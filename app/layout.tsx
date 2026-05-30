@@ -13,6 +13,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="el">
+      <head>
+        <link
+          rel="preload"
+          as="image"
+          href="https://chioshotel.gr/wp-content/uploads/2026/03/chios.hotels.voulamandis.house_.hero_.image_.webp"
+          fetchPriority="high"
+        />
+      </head>
       <body>{children}</body>
     </html>
   );
