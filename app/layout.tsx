@@ -1,9 +1,9 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "Chios Hotels in Kampos – Rooms & Apartments in Chios | Voulamandis House",
+  title: "Ξενοδοχείο στη Χίο – Δωμάτια & Διαμερίσματα | Voulamandis House",
   description:
-    "Peaceful rooms and apartments in Kampos, Chios. Stay at Voulamandis House near Chios airport, town and beaches, with authentic hospitality and direct booking benefits.",
+    "Ήσυχα δωμάτια και διαμερίσματα στον Κάμπο της Χίου. Διαμονή στο Voulamandis House κοντά σε αεροδρόμιο, πόλη και παραλίες.",
 };
 
 export default function RootLayout({
