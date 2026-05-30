@@ -1219,3 +1219,44 @@ input {
     transition: none !important;
   }
 }
+/* SPEED + CLS FIXES */
+
+.hero-quiz-card::after {
+  display: none !important;
+  animation: none !important;
+}
+
+.hero-quiz-live::before {
+  animation: none !important;
+}
+
+.vh-final-shell {
+  background:
+    linear-gradient(135deg, rgba(36, 28, 22, 0.92), rgba(142, 102, 7, 0.72)) !important;
+  min-height: 360px !important;
+}
+
+.vh-room-meta span,
+.vh-room-amenities span {
+  background: #fff8e8 !important;
+  color: #3d2b00 !important;
+  border-color: rgba(142, 102, 7, 0.35) !important;
+}
+
+.room-direct-badge {
+  background: #f0fff4 !important;
+  color: #0f6b2f !important;
+}
+
+@media (max-width: 767px) {
+  .vh-final-shell {
+    min-height: 320px !important;
+    background:
+      linear-gradient(135deg, rgba(36, 28, 22, 0.94), rgba(142, 102, 7, 0.75)) !important;
+  }
+
+  .vh-room-meta span,
+  .vh-room-amenities span {
+    font-weight: 900 !important;
+  }
+}
