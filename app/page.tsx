@@ -1,3 +1,4 @@
+const lang = "el";
 export default function HomePage() {
   return (
     <main className="vh-homepage">
