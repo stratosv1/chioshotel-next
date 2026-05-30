@@ -374,14 +374,9 @@ input {
 }
 
 .hero-quiz-card::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -120%;
-  width: 90%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.26), transparent);
-  animation: shineMove 1s infinite;
+  display: none !important;
+  animation: none !important;
+  content: none !important;
 }
 
 .hero-quiz-icon {
@@ -435,7 +430,7 @@ input {
   height: 7px;
   border-radius: 999px;
   background: #22c55e;
-  animation: pulseDot 1.35s infinite;
+  animation: none !important;
 }
 
 .hero-quiz-link {
@@ -466,28 +461,6 @@ input {
   text-align: center;
   font-size: 15px;
   font-weight: 700;
-}
-
-@keyframes shineMove {
-  0% {
-    left: -120%;
-  }
-  45%,
-  100% {
-    left: 130%;
-  }
-}
-
-@keyframes pulseDot {
-  0% {
-    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.78);
-  }
-  70% {
-    box-shadow: 0 0 0 8px rgba(34, 197, 94, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
-  }
 }
 
 /* PANELS */
@@ -627,20 +600,10 @@ input {
   overflow: hidden;
 }
 
-.vh-room-image--economy {
-  background-image: url("https://chioshotel.gr/wp-content/uploads/2022/12/DSC07803-1.webp");
-}
-
-.vh-room-image--ground {
-  background-image: url("https://chioshotel.gr/wp-content/uploads/2022/12/double-triple-room.jpg");
-}
-
-.vh-room-image--upper {
-  background-image: url("https://chioshotel.gr/wp-content/uploads/2022/12/DSC07867-1.webp");
-}
-
-.vh-room-image--family {
-  background-image: url("https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-family-apartments.webp");
+.vh-room-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .room-offer-stack {
@@ -676,8 +639,8 @@ input {
 .room-direct-badge {
   margin-left: auto;
   padding: 7px 10px;
-  background: rgba(240, 253, 244, 0.96);
-  color: #15803d;
+  background: #f0fff4 !important;
+  color: #0f6b2f !important;
 }
 
 .room-bed-badge {
@@ -734,11 +697,11 @@ input {
   min-height: 34px;
   padding: 0 8px;
   border-radius: 999px;
-  background: var(--vh-surface-2);
-  border: 1px solid rgba(154, 107, 63, 0.1);
-  color: var(--vh-accent-dark) !important;
+  background: #fff8e8 !important;
+  border: 1px solid rgba(142, 102, 7, 0.35) !important;
+  color: #3d2b00 !important;
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 900;
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
@@ -746,8 +709,6 @@ input {
 }
 
 .vh-room-amenities span {
-  background: #fff;
-  color: #3d3530 !important;
   font-size: 10.5px;
 }
 
@@ -800,12 +761,10 @@ input {
   overflow: hidden;
   border-radius: var(--vh-radius-xxl);
   box-shadow: var(--vh-shadow-strong);
-  background:
-    linear-gradient(180deg, rgba(36, 28, 22, 0.22) 0%, rgba(36, 28, 22, 0.72) 72%, rgba(36, 28, 22, 0.88) 100%),
-    url("https://chioshotel.gr/wp-content/uploads/2026/04/Screenshot_2026-04-25-14-11-19-166_com.instagram.android-edit-1.webp") center / cover no-repeat;
+  background: linear-gradient(135deg, rgba(36, 28, 22, 0.94), rgba(142, 102, 7, 0.76)) !important;
   color: #fff;
   padding: 44px;
-  min-height: 460px;
+  min-height: 360px !important;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -1157,6 +1116,7 @@ input {
     min-height: 26px !important;
     padding: 0 3px !important;
     font-size: 8px !important;
+    font-weight: 900 !important;
   }
 
   .vh-amenities-grid {
@@ -1192,7 +1152,8 @@ input {
   }
 
   .vh-final-shell {
-    min-height: 470px !important;
+    min-height: 320px !important;
+    background: linear-gradient(135deg, rgba(36, 28, 22, 0.94), rgba(142, 102, 7, 0.75)) !important;
   }
 
   .vh-final-shell h2 {
@@ -1217,46 +1178,5 @@ input {
     scroll-behavior: auto !important;
     animation: none !important;
     transition: none !important;
-  }
-}
-/* SPEED + CLS FIXES */
-
-.hero-quiz-card::after {
-  display: none !important;
-  animation: none !important;
-}
-
-.hero-quiz-live::before {
-  animation: none !important;
-}
-
-.vh-final-shell {
-  background:
-    linear-gradient(135deg, rgba(36, 28, 22, 0.92), rgba(142, 102, 7, 0.72)) !important;
-  min-height: 360px !important;
-}
-
-.vh-room-meta span,
-.vh-room-amenities span {
-  background: #fff8e8 !important;
-  color: #3d2b00 !important;
-  border-color: rgba(142, 102, 7, 0.35) !important;
-}
-
-.room-direct-badge {
-  background: #f0fff4 !important;
-  color: #0f6b2f !important;
-}
-
-@media (max-width: 767px) {
-  .vh-final-shell {
-    min-height: 320px !important;
-    background:
-      linear-gradient(135deg, rgba(36, 28, 22, 0.94), rgba(142, 102, 7, 0.75)) !important;
-  }
-
-  .vh-room-meta span,
-  .vh-room-amenities span {
-    font-weight: 900 !important;
   }
 }
