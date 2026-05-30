@@ -1,12 +1,11 @@
-const lang = "el";
 export default function HomePage() {
   return (
     <main className="vh-homepage">
-      <section className="hero" aria-label="Rooms and apartments in Chios, Kampos">
+      <section className="hero" aria-label="Δωμάτια και διαμερίσματα στη Χίο, Κάμπος">
         <div className="hero-media" aria-hidden="true">
           <img
             src="https://chioshotel.gr/wp-content/uploads/2026/03/chios.hotels.voulamandis.house_.hero_.image_.webp"
-            alt="Chios Hotels and Apartments in Kampos - Voulamandis House"
+            alt="Ξενοδοχείο και διαμερίσματα στη Χίο - Voulamandis House"
             width="1200"
             height="675"
           />
@@ -16,27 +15,29 @@ export default function HomePage() {
           <div className="hero-content-box">
             <div
               className="rating-card"
-              aria-label="Guest rating 4.8 out of 5 from 143 reviews"
+              aria-label="Αξιολόγηση επισκεπτών 4.8 στα 5 από 143 κριτικές"
             >
               <div>
                 <strong>4.8 / 5</strong>
-                <span>143 reviews</span>
+                <span>143 κριτικές</span>
               </div>
               <div className="stars" aria-hidden="true">
                 ★★★★★
               </div>
             </div>
 
-            <div className="hero-kicker">KAMPOS CHIOS • VOULAMANDIS HOUSE</div>
+            <div className="hero-kicker">ΚΑΜΠΟΣ ΧΙΟΥ • VOULAMANDIS HOUSE</div>
 
-            <h1 className="hero-title">Chios Hotels and Apartments in Kambos</h1>
+            <h1 className="hero-title">
+              Ξενοδοχείο και διαμερίσματα στη Χίο
+            </h1>
 
             <p className="hero-description">
-              Looking for <strong>hotels in Chios</strong> or{" "}
-              <strong>rooms in Chios</strong>?{" "}
-              <strong>Voulamandis House</strong> is an authentic accommodation
-              choice in Kampos, with comfortable rooms, peaceful surroundings and
-              excellent guest reviews.
+              Αναζητάτε <strong>ξενοδοχείο στη Χίο</strong> ή{" "}
+              <strong>δωμάτια στη Χίο</strong>; Το{" "}
+              <strong>Voulamandis House</strong> είναι μια αυθεντική επιλογή
+              διαμονής στον Κάμπο, με άνετα δωμάτια, ήσυχο περιβάλλον και
+              εξαιρετικές κριτικές επισκεπτών.
             </p>
 
             <div className="hero-actions">
@@ -44,14 +45,14 @@ export default function HomePage() {
                 className="btn-primary"
                 href="https://chioshotel.gr/room-finder/"
               >
-                <span aria-hidden="true">✨</span> Find Room
+                <span aria-hidden="true">✨</span> Βρες δωμάτιο
               </a>
 
               <a
                 className="btn-ghost"
                 href="https://chioshotel.gr/chios-hotels-rates/"
               >
-                <span aria-hidden="true">🔥</span> Book now
+                <span aria-hidden="true">🔥</span> Κράτηση τώρα
               </a>
             </div>
 
@@ -64,12 +65,15 @@ export default function HomePage() {
               </span>
 
               <span className="hero-quiz-copy">
-                <span className="hero-quiz-live">LIVE discount code</span>
-                <strong>Discover Chios</strong>
-                <span>Learn the island’s secrets and get a code for your stay.</span>
+                <span className="hero-quiz-live">LIVE εκπτωτικός κωδικός</span>
+                <strong>Ανακαλύψτε τη Χίο</strong>
+                <span>
+                  Μάθετε τα μυστικά του νησιού και πάρτε κωδικό έκπτωσης για τη
+                  διαμονή σας.
+                </span>
               </span>
 
-              <span className="hero-quiz-link">Start →</span>
+              <span className="hero-quiz-link">Έναρξη →</span>
             </a>
           </div>
         </div>
@@ -78,79 +82,96 @@ export default function HomePage() {
       <a href="#vh-lastminute-title" className="vh-hero-announce">
         <span aria-hidden="true">🔥</span>
         <span>
-          Traveling to Chios this week?{" "}
-          <strong>See available accommodation deals.</strong>
+          Ταξιδεύετε στη Χίο αυτή την εβδομάδα;{" "}
+          <strong>Δείτε διαθέσιμες προσφορές διαμονής.</strong>
         </span>
         <span aria-hidden="true">↓</span>
       </a>
 
-      <section className="vh-section vh-section--tight" aria-labelledby="vh-intro-title">
+      <section
+        className="vh-section vh-section--tight"
+        aria-labelledby="vh-intro-title"
+      >
         <div className="vh-wrap">
           <div className="vh-intro-grid">
             <article className="vh-panel">
               <span className="vh-kicker">
-                Authentic hospitality in Kampos, Chios
+                Αυθεντική φιλοξενία στον Κάμπο της Χίου
               </span>
 
               <h2 id="vh-intro-title">
-                <span aria-hidden="true">🏡</span> Stay in Chios at Voulamandis House
+                <span aria-hidden="true">🏡</span> Διαμονή στη Χίο στο
+                Voulamandis House
               </h2>
 
               <p>
-                Looking for <strong>rooms in Chios</strong> or{" "}
-                <strong>Chios accommodation</strong> for a peaceful and well-kept
-                stay? Voulamandis House welcomes you to the historic Kampos area
-                of Chios, offering an authentic hospitality experience in a setting
-                of natural beauty. If you are searching for{" "}
-                <strong>hotels in Chios</strong> but prefer something more personal,
-                our property is a warm alternative.
+                Αναζητάτε <strong>δωμάτια στη Χίο</strong> ή{" "}
+                <strong>διαμονή στη Χίο</strong> για ήρεμες και προσεγμένες
+                διακοπές; Το Voulamandis House σας υποδέχεται στον ιστορικό
+                Κάμπο της Χίου, προσφέροντας μια αυθεντική εμπειρία φιλοξενίας
+                μέσα σε ένα όμορφο και φυσικό περιβάλλον. Αν ψάχνετε{" "}
+                <strong>ξενοδοχείο στη Χίο</strong> αλλά προτιμάτε κάτι πιο
+                προσωπικό, το κατάλυμά μας είναι μια ζεστή εναλλακτική.
               </p>
 
-              <div className="vh-pill-row" aria-label="Key features">
-                <span className="vh-pill">🌴 Holidays in Chios</span>
-                <span className="vh-pill">🍊 Kampos Chios</span>
-                <span className="vh-pill">🛏️ Comfortable rooms</span>
+              <div className="vh-pill-row" aria-label="Βασικά χαρακτηριστικά">
+                <span className="vh-pill">🌴 Διακοπές στη Χίο</span>
+                <span className="vh-pill">🍊 Κάμπος Χίου</span>
+                <span className="vh-pill">🛏️ Άνετα δωμάτια</span>
                 <span className="vh-pill">💎 Value for money</span>
               </div>
             </article>
 
             <article className="vh-panel">
-              <span className="vh-kicker">What makes Voulamandis House special</span>
+              <span className="vh-kicker">
+                Τι κάνει το Voulamandis House ξεχωριστό
+              </span>
 
               <h3>
-                Six reasons that make your stay more comfortable, personal and
-                authentic
+                Έξι λόγοι που κάνουν τη διαμονή σας πιο άνετη, προσωπική και
+                αυθεντική
               </h3>
 
               <div className="vh-unique-grid">
                 <div className="vh-unique-card">
-                  <strong>🥐 Homemade breakfast</strong>
-                  <span>Breakfast in the garden with products from the farm.</span>
+                  <strong>🥐 Σπιτικό πρωινό</strong>
+                  <span>
+                    Πρωινό στον κήπο με προϊόντα από το αγρόκτημα.
+                  </span>
                 </div>
 
                 <div className="vh-unique-card">
-                  <strong>🌿 Courtyard & calm</strong>
-                  <span>Quiet atmosphere, garden and authentic Kampos feeling.</span>
+                  <strong>🌿 Αυλή & ηρεμία</strong>
+                  <span>
+                    Ήσυχη ατμόσφαιρα, κήπος και αυθεντική αίσθηση Κάμπου.
+                  </span>
                 </div>
 
                 <div className="vh-unique-card">
                   <strong>🧭 Room Wizard</strong>
-                  <span>Help to find the room that best suits your trip.</span>
+                  <span>
+                    Βοήθεια για να βρείτε το δωμάτιο που ταιριάζει στο ταξίδι
+                    σας.
+                  </span>
                 </div>
 
                 <div className="vh-unique-card">
-                  <strong>📍 Practical location</strong>
-                  <span>Close to town, airport, port and beaches.</span>
+                  <strong>📍 Πρακτική τοποθεσία</strong>
+                  <span>Κοντά σε πόλη, αεροδρόμιο, λιμάνι και παραλίες.</span>
                 </div>
 
                 <div className="vh-unique-card">
-                  <strong>🛎️ -10% Direct booking</strong>
-                  <span>Direct contact with the property and clear availability.</span>
+                  <strong>🛎️ -10% απευθείας κράτηση</strong>
+                  <span>
+                    Άμεση επικοινωνία με το κατάλυμα και καθαρή διαθεσιμότητα.
+                  </span>
                 </div>
 
                 <div className="vh-unique-card">
-                  <strong>🍊 Chios secrets</strong>
-                  <span>Suggestions for beaches, villages and island routes.</span>
+                  <strong>🍊 Μυστικά της Χίου</strong>
+                  <span>
+                    Προτάσεις για παραλίες, χωριά και αυθεντικές διαδρομές.
+                  </span>
                 </div>
               </div>
             </article>
@@ -158,40 +179,49 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="vh-section vh-section--tight" aria-labelledby="vh-rooms-title">
+      <section
+        className="vh-section vh-section--tight"
+        aria-labelledby="vh-rooms-title"
+      >
         <div className="vh-wrap">
           <div className="vh-split-highlight">
             <article className="vh-highlight-card">
-              <span className="vh-kicker">Rooms & accommodation in Chios</span>
+              <span className="vh-kicker">Δωμάτια & διαμονή στη Χίο</span>
 
               <h2 className="vh-title" id="vh-rooms-title">
-                <span aria-hidden="true">🛏️</span> Rooms in Chios for couples and
-                families
+                <span aria-hidden="true">🛏️</span> Δωμάτια στη Χίο για ζευγάρια
+                και οικογένειες
               </h2>
 
               <p>
-                Our rooms are cleaned daily and designed for a comfortable,
-                peaceful and quality stay in Kampos, Chios.
+                Τα δωμάτιά μας καθαρίζονται καθημερινά και είναι σχεδιασμένα για
+                άνετη, ήρεμη και ποιοτική διαμονή στον Κάμπο της Χίου.
               </p>
 
               <div className="vh-btn-row">
-                <a className="vh-btn vh-btn--primary" href="https://chioshotel.gr/room-finder/">
+                <a
+                  className="vh-btn vh-btn--primary"
+                  href="https://chioshotel.gr/room-finder/"
+                >
                   <span aria-hidden="true">✨</span> Room Wizard
                 </a>
 
-                <a className="vh-btn vh-btn--secondary" href="https://chioshotel.gr/chios-rooms/">
-                  <span aria-hidden="true">🗂️</span> All rooms
+                <a
+                  className="vh-btn vh-btn--secondary"
+                  href="https://chioshotel.gr/chios-rooms/"
+                >
+                  <span aria-hidden="true">🗂️</span> Όλα τα δωμάτια
                 </a>
               </div>
             </article>
 
             <article className="vh-highlight-card">
-              <span className="vh-kicker">Rooms in Chios</span>
-              <h3>From budget stays to family solutions</h3>
+              <span className="vh-kicker">Δωμάτια στη Χίο</span>
+              <h3>Από οικονομική διαμονή μέχρι οικογενειακές λύσεις</h3>
               <p>
-                If you are looking for hotels in Chios but prefer more personal
-                hospitality, Voulamandis House offers an authentic alternative in
-                Kampos.
+                Αν ψάχνετε ξενοδοχείο στη Χίο αλλά προτιμάτε πιο προσωπική
+                φιλοξενία, το Voulamandis House είναι μια αυθεντική εναλλακτική
+                στον Κάμπο.
               </p>
             </article>
           </div>
@@ -200,69 +230,73 @@ export default function HomePage() {
             <RoomCard
               href="https://chioshotel.gr/chios-rooms/economy-double-rooms/"
               imageClass="vh-room-image--economy"
-              bed="🛏️ 1 double or 2 singles"
+              bed="🛏️ 1 διπλό ή 2 μονά"
               title="Economy Double"
-              text="Ideal for two guests who want a well-kept stay in Kampos, Chios."
-              meta={["👥 2 guests", "Economy", "🍊 Kampos"]}
-              button="View room"
+              text="Ιδανικό για δύο επισκέπτες που θέλουν προσεγμένη διαμονή στον Κάμπο της Χίου."
+              meta={["👥 2 άτομα", "Economy", "🍊 Κάμπος"]}
+              button="Δείτε δωμάτιο"
             />
 
             <RoomCard
               href="https://chioshotel.gr/chios-rooms/standard-double-room/"
               imageClass="vh-room-image--ground"
-              bed="🛏️ Double + extra"
+              bed="🛏️ Διπλό + έξτρα"
               title="Ground Floor Double & Triple"
-              text="A comfortable choice for couples or small families with easy access."
-              meta={["👤 ×2-3", "🌿 Ground", "Easy"]}
-              button="View room"
+              text="Άνετη επιλογή για ζευγάρια ή μικρές οικογένειες με εύκολη πρόσβαση."
+              meta={["👤 ×2-3", "🌿 Ισόγειο", "Εύκολο"]}
+              button="Δείτε δωμάτιο"
             />
 
             <RoomCard
               href="https://chioshotel.gr/chios-rooms/standard-double-room/"
               imageClass="vh-room-image--upper"
-              bed="🛏️ Double + extra"
+              bed="🛏️ Διπλό + έξτρα"
               title="Upper Floor Double & Triple"
-              text="A choice for guests looking for a quieter atmosphere and classic hospitality."
-              meta={["👤 ×2-3", "🏛️ Upper", "Quiet"]}
-              button="View room"
+              text="Επιλογή για επισκέπτες που θέλουν πιο ήσυχη ατμόσφαιρα και κλασική φιλοξενία."
+              meta={["👤 ×2-3", "🏛️ Όροφος", "Ήσυχο"]}
+              button="Δείτε δωμάτιο"
             />
 
             <RoomCard
               href="https://chioshotel.gr/chios-rooms/family-chios-apartments/"
               imageClass="vh-room-image--family"
-              bed="🛏️ Family beds"
+              bed="🛏️ Οικογενειακά κρεβάτια"
               title="Family Apartment"
-              text="Ideal for families or small groups who need more space."
-              meta={["👤 ×4", "Space", "🏡 Apt"]}
-              button="View apartment"
+              text="Ιδανικό για οικογένειες ή μικρές παρέες που χρειάζονται περισσότερο χώρο."
+              meta={["👤 ×4", "Άνεση", "🏡 Apt"]}
+              button="Δείτε διαμέρισμα"
             />
           </div>
         </div>
       </section>
 
-      <section className="vh-section vh-section--tight" aria-labelledby="vh-amenities-title">
+      <section
+        className="vh-section vh-section--tight"
+        aria-labelledby="vh-amenities-title"
+      >
         <div className="vh-wrap">
           <header className="vh-section-head">
-            <span className="vh-kicker">Accommodation amenities</span>
+            <span className="vh-kicker">Παροχές διαμονής</span>
             <h2 className="vh-title" id="vh-amenities-title">
-              <span aria-hidden="true">🛋️</span> Everything you need for a comfortable stay
+              <span aria-hidden="true">🛋️</span> Όλα όσα χρειάζεστε για μια
+              άνετη διαμονή
             </h2>
           </header>
 
           <div className="vh-amenities-grid">
             {[
               "📶 Wi-Fi / Internet",
-              "❄️ Air Conditioning",
-              "🔥 Heating",
-              "📺 TV",
-              "🧊 Fridge",
-              "☕ Coffee / Tea",
-              "🧼 Daily housekeeping",
-              "🌿 Garden & seating",
-              "🍖 BBQ area",
+              "❄️ Κλιματισμός",
+              "🔥 Θέρμανση",
+              "📺 Τηλεόραση",
+              "🧊 Ψυγείο",
+              "☕ Καφές / Τσάι",
+              "🧼 Καθημερινή καθαριότητα",
+              "🌿 Κήπος & καθιστικό",
+              "🍖 BBQ",
               "🚗 Parking",
-              "🚕 Transfer options",
-              "🏡 Authentic hospitality",
+              "🚕 Επιλογές μεταφοράς",
+              "🏡 Αυθεντική φιλοξενία",
             ].map((item) => (
               <div className="vh-amenity" key={item}>
                 <div className="vh-amenity-icon">{item.split(" ")[0]}</div>
@@ -276,39 +310,47 @@ export default function HomePage() {
       <section className="vh-final" aria-labelledby="vh-final-title">
         <div className="vh-wrap">
           <div className="vh-final-shell">
-            <span className="vh-kicker">Book your stay</span>
+            <span className="vh-kicker">Κλείστε τη διαμονή σας</span>
 
             <h2 id="vh-final-title">
-              <span aria-hidden="true">✈️</span> Your trip to Chios starts here
+              <span aria-hidden="true">✈️</span> Το ταξίδι σας στη Χίο ξεκινά
+              εδώ
             </h2>
 
             <p>
-              Warm hospitality, authentic atmosphere and an ideal location in Kampos.
+              Ζεστή φιλοξενία, αυθεντική ατμόσφαιρα και ιδανική τοποθεσία στον
+              Κάμπο.
             </p>
 
             <div className="vh-btn-row">
-              <a className="vh-btn vh-btn--primary" href="https://chioshotel.gr/chios-hotels-rates/">
-                <span aria-hidden="true">🛎️</span> Book Direct
+              <a
+                className="vh-btn vh-btn--primary"
+                href="https://chioshotel.gr/chios-hotels-rates/"
+              >
+                <span aria-hidden="true">🛎️</span> Άμεση κράτηση
               </a>
 
               <a
                 className="vh-btn vh-btn--secondary"
                 href="https://chioshotel.gr/voulamandis-house-contact-us-form-fill-in-the-form/"
               >
-                <span aria-hidden="true">✉️</span> Contact
+                <span aria-hidden="true">✉️</span> Επικοινωνία
               </a>
             </div>
           </div>
         </div>
       </section>
 
-      <div className="vh-mobile-sticky" aria-label="Quick communication actions">
+      <div className="vh-mobile-sticky" aria-label="Γρήγορη επικοινωνία">
         <div className="vh-mobile-sticky__inner">
           <a className="vh-btn vh-btn--secondary" href="tel:+306944764654">
-            📞 CALL
+            📞 ΚΛΗΣΗ
           </a>
 
-          <a className="vh-btn vh-btn--primary" href="viber://chat?number=%2B306944474226">
+          <a
+            className="vh-btn vh-btn--primary"
+            href="viber://chat?number=%2B306944474226"
+          >
             💬 VIBER
           </a>
         </div>
@@ -339,7 +381,7 @@ function RoomCard({
       <div className={`vh-room-image ${imageClass}`} aria-hidden="true">
         <div className="room-offer-stack">
           <span className="room-live-badge">LIVE</span>
-          <span className="room-direct-badge">🎁 -10% Discount</span>
+          <span className="room-direct-badge">🎁 -10% Έκπτωση</span>
         </div>
         <span className="room-bed-badge">{bed}</span>
       </div>
@@ -357,8 +399,8 @@ function RoomCard({
         <div className="vh-room-amenities">
           <span>❄️ A/C</span>
           <span>📶 Wi-Fi</span>
-          <span>☕ Coffee</span>
-          <span>🧊 Fridge</span>
+          <span>☕ Καφές</span>
+          <span>🧊 Ψυγείο</span>
         </div>
 
         <span className="vh-btn vh-btn--secondary">
