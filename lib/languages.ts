@@ -111,7 +111,7 @@ export function withLanguagePrefix(code: LanguageCode, path: string): string {
   }
 
   if (path === "/") {
-    return prefix;
+    return normalizePath(prefix);
   }
 
   return normalizePath(`${prefix}${path}`);
