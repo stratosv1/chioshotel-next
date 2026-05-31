@@ -589,6 +589,2969 @@ export const museumDetails: MuseumDetailData[] = [
   },
 ];
 
+export const localizedMuseumDetails: MuseumDetailData[] = [
+  {
+    "slug": "mouseio-mastichas-xios",
+    "seo": {
+      "canonicalPath": "/el/mouseia-xios/mouseio-mastichas-xios/",
+      "title": "Μουσείο Μαστίχας Χίου | Πολιτιστικός οδηγός Χίου",
+      "description": "Επισκεφθείτε Μουσείο Μαστίχας Χίου και ανακαλύψτε την ιστορία, την καλλιέργεια και την πολιτιστική αξία της μαστίχας.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp"
+    },
+    "hero": {
+      "kicker": "Νότια Χίος • Πολιτισμός μαστίχας",
+      "title": "Μουσείο Μαστίχας Χίου",
+      "description": "Επισκεφθείτε Μουσείο Μαστίχας Χίου και ανακαλύψτε την ιστορία, την καλλιέργεια και την πολιτιστική αξία της μαστίχας.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp",
+      "tags": [
+        "#mastic_museum",
+        "#south_chios",
+        "#mastic_culture",
+        "#mastichochoria"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Τοποθεσία & πρόσβαση",
+        "text": "Βρίσκεται σε εύκολα προσβάσιμο σημείο και συνδυάζεται όμορφα με μια πολιτιστική διαδρομή στη Χίο."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Θεματική μουσείου",
+        "text": "Το μουσείο παρουσιάζει την ιστορία, την καλλιέργεια και την πολιτιστική αξία της μαστίχας."
+      },
+      {
+        "icon": "💡",
+        "title": "Τοπική συμβουλή",
+        "text": "Συνδυάστε την επίσκεψη με κοντινή βόλτα, καφέ ή φαγητό για μια πιο ολοκληρωμένη εμπειρία."
+      }
+    ],
+    "highlights": {
+      "title": "Τι θα δείτε",
+      "items": [
+        "Την ιστορία, την καλλιέργεια και την πολιτιστική αξία της μαστίχας",
+        "Σύνδεση με την ιστορία και την ταυτότητα της Χίου",
+        "Μια χρήσιμη πολιτιστική στάση για όλες τις εποχές"
+      ]
+    },
+    "experience": {
+      "title": "Γιατί αξίζει η επίσκεψη",
+      "paragraphs": [
+        "Επισκεφθείτε Μουσείο Μαστίχας Χίου και ανακαλύψτε την ιστορία, την καλλιέργεια και την πολιτιστική αξία της μαστίχας.",
+        "Είναι μια καλή στάση για να καταλάβετε καλύτερα το νησί πέρα από τις παραλίες και τα χωριά."
+      ]
+    },
+    "routeIdeas": {
+      "title": "Πώς να το συνδυάσετε",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Πολιτιστική βόλτα",
+          "text": "Συνδυάστε την επίσκεψη με κοντινή βόλτα, καφέ ή φαγητό για μια πιο ολοκληρωμένη εμπειρία."
+        },
+        {
+          "icon": "🚗",
+          "title": "Συνδυάστε κοντινά σημεία",
+          "text": "Βρίσκεται σε εύκολα προσβάσιμο σημείο και συνδυάζεται όμορφα με μια πολιτιστική διαδρομή στη Χίο."
+        },
+        {
+          "icon": "📷",
+          "title": "Αφήστε χρόνο",
+          "text": "Τα μουσεία αποκαλύπτουν περισσότερα όταν τα δείτε χωρίς βιασύνη."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "Η στρατηγική σας βάση",
+      "text": "Με βάση το Voulamandis House στον Κάμπο, μπορείτε να οργανώσετε εύκολα μουσεία, χωριά, παραλίες και γεύσεις της Χίου σε ισορροπημένες ημερήσιες διαδρομές.",
+      "linkLabel": "Μείνετε με ανθρώπους που γνωρίζουν το νησί.",
+      "href": "/el/domatia-xios/"
+    },
+    "relatedTitle": "Ανακαλύψτε περισσότερα μουσεία της Χίου",
+    "relatedText": "Συνεχίστε την πολιτιστική διαδρομή σας στη Χίο με αρχαιολογία, βυζαντινή τέχνη, ναυτική ιστορία, βιβλία, μαστίχα και λαογραφία."
+  },
+  {
+    "slug": "musee-du-mastic-chios",
+    "seo": {
+      "canonicalPath": "/fr/musees-de-chios/musee-du-mastic-chios/",
+      "title": "Musée du Mastic de Chios | Guide culturel de Chios",
+      "description": "Visitez Musée du Mastic de Chios et découvrez l’histoire, la culture et l’importance culturelle du mastic.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp"
+    },
+    "hero": {
+      "kicker": "Sud de Chios • Culture du mastic",
+      "title": "Musée du Mastic de Chios",
+      "description": "Visitez Musée du Mastic de Chios et découvrez l’histoire, la culture et l’importance culturelle du mastic.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp",
+      "tags": [
+        "#mastic_museum",
+        "#south_chios",
+        "#mastic_culture",
+        "#mastichochoria"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Emplacement & accès",
+        "text": "Il se trouve dans un secteur facile à intégrer à un itinéraire culturel à Chios."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Thème du musée",
+        "text": "Le musée présente l’histoire, la culture et l’importance culturelle du mastic."
+      },
+      {
+        "icon": "💡",
+        "title": "Conseil local",
+        "text": "Combinez la visite avec une promenade, un café ou un repas à proximité pour une expérience plus complète."
+      }
+    ],
+    "highlights": {
+      "title": "À voir",
+      "items": [
+        "L’histoire, la culture et l’importance culturelle du mastic",
+        "Lien avec l’histoire et l’identité de Chios",
+        "Une halte culturelle utile en toute saison"
+      ]
+    },
+    "experience": {
+      "title": "Pourquoi visiter",
+      "paragraphs": [
+        "Visitez Musée du Mastic de Chios et découvrez l’histoire, la culture et l’importance culturelle du mastic.",
+        "C’est une bonne étape pour mieux comprendre l’île au-delà des plages et des villages."
+      ]
+    },
+    "routeIdeas": {
+      "title": "Comment l’intégrer à votre itinéraire",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Promenade culturelle",
+          "text": "Combinez la visite avec une promenade, un café ou un repas à proximité pour une expérience plus complète."
+        },
+        {
+          "icon": "🚗",
+          "title": "Combinez les lieux proches",
+          "text": "Il se trouve dans un secteur facile à intégrer à un itinéraire culturel à Chios."
+        },
+        {
+          "icon": "📷",
+          "title": "Prenez votre temps",
+          "text": "Les musées se révèlent mieux quand on les visite sans hâte."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "Votre base stratégique",
+      "text": "Depuis Voulamandis House à Kampos, vous pouvez organiser facilement musées, villages, plages et gastronomie de Chios en belles journées équilibrées.",
+      "linkLabel": "Séjournez avec ceux qui connaissent le mieux l’île.",
+      "href": "/fr/chambres-a-chios/"
+    },
+    "relatedTitle": "Découvrez plus de musées de Chios",
+    "relatedText": "Poursuivez votre itinéraire culturel à Chios avec archéologie, art byzantin, histoire maritime, livres, mastic et folklore."
+  },
+  {
+    "slug": "mastix-museum-chios",
+    "seo": {
+      "canonicalPath": "/de/museen-chios/mastix-museum-chios/",
+      "title": "Mastix-Museum Chios | Kulturführer für Chios",
+      "description": "Besuchen Sie Mastix-Museum Chios und entdecken Sie Geschichte, Anbau und kulturelle Bedeutung des Mastix.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp"
+    },
+    "hero": {
+      "kicker": "Süd-Chios • Mastixkultur",
+      "title": "Mastix-Museum Chios",
+      "description": "Besuchen Sie Mastix-Museum Chios und entdecken Sie Geschichte, Anbau und kulturelle Bedeutung des Mastix.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp",
+      "tags": [
+        "#mastic_museum",
+        "#south_chios",
+        "#mastic_culture",
+        "#mastichochoria"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Lage & Zugang",
+        "text": "Es liegt an einem gut erreichbaren Ort und lässt sich leicht in eine Kulturroute auf Chios einbauen."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Museumsschwerpunkt",
+        "text": "Das Museum zeigt Geschichte, Anbau und kulturelle Bedeutung des Mastix."
+      },
+      {
+        "icon": "💡",
+        "title": "Lokaler Tipp",
+        "text": "Kombinieren Sie den Besuch mit einem Spaziergang, Kaffee oder Essen in der Nähe für ein runderes Erlebnis."
+      }
+    ],
+    "highlights": {
+      "title": "Was Sie sehen können",
+      "items": [
+        "Geschichte, Anbau und kulturelle Bedeutung des Mastix",
+        "Verbindung zur Geschichte und Identität von Chios",
+        "Ein sinnvoller Kulturstopp zu jeder Jahreszeit"
+      ]
+    },
+    "experience": {
+      "title": "Warum sich der Besuch lohnt",
+      "paragraphs": [
+        "Besuchen Sie Mastix-Museum Chios und entdecken Sie Geschichte, Anbau und kulturelle Bedeutung des Mastix.",
+        "Es ist ein guter Stopp, um die Insel jenseits von Stränden und Dörfern besser zu verstehen."
+      ]
+    },
+    "routeIdeas": {
+      "title": "So kombinieren Sie den Besuch",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Kulturspaziergang",
+          "text": "Kombinieren Sie den Besuch mit einem Spaziergang, Kaffee oder Essen in der Nähe für ein runderes Erlebnis."
+        },
+        {
+          "icon": "🚗",
+          "title": "Nahe Orte kombinieren",
+          "text": "Es liegt an einem gut erreichbaren Ort und lässt sich leicht in eine Kulturroute auf Chios einbauen."
+        },
+        {
+          "icon": "📷",
+          "title": "Nehmen Sie sich Zeit",
+          "text": "Museen zeigen mehr, wenn man sie ohne Eile besucht."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "Ihre strategische Basis",
+      "text": "Von Voulamandis House in Kampos aus können Sie Museen, Dörfer, Strände und kulinarische Stopps auf Chios entspannt in Tagesrouten verbinden.",
+      "linkLabel": "Übernachten Sie bei Menschen, die die Insel kennen.",
+      "href": "/de/chios-zimmer/"
+    },
+    "relatedTitle": "Weitere Museen auf Chios entdecken",
+    "relatedText": "Setzen Sie Ihre Kulturroute auf Chios mit Archäologie, byzantinischer Kunst, Seefahrtsgeschichte, Büchern, Mastix und Volkskunde fort."
+  },
+  {
+    "slug": "museo-del-mastice-chios",
+    "seo": {
+      "canonicalPath": "/it/musei-chios/museo-del-mastice-chios/",
+      "title": "Museo del Mastice di Chios | Guida culturale di Chios",
+      "description": "Visita Museo del Mastice di Chios e scopri la storia, la coltivazione e il valore culturale del mastice.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp"
+    },
+    "hero": {
+      "kicker": "Chios meridionale • Cultura del mastice",
+      "title": "Museo del Mastice di Chios",
+      "description": "Visita Museo del Mastice di Chios e scopri la storia, la coltivazione e il valore culturale del mastice.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp",
+      "tags": [
+        "#mastic_museum",
+        "#south_chios",
+        "#mastic_culture",
+        "#mastichochoria"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Posizione & accesso",
+        "text": "Si trova in una zona facile da inserire in un itinerario culturale a Chios."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Tema del museo",
+        "text": "Il museo presenta la storia, la coltivazione e il valore culturale del mastice."
+      },
+      {
+        "icon": "💡",
+        "title": "Consiglio locale",
+        "text": "Combina la visita con una passeggiata, un caffè o un pasto nelle vicinanze per un’esperienza più completa."
+      }
+    ],
+    "highlights": {
+      "title": "Cosa vedere",
+      "items": [
+        "La storia, la coltivazione e il valore culturale del mastice",
+        "Collegamento con la storia e l’identità di Chios",
+        "Una tappa culturale utile in ogni stagione"
+      ]
+    },
+    "experience": {
+      "title": "Perché visitarlo",
+      "paragraphs": [
+        "Visita Museo del Mastice di Chios e scopri la storia, la coltivazione e il valore culturale del mastice.",
+        "È una tappa utile per capire meglio l’isola oltre alle spiagge e ai villaggi."
+      ]
+    },
+    "routeIdeas": {
+      "title": "Come combinarlo",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Passeggiata culturale",
+          "text": "Combina la visita con una passeggiata, un caffè o un pasto nelle vicinanze per un’esperienza più completa."
+        },
+        {
+          "icon": "🚗",
+          "title": "Combina luoghi vicini",
+          "text": "Si trova in una zona facile da inserire in un itinerario culturale a Chios."
+        },
+        {
+          "icon": "📷",
+          "title": "Prenditi tempo",
+          "text": "I musei rivelano di più quando li visiti senza fretta."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "La tua base strategica",
+      "text": "Da Voulamandis House a Kampos puoi organizzare facilmente musei, villaggi, spiagge e sapori di Chios in itinerari giornalieri equilibrati.",
+      "linkLabel": "Soggiorna con chi conosce meglio l’isola.",
+      "href": "/it/camere-a-chios/"
+    },
+    "relatedTitle": "Scopri altri musei di Chios",
+    "relatedText": "Continua il tuo itinerario culturale a Chios con archeologia, arte bizantina, storia marittima, libri, mastice e folklore."
+  },
+  {
+    "slug": "museo-mastiha-chios",
+    "seo": {
+      "canonicalPath": "/es/museos-chios/museo-mastiha-chios/",
+      "title": "Museo de la Mastiha de Chios | Guía cultural de Chios",
+      "description": "Visita Museo de la Mastiha de Chios y descubre la historia, el cultivo y la importancia cultural de la mastiha.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp"
+    },
+    "hero": {
+      "kicker": "Sur de Chios • Cultura de la mastiha",
+      "title": "Museo de la Mastiha de Chios",
+      "description": "Visita Museo de la Mastiha de Chios y descubre la historia, el cultivo y la importancia cultural de la mastiha.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp",
+      "tags": [
+        "#mastic_museum",
+        "#south_chios",
+        "#mastic_culture",
+        "#mastichochoria"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Ubicación y acceso",
+        "text": "Está en una zona fácil de incluir en una ruta cultural por Chios."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Tema del museo",
+        "text": "El museo presenta la historia, el cultivo y la importancia cultural de la mastiha."
+      },
+      {
+        "icon": "💡",
+        "title": "Consejo local",
+        "text": "Combina la visita con un paseo, un café o una comida cercana para una experiencia más completa."
+      }
+    ],
+    "highlights": {
+      "title": "Qué ver",
+      "items": [
+        "La historia, el cultivo y la importancia cultural de la mastiha",
+        "Conexión con la historia y la identidad de Chios",
+        "Una parada cultural útil en cualquier época"
+      ]
+    },
+    "experience": {
+      "title": "Por qué visitarlo",
+      "paragraphs": [
+        "Visita Museo de la Mastiha de Chios y descubre la historia, el cultivo y la importancia cultural de la mastiha.",
+        "Es una buena parada para comprender mejor la isla más allá de sus playas y pueblos."
+      ]
+    },
+    "routeIdeas": {
+      "title": "Cómo combinarlo",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Paseo cultural",
+          "text": "Combina la visita con un paseo, un café o una comida cercana para una experiencia más completa."
+        },
+        {
+          "icon": "🚗",
+          "title": "Combina lugares cercanos",
+          "text": "Está en una zona fácil de incluir en una ruta cultural por Chios."
+        },
+        {
+          "icon": "📷",
+          "title": "Tómate tu tiempo",
+          "text": "Los museos se disfrutan más cuando se visitan sin prisa."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "Tu base estratégica",
+      "text": "Desde Voulamandis House en Kampos puedes organizar fácilmente museos, pueblos, playas y sabores de Chios en rutas diarias equilibradas.",
+      "linkLabel": "Alójate con quienes mejor conocen la isla.",
+      "href": "/es/habitaciones-en-chios/"
+    },
+    "relatedTitle": "Descubre más museos de Chios",
+    "relatedText": "Continúa tu ruta cultural por Chios con arqueología, arte bizantino, historia marítima, libros, mastiha y folclore."
+  },
+  {
+    "slug": "sakiz-mastik-muzesi",
+    "seo": {
+      "canonicalPath": "/tr/sakiz-adasi-muzeleri/sakiz-mastik-muzesi/",
+      "title": "Sakız Mastik Müzesi | Sakız Adası kültür rehberi",
+      "description": "Ziyaret edin Sakız Mastik Müzesi ve keşfedin mastiğin tarihini, üretimini ve kültürel önemini.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp"
+    },
+    "hero": {
+      "kicker": "Güney Sakız • Mastik kültürü",
+      "title": "Sakız Mastik Müzesi",
+      "description": "Ziyaret edin Sakız Mastik Müzesi ve keşfedin mastiğin tarihini, üretimini ve kültürel önemini.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp",
+      "tags": [
+        "#mastic_museum",
+        "#south_chios",
+        "#mastic_culture",
+        "#mastichochoria"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Konum & ulaşım",
+        "text": "Sakız Adası’ndaki kültür rotalarına kolayca eklenebilecek bir konumdadır."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Müze teması",
+        "text": "Müze mastiğin tarihini, üretimini ve kültürel önemini."
+      },
+      {
+        "icon": "💡",
+        "title": "Yerel tavsiye",
+        "text": "Ziyareti yakınlarda kısa bir yürüyüş, kahve veya yemek molasıyla birleştirerek daha tamamlayıcı bir deneyim yaşayabilirsiniz."
+      }
+    ],
+    "highlights": {
+      "title": "Neler görülebilir",
+      "items": [
+        "Mastiğin tarihini, üretimini ve kültürel önemini",
+        "Sakız’ın tarihi ve kimliğiyle bağlantı",
+        "Her mevsim için anlamlı bir kültür durağı"
+      ]
+    },
+    "experience": {
+      "title": "Neden ziyaret etmeli",
+      "paragraphs": [
+        "Ziyaret edin Sakız Mastik Müzesi ve keşfedin mastiğin tarihini, üretimini ve kültürel önemini.",
+        "Plajların ve köylerin ötesinde adayı daha iyi anlamak için iyi bir duraktır."
+      ]
+    },
+    "routeIdeas": {
+      "title": "Nasıl birleştirilir",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Kültür yürüyüşü",
+          "text": "Ziyareti yakınlarda kısa bir yürüyüş, kahve veya yemek molasıyla birleştirerek daha tamamlayıcı bir deneyim yaşayabilirsiniz."
+        },
+        {
+          "icon": "🚗",
+          "title": "Yakın noktaları birleştirin",
+          "text": "Sakız Adası’ndaki kültür rotalarına kolayca eklenebilecek bir konumdadır."
+        },
+        {
+          "icon": "📷",
+          "title": "Zaman ayırın",
+          "text": "Müzeler acele etmeden gezildiğinde daha çok şey anlatır."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "Stratejik üssünüz",
+      "text": "Kampos’taki Voulamandis House’tan müzeleri, köyleri, plajları ve Sakız lezzetlerini dengeli günlük rotalar halinde kolayca planlayabilirsiniz.",
+      "linkLabel": "Adayı en iyi bilenlerle konaklayın.",
+      "href": "/tr/sakiz-adasi-odalari/"
+    },
+    "relatedTitle": "Daha fazla Sakız müzesi keşfedin",
+    "relatedText": "Sakız Adası’ndaki kültür rotanıza arkeoloji, Bizans sanatı, denizcilik tarihi, kitaplar, mastik ve folklorla devam edin."
+  },
+  {
+    "slug": "arxaiologiko-mouseio-xios",
+    "seo": {
+      "canonicalPath": "/el/mouseia-xios/arxaiologiko-mouseio-xios/",
+      "title": "Αρχαιολογικό Μουσείο Χίου | Πολιτιστικός οδηγός Χίου",
+      "description": "Επισκεφθείτε Αρχαιολογικό Μουσείο Χίου και ανακαλύψτε την αρχαία ιστορία, τα ευρήματα, την κεραμική και την πολιτιστική κληρονομιά του νησιού.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/caption.webp"
+    },
+    "hero": {
+      "kicker": "Πόλη Χίου • Αρχαία ιστορία",
+      "title": "Αρχαιολογικό Μουσείο Χίου",
+      "description": "Επισκεφθείτε Αρχαιολογικό Μουσείο Χίου και ανακαλύψτε την αρχαία ιστορία, τα ευρήματα, την κεραμική και την πολιτιστική κληρονομιά του νησιού.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/caption.webp",
+      "tags": [
+        "#archaeology",
+        "#chios_town",
+        "#ancient_chios",
+        "#museum_guide"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Τοποθεσία & πρόσβαση",
+        "text": "Βρίσκεται σε εύκολα προσβάσιμο σημείο και συνδυάζεται όμορφα με μια πολιτιστική διαδρομή στη Χίο."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Θεματική μουσείου",
+        "text": "Το μουσείο παρουσιάζει την αρχαία ιστορία, τα ευρήματα, την κεραμική και την πολιτιστική κληρονομιά του νησιού."
+      },
+      {
+        "icon": "💡",
+        "title": "Τοπική συμβουλή",
+        "text": "Συνδυάστε την επίσκεψη με κοντινή βόλτα, καφέ ή φαγητό για μια πιο ολοκληρωμένη εμπειρία."
+      }
+    ],
+    "highlights": {
+      "title": "Τι θα δείτε",
+      "items": [
+        "Την αρχαία ιστορία, τα ευρήματα, την κεραμική και την πολιτιστική κληρονομιά του νησιού",
+        "Σύνδεση με την ιστορία και την ταυτότητα της Χίου",
+        "Μια χρήσιμη πολιτιστική στάση για όλες τις εποχές"
+      ]
+    },
+    "experience": {
+      "title": "Γιατί αξίζει η επίσκεψη",
+      "paragraphs": [
+        "Επισκεφθείτε Αρχαιολογικό Μουσείο Χίου και ανακαλύψτε την αρχαία ιστορία, τα ευρήματα, την κεραμική και την πολιτιστική κληρονομιά του νησιού.",
+        "Είναι μια καλή στάση για να καταλάβετε καλύτερα το νησί πέρα από τις παραλίες και τα χωριά."
+      ]
+    },
+    "routeIdeas": {
+      "title": "Πώς να το συνδυάσετε",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Πολιτιστική βόλτα",
+          "text": "Συνδυάστε την επίσκεψη με κοντινή βόλτα, καφέ ή φαγητό για μια πιο ολοκληρωμένη εμπειρία."
+        },
+        {
+          "icon": "🚗",
+          "title": "Συνδυάστε κοντινά σημεία",
+          "text": "Βρίσκεται σε εύκολα προσβάσιμο σημείο και συνδυάζεται όμορφα με μια πολιτιστική διαδρομή στη Χίο."
+        },
+        {
+          "icon": "📷",
+          "title": "Αφήστε χρόνο",
+          "text": "Τα μουσεία αποκαλύπτουν περισσότερα όταν τα δείτε χωρίς βιασύνη."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "Η στρατηγική σας βάση",
+      "text": "Με βάση το Voulamandis House στον Κάμπο, μπορείτε να οργανώσετε εύκολα μουσεία, χωριά, παραλίες και γεύσεις της Χίου σε ισορροπημένες ημερήσιες διαδρομές.",
+      "linkLabel": "Μείνετε με ανθρώπους που γνωρίζουν το νησί.",
+      "href": "/el/domatia-xios/"
+    },
+    "relatedTitle": "Ανακαλύψτε περισσότερα μουσεία της Χίου",
+    "relatedText": "Συνεχίστε την πολιτιστική διαδρομή σας στη Χίο με αρχαιολογία, βυζαντινή τέχνη, ναυτική ιστορία, βιβλία, μαστίχα και λαογραφία."
+  },
+  {
+    "slug": "musee-archeologique-chios",
+    "seo": {
+      "canonicalPath": "/fr/musees-de-chios/musee-archeologique-chios/",
+      "title": "Musée archéologique de Chios | Guide culturel de Chios",
+      "description": "Visitez Musée archéologique de Chios et découvrez l’histoire ancienne, les objets, la céramique et le patrimoine de l’île.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/caption.webp"
+    },
+    "hero": {
+      "kicker": "Ville de Chios • Histoire ancienne",
+      "title": "Musée archéologique de Chios",
+      "description": "Visitez Musée archéologique de Chios et découvrez l’histoire ancienne, les objets, la céramique et le patrimoine de l’île.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/caption.webp",
+      "tags": [
+        "#archaeology",
+        "#chios_town",
+        "#ancient_chios",
+        "#museum_guide"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Emplacement & accès",
+        "text": "Il se trouve dans un secteur facile à intégrer à un itinéraire culturel à Chios."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Thème du musée",
+        "text": "Le musée présente l’histoire ancienne, les objets, la céramique et le patrimoine de l’île."
+      },
+      {
+        "icon": "💡",
+        "title": "Conseil local",
+        "text": "Combinez la visite avec une promenade, un café ou un repas à proximité pour une expérience plus complète."
+      }
+    ],
+    "highlights": {
+      "title": "À voir",
+      "items": [
+        "L’histoire ancienne, les objets, la céramique et le patrimoine de l’île",
+        "Lien avec l’histoire et l’identité de Chios",
+        "Une halte culturelle utile en toute saison"
+      ]
+    },
+    "experience": {
+      "title": "Pourquoi visiter",
+      "paragraphs": [
+        "Visitez Musée archéologique de Chios et découvrez l’histoire ancienne, les objets, la céramique et le patrimoine de l’île.",
+        "C’est une bonne étape pour mieux comprendre l’île au-delà des plages et des villages."
+      ]
+    },
+    "routeIdeas": {
+      "title": "Comment l’intégrer à votre itinéraire",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Promenade culturelle",
+          "text": "Combinez la visite avec une promenade, un café ou un repas à proximité pour une expérience plus complète."
+        },
+        {
+          "icon": "🚗",
+          "title": "Combinez les lieux proches",
+          "text": "Il se trouve dans un secteur facile à intégrer à un itinéraire culturel à Chios."
+        },
+        {
+          "icon": "📷",
+          "title": "Prenez votre temps",
+          "text": "Les musées se révèlent mieux quand on les visite sans hâte."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "Votre base stratégique",
+      "text": "Depuis Voulamandis House à Kampos, vous pouvez organiser facilement musées, villages, plages et gastronomie de Chios en belles journées équilibrées.",
+      "linkLabel": "Séjournez avec ceux qui connaissent le mieux l’île.",
+      "href": "/fr/chambres-a-chios/"
+    },
+    "relatedTitle": "Découvrez plus de musées de Chios",
+    "relatedText": "Poursuivez votre itinéraire culturel à Chios avec archéologie, art byzantin, histoire maritime, livres, mastic et folklore."
+  },
+  {
+    "slug": "archaeologisches-museum-chios",
+    "seo": {
+      "canonicalPath": "/de/museen-chios/archaeologisches-museum-chios/",
+      "title": "Archäologisches Museum Chios | Kulturführer für Chios",
+      "description": "Besuchen Sie Archäologisches Museum Chios und entdecken Sie antike Geschichte, Fundstücke, Keramik und Kulturerbe der Insel.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/caption.webp"
+    },
+    "hero": {
+      "kicker": "Chios-Stadt • Antike Geschichte",
+      "title": "Archäologisches Museum Chios",
+      "description": "Besuchen Sie Archäologisches Museum Chios und entdecken Sie antike Geschichte, Fundstücke, Keramik und Kulturerbe der Insel.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/caption.webp",
+      "tags": [
+        "#archaeology",
+        "#chios_town",
+        "#ancient_chios",
+        "#museum_guide"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Lage & Zugang",
+        "text": "Es liegt an einem gut erreichbaren Ort und lässt sich leicht in eine Kulturroute auf Chios einbauen."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Museumsschwerpunkt",
+        "text": "Das Museum zeigt antike Geschichte, Fundstücke, Keramik und Kulturerbe der Insel."
+      },
+      {
+        "icon": "💡",
+        "title": "Lokaler Tipp",
+        "text": "Kombinieren Sie den Besuch mit einem Spaziergang, Kaffee oder Essen in der Nähe für ein runderes Erlebnis."
+      }
+    ],
+    "highlights": {
+      "title": "Was Sie sehen können",
+      "items": [
+        "Antike Geschichte, Fundstücke, Keramik und Kulturerbe der Insel",
+        "Verbindung zur Geschichte und Identität von Chios",
+        "Ein sinnvoller Kulturstopp zu jeder Jahreszeit"
+      ]
+    },
+    "experience": {
+      "title": "Warum sich der Besuch lohnt",
+      "paragraphs": [
+        "Besuchen Sie Archäologisches Museum Chios und entdecken Sie antike Geschichte, Fundstücke, Keramik und Kulturerbe der Insel.",
+        "Es ist ein guter Stopp, um die Insel jenseits von Stränden und Dörfern besser zu verstehen."
+      ]
+    },
+    "routeIdeas": {
+      "title": "So kombinieren Sie den Besuch",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Kulturspaziergang",
+          "text": "Kombinieren Sie den Besuch mit einem Spaziergang, Kaffee oder Essen in der Nähe für ein runderes Erlebnis."
+        },
+        {
+          "icon": "🚗",
+          "title": "Nahe Orte kombinieren",
+          "text": "Es liegt an einem gut erreichbaren Ort und lässt sich leicht in eine Kulturroute auf Chios einbauen."
+        },
+        {
+          "icon": "📷",
+          "title": "Nehmen Sie sich Zeit",
+          "text": "Museen zeigen mehr, wenn man sie ohne Eile besucht."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "Ihre strategische Basis",
+      "text": "Von Voulamandis House in Kampos aus können Sie Museen, Dörfer, Strände und kulinarische Stopps auf Chios entspannt in Tagesrouten verbinden.",
+      "linkLabel": "Übernachten Sie bei Menschen, die die Insel kennen.",
+      "href": "/de/chios-zimmer/"
+    },
+    "relatedTitle": "Weitere Museen auf Chios entdecken",
+    "relatedText": "Setzen Sie Ihre Kulturroute auf Chios mit Archäologie, byzantinischer Kunst, Seefahrtsgeschichte, Büchern, Mastix und Volkskunde fort."
+  },
+  {
+    "slug": "museo-archeologico-chios",
+    "seo": {
+      "canonicalPath": "/it/musei-chios/museo-archeologico-chios/",
+      "title": "Museo Archeologico di Chios | Guida culturale di Chios",
+      "description": "Visita Museo Archeologico di Chios e scopri la storia antica, i reperti, la ceramica e il patrimonio dell’isola.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/caption.webp"
+    },
+    "hero": {
+      "kicker": "Città di Chios • Storia antica",
+      "title": "Museo Archeologico di Chios",
+      "description": "Visita Museo Archeologico di Chios e scopri la storia antica, i reperti, la ceramica e il patrimonio dell’isola.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/caption.webp",
+      "tags": [
+        "#archaeology",
+        "#chios_town",
+        "#ancient_chios",
+        "#museum_guide"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Posizione & accesso",
+        "text": "Si trova in una zona facile da inserire in un itinerario culturale a Chios."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Tema del museo",
+        "text": "Il museo presenta la storia antica, i reperti, la ceramica e il patrimonio dell’isola."
+      },
+      {
+        "icon": "💡",
+        "title": "Consiglio locale",
+        "text": "Combina la visita con una passeggiata, un caffè o un pasto nelle vicinanze per un’esperienza più completa."
+      }
+    ],
+    "highlights": {
+      "title": "Cosa vedere",
+      "items": [
+        "La storia antica, i reperti, la ceramica e il patrimonio dell’isola",
+        "Collegamento con la storia e l’identità di Chios",
+        "Una tappa culturale utile in ogni stagione"
+      ]
+    },
+    "experience": {
+      "title": "Perché visitarlo",
+      "paragraphs": [
+        "Visita Museo Archeologico di Chios e scopri la storia antica, i reperti, la ceramica e il patrimonio dell’isola.",
+        "È una tappa utile per capire meglio l’isola oltre alle spiagge e ai villaggi."
+      ]
+    },
+    "routeIdeas": {
+      "title": "Come combinarlo",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Passeggiata culturale",
+          "text": "Combina la visita con una passeggiata, un caffè o un pasto nelle vicinanze per un’esperienza più completa."
+        },
+        {
+          "icon": "🚗",
+          "title": "Combina luoghi vicini",
+          "text": "Si trova in una zona facile da inserire in un itinerario culturale a Chios."
+        },
+        {
+          "icon": "📷",
+          "title": "Prenditi tempo",
+          "text": "I musei rivelano di più quando li visiti senza fretta."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "La tua base strategica",
+      "text": "Da Voulamandis House a Kampos puoi organizzare facilmente musei, villaggi, spiagge e sapori di Chios in itinerari giornalieri equilibrati.",
+      "linkLabel": "Soggiorna con chi conosce meglio l’isola.",
+      "href": "/it/camere-a-chios/"
+    },
+    "relatedTitle": "Scopri altri musei di Chios",
+    "relatedText": "Continua il tuo itinerario culturale a Chios con archeologia, arte bizantina, storia marittima, libri, mastice e folklore."
+  },
+  {
+    "slug": "museo-arqueologico-chios",
+    "seo": {
+      "canonicalPath": "/es/museos-chios/museo-arqueologico-chios/",
+      "title": "Museo Arqueológico de Chios | Guía cultural de Chios",
+      "description": "Visita Museo Arqueológico de Chios y descubre la historia antigua, los hallazgos, la cerámica y el patrimonio de la isla.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/caption.webp"
+    },
+    "hero": {
+      "kicker": "Ciudad de Chios • Historia antigua",
+      "title": "Museo Arqueológico de Chios",
+      "description": "Visita Museo Arqueológico de Chios y descubre la historia antigua, los hallazgos, la cerámica y el patrimonio de la isla.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/caption.webp",
+      "tags": [
+        "#archaeology",
+        "#chios_town",
+        "#ancient_chios",
+        "#museum_guide"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Ubicación y acceso",
+        "text": "Está en una zona fácil de incluir en una ruta cultural por Chios."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Tema del museo",
+        "text": "El museo presenta la historia antigua, los hallazgos, la cerámica y el patrimonio de la isla."
+      },
+      {
+        "icon": "💡",
+        "title": "Consejo local",
+        "text": "Combina la visita con un paseo, un café o una comida cercana para una experiencia más completa."
+      }
+    ],
+    "highlights": {
+      "title": "Qué ver",
+      "items": [
+        "La historia antigua, los hallazgos, la cerámica y el patrimonio de la isla",
+        "Conexión con la historia y la identidad de Chios",
+        "Una parada cultural útil en cualquier época"
+      ]
+    },
+    "experience": {
+      "title": "Por qué visitarlo",
+      "paragraphs": [
+        "Visita Museo Arqueológico de Chios y descubre la historia antigua, los hallazgos, la cerámica y el patrimonio de la isla.",
+        "Es una buena parada para comprender mejor la isla más allá de sus playas y pueblos."
+      ]
+    },
+    "routeIdeas": {
+      "title": "Cómo combinarlo",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Paseo cultural",
+          "text": "Combina la visita con un paseo, un café o una comida cercana para una experiencia más completa."
+        },
+        {
+          "icon": "🚗",
+          "title": "Combina lugares cercanos",
+          "text": "Está en una zona fácil de incluir en una ruta cultural por Chios."
+        },
+        {
+          "icon": "📷",
+          "title": "Tómate tu tiempo",
+          "text": "Los museos se disfrutan más cuando se visitan sin prisa."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "Tu base estratégica",
+      "text": "Desde Voulamandis House en Kampos puedes organizar fácilmente museos, pueblos, playas y sabores de Chios en rutas diarias equilibradas.",
+      "linkLabel": "Alójate con quienes mejor conocen la isla.",
+      "href": "/es/habitaciones-en-chios/"
+    },
+    "relatedTitle": "Descubre más museos de Chios",
+    "relatedText": "Continúa tu ruta cultural por Chios con arqueología, arte bizantino, historia marítima, libros, mastiha y folclore."
+  },
+  {
+    "slug": "arkeoloji-muzesi-sakiz",
+    "seo": {
+      "canonicalPath": "/tr/sakiz-adasi-muzeleri/arkeoloji-muzesi-sakiz/",
+      "title": "Sakız Arkeoloji Müzesi | Sakız Adası kültür rehberi",
+      "description": "Ziyaret edin Sakız Arkeoloji Müzesi ve keşfedin adanın antik tarihini, buluntularını, seramiklerini ve kültürel mirasını.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/caption.webp"
+    },
+    "hero": {
+      "kicker": "Sakız şehir merkezi • Antik tarih",
+      "title": "Sakız Arkeoloji Müzesi",
+      "description": "Ziyaret edin Sakız Arkeoloji Müzesi ve keşfedin adanın antik tarihini, buluntularını, seramiklerini ve kültürel mirasını.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/caption.webp",
+      "tags": [
+        "#archaeology",
+        "#chios_town",
+        "#ancient_chios",
+        "#museum_guide"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Konum & ulaşım",
+        "text": "Sakız Adası’ndaki kültür rotalarına kolayca eklenebilecek bir konumdadır."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Müze teması",
+        "text": "Müze adanın antik tarihini, buluntularını, seramiklerini ve kültürel mirasını."
+      },
+      {
+        "icon": "💡",
+        "title": "Yerel tavsiye",
+        "text": "Ziyareti yakınlarda kısa bir yürüyüş, kahve veya yemek molasıyla birleştirerek daha tamamlayıcı bir deneyim yaşayabilirsiniz."
+      }
+    ],
+    "highlights": {
+      "title": "Neler görülebilir",
+      "items": [
+        "Adanın antik tarihini, buluntularını, seramiklerini ve kültürel mirasını",
+        "Sakız’ın tarihi ve kimliğiyle bağlantı",
+        "Her mevsim için anlamlı bir kültür durağı"
+      ]
+    },
+    "experience": {
+      "title": "Neden ziyaret etmeli",
+      "paragraphs": [
+        "Ziyaret edin Sakız Arkeoloji Müzesi ve keşfedin adanın antik tarihini, buluntularını, seramiklerini ve kültürel mirasını.",
+        "Plajların ve köylerin ötesinde adayı daha iyi anlamak için iyi bir duraktır."
+      ]
+    },
+    "routeIdeas": {
+      "title": "Nasıl birleştirilir",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Kültür yürüyüşü",
+          "text": "Ziyareti yakınlarda kısa bir yürüyüş, kahve veya yemek molasıyla birleştirerek daha tamamlayıcı bir deneyim yaşayabilirsiniz."
+        },
+        {
+          "icon": "🚗",
+          "title": "Yakın noktaları birleştirin",
+          "text": "Sakız Adası’ndaki kültür rotalarına kolayca eklenebilecek bir konumdadır."
+        },
+        {
+          "icon": "📷",
+          "title": "Zaman ayırın",
+          "text": "Müzeler acele etmeden gezildiğinde daha çok şey anlatır."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "Stratejik üssünüz",
+      "text": "Kampos’taki Voulamandis House’tan müzeleri, köyleri, plajları ve Sakız lezzetlerini dengeli günlük rotalar halinde kolayca planlayabilirsiniz.",
+      "linkLabel": "Adayı en iyi bilenlerle konaklayın.",
+      "href": "/tr/sakiz-adasi-odalari/"
+    },
+    "relatedTitle": "Daha fazla Sakız müzesi keşfedin",
+    "relatedText": "Sakız Adası’ndaki kültür rotanıza arkeoloji, Bizans sanatı, denizcilik tarihi, kitaplar, mastik ve folklorla devam edin."
+  },
+  {
+    "slug": "vyzantino-mouseio-xios",
+    "seo": {
+      "canonicalPath": "/el/mouseia-xios/vyzantino-mouseio-xios/",
+      "title": "Βυζαντινό Μουσείο Χίου | Πολιτιστικός οδηγός Χίου",
+      "description": "Επισκεφθείτε Βυζαντινό Μουσείο Χίου και ανακαλύψτε τη βυζαντινή και μεταβυζαντινή τέχνη, τις εικόνες και τη θρησκευτική κληρονομιά.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp"
+    },
+    "hero": {
+      "kicker": "Πόλη Χίου • Βυζαντινή κληρονομιά",
+      "title": "Βυζαντινό Μουσείο Χίου",
+      "description": "Επισκεφθείτε Βυζαντινό Μουσείο Χίου και ανακαλύψτε τη βυζαντινή και μεταβυζαντινή τέχνη, τις εικόνες και τη θρησκευτική κληρονομιά.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
+      "tags": [
+        "#byzantine_museum",
+        "#icons",
+        "#chios_town",
+        "#culture"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Τοποθεσία & πρόσβαση",
+        "text": "Βρίσκεται σε εύκολα προσβάσιμο σημείο και συνδυάζεται όμορφα με μια πολιτιστική διαδρομή στη Χίο."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Θεματική μουσείου",
+        "text": "Το μουσείο παρουσιάζει τη βυζαντινή και μεταβυζαντινή τέχνη, τις εικόνες και τη θρησκευτική κληρονομιά."
+      },
+      {
+        "icon": "💡",
+        "title": "Τοπική συμβουλή",
+        "text": "Συνδυάστε την επίσκεψη με κοντινή βόλτα, καφέ ή φαγητό για μια πιο ολοκληρωμένη εμπειρία."
+      }
+    ],
+    "highlights": {
+      "title": "Τι θα δείτε",
+      "items": [
+        "Τη βυζαντινή και μεταβυζαντινή τέχνη, τις εικόνες και τη θρησκευτική κληρονομιά",
+        "Σύνδεση με την ιστορία και την ταυτότητα της Χίου",
+        "Μια χρήσιμη πολιτιστική στάση για όλες τις εποχές"
+      ]
+    },
+    "experience": {
+      "title": "Γιατί αξίζει η επίσκεψη",
+      "paragraphs": [
+        "Επισκεφθείτε Βυζαντινό Μουσείο Χίου και ανακαλύψτε τη βυζαντινή και μεταβυζαντινή τέχνη, τις εικόνες και τη θρησκευτική κληρονομιά.",
+        "Είναι μια καλή στάση για να καταλάβετε καλύτερα το νησί πέρα από τις παραλίες και τα χωριά."
+      ]
+    },
+    "routeIdeas": {
+      "title": "Πώς να το συνδυάσετε",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Πολιτιστική βόλτα",
+          "text": "Συνδυάστε την επίσκεψη με κοντινή βόλτα, καφέ ή φαγητό για μια πιο ολοκληρωμένη εμπειρία."
+        },
+        {
+          "icon": "🚗",
+          "title": "Συνδυάστε κοντινά σημεία",
+          "text": "Βρίσκεται σε εύκολα προσβάσιμο σημείο και συνδυάζεται όμορφα με μια πολιτιστική διαδρομή στη Χίο."
+        },
+        {
+          "icon": "📷",
+          "title": "Αφήστε χρόνο",
+          "text": "Τα μουσεία αποκαλύπτουν περισσότερα όταν τα δείτε χωρίς βιασύνη."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "Η στρατηγική σας βάση",
+      "text": "Με βάση το Voulamandis House στον Κάμπο, μπορείτε να οργανώσετε εύκολα μουσεία, χωριά, παραλίες και γεύσεις της Χίου σε ισορροπημένες ημερήσιες διαδρομές.",
+      "linkLabel": "Μείνετε με ανθρώπους που γνωρίζουν το νησί.",
+      "href": "/el/domatia-xios/"
+    },
+    "relatedTitle": "Ανακαλύψτε περισσότερα μουσεία της Χίου",
+    "relatedText": "Συνεχίστε την πολιτιστική διαδρομή σας στη Χίο με αρχαιολογία, βυζαντινή τέχνη, ναυτική ιστορία, βιβλία, μαστίχα και λαογραφία."
+  },
+  {
+    "slug": "musee-byzantin-chios",
+    "seo": {
+      "canonicalPath": "/fr/musees-de-chios/musee-byzantin-chios/",
+      "title": "Musée byzantin de Chios | Guide culturel de Chios",
+      "description": "Visitez Musée byzantin de Chios et découvrez l’art byzantin et post-byzantin, les icônes et le patrimoine religieux.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp"
+    },
+    "hero": {
+      "kicker": "Ville de Chios • Patrimoine byzantin",
+      "title": "Musée byzantin de Chios",
+      "description": "Visitez Musée byzantin de Chios et découvrez l’art byzantin et post-byzantin, les icônes et le patrimoine religieux.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
+      "tags": [
+        "#byzantine_museum",
+        "#icons",
+        "#chios_town",
+        "#culture"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Emplacement & accès",
+        "text": "Il se trouve dans un secteur facile à intégrer à un itinéraire culturel à Chios."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Thème du musée",
+        "text": "Le musée présente l’art byzantin et post-byzantin, les icônes et le patrimoine religieux."
+      },
+      {
+        "icon": "💡",
+        "title": "Conseil local",
+        "text": "Combinez la visite avec une promenade, un café ou un repas à proximité pour une expérience plus complète."
+      }
+    ],
+    "highlights": {
+      "title": "À voir",
+      "items": [
+        "L’art byzantin et post-byzantin, les icônes et le patrimoine religieux",
+        "Lien avec l’histoire et l’identité de Chios",
+        "Une halte culturelle utile en toute saison"
+      ]
+    },
+    "experience": {
+      "title": "Pourquoi visiter",
+      "paragraphs": [
+        "Visitez Musée byzantin de Chios et découvrez l’art byzantin et post-byzantin, les icônes et le patrimoine religieux.",
+        "C’est une bonne étape pour mieux comprendre l’île au-delà des plages et des villages."
+      ]
+    },
+    "routeIdeas": {
+      "title": "Comment l’intégrer à votre itinéraire",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Promenade culturelle",
+          "text": "Combinez la visite avec une promenade, un café ou un repas à proximité pour une expérience plus complète."
+        },
+        {
+          "icon": "🚗",
+          "title": "Combinez les lieux proches",
+          "text": "Il se trouve dans un secteur facile à intégrer à un itinéraire culturel à Chios."
+        },
+        {
+          "icon": "📷",
+          "title": "Prenez votre temps",
+          "text": "Les musées se révèlent mieux quand on les visite sans hâte."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "Votre base stratégique",
+      "text": "Depuis Voulamandis House à Kampos, vous pouvez organiser facilement musées, villages, plages et gastronomie de Chios en belles journées équilibrées.",
+      "linkLabel": "Séjournez avec ceux qui connaissent le mieux l’île.",
+      "href": "/fr/chambres-a-chios/"
+    },
+    "relatedTitle": "Découvrez plus de musées de Chios",
+    "relatedText": "Poursuivez votre itinéraire culturel à Chios avec archéologie, art byzantin, histoire maritime, livres, mastic et folklore."
+  },
+  {
+    "slug": "byzantinisches-museum-chios",
+    "seo": {
+      "canonicalPath": "/de/museen-chios/byzantinisches-museum-chios/",
+      "title": "Byzantinisches Museum Chios | Kulturführer für Chios",
+      "description": "Besuchen Sie Byzantinisches Museum Chios und entdecken Sie byzantinische und postbyzantinische Kunst, Ikonen und religiöses Erbe.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp"
+    },
+    "hero": {
+      "kicker": "Chios-Stadt • Byzantinisches Erbe",
+      "title": "Byzantinisches Museum Chios",
+      "description": "Besuchen Sie Byzantinisches Museum Chios und entdecken Sie byzantinische und postbyzantinische Kunst, Ikonen und religiöses Erbe.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
+      "tags": [
+        "#byzantine_museum",
+        "#icons",
+        "#chios_town",
+        "#culture"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Lage & Zugang",
+        "text": "Es liegt an einem gut erreichbaren Ort und lässt sich leicht in eine Kulturroute auf Chios einbauen."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Museumsschwerpunkt",
+        "text": "Das Museum zeigt byzantinische und postbyzantinische Kunst, Ikonen und religiöses Erbe."
+      },
+      {
+        "icon": "💡",
+        "title": "Lokaler Tipp",
+        "text": "Kombinieren Sie den Besuch mit einem Spaziergang, Kaffee oder Essen in der Nähe für ein runderes Erlebnis."
+      }
+    ],
+    "highlights": {
+      "title": "Was Sie sehen können",
+      "items": [
+        "Byzantinische und postbyzantinische Kunst, Ikonen und religiöses Erbe",
+        "Verbindung zur Geschichte und Identität von Chios",
+        "Ein sinnvoller Kulturstopp zu jeder Jahreszeit"
+      ]
+    },
+    "experience": {
+      "title": "Warum sich der Besuch lohnt",
+      "paragraphs": [
+        "Besuchen Sie Byzantinisches Museum Chios und entdecken Sie byzantinische und postbyzantinische Kunst, Ikonen und religiöses Erbe.",
+        "Es ist ein guter Stopp, um die Insel jenseits von Stränden und Dörfern besser zu verstehen."
+      ]
+    },
+    "routeIdeas": {
+      "title": "So kombinieren Sie den Besuch",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Kulturspaziergang",
+          "text": "Kombinieren Sie den Besuch mit einem Spaziergang, Kaffee oder Essen in der Nähe für ein runderes Erlebnis."
+        },
+        {
+          "icon": "🚗",
+          "title": "Nahe Orte kombinieren",
+          "text": "Es liegt an einem gut erreichbaren Ort und lässt sich leicht in eine Kulturroute auf Chios einbauen."
+        },
+        {
+          "icon": "📷",
+          "title": "Nehmen Sie sich Zeit",
+          "text": "Museen zeigen mehr, wenn man sie ohne Eile besucht."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "Ihre strategische Basis",
+      "text": "Von Voulamandis House in Kampos aus können Sie Museen, Dörfer, Strände und kulinarische Stopps auf Chios entspannt in Tagesrouten verbinden.",
+      "linkLabel": "Übernachten Sie bei Menschen, die die Insel kennen.",
+      "href": "/de/chios-zimmer/"
+    },
+    "relatedTitle": "Weitere Museen auf Chios entdecken",
+    "relatedText": "Setzen Sie Ihre Kulturroute auf Chios mit Archäologie, byzantinischer Kunst, Seefahrtsgeschichte, Büchern, Mastix und Volkskunde fort."
+  },
+  {
+    "slug": "museo-bizantino-chios",
+    "seo": {
+      "canonicalPath": "/it/musei-chios/museo-bizantino-chios/",
+      "title": "Museo Bizantino di Chios | Guida culturale di Chios",
+      "description": "Visita Museo Bizantino di Chios e scopri l’arte bizantina e post-bizantina, le icone e il patrimonio religioso.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp"
+    },
+    "hero": {
+      "kicker": "Città di Chios • Patrimonio bizantino",
+      "title": "Museo Bizantino di Chios",
+      "description": "Visita Museo Bizantino di Chios e scopri l’arte bizantina e post-bizantina, le icone e il patrimonio religioso.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
+      "tags": [
+        "#byzantine_museum",
+        "#icons",
+        "#chios_town",
+        "#culture"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Posizione & accesso",
+        "text": "Si trova in una zona facile da inserire in un itinerario culturale a Chios."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Tema del museo",
+        "text": "Il museo presenta l’arte bizantina e post-bizantina, le icone e il patrimonio religioso."
+      },
+      {
+        "icon": "💡",
+        "title": "Consiglio locale",
+        "text": "Combina la visita con una passeggiata, un caffè o un pasto nelle vicinanze per un’esperienza più completa."
+      }
+    ],
+    "highlights": {
+      "title": "Cosa vedere",
+      "items": [
+        "L’arte bizantina e post-bizantina, le icone e il patrimonio religioso",
+        "Collegamento con la storia e l’identità di Chios",
+        "Una tappa culturale utile in ogni stagione"
+      ]
+    },
+    "experience": {
+      "title": "Perché visitarlo",
+      "paragraphs": [
+        "Visita Museo Bizantino di Chios e scopri l’arte bizantina e post-bizantina, le icone e il patrimonio religioso.",
+        "È una tappa utile per capire meglio l’isola oltre alle spiagge e ai villaggi."
+      ]
+    },
+    "routeIdeas": {
+      "title": "Come combinarlo",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Passeggiata culturale",
+          "text": "Combina la visita con una passeggiata, un caffè o un pasto nelle vicinanze per un’esperienza più completa."
+        },
+        {
+          "icon": "🚗",
+          "title": "Combina luoghi vicini",
+          "text": "Si trova in una zona facile da inserire in un itinerario culturale a Chios."
+        },
+        {
+          "icon": "📷",
+          "title": "Prenditi tempo",
+          "text": "I musei rivelano di più quando li visiti senza fretta."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "La tua base strategica",
+      "text": "Da Voulamandis House a Kampos puoi organizzare facilmente musei, villaggi, spiagge e sapori di Chios in itinerari giornalieri equilibrati.",
+      "linkLabel": "Soggiorna con chi conosce meglio l’isola.",
+      "href": "/it/camere-a-chios/"
+    },
+    "relatedTitle": "Scopri altri musei di Chios",
+    "relatedText": "Continua il tuo itinerario culturale a Chios con archeologia, arte bizantina, storia marittima, libri, mastice e folklore."
+  },
+  {
+    "slug": "museo-bizantino-chios",
+    "seo": {
+      "canonicalPath": "/es/museos-chios/museo-bizantino-chios/",
+      "title": "Museo Bizantino de Chios | Guía cultural de Chios",
+      "description": "Visita Museo Bizantino de Chios y descubre el arte bizantino y posbizantino, los iconos y el patrimonio religioso.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp"
+    },
+    "hero": {
+      "kicker": "Ciudad de Chios • Patrimonio bizantino",
+      "title": "Museo Bizantino de Chios",
+      "description": "Visita Museo Bizantino de Chios y descubre el arte bizantino y posbizantino, los iconos y el patrimonio religioso.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
+      "tags": [
+        "#byzantine_museum",
+        "#icons",
+        "#chios_town",
+        "#culture"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Ubicación y acceso",
+        "text": "Está en una zona fácil de incluir en una ruta cultural por Chios."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Tema del museo",
+        "text": "El museo presenta el arte bizantino y posbizantino, los iconos y el patrimonio religioso."
+      },
+      {
+        "icon": "💡",
+        "title": "Consejo local",
+        "text": "Combina la visita con un paseo, un café o una comida cercana para una experiencia más completa."
+      }
+    ],
+    "highlights": {
+      "title": "Qué ver",
+      "items": [
+        "El arte bizantino y posbizantino, los iconos y el patrimonio religioso",
+        "Conexión con la historia y la identidad de Chios",
+        "Una parada cultural útil en cualquier época"
+      ]
+    },
+    "experience": {
+      "title": "Por qué visitarlo",
+      "paragraphs": [
+        "Visita Museo Bizantino de Chios y descubre el arte bizantino y posbizantino, los iconos y el patrimonio religioso.",
+        "Es una buena parada para comprender mejor la isla más allá de sus playas y pueblos."
+      ]
+    },
+    "routeIdeas": {
+      "title": "Cómo combinarlo",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Paseo cultural",
+          "text": "Combina la visita con un paseo, un café o una comida cercana para una experiencia más completa."
+        },
+        {
+          "icon": "🚗",
+          "title": "Combina lugares cercanos",
+          "text": "Está en una zona fácil de incluir en una ruta cultural por Chios."
+        },
+        {
+          "icon": "📷",
+          "title": "Tómate tu tiempo",
+          "text": "Los museos se disfrutan más cuando se visitan sin prisa."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "Tu base estratégica",
+      "text": "Desde Voulamandis House en Kampos puedes organizar fácilmente museos, pueblos, playas y sabores de Chios en rutas diarias equilibradas.",
+      "linkLabel": "Alójate con quienes mejor conocen la isla.",
+      "href": "/es/habitaciones-en-chios/"
+    },
+    "relatedTitle": "Descubre más museos de Chios",
+    "relatedText": "Continúa tu ruta cultural por Chios con arqueología, arte bizantino, historia marítima, libros, mastiha y folclore."
+  },
+  {
+    "slug": "bizans-muzesi-sakiz",
+    "seo": {
+      "canonicalPath": "/tr/sakiz-adasi-muzeleri/bizans-muzesi-sakiz/",
+      "title": "Sakız Bizans Müzesi | Sakız Adası kültür rehberi",
+      "description": "Ziyaret edin Sakız Bizans Müzesi ve keşfedin Bizans ve Bizans sonrası sanatı, ikonaları ve dini mirası.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp"
+    },
+    "hero": {
+      "kicker": "Sakız şehir merkezi • Bizans mirası",
+      "title": "Sakız Bizans Müzesi",
+      "description": "Ziyaret edin Sakız Bizans Müzesi ve keşfedin Bizans ve Bizans sonrası sanatı, ikonaları ve dini mirası.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
+      "tags": [
+        "#byzantine_museum",
+        "#icons",
+        "#chios_town",
+        "#culture"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Konum & ulaşım",
+        "text": "Sakız Adası’ndaki kültür rotalarına kolayca eklenebilecek bir konumdadır."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Müze teması",
+        "text": "Müze Bizans ve Bizans sonrası sanatı, ikonaları ve dini mirası."
+      },
+      {
+        "icon": "💡",
+        "title": "Yerel tavsiye",
+        "text": "Ziyareti yakınlarda kısa bir yürüyüş, kahve veya yemek molasıyla birleştirerek daha tamamlayıcı bir deneyim yaşayabilirsiniz."
+      }
+    ],
+    "highlights": {
+      "title": "Neler görülebilir",
+      "items": [
+        "Bizans ve Bizans sonrası sanatı, ikonaları ve dini mirası",
+        "Sakız’ın tarihi ve kimliğiyle bağlantı",
+        "Her mevsim için anlamlı bir kültür durağı"
+      ]
+    },
+    "experience": {
+      "title": "Neden ziyaret etmeli",
+      "paragraphs": [
+        "Ziyaret edin Sakız Bizans Müzesi ve keşfedin Bizans ve Bizans sonrası sanatı, ikonaları ve dini mirası.",
+        "Plajların ve köylerin ötesinde adayı daha iyi anlamak için iyi bir duraktır."
+      ]
+    },
+    "routeIdeas": {
+      "title": "Nasıl birleştirilir",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Kültür yürüyüşü",
+          "text": "Ziyareti yakınlarda kısa bir yürüyüş, kahve veya yemek molasıyla birleştirerek daha tamamlayıcı bir deneyim yaşayabilirsiniz."
+        },
+        {
+          "icon": "🚗",
+          "title": "Yakın noktaları birleştirin",
+          "text": "Sakız Adası’ndaki kültür rotalarına kolayca eklenebilecek bir konumdadır."
+        },
+        {
+          "icon": "📷",
+          "title": "Zaman ayırın",
+          "text": "Müzeler acele etmeden gezildiğinde daha çok şey anlatır."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "Stratejik üssünüz",
+      "text": "Kampos’taki Voulamandis House’tan müzeleri, köyleri, plajları ve Sakız lezzetlerini dengeli günlük rotalar halinde kolayca planlayabilirsiniz.",
+      "linkLabel": "Adayı en iyi bilenlerle konaklayın.",
+      "href": "/tr/sakiz-adasi-odalari/"
+    },
+    "relatedTitle": "Daha fazla Sakız müzesi keşfedin",
+    "relatedText": "Sakız Adası’ndaki kültür rotanıza arkeoloji, Bizans sanatı, denizcilik tarihi, kitaplar, mastik ve folklorla devam edin."
+  },
+  {
+    "slug": "vivliothiki-korai-xios",
+    "seo": {
+      "canonicalPath": "/el/mouseia-xios/vivliothiki-korai-xios/",
+      "title": "Βιβλιοθήκη Κοραή | Πολιτιστικός οδηγός Χίου",
+      "description": "Επισκεφθείτε Βιβλιοθήκη Κοραή και ανακαλύψτε σπάνια βιβλία, χειρόγραφα, αρχεία και την ελληνική πνευματική παράδοση.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/vivlitothiki-korai-1.webp"
+    },
+    "hero": {
+      "kicker": "Πόλη Χίου • Βιβλία & πολιτισμός",
+      "title": "Βιβλιοθήκη Κοραή",
+      "description": "Επισκεφθείτε Βιβλιοθήκη Κοραή και ανακαλύψτε σπάνια βιβλία, χειρόγραφα, αρχεία και την ελληνική πνευματική παράδοση.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/vivlitothiki-korai-1.webp",
+      "tags": [
+        "#koraes_library",
+        "#rare_books",
+        "#manuscripts",
+        "#chios_town"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Τοποθεσία & πρόσβαση",
+        "text": "Βρίσκεται σε εύκολα προσβάσιμο σημείο και συνδυάζεται όμορφα με μια πολιτιστική διαδρομή στη Χίο."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Θεματική μουσείου",
+        "text": "Το μουσείο παρουσιάζει σπάνια βιβλία, χειρόγραφα, αρχεία και την ελληνική πνευματική παράδοση."
+      },
+      {
+        "icon": "💡",
+        "title": "Τοπική συμβουλή",
+        "text": "Συνδυάστε την επίσκεψη με κοντινή βόλτα, καφέ ή φαγητό για μια πιο ολοκληρωμένη εμπειρία."
+      }
+    ],
+    "highlights": {
+      "title": "Τι θα δείτε",
+      "items": [
+        "Σπάνια βιβλία, χειρόγραφα, αρχεία και την ελληνική πνευματική παράδοση",
+        "Σύνδεση με την ιστορία και την ταυτότητα της Χίου",
+        "Μια χρήσιμη πολιτιστική στάση για όλες τις εποχές"
+      ]
+    },
+    "experience": {
+      "title": "Γιατί αξίζει η επίσκεψη",
+      "paragraphs": [
+        "Επισκεφθείτε Βιβλιοθήκη Κοραή και ανακαλύψτε σπάνια βιβλία, χειρόγραφα, αρχεία και την ελληνική πνευματική παράδοση.",
+        "Είναι μια καλή στάση για να καταλάβετε καλύτερα το νησί πέρα από τις παραλίες και τα χωριά."
+      ]
+    },
+    "routeIdeas": {
+      "title": "Πώς να το συνδυάσετε",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Πολιτιστική βόλτα",
+          "text": "Συνδυάστε την επίσκεψη με κοντινή βόλτα, καφέ ή φαγητό για μια πιο ολοκληρωμένη εμπειρία."
+        },
+        {
+          "icon": "🚗",
+          "title": "Συνδυάστε κοντινά σημεία",
+          "text": "Βρίσκεται σε εύκολα προσβάσιμο σημείο και συνδυάζεται όμορφα με μια πολιτιστική διαδρομή στη Χίο."
+        },
+        {
+          "icon": "📷",
+          "title": "Αφήστε χρόνο",
+          "text": "Τα μουσεία αποκαλύπτουν περισσότερα όταν τα δείτε χωρίς βιασύνη."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "Η στρατηγική σας βάση",
+      "text": "Με βάση το Voulamandis House στον Κάμπο, μπορείτε να οργανώσετε εύκολα μουσεία, χωριά, παραλίες και γεύσεις της Χίου σε ισορροπημένες ημερήσιες διαδρομές.",
+      "linkLabel": "Μείνετε με ανθρώπους που γνωρίζουν το νησί.",
+      "href": "/el/domatia-xios/"
+    },
+    "relatedTitle": "Ανακαλύψτε περισσότερα μουσεία της Χίου",
+    "relatedText": "Συνεχίστε την πολιτιστική διαδρομή σας στη Χίο με αρχαιολογία, βυζαντινή τέχνη, ναυτική ιστορία, βιβλία, μαστίχα και λαογραφία."
+  },
+  {
+    "slug": "bibliotheque-korais-chios",
+    "seo": {
+      "canonicalPath": "/fr/musees-de-chios/bibliotheque-korais-chios/",
+      "title": "Bibliothèque Korais | Guide culturel de Chios",
+      "description": "Visitez Bibliothèque Korais et découvrez les livres rares, manuscrits, archives et la tradition intellectuelle grecque.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/vivlitothiki-korai-1.webp"
+    },
+    "hero": {
+      "kicker": "Ville de Chios • Livres & culture",
+      "title": "Bibliothèque Korais",
+      "description": "Visitez Bibliothèque Korais et découvrez les livres rares, manuscrits, archives et la tradition intellectuelle grecque.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/vivlitothiki-korai-1.webp",
+      "tags": [
+        "#koraes_library",
+        "#rare_books",
+        "#manuscripts",
+        "#chios_town"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Emplacement & accès",
+        "text": "Il se trouve dans un secteur facile à intégrer à un itinéraire culturel à Chios."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Thème du musée",
+        "text": "Le musée présente les livres rares, manuscrits, archives et la tradition intellectuelle grecque."
+      },
+      {
+        "icon": "💡",
+        "title": "Conseil local",
+        "text": "Combinez la visite avec une promenade, un café ou un repas à proximité pour une expérience plus complète."
+      }
+    ],
+    "highlights": {
+      "title": "À voir",
+      "items": [
+        "Les livres rares, manuscrits, archives et la tradition intellectuelle grecque",
+        "Lien avec l’histoire et l’identité de Chios",
+        "Une halte culturelle utile en toute saison"
+      ]
+    },
+    "experience": {
+      "title": "Pourquoi visiter",
+      "paragraphs": [
+        "Visitez Bibliothèque Korais et découvrez les livres rares, manuscrits, archives et la tradition intellectuelle grecque.",
+        "C’est une bonne étape pour mieux comprendre l’île au-delà des plages et des villages."
+      ]
+    },
+    "routeIdeas": {
+      "title": "Comment l’intégrer à votre itinéraire",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Promenade culturelle",
+          "text": "Combinez la visite avec une promenade, un café ou un repas à proximité pour une expérience plus complète."
+        },
+        {
+          "icon": "🚗",
+          "title": "Combinez les lieux proches",
+          "text": "Il se trouve dans un secteur facile à intégrer à un itinéraire culturel à Chios."
+        },
+        {
+          "icon": "📷",
+          "title": "Prenez votre temps",
+          "text": "Les musées se révèlent mieux quand on les visite sans hâte."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "Votre base stratégique",
+      "text": "Depuis Voulamandis House à Kampos, vous pouvez organiser facilement musées, villages, plages et gastronomie de Chios en belles journées équilibrées.",
+      "linkLabel": "Séjournez avec ceux qui connaissent le mieux l’île.",
+      "href": "/fr/chambres-a-chios/"
+    },
+    "relatedTitle": "Découvrez plus de musées de Chios",
+    "relatedText": "Poursuivez votre itinéraire culturel à Chios avec archéologie, art byzantin, histoire maritime, livres, mastic et folklore."
+  },
+  {
+    "slug": "korais-bibliothek-chios",
+    "seo": {
+      "canonicalPath": "/de/museen-chios/korais-bibliothek-chios/",
+      "title": "Korais-Bibliothek | Kulturführer für Chios",
+      "description": "Besuchen Sie Korais-Bibliothek und entdecken Sie seltene Bücher, Handschriften, Archive und griechische Geistesgeschichte.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/vivlitothiki-korai-1.webp"
+    },
+    "hero": {
+      "kicker": "Chios-Stadt • Bücher & Kultur",
+      "title": "Korais-Bibliothek",
+      "description": "Besuchen Sie Korais-Bibliothek und entdecken Sie seltene Bücher, Handschriften, Archive und griechische Geistesgeschichte.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/vivlitothiki-korai-1.webp",
+      "tags": [
+        "#koraes_library",
+        "#rare_books",
+        "#manuscripts",
+        "#chios_town"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Lage & Zugang",
+        "text": "Es liegt an einem gut erreichbaren Ort und lässt sich leicht in eine Kulturroute auf Chios einbauen."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Museumsschwerpunkt",
+        "text": "Das Museum zeigt seltene Bücher, Handschriften, Archive und griechische Geistesgeschichte."
+      },
+      {
+        "icon": "💡",
+        "title": "Lokaler Tipp",
+        "text": "Kombinieren Sie den Besuch mit einem Spaziergang, Kaffee oder Essen in der Nähe für ein runderes Erlebnis."
+      }
+    ],
+    "highlights": {
+      "title": "Was Sie sehen können",
+      "items": [
+        "Seltene Bücher, Handschriften, Archive und griechische Geistesgeschichte",
+        "Verbindung zur Geschichte und Identität von Chios",
+        "Ein sinnvoller Kulturstopp zu jeder Jahreszeit"
+      ]
+    },
+    "experience": {
+      "title": "Warum sich der Besuch lohnt",
+      "paragraphs": [
+        "Besuchen Sie Korais-Bibliothek und entdecken Sie seltene Bücher, Handschriften, Archive und griechische Geistesgeschichte.",
+        "Es ist ein guter Stopp, um die Insel jenseits von Stränden und Dörfern besser zu verstehen."
+      ]
+    },
+    "routeIdeas": {
+      "title": "So kombinieren Sie den Besuch",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Kulturspaziergang",
+          "text": "Kombinieren Sie den Besuch mit einem Spaziergang, Kaffee oder Essen in der Nähe für ein runderes Erlebnis."
+        },
+        {
+          "icon": "🚗",
+          "title": "Nahe Orte kombinieren",
+          "text": "Es liegt an einem gut erreichbaren Ort und lässt sich leicht in eine Kulturroute auf Chios einbauen."
+        },
+        {
+          "icon": "📷",
+          "title": "Nehmen Sie sich Zeit",
+          "text": "Museen zeigen mehr, wenn man sie ohne Eile besucht."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "Ihre strategische Basis",
+      "text": "Von Voulamandis House in Kampos aus können Sie Museen, Dörfer, Strände und kulinarische Stopps auf Chios entspannt in Tagesrouten verbinden.",
+      "linkLabel": "Übernachten Sie bei Menschen, die die Insel kennen.",
+      "href": "/de/chios-zimmer/"
+    },
+    "relatedTitle": "Weitere Museen auf Chios entdecken",
+    "relatedText": "Setzen Sie Ihre Kulturroute auf Chios mit Archäologie, byzantinischer Kunst, Seefahrtsgeschichte, Büchern, Mastix und Volkskunde fort."
+  },
+  {
+    "slug": "biblioteca-korais-chios",
+    "seo": {
+      "canonicalPath": "/it/musei-chios/biblioteca-korais-chios/",
+      "title": "Biblioteca Korais | Guida culturale di Chios",
+      "description": "Visita Biblioteca Korais e scopri libri rari, manoscritti, archivi e cultura greca.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/vivlitothiki-korai-1.webp"
+    },
+    "hero": {
+      "kicker": "Città di Chios • Libri e cultura",
+      "title": "Biblioteca Korais",
+      "description": "Visita Biblioteca Korais e scopri libri rari, manoscritti, archivi e cultura greca.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/vivlitothiki-korai-1.webp",
+      "tags": [
+        "#koraes_library",
+        "#rare_books",
+        "#manuscripts",
+        "#chios_town"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Posizione & accesso",
+        "text": "Si trova in una zona facile da inserire in un itinerario culturale a Chios."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Tema del museo",
+        "text": "Il museo presenta libri rari, manoscritti, archivi e cultura greca."
+      },
+      {
+        "icon": "💡",
+        "title": "Consiglio locale",
+        "text": "Combina la visita con una passeggiata, un caffè o un pasto nelle vicinanze per un’esperienza più completa."
+      }
+    ],
+    "highlights": {
+      "title": "Cosa vedere",
+      "items": [
+        "Libri rari, manoscritti, archivi e cultura greca",
+        "Collegamento con la storia e l’identità di Chios",
+        "Una tappa culturale utile in ogni stagione"
+      ]
+    },
+    "experience": {
+      "title": "Perché visitarlo",
+      "paragraphs": [
+        "Visita Biblioteca Korais e scopri libri rari, manoscritti, archivi e cultura greca.",
+        "È una tappa utile per capire meglio l’isola oltre alle spiagge e ai villaggi."
+      ]
+    },
+    "routeIdeas": {
+      "title": "Come combinarlo",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Passeggiata culturale",
+          "text": "Combina la visita con una passeggiata, un caffè o un pasto nelle vicinanze per un’esperienza più completa."
+        },
+        {
+          "icon": "🚗",
+          "title": "Combina luoghi vicini",
+          "text": "Si trova in una zona facile da inserire in un itinerario culturale a Chios."
+        },
+        {
+          "icon": "📷",
+          "title": "Prenditi tempo",
+          "text": "I musei rivelano di più quando li visiti senza fretta."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "La tua base strategica",
+      "text": "Da Voulamandis House a Kampos puoi organizzare facilmente musei, villaggi, spiagge e sapori di Chios in itinerari giornalieri equilibrati.",
+      "linkLabel": "Soggiorna con chi conosce meglio l’isola.",
+      "href": "/it/camere-a-chios/"
+    },
+    "relatedTitle": "Scopri altri musei di Chios",
+    "relatedText": "Continua il tuo itinerario culturale a Chios con archeologia, arte bizantina, storia marittima, libri, mastice e folklore."
+  },
+  {
+    "slug": "biblioteca-korais-chios",
+    "seo": {
+      "canonicalPath": "/es/museos-chios/biblioteca-korais-chios/",
+      "title": "Biblioteca Korais | Guía cultural de Chios",
+      "description": "Visita Biblioteca Korais y descubre libros raros, manuscritos, archivos y cultura griega.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/vivlitothiki-korai-1.webp"
+    },
+    "hero": {
+      "kicker": "Ciudad de Chios • Libros y cultura",
+      "title": "Biblioteca Korais",
+      "description": "Visita Biblioteca Korais y descubre libros raros, manuscritos, archivos y cultura griega.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/vivlitothiki-korai-1.webp",
+      "tags": [
+        "#koraes_library",
+        "#rare_books",
+        "#manuscripts",
+        "#chios_town"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Ubicación y acceso",
+        "text": "Está en una zona fácil de incluir en una ruta cultural por Chios."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Tema del museo",
+        "text": "El museo presenta libros raros, manuscritos, archivos y cultura griega."
+      },
+      {
+        "icon": "💡",
+        "title": "Consejo local",
+        "text": "Combina la visita con un paseo, un café o una comida cercana para una experiencia más completa."
+      }
+    ],
+    "highlights": {
+      "title": "Qué ver",
+      "items": [
+        "Libros raros, manuscritos, archivos y cultura griega",
+        "Conexión con la historia y la identidad de Chios",
+        "Una parada cultural útil en cualquier época"
+      ]
+    },
+    "experience": {
+      "title": "Por qué visitarlo",
+      "paragraphs": [
+        "Visita Biblioteca Korais y descubre libros raros, manuscritos, archivos y cultura griega.",
+        "Es una buena parada para comprender mejor la isla más allá de sus playas y pueblos."
+      ]
+    },
+    "routeIdeas": {
+      "title": "Cómo combinarlo",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Paseo cultural",
+          "text": "Combina la visita con un paseo, un café o una comida cercana para una experiencia más completa."
+        },
+        {
+          "icon": "🚗",
+          "title": "Combina lugares cercanos",
+          "text": "Está en una zona fácil de incluir en una ruta cultural por Chios."
+        },
+        {
+          "icon": "📷",
+          "title": "Tómate tu tiempo",
+          "text": "Los museos se disfrutan más cuando se visitan sin prisa."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "Tu base estratégica",
+      "text": "Desde Voulamandis House en Kampos puedes organizar fácilmente museos, pueblos, playas y sabores de Chios en rutas diarias equilibradas.",
+      "linkLabel": "Alójate con quienes mejor conocen la isla.",
+      "href": "/es/habitaciones-en-chios/"
+    },
+    "relatedTitle": "Descubre más museos de Chios",
+    "relatedText": "Continúa tu ruta cultural por Chios con arqueología, arte bizantino, historia marítima, libros, mastiha y folclore."
+  },
+  {
+    "slug": "korais-kutuphanesi-sakiz",
+    "seo": {
+      "canonicalPath": "/tr/sakiz-adasi-muzeleri/korais-kutuphanesi-sakiz/",
+      "title": "Korais Kütüphanesi | Sakız Adası kültür rehberi",
+      "description": "Ziyaret edin Korais Kütüphanesi ve keşfedin nadir kitapları, el yazmalarını, arşivleri ve Yunan kültürünü.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/vivlitothiki-korai-1.webp"
+    },
+    "hero": {
+      "kicker": "Sakız şehir merkezi • Kitaplar ve kültür",
+      "title": "Korais Kütüphanesi",
+      "description": "Ziyaret edin Korais Kütüphanesi ve keşfedin nadir kitapları, el yazmalarını, arşivleri ve Yunan kültürünü.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/vivlitothiki-korai-1.webp",
+      "tags": [
+        "#koraes_library",
+        "#rare_books",
+        "#manuscripts",
+        "#chios_town"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Konum & ulaşım",
+        "text": "Sakız Adası’ndaki kültür rotalarına kolayca eklenebilecek bir konumdadır."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Müze teması",
+        "text": "Müze nadir kitapları, el yazmalarını, arşivleri ve Yunan kültürünü."
+      },
+      {
+        "icon": "💡",
+        "title": "Yerel tavsiye",
+        "text": "Ziyareti yakınlarda kısa bir yürüyüş, kahve veya yemek molasıyla birleştirerek daha tamamlayıcı bir deneyim yaşayabilirsiniz."
+      }
+    ],
+    "highlights": {
+      "title": "Neler görülebilir",
+      "items": [
+        "Nadir kitapları, el yazmalarını, arşivleri ve Yunan kültürünü",
+        "Sakız’ın tarihi ve kimliğiyle bağlantı",
+        "Her mevsim için anlamlı bir kültür durağı"
+      ]
+    },
+    "experience": {
+      "title": "Neden ziyaret etmeli",
+      "paragraphs": [
+        "Ziyaret edin Korais Kütüphanesi ve keşfedin nadir kitapları, el yazmalarını, arşivleri ve Yunan kültürünü.",
+        "Plajların ve köylerin ötesinde adayı daha iyi anlamak için iyi bir duraktır."
+      ]
+    },
+    "routeIdeas": {
+      "title": "Nasıl birleştirilir",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Kültür yürüyüşü",
+          "text": "Ziyareti yakınlarda kısa bir yürüyüş, kahve veya yemek molasıyla birleştirerek daha tamamlayıcı bir deneyim yaşayabilirsiniz."
+        },
+        {
+          "icon": "🚗",
+          "title": "Yakın noktaları birleştirin",
+          "text": "Sakız Adası’ndaki kültür rotalarına kolayca eklenebilecek bir konumdadır."
+        },
+        {
+          "icon": "📷",
+          "title": "Zaman ayırın",
+          "text": "Müzeler acele etmeden gezildiğinde daha çok şey anlatır."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "Stratejik üssünüz",
+      "text": "Kampos’taki Voulamandis House’tan müzeleri, köyleri, plajları ve Sakız lezzetlerini dengeli günlük rotalar halinde kolayca planlayabilirsiniz.",
+      "linkLabel": "Adayı en iyi bilenlerle konaklayın.",
+      "href": "/tr/sakiz-adasi-odalari/"
+    },
+    "relatedTitle": "Daha fazla Sakız müzesi keşfedin",
+    "relatedText": "Sakız Adası’ndaki kültür rotanıza arkeoloji, Bizans sanatı, denizcilik tarihi, kitaplar, mastik ve folklorla devam edin."
+  },
+  {
+    "slug": "naftiko-mouseio-xios",
+    "seo": {
+      "canonicalPath": "/el/mouseia-xios/naftiko-mouseio-xios/",
+      "title": "Ναυτικό Μουσείο Χίου | Πολιτιστικός οδηγός Χίου",
+      "description": "Επισκεφθείτε Ναυτικό Μουσείο Χίου και ανακαλύψτε τη ναυτική ταυτότητα της Χίου, τα πλοία, τη ναυσιπλοΐα και το εμπόριο.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/IMG_1203-Medium-min-768x487.webp"
+    },
+    "hero": {
+      "kicker": "Πόλη Χίου • Ναυτική κληρονομιά",
+      "title": "Ναυτικό Μουσείο Χίου",
+      "description": "Επισκεφθείτε Ναυτικό Μουσείο Χίου και ανακαλύψτε τη ναυτική ταυτότητα της Χίου, τα πλοία, τη ναυσιπλοΐα και το εμπόριο.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/IMG_1203-Medium-min-768x487.webp",
+      "tags": [
+        "#maritime_museum",
+        "#seafaring",
+        "#ship_models",
+        "#chios_town"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Τοποθεσία & πρόσβαση",
+        "text": "Βρίσκεται σε εύκολα προσβάσιμο σημείο και συνδυάζεται όμορφα με μια πολιτιστική διαδρομή στη Χίο."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Θεματική μουσείου",
+        "text": "Το μουσείο παρουσιάζει τη ναυτική ταυτότητα της Χίου, τα πλοία, τη ναυσιπλοΐα και το εμπόριο."
+      },
+      {
+        "icon": "💡",
+        "title": "Τοπική συμβουλή",
+        "text": "Συνδυάστε την επίσκεψη με κοντινή βόλτα, καφέ ή φαγητό για μια πιο ολοκληρωμένη εμπειρία."
+      }
+    ],
+    "highlights": {
+      "title": "Τι θα δείτε",
+      "items": [
+        "Τη ναυτική ταυτότητα της Χίου, τα πλοία, τη ναυσιπλοΐα και το εμπόριο",
+        "Σύνδεση με την ιστορία και την ταυτότητα της Χίου",
+        "Μια χρήσιμη πολιτιστική στάση για όλες τις εποχές"
+      ]
+    },
+    "experience": {
+      "title": "Γιατί αξίζει η επίσκεψη",
+      "paragraphs": [
+        "Επισκεφθείτε Ναυτικό Μουσείο Χίου και ανακαλύψτε τη ναυτική ταυτότητα της Χίου, τα πλοία, τη ναυσιπλοΐα και το εμπόριο.",
+        "Είναι μια καλή στάση για να καταλάβετε καλύτερα το νησί πέρα από τις παραλίες και τα χωριά."
+      ]
+    },
+    "routeIdeas": {
+      "title": "Πώς να το συνδυάσετε",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Πολιτιστική βόλτα",
+          "text": "Συνδυάστε την επίσκεψη με κοντινή βόλτα, καφέ ή φαγητό για μια πιο ολοκληρωμένη εμπειρία."
+        },
+        {
+          "icon": "🚗",
+          "title": "Συνδυάστε κοντινά σημεία",
+          "text": "Βρίσκεται σε εύκολα προσβάσιμο σημείο και συνδυάζεται όμορφα με μια πολιτιστική διαδρομή στη Χίο."
+        },
+        {
+          "icon": "📷",
+          "title": "Αφήστε χρόνο",
+          "text": "Τα μουσεία αποκαλύπτουν περισσότερα όταν τα δείτε χωρίς βιασύνη."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "Η στρατηγική σας βάση",
+      "text": "Με βάση το Voulamandis House στον Κάμπο, μπορείτε να οργανώσετε εύκολα μουσεία, χωριά, παραλίες και γεύσεις της Χίου σε ισορροπημένες ημερήσιες διαδρομές.",
+      "linkLabel": "Μείνετε με ανθρώπους που γνωρίζουν το νησί.",
+      "href": "/el/domatia-xios/"
+    },
+    "relatedTitle": "Ανακαλύψτε περισσότερα μουσεία της Χίου",
+    "relatedText": "Συνεχίστε την πολιτιστική διαδρομή σας στη Χίο με αρχαιολογία, βυζαντινή τέχνη, ναυτική ιστορία, βιβλία, μαστίχα και λαογραφία."
+  },
+  {
+    "slug": "musee-maritime-chios",
+    "seo": {
+      "canonicalPath": "/fr/musees-de-chios/musee-maritime-chios/",
+      "title": "Musée maritime de Chios | Guide culturel de Chios",
+      "description": "Visitez Musée maritime de Chios et découvrez l’identité maritime de Chios, les navires, la navigation et le commerce.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/IMG_1203-Medium-min-768x487.webp"
+    },
+    "hero": {
+      "kicker": "Ville de Chios • Patrimoine maritime",
+      "title": "Musée maritime de Chios",
+      "description": "Visitez Musée maritime de Chios et découvrez l’identité maritime de Chios, les navires, la navigation et le commerce.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/IMG_1203-Medium-min-768x487.webp",
+      "tags": [
+        "#maritime_museum",
+        "#seafaring",
+        "#ship_models",
+        "#chios_town"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Emplacement & accès",
+        "text": "Il se trouve dans un secteur facile à intégrer à un itinéraire culturel à Chios."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Thème du musée",
+        "text": "Le musée présente l’identité maritime de Chios, les navires, la navigation et le commerce."
+      },
+      {
+        "icon": "💡",
+        "title": "Conseil local",
+        "text": "Combinez la visite avec une promenade, un café ou un repas à proximité pour une expérience plus complète."
+      }
+    ],
+    "highlights": {
+      "title": "À voir",
+      "items": [
+        "L’identité maritime de Chios, les navires, la navigation et le commerce",
+        "Lien avec l’histoire et l’identité de Chios",
+        "Une halte culturelle utile en toute saison"
+      ]
+    },
+    "experience": {
+      "title": "Pourquoi visiter",
+      "paragraphs": [
+        "Visitez Musée maritime de Chios et découvrez l’identité maritime de Chios, les navires, la navigation et le commerce.",
+        "C’est une bonne étape pour mieux comprendre l’île au-delà des plages et des villages."
+      ]
+    },
+    "routeIdeas": {
+      "title": "Comment l’intégrer à votre itinéraire",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Promenade culturelle",
+          "text": "Combinez la visite avec une promenade, un café ou un repas à proximité pour une expérience plus complète."
+        },
+        {
+          "icon": "🚗",
+          "title": "Combinez les lieux proches",
+          "text": "Il se trouve dans un secteur facile à intégrer à un itinéraire culturel à Chios."
+        },
+        {
+          "icon": "📷",
+          "title": "Prenez votre temps",
+          "text": "Les musées se révèlent mieux quand on les visite sans hâte."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "Votre base stratégique",
+      "text": "Depuis Voulamandis House à Kampos, vous pouvez organiser facilement musées, villages, plages et gastronomie de Chios en belles journées équilibrées.",
+      "linkLabel": "Séjournez avec ceux qui connaissent le mieux l’île.",
+      "href": "/fr/chambres-a-chios/"
+    },
+    "relatedTitle": "Découvrez plus de musées de Chios",
+    "relatedText": "Poursuivez votre itinéraire culturel à Chios avec archéologie, art byzantin, histoire maritime, livres, mastic et folklore."
+  },
+  {
+    "slug": "schifffahrtsmuseum-chios",
+    "seo": {
+      "canonicalPath": "/de/museen-chios/schifffahrtsmuseum-chios/",
+      "title": "Schifffahrtsmuseum Chios | Kulturführer für Chios",
+      "description": "Besuchen Sie Schifffahrtsmuseum Chios und entdecken Sie die maritime Identität von Chios, Schiffe, Navigation und Handel.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/IMG_1203-Medium-min-768x487.webp"
+    },
+    "hero": {
+      "kicker": "Chios-Stadt • Maritimes Erbe",
+      "title": "Schifffahrtsmuseum Chios",
+      "description": "Besuchen Sie Schifffahrtsmuseum Chios und entdecken Sie die maritime Identität von Chios, Schiffe, Navigation und Handel.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/IMG_1203-Medium-min-768x487.webp",
+      "tags": [
+        "#maritime_museum",
+        "#seafaring",
+        "#ship_models",
+        "#chios_town"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Lage & Zugang",
+        "text": "Es liegt an einem gut erreichbaren Ort und lässt sich leicht in eine Kulturroute auf Chios einbauen."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Museumsschwerpunkt",
+        "text": "Das Museum zeigt die maritime Identität von Chios, Schiffe, Navigation und Handel."
+      },
+      {
+        "icon": "💡",
+        "title": "Lokaler Tipp",
+        "text": "Kombinieren Sie den Besuch mit einem Spaziergang, Kaffee oder Essen in der Nähe für ein runderes Erlebnis."
+      }
+    ],
+    "highlights": {
+      "title": "Was Sie sehen können",
+      "items": [
+        "Die maritime Identität von Chios, Schiffe, Navigation und Handel",
+        "Verbindung zur Geschichte und Identität von Chios",
+        "Ein sinnvoller Kulturstopp zu jeder Jahreszeit"
+      ]
+    },
+    "experience": {
+      "title": "Warum sich der Besuch lohnt",
+      "paragraphs": [
+        "Besuchen Sie Schifffahrtsmuseum Chios und entdecken Sie die maritime Identität von Chios, Schiffe, Navigation und Handel.",
+        "Es ist ein guter Stopp, um die Insel jenseits von Stränden und Dörfern besser zu verstehen."
+      ]
+    },
+    "routeIdeas": {
+      "title": "So kombinieren Sie den Besuch",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Kulturspaziergang",
+          "text": "Kombinieren Sie den Besuch mit einem Spaziergang, Kaffee oder Essen in der Nähe für ein runderes Erlebnis."
+        },
+        {
+          "icon": "🚗",
+          "title": "Nahe Orte kombinieren",
+          "text": "Es liegt an einem gut erreichbaren Ort und lässt sich leicht in eine Kulturroute auf Chios einbauen."
+        },
+        {
+          "icon": "📷",
+          "title": "Nehmen Sie sich Zeit",
+          "text": "Museen zeigen mehr, wenn man sie ohne Eile besucht."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "Ihre strategische Basis",
+      "text": "Von Voulamandis House in Kampos aus können Sie Museen, Dörfer, Strände und kulinarische Stopps auf Chios entspannt in Tagesrouten verbinden.",
+      "linkLabel": "Übernachten Sie bei Menschen, die die Insel kennen.",
+      "href": "/de/chios-zimmer/"
+    },
+    "relatedTitle": "Weitere Museen auf Chios entdecken",
+    "relatedText": "Setzen Sie Ihre Kulturroute auf Chios mit Archäologie, byzantinischer Kunst, Seefahrtsgeschichte, Büchern, Mastix und Volkskunde fort."
+  },
+  {
+    "slug": "museo-marittimo-chios",
+    "seo": {
+      "canonicalPath": "/it/musei-chios/museo-marittimo-chios/",
+      "title": "Museo Marittimo di Chios | Guida culturale di Chios",
+      "description": "Visita Museo Marittimo di Chios e scopri l’identità marinara di Chios, le navi, la navigazione e il commercio.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/IMG_1203-Medium-min-768x487.webp"
+    },
+    "hero": {
+      "kicker": "Città di Chios • Patrimonio marittimo",
+      "title": "Museo Marittimo di Chios",
+      "description": "Visita Museo Marittimo di Chios e scopri l’identità marinara di Chios, le navi, la navigazione e il commercio.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/IMG_1203-Medium-min-768x487.webp",
+      "tags": [
+        "#maritime_museum",
+        "#seafaring",
+        "#ship_models",
+        "#chios_town"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Posizione & accesso",
+        "text": "Si trova in una zona facile da inserire in un itinerario culturale a Chios."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Tema del museo",
+        "text": "Il museo presenta l’identità marinara di Chios, le navi, la navigazione e il commercio."
+      },
+      {
+        "icon": "💡",
+        "title": "Consiglio locale",
+        "text": "Combina la visita con una passeggiata, un caffè o un pasto nelle vicinanze per un’esperienza più completa."
+      }
+    ],
+    "highlights": {
+      "title": "Cosa vedere",
+      "items": [
+        "L’identità marinara di Chios, le navi, la navigazione e il commercio",
+        "Collegamento con la storia e l’identità di Chios",
+        "Una tappa culturale utile in ogni stagione"
+      ]
+    },
+    "experience": {
+      "title": "Perché visitarlo",
+      "paragraphs": [
+        "Visita Museo Marittimo di Chios e scopri l’identità marinara di Chios, le navi, la navigazione e il commercio.",
+        "È una tappa utile per capire meglio l’isola oltre alle spiagge e ai villaggi."
+      ]
+    },
+    "routeIdeas": {
+      "title": "Come combinarlo",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Passeggiata culturale",
+          "text": "Combina la visita con una passeggiata, un caffè o un pasto nelle vicinanze per un’esperienza più completa."
+        },
+        {
+          "icon": "🚗",
+          "title": "Combina luoghi vicini",
+          "text": "Si trova in una zona facile da inserire in un itinerario culturale a Chios."
+        },
+        {
+          "icon": "📷",
+          "title": "Prenditi tempo",
+          "text": "I musei rivelano di più quando li visiti senza fretta."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "La tua base strategica",
+      "text": "Da Voulamandis House a Kampos puoi organizzare facilmente musei, villaggi, spiagge e sapori di Chios in itinerari giornalieri equilibrati.",
+      "linkLabel": "Soggiorna con chi conosce meglio l’isola.",
+      "href": "/it/camere-a-chios/"
+    },
+    "relatedTitle": "Scopri altri musei di Chios",
+    "relatedText": "Continua il tuo itinerario culturale a Chios con archeologia, arte bizantina, storia marittima, libri, mastice e folklore."
+  },
+  {
+    "slug": "museo-maritimo-chios",
+    "seo": {
+      "canonicalPath": "/es/museos-chios/museo-maritimo-chios/",
+      "title": "Museo Marítimo de Chios | Guía cultural de Chios",
+      "description": "Visita Museo Marítimo de Chios y descubre la identidad marinera de Chios, los barcos, la navegación y el comercio.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/IMG_1203-Medium-min-768x487.webp"
+    },
+    "hero": {
+      "kicker": "Ciudad de Chios • Patrimonio marítimo",
+      "title": "Museo Marítimo de Chios",
+      "description": "Visita Museo Marítimo de Chios y descubre la identidad marinera de Chios, los barcos, la navegación y el comercio.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/IMG_1203-Medium-min-768x487.webp",
+      "tags": [
+        "#maritime_museum",
+        "#seafaring",
+        "#ship_models",
+        "#chios_town"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Ubicación y acceso",
+        "text": "Está en una zona fácil de incluir en una ruta cultural por Chios."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Tema del museo",
+        "text": "El museo presenta la identidad marinera de Chios, los barcos, la navegación y el comercio."
+      },
+      {
+        "icon": "💡",
+        "title": "Consejo local",
+        "text": "Combina la visita con un paseo, un café o una comida cercana para una experiencia más completa."
+      }
+    ],
+    "highlights": {
+      "title": "Qué ver",
+      "items": [
+        "La identidad marinera de Chios, los barcos, la navegación y el comercio",
+        "Conexión con la historia y la identidad de Chios",
+        "Una parada cultural útil en cualquier época"
+      ]
+    },
+    "experience": {
+      "title": "Por qué visitarlo",
+      "paragraphs": [
+        "Visita Museo Marítimo de Chios y descubre la identidad marinera de Chios, los barcos, la navegación y el comercio.",
+        "Es una buena parada para comprender mejor la isla más allá de sus playas y pueblos."
+      ]
+    },
+    "routeIdeas": {
+      "title": "Cómo combinarlo",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Paseo cultural",
+          "text": "Combina la visita con un paseo, un café o una comida cercana para una experiencia más completa."
+        },
+        {
+          "icon": "🚗",
+          "title": "Combina lugares cercanos",
+          "text": "Está en una zona fácil de incluir en una ruta cultural por Chios."
+        },
+        {
+          "icon": "📷",
+          "title": "Tómate tu tiempo",
+          "text": "Los museos se disfrutan más cuando se visitan sin prisa."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "Tu base estratégica",
+      "text": "Desde Voulamandis House en Kampos puedes organizar fácilmente museos, pueblos, playas y sabores de Chios en rutas diarias equilibradas.",
+      "linkLabel": "Alójate con quienes mejor conocen la isla.",
+      "href": "/es/habitaciones-en-chios/"
+    },
+    "relatedTitle": "Descubre más museos de Chios",
+    "relatedText": "Continúa tu ruta cultural por Chios con arqueología, arte bizantino, historia marítima, libros, mastiha y folclore."
+  },
+  {
+    "slug": "denizcilik-muzesi-sakiz",
+    "seo": {
+      "canonicalPath": "/tr/sakiz-adasi-muzeleri/denizcilik-muzesi-sakiz/",
+      "title": "Sakız Denizcilik Müzesi | Sakız Adası kültür rehberi",
+      "description": "Ziyaret edin Sakız Denizcilik Müzesi ve keşfedin Sakız’ın denizcilik kimliğini, gemileri, navigasyonu ve ticareti.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/IMG_1203-Medium-min-768x487.webp"
+    },
+    "hero": {
+      "kicker": "Sakız şehir merkezi • Denizcilik mirası",
+      "title": "Sakız Denizcilik Müzesi",
+      "description": "Ziyaret edin Sakız Denizcilik Müzesi ve keşfedin Sakız’ın denizcilik kimliğini, gemileri, navigasyonu ve ticareti.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/IMG_1203-Medium-min-768x487.webp",
+      "tags": [
+        "#maritime_museum",
+        "#seafaring",
+        "#ship_models",
+        "#chios_town"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Konum & ulaşım",
+        "text": "Sakız Adası’ndaki kültür rotalarına kolayca eklenebilecek bir konumdadır."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Müze teması",
+        "text": "Müze Sakız’ın denizcilik kimliğini, gemileri, navigasyonu ve ticareti."
+      },
+      {
+        "icon": "💡",
+        "title": "Yerel tavsiye",
+        "text": "Ziyareti yakınlarda kısa bir yürüyüş, kahve veya yemek molasıyla birleştirerek daha tamamlayıcı bir deneyim yaşayabilirsiniz."
+      }
+    ],
+    "highlights": {
+      "title": "Neler görülebilir",
+      "items": [
+        "Sakız’ın denizcilik kimliğini, gemileri, navigasyonu ve ticareti",
+        "Sakız’ın tarihi ve kimliğiyle bağlantı",
+        "Her mevsim için anlamlı bir kültür durağı"
+      ]
+    },
+    "experience": {
+      "title": "Neden ziyaret etmeli",
+      "paragraphs": [
+        "Ziyaret edin Sakız Denizcilik Müzesi ve keşfedin Sakız’ın denizcilik kimliğini, gemileri, navigasyonu ve ticareti.",
+        "Plajların ve köylerin ötesinde adayı daha iyi anlamak için iyi bir duraktır."
+      ]
+    },
+    "routeIdeas": {
+      "title": "Nasıl birleştirilir",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Kültür yürüyüşü",
+          "text": "Ziyareti yakınlarda kısa bir yürüyüş, kahve veya yemek molasıyla birleştirerek daha tamamlayıcı bir deneyim yaşayabilirsiniz."
+        },
+        {
+          "icon": "🚗",
+          "title": "Yakın noktaları birleştirin",
+          "text": "Sakız Adası’ndaki kültür rotalarına kolayca eklenebilecek bir konumdadır."
+        },
+        {
+          "icon": "📷",
+          "title": "Zaman ayırın",
+          "text": "Müzeler acele etmeden gezildiğinde daha çok şey anlatır."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "Stratejik üssünüz",
+      "text": "Kampos’taki Voulamandis House’tan müzeleri, köyleri, plajları ve Sakız lezzetlerini dengeli günlük rotalar halinde kolayca planlayabilirsiniz.",
+      "linkLabel": "Adayı en iyi bilenlerle konaklayın.",
+      "href": "/tr/sakiz-adasi-odalari/"
+    },
+    "relatedTitle": "Daha fazla Sakız müzesi keşfedin",
+    "relatedText": "Sakız Adası’ndaki kültür rotanıza arkeoloji, Bizans sanatı, denizcilik tarihi, kitaplar, mastik ve folklorla devam edin."
+  },
+  {
+    "slug": "laografiko-mouseio-kallimasias",
+    "seo": {
+      "canonicalPath": "/el/mouseia-xios/laografiko-mouseio-kallimasias/",
+      "title": "Λαογραφικό Μουσείο Καλλιμασιάς | Πολιτιστικός οδηγός Χίου",
+      "description": "Επισκεφθείτε Λαογραφικό Μουσείο Καλλιμασιάς και ανακαλύψτε την καθημερινή ζωή, τα εργαλεία, τα έθιμα και τη λαϊκή μνήμη της Χίου.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/2-1-768x512.webp"
+    },
+    "hero": {
+      "kicker": "Καλλιμασιά • Λαογραφία",
+      "title": "Λαογραφικό Μουσείο Καλλιμασιάς",
+      "description": "Επισκεφθείτε Λαογραφικό Μουσείο Καλλιμασιάς και ανακαλύψτε την καθημερινή ζωή, τα εργαλεία, τα έθιμα και τη λαϊκή μνήμη της Χίου.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/2-1-768x512.webp",
+      "tags": [
+        "#folklore_museum",
+        "#kallimasia",
+        "#village_life",
+        "#tradition"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Τοποθεσία & πρόσβαση",
+        "text": "Βρίσκεται σε εύκολα προσβάσιμο σημείο και συνδυάζεται όμορφα με μια πολιτιστική διαδρομή στη Χίο."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Θεματική μουσείου",
+        "text": "Το μουσείο παρουσιάζει την καθημερινή ζωή, τα εργαλεία, τα έθιμα και τη λαϊκή μνήμη της Χίου."
+      },
+      {
+        "icon": "💡",
+        "title": "Τοπική συμβουλή",
+        "text": "Συνδυάστε την επίσκεψη με κοντινή βόλτα, καφέ ή φαγητό για μια πιο ολοκληρωμένη εμπειρία."
+      }
+    ],
+    "highlights": {
+      "title": "Τι θα δείτε",
+      "items": [
+        "Την καθημερινή ζωή, τα εργαλεία, τα έθιμα και τη λαϊκή μνήμη της Χίου",
+        "Σύνδεση με την ιστορία και την ταυτότητα της Χίου",
+        "Μια χρήσιμη πολιτιστική στάση για όλες τις εποχές"
+      ]
+    },
+    "experience": {
+      "title": "Γιατί αξίζει η επίσκεψη",
+      "paragraphs": [
+        "Επισκεφθείτε Λαογραφικό Μουσείο Καλλιμασιάς και ανακαλύψτε την καθημερινή ζωή, τα εργαλεία, τα έθιμα και τη λαϊκή μνήμη της Χίου.",
+        "Είναι μια καλή στάση για να καταλάβετε καλύτερα το νησί πέρα από τις παραλίες και τα χωριά."
+      ]
+    },
+    "routeIdeas": {
+      "title": "Πώς να το συνδυάσετε",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Πολιτιστική βόλτα",
+          "text": "Συνδυάστε την επίσκεψη με κοντινή βόλτα, καφέ ή φαγητό για μια πιο ολοκληρωμένη εμπειρία."
+        },
+        {
+          "icon": "🚗",
+          "title": "Συνδυάστε κοντινά σημεία",
+          "text": "Βρίσκεται σε εύκολα προσβάσιμο σημείο και συνδυάζεται όμορφα με μια πολιτιστική διαδρομή στη Χίο."
+        },
+        {
+          "icon": "📷",
+          "title": "Αφήστε χρόνο",
+          "text": "Τα μουσεία αποκαλύπτουν περισσότερα όταν τα δείτε χωρίς βιασύνη."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "Η στρατηγική σας βάση",
+      "text": "Με βάση το Voulamandis House στον Κάμπο, μπορείτε να οργανώσετε εύκολα μουσεία, χωριά, παραλίες και γεύσεις της Χίου σε ισορροπημένες ημερήσιες διαδρομές.",
+      "linkLabel": "Μείνετε με ανθρώπους που γνωρίζουν το νησί.",
+      "href": "/el/domatia-xios/"
+    },
+    "relatedTitle": "Ανακαλύψτε περισσότερα μουσεία της Χίου",
+    "relatedText": "Συνεχίστε την πολιτιστική διαδρομή σας στη Χίο με αρχαιολογία, βυζαντινή τέχνη, ναυτική ιστορία, βιβλία, μαστίχα και λαογραφία."
+  },
+  {
+    "slug": "musee-folklorique-kallimasia",
+    "seo": {
+      "canonicalPath": "/fr/musees-de-chios/musee-folklorique-kallimasia/",
+      "title": "Musée folklorique de Kallimasia | Guide culturel de Chios",
+      "description": "Visitez Musée folklorique de Kallimasia et découvrez la vie quotidienne, les outils, les coutumes et la mémoire locale de Chios.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/2-1-768x512.webp"
+    },
+    "hero": {
+      "kicker": "Kallimasia • Folklore",
+      "title": "Musée folklorique de Kallimasia",
+      "description": "Visitez Musée folklorique de Kallimasia et découvrez la vie quotidienne, les outils, les coutumes et la mémoire locale de Chios.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/2-1-768x512.webp",
+      "tags": [
+        "#folklore_museum",
+        "#kallimasia",
+        "#village_life",
+        "#tradition"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Emplacement & accès",
+        "text": "Il se trouve dans un secteur facile à intégrer à un itinéraire culturel à Chios."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Thème du musée",
+        "text": "Le musée présente la vie quotidienne, les outils, les coutumes et la mémoire locale de Chios."
+      },
+      {
+        "icon": "💡",
+        "title": "Conseil local",
+        "text": "Combinez la visite avec une promenade, un café ou un repas à proximité pour une expérience plus complète."
+      }
+    ],
+    "highlights": {
+      "title": "À voir",
+      "items": [
+        "La vie quotidienne, les outils, les coutumes et la mémoire locale de Chios",
+        "Lien avec l’histoire et l’identité de Chios",
+        "Une halte culturelle utile en toute saison"
+      ]
+    },
+    "experience": {
+      "title": "Pourquoi visiter",
+      "paragraphs": [
+        "Visitez Musée folklorique de Kallimasia et découvrez la vie quotidienne, les outils, les coutumes et la mémoire locale de Chios.",
+        "C’est une bonne étape pour mieux comprendre l’île au-delà des plages et des villages."
+      ]
+    },
+    "routeIdeas": {
+      "title": "Comment l’intégrer à votre itinéraire",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Promenade culturelle",
+          "text": "Combinez la visite avec une promenade, un café ou un repas à proximité pour une expérience plus complète."
+        },
+        {
+          "icon": "🚗",
+          "title": "Combinez les lieux proches",
+          "text": "Il se trouve dans un secteur facile à intégrer à un itinéraire culturel à Chios."
+        },
+        {
+          "icon": "📷",
+          "title": "Prenez votre temps",
+          "text": "Les musées se révèlent mieux quand on les visite sans hâte."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "Votre base stratégique",
+      "text": "Depuis Voulamandis House à Kampos, vous pouvez organiser facilement musées, villages, plages et gastronomie de Chios en belles journées équilibrées.",
+      "linkLabel": "Séjournez avec ceux qui connaissent le mieux l’île.",
+      "href": "/fr/chambres-a-chios/"
+    },
+    "relatedTitle": "Découvrez plus de musées de Chios",
+    "relatedText": "Poursuivez votre itinéraire culturel à Chios avec archéologie, art byzantin, histoire maritime, livres, mastic et folklore."
+  },
+  {
+    "slug": "volkskundemuseum-kallimasia",
+    "seo": {
+      "canonicalPath": "/de/museen-chios/volkskundemuseum-kallimasia/",
+      "title": "Volkskundemuseum Kallimasia | Kulturführer für Chios",
+      "description": "Besuchen Sie Volkskundemuseum Kallimasia und entdecken Sie Alltagsleben, Werkzeuge, Bräuche und lokale Erinnerung auf Chios.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/2-1-768x512.webp"
+    },
+    "hero": {
+      "kicker": "Kallimasia • Volkskunde",
+      "title": "Volkskundemuseum Kallimasia",
+      "description": "Besuchen Sie Volkskundemuseum Kallimasia und entdecken Sie Alltagsleben, Werkzeuge, Bräuche und lokale Erinnerung auf Chios.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/2-1-768x512.webp",
+      "tags": [
+        "#folklore_museum",
+        "#kallimasia",
+        "#village_life",
+        "#tradition"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Lage & Zugang",
+        "text": "Es liegt an einem gut erreichbaren Ort und lässt sich leicht in eine Kulturroute auf Chios einbauen."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Museumsschwerpunkt",
+        "text": "Das Museum zeigt Alltagsleben, Werkzeuge, Bräuche und lokale Erinnerung auf Chios."
+      },
+      {
+        "icon": "💡",
+        "title": "Lokaler Tipp",
+        "text": "Kombinieren Sie den Besuch mit einem Spaziergang, Kaffee oder Essen in der Nähe für ein runderes Erlebnis."
+      }
+    ],
+    "highlights": {
+      "title": "Was Sie sehen können",
+      "items": [
+        "Alltagsleben, Werkzeuge, Bräuche und lokale Erinnerung auf Chios",
+        "Verbindung zur Geschichte und Identität von Chios",
+        "Ein sinnvoller Kulturstopp zu jeder Jahreszeit"
+      ]
+    },
+    "experience": {
+      "title": "Warum sich der Besuch lohnt",
+      "paragraphs": [
+        "Besuchen Sie Volkskundemuseum Kallimasia und entdecken Sie Alltagsleben, Werkzeuge, Bräuche und lokale Erinnerung auf Chios.",
+        "Es ist ein guter Stopp, um die Insel jenseits von Stränden und Dörfern besser zu verstehen."
+      ]
+    },
+    "routeIdeas": {
+      "title": "So kombinieren Sie den Besuch",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Kulturspaziergang",
+          "text": "Kombinieren Sie den Besuch mit einem Spaziergang, Kaffee oder Essen in der Nähe für ein runderes Erlebnis."
+        },
+        {
+          "icon": "🚗",
+          "title": "Nahe Orte kombinieren",
+          "text": "Es liegt an einem gut erreichbaren Ort und lässt sich leicht in eine Kulturroute auf Chios einbauen."
+        },
+        {
+          "icon": "📷",
+          "title": "Nehmen Sie sich Zeit",
+          "text": "Museen zeigen mehr, wenn man sie ohne Eile besucht."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "Ihre strategische Basis",
+      "text": "Von Voulamandis House in Kampos aus können Sie Museen, Dörfer, Strände und kulinarische Stopps auf Chios entspannt in Tagesrouten verbinden.",
+      "linkLabel": "Übernachten Sie bei Menschen, die die Insel kennen.",
+      "href": "/de/chios-zimmer/"
+    },
+    "relatedTitle": "Weitere Museen auf Chios entdecken",
+    "relatedText": "Setzen Sie Ihre Kulturroute auf Chios mit Archäologie, byzantinischer Kunst, Seefahrtsgeschichte, Büchern, Mastix und Volkskunde fort."
+  },
+  {
+    "slug": "museo-folkloristico-kallimasia",
+    "seo": {
+      "canonicalPath": "/it/musei-chios/museo-folkloristico-kallimasia/",
+      "title": "Museo Folkloristico di Kallimasia | Guida culturale di Chios",
+      "description": "Visita Museo Folkloristico di Kallimasia e scopri la vita quotidiana, gli strumenti, le usanze e la memoria locale di Chios.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/2-1-768x512.webp"
+    },
+    "hero": {
+      "kicker": "Kallimasia • Folklore",
+      "title": "Museo Folkloristico di Kallimasia",
+      "description": "Visita Museo Folkloristico di Kallimasia e scopri la vita quotidiana, gli strumenti, le usanze e la memoria locale di Chios.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/2-1-768x512.webp",
+      "tags": [
+        "#folklore_museum",
+        "#kallimasia",
+        "#village_life",
+        "#tradition"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Posizione & accesso",
+        "text": "Si trova in una zona facile da inserire in un itinerario culturale a Chios."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Tema del museo",
+        "text": "Il museo presenta la vita quotidiana, gli strumenti, le usanze e la memoria locale di Chios."
+      },
+      {
+        "icon": "💡",
+        "title": "Consiglio locale",
+        "text": "Combina la visita con una passeggiata, un caffè o un pasto nelle vicinanze per un’esperienza più completa."
+      }
+    ],
+    "highlights": {
+      "title": "Cosa vedere",
+      "items": [
+        "La vita quotidiana, gli strumenti, le usanze e la memoria locale di Chios",
+        "Collegamento con la storia e l’identità di Chios",
+        "Una tappa culturale utile in ogni stagione"
+      ]
+    },
+    "experience": {
+      "title": "Perché visitarlo",
+      "paragraphs": [
+        "Visita Museo Folkloristico di Kallimasia e scopri la vita quotidiana, gli strumenti, le usanze e la memoria locale di Chios.",
+        "È una tappa utile per capire meglio l’isola oltre alle spiagge e ai villaggi."
+      ]
+    },
+    "routeIdeas": {
+      "title": "Come combinarlo",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Passeggiata culturale",
+          "text": "Combina la visita con una passeggiata, un caffè o un pasto nelle vicinanze per un’esperienza più completa."
+        },
+        {
+          "icon": "🚗",
+          "title": "Combina luoghi vicini",
+          "text": "Si trova in una zona facile da inserire in un itinerario culturale a Chios."
+        },
+        {
+          "icon": "📷",
+          "title": "Prenditi tempo",
+          "text": "I musei rivelano di più quando li visiti senza fretta."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "La tua base strategica",
+      "text": "Da Voulamandis House a Kampos puoi organizzare facilmente musei, villaggi, spiagge e sapori di Chios in itinerari giornalieri equilibrati.",
+      "linkLabel": "Soggiorna con chi conosce meglio l’isola.",
+      "href": "/it/camere-a-chios/"
+    },
+    "relatedTitle": "Scopri altri musei di Chios",
+    "relatedText": "Continua il tuo itinerario culturale a Chios con archeologia, arte bizantina, storia marittima, libri, mastice e folklore."
+  },
+  {
+    "slug": "museo-folclorico-kallimasia",
+    "seo": {
+      "canonicalPath": "/es/museos-chios/museo-folclorico-kallimasia/",
+      "title": "Museo Folclórico de Kallimasia | Guía cultural de Chios",
+      "description": "Visita Museo Folclórico de Kallimasia y descubre la vida cotidiana, las herramientas, las costumbres y la memoria local de Chios.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/2-1-768x512.webp"
+    },
+    "hero": {
+      "kicker": "Kallimasia • Folclore",
+      "title": "Museo Folclórico de Kallimasia",
+      "description": "Visita Museo Folclórico de Kallimasia y descubre la vida cotidiana, las herramientas, las costumbres y la memoria local de Chios.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/2-1-768x512.webp",
+      "tags": [
+        "#folklore_museum",
+        "#kallimasia",
+        "#village_life",
+        "#tradition"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Ubicación y acceso",
+        "text": "Está en una zona fácil de incluir en una ruta cultural por Chios."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Tema del museo",
+        "text": "El museo presenta la vida cotidiana, las herramientas, las costumbres y la memoria local de Chios."
+      },
+      {
+        "icon": "💡",
+        "title": "Consejo local",
+        "text": "Combina la visita con un paseo, un café o una comida cercana para una experiencia más completa."
+      }
+    ],
+    "highlights": {
+      "title": "Qué ver",
+      "items": [
+        "La vida cotidiana, las herramientas, las costumbres y la memoria local de Chios",
+        "Conexión con la historia y la identidad de Chios",
+        "Una parada cultural útil en cualquier época"
+      ]
+    },
+    "experience": {
+      "title": "Por qué visitarlo",
+      "paragraphs": [
+        "Visita Museo Folclórico de Kallimasia y descubre la vida cotidiana, las herramientas, las costumbres y la memoria local de Chios.",
+        "Es una buena parada para comprender mejor la isla más allá de sus playas y pueblos."
+      ]
+    },
+    "routeIdeas": {
+      "title": "Cómo combinarlo",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Paseo cultural",
+          "text": "Combina la visita con un paseo, un café o una comida cercana para una experiencia más completa."
+        },
+        {
+          "icon": "🚗",
+          "title": "Combina lugares cercanos",
+          "text": "Está en una zona fácil de incluir en una ruta cultural por Chios."
+        },
+        {
+          "icon": "📷",
+          "title": "Tómate tu tiempo",
+          "text": "Los museos se disfrutan más cuando se visitan sin prisa."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "Tu base estratégica",
+      "text": "Desde Voulamandis House en Kampos puedes organizar fácilmente museos, pueblos, playas y sabores de Chios en rutas diarias equilibradas.",
+      "linkLabel": "Alójate con quienes mejor conocen la isla.",
+      "href": "/es/habitaciones-en-chios/"
+    },
+    "relatedTitle": "Descubre más museos de Chios",
+    "relatedText": "Continúa tu ruta cultural por Chios con arqueología, arte bizantino, historia marítima, libros, mastiha y folclore."
+  },
+  {
+    "slug": "kallimasia-folklor-muzesi",
+    "seo": {
+      "canonicalPath": "/tr/sakiz-adasi-muzeleri/kallimasia-folklor-muzesi/",
+      "title": "Kallimasia Folklor Müzesi | Sakız Adası kültür rehberi",
+      "description": "Ziyaret edin Kallimasia Folklor Müzesi ve keşfedin Sakız’ın günlük yaşamını, araçlarını, geleneklerini ve yerel hafızasını.",
+      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/2-1-768x512.webp"
+    },
+    "hero": {
+      "kicker": "Kallimasia • Folklor",
+      "title": "Kallimasia Folklor Müzesi",
+      "description": "Ziyaret edin Kallimasia Folklor Müzesi ve keşfedin Sakız’ın günlük yaşamını, araçlarını, geleneklerini ve yerel hafızasını.",
+      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/2-1-768x512.webp",
+      "tags": [
+        "#folklore_museum",
+        "#kallimasia",
+        "#village_life",
+        "#tradition"
+      ]
+    },
+    "details": [
+      {
+        "icon": "📍",
+        "title": "Konum & ulaşım",
+        "text": "Sakız Adası’ndaki kültür rotalarına kolayca eklenebilecek bir konumdadır."
+      },
+      {
+        "icon": "🏛️",
+        "title": "Müze teması",
+        "text": "Müze Sakız’ın günlük yaşamını, araçlarını, geleneklerini ve yerel hafızasını."
+      },
+      {
+        "icon": "💡",
+        "title": "Yerel tavsiye",
+        "text": "Ziyareti yakınlarda kısa bir yürüyüş, kahve veya yemek molasıyla birleştirerek daha tamamlayıcı bir deneyim yaşayabilirsiniz."
+      }
+    ],
+    "highlights": {
+      "title": "Neler görülebilir",
+      "items": [
+        "Sakız’ın günlük yaşamını, araçlarını, geleneklerini ve yerel hafızasını",
+        "Sakız’ın tarihi ve kimliğiyle bağlantı",
+        "Her mevsim için anlamlı bir kültür durağı"
+      ]
+    },
+    "experience": {
+      "title": "Neden ziyaret etmeli",
+      "paragraphs": [
+        "Ziyaret edin Kallimasia Folklor Müzesi ve keşfedin Sakız’ın günlük yaşamını, araçlarını, geleneklerini ve yerel hafızasını.",
+        "Plajların ve köylerin ötesinde adayı daha iyi anlamak için iyi bir duraktır."
+      ]
+    },
+    "routeIdeas": {
+      "title": "Nasıl birleştirilir",
+      "items": [
+        {
+          "icon": "🏛️",
+          "title": "Kültür yürüyüşü",
+          "text": "Ziyareti yakınlarda kısa bir yürüyüş, kahve veya yemek molasıyla birleştirerek daha tamamlayıcı bir deneyim yaşayabilirsiniz."
+        },
+        {
+          "icon": "🚗",
+          "title": "Yakın noktaları birleştirin",
+          "text": "Sakız Adası’ndaki kültür rotalarına kolayca eklenebilecek bir konumdadır."
+        },
+        {
+          "icon": "📷",
+          "title": "Zaman ayırın",
+          "text": "Müzeler acele etmeden gezildiğinde daha çok şey anlatır."
+        }
+      ]
+    },
+    "baseTip": {
+      "icon": "🗺️",
+      "title": "Stratejik üssünüz",
+      "text": "Kampos’taki Voulamandis House’tan müzeleri, köyleri, plajları ve Sakız lezzetlerini dengeli günlük rotalar halinde kolayca planlayabilirsiniz.",
+      "linkLabel": "Adayı en iyi bilenlerle konaklayın.",
+      "href": "/tr/sakiz-adasi-odalari/"
+    },
+    "relatedTitle": "Daha fazla Sakız müzesi keşfedin",
+    "relatedText": "Sakız Adası’ndaki kültür rotanıza arkeoloji, Bizans sanatı, denizcilik tarihi, kitaplar, mastik ve folklorla devam edin."
+  }
+];
+
+export function getLocalizedMuseumDetailByPath(path: string) {
+  return localizedMuseumDetails.find((museum) => museum.seo.canonicalPath === path);
+}
+
+export function getAllMuseumDetails() {
+  return [...museumDetails, ...localizedMuseumDetails];
+}
+
 export const relatedMuseumCards = [
   {
     slug: "the-mastic-museum-chios",

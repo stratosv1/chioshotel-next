@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
+import { ChiosBeachesPage } from "@/components/chios/ChiosBeachesPage";
+import { ChiosVillagesPage } from "@/components/chios/ChiosVillagesPage";
+import { ChiosMuseumsPage } from "@/components/chios/ChiosMuseumsPage";
+import { BeachDetailPage } from "@/components/chios/BeachDetailPage";
+import { VillageDetailPage } from "@/components/chios/VillageDetailPage";
+import { MuseumDetailPage } from "@/components/chios/MuseumDetailPage";
 import { RoomsCategoryPage } from "@/components/rooms/RoomsCategoryPage";
 import { RoomDetailPage } from "@/components/rooms/RoomDetailPage";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -8,6 +14,18 @@ import {
   isLanguageCode,
   normalizePath,
 } from "@/lib/languages";
+import {
+  getLocalizedChiosBeachesPageByPath,
+} from "@/content/chios-beaches";
+import { buildChiosBeachesSchema } from "@/content/chios-beaches-schema";
+import {
+  getLocalizedChiosVillagesPageByPath,
+} from "@/content/chios-villages";
+import { buildChiosVillagesSchema } from "@/content/chios-villages-schema";
+import {
+  getLocalizedChiosMuseumsPageByPath,
+} from "@/content/chios-museums";
+import { buildChiosMuseumsSchema } from "@/content/chios-museums-schema";
 import {
   roomsCategoryDe,
   roomsCategoryEl,
@@ -38,6 +56,12 @@ import {
   standardDoubleRoomTr,
 } from "@/content/room-details";
 import type { RoomDetailData } from "@/content/room-details";
+import { buildBeachDetailSchema } from "@/content/beach-detail-schema";
+import { getLocalizedBeachDetailByPath } from "@/content/beach-details";
+import { buildVillageDetailSchema } from "@/content/village-detail-schema";
+import { getLocalizedVillageDetailByPath } from "@/content/village-details";
+import { buildMuseumDetailSchema } from "@/content/museum-detail-schema";
+import { getLocalizedMuseumDetailByPath } from "@/content/museum-details";
 import { buildRoomDetailSchema } from "@/content/room-detail-schema";
 import { buildRoomsCategorySchema } from "@/content/rooms-schema";
 import { absoluteUrl, buildPageMetadata } from "@/lib/seo";
@@ -211,6 +235,39 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const requestedPath = getRequestedPath(locale, slug);
 
+  const chiosBeachesData = getLocalizedChiosBeachesPageByPath(requestedPath);
+
+  if (chiosBeachesData) {
+    return buildLocalizedPageMetadata({
+      path: chiosBeachesData.seo.canonicalPath,
+      title: chiosBeachesData.seo.title,
+      description: chiosBeachesData.seo.description,
+      image: chiosBeachesData.seo.ogImage,
+    });
+  }
+
+  const chiosVillagesData = getLocalizedChiosVillagesPageByPath(requestedPath);
+
+  if (chiosVillagesData) {
+    return buildLocalizedPageMetadata({
+      path: chiosVillagesData.seo.canonicalPath,
+      title: chiosVillagesData.seo.title,
+      description: chiosVillagesData.seo.description,
+      image: chiosVillagesData.seo.ogImage,
+    });
+  }
+
+  const chiosMuseumsData = getLocalizedChiosMuseumsPageByPath(requestedPath);
+
+  if (chiosMuseumsData) {
+    return buildLocalizedPageMetadata({
+      path: chiosMuseumsData.seo.canonicalPath,
+      title: chiosMuseumsData.seo.title,
+      description: chiosMuseumsData.seo.description,
+      image: chiosMuseumsData.seo.ogImage,
+    });
+  }
+
   const roomsCategoryData = getLocalizedRoomsCategoryData(requestedPath);
 
   if (roomsCategoryData) {
@@ -233,6 +290,39 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     });
   }
 
+  const beachDetailData = getLocalizedBeachDetailByPath(requestedPath);
+
+  if (beachDetailData) {
+    return buildLocalizedPageMetadata({
+      path: beachDetailData.seo.canonicalPath,
+      title: beachDetailData.seo.title,
+      description: beachDetailData.seo.description,
+      image: beachDetailData.seo.ogImage,
+    });
+  }
+
+  const villageDetailData = getLocalizedVillageDetailByPath(requestedPath);
+
+  if (villageDetailData) {
+    return buildLocalizedPageMetadata({
+      path: villageDetailData.seo.canonicalPath,
+      title: villageDetailData.seo.title,
+      description: villageDetailData.seo.description,
+      image: villageDetailData.seo.ogImage,
+    });
+  }
+
+  const museumDetailData = getLocalizedMuseumDetailByPath(requestedPath);
+
+  if (museumDetailData) {
+    return buildLocalizedPageMetadata({
+      path: museumDetailData.seo.canonicalPath,
+      title: museumDetailData.seo.title,
+      description: museumDetailData.seo.description,
+      image: museumDetailData.seo.ogImage,
+    });
+  }
+
   return {};
 }
 
@@ -244,6 +334,39 @@ export default async function Page({ params }: PageProps) {
   }
 
   const requestedPath = getRequestedPath(locale, slug);
+
+  const chiosBeachesData = getLocalizedChiosBeachesPageByPath(requestedPath);
+
+  if (chiosBeachesData) {
+    return (
+      <>
+        <JsonLd data={buildChiosBeachesSchema(chiosBeachesData)} />
+        <ChiosBeachesPage data={chiosBeachesData} />
+      </>
+    );
+  }
+
+  const chiosVillagesData = getLocalizedChiosVillagesPageByPath(requestedPath);
+
+  if (chiosVillagesData) {
+    return (
+      <>
+        <JsonLd data={buildChiosVillagesSchema(chiosVillagesData)} />
+        <ChiosVillagesPage data={chiosVillagesData} />
+      </>
+    );
+  }
+
+  const chiosMuseumsData = getLocalizedChiosMuseumsPageByPath(requestedPath);
+
+  if (chiosMuseumsData) {
+    return (
+      <>
+        <JsonLd data={buildChiosMuseumsSchema(chiosMuseumsData)} />
+        <ChiosMuseumsPage data={chiosMuseumsData} />
+      </>
+    );
+  }
 
   const roomsCategoryData = getLocalizedRoomsCategoryData(requestedPath);
 
@@ -263,6 +386,39 @@ export default async function Page({ params }: PageProps) {
       <>
         <JsonLd data={buildRoomDetailSchema(roomDetailData)} />
         <RoomDetailPage data={roomDetailData} />
+      </>
+    );
+  }
+
+  const beachDetailData = getLocalizedBeachDetailByPath(requestedPath);
+
+  if (beachDetailData) {
+    return (
+      <>
+        <JsonLd data={buildBeachDetailSchema(beachDetailData)} />
+        <BeachDetailPage beach={beachDetailData} />
+      </>
+    );
+  }
+
+  const villageDetailData = getLocalizedVillageDetailByPath(requestedPath);
+
+  if (villageDetailData) {
+    return (
+      <>
+        <JsonLd data={buildVillageDetailSchema(villageDetailData)} />
+        <VillageDetailPage village={villageDetailData} />
+      </>
+    );
+  }
+
+  const museumDetailData = getLocalizedMuseumDetailByPath(requestedPath);
+
+  if (museumDetailData) {
+    return (
+      <>
+        <JsonLd data={buildMuseumDetailSchema(museumDetailData)} />
+        <MuseumDetailPage museum={museumDetailData} />
       </>
     );
   }

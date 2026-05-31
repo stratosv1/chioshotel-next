@@ -66,32 +66,82 @@ const holidayQuizPaths: Record<LanguageCode, string> = {
 
 const beachPaths: Record<LanguageCode, string> = {
   en: "/chios/chios-beaches/",
-  el: "/chios/chios-beaches/",
-  fr: "/chios/chios-beaches/",
-  de: "/chios/chios-beaches/",
-  it: "/chios/chios-beaches/",
-  es: "/chios/chios-beaches/",
-  tr: "/chios/chios-beaches/",
+  el: "/el/paralies-xios/",
+  fr: "/fr/plages-de-chios/",
+  de: "/de/straende-chios/",
+  it: "/it/spiagge-chios/",
+  es: "/es/playas-chios/",
+  tr: "/tr/sakiz-adasi-plajlari/",
+};
+
+const agiaDynamiBeachPaths: Record<LanguageCode, string> = {
+  en: "/chios/chios-beaches/agia-dynami-beach-chios/",
+  el: "/el/paralies-xios/paralia-agia-dynami/",
+  fr: "/fr/plages-de-chios/plage-agia-dynami/",
+  de: "/de/straende-chios/agia-dynami-strand/",
+  it: "/it/spiagge-chios/spiaggia-agia-dynami/",
+  es: "/es/playas-chios/playa-agia-dynami/",
+  tr: "/tr/sakiz-adasi-plajlari/agia-dynami-plaji/",
+};
+
+const mavraVoliaBeachPaths: Record<LanguageCode, string> = {
+  en: "/chios/chios-beaches/emporios-beach/",
+  el: "/el/paralies-xios/paralia-mavra-volia/",
+  fr: "/fr/plages-de-chios/plage-mavra-volia/",
+  de: "/de/straende-chios/mavra-volia-strand/",
+  it: "/it/spiagge-chios/spiaggia-mavra-volia/",
+  es: "/es/playas-chios/playa-mavra-volia/",
+  tr: "/tr/sakiz-adasi-plajlari/mavra-volia-plaji/",
 };
 
 const villagePaths: Record<LanguageCode, string> = {
   en: "/chios/chios-villages/",
-  el: "/chios/chios-villages/",
-  fr: "/chios/chios-villages/",
-  de: "/chios/chios-villages/",
-  it: "/chios/chios-villages/",
-  es: "/chios/chios-villages/",
-  tr: "/chios/chios-villages/",
+  el: "/el/xoria-xios/",
+  fr: "/fr/villages-de-chios/",
+  de: "/de/doerfer-chios/",
+  it: "/it/villaggi-chios/",
+  es: "/es/pueblos-chios/",
+  tr: "/tr/sakiz-adasi-koyleri/",
+};
+
+const pyrgiVillagePaths: Record<LanguageCode, string> = {
+  en: "/chios/chios-villages/chios-pyrgi/",
+  el: "/el/xoria-xios/pyrgi-xios/",
+  fr: "/fr/villages-de-chios/village-pyrgi/",
+  de: "/de/doerfer-chios/pyrgi-dorf/",
+  it: "/it/villaggi-chios/villaggio-pyrgi/",
+  es: "/es/pueblos-chios/pueblo-pyrgi/",
+  tr: "/tr/sakiz-adasi-koyleri/pyrgi-koyu/",
+};
+
+const mestaVillagePaths: Record<LanguageCode, string> = {
+  en: "/chios/chios-villages/mesta-chios/",
+  el: "/el/xoria-xios/mesta-xios/",
+  fr: "/fr/villages-de-chios/village-mesta/",
+  de: "/de/doerfer-chios/mesta-dorf/",
+  it: "/it/villaggi-chios/villaggio-mesta/",
+  es: "/es/pueblos-chios/pueblo-mesta/",
+  tr: "/tr/sakiz-adasi-koyleri/mesta-koyu/",
 };
 
 const museumPaths: Record<LanguageCode, string> = {
   en: "/chios/chios-museums/",
-  el: "/chios/chios-museums/",
-  fr: "/chios/chios-museums/",
-  de: "/chios/chios-museums/",
-  it: "/chios/chios-museums/",
-  es: "/chios/chios-museums/",
-  tr: "/chios/chios-museums/",
+  el: "/el/mouseia-xios/",
+  fr: "/fr/musees-de-chios/",
+  de: "/de/museen-chios/",
+  it: "/it/musei-chios/",
+  es: "/es/museos-chios/",
+  tr: "/tr/sakiz-adasi-muzeleri/",
+};
+
+const masticMuseumPaths: Record<LanguageCode, string> = {
+  en: "/chios/chios-museums/the-mastic-museum-chios/",
+  el: "/el/mouseia-xios/mouseio-mastixas-xios/",
+  fr: "/fr/musees-de-chios/musee-du-mastic-de-chios/",
+  de: "/de/museen-chios/chios-mastix-museum/",
+  it: "/it/musei-chios/museo-del-mastice-di-chios/",
+  es: "/es/museos-chios/museo-de-la-mastiha-de-chios/",
+  tr: "/tr/sakiz-adasi-muzeleri/sakiz-adasi-mastik-muzesi/",
 };
 
 const footerCopy: Record<
@@ -427,23 +477,23 @@ function getFooterGroups(language: LanguageCode) {
       links: [
         {
           label: copy.links.agiaDynami,
-          href: "/chios/chios-beaches/agia-dynami-beach-chios/",
+          href: agiaDynamiBeachPaths[language],
         },
         {
           label: copy.links.mavraVolia,
-          href: "/chios/chios-beaches/emporios-beach/",
+          href: mavraVoliaBeachPaths[language],
         },
         {
           label: copy.links.pyrgi,
-          href: "/chios/chios-villages/chios-pyrgi/",
+          href: pyrgiVillagePaths[language],
         },
         {
           label: copy.links.mesta,
-          href: "/chios/chios-villages/mesta-chios/",
+          href: mestaVillagePaths[language],
         },
         {
           label: copy.links.masticMuseum,
-          href: "/chios/chios-museums/the-mastic-museum-chios/",
+          href: masticMuseumPaths[language],
         },
       ],
     },

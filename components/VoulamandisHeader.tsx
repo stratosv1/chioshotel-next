@@ -125,33 +125,240 @@ const chiosIslandPaths: Record<LanguageCode, string> = {
 
 const beachPaths: Record<LanguageCode, string> = {
   en: "/chios/chios-beaches/",
-  el: "/chios/chios-beaches/",
-  fr: "/chios/chios-beaches/",
-  de: "/chios/chios-beaches/",
-  it: "/chios/chios-beaches/",
-  es: "/chios/chios-beaches/",
-  tr: "/chios/chios-beaches/",
+  el: "/el/paralies-xios/",
+  fr: "/fr/plages-de-chios/",
+  de: "/de/straende-chios/",
+  it: "/it/spiagge-chios/",
+  es: "/es/playas-chios/",
+  tr: "/tr/sakiz-adasi-plajlari/",
 };
+
+const beachDetailPathGroups: Record<LanguageCode, string>[] = [
+  {
+    en: "/chios/chios-beaches/agia-dynami-beach-chios/",
+    el: "/el/paralies-xios/paralia-agia-dynami/",
+    fr: "/fr/plages-de-chios/plage-agia-dynami/",
+    de: "/de/straende-chios/agia-dynami-strand/",
+    it: "/it/spiagge-chios/spiaggia-agia-dynami/",
+    es: "/es/playas-chios/playa-agia-dynami/",
+    tr: "/tr/sakiz-adasi-plajlari/agia-dynami-plaji/",
+  },
+  {
+    en: "/chios/chios-beaches/lithi-beach/",
+    el: "/el/paralies-xios/paralia-lithi/",
+    fr: "/fr/plages-de-chios/plage-lithi/",
+    de: "/de/straende-chios/lithi-strand/",
+    it: "/it/spiagge-chios/spiaggia-lithi/",
+    es: "/es/playas-chios/playa-lithi/",
+    tr: "/tr/sakiz-adasi-plajlari/lithi-plaji/",
+  },
+  {
+    en: "/chios/chios-beaches/lefkathia-beach/",
+    el: "/el/paralies-xios/paralia-lefkathia/",
+    fr: "/fr/plages-de-chios/plage-lefkathia/",
+    de: "/de/straende-chios/lefkathia-strand/",
+    it: "/it/spiagge-chios/spiaggia-lefkathia/",
+    es: "/es/playas-chios/playa-lefkathia/",
+    tr: "/tr/sakiz-adasi-plajlari/lefkathia-plaji/",
+  },
+  {
+    en: "/chios/chios-beaches/nagos-beach/",
+    el: "/el/paralies-xios/paralia-nagos/",
+    fr: "/fr/plages-de-chios/plage-nagos/",
+    de: "/de/straende-chios/nagos-strand/",
+    it: "/it/spiagge-chios/spiaggia-nagos/",
+    es: "/es/playas-chios/playa-nagos/",
+    tr: "/tr/sakiz-adasi-plajlari/nagos-plaji/",
+  },
+  {
+    en: "/chios/chios-beaches/avlonia-beach2/",
+    el: "/el/paralies-xios/paralia-avlonia/",
+    fr: "/fr/plages-de-chios/plage-avlonia/",
+    de: "/de/straende-chios/avlonia-strand/",
+    it: "/it/spiagge-chios/spiaggia-avlonia/",
+    es: "/es/playas-chios/playa-avlonia/",
+    tr: "/tr/sakiz-adasi-plajlari/avlonia-plaji/",
+  },
+  {
+    en: "/chios/chios-beaches/salagona-beach/",
+    el: "/el/paralies-xios/paralia-salagona/",
+    fr: "/fr/plages-de-chios/plage-salagona/",
+    de: "/de/straende-chios/salagona-strand/",
+    it: "/it/spiagge-chios/spiaggia-salagona/",
+    es: "/es/playas-chios/playa-salagona/",
+    tr: "/tr/sakiz-adasi-plajlari/salagona-plaji/",
+  },
+  {
+    en: "/chios/chios-beaches/agia-fotia-beach/",
+    el: "/el/paralies-xios/paralia-agia-fotia/",
+    fr: "/fr/plages-de-chios/plage-agia-fotia/",
+    de: "/de/straende-chios/agia-fotia-strand/",
+    it: "/it/spiagge-chios/spiaggia-agia-fotia/",
+    es: "/es/playas-chios/playa-agia-fotia/",
+    tr: "/tr/sakiz-adasi-plajlari/agia-fotia-plaji/",
+  },
+  {
+    en: "/chios/chios-beaches/komi-beach/",
+    el: "/el/paralies-xios/paralia-komi/",
+    fr: "/fr/plages-de-chios/plage-komi/",
+    de: "/de/straende-chios/komi-strand/",
+    it: "/it/spiagge-chios/spiaggia-komi/",
+    es: "/es/playas-chios/playa-komi/",
+    tr: "/tr/sakiz-adasi-plajlari/komi-plaji/",
+  },
+  {
+    en: "/chios/chios-beaches/emporios-beach/",
+    el: "/el/paralies-xios/paralia-mavra-volia/",
+    fr: "/fr/plages-de-chios/plage-mavra-volia/",
+    de: "/de/straende-chios/mavra-volia-strand/",
+    it: "/it/spiagge-chios/spiaggia-mavra-volia/",
+    es: "/es/playas-chios/playa-mavra-volia/",
+    tr: "/tr/sakiz-adasi-plajlari/mavra-volia-plaji/",
+  },
+];
 
 const villagePaths: Record<LanguageCode, string> = {
   en: "/chios/chios-villages/",
-  el: "/chios/chios-villages/",
-  fr: "/chios/chios-villages/",
-  de: "/chios/chios-villages/",
-  it: "/chios/chios-villages/",
-  es: "/chios/chios-villages/",
-  tr: "/chios/chios-villages/",
+  el: "/el/xoria-xios/",
+  fr: "/fr/villages-de-chios/",
+  de: "/de/doerfer-chios/",
+  it: "/it/villaggi-chios/",
+  es: "/es/pueblos-chios/",
+  tr: "/tr/sakiz-adasi-koyleri/",
 };
+
+const villageDetailPathGroups: Record<LanguageCode, string>[] = [
+  {
+    en: "/chios/chios-villages/chios-pyrgi/",
+    el: "/el/xoria-xios/pyrgi-xios/",
+    fr: "/fr/villages-de-chios/village-pyrgi/",
+    de: "/de/doerfer-chios/pyrgi-dorf/",
+    it: "/it/villaggi-chios/villaggio-pyrgi/",
+    es: "/es/pueblos-chios/pueblo-pyrgi/",
+    tr: "/tr/sakiz-adasi-koyleri/pyrgi-koyu/",
+  },
+  {
+    en: "/chios/chios-villages/mesta-chios/",
+    el: "/el/xoria-xios/mesta-xios/",
+    fr: "/fr/villages-de-chios/village-mesta/",
+    de: "/de/doerfer-chios/mesta-dorf/",
+    it: "/it/villaggi-chios/villaggio-mesta/",
+    es: "/es/pueblos-chios/pueblo-mesta/",
+    tr: "/tr/sakiz-adasi-koyleri/mesta-koyu/",
+  },
+  {
+    en: "/chios/chios-villages/vessa-chios/",
+    el: "/el/xoria-xios/vessa-xios/",
+    fr: "/fr/villages-de-chios/village-vessa/",
+    de: "/de/doerfer-chios/vessa-dorf/",
+    it: "/it/villaggi-chios/villaggio-vessa/",
+    es: "/es/pueblos-chios/pueblo-vessa/",
+    tr: "/tr/sakiz-adasi-koyleri/vessa-koyu/",
+  },
+  {
+    en: "/chios/chios-villages/olympoi-chios/",
+    el: "/el/xoria-xios/olympoi-xios/",
+    fr: "/fr/villages-de-chios/village-olympoi/",
+    de: "/de/doerfer-chios/olympoi-dorf/",
+    it: "/it/villaggi-chios/villaggio-olympoi/",
+    es: "/es/pueblos-chios/pueblo-olympoi/",
+    tr: "/tr/sakiz-adasi-koyleri/olympoi-koyu/",
+  },
+  {
+    en: "/chios/chios-villages/volissos-chios/",
+    el: "/el/xoria-xios/volissos-xios/",
+    fr: "/fr/villages-de-chios/village-volissos/",
+    de: "/de/doerfer-chios/volissos-dorf/",
+    it: "/it/villaggi-chios/villaggio-volissos/",
+    es: "/es/pueblos-chios/pueblo-volissos/",
+    tr: "/tr/sakiz-adasi-koyleri/volissos-koyu/",
+  },
+  {
+    en: "/chios/chios-villages/armolia-chios/",
+    el: "/el/xoria-xios/armolia-xios/",
+    fr: "/fr/villages-de-chios/village-armolia/",
+    de: "/de/doerfer-chios/armolia-dorf/",
+    it: "/it/villaggi-chios/villaggio-armolia/",
+    es: "/es/pueblos-chios/pueblo-armolia/",
+    tr: "/tr/sakiz-adasi-koyleri/armolia-koyu/",
+  },
+  {
+    en: "/chios/chios-villages/lagada-chios/",
+    el: "/el/xoria-xios/lagada-xios/",
+    fr: "/fr/villages-de-chios/village-lagada/",
+    de: "/de/doerfer-chios/lagada-dorf/",
+    it: "/it/villaggi-chios/villaggio-lagada/",
+    es: "/es/pueblos-chios/pueblo-lagada/",
+    tr: "/tr/sakiz-adasi-koyleri/lagada-koyu/",
+  },
+];
 
 const museumPaths: Record<LanguageCode, string> = {
   en: "/chios/chios-museums/",
-  el: "/chios/chios-museums/",
-  fr: "/chios/chios-museums/",
-  de: "/chios/chios-museums/",
-  it: "/chios/chios-museums/",
-  es: "/chios/chios-museums/",
-  tr: "/chios/chios-museums/",
+  el: "/el/mouseia-xios/",
+  fr: "/fr/musees-de-chios/",
+  de: "/de/museen-chios/",
+  it: "/it/musei-chios/",
+  es: "/es/museos-chios/",
+  tr: "/tr/sakiz-adasi-muzeleri/",
 };
+
+const museumDetailPathGroups: Record<LanguageCode, string>[] = [
+  {
+    en: "/chios/chios-museums/the-mastic-museum-chios/",
+    el: "/el/mouseia-xios/mouseio-mastichas-xios/",
+    fr: "/fr/musees-de-chios/musee-du-mastic-chios/",
+    de: "/de/museen-chios/mastix-museum-chios/",
+    it: "/it/musei-chios/museo-del-mastice-chios/",
+    es: "/es/museos-chios/museo-mastiha-chios/",
+    tr: "/tr/sakiz-adasi-muzeleri/sakiz-mastik-muzesi/",
+  },
+  {
+    en: "/chios/chios-museums/archaeological-museum-chios/",
+    el: "/el/mouseia-xios/arxaiologiko-mouseio-xios/",
+    fr: "/fr/musees-de-chios/musee-archeologique-chios/",
+    de: "/de/museen-chios/archaeologisches-museum-chios/",
+    it: "/it/musei-chios/museo-archeologico-chios/",
+    es: "/es/museos-chios/museo-arqueologico-chios/",
+    tr: "/tr/sakiz-adasi-muzeleri/arkeoloji-muzesi-sakiz/",
+  },
+  {
+    en: "/chios/chios-museums/chios-byzantine-museum/",
+    el: "/el/mouseia-xios/vyzantino-mouseio-xios/",
+    fr: "/fr/musees-de-chios/musee-byzantin-chios/",
+    de: "/de/museen-chios/byzantinisches-museum-chios/",
+    it: "/it/musei-chios/museo-bizantino-chios/",
+    es: "/es/museos-chios/museo-bizantino-chios/",
+    tr: "/tr/sakiz-adasi-muzeleri/bizans-muzesi-sakiz/",
+  },
+  {
+    en: "/chios/chios-museums/koraes-library-chios/",
+    el: "/el/mouseia-xios/vivliothiki-korai-xios/",
+    fr: "/fr/musees-de-chios/bibliotheque-korais-chios/",
+    de: "/de/museen-chios/korais-bibliothek-chios/",
+    it: "/it/musei-chios/biblioteca-korais-chios/",
+    es: "/es/museos-chios/biblioteca-korais-chios/",
+    tr: "/tr/sakiz-adasi-muzeleri/korais-kutuphanesi-sakiz/",
+  },
+  {
+    en: "/chios/chios-museums/chios-maritime-museum/",
+    el: "/el/mouseia-xios/naftiko-mouseio-xios/",
+    fr: "/fr/musees-de-chios/musee-maritime-chios/",
+    de: "/de/museen-chios/schifffahrtsmuseum-chios/",
+    it: "/it/musei-chios/museo-marittimo-chios/",
+    es: "/es/museos-chios/museo-maritimo-chios/",
+    tr: "/tr/sakiz-adasi-muzeleri/denizcilik-muzesi-sakiz/",
+  },
+  {
+    en: "/chios/chios-museums/kallimasia-folklore-museum/",
+    el: "/el/mouseia-xios/laografiko-mouseio-kallimasias/",
+    fr: "/fr/musees-de-chios/musee-folklorique-kallimasia/",
+    de: "/de/museen-chios/volkskundemuseum-kallimasia/",
+    it: "/it/musei-chios/museo-folkloristico-kallimasia/",
+    es: "/es/museos-chios/museo-folclorico-kallimasia/",
+    tr: "/tr/sakiz-adasi-muzeleri/kallimasia-folklor-muzesi/",
+  },
+];
 
 const navigationCopy: Record<
   LanguageCode,
@@ -495,6 +702,30 @@ function getCurrentLanguage(path: string): LanguageCode {
 function getLanguageHref(path: string, language: LanguageCode) {
   const normalizedPath = normalizePath(path);
 
+  const matchingBeachDetailGroup = beachDetailPathGroups.find((group) =>
+    Object.values(group).includes(normalizedPath),
+  );
+
+  if (matchingBeachDetailGroup) {
+    return matchingBeachDetailGroup[language];
+  }
+
+  const matchingVillageDetailGroup = villageDetailPathGroups.find((group) =>
+    Object.values(group).includes(normalizedPath),
+  );
+
+  if (matchingVillageDetailGroup) {
+    return matchingVillageDetailGroup[language];
+  }
+
+  const matchingMuseumDetailGroup = museumDetailPathGroups.find((group) =>
+    Object.values(group).includes(normalizedPath),
+  );
+
+  if (matchingMuseumDetailGroup) {
+    return matchingMuseumDetailGroup[language];
+  }
+
   const isHomePage = Object.values(homePaths).includes(normalizedPath);
 
   const isRoomsCategoryPage =
@@ -515,6 +746,15 @@ function getLanguageHref(path: string, language: LanguageCode) {
 
   const isChiosIslandPage =
     Object.values(chiosIslandPaths).includes(normalizedPath);
+
+  const isBeachCategoryPage =
+    Object.values(beachPaths).includes(normalizedPath);
+
+  const isVillageCategoryPage =
+    Object.values(villagePaths).includes(normalizedPath);
+
+  const isMuseumCategoryPage =
+    Object.values(museumPaths).includes(normalizedPath);
 
   if (isHomePage) {
     return homePaths[language];
@@ -548,11 +788,80 @@ function getLanguageHref(path: string, language: LanguageCode) {
     return chiosIslandPaths[language];
   }
 
+  if (isBeachCategoryPage) {
+    return beachPaths[language];
+  }
+
+  if (isVillageCategoryPage) {
+    return villagePaths[language];
+  }
+
+  if (isMuseumCategoryPage) {
+    return museumPaths[language];
+  }
+
   if (
     normalizedPath === "/chios-rooms/" ||
     normalizedPath.startsWith("/chios-rooms/")
   ) {
     return roomsCategoryPaths[language];
+  }
+
+  if (
+    normalizedPath === "/chios/chios-beaches/" ||
+    normalizedPath.startsWith("/chios/chios-beaches/") ||
+    normalizedPath === "/el/paralies-xios/" ||
+    normalizedPath.startsWith("/el/paralies-xios/") ||
+    normalizedPath === "/fr/plages-de-chios/" ||
+    normalizedPath.startsWith("/fr/plages-de-chios/") ||
+    normalizedPath === "/de/straende-chios/" ||
+    normalizedPath.startsWith("/de/straende-chios/") ||
+    normalizedPath === "/it/spiagge-chios/" ||
+    normalizedPath.startsWith("/it/spiagge-chios/") ||
+    normalizedPath === "/es/playas-chios/" ||
+    normalizedPath.startsWith("/es/playas-chios/") ||
+    normalizedPath === "/tr/sakiz-adasi-plajlari/" ||
+    normalizedPath.startsWith("/tr/sakiz-adasi-plajlari/")
+  ) {
+    return beachPaths[language];
+  }
+
+  if (
+    normalizedPath === "/chios/chios-villages/" ||
+    normalizedPath.startsWith("/chios/chios-villages/") ||
+    normalizedPath === "/el/xoria-xios/" ||
+    normalizedPath.startsWith("/el/xoria-xios/") ||
+    normalizedPath === "/fr/villages-de-chios/" ||
+    normalizedPath.startsWith("/fr/villages-de-chios/") ||
+    normalizedPath === "/de/doerfer-chios/" ||
+    normalizedPath.startsWith("/de/doerfer-chios/") ||
+    normalizedPath === "/it/villaggi-chios/" ||
+    normalizedPath.startsWith("/it/villaggi-chios/") ||
+    normalizedPath === "/es/pueblos-chios/" ||
+    normalizedPath.startsWith("/es/pueblos-chios/") ||
+    normalizedPath === "/tr/sakiz-adasi-koyleri/" ||
+    normalizedPath.startsWith("/tr/sakiz-adasi-koyleri/")
+  ) {
+    return villagePaths[language];
+  }
+
+  if (
+    normalizedPath === "/chios/chios-museums/" ||
+    normalizedPath.startsWith("/chios/chios-museums/") ||
+    normalizedPath === "/el/mouseia-xios/" ||
+    normalizedPath.startsWith("/el/mouseia-xios/") ||
+    normalizedPath === "/fr/musees-de-chios/" ||
+    normalizedPath.startsWith("/fr/musees-de-chios/") ||
+    normalizedPath === "/de/museen-chios/" ||
+    normalizedPath.startsWith("/de/museen-chios/") ||
+    normalizedPath === "/it/musei-chios/" ||
+    normalizedPath.startsWith("/it/musei-chios/") ||
+    normalizedPath === "/es/museos-chios/" ||
+    normalizedPath.startsWith("/es/museos-chios/") ||
+    normalizedPath === "/tr/sakiz-adasi-muzeleri/" ||
+    normalizedPath.startsWith("/tr/sakiz-adasi-muzeleri/")
+  ) {
+    return museumPaths[language];
   }
 
   return homePaths[language];
