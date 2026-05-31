@@ -40,7 +40,7 @@ import {
 import type { RoomDetailData } from "@/content/room-details";
 import { buildRoomDetailSchema } from "@/content/room-detail-schema";
 import { buildRoomsCategorySchema } from "@/content/rooms-schema";
-import { buildPageMetadata } from "@/lib/seo";
+import { absoluteUrl, buildPageMetadata } from "@/lib/seo";
 import { getRouteByPath, getRoutesByItemId, routeMap } from "@/lib/url-map";
 
 type PageProps = {
@@ -139,6 +139,69 @@ function getLocalizedRoomDetailData(path: string): RoomDetailData | undefined {
   }
 }
 
+function buildLocalizedAlternates(path: string) {
+  const route = getRouteByPath(path);
+
+  if (!route) {
+    return undefined;
+  }
+
+  const relatedRoutes = getRoutesByItemId(route.itemId).filter(
+    (item) => item.action === "KEEP",
+  );
+
+  const languages = relatedRoutes.reduce<Record<string, string>>(
+    (acc, item) => {
+      acc[item.language] = absoluteUrl(item.path);
+      return acc;
+    },
+    {},
+  );
+
+  const defaultRoute = relatedRoutes.find(
+    (item) => item.language === defaultLanguage,
+  );
+
+  if (defaultRoute) {
+    languages["x-default"] = absoluteUrl(defaultRoute.path);
+  }
+
+  return {
+    canonical: absoluteUrl(path),
+    languages,
+  };
+}
+
+function buildLocalizedPageMetadata({
+  path,
+  title,
+  description,
+  image,
+}: {
+  path: string;
+  title: string;
+  description: string;
+  image?: string;
+}): Metadata {
+  const metadata = buildPageMetadata({
+    path,
+    title,
+    description,
+    image,
+  });
+
+  const alternates = buildLocalizedAlternates(path);
+
+  if (!alternates) {
+    return metadata;
+  }
+
+  return {
+    ...metadata,
+    alternates,
+  };
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale, slug } = await params;
 
@@ -151,7 +214,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const roomsCategoryData = getLocalizedRoomsCategoryData(requestedPath);
 
   if (roomsCategoryData) {
-    return buildPageMetadata({
+    return buildLocalizedPageMetadata({
       path: roomsCategoryData.seo.canonicalPath,
       title: roomsCategoryData.seo.title,
       description: roomsCategoryData.seo.description,
@@ -162,7 +225,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const roomDetailData = getLocalizedRoomDetailData(requestedPath);
 
   if (roomDetailData) {
-    return buildPageMetadata({
+    return buildLocalizedPageMetadata({
       path: roomDetailData.seo.canonicalPath,
       title: roomDetailData.seo.title,
       description: roomDetailData.seo.description,
