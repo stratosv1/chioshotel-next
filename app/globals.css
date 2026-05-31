@@ -12046,3 +12046,34 @@ a.rw-action-btn {
     display: none;
   }
 }
+/* =========================================================
+   CLS FIX: Home hero quiz card pseudo element
+   Prevent decorative ::after from causing layout shifts
+   ========================================================= */
+
+.hero-quiz-card {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  contain: layout paint;
+}
+
+.hero-quiz-card::after {
+  position: absolute;
+  inset: auto;
+  right: -42px;
+  bottom: -42px;
+  width: 120px;
+  height: 120px;
+  display: block;
+  pointer-events: none;
+  transform: translate3d(0, 0, 0);
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-quiz-card::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
