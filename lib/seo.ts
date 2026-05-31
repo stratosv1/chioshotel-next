@@ -12,6 +12,22 @@ export type SeoInput = {
   noIndex?: boolean;
 };
 
+const publishedLocalizedPaths = new Set([
+  "/el/",
+  "/fr/",
+  "/de/",
+  "/it/",
+  "/es/",
+  "/tr/",
+
+  "/el/domatia-xios/",
+  "/fr/chambres-a-chios/",
+  "/de/chios-zimmer/",
+  "/it/camere-a-chios/",
+  "/es/habitaciones-en-chios/",
+  "/tr/sakiz-adasi-odalari/",
+]);
+
 export function absoluteUrl(path: string): string {
   if (!path) {
     return siteUrl;
@@ -40,6 +56,14 @@ export function getCanonicalUrl(path: string): string {
   return absoluteUrl(route.canonicalPath || route.path);
 }
 
+function isPublishedAlternate(path: string, language: LanguageCode) {
+  if (language === "en") {
+    return true;
+  }
+
+  return publishedLocalizedPaths.has(path);
+}
+
 export function getAlternates(path: string): Record<string, string> {
   const localizedRoutes = getLocalizedRoutes(path);
 
@@ -47,9 +71,17 @@ export function getAlternates(path: string): Record<string, string> {
     return {};
   }
 
+  const publishedRoutes = localizedRoutes.filter((route) =>
+    isPublishedAlternate(route.path, route.language),
+  );
+
+  if (!publishedRoutes.length) {
+    return {};
+  }
+
   const alternates: Record<string, string> = {};
 
-  for (const route of localizedRoutes) {
+  for (const route of publishedRoutes) {
     const language = languages.find((item) => item.code === route.language);
 
     if (!language) {
@@ -59,7 +91,7 @@ export function getAlternates(path: string): Record<string, string> {
     alternates[language.hreflang] = absoluteUrl(route.path);
   }
 
-  const englishRoute = localizedRoutes.find((route) => route.language === "en");
+  const englishRoute = publishedRoutes.find((route) => route.language === "en");
 
   if (englishRoute) {
     alternates["x-default"] = absoluteUrl(englishRoute.path);
@@ -94,7 +126,9 @@ export function getLanguageForPath(path: string): LanguageCode {
 export function buildPageMetadata(input: SeoInput): Metadata {
   const canonicalUrl = getCanonicalUrl(input.path);
   const alternates = getAlternates(input.path);
-  const imageUrl = input.image ? absoluteUrl(input.image) : absoluteUrl("/og-image.jpg");
+  const imageUrl = input.image
+    ? absoluteUrl(input.image)
+    : absoluteUrl("/og-image.jpg");
 
   if (input.noIndex) {
     return {
