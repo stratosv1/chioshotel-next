@@ -603,3 +603,729 @@ input{
   font-size:14px;
   line-height:1.7;
 }
+/* LOCATION / MAP / DISCOUNT */
+.bento{
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  gap:18px;
+  margin-top:20px;
+}
+
+.b7{
+  grid-column:span 7;
+}
+
+.b5{
+  grid-column:span 5;
+}
+
+.b12{
+  grid-column:span 12;
+}
+
+.b-card{
+  border-radius:var(--vh-radius-xl);
+  overflow:hidden;
+  transition:var(--transition);
+}
+
+.b-card:hover{
+  transform:translateY(-4px);
+  box-shadow:var(--vh-shadow-strong);
+}
+
+.b-pad{
+  padding:30px;
+}
+
+.map-preview{
+  height:260px;
+  background-color:#f2f2f2;
+  background-image:
+    linear-gradient(to top,rgba(0,0,0,.36),rgba(0,0,0,.05)),
+    url("https://chioshotel.gr/wp-content/uploads/2026/03/voulamandis.house_.google.maps_.webp");
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size:cover;
+  border-radius:20px;
+  padding:20px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  position:relative;
+}
+
+.map-iframe{
+  width:100%;
+  height:380px;
+  border:0;
+  display:none;
+}
+
+.map-preview.is-hidden{
+  display:none;
+}
+
+.map-iframe.is-visible{
+  display:block;
+}
+
+.distance-badge{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  text-align:center;
+  padding:18px;
+  border-top:1px solid rgba(154,107,63,.10);
+  background:#fffdfa;
+  gap:10px;
+}
+
+.distance-badge > div{
+  padding:14px 10px;
+  border-radius:18px;
+  background:#fff;
+  border:1px solid rgba(154,107,63,.10);
+}
+
+.distance-badge span{
+  font-size:11px;
+  color:var(--vh-muted);
+  text-transform:uppercase;
+  font-weight:800;
+}
+
+.distance-badge strong{
+  display:block;
+  margin-top:4px;
+  font-size:15px;
+  color:#8E6607!important;
+  font-weight:700!important;
+  font-family:Georgia,serif;
+}
+
+.discount-box{
+  position:relative;
+  background:linear-gradient(145deg,#fffdfa,var(--vh-surface-2));
+  overflow:hidden;
+}
+
+.discount-box::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(110deg,transparent 0%,rgba(255,255,255,.55) 45%,transparent 70%);
+  transform:translateX(-130%);
+  animation:shineMove 1s infinite;
+}
+
+.discount-badge{
+  position:relative;
+  z-index:1;
+  background:linear-gradient(135deg,#a87842,#8E6607);
+  color:#fff!important;
+  padding:9px 14px;
+  border-radius:999px;
+  font-weight:900;
+  font-size:11px;
+  letter-spacing:1px;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  box-shadow:0 10px 22px rgba(142,102,7,.18);
+}
+
+.discount-badge::before{
+  content:"";
+  width:8px;
+  height:8px;
+  border-radius:999px;
+  background:#22c55e;
+  box-shadow:0 0 0 0 rgba(34,197,94,.8);
+  animation:pulseDot 1.35s infinite;
+}
+
+.form-row{
+  display:flex;
+  gap:10px;
+  margin-top:18px;
+  flex-wrap:wrap;
+}
+
+.email-input{
+  flex:1;
+  min-width:220px;
+  padding:14px 18px;
+  border-radius:999px;
+  border:1px solid rgba(154,107,63,.2);
+  font-size:15px;
+  outline:none;
+}
+
+.email-input:focus{
+  border-color:var(--vh-accent);
+}
+
+.discount-success{
+  display:none;
+  margin-top:14px;
+  padding:14px 16px;
+  border-radius:12px;
+  background:#fdfaf3;
+  border:1px solid #8E6607;
+  font-weight:800;
+}
+
+.discount-code-value{
+  font-size:22px;
+  color:#8E6607;
+  margin-top:8px;
+  word-break:break-word;
+}
+
+.discount-error{
+  display:none;
+  margin-top:10px;
+  padding:12px 14px;
+  border-radius:12px;
+  background:#fff4f4;
+  border:1px solid #d66;
+  color:#a33;
+  font-weight:800;
+  font-size:14px;
+}
+
+.discount-consent{
+  margin-top:10px;
+  font-size:12px;
+  color:var(--vh-dark);
+}
+
+.vh-check-list{
+  margin:18px 0 0;
+  padding:0;
+  list-style:none;
+  color:var(--vh-dark);
+  font-size:15px;
+  line-height:1.9;
+  font-weight:700;
+}
+
+.vh-location-copy{
+  margin-top:24px;
+  border-radius:var(--vh-radius-xxl);
+  padding:34px;
+}
+
+.vh-location-copy p{
+  margin:0 0 18px;
+  color:var(--vh-muted);
+  font-size:16px;
+  line-height:1.85;
+  max-width:980px;
+}
+
+.vh-location-copy p:last-child{
+  margin-bottom:0;
+}
+
+/* ROOMS */
+.vh-split-highlight{
+  display:grid;
+  grid-template-columns:1.08fr .92fr;
+  gap:22px;
+  margin-bottom:24px;
+}
+
+.vh-highlight-card{
+  background:linear-gradient(180deg,#fffdfa 0%,#f7efe5 100%);
+  border-radius:var(--vh-radius-xxl);
+  padding:34px;
+}
+
+.vh-highlight-card h3{
+  margin:0 0 10px;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:34px;
+  line-height:1.1;
+  color:var(--vh-accent-dark)!important;
+  font-weight:700!important;
+}
+
+.vh-highlight-card p{
+  margin:0;
+  color:var(--vh-muted);
+  font-size:16px;
+  line-height:1.8;
+}
+
+.vh-room-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:22px;
+}
+
+.vh-room-card{
+  border-radius:var(--vh-radius-xl);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  transition:var(--transition);
+  width:100%;
+}
+
+.vh-room-card:hover{
+  transform:translateY(-4px);
+  box-shadow:var(--vh-shadow-strong);
+}
+
+.vh-room-image{
+  position:relative;
+  aspect-ratio:4/3;
+  background:#e8ddcf center/cover no-repeat;
+  width:100%;
+  overflow:hidden;
+}
+
+.vh-room-image--economy{
+  background-image:url("https://chioshotel.gr/wp-content/uploads/2022/12/DSC07803-1.webp");
+}
+
+.vh-room-image--ground{
+  background-image:url("https://chioshotel.gr/wp-content/uploads/2022/12/double-triple-room.jpg");
+}
+
+.vh-room-image--upper{
+  background-image:url("https://chioshotel.gr/wp-content/uploads/2022/12/DSC07867-1.webp");
+}
+
+.vh-room-image--family{
+  background-image:url("https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-family-apartments.webp");
+}
+
+.room-offer-stack{
+  position:absolute!important;
+  top:10px!important;
+  left:10px!important;
+  right:10px!important;
+  width:auto!important;
+  max-width:none!important;
+  display:flex!important;
+  flex-direction:row!important;
+  justify-content:space-between!important;
+  align-items:flex-start!important;
+  gap:8px!important;
+  z-index:5!important;
+}
+
+.room-live-badge,
+.room-direct-badge,
+.room-bed-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:900;
+  white-space:nowrap;
+  box-shadow:0 8px 18px rgba(0,0,0,.16);
+}
+
+.room-live-badge{
+  order:1!important;
+  padding:8px 12px;
+  background:linear-gradient(135deg,#22c55e,#16a34a);
+  color:#fff;
+}
+
+.room-live-badge::before{
+  content:"";
+  width:8px;
+  height:8px;
+  border-radius:999px;
+  background:#bbf7d0;
+  box-shadow:0 0 0 0 rgba(187,247,208,.9);
+  animation:pulseDotLight 1.35s infinite;
+}
+
+.room-direct-badge{
+  order:2!important;
+  margin-left:auto!important;
+  padding:7px 10px;
+  background:rgba(240,253,244,.96);
+  color:#15803d;
+}
+
+.room-bed-badge{
+  position:absolute;
+  left:10px;
+  bottom:10px;
+  z-index:2;
+  padding:7px 10px;
+  background:rgba(255,255,255,.94);
+  color:#3d3530;
+}
+
+@keyframes pulseDotLight{
+  0%{
+    box-shadow:0 0 0 0 rgba(187,247,208,.9);
+  }
+
+  70%{
+    box-shadow:0 0 0 9px rgba(187,247,208,0);
+  }
+
+  100%{
+    box-shadow:0 0 0 0 rgba(187,247,208,0);
+  }
+}
+
+.vh-room-body{
+  padding:24px;
+  display:flex;
+  flex-direction:column;
+  flex:1;
+}
+
+.vh-room-body h3{
+  margin:0 0 10px;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:28px;
+  line-height:1.12;
+  color:var(--vh-accent-dark)!important;
+  font-weight:700!important;
+}
+
+.vh-room-body p{
+  margin:0 0 18px;
+  color:var(--vh-muted);
+  font-size:15px;
+  line-height:1.75;
+  flex:1;
+}
+
+.vh-room-meta,
+.vh-room-amenities{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+  margin-bottom:12px;
+}
+
+.vh-room-amenities{
+  grid-template-columns:repeat(4,minmax(0,1fr));
+}
+
+.vh-room-meta span,
+.vh-room-amenities span{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:34px;
+  padding:0 8px;
+  border-radius:999px;
+  background:var(--vh-surface-2);
+  border:1px solid rgba(154,107,63,.10);
+  color:var(--vh-accent-dark)!important;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  text-align:center;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.vh-room-amenities span{
+  background:#fff;
+  color:#3D3530!important;
+  font-size:10.5px;
+  text-transform:none;
+  letter-spacing:0;
+}
+
+/* LAST MINUTE WIDGET */
+.lm-widget{
+  width:100%;
+  max-width:100%;
+  font-family:Arial,Helvetica,sans-serif;
+  color:var(--vh-text);
+}
+
+.lm-shell{
+  width:min(var(--vh-container),calc(100% - 32px));
+  margin:0 auto;
+}
+
+.lm-panel{
+  background:linear-gradient(180deg,#fffdfa 0%,#fbf6f0 100%);
+  border:1px solid #eadfd3;
+  border-radius:24px;
+  box-shadow:0 10px 28px rgba(61,53,48,.06);
+  padding:14px;
+}
+
+#deals-app{
+  max-width:100%;
+  margin:auto;
+  padding:0;
+}
+
+.rb-hero,
+.rb-search-card,
+.rb-results-wrap{
+  background:#fff;
+  border:1px solid #EAE3DC;
+  border-radius:20px;
+  box-shadow:0 8px 22px rgba(0,0,0,.05);
+}
+
+.rb-hero{
+  padding:16px 18px;
+  background:linear-gradient(145deg,#fff,#fff8f2);
+  border:1px solid rgba(212,163,115,.35);
+  margin-bottom:12px;
+}
+
+.rb-hero-top{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+}
+
+.rb-hero-head{
+  flex:1 1 580px;
+  min-width:280px;
+}
+
+.rb-hero-actions{
+  flex:0 0 320px;
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:10px;
+}
+
+.rb-hero-timer{
+  width:100%;
+  background:linear-gradient(180deg,#fff8f0 0%,#fffdf9 100%);
+  border:1px solid #ecd8c2;
+  border-radius:16px;
+  padding:10px 14px;
+  box-shadow:0 8px 20px rgba(142,102,7,.06);
+}
+
+.rb-hero-timer-label{
+  margin:0 0 6px;
+  color:#7b6656;
+  font-size:.82rem;
+  font-weight:800;
+  line-height:1.35;
+  text-align:center;
+}
+
+.rb-hero-timer-value{
+  margin:0;
+  color:#8E6607;
+  font-size:1.7rem;
+  line-height:1;
+  font-weight:900;
+  letter-spacing:.04em;
+  text-align:center;
+}
+
+.rb-title{
+  margin:0 0 6px;
+  font-size:1.6rem;
+  font-weight:900;
+  line-height:1.12;
+  color:#8E6607!important;
+  font-family:Georgia,"Times New Roman",serif;
+}
+
+.rb-subtitle{
+  margin:0;
+  color:#6f645b;
+  line-height:1.6;
+  font-size:.96rem;
+  max-width:1050px;
+}
+
+.rb-trust-line{
+  margin-top:12px;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 12px;
+  border-radius:999px;
+  background:#fff8e8;
+  border:1px solid #efdfaa;
+  color:#8f6d08;
+  font-weight:800;
+  font-size:.82rem;
+}
+
+.rb-search-card{
+  padding:16px;
+  margin-bottom:12px;
+}
+
+.rb-section-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:10px;
+}
+
+.rb-section-head h2,
+.rb-section-head h3{
+  margin:0 0 4px;
+  font-weight:900;
+  font-size:1.15rem;
+  color:#8E6607!important;
+  font-family:Georgia,"Times New Roman",serif;
+}
+
+.rb-section-head p{
+  margin:0;
+  color:#6f645b;
+  line-height:1.45;
+  font-size:.88rem;
+}
+
+.rb-guest-row{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+  margin-top:10px;
+}
+
+.rb-guest-btn{
+  border:none;
+  background:#fff;
+  border:2px solid #EAE3DC;
+  color:#3D3530;
+  padding:10px 10px;
+  border-radius:13px;
+  font-weight:900;
+  cursor:pointer;
+  min-width:0;
+  width:100%;
+  transition:.2s ease;
+  font-size:.88rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  white-space:nowrap;
+}
+
+.rb-guest-btn.is-active{
+  background:linear-gradient(135deg,#8E6607,#6A4B00);
+  border-color:transparent;
+  color:#fff;
+  box-shadow:0 8px 18px rgba(156,102,68,.22);
+}
+
+.rb-helper{
+  margin-top:8px;
+  color:#6f645b;
+  font-size:.84rem;
+  line-height:1.45;
+  font-weight:700;
+}
+
+.rb-loading{
+  margin-top:10px;
+  padding:10px 12px;
+  border-radius:12px;
+  background:#fff8f2;
+  border:1px solid rgba(212,163,115,.35);
+  color:#8E6607;
+  font-weight:800;
+  font-size:.84rem;
+}
+
+.rb-results-wrap{
+  padding:16px;
+  display:none;
+}
+
+.rb-results-wrap.is-visible{
+  display:block;
+}
+
+.rb-results-meta{
+  margin-top:4px;
+  color:#6f645b;
+  font-weight:700;
+  font-size:.84rem;
+}
+
+.rb-filter-row{
+  display:none;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:0 0 12px;
+  padding:0 0 12px;
+  border-bottom:1px solid #EAE3DC;
+}
+
+.rb-filter-chip{
+  border:none;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:7px 10px;
+  border-radius:999px;
+  border:1px solid #EAE3DC;
+  background:#fff;
+  color:#3D3530;
+  font-weight:800;
+  font-size:.76rem;
+}
+
+.rb-filter-chip.is-active{
+  background:#fff8f2;
+  border-color:#8E6607;
+  color:#8E6607;
+}
+
+.rb-empty{
+  margin-top:10px;
+  background:#fff;
+  border:1px solid #EAE3DC;
+  border-radius:14px;
+  padding:18px 14px;
+  text-align:center;
+  color:#6f645b;
+  font-weight:800;
+  font-size:.86rem;
+}
+
+.rb-room-list{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:14px;
+  margin-top:12px;
+}
+
+.rb-room-card{
+  background:#fff;
+  border:1px solid rgba(212,163,115,.22);
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 10px 22px rgba(61,53,48,.06);
+}
+
+.rb-room-card--best{
+  border:2px solid #16a34a;
+  box-shadow:0 10px 22px rgba(22,163,74,.10);
+}
