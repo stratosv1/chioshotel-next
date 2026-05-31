@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getBeachSlugs } from "@/content/beach-details";
 import { getVillageSlugs } from "@/content/village-details";
+import { getMuseumSlugs } from "@/content/museum-details";
 import { routeMap } from "@/lib/url-map";
 import { absoluteUrl } from "@/lib/seo";
 
@@ -11,6 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     .filter((route) => route.action === "KEEP")
     .filter((route) => !isOldBeachDetailRoute(route.path))
     .filter((route) => !isOldVillageDetailRoute(route.path))
+    .filter((route) => !isOldMuseumDetailRoute(route.path))
     .map((route) => ({
       url: absoluteUrl(route.path),
       lastModified: now,
@@ -32,7 +34,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  return [...routes, ...beachDetailRoutes, ...villageDetailRoutes];
+  const museumDetailRoutes = getMuseumSlugs().map((slug) => ({
+    url: absoluteUrl(`/chios/chios-museums/${slug}/`),
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
+
+  return [
+    ...routes,
+    ...beachDetailRoutes,
+    ...villageDetailRoutes,
+    ...museumDetailRoutes,
+  ];
 }
 
 function isOldBeachDetailRoute(path: string) {
@@ -46,6 +60,13 @@ function isOldVillageDetailRoute(path: string) {
   return (
     path.startsWith("/chios/chios-villages/") &&
     path !== "/chios/chios-villages/"
+  );
+}
+
+function isOldMuseumDetailRoute(path: string) {
+  return (
+    path.startsWith("/chios/chios-museums/") &&
+    path !== "/chios/chios-museums/"
   );
 }
 
