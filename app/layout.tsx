@@ -1,9 +1,10 @@
+import { VoulamandisHeader } from "@/components/VoulamandisHeader";
 import "./globals.css";
 
 export const metadata = {
-  title: "Ξενοδοχείο στη Χίο – Δωμάτια & Διαμερίσματα | Voulamandis House",
+  title: "Chios Hotel Rooms & Apartments | Voulamandis House",
   description:
-    "Ήσυχα δωμάτια και διαμερίσματα στον Κάμπο της Χίου. Διαμονή στο Voulamandis House κοντά σε αεροδρόμιο, πόλη και παραλίες.",
+    "Quiet rooms and apartments in Kampos, Chios. Stay at Voulamandis House near Chios Town, the airport, beaches, villages and local attractions.",
 };
 
 export default function RootLayout({
@@ -12,7 +13,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="el">
+    <html lang="en">
       <head>
         <link
           rel="preload"
@@ -21,7 +22,10 @@ export default function RootLayout({
           fetchPriority="high"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <VoulamandisHeader />
+        {children}
+      </body>
     </html>
   );
 }
