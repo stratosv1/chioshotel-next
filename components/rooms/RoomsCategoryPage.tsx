@@ -1,0 +1,96 @@
+import { RoomWizard } from "@/components/rooms/RoomWizard";
+import type { RoomsCategoryPageData } from "@/content/rooms";
+
+type RoomsCategoryPageProps = {
+  data: RoomsCategoryPageData;
+};
+
+function HtmlText({ html }: { html: string }) {
+  return <span dangerouslySetInnerHTML={{ __html: html }} />;
+}
+
+export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
+  return (
+    <main className="rooms-page">
+      <section className="rooms-hero" aria-labelledby="rooms-hero-title">
+        <div className="rooms-hero__inner">
+          <div className="rooms-hero__content">
+            <span className="rooms-kicker">{data.hero.kicker}</span>
+
+            <h1 id="rooms-hero-title">
+              {data.hero.title} <span>{data.hero.highlightedTitle}</span>
+            </h1>
+
+            <p>{data.hero.description}</p>
+
+            <div className="rooms-hero__actions">
+              <a className="rooms-btn rooms-btn--primary" href={data.hero.primaryCta.href}>
+                {data.hero.primaryCta.label}
+              </a>
+
+              <a className="rooms-btn rooms-btn--secondary" href={data.hero.secondaryCta.href}>
+                {data.hero.secondaryCta.label}
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="v-master-wrapper" aria-labelledby="rooms-category-title">
+        <header className="v-page-header">
+          <span className="rooms-kicker">Rooms & apartments</span>
+
+          <h2 id="rooms-category-title">
+            {data.intro.title.split(" in Chios")[0]} <span>in Chios</span>
+          </h2>
+
+          <p>{data.intro.description}</p>
+        </header>
+
+        <div className="v-rooms-grid" id="rooms-list">
+          {data.cards.map((card) => (
+            <a href={card.href} className="v-category-card" key={card.id}>
+              <div className="v-cat-img">
+                <img src={card.image} alt={card.imageAlt} loading="lazy" />
+                <span className="v-card-badge">{card.badge}</span>
+              </div>
+
+              <div className="v-card-meta">
+                {card.meta.map((item) => (
+                  <span key={item}>{item}</span>
+                ))}
+              </div>
+
+              <h3>{card.title}</h3>
+
+              <p className="v-card-subtitle">{card.subtitle}</p>
+
+              <p>{card.description}</p>
+
+              <div className="v-btn-link">{card.ctaLabel} →</div>
+            </a>
+          ))}
+        </div>
+
+        <div className="v-tip-bar">
+          <div className="v-tip-bulb">{data.tip.icon}</div>
+
+          <div className="v-tip-content">
+            <h4>{data.tip.title}</h4>
+            <p>
+              <HtmlText html={data.tip.textHtml} />
+            </p>
+          </div>
+        </div>
+
+        <div className="v-wizard-intro">
+          <span className="rooms-kicker">Smart room finder</span>
+          <h2>{data.wizardIntro.title}</h2>
+          <p>{data.wizardIntro.description}</p>
+        </div>
+
+        <RoomWizard rooms={data.wizard.rooms} whatsappPhone={data.wizard.whatsappPhone} />
+      </section>
+    </main>
+  );
+}
