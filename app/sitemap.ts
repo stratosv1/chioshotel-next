@@ -5,28 +5,11 @@ import { getMuseumSlugs } from "@/content/museum-details";
 import { routeMap } from "@/lib/url-map";
 import { absoluteUrl } from "@/lib/seo";
 
-const publishedLocalizedPaths = new Set([
-  "/el/",
-  "/fr/",
-  "/de/",
-  "/it/",
-  "/es/",
-  "/tr/",
-
-  "/el/domatia-xios/",
-  "/fr/chambres-a-chios/",
-  "/de/chios-zimmer/",
-  "/it/camere-a-chios/",
-  "/es/habitaciones-en-chios/",
-  "/tr/sakiz-adasi-odalari/",
-]);
-
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
   const routes = routeMap
     .filter((route) => route.action === "KEEP")
-    .filter((route) => isPublishedRoute(route.path, route.language))
     .filter((route) => !isOldBeachDetailRoute(route.path))
     .filter((route) => !isOldVillageDetailRoute(route.path))
     .filter((route) => !isOldMuseumDetailRoute(route.path))
@@ -64,14 +47,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...villageDetailRoutes,
     ...museumDetailRoutes,
   ];
-}
-
-function isPublishedRoute(path: string, language: string) {
-  if (language === "en") {
-    return true;
-  }
-
-  return publishedLocalizedPaths.has(path);
 }
 
 function isOldBeachDetailRoute(path: string) {
