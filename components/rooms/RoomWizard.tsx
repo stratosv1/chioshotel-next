@@ -162,7 +162,7 @@ function getMatchRows(room: RoomWizardRoom, prefs: WizardPrefs) {
   if (prefs.kitchen) {
     if (room.fullKitchen) {
       matches.push("Full kitchen");
-    } else if (room.kardenView) {
+    } else if (room.kitchenette) {
       matches.push("Kitchenette");
     }
   }
