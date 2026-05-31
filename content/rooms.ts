@@ -392,3 +392,115 @@ export const roomsCategoryEn: RoomsCategoryPageData = {
     ],
   },
 };
+
+export const roomsCategoryEl: RoomsCategoryPageData = {
+  ...roomsCategoryEn,
+
+  seo: {
+    canonicalPath: "/el/domatia-xios/",
+    title: "Δωμάτια στη Χίο & Διαμερίσματα | Voulamandis House",
+    description:
+      "Εξερευνήστε τις κατηγορίες δωματίων και διαμερισμάτων του Voulamandis House στον Κάμπο της Χίου. Οικονομικά δίκλινα, ισόγεια δωμάτια, δωμάτια ορόφου και οικογενειακά διαμερίσματα.",
+    ogImage:
+      "https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-family-apartments.webp",
+  },
+
+  hero: {
+    kicker: "Δωμάτια Voulamandis House",
+    title: "Πού να μείνω",
+    highlightedTitle: "στη Χίο;",
+    description:
+      "Επιλέξτε την κατηγορία δωματίου που ταιριάζει στο ταξίδι σας: οικονομικά δίκλινα, άνετα δίκλινα και τρίκλινα δωμάτια ή οικογενειακά διαμερίσματα με κουζίνα και περισσότερο χώρο.",
+    primaryCta: {
+      label: "Βρες δωμάτιο",
+      href: "#room-wizard-app",
+    },
+    secondaryCta: {
+      label: "Δες όλα τα δωμάτια",
+      href: "#rooms-list",
+    },
+  },
+
+  intro: {
+    title: "Επιλογές διαμονής στη Χίο",
+    description:
+      "Εξερευνήστε τις 4 κατηγορίες δωματίων μας παρακάτω. Κάθε δωμάτιο είναι σχεδιασμένο για να προσφέρει την αυθεντική φιλοξενία του Κάμπου της Χίου, με άνεση για ζευγάρια, φίλους και οικογένειες.",
+  },
+
+  cards: [
+    {
+      ...roomsCategoryEn.cards[0],
+      title: "Οικονομικό Δίκλινο",
+      subtitle: "Value επιλογή για 2 άτομα",
+      description:
+        "Η πιο value επιλογή για 2 άτομα. Ανακαινισμένα δωμάτια 16m² με σύγχρονες παροχές και αυθεντική αίσθηση Κάμπου.",
+      href: "/el/domatia-xios/oikonomiko-diklino-domatio/",
+      image:
+        "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753964631359257.webp",
+      imageAlt: "Οικονομικό δίκλινο δωμάτιο στη Χίο στο Voulamandis House",
+      badge: "Value επιλογή",
+      ctaLabel: "Εξερεύνηση Δωματίου",
+      meta: ["2 άτομα", "16m²", "Economy"],
+    },
+    {
+      ...roomsCategoryEn.cards[1],
+      title: "Ισόγεια Δωμάτια",
+      subtitle: "Δίκλινα & τρίκλινα δωμάτια",
+      description:
+        "Δίκλινα και τρίκλινα δωμάτια με άμεση πρόσβαση στον κήπο. Ιδανικά για όσους αναζητούν δροσιά και την ηρεμία της φύσης.",
+      href: "/el/domatia-xios/diklina-triklina-domatia/",
+      image:
+        "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07776-2-e1675109942622.webp",
+      imageAlt: "Ισόγεια δίκλινα και τρίκλινα δωμάτια στη Χίο",
+      badge: "Πρόσβαση στον κήπο",
+      ctaLabel: "Δείτε τα Δωμάτια",
+      meta: ["2–3 άτομα", "Ισόγειο", "Κήπος"],
+    },
+    {
+      ...roomsCategoryEn.cards[2],
+      title: "Δωμάτια Ορόφου",
+      subtitle: "Δίκλινα & τρίκλινα δωμάτια",
+      description:
+        "Απολαύστε την πανοραμική θέα στο κτήμα και τα εσπεριδοειδή από τη βεράντα σας. Φωτεινά δωμάτια με premium αίσθηση.",
+      href: "/el/domatia-xios/diklina-triklina-domatia/",
+      image:
+        "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07803-1.webp",
+      imageAlt: "Δωμάτια ορόφου στη Χίο με θέα στον Κάμπο",
+      badge: "Θέα από όροφο",
+      ctaLabel: "Δείτε τα Δωμάτια",
+      meta: ["2–3 άτομα", "Όροφος", "Θέα"],
+    },
+    {
+      ...roomsCategoryEn.cards[3],
+      title: "Οικογενειακά Διαμερίσματα",
+      subtitle: "Κουζίνα & καθιστικό",
+      description:
+        "Ευρύχωρα διαμερίσματα 40–45m² με πλήρη κουζίνα και καθιστικό. Η απόλυτη επιλογή για οικογένειες που αναζητούν την άνεση του σπιτιού τους.",
+      href: "/el/domatia-xios/oikogeneiako-diamerisma/",
+      image:
+        "https://chioshotel.gr/wp-content/uploads/2022/12/chios-apartments-voulamandis.webp",
+      imageAlt: "Οικογενειακά διαμερίσματα στη Χίο στο Voulamandis House",
+      badge: "Για οικογένειες",
+      ctaLabel: "Δείτε τα Διαμερίσματα",
+      meta: ["Έως 4 άτομα", "40–45m²", "Κουζίνα"],
+    },
+  ],
+
+  tip: {
+    icon: "💡",
+    title: "Smart Booking Tip",
+    textHtml:
+      "Θυμηθείτε! Μπορείτε να χρησιμοποιήσετε τον <strong>κωδικό έκπτωσης</strong> για την απευθείας κράτησή σας και να εξασφαλίσετε την <strong>καλύτερη τιμή</strong> online.",
+  },
+
+  wizardIntro: {
+    title: "Δεν είστε σίγουροι ποιο να επιλέξετε; 🤔",
+    description:
+      "Αφήστε τον έξυπνο βοηθό μας να βρει το ιδανικό δωμάτιο για εσάς σε περίπου 30 δευτερόλεπτα.",
+  },
+
+  wizard: {
+    ...roomsCategoryEn.wizard,
+    whatsappPhone: "306944474226",
+  },
+};
