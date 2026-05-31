@@ -128,9 +128,7 @@ export function RatesPage({ data }: RatesPageProps) {
                 className="rates-booking-iframe"
                 loading="lazy"
                 title={data.booking.iframeTitle}
-              >
-                <a href={data.booking.fallbackHref}>Direct Booking - Book Now</a>
-              </iframe>
+              />
             </div>
 
             <article className="rates-seo-copy">
