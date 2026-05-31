@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type FormEvent } from "react";
 import type { RoomWizardRoom } from "@/content/rooms";
 
 type RoomWizardProps = {
@@ -162,10 +162,16 @@ function getMatchRows(room: RoomWizardRoom, prefs: WizardPrefs) {
   if (prefs.kitchen) {
     if (room.fullKitchen) {
       matches.push("Full kitchen");
-    } else if (room.kitchenette) {
+    } else if (room.kardenView) {
       matches.push("Kitchenette");
-    } else {
+    }
+  }
+
+  if (prefs.kitchen) {
+    if (!room.fullKitchen && !room.kitchenette) {
       misses.push("No kitchen facilities");
+    } else if (room.kitchenette && !room.fullKitchen) {
+      matches.push("Kitchenette");
     }
   }
 
@@ -256,11 +262,13 @@ function BedPills({ room }: { room: RoomWizardRoom }) {
           🛏️ Double <span className="rw-bed-count">x{room.beds.double}</span>
         </span>
       )}
+
       {room.beds.single > 0 && (
         <span className="rw-bed-pill">
           🛌 Single <span className="rw-bed-count">x{room.beds.single}</span>
         </span>
       )}
+
       {room.beds.sofa > 0 && (
         <span className="rw-bed-pill">
           🛋️ Sofa bed <span className="rw-bed-count">x{room.beds.sofa}</span>
@@ -279,12 +287,7 @@ function RoomGallery({ room }: { room: RoomWizardRoom }) {
 
   return (
     <div className="rw-gallery" id={`gal-${slugify(room.name)}`}>
-      <img
-        className="rw-gallery-main"
-        src={activeImage}
-        alt={room.name}
-        loading="lazy"
-      />
+      <img className="rw-gallery-main" src={activeImage} alt={room.name} loading="lazy" />
 
       <div className="rw-gallery-thumbs" aria-label="Gallery thumbnails">
         {room.images.map((image, index) => (
@@ -595,7 +598,7 @@ export function RoomWizard({ rooms, whatsappPhone }: RoomWizardProps) {
   const bestRoom = results[0]?.room;
   const alternativeRooms = results.slice(1, 3).map((item) => item.room);
 
-  function handleLeadSubmit(event: React.FormEvent<HTMLFormElement>) {
+  function handleLeadSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (!lead.checkin || !lead.checkout || lead.checkout <= lead.checkin) {
@@ -635,6 +638,7 @@ export function RoomWizard({ rooms, whatsappPhone }: RoomWizardProps) {
           <header className="rw-header active" id="rw-header">
             <div className="rw-header-flex">
               <div className="rw-logo">🏠 Room Finder</div>
+
               <div className="rw-step-tag" aria-live="polite">
                 Step <span>{Math.min(step + 1, visibleQuestions.length)}</span>/
                 <span>{visibleQuestions.length}</span>
@@ -666,6 +670,7 @@ export function RoomWizard({ rooms, whatsappPhone }: RoomWizardProps) {
               <h3 className="rw-intro-title" id="rw-main-title">
                 Let’s begin!
               </h3>
+
               <p className="rw-intro-sub">
                 Answer 5 quick questions and we’ll suggest the best room or apartment for your stay
                 in Chios.
@@ -677,6 +682,7 @@ export function RoomWizard({ rooms, whatsappPhone }: RoomWizardProps) {
                 <div className="rw-form-grid">
                   <div className="rw-form-group">
                     <input
+                      id="rw-first-name"
                       type="text"
                       className="rw-input"
                       placeholder=" "
@@ -687,11 +693,14 @@ export function RoomWizard({ rooms, whatsappPhone }: RoomWizardProps) {
                         setLead((current) => ({ ...current, firstName: event.target.value }))
                       }
                     />
-                    <label className="rw-label">First name</label>
+                    <label className="rw-label" htmlFor="rw-first-name">
+                      First name
+                    </label>
                   </div>
 
                   <div className="rw-form-group">
                     <input
+                      id="rw-last-name"
                       type="text"
                       className="rw-input"
                       placeholder=" "
@@ -702,11 +711,14 @@ export function RoomWizard({ rooms, whatsappPhone }: RoomWizardProps) {
                         setLead((current) => ({ ...current, lastName: event.target.value }))
                       }
                     />
-                    <label className="rw-label">Last name</label>
+                    <label className="rw-label" htmlFor="rw-last-name">
+                      Last name
+                    </label>
                   </div>
 
                   <div className="rw-form-group">
                     <input
+                      id="rw-checkin"
                       type="date"
                       className="rw-input"
                       min={minDate}
@@ -724,11 +736,14 @@ export function RoomWizard({ rooms, whatsappPhone }: RoomWizardProps) {
                         }))
                       }
                     />
-                    <label className="rw-label">Check-in</label>
+                    <label className="rw-label" htmlFor="rw-checkin">
+                      Check-in
+                    </label>
                   </div>
 
                   <div className="rw-form-group">
                     <input
+                      id="rw-checkout"
                       type="date"
                       className="rw-input"
                       min={lead.checkin || minDate}
@@ -739,11 +754,14 @@ export function RoomWizard({ rooms, whatsappPhone }: RoomWizardProps) {
                         setLead((current) => ({ ...current, checkout: event.target.value }))
                       }
                     />
-                    <label className="rw-label">Check-out</label>
+                    <label className="rw-label" htmlFor="rw-checkout">
+                      Check-out
+                    </label>
                   </div>
 
                   <div className="rw-form-group full">
                     <input
+                      id="rw-email"
                       type="email"
                       className="rw-input"
                       placeholder=" "
@@ -754,11 +772,14 @@ export function RoomWizard({ rooms, whatsappPhone }: RoomWizardProps) {
                         setLead((current) => ({ ...current, email: event.target.value }))
                       }
                     />
-                    <label className="rw-label">Email</label>
+                    <label className="rw-label" htmlFor="rw-email">
+                      Email
+                    </label>
                   </div>
 
                   <div className="rw-form-group full">
                     <input
+                      id="rw-phone"
                       type="tel"
                       className="rw-input"
                       placeholder=" "
@@ -770,12 +791,14 @@ export function RoomWizard({ rooms, whatsappPhone }: RoomWizardProps) {
                         setLead((current) => ({ ...current, phone: event.target.value }))
                       }
                     />
-                    <label className="rw-label">Phone</label>
+                    <label className="rw-label" htmlFor="rw-phone">
+                      Phone
+                    </label>
                   </div>
 
                   <div className="rw-form-group full rw-checkbox-group">
-                    <input type="checkbox" required />
-                    <label>
+                    <input id="rw-gdpr" type="checkbox" required />
+                    <label htmlFor="rw-gdpr">
                       I consent to the processing of my personal data for the purpose of receiving
                       accommodation suggestions.
                     </label>
