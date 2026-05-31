@@ -136,12 +136,12 @@ const museumPaths: Record<LanguageCode, string> = {
 
 const masticMuseumPaths: Record<LanguageCode, string> = {
   en: "/chios/chios-museums/the-mastic-museum-chios/",
-  el: "/el/mouseia-xios/mouseio-mastixas-xios/",
-  fr: "/fr/musees-de-chios/musee-du-mastic-de-chios/",
-  de: "/de/museen-chios/chios-mastix-museum/",
-  it: "/it/musei-chios/museo-del-mastice-di-chios/",
-  es: "/es/museos-chios/museo-de-la-mastiha-de-chios/",
-  tr: "/tr/sakiz-adasi-muzeleri/sakiz-adasi-mastik-muzesi/",
+  el: "/el/mouseia-xios/mouseio-mastichas-xios/",
+  fr: "/fr/musees-de-chios/musee-du-mastic-chios/",
+  de: "/de/museen-chios/mastix-museum-chios/",
+  it: "/it/musei-chios/museo-del-mastice-chios/",
+  es: "/es/museos-chios/museo-mastiha-chios/",
+  tr: "/tr/sakiz-adasi-muzeleri/sakiz-mastik-muzesi/",
 };
 
 const footerCopy: Record<
