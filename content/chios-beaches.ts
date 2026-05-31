@@ -174,8 +174,10 @@ export const chiosBeachesPageEn: ChiosBeachesPageData = {
       title: "Lithi Beach: ideal for families",
       description:
         "Shallow sandy waters and fresh seafood taverns on the shore make Lithi one of the best family-friendly beach choices in Chios.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/2017-06-28-1024x768.webp",
-      imageAlt: "Lithi Beach in western Chios with shallow sandy waters, ideal for families",
+      image:
+        "https://chioshotel.gr/wp-content/uploads/2021/12/2017-06-28-1024x768.webp",
+      imageAlt:
+        "Lithi Beach in western Chios with shallow sandy waters, ideal for families",
       href: "/chios/chios-beaches/lithi-beach/",
       region: "West Chios",
       mood: "Family friendly",
@@ -188,7 +190,8 @@ export const chiosBeachesPageEn: ChiosBeachesPageData = {
       title: "Agia Dynami",
       description:
         "One of the most exotic and photogenic coves of Chios, with emerald waters and a quiet, remote atmosphere.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/691-e1645969589226.webp",
+      image:
+        "https://chioshotel.gr/wp-content/uploads/2021/12/691-e1645969589226.webp",
       imageAlt: "Agia Dynami beach in Chios with exotic emerald waters",
       href: "/chios/chios-beaches/agia-dynami-beach-chios/",
       region: "South Chios",
@@ -202,7 +205,8 @@ export const chiosBeachesPageEn: ChiosBeachesPageData = {
       title: "Avlonia",
       description:
         "A sheltered bay with calm waters, ideal for a slower beach day and relaxed swimming.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/avlonia-1024x768.webp",
+      image:
+        "https://chioshotel.gr/wp-content/uploads/2021/12/avlonia-1024x768.webp",
       imageAlt: "Avlonia beach in Chios, a sheltered bay with calm waters",
       href: "/chios/chios-beaches/avlonia-beach2/",
       region: "South Chios",
@@ -216,7 +220,7 @@ export const chiosBeachesPageEn: ChiosBeachesPageData = {
       title: "Lefkathia",
       description:
         "A northern beach with deep blue waters and a youthful summer vibe, close to the Kardamyla area.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/avlonia-768x576.jpg",
+      image: "https://chioshotel.gr/wp-content/uploads/2026/03/lefkathia-2.jpg",
       imageAlt: "Lefkathia beach in Chios with deep blue waters",
       href: "/chios/chios-beaches/lefkathia-beach/",
       region: "North Chios",
@@ -230,7 +234,8 @@ export const chiosBeachesPageEn: ChiosBeachesPageData = {
       title: "Nagos: lush green landscape",
       description:
         "A unique northern beach where running spring waters, ancient trees and colorful pebbles meet the Aegean Sea.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/nagos-e1645969566121.webp",
+      image:
+        "https://chioshotel.gr/wp-content/uploads/2021/12/nagos-e1645969566121.webp",
       imageAlt: "Nagos beach in northern Chios where springs meet the Aegean sea",
       href: "/chios/chios-beaches/nagos-beach/",
       region: "North Chios",
