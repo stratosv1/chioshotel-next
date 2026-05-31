@@ -1329,3 +1329,1032 @@ input{
   border:2px solid #16a34a;
   box-shadow:0 10px 22px rgba(22,163,74,.10);
 }
+/* REVIEWS / AMENITIES / LINKS */
+.vh-reviews-shell{
+  background:linear-gradient(180deg,#fffdfa 0%,#f7efe5 100%);
+  border-radius:var(--vh-radius-xxl);
+  padding:34px;
+}
+
+.vh-reviews-widget{
+  margin-top:20px;
+  background:#fff;
+  border-radius:22px;
+  padding:18px;
+  border:1px solid rgba(154,107,63,.08);
+}
+
+.vh-amenities-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
+}
+
+.vh-amenity{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-height:76px;
+  padding:16px 18px;
+  border-radius:22px;
+}
+
+.vh-amenity-icon{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#fff;
+  border:1px solid rgba(154,107,63,.10);
+  color:#8E6607!important;
+  font-size:18px;
+  flex:0 0 42px;
+}
+
+.vh-amenity span{
+  color:var(--vh-dark);
+  font-size:14px;
+  font-weight:700;
+  line-height:1.45;
+}
+
+.vh-link-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+}
+
+.vh-link-card{
+  border-radius:26px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  transition:var(--transition);
+  width:100%;
+}
+
+.vh-link-card:hover{
+  transform:translateY(-4px);
+  box-shadow:var(--vh-shadow-strong);
+}
+
+.vh-link-image{
+  aspect-ratio:16/10;
+  background:#e8ddcf center/cover no-repeat;
+}
+
+.vh-link-image--beaches{
+  background-image:url("https://chioshotel.gr/wp-content/uploads/2026/03/sakiz-agia-dynami.jpg");
+}
+
+.vh-link-image--villages{
+  background-image:url("https://chioshotel.gr/wp-content/uploads/2021/12/lagada_3.webp");
+}
+
+.vh-link-image--kampos{
+  background-image:url("https://chioshotel.gr/wp-content/uploads/2026/03/chios.hotels.voulamandis.house_.hero_.image_.webp");
+}
+
+.vh-link-image--museums{
+  background-image:url("https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp");
+}
+
+.vh-link-image--orchids{
+  background-image:url("https://chioshotel.gr/wp-content/uploads/2021/12/Ophrys_mastichorum-680x1024.webp");
+}
+
+.vh-link-image--springs{
+  background-image:url("https://chioshotel.gr/wp-content/uploads/2021/12/the-thermal-baths-center.webp");
+}
+
+.vh-link-body{
+  padding:22px;
+  display:flex;
+  flex-direction:column;
+  flex:1;
+}
+
+.vh-link-body h3{
+  margin:0 0 10px;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:26px;
+  line-height:1.14;
+  color:#8E6607!important;
+  font-weight:700!important;
+}
+
+.vh-link-body p{
+  margin:0 0 18px;
+  color:var(--vh-muted);
+  font-size:15px;
+  line-height:1.75;
+  flex:1;
+}
+
+/* TRAVELER */
+.vh-traveler-section{
+  background:linear-gradient(180deg,#f8f3ec 0%,#f6f0e8 100%);
+}
+
+.vh-traveler-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:22px;
+  margin-top:30px;
+}
+
+.vh-traveler-card{
+  position:relative;
+  height:460px;
+  border-radius:26px;
+  overflow:hidden;
+  display:flex;
+  align-items:flex-end;
+  padding:24px;
+  text-decoration:none!important;
+  background-size:cover;
+  background-position:center;
+  box-shadow:0 15px 35px rgba(61,43,31,.12);
+  transition:var(--transition);
+}
+
+.vh-traveler-card:hover{
+  transform:translateY(-8px);
+  box-shadow:0 25px 60px rgba(61,43,31,.20);
+}
+
+.vh-traveler-overlay{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to top,rgba(61,43,31,.85) 0%,rgba(61,43,31,.25) 55%,rgba(0,0,0,0) 100%);
+}
+
+.vh-traveler-content{
+  position:relative;
+  z-index:2;
+  width:100%;
+  text-align:left;
+  color:#fff;
+}
+
+.vh-traveler-content h3{
+  margin:0 0 10px;
+  font-size:28px;
+  font-weight:800;
+  color:#fff!important;
+}
+
+.vh-traveler-content p{
+  margin:0 0 18px;
+  font-size:14px;
+  color:rgba(255,255,255,.9);
+  line-height:1.5;
+}
+
+.vh-traveler-link{
+  display:inline-block;
+  padding:10px 18px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.35);
+  font-size:11px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  background:rgba(255,255,255,.15);
+  color:#fff!important;
+}
+
+.vh-traveler-card:hover .vh-traveler-link{
+  background:#fff;
+  color:#3d2b1f!important;
+  border-color:#fff;
+}
+
+.vh-traveler-card--sea{
+  background-image:url("https://chioshotel.gr/wp-content/uploads/2026/03/sakiz-agia-dynami.jpg");
+}
+
+.vh-traveler-card--explorer{
+  background-image:url("https://chioshotel.gr/wp-content/uploads/2021/12/lagada_3.webp");
+}
+
+.vh-traveler-card--family{
+  background-image:url("https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-family-apartments.webp");
+}
+
+.vh-traveler-card--food{
+  background-image:url("https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp");
+}
+
+/* QUIZ BAR */
+.premium-seo-bar{
+  background:var(--vh-surface-2);
+  box-shadow:var(--vh-shadow);
+  padding:22px 0;
+  width:100%;
+  border-top:1px solid rgba(154,107,63,.1);
+  border-bottom:1px solid rgba(154,107,63,.1);
+  margin:40px 0;
+}
+
+.bar-inner{
+  max-width:var(--vh-container);
+  margin:0 auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 16px;
+  gap:20px;
+}
+
+.premium-label{
+  display:block;
+  font-size:14px;
+  letter-spacing:2px;
+  color:#8E6607!important;
+  margin-bottom:4px;
+  font-weight:800;
+  text-transform:uppercase;
+}
+
+.premium-text{
+  margin:0;
+  font-size:15px;
+  color:var(--vh-dark);
+  line-height:1.6;
+}
+
+.premium-btn-quiz{
+  position:relative;
+  overflow:hidden;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:1.5px;
+  background:linear-gradient(135deg,#a87842,#8E6607);
+  color:#fff!important;
+  padding:16px 36px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  border-radius:50px;
+  box-shadow:0 10px 25px rgba(142,102,7,.3);
+  white-space:nowrap;
+  text-decoration:none!important;
+}
+
+.premium-btn-quiz::after{
+  content:"";
+  position:absolute;
+  top:0;
+  left:-120%;
+  width:90%;
+  height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);
+  animation:shineMove 1s infinite;
+}
+
+.premium-btn-quiz:hover{
+  background:#241c16;
+  transform:translateY(-3px);
+}
+
+/* FAQ */
+.vh-faq-grid{
+  max-width:900px;
+  margin:0 auto;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+.vh-faq-item{
+  background:#fffdfa;
+  border:1px solid rgba(154,107,63,.15);
+  border-radius:var(--vh-radius-md);
+  box-shadow:var(--vh-shadow);
+  overflow:hidden;
+}
+
+.vh-faq-item summary{
+  padding:20px 24px;
+  font-size:16px;
+  font-weight:700;
+  color:#8E6607!important;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  list-style:none;
+}
+
+.vh-faq-item summary::-webkit-details-marker{
+  display:none;
+}
+
+.vh-faq-item summary::after{
+  content:"+";
+  font-size:20px;
+  color:#8E6607!important;
+  transition:transform .3s ease;
+}
+
+.vh-faq-item[open] summary::after{
+  transform:rotate(45deg);
+}
+
+.vh-faq-answer{
+  padding:14px 24px 24px;
+  color:var(--vh-muted);
+  font-size:15px;
+  line-height:1.7;
+  border-top:1px solid rgba(154,107,63,.05);
+}
+
+/* FINAL CONTACT */
+.vh-final{
+  padding:0 0 92px;
+}
+
+.vh-final-shell{
+  position:relative;
+  overflow:hidden;
+  border-radius:var(--vh-radius-xxl);
+  box-shadow:var(--vh-shadow-strong);
+  background:
+    linear-gradient(180deg,rgba(36,28,22,.22) 0%,rgba(36,28,22,.72) 72%,rgba(36,28,22,.88) 100%),
+    url("https://chioshotel.gr/wp-content/uploads/2026/04/Screenshot_2026-04-25-14-11-19-166_com.instagram.android-edit-1.webp") center/cover no-repeat;
+  color:#fff;
+  padding:44px;
+  min-height:460px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+}
+
+.vh-final-shell h2{
+  margin:0 0 12px;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(34px,4.3vw,58px);
+  line-height:1.05;
+  color:#fff!important;
+  max-width:12ch;
+  text-shadow:0 3px 18px rgba(0,0,0,.45);
+}
+
+.vh-final-shell p{
+  margin:0;
+  color:rgba(255,255,255,.92);
+  font-size:16px;
+  line-height:1.65;
+  max-width:560px;
+  text-shadow:0 2px 12px rgba(0,0,0,.45);
+}
+
+/* TABLET */
+@media (max-width:1180px){
+  .vh-intro-grid,
+  .vh-split-highlight{
+    grid-template-columns:1fr;
+  }
+
+  .vh-room-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .vh-amenities-grid{
+    grid-template-columns:repeat(3,1fr);
+  }
+
+  .vh-link-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .vh-traveler-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .b7,
+  .b5,
+  .b12{
+    grid-column:span 12;
+  }
+}
+
+@media (max-width:960px){
+  .rb-hero-top{
+    flex-direction:column;
+    align-items:stretch;
+    gap:12px;
+  }
+
+  .rb-hero-head,
+  .rb-hero-actions{
+    flex:none;
+    min-width:0;
+    width:100%;
+  }
+}
+
+/* MOBILE */
+@media (max-width:767px){
+  html,
+  body,
+  .vh-homepage{
+    width:100%;
+    max-width:100%;
+    overflow-x:hidden;
+  }
+
+  .vh-homepage{
+    display:block!important;
+  }
+
+  .vh-wrap{
+    width:100%!important;
+    max-width:100%!important;
+    margin:0!important;
+    padding-left:0!important;
+    padding-right:0!important;
+    overflow:visible!important;
+  }
+
+  .vh-section,
+  .vh-section--tight{
+    width:100%!important;
+    max-width:100%!important;
+    padding:32px 0!important;
+    overflow:visible!important;
+  }
+
+  .vh-section-head{
+    margin-bottom:14px!important;
+    padding-left:12px!important;
+    padding-right:12px!important;
+  }
+
+  .vh-title{
+    font-size:28px!important;
+    line-height:1.08!important;
+    margin-bottom:10px!important;
+  }
+
+  .vh-subtitle,
+  .vh-copy,
+  .vh-panel p,
+  .vh-highlight-card p,
+  .vh-location-copy p,
+  .vh-link-body p,
+  .vh-room-body p,
+  .vh-faq-answer,
+  .premium-text{
+    font-size:14px!important;
+    line-height:1.58!important;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  p,
+  span,
+  a,
+  div{
+    overflow-wrap:anywhere;
+  }
+
+  .hero{
+    width:100%!important;
+    height:76svh!important;
+    min-height:590px!important;
+    max-height:720px!important;
+    border-radius:0!important;
+    overflow:hidden!important;
+    background:#000!important;
+    display:flex!important;
+    align-items:stretch!important;
+  }
+
+  .hero-media{
+    position:absolute!important;
+    inset:0!important;
+    z-index:0!important;
+  }
+
+  .hero-media img{
+    width:100%!important;
+    height:100%!important;
+    object-fit:cover!important;
+    object-position:center top!important;
+    filter:none!important;
+    transform:none!important;
+  }
+
+  .hero::after{
+    content:""!important;
+    position:absolute!important;
+    inset:0!important;
+    z-index:1!important;
+    pointer-events:none!important;
+    background:linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,.04) 35%,rgba(0,0,0,.40) 68%,rgba(0,0,0,.82) 100%)!important;
+  }
+
+  .hero-inner{
+    position:relative!important;
+    z-index:2!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-height:100%!important;
+    padding:12px 12px 18px!important;
+    margin:0!important;
+    display:flex!important;
+    align-items:flex-end!important;
+    justify-content:flex-end!important;
+  }
+
+  .hero-content-box{
+    width:100%!important;
+    max-width:100%!important;
+    min-height:auto!important;
+    margin:0!important;
+    padding:0!important;
+    border:0!important;
+    border-radius:0!important;
+    background:transparent!important;
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+    box-shadow:none!important;
+    display:flex!important;
+    flex-direction:column!important;
+    gap:10px!important;
+  }
+
+  .rating-card{
+    position:absolute!important;
+    top:14px!important;
+    left:12px!important;
+    z-index:3!important;
+    width:auto!important;
+    max-width:calc(100% - 24px)!important;
+    padding:8px 12px!important;
+    border-radius:999px!important;
+    background:rgba(255,255,255,.92)!important;
+    color:#2f261f!important;
+    box-shadow:0 8px 24px rgba(0,0,0,.18)!important;
+    gap:10px!important;
+  }
+
+  .rating-card strong{
+    font-size:13px!important;
+    line-height:1.1!important;
+  }
+
+  .rating-card span{
+    font-size:10px!important;
+  }
+
+  .stars{
+    font-size:12px!important;
+  }
+
+  .hero-kicker{
+    font-size:10px!important;
+    line-height:1.2!important;
+    letter-spacing:.16em!important;
+    color:rgba(255,255,255,.92)!important;
+    text-shadow:0 2px 8px rgba(0,0,0,.45)!important;
+  }
+
+  .hero-title{
+    max-width:12ch!important;
+    font-size:34px!important;
+    line-height:.98!important;
+    margin:0!important;
+    color:#fff!important;
+    text-shadow:0 3px 18px rgba(0,0,0,.55)!important;
+    letter-spacing:-.035em!important;
+  }
+
+  .hero-description{
+    max-width:100%!important;
+    margin:0!important;
+    font-size:14px!important;
+    line-height:1.45!important;
+    color:rgba(255,255,255,.94)!important;
+    text-shadow:0 2px 10px rgba(0,0,0,.45)!important;
+    display:-webkit-box!important;
+    -webkit-line-clamp:2!important;
+    -webkit-box-orient:vertical!important;
+    overflow:hidden!important;
+  }
+
+  .hero-actions{
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:10px!important;
+    width:100%!important;
+    margin-top:4px!important;
+  }
+
+  .btn-primary,
+  .btn-ghost{
+    min-height:52px!important;
+    border-radius:18px!important;
+    padding:0 10px!important;
+    font-size:11px!important;
+    line-height:1.15!important;
+    letter-spacing:.06em!important;
+    white-space:normal!important;
+  }
+
+  .hero-quiz-card{
+    grid-template-columns:auto 1fr!important;
+    padding:11px 12px!important;
+    border-radius:18px!important;
+    gap:10px!important;
+  }
+
+  .hero-quiz-icon{
+    width:38px!important;
+    height:38px!important;
+    border-radius:14px!important;
+    font-size:19px!important;
+  }
+
+  .hero-quiz-copy strong{
+    font-size:12px!important;
+  }
+
+  .hero-quiz-copy span{
+    font-size:11.5px!important;
+    display:-webkit-box!important;
+    -webkit-line-clamp:2!important;
+    -webkit-box-orient:vertical!important;
+    overflow:hidden!important;
+  }
+
+  .hero-quiz-link{
+    grid-column:1/-1!important;
+    width:100%!important;
+    min-height:36px!important;
+    font-size:10px!important;
+  }
+
+  .vh-hero-announce{
+    padding:12px 14px!important;
+    font-size:13px!important;
+    line-height:1.35!important;
+    gap:8px!important;
+  }
+
+  .vh-panel,
+  .vh-highlight-card,
+  .vh-location-copy,
+  .vh-reviews-shell,
+  .vh-final-shell,
+  .b-pad,
+  .b-card{
+    padding:16px 12px!important;
+    border-radius:20px!important;
+  }
+
+  .vh-panel h2{
+    font-size:28px!important;
+  }
+
+  .vh-panel h3,
+  .vh-highlight-card h3{
+    font-size:24px!important;
+  }
+
+  .vh-intro-grid,
+  .vh-split-highlight,
+  .bento{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:12px!important;
+  }
+
+  .vh-pill-row{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:8px!important;
+  }
+
+  .vh-pill{
+    width:100%!important;
+    min-height:36px!important;
+    padding:0 8px!important;
+    font-size:10px!important;
+    text-align:center!important;
+  }
+
+  .vh-unique-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:8px!important;
+    margin-top:14px!important;
+  }
+
+  .vh-unique-card{
+    min-height:118px!important;
+    padding:10px 6px!important;
+    border-radius:15px!important;
+  }
+
+  .vh-unique-card strong{
+    font-size:10.8px!important;
+    line-height:1.15!important;
+    margin-bottom:5px!important;
+  }
+
+  .vh-unique-card span{
+    font-size:9.8px!important;
+    line-height:1.25!important;
+    display:-webkit-box!important;
+    -webkit-line-clamp:4!important;
+    -webkit-box-orient:vertical!important;
+    overflow:hidden!important;
+  }
+
+  .vh-room-grid{
+    width:100%!important;
+    max-width:100%!important;
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:10px!important;
+    padding:0!important;
+    margin:0!important;
+  }
+
+  .vh-room-card{
+    width:100%!important;
+    max-width:100%!important;
+    margin:0!important;
+    border-radius:0!important;
+    border-left:0!important;
+    border-right:0!important;
+    box-shadow:none!important;
+    display:grid!important;
+    grid-template-columns:44% 56%!important;
+    min-height:220px!important;
+    overflow:hidden!important;
+    background:#fffdfa!important;
+  }
+
+  .vh-room-card + .vh-room-card{
+    border-top:1px solid rgba(154,107,63,.14)!important;
+  }
+
+  .vh-room-image{
+    width:100%!important;
+    height:100%!important;
+    min-height:220px!important;
+    aspect-ratio:auto!important;
+    background-size:cover!important;
+    background-position:center!important;
+  }
+
+  .vh-room-body{
+    padding:12px 10px!important;
+    min-width:0!important;
+    display:flex!important;
+    flex-direction:column!important;
+  }
+
+  .vh-room-body h3{
+    font-size:25px!important;
+    line-height:1!important;
+    margin:0 0 7px!important;
+    letter-spacing:-.025em!important;
+  }
+
+  .vh-room-body p{
+    font-size:13px!important;
+    line-height:1.32!important;
+    margin:0 0 8px!important;
+    color:#574B3F!important;
+    display:-webkit-box!important;
+    -webkit-line-clamp:2!important;
+    -webkit-box-orient:vertical!important;
+    overflow:hidden!important;
+  }
+
+  .vh-room-meta{
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:5px!important;
+    width:100%!important;
+    margin:0 0 7px!important;
+  }
+
+  .vh-room-amenities{
+    display:grid!important;
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    gap:4px!important;
+    width:100%!important;
+    margin:0 0 8px!important;
+  }
+
+  .vh-room-meta span,
+  .vh-room-amenities span{
+    width:100%!important;
+    min-width:0!important;
+    min-height:26px!important;
+    padding:0 3px!important;
+    border-radius:999px!important;
+    font-size:8px!important;
+    line-height:1.05!important;
+    text-align:center!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+  }
+
+  .vh-amenities-grid{
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:8px!important;
+    padding:0 10px!important;
+  }
+
+  .vh-amenity{
+    min-height:70px!important;
+    padding:8px 6px!important;
+    border-radius:16px!important;
+    flex-direction:column!important;
+    justify-content:center!important;
+    text-align:center!important;
+    gap:5px!important;
+  }
+
+  .vh-amenity-icon{
+    width:30px!important;
+    height:30px!important;
+    flex-basis:30px!important;
+    font-size:15px!important;
+  }
+
+  .vh-amenity span{
+    font-size:10.5px!important;
+    line-height:1.18!important;
+  }
+
+  .vh-link-grid,
+  .distance-badge{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:12px!important;
+  }
+
+  .vh-traveler-grid{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:10px!important;
+    padding:0 10px!important;
+    margin-top:14px!important;
+  }
+
+  .vh-traveler-card{
+    height:245px!important;
+    border-radius:18px!important;
+    padding:14px!important;
+  }
+
+  .vh-traveler-content h3{
+    font-size:20px!important;
+    margin-bottom:6px!important;
+  }
+
+  .vh-traveler-content p{
+    font-size:11.5px!important;
+    line-height:1.32!important;
+    margin-bottom:10px!important;
+    display:-webkit-box!important;
+    -webkit-line-clamp:2!important;
+    -webkit-box-orient:vertical!important;
+    overflow:hidden!important;
+  }
+
+  .vh-traveler-link{
+    padding:8px 10px!important;
+    font-size:9px!important;
+  }
+
+  .map-preview,
+  .map-iframe{
+    height:240px!important;
+    border-radius:18px!important;
+  }
+
+  .form-row{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:10px!important;
+  }
+
+  .email-input{
+    width:100%!important;
+    min-width:100%!important;
+    border-radius:14px!important;
+  }
+
+  .premium-seo-bar{
+    margin:24px 0!important;
+    padding:16px 0!important;
+  }
+
+  .bar-inner{
+    flex-direction:column!important;
+    align-items:stretch!important;
+    text-align:left!important;
+    gap:12px!important;
+  }
+
+  .vh-final{
+    padding-bottom:86px!important;
+  }
+
+  .vh-final-shell{
+    min-height:470px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:flex-end!important;
+    padding:18px 12px!important;
+    background:
+      linear-gradient(180deg,rgba(36,28,22,.05) 0%,rgba(36,28,22,.28) 45%,rgba(36,28,22,.78) 82%,rgba(36,28,22,.92) 100%),
+      url("https://chioshotel.gr/wp-content/uploads/2026/04/Screenshot_2026-04-25-14-11-19-166_com.instagram.android-edit-1.webp") center/cover no-repeat!important;
+  }
+
+  .vh-final-shell h2{
+    font-size:26px!important;
+    line-height:1.05!important;
+    max-width:11ch!important;
+    margin-bottom:8px!important;
+    text-shadow:0 3px 16px rgba(0,0,0,.65)!important;
+  }
+
+  .vh-final-shell p{
+    font-size:13px!important;
+    line-height:1.35!important;
+    max-width:100%!important;
+    display:-webkit-box!important;
+    -webkit-line-clamp:2!important;
+    -webkit-box-orient:vertical!important;
+    overflow:hidden!important;
+    text-shadow:0 2px 12px rgba(0,0,0,.65)!important;
+  }
+
+  .vh-mobile-sticky{
+    position:fixed;
+    left:0;
+    right:0;
+    bottom:0;
+    z-index:9999;
+    padding:8px 10px calc(8px + env(safe-area-inset-bottom))!important;
+    background:rgba(255,253,250,.96)!important;
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+    border-top:1px solid rgba(154,107,63,.14)!important;
+    box-shadow:0 -10px 30px rgba(47,38,31,.10)!important;
+  }
+
+  .vh-mobile-sticky__inner{
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:8px!important;
+    width:100%;
+  }
+
+  .vh-mobile-sticky .vh-btn{
+    min-height:50px!important;
+    border-radius:18px!important;
+    font-size:10.5px!important;
+    letter-spacing:.08em!important;
+  }
+
+  .vh-mobile-sticky .vh-btn--primary{
+    background:var(--viber)!important;
+    color:#fff!important;
+    border-color:var(--viber)!important;
+    box-shadow:0 10px 24px rgba(115,96,242,.28)!important;
+  }
+}
+
+@media (min-width:768px){
+  .vh-mobile-sticky{
+    display:none!important;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{
+    scroll-behavior:auto!important;
+    animation:none!important;
+    transition:none!important;
+  }
+}
