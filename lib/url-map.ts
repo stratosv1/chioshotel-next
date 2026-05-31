@@ -154,7 +154,7 @@ export const routeMap: readonly RouteRecord[] = [
     priority: "Critical",
   },
   {
-    path: "/it/le-migliori-camere-a-chios-hotel-a-chios-camere-a-chios/",
+    path: "/it/camere-a-chios/",
     language: "it",
     contentType: "rooms-category",
     category: "rooms",
@@ -174,7 +174,7 @@ export const routeMap: readonly RouteRecord[] = [
     priority: "Critical",
   },
   {
-    path: "/tr/chiosta-odalar/",
+    path: "/tr/sakiz-adasi-odalari/",
     language: "tr",
     contentType: "rooms-category",
     category: "rooms",
