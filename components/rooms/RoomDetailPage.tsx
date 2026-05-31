@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { RoomDetailData } from "@/content/room-details";
+import type { IndividualRoomData, RoomDetailData } from "@/content/room-details";
 
 type RoomDetailPageProps = {
   data: RoomDetailData;
@@ -38,6 +38,92 @@ function RoomGallery({ data }: { data: RoomDetailData }) {
               </button>
             ))}
           </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function IndividualRoomCard({ room }: { room: IndividualRoomData }) {
+  const [activeImage, setActiveImage] = useState(room.images[0]);
+
+  return (
+    <article className="rd-room-card">
+      <div className="rd-room-card__media">
+        <div className="rd-room-main-image">
+          <img src={activeImage.src} alt={activeImage.alt} loading="lazy" />
+          <span>{activeImage.caption}</span>
+        </div>
+
+        <div className="rd-room-thumbs" aria-label={`${room.name} photos`}>
+          {room.images.map((image, index) => (
+            <button
+              type="button"
+              className={`rd-room-thumb ${activeImage.src === image.src ? "is-active" : ""}`}
+              key={image.src}
+              onClick={() => setActiveImage(image)}
+              aria-label={`Show ${room.name} photo ${index + 1}`}
+            >
+              <img src={image.src} alt={image.alt} loading="lazy" />
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="rd-room-card__body">
+        <div className="rd-room-topline">
+          <span>{room.location}</span>
+          <strong>Up to {room.maxGuests} guests</strong>
+        </div>
+
+        <h3>{room.name}</h3>
+
+        <p className="rd-room-type">{room.type}</p>
+
+        <p className="rd-room-description">{room.description}</p>
+
+        <div className="rd-room-badges" aria-label={`${room.name} highlights`}>
+          {room.badges.map((badge) => (
+            <span key={badge}>{badge}</span>
+          ))}
+        </div>
+
+        <div className="rd-room-beds" aria-label={`${room.name} beds`}>
+          {room.beds.map((bed) => (
+            <span key={bed}>🛏️ {bed}</span>
+          ))}
+        </div>
+
+        <div className="rd-room-amenities" aria-label={`${room.name} amenities`}>
+          {room.amenities.map((amenity) => (
+            <span key={`${amenity.icon}-${amenity.label}`}>
+              {amenity.icon} {amenity.label}
+            </span>
+          ))}
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function IndividualRoomsSection({ data }: { data: RoomDetailData }) {
+  if (!data.individualRooms.rooms.length) {
+    return null;
+  }
+
+  return (
+    <section className="rd-section rd-section--individual" aria-labelledby="rd-individual-title">
+      <div className="rd-wrap">
+        <header className="rd-section-head">
+          <span className="rd-kicker">{data.individualRooms.kicker}</span>
+          <h2 id="rd-individual-title">{data.individualRooms.title}</h2>
+          <p>{data.individualRooms.description}</p>
+        </header>
+
+        <div className="rd-individual-list">
+          {data.individualRooms.rooms.map((room) => (
+            <IndividualRoomCard room={room} key={room.id} />
+          ))}
         </div>
       </div>
     </section>
@@ -107,6 +193,8 @@ export function RoomDetailPage({ data }: RoomDetailPageProps) {
       </section>
 
       <RoomGallery data={data} />
+
+      <IndividualRoomsSection data={data} />
 
       <section className="rd-section" aria-labelledby="rd-amenities-title">
         <div className="rd-wrap">

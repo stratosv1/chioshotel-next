@@ -1,3 +1,23 @@
+export type IndividualRoomData = {
+  id: string;
+  name: string;
+  type: string;
+  location: string;
+  maxGuests: number;
+  description: string;
+  badges: string[];
+  beds: string[];
+  amenities: {
+    icon: string;
+    label: string;
+  }[];
+  images: {
+    src: string;
+    alt: string;
+    caption: string;
+  }[];
+};
+
 export type RoomDetailData = {
   id: string;
   seo: {
@@ -49,6 +69,12 @@ export type RoomDetailData = {
       text: string;
     }[];
   };
+  individualRooms: {
+    kicker: string;
+    title: string;
+    description: string;
+    rooms: IndividualRoomData[];
+  };
   bestFor: {
     kicker: string;
     title: string;
@@ -92,11 +118,11 @@ export const standardDoubleRoom: RoomDetailData = {
     badges: ["2–4 guests", "Garden or terrace feel", "Free WiFi", "Air conditioning"],
     primaryCta: {
       label: "Book direct",
-      href: "https://www.viber.com/en/",
+      href: "https://chioshotel.gr/chios-hotels-rates/",
     },
     secondaryCta: {
       label: "Ask availability",
-      href: "tel:+302271031733",
+      href: "tel:+306944764654",
     },
   },
   overview: {
@@ -148,45 +174,226 @@ export const standardDoubleRoom: RoomDetailData = {
     kicker: "Amenities",
     title: "Everything you need for a comfortable stay",
     items: [
+      { icon: "📶", label: "Free WiFi", text: "Stay connected throughout your visit." },
+      { icon: "❄️", label: "Air conditioning", text: "Comfort during the warm Chios summer." },
+      { icon: "📺", label: "LCD TV", text: "Simple in-room entertainment." },
+      { icon: "🧊", label: "Refrigerator", text: "Useful for drinks, snacks and fruit." },
+      { icon: "☕", label: "Kettle", text: "Prepare coffee or tea in your room." },
+      { icon: "🚿", label: "Private bathroom", text: "Clean, practical bathroom facilities." },
+      { icon: "🌿", label: "Garden atmosphere", text: "Enjoy the calm Kampos estate feeling." },
+      { icon: "🍽️", label: "Kitchenette", text: "Available in selected first-floor rooms." },
+    ],
+  },
+  individualRooms: {
+    kicker: "Available rooms",
+    title: "Choose your specific standard room",
+    description:
+      "This category includes ground floor rooms with direct garden access and first floor rooms with terrace feel. Some first floor rooms also include a kitchenette.",
+    rooms: [
       {
-        icon: "📶",
-        label: "Free WiFi",
-        text: "Stay connected throughout your visit.",
+        id: "room-5",
+        name: "Room 5",
+        type: "Ground-floor double / triple",
+        location: "Ground floor",
+        maxGuests: 3,
+        description:
+          "Room 5 is a ground-floor double / triple room with direct courtyard and garden access. It is ideal for guests who prefer no stairs and an easy outdoor connection.",
+        badges: ["Ground floor", "Garden access", "No stairs", "Up to 3 guests"],
+        beds: ["1 double bed", "1 single bed"],
+        amenities: [
+          { icon: "📶", label: "Wi-Fi" },
+          { icon: "☕", label: "Coffee and tea kettle" },
+          { icon: "🌿", label: "Ground-floor view" },
+          { icon: "🪜❌", label: "No stairs" },
+          { icon: "📐", label: "Open-plan space" },
+        ],
+        images: [
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-house-rooms.webp",
+            alt: "Standard triple room 5 on the ground floor in Chios - bedroom - Voulamandis House",
+            caption: "Bedroom",
+          },
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-triple-rooms_1646x1080.webp",
+            alt: "Standard triple room 5 in Chios - traditional Kampos interior decoration - Voulamandis House",
+            caption: "Traditional interior",
+          },
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-house-double-room-bathroom_1620x1080.webp",
+            alt: "Standard triple room 5 in Chios - large renovated bathroom - Voulamandis House",
+            caption: "Bathroom",
+          },
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/hotels-chios-voulamandis_1620x1080.webp",
+            alt: "Ground floor standard room 5 in Chios - courtyard access - Voulamandis House",
+            caption: "Courtyard access",
+          },
+        ],
       },
       {
-        icon: "❄️",
-        label: "Air conditioning",
-        text: "Comfort during the warm Chios summer.",
+        id: "room-7",
+        name: "Room 7",
+        type: "Ground-floor double / triple",
+        location: "Ground floor",
+        maxGuests: 3,
+        description:
+          "Room 7 is a ground-floor double / triple room with garden access and a flexible layout with a sofa bed.",
+        badges: ["Ground floor", "Garden access", "No stairs", "Sofa bed"],
+        beds: ["1 double bed", "1 sofa bed"],
+        amenities: [
+          { icon: "📶", label: "Wi-Fi" },
+          { icon: "☕", label: "Coffee and tea kettle" },
+          { icon: "🌿", label: "Ground-floor view" },
+          { icon: "🪜❌", label: "No stairs" },
+          { icon: "📐", label: "Open-plan space" },
+        ],
+        images: [
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/double-triple-room.jpg",
+            alt: "Standard double room 7 on the ground floor in Chios with sofa bed - Voulamandis House",
+            caption: "Room layout",
+          },
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/view-double-room-chios-hotels.webp",
+            alt: "Standard double room 7 in Chios - interior with traditional stone wall - Voulamandis House",
+            caption: "Stone wall interior",
+          },
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/double-room-bathroom.webp",
+            alt: "Standard double room 7 in Chios - modern shower bathroom - Voulamandis House",
+            caption: "Bathroom",
+          },
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-stone-bathroom.webp",
+            alt: "Standard double room 7 in Chios - traditional stone bathroom details - Voulamandis House",
+            caption: "Stone bathroom details",
+          },
+        ],
       },
       {
-        icon: "📺",
-        label: "LCD TV",
-        text: "Simple in-room entertainment.",
+        id: "room-1",
+        name: "Room 1",
+        type: "First-floor double / triple",
+        location: "First floor",
+        maxGuests: 4,
+        description:
+          "Room 1 is a first-floor room for up to 4 guests, with upper-floor view, private balcony feel and two sleeping spaces without a connecting door.",
+        badges: ["First floor", "Upper-floor view", "Private balcony", "Up to 4 guests"],
+        beds: ["1 double bed", "2 single beds"],
+        amenities: [
+          { icon: "📶", label: "Wi-Fi" },
+          { icon: "☕", label: "Coffee and tea kettle" },
+          { icon: "🌤️", label: "Private balcony" },
+          { icon: "🌾", label: "Upper-floor view" },
+          { icon: "🪜", label: "Access by stairs" },
+          { icon: "🚪", label: "Two spaces, no connecting door" },
+        ],
+        images: [
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07776-2-e1675109942622.webp",
+            alt: "Standard first-floor room 1 in Chios for up to 4 guests - Voulamandis House",
+            caption: "Bedroom",
+          },
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07769-1.webp",
+            alt: "Standard room 1 in Chios - spacious room with double and single beds - Voulamandis House",
+            caption: "Spacious layout",
+          },
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/%CF%87%CE%B9%CE%BF%CF%82-%CE%B4%CF%89%CE%BC%CE%B1%CF%84%CE%B9%CE%B1-1-1.webp",
+            alt: "Standard room 1 in Kampos Chios - traditional details and decoration - Voulamandis House",
+            caption: "Traditional details",
+          },
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-house-bathrooms-1.webp",
+            alt: "Standard room 1 in Chios - large private renovated bathroom - Voulamandis House",
+            caption: "Bathroom",
+          },
+        ],
       },
       {
-        icon: "🧊",
-        label: "Refrigerator",
-        text: "Useful for drinks, snacks and fruit.",
+        id: "room-3",
+        name: "Room 3",
+        type: "First-floor double / triple",
+        location: "First floor",
+        maxGuests: 3,
+        description:
+          "Room 3 is a first-floor double / triple room with kitchenette, upper-floor view and access by stairs.",
+        badges: ["First floor", "Kitchenette", "Upper-floor view", "Up to 3 guests"],
+        beds: ["1 double bed", "1 single bed"],
+        amenities: [
+          { icon: "📶", label: "Wi-Fi" },
+          { icon: "☕", label: "Coffee and tea kettle" },
+          { icon: "🌤️", label: "Private balcony" },
+          { icon: "🌾", label: "Upper-floor view" },
+          { icon: "🥣", label: "Kitchenette" },
+          { icon: "🪜", label: "Access by stairs" },
+          { icon: "🚪", label: "Two spaces, no connecting door" },
+        ],
+        images: [
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07867-1.webp",
+            alt: "Standard triple room 3 on the first floor in Chios with kitchenette - bedroom - Voulamandis House",
+            caption: "Bedroom",
+          },
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07860-1.webp",
+            alt: "Standard room 3 in Chios - comfortable bedroom with stone walls - Voulamandis House",
+            caption: "Stone wall interior",
+          },
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07849-1.webp",
+            alt: "Standard room 3 in Chios - interior equipment and terrace access - Voulamandis House",
+            caption: "Terrace access",
+          },
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07891-1.webp",
+            alt: "Standard room 3 in Kampos Chios - equipped kitchenette - Voulamandis House",
+            caption: "Kitchenette",
+          },
+        ],
       },
       {
-        icon: "☕",
-        label: "Kettle",
-        text: "Prepare coffee or tea in your room.",
-      },
-      {
-        icon: "🚿",
-        label: "Private bathroom",
-        text: "Clean, practical bathroom facilities.",
-      },
-      {
-        icon: "🌿",
-        label: "Garden atmosphere",
-        text: "Enjoy the calm Kampos estate feeling.",
-      },
-      {
-        icon: "🅿️",
-        label: "Parking",
-        text: "Convenient for guests exploring Chios by car.",
+        id: "room-4",
+        name: "Room 4",
+        type: "First-floor double / triple",
+        location: "First floor",
+        maxGuests: 3,
+        description:
+          "Room 4 is a first-floor double / triple room with kitchenette, sofa bed and upper-floor view.",
+        badges: ["First floor", "Kitchenette", "Sofa bed", "Up to 3 guests"],
+        beds: ["1 double bed", "1 sofa bed"],
+        amenities: [
+          { icon: "📶", label: "Wi-Fi" },
+          { icon: "☕", label: "Coffee and tea kettle" },
+          { icon: "🌤️", label: "Private balcony" },
+          { icon: "🌾", label: "Upper-floor view" },
+          { icon: "🥣", label: "Kitchenette" },
+          { icon: "🪜", label: "Access by stairs" },
+          { icon: "📐", label: "Open-plan space" },
+        ],
+        images: [
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/received_1748354861920234.webp",
+            alt: "Standard triple room 4 on the first floor in Chios with sofa bed and kitchenette - Voulamandis House",
+            caption: "Room layout",
+          },
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/received_1748358935253160.webp",
+            alt: "Standard room 4 in Chios - bright living space with kitchenette - Voulamandis House",
+            caption: "Kitchenette area",
+          },
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/received_1748356725253381.webp",
+            alt: "Standard room 4 in Chios - traditional decoration and comfort - Voulamandis House",
+            caption: "Traditional decoration",
+          },
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/received_1748356718586715.webp",
+            alt: "Standard room 4 in Kampos Chios - balcony view - Voulamandis House",
+            caption: "Balcony view",
+          },
+        ],
       },
     ],
   },
@@ -204,7 +411,7 @@ export const standardDoubleRoom: RoomDetailData = {
     kicker: "Direct booking",
     title: "Ask us which standard room fits your stay",
     text: "Tell us your dates, number of guests and whether you prefer ground floor or first floor. We will suggest the most suitable available option.",
-    phoneHref: "tel:+302271031733",
+    phoneHref: "tel:+306944764654",
     phoneLabel: "Call us",
     whatsappHref:
       "https://wa.me/306944474226?text=Hello!%20I%20am%20interested%20in%20the%20standard%20double%20or%20triple%20rooms%20in%20Chios.",
@@ -252,11 +459,11 @@ export const economyDoubleRooms: RoomDetailData = {
     badges: ["2 guests", "Economy choice", "Free WiFi", "Air conditioning"],
     primaryCta: {
       label: "Book direct",
-      href: "https://www.viber.com/en/",
+      href: "https://beds24.com/booking.php?propid=117813&referer=BookingLink&roomid=268803&lang=en&booking=723an9sb8hfukvhvbj6c7bmnni",
     },
     secondaryCta: {
       label: "Ask availability",
-      href: "tel:+302271031733",
+      href: "tel:+306944764654",
     },
   },
   overview: {
@@ -308,45 +515,98 @@ export const economyDoubleRooms: RoomDetailData = {
     kicker: "Amenities",
     title: "Essential comfort for your stay",
     items: [
+      { icon: "📶", label: "Free WiFi", text: "Internet access during your stay." },
+      { icon: "❄️", label: "Air conditioning", text: "Comfort in summer weather." },
+      { icon: "🧊", label: "Refrigerator", text: "Useful for drinks and snacks." },
+      { icon: "☕", label: "Kettle", text: "Make coffee or tea in the room." },
+      { icon: "💨", label: "Hairdryer", text: "Practical bathroom amenity." },
+      { icon: "🪑", label: "Small desk", text: "Useful for light work or planning your day." },
+    ],
+  },
+  individualRooms: {
+    kicker: "Available rooms",
+    title: "Choose your specific economy room",
+    description:
+      "The economy category includes two renovated 16m² double rooms: Room 6 on the ground floor with direct garden access, and Room 2 on the first floor with Kampos view.",
+    rooms: [
       {
-        icon: "📶",
-        label: "Free WiFi",
-        text: "Internet access during your stay.",
+        id: "room-6",
+        name: "Room 6",
+        type: "Budget double room",
+        location: "Ground floor",
+        maxGuests: 2,
+        description:
+          "Room 6 is ideal for guests who love nature. Located on the ground floor, it opens directly to the peaceful courtyard and garden.",
+        badges: ["Ground floor", "Garden access", "No stairs", "Economy"],
+        beds: ["1 double bed"],
+        amenities: [
+          { icon: "📶", label: "Wi-Fi" },
+          { icon: "☕", label: "Coffee and tea kettle" },
+          { icon: "🌿", label: "Ground-floor view" },
+          { icon: "🪜❌", label: "No stairs" },
+          { icon: "📐", label: "Open-plan space" },
+        ],
+        images: [
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753964631359257.webp",
+            alt: "Economy double room in Chios No. 6 on the ground floor with garden access - Voulamandis House",
+            caption: "Room",
+          },
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753964581359262.webp",
+            alt: "Workspace and small desk in economy double room No. 6 in Chios",
+            caption: "Double bed",
+          },
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753968691358851.webp",
+            alt: "Renovated bathroom of economy double room No. 6 in Chios",
+            caption: "Desk",
+          },
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753969201358800.webp",
+            alt: "Interior and decoration of economy double room No. 6 in Kampos Chios",
+            caption: "Bathroom",
+          },
+        ],
       },
       {
-        icon: "❄️",
-        label: "Air conditioning",
-        text: "Comfort in summer weather.",
-      },
-      {
-        icon: "📺",
-        label: "LCD TV",
-        text: "Basic in-room entertainment.",
-      },
-      {
-        icon: "🧊",
-        label: "Refrigerator",
-        text: "Useful for drinks and snacks.",
-      },
-      {
-        icon: "☕",
-        label: "Kettle",
-        text: "Make coffee or tea in the room.",
-      },
-      {
-        icon: "🚿",
-        label: "Private bathroom",
-        text: "Private bathroom facilities.",
-      },
-      {
-        icon: "🌿",
-        label: "Kampos setting",
-        text: "A quiet base in the traditional Kampos area.",
-      },
-      {
-        icon: "🅿️",
-        label: "Parking",
-        text: "Helpful if you rent a car in Chios.",
+        id: "room-2",
+        name: "Room 2",
+        type: "Budget double room",
+        location: "First floor",
+        maxGuests: 2,
+        description:
+          "Room 2 is located on the first floor and offers access to a shared terrace with views over the estate and the citrus trees of Kampos.",
+        badges: ["First floor", "Kampos view", "Access by stairs", "Economy"],
+        beds: ["1 double bed"],
+        amenities: [
+          { icon: "📶", label: "Wi-Fi" },
+          { icon: "☕", label: "Coffee and tea kettle" },
+          { icon: "🪜", label: "Access by stairs" },
+          { icon: "📐", label: "Open-plan space" },
+        ],
+        images: [
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07803-1.webp",
+            alt: "Economy double room No. 2 in Chios on the first floor with a view - Voulamandis House",
+            caption: "Room view",
+          },
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07839.webp",
+            alt: "Lighting and atmosphere in economy double room No. 2 on the first floor",
+            caption: "Layout",
+          },
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07832.webp",
+            alt: "Stone wall detail in economy double room No. 2 in Chios",
+            caption: "Detail",
+          },
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/received_1385287484893642_1500478431120_1200x800_3240x2160-1.webp",
+            alt: "Bed and room layout in economy double room No. 2 in Chios",
+            caption: "Bathroom",
+          },
+        ],
       },
     ],
   },
@@ -364,7 +624,7 @@ export const economyDoubleRooms: RoomDetailData = {
     kicker: "Direct booking",
     title: "Ask for the best available economy option",
     text: "Tell us your dates and we will let you know which economy double room is available for your stay.",
-    phoneHref: "tel:+302271031733",
+    phoneHref: "tel:+306944764654",
     phoneLabel: "Call us",
     whatsappHref:
       "https://wa.me/306944474226?text=Hello!%20I%20am%20interested%20in%20the%20economy%20double%20rooms%20in%20Chios.",
@@ -411,11 +671,11 @@ export const familyChiosApartments: RoomDetailData = {
     badges: ["Up to 4 guests", "40–45m²", "Kitchen", "Living area"],
     primaryCta: {
       label: "Book direct",
-      href: "https://www.viber.com/en/",
+      href: "https://beds24.com/booking.php?propid=117813&referer=BookingLink&roomid=265595&lang=en",
     },
     secondaryCta: {
       label: "Ask availability",
-      href: "tel:+302271031733",
+      href: "tel:+306944764654",
     },
   },
   overview: {
@@ -467,45 +727,147 @@ export const familyChiosApartments: RoomDetailData = {
     kicker: "Amenities",
     title: "Apartment comfort and practical facilities",
     items: [
+      { icon: "📶", label: "Free WiFi", text: "Internet access for the whole family." },
+      { icon: "❄️", label: "Air conditioning", text: "Comfortable temperature during summer." },
+      { icon: "🍳", label: "Full kitchen", text: "Prepare simple meals during your stay." },
+      { icon: "🛋️", label: "Living area", text: "Extra space to relax inside the apartment." },
+      { icon: "🛏️", label: "Separate bedroom", text: "More privacy and comfort for families." },
+      { icon: "🌿", label: "Garden view", text: "A peaceful Kampos setting around the property." },
+      { icon: "🌞", label: "Private balcony", text: "Outdoor space for your stay." },
+      { icon: "🚿", label: "Private bathroom", text: "Practical bathroom facilities." },
+    ],
+  },
+  individualRooms: {
+    kicker: "Available apartments",
+    title: "Choose your specific family apartment",
+    description:
+      "The family apartment category includes three independent units for up to 4 guests, with kitchen facilities, living area and extra space for families or longer stays.",
+    rooms: [
       {
-        icon: "📶",
-        label: "Free WiFi",
-        text: "Internet access for the whole family.",
+        id: "apartment-8",
+        name: "Apartment 8",
+        type: "Apartment",
+        location: "Independent unit",
+        maxGuests: 4,
+        description:
+          "Apartment 8 is a family apartment with living room and kitchen, separate bedroom and bathroom. It is suitable for up to 4 guests.",
+        badges: ["Independent unit", "Full kitchen", "Garden view", "Up to 4 guests"],
+        beds: ["1 double bed", "2 single beds"],
+        amenities: [
+          { icon: "📶", label: "Wi-Fi" },
+          { icon: "☕", label: "Coffee and tea kettle" },
+          { icon: "🌤️", label: "Private balcony" },
+          { icon: "🌿", label: "Garden view" },
+          { icon: "🍳", label: "Kitchen" },
+          { icon: "🪜❌", label: "No stairs" },
+          { icon: "🧩", label: "Two spaces" },
+        ],
+        images: [
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/chios-apartments-voulamandis.webp",
+            alt: "Family Apartment 8 - living room and kitchen - Voulamandis House Chios",
+            caption: "Living Room & Kitchen",
+          },
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-family-apartments.webp",
+            alt: "Family Apartment 8 - kitchen area - Voulamandis House Chios",
+            caption: "Kitchen",
+          },
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/family-room.webp",
+            alt: "Family Apartment 8 - bedroom - Voulamandis House Chios",
+            caption: "Bedroom",
+          },
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-apartment-bathroom..webp",
+            alt: "Family Apartment 8 - bathroom - Voulamandis House Chios",
+            caption: "Bathroom",
+          },
+        ],
       },
       {
-        icon: "❄️",
-        label: "Air conditioning",
-        text: "Comfortable temperature during summer.",
+        id: "apartment-9",
+        name: "Apartment 9",
+        type: "Apartment",
+        location: "Independent unit",
+        maxGuests: 4,
+        description:
+          "Apartment 9 offers the same family-friendly layout with kitchen, living area, bedroom and bathroom, suitable for up to 4 guests.",
+        badges: ["Independent unit", "Full kitchen", "Garden view", "Up to 4 guests"],
+        beds: ["1 double bed", "2 single beds"],
+        amenities: [
+          { icon: "📶", label: "Wi-Fi" },
+          { icon: "☕", label: "Coffee and tea kettle" },
+          { icon: "🌤️", label: "Private balcony" },
+          { icon: "🌿", label: "Garden view" },
+          { icon: "🍳", label: "Kitchen" },
+          { icon: "🪜❌", label: "No stairs" },
+          { icon: "🧩", label: "Two spaces" },
+        ],
+        images: [
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/chios-apartments-voulamandis.webp",
+            alt: "Family Apartment 9 - living room and kitchen - Voulamandis House Chios",
+            caption: "Living Room & Kitchen",
+          },
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-family-apartments.webp",
+            alt: "Family Apartment 9 - kitchen area - Voulamandis House Chios",
+            caption: "Kitchen",
+          },
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/family-room.webp",
+            alt: "Family Apartment 9 - bedroom - Voulamandis House Chios",
+            caption: "Bedroom",
+          },
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-apartment-bathroom..webp",
+            alt: "Family Apartment 9 - bathroom - Voulamandis House Chios",
+            caption: "Bathroom",
+          },
+        ],
       },
       {
-        icon: "🍳",
-        label: "Full kitchen",
-        text: "Prepare simple meals during your stay.",
-      },
-      {
-        icon: "🛋️",
-        label: "Living area",
-        text: "Extra space to relax inside the apartment.",
-      },
-      {
-        icon: "🛏️",
-        label: "Separate bedroom",
-        text: "More privacy and comfort for families.",
-      },
-      {
-        icon: "🚿",
-        label: "Private bathroom",
-        text: "Practical bathroom facilities.",
-      },
-      {
-        icon: "🌿",
-        label: "Garden atmosphere",
-        text: "A peaceful Kampos setting around the property.",
-      },
-      {
-        icon: "🅿️",
-        label: "Parking",
-        text: "Convenient if you explore Chios by car.",
+        id: "apartment-10",
+        name: "Apartment 10",
+        type: "Apartment",
+        location: "Independent unit",
+        maxGuests: 4,
+        description:
+          "Apartment 10 is a family apartment with living room and kitchen, bedroom and flexible sofa-bed layout.",
+        badges: ["Independent unit", "Full kitchen", "Garden view", "Sofa beds"],
+        beds: ["1 double bed", "2 sofa beds"],
+        amenities: [
+          { icon: "📶", label: "Wi-Fi" },
+          { icon: "☕", label: "Coffee and tea kettle" },
+          { icon: "🌤️", label: "Private balcony" },
+          { icon: "🌿", label: "Garden view" },
+          { icon: "🍳", label: "Kitchen" },
+          { icon: "🪜❌", label: "No stairs" },
+          { icon: "🧩", label: "Two spaces" },
+        ],
+        images: [
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07899.webp",
+            alt: "Family Apartment 10 - living room and kitchen - Voulamandis House Chios",
+            caption: "Living Room & Kitchen",
+          },
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07909.webp",
+            alt: "Family Apartment 10 - kitchen area - Voulamandis House Chios",
+            caption: "Kitchen",
+          },
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07940.webp",
+            alt: "Family Apartment 10 - bedroom - Voulamandis House Chios",
+            caption: "Bedroom",
+          },
+          {
+            src: "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07943.webp",
+            alt: "Family Apartment 10 - interior detail - Voulamandis House Chios",
+            caption: "Detail",
+          },
+        ],
       },
     ],
   },
@@ -523,7 +885,7 @@ export const familyChiosApartments: RoomDetailData = {
     kicker: "Direct booking",
     title: "Ask us which apartment is available",
     text: "Tell us your dates and number of guests, and we will suggest the most suitable available family apartment.",
-    phoneHref: "tel:+302271031733",
+    phoneHref: "tel:+306944764654",
     phoneLabel: "Call us",
     whatsappHref:
       "https://wa.me/306944474226?text=Hello!%20I%20am%20interested%20in%20the%20family%20apartments%20in%20Chios.",
