@@ -6,7 +6,15 @@ import {
   isLanguageCode,
   normalizePath,
 } from "@/lib/languages";
-import { roomsCategoryEl } from "@/content/rooms";
+import {
+  roomsCategoryDe,
+  roomsCategoryEl,
+  roomsCategoryEs,
+  roomsCategoryFr,
+  roomsCategoryIt,
+  roomsCategoryTr,
+} from "@/content/rooms";
+import type { RoomsCategoryPageData } from "@/content/rooms";
 import { buildPageMetadata } from "@/lib/seo";
 import { getRouteByPath, getRoutesByItemId, routeMap } from "@/lib/url-map";
 
@@ -39,8 +47,25 @@ function getRequestedPath(locale: string, slug: string[]) {
   return normalizePath(`/${locale}/${slug.join("/")}/`);
 }
 
-function isGreekRoomsCategoryPath(path: string) {
-  return path === "/el/domatia-xios/";
+function getLocalizedRoomsCategoryData(
+  path: string,
+): RoomsCategoryPageData | undefined {
+  switch (path) {
+    case "/el/domatia-xios/":
+      return roomsCategoryEl;
+    case "/fr/chambres-a-chios/":
+      return roomsCategoryFr;
+    case "/de/chios-zimmer/":
+      return roomsCategoryDe;
+    case "/it/camere-a-chios/":
+      return roomsCategoryIt;
+    case "/es/habitaciones-en-chios/":
+      return roomsCategoryEs;
+    case "/tr/sakiz-adasi-odalari/":
+      return roomsCategoryTr;
+    default:
+      return undefined;
+  }
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -51,13 +76,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const requestedPath = getRequestedPath(locale, slug);
+  const roomsCategoryData = getLocalizedRoomsCategoryData(requestedPath);
 
-  if (isGreekRoomsCategoryPath(requestedPath)) {
+  if (roomsCategoryData) {
     return buildPageMetadata({
-      path: roomsCategoryEl.seo.canonicalPath,
-      title: roomsCategoryEl.seo.title,
-      description: roomsCategoryEl.seo.description,
-      image: roomsCategoryEl.seo.ogImage,
+      path: roomsCategoryData.seo.canonicalPath,
+      title: roomsCategoryData.seo.title,
+      description: roomsCategoryData.seo.description,
+      image: roomsCategoryData.seo.ogImage,
     });
   }
 
@@ -72,9 +98,10 @@ export default async function Page({ params }: PageProps) {
   }
 
   const requestedPath = getRequestedPath(locale, slug);
+  const roomsCategoryData = getLocalizedRoomsCategoryData(requestedPath);
 
-  if (isGreekRoomsCategoryPath(requestedPath)) {
-    return <RoomsCategoryPage data={roomsCategoryEl} />;
+  if (roomsCategoryData) {
+    return <RoomsCategoryPage data={roomsCategoryData} />;
   }
 
   const route = getRouteByPath(requestedPath);
