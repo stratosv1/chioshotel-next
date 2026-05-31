@@ -1,23 +1,13 @@
 import type { MetadataRoute } from "next";
 
-const siteUrl = "https://chioshotel.gr";
-
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: [
-      {
-        userAgent: "*",
-        allow: "/",
-        disallow: [
-          "/api/",
-          "/_next/",
-          "/private/",
-          "/admin/",
-          "/wp-admin/",
-        ],
-      },
-    ],
-    sitemap: `${siteUrl}/sitemap.xml`,
-    host: siteUrl,
+    rules: {
+      userAgent: "*",
+      allow: "/",
+      disallow: ["/api/", "/private/", "/admin/", "/wp-admin/"],
+    },
+    host: "https://chioshotel.gr",
+    sitemap: "https://chioshotel.gr/sitemap.xml",
   };
 }
