@@ -1,3 +1,4 @@
+import { VoulamandisFooter } from "@/components/VoulamandisFooter";
 import { VoulamandisHeader } from "@/components/VoulamandisHeader";
 import "./globals.css";
 
@@ -22,9 +23,11 @@ export default function RootLayout({
           fetchPriority="high"
         />
       </head>
+
       <body>
         <VoulamandisHeader />
         {children}
+        <VoulamandisFooter />
       </body>
     </html>
   );
