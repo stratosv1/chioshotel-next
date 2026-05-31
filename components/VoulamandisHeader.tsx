@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { usePathname } from "next/navigation";
+import { useMemo, useState } from "react";
 
 const mainLinks = [
   {
@@ -51,6 +52,171 @@ const exploreLinks = [
   },
 ];
 
+const languageOptions = [
+  {
+    code: "en",
+    label: "EN",
+    name: "English",
+  },
+  {
+    code: "el",
+    label: "EL",
+    name: "Ελληνικά",
+  },
+  {
+    code: "fr",
+    label: "FR",
+    name: "Français",
+  },
+  {
+    code: "de",
+    label: "DE",
+    name: "Deutsch",
+  },
+  {
+    code: "it",
+    label: "IT",
+    name: "Italiano",
+  },
+  {
+    code: "es",
+    label: "ES",
+    name: "Español",
+  },
+  {
+    code: "tr",
+    label: "TR",
+    name: "Türkçe",
+  },
+] as const;
+
+type LanguageCode = (typeof languageOptions)[number]["code"];
+
+const homePaths: Record<LanguageCode, string> = {
+  en: "/",
+  el: "/el/",
+  fr: "/fr/",
+  de: "/de/",
+  it: "/it/",
+  es: "/es/",
+  tr: "/tr/",
+};
+
+const roomsCategoryPaths: Record<LanguageCode, string> = {
+  en: "/chios-rooms/",
+  el: "/el/domatia-xios/",
+  fr: "/fr/chambres-a-chios/",
+  de: "/de/chios-zimmer/",
+  it: "/it/camere-a-chios/",
+  es: "/es/habitaciones-en-chios/",
+  tr: "/tr/sakiz-adasi-odalari/",
+};
+
+function normalizePath(path: string) {
+  if (!path) {
+    return "/";
+  }
+
+  const withLeadingSlash = path.startsWith("/") ? path : `/${path}`;
+
+  if (withLeadingSlash === "/") {
+    return "/";
+  }
+
+  return withLeadingSlash.endsWith("/")
+    ? withLeadingSlash
+    : `${withLeadingSlash}/`;
+}
+
+function getCurrentLanguage(path: string): LanguageCode {
+  const normalizedPath = normalizePath(path);
+
+  if (normalizedPath === "/el/" || normalizedPath.startsWith("/el/")) {
+    return "el";
+  }
+
+  if (normalizedPath === "/fr/" || normalizedPath.startsWith("/fr/")) {
+    return "fr";
+  }
+
+  if (normalizedPath === "/de/" || normalizedPath.startsWith("/de/")) {
+    return "de";
+  }
+
+  if (normalizedPath === "/it/" || normalizedPath.startsWith("/it/")) {
+    return "it";
+  }
+
+  if (normalizedPath === "/es/" || normalizedPath.startsWith("/es/")) {
+    return "es";
+  }
+
+  if (normalizedPath === "/tr/" || normalizedPath.startsWith("/tr/")) {
+    return "tr";
+  }
+
+  return "en";
+}
+
+function getLanguageHref(path: string, language: LanguageCode) {
+  const normalizedPath = normalizePath(path);
+
+  const isHomePage = Object.values(homePaths).includes(normalizedPath);
+  const isRoomsCategoryPage =
+    Object.values(roomsCategoryPaths).includes(normalizedPath);
+
+  if (isHomePage) {
+    return homePaths[language];
+  }
+
+  if (isRoomsCategoryPage) {
+    return roomsCategoryPaths[language];
+  }
+
+  if (
+    normalizedPath === "/chios-rooms/" ||
+    normalizedPath.startsWith("/chios-rooms/")
+  ) {
+    return roomsCategoryPaths[language];
+  }
+
+  return homePaths[language];
+}
+
+function LanguageSwitcher({ onNavigate }: { onNavigate?: () => void }) {
+  const pathname = usePathname() || "/";
+  const currentLanguage = getCurrentLanguage(pathname);
+
+  const links = useMemo(
+    () =>
+      languageOptions.map((language) => ({
+        ...language,
+        href: getLanguageHref(pathname, language.code),
+        isActive: language.code === currentLanguage,
+      })),
+    [currentLanguage, pathname],
+  );
+
+  return (
+    <nav className="vh-language-switcher" aria-label="Language selector">
+      {links.map((language) => (
+        <a
+          href={language.href}
+          key={language.code}
+          lang={language.code}
+          hrefLang={language.code}
+          aria-current={language.isActive ? "page" : undefined}
+          title={language.name}
+          onClick={onNavigate}
+          className={language.isActive ? "is-active" : ""}
+        >
+          {language.label}
+        </a>
+      ))}
+    </nav>
+  );
+}
+
 export function VoulamandisHeader() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -79,6 +245,8 @@ export function VoulamandisHeader() {
         </nav>
 
         <div className="vh-header__actions">
+          <LanguageSwitcher />
+
           <a className="vh-header__book" href="/chios-hotels-rates/">
             Book Now
           </a>
@@ -115,6 +283,11 @@ export function VoulamandisHeader() {
             <button type="button" onClick={closeMenu} aria-label="Close menu">
               ×
             </button>
+          </div>
+
+          <div className="vh-mobile-menu__section">
+            <span className="vh-mobile-menu__label">Language</span>
+            <LanguageSwitcher onNavigate={closeMenu} />
           </div>
 
           <a
