@@ -306,7 +306,7 @@ export const routeMap: readonly RouteRecord[] = [
     priority: "Critical",
   },
   {
-    path: "/es/habitaciones-en-chios/habitaciones-dobles-en-la-isla-de-chios/",
+    path: "/es/habitaciones-en-chios/habitaciones-dobles-estandar/",
     language: "es",
     contentType: "room-detail",
     category: "rooms",
@@ -316,7 +316,7 @@ export const routeMap: readonly RouteRecord[] = [
     priority: "Critical",
   },
   {
-    path: "/tr/chios-odalari/standart-cift-kisilik-odalar-sakiz-adasi/",
+    path: "/tr/chios-odalari/standart-cift-kisilik-odalar/",
     language: "tr",
     contentType: "room-detail",
     category: "rooms",

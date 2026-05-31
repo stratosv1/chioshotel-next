@@ -12504,3 +12504,34 @@ a.rw-action-btn {
     display: none;
   }
 }
+/* ==========================================================================
+   Room detail multilingual text overflow fixes
+   ========================================================================== */
+
+.room-detail-hero,
+.room-detail-hero * {
+  min-width: 0;
+}
+
+.room-detail-hero h1,
+.room-detail-hero h2,
+.room-detail-hero p,
+.room-detail-card h1,
+.room-detail-card h2,
+.room-detail-card h3,
+.room-detail-card p,
+.rooms-glass-card h1,
+.rooms-glass-card h2,
+.rooms-glass-card p {
+  overflow-wrap: anywhere;
+  word-break: normal;
+  hyphens: auto;
+}
+
+@media (max-width: 767px) {
+  .room-detail-hero h1 {
+    font-size: clamp(2.1rem, 11vw, 3.4rem);
+    line-height: 0.98;
+    letter-spacing: -0.06em;
+  }
+}

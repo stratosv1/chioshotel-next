@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { RoomsCategoryPage } from "@/components/rooms/RoomsCategoryPage";
+import { RoomDetailPage } from "@/components/rooms/RoomDetailPage";
 import { JsonLd } from "@/components/seo/JsonLd";
 import {
   defaultLanguage,
@@ -16,6 +17,28 @@ import {
   roomsCategoryTr,
 } from "@/content/rooms";
 import type { RoomsCategoryPageData } from "@/content/rooms";
+import {
+  economyDoubleRoomsDe,
+  economyDoubleRoomsEl,
+  economyDoubleRoomsEs,
+  economyDoubleRoomsFr,
+  economyDoubleRoomsIt,
+  economyDoubleRoomsTr,
+  familyChiosApartmentsDe,
+  familyChiosApartmentsEl,
+  familyChiosApartmentsEs,
+  familyChiosApartmentsFr,
+  familyChiosApartmentsIt,
+  familyChiosApartmentsTr,
+  standardDoubleRoomDe,
+  standardDoubleRoomEl,
+  standardDoubleRoomEs,
+  standardDoubleRoomFr,
+  standardDoubleRoomIt,
+  standardDoubleRoomTr,
+} from "@/content/room-details";
+import type { RoomDetailData } from "@/content/room-details";
+import { buildRoomDetailSchema } from "@/content/room-detail-schema";
 import { buildRoomsCategorySchema } from "@/content/rooms-schema";
 import { buildPageMetadata } from "@/lib/seo";
 import { getRouteByPath, getRoutesByItemId, routeMap } from "@/lib/url-map";
@@ -70,6 +93,52 @@ function getLocalizedRoomsCategoryData(
   }
 }
 
+function getLocalizedRoomDetailData(path: string): RoomDetailData | undefined {
+  switch (path) {
+    case "/el/domatia-xios/oikonomiko-diklino-domatio/":
+      return economyDoubleRoomsEl;
+    case "/fr/chambres-a-chios/chambres-doubles-economiques/":
+      return economyDoubleRoomsFr;
+    case "/de/zimmer-chios/economy-zimmer-auf-chios/":
+      return economyDoubleRoomsDe;
+    case "/it/stanze-a-chios/camera-doppia-economica-chios/":
+      return economyDoubleRoomsIt;
+    case "/es/habitaciones-en-chios/economicas-habitaciones-en-chios/":
+      return economyDoubleRoomsEs;
+    case "/tr/chios-odalari/sakiz-adasindaki-ekonomi-cift-kisilik-oda/":
+      return economyDoubleRoomsTr;
+
+    case "/el/domatia-xios/diklina-triklina-domatia/":
+      return standardDoubleRoomEl;
+    case "/fr/chambres-a-chios/chambres-doubles-standard/":
+      return standardDoubleRoomFr;
+    case "/de/zimmer-chios/standard-doppelzimmer-auf-chios/":
+      return standardDoubleRoomDe;
+    case "/it/stanze-a-chios/camere-doppie-standard-chios/":
+      return standardDoubleRoomIt;
+    case "/es/habitaciones-en-chios/habitaciones-dobles-estandar/":
+      return standardDoubleRoomEs;
+    case "/tr/chios-odalari/standart-cift-kisilik-odalar/":
+      return standardDoubleRoomTr;
+
+    case "/el/domatia-xios/oikogeneiako-diamerisma/":
+      return familyChiosApartmentsEl;
+    case "/fr/chambres-a-chios/appartements-familiaux-de-chios/":
+      return familyChiosApartmentsFr;
+    case "/de/zimmer-chios/familienapartments-in-chios/":
+      return familyChiosApartmentsDe;
+    case "/it/stanze-a-chios/appartamenti-familiari-a-chios/":
+      return familyChiosApartmentsIt;
+    case "/es/habitaciones-en-chios/apartamentos-familiares-en-chios/":
+      return familyChiosApartmentsEs;
+    case "/tr/chios-odalari/sakiz-adasinda-buyuk-aile-daireleri/":
+      return familyChiosApartmentsTr;
+
+    default:
+      return undefined;
+  }
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale, slug } = await params;
 
@@ -78,6 +147,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const requestedPath = getRequestedPath(locale, slug);
+
   const roomsCategoryData = getLocalizedRoomsCategoryData(requestedPath);
 
   if (roomsCategoryData) {
@@ -86,6 +156,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: roomsCategoryData.seo.title,
       description: roomsCategoryData.seo.description,
       image: roomsCategoryData.seo.ogImage,
+    });
+  }
+
+  const roomDetailData = getLocalizedRoomDetailData(requestedPath);
+
+  if (roomDetailData) {
+    return buildPageMetadata({
+      path: roomDetailData.seo.canonicalPath,
+      title: roomDetailData.seo.title,
+      description: roomDetailData.seo.description,
+      image: roomDetailData.seo.ogImage,
     });
   }
 
@@ -100,6 +181,7 @@ export default async function Page({ params }: PageProps) {
   }
 
   const requestedPath = getRequestedPath(locale, slug);
+
   const roomsCategoryData = getLocalizedRoomsCategoryData(requestedPath);
 
   if (roomsCategoryData) {
@@ -107,6 +189,17 @@ export default async function Page({ params }: PageProps) {
       <>
         <JsonLd data={buildRoomsCategorySchema(roomsCategoryData)} />
         <RoomsCategoryPage data={roomsCategoryData} />
+      </>
+    );
+  }
+
+  const roomDetailData = getLocalizedRoomDetailData(requestedPath);
+
+  if (roomDetailData) {
+    return (
+      <>
+        <JsonLd data={buildRoomDetailSchema(roomDetailData)} />
+        <RoomDetailPage data={roomDetailData} />
       </>
     );
   }

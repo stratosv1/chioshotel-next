@@ -112,6 +112,37 @@ const roomsCategoryPaths: Record<LanguageCode, string> = {
   tr: "/tr/sakiz-adasi-odalari/",
 };
 
+const economyDoubleRoomPaths: Record<LanguageCode, string> = {
+  en: "/chios-rooms/economy-double-rooms/",
+  el: "/el/domatia-xios/oikonomiko-diklino-domatio/",
+  fr: "/fr/chambres-a-chios/chambres-doubles-economiques/",
+  de: "/de/zimmer-chios/economy-zimmer-auf-chios/",
+  it: "/it/stanze-a-chios/camera-doppia-economica-chios/",
+  es: "/es/habitaciones-en-chios/economicas-habitaciones-en-chios/",
+  tr: "/tr/chios-odalari/sakiz-adasindaki-ekonomi-cift-kisilik-oda/",
+};
+
+const standardDoubleRoomPaths: Record<LanguageCode, string> = {
+  en: "/chios-rooms/standard-double-room/",
+  el: "/el/domatia-xios/diklina-triklina-domatia/",
+  fr: "/fr/chambres-a-chios/chambres-doubles-standard/",
+  de: "/de/zimmer-chios/standard-doppelzimmer-auf-chios/",
+  it: "/it/stanze-a-chios/camere-doppie-standard-chios/",
+  es: "/es/habitaciones-en-chios/habitaciones-dobles-estandar/",
+  tr: "/tr/chios-odalari/standart-cift-kisilik-odalar/",
+};
+
+
+const familyChiosApartmentsPaths: Record<LanguageCode, string> = {
+  en: "/chios-rooms/family-chios-apartments/",
+  el: "/el/domatia-xios/oikogeneiako-diamerisma/",
+  fr: "/fr/chambres-a-chios/appartements-familiaux-de-chios/",
+  de: "/de/zimmer-chios/familienapartments-in-chios/",
+  it: "/it/stanze-a-chios/appartamenti-familiari-a-chios/",
+  es: "/es/habitaciones-en-chios/apartamentos-familiares-en-chios/",
+  tr: "/tr/chios-odalari/sakiz-adasinda-buyuk-aile-daireleri/",
+};
+
 function normalizePath(path: string) {
   if (!path) {
     return "/";
@@ -162,8 +193,18 @@ function getLanguageHref(path: string, language: LanguageCode) {
   const normalizedPath = normalizePath(path);
 
   const isHomePage = Object.values(homePaths).includes(normalizedPath);
+
   const isRoomsCategoryPage =
     Object.values(roomsCategoryPaths).includes(normalizedPath);
+
+  const isEconomyDoubleRoomPage =
+    Object.values(economyDoubleRoomPaths).includes(normalizedPath);
+
+  const isStandardDoubleRoomPage =
+    Object.values(standardDoubleRoomPaths).includes(normalizedPath);
+
+  const isFamilyChiosApartmentsPage =
+    Object.values(familyChiosApartmentsPaths).includes(normalizedPath);
 
   if (isHomePage) {
     return homePaths[language];
@@ -171,6 +212,18 @@ function getLanguageHref(path: string, language: LanguageCode) {
 
   if (isRoomsCategoryPage) {
     return roomsCategoryPaths[language];
+  }
+
+  if (isEconomyDoubleRoomPage) {
+    return economyDoubleRoomPaths[language];
+  }
+
+  if (isStandardDoubleRoomPage) {
+    return standardDoubleRoomPaths[language];
+  }
+
+  if (isFamilyChiosApartmentsPage) {
+    return familyChiosApartmentsPaths[language];
   }
 
   if (
