@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { getBeachSlugs } from "@/content/beach-details";
 import { routeMap } from "@/lib/url-map";
 import { absoluteUrl } from "@/lib/seo";
 
@@ -7,6 +8,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const routes = routeMap
     .filter((route) => route.action === "KEEP")
+    .filter((route) => !isOldBeachDetailRoute(route.path))
     .map((route) => ({
       url: absoluteUrl(route.path),
       lastModified: now,
@@ -14,7 +16,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: getPriority(route.priority),
     }));
 
-  return routes;
+  const beachDetailRoutes = getBeachSlugs().map((slug) => ({
+    url: absoluteUrl(`/chios/chios-beaches/${slug}/`),
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
+
+  return [...routes, ...beachDetailRoutes];
+}
+
+function isOldBeachDetailRoute(path: string) {
+  return (
+    path.startsWith("/chios/chios-beaches/") &&
+    path !== "/chios/chios-beaches/"
+  );
 }
 
 function getPriority(priority: "Critical" | "High" | "Medium" | "Low") {
