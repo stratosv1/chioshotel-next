@@ -9,6 +9,17 @@ function HtmlText({ html }: { html: string }) {
   return <span dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
+function getWizardLanguage(path: string) {
+  if (path.startsWith("/el/")) return "el";
+  if (path.startsWith("/fr/")) return "fr";
+  if (path.startsWith("/de/")) return "de";
+  if (path.startsWith("/it/")) return "it";
+  if (path.startsWith("/es/")) return "es";
+  if (path.startsWith("/tr/")) return "tr";
+
+  return "en";
+}
+
 export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
   return (
     <main className="rooms-page">
@@ -24,11 +35,17 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
             <p>{data.hero.description}</p>
 
             <div className="rooms-hero__actions">
-              <a className="rooms-btn rooms-btn--primary" href={data.hero.primaryCta.href}>
+              <a
+                className="rooms-btn rooms-btn--primary"
+                href={data.hero.primaryCta.href}
+              >
                 {data.hero.primaryCta.label}
               </a>
 
-              <a className="rooms-btn rooms-btn--secondary" href={data.hero.secondaryCta.href}>
+              <a
+                className="rooms-btn rooms-btn--secondary"
+                href={data.hero.secondaryCta.href}
+              >
                 {data.hero.secondaryCta.label}
               </a>
             </div>
@@ -36,13 +53,14 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
         </div>
       </section>
 
-      <section className="v-master-wrapper" aria-labelledby="rooms-category-title">
+      <section
+        className="v-master-wrapper"
+        aria-labelledby="rooms-category-title"
+      >
         <header className="v-page-header">
-          <span className="rooms-kicker">Rooms & apartments</span>
+          <span className="rooms-kicker">{data.hero.kicker}</span>
 
-          <h2 id="rooms-category-title">
-            {data.intro.title.split(" in Chios")[0]} <span>in Chios</span>
-          </h2>
+          <h2 id="rooms-category-title">{data.intro.title}</h2>
 
           <p>{data.intro.description}</p>
         </header>
@@ -84,12 +102,16 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
         </div>
 
         <div className="v-wizard-intro">
-          <span className="rooms-kicker">Smart room finder</span>
+          <span className="rooms-kicker">{data.hero.kicker}</span>
           <h2>{data.wizardIntro.title}</h2>
           <p>{data.wizardIntro.description}</p>
         </div>
 
-        <RoomWizard rooms={data.wizard.rooms} whatsappPhone={data.wizard.whatsappPhone} />
+        <RoomWizard
+          rooms={data.wizard.rooms}
+          whatsappPhone={data.wizard.whatsappPhone}
+          language={getWizardLanguage(data.seo.canonicalPath)}
+        />
       </section>
     </main>
   );
