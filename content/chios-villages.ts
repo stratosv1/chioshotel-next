@@ -208,7 +208,7 @@ export const chiosVillagesPageEn: ChiosVillagesPageData = {
       name: "Lagada",
       title: "Lagada: seaside village and fish taverns",
       description:
-        "Lagada is a picturesque seaside village northwest of Chios Town, known for harbor views, fish taverns and relaxed local food.",
+        "Lagada is a picturesque seaside village northeast of Chios Town, known for harbor views, fish taverns and relaxed local food.",
       image:
         "https://chioshotel.gr/wp-content/uploads/2021/12/lagada_3.webp",
       imageAlt: "Lagada seaside village in Chios with harbor and fish taverns",
