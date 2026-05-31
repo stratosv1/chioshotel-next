@@ -75,14 +75,16 @@ export const chiosMuseumsPageEn: ChiosMuseumsPageData = {
     title: "Chios Museums Guide | History, Mastic Culture & Maritime Heritage",
     description:
       "Explore the best museums in Chios, including the Archaeological Museum, Byzantine Museum, Koraes Library, Maritime Museum, Mastic Museum and Kallimasia Folklore Museum.",
-    ogImage: "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp",
+    ogImage:
+      "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp",
   },
   hero: {
     kicker: "Chios museums guide",
     title: "Explore the museums of Chios",
     description:
       "Discover the island’s archaeology, Byzantine art, maritime history, literature, folklore and the unique culture of Chios mastic.",
-    image: "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp",
+    image:
+      "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp",
     primaryCta: {
       label: "Explore museums",
       href: "#museums",
@@ -113,8 +115,10 @@ export const chiosMuseumsPageEn: ChiosMuseumsPageData = {
       title: "Chios Mastic Museum",
       description:
         "Dedicated to the history, cultivation and cultural value of Chios mastic, this museum explains one of the island’s most unique products and strongest identities.",
-      image: "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp",
-      imageAlt: "Chios Mastic Museum dedicated to the history and culture of mastic",
+      image:
+        "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp",
+      imageAlt:
+        "Chios Mastic Museum dedicated to the history and culture of mastic",
       href: "/chios/chios-museums/the-mastic-museum-chios/",
       region: "South Chios",
       mood: "Mastic culture",
@@ -127,8 +131,10 @@ export const chiosMuseumsPageEn: ChiosMuseumsPageData = {
       title: "Archaeological Museum of Chios",
       description:
         "A key museum in Chios Town with artifacts from the Neolithic period to the Roman era, including pottery, figurines, jewelry and sculptures.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/archeological-museum-chios.webp",
-      imageAlt: "Archaeological Museum of Chios with ancient artifacts and exhibits",
+      image:
+        "https://chioshotel.gr/wp-content/uploads/2021/12/caption.webp",
+      imageAlt:
+        "Archaeological Museum of Chios with ancient artifacts and exhibits",
       href: "/chios/chios-museums/archaeological-museum-of-chios/",
       region: "Chios Town",
       mood: "Ancient history",
@@ -141,8 +147,10 @@ export const chiosMuseumsPageEn: ChiosMuseumsPageData = {
       title: "Chios Byzantine Museum",
       description:
         "A museum dedicated to Byzantine and post-Byzantine art, with icons, frescoes, manuscripts and exhibits connected to the island’s religious history.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/byzantine-museum-chios.webp",
-      imageAlt: "Chios Byzantine Museum with Byzantine and post-Byzantine art",
+      image:
+        "https://chioshotel.gr/wp-content/uploads/2021/12/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
+      imageAlt:
+        "Chios Byzantine Museum with Byzantine and post-Byzantine art",
       href: "/chios/chios-museums/chios-byzantine-museum/",
       region: "Chios Town",
       mood: "Byzantine art",
@@ -155,7 +163,8 @@ export const chiosMuseumsPageEn: ChiosMuseumsPageData = {
       title: "Koraes Library",
       description:
         "One of the most important libraries in Greece, dedicated to Greek literature and culture, with rare books, manuscripts, archives and museum exhibits.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/korais-library-chios.webp",
+      image:
+        "https://chioshotel.gr/wp-content/uploads/2021/12/vivlitothiki-korai-1.webp",
       imageAlt: "Koraes Library in Chios with rare books and manuscripts",
       href: "/chios/chios-museums/koraes-library-chios/",
       region: "Chios Town",
@@ -169,8 +178,10 @@ export const chiosMuseumsPageEn: ChiosMuseumsPageData = {
       title: "Chios Maritime Museum",
       description:
         "A museum presenting the island’s maritime history, shipbuilding, navigation, trade and seafaring traditions through models, tools and exhibits.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/chios-maritime-museum.webp",
-      imageAlt: "Chios Maritime Museum with ship models and maritime history exhibits",
+      image:
+        "https://chioshotel.gr/wp-content/uploads/2021/12/IMG_1203-Medium-min-768x487.webp",
+      imageAlt:
+        "Chios Maritime Museum with ship models and maritime history exhibits",
       href: "/chios/chios-museums/chios-maritime-museum/",
       region: "Chios Town",
       mood: "Maritime heritage",
@@ -183,8 +194,10 @@ export const chiosMuseumsPageEn: ChiosMuseumsPageData = {
       title: "Kallimasia Folklore Museum",
       description:
         "A folklore museum that helps visitors understand everyday life, local traditions, tools, clothing and cultural memory from Chios villages.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/kallimasia-folklore-museum.webp",
-      imageAlt: "Kallimasia Folklore Museum in Chios with traditional objects and village culture",
+      image:
+        "https://chioshotel.gr/wp-content/uploads/2021/12/2-1-768x512.webp",
+      imageAlt:
+        "Kallimasia Folklore Museum in Chios with traditional objects and village culture",
       href: "/chios/chios-museums/kallimasia-folklore-museum/",
       region: "Kallimasia",
       mood: "Folklore",
