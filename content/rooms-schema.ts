@@ -1,28 +1,18 @@
-export const roomsCategorySchema = {
-  "@context": "https://schema.org",
-  "@type": "ItemList",
-  name: "Chios Rooms & Apartments - Voulamandis House",
-  description:
-    "Explore accommodation categories in Chios at Voulamandis House, including economy double rooms, standard double and triple rooms, and family apartments.",
-  url: "https://chioshotel.gr/chios-rooms/",
-  itemListElement: [
-    {
+import type { RoomsCategoryPageData } from "@/content/rooms";
+import { absoluteUrl } from "@/lib/seo";
+
+export function buildRoomsCategorySchema(data: RoomsCategoryPageData) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: data.seo.title,
+    description: data.seo.description,
+    url: absoluteUrl(data.seo.canonicalPath),
+    itemListElement: data.cards.map((card, index) => ({
       "@type": "ListItem",
-      position: 1,
-      url: "https://chioshotel.gr/chios-rooms/economy-double-rooms/",
-      name: "Economy Double Rooms",
-    },
-    {
-      "@type": "ListItem",
-      position: 2,
-      url: "https://chioshotel.gr/chios-rooms/standard-double-room/",
-      name: "Standard Double and Triple Rooms",
-    },
-    {
-      "@type": "ListItem",
-      position: 3,
-      url: "https://chioshotel.gr/chios-rooms/family-chios-apartments/",
-      name: "Family Chios Apartments",
-    },
-  ],
-};
+      position: index + 1,
+      url: absoluteUrl(card.href),
+      name: card.title,
+    })),
+  };
+}

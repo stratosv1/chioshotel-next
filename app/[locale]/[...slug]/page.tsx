@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { RoomsCategoryPage } from "@/components/rooms/RoomsCategoryPage";
+import { JsonLd } from "@/components/seo/JsonLd";
 import {
   defaultLanguage,
   isLanguageCode,
@@ -15,6 +16,7 @@ import {
   roomsCategoryTr,
 } from "@/content/rooms";
 import type { RoomsCategoryPageData } from "@/content/rooms";
+import { buildRoomsCategorySchema } from "@/content/rooms-schema";
 import { buildPageMetadata } from "@/lib/seo";
 import { getRouteByPath, getRoutesByItemId, routeMap } from "@/lib/url-map";
 
@@ -101,7 +103,12 @@ export default async function Page({ params }: PageProps) {
   const roomsCategoryData = getLocalizedRoomsCategoryData(requestedPath);
 
   if (roomsCategoryData) {
-    return <RoomsCategoryPage data={roomsCategoryData} />;
+    return (
+      <>
+        <JsonLd data={buildRoomsCategorySchema(roomsCategoryData)} />
+        <RoomsCategoryPage data={roomsCategoryData} />
+      </>
+    );
   }
 
   const route = getRouteByPath(requestedPath);
