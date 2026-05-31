@@ -1241,3 +1241,1978 @@ export const homePageEl: HomePageData = {
     },
   },
 };
+export const homePageFr: HomePageData = {
+  ...homePageEn,
+
+  seo: {
+    title:
+      "Hôtel à Chios – Chambres & appartements | Voulamandis House",
+    description:
+      "Chambres et appartements paisibles à Kampos, Chios. Séjournez à Voulamandis House, près de l’aéroport, de la ville, des plages et des villages de l’île.",
+    canonicalPath: "/fr/",
+    ogImage: homePageEn.seo.ogImage,
+    ogImageAlt:
+      "Voulamandis House à Kampos, Chios - hébergement authentique dans un domaine d’agrumes",
+  },
+
+  hero: {
+    ...homePageEn.hero,
+    reviews: "143 avis",
+    kicker: "KAMPOS CHIOS • VOULAMANDIS HOUSE",
+    title: "Hôtel et appartements à Chios, au cœur de Kampos",
+    descriptionHtml:
+      'Vous cherchez un <strong>hôtel à Chios</strong> ou des <strong>chambres à Chios</strong> ? <strong>Voulamandis House</strong> vous accueille à Kampos avec des chambres confortables, une atmosphère paisible et une hospitalité authentique.',
+    imageAlt: "Hôtel et appartements à Chios - Voulamandis House à Kampos",
+    primaryCta: {
+      label: "Trouver une chambre",
+      href: "/fr/trouver-la-chambre-ideale/",
+      icon: "✨",
+    },
+    secondaryCta: {
+      label: "Réserver",
+      href: "/fr/reservation-directe-voulamandis-house/",
+      icon: "🔥",
+    },
+    quizCard: {
+      href: "/fr/quiz-vacances-a-chios/",
+      icon: "🧭",
+      liveLabel: "Code réduction live",
+      title: "Découvrez Chios",
+      text: "Explorez les secrets de l’île et recevez un code pour votre séjour.",
+      cta: "Commencer →",
+    },
+  },
+
+  announceBar: {
+    href: "#vh-lastminute-title",
+    icon: "🔥",
+    text: "Vous voyagez à Chios cette semaine ?",
+    strongText: "Découvrez les offres d’hébergement disponibles.",
+  },
+
+  intro: {
+    left: {
+      kicker: "Hospitalité authentique à Kampos, Chios",
+      icon: "🏡",
+      title: "Séjourner à Chios au Voulamandis House",
+      bodyHtml:
+        'Vous recherchez des <strong>chambres à Chios</strong> ou un <strong>hébergement à Chios</strong> pour un séjour calme et soigné ? Voulamandis House vous accueille dans le quartier historique de Kampos, dans un cadre verdoyant et authentique. Si vous cherchez un <strong>hôtel à Chios</strong> mais préférez une expérience plus personnelle, notre maison est une alternative chaleureuse.',
+      pills: [
+        "🌴 Vacances à Chios",
+        "🍊 Kampos Chios",
+        "🛏️ Chambres confortables",
+        "💎 Excellent rapport qualité-prix",
+      ],
+    },
+    right: {
+      kicker: "Ce qui rend Voulamandis House spécial",
+      title:
+        "Six raisons qui rendent votre séjour plus confortable, personnel et authentique",
+      cards: [
+        {
+          title: "🥐 Petit-déjeuner maison",
+          text: "Petit-déjeuner dans le jardin avec des produits de notre ferme, disponible sur demande.",
+        },
+        {
+          title: "🌿 Cour & tranquillité",
+          text: "Une atmosphère calme, un jardin et l’esprit authentique de Kampos pour se détendre.",
+        },
+        {
+          title: "🧭 Room Wizard",
+          text: "Un assistant pratique pour trouver la chambre la plus adaptée à votre voyage.",
+        },
+        {
+          title: "📍 Emplacement pratique",
+          text: "Proche de la ville, de l’aéroport, du port et des plages, sans longs trajets.",
+        },
+        {
+          title: "🛎️ -10% en direct",
+          text: "Contact direct avec l’établissement et accès clair aux disponibilités.",
+        },
+        {
+          title: "🍊 Secrets de Chios",
+          text: "Suggestions de plages, villages, expériences et itinéraires authentiques.",
+        },
+      ],
+    },
+  },
+
+  location: {
+    ...homePageEn.location,
+    kicker: "Emplacement & réservation directe",
+    title: "Tout ce qu’il faut pour organiser votre séjour",
+    subtitle:
+      "Carte, distances, coordonnées et avantages de la réservation directe.",
+    map: {
+      ...homePageEn.location.map,
+      buttonLabel: "Afficher la carte",
+    },
+    distances: [
+      { label: "✈️ Aéroport", value: "3 km" },
+      { label: "⛴️ Port", value: "6 km" },
+      { label: "🏖️ Plage", value: "1.5 km" },
+    ],
+    infoCard: {
+      ...homePageEn.location.infoCard,
+      kicker: "Informations locales",
+      title: "Voulamandis House",
+      addressLines: ["Mayor Kalvokoresi 117", "Kampos, Chios 82100"],
+      phoneLabel: "Tél :",
+      emailLabel: "Email :",
+      text: "L’établissement se trouve dans un endroit qui combine calme, accès facile et courtes distances vers les principaux points de Chios.",
+      cta: {
+        label: "Disponibilités",
+        href: "/fr/reservation-directe-voulamandis-house/",
+        icon: "📅",
+      },
+    },
+    discount: {
+      badge: "Offre live • Recevez votre code",
+      title: "Réservez directement avec nous",
+      text: "Recevez un code de réduction et réservez en direct, sans commissions.",
+      benefits: [
+        "✔️ Meilleur tarif disponible",
+        "✔️ Communication directe avec l’établissement",
+        "✔️ Accès aux chambres disponibles",
+      ],
+      formIntro: "🎁 Recevez 10% de réduction pour votre réservation directe :",
+      emailPlaceholder: "Votre email",
+      submitLabel: "OBTENIR LE CODE",
+      consent: "J’accepte de recevoir des offres de Voulamandis House.",
+      successText: "Votre code de réduction est :",
+      defaultCode: "WELCOME10",
+    },
+    copy: {
+      kicker: "Emplacement – Kampos Chios",
+      title: "Un quartier unique pour un séjour authentique à Chios",
+      paragraphsHtml: [
+        "<strong>Kampos de Chios</strong> est l’un des quartiers les plus caractéristiques et historiques de l’île, connu pour ses demeures, ses portails en pierre, ses vergers et ses parfums d’agrumes.",
+        "Son emplacement est idéal pour combiner détente, accès facile à la ville de Chios, à l’aéroport et aux plages populaires.",
+      ],
+    },
+  },
+
+  roomsPreview: {
+    ...homePageEn.roomsPreview,
+    kicker: "Chambres & hébergement à Chios",
+    title: "Chambres à Chios pour couples et familles",
+    text: "Nos chambres sont nettoyées chaque jour et pensées pour un séjour confortable, calme et de qualité à Kampos, Chios.",
+    primaryCta: {
+      label: "Room Wizard",
+      href: "/fr/trouver-la-chambre-ideale/",
+      icon: "✨",
+    },
+    secondaryCta: {
+      label: "Toutes les chambres",
+      href: "/fr/chambres-a-chios/",
+      icon: "🗂️",
+    },
+    sideCard: {
+      kicker: "Chambres à Chios",
+      title: "Du séjour économique aux solutions familiales",
+      text: "Si vous cherchez un hôtel à Chios mais préférez une hospitalité plus personnelle, Voulamandis House offre une alternative authentique à Kampos.",
+    },
+    rooms: [
+      {
+        ...homePageEn.roomsPreview.rooms[0],
+        title: "Chambre double économique",
+        href: "/fr/chambres-a-chios/chambre-double-economique/",
+        directBadge: "🎁 -10% Réduction",
+        bedBadge: "🛏️ 1 lit double ou 2 lits simples",
+        description:
+          "Idéale pour deux personnes qui souhaitent un séjour soigné à Kampos, Chios.",
+        meta: ["👥 2 personnes", "Économique", "🍊 Kampos"],
+        amenities: ["❄️ A/C", "📶 Wi-Fi", "☕ Café", "🧊 Réfrigérateur"],
+        cta: "Voir la chambre",
+      },
+      {
+        ...homePageEn.roomsPreview.rooms[1],
+        title: "Chambres rez-de-chaussée",
+        href: "/fr/chambres-a-chios/chambres-doubles-triples/",
+        directBadge: "🎁 -10% Réduction",
+        bedBadge: "🛏️ Double + lit supplémentaire",
+        description:
+          "Un choix confortable pour couples ou petites familles, avec accès facile.",
+        meta: ["👤 ×2-3", "🌿 Rez-de-chaussée", "Facile"],
+        amenities: ["❄️ A/C", "📶 Wi-Fi", "☕ Café", "🧊 Réfrigérateur"],
+        cta: "Voir la chambre",
+      },
+      {
+        ...homePageEn.roomsPreview.rooms[2],
+        title: "Chambres à l’étage",
+        href: "/fr/chambres-a-chios/chambres-doubles-triples/",
+        directBadge: "🎁 -10% Réduction",
+        bedBadge: "🛏️ Double + lit supplémentaire",
+        description:
+          "Pour les voyageurs qui recherchent une atmosphère plus calme et classique.",
+        meta: ["👤 ×2-3", "🏛️ Étage", "Calme"],
+        amenities: ["❄️ A/C", "📶 Wi-Fi", "☕ Café", "🧊 Réfrigérateur"],
+        cta: "Voir la chambre",
+      },
+      {
+        ...homePageEn.roomsPreview.rooms[3],
+        title: "Appartement familial",
+        href: "/fr/chambres-a-chios/appartement-familial/",
+        directBadge: "🎁 -10% Réduction",
+        bedBadge: "🛏️ Lits famille",
+        description:
+          "Idéal pour les familles ou petits groupes qui souhaitent plus d’espace.",
+        meta: ["👤 ×4", "Espace", "🏡 Apt"],
+        amenities: ["❄️ A/C", "📶 Wi-Fi", "☕ Café", "🧊 Réfrigérateur"],
+        cta: "Voir l’appartement",
+      },
+    ],
+  },
+
+  lastMinute: {
+    kicker: "Offres de dernière minute",
+    icon: "⚡",
+    title: "Vous voyagez à Chios cette semaine ?",
+    subtitle:
+      "Choisissez le nombre de voyageurs et consultez les offres disponibles pour les 7 prochains jours, avec coût final et contact direct.",
+    widget: {
+      title: "Offres d’hébergement à Chios pour les 7 prochains jours",
+      subtitle:
+        "Trouvez des chambres ou appartements disponibles en réservation directe, sans commissions. Choisissez le nombre de voyageurs et envoyez votre demande par WhatsApp ou Viber.",
+      trustLine:
+        "🎁 Réservation directe sans commissions – meilleur tarif disponible",
+      timerLabel: "Les prix last minute se renouvellent dans :",
+      guestTitle: "1. Choisissez le nombre de voyageurs",
+      guestText:
+        "Une fois le nombre de personnes sélectionné, les offres disponibles apparaîtront.",
+      guestButtons: homePageEn.lastMinute.widget.guestButtons,
+      helper:
+        "Choisissez d’abord le nombre de voyageurs pour voir les chambres disponibles à Chios.",
+      loadingText: "🔥 Recherche des meilleures offres disponibles…",
+      resultsTitle: "2. Offres disponibles",
+      resultsText: "Utilisez les filtres pour affiner rapidement vos options.",
+      emptyText:
+        "Choisissez d’abord 2, 3 ou 4 voyageurs pour charger les offres disponibles.",
+    },
+  },
+
+  reviews: {
+    ...homePageEn.reviews,
+    kicker: "Avis clients",
+    title: "Ce que disent nos voyageurs",
+  },
+
+  amenities: {
+    kicker: "Équipements",
+    icon: "🛋️",
+    title: "Tout ce qu’il faut pour un séjour confortable",
+    items: [
+      { icon: "📶", label: "Wi-Fi / Internet" },
+      { icon: "❄️", label: "Climatisation" },
+      { icon: "🔥", label: "Chauffage" },
+      { icon: "📺", label: "TV" },
+      { icon: "🧊", label: "Réfrigérateur" },
+      { icon: "☕", label: "Café / Thé" },
+      { icon: "🧼", label: "Ménage quotidien" },
+      { icon: "🌿", label: "Jardin & coin détente" },
+      { icon: "🍖", label: "Espace BBQ" },
+      { icon: "🚗", label: "Parking" },
+      { icon: "🚕", label: "Transfert possible" },
+      { icon: "🏡", label: "Hospitalité authentique" },
+    ],
+  },
+
+  traveler: {
+    ...homePageEn.traveler,
+    kicker: "Découvrir Chios",
+    title: "Quel type de voyageur êtes-vous ?",
+    subtitle:
+      "Choisissez l’expérience qui vous correspond et découvrez Chios selon votre style de voyage.",
+    cards: [
+      {
+        ...homePageEn.traveler.cards[0],
+        title: "Mer",
+        text: "Eaux cristallines, plages uniques et moments de détente sur l’île.",
+        cta: "🏖️ Explorer",
+      },
+      {
+        ...homePageEn.traveler.cards[1],
+        title: "Exploration",
+        text: "Villages, nature et culture dans chaque coin de Chios.",
+        cta: "🧭 Explorer",
+      },
+      {
+        ...homePageEn.traveler.cards[2],
+        title: "Famille",
+        text: "Idées et activités pour des vacances familiales inoubliables.",
+        cta: "👨‍👩‍👧‍👦 Explorer",
+      },
+      {
+        ...homePageEn.traveler.cards[3],
+        title: "Gastronomie",
+        text: "Saveurs authentiques, mastiha et expériences locales.",
+        cta: "🍽️ Explorer",
+      },
+    ],
+  },
+
+  chiosGuide: {
+    ...homePageEn.chiosGuide,
+    kicker: "En savoir plus sur Chios",
+    title: "Que voir à Chios ?",
+    subtitle:
+      "Nous avons rassemblé des informations utiles pour organiser plus facilement votre séjour et vos excursions.",
+    cards: homePageEn.chiosGuide.cards.map((card) => ({
+      ...card,
+      ctaLabel: "Voir plus",
+    })),
+  },
+
+  quizBar: {
+    label: "DÉCOUVRIR CHIOS",
+    text: "Prenez 5 minutes pour faire ce quiz, découvrir Chios et recevoir un code de réduction.",
+    href: "/fr/quiz-vacances-a-chios/",
+    cta: "🧭 COMMENCER L’EXPÉRIENCE →",
+  },
+
+  faq: {
+    kicker: "Questions fréquentes",
+    icon: "❓",
+    title: "Ce qu’il faut savoir avant de réserver",
+    items: [
+      {
+        question: "Voulamandis House est-il un hôtel ?",
+        answerHtml:
+          "Voulamandis House est un hébergement avec chambres et appartements à Kampos, Chios. Si vous cherchez un hôtel à Chios mais préférez une hospitalité plus calme et personnelle, c’est une alternative authentique.",
+      },
+      {
+        question: "Où se trouve exactement Voulamandis House ?",
+        answerHtml:
+          "L’établissement se trouve dans le quartier historique de <strong>Kampos, Chios</strong>, à environ 7 minutes en voiture de l’aéroport et 14 minutes du port et du centre-ville.",
+      },
+      {
+        question: "Le petit-déjeuner est-il disponible ?",
+        answerHtml:
+          "Oui, un petit-déjeuner maison est proposé dans le jardin, avec des produits de notre ferme. Il est optionnel et disponible sur demande.",
+      },
+      {
+        question: "Quelles chambres conviennent aux familles ?",
+        answerHtml:
+          "Pour les familles jusqu’à 4 personnes, nous recommandons les <strong>appartements familiaux</strong>. Selon disponibilité, deux chambres peuvent aussi convenir aux groupes plus grands.",
+      },
+      {
+        question: "Y a-t-il un parking ?",
+        answerHtml:
+          "Oui, un parking est disponible dans l’établissement, et il est également facile de se garer dans la rue calme juste à côté.",
+      },
+      {
+        question: "Comment réserver directement ?",
+        answerHtml:
+          "Vous pouvez réserver directement sur notre site ou nous contacter afin de choisir la chambre la plus adaptée à votre séjour.",
+      },
+    ],
+  },
+
+  finalCta: {
+    kicker: "Réservez votre séjour",
+    icon: "✈️",
+    title: "Votre voyage à Chios commence ici",
+    text: "Hospitalité chaleureuse, atmosphère authentique et emplacement idéal à Kampos.",
+    primaryCta: {
+      label: "Réserver en direct",
+      href: "/fr/reservation-directe-voulamandis-house/",
+      icon: "🛎️",
+    },
+    secondaryCta: {
+      label: "Contact",
+      href: "/fr/contact-voulamandis-house/",
+      icon: "✉️",
+    },
+  },
+
+  mobileSticky: {
+    call: {
+      label: "📞 APPELER",
+      href: "tel:+306944764654",
+    },
+    viber: {
+      label: "💬 VIBER",
+      href: "viber://chat?number=%2B306944474226",
+    },
+  },
+};
+
+export const homePageDe: HomePageData = {
+  ...homePageEn,
+
+  seo: {
+    title:
+      "Hotel auf Chios – Zimmer & Apartments | Voulamandis House",
+    description:
+      "Ruhige Zimmer und Apartments in Kampos, Chios. Übernachten Sie im Voulamandis House nahe Flughafen, Stadt, Stränden und Dörfern.",
+    canonicalPath: "/de/",
+    ogImage: homePageEn.seo.ogImage,
+    ogImageAlt:
+      "Voulamandis House in Kampos, Chios - authentische Unterkunft in einem Zitrusgarten",
+  },
+
+  hero: {
+    ...homePageEn.hero,
+    reviews: "143 Bewertungen",
+    kicker: "KAMPOS CHIOS • VOULAMANDIS HOUSE",
+    title: "Hotel und Apartments auf Chios in Kampos",
+    descriptionHtml:
+      'Suchen Sie ein <strong>Hotel auf Chios</strong> oder <strong>Zimmer auf Chios</strong>? <strong>Voulamandis House</strong> ist eine authentische Unterkunft in Kampos mit komfortablen Zimmern, ruhiger Umgebung und herzlicher Gastfreundschaft.',
+    imageAlt: "Hotel und Apartments auf Chios in Kampos - Voulamandis House",
+    primaryCta: {
+      label: "Zimmer finden",
+      href: "/de/passendes-zimmer-finden/",
+      icon: "✨",
+    },
+    secondaryCta: {
+      label: "Jetzt buchen",
+      href: "/de/direktbuchung-voulamandis-house/",
+      icon: "🔥",
+    },
+    quizCard: {
+      href: "/de/chios-urlaubsquiz/",
+      icon: "🧭",
+      liveLabel: "Live-Rabattcode",
+      title: "Chios entdecken",
+      text: "Lernen Sie die Geheimnisse der Insel kennen und erhalten Sie einen Code für Ihren Aufenthalt.",
+      cta: "Starten →",
+    },
+  },
+
+  announceBar: {
+    href: "#vh-lastminute-title",
+    icon: "🔥",
+    text: "Reisen Sie diese Woche nach Chios?",
+    strongText: "Sehen Sie verfügbare Unterkunftsangebote.",
+  },
+
+  intro: {
+    left: {
+      kicker: "Authentische Gastfreundschaft in Kampos, Chios",
+      icon: "🏡",
+      title: "Übernachten auf Chios im Voulamandis House",
+      bodyHtml:
+        'Suchen Sie <strong>Zimmer auf Chios</strong> oder eine ruhige, gepflegte <strong>Unterkunft auf Chios</strong>? Voulamandis House begrüßt Sie im historischen Kampos, in einer Umgebung voller natürlicher Schönheit. Wenn Sie ein <strong>Hotel auf Chios</strong> suchen, aber eine persönlichere Atmosphäre bevorzugen, ist unser Haus eine warme Alternative.',
+      pills: [
+        "🌴 Urlaub auf Chios",
+        "🍊 Kampos Chios",
+        "🛏️ Komfortable Zimmer",
+        "💎 Gutes Preis-Leistungs-Verhältnis",
+      ],
+    },
+    right: {
+      kicker: "Was Voulamandis House besonders macht",
+      title:
+        "Sechs Gründe, die Ihren Aufenthalt komfortabler, persönlicher und authentischer machen",
+      cards: [
+        {
+          title: "🥐 Hausgemachtes Frühstück",
+          text: "Frühstück im Garten mit Produkten vom Hof, auf Anfrage verfügbar.",
+        },
+        {
+          title: "🌿 Innenhof & Ruhe",
+          text: "Ruhige Atmosphäre, Garten und echtes Kampos-Gefühl zum Entspannen.",
+        },
+        {
+          title: "🧭 Room Wizard",
+          text: "Hilfe, um das Zimmer zu finden, das am besten zu Ihrer Reise passt.",
+        },
+        {
+          title: "📍 Praktische Lage",
+          text: "Nahe Stadt, Flughafen, Hafen und Stränden – ohne unnötige Wege.",
+        },
+        {
+          title: "🛎️ -10% Direktbuchung",
+          text: "Direkter Kontakt zur Unterkunft und klarer Überblick über Verfügbarkeit.",
+        },
+        {
+          title: "🍊 Chios-Geheimtipps",
+          text: "Empfehlungen für Strände, Dörfer, Erlebnisse und echte Inselrouten.",
+        },
+      ],
+    },
+  },
+
+  location: {
+    ...homePageEn.location,
+    kicker: "Lage & Direktbuchung",
+    title: "Alles, was Sie vor Ihrer Reiseplanung brauchen",
+    subtitle:
+      "Karte, Entfernungen, Kontaktdaten und Vorteile der Direktbuchung.",
+    map: {
+      ...homePageEn.location.map,
+      buttonLabel: "Karte anzeigen",
+    },
+    distances: [
+      { label: "✈️ Flughafen", value: "3 km" },
+      { label: "⛴️ Hafen", value: "6 km" },
+      { label: "🏖️ Strand", value: "1.5 km" },
+    ],
+    infoCard: {
+      ...homePageEn.location.infoCard,
+      kicker: "Lokale Informationen",
+      title: "Voulamandis House",
+      addressLines: ["Mayor Kalvokoresi 117", "Kampos, Chios 82100"],
+      phoneLabel: "Tel:",
+      emailLabel: "Email:",
+      text: "Die Unterkunft liegt an einem Ort, der Ruhe, einfache Erreichbarkeit und kurze Wege zu den wichtigsten Punkten von Chios verbindet.",
+      cta: {
+        label: "Verfügbarkeit",
+        href: "/de/direktbuchung-voulamandis-house/",
+        icon: "📅",
+      },
+    },
+    discount: {
+      badge: "Live-Angebot • Code erhalten",
+      title: "Direkt bei uns buchen",
+      text: "Erhalten Sie einen Rabattcode und buchen Sie direkt ohne Provisionen.",
+      benefits: [
+        "✔️ Bester verfügbarer Preis",
+        "✔️ Direkte Kommunikation mit der Unterkunft",
+        "✔️ Zugang zu verfügbaren Zimmern",
+      ],
+      formIntro: "🎁 Erhalten Sie 10% Rabatt für Ihre Direktbuchung:",
+      emailPlaceholder: "Ihre E-Mail",
+      submitLabel: "CODE ERHALTEN",
+      consent: "Ich möchte Angebote von Voulamandis House erhalten.",
+      successText: "Ihr Rabattcode lautet:",
+      defaultCode: "WELCOME10",
+    },
+    copy: {
+      kicker: "Lage – Kampos Chios",
+      title: "Eine besondere Gegend für einen authentischen Aufenthalt auf Chios",
+      paragraphsHtml: [
+        "<strong>Kampos auf Chios</strong> ist eine der charakteristischsten historischen Gegenden der Insel, bekannt für Herrenhäuser, Steintore, Gärten und den Duft von Zitrusfrüchten.",
+        "Die Lage ist ideal für Reisende, die Entspannung mit einfachem Zugang zur Stadt Chios, zum Flughafen und zu beliebten Stränden verbinden möchten.",
+      ],
+    },
+  },
+
+  roomsPreview: {
+    ...homePageEn.roomsPreview,
+    kicker: "Zimmer & Unterkunft auf Chios",
+    title: "Zimmer auf Chios für Paare und Familien",
+    text: "Unsere Zimmer werden täglich gereinigt und sind für einen komfortablen, ruhigen und hochwertigen Aufenthalt in Kampos gestaltet.",
+    primaryCta: {
+      label: "Room Wizard",
+      href: "/de/passendes-zimmer-finden/",
+      icon: "✨",
+    },
+    secondaryCta: {
+      label: "Alle Zimmer",
+      href: "/de/chios-zimmer/",
+      icon: "🗂️",
+    },
+    sideCard: {
+      kicker: "Zimmer auf Chios",
+      title: "Von günstigen Aufenthalten bis zu Familienlösungen",
+      text: "Wenn Sie ein Hotel auf Chios suchen, aber eine persönlichere Gastfreundschaft bevorzugen, bietet Voulamandis House eine authentische Alternative in Kampos.",
+    },
+    rooms: [
+      {
+        ...homePageEn.roomsPreview.rooms[0],
+        title: "Economy Doppelzimmer",
+        href: "/de/chios-zimmer/economy-doppelzimmer/",
+        directBadge: "🎁 -10% Rabatt",
+        bedBadge: "🛏️ 1 Doppelbett oder 2 Einzelbetten",
+        description:
+          "Ideal für zwei Gäste, die einen gepflegten Aufenthalt in Kampos suchen.",
+        meta: ["👥 2 Gäste", "Economy", "🍊 Kampos"],
+        amenities: ["❄️ A/C", "📶 Wi-Fi", "☕ Kaffee", "🧊 Kühlschrank"],
+        cta: "Zimmer ansehen",
+      },
+      {
+        ...homePageEn.roomsPreview.rooms[1],
+        title: "Zimmer im Erdgeschoss",
+        href: "/de/chios-zimmer/doppel-und-dreibettzimmer/",
+        directBadge: "🎁 -10% Rabatt",
+        bedBadge: "🛏️ Doppelbett + Zusatzbett",
+        description:
+          "Eine komfortable Wahl für Paare oder kleine Familien mit einfachem Zugang.",
+        meta: ["👤 ×2-3", "🌿 Erdgeschoss", "Einfach"],
+        amenities: ["❄️ A/C", "📶 Wi-Fi", "☕ Kaffee", "🧊 Kühlschrank"],
+        cta: "Zimmer ansehen",
+      },
+      {
+        ...homePageEn.roomsPreview.rooms[2],
+        title: "Zimmer im Obergeschoss",
+        href: "/de/chios-zimmer/doppel-und-dreibettzimmer/",
+        directBadge: "🎁 -10% Rabatt",
+        bedBadge: "🛏️ Doppelbett + Zusatzbett",
+        description:
+          "Für Gäste, die eine ruhigere Atmosphäre und klassische Gastfreundschaft suchen.",
+        meta: ["👤 ×2-3", "🏛️ Obergeschoss", "Ruhig"],
+        amenities: ["❄️ A/C", "📶 Wi-Fi", "☕ Kaffee", "🧊 Kühlschrank"],
+        cta: "Zimmer ansehen",
+      },
+      {
+        ...homePageEn.roomsPreview.rooms[3],
+        title: "Familienapartment",
+        href: "/de/chios-zimmer/familienapartment/",
+        directBadge: "🎁 -10% Rabatt",
+        bedBadge: "🛏️ Familienbetten",
+        description:
+          "Ideal für Familien oder kleine Gruppen, die mehr Platz wünschen.",
+        meta: ["👤 ×4", "Platz", "🏡 Apt"],
+        amenities: ["❄️ A/C", "📶 Wi-Fi", "☕ Kaffee", "🧊 Kühlschrank"],
+        cta: "Apartment ansehen",
+      },
+    ],
+  },
+
+  lastMinute: {
+    kicker: "Last-Minute-Angebote",
+    icon: "⚡",
+    title: "Reisen Sie diese Woche nach Chios?",
+    subtitle:
+      "Wählen Sie die Anzahl der Gäste und sehen Sie verfügbare Angebote für die nächsten 7 Tage, mit Endpreis und direktem Kontakt.",
+    widget: {
+      title: "Unterkunftsangebote auf Chios für die nächsten 7 Tage",
+      subtitle:
+        "Finden Sie verfügbare Zimmer oder Apartments zur Direktbuchung ohne Provisionen. Wählen Sie die Gästezahl und senden Sie Ihre Anfrage direkt per WhatsApp oder Viber.",
+      trustLine:
+        "🎁 Direktbuchung ohne Provisionen – bester verfügbarer Preis",
+      timerLabel: "Last-Minute-Preise aktualisieren sich in:",
+      guestTitle: "1. Anzahl der Gäste wählen",
+      guestText:
+        "Sobald Sie die Gästezahl gewählt haben, erscheinen die verfügbaren Angebote.",
+      guestButtons: homePageEn.lastMinute.widget.guestButtons,
+      helper:
+        "Wählen Sie zuerst die Gästezahl, um verfügbare Zimmer auf Chios zu sehen.",
+      loadingText: "🔥 Suche nach den besten verfügbaren Angeboten…",
+      resultsTitle: "2. Verfügbare Angebote",
+      resultsText: "Nutzen Sie die Filter, um Ihre Optionen schnell einzugrenzen.",
+      emptyText:
+        "Wählen Sie zuerst 2, 3 oder 4 Gäste, um die verfügbaren Angebote zu laden.",
+    },
+  },
+
+  reviews: {
+    ...homePageEn.reviews,
+    kicker: "Gästebewertungen",
+    title: "Was unsere Gäste sagen",
+  },
+
+  amenities: {
+    kicker: "Ausstattung",
+    icon: "🛋️",
+    title: "Alles, was Sie für einen komfortablen Aufenthalt brauchen",
+    items: [
+      { icon: "📶", label: "Wi-Fi / Internet" },
+      { icon: "❄️", label: "Klimaanlage" },
+      { icon: "🔥", label: "Heizung" },
+      { icon: "📺", label: "TV" },
+      { icon: "🧊", label: "Kühlschrank" },
+      { icon: "☕", label: "Kaffee / Tee" },
+      { icon: "🧼", label: "Tägliche Reinigung" },
+      { icon: "🌿", label: "Garten & Sitzbereich" },
+      { icon: "🍖", label: "BBQ-Bereich" },
+      { icon: "🚗", label: "Parkplatz" },
+      { icon: "🚕", label: "Transfer möglich" },
+      { icon: "🏡", label: "Authentische Gastfreundschaft" },
+    ],
+  },
+
+  traveler: {
+    ...homePageEn.traveler,
+    kicker: "Chios entdecken",
+    title: "Welcher Reisetyp sind Sie?",
+    subtitle:
+      "Wählen Sie das Erlebnis, das zu Ihnen passt, und entdecken Sie Chios nach Ihrem Reisestil.",
+    cards: [
+      {
+        ...homePageEn.traveler.cards[0],
+        title: "Meer",
+        text: "Kristallklares Wasser, besondere Strände und Entspannung auf der Insel.",
+        cta: "🏖️ Entdecken",
+      },
+      {
+        ...homePageEn.traveler.cards[1],
+        title: "Erkundung",
+        text: "Dörfer, Natur und Kultur in jeder Ecke von Chios.",
+        cta: "🧭 Entdecken",
+      },
+      {
+        ...homePageEn.traveler.cards[2],
+        title: "Familie",
+        text: "Ideen und Aktivitäten für unvergessliche Familienferien.",
+        cta: "👨‍👩‍👧‍👦 Entdecken",
+      },
+      {
+        ...homePageEn.traveler.cards[3],
+        title: "Kulinarik",
+        text: "Authentische Aromen, Mastix und lokale Erlebnisse.",
+        cta: "🍽️ Entdecken",
+      },
+    ],
+  },
+
+  chiosGuide: {
+    ...homePageEn.chiosGuide,
+    kicker: "Mehr über Chios",
+    title: "Was kann man auf Chios sehen?",
+    subtitle:
+      "Wir haben nützliche Informationen gesammelt, damit Sie Ihren Aufenthalt und Tagesausflüge leichter planen können.",
+    cards: homePageEn.chiosGuide.cards.map((card) => ({
+      ...card,
+      ctaLabel: "Mehr ansehen",
+    })),
+  },
+
+  quizBar: {
+    label: "CHIOS ENTDECKEN",
+    text: "Nehmen Sie sich 5 Minuten Zeit, machen Sie dieses Quiz und entdecken Sie die Geheimnisse von Chios.",
+    href: "/de/chios-urlaubsquiz/",
+    cta: "🧭 ERLEBNIS STARTEN →",
+  },
+
+  faq: {
+    kicker: "Häufige Fragen",
+    icon: "❓",
+    title: "Was Sie vor der Buchung wissen sollten",
+    items: [
+      {
+        question: "Ist Voulamandis House ein Hotel?",
+        answerHtml:
+          "Voulamandis House ist eine Unterkunft mit Zimmern und Apartments in Kampos, Chios. Wenn Sie ein Hotel auf Chios suchen, aber eine ruhigere und persönlichere Gastfreundschaft bevorzugen, ist es eine authentische Alternative.",
+      },
+      {
+        question: "Wo genau liegt Voulamandis House?",
+        answerHtml:
+          "Die Unterkunft liegt im historischen <strong>Kampos, Chios</strong>, etwa 7 Autominuten vom Flughafen und etwa 14 Minuten vom Hafen und Stadtzentrum entfernt.",
+      },
+      {
+        question: "Gibt es Frühstück?",
+        answerHtml:
+          "Ja, hausgemachtes Frühstück wird im Garten angeboten, mit Produkten von unserem Hof. Es ist optional und auf Anfrage verfügbar.",
+      },
+      {
+        question: "Welche Zimmer eignen sich für Familien?",
+        answerHtml:
+          "Für Familien bis zu 4 Personen empfehlen wir die <strong>Familienapartments</strong>. Je nach Verfügbarkeit kann auch eine Kombination aus zwei Zimmern passen.",
+      },
+      {
+        question: "Gibt es Parkplätze?",
+        answerHtml:
+          "Ja, Parkplätze stehen innerhalb der Unterkunft zur Verfügung. Außerdem gibt es einfache Parkmöglichkeiten an der ruhigen Straße direkt davor.",
+      },
+      {
+        question: "Wie kann ich direkt buchen?",
+        answerHtml:
+          "Sie können direkt über unsere Website buchen oder uns kontaktieren, damit wir gemeinsam das passende Zimmer für Ihren Aufenthalt finden.",
+      },
+    ],
+  },
+
+  finalCta: {
+    kicker: "Aufenthalt buchen",
+    icon: "✈️",
+    title: "Ihre Reise nach Chios beginnt hier",
+    text: "Herzliche Gastfreundschaft, authentische Atmosphäre und eine ideale Lage in Kampos.",
+    primaryCta: {
+      label: "Direkt buchen",
+      href: "/de/direktbuchung-voulamandis-house/",
+      icon: "🛎️",
+    },
+    secondaryCta: {
+      label: "Kontakt",
+      href: "/de/kontakt-voulamandis-house/",
+      icon: "✉️",
+    },
+  },
+
+  mobileSticky: {
+    call: {
+      label: "📞 ANRUFEN",
+      href: "tel:+306944764654",
+    },
+    viber: {
+      label: "💬 VIBER",
+      href: "viber://chat?number=%2B306944474226",
+    },
+  },
+};
+export const homePageIt: HomePageData = {
+  ...homePageEn,
+
+  seo: {
+    title: "Hotel a Chios – Camere e appartamenti | Voulamandis House",
+    description:
+      "Camere e appartamenti tranquilli a Kampos, Chios. Soggiorna al Voulamandis House, vicino all’aeroporto, alla città, alle spiagge e ai villaggi dell’isola.",
+    canonicalPath: "/it/",
+    ogImage: homePageEn.seo.ogImage,
+    ogImageAlt:
+      "Voulamandis House a Kampos, Chios - soggiorno autentico in un agrumeto",
+  },
+
+  hero: {
+    ...homePageEn.hero,
+    reviews: "143 recensioni",
+    kicker: "KAMPOS CHIOS • VOULAMANDIS HOUSE",
+    title: "Hotel e appartamenti a Chios, nel cuore di Kampos",
+    descriptionHtml:
+      'Cerchi un <strong>hotel a Chios</strong> o <strong>camere a Chios</strong>? <strong>Voulamandis House</strong> ti accoglie a Kampos con camere confortevoli, atmosfera tranquilla e ospitalità autentica.',
+    imageAlt: "Hotel e appartamenti a Chios - Voulamandis House a Kampos",
+    primaryCta: {
+      label: "Trova la camera",
+      href: "/it/trova-la-camera-ideale/",
+      icon: "✨",
+    },
+    secondaryCta: {
+      label: "Prenota ora",
+      href: "/it/prenotazione-diretta-voulamandis-house/",
+      icon: "🔥",
+    },
+    quizCard: {
+      href: "/it/quiz-vacanze-a-chios/",
+      icon: "🧭",
+      liveLabel: "Codice sconto live",
+      title: "Scopri Chios",
+      text: "Esplora i segreti dell’isola e ricevi un codice per il tuo soggiorno.",
+      cta: "Inizia →",
+    },
+  },
+
+  announceBar: {
+    href: "#vh-lastminute-title",
+    icon: "🔥",
+    text: "Viaggi a Chios questa settimana?",
+    strongText: "Scopri le offerte disponibili per il tuo soggiorno.",
+  },
+
+  intro: {
+    left: {
+      kicker: "Ospitalità autentica a Kampos, Chios",
+      icon: "🏡",
+      title: "Soggiornare a Chios al Voulamandis House",
+      bodyHtml:
+        'Se cerchi <strong>camere a Chios</strong> o un <strong>alloggio a Chios</strong> tranquillo e curato, Voulamandis House ti accoglie nello storico Kampos, in un ambiente verde e autentico. Se desideri un <strong>hotel a Chios</strong> ma preferisci un’esperienza più personale, la nostra struttura è un’alternativa calorosa e genuina.',
+      pills: [
+        "🌴 Vacanze a Chios",
+        "🍊 Kampos Chios",
+        "🛏️ Camere confortevoli",
+        "💎 Ottimo rapporto qualità-prezzo",
+      ],
+    },
+    right: {
+      kicker: "Cosa rende speciale Voulamandis House",
+      title:
+        "Sei motivi che rendono il tuo soggiorno più comodo, personale e autentico",
+      cards: [
+        {
+          title: "🥐 Colazione fatta in casa",
+          text: "Colazione in giardino con prodotti della nostra fattoria, disponibile su richiesta.",
+        },
+        {
+          title: "🌿 Cortile e tranquillità",
+          text: "Atmosfera rilassante, giardino e il carattere autentico di Kampos.",
+        },
+        {
+          title: "🧭 Room Wizard",
+          text: "Un assistente pratico per trovare la camera più adatta al tuo viaggio.",
+        },
+        {
+          title: "📍 Posizione comoda",
+          text: "Vicino a città, aeroporto, porto e spiagge, senza lunghi spostamenti.",
+        },
+        {
+          title: "🛎️ -10% diretto",
+          text: "Contatto diretto con la struttura e disponibilità chiare.",
+        },
+        {
+          title: "🍊 Segreti di Chios",
+          text: "Consigli su spiagge, villaggi, esperienze e itinerari autentici.",
+        },
+      ],
+    },
+  },
+
+  location: {
+    ...homePageEn.location,
+    kicker: "Posizione e prenotazione diretta",
+    title: "Tutto ciò che serve per organizzare il soggiorno",
+    subtitle:
+      "Mappa, distanze, contatti e vantaggi della prenotazione diretta.",
+    map: {
+      ...homePageEn.location.map,
+      buttonLabel: "Mostra la mappa",
+    },
+    distances: [
+      { label: "✈️ Aeroporto", value: "3 km" },
+      { label: "⛴️ Porto", value: "6 km" },
+      { label: "🏖️ Spiaggia", value: "1.5 km" },
+    ],
+    infoCard: {
+      ...homePageEn.location.infoCard,
+      kicker: "Informazioni locali",
+      title: "Voulamandis House",
+      addressLines: ["Mayor Kalvokoresi 117", "Kampos, Chios 82100"],
+      phoneLabel: "Tel:",
+      emailLabel: "Email:",
+      text: "La struttura si trova in una zona che unisce tranquillità, accesso facile e brevi distanze dai punti principali di Chios.",
+      cta: {
+        label: "Disponibilità",
+        href: "/it/prenotazione-diretta-voulamandis-house/",
+        icon: "📅",
+      },
+    },
+    discount: {
+      badge: "Offerta live • Ricevi il codice",
+      title: "Prenota direttamente con noi",
+      text: "Ricevi un codice sconto e prenota direttamente, senza commissioni.",
+      benefits: [
+        "✔️ Miglior tariffa disponibile",
+        "✔️ Comunicazione diretta con la struttura",
+        "✔️ Accesso alle camere disponibili",
+      ],
+      formIntro: "🎁 Ricevi il 10% di sconto per la prenotazione diretta:",
+      emailPlaceholder: "La tua email",
+      submitLabel: "OTTIENI IL CODICE",
+      consent: "Accetto di ricevere offerte da Voulamandis House.",
+      successText: "Il tuo codice sconto è:",
+      defaultCode: "WELCOME10",
+    },
+    copy: {
+      kicker: "Posizione – Kampos Chios",
+      title: "Un quartiere speciale per un soggiorno autentico a Chios",
+      paragraphsHtml: [
+        "<strong>Kampos di Chios</strong> è una delle zone storiche più caratteristiche dell’isola, conosciuta per le dimore signorili, i portali in pietra, i giardini e il profumo degli agrumi.",
+        "La posizione è ideale per chi desidera combinare relax, accesso facile alla città di Chios, all’aeroporto e alle spiagge più amate.",
+      ],
+    },
+  },
+
+  roomsPreview: {
+    ...homePageEn.roomsPreview,
+    kicker: "Camere e alloggi a Chios",
+    title: "Camere a Chios per coppie e famiglie",
+    text: "Le nostre camere vengono pulite ogni giorno e sono pensate per un soggiorno comodo, tranquillo e curato a Kampos, Chios.",
+    primaryCta: {
+      label: "Room Wizard",
+      href: "/it/trova-la-camera-ideale/",
+      icon: "✨",
+    },
+    secondaryCta: {
+      label: "Tutte le camere",
+      href: "/it/camere-a-chios/",
+      icon: "🗂️",
+    },
+    sideCard: {
+      kicker: "Camere a Chios",
+      title: "Dal soggiorno economico alle soluzioni per famiglie",
+      text: "Se cerchi un hotel a Chios ma preferisci un’accoglienza più personale, Voulamandis House offre un’alternativa autentica a Kampos.",
+    },
+    rooms: [
+      {
+        ...homePageEn.roomsPreview.rooms[0],
+        title: "Camera doppia economy",
+        href: "/it/camere-a-chios/camera-doppia-economy/",
+        directBadge: "🎁 -10% Sconto",
+        bedBadge: "🛏️ 1 letto matrimoniale o 2 letti singoli",
+        description:
+          "Ideale per due persone che desiderano un soggiorno curato a Kampos.",
+        meta: ["👥 2 ospiti", "Economy", "🍊 Kampos"],
+        amenities: ["❄️ A/C", "📶 Wi-Fi", "☕ Caffè", "🧊 Frigo"],
+        cta: "Vedi camera",
+      },
+      {
+        ...homePageEn.roomsPreview.rooms[1],
+        title: "Camere al piano terra",
+        href: "/it/camere-a-chios/camere-doppie-triple/",
+        directBadge: "🎁 -10% Sconto",
+        bedBadge: "🛏️ Matrimoniale + letto extra",
+        description:
+          "Una scelta comoda per coppie o piccole famiglie, con accesso facile.",
+        meta: ["👤 ×2-3", "🌿 Piano terra", "Facile"],
+        amenities: ["❄️ A/C", "📶 Wi-Fi", "☕ Caffè", "🧊 Frigo"],
+        cta: "Vedi camera",
+      },
+      {
+        ...homePageEn.roomsPreview.rooms[2],
+        title: "Camere al piano superiore",
+        href: "/it/camere-a-chios/camere-doppie-triple/",
+        directBadge: "🎁 -10% Sconto",
+        bedBadge: "🛏️ Matrimoniale + letto extra",
+        description:
+          "Per chi cerca un’atmosfera più tranquilla e classica.",
+        meta: ["👤 ×2-3", "🏛️ Piano superiore", "Tranquillo"],
+        amenities: ["❄️ A/C", "📶 Wi-Fi", "☕ Caffè", "🧊 Frigo"],
+        cta: "Vedi camera",
+      },
+      {
+        ...homePageEn.roomsPreview.rooms[3],
+        title: "Appartamento familiare",
+        href: "/it/camere-a-chios/appartamento-familiare/",
+        directBadge: "🎁 -10% Sconto",
+        bedBadge: "🛏️ Letti famiglia",
+        description:
+          "Ideale per famiglie o piccoli gruppi che desiderano più spazio.",
+        meta: ["👤 ×4", "Spazio", "🏡 Apt"],
+        amenities: ["❄️ A/C", "📶 Wi-Fi", "☕ Caffè", "🧊 Frigo"],
+        cta: "Vedi appartamento",
+      },
+    ],
+  },
+
+  lastMinute: {
+    kicker: "Offerte last minute",
+    icon: "⚡",
+    title: "Viaggi a Chios questa settimana?",
+    subtitle:
+      "Scegli il numero di ospiti e guarda le offerte disponibili per i prossimi 7 giorni, con prezzo finale e contatto diretto.",
+    widget: {
+      title: "Offerte di alloggio a Chios per i prossimi 7 giorni",
+      subtitle:
+        "Trova camere o appartamenti disponibili con prenotazione diretta, senza commissioni. Scegli il numero di ospiti e invia la richiesta su WhatsApp o Viber.",
+      trustLine:
+        "🎁 Prenotazione diretta senza commissioni – miglior tariffa disponibile",
+      timerLabel: "I prezzi last minute si aggiornano tra:",
+      guestTitle: "1. Scegli il numero di ospiti",
+      guestText:
+        "Dopo aver selezionato il numero di persone, vedrai le offerte disponibili.",
+      guestButtons: homePageEn.lastMinute.widget.guestButtons,
+      helper:
+        "Scegli prima il numero di ospiti per vedere le camere disponibili a Chios.",
+      loadingText: "🔥 Ricerca delle migliori offerte disponibili…",
+      resultsTitle: "2. Offerte disponibili",
+      resultsText: "Usa i filtri per restringere rapidamente le opzioni.",
+      emptyText:
+        "Scegli prima 2, 3 o 4 ospiti per caricare le offerte disponibili.",
+    },
+  },
+
+  reviews: {
+    ...homePageEn.reviews,
+    kicker: "Recensioni ospiti",
+    title: "Cosa dicono i nostri ospiti",
+  },
+
+  amenities: {
+    kicker: "Servizi",
+    icon: "🛋️",
+    title: "Tutto ciò che serve per un soggiorno confortevole",
+    items: [
+      { icon: "📶", label: "Wi-Fi / Internet" },
+      { icon: "❄️", label: "Aria condizionata" },
+      { icon: "🔥", label: "Riscaldamento" },
+      { icon: "📺", label: "TV" },
+      { icon: "🧊", label: "Frigorifero" },
+      { icon: "☕", label: "Caffè / Tè" },
+      { icon: "🧼", label: "Pulizia giornaliera" },
+      { icon: "🌿", label: "Giardino e relax" },
+      { icon: "🍖", label: "Area BBQ" },
+      { icon: "🚗", label: "Parcheggio" },
+      { icon: "🚕", label: "Transfer possibile" },
+      { icon: "🏡", label: "Ospitalità autentica" },
+    ],
+  },
+
+  traveler: {
+    ...homePageEn.traveler,
+    kicker: "Scoprire Chios",
+    title: "Che tipo di viaggiatore sei?",
+    subtitle:
+      "Scegli l’esperienza più adatta a te e scopri Chios secondo il tuo stile di viaggio.",
+    cards: [
+      {
+        ...homePageEn.traveler.cards[0],
+        title: "Mare",
+        text: "Acque cristalline, spiagge uniche e momenti di relax sull’isola.",
+        cta: "🏖️ Esplora",
+      },
+      {
+        ...homePageEn.traveler.cards[1],
+        title: "Esplorazione",
+        text: "Villaggi, natura e cultura in ogni angolo di Chios.",
+        cta: "🧭 Esplora",
+      },
+      {
+        ...homePageEn.traveler.cards[2],
+        title: "Famiglia",
+        text: "Idee e attività per vacanze in famiglia indimenticabili.",
+        cta: "👨‍👩‍👧‍👦 Esplora",
+      },
+      {
+        ...homePageEn.traveler.cards[3],
+        title: "Gastronomia",
+        text: "Sapori autentici, mastice e vere esperienze locali.",
+        cta: "🍽️ Esplora",
+      },
+    ],
+  },
+
+  chiosGuide: {
+    ...homePageEn.chiosGuide,
+    kicker: "Scopri di più su Chios",
+    title: "Cosa vedere a Chios?",
+    subtitle:
+      "Abbiamo raccolto informazioni utili per organizzare più facilmente il tuo soggiorno e le tue escursioni.",
+    cards: homePageEn.chiosGuide.cards.map((card) => ({
+      ...card,
+      ctaLabel: "Vedi di più",
+    })),
+  },
+
+  quizBar: {
+    label: "SCOPRI CHIOS",
+    text: "Dedica 5 minuti a questo quiz, scopri Chios e ricevi un codice sconto.",
+    href: "/it/quiz-vacanze-a-chios/",
+    cta: "🧭 INIZIA L’ESPERIENZA →",
+  },
+
+  faq: {
+    kicker: "Domande frequenti",
+    icon: "❓",
+    title: "Cosa sapere prima di prenotare",
+    items: [
+      {
+        question: "Voulamandis House è un hotel?",
+        answerHtml:
+          "Voulamandis House è una struttura con camere e appartamenti a Kampos, Chios. Se cerchi un hotel a Chios ma preferisci un’ospitalità più tranquilla e personale, è un’alternativa autentica.",
+      },
+      {
+        question: "Dove si trova esattamente Voulamandis House?",
+        answerHtml:
+          "La struttura si trova nello storico <strong>Kampos, Chios</strong>, a circa 7 minuti in auto dall’aeroporto e 14 minuti dal porto e dal centro città.",
+      },
+      {
+        question: "La colazione è disponibile?",
+        answerHtml:
+          "Sì, la colazione fatta in casa viene servita in giardino con prodotti della nostra fattoria. È opzionale e disponibile su richiesta.",
+      },
+      {
+        question: "Quali camere sono adatte alle famiglie?",
+        answerHtml:
+          "Per famiglie fino a 4 persone consigliamo gli <strong>appartamenti familiari</strong>. In base alla disponibilità, anche due camere possono essere adatte a gruppi più grandi.",
+      },
+      {
+        question: "C’è parcheggio?",
+        answerHtml:
+          "Sì, è disponibile un parcheggio nella struttura ed è facile parcheggiare anche nella strada tranquilla accanto.",
+      },
+      {
+        question: "Come posso prenotare direttamente?",
+        answerHtml:
+          "Puoi prenotare direttamente dal sito o contattarci per scegliere insieme la camera più adatta al tuo soggiorno.",
+      },
+    ],
+  },
+
+  finalCta: {
+    kicker: "Prenota il tuo soggiorno",
+    icon: "✈️",
+    title: "Il tuo viaggio a Chios inizia qui",
+    text: "Ospitalità calorosa, atmosfera autentica e posizione ideale a Kampos.",
+    primaryCta: {
+      label: "Prenota diretto",
+      href: "/it/prenotazione-diretta-voulamandis-house/",
+      icon: "🛎️",
+    },
+    secondaryCta: {
+      label: "Contatto",
+      href: "/it/contatto-voulamandis-house/",
+      icon: "✉️",
+    },
+  },
+
+  mobileSticky: {
+    call: {
+      label: "📞 CHIAMA",
+      href: "tel:+306944764654",
+    },
+    viber: {
+      label: "💬 VIBER",
+      href: "viber://chat?number=%2B306944474226",
+    },
+  },
+};
+
+export const homePageEs: HomePageData = {
+  ...homePageEn,
+
+  seo: {
+    title: "Hotel en Chios – Habitaciones y apartamentos | Voulamandis House",
+    description:
+      "Habitaciones y apartamentos tranquilos en Kampos, Chios. Alójate en Voulamandis House, cerca del aeropuerto, la ciudad, las playas y los pueblos de la isla.",
+    canonicalPath: "/es/",
+    ogImage: homePageEn.seo.ogImage,
+    ogImageAlt:
+      "Voulamandis House en Kampos, Chios - alojamiento auténtico entre cítricos",
+  },
+
+  hero: {
+    ...homePageEn.hero,
+    reviews: "143 reseñas",
+    kicker: "KAMPOS CHIOS • VOULAMANDIS HOUSE",
+    title: "Hotel y apartamentos en Chios, en Kampos",
+    descriptionHtml:
+      '¿Buscas un <strong>hotel en Chios</strong> o <strong>habitaciones en Chios</strong>? <strong>Voulamandis House</strong> te recibe en Kampos con habitaciones cómodas, ambiente tranquilo y hospitalidad auténtica.',
+    imageAlt: "Hotel y apartamentos en Chios - Voulamandis House en Kampos",
+    primaryCta: {
+      label: "Encontrar habitación",
+      href: "/es/encontrar-habitacion-ideal/",
+      icon: "✨",
+    },
+    secondaryCta: {
+      label: "Reservar",
+      href: "/es/reserva-directa-voulamandis-house/",
+      icon: "🔥",
+    },
+    quizCard: {
+      href: "/es/quiz-vacaciones-en-chios/",
+      icon: "🧭",
+      liveLabel: "Código descuento live",
+      title: "Descubre Chios",
+      text: "Explora los secretos de la isla y recibe un código para tu estancia.",
+      cta: "Empezar →",
+    },
+  },
+
+  announceBar: {
+    href: "#vh-lastminute-title",
+    icon: "🔥",
+    text: "¿Viajas a Chios esta semana?",
+    strongText: "Mira las ofertas de alojamiento disponibles.",
+  },
+
+  intro: {
+    left: {
+      kicker: "Hospitalidad auténtica en Kampos, Chios",
+      icon: "🏡",
+      title: "Alojarse en Chios en Voulamandis House",
+      bodyHtml:
+        'Si buscas <strong>habitaciones en Chios</strong> o un <strong>alojamiento en Chios</strong> tranquilo y cuidado, Voulamandis House te espera en el histórico Kampos, en un entorno verde y auténtico. Si buscas un <strong>hotel en Chios</strong> pero prefieres una experiencia más personal, nuestra casa es una alternativa cálida y genuina.',
+      pills: [
+        "🌴 Vacaciones en Chios",
+        "🍊 Kampos Chios",
+        "🛏️ Habitaciones cómodas",
+        "💎 Buena relación calidad-precio",
+      ],
+    },
+    right: {
+      kicker: "Qué hace especial a Voulamandis House",
+      title:
+        "Seis razones que hacen tu estancia más cómoda, personal y auténtica",
+      cards: [
+        {
+          title: "🥐 Desayuno casero",
+          text: "Desayuno en el jardín con productos de nuestra finca, disponible bajo petición.",
+        },
+        {
+          title: "🌿 Patio y tranquilidad",
+          text: "Ambiente tranquilo, jardín y el carácter auténtico de Kampos.",
+        },
+        {
+          title: "🧭 Room Wizard",
+          text: "Un asistente práctico para encontrar la habitación ideal para tu viaje.",
+        },
+        {
+          title: "📍 Ubicación práctica",
+          text: "Cerca de la ciudad, aeropuerto, puerto y playas, sin largos desplazamientos.",
+        },
+        {
+          title: "🛎️ -10% directo",
+          text: "Contacto directo con el alojamiento y disponibilidad clara.",
+        },
+        {
+          title: "🍊 Secretos de Chios",
+          text: "Consejos sobre playas, pueblos, experiencias e itinerarios auténticos.",
+        },
+      ],
+    },
+  },
+
+  location: {
+    ...homePageEn.location,
+    kicker: "Ubicación y reserva directa",
+    title: "Todo lo necesario para organizar tu estancia",
+    subtitle:
+      "Mapa, distancias, datos de contacto y ventajas de reservar directamente.",
+    map: {
+      ...homePageEn.location.map,
+      buttonLabel: "Mostrar mapa",
+    },
+    distances: [
+      { label: "✈️ Aeropuerto", value: "3 km" },
+      { label: "⛴️ Puerto", value: "6 km" },
+      { label: "🏖️ Playa", value: "1.5 km" },
+    ],
+    infoCard: {
+      ...homePageEn.location.infoCard,
+      kicker: "Información local",
+      title: "Voulamandis House",
+      addressLines: ["Mayor Kalvokoresi 117", "Kampos, Chios 82100"],
+      phoneLabel: "Tel:",
+      emailLabel: "Email:",
+      text: "El alojamiento se encuentra en una zona que combina tranquilidad, acceso fácil y distancias cortas a los puntos principales de Chios.",
+      cta: {
+        label: "Disponibilidad",
+        href: "/es/reserva-directa-voulamandis-house/",
+        icon: "📅",
+      },
+    },
+    discount: {
+      badge: "Oferta live • Recibe tu código",
+      title: "Reserva directamente con nosotros",
+      text: "Recibe un código de descuento y reserva directamente, sin comisiones.",
+      benefits: [
+        "✔️ Mejor tarifa disponible",
+        "✔️ Comunicación directa con el alojamiento",
+        "✔️ Acceso a habitaciones disponibles",
+      ],
+      formIntro: "🎁 Recibe un 10% de descuento para tu reserva directa:",
+      emailPlaceholder: "Tu email",
+      submitLabel: "OBTENER CÓDIGO",
+      consent: "Acepto recibir ofertas de Voulamandis House.",
+      successText: "Tu código de descuento es:",
+      defaultCode: "WELCOME10",
+    },
+    copy: {
+      kicker: "Ubicación – Kampos Chios",
+      title: "Una zona especial para una estancia auténtica en Chios",
+      paragraphsHtml: [
+        "<strong>Kampos de Chios</strong> es una de las zonas históricas más características de la isla, conocida por sus mansiones, portales de piedra, jardines y aromas cítricos.",
+        "Su ubicación es ideal para combinar descanso, acceso fácil a la ciudad de Chios, al aeropuerto y a playas populares.",
+      ],
+    },
+  },
+
+  roomsPreview: {
+    ...homePageEn.roomsPreview,
+    kicker: "Habitaciones y alojamiento en Chios",
+    title: "Habitaciones en Chios para parejas y familias",
+    text: "Nuestras habitaciones se limpian cada día y están pensadas para una estancia cómoda, tranquila y cuidada en Kampos, Chios.",
+    primaryCta: {
+      label: "Room Wizard",
+      href: "/es/encontrar-habitacion-ideal/",
+      icon: "✨",
+    },
+    secondaryCta: {
+      label: "Todas las habitaciones",
+      href: "/es/habitaciones-en-chios/",
+      icon: "🗂️",
+    },
+    sideCard: {
+      kicker: "Habitaciones en Chios",
+      title: "Desde opciones económicas hasta soluciones familiares",
+      text: "Si buscas un hotel en Chios pero prefieres una hospitalidad más personal, Voulamandis House ofrece una alternativa auténtica en Kampos.",
+    },
+    rooms: [
+      {
+        ...homePageEn.roomsPreview.rooms[0],
+        title: "Habitación doble económica",
+        href: "/es/habitaciones-en-chios/habitacion-doble-economica/",
+        directBadge: "🎁 -10% Descuento",
+        bedBadge: "🛏️ 1 cama doble o 2 camas individuales",
+        description:
+          "Ideal para dos personas que desean una estancia cuidada en Kampos.",
+        meta: ["👥 2 huéspedes", "Económica", "🍊 Kampos"],
+        amenities: ["❄️ A/C", "📶 Wi-Fi", "☕ Café", "🧊 Nevera"],
+        cta: "Ver habitación",
+      },
+      {
+        ...homePageEn.roomsPreview.rooms[1],
+        title: "Habitaciones en planta baja",
+        href: "/es/habitaciones-en-chios/habitaciones-dobles-triples/",
+        directBadge: "🎁 -10% Descuento",
+        bedBadge: "🛏️ Doble + cama extra",
+        description:
+          "Una opción cómoda para parejas o familias pequeñas, con acceso fácil.",
+        meta: ["👤 ×2-3", "🌿 Planta baja", "Fácil"],
+        amenities: ["❄️ A/C", "📶 Wi-Fi", "☕ Café", "🧊 Nevera"],
+        cta: "Ver habitación",
+      },
+      {
+        ...homePageEn.roomsPreview.rooms[2],
+        title: "Habitaciones en planta superior",
+        href: "/es/habitaciones-en-chios/habitaciones-dobles-triples/",
+        directBadge: "🎁 -10% Descuento",
+        bedBadge: "🛏️ Doble + cama extra",
+        description:
+          "Para viajeros que buscan un ambiente más tranquilo y clásico.",
+        meta: ["👤 ×2-3", "🏛️ Planta superior", "Tranquilo"],
+        amenities: ["❄️ A/C", "📶 Wi-Fi", "☕ Café", "🧊 Nevera"],
+        cta: "Ver habitación",
+      },
+      {
+        ...homePageEn.roomsPreview.rooms[3],
+        title: "Apartamento familiar",
+        href: "/es/habitaciones-en-chios/apartamento-familiar/",
+        directBadge: "🎁 -10% Descuento",
+        bedBadge: "🛏️ Camas familiares",
+        description:
+          "Ideal para familias o grupos pequeños que desean más espacio.",
+        meta: ["👤 ×4", "Espacio", "🏡 Apt"],
+        amenities: ["❄️ A/C", "📶 Wi-Fi", "☕ Café", "🧊 Nevera"],
+        cta: "Ver apartamento",
+      },
+    ],
+  },
+
+  lastMinute: {
+    kicker: "Ofertas de última hora",
+    icon: "⚡",
+    title: "¿Viajas a Chios esta semana?",
+    subtitle:
+      "Elige el número de huéspedes y consulta las ofertas disponibles para los próximos 7 días, con precio final y contacto directo.",
+    widget: {
+      title: "Ofertas de alojamiento en Chios para los próximos 7 días",
+      subtitle:
+        "Encuentra habitaciones o apartamentos disponibles con reserva directa, sin comisiones. Elige el número de huéspedes y envía tu solicitud por WhatsApp o Viber.",
+      trustLine:
+        "🎁 Reserva directa sin comisiones – mejor tarifa disponible",
+      timerLabel: "Los precios last minute se actualizan en:",
+      guestTitle: "1. Elige el número de huéspedes",
+      guestText:
+        "Cuando selecciones el número de personas, aparecerán las ofertas disponibles.",
+      guestButtons: homePageEn.lastMinute.widget.guestButtons,
+      helper:
+        "Elige primero el número de huéspedes para ver habitaciones disponibles en Chios.",
+      loadingText: "🔥 Buscando las mejores ofertas disponibles…",
+      resultsTitle: "2. Ofertas disponibles",
+      resultsText: "Usa los filtros para encontrar rápidamente tu mejor opción.",
+      emptyText:
+        "Elige primero 2, 3 o 4 huéspedes para cargar las ofertas disponibles.",
+    },
+  },
+
+  reviews: {
+    ...homePageEn.reviews,
+    kicker: "Opiniones de huéspedes",
+    title: "Qué dicen nuestros huéspedes",
+  },
+
+  amenities: {
+    kicker: "Servicios",
+    icon: "🛋️",
+    title: "Todo lo necesario para una estancia cómoda",
+    items: [
+      { icon: "📶", label: "Wi-Fi / Internet" },
+      { icon: "❄️", label: "Aire acondicionado" },
+      { icon: "🔥", label: "Calefacción" },
+      { icon: "📺", label: "TV" },
+      { icon: "🧊", label: "Nevera" },
+      { icon: "☕", label: "Café / Té" },
+      { icon: "🧼", label: "Limpieza diaria" },
+      { icon: "🌿", label: "Jardín y zona relax" },
+      { icon: "🍖", label: "Zona BBQ" },
+      { icon: "🚗", label: "Parking" },
+      { icon: "🚕", label: "Transfer posible" },
+      { icon: "🏡", label: "Hospitalidad auténtica" },
+    ],
+  },
+
+  traveler: {
+    ...homePageEn.traveler,
+    kicker: "Descubrir Chios",
+    title: "¿Qué tipo de viajero eres?",
+    subtitle:
+      "Elige la experiencia que encaja contigo y descubre Chios según tu estilo de viaje.",
+    cards: [
+      {
+        ...homePageEn.traveler.cards[0],
+        title: "Mar",
+        text: "Aguas cristalinas, playas únicas y momentos de relax en la isla.",
+        cta: "🏖️ Explorar",
+      },
+      {
+        ...homePageEn.traveler.cards[1],
+        title: "Exploración",
+        text: "Pueblos, naturaleza y cultura en cada rincón de Chios.",
+        cta: "🧭 Explorar",
+      },
+      {
+        ...homePageEn.traveler.cards[2],
+        title: "Familia",
+        text: "Ideas y actividades para unas vacaciones familiares inolvidables.",
+        cta: "👨‍👩‍👧‍👦 Explorar",
+      },
+      {
+        ...homePageEn.traveler.cards[3],
+        title: "Gastronomía",
+        text: "Sabores auténticos, masticha y experiencias locales.",
+        cta: "🍽️ Explorar",
+      },
+    ],
+  },
+
+  chiosGuide: {
+    ...homePageEn.chiosGuide,
+    kicker: "Más sobre Chios",
+    title: "¿Qué ver en Chios?",
+    subtitle:
+      "Hemos reunido información útil para organizar mejor tu estancia y tus excursiones.",
+    cards: homePageEn.chiosGuide.cards.map((card) => ({
+      ...card,
+      ctaLabel: "Ver más",
+    })),
+  },
+
+  quizBar: {
+    label: "DESCUBRIR CHIOS",
+    text: "Dedica 5 minutos a este quiz, descubre Chios y recibe un código de descuento.",
+    href: "/es/quiz-vacaciones-en-chios/",
+    cta: "🧭 EMPEZAR LA EXPERIENCIA →",
+  },
+
+  faq: {
+    kicker: "Preguntas frecuentes",
+    icon: "❓",
+    title: "Lo que conviene saber antes de reservar",
+    items: [
+      {
+        question: "¿Voulamandis House es un hotel?",
+        answerHtml:
+          "Voulamandis House es un alojamiento con habitaciones y apartamentos en Kampos, Chios. Si buscas un hotel en Chios pero prefieres una hospitalidad más tranquila y personal, es una alternativa auténtica.",
+      },
+      {
+        question: "¿Dónde está exactamente Voulamandis House?",
+        answerHtml:
+          "La propiedad está en el histórico <strong>Kampos, Chios</strong>, a unos 7 minutos en coche del aeropuerto y unos 14 minutos del puerto y del centro.",
+      },
+      {
+        question: "¿Hay desayuno?",
+        answerHtml:
+          "Sí, ofrecemos desayuno casero en el jardín con productos de nuestra finca. Es opcional y está disponible bajo petición.",
+      },
+      {
+        question: "¿Qué habitaciones son adecuadas para familias?",
+        answerHtml:
+          "Para familias de hasta 4 personas recomendamos los <strong>apartamentos familiares</strong>. Según disponibilidad, también puede funcionar una combinación de dos habitaciones.",
+      },
+      {
+        question: "¿Hay parking?",
+        answerHtml:
+          "Sí, hay parking dentro de la propiedad y también es fácil aparcar en la calle tranquila junto al alojamiento.",
+      },
+      {
+        question: "¿Cómo puedo reservar directamente?",
+        answerHtml:
+          "Puedes reservar directamente desde nuestra web o contactarnos para elegir juntos la habitación más adecuada para tu estancia.",
+      },
+    ],
+  },
+
+  finalCta: {
+    kicker: "Reserva tu estancia",
+    icon: "✈️",
+    title: "Tu viaje a Chios empieza aquí",
+    text: "Hospitalidad cálida, ambiente auténtico y ubicación ideal en Kampos.",
+    primaryCta: {
+      label: "Reservar directo",
+      href: "/es/reserva-directa-voulamandis-house/",
+      icon: "🛎️",
+    },
+    secondaryCta: {
+      label: "Contacto",
+      href: "/es/contacto-voulamandis-house/",
+      icon: "✉️",
+    },
+  },
+
+  mobileSticky: {
+    call: {
+      label: "📞 LLAMAR",
+      href: "tel:+306944764654",
+    },
+    viber: {
+      label: "💬 VIBER",
+      href: "viber://chat?number=%2B306944474226",
+    },
+  },
+};
+
+export const homePageTr: HomePageData = {
+  ...homePageEn,
+
+  seo: {
+    title: "Sakız Adası Oteli – Odalar ve Daireler | Voulamandis House",
+    description:
+      "Kampos, Sakız Adası’nda sakin odalar ve daireler. Havaalanına, merkeze, plajlara ve köylere yakın Voulamandis House’ta konaklayın.",
+    canonicalPath: "/tr/",
+    ogImage: homePageEn.seo.ogImage,
+    ogImageAlt:
+      "Kampos, Sakız Adası’nda Voulamandis House - narenciye bahçesi içinde otantik konaklama",
+  },
+
+  hero: {
+    ...homePageEn.hero,
+    reviews: "143 yorum",
+    kicker: "KAMPOS SAKIZ • VOULAMANDIS HOUSE",
+    title: "Sakız Adası’nda Kampos’ta otel ve daireler",
+    descriptionHtml:
+      '<strong>Sakız Adası’nda otel</strong> ya da <strong>Sakız Adası odaları</strong> mı arıyorsunuz? <strong>Voulamandis House</strong>, Kampos’ta rahat odalar, sakin bir atmosfer ve samimi misafirperverlik sunar.',
+    imageAlt: "Sakız Adası’nda otel ve daireler - Kampos Voulamandis House",
+    primaryCta: {
+      label: "Odamı bul",
+      href: "/tr/ideal-odayi-bul/",
+      icon: "✨",
+    },
+    secondaryCta: {
+      label: "Rezervasyon",
+      href: "/tr/direkt-rezervasyon-voulamandis-house/",
+      icon: "🔥",
+    },
+    quizCard: {
+      href: "/tr/sakiz-adasi-tatil-testi/",
+      icon: "🧭",
+      liveLabel: "Canlı indirim kodu",
+      title: "Sakız’ı keşfedin",
+      text: "Adanın sırlarını keşfedin ve konaklamanız için indirim kodu alın.",
+      cta: "Başla →",
+    },
+  },
+
+  announceBar: {
+    href: "#vh-lastminute-title",
+    icon: "🔥",
+    text: "Bu hafta Sakız Adası’na mı geliyorsunuz?",
+    strongText: "Mevcut konaklama fırsatlarını görün.",
+  },
+
+  intro: {
+    left: {
+      kicker: "Kampos, Sakız Adası’nda otantik misafirperverlik",
+      icon: "🏡",
+      title: "Sakız Adası’nda Voulamandis House’ta konaklama",
+      bodyHtml:
+        '<strong>Sakız Adası odaları</strong> veya sakin ve özenli bir <strong>Sakız Adası konaklama</strong> seçeneği arıyorsanız, Voulamandis House sizi tarihi Kampos bölgesinde karşılar. Bir <strong>Sakız Adası oteli</strong> arıyor ama daha kişisel bir deneyim istiyorsanız, burası sıcak ve otantik bir alternatiftir.',
+      pills: [
+        "🌴 Sakız Adası tatili",
+        "🍊 Kampos Sakız",
+        "🛏️ Rahat odalar",
+        "💎 İyi fiyat-performans",
+      ],
+    },
+    right: {
+      kicker: "Voulamandis House’u özel yapan şeyler",
+      title:
+        "Konaklamanızı daha rahat, kişisel ve otantik yapan altı neden",
+      cards: [
+        {
+          title: "🥐 Ev yapımı kahvaltı",
+          text: "Bahçede, çiftliğimizden ürünlerle hazırlanan kahvaltı; talep üzerine sunulur.",
+        },
+        {
+          title: "🌿 Avlu ve huzur",
+          text: "Sakin atmosfer, bahçe ve Kampos’un gerçek ruhu ile dinlenme imkânı.",
+        },
+        {
+          title: "🧭 Room Wizard",
+          text: "Seyahatinize en uygun odayı bulmanıza yardımcı olan pratik asistan.",
+        },
+        {
+          title: "📍 Kullanışlı konum",
+          text: "Şehre, havaalanına, limana ve plajlara yakın; uzun yol yapmadan.",
+        },
+        {
+          title: "🛎️ Direkt rezervasyonda -10%",
+          text: "Tesisle doğrudan iletişim ve müsait odalara net erişim.",
+        },
+        {
+          title: "🍊 Sakız ipuçları",
+          text: "Plajlar, köyler, deneyimler ve gerçek ada rotaları için öneriler.",
+        },
+      ],
+    },
+  },
+
+  location: {
+    ...homePageEn.location,
+    kicker: "Konum ve direkt rezervasyon",
+    title: "Konaklamanızı planlamak için ihtiyacınız olan her şey",
+    subtitle:
+      "Harita, mesafeler, iletişim bilgileri ve direkt rezervasyon avantajları.",
+    map: {
+      ...homePageEn.location.map,
+      buttonLabel: "Haritayı göster",
+    },
+    distances: [
+      { label: "✈️ Havaalanı", value: "3 km" },
+      { label: "⛴️ Liman", value: "6 km" },
+      { label: "🏖️ Plaj", value: "1.5 km" },
+    ],
+    infoCard: {
+      ...homePageEn.location.infoCard,
+      kicker: "Yerel bilgiler",
+      title: "Voulamandis House",
+      addressLines: ["Mayor Kalvokoresi 117", "Kampos, Chios 82100"],
+      phoneLabel: "Tel:",
+      emailLabel: "Email:",
+      text: "Tesis, Sakız Adası’nın önemli noktalarına kısa mesafede; sakinlik ve kolay ulaşımı bir arada sunan bir konumdadır.",
+      cta: {
+        label: "Müsaitlik",
+        href: "/tr/direkt-rezervasyon-voulamandis-house/",
+        icon: "📅",
+      },
+    },
+    discount: {
+      badge: "Canlı teklif • Kod alın",
+      title: "Doğrudan bizden rezervasyon yapın",
+      text: "İndirim kodu alın ve komisyonsuz şekilde direkt rezervasyon yapın.",
+      benefits: [
+        "✔️ En iyi mevcut fiyat",
+        "✔️ Tesisle doğrudan iletişim",
+        "✔️ Müsait odalara erişim",
+      ],
+      formIntro: "🎁 Direkt rezervasyon için %10 indirim alın:",
+      emailPlaceholder: "E-posta adresiniz",
+      submitLabel: "KODU AL",
+      consent: "Voulamandis House tekliflerini almayı kabul ediyorum.",
+      successText: "İndirim kodunuz:",
+      defaultCode: "WELCOME10",
+    },
+    copy: {
+      kicker: "Konum – Kampos Sakız",
+      title: "Sakız Adası’nda otantik bir konaklama için özel bir bölge",
+      paragraphsHtml: [
+        "<strong>Sakız Adası Kampos</strong>, tarihi konakları, taş kapıları, bahçeleri ve narenciye kokusuyla adanın en karakteristik bölgelerinden biridir.",
+        "Konumu; dinlenmeyi, Sakız şehir merkezine, havaalanına ve popüler plajlara kolay erişimle birleştirmek isteyenler için idealdir.",
+      ],
+    },
+  },
+
+  roomsPreview: {
+    ...homePageEn.roomsPreview,
+    kicker: "Sakız Adası odaları ve konaklama",
+    title: "Çiftler ve aileler için Sakız Adası odaları",
+    text: "Odalarımız her gün temizlenir ve Kampos’ta rahat, sakin ve kaliteli bir konaklama için hazırlanmıştır.",
+    primaryCta: {
+      label: "Room Wizard",
+      href: "/tr/ideal-odayi-bul/",
+      icon: "✨",
+    },
+    secondaryCta: {
+      label: "Tüm odalar",
+      href: "/tr/sakiz-adasi-odalari/",
+      icon: "🗂️",
+    },
+    sideCard: {
+      kicker: "Sakız Adası odaları",
+      title: "Ekonomik konaklamadan aile çözümlerine",
+      text: "Sakız Adası’nda otel arıyor ama daha kişisel bir misafirperverlik istiyorsanız, Voulamandis House Kampos’ta otantik bir alternatiftir.",
+    },
+    rooms: [
+      {
+        ...homePageEn.roomsPreview.rooms[0],
+        title: "Ekonomik çift kişilik oda",
+        href: "/tr/sakiz-adasi-odalari/ekonomik-cift-kisilik-oda/",
+        directBadge: "🎁 -10% İndirim",
+        bedBadge: "🛏️ 1 çift kişilik veya 2 tek kişilik yatak",
+        description:
+          "Kampos’ta özenli bir konaklama isteyen iki kişi için idealdir.",
+        meta: ["👥 2 misafir", "Ekonomik", "🍊 Kampos"],
+        amenities: ["❄️ Klima", "📶 Wi-Fi", "☕ Kahve", "🧊 Buzdolabı"],
+        cta: "Odayı gör",
+      },
+      {
+        ...homePageEn.roomsPreview.rooms[1],
+        title: "Zemin kat odaları",
+        href: "/tr/sakiz-adasi-odalari/cift-ve-uclu-odalar/",
+        directBadge: "🎁 -10% İndirim",
+        bedBadge: "🛏️ Çift kişilik + ek yatak",
+        description:
+          "Kolay erişim isteyen çiftler veya küçük aileler için rahat bir seçenek.",
+        meta: ["👤 ×2-3", "🌿 Zemin kat", "Kolay"],
+        amenities: ["❄️ Klima", "📶 Wi-Fi", "☕ Kahve", "🧊 Buzdolabı"],
+        cta: "Odayı gör",
+      },
+      {
+        ...homePageEn.roomsPreview.rooms[2],
+        title: "Üst kat odaları",
+        href: "/tr/sakiz-adasi-odalari/cift-ve-uclu-odalar/",
+        directBadge: "🎁 -10% İndirim",
+        bedBadge: "🛏️ Çift kişilik + ek yatak",
+        description:
+          "Daha sakin ve klasik bir atmosfer arayan gezginler için.",
+        meta: ["👤 ×2-3", "🏛️ Üst kat", "Sakin"],
+        amenities: ["❄️ Klima", "📶 Wi-Fi", "☕ Kahve", "🧊 Buzdolabı"],
+        cta: "Odayı gör",
+      },
+      {
+        ...homePageEn.roomsPreview.rooms[3],
+        title: "Aile dairesi",
+        href: "/tr/sakiz-adasi-odalari/aile-dairesi/",
+        directBadge: "🎁 -10% İndirim",
+        bedBadge: "🛏️ Aile yatakları",
+        description:
+          "Daha fazla alan isteyen aileler veya küçük gruplar için idealdir.",
+        meta: ["👤 ×4", "Alan", "🏡 Daire"],
+        amenities: ["❄️ Klima", "📶 Wi-Fi", "☕ Kahve", "🧊 Buzdolabı"],
+        cta: "Daireyi gör",
+      },
+    ],
+  },
+
+  lastMinute: {
+    kicker: "Son dakika fırsatları",
+    icon: "⚡",
+    title: "Bu hafta Sakız Adası’na mı geliyorsunuz?",
+    subtitle:
+      "Misafir sayısını seçin ve önümüzdeki 7 gün için mevcut fırsatları, toplam fiyat ve direkt iletişimle görün.",
+    widget: {
+      title: "Önümüzdeki 7 gün için Sakız Adası konaklama fırsatları",
+      subtitle:
+        "Komisyonsuz direkt rezervasyonla müsait odaları veya daireleri bulun. Misafir sayısını seçin ve talebinizi WhatsApp veya Viber üzerinden gönderin.",
+      trustLine:
+        "🎁 Komisyonsuz direkt rezervasyon – en iyi mevcut fiyat",
+      timerLabel: "Son dakika fiyatları yenileniyor:",
+      guestTitle: "1. Misafir sayısını seçin",
+      guestText:
+        "Kişi sayısını seçtiğinizde mevcut fırsatlar görünecektir.",
+      guestButtons: homePageEn.lastMinute.widget.guestButtons,
+      helper:
+        "Sakız Adası’ndaki müsait odaları görmek için önce misafir sayısını seçin.",
+      loadingText: "🔥 En iyi mevcut fırsatlar aranıyor…",
+      resultsTitle: "2. Mevcut fırsatlar",
+      resultsText: "Seçenekleri hızlıca daraltmak için filtreleri kullanın.",
+      emptyText:
+        "Mevcut fırsatları yüklemek için önce 2, 3 veya 4 misafir seçin.",
+    },
+  },
+
+  reviews: {
+    ...homePageEn.reviews,
+    kicker: "Misafir yorumları",
+    title: "Misafirlerimiz ne söylüyor?",
+  },
+
+  amenities: {
+    kicker: "Olanaklar",
+    icon: "🛋️",
+    title: "Rahat bir konaklama için ihtiyacınız olan her şey",
+    items: [
+      { icon: "📶", label: "Wi-Fi / İnternet" },
+      { icon: "❄️", label: "Klima" },
+      { icon: "🔥", label: "Isıtma" },
+      { icon: "📺", label: "TV" },
+      { icon: "🧊", label: "Buzdolabı" },
+      { icon: "☕", label: "Kahve / Çay" },
+      { icon: "🧼", label: "Günlük temizlik" },
+      { icon: "🌿", label: "Bahçe ve dinlenme alanı" },
+      { icon: "🍖", label: "Barbekü alanı" },
+      { icon: "🚗", label: "Otopark" },
+      { icon: "🚕", label: "Transfer mümkün" },
+      { icon: "🏡", label: "Otantik misafirperverlik" },
+    ],
+  },
+
+  traveler: {
+    ...homePageEn.traveler,
+    kicker: "Sakız’ı keşfedin",
+    title: "Nasıl bir gezginsiniz?",
+    subtitle:
+      "Size uygun deneyimi seçin ve Sakız Adası’nı seyahat tarzınıza göre keşfedin.",
+    cards: [
+      {
+        ...homePageEn.traveler.cards[0],
+        title: "Deniz",
+        text: "Kristal sular, özel plajlar ve adada huzurlu anlar.",
+        cta: "🏖️ Keşfet",
+      },
+      {
+        ...homePageEn.traveler.cards[1],
+        title: "Keşif",
+        text: "Sakız’ın her köşesinde köyler, doğa ve kültür.",
+        cta: "🧭 Keşfet",
+      },
+      {
+        ...homePageEn.traveler.cards[2],
+        title: "Aile",
+        text: "Unutulmaz aile tatilleri için fikirler ve aktiviteler.",
+        cta: "👨‍👩‍👧‍👦 Keşfet",
+      },
+      {
+        ...homePageEn.traveler.cards[3],
+        title: "Lezzet",
+        text: "Otantik tatlar, damla sakızı ve yerel deneyimler.",
+        cta: "🍽️ Keşfet",
+      },
+    ],
+  },
+
+  chiosGuide: {
+    ...homePageEn.chiosGuide,
+    kicker: "Sakız hakkında daha fazla",
+    title: "Sakız Adası’nda ne görülür?",
+    subtitle:
+      "Konaklamanızı ve gezilerinizi daha kolay planlamanız için faydalı bilgileri bir araya getirdik.",
+    cards: homePageEn.chiosGuide.cards.map((card) => ({
+      ...card,
+      ctaLabel: "Daha fazla gör",
+    })),
+  },
+
+  quizBar: {
+    label: "SAKIZ’I KEŞFET",
+    text: "Bu testi 5 dakikada tamamlayın, Sakız’ı keşfedin ve indirim kodu alın.",
+    href: "/tr/sakiz-adasi-tatil-testi/",
+    cta: "🧭 DENEYİME BAŞLA →",
+  },
+
+  faq: {
+    kicker: "Sık sorulan sorular",
+    icon: "❓",
+    title: "Rezervasyon öncesi bilmeniz gerekenler",
+    items: [
+      {
+        question: "Voulamandis House bir otel mi?",
+        answerHtml:
+          "Voulamandis House, Kampos, Sakız Adası’nda odalar ve daireler sunan bir konaklama tesisidir. Sakız Adası’nda otel arıyor ama daha sakin ve kişisel bir misafirperverlik istiyorsanız, otantik bir alternatiftir.",
+      },
+      {
+        question: "Voulamandis House tam olarak nerede?",
+        answerHtml:
+          "Tesis, tarihi <strong>Kampos, Sakız</strong> bölgesinde yer alır. Havaalanına yaklaşık 7 dakika, limana ve şehir merkezine yaklaşık 14 dakika sürüş mesafesindedir.",
+      },
+      {
+        question: "Kahvaltı var mı?",
+        answerHtml:
+          "Evet, bahçede ev yapımı kahvaltı sunulur ve çiftliğimizden ürünler kullanılır. Kahvaltı isteğe bağlıdır ve talep üzerine hazırlanır.",
+      },
+      {
+        question: "Aileler için hangi odalar uygundur?",
+        answerHtml:
+          "4 kişiye kadar aileler için <strong>aile dairelerini</strong> öneriyoruz. Müsaitliğe bağlı olarak iki oda kombinasyonu da daha büyük gruplar için uygun olabilir.",
+      },
+      {
+        question: "Otopark var mı?",
+        answerHtml:
+          "Evet, tesis içinde otopark vardır. Ayrıca tesisin yanındaki sakin sokakta da park etmek kolaydır.",
+      },
+      {
+        question: "Nasıl direkt rezervasyon yapabilirim?",
+        answerHtml:
+          "Web sitemiz üzerinden direkt rezervasyon yapabilir veya konaklamanız için en uygun odayı birlikte seçmek üzere bizimle iletişime geçebilirsiniz.",
+      },
+    ],
+  },
+
+  finalCta: {
+    kicker: "Konaklamanızı ayırtın",
+    icon: "✈️",
+    title: "Sakız Adası yolculuğunuz burada başlar",
+    text: "Samimi misafirperverlik, otantik atmosfer ve Kampos’ta ideal konum.",
+    primaryCta: {
+      label: "Direkt rezervasyon",
+      href: "/tr/direkt-rezervasyon-voulamandis-house/",
+      icon: "🛎️",
+    },
+    secondaryCta: {
+      label: "İletişim",
+      href: "/tr/iletisim-voulamandis-house/",
+      icon: "✉️",
+    },
+  },
+
+  mobileSticky: {
+    call: {
+      label: "📞 ARA",
+      href: "tel:+306944764654",
+    },
+    viber: {
+      label: "💬 VIBER",
+      href: "viber://chat?number=%2B306944474226",
+    },
+  },
+};

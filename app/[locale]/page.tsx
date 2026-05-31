@@ -1,7 +1,16 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { HomePage } from "@/components/home/HomePage";
-import { homePageEl, homePageEn } from "@/content/home";
+import {
+  homePageDe,
+  homePageEl,
+  homePageEn,
+  homePageEs,
+  homePageFr,
+  homePageIt,
+  homePageTr,
+} from "@/content/home";
+import type { HomePageData } from "@/content/home";
 import { buildPageMetadata } from "@/lib/seo";
 import { defaultLanguage, isLanguageCode, languages } from "@/lib/languages";
 
@@ -15,10 +24,20 @@ const localizedLanguages = languages.filter(
   (language) => language.code !== defaultLanguage,
 );
 
-function getLocalizedHomePageData(locale: string) {
+function getLocalizedHomePageData(locale: string): HomePageData {
   switch (locale) {
     case "el":
       return homePageEl;
+    case "fr":
+      return homePageFr;
+    case "de":
+      return homePageDe;
+    case "it":
+      return homePageIt;
+    case "es":
+      return homePageEs;
+    case "tr":
+      return homePageTr;
     default:
       return homePageEn;
   }
