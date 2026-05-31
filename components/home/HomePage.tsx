@@ -1,7 +1,6 @@
 "use client";
 
-import Script from "next/script";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { HomePageData } from "@/content/home";
 
 type HomePageProps = {
@@ -14,6 +13,26 @@ function HtmlText({ html }: { html: string }) {
 
 export function HomePage({ data }: HomePageProps) {
   const [isMapLoaded, setIsMapLoaded] = useState(false);
+  const reviewsRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!reviewsRef.current) {
+      return;
+    }
+
+    reviewsRef.current.innerHTML = "";
+
+    const script = document.createElement("script");
+    script.src = data.reviews.trustindexLoaderUrl;
+    script.async = true;
+    script.defer = true;
+
+    reviewsRef.current.appendChild(script);
+  }, [data.reviews.trustindexLoaderUrl]);
+
+  function loadMap() {
+    setIsMapLoaded(true);
+  }
 
   return (
     <>
@@ -157,38 +176,39 @@ export function HomePage({ data }: HomePageProps) {
 
             <div className="bento">
               <article className="b-card b7">
-                {!isMapLoaded ? (
-                  <div
-                    className="map-preview"
-                    role="button"
-                    tabIndex={0}
-                    aria-controls="mapIframe"
-                    aria-label="Show interactive map"
-                    style={{
-                      backgroundImage: `linear-gradient(to top, rgba(0,0,0,.36), rgba(0,0,0,.05)), url("${data.location.map.previewImage}")`,
-                    }}
-                    onClick={() => setIsMapLoaded(true)}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter" || event.key === " ") {
-                        event.preventDefault();
-                        setIsMapLoaded(true);
-                      }
-                    }}
+                <div
+                  className={`map-preview ${isMapLoaded ? "is-hidden" : ""}`}
+                  id="mapPreview"
+                  role="button"
+                  tabIndex={0}
+                  aria-controls="mapIframe"
+                  aria-label="Show interactive map"
+                  onClick={loadMap}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      loadMap();
+                    }
+                  }}
+                >
+                  <button
+                    className="vh-btn vh-btn--primary"
+                    id="mapLoadBtn"
+                    type="button"
+                    onClick={loadMap}
                   >
-                    <button className="vh-btn vh-btn--primary" type="button">
-                      <span aria-hidden="true">📍</span> {data.location.map.buttonLabel}
-                    </button>
-                  </div>
-                ) : (
-                  <iframe
-                    id="mapIframe"
-                    className="map-iframe is-visible"
-                    title="Voulamandis House location map"
-                    src={data.location.map.iframeSrc}
-                    loading="lazy"
-                    allowFullScreen
-                  />
-                )}
+                    <span aria-hidden="true">📍</span> {data.location.map.buttonLabel}
+                  </button>
+                </div>
+
+                <iframe
+                  id="mapIframe"
+                  className={`map-iframe ${isMapLoaded ? "is-visible" : ""}`}
+                  title="Voulamandis House location map"
+                  src={isMapLoaded ? data.location.map.iframeSrc : undefined}
+                  loading="lazy"
+                  allowFullScreen
+                />
 
                 <div className="distance-badge">
                   {data.location.distances.map((distance) => (
@@ -205,7 +225,7 @@ export function HomePage({ data }: HomePageProps) {
 
                 <h3
                   style={{
-                    fontFamily: "Georgia, serif",
+                    fontFamily: "Georgia,serif",
                     fontSize: 26,
                     color: "#8E6607",
                     margin: "10px 0",
@@ -269,7 +289,7 @@ export function HomePage({ data }: HomePageProps) {
                 <h3
                   style={{
                     margin: "14px 0 10px",
-                    fontFamily: "Georgia, serif",
+                    fontFamily: "Georgia,serif",
                     fontSize: 28,
                     color: "#8E6607",
                     lineHeight: 1.1,
@@ -309,10 +329,23 @@ export function HomePage({ data }: HomePageProps) {
                     {data.location.discount.formIntro}
                   </p>
 
-                  <form>
+                  <form id="discountCodeForm" noValidate>
+                    <input type="hidden" name="lang" value="en" />
+
                     <label className="sr-only" htmlFor="dc_email">
                       Your email
                     </label>
+
+                    <div className="vh-honeypot" aria-hidden="true">
+                      <label htmlFor="dc_honeypot">Do not fill this field</label>
+                      <input
+                        type="text"
+                        id="dc_honeypot"
+                        name="honeypot"
+                        tabIndex={-1}
+                        autoComplete="off"
+                      />
+                    </div>
 
                     <div className="form-row">
                       <input
@@ -327,16 +360,26 @@ export function HomePage({ data }: HomePageProps) {
                         aria-label="Your email"
                       />
 
-                      <button type="submit" className="vh-btn vh-btn--primary">
+                      <button type="submit" className="vh-btn vh-btn--primary" id="dc_submitBtn">
                         <span aria-hidden="true">✉️</span> {data.location.discount.submitLabel}
                       </button>
                     </div>
 
                     <div className="discount-consent">
                       <label>
-                        <input type="checkbox" required /> {data.location.discount.consent}
+                        <input type="checkbox" id="dc_gdpr" required />{" "}
+                        {data.location.discount.consent}
                       </label>
                     </div>
+
+                    <div id="discountSuccess" className="discount-success" aria-live="polite">
+                      <div id="discountSuccessText">{data.location.discount.successText}</div>
+                      <div id="discountCodeValue" className="discount-code-value">
+                        {data.location.discount.defaultCode}
+                      </div>
+                    </div>
+
+                    <div id="discountFeedback" className="discount-error" aria-live="polite" />
                   </form>
                 </div>
               </article>
@@ -450,59 +493,84 @@ export function HomePage({ data }: HomePageProps) {
             </header>
           </div>
 
-          <div className="lm-widget">
+          <div className="lm-widget" id="lmDealsWidget">
             <div className="lm-shell">
               <div className="lm-panel">
-                <div id="deals-app">
-                  <section className="rb-hero" aria-label="Accommodation deals in Chios">
-                    <div className="rb-hero-top">
-                      <div className="rb-hero-head">
-                        <h2 className="rb-title">{data.lastMinute.widget.title}</h2>
-                        <p className="rb-subtitle">{data.lastMinute.widget.subtitle}</p>
-                        <div className="rb-trust-line">{data.lastMinute.widget.trustLine}</div>
-                      </div>
+                <div id="lmDealsContent">
+                  <div id="deals-app">
+                    <section className="rb-hero" aria-label="Accommodation deals in Chios">
+                      <div className="rb-hero-top">
+                        <div className="rb-hero-head">
+                          <h2 className="rb-title">{data.lastMinute.widget.title}</h2>
+                          <p className="rb-subtitle">{data.lastMinute.widget.subtitle}</p>
+                          <div className="rb-trust-line">{data.lastMinute.widget.trustLine}</div>
+                        </div>
 
-                      <div className="rb-hero-actions">
-                        <div className="rb-hero-timer">
-                          <p className="rb-hero-timer-label">{data.lastMinute.widget.timerLabel}</p>
-                          <p className="rb-hero-timer-value">00:00:00</p>
+                        <div className="rb-hero-actions">
+                          <div className="rb-hero-timer">
+                            <p className="rb-hero-timer-label">
+                              {data.lastMinute.widget.timerLabel}
+                            </p>
+                            <p className="rb-hero-timer-value" id="lmCountdown">
+                              00:00:00
+                            </p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </section>
+                    </section>
 
-                  <section className="rb-search-card" aria-label="Guest selection">
-                    <div className="rb-section-head">
-                      <div>
-                        <h3>{data.lastMinute.widget.guestTitle}</h3>
-                        <p>{data.lastMinute.widget.guestText}</p>
+                    <section className="rb-search-card" aria-label="Guest selection">
+                      <div className="rb-section-head">
+                        <div>
+                          <h3>{data.lastMinute.widget.guestTitle}</h3>
+                          <p>{data.lastMinute.widget.guestText}</p>
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="rb-guest-row">
-                      {data.lastMinute.widget.guestButtons.map((button) => (
-                        <button className="rb-guest-btn" type="button" key={button.value}>
-                          {button.label}
-                        </button>
-                      ))}
-                    </div>
-
-                    <div className="rb-helper">{data.lastMinute.widget.helper}</div>
-                  </section>
-
-                  <section className="rb-results-wrap is-visible" aria-label="Deal results">
-                    <div className="rb-section-head">
-                      <div>
-                        <h3>{data.lastMinute.widget.resultsTitle}</h3>
-                        <p>{data.lastMinute.widget.resultsText}</p>
+                      <div className="rb-guest-row">
+                        {data.lastMinute.widget.guestButtons.map((button) => (
+                          <button
+                            className="rb-guest-btn"
+                            data-guests={button.value}
+                            type="button"
+                            key={button.value}
+                          >
+                            <span aria-hidden="true">👤</span> ×{button.value}
+                          </button>
+                        ))}
                       </div>
-                      <div className="rb-results-meta">First select guests.</div>
-                    </div>
 
-                    <div>
-                      <div className="rb-empty">{data.lastMinute.widget.emptyText}</div>
-                    </div>
-                  </section>
+                      <div className="rb-helper">{data.lastMinute.widget.helper}</div>
+
+                      <div id="loadingBox" className="rb-loading" style={{ display: "none" }}>
+                        {data.lastMinute.widget.loadingText}
+                      </div>
+                    </section>
+
+                    <section
+                      className="rb-results-wrap is-visible"
+                      id="resultsSection"
+                      aria-label="Deal results"
+                    >
+                      <div className="rb-section-head">
+                        <div>
+                          <h3>{data.lastMinute.widget.resultsTitle}</h3>
+                          <p>{data.lastMinute.widget.resultsText}</p>
+                        </div>
+                        <div id="resultsMeta" className="rb-results-meta">
+                          First select guests.
+                        </div>
+                      </div>
+
+                      <div id="filterBar" className="rb-filter-row" />
+
+                      <div id="resultsGrid">
+                        <div className="rb-empty">{data.lastMinute.widget.emptyText}</div>
+                      </div>
+
+                      <div id="updatedAt" className="rb-updated" />
+                    </section>
+                  </div>
                 </div>
               </div>
             </div>
@@ -520,9 +588,11 @@ export function HomePage({ data }: HomePageProps) {
                 {data.reviews.title}
               </h2>
 
-              <div className="vh-reviews-widget" style={{ textAlign: "center" }}>
-                <Script src={data.reviews.trustindexLoaderUrl} strategy="lazyOnload" />
-              </div>
+              <div
+                ref={reviewsRef}
+                className="vh-reviews-widget"
+                style={{ textAlign: "center" }}
+              />
             </div>
           </div>
         </section>
