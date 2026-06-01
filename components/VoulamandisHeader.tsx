@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { usePathname } from "next/navigation";
 import { useMemo, useState } from "react";
@@ -131,6 +131,16 @@ const chiosIslandPaths: Record<LanguageCode, string> = {
   it: "/it/chios-lisola-in-grecia/",
   es: "/es/chios-en-grecia/",
   tr: "/tr/sakiz-adasi/",
+};
+
+const quizPaths: Record<LanguageCode, string> = {
+  en: "/chios-holidays-quiz/",
+  el: "/el/diakopes-sti-chio-quiz/",
+  fr: "/fr/quiz-vacances-a-chios/",
+  de: "/de/chios-urlaubsquiz/",
+  it: "/it/quiz-vacanze-a-chios/",
+  es: "/es/quiz-vacaciones-en-quios/",
+  tr: "/tr/sakiz-adasi-tatil-testi/",
 };
 
 const beachPaths: Record<LanguageCode, string> = {
@@ -764,6 +774,8 @@ function getLanguageHref(path: string, language: LanguageCode) {
 
   const isContactPage = Object.values(contactPaths).includes(normalizedPath);
 
+  const isQuizPage = Object.values(quizPaths).includes(normalizedPath);
+
   const isChiosIslandPage =
     Object.values(chiosIslandPaths).includes(normalizedPath);
 
@@ -806,6 +818,10 @@ function getLanguageHref(path: string, language: LanguageCode) {
 
   if (isContactPage) {
     return contactPaths[language];
+  }
+
+  if (isQuizPage) {
+    return quizPaths[language];
   }
 
   if (isChiosIslandPage) {
