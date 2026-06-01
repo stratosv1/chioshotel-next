@@ -10,6 +10,7 @@ import { VillageDetailPage } from "@/components/chios/VillageDetailPage";
 import { MuseumDetailPage } from "@/components/chios/MuseumDetailPage";
 import { BeachLoversPage } from "@/components/landing/BeachLoversPage";
 import FamilyTravelPage from "@/components/landing/FamilyTravelPage";
+import TasteLoverPage from "@/components/landing/TasteLoverPage";
 import { RoomsCategoryPage } from "@/components/rooms/RoomsCategoryPage";
 import { RoomDetailPage } from "@/components/rooms/RoomDetailPage";
 import { DealsPage } from "@/components/deals/DealsPage";
@@ -33,6 +34,7 @@ import { getLocalizedChiosMuseumsPageByPath } from "@/content/chios-museums";
 import { buildChiosMuseumsSchema } from "@/content/chios-museums-schema";
 import { getBeachLoversPageByPath } from "@/content/beach-lovers";
 import { getFamilyTravelPageByPath } from "@/content/family-travel";
+import { getTasteLoverPageByPath } from "@/content/taste-lover";
 import {
   roomsCategoryDe,
   roomsCategoryEl,
@@ -396,6 +398,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     });
   }
 
+  const tasteLoverData = getTasteLoverPageByPath(requestedPath);
+
+  if (tasteLoverData) {
+    return buildLocalizedPageMetadata({
+      path: tasteLoverData.path,
+      title: tasteLoverData.seo.title,
+      description: tasteLoverData.seo.description,
+      image: tasteLoverData.seo.image,
+    });
+  }
+
   const route = getRouteByPath(requestedPath);
 
   if (route?.itemId === "chios-quiz" && route.action === "KEEP") {
@@ -542,6 +555,12 @@ export default async function Page({ params }: PageProps) {
 
   if (familyTravelData) {
     return <FamilyTravelPage data={familyTravelData} />;
+  }
+
+  const tasteLoverData = getTasteLoverPageByPath(requestedPath);
+
+  if (tasteLoverData) {
+    return <TasteLoverPage data={tasteLoverData} />;
   }
 
   const route = getRouteByPath(requestedPath);
