@@ -5,6 +5,63 @@ type RatesPageProps = {
   data: RatesPageData;
 };
 
+type RatesUiText = {
+  directBookingCode: string;
+  discountCodeAriaLabel: string;
+  yourDiscountCode: string;
+  openBooking: string;
+};
+
+const ratesUiByLocale: Record<string, RatesUiText> = {
+  en: {
+    directBookingCode: "Exclusive direct booking code",
+    discountCodeAriaLabel: "Direct booking discount code",
+    yourDiscountCode: "Your discount code",
+    openBooking: "Open booking",
+  },
+  el: {
+    directBookingCode: "Αποκλειστικός κωδικός απευθείας κράτησης",
+    discountCodeAriaLabel: "Κωδικός έκπτωσης για απευθείας κράτηση",
+    yourDiscountCode: "Ο κωδικός έκπτωσής σας",
+    openBooking: "Άνοιγμα κράτησης",
+  },
+  fr: {
+    directBookingCode: "Code exclusif pour réservation directe",
+    discountCodeAriaLabel: "Code de réduction pour réservation directe",
+    yourDiscountCode: "Votre code de réduction",
+    openBooking: "Ouvrir la réservation",
+  },
+  de: {
+    directBookingCode: "Exklusiver Code für Direktbuchungen",
+    discountCodeAriaLabel: "Rabattcode für Direktbuchungen",
+    yourDiscountCode: "Ihr Rabattcode",
+    openBooking: "Buchung öffnen",
+  },
+  it: {
+    directBookingCode: "Codice esclusivo per prenotazione diretta",
+    discountCodeAriaLabel: "Codice sconto per prenotazione diretta",
+    yourDiscountCode: "Il tuo codice sconto",
+    openBooking: "Apri prenotazione",
+  },
+  es: {
+    directBookingCode: "Código exclusivo para reserva directa",
+    discountCodeAriaLabel: "Código de descuento para reserva directa",
+    yourDiscountCode: "Tu código de descuento",
+    openBooking: "Abrir reserva",
+  },
+  tr: {
+    directBookingCode: "Doğrudan rezervasyon için özel kod",
+    discountCodeAriaLabel: "Doğrudan rezervasyon indirim kodu",
+    yourDiscountCode: "İndirim kodunuz",
+    openBooking: "Rezervasyonu aç",
+  },
+};
+
+function getRatesLocale(path: string) {
+  const locale = path.split("/").filter(Boolean)[0];
+  return locale && ratesUiByLocale[locale] ? locale : "en";
+}
+
 function renderSeoParagraph(text: string, links: RatesPageData["seoCopy"]["links"]): ReactNode[] {
   const parts: ReactNode[] = [text];
 
@@ -36,6 +93,8 @@ function renderSeoParagraph(text: string, links: RatesPageData["seoCopy"]["links
 }
 
 export function RatesPage({ data }: RatesPageProps) {
+  const ui = ratesUiByLocale[getRatesLocale(data.seo.canonicalPath)];
+
   return (
     <main className="rates-page">
       <section className="rates-hero" aria-labelledby="rates-hero-title">
@@ -82,15 +141,15 @@ export function RatesPage({ data }: RatesPageProps) {
             <div className="rates-discount-highlight">
               <div>
                 <strong>{data.discount.value}</strong>
-                <span>Exclusive direct booking code</span>
+                <span>{ui.directBookingCode}</span>
               </div>
               <div className="rates-discount-icon" aria-hidden="true">
                 🎁
               </div>
             </div>
 
-            <div className="rates-code-box" aria-label="Direct booking discount code">
-              <span>Your discount code</span>
+            <div className="rates-code-box" aria-label={ui.discountCodeAriaLabel}>
+              <span>{ui.yourDiscountCode}</span>
               <strong>{data.discount.code}</strong>
             </div>
 
@@ -118,7 +177,7 @@ export function RatesPage({ data }: RatesPageProps) {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Open booking
+                {ui.openBooking}
               </a>
             </header>
 
