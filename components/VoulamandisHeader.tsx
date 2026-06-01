@@ -103,6 +103,16 @@ const ratesPaths: Record<LanguageCode, string> = {
   tr: "/tr/sakiz-adasi-rezervasyon/",
 };
 
+const dealsPaths: Record<LanguageCode, string> = {
+  en: "/best-chios-travel-deals-for-chios-hotels/",
+  el: "/el/crazy-travel-deals-for-chios-hotels/",
+  fr: "/fr/offres-de-voyage-pour-les-hotels-a-chios/",
+  de: "/de/beste-reiseangebote-fur-chios-hotels-auf-chios/",
+  it: "/it/offerte-di-viaggio-hotels-chios/",
+  es: "/es/mejores-ofertas-de-viaje-a-quios-para-hoteles-en-quios/",
+  tr: "/tr/sakiz-adasi-otel-firsatlari/",
+};
+
 const contactPaths: Record<LanguageCode, string> = {
   en: "/voulamandis-house-contact-us-form-fill-in-the-form/",
   el: "/el/epikoinonia-voulamandis-house/",
@@ -377,6 +387,7 @@ const navigationCopy: Record<
     rooms: string;
     rates: string;
     ratesAvailability: string;
+    deals: string;
     chiosIsland: string;
     beaches: string;
     villages: string;
@@ -414,6 +425,7 @@ const navigationCopy: Record<
     rooms: "Rooms",
     rates: "Rates",
     ratesAvailability: "Rates & Availability",
+    deals: "Deals",
     chiosIsland: "Chios Island",
     beaches: "Beaches",
     villages: "Villages",
@@ -450,6 +462,7 @@ const navigationCopy: Record<
     rooms: "Δωμάτια",
     rates: "Τιμές",
     ratesAvailability: "Τιμές & Διαθεσιμότητα",
+    deals: "Προσφορές",
     chiosIsland: "Χίος",
     beaches: "Παραλίες",
     villages: "Χωριά",
@@ -486,6 +499,7 @@ const navigationCopy: Record<
     rooms: "Chambres",
     rates: "Tarifs",
     ratesAvailability: "Tarifs & Disponibilité",
+    deals: "Offres",
     chiosIsland: "Île de Chios",
     beaches: "Plages",
     villages: "Villages",
@@ -522,6 +536,7 @@ const navigationCopy: Record<
     rooms: "Zimmer",
     rates: "Preise",
     ratesAvailability: "Preise & Verfügbarkeit",
+    deals: "Angebote",
     chiosIsland: "Insel Chios",
     beaches: "Strände",
     villages: "Dörfer",
@@ -558,6 +573,7 @@ const navigationCopy: Record<
     rooms: "Camere",
     rates: "Prezzi",
     ratesAvailability: "Prezzi & Disponibilità",
+    deals: "Offerte",
     chiosIsland: "Isola di Chios",
     beaches: "Spiagge",
     villages: "Villaggi",
@@ -594,6 +610,7 @@ const navigationCopy: Record<
     rooms: "Habitaciones",
     rates: "Precios",
     ratesAvailability: "Precios & Disponibilidad",
+    deals: "Ofertas",
     chiosIsland: "Isla de Chios",
     beaches: "Playas",
     villages: "Pueblos",
@@ -630,6 +647,7 @@ const navigationCopy: Record<
     rooms: "Odalar",
     rates: "Fiyatlar",
     ratesAvailability: "Fiyatlar & Müsaitlik",
+    deals: "Fırsatlar",
     chiosIsland: "Sakız Adası",
     beaches: "Plajlar",
     villages: "Köyler",
@@ -742,6 +760,8 @@ function getLanguageHref(path: string, language: LanguageCode) {
 
   const isRatesPage = Object.values(ratesPaths).includes(normalizedPath);
 
+  const isDealsPage = Object.values(dealsPaths).includes(normalizedPath);
+
   const isContactPage = Object.values(contactPaths).includes(normalizedPath);
 
   const isChiosIslandPage =
@@ -780,6 +800,10 @@ function getLanguageHref(path: string, language: LanguageCode) {
     return ratesPaths[language];
   }
 
+  if (isDealsPage) {
+    return dealsPaths[language];
+  }
+
   if (isContactPage) {
     return contactPaths[language];
   }
@@ -805,6 +829,18 @@ function getLanguageHref(path: string, language: LanguageCode) {
     normalizedPath.startsWith("/chios-rooms/")
   ) {
     return roomsCategoryPaths[language];
+  }
+
+  if (
+    normalizedPath === "/best-chios-travel-deals-for-chios-hotels/" ||
+    normalizedPath === "/el/crazy-travel-deals-for-chios-hotels/" ||
+    normalizedPath === "/fr/offres-de-voyage-pour-les-hotels-a-chios/" ||
+    normalizedPath === "/de/beste-reiseangebote-fur-chios-hotels-auf-chios/" ||
+    normalizedPath === "/it/offerte-di-viaggio-hotels-chios/" ||
+    normalizedPath === "/es/mejores-ofertas-de-viaje-a-quios-para-hoteles-en-quios/" ||
+    normalizedPath === "/tr/sakiz-adasi-otel-firsatlari/"
+  ) {
+    return dealsPaths[language];
   }
 
   if (
@@ -878,6 +914,10 @@ function getMainLinks(language: LanguageCode) {
     {
       label: copy.rates,
       href: ratesPaths[language],
+    },
+    {
+      label: copy.deals,
+      href: dealsPaths[language],
     },
     {
       label: copy.chiosIsland,
@@ -1059,6 +1099,10 @@ export function VoulamandisHeader() {
 
               <a href={ratesPaths[currentLanguage]} onClick={closeMenu}>
                 {copy.ratesAvailability}
+              </a>
+
+              <a href={dealsPaths[currentLanguage]} onClick={closeMenu}>
+                {copy.deals}
               </a>
 
               <a href={contactPaths[currentLanguage]} onClick={closeMenu}>

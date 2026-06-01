@@ -4,6 +4,7 @@ import { ChiosIslandPage } from "@/components/chios/ChiosIslandPage";
 import { ChiosBeachesPage } from "@/components/chios/ChiosBeachesPage";
 import { ChiosVillagesPage } from "@/components/chios/ChiosVillagesPage";
 import { ChiosMuseumsPage } from "@/components/chios/ChiosMuseumsPage";
+import { ChiosHolidayQuizPage } from "@/components/chios/ChiosHolidayQuizPage";
 import { BeachDetailPage } from "@/components/chios/BeachDetailPage";
 import { VillageDetailPage } from "@/components/chios/VillageDetailPage";
 import { MuseumDetailPage } from "@/components/chios/MuseumDetailPage";
@@ -369,6 +370,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     });
   }
 
+  const route = getRouteByPath(requestedPath);
+
+  if (route?.itemId === "chios-quiz" && route.action === "KEEP") {
+    return buildLocalizedPageMetadata({
+      path: route.path,
+      title: "Chios Holiday Quiz | Voulamandis House",
+      description:
+        "Take the Chios Holiday Quiz by Voulamandis House, discover hidden island secrets and get a special discount code for your stay.",
+      image: "/images/voulamandis-house-og.jpg",
+    });
+  }
+
   return {};
 }
 
@@ -497,6 +510,10 @@ export default async function Page({ params }: PageProps) {
 
   if (!route || route.action !== "KEEP") {
     notFound();
+  }
+
+  if (route.itemId === "chios-quiz") {
+    return <ChiosHolidayQuizPage locale={locale} />;
   }
 
   const englishRoute = getRoutesByItemId(route.itemId).find(
