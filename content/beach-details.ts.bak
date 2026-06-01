@@ -4005,7 +4005,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
   {
     slug: "paralia-mavra-volia-emporios",
     seo: {
-      canonicalPath: "/el/paralies-xios/paralia-mavra-volia/",
+      canonicalPath: "/el/paralies-xios/paralia-mavra-volia-emporios/",
       title: "Μαύρα Βόλια Εμπορειός Χίος | Το απόλυτο ηφαιστειακό τοπίο",
       description:
         "Εξερευνήστε την παραλία Μαύρα Βόλια στον Εμπορειό της νότιας Χίου, την εμβληματική ηφαιστειακή παραλία του νησιού με μαύρα βότσαλα, τρεις κόλπους, βαθιά δροσερά νερά και άγριους βράχους.",
@@ -4074,7 +4074,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
   {
     slug: "plage-mavra-volia-emporios",
     seo: {
-      canonicalPath: "/fr/plages-de-chios/plage-mavra-volia/",
+      canonicalPath: "/fr/plages-de-chios/plage-mavra-volia-emporios/",
       title: "Plage Mavra Volia Emporios Chios | Paysage volcanique unique",
       description:
         "Explorez la plage de Mavra Volia à Emporios, au sud de Chios, la plage volcanique emblématique de l’île avec galets noirs, trois baies, eaux profondes et falaises sauvages.",
@@ -4143,7 +4143,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
   {
     slug: "mavra-volia-emporios-strand",
     seo: {
-      canonicalPath: "/de/straende-chios/mavra-volia-strand/",
+      canonicalPath: "/de/straende-chios/mavra-volia-emporios-strand/",
       title: "Mavra Volia Emporios Strand Chios | Einzigartige Vulkanlandschaft",
       description:
         "Entdecken Sie den Mavra Volia Strand bei Emporios im Süden von Chios, den ikonischen Vulkanstrand der Insel mit schwarzen Kieseln, drei Buchten, tiefem kühlem Wasser und wilden Klippen.",
@@ -4212,7 +4212,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
   {
     slug: "spiaggia-mavra-volia-emporios",
     seo: {
-      canonicalPath: "/it/spiagge-chios/spiaggia-mavra-volia/",
+      canonicalPath: "/it/spiagge-chios/spiaggia-mavra-volia-emporios/",
       title: "Spiaggia Mavra Volia Emporios Chios | Paesaggio vulcanico unico",
       description:
         "Esplora la spiaggia Mavra Volia a Emporios, nel sud di Chios, l’iconica spiaggia vulcanica dell’isola con ciottoli neri, tre baie, acque profonde e fresche e scogliere selvagge.",
@@ -4281,7 +4281,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
   {
     slug: "playa-mavra-volia-emporios",
     seo: {
-      canonicalPath: "/es/playas-chios/playa-mavra-volia/",
+      canonicalPath: "/es/playas-chios/playa-mavra-volia-emporios/",
       title: "Playa Mavra Volia Emporios Chios | Paisaje volcánico único",
       description:
         "Explora la playa Mavra Volia en Emporios, al sur de Chios, la playa volcánica icónica de la isla con guijarros negros, tres bahías, aguas profundas y frescas y acantilados salvajes.",
@@ -4350,7 +4350,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
   {
     slug: "mavra-volia-emporios-plaji",
     seo: {
-      canonicalPath: "/tr/sakiz-adasi-plajlari/mavra-volia-plaji/",
+      canonicalPath: "/tr/sakiz-adasi-plajlari/mavra-volia-emporios-plaji/",
       title: "Mavra Volia Emporios Plajı Sakız Adası | Eşsiz volkanik manzara",
       description:
         "Sakız Adası’nın güneyindeki Emporios Mavra Volia Plajı’nı keşfedin: siyah çakılları, üç koyu, derin serin suları ve vahşi kayalıklarıyla adanın ikonik volkanik plajı.",
