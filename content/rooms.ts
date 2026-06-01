@@ -1010,7 +1010,6 @@ export const roomsCategoryEs: RoomsCategoryPageData = {
     })),
   },
 };
-
 export const roomsCategoryTr: RoomsCategoryPageData = {
   ...roomsCategoryEn,
 
@@ -1052,7 +1051,7 @@ export const roomsCategoryTr: RoomsCategoryPageData = {
       subtitle: "2 misafir için en avantajlı seçenek",
       description:
         "2 misafir için en iyi fiyat-performans seçeneği. Temel ihtiyaçlara sahip, yenilenmiş 16m² odalar ve huzurlu bir Kampos atmosferi.",
-      href: "/tr/sakiz-adasi-odalari/ekonomik-cift-kisilik-oda/",
+      href: "/tr/chios-odalari/sakiz-adasindaki-ekonomi-cift-kisilik-oda/",
       image:
         "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753964631359257.webp",
       imageAlt:
@@ -1067,7 +1066,7 @@ export const roomsCategoryTr: RoomsCategoryPageData = {
       subtitle: "Çift ve üç kişilik odalar",
       description:
         "Avluya ve bahçeye doğrudan erişimi olan çift ve üç kişilik odalar. Kolay erişim ve sakin bir açık hava atmosferi tercih edenler için ideal.",
-      href: "/tr/sakiz-adasi-odalari/cift-ve-uclu-odalar/",
+      href: "/tr/chios-odalari/standart-cift-kisilik-odalar/",
       image:
         "https://chioshotel.gr/wp-content/uploads/2022/12/double-triple-room.jpg",
       imageAlt:
@@ -1082,7 +1081,7 @@ export const roomsCategoryTr: RoomsCategoryPageData = {
       subtitle: "Çift ve üç kişilik odalar",
       description:
         "Ortak terasa erişimi olan ve narenciye bahçesine bakan aydınlık çift ve üç kişilik odalar. Daha ayrıcalıklı bir konaklama hissi sunar.",
-      href: "/tr/sakiz-adasi-odalari/cift-ve-uclu-odalar/",
+      href: "/tr/chios-odalari/standart-cift-kisilik-odalar/",
       image:
         "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07776-2-e1675109942622.webp",
       imageAlt:
@@ -1097,7 +1096,7 @@ export const roomsCategoryTr: RoomsCategoryPageData = {
       subtitle: "Mutfak ve oturma alanı",
       description:
         "Tam donanımlı mutfak ve oturma alanına sahip geniş 40–45m² daireler. Ev rahatlığı isteyen aileler ve küçük gruplar için mükemmel.",
-      href: "/tr/sakiz-adasi-odalari/aile-dairesi/",
+      href: "/tr/chios-odalari/sakiz-adasinda-buyuk-aile-daireleri/",
       image:
         "https://chioshotel.gr/wp-content/uploads/2022/12/chios-apartments-voulamandis.webp",
       imageAlt:
@@ -1112,28 +1111,16 @@ export const roomsCategoryTr: RoomsCategoryPageData = {
     icon: "💡",
     title: "Akıllı rezervasyon ipucu",
     textHtml:
-      "Doğrudan rezervasyonlarda <strong>indirim kodunuzu</strong> kullanın ve <strong>en iyi online fiyatı</strong> alın.",
+      "Unutmayın: doğrudan rezervasyonlarda <strong>indirim kodunuzu</strong> kullanın ve <strong>en iyi online fiyatı</strong> güvenceye alın.",
   },
 
   wizardIntro: {
-    title: "Ne seçeceğinizden emin değil misiniz? 🤔",
+    title: "Hangi odayı seçeceğinizden emin değil misiniz? 🤔",
     description:
-      "Yaklaşık 30 saniyede konaklamanız için en iyi seçeneği bulmak üzere akıllı oda bulucumuzu kullanın.",
+      "Yaklaşık 30 saniyede konaklamanız için en uygun seçeneği bulmak için akıllı Oda Sihirbazımızı kullanın.",
   },
 
   wizard: {
     ...roomsCategoryEn.wizard,
-    whatsappPhone: "306944474226",
-    rooms: roomsCategoryEn.wizard.rooms.map((room) => ({
-      ...room,
-      type:
-        room.type === "Economy double"
-          ? "Ekonomik çift kişilik oda"
-          : room.type === "Apartment"
-            ? "Aile dairesi"
-            : room.location === "Ground Floor"
-              ? "Zemin kat çift/üç kişilik oda"
-              : "Üst kat çift/üç kişilik oda",
-    })),
   },
 };
