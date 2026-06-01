@@ -305,4 +305,4 @@ export function MuseumDetailPage({ museum }: MuseumDetailPageProps) {
       </section>
     </main>
   );
-}
+} 
