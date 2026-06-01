@@ -545,7 +545,7 @@ export const roomsCategoryFr: RoomsCategoryPageData = {
       subtitle: "Meilleur rapport qualité-prix pour 2 personnes",
       description:
         "Le meilleur choix value pour 2 personnes. Chambres rénovées de 16m² avec les essentiels et une atmosphère paisible à Kampos.",
-      href: "/fr/chambres-a-chios/chambres-doubles-economiques/",
+      href: "/fr/chambres-a-chios/chambre-double-economique/",
       image:
         "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753964631359257.webp",
       imageAlt:
@@ -560,7 +560,7 @@ export const roomsCategoryFr: RoomsCategoryPageData = {
       subtitle: "Chambres doubles et triples",
       description:
         "Chambres doubles et triples avec accès direct à la cour et au jardin. Idéal pour un accès facile et une ambiance calme en plein air.",
-      href: "/fr/chambres-a-chios/chambres-doubles-standard/",
+      href: "/fr/chambres-a-chios/chambres-doubles-triples/",
       image:
         "https://chioshotel.gr/wp-content/uploads/2022/12/double-triple-room.jpg",
       imageAlt:
@@ -575,7 +575,7 @@ export const roomsCategoryFr: RoomsCategoryPageData = {
       subtitle: "Chambres doubles et triples",
       description:
         "Chambres lumineuses avec accès à une terrasse commune et vue sur le domaine d’agrumes. Une option plus premium et plus ouverte.",
-      href: "/fr/chambres-a-chios/chambres-doubles-standard/",
+      href: "/fr/chambres-a-chios/chambres-doubles-triples/",
       image:
         "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07776-2-e1675109942622.webp",
       imageAlt:
@@ -590,7 +590,7 @@ export const roomsCategoryFr: RoomsCategoryPageData = {
       subtitle: "Cuisine et espace salon",
       description:
         "Appartements spacieux de 40–45m² avec cuisine complète et coin salon. Parfaits pour les familles qui souhaitent plus d’espace et le confort d’un chez-soi.",
-      href: "/fr/chambres-a-chios/appartements-familiaux-de-chios/",
+      href: "/fr/chambres-a-chios/appartement-familial/",
       image:
         "https://chioshotel.gr/wp-content/uploads/2022/12/chios-apartments-voulamandis.webp",
       imageAlt:
@@ -672,7 +672,7 @@ export const roomsCategoryDe: RoomsCategoryPageData = {
       subtitle: "Preiswerte Option für 2 Gäste",
       description:
         "Unsere preiswerteste Unterkunft für 2 Gäste. Renovierte Zimmer mit ca. 16m² und allen wichtigen Annehmlichkeiten für einen angenehmen Aufenthalt im ruhigen Kampos von Chios.",
-      href: "/de/zimmer-chios/economy-zimmer-auf-chios/",
+      href: "/de/chios-zimmer/economy-doppelzimmer/",
       image:
         "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753964631359257.webp",
       imageAlt:
@@ -687,7 +687,7 @@ export const roomsCategoryDe: RoomsCategoryPageData = {
       subtitle: "Doppel- und Dreibettzimmer",
       description:
         "Zimmer mit direktem Zugang zum Innenhof und zum Garten. Ideal für Gäste, die eine ruhige Atmosphäre und einfachen Zugang ohne Treppen bevorzugen.",
-      href: "/de/zimmer-chios/standard-doppelzimmer-auf-chios/",
+      href: "/de/chios-zimmer/doppel-und-dreibettzimmer/",
       image:
         "https://chioshotel.gr/wp-content/uploads/2022/12/double-triple-room.jpg",
       imageAlt:
@@ -702,7 +702,7 @@ export const roomsCategoryDe: RoomsCategoryPageData = {
       subtitle: "Doppel- und Dreibettzimmer",
       description:
         "Helle Zimmer mit Zugang zu einer gemeinsamen Terrasse und Blick auf die historischen Zitrusgärten von Kampos. Eine etwas hochwertigere Unterkunft mit mehr Aussicht.",
-      href: "/de/zimmer-chios/standard-doppelzimmer-auf-chios/",
+      href: "/de/chios-zimmer/doppel-und-dreibettzimmer/",
       image:
         "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07776-2-e1675109942622.webp",
       imageAlt:
@@ -717,7 +717,7 @@ export const roomsCategoryDe: RoomsCategoryPageData = {
       subtitle: "Küche und Wohnbereich",
       description:
         "Geräumige Apartments mit 40–45m², voll ausgestatteter Küche und separatem Wohnbereich. Perfekt für Familien oder Gäste, die mehr Platz und Unabhängigkeit wünschen.",
-      href: "/de/zimmer-chios/familienapartments-in-chios/",
+      href: "/de/chios-zimmer/familienapartment/",
       image:
         "https://chioshotel.gr/wp-content/uploads/2022/12/chios-apartments-voulamandis.webp",
       imageAlt:
@@ -799,7 +799,7 @@ export const roomsCategoryIt: RoomsCategoryPageData = {
       subtitle: "Miglior rapporto qualità-prezzo per 2 ospiti",
       description:
         "La scelta con il miglior rapporto qualità-prezzo per 2 ospiti. Camere rinnovate di 16m² con servizi essenziali e la tranquilla atmosfera di Kampos.",
-      href: "/it/stanze-a-chios/camera-doppia-economica-chios/",
+      href: "/it/camere-a-chios/camera-doppia-economy/",
       image:
         "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753964631359257.webp",
       imageAlt:
@@ -814,7 +814,7 @@ export const roomsCategoryIt: RoomsCategoryPageData = {
       subtitle: "Camere doppie e triple",
       description:
         "Camere doppie e triple con accesso diretto al cortile e al giardino. Ideali se desideri comodità, accesso facile e un’atmosfera esterna rilassante.",
-      href: "/it/stanze-a-chios/camere-doppie-standard-chios/",
+      href: "/it/camere-a-chios/camere-doppie-triple/",
       image:
         "https://chioshotel.gr/wp-content/uploads/2022/12/double-triple-room.jpg",
       imageAlt:
@@ -829,7 +829,7 @@ export const roomsCategoryIt: RoomsCategoryPageData = {
       subtitle: "Camere doppie e triple",
       description:
         "Luminose camere doppie e triple con accesso a una terrazza condivisa e vista sulla tenuta agrumicola. Una soluzione più raffinata e suggestiva.",
-      href: "/it/stanze-a-chios/camere-doppie-standard-chios/",
+      href: "/it/camere-a-chios/camere-doppie-triple/",
       image:
         "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07776-2-e1675109942622.webp",
       imageAlt:
@@ -844,7 +844,7 @@ export const roomsCategoryIt: RoomsCategoryPageData = {
       subtitle: "Cucina e zona giorno",
       description:
         "Ampi appartamenti di 40–45m² con cucina completa e zona giorno, perfetti per famiglie e ospiti che desiderano il comfort di casa durante il soggiorno a Chios.",
-      href: "/it/stanze-a-chios/appartamenti-familiari-a-chios/",
+      href: "/it/camere-a-chios/appartamento-familiare/",
       image:
         "https://chioshotel.gr/wp-content/uploads/2022/12/chios-apartments-voulamandis.webp",
       imageAlt:
@@ -925,7 +925,7 @@ export const roomsCategoryEs: RoomsCategoryPageData = {
       subtitle: "Mejor relación calidad-precio para 2 huéspedes",
       description:
         "La mejor opción calidad-precio para 2 huéspedes. Habitaciones renovadas de 16m² con lo esencial y un ambiente tranquilo en Kampos.",
-      href: "/es/habitaciones-en-chios/economicas-habitaciones-en-chios/",
+      href: "/es/habitaciones-en-chios/habitacion-doble-economica/",
       image:
         "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753964631359257.webp",
       imageAlt:
@@ -940,7 +940,7 @@ export const roomsCategoryEs: RoomsCategoryPageData = {
       subtitle: "Habitaciones dobles y triples",
       description:
         "Habitaciones dobles y triples con acceso directo al patio y al jardín. Ideales si prefieres un acceso fácil y un ambiente exterior tranquilo.",
-      href: "/es/habitaciones-en-chios/habitaciones-dobles-estandar/",
+      href: "/es/habitaciones-en-chios/habitaciones-dobles-triples/",
       image:
         "https://chioshotel.gr/wp-content/uploads/2022/12/double-triple-room.jpg",
       imageAlt:
@@ -955,7 +955,7 @@ export const roomsCategoryEs: RoomsCategoryPageData = {
       subtitle: "Habitaciones dobles y triples",
       description:
         "Habitaciones dobles y triples luminosas con acceso a una terraza compartida y vistas sobre la finca de cítricos. Una opción con un toque más premium.",
-      href: "/es/habitaciones-en-chios/habitaciones-dobles-estandar/",
+      href: "/es/habitaciones-en-chios/habitaciones-dobles-triples/",
       image:
         "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07776-2-e1675109942622.webp",
       imageAlt:
@@ -970,7 +970,7 @@ export const roomsCategoryEs: RoomsCategoryPageData = {
       subtitle: "Cocina y sala de estar",
       description:
         "Amplios apartamentos de 40–45m² con cocina completa y sala de estar, perfectos para familias que buscan la comodidad de sentirse como en casa.",
-      href: "/es/habitaciones-en-chios/apartamentos-familiares-en-chios/",
+      href: "/es/habitaciones-en-chios/apartamento-familiar/",
       image:
         "https://chioshotel.gr/wp-content/uploads/2022/12/chios-apartments-voulamandis.webp",
       imageAlt:
