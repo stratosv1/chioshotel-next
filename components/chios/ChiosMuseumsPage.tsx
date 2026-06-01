@@ -174,7 +174,7 @@ export function ChiosMuseumsPage({ data }: ChiosMuseumsPageProps) {
               <a
                 className={`cm-museum-card cm-museum-card--${museum.size}`}
                 href={museum.href}
-                key={museum.id}
+                key={museum.href}
               >
                 <div className="cm-museum-image" aria-hidden="true">
                   <img
@@ -224,6 +224,7 @@ export function ChiosMuseumsPage({ data }: ChiosMuseumsPageProps) {
             {data.planning.items.map((item) => (
               <div className="cm-planning-item" key={item.title}>
                 <span aria-hidden="true">{item.icon}</span>
+
                 <div>
                   <h3>{item.title}</h3>
                   <p>{item.text}</p>

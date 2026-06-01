@@ -174,7 +174,7 @@ export function ChiosVillagesPage({ data }: ChiosVillagesPageProps) {
               <a
                 className={`cv-village-card cv-village-card--${village.size}`}
                 href={village.href}
-                key={village.id}
+                key={village.href}
               >
                 <div className="cv-village-image" aria-hidden="true">
                   <img
@@ -224,6 +224,7 @@ export function ChiosVillagesPage({ data }: ChiosVillagesPageProps) {
             {data.planning.items.map((item) => (
               <div className="cv-planning-item" key={item.title}>
                 <span aria-hidden="true">{item.icon}</span>
+
                 <div>
                   <h3>{item.title}</h3>
                   <p>{item.text}</p>

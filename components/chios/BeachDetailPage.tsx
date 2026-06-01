@@ -313,7 +313,7 @@ export function BeachDetailPage({ beach }: BeachDetailPageProps) {
               <a
                 className={`bd-related-card bd-related-card--${related.size}`}
                 href={related.href}
-                key={related.id}
+                key={related.href}
               >
                 <div className="bd-related-image" aria-hidden="true">
                   <img

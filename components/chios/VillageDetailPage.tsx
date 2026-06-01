@@ -108,8 +108,8 @@ function getVillageCollectionForLanguage(language: VillageUiLanguage) {
     return villageDetails;
   }
 
-  return localizedVillageDetails.filter((village) =>
-    village.seo.canonicalPath.startsWith(`/${language}/`),
+  return localizedVillageDetails.filter((relatedVillage) =>
+    relatedVillage.seo.canonicalPath.startsWith(`/${language}/`),
   );
 }
 
@@ -138,6 +138,7 @@ function getBadgeFromVillage(village: VillageDetailData) {
 export function VillageDetailPage({ village }: VillageDetailPageProps) {
   const language = getVillageLanguage(village);
   const copy = villageUiCopy[language];
+
   const relatedVillages = getVillageCollectionForLanguage(language).filter(
     (relatedVillage) =>
       relatedVillage.seo.canonicalPath !== village.seo.canonicalPath,
@@ -279,7 +280,7 @@ export function VillageDetailPage({ village }: VillageDetailPageProps) {
                   index,
                 )}`}
                 href={related.seo.canonicalPath}
-                key={related.slug}
+                key={related.seo.canonicalPath}
               >
                 <div className="vd-related-image" aria-hidden="true">
                   <img

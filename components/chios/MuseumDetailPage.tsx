@@ -108,8 +108,8 @@ function getMuseumCollectionForLanguage(language: MuseumUiLanguage) {
     return museumDetails;
   }
 
-  return localizedMuseumDetails.filter((museum) =>
-    museum.seo.canonicalPath.startsWith(`/${language}/`),
+  return localizedMuseumDetails.filter((relatedMuseum) =>
+    relatedMuseum.seo.canonicalPath.startsWith(`/${language}/`),
   );
 }
 
@@ -138,6 +138,7 @@ function getBadgeFromMuseum(museum: MuseumDetailData) {
 export function MuseumDetailPage({ museum }: MuseumDetailPageProps) {
   const language = getMuseumLanguage(museum);
   const copy = museumUiCopy[language];
+
   const relatedMuseums = getMuseumCollectionForLanguage(language).filter(
     (relatedMuseum) =>
       relatedMuseum.seo.canonicalPath !== museum.seo.canonicalPath,
@@ -279,7 +280,7 @@ export function MuseumDetailPage({ museum }: MuseumDetailPageProps) {
                   index,
                 )}`}
                 href={related.seo.canonicalPath}
-                key={related.slug}
+                key={related.seo.canonicalPath}
               >
                 <div className="md-related-image" aria-hidden="true">
                   <img
