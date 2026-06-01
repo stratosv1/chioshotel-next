@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { HomePageData } from "@/content/home";
+import { LastMinuteDeals } from "@/components/home/LastMinuteDeals";
 
 type HomePageProps = {
   data: HomePageData;
@@ -477,105 +478,7 @@ export function HomePage({ data }: HomePageProps) {
           </div>
         </section>
 
-        <section className="vh-section vh-section--tight" aria-labelledby="vh-lastminute-title">
-          <div className="vh-wrap">
-            <header className="vh-section-head" style={{ textAlign: "center" }}>
-              <span className="vh-kicker">{data.lastMinute.kicker}</span>
-              <h2 className="vh-title" id="vh-lastminute-title">
-                <span aria-hidden="true" style={{ marginRight: 8 }}>
-                  {data.lastMinute.icon}
-                </span>
-                {data.lastMinute.title}
-              </h2>
-              <p className="vh-subtitle" style={{ margin: "0 auto", maxWidth: 900 }}>
-                {data.lastMinute.subtitle}
-              </p>
-            </header>
-          </div>
-
-          <div className="lm-widget" id="lmDealsWidget">
-            <div className="lm-shell">
-              <div className="lm-panel">
-                <div id="lmDealsContent">
-                  <div id="deals-app">
-                    <section className="rb-hero" aria-label="Accommodation deals in Chios">
-                      <div className="rb-hero-top">
-                        <div className="rb-hero-head">
-                          <h2 className="rb-title">{data.lastMinute.widget.title}</h2>
-                          <p className="rb-subtitle">{data.lastMinute.widget.subtitle}</p>
-                          <div className="rb-trust-line">{data.lastMinute.widget.trustLine}</div>
-                        </div>
-
-                        <div className="rb-hero-actions">
-                          <div className="rb-hero-timer">
-                            <p className="rb-hero-timer-label">
-                              {data.lastMinute.widget.timerLabel}
-                            </p>
-                            <p className="rb-hero-timer-value" id="lmCountdown">
-                              00:00:00
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </section>
-
-                    <section className="rb-search-card" aria-label="Guest selection">
-                      <div className="rb-section-head">
-                        <div>
-                          <h3>{data.lastMinute.widget.guestTitle}</h3>
-                          <p>{data.lastMinute.widget.guestText}</p>
-                        </div>
-                      </div>
-
-                      <div className="rb-guest-row">
-                        {data.lastMinute.widget.guestButtons.map((button) => (
-                          <button
-                            className="rb-guest-btn"
-                            data-guests={button.value}
-                            type="button"
-                            key={button.value}
-                          >
-                            <span aria-hidden="true">👤</span> ×{button.value}
-                          </button>
-                        ))}
-                      </div>
-
-                      <div className="rb-helper">{data.lastMinute.widget.helper}</div>
-
-                      <div id="loadingBox" className="rb-loading" style={{ display: "none" }}>
-                        {data.lastMinute.widget.loadingText}
-                      </div>
-                    </section>
-
-                    <section
-                      className="rb-results-wrap is-visible"
-                      id="resultsSection"
-                      aria-label="Deal results"
-                    >
-                      <div className="rb-section-head">
-                        <div>
-                          <h3>{data.lastMinute.widget.resultsTitle}</h3>
-                          <p>{data.lastMinute.widget.resultsText}</p>
-                        </div>
-                        <div id="resultsMeta" className="rb-results-meta">
-                          First select guests.
-                        </div>
-                      </div>
-
-                      <div id="filterBar" className="rb-filter-row" />
-
-                      <div id="resultsGrid">
-                        <div className="rb-empty">{data.lastMinute.widget.emptyText}</div>
-                      </div>
-
-                      <div id="updatedAt" className="rb-updated" />
-                    </section>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        <LastMinuteDeals data={data.lastMinute} />
 
         <section className="vh-section vh-section--tight" aria-labelledby="vh-reviews-title">
           <div className="vh-wrap">
