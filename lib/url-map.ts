@@ -1,4 +1,4 @@
-import { type LanguageCode, normalizePath } from "./languages";
+﻿import { type LanguageCode, normalizePath } from "./languages";
 
 export type RouteAction = "KEEP" | "CHECK" | "REDIRECT" | "REMOVE" | "MERGE";
 
@@ -2578,6 +2578,66 @@ export const routeMap: readonly RouteRecord[] = [
   {
     path: "/family-travel-in-chios/",
     language: "en",
+    contentType: "landing-page",
+    category: "landing",
+    itemId: "family-travel",
+    template: "LandingPage",
+    action: "KEEP",
+    priority: "Medium",
+  },
+  {
+    path: "/el/oikogeneiakes-diakopes-sti-xio/",
+    language: "el",
+    contentType: "landing-page",
+    category: "landing",
+    itemId: "family-travel",
+    template: "LandingPage",
+    action: "KEEP",
+    priority: "Medium",
+  },
+  {
+    path: "/fr/vacances-en-famille-a-chios/",
+    language: "fr",
+    contentType: "landing-page",
+    category: "landing",
+    itemId: "family-travel",
+    template: "LandingPage",
+    action: "KEEP",
+    priority: "Medium",
+  },
+  {
+    path: "/de/familienurlaub-auf-chios/",
+    language: "de",
+    contentType: "landing-page",
+    category: "landing",
+    itemId: "family-travel",
+    template: "LandingPage",
+    action: "KEEP",
+    priority: "Medium",
+  },
+  {
+    path: "/it/vacanze-in-famiglia-a-chios/",
+    language: "it",
+    contentType: "landing-page",
+    category: "landing",
+    itemId: "family-travel",
+    template: "LandingPage",
+    action: "KEEP",
+    priority: "Medium",
+  },
+  {
+    path: "/es/vacaciones-en-familia-en-quios/",
+    language: "es",
+    contentType: "landing-page",
+    category: "landing",
+    itemId: "family-travel",
+    template: "LandingPage",
+    action: "KEEP",
+    priority: "Medium",
+  },
+  {
+    path: "/tr/sakiz-adasi-aile-tatili/",
+    language: "tr",
     contentType: "landing-page",
     category: "landing",
     itemId: "family-travel",

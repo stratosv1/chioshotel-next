@@ -143,6 +143,26 @@ const quizPaths: Record<LanguageCode, string> = {
   tr: "/tr/sakiz-adasi-tatil-testi/",
 };
 
+const beachLoversPaths: Record<LanguageCode, string> = {
+  en: "/chios-beach-lovers/",
+  el: "/el/xios-gia-latreis-paralias/",
+  fr: "/fr/chios-pour-amoureux-de-plage/",
+  de: "/de/chios-fuer-strandliebhaber/",
+  it: "/it/chios-per-amanti-del-mare/",
+  es: "/es/quios-para-amantes-de-la-playa/",
+  tr: "/tr/plaj-severler-icin-sakiz-adasi/",
+};
+
+const familyTravelPaths: Record<LanguageCode, string> = {
+  en: "/family-travel-in-chios/",
+  el: "/el/oikogeneiakes-diakopes-sti-xio/",
+  fr: "/fr/vacances-en-famille-a-chios/",
+  de: "/de/familienurlaub-auf-chios/",
+  it: "/it/vacanze-in-famiglia-a-chios/",
+  es: "/es/vacaciones-en-familia-en-quios/",
+  tr: "/tr/sakiz-adasi-aile-tatili/",
+};
+
 const beachPaths: Record<LanguageCode, string> = {
   en: "/chios/chios-beaches/",
   el: "/el/paralies-xios/",
@@ -776,6 +796,12 @@ function getLanguageHref(path: string, language: LanguageCode) {
 
   const isQuizPage = Object.values(quizPaths).includes(normalizedPath);
 
+  const isBeachLoversPage =
+    Object.values(beachLoversPaths).includes(normalizedPath);
+
+  const isFamilyTravelPage =
+    Object.values(familyTravelPaths).includes(normalizedPath);
+
   const isChiosIslandPage =
     Object.values(chiosIslandPaths).includes(normalizedPath);
 
@@ -822,6 +848,14 @@ function getLanguageHref(path: string, language: LanguageCode) {
 
   if (isQuizPage) {
     return quizPaths[language];
+  }
+
+  if (isBeachLoversPage) {
+    return beachLoversPaths[language];
+  }
+
+  if (isFamilyTravelPage) {
+    return familyTravelPaths[language];
   }
 
   if (isChiosIslandPage) {
