@@ -274,7 +274,7 @@ export const homePageEn: HomePageData = {
     imageAlt: "Chios Hotels and Apartments in Kampos - Voulamandis House",
     primaryCta: {
       label: "Find Room",
-      href: "/room-finder/",
+      href: "/chios-rooms/",
       icon: "✨",
     },
     secondaryCta: {
@@ -422,7 +422,7 @@ export const homePageEn: HomePageData = {
     text: "Our rooms are cleaned daily and designed for a comfortable, peaceful and quality stay in Kampos, Chios.",
     primaryCta: {
       label: "Room Wizard",
-      href: "/room-finder/",
+      href: "/chios-rooms/",
       icon: "✨",
     },
     secondaryCta: {
@@ -665,7 +665,7 @@ export const homePageEn: HomePageData = {
         id: "kampos",
         title: "Kampos of Chios",
         text: "Learn more about the area that makes staying in Kampos special.",
-        href: "/chios/chios-kambos/",
+        href: "/chios-island/",
         imageClass: "vh-link-image--kampos",
         ctaIcon: "🍊",
         ctaLabel: "See more",
@@ -683,7 +683,7 @@ export const homePageEn: HomePageData = {
         id: "orchids",
         title: "Orchids of Chios",
         text: "A special activity for nature lovers who want to see a different side of the island.",
-        href: "/chios/chios-orchids/",
+        href: "/chios-island/",
         imageClass: "vh-link-image--orchids",
         ctaIcon: "🌸",
         ctaLabel: "See more",
@@ -692,7 +692,7 @@ export const homePageEn: HomePageData = {
         id: "thermal-springs",
         title: "Thermal Springs",
         text: "Relaxation and wellness experiences that complement your holiday perfectly.",
-        href: "/chios/chios-activities/the-chios-thermal-baths/chios/",
+        href: "/chios-island/",
         imageClass: "vh-link-image--springs",
         ctaIcon: "♨️",
         ctaLabel: "See more",
@@ -797,7 +797,7 @@ export const homePageEl: HomePageData = {
       "Ενοικιαζόμενα δωμάτια στη Χίο στον Κάμπο - Voulamandis House",
     primaryCta: {
       label: "Βρες Δωμάτιο",
-      href: "/el/vre-to-domatio-pou-sou-tairiazei/",
+      href: "/el/domatia-xios/",
       icon: "✨",
     },
     secondaryCta: {
@@ -945,7 +945,7 @@ export const homePageEl: HomePageData = {
     text: "Τα δωμάτιά μας καθαρίζονται καθημερινά και έχουν σχεδιαστεί για άνετη, ήρεμη και ποιοτική διαμονή στον Κάμπο της Χίου.",
     primaryCta: {
       label: "Room Wizard",
-      href: "/el/vre-to-domatio-pou-sou-tairiazei/",
+      href: "/el/domatia-xios/",
       icon: "✨",
     },
     secondaryCta: {
@@ -1089,28 +1089,28 @@ export const homePageEl: HomePageData = {
         ...homePageEn.traveler.cards[0],
         title: "Θάλασσα",
         text: "Κρυστάλλινα νερά, μοναδικές παραλίες και χαλάρωση στο νησί.",
-        href: "/el/kalyteres-paralies-xiou/",
+        href: "/el/paralies-xios/",
         cta: "🏖️ Εξερεύνησε",
       },
       {
         ...homePageEn.traveler.cards[1],
         title: "Εξερεύνηση",
         text: "Χωριά, φύση και πολιτισμός σε κάθε γωνιά της Χίου.",
-        href: "/el/exerevnisi-chiou/",
+        href: "/el/xoria-xios/",
         cta: "🧭 Εξερεύνησε",
       },
       {
         ...homePageEn.traveler.cards[2],
         title: "Οικογένεια",
         text: "Ιδέες και δραστηριότητες για αξέχαστες οικογενειακές διακοπές.",
-        href: "/el/oikogeneiakes-diakopes-sti-xio/",
+        href: "/el/domatia-xios/oikogeneiako-diamerisma/",
         cta: "👨‍👩‍👧‍👦 Εξερεύνησε",
       },
       {
         ...homePageEn.traveler.cards[3],
         title: "Γαστρονομία",
         text: "Αυθεντικές γεύσεις, μαστίχα και τοπικές εμπειρίες.",
-        href: "/el/taste-lover-el-gastronomiko-taxidi-xios/",
+        href: "/el/ti-na-do-sti-xio/",
         cta: "🍽️ Εξερεύνησε",
       },
     ],
@@ -1265,12 +1265,12 @@ export const homePageFr: HomePageData = {
     imageAlt: "Hôtel et appartements à Chios - Voulamandis House à Kampos",
     primaryCta: {
       label: "Trouver une chambre",
-      href: "/fr/trouver-la-chambre-ideale/",
+      href: "/fr/chambres-a-chios/",
       icon: "✨",
     },
     secondaryCta: {
       label: "Réserver",
-      href: "/fr/reservation-directe-voulamandis-house/",
+      href: "/fr/tarifs-des-hotels-a-chios/",
       icon: "🔥",
     },
     quizCard: {
@@ -1362,7 +1362,7 @@ export const homePageFr: HomePageData = {
       text: "L’établissement se trouve dans un endroit qui combine calme, accès facile et courtes distances vers les principaux points de Chios.",
       cta: {
         label: "Disponibilités",
-        href: "/fr/reservation-directe-voulamandis-house/",
+        href: "/fr/tarifs-des-hotels-a-chios/",
         icon: "📅",
       },
     },
@@ -1399,7 +1399,7 @@ export const homePageFr: HomePageData = {
     text: "Nos chambres sont nettoyées chaque jour et pensées pour un séjour confortable, calme et de qualité à Kampos, Chios.",
     primaryCta: {
       label: "Room Wizard",
-      href: "/fr/trouver-la-chambre-ideale/",
+      href: "/fr/chambres-a-chios/",
       icon: "✨",
     },
     secondaryCta: {
@@ -1416,7 +1416,7 @@ export const homePageFr: HomePageData = {
       {
         ...homePageEn.roomsPreview.rooms[0],
         title: "Chambre double économique",
-        href: "/fr/chambres-a-chios/chambre-double-economique/",
+        href: "/fr/chambres-a-chios/chambres-doubles-economiques/",
         directBadge: "🎁 -10% Réduction",
         bedBadge: "🛏️ 1 lit double ou 2 lits simples",
         description:
@@ -1428,7 +1428,7 @@ export const homePageFr: HomePageData = {
       {
         ...homePageEn.roomsPreview.rooms[1],
         title: "Chambres rez-de-chaussée",
-        href: "/fr/chambres-a-chios/chambres-doubles-triples/",
+        href: "/fr/chambres-a-chios/chambres-doubles-standard/",
         directBadge: "🎁 -10% Réduction",
         bedBadge: "🛏️ Double + lit supplémentaire",
         description:
@@ -1440,7 +1440,7 @@ export const homePageFr: HomePageData = {
       {
         ...homePageEn.roomsPreview.rooms[2],
         title: "Chambres à l’étage",
-        href: "/fr/chambres-a-chios/chambres-doubles-triples/",
+        href: "/fr/chambres-a-chios/chambres-doubles-standard/",
         directBadge: "🎁 -10% Réduction",
         bedBadge: "🛏️ Double + lit supplémentaire",
         description:
@@ -1452,7 +1452,7 @@ export const homePageFr: HomePageData = {
       {
         ...homePageEn.roomsPreview.rooms[3],
         title: "Appartement familial",
-        href: "/fr/chambres-a-chios/appartement-familial/",
+        href: "/fr/chambres-a-chios/appartements-familiaux-de-chios/",
         directBadge: "🎁 -10% Réduction",
         bedBadge: "🛏️ Lits famille",
         description:
@@ -1557,10 +1557,22 @@ export const homePageFr: HomePageData = {
     title: "Que voir à Chios ?",
     subtitle:
       "Nous avons rassemblé des informations utiles pour organiser plus facilement votre séjour et vos excursions.",
-    cards: homePageEn.chiosGuide.cards.map((card) => ({
-      ...card,
-      ctaLabel: "Voir plus",
-    })),
+    cards: homePageEn.chiosGuide.cards.map((card) => {
+      const hrefById: Record<string, string> = {
+        beaches: "/fr/plages-de-chios/",
+        villages: "/fr/villages-de-chios/",
+        kampos: "/fr/chios-en-grece/",
+        museums: "/fr/musees-de-chios/",
+        orchids: "/fr/chios-en-grece/",
+        "thermal-springs": "/fr/chios-en-grece/",
+      };
+
+      return {
+        ...card,
+        href: hrefById[card.id] ?? card.href,
+        ctaLabel: "Voir plus",
+      };
+    }),
   },
 
   quizBar: {
@@ -1615,12 +1627,12 @@ export const homePageFr: HomePageData = {
     text: "Hospitalité chaleureuse, atmosphère authentique et emplacement idéal à Kampos.",
     primaryCta: {
       label: "Réserver en direct",
-      href: "/fr/reservation-directe-voulamandis-house/",
+      href: "/fr/tarifs-des-hotels-a-chios/",
       icon: "🛎️",
     },
     secondaryCta: {
       label: "Contact",
-      href: "/fr/contact-voulamandis-house/",
+      href: "/fr/contactez-nous/",
       icon: "✉️",
     },
   },
@@ -1661,12 +1673,12 @@ export const homePageDe: HomePageData = {
     imageAlt: "Hotel und Apartments auf Chios in Kampos - Voulamandis House",
     primaryCta: {
       label: "Zimmer finden",
-      href: "/de/passendes-zimmer-finden/",
+      href: "/de/chios-zimmer/",
       icon: "✨",
     },
     secondaryCta: {
       label: "Jetzt buchen",
-      href: "/de/direktbuchung-voulamandis-house/",
+      href: "/de/hotelpreise-auf-der-insel-chios/",
       icon: "🔥",
     },
     quizCard: {
@@ -1758,7 +1770,7 @@ export const homePageDe: HomePageData = {
       text: "Die Unterkunft liegt an einem Ort, der Ruhe, einfache Erreichbarkeit und kurze Wege zu den wichtigsten Punkten von Chios verbindet.",
       cta: {
         label: "Verfügbarkeit",
-        href: "/de/direktbuchung-voulamandis-house/",
+        href: "/de/hotelpreise-auf-der-insel-chios/",
         icon: "📅",
       },
     },
@@ -1795,7 +1807,7 @@ export const homePageDe: HomePageData = {
     text: "Unsere Zimmer werden täglich gereinigt und sind für einen komfortablen, ruhigen und hochwertigen Aufenthalt in Kampos gestaltet.",
     primaryCta: {
       label: "Room Wizard",
-      href: "/de/passendes-zimmer-finden/",
+      href: "/de/chios-zimmer/",
       icon: "✨",
     },
     secondaryCta: {
@@ -1812,7 +1824,7 @@ export const homePageDe: HomePageData = {
       {
         ...homePageEn.roomsPreview.rooms[0],
         title: "Economy Doppelzimmer",
-        href: "/de/chios-zimmer/economy-doppelzimmer/",
+        href: "/de/zimmer-chios/economy-zimmer-auf-chios/",
         directBadge: "🎁 -10% Rabatt",
         bedBadge: "🛏️ 1 Doppelbett oder 2 Einzelbetten",
         description:
@@ -1824,7 +1836,7 @@ export const homePageDe: HomePageData = {
       {
         ...homePageEn.roomsPreview.rooms[1],
         title: "Zimmer im Erdgeschoss",
-        href: "/de/chios-zimmer/doppel-und-dreibettzimmer/",
+        href: "/de/zimmer-chios/standard-doppelzimmer-auf-chios/",
         directBadge: "🎁 -10% Rabatt",
         bedBadge: "🛏️ Doppelbett + Zusatzbett",
         description:
@@ -1836,7 +1848,7 @@ export const homePageDe: HomePageData = {
       {
         ...homePageEn.roomsPreview.rooms[2],
         title: "Zimmer im Obergeschoss",
-        href: "/de/chios-zimmer/doppel-und-dreibettzimmer/",
+        href: "/de/zimmer-chios/standard-doppelzimmer-auf-chios/",
         directBadge: "🎁 -10% Rabatt",
         bedBadge: "🛏️ Doppelbett + Zusatzbett",
         description:
@@ -1848,7 +1860,7 @@ export const homePageDe: HomePageData = {
       {
         ...homePageEn.roomsPreview.rooms[3],
         title: "Familienapartment",
-        href: "/de/chios-zimmer/familienapartment/",
+        href: "/de/zimmer-chios/familienapartments-in-chios/",
         directBadge: "🎁 -10% Rabatt",
         bedBadge: "🛏️ Familienbetten",
         description:
@@ -1953,10 +1965,22 @@ export const homePageDe: HomePageData = {
     title: "Was kann man auf Chios sehen?",
     subtitle:
       "Wir haben nützliche Informationen gesammelt, damit Sie Ihren Aufenthalt und Tagesausflüge leichter planen können.",
-    cards: homePageEn.chiosGuide.cards.map((card) => ({
-      ...card,
-      ctaLabel: "Mehr ansehen",
-    })),
+    cards: homePageEn.chiosGuide.cards.map((card) => {
+      const hrefById: Record<string, string> = {
+        beaches: "/de/straende-chios/",
+        villages: "/de/doerfer-chios/",
+        kampos: "/de/chios-insel/",
+        museums: "/de/museen-chios/",
+        orchids: "/de/chios-insel/",
+        "thermal-springs": "/de/chios-insel/",
+      };
+
+      return {
+        ...card,
+        href: hrefById[card.id] ?? card.href,
+        ctaLabel: "Mehr ansehen",
+      };
+    }),
   },
 
   quizBar: {
@@ -2011,12 +2035,12 @@ export const homePageDe: HomePageData = {
     text: "Herzliche Gastfreundschaft, authentische Atmosphäre und eine ideale Lage in Kampos.",
     primaryCta: {
       label: "Direkt buchen",
-      href: "/de/direktbuchung-voulamandis-house/",
+      href: "/de/hotelpreise-auf-der-insel-chios/",
       icon: "🛎️",
     },
     secondaryCta: {
       label: "Kontakt",
-      href: "/de/kontakt-voulamandis-house/",
+      href: "/de/kontaktieren-voulamandis-house/",
       icon: "✉️",
     },
   },
@@ -2055,12 +2079,12 @@ export const homePageIt: HomePageData = {
     imageAlt: "Hotel e appartamenti a Chios - Voulamandis House a Kampos",
     primaryCta: {
       label: "Trova la camera",
-      href: "/it/trova-la-camera-ideale/",
+      href: "/it/camere-a-chios/",
       icon: "✨",
     },
     secondaryCta: {
       label: "Prenota ora",
-      href: "/it/prenotazione-diretta-voulamandis-house/",
+      href: "/it/prezzi-hotel-chios/",
       icon: "🔥",
     },
     quizCard: {
@@ -2152,7 +2176,7 @@ export const homePageIt: HomePageData = {
       text: "La struttura si trova in una zona che unisce tranquillità, accesso facile e brevi distanze dai punti principali di Chios.",
       cta: {
         label: "Disponibilità",
-        href: "/it/prenotazione-diretta-voulamandis-house/",
+        href: "/it/prezzi-hotel-chios/",
         icon: "📅",
       },
     },
@@ -2189,7 +2213,7 @@ export const homePageIt: HomePageData = {
     text: "Le nostre camere vengono pulite ogni giorno e sono pensate per un soggiorno comodo, tranquillo e curato a Kampos, Chios.",
     primaryCta: {
       label: "Room Wizard",
-      href: "/it/trova-la-camera-ideale/",
+      href: "/it/camere-a-chios/",
       icon: "✨",
     },
     secondaryCta: {
@@ -2206,7 +2230,7 @@ export const homePageIt: HomePageData = {
       {
         ...homePageEn.roomsPreview.rooms[0],
         title: "Camera doppia economy",
-        href: "/it/camere-a-chios/camera-doppia-economy/",
+        href: "/it/stanze-a-chios/camera-doppia-economica-chios/",
         directBadge: "🎁 -10% Sconto",
         bedBadge: "🛏️ 1 letto matrimoniale o 2 letti singoli",
         description:
@@ -2218,7 +2242,7 @@ export const homePageIt: HomePageData = {
       {
         ...homePageEn.roomsPreview.rooms[1],
         title: "Camere al piano terra",
-        href: "/it/camere-a-chios/camere-doppie-triple/",
+        href: "/it/stanze-a-chios/camere-doppie-standard-chios/",
         directBadge: "🎁 -10% Sconto",
         bedBadge: "🛏️ Matrimoniale + letto extra",
         description:
@@ -2230,7 +2254,7 @@ export const homePageIt: HomePageData = {
       {
         ...homePageEn.roomsPreview.rooms[2],
         title: "Camere al piano superiore",
-        href: "/it/camere-a-chios/camere-doppie-triple/",
+        href: "/it/stanze-a-chios/camere-doppie-standard-chios/",
         directBadge: "🎁 -10% Sconto",
         bedBadge: "🛏️ Matrimoniale + letto extra",
         description:
@@ -2242,7 +2266,7 @@ export const homePageIt: HomePageData = {
       {
         ...homePageEn.roomsPreview.rooms[3],
         title: "Appartamento familiare",
-        href: "/it/camere-a-chios/appartamento-familiare/",
+        href: "/it/stanze-a-chios/appartamenti-familiari-a-chios/",
         directBadge: "🎁 -10% Sconto",
         bedBadge: "🛏️ Letti famiglia",
         description:
@@ -2347,10 +2371,22 @@ export const homePageIt: HomePageData = {
     title: "Cosa vedere a Chios?",
     subtitle:
       "Abbiamo raccolto informazioni utili per organizzare più facilmente il tuo soggiorno e le tue escursioni.",
-    cards: homePageEn.chiosGuide.cards.map((card) => ({
-      ...card,
-      ctaLabel: "Vedi di più",
-    })),
+    cards: homePageEn.chiosGuide.cards.map((card) => {
+      const hrefById: Record<string, string> = {
+        beaches: "/it/spiagge-chios/",
+        villages: "/it/villaggi-chios/",
+        kampos: "/it/chios-lisola-in-grecia/",
+        museums: "/it/musei-chios/",
+        orchids: "/it/chios-lisola-in-grecia/",
+        "thermal-springs": "/it/chios-lisola-in-grecia/",
+      };
+
+      return {
+        ...card,
+        href: hrefById[card.id] ?? card.href,
+        ctaLabel: "Vedi di più",
+      };
+    }),
   },
 
   quizBar: {
@@ -2405,12 +2441,12 @@ export const homePageIt: HomePageData = {
     text: "Ospitalità calorosa, atmosfera autentica e posizione ideale a Kampos.",
     primaryCta: {
       label: "Prenota diretto",
-      href: "/it/prenotazione-diretta-voulamandis-house/",
+      href: "/it/prezzi-hotel-chios/",
       icon: "🛎️",
     },
     secondaryCta: {
       label: "Contatto",
-      href: "/it/contatto-voulamandis-house/",
+      href: "/it/contattaci-voulamandis-house/",
       icon: "✉️",
     },
   },
@@ -2450,16 +2486,16 @@ export const homePageEs: HomePageData = {
     imageAlt: "Hotel y apartamentos en Chios - Voulamandis House en Kampos",
     primaryCta: {
       label: "Encontrar habitación",
-      href: "/es/encontrar-habitacion-ideal/",
+      href: "/es/habitaciones-en-chios/",
       icon: "✨",
     },
     secondaryCta: {
       label: "Reservar",
-      href: "/es/reserva-directa-voulamandis-house/",
+      href: "/es/los-mejores-precios-de-hotel-en-la-isla-chios/",
       icon: "🔥",
     },
     quizCard: {
-      href: "/es/quiz-vacaciones-en-chios/",
+      href: "/es/quiz-vacaciones-en-quios/",
       icon: "🧭",
       liveLabel: "Código descuento live",
       title: "Descubre Chios",
@@ -2547,7 +2583,7 @@ export const homePageEs: HomePageData = {
       text: "El alojamiento se encuentra en una zona que combina tranquilidad, acceso fácil y distancias cortas a los puntos principales de Chios.",
       cta: {
         label: "Disponibilidad",
-        href: "/es/reserva-directa-voulamandis-house/",
+        href: "/es/los-mejores-precios-de-hotel-en-la-isla-chios/",
         icon: "📅",
       },
     },
@@ -2584,7 +2620,7 @@ export const homePageEs: HomePageData = {
     text: "Nuestras habitaciones se limpian cada día y están pensadas para una estancia cómoda, tranquila y cuidada en Kampos, Chios.",
     primaryCta: {
       label: "Room Wizard",
-      href: "/es/encontrar-habitacion-ideal/",
+      href: "/es/habitaciones-en-chios/",
       icon: "✨",
     },
     secondaryCta: {
@@ -2601,7 +2637,7 @@ export const homePageEs: HomePageData = {
       {
         ...homePageEn.roomsPreview.rooms[0],
         title: "Habitación doble económica",
-        href: "/es/habitaciones-en-chios/habitacion-doble-economica/",
+        href: "/es/habitaciones-en-chios/economicas-habitaciones-en-chios/",
         directBadge: "🎁 -10% Descuento",
         bedBadge: "🛏️ 1 cama doble o 2 camas individuales",
         description:
@@ -2613,7 +2649,7 @@ export const homePageEs: HomePageData = {
       {
         ...homePageEn.roomsPreview.rooms[1],
         title: "Habitaciones en planta baja",
-        href: "/es/habitaciones-en-chios/habitaciones-dobles-triples/",
+        href: "/es/habitaciones-en-chios/habitaciones-dobles-estandar/",
         directBadge: "🎁 -10% Descuento",
         bedBadge: "🛏️ Doble + cama extra",
         description:
@@ -2625,7 +2661,7 @@ export const homePageEs: HomePageData = {
       {
         ...homePageEn.roomsPreview.rooms[2],
         title: "Habitaciones en planta superior",
-        href: "/es/habitaciones-en-chios/habitaciones-dobles-triples/",
+        href: "/es/habitaciones-en-chios/habitaciones-dobles-estandar/",
         directBadge: "🎁 -10% Descuento",
         bedBadge: "🛏️ Doble + cama extra",
         description:
@@ -2637,7 +2673,7 @@ export const homePageEs: HomePageData = {
       {
         ...homePageEn.roomsPreview.rooms[3],
         title: "Apartamento familiar",
-        href: "/es/habitaciones-en-chios/apartamento-familiar/",
+        href: "/es/habitaciones-en-chios/apartamentos-familiares-en-chios/",
         directBadge: "🎁 -10% Descuento",
         bedBadge: "🛏️ Camas familiares",
         description:
@@ -2742,16 +2778,28 @@ export const homePageEs: HomePageData = {
     title: "¿Qué ver en Chios?",
     subtitle:
       "Hemos reunido información útil para organizar mejor tu estancia y tus excursiones.",
-    cards: homePageEn.chiosGuide.cards.map((card) => ({
-      ...card,
-      ctaLabel: "Ver más",
-    })),
+    cards: homePageEn.chiosGuide.cards.map((card) => {
+      const hrefById: Record<string, string> = {
+        beaches: "/es/playas-chios/",
+        villages: "/es/pueblos-chios/",
+        kampos: "/es/chios-en-grecia/",
+        museums: "/es/museos-chios/",
+        orchids: "/es/chios-en-grecia/",
+        "thermal-springs": "/es/chios-en-grecia/",
+      };
+
+      return {
+        ...card,
+        href: hrefById[card.id] ?? card.href,
+        ctaLabel: "Ver más",
+      };
+    }),
   },
 
   quizBar: {
     label: "DESCUBRIR CHIOS",
     text: "Dedica 5 minutos a este quiz, descubre Chios y recibe un código de descuento.",
-    href: "/es/quiz-vacaciones-en-chios/",
+    href: "/es/quiz-vacaciones-en-quios/",
     cta: "🧭 EMPEZAR LA EXPERIENCIA →",
   },
 
@@ -2800,12 +2848,12 @@ export const homePageEs: HomePageData = {
     text: "Hospitalidad cálida, ambiente auténtico y ubicación ideal en Kampos.",
     primaryCta: {
       label: "Reservar directo",
-      href: "/es/reserva-directa-voulamandis-house/",
+      href: "/es/los-mejores-precios-de-hotel-en-la-isla-chios/",
       icon: "🛎️",
     },
     secondaryCta: {
       label: "Contacto",
-      href: "/es/contacto-voulamandis-house/",
+      href: "/es/contacta-con-voulamandis-house/",
       icon: "✉️",
     },
   },
@@ -2845,12 +2893,12 @@ export const homePageTr: HomePageData = {
     imageAlt: "Sakız Adası’nda otel ve daireler - Kampos Voulamandis House",
     primaryCta: {
       label: "Odamı bul",
-      href: "/tr/ideal-odayi-bul/",
+      href: "/tr/sakiz-adasi-odalari/",
       icon: "✨",
     },
     secondaryCta: {
       label: "Rezervasyon",
-      href: "/tr/direkt-rezervasyon-voulamandis-house/",
+      href: "/tr/sakiz-adasi-rezervasyon/",
       icon: "🔥",
     },
     quizCard: {
@@ -2942,7 +2990,7 @@ export const homePageTr: HomePageData = {
       text: "Tesis, Sakız Adası’nın önemli noktalarına kısa mesafede; sakinlik ve kolay ulaşımı bir arada sunan bir konumdadır.",
       cta: {
         label: "Müsaitlik",
-        href: "/tr/direkt-rezervasyon-voulamandis-house/",
+        href: "/tr/sakiz-adasi-rezervasyon/",
         icon: "📅",
       },
     },
@@ -2979,7 +3027,7 @@ export const homePageTr: HomePageData = {
     text: "Odalarımız her gün temizlenir ve Kampos’ta rahat, sakin ve kaliteli bir konaklama için hazırlanmıştır.",
     primaryCta: {
       label: "Room Wizard",
-      href: "/tr/ideal-odayi-bul/",
+      href: "/tr/sakiz-adasi-odalari/",
       icon: "✨",
     },
     secondaryCta: {
@@ -2996,7 +3044,7 @@ export const homePageTr: HomePageData = {
       {
         ...homePageEn.roomsPreview.rooms[0],
         title: "Ekonomik çift kişilik oda",
-        href: "/tr/sakiz-adasi-odalari/ekonomik-cift-kisilik-oda/",
+        href: "/tr/chios-odalari/sakiz-adasindaki-ekonomi-cift-kisilik-oda/",
         directBadge: "🎁 -10% İndirim",
         bedBadge: "🛏️ 1 çift kişilik veya 2 tek kişilik yatak",
         description:
@@ -3008,7 +3056,7 @@ export const homePageTr: HomePageData = {
       {
         ...homePageEn.roomsPreview.rooms[1],
         title: "Zemin kat odaları",
-        href: "/tr/sakiz-adasi-odalari/cift-ve-uclu-odalar/",
+        href: "/tr/chios-odalari/standart-cift-kisilik-odalar/",
         directBadge: "🎁 -10% İndirim",
         bedBadge: "🛏️ Çift kişilik + ek yatak",
         description:
@@ -3020,7 +3068,7 @@ export const homePageTr: HomePageData = {
       {
         ...homePageEn.roomsPreview.rooms[2],
         title: "Üst kat odaları",
-        href: "/tr/sakiz-adasi-odalari/cift-ve-uclu-odalar/",
+        href: "/tr/chios-odalari/standart-cift-kisilik-odalar/",
         directBadge: "🎁 -10% İndirim",
         bedBadge: "🛏️ Çift kişilik + ek yatak",
         description:
@@ -3032,7 +3080,7 @@ export const homePageTr: HomePageData = {
       {
         ...homePageEn.roomsPreview.rooms[3],
         title: "Aile dairesi",
-        href: "/tr/sakiz-adasi-odalari/aile-dairesi/",
+        href: "/tr/chios-odalari/sakiz-adasinda-buyuk-aile-daireleri/",
         directBadge: "🎁 -10% İndirim",
         bedBadge: "🛏️ Aile yatakları",
         description:
@@ -3137,10 +3185,22 @@ export const homePageTr: HomePageData = {
     title: "Sakız Adası’nda ne görülür?",
     subtitle:
       "Konaklamanızı ve gezilerinizi daha kolay planlamanız için faydalı bilgileri bir araya getirdik.",
-    cards: homePageEn.chiosGuide.cards.map((card) => ({
-      ...card,
-      ctaLabel: "Daha fazla gör",
-    })),
+    cards: homePageEn.chiosGuide.cards.map((card) => {
+      const hrefById: Record<string, string> = {
+        beaches: "/tr/sakiz-adasi-plajlari/",
+        villages: "/tr/sakiz-adasi-koyleri/",
+        kampos: "/tr/sakiz-adasi/",
+        museums: "/tr/sakiz-adasi-muzeleri/",
+        orchids: "/tr/sakiz-adasi/",
+        "thermal-springs": "/tr/sakiz-adasi/",
+      };
+
+      return {
+        ...card,
+        href: hrefById[card.id] ?? card.href,
+        ctaLabel: "Daha fazla gör",
+      };
+    }),
   },
 
   quizBar: {
@@ -3195,12 +3255,12 @@ export const homePageTr: HomePageData = {
     text: "Samimi misafirperverlik, otantik atmosfer ve Kampos’ta ideal konum.",
     primaryCta: {
       label: "Direkt rezervasyon",
-      href: "/tr/direkt-rezervasyon-voulamandis-house/",
+      href: "/tr/sakiz-adasi-rezervasyon/",
       icon: "🛎️",
     },
     secondaryCta: {
       label: "İletişim",
-      href: "/tr/iletisim-voulamandis-house/",
+      href: "/tr/sakiz-adasi-otelleri-ile-iletisim/",
       icon: "✉️",
     },
   },
