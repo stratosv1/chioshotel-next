@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import { VoulamandisFooter } from "@/components/VoulamandisFooter";
 import { VoulamandisHeader } from "@/components/VoulamandisHeader";
 import "./globals.css";
@@ -8,13 +9,29 @@ export const metadata = {
     "Quiet rooms and apartments in Kampos, Chios. Stay at Voulamandis House near Chios Town, the airport, beaches, villages and local attractions.",
 };
 
-export default function RootLayout({
+const supportedLanguages = ["el", "fr", "de", "it", "es", "tr"];
+
+function getHtmlLanguage(pathname: string | null) {
+  const firstSegment = pathname?.split("/").filter(Boolean)[0];
+
+  if (firstSegment && supportedLanguages.includes(firstSegment)) {
+    return firstSegment;
+  }
+
+  return "en";
+}
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const htmlLang = getHtmlLanguage(pathname);
+
   return (
-    <html lang="en">
+    <html lang={htmlLang}>
       <head>
         <link
           rel="preload"
