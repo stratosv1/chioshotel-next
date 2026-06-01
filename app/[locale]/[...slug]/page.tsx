@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
+import { ChiosIslandPage } from "@/components/chios/ChiosIslandPage";
 import { ChiosBeachesPage } from "@/components/chios/ChiosBeachesPage";
 import { ChiosVillagesPage } from "@/components/chios/ChiosVillagesPage";
 import { ChiosMuseumsPage } from "@/components/chios/ChiosMuseumsPage";
@@ -14,17 +15,12 @@ import {
   isLanguageCode,
   normalizePath,
 } from "@/lib/languages";
-import {
-  getLocalizedChiosBeachesPageByPath,
-} from "@/content/chios-beaches";
+import { getLocalizedChiosIslandPageByPath } from "@/content/chios-island";
+import { getLocalizedChiosBeachesPageByPath } from "@/content/chios-beaches";
 import { buildChiosBeachesSchema } from "@/content/chios-beaches-schema";
-import {
-  getLocalizedChiosVillagesPageByPath,
-} from "@/content/chios-villages";
+import { getLocalizedChiosVillagesPageByPath } from "@/content/chios-villages";
 import { buildChiosVillagesSchema } from "@/content/chios-villages-schema";
-import {
-  getLocalizedChiosMuseumsPageByPath,
-} from "@/content/chios-museums";
+import { getLocalizedChiosMuseumsPageByPath } from "@/content/chios-museums";
 import { buildChiosMuseumsSchema } from "@/content/chios-museums-schema";
 import {
   roomsCategoryDe,
@@ -235,6 +231,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const requestedPath = getRequestedPath(locale, slug);
 
+  const chiosIslandData = getLocalizedChiosIslandPageByPath(requestedPath);
+
+  if (chiosIslandData) {
+    return buildLocalizedPageMetadata({
+      path: chiosIslandData.seo.canonicalPath,
+      title: chiosIslandData.seo.title,
+      description: chiosIslandData.seo.description,
+      image: chiosIslandData.seo.ogImage,
+    });
+  }
+
   const chiosBeachesData = getLocalizedChiosBeachesPageByPath(requestedPath);
 
   if (chiosBeachesData) {
@@ -334,6 +341,12 @@ export default async function Page({ params }: PageProps) {
   }
 
   const requestedPath = getRequestedPath(locale, slug);
+
+  const chiosIslandData = getLocalizedChiosIslandPageByPath(requestedPath);
+
+  if (chiosIslandData) {
+    return <ChiosIslandPage data={chiosIslandData} />;
+  }
 
   const chiosBeachesData = getLocalizedChiosBeachesPageByPath(requestedPath);
 
