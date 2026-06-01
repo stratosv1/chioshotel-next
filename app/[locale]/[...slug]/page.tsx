@@ -9,6 +9,7 @@ import { BeachDetailPage } from "@/components/chios/BeachDetailPage";
 import { VillageDetailPage } from "@/components/chios/VillageDetailPage";
 import { MuseumDetailPage } from "@/components/chios/MuseumDetailPage";
 import { BeachLoversPage } from "@/components/landing/BeachLoversPage";
+import ChiosExplorerPage from "@/components/landing/ChiosExplorerPage";
 import FamilyTravelPage from "@/components/landing/FamilyTravelPage";
 import TasteLoverPage from "@/components/landing/TasteLoverPage";
 import { RoomsCategoryPage } from "@/components/rooms/RoomsCategoryPage";
@@ -33,6 +34,7 @@ import { buildChiosVillagesSchema } from "@/content/chios-villages-schema";
 import { getLocalizedChiosMuseumsPageByPath } from "@/content/chios-museums";
 import { buildChiosMuseumsSchema } from "@/content/chios-museums-schema";
 import { getBeachLoversPageByPath } from "@/content/beach-lovers";
+import { getChiosExplorerPageByPath } from "@/content/chios-explorer";
 import { getFamilyTravelPageByPath } from "@/content/family-travel";
 import { getTasteLoverPageByPath } from "@/content/taste-lover";
 import {
@@ -409,6 +411,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     });
   }
 
+  const chiosExplorerData = getChiosExplorerPageByPath(requestedPath);
+
+  if (chiosExplorerData) {
+    return buildLocalizedPageMetadata({
+      path: chiosExplorerData.path,
+      title: chiosExplorerData.seo.title,
+      description: chiosExplorerData.seo.description,
+      image: chiosExplorerData.hero.image.src,
+    });
+  }
+
   const route = getRouteByPath(requestedPath);
 
   if (route?.itemId === "chios-quiz" && route.action === "KEEP") {
@@ -561,6 +574,12 @@ export default async function Page({ params }: PageProps) {
 
   if (tasteLoverData) {
     return <TasteLoverPage data={tasteLoverData} />;
+  }
+
+  const chiosExplorerData = getChiosExplorerPageByPath(requestedPath);
+
+  if (chiosExplorerData) {
+    return <ChiosExplorerPage data={chiosExplorerData} />;
   }
 
   const route = getRouteByPath(requestedPath);

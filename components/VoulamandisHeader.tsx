@@ -173,6 +173,16 @@ const tasteLoverPaths: Record<LanguageCode, string> = {
   tr: "/tr/sakiz-adasi-lezzetleri/",
 };
 
+const chiosExplorerPaths: Record<LanguageCode, string> = {
+  en: "/chios-explorer/",
+  el: "/el/exerevnisi-xiou/",
+  fr: "/fr/explorer-chios/",
+  de: "/de/chios-entdecken/",
+  it: "/it/esplora-chios/",
+  es: "/es/explorar-quios/",
+  tr: "/tr/sakiz-adasi-kesif/",
+};
+
 const beachPaths: Record<LanguageCode, string> = {
   en: "/chios/chios-beaches/",
   el: "/el/paralies-xios/",
@@ -815,6 +825,9 @@ function getLanguageHref(path: string, language: LanguageCode) {
   const isTasteLoverPage =
     Object.values(tasteLoverPaths).includes(normalizedPath);
 
+  const isChiosExplorerPage =
+    Object.values(chiosExplorerPaths).includes(normalizedPath);
+
   const isChiosIslandPage =
     Object.values(chiosIslandPaths).includes(normalizedPath);
 
@@ -873,6 +886,10 @@ function getLanguageHref(path: string, language: LanguageCode) {
 
   if (isTasteLoverPage) {
     return tasteLoverPaths[language];
+  }
+
+  if (isChiosExplorerPage) {
+    return chiosExplorerPaths[language];
   }
 
   if (isChiosIslandPage) {
