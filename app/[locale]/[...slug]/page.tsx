@@ -11,6 +11,7 @@ import { RoomsCategoryPage } from "@/components/rooms/RoomsCategoryPage";
 import { RoomDetailPage } from "@/components/rooms/RoomDetailPage";
 import { DealsPage } from "@/components/deals/DealsPage";
 import { ContactPage } from "@/components/contact/ContactPage";
+import { RatesPage } from "@/components/rates/RatesPage";
 import { JsonLd } from "@/components/seo/JsonLd";
 import {
   defaultLanguage,
@@ -20,6 +21,7 @@ import {
 import { getLocalizedChiosIslandPageByPath } from "@/content/chios-island";
 import { getLocalizedDealsPageByPath } from "@/content/deals";
 import { getLocalizedContactPageByPath } from "@/content/contact";
+import { getLocalizedRatesPageByPath } from "@/content/rates";
 import { getLocalizedChiosBeachesPageByPath } from "@/content/chios-beaches";
 import { buildChiosBeachesSchema } from "@/content/chios-beaches-schema";
 import { getLocalizedChiosVillagesPageByPath } from "@/content/chios-villages";
@@ -268,6 +270,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     });
   }
 
+  const ratesData = getLocalizedRatesPageByPath(requestedPath);
+
+  if (ratesData) {
+    return buildLocalizedPageMetadata({
+      path: ratesData.seo.canonicalPath,
+      title: ratesData.seo.title,
+      description: ratesData.seo.description,
+      image: ratesData.seo.ogImage,
+    });
+  }
+
   const chiosBeachesData = getLocalizedChiosBeachesPageByPath(requestedPath);
 
   if (chiosBeachesData) {
@@ -384,6 +397,12 @@ export default async function Page({ params }: PageProps) {
 
   if (contactData) {
     return <ContactPage data={contactData} />;
+  }
+
+  const ratesData = getLocalizedRatesPageByPath(requestedPath);
+
+  if (ratesData) {
+    return <RatesPage data={ratesData} />;
   }
 
   const chiosBeachesData = getLocalizedChiosBeachesPageByPath(requestedPath);

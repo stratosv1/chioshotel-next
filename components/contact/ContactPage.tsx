@@ -18,6 +18,367 @@ type ContactLead = {
   message: string;
 };
 
+type ContactUiText = {
+  inquiryTitle: string;
+  labels: {
+    name: string;
+    email: string;
+    phone: string;
+    checkin: string;
+    checkout: string;
+    room: string;
+    message: string;
+  };
+  placeholders: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    message: string;
+  };
+  buttons: {
+    email: string;
+    whatsapp: string;
+  };
+  validation: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    dates: string;
+    checkoutAfterCheckin: string;
+  };
+  feedback: {
+    email: string;
+    whatsapp: string;
+  };
+  inquiryLabels: {
+    name: string;
+    email: string;
+    phone: string;
+    checkin: string;
+    checkout: string;
+    room: string;
+    message: string;
+  };
+};
+
+const contactUiByLocale: Record<string, ContactUiText> = {
+  en: {
+    inquiryTitle: "Voulamandis House - New Inquiry",
+    labels: {
+      name: "Name",
+      email: "Email address",
+      phone: "Phone number",
+      checkin: "Check-in",
+      checkout: "Check-out",
+      room: "Room selection",
+      message: "Message",
+    },
+    placeholders: {
+      firstName: "John",
+      lastName: "Smith",
+      email: "mail@example.com",
+      phone: "+44...",
+      message: "Tell us more about your stay...",
+    },
+    buttons: {
+      email: "✉️ Send email",
+      whatsapp: "💬 WhatsApp",
+    },
+    validation: {
+      firstName: "Please enter your first name.",
+      lastName: "Please enter your last name.",
+      email: "Please enter your email.",
+      phone: "Please enter your phone number.",
+      dates: "Please select check-in and check-out dates.",
+      checkoutAfterCheckin: "Check-out must be after check-in.",
+    },
+    feedback: {
+      email: "Opening your email app...",
+      whatsapp: "Opening WhatsApp...",
+    },
+    inquiryLabels: {
+      name: "Name",
+      email: "Email",
+      phone: "Phone",
+      checkin: "Check-in",
+      checkout: "Check-out",
+      room: "Room",
+      message: "Message",
+    },
+  },
+  el: {
+    inquiryTitle: "Voulamandis House - Νέο αίτημα",
+    labels: {
+      name: "Ονοματεπώνυμο",
+      email: "Email",
+      phone: "Τηλέφωνο",
+      checkin: "Άφιξη",
+      checkout: "Αναχώρηση",
+      room: "Επιλογή δωματίου",
+      message: "Μήνυμα",
+    },
+    placeholders: {
+      firstName: "Όνομα",
+      lastName: "Επώνυμο",
+      email: "mail@example.com",
+      phone: "+30...",
+      message: "Γράψτε μας περισσότερες λεπτομέρειες για τη διαμονή σας...",
+    },
+    buttons: {
+      email: "✉️ Αποστολή email",
+      whatsapp: "💬 WhatsApp",
+    },
+    validation: {
+      firstName: "Παρακαλώ συμπληρώστε το όνομά σας.",
+      lastName: "Παρακαλώ συμπληρώστε το επώνυμό σας.",
+      email: "Παρακαλώ συμπληρώστε το email σας.",
+      phone: "Παρακαλώ συμπληρώστε το τηλέφωνό σας.",
+      dates: "Παρακαλώ επιλέξτε ημερομηνίες άφιξης και αναχώρησης.",
+      checkoutAfterCheckin: "Η αναχώρηση πρέπει να είναι μετά την άφιξη.",
+    },
+    feedback: {
+      email: "Άνοιγμα εφαρμογής email...",
+      whatsapp: "Άνοιγμα WhatsApp...",
+    },
+    inquiryLabels: {
+      name: "Ονοματεπώνυμο",
+      email: "Email",
+      phone: "Τηλέφωνο",
+      checkin: "Άφιξη",
+      checkout: "Αναχώρηση",
+      room: "Δωμάτιο",
+      message: "Μήνυμα",
+    },
+  },
+  fr: {
+    inquiryTitle: "Voulamandis House - Nouvelle demande",
+    labels: {
+      name: "Nom complet",
+      email: "Adresse email",
+      phone: "Téléphone",
+      checkin: "Arrivée",
+      checkout: "Départ",
+      room: "Choix de chambre",
+      message: "Message",
+    },
+    placeholders: {
+      firstName: "Prénom",
+      lastName: "Nom",
+      email: "mail@example.com",
+      phone: "+33...",
+      message: "Ajoutez plus de détails sur votre séjour...",
+    },
+    buttons: {
+      email: "✉️ Envoyer un email",
+      whatsapp: "💬 WhatsApp",
+    },
+    validation: {
+      firstName: "Veuillez saisir votre prénom.",
+      lastName: "Veuillez saisir votre nom.",
+      email: "Veuillez saisir votre email.",
+      phone: "Veuillez saisir votre téléphone.",
+      dates: "Veuillez sélectionner les dates d’arrivée et de départ.",
+      checkoutAfterCheckin: "La date de départ doit être après la date d’arrivée.",
+    },
+    feedback: {
+      email: "Ouverture de votre application email...",
+      whatsapp: "Ouverture de WhatsApp...",
+    },
+    inquiryLabels: {
+      name: "Nom",
+      email: "Email",
+      phone: "Téléphone",
+      checkin: "Arrivée",
+      checkout: "Départ",
+      room: "Chambre",
+      message: "Message",
+    },
+  },
+  de: {
+    inquiryTitle: "Voulamandis House - Neue Anfrage",
+    labels: {
+      name: "Vollständiger Name",
+      email: "E-Mail-Adresse",
+      phone: "Telefonnummer",
+      checkin: "Anreise",
+      checkout: "Abreise",
+      room: "Zimmerauswahl",
+      message: "Nachricht",
+    },
+    placeholders: {
+      firstName: "Vorname",
+      lastName: "Nachname",
+      email: "mail@example.com",
+      phone: "+49...",
+      message: "Teilen Sie uns weitere Details zu Ihrem Aufenthalt mit...",
+    },
+    buttons: {
+      email: "✉️ E-Mail senden",
+      whatsapp: "💬 WhatsApp",
+    },
+    validation: {
+      firstName: "Bitte geben Sie Ihren Vornamen ein.",
+      lastName: "Bitte geben Sie Ihren Nachnamen ein.",
+      email: "Bitte geben Sie Ihre E-Mail-Adresse ein.",
+      phone: "Bitte geben Sie Ihre Telefonnummer ein.",
+      dates: "Bitte wählen Sie Anreise- und Abreisedatum aus.",
+      checkoutAfterCheckin: "Die Abreise muss nach der Anreise liegen.",
+    },
+    feedback: {
+      email: "E-Mail-App wird geöffnet...",
+      whatsapp: "WhatsApp wird geöffnet...",
+    },
+    inquiryLabels: {
+      name: "Name",
+      email: "E-Mail",
+      phone: "Telefon",
+      checkin: "Anreise",
+      checkout: "Abreise",
+      room: "Zimmer",
+      message: "Nachricht",
+    },
+  },
+  it: {
+    inquiryTitle: "Voulamandis House - Nuova richiesta",
+    labels: {
+      name: "Nome completo",
+      email: "Indirizzo email",
+      phone: "Telefono",
+      checkin: "Arrivo",
+      checkout: "Partenza",
+      room: "Scelta camera",
+      message: "Messaggio",
+    },
+    placeholders: {
+      firstName: "Nome",
+      lastName: "Cognome",
+      email: "mail@example.com",
+      phone: "+39...",
+      message: "Scrivici altri dettagli sul tuo soggiorno...",
+    },
+    buttons: {
+      email: "✉️ Invia email",
+      whatsapp: "💬 WhatsApp",
+    },
+    validation: {
+      firstName: "Inserisci il tuo nome.",
+      lastName: "Inserisci il tuo cognome.",
+      email: "Inserisci la tua email.",
+      phone: "Inserisci il tuo numero di telefono.",
+      dates: "Seleziona le date di arrivo e partenza.",
+      checkoutAfterCheckin: "La partenza deve essere dopo l’arrivo.",
+    },
+    feedback: {
+      email: "Apertura dell’app email...",
+      whatsapp: "Apertura di WhatsApp...",
+    },
+    inquiryLabels: {
+      name: "Nome",
+      email: "Email",
+      phone: "Telefono",
+      checkin: "Arrivo",
+      checkout: "Partenza",
+      room: "Camera",
+      message: "Messaggio",
+    },
+  },
+  es: {
+    inquiryTitle: "Voulamandis House - Nueva consulta",
+    labels: {
+      name: "Nombre completo",
+      email: "Correo electrónico",
+      phone: "Teléfono",
+      checkin: "Llegada",
+      checkout: "Salida",
+      room: "Selección de habitación",
+      message: "Mensaje",
+    },
+    placeholders: {
+      firstName: "Nombre",
+      lastName: "Apellido",
+      email: "mail@example.com",
+      phone: "+34...",
+      message: "Cuéntanos más detalles sobre tu estancia...",
+    },
+    buttons: {
+      email: "✉️ Enviar email",
+      whatsapp: "💬 WhatsApp",
+    },
+    validation: {
+      firstName: "Introduce tu nombre.",
+      lastName: "Introduce tu apellido.",
+      email: "Introduce tu correo electrónico.",
+      phone: "Introduce tu teléfono.",
+      dates: "Selecciona las fechas de llegada y salida.",
+      checkoutAfterCheckin: "La salida debe ser posterior a la llegada.",
+    },
+    feedback: {
+      email: "Abriendo tu aplicación de email...",
+      whatsapp: "Abriendo WhatsApp...",
+    },
+    inquiryLabels: {
+      name: "Nombre",
+      email: "Email",
+      phone: "Teléfono",
+      checkin: "Llegada",
+      checkout: "Salida",
+      room: "Habitación",
+      message: "Mensaje",
+    },
+  },
+  tr: {
+    inquiryTitle: "Voulamandis House - Yeni talep",
+    labels: {
+      name: "Ad soyad",
+      email: "E-posta adresi",
+      phone: "Telefon numarası",
+      checkin: "Giriş",
+      checkout: "Çıkış",
+      room: "Oda seçimi",
+      message: "Mesaj",
+    },
+    placeholders: {
+      firstName: "Ad",
+      lastName: "Soyad",
+      email: "mail@example.com",
+      phone: "+90...",
+      message: "Konaklamanız hakkında daha fazla bilgi yazın...",
+    },
+    buttons: {
+      email: "✉️ E-posta gönder",
+      whatsapp: "💬 WhatsApp",
+    },
+    validation: {
+      firstName: "Lütfen adınızı girin.",
+      lastName: "Lütfen soyadınızı girin.",
+      email: "Lütfen e-posta adresinizi girin.",
+      phone: "Lütfen telefon numaranızı girin.",
+      dates: "Lütfen giriş ve çıkış tarihlerini seçin.",
+      checkoutAfterCheckin: "Çıkış tarihi giriş tarihinden sonra olmalıdır.",
+    },
+    feedback: {
+      email: "E-posta uygulamanız açılıyor...",
+      whatsapp: "WhatsApp açılıyor...",
+    },
+    inquiryLabels: {
+      name: "Ad soyad",
+      email: "E-posta",
+      phone: "Telefon",
+      checkin: "Giriş",
+      checkout: "Çıkış",
+      room: "Oda",
+      message: "Mesaj",
+    },
+  },
+};
+
+function getContactLocale(path: string) {
+  const locale = path.split("/").filter(Boolean)[0];
+  return locale && contactUiByLocale[locale] ? locale : "en";
+}
+
 function getTodayDate() {
   return new Date().toISOString().split("T")[0];
 }
@@ -28,37 +389,38 @@ function getTomorrowDate() {
   return tomorrow.toISOString().split("T")[0];
 }
 
-function buildInquiryText(lead: ContactLead) {
+function buildInquiryText(lead: ContactLead, ui: ContactUiText) {
   return [
-    "Voulamandis House - New Inquiry",
+    ui.inquiryTitle,
     "",
-    `Name: ${lead.firstName} ${lead.lastName}`,
-    `Email: ${lead.email}`,
-    `Phone: ${lead.phone}`,
-    `Check-in: ${lead.checkin}`,
-    `Check-out: ${lead.checkout}`,
-    `Room: ${lead.room}`,
+    `${ui.inquiryLabels.name}: ${lead.firstName} ${lead.lastName}`,
+    `${ui.inquiryLabels.email}: ${lead.email}`,
+    `${ui.inquiryLabels.phone}: ${lead.phone}`,
+    `${ui.inquiryLabels.checkin}: ${lead.checkin}`,
+    `${ui.inquiryLabels.checkout}: ${lead.checkout}`,
+    `${ui.inquiryLabels.room}: ${lead.room}`,
     "",
-    `Message: ${lead.message || "-"}`,
+    `${ui.inquiryLabels.message}: ${lead.message || "-"}`,
   ].join("\n");
 }
 
-function buildMailto(data: ContactPageData, lead: ContactLead) {
+function buildMailto(data: ContactPageData, lead: ContactLead, ui: ContactUiText) {
   const subject = `${data.form.emailSubjectPrefix} - ${lead.firstName} ${lead.lastName}`;
-  const body = buildInquiryText(lead);
+  const body = buildInquiryText(lead, ui);
 
   return `mailto:${data.form.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(
     body,
   )}`;
 }
 
-function buildWhatsAppUrl(data: ContactPageData, lead: ContactLead) {
-  return `https://wa.me/${data.form.whatsappPhone}?text=${encodeURIComponent(buildInquiryText(lead))}`;
+function buildWhatsAppUrl(data: ContactPageData, lead: ContactLead, ui: ContactUiText) {
+  return `https://wa.me/${data.form.whatsappPhone}?text=${encodeURIComponent(buildInquiryText(lead, ui))}`;
 }
 
 export function ContactPage({ data }: ContactPageProps) {
   const today = useMemo(() => getTodayDate(), []);
   const tomorrow = useMemo(() => getTomorrowDate(), []);
+  const ui = contactUiByLocale[getContactLocale(data.seo.canonicalPath)];
 
   const [lead, setLead] = useState<ContactLead>({
     firstName: "",
@@ -73,8 +435,8 @@ export function ContactPage({ data }: ContactPageProps) {
 
   const [feedback, setFeedback] = useState("");
 
-  const mailtoHref = buildMailto(data, lead);
-  const whatsappHref = buildWhatsAppUrl(data, lead);
+  const mailtoHref = buildMailto(data, lead, ui);
+  const whatsappHref = buildWhatsAppUrl(data, lead, ui);
 
   function updateLead<K extends keyof ContactLead>(key: K, value: ContactLead[K]) {
     setLead((current) => ({ ...current, [key]: value }));
@@ -93,12 +455,12 @@ export function ContactPage({ data }: ContactPageProps) {
   }
 
   function validateLead() {
-    if (!lead.firstName.trim()) return "Please enter your first name.";
-    if (!lead.lastName.trim()) return "Please enter your last name.";
-    if (!lead.email.trim()) return "Please enter your email.";
-    if (!lead.phone.trim()) return "Please enter your phone number.";
-    if (!lead.checkin || !lead.checkout) return "Please select check-in and check-out dates.";
-    if (lead.checkout <= lead.checkin) return "Check-out must be after check-in.";
+    if (!lead.firstName.trim()) return ui.validation.firstName;
+    if (!lead.lastName.trim()) return ui.validation.lastName;
+    if (!lead.email.trim()) return ui.validation.email;
+    if (!lead.phone.trim()) return ui.validation.phone;
+    if (!lead.checkin || !lead.checkout) return ui.validation.dates;
+    if (lead.checkout <= lead.checkin) return ui.validation.checkoutAfterCheckin;
     return "";
   }
 
@@ -112,7 +474,7 @@ export function ContactPage({ data }: ContactPageProps) {
       return;
     }
 
-    setFeedback("Opening your email app...");
+    setFeedback(ui.feedback.email);
     window.location.href = mailtoHref;
   }
 
@@ -124,7 +486,7 @@ export function ContactPage({ data }: ContactPageProps) {
       return;
     }
 
-    setFeedback("Opening WhatsApp...");
+    setFeedback(ui.feedback.whatsapp);
     window.open(whatsappHref, "_blank", "noopener,noreferrer");
   }
 
@@ -158,60 +520,60 @@ export function ContactPage({ data }: ContactPageProps) {
             <form onSubmit={handleEmailSubmit}>
               <div className="contact-form-grid">
                 <div className="contact-field">
-                  <label htmlFor="contact-first-name">First name</label>
+                  <label htmlFor="contact-first-name">{ui.labels.name}</label>
                   <input
                     id="contact-first-name"
                     type="text"
                     required
                     autoComplete="given-name"
-                    placeholder="John"
+                    placeholder={ui.placeholders.firstName}
                     value={lead.firstName}
                     onChange={(event) => updateLead("firstName", event.target.value)}
                   />
                 </div>
 
                 <div className="contact-field">
-                  <label htmlFor="contact-last-name">Last name</label>
+                  <label htmlFor="contact-last-name">{ui.labels.name}</label>
                   <input
                     id="contact-last-name"
                     type="text"
                     required
                     autoComplete="family-name"
-                    placeholder="Smith"
+                    placeholder={ui.placeholders.lastName}
                     value={lead.lastName}
                     onChange={(event) => updateLead("lastName", event.target.value)}
                   />
                 </div>
 
                 <div className="contact-field">
-                  <label htmlFor="contact-email">Email address</label>
+                  <label htmlFor="contact-email">{ui.labels.email}</label>
                   <input
                     id="contact-email"
                     type="email"
                     required
                     autoComplete="email"
-                    placeholder="mail@example.com"
+                    placeholder={ui.placeholders.email}
                     value={lead.email}
                     onChange={(event) => updateLead("email", event.target.value)}
                   />
                 </div>
 
                 <div className="contact-field">
-                  <label htmlFor="contact-phone">Phone number</label>
+                  <label htmlFor="contact-phone">{ui.labels.phone}</label>
                   <input
                     id="contact-phone"
                     type="tel"
                     required
                     autoComplete="tel"
                     inputMode="tel"
-                    placeholder="+44..."
+                    placeholder={ui.placeholders.phone}
                     value={lead.phone}
                     onChange={(event) => updateLead("phone", event.target.value)}
                   />
                 </div>
 
                 <div className="contact-field">
-                  <label htmlFor="contact-checkin">Check-in</label>
+                  <label htmlFor="contact-checkin">{ui.labels.checkin}</label>
                   <input
                     id="contact-checkin"
                     type="date"
@@ -223,7 +585,7 @@ export function ContactPage({ data }: ContactPageProps) {
                 </div>
 
                 <div className="contact-field">
-                  <label htmlFor="contact-checkout">Check-out</label>
+                  <label htmlFor="contact-checkout">{ui.labels.checkout}</label>
                   <input
                     id="contact-checkout"
                     type="date"
@@ -235,7 +597,7 @@ export function ContactPage({ data }: ContactPageProps) {
                 </div>
 
                 <div className="contact-field contact-field--full">
-                  <label htmlFor="contact-room">Room selection</label>
+                  <label htmlFor="contact-room">{ui.labels.room}</label>
                   <select
                     id="contact-room"
                     value={lead.room}
@@ -250,11 +612,11 @@ export function ContactPage({ data }: ContactPageProps) {
                 </div>
 
                 <div className="contact-field contact-field--full">
-                  <label htmlFor="contact-message">Message</label>
+                  <label htmlFor="contact-message">{ui.labels.message}</label>
                   <textarea
                     id="contact-message"
                     rows={4}
-                    placeholder="Tell us more about your stay..."
+                    placeholder={ui.placeholders.message}
                     value={lead.message}
                     onChange={(event) => updateLead("message", event.target.value)}
                   />
@@ -263,7 +625,7 @@ export function ContactPage({ data }: ContactPageProps) {
 
               <div className="contact-actions">
                 <button type="submit" className="contact-btn contact-btn--email">
-                  ✉️ Send email
+                  {ui.buttons.email}
                 </button>
 
                 <button
@@ -271,7 +633,7 @@ export function ContactPage({ data }: ContactPageProps) {
                   className="contact-btn contact-btn--whatsapp"
                   onClick={handleWhatsAppClick}
                 >
-                  💬 WhatsApp
+                  {ui.buttons.whatsapp}
                 </button>
               </div>
 
