@@ -9,6 +9,7 @@ import { VillageDetailPage } from "@/components/chios/VillageDetailPage";
 import { MuseumDetailPage } from "@/components/chios/MuseumDetailPage";
 import { RoomsCategoryPage } from "@/components/rooms/RoomsCategoryPage";
 import { RoomDetailPage } from "@/components/rooms/RoomDetailPage";
+import { DealsPage } from "@/components/deals/DealsPage";
 import { JsonLd } from "@/components/seo/JsonLd";
 import {
   defaultLanguage,
@@ -16,6 +17,7 @@ import {
   normalizePath,
 } from "@/lib/languages";
 import { getLocalizedChiosIslandPageByPath } from "@/content/chios-island";
+import { getLocalizedDealsPageByPath } from "@/content/deals";
 import { getLocalizedChiosBeachesPageByPath } from "@/content/chios-beaches";
 import { buildChiosBeachesSchema } from "@/content/chios-beaches-schema";
 import { getLocalizedChiosVillagesPageByPath } from "@/content/chios-villages";
@@ -242,6 +244,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     });
   }
 
+  const dealsData = getLocalizedDealsPageByPath(requestedPath);
+
+  if (dealsData) {
+    return buildLocalizedPageMetadata({
+      path: dealsData.seo.canonicalPath,
+      title: dealsData.seo.title,
+      description: dealsData.seo.description,
+      image: dealsData.seo.ogImage,
+    });
+  }
+
   const chiosBeachesData = getLocalizedChiosBeachesPageByPath(requestedPath);
 
   if (chiosBeachesData) {
@@ -346,6 +359,12 @@ export default async function Page({ params }: PageProps) {
 
   if (chiosIslandData) {
     return <ChiosIslandPage data={chiosIslandData} />;
+  }
+
+  const dealsData = getLocalizedDealsPageByPath(requestedPath);
+
+  if (dealsData) {
+    return <DealsPage data={dealsData} />;
   }
 
   const chiosBeachesData = getLocalizedChiosBeachesPageByPath(requestedPath);
