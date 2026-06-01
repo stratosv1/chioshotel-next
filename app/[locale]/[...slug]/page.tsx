@@ -8,6 +8,7 @@ import { ChiosHolidayQuizPage } from "@/components/chios/ChiosHolidayQuizPage";
 import { BeachDetailPage } from "@/components/chios/BeachDetailPage";
 import { VillageDetailPage } from "@/components/chios/VillageDetailPage";
 import { MuseumDetailPage } from "@/components/chios/MuseumDetailPage";
+import { BeachLoversPage } from "@/components/landing/BeachLoversPage";
 import { RoomsCategoryPage } from "@/components/rooms/RoomsCategoryPage";
 import { RoomDetailPage } from "@/components/rooms/RoomDetailPage";
 import { DealsPage } from "@/components/deals/DealsPage";
@@ -29,6 +30,7 @@ import { getLocalizedChiosVillagesPageByPath } from "@/content/chios-villages";
 import { buildChiosVillagesSchema } from "@/content/chios-villages-schema";
 import { getLocalizedChiosMuseumsPageByPath } from "@/content/chios-museums";
 import { buildChiosMuseumsSchema } from "@/content/chios-museums-schema";
+import { getBeachLoversPageByPath } from "@/content/beach-lovers";
 import {
   roomsCategoryDe,
   roomsCategoryEl,
@@ -370,6 +372,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     });
   }
 
+  const beachLoversData = getBeachLoversPageByPath(requestedPath);
+
+  if (beachLoversData) {
+    return buildLocalizedPageMetadata({
+      path: beachLoversData.seo.canonicalPath,
+      title: beachLoversData.seo.title,
+      description: beachLoversData.seo.description,
+      image: beachLoversData.seo.ogImage,
+    });
+  }
+
   const route = getRouteByPath(requestedPath);
 
   if (route?.itemId === "chios-quiz" && route.action === "KEEP") {
@@ -504,6 +517,12 @@ export default async function Page({ params }: PageProps) {
         <MuseumDetailPage museum={museumDetailData} />
       </>
     );
+  }
+
+  const beachLoversData = getBeachLoversPageByPath(requestedPath);
+
+  if (beachLoversData) {
+    return <BeachLoversPage data={beachLoversData} />;
   }
 
   const route = getRouteByPath(requestedPath);
