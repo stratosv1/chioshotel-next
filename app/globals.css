@@ -15556,3 +15556,431 @@ button.rb-day {
     border-radius: 24px;
   }
 }
+/* Chios Activities pages */
+.chios-activities-page {
+  background: #fffaf3;
+  color: #263126;
+}
+
+.chios-activities-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  padding: clamp(4.5rem, 9vw, 8rem) clamp(1.25rem, 4vw, 4rem);
+  background:
+    radial-gradient(circle at top left, rgba(192, 137, 74, 0.18), transparent 34rem),
+    linear-gradient(135deg, #fff8ec 0%, #f7ead9 100%);
+  overflow: hidden;
+}
+
+.chios-activities-hero__content {
+  max-width: 720px;
+}
+
+.chios-activities-eyebrow {
+  margin: 0 0 0.85rem;
+  color: #9b6231;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.chios-activities-hero h1 {
+  margin: 0;
+  color: #20301f;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.55rem, 6vw, 5.6rem);
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+}
+
+.chios-activities-hero__subtitle {
+  margin: 1.35rem 0 0;
+  max-width: 620px;
+  color: #52604d;
+  font-size: clamp(1.05rem, 1.6vw, 1.28rem);
+  line-height: 1.75;
+}
+
+.chios-activities-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin-top: 2rem;
+}
+
+.chios-activities-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0.85rem 1.35rem;
+  border: 1px solid #20301f;
+  border-radius: 999px;
+  background: #20301f;
+  color: #fffaf3;
+  font-weight: 800;
+  line-height: 1;
+  text-decoration: none;
+  transition:
+    transform 180ms ease,
+    background 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.chios-activities-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(32, 48, 31, 0.16);
+}
+
+.chios-activities-button--ghost {
+  background: transparent;
+  color: #20301f;
+}
+
+.chios-activities-button--ghost:hover {
+  background: #20301f;
+  color: #fffaf3;
+}
+
+.chios-activities-button--light {
+  border-color: rgba(255, 250, 243, 0.75);
+  background: #fffaf3;
+  color: #20301f;
+}
+
+.chios-activities-hero__image-wrap {
+  position: relative;
+  min-height: 420px;
+  border-radius: 2rem;
+  overflow: hidden;
+  box-shadow: 0 28px 70px rgba(68, 45, 24, 0.18);
+}
+
+.chios-activities-hero__image {
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+  object-fit: cover;
+  display: block;
+}
+
+.chios-activities-section {
+  padding: clamp(3.5rem, 7vw, 6.5rem) clamp(1.25rem, 4vw, 4rem);
+}
+
+.chios-activities-container {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+}
+
+.chios-activities-container--narrow {
+  width: min(860px, 100%);
+}
+
+.chios-activities-intro {
+  background: #fffaf3;
+}
+
+.chios-activities-intro h2,
+.chios-activities-section-heading h2,
+.chios-activities-text-block h2,
+.chios-activities-final-cta h2 {
+  margin: 0 0 1rem;
+  color: #20301f;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2rem, 4vw, 3.45rem);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+.chios-activities-intro p,
+.chios-activities-section-heading p,
+.chios-activities-text-block p,
+.chios-activities-final-cta p {
+  color: #52604d;
+  font-size: 1.04rem;
+  line-height: 1.82;
+}
+
+.chios-activities-section-heading {
+  max-width: 760px;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.chios-activities-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.35rem;
+}
+
+.chios-activities-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(32, 48, 31, 0.1);
+  border-radius: 1.35rem;
+  background: #ffffff;
+  box-shadow: 0 16px 38px rgba(68, 45, 24, 0.08);
+}
+
+.chios-activities-card__image-link {
+  display: block;
+  overflow: hidden;
+  background: #eadcc7;
+}
+
+.chios-activities-card__image {
+  width: 100%;
+  height: 245px;
+  object-fit: cover;
+  display: block;
+  transition: transform 260ms ease;
+}
+
+.chios-activities-card:hover .chios-activities-card__image {
+  transform: scale(1.045);
+}
+
+.chios-activities-card__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 1.3rem;
+}
+
+.chios-activities-card__body h3 {
+  margin: 0 0 0.75rem;
+  color: #20301f;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.42rem;
+  line-height: 1.18;
+}
+
+.chios-activities-card__body p {
+  margin: 0;
+  color: #5d6959;
+  line-height: 1.7;
+}
+
+.chios-activities-card__link {
+  margin-top: auto;
+  padding-top: 1.15rem;
+  color: #9b6231;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.chios-activities-card__link:hover {
+  color: #20301f;
+  text-decoration: underline;
+}
+
+.chios-activities-content-stack {
+  display: grid;
+  gap: clamp(2rem, 4vw, 3rem);
+}
+
+.chios-activities-text-block {
+  padding-bottom: clamp(1.75rem, 3vw, 2.6rem);
+  border-bottom: 1px solid rgba(32, 48, 31, 0.12);
+}
+
+.chios-activities-text-block:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.chios-activities-text-block p {
+  margin: 0 0 1.05rem;
+}
+
+.chios-activities-text-block p:last-child {
+  margin-bottom: 0;
+}
+
+.chios-activities-gallery-section {
+  background: #f5eadb;
+}
+
+.chios-activities-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.chios-activities-gallery__item {
+  margin: 0;
+  overflow: hidden;
+  border-radius: 1.15rem;
+  background: #eadcc7;
+  box-shadow: 0 14px 32px rgba(68, 45, 24, 0.1);
+}
+
+.chios-activities-gallery__item img {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  display: block;
+}
+
+.chios-activities-final-cta {
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.16), transparent 28rem),
+    linear-gradient(135deg, #20301f 0%, #324a2f 100%);
+  color: #fffaf3;
+}
+
+.chios-activities-final-cta__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2rem;
+  align-items: center;
+}
+
+.chios-activities-final-cta h2,
+.chios-activities-final-cta p,
+.chios-activities-final-cta .chios-activities-eyebrow {
+  color: #fffaf3;
+}
+
+.chios-activities-final-cta p {
+  max-width: 720px;
+  opacity: 0.9;
+}
+
+.chios-activities-final-cta__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  justify-content: flex-end;
+}
+
+@media (max-width: 980px) {
+  .chios-activities-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .chios-activities-hero__image-wrap,
+  .chios-activities-hero__image {
+    min-height: 340px;
+  }
+
+  .chios-activities-grid,
+  .chios-activities-gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .chios-activities-final-cta__inner {
+    grid-template-columns: 1fr;
+  }
+
+  .chios-activities-final-cta__actions {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .chios-activities-hero {
+    padding-top: 3.5rem;
+  }
+
+  .chios-activities-hero h1 {
+    font-size: clamp(2.35rem, 13vw, 3.5rem);
+  }
+
+  .chios-activities-hero__actions,
+  .chios-activities-final-cta__actions {
+    flex-direction: column;
+  }
+
+  .chios-activities-button {
+    width: 100%;
+  }
+
+  .chios-activities-grid,
+  .chios-activities-gallery {
+    grid-template-columns: 1fr;
+  }
+
+  .chios-activities-card__image,
+  .chios-activities-gallery__item img {
+    height: 235px;
+  }
+}
+
+/* Chios Activities final CTA image */
+.chios-activities-final-cta__copy {
+  min-width: 0;
+}
+
+.chios-activities-final-cta__image-wrap {
+  width: min(420px, 100%);
+  overflow: hidden;
+  border: 1px solid rgba(255, 250, 243, 0.28);
+  border-radius: 1.4rem;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+}
+
+.chios-activities-final-cta__image {
+  display: block;
+  width: 100%;
+  height: 290px;
+  object-fit: cover;
+}
+
+@media (max-width: 980px) {
+  .chios-activities-final-cta__image-wrap {
+    width: 100%;
+  }
+
+  .chios-activities-final-cta__image {
+    height: 260px;
+  }
+}
+
+
+/* Chios Activities header nav fit fix */
+.vh-header__inner {
+  gap: clamp(0.6rem, 1vw, 1.1rem);
+}
+
+.vh-header__brand {
+  flex: 0 0 auto;
+}
+
+.vh-header__nav {
+  flex: 1 1 auto;
+  min-width: 0;
+  justify-content: center;
+  gap: clamp(0.55rem, 0.8vw, 1rem);
+}
+
+.vh-header__nav a {
+  white-space: nowrap;
+  font-size: clamp(0.72rem, 0.78vw, 0.9rem);
+}
+
+.vh-header__actions {
+  flex: 0 0 auto;
+  gap: clamp(0.45rem, 0.7vw, 0.8rem);
+}
+
+@media (max-width: 1320px) {
+  .vh-header__nav {
+    gap: 0.5rem;
+  }
+
+  .vh-header__nav a {
+    font-size: 0.74rem;
+  }
+
+  .vh-header__book {
+    padding-inline: 1rem;
+  }
+}
+

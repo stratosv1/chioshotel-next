@@ -2,6 +2,10 @@
 
 import { usePathname } from "next/navigation";
 import { useMemo, useState } from "react";
+import {
+  chiosActivitiesPaths,
+  chiosActivityDetailPaths,
+} from "@/content/chios-activities";
 
 const languageOptions = [
   {
@@ -182,6 +186,15 @@ const chiosExplorerPaths: Record<LanguageCode, string> = {
   es: "/es/explorar-quios/",
   tr: "/tr/sakiz-adasi-kesif/",
 };
+
+const chiosActivityDetailPathGroups: Record<LanguageCode, string>[] = [
+  chiosActivityDetailPaths.mostra,
+  chiosActivityDetailPaths.greekCourses,
+  chiosActivityDetailPaths.hiking,
+  chiosActivityDetailPaths.thermalBaths,
+  chiosActivityDetailPaths.rocketWar,
+  chiosActivityDetailPaths.orchids,
+];
 
 const beachPaths: Record<LanguageCode, string> = {
   en: "/chios/chios-beaches/",
@@ -442,6 +455,7 @@ const navigationCopy: Record<
     beaches: string;
     villages: string;
     museums: string;
+    chiosActivities: string;
     contact: string;
     chiosIslandGuide: string;
     exploreCards: {
@@ -480,6 +494,7 @@ const navigationCopy: Record<
     beaches: "Beaches",
     villages: "Villages",
     museums: "Museums",
+    chiosActivities: "Chios Activities",
     contact: "Contact",
     chiosIslandGuide: "Chios Island Guide",
     exploreCards: {
@@ -517,6 +532,7 @@ const navigationCopy: Record<
     beaches: "Παραλίες",
     villages: "Χωριά",
     museums: "Μουσεία",
+    chiosActivities: "Δραστηριότητες στη Χίο",
     contact: "Επικοινωνία",
     chiosIslandGuide: "Οδηγός Χίου",
     exploreCards: {
@@ -554,6 +570,7 @@ const navigationCopy: Record<
     beaches: "Plages",
     villages: "Villages",
     museums: "Musées",
+    chiosActivities: "Activités à Chios",
     contact: "Contact",
     chiosIslandGuide: "Guide de Chios",
     exploreCards: {
@@ -591,6 +608,7 @@ const navigationCopy: Record<
     beaches: "Strände",
     villages: "Dörfer",
     museums: "Museen",
+    chiosActivities: "Aktivitäten auf Chios",
     contact: "Kontakt",
     chiosIslandGuide: "Chios Reiseführer",
     exploreCards: {
@@ -628,6 +646,7 @@ const navigationCopy: Record<
     beaches: "Spiagge",
     villages: "Villaggi",
     museums: "Musei",
+    chiosActivities: "Attività a Chios",
     contact: "Contatti",
     chiosIslandGuide: "Guida di Chios",
     exploreCards: {
@@ -665,6 +684,7 @@ const navigationCopy: Record<
     beaches: "Playas",
     villages: "Pueblos",
     museums: "Museos",
+    chiosActivities: "Actividades en Quíos",
     contact: "Contacto",
     chiosIslandGuide: "Guía de Chios",
     exploreCards: {
@@ -702,6 +722,7 @@ const navigationCopy: Record<
     beaches: "Plajlar",
     villages: "Köyler",
     museums: "Müzeler",
+    chiosActivities: "Sakız Adası Aktiviteleri",
     contact: "İletişim",
     chiosIslandGuide: "Sakız Adası Rehberi",
     exploreCards: {
@@ -769,6 +790,22 @@ function getCurrentLanguage(path: string): LanguageCode {
 
 function getLanguageHref(path: string, language: LanguageCode) {
   const normalizedPath = normalizePath(path);
+
+  
+
+  const matchingChiosActivityDetailGroup = chiosActivityDetailPathGroups.find((group) =>
+    Object.values(group).includes(normalizedPath),
+  );
+
+  if (matchingChiosActivityDetailGroup) {
+    return matchingChiosActivityDetailGroup[language];
+  }
+
+  const isChiosActivitiesPage = Object.values(chiosActivitiesPaths).includes(normalizedPath);
+
+  if (isChiosActivitiesPage) {
+    return chiosActivitiesPaths[language];
+  }
 
   const matchingBeachDetailGroup = beachDetailPathGroups.find((group) =>
     Object.values(group).includes(normalizedPath),
@@ -1008,16 +1045,8 @@ function getMainLinks(language: LanguageCode) {
       href: chiosIslandPaths[language],
     },
     {
-      label: copy.beaches,
-      href: beachPaths[language],
-    },
-    {
-      label: copy.villages,
-      href: villagePaths[language],
-    },
-    {
-      label: copy.museums,
-      href: museumPaths[language],
+      label: copy.chiosActivities,
+      href: chiosActivitiesPaths[language],
     },
     {
       label: copy.contact,
@@ -1044,6 +1073,11 @@ function getExploreLinks(language: LanguageCode) {
       title: copy.exploreCards.museums.title,
       text: copy.exploreCards.museums.text,
       href: museumPaths[language],
+    },
+    {
+      title: copy.chiosActivities,
+      text: copy.exploreChios,
+      href: chiosActivitiesPaths[language],
     },
   ];
 }

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { ChiosIslandPage } from "@/components/chios/ChiosIslandPage";
 import { ChiosBeachesPage } from "@/components/chios/ChiosBeachesPage";
@@ -12,6 +12,7 @@ import { BeachLoversPage } from "@/components/landing/BeachLoversPage";
 import ChiosExplorerPage from "@/components/landing/ChiosExplorerPage";
 import FamilyTravelPage from "@/components/landing/FamilyTravelPage";
 import TasteLoverPage from "@/components/landing/TasteLoverPage";
+import ChiosActivitiesPage from "@/components/landing/ChiosActivitiesPage";
 import { RoomsCategoryPage } from "@/components/rooms/RoomsCategoryPage";
 import { RoomDetailPage } from "@/components/rooms/RoomDetailPage";
 import { DealsPage } from "@/components/deals/DealsPage";
@@ -37,6 +38,7 @@ import { getBeachLoversPageByPath } from "@/content/beach-lovers";
 import { getChiosExplorerPageByPath } from "@/content/chios-explorer";
 import { getFamilyTravelPageByPath } from "@/content/family-travel";
 import { getTasteLoverPageByPath } from "@/content/taste-lover";
+import { getChiosActivitiesPageByPath } from "@/content/chios-activities";
 import {
   roomsCategoryDe,
   roomsCategoryEl,
@@ -422,6 +424,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     });
   }
 
+  const chiosActivitiesData = getChiosActivitiesPageByPath(requestedPath);
+
+  if (chiosActivitiesData) {
+    return buildLocalizedPageMetadata({
+      path: chiosActivitiesData.path,
+      title: chiosActivitiesData.seo.title,
+      description: chiosActivitiesData.seo.description,
+      image: chiosActivitiesData.hero.image,
+    });
+  }
+
   const route = getRouteByPath(requestedPath);
 
   if (route?.itemId === "chios-quiz" && route.action === "KEEP") {
@@ -580,6 +593,12 @@ export default async function Page({ params }: PageProps) {
 
   if (chiosExplorerData) {
     return <ChiosExplorerPage data={chiosExplorerData} />;
+  }
+
+  const chiosActivitiesData = getChiosActivitiesPageByPath(requestedPath);
+
+  if (chiosActivitiesData) {
+    return <ChiosActivitiesPage data={chiosActivitiesData} />;
   }
 
   const route = getRouteByPath(requestedPath);
