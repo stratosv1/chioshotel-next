@@ -13,6 +13,7 @@ import ChiosExplorerPage from "@/components/landing/ChiosExplorerPage";
 import FamilyTravelPage from "@/components/landing/FamilyTravelPage";
 import TasteLoverPage from "@/components/landing/TasteLoverPage";
 import ChiosActivitiesPage from "@/components/landing/ChiosActivitiesPage";
+import FindYourRoomPage from "@/components/booking/FindYourRoomPage";
 import { RoomsCategoryPage } from "@/components/rooms/RoomsCategoryPage";
 import { RoomDetailPage } from "@/components/rooms/RoomDetailPage";
 import { DealsPage } from "@/components/deals/DealsPage";
@@ -39,6 +40,7 @@ import { getChiosExplorerPageByPath } from "@/content/chios-explorer";
 import { getFamilyTravelPageByPath } from "@/content/family-travel";
 import { getTasteLoverPageByPath } from "@/content/taste-lover";
 import { getChiosActivitiesPageByPath } from "@/content/chios-activities";
+import { getFindYourRoomPageByPath } from "@/content/find-your-room";
 import {
   roomsCategoryDe,
   roomsCategoryEl,
@@ -87,7 +89,7 @@ type PageProps = {
   }>;
 };
 
-export const dynamicParams = false;
+export const dynamicParams = true;
 
 export function generateStaticParams() {
   return routeMap
@@ -435,6 +437,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     });
   }
 
+  const findYourRoomData = getFindYourRoomPageByPath(requestedPath);
+
+  if (findYourRoomData) {
+    return buildLocalizedPageMetadata({
+      path: findYourRoomData.seo.canonicalPath,
+      title: findYourRoomData.seo.title,
+      description: findYourRoomData.seo.description,
+      image: findYourRoomData.seo.ogImage,
+    });
+  }
+
   const route = getRouteByPath(requestedPath);
 
   if (route?.itemId === "chios-quiz" && route.action === "KEEP") {
@@ -599,6 +612,12 @@ export default async function Page({ params }: PageProps) {
 
   if (chiosActivitiesData) {
     return <ChiosActivitiesPage data={chiosActivitiesData} />;
+  }
+
+  const findYourRoomData = getFindYourRoomPageByPath(requestedPath);
+
+  if (findYourRoomData) {
+    return <FindYourRoomPage data={findYourRoomData} />;
   }
 
   const route = getRouteByPath(requestedPath);

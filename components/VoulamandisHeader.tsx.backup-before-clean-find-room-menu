@@ -1060,6 +1060,10 @@ function getMainLinks(language: LanguageCode) {
 
   return [
     {
+      label: copy.findYourRoom,
+      href: findYourRoomPaths[language],
+    },
+    {
       label: copy.rooms,
       href: roomsCategoryPaths[language],
     },
@@ -1422,7 +1426,11 @@ export function VoulamandisHeader() {
             <span className="vh-mobile-menu__label">{copy.stay}</span>
 
             <div className="vh-mobile-menu__links">
-<a href={roomsCategoryPaths[currentLanguage]} onClick={closeMenu}>
+              <a href={findYourRoomPaths[currentLanguage]} onClick={closeMenu}>
+                {copy.findYourRoom}
+              </a>
+
+              <a href={roomsCategoryPaths[currentLanguage]} onClick={closeMenu}>
                 {copy.rooms}
               </a>
 

@@ -16101,3 +16101,572 @@ button.rb-day {
     overflow-wrap: anywhere;
   }
 }
+.find-room-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(205, 168, 109, 0.22), transparent 34rem),
+    linear-gradient(180deg, #fffaf2 0%, #ffffff 42%, #f8efe2 100%);
+  color: #2c2118;
+}
+
+.find-room-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 7rem 1.5rem 3.5rem;
+  background:
+    linear-gradient(120deg, rgba(31, 24, 18, 0.72), rgba(31, 24, 18, 0.2)),
+    url("https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-family-apartments.webp")
+      center / cover;
+  color: #ffffff;
+}
+
+.find-room-hero::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 7rem;
+  background: linear-gradient(180deg, transparent, rgba(255, 250, 242, 0.98));
+}
+
+.find-room-hero__inner {
+  position: relative;
+  z-index: 1;
+  width: min(1080px, 100%);
+  margin: 0 auto;
+}
+
+.find-room-hero__eyebrow {
+  margin: 0 0 0.85rem;
+  color: #f2c978;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.find-room-hero__title {
+  max-width: 720px;
+  margin: 0;
+  font-size: clamp(2.4rem, 7vw, 5.4rem);
+  line-height: 0.95;
+  letter-spacing: -0.055em;
+}
+
+.find-room-hero__description {
+  max-width: 680px;
+  margin: 1.4rem 0 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  line-height: 1.7;
+}
+
+.find-room-engine-section {
+  position: relative;
+  z-index: 2;
+  padding: 0 1rem 5rem;
+}
+
+.find-room-engine-section__inner {
+  width: min(1100px, 100%);
+  margin: -2.5rem auto 0;
+}
+
+.find-room-engine {
+  width: 100%;
+}
+
+.find-room-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(116, 83, 48, 0.12);
+  border-radius: 2rem;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 1.5rem 4rem rgba(56, 38, 20, 0.14);
+  backdrop-filter: blur(14px);
+}
+
+.find-room-benefits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  padding: 1.25rem 1.25rem 0;
+}
+
+.find-room-benefits span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.15rem;
+  border: 1px solid rgba(182, 126, 48, 0.18);
+  border-radius: 999px;
+  padding: 0.45rem 0.8rem;
+  background: #fff7e8;
+  color: #7b4c13;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.find-room-step {
+  padding: clamp(1.25rem, 4vw, 2.2rem);
+}
+
+.find-room-step h2 {
+  margin: 0 0 1.35rem;
+  color: #2b1d12;
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+}
+
+.find-room-step p {
+  max-width: 680px;
+  color: #6b5947;
+  line-height: 1.7;
+}
+
+.find-room-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.find-room-grid label,
+.find-room-guests label {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.find-room-grid span,
+.find-room-guests span {
+  color: #5c4938;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.find-room-grid input,
+.find-room-grid select,
+.find-room-guests select {
+  width: 100%;
+  min-height: 3.15rem;
+  border: 1px solid rgba(94, 69, 46, 0.18);
+  border-radius: 1rem;
+  padding: 0 0.95rem;
+  background: #fffdf8;
+  color: #2c2118;
+  font: inherit;
+  outline: none;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background 180ms ease;
+}
+
+.find-room-grid input:focus,
+.find-room-grid select:focus,
+.find-room-guests select:focus {
+  border-color: rgba(177, 111, 32, 0.58);
+  box-shadow: 0 0 0 4px rgba(209, 145, 65, 0.14);
+  background: #ffffff;
+}
+
+.find-room-guests {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1rem 0 1.4rem;
+}
+
+.find-room-primary,
+.find-room-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.15rem;
+  border: 0;
+  border-radius: 999px;
+  padding: 0.8rem 1.35rem;
+  font: inherit;
+  font-weight: 900;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    opacity 160ms ease,
+    background 160ms ease;
+}
+
+.find-room-primary {
+  background: linear-gradient(135deg, #b56a18, #e0a84f);
+  color: #ffffff;
+  box-shadow: 0 0.85rem 1.8rem rgba(172, 99, 22, 0.24);
+}
+
+.find-room-secondary {
+  border: 1px solid rgba(94, 69, 46, 0.15);
+  background: #fff7e8;
+  color: #6a4217;
+}
+
+.find-room-primary:hover,
+.find-room-secondary:hover {
+  transform: translateY(-1px);
+}
+
+.find-room-primary:disabled,
+.find-room-secondary:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+  transform: none;
+}
+
+.find-room-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1.35rem;
+}
+
+.find-room-filter-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.find-room-filter-list button {
+  border: 1px solid rgba(94, 69, 46, 0.16);
+  border-radius: 999px;
+  padding: 0.7rem 1rem;
+  background: #fffdf8;
+  color: #4d3827;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    background 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+.find-room-filter-list button:hover {
+  transform: translateY(-1px);
+}
+
+.find-room-filter-list button.is-active {
+  border-color: rgba(177, 111, 32, 0.5);
+  background: #2f241a;
+  color: #ffffff;
+}
+
+.find-room-toast,
+.find-room-error {
+  margin: 1.1rem 1.25rem 0;
+  border-radius: 1rem;
+  padding: 0.9rem 1rem;
+  font-weight: 800;
+}
+
+.find-room-toast {
+  border: 1px solid rgba(56, 134, 89, 0.18);
+  background: #effaf2;
+  color: #235b36;
+}
+
+.find-room-error {
+  border: 1px solid rgba(188, 63, 47, 0.18);
+  background: #fff0ec;
+  color: #9a2e20;
+}
+
+.find-room-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin: -0.35rem 0 1.25rem;
+}
+
+.find-room-summary span {
+  border-radius: 999px;
+  padding: 0.55rem 0.85rem;
+  background: #f6ead9;
+  color: #65411e;
+  font-size: 0.9rem;
+  font-weight: 900;
+}
+
+.find-room-results {
+  display: grid;
+  gap: 1rem;
+}
+
+.find-room-result-card {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  overflow: hidden;
+  border: 1px solid rgba(94, 69, 46, 0.12);
+  border-radius: 1.45rem;
+  background: #ffffff;
+  box-shadow: 0 0.8rem 2rem rgba(56, 38, 20, 0.08);
+}
+
+.find-room-result-card img {
+  width: 100%;
+  height: 100%;
+  min-height: 260px;
+  object-fit: cover;
+}
+
+.find-room-result-card__body {
+  padding: 1.25rem;
+}
+
+.find-room-result-card__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.find-room-result-card__top h3 {
+  margin: 0;
+  color: #2b1d12;
+  font-size: 1.45rem;
+  letter-spacing: -0.03em;
+}
+
+.find-room-result-card__top p {
+  margin: 0.35rem 0 0;
+}
+
+.find-room-badge {
+  display: inline-flex;
+  width: fit-content;
+  margin: 0 0 0.45rem !important;
+  border-radius: 999px;
+  padding: 0.35rem 0.65rem;
+  background: #fff1d6;
+  color: #8a5517 !important;
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.find-room-price {
+  display: grid;
+  align-content: start;
+  justify-items: end;
+  min-width: 120px;
+}
+
+.find-room-price span {
+  color: #2b8a4b;
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.find-room-price strong {
+  color: #2b1d12;
+  font-size: 1.35rem;
+}
+
+.find-room-amenities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin: 1rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.find-room-amenities li {
+  border-radius: 999px;
+  padding: 0.42rem 0.65rem;
+  background: #f8f1e8;
+  color: #5b4634;
+  font-size: 0.82rem;
+  font-weight: 750;
+}
+
+.find-room-result-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.find-room-result-card__footer span {
+  color: #7b6149;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.find-room-total-box {
+  display: grid;
+  gap: 0.45rem;
+  margin: 1.25rem 0;
+  border: 1px solid rgba(177, 111, 32, 0.18);
+  border-radius: 1.25rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, #fff7e8, #ffffff);
+}
+
+.find-room-total-box div,
+.find-room-final-summary div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.find-room-total-box span,
+.find-room-final-summary span {
+  color: #654d36;
+  font-weight: 800;
+}
+
+.find-room-total-box strong,
+.find-room-final-summary strong {
+  color: #2b1d12;
+  font-size: 1.35rem;
+}
+
+.find-room-total-box p {
+  margin: 0;
+  color: #7a5d41;
+  font-size: 0.9rem;
+}
+
+.find-room-empty {
+  border: 1px dashed rgba(94, 69, 46, 0.25);
+  border-radius: 1.25rem;
+  padding: 1.25rem;
+  background: #fffaf2;
+}
+
+.find-room-empty h3 {
+  margin: 0 0 0.45rem;
+  color: #2b1d12;
+}
+
+.find-room-empty p {
+  margin: 0;
+}
+
+.find-room-breakfast-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.find-room-choice-card {
+  min-height: 10rem;
+  border: 1px solid rgba(94, 69, 46, 0.14);
+  border-radius: 1.45rem;
+  padding: 1.2rem;
+  background: #fffdf8;
+  color: #2c2118;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease;
+}
+
+.find-room-choice-card:hover {
+  border-color: rgba(177, 111, 32, 0.45);
+  background: #fff7e8;
+  box-shadow: 0 0.8rem 2rem rgba(56, 38, 20, 0.08);
+  transform: translateY(-2px);
+}
+
+.find-room-choice-card strong {
+  display: block;
+  margin-bottom: 0.6rem;
+  font-size: 1.35rem;
+}
+
+.find-room-choice-card span {
+  color: #7a5d41;
+  font-weight: 800;
+}
+
+.find-room-final-summary {
+  display: grid;
+  gap: 0.7rem;
+  margin: 1rem 0 0;
+  border: 1px solid rgba(94, 69, 46, 0.12);
+  border-radius: 1.25rem;
+  padding: 1rem;
+  background: #fffaf2;
+}
+
+@media (max-width: 820px) {
+  .find-room-hero {
+    padding-top: 5.6rem;
+  }
+
+  .find-room-grid,
+  .find-room-guests,
+  .find-room-breakfast-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .find-room-result-card {
+    grid-template-columns: 1fr;
+  }
+
+  .find-room-result-card img {
+    min-height: 230px;
+  }
+
+  .find-room-result-card__top {
+    display: grid;
+  }
+
+  .find-room-price {
+    justify-items: start;
+  }
+
+  .find-room-result-card__footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 520px) {
+  .find-room-engine-section {
+    padding-inline: 0.75rem;
+  }
+
+  .find-room-card {
+    border-radius: 1.35rem;
+  }
+
+  .find-room-step {
+    padding: 1rem;
+  }
+
+  .find-room-benefits {
+    padding: 1rem 1rem 0;
+  }
+
+  .find-room-primary,
+  .find-room-secondary {
+    width: 100%;
+  }
+
+  .find-room-actions {
+    width: 100%;
+  }
+
+  .find-room-total-box div,
+  .find-room-final-summary div {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+}
