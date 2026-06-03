@@ -11645,10 +11645,10 @@ a.rw-action-btn {
 }
 /* =========================================================
    VOULAMANDIS PREMIUM HEADER
-   Desktop nav + mobile premium burger menu
+   Desktop nav + mobile premium burger menu + live pulse
    ========================================================= */
 
-/* ==========================================================================
+/* ========================================================================== 
    Header / Navigation / Language Switcher
    ========================================================================== */
 
@@ -11657,27 +11657,29 @@ a.rw-action-btn {
   top: 0;
   z-index: 1000;
   width: 100%;
-  background: rgba(255, 253, 250, 0.9);
+  background: rgba(255, 253, 250, 0.92);
   border-bottom: 1px solid rgba(142, 102, 7, 0.12);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
 }
 
 .vh-header__inner {
-  width: min(1320px, calc(100% - 32px));
-  min-height: 76px;
+  width: min(1600px, calc(100% - 40px));
+  min-height: 82px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 22px;
+  gap: clamp(0.75rem, 1.15vw, 1.35rem);
 }
 
 .vh-header__brand {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  min-width: 220px;
+  gap: 0.95rem;
+  min-width: 0;
+  max-width: 440px;
+  flex: 0 0 auto;
   color: #2f261f;
   text-decoration: none;
 }
@@ -11703,30 +11705,84 @@ a.rw-action-btn {
 .vh-header__brand-text {
   display: grid;
   gap: 2px;
+  min-width: 0;
 }
 
 .vh-header__brand-text strong {
+  display: block;
   color: #2f261f;
-  font-size: 15px;
-  line-height: 1;
+  font-size: clamp(1.18rem, 1.34vw, 1.48rem);
+  line-height: 1.02;
   font-weight: 950;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.045em;
+  white-space: nowrap;
 }
 
 .vh-header__brand-text small {
+  display: block;
   color: #766a61;
-  font-size: 11px;
-  line-height: 1;
-  font-weight: 800;
-  letter-spacing: 0.08em;
+  font-size: clamp(0.72rem, 0.86vw, 0.86rem);
+  line-height: 1.05;
+  font-weight: 850;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.vh-header__brand-live {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 1.78rem;
+  height: 1.78rem;
+  margin-left: 0.28rem;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid rgba(34, 197, 94, 0.24);
+  background: rgba(34, 197, 94, 0.08);
+  color: #15803d;
+  white-space: nowrap;
+}
+
+.vh-header__brand-live-dot {
+  width: 0.52rem;
+  height: 0.52rem;
+  border-radius: 999px;
+  background: #22c55e;
+  box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6);
+  animation: vhHeaderLivePulse 1.6s ease-out infinite;
+}
+
+.vh-header__brand-live-text {
+  display: none;
+  color: #15803d;
+  font-size: 0.68rem;
+  font-weight: 950;
+  letter-spacing: 0.1em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+@keyframes vhHeaderLivePulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6);
+  }
+
+  70% {
+    box-shadow: 0 0 0 8px rgba(34, 197, 94, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+  }
 }
 
 .vh-header__nav {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 3px;
+  gap: clamp(0.45rem, 0.62vw, 0.9rem);
   min-width: 0;
 }
 
@@ -11734,42 +11790,47 @@ a.rw-action-btn {
   position: relative;
   display: inline-flex;
   align-items: center;
-  min-height: 38px;
-  padding: 0 9px;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 clamp(0.48rem, 0.64vw, 0.78rem);
   border-radius: 999px;
   color: #574b3f;
-  font-size: 12.5px;
+  font-size: clamp(0.82rem, 0.84vw, 0.96rem);
   font-weight: 900;
+  line-height: 1;
   white-space: nowrap;
   text-decoration: none;
   transition: all 0.25s ease;
 }
 
-.vh-header__nav a:hover {
+.vh-header__nav a:hover,
+.vh-header__nav a:focus-visible {
   background: #fff4e5;
   color: #6a4b00;
+  outline: none;
 }
 
 .vh-header__actions {
   display: inline-flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 9px;
+  gap: clamp(0.5rem, 0.72vw, 0.9rem);
   min-width: 0;
+  flex: 0 0 auto;
 }
 
 .vh-header__book {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 40px;
-  padding: 0 15px;
+  min-height: 44px;
+  padding: 0 1.28rem;
   border-radius: 999px;
   background: #2f261f;
   color: #fff;
   border: 1px solid rgba(47, 38, 31, 0.16);
   box-shadow: 0 14px 34px rgba(47, 38, 31, 0.18);
-  font-size: 10.5px;
+  font-size: 11.5px;
   font-weight: 950;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -11778,10 +11839,12 @@ a.rw-action-btn {
   transition: all 0.25s ease;
 }
 
-.vh-header__book:hover {
+.vh-header__book:hover,
+.vh-header__book:focus-visible {
   transform: translateY(-2px);
   background: #6a4b00;
   box-shadow: 0 18px 42px rgba(47, 38, 31, 0.22);
+  outline: none;
 }
 
 .vh-language-switcher {
@@ -11799,12 +11862,12 @@ a.rw-action-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 29px;
-  height: 28px;
+  min-width: 34px;
+  height: 32px;
   padding: 0 6px;
   border-radius: 999px;
   color: #2c2620;
-  font-size: 0.7rem;
+  font-size: 0.78rem;
   font-weight: 850;
   letter-spacing: 0.04em;
   text-decoration: none;
@@ -11814,10 +11877,12 @@ a.rw-action-btn {
     transform 0.2s ease;
 }
 
-.vh-language-switcher a:hover {
+.vh-language-switcher a:hover,
+.vh-language-switcher a:focus-visible {
   background: #fcfaf7;
   color: #a68b6d;
   transform: translateY(-1px);
+  outline: none;
 }
 
 .vh-language-switcher a.is-active {
@@ -12086,9 +12151,23 @@ a.rw-action-btn {
 
 /* Responsive header */
 
-@media (max-width: 1280px) {
+@media (min-width: 1500px) {
+  .vh-header__brand-live {
+    width: auto;
+    height: auto;
+    gap: 0.36rem;
+    padding: 0.36rem 0.58rem;
+  }
+
+  .vh-header__brand-live-text {
+    display: inline;
+  }
+}
+
+@media (max-width: 1420px) {
   .vh-header__inner {
     grid-template-columns: auto auto;
+    justify-content: space-between;
   }
 
   .vh-header__nav {
@@ -12098,17 +12177,39 @@ a.rw-action-btn {
   .vh-header__burger {
     display: inline-block;
   }
+
+  .vh-header__actions > .vh-language-switcher,
+  .vh-header__book {
+    display: none;
+  }
+
+  .vh-header__brand {
+    max-width: none;
+  }
+
+  .vh-header__brand-live {
+    width: auto;
+    height: auto;
+    gap: 0.34rem;
+    padding: 0.35rem 0.52rem;
+  }
+
+  .vh-header__brand-live-text {
+    display: inline;
+  }
 }
 
 @media (max-width: 767px) {
   .vh-header__inner {
     width: calc(100% - 22px);
-    min-height: 66px;
+    min-height: 70px;
     gap: 12px;
   }
 
   .vh-header__brand {
     min-width: 0;
+    gap: 0.62rem;
+    flex: 1 1 auto;
   }
 
   .vh-header__logo-mark {
@@ -12119,21 +12220,50 @@ a.rw-action-btn {
   }
 
   .vh-header__brand-text strong {
-    font-size: 14px;
+    font-size: clamp(1.02rem, 4.6vw, 1.25rem);
+    letter-spacing: -0.05em;
   }
 
   .vh-header__brand-text small {
-    font-size: 10px;
+    font-size: clamp(0.62rem, 2.8vw, 0.74rem);
+    letter-spacing: 0.13em;
   }
 
-  .vh-header__actions > .vh-language-switcher {
-    display: none;
+  .vh-header__brand-live {
+    gap: 0.32rem;
+    padding: 0.32rem 0.48rem;
   }
 
-  .vh-header__book {
-    display: none;
+  .vh-header__brand-live-dot {
+    width: 0.48rem;
+    height: 0.48rem;
+  }
+
+  .vh-header__brand-live-text {
+    font-size: 0.62rem;
   }
 }
+
+@media (max-width: 380px) {
+  .vh-header__brand-live {
+    width: 1.72rem;
+    height: 1.72rem;
+    padding: 0;
+  }
+
+  .vh-header__brand-live-text {
+    display: none;
+  }
+
+  .vh-header__brand-text strong {
+    font-size: 0.98rem;
+  }
+
+  .vh-header__brand-text small {
+    font-size: 0.58rem;
+  }
+}
+
 /* =========================================================
    CLS FIX: Home hero quiz card pseudo element
    Prevent decorative ::after from causing layout shifts
@@ -15940,47 +16070,6 @@ button.rb-day {
 
   .chios-activities-final-cta__image {
     height: 260px;
-  }
-}
-
-
-/* Chios Activities header nav fit fix */
-.vh-header__inner {
-  gap: clamp(0.6rem, 1vw, 1.1rem);
-}
-
-.vh-header__brand {
-  flex: 0 0 auto;
-}
-
-.vh-header__nav {
-  flex: 1 1 auto;
-  min-width: 0;
-  justify-content: center;
-  gap: clamp(0.55rem, 0.8vw, 1rem);
-}
-
-.vh-header__nav a {
-  white-space: nowrap;
-  font-size: clamp(0.72rem, 0.78vw, 0.9rem);
-}
-
-.vh-header__actions {
-  flex: 0 0 auto;
-  gap: clamp(0.45rem, 0.7vw, 0.8rem);
-}
-
-@media (max-width: 1320px) {
-  .vh-header__nav {
-    gap: 0.5rem;
-  }
-
-  .vh-header__nav a {
-    font-size: 0.74rem;
-  }
-
-  .vh-header__book {
-    padding-inline: 1rem;
   }
 }
 

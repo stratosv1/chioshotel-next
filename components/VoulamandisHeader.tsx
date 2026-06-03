@@ -458,6 +458,7 @@ const navigationCopy: Record<
     chiosActivities: string;
     contact: string;
     chiosIslandGuide: string;
+    live: string;
     exploreCards: {
       beaches: {
         title: string;
@@ -497,6 +498,7 @@ const navigationCopy: Record<
     chiosActivities: "Chios Activities",
     contact: "Contact",
     chiosIslandGuide: "Chios Island Guide",
+    live: "Live",
     exploreCards: {
       beaches: {
         title: "Chios Beaches",
@@ -535,6 +537,7 @@ const navigationCopy: Record<
     chiosActivities: "Δραστηριότητες στη Χίο",
     contact: "Επικοινωνία",
     chiosIslandGuide: "Οδηγός Χίου",
+    live: "Live",
     exploreCards: {
       beaches: {
         title: "Παραλίες της Χίου",
@@ -573,6 +576,7 @@ const navigationCopy: Record<
     chiosActivities: "Activités à Chios",
     contact: "Contact",
     chiosIslandGuide: "Guide de Chios",
+    live: "Live",
     exploreCards: {
       beaches: {
         title: "Plages de Chios",
@@ -611,6 +615,7 @@ const navigationCopy: Record<
     chiosActivities: "Aktivitäten auf Chios",
     contact: "Kontakt",
     chiosIslandGuide: "Chios Reiseführer",
+    live: "Live",
     exploreCards: {
       beaches: {
         title: "Strände auf Chios",
@@ -649,6 +654,7 @@ const navigationCopy: Record<
     chiosActivities: "Attività a Chios",
     contact: "Contatti",
     chiosIslandGuide: "Guida di Chios",
+    live: "Live",
     exploreCards: {
       beaches: {
         title: "Spiagge di Chios",
@@ -687,6 +693,7 @@ const navigationCopy: Record<
     chiosActivities: "Actividades en Quíos",
     contact: "Contacto",
     chiosIslandGuide: "Guía de Chios",
+    live: "Live",
     exploreCards: {
       beaches: {
         title: "Playas de Chios",
@@ -725,6 +732,7 @@ const navigationCopy: Record<
     chiosActivities: "Sakız Adası Aktiviteleri",
     contact: "İletişim",
     chiosIslandGuide: "Sakız Adası Rehberi",
+    live: "Live",
     exploreCards: {
       beaches: {
         title: "Sakız Adası Plajları",
@@ -790,8 +798,6 @@ function getCurrentLanguage(path: string): LanguageCode {
 
 function getLanguageHref(path: string, language: LanguageCode) {
   const normalizedPath = normalizePath(path);
-
-  
 
   const matchingChiosActivityDetailGroup = chiosActivityDetailPathGroups.find((group) =>
     Object.values(group).includes(normalizedPath),
@@ -1131,6 +1137,181 @@ export function VoulamandisHeader() {
 
   return (
     <header className="vh-header">
+      <style jsx global>{`
+        .vh-header__brand {
+          gap: 0.95rem;
+          min-width: 0;
+        }
+
+        .vh-header__brand-text {
+          min-width: 0;
+        }
+
+        .vh-header__brand-text strong {
+          display: block;
+          font-size: clamp(1.12rem, 2vw, 1.45rem);
+          line-height: 1.02;
+          font-weight: 900;
+          letter-spacing: -0.045em;
+          color: #2d241d;
+        }
+
+        .vh-header__brand-text small {
+          display: block;
+          margin-top: 0.26rem;
+          font-size: clamp(0.72rem, 1.2vw, 0.9rem);
+          line-height: 1.05;
+          font-weight: 800;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          color: #746c63;
+        }
+
+        .vh-header__brand-live {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.42rem;
+          flex: 0 0 auto;
+          padding: 0.42rem 0.7rem;
+          border-radius: 999px;
+          border: 1px solid rgba(35, 174, 89, 0.22);
+          background:
+            radial-gradient(circle at 20% 50%, rgba(35, 174, 89, 0.12), transparent 55%),
+            rgba(35, 174, 89, 0.08);
+          color: #15803d;
+          box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.2);
+        }
+
+        .vh-header__brand-live-dot {
+          position: relative;
+          width: 0.58rem;
+          height: 0.58rem;
+          border-radius: 999px;
+          background: #22c55e;
+          box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.55);
+          animation: vhLivePulse 1.65s ease-out infinite;
+        }
+
+        .vh-header__brand-live-dot::after {
+          content: "";
+          position: absolute;
+          inset: -0.42rem;
+          border-radius: inherit;
+          background: rgba(34, 197, 94, 0.12);
+          opacity: 0;
+          animation: vhLiveGlow 1.65s ease-out infinite;
+        }
+
+        .vh-header__brand-live-text {
+          font-size: 0.78rem;
+          line-height: 1;
+          font-weight: 900;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+        }
+
+        @keyframes vhLivePulse {
+          0% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.55);
+          }
+
+          70% {
+            transform: scale(1.06);
+            box-shadow: 0 0 0 0.6rem rgba(34, 197, 94, 0);
+          }
+
+          100% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+          }
+        }
+
+        @keyframes vhLiveGlow {
+          0% {
+            transform: scale(0.75);
+            opacity: 0.8;
+          }
+
+          70% {
+            transform: scale(1.55);
+            opacity: 0;
+          }
+
+          100% {
+            transform: scale(0.75);
+            opacity: 0;
+          }
+        }
+
+        @media (max-width: 767px) {
+          .vh-header__inner {
+            gap: 0.72rem;
+          }
+
+          .vh-header__brand {
+            gap: 0.72rem;
+            flex: 1 1 auto;
+          }
+
+          .vh-header__logo-mark {
+            width: 3.85rem;
+            height: 3.85rem;
+            min-width: 3.85rem;
+          }
+
+          .vh-header__brand-text strong {
+            font-size: clamp(1.04rem, 4.8vw, 1.34rem);
+            letter-spacing: -0.05em;
+          }
+
+          .vh-header__brand-text small {
+            margin-top: 0.22rem;
+            font-size: clamp(0.66rem, 3vw, 0.8rem);
+            letter-spacing: 0.14em;
+          }
+
+          .vh-header__brand-live {
+            padding: 0.36rem 0.55rem;
+            gap: 0.34rem;
+          }
+
+          .vh-header__brand-live-dot {
+            width: 0.5rem;
+            height: 0.5rem;
+          }
+
+          .vh-header__brand-live-text {
+            font-size: 0.68rem;
+            letter-spacing: 0.1em;
+          }
+        }
+
+        @media (max-width: 430px) {
+          .vh-header__brand {
+            gap: 0.62rem;
+          }
+
+          .vh-header__brand-live {
+            padding: 0.32rem 0.48rem;
+          }
+
+          .vh-header__brand-live-text {
+            font-size: 0.64rem;
+          }
+        }
+
+        @media (max-width: 380px) {
+          .vh-header__brand-live-text {
+            display: none;
+          }
+
+          .vh-header__brand-live {
+            padding: 0.42rem;
+          }
+        }
+      `}</style>
+
       <div className="vh-header__inner">
         <a
           className="vh-header__brand"
@@ -1142,6 +1323,11 @@ export function VoulamandisHeader() {
           <span className="vh-header__brand-text">
             <strong>Voulamandis House</strong>
             <small>Kampos, Chios</small>
+          </span>
+
+          <span className="vh-header__brand-live" aria-label="Live availability">
+            <span className="vh-header__brand-live-dot" />
+            <span className="vh-header__brand-live-text">{copy.live}</span>
           </span>
         </a>
 
