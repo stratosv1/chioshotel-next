@@ -1,90 +1,69 @@
-export const defaultLanguage = "en" as const;
+export type LanguageCode = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
 
-export const languages = [
+export type Language = {
+  code: LanguageCode;
+  hreflang: LanguageCode;
+  locale: string;
+  pathPrefix: string;
+  label: string;
+};
+
+export const defaultLanguage: LanguageCode = "en";
+
+export const languages: readonly Language[] = [
   {
     code: "en",
-    label: "English",
-    nativeLabel: "English",
-    locale: "en_US",
     hreflang: "en",
+    locale: "en_US",
     pathPrefix: "",
-    isDefault: true,
+    label: "English",
   },
   {
     code: "el",
-    label: "Greek",
-    nativeLabel: "Ελληνικά",
-    locale: "el_GR",
     hreflang: "el",
+    locale: "el_GR",
     pathPrefix: "/el",
-    isDefault: false,
+    label: "Ελληνικά",
   },
   {
     code: "fr",
-    label: "French",
-    nativeLabel: "Français",
-    locale: "fr_FR",
     hreflang: "fr",
+    locale: "fr_FR",
     pathPrefix: "/fr",
-    isDefault: false,
+    label: "Français",
   },
   {
     code: "de",
-    label: "German",
-    nativeLabel: "Deutsch",
-    locale: "de_DE",
     hreflang: "de",
+    locale: "de_DE",
     pathPrefix: "/de",
-    isDefault: false,
+    label: "Deutsch",
   },
   {
     code: "it",
-    label: "Italian",
-    nativeLabel: "Italiano",
-    locale: "it_IT",
     hreflang: "it",
+    locale: "it_IT",
     pathPrefix: "/it",
-    isDefault: false,
+    label: "Italiano",
   },
   {
     code: "es",
-    label: "Spanish",
-    nativeLabel: "Español",
-    locale: "es_ES",
     hreflang: "es",
+    locale: "es_ES",
     pathPrefix: "/es",
-    isDefault: false,
+    label: "Español",
   },
   {
     code: "tr",
-    label: "Turkish",
-    nativeLabel: "Türkçe",
-    locale: "tr_TR",
     hreflang: "tr",
+    locale: "tr_TR",
     pathPrefix: "/tr",
-    isDefault: false,
+    label: "Türkçe",
   },
 ] as const;
 
-export type Language = (typeof languages)[number];
-export type LanguageCode = Language["code"];
-
-export function getLanguage(code: string): Language | undefined {
-  return languages.find((language) => language.code === code);
-}
-
-export function isLanguageCode(code: string): code is LanguageCode {
-  return languages.some((language) => language.code === code);
-}
-
-export function getLanguagePrefix(code: LanguageCode): string {
-  const language = getLanguage(code);
-
-  if (!language) {
-    return "";
-  }
-
-  return language.pathPrefix;
+export function isLanguageCode(value: string): value is LanguageCode {
+  return languages.some((language) => language.code === value);
 }
 
 export function normalizePath(path: string): string {
@@ -92,36 +71,25 @@ export function normalizePath(path: string): string {
     return "/";
   }
 
-  const withLeadingSlash = path.startsWith("/") ? path : `/${path}`;
+  const withoutHash = path.split("#")[0] || "/";
+  const withoutQuery = withoutHash.split("?")[0] || "/";
 
-  if (withLeadingSlash === "/") {
-    return "/";
+  let normalizedPath = withoutQuery.replace(/\/+/g, "/");
+
+  if (!normalizedPath.startsWith("/")) {
+    normalizedPath = `/${normalizedPath}`;
   }
 
-  return withLeadingSlash.endsWith("/")
-    ? withLeadingSlash
-    : `${withLeadingSlash}/`;
-}
+  const lastSegment = normalizedPath.split("/").filter(Boolean).pop();
+  const looksLikeFile = Boolean(lastSegment && lastSegment.includes("."));
 
-export function withLanguagePrefix(code: LanguageCode, path: string): string {
-  const prefix = getLanguagePrefix(code);
-
-  if (code === defaultLanguage) {
-    return path === "/" ? "/" : normalizePath(path);
+  if (normalizedPath !== "/" && !looksLikeFile && !normalizedPath.endsWith("/")) {
+    normalizedPath = `${normalizedPath}/`;
   }
 
-  if (path === "/") {
-    return normalizePath(prefix);
+  if (normalizedPath.length > 1 && normalizedPath.endsWith("//")) {
+    normalizedPath = normalizedPath.replace(/\/+$/, "/");
   }
 
-  return normalizePath(`${prefix}${path}`);
-}
-
-export function removeDomainFromUrl(url: string): string {
-  try {
-    const parsedUrl = new URL(url);
-    return normalizePath(parsedUrl.pathname);
-  } catch {
-    return normalizePath(url);
-  }
+  return normalizedPath;
 }
