@@ -42,7 +42,7 @@ function splitPath(path: string) {
 
 export function absoluteUrl(path: string): string {
   if (!path) {
-    return siteUrl;
+    return `${siteUrl}/`;
   }
 
   if (path.startsWith("http://") || path.startsWith("https://")) {
@@ -57,7 +57,7 @@ export function absoluteUrl(path: string): string {
   const normalizedPath = normalizePath(pathname);
 
   if (normalizedPath === "/") {
-    return `${siteUrl}${suffix}`;
+    return `${siteUrl}/${suffix}`;
   }
 
   return `${siteUrl}${normalizedPath}${suffix}`;
@@ -103,18 +103,18 @@ export function getAlternates(path: string): Record<string, string> {
   }
 
   const englishRoute = publishedRoutes.find((route) => route.language === "en");
-  const firstRoute = publishedRoutes[0];
+  const defaultRoute = englishRoute || publishedRoutes[0];
 
-  if (englishRoute) {
-    alternates["x-default"] = absoluteUrl(englishRoute.path);
-  } else if (firstRoute) {
-    alternates["x-default"] = absoluteUrl(firstRoute.path);
+  if (defaultRoute) {
+    alternates["x-default"] = absoluteUrl(defaultRoute.path);
   }
 
   return alternates;
 }
 
-export function buildAlternates(path: string): NonNullable<Metadata["alternates"]> {
+export function buildAlternates(
+  path: string,
+): NonNullable<Metadata["alternates"]> {
   return {
     canonical: getCanonicalUrl(path),
     languages: getAlternates(path),
@@ -161,7 +161,6 @@ export function getAlternateLocales(path: string): string[] {
 
 export function buildPageMetadata(input: SeoInput): Metadata {
   const canonicalUrl = getCanonicalUrl(input.path);
-  const alternates = getAlternates(input.path);
   const imageUrl = input.image
     ? absoluteUrl(input.image)
     : absoluteUrl(defaultOgImage);
@@ -193,13 +192,10 @@ export function buildPageMetadata(input: SeoInput): Metadata {
       };
 
   return {
+    metadataBase: new URL(siteUrl),
     title: input.title,
     description: input.description,
-    metadataBase: new URL(siteUrl),
-    alternates: {
-      canonical: canonicalUrl,
-      languages: alternates,
-    },
+    alternates: buildAlternates(input.path),
     robots,
     openGraph: {
       type: input.ogType || "website",
