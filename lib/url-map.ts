@@ -1,6 +1,12 @@
-﻿import { type LanguageCode, normalizePath } from "./languages";
+import { type LanguageCode, normalizePath } from "./languages";
 
-export type RouteAction = "KEEP" | "CHECK" | "REDIRECT" | "REMOVE" | "MERGE";
+export type RouteAction =
+  | "KEEP"
+  | "CHECK"
+  | "REDIRECT"
+  | "REMOVE"
+  | "MERGE"
+  | "NOINDEX";
 
 export type PageTemplate =
   | "HomePage"
@@ -801,6 +807,7 @@ export const routeMap: readonly RouteRecord[] = [
     action: "KEEP",
     priority: "High",
   },
+
   {
     path: "/chios/chios-museums/",
     language: "en",
@@ -942,6 +949,7 @@ export const routeMap: readonly RouteRecord[] = [
     action: "KEEP",
     priority: "High",
   },
+
   {
     path: "/chios/chios-beaches/lithi-beach/",
     language: "en",
@@ -1012,6 +1020,7 @@ export const routeMap: readonly RouteRecord[] = [
     action: "KEEP",
     priority: "High",
   },
+
   {
     path: "/chios/chios-beaches/lefkathia-beach/",
     language: "en",
@@ -1082,6 +1091,7 @@ export const routeMap: readonly RouteRecord[] = [
     action: "KEEP",
     priority: "High",
   },
+
   {
     path: "/chios/chios-beaches/nagos-beach/",
     language: "en",
@@ -1152,6 +1162,7 @@ export const routeMap: readonly RouteRecord[] = [
     action: "KEEP",
     priority: "High",
   },
+
   {
     path: "/chios/chios-beaches/avlonia-beach2/",
     language: "en",
@@ -1222,6 +1233,7 @@ export const routeMap: readonly RouteRecord[] = [
     action: "KEEP",
     priority: "High",
   },
+
   {
     path: "/chios/chios-beaches/salagona-beach/",
     language: "en",
@@ -1292,6 +1304,7 @@ export const routeMap: readonly RouteRecord[] = [
     action: "KEEP",
     priority: "High",
   },
+
   {
     path: "/chios/chios-beaches/agia-fotia-beach/",
     language: "en",
@@ -1362,6 +1375,7 @@ export const routeMap: readonly RouteRecord[] = [
     action: "KEEP",
     priority: "High",
   },
+
   {
     path: "/chios/chios-beaches/komi-beach/",
     language: "en",
@@ -1432,6 +1446,7 @@ export const routeMap: readonly RouteRecord[] = [
     action: "KEEP",
     priority: "High",
   },
+
   {
     path: "/chios/chios-beaches/emporios-beach/",
     language: "en",
@@ -1573,6 +1588,7 @@ export const routeMap: readonly RouteRecord[] = [
     action: "KEEP",
     priority: "High",
   },
+
   {
     path: "/el/xoria-xios/pyrgi-xios/",
     language: "el",
@@ -1643,6 +1659,7 @@ export const routeMap: readonly RouteRecord[] = [
     action: "KEEP",
     priority: "High",
   },
+
   {
     path: "/fr/villages-de-chios/village-pyrgi/",
     language: "fr",
@@ -1713,6 +1730,7 @@ export const routeMap: readonly RouteRecord[] = [
     action: "KEEP",
     priority: "High",
   },
+
   {
     path: "/de/doerfer-chios/pyrgi-dorf/",
     language: "de",
@@ -1783,6 +1801,7 @@ export const routeMap: readonly RouteRecord[] = [
     action: "KEEP",
     priority: "High",
   },
+
   {
     path: "/it/villaggi-chios/villaggio-pyrgi/",
     language: "it",
@@ -1853,6 +1872,7 @@ export const routeMap: readonly RouteRecord[] = [
     action: "KEEP",
     priority: "High",
   },
+
   {
     path: "/es/pueblos-chios/pueblo-pyrgi/",
     language: "es",
@@ -1923,6 +1943,7 @@ export const routeMap: readonly RouteRecord[] = [
     action: "KEEP",
     priority: "High",
   },
+
   {
     path: "/tr/sakiz-adasi-koyleri/pyrgi-koyu/",
     language: "tr",
@@ -2025,8 +2046,6 @@ export const routeMap: readonly RouteRecord[] = [
     priority: "High",
   },
 
-
-  // Localized museum detail routes
   {
     path: "/el/mouseia-xios/mouseio-mastichas-xios/",
     language: "el",
@@ -2493,6 +2512,7 @@ export const routeMap: readonly RouteRecord[] = [
     action: "KEEP",
     priority: "High",
   },
+
   {
     path: "/chios-beach-lovers/",
     language: "en",
@@ -2573,8 +2593,10 @@ export const routeMap: readonly RouteRecord[] = [
     action: "REDIRECT",
     priority: "Medium",
     canonicalPath: "/chios-beach-lovers/",
-    notes: "Old Beach Lovers / best beaches landing page. Redirect to the new Beach Lovers landing page.",
+    notes:
+      "Old Beach Lovers / best beaches landing page. Redirect to the new Beach Lovers landing page.",
   },
+
   {
     path: "/family-travel-in-chios/",
     language: "en",
@@ -2645,6 +2667,7 @@ export const routeMap: readonly RouteRecord[] = [
     action: "KEEP",
     priority: "Medium",
   },
+
   {
     path: "/10-best-tips-to-explore-chiosvoulamandis-house/",
     language: "en",
@@ -2655,6 +2678,7 @@ export const routeMap: readonly RouteRecord[] = [
     action: "KEEP",
     priority: "Medium",
   },
+
   {
     path: "/chios-explorer/",
     language: "en",
@@ -2725,6 +2749,7 @@ export const routeMap: readonly RouteRecord[] = [
     action: "KEEP",
     priority: "Medium",
   },
+
   {
     path: "/taste-lover-chios/",
     language: "en",
@@ -2795,7 +2820,7 @@ export const routeMap: readonly RouteRecord[] = [
     action: "KEEP",
     priority: "Medium",
   },
-  // Chios Activities localized routes
+
   {
     path: "/el/drastiriotites-sti-xio/",
     language: "el",
@@ -2856,6 +2881,7 @@ export const routeMap: readonly RouteRecord[] = [
     action: "KEEP",
     priority: "High",
   },
+
   {
     path: "/el/festival-mostra-thymiana-xios/",
     language: "el",
@@ -2916,6 +2942,7 @@ export const routeMap: readonly RouteRecord[] = [
     action: "KEEP",
     priority: "High",
   },
+
   {
     path: "/el/mathimata-ellinikon-sti-xio/",
     language: "el",
@@ -2976,6 +3003,7 @@ export const routeMap: readonly RouteRecord[] = [
     action: "KEEP",
     priority: "High",
   },
+
   {
     path: "/el/pezoporia-sti-xio/",
     language: "el",
@@ -3036,6 +3064,7 @@ export const routeMap: readonly RouteRecord[] = [
     action: "KEEP",
     priority: "High",
   },
+
   {
     path: "/el/iamatika-loutra-xiou/",
     language: "el",
@@ -3096,6 +3125,7 @@ export const routeMap: readonly RouteRecord[] = [
     action: "KEEP",
     priority: "High",
   },
+
   {
     path: "/el/rouketopolemos-xios/",
     language: "el",
@@ -3156,6 +3186,7 @@ export const routeMap: readonly RouteRecord[] = [
     action: "KEEP",
     priority: "High",
   },
+
   {
     path: "/el/orchidees-xiou/",
     language: "el",
@@ -3217,8 +3248,6 @@ export const routeMap: readonly RouteRecord[] = [
     priority: "High",
   },
 
-
-
   {
     path: "/mike-2/",
     language: "en",
@@ -3256,22 +3285,39 @@ export const routeMap: readonly RouteRecord[] = [
 
 export type RouteMapItem = RouteRecord;
 
-export function getRouteByPath(path: string): RouteMapItem | undefined {
-  const normalizedPath = normalizePath(path);
+const normalizedRouteMap: readonly RouteMapItem[] = routeMap.map((route) => ({
+  ...route,
+  path: normalizePath(route.path),
+  canonicalPath: route.canonicalPath
+    ? normalizePath(route.canonicalPath)
+    : undefined,
+}));
 
-  return routeMap.find((route) => route.path === normalizedPath);
+const routeByPath = new Map<string, RouteMapItem>();
+const routesByItemId = new Map<string, RouteMapItem[]>();
+
+for (const route of normalizedRouteMap) {
+  routeByPath.set(route.path, route);
+
+  const existingRoutes = routesByItemId.get(route.itemId) || [];
+  existingRoutes.push(route);
+  routesByItemId.set(route.itemId, existingRoutes);
+}
+
+export function getRouteByPath(path: string): RouteMapItem | undefined {
+  return routeByPath.get(normalizePath(path));
 }
 
 export function getRoutesByItemId(itemId: string): RouteMapItem[] {
-  return routeMap.filter((route) => route.itemId === itemId);
+  return routesByItemId.get(itemId) || [];
 }
 
 export function getRoutesByTemplate(template: PageTemplate): RouteMapItem[] {
-  return routeMap.filter((route) => route.template === template);
+  return normalizedRouteMap.filter((route) => route.template === template);
 }
 
 export function getRoutesByLanguage(language: LanguageCode): RouteMapItem[] {
-  return routeMap.filter((route) => route.language === language);
+  return normalizedRouteMap.filter((route) => route.language === language);
 }
 
 export function getLocalizedRoutes(path: string): RouteMapItem[] {
