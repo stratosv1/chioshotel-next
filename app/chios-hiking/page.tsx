@@ -1,9 +1,11 @@
 ﻿import type { Metadata } from "next";
 import ChiosActivitiesPage from "@/components/landing/ChiosActivitiesPage";
+import { JsonLd } from "@/components/seo/JsonLd";
 import {
   chiosActivityDetailPaths,
   getChiosActivityPageByKey,
 } from "@/content/chios-activities";
+import { buildChiosActivitiesSchema } from "@/content/chios-activities-schema";
 import { absoluteUrl, buildPageMetadata } from "@/lib/seo";
 
 const data = getChiosActivityPageByKey("hiking", "en");
@@ -14,6 +16,7 @@ export const metadata: Metadata = {
     title: data.seo.title,
     description: data.seo.description,
     path: data.path,
+    image: data.hero.image,
   }),
   alternates: {
     canonical: absoluteUrl(data.path),
@@ -31,5 +34,10 @@ export const metadata: Metadata = {
 };
 
 export default function ChiosHikingRoute() {
-  return <ChiosActivitiesPage data={data} />;
+  return (
+    <>
+      <JsonLd data={buildChiosActivitiesSchema(data)} />
+      <ChiosActivitiesPage data={data} />
+    </>
+  );
 }

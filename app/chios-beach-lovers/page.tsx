@@ -1,6 +1,8 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { BeachLoversPage } from "@/components/landing/BeachLoversPage";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { getBeachLoversPageByLocale } from "@/content/beach-lovers";
+import { buildLandingPageSchema } from "@/content/landing-schema";
 import { absoluteUrl, buildPageMetadata } from "@/lib/seo";
 
 const data = getBeachLoversPageByLocale("en");
@@ -28,5 +30,10 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <BeachLoversPage data={data} />;
+  return (
+    <>
+      <JsonLd data={buildLandingPageSchema(data)} />
+      <BeachLoversPage data={data} />
+    </>
+  );
 }

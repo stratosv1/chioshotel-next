@@ -35,19 +35,6 @@ export function HomePage({ data }: HomePageProps) {
     setIsMapLoaded(true);
   }
 
-  function showDiscountCode() {
-    const successBox = document.getElementById("discountSuccess") as HTMLDivElement | null;
-    const feedbackBox = document.getElementById("discountFeedback") as HTMLDivElement | null;
-
-    if (feedbackBox) {
-      feedbackBox.style.display = "none";
-      feedbackBox.textContent = "";
-    }
-
-    if (successBox) {
-      successBox.style.display = "block";
-    }
-  }
   return (
     <>
       <main className="vh-homepage">
@@ -343,25 +330,58 @@ export function HomePage({ data }: HomePageProps) {
                     {data.location.discount.formIntro}
                   </p>
 
-                  <div id="discountCodeForm">
-                    <button
-                      type="button"
-                      className="vh-btn vh-btn--primary"
-                      id="dc_submitBtn"
-                      onClick={showDiscountCode}
-                    >
-                      <span aria-hidden="true">🎁</span> Show my discount code
-                    </button>
+                  <form id="discountCodeForm" noValidate>
+                    <input type="hidden" name="lang" value="en" />
+
+                    <label className="sr-only" htmlFor="dc_email">
+                      Your email
+                    </label>
+
+                    <div className="vh-honeypot" aria-hidden="true">
+                      <label htmlFor="dc_honeypot">Do not fill this field</label>
+                      <input
+                        type="text"
+                        id="dc_honeypot"
+                        name="honeypot"
+                        tabIndex={-1}
+                        autoComplete="off"
+                      />
+                    </div>
+
+                    <div className="form-row">
+                      <input
+                        type="email"
+                        id="dc_email"
+                        name="email"
+                        placeholder={data.location.discount.emailPlaceholder}
+                        required
+                        className="email-input"
+                        inputMode="email"
+                        autoComplete="email"
+                        aria-label="Your email"
+                      />
+
+                      <button type="submit" className="vh-btn vh-btn--primary" id="dc_submitBtn">
+                        <span aria-hidden="true">β‰οΈ</span> {data.location.discount.submitLabel}
+                      </button>
+                    </div>
+
+                    <div className="discount-consent">
+                      <label>
+                        <input type="checkbox" id="dc_gdpr" required />{" "}
+                        {data.location.discount.consent}
+                      </label>
+                    </div>
 
                     <div id="discountSuccess" className="discount-success" aria-live="polite">
                       <div id="discountSuccessText">{data.location.discount.successText}</div>
                       <div id="discountCodeValue" className="discount-code-value">
-                        {data.location.discount.defaultCode || "WELCOME10"}
+                        {data.location.discount.defaultCode}
                       </div>
                     </div>
 
                     <div id="discountFeedback" className="discount-error" aria-live="polite" />
-                  </div>
+                  </form>
                 </div>
               </article>
             </div>
@@ -659,8 +679,6 @@ export function HomePage({ data }: HomePageProps) {
     </>
   );
 }
-
-
 
 
 

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useRef, useState } from "react";
 import type { HomePageData } from "@/content/home";
@@ -35,24 +35,14 @@ export function HomePage({ data }: HomePageProps) {
     setIsMapLoaded(true);
   }
 
-  function showDiscountCode() {
-    const successBox = document.getElementById("discountSuccess") as HTMLDivElement | null;
-    const feedbackBox = document.getElementById("discountFeedback") as HTMLDivElement | null;
-
-    if (feedbackBox) {
-      feedbackBox.style.display = "none";
-      feedbackBox.textContent = "";
-    }
-
-    if (successBox) {
-      successBox.style.display = "block";
-    }
-  }
   return (
     <>
       <main className="vh-homepage">
-        <section className="hero" aria-label="Rooms and apartments in Chios, Kampos">
-          <div className="hero-media" aria-hidden="true">
+        <section
+          className="relative isolate flex min-h-[88vh] items-end overflow-hidden bg-stone-950 text-white max-md:h-[76svh] max-md:max-h-[720px] max-md:min-h-[590px]"
+          aria-label="Rooms and apartments in Chios, Kampos"
+        >
+          <div className="absolute inset-0 z-0" aria-hidden="true">
             <picture>
               <img
                 src={data.hero.image}
@@ -61,57 +51,100 @@ export function HomePage({ data }: HomePageProps) {
                 height={675}
                 fetchPriority="high"
                 decoding="async"
+                className="h-full w-full object-cover object-center max-md:object-top"
               />
             </picture>
           </div>
 
-          <div className="hero-inner">
-            <div className="hero-content-box">
+          <div
+            className="absolute inset-0 z-10 bg-[linear-gradient(90deg,rgba(0,0,0,0.08)_0%,rgba(0,0,0,0.12)_40%,rgba(0,0,0,0.58)_100%)] max-md:bg-[linear-gradient(180deg,rgba(0,0,0,0)_0%,rgba(0,0,0,0.04)_35%,rgba(0,0,0,0.40)_68%,rgba(0,0,0,0.82)_100%)]"
+            aria-hidden="true"
+          />
+
+          <div className="relative z-20 mx-auto flex min-h-[88vh] w-[min(1280px,92vw)] items-end justify-end py-[58px] max-md:min-h-full max-md:w-full max-md:px-3 max-md:pb-[18px] max-md:pt-3">
+            <div className="flex w-[590px] max-w-full flex-col items-start gap-4 rounded-[30px] border border-white/20 bg-gradient-to-b from-white/10 to-black/40 px-7 py-[30px] shadow-[0_28px_64px_rgba(0,0,0,0.32)] backdrop-blur-2xl max-md:w-full max-md:gap-2.5 max-md:border-0 max-md:bg-transparent max-md:p-0 max-md:shadow-none max-md:backdrop-blur-none">
               <div
-                className="rating-card"
+                className="inline-flex items-center gap-3 rounded-full bg-white/95 px-[15px] py-[9px] text-stone-800 shadow-[0_10px_24px_rgba(0,0,0,0.15)] max-md:absolute max-md:left-3 max-md:top-3 max-md:z-30 max-md:px-3 max-md:py-2"
                 aria-label={`Guest rating ${data.hero.rating} from ${data.hero.reviews}`}
               >
                 <div>
-                  <strong>{data.hero.rating}</strong>
-                  <span>{data.hero.reviews}</span>
+                  <strong className="block text-sm font-black leading-none text-stone-700 max-md:text-[13px]">
+                    {data.hero.rating}
+                  </strong>
+                  <span className="block text-[11px] font-bold text-stone-500 max-md:text-[10px]">
+                    {data.hero.reviews}
+                  </span>
                 </div>
-                <div className="stars" aria-hidden="true">
+
+                <div className="text-[13px] leading-none text-yellow-400 max-md:text-xs" aria-hidden="true">
                   ★★★★★
                 </div>
               </div>
 
-              <div className="hero-kicker">{data.hero.kicker}</div>
+              <div className="text-[11px] font-black uppercase tracking-[0.18em] text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.45)] max-md:text-[10px] max-md:tracking-[0.16em]">
+                {data.hero.kicker}
+              </div>
 
-              <h1 className="hero-title">{data.hero.title}</h1>
+              <h1 className="m-0 max-w-[17ch] text-balance text-[clamp(36px,3vw,50px)] font-black leading-[1.08] tracking-[-0.02em] text-white drop-shadow-[0_4px_14px_rgba(0,0,0,0.42)] max-md:max-w-[12ch] max-md:text-[34px] max-md:leading-[0.98] max-md:tracking-[-0.035em]">
+                {data.hero.title}
+              </h1>
 
-              <p className="hero-description">
+              <p className="m-0 text-base leading-7 text-white/95 drop-shadow-[0_2px_10px_rgba(0,0,0,0.35)] max-md:line-clamp-2 max-md:text-sm max-md:leading-[1.45]">
                 <HtmlText html={data.hero.descriptionHtml} />
               </p>
 
-              <div className="hero-actions">
-                <a className="btn-primary" href={data.hero.primaryCta.href}>
-                  <span aria-hidden="true">{data.hero.primaryCta.icon}</span>{" "}
+              <div className="mt-1 grid w-full grid-cols-2 gap-3 max-md:gap-2.5">
+                <a
+                  className="inline-flex min-h-[52px] items-center justify-center gap-2.5 rounded-full border border-orange-500 bg-orange-500 px-[18px] text-center text-xs font-black uppercase text-white shadow-[0_8px_20px_rgba(230,126,34,0.32)] transition hover:-translate-y-0.5 hover:bg-orange-600 max-md:rounded-[18px] max-md:px-2.5 max-md:text-[11px] max-md:leading-tight"
+                  href={data.hero.primaryCta.href}
+                >
+                  <span aria-hidden="true">{data.hero.primaryCta.icon}</span>
                   {data.hero.primaryCta.label}
                 </a>
 
-                <a className="btn-ghost" href={data.hero.secondaryCta.href}>
-                  <span aria-hidden="true">{data.hero.secondaryCta.icon}</span>{" "}
+                <a
+                  className="inline-flex min-h-[52px] items-center justify-center gap-2.5 rounded-full border border-white/40 bg-white/10 px-[18px] text-center text-xs font-black uppercase text-white backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/20 max-md:rounded-[18px] max-md:px-2.5 max-md:text-[11px] max-md:leading-tight"
+                  href={data.hero.secondaryCta.href}
+                >
+                  <span aria-hidden="true">{data.hero.secondaryCta.icon}</span>
                   {data.hero.secondaryCta.label}
                 </a>
               </div>
 
-              <a className="hero-quiz-card" href={data.hero.quizCard.href}>
-                <span className="hero-quiz-icon" aria-hidden="true">
+              <a
+                className="group relative grid w-full grid-cols-[auto_1fr_auto] items-center gap-3 overflow-hidden rounded-[20px] border border-white/25 bg-white/15 px-3.5 py-3 text-white shadow-[0_14px_34px_rgba(0,0,0,0.22)] backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/20 max-md:grid-cols-[auto_1fr] max-md:gap-2.5 max-md:rounded-[18px] max-md:px-3"
+                href={data.hero.quizCard.href}
+              >
+                <span
+                  className="pointer-events-none absolute inset-y-0 -left-full w-3/4 bg-gradient-to-r from-transparent via-white/25 to-transparent transition duration-700 group-hover:left-full"
+                  aria-hidden="true"
+                />
+
+                <span className="relative z-10 flex h-[42px] w-[42px] items-center justify-center rounded-2xl bg-white/20 text-[22px] max-md:h-[38px] max-md:w-[38px] max-md:rounded-[14px] max-md:text-[19px]">
                   {data.hero.quizCard.icon}
                 </span>
 
-                <span className="hero-quiz-copy">
-                  <span className="hero-quiz-live">{data.hero.quizCard.liveLabel}</span>
-                  <strong>{data.hero.quizCard.title}</strong>
-                  <span>{data.hero.quizCard.text}</span>
+                <span className="relative z-10 min-w-0">
+                  <span className="mb-1 inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.1em] text-green-200">
+                    <span className="relative flex h-2 w-2">
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-300 opacity-75" />
+                      <span className="relative inline-flex h-2 w-2 rounded-full bg-green-400" />
+                    </span>
+                    {data.hero.quizCard.liveLabel}
+                  </span>
+
+                  <strong className="block text-[13px] font-black uppercase tracking-[0.04em] max-md:text-xs">
+                    {data.hero.quizCard.title}
+                  </strong>
+
+                  <span className="mt-0.5 block text-xs leading-snug text-white/90 max-md:line-clamp-2 max-md:text-[11.5px]">
+                    {data.hero.quizCard.text}
+                  </span>
                 </span>
 
-                <span className="hero-quiz-link">{data.hero.quizCard.cta}</span>
+                <span className="relative z-10 inline-flex min-h-9 items-center justify-center rounded-full bg-white px-3 text-[10px] font-black uppercase tracking-[0.08em] text-[#8E6607] max-md:col-span-2 max-md:w-full">
+                  {data.hero.quizCard.cta}
+                </span>
               </a>
             </div>
           </div>
@@ -125,7 +158,7 @@ export function HomePage({ data }: HomePageProps) {
             {data.announceBar.text} <strong>{data.announceBar.strongText}</strong>
           </span>
           <span className="vh-hero-announce-arrow" aria-hidden="true">
-            β†“
+            ↓
           </span>
         </a>
 
@@ -211,7 +244,7 @@ export function HomePage({ data }: HomePageProps) {
                     type="button"
                     onClick={loadMap}
                   >
-                    <span aria-hidden="true">π“</span> {data.location.map.buttonLabel}
+                    <span aria-hidden="true">📍</span> {data.location.map.buttonLabel}
                   </button>
                 </div>
 
@@ -257,11 +290,11 @@ export function HomePage({ data }: HomePageProps) {
                     lineHeight: 1.8,
                   }}
                 >
-                  π“ {data.location.infoCard.addressLines[0]}
+                  📍 {data.location.infoCard.addressLines[0]}
                   <br />
                   {data.location.infoCard.addressLines[1]}
                   <br />
-                  π“ {data.location.infoCard.phoneLabel}{" "}
+                  📞 {data.location.infoCard.phoneLabel}{" "}
                   <a
                     href={data.location.infoCard.phoneHref}
                     style={{ color: "#8E6607", fontWeight: 700 }}
@@ -269,7 +302,7 @@ export function HomePage({ data }: HomePageProps) {
                     {data.location.infoCard.phone}
                   </a>
                   <br />
-                  β‰οΈ {data.location.infoCard.emailLabel}{" "}
+                  ✉️ {data.location.infoCard.emailLabel}{" "}
                   <a
                     href={data.location.infoCard.emailHref}
                     style={{ color: "#8E6607", fontWeight: 700 }}
@@ -343,25 +376,58 @@ export function HomePage({ data }: HomePageProps) {
                     {data.location.discount.formIntro}
                   </p>
 
-                  <div id="discountCodeForm">
-                    <button
-                      type="button"
-                      className="vh-btn vh-btn--primary"
-                      id="dc_submitBtn"
-                      onClick={showDiscountCode}
-                    >
-                      <span aria-hidden="true">🎁</span> Show my discount code
-                    </button>
+                  <form id="discountCodeForm" noValidate>
+                    <input type="hidden" name="lang" value="en" />
+
+                    <label className="sr-only" htmlFor="dc_email">
+                      Your email
+                    </label>
+
+                    <div className="vh-honeypot" aria-hidden="true">
+                      <label htmlFor="dc_honeypot">Do not fill this field</label>
+                      <input
+                        type="text"
+                        id="dc_honeypot"
+                        name="honeypot"
+                        tabIndex={-1}
+                        autoComplete="off"
+                      />
+                    </div>
+
+                    <div className="form-row">
+                      <input
+                        type="email"
+                        id="dc_email"
+                        name="email"
+                        placeholder={data.location.discount.emailPlaceholder}
+                        required
+                        className="email-input"
+                        inputMode="email"
+                        autoComplete="email"
+                        aria-label="Your email"
+                      />
+
+                      <button type="submit" className="vh-btn vh-btn--primary" id="dc_submitBtn">
+                        <span aria-hidden="true">✉️</span> {data.location.discount.submitLabel}
+                      </button>
+                    </div>
+
+                    <div className="discount-consent">
+                      <label>
+                        <input type="checkbox" id="dc_gdpr" required />{" "}
+                        {data.location.discount.consent}
+                      </label>
+                    </div>
 
                     <div id="discountSuccess" className="discount-success" aria-live="polite">
                       <div id="discountSuccessText">{data.location.discount.successText}</div>
                       <div id="discountCodeValue" className="discount-code-value">
-                        {data.location.discount.defaultCode || "WELCOME10"}
+                        {data.location.discount.defaultCode}
                       </div>
                     </div>
 
                     <div id="discountFeedback" className="discount-error" aria-live="polite" />
-                  </div>
+                  </form>
                 </div>
               </article>
             </div>
@@ -449,7 +515,7 @@ export function HomePage({ data }: HomePageProps) {
                     </div>
 
                     <span className="vh-btn vh-btn--secondary">
-                      <span aria-hidden="true">π”</span> {room.cta}
+                      <span aria-hidden="true">🔎</span> {room.cta}
                     </span>
                   </div>
                 </a>
@@ -659,8 +725,3 @@ export function HomePage({ data }: HomePageProps) {
     </>
   );
 }
-
-
-
-
-

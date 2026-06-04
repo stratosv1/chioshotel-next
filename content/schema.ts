@@ -1,210 +1,146 @@
-export const homePageSchema = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Hotel",
-      "@id": "https://chioshotel.gr/#hotel",
-      name: "Voulamandis House",
-      url: "https://chioshotel.gr/",
-      image:
-        "https://chioshotel.gr/wp-content/uploads/2026/03/chios.hotels.voulamandis.house_.hero_.image_.webp",
-      telephone: "+302271031733",
-      priceRange: "€70-€90",
-      address: {
-        "@type": "PostalAddress",
-        streetAddress: "Dimarchou Kalvokoressi 117",
-        addressLocality: "Chios",
-        addressRegion: "North Aegean",
-        postalCode: "82100",
-        addressCountry: "GR",
-      },
-      containsPlace: [
-        {
-          "@id": "https://chioshotel.gr/chios-rooms/standard-double-room/#hotelroom",
-        },
-        {
-          "@id": "https://chioshotel.gr/chios-rooms/economy-double-rooms/#hotelroom",
-        },
-        {
-          "@id": "https://chioshotel.gr/chios-rooms/family-chios-apartments/#hotelroom",
-        },
-      ],
+import {
+  absoluteUrl,
+  siteName,
+  siteUrl,
+} from "@/lib/seo";
+import {
+  buildBreadcrumbSchema,
+  buildHotelSchema,
+  buildImageSchema,
+  buildOrganizationSchema,
+  buildSchemaGraph,
+  buildWebsiteSchema,
+  hotelId,
+  itemListId,
+  schemaId,
+  webPageId,
+  websiteId,
+  type SchemaObject,
+} from "@/lib/structured-data";
+
+const homepagePath = "/";
+
+function buildHomeWebPageSchema(): SchemaObject {
+  return {
+    "@type": "WebPage",
+    "@id": webPageId(homepagePath),
+    url: siteUrl,
+    name: "Voulamandis House - Chios Hotel in Kampos",
+    headline: "Voulamandis House - Chios Hotel in Kampos",
+    description:
+      "Stay at Voulamandis House, a family-run Chios hotel in Kampos with rooms and apartments close to Chios Town, the airport and the beaches of southern Chios.",
+    inLanguage: "en",
+    isPartOf: {
+      "@id": websiteId(),
     },
+    about: {
+      "@id": hotelId(),
+    },
+    mainEntity: {
+      "@id": hotelId(),
+    },
+    breadcrumb: {
+      "@id": schemaId(homepagePath, "breadcrumb"),
+    },
+    primaryImageOfPage: {
+      "@id": schemaId(homepagePath, "primaryimage"),
+    },
+  };
+}
+
+function buildHomeRoomsItemListSchema(): SchemaObject {
+  return {
+    "@type": "ItemList",
+    "@id": itemListId(homepagePath),
+    name: "Rooms and apartments at Voulamandis House",
+    description:
+      "A selection of rooms and apartments at Voulamandis House in Kampos, Chios.",
+    itemListOrder: "https://schema.org/ItemListOrderAscending",
+    numberOfItems: 3,
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        url: absoluteUrl("/chios-rooms/standard-double-room/"),
+        name: "Double Rooms and Triple Rooms in Chios",
+        item: {
+          "@id": schemaId("/chios-rooms/standard-double-room/", "room"),
+        },
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        url: absoluteUrl("/chios-rooms/economy-double-rooms/"),
+        name: "Economy Double Rooms in Chios",
+        item: {
+          "@id": schemaId("/chios-rooms/economy-double-rooms/", "room"),
+        },
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        url: absoluteUrl("/chios-rooms/family-chios-apartments/"),
+        name: "Family Chios Apartments",
+        item: {
+          "@id": schemaId("/chios-rooms/family-chios-apartments/", "room"),
+        },
+      },
+    ],
+  };
+}
+
+function buildHomeRoomReferencesSchema(): SchemaObject[] {
+  return [
     {
-      "@type": "HotelRoom",
-      "@id": "https://chioshotel.gr/chios-rooms/standard-double-room/#hotelroom",
-      name: "Double Rooms in Chios & Triple Rooms in Chios - Voulamandis House",
+      "@type": ["Accommodation", "HotelRoom"],
+      "@id": schemaId("/chios-rooms/standard-double-room/", "room"),
+      name: "Double Rooms and Triple Rooms in Chios",
+      url: absoluteUrl("/chios-rooms/standard-double-room/"),
       description:
-        "Fully renovated double rooms in Chios and triple rooms in Chios at Voulamandis House, in Kampos. Bright, air-conditioned rooms with traditional stone walls, large bathrooms, LCD TV, free WiFi, refrigerator and kettle. Comfortable accommodation for up to 4 guests.",
-      url: "https://chioshotel.gr/chios-rooms/standard-double-room/",
-      image: [
-        "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-house-rooms.webp",
-        "https://chioshotel.gr/wp-content/uploads/2022/12/double-triple-room.jpg",
-        "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07776-2-e1675109942622.webp",
-        "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07867-1.webp",
-        "https://chioshotel.gr/wp-content/uploads/2022/12/received_1748354861920234.webp",
-      ],
-      occupancy: {
-        "@type": "QuantitativeValue",
-        maxValue: 4,
-        unitText: "guests",
-      },
-      amenityFeature: [
-        {
-          "@type": "LocationFeatureSpecification",
-          name: "Free WiFi",
-          value: true,
-        },
-        {
-          "@type": "LocationFeatureSpecification",
-          name: "Refrigerator",
-          value: true,
-        },
-        {
-          "@type": "LocationFeatureSpecification",
-          name: "Kettle",
-          value: true,
-        },
-        {
-          "@type": "LocationFeatureSpecification",
-          name: "LCD TV",
-          value: true,
-        },
-        {
-          "@type": "LocationFeatureSpecification",
-          name: "Air Conditioning",
-          value: true,
-        },
-        {
-          "@type": "LocationFeatureSpecification",
-          name: "Large Bathroom",
-          value: true,
-        },
-        {
-          "@type": "LocationFeatureSpecification",
-          name: "Kitchenette",
-          value: true,
-          description: "Available in selected rooms, Rooms 3 and 4",
-        },
-      ],
+        "Fully renovated double and triple rooms at Voulamandis House in Kampos, Chios, suitable for up to 4 guests.",
       containedInPlace: {
-        "@id": "https://chioshotel.gr/#hotel",
+        "@id": hotelId(),
       },
     },
     {
-      "@type": "HotelRoom",
-      "@id": "https://chioshotel.gr/chios-rooms/economy-double-rooms/#hotelroom",
-      name: "Economy Double Rooms in Chios - Voulamandis House",
+      "@type": ["Accommodation", "HotelRoom"],
+      "@id": schemaId("/chios-rooms/economy-double-rooms/", "room"),
+      name: "Economy Double Rooms in Chios",
+      url: absoluteUrl("/chios-rooms/economy-double-rooms/"),
       description:
-        "Economy double rooms in Chios at Voulamandis House, in Kampos. Comfortable ground floor and first floor rooms with traditional character, ideal for couples or two guests looking for value-for-money accommodation in Chios.",
-      url: "https://chioshotel.gr/chios-rooms/economy-double-rooms/",
-      image: [
-        "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-house-rooms.webp",
-        "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07776-2-e1675109942622.webp",
-      ],
-      occupancy: {
-        "@type": "QuantitativeValue",
-        maxValue: 2,
-        unitText: "guests",
-      },
-      amenityFeature: [
-        {
-          "@type": "LocationFeatureSpecification",
-          name: "Free WiFi",
-          value: true,
-        },
-        {
-          "@type": "LocationFeatureSpecification",
-          name: "Air Conditioning",
-          value: true,
-        },
-        {
-          "@type": "LocationFeatureSpecification",
-          name: "LCD TV",
-          value: true,
-        },
-        {
-          "@type": "LocationFeatureSpecification",
-          name: "Refrigerator",
-          value: true,
-        },
-        {
-          "@type": "LocationFeatureSpecification",
-          name: "Kettle",
-          value: true,
-        },
-        {
-          "@type": "LocationFeatureSpecification",
-          name: "Private bathroom",
-          value: true,
-        },
-      ],
+        "Economy double rooms at Voulamandis House in Kampos, Chios, ideal for couples or two guests looking for comfortable value-for-money accommodation.",
       containedInPlace: {
-        "@id": "https://chioshotel.gr/#hotel",
+        "@id": hotelId(),
       },
     },
     {
-      "@type": "HotelRoom",
-      "@id": "https://chioshotel.gr/chios-rooms/family-chios-apartments/#hotelroom",
-      name: "Family Chios Apartments - Voulamandis House",
+      "@type": ["Accommodation", "HotelRoom"],
+      "@id": schemaId("/chios-rooms/family-chios-apartments/", "room"),
+      name: "Family Chios Apartments",
+      url: absoluteUrl("/chios-rooms/family-chios-apartments/"),
       description:
-        "Family Chios Apartments at Voulamandis House in Kampos, Chios. Spacious apartments ideal for families, with a separate bedroom, fully equipped kitchen and comfortable living area.",
-      url: "https://chioshotel.gr/chios-rooms/family-chios-apartments/",
-      image: [
-        "https://chioshotel.gr/wp-content/uploads/2022/12/chios-apartments-voulamandis.webp",
-      ],
-      occupancy: {
-        "@type": "QuantitativeValue",
-        maxValue: 4,
-        unitText: "guests",
-      },
-      floorSize: {
-        "@type": "QuantitativeValue",
-        minValue: 40,
-        maxValue: 45,
-        unitCode: "MTK",
-        unitText: "square meters",
-      },
-      amenityFeature: [
-        {
-          "@type": "LocationFeatureSpecification",
-          name: "Free WiFi",
-          value: true,
-        },
-        {
-          "@type": "LocationFeatureSpecification",
-          name: "Air Conditioning",
-          value: true,
-        },
-        {
-          "@type": "LocationFeatureSpecification",
-          name: "LCD TV",
-          value: true,
-        },
-        {
-          "@type": "LocationFeatureSpecification",
-          name: "Private bathroom",
-          value: true,
-        },
-        {
-          "@type": "LocationFeatureSpecification",
-          name: "Fully equipped kitchen",
-          value: true,
-        },
-        {
-          "@type": "LocationFeatureSpecification",
-          name: "Separate bedroom",
-          value: true,
-        },
-        {
-          "@type": "LocationFeatureSpecification",
-          name: "Living area",
-          value: true,
-        },
-      ],
+        "Spacious family apartments at Voulamandis House in Kampos, Chios, with a separate bedroom, kitchen and living area.",
       containedInPlace: {
-        "@id": "https://chioshotel.gr/#hotel",
+        "@id": hotelId(),
       },
     },
-  ],
-};
+  ];
+}
+
+export const homePageSchema = buildSchemaGraph([
+  buildOrganizationSchema(),
+  buildHotelSchema(),
+  buildWebsiteSchema(),
+  buildImageSchema(
+    {
+      url: "https://chioshotel.gr/wp-content/uploads/2026/03/chios.hotels.voulamandis.house_.hero_.image_.webp",
+      alt: "Voulamandis House hotel in Kampos, Chios",
+      caption: `${siteName} hotel in Kampos, Chios`,
+    },
+    homepagePath,
+  ),
+  buildHomeWebPageSchema(),
+  buildHomeRoomsItemListSchema(),
+  ...buildHomeRoomReferencesSchema(),
+  buildBreadcrumbSchema(homepagePath, []),
+]);

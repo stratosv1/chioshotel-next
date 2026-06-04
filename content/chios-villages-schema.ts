@@ -1,143 +1,225 @@
 import type { ChiosVillagesPageData } from "@/content/chios-villages";
+import {
+  absoluteUrl,
+  getCanonicalUrl,
+  getLanguageForPath,
+  siteName,
+  siteUrl,
+} from "@/lib/seo";
+import {
+  buildBreadcrumbSchema,
+  buildHotelSchema,
+  buildImageSchema,
+  buildOrganizationSchema,
+  buildSchemaGraph,
+  buildWebsiteSchema,
+  hotelId,
+  itemListId,
+  primaryImageId,
+  schemaId,
+  webPageId,
+  websiteId,
+  type SchemaObject,
+} from "@/lib/structured-data";
 
-export function buildChiosVillagesSchema(data: ChiosVillagesPageData) {
-  const canonicalUrl = `https://chioshotel.gr${data.seo.canonicalPath}`;
+function buildChiosVillagesCollectionPageSchema(
+  data: ChiosVillagesPageData,
+): SchemaObject {
+  const canonicalPath = data.seo.canonicalPath;
+  const language = getLanguageForPath(canonicalPath);
 
   return {
-    "@context": "https://schema.org",
-    "@graph": [
+    "@type": "CollectionPage",
+    "@id": webPageId(canonicalPath),
+    url: getCanonicalUrl(canonicalPath),
+    name: data.seo.title,
+    headline: data.hero.title,
+    description: data.seo.description,
+    inLanguage: language,
+    isPartOf: {
+      "@id": websiteId(),
+    },
+    about: [
       {
-        "@type": "Article",
-        "@id": `${canonicalUrl}#article`,
-        headline: data.seo.title,
-        description: data.seo.description,
-        image: data.seo.ogImage,
-        url: canonicalUrl,
-        author: {
-          "@id": "https://chioshotel.gr/#hotel",
-        },
-        publisher: {
-          "@type": "Organization",
-          "@id": "https://chioshotel.gr/#organization",
-          name: "Voulamandis House",
-          logo: {
-            "@type": "ImageObject",
-            url: "https://chioshotel.gr/wp-content/uploads/voula-logo.png",
-          },
-        },
-        mainEntityOfPage: {
-          "@id": `${canonicalUrl}#webpage`,
-        },
-        mainEntity: {
-          "@id": `${canonicalUrl}#village-list`,
-        },
+        "@id": schemaId("/chios-island/", "destination"),
       },
       {
-        "@type": "WebPage",
-        "@id": `${canonicalUrl}#webpage`,
-        url: canonicalUrl,
-        name: data.seo.title,
-        description: data.seo.description,
-        image: data.seo.ogImage,
-        isPartOf: {
-          "@id": "https://chioshotel.gr/#website",
-        },
-        about: [
-          {
-            "@type": "Place",
-            name: "Chios Island",
-            address: {
-              "@type": "PostalAddress",
-              addressRegion: "Chios",
-              addressCountry: "GR",
-            },
-          },
-          {
-            "@id": "https://chioshotel.gr/#hotel",
-          },
-        ],
+        "@id": hotelId(),
+      },
+    ],
+    mainEntity: {
+      "@id": itemListId(canonicalPath),
+    },
+    primaryImageOfPage: {
+      "@id": primaryImageId(canonicalPath),
+    },
+    breadcrumb: {
+      "@id": schemaId(canonicalPath, "breadcrumb"),
+    },
+    publisher: {
+      "@id": `${siteUrl}/#organization`,
+    },
+  };
+}
+
+function buildVillagePlaceSchema(
+  village: ChiosVillagesPageData["villages"][number],
+): SchemaObject {
+  return {
+    "@type": ["Place", "TouristAttraction"],
+    "@id": schemaId(village.href, "place"),
+    name: village.name,
+    alternateName: village.title,
+    url: absoluteUrl(village.href),
+    description: village.description,
+    image: absoluteUrl(village.image),
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: village.region,
+      addressRegion: "Chios",
+      addressCountry: "GR",
+    },
+    touristType: village.badges,
+    isPartOf: {
+      "@id": schemaId("/chios-island/", "destination"),
+    },
+    subjectOf: {
+      "@id": webPageId(village.href),
+    },
+    additionalProperty: [
+      {
+        "@type": "PropertyValue",
+        name: "Region",
+        value: village.region,
       },
       {
-        "@type": "ItemList",
-        "@id": `${canonicalUrl}#village-list`,
-        name: "Top Chios Villages",
-        numberOfItems: data.villages.length,
-        itemListOrder: "https://schema.org/ItemListOrderDescending",
-        itemListElement: data.villages.map((village, index) => ({
-          "@type": "ListItem",
-          position: index + 1,
-          item: {
-            "@type": "Place",
-            name: village.name,
-            description: village.description,
-            image: village.image,
-            url: `https://chioshotel.gr${village.href}`,
-            address: {
-              "@type": "PostalAddress",
-              addressRegion: "Chios",
-              addressCountry: "GR",
-            },
-            additionalProperty: [
-              {
-                "@type": "PropertyValue",
-                name: "Region",
-                value: village.region,
-              },
-              {
-                "@type": "PropertyValue",
-                name: "Mood",
-                value: village.mood,
-              },
-              {
-                "@type": "PropertyValue",
-                name: "Tags",
-                value: village.badges.join(", "),
-              },
-            ],
-          },
-        })),
+        "@type": "PropertyValue",
+        name: "Mood",
+        value: village.mood,
       },
       {
-        "@type": "Hotel",
-        "@id": "https://chioshotel.gr/#hotel",
-        name: "Voulamandis House",
-        url: "https://chioshotel.gr/",
-        telephone: "+30 694 476 4654",
-        image: data.seo.ogImage,
-        priceRange: "€€",
-        address: {
-          "@type": "PostalAddress",
-          streetAddress: "Kalvokoressi 117",
-          addressLocality: "Kampos",
-          addressRegion: "Chios",
-          postalCode: "82100",
-          addressCountry: "GR",
-        },
-      },
-      {
-        "@type": "BreadcrumbList",
-        "@id": `${canonicalUrl}#breadcrumb`,
-        itemListElement: [
-          {
-            "@type": "ListItem",
-            position: 1,
-            name: "Home",
-            item: "https://chioshotel.gr/",
-          },
-          {
-            "@type": "ListItem",
-            position: 2,
-            name: "Chios Island",
-            item: "https://chioshotel.gr/chios-island/",
-          },
-          {
-            "@type": "ListItem",
-            position: 3,
-            name: "Chios Villages",
-            item: canonicalUrl,
-          },
-        ],
+        "@type": "PropertyValue",
+        name: "Tags",
+        value: village.badges.join(", "),
       },
     ],
   };
+}
+
+function buildVillagesItemListSchema(data: ChiosVillagesPageData): SchemaObject {
+  const canonicalPath = data.seo.canonicalPath;
+
+  return {
+    "@type": "ItemList",
+    "@id": itemListId(canonicalPath),
+    name: "Top Chios villages",
+    description: data.intro.description,
+    itemListOrder: "https://schema.org/ItemListOrderAscending",
+    numberOfItems: data.villages.length,
+    itemListElement: data.villages.map((village, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: village.name,
+      description: village.description,
+      url: absoluteUrl(village.href),
+      image: absoluteUrl(village.image),
+      item: {
+        "@id": schemaId(village.href, "place"),
+      },
+    })),
+  };
+}
+
+function buildVillagePlanningSchema(data: ChiosVillagesPageData): SchemaObject {
+  const canonicalPath = data.seo.canonicalPath;
+
+  return {
+    "@type": "ItemList",
+    "@id": schemaId(canonicalPath, "village-planning"),
+    name: data.planning.title,
+    description: data.planning.description,
+    itemListOrder: "https://schema.org/ItemListOrderAscending",
+    numberOfItems: data.planning.items.length,
+    itemListElement: data.planning.items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.title,
+      description: item.text,
+    })),
+  };
+}
+
+function buildVillageGuideTipSchema(data: ChiosVillagesPageData): SchemaObject {
+  const canonicalPath = data.seo.canonicalPath;
+
+  return {
+    "@type": "CreativeWork",
+    "@id": schemaId(canonicalPath, "local-village-tip"),
+    name: data.intro.tip.title,
+    text: data.intro.tip.text,
+    url: absoluteUrl(data.intro.tip.href),
+    about: {
+      "@id": hotelId(),
+    },
+  };
+}
+
+function buildVillageStayActionSchema(data: ChiosVillagesPageData): SchemaObject {
+  const canonicalPath = data.seo.canonicalPath;
+
+  return {
+    "@type": "ReserveAction",
+    "@id": schemaId(canonicalPath, "reserve-action"),
+    name: data.stay.primaryCta.label,
+    description: data.stay.text,
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: absoluteUrl(data.stay.primaryCta.href),
+      actionPlatform: [
+        "https://schema.org/DesktopWebPlatform",
+        "https://schema.org/MobileWebPlatform",
+      ],
+    },
+    object: {
+      "@id": hotelId(),
+    },
+    result: {
+      "@type": "LodgingReservation",
+      name: `${siteName} stay for exploring Chios villages`,
+    },
+  };
+}
+
+export function buildChiosVillagesSchema(data: ChiosVillagesPageData) {
+  const canonicalPath = data.seo.canonicalPath;
+
+  return buildSchemaGraph([
+    buildOrganizationSchema(),
+    buildHotelSchema(),
+    buildWebsiteSchema(),
+    buildImageSchema(
+      {
+        url: data.seo.ogImage || data.hero.image,
+        alt: data.hero.title,
+        caption: `${data.hero.title} - ${siteName}`,
+      },
+      canonicalPath,
+    ),
+    buildChiosVillagesCollectionPageSchema(data),
+    buildVillagesItemListSchema(data),
+    buildVillagePlanningSchema(data),
+    buildVillageGuideTipSchema(data),
+    ...data.villages.map(buildVillagePlaceSchema),
+    buildVillageStayActionSchema(data),
+    buildBreadcrumbSchema(canonicalPath, [
+      {
+        name: "Chios Island",
+        path: "/chios-island/",
+      },
+      {
+        name: "Chios Villages",
+        path: canonicalPath,
+      },
+    ]),
+  ]);
 }

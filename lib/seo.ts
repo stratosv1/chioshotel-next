@@ -3,30 +3,42 @@ import { languages, normalizePath, type LanguageCode } from "./languages";
 import { getLocalizedRoutes, getRouteByPath } from "./url-map";
 
 export const siteUrl = "https://chioshotel.gr";
+export const siteName = "Voulamandis House";
+export const defaultOgImage = "/og-image.jpg";
 
 export type SeoInput = {
   path: string;
   title: string;
   description: string;
   image?: string;
+  imageAlt?: string;
   noIndex?: boolean;
+  ogType?: "website" | "article";
 };
 
-const publishedLocalizedPaths = new Set([
-  "/el/",
-  "/fr/",
-  "/de/",
-  "/it/",
-  "/es/",
-  "/tr/",
+function splitPath(path: string) {
+  const hashIndex = path.indexOf("#");
+  const queryIndex = path.indexOf("?");
 
-  "/el/domatia-xios/",
-  "/fr/chambres-a-chios/",
-  "/de/chios-zimmer/",
-  "/it/camere-a-chios/",
-  "/es/habitaciones-en-chios/",
-  "/tr/sakiz-adasi-odalari/",
-]);
+  const firstSpecialIndex =
+    hashIndex === -1
+      ? queryIndex
+      : queryIndex === -1
+        ? hashIndex
+        : Math.min(hashIndex, queryIndex);
+
+  if (firstSpecialIndex === -1) {
+    return {
+      pathname: path,
+      suffix: "",
+    };
+  }
+
+  return {
+    pathname: path.slice(0, firstSpecialIndex),
+    suffix: path.slice(firstSpecialIndex),
+  };
+}
 
 export function absoluteUrl(path: string): string {
   if (!path) {
@@ -37,13 +49,18 @@ export function absoluteUrl(path: string): string {
     return path;
   }
 
-  const normalizedPath = normalizePath(path);
-
-  if (normalizedPath === "/") {
-    return siteUrl;
+  if (path.startsWith("#")) {
+    return `${siteUrl}/${path}`;
   }
 
-  return `${siteUrl}${normalizedPath}`;
+  const { pathname, suffix } = splitPath(path);
+  const normalizedPath = normalizePath(pathname);
+
+  if (normalizedPath === "/") {
+    return `${siteUrl}${suffix}`;
+  }
+
+  return `${siteUrl}${normalizedPath}${suffix}`;
 }
 
 export function getCanonicalUrl(path: string): string {
@@ -56,12 +73,8 @@ export function getCanonicalUrl(path: string): string {
   return absoluteUrl(route.canonicalPath || route.path);
 }
 
-function isPublishedAlternate(path: string, language: LanguageCode) {
-  if (language === "en") {
-    return true;
-  }
-
-  return publishedLocalizedPaths.has(path);
+function isIndexableRoute(route: ReturnType<typeof getLocalizedRoutes>[number]) {
+  return route.action === "KEEP";
 }
 
 export function getAlternates(path: string): Record<string, string> {
@@ -71,9 +84,7 @@ export function getAlternates(path: string): Record<string, string> {
     return {};
   }
 
-  const publishedRoutes = localizedRoutes.filter((route) =>
-    isPublishedAlternate(route.path, route.language),
-  );
+  const publishedRoutes = localizedRoutes.filter(isIndexableRoute);
 
   if (!publishedRoutes.length) {
     return {};
@@ -92,12 +103,22 @@ export function getAlternates(path: string): Record<string, string> {
   }
 
   const englishRoute = publishedRoutes.find((route) => route.language === "en");
+  const firstRoute = publishedRoutes[0];
 
   if (englishRoute) {
     alternates["x-default"] = absoluteUrl(englishRoute.path);
+  } else if (firstRoute) {
+    alternates["x-default"] = absoluteUrl(firstRoute.path);
   }
 
   return alternates;
+}
+
+export function buildAlternates(path: string): NonNullable<Metadata["alternates"]> {
+  return {
+    canonical: getCanonicalUrl(path),
+    languages: getAlternates(path),
+  };
 }
 
 export function getLanguageForPath(path: string): LanguageCode {
@@ -123,49 +144,53 @@ export function getLanguageForPath(path: string): LanguageCode {
   return detectedLanguage?.code || "en";
 }
 
+export function getLocaleForPath(path: string): string {
+  const languageCode = getLanguageForPath(path);
+  const language = languages.find((item) => item.code === languageCode);
+
+  return language?.locale || "en_US";
+}
+
+export function getAlternateLocales(path: string): string[] {
+  const currentLanguage = getLanguageForPath(path);
+
+  return languages
+    .filter((language) => language.code !== currentLanguage)
+    .map((language) => language.locale);
+}
+
 export function buildPageMetadata(input: SeoInput): Metadata {
   const canonicalUrl = getCanonicalUrl(input.path);
   const alternates = getAlternates(input.path);
   const imageUrl = input.image
     ? absoluteUrl(input.image)
-    : absoluteUrl("/og-image.jpg");
+    : absoluteUrl(defaultOgImage);
+  const locale = getLocaleForPath(input.path);
+  const alternateLocale = getAlternateLocales(input.path);
 
-  if (input.noIndex) {
-    return {
-      title: input.title,
-      description: input.description,
-      metadataBase: new URL(siteUrl),
-      alternates: {
-        canonical: canonicalUrl,
-        languages: alternates,
-      },
-      robots: {
+  const robots: Metadata["robots"] = input.noIndex
+    ? {
         index: false,
         follow: false,
-      },
-      openGraph: {
-        type: "website",
-        url: canonicalUrl,
-        siteName: "Voulamandis House",
-        title: input.title,
-        description: input.description,
-        images: [
-          {
-            url: imageUrl,
-            width: 1200,
-            height: 675,
-            alt: input.title,
-          },
-        ],
-      },
-      twitter: {
-        card: "summary_large_image",
-        title: input.title,
-        description: input.description,
-        images: [imageUrl],
-      },
-    };
-  }
+        googleBot: {
+          index: false,
+          follow: false,
+          "max-image-preview": "large",
+          "max-snippet": -1,
+          "max-video-preview": -1,
+        },
+      }
+    : {
+        index: true,
+        follow: true,
+        googleBot: {
+          index: true,
+          follow: true,
+          "max-image-preview": "large",
+          "max-snippet": -1,
+          "max-video-preview": -1,
+        },
+      };
 
   return {
     title: input.title,
@@ -175,29 +200,21 @@ export function buildPageMetadata(input: SeoInput): Metadata {
       canonical: canonicalUrl,
       languages: alternates,
     },
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        "max-image-preview": "large",
-        "max-snippet": -1,
-        "max-video-preview": -1,
-      },
-    },
+    robots,
     openGraph: {
-      type: "website",
+      type: input.ogType || "website",
       url: canonicalUrl,
-      siteName: "Voulamandis House",
+      siteName,
       title: input.title,
       description: input.description,
+      locale,
+      alternateLocale,
       images: [
         {
           url: imageUrl,
           width: 1200,
           height: 675,
-          alt: input.title,
+          alt: input.imageAlt || input.title,
         },
       ],
     },

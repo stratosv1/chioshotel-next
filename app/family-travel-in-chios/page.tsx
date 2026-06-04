@@ -1,6 +1,8 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import FamilyTravelPage from "@/components/landing/FamilyTravelPage";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { getFamilyTravelPageByLocale } from "@/content/family-travel";
+import { buildLandingPageSchema } from "@/content/landing-schema";
 import { absoluteUrl, buildPageMetadata } from "@/lib/seo";
 
 const data = getFamilyTravelPageByLocale("en");
@@ -28,5 +30,10 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <FamilyTravelPage data={data} />;
+  return (
+    <>
+      <JsonLd data={buildLandingPageSchema(data)} />
+      <FamilyTravelPage data={data} />
+    </>
+  );
 }

@@ -1,19 +1,21 @@
 import type { Metadata } from "next";
 import TasteLoverPage from "@/components/landing/TasteLoverPage";
+import { JsonLd } from "@/components/seo/JsonLd";
 import {
   getTasteLoverPageByLocale,
   tasteLoverPaths,
 } from "@/content/taste-lover";
+import { buildLandingPageSchema } from "@/content/landing-schema";
 import { absoluteUrl, buildPageMetadata } from "@/lib/seo";
 
 const data = getTasteLoverPageByLocale("en");
 
 export const metadata: Metadata = {
   ...buildPageMetadata({
-    path: data.path,
     title: data.seo.title,
     description: data.seo.description,
-    image: data.seo.image,
+    path: data.path,
+    image: data.hero.image.src,
   }),
   alternates: {
     canonical: absoluteUrl(data.path),
@@ -25,10 +27,16 @@ export const metadata: Metadata = {
       it: absoluteUrl(tasteLoverPaths.it),
       es: absoluteUrl(tasteLoverPaths.es),
       tr: absoluteUrl(tasteLoverPaths.tr),
+      "x-default": absoluteUrl(tasteLoverPaths.en),
     },
   },
 };
 
-export default function TasteLoverEnglishPage() {
-  return <TasteLoverPage data={data} />;
+export default function TasteLoverChiosRoute() {
+  return (
+    <>
+      <JsonLd data={buildLandingPageSchema(data)} />
+      <TasteLoverPage data={data} />
+    </>
+  );
 }
