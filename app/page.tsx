@@ -6,7 +6,7 @@ import { homePageSchema } from "@/content/schema";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
-  path: homePageEn.seo.canonicalPath,
+  path: "/",
   title: homePageEn.seo.title,
   description: homePageEn.seo.description,
   image: homePageEn.seo.ogImage,
