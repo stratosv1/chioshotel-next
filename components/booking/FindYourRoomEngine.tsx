@@ -133,10 +133,10 @@ const roomOptions: RoomOption[] = [
     kitchen: false,
     kitchenette: false,
     images: [
-      "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07776-2-e1675109942622.webp",
-      "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07769-1.webp",
-      "https://chioshotel.gr/wp-content/uploads/2022/12/%CF%87%CE%B9%CE%BF%CF%82-%CE%B4%CF%89%CE%BC%CE%B1%CF%84%CE%B9%CE%B1-1-1.webp",
-      "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-house-bathrooms-1.webp",
+      "/images/rooms/DSC07776-2-e1675109942622.webp",
+      "/images/rooms/DSC07769-1.webp",
+      "/images/rooms/----1-1.webp",
+      "/images/rooms/voulamandis-house-bathrooms-1.webp",
     ],
     amenities: [
       { key: "wifi", icon: "📶", fallback: "Wi-Fi" },
@@ -169,10 +169,10 @@ const roomOptions: RoomOption[] = [
     kitchen: false,
     kitchenette: false,
     images: [
-      "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07803-1.webp",
-      "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07839.webp",
-      "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07832.webp",
-      "https://chioshotel.gr/wp-content/uploads/2022/12/received_1385287484893642_1500478431120_1200x800_3240x2160-1.webp",
+      "/images/rooms/DSC07803-1.webp",
+      "/images/rooms/DSC07839.webp",
+      "/images/rooms/DSC07832.webp",
+      "/images/rooms/received_1385287484893642_1500478431120_1200x800_3240x2160-1.webp",
     ],
     amenities: [
       { key: "wifi", icon: "📶", fallback: "Wi-Fi" },
@@ -202,10 +202,10 @@ const roomOptions: RoomOption[] = [
     kitchen: false,
     kitchenette: true,
     images: [
-      "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07867-1.webp",
-      "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07860-1.webp",
-      "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07849-1.webp",
-      "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07891-1.webp",
+      "/images/rooms/DSC07867-1.webp",
+      "/images/rooms/DSC07860-1.webp",
+      "/images/rooms/DSC07849-1.webp",
+      "/images/rooms/DSC07891-1.webp",
     ],
     amenities: [
       { key: "wifi", icon: "📶", fallback: "Wi-Fi" },
@@ -239,9 +239,9 @@ const roomOptions: RoomOption[] = [
     kitchen: false,
     kitchenette: true,
     images: [
-      "https://chioshotel.gr/wp-content/uploads/2022/12/received_1748354861920234.webp",
-      "https://chioshotel.gr/wp-content/uploads/2022/12/received_1748358935253160.webp",
-      "https://chioshotel.gr/wp-content/uploads/2022/12/received_1748356725253381.webp",
+      "/images/rooms/received_1748354861920234.webp",
+      "/images/rooms/received_1748358935253160.webp",
+      "/images/rooms/received_1748356725253381.webp",
     ],
     amenities: [
       { key: "wifi", icon: "📶", fallback: "Wi-Fi" },
@@ -275,10 +275,10 @@ const roomOptions: RoomOption[] = [
     kitchen: false,
     kitchenette: false,
     images: [
-      "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-house-rooms.webp",
-      "https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-triple-rooms_1646x1080.webp",
-      "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-house-double-room-bathroom_1620x1080.webp",
-      "https://chioshotel.gr/wp-content/uploads/2022/12/hotels-chios-voulamandis_1620x1080.webp",
+      "/images/rooms/voulamandis-house-rooms.webp",
+      "/images/rooms/chios-hotels-triple-rooms_1646x1080.webp",
+      "/images/rooms/voulamandis-house-double-room-bathroom_1620x1080.webp",
+      "/images/rooms/hotels-chios-voulamandis_1620x1080.webp",
     ],
     amenities: [
       { key: "wifi", icon: "📶", fallback: "Wi-Fi" },
@@ -310,10 +310,10 @@ const roomOptions: RoomOption[] = [
     kitchen: false,
     kitchenette: false,
     images: [
-      "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753964631359257.webp",
-      "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753964581359262.webp",
-      "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753968691358851.webp",
-      "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753969201358800.webp",
+      "/images/rooms/received_1753964631359257.webp",
+      "/images/rooms/received_1753964581359262.webp",
+      "/images/rooms/received_1753968691358851.webp",
+      "/images/rooms/received_1753969201358800.webp",
     ],
     amenities: [
       { key: "wifi", icon: "📶", fallback: "Wi-Fi" },
@@ -344,10 +344,10 @@ const roomOptions: RoomOption[] = [
     kitchen: false,
     kitchenette: false,
     images: [
-      "https://chioshotel.gr/wp-content/uploads/2022/12/double-triple-room.jpg",
-      "https://chioshotel.gr/wp-content/uploads/2022/12/view-double-room-chios-hotels.webp",
-      "https://chioshotel.gr/wp-content/uploads/2022/12/double-room-bathroom.webp",
-      "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-stone-bathroom.webp",
+      "/images/rooms/double-triple-room.jpg",
+      "/images/rooms/view-double-room-chios-hotels.webp",
+      "/images/rooms/double-room-bathroom.webp",
+      "/images/rooms/voulamandis-stone-bathroom.webp",
     ],
     amenities: [
       { key: "wifi", icon: "📶", fallback: "Wi-Fi" },
@@ -379,10 +379,10 @@ const roomOptions: RoomOption[] = [
     kitchen: true,
     kitchenette: false,
     images: [
-      "https://chioshotel.gr/wp-content/uploads/2022/12/chios-apartments-voulamandis.webp",
-      "https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-family-apartments.webp",
-      "https://chioshotel.gr/wp-content/uploads/2022/12/family-room.webp",
-      "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-apartment-bathroom..webp",
+      "/images/rooms/chios-apartments-voulamandis.webp",
+      "/images/rooms/chios-hotels-family-apartments.webp",
+      "/images/rooms/family-room.webp",
+      "/images/rooms/voulamandis-apartment-bathroom..webp",
     ],
     amenities: [
       { key: "wifi", icon: "📶", fallback: "Wi-Fi" },
@@ -416,10 +416,10 @@ const roomOptions: RoomOption[] = [
     kitchen: true,
     kitchenette: false,
     images: [
-      "https://chioshotel.gr/wp-content/uploads/2022/12/chios-apartments-voulamandis.webp",
-      "https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-family-apartments.webp",
-      "https://chioshotel.gr/wp-content/uploads/2022/12/family-room.webp",
-      "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-apartment-bathroom..webp",
+      "/images/rooms/chios-apartments-voulamandis.webp",
+      "/images/rooms/chios-hotels-family-apartments.webp",
+      "/images/rooms/family-room.webp",
+      "/images/rooms/voulamandis-apartment-bathroom..webp",
     ],
     amenities: [
       { key: "wifi", icon: "📶", fallback: "Wi-Fi" },
@@ -453,10 +453,10 @@ const roomOptions: RoomOption[] = [
     kitchen: true,
     kitchenette: false,
     images: [
-      "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07899.webp",
-      "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07909.webp",
-      "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07940.webp",
-      "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07943.webp",
+      "/images/rooms/DSC07899.webp",
+      "/images/rooms/DSC07909.webp",
+      "/images/rooms/DSC07940.webp",
+      "/images/rooms/DSC07943.webp",
     ],
     amenities: [
       { key: "wifi", icon: "📶", fallback: "Wi-Fi" },

@@ -39,16 +39,16 @@ export type DealsPageData = {
 };
 
 const dealsHeroImage =
-  "https://chioshotel.gr/wp-content/uploads/2022/12/double-triple-room.jpg";
+  "/images/rooms/double-triple-room.jpg";
 
 const economyRoomImage =
-  "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07803-1.webp";
+  "/images/rooms/DSC07803-1.webp";
 
 const firstFloorRoomImage =
-  "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07776-2-e1675109942622.webp";
+  "/images/rooms/DSC07776-2-e1675109942622.webp";
 
 const familyApartmentImage =
-  "https://chioshotel.gr/wp-content/uploads/2022/12/chios-apartments-voulamandis.webp";
+  "/images/rooms/chios-apartments-voulamandis.webp";
 
 const phoneHref = "tel:+302271031733";
 const offerTargetIso = "2026-09-30T23:59:59+03:00";

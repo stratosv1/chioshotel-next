@@ -71,21 +71,21 @@ export type ChiosBeachesPageData = {
 
 const beachImages = {
   mavraVolia:
-    "https://chioshotel.gr/wp-content/uploads/2021/12/emporios3-e1702727598897.webp",
-  agiaFotia: "https://chioshotel.gr/wp-content/uploads/2026/02/agia-fotia.jpg",
+    "/images/beaches/emporios3-e1702727598897.webp",
+  agiaFotia: "/images/beaches/agia-fotia.jpg",
   komi:
-    "https://chioshotel.gr/wp-content/uploads/2021/12/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
+    "/images/beaches/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
   salagona:
-    "https://chioshotel.gr/wp-content/uploads/2021/12/salagona-e1645969502155.webp",
+    "/images/beaches/salagona-e1645969502155.webp",
   lithi:
-    "https://chioshotel.gr/wp-content/uploads/2021/12/2017-06-28-1024x768.webp",
+    "/images/beaches/2017-06-28-1024x768.webp",
   agiaDynami:
-    "https://chioshotel.gr/wp-content/uploads/2021/12/691-e1645969589226.webp",
+    "/images/beaches/691-e1645969589226.webp",
   avlonia:
-    "https://chioshotel.gr/wp-content/uploads/2021/12/avlonia-1024x768.webp",
-  lefkathia: "https://chioshotel.gr/wp-content/uploads/2026/03/lefkathia-2.jpg",
+    "/images/beaches/avlonia-1024x768.webp",
+  lefkathia: "/images/beaches/lefkathia-2.jpg",
   nagos:
-    "https://chioshotel.gr/wp-content/uploads/2021/12/nagos-e1645969566121.webp",
+    "/images/beaches/nagos-e1645969566121.webp",
 };
 
 export const chiosBeachesPageEn: ChiosBeachesPageData = {

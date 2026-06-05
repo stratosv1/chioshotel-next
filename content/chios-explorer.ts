@@ -152,27 +152,27 @@ const mestaLinks: ExplorerLinkSet = {
 
 const images = {
   koraisLibrary: {
-    src: "https://chioshotel.gr/wp-content/uploads/2021/12/vivlitothiki-korai-1.webp",
+    src: "/images/museums/vivlitothiki-korai-1.webp",
     alt: "Korais Library in Chios with historic manuscripts and cultural treasures",
   },
   masticMuseum: {
-    src: "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp",
+    src: "/images/museums/mousio.mastic.webp",
     alt: "Chios Mastic Museum and mastic tradition in southern Chios",
   },
   mesta: {
-    src: "https://chioshotel.gr/wp-content/uploads/2021/12/9ac4cf44d16c4af6d873c5bba4a6696b_L.webp",
+    src: "/images/chios-guide/9ac4cf44d16c4af6d873c5bba4a6696b_L.webp",
     alt: "Mesta medieval village stone alley in Chios",
   },
   anavatos: {
-    src: "https://chioshotel.gr/wp-content/uploads/2026/02/anavatos-1.jpg",
+    src: "/images/chios-guide/anavatos-1.jpg",
     alt: "Anavatos medieval abandoned village in Chios with dramatic stone landscape",
   },
   hiking: {
-    src: "https://chioshotel.gr/wp-content/uploads/2021/12/Hiking-Amani_1_Antonia-1.webp",
+    src: "/images/activities/Hiking-Amani_1_Antonia-1.webp",
     alt: "Hiking trail in Amani, Chios with mountain landscape",
   },
   agiaMarkella: {
-    src: "https://chioshotel.gr/wp-content/uploads/2026/02/ag-markella.jpg",
+    src: "/images/chios-guide/ag-markella.jpg",
     alt: "Agia Markella Monastery by the sea in Chios",
   },
 };

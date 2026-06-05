@@ -54,7 +54,7 @@ export const villageDetails: VillageDetailData[] = [
       description:
         "Discover Pyrgi in Chios, the famous painted medieval village known for its black-and-white xysta patterns, narrow streets and mastic village identity.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
+        "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
     },
     hero: {
       kicker: "South Chios • Mastic village",
@@ -62,7 +62,7 @@ export const villageDetails: VillageDetailData[] = [
       description:
         "One of the most distinctive villages in Chios, famous for its black-and-white geometric xysta patterns and its strong medieval mastic-village character.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
+        "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
       tags: ["#pyrgi", "#mastic_village", "#xysta", "#medieval_chios"],
     },
     details: [
@@ -144,7 +144,7 @@ export const villageDetails: VillageDetailData[] = [
       description:
         "Explore Mesta in Chios, one of the best-preserved medieval mastic villages, with stone houses, arches, narrow alleys and authentic atmosphere.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+        "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
     },
     hero: {
       kicker: "Southwest Chios • Fortress village",
@@ -152,7 +152,7 @@ export const villageDetails: VillageDetailData[] = [
       description:
         "One of the most beautiful and well-preserved medieval villages in Chios, built like a castle with stone houses, arches and narrow atmospheric alleys.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+        "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
       tags: ["#mesta", "#mastic_village", "#medieval_village", "#stone_alleys"],
     },
     details: [
@@ -235,7 +235,7 @@ export const villageDetails: VillageDetailData[] = [
       description:
         "Discover Vessa in Chios, a quiet traditional mastic village with medieval character, authentic atmosphere and easy access toward Lithi Beach.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
+        "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
     },
     hero: {
       kicker: "South Chios • Quiet mastic village",
@@ -243,7 +243,7 @@ export const villageDetails: VillageDetailData[] = [
       description:
         "A peaceful mastic village in southern Chios, known for its traditional character, medieval roots and slower local atmosphere.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
+        "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
       tags: ["#vessa", "#mastic_village", "#quiet_chios", "#medieval_village"],
     },
     details: [
@@ -325,7 +325,7 @@ export const villageDetails: VillageDetailData[] = [
       description:
         "Visit Olympoi in southern Chios, a medieval mastic village with fortified character, historic buildings and a walking route toward Mesta.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/olympoi-1-768x432.webp",
+        "/images/villages/olympoi-1-768x432.webp",
     },
     hero: {
       kicker: "South Chios • Medieval mastic village",
@@ -333,7 +333,7 @@ export const villageDetails: VillageDetailData[] = [
       description:
         "A characteristic medieval mastic village in southern Chios, with defensive architecture, historic points of interest and a walking route toward Mesta.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/olympoi-1-768x432.webp",
+        "/images/villages/olympoi-1-768x432.webp",
       tags: ["#olympoi", "#mastic_village", "#medieval_chios", "#walking_route"],
     },
     details: [
@@ -416,7 +416,7 @@ export const villageDetails: VillageDetailData[] = [
       description:
         "Explore Volissos in northwest Chios, the main village of Amani with castle views, old streets, nearby beaches and access to Agia Markella.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/Volissos-Chios.webp",
+        "/images/villages/Volissos-Chios.webp",
     },
     hero: {
       kicker: "Northwest Chios • Amani",
@@ -424,7 +424,7 @@ export const villageDetails: VillageDetailData[] = [
       description:
         "The main village of Amani, known for its castle, hillside views, old streets, nearby beaches and strong northwest Chios character.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/Volissos-Chios.webp",
+        "/images/villages/Volissos-Chios.webp",
       tags: ["#volissos", "#amani", "#castle_views", "#northwest_chios"],
     },
     details: [
@@ -508,7 +508,7 @@ export const villageDetails: VillageDetailData[] = [
       description:
         "Discover Armolia in Chios, a traditional village known for pottery, ceramics, stone houses and its position on southern Chios routes.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/unnamed-e1702830815478.webp",
+        "/images/villages/unnamed-e1702830815478.webp",
     },
     hero: {
       kicker: "South Chios • Pottery tradition",
@@ -516,7 +516,7 @@ export const villageDetails: VillageDetailData[] = [
       description:
         "A traditional village in southern Chios known for pottery, ceramics and local craftsmanship, making it a meaningful stop on the way to the mastic villages.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/unnamed-e1702830815478.webp",
+        "/images/villages/unnamed-e1702830815478.webp",
       tags: ["#armolia", "#pottery", "#ceramics", "#south_chios"],
     },
     details: [
@@ -598,7 +598,7 @@ export const villageDetails: VillageDetailData[] = [
       description:
         "Discover Lagada in northeast Chios, a picturesque seaside village with a small harbor, fish taverns, views toward Oinousses and relaxed local atmosphere.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/lagada_3.webp",
+        "/images/villages/lagada_3.webp",
     },
     hero: {
       kicker: "Northeast Chios • Seaside village",
@@ -606,7 +606,7 @@ export const villageDetails: VillageDetailData[] = [
       description:
         "A picturesque seaside village in northeast Chios, known for its small harbor, taverns by the water and views toward Oinousses.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/lagada_3.webp",
+        "/images/villages/lagada_3.webp",
       tags: ["#lagada", "#seaside_village", "#fish_taverns", "#oinousses_view"],
     },
     details: [
@@ -691,13 +691,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/el/xoria-xios/pyrgi-xios/",
       title: "Πυργί Χίος | Το ζωγραφιστό μεσαιωνικό χωριό",
       description: "Ανακαλύψτε το Πυργί στη Χίο, το διάσημο ζωγραφιστό μεσαιωνικό χωριό με τα ασπρόμαυρα ξυστά, τα στενά σοκάκια και την αυθεντική ταυτότητα των Μαστιχοχωρίων.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
+      ogImage: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
     },
     hero: {
       kicker: "Νότια Χίος • Μαστιχοχώρι",
       title: "Πυργί: το ζωγραφιστό χωριό της Χίου",
       description: "Ανακαλύψτε το Πυργί στη Χίο, το διάσημο ζωγραφιστό μεσαιωνικό χωριό με τα ασπρόμαυρα ξυστά, τα στενά σοκάκια και την αυθεντική ταυτότητα των Μαστιχοχωρίων.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
+      image: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
       tags: ["#pyrgi", "#mastic_village", "#xysta", "#medieval_chios"],
     },
     details: [
@@ -768,13 +768,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/el/xoria-xios/mesta-xios/",
       title: "Μεστά Χίος | Μεσαιωνικό καστροχώρι στα Μαστιχοχώρια",
       description: "Ανακαλύψτε τα Μεστά στη Χίο, ένα από τα καλύτερα διατηρημένα μεσαιωνικά καστροχώρια με πέτρινα σοκάκια, καμάρες και αυθεντική ατμόσφαιρα.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+      ogImage: "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
     },
     hero: {
       kicker: "Νότια Χίος • Μαστιχοχώρι",
       title: "Μεστά: το αυθεντικό μεσαιωνικό καστροχώρι",
       description: "Ανακαλύψτε τα Μεστά στη Χίο, ένα από τα καλύτερα διατηρημένα μεσαιωνικά καστροχώρια με πέτρινα σοκάκια, καμάρες και αυθεντική ατμόσφαιρα.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+      image: "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
       tags: ["#mesta", "#medieval_village", "#mastichochoria", "#stone_alleys"],
     },
     details: [
@@ -845,13 +845,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/el/xoria-xios/vessa-xios/",
       title: "Βέσσα Χίος | Ήσυχο μεσαιωνικό Μαστιχοχώρι",
       description: "Ανακαλύψτε τη Βέσσα στη Χίο, ένα ήσυχο μεσαιωνικό Μαστιχοχώρι με αυθεντική ατμόσφαιρα, πέτρινα στενά και χαμηλούς ρυθμούς.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
+      ogImage: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
     },
     hero: {
       kicker: "Νότια Χίος • Ήσυχο Μαστιχοχώρι",
       title: "Βέσσα: ήσυχο μεσαιωνικό Μαστιχοχώρι",
       description: "Ανακαλύψτε τη Βέσσα στη Χίο, ένα ήσυχο μεσαιωνικό Μαστιχοχώρι με αυθεντική ατμόσφαιρα, πέτρινα στενά και χαμηλούς ρυθμούς.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
+      image: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
       tags: ["#vessa", "#quiet_village", "#mastichochoria", "#authentic_chios"],
     },
     details: [
@@ -922,13 +922,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/el/xoria-xios/olympoi-xios/",
       title: "Ολύμποι Χίος | Μεσαιωνικό Μαστιχοχώρι & διαδρομή προς Μεστά",
       description: "Ανακαλύψτε τους Ολύμπους στη Χίο, ένα μεσαιωνικό Μαστιχοχώρι με οχυρωμένη δομή, αυθεντικά σοκάκια και ωραία σύνδεση με τα Μεστά.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/olympoi-1-768x432.webp",
+      ogImage: "/images/villages/olympoi-1-768x432.webp",
     },
     hero: {
       kicker: "Νότια Χίος • Οχυρωμένο χωριό",
       title: "Ολύμποι: μεσαιωνικό Μαστιχοχώρι με χαρακτήρα",
       description: "Ανακαλύψτε τους Ολύμπους στη Χίο, ένα μεσαιωνικό Μαστιχοχώρι με οχυρωμένη δομή, αυθεντικά σοκάκια και ωραία σύνδεση με τα Μεστά.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/olympoi-1-768x432.webp",
+      image: "/images/villages/olympoi-1-768x432.webp",
       tags: ["#olympoi", "#mastic_village", "#medieval_chios", "#south_chios"],
     },
     details: [
@@ -999,13 +999,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/el/xoria-xios/volissos-xios/",
       title: "Βολισσός Χίος | Κάστρο, Αμανή και βορειοδυτικές παραλίες",
       description: "Ανακαλύψτε τη Βολισσό στη βορειοδυτική Χίο, ένα ιστορικό χωριό με κάστρο, θέα στην Αμανή και πρόσβαση σε υπέροχες βόρειες παραλίες.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/Volissos-Chios.webp",
+      ogImage: "/images/villages/Volissos-Chios.webp",
     },
     hero: {
       kicker: "Βορειοδυτική Χίος • Κάστρο",
       title: "Βολισσός: κάστρο και βόρεια Χίος",
       description: "Ανακαλύψτε τη Βολισσό στη βορειοδυτική Χίο, ένα ιστορικό χωριό με κάστρο, θέα στην Αμανή και πρόσβαση σε υπέροχες βόρειες παραλίες.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/Volissos-Chios.webp",
+      image: "/images/villages/Volissos-Chios.webp",
       tags: ["#volissos", "#north_chios", "#castle", "#amani"],
     },
     details: [
@@ -1076,13 +1076,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/el/xoria-xios/armolia-xios/",
       title: "Αρμόλια Χίος | Χωριό κεραμικής και τοπικής τέχνης",
       description: "Ανακαλύψτε τα Αρμόλια στη Χίο, το χωριό της κεραμικής με εργαστήρια, τοπική τέχνη και εύκολη στάση σε διαδρομές προς τα Μαστιχοχώρια.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/unnamed-e1702830815478.webp",
+      ogImage: "/images/villages/unnamed-e1702830815478.webp",
     },
     hero: {
       kicker: "Νότια Χίος • Κεραμική παράδοση",
       title: "Αρμόλια: το χωριό της κεραμικής",
       description: "Ανακαλύψτε τα Αρμόλια στη Χίο, το χωριό της κεραμικής με εργαστήρια, τοπική τέχνη και εύκολη στάση σε διαδρομές προς τα Μαστιχοχώρια.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/unnamed-e1702830815478.webp",
+      image: "/images/villages/unnamed-e1702830815478.webp",
       tags: ["#armolia", "#pottery", "#local_crafts", "#south_chios"],
     },
     details: [
@@ -1153,13 +1153,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/el/xoria-xios/lagada-xios/",
       title: "Λαγκάδα Χίος | Παραθαλάσσιο χωριό, λιμάνι και ψαροταβέρνες",
       description: "Ανακαλύψτε τη Λαγκάδα στη Χίο, ένα παραθαλάσσιο χωριό με λιμάνι, θέα στις Οινούσσες, ψαροταβέρνες και χαλαρή τοπική ατμόσφαιρα.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/lagada_3.webp",
+      ogImage: "/images/villages/lagada_3.webp",
     },
     hero: {
       kicker: "Ανατολική Χίος • Παραθαλάσσιο χωριό",
       title: "Λαγκάδα: λιμάνι, θάλασσα και ψαροταβέρνες",
       description: "Ανακαλύψτε τη Λαγκάδα στη Χίο, ένα παραθαλάσσιο χωριό με λιμάνι, θέα στις Οινούσσες, ψαροταβέρνες και χαλαρή τοπική ατμόσφαιρα.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/lagada_3.webp",
+      image: "/images/villages/lagada_3.webp",
       tags: ["#lagada", "#seaside_village", "#fish_taverns", "#oinousses_views"],
     },
     details: [
@@ -1231,13 +1231,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/fr/villages-de-chios/village-pyrgi/",
       title: "Pyrgi Chios | Le village médiéval peint",
       description: "Découvrez Pyrgi à Chios, le célèbre village médiéval peint, connu pour ses motifs noirs et blancs, ses ruelles étroites et son identité de village du mastic.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
+      ogImage: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
     },
     hero: {
       kicker: "Sud de Chios • Village du mastic",
       title: "Pyrgi : le village peint de Chios",
       description: "Découvrez Pyrgi à Chios, le célèbre village médiéval peint, connu pour ses motifs noirs et blancs, ses ruelles étroites et son identité de village du mastic.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
+      image: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
       tags: ["#pyrgi", "#mastic_village", "#xysta", "#medieval_chios"],
     },
     details: [
@@ -1308,13 +1308,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/fr/villages-de-chios/village-mesta/",
       title: "Mesta Chios | Village fortifié médiéval du mastic",
       description: "Découvrez Mesta à Chios, l’un des villages fortifiés médiévaux les mieux préservés, avec ruelles en pierre, passages voûtés et atmosphère authentique.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+      ogImage: "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
     },
     hero: {
       kicker: "Sud de Chios • Village fortifié",
       title: "Mesta : le village-forteresse médiéval",
       description: "Découvrez Mesta à Chios, l’un des villages fortifiés médiévaux les mieux préservés, avec ruelles en pierre, passages voûtés et atmosphère authentique.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+      image: "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
       tags: ["#mesta", "#medieval_village", "#mastichochoria", "#stone_alleys"],
     },
     details: [
@@ -1385,13 +1385,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/fr/villages-de-chios/village-vessa/",
       title: "Vessa Chios | Village médiéval tranquille du mastic",
       description: "Découvrez Vessa à Chios, un village médiéval du mastic paisible, avec atmosphère authentique, ruelles en pierre et rythme lent.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
+      ogImage: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
     },
     hero: {
       kicker: "Sud de Chios • Village calme",
       title: "Vessa : village médiéval paisible",
       description: "Découvrez Vessa à Chios, un village médiéval du mastic paisible, avec atmosphère authentique, ruelles en pierre et rythme lent.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
+      image: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
       tags: ["#vessa", "#quiet_village", "#mastichochoria", "#authentic_chios"],
     },
     details: [
@@ -1462,13 +1462,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/fr/villages-de-chios/village-olympoi/",
       title: "Olympoi Chios | Village médiéval du mastic et route vers Mesta",
       description: "Découvrez Olympoi à Chios, un village médiéval du mastic avec structure fortifiée, ruelles authentiques et belle connexion avec Mesta.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/olympoi-1-768x432.webp",
+      ogImage: "/images/villages/olympoi-1-768x432.webp",
     },
     hero: {
       kicker: "Sud de Chios • Village fortifié",
       title: "Olympoi : village médiéval du mastic",
       description: "Découvrez Olympoi à Chios, un village médiéval du mastic avec structure fortifiée, ruelles authentiques et belle connexion avec Mesta.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/olympoi-1-768x432.webp",
+      image: "/images/villages/olympoi-1-768x432.webp",
       tags: ["#olympoi", "#mastic_village", "#medieval_chios", "#south_chios"],
     },
     details: [
@@ -1539,13 +1539,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/fr/villages-de-chios/village-volissos/",
       title: "Volissos Chios | Château, Amani et plages du nord-ouest",
       description: "Découvrez Volissos au nord-ouest de Chios, un village historique avec château, vues sur Amani et accès à de belles plages du nord.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/Volissos-Chios.webp",
+      ogImage: "/images/villages/Volissos-Chios.webp",
     },
     hero: {
       kicker: "Nord-ouest de Chios • Château",
       title: "Volissos : château et nord de Chios",
       description: "Découvrez Volissos au nord-ouest de Chios, un village historique avec château, vues sur Amani et accès à de belles plages du nord.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/Volissos-Chios.webp",
+      image: "/images/villages/Volissos-Chios.webp",
       tags: ["#volissos", "#north_chios", "#castle", "#amani"],
     },
     details: [
@@ -1616,13 +1616,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/fr/villages-de-chios/village-armolia/",
       title: "Armolia Chios | Village de poterie et artisanat local",
       description: "Découvrez Armolia à Chios, le village de la poterie avec ateliers, artisanat local et halte facile vers les villages du mastic.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/unnamed-e1702830815478.webp",
+      ogImage: "/images/villages/unnamed-e1702830815478.webp",
     },
     hero: {
       kicker: "Sud de Chios • Tradition de poterie",
       title: "Armolia : le village de la poterie",
       description: "Découvrez Armolia à Chios, le village de la poterie avec ateliers, artisanat local et halte facile vers les villages du mastic.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/unnamed-e1702830815478.webp",
+      image: "/images/villages/unnamed-e1702830815478.webp",
       tags: ["#armolia", "#pottery", "#local_crafts", "#south_chios"],
     },
     details: [
@@ -1693,13 +1693,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/fr/villages-de-chios/village-lagada/",
       title: "Lagada Chios | Village de bord de mer, port et tavernes de poisson",
       description: "Découvrez Lagada à Chios, un village de bord de mer avec port, vues vers Oinousses, tavernes de poisson et atmosphère locale détendue.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/lagada_3.webp",
+      ogImage: "/images/villages/lagada_3.webp",
     },
     hero: {
       kicker: "Est de Chios • Village de bord de mer",
       title: "Lagada : port, mer et tavernes de poisson",
       description: "Découvrez Lagada à Chios, un village de bord de mer avec port, vues vers Oinousses, tavernes de poisson et atmosphère locale détendue.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/lagada_3.webp",
+      image: "/images/villages/lagada_3.webp",
       tags: ["#lagada", "#seaside_village", "#fish_taverns", "#oinousses_views"],
     },
     details: [
@@ -1771,13 +1771,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/de/doerfer-chios/pyrgi-dorf/",
       title: "Pyrgi Chios | Das bemalte mittelalterliche Dorf",
       description: "Entdecken Sie Pyrgi auf Chios, das berühmte bemalte mittelalterliche Dorf mit schwarz-weißen Xysta-Mustern, engen Gassen und Mastixdorf-Charakter.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
+      ogImage: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
     },
     hero: {
       kicker: "Süd-Chios • Mastixdorf",
       title: "Pyrgi: das bemalte Dorf von Chios",
       description: "Entdecken Sie Pyrgi auf Chios, das berühmte bemalte mittelalterliche Dorf mit schwarz-weißen Xysta-Mustern, engen Gassen und Mastixdorf-Charakter.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
+      image: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
       tags: ["#pyrgi", "#mastic_village", "#xysta", "#medieval_chios"],
     },
     details: [
@@ -1848,13 +1848,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/de/doerfer-chios/mesta-dorf/",
       title: "Mesta Chios | Mittelalterliches Festungsdorf",
       description: "Entdecken Sie Mesta auf Chios, eines der am besten erhaltenen mittelalterlichen Festungsdörfer mit Steingassen, Bögen und authentischer Atmosphäre.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+      ogImage: "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
     },
     hero: {
       kicker: "Süd-Chios • Festungsdorf",
       title: "Mesta: das mittelalterliche Festungsdorf",
       description: "Entdecken Sie Mesta auf Chios, eines der am besten erhaltenen mittelalterlichen Festungsdörfer mit Steingassen, Bögen und authentischer Atmosphäre.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+      image: "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
       tags: ["#mesta", "#medieval_village", "#mastichochoria", "#stone_alleys"],
     },
     details: [
@@ -1925,13 +1925,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/de/doerfer-chios/vessa-dorf/",
       title: "Vessa Chios | Ruhiges mittelalterliches Mastixdorf",
       description: "Entdecken Sie Vessa auf Chios, ein ruhiges mittelalterliches Mastixdorf mit authentischer Atmosphäre, Steingassen und langsamem Rhythmus.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
+      ogImage: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
     },
     hero: {
       kicker: "Süd-Chios • Ruhiges Mastixdorf",
       title: "Vessa: ruhiges mittelalterliches Mastixdorf",
       description: "Entdecken Sie Vessa auf Chios, ein ruhiges mittelalterliches Mastixdorf mit authentischer Atmosphäre, Steingassen und langsamem Rhythmus.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
+      image: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
       tags: ["#vessa", "#quiet_village", "#mastichochoria", "#authentic_chios"],
     },
     details: [
@@ -2002,13 +2002,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/de/doerfer-chios/olympoi-dorf/",
       title: "Olympoi Chios | Mittelalterliches Mastixdorf und Route nach Mesta",
       description: "Entdecken Sie Olympoi auf Chios, ein mittelalterliches Mastixdorf mit befestigter Struktur, authentischen Gassen und schöner Verbindung nach Mesta.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/olympoi-1-768x432.webp",
+      ogImage: "/images/villages/olympoi-1-768x432.webp",
     },
     hero: {
       kicker: "Süd-Chios • Befestigtes Dorf",
       title: "Olympoi: mittelalterliches Mastixdorf",
       description: "Entdecken Sie Olympoi auf Chios, ein mittelalterliches Mastixdorf mit befestigter Struktur, authentischen Gassen und schöner Verbindung nach Mesta.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/olympoi-1-768x432.webp",
+      image: "/images/villages/olympoi-1-768x432.webp",
       tags: ["#olympoi", "#mastic_village", "#medieval_chios", "#south_chios"],
     },
     details: [
@@ -2079,13 +2079,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/de/doerfer-chios/volissos-dorf/",
       title: "Volissos Chios | Burg, Amani und Strände im Nordwesten",
       description: "Entdecken Sie Volissos im Nordwesten von Chios, ein historisches Dorf mit Burg, Blick auf Amani und Zugang zu schönen nördlichen Stränden.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/Volissos-Chios.webp",
+      ogImage: "/images/villages/Volissos-Chios.webp",
     },
     hero: {
       kicker: "Nordwest-Chios • Burg",
       title: "Volissos: Burg und Nord-Chios",
       description: "Entdecken Sie Volissos im Nordwesten von Chios, ein historisches Dorf mit Burg, Blick auf Amani und Zugang zu schönen nördlichen Stränden.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/Volissos-Chios.webp",
+      image: "/images/villages/Volissos-Chios.webp",
       tags: ["#volissos", "#north_chios", "#castle", "#amani"],
     },
     details: [
@@ -2156,13 +2156,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/de/doerfer-chios/armolia-dorf/",
       title: "Armolia Chios | Töpferdorf und lokales Handwerk",
       description: "Entdecken Sie Armolia auf Chios, das Töpferdorf mit Werkstätten, lokalem Handwerk und gutem Halt auf Routen zu den Mastixdörfern.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/unnamed-e1702830815478.webp",
+      ogImage: "/images/villages/unnamed-e1702830815478.webp",
     },
     hero: {
       kicker: "Süd-Chios • Töpfertradition",
       title: "Armolia: das Töpferdorf",
       description: "Entdecken Sie Armolia auf Chios, das Töpferdorf mit Werkstätten, lokalem Handwerk und gutem Halt auf Routen zu den Mastixdörfern.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/unnamed-e1702830815478.webp",
+      image: "/images/villages/unnamed-e1702830815478.webp",
       tags: ["#armolia", "#pottery", "#local_crafts", "#south_chios"],
     },
     details: [
@@ -2233,13 +2233,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/de/doerfer-chios/lagada-dorf/",
       title: "Lagada Chios | Dorf am Meer, Hafen und Fischtavernen",
       description: "Entdecken Sie Lagada auf Chios, ein Dorf am Meer mit Hafen, Blick nach Oinousses, Fischtavernen und entspannter lokaler Atmosphäre.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/lagada_3.webp",
+      ogImage: "/images/villages/lagada_3.webp",
     },
     hero: {
       kicker: "Ost-Chios • Dorf am Meer",
       title: "Lagada: Hafen, Meer und Fischtavernen",
       description: "Entdecken Sie Lagada auf Chios, ein Dorf am Meer mit Hafen, Blick nach Oinousses, Fischtavernen und entspannter lokaler Atmosphäre.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/lagada_3.webp",
+      image: "/images/villages/lagada_3.webp",
       tags: ["#lagada", "#seaside_village", "#fish_taverns", "#oinousses_views"],
     },
     details: [
@@ -2311,13 +2311,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/it/villaggi-chios/villaggio-pyrgi/",
       title: "Pyrgi Chios | Il villaggio medievale dipinto",
       description: "Scopri Pyrgi a Chios, il famoso villaggio medievale dipinto, noto per i motivi bianchi e neri, i vicoli stretti e l’identità dei villaggi del mastice.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
+      ogImage: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
     },
     hero: {
       kicker: "Chios meridionale • Villaggio del mastice",
       title: "Pyrgi: il villaggio dipinto di Chios",
       description: "Scopri Pyrgi a Chios, il famoso villaggio medievale dipinto, noto per i motivi bianchi e neri, i vicoli stretti e l’identità dei villaggi del mastice.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
+      image: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
       tags: ["#pyrgi", "#mastic_village", "#xysta", "#medieval_chios"],
     },
     details: [
@@ -2388,13 +2388,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/it/villaggi-chios/villaggio-mesta/",
       title: "Mesta Chios | Villaggio medievale fortificato",
       description: "Scopri Mesta a Chios, uno dei villaggi fortificati medievali meglio conservati, con vicoli in pietra, archi e atmosfera autentica.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+      ogImage: "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
     },
     hero: {
       kicker: "Chios meridionale • Villaggio fortificato",
       title: "Mesta: il villaggio-fortezza medievale",
       description: "Scopri Mesta a Chios, uno dei villaggi fortificati medievali meglio conservati, con vicoli in pietra, archi e atmosfera autentica.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+      image: "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
       tags: ["#mesta", "#medieval_village", "#mastichochoria", "#stone_alleys"],
     },
     details: [
@@ -2465,13 +2465,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/it/villaggi-chios/villaggio-vessa/",
       title: "Vessa Chios | Tranquillo villaggio medievale del mastice",
       description: "Scopri Vessa a Chios, un tranquillo villaggio medievale del mastice con atmosfera autentica, vicoli in pietra e ritmi lenti.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
+      ogImage: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
     },
     hero: {
       kicker: "Chios meridionale • Villaggio tranquillo",
       title: "Vessa: tranquillo villaggio medievale",
       description: "Scopri Vessa a Chios, un tranquillo villaggio medievale del mastice con atmosfera autentica, vicoli in pietra e ritmi lenti.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
+      image: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
       tags: ["#vessa", "#quiet_village", "#mastichochoria", "#authentic_chios"],
     },
     details: [
@@ -2542,13 +2542,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/it/villaggi-chios/villaggio-olympoi/",
       title: "Olympoi Chios | Villaggio medievale del mastice e percorso verso Mesta",
       description: "Scopri Olympoi a Chios, un villaggio medievale del mastice con struttura fortificata, vicoli autentici e bel collegamento con Mesta.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/olympoi-1-768x432.webp",
+      ogImage: "/images/villages/olympoi-1-768x432.webp",
     },
     hero: {
       kicker: "Chios meridionale • Villaggio fortificato",
       title: "Olympoi: villaggio medievale del mastice",
       description: "Scopri Olympoi a Chios, un villaggio medievale del mastice con struttura fortificata, vicoli autentici e bel collegamento con Mesta.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/olympoi-1-768x432.webp",
+      image: "/images/villages/olympoi-1-768x432.webp",
       tags: ["#olympoi", "#mastic_village", "#medieval_chios", "#south_chios"],
     },
     details: [
@@ -2619,13 +2619,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/it/villaggi-chios/villaggio-volissos/",
       title: "Volissos Chios | Castello, Amani e spiagge del nord-ovest",
       description: "Scopri Volissos nel nord-ovest di Chios, un villaggio storico con castello, vista su Amani e accesso a splendide spiagge del nord.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/Volissos-Chios.webp",
+      ogImage: "/images/villages/Volissos-Chios.webp",
     },
     hero: {
       kicker: "Nord-ovest di Chios • Castello",
       title: "Volissos: castello e nord di Chios",
       description: "Scopri Volissos nel nord-ovest di Chios, un villaggio storico con castello, vista su Amani e accesso a splendide spiagge del nord.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/Volissos-Chios.webp",
+      image: "/images/villages/Volissos-Chios.webp",
       tags: ["#volissos", "#north_chios", "#castle", "#amani"],
     },
     details: [
@@ -2696,13 +2696,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/it/villaggi-chios/villaggio-armolia/",
       title: "Armolia Chios | Villaggio della ceramica e artigianato",
       description: "Scopri Armolia a Chios, il villaggio della ceramica con laboratori, artigianato locale e comoda tappa verso i villaggi del mastice.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/unnamed-e1702830815478.webp",
+      ogImage: "/images/villages/unnamed-e1702830815478.webp",
     },
     hero: {
       kicker: "Chios meridionale • Tradizione ceramica",
       title: "Armolia: il villaggio della ceramica",
       description: "Scopri Armolia a Chios, il villaggio della ceramica con laboratori, artigianato locale e comoda tappa verso i villaggi del mastice.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/unnamed-e1702830815478.webp",
+      image: "/images/villages/unnamed-e1702830815478.webp",
       tags: ["#armolia", "#pottery", "#local_crafts", "#south_chios"],
     },
     details: [
@@ -2773,13 +2773,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/it/villaggi-chios/villaggio-lagada/",
       title: "Lagada Chios | Villaggio sul mare, porto e taverne di pesce",
       description: "Scopri Lagada a Chios, un villaggio sul mare con porto, vista su Oinousses, taverne di pesce e atmosfera locale rilassata.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/lagada_3.webp",
+      ogImage: "/images/villages/lagada_3.webp",
     },
     hero: {
       kicker: "Chios orientale • Villaggio sul mare",
       title: "Lagada: porto, mare e taverne di pesce",
       description: "Scopri Lagada a Chios, un villaggio sul mare con porto, vista su Oinousses, taverne di pesce e atmosfera locale rilassata.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/lagada_3.webp",
+      image: "/images/villages/lagada_3.webp",
       tags: ["#lagada", "#seaside_village", "#fish_taverns", "#oinousses_views"],
     },
     details: [
@@ -2851,13 +2851,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/es/pueblos-chios/pueblo-pyrgi/",
       title: "Pyrgi Chios | El pueblo medieval pintado",
       description: "Descubre Pyrgi en Chios, un pueblo medieval pintado con motivos blancos y negros, callejones estrechos y carácter de mastiha.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
+      ogImage: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
     },
     hero: {
       kicker: "Sur de Chios • Pueblo del mastiha",
       title: "Pyrgi: el pueblo pintado de Chios",
       description: "Descubre Pyrgi en Chios, un pueblo medieval pintado con motivos blancos y negros, callejones estrechos y carácter de mastiha.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
+      image: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
       tags: ["#pyrgi", "#mastic_village", "#xysta", "#medieval_chios"],
     },
     details: [
@@ -2928,13 +2928,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/es/pueblos-chios/pueblo-mesta/",
       title: "Mesta Chios | Pueblo medieval fortificado",
       description: "Descubre Mesta en Chios, uno de los pueblos fortificados medievales mejor conservados, con calles de piedra, arcos y atmósfera auténtica.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+      ogImage: "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
     },
     hero: {
       kicker: "Sur de Chios • Pueblo fortificado",
       title: "Mesta: el pueblo fortaleza medieval",
       description: "Descubre Mesta en Chios, uno de los pueblos fortificados medievales mejor conservados, con calles de piedra, arcos y atmósfera auténtica.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+      image: "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
       tags: ["#mesta", "#medieval_village", "#mastichochoria", "#stone_alleys"],
     },
     details: [
@@ -3005,13 +3005,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/es/pueblos-chios/pueblo-vessa/",
       title: "Vessa Chios | Tranquilo pueblo medieval del mastiha",
       description: "Descubre Vessa en Chios, un tranquilo pueblo medieval del mastiha con atmósfera auténtica, calles de piedra y ritmo pausado.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
+      ogImage: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
     },
     hero: {
       kicker: "Sur de Chios • Pueblo tranquilo",
       title: "Vessa: pueblo medieval tranquilo",
       description: "Descubre Vessa en Chios, un tranquilo pueblo medieval del mastiha con atmósfera auténtica, calles de piedra y ritmo pausado.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
+      image: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
       tags: ["#vessa", "#quiet_village", "#mastichochoria", "#authentic_chios"],
     },
     details: [
@@ -3082,13 +3082,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/es/pueblos-chios/pueblo-olympoi/",
       title: "Olympoi Chios | Pueblo medieval del mastiha y ruta a Mesta",
       description: "Descubre Olympoi en Chios, un pueblo medieval del mastiha con estructura fortificada, calles auténticas y bonita conexión con Mesta.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/olympoi-1-768x432.webp",
+      ogImage: "/images/villages/olympoi-1-768x432.webp",
     },
     hero: {
       kicker: "Sur de Chios • Pueblo fortificado",
       title: "Olympoi: pueblo medieval del mastiha",
       description: "Descubre Olympoi en Chios, un pueblo medieval del mastiha con estructura fortificada, calles auténticas y bonita conexión con Mesta.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/olympoi-1-768x432.webp",
+      image: "/images/villages/olympoi-1-768x432.webp",
       tags: ["#olympoi", "#mastic_village", "#medieval_chios", "#south_chios"],
     },
     details: [
@@ -3159,13 +3159,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/es/pueblos-chios/pueblo-volissos/",
       title: "Volissos Chios | Castillo, Amani y playas del noroeste",
       description: "Descubre Volissos en el noroeste de Chios, un pueblo histórico con castillo, vistas a Amani y acceso a bonitas playas del norte.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/Volissos-Chios.webp",
+      ogImage: "/images/villages/Volissos-Chios.webp",
     },
     hero: {
       kicker: "Noroeste de Chios • Castillo",
       title: "Volissos: castillo y norte de Chios",
       description: "Descubre Volissos en el noroeste de Chios, un pueblo histórico con castillo, vistas a Amani y acceso a bonitas playas del norte.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/Volissos-Chios.webp",
+      image: "/images/villages/Volissos-Chios.webp",
       tags: ["#volissos", "#north_chios", "#castle", "#amani"],
     },
     details: [
@@ -3236,13 +3236,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/es/pueblos-chios/pueblo-armolia/",
       title: "Armolia Chios | Pueblo de cerámica y artesanía local",
       description: "Descubre Armolia en Chios, el pueblo de la cerámica con talleres, artesanía local y parada fácil hacia los pueblos del mastiha.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/unnamed-e1702830815478.webp",
+      ogImage: "/images/villages/unnamed-e1702830815478.webp",
     },
     hero: {
       kicker: "Sur de Chios • Tradición cerámica",
       title: "Armolia: el pueblo de la cerámica",
       description: "Descubre Armolia en Chios, el pueblo de la cerámica con talleres, artesanía local y parada fácil hacia los pueblos del mastiha.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/unnamed-e1702830815478.webp",
+      image: "/images/villages/unnamed-e1702830815478.webp",
       tags: ["#armolia", "#pottery", "#local_crafts", "#south_chios"],
     },
     details: [
@@ -3313,13 +3313,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/es/pueblos-chios/pueblo-lagada/",
       title: "Lagada Chios | Pueblo junto al mar, puerto y tabernas de pescado",
       description: "Descubre Lagada en Chios, un pueblo junto al mar con puerto, vistas a Oinousses, tabernas de pescado y ambiente local relajado.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/lagada_3.webp",
+      ogImage: "/images/villages/lagada_3.webp",
     },
     hero: {
       kicker: "Este de Chios • Pueblo costero",
       title: "Lagada: puerto, mar y tabernas de pescado",
       description: "Descubre Lagada en Chios, un pueblo junto al mar con puerto, vistas a Oinousses, tabernas de pescado y ambiente local relajado.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/lagada_3.webp",
+      image: "/images/villages/lagada_3.webp",
       tags: ["#lagada", "#seaside_village", "#fish_taverns", "#oinousses_views"],
     },
     details: [
@@ -3391,13 +3391,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/tr/sakiz-adasi-koyleri/pyrgi-koyu/",
       title: "Pyrgi Sakız Adası | Boyalı Orta Çağ köyü",
       description: "Sakız Adası’ndaki Pyrgi’yi keşfedin: siyah beyaz desenleri, dar sokakları ve mastik köyü kimliğiyle ünlü boyalı Orta Çağ köyü.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
+      ogImage: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
     },
     hero: {
       kicker: "Güney Sakız • Mastik köyü",
       title: "Pyrgi: Sakız’ın boyalı köyü",
       description: "Sakız Adası’ndaki Pyrgi’yi keşfedin: siyah beyaz desenleri, dar sokakları ve mastik köyü kimliğiyle ünlü boyalı Orta Çağ köyü.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
+      image: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
       tags: ["#pyrgi", "#mastic_village", "#xysta", "#medieval_chios"],
     },
     details: [
@@ -3468,13 +3468,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/tr/sakiz-adasi-koyleri/mesta-koyu/",
       title: "Mesta Sakız Adası | Orta Çağ kale köyü",
       description: "Sakız Adası’ndaki Mesta’yı keşfedin: taş sokakları, kemerleri ve otantik atmosferiyle en iyi korunmuş Orta Çağ kale köylerinden biri.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+      ogImage: "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
     },
     hero: {
       kicker: "Güney Sakız • Kale köyü",
       title: "Mesta: Orta Çağ kale köyü",
       description: "Sakız Adası’ndaki Mesta’yı keşfedin: taş sokakları, kemerleri ve otantik atmosferiyle en iyi korunmuş Orta Çağ kale köylerinden biri.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+      image: "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
       tags: ["#mesta", "#medieval_village", "#mastichochoria", "#stone_alleys"],
     },
     details: [
@@ -3545,13 +3545,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/tr/sakiz-adasi-koyleri/vessa-koyu/",
       title: "Vessa Sakız Adası | Sakin Orta Çağ mastik köyü",
       description: "Sakız Adası’ndaki Vessa’yı keşfedin: otantik atmosferi, taş sokakları ve sakin temposuyla huzurlu bir Orta Çağ mastik köyü.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
+      ogImage: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
     },
     hero: {
       kicker: "Güney Sakız • Sakin mastik köyü",
       title: "Vessa: sakin Orta Çağ mastik köyü",
       description: "Sakız Adası’ndaki Vessa’yı keşfedin: otantik atmosferi, taş sokakları ve sakin temposuyla huzurlu bir Orta Çağ mastik köyü.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
+      image: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
       tags: ["#vessa", "#quiet_village", "#mastichochoria", "#authentic_chios"],
     },
     details: [
@@ -3622,13 +3622,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/tr/sakiz-adasi-koyleri/olympoi-koyu/",
       title: "Olympoi Sakız Adası | Orta Çağ mastik köyü ve Mesta rotası",
       description: "Sakız Adası’ndaki Olympoi’yi keşfedin: surlu dokusu, otantik sokakları ve Mesta ile güzel bağlantısıyla Orta Çağ mastik köyü.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/olympoi-1-768x432.webp",
+      ogImage: "/images/villages/olympoi-1-768x432.webp",
     },
     hero: {
       kicker: "Güney Sakız • Surlu köy",
       title: "Olympoi: Orta Çağ mastik köyü",
       description: "Sakız Adası’ndaki Olympoi’yi keşfedin: surlu dokusu, otantik sokakları ve Mesta ile güzel bağlantısıyla Orta Çağ mastik köyü.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/olympoi-1-768x432.webp",
+      image: "/images/villages/olympoi-1-768x432.webp",
       tags: ["#olympoi", "#mastic_village", "#medieval_chios", "#south_chios"],
     },
     details: [
@@ -3699,13 +3699,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/tr/sakiz-adasi-koyleri/volissos-koyu/",
       title: "Volissos Sakız Adası | Kale, Amani ve kuzeybatı plajları",
       description: "Sakız Adası’nın kuzeybatısındaki Volissos’u keşfedin: kalesi, Amani manzaraları ve güzel kuzey plajlarına erişimiyle tarihi bir köy.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/Volissos-Chios.webp",
+      ogImage: "/images/villages/Volissos-Chios.webp",
     },
     hero: {
       kicker: "Kuzeybatı Sakız • Kale",
       title: "Volissos: kale ve kuzey Sakız",
       description: "Sakız Adası’nın kuzeybatısındaki Volissos’u keşfedin: kalesi, Amani manzaraları ve güzel kuzey plajlarına erişimiyle tarihi bir köy.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/Volissos-Chios.webp",
+      image: "/images/villages/Volissos-Chios.webp",
       tags: ["#volissos", "#north_chios", "#castle", "#amani"],
     },
     details: [
@@ -3776,13 +3776,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/tr/sakiz-adasi-koyleri/armolia-koyu/",
       title: "Armolia Sakız Adası | Seramik ve yerel zanaat köyü",
       description: "Sakız Adası’ndaki Armolia’yı keşfedin: atölyeleri, yerel zanaatı ve mastik köyleri rotasındaki kolay konumuyla seramik köyü.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/unnamed-e1702830815478.webp",
+      ogImage: "/images/villages/unnamed-e1702830815478.webp",
     },
     hero: {
       kicker: "Güney Sakız • Seramik geleneği",
       title: "Armolia: seramik köyü",
       description: "Sakız Adası’ndaki Armolia’yı keşfedin: atölyeleri, yerel zanaatı ve mastik köyleri rotasındaki kolay konumuyla seramik köyü.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/unnamed-e1702830815478.webp",
+      image: "/images/villages/unnamed-e1702830815478.webp",
       tags: ["#armolia", "#pottery", "#local_crafts", "#south_chios"],
     },
     details: [
@@ -3853,13 +3853,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/tr/sakiz-adasi-koyleri/lagada-koyu/",
       title: "Lagada Sakız Adası | Deniz köyü, liman ve balık tavernaları",
       description: "Sakız Adası’ndaki Lagada’yı keşfedin: limanı, Oinousses manzaraları, balık tavernaları ve rahat yerel atmosferiyle deniz kenarı köyü.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/lagada_3.webp",
+      ogImage: "/images/villages/lagada_3.webp",
     },
     hero: {
       kicker: "Doğu Sakız • Deniz kenarı köyü",
       title: "Lagada: liman, deniz ve balık tavernaları",
       description: "Sakız Adası’ndaki Lagada’yı keşfedin: limanı, Oinousses manzaraları, balık tavernaları ve rahat yerel atmosferiyle deniz kenarı köyü.",
-      image: "https://chioshotel.gr/wp-content/uploads/2021/12/lagada_3.webp",
+      image: "/images/villages/lagada_3.webp",
       tags: ["#lagada", "#seaside_village", "#fish_taverns", "#oinousses_views"],
     },
     details: [
@@ -3935,7 +3935,7 @@ export const relatedVillageCards = [
     description: "The painted village of Chios, famous for its black-and-white xysta facades.",
     href: "/chios/chios-villages/chios-pyrgi/",
     image:
-      "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
+      "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
     imageAlt: "Pyrgi village in Chios with black and white xysta patterns",
     badge: "Painted",
     size: "large",
@@ -3946,7 +3946,7 @@ export const relatedVillageCards = [
     description: "A beautifully preserved medieval fortress village with stone alleys.",
     href: "/chios/chios-villages/mesta-chios/",
     image:
-      "https://chioshotel.gr/wp-content/uploads/2021/12/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+      "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
     imageAlt: "Mesta village in Chios with medieval stone alleys",
     badge: "Medieval",
     size: "wide",
@@ -3957,7 +3957,7 @@ export const relatedVillageCards = [
     description: "A quieter mastic village with medieval roots and authentic local atmosphere.",
     href: "/chios/chios-villages/vessa-chios/",
     image:
-      "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
+      "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
     imageAlt: "Vessa village in Chios with traditional mastic village character",
     badge: "Quiet",
     size: "normal",
@@ -3968,7 +3968,7 @@ export const relatedVillageCards = [
     description: "A fortified mastic village with historic sights and a walking route to Mesta.",
     href: "/chios/chios-villages/olympoi-chios/",
     image:
-      "https://chioshotel.gr/wp-content/uploads/2021/12/olympoi-1-768x432.webp",
+      "/images/villages/olympoi-1-768x432.webp",
     imageAlt: "Olympoi village in Chios with traditional architecture",
     badge: "Fortified",
     size: "normal",
@@ -3979,7 +3979,7 @@ export const relatedVillageCards = [
     description: "Castle views, northern landscapes and access to beaches around Amani.",
     href: "/chios/chios-villages/volissos-chios/",
     image:
-      "https://chioshotel.gr/wp-content/uploads/2021/12/Volissos-Chios.webp",
+      "/images/villages/Volissos-Chios.webp",
     imageAlt: "Volissos village in Chios with castle views",
     badge: "Castle",
     size: "normal",
@@ -3990,7 +3990,7 @@ export const relatedVillageCards = [
     description: "A traditional pottery village and useful stop on southern Chios routes.",
     href: "/chios/chios-villages/armolia-chios/",
     image:
-      "https://chioshotel.gr/wp-content/uploads/2021/12/unnamed-e1702830815478.webp",
+      "/images/villages/unnamed-e1702830815478.webp",
     imageAlt: "Armolia village in Chios known for pottery tradition",
     badge: "Pottery",
     size: "normal",
@@ -4001,7 +4001,7 @@ export const relatedVillageCards = [
     description: "A seaside village with harbor views, fish taverns and relaxed local food.",
     href: "/chios/chios-villages/lagada-chios/",
     image:
-      "https://chioshotel.gr/wp-content/uploads/2021/12/lagada_3.webp",
+      "/images/villages/lagada_3.webp",
     imageAlt: "Lagada seaside village in Chios with harbor and taverns",
     badge: "Seaside",
     size: "wide",

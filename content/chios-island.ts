@@ -67,16 +67,16 @@ export type ChiosIslandPageData = {
 };
 
 const chiosIslandHeroImage =
-  "https://chioshotel.gr/wp-content/uploads/2026/03/chios.hotels.voulamandis.house_.hero_.image_.webp";
+  "/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp";
 
 const agiaDynamiImage =
-  "https://chioshotel.gr/wp-content/uploads/2026/03/sakiz-agia-dynami.jpg";
+  "/images/chios-guide/sakiz-agia-dynami.jpg";
 
 const villagesImage =
-  "https://chioshotel.gr/wp-content/uploads/2021/12/lagada_3.webp";
+  "/images/villages/lagada_3.webp";
 
 const masticMuseumImage =
-  "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp";
+  "/images/museums/mousio.mastic.webp";
 
 const whatsappHref = "https://wa.me/306944474226";
 

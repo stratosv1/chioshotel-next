@@ -179,7 +179,7 @@ const ROOM_META_BASE = [
     gardenView: false,
     kitchen: false,
     kitchenette: false,
-    images: ["https://chioshotel.gr/wp-content/uploads/2022/12/DSC07776-2-e1675109942622.webp"],
+    images: ["/images/rooms/DSC07776-2-e1675109942622.webp"],
   },
   {
     id: 2,
@@ -193,7 +193,7 @@ const ROOM_META_BASE = [
     gardenView: false,
     kitchen: false,
     kitchenette: false,
-    images: ["https://chioshotel.gr/wp-content/uploads/2022/12/DSC07803-1.webp"],
+    images: ["/images/rooms/DSC07803-1.webp"],
   },
   {
     id: 3,
@@ -207,7 +207,7 @@ const ROOM_META_BASE = [
     gardenView: false,
     kitchen: false,
     kitchenette: true,
-    images: ["https://chioshotel.gr/wp-content/uploads/2022/12/DSC07867-1.webp"],
+    images: ["/images/rooms/DSC07867-1.webp"],
   },
   {
     id: 4,
@@ -221,7 +221,7 @@ const ROOM_META_BASE = [
     gardenView: false,
     kitchen: false,
     kitchenette: true,
-    images: ["https://chioshotel.gr/wp-content/uploads/2022/12/received_1748354861920234.webp"],
+    images: ["/images/rooms/received_1748354861920234.webp"],
   },
   {
     id: 5,
@@ -235,7 +235,7 @@ const ROOM_META_BASE = [
     gardenView: true,
     kitchen: false,
     kitchenette: false,
-    images: ["https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-house-rooms.webp"],
+    images: ["/images/rooms/voulamandis-house-rooms.webp"],
   },
   {
     id: 6,
@@ -249,7 +249,7 @@ const ROOM_META_BASE = [
     gardenView: true,
     kitchen: false,
     kitchenette: false,
-    images: ["https://chioshotel.gr/wp-content/uploads/2022/12/received_1753964631359257.webp"],
+    images: ["/images/rooms/received_1753964631359257.webp"],
   },
   {
     id: 7,
@@ -263,7 +263,7 @@ const ROOM_META_BASE = [
     gardenView: true,
     kitchen: false,
     kitchenette: false,
-    images: ["https://chioshotel.gr/wp-content/uploads/2022/12/double-triple-room.jpg"],
+    images: ["/images/rooms/double-triple-room.jpg"],
   },
   {
     id: 8,
@@ -277,7 +277,7 @@ const ROOM_META_BASE = [
     gardenView: true,
     kitchen: true,
     kitchenette: false,
-    images: ["https://chioshotel.gr/wp-content/uploads/2022/12/chios-apartments-voulamandis.webp"],
+    images: ["/images/rooms/chios-apartments-voulamandis.webp"],
   },
   {
     id: 9,
@@ -291,7 +291,7 @@ const ROOM_META_BASE = [
     gardenView: true,
     kitchen: true,
     kitchenette: false,
-    images: ["https://chioshotel.gr/wp-content/uploads/2022/12/chios-apartments-voulamandis.webp"],
+    images: ["/images/rooms/chios-apartments-voulamandis.webp"],
   },
   {
     id: 10,
@@ -305,7 +305,7 @@ const ROOM_META_BASE = [
     gardenView: true,
     kitchen: true,
     kitchenette: false,
-    images: ["https://chioshotel.gr/wp-content/uploads/2022/12/DSC07899.webp"],
+    images: ["/images/rooms/DSC07899.webp"],
   },
 ] as const;
 

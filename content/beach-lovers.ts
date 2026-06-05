@@ -45,17 +45,17 @@ export type BeachLoversPageData = {
 };
 
 const images = {
-  hero: "https://chioshotel.gr/wp-content/uploads/2026/02/agia-fotia.jpg",
+  hero: "/images/beaches/agia-fotia.jpg",
   mavraVolia:
-    "https://chioshotel.gr/wp-content/uploads/2021/12/emporios3-e1702727598897.webp",
-  agiaFotia: "https://chioshotel.gr/wp-content/uploads/2026/02/agia-fotia.jpg",
-  komi: "https://chioshotel.gr/wp-content/uploads/2026/03/sakiz-adasi-chios-greece-komi-be-2.jpg",
+    "/images/beaches/emporios3-e1702727598897.webp",
+  agiaFotia: "/images/beaches/agia-fotia.jpg",
+  komi: "/images/beaches/sakiz-adasi-chios-greece-komi-be-2.jpg",
   salagona:
-    "https://chioshotel.gr/wp-content/uploads/2026/03/sakiz-adasi-chios-greece-komi-be-2.jpg",
-  vroulidia: "https://chioshotel.gr/wp-content/uploads/2026/02/vroulidia-2-1.jpg",
-  katoFana: "https://chioshotel.gr/wp-content/uploads/2026/02/kato-fana-3.jpg",
+    "/images/beaches/sakiz-adasi-chios-greece-komi-be-2.jpg",
+  vroulidia: "/images/beaches/vroulidia-2-1.jpg",
+  katoFana: "/images/beaches/kato-fana-3.jpg",
   voulamandis:
-    "https://chioshotel.gr/wp-content/uploads/2026/01/voulamandis-house-chios-courtyard-hero-desktop.webp",
+    "/images/beaches/voulamandis-house-chios-courtyard-hero-desktop.webp",
 };
 
 export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {

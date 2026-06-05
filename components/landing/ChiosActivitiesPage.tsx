@@ -152,7 +152,7 @@ export default function ChiosActivitiesPage({ data }: ChiosActivitiesPageProps) 
 
           <div className="chios-activities-final-cta__image-wrap">
             <img
-              src="https://chioshotel.gr/wp-content/uploads/2026/03/chios.hotels.voulamandis.house_.hero_.image_.webp"
+              src="/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp"
               alt="Voulamandis House in Kampos Chios"
               className="chios-activities-final-cta__image"
             />

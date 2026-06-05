@@ -112,31 +112,31 @@ const chiosGuideLinks: Record<LanguageCode, string> = {
 
 const images = {
   hero: {
-    src: "https://chioshotel.gr/wp-content/uploads/2026/02/d8765ffe-dbf2-496c-9190-f1fb82e6318a.webp",
+    src: "/images/taste/d8765ffe-dbf2-496c-9190-f1fb82e6318a.webp",
     alt: "Taste Lover Chios experience with local food and island atmosphere",
   },
   masourakia: {
-    src: "https://chioshotel.gr/wp-content/uploads/2026/02/masourakia.jpg",
+    src: "/images/taste/masourakia.jpg",
     alt: "Masourakia, traditional Chios sweets with mastiha",
   },
   passas: {
-    src: "https://chioshotel.gr/wp-content/uploads/2026/02/passas.chios_.jpg",
+    src: "/images/taste/passas.chios_.jpg",
     alt: "Traditional dishes at Passas Tavern in Chios",
   },
   makelos: {
-    src: "https://chioshotel.gr/wp-content/uploads/2026/02/handmade.spaghetti.jpg",
+    src: "/images/taste/handmade.spaghetti.jpg",
     alt: "Handmade spaghetti and traditional food at Makelos tavern in Chios",
   },
   kechrimpari: {
-    src: "https://chioshotel.gr/wp-content/uploads/2026/02/kechrimpari.jpg",
+    src: "/images/taste/kechrimpari.jpg",
     alt: "Traditional food and local flavors at Kechrimpari in Chios",
   },
   kafenes: {
-    src: "https://chioshotel.gr/wp-content/uploads/2026/02/kafenes.jpg",
+    src: "/images/taste/kafenes.jpg",
     alt: "Traditional kafenes in Chios with tables outside",
   },
   asteri: {
-    src: "https://chioshotel.gr/wp-content/uploads/2026/02/asteri.jpg",
+    src: "/images/taste/asteri.jpg",
     alt: "Sunset dining table at Asteri in Chios",
   },
 };

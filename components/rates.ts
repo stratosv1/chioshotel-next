@@ -53,7 +53,7 @@ export const ratesPageEn: RatesPageData = {
     description:
       "Book directly at Voulamandis House in Chios. Check live availability, secure your room or apartment, and enjoy direct booking benefits.",
     ogImage:
-      "https://chioshotel.gr/wp-content/uploads/2026/03/chios.hotels.voulamandis.house_.hero_.image_.webp",
+      "/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp",
   },
   hero: {
     kicker: "Kampos, Chios • Voulamandis House",
@@ -61,7 +61,7 @@ export const ratesPageEn: RatesPageData = {
     description:
       "Book your stay directly at Voulamandis House and enjoy the lowest available rates, exclusive perks, and a secure online booking experience in Chios.",
     image:
-      "https://chioshotel.gr/wp-content/uploads/2026/03/chios.hotels.voulamandis.house_.hero_.image_.webp",
+      "/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp",
   },
   benefits: {
     kicker: "Direct Booking Benefits",

@@ -50,7 +50,7 @@ const bookingIframeSrc =
   "https://beds24.com/booking2.php?propid=117813&referer=iframe";
 
 const ratesHeroImage =
-  "https://chioshotel.gr/wp-content/uploads/2026/03/chios.hotels.voulamandis.house_.hero_.image_.webp";
+  "/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp";
 
 export const ratesPageEn: RatesPageData = {
   seo: {

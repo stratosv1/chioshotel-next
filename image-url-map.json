@@ -1,0 +1,812 @@
+[
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07803-1.webp",
+    "local": "/images/rooms/DSC07803-1.webp",
+    "sources": [
+      "app/globals.css",
+      "components/booking/FindYourRoomEngine.tsx",
+      "components/home/LastMinuteDeals.tsx",
+      "content/deals.ts",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/double-triple-room.jpg",
+    "local": "/images/rooms/double-triple-room.jpg",
+    "sources": [
+      "app/globals.css",
+      "components/booking/FindYourRoomEngine.tsx",
+      "components/home/LastMinuteDeals.tsx",
+      "content/deals.ts",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07867-1.webp",
+    "local": "/images/rooms/DSC07867-1.webp",
+    "sources": [
+      "app/globals.css",
+      "components/booking/FindYourRoomEngine.tsx",
+      "components/home/LastMinuteDeals.tsx",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-family-apartments.webp",
+    "local": "/images/rooms/chios-hotels-family-apartments.webp",
+    "sources": [
+      "app/globals.css",
+      "components/booking/FindYourRoomEngine.css",
+      "components/booking/FindYourRoomEngine.tsx",
+      "content/find-your-room.ts",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2026/03/sakiz-agia-dynami.jpg",
+    "local": "/images/chios-guide/sakiz-agia-dynami.jpg",
+    "sources": [
+      "app/globals.css",
+      "content/chios-island.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2021/12/lagada_3.webp",
+    "local": "/images/villages/lagada_3.webp",
+    "sources": [
+      "app/globals.css",
+      "content/chios-island.ts",
+      "content/chios-villages.ts",
+      "content/village-details.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2026/03/chios.hotels.voulamandis.house_.hero_.image_.webp",
+    "local": "/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp",
+    "sources": [
+      "app/globals.css",
+      "components/landing/ChiosActivitiesPage.tsx",
+      "components/rates.ts",
+      "content/chios-island.ts",
+      "content/contact.ts",
+      "content/family-travel.ts",
+      "content/home.ts",
+      "content/rates.ts",
+      "content/schema.ts",
+      "lib/structured-data.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp",
+    "local": "/images/museums/mousio.mastic.webp",
+    "sources": [
+      "app/globals.css",
+      "content/chios-explorer.ts",
+      "content/chios-island.ts",
+      "content/chios-museums.ts",
+      "content/museum-details.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2021/12/Ophrys_mastichorum-680x1024.webp",
+    "local": "/images/museums/Ophrys_mastichorum-680x1024.webp",
+    "sources": [
+      "app/globals.css"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2021/12/the-thermal-baths-center.webp",
+    "local": "/images/site/the-thermal-baths-center.webp",
+    "sources": [
+      "app/globals.css"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2026/04/Screenshot_2026-04-25-14-11-19-166_com.instagram.android-edit-1.webp",
+    "local": "/images/site/Screenshot_2026-04-25-14-11-19-166_com.instagram.android-edit-1.webp",
+    "sources": [
+      "app/globals.css"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07776-2-e1675109942622.webp",
+    "local": "/images/rooms/DSC07776-2-e1675109942622.webp",
+    "sources": [
+      "components/booking/FindYourRoomEngine.tsx",
+      "components/home/LastMinuteDeals.tsx",
+      "content/deals.ts",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07769-1.webp",
+    "local": "/images/rooms/DSC07769-1.webp",
+    "sources": [
+      "components/booking/FindYourRoomEngine.tsx",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/%CF%87%CE%B9%CE%BF%CF%82-%CE%B4%CF%89%CE%BC%CE%B1%CF%84%CE%B9%CE%B1-1-1.webp",
+    "local": "/images/rooms/----1-1.webp",
+    "sources": [
+      "components/booking/FindYourRoomEngine.tsx",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-house-bathrooms-1.webp",
+    "local": "/images/rooms/voulamandis-house-bathrooms-1.webp",
+    "sources": [
+      "components/booking/FindYourRoomEngine.tsx",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07839.webp",
+    "local": "/images/rooms/DSC07839.webp",
+    "sources": [
+      "components/booking/FindYourRoomEngine.tsx",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07832.webp",
+    "local": "/images/rooms/DSC07832.webp",
+    "sources": [
+      "components/booking/FindYourRoomEngine.tsx",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/received_1385287484893642_1500478431120_1200x800_3240x2160-1.webp",
+    "local": "/images/rooms/received_1385287484893642_1500478431120_1200x800_3240x2160-1.webp",
+    "sources": [
+      "components/booking/FindYourRoomEngine.tsx",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07860-1.webp",
+    "local": "/images/rooms/DSC07860-1.webp",
+    "sources": [
+      "components/booking/FindYourRoomEngine.tsx",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07849-1.webp",
+    "local": "/images/rooms/DSC07849-1.webp",
+    "sources": [
+      "components/booking/FindYourRoomEngine.tsx",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07891-1.webp",
+    "local": "/images/rooms/DSC07891-1.webp",
+    "sources": [
+      "components/booking/FindYourRoomEngine.tsx",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/received_1748354861920234.webp",
+    "local": "/images/rooms/received_1748354861920234.webp",
+    "sources": [
+      "components/booking/FindYourRoomEngine.tsx",
+      "components/home/LastMinuteDeals.tsx",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/received_1748358935253160.webp",
+    "local": "/images/rooms/received_1748358935253160.webp",
+    "sources": [
+      "components/booking/FindYourRoomEngine.tsx",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/received_1748356725253381.webp",
+    "local": "/images/rooms/received_1748356725253381.webp",
+    "sources": [
+      "components/booking/FindYourRoomEngine.tsx",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-house-rooms.webp",
+    "local": "/images/rooms/voulamandis-house-rooms.webp",
+    "sources": [
+      "components/booking/FindYourRoomEngine.tsx",
+      "components/home/LastMinuteDeals.tsx",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-triple-rooms_1646x1080.webp",
+    "local": "/images/rooms/chios-hotels-triple-rooms_1646x1080.webp",
+    "sources": [
+      "components/booking/FindYourRoomEngine.tsx",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-house-double-room-bathroom_1620x1080.webp",
+    "local": "/images/rooms/voulamandis-house-double-room-bathroom_1620x1080.webp",
+    "sources": [
+      "components/booking/FindYourRoomEngine.tsx",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/hotels-chios-voulamandis_1620x1080.webp",
+    "local": "/images/rooms/hotels-chios-voulamandis_1620x1080.webp",
+    "sources": [
+      "components/booking/FindYourRoomEngine.tsx",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753964631359257.webp",
+    "local": "/images/rooms/received_1753964631359257.webp",
+    "sources": [
+      "components/booking/FindYourRoomEngine.tsx",
+      "components/home/LastMinuteDeals.tsx",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753964581359262.webp",
+    "local": "/images/rooms/received_1753964581359262.webp",
+    "sources": [
+      "components/booking/FindYourRoomEngine.tsx",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753968691358851.webp",
+    "local": "/images/rooms/received_1753968691358851.webp",
+    "sources": [
+      "components/booking/FindYourRoomEngine.tsx",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753969201358800.webp",
+    "local": "/images/rooms/received_1753969201358800.webp",
+    "sources": [
+      "components/booking/FindYourRoomEngine.tsx",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/view-double-room-chios-hotels.webp",
+    "local": "/images/rooms/view-double-room-chios-hotels.webp",
+    "sources": [
+      "components/booking/FindYourRoomEngine.tsx",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/double-room-bathroom.webp",
+    "local": "/images/rooms/double-room-bathroom.webp",
+    "sources": [
+      "components/booking/FindYourRoomEngine.tsx",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-stone-bathroom.webp",
+    "local": "/images/rooms/voulamandis-stone-bathroom.webp",
+    "sources": [
+      "components/booking/FindYourRoomEngine.tsx",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/chios-apartments-voulamandis.webp",
+    "local": "/images/rooms/chios-apartments-voulamandis.webp",
+    "sources": [
+      "components/booking/FindYourRoomEngine.tsx",
+      "components/home/LastMinuteDeals.tsx",
+      "content/deals.ts",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/family-room.webp",
+    "local": "/images/rooms/family-room.webp",
+    "sources": [
+      "components/booking/FindYourRoomEngine.tsx",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-apartment-bathroom..webp",
+    "local": "/images/rooms/voulamandis-apartment-bathroom..webp",
+    "sources": [
+      "components/booking/FindYourRoomEngine.tsx",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07899.webp",
+    "local": "/images/rooms/DSC07899.webp",
+    "sources": [
+      "components/booking/FindYourRoomEngine.tsx",
+      "components/home/LastMinuteDeals.tsx",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07909.webp",
+    "local": "/images/rooms/DSC07909.webp",
+    "sources": [
+      "components/booking/FindYourRoomEngine.tsx",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07940.webp",
+    "local": "/images/rooms/DSC07940.webp",
+    "sources": [
+      "components/booking/FindYourRoomEngine.tsx",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07943.webp",
+    "local": "/images/rooms/DSC07943.webp",
+    "sources": [
+      "components/booking/FindYourRoomEngine.tsx",
+      "content/room-details.ts",
+      "content/rooms.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2021/12/691-e1645969589226.webp",
+    "local": "/images/beaches/691-e1645969589226.webp",
+    "sources": [
+      "content/beach-details.ts",
+      "content/chios-beaches.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2021/12/2017-06-28-1024x768.webp",
+    "local": "/images/beaches/2017-06-28-1024x768.webp",
+    "sources": [
+      "content/beach-details.ts",
+      "content/chios-beaches.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2026/03/lefkathia-2.jpg",
+    "local": "/images/beaches/lefkathia-2.jpg",
+    "sources": [
+      "content/beach-details.ts",
+      "content/chios-beaches.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2021/12/nagos-e1645969566121.webp",
+    "local": "/images/beaches/nagos-e1645969566121.webp",
+    "sources": [
+      "content/beach-details.ts",
+      "content/chios-beaches.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2021/12/avlonia-1024x768.webp",
+    "local": "/images/beaches/avlonia-1024x768.webp",
+    "sources": [
+      "content/beach-details.ts",
+      "content/chios-beaches.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2021/12/salagona-e1645969502155.webp",
+    "local": "/images/beaches/salagona-e1645969502155.webp",
+    "sources": [
+      "content/beach-details.ts",
+      "content/chios-beaches.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2026/02/agia-fotia.jpg",
+    "local": "/images/beaches/agia-fotia.jpg",
+    "sources": [
+      "content/beach-details.ts",
+      "content/beach-lovers.ts",
+      "content/chios-beaches.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2021/12/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
+    "local": "/images/beaches/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
+    "sources": [
+      "content/beach-details.ts",
+      "content/chios-beaches.ts",
+      "content/family-travel.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2021/12/emporios3-e1702727598897.webp",
+    "local": "/images/beaches/emporios3-e1702727598897.webp",
+    "sources": [
+      "content/beach-details.ts",
+      "content/beach-lovers.ts",
+      "content/chios-beaches.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2026/03/sakiz-adasi-chios-greece-komi-be-2.jpg",
+    "local": "/images/beaches/sakiz-adasi-chios-greece-komi-be-2.jpg",
+    "sources": [
+      "content/beach-lovers.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2026/02/vroulidia-2-1.jpg",
+    "local": "/images/beaches/vroulidia-2-1.jpg",
+    "sources": [
+      "content/beach-lovers.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2026/02/kato-fana-3.jpg",
+    "local": "/images/beaches/kato-fana-3.jpg",
+    "sources": [
+      "content/beach-lovers.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2026/01/voulamandis-house-chios-courtyard-hero-desktop.webp",
+    "local": "/images/beaches/voulamandis-house-chios-courtyard-hero-desktop.webp",
+    "sources": [
+      "content/beach-lovers.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2026/02/ChatGPT-Image-Feb-13-2026-06_09_19-PM.png",
+    "local": "/images/activities/ChatGPT-Image-Feb-13-2026-06_09_19-PM.png",
+    "sources": [
+      "content/chios-activities.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2023/03/maxresdefault.webp",
+    "local": "/images/activities/maxresdefault.webp",
+    "sources": [
+      "content/chios-activities.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/chios-church-1024x576-1.webp",
+    "local": "/images/activities/chios-church-1024x576-1.webp",
+    "sources": [
+      "content/chios-activities.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2021/12/Μονοπάτια-Χίος_Chios-Hiking-e1645969099488.webp",
+    "local": "/images/activities/---_Chios-Hiking-e1645969099488.webp",
+    "sources": [
+      "content/chios-activities.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2021/12/Hiking-Amani_1_Antonia-1.webp",
+    "local": "/images/activities/Hiking-Amani_1_Antonia-1.webp",
+    "sources": [
+      "content/chios-activities.ts",
+      "content/chios-explorer.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2021/12/Chios-trail.webp",
+    "local": "/images/activities/Chios-trail.webp",
+    "sources": [
+      "content/chios-activities.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2021/12/the-thermal-baths-center-1.webp",
+    "local": "/images/activities/the-thermal-baths-center-1.webp",
+    "sources": [
+      "content/chios-activities.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/02/chios1_b-1.webp",
+    "local": "/images/activities/chios1_b-1.webp",
+    "sources": [
+      "content/chios-activities.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2021/12/chios-orchids-e1645969063573.webp",
+    "local": "/images/activities/chios-orchids-e1645969063573.webp",
+    "sources": [
+      "content/chios-activities.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2021/12/OrchidToursChios-1.webp",
+    "local": "/images/activities/OrchidToursChios-1.webp",
+    "sources": [
+      "content/chios-activities.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2021/12/chios-orchids-orchids-e1645969073154.webp",
+    "local": "/images/activities/chios-orchids-orchids-e1645969073154.webp",
+    "sources": [
+      "content/chios-activities.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2021/12/Ophrys_mastichorum.webp",
+    "local": "/images/museums/Ophrys_mastichorum.webp",
+    "sources": [
+      "content/chios-activities.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2021/12/Ophrys-8-1.webp",
+    "local": "/images/activities/Ophrys-8-1.webp",
+    "sources": [
+      "content/chios-activities.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2021/12/O.-regis-fernandii-89-Chios.webp",
+    "local": "/images/activities/O.-regis-fernandii-89-Chios.webp",
+    "sources": [
+      "content/chios-activities.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2021/12/O.-blitopertha-579-Chios.webp",
+    "local": "/images/activities/O.-blitopertha-579-Chios.webp",
+    "sources": [
+      "content/chios-activities.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2021/12/vivlitothiki-korai-1.webp",
+    "local": "/images/museums/vivlitothiki-korai-1.webp",
+    "sources": [
+      "content/chios-explorer.ts",
+      "content/chios-museums.ts",
+      "content/family-travel.ts",
+      "content/museum-details.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2021/12/9ac4cf44d16c4af6d873c5bba4a6696b_L.webp",
+    "local": "/images/chios-guide/9ac4cf44d16c4af6d873c5bba4a6696b_L.webp",
+    "sources": [
+      "content/chios-explorer.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2026/02/anavatos-1.jpg",
+    "local": "/images/chios-guide/anavatos-1.jpg",
+    "sources": [
+      "content/chios-explorer.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2026/02/ag-markella.jpg",
+    "local": "/images/chios-guide/ag-markella.jpg",
+    "sources": [
+      "content/chios-explorer.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2021/12/caption.webp",
+    "local": "/images/museums/caption.webp",
+    "sources": [
+      "content/chios-museums.ts",
+      "content/museum-details.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2021/12/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
+    "local": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
+    "sources": [
+      "content/chios-museums.ts",
+      "content/museum-details.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2021/12/IMG_1203-Medium-min-768x487.webp",
+    "local": "/images/museums/IMG_1203-Medium-min-768x487.webp",
+    "sources": [
+      "content/chios-museums.ts",
+      "content/museum-details.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2021/12/2-1-768x512.webp",
+    "local": "/images/museums/2-1-768x512.webp",
+    "sources": [
+      "content/chios-museums.ts",
+      "content/museum-details.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
+    "local": "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+    "sources": [
+      "content/chios-villages.ts",
+      "content/village-details.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2021/12/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+    "local": "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+    "sources": [
+      "content/chios-villages.ts",
+      "content/village-details.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2021/12/olympoi-1-768x432.webp",
+    "local": "/images/villages/olympoi-1-768x432.webp",
+    "sources": [
+      "content/chios-villages.ts",
+      "content/village-details.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2021/12/Volissos-Chios.webp",
+    "local": "/images/villages/Volissos-Chios.webp",
+    "sources": [
+      "content/chios-villages.ts",
+      "content/village-details.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2021/12/unnamed-e1702830815478.webp",
+    "local": "/images/villages/unnamed-e1702830815478.webp",
+    "sources": [
+      "content/chios-villages.ts",
+      "content/village-details.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2026/02/ChatGPT-Image-Feb-13-2026-08_32_22-PM.png",
+    "local": "/images/family/ChatGPT-Image-Feb-13-2026-08_32_22-PM.png",
+    "sources": [
+      "content/family-travel.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/moysio-mastixas-1-Copy.webp",
+    "local": "/images/family/moysio-mastixas-1-Copy.webp",
+    "sources": [
+      "content/family-travel.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2026/02/paidiki_xara_daskalopetras_210222_2.jpg",
+    "local": "/images/family/paidiki_xara_daskalopetras_210222_2.jpg",
+    "sources": [
+      "content/family-travel.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2026/02/farkaina01.jpg",
+    "local": "/images/family/farkaina01.jpg",
+    "sources": [
+      "content/family-travel.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2026/02/paintball-chios.jpg",
+    "local": "/images/family/paintball-chios.jpg",
+    "sources": [
+      "content/family-travel.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2026/02/The-Pastards-Handmade-pasta-with-cheese-restaurant-chios-3.jpg",
+    "local": "/images/family/The-Pastards-Handmade-pasta-with-cheese-restaurant-chios-3.jpg",
+    "sources": [
+      "content/family-travel.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2022/12/received_1748356718586715.webp",
+    "local": "/images/rooms/received_1748356718586715.webp",
+    "sources": [
+      "content/room-details.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2026/02/d8765ffe-dbf2-496c-9190-f1fb82e6318a.webp",
+    "local": "/images/taste/d8765ffe-dbf2-496c-9190-f1fb82e6318a.webp",
+    "sources": [
+      "content/taste-lover.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2026/02/masourakia.jpg",
+    "local": "/images/taste/masourakia.jpg",
+    "sources": [
+      "content/taste-lover.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2026/02/passas.chios_.jpg",
+    "local": "/images/taste/passas.chios_.jpg",
+    "sources": [
+      "content/taste-lover.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2026/02/handmade.spaghetti.jpg",
+    "local": "/images/taste/handmade.spaghetti.jpg",
+    "sources": [
+      "content/taste-lover.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2026/02/kechrimpari.jpg",
+    "local": "/images/taste/kechrimpari.jpg",
+    "sources": [
+      "content/taste-lover.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2026/02/kafenes.jpg",
+    "local": "/images/taste/kafenes.jpg",
+    "sources": [
+      "content/taste-lover.ts"
+    ]
+  },
+  {
+    "old": "https://chioshotel.gr/wp-content/uploads/2026/02/asteri.jpg",
+    "local": "/images/taste/asteri.jpg",
+    "sources": [
+      "content/taste-lover.ts"
+    ]
+  }
+]

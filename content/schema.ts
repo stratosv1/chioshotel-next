@@ -133,7 +133,7 @@ export const homePageSchema = buildSchemaGraph([
   buildWebsiteSchema(),
   buildImageSchema(
     {
-      url: "https://chioshotel.gr/wp-content/uploads/2026/03/chios.hotels.voulamandis.house_.hero_.image_.webp",
+      url: "/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp",
       alt: "Voulamandis House hotel in Kampos, Chios",
       caption: `${siteName} hotel in Kampos, Chios`,
     },

@@ -68,39 +68,39 @@ export type FamilyTravelPageContent = {
 
 const familyTravelImages = {
   hero: {
-    src: "https://chioshotel.gr/wp-content/uploads/2026/02/ChatGPT-Image-Feb-13-2026-08_32_22-PM.png",
+    src: "/images/family/ChatGPT-Image-Feb-13-2026-08_32_22-PM.png",
     alt: "Family holidays in Chios with children enjoying a sunny island day",
   },
   garden: {
-    src: "https://chioshotel.gr/wp-content/uploads/2026/03/chios.hotels.voulamandis.house_.hero_.image_.webp",
+    src: "/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp",
     alt: "The peaceful garden of Voulamandis House in Kampos Chios",
   },
   sandyBeach: {
-    src: "https://chioshotel.gr/wp-content/uploads/2021/12/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
+    src: "/images/beaches/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
     alt: "Komi sandy beach in Chios, ideal for relaxed family beach days",
   },
   museum: {
-    src: "https://chioshotel.gr/wp-content/uploads/2022/12/moysio-mastixas-1-Copy.webp",
+    src: "/images/family/moysio-mastixas-1-Copy.webp",
     alt: "The Chios Mastic Museum, a family friendly cultural stop in Chios",
   },
   koraisLibrary: {
-    src: "https://chioshotel.gr/wp-content/uploads/2021/12/vivlitothiki-korai-1.webp",
+    src: "/images/museums/vivlitothiki-korai-1.webp",
     alt: "Korais Library in Chios, a cultural visit for families",
   },
   playground: {
-    src: "https://chioshotel.gr/wp-content/uploads/2026/02/paidiki_xara_daskalopetras_210222_2.jpg",
+    src: "/images/family/paidiki_xara_daskalopetras_210222_2.jpg",
     alt: "Daskalopetra playground in Chios for children and families",
   },
   childrenActivity: {
-    src: "https://chioshotel.gr/wp-content/uploads/2026/02/farkaina01.jpg",
+    src: "/images/family/farkaina01.jpg",
     alt: "Simple outdoor activities for children in Chios",
   },
   paintball: {
-    src: "https://chioshotel.gr/wp-content/uploads/2026/02/paintball-chios.jpg",
+    src: "/images/family/paintball-chios.jpg",
     alt: "Outdoor paintball activity in Chios for older children and families",
   },
   pizza: {
-    src: "https://chioshotel.gr/wp-content/uploads/2026/02/The-Pastards-Handmade-pasta-with-cheese-restaurant-chios-3.jpg",
+    src: "/images/family/The-Pastards-Handmade-pasta-with-cheese-restaurant-chios-3.jpg",
     alt: "Family friendly food stop in Chios with pasta and simple meals",
   },
 };

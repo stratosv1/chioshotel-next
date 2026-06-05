@@ -80,7 +80,7 @@ export const roomsCategoryEn: RoomsCategoryPageData = {
     description:
       "Explore rooms and apartments in Chios at Voulamandis House in Kampos. Choose economy double rooms, ground floor rooms, first floor rooms or family apartments.",
     ogImage:
-      "https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-family-apartments.webp",
+      "/images/rooms/chios-hotels-family-apartments.webp",
   },
 
   hero: {
@@ -114,7 +114,7 @@ export const roomsCategoryEn: RoomsCategoryPageData = {
         "The best value option for 2 guests. Renovated 16m² rooms with essentials and a peaceful Kampos atmosphere.",
       href: "/chios-rooms/economy-double-rooms/",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753964631359257.webp",
+        "/images/rooms/received_1753964631359257.webp",
       imageAlt: "Economy double room in Chios at Voulamandis House",
       badge: "Best value",
       ctaLabel: "Explore Room",
@@ -128,7 +128,7 @@ export const roomsCategoryEn: RoomsCategoryPageData = {
         "Double and triple rooms with direct access to the courtyard and garden. Ideal if you prefer easy access and a calm outdoor vibe.",
       href: "/chios-rooms/standard-double-room/",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2022/12/double-triple-room.jpg",
+        "/images/rooms/double-triple-room.jpg",
       imageAlt: "Ground floor double and triple rooms in Chios with garden access",
       badge: "Garden access",
       ctaLabel: "View Rooms",
@@ -142,7 +142,7 @@ export const roomsCategoryEn: RoomsCategoryPageData = {
         "Bright double and triple rooms with access to a shared terrace and views over the citrus estate. A more premium feel.",
       href: "/chios-rooms/standard-double-room/",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07776-2-e1675109942622.webp",
+        "/images/rooms/DSC07776-2-e1675109942622.webp",
       imageAlt: "First floor double and triple rooms in Chios with view in Kampos",
       badge: "Terrace view",
       ctaLabel: "View Rooms",
@@ -156,7 +156,7 @@ export const roomsCategoryEn: RoomsCategoryPageData = {
         "Spacious 40–45m² apartments with a full kitchen and living area, perfect for families who want home-like comfort.",
       href: "/chios-rooms/family-chios-apartments/",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2022/12/chios-apartments-voulamandis.webp",
+        "/images/rooms/chios-apartments-voulamandis.webp",
       imageAlt: "Family apartments in Chios with kitchen at Voulamandis House",
       badge: "Family choice",
       ctaLabel: "View Apartments",
@@ -194,10 +194,10 @@ export const roomsCategoryEn: RoomsCategoryPageData = {
         kitchenette: false,
         fullKitchen: false,
         images: [
-          "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07776-2-e1675109942622.webp",
-          "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07769-1.webp",
-          "https://chioshotel.gr/wp-content/uploads/2022/12/%CF%87%CE%B9%CE%BF%CF%82-%CE%B4%CF%89%CE%BC%CE%B1%CF%84%CE%B9%CE%B1-1-1.webp",
-          "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-house-bathrooms-1.webp",
+          "/images/rooms/DSC07776-2-e1675109942622.webp",
+          "/images/rooms/DSC07769-1.webp",
+          "/images/rooms/----1-1.webp",
+          "/images/rooms/voulamandis-house-bathrooms-1.webp",
         ],
         beds: { double: 2, single: 2, sofa: 0 },
       },
@@ -215,10 +215,10 @@ export const roomsCategoryEn: RoomsCategoryPageData = {
         kitchenette: false,
         fullKitchen: false,
         images: [
-          "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07803-1.webp",
-          "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07839.webp",
-          "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07832.webp",
-          "https://chioshotel.gr/wp-content/uploads/2022/12/received_1385287484893642_1500478431120_1200x800_3240x2160-1.webp",
+          "/images/rooms/DSC07803-1.webp",
+          "/images/rooms/DSC07839.webp",
+          "/images/rooms/DSC07832.webp",
+          "/images/rooms/received_1385287484893642_1500478431120_1200x800_3240x2160-1.webp",
         ],
         beds: { double: 2, single: 0, sofa: 0 },
       },
@@ -236,10 +236,10 @@ export const roomsCategoryEn: RoomsCategoryPageData = {
         kitchenette: true,
         fullKitchen: false,
         images: [
-          "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07867-1.webp",
-          "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07860-1.webp",
-          "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07849-1.webp",
-          "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07891-1.webp",
+          "/images/rooms/DSC07867-1.webp",
+          "/images/rooms/DSC07860-1.webp",
+          "/images/rooms/DSC07849-1.webp",
+          "/images/rooms/DSC07891-1.webp",
         ],
         beds: { double: 1, single: 1, sofa: 0 },
       },
@@ -257,9 +257,9 @@ export const roomsCategoryEn: RoomsCategoryPageData = {
         kitchenette: true,
         fullKitchen: false,
         images: [
-          "https://chioshotel.gr/wp-content/uploads/2022/12/received_1748354861920234.webp",
-          "https://chioshotel.gr/wp-content/uploads/2022/12/received_1748358935253160.webp",
-          "https://chioshotel.gr/wp-content/uploads/2022/12/received_1748356725253381.webp",
+          "/images/rooms/received_1748354861920234.webp",
+          "/images/rooms/received_1748358935253160.webp",
+          "/images/rooms/received_1748356725253381.webp",
         ],
         beds: { double: 1, single: 0, sofa: 1 },
       },
@@ -277,10 +277,10 @@ export const roomsCategoryEn: RoomsCategoryPageData = {
         kitchenette: false,
         fullKitchen: false,
         images: [
-          "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-house-rooms.webp",
-          "https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-triple-rooms_1646x1080.webp",
-          "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-house-double-room-bathroom_1620x1080.webp",
-          "https://chioshotel.gr/wp-content/uploads/2022/12/hotels-chios-voulamandis_1620x1080.webp",
+          "/images/rooms/voulamandis-house-rooms.webp",
+          "/images/rooms/chios-hotels-triple-rooms_1646x1080.webp",
+          "/images/rooms/voulamandis-house-double-room-bathroom_1620x1080.webp",
+          "/images/rooms/hotels-chios-voulamandis_1620x1080.webp",
         ],
         beds: { double: 1, single: 1, sofa: 0 },
       },
@@ -298,10 +298,10 @@ export const roomsCategoryEn: RoomsCategoryPageData = {
         kitchenette: false,
         fullKitchen: false,
         images: [
-          "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753964631359257.webp",
-          "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753964581359262.webp",
-          "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753968691358851.webp",
-          "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753969201358800.webp",
+          "/images/rooms/received_1753964631359257.webp",
+          "/images/rooms/received_1753964581359262.webp",
+          "/images/rooms/received_1753968691358851.webp",
+          "/images/rooms/received_1753969201358800.webp",
         ],
         beds: { double: 1, single: 0, sofa: 0 },
       },
@@ -319,10 +319,10 @@ export const roomsCategoryEn: RoomsCategoryPageData = {
         kitchenette: false,
         fullKitchen: false,
         images: [
-          "https://chioshotel.gr/wp-content/uploads/2022/12/double-triple-room.jpg",
-          "https://chioshotel.gr/wp-content/uploads/2022/12/view-double-room-chios-hotels.webp",
-          "https://chioshotel.gr/wp-content/uploads/2022/12/double-room-bathroom.webp",
-          "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-stone-bathroom.webp",
+          "/images/rooms/double-triple-room.jpg",
+          "/images/rooms/view-double-room-chios-hotels.webp",
+          "/images/rooms/double-room-bathroom.webp",
+          "/images/rooms/voulamandis-stone-bathroom.webp",
         ],
         beds: { double: 1, single: 0, sofa: 1 },
       },
@@ -340,10 +340,10 @@ export const roomsCategoryEn: RoomsCategoryPageData = {
         kitchenette: false,
         fullKitchen: true,
         images: [
-          "https://chioshotel.gr/wp-content/uploads/2022/12/chios-apartments-voulamandis.webp",
-          "https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-family-apartments.webp",
-          "https://chioshotel.gr/wp-content/uploads/2022/12/family-room.webp",
-          "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-apartment-bathroom..webp",
+          "/images/rooms/chios-apartments-voulamandis.webp",
+          "/images/rooms/chios-hotels-family-apartments.webp",
+          "/images/rooms/family-room.webp",
+          "/images/rooms/voulamandis-apartment-bathroom..webp",
         ],
         beds: { double: 1, single: 2, sofa: 0 },
       },
@@ -361,10 +361,10 @@ export const roomsCategoryEn: RoomsCategoryPageData = {
         kitchenette: false,
         fullKitchen: true,
         images: [
-          "https://chioshotel.gr/wp-content/uploads/2022/12/chios-apartments-voulamandis.webp",
-          "https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-family-apartments.webp",
-          "https://chioshotel.gr/wp-content/uploads/2022/12/family-room.webp",
-          "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-apartment-bathroom..webp",
+          "/images/rooms/chios-apartments-voulamandis.webp",
+          "/images/rooms/chios-hotels-family-apartments.webp",
+          "/images/rooms/family-room.webp",
+          "/images/rooms/voulamandis-apartment-bathroom..webp",
         ],
         beds: { double: 1, single: 2, sofa: 0 },
       },
@@ -382,10 +382,10 @@ export const roomsCategoryEn: RoomsCategoryPageData = {
         kitchenette: false,
         fullKitchen: true,
         images: [
-          "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07899.webp",
-          "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07909.webp",
-          "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07940.webp",
-          "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07943.webp",
+          "/images/rooms/DSC07899.webp",
+          "/images/rooms/DSC07909.webp",
+          "/images/rooms/DSC07940.webp",
+          "/images/rooms/DSC07943.webp",
         ],
         beds: { double: 1, single: 0, sofa: 2 },
       },
@@ -402,7 +402,7 @@ export const roomsCategoryEl: RoomsCategoryPageData = {
     description:
       "Εξερευνήστε τις κατηγορίες δωματίων και διαμερισμάτων του Voulamandis House στον Κάμπο της Χίου. Οικονομικά δίκλινα, ισόγεια δωμάτια, δωμάτια ορόφου και οικογενειακά διαμερίσματα.",
     ogImage:
-      "https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-family-apartments.webp",
+      "/images/rooms/chios-hotels-family-apartments.webp",
   },
 
   hero: {
@@ -436,7 +436,7 @@ export const roomsCategoryEl: RoomsCategoryPageData = {
         "Η πιο value επιλογή για 2 άτομα. Ανακαινισμένα δωμάτια 16m² με σύγχρονες παροχές και αυθεντική αίσθηση Κάμπου.",
       href: "/el/domatia-xios/oikonomiko-diklino-domatio/",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753964631359257.webp",
+        "/images/rooms/received_1753964631359257.webp",
       imageAlt: "Οικονομικό δίκλινο δωμάτιο στη Χίο στο Voulamandis House",
       badge: "Value επιλογή",
       ctaLabel: "Εξερεύνηση Δωματίου",
@@ -450,7 +450,7 @@ export const roomsCategoryEl: RoomsCategoryPageData = {
         "Δίκλινα και τρίκλινα δωμάτια με άμεση πρόσβαση στον κήπο. Ιδανικά για όσους αναζητούν δροσιά και την ηρεμία της φύσης.",
       href: "/el/domatia-xios/diklina-triklina-domatia/",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07776-2-e1675109942622.webp",
+        "/images/rooms/DSC07776-2-e1675109942622.webp",
       imageAlt: "Ισόγεια δίκλινα και τρίκλινα δωμάτια στη Χίο",
       badge: "Πρόσβαση στον κήπο",
       ctaLabel: "Δείτε τα Δωμάτια",
@@ -464,7 +464,7 @@ export const roomsCategoryEl: RoomsCategoryPageData = {
         "Απολαύστε την πανοραμική θέα στο κτήμα και τα εσπεριδοειδή από τη βεράντα σας. Φωτεινά δωμάτια με premium αίσθηση.",
       href: "/el/domatia-xios/diklina-triklina-domatia/",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07803-1.webp",
+        "/images/rooms/DSC07803-1.webp",
       imageAlt: "Δωμάτια ορόφου στη Χίο με θέα στον Κάμπο",
       badge: "Θέα από όροφο",
       ctaLabel: "Δείτε τα Δωμάτια",
@@ -478,7 +478,7 @@ export const roomsCategoryEl: RoomsCategoryPageData = {
         "Ευρύχωρα διαμερίσματα 40–45m² με πλήρη κουζίνα και καθιστικό. Η απόλυτη επιλογή για οικογένειες που αναζητούν την άνεση του σπιτιού τους.",
       href: "/el/domatia-xios/oikogeneiako-diamerisma/",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2022/12/chios-apartments-voulamandis.webp",
+        "/images/rooms/chios-apartments-voulamandis.webp",
       imageAlt: "Οικογενειακά διαμερίσματα στη Χίο στο Voulamandis House",
       badge: "Για οικογένειες",
       ctaLabel: "Δείτε τα Διαμερίσματα",
@@ -513,7 +513,7 @@ export const roomsCategoryFr: RoomsCategoryPageData = {
     description:
       "Découvrez les chambres et appartements du Voulamandis House à Kampos, Chios. Chambres doubles économiques, chambres au rez-de-chaussée, chambres à l’étage et appartements familiaux.",
     ogImage:
-      "https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-family-apartments.webp",
+      "/images/rooms/chios-hotels-family-apartments.webp",
   },
 
   hero: {
@@ -547,7 +547,7 @@ export const roomsCategoryFr: RoomsCategoryPageData = {
         "Le meilleur choix value pour 2 personnes. Chambres rénovées de 16m² avec les essentiels et une atmosphère paisible à Kampos.",
       href: "/fr/chambres-a-chios/chambres-doubles-economiques/",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753964631359257.webp",
+        "/images/rooms/received_1753964631359257.webp",
       imageAlt:
         "Chambre double économique à Chios au Voulamandis House",
       badge: "Meilleur prix",
@@ -562,7 +562,7 @@ export const roomsCategoryFr: RoomsCategoryPageData = {
         "Chambres doubles et triples avec accès direct à la cour et au jardin. Idéal pour un accès facile et une ambiance calme en plein air.",
       href: "/fr/chambres-a-chios/chambres-doubles-standard/",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2022/12/double-triple-room.jpg",
+        "/images/rooms/double-triple-room.jpg",
       imageAlt:
         "Chambres doubles et triples au rez-de-chaussée à Chios avec accès au jardin",
       badge: "Accès jardin",
@@ -577,7 +577,7 @@ export const roomsCategoryFr: RoomsCategoryPageData = {
         "Chambres lumineuses avec accès à une terrasse commune et vue sur le domaine d’agrumes. Une option plus premium et plus ouverte.",
       href: "/fr/chambres-a-chios/chambres-doubles-standard/",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07776-2-e1675109942622.webp",
+        "/images/rooms/DSC07776-2-e1675109942622.webp",
       imageAlt:
         "Chambres à l’étage à Chios avec vue sur Kampos",
       badge: "Vue terrasse",
@@ -592,7 +592,7 @@ export const roomsCategoryFr: RoomsCategoryPageData = {
         "Appartements spacieux de 40–45m² avec cuisine complète et coin salon. Parfaits pour les familles qui souhaitent plus d’espace et le confort d’un chez-soi.",
       href: "/fr/chambres-a-chios/appartements-familiaux-de-chios/",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2022/12/chios-apartments-voulamandis.webp",
+        "/images/rooms/chios-apartments-voulamandis.webp",
       imageAlt:
         "Appartements familiaux à Chios avec cuisine au Voulamandis House",
       badge: "Choix famille",
@@ -640,7 +640,7 @@ export const roomsCategoryDe: RoomsCategoryPageData = {
     description:
       "Entdecken Sie Zimmer und Apartments im Voulamandis House in Kampos, Chios. Economy Zimmer, Doppel- und Dreibettzimmer sowie Familienapartments mit Küche.",
     ogImage:
-      "https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-family-apartments.webp",
+      "/images/rooms/chios-hotels-family-apartments.webp",
   },
 
   hero: {
@@ -674,7 +674,7 @@ export const roomsCategoryDe: RoomsCategoryPageData = {
         "Unsere preiswerteste Unterkunft für 2 Gäste. Renovierte Zimmer mit ca. 16m² und allen wichtigen Annehmlichkeiten für einen angenehmen Aufenthalt im ruhigen Kampos von Chios.",
       href: "/de/zimmer-chios/economy-zimmer-auf-chios/",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753964631359257.webp",
+        "/images/rooms/received_1753964631359257.webp",
       imageAlt:
         "Economy Zimmer auf Chios im Voulamandis House",
       badge: "Preiswert",
@@ -689,7 +689,7 @@ export const roomsCategoryDe: RoomsCategoryPageData = {
         "Zimmer mit direktem Zugang zum Innenhof und zum Garten. Ideal für Gäste, die eine ruhige Atmosphäre und einfachen Zugang ohne Treppen bevorzugen.",
       href: "/de/zimmer-chios/standard-doppelzimmer-auf-chios/",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2022/12/double-triple-room.jpg",
+        "/images/rooms/double-triple-room.jpg",
       imageAlt:
         "Doppel- und Dreibettzimmer im Erdgeschoss auf Chios mit Gartenzugang",
       badge: "Gartenzugang",
@@ -704,7 +704,7 @@ export const roomsCategoryDe: RoomsCategoryPageData = {
         "Helle Zimmer mit Zugang zu einer gemeinsamen Terrasse und Blick auf die historischen Zitrusgärten von Kampos. Eine etwas hochwertigere Unterkunft mit mehr Aussicht.",
       href: "/de/zimmer-chios/standard-doppelzimmer-auf-chios/",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07776-2-e1675109942622.webp",
+        "/images/rooms/DSC07776-2-e1675109942622.webp",
       imageAlt:
         "Doppel- und Dreibettzimmer im Obergeschoss mit Blick auf Kampos",
       badge: "Terrassenblick",
@@ -719,7 +719,7 @@ export const roomsCategoryDe: RoomsCategoryPageData = {
         "Geräumige Apartments mit 40–45m², voll ausgestatteter Küche und separatem Wohnbereich. Perfekt für Familien oder Gäste, die mehr Platz und Unabhängigkeit wünschen.",
       href: "/de/zimmer-chios/familienapartments-in-chios/",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2022/12/chios-apartments-voulamandis.webp",
+        "/images/rooms/chios-apartments-voulamandis.webp",
       imageAlt:
         "Familienapartments auf Chios mit Küche im Voulamandis House",
       badge: "Für Familien",
@@ -767,7 +767,7 @@ export const roomsCategoryIt: RoomsCategoryPageData = {
     description:
       "Esplora camere e appartamenti a Chios presso Voulamandis House a Kampos. Camere doppie economy, camere al piano terra, camere al primo piano e appartamenti familiari.",
     ogImage:
-      "https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-family-apartments.webp",
+      "/images/rooms/chios-hotels-family-apartments.webp",
   },
 
   hero: {
@@ -801,7 +801,7 @@ export const roomsCategoryIt: RoomsCategoryPageData = {
         "La scelta con il miglior rapporto qualità-prezzo per 2 ospiti. Camere rinnovate di 16m² con servizi essenziali e la tranquilla atmosfera di Kampos.",
       href: "/it/stanze-a-chios/camera-doppia-economica-chios/",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753964631359257.webp",
+        "/images/rooms/received_1753964631359257.webp",
       imageAlt:
         "Camera doppia economy a Chios al Voulamandis House",
       badge: "Miglior valore",
@@ -816,7 +816,7 @@ export const roomsCategoryIt: RoomsCategoryPageData = {
         "Camere doppie e triple con accesso diretto al cortile e al giardino. Ideali se desideri comodità, accesso facile e un’atmosfera esterna rilassante.",
       href: "/it/stanze-a-chios/camere-doppie-standard-chios/",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2022/12/double-triple-room.jpg",
+        "/images/rooms/double-triple-room.jpg",
       imageAlt:
         "Camere doppie e triple al piano terra a Chios con accesso al giardino",
       badge: "Accesso giardino",
@@ -831,7 +831,7 @@ export const roomsCategoryIt: RoomsCategoryPageData = {
         "Luminose camere doppie e triple con accesso a una terrazza condivisa e vista sulla tenuta agrumicola. Una soluzione più raffinata e suggestiva.",
       href: "/it/stanze-a-chios/camere-doppie-standard-chios/",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07776-2-e1675109942622.webp",
+        "/images/rooms/DSC07776-2-e1675109942622.webp",
       imageAlt:
         "Camere doppie e triple al primo piano a Chios con vista su Kampos",
       badge: "Vista terrazza",
@@ -846,7 +846,7 @@ export const roomsCategoryIt: RoomsCategoryPageData = {
         "Ampi appartamenti di 40–45m² con cucina completa e zona giorno, perfetti per famiglie e ospiti che desiderano il comfort di casa durante il soggiorno a Chios.",
       href: "/it/stanze-a-chios/appartamenti-familiari-a-chios/",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2022/12/chios-apartments-voulamandis.webp",
+        "/images/rooms/chios-apartments-voulamandis.webp",
       imageAlt:
         "Appartamenti familiari a Chios con cucina al Voulamandis House",
       badge: "Per famiglie",
@@ -893,7 +893,7 @@ export const roomsCategoryEs: RoomsCategoryPageData = {
     description:
       "Explora las habitaciones y apartamentos de Voulamandis House en Kampos, Chios. Habitaciones dobles económicas, habitaciones en planta baja, habitaciones en primera planta y apartamentos familiares.",
     ogImage:
-      "https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-family-apartments.webp",
+      "/images/rooms/chios-hotels-family-apartments.webp",
   },
 
   hero: {
@@ -927,7 +927,7 @@ export const roomsCategoryEs: RoomsCategoryPageData = {
         "La mejor opción calidad-precio para 2 huéspedes. Habitaciones renovadas de 16m² con lo esencial y un ambiente tranquilo en Kampos.",
       href: "/es/habitaciones-en-chios/economicas-habitaciones-en-chios/",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753964631359257.webp",
+        "/images/rooms/received_1753964631359257.webp",
       imageAlt:
         "Habitación doble económica en Chios en Voulamandis House",
       badge: "Mejor valor",
@@ -942,7 +942,7 @@ export const roomsCategoryEs: RoomsCategoryPageData = {
         "Habitaciones dobles y triples con acceso directo al patio y al jardín. Ideales si prefieres un acceso fácil y un ambiente exterior tranquilo.",
       href: "/es/habitaciones-en-chios/habitaciones-dobles-estandar/",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2022/12/double-triple-room.jpg",
+        "/images/rooms/double-triple-room.jpg",
       imageAlt:
         "Habitaciones dobles y triples en planta baja en Chios con acceso al jardín",
       badge: "Acceso al jardín",
@@ -957,7 +957,7 @@ export const roomsCategoryEs: RoomsCategoryPageData = {
         "Habitaciones dobles y triples luminosas con acceso a una terraza compartida y vistas sobre la finca de cítricos. Una opción con un toque más premium.",
       href: "/es/habitaciones-en-chios/habitaciones-dobles-estandar/",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07776-2-e1675109942622.webp",
+        "/images/rooms/DSC07776-2-e1675109942622.webp",
       imageAlt:
         "Habitaciones dobles y triples en primera planta en Chios con vistas en Kampos",
       badge: "Vista terraza",
@@ -972,7 +972,7 @@ export const roomsCategoryEs: RoomsCategoryPageData = {
         "Amplios apartamentos de 40–45m² con cocina completa y sala de estar, perfectos para familias que buscan la comodidad de sentirse como en casa.",
       href: "/es/habitaciones-en-chios/apartamentos-familiares-en-chios/",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2022/12/chios-apartments-voulamandis.webp",
+        "/images/rooms/chios-apartments-voulamandis.webp",
       imageAlt:
         "Apartamentos familiares en Chios con cocina en Voulamandis House",
       badge: "Para familias",
@@ -1019,7 +1019,7 @@ export const roomsCategoryTr: RoomsCategoryPageData = {
     description:
       "Kampos, Sakız Adası’ndaki Voulamandis House odalarını ve dairelerini keşfedin. Ekonomik çift kişilik odalar, zemin kat odaları, üst kat odaları ve aile daireleri.",
     ogImage:
-      "https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-family-apartments.webp",
+      "/images/rooms/chios-hotels-family-apartments.webp",
   },
 
   hero: {
@@ -1053,7 +1053,7 @@ export const roomsCategoryTr: RoomsCategoryPageData = {
         "2 misafir için en iyi fiyat-performans seçeneği. Temel ihtiyaçlara sahip, yenilenmiş 16m² odalar ve huzurlu bir Kampos atmosferi.",
       href: "/tr/chios-odalari/sakiz-adasindaki-ekonomi-cift-kisilik-oda/",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753964631359257.webp",
+        "/images/rooms/received_1753964631359257.webp",
       imageAlt:
         "Sakız Adası’nda Voulamandis House ekonomik çift kişilik oda",
       badge: "En avantajlı",
@@ -1068,7 +1068,7 @@ export const roomsCategoryTr: RoomsCategoryPageData = {
         "Avluya ve bahçeye doğrudan erişimi olan çift ve üç kişilik odalar. Kolay erişim ve sakin bir açık hava atmosferi tercih edenler için ideal.",
       href: "/tr/chios-odalari/standart-cift-kisilik-odalar/",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2022/12/double-triple-room.jpg",
+        "/images/rooms/double-triple-room.jpg",
       imageAlt:
         "Sakız Adası’nda bahçeye erişimli zemin kat çift ve üç kişilik odalar",
       badge: "Bahçe erişimi",
@@ -1083,7 +1083,7 @@ export const roomsCategoryTr: RoomsCategoryPageData = {
         "Ortak terasa erişimi olan ve narenciye bahçesine bakan aydınlık çift ve üç kişilik odalar. Daha ayrıcalıklı bir konaklama hissi sunar.",
       href: "/tr/chios-odalari/standart-cift-kisilik-odalar/",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07776-2-e1675109942622.webp",
+        "/images/rooms/DSC07776-2-e1675109942622.webp",
       imageAlt:
         "Sakız Adası’nda Kampos manzaralı üst kat çift ve üç kişilik odalar",
       badge: "Teras manzarası",
@@ -1098,7 +1098,7 @@ export const roomsCategoryTr: RoomsCategoryPageData = {
         "Tam donanımlı mutfak ve oturma alanına sahip geniş 40–45m² daireler. Ev rahatlığı isteyen aileler ve küçük gruplar için mükemmel.",
       href: "/tr/chios-odalari/sakiz-adasinda-buyuk-aile-daireleri/",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2022/12/chios-apartments-voulamandis.webp",
+        "/images/rooms/chios-apartments-voulamandis.webp",
       imageAlt:
         "Sakız Adası’nda mutfaklı aile daireleri Voulamandis House",
       badge: "Aileler için",

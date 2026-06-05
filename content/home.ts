@@ -256,7 +256,7 @@ export const homePageEn: HomePageData = {
       "Peaceful rooms and apartments in Kampos, Chios. Stay at Voulamandis House near Chios airport, town and beaches, with authentic hospitality and direct booking benefits.",
     canonicalPath: "/",
     ogImage:
-      "https://chioshotel.gr/wp-content/uploads/2026/03/chios.hotels.voulamandis.house_.hero_.image_.webp",
+      "/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp",
     ogImageAlt:
       "Voulamandis House in Kampos, Chios - authentic accommodation in a citrus estate",
   },
@@ -269,7 +269,7 @@ export const homePageEn: HomePageData = {
     descriptionHtml:
       'Looking for <strong>hotels in Chios</strong> or <strong>rooms in Chios</strong>? <strong>Voulamandis House</strong> is an authentic accommodation choice in Kampos, with comfortable rooms, peaceful surroundings and excellent guest reviews.',
     image:
-      "https://chioshotel.gr/wp-content/uploads/2026/03/chios.hotels.voulamandis.house_.hero_.image_.webp",
+      "/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp",
     imageAlt: "Chios Hotels and Apartments in Kampos - Voulamandis House",
     primaryCta: {
       label: "Find your room",
@@ -352,7 +352,7 @@ export const homePageEn: HomePageData = {
     subtitle: "Map, distances, contact details and direct booking advantages.",
     map: {
       previewImage:
-        "https://chioshotel.gr/wp-content/uploads/2026/03/voulamandis.house_.google.maps_.webp",
+        "/images/site/voulamandis.house_.google.maps_.webp",
       iframeSrc:
         "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12648.784411135249!2d26.1360051!3d38.3370954!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14bac5b2f6b8b9f1%3A0x6b8b9f1b2f6b8b9f!2sVoulamandis%20House!5e0!3m2!1sel!2sgr!4v1614241234567!5m2!1sel!2sgr",
       buttonLabel: "Show Map",
@@ -3293,3 +3293,4 @@ export const homePageTr: HomePageData = {
     },
   },
 };
+

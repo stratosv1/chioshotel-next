@@ -54,7 +54,7 @@ export const museumDetails: MuseumDetailData[] = [
       description:
         "Visit the Chios Mastic Museum and discover the history, cultivation and cultural importance of mastic, one of the island’s most unique traditions.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp",
+        "/images/museums/mousio.mastic.webp",
     },
     hero: {
       kicker: "South Chios • Mastic culture",
@@ -62,7 +62,7 @@ export const museumDetails: MuseumDetailData[] = [
       description:
         "A must-visit museum dedicated to the history, cultivation and cultural value of Chios mastic, the island’s most distinctive natural product.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp",
+        "/images/museums/mousio.mastic.webp",
       tags: ["#mastic_museum", "#south_chios", "#mastic_culture", "#mastichochoria"],
     },
     details: [
@@ -145,7 +145,7 @@ export const museumDetails: MuseumDetailData[] = [
       description:
         "Explore the Archaeological Museum of Chios, with exhibits connected to the island’s ancient history, artifacts, sculpture, pottery and cultural heritage.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/caption.webp",
+        "/images/museums/caption.webp",
     },
     hero: {
       kicker: "Chios Town • Ancient history",
@@ -153,7 +153,7 @@ export const museumDetails: MuseumDetailData[] = [
       description:
         "A key museum for understanding ancient Chios, with exhibits that connect the island to the wider history of the Aegean and the eastern Mediterranean.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/caption.webp",
+        "/images/museums/caption.webp",
       tags: ["#archaeology", "#chios_town", "#ancient_chios", "#museum_guide"],
     },
     details: [
@@ -235,7 +235,7 @@ export const museumDetails: MuseumDetailData[] = [
       description:
         "Visit the Chios Byzantine Museum and explore Byzantine and post-Byzantine art, icons, manuscripts and religious heritage in Chios Town.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
+        "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
     },
     hero: {
       kicker: "Chios Town • Byzantine heritage",
@@ -243,7 +243,7 @@ export const museumDetails: MuseumDetailData[] = [
       description:
         "A cultural stop in Chios Town dedicated to Byzantine and post-Byzantine art, religious heritage and the historic layers of the island.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
+        "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
       tags: ["#byzantine_museum", "#icons", "#chios_town", "#culture"],
     },
     details: [
@@ -325,7 +325,7 @@ export const museumDetails: MuseumDetailData[] = [
       description:
         "Discover Koraes Library in Chios, one of the island’s most important cultural institutions, with rare books, manuscripts, archives and museum exhibits.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/vivlitothiki-korai-1.webp",
+        "/images/museums/vivlitothiki-korai-1.webp",
     },
     hero: {
       kicker: "Chios Town • Books & culture",
@@ -333,7 +333,7 @@ export const museumDetails: MuseumDetailData[] = [
       description:
         "A major cultural institution in Chios Town, dedicated to Greek literature, rare books, manuscripts, archives and the legacy of Adamantios Korais.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/vivlitothiki-korai-1.webp",
+        "/images/museums/vivlitothiki-korai-1.webp",
       tags: ["#koraes_library", "#rare_books", "#manuscripts", "#chios_town"],
     },
     details: [
@@ -415,7 +415,7 @@ export const museumDetails: MuseumDetailData[] = [
       description:
         "Visit the Chios Maritime Museum and discover the island’s seafaring identity, ship models, navigation, trade and maritime traditions.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/IMG_1203-Medium-min-768x487.webp",
+        "/images/museums/IMG_1203-Medium-min-768x487.webp",
     },
     hero: {
       kicker: "Chios Town • Maritime heritage",
@@ -423,7 +423,7 @@ export const museumDetails: MuseumDetailData[] = [
       description:
         "A museum dedicated to the island’s maritime history, seafaring traditions, shipbuilding, navigation and the long relationship between Chios and the sea.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/IMG_1203-Medium-min-768x487.webp",
+        "/images/museums/IMG_1203-Medium-min-768x487.webp",
       tags: ["#maritime_museum", "#seafaring", "#ship_models", "#chios_town"],
     },
     details: [
@@ -505,7 +505,7 @@ export const museumDetails: MuseumDetailData[] = [
       description:
         "Explore the Kallimasia Folklore Museum in Chios and discover everyday village life, local traditions, tools, clothing and cultural memory.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/2-1-768x512.webp",
+        "/images/museums/2-1-768x512.webp",
     },
     hero: {
       kicker: "Kallimasia • Folklore",
@@ -513,7 +513,7 @@ export const museumDetails: MuseumDetailData[] = [
       description:
         "A museum that brings everyday Chios village life into focus through traditional objects, tools, clothing and local cultural memory.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/2-1-768x512.webp",
+        "/images/museums/2-1-768x512.webp",
       tags: ["#folklore_museum", "#kallimasia", "#village_life", "#tradition"],
     },
     details: [
@@ -596,13 +596,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/el/mouseia-xios/mouseio-mastichas-xios/",
       "title": "Μουσείο Μαστίχας Χίου | Πολιτιστικός οδηγός Χίου",
       "description": "Επισκεφθείτε Μουσείο Μαστίχας Χίου και ανακαλύψτε την ιστορία, την καλλιέργεια και την πολιτιστική αξία της μαστίχας.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp"
+      "ogImage": "/images/museums/mousio.mastic.webp"
     },
     "hero": {
       "kicker": "Νότια Χίος • Πολιτισμός μαστίχας",
       "title": "Μουσείο Μαστίχας Χίου",
       "description": "Επισκεφθείτε Μουσείο Μαστίχας Χίου και ανακαλύψτε την ιστορία, την καλλιέργεια και την πολιτιστική αξία της μαστίχας.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp",
+      "image": "/images/museums/mousio.mastic.webp",
       "tags": [
         "#mastic_museum",
         "#south_chios",
@@ -678,13 +678,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/fr/musees-de-chios/musee-du-mastic-chios/",
       "title": "Musée du Mastic de Chios | Guide culturel de Chios",
       "description": "Visitez Musée du Mastic de Chios et découvrez l’histoire, la culture et l’importance culturelle du mastic.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp"
+      "ogImage": "/images/museums/mousio.mastic.webp"
     },
     "hero": {
       "kicker": "Sud de Chios • Culture du mastic",
       "title": "Musée du Mastic de Chios",
       "description": "Visitez Musée du Mastic de Chios et découvrez l’histoire, la culture et l’importance culturelle du mastic.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp",
+      "image": "/images/museums/mousio.mastic.webp",
       "tags": [
         "#mastic_museum",
         "#south_chios",
@@ -760,13 +760,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/de/museen-chios/mastix-museum-chios/",
       "title": "Mastix-Museum Chios | Kulturführer für Chios",
       "description": "Besuchen Sie Mastix-Museum Chios und entdecken Sie Geschichte, Anbau und kulturelle Bedeutung des Mastix.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp"
+      "ogImage": "/images/museums/mousio.mastic.webp"
     },
     "hero": {
       "kicker": "Süd-Chios • Mastixkultur",
       "title": "Mastix-Museum Chios",
       "description": "Besuchen Sie Mastix-Museum Chios und entdecken Sie Geschichte, Anbau und kulturelle Bedeutung des Mastix.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp",
+      "image": "/images/museums/mousio.mastic.webp",
       "tags": [
         "#mastic_museum",
         "#south_chios",
@@ -842,13 +842,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/it/musei-chios/museo-del-mastice-chios/",
       "title": "Museo del Mastice di Chios | Guida culturale di Chios",
       "description": "Visita Museo del Mastice di Chios e scopri la storia, la coltivazione e il valore culturale del mastice.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp"
+      "ogImage": "/images/museums/mousio.mastic.webp"
     },
     "hero": {
       "kicker": "Chios meridionale • Cultura del mastice",
       "title": "Museo del Mastice di Chios",
       "description": "Visita Museo del Mastice di Chios e scopri la storia, la coltivazione e il valore culturale del mastice.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp",
+      "image": "/images/museums/mousio.mastic.webp",
       "tags": [
         "#mastic_museum",
         "#south_chios",
@@ -924,13 +924,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/es/museos-chios/museo-mastiha-chios/",
       "title": "Museo de la Mastiha de Chios | Guía cultural de Chios",
       "description": "Visita Museo de la Mastiha de Chios y descubre la historia, el cultivo y la importancia cultural de la mastiha.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp"
+      "ogImage": "/images/museums/mousio.mastic.webp"
     },
     "hero": {
       "kicker": "Sur de Chios • Cultura de la mastiha",
       "title": "Museo de la Mastiha de Chios",
       "description": "Visita Museo de la Mastiha de Chios y descubre la historia, el cultivo y la importancia cultural de la mastiha.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp",
+      "image": "/images/museums/mousio.mastic.webp",
       "tags": [
         "#mastic_museum",
         "#south_chios",
@@ -1006,13 +1006,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/tr/sakiz-adasi-muzeleri/sakiz-mastik-muzesi/",
       "title": "Sakız Mastik Müzesi | Sakız Adası kültür rehberi",
       "description": "Ziyaret edin Sakız Mastik Müzesi ve keşfedin mastiğin tarihini, üretimini ve kültürel önemini.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp"
+      "ogImage": "/images/museums/mousio.mastic.webp"
     },
     "hero": {
       "kicker": "Güney Sakız • Mastik kültürü",
       "title": "Sakız Mastik Müzesi",
       "description": "Ziyaret edin Sakız Mastik Müzesi ve keşfedin mastiğin tarihini, üretimini ve kültürel önemini.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp",
+      "image": "/images/museums/mousio.mastic.webp",
       "tags": [
         "#mastic_museum",
         "#south_chios",
@@ -1088,13 +1088,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/el/mouseia-xios/arxaiologiko-mouseio-xios/",
       "title": "Αρχαιολογικό Μουσείο Χίου | Πολιτιστικός οδηγός Χίου",
       "description": "Επισκεφθείτε Αρχαιολογικό Μουσείο Χίου και ανακαλύψτε την αρχαία ιστορία, τα ευρήματα, την κεραμική και την πολιτιστική κληρονομιά του νησιού.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/caption.webp"
+      "ogImage": "/images/museums/caption.webp"
     },
     "hero": {
       "kicker": "Πόλη Χίου • Αρχαία ιστορία",
       "title": "Αρχαιολογικό Μουσείο Χίου",
       "description": "Επισκεφθείτε Αρχαιολογικό Μουσείο Χίου και ανακαλύψτε την αρχαία ιστορία, τα ευρήματα, την κεραμική και την πολιτιστική κληρονομιά του νησιού.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/caption.webp",
+      "image": "/images/museums/caption.webp",
       "tags": [
         "#archaeology",
         "#chios_town",
@@ -1170,13 +1170,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/fr/musees-de-chios/musee-archeologique-chios/",
       "title": "Musée archéologique de Chios | Guide culturel de Chios",
       "description": "Visitez Musée archéologique de Chios et découvrez l’histoire ancienne, les objets, la céramique et le patrimoine de l’île.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/caption.webp"
+      "ogImage": "/images/museums/caption.webp"
     },
     "hero": {
       "kicker": "Ville de Chios • Histoire ancienne",
       "title": "Musée archéologique de Chios",
       "description": "Visitez Musée archéologique de Chios et découvrez l’histoire ancienne, les objets, la céramique et le patrimoine de l’île.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/caption.webp",
+      "image": "/images/museums/caption.webp",
       "tags": [
         "#archaeology",
         "#chios_town",
@@ -1252,13 +1252,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/de/museen-chios/archaeologisches-museum-chios/",
       "title": "Archäologisches Museum Chios | Kulturführer für Chios",
       "description": "Besuchen Sie Archäologisches Museum Chios und entdecken Sie antike Geschichte, Fundstücke, Keramik und Kulturerbe der Insel.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/caption.webp"
+      "ogImage": "/images/museums/caption.webp"
     },
     "hero": {
       "kicker": "Chios-Stadt • Antike Geschichte",
       "title": "Archäologisches Museum Chios",
       "description": "Besuchen Sie Archäologisches Museum Chios und entdecken Sie antike Geschichte, Fundstücke, Keramik und Kulturerbe der Insel.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/caption.webp",
+      "image": "/images/museums/caption.webp",
       "tags": [
         "#archaeology",
         "#chios_town",
@@ -1334,13 +1334,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/it/musei-chios/museo-archeologico-chios/",
       "title": "Museo Archeologico di Chios | Guida culturale di Chios",
       "description": "Visita Museo Archeologico di Chios e scopri la storia antica, i reperti, la ceramica e il patrimonio dell’isola.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/caption.webp"
+      "ogImage": "/images/museums/caption.webp"
     },
     "hero": {
       "kicker": "Città di Chios • Storia antica",
       "title": "Museo Archeologico di Chios",
       "description": "Visita Museo Archeologico di Chios e scopri la storia antica, i reperti, la ceramica e il patrimonio dell’isola.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/caption.webp",
+      "image": "/images/museums/caption.webp",
       "tags": [
         "#archaeology",
         "#chios_town",
@@ -1416,13 +1416,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/es/museos-chios/museo-arqueologico-chios/",
       "title": "Museo Arqueológico de Chios | Guía cultural de Chios",
       "description": "Visita Museo Arqueológico de Chios y descubre la historia antigua, los hallazgos, la cerámica y el patrimonio de la isla.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/caption.webp"
+      "ogImage": "/images/museums/caption.webp"
     },
     "hero": {
       "kicker": "Ciudad de Chios • Historia antigua",
       "title": "Museo Arqueológico de Chios",
       "description": "Visita Museo Arqueológico de Chios y descubre la historia antigua, los hallazgos, la cerámica y el patrimonio de la isla.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/caption.webp",
+      "image": "/images/museums/caption.webp",
       "tags": [
         "#archaeology",
         "#chios_town",
@@ -1498,13 +1498,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/tr/sakiz-adasi-muzeleri/arkeoloji-muzesi-sakiz/",
       "title": "Sakız Arkeoloji Müzesi | Sakız Adası kültür rehberi",
       "description": "Ziyaret edin Sakız Arkeoloji Müzesi ve keşfedin adanın antik tarihini, buluntularını, seramiklerini ve kültürel mirasını.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/caption.webp"
+      "ogImage": "/images/museums/caption.webp"
     },
     "hero": {
       "kicker": "Sakız şehir merkezi • Antik tarih",
       "title": "Sakız Arkeoloji Müzesi",
       "description": "Ziyaret edin Sakız Arkeoloji Müzesi ve keşfedin adanın antik tarihini, buluntularını, seramiklerini ve kültürel mirasını.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/caption.webp",
+      "image": "/images/museums/caption.webp",
       "tags": [
         "#archaeology",
         "#chios_town",
@@ -1580,13 +1580,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/el/mouseia-xios/vyzantino-mouseio-xios/",
       "title": "Βυζαντινό Μουσείο Χίου | Πολιτιστικός οδηγός Χίου",
       "description": "Επισκεφθείτε Βυζαντινό Μουσείο Χίου και ανακαλύψτε τη βυζαντινή και μεταβυζαντινή τέχνη, τις εικόνες και τη θρησκευτική κληρονομιά.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp"
+      "ogImage": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp"
     },
     "hero": {
       "kicker": "Πόλη Χίου • Βυζαντινή κληρονομιά",
       "title": "Βυζαντινό Μουσείο Χίου",
       "description": "Επισκεφθείτε Βυζαντινό Μουσείο Χίου και ανακαλύψτε τη βυζαντινή και μεταβυζαντινή τέχνη, τις εικόνες και τη θρησκευτική κληρονομιά.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
+      "image": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
       "tags": [
         "#byzantine_museum",
         "#icons",
@@ -1662,13 +1662,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/fr/musees-de-chios/musee-byzantin-chios/",
       "title": "Musée byzantin de Chios | Guide culturel de Chios",
       "description": "Visitez Musée byzantin de Chios et découvrez l’art byzantin et post-byzantin, les icônes et le patrimoine religieux.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp"
+      "ogImage": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp"
     },
     "hero": {
       "kicker": "Ville de Chios • Patrimoine byzantin",
       "title": "Musée byzantin de Chios",
       "description": "Visitez Musée byzantin de Chios et découvrez l’art byzantin et post-byzantin, les icônes et le patrimoine religieux.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
+      "image": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
       "tags": [
         "#byzantine_museum",
         "#icons",
@@ -1744,13 +1744,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/de/museen-chios/byzantinisches-museum-chios/",
       "title": "Byzantinisches Museum Chios | Kulturführer für Chios",
       "description": "Besuchen Sie Byzantinisches Museum Chios und entdecken Sie byzantinische und postbyzantinische Kunst, Ikonen und religiöses Erbe.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp"
+      "ogImage": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp"
     },
     "hero": {
       "kicker": "Chios-Stadt • Byzantinisches Erbe",
       "title": "Byzantinisches Museum Chios",
       "description": "Besuchen Sie Byzantinisches Museum Chios und entdecken Sie byzantinische und postbyzantinische Kunst, Ikonen und religiöses Erbe.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
+      "image": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
       "tags": [
         "#byzantine_museum",
         "#icons",
@@ -1826,13 +1826,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/it/musei-chios/museo-bizantino-chios/",
       "title": "Museo Bizantino di Chios | Guida culturale di Chios",
       "description": "Visita Museo Bizantino di Chios e scopri l’arte bizantina e post-bizantina, le icone e il patrimonio religioso.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp"
+      "ogImage": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp"
     },
     "hero": {
       "kicker": "Città di Chios • Patrimonio bizantino",
       "title": "Museo Bizantino di Chios",
       "description": "Visita Museo Bizantino di Chios e scopri l’arte bizantina e post-bizantina, le icone e il patrimonio religioso.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
+      "image": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
       "tags": [
         "#byzantine_museum",
         "#icons",
@@ -1908,13 +1908,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/es/museos-chios/museo-bizantino-chios/",
       "title": "Museo Bizantino de Chios | Guía cultural de Chios",
       "description": "Visita Museo Bizantino de Chios y descubre el arte bizantino y posbizantino, los iconos y el patrimonio religioso.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp"
+      "ogImage": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp"
     },
     "hero": {
       "kicker": "Ciudad de Chios • Patrimonio bizantino",
       "title": "Museo Bizantino de Chios",
       "description": "Visita Museo Bizantino de Chios y descubre el arte bizantino y posbizantino, los iconos y el patrimonio religioso.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
+      "image": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
       "tags": [
         "#byzantine_museum",
         "#icons",
@@ -1990,13 +1990,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/tr/sakiz-adasi-muzeleri/bizans-muzesi-sakiz/",
       "title": "Sakız Bizans Müzesi | Sakız Adası kültür rehberi",
       "description": "Ziyaret edin Sakız Bizans Müzesi ve keşfedin Bizans ve Bizans sonrası sanatı, ikonaları ve dini mirası.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp"
+      "ogImage": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp"
     },
     "hero": {
       "kicker": "Sakız şehir merkezi • Bizans mirası",
       "title": "Sakız Bizans Müzesi",
       "description": "Ziyaret edin Sakız Bizans Müzesi ve keşfedin Bizans ve Bizans sonrası sanatı, ikonaları ve dini mirası.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
+      "image": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
       "tags": [
         "#byzantine_museum",
         "#icons",
@@ -2072,13 +2072,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/el/mouseia-xios/vivliothiki-korai-xios/",
       "title": "Βιβλιοθήκη Κοραή | Πολιτιστικός οδηγός Χίου",
       "description": "Επισκεφθείτε Βιβλιοθήκη Κοραή και ανακαλύψτε σπάνια βιβλία, χειρόγραφα, αρχεία και την ελληνική πνευματική παράδοση.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/vivlitothiki-korai-1.webp"
+      "ogImage": "/images/museums/vivlitothiki-korai-1.webp"
     },
     "hero": {
       "kicker": "Πόλη Χίου • Βιβλία & πολιτισμός",
       "title": "Βιβλιοθήκη Κοραή",
       "description": "Επισκεφθείτε Βιβλιοθήκη Κοραή και ανακαλύψτε σπάνια βιβλία, χειρόγραφα, αρχεία και την ελληνική πνευματική παράδοση.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/vivlitothiki-korai-1.webp",
+      "image": "/images/museums/vivlitothiki-korai-1.webp",
       "tags": [
         "#koraes_library",
         "#rare_books",
@@ -2154,13 +2154,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/fr/musees-de-chios/bibliotheque-korais-chios/",
       "title": "Bibliothèque Korais | Guide culturel de Chios",
       "description": "Visitez Bibliothèque Korais et découvrez les livres rares, manuscrits, archives et la tradition intellectuelle grecque.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/vivlitothiki-korai-1.webp"
+      "ogImage": "/images/museums/vivlitothiki-korai-1.webp"
     },
     "hero": {
       "kicker": "Ville de Chios • Livres & culture",
       "title": "Bibliothèque Korais",
       "description": "Visitez Bibliothèque Korais et découvrez les livres rares, manuscrits, archives et la tradition intellectuelle grecque.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/vivlitothiki-korai-1.webp",
+      "image": "/images/museums/vivlitothiki-korai-1.webp",
       "tags": [
         "#koraes_library",
         "#rare_books",
@@ -2236,13 +2236,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/de/museen-chios/korais-bibliothek-chios/",
       "title": "Korais-Bibliothek | Kulturführer für Chios",
       "description": "Besuchen Sie Korais-Bibliothek und entdecken Sie seltene Bücher, Handschriften, Archive und griechische Geistesgeschichte.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/vivlitothiki-korai-1.webp"
+      "ogImage": "/images/museums/vivlitothiki-korai-1.webp"
     },
     "hero": {
       "kicker": "Chios-Stadt • Bücher & Kultur",
       "title": "Korais-Bibliothek",
       "description": "Besuchen Sie Korais-Bibliothek und entdecken Sie seltene Bücher, Handschriften, Archive und griechische Geistesgeschichte.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/vivlitothiki-korai-1.webp",
+      "image": "/images/museums/vivlitothiki-korai-1.webp",
       "tags": [
         "#koraes_library",
         "#rare_books",
@@ -2318,13 +2318,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/it/musei-chios/biblioteca-korais-chios/",
       "title": "Biblioteca Korais | Guida culturale di Chios",
       "description": "Visita Biblioteca Korais e scopri libri rari, manoscritti, archivi e cultura greca.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/vivlitothiki-korai-1.webp"
+      "ogImage": "/images/museums/vivlitothiki-korai-1.webp"
     },
     "hero": {
       "kicker": "Città di Chios • Libri e cultura",
       "title": "Biblioteca Korais",
       "description": "Visita Biblioteca Korais e scopri libri rari, manoscritti, archivi e cultura greca.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/vivlitothiki-korai-1.webp",
+      "image": "/images/museums/vivlitothiki-korai-1.webp",
       "tags": [
         "#koraes_library",
         "#rare_books",
@@ -2400,13 +2400,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/es/museos-chios/biblioteca-korais-chios/",
       "title": "Biblioteca Korais | Guía cultural de Chios",
       "description": "Visita Biblioteca Korais y descubre libros raros, manuscritos, archivos y cultura griega.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/vivlitothiki-korai-1.webp"
+      "ogImage": "/images/museums/vivlitothiki-korai-1.webp"
     },
     "hero": {
       "kicker": "Ciudad de Chios • Libros y cultura",
       "title": "Biblioteca Korais",
       "description": "Visita Biblioteca Korais y descubre libros raros, manuscritos, archivos y cultura griega.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/vivlitothiki-korai-1.webp",
+      "image": "/images/museums/vivlitothiki-korai-1.webp",
       "tags": [
         "#koraes_library",
         "#rare_books",
@@ -2482,13 +2482,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/tr/sakiz-adasi-muzeleri/korais-kutuphanesi-sakiz/",
       "title": "Korais Kütüphanesi | Sakız Adası kültür rehberi",
       "description": "Ziyaret edin Korais Kütüphanesi ve keşfedin nadir kitapları, el yazmalarını, arşivleri ve Yunan kültürünü.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/vivlitothiki-korai-1.webp"
+      "ogImage": "/images/museums/vivlitothiki-korai-1.webp"
     },
     "hero": {
       "kicker": "Sakız şehir merkezi • Kitaplar ve kültür",
       "title": "Korais Kütüphanesi",
       "description": "Ziyaret edin Korais Kütüphanesi ve keşfedin nadir kitapları, el yazmalarını, arşivleri ve Yunan kültürünü.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/vivlitothiki-korai-1.webp",
+      "image": "/images/museums/vivlitothiki-korai-1.webp",
       "tags": [
         "#koraes_library",
         "#rare_books",
@@ -2564,13 +2564,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/el/mouseia-xios/naftiko-mouseio-xios/",
       "title": "Ναυτικό Μουσείο Χίου | Πολιτιστικός οδηγός Χίου",
       "description": "Επισκεφθείτε Ναυτικό Μουσείο Χίου και ανακαλύψτε τη ναυτική ταυτότητα της Χίου, τα πλοία, τη ναυσιπλοΐα και το εμπόριο.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/IMG_1203-Medium-min-768x487.webp"
+      "ogImage": "/images/museums/IMG_1203-Medium-min-768x487.webp"
     },
     "hero": {
       "kicker": "Πόλη Χίου • Ναυτική κληρονομιά",
       "title": "Ναυτικό Μουσείο Χίου",
       "description": "Επισκεφθείτε Ναυτικό Μουσείο Χίου και ανακαλύψτε τη ναυτική ταυτότητα της Χίου, τα πλοία, τη ναυσιπλοΐα και το εμπόριο.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/IMG_1203-Medium-min-768x487.webp",
+      "image": "/images/museums/IMG_1203-Medium-min-768x487.webp",
       "tags": [
         "#maritime_museum",
         "#seafaring",
@@ -2646,13 +2646,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/fr/musees-de-chios/musee-maritime-chios/",
       "title": "Musée maritime de Chios | Guide culturel de Chios",
       "description": "Visitez Musée maritime de Chios et découvrez l’identité maritime de Chios, les navires, la navigation et le commerce.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/IMG_1203-Medium-min-768x487.webp"
+      "ogImage": "/images/museums/IMG_1203-Medium-min-768x487.webp"
     },
     "hero": {
       "kicker": "Ville de Chios • Patrimoine maritime",
       "title": "Musée maritime de Chios",
       "description": "Visitez Musée maritime de Chios et découvrez l’identité maritime de Chios, les navires, la navigation et le commerce.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/IMG_1203-Medium-min-768x487.webp",
+      "image": "/images/museums/IMG_1203-Medium-min-768x487.webp",
       "tags": [
         "#maritime_museum",
         "#seafaring",
@@ -2728,13 +2728,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/de/museen-chios/schifffahrtsmuseum-chios/",
       "title": "Schifffahrtsmuseum Chios | Kulturführer für Chios",
       "description": "Besuchen Sie Schifffahrtsmuseum Chios und entdecken Sie die maritime Identität von Chios, Schiffe, Navigation und Handel.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/IMG_1203-Medium-min-768x487.webp"
+      "ogImage": "/images/museums/IMG_1203-Medium-min-768x487.webp"
     },
     "hero": {
       "kicker": "Chios-Stadt • Maritimes Erbe",
       "title": "Schifffahrtsmuseum Chios",
       "description": "Besuchen Sie Schifffahrtsmuseum Chios und entdecken Sie die maritime Identität von Chios, Schiffe, Navigation und Handel.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/IMG_1203-Medium-min-768x487.webp",
+      "image": "/images/museums/IMG_1203-Medium-min-768x487.webp",
       "tags": [
         "#maritime_museum",
         "#seafaring",
@@ -2810,13 +2810,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/it/musei-chios/museo-marittimo-chios/",
       "title": "Museo Marittimo di Chios | Guida culturale di Chios",
       "description": "Visita Museo Marittimo di Chios e scopri l’identità marinara di Chios, le navi, la navigazione e il commercio.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/IMG_1203-Medium-min-768x487.webp"
+      "ogImage": "/images/museums/IMG_1203-Medium-min-768x487.webp"
     },
     "hero": {
       "kicker": "Città di Chios • Patrimonio marittimo",
       "title": "Museo Marittimo di Chios",
       "description": "Visita Museo Marittimo di Chios e scopri l’identità marinara di Chios, le navi, la navigazione e il commercio.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/IMG_1203-Medium-min-768x487.webp",
+      "image": "/images/museums/IMG_1203-Medium-min-768x487.webp",
       "tags": [
         "#maritime_museum",
         "#seafaring",
@@ -2892,13 +2892,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/es/museos-chios/museo-maritimo-chios/",
       "title": "Museo Marítimo de Chios | Guía cultural de Chios",
       "description": "Visita Museo Marítimo de Chios y descubre la identidad marinera de Chios, los barcos, la navegación y el comercio.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/IMG_1203-Medium-min-768x487.webp"
+      "ogImage": "/images/museums/IMG_1203-Medium-min-768x487.webp"
     },
     "hero": {
       "kicker": "Ciudad de Chios • Patrimonio marítimo",
       "title": "Museo Marítimo de Chios",
       "description": "Visita Museo Marítimo de Chios y descubre la identidad marinera de Chios, los barcos, la navegación y el comercio.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/IMG_1203-Medium-min-768x487.webp",
+      "image": "/images/museums/IMG_1203-Medium-min-768x487.webp",
       "tags": [
         "#maritime_museum",
         "#seafaring",
@@ -2974,13 +2974,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/tr/sakiz-adasi-muzeleri/denizcilik-muzesi-sakiz/",
       "title": "Sakız Denizcilik Müzesi | Sakız Adası kültür rehberi",
       "description": "Ziyaret edin Sakız Denizcilik Müzesi ve keşfedin Sakız’ın denizcilik kimliğini, gemileri, navigasyonu ve ticareti.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/IMG_1203-Medium-min-768x487.webp"
+      "ogImage": "/images/museums/IMG_1203-Medium-min-768x487.webp"
     },
     "hero": {
       "kicker": "Sakız şehir merkezi • Denizcilik mirası",
       "title": "Sakız Denizcilik Müzesi",
       "description": "Ziyaret edin Sakız Denizcilik Müzesi ve keşfedin Sakız’ın denizcilik kimliğini, gemileri, navigasyonu ve ticareti.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/IMG_1203-Medium-min-768x487.webp",
+      "image": "/images/museums/IMG_1203-Medium-min-768x487.webp",
       "tags": [
         "#maritime_museum",
         "#seafaring",
@@ -3056,13 +3056,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/el/mouseia-xios/laografiko-mouseio-kallimasias/",
       "title": "Λαογραφικό Μουσείο Καλλιμασιάς | Πολιτιστικός οδηγός Χίου",
       "description": "Επισκεφθείτε Λαογραφικό Μουσείο Καλλιμασιάς και ανακαλύψτε την καθημερινή ζωή, τα εργαλεία, τα έθιμα και τη λαϊκή μνήμη της Χίου.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/2-1-768x512.webp"
+      "ogImage": "/images/museums/2-1-768x512.webp"
     },
     "hero": {
       "kicker": "Καλλιμασιά • Λαογραφία",
       "title": "Λαογραφικό Μουσείο Καλλιμασιάς",
       "description": "Επισκεφθείτε Λαογραφικό Μουσείο Καλλιμασιάς και ανακαλύψτε την καθημερινή ζωή, τα εργαλεία, τα έθιμα και τη λαϊκή μνήμη της Χίου.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/2-1-768x512.webp",
+      "image": "/images/museums/2-1-768x512.webp",
       "tags": [
         "#folklore_museum",
         "#kallimasia",
@@ -3138,13 +3138,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/fr/musees-de-chios/musee-folklorique-kallimasia/",
       "title": "Musée folklorique de Kallimasia | Guide culturel de Chios",
       "description": "Visitez Musée folklorique de Kallimasia et découvrez la vie quotidienne, les outils, les coutumes et la mémoire locale de Chios.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/2-1-768x512.webp"
+      "ogImage": "/images/museums/2-1-768x512.webp"
     },
     "hero": {
       "kicker": "Kallimasia • Folklore",
       "title": "Musée folklorique de Kallimasia",
       "description": "Visitez Musée folklorique de Kallimasia et découvrez la vie quotidienne, les outils, les coutumes et la mémoire locale de Chios.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/2-1-768x512.webp",
+      "image": "/images/museums/2-1-768x512.webp",
       "tags": [
         "#folklore_museum",
         "#kallimasia",
@@ -3220,13 +3220,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/de/museen-chios/volkskundemuseum-kallimasia/",
       "title": "Volkskundemuseum Kallimasia | Kulturführer für Chios",
       "description": "Besuchen Sie Volkskundemuseum Kallimasia und entdecken Sie Alltagsleben, Werkzeuge, Bräuche und lokale Erinnerung auf Chios.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/2-1-768x512.webp"
+      "ogImage": "/images/museums/2-1-768x512.webp"
     },
     "hero": {
       "kicker": "Kallimasia • Volkskunde",
       "title": "Volkskundemuseum Kallimasia",
       "description": "Besuchen Sie Volkskundemuseum Kallimasia und entdecken Sie Alltagsleben, Werkzeuge, Bräuche und lokale Erinnerung auf Chios.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/2-1-768x512.webp",
+      "image": "/images/museums/2-1-768x512.webp",
       "tags": [
         "#folklore_museum",
         "#kallimasia",
@@ -3302,13 +3302,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/it/musei-chios/museo-folkloristico-kallimasia/",
       "title": "Museo Folkloristico di Kallimasia | Guida culturale di Chios",
       "description": "Visita Museo Folkloristico di Kallimasia e scopri la vita quotidiana, gli strumenti, le usanze e la memoria locale di Chios.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/2-1-768x512.webp"
+      "ogImage": "/images/museums/2-1-768x512.webp"
     },
     "hero": {
       "kicker": "Kallimasia • Folklore",
       "title": "Museo Folkloristico di Kallimasia",
       "description": "Visita Museo Folkloristico di Kallimasia e scopri la vita quotidiana, gli strumenti, le usanze e la memoria locale di Chios.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/2-1-768x512.webp",
+      "image": "/images/museums/2-1-768x512.webp",
       "tags": [
         "#folklore_museum",
         "#kallimasia",
@@ -3384,13 +3384,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/es/museos-chios/museo-folclorico-kallimasia/",
       "title": "Museo Folclórico de Kallimasia | Guía cultural de Chios",
       "description": "Visita Museo Folclórico de Kallimasia y descubre la vida cotidiana, las herramientas, las costumbres y la memoria local de Chios.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/2-1-768x512.webp"
+      "ogImage": "/images/museums/2-1-768x512.webp"
     },
     "hero": {
       "kicker": "Kallimasia • Folclore",
       "title": "Museo Folclórico de Kallimasia",
       "description": "Visita Museo Folclórico de Kallimasia y descubre la vida cotidiana, las herramientas, las costumbres y la memoria local de Chios.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/2-1-768x512.webp",
+      "image": "/images/museums/2-1-768x512.webp",
       "tags": [
         "#folklore_museum",
         "#kallimasia",
@@ -3466,13 +3466,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/tr/sakiz-adasi-muzeleri/kallimasia-folklor-muzesi/",
       "title": "Kallimasia Folklor Müzesi | Sakız Adası kültür rehberi",
       "description": "Ziyaret edin Kallimasia Folklor Müzesi ve keşfedin Sakız’ın günlük yaşamını, araçlarını, geleneklerini ve yerel hafızasını.",
-      "ogImage": "https://chioshotel.gr/wp-content/uploads/2021/12/2-1-768x512.webp"
+      "ogImage": "/images/museums/2-1-768x512.webp"
     },
     "hero": {
       "kicker": "Kallimasia • Folklor",
       "title": "Kallimasia Folklor Müzesi",
       "description": "Ziyaret edin Kallimasia Folklor Müzesi ve keşfedin Sakız’ın günlük yaşamını, araçlarını, geleneklerini ve yerel hafızasını.",
-      "image": "https://chioshotel.gr/wp-content/uploads/2021/12/2-1-768x512.webp",
+      "image": "/images/museums/2-1-768x512.webp",
       "tags": [
         "#folklore_museum",
         "#kallimasia",
@@ -3559,7 +3559,7 @@ export const relatedMuseumCards = [
     description: "The story of Chios mastic, from cultivation to culture.",
     href: "/chios/chios-museums/the-mastic-museum-chios/",
     image:
-      "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp",
+      "/images/museums/mousio.mastic.webp",
     imageAlt: "Chios Mastic Museum",
     badge: "Mastic",
     size: "large",
@@ -3570,7 +3570,7 @@ export const relatedMuseumCards = [
     description: "Ancient artifacts and the island’s early history.",
     href: "/chios/chios-museums/archaeological-museum-chios/",
     image:
-      "https://chioshotel.gr/wp-content/uploads/2021/12/caption.webp",
+      "/images/museums/caption.webp",
     imageAlt: "Archaeological Museum of Chios",
     badge: "Ancient",
     size: "wide",
@@ -3581,7 +3581,7 @@ export const relatedMuseumCards = [
     description: "Icons, religious art and Byzantine heritage.",
     href: "/chios/chios-museums/chios-byzantine-museum/",
     image:
-      "https://chioshotel.gr/wp-content/uploads/2021/12/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
+      "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
     imageAlt: "Chios Byzantine Museum",
     badge: "Byzantine",
     size: "normal",
@@ -3592,7 +3592,7 @@ export const relatedMuseumCards = [
     description: "Rare books, manuscripts and Greek culture.",
     href: "/chios/chios-museums/koraes-library-chios/",
     image:
-      "https://chioshotel.gr/wp-content/uploads/2021/12/vivlitothiki-korai-1.webp",
+      "/images/museums/vivlitothiki-korai-1.webp",
     imageAlt: "Koraes Library in Chios",
     badge: "Books",
     size: "normal",
@@ -3603,7 +3603,7 @@ export const relatedMuseumCards = [
     description: "Seafaring, ship models and maritime heritage.",
     href: "/chios/chios-museums/chios-maritime-museum/",
     image:
-      "https://chioshotel.gr/wp-content/uploads/2021/12/IMG_1203-Medium-min-768x487.webp",
+      "/images/museums/IMG_1203-Medium-min-768x487.webp",
     imageAlt: "Chios Maritime Museum",
     badge: "Sea",
     size: "normal",
@@ -3614,7 +3614,7 @@ export const relatedMuseumCards = [
     description: "Village life, tools, customs and local memory.",
     href: "/chios/chios-museums/kallimasia-folklore-museum/",
     image:
-      "https://chioshotel.gr/wp-content/uploads/2021/12/2-1-768x512.webp",
+      "/images/museums/2-1-768x512.webp",
     imageAlt: "Kallimasia Folklore Museum in Chios",
     badge: "Folklore",
     size: "wide",

@@ -162,7 +162,7 @@ export const findYourRoomPaths: Record<LanguageCode, string> = {
 };
 
 const ogImage =
-  "https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-family-apartments.webp";
+  "/images/rooms/chios-hotels-family-apartments.webp";
 
 const baseRoomLabels = {
   room: "Room",

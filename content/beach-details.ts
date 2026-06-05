@@ -54,7 +54,7 @@ export const beachDetails: BeachDetailData[] = [
       description:
         "Discover Agia Dynami Beach in southern Chios, a small dreamy beach near Olympoi with emerald waters, fine sand, small pebbles and natural shade.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/691-e1645969589226.webp",
+        "/images/beaches/691-e1645969589226.webp",
     },
     hero: {
       kicker: "Southern Chios • Near Olympoi",
@@ -62,7 +62,7 @@ export const beachDetails: BeachDetailData[] = [
       description:
         "A small, dreamy beach in southern Chios with incredible clarity and waters of a unique emerald color. The picturesque chapel completes the ultimate Greek landscape.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/691-e1645969589226.webp",
+        "/images/beaches/691-e1645969589226.webp",
       tags: ["#agia_dynami", "#emerald_waters", "#olympoi", "#hidden_treasure"],
     },
     details: [
@@ -123,7 +123,7 @@ export const beachDetails: BeachDetailData[] = [
       description:
         "Discover Lithi Beach in western Chios, a natural harbor with shallow waters, golden sand and authentic fish taverns by the sea.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/2017-06-28-1024x768.webp",
+        "/images/beaches/2017-06-28-1024x768.webp",
     },
     hero: {
       kicker: "Western Chios • Family friendly",
@@ -131,7 +131,7 @@ export const beachDetails: BeachDetailData[] = [
       description:
         "A beautiful natural harbor in western Chios. Enjoy shallow waters, golden sand and authentic fish taverns right on the waves.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/2017-06-28-1024x768.webp",
+        "/images/beaches/2017-06-28-1024x768.webp",
       tags: ["#western_chios", "#sandy_beach", "#family_friendly", "#taverns"],
     },
     details: [
@@ -191,14 +191,14 @@ export const beachDetails: BeachDetailData[] = [
       title: "Lefkathia Beach Chios | Crystal Waters in Volissos",
       description:
         "Discover Lefkathia Beach in northwestern Chios, a beautiful enclosed bay near Volissos and Limnia with crystal waters, tamarisk trees and sunset views.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2026/03/lefkathia-2.jpg",
+      ogImage: "/images/beaches/lefkathia-2.jpg",
     },
     hero: {
       kicker: "Northwestern Chios • Volissos",
       title: "Lefkathia Beach: Crystal Waters in Volissos",
       description:
         "A beautiful enclosed bay in northwestern Chios. Its semi-circular shape, crystal-clear waters and stunning sunsets will enchant you.",
-      image: "https://chioshotel.gr/wp-content/uploads/2026/03/lefkathia-2.jpg",
+      image: "/images/beaches/lefkathia-2.jpg",
       tags: ["#northwest_chios", "#volissos", "#youth_vibe", "#sunset_spot"],
     },
     details: [
@@ -259,7 +259,7 @@ export const beachDetails: BeachDetailData[] = [
       description:
         "Discover Nagos Beach in northern Chios near Kardamyla, where springs, plane trees, colorful pebbles and crystal-clear waters create a refreshing landscape.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/nagos-e1645969566121.webp",
+        "/images/beaches/nagos-e1645969566121.webp",
     },
     hero: {
       kicker: "Northern Chios • Kardamyla",
@@ -267,7 +267,7 @@ export const beachDetails: BeachDetailData[] = [
       description:
         "A unique setting where running spring waters and century-old plane trees meet the crystal-clear waters and colorful pebbles of the Aegean.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/nagos-e1645969566121.webp",
+        "/images/beaches/nagos-e1645969566121.webp",
       tags: ["#northern_chios", "#kardamyla", "#springs", "#plane_trees"],
     },
     details: [
@@ -328,7 +328,7 @@ export const beachDetails: BeachDetailData[] = [
       description:
         "Discover Avlonia Beach in southern Chios, an isolated bay near Pyrgi with turquoise waters, wild beauty, small pebbles and a seabed ideal for snorkeling.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/avlonia-1024x768.webp",
+        "/images/beaches/avlonia-1024x768.webp",
     },
     hero: {
       kicker: "Southern Chios • Pyrgousiki Avlonia",
@@ -336,7 +336,7 @@ export const beachDetails: BeachDetailData[] = [
       description:
         "A magical, isolated bay in southern Chios with wild beauty, turquoise crystal-clear waters and an impressive seabed waiting to be explored.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/avlonia-1024x768.webp",
+        "/images/beaches/avlonia-1024x768.webp",
       tags: ["#southern_chios", "#pyrgousiki_avlonia", "#hidden_beach", "#seabed_exploration"],
     },
     details: [
@@ -397,7 +397,7 @@ export const beachDetails: BeachDetailData[] = [
       description:
         "Discover Salagona Beach in southwestern Chios, a quiet bay near the medieval villages with turquoise waters, fine pebbles and excellent snorkeling.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/salagona-e1645969502155.webp",
+        "/images/beaches/salagona-e1645969502155.webp",
     },
     hero: {
       kicker: "Southwestern Chios • Quiet beach",
@@ -405,7 +405,7 @@ export const beachDetails: BeachDetailData[] = [
       description:
         "Avoid the crowds in this magical southwestern bay with crystal-clear turquoise waters and fine pebbles, ideal for relaxation and seabed exploration.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/salagona-e1645969502155.webp",
+        "/images/beaches/salagona-e1645969502155.webp",
       tags: ["#southwestern_chios", "#quiet_beach", "#fine_pebbles", "#seabed_exploration"],
     },
     details: [
@@ -465,14 +465,14 @@ export const beachDetails: BeachDetailData[] = [
       title: "Agia Fotia Beach Chios | Cosmopolitan Organized Beach",
       description:
         "Discover Agia Fotia Beach in Chios, a lively organized pebble beach near Kampos with crystal-clear waters, taverns, cafes and views toward Asia Minor.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2026/02/agia-fotia.jpg",
+      ogImage: "/images/beaches/agia-fotia.jpg",
     },
     hero: {
       kicker: "East Chios • Cosmopolitan beach",
       title: "Agia Fotia Beach: The Cosmopolitan Choice of Chios",
       description:
         "One of the most beautiful and lively beaches of Chios, with crystal-clear waters, a pebbled seabed and a magical view toward the Asia Minor coast.",
-      image: "https://chioshotel.gr/wp-content/uploads/2026/02/agia-fotia.jpg",
+      image: "/images/beaches/agia-fotia.jpg",
       tags: ["#agia_fotia", "#youth", "#cosmopolitan_beach", "#organized"],
     },
     details: [
@@ -533,7 +533,7 @@ export const beachDetails: BeachDetailData[] = [
       description:
         "Discover Komi Beach in southeastern Chios, one of the island’s most popular organized sandy beaches with shallow waters, restaurants, cafe-bars and beach activities.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
+        "/images/beaches/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
     },
     hero: {
       kicker: "Southeast Chios • Golden sand",
@@ -541,7 +541,7 @@ export const beachDetails: BeachDetailData[] = [
       description:
         "One of the most popular and fully organized beaches in Chios, with endless sand, shallow crystal waters and excellent options for dining and entertainment by the waves.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
+        "/images/beaches/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
       tags: ["#southeast_chios", "#golden_sand", "#organized_beach", "#family_friendly"],
     },
     details: [
@@ -602,7 +602,7 @@ export const beachDetails: BeachDetailData[] = [
       description:
         "Explore Emporios Mavra Volia Beach in southern Chios, the island’s iconic volcanic beach with black pebbles, three bays, deep cool waters and wild cliffs.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/emporios3-e1702727598897.webp",
+        "/images/beaches/emporios3-e1702727598897.webp",
     },
     hero: {
       kicker: "Emporios • Volcanic beach",
@@ -610,7 +610,7 @@ export const beachDetails: BeachDetailData[] = [
       description:
         "The most iconic and impressive beach of Chios: three consecutive bays with deep dark waters and breathtaking black volcanic pebbles.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/emporios3-e1702727598897.webp",
+        "/images/beaches/emporios3-e1702727598897.webp",
       tags: ["#mavra_volia", "#emporios", "#volcanic_beach", "#mavros_gialos"],
     },
     details: [
@@ -674,7 +674,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Ανακαλύψτε την παραλία Αγία Δύναμη στη νότια Χίο, έναν μικρό ονειρικό όρμο κοντά στους Ολύμπους με σμαραγδένια νερά, ψιλή άμμο, βότσαλο και φυσική σκιά.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/691-e1645969589226.webp",
+        "/images/beaches/691-e1645969589226.webp",
     },
     hero: {
       kicker: "Νότια Χίος • Κοντά στους Ολύμπους",
@@ -682,7 +682,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Μια μικρή, ονειρική παραλία στη νότια Χίο με απίστευτη διαύγεια και νερά σε μοναδικό σμαραγδένιο χρώμα. Το γραφικό εκκλησάκι συμπληρώνει ένα αυθεντικό ελληνικό τοπίο.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/691-e1645969589226.webp",
+        "/images/beaches/691-e1645969589226.webp",
       tags: ["#αγία_δύναμη", "#σμαραγδένια_νερά", "#ολύμποι", "#κρυμμένος_θησαυρός"],
     },
     details: [
@@ -743,7 +743,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Découvrez la plage d’Agia Dynami au sud de Chios, une petite crique de rêve près d’Olympoi avec des eaux émeraude, du sable fin, de petits galets et de l’ombre naturelle.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/691-e1645969589226.webp",
+        "/images/beaches/691-e1645969589226.webp",
     },
     hero: {
       kicker: "Sud de Chios • Près d’Olympoi",
@@ -751,7 +751,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Une petite plage de rêve au sud de Chios, avec une clarté exceptionnelle et des eaux d’une couleur émeraude unique. La petite chapelle pittoresque complète ce paysage grec authentique.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/691-e1645969589226.webp",
+        "/images/beaches/691-e1645969589226.webp",
       tags: ["#agia_dynami", "#eaux_emeraude", "#olympoi", "#tresor_cache"],
     },
     details: [
@@ -812,7 +812,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Entdecken Sie den Agia Dynami Strand im Süden von Chios, eine kleine traumhafte Bucht nahe Olympoi mit smaragdgrünem Wasser, feinem Sand, kleinen Kieseln und natürlichem Schatten.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/691-e1645969589226.webp",
+        "/images/beaches/691-e1645969589226.webp",
     },
     hero: {
       kicker: "Süd-Chios • Nahe Olympoi",
@@ -820,7 +820,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Ein kleiner Traumstrand im Süden von Chios mit außergewöhnlich klarem Wasser in einzigartigem Smaragdton. Die malerische Kapelle ergänzt die authentische griechische Landschaft.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/691-e1645969589226.webp",
+        "/images/beaches/691-e1645969589226.webp",
       tags: ["#agia_dynami", "#smaragdgruenes_wasser", "#olympoi", "#versteckter_schatz"],
     },
     details: [
@@ -881,7 +881,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Scopri la spiaggia di Agia Dynami nel sud di Chios, una piccola baia da sogno vicino a Olympoi con acque color smeraldo, sabbia fine, piccoli ciottoli e ombra naturale.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/691-e1645969589226.webp",
+        "/images/beaches/691-e1645969589226.webp",
     },
     hero: {
       kicker: "Chios meridionale • Vicino a Olympoi",
@@ -889,7 +889,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Una piccola spiaggia da sogno nel sud di Chios, con una trasparenza incredibile e acque di un colore smeraldo unico. La pittoresca cappella completa un paesaggio greco autentico.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/691-e1645969589226.webp",
+        "/images/beaches/691-e1645969589226.webp",
       tags: ["#agia_dynami", "#acque_smeraldo", "#olympoi", "#tesoro_nascosto"],
     },
     details: [
@@ -950,7 +950,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Descubre la playa de Agia Dynami en el sur de Chios, una pequeña cala de ensueño cerca de Olympoi con aguas esmeralda, arena fina, pequeños guijarros y sombra natural.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/691-e1645969589226.webp",
+        "/images/beaches/691-e1645969589226.webp",
     },
     hero: {
       kicker: "Sur de Chios • Cerca de Olympoi",
@@ -958,7 +958,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Una pequeña playa de ensueño en el sur de Chios, con una claridad increíble y aguas de un color esmeralda único. La pintoresca capilla completa este auténtico paisaje griego.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/691-e1645969589226.webp",
+        "/images/beaches/691-e1645969589226.webp",
       tags: ["#agia_dynami", "#aguas_esmeralda", "#olympoi", "#tesoro_escondido"],
     },
     details: [
@@ -1019,7 +1019,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Sakız Adası’nın güneyindeki Agia Dynami Plajı’nı keşfedin: Olympoi yakınlarında zümrüt renkli suları, ince kumu, küçük çakılları ve doğal gölgesiyle küçük bir rüya koyu.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/691-e1645969589226.webp",
+        "/images/beaches/691-e1645969589226.webp",
     },
     hero: {
       kicker: "Güney Sakız • Olympoi yakınında",
@@ -1027,7 +1027,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Sakız Adası’nın güneyinde, olağanüstü berraklığa ve benzersiz zümrüt tonlarında sulara sahip küçük bir rüya plajı. Pitoresk şapel bu otantik Yunan manzarasını tamamlar.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/691-e1645969589226.webp",
+        "/images/beaches/691-e1645969589226.webp",
       tags: ["#agia_dynami", "#zumrut_sular", "#olympoi", "#gizli_hazine"],
     },
     details: [
@@ -1101,7 +1101,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Ανακαλύψτε την παραλία Λιθί στη δυτική Χίο, ένα φυσικό λιμανάκι με ρηχά νερά, χρυσή άμμο και αυθεντικές ψαροταβέρνες δίπλα στη θάλασσα.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/2017-06-28-1024x768.webp",
+        "/images/beaches/2017-06-28-1024x768.webp",
     },
     hero: {
       kicker: "Δυτική Χίος • Ιδανική για οικογένειες",
@@ -1109,7 +1109,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Ένα όμορφο φυσικό λιμανάκι στη δυτική Χίο με ρηχά νερά, χρυσή άμμο και αυθεντικές ψαροταβέρνες σχεδόν πάνω στο κύμα.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/2017-06-28-1024x768.webp",
+        "/images/beaches/2017-06-28-1024x768.webp",
       tags: ["#δυτική_χίος", "#αμμώδης_παραλία", "#οικογενειακή", "#ταβέρνες"],
     },
     details: [
@@ -1170,7 +1170,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Découvrez la plage de Lithi à l’ouest de Chios, un port naturel avec des eaux peu profondes, du sable doré et des tavernes de poisson authentiques au bord de la mer.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/2017-06-28-1024x768.webp",
+        "/images/beaches/2017-06-28-1024x768.webp",
     },
     hero: {
       kicker: "Ouest de Chios • Idéale pour les familles",
@@ -1178,7 +1178,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Un joli port naturel à l’ouest de Chios avec des eaux peu profondes, du sable doré et des tavernes de poisson authentiques presque au bord des vagues.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/2017-06-28-1024x768.webp",
+        "/images/beaches/2017-06-28-1024x768.webp",
       tags: ["#ouest_de_chios", "#plage_de_sable", "#famille", "#tavernes"],
     },
     details: [
@@ -1239,7 +1239,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Entdecken Sie den Lithi Strand im Westen von Chios, einen natürlichen Hafen mit flachem Wasser, goldenem Sand und authentischen Fischtavernen direkt am Meer.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/2017-06-28-1024x768.webp",
+        "/images/beaches/2017-06-28-1024x768.webp",
     },
     hero: {
       kicker: "West-Chios • Familienfreundlich",
@@ -1247,7 +1247,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Ein schöner natürlicher Hafen im Westen von Chios mit flachem Wasser, goldenem Sand und authentischen Fischtavernen direkt an den Wellen.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/2017-06-28-1024x768.webp",
+        "/images/beaches/2017-06-28-1024x768.webp",
       tags: ["#west_chios", "#sandstrand", "#familienfreundlich", "#tavernen"],
     },
     details: [
@@ -1308,7 +1308,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Scopri la spiaggia di Lithi nella parte occidentale di Chios, un porto naturale con acque basse, sabbia dorata e autentiche taverne di pesce sul mare.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/2017-06-28-1024x768.webp",
+        "/images/beaches/2017-06-28-1024x768.webp",
     },
     hero: {
       kicker: "Chios occidentale • Ideale per famiglie",
@@ -1316,7 +1316,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Un bellissimo porto naturale nella parte occidentale di Chios, con acque basse, sabbia dorata e autentiche taverne di pesce quasi sul mare.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/2017-06-28-1024x768.webp",
+        "/images/beaches/2017-06-28-1024x768.webp",
       tags: ["#chios_occidentale", "#spiaggia_sabbiosa", "#famiglie", "#taverne"],
     },
     details: [
@@ -1377,7 +1377,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Descubre la playa de Lithi en el oeste de Chios, un puerto natural con aguas poco profundas, arena dorada y auténticas tabernas de pescado junto al mar.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/2017-06-28-1024x768.webp",
+        "/images/beaches/2017-06-28-1024x768.webp",
     },
     hero: {
       kicker: "Oeste de Chios • Ideal para familias",
@@ -1385,7 +1385,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Un hermoso puerto natural en el oeste de Chios, con aguas poco profundas, arena dorada y auténticas tabernas de pescado casi sobre las olas.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/2017-06-28-1024x768.webp",
+        "/images/beaches/2017-06-28-1024x768.webp",
       tags: ["#oeste_de_chios", "#playa_de_arena", "#familias", "#tabernas"],
     },
     details: [
@@ -1446,7 +1446,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Sakız Adası’nın batısındaki Lithi Plajı’nı keşfedin: sığ suları, altın rengi kumu ve deniz kenarındaki otantik balık tavernalarıyla doğal bir liman.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/2017-06-28-1024x768.webp",
+        "/images/beaches/2017-06-28-1024x768.webp",
     },
     hero: {
       kicker: "Batı Sakız • Aileler için ideal",
@@ -1454,7 +1454,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Sakız Adası’nın batısında, sığ suları, altın rengi kumu ve dalgaların hemen yanında otantik balık tavernalarıyla güzel bir doğal liman.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/2017-06-28-1024x768.webp",
+        "/images/beaches/2017-06-28-1024x768.webp",
       tags: ["#bati_sakiz", "#kum_plaji", "#aile_dostu", "#tavernalar"],
     },
     details: [
@@ -1519,14 +1519,14 @@ export const localizedBeachDetails: BeachDetailData[] = [
       title: "Παραλία Λευκάθια Χίος | Κρυστάλλινα νερά στη Βολισσό",
       description:
         "Ανακαλύψτε την παραλία Λευκάθια στη βορειοδυτική Χίο, έναν όμορφο κλειστό κόλπο κοντά στη Βολισσό και τα Λημνιά με κρυστάλλινα νερά, αρμυρίκια και υπέροχο ηλιοβασίλεμα.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2026/03/lefkathia-2.jpg",
+      ogImage: "/images/beaches/lefkathia-2.jpg",
     },
     hero: {
       kicker: "Βορειοδυτική Χίος • Βολισσός",
       title: "Παραλία Λευκάθια: κρυστάλλινα νερά στη Βολισσό",
       description:
         "Ένας όμορφος κλειστός κόλπος στη βορειοδυτική Χίο. Το ημικυκλικό σχήμα, τα καθαρά νερά και τα μαγικά ηλιοβασιλέματα δημιουργούν μια ξεχωριστή εμπειρία.",
-      image: "https://chioshotel.gr/wp-content/uploads/2026/03/lefkathia-2.jpg",
+      image: "/images/beaches/lefkathia-2.jpg",
       tags: ["#βορειοδυτική_χίος", "#βολισσός", "#νεανική_ατμόσφαιρα", "#ηλιοβασίλεμα"],
     },
     details: [
@@ -1586,14 +1586,14 @@ export const localizedBeachDetails: BeachDetailData[] = [
       title: "Plage de Lefkathia à Chios | Eaux cristallines à Volissos",
       description:
         "Découvrez la plage de Lefkathia au nord-ouest de Chios, une belle baie fermée près de Volissos et Limnia avec des eaux cristallines, des tamaris et une vue sur le coucher du soleil.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2026/03/lefkathia-2.jpg",
+      ogImage: "/images/beaches/lefkathia-2.jpg",
     },
     hero: {
       kicker: "Nord-ouest de Chios • Volissos",
       title: "Plage de Lefkathia : eaux cristallines à Volissos",
       description:
         "Une belle baie fermée au nord-ouest de Chios. Sa forme semi-circulaire, ses eaux limpides et ses superbes couchers de soleil créent une atmosphère unique.",
-      image: "https://chioshotel.gr/wp-content/uploads/2026/03/lefkathia-2.jpg",
+      image: "/images/beaches/lefkathia-2.jpg",
       tags: ["#nord_ouest_chios", "#volissos", "#ambiance_jeune", "#coucher_de_soleil"],
     },
     details: [
@@ -1653,14 +1653,14 @@ export const localizedBeachDetails: BeachDetailData[] = [
       title: "Lefkathia Strand Chios | Kristallklares Wasser bei Volissos",
       description:
         "Entdecken Sie den Lefkathia Strand im Nordwesten von Chios, eine schöne geschlossene Bucht nahe Volissos und Limnia mit kristallklarem Wasser, Tamarisken und Sonnenuntergangsblick.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2026/03/lefkathia-2.jpg",
+      ogImage: "/images/beaches/lefkathia-2.jpg",
     },
     hero: {
       kicker: "Nordwest-Chios • Volissos",
       title: "Lefkathia Strand: kristallklares Wasser bei Volissos",
       description:
         "Eine schöne geschlossene Bucht im Nordwesten von Chios. Die halbkreisförmige Bucht, das klare Wasser und die Sonnenuntergänge schaffen eine besondere Atmosphäre.",
-      image: "https://chioshotel.gr/wp-content/uploads/2026/03/lefkathia-2.jpg",
+      image: "/images/beaches/lefkathia-2.jpg",
       tags: ["#nordwest_chios", "#volissos", "#junge_atmosphaere", "#sonnenuntergang"],
     },
     details: [
@@ -1720,14 +1720,14 @@ export const localizedBeachDetails: BeachDetailData[] = [
       title: "Spiaggia di Lefkathia Chios | Acque cristalline a Volissos",
       description:
         "Scopri la spiaggia di Lefkathia nel nord-ovest di Chios, una splendida baia chiusa vicino a Volissos e Limnia con acque cristalline, tamerici e tramonti suggestivi.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2026/03/lefkathia-2.jpg",
+      ogImage: "/images/beaches/lefkathia-2.jpg",
     },
     hero: {
       kicker: "Nord-ovest di Chios • Volissos",
       title: "Spiaggia di Lefkathia: acque cristalline a Volissos",
       description:
         "Una splendida baia chiusa nel nord-ovest di Chios. La sua forma semicircolare, le acque limpide e i tramonti creano un’atmosfera speciale.",
-      image: "https://chioshotel.gr/wp-content/uploads/2026/03/lefkathia-2.jpg",
+      image: "/images/beaches/lefkathia-2.jpg",
       tags: ["#nord_ovest_chios", "#volissos", "#atmosfera_giovane", "#tramonto"],
     },
     details: [
@@ -1787,14 +1787,14 @@ export const localizedBeachDetails: BeachDetailData[] = [
       title: "Playa de Lefkathia Chios | Aguas cristalinas en Volissos",
       description:
         "Descubre la playa de Lefkathia en el noroeste de Chios, una hermosa bahía cerrada cerca de Volissos y Limnia con aguas cristalinas, tamariscos y vistas al atardecer.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2026/03/lefkathia-2.jpg",
+      ogImage: "/images/beaches/lefkathia-2.jpg",
     },
     hero: {
       kicker: "Noroeste de Chios • Volissos",
       title: "Playa de Lefkathia: aguas cristalinas en Volissos",
       description:
         "Una hermosa bahía cerrada en el noroeste de Chios. Su forma semicircular, sus aguas claras y sus atardeceres crean una atmósfera muy especial.",
-      image: "https://chioshotel.gr/wp-content/uploads/2026/03/lefkathia-2.jpg",
+      image: "/images/beaches/lefkathia-2.jpg",
       tags: ["#noroeste_de_chios", "#volissos", "#ambiente_joven", "#atardecer"],
     },
     details: [
@@ -1854,14 +1854,14 @@ export const localizedBeachDetails: BeachDetailData[] = [
       title: "Lefkathia Plajı Sakız Adası | Volissos’ta kristal sular",
       description:
         "Sakız Adası’nın kuzeybatısındaki Lefkathia Plajı’nı keşfedin: Volissos ve Limnia yakınında kristal suları, ılgın ağaçları ve gün batımı manzarasıyla güzel bir kapalı koy.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2026/03/lefkathia-2.jpg",
+      ogImage: "/images/beaches/lefkathia-2.jpg",
     },
     hero: {
       kicker: "Kuzeybatı Sakız • Volissos",
       title: "Lefkathia Plajı: Volissos’ta kristal sular",
       description:
         "Sakız Adası’nın kuzeybatısında güzel bir kapalı koy. Yarım daire şekli, berrak suları ve gün batımı manzarası özel bir atmosfer yaratır.",
-      image: "https://chioshotel.gr/wp-content/uploads/2026/03/lefkathia-2.jpg",
+      image: "/images/beaches/lefkathia-2.jpg",
       tags: ["#kuzeybati_sakiz", "#volissos", "#genç_atmosfer", "#gun_batimi"],
     },
     details: [
@@ -1927,7 +1927,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Ανακαλύψτε την παραλία Ναγός στη βόρεια Χίο κοντά στα Καρδάμυλα, όπου πηγές, πλατάνια, πολύχρωμα βότσαλα και κρυστάλλινα νερά δημιουργούν ένα δροσερό τοπίο.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/nagos-e1645969566121.webp",
+        "/images/beaches/nagos-e1645969566121.webp",
     },
     hero: {
       kicker: "Βόρεια Χίος • Καρδάμυλα",
@@ -1935,7 +1935,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Ένα μοναδικό σκηνικό όπου τα τρεχούμενα νερά από τις πηγές και τα αιωνόβια πλατάνια συναντούν τα κρυστάλλινα νερά και τα πολύχρωμα βότσαλα του Αιγαίου.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/nagos-e1645969566121.webp",
+        "/images/beaches/nagos-e1645969566121.webp",
       tags: ["#βόρεια_χίος", "#καρδάμυλα", "#πηγές", "#πλατάνια"],
     },
     details: [
@@ -1996,7 +1996,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Découvrez la plage de Nagos au nord de Chios près de Kardamyla, où sources, platanes, galets colorés et eaux cristallines créent un paysage rafraîchissant.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/nagos-e1645969566121.webp",
+        "/images/beaches/nagos-e1645969566121.webp",
     },
     hero: {
       kicker: "Nord de Chios • Kardamyla",
@@ -2004,7 +2004,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Un décor unique où les eaux des sources et les platanes centenaires rencontrent les eaux cristallines et les galets colorés de la mer Égée.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/nagos-e1645969566121.webp",
+        "/images/beaches/nagos-e1645969566121.webp",
       tags: ["#nord_de_chios", "#kardamyla", "#sources", "#platanes"],
     },
     details: [
@@ -2065,7 +2065,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Entdecken Sie den Nagos Strand im Norden von Chios nahe Kardamyla, wo Quellen, Platanen, bunte Kiesel und kristallklares Wasser eine erfrischende Landschaft schaffen.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/nagos-e1645969566121.webp",
+        "/images/beaches/nagos-e1645969566121.webp",
     },
     hero: {
       kicker: "Nord-Chios • Kardamyla",
@@ -2073,7 +2073,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Eine einzigartige Kulisse, in der Quellwasser und jahrhundertealte Platanen auf kristallklares Wasser und farbige Kiesel der Ägäis treffen.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/nagos-e1645969566121.webp",
+        "/images/beaches/nagos-e1645969566121.webp",
       tags: ["#nord_chios", "#kardamyla", "#quellen", "#platanen"],
     },
     details: [
@@ -2134,7 +2134,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Scopri la spiaggia di Nagos nel nord di Chios vicino a Kardamyla, dove sorgenti, platani, ciottoli colorati e acque cristalline creano un paesaggio rinfrescante.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/nagos-e1645969566121.webp",
+        "/images/beaches/nagos-e1645969566121.webp",
     },
     hero: {
       kicker: "Chios settentrionale • Kardamyla",
@@ -2142,7 +2142,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Uno scenario unico dove le acque delle sorgenti e i platani secolari incontrano le acque cristalline e i ciottoli colorati dell’Egeo.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/nagos-e1645969566121.webp",
+        "/images/beaches/nagos-e1645969566121.webp",
       tags: ["#chios_settentrionale", "#kardamyla", "#sorgenti", "#platani"],
     },
     details: [
@@ -2203,7 +2203,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Descubre la playa de Nagos en el norte de Chios, cerca de Kardamyla, donde manantiales, plátanos, guijarros coloridos y aguas cristalinas crean un paisaje refrescante.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/nagos-e1645969566121.webp",
+        "/images/beaches/nagos-e1645969566121.webp",
     },
     hero: {
       kicker: "Norte de Chios • Kardamyla",
@@ -2211,7 +2211,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Un entorno único donde las aguas de los manantiales y los plátanos centenarios se encuentran con aguas cristalinas y guijarros coloridos del Egeo.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/nagos-e1645969566121.webp",
+        "/images/beaches/nagos-e1645969566121.webp",
       tags: ["#norte_de_chios", "#kardamyla", "#manantiales", "#platanos"],
     },
     details: [
@@ -2272,7 +2272,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Kardamyla yakınındaki Nagos Plajı’nı keşfedin: kaynaklar, çınar ağaçları, renkli çakıllar ve kristal suların serin bir manzara yarattığı kuzey Sakız plajı.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/nagos-e1645969566121.webp",
+        "/images/beaches/nagos-e1645969566121.webp",
     },
     hero: {
       kicker: "Kuzey Sakız • Kardamyla",
@@ -2280,7 +2280,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Kaynak sularının ve asırlık çınarların, Ege’nin kristal suları ve renkli çakıllarıyla buluştuğu benzersiz bir manzara.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/nagos-e1645969566121.webp",
+        "/images/beaches/nagos-e1645969566121.webp",
       tags: ["#kuzey_sakiz", "#kardamyla", "#kaynaklar", "#cinarlar"],
     },
     details: [
@@ -2346,7 +2346,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Ανακαλύψτε την παραλία Αυλωνιά στη νότια Χίο, έναν απομονωμένο κόλπο κοντά στο Πυργί με τιρκουάζ νερά, άγρια ομορφιά, μικρά βότσαλα και βυθό ιδανικό για snorkeling.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/avlonia-1024x768.webp",
+        "/images/beaches/avlonia-1024x768.webp",
     },
     hero: {
       kicker: "Νότια Χίος • Πυργούσικη Αυλωνιά",
@@ -2354,7 +2354,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Ένας μαγικός, απομονωμένος κόλπος στη νότια Χίο με άγρια ομορφιά, τιρκουάζ κρυστάλλινα νερά και εντυπωσιακό βυθό που αξίζει να εξερευνήσετε.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/avlonia-1024x768.webp",
+        "/images/beaches/avlonia-1024x768.webp",
       tags: ["#νότια_χίος", "#πυργούσικη_αυλωνιά", "#κρυφή_παραλία", "#snorkeling"],
     },
     details: [
@@ -2415,7 +2415,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Découvrez la plage d’Avlonia au sud de Chios, une baie isolée près de Pyrgi avec des eaux turquoise, une beauté sauvage, de petits galets et un fond marin idéal pour le snorkeling.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/avlonia-1024x768.webp",
+        "/images/beaches/avlonia-1024x768.webp",
     },
     hero: {
       kicker: "Sud de Chios • Avlonia de Pyrgi",
@@ -2423,7 +2423,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Une baie magique et isolée au sud de Chios, avec une beauté sauvage, des eaux turquoise cristallines et un fond marin impressionnant à explorer.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/avlonia-1024x768.webp",
+        "/images/beaches/avlonia-1024x768.webp",
       tags: ["#sud_de_chios", "#avlonia", "#plage_cachee", "#snorkeling"],
     },
     details: [
@@ -2484,7 +2484,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Entdecken Sie den Avlonia Strand im Süden von Chios, eine abgelegene Bucht nahe Pyrgi mit türkisfarbenem Wasser, wilder Schönheit, kleinen Kieseln und idealem Meeresgrund zum Schnorcheln.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/avlonia-1024x768.webp",
+        "/images/beaches/avlonia-1024x768.webp",
     },
     hero: {
       kicker: "Süd-Chios • Avlonia bei Pyrgi",
@@ -2492,7 +2492,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Eine magische, abgelegene Bucht im Süden von Chios mit wilder Schönheit, türkisfarbenem kristallklarem Wasser und einem beeindruckenden Meeresboden.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/avlonia-1024x768.webp",
+        "/images/beaches/avlonia-1024x768.webp",
       tags: ["#sued_chios", "#avlonia", "#versteckter_strand", "#schnorcheln"],
     },
     details: [
@@ -2553,7 +2553,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Scopri la spiaggia di Avlonia nel sud di Chios, una baia isolata vicino a Pyrgi con acque turchesi, bellezza selvaggia, piccoli ciottoli e fondale ideale per lo snorkeling.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/avlonia-1024x768.webp",
+        "/images/beaches/avlonia-1024x768.webp",
     },
     hero: {
       kicker: "Chios meridionale • Avlonia di Pyrgi",
@@ -2561,7 +2561,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Una baia magica e isolata nel sud di Chios con bellezza selvaggia, acque turchesi cristalline e un fondale impressionante da esplorare.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/avlonia-1024x768.webp",
+        "/images/beaches/avlonia-1024x768.webp",
       tags: ["#chios_meridionale", "#avlonia", "#spiaggia_nascosta", "#snorkeling"],
     },
     details: [
@@ -2622,7 +2622,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Descubre la playa de Avlonia en el sur de Chios, una bahía aislada cerca de Pyrgi con aguas turquesas, belleza salvaje, pequeños guijarros y fondo marino ideal para snorkel.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/avlonia-1024x768.webp",
+        "/images/beaches/avlonia-1024x768.webp",
     },
     hero: {
       kicker: "Sur de Chios • Avlonia de Pyrgi",
@@ -2630,7 +2630,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Una bahía mágica y aislada en el sur de Chios, con belleza salvaje, aguas turquesas cristalinas y un fondo marino impresionante para explorar.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/avlonia-1024x768.webp",
+        "/images/beaches/avlonia-1024x768.webp",
       tags: ["#sur_de_chios", "#avlonia", "#playa_escondida", "#snorkel"],
     },
     details: [
@@ -2691,7 +2691,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Sakız Adası’nın güneyindeki Avlonia Plajı’nı keşfedin: Pyrgi yakınında turkuaz suları, vahşi güzelliği, küçük çakılları ve şnorkel için ideal deniz tabanıyla izole bir koy.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/avlonia-1024x768.webp",
+        "/images/beaches/avlonia-1024x768.webp",
     },
     hero: {
       kicker: "Güney Sakız • Pyrgi Avlonia",
@@ -2699,7 +2699,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Sakız Adası’nın güneyinde, vahşi güzelliği, turkuaz kristal suları ve keşfedilmeyi bekleyen etkileyici deniz tabanıyla büyülü ve izole bir koy.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/avlonia-1024x768.webp",
+        "/images/beaches/avlonia-1024x768.webp",
       tags: ["#guney_sakiz", "#avlonia", "#gizli_plaj", "#snorkel"],
     },
     details: [
@@ -2765,7 +2765,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Ανακαλύψτε την παραλία Σαλάγωνα στη νοτιοδυτική Χίο, έναν ήσυχο κόλπο κοντά στα μεσαιωνικά χωριά με τιρκουάζ νερά, ψιλό βότσαλο και εξαιρετικό βυθό για snorkeling.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/salagona-e1645969502155.webp",
+        "/images/beaches/salagona-e1645969502155.webp",
     },
     hero: {
       kicker: "Νοτιοδυτική Χίος • Ήσυχη παραλία",
@@ -2773,7 +2773,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Αποφύγετε την πολυκοσμία σε αυτόν τον μαγικό νοτιοδυτικό κόλπο με πεντακάθαρα τιρκουάζ νερά και ψιλό βότσαλο, ιδανικό για χαλάρωση και εξερεύνηση του βυθού.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/salagona-e1645969502155.webp",
+        "/images/beaches/salagona-e1645969502155.webp",
       tags: ["#νοτιοδυτική_χίος", "#ήσυχη_παραλία", "#ψιλό_βότσαλο", "#snorkeling"],
     },
     details: [
@@ -2834,7 +2834,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Découvrez la plage de Salagona au sud-ouest de Chios, une baie tranquille près des villages médiévaux avec des eaux turquoise, de fins galets et un excellent fond marin pour le snorkeling.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/salagona-e1645969502155.webp",
+        "/images/beaches/salagona-e1645969502155.webp",
     },
     hero: {
       kicker: "Sud-ouest de Chios • Plage tranquille",
@@ -2842,7 +2842,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Évitez la foule dans cette baie magique du sud-ouest, aux eaux turquoise cristallines et aux fins galets, idéale pour la détente et l’exploration du fond marin.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/salagona-e1645969502155.webp",
+        "/images/beaches/salagona-e1645969502155.webp",
       tags: ["#sud_ouest_chios", "#plage_tranquille", "#galets_fins", "#snorkeling"],
     },
     details: [
@@ -2903,7 +2903,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Entdecken Sie den Salagona Strand im Südwesten von Chios, eine ruhige Bucht nahe den mittelalterlichen Dörfern mit türkisfarbenem Wasser, feinen Kieseln und idealem Meeresboden zum Schnorcheln.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/salagona-e1645969502155.webp",
+        "/images/beaches/salagona-e1645969502155.webp",
     },
     hero: {
       kicker: "Südwest-Chios • Ruhiger Strand",
@@ -2911,7 +2911,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Meiden Sie die Menschenmassen in dieser magischen südwestlichen Bucht mit kristallklarem türkisfarbenem Wasser und feinen Kieseln, ideal zum Entspannen und Schnorcheln.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/salagona-e1645969502155.webp",
+        "/images/beaches/salagona-e1645969502155.webp",
       tags: ["#suedwest_chios", "#ruhiger_strand", "#feine_kiesel", "#schnorcheln"],
     },
     details: [
@@ -2972,7 +2972,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Scopri la spiaggia di Salagona nel sud-ovest di Chios, una baia tranquilla vicino ai villaggi medievali con acque turchesi, piccoli ciottoli e fondale ideale per lo snorkeling.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/salagona-e1645969502155.webp",
+        "/images/beaches/salagona-e1645969502155.webp",
     },
     hero: {
       kicker: "Sud-ovest di Chios • Spiaggia tranquilla",
@@ -2980,7 +2980,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Evita la folla in questa magica baia sud-occidentale con acque turchesi cristalline e piccoli ciottoli, ideale per il relax e l’esplorazione del fondale.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/salagona-e1645969502155.webp",
+        "/images/beaches/salagona-e1645969502155.webp",
       tags: ["#sud_ovest_chios", "#spiaggia_tranquilla", "#piccoli_ciottoli", "#snorkeling"],
     },
     details: [
@@ -3041,7 +3041,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Descubre la playa de Salagona en el suroeste de Chios, una bahía tranquila cerca de los pueblos medievales con aguas turquesas, guijarros finos y excelente fondo marino para snorkel.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/salagona-e1645969502155.webp",
+        "/images/beaches/salagona-e1645969502155.webp",
     },
     hero: {
       kicker: "Suroeste de Chios • Playa tranquila",
@@ -3049,7 +3049,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Evita las multitudes en esta mágica bahía del suroeste con aguas turquesas cristalinas y guijarros finos, ideal para relajarse y explorar el fondo marino.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/salagona-e1645969502155.webp",
+        "/images/beaches/salagona-e1645969502155.webp",
       tags: ["#suroeste_de_chios", "#playa_tranquila", "#guijarros_finos", "#snorkel"],
     },
     details: [
@@ -3110,7 +3110,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Sakız Adası’nın güneybatısındaki Salagona Plajı’nı keşfedin: Orta Çağ köyleri yakınında turkuaz suları, ince çakılları ve şnorkel için harika deniz tabanıyla sakin bir koy.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/salagona-e1645969502155.webp",
+        "/images/beaches/salagona-e1645969502155.webp",
     },
     hero: {
       kicker: "Güneybatı Sakız • Sakin plaj",
@@ -3118,7 +3118,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Kalabalıktan uzak, kristal turkuaz suları ve ince çakıllarıyla dinlenmek ve deniz tabanını keşfetmek için ideal büyülü bir güneybatı koyu.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/salagona-e1645969502155.webp",
+        "/images/beaches/salagona-e1645969502155.webp",
       tags: ["#guneybati_sakiz", "#sakin_plaj", "#ince_cakil", "#snorkel"],
     },
     details: [
@@ -3183,14 +3183,14 @@ export const localizedBeachDetails: BeachDetailData[] = [
       title: "Παραλία Αγία Φωτιά Χίος | Κοσμοπολίτικη οργανωμένη παραλία",
       description:
         "Ανακαλύψτε την Αγία Φωτιά στη Χίο, μια ζωντανή οργανωμένη παραλία με βότσαλο κοντά στον Κάμπο, κρυστάλλινα νερά, ταβέρνες, καφέ και θέα προς τα μικρασιατικά παράλια.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2026/02/agia-fotia.jpg",
+      ogImage: "/images/beaches/agia-fotia.jpg",
     },
     hero: {
       kicker: "Ανατολική Χίος • Κοσμοπολίτικη παραλία",
       title: "Παραλία Αγία Φωτιά: η κοσμοπολίτικη επιλογή της Χίου",
       description:
         "Μία από τις πιο όμορφες και ζωντανές παραλίες της Χίου, με κρυστάλλινα νερά, βοτσαλωτό βυθό και μαγική θέα προς τα μικρασιατικά παράλια.",
-      image: "https://chioshotel.gr/wp-content/uploads/2026/02/agia-fotia.jpg",
+      image: "/images/beaches/agia-fotia.jpg",
       tags: ["#αγία_φωτιά", "#νεανική", "#κοσμοπολίτικη", "#οργανωμένη"],
     },
     details: [
@@ -3250,14 +3250,14 @@ export const localizedBeachDetails: BeachDetailData[] = [
       title: "Plage Agia Fotia à Chios | Plage organisée et cosmopolite",
       description:
         "Découvrez Agia Fotia à Chios, une plage de galets animée et organisée près de Kampos, avec eaux cristallines, tavernes, cafés et vue vers l’Asie Mineure.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2026/02/agia-fotia.jpg",
+      ogImage: "/images/beaches/agia-fotia.jpg",
     },
     hero: {
       kicker: "Est de Chios • Plage cosmopolite",
       title: "Plage Agia Fotia : le choix cosmopolite de Chios",
       description:
         "L’une des plages les plus belles et animées de Chios, avec des eaux cristallines, un fond de galets et une vue magique vers la côte d’Asie Mineure.",
-      image: "https://chioshotel.gr/wp-content/uploads/2026/02/agia-fotia.jpg",
+      image: "/images/beaches/agia-fotia.jpg",
       tags: ["#agia_fotia", "#jeune", "#cosmopolite", "#organisee"],
     },
     details: [
@@ -3317,14 +3317,14 @@ export const localizedBeachDetails: BeachDetailData[] = [
       title: "Agia Fotia Strand Chios | Kosmopolitischer organisierter Strand",
       description:
         "Entdecken Sie Agia Fotia auf Chios, einen lebhaften organisierten Kiesstrand nahe Kampos mit kristallklarem Wasser, Tavernen, Cafés und Blick Richtung Kleinasien.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2026/02/agia-fotia.jpg",
+      ogImage: "/images/beaches/agia-fotia.jpg",
     },
     hero: {
       kicker: "Ost-Chios • Kosmopolitischer Strand",
       title: "Agia Fotia Strand: die kosmopolitische Wahl auf Chios",
       description:
         "Einer der schönsten und lebendigsten Strände von Chios, mit kristallklarem Wasser, Kieselgrund und magischem Blick auf die kleinasiatische Küste.",
-      image: "https://chioshotel.gr/wp-content/uploads/2026/02/agia-fotia.jpg",
+      image: "/images/beaches/agia-fotia.jpg",
       tags: ["#agia_fotia", "#jung", "#kosmopolitisch", "#organisiert"],
     },
     details: [
@@ -3384,14 +3384,14 @@ export const localizedBeachDetails: BeachDetailData[] = [
       title: "Spiaggia Agia Fotia Chios | Spiaggia organizzata e cosmopolita",
       description:
         "Scopri Agia Fotia a Chios, una vivace spiaggia di ciottoli organizzata vicino a Kampos con acque cristalline, taverne, caffè e vista verso l’Asia Minore.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2026/02/agia-fotia.jpg",
+      ogImage: "/images/beaches/agia-fotia.jpg",
     },
     hero: {
       kicker: "Chios orientale • Spiaggia cosmopolita",
       title: "Spiaggia Agia Fotia: la scelta cosmopolita di Chios",
       description:
         "Una delle spiagge più belle e vivaci di Chios, con acque cristalline, fondale di ciottoli e una vista magica verso la costa dell’Asia Minore.",
-      image: "https://chioshotel.gr/wp-content/uploads/2026/02/agia-fotia.jpg",
+      image: "/images/beaches/agia-fotia.jpg",
       tags: ["#agia_fotia", "#giovane", "#cosmopolita", "#organizzata"],
     },
     details: [
@@ -3451,14 +3451,14 @@ export const localizedBeachDetails: BeachDetailData[] = [
       title: "Playa Agia Fotia Chios | Playa organizada y cosmopolita",
       description:
         "Descubre Agia Fotia en Chios, una animada playa organizada de guijarros cerca de Kampos con aguas cristalinas, tabernas, cafés y vistas hacia Asia Menor.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2026/02/agia-fotia.jpg",
+      ogImage: "/images/beaches/agia-fotia.jpg",
     },
     hero: {
       kicker: "Este de Chios • Playa cosmopolita",
       title: "Playa Agia Fotia: la opción cosmopolita de Chios",
       description:
         "Una de las playas más bonitas y animadas de Chios, con aguas cristalinas, fondo de guijarros y una vista mágica hacia la costa de Asia Menor.",
-      image: "https://chioshotel.gr/wp-content/uploads/2026/02/agia-fotia.jpg",
+      image: "/images/beaches/agia-fotia.jpg",
       tags: ["#agia_fotia", "#joven", "#cosmopolita", "#organizada"],
     },
     details: [
@@ -3518,14 +3518,14 @@ export const localizedBeachDetails: BeachDetailData[] = [
       title: "Agia Fotia Plajı Sakız Adası | Kozmopolit organize plaj",
       description:
         "Sakız Adası’ndaki Agia Fotia Plajı’nı keşfedin: Kampos yakınında kristal suları, tavernaları, kafeleri ve Anadolu kıyılarına manzarasıyla canlı, organize bir çakıl plajı.",
-      ogImage: "https://chioshotel.gr/wp-content/uploads/2026/02/agia-fotia.jpg",
+      ogImage: "/images/beaches/agia-fotia.jpg",
     },
     hero: {
       kicker: "Doğu Sakız • Kozmopolit plaj",
       title: "Agia Fotia Plajı: Sakız’ın kozmopolit seçimi",
       description:
         "Sakız Adası’nın en güzel ve canlı plajlarından biri; kristal suları, çakıllı deniz tabanı ve Anadolu kıyılarına doğru büyüleyici manzarasıyla öne çıkar.",
-      image: "https://chioshotel.gr/wp-content/uploads/2026/02/agia-fotia.jpg",
+      image: "/images/beaches/agia-fotia.jpg",
       tags: ["#agia_fotia", "#genç", "#kozmopolit", "#organize"],
     },
     details: [
@@ -3591,7 +3591,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Ανακαλύψτε την παραλία Κώμη στη νοτιοανατολική Χίο, μία από τις πιο δημοφιλείς οργανωμένες αμμώδεις παραλίες του νησιού με ρηχά νερά, εστιατόρια, καφέ-μπαρ και δραστηριότητες.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
+        "/images/beaches/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
     },
     hero: {
       kicker: "Νοτιοανατολική Χίος • Χρυσή άμμος",
@@ -3599,7 +3599,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Μία από τις πιο δημοφιλείς και πλήρως οργανωμένες παραλίες της Χίου, με ατελείωτη άμμο, ρηχά κρυστάλλινα νερά και εξαιρετικές επιλογές για φαγητό και διασκέδαση δίπλα στο κύμα.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
+        "/images/beaches/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
       tags: ["#νοτιοανατολική_χίος", "#χρυσή_άμμος", "#οργανωμένη", "#οικογενειακή"],
     },
     details: [
@@ -3660,7 +3660,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Découvrez la plage de Komi au sud-est de Chios, l’une des plages de sable organisées les plus populaires de l’île avec eaux peu profondes, restaurants, cafés-bars et activités de plage.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
+        "/images/beaches/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
     },
     hero: {
       kicker: "Sud-est de Chios • Sable doré",
@@ -3668,7 +3668,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "L’une des plages les plus populaires et les mieux organisées de Chios, avec du sable à perte de vue, des eaux peu profondes et cristallines, et d’excellentes options pour manger et se divertir au bord des vagues.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
+        "/images/beaches/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
       tags: ["#sud_est_chios", "#sable_dore", "#organisee", "#famille"],
     },
     details: [
@@ -3729,7 +3729,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Entdecken Sie den Komi Strand im Südosten von Chios, einen der beliebtesten organisierten Sandstrände der Insel mit flachem Wasser, Restaurants, Café-Bars und Strandaktivitäten.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
+        "/images/beaches/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
     },
     hero: {
       kicker: "Südost-Chios • Goldener Sand",
@@ -3737,7 +3737,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Einer der beliebtesten und vollständig organisierten Strände von Chios, mit endlosem Sand, flachem kristallklarem Wasser und hervorragenden Möglichkeiten zum Essen und Entspannen am Meer.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
+        "/images/beaches/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
       tags: ["#suedost_chios", "#goldener_sand", "#organisiert", "#familienfreundlich"],
     },
     details: [
@@ -3798,7 +3798,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Scopri la spiaggia di Komi nel sud-est di Chios, una delle spiagge sabbiose organizzate più popolari dell’isola, con acque basse, ristoranti, café-bar e attività sul mare.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
+        "/images/beaches/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
     },
     hero: {
       kicker: "Sud-est di Chios • Sabbia dorata",
@@ -3806,7 +3806,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Una delle spiagge più popolari e completamente organizzate di Chios, con sabbia infinita, acque basse e cristalline, e ottime opzioni per mangiare e divertirsi sul mare.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
+        "/images/beaches/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
       tags: ["#sud_est_chios", "#sabbia_dorata", "#organizzata", "#famiglie"],
     },
     details: [
@@ -3867,7 +3867,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Descubre la playa de Komi en el sureste de Chios, una de las playas de arena organizadas más populares de la isla, con aguas poco profundas, restaurantes, cafés-bares y actividades.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
+        "/images/beaches/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
     },
     hero: {
       kicker: "Sureste de Chios • Arena dorada",
@@ -3875,7 +3875,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Una de las playas más populares y totalmente organizadas de Chios, con arena interminable, aguas poco profundas y cristalinas, y excelentes opciones para comer y divertirse junto al mar.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
+        "/images/beaches/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
       tags: ["#sureste_de_chios", "#arena_dorada", "#organizada", "#familias"],
     },
     details: [
@@ -3936,7 +3936,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Sakız Adası’nın güneydoğusundaki Komi Plajı’nı keşfedin: sığ suları, restoranları, kafe-barları ve plaj aktiviteleriyle adanın en popüler organize kum plajlarından biri.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
+        "/images/beaches/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
     },
     hero: {
       kicker: "Güneydoğu Sakız • Altın kum",
@@ -3944,7 +3944,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Sakız Adası’nın en popüler ve tamamen organize plajlarından biri; sonsuz kumu, sığ kristal suları ve deniz kenarında yemek ve eğlence seçenekleriyle öne çıkar.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
+        "/images/beaches/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
       tags: ["#guneydogu_sakiz", "#altin_kum", "#organize", "#aile_dostu"],
     },
     details: [
@@ -4010,7 +4010,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Εξερευνήστε την παραλία Μαύρα Βόλια στον Εμπορειό της νότιας Χίου, την εμβληματική ηφαιστειακή παραλία του νησιού με μαύρα βότσαλα, τρεις κόλπους, βαθιά δροσερά νερά και άγριους βράχους.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/emporios3-e1702727598897.webp",
+        "/images/beaches/emporios3-e1702727598897.webp",
     },
     hero: {
       kicker: "Εμπορειός • Ηφαιστειακή παραλία",
@@ -4018,7 +4018,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Η πιο εμβληματική και εντυπωσιακή παραλία της Χίου: τρεις συνεχόμενοι κόλποι με βαθιά σκούρα νερά και μοναδικά μαύρα ηφαιστειακά βότσαλα.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/emporios3-e1702727598897.webp",
+        "/images/beaches/emporios3-e1702727598897.webp",
       tags: ["#μαύρα_βόλια", "#εμπορειός", "#ηφαιστειακή_παραλία", "#μαύρος_γιαλός"],
     },
     details: [
@@ -4079,7 +4079,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Explorez la plage de Mavra Volia à Emporios, au sud de Chios, la plage volcanique emblématique de l’île avec galets noirs, trois baies, eaux profondes et falaises sauvages.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/emporios3-e1702727598897.webp",
+        "/images/beaches/emporios3-e1702727598897.webp",
     },
     hero: {
       kicker: "Emporios • Plage volcanique",
@@ -4087,7 +4087,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "La plage la plus emblématique et impressionnante de Chios : trois baies successives aux eaux profondes et sombres, avec de spectaculaires galets volcaniques noirs.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/emporios3-e1702727598897.webp",
+        "/images/beaches/emporios3-e1702727598897.webp",
       tags: ["#mavra_volia", "#emporios", "#plage_volcanique", "#mavros_gialos"],
     },
     details: [
@@ -4148,7 +4148,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Entdecken Sie den Mavra Volia Strand bei Emporios im Süden von Chios, den ikonischen Vulkanstrand der Insel mit schwarzen Kieseln, drei Buchten, tiefem kühlem Wasser und wilden Klippen.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/emporios3-e1702727598897.webp",
+        "/images/beaches/emporios3-e1702727598897.webp",
     },
     hero: {
       kicker: "Emporios • Vulkanstrand",
@@ -4156,7 +4156,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Der ikonischste und beeindruckendste Strand von Chios: drei aufeinanderfolgende Buchten mit tiefem dunklem Wasser und atemberaubenden schwarzen Vulkansteinen.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/emporios3-e1702727598897.webp",
+        "/images/beaches/emporios3-e1702727598897.webp",
       tags: ["#mavra_volia", "#emporios", "#vulkanstrand", "#mavros_gialos"],
     },
     details: [
@@ -4217,7 +4217,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Esplora la spiaggia Mavra Volia a Emporios, nel sud di Chios, l’iconica spiaggia vulcanica dell’isola con ciottoli neri, tre baie, acque profonde e fresche e scogliere selvagge.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/emporios3-e1702727598897.webp",
+        "/images/beaches/emporios3-e1702727598897.webp",
     },
     hero: {
       kicker: "Emporios • Spiaggia vulcanica",
@@ -4225,7 +4225,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "La spiaggia più iconica e impressionante di Chios: tre baie consecutive con acque profonde e scure e spettacolari ciottoli vulcanici neri.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/emporios3-e1702727598897.webp",
+        "/images/beaches/emporios3-e1702727598897.webp",
       tags: ["#mavra_volia", "#emporios", "#spiaggia_vulcanica", "#mavros_gialos"],
     },
     details: [
@@ -4286,7 +4286,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Explora la playa Mavra Volia en Emporios, al sur de Chios, la playa volcánica icónica de la isla con guijarros negros, tres bahías, aguas profundas y frescas y acantilados salvajes.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/emporios3-e1702727598897.webp",
+        "/images/beaches/emporios3-e1702727598897.webp",
     },
     hero: {
       kicker: "Emporios • Playa volcánica",
@@ -4294,7 +4294,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "La playa más icónica e impresionante de Chios: tres bahías consecutivas con aguas profundas y oscuras y espectaculares guijarros volcánicos negros.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/emporios3-e1702727598897.webp",
+        "/images/beaches/emporios3-e1702727598897.webp",
       tags: ["#mavra_volia", "#emporios", "#playa_volcanica", "#mavros_gialos"],
     },
     details: [
@@ -4355,7 +4355,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Sakız Adası’nın güneyindeki Emporios Mavra Volia Plajı’nı keşfedin: siyah çakılları, üç koyu, derin serin suları ve vahşi kayalıklarıyla adanın ikonik volkanik plajı.",
       ogImage:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/emporios3-e1702727598897.webp",
+        "/images/beaches/emporios3-e1702727598897.webp",
     },
     hero: {
       kicker: "Emporios • Volkanik plaj",
@@ -4363,7 +4363,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Sakız Adası’nın en ikonik ve etkileyici plajı: derin koyu sulara ve nefes kesici siyah volkanik çakıllara sahip üç ardışık koy.",
       image:
-        "https://chioshotel.gr/wp-content/uploads/2021/12/emporios3-e1702727598897.webp",
+        "/images/beaches/emporios3-e1702727598897.webp",
       tags: ["#mavra_volia", "#emporios", "#volkanik_plaj", "#mavros_gialos"],
     },
     details: [
@@ -4425,7 +4425,7 @@ export const relatedBeachCards = [
     description: "The most imposing beach in Chios with unique volcanic beauty.",
     href: "/chios/chios-beaches/emporios-beach/",
     image:
-      "https://chioshotel.gr/wp-content/uploads/2021/12/emporios3-e1702727598897.webp",
+      "/images/beaches/emporios3-e1702727598897.webp",
     imageAlt: "Mavra Volia beach in Chios with black volcanic pebbles",
     badge: "Top pick",
     size: "large",
@@ -4436,7 +4436,7 @@ export const relatedBeachCards = [
     description: "Turquoise waters and a small hidden cove in southern Chios.",
     href: "/chios/chios-beaches/agia-dynami-beach-chios/",
     image:
-      "https://chioshotel.gr/wp-content/uploads/2021/12/691-e1645969589226.webp",
+      "/images/beaches/691-e1645969589226.webp",
     imageAlt: "Agia Dynami beach in Chios with emerald waters",
     badge: "Exotic",
     size: "wide",
@@ -4447,7 +4447,7 @@ export const relatedBeachCards = [
     description: "Shallow sandy waters and fresh fish taverns by the sea.",
     href: "/chios/chios-beaches/lithi-beach/",
     image:
-      "https://chioshotel.gr/wp-content/uploads/2021/12/2017-06-28-1024x768.webp",
+      "/images/beaches/2017-06-28-1024x768.webp",
     imageAlt: "Lithi beach in Chios with shallow sandy waters",
     badge: "Family",
     size: "normal",
@@ -4457,7 +4457,7 @@ export const relatedBeachCards = [
     title: "Agia Fotia",
     description: "A cosmopolitan organized beach close to Kampos.",
     href: "/chios/chios-beaches/agia-fotia-beach/",
-    image: "https://chioshotel.gr/wp-content/uploads/2026/02/agia-fotia.jpg",
+    image: "/images/beaches/agia-fotia.jpg",
     imageAlt: "Agia Fotia beach in Chios",
     badge: "Organized",
     size: "normal",
@@ -4468,7 +4468,7 @@ export const relatedBeachCards = [
     description: "Golden sand, shallow waters and summer beach life.",
     href: "/chios/chios-beaches/komi-beach/",
     image:
-      "https://chioshotel.gr/wp-content/uploads/2021/12/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
+      "/images/beaches/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
     imageAlt: "Komi beach in Chios with golden sand",
     badge: "Sandy",
     size: "normal",
@@ -4479,7 +4479,7 @@ export const relatedBeachCards = [
     description: "A quiet turquoise treasure for relaxation and snorkeling.",
     href: "/chios/chios-beaches/salagona-beach/",
     image:
-      "https://chioshotel.gr/wp-content/uploads/2021/12/salagona-e1645969502155.webp",
+      "/images/beaches/salagona-e1645969502155.webp",
     imageAlt: "Salagona beach in Chios with turquoise waters",
     badge: "Hidden",
     size: "normal",
@@ -4490,7 +4490,7 @@ export const relatedBeachCards = [
     description: "A wild isolated bay with an impressive seabed.",
     href: "/chios/chios-beaches/avlonia-beach2/",
     image:
-      "https://chioshotel.gr/wp-content/uploads/2021/12/avlonia-1024x768.webp",
+      "/images/beaches/avlonia-1024x768.webp",
     imageAlt: "Avlonia beach in southern Chios",
     badge: "Wild",
     size: "normal",
@@ -4500,7 +4500,7 @@ export const relatedBeachCards = [
     title: "Lefkathia",
     description: "Crystal waters and sunset views near Volissos.",
     href: "/chios/chios-beaches/lefkathia-beach/",
-    image: "https://chioshotel.gr/wp-content/uploads/2026/03/lefkathia-2.jpg",
+    image: "/images/beaches/lefkathia-2.jpg",
     imageAlt: "Lefkathia beach in northwestern Chios",
     badge: "Sunset",
     size: "normal",
@@ -4511,7 +4511,7 @@ export const relatedBeachCards = [
     description: "Springs, plane trees and colorful pebbles in northern Chios.",
     href: "/chios/chios-beaches/nagos-beach/",
     image:
-      "https://chioshotel.gr/wp-content/uploads/2021/12/nagos-e1645969566121.webp",
+      "/images/beaches/nagos-e1645969566121.webp",
     imageAlt: "Nagos beach in northern Chios",
     badge: "Nature",
     size: "normal",

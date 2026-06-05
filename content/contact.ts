@@ -44,7 +44,7 @@ export type ContactPageData = {
 };
 
 const contactHeroImage =
-  "https://chioshotel.gr/wp-content/uploads/2026/03/chios.hotels.voulamandis.house_.hero_.image_.webp";
+  "/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp";
 
 const whatsappPhone = "306944474226";
 const contactEmail = "info@chioshotel.gr";

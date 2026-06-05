@@ -71,17 +71,17 @@ export type ChiosMuseumsPageData = {
 
 const museumImages = {
   mastic:
-    "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp",
+    "/images/museums/mousio.mastic.webp",
   archaeological:
-    "https://chioshotel.gr/wp-content/uploads/2021/12/caption.webp",
+    "/images/museums/caption.webp",
   byzantine:
-    "https://chioshotel.gr/wp-content/uploads/2021/12/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
+    "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
   koraes:
-    "https://chioshotel.gr/wp-content/uploads/2021/12/vivlitothiki-korai-1.webp",
+    "/images/museums/vivlitothiki-korai-1.webp",
   maritime:
-    "https://chioshotel.gr/wp-content/uploads/2021/12/IMG_1203-Medium-min-768x487.webp",
+    "/images/museums/IMG_1203-Medium-min-768x487.webp",
   folklore:
-    "https://chioshotel.gr/wp-content/uploads/2021/12/2-1-768x512.webp",
+    "/images/museums/2-1-768x512.webp",
 };
 
 export const chiosMuseumsPageEn: ChiosMuseumsPageData = {

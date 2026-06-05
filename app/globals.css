@@ -1,4 +1,4 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 :root{
   --vh-bg:#f6f0e8;
   --vh-bg-soft:#fbf7f2;
@@ -644,7 +644,7 @@ input{
   background-color:#f2f2f2;
   background-image:
     linear-gradient(to top,rgba(0,0,0,.36),rgba(0,0,0,.05)),
-    url("https://chioshotel.gr/wp-content/uploads/2026/03/voulamandis.house_.google.maps_.webp");
+    url("/images/site/voulamandis.house_.google.maps_.webp");
   background-repeat:no-repeat;
   background-position:center;
   background-size:cover;
@@ -890,19 +890,19 @@ input{
 }
 
 .vh-room-image--economy{
-  background-image:url("https://chioshotel.gr/wp-content/uploads/2022/12/DSC07803-1.webp");
+  background-image:url("/images/rooms/DSC07803-1.webp");
 }
 
 .vh-room-image--ground{
-  background-image:url("https://chioshotel.gr/wp-content/uploads/2022/12/double-triple-room.jpg");
+  background-image:url("/images/rooms/double-triple-room.jpg");
 }
 
 .vh-room-image--upper{
-  background-image:url("https://chioshotel.gr/wp-content/uploads/2022/12/DSC07867-1.webp");
+  background-image:url("/images/rooms/DSC07867-1.webp");
 }
 
 .vh-room-image--family{
-  background-image:url("https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-family-apartments.webp");
+  background-image:url("/images/rooms/chios-hotels-family-apartments.webp");
 }
 
 .room-offer-stack{
@@ -1407,27 +1407,27 @@ input{
 }
 
 .vh-link-image--beaches{
-  background-image:url("https://chioshotel.gr/wp-content/uploads/2026/03/sakiz-agia-dynami.jpg");
+  background-image:url("/images/chios-guide/sakiz-agia-dynami.jpg");
 }
 
 .vh-link-image--villages{
-  background-image:url("https://chioshotel.gr/wp-content/uploads/2021/12/lagada_3.webp");
+  background-image:url("/images/villages/lagada_3.webp");
 }
 
 .vh-link-image--kampos{
-  background-image:url("https://chioshotel.gr/wp-content/uploads/2026/03/chios.hotels.voulamandis.house_.hero_.image_.webp");
+  background-image:url("/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp");
 }
 
 .vh-link-image--museums{
-  background-image:url("https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp");
+  background-image:url("/images/museums/mousio.mastic.webp");
 }
 
 .vh-link-image--orchids{
-  background-image:url("https://chioshotel.gr/wp-content/uploads/2021/12/Ophrys_mastichorum-680x1024.webp");
+  background-image:url("/images/museums/Ophrys_mastichorum-680x1024.webp");
 }
 
 .vh-link-image--springs{
-  background-image:url("https://chioshotel.gr/wp-content/uploads/2021/12/the-thermal-baths-center.webp");
+  background-image:url("/images/site/the-thermal-baths-center.webp");
 }
 
 .vh-link-body{
@@ -1534,19 +1534,19 @@ input{
 }
 
 .vh-traveler-card--sea{
-  background-image:url("https://chioshotel.gr/wp-content/uploads/2026/03/sakiz-agia-dynami.jpg");
+  background-image:url("/images/chios-guide/sakiz-agia-dynami.jpg");
 }
 
 .vh-traveler-card--explorer{
-  background-image:url("https://chioshotel.gr/wp-content/uploads/2021/12/lagada_3.webp");
+  background-image:url("/images/villages/lagada_3.webp");
 }
 
 .vh-traveler-card--family{
-  background-image:url("https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-family-apartments.webp");
+  background-image:url("/images/rooms/chios-hotels-family-apartments.webp");
 }
 
 .vh-traveler-card--food{
-  background-image:url("https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp");
+  background-image:url("/images/museums/mousio.mastic.webp");
 }
 
 /* QUIZ BAR */
@@ -1686,7 +1686,7 @@ input{
   box-shadow:var(--vh-shadow-strong);
   background:
     linear-gradient(180deg,rgba(36,28,22,.22) 0%,rgba(36,28,22,.72) 72%,rgba(36,28,22,.88) 100%),
-    url("https://chioshotel.gr/wp-content/uploads/2026/04/Screenshot_2026-04-25-14-11-19-166_com.instagram.android-edit-1.webp") center/cover no-repeat;
+    url("/images/site/Screenshot_2026-04-25-14-11-19-166_com.instagram.android-edit-1.webp") center/cover no-repeat;
   color:#fff;
   padding:44px;
   min-height:460px;
@@ -2288,7 +2288,7 @@ input{
     padding:18px 12px!important;
     background:
       linear-gradient(180deg,rgba(36,28,22,.05) 0%,rgba(36,28,22,.28) 45%,rgba(36,28,22,.78) 82%,rgba(36,28,22,.92) 100%),
-      url("https://chioshotel.gr/wp-content/uploads/2026/04/Screenshot_2026-04-25-14-11-19-166_com.instagram.android-edit-1.webp") center/cover no-repeat!important;
+      url("/images/site/Screenshot_2026-04-25-14-11-19-166_com.instagram.android-edit-1.webp") center/cover no-repeat!important;
   }
 
   .vh-final-shell h2{
@@ -2791,7 +2791,7 @@ input{
   color: #fff;
   background:
     linear-gradient(90deg, rgba(32, 24, 18, 0.82) 0%, rgba(32, 24, 18, 0.52) 42%, rgba(32, 24, 18, 0.18) 100%),
-    url("https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-family-apartments.webp") center/cover no-repeat;
+    url("/images/rooms/chios-hotels-family-apartments.webp") center/cover no-repeat;
 }
 
 .rooms-hero::before {
@@ -3805,7 +3805,7 @@ a.rw-action-btn {
     align-items: flex-end;
     background:
       linear-gradient(180deg, rgba(32, 24, 18, 0.04) 0%, rgba(32, 24, 18, 0.2) 42%, rgba(32, 24, 18, 0.88) 100%),
-      url("https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-family-apartments.webp") center/cover no-repeat;
+      url("/images/rooms/chios-hotels-family-apartments.webp") center/cover no-repeat;
   }
 
   .rooms-hero__inner {
@@ -16116,7 +16116,7 @@ button.rb-day {
   padding: 7rem 1.5rem 3.5rem;
   background:
     linear-gradient(120deg, rgba(31, 24, 18, 0.72), rgba(31, 24, 18, 0.2)),
-    url("https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-family-apartments.webp")
+    url("/images/rooms/chios-hotels-family-apartments.webp")
       center / cover;
   color: #ffffff;
 }

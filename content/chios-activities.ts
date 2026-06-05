@@ -139,33 +139,33 @@ const bookingLinks: Record<LanguageCode, string> = {
 
 const images = {
   hubHero:
-    "https://chioshotel.gr/wp-content/uploads/2026/02/ChatGPT-Image-Feb-13-2026-06_09_19-PM.png",
-  mostra: "https://chioshotel.gr/wp-content/uploads/2023/03/maxresdefault.webp",
+    "/images/activities/ChatGPT-Image-Feb-13-2026-06_09_19-PM.png",
+  mostra: "/images/activities/maxresdefault.webp",
   greekCourses:
-    "https://chioshotel.gr/wp-content/uploads/2022/12/chios-church-1024x576-1.webp",
+    "/images/activities/chios-church-1024x576-1.webp",
   hiking:
-    "https://chioshotel.gr/wp-content/uploads/2021/12/Μονοπάτια-Χίος_Chios-Hiking-e1645969099488.webp",
+    "/images/activities/---_Chios-Hiking-e1645969099488.webp",
   hikingAmani:
-    "https://chioshotel.gr/wp-content/uploads/2021/12/Hiking-Amani_1_Antonia-1.webp",
+    "/images/activities/Hiking-Amani_1_Antonia-1.webp",
   hikingTrail:
-    "https://chioshotel.gr/wp-content/uploads/2021/12/Chios-trail.webp",
+    "/images/activities/Chios-trail.webp",
   thermalBaths:
-    "https://chioshotel.gr/wp-content/uploads/2021/12/the-thermal-baths-center-1.webp",
-  rocketWar: "https://chioshotel.gr/wp-content/uploads/2022/02/chios1_b-1.webp",
+    "/images/activities/the-thermal-baths-center-1.webp",
+  rocketWar: "/images/activities/chios1_b-1.webp",
   orchids:
-    "https://chioshotel.gr/wp-content/uploads/2021/12/chios-orchids-e1645969063573.webp",
+    "/images/activities/chios-orchids-e1645969063573.webp",
   orchidTours:
-    "https://chioshotel.gr/wp-content/uploads/2021/12/OrchidToursChios-1.webp",
+    "/images/activities/OrchidToursChios-1.webp",
   orchidClose:
-    "https://chioshotel.gr/wp-content/uploads/2021/12/chios-orchids-orchids-e1645969073154.webp",
+    "/images/activities/chios-orchids-orchids-e1645969073154.webp",
   ophrysMastichorum:
-    "https://chioshotel.gr/wp-content/uploads/2021/12/Ophrys_mastichorum.webp",
+    "/images/museums/Ophrys_mastichorum.webp",
   ophrys:
-    "https://chioshotel.gr/wp-content/uploads/2021/12/Ophrys-8-1.webp",
+    "/images/activities/Ophrys-8-1.webp",
   ophrysRegis:
-    "https://chioshotel.gr/wp-content/uploads/2021/12/O.-regis-fernandii-89-Chios.webp",
+    "/images/activities/O.-regis-fernandii-89-Chios.webp",
   ophrysBlitopertha:
-    "https://chioshotel.gr/wp-content/uploads/2021/12/O.-blitopertha-579-Chios.webp",
+    "/images/activities/O.-blitopertha-579-Chios.webp",
 };
 
 const hubCardCopy: Record<

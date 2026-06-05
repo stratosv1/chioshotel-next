@@ -31,7 +31,7 @@ export const businessData = {
   },
   images: [
     absoluteUrl(
-      "https://chioshotel.gr/wp-content/uploads/2026/03/chios.hotels.voulamandis.house_.hero_.image_.webp",
+      "/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp",
     ),
   ],
   socialProfiles: [

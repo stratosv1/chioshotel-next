@@ -1,4 +1,4 @@
-import type { ChiosVillagesPageData } from "@/content/chios-villages";
+﻿import type { ChiosVillagesPageData } from "@/content/chios-villages";
 
 export function buildChiosVillagesSchema(data: ChiosVillagesPageData) {
   const canonicalUrl = `https://chioshotel.gr${data.seo.canonicalPath}`;
@@ -22,7 +22,7 @@ export function buildChiosVillagesSchema(data: ChiosVillagesPageData) {
           name: "Voulamandis House",
           logo: {
             "@type": "ImageObject",
-            url: "https://chioshotel.gr/wp-content/uploads/voula-logo.png",
+            url: "/images/site/voula-logo.png",
           },
         },
         mainEntityOfPage: {

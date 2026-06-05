@@ -108,7 +108,7 @@ export const standardDoubleRoomEn: RoomDetailData = {
     description:
       "Standard double and triple rooms in Chios at Voulamandis House in Kampos. Choose ground floor garden-access rooms or first floor rooms with terrace feel.",
     ogImage:
-      "https://chioshotel.gr/wp-content/uploads/2022/12/double-triple-room.jpg",
+      "/images/rooms/double-triple-room.jpg",
   },
   hero: {
     kicker: "Standard rooms in Chios",
@@ -117,7 +117,7 @@ export const standardDoubleRoomEn: RoomDetailData = {
     description:
       "Comfortable double and triple rooms for couples, friends and small families. Choose easy garden access on the ground floor or a brighter first-floor stay with a more premium feel.",
     image:
-      "https://chioshotel.gr/wp-content/uploads/2022/12/double-triple-room.jpg",
+      "/images/rooms/double-triple-room.jpg",
     imageAlt: "Standard double and triple room in Chios at Voulamandis House",
     badges: ["2–4 guests", "Garden or terrace feel", "Free WiFi", "Air conditioning"],
     primaryCta: {
@@ -149,27 +149,27 @@ export const standardDoubleRoomEn: RoomDetailData = {
     title: "See the room atmosphere",
     images: [
       {
-        src: "https://chioshotel.gr/wp-content/uploads/2022/12/double-triple-room.jpg",
+        src: "/images/rooms/double-triple-room.jpg",
         alt: "Ground floor double and triple room in Chios",
       },
       {
-        src: "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07776-2-e1675109942622.webp",
+        src: "/images/rooms/DSC07776-2-e1675109942622.webp",
         alt: "First floor double and triple room in Chios",
       },
       {
-        src: "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07867-1.webp",
+        src: "/images/rooms/DSC07867-1.webp",
         alt: "Bright standard room at Voulamandis House",
       },
       {
-        src: "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-house-rooms.webp",
+        src: "/images/rooms/voulamandis-house-rooms.webp",
         alt: "Standard room with traditional stone wall in Chios",
       },
       {
-        src: "https://chioshotel.gr/wp-content/uploads/2022/12/view-double-room-chios-hotels.webp",
+        src: "/images/rooms/view-double-room-chios-hotels.webp",
         alt: "Double room view at Voulamandis House",
       },
       {
-        src: "https://chioshotel.gr/wp-content/uploads/2022/12/double-room-bathroom.webp",
+        src: "/images/rooms/double-room-bathroom.webp",
         alt: "Bathroom in standard room at Voulamandis House",
       },
     ],
@@ -213,22 +213,22 @@ export const standardDoubleRoomEn: RoomDetailData = {
         ],
         images: [
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-house-rooms.webp",
+            src: "/images/rooms/voulamandis-house-rooms.webp",
             alt: "Standard triple room 5 on the ground floor in Chios - bedroom - Voulamandis House",
             caption: "Bedroom",
           },
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-triple-rooms_1646x1080.webp",
+            src: "/images/rooms/chios-hotels-triple-rooms_1646x1080.webp",
             alt: "Standard triple room 5 in Chios - traditional Kampos interior decoration - Voulamandis House",
             caption: "Traditional interior",
           },
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-house-double-room-bathroom_1620x1080.webp",
+            src: "/images/rooms/voulamandis-house-double-room-bathroom_1620x1080.webp",
             alt: "Standard triple room 5 in Chios - large renovated bathroom - Voulamandis House",
             caption: "Bathroom",
           },
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/hotels-chios-voulamandis_1620x1080.webp",
+            src: "/images/rooms/hotels-chios-voulamandis_1620x1080.webp",
             alt: "Ground floor standard room 5 in Chios - courtyard access - Voulamandis House",
             caption: "Courtyard access",
           },
@@ -253,22 +253,22 @@ export const standardDoubleRoomEn: RoomDetailData = {
         ],
         images: [
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/double-triple-room.jpg",
+            src: "/images/rooms/double-triple-room.jpg",
             alt: "Standard double room 7 on the ground floor in Chios with sofa bed - Voulamandis House",
             caption: "Room layout",
           },
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/view-double-room-chios-hotels.webp",
+            src: "/images/rooms/view-double-room-chios-hotels.webp",
             alt: "Standard double room 7 in Chios - interior with traditional stone wall - Voulamandis House",
             caption: "Stone wall interior",
           },
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/double-room-bathroom.webp",
+            src: "/images/rooms/double-room-bathroom.webp",
             alt: "Standard double room 7 in Chios - modern shower bathroom - Voulamandis House",
             caption: "Bathroom",
           },
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-stone-bathroom.webp",
+            src: "/images/rooms/voulamandis-stone-bathroom.webp",
             alt: "Standard double room 7 in Chios - traditional stone bathroom details - Voulamandis House",
             caption: "Stone bathroom details",
           },
@@ -294,22 +294,22 @@ export const standardDoubleRoomEn: RoomDetailData = {
         ],
         images: [
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07776-2-e1675109942622.webp",
+            src: "/images/rooms/DSC07776-2-e1675109942622.webp",
             alt: "Standard first-floor room 1 in Chios for up to 4 guests - Voulamandis House",
             caption: "Bedroom",
           },
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07769-1.webp",
+            src: "/images/rooms/DSC07769-1.webp",
             alt: "Standard room 1 in Chios - spacious room with double and single beds - Voulamandis House",
             caption: "Spacious layout",
           },
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/%CF%87%CE%B9%CE%BF%CF%82-%CE%B4%CF%89%CE%BC%CE%B1%CF%84%CE%B9%CE%B1-1-1.webp",
+            src: "/images/rooms/----1-1.webp",
             alt: "Standard room 1 in Kampos Chios - traditional details and decoration - Voulamandis House",
             caption: "Traditional details",
           },
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-house-bathrooms-1.webp",
+            src: "/images/rooms/voulamandis-house-bathrooms-1.webp",
             alt: "Standard room 1 in Chios - large private renovated bathroom - Voulamandis House",
             caption: "Bathroom",
           },
@@ -336,22 +336,22 @@ export const standardDoubleRoomEn: RoomDetailData = {
         ],
         images: [
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07867-1.webp",
+            src: "/images/rooms/DSC07867-1.webp",
             alt: "Standard triple room 3 on the first floor in Chios with kitchenette - bedroom - Voulamandis House",
             caption: "Bedroom",
           },
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07860-1.webp",
+            src: "/images/rooms/DSC07860-1.webp",
             alt: "Standard room 3 in Chios - comfortable bedroom with stone walls - Voulamandis House",
             caption: "Stone wall interior",
           },
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07849-1.webp",
+            src: "/images/rooms/DSC07849-1.webp",
             alt: "Standard room 3 in Chios - interior equipment and terrace access - Voulamandis House",
             caption: "Terrace access",
           },
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07891-1.webp",
+            src: "/images/rooms/DSC07891-1.webp",
             alt: "Standard room 3 in Kampos Chios - equipped kitchenette - Voulamandis House",
             caption: "Kitchenette",
           },
@@ -378,22 +378,22 @@ export const standardDoubleRoomEn: RoomDetailData = {
         ],
         images: [
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/received_1748354861920234.webp",
+            src: "/images/rooms/received_1748354861920234.webp",
             alt: "Standard triple room 4 on the first floor in Chios with sofa bed and kitchenette - Voulamandis House",
             caption: "Room layout",
           },
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/received_1748358935253160.webp",
+            src: "/images/rooms/received_1748358935253160.webp",
             alt: "Standard room 4 in Chios - bright living space with kitchenette - Voulamandis House",
             caption: "Kitchenette area",
           },
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/received_1748356725253381.webp",
+            src: "/images/rooms/received_1748356725253381.webp",
             alt: "Standard room 4 in Chios - traditional decoration and comfort - Voulamandis House",
             caption: "Traditional decoration",
           },
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/received_1748356718586715.webp",
+            src: "/images/rooms/received_1748356718586715.webp",
             alt: "Standard room 4 in Kampos Chios - balcony view - Voulamandis House",
             caption: "Balcony view",
           },
@@ -1117,7 +1117,7 @@ export const economyDoubleRoomsEn: RoomDetailData = {
     description:
       "Economy double rooms in Chios at Voulamandis House. A value-for-money option for 2 guests in the peaceful Kampos area.",
     ogImage:
-      "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753964631359257.webp",
+      "/images/rooms/received_1753964631359257.webp",
   },
   hero: {
     kicker: "Economy rooms in Chios",
@@ -1126,7 +1126,7 @@ export const economyDoubleRoomsEn: RoomDetailData = {
     description:
       "Simple, comfortable and value-focused double rooms for guests who want to enjoy Chios while keeping accommodation practical and affordable.",
     image:
-      "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753964631359257.webp",
+      "/images/rooms/received_1753964631359257.webp",
     imageAlt: "Economy double room in Chios at Voulamandis House",
     badges: ["2 guests", "Economy choice", "Free WiFi", "Air conditioning"],
     primaryCta: {
@@ -1158,27 +1158,27 @@ export const economyDoubleRoomsEn: RoomDetailData = {
     title: "A simple and practical room base",
     images: [
       {
-        src: "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753964631359257.webp",
+        src: "/images/rooms/received_1753964631359257.webp",
         alt: "Economy double room at Voulamandis House",
       },
       {
-        src: "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753964581359262.webp",
+        src: "/images/rooms/received_1753964581359262.webp",
         alt: "Economy room bed in Chios",
       },
       {
-        src: "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753968691358851.webp",
+        src: "/images/rooms/received_1753968691358851.webp",
         alt: "Economy room interior at Voulamandis House",
       },
       {
-        src: "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753969201358800.webp",
+        src: "/images/rooms/received_1753969201358800.webp",
         alt: "Economy room bathroom and interior details",
       },
       {
-        src: "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07803-1.webp",
+        src: "/images/rooms/DSC07803-1.webp",
         alt: "Economy double room in Chios",
       },
       {
-        src: "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07839.webp",
+        src: "/images/rooms/DSC07839.webp",
         alt: "Economy double room detail",
       },
     ],
@@ -1220,22 +1220,22 @@ export const economyDoubleRoomsEn: RoomDetailData = {
         ],
         images: [
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753964631359257.webp",
+            src: "/images/rooms/received_1753964631359257.webp",
             alt: "Economy double room in Chios No. 6 on the ground floor with garden access - Voulamandis House",
             caption: "Room",
           },
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753964581359262.webp",
+            src: "/images/rooms/received_1753964581359262.webp",
             alt: "Workspace and small desk in economy double room No. 6 in Chios",
             caption: "Double bed",
           },
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753968691358851.webp",
+            src: "/images/rooms/received_1753968691358851.webp",
             alt: "Renovated bathroom of economy double room No. 6 in Chios",
             caption: "Desk",
           },
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753969201358800.webp",
+            src: "/images/rooms/received_1753969201358800.webp",
             alt: "Interior and decoration of economy double room No. 6 in Kampos Chios",
             caption: "Bathroom",
           },
@@ -1259,22 +1259,22 @@ export const economyDoubleRoomsEn: RoomDetailData = {
         ],
         images: [
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07803-1.webp",
+            src: "/images/rooms/DSC07803-1.webp",
             alt: "Economy double room No. 2 in Chios on the first floor with a view - Voulamandis House",
             caption: "Room view",
           },
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07839.webp",
+            src: "/images/rooms/DSC07839.webp",
             alt: "Lighting and atmosphere in economy double room No. 2 on the first floor",
             caption: "Layout",
           },
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07832.webp",
+            src: "/images/rooms/DSC07832.webp",
             alt: "Stone wall detail in economy double room No. 2 in Chios",
             caption: "Detail",
           },
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/received_1385287484893642_1500478431120_1200x800_3240x2160-1.webp",
+            src: "/images/rooms/received_1385287484893642_1500478431120_1200x800_3240x2160-1.webp",
             alt: "Bed and room layout in economy double room No. 2 in Chios",
             caption: "Bathroom",
           },
@@ -1952,7 +1952,7 @@ export const familyChiosApartmentsEn: RoomDetailData = {
     description:
       "Family apartments in Chios at Voulamandis House in Kampos. Spacious 40–45m² apartments with kitchen, bedroom and living area.",
     ogImage:
-      "https://chioshotel.gr/wp-content/uploads/2022/12/chios-apartments-voulamandis.webp",
+      "/images/rooms/chios-apartments-voulamandis.webp",
   },
   hero: {
     kicker: "Family apartments in Chios",
@@ -1961,7 +1961,7 @@ export const familyChiosApartmentsEn: RoomDetailData = {
     description:
       "Spacious family apartments with separate bedroom, kitchen and living area. Ideal for families or guests who want more independence during their stay in Chios.",
     image:
-      "https://chioshotel.gr/wp-content/uploads/2022/12/chios-apartments-voulamandis.webp",
+      "/images/rooms/chios-apartments-voulamandis.webp",
     imageAlt: "Family apartment in Chios at Voulamandis House",
     badges: ["Up to 4 guests", "40–45m²", "Kitchen", "Living area"],
     primaryCta: {
@@ -1993,27 +1993,27 @@ export const familyChiosApartmentsEn: RoomDetailData = {
     title: "Space for a more independent stay",
     images: [
       {
-        src: "https://chioshotel.gr/wp-content/uploads/2022/12/chios-apartments-voulamandis.webp",
+        src: "/images/rooms/chios-apartments-voulamandis.webp",
         alt: "Family apartment in Chios at Voulamandis House",
       },
       {
-        src: "https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-family-apartments.webp",
+        src: "/images/rooms/chios-hotels-family-apartments.webp",
         alt: "Family apartment living area in Chios",
       },
       {
-        src: "https://chioshotel.gr/wp-content/uploads/2022/12/family-room.webp",
+        src: "/images/rooms/family-room.webp",
         alt: "Family room bedroom at Voulamandis House",
       },
       {
-        src: "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-apartment-bathroom..webp",
+        src: "/images/rooms/voulamandis-apartment-bathroom..webp",
         alt: "Family apartment bathroom in Chios",
       },
       {
-        src: "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07899.webp",
+        src: "/images/rooms/DSC07899.webp",
         alt: "Apartment room at Voulamandis House",
       },
       {
-        src: "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07909.webp",
+        src: "/images/rooms/DSC07909.webp",
         alt: "Apartment interior details at Voulamandis House",
       },
     ],
@@ -2059,22 +2059,22 @@ export const familyChiosApartmentsEn: RoomDetailData = {
         ],
         images: [
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/chios-apartments-voulamandis.webp",
+            src: "/images/rooms/chios-apartments-voulamandis.webp",
             alt: "Family Apartment 8 - living room and kitchen - Voulamandis House Chios",
             caption: "Living Room & Kitchen",
           },
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-family-apartments.webp",
+            src: "/images/rooms/chios-hotels-family-apartments.webp",
             alt: "Family Apartment 8 - kitchen area - Voulamandis House Chios",
             caption: "Kitchen",
           },
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/family-room.webp",
+            src: "/images/rooms/family-room.webp",
             alt: "Family Apartment 8 - bedroom - Voulamandis House Chios",
             caption: "Bedroom",
           },
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-apartment-bathroom..webp",
+            src: "/images/rooms/voulamandis-apartment-bathroom..webp",
             alt: "Family Apartment 8 - bathroom - Voulamandis House Chios",
             caption: "Bathroom",
           },
@@ -2101,22 +2101,22 @@ export const familyChiosApartmentsEn: RoomDetailData = {
         ],
         images: [
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/chios-apartments-voulamandis.webp",
+            src: "/images/rooms/chios-apartments-voulamandis.webp",
             alt: "Family Apartment 9 - living room and kitchen - Voulamandis House Chios",
             caption: "Living Room & Kitchen",
           },
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-family-apartments.webp",
+            src: "/images/rooms/chios-hotels-family-apartments.webp",
             alt: "Family Apartment 9 - kitchen area - Voulamandis House Chios",
             caption: "Kitchen",
           },
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/family-room.webp",
+            src: "/images/rooms/family-room.webp",
             alt: "Family Apartment 9 - bedroom - Voulamandis House Chios",
             caption: "Bedroom",
           },
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-apartment-bathroom..webp",
+            src: "/images/rooms/voulamandis-apartment-bathroom..webp",
             alt: "Family Apartment 9 - bathroom - Voulamandis House Chios",
             caption: "Bathroom",
           },
@@ -2143,22 +2143,22 @@ export const familyChiosApartmentsEn: RoomDetailData = {
         ],
         images: [
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07899.webp",
+            src: "/images/rooms/DSC07899.webp",
             alt: "Family Apartment 10 - living room and kitchen - Voulamandis House Chios",
             caption: "Living Room & Kitchen",
           },
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07909.webp",
+            src: "/images/rooms/DSC07909.webp",
             alt: "Family Apartment 10 - kitchen area - Voulamandis House Chios",
             caption: "Kitchen",
           },
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07940.webp",
+            src: "/images/rooms/DSC07940.webp",
             alt: "Family Apartment 10 - bedroom - Voulamandis House Chios",
             caption: "Bedroom",
           },
           {
-            src: "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07943.webp",
+            src: "/images/rooms/DSC07943.webp",
             alt: "Family Apartment 10 - interior detail - Voulamandis House Chios",
             caption: "Detail",
           },
