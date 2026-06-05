@@ -2736,12 +2736,15 @@ export const routeMap: readonly RouteRecord[] = [
   {
     path: "/10-best-tips-to-explore-chiosvoulamandis-house/",
     language: "en",
-    contentType: "landing-page",
+    contentType: "redirect-candidate",
     category: "landing",
-    itemId: "explore-chios",
-    template: "LandingPage",
-    action: "KEEP",
+    itemId: "explore-chios-old",
+    template: "Redirect",
+    action: "REDIRECT",
     priority: "Medium",
+    canonicalPath: "/chios-explorer/",
+    notes:
+      "Old Chios explorer URL. Redirect to the current English Chios Explorer landing page.",
   },
 
   {
