@@ -89,9 +89,9 @@ const villageImages = {
 export const chiosVillagesPageEn: ChiosVillagesPageData = {
   seo: {
     canonicalPath: "/chios/chios-villages/",
-    title: "Chios Villages Guide | Medieval Villages, Mastic Villages & Local Life",
+    title: "Chios Villages Guide | Voulamandis House",
     description:
-      "Explore the most beautiful villages in Chios, from Pyrgi and Mesta to Vessa, Olympoi, Volissos, Armolia and Lagada.",
+      "Explore beautiful villages in Chios, from Pyrgi and Mesta to Vessa, Olympoi, Volissos, Armolia and Lagada.",
     ogImage: villageImages.lagada,
   },
   hero: {
@@ -272,9 +272,9 @@ export const chiosVillagesPageEn: ChiosVillagesPageData = {
 export const chiosVillagesPageEl: ChiosVillagesPageData = {
   seo: {
     canonicalPath: "/el/xoria-xios/",
-    title: "Χωριά της Χίου | Μεσαιωνικά χωριά, Μαστιχοχώρια & τοπική ζωή",
+    title: "Χωριά της Χίου | Voulamandis House",
     description:
-      "Ανακαλύψτε τα πιο όμορφα χωριά της Χίου, από το Πυργί και τα Μεστά μέχρι τη Βέσσα, τους Ολύμπους, τη Βολισσό, τα Αρμόλια και τη Λαγκάδα.",
+      "Ανακαλύψτε τα χωριά της Χίου: Πυργί, Μεστά, Βέσσα, Ολύμποι, Βολισσός, Αρμόλια και Λαγκάδα.",
     ogImage: villageImages.lagada,
   },
   hero: {
@@ -455,9 +455,9 @@ export const chiosVillagesPageEl: ChiosVillagesPageData = {
 export const chiosVillagesPageFr: ChiosVillagesPageData = {
   seo: {
     canonicalPath: "/fr/villages-de-chios/",
-    title: "Villages de Chios | Villages médiévaux, villages du mastic et vie locale",
+    title: "Villages de Chios | Voulamandis House",
     description:
-      "Explorez les plus beaux villages de Chios, de Pyrgi et Mesta à Vessa, Olympoi, Volissos, Armolia et Lagada.",
+      "Explorez les villages de Chios, de Pyrgi et Mesta à Vessa, Olympoi, Volissos, Armolia et Lagada.",
     ogImage: villageImages.lagada,
   },
   hero: {
@@ -638,9 +638,9 @@ export const chiosVillagesPageFr: ChiosVillagesPageData = {
 export const chiosVillagesPageDe: ChiosVillagesPageData = {
   seo: {
     canonicalPath: "/de/doerfer-chios/",
-    title: "Dörfer auf Chios | Mittelalterliche Dörfer, Mastixdörfer & lokales Leben",
+    title: "Dörfer auf Chios | Voulamandis House",
     description:
-      "Entdecken Sie die schönsten Dörfer auf Chios, von Pyrgi und Mesta bis Vessa, Olympoi, Volissos, Armolia und Lagada.",
+      "Entdecken Sie die Dörfer auf Chios: Pyrgi, Mesta, Vessa, Olympoi, Volissos, Armolia und Lagada.",
     ogImage: villageImages.lagada,
   },
   hero: {
@@ -821,9 +821,9 @@ export const chiosVillagesPageDe: ChiosVillagesPageData = {
 export const chiosVillagesPageIt: ChiosVillagesPageData = {
   seo: {
     canonicalPath: "/it/villaggi-chios/",
-    title: "Villaggi di Chios | Villaggi medievali, mastice e vita locale",
+    title: "Villaggi di Chios | Voulamandis House",
     description:
-      "Scopri i villaggi più belli di Chios, da Pyrgi e Mesta a Vessa, Olympoi, Volissos, Armolia e Lagada.",
+      "Scopri i villaggi di Chios, da Pyrgi e Mesta a Vessa, Olympoi, Volissos, Armolia e Lagada.",
     ogImage: villageImages.lagada,
   },
   hero: {
@@ -1004,9 +1004,9 @@ export const chiosVillagesPageIt: ChiosVillagesPageData = {
 export const chiosVillagesPageEs: ChiosVillagesPageData = {
   seo: {
     canonicalPath: "/es/pueblos-chios/",
-    title: "Pueblos de Chios | Pueblos medievales, mastiha y vida local",
+    title: "Pueblos de Chios | Voulamandis House",
     description:
-      "Explora los pueblos más bonitos de Chios, desde Pyrgi y Mesta hasta Vessa, Olympoi, Volissos, Armolia y Lagada.",
+      "Explora los pueblos de Chios: Pyrgi, Mesta, Vessa, Olympoi, Volissos, Armolia y Lagada.",
     ogImage: villageImages.lagada,
   },
   hero: {
@@ -1187,9 +1187,9 @@ export const chiosVillagesPageEs: ChiosVillagesPageData = {
 export const chiosVillagesPageTr: ChiosVillagesPageData = {
   seo: {
     canonicalPath: "/tr/sakiz-adasi-koyleri/",
-    title: "Sakız Adası Köyleri | Orta Çağ köyleri, mastik köyleri ve yerel yaşam",
+    title: "Sakız Adası Köyleri | Voulamandis House",
     description:
-      "Sakız Adası’nın en güzel köylerini keşfedin: Pyrgi, Mesta, Vessa, Olympoi, Volissos, Armolia ve Lagada.",
+      "Sakız Adası köylerini keşfedin: Pyrgi, Mesta, Vessa, Olympoi, Volissos, Armolia ve Lagada.",
     ogImage: villageImages.lagada,
   },
   hero: {

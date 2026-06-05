@@ -87,9 +87,9 @@ const museumImages = {
 export const chiosMuseumsPageEn: ChiosMuseumsPageData = {
   seo: {
     canonicalPath: "/chios/chios-museums/",
-    title: "Chios Museums Guide | History, Mastic Culture & Maritime Heritage",
+    title: "Chios Museums Guide | Voulamandis House",
     description:
-      "Explore the best museums in Chios, including the Mastic Museum, Archaeological Museum, Byzantine Museum, Koraes Library, Maritime Museum and Kallimasia Folklore Museum.",
+      "Explore Chios museums, from mastic culture and archaeology to Byzantine art, maritime history, rare books and folklore.",
     ogImage: museumImages.mastic,
   },
   hero: {
@@ -252,9 +252,9 @@ export const chiosMuseumsPageEn: ChiosMuseumsPageData = {
 export const chiosMuseumsPageEl: ChiosMuseumsPageData = {
   seo: {
     canonicalPath: "/el/mouseia-xios/",
-    title: "Μουσεία Χίου | Ιστορία, μαστίχα και ναυτική παράδοση",
+    title: "Μουσεία Χίου | Voulamandis House",
     description:
-      "Ανακαλύψτε τα καλύτερα μουσεία της Χίου, από το Μουσείο Μαστίχας και το Αρχαιολογικό Μουσείο μέχρι τη Βιβλιοθήκη Κοραή, το Ναυτικό Μουσείο και το Λαογραφικό Μουσείο Καλλιμασιάς.",
+      "Ανακαλύψτε μουσεία της Χίου για μαστίχα, αρχαιολογία, βυζαντινή τέχνη, ναυτική ιστορία, βιβλία και λαογραφία.",
     ogImage: museumImages.mastic,
   },
   hero: {
@@ -417,9 +417,9 @@ export const chiosMuseumsPageEl: ChiosMuseumsPageData = {
 export const chiosMuseumsPageFr: ChiosMuseumsPageData = {
   seo: {
     canonicalPath: "/fr/musees-de-chios/",
-    title: "Musées de Chios | Histoire, mastic et patrimoine maritime",
+    title: "Musées de Chios | Voulamandis House",
     description:
-      "Découvrez les meilleurs musées de Chios, du Musée du Mastic au Musée archéologique, Musée byzantin, Bibliothèque Korais, Musée maritime et Musée folklorique de Kallimasia.",
+      "Découvrez les musées de Chios : mastic, archéologie, art byzantin, histoire maritime, livres rares et folklore.",
     ogImage: museumImages.mastic,
   },
   hero: {
@@ -582,9 +582,9 @@ export const chiosMuseumsPageFr: ChiosMuseumsPageData = {
 export const chiosMuseumsPageDe: ChiosMuseumsPageData = {
   seo: {
     canonicalPath: "/de/museen-chios/",
-    title: "Museen auf Chios | Geschichte, Mastixkultur und maritimes Erbe",
+    title: "Museen auf Chios | Voulamandis House",
     description:
-      "Entdecken Sie die besten Museen auf Chios, vom Mastix-Museum und Archäologischen Museum bis zum Byzantinischen Museum, zur Korais-Bibliothek, zum Schifffahrtsmuseum und zum Volkskundemuseum Kallimasia.",
+      "Entdecken Sie Museen auf Chios: Mastixkultur, Archäologie, byzantinische Kunst, Seefahrt, Bücher und Volkskunde.",
     ogImage: museumImages.mastic,
   },
   hero: {
@@ -747,9 +747,9 @@ export const chiosMuseumsPageDe: ChiosMuseumsPageData = {
 export const chiosMuseumsPageIt: ChiosMuseumsPageData = {
   seo: {
     canonicalPath: "/it/musei-chios/",
-    title: "Musei di Chios | Storia, mastice e patrimonio marittimo",
+    title: "Musei di Chios | Voulamandis House",
     description:
-      "Scopri i migliori musei di Chios, dal Museo del Mastice e Museo Archeologico al Museo Bizantino, Biblioteca Korais, Museo Marittimo e Museo Folkloristico di Kallimasia.",
+      "Scopri i musei di Chios: mastice, archeologia, arte bizantina, storia marittima, libri rari e folklore.",
     ogImage: museumImages.mastic,
   },
   hero: {
@@ -912,9 +912,9 @@ export const chiosMuseumsPageIt: ChiosMuseumsPageData = {
 export const chiosMuseumsPageEs: ChiosMuseumsPageData = {
   seo: {
     canonicalPath: "/es/museos-chios/",
-    title: "Museos de Chios | Historia, mastiha y patrimonio marítimo",
+    title: "Museos de Chios | Voulamandis House",
     description:
-      "Descubre los mejores museos de Chios, desde el Museo de la Mastiha y el Museo Arqueológico hasta el Museo Bizantino, la Biblioteca Korais, el Museo Marítimo y el Museo Folclórico de Kallimasia.",
+      "Descubre museos de Chios sobre mastiha, arqueología, arte bizantino, historia marítima, libros raros y folclore.",
     ogImage: museumImages.mastic,
   },
   hero: {
@@ -1077,9 +1077,9 @@ export const chiosMuseumsPageEs: ChiosMuseumsPageData = {
 export const chiosMuseumsPageTr: ChiosMuseumsPageData = {
   seo: {
     canonicalPath: "/tr/sakiz-adasi-muzeleri/",
-    title: "Sakız Adası Müzeleri | Tarih, mastik kültürü ve denizcilik mirası",
+    title: "Sakız Adası Müzeleri | Voulamandis House",
     description:
-      "Sakız Adası’nın en iyi müzelerini keşfedin: Mastik Müzesi, Arkeoloji Müzesi, Bizans Müzesi, Korais Kütüphanesi, Denizcilik Müzesi ve Kallimasia Folklor Müzesi.",
+      "Sakız Adası müzelerini keşfedin: mastik kültürü, arkeoloji, Bizans sanatı, denizcilik, nadir kitaplar ve folklor.",
     ogImage: museumImages.mastic,
   },
   hero: {

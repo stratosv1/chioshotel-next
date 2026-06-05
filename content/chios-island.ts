@@ -400,7 +400,7 @@ export const chiosIslandPageFr: ChiosIslandPageData = {
     text:
       "Faites le quiz créé par Voulamandis House spécialement pour ses hôtes. Découvrez quelle facette de Chios correspond à votre style et apprenez à connaître l’île de façon plus personnelle.",
     ctaLabel: "Commencer le quiz",
-    href: "/chios-holidays-quiz/",
+    href: "/fr/quiz-vacances-a-chios/",
   },
   stay: {
     kicker: "Séjourner à Kampos",
@@ -514,7 +514,7 @@ export const chiosIslandPageDe: ChiosIslandPageData = {
     text:
       "Machen Sie das Quiz, das Voulamandis House speziell für seine Gäste erstellt hat. Finden Sie heraus, welche Seite von Chios zu Ihrem Reisestil passt, und lernen Sie die Insel persönlicher kennen.",
     ctaLabel: "Quiz starten",
-    href: "/chios-holidays-quiz/",
+    href: "/de/chios-urlaubsquiz/",
   },
   stay: {
     kicker: "Aufenthalt in Kampos",
@@ -628,7 +628,7 @@ export const chiosIslandPageIt: ChiosIslandPageData = {
     text:
       "Fate il quiz creato da Voulamandis House appositamente per i suoi ospiti. Scoprite quale lato di Chios si adatta al vostro stile e conoscete l’isola in modo più personale.",
     ctaLabel: "Inizia il quiz",
-    href: "/chios-holidays-quiz/",
+    href: "/it/quiz-vacanze-a-chios/",
   },
   stay: {
     kicker: "Soggiorno a Kampos",
@@ -742,7 +742,7 @@ export const chiosIslandPageEs: ChiosIslandPageData = {
     text:
       "Haga el quiz creado por Voulamandis House especialmente para sus huéspedes. Descubra qué lado de Quíos se adapta a su estilo y conozca la isla de una manera más personal.",
     ctaLabel: "Empezar quiz",
-    href: "/chios-holidays-quiz/",
+    href: "/es/quiz-vacaciones-en-quios/",
   },
   stay: {
     kicker: "Alojarse en Kampos",
@@ -856,7 +856,7 @@ export const chiosIslandPageTr: ChiosIslandPageData = {
     text:
       "Voulamandis House’un misafirleri için özel olarak hazırladığı testi yapın. Sakız’ın hangi yönünün tarzınıza uyduğunu keşfedin ve adayı daha kişisel bir şekilde tanıyın.",
     ctaLabel: "Teste başla",
-    href: "/chios-holidays-quiz/",
+    href: "/tr/sakiz-adasi-tatil-testi/",
   },
   stay: {
     kicker: "Kampos’ta konaklayın",

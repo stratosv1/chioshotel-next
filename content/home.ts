@@ -251,8 +251,7 @@
 
 export const homePageEn: HomePageData = {
   seo: {
-    title:
-      "Chios Hotels in Kampos – Rooms & Apartments in Chios | Voulamandis House",
+    title: "Chios Hotels & Rooms | Voulamandis House",
     description:
       "Peaceful rooms and apartments in Kampos, Chios. Stay at Voulamandis House near Chios airport, town and beaches, with authentic hospitality and direct booking benefits.",
     canonicalPath: "/",
@@ -605,7 +604,7 @@ export const homePageEn: HomePageData = {
         id: "sea",
         title: "Sea",
         text: "Crystal-clear waters, unique beaches and relaxation on the island.",
-        href: "/best-beaches-in-chios/",
+        href: "/chios-beach-lovers/",
         className: "vh-traveler-card--sea",
         cta: "🏖️ Explore",
       },
@@ -613,7 +612,7 @@ export const homePageEn: HomePageData = {
         id: "exploration",
         title: "Exploration",
         text: "Villages, nature and culture in every corner of Chios.",
-        href: "/10-best-tips-to-explore-chiosvoulamandis-house/",
+        href: "/chios-explorer/",
         className: "vh-traveler-card--explorer",
         cta: "🧭 Explore",
       },
@@ -674,7 +673,7 @@ export const homePageEn: HomePageData = {
         id: "museums",
         title: "Museums of Chios",
         text: "Cultural stops for travelers who love history and local identity.",
-        href: "/chios/chios-museums/the-mastic-museum-chios/",
+        href: "/chios/chios-museums/",
         imageClass: "vh-link-image--museums",
         ctaIcon: "🏺",
         ctaLabel: "See more",
@@ -683,7 +682,7 @@ export const homePageEn: HomePageData = {
         id: "orchids",
         title: "Orchids of Chios",
         text: "A special activity for nature lovers who want to see a different side of the island.",
-        href: "/chios-island/",
+        href: "/chios-orchids/",
         imageClass: "vh-link-image--orchids",
         ctaIcon: "🌸",
         ctaLabel: "See more",
@@ -692,7 +691,7 @@ export const homePageEn: HomePageData = {
         id: "thermal-springs",
         title: "Thermal Springs",
         text: "Relaxation and wellness experiences that complement your holiday perfectly.",
-        href: "/chios-island/",
+        href: "/chios-thermal-baths/",
         imageClass: "vh-link-image--springs",
         ctaIcon: "♨️",
         ctaLabel: "See more",
@@ -776,7 +775,7 @@ export const homePageEl: HomePageData = {
   ...homePageEn,
 
   seo: {
-    title: "Ξενοδοχείο στη Χίο – Δωμάτια & Διαμερίσματα | Voulamandis House",
+    title: "Ξενοδοχείο στη Χίο | Voulamandis House",
     description:
       "Ήσυχα δωμάτια και διαμερίσματα στον Κάμπο της Χίου. Διαμονή στο Voulamandis House κοντά σε αεροδρόμιο, πόλη και παραλίες.",
     canonicalPath: "/el/",
@@ -1127,42 +1126,42 @@ export const homePageEl: HomePageData = {
         ...homePageEn.chiosGuide.cards[0],
         title: "Παραλίες της Χίου",
         text: "Δείτε προτάσεις και οργανώστε πιο εύκολα τις καλοκαιρινές σας εξορμήσεις.",
-        href: "/chios/chios-beaches/",
+        href: "/el/paralies-xios/",
         ctaLabel: "Δες περισσότερα",
       },
       {
         ...homePageEn.chiosGuide.cards[1],
         title: "Χωριά της Χίου",
         text: "Ανακαλύψτε παραδοσιακούς οικισμούς και σημεία που αξίζει να επισκεφθείτε.",
-        href: "/chios/chios-villages/",
+        href: "/el/xoria-xios/",
         ctaLabel: "Δες περισσότερα",
       },
       {
         ...homePageEn.chiosGuide.cards[2],
         title: "Κάμπος της Χίου",
         text: "Μάθετε περισσότερα για την περιοχή που κάνει τη διαμονή στον Κάμπο ξεχωριστή.",
-        href: "/chios-island/",
+        href: "/el/ti-na-do-sti-xio/",
         ctaLabel: "Δες περισσότερα",
       },
       {
         ...homePageEn.chiosGuide.cards[3],
         title: "Μουσεία της Χίου",
         text: "Πολιτιστικές στάσεις για όσους αγαπούν την ιστορία και την τοπική ταυτότητα.",
-        href: "/chios/chios-museums/",
+        href: "/el/mouseia-xios/",
         ctaLabel: "Δες περισσότερα",
       },
       {
         ...homePageEn.chiosGuide.cards[4],
         title: "Ορχιδέες της Χίου",
         text: "Μια ιδιαίτερη δραστηριότητα για φυσιολάτρες που θέλουν να δουν μια διαφορετική πλευρά του νησιού.",
-        href: "/chios-island/",
+        href: "/el/orchidees-xiou/",
         ctaLabel: "Δες περισσότερα",
       },
       {
         ...homePageEn.chiosGuide.cards[5],
         title: "Ιαματικές Πηγές",
         text: "Επιλογές για χαλάρωση και wellness εμπειρίες που συμπληρώνουν ιδανικά τις διακοπές σας.",
-        href: "/chios-island/",
+        href: "/el/iamatika-loutra-xiou/",
         ctaLabel: "Δες περισσότερα",
       },
     ],
@@ -1245,8 +1244,7 @@ export const homePageFr: HomePageData = {
   ...homePageEn,
 
   seo: {
-    title:
-      "Hôtel à Chios – Chambres & appartements | Voulamandis House",
+    title: "Hôtel à Chios | Voulamandis House",
     description:
       "Chambres et appartements paisibles à Kampos, Chios. Séjournez à Voulamandis House, près de l’aéroport, de la ville, des plages et des villages de l’île.",
     canonicalPath: "/fr/",
@@ -1528,24 +1526,28 @@ export const homePageFr: HomePageData = {
         ...homePageEn.traveler.cards[0],
         title: "Mer",
         text: "Eaux cristallines, plages uniques et moments de détente sur l’île.",
+        href: "/fr/chios-pour-amoureux-de-plage/",
         cta: "🏖️ Explorer",
       },
       {
         ...homePageEn.traveler.cards[1],
         title: "Exploration",
         text: "Villages, nature et culture dans chaque coin de Chios.",
+        href: "/fr/explorer-chios/",
         cta: "🧭 Explorer",
       },
       {
         ...homePageEn.traveler.cards[2],
         title: "Famille",
         text: "Idées et activités pour des vacances familiales inoubliables.",
+        href: "/fr/vacances-en-famille-a-chios/",
         cta: "👨‍👩‍👧‍👦 Explorer",
       },
       {
         ...homePageEn.traveler.cards[3],
         title: "Gastronomie",
         text: "Saveurs authentiques, mastiha et expériences locales.",
+        href: "/fr/saveurs-de-chios/",
         cta: "🍽️ Explorer",
       },
     ],
@@ -1653,8 +1655,7 @@ export const homePageDe: HomePageData = {
   ...homePageEn,
 
   seo: {
-    title:
-      "Hotel auf Chios – Zimmer & Apartments | Voulamandis House",
+    title: "Hotel auf Chios | Voulamandis House",
     description:
       "Ruhige Zimmer und Apartments in Kampos, Chios. Übernachten Sie im Voulamandis House nahe Flughafen, Stadt, Stränden und Dörfern.",
     canonicalPath: "/de/",
@@ -1936,24 +1937,28 @@ export const homePageDe: HomePageData = {
         ...homePageEn.traveler.cards[0],
         title: "Meer",
         text: "Kristallklares Wasser, besondere Strände und Entspannung auf der Insel.",
+        href: "/de/chios-fuer-strandliebhaber/",
         cta: "🏖️ Entdecken",
       },
       {
         ...homePageEn.traveler.cards[1],
         title: "Erkundung",
         text: "Dörfer, Natur und Kultur in jeder Ecke von Chios.",
+        href: "/de/chios-entdecken/",
         cta: "🧭 Entdecken",
       },
       {
         ...homePageEn.traveler.cards[2],
         title: "Familie",
         text: "Ideen und Aktivitäten für unvergessliche Familienferien.",
+        href: "/de/familienurlaub-auf-chios/",
         cta: "👨‍👩‍👧‍👦 Entdecken",
       },
       {
         ...homePageEn.traveler.cards[3],
         title: "Kulinarik",
         text: "Authentische Aromen, Mastix und lokale Erlebnisse.",
+        href: "/de/chios-fuer-geniesser/",
         cta: "🍽️ Entdecken",
       },
     ],
@@ -2060,7 +2065,7 @@ export const homePageIt: HomePageData = {
   ...homePageEn,
 
   seo: {
-    title: "Hotel a Chios – Camere e appartamenti | Voulamandis House",
+    title: "Hotel a Chios | Voulamandis House",
     description:
       "Camere e appartamenti tranquilli a Kampos, Chios. Soggiorna al Voulamandis House, vicino all’aeroporto, alla città, alle spiagge e ai villaggi dell’isola.",
     canonicalPath: "/it/",
@@ -2342,24 +2347,28 @@ export const homePageIt: HomePageData = {
         ...homePageEn.traveler.cards[0],
         title: "Mare",
         text: "Acque cristalline, spiagge uniche e momenti di relax sull’isola.",
+        href: "/it/chios-per-amanti-del-mare/",
         cta: "🏖️ Esplora",
       },
       {
         ...homePageEn.traveler.cards[1],
         title: "Esplorazione",
         text: "Villaggi, natura e cultura in ogni angolo di Chios.",
+        href: "/it/esplora-chios/",
         cta: "🧭 Esplora",
       },
       {
         ...homePageEn.traveler.cards[2],
         title: "Famiglia",
         text: "Idee e attività per vacanze in famiglia indimenticabili.",
+        href: "/it/vacanze-in-famiglia-a-chios/",
         cta: "👨‍👩‍👧‍👦 Esplora",
       },
       {
         ...homePageEn.traveler.cards[3],
         title: "Gastronomia",
         text: "Sapori autentici, mastice e vere esperienze locali.",
+        href: "/it/sapori-di-chios/",
         cta: "🍽️ Esplora",
       },
     ],
@@ -2467,7 +2476,7 @@ export const homePageEs: HomePageData = {
   ...homePageEn,
 
   seo: {
-    title: "Hotel en Chios – Habitaciones y apartamentos | Voulamandis House",
+    title: "Hotel en Chios | Voulamandis House",
     description:
       "Habitaciones y apartamentos tranquilos en Kampos, Chios. Alójate en Voulamandis House, cerca del aeropuerto, la ciudad, las playas y los pueblos de la isla.",
     canonicalPath: "/es/",
@@ -2749,24 +2758,28 @@ export const homePageEs: HomePageData = {
         ...homePageEn.traveler.cards[0],
         title: "Mar",
         text: "Aguas cristalinas, playas únicas y momentos de relax en la isla.",
+        href: "/es/quios-para-amantes-de-la-playa/",
         cta: "🏖️ Explorar",
       },
       {
         ...homePageEn.traveler.cards[1],
         title: "Exploración",
         text: "Pueblos, naturaleza y cultura en cada rincón de Chios.",
+        href: "/es/explorar-quios/",
         cta: "🧭 Explorar",
       },
       {
         ...homePageEn.traveler.cards[2],
         title: "Familia",
         text: "Ideas y actividades para unas vacaciones familiares inolvidables.",
+        href: "/es/vacaciones-en-familia-en-quios/",
         cta: "👨‍👩‍👧‍👦 Explorar",
       },
       {
         ...homePageEn.traveler.cards[3],
         title: "Gastronomía",
         text: "Sabores auténticos, masticha y experiencias locales.",
+        href: "/es/sabores-de-quios/",
         cta: "🍽️ Explorar",
       },
     ],
@@ -2874,7 +2887,7 @@ export const homePageTr: HomePageData = {
   ...homePageEn,
 
   seo: {
-    title: "Sakız Adası Oteli – Odalar ve Daireler | Voulamandis House",
+    title: "Sakız Adası Oteli | Voulamandis House",
     description:
       "Kampos, Sakız Adası’nda sakin odalar ve daireler. Havaalanına, merkeze, plajlara ve köylere yakın Voulamandis House’ta konaklayın.",
     canonicalPath: "/tr/",
@@ -3156,24 +3169,28 @@ export const homePageTr: HomePageData = {
         ...homePageEn.traveler.cards[0],
         title: "Deniz",
         text: "Kristal sular, özel plajlar ve adada huzurlu anlar.",
+        href: "/tr/plaj-severler-icin-sakiz-adasi/",
         cta: "🏖️ Keşfet",
       },
       {
         ...homePageEn.traveler.cards[1],
         title: "Keşif",
         text: "Sakız’ın her köşesinde köyler, doğa ve kültür.",
+        href: "/tr/sakiz-adasi-kesif/",
         cta: "🧭 Keşfet",
       },
       {
         ...homePageEn.traveler.cards[2],
         title: "Aile",
         text: "Unutulmaz aile tatilleri için fikirler ve aktiviteler.",
+        href: "/tr/sakiz-adasi-aile-tatili/",
         cta: "👨‍👩‍👧‍👦 Keşfet",
       },
       {
         ...homePageEn.traveler.cards[3],
         title: "Lezzet",
         text: "Otantik tatlar, damla sakızı ve yerel deneyimler.",
+        href: "/tr/sakiz-adasi-lezzetleri/",
         cta: "🍽️ Keşfet",
       },
     ],

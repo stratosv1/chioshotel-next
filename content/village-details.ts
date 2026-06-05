@@ -2850,13 +2850,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
     seo: {
       canonicalPath: "/es/pueblos-chios/pueblo-pyrgi/",
       title: "Pyrgi Chios | El pueblo medieval pintado",
-      description: "Descubre Pyrgi en Chios, el famoso pueblo medieval pintado, conocido por sus motivos blancos y negros, sus callejones estrechos y su identidad de pueblo del mastiha.",
+      description: "Descubre Pyrgi en Chios, un pueblo medieval pintado con motivos blancos y negros, callejones estrechos y carácter de mastiha.",
       ogImage: "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
     },
     hero: {
       kicker: "Sur de Chios • Pueblo del mastiha",
       title: "Pyrgi: el pueblo pintado de Chios",
-      description: "Descubre Pyrgi en Chios, el famoso pueblo medieval pintado, conocido por sus motivos blancos y negros, sus callejones estrechos y su identidad de pueblo del mastiha.",
+      description: "Descubre Pyrgi en Chios, un pueblo medieval pintado con motivos blancos y negros, callejones estrechos y carácter de mastiha.",
       image: "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
       tags: ["#pyrgi", "#mastic_village", "#xysta", "#medieval_chios"],
     },

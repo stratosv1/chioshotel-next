@@ -125,7 +125,7 @@ export function HomePage({ data }: HomePageProps) {
             {data.announceBar.text} <strong>{data.announceBar.strongText}</strong>
           </span>
           <span className="vh-hero-announce-arrow" aria-hidden="true">
-            β†“
+            
           </span>
         </a>
 
@@ -211,7 +211,7 @@ export function HomePage({ data }: HomePageProps) {
                     type="button"
                     onClick={loadMap}
                   >
-                    <span aria-hidden="true">π“</span> {data.location.map.buttonLabel}
+                    {data.location.map.buttonLabel}
                   </button>
                 </div>
 
@@ -257,11 +257,11 @@ export function HomePage({ data }: HomePageProps) {
                     lineHeight: 1.8,
                   }}
                 >
-                  π“ {data.location.infoCard.addressLines[0]}
+                  {data.location.infoCard.addressLines[0]}
                   <br />
                   {data.location.infoCard.addressLines[1]}
                   <br />
-                  π“ {data.location.infoCard.phoneLabel}{" "}
+                  {data.location.infoCard.phoneLabel}{" "}
                   <a
                     href={data.location.infoCard.phoneHref}
                     style={{ color: "#8E6607", fontWeight: 700 }}
@@ -269,7 +269,7 @@ export function HomePage({ data }: HomePageProps) {
                     {data.location.infoCard.phone}
                   </a>
                   <br />
-                  β‰οΈ {data.location.infoCard.emailLabel}{" "}
+                  {data.location.infoCard.emailLabel}{" "}
                   <a
                     href={data.location.infoCard.emailHref}
                     style={{ color: "#8E6607", fontWeight: 700 }}
@@ -449,7 +449,7 @@ export function HomePage({ data }: HomePageProps) {
                     </div>
 
                     <span className="vh-btn vh-btn--secondary">
-                      <span aria-hidden="true">π”</span> {room.cta}
+                      {room.cta}
                     </span>
                   </div>
                 </a>

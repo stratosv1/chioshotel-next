@@ -718,7 +718,7 @@ const englishPages: Record<ChiosActivityKey, ChiosActivitiesPageData> = {
     key: "hiking",
     path: chiosActivityDetailPaths.hiking.en,
     seo: {
-      title: "Chios Hiking - Trails, Villages and Nature | Voulamandis House",
+      title: "Chios Hiking Trails | Voulamandis House",
       description:
         "Explore Chios hiking routes through mastic villages, Kampos orchards, Amani mountains, coastal trails, forests and traditional villages.",
     },
@@ -820,7 +820,7 @@ const englishPages: Record<ChiosActivityKey, ChiosActivitiesPageData> = {
     key: "rocketWar",
     path: chiosActivityDetailPaths.rocketWar.en,
     seo: {
-      title: "Rocket War of Chios Island - Rouketopolemos | Voulamandis House",
+      title: "Rocket War of Chios | Voulamandis House",
       description:
         "Experience the famous Rocket War of Chios, the spectacular Easter tradition in Vrontados, and stay at Voulamandis House in Kampos.",
     },
@@ -929,7 +929,7 @@ const localizedActivityCopy: Partial<
   el: {
     hub: {
       seo: {
-        title: "Δραστηριότητες στη Χίο - Τι να κάνετε στη Χίο | Voulamandis House",
+        title: "Δραστηριότητες στη Χίο | Voulamandis House",
         description:
           "Ανακαλύψτε δραστηριότητες στη Χίο: μαθήματα ελληνικών, πεζοπορία, ιαματικά λουτρά, Μόστρα, Ρουκετοπόλεμος και ορχιδέες.",
       },
@@ -1038,7 +1038,7 @@ const localizedActivityCopy: Partial<
     },
     hiking: {
       seo: {
-        title: "Πεζοπορία στη Χίο - Μονοπάτια, Χωριά και Φύση | Voulamandis House",
+        title: "Πεζοπορία στη Χίο | Voulamandis House",
         description:
           "Ανακαλύψτε πεζοπορικές διαδρομές στη Χίο μέσα από μαστιχοχώρια, περιβόλια του Κάμπου, βουνά, δάση, ακτές και παραδοσιακά χωριά.",
       },
@@ -1124,7 +1124,7 @@ const localizedActivityCopy: Partial<
     },
     rocketWar: {
       seo: {
-        title: "Ρουκετοπόλεμος Χίου - Πάσχα στον Βροντάδο | Voulamandis House",
+        title: "Ρουκετοπόλεμος Χίου | Voulamandis House",
         description:
           "Ζήστε τον διάσημο Ρουκετοπόλεμο της Χίου, το εντυπωσιακό πασχαλινό έθιμο του Βροντάδου, με διαμονή στο Voulamandis House.",
       },
@@ -1168,7 +1168,7 @@ const localizedActivityCopy: Partial<
     },
     orchids: {
       seo: {
-        title: "Ορχιδέες της Χίου - Άγρια Λουλούδια και Φύση | Voulamandis House",
+        title: "Ορχιδέες της Χίου | Voulamandis House",
         description:
           "Ανακαλύψτε τις άγριες ορχιδέες της Χίου, τα ανοιξιάτικα λουλούδια, τους βοτανικούς τόπους και τη φύση του νησιού.",
       },
@@ -1323,7 +1323,7 @@ const localizedActivityCopy: Partial<
     },
     hiking: {
       seo: {
-        title: "Randonnée à Chios - Sentiers, villages et nature | Voulamandis House",
+        title: "Randonnée à Chios | Voulamandis House",
         description:
           "Explorez les sentiers de randonnée de Chios à travers villages de mastiha, Kampos, montagnes, forêts, côtes et villages traditionnels.",
       },
@@ -1409,7 +1409,7 @@ const localizedActivityCopy: Partial<
     },
     rocketWar: {
       seo: {
-        title: "Guerre des fusées de Chios - Rouketopolemos | Voulamandis House",
+        title: "Guerre des fusées de Chios | Voulamandis House",
         description:
           "Découvrez la célèbre Guerre des fusées de Chios, la spectaculaire tradition de Pâques à Vrontados.",
       },
@@ -1453,7 +1453,7 @@ const localizedActivityCopy: Partial<
     },
     orchids: {
       seo: {
-        title: "Orchidées de Chios - Fleurs sauvages et nature | Voulamandis House",
+        title: "Orchidées de Chios | Voulamandis House",
         description:
           "Découvrez les orchidées sauvages de Chios, les fleurs printanières, les sites botaniques et les promenades nature de l'île.",
       },
@@ -1499,7 +1499,7 @@ const localizedActivityCopy: Partial<
   de: {
     hub: {
       seo: {
-        title: "Aktivitäten auf Chios - Was tun auf Chios | Voulamandis House",
+        title: "Aktivitäten auf Chios | Voulamandis House",
         description:
           "Entdecken Sie Aktivitäten auf Chios: Griechischkurse, Wandern, Thermalquellen, Mostra Festival, Raketenkrieg und wilde Orchideen.",
       },
@@ -1608,7 +1608,7 @@ const localizedActivityCopy: Partial<
     },
     hiking: {
       seo: {
-        title: "Wandern auf Chios - Wege, Dörfer und Natur | Voulamandis House",
+        title: "Wandern auf Chios | Voulamandis House",
         description:
           "Entdecken Sie Wanderwege auf Chios durch Mastixdörfer, Kampos, Berge, Wälder, Küsten und traditionelle Dörfer.",
       },
@@ -1738,7 +1738,7 @@ const localizedActivityCopy: Partial<
     },
     orchids: {
       seo: {
-        title: "Orchideen auf Chios - Wildblumen und Natur | Voulamandis House",
+        title: "Orchideen auf Chios | Voulamandis House",
         description:
           "Entdecken Sie wilde Orchideen auf Chios, Frühlingsblumen, botanische Orte und Naturspaziergänge auf der Insel.",
       },
@@ -1893,7 +1893,7 @@ const localizedActivityCopy: Partial<
     },
     hiking: {
       seo: {
-        title: "Trekking a Chios - Sentieri, villaggi e natura | Voulamandis House",
+        title: "Trekking a Chios | Voulamandis House",
         description:
           "Esplora i percorsi trekking di Chios tra villaggi del mastice, Kampos, montagne, boschi, coste e villaggi tradizionali.",
       },
@@ -1979,7 +1979,7 @@ const localizedActivityCopy: Partial<
     },
     rocketWar: {
       seo: {
-        title: "Guerra dei razzi di Chios - Rouketopolemos | Voulamandis House",
+        title: "Guerra dei razzi di Chios | Voulamandis House",
         description:
           "Vivi la famosa Guerra dei razzi di Chios, la spettacolare tradizione pasquale di Vrontados.",
       },
@@ -2023,7 +2023,7 @@ const localizedActivityCopy: Partial<
     },
     orchids: {
       seo: {
-        title: "Orchidee di Chios - Fiori selvatici e natura | Voulamandis House",
+        title: "Orchidee di Chios | Voulamandis House",
         description:
           "Scopri le orchidee selvatiche di Chios, i fiori primaverili, i luoghi botanici e le passeggiate nella natura.",
       },
@@ -2069,7 +2069,7 @@ const localizedActivityCopy: Partial<
   es: {
     hub: {
       seo: {
-        title: "Actividades en Quíos - Qué hacer en Quíos | Voulamandis House",
+        title: "Actividades en Quíos | Voulamandis House",
         description:
           "Descubre qué hacer en Quíos: cursos de griego, senderismo, baños termales, Festival Mostra, Guerra de cohetes y orquídeas silvestres.",
       },
@@ -2178,7 +2178,7 @@ const localizedActivityCopy: Partial<
     },
     hiking: {
       seo: {
-        title: "Senderismo en Quíos - Rutas, pueblos y naturaleza | Voulamandis House",
+        title: "Senderismo en Quíos | Voulamandis House",
         description:
           "Explora rutas de senderismo en Quíos por pueblos de mastiha, Kampos, montañas, bosques, costas y pueblos tradicionales.",
       },
@@ -2264,7 +2264,7 @@ const localizedActivityCopy: Partial<
     },
     rocketWar: {
       seo: {
-        title: "Guerra de cohetes de Quíos - Rouketopolemos | Voulamandis House",
+        title: "Guerra de cohetes de Quíos | Voulamandis House",
         description:
           "Vive la famosa Guerra de cohetes de Quíos, la espectacular tradición de Pascua en Vrontados.",
       },
@@ -2308,7 +2308,7 @@ const localizedActivityCopy: Partial<
     },
     orchids: {
       seo: {
-        title: "Orquídeas de Quíos - Flores silvestres y naturaleza | Voulamandis House",
+        title: "Orquídeas de Quíos | Voulamandis House",
         description:
           "Descubre las orquídeas silvestres de Quíos, flores de primavera, lugares botánicos y paseos por la naturaleza.",
       },
@@ -2354,7 +2354,7 @@ const localizedActivityCopy: Partial<
   tr: {
     hub: {
       seo: {
-        title: "Sakız Adası Aktiviteleri - Sakız Adası'nda Ne Yapılır | Voulamandis House",
+        title: "Sakız Adası Aktiviteleri | Voulamandis House",
         description:
           "Sakız Adası'nda yapılacakları keşfedin: Yunanca kursları, yürüyüş, termal kaplıcalar, Mostra Festivali, Roket Savaşı ve yabani orkideler.",
       },
@@ -2463,7 +2463,7 @@ const localizedActivityCopy: Partial<
     },
     hiking: {
       seo: {
-        title: "Sakız Adası Yürüyüş Rotaları - Köyler ve Doğa | Voulamandis House",
+        title: "Sakız Adası Yürüyüş Rotaları | Voulamandis House",
         description:
           "Sakız Adası'nda mastik köyleri, Kampos, dağlar, ormanlar, kıyılar ve geleneksel köyler arasında yürüyüş rotalarını keşfedin.",
       },
@@ -2506,7 +2506,7 @@ const localizedActivityCopy: Partial<
     },
     thermalBaths: {
       seo: {
-        title: "Sakız Adası Termal Kaplıcaları - Agiasmata | Voulamandis House",
+        title: "Sakız Adası Termal Kaplıcaları | Voulamandis House",
         description:
           "Kuzey Sakız'daki Agiasmata doğal termal sularında, doğayla çevrili sakin bir dinlenme noktasında rahatlayın.",
       },
@@ -2549,7 +2549,7 @@ const localizedActivityCopy: Partial<
     },
     rocketWar: {
       seo: {
-        title: "Sakız Adası Roket Savaşı - Rouketopolemos | Voulamandis House",
+        title: "Sakız Adası Roket Savaşı | Voulamandis House",
         description:
           "Sakız Adası'nın ünlü Roket Savaşı'nı, Vrontados'taki etkileyici Paskalya geleneğini deneyimleyin.",
       },
@@ -2593,7 +2593,7 @@ const localizedActivityCopy: Partial<
     },
     orchids: {
       seo: {
-        title: "Sakız Adası Orkideleri - Yabani Çiçekler ve Doğa | Voulamandis House",
+        title: "Sakız Adası Orkideleri | Voulamandis House",
         description:
           "Sakız Adası'nın yabani orkidelerini, bahar çiçeklerini, botanik alanlarını ve doğa yürüyüşlerini keşfedin.",
       },

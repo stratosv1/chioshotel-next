@@ -467,6 +467,71 @@ export const routeMap: readonly RouteRecord[] = [
     priority: "Critical",
   },
 
+
+  {
+    path: "/find-your-room/",
+    language: "en",
+    contentType: "booking-rates",
+    itemId: "find-your-room",
+    template: "BookingPage",
+    action: "KEEP",
+    priority: "Critical",
+  },
+  {
+    path: "/el/vres-to-domatio-sou/",
+    language: "el",
+    contentType: "booking-rates",
+    itemId: "find-your-room",
+    template: "BookingPage",
+    action: "KEEP",
+    priority: "Critical",
+  },
+  {
+    path: "/fr/trouvez-votre-chambre/",
+    language: "fr",
+    contentType: "booking-rates",
+    itemId: "find-your-room",
+    template: "BookingPage",
+    action: "KEEP",
+    priority: "Critical",
+  },
+  {
+    path: "/de/finde-dein-zimmer/",
+    language: "de",
+    contentType: "booking-rates",
+    itemId: "find-your-room",
+    template: "BookingPage",
+    action: "KEEP",
+    priority: "Critical",
+  },
+  {
+    path: "/it/trova-la-tua-camera/",
+    language: "it",
+    contentType: "booking-rates",
+    itemId: "find-your-room",
+    template: "BookingPage",
+    action: "KEEP",
+    priority: "Critical",
+  },
+  {
+    path: "/es/encuentra-tu-habitacion/",
+    language: "es",
+    contentType: "booking-rates",
+    itemId: "find-your-room",
+    template: "BookingPage",
+    action: "KEEP",
+    priority: "Critical",
+  },
+  {
+    path: "/tr/odani-bul/",
+    language: "tr",
+    contentType: "booking-rates",
+    itemId: "find-your-room",
+    template: "BookingPage",
+    action: "KEEP",
+    priority: "Critical",
+  },
+
   {
     path: "/best-chios-travel-deals-for-chios-hotels/",
     language: "en",
@@ -2821,6 +2886,18 @@ export const routeMap: readonly RouteRecord[] = [
     priority: "Medium",
   },
 
+
+  {
+    path: "/chios-activities/",
+    language: "en",
+    contentType: "landing-page",
+    category: "landing",
+    itemId: "chios-activities-hub",
+    template: "LandingPage",
+    action: "KEEP",
+    priority: "High",
+  },
+
   {
     path: "/el/drastiriotites-sti-xio/",
     language: "el",
@@ -2877,6 +2954,18 @@ export const routeMap: readonly RouteRecord[] = [
     contentType: "landing-page",
     category: "landing",
     itemId: "chios-activities-hub",
+    template: "LandingPage",
+    action: "KEEP",
+    priority: "High",
+  },
+
+
+  {
+    path: "/chios-festival-mostra/",
+    language: "en",
+    contentType: "landing-page",
+    category: "landing",
+    itemId: "chios-activity-mostra",
     template: "LandingPage",
     action: "KEEP",
     priority: "High",
@@ -2943,6 +3032,18 @@ export const routeMap: readonly RouteRecord[] = [
     priority: "High",
   },
 
+
+  {
+    path: "/greek-language-courses-chios/",
+    language: "en",
+    contentType: "landing-page",
+    category: "landing",
+    itemId: "chios-activity-greek-courses",
+    template: "LandingPage",
+    action: "KEEP",
+    priority: "High",
+  },
+
   {
     path: "/el/mathimata-ellinikon-sti-xio/",
     language: "el",
@@ -2999,6 +3100,18 @@ export const routeMap: readonly RouteRecord[] = [
     contentType: "landing-page",
     category: "landing",
     itemId: "chios-activity-greek-courses",
+    template: "LandingPage",
+    action: "KEEP",
+    priority: "High",
+  },
+
+
+  {
+    path: "/chios-hiking/",
+    language: "en",
+    contentType: "landing-page",
+    category: "landing",
+    itemId: "chios-activity-hiking",
     template: "LandingPage",
     action: "KEEP",
     priority: "High",
@@ -3065,6 +3178,18 @@ export const routeMap: readonly RouteRecord[] = [
     priority: "High",
   },
 
+
+  {
+    path: "/chios-thermal-baths/",
+    language: "en",
+    contentType: "landing-page",
+    category: "landing",
+    itemId: "chios-activity-thermal-baths",
+    template: "LandingPage",
+    action: "KEEP",
+    priority: "High",
+  },
+
   {
     path: "/el/iamatika-loutra-xiou/",
     language: "el",
@@ -3126,6 +3251,18 @@ export const routeMap: readonly RouteRecord[] = [
     priority: "High",
   },
 
+
+  {
+    path: "/rocket-war-chios/",
+    language: "en",
+    contentType: "landing-page",
+    category: "landing",
+    itemId: "chios-activity-rocket-war",
+    template: "LandingPage",
+    action: "KEEP",
+    priority: "High",
+  },
+
   {
     path: "/el/rouketopolemos-xios/",
     language: "el",
@@ -3182,6 +3319,18 @@ export const routeMap: readonly RouteRecord[] = [
     contentType: "landing-page",
     category: "landing",
     itemId: "chios-activity-rocket-war",
+    template: "LandingPage",
+    action: "KEEP",
+    priority: "High",
+  },
+
+
+  {
+    path: "/chios-orchids/",
+    language: "en",
+    contentType: "landing-page",
+    category: "landing",
+    itemId: "chios-activity-orchids",
     template: "LandingPage",
     action: "KEEP",
     priority: "High",

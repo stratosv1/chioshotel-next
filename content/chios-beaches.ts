@@ -91,9 +91,9 @@ const beachImages = {
 export const chiosBeachesPageEn: ChiosBeachesPageData = {
   seo: {
     canonicalPath: "/chios/chios-beaches/",
-    title: "Top Chios Beaches | Best Beaches in Chios Island Guide",
+    title: "Top Chios Beaches | Voulamandis House",
     description:
-      "Discover the best beaches in Chios, from Mavra Volia and Agia Fotia to Komi, Lithi, Agia Dynami, Lefkathia and hidden turquoise coves.",
+      "Discover the best beaches in Chios, from Mavra Volia and Agia Fotia to Komi, Lithi, Agia Dynami and hidden coves.",
     ogImage: beachImages.mavraVolia,
   },
   hero: {
@@ -299,9 +299,9 @@ export const chiosBeachesPageEn: ChiosBeachesPageData = {
 export const chiosBeachesPageEl: ChiosBeachesPageData = {
   seo: {
     canonicalPath: "/el/paralies-xios/",
-    title: "Παραλίες Χίου | Οδηγός για τις καλύτερες παραλίες της Χίου",
+    title: "Παραλίες Χίου | Voulamandis House",
     description:
-      "Ανακαλύψτε τις καλύτερες παραλίες της Χίου, από τα Μαύρα Βόλια και την Αγία Φωτιά μέχρι την Κώμη, το Λιθί, την Αγία Δύναμη και τους κρυφούς τιρκουάζ κόλπους.",
+      "Ανακαλύψτε τις παραλίες της Χίου: Μαύρα Βόλια, Αγία Φωτιά, Κώμη, Λιθί, Αγία Δύναμη και κρυφοί κόλποι.",
     ogImage: beachImages.mavraVolia,
   },
   hero: {
@@ -506,9 +506,9 @@ export const chiosBeachesPageEl: ChiosBeachesPageData = {
 export const chiosBeachesPageFr: ChiosBeachesPageData = {
   seo: {
     canonicalPath: "/fr/plages-de-chios/",
-    title: "Plages de Chios | Guide des plus belles plages de Chios",
+    title: "Plages de Chios | Voulamandis House",
     description:
-      "Découvrez les plus belles plages de Chios, de Mavra Volia et Agia Fotia à Komi, Lithi, Agia Dynami, Lefkathia et aux criques turquoise cachées.",
+      "Découvrez les plages de Chios : Mavra Volia, Agia Fotia, Komi, Lithi, Agia Dynami et criques turquoise.",
     ogImage: beachImages.mavraVolia,
   },
   hero: {
@@ -713,9 +713,9 @@ export const chiosBeachesPageFr: ChiosBeachesPageData = {
 export const chiosBeachesPageDe: ChiosBeachesPageData = {
   seo: {
     canonicalPath: "/de/straende-chios/",
-    title: "Strände auf Chios | Reiseführer zu den schönsten Stränden",
+    title: "Strände auf Chios | Voulamandis House",
     description:
-      "Entdecken Sie die schönsten Strände auf Chios, von Mavra Volia und Agia Fotia bis Komi, Lithi, Agia Dynami, Lefkathia und versteckten türkisfarbenen Buchten.",
+      "Entdecken Sie Strände auf Chios: Mavra Volia, Agia Fotia, Komi, Lithi, Agia Dynami und versteckte Buchten.",
     ogImage: beachImages.mavraVolia,
   },
   hero: {
@@ -920,9 +920,9 @@ export const chiosBeachesPageDe: ChiosBeachesPageData = {
 export const chiosBeachesPageIt: ChiosBeachesPageData = {
   seo: {
     canonicalPath: "/it/spiagge-chios/",
-    title: "Spiagge di Chios | Guida alle migliori spiagge dell’isola",
+    title: "Spiagge di Chios | Voulamandis House",
     description:
-      "Scopri le migliori spiagge di Chios, da Mavra Volia e Agia Fotia a Komi, Lithi, Agia Dynami, Lefkathia e le baie turchesi nascoste.",
+      "Scopri le spiagge di Chios: Mavra Volia, Agia Fotia, Komi, Lithi, Agia Dynami e baie nascoste.",
     ogImage: beachImages.mavraVolia,
   },
   hero: {
@@ -1127,9 +1127,9 @@ export const chiosBeachesPageIt: ChiosBeachesPageData = {
 export const chiosBeachesPageEs: ChiosBeachesPageData = {
   seo: {
     canonicalPath: "/es/playas-chios/",
-    title: "Playas de Chios | Guía de las mejores playas de Chios",
+    title: "Playas de Chios | Voulamandis House",
     description:
-      "Descubre las mejores playas de Chios, desde Mavra Volia y Agia Fotia hasta Komi, Lithi, Agia Dynami, Lefkathia y calas turquesas escondidas.",
+      "Descubre las playas de Chios: Mavra Volia, Agia Fotia, Komi, Lithi, Agia Dynami y calas escondidas.",
     ogImage: beachImages.mavraVolia,
   },
   hero: {
@@ -1334,9 +1334,9 @@ export const chiosBeachesPageEs: ChiosBeachesPageData = {
 export const chiosBeachesPageTr: ChiosBeachesPageData = {
   seo: {
     canonicalPath: "/tr/sakiz-adasi-plajlari/",
-    title: "Sakız Adası Plajları | En güzel Chios plajları rehberi",
+    title: "Sakız Adası Plajları | Voulamandis House",
     description:
-      "Sakız Adası’nın en güzel plajlarını keşfedin: Mavra Volia, Agia Fotia, Komi, Lithi, Agia Dynami, Lefkathia ve gizli turkuaz koylar.",
+      "Sakız Adası plajlarını keşfedin: Mavra Volia, Agia Fotia, Komi, Lithi, Agia Dynami ve gizli koylar.",
     ogImage: beachImages.mavraVolia,
   },
   hero: {

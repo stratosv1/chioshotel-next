@@ -895,9 +895,9 @@ export const findYourRoomPages: Record<LanguageCode, FindYourRoomPageData> = {
     path: findYourRoomPaths.en,
     seo: {
       canonicalPath: findYourRoomPaths.en,
-      title: "Book direct at Voulamandis House in Chios | Rooms & Apartments",
+      title: "Book Direct in Chios | Voulamandis House",
       description:
-        "Find live availability and book your room or apartment directly at Voulamandis House in Chios. Simple direct contact, discount and no commissions.",
+        "Check live availability and book direct at Voulamandis House in Chios, with direct contact, discount and no commissions.",
       ogImage,
     },
     hero: {
@@ -913,9 +913,9 @@ export const findYourRoomPages: Record<LanguageCode, FindYourRoomPageData> = {
     path: findYourRoomPaths.el,
     seo: {
       canonicalPath: findYourRoomPaths.el,
-      title: "Κάντε άμεση κράτηση στο Voulamandis House στη Χίο | Δωμάτια & Διαμερίσματα",
+      title: "Άμεση Κράτηση στη Χίο | Voulamandis House",
       description:
-        "Δείτε live διαθεσιμότητα και κλείστε απευθείας το δωμάτιο ή το διαμέρισμά σας στο Voulamandis House στη Χίο.",
+        "Δείτε live διαθεσιμότητα και κάντε απευθείας κράτηση στο Voulamandis House στη Χίο, χωρίς προμήθειες.",
       ogImage,
     },
     hero: {
@@ -931,9 +931,9 @@ export const findYourRoomPages: Record<LanguageCode, FindYourRoomPageData> = {
     path: findYourRoomPaths.fr,
     seo: {
       canonicalPath: findYourRoomPaths.fr,
-      title: "Réservez directement à Voulamandis House à Chios | Chambres et appartements",
+      title: "Réservation directe à Chios | Voulamandis House",
       description:
-        "Consultez les disponibilités en direct et réservez votre chambre ou appartement directement à Voulamandis House à Chios.",
+        "Consultez les disponibilités en direct et réservez directement à Voulamandis House à Chios, sans commissions.",
       ogImage,
     },
     hero: {
@@ -949,9 +949,9 @@ export const findYourRoomPages: Record<LanguageCode, FindYourRoomPageData> = {
     path: findYourRoomPaths.de,
     seo: {
       canonicalPath: findYourRoomPaths.de,
-      title: "Direkt buchen im Voulamandis House auf Chios | Zimmer und Apartments",
+      title: "Direkt buchen auf Chios | Voulamandis House",
       description:
-        "Prüfen Sie Live-Verfügbarkeit und buchen Sie Ihr Zimmer oder Apartment direkt im Voulamandis House auf Chios.",
+        "Prüfen Sie Live-Verfügbarkeit und buchen Sie direkt im Voulamandis House auf Chios, ohne Provisionen.",
       ogImage,
     },
     hero: {
@@ -967,9 +967,9 @@ export const findYourRoomPages: Record<LanguageCode, FindYourRoomPageData> = {
     path: findYourRoomPaths.it,
     seo: {
       canonicalPath: findYourRoomPaths.it,
-      title: "Prenota direttamente al Voulamandis House a Chios | Camere e appartamenti",
+      title: "Prenota diretto a Chios | Voulamandis House",
       description:
-        "Controlla la disponibilità live e prenota direttamente la tua camera o il tuo appartamento al Voulamandis House a Chios.",
+        "Controlla la disponibilità live e prenota direttamente al Voulamandis House a Chios, senza commissioni.",
       ogImage,
     },
     hero: {
@@ -985,9 +985,9 @@ export const findYourRoomPages: Record<LanguageCode, FindYourRoomPageData> = {
     path: findYourRoomPaths.es,
     seo: {
       canonicalPath: findYourRoomPaths.es,
-      title: "Reserva directamente en Voulamandis House en Quíos | Habitaciones y apartamentos",
+      title: "Reserva directa en Quíos | Voulamandis House",
       description:
-        "Consulta la disponibilidad en vivo y reserva tu habitación o apartamento directamente en Voulamandis House en Quíos.",
+        "Consulta disponibilidad en vivo y reserva directamente en Voulamandis House en Quíos, sin comisiones.",
       ogImage,
     },
     hero: {
@@ -1003,9 +1003,9 @@ export const findYourRoomPages: Record<LanguageCode, FindYourRoomPageData> = {
     path: findYourRoomPaths.tr,
     seo: {
       canonicalPath: findYourRoomPaths.tr,
-      title: "Sakız Adası Voulamandis House’ta doğrudan rezervasyon | Odalar ve daireler",
+      title: "Sakız Adası Direkt Rezervasyon | Voulamandis House",
       description:
-        "Canlı müsaitliği kontrol edin ve Sakız Adası’ndaki Voulamandis House’ta odanızı veya dairenizi doğrudan ayırtın.",
+        "Canlı müsaitliği kontrol edin ve Sakız Adası Voulamandis House’ta doğrudan, komisyonsuz rezervasyon yapın.",
       ogImage,
     },
     hero: {
