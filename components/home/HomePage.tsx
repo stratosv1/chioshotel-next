@@ -1,5 +1,6 @@
 ﻿"use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import type { HomePageData } from "@/content/home";
 import { LastMinuteDeals } from "@/components/home/LastMinuteDeals";
@@ -48,21 +49,20 @@ export function HomePage({ data }: HomePageProps) {
       successBox.style.display = "block";
     }
   }
+
   return (
     <>
       <main className="vh-homepage">
         <section className="hero" aria-label="Rooms and apartments in Chios, Kampos">
           <div className="hero-media" aria-hidden="true">
-            <picture>
-              <img
-                src={data.hero.image}
-                alt={data.hero.imageAlt}
-                width={1200}
-                height={675}
-                fetchPriority="high"
-                decoding="async"
-              />
-            </picture>
+            <Image
+              src={data.hero.image}
+              alt={data.hero.imageAlt}
+              width={1200}
+              height={675}
+              priority
+              sizes="100vw"
+            />
           </div>
 
           <div className="hero-inner">
@@ -448,9 +448,7 @@ export function HomePage({ data }: HomePageProps) {
                       ))}
                     </div>
 
-                    <span className="vh-btn vh-btn--secondary">
-                      {room.cta}
-                    </span>
+                    <span className="vh-btn vh-btn--secondary">{room.cta}</span>
                   </div>
                 </a>
               ))}
@@ -659,8 +657,3 @@ export function HomePage({ data }: HomePageProps) {
     </>
   );
 }
-
-
-
-
-
