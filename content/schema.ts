@@ -63,27 +63,18 @@ function buildHomeRoomsItemListSchema(): SchemaObject {
         position: 1,
         url: absoluteUrl("/chios-rooms/standard-double-room/"),
         name: "Double Rooms and Triple Rooms in Chios",
-        item: {
-          "@id": schemaId("/chios-rooms/standard-double-room/", "room"),
-        },
       },
       {
         "@type": "ListItem",
         position: 2,
         url: absoluteUrl("/chios-rooms/economy-double-rooms/"),
         name: "Economy Double Rooms in Chios",
-        item: {
-          "@id": schemaId("/chios-rooms/economy-double-rooms/", "room"),
-        },
       },
       {
         "@type": "ListItem",
         position: 3,
         url: absoluteUrl("/chios-rooms/family-chios-apartments/"),
         name: "Family Chios Apartments",
-        item: {
-          "@id": schemaId("/chios-rooms/family-chios-apartments/", "room"),
-        },
       },
     ],
   };
