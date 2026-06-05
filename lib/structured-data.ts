@@ -173,7 +173,7 @@ export function buildOrganizationSchema(): SchemaObject {
 
 export function buildHotelSchema(): SchemaObject {
   return {
-    "@type": ["Hotel", "LodgingBusiness"],
+    "@type": "Hotel",
     "@id": hotelId(),
     name: businessData.name,
     url: businessData.url,
