@@ -89,7 +89,7 @@ function buildDealOfferSchema(
       "@id": hotelId(),
     },
     itemOffered: {
-      "@type": ["Accommodation", "HotelRoom"],
+      "@type": "HotelRoom",
       "@id": schemaId(offer.roomPageHref, "room"),
       name: offer.title,
       url: absoluteUrl(offer.roomPageHref),

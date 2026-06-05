@@ -156,7 +156,7 @@ function buildRoomOptionsItemListSchema(data: FindYourRoomPageData): SchemaObjec
       description: room.description,
       url: absoluteUrl(room.url),
       item: {
-        "@type": ["Accommodation", "HotelRoom"],
+        "@type": "HotelRoom",
         "@id": schemaId(room.url, "room"),
         name: room.name,
         url: absoluteUrl(room.url),

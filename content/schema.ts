@@ -92,7 +92,7 @@ function buildHomeRoomsItemListSchema(): SchemaObject {
 function buildHomeRoomReferencesSchema(): SchemaObject[] {
   return [
     {
-      "@type": ["Accommodation", "HotelRoom"],
+      "@type": "HotelRoom",
       "@id": schemaId("/chios-rooms/standard-double-room/", "room"),
       name: "Double Rooms and Triple Rooms in Chios",
       url: absoluteUrl("/chios-rooms/standard-double-room/"),
@@ -103,7 +103,7 @@ function buildHomeRoomReferencesSchema(): SchemaObject[] {
       },
     },
     {
-      "@type": ["Accommodation", "HotelRoom"],
+      "@type": "HotelRoom",
       "@id": schemaId("/chios-rooms/economy-double-rooms/", "room"),
       name: "Economy Double Rooms in Chios",
       url: absoluteUrl("/chios-rooms/economy-double-rooms/"),
@@ -114,7 +114,7 @@ function buildHomeRoomReferencesSchema(): SchemaObject[] {
       },
     },
     {
-      "@type": ["Accommodation", "HotelRoom"],
+      "@type": "HotelRoom",
       "@id": schemaId("/chios-rooms/family-chios-apartments/", "room"),
       name: "Family Chios Apartments",
       url: absoluteUrl("/chios-rooms/family-chios-apartments/"),

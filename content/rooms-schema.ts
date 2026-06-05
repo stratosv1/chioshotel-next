@@ -24,7 +24,7 @@ import {
 
 function buildRoomCardSchema(card: RoomCategoryCard): SchemaObject {
   return {
-    "@type": ["Accommodation", "HotelRoom"],
+    "@type": "HotelRoom",
     "@id": schemaId(card.href, "room"),
     name: card.title,
     alternateName: card.subtitle,
