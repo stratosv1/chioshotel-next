@@ -165,7 +165,7 @@ export function buildOrganizationSchema(): SchemaObject {
     url: businessData.url,
     logo: {
       "@type": "ImageObject",
-      url: absoluteUrl("/og-image.jpg"),
+      url: absoluteUrl("/images/voulamandis-house-og.jpg"),
     },
     sameAs: businessData.socialProfiles,
   };

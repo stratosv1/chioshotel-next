@@ -1,4 +1,4 @@
-﻿import {
+import {
   absoluteUrl,
   getCanonicalUrl,
   getLanguageForPath,
@@ -141,7 +141,7 @@ function getPrimaryImage(data: LandingPageSchemaData): string {
     data.seo.ogImage ||
     data.seo.image ||
     getImageUrl(data.hero.image) ||
-    "/og-image.jpg"
+    "/images/voulamandis-house-og.jpg"
   );
 }
 

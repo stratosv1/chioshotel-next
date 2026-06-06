@@ -4,7 +4,7 @@ import { getLocalizedRoutes, getRouteByPath } from "./url-map";
 
 export const siteUrl = "https://chioshotel.gr";
 export const siteName = "Voulamandis House";
-export const defaultOgImage = "/og-image.jpg";
+export const defaultOgImage = "/images/voulamandis-house-og.jpg";
 
 export type SeoInput = {
   path: string;

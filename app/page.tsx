@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     description: homePageEn.seo.description,
     images: [
       {
-        url: homePageEn.seo.ogImage || "https://chioshotel.gr/og-image.jpg",
+        url: homePageEn.seo.ogImage || "https://chioshotel.gr/images/voulamandis-house-og.jpg",
         width: 1200,
         height: 675,
         alt: homePageEn.seo.title,
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: homePageEn.seo.title,
     description: homePageEn.seo.description,
-    images: [homePageEn.seo.ogImage || "https://chioshotel.gr/og-image.jpg"],
+    images: [homePageEn.seo.ogImage || "https://chioshotel.gr/images/voulamandis-house-og.jpg"],
   },
   robots: {
     index: true,

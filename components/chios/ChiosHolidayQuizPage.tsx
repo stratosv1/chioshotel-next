@@ -20,13 +20,13 @@ type ChiosHolidayQuizPageProps = {
 const supportedLocales: QuizLocale[] = ["en", "el", "fr", "de", "it", "es", "tr"];
 
 const bookingHrefByLocale: Record<QuizLocale, string> = {
-  en: "/direct-booking-voulamandis-house/",
-  el: "/el/",
-  fr: "/fr/",
-  de: "/de/",
-  it: "/it/",
-  es: "/es/",
-  tr: "/tr/",
+  en: "/chios-hotels-rates/",
+  el: "/el/amesi-kratisi-voulamandis-house/",
+  fr: "/fr/tarifs-des-hotels-a-chios/",
+  de: "/de/hotelpreise-auf-der-insel-chios/",
+  it: "/it/prezzi-hotel-chios/",
+  es: "/es/los-mejores-precios-de-hotel-en-la-isla-chios/",
+  tr: "/tr/sakiz-adasi-rezervasyon/",
 };
 
 const uiByLocale = {

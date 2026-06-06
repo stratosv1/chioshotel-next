@@ -1,4 +1,4 @@
-﻿import type { ChiosActivitiesPageData } from "@/content/chios-activities";
+import type { ChiosActivitiesPageData } from "@/content/chios-activities";
 import {
   absoluteUrl,
   getCanonicalUrl,
@@ -304,7 +304,7 @@ export function buildChiosActivitiesSchema(data: ChiosActivitiesPageData) {
     buildWebsiteSchema(),
     buildImageSchema(
       {
-        url: data.hero.image || "/og-image.jpg",
+        url: data.hero.image || "/images/voulamandis-house-og.jpg",
         alt: data.hero.imageAlt || data.hero.title,
         caption: `${data.hero.title} - ${siteName}`,
       },
