@@ -1,0 +1,361 @@
+﻿
+  app\globals.css:488:  animation:pulseDot 1.35s infinite;
+  app\globals.css:489:}
+  app\globals.css:490:
+> app\globals.css:491:@keyframes shineMove{
+  app\globals.css:492:  0%{left:-120%}
+  app\globals.css:493:  45%,100%{left:130%}
+  app\globals.css:494:}
+  app\globals.css:495:
+> app\globals.css:496:@keyframes pulseDot{
+  app\globals.css:497:  0%{box-shadow:0 0 0 0 rgba(34,197,94,.78)}
+  app\globals.css:498:  70%{box-shadow:0 0 0 8px rgba(34,197,94,0)}
+  app\globals.css:499:  100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}
+  app\globals.css:500:}
+  app\globals.css:501:
+  app\globals.css:502:.vh-hero-announce{
+  app\globals.css:503:  display:flex;
+  app\globals.css:504:  align-items:center;
+  app\globals.css:505:  justify-content:center;
+  app\globals.css:506:  gap:12px;
+  app\globals.css:507:  background:linear-gradient(135deg,#8E6607,#6A4B00);
+  app\globals.css:508:  color:#fff!important;
+  app\globals.css:517:  animation:bounceDown 2s infinite;
+  app\globals.css:518:}
+  app\globals.css:519:
+> app\globals.css:520:@keyframes bounceDown{
+  app\globals.css:521:  0%,20%,50%,80%,100%{transform:translateY(0)}
+  app\globals.css:522:  40%{transform:translateY(4px)}
+  app\globals.css:523:  60%{transform:translateY(2px)}
+  app\globals.css:524:}
+  app\globals.css:525:
+  app\globals.css:526:/* SHARED CARDS */
+  app\globals.css:527:.vh-panel,
+  app\globals.css:528:.vh-highlight-card,
+  app\globals.css:529:.vh-location-copy,
+  app\globals.css:530:.vh-reviews-shell,
+  app\globals.css:531:.b-card,
+  app\globals.css:532:.vh-room-card,
+  app\globals.css:968:  color:#3d3530;
+  app\globals.css:969:}
+  app\globals.css:970:
+> app\globals.css:971:@keyframes pulseDotLight{
+  app\globals.css:972:  0%{
+  app\globals.css:973:    box-shadow:0 0 0 0 rgba(187,247,208,.9);
+  app\globals.css:974:  }
+  app\globals.css:975:
+  app\globals.css:976:  70%{
+  app\globals.css:977:    box-shadow:0 0 0 9px rgba(187,247,208,0);
+  app\globals.css:978:  }
+  app\globals.css:979:
+  app\globals.css:980:  100%{
+  app\globals.css:981:    box-shadow:0 0 0 0 rgba(187,247,208,0);
+  app\globals.css:982:  }
+  app\globals.css:983:}
+  app\globals.css:1550:}
+  app\globals.css:1551:
+  app\globals.css:1552:/* QUIZ BAR */
+> app\globals.css:1553:.premium-seo-bar{
+  app\globals.css:1554:  background:var(--vh-surface-2);
+  app\globals.css:1555:  box-shadow:var(--vh-shadow);
+  app\globals.css:1556:  padding:22px 0;
+  app\globals.css:1557:  width:100%;
+  app\globals.css:1558:  border-top:1px solid rgba(154,107,63,.1);
+  app\globals.css:1559:  border-bottom:1px solid rgba(154,107,63,.1);
+  app\globals.css:1560:  margin:40px 0;
+  app\globals.css:1561:}
+  app\globals.css:1562:
+> app\globals.css:1563:.bar-inner{
+  app\globals.css:1564:  max-width:var(--vh-container);
+  app\globals.css:1565:  margin:0 auto;
+  app\globals.css:1566:  display:flex;
+  app\globals.css:1567:  justify-content:space-between;
+  app\globals.css:1568:  align-items:center;
+  app\globals.css:1569:  padding:0 16px;
+  app\globals.css:1570:  gap:20px;
+  app\globals.css:1571:}
+  app\globals.css:1572:
+  app\globals.css:1573:.premium-label{
+  app\globals.css:1574:  display:block;
+  app\globals.css:1575:  font-size:14px;
+  app\globals.css:1587:  line-height:1.6;
+  app\globals.css:1588:}
+  app\globals.css:1589:
+> app\globals.css:1590:.premium-btn-quiz{
+  app\globals.css:1591:  position:relative;
+  app\globals.css:1592:  overflow:hidden;
+  app\globals.css:1593:  font-size:12px;
+  app\globals.css:1594:  font-weight:900;
+  app\globals.css:1595:  letter-spacing:1.5px;
+  app\globals.css:1596:  background:linear-gradient(135deg,#a87842,#8E6607);
+  app\globals.css:1597:  color:#fff!important;
+  app\globals.css:1598:  padding:16px 36px;
+  app\globals.css:1599:  display:inline-flex;
+  app\globals.css:1600:  align-items:center;
+  app\globals.css:1601:  justify-content:center;
+  app\globals.css:1602:  gap:12px;
+  app\globals.css:1606:  text-decoration:none!important;
+  app\globals.css:1607:}
+  app\globals.css:1608:
+> app\globals.css:1609:.premium-btn-quiz::after{
+  app\globals.css:1610:  content:"";
+  app\globals.css:1611:  position:absolute;
+  app\globals.css:1612:  top:0;
+  app\globals.css:1613:  left:-120%;
+  app\globals.css:1614:  width:90%;
+  app\globals.css:1615:  height:100%;
+  app\globals.css:1616:  background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);
+  app\globals.css:1617:  animation:shineMove 1s infinite;
+  app\globals.css:1618:}
+  app\globals.css:1619:
+> app\globals.css:1620:.premium-btn-quiz:hover{
+  app\globals.css:1621:  background:#241c16;
+  app\globals.css:1622:  transform:translateY(-3px);
+  app\globals.css:1623:}
+  app\globals.css:1624:
+  app\globals.css:1625:/* FAQ */
+  app\globals.css:1626:.vh-faq-grid{
+  app\globals.css:1627:  max-width:900px;
+  app\globals.css:1628:  margin:0 auto;
+  app\globals.css:1629:  display:flex;
+  app\globals.css:1630:  flex-direction:column;
+  app\globals.css:1631:  gap:14px;
+  app\globals.css:1632:}
+  app\globals.css:2264:    border-radius:14px!important;
+  app\globals.css:2265:  }
+  app\globals.css:2266:
+> app\globals.css:2267:  .premium-seo-bar{
+  app\globals.css:2268:    margin:24px 0!important;
+  app\globals.css:2269:    padding:16px 0!important;
+  app\globals.css:2270:  }
+  app\globals.css:2271:
+> app\globals.css:2272:  .bar-inner{
+  app\globals.css:2273:    flex-direction:column!important;
+  app\globals.css:2274:    align-items:stretch!important;
+  app\globals.css:2275:    text-align:left!important;
+  app\globals.css:2276:    gap:12px!important;
+  app\globals.css:2277:  }
+  app\globals.css:2278:
+  app\globals.css:2279:  .vh-final{
+  app\globals.css:2280:    padding-bottom:86px!important;
+  app\globals.css:2281:  }
+  app\globals.css:2282:
+  app\globals.css:2283:  .vh-final-shell{
+  app\globals.css:2284:    min-height:470px!important;
+  app\globals.css:2488:  }
+  app\globals.css:2489:
+  app\globals.css:2490:  .vh-btn,
+> app\globals.css:2491:  .premium-btn-quiz{
+  app\globals.css:2492:    width:100%!important;
+  app\globals.css:2493:    max-width:100%!important;
+  app\globals.css:2494:    min-height:48px!important;
+  app\globals.css:2495:    padding:0 14px!important;
+  app\globals.css:2496:  }
+  app\globals.css:2497:
+> app\globals.css:2498:  .premium-seo-bar .premium-label::before{
+  app\globals.css:2499:    content:"🧭 ";
+  app\globals.css:2500:  }
+  app\globals.css:2501:
+  app\globals.css:2502:  .premium-text::after{
+  app\globals.css:2503:    content:" Play, discover Chios secrets and get your discount code at the end.";
+  app\globals.css:2504:    font-weight:700;
+  app\globals.css:2505:    color:#8E6607;
+  app\globals.css:2506:  }
+  app\globals.css:2507:
+  app\globals.css:2508:  .vh-faq-item summary{
+  app\globals.css:2509:    padding:15px 16px!important;
+  app\globals.css:2510:    font-size:14px!important;
+  app\globals.css:11765:  text-transform: uppercase;
+  app\globals.css:11766:}
+  app\globals.css:11767:
+> app\globals.css:11768:@keyframes vhHeaderLivePulse {
+  app\globals.css:11769:  0% {
+  app\globals.css:11770:    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6);
+  app\globals.css:11771:  }
+  app\globals.css:11772:
+  app\globals.css:11773:  70% {
+  app\globals.css:11774:    box-shadow: 0 0 0 8px rgba(34, 197, 94, 0);
+  app\globals.css:11775:  }
+  app\globals.css:11776:
+  app\globals.css:11777:  100% {
+  app\globals.css:11778:    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+  app\globals.css:11779:  }
+  app\globals.css:11780:}
+  app\globals.css:13003:  transform: translateY(-3px);
+  app\globals.css:13004:}
+  app\globals.css:13005:
+> app\globals.css:13006:@keyframes chqFadeIn {
+  app\globals.css:13007:  from {
+  app\globals.css:13008:    opacity: 0;
+  app\globals.css:13009:    transform: translateY(10px);
+  app\globals.css:13010:  }
+  app\globals.css:13011:  to {
+  app\globals.css:13012:    opacity: 1;
+  app\globals.css:13013:    transform: translateY(0);
+  app\globals.css:13014:  }
+  app\globals.css:13015:}
+  app\globals.css:13016:
+  app\globals.css:13017:@media (max-width: 700px) {
+  app\globals.css:13018:  .chq-page {
+  components\booking\FindYourRoomEngine.css:153:  animation: findRoomLivePulse 0.9s infinite;
+  components\booking\FindYourRoomEngine.css:154:}
+  components\booking\FindYourRoomEngine.css:155:
+> components\booking\FindYourRoomEngine.css:156:@keyframes findRoomLivePulse {
+  components\booking\FindYourRoomEngine.css:157:  0% {
+  components\booking\FindYourRoomEngine.css:158:    box-shadow: 0 0 0 0 rgba(46, 219, 113, 0.55);
+  components\booking\FindYourRoomEngine.css:159:  }
+  components\booking\FindYourRoomEngine.css:160:
+  components\booking\FindYourRoomEngine.css:161:  70% {
+  components\booking\FindYourRoomEngine.css:162:    box-shadow: 0 0 0 14px rgba(46, 219, 113, 0);
+  components\booking\FindYourRoomEngine.css:163:  }
+  components\booking\FindYourRoomEngine.css:164:
+  components\booking\FindYourRoomEngine.css:165:  100% {
+  components\booking\FindYourRoomEngine.css:166:    box-shadow: 0 0 0 0 rgba(46, 219, 113, 0);
+  components\booking\FindYourRoomEngine.css:167:  }
+  components\booking\FindYourRoomEngine.css:168:}
+  components\booking\FindYourRoomEngine.css:189:  animation: findRoomBadgeShine 2.1s linear infinite;
+  components\booking\FindYourRoomEngine.css:190:}
+  components\booking\FindYourRoomEngine.css:191:
+> components\booking\FindYourRoomEngine.css:192:@keyframes findRoomBadgeShine {
+  components\booking\FindYourRoomEngine.css:193:  0% {
+  components\booking\FindYourRoomEngine.css:194:    transform: translateX(-200%) skewX(-18deg);
+  components\booking\FindYourRoomEngine.css:195:    opacity: 0;
+  components\booking\FindYourRoomEngine.css:196:  }
+  components\booking\FindYourRoomEngine.css:197:
+  components\booking\FindYourRoomEngine.css:198:  16% {
+  components\booking\FindYourRoomEngine.css:199:    opacity: 1;
+  components\booking\FindYourRoomEngine.css:200:  }
+  components\booking\FindYourRoomEngine.css:201:
+  components\booking\FindYourRoomEngine.css:202:  42% {
+  components\booking\FindYourRoomEngine.css:203:    transform: translateX(360%) skewX(-18deg);
+  components\booking\FindYourRoomEngine.css:204:    opacity: 0.95;
+  components\booking\FindYourRoomEngine.css:736:  animation: findRoomScratchShimmer 2.4s ease-in-out infinite;
+  components\booking\FindYourRoomEngine.css:737:}
+  components\booking\FindYourRoomEngine.css:738:
+> components\booking\FindYourRoomEngine.css:739:@keyframes findRoomScratchShimmer {
+  components\booking\FindYourRoomEngine.css:740:  0%,
+  components\booking\FindYourRoomEngine.css:741:  100% {
+  components\booking\FindYourRoomEngine.css:742:    transform: translateX(-30%);
+  components\booking\FindYourRoomEngine.css:743:  }
+  components\booking\FindYourRoomEngine.css:744:
+  components\booking\FindYourRoomEngine.css:745:  50% {
+  components\booking\FindYourRoomEngine.css:746:    transform: translateX(30%);
+  components\booking\FindYourRoomEngine.css:747:  }
+  components\booking\FindYourRoomEngine.css:748:}
+  components\booking\FindYourRoomEngine.css:749:
+  components\booking\FindYourRoomEngine.css:750:.find-room-direct-price span,
+  components\booking\FindYourRoomEngine.css:751:.find-room-direct-price strong {
+  components\booking\FindYourRoomEngine.css:796:  animation: findRoomPriceGlow 2.4s infinite cubic-bezier(0.4, 0, 0.2, 1);
+  components\booking\FindYourRoomEngine.css:797:}
+  components\booking\FindYourRoomEngine.css:798:
+> components\booking\FindYourRoomEngine.css:799:@keyframes findRoomPriceGlow {
+  components\booking\FindYourRoomEngine.css:800:  0%,
+  components\booking\FindYourRoomEngine.css:801:  100% {
+  components\booking\FindYourRoomEngine.css:802:    transform: scale(1);
+  components\booking\FindYourRoomEngine.css:803:    text-shadow: 0 0 0 rgba(143, 159, 78, 0);
+  components\booking\FindYourRoomEngine.css:804:  }
+  components\booking\FindYourRoomEngine.css:805:
+  components\booking\FindYourRoomEngine.css:806:  50% {
+  components\booking\FindYourRoomEngine.css:807:    transform: scale(1.04);
+  components\booking\FindYourRoomEngine.css:808:    text-shadow: 0 6px 16px rgba(143, 159, 78, 0.28);
+  components\booking\FindYourRoomEngine.css:809:  }
+  components\booking\FindYourRoomEngine.css:810:}
+  components\booking\FindYourRoomEngine.css:811:
+  components\home\HomePage.backup.tsx:638:          </div>
+  components\home\HomePage.backup.tsx:639:        </section>
+  components\home\HomePage.backup.tsx:640:
+> components\home\HomePage.backup.tsx:641:        <section className="premium-seo-bar" aria-label="Discover more about Chios">
+> components\home\HomePage.backup.tsx:642:          <div className="bar-inner">
+  components\home\HomePage.backup.tsx:643:            <div className="text-wrap">
+  components\home\HomePage.backup.tsx:644:              <span className="premium-label">{data.quizBar.label}</span>
+  components\home\HomePage.backup.tsx:645:              <p className="premium-text">{data.quizBar.text}</p>
+  components\home\HomePage.backup.tsx:646:            </div>
+  components\home\HomePage.backup.tsx:647:
+> components\home\HomePage.backup.tsx:648:            <div className="cta-wrap">
+> components\home\HomePage.backup.tsx:649:              <a href={data.quizBar.href} className="premium-btn-quiz">
+  components\home\HomePage.backup.tsx:650:                {data.quizBar.cta}
+  components\home\HomePage.backup.tsx:651:              </a>
+  components\home\HomePage.backup.tsx:652:            </div>
+  components\home\HomePage.backup.tsx:653:          </div>
+  components\home\HomePage.backup.tsx:654:        </section>
+  components\home\HomePage.backup.tsx:655:
+  components\home\HomePage.backup.tsx:656:        <section className="vh-section vh-section--tight" aria-labelledby="vh-faq-title">
+  components\home\HomePage.backup.tsx:657:          <div className="vh-wrap">
+  components\home\HomePage.backup.tsx:658:            <header className="vh-section-head" style={{ textAlign: "center" }}>
+  components\home\HomePage.backup.tsx:659:              <span className="vh-kicker">{data.faq.kicker}</span>
+  components\home\HomePage.backup.tsx:660:
+  components\home\HomePage.backup.tsx:661:              <h2 className="vh-title" id="vh-faq-title">
+  components\home\HomePage.tsx:570:          </div>
+  components\home\HomePage.tsx:571:        </section>
+  components\home\HomePage.tsx:572:
+> components\home\HomePage.tsx:573:        <section className="premium-seo-bar" aria-label="Discover more about Chios">
+> components\home\HomePage.tsx:574:          <div className="bar-inner">
+  components\home\HomePage.tsx:575:            <div className="text-wrap">
+  components\home\HomePage.tsx:576:              <span className="premium-label">{data.quizBar.label}</span>
+  components\home\HomePage.tsx:577:              <p className="premium-text">{data.quizBar.text}</p>
+  components\home\HomePage.tsx:578:            </div>
+  components\home\HomePage.tsx:579:
+> components\home\HomePage.tsx:580:            <div className="cta-wrap">
+> components\home\HomePage.tsx:581:              <a href={data.quizBar.href} className="premium-btn-quiz">
+  components\home\HomePage.tsx:582:                {data.quizBar.cta}
+  components\home\HomePage.tsx:583:              </a>
+  components\home\HomePage.tsx:584:            </div>
+  components\home\HomePage.tsx:585:          </div>
+  components\home\HomePage.tsx:586:        </section>
+  components\home\HomePage.tsx:587:
+  components\home\HomePage.tsx:588:        <section className="vh-section vh-section--tight" aria-labelledby="vh-faq-title">
+  components\home\HomePage.tsx:589:          <div className="vh-wrap">
+  components\home\HomePage.tsx:590:            <header className="vh-section-head" style={{ textAlign: "center" }}>
+  components\home\HomePage.tsx:591:              <span className="vh-kicker">{data.faq.kicker}</span>
+  components\home\HomePage.tsx:592:
+  components\home\HomePage.tsx:593:              <h2 className="vh-title" id="vh-faq-title">
+  components\VoulamandisHeader.tsx:1260:            inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  components\VoulamandisHeader.tsx:1261:        }
+  components\VoulamandisHeader.tsx:1262:
+> components\VoulamandisHeader.tsx:1263:        @keyframes vhHeartPremiumPulse {
+  components\VoulamandisHeader.tsx:1264:          0% {
+  components\VoulamandisHeader.tsx:1265:            transform: scale(1);
+  components\VoulamandisHeader.tsx:1266:            filter: drop-shadow(0 0.28rem 0.55rem rgba(111, 78, 55, 0.18));
+  components\VoulamandisHeader.tsx:1267:          }
+  components\VoulamandisHeader.tsx:1268:
+  components\VoulamandisHeader.tsx:1269:          14% {
+  components\VoulamandisHeader.tsx:1270:            transform: scale(1.085);
+  components\VoulamandisHeader.tsx:1271:            filter: drop-shadow(0 0.42rem 0.85rem rgba(168, 107, 72, 0.26));
+  components\VoulamandisHeader.tsx:1272:          }
+  components\VoulamandisHeader.tsx:1273:
+  components\VoulamandisHeader.tsx:1274:          28% {
+  components\VoulamandisHeader.tsx:1275:            transform: scale(0.985);
+  components\VoulamandisHeader.tsx:1298:          }
+  components\VoulamandisHeader.tsx:1299:        }
+  components\VoulamandisHeader.tsx:1300:
+> components\VoulamandisHeader.tsx:1301:        @keyframes vhLivePulse {
+  components\VoulamandisHeader.tsx:1302:          0% {
+  components\VoulamandisHeader.tsx:1303:            transform: scale(1);
+  components\VoulamandisHeader.tsx:1304:            box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.55);
+  components\VoulamandisHeader.tsx:1305:          }
+  components\VoulamandisHeader.tsx:1306:
+  components\VoulamandisHeader.tsx:1307:          70% {
+  components\VoulamandisHeader.tsx:1308:            transform: scale(1.06);
+  components\VoulamandisHeader.tsx:1309:            box-shadow: 0 0 0 0.6rem rgba(34, 197, 94, 0);
+  components\VoulamandisHeader.tsx:1310:          }
+  components\VoulamandisHeader.tsx:1311:
+  components\VoulamandisHeader.tsx:1312:          100% {
+  components\VoulamandisHeader.tsx:1313:            transform: scale(1);
+  components\VoulamandisHeader.tsx:1315:          }
+  components\VoulamandisHeader.tsx:1316:        }
+  components\VoulamandisHeader.tsx:1317:
+> components\VoulamandisHeader.tsx:1318:        @keyframes vhLiveGlow {
+  components\VoulamandisHeader.tsx:1319:          0% {
+  components\VoulamandisHeader.tsx:1320:            transform: scale(0.75);
+  components\VoulamandisHeader.tsx:1321:            opacity: 0.8;
+  components\VoulamandisHeader.tsx:1322:          }
+  components\VoulamandisHeader.tsx:1323:
+  components\VoulamandisHeader.tsx:1324:          70% {
+  components\VoulamandisHeader.tsx:1325:            transform: scale(1.55);
+  components\VoulamandisHeader.tsx:1326:            opacity: 0;
+  components\VoulamandisHeader.tsx:1327:          }
+  components\VoulamandisHeader.tsx:1328:
+  components\VoulamandisHeader.tsx:1329:          100% {
+  components\VoulamandisHeader.tsx:1330:            transform: scale(0.75);
+
+

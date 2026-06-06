@@ -1235,6 +1235,69 @@ export function VoulamandisHeader() {
           text-transform: uppercase;
         }
 
+        .vh-header__logo-heart {
+          width: 108%;
+          height: 108%;
+          object-fit: contain;
+          display: block;
+          margin: auto;
+          filter: drop-shadow(0 0.32rem 0.62rem rgba(111, 78, 55, 0.22));
+          transform-origin: center;
+          animation: vhHeartPremiumPulse 2.35s ease-in-out infinite;
+          will-change: transform, filter;
+        }
+
+        .vh-header__logo-mark {
+          overflow: visible;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          background:
+            radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.96), rgba(255, 247, 232, 0.92) 58%, rgba(239, 220, 190, 0.78));
+          border: 1px solid rgba(196, 154, 96, 0.22);
+          box-shadow:
+            0 0.7rem 1.55rem rgba(66, 45, 25, 0.12),
+            inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        }
+
+        @keyframes vhHeartPremiumPulse {
+          0% {
+            transform: scale(1);
+            filter: drop-shadow(0 0.28rem 0.55rem rgba(111, 78, 55, 0.18));
+          }
+
+          14% {
+            transform: scale(1.085);
+            filter: drop-shadow(0 0.42rem 0.85rem rgba(168, 107, 72, 0.26));
+          }
+
+          28% {
+            transform: scale(0.985);
+            filter: drop-shadow(0 0.28rem 0.55rem rgba(111, 78, 55, 0.18));
+          }
+
+          42% {
+            transform: scale(1.055);
+            filter: drop-shadow(0 0.38rem 0.72rem rgba(168, 107, 72, 0.22));
+          }
+
+          62% {
+            transform: scale(1);
+            filter: drop-shadow(0 0.28rem 0.55rem rgba(111, 78, 55, 0.18));
+          }
+
+          100% {
+            transform: scale(1);
+            filter: drop-shadow(0 0.28rem 0.55rem rgba(111, 78, 55, 0.18));
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .vh-header__logo-heart {
+            animation: none;
+          }
+        }
+
         @keyframes vhLivePulse {
           0% {
             transform: scale(1);
@@ -1343,7 +1406,13 @@ export function VoulamandisHeader() {
           href={homePaths[currentLanguage]}
           onClick={closeMenu}
         >
-          <span className="vh-header__logo-mark">VH</span>
+          <span className="vh-header__logo-mark" aria-hidden="true">
+            <img
+              src="/favicon/vh-heart-logo-transparent.png"
+              alt=""
+              className="vh-header__logo-heart"
+            />
+          </span>
 
           <span className="vh-header__brand-text">
             <strong>Voulamandis House</strong>

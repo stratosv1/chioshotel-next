@@ -1,0 +1,2175 @@
+﻿
+  components\VoulamandisFooter.tsx:52:  it: "/it/chios-lisola-in-grecia/",
+  components\VoulamandisFooter.tsx:53:  es: "/es/chios-en-grecia/",
+  components\VoulamandisFooter.tsx:54:  tr: "/tr/sakiz-adasi/",
+  components\VoulamandisFooter.tsx:55:};
+  components\VoulamandisFooter.tsx:56:
+> components\VoulamandisFooter.tsx:57:const holidayQuizPaths: Record<LanguageCode, string> = {
+> components\VoulamandisFooter.tsx:58:  en: "/chios-holidays-quiz/",
+> components\VoulamandisFooter.tsx:59:  el: "/el/diakopes-sti-chio-quiz/",
+> components\VoulamandisFooter.tsx:60:  fr: "/chios-holidays-quiz/",
+> components\VoulamandisFooter.tsx:61:  de: "/chios-holidays-quiz/",
+> components\VoulamandisFooter.tsx:62:  it: "/chios-holidays-quiz/",
+> components\VoulamandisFooter.tsx:63:  es: "/chios-holidays-quiz/",
+> components\VoulamandisFooter.tsx:64:  tr: "/chios-holidays-quiz/",
+  components\VoulamandisFooter.tsx:65:};
+  components\VoulamandisFooter.tsx:66:
+  components\VoulamandisFooter.tsx:67:const beachPaths: Record<LanguageCode, string> = {
+  components\VoulamandisFooter.tsx:68:  en: "/chios/chios-beaches/",
+  components\VoulamandisFooter.tsx:69:  el: "/el/paralies-xios/",
+  components\VoulamandisFooter.tsx:70:  fr: "/fr/plages-de-chios/",
+  components\VoulamandisFooter.tsx:71:  de: "/de/straende-chios/",
+  components\VoulamandisFooter.tsx:72:  it: "/it/spiagge-chios/",
+  components\VoulamandisFooter.tsx:73:  es: "/es/playas-chios/",
+  components\VoulamandisFooter.tsx:74:  tr: "/tr/sakiz-adasi-plajlari/",
+  components\VoulamandisFooter.tsx:75:};
+  components\VoulamandisFooter.tsx:76:
+  components\VoulamandisFooter.tsx:164:      contact: string;
+  components\VoulamandisFooter.tsx:165:      chiosIslandGuide: string;
+  components\VoulamandisFooter.tsx:166:      beaches: string;
+  components\VoulamandisFooter.tsx:167:      villages: string;
+  components\VoulamandisFooter.tsx:168:      museums: string;
+> components\VoulamandisFooter.tsx:169:      holidayQuiz: string;
+  components\VoulamandisFooter.tsx:170:      agiaDynami: string;
+  components\VoulamandisFooter.tsx:171:      mavraVolia: string;
+  components\VoulamandisFooter.tsx:172:      pyrgi: string;
+  components\VoulamandisFooter.tsx:173:      mesta: string;
+  components\VoulamandisFooter.tsx:174:      masticMuseum: string;
+  components\VoulamandisFooter.tsx:175:    };
+  components\VoulamandisFooter.tsx:176:  }
+  components\VoulamandisFooter.tsx:177:> = {
+  components\VoulamandisFooter.tsx:178:  en: {
+  components\VoulamandisFooter.tsx:179:    description:
+  components\VoulamandisFooter.tsx:180:      "Quiet rooms and apartments in the historic Kampos area of Chios, with easy access to Chios Town, the airport, 
+beaches, villages and cultural landmarks.",
+  components\VoulamandisFooter.tsx:181:    bookStay: "Book your stay",
+  components\VoulamandisFooter.tsx:194:      contact: "Contact",
+  components\VoulamandisFooter.tsx:195:      chiosIslandGuide: "Chios Island Guide",
+  components\VoulamandisFooter.tsx:196:      beaches: "Chios Beaches",
+  components\VoulamandisFooter.tsx:197:      villages: "Chios Villages",
+  components\VoulamandisFooter.tsx:198:      museums: "Chios Museums",
+> components\VoulamandisFooter.tsx:199:      holidayQuiz: "Chios Holiday Quiz",
+  components\VoulamandisFooter.tsx:200:      agiaDynami: "Agia Dynami Beach",
+  components\VoulamandisFooter.tsx:201:      mavraVolia: "Mavra Volia Beach",
+  components\VoulamandisFooter.tsx:202:      pyrgi: "Pyrgi Village",
+  components\VoulamandisFooter.tsx:203:      mesta: "Mesta Village",
+  components\VoulamandisFooter.tsx:204:      masticMuseum: "Chios Mastic Museum",
+  components\VoulamandisFooter.tsx:205:    },
+  components\VoulamandisFooter.tsx:206:  },
+  components\VoulamandisFooter.tsx:207:  el: {
+  components\VoulamandisFooter.tsx:208:    description:
+  components\VoulamandisFooter.tsx:209:      "Ήσυχα δωμάτια και διαμερίσματα στον ιστορικό Κάμπο της Χίου, με εύκολη πρόσβαση στην πόλη, το αεροδρόμιο, τις 
+παραλίες, τα χωριά και τα αξιοθέατα.",
+  components\VoulamandisFooter.tsx:210:    bookStay: "Κάντε κράτηση",
+  components\VoulamandisFooter.tsx:211:    footerNavigation: "Πλοήγηση υποσέλιδου",
+  components\VoulamandisFooter.tsx:223:      contact: "Επικοινωνία",
+  components\VoulamandisFooter.tsx:224:      chiosIslandGuide: "Οδηγός Χίου",
+  components\VoulamandisFooter.tsx:225:      beaches: "Παραλίες της Χίου",
+  components\VoulamandisFooter.tsx:226:      villages: "Χωριά της Χίου",
+  components\VoulamandisFooter.tsx:227:      museums: "Μουσεία της Χίου",
+> components\VoulamandisFooter.tsx:228:      holidayQuiz: "Quiz διακοπών στη Χίο",
+  components\VoulamandisFooter.tsx:229:      agiaDynami: "Παραλία Αγία Δύναμη",
+  components\VoulamandisFooter.tsx:230:      mavraVolia: "Παραλία Μαύρα Βόλια",
+  components\VoulamandisFooter.tsx:231:      pyrgi: "Χωριό Πυργί",
+  components\VoulamandisFooter.tsx:232:      mesta: "Χωριό Μεστά",
+  components\VoulamandisFooter.tsx:233:      masticMuseum: "Μουσείο Μαστίχας Χίου",
+  components\VoulamandisFooter.tsx:234:    },
+  components\VoulamandisFooter.tsx:235:  },
+  components\VoulamandisFooter.tsx:236:  fr: {
+  components\VoulamandisFooter.tsx:237:    description:
+  components\VoulamandisFooter.tsx:238:      "Chambres et appartements calmes dans le quartier historique de Kampos à Chios, avec un accès facile à la 
+ville, à l’aéroport, aux plages, aux villages et aux sites culturels.",
+  components\VoulamandisFooter.tsx:239:    bookStay: "Réserver votre séjour",
+  components\VoulamandisFooter.tsx:240:    footerNavigation: "Navigation du pied de page",
+  components\VoulamandisFooter.tsx:252:      contact: "Contact",
+  components\VoulamandisFooter.tsx:253:      chiosIslandGuide: "Guide de Chios",
+  components\VoulamandisFooter.tsx:254:      beaches: "Plages de Chios",
+  components\VoulamandisFooter.tsx:255:      villages: "Villages de Chios",
+  components\VoulamandisFooter.tsx:256:      museums: "Musées de Chios",
+> components\VoulamandisFooter.tsx:257:      holidayQuiz: "Quiz vacances à Chios",
+  components\VoulamandisFooter.tsx:258:      agiaDynami: "Plage d’Agia Dynami",
+  components\VoulamandisFooter.tsx:259:      mavraVolia: "Plage de Mavra Volia",
+  components\VoulamandisFooter.tsx:260:      pyrgi: "Village de Pyrgi",
+  components\VoulamandisFooter.tsx:261:      mesta: "Village de Mesta",
+  components\VoulamandisFooter.tsx:262:      masticMuseum: "Musée du Mastic de Chios",
+  components\VoulamandisFooter.tsx:263:    },
+  components\VoulamandisFooter.tsx:264:  },
+  components\VoulamandisFooter.tsx:265:  de: {
+  components\VoulamandisFooter.tsx:266:    description:
+  components\VoulamandisFooter.tsx:267:      "Ruhige Zimmer und Apartments im historischen Kampos-Gebiet von Chios, mit einfachem Zugang zur Stadt, zum 
+Flughafen, zu Stränden, Dörfern und Sehenswürdigkeiten.",
+  components\VoulamandisFooter.tsx:268:    bookStay: "Aufenthalt buchen",
+  components\VoulamandisFooter.tsx:269:    footerNavigation: "Fußzeilen-Navigation",
+  components\VoulamandisFooter.tsx:281:      contact: "Kontakt",
+  components\VoulamandisFooter.tsx:282:      chiosIslandGuide: "Chios Reiseführer",
+  components\VoulamandisFooter.tsx:283:      beaches: "Strände auf Chios",
+  components\VoulamandisFooter.tsx:284:      villages: "Dörfer auf Chios",
+  components\VoulamandisFooter.tsx:285:      museums: "Museen auf Chios",
+> components\VoulamandisFooter.tsx:286:      holidayQuiz: "Chios Urlaubsquiz",
+  components\VoulamandisFooter.tsx:287:      agiaDynami: "Agia Dynami Strand",
+  components\VoulamandisFooter.tsx:288:      mavraVolia: "Mavra Volia Strand",
+  components\VoulamandisFooter.tsx:289:      pyrgi: "Pyrgi Dorf",
+  components\VoulamandisFooter.tsx:290:      mesta: "Mesta Dorf",
+  components\VoulamandisFooter.tsx:291:      masticMuseum: "Chios Mastix Museum",
+  components\VoulamandisFooter.tsx:292:    },
+  components\VoulamandisFooter.tsx:293:  },
+  components\VoulamandisFooter.tsx:294:  it: {
+  components\VoulamandisFooter.tsx:295:    description:
+  components\VoulamandisFooter.tsx:296:      "Camere e appartamenti tranquilli nella storica zona di Kampos a Chios, con facile accesso alla città, 
+all’aeroporto, alle spiagge, ai villaggi e ai luoghi culturali.",
+  components\VoulamandisFooter.tsx:297:    bookStay: "Prenota il soggiorno",
+  components\VoulamandisFooter.tsx:298:    footerNavigation: "Navigazione footer",
+  components\VoulamandisFooter.tsx:310:      contact: "Contatti",
+  components\VoulamandisFooter.tsx:311:      chiosIslandGuide: "Guida di Chios",
+  components\VoulamandisFooter.tsx:312:      beaches: "Spiagge di Chios",
+  components\VoulamandisFooter.tsx:313:      villages: "Villaggi di Chios",
+  components\VoulamandisFooter.tsx:314:      museums: "Musei di Chios",
+> components\VoulamandisFooter.tsx:315:      holidayQuiz: "Quiz vacanze a Chios",
+  components\VoulamandisFooter.tsx:316:      agiaDynami: "Spiaggia di Agia Dynami",
+  components\VoulamandisFooter.tsx:317:      mavraVolia: "Spiaggia di Mavra Volia",
+  components\VoulamandisFooter.tsx:318:      pyrgi: "Villaggio di Pyrgi",
+  components\VoulamandisFooter.tsx:319:      mesta: "Villaggio di Mesta",
+  components\VoulamandisFooter.tsx:320:      masticMuseum: "Museo del Mastice di Chios",
+  components\VoulamandisFooter.tsx:321:    },
+  components\VoulamandisFooter.tsx:322:  },
+  components\VoulamandisFooter.tsx:323:  es: {
+  components\VoulamandisFooter.tsx:324:    description:
+  components\VoulamandisFooter.tsx:325:      "Habitaciones y apartamentos tranquilos en la histórica zona de Kampos en Chios, con fácil acceso a la ciudad, 
+al aeropuerto, a playas, pueblos y lugares culturales.",
+  components\VoulamandisFooter.tsx:326:    bookStay: "Reserva tu estancia",
+  components\VoulamandisFooter.tsx:327:    footerNavigation: "Navegación del pie de página",
+  components\VoulamandisFooter.tsx:339:      contact: "Contacto",
+  components\VoulamandisFooter.tsx:340:      chiosIslandGuide: "Guía de Chios",
+  components\VoulamandisFooter.tsx:341:      beaches: "Playas de Chios",
+  components\VoulamandisFooter.tsx:342:      villages: "Pueblos de Chios",
+  components\VoulamandisFooter.tsx:343:      museums: "Museos de Chios",
+> components\VoulamandisFooter.tsx:344:      holidayQuiz: "Quiz de vacaciones en Chios",
+  components\VoulamandisFooter.tsx:345:      agiaDynami: "Playa Agia Dynami",
+  components\VoulamandisFooter.tsx:346:      mavraVolia: "Playa Mavra Volia",
+  components\VoulamandisFooter.tsx:347:      pyrgi: "Pueblo de Pyrgi",
+  components\VoulamandisFooter.tsx:348:      mesta: "Pueblo de Mesta",
+  components\VoulamandisFooter.tsx:349:      masticMuseum: "Museo del Mastiha de Chios",
+  components\VoulamandisFooter.tsx:350:    },
+  components\VoulamandisFooter.tsx:351:  },
+  components\VoulamandisFooter.tsx:352:  tr: {
+  components\VoulamandisFooter.tsx:353:    description:
+  components\VoulamandisFooter.tsx:354:      "Sakız Adası’nın tarihi Kampos bölgesinde, şehir merkezine, havaalanına, plajlara, köylere ve kültürel 
+noktalara kolay erişimli sakin odalar ve daireler.",
+  components\VoulamandisFooter.tsx:355:    bookStay: "Konaklamanızı ayırtın",
+  components\VoulamandisFooter.tsx:356:    footerNavigation: "Alt bilgi navigasyonu",
+  components\VoulamandisFooter.tsx:368:      contact: "İletişim",
+  components\VoulamandisFooter.tsx:369:      chiosIslandGuide: "Sakız Adası Rehberi",
+  components\VoulamandisFooter.tsx:370:      beaches: "Sakız Adası Plajları",
+  components\VoulamandisFooter.tsx:371:      villages: "Sakız Adası Köyleri",
+  components\VoulamandisFooter.tsx:372:      museums: "Sakız Adası Müzeleri",
+> components\VoulamandisFooter.tsx:373:      holidayQuiz: "Sakız Adası Tatil Testi",
+  components\VoulamandisFooter.tsx:374:      agiaDynami: "Agia Dynami Plajı",
+  components\VoulamandisFooter.tsx:375:      mavraVolia: "Mavra Volia Plajı",
+  components\VoulamandisFooter.tsx:376:      pyrgi: "Pyrgi Köyü",
+  components\VoulamandisFooter.tsx:377:      mesta: "Mesta Köyü",
+  components\VoulamandisFooter.tsx:378:      masticMuseum: "Sakız Adası Mastik Müzesi",
+  components\VoulamandisFooter.tsx:379:    },
+  components\VoulamandisFooter.tsx:380:  },
+  components\VoulamandisFooter.tsx:381:};
+  components\VoulamandisFooter.tsx:382:
+  components\VoulamandisFooter.tsx:383:function normalizePath(path: string) {
+  components\VoulamandisFooter.tsx:384:  if (!path) {
+  components\VoulamandisFooter.tsx:385:    return "/";
+  components\VoulamandisFooter.tsx:386:  }
+  components\VoulamandisFooter.tsx:387:
+> components\VoulamandisFooter.tsx:388:  const withLeadingSlash = path.startsWith("/") ? path : `/${path}`;
+  components\VoulamandisFooter.tsx:389:
+  components\VoulamandisFooter.tsx:390:  if (withLeadingSlash === "/") {
+  components\VoulamandisFooter.tsx:391:    return "/";
+  components\VoulamandisFooter.tsx:392:  }
+  components\VoulamandisFooter.tsx:393:
+  components\VoulamandisFooter.tsx:394:  return withLeadingSlash.endsWith("/")
+  components\VoulamandisFooter.tsx:395:    ? withLeadingSlash
+  components\VoulamandisFooter.tsx:396:    : `${withLeadingSlash}/`;
+  components\VoulamandisFooter.tsx:397:}
+  components\VoulamandisFooter.tsx:398:
+  components\VoulamandisFooter.tsx:399:function getCurrentLanguage(path: string): LanguageCode {
+  components\VoulamandisFooter.tsx:400:  const normalizedPath = normalizePath(path);
+  components\VoulamandisFooter.tsx:401:
+> components\VoulamandisFooter.tsx:402:  if (normalizedPath === "/el/" || normalizedPath.startsWith("/el/")) {
+  components\VoulamandisFooter.tsx:403:    return "el";
+  components\VoulamandisFooter.tsx:404:  }
+  components\VoulamandisFooter.tsx:405:
+> components\VoulamandisFooter.tsx:406:  if (normalizedPath === "/fr/" || normalizedPath.startsWith("/fr/")) {
+  components\VoulamandisFooter.tsx:407:    return "fr";
+  components\VoulamandisFooter.tsx:408:  }
+  components\VoulamandisFooter.tsx:409:
+> components\VoulamandisFooter.tsx:410:  if (normalizedPath === "/de/" || normalizedPath.startsWith("/de/")) {
+  components\VoulamandisFooter.tsx:411:    return "de";
+  components\VoulamandisFooter.tsx:412:  }
+  components\VoulamandisFooter.tsx:413:
+> components\VoulamandisFooter.tsx:414:  if (normalizedPath === "/it/" || normalizedPath.startsWith("/it/")) {
+  components\VoulamandisFooter.tsx:415:    return "it";
+  components\VoulamandisFooter.tsx:416:  }
+  components\VoulamandisFooter.tsx:417:
+> components\VoulamandisFooter.tsx:418:  if (normalizedPath === "/es/" || normalizedPath.startsWith("/es/")) {
+  components\VoulamandisFooter.tsx:419:    return "es";
+  components\VoulamandisFooter.tsx:420:  }
+  components\VoulamandisFooter.tsx:421:
+> components\VoulamandisFooter.tsx:422:  if (normalizedPath === "/tr/" || normalizedPath.startsWith("/tr/")) {
+  components\VoulamandisFooter.tsx:423:    return "tr";
+  components\VoulamandisFooter.tsx:424:  }
+  components\VoulamandisFooter.tsx:425:
+  components\VoulamandisFooter.tsx:426:  return "en";
+  components\VoulamandisFooter.tsx:427:}
+  components\VoulamandisFooter.tsx:428:
+  components\VoulamandisFooter.tsx:429:function getFooterGroups(language: LanguageCode) {
+  components\VoulamandisFooter.tsx:430:  const copy = footerCopy[language];
+  components\VoulamandisFooter.tsx:431:
+  components\VoulamandisFooter.tsx:432:  return [
+  components\VoulamandisFooter.tsx:433:    {
+  components\VoulamandisFooter.tsx:434:      title: copy.groups.stay,
+  components\VoulamandisFooter.tsx:465:        {
+  components\VoulamandisFooter.tsx:466:          label: copy.links.museums,
+  components\VoulamandisFooter.tsx:467:          href: museumPaths[language],
+  components\VoulamandisFooter.tsx:468:        },
+  components\VoulamandisFooter.tsx:469:        {
+> components\VoulamandisFooter.tsx:470:          label: copy.links.holidayQuiz,
+> components\VoulamandisFooter.tsx:471:          href: holidayQuizPaths[language],
+  components\VoulamandisFooter.tsx:472:        },
+  components\VoulamandisFooter.tsx:473:      ],
+  components\VoulamandisFooter.tsx:474:    },
+  components\VoulamandisFooter.tsx:475:    {
+  components\VoulamandisFooter.tsx:476:      title: copy.groups.popularGuides,
+  components\VoulamandisFooter.tsx:477:      links: [
+  components\VoulamandisFooter.tsx:478:        {
+  components\VoulamandisFooter.tsx:479:          label: copy.links.agiaDynami,
+  components\VoulamandisFooter.tsx:480:          href: agiaDynamiBeachPaths[language],
+  components\VoulamandisFooter.tsx:481:        },
+  components\VoulamandisFooter.tsx:482:        {
+  components\VoulamandisFooter.tsx:483:          label: copy.links.mavraVolia,
+  components\VoulamandisHeader.tsx:145:  it: "/it/chios-lisola-in-grecia/",
+  components\VoulamandisHeader.tsx:146:  es: "/es/chios-en-grecia/",
+  components\VoulamandisHeader.tsx:147:  tr: "/tr/sakiz-adasi/",
+  components\VoulamandisHeader.tsx:148:};
+  components\VoulamandisHeader.tsx:149:
+> components\VoulamandisHeader.tsx:150:const quizPaths: Record<LanguageCode, string> = {
+> components\VoulamandisHeader.tsx:151:  en: "/chios-holidays-quiz/",
+> components\VoulamandisHeader.tsx:152:  el: "/el/diakopes-sti-chio-quiz/",
+> components\VoulamandisHeader.tsx:153:  fr: "/fr/quiz-vacances-a-chios/",
+> components\VoulamandisHeader.tsx:154:  de: "/de/chios-urlaubsquiz/",
+> components\VoulamandisHeader.tsx:155:  it: "/it/quiz-vacanze-a-chios/",
+> components\VoulamandisHeader.tsx:156:  es: "/es/quiz-vacaciones-en-quios/",
+  components\VoulamandisHeader.tsx:157:  tr: "/tr/sakiz-adasi-tatil-testi/",
+  components\VoulamandisHeader.tsx:158:};
+  components\VoulamandisHeader.tsx:159:
+  components\VoulamandisHeader.tsx:160:const beachLoversPaths: Record<LanguageCode, string> = {
+  components\VoulamandisHeader.tsx:161:  en: "/chios-beach-lovers/",
+  components\VoulamandisHeader.tsx:162:  el: "/el/xios-gia-latreis-paralias/",
+  components\VoulamandisHeader.tsx:163:  fr: "/fr/chios-pour-amoureux-de-plage/",
+  components\VoulamandisHeader.tsx:164:  de: "/de/chios-fuer-strandliebhaber/",
+  components\VoulamandisHeader.tsx:165:  it: "/it/chios-per-amanti-del-mare/",
+  components\VoulamandisHeader.tsx:166:  es: "/es/quios-para-amantes-de-la-playa/",
+  components\VoulamandisHeader.tsx:167:  tr: "/tr/plaj-severler-icin-sakiz-adasi/",
+  components\VoulamandisHeader.tsx:168:};
+  components\VoulamandisHeader.tsx:771:function normalizePath(path: string) {
+  components\VoulamandisHeader.tsx:772:  if (!path) {
+  components\VoulamandisHeader.tsx:773:    return "/";
+  components\VoulamandisHeader.tsx:774:  }
+  components\VoulamandisHeader.tsx:775:
+> components\VoulamandisHeader.tsx:776:  const withLeadingSlash = path.startsWith("/") ? path : `/${path}`;
+  components\VoulamandisHeader.tsx:777:
+  components\VoulamandisHeader.tsx:778:  if (withLeadingSlash === "/") {
+  components\VoulamandisHeader.tsx:779:    return "/";
+  components\VoulamandisHeader.tsx:780:  }
+  components\VoulamandisHeader.tsx:781:
+  components\VoulamandisHeader.tsx:782:  return withLeadingSlash.endsWith("/")
+  components\VoulamandisHeader.tsx:783:    ? withLeadingSlash
+  components\VoulamandisHeader.tsx:784:    : `${withLeadingSlash}/`;
+  components\VoulamandisHeader.tsx:785:}
+  components\VoulamandisHeader.tsx:786:
+  components\VoulamandisHeader.tsx:787:function getCurrentLanguage(path: string): LanguageCode {
+  components\VoulamandisHeader.tsx:788:  const normalizedPath = normalizePath(path);
+  components\VoulamandisHeader.tsx:789:
+> components\VoulamandisHeader.tsx:790:  if (normalizedPath === "/el/" || normalizedPath.startsWith("/el/")) {
+  components\VoulamandisHeader.tsx:791:    return "el";
+  components\VoulamandisHeader.tsx:792:  }
+  components\VoulamandisHeader.tsx:793:
+> components\VoulamandisHeader.tsx:794:  if (normalizedPath === "/fr/" || normalizedPath.startsWith("/fr/")) {
+  components\VoulamandisHeader.tsx:795:    return "fr";
+  components\VoulamandisHeader.tsx:796:  }
+  components\VoulamandisHeader.tsx:797:
+> components\VoulamandisHeader.tsx:798:  if (normalizedPath === "/de/" || normalizedPath.startsWith("/de/")) {
+  components\VoulamandisHeader.tsx:799:    return "de";
+  components\VoulamandisHeader.tsx:800:  }
+  components\VoulamandisHeader.tsx:801:
+> components\VoulamandisHeader.tsx:802:  if (normalizedPath === "/it/" || normalizedPath.startsWith("/it/")) {
+  components\VoulamandisHeader.tsx:803:    return "it";
+  components\VoulamandisHeader.tsx:804:  }
+  components\VoulamandisHeader.tsx:805:
+> components\VoulamandisHeader.tsx:806:  if (normalizedPath === "/es/" || normalizedPath.startsWith("/es/")) {
+  components\VoulamandisHeader.tsx:807:    return "es";
+  components\VoulamandisHeader.tsx:808:  }
+  components\VoulamandisHeader.tsx:809:
+> components\VoulamandisHeader.tsx:810:  if (normalizedPath === "/tr/" || normalizedPath.startsWith("/tr/")) {
+  components\VoulamandisHeader.tsx:811:    return "tr";
+  components\VoulamandisHeader.tsx:812:  }
+  components\VoulamandisHeader.tsx:813:
+  components\VoulamandisHeader.tsx:814:  return "en";
+  components\VoulamandisHeader.tsx:815:}
+  components\VoulamandisHeader.tsx:816:
+  components\VoulamandisHeader.tsx:817:function getLanguageHref(path: string, language: LanguageCode) {
+  components\VoulamandisHeader.tsx:818:  const normalizedPath = normalizePath(path);
+  components\VoulamandisHeader.tsx:819:
+  components\VoulamandisHeader.tsx:820:  const matchingChiosActivityDetailGroup = chiosActivityDetailPathGroups.find((group) =>
+  components\VoulamandisHeader.tsx:821:    Object.values(group).includes(normalizedPath),
+  components\VoulamandisHeader.tsx:822:  );
+  components\VoulamandisHeader.tsx:876:
+  components\VoulamandisHeader.tsx:877:  const isDealsPage = Object.values(dealsPaths).includes(normalizedPath);
+  components\VoulamandisHeader.tsx:878:
+  components\VoulamandisHeader.tsx:879:  const isContactPage = Object.values(contactPaths).includes(normalizedPath);
+  components\VoulamandisHeader.tsx:880:
+> components\VoulamandisHeader.tsx:881:  const isQuizPage = Object.values(quizPaths).includes(normalizedPath);
+  components\VoulamandisHeader.tsx:882:
+  components\VoulamandisHeader.tsx:883:  const isBeachLoversPage =
+  components\VoulamandisHeader.tsx:884:    Object.values(beachLoversPaths).includes(normalizedPath);
+  components\VoulamandisHeader.tsx:885:
+  components\VoulamandisHeader.tsx:886:  const isFamilyTravelPage =
+  components\VoulamandisHeader.tsx:887:    Object.values(familyTravelPaths).includes(normalizedPath);
+  components\VoulamandisHeader.tsx:888:
+  components\VoulamandisHeader.tsx:889:  const isTasteLoverPage =
+  components\VoulamandisHeader.tsx:890:    Object.values(tasteLoverPaths).includes(normalizedPath);
+  components\VoulamandisHeader.tsx:891:
+  components\VoulamandisHeader.tsx:892:  const isChiosExplorerPage =
+  components\VoulamandisHeader.tsx:893:    Object.values(chiosExplorerPaths).includes(normalizedPath);
+  components\VoulamandisHeader.tsx:938:
+  components\VoulamandisHeader.tsx:939:  if (isContactPage) {
+  components\VoulamandisHeader.tsx:940:    return contactPaths[language];
+  components\VoulamandisHeader.tsx:941:  }
+  components\VoulamandisHeader.tsx:942:
+> components\VoulamandisHeader.tsx:943:  if (isQuizPage) {
+> components\VoulamandisHeader.tsx:944:    return quizPaths[language];
+  components\VoulamandisHeader.tsx:945:  }
+  components\VoulamandisHeader.tsx:946:
+  components\VoulamandisHeader.tsx:947:  if (isBeachLoversPage) {
+  components\VoulamandisHeader.tsx:948:    return beachLoversPaths[language];
+  components\VoulamandisHeader.tsx:949:  }
+  components\VoulamandisHeader.tsx:950:
+  components\VoulamandisHeader.tsx:951:  if (isFamilyTravelPage) {
+  components\VoulamandisHeader.tsx:952:    return familyTravelPaths[language];
+  components\VoulamandisHeader.tsx:953:  }
+  components\VoulamandisHeader.tsx:954:
+  components\VoulamandisHeader.tsx:955:  if (isTasteLoverPage) {
+  components\VoulamandisHeader.tsx:956:    return tasteLoverPaths[language];
+  components\VoulamandisHeader.tsx:976:    return museumPaths[language];
+  components\VoulamandisHeader.tsx:977:  }
+  components\VoulamandisHeader.tsx:978:
+  components\VoulamandisHeader.tsx:979:  if (
+  components\VoulamandisHeader.tsx:980:    normalizedPath === "/chios-rooms/" ||
+> components\VoulamandisHeader.tsx:981:    normalizedPath.startsWith("/chios-rooms/")
+  components\VoulamandisHeader.tsx:982:  ) {
+  components\VoulamandisHeader.tsx:983:    return roomsCategoryPaths[language];
+  components\VoulamandisHeader.tsx:984:  }
+  components\VoulamandisHeader.tsx:985:
+  components\VoulamandisHeader.tsx:986:  if (
+  components\VoulamandisHeader.tsx:987:    normalizedPath === "/best-chios-travel-deals-for-chios-hotels/" ||
+  components\VoulamandisHeader.tsx:988:    normalizedPath === "/el/crazy-travel-deals-for-chios-hotels/" ||
+  components\VoulamandisHeader.tsx:989:    normalizedPath === "/fr/offres-de-voyage-pour-les-hotels-a-chios/" ||
+  components\VoulamandisHeader.tsx:990:    normalizedPath === "/de/beste-reiseangebote-fur-chios-hotels-auf-chios/" ||
+  components\VoulamandisHeader.tsx:991:    normalizedPath === "/it/offerte-di-viaggio-hotels-chios/" ||
+  components\VoulamandisHeader.tsx:992:    normalizedPath === "/es/mejores-ofertas-de-viaje-a-quios-para-hoteles-en-quios/" ||
+  components\VoulamandisHeader.tsx:993:    normalizedPath === "/tr/sakiz-adasi-otel-firsatlari/"
+  components\VoulamandisHeader.tsx:995:    return dealsPaths[language];
+  components\VoulamandisHeader.tsx:996:  }
+  components\VoulamandisHeader.tsx:997:
+  components\VoulamandisHeader.tsx:998:  if (
+  components\VoulamandisHeader.tsx:999:    normalizedPath === "/chios/chios-beaches/" ||
+> components\VoulamandisHeader.tsx:1000:    normalizedPath.startsWith("/chios/chios-beaches/") ||
+  components\VoulamandisHeader.tsx:1001:    normalizedPath === "/el/paralies-xios/" ||
+> components\VoulamandisHeader.tsx:1002:    normalizedPath.startsWith("/el/paralies-xios/") ||
+  components\VoulamandisHeader.tsx:1003:    normalizedPath === "/fr/plages-de-chios/" ||
+> components\VoulamandisHeader.tsx:1004:    normalizedPath.startsWith("/fr/plages-de-chios/") ||
+  components\VoulamandisHeader.tsx:1005:    normalizedPath === "/de/straende-chios/" ||
+> components\VoulamandisHeader.tsx:1006:    normalizedPath.startsWith("/de/straende-chios/") ||
+  components\VoulamandisHeader.tsx:1007:    normalizedPath === "/it/spiagge-chios/" ||
+> components\VoulamandisHeader.tsx:1008:    normalizedPath.startsWith("/it/spiagge-chios/") ||
+  components\VoulamandisHeader.tsx:1009:    normalizedPath === "/es/playas-chios/" ||
+> components\VoulamandisHeader.tsx:1010:    normalizedPath.startsWith("/es/playas-chios/") ||
+  components\VoulamandisHeader.tsx:1011:    normalizedPath === "/tr/sakiz-adasi-plajlari/" ||
+> components\VoulamandisHeader.tsx:1012:    normalizedPath.startsWith("/tr/sakiz-adasi-plajlari/")
+  components\VoulamandisHeader.tsx:1013:  ) {
+  components\VoulamandisHeader.tsx:1014:    return beachPaths[language];
+  components\VoulamandisHeader.tsx:1015:  }
+  components\VoulamandisHeader.tsx:1016:
+  components\VoulamandisHeader.tsx:1017:  if (
+  components\VoulamandisHeader.tsx:1018:    normalizedPath === "/chios/chios-villages/" ||
+> components\VoulamandisHeader.tsx:1019:    normalizedPath.startsWith("/chios/chios-villages/") ||
+  components\VoulamandisHeader.tsx:1020:    normalizedPath === "/el/xoria-xios/" ||
+> components\VoulamandisHeader.tsx:1021:    normalizedPath.startsWith("/el/xoria-xios/") ||
+  components\VoulamandisHeader.tsx:1022:    normalizedPath === "/fr/villages-de-chios/" ||
+> components\VoulamandisHeader.tsx:1023:    normalizedPath.startsWith("/fr/villages-de-chios/") ||
+  components\VoulamandisHeader.tsx:1024:    normalizedPath === "/de/doerfer-chios/" ||
+> components\VoulamandisHeader.tsx:1025:    normalizedPath.startsWith("/de/doerfer-chios/") ||
+  components\VoulamandisHeader.tsx:1026:    normalizedPath === "/it/villaggi-chios/" ||
+> components\VoulamandisHeader.tsx:1027:    normalizedPath.startsWith("/it/villaggi-chios/") ||
+  components\VoulamandisHeader.tsx:1028:    normalizedPath === "/es/pueblos-chios/" ||
+> components\VoulamandisHeader.tsx:1029:    normalizedPath.startsWith("/es/pueblos-chios/") ||
+  components\VoulamandisHeader.tsx:1030:    normalizedPath === "/tr/sakiz-adasi-koyleri/" ||
+> components\VoulamandisHeader.tsx:1031:    normalizedPath.startsWith("/tr/sakiz-adasi-koyleri/")
+  components\VoulamandisHeader.tsx:1032:  ) {
+  components\VoulamandisHeader.tsx:1033:    return villagePaths[language];
+  components\VoulamandisHeader.tsx:1034:  }
+  components\VoulamandisHeader.tsx:1035:
+  components\VoulamandisHeader.tsx:1036:  if (
+  components\VoulamandisHeader.tsx:1037:    normalizedPath === "/chios/chios-museums/" ||
+> components\VoulamandisHeader.tsx:1038:    normalizedPath.startsWith("/chios/chios-museums/") ||
+  components\VoulamandisHeader.tsx:1039:    normalizedPath === "/el/mouseia-xios/" ||
+> components\VoulamandisHeader.tsx:1040:    normalizedPath.startsWith("/el/mouseia-xios/") ||
+  components\VoulamandisHeader.tsx:1041:    normalizedPath === "/fr/musees-de-chios/" ||
+> components\VoulamandisHeader.tsx:1042:    normalizedPath.startsWith("/fr/musees-de-chios/") ||
+  components\VoulamandisHeader.tsx:1043:    normalizedPath === "/de/museen-chios/" ||
+> components\VoulamandisHeader.tsx:1044:    normalizedPath.startsWith("/de/museen-chios/") ||
+  components\VoulamandisHeader.tsx:1045:    normalizedPath === "/it/musei-chios/" ||
+> components\VoulamandisHeader.tsx:1046:    normalizedPath.startsWith("/it/musei-chios/") ||
+  components\VoulamandisHeader.tsx:1047:    normalizedPath === "/es/museos-chios/" ||
+> components\VoulamandisHeader.tsx:1048:    normalizedPath.startsWith("/es/museos-chios/") ||
+  components\VoulamandisHeader.tsx:1049:    normalizedPath === "/tr/sakiz-adasi-muzeleri/" ||
+> components\VoulamandisHeader.tsx:1050:    normalizedPath.startsWith("/tr/sakiz-adasi-muzeleri/")
+  components\VoulamandisHeader.tsx:1051:  ) {
+  components\VoulamandisHeader.tsx:1052:    return museumPaths[language];
+  components\VoulamandisHeader.tsx:1053:  }
+  components\VoulamandisHeader.tsx:1054:
+  components\VoulamandisHeader.tsx:1055:  return homePaths[language];
+  components\VoulamandisHeader.tsx:1056:}
+  components\VoulamandisHeader.tsx:1057:
+  components\VoulamandisHeader.tsx:1058:function getMainLinks(language: LanguageCode) {
+  components\VoulamandisHeader.tsx:1059:  const copy = navigationCopy[language];
+  components\VoulamandisHeader.tsx:1060:
+  components\VoulamandisHeader.tsx:1061:  return [
+  components\VoulamandisHeader.tsx:1062:    {
+  components\booking\FindYourRoomEngine.tsx:612:    text,
+  components\booking\FindYourRoomEngine.tsx:613:  );
+  components\booking\FindYourRoomEngine.tsx:614:}
+  components\booking\FindYourRoomEngine.tsx:615:
+  components\booking\FindYourRoomEngine.tsx:616:function getNights(checkin: string, checkout: string) {
+> components\booking\FindYourRoomEngine.tsx:617:  const start = new Date(`${checkin}T12:00:00`);
+  components\booking\FindYourRoomEngine.tsx:618:  const end = new Date(`${checkout}T12:00:00`);
+> components\booking\FindYourRoomEngine.tsx:619:  const diff = end.getTime() - start.getTime();
+  components\booking\FindYourRoomEngine.tsx:620:
+  components\booking\FindYourRoomEngine.tsx:621:  if (!Number.isFinite(diff)) {
+  components\booking\FindYourRoomEngine.tsx:622:    return 0;
+  components\booking\FindYourRoomEngine.tsx:623:  }
+  components\booking\FindYourRoomEngine.tsx:624:
+  components\booking\FindYourRoomEngine.tsx:625:  return Math.max(0, Math.round(diff / 86400000));
+  components\booking\FindYourRoomEngine.tsx:626:}
+  components\booking\FindYourRoomEngine.tsx:627:
+  components\booking\FindYourRoomEngine.tsx:628:function formatMoney(value: number, currencyLocale: string) {
+  components\booking\FindYourRoomEngine.tsx:629:  return new Intl.NumberFormat(currencyLocale, {
+  components\booking\FindYourRoomEngine.tsx:630:    style: "currency",
+  components\booking\FindYourRoomEngine.tsx:631:    currency: "EUR",
+  components\booking\FindYourRoomEngine.tsx:903:  onReveal: () => void;
+  components\booking\FindYourRoomEngine.tsx:904:}) {
+  components\booking\FindYourRoomEngine.tsx:905:  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  components\booking\FindYourRoomEngine.tsx:906:  const wrapRef = useRef<HTMLDivElement | null>(null);
+  components\booking\FindYourRoomEngine.tsx:907:  const [isRevealed, setIsRevealed] = useState(initiallyRevealed);
+> components\booking\FindYourRoomEngine.tsx:908:  const [hasStarted, setHasStarted] = useState(false);
+  components\booking\FindYourRoomEngine.tsx:909:  const [scratchPercent, setScratchPercent] = useState(0);
+  components\booking\FindYourRoomEngine.tsx:910:  const drawingRef = useRef(false);
+  components\booking\FindYourRoomEngine.tsx:911:  const revealedRef = useRef(initiallyRevealed);
+  components\booking\FindYourRoomEngine.tsx:912:
+  components\booking\FindYourRoomEngine.tsx:913:  useEffect(() => {
+  components\booking\FindYourRoomEngine.tsx:914:    setIsRevealed(initiallyRevealed);
+  components\booking\FindYourRoomEngine.tsx:915:    revealedRef.current = initiallyRevealed;
+  components\booking\FindYourRoomEngine.tsx:916:  }, [initiallyRevealed]);
+  components\booking\FindYourRoomEngine.tsx:917:
+  components\booking\FindYourRoomEngine.tsx:918:  useEffect(() => {
+  components\booking\FindYourRoomEngine.tsx:919:    const canvas = canvasRef.current;
+  components\booking\FindYourRoomEngine.tsx:920:    const wrap = wrapRef.current;
+  components\booking\FindYourRoomEngine.tsx:1038:      if (!drawingRef.current || revealedRef.current) {
+  components\booking\FindYourRoomEngine.tsx:1039:        return;
+  components\booking\FindYourRoomEngine.tsx:1040:      }
+  components\booking\FindYourRoomEngine.tsx:1041:
+  components\booking\FindYourRoomEngine.tsx:1042:      event.preventDefault();
+> components\booking\FindYourRoomEngine.tsx:1043:      setHasStarted(true);
+  components\booking\FindYourRoomEngine.tsx:1044:
+  components\booking\FindYourRoomEngine.tsx:1045:      const point = getPoint(event);
+  components\booking\FindYourRoomEngine.tsx:1046:      context.globalCompositeOperation = "destination-out";
+  components\booking\FindYourRoomEngine.tsx:1047:
+  components\booking\FindYourRoomEngine.tsx:1048:      const radius = 25;
+  components\booking\FindYourRoomEngine.tsx:1049:      const brush = context.createRadialGradient(point.x, point.y, 2, point.x, point.y, radius);
+  components\booking\FindYourRoomEngine.tsx:1050:      brush.addColorStop(0, "rgba(0,0,0,1)");
+  components\booking\FindYourRoomEngine.tsx:1051:      brush.addColorStop(0.65, "rgba(0,0,0,.85)");
+  components\booking\FindYourRoomEngine.tsx:1052:      brush.addColorStop(1, "rgba(0,0,0,0)");
+  components\booking\FindYourRoomEngine.tsx:1053:
+  components\booking\FindYourRoomEngine.tsx:1054:      context.fillStyle = brush;
+  components\booking\FindYourRoomEngine.tsx:1055:      context.beginPath();
+  components\booking\FindYourRoomEngine.tsx:1210:                justifyContent: "center",
+  components\booking\FindYourRoomEngine.tsx:1211:                pointerEvents: "none",
+  components\booking\FindYourRoomEngine.tsx:1212:                color: "#fffdfa",
+  components\booking\FindYourRoomEngine.tsx:1213:                fontWeight: 900,
+  components\booking\FindYourRoomEngine.tsx:1214:                textShadow: "0 2px 8px rgba(45,39,34,.55)",
+> components\booking\FindYourRoomEngine.tsx:1215:                opacity: hasStarted ? 0.35 : 1,
+  components\booking\FindYourRoomEngine.tsx:1216:              }}
+  components\booking\FindYourRoomEngine.tsx:1217:            >
+  components\booking\FindYourRoomEngine.tsx:1218:              <span style={{ fontSize: "1.35rem" }}>🖐️</span>
+  components\booking\FindYourRoomEngine.tsx:1219:              <span>{labels.scratchAndSee}</span>
+  components\booking\FindYourRoomEngine.tsx:1220:            </div>
+  components\booking\FindYourRoomEngine.tsx:1221:
+  components\booking\FindYourRoomEngine.tsx:1222:            <div
+  components\booking\FindYourRoomEngine.tsx:1223:              style={{
+  components\booking\FindYourRoomEngine.tsx:1224:                position: "absolute",
+  components\booking\FindYourRoomEngine.tsx:1225:                left: 0,
+  components\booking\FindYourRoomEngine.tsx:1226:                right: 0,
+  components\booking\FindYourRoomEngine.tsx:1227:                bottom: 0,
+  components\booking\FindYourRoomEngine.tsx:1228:                height: 4,
+  components\booking\FindYourRoomEngine.tsx:1229:                zIndex: 6,
+  components\booking\FindYourRoomEngine.tsx:1230:                background: "rgba(45,39,34,.14)",
+> components\booking\FindYourRoomEngine.tsx:1231:                opacity: hasStarted ? 1 : 0,
+  components\booking\FindYourRoomEngine.tsx:1232:              }}
+  components\booking\FindYourRoomEngine.tsx:1233:            >
+  components\booking\FindYourRoomEngine.tsx:1234:              <div
+  components\booking\FindYourRoomEngine.tsx:1235:                style={{
+  components\booking\FindYourRoomEngine.tsx:1236:                  width: `${Math.min((scratchPercent / 0.45) * 100, 100)}%`,
+  components\booking\FindYourRoomEngine.tsx:1237:                  height: "100%",
+  components\booking\FindYourRoomEngine.tsx:1238:                  background: "linear-gradient(90deg, #77863f, #8f9f4e)",
+  components\booking\FindYourRoomEngine.tsx:1239:                }}
+  components\booking\FindYourRoomEngine.tsx:1240:              />
+  components\booking\FindYourRoomEngine.tsx:1241:            </div>
+  components\booking\FindYourRoomEngine.tsx:1242:          </>
+  components\booking\FindYourRoomEngine.tsx:1243:        ) : null}
+  components\chios\BeachDetailPage.tsx:111:type BeachUiLanguage = keyof typeof beachUiCopy;
+  components\chios\BeachDetailPage.tsx:112:
+  components\chios\BeachDetailPage.tsx:113:function getBeachLanguage(beach: BeachDetailData): BeachUiLanguage {
+  components\chios\BeachDetailPage.tsx:114:  const path = beach.seo.canonicalPath;
+  components\chios\BeachDetailPage.tsx:115:
+> components\chios\BeachDetailPage.tsx:116:  if (path.startsWith("/el/")) {
+  components\chios\BeachDetailPage.tsx:117:    return "el";
+  components\chios\BeachDetailPage.tsx:118:  }
+  components\chios\BeachDetailPage.tsx:119:
+> components\chios\BeachDetailPage.tsx:120:  if (path.startsWith("/fr/")) {
+  components\chios\BeachDetailPage.tsx:121:    return "fr";
+  components\chios\BeachDetailPage.tsx:122:  }
+  components\chios\BeachDetailPage.tsx:123:
+> components\chios\BeachDetailPage.tsx:124:  if (path.startsWith("/de/")) {
+  components\chios\BeachDetailPage.tsx:125:    return "de";
+  components\chios\BeachDetailPage.tsx:126:  }
+  components\chios\BeachDetailPage.tsx:127:
+> components\chios\BeachDetailPage.tsx:128:  if (path.startsWith("/it/")) {
+  components\chios\BeachDetailPage.tsx:129:    return "it";
+  components\chios\BeachDetailPage.tsx:130:  }
+  components\chios\BeachDetailPage.tsx:131:
+> components\chios\BeachDetailPage.tsx:132:  if (path.startsWith("/es/")) {
+  components\chios\BeachDetailPage.tsx:133:    return "es";
+  components\chios\BeachDetailPage.tsx:134:  }
+  components\chios\BeachDetailPage.tsx:135:
+> components\chios\BeachDetailPage.tsx:136:  if (path.startsWith("/tr/")) {
+  components\chios\BeachDetailPage.tsx:137:    return "tr";
+  components\chios\BeachDetailPage.tsx:138:  }
+  components\chios\BeachDetailPage.tsx:139:
+  components\chios\BeachDetailPage.tsx:140:  return "en";
+  components\chios\BeachDetailPage.tsx:141:}
+  components\chios\BeachDetailPage.tsx:142:
+  components\chios\BeachDetailPage.tsx:143:function getChiosBeachesPageForLanguage(
+  components\chios\BeachDetailPage.tsx:144:  language: BeachUiLanguage,
+  components\chios\BeachDetailPage.tsx:145:): ChiosBeachesPageData {
+  components\chios\BeachDetailPage.tsx:146:  switch (language) {
+  components\chios\BeachDetailPage.tsx:147:    case "el":
+  components\chios\BeachDetailPage.tsx:148:      return chiosBeachesPageEl;
+  components\chios\ChiosBeachesPage.tsx:61:function getBeachesPageLanguage(
+  components\chios\ChiosBeachesPage.tsx:62:  data: ChiosBeachesPageData,
+  components\chios\ChiosBeachesPage.tsx:63:): BeachesPageUiLanguage {
+  components\chios\ChiosBeachesPage.tsx:64:  const path = data.seo.canonicalPath;
+  components\chios\ChiosBeachesPage.tsx:65:
+> components\chios\ChiosBeachesPage.tsx:66:  if (path.startsWith("/el/")) {
+  components\chios\ChiosBeachesPage.tsx:67:    return "el";
+  components\chios\ChiosBeachesPage.tsx:68:  }
+  components\chios\ChiosBeachesPage.tsx:69:
+> components\chios\ChiosBeachesPage.tsx:70:  if (path.startsWith("/fr/")) {
+  components\chios\ChiosBeachesPage.tsx:71:    return "fr";
+  components\chios\ChiosBeachesPage.tsx:72:  }
+  components\chios\ChiosBeachesPage.tsx:73:
+> components\chios\ChiosBeachesPage.tsx:74:  if (path.startsWith("/de/")) {
+  components\chios\ChiosBeachesPage.tsx:75:    return "de";
+  components\chios\ChiosBeachesPage.tsx:76:  }
+  components\chios\ChiosBeachesPage.tsx:77:
+> components\chios\ChiosBeachesPage.tsx:78:  if (path.startsWith("/it/")) {
+  components\chios\ChiosBeachesPage.tsx:79:    return "it";
+  components\chios\ChiosBeachesPage.tsx:80:  }
+  components\chios\ChiosBeachesPage.tsx:81:
+> components\chios\ChiosBeachesPage.tsx:82:  if (path.startsWith("/es/")) {
+  components\chios\ChiosBeachesPage.tsx:83:    return "es";
+  components\chios\ChiosBeachesPage.tsx:84:  }
+  components\chios\ChiosBeachesPage.tsx:85:
+> components\chios\ChiosBeachesPage.tsx:86:  if (path.startsWith("/tr/")) {
+  components\chios\ChiosBeachesPage.tsx:87:    return "tr";
+  components\chios\ChiosBeachesPage.tsx:88:  }
+  components\chios\ChiosBeachesPage.tsx:89:
+  components\chios\ChiosBeachesPage.tsx:90:  return "en";
+  components\chios\ChiosBeachesPage.tsx:91:}
+  components\chios\ChiosBeachesPage.tsx:92:
+  components\chios\ChiosBeachesPage.tsx:93:export function ChiosBeachesPage({ data }: ChiosBeachesPageProps) {
+  components\chios\ChiosBeachesPage.tsx:94:  const language = getBeachesPageLanguage(data);
+  components\chios\ChiosBeachesPage.tsx:95:  const copy = beachesPageUiCopy[language];
+  components\chios\ChiosBeachesPage.tsx:96:
+  components\chios\ChiosBeachesPage.tsx:97:  return (
+  components\chios\ChiosBeachesPage.tsx:98:    <main className="chios-beaches-page">
+  components\chios\ChiosHolidayQuizPage.tsx:1:"use client";
+  components\chios\ChiosHolidayQuizPage.tsx:2:
+  components\chios\ChiosHolidayQuizPage.tsx:3:import { useMemo, useState } from "react";
+  components\chios\ChiosHolidayQuizPage.tsx:4:
+> components\chios\ChiosHolidayQuizPage.tsx:5:type QuizLocale = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
+  components\chios\ChiosHolidayQuizPage.tsx:6:type QuestType = "main" | "beaches" | "villages" | "sights";
+  components\chios\ChiosHolidayQuizPage.tsx:7:type OptionKey = "a" | "b" | "c" | "d";
+  components\chios\ChiosHolidayQuizPage.tsx:8:
+> components\chios\ChiosHolidayQuizPage.tsx:9:type QuizQuestion = {
+  components\chios\ChiosHolidayQuizPage.tsx:10:  q: string;
+  components\chios\ChiosHolidayQuizPage.tsx:11:  a: OptionKey;
+  components\chios\ChiosHolidayQuizPage.tsx:12:  opts: Partial<Record<OptionKey, string>>;
+  components\chios\ChiosHolidayQuizPage.tsx:13:  tip: string;
+  components\chios\ChiosHolidayQuizPage.tsx:14:};
+  components\chios\ChiosHolidayQuizPage.tsx:15:
+> components\chios\ChiosHolidayQuizPage.tsx:16:type ChiosHolidayQuizPageProps = {
+  components\chios\ChiosHolidayQuizPage.tsx:17:  locale?: string;
+  components\chios\ChiosHolidayQuizPage.tsx:18:};
+  components\chios\ChiosHolidayQuizPage.tsx:19:
+> components\chios\ChiosHolidayQuizPage.tsx:20:const supportedLocales: QuizLocale[] = ["en", "el", "fr", "de", "it", "es", "tr"];
+  components\chios\ChiosHolidayQuizPage.tsx:21:
+> components\chios\ChiosHolidayQuizPage.tsx:22:const bookingHrefByLocale: Record<QuizLocale, string> = {
+  components\chios\ChiosHolidayQuizPage.tsx:23:  en: "/chios-hotels-rates/",
+  components\chios\ChiosHolidayQuizPage.tsx:24:  el: "/el/amesi-kratisi-voulamandis-house/",
+  components\chios\ChiosHolidayQuizPage.tsx:25:  fr: "/fr/tarifs-des-hotels-a-chios/",
+  components\chios\ChiosHolidayQuizPage.tsx:26:  de: "/de/hotelpreise-auf-der-insel-chios/",
+  components\chios\ChiosHolidayQuizPage.tsx:27:  it: "/it/prezzi-hotel-chios/",
+  components\chios\ChiosHolidayQuizPage.tsx:28:  es: "/es/los-mejores-precios-de-hotel-en-la-isla-chios/",
+  components\chios\ChiosHolidayQuizPage.tsx:29:  tr: "/tr/sakiz-adasi-rezervasyon/",
+  components\chios\ChiosHolidayQuizPage.tsx:30:};
+  components\chios\ChiosHolidayQuizPage.tsx:31:
+  components\chios\ChiosHolidayQuizPage.tsx:32:const uiByLocale = {
+  components\chios\ChiosHolidayQuizPage.tsx:33:  "en": {
+> components\chios\ChiosHolidayQuizPage.tsx:34:    "kicker": "Chios quiz",
+  components\chios\ChiosHolidayQuizPage.tsx:35:    "title": "Are you a Chios Insider? 🍋",
+  components\chios\ChiosHolidayQuizPage.tsx:36:    "description": "Discover the island's secrets and win a special discount for your stay in Kampos.",
+  components\chios\ChiosHolidayQuizPage.tsx:37:    "question": "Question",
+  components\chios\ChiosHolidayQuizPage.tsx:38:    "back": "← Back",
+  components\chios\ChiosHolidayQuizPage.tsx:39:    "next": "Next question →",
+  components\chios\ChiosHolidayQuizPage.tsx:40:    "insiderTip": "Insider Tip 💡",
+  components\chios\ChiosHolidayQuizPage.tsx:41:    "resultTitle": "You're a Chios Insider! 🏆",
+  components\chios\ChiosHolidayQuizPage.tsx:42:    "resultHigh": "You are a Chios expert! You deserve our maximum discount.",
+  components\chios\ChiosHolidayQuizPage.tsx:43:    "resultLow": "Great effort! Chios is waiting for you to discover its secrets.",
+  components\chios\ChiosHolidayQuizPage.tsx:44:    "whyChoose": "Why choose Voulamandis House 🍊",
+  components\chios\ChiosHolidayQuizPage.tsx:45:    "houseBio": "Experience the authentic Kampos lifestyle. Our family estate is the perfect base for your 
+Chian adventures.",
+  components\chios\ChiosHolidayQuizPage.tsx:46:    "uspRooms": "Value for Money Renovated Rooms",
+  components\chios\ChiosHolidayQuizPage.tsx:81:    "miniComplete": "Το mini quest ολοκληρώθηκε! 🌟",
+  components\chios\ChiosHolidayQuizPage.tsx:82:    "miniCompleteText": "Μπράβο! Γίνεσαι πραγματικός γνώστης της Χίου.",
+  components\chios\ChiosHolidayQuizPage.tsx:83:    "returnToOffer": "Επιστροφή στην προσφορά"
+  components\chios\ChiosHolidayQuizPage.tsx:84:  },
+  components\chios\ChiosHolidayQuizPage.tsx:85:  "fr": {
+> components\chios\ChiosHolidayQuizPage.tsx:86:    "kicker": "Quiz sur Chios",
+  components\chios\ChiosHolidayQuizPage.tsx:87:    "title": "Êtes-vous un Chios Insider ? 🍋",
+  components\chios\ChiosHolidayQuizPage.tsx:88:    "description": "Découvrez les secrets de l’île et gagnez un code de réduction spécial pour votre séjour à 
+Kampos.",
+  components\chios\ChiosHolidayQuizPage.tsx:89:    "question": "Question",
+  components\chios\ChiosHolidayQuizPage.tsx:90:    "back": "← Retour",
+  components\chios\ChiosHolidayQuizPage.tsx:91:    "next": "Question suivante →",
+  components\chios\ChiosHolidayQuizPage.tsx:92:    "insiderTip": "Conseil d’initié 💡",
+  components\chios\ChiosHolidayQuizPage.tsx:93:    "resultTitle": "Vous êtes un Chios Insider ! 🏆",
+  components\chios\ChiosHolidayQuizPage.tsx:94:    "resultHigh": "Vous connaissez très bien Chios ! Vous méritez notre meilleure réduction.",
+  components\chios\ChiosHolidayQuizPage.tsx:95:    "resultLow": "Très bel effort ! Chios vous attend pour révéler ses secrets.",
+  components\chios\ChiosHolidayQuizPage.tsx:96:    "whyChoose": "Pourquoi choisir Voulamandis House 🍊",
+  components\chios\ChiosHolidayQuizPage.tsx:97:    "houseBio": "Découvrez le style de vie authentique de Kampos. Notre domaine familial est une base idéale 
+pour explorer Chios.",
+  components\chios\ChiosHolidayQuizPage.tsx:98:    "uspRooms": "Chambres rénovées au bon rapport qualité-prix",
+  components\chios\ChiosHolidayQuizPage.tsx:107:    "miniComplete": "Mini quest terminé ! 🌟",
+  components\chios\ChiosHolidayQuizPage.tsx:108:    "miniCompleteText": "Bravo ! Vous devenez un vrai expert de Chios.",
+  components\chios\ChiosHolidayQuizPage.tsx:109:    "returnToOffer": "Retour à l’offre"
+  components\chios\ChiosHolidayQuizPage.tsx:110:  },
+  components\chios\ChiosHolidayQuizPage.tsx:111:  "de": {
+> components\chios\ChiosHolidayQuizPage.tsx:112:    "kicker": "Chios-Quiz",
+  components\chios\ChiosHolidayQuizPage.tsx:113:    "title": "Sind Sie ein Chios Insider? 🍋",
+  components\chios\ChiosHolidayQuizPage.tsx:114:    "description": "Entdecken Sie die Geheimnisse der Insel und gewinnen Sie einen besonderen Rabattcode für 
+Ihren Aufenthalt in Kampos.",
+  components\chios\ChiosHolidayQuizPage.tsx:115:    "question": "Frage",
+  components\chios\ChiosHolidayQuizPage.tsx:116:    "back": "← Zurück",
+  components\chios\ChiosHolidayQuizPage.tsx:117:    "next": "Nächste Frage →",
+  components\chios\ChiosHolidayQuizPage.tsx:118:    "insiderTip": "Insider-Tipp 💡",
+  components\chios\ChiosHolidayQuizPage.tsx:119:    "resultTitle": "Sie sind ein Chios Insider! 🏆",
+  components\chios\ChiosHolidayQuizPage.tsx:120:    "resultHigh": "Sie kennen Chios sehr gut! Sie verdienen unseren besten Rabatt.",
+  components\chios\ChiosHolidayQuizPage.tsx:121:    "resultLow": "Sehr gut gemacht! Chios wartet darauf, von Ihnen entdeckt zu werden.",
+  components\chios\ChiosHolidayQuizPage.tsx:122:    "whyChoose": "Warum Voulamandis House wählen 🍊",
+  components\chios\ChiosHolidayQuizPage.tsx:123:    "houseBio": "Erleben Sie den authentischen Lebensstil von Kampos. Unser Familienanwesen ist der ideale 
+Ausgangspunkt für Chios.",
+  components\chios\ChiosHolidayQuizPage.tsx:124:    "uspRooms": "Renovierte Zimmer mit gutem Preis-Leistungs-Verhältnis",
+  components\chios\ChiosHolidayQuizPage.tsx:133:    "miniComplete": "Mini Quest abgeschlossen! 🌟",
+  components\chios\ChiosHolidayQuizPage.tsx:134:    "miniCompleteText": "Sehr gut! Sie werden ein echter Chios-Experte.",
+  components\chios\ChiosHolidayQuizPage.tsx:135:    "returnToOffer": "Zurück zum Angebot"
+  components\chios\ChiosHolidayQuizPage.tsx:136:  },
+  components\chios\ChiosHolidayQuizPage.tsx:137:  "it": {
+> components\chios\ChiosHolidayQuizPage.tsx:138:    "kicker": "Quiz su Chios",
+  components\chios\ChiosHolidayQuizPage.tsx:139:    "title": "Sei un Chios Insider? 🍋",
+  components\chios\ChiosHolidayQuizPage.tsx:140:    "description": "Scopri i segreti dell’isola e ricevi un codice sconto speciale per il tuo soggiorno a 
+Kampos.",
+  components\chios\ChiosHolidayQuizPage.tsx:141:    "question": "Domanda",
+  components\chios\ChiosHolidayQuizPage.tsx:142:    "back": "← Indietro",
+  components\chios\ChiosHolidayQuizPage.tsx:143:    "next": "Domanda successiva →",
+  components\chios\ChiosHolidayQuizPage.tsx:144:    "insiderTip": "Consiglio da insider 💡",
+  components\chios\ChiosHolidayQuizPage.tsx:145:    "resultTitle": "Sei un Chios Insider! 🏆",
+  components\chios\ChiosHolidayQuizPage.tsx:146:    "resultHigh": "Conosci molto bene Chios! Ti meriti il nostro sconto migliore.",
+  components\chios\ChiosHolidayQuizPage.tsx:147:    "resultLow": "Ottimo tentativo! Chios ti aspetta per svelarti i suoi segreti.",
+  components\chios\ChiosHolidayQuizPage.tsx:148:    "whyChoose": "Perché scegliere Voulamandis House 🍊",
+  components\chios\ChiosHolidayQuizPage.tsx:149:    "houseBio": "Vivi l’autentica atmosfera di Kampos. La nostra tenuta familiare è la base ideale per 
+esplorare Chios.",
+  components\chios\ChiosHolidayQuizPage.tsx:150:    "uspRooms": "Camere rinnovate con ottimo rapporto qualità-prezzo",
+  components\chios\ChiosHolidayQuizPage.tsx:159:    "miniComplete": "Mini quest completata! 🌟",
+  components\chios\ChiosHolidayQuizPage.tsx:160:    "miniCompleteText": "Ottimo lavoro! Stai diventando un vero esperto di Chios.",
+  components\chios\ChiosHolidayQuizPage.tsx:161:    "returnToOffer": "Torna all’offerta"
+  components\chios\ChiosHolidayQuizPage.tsx:162:  },
+  components\chios\ChiosHolidayQuizPage.tsx:163:  "es": {
+> components\chios\ChiosHolidayQuizPage.tsx:164:    "kicker": "Quiz sobre Quíos",
+  components\chios\ChiosHolidayQuizPage.tsx:165:    "title": "¿Eres un Chios Insider? 🍋",
+  components\chios\ChiosHolidayQuizPage.tsx:166:    "description": "Descubre los secretos de la isla y consigue un código de descuento especial para tu 
+estancia en Kampos.",
+  components\chios\ChiosHolidayQuizPage.tsx:167:    "question": "Pregunta",
+  components\chios\ChiosHolidayQuizPage.tsx:168:    "back": "← Atrás",
+  components\chios\ChiosHolidayQuizPage.tsx:169:    "next": "Siguiente pregunta →",
+  components\chios\ChiosHolidayQuizPage.tsx:170:    "insiderTip": "Consejo insider 💡",
+  components\chios\ChiosHolidayQuizPage.tsx:171:    "resultTitle": "¡Eres un Chios Insider! 🏆",
+  components\chios\ChiosHolidayQuizPage.tsx:172:    "resultHigh": "¡Conoces muy bien Quíos! Mereces nuestro mayor descuento.",
+  components\chios\ChiosHolidayQuizPage.tsx:173:    "resultLow": "¡Muy buen intento! Quíos te espera para descubrir sus secretos.",
+  components\chios\ChiosHolidayQuizPage.tsx:174:    "whyChoose": "Por qué elegir Voulamandis House 🍊",
+  components\chios\ChiosHolidayQuizPage.tsx:175:    "houseBio": "Vive el auténtico ambiente de Kampos. Nuestra finca familiar es una base ideal para 
+explorar Quíos.",
+  components\chios\ChiosHolidayQuizPage.tsx:176:    "uspRooms": "Habitaciones renovadas con buena relación calidad-precio",
+  components\chios\ChiosHolidayQuizPage.tsx:210:    "sights": "🏛️ Gezilecek yerler",
+  components\chios\ChiosHolidayQuizPage.tsx:211:    "miniComplete": "Mini quest tamamlandı! 🌟",
+  components\chios\ChiosHolidayQuizPage.tsx:212:    "miniCompleteText": "Harika! Gerçek bir Sakız Adası uzmanı oluyorsunuz.",
+  components\chios\ChiosHolidayQuizPage.tsx:213:    "returnToOffer": "Teklife dön"
+  components\chios\ChiosHolidayQuizPage.tsx:214:  }
+> components\chios\ChiosHolidayQuizPage.tsx:215:} satisfies Record<QuizLocale, {
+  components\chios\ChiosHolidayQuizPage.tsx:216:  kicker: string;
+  components\chios\ChiosHolidayQuizPage.tsx:217:  title: string;
+  components\chios\ChiosHolidayQuizPage.tsx:218:  description: string;
+  components\chios\ChiosHolidayQuizPage.tsx:219:  question: string;
+  components\chios\ChiosHolidayQuizPage.tsx:220:  back: string;
+  components\chios\ChiosHolidayQuizPage.tsx:221:  next: string;
+  components\chios\ChiosHolidayQuizPage.tsx:222:  insiderTip: string;
+  components\chios\ChiosHolidayQuizPage.tsx:223:  resultTitle: string;
+  components\chios\ChiosHolidayQuizPage.tsx:224:  resultHigh: string;
+  components\chios\ChiosHolidayQuizPage.tsx:225:  resultLow: string;
+  components\chios\ChiosHolidayQuizPage.tsx:226:  whyChoose: string;
+  components\chios\ChiosHolidayQuizPage.tsx:227:  houseBio: string;
+  components\chios\ChiosHolidayQuizPage.tsx:237:  miniComplete: string;
+  components\chios\ChiosHolidayQuizPage.tsx:238:  miniCompleteText: string;
+  components\chios\ChiosHolidayQuizPage.tsx:239:  returnToOffer: string;
+  components\chios\ChiosHolidayQuizPage.tsx:240:}>;
+  components\chios\ChiosHolidayQuizPage.tsx:241:
+> components\chios\ChiosHolidayQuizPage.tsx:242:const quizDataByLocale = {
+  components\chios\ChiosHolidayQuizPage.tsx:243:  "en": {
+  components\chios\ChiosHolidayQuizPage.tsx:244:    "main": [
+  components\chios\ChiosHolidayQuizPage.tsx:245:      {
+  components\chios\ChiosHolidayQuizPage.tsx:246:        "q": "What will you find behind the high stone walls in Kampos?",
+  components\chios\ChiosHolidayQuizPage.tsx:247:        "a": "b",
+  components\chios\ChiosHolidayQuizPage.tsx:248:        "opts": {
+  components\chios\ChiosHolidayQuizPage.tsx:249:          "a": "Shopping malls.",
+  components\chios\ChiosHolidayQuizPage.tsx:250:          "b": "Citrus orchards and water wheels.",
+  components\chios\ChiosHolidayQuizPage.tsx:251:          "c": "Large hotels."
+  components\chios\ChiosHolidayQuizPage.tsx:252:        },
+  components\chios\ChiosHolidayQuizPage.tsx:253:        "tip": "Kampos is famous for historic mansions, citrus orchards and the scent of orange blossoms."
+  components\chios\ChiosHolidayQuizPage.tsx:254:      },
+  components\chios\ChiosHolidayQuizPage.tsx:2485:        },
+  components\chios\ChiosHolidayQuizPage.tsx:2486:        "tip": "Le hammam est un monument très bien conservé à l’intérieur du château."
+  components\chios\ChiosHolidayQuizPage.tsx:2487:      }
+  components\chios\ChiosHolidayQuizPage.tsx:2488:    ]
+  components\chios\ChiosHolidayQuizPage.tsx:2489:  }
+> components\chios\ChiosHolidayQuizPage.tsx:2490:} satisfies Record<QuizLocale, Record<QuestType, QuizQuestion[]>>;
+  components\chios\ChiosHolidayQuizPage.tsx:2491:
+> components\chios\ChiosHolidayQuizPage.tsx:2492:function normalizeLocale(locale?: string): QuizLocale {
+> components\chios\ChiosHolidayQuizPage.tsx:2493:  if (locale && supportedLocales.includes(locale as QuizLocale)) {
+> components\chios\ChiosHolidayQuizPage.tsx:2494:    return locale as QuizLocale;
+  components\chios\ChiosHolidayQuizPage.tsx:2495:  }
+  components\chios\ChiosHolidayQuizPage.tsx:2496:
+  components\chios\ChiosHolidayQuizPage.tsx:2497:  return "en";
+  components\chios\ChiosHolidayQuizPage.tsx:2498:}
+  components\chios\ChiosHolidayQuizPage.tsx:2499:
+> components\chios\ChiosHolidayQuizPage.tsx:2500:export function ChiosHolidayQuizPage({ locale = "en" }: ChiosHolidayQuizPageProps) {
+  components\chios\ChiosHolidayQuizPage.tsx:2501:  const currentLocale = normalizeLocale(locale);
+  components\chios\ChiosHolidayQuizPage.tsx:2502:  const ui = uiByLocale[currentLocale];
+> components\chios\ChiosHolidayQuizPage.tsx:2503:  const quizData = quizDataByLocale[currentLocale];
+  components\chios\ChiosHolidayQuizPage.tsx:2504:
+  components\chios\ChiosHolidayQuizPage.tsx:2505:  const [questType, setQuestType] = useState<QuestType>("main");
+  components\chios\ChiosHolidayQuizPage.tsx:2506:  const [currentIdx, setCurrentIdx] = useState(0);
+  components\chios\ChiosHolidayQuizPage.tsx:2507:  const [score, setScore] = useState(0);
+> components\chios\ChiosHolidayQuizPage.tsx:2508:  const [mainQuizScore, setMainQuizScore] = useState(0);
+  components\chios\ChiosHolidayQuizPage.tsx:2509:  const [selectedAnswer, setSelectedAnswer] = useState<OptionKey | null>(null);
+  components\chios\ChiosHolidayQuizPage.tsx:2510:  const [showResult, setShowResult] = useState(false);
+  components\chios\ChiosHolidayQuizPage.tsx:2511:
+> components\chios\ChiosHolidayQuizPage.tsx:2512:  const currentQuestions = quizData[questType];
+  components\chios\ChiosHolidayQuizPage.tsx:2513:  const currentQuestion = currentQuestions[currentIdx];
+  components\chios\ChiosHolidayQuizPage.tsx:2514:  const isMiniQuest = questType !== "main";
+  components\chios\ChiosHolidayQuizPage.tsx:2515:
+  components\chios\ChiosHolidayQuizPage.tsx:2516:  const progressPercent = useMemo(() => {
+  components\chios\ChiosHolidayQuizPage.tsx:2517:    return Math.round(((currentIdx + 1) / currentQuestions.length) * 100);
+  components\chios\ChiosHolidayQuizPage.tsx:2518:  }, [currentIdx, currentQuestions.length]);
+  components\chios\ChiosHolidayQuizPage.tsx:2519:
+> components\chios\ChiosHolidayQuizPage.tsx:2520:  const finalCode = mainQuizScore >= 7 ? "INSIDER15" : "CHIOS10";
+  components\chios\ChiosHolidayQuizPage.tsx:2521:
+> components\chios\ChiosHolidayQuizPage.tsx:2522:  function startQuest(type: QuestType) {
+  components\chios\ChiosHolidayQuizPage.tsx:2523:    setQuestType(type);
+  components\chios\ChiosHolidayQuizPage.tsx:2524:    setCurrentIdx(0);
+  components\chios\ChiosHolidayQuizPage.tsx:2525:    setScore(0);
+  components\chios\ChiosHolidayQuizPage.tsx:2526:    setSelectedAnswer(null);
+  components\chios\ChiosHolidayQuizPage.tsx:2527:    setShowResult(false);
+  components\chios\ChiosHolidayQuizPage.tsx:2528:  }
+  components\chios\ChiosHolidayQuizPage.tsx:2529:
+  components\chios\ChiosHolidayQuizPage.tsx:2530:  function handleAnswer(answer: OptionKey) {
+  components\chios\ChiosHolidayQuizPage.tsx:2531:    if (selectedAnswer) {
+  components\chios\ChiosHolidayQuizPage.tsx:2532:      return;
+  components\chios\ChiosHolidayQuizPage.tsx:2533:    }
+  components\chios\ChiosHolidayQuizPage.tsx:2534:
+  components\chios\ChiosHolidayQuizPage.tsx:2548:      return;
+  components\chios\ChiosHolidayQuizPage.tsx:2549:    }
+  components\chios\ChiosHolidayQuizPage.tsx:2550:
+  components\chios\ChiosHolidayQuizPage.tsx:2551:    if (questType === "main") {
+  components\chios\ChiosHolidayQuizPage.tsx:2552:      const finalScore = selectedAnswer === currentQuestion.a ? score + 1 : score;
+> components\chios\ChiosHolidayQuizPage.tsx:2553:      setMainQuizScore(finalScore);
+  components\chios\ChiosHolidayQuizPage.tsx:2554:    }
+  components\chios\ChiosHolidayQuizPage.tsx:2555:
+  components\chios\ChiosHolidayQuizPage.tsx:2556:    setShowResult(true);
+  components\chios\ChiosHolidayQuizPage.tsx:2557:  }
+  components\chios\ChiosHolidayQuizPage.tsx:2558:
+  components\chios\ChiosHolidayQuizPage.tsx:2559:  function handleBack() {
+  components\chios\ChiosHolidayQuizPage.tsx:2560:    if (currentIdx === 0) {
+  components\chios\ChiosHolidayQuizPage.tsx:2561:      return;
+  components\chios\ChiosHolidayQuizPage.tsx:2562:    }
+  components\chios\ChiosHolidayQuizPage.tsx:2563:
+  components\chios\ChiosHolidayQuizPage.tsx:2564:    setCurrentIdx((idx) => idx - 1);
+  components\chios\ChiosHolidayQuizPage.tsx:2565:    setSelectedAnswer(null);
+  components\chios\ChiosHolidayQuizPage.tsx:2566:  }
+  components\chios\ChiosHolidayQuizPage.tsx:2567:
+  components\chios\ChiosHolidayQuizPage.tsx:2568:  function returnToMainResult() {
+  components\chios\ChiosHolidayQuizPage.tsx:2569:    setQuestType("main");
+> components\chios\ChiosHolidayQuizPage.tsx:2570:    setScore(mainQuizScore);
+> components\chios\ChiosHolidayQuizPage.tsx:2571:    setCurrentIdx(quizData.main.length - 1);
+  components\chios\ChiosHolidayQuizPage.tsx:2572:    setSelectedAnswer(null);
+  components\chios\ChiosHolidayQuizPage.tsx:2573:    setShowResult(true);
+  components\chios\ChiosHolidayQuizPage.tsx:2574:  }
+  components\chios\ChiosHolidayQuizPage.tsx:2575:
+  components\chios\ChiosHolidayQuizPage.tsx:2576:  return (
+  components\chios\ChiosHolidayQuizPage.tsx:2577:    <main className="chq-page">
+> components\chios\ChiosHolidayQuizPage.tsx:2578:      <article className="chq-container" itemScope itemType="https://schema.org/Quiz">
+  components\chios\ChiosHolidayQuizPage.tsx:2579:        {!showResult && (
+  components\chios\ChiosHolidayQuizPage.tsx:2580:          <header className="chq-header">
+  components\chios\ChiosHolidayQuizPage.tsx:2581:            <span className="chq-kicker">{ui.kicker}</span>
+  components\chios\ChiosHolidayQuizPage.tsx:2582:            <h1>{ui.title}</h1>
+  components\chios\ChiosHolidayQuizPage.tsx:2583:            <p>{ui.description}</p>
+  components\chios\ChiosHolidayQuizPage.tsx:2584:
+  components\chios\ChiosHolidayQuizPage.tsx:2585:            <div className="chq-progress-container">
+  components\chios\ChiosHolidayQuizPage.tsx:2586:              <div className="chq-stats">
+  components\chios\ChiosHolidayQuizPage.tsx:2587:                <span>
+  components\chios\ChiosHolidayQuizPage.tsx:2588:                  {ui.question}: {currentIdx + 1}/{currentQuestions.length}
+  components\chios\ChiosHolidayQuizPage.tsx:2589:                </span>
+  components\chios\ChiosHolidayQuizPage.tsx:2590:                <span>{progressPercent}%</span>
+  components\chios\ChiosHolidayQuizPage.tsx:2678:        {showResult && !isMiniQuest && (
+  components\chios\ChiosHolidayQuizPage.tsx:2679:          <section className="chq-result-card">
+  components\chios\ChiosHolidayQuizPage.tsx:2680:            <div className="chq-result-header">
+  components\chios\ChiosHolidayQuizPage.tsx:2681:              <h2>{ui.resultTitle}</h2>
+  components\chios\ChiosHolidayQuizPage.tsx:2682:              <div className="chq-score-badge">
+> components\chios\ChiosHolidayQuizPage.tsx:2683:                {mainQuizScore}/{quizData.main.length}
+  components\chios\ChiosHolidayQuizPage.tsx:2684:              </div>
+> components\chios\ChiosHolidayQuizPage.tsx:2685:              <p>{mainQuizScore >= 7 ? ui.resultHigh : ui.resultLow}</p>
+  components\chios\ChiosHolidayQuizPage.tsx:2686:            </div>
+  components\chios\ChiosHolidayQuizPage.tsx:2687:
+  components\chios\ChiosHolidayQuizPage.tsx:2688:            <div className="chq-house-intro">
+  components\chios\ChiosHolidayQuizPage.tsx:2689:              <hr className="chq-divider" />
+  components\chios\ChiosHolidayQuizPage.tsx:2690:              <h3>{ui.whyChoose}</h3>
+  components\chios\ChiosHolidayQuizPage.tsx:2691:              <p className="chq-house-bio">{ui.houseBio}</p>
+  components\chios\ChiosHolidayQuizPage.tsx:2692:
+  components\chios\ChiosHolidayQuizPage.tsx:2693:              <div className="chq-usp-grid">
+  components\chios\ChiosHolidayQuizPage.tsx:2694:                <div className="chq-usp-item">
+  components\chios\ChiosHolidayQuizPage.tsx:2695:                  <span className="chq-usp-icon">✨</span>
+  components\chios\ChiosHolidayQuizPage.tsx:2696:                  <span className="chq-usp-text">{ui.uspRooms}</span>
+  components\chios\ChiosHolidayQuizPage.tsx:2697:                </div>
+  components\chios\ChiosHolidayQuizPage.tsx:2723:              <h3>{ui.miniTitle}</h3>
+  components\chios\ChiosHolidayQuizPage.tsx:2724:              <div className="chq-mini-quest-grid">
+  components\chios\ChiosHolidayQuizPage.tsx:2725:                <button
+  components\chios\ChiosHolidayQuizPage.tsx:2726:                  type="button"
+  components\chios\ChiosHolidayQuizPage.tsx:2727:                  className="chq-quest-card"
+> components\chios\ChiosHolidayQuizPage.tsx:2728:                  onClick={() => startQuest("beaches")}
+  components\chios\ChiosHolidayQuizPage.tsx:2729:                >
+  components\chios\ChiosHolidayQuizPage.tsx:2730:                  {ui.beaches}
+  components\chios\ChiosHolidayQuizPage.tsx:2731:                </button>
+  components\chios\ChiosHolidayQuizPage.tsx:2732:                <button
+  components\chios\ChiosHolidayQuizPage.tsx:2733:                  type="button"
+  components\chios\ChiosHolidayQuizPage.tsx:2734:                  className="chq-quest-card"
+> components\chios\ChiosHolidayQuizPage.tsx:2735:                  onClick={() => startQuest("villages")}
+  components\chios\ChiosHolidayQuizPage.tsx:2736:                >
+  components\chios\ChiosHolidayQuizPage.tsx:2737:                  {ui.villages}
+  components\chios\ChiosHolidayQuizPage.tsx:2738:                </button>
+  components\chios\ChiosHolidayQuizPage.tsx:2739:                <button
+  components\chios\ChiosHolidayQuizPage.tsx:2740:                  type="button"
+  components\chios\ChiosHolidayQuizPage.tsx:2741:                  className="chq-quest-card"
+> components\chios\ChiosHolidayQuizPage.tsx:2742:                  onClick={() => startQuest("sights")}
+  components\chios\ChiosHolidayQuizPage.tsx:2743:                >
+  components\chios\ChiosHolidayQuizPage.tsx:2744:                  {ui.sights}
+  components\chios\ChiosHolidayQuizPage.tsx:2745:                </button>
+  components\chios\ChiosHolidayQuizPage.tsx:2746:              </div>
+  components\chios\ChiosHolidayQuizPage.tsx:2747:            </div>
+  components\chios\ChiosHolidayQuizPage.tsx:2748:          </section>
+  components\chios\ChiosHolidayQuizPage.tsx:2749:        )}
+  components\chios\ChiosHolidayQuizPage.tsx:2750:      </article>
+  components\chios\ChiosHolidayQuizPage.tsx:2751:    </main>
+  components\chios\ChiosHolidayQuizPage.tsx:2752:  );
+  components\chios\ChiosHolidayQuizPage.tsx:2753:}
+  components\chios\ChiosHolidayQuizPage.tsx:2754:
+> components\chios\ChiosHolidayQuizPage.tsx:2755:export default ChiosHolidayQuizPage;
+  components\chios\ChiosIslandPage.tsx:5:};
+  components\chios\ChiosIslandPage.tsx:6:
+  components\chios\ChiosIslandPage.tsx:7:type ChiosIslandUiText = {
+  components\chios\ChiosIslandPage.tsx:8:  introKicker: string;
+  components\chios\ChiosIslandPage.tsx:9:  highlightsAriaLabel: string;
+> components\chios\ChiosIslandPage.tsx:10:  quizKicker: string;
+  components\chios\ChiosIslandPage.tsx:11:  quickActionsAriaLabel: string;
+  components\chios\ChiosIslandPage.tsx:12:  whatsapp: string;
+  components\chios\ChiosIslandPage.tsx:13:  bookNow: string;
+  components\chios\ChiosIslandPage.tsx:14:};
+  components\chios\ChiosIslandPage.tsx:15:
+  components\chios\ChiosIslandPage.tsx:16:const chiosIslandUiByLocale: Record<string, ChiosIslandUiText> = {
+  components\chios\ChiosIslandPage.tsx:17:  en: {
+  components\chios\ChiosIslandPage.tsx:18:    introKicker: "Why visit Chios",
+  components\chios\ChiosIslandPage.tsx:19:    highlightsAriaLabel: "Chios island highlights",
+> components\chios\ChiosIslandPage.tsx:20:    quizKicker: "Chios quiz",
+  components\chios\ChiosIslandPage.tsx:21:    quickActionsAriaLabel: "Quick actions",
+  components\chios\ChiosIslandPage.tsx:22:    whatsapp: "WhatsApp",
+  components\chios\ChiosIslandPage.tsx:23:    bookNow: "Book now",
+  components\chios\ChiosIslandPage.tsx:24:  },
+  components\chios\ChiosIslandPage.tsx:25:  el: {
+  components\chios\ChiosIslandPage.tsx:26:    introKicker: "Γιατί να επισκεφθείτε τη Χίο",
+  components\chios\ChiosIslandPage.tsx:27:    highlightsAriaLabel: "Σημαντικά στοιχεία για τη Χίο",
+> components\chios\ChiosIslandPage.tsx:28:    quizKicker: "Κουίζ για τη Χίο",
+  components\chios\ChiosIslandPage.tsx:29:    quickActionsAriaLabel: "Γρήγορες ενέργειες",
+  components\chios\ChiosIslandPage.tsx:30:    whatsapp: "WhatsApp",
+  components\chios\ChiosIslandPage.tsx:31:    bookNow: "Κάντε κράτηση",
+  components\chios\ChiosIslandPage.tsx:32:  },
+  components\chios\ChiosIslandPage.tsx:33:  fr: {
+  components\chios\ChiosIslandPage.tsx:34:    introKicker: "Pourquoi visiter Chios",
+  components\chios\ChiosIslandPage.tsx:35:    highlightsAriaLabel: "Points forts de l’île de Chios",
+> components\chios\ChiosIslandPage.tsx:36:    quizKicker: "Quiz sur Chios",
+  components\chios\ChiosIslandPage.tsx:37:    quickActionsAriaLabel: "Actions rapides",
+  components\chios\ChiosIslandPage.tsx:38:    whatsapp: "WhatsApp",
+  components\chios\ChiosIslandPage.tsx:39:    bookNow: "Réserver",
+  components\chios\ChiosIslandPage.tsx:40:  },
+  components\chios\ChiosIslandPage.tsx:41:  de: {
+  components\chios\ChiosIslandPage.tsx:42:    introKicker: "Warum Chios besuchen",
+  components\chios\ChiosIslandPage.tsx:43:    highlightsAriaLabel: "Highlights der Insel Chios",
+> components\chios\ChiosIslandPage.tsx:44:    quizKicker: "Chios-Quiz",
+  components\chios\ChiosIslandPage.tsx:45:    quickActionsAriaLabel: "Schnellaktionen",
+  components\chios\ChiosIslandPage.tsx:46:    whatsapp: "WhatsApp",
+  components\chios\ChiosIslandPage.tsx:47:    bookNow: "Jetzt buchen",
+  components\chios\ChiosIslandPage.tsx:48:  },
+  components\chios\ChiosIslandPage.tsx:49:  it: {
+  components\chios\ChiosIslandPage.tsx:50:    introKicker: "Perché visitare Chios",
+  components\chios\ChiosIslandPage.tsx:51:    highlightsAriaLabel: "Punti salienti dell’isola di Chios",
+> components\chios\ChiosIslandPage.tsx:52:    quizKicker: "Quiz su Chios",
+  components\chios\ChiosIslandPage.tsx:53:    quickActionsAriaLabel: "Azioni rapide",
+  components\chios\ChiosIslandPage.tsx:54:    whatsapp: "WhatsApp",
+  components\chios\ChiosIslandPage.tsx:55:    bookNow: "Prenota ora",
+  components\chios\ChiosIslandPage.tsx:56:  },
+  components\chios\ChiosIslandPage.tsx:57:  es: {
+  components\chios\ChiosIslandPage.tsx:58:    introKicker: "Por qué visitar Quíos",
+  components\chios\ChiosIslandPage.tsx:59:    highlightsAriaLabel: "Aspectos destacados de la isla de Quíos",
+> components\chios\ChiosIslandPage.tsx:60:    quizKicker: "Quiz sobre Quíos",
+  components\chios\ChiosIslandPage.tsx:61:    quickActionsAriaLabel: "Acciones rápidas",
+  components\chios\ChiosIslandPage.tsx:62:    whatsapp: "WhatsApp",
+  components\chios\ChiosIslandPage.tsx:63:    bookNow: "Reservar ahora",
+  components\chios\ChiosIslandPage.tsx:64:  },
+  components\chios\ChiosIslandPage.tsx:65:  tr: {
+  components\chios\ChiosIslandPage.tsx:66:    introKicker: "Sakız Adası neden ziyaret edilmeli",
+  components\chios\ChiosIslandPage.tsx:67:    highlightsAriaLabel: "Sakız Adası öne çıkanlar",
+> components\chios\ChiosIslandPage.tsx:68:    quizKicker: "Sakız Adası testi",
+  components\chios\ChiosIslandPage.tsx:69:    quickActionsAriaLabel: "Hızlı işlemler",
+  components\chios\ChiosIslandPage.tsx:70:    whatsapp: "WhatsApp",
+  components\chios\ChiosIslandPage.tsx:71:    bookNow: "Şimdi rezervasyon yap",
+  components\chios\ChiosIslandPage.tsx:72:  },
+  components\chios\ChiosIslandPage.tsx:73:};
+  components\chios\ChiosIslandPage.tsx:74:
+  components\chios\ChiosIslandPage.tsx:75:function getChiosIslandLocale(path: string) {
+  components\chios\ChiosIslandPage.tsx:76:  const locale = path.split("/").filter(Boolean)[0];
+  components\chios\ChiosIslandPage.tsx:77:  return locale && chiosIslandUiByLocale[locale] ? locale : "en";
+  components\chios\ChiosIslandPage.tsx:78:}
+  components\chios\ChiosIslandPage.tsx:79:
+  components\chios\ChiosIslandPage.tsx:80:export function ChiosIslandPage({ data }: ChiosIslandPageProps) {
+  components\chios\ChiosIslandPage.tsx:165:            ))}
+  components\chios\ChiosIslandPage.tsx:166:          </div>
+  components\chios\ChiosIslandPage.tsx:167:        </div>
+  components\chios\ChiosIslandPage.tsx:168:      </section>
+  components\chios\ChiosIslandPage.tsx:169:
+> components\chios\ChiosIslandPage.tsx:170:      <section className="ci-section ci-section--quiz" aria-labelledby="ci-quiz-title">
+  components\chios\ChiosIslandPage.tsx:171:        <div className="ci-wrap">
+> components\chios\ChiosIslandPage.tsx:172:          <article className="ci-quiz-card">
+> components\chios\ChiosIslandPage.tsx:173:            <span className="ci-kicker ci-kicker--light">{ui.quizKicker}</span>
+> components\chios\ChiosIslandPage.tsx:174:            <h2 id="ci-quiz-title">{data.quiz.title}</h2>
+> components\chios\ChiosIslandPage.tsx:175:            <p>{data.quiz.text}</p>
+  components\chios\ChiosIslandPage.tsx:176:
+> components\chios\ChiosIslandPage.tsx:177:            <a className="ci-btn ci-btn--secondary" href={data.quiz.href}>
+> components\chios\ChiosIslandPage.tsx:178:              {data.quiz.ctaLabel}
+  components\chios\ChiosIslandPage.tsx:179:            </a>
+  components\chios\ChiosIslandPage.tsx:180:          </article>
+  components\chios\ChiosIslandPage.tsx:181:        </div>
+  components\chios\ChiosIslandPage.tsx:182:      </section>
+  components\chios\ChiosIslandPage.tsx:183:
+  components\chios\ChiosIslandPage.tsx:184:      <section className="ci-section ci-section--stay" aria-labelledby="ci-stay-title">
+  components\chios\ChiosIslandPage.tsx:185:        <div className="ci-wrap">
+  components\chios\ChiosIslandPage.tsx:186:          <article className="ci-stay-card">
+  components\chios\ChiosIslandPage.tsx:187:            <span className="ci-kicker">{data.stay.kicker}</span>
+  components\chios\ChiosIslandPage.tsx:188:            <h2 id="ci-stay-title">{data.stay.title}</h2>
+  components\chios\ChiosIslandPage.tsx:189:            <p>{data.stay.text}</p>
+  components\chios\ChiosIslandPage.tsx:190:
+  components\chios\ChiosMuseumsPage.tsx:61:function getMuseumsPageLanguage(
+  components\chios\ChiosMuseumsPage.tsx:62:  data: ChiosMuseumsPageData,
+  components\chios\ChiosMuseumsPage.tsx:63:): MuseumsPageUiLanguage {
+  components\chios\ChiosMuseumsPage.tsx:64:  const path = data.seo.canonicalPath;
+  components\chios\ChiosMuseumsPage.tsx:65:
+> components\chios\ChiosMuseumsPage.tsx:66:  if (path.startsWith("/el/")) {
+  components\chios\ChiosMuseumsPage.tsx:67:    return "el";
+  components\chios\ChiosMuseumsPage.tsx:68:  }
+  components\chios\ChiosMuseumsPage.tsx:69:
+> components\chios\ChiosMuseumsPage.tsx:70:  if (path.startsWith("/fr/")) {
+  components\chios\ChiosMuseumsPage.tsx:71:    return "fr";
+  components\chios\ChiosMuseumsPage.tsx:72:  }
+  components\chios\ChiosMuseumsPage.tsx:73:
+> components\chios\ChiosMuseumsPage.tsx:74:  if (path.startsWith("/de/")) {
+  components\chios\ChiosMuseumsPage.tsx:75:    return "de";
+  components\chios\ChiosMuseumsPage.tsx:76:  }
+  components\chios\ChiosMuseumsPage.tsx:77:
+> components\chios\ChiosMuseumsPage.tsx:78:  if (path.startsWith("/it/")) {
+  components\chios\ChiosMuseumsPage.tsx:79:    return "it";
+  components\chios\ChiosMuseumsPage.tsx:80:  }
+  components\chios\ChiosMuseumsPage.tsx:81:
+> components\chios\ChiosMuseumsPage.tsx:82:  if (path.startsWith("/es/")) {
+  components\chios\ChiosMuseumsPage.tsx:83:    return "es";
+  components\chios\ChiosMuseumsPage.tsx:84:  }
+  components\chios\ChiosMuseumsPage.tsx:85:
+> components\chios\ChiosMuseumsPage.tsx:86:  if (path.startsWith("/tr/")) {
+  components\chios\ChiosMuseumsPage.tsx:87:    return "tr";
+  components\chios\ChiosMuseumsPage.tsx:88:  }
+  components\chios\ChiosMuseumsPage.tsx:89:
+  components\chios\ChiosMuseumsPage.tsx:90:  return "en";
+  components\chios\ChiosMuseumsPage.tsx:91:}
+  components\chios\ChiosMuseumsPage.tsx:92:
+  components\chios\ChiosMuseumsPage.tsx:93:export function ChiosMuseumsPage({ data }: ChiosMuseumsPageProps) {
+  components\chios\ChiosMuseumsPage.tsx:94:  const language = getMuseumsPageLanguage(data);
+  components\chios\ChiosMuseumsPage.tsx:95:  const copy = museumsPageUiCopy[language];
+  components\chios\ChiosMuseumsPage.tsx:96:
+  components\chios\ChiosMuseumsPage.tsx:97:  return (
+  components\chios\ChiosMuseumsPage.tsx:98:    <main className="chios-museums-page">
+  components\chios\ChiosVillagesPage.tsx:61:function getVillagesPageLanguage(
+  components\chios\ChiosVillagesPage.tsx:62:  data: ChiosVillagesPageData,
+  components\chios\ChiosVillagesPage.tsx:63:): VillagesPageUiLanguage {
+  components\chios\ChiosVillagesPage.tsx:64:  const path = data.seo.canonicalPath;
+  components\chios\ChiosVillagesPage.tsx:65:
+> components\chios\ChiosVillagesPage.tsx:66:  if (path.startsWith("/el/")) {
+  components\chios\ChiosVillagesPage.tsx:67:    return "el";
+  components\chios\ChiosVillagesPage.tsx:68:  }
+  components\chios\ChiosVillagesPage.tsx:69:
+> components\chios\ChiosVillagesPage.tsx:70:  if (path.startsWith("/fr/")) {
+  components\chios\ChiosVillagesPage.tsx:71:    return "fr";
+  components\chios\ChiosVillagesPage.tsx:72:  }
+  components\chios\ChiosVillagesPage.tsx:73:
+> components\chios\ChiosVillagesPage.tsx:74:  if (path.startsWith("/de/")) {
+  components\chios\ChiosVillagesPage.tsx:75:    return "de";
+  components\chios\ChiosVillagesPage.tsx:76:  }
+  components\chios\ChiosVillagesPage.tsx:77:
+> components\chios\ChiosVillagesPage.tsx:78:  if (path.startsWith("/it/")) {
+  components\chios\ChiosVillagesPage.tsx:79:    return "it";
+  components\chios\ChiosVillagesPage.tsx:80:  }
+  components\chios\ChiosVillagesPage.tsx:81:
+> components\chios\ChiosVillagesPage.tsx:82:  if (path.startsWith("/es/")) {
+  components\chios\ChiosVillagesPage.tsx:83:    return "es";
+  components\chios\ChiosVillagesPage.tsx:84:  }
+  components\chios\ChiosVillagesPage.tsx:85:
+> components\chios\ChiosVillagesPage.tsx:86:  if (path.startsWith("/tr/")) {
+  components\chios\ChiosVillagesPage.tsx:87:    return "tr";
+  components\chios\ChiosVillagesPage.tsx:88:  }
+  components\chios\ChiosVillagesPage.tsx:89:
+  components\chios\ChiosVillagesPage.tsx:90:  return "en";
+  components\chios\ChiosVillagesPage.tsx:91:}
+  components\chios\ChiosVillagesPage.tsx:92:
+  components\chios\ChiosVillagesPage.tsx:93:export function ChiosVillagesPage({ data }: ChiosVillagesPageProps) {
+  components\chios\ChiosVillagesPage.tsx:94:  const language = getVillagesPageLanguage(data);
+  components\chios\ChiosVillagesPage.tsx:95:  const copy = villagesPageUiCopy[language];
+  components\chios\ChiosVillagesPage.tsx:96:
+  components\chios\ChiosVillagesPage.tsx:97:  return (
+  components\chios\ChiosVillagesPage.tsx:98:    <main className="chios-villages-page">
+  components\chios\MuseumDetailPage.tsx:74:type MuseumUiLanguage = keyof typeof museumUiCopy;
+  components\chios\MuseumDetailPage.tsx:75:
+  components\chios\MuseumDetailPage.tsx:76:function getMuseumLanguage(museum: MuseumDetailData): MuseumUiLanguage {
+  components\chios\MuseumDetailPage.tsx:77:  const path = museum.seo.canonicalPath;
+  components\chios\MuseumDetailPage.tsx:78:
+> components\chios\MuseumDetailPage.tsx:79:  if (path.startsWith("/el/")) {
+  components\chios\MuseumDetailPage.tsx:80:    return "el";
+  components\chios\MuseumDetailPage.tsx:81:  }
+  components\chios\MuseumDetailPage.tsx:82:
+> components\chios\MuseumDetailPage.tsx:83:  if (path.startsWith("/fr/")) {
+  components\chios\MuseumDetailPage.tsx:84:    return "fr";
+  components\chios\MuseumDetailPage.tsx:85:  }
+  components\chios\MuseumDetailPage.tsx:86:
+> components\chios\MuseumDetailPage.tsx:87:  if (path.startsWith("/de/")) {
+  components\chios\MuseumDetailPage.tsx:88:    return "de";
+  components\chios\MuseumDetailPage.tsx:89:  }
+  components\chios\MuseumDetailPage.tsx:90:
+> components\chios\MuseumDetailPage.tsx:91:  if (path.startsWith("/it/")) {
+  components\chios\MuseumDetailPage.tsx:92:    return "it";
+  components\chios\MuseumDetailPage.tsx:93:  }
+  components\chios\MuseumDetailPage.tsx:94:
+> components\chios\MuseumDetailPage.tsx:95:  if (path.startsWith("/es/")) {
+  components\chios\MuseumDetailPage.tsx:96:    return "es";
+  components\chios\MuseumDetailPage.tsx:97:  }
+  components\chios\MuseumDetailPage.tsx:98:
+> components\chios\MuseumDetailPage.tsx:99:  if (path.startsWith("/tr/")) {
+  components\chios\MuseumDetailPage.tsx:100:    return "tr";
+  components\chios\MuseumDetailPage.tsx:101:  }
+  components\chios\MuseumDetailPage.tsx:102:
+  components\chios\MuseumDetailPage.tsx:103:  return "en";
+  components\chios\MuseumDetailPage.tsx:104:}
+  components\chios\MuseumDetailPage.tsx:105:
+  components\chios\MuseumDetailPage.tsx:106:function getMuseumCollectionForLanguage(language: MuseumUiLanguage) {
+  components\chios\MuseumDetailPage.tsx:107:  if (language === "en") {
+  components\chios\MuseumDetailPage.tsx:108:    return museumDetails;
+  components\chios\MuseumDetailPage.tsx:109:  }
+  components\chios\MuseumDetailPage.tsx:110:
+  components\chios\MuseumDetailPage.tsx:111:  return localizedMuseumDetails.filter((relatedMuseum) =>
+> components\chios\MuseumDetailPage.tsx:112:    relatedMuseum.seo.canonicalPath.startsWith(`/${language}/`),
+  components\chios\MuseumDetailPage.tsx:113:  );
+  components\chios\MuseumDetailPage.tsx:114:}
+  components\chios\MuseumDetailPage.tsx:115:
+  components\chios\MuseumDetailPage.tsx:116:function getRelatedCardSize(index: number) {
+  components\chios\MuseumDetailPage.tsx:117:  if (index === 0) {
+  components\chios\MuseumDetailPage.tsx:118:    return "large";
+  components\chios\MuseumDetailPage.tsx:119:  }
+  components\chios\MuseumDetailPage.tsx:120:
+  components\chios\MuseumDetailPage.tsx:121:  if (index === 1 || index === 5) {
+  components\chios\MuseumDetailPage.tsx:122:    return "wide";
+  components\chios\MuseumDetailPage.tsx:123:  }
+  components\chios\MuseumDetailPage.tsx:124:
+  components\chios\VillageDetailPage.tsx:74:type VillageUiLanguage = keyof typeof villageUiCopy;
+  components\chios\VillageDetailPage.tsx:75:
+  components\chios\VillageDetailPage.tsx:76:function getVillageLanguage(village: VillageDetailData): VillageUiLanguage {
+  components\chios\VillageDetailPage.tsx:77:  const path = village.seo.canonicalPath;
+  components\chios\VillageDetailPage.tsx:78:
+> components\chios\VillageDetailPage.tsx:79:  if (path.startsWith("/el/")) {
+  components\chios\VillageDetailPage.tsx:80:    return "el";
+  components\chios\VillageDetailPage.tsx:81:  }
+  components\chios\VillageDetailPage.tsx:82:
+> components\chios\VillageDetailPage.tsx:83:  if (path.startsWith("/fr/")) {
+  components\chios\VillageDetailPage.tsx:84:    return "fr";
+  components\chios\VillageDetailPage.tsx:85:  }
+  components\chios\VillageDetailPage.tsx:86:
+> components\chios\VillageDetailPage.tsx:87:  if (path.startsWith("/de/")) {
+  components\chios\VillageDetailPage.tsx:88:    return "de";
+  components\chios\VillageDetailPage.tsx:89:  }
+  components\chios\VillageDetailPage.tsx:90:
+> components\chios\VillageDetailPage.tsx:91:  if (path.startsWith("/it/")) {
+  components\chios\VillageDetailPage.tsx:92:    return "it";
+  components\chios\VillageDetailPage.tsx:93:  }
+  components\chios\VillageDetailPage.tsx:94:
+> components\chios\VillageDetailPage.tsx:95:  if (path.startsWith("/es/")) {
+  components\chios\VillageDetailPage.tsx:96:    return "es";
+  components\chios\VillageDetailPage.tsx:97:  }
+  components\chios\VillageDetailPage.tsx:98:
+> components\chios\VillageDetailPage.tsx:99:  if (path.startsWith("/tr/")) {
+  components\chios\VillageDetailPage.tsx:100:    return "tr";
+  components\chios\VillageDetailPage.tsx:101:  }
+  components\chios\VillageDetailPage.tsx:102:
+  components\chios\VillageDetailPage.tsx:103:  return "en";
+  components\chios\VillageDetailPage.tsx:104:}
+  components\chios\VillageDetailPage.tsx:105:
+  components\chios\VillageDetailPage.tsx:106:function getVillageCollectionForLanguage(language: VillageUiLanguage) {
+  components\chios\VillageDetailPage.tsx:107:  if (language === "en") {
+  components\chios\VillageDetailPage.tsx:108:    return villageDetails;
+  components\chios\VillageDetailPage.tsx:109:  }
+  components\chios\VillageDetailPage.tsx:110:
+  components\chios\VillageDetailPage.tsx:111:  return localizedVillageDetails.filter((relatedVillage) =>
+> components\chios\VillageDetailPage.tsx:112:    relatedVillage.seo.canonicalPath.startsWith(`/${language}/`),
+  components\chios\VillageDetailPage.tsx:113:  );
+  components\chios\VillageDetailPage.tsx:114:}
+  components\chios\VillageDetailPage.tsx:115:
+  components\chios\VillageDetailPage.tsx:116:function getRelatedCardSize(index: number) {
+  components\chios\VillageDetailPage.tsx:117:  if (index === 0) {
+  components\chios\VillageDetailPage.tsx:118:    return "large";
+  components\chios\VillageDetailPage.tsx:119:  }
+  components\chios\VillageDetailPage.tsx:120:
+  components\chios\VillageDetailPage.tsx:121:  if (index === 1 || index === 5) {
+  components\chios\VillageDetailPage.tsx:122:    return "wide";
+  components\chios\VillageDetailPage.tsx:123:  }
+  components\chios\VillageDetailPage.tsx:124:
+  components\deals\DealsPage.tsx:34:  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  components\deals\DealsPage.tsx:35:  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  components\deals\DealsPage.tsx:36:  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+  components\deals\DealsPage.tsx:37:
+  components\deals\DealsPage.tsx:38:  return {
+> components\deals\DealsPage.tsx:39:    days: String(days).padStart(2, "0"),
+> components\deals\DealsPage.tsx:40:    hours: String(hours).padStart(2, "0"),
+> components\deals\DealsPage.tsx:41:    minutes: String(minutes).padStart(2, "0"),
+> components\deals\DealsPage.tsx:42:    seconds: String(seconds).padStart(2, "0"),
+  components\deals\DealsPage.tsx:43:    expired: false,
+  components\deals\DealsPage.tsx:44:  };
+  components\deals\DealsPage.tsx:45:}
+  components\deals\DealsPage.tsx:46:
+  components\deals\DealsPage.tsx:47:function Countdown({ data }: { data: DealsPageData }) {
+  components\deals\DealsPage.tsx:48:  const initialCountdown = useMemo(() => getCountdown(data.countdown.targetIso), [data]);
+  components\deals\DealsPage.tsx:49:  const [countdown, setCountdown] = useState<CountdownState>(initialCountdown);
+  components\deals\DealsPage.tsx:50:
+  components\deals\DealsPage.tsx:51:  useEffect(() => {
+  components\deals\DealsPage.tsx:52:    const timer = window.setInterval(() => {
+  components\deals\DealsPage.tsx:53:      setCountdown(getCountdown(data.countdown.targetIso));
+  components\deals\DealsPage.tsx:54:    }, 1000);
+  components\home\HomePage.backup.tsx:60:            className="absolute inset-0 z-10 
+bg-[linear-gradient(90deg,rgba(0,0,0,0.08)_0%,rgba(0,0,0,0.12)_40%,rgba(0,0,0,0.58)_100%)] 
+max-md:bg-[linear-gradient(180deg,rgba(0,0,0,0)_0%,rgba(0,0,0,0.04)_35%,rgba(0,0,0,0.40)_68%,rgba(0,0,0,0.82)_100%)]"
+  components\home\HomePage.backup.tsx:61:            aria-hidden="true"
+  components\home\HomePage.backup.tsx:62:          />
+  components\home\HomePage.backup.tsx:63:
+  components\home\HomePage.backup.tsx:64:          <div className="relative z-20 mx-auto flex min-h-[88vh] w-[min(1280px,92vw)] items-end justify-end 
+py-[58px] max-md:min-h-full max-md:w-full max-md:px-3 max-md:pb-[18px] max-md:pt-3">
+> components\home\HomePage.backup.tsx:65:            <div className="flex w-[590px] max-w-full flex-col items-start gap-4 rounded-[30px] border 
+border-white/20 bg-gradient-to-b from-white/10 to-black/40 px-7 py-[30px] shadow-[0_28px_64px_rgba(0,0,0,0.32)] backdrop-blur-2xl max-md:w-full 
+max-md:gap-2.5 max-md:border-0 max-md:bg-transparent max-md:p-0 max-md:shadow-none max-md:backdrop-blur-none">
+  components\home\HomePage.backup.tsx:66:              <div
+  components\home\HomePage.backup.tsx:67:                className="inline-flex items-center gap-3 rounded-full bg-white/95 px-[15px] py-[9px] 
+text-stone-800 shadow-[0_10px_24px_rgba(0,0,0,0.15)] max-md:absolute max-md:left-3 max-md:top-3 max-md:z-30 max-md:px-3 max-md:py-2"
+  components\home\HomePage.backup.tsx:68:                aria-label={`Guest rating ${data.hero.rating} from ${data.hero.reviews}`}
+  components\home\HomePage.backup.tsx:69:              >
+  components\home\HomePage.backup.tsx:70:                <div>
+  components\home\HomePage.backup.tsx:71:                  <strong className="block text-sm font-black leading-none text-stone-700 max-md:text-[13px]">
+  components\home\HomePage.backup.tsx:72:                    {data.hero.rating}
+  components\home\HomePage.backup.tsx:73:                  </strong>
+  components\home\HomePage.backup.tsx:74:                  <span className="block text-[11px] font-bold text-stone-500 max-md:text-[10px]">
+  components\home\HomePage.backup.tsx:75:                    {data.hero.reviews}
+  components\home\HomePage.backup.tsx:76:                  </span>
+  components\home\HomePage.backup.tsx:77:                </div>
+  components\home\HomePage.backup.tsx:111:                </a>
+  components\home\HomePage.backup.tsx:112:              </div>
+  components\home\HomePage.backup.tsx:113:
+  components\home\HomePage.backup.tsx:114:              <a
+  components\home\HomePage.backup.tsx:115:                className="group relative grid w-full grid-cols-[auto_1fr_auto] items-center gap-3 overflow-hidden 
+rounded-[20px] border border-white/25 bg-white/15 px-3.5 py-3 text-white shadow-[0_14px_34px_rgba(0,0,0,0.22)] backdrop-blur transition 
+hover:-translate-y-0.5 hover:bg-white/20 max-md:grid-cols-[auto_1fr] max-md:gap-2.5 max-md:rounded-[18px] max-md:px-3"
+> components\home\HomePage.backup.tsx:116:                href={data.hero.quizCard.href}
+  components\home\HomePage.backup.tsx:117:              >
+  components\home\HomePage.backup.tsx:118:                <span
+  components\home\HomePage.backup.tsx:119:                  className="pointer-events-none absolute inset-y-0 -left-full w-3/4 bg-gradient-to-r 
+from-transparent via-white/25 to-transparent transition duration-700 group-hover:left-full"
+  components\home\HomePage.backup.tsx:120:                  aria-hidden="true"
+  components\home\HomePage.backup.tsx:121:                />
+  components\home\HomePage.backup.tsx:122:
+  components\home\HomePage.backup.tsx:123:                <span className="relative z-10 flex h-[42px] w-[42px] items-center justify-center rounded-2xl 
+bg-white/20 text-[22px] max-md:h-[38px] max-md:w-[38px] max-md:rounded-[14px] max-md:text-[19px]">
+> components\home\HomePage.backup.tsx:124:                  {data.hero.quizCard.icon}
+  components\home\HomePage.backup.tsx:125:                </span>
+  components\home\HomePage.backup.tsx:126:
+  components\home\HomePage.backup.tsx:127:                <span className="relative z-10 min-w-0">
+  components\home\HomePage.backup.tsx:128:                  <span className="mb-1 inline-flex items-center gap-1.5 text-[10px] font-black uppercase 
+tracking-[0.1em] text-green-200">
+  components\home\HomePage.backup.tsx:129:                    <span className="relative flex h-2 w-2">
+  components\home\HomePage.backup.tsx:130:                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-300 
+opacity-75" />
+  components\home\HomePage.backup.tsx:131:                      <span className="relative inline-flex h-2 w-2 rounded-full bg-green-400" />
+  components\home\HomePage.backup.tsx:132:                    </span>
+> components\home\HomePage.backup.tsx:133:                    {data.hero.quizCard.liveLabel}
+  components\home\HomePage.backup.tsx:134:                  </span>
+  components\home\HomePage.backup.tsx:135:
+  components\home\HomePage.backup.tsx:136:                  <strong className="block text-[13px] font-black uppercase tracking-[0.04em] max-md:text-xs">
+> components\home\HomePage.backup.tsx:137:                    {data.hero.quizCard.title}
+  components\home\HomePage.backup.tsx:138:                  </strong>
+  components\home\HomePage.backup.tsx:139:
+  components\home\HomePage.backup.tsx:140:                  <span className="mt-0.5 block text-xs leading-snug text-white/90 max-md:line-clamp-2 
+max-md:text-[11.5px]">
+> components\home\HomePage.backup.tsx:141:                    {data.hero.quizCard.text}
+  components\home\HomePage.backup.tsx:142:                  </span>
+  components\home\HomePage.backup.tsx:143:                </span>
+  components\home\HomePage.backup.tsx:144:
+  components\home\HomePage.backup.tsx:145:                <span className="relative z-10 inline-flex min-h-9 items-center justify-center rounded-full 
+bg-white px-3 text-[10px] font-black uppercase tracking-[0.08em] text-[#8E6607] max-md:col-span-2 max-md:w-full">
+> components\home\HomePage.backup.tsx:146:                  {data.hero.quizCard.cta}
+  components\home\HomePage.backup.tsx:147:                </span>
+  components\home\HomePage.backup.tsx:148:              </a>
+  components\home\HomePage.backup.tsx:149:            </div>
+  components\home\HomePage.backup.tsx:150:          </div>
+  components\home\HomePage.backup.tsx:151:        </section>
+  components\home\HomePage.backup.tsx:152:
+  components\home\HomePage.backup.tsx:153:        <a href={data.announceBar.href} className="vh-hero-announce">
+  components\home\HomePage.backup.tsx:154:          <span className="vh-hero-announce-icon" aria-hidden="true">
+  components\home\HomePage.backup.tsx:155:            {data.announceBar.icon}
+  components\home\HomePage.backup.tsx:156:          </span>
+  components\home\HomePage.backup.tsx:157:          <span className="vh-hero-announce-text">
+  components\home\HomePage.backup.tsx:158:            {data.announceBar.text} <strong>{data.announceBar.strongText}</strong>
+  components\home\HomePage.backup.tsx:639:        </section>
+  components\home\HomePage.backup.tsx:640:
+  components\home\HomePage.backup.tsx:641:        <section className="premium-seo-bar" aria-label="Discover more about Chios">
+  components\home\HomePage.backup.tsx:642:          <div className="bar-inner">
+  components\home\HomePage.backup.tsx:643:            <div className="text-wrap">
+> components\home\HomePage.backup.tsx:644:              <span className="premium-label">{data.quizBar.label}</span>
+> components\home\HomePage.backup.tsx:645:              <p className="premium-text">{data.quizBar.text}</p>
+  components\home\HomePage.backup.tsx:646:            </div>
+  components\home\HomePage.backup.tsx:647:
+  components\home\HomePage.backup.tsx:648:            <div className="cta-wrap">
+> components\home\HomePage.backup.tsx:649:              <a href={data.quizBar.href} className="premium-btn-quiz">
+> components\home\HomePage.backup.tsx:650:                {data.quizBar.cta}
+  components\home\HomePage.backup.tsx:651:              </a>
+  components\home\HomePage.backup.tsx:652:            </div>
+  components\home\HomePage.backup.tsx:653:          </div>
+  components\home\HomePage.backup.tsx:654:        </section>
+  components\home\HomePage.backup.tsx:655:
+  components\home\HomePage.backup.tsx:656:        <section className="vh-section vh-section--tight" aria-labelledby="vh-faq-title">
+  components\home\HomePage.backup.tsx:657:          <div className="vh-wrap">
+  components\home\HomePage.backup.tsx:658:            <header className="vh-section-head" style={{ textAlign: "center" }}>
+  components\home\HomePage.backup.tsx:659:              <span className="vh-kicker">{data.faq.kicker}</span>
+  components\home\HomePage.backup.tsx:660:
+  components\home\HomePage.backup.tsx:661:              <h2 className="vh-title" id="vh-faq-title">
+  components\home\HomePage.backup.tsx:662:                <span aria-hidden="true" style={{ marginRight: 8 }}>
+  components\home\HomePage.tsx:98:                  <span aria-hidden="true">{data.hero.secondaryCta.icon}</span>{" "}
+  components\home\HomePage.tsx:99:                  {data.hero.secondaryCta.label}
+  components\home\HomePage.tsx:100:                </a>
+  components\home\HomePage.tsx:101:              </div>
+  components\home\HomePage.tsx:102:
+> components\home\HomePage.tsx:103:              <a className="hero-quiz-card" href={data.hero.quizCard.href}>
+> components\home\HomePage.tsx:104:                <span className="hero-quiz-icon" aria-hidden="true">
+> components\home\HomePage.tsx:105:                  {data.hero.quizCard.icon}
+  components\home\HomePage.tsx:106:                </span>
+  components\home\HomePage.tsx:107:
+> components\home\HomePage.tsx:108:                <span className="hero-quiz-copy">
+> components\home\HomePage.tsx:109:                  <span className="hero-quiz-live">{data.hero.quizCard.liveLabel}</span>
+> components\home\HomePage.tsx:110:                  <strong>{data.hero.quizCard.title}</strong>
+> components\home\HomePage.tsx:111:                  <span>{data.hero.quizCard.text}</span>
+  components\home\HomePage.tsx:112:                </span>
+  components\home\HomePage.tsx:113:
+> components\home\HomePage.tsx:114:                <span className="hero-quiz-link">{data.hero.quizCard.cta}</span>
+  components\home\HomePage.tsx:115:              </a>
+  components\home\HomePage.tsx:116:            </div>
+  components\home\HomePage.tsx:117:          </div>
+  components\home\HomePage.tsx:118:        </section>
+  components\home\HomePage.tsx:119:
+  components\home\HomePage.tsx:120:        <a href={data.announceBar.href} className="vh-hero-announce">
+  components\home\HomePage.tsx:121:          <span className="vh-hero-announce-icon" aria-hidden="true">
+  components\home\HomePage.tsx:122:            {data.announceBar.icon}
+  components\home\HomePage.tsx:123:          </span>
+  components\home\HomePage.tsx:124:          <span className="vh-hero-announce-text">
+  components\home\HomePage.tsx:125:            {data.announceBar.text} <strong>{data.announceBar.strongText}</strong>
+  components\home\HomePage.tsx:126:          </span>
+  components\home\HomePage.tsx:571:        </section>
+  components\home\HomePage.tsx:572:
+  components\home\HomePage.tsx:573:        <section className="premium-seo-bar" aria-label="Discover more about Chios">
+  components\home\HomePage.tsx:574:          <div className="bar-inner">
+  components\home\HomePage.tsx:575:            <div className="text-wrap">
+> components\home\HomePage.tsx:576:              <span className="premium-label">{data.quizBar.label}</span>
+> components\home\HomePage.tsx:577:              <p className="premium-text">{data.quizBar.text}</p>
+  components\home\HomePage.tsx:578:            </div>
+  components\home\HomePage.tsx:579:
+  components\home\HomePage.tsx:580:            <div className="cta-wrap">
+> components\home\HomePage.tsx:581:              <a href={data.quizBar.href} className="premium-btn-quiz">
+> components\home\HomePage.tsx:582:                {data.quizBar.cta}
+  components\home\HomePage.tsx:583:              </a>
+  components\home\HomePage.tsx:584:            </div>
+  components\home\HomePage.tsx:585:          </div>
+  components\home\HomePage.tsx:586:        </section>
+  components\home\HomePage.tsx:587:
+  components\home\HomePage.tsx:588:        <section className="vh-section vh-section--tight" aria-labelledby="vh-faq-title">
+  components\home\HomePage.tsx:589:          <div className="vh-wrap">
+  components\home\HomePage.tsx:590:            <header className="vh-section-head" style={{ textAlign: "center" }}>
+  components\home\HomePage.tsx:591:              <span className="vh-kicker">{data.faq.kicker}</span>
+  components\home\HomePage.tsx:592:
+  components\home\HomePage.tsx:593:              <h2 className="vh-title" id="vh-faq-title">
+  components\home\HomePage.tsx:594:                <span aria-hidden="true" style={{ marginRight: 8 }}>
+  components\home\LastMinuteDeals.tsx:962:function detectLocale(): Locale {
+  components\home\LastMinuteDeals.tsx:963:  if (typeof window === "undefined") return "en";
+  components\home\LastMinuteDeals.tsx:964:
+  components\home\LastMinuteDeals.tsx:965:  const path = window.location.pathname.toLowerCase();
+  components\home\LastMinuteDeals.tsx:966:
+> components\home\LastMinuteDeals.tsx:967:  if (path === "/el" || path.startsWith("/el/")) return "el";
+> components\home\LastMinuteDeals.tsx:968:  if (path === "/fr" || path.startsWith("/fr/")) return "fr";
+> components\home\LastMinuteDeals.tsx:969:  if (path === "/de" || path.startsWith("/de/")) return "de";
+> components\home\LastMinuteDeals.tsx:970:  if (path === "/it" || path.startsWith("/it/")) return "it";
+> components\home\LastMinuteDeals.tsx:971:  if (path === "/es" || path.startsWith("/es/")) return "es";
+> components\home\LastMinuteDeals.tsx:972:  if (path === "/tr" || path.startsWith("/tr/")) return "tr";
+  components\home\LastMinuteDeals.tsx:973:
+  components\home\LastMinuteDeals.tsx:974:  return "en";
+  components\home\LastMinuteDeals.tsx:975:}
+  components\home\LastMinuteDeals.tsx:976:
+  components\home\LastMinuteDeals.tsx:977:function getCopy(locale: Locale): Copy {
+  components\home\LastMinuteDeals.tsx:978:  return {
+  components\home\LastMinuteDeals.tsx:979:    ...COPY[locale],
+  components\home\LastMinuteDeals.tsx:980:    rooms: ROOM_NAMES[locale],
+  components\home\LastMinuteDeals.tsx:981:  };
+  components\home\LastMinuteDeals.tsx:982:}
+  components\home\LastMinuteDeals.tsx:983:
+  components\home\LastMinuteDeals.tsx:984:function money(value: number) {
+  components\home\LastMinuteDeals.tsx:996:function addDaysString(dateStr: string, days: number) {
+  components\home\LastMinuteDeals.tsx:997:  const date = new Date(`${dateStr}T00:00:00`);
+  components\home\LastMinuteDeals.tsx:998:  date.setDate(date.getDate() + days);
+  components\home\LastMinuteDeals.tsx:999:
+  components\home\LastMinuteDeals.tsx:1000:  const y = date.getFullYear();
+> components\home\LastMinuteDeals.tsx:1001:  const m = String(date.getMonth() + 1).padStart(2, "0");
+> components\home\LastMinuteDeals.tsx:1002:  const d = String(date.getDate()).padStart(2, "0");
+  components\home\LastMinuteDeals.tsx:1003:
+  components\home\LastMinuteDeals.tsx:1004:  return `${y}-${m}-${d}`;
+  components\home\LastMinuteDeals.tsx:1005:}
+  components\home\LastMinuteDeals.tsx:1006:
+  components\home\LastMinuteDeals.tsx:1007:function sortDates(dates: string[]) {
+  components\home\LastMinuteDeals.tsx:1008:  return [...dates].sort(
+  components\home\LastMinuteDeals.tsx:1009:    (a, b) => new Date(`${a}T00:00:00`).getTime() - new Date(`${b}T00:00:00`).getTime()
+  components\home\LastMinuteDeals.tsx:1010:  );
+  components\home\LastMinuteDeals.tsx:1011:}
+  components\home\LastMinuteDeals.tsx:1012:
+  components\home\LastMinuteDeals.tsx:1013:function isConsecutive(dates: string[]) {
+  components\home\LastMinuteDeals.tsx:1014:  const sorted = sortDates(dates);
+  components\home\LastMinuteDeals.tsx:1024:
+  components\home\LastMinuteDeals.tsx:1025:function formatDate(dateStr: string, localeTag: string) {
+  components\home\LastMinuteDeals.tsx:1026:  const date = new Date(`${dateStr}T00:00:00`);
+  components\home\LastMinuteDeals.tsx:1027:  const weekday = date.toLocaleDateString(localeTag, { weekday: "short" });
+  components\home\LastMinuteDeals.tsx:1028:  const month = date.toLocaleDateString(localeTag, { month: "short" });
+> components\home\LastMinuteDeals.tsx:1029:  const day = String(date.getDate()).padStart(2, "0");
+  components\home\LastMinuteDeals.tsx:1030:
+> components\home\LastMinuteDeals.tsx:1031:  if (localeTag.startsWith("es")) return `${weekday}, ${day} ${month}`;
+> components\home\LastMinuteDeals.tsx:1032:  if (localeTag.startsWith("it")) return `${weekday}, ${month} ${day}`;
+  components\home\LastMinuteDeals.tsx:1033:
+  components\home\LastMinuteDeals.tsx:1034:  return `${weekday}, ${day} ${month}`;
+  components\home\LastMinuteDeals.tsx:1035:}
+  components\home\LastMinuteDeals.tsx:1036:
+  components\home\LastMinuteDeals.tsx:1037:function formatUpdatedAt(iso: string | undefined, localeTag: string) {
+  components\home\LastMinuteDeals.tsx:1038:  if (!iso) return "";
+  components\home\LastMinuteDeals.tsx:1039:  const date = new Date(iso);
+  components\home\LastMinuteDeals.tsx:1040:  if (Number.isNaN(date.getTime())) return "";
+  components\home\LastMinuteDeals.tsx:1041:  return date.toLocaleString(localeTag);
+  components\home\LastMinuteDeals.tsx:1042:}
+  components\home\LastMinuteDeals.tsx:1043:
+  components\home\LastMinuteDeals.tsx:1044:function roomExtraPerNight(room: DealRoom) {
+  components\home\LastMinuteDeals.tsx:1234:      const now = new Date();
+  components\home\LastMinuteDeals.tsx:1235:      const next = new Date(now);
+  components\home\LastMinuteDeals.tsx:1236:      next.setHours(now.getHours() + 1, 0, 0, 0);
+  components\home\LastMinuteDeals.tsx:1237:
+  components\home\LastMinuteDeals.tsx:1238:      const diff = Math.max(0, next.getTime() - now.getTime());
+> components\home\LastMinuteDeals.tsx:1239:      const hours = String(Math.floor(diff / 3600000)).padStart(2, "0");
+> components\home\LastMinuteDeals.tsx:1240:      const minutes = String(Math.floor((diff % 3600000) / 60000)).padStart(2, "0");
+> components\home\LastMinuteDeals.tsx:1241:      const seconds = String(Math.floor((diff % 60000) / 1000)).padStart(2, "0");
+  components\home\LastMinuteDeals.tsx:1242:
+  components\home\LastMinuteDeals.tsx:1243:      setCountdown(`${hours}:${minutes}:${seconds}`);
+  components\home\LastMinuteDeals.tsx:1244:    }
+  components\home\LastMinuteDeals.tsx:1245:
+  components\home\LastMinuteDeals.tsx:1246:    tick();
+  components\home\LastMinuteDeals.tsx:1247:    const interval = window.setInterval(tick, 1000);
+  components\home\LastMinuteDeals.tsx:1248:
+  components\home\LastMinuteDeals.tsx:1249:    return () => window.clearInterval(interval);
+  components\home\LastMinuteDeals.tsx:1250:  }, []);
+  components\home\LastMinuteDeals.tsx:1251:
+  components\home\LastMinuteDeals.tsx:1252:  async function loadDeals(nextGuests: number) {
+  components\home\LastMinuteDeals.tsx:1253:    setGuests(nextGuests);
+  components\landing\FamilyTravelPage.tsx:85:          </div>
+  components\landing\FamilyTravelPage.tsx:86:
+  components\landing\FamilyTravelPage.tsx:87:          <div className="family-travel-timeline">
+  components\landing\FamilyTravelPage.tsx:88:            {data.familyDay.steps.map((step, index) => (
+  components\landing\FamilyTravelPage.tsx:89:              <article className="family-travel-timeline__item" key={step.title}>
+> components\landing\FamilyTravelPage.tsx:90:                <span className="family-travel-timeline__number">{String(index + 1).padStart(2, "0")}</span>
+  components\landing\FamilyTravelPage.tsx:91:                <div>
+  components\landing\FamilyTravelPage.tsx:92:                  <h3>{step.title}</h3>
+  components\landing\FamilyTravelPage.tsx:93:                  <p>{step.text}</p>
+  components\landing\FamilyTravelPage.tsx:94:                </div>
+  components\landing\FamilyTravelPage.tsx:95:              </article>
+  components\landing\FamilyTravelPage.tsx:96:            ))}
+  components\landing\FamilyTravelPage.tsx:97:          </div>
+  components\landing\FamilyTravelPage.tsx:98:        </div>
+  components\landing\FamilyTravelPage.tsx:99:      </section>
+  components\landing\FamilyTravelPage.tsx:100:
+  components\landing\FamilyTravelPage.tsx:101:      <section className="family-travel-stay">
+  components\landing\FamilyTravelPage.tsx:102:        <div className="family-travel-container family-travel-stay__grid">
+  components\rooms\RoomsCategoryPage.tsx:8:function HtmlText({ html }: { html: string }) {
+  components\rooms\RoomsCategoryPage.tsx:9:  return <span dangerouslySetInnerHTML={{ __html: html }} />;
+  components\rooms\RoomsCategoryPage.tsx:10:}
+  components\rooms\RoomsCategoryPage.tsx:11:
+  components\rooms\RoomsCategoryPage.tsx:12:function getWizardLanguage(path: string) {
+> components\rooms\RoomsCategoryPage.tsx:13:  if (path.startsWith("/el/")) return "el";
+> components\rooms\RoomsCategoryPage.tsx:14:  if (path.startsWith("/fr/")) return "fr";
+> components\rooms\RoomsCategoryPage.tsx:15:  if (path.startsWith("/de/")) return "de";
+> components\rooms\RoomsCategoryPage.tsx:16:  if (path.startsWith("/it/")) return "it";
+> components\rooms\RoomsCategoryPage.tsx:17:  if (path.startsWith("/es/")) return "es";
+> components\rooms\RoomsCategoryPage.tsx:18:  if (path.startsWith("/tr/")) return "tr";
+  components\rooms\RoomsCategoryPage.tsx:19:
+  components\rooms\RoomsCategoryPage.tsx:20:  return "en";
+  components\rooms\RoomsCategoryPage.tsx:21:}
+  components\rooms\RoomsCategoryPage.tsx:22:
+  components\rooms\RoomsCategoryPage.tsx:23:export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
+  components\rooms\RoomsCategoryPage.tsx:24:  return (
+  components\rooms\RoomsCategoryPage.tsx:25:    <main className="rooms-page">
+  components\rooms\RoomsCategoryPage.tsx:26:      <section className="rooms-hero" aria-labelledby="rooms-hero-title">
+  components\rooms\RoomsCategoryPage.tsx:27:        <div className="rooms-hero__inner">
+  components\rooms\RoomsCategoryPage.tsx:28:          <div className="rooms-hero__content">
+  components\rooms\RoomsCategoryPage.tsx:29:            <span className="rooms-kicker">{data.hero.kicker}</span>
+  components\rooms\RoomsCategoryPage.tsx:30:
+  components\rooms\RoomWizard.tsx:59:    checkout: "Check-out",
+  components\rooms\RoomWizard.tsx:60:    email: "Email",
+  components\rooms\RoomWizard.tsx:61:    phone: "Phone",
+  components\rooms\RoomWizard.tsx:62:    gdpr:
+  components\rooms\RoomWizard.tsx:63:      "I consent to the processing of my personal data for the purpose of receiving accommodation suggestions.",
+> components\rooms\RoomWizard.tsx:64:    start: "Start",
+  components\rooms\RoomWizard.tsx:65:    back: "Back",
+  components\rooms\RoomWizard.tsx:66:    bestMatch: "Best Match",
+  components\rooms\RoomWizard.tsx:67:    sendByEmail: "Send by Email",
+  components\rooms\RoomWizard.tsx:68:    alternativeOptions: "Alternative Options",
+> components\rooms\RoomWizard.tsx:69:    startOver: "Start over",
+  components\rooms\RoomWizard.tsx:70:    checkoutAlert: "Check-out must be after check-in.",
+  components\rooms\RoomWizard.tsx:71:    whyItFits: "WHY IT FITS:",
+  components\rooms\RoomWizard.tsx:72:    perfectMatch: "Matches 100% of your criteria!",
+  components\rooms\RoomWizard.tsx:73:    offersMissing: "WHAT IT OFFERS / WHAT’S MISSING:",
+  components\rooms\RoomWizard.tsx:74:    samePrice: "Same price category",
+  components\rooms\RoomWizard.tsx:75:    moreExpensive: "More expensive than the best match",
+  components\rooms\RoomWizard.tsx:76:    cheaper: "Cheaper than the best match",
+  components\rooms\RoomWizard.tsx:77:    bedTypes: "Bed types",
+  components\rooms\RoomWizard.tsx:78:    double: "Double",
+  components\rooms\RoomWizard.tsx:79:    single: "Single",
+  components\rooms\RoomWizard.tsx:80:    sofaBed: "Sofa bed",
+  components\rooms\RoomWizard.tsx:81:    galleryThumbnails: "Gallery thumbnails",
+  components\rooms\RoomWizard.tsx:145:    checkout: "Αναχώρηση",
+  components\rooms\RoomWizard.tsx:146:    email: "Email",
+  components\rooms\RoomWizard.tsx:147:    phone: "Τηλέφωνο",
+  components\rooms\RoomWizard.tsx:148:    gdpr:
+  components\rooms\RoomWizard.tsx:149:      "Συναινώ στην επεξεργασία των προσωπικών μου δεδομένων για να λάβω προτάσεις διαμονής.",
+> components\rooms\RoomWizard.tsx:150:    start: "Έναρξη",
+  components\rooms\RoomWizard.tsx:151:    back: "Πίσω",
+  components\rooms\RoomWizard.tsx:152:    bestMatch: "Καλύτερη επιλογή",
+  components\rooms\RoomWizard.tsx:153:    sendByEmail: "Αποστολή με email",
+  components\rooms\RoomWizard.tsx:154:    alternativeOptions: "Εναλλακτικές επιλογές",
+> components\rooms\RoomWizard.tsx:155:    startOver: "Ξεκίνα ξανά",
+  components\rooms\RoomWizard.tsx:156:    checkoutAlert: "Η αναχώρηση πρέπει να είναι μετά την άφιξη.",
+  components\rooms\RoomWizard.tsx:157:    whyItFits: "ΓΙΑΤΙ ΤΑΙΡΙΑΖΕΙ:",
+  components\rooms\RoomWizard.tsx:158:    perfectMatch: "Ταιριάζει 100% στα κριτήριά σου!",
+  components\rooms\RoomWizard.tsx:159:    offersMissing: "ΤΙ ΠΡΟΣΦΕΡΕΙ / ΤΙ ΛΕΙΠΕΙ:",
+  components\rooms\RoomWizard.tsx:160:    samePrice: "Ίδια κατηγορία τιμής",
+  components\rooms\RoomWizard.tsx:161:    moreExpensive: "Πιο ακριβό από την καλύτερη επιλογή",
+  components\rooms\RoomWizard.tsx:162:    cheaper: "Πιο οικονομικό από την καλύτερη επιλογή",
+  components\rooms\RoomWizard.tsx:163:    bedTypes: "Τύποι κρεβατιών",
+  components\rooms\RoomWizard.tsx:164:    double: "Διπλό",
+  components\rooms\RoomWizard.tsx:165:    single: "Μονό",
+  components\rooms\RoomWizard.tsx:166:    sofaBed: "Καναπές-κρεβάτι",
+  components\rooms\RoomWizard.tsx:167:    galleryThumbnails: "Μικρογραφίες gallery",
+  components\rooms\RoomWizard.tsx:231:    checkout: "Départ",
+  components\rooms\RoomWizard.tsx:232:    email: "Email",
+  components\rooms\RoomWizard.tsx:233:    phone: "Téléphone",
+  components\rooms\RoomWizard.tsx:234:    gdpr:
+  components\rooms\RoomWizard.tsx:235:      "J’accepte le traitement de mes données personnelles afin de recevoir des suggestions d’hébergement.",
+> components\rooms\RoomWizard.tsx:236:    start: "Démarrer",
+  components\rooms\RoomWizard.tsx:237:    back: "Retour",
+  components\rooms\RoomWizard.tsx:238:    bestMatch: "Meilleur choix",
+  components\rooms\RoomWizard.tsx:239:    sendByEmail: "Envoyer par email",
+  components\rooms\RoomWizard.tsx:240:    alternativeOptions: "Options alternatives",
+> components\rooms\RoomWizard.tsx:241:    startOver: "Recommencer",
+  components\rooms\RoomWizard.tsx:242:    checkoutAlert: "La date de départ doit être après la date d’arrivée.",
+  components\rooms\RoomWizard.tsx:243:    whyItFits: "POURQUOI CELA VOUS CORRESPOND :",
+  components\rooms\RoomWizard.tsx:244:    perfectMatch: "Correspond à 100% de vos critères !",
+  components\rooms\RoomWizard.tsx:245:    offersMissing: "CE QU’ELLE OFFRE / CE QUI MANQUE :",
+  components\rooms\RoomWizard.tsx:246:    samePrice: "Même catégorie de prix",
+  components\rooms\RoomWizard.tsx:247:    moreExpensive: "Plus cher que le meilleur choix",
+  components\rooms\RoomWizard.tsx:248:    cheaper: "Moins cher que le meilleur choix",
+  components\rooms\RoomWizard.tsx:249:    bedTypes: "Types de lits",
+  components\rooms\RoomWizard.tsx:250:    double: "Double",
+  components\rooms\RoomWizard.tsx:251:    single: "Simple",
+  components\rooms\RoomWizard.tsx:252:    sofaBed: "Canapé-lit",
+  components\rooms\RoomWizard.tsx:253:    galleryThumbnails: "Miniatures de la galerie",
+  components\rooms\RoomWizard.tsx:317:    checkout: "Abreise",
+  components\rooms\RoomWizard.tsx:318:    email: "Email",
+  components\rooms\RoomWizard.tsx:319:    phone: "Telefon",
+  components\rooms\RoomWizard.tsx:320:    gdpr:
+  components\rooms\RoomWizard.tsx:321:      "Ich stimme der Verarbeitung meiner personenbezogenen Daten zu, um Unterkunftsvorschläge zu erhalten.",
+> components\rooms\RoomWizard.tsx:322:    start: "Starten",
+  components\rooms\RoomWizard.tsx:323:    back: "Zurück",
+  components\rooms\RoomWizard.tsx:324:    bestMatch: "Beste Wahl",
+  components\rooms\RoomWizard.tsx:325:    sendByEmail: "Per Email senden",
+  components\rooms\RoomWizard.tsx:326:    alternativeOptions: "Alternative Optionen",
+> components\rooms\RoomWizard.tsx:327:    startOver: "Neu starten",
+  components\rooms\RoomWizard.tsx:328:    checkoutAlert: "Das Abreisedatum muss nach dem Anreisedatum liegen.",
+  components\rooms\RoomWizard.tsx:329:    whyItFits: "WARUM ES PASST:",
+  components\rooms\RoomWizard.tsx:330:    perfectMatch: "Passt zu 100% zu Ihren Kriterien!",
+  components\rooms\RoomWizard.tsx:331:    offersMissing: "WAS ES BIETET / WAS FEHLT:",
+  components\rooms\RoomWizard.tsx:332:    samePrice: "Gleiche Preiskategorie",
+  components\rooms\RoomWizard.tsx:333:    moreExpensive: "Teurer als die beste Wahl",
+  components\rooms\RoomWizard.tsx:334:    cheaper: "Günstiger als die beste Wahl",
+  components\rooms\RoomWizard.tsx:335:    bedTypes: "Bettenarten",
+  components\rooms\RoomWizard.tsx:336:    double: "Doppelbett",
+  components\rooms\RoomWizard.tsx:337:    single: "Einzelbett",
+  components\rooms\RoomWizard.tsx:338:    sofaBed: "Schlafsofa",
+  components\rooms\RoomWizard.tsx:339:    galleryThumbnails: "Galerie-Miniaturen",
+  components\rooms\RoomWizard.tsx:403:    checkout: "Check-out",
+  components\rooms\RoomWizard.tsx:404:    email: "Email",
+  components\rooms\RoomWizard.tsx:405:    phone: "Telefono",
+  components\rooms\RoomWizard.tsx:406:    gdpr:
+  components\rooms\RoomWizard.tsx:407:      "Acconsento al trattamento dei miei dati personali per ricevere suggerimenti relativi all’alloggio.",
+> components\rooms\RoomWizard.tsx:408:    start: "Inizia",
+  components\rooms\RoomWizard.tsx:409:    back: "Indietro",
+  components\rooms\RoomWizard.tsx:410:    bestMatch: "Migliore scelta",
+  components\rooms\RoomWizard.tsx:411:    sendByEmail: "Invia via email",
+  components\rooms\RoomWizard.tsx:412:    alternativeOptions: "Alternative disponibili",
+> components\rooms\RoomWizard.tsx:413:    startOver: "Ricomincia",
+  components\rooms\RoomWizard.tsx:414:    checkoutAlert: "Il check-out deve essere successivo al check-in.",
+  components\rooms\RoomWizard.tsx:415:    whyItFits: "PERCHÉ È ADATTA A TE:",
+  components\rooms\RoomWizard.tsx:416:    perfectMatch: "Soddisfa il 100% dei tuoi criteri!",
+  components\rooms\RoomWizard.tsx:417:    offersMissing: "COSA OFFRE / COSA MANCA:",
+  components\rooms\RoomWizard.tsx:418:    samePrice: "Stessa fascia di prezzo",
+  components\rooms\RoomWizard.tsx:419:    moreExpensive: "Più costosa rispetto alla soluzione migliore",
+  components\rooms\RoomWizard.tsx:420:    cheaper: "Più conveniente rispetto alla soluzione migliore",
+  components\rooms\RoomWizard.tsx:421:    bedTypes: "Tipologia letti",
+  components\rooms\RoomWizard.tsx:422:    double: "Matrimoniale",
+  components\rooms\RoomWizard.tsx:423:    single: "Singolo",
+  components\rooms\RoomWizard.tsx:424:    sofaBed: "Divano letto",
+  components\rooms\RoomWizard.tsx:425:    galleryThumbnails: "Miniature della galleria",
+  components\rooms\RoomWizard.tsx:489:    checkout: "Salida",
+  components\rooms\RoomWizard.tsx:490:    email: "Email",
+  components\rooms\RoomWizard.tsx:491:    phone: "Teléfono",
+  components\rooms\RoomWizard.tsx:492:    gdpr:
+  components\rooms\RoomWizard.tsx:493:      "Acepto el tratamiento de mis datos personales para recibir sugerencias de alojamiento.",
+> components\rooms\RoomWizard.tsx:494:    start: "Empezar",
+  components\rooms\RoomWizard.tsx:495:    back: "Atrás",
+  components\rooms\RoomWizard.tsx:496:    bestMatch: "Mejor opción",
+  components\rooms\RoomWizard.tsx:497:    sendByEmail: "Enviar por email",
+  components\rooms\RoomWizard.tsx:498:    alternativeOptions: "Opciones alternativas",
+> components\rooms\RoomWizard.tsx:499:    startOver: "Empezar de nuevo",
+  components\rooms\RoomWizard.tsx:500:    checkoutAlert: "La fecha de salida debe ser posterior a la fecha de llegada.",
+  components\rooms\RoomWizard.tsx:501:    whyItFits: "POR QUÉ ENCAJA:",
+  components\rooms\RoomWizard.tsx:502:    perfectMatch: "¡Coincide al 100% con tus criterios!",
+  components\rooms\RoomWizard.tsx:503:    offersMissing: "QUÉ OFRECE / QUÉ FALTA:",
+  components\rooms\RoomWizard.tsx:504:    samePrice: "Misma categoría de precio",
+  components\rooms\RoomWizard.tsx:505:    moreExpensive: "Más caro que la mejor opción",
+  components\rooms\RoomWizard.tsx:506:    cheaper: "Más económico que la mejor opción",
+  components\rooms\RoomWizard.tsx:507:    bedTypes: "Tipos de cama",
+  components\rooms\RoomWizard.tsx:508:    double: "Doble",
+  components\rooms\RoomWizard.tsx:509:    single: "Individual",
+  components\rooms\RoomWizard.tsx:510:    sofaBed: "Sofá cama",
+  components\rooms\RoomWizard.tsx:511:    galleryThumbnails: "Miniaturas de la galería",
+  components\rooms\RoomWizard.tsx:575:    checkout: "Çıkış",
+  components\rooms\RoomWizard.tsx:576:    email: "Email",
+  components\rooms\RoomWizard.tsx:577:    phone: "Telefon",
+  components\rooms\RoomWizard.tsx:578:    gdpr:
+  components\rooms\RoomWizard.tsx:579:      "Konaklama önerileri almak amacıyla kişisel verilerimin işlenmesini kabul ediyorum.",
+> components\rooms\RoomWizard.tsx:580:    start: "Başla",
+  components\rooms\RoomWizard.tsx:581:    back: "Geri",
+  components\rooms\RoomWizard.tsx:582:    bestMatch: "En iyi seçim",
+  components\rooms\RoomWizard.tsx:583:    sendByEmail: "Email ile gönder",
+  components\rooms\RoomWizard.tsx:584:    alternativeOptions: "Alternatif seçenekler",
+> components\rooms\RoomWizard.tsx:585:    startOver: "Baştan başla",
+  components\rooms\RoomWizard.tsx:586:    checkoutAlert: "Çıkış tarihi giriş tarihinden sonra olmalıdır.",
+  components\rooms\RoomWizard.tsx:587:    whyItFits: "NEDEN UYGUN:",
+  components\rooms\RoomWizard.tsx:588:    perfectMatch: "Kriterlerinizle %100 uyumlu!",
+  components\rooms\RoomWizard.tsx:589:    offersMissing: "NE SUNUYOR / NE EKSİK:",
+  components\rooms\RoomWizard.tsx:590:    samePrice: "Aynı fiyat kategorisi",
+  components\rooms\RoomWizard.tsx:591:    moreExpensive: "En iyi seçimden daha pahalı",
+  components\rooms\RoomWizard.tsx:592:    cheaper: "En iyi seçimden daha ekonomik",
+  components\rooms\RoomWizard.tsx:593:    bedTypes: "Yatak türleri",
+  components\rooms\RoomWizard.tsx:594:    double: "Çift kişilik",
+  components\rooms\RoomWizard.tsx:595:    single: "Tek kişilik",
+  components\rooms\RoomWizard.tsx:596:    sofaBed: "Çekyat",
+  components\rooms\RoomWizard.tsx:597:    galleryThumbnails: "Galeri küçük görselleri",
+  components\rooms\RoomWizard.tsx:1080:    email: "",
+  components\rooms\RoomWizard.tsx:1081:    phone: "",
+  components\rooms\RoomWizard.tsx:1082:  });
+  components\rooms\RoomWizard.tsx:1083:
+  components\rooms\RoomWizard.tsx:1084:  const [prefs, setPrefs] = useState<WizardPrefs>({});
+> components\rooms\RoomWizard.tsx:1085:  const [hasStarted, setHasStarted] = useState(false);
+  components\rooms\RoomWizard.tsx:1086:  const [step, setStep] = useState(0);
+  components\rooms\RoomWizard.tsx:1087:
+  components\rooms\RoomWizard.tsx:1088:  const questions: Question[] = useMemo(
+  components\rooms\RoomWizard.tsx:1089:    () => [
+  components\rooms\RoomWizard.tsx:1090:      {
+  components\rooms\RoomWizard.tsx:1091:        id: "guests",
+  components\rooms\RoomWizard.tsx:1092:        question: labels.questions.guests,
+  components\rooms\RoomWizard.tsx:1093:        options: [
+  components\rooms\RoomWizard.tsx:1094:          {
+  components\rooms\RoomWizard.tsx:1095:            title: labels.options.couple[0],
+  components\rooms\RoomWizard.tsx:1096:            hint: labels.options.couple[1],
+  components\rooms\RoomWizard.tsx:1097:            icon: "👥",
+  components\rooms\RoomWizard.tsx:1213:    const skipView = prefs.guests === 2 && prefs.budget === true;
+  components\rooms\RoomWizard.tsx:1214:    return questions.filter((question) => !(skipView && question.id === "view"));
+  components\rooms\RoomWizard.tsx:1215:  }, [prefs.budget, prefs.guests, questions]);
+  components\rooms\RoomWizard.tsx:1216:
+  components\rooms\RoomWizard.tsx:1217:  const currentQuestion = visibleQuestions[step];
+> components\rooms\RoomWizard.tsx:1218:  const isFinished = hasStarted && step >= visibleQuestions.length;
+  components\rooms\RoomWizard.tsx:1219:
+  components\rooms\RoomWizard.tsx:1220:  const results = useMemo(() => {
+  components\rooms\RoomWizard.tsx:1221:    return rooms
+  components\rooms\RoomWizard.tsx:1222:      .map((room) => ({
+  components\rooms\RoomWizard.tsx:1223:        room,
+  components\rooms\RoomWizard.tsx:1224:        score: scoreRoom(room, prefs),
+  components\rooms\RoomWizard.tsx:1225:      }))
+  components\rooms\RoomWizard.tsx:1226:      .filter((item) => item.score > -999)
+  components\rooms\RoomWizard.tsx:1227:      .sort((a, b) => b.score - a.score);
+  components\rooms\RoomWizard.tsx:1228:  }, [prefs, rooms]);
+  components\rooms\RoomWizard.tsx:1229:
+  components\rooms\RoomWizard.tsx:1230:  const bestRoom = results[0]?.room;
+  components\rooms\RoomWizard.tsx:1236:    if (!lead.checkin || !lead.checkout || lead.checkout <= lead.checkin) {
+  components\rooms\RoomWizard.tsx:1237:      alert(labels.checkoutAlert);
+  components\rooms\RoomWizard.tsx:1238:      return;
+  components\rooms\RoomWizard.tsx:1239:    }
+  components\rooms\RoomWizard.tsx:1240:
+> components\rooms\RoomWizard.tsx:1241:    setHasStarted(true);
+  components\rooms\RoomWizard.tsx:1242:    setStep(0);
+  components\rooms\RoomWizard.tsx:1243:  }
+  components\rooms\RoomWizard.tsx:1244:
+  components\rooms\RoomWizard.tsx:1245:  function handleOption(option: QuestionOption) {
+  components\rooms\RoomWizard.tsx:1246:    setPrefs((current) => option.apply(current));
+  components\rooms\RoomWizard.tsx:1247:    setStep((current) => current + 1);
+  components\rooms\RoomWizard.tsx:1248:  }
+  components\rooms\RoomWizard.tsx:1249:
+  components\rooms\RoomWizard.tsx:1250:  function goBack() {
+  components\rooms\RoomWizard.tsx:1251:    if (step > 0) {
+  components\rooms\RoomWizard.tsx:1252:      setStep((current) => current - 1);
+  components\rooms\RoomWizard.tsx:1253:      return;
+  components\rooms\RoomWizard.tsx:1254:    }
+  components\rooms\RoomWizard.tsx:1255:
+> components\rooms\RoomWizard.tsx:1256:    setHasStarted(false);
+  components\rooms\RoomWizard.tsx:1257:    setPrefs({});
+  components\rooms\RoomWizard.tsx:1258:  }
+  components\rooms\RoomWizard.tsx:1259:
+  components\rooms\RoomWizard.tsx:1260:  function resetWizard() {
+> components\rooms\RoomWizard.tsx:1261:    setHasStarted(false);
+  components\rooms\RoomWizard.tsx:1262:    setStep(0);
+  components\rooms\RoomWizard.tsx:1263:    setPrefs({});
+  components\rooms\RoomWizard.tsx:1264:  }
+  components\rooms\RoomWizard.tsx:1265:
+  components\rooms\RoomWizard.tsx:1266:  return (
+  components\rooms\RoomWizard.tsx:1267:    <section className="rw-wrapper" id="room-wizard-app" aria-labelledby="rw-main-title">
+  components\rooms\RoomWizard.tsx:1268:      <div className="rw-main-card">
+> components\rooms\RoomWizard.tsx:1269:        {hasStarted && (
+  components\rooms\RoomWizard.tsx:1270:          <header className="rw-header active" id="rw-header">
+  components\rooms\RoomWizard.tsx:1271:            <div className="rw-header-flex">
+  components\rooms\RoomWizard.tsx:1272:              <div className="rw-logo">🏠 {labels.roomFinder}</div>
+  components\rooms\RoomWizard.tsx:1273:
+  components\rooms\RoomWizard.tsx:1274:              <div className="rw-step-tag" aria-live="polite">
+  components\rooms\RoomWizard.tsx:1275:                {labels.step} <span>{Math.min(step + 1, visibleQuestions.length)}</span>/
+  components\rooms\RoomWizard.tsx:1276:                <span>{visibleQuestions.length}</span>
+  components\rooms\RoomWizard.tsx:1277:              </div>
+  components\rooms\RoomWizard.tsx:1278:            </div>
+  components\rooms\RoomWizard.tsx:1279:
+  components\rooms\RoomWizard.tsx:1280:            <div className="rw-progress-track">
+  components\rooms\RoomWizard.tsx:1281:              <div
+  components\rooms\RoomWizard.tsx:1294:              />
+  components\rooms\RoomWizard.tsx:1295:            </div>
+  components\rooms\RoomWizard.tsx:1296:          </header>
+  components\rooms\RoomWizard.tsx:1297:        )}
+  components\rooms\RoomWizard.tsx:1298:
+> components\rooms\RoomWizard.tsx:1299:        {!hasStarted && (
+  components\rooms\RoomWizard.tsx:1300:          <>
+  components\rooms\RoomWizard.tsx:1301:            <header className="rw-intro-header">
+  components\rooms\RoomWizard.tsx:1302:              <h3 className="rw-intro-title" id="rw-main-title">
+  components\rooms\RoomWizard.tsx:1303:                {labels.introTitle}
+  components\rooms\RoomWizard.tsx:1304:              </h3>
+  components\rooms\RoomWizard.tsx:1305:
+  components\rooms\RoomWizard.tsx:1306:              <p className="rw-intro-sub">{labels.introText}</p>
+  components\rooms\RoomWizard.tsx:1307:            </header>
+  components\rooms\RoomWizard.tsx:1308:
+  components\rooms\RoomWizard.tsx:1309:            <form onSubmit={handleLeadSubmit}>
+  components\rooms\RoomWizard.tsx:1310:              <fieldset style={{ border: "none", padding: 0, margin: 0 }}>
+  components\rooms\RoomWizard.tsx:1311:                <div className="rw-form-grid">
+  components\rooms\RoomWizard.tsx:1430:                    <label htmlFor="rw-gdpr">{labels.gdpr}</label>
+  components\rooms\RoomWizard.tsx:1431:                  </div>
+  components\rooms\RoomWizard.tsx:1432:                </div>
+  components\rooms\RoomWizard.tsx:1433:              </fieldset>
+  components\rooms\RoomWizard.tsx:1434:
+> components\rooms\RoomWizard.tsx:1435:              <button type="submit" className="rw-start-btn">
+> components\rooms\RoomWizard.tsx:1436:                {labels.start}
+  components\rooms\RoomWizard.tsx:1437:              </button>
+  components\rooms\RoomWizard.tsx:1438:            </form>
+  components\rooms\RoomWizard.tsx:1439:          </>
+  components\rooms\RoomWizard.tsx:1440:        )}
+  components\rooms\RoomWizard.tsx:1441:
+> components\rooms\RoomWizard.tsx:1442:        {hasStarted && currentQuestion && !isFinished && (
+  components\rooms\RoomWizard.tsx:1443:          <>
+  components\rooms\RoomWizard.tsx:1444:            <h2 className="rw-question-text">{currentQuestion.question}</h2>
+  components\rooms\RoomWizard.tsx:1445:
+  components\rooms\RoomWizard.tsx:1446:            <div className="rw-options-list">
+  components\rooms\RoomWizard.tsx:1447:              {currentQuestion.options.map((option) => (
+  components\rooms\RoomWizard.tsx:1448:                <button
+  components\rooms\RoomWizard.tsx:1449:                  type="button"
+  components\rooms\RoomWizard.tsx:1450:                  className="rw-opt-card"
+  components\rooms\RoomWizard.tsx:1451:                  key={option.title}
+  components\rooms\RoomWizard.tsx:1452:                  onClick={() => handleOption(option)}
+  components\rooms\RoomWizard.tsx:1453:                >
+  components\rooms\RoomWizard.tsx:1454:                  <div className="rw-opt-icon">{option.icon}</div>
+  components\rooms\RoomWizard.tsx:1540:                  type="button"
+  components\rooms\RoomWizard.tsx:1541:                  className="rw-back-btn"
+  components\rooms\RoomWizard.tsx:1542:                  onClick={resetWizard}
+  components\rooms\RoomWizard.tsx:1543:                  style={{ justifyContent: "center" }}
+  components\rooms\RoomWizard.tsx:1544:                >
+> components\rooms\RoomWizard.tsx:1545:                  {labels.startOver}
+  components\rooms\RoomWizard.tsx:1546:                </button>
+  components\rooms\RoomWizard.tsx:1547:              </div>
+  components\rooms\RoomWizard.tsx:1548:            </div>
+  components\rooms\RoomWizard.tsx:1549:          </>
+  components\rooms\RoomWizard.tsx:1550:        )}
+  components\rooms\RoomWizard.tsx:1551:      </div>
+  components\rooms\RoomWizard.tsx:1552:    </section>
+  components\rooms\RoomWizard.tsx:1553:  );
+  components\rooms\RoomWizard.tsx:1554:}
+  app\chios-holidays-quiz\page.tsx:1:import type { Metadata } from "next";
+> app\chios-holidays-quiz\page.tsx:2:import { ChiosHolidayQuizPage } from "@/components/chios/ChiosHolidayQuizPage";
+  app\chios-holidays-quiz\page.tsx:3:import { buildPageMetadata } from "@/lib/seo";
+  app\chios-holidays-quiz\page.tsx:4:
+  app\chios-holidays-quiz\page.tsx:5:export const metadata: Metadata = buildPageMetadata({
+> app\chios-holidays-quiz\page.tsx:6:  path: "/chios-holidays-quiz/",
+> app\chios-holidays-quiz\page.tsx:7:  title: "Chios Holiday Quiz | Voulamandis House",
+  app\chios-holidays-quiz\page.tsx:8:  description:
+> app\chios-holidays-quiz\page.tsx:9:    "Take the Chios Holiday Quiz by Voulamandis House, discover hidden island secrets and get a special discount code 
+for your stay.",
+  app\chios-holidays-quiz\page.tsx:10:  image: "/images/voulamandis-house-og.jpg",
+  app\chios-holidays-quiz\page.tsx:11:});
+  app\chios-holidays-quiz\page.tsx:12:
+  app\chios-holidays-quiz\page.tsx:13:export default function Page() {
+> app\chios-holidays-quiz\page.tsx:14:  return <ChiosHolidayQuizPage locale="en" />;
+  app\chios-holidays-quiz\page.tsx:15:}
+  content\home.ts:22:    secondaryCta: {
+  content\home.ts:23:      label: string;
+  content\home.ts:24:      href: string;
+  content\home.ts:25:      icon: string;
+  content\home.ts:26:    };
+> content\home.ts:27:    quizCard: {
+  content\home.ts:28:      href: string;
+  content\home.ts:29:      icon: string;
+  content\home.ts:30:      liveLabel: string;
+  content\home.ts:31:      title: string;
+  content\home.ts:32:      text: string;
+  content\home.ts:33:      cta: string;
+  content\home.ts:34:    };
+  content\home.ts:35:  };
+  content\home.ts:36:  announceBar: {
+  content\home.ts:37:    href: string;
+  content\home.ts:38:    icon: string;
+  content\home.ts:39:    text: string;
+  content\home.ts:204:      imageClass: string;
+  content\home.ts:205:      ctaIcon: string;
+  content\home.ts:206:      ctaLabel: string;
+  content\home.ts:207:    }[];
+  content\home.ts:208:  };
+> content\home.ts:209:  quizBar: {
+  content\home.ts:210:    label: string;
+  content\home.ts:211:    text: string;
+  content\home.ts:212:    href: string;
+  content\home.ts:213:    cta: string;
+  content\home.ts:214:  };
+  content\home.ts:215:  faq: {
+  content\home.ts:216:    kicker: string;
+  content\home.ts:217:    title: string;
+  content\home.ts:218:    icon: string;
+  content\home.ts:219:    items: {
+  content\home.ts:220:      question: string;
+  content\home.ts:221:      answerHtml: string;
+  content\home.ts:279:    secondaryCta: {
+  content\home.ts:280:      label: "Book now",
+  content\home.ts:281:      href: "/chios-hotels-rates/",
+  content\home.ts:282:      icon: "🔥",
+  content\home.ts:283:    },
+> content\home.ts:284:    quizCard: {
+> content\home.ts:285:      href: "/chios-holidays-quiz/",
+  content\home.ts:286:      icon: "🧭",
+  content\home.ts:287:      liveLabel: "LIVE discount code",
+  content\home.ts:288:      title: "Discover Chios",
+  content\home.ts:289:      text: "Learn the island’s secrets and get a code for your stay.",
+> content\home.ts:290:      cta: "Start →",
+  content\home.ts:291:    },
+  content\home.ts:292:  },
+  content\home.ts:293:
+  content\home.ts:294:  announceBar: {
+  content\home.ts:295:    href: "#vh-lastminute-title",
+  content\home.ts:296:    icon: "🔥",
+  content\home.ts:297:    text: "Traveling to Chios this week?",
+  content\home.ts:298:    strongText: "See available accommodation deals.",
+  content\home.ts:299:  },
+  content\home.ts:300:
+  content\home.ts:301:  intro: {
+  content\home.ts:302:    left: {
+  content\home.ts:697:        ctaLabel: "See more",
+  content\home.ts:698:      },
+  content\home.ts:699:    ],
+  content\home.ts:700:  },
+  content\home.ts:701:
+> content\home.ts:702:  quizBar: {
+  content\home.ts:703:    label: "DISCOVER CHIOS",
+> content\home.ts:704:    text: "Spend 5 minutes and play this quiz to discover Chios and learn its hidden secrets.",
+> content\home.ts:705:    href: "/chios-holidays-quiz/",
+> content\home.ts:706:    cta: "🧭 START THE EXPERIENCE →",
+  content\home.ts:707:  },
+  content\home.ts:708:
+  content\home.ts:709:  faq: {
+  content\home.ts:710:    kicker: "Frequently Asked Questions",
+  content\home.ts:711:    icon: "❓",
+  content\home.ts:712:    title: "What you should know before booking your stay",
+  content\home.ts:713:    items: [
+  content\home.ts:714:      {
+  content\home.ts:715:        question: "Is Voulamandis House a hotel?",
+  content\home.ts:716:        answerHtml:
+  content\home.ts:717:          "Voulamandis House is a property with rooms and apartments in Kampos, Chios. If you are searching for a hotel in Chios but 
+prefer quieter and more personal hospitality, it is an authentic alternative.",
+  content\home.ts:718:      },
+  content\home.ts:745:  },
+  content\home.ts:746:
+  content\home.ts:747:  finalCta: {
+  content\home.ts:748:    kicker: "Book your stay",
+  content\home.ts:749:    icon: "✈️",
+> content\home.ts:750:    title: "Your trip to Chios starts here",
+  content\home.ts:751:    text: "Warm hospitality, authentic atmosphere and an ideal location in Kampos.",
+  content\home.ts:752:    primaryCta: {
+  content\home.ts:753:      label: "Book Direct",
+  content\home.ts:754:      href: "/chios-hotels-rates/",
+  content\home.ts:755:      icon: "🛎️",
+  content\home.ts:756:    },
+  content\home.ts:757:    secondaryCta: {
+  content\home.ts:758:      label: "Contact",
+  content\home.ts:759:      href: "/voulamandis-house-contact-us-form-fill-in-the-form/",
+  content\home.ts:760:      icon: "✉️",
+  content\home.ts:761:    },
+  content\home.ts:762:  },
+  content\home.ts:802:    secondaryCta: {
+  content\home.ts:803:      label: "Προσφορές",
+  content\home.ts:804:      href: "#vh-lastminute-title",
+  content\home.ts:805:      icon: "🔥",
+  content\home.ts:806:    },
+> content\home.ts:807:    quizCard: {
+> content\home.ts:808:      href: "/el/diakopes-sti-chio-quiz/",
+  content\home.ts:809:      icon: "🧭",
+  content\home.ts:810:      liveLabel: "LIVE Κωδικός έκπτωσης",
+  content\home.ts:811:      title: "Ανακάλυψε τη Χίο",
+  content\home.ts:812:      text: "Μάθε τα μυστικά του νησιού και πάρε κωδικό για τη διαμονή σου.",
+  content\home.ts:813:      cta: "Ξεκίνα →",
+  content\home.ts:814:    },
+  content\home.ts:815:  },
+  content\home.ts:816:
+  content\home.ts:817:  announceBar: {
+  content\home.ts:818:    href: "#vh-lastminute-title",
+  content\home.ts:819:    icon: "🔥",
+  content\home.ts:820:    text: "Ταξιδεύεις για Χίο αυτή την εβδομάδα;",
+  content\home.ts:1165:        ctaLabel: "Δες περισσότερα",
+  content\home.ts:1166:      },
+  content\home.ts:1167:    ],
+  content\home.ts:1168:  },
+  content\home.ts:1169:
+> content\home.ts:1170:  quizBar: {
+  content\home.ts:1171:    label: "ΑΝΑΚΑΛΥΨΤΕ ΤΗ ΧΙΟ",
+> content\home.ts:1172:    text: "Αφιέρωσε 5 λεπτά και παίξε αυτό το quiz που θα σε βοηθήσει να γνωρίσεις τη Χίο, να μάθεις τα μυστικά της και να πάρεις 
+κωδικό έκπτωσης στο τέλος.",
+> content\home.ts:1173:    href: "/el/diakopes-sti-chio-quiz/",
+  content\home.ts:1174:    cta: "🧭 ΞΕΚΙΝΑ ΤΗΝ ΕΜΠΕΙΡΙΑ →",
+  content\home.ts:1175:  },
+  content\home.ts:1176:
+  content\home.ts:1177:  faq: {
+  content\home.ts:1178:    kicker: "Συχνές Ερωτήσεις",
+  content\home.ts:1179:    icon: "❓",
+  content\home.ts:1180:    title: "Όσα πρέπει να γνωρίζετε πριν κλείσετε τη διαμονή σας",
+  content\home.ts:1181:    items: [
+  content\home.ts:1182:      {
+  content\home.ts:1183:        question: "Το Voulamandis House είναι ξενοδοχείο;",
+  content\home.ts:1184:        answerHtml:
+  content\home.ts:1185:          "Όχι. Το Voulamandis House είναι κατάλυμα με ενοικιαζόμενα δωμάτια και διαμερίσματα στον Κάμπο της Χίου. Αν αναζητάτε 
+ξενοδοχείο στη Χίο αλλά προτιμάτε πιο ήρεμη και προσωπική φιλοξενία, αποτελεί μια αυθεντική εναλλακτική επιλογή.",
+  content\home.ts:1269:    secondaryCta: {
+  content\home.ts:1270:      label: "Réserver",
+  content\home.ts:1271:      href: "/fr/tarifs-des-hotels-a-chios/",
+  content\home.ts:1272:      icon: "🔥",
+  content\home.ts:1273:    },
+> content\home.ts:1274:    quizCard: {
+> content\home.ts:1275:      href: "/fr/quiz-vacances-a-chios/",
+  content\home.ts:1276:      icon: "🧭",
+  content\home.ts:1277:      liveLabel: "Code réduction live",
+  content\home.ts:1278:      title: "Découvrez Chios",
+  content\home.ts:1279:      text: "Explorez les secrets de l’île et recevez un code pour votre séjour.",
+> content\home.ts:1280:      cta: "Commencer →",
+  content\home.ts:1281:    },
+  content\home.ts:1282:  },
+  content\home.ts:1283:
+  content\home.ts:1284:  announceBar: {
+  content\home.ts:1285:    href: "#vh-lastminute-title",
+  content\home.ts:1286:    icon: "🔥",
+  content\home.ts:1287:    text: "Vous voyagez à Chios cette semaine ?",
+  content\home.ts:1288:    strongText: "Découvrez les offres d’hébergement disponibles.",
+  content\home.ts:1289:  },
+  content\home.ts:1290:
+  content\home.ts:1291:  intro: {
+  content\home.ts:1292:    left: {
+  content\home.ts:1603:        ctaLabel: "Voir plus",
+  content\home.ts:1604:      },
+  content\home.ts:1605:    ],
+  content\home.ts:1606:  },
+  content\home.ts:1607:
+> content\home.ts:1608:  quizBar: {
+  content\home.ts:1609:    label: "DÉCOUVRIR CHIOS",
+> content\home.ts:1610:    text: "Prenez 5 minutes pour faire ce quiz, découvrir Chios et recevoir un code de réduction.",
+> content\home.ts:1611:    href: "/fr/quiz-vacances-a-chios/",
+> content\home.ts:1612:    cta: "🧭 COMMENCER L’EXPÉRIENCE →",
+  content\home.ts:1613:  },
+  content\home.ts:1614:
+  content\home.ts:1615:  faq: {
+  content\home.ts:1616:    kicker: "Questions fréquentes",
+  content\home.ts:1617:    icon: "❓",
+  content\home.ts:1618:    title: "Ce qu’il faut savoir avant de réserver",
+  content\home.ts:1619:    items: [
+  content\home.ts:1620:      {
+  content\home.ts:1621:        question: "Voulamandis House est-il un hôtel ?",
+  content\home.ts:1622:        answerHtml:
+  content\home.ts:1623:          "Voulamandis House est un hébergement avec chambres et appartements à Kampos, Chios. Si vous cherchez un hôtel à Chios mais 
+préférez une hospitalité plus calme et personnelle, c’est une alternative authentique.",
+  content\home.ts:1624:      },
+  content\home.ts:1708:    secondaryCta: {
+  content\home.ts:1709:      label: "Jetzt buchen",
+  content\home.ts:1710:      href: "/de/hotelpreise-auf-der-insel-chios/",
+  content\home.ts:1711:      icon: "🔥",
+  content\home.ts:1712:    },
+> content\home.ts:1713:    quizCard: {
+> content\home.ts:1714:      href: "/de/chios-urlaubsquiz/",
+  content\home.ts:1715:      icon: "🧭",
+  content\home.ts:1716:      liveLabel: "Live-Rabattcode",
+  content\home.ts:1717:      title: "Chios entdecken",
+  content\home.ts:1718:      text: "Lernen Sie die Geheimnisse der Insel kennen und erhalten Sie einen Code für Ihren Aufenthalt.",
+> content\home.ts:1719:      cta: "Starten →",
+  content\home.ts:1720:    },
+  content\home.ts:1721:  },
+  content\home.ts:1722:
+  content\home.ts:1723:  announceBar: {
+  content\home.ts:1724:    href: "#vh-lastminute-title",
+  content\home.ts:1725:    icon: "🔥",
+  content\home.ts:1726:    text: "Reisen Sie diese Woche nach Chios?",
+  content\home.ts:1727:    strongText: "Sehen Sie verfügbare Unterkunftsangebote.",
+  content\home.ts:1728:  },
+  content\home.ts:1729:
+  content\home.ts:1730:  intro: {
+  content\home.ts:1731:    left: {
+  content\home.ts:2042:        ctaLabel: "Mehr ansehen",
+  content\home.ts:2043:      },
+  content\home.ts:2044:    ],
+  content\home.ts:2045:  },
+  content\home.ts:2046:
+> content\home.ts:2047:  quizBar: {
+  content\home.ts:2048:    label: "CHIOS ENTDECKEN",
+> content\home.ts:2049:    text: "Nehmen Sie sich 5 Minuten Zeit, machen Sie dieses Quiz und entdecken Sie die Geheimnisse von Chios.",
+> content\home.ts:2050:    href: "/de/chios-urlaubsquiz/",
+> content\home.ts:2051:    cta: "🧭 ERLEBNIS STARTEN →",
+  content\home.ts:2052:  },
+  content\home.ts:2053:
+  content\home.ts:2054:  faq: {
+  content\home.ts:2055:    kicker: "Häufige Fragen",
+  content\home.ts:2056:    icon: "❓",
+  content\home.ts:2057:    title: "Was Sie vor der Buchung wissen sollten",
+  content\home.ts:2058:    items: [
+  content\home.ts:2059:      {
+  content\home.ts:2060:        question: "Ist Voulamandis House ein Hotel?",
+  content\home.ts:2061:        answerHtml:
+  content\home.ts:2062:          "Voulamandis House ist eine Unterkunft mit Zimmern und Apartments in Kampos, Chios. Wenn Sie ein Hotel auf Chios suchen, 
+aber eine ruhigere und persönlichere Gastfreundschaft bevorzugen, ist es eine authentische Alternative.",
+  content\home.ts:2063:      },
+  content\home.ts:2146:    secondaryCta: {
+  content\home.ts:2147:      label: "Prenota ora",
+  content\home.ts:2148:      href: "/it/prezzi-hotel-chios/",
+  content\home.ts:2149:      icon: "🔥",
+  content\home.ts:2150:    },
+> content\home.ts:2151:    quizCard: {
+> content\home.ts:2152:      href: "/it/quiz-vacanze-a-chios/",
+  content\home.ts:2153:      icon: "🧭",
+  content\home.ts:2154:      liveLabel: "Codice sconto live",
+  content\home.ts:2155:      title: "Scopri Chios",
+  content\home.ts:2156:      text: "Esplora i segreti dell’isola e ricevi un codice per il tuo soggiorno.",
+  content\home.ts:2157:      cta: "Inizia →",
+  content\home.ts:2158:    },
+  content\home.ts:2159:  },
+  content\home.ts:2160:
+  content\home.ts:2161:  announceBar: {
+  content\home.ts:2162:    href: "#vh-lastminute-title",
+  content\home.ts:2163:    icon: "🔥",
+  content\home.ts:2164:    text: "Viaggi a Chios questa settimana?",
+  content\home.ts:2480:        ctaLabel: "Vedi di più",
+  content\home.ts:2481:      },
+  content\home.ts:2482:    ],
+  content\home.ts:2483:  },
+  content\home.ts:2484:
+> content\home.ts:2485:  quizBar: {
+  content\home.ts:2486:    label: "SCOPRI CHIOS",
+> content\home.ts:2487:    text: "Dedica 5 minuti a questo quiz, scopri Chios e ricevi un codice sconto.",
+> content\home.ts:2488:    href: "/it/quiz-vacanze-a-chios/",
+  content\home.ts:2489:    cta: "🧭 INIZIA L’ESPERIENZA →",
+  content\home.ts:2490:  },
+  content\home.ts:2491:
+  content\home.ts:2492:  faq: {
+  content\home.ts:2493:    kicker: "Domande frequenti",
+  content\home.ts:2494:    icon: "❓",
+  content\home.ts:2495:    title: "Cosa sapere prima di prenotare",
+  content\home.ts:2496:    items: [
+  content\home.ts:2497:      {
+  content\home.ts:2498:        question: "Voulamandis House è un hotel?",
+  content\home.ts:2499:        answerHtml:
+  content\home.ts:2500:          "Voulamandis House è una struttura con camere e appartamenti a Kampos, Chios. Se cerchi un hotel a Chios ma preferisci 
+un’ospitalità più tranquilla e personale, è un’alternativa autentica.",
+  content\home.ts:2585:    secondaryCta: {
+  content\home.ts:2586:      label: "Reservar",
+  content\home.ts:2587:      href: "/es/los-mejores-precios-de-hotel-en-la-isla-chios/",
+  content\home.ts:2588:      icon: "🔥",
+  content\home.ts:2589:    },
+> content\home.ts:2590:    quizCard: {
+> content\home.ts:2591:      href: "/es/quiz-vacaciones-en-quios/",
+  content\home.ts:2592:      icon: "🧭",
+  content\home.ts:2593:      liveLabel: "Código descuento live",
+  content\home.ts:2594:      title: "Descubre Chios",
+  content\home.ts:2595:      text: "Explora los secretos de la isla y recibe un código para tu estancia.",
+  content\home.ts:2596:      cta: "Empezar →",
+  content\home.ts:2597:    },
+  content\home.ts:2598:  },
+  content\home.ts:2599:
+  content\home.ts:2600:  announceBar: {
+  content\home.ts:2601:    href: "#vh-lastminute-title",
+  content\home.ts:2602:    icon: "🔥",
+  content\home.ts:2603:    text: "¿Viajas a Chios esta semana?",
+  content\home.ts:2919:        ctaLabel: "Ver más",
+  content\home.ts:2920:      },
+  content\home.ts:2921:    ],
+  content\home.ts:2922:  },
+  content\home.ts:2923:
+> content\home.ts:2924:  quizBar: {
+  content\home.ts:2925:    label: "DESCUBRIR CHIOS",
+> content\home.ts:2926:    text: "Dedica 5 minutos a este quiz, descubre Chios y recibe un código de descuento.",
+> content\home.ts:2927:    href: "/es/quiz-vacaciones-en-quios/",
+  content\home.ts:2928:    cta: "🧭 EMPEZAR LA EXPERIENCIA →",
+  content\home.ts:2929:  },
+  content\home.ts:2930:
+  content\home.ts:2931:  faq: {
+  content\home.ts:2932:    kicker: "Preguntas frecuentes",
+  content\home.ts:2933:    icon: "❓",
+  content\home.ts:2934:    title: "Lo que conviene saber antes de reservar",
+  content\home.ts:2935:    items: [
+  content\home.ts:2936:      {
+  content\home.ts:2937:        question: "¿Voulamandis House es un hotel?",
+  content\home.ts:2938:        answerHtml:
+  content\home.ts:2939:          "Voulamandis House es un alojamiento con habitaciones y apartamentos en Kampos, Chios. Si buscas un hotel en Chios pero 
+prefieres una hospitalidad más tranquila y personal, es una alternativa auténtica.",
+  content\home.ts:3024:    secondaryCta: {
+  content\home.ts:3025:      label: "Rezervasyon",
+  content\home.ts:3026:      href: "/tr/sakiz-adasi-rezervasyon/",
+  content\home.ts:3027:      icon: "🔥",
+  content\home.ts:3028:    },
+> content\home.ts:3029:    quizCard: {
+  content\home.ts:3030:      href: "/tr/sakiz-adasi-tatil-testi/",
+  content\home.ts:3031:      icon: "🧭",
+  content\home.ts:3032:      liveLabel: "Canlı indirim kodu",
+  content\home.ts:3033:      title: "Sakız’ı keşfedin",
+  content\home.ts:3034:      text: "Adanın sırlarını keşfedin ve konaklamanız için indirim kodu alın.",
+  content\home.ts:3035:      cta: "Başla →",
+  content\home.ts:3036:    },
+  content\home.ts:3037:  },
+  content\home.ts:3038:
+  content\home.ts:3039:  announceBar: {
+  content\home.ts:3040:    href: "#vh-lastminute-title",
+  content\home.ts:3041:    icon: "🔥",
+  content\home.ts:3358:        ctaLabel: "Daha fazla gör",
+  content\home.ts:3359:      },
+  content\home.ts:3360:    ],
+  content\home.ts:3361:  },
+  content\home.ts:3362:
+> content\home.ts:3363:  quizBar: {
+  content\home.ts:3364:    label: "SAKIZ’I KEŞFET",
+  content\home.ts:3365:    text: "Bu testi 5 dakikada tamamlayın, Sakız’ı keşfedin ve indirim kodu alın.",
+  content\home.ts:3366:    href: "/tr/sakiz-adasi-tatil-testi/",
+  content\home.ts:3367:    cta: "🧭 DENEYİME BAŞLA →",
+  content\home.ts:3368:  },
+  content\home.ts:3369:
+  content\home.ts:3370:  faq: {
+  content\home.ts:3371:    kicker: "Sık sorulan sorular",
+  content\home.ts:3372:    icon: "❓",
+  content\home.ts:3373:    title: "Rezervasyon öncesi bilmeniz gerekenler",
+  content\home.ts:3374:    items: [
+  content\home.ts:3375:      {
+
+
