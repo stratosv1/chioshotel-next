@@ -17317,3 +17317,76 @@ button.rb-day {
     animation: none !important;
   }
 }
+
+/* =========================================================
+   FINAL ACCESSIBILITY OVERRIDE — Better contrast for badges
+   ========================================================= */
+
+/* Room meta badges: guests, economy, Kampos, ground, upper, easy, quiet, space, apt */
+.vh-room-meta span,
+.vh-room-amenities span,
+.vh-pill,
+.room-bed-badge {
+  color: #3f2d00 !important;
+  background: #fff8ea !important;
+  border-color: rgba(92, 62, 0, 0.22) !important;
+  font-weight: 900 !important;
+}
+
+/* Room badges over images */
+.room-live-badge {
+  background: #0f7a36 !important;
+  color: #ffffff !important;
+}
+
+.room-direct-badge {
+  background: #f4fff6 !important;
+  color: #0b5f2a !important;
+  border: 1px solid rgba(11, 95, 42, 0.22) !important;
+}
+
+/* Premium quiz bar label and text */
+.premium-seo-bar {
+  background: #f7eadb !important;
+}
+
+.premium-label {
+  color: #5f4300 !important;
+}
+
+.premium-text {
+  color: #2f261f !important;
+}
+
+/* Viber / primary mobile sticky button contrast */
+.vh-mobile-sticky .vh-btn--primary,
+a.vh-btn.vh-btn--primary[href*="viber"],
+.vh-btn--primary {
+  color: #ffffff !important;
+}
+
+/* Keep Viber strong enough against white text */
+.vh-mobile-sticky .vh-btn--primary {
+  background: #5d4bd8 !important;
+  border-color: #5d4bd8 !important;
+}
+
+/* Mobile-specific contrast tightening */
+@media (max-width: 767px) {
+  .vh-room-meta span,
+  .vh-room-amenities span,
+  .vh-pill,
+  .room-bed-badge {
+    color: #332400 !important;
+    background: #fff9ef !important;
+  }
+
+  .premium-label {
+    color: #543a00 !important;
+  }
+
+  .premium-text,
+  .premium-seo-bar {
+    color: #2f261f !important;
+  }
+}
