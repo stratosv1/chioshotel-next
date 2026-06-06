@@ -1,4 +1,4 @@
-﻿export type HomePageData = {
+export type HomePageData = {
   seo: {
     title: string;
     description: string;
@@ -1559,22 +1559,50 @@ export const homePageFr: HomePageData = {
     title: "Que voir à Chios ?",
     subtitle:
       "Nous avons rassemblé des informations utiles pour organiser plus facilement votre séjour et vos excursions.",
-    cards: homePageEn.chiosGuide.cards.map((card) => {
-      const hrefById: Record<string, string> = {
-        beaches: "/fr/plages-de-chios/",
-        villages: "/fr/villages-de-chios/",
-        kampos: "/fr/chios-en-grece/",
-        museums: "/fr/musees-de-chios/",
-        orchids: "/fr/chios-en-grece/",
-        "thermal-springs": "/fr/chios-en-grece/",
-      };
-
-      return {
-        ...card,
-        href: hrefById[card.id] ?? card.href,
+    cards: [
+      {
+        ...homePageEn.chiosGuide.cards[0],
+        title: "Plages de Chios",
+        text: "Découvrez nos suggestions et organisez plus facilement vos escapades en bord de mer.",
+        href: "/fr/plages-de-chios/",
         ctaLabel: "Voir plus",
-      };
-    }),
+      },
+      {
+        ...homePageEn.chiosGuide.cards[1],
+        title: "Villages de Chios",
+        text: "Explorez des villages traditionnels et des lieux qui méritent vraiment une visite.",
+        href: "/fr/villages-de-chios/",
+        ctaLabel: "Voir plus",
+      },
+      {
+        ...homePageEn.chiosGuide.cards[2],
+        title: "Kampos de Chios",
+        text: "Découvrez le quartier historique qui rend un séjour à Kampos si particulier.",
+        href: "/fr/chios-en-grece/",
+        ctaLabel: "Voir plus",
+      },
+      {
+        ...homePageEn.chiosGuide.cards[3],
+        title: "Musées de Chios",
+        text: "Des étapes culturelles pour les voyageurs qui aiment l’histoire et l’identité locale.",
+        href: "/fr/musees-de-chios/",
+        ctaLabel: "Voir plus",
+      },
+      {
+        ...homePageEn.chiosGuide.cards[4],
+        title: "Orchidées de Chios",
+        text: "Une activité spéciale pour les amoureux de la nature qui veulent découvrir une autre facette de l’île.",
+        href: "/fr/orchidees-de-chios/",
+        ctaLabel: "Voir plus",
+      },
+      {
+        ...homePageEn.chiosGuide.cards[5],
+        title: "Sources thermales",
+        text: "Des expériences de détente et de bien-être qui complètent parfaitement vos vacances.",
+        href: "/fr/sources-thermales-de-chios/",
+        ctaLabel: "Voir plus",
+      },
+    ],
   },
 
   quizBar: {
@@ -1970,22 +1998,50 @@ export const homePageDe: HomePageData = {
     title: "Was kann man auf Chios sehen?",
     subtitle:
       "Wir haben nützliche Informationen gesammelt, damit Sie Ihren Aufenthalt und Tagesausflüge leichter planen können.",
-    cards: homePageEn.chiosGuide.cards.map((card) => {
-      const hrefById: Record<string, string> = {
-        beaches: "/de/straende-chios/",
-        villages: "/de/doerfer-chios/",
-        kampos: "/de/chios-insel/",
-        museums: "/de/museen-chios/",
-        orchids: "/de/chios-insel/",
-        "thermal-springs": "/de/chios-insel/",
-      };
-
-      return {
-        ...card,
-        href: hrefById[card.id] ?? card.href,
+    cards: [
+      {
+        ...homePageEn.chiosGuide.cards[0],
+        title: "Strände von Chios",
+        text: "Entdecken Sie Empfehlungen und planen Sie Ihre Ausflüge ans Meer leichter.",
+        href: "/de/straende-chios/",
         ctaLabel: "Mehr ansehen",
-      };
-    }),
+      },
+      {
+        ...homePageEn.chiosGuide.cards[1],
+        title: "Dörfer von Chios",
+        text: "Entdecken Sie traditionelle Orte und sehenswerte Stationen auf der Insel.",
+        href: "/de/doerfer-chios/",
+        ctaLabel: "Mehr ansehen",
+      },
+      {
+        ...homePageEn.chiosGuide.cards[2],
+        title: "Kampos auf Chios",
+        text: "Erfahren Sie mehr über die historische Gegend, die einen Aufenthalt in Kampos besonders macht.",
+        href: "/de/chios-insel/",
+        ctaLabel: "Mehr ansehen",
+      },
+      {
+        ...homePageEn.chiosGuide.cards[3],
+        title: "Museen von Chios",
+        text: "Kulturelle Stationen für Reisende, die Geschichte und lokale Identität lieben.",
+        href: "/de/museen-chios/",
+        ctaLabel: "Mehr ansehen",
+      },
+      {
+        ...homePageEn.chiosGuide.cards[4],
+        title: "Orchideen von Chios",
+        text: "Ein besonderes Naturerlebnis für Reisende, die eine andere Seite der Insel entdecken möchten.",
+        href: "/de/orchideen-auf-chios/",
+        ctaLabel: "Mehr ansehen",
+      },
+      {
+        ...homePageEn.chiosGuide.cards[5],
+        title: "Thermalquellen",
+        text: "Entspannung und Wellness-Erlebnisse, die Ihren Urlaub ideal ergänzen.",
+        href: "/de/thermalquellen-auf-chios/",
+        ctaLabel: "Mehr ansehen",
+      },
+    ],
   },
 
   quizBar: {
@@ -2380,22 +2436,50 @@ export const homePageIt: HomePageData = {
     title: "Cosa vedere a Chios?",
     subtitle:
       "Abbiamo raccolto informazioni utili per organizzare più facilmente il tuo soggiorno e le tue escursioni.",
-    cards: homePageEn.chiosGuide.cards.map((card) => {
-      const hrefById: Record<string, string> = {
-        beaches: "/it/spiagge-chios/",
-        villages: "/it/villaggi-chios/",
-        kampos: "/it/chios-lisola-in-grecia/",
-        museums: "/it/musei-chios/",
-        orchids: "/it/chios-lisola-in-grecia/",
-        "thermal-springs": "/it/chios-lisola-in-grecia/",
-      };
-
-      return {
-        ...card,
-        href: hrefById[card.id] ?? card.href,
+    cards: [
+      {
+        ...homePageEn.chiosGuide.cards[0],
+        title: "Spiagge di Chios",
+        text: "Scopri suggerimenti utili e organizza più facilmente le tue giornate al mare.",
+        href: "/it/spiagge-chios/",
         ctaLabel: "Vedi di più",
-      };
-    }),
+      },
+      {
+        ...homePageEn.chiosGuide.cards[1],
+        title: "Villaggi di Chios",
+        text: "Esplora borghi tradizionali e luoghi che vale davvero la pena visitare.",
+        href: "/it/villaggi-chios/",
+        ctaLabel: "Vedi di più",
+      },
+      {
+        ...homePageEn.chiosGuide.cards[2],
+        title: "Kampos di Chios",
+        text: "Scopri la zona storica che rende speciale il soggiorno a Kampos.",
+        href: "/it/chios-lisola-in-grecia/",
+        ctaLabel: "Vedi di più",
+      },
+      {
+        ...homePageEn.chiosGuide.cards[3],
+        title: "Musei di Chios",
+        text: "Tappe culturali per chi ama la storia e l’identità locale.",
+        href: "/it/musei-chios/",
+        ctaLabel: "Vedi di più",
+      },
+      {
+        ...homePageEn.chiosGuide.cards[4],
+        title: "Orchidee di Chios",
+        text: "Un’attività speciale per gli amanti della natura che vogliono scoprire un lato diverso dell’isola.",
+        href: "/it/orchidee-di-chios/",
+        ctaLabel: "Vedi di più",
+      },
+      {
+        ...homePageEn.chiosGuide.cards[5],
+        title: "Terme di Chios",
+        text: "Esperienze di relax e benessere che completano perfettamente la vacanza.",
+        href: "/it/terme-di-chios/",
+        ctaLabel: "Vedi di più",
+      },
+    ],
   },
 
   quizBar: {
@@ -2791,22 +2875,50 @@ export const homePageEs: HomePageData = {
     title: "¿Qué ver en Chios?",
     subtitle:
       "Hemos reunido información útil para organizar mejor tu estancia y tus excursiones.",
-    cards: homePageEn.chiosGuide.cards.map((card) => {
-      const hrefById: Record<string, string> = {
-        beaches: "/es/playas-chios/",
-        villages: "/es/pueblos-chios/",
-        kampos: "/es/chios-en-grecia/",
-        museums: "/es/museos-chios/",
-        orchids: "/es/chios-en-grecia/",
-        "thermal-springs": "/es/chios-en-grecia/",
-      };
-
-      return {
-        ...card,
-        href: hrefById[card.id] ?? card.href,
+    cards: [
+      {
+        ...homePageEn.chiosGuide.cards[0],
+        title: "Playas de Chios",
+        text: "Consulta sugerencias y organiza más fácilmente tus escapadas junto al mar.",
+        href: "/es/playas-chios/",
         ctaLabel: "Ver más",
-      };
-    }),
+      },
+      {
+        ...homePageEn.chiosGuide.cards[1],
+        title: "Pueblos de Chios",
+        text: "Descubre pueblos tradicionales y lugares que merece la pena visitar.",
+        href: "/es/pueblos-chios/",
+        ctaLabel: "Ver más",
+      },
+      {
+        ...homePageEn.chiosGuide.cards[2],
+        title: "Kampos de Chios",
+        text: "Conoce la zona histórica que hace especial alojarse en Kampos.",
+        href: "/es/chios-en-grecia/",
+        ctaLabel: "Ver más",
+      },
+      {
+        ...homePageEn.chiosGuide.cards[3],
+        title: "Museos de Chios",
+        text: "Paradas culturales para viajeros que aman la historia y la identidad local.",
+        href: "/es/museos-chios/",
+        ctaLabel: "Ver más",
+      },
+      {
+        ...homePageEn.chiosGuide.cards[4],
+        title: "Orquídeas de Chios",
+        text: "Una actividad especial para amantes de la naturaleza que quieren descubrir otra cara de la isla.",
+        href: "/es/orquideas-de-quios/",
+        ctaLabel: "Ver más",
+      },
+      {
+        ...homePageEn.chiosGuide.cards[5],
+        title: "Baños termales",
+        text: "Experiencias de relax y bienestar que completan perfectamente tus vacaciones.",
+        href: "/es/banos-termales-de-quios/",
+        ctaLabel: "Ver más",
+      },
+    ],
   },
 
   quizBar: {
@@ -3202,22 +3314,50 @@ export const homePageTr: HomePageData = {
     title: "Sakız Adası’nda ne görülür?",
     subtitle:
       "Konaklamanızı ve gezilerinizi daha kolay planlamanız için faydalı bilgileri bir araya getirdik.",
-    cards: homePageEn.chiosGuide.cards.map((card) => {
-      const hrefById: Record<string, string> = {
-        beaches: "/tr/sakiz-adasi-plajlari/",
-        villages: "/tr/sakiz-adasi-koyleri/",
-        kampos: "/tr/sakiz-adasi/",
-        museums: "/tr/sakiz-adasi-muzeleri/",
-        orchids: "/tr/sakiz-adasi/",
-        "thermal-springs": "/tr/sakiz-adasi/",
-      };
-
-      return {
-        ...card,
-        href: hrefById[card.id] ?? card.href,
+    cards: [
+      {
+        ...homePageEn.chiosGuide.cards[0],
+        title: "Sakız Adası plajları",
+        text: "Deniz kaçamaklarınızı daha kolay planlamak için önerilerimize göz atın.",
+        href: "/tr/sakiz-adasi-plajlari/",
         ctaLabel: "Daha fazla gör",
-      };
-    }),
+      },
+      {
+        ...homePageEn.chiosGuide.cards[1],
+        title: "Sakız Adası köyleri",
+        text: "Geleneksel köyleri ve görülmeye değer yerleri keşfedin.",
+        href: "/tr/sakiz-adasi-koyleri/",
+        ctaLabel: "Daha fazla gör",
+      },
+      {
+        ...homePageEn.chiosGuide.cards[2],
+        title: "Sakız Adası Kampos",
+        text: "Kampos’ta konaklamayı özel kılan tarihi bölge hakkında daha fazla bilgi alın.",
+        href: "/tr/sakiz-adasi/",
+        ctaLabel: "Daha fazla gör",
+      },
+      {
+        ...homePageEn.chiosGuide.cards[3],
+        title: "Sakız Adası müzeleri",
+        text: "Tarih ve yerel kimliği seven gezginler için kültürel duraklar.",
+        href: "/tr/sakiz-adasi-muzeleri/",
+        ctaLabel: "Daha fazla gör",
+      },
+      {
+        ...homePageEn.chiosGuide.cards[4],
+        title: "Sakız Adası orkideleri",
+        text: "Adanın farklı bir yönünü görmek isteyen doğa severler için özel bir deneyim.",
+        href: "/tr/sakiz-adasi-orkideleri/",
+        ctaLabel: "Daha fazla gör",
+      },
+      {
+        ...homePageEn.chiosGuide.cards[5],
+        title: "Termal kaynaklar",
+        text: "Tatilinizi tamamlayan rahatlama ve wellness deneyimleri.",
+        href: "/tr/sakiz-adasi-termal-kaplicalari/",
+        ctaLabel: "Daha fazla gör",
+      },
+    ],
   },
 
   quizBar: {
