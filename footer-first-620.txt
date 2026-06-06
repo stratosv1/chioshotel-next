@@ -1,6 +1,4 @@
-"use client";
-
-import { chiosActivityDetailPaths } from "@/content/chios-activities";
+﻿"use client";
 
 import { usePathname } from "next/navigation";
 
@@ -146,76 +144,6 @@ const masticMuseumPaths: Record<LanguageCode, string> = {
   tr: "/tr/sakiz-adasi-muzeleri/sakiz-mastik-muzesi/",
 };
 
-const chiosSecretsTitles: Record<LanguageCode, string> = {
-  en: "Chios Secrets",
-  el: "Μυστικά της Χίου",
-  fr: "Secrets de Chios",
-  de: "Geheimtipps auf Chios",
-  it: "Segreti di Chios",
-  es: "Secretos de Chios",
-  tr: "Sakız Adası Sırları",
-};
-
-const chiosSecretsLabels: Record<
-  LanguageCode,
-  {
-    orchids: string;
-    hiking: string;
-    thermalBaths: string;
-    mostra: string;
-    rocketWar: string;
-  }
-> = {
-  en: {
-    orchids: "Orchids of Chios",
-    hiking: "Hiking in Chios",
-    thermalBaths: "Thermal Baths",
-    mostra: "Mostra Festival",
-    rocketWar: "Rocket War",
-  },
-  el: {
-    orchids: "Ορχιδέες της Χίου",
-    hiking: "Πεζοπορία στη Χίο",
-    thermalBaths: "Ιαματικά λουτρά",
-    mostra: "Μόστρα Θυμιανών",
-    rocketWar: "Ρουκετοπόλεμος",
-  },
-  fr: {
-    orchids: "Orchidées de Chios",
-    hiking: "Randonnée à Chios",
-    thermalBaths: "Sources thermales",
-    mostra: "Festival Mostra",
-    rocketWar: "Guerre des fusées",
-  },
-  de: {
-    orchids: "Orchideen auf Chios",
-    hiking: "Wandern auf Chios",
-    thermalBaths: "Thermalquellen",
-    mostra: "Mostra Festival",
-    rocketWar: "Raketenkrieg",
-  },
-  it: {
-    orchids: "Orchidee di Chios",
-    hiking: "Trekking a Chios",
-    thermalBaths: "Terme di Chios",
-    mostra: "Festival Mostra",
-    rocketWar: "Guerra dei razzi",
-  },
-  es: {
-    orchids: "Orquídeas de Chios",
-    hiking: "Senderismo en Chios",
-    thermalBaths: "Baños termales",
-    mostra: "Festival Mostra",
-    rocketWar: "Guerra de cohetes",
-  },
-  tr: {
-    orchids: "Sakız Adası orkideleri",
-    hiking: "Sakız Adası yürüyüş rotaları",
-    thermalBaths: "Termal kaplıcalar",
-    mostra: "Mostra Festivali",
-    rocketWar: "Roket Savaşı",
-  },
-};
 const footerCopy: Record<
   LanguageCode,
   {
@@ -278,82 +206,82 @@ const footerCopy: Record<
   },
   el: {
     description:
-      "Ήσυχα δωμάτια και διαμερίσματα στον ιστορικό Κάμπο της Χίου, με εύκολη πρόσβαση στην πόλη, το αεροδρόμιο, τις παραλίες, τα χωριά και τα αξιοθέατα.",
-    bookStay: "Κάντε κράτηση",
-    footerNavigation: "Πλοήγηση υποσέλιδου",
-    allRightsReserved: "Με επιφύλαξη παντός δικαιώματος.",
-    sitemap: "Χάρτης ιστότοπου",
+      "Ξ‰ΟƒΟ…Ο‡Ξ± Ξ΄Ο‰ΞΌΞ¬Ο„ΞΉΞ± ΞΊΞ±ΞΉ Ξ΄ΞΉΞ±ΞΌΞµΟΞ―ΟƒΞΌΞ±Ο„Ξ± ΟƒΟ„ΞΏΞ½ ΞΉΟƒΟ„ΞΏΟΞΉΞΊΟ ΞΞ¬ΞΌΟ€ΞΏ Ο„Ξ·Ο‚ Ξ§Ξ―ΞΏΟ…, ΞΌΞµ ΞµΟΞΊΞΏΞ»Ξ· Ο€ΟΟΟƒΞ²Ξ±ΟƒΞ· ΟƒΟ„Ξ·Ξ½ Ο€ΟΞ»Ξ·, Ο„ΞΏ Ξ±ΞµΟΞΏΞ΄ΟΟΞΌΞΉΞΏ, Ο„ΞΉΟ‚ Ο€Ξ±ΟΞ±Ξ»Ξ―ΞµΟ‚, Ο„Ξ± Ο‡Ο‰ΟΞΉΞ¬ ΞΊΞ±ΞΉ Ο„Ξ± Ξ±ΞΎΞΉΞΏΞΈΞ­Ξ±Ο„Ξ±.",
+    bookStay: "ΞΞ¬Ξ½Ο„Ξµ ΞΊΟΞ¬Ο„Ξ·ΟƒΞ·",
+    footerNavigation: "Ξ Ξ»ΞΏΞ®Ξ³Ξ·ΟƒΞ· Ο…Ο€ΞΏΟƒΞ­Ξ»ΞΉΞ΄ΞΏΟ…",
+    allRightsReserved: "ΞΞµ ΞµΟ€ΞΉΟ†ΟΞ»Ξ±ΞΎΞ· Ο€Ξ±Ξ½Ο„ΟΟ‚ Ξ΄ΞΉΞΊΞ±ΞΉΟΞΌΞ±Ο„ΞΏΟ‚.",
+    sitemap: "Ξ§Ξ¬ΟΟ„Ξ·Ο‚ ΞΉΟƒΟ„ΟΟ„ΞΏΟ€ΞΏΟ…",
     robots: "Robots",
     groups: {
-      stay: "Διαμονή",
-      exploreChios: "Ανακαλύψτε τη Χίο",
-      popularGuides: "Δημοφιλείς οδηγοί",
+      stay: "Ξ”ΞΉΞ±ΞΌΞΏΞ½Ξ®",
+      exploreChios: "Ξ‘Ξ½Ξ±ΞΊΞ±Ξ»ΟΟΟ„Ξµ Ο„Ξ· Ξ§Ξ―ΞΏ",
+      popularGuides: "Ξ”Ξ·ΞΌΞΏΟ†ΞΉΞ»ΞµΞ―Ο‚ ΞΏΞ΄Ξ·Ξ³ΞΏΞ―",
     },
     links: {
-      rooms: "Δωμάτια",
-      ratesAvailability: "Τιμές & Διαθεσιμότητα",
-      contact: "Επικοινωνία",
-      chiosIslandGuide: "Οδηγός Χίου",
-      beaches: "Παραλίες της Χίου",
-      villages: "Χωριά της Χίου",
-      museums: "Μουσεία της Χίου",
-      holidayQuiz: "Quiz διακοπών στη Χίο",
-      agiaDynami: "Παραλία Αγία Δύναμη",
-      mavraVolia: "Παραλία Μαύρα Βόλια",
-      pyrgi: "Χωριό Πυργί",
-      mesta: "Χωριό Μεστά",
-      masticMuseum: "Μουσείο Μαστίχας Χίου",
+      rooms: "Ξ”Ο‰ΞΌΞ¬Ο„ΞΉΞ±",
+      ratesAvailability: "Ξ¤ΞΉΞΌΞ­Ο‚ & Ξ”ΞΉΞ±ΞΈΞµΟƒΞΉΞΌΟΟ„Ξ·Ο„Ξ±",
+      contact: "Ξ•Ο€ΞΉΞΊΞΏΞΉΞ½Ο‰Ξ½Ξ―Ξ±",
+      chiosIslandGuide: "ΞΞ΄Ξ·Ξ³ΟΟ‚ Ξ§Ξ―ΞΏΟ…",
+      beaches: "Ξ Ξ±ΟΞ±Ξ»Ξ―ΞµΟ‚ Ο„Ξ·Ο‚ Ξ§Ξ―ΞΏΟ…",
+      villages: "Ξ§Ο‰ΟΞΉΞ¬ Ο„Ξ·Ο‚ Ξ§Ξ―ΞΏΟ…",
+      museums: "ΞΞΏΟ…ΟƒΞµΞ―Ξ± Ο„Ξ·Ο‚ Ξ§Ξ―ΞΏΟ…",
+      holidayQuiz: "Quiz Ξ΄ΞΉΞ±ΞΊΞΏΟ€ΟΞ½ ΟƒΟ„Ξ· Ξ§Ξ―ΞΏ",
+      agiaDynami: "Ξ Ξ±ΟΞ±Ξ»Ξ―Ξ± Ξ‘Ξ³Ξ―Ξ± Ξ”ΟΞ½Ξ±ΞΌΞ·",
+      mavraVolia: "Ξ Ξ±ΟΞ±Ξ»Ξ―Ξ± ΞΞ±ΟΟΞ± Ξ’ΟΞ»ΞΉΞ±",
+      pyrgi: "Ξ§Ο‰ΟΞΉΟ Ξ Ο…ΟΞ³Ξ―",
+      mesta: "Ξ§Ο‰ΟΞΉΟ ΞΞµΟƒΟ„Ξ¬",
+      masticMuseum: "ΞΞΏΟ…ΟƒΞµΞ―ΞΏ ΞΞ±ΟƒΟ„Ξ―Ο‡Ξ±Ο‚ Ξ§Ξ―ΞΏΟ…",
     },
   },
   fr: {
     description:
-      "Chambres et appartements calmes dans le quartier historique de Kampos à Chios, avec un accès facile à la ville, à l’aéroport, aux plages, aux villages et aux sites culturels.",
-    bookStay: "Réserver votre séjour",
+      "Chambres et appartements calmes dans le quartier historique de Kampos Γ  Chios, avec un accΓ¨s facile Γ  la ville, Γ  lβ€™aΓ©roport, aux plages, aux villages et aux sites culturels.",
+    bookStay: "RΓ©server votre sΓ©jour",
     footerNavigation: "Navigation du pied de page",
-    allRightsReserved: "Tous droits réservés.",
+    allRightsReserved: "Tous droits rΓ©servΓ©s.",
     sitemap: "Plan du site",
     robots: "Robots",
     groups: {
-      stay: "Séjour",
+      stay: "SΓ©jour",
       exploreChios: "Explorer Chios",
       popularGuides: "Guides populaires",
     },
     links: {
       rooms: "Chambres",
-      ratesAvailability: "Tarifs & Disponibilité",
+      ratesAvailability: "Tarifs & DisponibilitΓ©",
       contact: "Contact",
       chiosIslandGuide: "Guide de Chios",
       beaches: "Plages de Chios",
       villages: "Villages de Chios",
-      museums: "Musées de Chios",
-      holidayQuiz: "Quiz vacances à Chios",
-      agiaDynami: "Plage d’Agia Dynami",
+      museums: "MusΓ©es de Chios",
+      holidayQuiz: "Quiz vacances Γ  Chios",
+      agiaDynami: "Plage dβ€™Agia Dynami",
       mavraVolia: "Plage de Mavra Volia",
       pyrgi: "Village de Pyrgi",
       mesta: "Village de Mesta",
-      masticMuseum: "Musée du Mastic de Chios",
+      masticMuseum: "MusΓ©e du Mastic de Chios",
     },
   },
   de: {
     description:
-      "Ruhige Zimmer und Apartments im historischen Kampos-Gebiet von Chios, mit einfachem Zugang zur Stadt, zum Flughafen, zu Stränden, Dörfern und Sehenswürdigkeiten.",
+      "Ruhige Zimmer und Apartments im historischen Kampos-Gebiet von Chios, mit einfachem Zugang zur Stadt, zum Flughafen, zu StrΓ¤nden, DΓ¶rfern und SehenswΓΌrdigkeiten.",
     bookStay: "Aufenthalt buchen",
-    footerNavigation: "Fußzeilen-Navigation",
+    footerNavigation: "FuΓzeilen-Navigation",
     allRightsReserved: "Alle Rechte vorbehalten.",
     sitemap: "Sitemap",
     robots: "Robots",
     groups: {
       stay: "Aufenthalt",
       exploreChios: "Chios entdecken",
-      popularGuides: "Beliebte Reiseführer",
+      popularGuides: "Beliebte ReisefΓΌhrer",
     },
     links: {
       rooms: "Zimmer",
-      ratesAvailability: "Preise & Verfügbarkeit",
+      ratesAvailability: "Preise & VerfΓΌgbarkeit",
       contact: "Kontakt",
-      chiosIslandGuide: "Chios Reiseführer",
-      beaches: "Strände auf Chios",
-      villages: "Dörfer auf Chios",
+      chiosIslandGuide: "Chios ReisefΓΌhrer",
+      beaches: "StrΓ¤nde auf Chios",
+      villages: "DΓ¶rfer auf Chios",
       museums: "Museen auf Chios",
       holidayQuiz: "Chios Urlaubsquiz",
       agiaDynami: "Agia Dynami Strand",
@@ -365,7 +293,7 @@ const footerCopy: Record<
   },
   it: {
     description:
-      "Camere e appartamenti tranquilli nella storica zona di Kampos a Chios, con facile accesso alla città, all’aeroporto, alle spiagge, ai villaggi e ai luoghi culturali.",
+      "Camere e appartamenti tranquilli nella storica zona di Kampos a Chios, con facile accesso alla cittΓ , allβ€™aeroporto, alle spiagge, ai villaggi e ai luoghi culturali.",
     bookStay: "Prenota il soggiorno",
     footerNavigation: "Navigazione footer",
     allRightsReserved: "Tutti i diritti riservati.",
@@ -378,7 +306,7 @@ const footerCopy: Record<
     },
     links: {
       rooms: "Camere",
-      ratesAvailability: "Prezzi & Disponibilità",
+      ratesAvailability: "Prezzi & DisponibilitΓ ",
       contact: "Contatti",
       chiosIslandGuide: "Guida di Chios",
       beaches: "Spiagge di Chios",
@@ -394,22 +322,22 @@ const footerCopy: Record<
   },
   es: {
     description:
-      "Habitaciones y apartamentos tranquilos en la histórica zona de Kampos en Chios, con fácil acceso a la ciudad, al aeropuerto, a playas, pueblos y lugares culturales.",
+      "Habitaciones y apartamentos tranquilos en la histΓ³rica zona de Kampos en Chios, con fΓ΅cil acceso a la ciudad, al aeropuerto, a playas, pueblos y lugares culturales.",
     bookStay: "Reserva tu estancia",
-    footerNavigation: "Navegación del pie de página",
+    footerNavigation: "NavegaciΓ³n del pie de pΓ΅gina",
     allRightsReserved: "Todos los derechos reservados.",
     sitemap: "Mapa del sitio",
     robots: "Robots",
     groups: {
       stay: "Estancia",
       exploreChios: "Explorar Chios",
-      popularGuides: "Guías populares",
+      popularGuides: "GuΓ­as populares",
     },
     links: {
       rooms: "Habitaciones",
       ratesAvailability: "Precios & Disponibilidad",
       contact: "Contacto",
-      chiosIslandGuide: "Guía de Chios",
+      chiosIslandGuide: "GuΓ­a de Chios",
       beaches: "Playas de Chios",
       villages: "Pueblos de Chios",
       museums: "Museos de Chios",
@@ -423,31 +351,31 @@ const footerCopy: Record<
   },
   tr: {
     description:
-      "Sakız Adası’nın tarihi Kampos bölgesinde, şehir merkezine, havaalanına, plajlara, köylere ve kültürel noktalara kolay erişimli sakin odalar ve daireler.",
-    bookStay: "Konaklamanızı ayırtın",
+      "SakΔ±z AdasΔ±β€™nΔ±n tarihi Kampos bΓ¶lgesinde, Εehir merkezine, havaalanΔ±na, plajlara, kΓ¶ylere ve kΓΌltΓΌrel noktalara kolay eriΕimli sakin odalar ve daireler.",
+    bookStay: "KonaklamanΔ±zΔ± ayΔ±rtΔ±n",
     footerNavigation: "Alt bilgi navigasyonu",
-    allRightsReserved: "Tüm hakları saklıdır.",
-    sitemap: "Site haritası",
+    allRightsReserved: "TΓΌm haklarΔ± saklΔ±dΔ±r.",
+    sitemap: "Site haritasΔ±",
     robots: "Robots",
     groups: {
       stay: "Konaklama",
-      exploreChios: "Sakız Adası’nı keşfedin",
-      popularGuides: "Popüler rehberler",
+      exploreChios: "SakΔ±z AdasΔ±β€™nΔ± keΕfedin",
+      popularGuides: "PopΓΌler rehberler",
     },
     links: {
       rooms: "Odalar",
-      ratesAvailability: "Fiyatlar & Müsaitlik",
-      contact: "İletişim",
-      chiosIslandGuide: "Sakız Adası Rehberi",
-      beaches: "Sakız Adası Plajları",
-      villages: "Sakız Adası Köyleri",
-      museums: "Sakız Adası Müzeleri",
-      holidayQuiz: "Sakız Adası Tatil Testi",
-      agiaDynami: "Agia Dynami Plajı",
-      mavraVolia: "Mavra Volia Plajı",
-      pyrgi: "Pyrgi Köyü",
-      mesta: "Mesta Köyü",
-      masticMuseum: "Sakız Adası Mastik Müzesi",
+      ratesAvailability: "Fiyatlar & MΓΌsaitlik",
+      contact: "Δ°letiΕim",
+      chiosIslandGuide: "SakΔ±z AdasΔ± Rehberi",
+      beaches: "SakΔ±z AdasΔ± PlajlarΔ±",
+      villages: "SakΔ±z AdasΔ± KΓ¶yleri",
+      museums: "SakΔ±z AdasΔ± MΓΌzeleri",
+      holidayQuiz: "SakΔ±z AdasΔ± Tatil Testi",
+      agiaDynami: "Agia Dynami PlajΔ±",
+      mavraVolia: "Mavra Volia PlajΔ±",
+      pyrgi: "Pyrgi KΓ¶yΓΌ",
+      mesta: "Mesta KΓ¶yΓΌ",
+      masticMuseum: "SakΔ±z AdasΔ± Mastik MΓΌzesi",
     },
   },
 };
@@ -545,31 +473,6 @@ function getFooterGroups(language: LanguageCode) {
       ],
     },
     {
-      title: chiosSecretsTitles[language],
-      links: [
-        {
-          label: chiosSecretsLabels[language].orchids,
-          href: chiosActivityDetailPaths.orchids[language],
-        },
-        {
-          label: chiosSecretsLabels[language].hiking,
-          href: chiosActivityDetailPaths.hiking[language],
-        },
-        {
-          label: chiosSecretsLabels[language].thermalBaths,
-          href: chiosActivityDetailPaths.thermalBaths[language],
-        },
-        {
-          label: chiosSecretsLabels[language].mostra,
-          href: chiosActivityDetailPaths.mostra[language],
-        },
-        {
-          label: chiosSecretsLabels[language].rocketWar,
-          href: chiosActivityDetailPaths.rocketWar[language],
-        },
-      ],
-    },
-    {
       title: copy.groups.popularGuides,
       links: [
         {
@@ -632,23 +535,6 @@ export function VoulamandisFooter() {
             >
               WhatsApp
             </a>
-            <a
-              className="vh-footer__secondary"
-              href="https://www.instagram.com/chioshotels/"
-              target="_blank"
-              rel="noopener"
-            >
-              Instagram
-            </a>
-
-            <a
-              className="vh-footer__secondary"
-              href="https://www.facebook.com/people/Voulamandis-House/100063584320703/"
-              target="_blank"
-              rel="noopener"
-            >
-              Facebook
-            </a>
           </div>
         </section>
 
@@ -671,7 +557,7 @@ export function VoulamandisFooter() {
 
       <div className="vh-footer__bottom">
         <p>
-          © {year} Voulamandis House. {copy.allRightsReserved}
+          Β© {year} Voulamandis House. {copy.allRightsReserved}
         </p>
 
         <div>
