@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -61,6 +61,7 @@ export function HomePage({ data }: HomePageProps) {
               width={1200}
               height={675}
               priority
+              fetchPriority="high"
               sizes="100vw"
             />
           </div>
