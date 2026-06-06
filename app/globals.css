@@ -17154,3 +17154,166 @@ button.rb-day {
     line-height: 1.4 !important;
   }
 }
+
+/* =========================================================
+   FINAL PERFORMANCE OVERRIDE — Composited animations only
+   Fix PageSpeed non-composited animation warnings
+   ========================================================= */
+
+/* Stop expensive box-shadow pulse animations on small live dots */
+.hero-quiz-live::before,
+.room-live-badge::before,
+.discount-badge::before {
+  box-shadow: none !important;
+  animation: vhDotCompositedPulse 1.8s ease-in-out infinite !important;
+  transform-origin: center !important;
+}
+
+/* Use transform/opacity only */
+@keyframes vhDotCompositedPulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.55;
+    transform: scale(1.32);
+  }
+}
+
+/* Disable old left-based shine layers that PageSpeed flags */
+.hero-quiz-card::after,
+.premium-btn-quiz::after,
+.discount-box::after,
+.b-card::after {
+  animation: none !important;
+}
+
+/* Hero quiz: premium shine using transform, not left */
+.hero-quiz-card {
+  position: relative !important;
+  overflow: hidden !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+.hero-quiz-card::before {
+  content: "" !important;
+  position: absolute !important;
+  z-index: 1 !important;
+  top: -45% !important;
+  bottom: -45% !important;
+  left: 0 !important;
+  width: 42% !important;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.10) 25%,
+    rgba(255, 245, 215, 0.42) 50%,
+    rgba(255, 255, 255, 0.10) 75%,
+    transparent 100%
+  ) !important;
+  transform: translateX(-260%) skewX(-18deg) !important;
+  animation: vhHeroQuizTransformShine 5.8s ease-in-out infinite !important;
+  pointer-events: none !important;
+  opacity: 0;
+}
+
+.hero-quiz-icon,
+.hero-quiz-copy,
+.hero-quiz-link {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+@keyframes vhHeroQuizTransformShine {
+  0% {
+    opacity: 0;
+    transform: translateX(-260%) skewX(-18deg);
+  }
+
+  24% {
+    opacity: 0;
+    transform: translateX(-260%) skewX(-18deg);
+  }
+
+  38% {
+    opacity: 0.85;
+  }
+
+  62% {
+    opacity: 0;
+    transform: translateX(420%) skewX(-18deg);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(420%) skewX(-18deg);
+  }
+}
+
+/* Quiz bar button: transform-based shine only */
+.premium-btn-quiz {
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.premium-btn-quiz::before {
+  content: "" !important;
+  position: absolute !important;
+  z-index: 1 !important;
+  top: -45% !important;
+  bottom: -45% !important;
+  left: 0 !important;
+  width: 42% !important;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.10) 25%,
+    rgba(255, 245, 215, 0.36) 50%,
+    rgba(255, 255, 255, 0.10) 75%,
+    transparent 100%
+  ) !important;
+  transform: translateX(-260%) skewX(-18deg) !important;
+  animation: vhQuizButtonTransformShine 6.2s ease-in-out infinite !important;
+  pointer-events: none !important;
+  opacity: 0;
+}
+
+@keyframes vhQuizButtonTransformShine {
+  0% {
+    opacity: 0;
+    transform: translateX(-260%) skewX(-18deg);
+  }
+
+  28% {
+    opacity: 0;
+    transform: translateX(-260%) skewX(-18deg);
+  }
+
+  42% {
+    opacity: 0.72;
+  }
+
+  64% {
+    opacity: 0;
+    transform: translateX(420%) skewX(-18deg);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(420%) skewX(-18deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-quiz-card::before,
+  .premium-btn-quiz::before,
+  .hero-quiz-live::before,
+  .room-live-badge::before,
+  .discount-badge::before {
+    animation: none !important;
+  }
+}

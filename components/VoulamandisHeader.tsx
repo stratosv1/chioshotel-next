@@ -1241,10 +1241,9 @@ export function VoulamandisHeader() {
           object-fit: contain;
           display: block;
           margin: auto;
-          filter: drop-shadow(0 0.32rem 0.62rem rgba(111, 78, 55, 0.22));
           transform-origin: center;
           animation: vhHeartPremiumPulse 2.35s ease-in-out infinite;
-          will-change: transform, filter;
+          will-change: transform;
         }
 
         .vh-header__logo-mark {
@@ -1263,33 +1262,27 @@ export function VoulamandisHeader() {
         @keyframes vhHeartPremiumPulse {
           0% {
             transform: scale(1);
-            filter: drop-shadow(0 0.28rem 0.55rem rgba(111, 78, 55, 0.18));
-          }
+            }
 
           14% {
             transform: scale(1.085);
-            filter: drop-shadow(0 0.42rem 0.85rem rgba(168, 107, 72, 0.26));
-          }
+            }
 
           28% {
             transform: scale(0.985);
-            filter: drop-shadow(0 0.28rem 0.55rem rgba(111, 78, 55, 0.18));
-          }
+            }
 
           42% {
             transform: scale(1.055);
-            filter: drop-shadow(0 0.38rem 0.72rem rgba(168, 107, 72, 0.22));
-          }
+            }
 
           62% {
             transform: scale(1);
-            filter: drop-shadow(0 0.28rem 0.55rem rgba(111, 78, 55, 0.18));
-          }
+            }
 
           100% {
             transform: scale(1);
-            filter: drop-shadow(0 0.28rem 0.55rem rgba(111, 78, 55, 0.18));
-          }
+            }
         }
 
         @media (prefers-reduced-motion: reduce) {
