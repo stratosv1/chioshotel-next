@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { usePathname } from "next/navigation";
 import { useMemo, useState } from "react";
@@ -1065,7 +1065,7 @@ function getMainLinks(language: LanguageCode) {
     },
     {
       label: copy.rates,
-      href: ratesPaths[language],
+      href: findYourRoomPaths[language],
     },
     {
       label: copy.deals,
@@ -1367,7 +1367,7 @@ export function VoulamandisHeader() {
         <div className="vh-header__actions">
           <LanguageSwitcher />
 
-          <a className="vh-header__book" href={findYourRoomPaths[currentLanguage]}>
+          <a className="vh-header__book" href={ratesPaths[currentLanguage]}>
             {copy.bookNow}
           </a>
 
@@ -1412,7 +1412,7 @@ export function VoulamandisHeader() {
 
           <a
             className="vh-mobile-menu__primary"
-            href={findYourRoomPaths[currentLanguage]}
+            href={ratesPaths[currentLanguage]}
             onClick={closeMenu}
           >
             {copy.bookStay}
@@ -1426,7 +1426,7 @@ export function VoulamandisHeader() {
                 {copy.rooms}
               </a>
 
-              <a href={ratesPaths[currentLanguage]} onClick={closeMenu}>
+              <a href={findYourRoomPaths[currentLanguage]} onClick={closeMenu}>
                 {copy.ratesAvailability}
               </a>
 
