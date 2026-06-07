@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { headers } from "next/headers";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { VoulamandisFooter } from "@/components/VoulamandisFooter";
@@ -41,6 +42,8 @@ function getHtmlLanguage(pathname: string): string {
   return "en";
 }
 
+const GA_MEASUREMENT_ID = "G-844GGQ1TC7";
+
 export default async function RootLayout({
   children,
 }: {
@@ -57,6 +60,24 @@ export default async function RootLayout({
         {children}
         <VoulamandisFooter />
         <SpeedInsights />
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script
+          id="google-analytics"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag("js", new Date());
+              gtag("config", "${GA_MEASUREMENT_ID}", {
+                page_path: window.location.pathname,
+              });
+            `,
+          }}
+        />
       </body>
     </html>
   );
