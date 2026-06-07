@@ -2,9 +2,17 @@
 import { NextResponse } from "next/server";
 
 export function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  if (pathname === "/it/esplorare-chio" || pathname === "/it/esplorare-chio/") {
+    const url = request.nextUrl.clone();
+    url.pathname = "/it/esplora-chios/";
+    return NextResponse.redirect(url, 308);
+  }
+
   const requestHeaders = new Headers(request.headers);
 
-  requestHeaders.set("x-current-pathname", request.nextUrl.pathname);
+  requestHeaders.set("x-current-pathname", pathname);
 
   return NextResponse.next({
     request: {
