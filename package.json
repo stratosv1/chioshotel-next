@@ -7,6 +7,7 @@
   "dependencies": {
     "@tailwindcss/postcss": "^4.3.0",
     "next": "latest",
+    "nodemailer": "^8.0.10",
     "postcss": "^8.5.15",
     "react": "latest",
     "react-dom": "latest",
@@ -14,6 +15,7 @@
   },
   "devDependencies": {
     "@types/node": "latest",
+    "@types/nodemailer": "^8.0.0",
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "typescript": "latest"

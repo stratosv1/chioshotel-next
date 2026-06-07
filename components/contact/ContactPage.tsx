@@ -434,8 +434,6 @@ export function ContactPage({ data }: ContactPageProps) {
   });
 
   const [feedback, setFeedback] = useState("");
-
-  const mailtoHref = buildMailto(data, lead, ui);
   const whatsappHref = buildWhatsAppUrl(data, lead, ui);
 
   function updateLead<K extends keyof ContactLead>(key: K, value: ContactLead[K]) {
@@ -464,7 +462,7 @@ export function ContactPage({ data }: ContactPageProps) {
     return "";
   }
 
-  function handleEmailSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleEmailSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const error = validateLead();
@@ -474,8 +472,35 @@ export function ContactPage({ data }: ContactPageProps) {
       return;
     }
 
-    setFeedback(ui.feedback.email);
-    window.location.href = mailtoHref;
+    setFeedback("Sending your message...");
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...lead,
+          language: getContactLocale(data.seo.canonicalPath),
+          page: data.seo.canonicalPath,
+        }),
+      });
+
+      const result = (await response.json()) as {
+        ok?: boolean;
+        error?: string;
+      };
+
+      if (!response.ok || !result.ok) {
+        setFeedback(result.error || "Could not send message. Please try again.");
+        return;
+      }
+
+      setFeedback("Message sent successfully. We will reply as soon as possible.");
+    } catch {
+      setFeedback("Could not send message. Please try again or contact us by WhatsApp.");
+    }
   }
 
   function handleWhatsAppClick() {
