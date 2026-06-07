@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { FindYourRoomPageData } from "@/content/find-your-room";
@@ -80,7 +80,7 @@ type GalleryState = {
 };
 
 const CONFIG = {
-  endpoint: "https://chioshotel.gr/wp-json/booking-engine/v1/search-range",
+  endpoint: "/api/booking/search-range",
   directDiscountPercent: 15,
   climateFeePerNight: 2,
   breakfastPerPersonPerNight: 12,
