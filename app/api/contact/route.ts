@@ -1,4 +1,4 @@
-﻿import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
 export const runtime = "nodejs";
@@ -77,8 +77,19 @@ export async function POST(request: Request) {
     const contactTo = process.env.CONTACT_TO || smtpUser;
 
     if (!smtpHost || !smtpUser || !smtpPass || !smtpFrom || !contactTo) {
+      const missing = [
+        !smtpHost ? "SMTP_HOST" : "",
+        !smtpUser ? "SMTP_USER" : "",
+        !smtpPass ? "SMTP_PASS" : "",
+        !smtpFrom ? "SMTP_FROM" : "",
+        !contactTo ? "CONTACT_TO" : "",
+      ].filter(Boolean);
+
       return NextResponse.json(
-        { ok: false, error: "Email service is not configured." },
+        {
+          ok: false,
+          error: `Email service is not configured. Missing: ${missing.join(", ")}`,
+        },
         { status: 500 }
       );
     }
