@@ -162,16 +162,8 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("Contact form email error:", error);
 
-    const message =
-      error instanceof Error
-        ? error.message
-        : "Unknown email sending error";
-
     return NextResponse.json(
-      {
-        ok: false,
-        error: `Could not send message. SMTP error: ${message}`,
-      },
+      { ok: false, error: "Could not send message. Please try again later." },
       { status: 500 }
     );
   }

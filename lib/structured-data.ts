@@ -35,8 +35,8 @@ export const businessData = {
     ),
   ],
   socialProfiles: [
-    "https://www.facebook.com/voulamandishouse",
-    "https://www.instagram.com/voulamandishouse",
+    "https://www.facebook.com/people/Voulamandis-House/100063584320703/",
+    "https://www.instagram.com/chioshotels/",
   ],
 };
 
