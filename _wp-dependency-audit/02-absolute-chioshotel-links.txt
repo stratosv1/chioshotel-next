@@ -1,0 +1,508 @@
+﻿
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\app\page.tsx
+LineNumber : 8
+Line       :   metadataBase: new URL("https://chioshotel.gr"),
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\app\page.tsx
+LineNumber : 12
+Line       :     canonical: "https://chioshotel.gr/",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\app\page.tsx
+LineNumber : 14
+Line       :       en: "https://chioshotel.gr/",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\app\page.tsx
+LineNumber : 15
+Line       :       el: "https://chioshotel.gr/el/",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\app\page.tsx
+LineNumber : 16
+Line       :       fr: "https://chioshotel.gr/fr/",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\app\page.tsx
+LineNumber : 17
+Line       :       de: "https://chioshotel.gr/de/",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\app\page.tsx
+LineNumber : 18
+Line       :       it: "https://chioshotel.gr/it/",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\app\page.tsx
+LineNumber : 19
+Line       :       es: "https://chioshotel.gr/es/",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\app\page.tsx
+LineNumber : 20
+Line       :       tr: "https://chioshotel.gr/tr/",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\app\page.tsx
+LineNumber : 21
+Line       :       "x-default": "https://chioshotel.gr/",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\app\page.tsx
+LineNumber : 26
+Line       :     url: "https://chioshotel.gr/",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\app\page.tsx
+LineNumber : 32
+Line       :         url: homePageEn.seo.ogImage || "https://chioshotel.gr/images/voulamandis-house-og.jpg",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\app\page.tsx
+LineNumber : 43
+Line       :     images: [homePageEn.seo.ogImage || "https://chioshotel.gr/images/voulamandis-house-og.jpg"],
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\app\robots.ts
+LineNumber : 10
+Line       :     host: "https://chioshotel.gr",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\app\robots.ts
+LineNumber : 11
+Line       :     sitemap: "https://chioshotel.gr/sitemap.xml",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\components\booking\FindYourRoomEngine.tsx
+LineNumber : 83
+Line       :   endpoint: "https://chioshotel.gr/wp-json/booking-engine/v1/search-range",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\components\home\LastMinuteDeals.tsx
+LineNumber : 150
+Line       :   DEALS_ENDPOINT: "https://chioshotel.gr/wp-json/vh/v1/deals",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\components\chios-villages-schema.ts
+LineNumber : 4
+Line       :   const canonicalUrl = `https://chioshotel.gr${data.seo.canonicalPath}`;
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\components\chios-villages-schema.ts
+LineNumber : 17
+Line       :           "@id": "https://chioshotel.gr/#hotel",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\components\chios-villages-schema.ts
+LineNumber : 21
+Line       :           "@id": "https://chioshotel.gr/#organization",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\components\chios-villages-schema.ts
+LineNumber : 43
+Line       :           "@id": "https://chioshotel.gr/#website",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\components\chios-villages-schema.ts
+LineNumber : 56
+Line       :             "@id": "https://chioshotel.gr/#hotel",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\components\chios-villages-schema.ts
+LineNumber : 74
+Line       :             url: `https://chioshotel.gr${village.href}`,
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\components\chios-villages-schema.ts
+LineNumber : 102
+Line       :         "@id": "https://chioshotel.gr/#hotel",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\components\chios-villages-schema.ts
+LineNumber : 104
+Line       :         url: "https://chioshotel.gr/",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\components\chios-villages-schema.ts
+LineNumber : 125
+Line       :             item: "https://chioshotel.gr/",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\components\chios-villages-schema.ts
+LineNumber : 131
+Line       :             item: "https://chioshotel.gr/chios-island/",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\content\room-details.ts
+LineNumber : 125
+Line       :       href: "https://chioshotel.gr/chios-hotels-rates/",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\lib\seo.ts
+LineNumber : 5
+Line       : export const siteUrl = "https://chioshotel.gr";
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 3
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07803-1.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 15
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/double-triple-room.jpg",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 27
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07867-1.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 38
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-family-apartments.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 50
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2026/03/sakiz-agia-dynami.jpg",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 58
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2021/12/lagada_3.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 68
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2026/03/chios.hotels.voulamandis.house_.hero_.image_.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 84
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/mousio.mastic.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 95
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2021/12/Ophrys_mastichorum-680x1024.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 102
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2021/12/the-thermal-baths-center.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 109
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2026/04/Screenshot_2026-04-25-14-11-19-166_com.instagram.android-edit-1.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 116
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07776-2-e1675109942622.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 127
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07769-1.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 136
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/%CF%87%CE%B9%CE%BF%CF%82-%CE%B4%CF%89%CE%BC%CE%B1%CF%84%CE%B9%CE%B1-1-1.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 145
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-house-bathrooms-1.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 154
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07839.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 163
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07832.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 172
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/received_1385287484893642_1500478431120_1200x800_3240x2160-1.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 181
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07860-1.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 190
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07849-1.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 199
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07891-1.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 208
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/received_1748354861920234.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 218
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/received_1748358935253160.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 227
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/received_1748356725253381.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 236
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-house-rooms.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 246
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/chios-hotels-triple-rooms_1646x1080.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 255
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-house-double-room-bathroom_1620x1080.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 264
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/hotels-chios-voulamandis_1620x1080.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 273
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753964631359257.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 283
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753964581359262.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 292
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753968691358851.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 301
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/received_1753969201358800.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 310
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/view-double-room-chios-hotels.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 319
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/double-room-bathroom.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 328
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-stone-bathroom.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 337
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/chios-apartments-voulamandis.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 348
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/family-room.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 357
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/voulamandis-apartment-bathroom..webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 366
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07899.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 376
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07909.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 385
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07940.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 394
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/DSC07943.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 403
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2021/12/691-e1645969589226.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 411
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2021/12/2017-06-28-1024x768.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 419
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2026/03/lefkathia-2.jpg",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 427
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2021/12/nagos-e1645969566121.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 435
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2021/12/avlonia-1024x768.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 443
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2021/12/salagona-e1645969502155.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 451
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2026/02/agia-fotia.jpg",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 460
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2021/12/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 469
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2021/12/emporios3-e1702727598897.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 478
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2026/03/sakiz-adasi-chios-greece-komi-be-2.jpg",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 485
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2026/02/vroulidia-2-1.jpg",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 492
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2026/02/kato-fana-3.jpg",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 499
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2026/01/voulamandis-house-chios-courtyard-hero-desktop.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 506
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2026/02/ChatGPT-Image-Feb-13-2026-06_09_19-PM.png",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 513
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2023/03/maxresdefault.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 520
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/chios-church-1024x576-1.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 527
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2021/12/Μονοπάτια-Χίος_Chios-Hiking-e1645969099488.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 534
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2021/12/Hiking-Amani_1_Antonia-1.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 542
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2021/12/Chios-trail.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 549
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2021/12/the-thermal-baths-center-1.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 556
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/02/chios1_b-1.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 563
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2021/12/chios-orchids-e1645969063573.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 570
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2021/12/OrchidToursChios-1.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 577
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2021/12/chios-orchids-orchids-e1645969073154.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 584
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2021/12/Ophrys_mastichorum.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 591
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2021/12/Ophrys-8-1.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 598
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2021/12/O.-regis-fernandii-89-Chios.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 605
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2021/12/O.-blitopertha-579-Chios.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 612
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2021/12/vivlitothiki-korai-1.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 622
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2021/12/9ac4cf44d16c4af6d873c5bba4a6696b_L.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 629
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2026/02/anavatos-1.jpg",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 636
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2026/02/ag-markella.jpg",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 643
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2021/12/caption.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 651
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2021/12/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 659
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2021/12/IMG_1203-Medium-min-768x487.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 667
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2021/12/2-1-768x512.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 675
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2021/12/29651245457_aa8f702ef7_b-768x432.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 683
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2021/12/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 691
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2021/12/olympoi-1-768x432.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 699
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2021/12/Volissos-Chios.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 707
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2021/12/unnamed-e1702830815478.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 715
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2026/02/ChatGPT-Image-Feb-13-2026-08_32_22-PM.png",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 722
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/moysio-mastixas-1-Copy.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 729
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2026/02/paidiki_xara_daskalopetras_210222_2.jpg",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 736
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2026/02/farkaina01.jpg",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 743
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2026/02/paintball-chios.jpg",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 750
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2026/02/The-Pastards-Handmade-pasta-with-cheese-restaurant-chios-3.jpg",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 757
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2022/12/received_1748356718586715.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 764
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2026/02/d8765ffe-dbf2-496c-9190-f1fb82e6318a.webp",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 771
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2026/02/masourakia.jpg",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 778
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2026/02/passas.chios_.jpg",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 785
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2026/02/handmade.spaghetti.jpg",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 792
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2026/02/kechrimpari.jpg",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 799
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2026/02/kafenes.jpg",
+
+Path       : C:\Users\sideris\Documents\GitHub\chioshotel-next\image-url-map.json
+LineNumber : 806
+Line       :     "old": "https://chioshotel.gr/wp-content/uploads/2026/02/asteri.jpg",
+
+
+

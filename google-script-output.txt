@@ -1,0 +1,1 @@
+﻿{"success":true,"message":"Web app is alive. Use POST actions or valid GET actions."}
