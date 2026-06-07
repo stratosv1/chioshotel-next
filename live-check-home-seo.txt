@@ -1,0 +1,437 @@
+﻿
+	<script>var vdm_ajax_nonce = "760358c6f1";</script><link rel="alternate" href="https://chioshotel.gr/" hreflang="en" />
+<link rel="alternate" href="https://chioshotel.gr/el/" hreflang="el" />
+<link rel="alternate" href="https://chioshotel.gr/de/" hreflang="de" />
+<link rel="alternate" href="https://chioshotel.gr/fr/" hreflang="fr" />
+<link rel="alternate" href="https://chioshotel.gr/it/" hreflang="it" />
+<link rel="alternate" href="https://chioshotel.gr/tr/" hreflang="tr" />
+<link rel="alternate" href="https://chioshotel.gr/es/" hreflang="es" />
+<link rel="canonical" href="https://chioshotel.gr/" />
+<script type="application/ld+json" class="rank-math-schema-pro">{"@context":"https://schema.org","@graph":[{"@type":"LodgingBusiness","name":"Voulamandis 
+House","url":"https://chioshotel.gr/","image":"https://p2g7c2y8.rocketcdn.me/wp-content/uploads/2022/12/DSC07776-1.jpg.webp","telephone":"+30 6944764654","numberOfRooms":"10",
+"availableLanguage":"en","priceRange":"70\u20ac","aggregateRating":{"@type":"AggregateRating","ratingValue":"4.5","reviewCount":"78"},"address":{"@type":"PostalAddress","stree
+tAddress":"Dimarchou Kalvokoressi 117","addressLocality":"Chios","postalCode":"821 00","addressCountry":{"@type":"Country","name":"Greece"}}},{"@type":"Place","@id":"https://c
+hioshotel.gr/#place","geo":{"@type":"GeoCoordinates","latitude":"38.32169399454957","longitude":" 
+26.135349481325928"},"hasMap":"https://www.google.com/maps/search/?api=1&amp;query=38.32169399454957, 
+26.135349481325928","address":{"@type":"PostalAddress","streetAddress":"Dimarchou Kalvokoresi 117","addressLocality":"Kambos","addressRegion":"Chios","postalCode":"82100","add
+ressCountry":"Greece"}},{"@type":["Hotel","Organization"],"@id":"https://chioshotel.gr/#organization","name":"Voulamandis House Chios Hotels","url":"https://chioshotel.gr","sa
+meAs":["https://www.facebook.com/people/Voulamandis-House/100063584320703/","https://twitter.com/chioshotels","https://www.instagram.com/chioshotels/?hl=el"],"email":"vhouse.r
+eservations@gmail.com","address":{"@type":"PostalAddress","streetAddress":"Dimarchou Kalvokoresi 117","addressLocality":"Kambos","addressRegion":"Chios","postalCode":"82100","
+addressCountry":"Greece"},"logo":{"@type":"ImageObject","@id":"https://chioshotel.gr/#logo","url":"https://chioshotel.gr/wp-content/uploads/2023/02/voulamandis-house-chios-hot
+els-1-e1675700558710.webp","contentUrl":"https://chioshotel.gr/wp-content/uploads/2023/02/voulamandis-house-chios-hotels-1-e1675700558710.webp","caption":"Voulamandis House 
+Chios Hotels","inLanguage":"en","width":"1024","height":"650"},"priceRange":"60-100","openingHours":["Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday 
+09:00-00:00"],"location":{"@id":"https://chioshotel.gr/#place"},"image":{"@id":"https://chioshotel.gr/#logo"},"telephone":"+30 
+6944764654"},{"@type":"WebSite","@id":"https://chioshotel.gr/#website","url":"https://chioshotel.gr","name":"Voulamandis House Chios Hotels","alternateName":"Voulamandis House
+","publisher":{"@id":"https://chioshotel.gr/#organization"},"inLanguage":"en","potentialAction":{"@type":"SearchAction","target":"https://chioshotel.gr/?s={search_term_string}
+","query-input":"required name=search_term_string"}},{"@type":"ImageObject","@id":"https://chioshotel.gr/wp-content/uploads/2022/12/DSC07776-3.webp","url":"https://chioshotel.
+gr/wp-content/uploads/2022/12/DSC07776-3.webp","width":"800","height":"534","caption":"Chambre double standard au premier \u00e9tage avec lit 
+double","inLanguage":"en"},{"@type":"AboutPage","@id":"https://chioshotel.gr/#webpage","url":"https://chioshotel.gr/","name":"Best Chios Hotels | Where To Stay In Chios 
+|Voulamandis House 2026 -","datePublished":"2022-02-28T19:59:29+02:00","dateModified":"2026-05-03T14:43:48+03:00","about":{"@id":"https://chioshotel.gr/#organization"},"isPart
+Of":{"@id":"https://chioshotel.gr/#website"},"primaryImageOfPage":{"@id":"https://chioshotel.gr/wp-content/uploads/2022/12/DSC07776-3.webp"},"inLanguage":"en"},{"@type":"Perso
+n","@id":"https://chioshotel.gr/#author","name":"admin","image":{"@type":"ImageObject","@id":"https://secure.gravatar.com/avatar/9570322025d7242cb31cd071d8d7f33d7fbf945b2d4b71
+01db7f7e6b734105f3?s=96&amp;d=mm&amp;r=g","url":"https://secure.gravatar.com/avatar/9570322025d7242cb31cd071d8d7f33d7fbf945b2d4b7101db7f7e6b734105f3?s=96&amp;d=mm&amp;r=g","ca
+ption":"admin","inLanguage":"en"},"worksFor":{"@id":"https://chioshotel.gr/#organization"}},{"headline":"Best Chios Hotels | Where To Stay In Chios |Voulamandis House 2026 
+-","description":"Discover the best Chios hotels in Greece. Experience a home away from home at Voulamandis House. Book now and explore Chios island!","keywords":"chios 
+hotels,where to stay in chios,things to do in chios,hotel in chios,best hotels in chios,stay in chios,chios hotels booking,hotels in chios greece,best hotels in chios 
+greece,chios greece hotels","@type":"Article","author":{"@id":"https://chioshotel.gr/#author","name":"admin"},"datePublished":"2022-02-28T19:59:29+02:00","dateModified":"2026-
+05-03T14:43:48+03:00","image":{"@id":"https://chioshotel.gr/wp-content/uploads/2022/12/DSC07776-3.webp"},"name":"Best Chios Hotels | Where To Stay In Chios |Voulamandis House 
+2026 -","@id":"https://chioshotel.gr/#schema-322557","isPartOf":{"@id":"https://chioshotel.gr/#webpage"},"publisher":{"@id":"https://chioshotel.gr/#organization"},"inLanguage"
+:"en","mainEntityOfPage":{"@id":"https://chioshotel.gr/#webpage"}}]}</script>
+<link rel="alternate" type="application/rss+xml" title="Voulamandis House Chios &raquo; Feed" href="https://chioshotel.gr/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Voulamandis House Chios &raquo; Comments Feed" href="https://chioshotel.gr/comments/feed/" />
+<link rel="alternate" title="oEmbed (JSON)" type="application/json+oembed" 
+href="https://chioshotel.gr/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fchioshotel.gr%2F&#038;lang=en" />
+<link rel="alternate" title="oEmbed (XML)" type="text/xml+oembed" 
+href="https://chioshotel.gr/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fchioshotel.gr%2F&#038;format=xml&#038;lang=en" />
+<link rel='stylesheet' id='fluentform-elementor-widget-css' href='https://chioshotel.gr/wp-content/plugins/fluentform/assets/css/fluent-forms-elementor-widget.css?ver=6.2.4' 
+media='all' />
+<link rel='stylesheet' id='hello-elementor-css' href='https://chioshotel.gr/wp-content/themes/hello-elementor/assets/css/reset.css?ver=3.4.9' media='all' />
+<link rel='stylesheet' id='hello-elementor-theme-style-css' href='https://chioshotel.gr/wp-content/themes/hello-elementor/assets/css/theme.css?ver=3.4.9' media='all' />
+<link rel='stylesheet' id='hello-elementor-header-footer-css' href='https://chioshotel.gr/wp-content/themes/hello-elementor/assets/css/header-footer.css?ver=3.4.9' 
+media='all' />
+<link rel='stylesheet' id='elementor-frontend-css' href='https://chioshotel.gr/wp-content/plugins/elementor/assets/css/frontend.min.css?ver=4.1.1' media='all' />
+<style id="elementor-frontend-inline-css">
+/*# sourceURL=elementor-frontend-inline-css */
+<link rel='stylesheet' id='elementor-post-1-css' href='https://chioshotel.gr/wp-content/uploads/elementor/css/post-1.css?ver=1780588047' media='all' />
+<link rel='stylesheet' id='widget-nav-menu-css' href='https://chioshotel.gr/wp-content/plugins/elementor-pro/assets/css/widget-nav-menu.min.css?ver=4.1.0' media='all' />
+<link rel='stylesheet' id='elementor-post-6082-css' href='https://chioshotel.gr/wp-content/uploads/elementor/css/post-6082.css?ver=1780588204' media='all' />
+<link rel='stylesheet' id='base-desktop-css' href='https://chioshotel.gr/wp-content/uploads/elementor/css/base-desktop.css?ver=6a219e0fd049d' media='all' />
+<link rel='stylesheet' id='elementor-post-9697-css' href='https://chioshotel.gr/wp-content/uploads/elementor/css/post-9697.css?ver=1780588048' media='all' />
+<link rel="https://api.w.org/" href="https://chioshotel.gr/wp-json/" /><link rel="alternate" title="JSON" type="application/json" 
+href="https://chioshotel.gr/wp-json/wp/v2/pages/6082" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://chioshotel.gr/xmlrpc.php?rsd" />
+<link rel="manifest" href="/wp-content/uploads/fbrfg/site.webmanifest" /><meta name="generator" content="Elementor 4.1.1; features: e_font_icon_svg, 
+additional_custom_breakpoints; settings: css_print_method-external, google_font-enabled, font_display-auto">
+    jQuery(document).on('elementor/popup/show', function () {
+<body class="home wp-singular page-template-default page page-id-6082 wp-custom-logo wp-embed-responsive wp-theme-hello-elementor hello-elementor-default elementor-default 
+elementor-kit-1 elementor-page elementor-page-6082 elementor-page-33367 elementor-page-32541 elementor-page-32001 elementor-page-24659 elementor-page-11317"><a 
+href="https://chioshotel.gr/cdn-cgi/content?id=mdM679hh.YEiW_xbhp200gm5ONU5Ku1CBQ69gKktt4U-1780826747.4276483-1.2.1.1-hvowOch.1sLBtAFqNmVIAWGJK2zAiCvJWTvGmCKbrSE" 
+aria-hidden="true" rel="nofollow noopener" style="display: none !important; visibility: hidden !important"></a>
+		<header data-elementor-type="header" data-elementor-id="9697" class="elementor elementor-9697 elementor-location-header" data-elementor-post-type="elementor_library">
+			<div class="elementor-element elementor-element-37b7e25 e-flex e-con-boxed e-con e-parent" data-id="37b7e25" data-element_type="container" data-e-type="container">
+				<div class="elementor-element elementor-element-07cf056 elementor-nav-menu__align-center elementor-nav-menu__text-align-center elementor-nav-menu--dropdown-tablet 
+elementor-nav-menu--toggle elementor-nav-menu--burger elementor-widget elementor-widget-nav-menu" data-id="07cf056" data-element_type="widget" data-e-type="widget" 
+data-settings="{&quot;layout&quot;:&quot;horizontal&quot;,&quot;submenu_icon&quot;:{&quot;value&quot;:&quot;&lt;svg aria-hidden=\&quot;true\&quot; 
+class=\&quot;e-font-icon-svg e-fas-caret-down\&quot; viewBox=\&quot;0 0 320 512\&quot; xmlns=\&quot;http:\/\/www.w3.org\/2000\/svg\&quot;&gt;&lt;path d=\&quot;M31.3 
+192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 
+192z\&quot;&gt;&lt;\/path&gt;&lt;\/svg&gt;&quot;,&quot;library&quot;:&quot;fa-solid&quot;},&quot;toggle&quot;:&quot;burger&quot;}" data-widget_type="nav-menu.default">
+								<nav aria-label="Menu" class="elementor-nav-menu--main elementor-nav-menu__container elementor-nav-menu--layout-horizontal e--pointer-underline e--animation-fade">
+				<ul id="menu-1-07cf056" class="elementor-nav-menu"><li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home current-menu-item page_item 
+page-item-6082 current_page_item menu-item-28864"><a href="https://chioshotel.gr/" aria-current="page" title="Best Chios Hotels | Where to Stay in Chios -Voulamandis House" 
+class="elementor-item elementor-item-active">Home</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-30237"><a href="https://chioshotel.gr/chios-ai-chatbox/" class="elementor-item">Chios AI 
+chatbox</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-14054"><a href="https://chioshotel.gr/chios-rooms/" title="Discover the 
+Best Chios Rooms" class="elementor-item">rooms</a>
+<ul class="sub-menu elementor-nav-menu--dropdown">
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-6663"><a href="https://chioshotel.gr/chios-rooms/economy-double-rooms/" 
+class="elementor-sub-item">Economy Double Room</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-6662"><a href="https://chioshotel.gr/chios-rooms/standard-double-room/" 
+class="elementor-sub-item">Standard Double Room</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-6664"><a href="https://chioshotel.gr/chios-rooms/family-chios-apartments/" title="Big family 
+chios apartments" class="elementor-sub-item">Family chios apartments</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-12916"><a href="https://chioshotel.gr/chios-island/" title="Discover 
+articles about Chios attractions, villages, and travel tips." class="elementor-item">chios blog</a>
+<ul class="sub-menu elementor-nav-menu--dropdown">
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-12920"><a href="https://chioshotel.gr/chios/chios-museums/" title="The 
+Exciting  Chios museums" class="elementor-sub-item">chios museums</a>
+	<ul class="sub-menu elementor-nav-menu--dropdown">
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10336"><a href="https://chioshotel.gr/chios/chios-museums/koraes-library/" title="The 
+inspiring library of Koraes Library" class="elementor-sub-item">Koraes Library</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10337"><a href="https://chioshotel.gr/chios/chios-museums/the-kallimasia-folklore-museum/" 
+title="The well informative Kallimasia Folklore Museum" class="elementor-sub-item">Kallimasia Folklore Museum</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10338"><a href="https://chioshotel.gr/chios/chios-museums/chios-byzantine-museum/" title="The 
+engaging Chios Byzantine Museum." class="elementor-sub-item">Byzantine Museum</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10339"><a href="https://chioshotel.gr/chios/chios-museums/chios-maritime-museum/" title="The 
+Enlightening Chios Maritime Museum" class="elementor-sub-item">Maritime Museum</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10340"><a href="https://chioshotel.gr/chios/chios-museums/archaeological-museum-chios/" 
+title="The fascinating Archaeological Museum Chios" class="elementor-sub-item">Archaeological Museum Chios</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10341"><a href="https://chioshotel.gr/chios/chios-museums/the-mastic-museum-chios/" title="The 
+amazing Mastic Museum Of Chios" class="elementor-sub-item">Mastic Museum</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-22860"><a 
+href="https://chioshotel.gr/chios-rooms/what-can-you-do-in-chios/" title="What Can You Do In Chios? | Discover The Activities" class="elementor-sub-item">chios Activities</a>
+	<ul class="sub-menu elementor-nav-menu--dropdown">
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-4352"><a href="https://chioshotel.gr/chios/chios-activities/greek-language/" title="Courses in 
+historic great Greek Language" class="elementor-sub-item">Greek Language Courses</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-17136"><a href="https://chioshotel.gr/chios/chios-activities/mostra-carnival-fiesta-chios/" 
+title="Exciting Mostra the carnival fiesta Chios" class="elementor-sub-item">Carnival Fiesta in Thymiana</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-4233"><a href="https://chioshotel.gr/chios/chios-activities/the-ignitable-chios-hiking/" 
+title="The ignitable and exciting Chios hiking" class="elementor-sub-item">Chios hiking</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-4238"><a href="https://chioshotel.gr/chios/chios-activities/the-chios-thermal-baths/" 
+title="The Refreshing Thermal Baths" class="elementor-sub-item">Thermal Baths</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-17077"><a href="https://chioshotel.gr/chios/rocket-war-of-chios/" title="The unique event of 
+rocket war of Chios island" class="elementor-sub-item">Chios Rocket War</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-12922"><a href="https://chioshotel.gr/chios/chios-villages/" title="The 
+lovely Chios villages are so interesting and unique" class="elementor-sub-item">Chios villages</a>
+	<ul class="sub-menu elementor-nav-menu--dropdown">
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10342"><a href="https://chioshotel.gr/chios/chios-villages/armolia-chios/" title="The creative 
+Village of Armolia" class="elementor-sub-item">Armolia</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10343"><a href="https://chioshotel.gr/chios/chios-villages/olympi-chios/" title="The 
+hospitable village Olympoi" class="elementor-sub-item">Olympoi</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10344"><a href="https://chioshotel.gr/chios/chios-villages/lagada-chios-2/" title="The 
+Charming village of Lagada" class="elementor-sub-item">Lagada</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10345"><a href="https://chioshotel.gr/chios/chios-villages/volissos-chios/" title="The lovely 
+and famous village of Volissos" class="elementor-sub-item">Volissos</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10346"><a href="https://chioshotel.gr/chios/chios-villages/vessa-chios/" title="The 
+astonishing Village of Vessa" class="elementor-sub-item">Vessa</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10347"><a href="https://chioshotel.gr/chios/chios-villages/mesta-chios/" title="The Impressive 
+Medieval Village of MestaέΑΜ" class="elementor-sub-item">MestaέΑΜ</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10348"><a href="https://chioshotel.gr/chios/chios-villages/chios-pyrgi/" title="The charming 
+and picturesque village of Pyrgi" class="elementor-sub-item">Pyrgi</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-4234"><a href="https://chioshotel.gr/chios/chios-kambos/" title="The Great Value of Kambos area 
+in Chios" class="elementor-sub-item">Kambos in Chios</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-12921"><a href="https://chioshotel.gr/chios/chios-beaches/" 
+title="Unveiling Chios Beaches: Explore 10 Must-Visit Spots" class="elementor-sub-item">Chios beaches</a>
+	<ul class="sub-menu elementor-nav-menu--dropdown">
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10349"><a href="https://chioshotel.gr/chios/chios-beaches/agia-dynami-beach-chios/" title="The 
+Adorable Agia Dynami Beach" class="elementor-sub-item">Agia Dynami</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10350"><a href="https://chioshotel.gr/chios/chios-beaches/agia-fotia-beach/" title="The 
+Authentic Agia fotia Beach" class="elementor-sub-item">Agia Fotia</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10351"><a href="https://chioshotel.gr/chios/chios-beaches/avlonia-beach2/" title="Avlonia 
+Beach is a Beauty !" class="elementor-sub-item">Avlonia</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10352"><a href="https://chioshotel.gr/chios/chios-beaches/komi-beach/" title="The Beautiful 
+Komi beach" class="elementor-sub-item">Komi</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10353"><a href="https://chioshotel.gr/chios/chios-beaches/lefkathia-beach/" title="The 
+Promising Lefkathia beach" class="elementor-sub-item">Lefkathia</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10354"><a href="https://chioshotel.gr/chios/chios-beaches/lithi-beach/" title="The wonderful 
+Secrets of Lithi beach" class="elementor-sub-item">Lithi</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10355"><a href="https://chioshotel.gr/chios/chios-beaches/emporios-beach/" title="The best 
+Majestic Mavra volia" class="elementor-sub-item">Mavra Volia</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10356"><a href="https://chioshotel.gr/chios/chios-beaches/nagos-beach/" title="The Colorful 
+Nagos beach is waiting for !" class="elementor-sub-item">Nagos</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10357"><a href="https://chioshotel.gr/chios/chios-beaches/salagona-beach/" title="The 
+Attractive Salagona Beach is waiting for you" class="elementor-sub-item">Salagona</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-4237"><a href="https://chioshotel.gr/chios/chios-orchids/" title="The Beauty of Chios Orchids" 
+class="elementor-sub-item">Chios Orchids</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4225"><a href="https://chioshotel.gr/chios-videos/" class="elementor-sub-item">Best of Chios 
+Videos</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-9545"><a href="https://chioshotel.gr/photos/" class="elementor-item">photos</a></li>
+<li class="menu-book-btn menu-item menu-item-type-post_type menu-item-object-page menu-item-4226"><a href="https://chioshotel.gr/chios-hotels-rates/" title="chios hotels 
+rates|low chios hotel rates|best hotels chios rates" class="elementor-item">book now</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-16524"><a href="https://chioshotel.gr/best-chios-travel-deals-for-chios-hotels/" title="Best 
+Travel deals for Chios Hotels" class="elementor-item">deals</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4230"><a href="https://chioshotel.gr/domande-frequenti-voulamandis-house/" title="the best of 
+FAQ for Voulamandis House" class="elementor-item">fAQ</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-11766"><a href="https://chioshotel.gr/voulamandis-house-contact-us-form-fill-in-the-form/" 
+title="contact us now" class="elementor-item">contact</a></li>
+<li class="pll-parent-menu-item menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-6357"><a href="#pll_switcher" class="elementor-item 
+elementor-item-anchor"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAALCAMAAABBPP0LAAAAt1BMVEWSmb66z+18msdig8La3u+tYX9IaLc7W7BagbmcUW+kqMr/q6n+//+hsNv/lIr/jIGM
+nNLJyOP9/fyQttT/wb3/////aWn+YWF5kNT0oqz0i4ueqtIZNJjhvt/8gn//WVr/6+rN1+o9RKZwgcMPJpX/VFT9UEn+RUX8Ozv2Ly+FGzdYZrfU1e/8LS/lQkG/mbVUX60AE231hHtcdMb0mp3qYFTFwNu3w9prcqSURGNDaaIUMX5
+FNW5wYt7AAAAAjklEQVR4AR3HNUJEMQCGwf+L8RR36ajR+1+CEuvRdd8kK9MNAiRQNgJmVDAt1yM6kSzYVJUsPNssAk5N7ZFKjVNFAY4co6TAOI+kyQm+LFUEBEKKzuWUNB7rSH/rSnvOulOGk+QlXTBqMIrfYX4tSe2nP3iRa/KNK7
+uTmWJ5a9+erZ3d+18od4ytiZdvZyuKWy8o3UpTVAAAAABJRU5ErkJggg==" alt="English" width="16" height="11" style="width: 16px; height: 11px;" /></a>
+<ul class="sub-menu elementor-nav-menu--dropdown">
+	<li class="lang-item lang-item-82 lang-item-el lang-item-first menu-item menu-item-type-custom menu-item-object-custom menu-item-6357-el"><a href="https://chioshotel.gr/el/" 
+lang="el" hreflang="el" class="elementor-sub-item"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAALCAMAAABBPP0LAAAAaVBMVEUJO8bU1dgENMQAILwACbAABKNNctT////+/v74
++fv09fjj4+PDzuy9yOm3xOeBhM6OpN6Hn919ltw5ZNHw8vXr7fXJy9czXs4tWs0oVcoGG6rl5++ZrOHV3PCBgsmmt+YIMKKrscgAAI7AuEORAAAAXUlEQVR4ATXKgQbDMACE4e/ayGgMG8DW93+6GmwCWztE8bvDF+KYhFHUZDdD0NO
++QRHDjqcQYf9kKpOms5wCXE8x57EFwgJbnnkhI8ct9XLHD2/SStYeUI1JQbAC/u0uEcnG0vheAAAAAElFTkSuQmCC" alt="╬Χ╬╗╬╗╬╖╬╜╬╣╬║╬υ" width="16" height="11" style="width: 16px; height: 11px;" 
+/></a></li>
+	<li class="lang-item lang-item-1769 lang-item-de menu-item menu-item-type-custom menu-item-object-custom menu-item-6357-de"><a href="https://chioshotel.gr/de/" lang="de-DE" 
+hreflang="de-DE" class="elementor-sub-item"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAALCAIAAAD5gJpuAAABLElEQVR4AY2QgUZEQRSGz9ydmzbYkBWABBJYABHEFhJ6m0WP0DM
+EQNIr9AKrN8ne2Tt3Zs7MOdOZmRBEv+v34Tvub9R6fdNlAzU+snSME/wdjbjbbJ6EiEg6BA8102QbjKNpoMzw8v6qD/sOALbbT2MC1NgaAWOKOgxf5czY+4dbAX2G/THzcozLrvPV85IQyqVz0rvg2p9Pei4HjzSsiFbV4JgyhhxCjp
+GdZ0RhdikLB9/b8Qig7MkpSovR7Cp59q6CazaNFiTt4J82o6uvdMVwTsztKTXZod4jgOJJuqNAjFyGrBR8gM6XwKfIC4KanBSTZ0rClKh08D9DFh3egW7ebH7NcRDQWrz9rM2Ne+mDOXB2mZJ8agL19nwxR2iZXGm1gDbQKhDjd4yHb
+2oW/KR8xHicAAAAAElFTkSuQmCC" alt="Deutsch" width="16" height="11" style="width: 16px; height: 11px;" /></a></li>
+	<li class="lang-item lang-item-1788 lang-item-fr menu-item menu-item-type-custom menu-item-object-custom menu-item-6357-fr"><a href="https://chioshotel.gr/fr/" lang="fr-FR" 
+hreflang="fr-FR" class="elementor-sub-item"><img loading="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAALCAMAAABBPP0LAAAAbFBMVEVzldTg4ODS0tLxDwDtAwDjAADD0uz3
+9/fy8vL3k4nzgna4yOixwuXu7u7s6+zn5+fyd2rvcGPtZljYAABrjNCpvOHrWkxegsqfs93NAADpUUFRd8THAABBa7wnVbERRKa8vLyxsLCoqKigoKClCvcsAAAAXklEQVR4AS3JxUEAQQAEwZo13Mk/R9w5/7UERJCIGIgj5qfRJZE
+pPyNfCgJTjMR1eRRnJiExFJz5Mf1PokWr/UztIjRGQ3V486u0HO55m634U6dMcf0RNPfkVCTvKjO16xHA8miowAAAAABJRU5ErkJggg==" alt="Fran├πais" width="16" height="11" style="width: 16px; height: 
+11px;" /></a></li>
+	<li class="lang-item lang-item-1794 lang-item-it menu-item menu-item-type-custom menu-item-object-custom menu-item-6357-it"><a href="https://chioshotel.gr/it/" lang="it" 
+hreflang="it" class="elementor-sub-item"><img loading="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAALCAMAAABBPP0LAAAAUVBMVEUAiQAAgADk5OTe3t7vAAB3yXf9/f36+vr
+5Vlb3RkZjwWNYvVj4+Pj1MzP1KChQuFD1GxviAABHtUf19fXzDw4/sT8AcAA2qzYAWgDLy8vDw8ObXclsAAAAVElEQVR4AQXBSwoCQRQEsNT70CC69P5XdCUMA2ISSAiBWAQScg8bN7GJWxFDrCivwhCLMipGx3LKUOi2HAZluy2HgX
+prxQGfGL6G63B5MJ5FCD/4A3DaCLvbBle5AAAAAElFTkSuQmCC" alt="Italiano" width="16" height="11" style="width: 16px; height: 11px;" /></a></li>
+	<li class="lang-item lang-item-1801 lang-item-tr menu-item menu-item-type-custom menu-item-object-custom menu-item-6357-tr"><a href="https://chioshotel.gr/tr/" lang="tr" 
+hreflang="tr" class="elementor-sub-item"><img loading="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAALCAMAAABBPP0LAAAARVBMVEX+AAD3AADwAAD+fHz9cHH7ZGT9WVn6UFD
+pAAD9oKD5Q0P5OTn2MzP1Kir7ubr65ub1Gxv69PTzDw/kAAD319ffAAD4iooXHQ3FAAAAYklEQVR4AT3HhW0EQRQD0Oc/KG3/dQYEYTg2O+4IQbTHydWt0fw2Sfz8Fuw51+U3On7a6/pc/as1UZLDyuq13lWOwpdPn3+v7XJiDD3DR1
+N87Qr5WXX9zyQ9opEIOwkmDgr/ZXASmpFRqe0AAAAASUVORK5CYII=" alt="T├╝rk├πe" width="16" height="11" style="width: 16px; height: 11px;" /></a></li>
+	<li class="lang-item lang-item-1821 lang-item-es menu-item menu-item-type-custom menu-item-object-custom menu-item-6357-es"><a href="https://chioshotel.gr/es/" lang="es-ES" 
+hreflang="es-ES" class="elementor-sub-item"><img loading="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAALCAMAAABBPP0LAAAAflBMVEX/AAD9AAD3AADxAADrAAD/eXn9bGz8
+YWH8WVn6UVH5SEj5Pz/3NDT0Kir9/QD+/nL+/lT18lDt4Uf6+j/39zD39yf19R3n5wDxflXsZ1Pt4Y3x8zr0wbLs1NXz8xPj4wD37t3jmkvsUU/Bz6nrykm3vJ72IiL0FBTyDAvhAABEt4UZAAAAX0lEQVR4AQXBQUrFQBBAwXqTDkY
+E94Jb73+qfwVRcYxVQRBRToiUfoaVpGTrtdS9SO0Z9FR9lVy/g5c99+dKl30N5uxPuviexXEc9/msC7TOkd4kHu/Dlh4itCJ8AP4B0w4Qwmm7CFQAAAAASUVORK5CYII=" alt="Espa├▒ol" width="16" height="11" 
+style="width: 16px; height: 11px;" /></a></li>
+					<div class="elementor-menu-toggle" role="button" tabindex="0" aria-label="Menu Toggle" aria-expanded="false">
+			<svg aria-hidden="true" role="presentation" class="elementor-menu-toggle__icon--open e-font-icon-svg e-eicon-menu-bar" viewBox="0 0 1000 1000" 
+xmlns="http://www.w3.org/2000/svg"><path d="M104 333H896C929 333 958 304 958 271S929 208 896 208H104C71 208 42 237 42 271S71 333 104 333ZM104 583H896C929 583 958 554 958 
+521S929 458 896 458H104C71 458 42 487 42 521S71 583 104 583ZM104 833H896C929 833 958 804 958 771S929 708 896 708H104C71 708 42 737 42 771S71 833 104 833Z"></path></svg><svg 
+aria-hidden="true" role="presentation" class="elementor-menu-toggle__icon--close e-font-icon-svg e-eicon-close" viewBox="0 0 1000 1000" 
+xmlns="http://www.w3.org/2000/svg"><path d="M742 167L500 408 258 167C246 154 233 150 217 150 196 150 179 158 167 167 154 179 150 196 150 212 150 229 154 242 171 254L408 500 
+167 742C138 771 138 800 167 829 196 858 225 858 254 829L496 587 738 829C750 842 767 846 783 846 800 846 817 842 829 829 842 817 846 804 846 783 846 767 842 750 829 737L588 
+500 833 258C863 229 863 200 833 171 804 137 775 137 742 167Z"></path></svg>		</div>
+					<nav class="elementor-nav-menu--dropdown elementor-nav-menu__container" aria-hidden="true">
+				<ul id="menu-2-07cf056" class="elementor-nav-menu"><li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home current-menu-item page_item 
+page-item-6082 current_page_item menu-item-28864"><a href="https://chioshotel.gr/" aria-current="page" title="Best Chios Hotels | Where to Stay in Chios -Voulamandis House" 
+class="elementor-item elementor-item-active" tabindex="-1">Home</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-30237"><a href="https://chioshotel.gr/chios-ai-chatbox/" class="elementor-item" 
+tabindex="-1">Chios AI chatbox</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-14054"><a href="https://chioshotel.gr/chios-rooms/" title="Discover the 
+Best Chios Rooms" class="elementor-item" tabindex="-1">rooms</a>
+<ul class="sub-menu elementor-nav-menu--dropdown">
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-6663"><a href="https://chioshotel.gr/chios-rooms/economy-double-rooms/" 
+class="elementor-sub-item" tabindex="-1">Economy Double Room</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-6662"><a href="https://chioshotel.gr/chios-rooms/standard-double-room/" 
+class="elementor-sub-item" tabindex="-1">Standard Double Room</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-6664"><a href="https://chioshotel.gr/chios-rooms/family-chios-apartments/" title="Big family 
+chios apartments" class="elementor-sub-item" tabindex="-1">Family chios apartments</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-12916"><a href="https://chioshotel.gr/chios-island/" title="Discover 
+articles about Chios attractions, villages, and travel tips." class="elementor-item" tabindex="-1">chios blog</a>
+<ul class="sub-menu elementor-nav-menu--dropdown">
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-12920"><a href="https://chioshotel.gr/chios/chios-museums/" title="The 
+Exciting  Chios museums" class="elementor-sub-item" tabindex="-1">chios museums</a>
+	<ul class="sub-menu elementor-nav-menu--dropdown">
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10336"><a href="https://chioshotel.gr/chios/chios-museums/koraes-library/" title="The 
+inspiring library of Koraes Library" class="elementor-sub-item" tabindex="-1">Koraes Library</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10337"><a href="https://chioshotel.gr/chios/chios-museums/the-kallimasia-folklore-museum/" 
+title="The well informative Kallimasia Folklore Museum" class="elementor-sub-item" tabindex="-1">Kallimasia Folklore Museum</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10338"><a href="https://chioshotel.gr/chios/chios-museums/chios-byzantine-museum/" title="The 
+engaging Chios Byzantine Museum." class="elementor-sub-item" tabindex="-1">Byzantine Museum</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10339"><a href="https://chioshotel.gr/chios/chios-museums/chios-maritime-museum/" title="The 
+Enlightening Chios Maritime Museum" class="elementor-sub-item" tabindex="-1">Maritime Museum</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10340"><a href="https://chioshotel.gr/chios/chios-museums/archaeological-museum-chios/" 
+title="The fascinating Archaeological Museum Chios" class="elementor-sub-item" tabindex="-1">Archaeological Museum Chios</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10341"><a href="https://chioshotel.gr/chios/chios-museums/the-mastic-museum-chios/" title="The 
+amazing Mastic Museum Of Chios" class="elementor-sub-item" tabindex="-1">Mastic Museum</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-22860"><a 
+href="https://chioshotel.gr/chios-rooms/what-can-you-do-in-chios/" title="What Can You Do In Chios? | Discover The Activities" class="elementor-sub-item" tabindex="-1">chios 
+Activities</a>
+	<ul class="sub-menu elementor-nav-menu--dropdown">
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-4352"><a href="https://chioshotel.gr/chios/chios-activities/greek-language/" title="Courses in 
+historic great Greek Language" class="elementor-sub-item" tabindex="-1">Greek Language Courses</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-17136"><a href="https://chioshotel.gr/chios/chios-activities/mostra-carnival-fiesta-chios/" 
+title="Exciting Mostra the carnival fiesta Chios" class="elementor-sub-item" tabindex="-1">Carnival Fiesta in Thymiana</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-4233"><a href="https://chioshotel.gr/chios/chios-activities/the-ignitable-chios-hiking/" 
+title="The ignitable and exciting Chios hiking" class="elementor-sub-item" tabindex="-1">Chios hiking</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-4238"><a href="https://chioshotel.gr/chios/chios-activities/the-chios-thermal-baths/" 
+title="The Refreshing Thermal Baths" class="elementor-sub-item" tabindex="-1">Thermal Baths</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-17077"><a href="https://chioshotel.gr/chios/rocket-war-of-chios/" title="The unique event of 
+rocket war of Chios island" class="elementor-sub-item" tabindex="-1">Chios Rocket War</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-12922"><a href="https://chioshotel.gr/chios/chios-villages/" title="The 
+lovely Chios villages are so interesting and unique" class="elementor-sub-item" tabindex="-1">Chios villages</a>
+	<ul class="sub-menu elementor-nav-menu--dropdown">
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10342"><a href="https://chioshotel.gr/chios/chios-villages/armolia-chios/" title="The creative 
+Village of Armolia" class="elementor-sub-item" tabindex="-1">Armolia</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10343"><a href="https://chioshotel.gr/chios/chios-villages/olympi-chios/" title="The 
+hospitable village Olympoi" class="elementor-sub-item" tabindex="-1">Olympoi</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10344"><a href="https://chioshotel.gr/chios/chios-villages/lagada-chios-2/" title="The 
+Charming village of Lagada" class="elementor-sub-item" tabindex="-1">Lagada</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10345"><a href="https://chioshotel.gr/chios/chios-villages/volissos-chios/" title="The lovely 
+and famous village of Volissos" class="elementor-sub-item" tabindex="-1">Volissos</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10346"><a href="https://chioshotel.gr/chios/chios-villages/vessa-chios/" title="The 
+astonishing Village of Vessa" class="elementor-sub-item" tabindex="-1">Vessa</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10347"><a href="https://chioshotel.gr/chios/chios-villages/mesta-chios/" title="The Impressive 
+Medieval Village of MestaέΑΜ" class="elementor-sub-item" tabindex="-1">MestaέΑΜ</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10348"><a href="https://chioshotel.gr/chios/chios-villages/chios-pyrgi/" title="The charming 
+and picturesque village of Pyrgi" class="elementor-sub-item" tabindex="-1">Pyrgi</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-4234"><a href="https://chioshotel.gr/chios/chios-kambos/" title="The Great Value of Kambos area 
+in Chios" class="elementor-sub-item" tabindex="-1">Kambos in Chios</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-12921"><a href="https://chioshotel.gr/chios/chios-beaches/" 
+title="Unveiling Chios Beaches: Explore 10 Must-Visit Spots" class="elementor-sub-item" tabindex="-1">Chios beaches</a>
+	<ul class="sub-menu elementor-nav-menu--dropdown">
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10349"><a href="https://chioshotel.gr/chios/chios-beaches/agia-dynami-beach-chios/" title="The 
+Adorable Agia Dynami Beach" class="elementor-sub-item" tabindex="-1">Agia Dynami</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10350"><a href="https://chioshotel.gr/chios/chios-beaches/agia-fotia-beach/" title="The 
+Authentic Agia fotia Beach" class="elementor-sub-item" tabindex="-1">Agia Fotia</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10351"><a href="https://chioshotel.gr/chios/chios-beaches/avlonia-beach2/" title="Avlonia 
+Beach is a Beauty !" class="elementor-sub-item" tabindex="-1">Avlonia</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10352"><a href="https://chioshotel.gr/chios/chios-beaches/komi-beach/" title="The Beautiful 
+Komi beach" class="elementor-sub-item" tabindex="-1">Komi</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10353"><a href="https://chioshotel.gr/chios/chios-beaches/lefkathia-beach/" title="The 
+Promising Lefkathia beach" class="elementor-sub-item" tabindex="-1">Lefkathia</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10354"><a href="https://chioshotel.gr/chios/chios-beaches/lithi-beach/" title="The wonderful 
+Secrets of Lithi beach" class="elementor-sub-item" tabindex="-1">Lithi</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10355"><a href="https://chioshotel.gr/chios/chios-beaches/emporios-beach/" title="The best 
+Majestic Mavra volia" class="elementor-sub-item" tabindex="-1">Mavra Volia</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10356"><a href="https://chioshotel.gr/chios/chios-beaches/nagos-beach/" title="The Colorful 
+Nagos beach is waiting for !" class="elementor-sub-item" tabindex="-1">Nagos</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-10357"><a href="https://chioshotel.gr/chios/chios-beaches/salagona-beach/" title="The 
+Attractive Salagona Beach is waiting for you" class="elementor-sub-item" tabindex="-1">Salagona</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-4237"><a href="https://chioshotel.gr/chios/chios-orchids/" title="The Beauty of Chios Orchids" 
+class="elementor-sub-item" tabindex="-1">Chios Orchids</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4225"><a href="https://chioshotel.gr/chios-videos/" class="elementor-sub-item" 
+tabindex="-1">Best of Chios Videos</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-9545"><a href="https://chioshotel.gr/photos/" class="elementor-item" 
+tabindex="-1">photos</a></li>
+<li class="menu-book-btn menu-item menu-item-type-post_type menu-item-object-page menu-item-4226"><a href="https://chioshotel.gr/chios-hotels-rates/" title="chios hotels 
+rates|low chios hotel rates|best hotels chios rates" class="elementor-item" tabindex="-1">book now</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-16524"><a href="https://chioshotel.gr/best-chios-travel-deals-for-chios-hotels/" title="Best 
+Travel deals for Chios Hotels" class="elementor-item" tabindex="-1">deals</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4230"><a href="https://chioshotel.gr/domande-frequenti-voulamandis-house/" title="the best of 
+FAQ for Voulamandis House" class="elementor-item" tabindex="-1">fAQ</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-11766"><a href="https://chioshotel.gr/voulamandis-house-contact-us-form-fill-in-the-form/" 
+title="contact us now" class="elementor-item" tabindex="-1">contact</a></li>
+<li class="pll-parent-menu-item menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-6357"><a href="#pll_switcher" class="elementor-item 
+elementor-item-anchor" tabindex="-1"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAALCAMAAABBPP0LAAAAt1BMVEWSmb66z+18msdig8La3u+tYX9IaLc7W7BagbmcUW+kqMr/q6n+//
++hsNv/lIr/jIGMnNLJyOP9/fyQttT/wb3/////aWn+YWF5kNT0oqz0i4ueqtIZNJjhvt/8gn//WVr/6+rN1+o9RKZwgcMPJpX/VFT9UEn+RUX8Ozv2Ly+FGzdYZrfU1e/8LS/lQkG/mbVUX60AE231hHtcdMb0mp3qYFTFwNu3w9prc
+qSURGNDaaIUMX5FNW5wYt7AAAAAjklEQVR4AR3HNUJEMQCGwf+L8RR36ajR+1+CEuvRdd8kK9MNAiRQNgJmVDAt1yM6kSzYVJUsPNssAk5N7ZFKjVNFAY4co6TAOI+kyQm+LFUEBEKKzuWUNB7rSH/rSnvOulOGk+QlXTBqMIrfYX4t
+Se2nP3iRa/KNK7uTmWJ5a9+erZ3d+18od4ytiZdvZyuKWy8o3UpTVAAAAABJRU5ErkJggg==" alt="English" width="16" height="11" style="width: 16px; height: 11px;" /></a>
+<ul class="sub-menu elementor-nav-menu--dropdown">
+	<li class="lang-item lang-item-82 lang-item-el lang-item-first menu-item menu-item-type-custom menu-item-object-custom menu-item-6357-el"><a href="https://chioshotel.gr/el/" 
+lang="el" hreflang="el" class="elementor-sub-item" tabindex="-1"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAALCAMAAABBPP0LAAAAaVBMVEUJO8bU1dgENMQAILwACbAABK
+NNctT////+/v74+fv09fjj4+PDzuy9yOm3xOeBhM6OpN6Hn919ltw5ZNHw8vXr7fXJy9czXs4tWs0oVcoGG6rl5++ZrOHV3PCBgsmmt+YIMKKrscgAAI7AuEORAAAAXUlEQVR4ATXKgQbDMACE4e/ayGgMG8DW93+6GmwCWztE8bvDF
++KYhFHUZDdD0NO+QRHDjqcQYf9kKpOms5wCXE8x57EFwgJbnnkhI8ct9XLHD2/SStYeUI1JQbAC/u0uEcnG0vheAAAAAElFTkSuQmCC" alt="╬Χ╬╗╬╗╬╖╬╜╬╣╬║╬υ" width="16" height="11" style="width: 16px; 
+height: 11px;" /></a></li>
+	<li class="lang-item lang-item-1769 lang-item-de menu-item menu-item-type-custom menu-item-object-custom menu-item-6357-de"><a href="https://chioshotel.gr/de/" lang="de-DE" 
+hreflang="de-DE" class="elementor-sub-item" tabindex="-1"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAALCAIAAAD5gJpuAAABLElEQVR4AY2QgUZEQRSGz9ydmzbYkBWABBJYA
+BHEFhJ6m0WP0DMEQNIr9AKrN8ne2Tt3Zs7MOdOZmRBEv+v34Tvub9R6fdNlAzU+snSME/wdjbjbbJ6EiEg6BA8102QbjKNpoMzw8v6qD/sOALbbT2MC1NgaAWOKOgxf5czY+4dbAX2G/THzcozLrvPV85IQyqVz0rvg2p9Pei4HjzSs
+iFbV4JgyhhxCjpGdZ0RhdikLB9/b8Qig7MkpSovR7Cp59q6CazaNFiTt4J82o6uvdMVwTsztKTXZod4jgOJJuqNAjFyGrBR8gM6XwKfIC4KanBSTZ0rClKh08D9DFh3egW7ebH7NcRDQWrz9rM2Ne+mDOXB2mZJ8agL19nwxR2iZXGm
+1gDbQKhDjd4yHb2oW/KR8xHicAAAAAElFTkSuQmCC" alt="Deutsch" width="16" height="11" style="width: 16px; height: 11px;" /></a></li>
+	<li class="lang-item lang-item-1788 lang-item-fr menu-item menu-item-type-custom menu-item-object-custom menu-item-6357-fr"><a href="https://chioshotel.gr/fr/" lang="fr-FR" 
+hreflang="fr-FR" class="elementor-sub-item" tabindex="-1"><img loading="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAALCAMAAABBPP0LAAAAbFBMVEVzldTg4ODS0tLxDw
+DtAwDjAADD0uz39/fy8vL3k4nzgna4yOixwuXu7u7s6+zn5+fyd2rvcGPtZljYAABrjNCpvOHrWkxegsqfs93NAADpUUFRd8THAABBa7wnVbERRKa8vLyxsLCoqKigoKClCvcsAAAAXklEQVR4AS3JxUEAQQAEwZo13Mk/R9w5/7UER
+JCIGIgj5qfRJZEpPyNfCgJTjMR1eRRnJiExFJz5Mf1PokWr/UztIjRGQ3V486u0HO55m634U6dMcf0RNPfkVCTvKjO16xHA8miowAAAAABJRU5ErkJggg==" alt="Fran├πais" width="16" height="11" style="width: 
+16px; height: 11px;" /></a></li>
+	<li class="lang-item lang-item-1794 lang-item-it menu-item menu-item-type-custom menu-item-object-custom menu-item-6357-it"><a href="https://chioshotel.gr/it/" lang="it" 
+hreflang="it" class="elementor-sub-item" tabindex="-1"><img loading="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAALCAMAAABBPP0LAAAAUVBMVEUAiQAAgADk5OTe3t7vA
+AB3yXf9/f36+vr5Vlb3RkZjwWNYvVj4+Pj1MzP1KChQuFD1GxviAABHtUf19fXzDw4/sT8AcAA2qzYAWgDLy8vDw8ObXclsAAAAVElEQVR4AQXBSwoCQRQEsNT70CC69P5XdCUMA2ISSAiBWAQScg8bN7GJWxFDrCivwhCLMipGx3LK
+UOi2HAZluy2HgXprxQGfGL6G63B5MJ5FCD/4A3DaCLvbBle5AAAAAElFTkSuQmCC" alt="Italiano" width="16" height="11" style="width: 16px; height: 11px;" /></a></li>
+	<li class="lang-item lang-item-1801 lang-item-tr menu-item menu-item-type-custom menu-item-object-custom menu-item-6357-tr"><a href="https://chioshotel.gr/tr/" lang="tr" 
+hreflang="tr" class="elementor-sub-item" tabindex="-1"><img loading="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAALCAMAAABBPP0LAAAARVBMVEX+AAD3AADwAAD+fHz9c
+HH7ZGT9WVn6UFDpAAD9oKD5Q0P5OTn2MzP1Kir7ubr65ub1Gxv69PTzDw/kAAD319ffAAD4iooXHQ3FAAAAYklEQVR4AT3HhW0EQRQD0Oc/KG3/dQYEYTg2O+4IQbTHydWt0fw2Sfz8Fuw51+U3On7a6/pc/as1UZLDyuq13lWOwpdP
+n3+v7XJiDD3DR1N87Qr5WXX9zyQ9opEIOwkmDgr/ZXASmpFRqe0AAAAASUVORK5CYII=" alt="T├╝rk├πe" width="16" height="11" style="width: 16px; height: 11px;" /></a></li>
+	<li class="lang-item lang-item-1821 lang-item-es menu-item menu-item-type-custom menu-item-object-custom menu-item-6357-es"><a href="https://chioshotel.gr/es/" lang="es-ES" 
+hreflang="es-ES" class="elementor-sub-item" tabindex="-1"><img loading="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAALCAMAAABBPP0LAAAAflBMVEX/AAD9AAD3AADxAA
+DrAAD/eXn9bGz8YWH8WVn6UVH5SEj5Pz/3NDT0Kir9/QD+/nL+/lT18lDt4Uf6+j/39zD39yf19R3n5wDxflXsZ1Pt4Y3x8zr0wbLs1NXz8xPj4wD37t3jmkvsUU/Bz6nrykm3vJ72IiL0FBTyDAvhAABEt4UZAAAAX0lEQVR4AQXBQ
+UrFQBBAwXqTDkYE94Jb73+qfwVRcYxVQRBRToiUfoaVpGTrtdS9SO0Z9FR9lVy/g5c99+dKl30N5uxPuviexXEc9/msC7TOkd4kHu/Dlh4itCJ8AP4B0w4Qwmm7CFQAAAAASUVORK5CYII=" alt="Espa├▒ol" width="16" 
+height="11" style="width: 16px; height: 11px;" /></a></li>
+				<div data-elementor-type="wp-page" data-elementor-id="6082" class="elementor elementor-6082" data-elementor-post-type="page">
+				<div class="elementor-element elementor-element-789333d e-con-full e-flex e-con e-parent" data-id="789333d" data-element_type="container" data-e-type="container">
+				<div class="elementor-element elementor-element-be37323 elementor-widget elementor-widget-html" data-id="be37323" data-element_type="widget" data-e-type="widget" 
+data-widget_type="html.default">
+  <link rel="canonical" href="https://chioshotel.gr/en/">
+      DEALS_ENDPOINT: "https://chioshotel.gr/wp-json/vh/v1/deals",
+	<li id="menu-item-16229-el" class="lang-item lang-item-82 lang-item-el lang-item-first menu-item menu-item-type-custom menu-item-object-custom menu-item-16229-el"><a 
+href="https://chioshotel.gr/el/" lang="el" hreflang="el"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAALCAMAAABBPP0LAAAAaVBMVEUJO8bU1dgENMQAILwACbAABKNNctT///
+/+/v74+fv09fjj4+PDzuy9yOm3xOeBhM6OpN6Hn919ltw5ZNHw8vXr7fXJy9czXs4tWs0oVcoGG6rl5++ZrOHV3PCBgsmmt+YIMKKrscgAAI7AuEORAAAAXUlEQVR4ATXKgQbDMACE4e/ayGgMG8DW93+6GmwCWztE8bvDF+KYhFHUZ
+DdD0NO+QRHDjqcQYf9kKpOms5wCXE8x57EFwgJbnnkhI8ct9XLHD2/SStYeUI1JQbAC/u0uEcnG0vheAAAAAElFTkSuQmCC" alt="╬Χ╬╗╬╗╬╖╬╜╬╣╬║╬υ" width="16" height="11" style="width: 16px; height: 
+11px;" /></a></li>
+	<li id="menu-item-16229-de" class="lang-item lang-item-1769 lang-item-de menu-item menu-item-type-custom menu-item-object-custom menu-item-16229-de"><a 
+href="https://chioshotel.gr/de/" lang="de-DE" hreflang="de-DE"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAALCAIAAAD5gJpuAAABLElEQVR4AY2QgUZEQRSGz9ydmzbYkBWA
+BBJYABHEFhJ6m0WP0DMEQNIr9AKrN8ne2Tt3Zs7MOdOZmRBEv+v34Tvub9R6fdNlAzU+snSME/wdjbjbbJ6EiEg6BA8102QbjKNpoMzw8v6qD/sOALbbT2MC1NgaAWOKOgxf5czY+4dbAX2G/THzcozLrvPV85IQyqVz0rvg2p9Pei4
+HjzSsiFbV4JgyhhxCjpGdZ0RhdikLB9/b8Qig7MkpSovR7Cp59q6CazaNFiTt4J82o6uvdMVwTsztKTXZod4jgOJJuqNAjFyGrBR8gM6XwKfIC4KanBSTZ0rClKh08D9DFh3egW7ebH7NcRDQWrz9rM2Ne+mDOXB2mZJ8agL19nwxR2
+iZXGm1gDbQKhDjd4yHb2oW/KR8xHicAAAAAElFTkSuQmCC" alt="Deutsch" width="16" height="11" style="width: 16px; height: 11px;" /></a></li>
+	<li id="menu-item-16229-fr" class="lang-item lang-item-1788 lang-item-fr menu-item menu-item-type-custom menu-item-object-custom menu-item-16229-fr"><a 
+href="https://chioshotel.gr/fr/" lang="fr-FR" hreflang="fr-FR"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAALCAMAAABBPP0LAAAAbFBMVEVzldTg4ODS0tLxDwDtAwDjAADD
+0uz39/fy8vL3k4nzgna4yOixwuXu7u7s6+zn5+fyd2rvcGPtZljYAABrjNCpvOHrWkxegsqfs93NAADpUUFRd8THAABBa7wnVbERRKa8vLyxsLCoqKigoKClCvcsAAAAXklEQVR4AS3JxUEAQQAEwZo13Mk/R9w5/7UERJCIGIgj5qf
+RJZEpPyNfCgJTjMR1eRRnJiExFJz5Mf1PokWr/UztIjRGQ3V486u0HO55m634U6dMcf0RNPfkVCTvKjO16xHA8miowAAAAABJRU5ErkJggg==" alt="Fran├πais" width="16" height="11" style="width: 16px; 
+height: 11px;" /></a></li>
+	<li id="menu-item-16229-it" class="lang-item lang-item-1794 lang-item-it menu-item menu-item-type-custom menu-item-object-custom menu-item-16229-it"><a 
+href="https://chioshotel.gr/it/" lang="it" hreflang="it"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAALCAMAAABBPP0LAAAAUVBMVEUAiQAAgADk5OTe3t7vAAB3yXf9/f36+v
+r5Vlb3RkZjwWNYvVj4+Pj1MzP1KChQuFD1GxviAABHtUf19fXzDw4/sT8AcAA2qzYAWgDLy8vDw8ObXclsAAAAVElEQVR4AQXBSwoCQRQEsNT70CC69P5XdCUMA2ISSAiBWAQScg8bN7GJWxFDrCivwhCLMipGx3LKUOi2HAZluy2Hg
+XprxQGfGL6G63B5MJ5FCD/4A3DaCLvbBle5AAAAAElFTkSuQmCC" alt="Italiano" width="16" height="11" style="width: 16px; height: 11px;" /></a></li>
+	<li id="menu-item-16229-tr" class="lang-item lang-item-1801 lang-item-tr menu-item menu-item-type-custom menu-item-object-custom menu-item-16229-tr"><a 
+href="https://chioshotel.gr/tr/" lang="tr" hreflang="tr"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAALCAMAAABBPP0LAAAARVBMVEX+AAD3AADwAAD+fHz9cHH7ZGT9WVn6UF
+DpAAD9oKD5Q0P5OTn2MzP1Kir7ubr65ub1Gxv69PTzDw/kAAD319ffAAD4iooXHQ3FAAAAYklEQVR4AT3HhW0EQRQD0Oc/KG3/dQYEYTg2O+4IQbTHydWt0fw2Sfz8Fuw51+U3On7a6/pc/as1UZLDyuq13lWOwpdPn3+v7XJiDD3DR
+1N87Qr5WXX9zyQ9opEIOwkmDgr/ZXASmpFRqe0AAAAASUVORK5CYII=" alt="T├╝rk├πe" width="16" height="11" style="width: 16px; height: 11px;" /></a></li>
+	<li id="menu-item-16229-es" class="lang-item lang-item-1821 lang-item-es menu-item menu-item-type-custom menu-item-object-custom menu-item-16229-es"><a 
+href="https://chioshotel.gr/es/" lang="es-ES" hreflang="es-ES"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAALCAMAAABBPP0LAAAAflBMVEX/AAD9AAD3AADxAADrAAD/eXn9
+bGz8YWH8WVn6UVH5SEj5Pz/3NDT0Kir9/QD+/nL+/lT18lDt4Uf6+j/39zD39yf19R3n5wDxflXsZ1Pt4Y3x8zr0wbLs1NXz8xPj4wD37t3jmkvsUU/Bz6nrykm3vJ72IiL0FBTyDAvhAABEt4UZAAAAX0lEQVR4AQXBQUrFQBBAwXq
+TDkYE94Jb73+qfwVRcYxVQRBRToiUfoaVpGTrtdS9SO0Z9FR9lVy/g5c99+dKl30N5uxPuviexXEc9/msC7TOkd4kHu/Dlh4itCJ8AP4B0w4Qwmm7CFQAAAAASUVORK5CYII=" alt="Espa├▒ol" width="16" height="11" 
+style="width: 16px; height: 11px;" /></a></li>
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/
+plugins/*","/wp-content/themes/hello-elementor/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch 
+a"}}]},"eagerness":"conservative"}]}
+					'elementor/lazyload/observe',
+			<script id="fluentform-elementor-js-extra">
+var fluentformElementor = {"adminUrl":"https://chioshotel.gr/wp-admin/admin.php"};
+//# sourceURL=fluentform-elementor-js-extra
+<script id="fluentform-elementor-js" src="https://chioshotel.gr/wp-content/plugins/fluentform/assets/js/fluent-forms-elementor-widget.js?ver=6.2.4"></script>
+<script id="hello-theme-frontend-js" src="https://chioshotel.gr/wp-content/themes/hello-elementor/assets/js/hello-frontend.js?ver=3.4.9"></script>
+<script id="smartmenus-js" src="https://chioshotel.gr/wp-content/plugins/elementor-pro/assets/lib/smartmenus/jquery.smartmenus.min.js?ver=1.2.1"></script>
+<script id="elementor-webpack-runtime-js" src="https://chioshotel.gr/wp-content/plugins/elementor/assets/js/webpack.runtime.min.js?ver=4.1.1"></script>
+<script id="elementor-frontend-modules-js" src="https://chioshotel.gr/wp-content/plugins/elementor/assets/js/frontend-modules.min.js?ver=4.1.1"></script>
+<script id="elementor-frontend-js-before">
+var elementorFrontendConfig = {"environmentMode":{"edit":false,"wpPreview":false,"isScriptDebug":false},"i18n":{"shareOnFacebook":"Share on Facebook","shareOnTwitter":"Share 
+on Twitter","pinIt":"Pin it","download":"Download","downloadImage":"Download image","fullscreen":"Fullscreen","zoom":"Zoom","share":"Share","playVideo":"Play 
+Video","previous":"Previous","next":"Next","close":"Close","a11yCarouselPrevSlideMessage":"Previous slide","a11yCarouselNextSlideMessage":"Next 
+slide","a11yCarouselFirstSlideMessage":"This is the first slide","a11yCarouselLastSlideMessage":"This is the last slide","a11yCarouselPaginationBulletMessage":"Go to 
+slide"},"is_rtl":false,"breakpoints":{"xs":0,"sm":480,"md":768,"lg":1025,"xl":1440,"xxl":1600},"responsive":{"breakpoints":{"mobile":{"label":"Mobile 
+Portrait","value":767,"default_value":767,"direction":"max","is_enabled":true},"mobile_extra":{"label":"Mobile 
+Landscape","value":880,"default_value":880,"direction":"max","is_enabled":false},"tablet":{"label":"Tablet 
+Portrait","value":1024,"default_value":1024,"direction":"max","is_enabled":true},"tablet_extra":{"label":"Tablet Landscape","value":1200,"default_value":1200,"direction":"max"
+,"is_enabled":false},"laptop":{"label":"Laptop","value":1366,"default_value":1366,"direction":"max","is_enabled":false},"widescreen":{"label":"Widescreen","value":2400,"defaul
+t_value":2400,"direction":"min","is_enabled":false}},"hasCustomBreakpoints":false},"version":"4.1.1","is_static":false,"experimentalFeatures":{"e_font_icon_svg":true,"addition
+al_custom_breakpoints":true,"container":true,"e_optimized_markup":true,"theme_builder_v2":true,"hello-theme-header-footer":true,"landing-pages":true,"nested-elements":true,"e_
+atomic_elements":true,"atomic_widgets_should_enforce_capabilities":true,"editor_mcp":true,"e_bc_migrations":true,"e_editor_design_system_panel":true,"e_classes":true,"global_c
+lasses_should_enforce_capabilities":true,"e_variables":true,"e_variables_manager":true,"e_opt_in_v4_page":true,"e_opt_in_v4":true,"e_components":true,"e_interactions":true,"e_
+widget_creation":true,"import-export-customization":true,"improved_page_actions_layout":true,"e_pro_atomic_form":true,"mega-menu":true,"e_pro_variables":true,"e_pro_interactio
+ns":true},"urls":{"assets":"https:\/\/chioshotel.gr\/wp-content\/plugins\/elementor\/assets\/","ajaxurl":"https:\/\/chioshotel.gr\/wp-admin\/admin-ajax.php","uploadUrl":"https
+:\/\/chioshotel.gr\/wp-content\/uploads"},"nonces":{"floatingButtonsClickTracking":"615f45841f","atomicFormsSendForm":"f802bbda58"},"swiperClass":"swiper","settings":{"page":[
+],"editorPreferences":[]},"kit":{"active_breakpoints":["viewport_mobile","viewport_tablet"],"global_image_lightbox":"yes","lightbox_enable_counter":"yes","lightbox_enable_full
+screen":"yes","lightbox_enable_zoom":"yes","lightbox_enable_share":"yes","lightbox_title_src":"title","lightbox_description_src":"description","hello_header_logo_type":"logo",
+"hello_header_menu_layout":"horizontal"},"post":{"id":6082,"title":"Best%20Chios%20Hotels%20%7C%20Where%20To%20Stay%20In%20Chios%20%7CVoulamandis%20House%202026%20-","excerpt"
+:"Discover the best Chios hotels in Greece. Experience a home away from home at Voulamandis House. Book now and explore Chios 
+island!","featuredImage":"https:\/\/chioshotel.gr\/wp-content\/uploads\/2022\/12\/DSC07776-3.webp"}};
+//# sourceURL=elementor-frontend-js-before
+<script id="elementor-frontend-js" src="https://chioshotel.gr/wp-content/plugins/elementor/assets/js/frontend.min.js?ver=4.1.1"></script>
+<script id="elementor-pro-webpack-runtime-js" src="https://chioshotel.gr/wp-content/plugins/elementor-pro/assets/js/webpack-pro.runtime.min.js?ver=4.1.0"></script>
+<script id="elementor-pro-frontend-js-before">
+var ElementorProFrontendConfig = {"ajaxurl":"https:\/\/chioshotel.gr\/wp-admin\/admin-ajax.php","nonce":"bc76f954eb","urls":{"assets":"https:\/\/chioshotel.gr\/wp-content\/plu
+gins\/elementor-pro\/assets\/","rest":"https:\/\/chioshotel.gr\/wp-json\/"},"settings":{"lazy_load_background_images":true},"popup":{"hasPopUps":true},"shareButtonsNetworks":{
+"facebook":{"title":"Facebook","has_counter":true},"twitter":{"title":"Twitter"},"linkedin":{"title":"LinkedIn","has_counter":true},"pinterest":{"title":"Pinterest","has_count
+er":true},"reddit":{"title":"Reddit","has_counter":true},"vk":{"title":"VK","has_counter":true},"odnoklassniki":{"title":"OK","has_counter":true},"tumblr":{"title":"Tumblr"},"
+digg":{"title":"Digg"},"skype":{"title":"Skype"},"stumbleupon":{"title":"StumbleUpon","has_counter":true},"mix":{"title":"Mix"},"telegram":{"title":"Telegram"},"pocket":{"titl
+e":"Pocket","has_counter":true},"xing":{"title":"XING","has_counter":true},"whatsapp":{"title":"WhatsApp"},"email":{"title":"Email"},"print":{"title":"Print"},"x-twitter":{"ti
+tle":"X"},"threads":{"title":"Threads"}},"facebook_sdk":{"lang":"en","app_id":""},"lottie":{"defaultAnimationUrl":"https:\/\/chioshotel.gr\/wp-content\/plugins\/elementor-pro\
+/modules\/lottie\/assets\/animations\/default.json"}};
+//# sourceURL=elementor-pro-frontend-js-before
+<script id="elementor-pro-frontend-js" src="https://chioshotel.gr/wp-content/plugins/elementor-pro/assets/js/frontend.min.js?ver=4.1.0"></script>
+<script id="pro-elements-handlers-js" src="https://chioshotel.gr/wp-content/plugins/elementor-pro/assets/js/elements-handlers.min.js?ver=4.1.0"></script>
+
+
