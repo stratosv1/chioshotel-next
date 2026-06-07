@@ -1,0 +1,20 @@
+﻿REDIRECT AUDIT - BASE URL: https://chioshotel-next-rlln9shii-evoulamandis-2524s-projects.vercel.app
+200 0 https://chioshotel-next-rlln9shii-evoulamandis-2524s-projects.vercel.app/
+200 1 https://chioshotel-next-rlln9shii-evoulamandis-2524s-projects.vercel.app/chios-rooms
+200 1 https://chioshotel-next-rlln9shii-evoulamandis-2524s-projects.vercel.app/chios-hotels-rates
+200 1 https://chioshotel-next-rlln9shii-evoulamandis-2524s-projects.vercel.app/voulamandis-house-contact-us-form-fill-in-the-form
+200 1 https://chioshotel-next-rlln9shii-evoulamandis-2524s-projects.vercel.app/chios-island
+200 2 https://chioshotel-next-rlln9shii-evoulamandis-2524s-projects.vercel.app/chios-beach-lovers
+200 1 https://chioshotel-next-rlln9shii-evoulamandis-2524s-projects.vercel.app/chios-activities
+200 1 https://chioshotel-next-rlln9shii-evoulamandis-2524s-projects.vercel.app/find-your-room
+200 1 https://chioshotel-next-rlln9shii-evoulamandis-2524s-projects.vercel.app/el
+200 1 https://chioshotel-next-rlln9shii-evoulamandis-2524s-projects.vercel.app/el/domatia-xios
+200 1 https://chioshotel-next-rlln9shii-evoulamandis-2524s-projects.vercel.app/el/amesi-kratisi-voulamandis-house
+200 1 https://chioshotel-next-rlln9shii-evoulamandis-2524s-projects.vercel.app/el/epikoinonia-voulamandis-house
+200 1 https://chioshotel-next-rlln9shii-evoulamandis-2524s-projects.vercel.app/fr
+200 1 https://chioshotel-next-rlln9shii-evoulamandis-2524s-projects.vercel.app/fr/chambres-a-chios
+200 1 https://chioshotel-next-rlln9shii-evoulamandis-2524s-projects.vercel.app/de
+200 1 https://chioshotel-next-rlln9shii-evoulamandis-2524s-projects.vercel.app/de/chios-zimmer
+200 1 https://chioshotel-next-rlln9shii-evoulamandis-2524s-projects.vercel.app/it
+200 1 https://chioshotel-next-rlln9shii-evoulamandis-2524s-projects.vercel.app/es
+200 1 https://chioshotel-next-rlln9shii-evoulamandis-2524s-projects.vercel.app/tr
