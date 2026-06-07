@@ -147,7 +147,7 @@ type Copy = {
 };
 
 const CONFIG = {
-  DEALS_ENDPOINT: "https://chioshotel.gr/wp-json/vh/v1/deals",
+  DEALS_ENDPOINT: "/api/deals",
   WHATSAPP_NUMBER: "306944474226",
   DIRECT_DISCOUNT_PERCENT: 15,
   CLIMATE_FEE_PER_NIGHT: 2,
