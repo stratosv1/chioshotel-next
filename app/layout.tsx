@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { VoulamandisFooter } from "@/components/VoulamandisFooter";
 import { VoulamandisHeader } from "@/components/VoulamandisHeader";
 import { siteName, siteUrl } from "@/lib/seo";
@@ -29,13 +30,27 @@ export const metadata: Metadata = {
   manifest: "/favicon/site.webmanifest",
 };
 
-export default function RootLayout({
+function getHtmlLanguage(pathname: string): string {
+  const firstSegment = pathname.split("/").filter(Boolean)[0];
+
+  if (["el", "fr", "de", "it", "es", "tr"].includes(firstSegment)) {
+    return firstSegment;
+  }
+
+  return "en";
+}
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const requestHeaders = await headers();
+  const pathname = requestHeaders.get("x-current-pathname") || "/";
+  const htmlLanguage = getHtmlLanguage(pathname);
+
   return (
-    <html lang="en">
+    <html lang={htmlLanguage}>
       <body>
         <VoulamandisHeader />
         {children}

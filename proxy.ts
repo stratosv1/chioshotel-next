@@ -1,10 +1,10 @@
-import type { NextRequest } from "next/server";
+﻿import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 export function proxy(request: NextRequest) {
   const requestHeaders = new Headers(request.headers);
 
-  requestHeaders.set("x-pathname", request.nextUrl.pathname);
+  requestHeaders.set("x-current-pathname", request.nextUrl.pathname);
 
   return NextResponse.next({
     request: {
@@ -14,5 +14,7 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)"],
+  matcher: [
+    "/((?!api|_next/static|_next/image|favicon|favicon.ico|robots.txt|sitemap.xml|.*\\..*).*)",
+  ],
 };
