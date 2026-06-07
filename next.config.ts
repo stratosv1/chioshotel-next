@@ -904,6 +904,7 @@ const legacyRedirects = [
 ];
 
 const nextConfig: NextConfig = {
+  trailingSlash: true,
   async redirects() {
     return legacyRedirects;
   },
