@@ -1,5 +1,6 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import { headers } from "next/headers";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { VoulamandisFooter } from "@/components/VoulamandisFooter";
 import { VoulamandisHeader } from "@/components/VoulamandisHeader";
 import { siteName, siteUrl } from "@/lib/seo";
@@ -55,6 +56,7 @@ export default async function RootLayout({
         <VoulamandisHeader />
         {children}
         <VoulamandisFooter />
+        <SpeedInsights />
       </body>
     </html>
   );
