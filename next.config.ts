@@ -2,6 +2,10 @@ import type { NextConfig } from "next";
 
 const legacyRedirects = [
     {
+        "source": "/el/kalyteres-paralies-xiou",
+        "destination": "/el/paralies-xios/",
+        "permanent": true
+    },{
         "source": "/el/exerevnisi-chiou",
         "destination": "/el/exerevnisi-xiou/",
         "permanent": true
