@@ -1,6 +1,11 @@
 import type { NextConfig } from "next";
 
 const legacyRedirects = [
+  {
+    source: "/el/chios-el/chios-villages-el/chios-armolia-village",
+    destination: "/el/xoria-xios/armolia-xios/",
+    permanent: true,
+  },
     {
         "source": "/el/kalyteres-paralies-xiou",
         "destination": "/el/paralies-xios/",
