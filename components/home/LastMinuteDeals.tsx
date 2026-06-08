@@ -1562,7 +1562,7 @@ export function LastMinuteDeals({ data }: { data: LastMinuteData }) {
                                     </div>
                                   ) : null}
                                   <img
-                                    src={room.images?.[0] || ""}
+                                    src={room.id === 1 ? "/images/rooms/voulamandis-house-chios-hotels-1-e1675700558710.webp" : (room.images?.[0] || "")}
                                     alt={`${room.displayName} - Chios accommodation deal`}
                                     loading="lazy"
                                   />
