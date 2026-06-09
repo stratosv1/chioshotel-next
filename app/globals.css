@@ -17390,3 +17390,278 @@ a.vh-btn.vh-btn--primary[href*="viber"],
     color: #2f261f !important;
   }
 }
+
+/* Kampos Chios page */
+.kc-page {
+  background: #fffaf3;
+  color: #2f2418;
+}
+
+.kc-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.95fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  padding: clamp(7rem, 11vw, 10rem) clamp(1.25rem, 5vw, 5rem) clamp(3rem, 6vw, 5rem);
+  background:
+    radial-gradient(circle at top left, rgba(215, 159, 73, 0.22), transparent 34%),
+    linear-gradient(135deg, #fff7e8 0%, #f8ead4 45%, #fffaf3 100%);
+}
+
+.kc-hero h1,
+.kc-intro h2,
+.kc-feature h2,
+.kc-stay h2 {
+  margin: 0;
+  color: #2b1d12;
+  letter-spacing: -0.035em;
+  line-height: 0.98;
+}
+
+.kc-hero h1 {
+  max-width: 760px;
+  font-size: clamp(3rem, 7vw, 6.5rem);
+}
+
+.kc-hero p,
+.kc-intro p,
+.kc-feature p,
+.kc-stay p {
+  color: #5f4a36;
+  font-size: clamp(1rem, 1.35vw, 1.18rem);
+  line-height: 1.75;
+}
+
+.kc-hero__content > p {
+  max-width: 680px;
+  margin-top: 1.25rem;
+}
+
+.kc-kicker {
+  margin: 0 0 0.85rem;
+  color: #9b6425 !important;
+  font-size: 0.8rem !important;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  line-height: 1.2 !important;
+  text-transform: uppercase;
+}
+
+.kc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin-top: 2rem;
+}
+
+.kc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0.85rem 1.35rem;
+  border-radius: 999px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kc-btn:hover {
+  transform: translateY(-2px);
+}
+
+.kc-btn--primary {
+  background: #7b3f18;
+  color: #fff;
+  box-shadow: 0 14px 34px rgba(94, 45, 15, 0.22);
+}
+
+.kc-btn--secondary {
+  border: 1px solid rgba(123, 63, 24, 0.28);
+  background: rgba(255, 255, 255, 0.72);
+  color: #653412;
+}
+
+.kc-hero__image,
+.kc-feature__image,
+.kc-gallery figure {
+  overflow: hidden;
+  border-radius: 32px;
+  box-shadow: 0 24px 70px rgba(65, 39, 15, 0.18);
+}
+
+.kc-hero__image img,
+.kc-feature__image img,
+.kc-gallery img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.kc-hero__image img {
+  aspect-ratio: 4 / 3;
+}
+
+.kc-intro {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.75fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  padding: clamp(3rem, 7vw, 6rem) clamp(1.25rem, 5vw, 5rem);
+}
+
+.kc-intro h2,
+.kc-stay h2 {
+  font-size: clamp(2.1rem, 4vw, 4.2rem);
+}
+
+.kc-intro__text {
+  display: grid;
+  gap: 1rem;
+}
+
+.kc-intro__text p {
+  margin: 0;
+}
+
+.kc-highlights {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  padding: 0 clamp(1.25rem, 5vw, 5rem) clamp(3rem, 6vw, 5rem);
+}
+
+.kc-highlights article {
+  padding: 1.4rem;
+  border: 1px solid rgba(123, 63, 24, 0.12);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.kc-highlights span {
+  display: block;
+  color: #8b6a48;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.kc-highlights strong {
+  display: block;
+  margin-top: 0.45rem;
+  color: #2b1d12;
+  font-size: 1.15rem;
+}
+
+.kc-sections {
+  display: grid;
+  gap: clamp(2rem, 5vw, 5rem);
+  padding: 0 clamp(1.25rem, 5vw, 5rem) clamp(3rem, 7vw, 6rem);
+}
+
+.kc-feature {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.95fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+}
+
+.kc-feature:nth-child(even) .kc-feature__image {
+  order: 2;
+}
+
+.kc-feature h2 {
+  font-size: clamp(2rem, 3.8vw, 4rem);
+}
+
+.kc-number {
+  display: inline-flex;
+  margin-bottom: 1rem;
+  color: #b77a32;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+}
+
+.kc-gallery {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  padding: 0 clamp(1.25rem, 5vw, 5rem) clamp(3rem, 7vw, 6rem);
+}
+
+.kc-gallery figure {
+  margin: 0;
+  border-radius: 22px;
+}
+
+.kc-gallery img {
+  aspect-ratio: 4 / 3;
+}
+
+.kc-stay {
+  margin: 0 clamp(1.25rem, 5vw, 5rem) clamp(3rem, 7vw, 6rem);
+  padding: clamp(2rem, 5vw, 4rem);
+  border-radius: 36px;
+  background:
+    linear-gradient(135deg, rgba(43, 29, 18, 0.92), rgba(94, 54, 20, 0.9)),
+    url("/images/kampos/kampos-chios-citrus-estate.webp") center / cover;
+  color: #fff;
+}
+
+.kc-stay h2,
+.kc-stay p,
+.kc-stay .kc-kicker {
+  color: #fff !important;
+}
+
+.kc-stay p {
+  max-width: 760px;
+}
+
+.kc-stay .kc-btn--primary {
+  background: #fff;
+  color: #5c2e0f;
+}
+
+.kc-stay .kc-btn--secondary {
+  border-color: rgba(255, 255, 255, 0.38);
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+@media (max-width: 900px) {
+  .kc-hero,
+  .kc-intro,
+  .kc-feature {
+    grid-template-columns: 1fr;
+  }
+
+  .kc-feature:nth-child(even) .kc-feature__image {
+    order: 0;
+  }
+
+  .kc-highlights,
+  .kc-gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .kc-hero {
+    padding-top: 6rem;
+  }
+
+  .kc-highlights,
+  .kc-gallery {
+    grid-template-columns: 1fr;
+  }
+
+  .kc-actions {
+    flex-direction: column;
+  }
+
+  .kc-btn {
+    width: 100%;
+  }
+}
