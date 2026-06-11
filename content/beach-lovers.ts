@@ -1,4 +1,4 @@
-import type { LanguageCode } from "@/lib/languages";
+﻿import type { LanguageCode } from "@/lib/languages";
 
 export type BeachLoversBeachCard = {
   name: string;
@@ -130,7 +130,7 @@ export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {
       {
         name: "Vroulidia",
         image: images.vroulidia,
-        href: "/chios/chios-beaches/",
+        href: "/chios/chios-beaches/vroulidia-beach/",
         tag: "Turquoise waters",
         description:
           "A small southern beach with calm colours, sea views and a feeling of escape.",
@@ -138,7 +138,7 @@ export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {
       {
         name: "Kato Fana",
         image: images.katoFana,
-        href: "/chios/chios-beaches/",
+        href: "/chios/chios-beaches/kato-fana-beach/",
         tag: "Hidden feeling",
         description:
           "A peaceful beach idea for travellers who like quiet corners and open sea horizons.",

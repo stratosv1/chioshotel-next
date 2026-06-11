@@ -1,4 +1,4 @@
-export type BeachDetailData = {
+﻿export type BeachDetailData = {
   slug: string;
   seo: {
     canonicalPath: string;
@@ -663,7 +663,140 @@ export const beachDetails: BeachDetailData[] = [
     relatedText:
       "Starting from Voulamandis House, explore the hidden treasures of the island.",
   },
-];
+  {
+    slug: "vroulidia-beach",
+    seo: {
+      canonicalPath: "/chios/chios-beaches/vroulidia-beach/",
+      title: "Vroulidia Beach Chios | Turquoise South Chios Cove",
+      description:
+        "Discover Vroulidia Beach in southern Chios, a small turquoise cove near Emporios and the Mastichochoria, ideal for quiet swimming and sea views.",
+      ogImage: "/images/beaches/vroulidia-2-1.jpg",
+    },
+    hero: {
+      kicker: "Southern Chios • Near Emporios",
+      title: "Vroulidia Beach: A Turquoise Cove in South Chios",
+      description:
+        "A small southern beach with clear turquoise water, dramatic sea views and a quiet feeling of escape, perfect for a relaxed beach-hopping day in Chios.",
+      image: "/images/beaches/vroulidia-2-1.jpg",
+      tags: ["#vroulidia", "#south_chios", "#turquoise_waters", "#quiet_beach"],
+    },
+    details: [
+      {
+        icon: "📍",
+        title: "Location & Access",
+        text:
+          "Vroulidia is located in southern Chios, close to Emporios and the Mastichochoria. It is a rewarding stop when exploring Mavra Volia, Pyrgi, Olympoi and the south of the island.",
+      },
+      {
+        icon: "🌊",
+        title: "Characteristics",
+        text:
+          "The beach is known for its turquoise waters, open sea views and peaceful atmosphere. It is best for travellers who enjoy smaller, more natural beaches rather than busy organized spots.",
+      },
+      {
+        icon: "💡",
+        title: "Insider Tip",
+        text:
+          "Combine Vroulidia with Mavra Volia and Komi for a full South Chios beach day. Start early, bring water and keep time for a relaxed meal by the sea afterwards.",
+      },
+    ],
+    media: {
+      video: {
+        title: "Vroulidia Beach in South Chios",
+        embedUrl: "https://www.youtube.com/embed?listType=search&list=Vroulidia%20Beach%20Chios",
+        creditText: "Video search results may vary depending on availability.",
+        creditLabel: "YouTube",
+        creditHref: "https://www.youtube.com/results?search_query=Vroulidia+Beach+Chios",
+      },
+      map: {
+        title: "Route from Voulamandis House",
+        embedUrl:
+          "https://maps.google.com/maps?saddr=Voulamandis+House,+Chios&daddr=Vroulidia+Beach,+Chios&output=embed",
+        distance: "~30 km",
+        time: "~40 minutes",
+        gpsHref:
+          "https://www.google.com/maps/dir/Voulamandis+House,+Chios/Vroulidia+Beach,+Chios/",
+      },
+    },
+    baseTip: {
+      icon: "🗺️",
+      title: "Your Strategic Base",
+      text:
+        "From Voulamandis House in Kampos, you can plan an easy South Chios route that combines Vroulidia with Mavra Volia, Komi and the Mastichochoria.",
+      linkLabel: "Stay with those who know best.",
+      href: "/chios-rooms/",
+    },
+    relatedTitle: "Discover More Beaches",
+    relatedText:
+      "Starting from Voulamandis House, explore the beaches, villages and hidden corners of South Chios.",
+  },
+  {
+    slug: "kato-fana-beach",
+    seo: {
+      canonicalPath: "/chios/chios-beaches/kato-fana-beach/",
+      title: "Kato Fana Beach Chios | Quiet Southern Beach Escape",
+      description:
+        "Discover Kato Fana Beach in southern Chios, a peaceful beach near the ancient Fana area, with open sea views and a calm off-the-beaten-path feeling.",
+      ogImage: "/images/beaches/kato-fana-3.jpg",
+    },
+    hero: {
+      kicker: "Southern Chios • Fana area",
+      title: "Kato Fana Beach: A Quiet Southern Chios Escape",
+      description:
+        "A peaceful beach idea for travellers who love open horizons, quiet corners and a more local side of South Chios.",
+      image: "/images/beaches/kato-fana-3.jpg",
+      tags: ["#kato_fana", "#south_chios", "#quiet_escape", "#open_sea"],
+    },
+    details: [
+      {
+        icon: "📍",
+        title: "Location & Access",
+        text:
+          "Kato Fana is in southern Chios, near the historic Fana area and within reach of Pyrgi, Olympoi and the Mastichochoria. It works well as part of a slow South Chios route.",
+      },
+      {
+        icon: "🌊",
+        title: "Characteristics",
+        text:
+          "This beach has a calm, open feeling and is better suited to travellers looking for space, quiet and simple natural scenery rather than a busy organized beach.",
+      },
+      {
+        icon: "💡",
+        title: "Insider Tip",
+        text:
+          "Visit Kato Fana when you want a quieter stop between villages and beaches. Bring essentials with you, especially water, shade and anything you need for a relaxed swim.",
+      },
+    ],
+    media: {
+      video: {
+        title: "Kato Fana Beach in South Chios",
+        embedUrl: "https://www.youtube.com/embed?listType=search&list=Kato%20Fana%20Beach%20Chios",
+        creditText: "Video search results may vary depending on availability.",
+        creditLabel: "YouTube",
+        creditHref: "https://www.youtube.com/results?search_query=Kato+Fana+Beach+Chios",
+      },
+      map: {
+        title: "Route from Voulamandis House",
+        embedUrl:
+          "https://maps.google.com/maps?saddr=Voulamandis+House,+Chios&daddr=Kato+Fana,+Chios&output=embed",
+        distance: "~27 km",
+        time: "~35-40 minutes",
+        gpsHref:
+          "https://www.google.com/maps/dir/Voulamandis+House,+Chios/Kato+Fana,+Chios/",
+      },
+    },
+    baseTip: {
+      icon: "🗺️",
+      title: "Your Strategic Base",
+      text:
+        "Voulamandis House in Kampos is a calm base for exploring South Chios beaches like Kato Fana, Vroulidia, Komi and Mavra Volia without changing accommodation.",
+      linkLabel: "Stay with those who know best.",
+      href: "/chios-rooms/",
+    },
+    relatedTitle: "Discover More Beaches",
+    relatedText:
+      "Use Voulamandis House as your base and discover the beaches and villages of southern Chios at your own pace.",
+  },];
 
 export const localizedBeachDetails: BeachDetailData[] = [
   {
@@ -4537,3 +4670,4 @@ export function getRelatedBeachCards(currentSlug: string) {
 export function getBeachSlugs() {
   return beachDetails.map((beach) => beach.slug);
 }
+
