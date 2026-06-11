@@ -4549,6 +4549,811 @@ export const localizedBeachDetails: BeachDetailData[] = [
     relatedText:
       "Voulamandis House’tan başlayarak adanın gizli hazinelerini keşfedin.",
   },
+
+  {
+    slug: "paralia-vroulidia",
+    seo: {
+      canonicalPath: "/el/paralies-xios/paralia-vroulidia/",
+      title: "Παραλία Βρουλίδια Χίος | Τυρκουάζ νερά στη νότια Χίο",
+      description:
+        "Ανακαλύψτε την παραλία Βρουλίδια στη νότια Χίο, έναν μικρό όρμο με τυρκουάζ νερά κοντά στα Μαστιχοχώρια, ιδανικό για ήρεμο μπάνιο.",
+      ogImage: "/images/beaches/vroulidia-2-1.jpg",
+    },
+    hero: {
+      kicker: "Νότια Χίος • Κοντά στον Εμπορειό",
+      title: "Παραλία Βρουλίδια: ένας τυρκουάζ όρμος στη νότια Χίο",
+      description:
+        "Μια μικρή παραλία με καθαρά τυρκουάζ νερά, ανοιχτή θέα στη θάλασσα και ήρεμη αίσθηση απόδρασης, ιδανική για beach hopping στη νότια Χίο.",
+      image: "/images/beaches/vroulidia-2-1.jpg",
+      tags: ["#βρουλίδια", "#νότια_χίος", "#τυρκουάζ_νερά", "#ήρεμη_παραλία"],
+    },
+    details: [
+      {
+        icon: "📍",
+        title: "Τοποθεσία & πρόσβαση",
+        text:
+          "Τα Βρουλίδια βρίσκονται στη νότια Χίο, κοντά στον Εμπορειό και τα Μαστιχοχώρια. Είναι ιδανική στάση μαζί με τα Μαύρα Βόλια, το Πυργί και τους Ολύμπους.",
+      },
+      {
+        icon: "🌊",
+        title: "Χαρακτηριστικά",
+        text:
+          "Η παραλία ξεχωρίζει για τα τυρκουάζ νερά, τη θέα προς το ανοιχτό πέλαγος και την ήρεμη ατμόσφαιρα. Ταιριάζει σε ταξιδιώτες που προτιμούν μικρές φυσικές παραλίες.",
+      },
+      {
+        icon: "💡",
+        title: "Τοπικό tip",
+        text:
+          "Συνδυάστε τα Βρουλίδια με τα Μαύρα Βόλια και την Κώμη για μια ολοκληρωμένη beach day στη νότια Χίο. Ξεκινήστε νωρίς και πάρτε μαζί σας νερό.",
+      },
+    ],
+    media: {
+      video: {
+        title: "Η παραλία Βρουλίδια στη νότια Χίο",
+        embedUrl: "https://www.youtube.com/embed?listType=search&list=Vroulidia%20Beach%20Chios",
+        creditText: "Τα διαθέσιμα αποτελέσματα βίντεο μπορεί να διαφέρουν.",
+        creditLabel: "YouTube",
+        creditHref: "https://www.youtube.com/results?search_query=Vroulidia+Beach+Chios",
+      },
+      map: {
+        title: "Διαδρομή από το Voulamandis House",
+        embedUrl:
+          "https://maps.google.com/maps?saddr=Voulamandis+House,+Chios&daddr=Vroulidia+Beach,+Chios&output=embed",
+        distance: "~30 χλμ.",
+        time: "~40 λεπτά",
+        gpsHref:
+          "https://www.google.com/maps/dir/Voulamandis+House,+Chios/Vroulidia+Beach,+Chios/",
+      },
+    },
+    baseTip: {
+      icon: "🗺️",
+      title: "Η στρατηγική σας βάση",
+      text:
+        "Από το Voulamandis House στον Κάμπο μπορείτε να οργανώσετε εύκολα μια διαδρομή στη νότια Χίο με Βρουλίδια, Μαύρα Βόλια, Κώμη και Μαστιχοχώρια.",
+      linkLabel: "Μείνετε με ανθρώπους που γνωρίζουν τη Χίο.",
+      href: "/el/domatia-xios/",
+    },
+    relatedTitle: "Ανακαλύψτε περισσότερες παραλίες",
+    relatedText:
+      "Με βάση το Voulamandis House, εξερευνήστε τις παραλίες και τα χωριά της νότιας Χίου.",
+  },
+  {
+    slug: "paralia-kato-fana",
+    seo: {
+      canonicalPath: "/el/paralies-xios/paralia-kato-fana/",
+      title: "Παραλία Κάτω Φανά Χίος | Ήρεμη νότια απόδραση",
+      description:
+        "Ανακαλύψτε την παραλία Κάτω Φανά στη νότια Χίο, μια ήρεμη παραλία κοντά στην ιστορική περιοχή των Φανών με ανοιχτή θέα στη θάλασσα.",
+      ogImage: "/images/beaches/kato-fana-3.jpg",
+    },
+    hero: {
+      kicker: "Νότια Χίος • Περιοχή Φανών",
+      title: "Παραλία Κάτω Φανά: ήρεμη απόδραση στη νότια Χίο",
+      description:
+        "Μια ήσυχη παραλία για ταξιδιώτες που αγαπούν τους ανοιχτούς ορίζοντες, τις ήρεμες γωνιές και την πιο αυθεντική πλευρά της νότιας Χίου.",
+      image: "/images/beaches/kato-fana-3.jpg",
+      tags: ["#κάτω_φανά", "#νότια_χίος", "#ήρεμη_απόδραση", "#ανοιχτή_θάλασσα"],
+    },
+    details: [
+      {
+        icon: "📍",
+        title: "Τοποθεσία & πρόσβαση",
+        text:
+          "Τα Κάτω Φανά βρίσκονται στη νότια Χίο, κοντά στην ιστορική περιοχή των Φανών και σε απόσταση για συνδυασμό με Πυργί, Ολύμπους και Μαστιχοχώρια.",
+      },
+      {
+        icon: "🌊",
+        title: "Χαρακτηριστικά",
+        text:
+          "Η παραλία έχει ήρεμη, ανοιχτή αίσθηση και ταιριάζει σε όσους αναζητούν χώρο, ησυχία και φυσικό τοπίο αντί για πολυσύχναστες οργανωμένες παραλίες.",
+      },
+      {
+        icon: "💡",
+        title: "Τοπικό tip",
+        text:
+          "Επισκεφθείτε τα Κάτω Φανά ως ήρεμη στάση ανάμεσα σε χωριά και παραλίες. Πάρτε μαζί σας νερό, σκιά και ό,τι χρειάζεστε για χαλαρό μπάνιο.",
+      },
+    ],
+    media: {
+      video: {
+        title: "Παραλία Κάτω Φανά στη νότια Χίο",
+        embedUrl: "https://www.youtube.com/embed?listType=search&list=Kato%20Fana%20Beach%20Chios",
+        creditText: "Τα διαθέσιμα αποτελέσματα βίντεο μπορεί να διαφέρουν.",
+        creditLabel: "YouTube",
+        creditHref: "https://www.youtube.com/results?search_query=Kato+Fana+Beach+Chios",
+      },
+      map: {
+        title: "Διαδρομή από το Voulamandis House",
+        embedUrl:
+          "https://maps.google.com/maps?saddr=Voulamandis+House,+Chios&daddr=Kato+Fana,+Chios&output=embed",
+        distance: "~27 χλμ.",
+        time: "~35-40 λεπτά",
+        gpsHref:
+          "https://www.google.com/maps/dir/Voulamandis+House,+Chios/Kato+Fana,+Chios/",
+      },
+    },
+    baseTip: {
+      icon: "🗺️",
+      title: "Η στρατηγική σας βάση",
+      text:
+        "Το Voulamandis House στον Κάμπο είναι ήρεμη βάση για να εξερευνήσετε παραλίες όπως Κάτω Φανά, Βρουλίδια, Κώμη και Μαύρα Βόλια.",
+      linkLabel: "Μείνετε με ανθρώπους που γνωρίζουν τη Χίο.",
+      href: "/el/domatia-xios/",
+    },
+    relatedTitle: "Ανακαλύψτε περισσότερες παραλίες",
+    relatedText:
+      "Χρησιμοποιήστε το Voulamandis House ως βάση και γνωρίστε τη νότια Χίο στον δικό σας ρυθμό.",
+  },
+  {
+    slug: "plage-vroulidia",
+    seo: {
+      canonicalPath: "/fr/plages-de-chios/plage-vroulidia/",
+      title: "Plage de Vroulidia Chios | Crique turquoise du sud",
+      description:
+        "Découvrez la plage de Vroulidia au sud de Chios, une petite crique turquoise près d’Emporios et des villages du mastic, idéale pour nager au calme.",
+      ogImage: "/images/beaches/vroulidia-2-1.jpg",
+    },
+    hero: {
+      kicker: "Sud de Chios • Près d’Emporios",
+      title: "Plage de Vroulidia : une crique turquoise au sud de Chios",
+      description:
+        "Une petite plage du sud avec des eaux turquoise, une vue ouverte sur la mer et une atmosphère paisible, parfaite pour une journée plage à Chios.",
+      image: "/images/beaches/vroulidia-2-1.jpg",
+      tags: ["#vroulidia", "#sud_chios", "#eaux_turquoise", "#plage_calme"],
+    },
+    details: [
+      {
+        icon: "📍",
+        title: "Situation & accès",
+        text:
+          "Vroulidia se trouve au sud de Chios, près d’Emporios et des villages du mastic. Elle se combine facilement avec Mavra Volia, Pyrgi et Olympoi.",
+      },
+      {
+        icon: "🌊",
+        title: "Caractéristiques",
+        text:
+          "La plage est connue pour ses eaux turquoise, ses vues vers le large et son ambiance tranquille. Elle convient aux voyageurs qui aiment les petites plages naturelles.",
+      },
+      {
+        icon: "💡",
+        title: "Conseil local",
+        text:
+          "Combinez Vroulidia avec Mavra Volia et Komi pour une belle journée dans le sud de Chios. Partez tôt et prévoyez de l’eau.",
+      },
+    ],
+    media: {
+      video: {
+        title: "La plage de Vroulidia au sud de Chios",
+        embedUrl: "https://www.youtube.com/embed?listType=search&list=Vroulidia%20Beach%20Chios",
+        creditText: "Les résultats vidéo disponibles peuvent varier.",
+        creditLabel: "YouTube",
+        creditHref: "https://www.youtube.com/results?search_query=Vroulidia+Beach+Chios",
+      },
+      map: {
+        title: "Itinéraire depuis Voulamandis House",
+        embedUrl:
+          "https://maps.google.com/maps?saddr=Voulamandis+House,+Chios&daddr=Vroulidia+Beach,+Chios&output=embed",
+        distance: "~30 km",
+        time: "~40 minutes",
+        gpsHref:
+          "https://www.google.com/maps/dir/Voulamandis+House,+Chios/Vroulidia+Beach,+Chios/",
+      },
+    },
+    baseTip: {
+      icon: "🗺️",
+      title: "Votre base idéale",
+      text:
+        "Depuis Voulamandis House à Kampos, vous pouvez explorer facilement Vroulidia, Mavra Volia, Komi et les villages du mastic.",
+      linkLabel: "Séjournez chez ceux qui connaissent Chios.",
+      href: "/fr/chambres-a-chios/",
+    },
+    relatedTitle: "Découvrez d’autres plages",
+    relatedText:
+      "Depuis Voulamandis House, explorez les plages et villages du sud de Chios.",
+  },
+  {
+    slug: "plage-kato-fana",
+    seo: {
+      canonicalPath: "/fr/plages-de-chios/plage-kato-fana/",
+      title: "Plage de Kato Fana Chios | Évasion calme au sud",
+      description:
+        "Découvrez la plage de Kato Fana au sud de Chios, une plage paisible près de la région historique de Fana, avec vue ouverte sur la mer.",
+      ogImage: "/images/beaches/kato-fana-3.jpg",
+    },
+    hero: {
+      kicker: "Sud de Chios • Région de Fana",
+      title: "Plage de Kato Fana : une évasion calme au sud de Chios",
+      description:
+        "Une plage paisible pour les voyageurs qui aiment les horizons ouverts, les coins tranquilles et le côté plus local du sud de Chios.",
+      image: "/images/beaches/kato-fana-3.jpg",
+      tags: ["#kato_fana", "#sud_chios", "#evasion_calme", "#mer_ouverte"],
+    },
+    details: [
+      {
+        icon: "📍",
+        title: "Situation & accès",
+        text:
+          "Kato Fana se trouve au sud de Chios, près de la région historique de Fana et à distance raisonnable de Pyrgi, Olympoi et des villages du mastic.",
+      },
+      {
+        icon: "🌊",
+        title: "Caractéristiques",
+        text:
+          "Cette plage offre une sensation calme et ouverte. Elle convient aux voyageurs qui cherchent de l’espace, de la simplicité et un décor naturel.",
+      },
+      {
+        icon: "💡",
+        title: "Conseil local",
+        text:
+          "Visitez Kato Fana comme étape tranquille entre villages et plages. Prévoyez eau, ombre et tout le nécessaire pour nager confortablement.",
+      },
+    ],
+    media: {
+      video: {
+        title: "La plage de Kato Fana au sud de Chios",
+        embedUrl: "https://www.youtube.com/embed?listType=search&list=Kato%20Fana%20Beach%20Chios",
+        creditText: "Les résultats vidéo disponibles peuvent varier.",
+        creditLabel: "YouTube",
+        creditHref: "https://www.youtube.com/results?search_query=Kato+Fana+Beach+Chios",
+      },
+      map: {
+        title: "Itinéraire depuis Voulamandis House",
+        embedUrl:
+          "https://maps.google.com/maps?saddr=Voulamandis+House,+Chios&daddr=Kato+Fana,+Chios&output=embed",
+        distance: "~27 km",
+        time: "~35-40 minutes",
+        gpsHref:
+          "https://www.google.com/maps/dir/Voulamandis+House,+Chios/Kato+Fana,+Chios/",
+      },
+    },
+    baseTip: {
+      icon: "🗺️",
+      title: "Votre base idéale",
+      text:
+        "Voulamandis House à Kampos est une base calme pour explorer Kato Fana, Vroulidia, Komi et Mavra Volia.",
+      linkLabel: "Séjournez chez ceux qui connaissent Chios.",
+      href: "/fr/chambres-a-chios/",
+    },
+    relatedTitle: "Découvrez d’autres plages",
+    relatedText:
+      "Depuis Voulamandis House, découvrez les plages du sud de Chios à votre rythme.",
+  },
+  {
+    slug: "vroulidia-strand",
+    seo: {
+      canonicalPath: "/de/straende-chios/vroulidia-strand/",
+      title: "Vroulidia Strand Chios | Türkisblaue Bucht im Süden",
+      description:
+        "Entdecken Sie den Vroulidia Strand im Süden von Chios, eine kleine türkisfarbene Bucht nahe Emporios und den Mastixdörfern, ideal zum ruhigen Schwimmen.",
+      ogImage: "/images/beaches/vroulidia-2-1.jpg",
+    },
+    hero: {
+      kicker: "Süd-Chios • Nahe Emporios",
+      title: "Vroulidia Strand: eine türkisfarbene Bucht im Süden von Chios",
+      description:
+        "Ein kleiner südlicher Strand mit klarem türkisfarbenem Wasser, Meerblick und ruhiger Atmosphäre, ideal für einen Strandtag auf Chios.",
+      image: "/images/beaches/vroulidia-2-1.jpg",
+      tags: ["#vroulidia", "#sued_chios", "#tuerkiswasser", "#ruhiger_strand"],
+    },
+    details: [
+      {
+        icon: "📍",
+        title: "Lage & Zugang",
+        text:
+          "Vroulidia liegt im Süden von Chios, nahe Emporios und den Mastixdörfern. Der Strand lässt sich gut mit Mavra Volia, Pyrgi und Olympoi kombinieren.",
+      },
+      {
+        icon: "🌊",
+        title: "Charakter",
+        text:
+          "Der Strand ist für türkisfarbenes Wasser, offene Meerblicke und ruhige Stimmung bekannt. Er passt zu Reisenden, die kleinere natürliche Strände mögen.",
+      },
+      {
+        icon: "💡",
+        title: "Lokaler Tipp",
+        text:
+          "Kombinieren Sie Vroulidia mit Mavra Volia und Komi für einen kompletten Strandtag im Süden von Chios. Starten Sie früh und nehmen Sie Wasser mit.",
+      },
+    ],
+    media: {
+      video: {
+        title: "Vroulidia Strand im Süden von Chios",
+        embedUrl: "https://www.youtube.com/embed?listType=search&list=Vroulidia%20Beach%20Chios",
+        creditText: "Verfügbare Videoergebnisse können variieren.",
+        creditLabel: "YouTube",
+        creditHref: "https://www.youtube.com/results?search_query=Vroulidia+Beach+Chios",
+      },
+      map: {
+        title: "Route von Voulamandis House",
+        embedUrl:
+          "https://maps.google.com/maps?saddr=Voulamandis+House,+Chios&daddr=Vroulidia+Beach,+Chios&output=embed",
+        distance: "~30 km",
+        time: "~40 Minuten",
+        gpsHref:
+          "https://www.google.com/maps/dir/Voulamandis+House,+Chios/Vroulidia+Beach,+Chios/",
+      },
+    },
+    baseTip: {
+      icon: "🗺️",
+      title: "Ihre strategische Basis",
+      text:
+        "Von Voulamandis House in Kampos aus können Sie Vroulidia, Mavra Volia, Komi und die Mastixdörfer bequem erkunden.",
+      linkLabel: "Übernachten Sie bei Menschen, die Chios kennen.",
+      href: "/de/chios-zimmer/",
+    },
+    relatedTitle: "Weitere Strände entdecken",
+    relatedText:
+      "Von Voulamandis House aus entdecken Sie die Strände und Dörfer im Süden von Chios.",
+  },
+  {
+    slug: "kato-fana-strand",
+    seo: {
+      canonicalPath: "/de/straende-chios/kato-fana-strand/",
+      title: "Kato Fana Strand Chios | Ruhige Auszeit im Süden",
+      description:
+        "Entdecken Sie den Kato Fana Strand im Süden von Chios, einen ruhigen Strand nahe der historischen Fana-Region mit offenem Blick aufs Meer.",
+      ogImage: "/images/beaches/kato-fana-3.jpg",
+    },
+    hero: {
+      kicker: "Süd-Chios • Region Fana",
+      title: "Kato Fana Strand: ruhige Auszeit im Süden von Chios",
+      description:
+        "Ein friedlicher Strand für Reisende, die offene Horizonte, ruhige Orte und die lokale Seite von Süd-Chios lieben.",
+      image: "/images/beaches/kato-fana-3.jpg",
+      tags: ["#kato_fana", "#sued_chios", "#ruhige_auszeit", "#offenes_meer"],
+    },
+    details: [
+      {
+        icon: "📍",
+        title: "Lage & Zugang",
+        text:
+          "Kato Fana liegt im Süden von Chios, nahe der historischen Fana-Region und gut erreichbar von Pyrgi, Olympoi und den Mastixdörfern.",
+      },
+      {
+        icon: "🌊",
+        title: "Charakter",
+        text:
+          "Der Strand wirkt ruhig und offen. Er eignet sich für Reisende, die Platz, einfache Natur und weniger besuchte Orte suchen.",
+      },
+      {
+        icon: "💡",
+        title: "Lokaler Tipp",
+        text:
+          "Besuchen Sie Kato Fana als ruhigen Stopp zwischen Dörfern und Stränden. Nehmen Sie Wasser, Schatten und alles für ein entspanntes Bad mit.",
+      },
+    ],
+    media: {
+      video: {
+        title: "Kato Fana Strand im Süden von Chios",
+        embedUrl: "https://www.youtube.com/embed?listType=search&list=Kato%20Fana%20Beach%20Chios",
+        creditText: "Verfügbare Videoergebnisse können variieren.",
+        creditLabel: "YouTube",
+        creditHref: "https://www.youtube.com/results?search_query=Kato+Fana+Beach+Chios",
+      },
+      map: {
+        title: "Route von Voulamandis House",
+        embedUrl:
+          "https://maps.google.com/maps?saddr=Voulamandis+House,+Chios&daddr=Kato+Fana,+Chios&output=embed",
+        distance: "~27 km",
+        time: "~35-40 Minuten",
+        gpsHref:
+          "https://www.google.com/maps/dir/Voulamandis+House,+Chios/Kato+Fana,+Chios/",
+      },
+    },
+    baseTip: {
+      icon: "🗺️",
+      title: "Ihre strategische Basis",
+      text:
+        "Voulamandis House in Kampos ist eine ruhige Basis für Kato Fana, Vroulidia, Komi und Mavra Volia.",
+      linkLabel: "Übernachten Sie bei Menschen, die Chios kennen.",
+      href: "/de/chios-zimmer/",
+    },
+    relatedTitle: "Weitere Strände entdecken",
+    relatedText:
+      "Nutzen Sie Voulamandis House als Basis und entdecken Sie Süd-Chios in Ihrem eigenen Tempo.",
+  },
+  {
+    slug: "spiaggia-vroulidia",
+    seo: {
+      canonicalPath: "/it/spiagge-chios/spiaggia-vroulidia/",
+      title: "Spiaggia Vroulidia Chios | Baia turchese del sud",
+      description:
+        "Scopri la spiaggia di Vroulidia nel sud di Chios, una piccola baia turchese vicino a Emporios e ai villaggi del mastice, ideale per nuotare in tranquillità.",
+      ogImage: "/images/beaches/vroulidia-2-1.jpg",
+    },
+    hero: {
+      kicker: "Sud di Chios • Vicino a Emporios",
+      title: "Spiaggia di Vroulidia: una baia turchese nel sud di Chios",
+      description:
+        "Una piccola spiaggia meridionale con acque turchesi, vista aperta sul mare e un’atmosfera tranquilla, perfetta per una giornata tra le spiagge di Chios.",
+      image: "/images/beaches/vroulidia-2-1.jpg",
+      tags: ["#vroulidia", "#sud_chios", "#acque_turchesi", "#spiaggia_tranquilla"],
+    },
+    details: [
+      {
+        icon: "📍",
+        title: "Posizione e accesso",
+        text:
+          "Vroulidia si trova nel sud di Chios, vicino a Emporios e ai villaggi del mastice. Si abbina bene a Mavra Volia, Pyrgi e Olympoi.",
+      },
+      {
+        icon: "🌊",
+        title: "Caratteristiche",
+        text:
+          "La spiaggia è nota per le acque turchesi, la vista sul mare aperto e l’atmosfera tranquilla. È ideale per chi ama piccole spiagge naturali.",
+      },
+      {
+        icon: "💡",
+        title: "Consiglio locale",
+        text:
+          "Abbina Vroulidia a Mavra Volia e Komi per una giornata completa nel sud di Chios. Parti presto e porta con te acqua.",
+      },
+    ],
+    media: {
+      video: {
+        title: "Spiaggia di Vroulidia nel sud di Chios",
+        embedUrl: "https://www.youtube.com/embed?listType=search&list=Vroulidia%20Beach%20Chios",
+        creditText: "I risultati video disponibili possono variare.",
+        creditLabel: "YouTube",
+        creditHref: "https://www.youtube.com/results?search_query=Vroulidia+Beach+Chios",
+      },
+      map: {
+        title: "Percorso da Voulamandis House",
+        embedUrl:
+          "https://maps.google.com/maps?saddr=Voulamandis+House,+Chios&daddr=Vroulidia+Beach,+Chios&output=embed",
+        distance: "~30 km",
+        time: "~40 minuti",
+        gpsHref:
+          "https://www.google.com/maps/dir/Voulamandis+House,+Chios/Vroulidia+Beach,+Chios/",
+      },
+    },
+    baseTip: {
+      icon: "🗺️",
+      title: "La tua base strategica",
+      text:
+        "Da Voulamandis House a Kampos puoi esplorare facilmente Vroulidia, Mavra Volia, Komi e i villaggi del mastice.",
+      linkLabel: "Soggiorna con chi conosce Chios.",
+      href: "/it/camere-a-chios/",
+    },
+    relatedTitle: "Scopri altre spiagge",
+    relatedText:
+      "Partendo da Voulamandis House, esplora le spiagge e i villaggi del sud di Chios.",
+  },
+  {
+    slug: "spiaggia-kato-fana",
+    seo: {
+      canonicalPath: "/it/spiagge-chios/spiaggia-kato-fana/",
+      title: "Spiaggia Kato Fana Chios | Tranquilla fuga a sud",
+      description:
+        "Scopri la spiaggia di Kato Fana nel sud di Chios, una spiaggia tranquilla vicino alla storica zona di Fana, con vista aperta sul mare.",
+      ogImage: "/images/beaches/kato-fana-3.jpg",
+    },
+    hero: {
+      kicker: "Sud di Chios • Zona di Fana",
+      title: "Spiaggia di Kato Fana: una fuga tranquilla nel sud di Chios",
+      description:
+        "Una spiaggia pacifica per chi ama orizzonti aperti, angoli tranquilli e il lato più locale del sud di Chios.",
+      image: "/images/beaches/kato-fana-3.jpg",
+      tags: ["#kato_fana", "#sud_chios", "#fuga_tranquilla", "#mare_aperto"],
+    },
+    details: [
+      {
+        icon: "📍",
+        title: "Posizione e accesso",
+        text:
+          "Kato Fana si trova nel sud di Chios, vicino alla zona storica di Fana e a breve distanza da Pyrgi, Olympoi e dai villaggi del mastice.",
+      },
+      {
+        icon: "🌊",
+        title: "Caratteristiche",
+        text:
+          "Questa spiaggia ha un’atmosfera calma e aperta. È adatta a chi cerca spazio, semplicità e paesaggio naturale.",
+      },
+      {
+        icon: "💡",
+        title: "Consiglio locale",
+        text:
+          "Visita Kato Fana come tappa tranquilla tra villaggi e spiagge. Porta acqua, ombra e tutto ciò che serve per un bagno rilassato.",
+      },
+    ],
+    media: {
+      video: {
+        title: "Spiaggia di Kato Fana nel sud di Chios",
+        embedUrl: "https://www.youtube.com/embed?listType=search&list=Kato%20Fana%20Beach%20Chios",
+        creditText: "I risultati video disponibili possono variare.",
+        creditLabel: "YouTube",
+        creditHref: "https://www.youtube.com/results?search_query=Kato+Fana+Beach+Chios",
+      },
+      map: {
+        title: "Percorso da Voulamandis House",
+        embedUrl:
+          "https://maps.google.com/maps?saddr=Voulamandis+House,+Chios&daddr=Kato+Fana,+Chios&output=embed",
+        distance: "~27 km",
+        time: "~35-40 minuti",
+        gpsHref:
+          "https://www.google.com/maps/dir/Voulamandis+House,+Chios/Kato+Fana,+Chios/",
+      },
+    },
+    baseTip: {
+      icon: "🗺️",
+      title: "La tua base strategica",
+      text:
+        "Voulamandis House a Kampos è una base tranquilla per Kato Fana, Vroulidia, Komi e Mavra Volia.",
+      linkLabel: "Soggiorna con chi conosce Chios.",
+      href: "/it/camere-a-chios/",
+    },
+    relatedTitle: "Scopri altre spiagge",
+    relatedText:
+      "Usa Voulamandis House come base e scopri il sud di Chios al tuo ritmo.",
+  },
+  {
+    slug: "playa-vroulidia",
+    seo: {
+      canonicalPath: "/es/playas-chios/playa-vroulidia/",
+      title: "Playa Vroulidia Chios | Cala turquesa del sur",
+      description:
+        "Descubre la playa de Vroulidia en el sur de Chios, una pequeña cala turquesa cerca de Emporios y los pueblos del mastiha, ideal para nadar con calma.",
+      ogImage: "/images/beaches/vroulidia-2-1.jpg",
+    },
+    hero: {
+      kicker: "Sur de Chios • Cerca de Emporios",
+      title: "Playa de Vroulidia: una cala turquesa en el sur de Chios",
+      description:
+        "Una pequeña playa del sur con aguas turquesas, vistas abiertas al mar y una atmósfera tranquila, perfecta para un día de playa en Chios.",
+      image: "/images/beaches/vroulidia-2-1.jpg",
+      tags: ["#vroulidia", "#sur_chios", "#aguas_turquesas", "#playa_tranquila"],
+    },
+    details: [
+      {
+        icon: "📍",
+        title: "Ubicación y acceso",
+        text:
+          "Vroulidia se encuentra en el sur de Chios, cerca de Emporios y los pueblos del mastiha. Combina bien con Mavra Volia, Pyrgi y Olympoi.",
+      },
+      {
+        icon: "🌊",
+        title: "Características",
+        text:
+          "La playa destaca por sus aguas turquesas, sus vistas al mar abierto y su ambiente tranquilo. Es ideal para quienes prefieren playas pequeñas y naturales.",
+      },
+      {
+        icon: "💡",
+        title: "Consejo local",
+        text:
+          "Combina Vroulidia con Mavra Volia y Komi para un día completo en el sur de Chios. Sal temprano y lleva agua.",
+      },
+    ],
+    media: {
+      video: {
+        title: "Playa de Vroulidia en el sur de Chios",
+        embedUrl: "https://www.youtube.com/embed?listType=search&list=Vroulidia%20Beach%20Chios",
+        creditText: "Los resultados de vídeo disponibles pueden variar.",
+        creditLabel: "YouTube",
+        creditHref: "https://www.youtube.com/results?search_query=Vroulidia+Beach+Chios",
+      },
+      map: {
+        title: "Ruta desde Voulamandis House",
+        embedUrl:
+          "https://maps.google.com/maps?saddr=Voulamandis+House,+Chios&daddr=Vroulidia+Beach,+Chios&output=embed",
+        distance: "~30 km",
+        time: "~40 minutos",
+        gpsHref:
+          "https://www.google.com/maps/dir/Voulamandis+House,+Chios/Vroulidia+Beach,+Chios/",
+      },
+    },
+    baseTip: {
+      icon: "🗺️",
+      title: "Tu base estratégica",
+      text:
+        "Desde Voulamandis House en Kampos puedes explorar fácilmente Vroulidia, Mavra Volia, Komi y los pueblos del mastiha.",
+      linkLabel: "Alójate con quienes conocen Chios.",
+      href: "/es/habitaciones-en-chios/",
+    },
+    relatedTitle: "Descubre más playas",
+    relatedText:
+      "Desde Voulamandis House, explora las playas y pueblos del sur de Chios.",
+  },
+  {
+    slug: "playa-kato-fana",
+    seo: {
+      canonicalPath: "/es/playas-chios/playa-kato-fana/",
+      title: "Playa Kato Fana Chios | Escapada tranquila al sur",
+      description:
+        "Descubre la playa de Kato Fana en el sur de Chios, una playa tranquila cerca de la zona histórica de Fana, con vistas abiertas al mar.",
+      ogImage: "/images/beaches/kato-fana-3.jpg",
+    },
+    hero: {
+      kicker: "Sur de Chios • Zona de Fana",
+      title: "Playa de Kato Fana: una escapada tranquila en el sur de Chios",
+      description:
+        "Una playa apacible para viajeros que aman los horizontes abiertos, los rincones tranquilos y el lado más local del sur de Chios.",
+      image: "/images/beaches/kato-fana-3.jpg",
+      tags: ["#kato_fana", "#sur_chios", "#escapada_tranquila", "#mar_abierto"],
+    },
+    details: [
+      {
+        icon: "📍",
+        title: "Ubicación y acceso",
+        text:
+          "Kato Fana se encuentra en el sur de Chios, cerca de la zona histórica de Fana y a distancia razonable de Pyrgi, Olympoi y los pueblos del mastiha.",
+      },
+      {
+        icon: "🌊",
+        title: "Características",
+        text:
+          "Esta playa tiene una sensación tranquila y abierta. Es adecuada para quienes buscan espacio, sencillez y paisaje natural.",
+      },
+      {
+        icon: "💡",
+        title: "Consejo local",
+        text:
+          "Visita Kato Fana como parada tranquila entre pueblos y playas. Lleva agua, sombra y todo lo necesario para nadar con calma.",
+      },
+    ],
+    media: {
+      video: {
+        title: "Playa de Kato Fana en el sur de Chios",
+        embedUrl: "https://www.youtube.com/embed?listType=search&list=Kato%20Fana%20Beach%20Chios",
+        creditText: "Los resultados de vídeo disponibles pueden variar.",
+        creditLabel: "YouTube",
+        creditHref: "https://www.youtube.com/results?search_query=Kato+Fana+Beach+Chios",
+      },
+      map: {
+        title: "Ruta desde Voulamandis House",
+        embedUrl:
+          "https://maps.google.com/maps?saddr=Voulamandis+House,+Chios&daddr=Kato+Fana,+Chios&output=embed",
+        distance: "~27 km",
+        time: "~35-40 minutos",
+        gpsHref:
+          "https://www.google.com/maps/dir/Voulamandis+House,+Chios/Kato+Fana,+Chios/",
+      },
+    },
+    baseTip: {
+      icon: "🗺️",
+      title: "Tu base estratégica",
+      text:
+        "Voulamandis House en Kampos es una base tranquila para Kato Fana, Vroulidia, Komi y Mavra Volia.",
+      linkLabel: "Alójate con quienes conocen Chios.",
+      href: "/es/habitaciones-en-chios/",
+    },
+    relatedTitle: "Descubre más playas",
+    relatedText:
+      "Usa Voulamandis House como base y descubre el sur de Chios a tu ritmo.",
+  },
+  {
+    slug: "vroulidia-plaji",
+    seo: {
+      canonicalPath: "/tr/sakiz-adasi-plajlari/vroulidia-plaji/",
+      title: "Vroulidia Plajı Sakız Adası | Güneyde turkuaz koy",
+      description:
+        "Sakız Adası’nın güneyindeki Vroulidia Plajı’nı keşfedin; Emporios ve damla sakızı köylerine yakın, sakin yüzme için ideal küçük turkuaz bir koy.",
+      ogImage: "/images/beaches/vroulidia-2-1.jpg",
+    },
+    hero: {
+      kicker: "Güney Sakız • Emporios yakınında",
+      title: "Vroulidia Plajı: Sakız Adası’nın güneyinde turkuaz bir koy",
+      description:
+        "Turkuaz suları, açık deniz manzarası ve sakin atmosferiyle güneyde küçük bir plaj; Sakız Adası’nda huzurlu bir beach day için idealdir.",
+      image: "/images/beaches/vroulidia-2-1.jpg",
+      tags: ["#vroulidia", "#guney_sakiz", "#turkuaz_sular", "#sakin_plaj"],
+    },
+    details: [
+      {
+        icon: "📍",
+        title: "Konum ve ulaşım",
+        text:
+          "Vroulidia, Sakız Adası’nın güneyinde, Emporios ve damla sakızı köylerine yakın konumdadır. Mavra Volia, Pyrgi ve Olympoi ile kolayca birleştirilebilir.",
+      },
+      {
+        icon: "🌊",
+        title: "Özellikler",
+        text:
+          "Plaj turkuaz suları, açık deniz manzarası ve sakin atmosferiyle bilinir. Küçük ve doğal plajları seven gezginler için uygundur.",
+      },
+      {
+        icon: "💡",
+        title: "Yerel ipucu",
+        text:
+          "Vroulidia’yı Mavra Volia ve Komi ile birleştirerek güney Sakız’da tam bir plaj günü planlayın. Erken çıkın ve yanınıza su alın.",
+      },
+    ],
+    media: {
+      video: {
+        title: "Güney Sakız’da Vroulidia Plajı",
+        embedUrl: "https://www.youtube.com/embed?listType=search&list=Vroulidia%20Beach%20Chios",
+        creditText: "Mevcut video sonuçları değişebilir.",
+        creditLabel: "YouTube",
+        creditHref: "https://www.youtube.com/results?search_query=Vroulidia+Beach+Chios",
+      },
+      map: {
+        title: "Voulamandis House’tan rota",
+        embedUrl:
+          "https://maps.google.com/maps?saddr=Voulamandis+House,+Chios&daddr=Vroulidia+Beach,+Chios&output=embed",
+        distance: "~30 km",
+        time: "~40 dakika",
+        gpsHref:
+          "https://www.google.com/maps/dir/Voulamandis+House,+Chios/Vroulidia+Beach,+Chios/",
+      },
+    },
+    baseTip: {
+      icon: "🗺️",
+      title: "Stratejik konaklama noktanız",
+      text:
+        "Kampos’taki Voulamandis House’tan Vroulidia, Mavra Volia, Komi ve damla sakızı köylerini kolayca keşfedebilirsiniz.",
+      linkLabel: "Sakız Adası’nı bilenlerle konaklayın.",
+      href: "/tr/sakiz-adasi-odalari/",
+    },
+    relatedTitle: "Daha fazla plaj keşfedin",
+    relatedText:
+      "Voulamandis House’tan başlayarak güney Sakız’ın plajlarını ve köylerini keşfedin.",
+  },
+  {
+    slug: "kato-fana-plaji",
+    seo: {
+      canonicalPath: "/tr/sakiz-adasi-plajlari/kato-fana-plaji/",
+      title: "Kato Fana Plajı Sakız Adası | Güneyde sakin kaçış",
+      description:
+        "Sakız Adası’nın güneyindeki Kato Fana Plajı’nı keşfedin; tarihi Fana bölgesine yakın, açık deniz manzaralı sakin bir plaj.",
+      ogImage: "/images/beaches/kato-fana-3.jpg",
+    },
+    hero: {
+      kicker: "Güney Sakız • Fana bölgesi",
+      title: "Kato Fana Plajı: Sakız Adası’nın güneyinde sakin kaçış",
+      description:
+        "Açık ufukları, sessiz köşeleri ve güney Sakız’ın daha yerel tarafını seven gezginler için huzurlu bir plaj.",
+      image: "/images/beaches/kato-fana-3.jpg",
+      tags: ["#kato_fana", "#guney_sakiz", "#sakin_kacis", "#acik_deniz"],
+    },
+    details: [
+      {
+        icon: "📍",
+        title: "Konum ve ulaşım",
+        text:
+          "Kato Fana, Sakız Adası’nın güneyinde, tarihi Fana bölgesine yakın ve Pyrgi, Olympoi ile damla sakızı köylerine ulaşılabilir mesafededir.",
+      },
+      {
+        icon: "🌊",
+        title: "Özellikler",
+        text:
+          "Bu plaj sakin ve açık bir his verir. Alan, sadelik ve doğal manzara arayan gezginler için uygundur.",
+      },
+      {
+        icon: "💡",
+        title: "Yerel ipucu",
+        text:
+          "Kato Fana’yı köyler ve plajlar arasında sakin bir durak olarak ziyaret edin. Su, gölge ve rahat yüzme için ihtiyaçlarınızı yanınıza alın.",
+      },
+    ],
+    media: {
+      video: {
+        title: "Güney Sakız’da Kato Fana Plajı",
+        embedUrl: "https://www.youtube.com/embed?listType=search&list=Kato%20Fana%20Beach%20Chios",
+        creditText: "Mevcut video sonuçları değişebilir.",
+        creditLabel: "YouTube",
+        creditHref: "https://www.youtube.com/results?search_query=Kato+Fana+Beach+Chios",
+      },
+      map: {
+        title: "Voulamandis House’tan rota",
+        embedUrl:
+          "https://maps.google.com/maps?saddr=Voulamandis+House,+Chios&daddr=Kato+Fana,+Chios&output=embed",
+        distance: "~27 km",
+        time: "~35-40 dakika",
+        gpsHref:
+          "https://www.google.com/maps/dir/Voulamandis+House,+Chios/Kato+Fana,+Chios/",
+      },
+    },
+    baseTip: {
+      icon: "🗺️",
+      title: "Stratejik konaklama noktanız",
+      text:
+        "Kampos’taki Voulamandis House, Kato Fana, Vroulidia, Komi ve Mavra Volia’yı keşfetmek için sakin bir başlangıç noktasıdır.",
+      linkLabel: "Sakız Adası’nı bilenlerle konaklayın.",
+      href: "/tr/sakiz-adasi-odalari/",
+    },
+    relatedTitle: "Daha fazla plaj keşfedin",
+    relatedText:
+      "Voulamandis House’u üs alarak güney Sakız’ı kendi ritminizde keşfedin.",
+  },
 ];
 
 export const relatedBeachCards = [

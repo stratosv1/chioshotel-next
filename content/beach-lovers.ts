@@ -228,7 +228,7 @@ export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {
       {
         name: "Βρουλίδια",
         image: images.vroulidia,
-        href: "/el/paralies-xios/",
+        href: "/el/paralies-xios/paralia-vroulidia/",
         tag: "Τιρκουάζ νερά",
         description:
           "Μικρή νότια παραλία με χρώματα, θέα και αίσθηση απόδρασης.",
@@ -236,7 +236,7 @@ export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {
       {
         name: "Κάτω Φανά",
         image: images.katoFana,
-        href: "/el/paralies-xios/",
+        href: "/el/paralies-xios/paralia-kato-fana/",
         tag: "Ήσυχη γωνιά",
         description:
           "Μια ήρεμη ιδέα για όσους αγαπούν ανοιχτούς ορίζοντες και λιγότερο κόσμο.",
@@ -326,7 +326,7 @@ export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {
       {
         name: "Vroulidia",
         image: images.vroulidia,
-        href: "/fr/plages-de-chios/",
+        href: "/fr/plages-de-chios/plage-vroulidia/",
         tag: "Eaux turquoise",
         description:
           "Une petite plage du sud avec une vraie sensation d’évasion.",
@@ -334,7 +334,7 @@ export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {
       {
         name: "Kato Fana",
         image: images.katoFana,
-        href: "/fr/plages-de-chios/",
+        href: "/fr/plages-de-chios/plage-kato-fana/",
         tag: "Calme",
         description:
           "Une idée paisible pour ceux qui aiment les horizons ouverts.",
@@ -424,7 +424,7 @@ export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {
       {
         name: "Vroulidia",
         image: images.vroulidia,
-        href: "/de/straende-chios/",
+        href: "/de/straende-chios/vroulidia-strand/",
         tag: "Türkisfarbenes Wasser",
         description:
           "Ein kleiner Strand im Süden mit Blick aufs Meer und ruhiger Atmosphäre.",
@@ -432,7 +432,7 @@ export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {
       {
         name: "Kato Fana",
         image: images.katoFana,
-        href: "/de/straende-chios/",
+        href: "/de/straende-chios/kato-fana-strand/",
         tag: "Ruhig",
         description:
           "Eine friedliche Idee für Gäste, die offene Horizonte lieben.",
@@ -522,7 +522,7 @@ export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {
       {
         name: "Vroulidia",
         image: images.vroulidia,
-        href: "/it/spiagge-chios/",
+        href: "/it/spiagge-chios/spiaggia-vroulidia/",
         tag: "Acque turchesi",
         description:
           "Una piccola spiaggia del sud con atmosfera calma e vista mare.",
@@ -530,7 +530,7 @@ export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {
       {
         name: "Kato Fana",
         image: images.katoFana,
-        href: "/it/spiagge-chios/",
+        href: "/it/spiagge-chios/spiaggia-kato-fana/",
         tag: "Tranquilla",
         description:
           "Un’idea rilassante per chi ama gli spazi aperti e il silenzio.",
@@ -620,7 +620,7 @@ export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {
       {
         name: "Vroulidia",
         image: images.vroulidia,
-        href: "/es/playas-chios/",
+        href: "/es/playas-chios/playa-vroulidia/",
         tag: "Aguas turquesas",
         description:
           "Una pequeña playa del sur con ambiente de escapada.",
@@ -628,7 +628,7 @@ export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {
       {
         name: "Kato Fana",
         image: images.katoFana,
-        href: "/es/playas-chios/",
+        href: "/es/playas-chios/playa-kato-fana/",
         tag: "Tranquila",
         description:
           "Una idea relajada para quienes aman los horizontes abiertos.",
@@ -718,7 +718,7 @@ export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {
       {
         name: "Vroulidia",
         image: images.vroulidia,
-        href: "/tr/sakiz-adasi-plajlari/",
+        href: "/tr/sakiz-adasi-plajlari/vroulidia-plaji/",
         tag: "Turkuaz sular",
         description:
           "Güneyde, kaçış hissi veren küçük ve sakin bir plaj.",
@@ -726,7 +726,7 @@ export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {
       {
         name: "Kato Fana",
         image: images.katoFana,
-        href: "/tr/sakiz-adasi-plajlari/",
+        href: "/tr/sakiz-adasi-plajlari/kato-fana-plaji/",
         tag: "Sakin",
         description:
           "Açık deniz manzaralarını ve sessizliği sevenler için güzel bir fikir.",
@@ -755,3 +755,4 @@ export function getBeachLoversPageByPath(path: string) {
     (page) => page.seo.canonicalPath === path,
   );
 }
+
