@@ -1,4 +1,6 @@
-"use client";
+﻿"use client";
+
+import Image from "next/image";
 
 import { useState } from "react";
 import type { IndividualRoomData, RoomDetailData } from "@/content/room-details";
@@ -20,7 +22,13 @@ function RoomGallery({ data }: { data: RoomDetailData }) {
 
         <div className="rd-gallery">
           <div className="rd-gallery-main">
-            <img src={activeImage.src} alt={activeImage.alt} loading="eager" />
+            <Image
+              src={activeImage.src}
+              alt={activeImage.alt}
+              width={1200}
+              height={800}
+              sizes="(max-width: 768px) 100vw, 900px"
+            />
           </div>
 
           <div className="rd-gallery-thumbs" aria-label="Room gallery thumbnails">
@@ -34,7 +42,13 @@ function RoomGallery({ data }: { data: RoomDetailData }) {
                 onClick={() => setActiveImage(image)}
                 aria-label={`Show photo ${index + 1}`}
               >
-                <img src={image.src} alt={image.alt} loading="lazy" />
+                <Image
+                src={image.src}
+                alt={image.alt}
+                width={220}
+                height={150}
+                sizes="110px"
+              />
               </button>
             ))}
           </div>
@@ -51,7 +65,13 @@ function IndividualRoomCard({ room }: { room: IndividualRoomData }) {
     <article className="rd-room-card">
       <div className="rd-room-card__media">
         <div className="rd-room-main-image">
-          <img src={activeImage.src} alt={activeImage.alt} loading="lazy" />
+          <Image
+            src={activeImage.src}
+            alt={activeImage.alt}
+            width={900}
+            height={600}
+            sizes="(max-width: 768px) 100vw, 640px"
+          />
           <span>{activeImage.caption}</span>
         </div>
 
@@ -64,7 +84,13 @@ function IndividualRoomCard({ room }: { room: IndividualRoomData }) {
               onClick={() => setActiveImage(image)}
               aria-label={`Show ${room.name} photo ${index + 1}`}
             >
-              <img src={image.src} alt={image.alt} loading="lazy" />
+              <Image
+                src={image.src}
+                alt={image.alt}
+                width={220}
+                height={150}
+                sizes="110px"
+              />
             </button>
           ))}
         </div>
@@ -135,7 +161,14 @@ export function RoomDetailPage({ data }: RoomDetailPageProps) {
     <main className="room-detail-page">
       <section className="rd-hero" aria-labelledby="rd-hero-title">
         <div className="rd-hero-media" aria-hidden="true">
-          <img src={data.hero.image} alt="" loading="eager" />
+          <Image
+            src={data.hero.image}
+            alt=""
+            fill
+            priority
+            fetchPriority="high"
+            sizes="100vw"
+          />
         </div>
 
         <div className="rd-hero-overlay" />
