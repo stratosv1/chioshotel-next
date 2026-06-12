@@ -1,4 +1,4 @@
-import type { LanguageCode } from "@/lib/languages";
+﻿import type { LanguageCode } from "@/lib/languages";
 
 export type ChiosActivityKey =
   | "hub"
@@ -139,7 +139,7 @@ const bookingLinks: Record<LanguageCode, string> = {
 
 const images = {
   hubHero:
-    "/images/activities/ChatGPT-Image-Feb-13-2026-06_09_19-PM.png",
+    "/images/activities/ChatGPT-Image-Feb-13-2026-06_09_19-PM.webp",
   mostra: "/images/activities/maxresdefault.webp",
   greekCourses:
     "/images/activities/chios-church-1024x576-1.webp",

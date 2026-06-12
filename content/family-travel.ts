@@ -1,4 +1,4 @@
-import { type LanguageCode, normalizePath } from "@/lib/languages";
+﻿import { type LanguageCode, normalizePath } from "@/lib/languages";
 
 export type FamilyTravelImage = {
   src: string;
@@ -68,7 +68,7 @@ export type FamilyTravelPageContent = {
 
 const familyTravelImages = {
   hero: {
-    src: "/images/family/ChatGPT-Image-Feb-13-2026-08_32_22-PM.png",
+    src: "/images/family/ChatGPT-Image-Feb-13-2026-08_32_22-PM.webp",
     alt: "Family holidays in Chios with children enjoying a sunny island day",
   },
   garden: {
