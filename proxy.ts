@@ -1,4 +1,4 @@
-﻿import type { NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 const wordpressGonePrefixes = [
@@ -20,6 +20,59 @@ function shouldReturnGone(pathname: string) {
   });
 }
 
+function isStaffPath(pathname: string) {
+  return (
+    pathname === "/staff" ||
+    pathname.startsWith("/staff/") ||
+    pathname === "/api/staff" ||
+    pathname.startsWith("/api/staff/")
+  );
+}
+
+function unauthorizedStaffResponse() {
+  return new NextResponse("Authentication required", {
+    status: 401,
+    headers: {
+      "content-type": "text/plain; charset=utf-8",
+      "www-authenticate": 'Basic realm="Staff Area", charset="UTF-8"',
+      "x-robots-tag": "noindex, nofollow",
+      "cache-control": "no-store",
+    },
+  });
+}
+
+function isAuthorizedStaffRequest(request: NextRequest) {
+  const username = process.env.STAFF_USERNAME;
+  const password = process.env.STAFF_PASSWORD;
+
+  if (!username || !password) {
+    return false;
+  }
+
+  const authorization = request.headers.get("authorization");
+
+  if (!authorization || !authorization.startsWith("Basic ")) {
+    return false;
+  }
+
+  try {
+    const encodedCredentials = authorization.slice("Basic ".length);
+    const decodedCredentials = atob(encodedCredentials);
+    const separatorIndex = decodedCredentials.indexOf(":");
+
+    if (separatorIndex === -1) {
+      return false;
+    }
+
+    const providedUsername = decodedCredentials.slice(0, separatorIndex);
+    const providedPassword = decodedCredentials.slice(separatorIndex + 1);
+
+    return providedUsername === username && providedPassword === password;
+  } catch {
+    return false;
+  }
+}
+
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -33,6 +86,10 @@ export function proxy(request: NextRequest) {
     });
   }
 
+  if (isStaffPath(pathname) && !isAuthorizedStaffRequest(request)) {
+    return unauthorizedStaffResponse();
+  }
+
   if (pathname === "/it/esplorare-chio" || pathname === "/it/esplorare-chio/") {
     const url = request.nextUrl.clone();
     url.pathname = "/it/esplora-chios/";
@@ -42,11 +99,18 @@ export function proxy(request: NextRequest) {
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-current-pathname", pathname);
 
-  return NextResponse.next({
+  const response = NextResponse.next({
     request: {
       headers: requestHeaders,
     },
   });
+
+  if (isStaffPath(pathname)) {
+    response.headers.set("x-robots-tag", "noindex, nofollow");
+    response.headers.set("cache-control", "no-store");
+  }
+
+  return response;
 }
 
 export const config = {
@@ -61,6 +125,8 @@ export const config = {
     "/wp-includes/:path*",
     "/elementor-landing-page-4251/:path*",
     "/.cloud/rum/:path*",
+    "/staff/:path*",
+    "/api/staff/:path*",
     "/((?!api|_next/static|_next/image|favicon|favicon.ico|robots.txt|sitemap.xml).*)",
   ],
 };
