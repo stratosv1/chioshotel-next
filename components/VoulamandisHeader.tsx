@@ -6,6 +6,7 @@ import {
   chiosActivitiesPaths,
   chiosActivityDetailPaths,
 } from "@/content/chios-activities";
+import { kamposChiosPaths } from "@/content/kampos-chios";
 
 const languageOptions = [
   {
@@ -895,6 +896,9 @@ function getLanguageHref(path: string, language: LanguageCode) {
   const isChiosIslandPage =
     Object.values(chiosIslandPaths).includes(normalizedPath);
 
+  const isKamposChiosPage =
+    (Object.values(kamposChiosPaths) as string[]).includes(normalizedPath);
+
   const isBeachCategoryPage =
     Object.values(beachPaths).includes(normalizedPath);
 
@@ -962,6 +966,10 @@ function getLanguageHref(path: string, language: LanguageCode) {
 
   if (isChiosIslandPage) {
     return chiosIslandPaths[language];
+  }
+
+  if (isKamposChiosPage) {
+    return kamposChiosPaths[language];
   }
 
   if (isBeachCategoryPage) {
