@@ -1,4 +1,4 @@
-export type RoomCategoryCard = {
+﻿export type RoomCategoryCard = {
   id: string;
   title: string;
   subtitle: string;
@@ -450,7 +450,7 @@ export const roomsCategoryEl: RoomsCategoryPageData = {
         "Δίκλινα και τρίκλινα δωμάτια με άμεση πρόσβαση στον κήπο. Ιδανικά για όσους αναζητούν δροσιά και την ηρεμία της φύσης.",
       href: "/el/domatia-xios/diklina-triklina-domatia/",
       image:
-        "/images/rooms/DSC07776-2-e1675109942622.webp",
+        "/images/rooms/double-triple-room.jpg",
       imageAlt: "Ισόγεια δίκλινα και τρίκλινα δωμάτια στη Χίο",
       badge: "Πρόσβαση στον κήπο",
       ctaLabel: "Δείτε τα Δωμάτια",
@@ -464,7 +464,7 @@ export const roomsCategoryEl: RoomsCategoryPageData = {
         "Απολαύστε την πανοραμική θέα στο κτήμα και τα εσπεριδοειδή από τη βεράντα σας. Φωτεινά δωμάτια με premium αίσθηση.",
       href: "/el/domatia-xios/diklina-triklina-domatia/",
       image:
-        "/images/rooms/DSC07803-1.webp",
+        "/images/rooms/DSC07776-2-e1675109942622.webp",
       imageAlt: "Δωμάτια ορόφου στη Χίο με θέα στον Κάμπο",
       badge: "Θέα από όροφο",
       ctaLabel: "Δείτε τα Δωμάτια",
@@ -1124,3 +1124,4 @@ export const roomsCategoryTr: RoomsCategoryPageData = {
     ...roomsCategoryEn.wizard,
   },
 };
+
