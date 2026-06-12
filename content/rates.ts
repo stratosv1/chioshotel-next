@@ -141,7 +141,7 @@ export const ratesPageEl: RatesPageData = {
     canonicalPath: "/el/amesi-kratisi-voulamandis-house/",
     title: "Άμεση Κράτηση στη Χίο | Τιμές Voulamandis House",
     description:
-      "Κάντε απευθείας κράτηση στο Voulamandis House στη Χίο. Δείτε διαθεσιμότητα, επιλέξτε δωμάτιο ή διαμέρισμα και επωφεληθείτε από τα πλεονεκτήματα της άμεσης κράτησης.",
+      "Κάντε απευθείας κράτηση στο Voulamandis House στη Χίο. Δείτε διαθεσιμότητα, επιλέξτε δωμάτιο και κερδίστε direct booking πλεονεκτήματα.",
     ogImage: ratesHeroImage,
   },
   hero: {
@@ -225,7 +225,7 @@ export const ratesPageFr: RatesPageData = {
     canonicalPath: "/fr/tarifs-des-hotels-a-chios/",
     title: "Réservation directe à Chios | Tarifs Voulamandis House",
     description:
-      "Réservez directement à Voulamandis House à Chios. Consultez les disponibilités en temps réel, choisissez votre chambre ou appartement et profitez des avantages de la réservation directe.",
+      "Réservez en direct à Voulamandis House à Chios. Consultez les disponibilités, choisissez votre chambre et profitez des avantages de réservation directe.",
     ogImage: ratesHeroImage,
   },
   hero: {
@@ -309,7 +309,7 @@ export const ratesPageDe: RatesPageData = {
     canonicalPath: "/de/hotelpreise-auf-der-insel-chios/",
     title: "Direktbuchung auf Chios | Preise Voulamandis House",
     description:
-      "Buchen Sie direkt im Voulamandis House auf Chios. Prüfen Sie die Verfügbarkeit in Echtzeit, wählen Sie Ihr Zimmer oder Apartment und profitieren Sie von Direktbuchungsvorteilen.",
+      "Buchen Sie direkt im Voulamandis House auf Chios. Prüfen Sie Verfügbarkeit, wählen Sie Ihr Zimmer und nutzen Sie Direktbuchungsvorteile.",
     ogImage: ratesHeroImage,
   },
   hero: {
@@ -393,7 +393,7 @@ export const ratesPageIt: RatesPageData = {
     canonicalPath: "/it/prezzi-hotel-chios/",
     title: "Prenotazione diretta a Chios | Tariffe Voulamandis House",
     description:
-      "Prenota direttamente al Voulamandis House a Chios. Controlla la disponibilità in tempo reale, scegli la tua camera o il tuo appartamento e approfitta dei vantaggi della prenotazione diretta.",
+      "Prenota direttamente al Voulamandis House a Chios. Controlla la disponibilità, scegli la camera e approfitta dei vantaggi della prenotazione diretta.",
     ogImage: ratesHeroImage,
   },
   hero: {
@@ -477,7 +477,7 @@ export const ratesPageEs: RatesPageData = {
     canonicalPath: "/es/los-mejores-precios-de-hotel-en-la-isla-chios/",
     title: "Reserva directa en Chios | Tarifas Voulamandis House",
     description:
-      "Reserva directamente en Voulamandis House en Chios. Consulta la disponibilidad en tiempo real, elige tu habitación o apartamento y disfruta de las ventajas de reservar directamente.",
+      "Reserva directamente en Voulamandis House en Chios. Consulta disponibilidad, elige tu habitación y disfruta ventajas de reserva directa.",
     ogImage: ratesHeroImage,
   },
   hero: {
@@ -561,7 +561,7 @@ export const ratesPageTr: RatesPageData = {
     canonicalPath: "/tr/sakiz-adasi-rezervasyon/",
     title: "Sakız Adası Direkt Rezervasyon | Voulamandis House Fiyatları",
     description:
-      "Sakız Adası’ndaki Voulamandis House için doğrudan rezervasyon yapın. Canlı müsaitliği kontrol edin, odanızı veya dairenizi seçin ve direkt rezervasyon avantajlarından yararlanın.",
+      "Sakız Adası’ndaki Voulamandis House için direkt rezervasyon yapın. Müsaitliği kontrol edin, odanızı seçin ve avantajlardan yararlanın.",
     ogImage: ratesHeroImage,
   },
   hero: {

@@ -400,7 +400,7 @@ export const roomsCategoryEl: RoomsCategoryPageData = {
     canonicalPath: "/el/domatia-xios/",
     title: "Δωμάτια στη Χίο & Διαμερίσματα | Voulamandis House",
     description:
-      "Εξερευνήστε τις κατηγορίες δωματίων και διαμερισμάτων του Voulamandis House στον Κάμπο της Χίου. Οικονομικά δίκλινα, ισόγεια δωμάτια, δωμάτια ορόφου και οικογενειακά διαμερίσματα.",
+      "Δείτε δωμάτια και διαμερίσματα στο Voulamandis House στον Κάμπο Χίου: οικονομικά δίκλινα, ισόγεια δωμάτια και οικογενειακά διαμερίσματα.",
     ogImage:
       "/images/rooms/chios-hotels-family-apartments.webp",
   },
@@ -511,7 +511,7 @@ export const roomsCategoryFr: RoomsCategoryPageData = {
     canonicalPath: "/fr/chambres-a-chios/",
     title: "Chambres et appartements à Chios | Voulamandis House",
     description:
-      "Découvrez les chambres et appartements du Voulamandis House à Kampos, Chios. Chambres doubles économiques, chambres au rez-de-chaussée, chambres à l’étage et appartements familiaux.",
+      "Découvrez les chambres et appartements du Voulamandis House à Kampos, Chios : doubles économiques, chambres avec jardin et appartements familiaux.",
     ogImage:
       "/images/rooms/chios-hotels-family-apartments.webp",
   },
@@ -765,7 +765,7 @@ export const roomsCategoryIt: RoomsCategoryPageData = {
     canonicalPath: "/it/camere-a-chios/",
     title: "Camere e appartamenti a Chios | Voulamandis House",
     description:
-      "Esplora camere e appartamenti a Chios presso Voulamandis House a Kampos. Camere doppie economy, camere al piano terra, camere al primo piano e appartamenti familiari.",
+      "Scopri camere e appartamenti a Chios presso Voulamandis House a Kampos: doppie economy, camere al piano terra e appartamenti familiari.",
     ogImage:
       "/images/rooms/chios-hotels-family-apartments.webp",
   },
@@ -891,7 +891,7 @@ export const roomsCategoryEs: RoomsCategoryPageData = {
     canonicalPath: "/es/habitaciones-en-chios/",
     title: "Habitaciones y apartamentos en Chios | Voulamandis House",
     description:
-      "Explora las habitaciones y apartamentos de Voulamandis House en Kampos, Chios. Habitaciones dobles económicas, habitaciones en planta baja, habitaciones en primera planta y apartamentos familiares.",
+      "Explora habitaciones y apartamentos de Voulamandis House en Kampos, Chios: dobles económicas, planta baja y apartamentos familiares.",
     ogImage:
       "/images/rooms/chios-hotels-family-apartments.webp",
   },
@@ -1017,7 +1017,7 @@ export const roomsCategoryTr: RoomsCategoryPageData = {
     canonicalPath: "/tr/sakiz-adasi-odalari/",
     title: "Sakız Adası odaları ve daireleri | Voulamandis House",
     description:
-      "Kampos, Sakız Adası’ndaki Voulamandis House odalarını ve dairelerini keşfedin. Ekonomik çift kişilik odalar, zemin kat odaları, üst kat odaları ve aile daireleri.",
+      "Kampos, Sakız Adası’ndaki Voulamandis House oda ve dairelerini keşfedin: ekonomik çift kişilik odalar, zemin kat odaları ve aile daireleri.",
     ogImage:
       "/images/rooms/chios-hotels-family-apartments.webp",
   },
