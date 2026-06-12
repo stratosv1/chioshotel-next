@@ -1417,7 +1417,7 @@ input{
 }
 
 .vh-link-image--museums{
-  background-image:url("/images/museums/mousio.mastic.webp");
+  background-image:url("/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp");
 }
 
 .vh-link-image--orchids{
@@ -1544,7 +1544,7 @@ input{
 }
 
 .vh-traveler-card--food{
-  background-image:url("/images/museums/mousio.mastic.webp");
+  background-image:url("/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp");
 }
 
 /* QUIZ BAR */
@@ -17663,5 +17663,6 @@ a.vh-btn.vh-btn--primary[href*="viber"],
     width: 100%;
   }
 }
+
 
 
