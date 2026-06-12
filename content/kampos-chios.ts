@@ -256,9 +256,67 @@ export const kamposChiosPageFr: KamposChiosPageData = {
     title: "Kampos de Chios : demeures, agrumes et histoire",
     description:
       "Découvrez l’un des quartiers les plus atmosphériques de Chios, avec demeures en pierre, jardins d’agrumes, hauts murs et ruelles paisibles.",
+    imageAlt: "Demeures historiques et jardins d’agrumes à Kampos Chios",
     primaryCta: { label: "Voir les chambres", href: "/fr/chambres-a-chios/" },
-    secondaryCta: { label: "Voir les tarifs", href: "/fr/tarifs-hotels-chios/" },
+    secondaryCta: { label: "Voir les tarifs", href: "/fr/tarifs-des-hotels-a-chios/" },
   },
+  intro: {
+    title: "Un quartier idéal pour un séjour authentique à Chios",
+    paragraphs: [
+      "Kampos de Chios est l’un des quartiers les plus distinctifs et historiques de l’île, connu pour ses demeures, ses portails en pierre, ses vergers d’agrumes et son atmosphère paisible.",
+      "Proche de la ville de Chios et de l’aéroport, Kampos convient aux voyageurs qui recherchent du caractère, de la tranquillité et un accès facile au reste de l’île.",
+      "Voulamandis House se trouve au cœur de Kampos, pour que le quartier fasse partie de l’expérience du séjour, et pas seulement d’une visite.",
+    ],
+  },
+  sections: [
+    {
+      title: "Demeures, jardins d’agrumes et hauts murs de pierre",
+      text:
+        "Les domaines historiques de Kampos associent architecture locale et nature. Derrière les hauts murs en pierre se cachent jardins d’agrumes, cours, puits et demeures élégantes qui composent l’un des paysages les plus uniques de Chios.",
+      image: mansionGardenImage,
+      imageAlt: "Demeure traditionnelle de Kampos Chios entourée de jardins d’agrumes",
+    },
+    {
+      title: "Un morceau vivant de l’histoire de Chios",
+      text:
+        "Depuis la période génoise et les anciennes familles de Chios, Kampos s’est développé comme un quartier de maisons raffinées, portes arquées, plafonds peints, cours en marbre et entrées de jardins impressionnantes.",
+      image: antouanikoImage,
+      imageAlt: "Demeure Antouaniko à Kampos Chios avec architecture historique",
+    },
+    {
+      title: "Parfait pour les promenades lentes et la découverte",
+      text:
+        "Kampos n’est pas une plage. C’est un quartier résidentiel historique, idéal pour marcher lentement, sentir les agrumes, découvrir des cours cachées et ressentir l’identité de Chios avant de partir vers les plages, villages et musées.",
+      image: citrusPathImage,
+      imageAlt: "Chemin dans un jardin d’agrumes du quartier historique de Kampos à Chios",
+    },
+  ],
+  highlights: [
+    { label: "Connu pour", value: "Demeures & agrumes" },
+    { label: "Idéal pour", value: "Séjours authentiques" },
+    { label: "Situation", value: "Près de Chios ville" },
+    { label: "Séjour", value: "Voulamandis House" },
+  ],
+  stay: {
+    kicker: "Séjourner à Kampos",
+    title: "Voulamandis House au cœur de Kampos",
+    text:
+      "Choisissez Voulamandis House pour un séjour paisible entre jardins d’agrumes, architecture historique et accès facile à la ville de Chios, à l’aéroport, aux plages et aux villages.",
+    primaryCta: {
+      label: "Réserver votre séjour",
+      href: "/fr/tarifs-des-hotels-a-chios/",
+    },
+    secondaryCta: {
+      label: "Voir les chambres",
+      href: "/fr/chambres-a-chios/",
+    },
+  },
+  gallery: [
+    { image: heroImage, imageAlt: "Demeures historiques et jardins d’agrumes à Kampos Chios" },
+    { image: citrusEstateImage, imageAlt: "Domaine d’agrumes et murs en pierre traditionnels à Kampos Chios" },
+    { image: stoneMansionImage, imageAlt: "Demeure en pierre et architecture traditionnelle à Kampos Chios" },
+    { image: historicEstateImage, imageAlt: "Domaine historique à Kampos Chios avec architecture traditionnelle" },
+  ],
 };
 
 export const kamposChiosPageDe: KamposChiosPageData = {
@@ -277,9 +335,67 @@ export const kamposChiosPageDe: KamposChiosPageData = {
     title: "Kampos auf Chios: Herrenhäuser und Zitrusgärten",
     description:
       "Erleben Sie eines der stimmungsvollsten Gebiete von Chios mit Steinhäusern, Zitrusgärten, hohen Mauern und ruhigen Wegen.",
+    imageAlt: "Historische Herrenhäuser und Zitrusgärten in Kampos auf Chios",
     primaryCta: { label: "Zimmer ansehen", href: "/de/chios-zimmer/" },
-    secondaryCta: { label: "Preise ansehen", href: "/de/chios-hotelpreise/" },
+    secondaryCta: { label: "Preise ansehen", href: "/de/hotelpreise-auf-der-insel-chios/" },
   },
+  intro: {
+    title: "Ein besonderer Ort für einen authentischen Aufenthalt auf Chios",
+    paragraphs: [
+      "Kampos auf Chios gehört zu den charakteristischsten und historischsten Gegenden der Insel, bekannt für Herrenhäuser, steinerne Tore, Zitrusgärten und eine ruhige Atmosphäre.",
+      "Dank der Nähe zur Stadt Chios und zum Flughafen ist Kampos ideal für Reisende, die Authentizität, Ruhe und einfache Wege über die Insel suchen.",
+      "Voulamandis House liegt im Herzen von Kampos, sodass die Umgebung selbst Teil des Aufenthalts wird.",
+    ],
+  },
+  sections: [
+    {
+      title: "Herrenhäuser, Zitrusgärten und hohe Steinmauern",
+      text:
+        "Die historischen Anwesen von Kampos verbinden lokale Architektur mit Natur. Hinter hohen Steinmauern liegen Zitrusgärten, Innenhöfe, Brunnen und elegante Häuser, die eine der einzigartigsten Landschaften von Chios bilden.",
+      image: mansionGardenImage,
+      imageAlt: "Traditionelles Herrenhaus in Kampos auf Chios, umgeben von Zitrusgärten",
+    },
+    {
+      title: "Ein lebendiges Stück Geschichte von Chios",
+      text:
+        "Seit der genuesischen Zeit und den alten Familien von Chios entwickelte sich Kampos zu einer Gegend mit eleganten Häusern, Bogentüren, bemalten Decken, Marmorböden und eindrucksvollen Garteneingängen.",
+      image: antouanikoImage,
+      imageAlt: "Antouaniko-Herrenhaus in Kampos auf Chios mit historischer Architektur",
+    },
+    {
+      title: "Perfekt für ruhige Spaziergänge und Entdeckungen",
+      text:
+        "Kampos ist kein Strand. Es ist ein historisches Wohnviertel für langsame Spaziergänge, Zitrusdüfte, versteckte Höfe und ein tieferes Gefühl für Chios, bevor Sie Strände, Dörfer und Museen erkunden.",
+      image: citrusPathImage,
+      imageAlt: "Weg durch einen Zitrusgarten im historischen Kampos auf Chios",
+    },
+  ],
+  highlights: [
+    { label: "Bekannt für", value: "Herrenhäuser & Zitrusgärten" },
+    { label: "Ideal für", value: "Authentische Aufenthalte" },
+    { label: "Lage", value: "Nahe Chios-Stadt" },
+    { label: "Aufenthalt", value: "Voulamandis House" },
+  ],
+  stay: {
+    kicker: "Aufenthalt in Kampos",
+    title: "Voulamandis House im Herzen von Kampos",
+    text:
+      "Wählen Sie Voulamandis House für einen ruhigen Aufenthalt zwischen Zitrusgärten, historischer Architektur und einfachen Wegen zur Stadt Chios, zum Flughafen, zu Stränden und Dörfern.",
+    primaryCta: {
+      label: "Aufenthalt buchen",
+      href: "/de/hotelpreise-auf-der-insel-chios/",
+    },
+    secondaryCta: {
+      label: "Zimmer ansehen",
+      href: "/de/chios-zimmer/",
+    },
+  },
+  gallery: [
+    { image: heroImage, imageAlt: "Historische Herrenhäuser und Zitrusgärten in Kampos auf Chios" },
+    { image: citrusEstateImage, imageAlt: "Zitrusanwesen und traditionelle Steinmauern in Kampos auf Chios" },
+    { image: stoneMansionImage, imageAlt: "Steinhaus und traditionelle Architektur in Kampos auf Chios" },
+    { image: historicEstateImage, imageAlt: "Historisches Anwesen in Kampos auf Chios mit traditioneller Architektur" },
+  ],
 };
 
 export const kamposChiosPageIt: KamposChiosPageData = {
@@ -298,9 +414,67 @@ export const kamposChiosPageIt: KamposChiosPageData = {
     title: "Kampos di Chios: dimore, agrumi e storia",
     description:
       "Scopri una delle zone più suggestive di Chios, con dimore in pietra, agrumeti, alti muri e strade tranquille.",
+    imageAlt: "Dimore storiche e giardini di agrumi a Kampos Chios",
     primaryCta: { label: "Vedi camere", href: "/it/camere-a-chios/" },
     secondaryCta: { label: "Vedi tariffe", href: "/it/prezzi-hotel-chios/" },
   },
+  intro: {
+    title: "Una zona speciale per un soggiorno autentico a Chios",
+    paragraphs: [
+      "Kampos di Chios è una delle aree più caratteristiche e storiche dell’isola, conosciuta per le sue dimore, i portali in pietra, gli agrumeti e l’atmosfera tranquilla.",
+      "Vicino alla città di Chios e all’aeroporto, Kampos è ideale per chi cerca autenticità, quiete e facile accesso al resto dell’isola.",
+      "Voulamandis House si trova nel cuore di Kampos, così la zona diventa parte dell’esperienza del soggiorno.",
+    ],
+  },
+  sections: [
+    {
+      title: "Dimore, agrumeti e alti muri in pietra",
+      text:
+        "Le tenute storiche di Kampos uniscono architettura locale e natura. Dietro gli alti muri in pietra si trovano agrumeti, cortili, pozzi e dimore eleganti che creano uno dei paesaggi più particolari di Chios.",
+      image: mansionGardenImage,
+      imageAlt: "Dimora tradizionale di Kampos Chios circondata da agrumeti",
+    },
+    {
+      title: "Un pezzo vivo della storia di Chios",
+      text:
+        "Dal periodo genovese e dalle antiche famiglie di Chios, Kampos si è sviluppato come area di case raffinate, porte ad arco, soffitti dipinti, cortili in marmo e ingressi monumentali ai giardini.",
+      image: antouanikoImage,
+      imageAlt: "Dimora Antouaniko a Kampos Chios con architettura storica",
+    },
+    {
+      title: "Perfetto per passeggiate lente e scoperte tranquille",
+      text:
+        "Kampos non è una spiaggia. È un quartiere residenziale storico, ideale per camminare lentamente, sentire il profumo degli agrumi, scoprire cortili nascosti e percepire l’identità di Chios prima di visitare spiagge, villaggi e musei.",
+      image: citrusPathImage,
+      imageAlt: "Sentiero in un giardino di agrumi nello storico Kampos di Chios",
+    },
+  ],
+  highlights: [
+    { label: "Famoso per", value: "Dimore e agrumeti" },
+    { label: "Ideale per", value: "Soggiorni autentici" },
+    { label: "Posizione", value: "Vicino a Chios città" },
+    { label: "Soggiorno", value: "Voulamandis House" },
+  ],
+  stay: {
+    kicker: "Soggiornare a Kampos",
+    title: "Voulamandis House nel cuore di Kampos",
+    text:
+      "Scegli Voulamandis House per un soggiorno tranquillo tra agrumeti, architettura storica e collegamenti facili verso la città di Chios, l’aeroporto, le spiagge e i villaggi.",
+    primaryCta: {
+      label: "Prenota il soggiorno",
+      href: "/it/prezzi-hotel-chios/",
+    },
+    secondaryCta: {
+      label: "Vedi camere",
+      href: "/it/camere-a-chios/",
+    },
+  },
+  gallery: [
+    { image: heroImage, imageAlt: "Dimore storiche e giardini di agrumi a Kampos Chios" },
+    { image: citrusEstateImage, imageAlt: "Tenuta di agrumi e muri tradizionali in pietra a Kampos Chios" },
+    { image: stoneMansionImage, imageAlt: "Dimora in pietra e architettura tradizionale a Kampos Chios" },
+    { image: historicEstateImage, imageAlt: "Tenuta storica a Kampos Chios con architettura tradizionale" },
+  ],
 };
 
 export const kamposChiosPageEs: KamposChiosPageData = {
@@ -319,9 +493,67 @@ export const kamposChiosPageEs: KamposChiosPageData = {
     title: "Kampos de Chios: mansiones, cítricos e historia",
     description:
       "Descubre una de las zonas más especiales de Chios, con mansiones de piedra, jardines cítricos, altos muros y caminos tranquilos.",
+    imageAlt: "Mansiones históricas y jardines cítricos en Kampos de Chios",
     primaryCta: { label: "Ver habitaciones", href: "/es/habitaciones-en-chios/" },
-    secondaryCta: { label: "Ver tarifas", href: "/es/tarifas-hoteles-chios/" },
+    secondaryCta: { label: "Ver tarifas", href: "/es/los-mejores-precios-de-hotel-en-la-isla-chios/" },
   },
+  intro: {
+    title: "Una zona especial para una estancia auténtica en Chios",
+    paragraphs: [
+      "Kampos de Chios es una de las zonas más características e históricas de la isla, conocida por sus mansiones, portales de piedra, huertos cítricos y ambiente tranquilo.",
+      "Cerca de la ciudad de Chios y del aeropuerto, Kampos es ideal para viajeros que buscan autenticidad, calma y fácil acceso al resto de la isla.",
+      "Voulamandis House se encuentra en el corazón de Kampos, por lo que la zona forma parte de la experiencia de la estancia.",
+    ],
+  },
+  sections: [
+    {
+      title: "Mansiones, jardines cítricos y altos muros de piedra",
+      text:
+        "Las fincas históricas de Kampos combinan arquitectura local y naturaleza. Detrás de los altos muros de piedra aparecen jardines cítricos, patios, pozos y mansiones elegantes que crean uno de los paisajes más singulares de Chios.",
+      image: mansionGardenImage,
+      imageAlt: "Mansión tradicional de Kampos de Chios rodeada de jardines cítricos",
+    },
+    {
+      title: "Una parte viva de la historia de Chios",
+      text:
+        "Desde la época genovesa y las antiguas familias de Chios, Kampos se desarrolló como una zona de casas refinadas, puertas arqueadas, techos pintados, patios de mármol y entradas monumentales a jardines.",
+      image: antouanikoImage,
+      imageAlt: "Mansión Antouaniko en Kampos de Chios con arquitectura histórica",
+    },
+    {
+      title: "Perfecto para paseos lentos y descubrimientos tranquilos",
+      text:
+        "Kampos no es una playa. Es una zona residencial histórica para caminar despacio, sentir el aroma de los cítricos, descubrir patios ocultos y conectar con la identidad de Chios antes de explorar playas, pueblos y museos.",
+      image: citrusPathImage,
+      imageAlt: "Camino en un jardín cítrico del histórico Kampos de Chios",
+    },
+  ],
+  highlights: [
+    { label: "Conocido por", value: "Mansiones y cítricos" },
+    { label: "Ideal para", value: "Estancias auténticas" },
+    { label: "Ubicación", value: "Cerca de Chios ciudad" },
+    { label: "Estancia", value: "Voulamandis House" },
+  ],
+  stay: {
+    kicker: "Alojamiento en Kampos",
+    title: "Voulamandis House en el corazón de Kampos",
+    text:
+      "Elige Voulamandis House para una estancia tranquila entre jardines cítricos, arquitectura histórica y rutas fáciles hacia la ciudad de Chios, el aeropuerto, las playas y los pueblos.",
+    primaryCta: {
+      label: "Reserva tu estancia",
+      href: "/es/los-mejores-precios-de-hotel-en-la-isla-chios/",
+    },
+    secondaryCta: {
+      label: "Ver habitaciones",
+      href: "/es/habitaciones-en-chios/",
+    },
+  },
+  gallery: [
+    { image: heroImage, imageAlt: "Mansiones históricas y jardines cítricos en Kampos de Chios" },
+    { image: citrusEstateImage, imageAlt: "Finca cítrica y muros tradicionales de piedra en Kampos de Chios" },
+    { image: stoneMansionImage, imageAlt: "Mansión de piedra y arquitectura tradicional en Kampos de Chios" },
+    { image: historicEstateImage, imageAlt: "Finca histórica en Kampos de Chios con arquitectura tradicional" },
+  ],
 };
 
 export const kamposChiosPageTr: KamposChiosPageData = {
@@ -340,9 +572,67 @@ export const kamposChiosPageTr: KamposChiosPageData = {
     title: "Sakız Adası Kampos: tarihi konaklar ve narenciye bahçeleri",
     description:
       "Taş konakları, narenciye bahçeleri, yüksek duvarları ve sakin yollarıyla Sakız Adası’nın en özel bölgelerinden birini keşfedin.",
+    imageAlt: "Sakız Adası Kampos bölgesinde tarihi konaklar ve narenciye bahçeleri",
     primaryCta: { label: "Odaları gör", href: "/tr/sakiz-adasi-odalari/" },
-    secondaryCta: { label: "Fiyatları gör", href: "/tr/sakiz-adasi-otel-fiyatlari/" },
+    secondaryCta: { label: "Fiyatları gör", href: "/tr/sakiz-adasi-rezervasyon/" },
   },
+  intro: {
+    title: "Sakız Adası’nda otantik bir konaklama için özel bir bölge",
+    paragraphs: [
+      "Kampos, Sakız Adası’nın en karakteristik ve tarihi bölgelerinden biridir; taş konakları, kemerli kapıları, narenciye bahçeleri ve sakin atmosferiyle bilinir.",
+      "Sakız şehir merkezine ve havalimanına yakın konumu sayesinde Kampos, otantik bir ortam, huzur ve adayı keşfetmek için kolay ulaşım isteyen gezginler için idealdir.",
+      "Voulamandis House, Kampos’un kalbinde yer alır; böylece bölge sadece haritada bir nokta değil, konaklama deneyiminin bir parçası olur.",
+    ],
+  },
+  sections: [
+    {
+      title: "Konaklar, narenciye bahçeleri ve yüksek taş duvarlar",
+      text:
+        "Kampos’un tarihi mülkleri yerel mimariyi doğayla birleştirir. Yüksek taş duvarların arkasında narenciye bahçeleri, avlular, kuyular ve zarif konaklar Sakız Adası’nın en özgün manzaralarından birini oluşturur.",
+      image: mansionGardenImage,
+      imageAlt: "Sakız Adası Kampos bölgesinde narenciye bahçeleriyle çevrili geleneksel konak",
+    },
+    {
+      title: "Sakız Adası tarihinin yaşayan bir parçası",
+      text:
+        "Ceneviz döneminden ve Sakız Adası’nın eski ailelerinden itibaren Kampos; zarif evleri, kemerli kapıları, boyalı tavanları, mermer avluları ve etkileyici bahçe girişleriyle özel bir yerleşim alanı olarak gelişmiştir.",
+      image: antouanikoImage,
+      imageAlt: "Sakız Adası Kampos bölgesinde tarihi mimariye sahip Antouaniko konağı",
+    },
+    {
+      title: "Yavaş yürüyüşler ve sakin keşifler için ideal",
+      text:
+        "Kampos bir plaj değildir. Narenciye kokuları, gizli avlular, sessiz yollar ve Sakız Adası’nın kimliğini hissettiren tarihi bir yerleşim alanıdır; plajlara, köylere ve müzelere gitmeden önce keşfetmek için idealdir.",
+      image: citrusPathImage,
+      imageAlt: "Sakız Adası Kampos bölgesindeki tarihi narenciye bahçesinde yürüyüş yolu",
+    },
+  ],
+  highlights: [
+    { label: "Bilinen özelliği", value: "Konaklar ve narenciye" },
+    { label: "En uygun", value: "Otantik konaklamalar" },
+    { label: "Konum", value: "Sakız merkeze yakın" },
+    { label: "Konaklama", value: "Voulamandis House" },
+  ],
+  stay: {
+    kicker: "Kampos’ta konaklama",
+    title: "Kampos’un kalbinde Voulamandis House",
+    text:
+      "Voulamandis House’u narenciye bahçeleri, tarihi mimari ve Sakız şehir merkezi, havalimanı, plajlar ve köylere kolay ulaşım için huzurlu bir konaklama noktası olarak seçin.",
+    primaryCta: {
+      label: "Konaklamanızı ayırtın",
+      href: "/tr/sakiz-adasi-rezervasyon/",
+    },
+    secondaryCta: {
+      label: "Odaları gör",
+      href: "/tr/sakiz-adasi-odalari/",
+    },
+  },
+  gallery: [
+    { image: heroImage, imageAlt: "Sakız Adası Kampos bölgesinde tarihi konaklar ve narenciye bahçeleri" },
+    { image: citrusEstateImage, imageAlt: "Sakız Adası Kampos bölgesinde narenciye arazisi ve geleneksel taş duvarlar" },
+    { image: stoneMansionImage, imageAlt: "Sakız Adası Kampos bölgesinde taş konak ve geleneksel mimari" },
+    { image: historicEstateImage, imageAlt: "Sakız Adası Kampos bölgesinde geleneksel mimariye sahip tarihi mülk" },
+  ],
 };
 
 export const kamposChiosPages = {
