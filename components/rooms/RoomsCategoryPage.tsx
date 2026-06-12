@@ -1,3 +1,4 @@
+﻿import Image from "next/image";
 import { RoomWizard } from "@/components/rooms/RoomWizard";
 import type { RoomsCategoryPageData } from "@/content/rooms";
 
@@ -69,7 +70,13 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
           {data.cards.map((card) => (
             <a href={card.href} className="v-category-card" key={card.id}>
               <div className="v-cat-img">
-                <img src={card.image} alt={card.imageAlt} loading="lazy" />
+                <Image
+                  src={card.image}
+                  alt={card.imageAlt}
+                  width={640}
+                  height={420}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                />
                 <span className="v-card-badge">{card.badge}</span>
               </div>
 
