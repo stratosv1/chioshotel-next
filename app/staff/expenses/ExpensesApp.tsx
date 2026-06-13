@@ -360,9 +360,9 @@ export default function ExpensesApp() {
             <div>
               <Link
                 href="/staff"
-                className="mb-4 inline-flex rounded-full border border-white/70 bg-white/60 px-4 py-2 text-xs font-black uppercase tracking-[0.22em] text-[#bc6c25] shadow-sm"
+                className="mb-4 inline-flex items-center rounded-2xl bg-white px-4 py-2 text-sm font-black text-amber-800 shadow-sm ring-1 ring-amber-200 hover:bg-amber-50"
               >
-                ← Staff Area
+                ← Επιστροφή στην κεντρική πλατφόρμα Staff
               </Link>
               <p className="text-xs font-black uppercase tracking-[0.28em] text-[#bc6c25]">
                 Voulamandis House
