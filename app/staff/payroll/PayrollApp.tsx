@@ -293,8 +293,8 @@ export default function PayrollApp() {
       <section className="mx-auto max-w-7xl">
         <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
           <div>
-            <Link href="/staff" className="text-sm font-bold text-amber-800">
-              ← Πίσω στο Staff
+            <Link href="/staff" className="inline-flex items-center rounded-2xl bg-white px-4 py-2 text-sm font-black text-amber-800 shadow-sm ring-1 ring-amber-200 hover:bg-amber-50">
+              ← Επιστροφή στην κεντρική πλατφόρμα Staff
             </Link>
             <p className="mt-4 text-xs font-black uppercase tracking-[0.32em] text-amber-700">
               Voulamandis Staff
