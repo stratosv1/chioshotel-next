@@ -1,0 +1,107 @@
+﻿@reference "../globals.css";
+
+.staffWrapper {
+  @apply min-h-screen w-full bg-gradient-to-br from-[#fdfcfb] to-[#e2d1c3] px-4 py-10 text-[#5d4037];
+}
+
+.staffShell {
+  @apply mx-auto w-full max-w-6xl;
+}
+
+.staffHeader {
+  @apply mb-8 rounded-[28px] border border-white/60 bg-white/40 p-6 shadow-[0_4px_18px_rgba(93,64,55,0.10)] backdrop-blur-xl;
+}
+
+.staffEyebrow {
+  @apply mb-2 text-xs font-bold uppercase tracking-[0.22em] text-[#bc6c25];
+}
+
+.staffTitle {
+  @apply text-3xl font-bold tracking-tight md:text-4xl;
+}
+
+.staffIntro {
+  @apply mt-3 max-w-3xl text-sm leading-6 text-[#5d4037]/80 md:text-base;
+}
+
+.cardGrid {
+  @apply grid grid-cols-2 gap-3 md:gap-6;
+}
+
+.staffCard {
+  @apply flex min-h-[145px] flex-col items-center justify-center rounded-2xl border bg-white/45 p-4 text-center text-[#5d4037] shadow-[0_4px_15px_rgba(93,64,55,0.10)] backdrop-blur-xl transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-[1.02] hover:bg-white/70 hover:shadow-[0_8px_30px_rgba(188,108,37,0.20)] md:min-h-[130px] md:flex-row md:justify-start md:p-6 md:text-left;
+}
+
+.cardIcon {
+  @apply mb-3 text-3xl saturate-75 transition duration-300 md:mb-0 md:mr-6;
+}
+
+.staffCard:hover .cardIcon {
+  @apply saturate-100;
+}
+
+.cardContent {
+  @apply flex min-w-0 flex-col items-center md:items-start;
+}
+
+.cardLabel {
+  @apply text-[0.88rem] font-bold leading-snug tracking-wide md:text-lg;
+}
+
+.cardSubText {
+  @apply mt-2 text-[0.65rem] font-medium uppercase leading-snug tracking-[0.08em] text-[#5d4037]/70 md:text-xs;
+}
+
+.callPrices {
+  @apply border-white/65 bg-white/45 hover:border-[#bc6c25];
+}
+
+.directBooking {
+  @apply border-[#bc6c25]/30 bg-[#bc6c25]/15 hover:border-[#bc6c25];
+}
+
+.housekeeping {
+  @apply border-[#6b8e23]/30 bg-[#6b8e23]/15 hover:border-[#6b8e23];
+}
+
+.performance {
+  @apply border-[#4a6984]/30 bg-[#4a6984]/15 hover:border-[#4a6984];
+}
+
+.expenses {
+  @apply border-[#0f766e]/30 bg-[#0f766e]/15 hover:border-[#0f766e];
+}
+
+.payroll {
+  @apply border-[#8e5a8a]/30 bg-[#8e5a8a]/15 hover:border-[#8e5a8a];
+}
+
+.staffNotice {
+  @apply mt-8 rounded-2xl border border-white/60 bg-white/35 p-5 text-sm leading-6 text-[#5d4037]/80 shadow-[0_4px_15px_rgba(93,64,55,0.08)] backdrop-blur-xl;
+}
+
+@media (max-width: 380px) {
+  .staffWrapper {
+    @apply px-3 py-7;
+  }
+
+  .cardGrid {
+    @apply gap-2.5;
+  }
+
+  .staffCard {
+    @apply min-h-[135px] rounded-2xl px-2 py-3;
+  }
+
+  .cardIcon {
+    @apply mb-2 text-2xl;
+  }
+
+  .cardLabel {
+    @apply text-[0.78rem];
+  }
+
+  .cardSubText {
+    @apply text-[0.58rem];
+  }
+}
