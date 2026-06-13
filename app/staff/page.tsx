@@ -22,7 +22,7 @@ const staffLinks = [
     className: styles.callPrices,
   },
   {
-    href: "https://chioshotels.elementor.cloud/booker/",
+    href: "/staff/booker",
     icon: "📅",
     label: "Εδώ καταχωρείται απευθείας κράτηση",
     subText: "Online Σύστημα",
