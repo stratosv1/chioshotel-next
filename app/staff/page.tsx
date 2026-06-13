@@ -22,6 +22,13 @@ const staffLinks = [
     className: styles.callPrices,
   },
   {
+    href: "/staff/calendar",
+    icon: "🏨",
+    label: "Hotel Calendar",
+    subText: "Μοντέρνο PMS ημερολόγιο κρατήσεων",
+    className: styles.directBooking,
+  },
+  {
     href: "/staff/booker",
     icon: "📅",
     label: "Εδώ καταχωρείται απευθείας κράτηση",
@@ -55,6 +62,13 @@ const staffLinks = [
     label: "Μισθοδοσία",
     subText: "Στοιχεία προσωπικού",
     className: styles.payroll,
+  },
+  {
+    href: "/staff/operations",
+    icon: "🗄️",
+    label: "Operations Database",
+    subText: "Νέα Neon βάση για calendar, τιμές & bookings",
+    className: styles.performance,
   },
 ];
 
@@ -102,5 +116,3 @@ export default function StaffPage() {
     </main>
   );
 }
-
-
