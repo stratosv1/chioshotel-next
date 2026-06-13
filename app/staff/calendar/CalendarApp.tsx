@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useMemo, useState } from "react";
 
@@ -43,16 +43,11 @@ type CalendarPayload = {
   availability: AvailabilityRow[];
   bookings: BookingRow[];
   generatedAt: string;
+  error?: string;
 };
 
 function dateOnly(date: Date) {
   return date.toISOString().slice(0, 10);
-}
-
-function addDays(date: Date, days: number) {
-  const next = new Date(date);
-  next.setDate(next.getDate() + days);
-  return next;
 }
 
 function startOfMonth(date: Date) {
@@ -149,6 +144,30 @@ function isBookingStart(booking: BookingRow, date: string) {
   return booking.arrival === date;
 }
 
+async function readCalendarPayload(response: Response) {
+  const responseText = await response.text();
+
+  if (!responseText.trim()) {
+    throw new Error(`Empty API response. Status ${response.status}`);
+  }
+
+  let payload: CalendarPayload;
+
+  try {
+    payload = JSON.parse(responseText) as CalendarPayload;
+  } catch {
+    throw new Error(
+      `Non-JSON API response. Status ${response.status}. Body: ${responseText.slice(0, 220)}`,
+    );
+  }
+
+  if (!response.ok || !payload.ok) {
+    throw new Error(payload.error || `Calendar API error. Status ${response.status}`);
+  }
+
+  return payload;
+}
+
 export default function CalendarApp() {
   const today = useMemo(() => new Date(), []);
   const [anchorMonth, setAnchorMonth] = useState(startOfMonth(today));
@@ -174,15 +193,17 @@ export default function CalendarApp() {
       setError("");
 
       try {
-        const response = await fetch(`/api/staff/calendar?start=${range.start}&end=${range.end}`, {
-          cache: "no-store",
-        });
+        const response = await fetch(
+          `/api/staff/calendar/?start=${encodeURIComponent(range.start)}&end=${encodeURIComponent(
+            range.end,
+          )}`,
+          {
+            cache: "no-store",
+            credentials: "same-origin",
+          },
+        );
 
-        const payload = await response.json();
-
-        if (!response.ok || !payload.ok) {
-          throw new Error(payload.error || "Calendar API error.");
-        }
+        const payload = await readCalendarPayload(response);
 
         if (!cancelled) {
           setData(payload);
@@ -230,9 +251,14 @@ export default function CalendarApp() {
 
   const stats = useMemo(() => {
     const bookings = data?.bookings || [];
-    const arrivals = bookings.filter((booking) => booking.arrival >= range.start && booking.arrival <= range.end).length;
-    const departures = bookings.filter((booking) => booking.departure >= range.start && booking.departure <= range.end).length;
-    const availablePrices = data?.availability.filter((row) => row.available && Number(row.price || 0) > 0).length || 0;
+    const arrivals = bookings.filter(
+      (booking) => booking.arrival >= range.start && booking.arrival <= range.end,
+    ).length;
+    const departures = bookings.filter(
+      (booking) => booking.departure >= range.start && booking.departure <= range.end,
+    ).length;
+    const availablePrices =
+      data?.availability.filter((row) => row.available && Number(row.price || 0) > 0).length || 0;
 
     return {
       units: data?.units.length || 0,
@@ -342,10 +368,18 @@ export default function CalendarApp() {
             </div>
 
             <div className="flex flex-wrap gap-2 text-xs font-black">
-              <span className="rounded-full border border-sky-300/30 bg-sky-300/10 px-3 py-2 text-sky-100">Booking.com</span>
-              <span className="rounded-full border border-yellow-300/30 bg-yellow-300/10 px-3 py-2 text-yellow-100">Expedia</span>
-              <span className="rounded-full border border-emerald-300/30 bg-emerald-300/10 px-3 py-2 text-emerald-100">Direct</span>
-              <span className="rounded-full border border-violet-300/30 bg-violet-300/10 px-3 py-2 text-violet-100">Other</span>
+              <span className="rounded-full border border-sky-300/30 bg-sky-300/10 px-3 py-2 text-sky-100">
+                Booking.com
+              </span>
+              <span className="rounded-full border border-yellow-300/30 bg-yellow-300/10 px-3 py-2 text-yellow-100">
+                Expedia
+              </span>
+              <span className="rounded-full border border-emerald-300/30 bg-emerald-300/10 px-3 py-2 text-emerald-100">
+                Direct
+              </span>
+              <span className="rounded-full border border-violet-300/30 bg-violet-300/10 px-3 py-2 text-violet-100">
+                Other
+              </span>
             </div>
           </div>
         </section>
@@ -363,7 +397,9 @@ export default function CalendarApp() {
             <div className="max-w-xl rounded-3xl border border-rose-300/20 bg-rose-950/40 p-8 text-center shadow-2xl">
               <div className="text-4xl">⚠️</div>
               <h2 className="mt-3 text-xl font-black text-white">Calendar error</h2>
-              <p className="mt-2 text-sm font-bold text-rose-100">{error}</p>
+              <p className="mt-2 whitespace-pre-wrap break-words text-sm font-bold text-rose-100">
+                {error}
+              </p>
             </div>
           </section>
         ) : (
@@ -403,7 +439,11 @@ export default function CalendarApp() {
 
                   return (
                     <div key={key} className="contents">
-                      <div className={`sticky left-0 z-10 border-b border-r border-white/10 bg-gradient-to-br ${unitColor(unit.category)} p-3 shadow-xl shadow-slate-950/20`}>
+                      <div
+                        className={`sticky left-0 z-10 border-b border-r border-white/10 bg-gradient-to-br ${unitColor(
+                          unit.category,
+                        )} p-3 shadow-xl shadow-slate-950/20`}
+                      >
                         <div className="text-sm font-black text-white">{unit.display_name}</div>
                         <div className="mt-1 text-[11px] font-bold text-white/85">{unit.category}</div>
                         <div className="mt-2 flex flex-wrap gap-1">
@@ -494,7 +534,9 @@ export default function CalendarApp() {
               <div className="p-8">
                 <div className="rounded-3xl border border-amber-300/20 bg-amber-950/30 p-8 text-center">
                   <div className="text-4xl">🗄️</div>
-                  <h2 className="mt-3 text-xl font-black text-white">Δεν υπάρχουν units στη Neon βάση.</h2>
+                  <h2 className="mt-3 text-xl font-black text-white">
+                    Δεν υπάρχουν units στη Neon βάση.
+                  </h2>
                   <p className="mt-2 text-sm font-bold text-amber-100">
                     Πρώτα πρέπει να υπάρχει το staff_units seed.
                   </p>
@@ -506,8 +548,14 @@ export default function CalendarApp() {
       </div>
 
       {selectedBooking ? (
-        <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/80 p-4 backdrop-blur" onClick={() => setSelectedBooking(null)}>
-          <div className="w-full max-w-lg rounded-3xl border border-white/10 bg-white p-5 text-slate-950 shadow-2xl" onClick={(event) => event.stopPropagation()}>
+        <div
+          className="fixed inset-0 z-50 grid place-items-center bg-slate-950/80 p-4 backdrop-blur"
+          onClick={() => setSelectedBooking(null)}
+        >
+          <div
+            className="w-full max-w-lg rounded-3xl border border-white/10 bg-white p-5 text-slate-950 shadow-2xl"
+            onClick={(event) => event.stopPropagation()}
+          >
             <div className="flex items-start justify-between gap-4">
               <div>
                 <div className="text-xs font-black uppercase text-slate-500">Booking details</div>
