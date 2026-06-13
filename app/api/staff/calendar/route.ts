@@ -118,49 +118,50 @@ export async function GET(request: NextRequest) {
 
   const sql = neon(databaseUrl);
 
-  const units = await sql`
+  const units = (await sql`
     select
       room_id::text as room_id,
       unit_id::text as unit_id,
-      display_name,
-      category,
-      floor,
+      label as display_name,
+      room_name as category,
+      location as floor,
       max_guests,
-      sort_order
+      id::int as sort_order
     from staff_units
-    order by sort_order nulls last, room_id::int, unit_id::int
-  ` as CalendarUnit[];
+    where is_active = true
+    order by id asc
+  `) as CalendarUnit[];
 
-  const availability = await sql`
+  const availability = (await sql`
     select
-      date::text as date,
+      stay_date::text as date,
       room_id::text as room_id,
       unit_id::text as unit_id,
       price,
       available,
       reason
     from staff_availability_calendar
-    where date >= ${start}::date
-      and date <= ${end}::date
-    order by date asc, room_id::int, unit_id::int
-  ` as AvailabilityRow[];
+    where stay_date >= ${start}::date
+      and stay_date <= ${end}::date
+    order by stay_date asc, room_id::int, unit_id::int
+  `) as AvailabilityRow[];
 
-  const bookings = await sql`
+  const bookings = (await sql`
     select
-      booking_id::text as booking_id,
+      beds24_booking_id::text as booking_id,
       room_id::text as room_id,
       unit_id::text as unit_id,
       guest_name,
       arrival::text as arrival,
       departure::text as departure,
       status,
-      referrer,
-      price
+      coalesce(referrer, channel, source) as referrer,
+      null::numeric as price
     from staff_bookings_snapshot
     where arrival <= ${end}::date
       and departure >= ${start}::date
     order by arrival asc, room_id::int, unit_id::int
-  ` as BookingRow[];
+  `) as BookingRow[];
 
   return NextResponse.json(
     {
