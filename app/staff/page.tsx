@@ -50,7 +50,7 @@ const staffLinks = [
     className: styles.expenses,
   },
   {
-    href: "https://chioshotels.elementor.cloud/employee/",
+    href: "/staff/payroll",
     icon: "💶",
     label: "Μισθοδοσία",
     subText: "Στοιχεία προσωπικού",
