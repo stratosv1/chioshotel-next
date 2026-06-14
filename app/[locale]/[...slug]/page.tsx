@@ -451,11 +451,23 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const route = getRouteByPath(requestedPath);
 
   if (route?.itemId === "chios-quiz" && route.action === "KEEP") {
+    const quizMetadata =
+      route.language === "el"
+        ? {
+            title: "Quiz Διακοπών στη Χίο 2026",
+            description:
+              "Κάντε το quiz διακοπών στη Χίο, ανακαλύψτε ποια εμπειρία σας ταιριάζει και πάρτε ειδικό κωδικό έκπτωσης για τη διαμονή σας.",
+          }
+        : {
+            title: "Chios Holiday Quiz",
+            description:
+              "Take the Chios Holiday Quiz by Voulamandis House, discover hidden island secrets and get a special discount code for your stay.",
+          };
+
     return buildLocalizedPageMetadata({
       path: route.path,
-      title: "Chios Holiday Quiz | Voulamandis House",
-      description:
-        "Take the Chios Holiday Quiz by Voulamandis House, discover hidden island secrets and get a special discount code for your stay.",
+      title: quizMetadata.title,
+      description: quizMetadata.description,
       image: "/images/voulamandis-house-og.jpg",
     });
   }
