@@ -892,11 +892,11 @@ input{
 }
 
 .vh-room-image--ground{
-  background-image:url("/images/rooms/double-triple-room.jpg");
+  background-image:url("/images/rooms/double-triple-room-v2.webp");
 }
 
 .vh-room-image--upper{
-  background-image:url("/images/rooms/DSC07867-1.webp");
+  background-image:url("/images/rooms/DSC07867-1-v2.webp");
 }
 
 .vh-room-image--family{
@@ -1409,7 +1409,7 @@ input{
 }
 
 .vh-link-image--villages{
-  background-image:url("/images/villages/lagada_3.webp");
+  background-image:url("/images/villages/lagada_3-v2.webp");
 }
 
 .vh-link-image--kampos{
@@ -1536,7 +1536,7 @@ input{
 }
 
 .vh-traveler-card--explorer{
-  background-image:url("/images/villages/lagada_3.webp");
+  background-image:url("/images/villages/lagada_3-v2.webp");
 }
 
 .vh-traveler-card--family{
@@ -17663,6 +17663,9 @@ a.vh-btn.vh-btn--primary[href*="viber"],
     width: 100%;
   }
 }
+
+
+
 
 
 
