@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -63,6 +63,7 @@ export function HomePage({ data }: HomePageProps) {
               priority
               fetchPriority="high"
               sizes="100vw"
+              quality={62}
             />
           </div>
 
@@ -77,7 +78,7 @@ export function HomePage({ data }: HomePageProps) {
                   <span>{data.hero.reviews}</span>
                 </div>
                 <div className="stars" aria-hidden="true">
-                  ★★★★★
+                  β…β…β…β…β…
                 </div>
               </div>
 
@@ -351,7 +352,7 @@ export function HomePage({ data }: HomePageProps) {
                       id="dc_submitBtn"
                       onClick={showDiscountCode}
                     >
-                      <span aria-hidden="true">🎁</span> {data.location.discount.revealCodeLabel}
+                      <span aria-hidden="true">π</span> {data.location.discount.revealCodeLabel}
                     </button>
 
                     <div id="discountSuccess" className="discount-success" aria-live="polite">

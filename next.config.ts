@@ -1,4 +1,4 @@
-import type { NextConfig } from "next";
+﻿import type { NextConfig } from "next";
 
 const legacyRedirects = [
   {
@@ -929,6 +929,11 @@ const legacyRedirects = [
 const nextConfig: NextConfig = {
   trailingSlash: true,
   poweredByHeader: false,
+  images: {
+    formats: ["image/avif", "image/webp"],
+    qualities: [50, 62, 75],
+    minimumCacheTTL: 2592000,
+  },
   async redirects() {
     return legacyRedirects;
   },
