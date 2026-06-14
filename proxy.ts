@@ -20,6 +20,23 @@ function shouldReturnGone(pathname: string) {
   });
 }
 
+function isOldBookRoomUrl(pathname: string) {
+  const normalizedPathname = pathname.replace(/\/+$/, "");
+
+  if (
+    normalizedPathname === "/book%20the%20room%20you%20like" ||
+    normalizedPathname === "/book the room you like"
+  ) {
+    return true;
+  }
+
+  try {
+    return decodeURIComponent(normalizedPathname) === "/book the room you like";
+  } catch {
+    return false;
+  }
+}
+
 function isStaffPath(pathname: string) {
   return (
     pathname === "/staff" ||
@@ -75,6 +92,12 @@ function isAuthorizedStaffRequest(request: NextRequest) {
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  if (isOldBookRoomUrl(pathname)) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/find-your-room/";
+    return NextResponse.redirect(url, 301);
+  }
 
   if (shouldReturnGone(pathname)) {
     return new NextResponse("Gone", {
