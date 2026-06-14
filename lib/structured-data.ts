@@ -12,6 +12,11 @@ export type SchemaObject = {
   [key: string]: SchemaValue | undefined;
 };
 
+export type AmenityInput = {
+  name: string;
+  description?: string;
+};
+
 export const businessData = {
   name: "Voulamandis House",
   url: siteUrl,
@@ -38,6 +43,48 @@ export const businessData = {
     "https://www.facebook.com/people/Voulamandis-House/100063584320703/",
     "https://www.instagram.com/chioshotels/",
   ],
+  amenities: [
+    {
+      name: "Free WiFi",
+      description: "High-speed wireless internet access throughout the property",
+    },
+    {
+      name: "Air Conditioning",
+      description: "Climate control in all rooms",
+    },
+    {
+      name: "24-Hour Front Desk",
+      description: "Always available to assist you",
+    },
+    {
+      name: "Room Service",
+      description: "Food and beverage delivery to your room",
+    },
+    {
+      name: "Daily Housekeeping",
+      description: "Professional cleaning services",
+    },
+    {
+      name: "Flat-screen TV",
+      description: "Entertainment in every room",
+    },
+    {
+      name: "Private Bathroom",
+      description: "En-suite facilities with shower",
+    },
+    {
+      name: "Wake-up Service",
+      description: "Morning call service upon request",
+    },
+    {
+      name: "Garden Terrace",
+      description: "Outdoor relaxation area with views",
+    },
+    {
+      name: "Parking Available",
+      description: "On-site parking for guests",
+    },
+  ] as AmenityInput[],
 };
 
 export type BreadcrumbItemInput = {
@@ -194,6 +241,12 @@ export function buildHotelSchema(): SchemaObject {
     parentOrganization: {
       "@id": organizationId(),
     },
+    amenityFeature: businessData.amenities.map((amenity) => ({
+      "@type": "LocationFeatureSpecification",
+      name: amenity.name,
+      description: amenity.description,
+      value: true,
+    })),
   };
 }
 
