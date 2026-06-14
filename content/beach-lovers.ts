@@ -72,7 +72,7 @@ export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {
       eyebrow: "For beach lovers",
       title: "Your perfect beach day in Chios starts at Voulamandis House",
       subtitle:
-        "Stay in peaceful Kampos and explore the beaches of South Chios, from volcanic Mavra Volia to golden Komi and quiet Vroulidia.",
+        "Stay in peaceful Kambos and explore the beaches of South Chios, from volcanic Mavra Volia to golden Komi and quiet Vroulidia.",
       primaryCta: "Check availability",
       secondaryCta: "Explore the beaches",
       image: images.hero,
@@ -80,7 +80,7 @@ export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {
     intro: {
       title: "Your perfect beach day with Voulamandis House",
       paragraphs: [
-        "You start your day with a peaceful walk through the magical Kampos area, where Voulamandis House is located. A quiet stroll among citrus orchards and historic mansions.",
+        "You start your day with a peaceful walk through the magical Kambos area, where Voulamandis House is located. A quiet stroll among citrus orchards and historic mansions.",
         "Full of energy, you return to Voulamandis House and enjoy a handmade, healthy breakfast. Fragrant citrus marmalades, fresh flavours and homemade delicacies that captivate everyone who tastes them.",
         "Today has a title: South Chios – Beach Day.",
         "First stop: the Mastic Museum. A journey into the history and culture of the island.",
@@ -146,7 +146,7 @@ export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {
     ],
     stay: {
       title: "Why beach lovers stay at Voulamandis House",
-      text: "Voulamandis House is in Kampos, close enough for easy beach trips and peaceful enough for slow mornings, garden evenings and real rest after a full day by the sea.",
+      text: "Voulamandis House is in Kambos, close enough for easy beach trips and peaceful enough for slow mornings, garden evenings and real rest after a full day by the sea.",
       image: images.voulamandis,
       cta: "See rooms and rates",
     },
@@ -268,7 +268,7 @@ export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {
       eyebrow: "Pour les amoureux de la plage",
       title: "Votre journée idéale à la plage commence à Voulamandis House",
       subtitle:
-        "Séjournez dans le calme de Kampos et explorez les plages du sud de Chios.",
+        "Séjournez dans le calme de Kambos et explorez les plages du sud de Chios.",
       primaryCta: "Voir les disponibilités",
       secondaryCta: "Explorer les plages",
       image: images.hero,
@@ -276,7 +276,7 @@ export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {
     intro: {
       title: "Votre journée parfaite avec Voulamandis House",
       paragraphs: [
-        "La journée commence par une promenade paisible dans la région magique de Kampos, entre vergers d’agrumes et demeures historiques.",
+        "La journée commence par une promenade paisible dans la région magique de Kambos, entre vergers d’agrumes et demeures historiques.",
         "De retour à Voulamandis House, vous profitez d’un petit-déjeuner fait maison, sain et plein de saveurs locales.",
         "Le programme du jour est simple: sud de Chios – journée plage.",
         "Premier arrêt: le Musée du Mastic, pour découvrir l’histoire et la culture de l’île.",
@@ -342,7 +342,7 @@ export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {
     ],
     stay: {
       title: "Pourquoi séjourner à Voulamandis House",
-      text: "Voulamandis House se trouve à Kampos, une base calme pour explorer les plages et se reposer dans le jardin après la mer.",
+      text: "Voulamandis House se trouve à Kambos, une base calme pour explorer les plages et se reposer dans le jardin après la mer.",
       image: images.voulamandis,
       cta: "Voir les chambres et les tarifs",
     },
@@ -366,7 +366,7 @@ export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {
       eyebrow: "Für Strandliebhaber",
       title: "Ihr perfekter Strandtag auf Chios beginnt im Voulamandis House",
       subtitle:
-        "Wohnen Sie ruhig in Kampos und entdecken Sie die Strände im Süden von Chios.",
+        "Wohnen Sie ruhig in Kambos und entdecken Sie die Strände im Süden von Chios.",
       primaryCta: "Verfügbarkeit prüfen",
       secondaryCta: "Strände entdecken",
       image: images.hero,
@@ -374,7 +374,7 @@ export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {
     intro: {
       title: "Ihr perfekter Strandtag mit Voulamandis House",
       paragraphs: [
-        "Der Tag beginnt mit einem ruhigen Spaziergang durch Kampos, zwischen Zitrusgärten und historischen Herrenhäusern.",
+        "Der Tag beginnt mit einem ruhigen Spaziergang durch Kambos, zwischen Zitrusgärten und historischen Herrenhäusern.",
         "Zurück im Voulamandis House genießen Sie ein hausgemachtes, gesundes Frühstück mit frischen lokalen Aromen.",
         "Der Tag steht unter dem Motto: Süd-Chios – Strandtag.",
         "Erster Halt: das Mastix-Museum, ein Einblick in Geschichte und Kultur der Insel.",
@@ -440,7 +440,7 @@ export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {
     ],
     stay: {
       title: "Warum Strandliebhaber im Voulamandis House wohnen",
-      text: "Voulamandis House liegt in Kampos: ruhig zum Erholen und praktisch als Ausgangspunkt für Strandtage.",
+      text: "Voulamandis House liegt in Kambos: ruhig zum Erholen und praktisch als Ausgangspunkt für Strandtage.",
       image: images.voulamandis,
       cta: "Zimmer und Preise ansehen",
     },
@@ -464,7 +464,7 @@ export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {
       eyebrow: "Per amanti del mare",
       title: "La tua giornata perfetta al mare inizia da Voulamandis House",
       subtitle:
-        "Soggiorna nella tranquillità di Kampos ed esplora le spiagge del sud di Chios.",
+        "Soggiorna nella tranquillità di Kambos ed esplora le spiagge del sud di Chios.",
       primaryCta: "Controlla disponibilità",
       secondaryCta: "Esplora le spiagge",
       image: images.hero,
@@ -472,7 +472,7 @@ export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {
     intro: {
       title: "La giornata perfetta con Voulamandis House",
       paragraphs: [
-        "La giornata comincia con una passeggiata tranquilla a Kampos, tra agrumeti e dimore storiche.",
+        "La giornata comincia con una passeggiata tranquilla a Kambos, tra agrumeti e dimore storiche.",
         "Poi torni a Voulamandis House per una colazione fatta in casa, sana e ricca di sapori locali.",
         "Il programma di oggi è chiaro: Sud di Chios – giornata al mare.",
         "Prima tappa: il Museo del Mastice, per conoscere la storia dell’isola.",
@@ -538,7 +538,7 @@ export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {
     ],
     stay: {
       title: "Perché scegliere Voulamandis House",
-      text: "Voulamandis House si trova a Kampos, una base tranquilla per esplorare le spiagge e riposare in giardino dopo il mare.",
+      text: "Voulamandis House si trova a Kambos, una base tranquilla per esplorare le spiagge e riposare in giardino dopo il mare.",
       image: images.voulamandis,
       cta: "Vedi camere e prezzi",
     },
@@ -562,7 +562,7 @@ export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {
       eyebrow: "Para amantes de la playa",
       title: "Tu día perfecto de playa en Quíos empieza en Voulamandis House",
       subtitle:
-        "Quédate en la tranquilidad de Kampos y explora las playas del sur de Quíos.",
+        "Quédate en la tranquilidad de Kambos y explora las playas del sur de Quíos.",
       primaryCta: "Ver disponibilidad",
       secondaryCta: "Explorar playas",
       image: images.hero,
@@ -570,7 +570,7 @@ export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {
     intro: {
       title: "Tu día perfecto con Voulamandis House",
       paragraphs: [
-        "El día empieza con un paseo tranquilo por Kampos, entre huertos de cítricos y mansiones históricas.",
+        "El día empieza con un paseo tranquilo por Kambos, entre huertos de cítricos y mansiones históricas.",
         "Después vuelves a Voulamandis House para disfrutar de un desayuno casero, saludable y lleno de sabores locales.",
         "El plan del día es claro: sur de Quíos – día de playa.",
         "Primera parada: el Museo de la Mastiha, una visita a la historia y cultura de la isla.",
@@ -636,7 +636,7 @@ export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {
     ],
     stay: {
       title: "Por qué alojarte en Voulamandis House",
-      text: "Voulamandis House está en Kampos, una base tranquila para explorar playas y descansar en el jardín después del mar.",
+      text: "Voulamandis House está en Kambos, una base tranquila para explorar playas y descansar en el jardín después del mar.",
       image: images.voulamandis,
       cta: "Ver habitaciones y precios",
     },
@@ -660,7 +660,7 @@ export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {
       eyebrow: "Plaj severler için",
       title: "Sakız Adası’nda mükemmel plaj gününüz Voulamandis House’ta başlar",
       subtitle:
-        "Sakin Kampos bölgesinde konaklayın ve Sakız Adası’nın güney plajlarını keşfedin.",
+        "Sakin Kambos bölgesinde konaklayın ve Sakız Adası’nın güney plajlarını keşfedin.",
       primaryCta: "Müsaitliği kontrol et",
       secondaryCta: "Plajları keşfet",
       image: images.hero,
@@ -668,7 +668,7 @@ export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {
     intro: {
       title: "Voulamandis House ile mükemmel plaj günü",
       paragraphs: [
-        "Güne Kampos bölgesinde, narenciye bahçeleri ve tarihi konaklar arasında sakin bir yürüyüşle başlarsınız.",
+        "Güne Kambos bölgesinde, narenciye bahçeleri ve tarihi konaklar arasında sakin bir yürüyüşle başlarsınız.",
         "Sonra Voulamandis House’a dönüp ev yapımı, sağlıklı ve yerel lezzetlerle dolu bir kahvaltının tadını çıkarırsınız.",
         "Bugünün planı belli: Güney Sakız – plaj günü.",
         "İlk durak: Mastiha Müzesi. Ada kültürü ve tarihi için güzel bir başlangıç.",
@@ -734,7 +734,7 @@ export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {
     ],
     stay: {
       title: "Plaj severler neden Voulamandis House’u seçiyor?",
-      text: "Voulamandis House, Kampos’ta sakin bir konumdadır. Plaj gezileri için pratik, deniz sonrası dinlenmek için huzurludur.",
+      text: "Voulamandis House, Kambos’ta sakin bir konumdadır. Plaj gezileri için pratik, deniz sonrası dinlenmek için huzurludur.",
       image: images.voulamandis,
       cta: "Odaları ve fiyatları gör",
     },

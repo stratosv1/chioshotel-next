@@ -107,7 +107,7 @@ export const beachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Your Strategic Base",
       text:
-        "Starting from Voulamandis House in Kampos, you have the strategic advantage to start early in the morning for Agia Dynami and enjoy the whole day in its crystal-clear waters.",
+        "Starting from Voulamandis House in Kambos, you have the strategic advantage to start early in the morning for Agia Dynami and enjoy the whole day in its crystal-clear waters.",
       linkLabel: "Stay with those who know best.",
       href: "/chios-rooms/",
     },
@@ -176,7 +176,7 @@ export const beachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Your Strategic Base",
       text:
-        "Lithi Beach is about 40 minutes away from the historic Kampos area. Make Voulamandis House your base to explore western beaches and medieval villages.",
+        "Lithi Beach is about 40 minutes away from the historic Kambos area. Make Voulamandis House your base to explore western beaches and medieval villages.",
       linkLabel: "Stay with the locals who know best.",
       href: "/chios-rooms/",
     },
@@ -243,7 +243,7 @@ export const beachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Your Strategic Base",
       text:
-        "Organize an unforgettable day trip to northern Chios, including Volissos, Agia Markella and Lefkathia, starting from Kampos.",
+        "Organize an unforgettable day trip to northern Chios, including Volissos, Agia Markella and Lefkathia, starting from Kambos.",
       linkLabel: "Stay with those who know best.",
       href: "/chios-rooms/",
     },
@@ -312,7 +312,7 @@ export const beachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Your Strategic Base",
       text:
-        "Starting from the lush Kampos area, you can plan your day trip to northern Chios. Make Voulamandis House your base and let us recommend the best routes.",
+        "Starting from the lush Kambos area, you can plan your day trip to northern Chios. Make Voulamandis House your base and let us recommend the best routes.",
       linkLabel: "Stay with those who know best.",
       href: "/chios-rooms/",
     },
@@ -381,7 +381,7 @@ export const beachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Your Strategic Base",
       text:
-        "Avlonia is perfectly combined with a trip to the Mastichochoria. Starting from Voulamandis House in Kampos, you are ideally placed for medieval villages and hidden southern beaches.",
+        "Avlonia is perfectly combined with a trip to the Mastichochoria. Starting from Voulamandis House in Kambos, you are ideally placed for medieval villages and hidden southern beaches.",
       linkLabel: "Stay with those who know best.",
       href: "/chios-rooms/",
     },
@@ -450,7 +450,7 @@ export const beachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Your Strategic Base",
       text:
-        "Salagona is easily accessible by car. Make Voulamandis House in historic Kampos your base to explore both the southern and western beaches of Chios with local guidance.",
+        "Salagona is easily accessible by car. Make Voulamandis House in historic Kambos your base to explore both the southern and western beaches of Chios with local guidance.",
       linkLabel: "Stay with those who know best.",
       href: "/chios-rooms/",
     },
@@ -464,7 +464,7 @@ export const beachDetails: BeachDetailData[] = [
       canonicalPath: "/chios/chios-beaches/agia-fotia-beach/",
       title: "Agia Fotia Beach Chios | Cosmopolitan Organized Beach",
       description:
-        "Discover Agia Fotia Beach in Chios, a lively organized pebble beach near Kampos with crystal-clear waters, taverns, cafes and views toward Asia Minor.",
+        "Discover Agia Fotia Beach in Chios, a lively organized pebble beach near Kambos with crystal-clear waters, taverns, cafes and views toward Asia Minor.",
       ogImage: "/images/beaches/agia-fotia.jpg",
     },
     hero: {
@@ -517,7 +517,7 @@ export const beachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Your Strategic Base",
       text:
-        "Agia Fotia is just 15-20 minutes away from Kampos. Make Voulamandis House your base, enjoy the tranquility of the orchards and easily visit the island’s cosmopolitan beaches.",
+        "Agia Fotia is just 15-20 minutes away from Kambos. Make Voulamandis House your base, enjoy the tranquility of the orchards and easily visit the island’s cosmopolitan beaches.",
       linkLabel: "Stay with those who know best.",
       href: "/chios-rooms/",
     },
@@ -586,7 +586,7 @@ export const beachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Your Strategic Outpost",
       text:
-        "Cosmopolitan Komi is at an ideal distance from Kampos, just a 30-minute drive. Make Voulamandis House your base and enjoy easy access to the best sandy beaches of southern Chios.",
+        "Cosmopolitan Komi is at an ideal distance from Kambos, just a 30-minute drive. Make Voulamandis House your base and enjoy easy access to the best sandy beaches of southern Chios.",
       linkLabel: "Stay with those who know best.",
       href: "/chios-rooms/",
     },
@@ -655,7 +655,7 @@ export const beachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Your Strategic Base",
       text:
-        "Kampos is the ideal starting point to discover the southern beaches and the Mastichochoria. Make Voulamandis House your base and enjoy comfort, hospitality and daily local tips.",
+        "Kambos is the ideal starting point to discover the southern beaches and the Mastichochoria. Make Voulamandis House your base and enjoy comfort, hospitality and daily local tips.",
       linkLabel: "Stay with those who know best.",
       href: "/chios-rooms/",
     },
@@ -722,7 +722,7 @@ export const beachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Your Strategic Base",
       text:
-        "From Voulamandis House in Kampos, you can plan an easy South Chios route that combines Vroulidia with Mavra Volia, Komi and the Mastichochoria.",
+        "From Voulamandis House in Kambos, you can plan an easy South Chios route that combines Vroulidia with Mavra Volia, Komi and the Mastichochoria.",
       linkLabel: "Stay with those who know best.",
       href: "/chios-rooms/",
     },
@@ -789,7 +789,7 @@ export const beachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Your Strategic Base",
       text:
-        "Voulamandis House in Kampos is a calm base for exploring South Chios beaches like Kato Fana, Vroulidia, Komi and Mavra Volia without changing accommodation.",
+        "Voulamandis House in Kambos is a calm base for exploring South Chios beaches like Kato Fana, Vroulidia, Komi and Mavra Volia without changing accommodation.",
       linkLabel: "Stay with those who know best.",
       href: "/chios-rooms/",
     },
@@ -929,7 +929,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Votre base stratégique",
       text:
-        "Depuis Voulamandis House à Kampos, vous pouvez partir tôt vers Agia Dynami et profiter pleinement de la journée dans ses eaux cristallines.",
+        "Depuis Voulamandis House à Kambos, vous pouvez partir tôt vers Agia Dynami et profiter pleinement de la journée dans ses eaux cristallines.",
       linkLabel: "Séjournez avec ceux qui connaissent le mieux l’île.",
       href: "/fr/chambres-a-chios/",
     },
@@ -998,7 +998,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Ihre strategische Basis",
       text:
-        "Von Voulamandis House in Kampos aus können Sie früh nach Agia Dynami starten und den ganzen Tag das kristallklare Wasser genießen.",
+        "Von Voulamandis House in Kambos aus können Sie früh nach Agia Dynami starten und den ganzen Tag das kristallklare Wasser genießen.",
       linkLabel: "Übernachten Sie bei Menschen, die die Insel kennen.",
       href: "/de/chios-zimmer/",
     },
@@ -1067,7 +1067,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "La tua base strategica",
       text:
-        "Partendo da Voulamandis House a Kampos, puoi raggiungere presto Agia Dynami e goderti tutta la giornata nelle sue acque cristalline.",
+        "Partendo da Voulamandis House a Kambos, puoi raggiungere presto Agia Dynami e goderti tutta la giornata nelle sue acque cristalline.",
       linkLabel: "Soggiorna con chi conosce meglio l’isola.",
       href: "/it/camere-a-chios/",
     },
@@ -1136,7 +1136,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Tu base estratégica",
       text:
-        "Desde Voulamandis House en Kampos, puedes salir temprano hacia Agia Dynami y disfrutar de todo el día en sus aguas cristalinas.",
+        "Desde Voulamandis House en Kambos, puedes salir temprano hacia Agia Dynami y disfrutar de todo el día en sus aguas cristalinas.",
       linkLabel: "Alójate con quienes mejor conocen la isla.",
       href: "/es/habitaciones-en-chios/",
     },
@@ -1205,7 +1205,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Stratejik üssünüz",
       text:
-        "Kampos’taki Voulamandis House’tan erken çıkarak Agia Dynami’ye ulaşabilir ve kristal berraklığındaki sularında tüm günün tadını çıkarabilirsiniz.",
+        "Kambos’taki Voulamandis House’tan erken çıkarak Agia Dynami’ye ulaşabilir ve kristal berraklığındaki sularında tüm günün tadını çıkarabilirsiniz.",
       linkLabel: "Adayı en iyi bilenlerle konaklayın.",
       href: "/tr/sakiz-adasi-odalari/",
     },
@@ -1356,7 +1356,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Votre base stratégique",
       text:
-        "La plage de Lithi se trouve à environ 40 minutes de Kampos. Faites de Voulamandis House votre base pour explorer les plages de l’ouest et les villages médiévaux.",
+        "La plage de Lithi se trouve à environ 40 minutes de Kambos. Faites de Voulamandis House votre base pour explorer les plages de l’ouest et les villages médiévaux.",
       linkLabel: "Séjournez avec ceux qui connaissent le mieux l’île.",
       href: "/fr/chambres-a-chios/",
     },
@@ -1425,7 +1425,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Ihre strategische Basis",
       text:
-        "Lithi Beach liegt etwa 40 Minuten vom historischen Kampos entfernt. Nutzen Sie Voulamandis House als Basis, um westliche Strände und mittelalterliche Dörfer zu entdecken.",
+        "Lithi Beach liegt etwa 40 Minuten vom historischen Kambos entfernt. Nutzen Sie Voulamandis House als Basis, um westliche Strände und mittelalterliche Dörfer zu entdecken.",
       linkLabel: "Übernachten Sie bei Menschen, die die Insel kennen.",
       href: "/de/chios-zimmer/",
     },
@@ -1494,7 +1494,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "La tua base strategica",
       text:
-        "La spiaggia di Lithi dista circa 40 minuti dalla storica zona di Kampos. Scegli Voulamandis House come base per esplorare le spiagge occidentali e i villaggi medievali.",
+        "La spiaggia di Lithi dista circa 40 minuti dalla storica zona di Kambos. Scegli Voulamandis House come base per esplorare le spiagge occidentali e i villaggi medievali.",
       linkLabel: "Soggiorna con chi conosce meglio l’isola.",
       href: "/it/camere-a-chios/",
     },
@@ -1563,7 +1563,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Tu base estratégica",
       text:
-        "La playa de Lithi está a unos 40 minutos de la histórica zona de Kampos. Haz de Voulamandis House tu base para explorar las playas occidentales y los pueblos medievales.",
+        "La playa de Lithi está a unos 40 minutos de la histórica zona de Kambos. Haz de Voulamandis House tu base para explorar las playas occidentales y los pueblos medievales.",
       linkLabel: "Alójate con quienes mejor conocen la isla.",
       href: "/es/habitaciones-en-chios/",
     },
@@ -1632,7 +1632,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Stratejik üssünüz",
       text:
-        "Lithi Plajı, tarihi Kampos bölgesinden yaklaşık 40 dakika uzaklıktadır. Batı plajlarını ve Orta Çağ köylerini keşfetmek için Voulamandis House’u üssünüz yapın.",
+        "Lithi Plajı, tarihi Kambos bölgesinden yaklaşık 40 dakika uzaklıktadır. Batı plajlarını ve Orta Çağ köylerini keşfetmek için Voulamandis House’u üssünüz yapın.",
       linkLabel: "Adayı en iyi bilenlerle konaklayın.",
       href: "/tr/sakiz-adasi-odalari/",
     },
@@ -1771,7 +1771,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Votre base stratégique",
       text:
-        "Organisez une journée inoubliable dans le nord de Chios avec Volissos, Agia Markella et Lefkathia, en partant de Kampos.",
+        "Organisez une journée inoubliable dans le nord de Chios avec Volissos, Agia Markella et Lefkathia, en partant de Kambos.",
       linkLabel: "Séjournez avec ceux qui connaissent le mieux l’île.",
       href: "/fr/chambres-a-chios/",
     },
@@ -1838,7 +1838,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Ihre strategische Basis",
       text:
-        "Planen Sie einen unvergesslichen Tagesausflug in den Norden von Chios mit Volissos, Agia Markella und Lefkathia, ausgehend von Kampos.",
+        "Planen Sie einen unvergesslichen Tagesausflug in den Norden von Chios mit Volissos, Agia Markella und Lefkathia, ausgehend von Kambos.",
       linkLabel: "Übernachten Sie bei Menschen, die die Insel kennen.",
       href: "/de/chios-zimmer/",
     },
@@ -1905,7 +1905,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "La tua base strategica",
       text:
-        "Organizza una gita indimenticabile nel nord di Chios con Volissos, Agia Markella e Lefkathia, partendo da Kampos.",
+        "Organizza una gita indimenticabile nel nord di Chios con Volissos, Agia Markella e Lefkathia, partendo da Kambos.",
       linkLabel: "Soggiorna con chi conosce meglio l’isola.",
       href: "/it/camere-a-chios/",
     },
@@ -1972,7 +1972,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Tu base estratégica",
       text:
-        "Organiza una excursión inolvidable al norte de Chios con Volissos, Agia Markella y Lefkathia, saliendo desde Kampos.",
+        "Organiza una excursión inolvidable al norte de Chios con Volissos, Agia Markella y Lefkathia, saliendo desde Kambos.",
       linkLabel: "Alójate con quienes mejor conocen la isla.",
       href: "/es/habitaciones-en-chios/",
     },
@@ -2039,7 +2039,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Stratejik üssünüz",
       text:
-        "Kampos’tan başlayarak Volissos, Agia Markella ve Lefkathia’yı içeren unutulmaz bir kuzey Sakız rotası planlayabilirsiniz.",
+        "Kambos’tan başlayarak Volissos, Agia Markella ve Lefkathia’yı içeren unutulmaz bir kuzey Sakız rotası planlayabilirsiniz.",
       linkLabel: "Adayı en iyi bilenlerle konaklayın.",
       href: "/tr/sakiz-adasi-odalari/",
     },
@@ -2182,7 +2182,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Votre base stratégique",
       text:
-        "Depuis le quartier verdoyant de Kampos, vous pouvez organiser votre excursion vers le nord de Chios. Faites de Voulamandis House votre base et laissez-nous vous recommander les meilleurs itinéraires.",
+        "Depuis le quartier verdoyant de Kambos, vous pouvez organiser votre excursion vers le nord de Chios. Faites de Voulamandis House votre base et laissez-nous vous recommander les meilleurs itinéraires.",
       linkLabel: "Séjournez avec ceux qui connaissent le mieux l’île.",
       href: "/fr/chambres-a-chios/",
     },
@@ -2251,7 +2251,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Ihre strategische Basis",
       text:
-        "Vom grünen Kampos aus können Sie Ihren Tagesausflug in den Norden von Chios planen. Nutzen Sie Voulamandis House als Basis und lassen Sie sich die besten Routen empfehlen.",
+        "Vom grünen Kambos aus können Sie Ihren Tagesausflug in den Norden von Chios planen. Nutzen Sie Voulamandis House als Basis und lassen Sie sich die besten Routen empfehlen.",
       linkLabel: "Übernachten Sie bei Menschen, die die Insel kennen.",
       href: "/de/chios-zimmer/",
     },
@@ -2320,7 +2320,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "La tua base strategica",
       text:
-        "Partendo dalla verde zona di Kampos, puoi organizzare la tua gita nel nord di Chios. Scegli Voulamandis House come base e lasciati consigliare i migliori itinerari.",
+        "Partendo dalla verde zona di Kambos, puoi organizzare la tua gita nel nord di Chios. Scegli Voulamandis House come base e lasciati consigliare i migliori itinerari.",
       linkLabel: "Soggiorna con chi conosce meglio l’isola.",
       href: "/it/camere-a-chios/",
     },
@@ -2389,7 +2389,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Tu base estratégica",
       text:
-        "Desde la verde zona de Kampos, puedes organizar tu excursión al norte de Chios. Haz de Voulamandis House tu base y deja que te recomendemos las mejores rutas.",
+        "Desde la verde zona de Kambos, puedes organizar tu excursión al norte de Chios. Haz de Voulamandis House tu base y deja que te recomendemos las mejores rutas.",
       linkLabel: "Alójate con quienes mejor conocen la isla.",
       href: "/es/habitaciones-en-chios/",
     },
@@ -2458,7 +2458,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Stratejik üssünüz",
       text:
-        "Yeşil Kampos bölgesinden başlayarak kuzey Sakız’a günlük gezi planlayabilirsiniz. Voulamandis House’u üssünüz yapın ve en iyi rotalar için bizden öneri alın.",
+        "Yeşil Kambos bölgesinden başlayarak kuzey Sakız’a günlük gezi planlayabilirsiniz. Voulamandis House’u üssünüz yapın ve en iyi rotalar için bizden öneri alın.",
       linkLabel: "Adayı en iyi bilenlerle konaklayın.",
       href: "/tr/sakiz-adasi-odalari/",
     },
@@ -2601,7 +2601,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Votre base stratégique",
       text:
-        "Avlonia se combine parfaitement avec une excursion dans les villages du mastic. Depuis Voulamandis House à Kampos, vous êtes idéalement placé pour explorer villages médiévaux et plages cachées du sud.",
+        "Avlonia se combine parfaitement avec une excursion dans les villages du mastic. Depuis Voulamandis House à Kambos, vous êtes idéalement placé pour explorer villages médiévaux et plages cachées du sud.",
       linkLabel: "Séjournez avec ceux qui connaissent le mieux l’île.",
       href: "/fr/chambres-a-chios/",
     },
@@ -2670,7 +2670,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Ihre strategische Basis",
       text:
-        "Avlonia lässt sich perfekt mit den Mastixdörfern verbinden. Von Voulamandis House in Kampos aus sind mittelalterliche Dörfer und versteckte Südstrände gut erreichbar.",
+        "Avlonia lässt sich perfekt mit den Mastixdörfern verbinden. Von Voulamandis House in Kambos aus sind mittelalterliche Dörfer und versteckte Südstrände gut erreichbar.",
       linkLabel: "Übernachten Sie bei Menschen, die die Insel kennen.",
       href: "/de/chios-zimmer/",
     },
@@ -2739,7 +2739,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "La tua base strategica",
       text:
-        "Avlonia si combina perfettamente con un’escursione nei villaggi del mastice. Da Voulamandis House a Kampos sei in una posizione ideale per villaggi medievali e spiagge nascoste del sud.",
+        "Avlonia si combina perfettamente con un’escursione nei villaggi del mastice. Da Voulamandis House a Kambos sei in una posizione ideale per villaggi medievali e spiagge nascoste del sud.",
       linkLabel: "Soggiorna con chi conosce meglio l’isola.",
       href: "/it/camere-a-chios/",
     },
@@ -2808,7 +2808,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Tu base estratégica",
       text:
-        "Avlonia combina perfectamente con una visita a los pueblos del mastiha. Desde Voulamandis House en Kampos estás bien situado para pueblos medievales y playas escondidas del sur.",
+        "Avlonia combina perfectamente con una visita a los pueblos del mastiha. Desde Voulamandis House en Kambos estás bien situado para pueblos medievales y playas escondidas del sur.",
       linkLabel: "Alójate con quienes mejor conocen la isla.",
       href: "/es/habitaciones-en-chios/",
     },
@@ -2877,7 +2877,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Stratejik üssünüz",
       text:
-        "Avlonia, mastik köyleri gezisiyle mükemmel şekilde birleşir. Kampos’taki Voulamandis House’tan Orta Çağ köylerine ve gizli güney plajlarına kolayca ulaşabilirsiniz.",
+        "Avlonia, mastik köyleri gezisiyle mükemmel şekilde birleşir. Kambos’taki Voulamandis House’tan Orta Çağ köylerine ve gizli güney plajlarına kolayca ulaşabilirsiniz.",
       linkLabel: "Adayı en iyi bilenlerle konaklayın.",
       href: "/tr/sakiz-adasi-odalari/",
     },
@@ -3020,7 +3020,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Votre base stratégique",
       text:
-        "Salagona est facilement accessible en voiture. Faites de Voulamandis House à Kampos votre base pour explorer les plages du sud et de l’ouest de Chios avec des conseils locaux.",
+        "Salagona est facilement accessible en voiture. Faites de Voulamandis House à Kambos votre base pour explorer les plages du sud et de l’ouest de Chios avec des conseils locaux.",
       linkLabel: "Séjournez avec ceux qui connaissent le mieux l’île.",
       href: "/fr/chambres-a-chios/",
     },
@@ -3089,7 +3089,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Ihre strategische Basis",
       text:
-        "Salagona ist mit dem Auto gut erreichbar. Nutzen Sie Voulamandis House im historischen Kampos als Basis, um südliche und westliche Strände mit lokalen Tipps zu erkunden.",
+        "Salagona ist mit dem Auto gut erreichbar. Nutzen Sie Voulamandis House im historischen Kambos als Basis, um südliche und westliche Strände mit lokalen Tipps zu erkunden.",
       linkLabel: "Übernachten Sie bei Menschen, die die Insel kennen.",
       href: "/de/chios-zimmer/",
     },
@@ -3158,7 +3158,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "La tua base strategica",
       text:
-        "Salagona è facilmente raggiungibile in auto. Scegli Voulamandis House nello storico Kampos come base per esplorare le spiagge meridionali e occidentali di Chios con consigli locali.",
+        "Salagona è facilmente raggiungibile in auto. Scegli Voulamandis House nello storico Kambos come base per esplorare le spiagge meridionali e occidentali di Chios con consigli locali.",
       linkLabel: "Soggiorna con chi conosce meglio l’isola.",
       href: "/it/camere-a-chios/",
     },
@@ -3227,7 +3227,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Tu base estratégica",
       text:
-        "Salagona es fácilmente accesible en coche. Haz de Voulamandis House, en el histórico Kampos, tu base para explorar las playas del sur y oeste de Chios con consejos locales.",
+        "Salagona es fácilmente accesible en coche. Haz de Voulamandis House, en el histórico Kambos, tu base para explorar las playas del sur y oeste de Chios con consejos locales.",
       linkLabel: "Alójate con quienes mejor conocen la isla.",
       href: "/es/habitaciones-en-chios/",
     },
@@ -3296,7 +3296,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Stratejik üssünüz",
       text:
-        "Salagona’ya arabayla kolayca ulaşılır. Güney ve batı plajlarını yerel önerilerle keşfetmek için tarihi Kampos’taki Voulamandis House’u üssünüz yapın.",
+        "Salagona’ya arabayla kolayca ulaşılır. Güney ve batı plajlarını yerel önerilerle keşfetmek için tarihi Kambos’taki Voulamandis House’u üssünüz yapın.",
       linkLabel: "Adayı en iyi bilenlerle konaklayın.",
       href: "/tr/sakiz-adasi-odalari/",
     },
@@ -3382,7 +3382,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       canonicalPath: "/fr/plages-de-chios/plage-agia-fotia/",
       title: "Plage Agia Fotia à Chios | Plage organisée et cosmopolite",
       description:
-        "Découvrez Agia Fotia à Chios, une plage de galets animée et organisée près de Kampos, avec eaux cristallines, tavernes, cafés et vue vers l’Asie Mineure.",
+        "Découvrez Agia Fotia à Chios, une plage de galets animée et organisée près de Kambos, avec eaux cristallines, tavernes, cafés et vue vers l’Asie Mineure.",
       ogImage: "/images/beaches/agia-fotia.jpg",
     },
     hero: {
@@ -3435,7 +3435,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Votre base stratégique",
       text:
-        "Agia Fotia se trouve à seulement 15-20 minutes de Kampos. Faites de Voulamandis House votre base, profitez du calme des vergers et rejoignez facilement les plages cosmopolites de l’île.",
+        "Agia Fotia se trouve à seulement 15-20 minutes de Kambos. Faites de Voulamandis House votre base, profitez du calme des vergers et rejoignez facilement les plages cosmopolites de l’île.",
       linkLabel: "Séjournez avec ceux qui connaissent le mieux l’île.",
       href: "/fr/chambres-a-chios/",
     },
@@ -3449,7 +3449,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       canonicalPath: "/de/straende-chios/agia-fotia-strand/",
       title: "Agia Fotia Strand Chios | Kosmopolitischer organisierter Strand",
       description:
-        "Entdecken Sie Agia Fotia auf Chios, einen lebhaften organisierten Kiesstrand nahe Kampos mit kristallklarem Wasser, Tavernen, Cafés und Blick Richtung Kleinasien.",
+        "Entdecken Sie Agia Fotia auf Chios, einen lebhaften organisierten Kiesstrand nahe Kambos mit kristallklarem Wasser, Tavernen, Cafés und Blick Richtung Kleinasien.",
       ogImage: "/images/beaches/agia-fotia.jpg",
     },
     hero: {
@@ -3502,7 +3502,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Ihre strategische Basis",
       text:
-        "Agia Fotia liegt nur 15-20 Minuten von Kampos entfernt. Nutzen Sie Voulamandis House als Basis, genießen Sie die Ruhe der Obstgärten und erreichen Sie leicht die kosmopolitischen Strände der Insel.",
+        "Agia Fotia liegt nur 15-20 Minuten von Kambos entfernt. Nutzen Sie Voulamandis House als Basis, genießen Sie die Ruhe der Obstgärten und erreichen Sie leicht die kosmopolitischen Strände der Insel.",
       linkLabel: "Übernachten Sie bei Menschen, die die Insel kennen.",
       href: "/de/chios-zimmer/",
     },
@@ -3516,7 +3516,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       canonicalPath: "/it/spiagge-chios/spiaggia-agia-fotia/",
       title: "Spiaggia Agia Fotia Chios | Spiaggia organizzata e cosmopolita",
       description:
-        "Scopri Agia Fotia a Chios, una vivace spiaggia di ciottoli organizzata vicino a Kampos con acque cristalline, taverne, caffè e vista verso l’Asia Minore.",
+        "Scopri Agia Fotia a Chios, una vivace spiaggia di ciottoli organizzata vicino a Kambos con acque cristalline, taverne, caffè e vista verso l’Asia Minore.",
       ogImage: "/images/beaches/agia-fotia.jpg",
     },
     hero: {
@@ -3569,7 +3569,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "La tua base strategica",
       text:
-        "Agia Fotia dista solo 15-20 minuti da Kampos. Scegli Voulamandis House come base, goditi la tranquillità degli agrumeti e raggiungi facilmente le spiagge più vivaci dell’isola.",
+        "Agia Fotia dista solo 15-20 minuti da Kambos. Scegli Voulamandis House come base, goditi la tranquillità degli agrumeti e raggiungi facilmente le spiagge più vivaci dell’isola.",
       linkLabel: "Soggiorna con chi conosce meglio l’isola.",
       href: "/it/camere-a-chios/",
     },
@@ -3583,7 +3583,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       canonicalPath: "/es/playas-chios/playa-agia-fotia/",
       title: "Playa Agia Fotia Chios | Playa organizada y cosmopolita",
       description:
-        "Descubre Agia Fotia en Chios, una animada playa organizada de guijarros cerca de Kampos con aguas cristalinas, tabernas, cafés y vistas hacia Asia Menor.",
+        "Descubre Agia Fotia en Chios, una animada playa organizada de guijarros cerca de Kambos con aguas cristalinas, tabernas, cafés y vistas hacia Asia Menor.",
       ogImage: "/images/beaches/agia-fotia.jpg",
     },
     hero: {
@@ -3636,7 +3636,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Tu base estratégica",
       text:
-        "Agia Fotia está a solo 15-20 minutos de Kampos. Haz de Voulamandis House tu base, disfruta de la tranquilidad de los huertos y visita fácilmente las playas cosmopolitas de la isla.",
+        "Agia Fotia está a solo 15-20 minutos de Kambos. Haz de Voulamandis House tu base, disfruta de la tranquilidad de los huertos y visita fácilmente las playas cosmopolitas de la isla.",
       linkLabel: "Alójate con quienes mejor conocen la isla.",
       href: "/es/habitaciones-en-chios/",
     },
@@ -3650,7 +3650,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       canonicalPath: "/tr/sakiz-adasi-plajlari/agia-fotia-plaji/",
       title: "Agia Fotia Plajı Sakız Adası | Kozmopolit organize plaj",
       description:
-        "Sakız Adası’ndaki Agia Fotia Plajı’nı keşfedin: Kampos yakınında kristal suları, tavernaları, kafeleri ve Anadolu kıyılarına manzarasıyla canlı, organize bir çakıl plajı.",
+        "Sakız Adası’ndaki Agia Fotia Plajı’nı keşfedin: Kambos yakınında kristal suları, tavernaları, kafeleri ve Anadolu kıyılarına manzarasıyla canlı, organize bir çakıl plajı.",
       ogImage: "/images/beaches/agia-fotia.jpg",
     },
     hero: {
@@ -3703,7 +3703,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Stratejik üssünüz",
       text:
-        "Agia Fotia, Kampos’tan sadece 15-20 dakika uzaklıktadır. Voulamandis House’u üssünüz yapın, bahçelerin huzurunun tadını çıkarın ve adanın kozmopolit plajlarına kolayca ulaşın.",
+        "Agia Fotia, Kambos’tan sadece 15-20 dakika uzaklıktadır. Voulamandis House’u üssünüz yapın, bahçelerin huzurunun tadını çıkarın ve adanın kozmopolit plajlarına kolayca ulaşın.",
       linkLabel: "Adayı en iyi bilenlerle konaklayın.",
       href: "/tr/sakiz-adasi-odalari/",
     },
@@ -3846,7 +3846,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Votre point de départ stratégique",
       text:
-        "La cosmopolite Komi est à une distance idéale de Kampos, à environ 30 minutes en voiture. Faites de Voulamandis House votre base pour accéder facilement aux plus belles plages de sable du sud de Chios.",
+        "La cosmopolite Komi est à une distance idéale de Kambos, à environ 30 minutes en voiture. Faites de Voulamandis House votre base pour accéder facilement aux plus belles plages de sable du sud de Chios.",
       linkLabel: "Séjournez avec ceux qui connaissent le mieux l’île.",
       href: "/fr/chambres-a-chios/",
     },
@@ -3915,7 +3915,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Ihr strategischer Ausgangspunkt",
       text:
-        "Das kosmopolitische Komi liegt ideal von Kampos entfernt, nur etwa 30 Minuten mit dem Auto. Nutzen Sie Voulamandis House als Basis für die besten Sandstrände im Süden von Chios.",
+        "Das kosmopolitische Komi liegt ideal von Kambos entfernt, nur etwa 30 Minuten mit dem Auto. Nutzen Sie Voulamandis House als Basis für die besten Sandstrände im Süden von Chios.",
       linkLabel: "Übernachten Sie bei Menschen, die die Insel kennen.",
       href: "/de/chios-zimmer/",
     },
@@ -3984,7 +3984,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "La tua base strategica",
       text:
-        "La cosmopolita Komi si trova a una distanza ideale da Kampos, circa 30 minuti in auto. Scegli Voulamandis House come base per accedere facilmente alle migliori spiagge sabbiose del sud di Chios.",
+        "La cosmopolita Komi si trova a una distanza ideale da Kambos, circa 30 minuti in auto. Scegli Voulamandis House come base per accedere facilmente alle migliori spiagge sabbiose del sud di Chios.",
       linkLabel: "Soggiorna con chi conosce meglio l’isola.",
       href: "/it/camere-a-chios/",
     },
@@ -4053,7 +4053,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Tu punto estratégico de partida",
       text:
-        "La cosmopolita Komi está a una distancia ideal de Kampos, a unos 30 minutos en coche. Haz de Voulamandis House tu base y disfruta de fácil acceso a las mejores playas de arena del sur de Chios.",
+        "La cosmopolita Komi está a una distancia ideal de Kambos, a unos 30 minutos en coche. Haz de Voulamandis House tu base y disfruta de fácil acceso a las mejores playas de arena del sur de Chios.",
       linkLabel: "Alójate con quienes mejor conocen la isla.",
       href: "/es/habitaciones-en-chios/",
     },
@@ -4122,7 +4122,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Stratejik başlangıç noktanız",
       text:
-        "Kozmopolit Komi, Kampos’tan ideal bir uzaklıktadır; arabayla yaklaşık 30 dakika. Güney Sakız’ın en iyi kum plajlarına kolay ulaşmak için Voulamandis House’u üssünüz yapın.",
+        "Kozmopolit Komi, Kambos’tan ideal bir uzaklıktadır; arabayla yaklaşık 30 dakika. Güney Sakız’ın en iyi kum plajlarına kolay ulaşmak için Voulamandis House’u üssünüz yapın.",
       linkLabel: "Adayı en iyi bilenlerle konaklayın.",
       href: "/tr/sakiz-adasi-odalari/",
     },
@@ -4265,7 +4265,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Votre base stratégique",
       text:
-        "Kampos est un point de départ idéal pour découvrir les plages du sud et les villages du mastic. Faites de Voulamandis House votre base et profitez du confort, de l’hospitalité et de conseils locaux quotidiens.",
+        "Kambos est un point de départ idéal pour découvrir les plages du sud et les villages du mastic. Faites de Voulamandis House votre base et profitez du confort, de l’hospitalité et de conseils locaux quotidiens.",
       linkLabel: "Séjournez avec ceux qui connaissent le mieux l’île.",
       href: "/fr/chambres-a-chios/",
     },
@@ -4334,7 +4334,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Ihre strategische Basis",
       text:
-        "Kampos ist der ideale Ausgangspunkt, um die südlichen Strände und Mastixdörfer zu entdecken. Nutzen Sie Voulamandis House als Basis und genießen Sie Komfort, Gastfreundschaft und tägliche lokale Tipps.",
+        "Kambos ist der ideale Ausgangspunkt, um die südlichen Strände und Mastixdörfer zu entdecken. Nutzen Sie Voulamandis House als Basis und genießen Sie Komfort, Gastfreundschaft und tägliche lokale Tipps.",
       linkLabel: "Übernachten Sie bei Menschen, die die Insel kennen.",
       href: "/de/chios-zimmer/",
     },
@@ -4403,7 +4403,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "La tua base strategica",
       text:
-        "Kampos è il punto di partenza ideale per scoprire le spiagge del sud e i villaggi del mastice. Scegli Voulamandis House come base e goditi comfort, ospitalità e consigli locali quotidiani.",
+        "Kambos è il punto di partenza ideale per scoprire le spiagge del sud e i villaggi del mastice. Scegli Voulamandis House come base e goditi comfort, ospitalità e consigli locali quotidiani.",
       linkLabel: "Soggiorna con chi conosce meglio l’isola.",
       href: "/it/camere-a-chios/",
     },
@@ -4472,7 +4472,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Tu base estratégica",
       text:
-        "Kampos es el punto de partida ideal para descubrir las playas del sur y los pueblos del mastiha. Haz de Voulamandis House tu base y disfruta de comodidad, hospitalidad y consejos locales diarios.",
+        "Kambos es el punto de partida ideal para descubrir las playas del sur y los pueblos del mastiha. Haz de Voulamandis House tu base y disfruta de comodidad, hospitalidad y consejos locales diarios.",
       linkLabel: "Alójate con quienes mejor conocen la isla.",
       href: "/es/habitaciones-en-chios/",
     },
@@ -4541,7 +4541,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Stratejik üssünüz",
       text:
-        "Kampos, güney plajlarını ve mastik köylerini keşfetmek için ideal başlangıç noktasıdır. Voulamandis House’u üssünüz yapın; konfor, misafirperverlik ve günlük yerel önerilerin tadını çıkarın.",
+        "Kambos, güney plajlarını ve mastik köylerini keşfetmek için ideal başlangıç noktasıdır. Voulamandis House’u üssünüz yapın; konfor, misafirperverlik ve günlük yerel önerilerin tadını çıkarın.",
       linkLabel: "Adayı en iyi bilenlerle konaklayın.",
       href: "/tr/sakiz-adasi-odalari/",
     },
@@ -4743,7 +4743,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Votre base idéale",
       text:
-        "Depuis Voulamandis House à Kampos, vous pouvez explorer facilement Vroulidia, Mavra Volia, Komi et les villages du mastic.",
+        "Depuis Voulamandis House à Kambos, vous pouvez explorer facilement Vroulidia, Mavra Volia, Komi et les villages du mastic.",
       linkLabel: "Séjournez chez ceux qui connaissent Chios.",
       href: "/fr/chambres-a-chios/",
     },
@@ -4810,7 +4810,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Votre base idéale",
       text:
-        "Voulamandis House à Kampos est une base calme pour explorer Kato Fana, Vroulidia, Komi et Mavra Volia.",
+        "Voulamandis House à Kambos est une base calme pour explorer Kato Fana, Vroulidia, Komi et Mavra Volia.",
       linkLabel: "Séjournez chez ceux qui connaissent Chios.",
       href: "/fr/chambres-a-chios/",
     },
@@ -4877,7 +4877,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Ihre strategische Basis",
       text:
-        "Von Voulamandis House in Kampos aus können Sie Vroulidia, Mavra Volia, Komi und die Mastixdörfer bequem erkunden.",
+        "Von Voulamandis House in Kambos aus können Sie Vroulidia, Mavra Volia, Komi und die Mastixdörfer bequem erkunden.",
       linkLabel: "Übernachten Sie bei Menschen, die Chios kennen.",
       href: "/de/chios-zimmer/",
     },
@@ -4944,7 +4944,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Ihre strategische Basis",
       text:
-        "Voulamandis House in Kampos ist eine ruhige Basis für Kato Fana, Vroulidia, Komi und Mavra Volia.",
+        "Voulamandis House in Kambos ist eine ruhige Basis für Kato Fana, Vroulidia, Komi und Mavra Volia.",
       linkLabel: "Übernachten Sie bei Menschen, die Chios kennen.",
       href: "/de/chios-zimmer/",
     },
@@ -5011,7 +5011,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "La tua base strategica",
       text:
-        "Da Voulamandis House a Kampos puoi esplorare facilmente Vroulidia, Mavra Volia, Komi e i villaggi del mastice.",
+        "Da Voulamandis House a Kambos puoi esplorare facilmente Vroulidia, Mavra Volia, Komi e i villaggi del mastice.",
       linkLabel: "Soggiorna con chi conosce Chios.",
       href: "/it/camere-a-chios/",
     },
@@ -5078,7 +5078,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "La tua base strategica",
       text:
-        "Voulamandis House a Kampos è una base tranquilla per Kato Fana, Vroulidia, Komi e Mavra Volia.",
+        "Voulamandis House a Kambos è una base tranquilla per Kato Fana, Vroulidia, Komi e Mavra Volia.",
       linkLabel: "Soggiorna con chi conosce Chios.",
       href: "/it/camere-a-chios/",
     },
@@ -5145,7 +5145,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Tu base estratégica",
       text:
-        "Desde Voulamandis House en Kampos puedes explorar fácilmente Vroulidia, Mavra Volia, Komi y los pueblos del mastiha.",
+        "Desde Voulamandis House en Kambos puedes explorar fácilmente Vroulidia, Mavra Volia, Komi y los pueblos del mastiha.",
       linkLabel: "Alójate con quienes conocen Chios.",
       href: "/es/habitaciones-en-chios/",
     },
@@ -5212,7 +5212,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Tu base estratégica",
       text:
-        "Voulamandis House en Kampos es una base tranquila para Kato Fana, Vroulidia, Komi y Mavra Volia.",
+        "Voulamandis House en Kambos es una base tranquila para Kato Fana, Vroulidia, Komi y Mavra Volia.",
       linkLabel: "Alójate con quienes conocen Chios.",
       href: "/es/habitaciones-en-chios/",
     },
@@ -5279,7 +5279,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Stratejik konaklama noktanız",
       text:
-        "Kampos’taki Voulamandis House’tan Vroulidia, Mavra Volia, Komi ve damla sakızı köylerini kolayca keşfedebilirsiniz.",
+        "Kambos’taki Voulamandis House’tan Vroulidia, Mavra Volia, Komi ve damla sakızı köylerini kolayca keşfedebilirsiniz.",
       linkLabel: "Sakız Adası’nı bilenlerle konaklayın.",
       href: "/tr/sakiz-adasi-odalari/",
     },
@@ -5346,7 +5346,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       icon: "🗺️",
       title: "Stratejik konaklama noktanız",
       text:
-        "Kampos’taki Voulamandis House, Kato Fana, Vroulidia, Komi ve Mavra Volia’yı keşfetmek için sakin bir başlangıç noktasıdır.",
+        "Kambos’taki Voulamandis House, Kato Fana, Vroulidia, Komi ve Mavra Volia’yı keşfetmek için sakin bir başlangıç noktasıdır.",
       linkLabel: "Sakız Adası’nı bilenlerle konaklayın.",
       href: "/tr/sakiz-adasi-odalari/",
     },
@@ -5393,7 +5393,7 @@ export const relatedBeachCards = [
   {
     slug: "agia-fotia-beach",
     title: "Agia Fotia",
-    description: "A cosmopolitan organized beach close to Kampos.",
+    description: "A cosmopolitan organized beach close to Kambos.",
     href: "/chios/chios-beaches/agia-fotia-beach/",
     image: "/images/beaches/agia-fotia.jpg",
     imageAlt: "Agia Fotia beach in Chios",

@@ -73,7 +73,7 @@ const familyTravelImages = {
   },
   garden: {
     src: "/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp",
-    alt: "The peaceful garden of Voulamandis House in Kampos Chios",
+    alt: "The peaceful garden of Voulamandis House in Kambos Chios",
   },
   sandyBeach: {
     src: "/images/beaches/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
@@ -197,13 +197,13 @@ export const familyTravelPages = {
     seo: {
       title: "Family Travel in Chios | Stay at Voulamandis House",
       description:
-        "Plan a relaxed family holiday in Chios with beaches, museums, villages, playgrounds and a peaceful stay at Voulamandis House in Kampos.",
+        "Plan a relaxed family holiday in Chios with beaches, museums, villages, playgrounds and a peaceful stay at Voulamandis House in Kambos.",
     },
     hero: {
       eyebrow: "Family holidays in Chios",
       title: "A relaxed island stay for families who want more than just a room",
       subtitle:
-        "Stay in peaceful Kampos, enjoy easy days by the sea, discover museums and villages, and return to the garden of Voulamandis House at the end of every family adventure.",
+        "Stay in peaceful Kambos, enjoy easy days by the sea, discover museums and villages, and return to the garden of Voulamandis House at the end of every family adventure.",
       image: familyTravelImages.hero,
       primaryCta: {
         label: "Book your family stay",
@@ -217,7 +217,7 @@ export const familyTravelPages = {
     intro: {
       title: "Why Chios works so well for families",
       text:
-        "Chios is calm, authentic and easy to explore at your own pace. Families can combine safe beach time, short cultural visits, traditional villages, simple food stops and quiet evenings without feeling rushed. Voulamandis House gives you a peaceful base close to Chios Town, Kampos and many of the island’s best family experiences.",
+        "Chios is calm, authentic and easy to explore at your own pace. Families can combine safe beach time, short cultural visits, traditional villages, simple food stops and quiet evenings without feeling rushed. Voulamandis House gives you a peaceful base close to Chios Town, Kambos and many of the island’s best family experiences.",
     },
     cardsTitle: "Easy family experiences around Chios",
     cardsIntro:
@@ -270,9 +270,9 @@ export const familyTravelPages = {
         "A family holiday in Chios does not need to be complicated. Start slowly, choose one or two experiences, leave space for the beach, and come back to a peaceful garden at the end of the day.",
       steps: [
         {
-          title: "Morning in Kampos",
+          title: "Morning in Kambos",
           text:
-            "Begin your morning with a gentle walk through the beautiful Kampos area, where Voulamandis House is located. Stroll among citrus orchards, stone walls and elegant mansions while children explore nature and parents enjoy the calm atmosphere of Chios.",
+            "Begin your morning with a gentle walk through the beautiful Kambos area, where Voulamandis House is located. Stroll among citrus orchards, stone walls and elegant mansions while children explore nature and parents enjoy the calm atmosphere of Chios.",
         },
         {
           title: "Breakfast and a cultural stop",
@@ -297,10 +297,10 @@ export const familyTravelPages = {
       ],
     },
     stay: {
-      eyebrow: "Stay in Kampos",
+      eyebrow: "Stay in Kambos",
       title: "A peaceful family base at Voulamandis House",
       text:
-        "Voulamandis House gives families space to slow down. The garden, the calm Kampos setting and the easy access to Chios Town, beaches, villages and museums make it a practical and welcoming base for parents and children.",
+        "Voulamandis House gives families space to slow down. The garden, the calm Kambos setting and the easy access to Chios Town, beaches, villages and museums make it a practical and welcoming base for parents and children.",
       image: familyTravelImages.garden,
       primaryCta: {
         label: "Book your stay",
@@ -473,7 +473,7 @@ export const familyTravelPages = {
       eyebrow: "Vacances en famille à Chios",
       title: "Un séjour paisible pour les familles qui veulent plus qu’une simple chambre",
       subtitle:
-        "Séjournez dans le calme de Kampos, profitez des plages, découvrez musées et villages, puis retrouvez le jardin de Voulamandis House chaque soir.",
+        "Séjournez dans le calme de Kambos, profitez des plages, découvrez musées et villages, puis retrouvez le jardin de Voulamandis House chaque soir.",
       image: familyTravelImages.hero,
       primaryCta: {
         label: "Réserver votre séjour",
@@ -540,9 +540,9 @@ export const familyTravelPages = {
         "Des vacances en famille à Chios peuvent rester simples: commencez doucement, choisissez une ou deux activités, gardez du temps pour la plage et rentrez au calme.",
       steps: [
         {
-          title: "Matin à Kampos",
+          title: "Matin à Kambos",
           text:
-            "Commencez par une promenade douce dans Kampos, entre vergers d’agrumes, murs de pierre et anciennes demeures.",
+            "Commencez par une promenade douce dans Kambos, entre vergers d’agrumes, murs de pierre et anciennes demeures.",
         },
         {
           title: "Petit-déjeuner et visite culturelle",
@@ -567,7 +567,7 @@ export const familyTravelPages = {
       ],
     },
     stay: {
-      eyebrow: "Séjourner à Kampos",
+      eyebrow: "Séjourner à Kambos",
       title: "Une base paisible pour les familles",
       text:
         "Voulamandis House offre aux familles un cadre calme, un jardin agréable et un accès facile à la ville de Chios, aux plages, aux villages et aux musées.",
@@ -608,7 +608,7 @@ export const familyTravelPages = {
       eyebrow: "Familienurlaub auf Chios",
       title: "Ein ruhiger Inselaufenthalt für Familien, die mehr als nur ein Zimmer suchen",
       subtitle:
-        "Wohnen Sie im ruhigen Kampos, genießen Sie einfache Strandtage, entdecken Sie Museen und Dörfer und kehren Sie abends in den Garten des Voulamandis House zurück.",
+        "Wohnen Sie im ruhigen Kambos, genießen Sie einfache Strandtage, entdecken Sie Museen und Dörfer und kehren Sie abends in den Garten des Voulamandis House zurück.",
       image: familyTravelImages.hero,
       primaryCta: {
         label: "Familienaufenthalt buchen",
@@ -675,9 +675,9 @@ export const familyTravelPages = {
         "Ein Familienurlaub auf Chios muss nicht kompliziert sein. Starten Sie langsam, wählen Sie ein oder zwei Erlebnisse und lassen Sie Zeit für Strand und Erholung.",
       steps: [
         {
-          title: "Morgen in Kampos",
+          title: "Morgen in Kambos",
           text:
-            "Beginnen Sie mit einem Spaziergang durch Kampos, vorbei an Zitrusgärten, Steinmauern und alten Herrenhäusern.",
+            "Beginnen Sie mit einem Spaziergang durch Kambos, vorbei an Zitrusgärten, Steinmauern und alten Herrenhäusern.",
         },
         {
           title: "Frühstück und Kultur",
@@ -702,7 +702,7 @@ export const familyTravelPages = {
       ],
     },
     stay: {
-      eyebrow: "Aufenthalt in Kampos",
+      eyebrow: "Aufenthalt in Kambos",
       title: "Eine ruhige Basis für Familien",
       text:
         "Voulamandis House bietet Familien Ruhe, Gartenatmosphäre und einfachen Zugang zu Chios-Stadt, Stränden, Dörfern und Museen.",
@@ -743,7 +743,7 @@ export const familyTravelPages = {
       eyebrow: "Vacanze in famiglia a Chios",
       title: "Un soggiorno tranquillo per famiglie che cercano più di una camera",
       subtitle:
-        "Soggiorna nel tranquillo Kampos, goditi giornate semplici al mare, scopri musei e villaggi e torna ogni sera nel giardino di Voulamandis House.",
+        "Soggiorna nel tranquillo Kambos, goditi giornate semplici al mare, scopri musei e villaggi e torna ogni sera nel giardino di Voulamandis House.",
       image: familyTravelImages.hero,
       primaryCta: {
         label: "Prenota il soggiorno",
@@ -810,9 +810,9 @@ export const familyTravelPages = {
         "Una vacanza in famiglia a Chios può essere semplice: inizia con calma, scegli una o due esperienze e lascia spazio al mare.",
       steps: [
         {
-          title: "Mattina a Kampos",
+          title: "Mattina a Kambos",
           text:
-            "Inizia con una passeggiata a Kampos, tra agrumeti, muri in pietra e antiche dimore.",
+            "Inizia con una passeggiata a Kambos, tra agrumeti, muri in pietra e antiche dimore.",
         },
         {
           title: "Colazione e cultura",
@@ -837,7 +837,7 @@ export const familyTravelPages = {
       ],
     },
     stay: {
-      eyebrow: "Soggiorna a Kampos",
+      eyebrow: "Soggiorna a Kambos",
       title: "Una base tranquilla per famiglie",
       text:
         "Voulamandis House offre tranquillità, un giardino piacevole e facile accesso alla città, alle spiagge, ai villaggi e ai musei.",
@@ -878,7 +878,7 @@ export const familyTravelPages = {
       eyebrow: "Vacaciones en familia en Quíos",
       title: "Una estancia tranquila para familias que buscan algo más que una habitación",
       subtitle:
-        "Alójate en el tranquilo Kampos, disfruta de días fáciles junto al mar, descubre museos y pueblos y vuelve cada tarde al jardín de Voulamandis House.",
+        "Alójate en el tranquilo Kambos, disfruta de días fáciles junto al mar, descubre museos y pueblos y vuelve cada tarde al jardín de Voulamandis House.",
       image: familyTravelImages.hero,
       primaryCta: {
         label: "Reservar estancia familiar",
@@ -945,9 +945,9 @@ export const familyTravelPages = {
         "Unas vacaciones familiares en Quíos pueden ser sencillas: empieza despacio, elige una o dos experiencias y deja tiempo para la playa.",
       steps: [
         {
-          title: "Mañana en Kampos",
+          title: "Mañana en Kambos",
           text:
-            "Comienza con un paseo suave por Kampos, entre cítricos, muros de piedra y antiguas mansiones.",
+            "Comienza con un paseo suave por Kambos, entre cítricos, muros de piedra y antiguas mansiones.",
         },
         {
           title: "Desayuno y cultura",
@@ -972,7 +972,7 @@ export const familyTravelPages = {
       ],
     },
     stay: {
-      eyebrow: "Alojamiento en Kampos",
+      eyebrow: "Alojamiento en Kambos",
       title: "Una base tranquila para familias",
       text:
         "Voulamandis House ofrece calma, jardín y fácil acceso a la ciudad de Quíos, playas, pueblos y museos.",
@@ -1007,13 +1007,13 @@ export const familyTravelPages = {
     seo: {
       title: "Sakız Adası Aile Tatili | Voulamandis House",
       description:
-        "Sakız Adası’nda plajlar, müzeler, köyler, çocuklara uygun aktiviteler ve Kampos’ta huzurlu bir konaklama ile aile tatilinizi planlayın.",
+        "Sakız Adası’nda plajlar, müzeler, köyler, çocuklara uygun aktiviteler ve Kambos’ta huzurlu bir konaklama ile aile tatilinizi planlayın.",
     },
     hero: {
       eyebrow: "Sakız Adası’nda aile tatili",
       title: "Sadece bir odadan fazlasını isteyen aileler için sakin bir ada konaklaması",
       subtitle:
-        "Sakin Kampos bölgesinde kalın, deniz kenarında rahat günler geçirin, müzeleri ve köyleri keşfedin, akşamları Voulamandis House bahçesine dönün.",
+        "Sakin Kambos bölgesinde kalın, deniz kenarında rahat günler geçirin, müzeleri ve köyleri keşfedin, akşamları Voulamandis House bahçesine dönün.",
       image: familyTravelImages.hero,
       primaryCta: {
         label: "Aile konaklaması rezerve et",
@@ -1080,9 +1080,9 @@ export const familyTravelPages = {
         "Sakız Adası’nda aile tatili karmaşık olmak zorunda değildir. Güne yavaş başlayın, bir veya iki deneyim seçin ve plaj için zaman bırakın.",
       steps: [
         {
-          title: "Kampos’ta sabah",
+          title: "Kambos’ta sabah",
           text:
-            "Güne Kampos’ta narenciye bahçeleri, taş duvarlar ve eski konaklar arasında sakin bir yürüyüşle başlayın.",
+            "Güne Kambos’ta narenciye bahçeleri, taş duvarlar ve eski konaklar arasında sakin bir yürüyüşle başlayın.",
         },
         {
           title: "Kahvaltı ve kültür",
@@ -1107,7 +1107,7 @@ export const familyTravelPages = {
       ],
     },
     stay: {
-      eyebrow: "Kampos’ta konaklama",
+      eyebrow: "Kambos’ta konaklama",
       title: "Aileler için huzurlu bir başlangıç noktası",
       text:
         "Voulamandis House ailelere sakinlik, bahçe atmosferi ve Sakız şehir merkezine, plajlara, köylere ve müzelere kolay erişim sunar.",

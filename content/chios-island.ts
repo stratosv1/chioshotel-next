@@ -85,7 +85,7 @@ export const chiosIslandPageEn: ChiosIslandPageData = {
     canonicalPath: "/chios-island/",
     title: "Chios Island Guide | Beaches, Villages & Mastic Culture",
     description:
-      "Explore Chios Island through its beaches, medieval villages, mastic culture and authentic local experiences. Plan your stay from Voulamandis House in Kampos.",
+      "Explore Chios Island through its beaches, medieval villages, mastic culture and authentic local experiences. Plan your stay from Voulamandis House in Kambos.",
     ogImage: chiosIslandHeroImage,
   },
   hero: {
@@ -108,7 +108,7 @@ export const chiosIslandPageEn: ChiosIslandPageData = {
     paragraphs: [
       "Chios Island is a distinctive destination in the northeastern Aegean Sea, known for its fortified villages, scenic coastline and the world-famous mastic resin that is cultivated only here.",
       "It offers an authentic Greek island experience, rich in history, local tradition, natural beauty and quieter travel away from the crowds.",
-      "From the citrus estates of Kampos to the southern mastic villages and the dramatic coastlines of the island, Chios reveals a different side of Greece.",
+      "From the citrus estates of Kambos to the southern mastic villages and the dramatic coastlines of the island, Chios reveals a different side of Greece.",
     ],
     highlights: [
       {
@@ -121,7 +121,7 @@ export const chiosIslandPageEn: ChiosIslandPageData = {
       },
       {
         label: "Base area",
-        value: "Kampos",
+        value: "Kambos",
       },
       {
         label: "Experience",
@@ -175,10 +175,10 @@ export const chiosIslandPageEn: ChiosIslandPageData = {
     href: "/chios-holidays-quiz/",
   },
   stay: {
-    kicker: "Stay in Kampos",
+    kicker: "Stay in Kambos",
     title: "Use Voulamandis House as your Chios base",
     text:
-      "Experience authentic hospitality in the historic Kampos area and stay close to Chios Town, the airport and the routes that lead to beaches, villages and cultural landmarks.",
+      "Experience authentic hospitality in the historic Kambos area and stay close to Chios Town, the airport and the routes that lead to beaches, villages and cultural landmarks.",
     primaryCta: {
       label: "Book your stay",
       href: "/chios-hotels-rates/",
@@ -313,7 +313,7 @@ export const chiosIslandPageFr: ChiosIslandPageData = {
     canonicalPath: "/fr/chios-en-grece/",
     title: "Guide de Chios | Plages, villages et culture du mastic",
     description:
-      "Explorez l’île de Chios à travers ses plages, ses villages médiévaux, la culture du mastic et des expériences locales authentiques depuis Voulamandis House à Kampos.",
+      "Explorez l’île de Chios à travers ses plages, ses villages médiévaux, la culture du mastic et des expériences locales authentiques depuis Voulamandis House à Kambos.",
     ogImage: chiosIslandHeroImage,
   },
   hero: {
@@ -336,7 +336,7 @@ export const chiosIslandPageFr: ChiosIslandPageData = {
     paragraphs: [
       "Chios est une destination singulière du nord-est de la mer Égée, connue pour ses villages fortifiés, son littoral varié et la résine de mastic mondialement célèbre, cultivée uniquement ici.",
       "L’île offre une expérience grecque authentique, riche en histoire, traditions locales, beauté naturelle et voyages plus calmes, loin des foules.",
-      "Des domaines d’agrumes de Kampos aux villages du mastic du sud et aux côtes spectaculaires de l’île, Chios révèle une autre facette de la Grèce.",
+      "Des domaines d’agrumes de Kambos aux villages du mastic du sud et aux côtes spectaculaires de l’île, Chios révèle une autre facette de la Grèce.",
     ],
     highlights: [
       {
@@ -349,7 +349,7 @@ export const chiosIslandPageFr: ChiosIslandPageData = {
       },
       {
         label: "Base idéale",
-        value: "Kampos",
+        value: "Kambos",
       },
       {
         label: "Expérience",
@@ -403,10 +403,10 @@ export const chiosIslandPageFr: ChiosIslandPageData = {
     href: "/fr/quiz-vacances-a-chios/",
   },
   stay: {
-    kicker: "Séjourner à Kampos",
+    kicker: "Séjourner à Kambos",
     title: "Faites de Voulamandis House votre base à Chios",
     text:
-      "Profitez d’une hospitalité authentique dans le quartier historique de Kampos, près de la ville de Chios, de l’aéroport et des routes vers les plages, villages et sites culturels.",
+      "Profitez d’une hospitalité authentique dans le quartier historique de Kambos, près de la ville de Chios, de l’aéroport et des routes vers les plages, villages et sites culturels.",
     primaryCta: {
       label: "Réserver votre séjour",
       href: "/fr/tarifs-des-hotels-a-chios/",
@@ -427,7 +427,7 @@ export const chiosIslandPageDe: ChiosIslandPageData = {
     canonicalPath: "/de/chios-insel/",
     title: "Chios Reiseführer | Strände, Dörfer und Mastixkultur",
     description:
-      "Entdecken Sie Chios mit Stränden, mittelalterlichen Dörfern, Mastixkultur und authentischen lokalen Erlebnissen. Planen Sie Ihren Aufenthalt im Voulamandis House in Kampos.",
+      "Entdecken Sie Chios mit Stränden, mittelalterlichen Dörfern, Mastixkultur und authentischen lokalen Erlebnissen. Planen Sie Ihren Aufenthalt im Voulamandis House in Kambos.",
     ogImage: chiosIslandHeroImage,
   },
   hero: {
@@ -450,7 +450,7 @@ export const chiosIslandPageDe: ChiosIslandPageData = {
     paragraphs: [
       "Chios ist ein besonderer Reiseziel im nordöstlichen Ägäischen Meer, bekannt für befestigte Dörfer, abwechslungsreiche Küsten und das weltberühmte Mastixharz, das nur hier kultiviert wird.",
       "Die Insel bietet ein authentisches griechisches Reiseerlebnis mit Geschichte, lokaler Tradition, natürlicher Schönheit und ruhigeren Urlaubsmomenten abseits der Massen.",
-      "Von den Zitrusgärten in Kampos über die Mastixdörfer im Süden bis zu den eindrucksvollen Küsten zeigt Chios eine andere Seite Griechenlands.",
+      "Von den Zitrusgärten in Kambos über die Mastixdörfer im Süden bis zu den eindrucksvollen Küsten zeigt Chios eine andere Seite Griechenlands.",
     ],
     highlights: [
       {
@@ -463,7 +463,7 @@ export const chiosIslandPageDe: ChiosIslandPageData = {
       },
       {
         label: "Ausgangspunkt",
-        value: "Kampos",
+        value: "Kambos",
       },
       {
         label: "Erlebnis",
@@ -517,10 +517,10 @@ export const chiosIslandPageDe: ChiosIslandPageData = {
     href: "/de/chios-urlaubsquiz/",
   },
   stay: {
-    kicker: "Aufenthalt in Kampos",
+    kicker: "Aufenthalt in Kambos",
     title: "Nutzen Sie Voulamandis House als Ausgangspunkt auf Chios",
     text:
-      "Erleben Sie authentische Gastfreundschaft im historischen Kampos und wohnen Sie nahe der Stadt Chios, dem Flughafen und den Routen zu Stränden, Dörfern und kulturellen Sehenswürdigkeiten.",
+      "Erleben Sie authentische Gastfreundschaft im historischen Kambos und wohnen Sie nahe der Stadt Chios, dem Flughafen und den Routen zu Stränden, Dörfern und kulturellen Sehenswürdigkeiten.",
     primaryCta: {
       label: "Aufenthalt buchen",
       href: "/de/hotelpreise-auf-der-insel-chios/",
@@ -541,7 +541,7 @@ export const chiosIslandPageIt: ChiosIslandPageData = {
     canonicalPath: "/it/chios-lisola-in-grecia/",
     title: "Guida di Chios | Spiagge, villaggi e cultura del mastice",
     description:
-      "Scoprite l’isola di Chios attraverso spiagge, villaggi medievali, cultura del mastice ed esperienze locali autentiche, con Voulamandis House a Kampos come base.",
+      "Scoprite l’isola di Chios attraverso spiagge, villaggi medievali, cultura del mastice ed esperienze locali autentiche, con Voulamandis House a Kambos come base.",
     ogImage: chiosIslandHeroImage,
   },
   hero: {
@@ -564,7 +564,7 @@ export const chiosIslandPageIt: ChiosIslandPageData = {
     paragraphs: [
       "Chios è una destinazione speciale nel nord-est del Mar Egeo, conosciuta per i villaggi fortificati, la costa suggestiva e la famosa resina di mastice, coltivata solo qui.",
       "Offre un’esperienza autentica di isola greca, ricca di storia, tradizione locale, bellezza naturale e viaggi più tranquilli lontano dalla folla.",
-      "Dagli agrumeti di Kampos ai villaggi del mastice del sud e alle coste spettacolari dell’isola, Chios rivela un lato diverso della Grecia.",
+      "Dagli agrumeti di Kambos ai villaggi del mastice del sud e alle coste spettacolari dell’isola, Chios rivela un lato diverso della Grecia.",
     ],
     highlights: [
       {
@@ -577,7 +577,7 @@ export const chiosIslandPageIt: ChiosIslandPageData = {
       },
       {
         label: "Base ideale",
-        value: "Kampos",
+        value: "Kambos",
       },
       {
         label: "Esperienza",
@@ -631,10 +631,10 @@ export const chiosIslandPageIt: ChiosIslandPageData = {
     href: "/it/quiz-vacanze-a-chios/",
   },
   stay: {
-    kicker: "Soggiorno a Kampos",
+    kicker: "Soggiorno a Kambos",
     title: "Usate Voulamandis House come base a Chios",
     text:
-      "Vivete un’ospitalità autentica nella storica zona di Kampos, vicino alla città di Chios, all’aeroporto e alle strade che portano a spiagge, villaggi e luoghi culturali.",
+      "Vivete un’ospitalità autentica nella storica zona di Kambos, vicino alla città di Chios, all’aeroporto e alle strade che portano a spiagge, villaggi e luoghi culturali.",
     primaryCta: {
       label: "Prenota il soggiorno",
       href: "/it/prezzi-hotel-chios/",
@@ -655,7 +655,7 @@ export const chiosIslandPageEs: ChiosIslandPageData = {
     canonicalPath: "/es/chios-en-grecia/",
     title: "Guía de Quíos | Playas, pueblos y cultura de la masilla",
     description:
-      "Explore la isla de Quíos a través de sus playas, pueblos medievales, cultura de la masilla y experiencias locales auténticas, con Voulamandis House en Kampos como base.",
+      "Explore la isla de Quíos a través de sus playas, pueblos medievales, cultura de la masilla y experiencias locales auténticas, con Voulamandis House en Kambos como base.",
     ogImage: chiosIslandHeroImage,
   },
   hero: {
@@ -678,7 +678,7 @@ export const chiosIslandPageEs: ChiosIslandPageData = {
     paragraphs: [
       "Quíos es un destino especial en el noreste del mar Egeo, conocido por sus pueblos fortificados, su costa pintoresca y la famosa resina de masilla, cultivada únicamente aquí.",
       "Ofrece una experiencia auténtica de isla griega, rica en historia, tradición local, belleza natural y viajes más tranquilos lejos de las multitudes.",
-      "Desde las fincas de cítricos de Kampos hasta los pueblos de la masilla del sur y las costas espectaculares de la isla, Quíos revela una cara diferente de Grecia.",
+      "Desde las fincas de cítricos de Kambos hasta los pueblos de la masilla del sur y las costas espectaculares de la isla, Quíos revela una cara diferente de Grecia.",
     ],
     highlights: [
       {
@@ -691,7 +691,7 @@ export const chiosIslandPageEs: ChiosIslandPageData = {
       },
       {
         label: "Zona base",
-        value: "Kampos",
+        value: "Kambos",
       },
       {
         label: "Experiencia",
@@ -745,10 +745,10 @@ export const chiosIslandPageEs: ChiosIslandPageData = {
     href: "/es/quiz-vacaciones-en-quios/",
   },
   stay: {
-    kicker: "Alojarse en Kampos",
+    kicker: "Alojarse en Kambos",
     title: "Use Voulamandis House como base en Quíos",
     text:
-      "Disfrute de una hospitalidad auténtica en la histórica zona de Kampos y alójese cerca de la ciudad de Quíos, del aeropuerto y de las rutas que llevan a playas, pueblos y lugares culturales.",
+      "Disfrute de una hospitalidad auténtica en la histórica zona de Kambos y alójese cerca de la ciudad de Quíos, del aeropuerto y de las rutas que llevan a playas, pueblos y lugares culturales.",
     primaryCta: {
       label: "Reservar estancia",
       href: "/es/los-mejores-precios-de-hotel-en-la-isla-chios/",
@@ -769,7 +769,7 @@ export const chiosIslandPageTr: ChiosIslandPageData = {
     canonicalPath: "/tr/sakiz-adasi/",
     title: "Sakız Adası Rehberi | Plajlar, Köyler ve Mastik Kültürü",
     description:
-      "Sakız Adası’nı plajları, ortaçağ köyleri, mastik kültürü ve yerel deneyimleriyle keşfedin. Kampos’taki Voulamandis House’u konaklama üssünüz yapın.",
+      "Sakız Adası’nı plajları, ortaçağ köyleri, mastik kültürü ve yerel deneyimleriyle keşfedin. Kambos’taki Voulamandis House’u konaklama üssünüz yapın.",
     ogImage: chiosIslandHeroImage,
   },
   hero: {
@@ -792,7 +792,7 @@ export const chiosIslandPageTr: ChiosIslandPageData = {
     paragraphs: [
       "Sakız Adası, kuzeydoğu Ege Denizi’nde yer alan; kale köyleri, etkileyici kıyıları ve yalnızca burada yetiştirilen dünyaca ünlü mastik reçinesiyle tanınan özel bir destinasyondur.",
       "Ada; tarih, yerel gelenek, doğal güzellik ve kalabalıklardan uzak daha sakin bir tatil arayanlar için otantik bir Yunan adası deneyimi sunar.",
-      "Kampos’un narenciye bahçelerinden güneydeki mastik köylerine ve adanın dramatik kıyılarına kadar Sakız, Yunanistan’ın farklı bir yüzünü gösterir.",
+      "Kambos’un narenciye bahçelerinden güneydeki mastik köylerine ve adanın dramatik kıyılarına kadar Sakız, Yunanistan’ın farklı bir yüzünü gösterir.",
     ],
     highlights: [
       {
@@ -805,7 +805,7 @@ export const chiosIslandPageTr: ChiosIslandPageData = {
       },
       {
         label: "Konaklama bölgesi",
-        value: "Kampos",
+        value: "Kambos",
       },
       {
         label: "Deneyim",
@@ -859,10 +859,10 @@ export const chiosIslandPageTr: ChiosIslandPageData = {
     href: "/tr/sakiz-adasi-tatil-testi/",
   },
   stay: {
-    kicker: "Kampos’ta konaklayın",
+    kicker: "Kambos’ta konaklayın",
     title: "Voulamandis House’u Sakız Adası üssünüz yapın",
     text:
-      "Tarihi Kampos bölgesinde otantik misafirperverliği deneyimleyin; Sakız şehir merkezine, havaalanına ve plajlara, köylere, kültürel noktalara giden rotalara yakın konaklayın.",
+      "Tarihi Kambos bölgesinde otantik misafirperverliği deneyimleyin; Sakız şehir merkezine, havaalanına ve plajlara, köylere, kültürel noktalara giden rotalara yakın konaklayın.",
     primaryCta: {
       label: "Konaklamanızı ayırtın",
       href: "/tr/sakiz-adasi-rezervasyon/",

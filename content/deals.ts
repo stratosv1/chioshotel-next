@@ -62,7 +62,7 @@ export const dealsPageEn: DealsPageData = {
     ogImage: dealsHeroImage,
   },
   hero: {
-    kicker: "Voulamandis House • Kampos, Chios",
+    kicker: "Voulamandis House • Kambos, Chios",
     title: "Best Chios Travel Deals for Chios Hotels",
     description:
       "Discover exclusive Chios travel packages, room offers and direct booking coupon codes for your stay at Voulamandis House.",
@@ -86,7 +86,7 @@ export const dealsPageEn: DealsPageData = {
       id: "economy-double",
       title: "Economy Double",
       description:
-        "A value-focused Chios hotel offer for guests who want a simple, comfortable and budget-friendly stay in Kampos.",
+        "A value-focused Chios hotel offer for guests who want a simple, comfortable and budget-friendly stay in Kambos.",
       image: economyRoomImage,
       imageAlt:
         "Best Chios travel deal for economy double room at Voulamandis House",
@@ -128,7 +128,7 @@ export const dealsPageEn: DealsPageData = {
       id: "first-floor-double",
       title: "First Floor Double",
       description:
-        "A first-floor room offer for guests who prefer a brighter stay, upper-floor feel and traditional Kampos atmosphere.",
+        "A first-floor room offer for guests who prefer a brighter stay, upper-floor feel and traditional Kambos atmosphere.",
       image: firstFloorRoomImage,
       imageAlt:
         "Chios travel package for first floor double room at Voulamandis House",
@@ -136,7 +136,7 @@ export const dealsPageEn: DealsPageData = {
         "Chios travel deals",
         "Chios travel packages",
         "Chios hotels offers",
-        "Kampos view",
+        "Kambos view",
       ],
       tip: "Use this code at the checkout stage.",
       couponCode: "MAY10",
@@ -272,7 +272,7 @@ export const dealsPageFr: DealsPageData = {
     ogImage: dealsHeroImage,
   },
   hero: {
-    kicker: "Voulamandis House • Kampos, Chios",
+    kicker: "Voulamandis House • Kambos, Chios",
     title: "Offres de séjour à Chios",
     description:
       "Découvrez des offres exclusives, des forfaits de séjour et des codes de réduction pour réserver directement à Voulamandis House.",
@@ -296,7 +296,7 @@ export const dealsPageFr: DealsPageData = {
       id: "economy-double",
       title: "Chambre double économique",
       description:
-        "Une offre avantageuse à Chios pour les voyageurs qui souhaitent un séjour simple, confortable et économique à Kampos.",
+        "Une offre avantageuse à Chios pour les voyageurs qui souhaitent un séjour simple, confortable et économique à Kambos.",
       image: economyRoomImage,
       imageAlt:
         "Offre de séjour à Chios pour chambre double économique à Voulamandis House",
@@ -328,11 +328,11 @@ export const dealsPageFr: DealsPageData = {
       id: "first-floor-double",
       title: "Chambre double au premier étage",
       description:
-        "Une offre pour les voyageurs qui préfèrent une chambre lumineuse, à l’étage, avec l’atmosphère traditionnelle de Kampos.",
+        "Une offre pour les voyageurs qui préfèrent une chambre lumineuse, à l’étage, avec l’atmosphère traditionnelle de Kambos.",
       image: firstFloorRoomImage,
       imageAlt:
         "Forfait séjour à Chios pour chambre double au premier étage à Voulamandis House",
-      tags: ["Offres Chios", "Forfaits séjour", "Hôtels Chios", "Vue Kampos"],
+      tags: ["Offres Chios", "Forfaits séjour", "Hôtels Chios", "Vue Kambos"],
       tip: "Utilisez ce code au moment de finaliser la réservation.",
       couponCode: "MAY10",
       discountLabel: "Offre premier étage",
@@ -368,7 +368,7 @@ export const dealsPageDe: DealsPageData = {
     ogImage: dealsHeroImage,
   },
   hero: {
-    kicker: "Voulamandis House • Kampos, Chios",
+    kicker: "Voulamandis House • Kambos, Chios",
     title: "Hotelangebote und Reiseangebote auf Chios",
     description:
       "Entdecken Sie exklusive Angebote, Zimmeraktionen und Rabattcodes für Ihre Direktbuchung im Voulamandis House.",
@@ -392,7 +392,7 @@ export const dealsPageDe: DealsPageData = {
       id: "economy-double",
       title: "Economy Doppelzimmer",
       description:
-        "Ein preisbewusstes Hotelangebot auf Chios für Gäste, die einen einfachen, komfortablen und günstigen Aufenthalt in Kampos suchen.",
+        "Ein preisbewusstes Hotelangebot auf Chios für Gäste, die einen einfachen, komfortablen und günstigen Aufenthalt in Kambos suchen.",
       image: economyRoomImage,
       imageAlt:
         "Chios Reiseangebot für Economy Doppelzimmer im Voulamandis House",
@@ -424,11 +424,11 @@ export const dealsPageDe: DealsPageData = {
       id: "first-floor-double",
       title: "Doppelzimmer im ersten Stock",
       description:
-        "Ein Angebot für Gäste, die ein helleres Zimmer, das Gefühl einer oberen Etage und die traditionelle Atmosphäre von Kampos bevorzugen.",
+        "Ein Angebot für Gäste, die ein helleres Zimmer, das Gefühl einer oberen Etage und die traditionelle Atmosphäre von Kambos bevorzugen.",
       image: firstFloorRoomImage,
       imageAlt:
         "Chios Reisepaket für Doppelzimmer im ersten Stock im Voulamandis House",
-      tags: ["Chios Angebote", "Reisepakete", "Hotels Chios", "Kampos Blick"],
+      tags: ["Chios Angebote", "Reisepakete", "Hotels Chios", "Kambos Blick"],
       tip: "Verwenden Sie diesen Code beim Abschluss der Buchung.",
       couponCode: "MAY10",
       discountLabel: "Angebot erster Stock",
@@ -463,7 +463,7 @@ export const dealsPageIt: DealsPageData = {
     ogImage: dealsHeroImage,
   },
   hero: {
-    kicker: "Voulamandis House • Kampos, Chios",
+    kicker: "Voulamandis House • Kambos, Chios",
     title: "Offerte di viaggio e hotel a Chios",
     description:
       "Scopri pacchetti esclusivi, offerte sulle camere e codici sconto per prenotare direttamente al Voulamandis House.",
@@ -487,7 +487,7 @@ export const dealsPageIt: DealsPageData = {
       id: "economy-double",
       title: "Camera doppia economy",
       description:
-        "Un’offerta conveniente a Chios per chi desidera un soggiorno semplice, comodo ed economico a Kampos.",
+        "Un’offerta conveniente a Chios per chi desidera un soggiorno semplice, comodo ed economico a Kambos.",
       image: economyRoomImage,
       imageAlt:
         "Offerta viaggio a Chios per camera doppia economy al Voulamandis House",
@@ -519,11 +519,11 @@ export const dealsPageIt: DealsPageData = {
       id: "first-floor-double",
       title: "Camera doppia al primo piano",
       description:
-        "Un’offerta per chi preferisce una camera più luminosa, al piano superiore, con atmosfera tradizionale di Kampos.",
+        "Un’offerta per chi preferisce una camera più luminosa, al piano superiore, con atmosfera tradizionale di Kambos.",
       image: firstFloorRoomImage,
       imageAlt:
         "Pacchetto viaggio a Chios per camera doppia al primo piano al Voulamandis House",
-      tags: ["Offerte Chios", "Pacchetti soggiorno", "Hotel Chios", "Vista Kampos"],
+      tags: ["Offerte Chios", "Pacchetti soggiorno", "Hotel Chios", "Vista Kambos"],
       tip: "Usa questo codice nella fase finale della prenotazione.",
       couponCode: "MAY10",
       discountLabel: "Offerta primo piano",
@@ -559,7 +559,7 @@ export const dealsPageEs: DealsPageData = {
     ogImage: dealsHeroImage,
   },
   hero: {
-    kicker: "Voulamandis House • Kampos, Chios",
+    kicker: "Voulamandis House • Kambos, Chios",
     title: "Ofertas de viaje y hotel en Chios",
     description:
       "Descubre paquetes exclusivos, ofertas de habitaciones y códigos de descuento para reservar directamente en Voulamandis House.",
@@ -583,7 +583,7 @@ export const dealsPageEs: DealsPageData = {
       id: "economy-double",
       title: "Habitación doble económica",
       description:
-        "Una oferta económica en Chios para huéspedes que buscan una estancia sencilla, cómoda y asequible en Kampos.",
+        "Una oferta económica en Chios para huéspedes que buscan una estancia sencilla, cómoda y asequible en Kambos.",
       image: economyRoomImage,
       imageAlt:
         "Oferta de viaje a Chios para habitación doble económica en Voulamandis House",
@@ -615,11 +615,11 @@ export const dealsPageEs: DealsPageData = {
       id: "first-floor-double",
       title: "Habitación doble en primera planta",
       description:
-        "Una oferta para huéspedes que prefieren una estancia más luminosa, en planta superior, con el ambiente tradicional de Kampos.",
+        "Una oferta para huéspedes que prefieren una estancia más luminosa, en planta superior, con el ambiente tradicional de Kambos.",
       image: firstFloorRoomImage,
       imageAlt:
         "Paquete de viaje a Chios para habitación doble en primera planta en Voulamandis House",
-      tags: ["Ofertas Chios", "Paquetes de viaje", "Hoteles Chios", "Vista Kampos"],
+      tags: ["Ofertas Chios", "Paquetes de viaje", "Hoteles Chios", "Vista Kambos"],
       tip: "Usa este código al finalizar la reserva.",
       couponCode: "MAY10",
       discountLabel: "Oferta primera planta",
@@ -655,7 +655,7 @@ export const dealsPageTr: DealsPageData = {
     ogImage: dealsHeroImage,
   },
   hero: {
-    kicker: "Voulamandis House • Kampos, Sakız Adası",
+    kicker: "Voulamandis House • Kambos, Sakız Adası",
     title: "Sakız Adası otel ve seyahat fırsatları",
     description:
       "Voulamandis House konaklamanız için özel paketleri, oda fırsatlarını ve direkt rezervasyon indirim kodlarını keşfedin.",
@@ -679,7 +679,7 @@ export const dealsPageTr: DealsPageData = {
       id: "economy-double",
       title: "Ekonomi çift kişilik oda",
       description:
-        "Kampos’ta sade, konforlu ve bütçe dostu bir konaklama isteyen misafirler için uygun fiyatlı Sakız Adası otel fırsatı.",
+        "Kambos’ta sade, konforlu ve bütçe dostu bir konaklama isteyen misafirler için uygun fiyatlı Sakız Adası otel fırsatı.",
       image: economyRoomImage,
       imageAlt:
         "Voulamandis House ekonomi çift kişilik oda için Sakız Adası fırsatı",
@@ -712,11 +712,11 @@ export const dealsPageTr: DealsPageData = {
       id: "first-floor-double",
       title: "Birinci kat çift kişilik oda",
       description:
-        "Daha aydınlık, üst katta ve geleneksel Kampos atmosferine sahip bir konaklama isteyen misafirler için oda fırsatı.",
+        "Daha aydınlık, üst katta ve geleneksel Kambos atmosferine sahip bir konaklama isteyen misafirler için oda fırsatı.",
       image: firstFloorRoomImage,
       imageAlt:
         "Voulamandis House birinci kat çift kişilik oda için Sakız Adası seyahat paketi",
-      tags: ["Sakız fırsatları", "Konaklama paketleri", "Sakız otelleri", "Kampos manzarası"],
+      tags: ["Sakız fırsatları", "Konaklama paketleri", "Sakız otelleri", "Kambos manzarası"],
       tip: "Bu kodu ödeme aşamasında kullanın.",
       couponCode: "MAY10",
       discountLabel: "Birinci kat fırsatı",

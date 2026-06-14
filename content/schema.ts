@@ -25,10 +25,10 @@ function buildHomeWebPageSchema(): SchemaObject {
     "@type": "WebPage",
     "@id": webPageId(homepagePath),
     url: siteUrl,
-    name: "Voulamandis House - Chios Hotel in Kampos",
-    headline: "Voulamandis House - Chios Hotel in Kampos",
+    name: "Voulamandis House - Chios Hotel in Kambos",
+    headline: "Voulamandis House - Chios Hotel in Kambos",
     description:
-      "Stay at Voulamandis House, a family-run Chios hotel in Kampos with rooms and apartments close to Chios Town, the airport and the beaches of southern Chios.",
+      "Stay at Voulamandis House, a family-run Chios hotel in Kambos with rooms and apartments close to Chios Town, the airport and the beaches of southern Chios.",
     inLanguage: "en",
     isPartOf: {
       "@id": websiteId(),
@@ -54,7 +54,7 @@ function buildHomeRoomsItemListSchema(): SchemaObject {
     "@id": itemListId(homepagePath),
     name: "Rooms and apartments at Voulamandis House",
     description:
-      "A selection of rooms and apartments at Voulamandis House in Kampos, Chios.",
+      "A selection of rooms and apartments at Voulamandis House in Kambos, Chios.",
     itemListOrder: "https://schema.org/ItemListOrderAscending",
     numberOfItems: 3,
     itemListElement: [
@@ -88,7 +88,7 @@ function buildHomeRoomReferencesSchema(): SchemaObject[] {
       name: "Double Rooms and Triple Rooms in Chios",
       url: absoluteUrl("/chios-rooms/standard-double-room/"),
       description:
-        "Fully renovated double and triple rooms at Voulamandis House in Kampos, Chios, suitable for up to 4 guests.",
+        "Fully renovated double and triple rooms at Voulamandis House in Kambos, Chios, suitable for up to 4 guests.",
       containedInPlace: {
         "@id": hotelId(),
       },
@@ -99,7 +99,7 @@ function buildHomeRoomReferencesSchema(): SchemaObject[] {
       name: "Economy Double Rooms in Chios",
       url: absoluteUrl("/chios-rooms/economy-double-rooms/"),
       description:
-        "Economy double rooms at Voulamandis House in Kampos, Chios, ideal for couples or two guests looking for comfortable value-for-money accommodation.",
+        "Economy double rooms at Voulamandis House in Kambos, Chios, ideal for couples or two guests looking for comfortable value-for-money accommodation.",
       containedInPlace: {
         "@id": hotelId(),
       },
@@ -110,7 +110,7 @@ function buildHomeRoomReferencesSchema(): SchemaObject[] {
       name: "Family Chios Apartments",
       url: absoluteUrl("/chios-rooms/family-chios-apartments/"),
       description:
-        "Spacious family apartments at Voulamandis House in Kampos, Chios, with a separate bedroom, kitchen and living area.",
+        "Spacious family apartments at Voulamandis House in Kambos, Chios, with a separate bedroom, kitchen and living area.",
       containedInPlace: {
         "@id": hotelId(),
       },
@@ -125,8 +125,8 @@ export const homePageSchema = buildSchemaGraph([
   buildImageSchema(
     {
       url: "/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp",
-      alt: "Voulamandis House hotel in Kampos, Chios",
-      caption: `${siteName} hotel in Kampos, Chios`,
+      alt: "Voulamandis House hotel in Kambos, Chios",
+      caption: `${siteName} hotel in Kambos, Chios`,
     },
     homepagePath,
   ),

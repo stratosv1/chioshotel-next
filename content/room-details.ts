@@ -106,14 +106,14 @@ export const standardDoubleRoomEn: RoomDetailData = {
     canonicalPath: "/chios-rooms/standard-double-room/",
     title: "Standard Double & Triple Rooms in Chios | Voulamandis House",
     description:
-      "Standard double and triple rooms in Chios at Voulamandis House in Kampos. Choose ground floor garden-access rooms or first floor rooms with terrace feel.",
+      "Standard double and triple rooms in Chios at Voulamandis House in Kambos. Choose ground floor garden-access rooms or first floor rooms with terrace feel.",
     ogImage:
       "/images/rooms/double-triple-room.jpg",
   },
   hero: {
     kicker: "Standard rooms in Chios",
     title: "Double & triple rooms in Chios",
-    subtitle: "Ground floor or first floor comfort in Kampos",
+    subtitle: "Ground floor or first floor comfort in Kambos",
     description:
       "Comfortable double and triple rooms for couples, friends and small families. Choose easy garden access on the ground floor or a brighter first-floor stay with a more premium feel.",
     image:
@@ -133,7 +133,7 @@ export const standardDoubleRoomEn: RoomDetailData = {
     kicker: "Room overview",
     title: "Flexible rooms for couples, friends and small families",
     paragraphs: [
-      "The standard double and triple rooms at Voulamandis House are designed for guests who want more comfort, more space and a calm Kampos atmosphere.",
+      "The standard double and triple rooms at Voulamandis House are designed for guests who want more comfort, more space and a calm Kambos atmosphere.",
       "Ground floor rooms are ideal if you prefer easy access to the courtyard and garden. First floor rooms offer a brighter stay and a more elevated feeling, with access to the shared terrace area.",
       "They are a practical choice for couples, friends and small families looking for accommodation in Chios close to the airport, Chios Town and the beaches of the island.",
     ],
@@ -141,7 +141,7 @@ export const standardDoubleRoomEn: RoomDetailData = {
       { label: "Guests", value: "2–4" },
       { label: "Room type", value: "Double / Triple" },
       { label: "Location", value: "Ground & first floor" },
-      { label: "Style", value: "Traditional Kampos" },
+      { label: "Style", value: "Traditional Kambos" },
     ],
   },
   gallery: {
@@ -184,7 +184,7 @@ export const standardDoubleRoomEn: RoomDetailData = {
       { icon: "🧊", label: "Refrigerator", text: "Useful for drinks, snacks and fruit." },
       { icon: "☕", label: "Kettle", text: "Prepare coffee or tea in your room." },
       { icon: "🚿", label: "Private bathroom", text: "Clean, practical bathroom facilities." },
-      { icon: "🌿", label: "Garden atmosphere", text: "Enjoy the calm Kampos estate feeling." },
+      { icon: "🌿", label: "Garden atmosphere", text: "Enjoy the calm Kambos estate feeling." },
       { icon: "🍽️", label: "Kitchenette", text: "Available in selected first-floor rooms." },
     ],
   },
@@ -219,7 +219,7 @@ export const standardDoubleRoomEn: RoomDetailData = {
           },
           {
             src: "/images/rooms/chios-hotels-triple-rooms_1646x1080.webp",
-            alt: "Standard triple room 5 in Chios - traditional Kampos interior decoration - Voulamandis House",
+            alt: "Standard triple room 5 in Chios - traditional Kambos interior decoration - Voulamandis House",
             caption: "Traditional interior",
           },
           {
@@ -305,7 +305,7 @@ export const standardDoubleRoomEn: RoomDetailData = {
           },
           {
             src: "/images/rooms/----1-1.webp",
-            alt: "Standard room 1 in Kampos Chios - traditional details and decoration - Voulamandis House",
+            alt: "Standard room 1 in Kambos Chios - traditional details and decoration - Voulamandis House",
             caption: "Traditional details",
           },
           {
@@ -352,7 +352,7 @@ export const standardDoubleRoomEn: RoomDetailData = {
           },
           {
             src: "/images/rooms/DSC07891-1.webp",
-            alt: "Standard room 3 in Kampos Chios - equipped kitchenette - Voulamandis House",
+            alt: "Standard room 3 in Kambos Chios - equipped kitchenette - Voulamandis House",
             caption: "Kitchenette",
           },
         ],
@@ -394,7 +394,7 @@ export const standardDoubleRoomEn: RoomDetailData = {
           },
           {
             src: "/images/rooms/received_1748356718586715.webp",
-            alt: "Standard room 4 in Kampos Chios - balcony view - Voulamandis House",
+            alt: "Standard room 4 in Kambos Chios - balcony view - Voulamandis House",
             caption: "Balcony view",
           },
         ],
@@ -407,7 +407,7 @@ export const standardDoubleRoomEn: RoomDetailData = {
     items: [
       "Couples who want more comfort than the economy category.",
       "Friends travelling together who need flexible sleeping arrangements.",
-      "Small families looking for practical accommodation in Kampos.",
+      "Small families looking for practical accommodation in Kambos.",
       "Guests who want the choice between garden access and first-floor feel.",
     ],
   },
@@ -609,13 +609,13 @@ export const standardDoubleRoomFr: RoomDetailData = {
     canonicalPath: "/fr/chambres-a-chios/chambres-doubles-standard/",
     title: "Chambres Doubles & Triples Standard à Chios | Voulamandis House",
     description:
-      "Chambres doubles et triples standard à Chios au Voulamandis House à Kampos. Choisissez le rez-de-chaussée avec accès au jardin ou le premier étage avec terrasse.",
+      "Chambres doubles et triples standard à Chios au Voulamandis House à Kambos. Choisissez le rez-de-chaussée avec accès au jardin ou le premier étage avec terrasse.",
   },
   hero: {
     ...standardDoubleRoomEn.hero,
     kicker: "Chambres standard à Chios",
     title: "Chambres doubles et triples à Chios",
-    subtitle: "Confort au rez-de-chaussée ou au premier étage à Kampos",
+    subtitle: "Confort au rez-de-chaussée ou au premier étage à Kambos",
     description:
       "Chambres doubles et triples confortables pour couples, amis et petites familles. Choisissez un accès facile au jardin au rez-de-chaussée ou un séjour plus lumineux au premier étage.",
     imageAlt: "Chambre double et triple standard à Chios au Voulamandis House",
@@ -627,7 +627,7 @@ export const standardDoubleRoomFr: RoomDetailData = {
     kicker: "Aperçu de la chambre",
     title: "Des chambres flexibles pour couples, amis et petites familles",
     paragraphs: [
-      "Les chambres doubles et triples standard du Voulamandis House sont conçues pour les voyageurs qui souhaitent plus de confort, plus d’espace et l’atmosphère paisible de Kampos.",
+      "Les chambres doubles et triples standard du Voulamandis House sont conçues pour les voyageurs qui souhaitent plus de confort, plus d’espace et l’atmosphère paisible de Kambos.",
       "Les chambres au rez-de-chaussée sont idéales si vous préférez un accès facile à la cour et au jardin. Les chambres au premier étage offrent un séjour plus lumineux et l’accès à la terrasse commune.",
       "C’est un choix pratique pour les couples, amis et petites familles cherchant un hébergement à Chios proche de l’aéroport, de la ville et des plages.",
     ],
@@ -635,7 +635,7 @@ export const standardDoubleRoomFr: RoomDetailData = {
       { label: "Personnes", value: "2–4" },
       { label: "Type", value: "Double / Triple" },
       { label: "Emplacement", value: "Rez-de-chaussée & premier étage" },
-      { label: "Style", value: "Kampos traditionnel" },
+      { label: "Style", value: "Kambos traditionnel" },
     ],
   },
   gallery: { ...standardDoubleRoomEn.gallery, kicker: "Photos des chambres", title: "Découvrez l’atmosphère des chambres" },
@@ -649,7 +649,7 @@ export const standardDoubleRoomFr: RoomDetailData = {
       { icon: "🧊", label: "Réfrigérateur", text: "Pratique pour boissons, snacks et fruits." },
       { icon: "☕", label: "Bouilloire", text: "Préparez café ou thé dans la chambre." },
       { icon: "🚿", label: "Salle de bain privée", text: "Installations propres et pratiques." },
-      { icon: "🌿", label: "Atmosphère jardin", text: "Profitez du calme du domaine de Kampos." },
+      { icon: "🌿", label: "Atmosphère jardin", text: "Profitez du calme du domaine de Kambos." },
       { icon: "🍽️", label: "Kitchenette", text: "Disponible dans certaines chambres du premier étage." },
     ],
   },
@@ -666,7 +666,7 @@ export const standardDoubleRoomFr: RoomDetailData = {
     items: [
       "Les couples qui souhaitent plus de confort que la catégorie économique.",
       "Les amis voyageant ensemble qui ont besoin de couchages flexibles.",
-      "Les petites familles recherchant un hébergement pratique à Kampos.",
+      "Les petites familles recherchant un hébergement pratique à Kambos.",
       "Les voyageurs qui veulent choisir entre accès au jardin et premier étage.",
     ],
   },
@@ -710,13 +710,13 @@ export const standardDoubleRoomDe: RoomDetailData = {
     canonicalPath: "/de/zimmer-chios/standard-doppelzimmer-auf-chios/",
     title: "Standard Doppel- & Dreibettzimmer auf Chios | Voulamandis House",
     description:
-      "Standard Doppel- und Dreibettzimmer auf Chios im Voulamandis House in Kampos. Wählen Sie Erdgeschoss mit Gartenzugang oder erste Etage mit Terrassengefühl.",
+      "Standard Doppel- und Dreibettzimmer auf Chios im Voulamandis House in Kambos. Wählen Sie Erdgeschoss mit Gartenzugang oder erste Etage mit Terrassengefühl.",
   },
   hero: {
     ...standardDoubleRoomEn.hero,
     kicker: "Standardzimmer auf Chios",
     title: "Doppel- und Dreibettzimmer auf Chios",
-    subtitle: "Komfort im Erdgeschoss oder in der ersten Etage in Kampos",
+    subtitle: "Komfort im Erdgeschoss oder in der ersten Etage in Kambos",
     description:
       "Komfortable Doppel- und Dreibettzimmer für Paare, Freunde und kleine Familien. Wählen Sie leichten Gartenzugang im Erdgeschoss oder einen helleren Aufenthalt in der ersten Etage.",
     imageAlt: "Standard Doppel- und Dreibettzimmer auf Chios im Voulamandis House",
@@ -728,7 +728,7 @@ export const standardDoubleRoomDe: RoomDetailData = {
     kicker: "Zimmerüberblick",
     title: "Flexible Zimmer für Paare, Freunde und kleine Familien",
     paragraphs: [
-      "Die Standard Doppel- und Dreibettzimmer im Voulamandis House sind für Gäste gedacht, die mehr Komfort, mehr Platz und die ruhige Atmosphäre von Kampos wünschen.",
+      "Die Standard Doppel- und Dreibettzimmer im Voulamandis House sind für Gäste gedacht, die mehr Komfort, mehr Platz und die ruhige Atmosphäre von Kambos wünschen.",
       "Die Zimmer im Erdgeschoss sind ideal, wenn Sie einfachen Zugang zum Hof und Garten bevorzugen. Die Zimmer in der ersten Etage bieten einen helleren Aufenthalt und Zugang zur gemeinschaftlichen Terrasse.",
       "Sie sind eine praktische Wahl für Paare, Freunde und kleine Familien, die eine Unterkunft auf Chios in der Nähe von Flughafen, Stadt und Stränden suchen.",
     ],
@@ -736,7 +736,7 @@ export const standardDoubleRoomDe: RoomDetailData = {
       { label: "Gäste", value: "2–4" },
       { label: "Zimmertyp", value: "Doppel / Dreibett" },
       { label: "Lage", value: "Erdgeschoss & erste Etage" },
-      { label: "Stil", value: "Traditionelles Kampos" },
+      { label: "Stil", value: "Traditionelles Kambos" },
     ],
   },
   gallery: { ...standardDoubleRoomEn.gallery, kicker: "Zimmerfotos", title: "Sehen Sie die Zimmeratmosphäre" },
@@ -750,7 +750,7 @@ export const standardDoubleRoomDe: RoomDetailData = {
       { icon: "🧊", label: "Kühlschrank", text: "Praktisch für Getränke, Snacks und Obst." },
       { icon: "☕", label: "Wasserkocher", text: "Kaffee oder Tee im Zimmer zubereiten." },
       { icon: "🚿", label: "Eigenes Bad", text: "Saubere und praktische Badezimmereinrichtung." },
-      { icon: "🌿", label: "Gartenatmosphäre", text: "Genießen Sie die ruhige Stimmung des Kampos-Anwesens." },
+      { icon: "🌿", label: "Gartenatmosphäre", text: "Genießen Sie die ruhige Stimmung des Kambos-Anwesens." },
       { icon: "🍽️", label: "Kitchenette", text: "In ausgewählten Zimmern der ersten Etage verfügbar." },
     ],
   },
@@ -767,7 +767,7 @@ export const standardDoubleRoomDe: RoomDetailData = {
     items: [
       "Paare, die mehr Komfort als in der Economy-Kategorie wünschen.",
       "Freunde, die gemeinsam reisen und flexible Schlafmöglichkeiten benötigen.",
-      "Kleine Familien, die eine praktische Unterkunft in Kampos suchen.",
+      "Kleine Familien, die eine praktische Unterkunft in Kambos suchen.",
       "Gäste, die zwischen Gartenzugang und erster Etage wählen möchten.",
     ],
   },
@@ -811,13 +811,13 @@ export const standardDoubleRoomIt: RoomDetailData = {
     canonicalPath: "/it/stanze-a-chios/camere-doppie-standard-chios/",
     title: "Camere Doppie e Triple Standard a Chios | Voulamandis House",
     description:
-      "Camere doppie e triple standard a Chios presso Voulamandis House a Kampos. Scegli il piano terra con accesso al giardino o il primo piano con atmosfera da terrazza.",
+      "Camere doppie e triple standard a Chios presso Voulamandis House a Kambos. Scegli il piano terra con accesso al giardino o il primo piano con atmosfera da terrazza.",
   },
   hero: {
     ...standardDoubleRoomEn.hero,
     kicker: "Camere standard a Chios",
     title: "Camere doppie e triple a Chios",
-    subtitle: "Comfort al piano terra o al primo piano a Kampos",
+    subtitle: "Comfort al piano terra o al primo piano a Kambos",
     description:
       "Camere doppie e triple confortevoli per coppie, amici e piccole famiglie. Scegli l’accesso facile al giardino al piano terra o un soggiorno più luminoso al primo piano.",
     imageAlt: "Camera doppia e tripla standard a Chios presso Voulamandis House",
@@ -829,7 +829,7 @@ export const standardDoubleRoomIt: RoomDetailData = {
     kicker: "Panoramica camera",
     title: "Camere flessibili per coppie, amici e piccole famiglie",
     paragraphs: [
-      "Le camere doppie e triple standard di Voulamandis House sono pensate per chi desidera più comfort, più spazio e la tranquilla atmosfera di Kampos.",
+      "Le camere doppie e triple standard di Voulamandis House sono pensate per chi desidera più comfort, più spazio e la tranquilla atmosfera di Kambos.",
       "Le camere al piano terra sono ideali se preferisci un accesso facile al cortile e al giardino. Le camere al primo piano offrono un soggiorno più luminoso e accesso alla terrazza comune.",
       "Sono una scelta pratica per coppie, amici e piccole famiglie che cercano un alloggio a Chios vicino all’aeroporto, alla città e alle spiagge.",
     ],
@@ -837,7 +837,7 @@ export const standardDoubleRoomIt: RoomDetailData = {
       { label: "Ospiti", value: "2–4" },
       { label: "Tipo", value: "Doppia / Tripla" },
       { label: "Posizione", value: "Piano terra & primo piano" },
-      { label: "Stile", value: "Kampos tradizionale" },
+      { label: "Stile", value: "Kambos tradizionale" },
     ],
   },
   gallery: { ...standardDoubleRoomEn.gallery, kicker: "Foto delle camere", title: "Scopri l’atmosfera delle camere" },
@@ -851,7 +851,7 @@ export const standardDoubleRoomIt: RoomDetailData = {
       { icon: "🧊", label: "Frigorifero", text: "Utile per bevande, snack e frutta." },
       { icon: "☕", label: "Bollitore", text: "Prepara caffè o tè in camera." },
       { icon: "🚿", label: "Bagno privato", text: "Servizi bagno puliti e pratici." },
-      { icon: "🌿", label: "Atmosfera giardino", text: "Goditi la calma della tenuta di Kampos." },
+      { icon: "🌿", label: "Atmosfera giardino", text: "Goditi la calma della tenuta di Kambos." },
       { icon: "🍽️", label: "Angolo cottura", text: "Disponibile in alcune camere al primo piano." },
     ],
   },
@@ -868,7 +868,7 @@ export const standardDoubleRoomIt: RoomDetailData = {
     items: [
       "Coppie che desiderano più comfort rispetto alla categoria economy.",
       "Amici in viaggio insieme che hanno bisogno di soluzioni letto flessibili.",
-      "Piccole famiglie che cercano un alloggio pratico a Kampos.",
+      "Piccole famiglie che cercano un alloggio pratico a Kambos.",
       "Ospiti che vogliono scegliere tra accesso al giardino e primo piano.",
     ],
   },
@@ -912,13 +912,13 @@ export const standardDoubleRoomEs: RoomDetailData = {
     canonicalPath: "/es/habitaciones-en-chios/habitaciones-dobles-estandar/",
     title: "Habitaciones Dobles y Triples Estándar en Quíos | Voulamandis House",
     description:
-      "Habitaciones dobles y triples estándar en Quíos en Voulamandis House, Kampos. Elige planta baja con acceso al jardín o primera planta con ambiente de terraza.",
+      "Habitaciones dobles y triples estándar en Quíos en Voulamandis House, Kambos. Elige planta baja con acceso al jardín o primera planta con ambiente de terraza.",
   },
   hero: {
     ...standardDoubleRoomEn.hero,
     kicker: "Habitaciones estándar en Quíos",
     title: "Habitaciones dobles y triples en Quíos",
-    subtitle: "Comodidad en planta baja o primera planta en Kampos",
+    subtitle: "Comodidad en planta baja o primera planta en Kambos",
     description:
       "Habitaciones dobles y triples cómodas para parejas, amigos y familias pequeñas. Elige acceso fácil al jardín en planta baja o una estancia más luminosa en primera planta.",
     imageAlt: "Habitación doble y triple estándar en Quíos en Voulamandis House",
@@ -930,7 +930,7 @@ export const standardDoubleRoomEs: RoomDetailData = {
     kicker: "Resumen de la habitación",
     title: "Habitaciones flexibles para parejas, amigos y familias pequeñas",
     paragraphs: [
-      "Las habitaciones dobles y triples estándar de Voulamandis House están pensadas para huéspedes que desean más comodidad, más espacio y el ambiente tranquilo de Kampos.",
+      "Las habitaciones dobles y triples estándar de Voulamandis House están pensadas para huéspedes que desean más comodidad, más espacio y el ambiente tranquilo de Kambos.",
       "Las habitaciones de planta baja son ideales si prefieres acceso fácil al patio y al jardín. Las de primera planta ofrecen una estancia más luminosa y acceso a la terraza compartida.",
       "Son una opción práctica para parejas, amigos y familias pequeñas que buscan alojamiento en Quíos cerca del aeropuerto, la ciudad y las playas.",
     ],
@@ -938,7 +938,7 @@ export const standardDoubleRoomEs: RoomDetailData = {
       { label: "Personas", value: "2–4" },
       { label: "Tipo", value: "Doble / Triple" },
       { label: "Ubicación", value: "Planta baja & primera planta" },
-      { label: "Estilo", value: "Kampos tradicional" },
+      { label: "Estilo", value: "Kambos tradicional" },
     ],
   },
   gallery: { ...standardDoubleRoomEn.gallery, kicker: "Fotos de las habitaciones", title: "Descubre el ambiente de las habitaciones" },
@@ -952,7 +952,7 @@ export const standardDoubleRoomEs: RoomDetailData = {
       { icon: "🧊", label: "Nevera", text: "Útil para bebidas, aperitivos y fruta." },
       { icon: "☕", label: "Hervidor", text: "Prepara café o té en la habitación." },
       { icon: "🚿", label: "Baño privado", text: "Instalaciones limpias y prácticas." },
-      { icon: "🌿", label: "Ambiente de jardín", text: "Disfruta de la calma de la finca de Kampos." },
+      { icon: "🌿", label: "Ambiente de jardín", text: "Disfruta de la calma de la finca de Kambos." },
       { icon: "🍽️", label: "Kitchenette", text: "Disponible en algunas habitaciones de primera planta." },
     ],
   },
@@ -969,7 +969,7 @@ export const standardDoubleRoomEs: RoomDetailData = {
     items: [
       "Parejas que quieren más comodidad que en la categoría económica.",
       "Amigos que viajan juntos y necesitan camas flexibles.",
-      "Familias pequeñas que buscan alojamiento práctico en Kampos.",
+      "Familias pequeñas que buscan alojamiento práctico en Kambos.",
       "Huéspedes que desean elegir entre acceso al jardín y primera planta.",
     ],
   },
@@ -1013,13 +1013,13 @@ export const standardDoubleRoomTr: RoomDetailData = {
     canonicalPath: "/tr/chios-odalari/standart-cift-kisilik-odalar/",
     title: "Sakız Adası Standart Çift & Üç Kişilik Odalar | Voulamandis House",
     description:
-      "Sakız Adası Kampos’ta Voulamandis House standart çift ve üç kişilik odalar. Bahçe erişimli zemin kat veya teras hissi veren birinci kat seçenekleri.",
+      "Sakız Adası Kambos’ta Voulamandis House standart çift ve üç kişilik odalar. Bahçe erişimli zemin kat veya teras hissi veren birinci kat seçenekleri.",
   },
   hero: {
     ...standardDoubleRoomEn.hero,
     kicker: "Sakız Adası standart odaları",
     title: "Sakız Adası çift ve üç kişilik odalar",
-    subtitle: "Kampos’ta zemin kat veya birinci katta konfor",
+    subtitle: "Kambos’ta zemin kat veya birinci katta konfor",
     description:
       "Çiftler, arkadaşlar ve küçük aileler için konforlu çift ve üç kişilik odalar. Zemin katta kolay bahçe erişimini veya birinci katta daha aydınlık bir konaklamayı seçin.",
     imageAlt: "Sakız Adası Voulamandis House standart çift ve üç kişilik oda",
@@ -1031,7 +1031,7 @@ export const standardDoubleRoomTr: RoomDetailData = {
     kicker: "Oda özeti",
     title: "Çiftler, arkadaşlar ve küçük aileler için esnek odalar",
     paragraphs: [
-      "Voulamandis House standart çift ve üç kişilik odaları, daha fazla konfor, pratik alan ve Kampos’un sakin atmosferini isteyen misafirler için tasarlanmıştır.",
+      "Voulamandis House standart çift ve üç kişilik odaları, daha fazla konfor, pratik alan ve Kambos’un sakin atmosferini isteyen misafirler için tasarlanmıştır.",
       "Zemin kat odalar avlu ve bahçeye kolay erişim isteyenler için idealdir. Birinci kat odalar daha aydınlık bir konaklama ve ortak teras alanına erişim sunar.",
       "Havalimanına, Sakız şehir merkezine ve adanın plajlarına yakın konaklama arayan çiftler, arkadaşlar ve küçük aileler için pratik bir seçenektir.",
     ],
@@ -1039,7 +1039,7 @@ export const standardDoubleRoomTr: RoomDetailData = {
       { label: "Kişi", value: "2–4" },
       { label: "Oda tipi", value: "Çift / Üç kişilik" },
       { label: "Konum", value: "Zemin kat & birinci kat" },
-      { label: "Stil", value: "Geleneksel Kampos" },
+      { label: "Stil", value: "Geleneksel Kambos" },
     ],
   },
   gallery: { ...standardDoubleRoomEn.gallery, kicker: "Oda fotoğrafları", title: "Oda atmosferini görün" },
@@ -1053,7 +1053,7 @@ export const standardDoubleRoomTr: RoomDetailData = {
       { icon: "🧊", label: "Buzdolabı", text: "İçecekler, atıştırmalıklar ve meyveler için kullanışlıdır." },
       { icon: "☕", label: "Su ısıtıcısı", text: "Odada kahve veya çay hazırlayın." },
       { icon: "🚿", label: "Özel banyo", text: "Temiz ve pratik banyo olanakları." },
-      { icon: "🌿", label: "Bahçe atmosferi", text: "Kampos arazisinin sakin hissini yaşayın." },
+      { icon: "🌿", label: "Bahçe atmosferi", text: "Kambos arazisinin sakin hissini yaşayın." },
       { icon: "🍽️", label: "Kitchenette", text: "Bazı birinci kat odalarda mevcuttur." },
     ],
   },
@@ -1070,7 +1070,7 @@ export const standardDoubleRoomTr: RoomDetailData = {
     items: [
       "Economy kategorisine göre daha fazla konfor isteyen çiftler.",
       "Birlikte seyahat eden ve esnek yatak düzeni isteyen arkadaşlar.",
-      "Kampos’ta pratik konaklama arayan küçük aileler.",
+      "Kambos’ta pratik konaklama arayan küçük aileler.",
       "Bahçe erişimi ile birinci kat hissi arasında seçim yapmak isteyen misafirler.",
     ],
   },
@@ -1115,7 +1115,7 @@ export const economyDoubleRoomsEn: RoomDetailData = {
     canonicalPath: "/chios-rooms/economy-double-rooms/",
     title: "Economy Double Rooms in Chios | Voulamandis House",
     description:
-      "Economy double rooms in Chios at Voulamandis House. A value-for-money option for 2 guests in the peaceful Kampos area.",
+      "Economy double rooms in Chios at Voulamandis House. A value-for-money option for 2 guests in the peaceful Kambos area.",
     ogImage:
       "/images/rooms/received_1753964631359257.webp",
   },
@@ -1140,10 +1140,10 @@ export const economyDoubleRoomsEn: RoomDetailData = {
   },
   overview: {
     kicker: "Room overview",
-    title: "A practical value-for-money stay in Kampos",
+    title: "A practical value-for-money stay in Kambos",
     paragraphs: [
       "The economy double rooms are ideal for guests who want a simple and comfortable base in Chios without paying for extra space they may not need.",
-      "They are suitable for couples, solo travellers or two friends who plan to explore the island during the day and return to a peaceful Kampos setting.",
+      "They are suitable for couples, solo travellers or two friends who plan to explore the island during the day and return to a peaceful Kambos setting.",
       "This is the best category if your priority is price, location and essential comfort.",
     ],
     highlights: [
@@ -1199,7 +1199,7 @@ export const economyDoubleRoomsEn: RoomDetailData = {
     kicker: "Available rooms",
     title: "Choose your specific economy room",
     description:
-      "The economy category includes two renovated 16m² double rooms: Room 6 on the ground floor with direct garden access, and Room 2 on the first floor with Kampos view.",
+      "The economy category includes two renovated 16m² double rooms: Room 6 on the ground floor with direct garden access, and Room 2 on the first floor with Kambos view.",
     rooms: [
       {
         id: "room-6",
@@ -1236,7 +1236,7 @@ export const economyDoubleRoomsEn: RoomDetailData = {
           },
           {
             src: "/images/rooms/received_1753969201358800.webp",
-            alt: "Interior and decoration of economy double room No. 6 in Kampos Chios",
+            alt: "Interior and decoration of economy double room No. 6 in Kambos Chios",
             caption: "Bathroom",
           },
         ],
@@ -1248,8 +1248,8 @@ export const economyDoubleRoomsEn: RoomDetailData = {
         location: "First floor",
         maxGuests: 2,
         description:
-          "Room 2 is located on the first floor and offers access to a shared terrace with views over the estate and the citrus trees of Kampos.",
-        badges: ["First floor", "Kampos view", "Access by stairs", "Economy"],
+          "Room 2 is located on the first floor and offers access to a shared terrace with views over the estate and the citrus trees of Kambos.",
+        badges: ["First floor", "Kambos view", "Access by stairs", "Economy"],
         beds: ["1 double bed"],
         amenities: [
           { icon: "📶", label: "Wi-Fi" },
@@ -1439,7 +1439,7 @@ export const economyDoubleRoomsFr: RoomDetailData = {
     canonicalPath: "/fr/chambres-a-chios/chambres-doubles-economiques/",
     title: "Chambre Double Économique à Chios | Voulamandis House",
     description:
-      "Chambres doubles économiques à Chios au Voulamandis House. Une option pratique et abordable pour 2 personnes dans le quartier paisible de Kampos.",
+      "Chambres doubles économiques à Chios au Voulamandis House. Une option pratique et abordable pour 2 personnes dans le quartier paisible de Kambos.",
   },
   hero: {
     ...economyDoubleRoomsEn.hero,
@@ -1455,10 +1455,10 @@ export const economyDoubleRoomsFr: RoomDetailData = {
   },
   overview: {
     kicker: "Aperçu de la chambre",
-    title: "Un séjour pratique et économique à Kampos",
+    title: "Un séjour pratique et économique à Kambos",
     paragraphs: [
       "Les chambres doubles économiques sont idéales pour les voyageurs qui souhaitent une base simple et confortable à Chios, sans payer pour un espace supplémentaire dont ils n’ont pas forcément besoin.",
-      "Elles conviennent aux couples, aux voyageurs seuls ou à deux amis qui souhaitent explorer l’île pendant la journée et revenir dans un environnement calme à Kampos.",
+      "Elles conviennent aux couples, aux voyageurs seuls ou à deux amis qui souhaitent explorer l’île pendant la journée et revenir dans un environnement calme à Kambos.",
       "C’est la meilleure catégorie si vos priorités sont le prix, l’emplacement et le confort essentiel.",
     ],
     highlights: [
@@ -1490,7 +1490,7 @@ export const economyDoubleRoomsFr: RoomDetailData = {
     kicker: "Chambres disponibles",
     title: "Choisissez votre chambre économique",
     description:
-      "Cette catégorie comprend deux chambres doubles rénovées d’environ 16m² : la chambre 6 au rez-de-chaussée avec accès direct au jardin et la chambre 2 au premier étage avec vue sur Kampos.",
+      "Cette catégorie comprend deux chambres doubles rénovées d’environ 16m² : la chambre 6 au rez-de-chaussée avec accès direct au jardin et la chambre 2 au premier étage avec vue sur Kambos.",
   },
   bestFor: {
     kicker: "Idéal pour",
@@ -1541,7 +1541,7 @@ export const economyDoubleRoomsDe: RoomDetailData = {
     canonicalPath: "/de/zimmer-chios/economy-zimmer-auf-chios/",
     title: "Economy Doppelzimmer auf Chios | Voulamandis House",
     description:
-      "Economy Doppelzimmer auf Chios im Voulamandis House. Eine praktische und preiswerte Option für 2 Gäste im ruhigen Kampos.",
+      "Economy Doppelzimmer auf Chios im Voulamandis House. Eine praktische und preiswerte Option für 2 Gäste im ruhigen Kambos.",
   },
   hero: {
     ...economyDoubleRoomsEn.hero,
@@ -1557,10 +1557,10 @@ export const economyDoubleRoomsDe: RoomDetailData = {
   },
   overview: {
     kicker: "Zimmerüberblick",
-    title: "Praktischer und preiswerter Aufenthalt in Kampos",
+    title: "Praktischer und preiswerter Aufenthalt in Kambos",
     paragraphs: [
       "Die Economy Doppelzimmer sind ideal für Gäste, die eine einfache und komfortable Basis auf Chios suchen, ohne für zusätzlichen Platz zu zahlen.",
-      "Sie eignen sich für Paare, Alleinreisende oder zwei Freunde, die tagsüber die Insel erkunden und abends in eine ruhige Umgebung in Kampos zurückkehren möchten.",
+      "Sie eignen sich für Paare, Alleinreisende oder zwei Freunde, die tagsüber die Insel erkunden und abends in eine ruhige Umgebung in Kambos zurückkehren möchten.",
       "Diese Kategorie ist die beste Wahl, wenn Preis, Lage und grundlegender Komfort im Vordergrund stehen.",
     ],
     highlights: [
@@ -1592,7 +1592,7 @@ export const economyDoubleRoomsDe: RoomDetailData = {
     kicker: "Verfügbare Zimmer",
     title: "Wählen Sie Ihr Economy Zimmer",
     description:
-      "Die Economy Kategorie umfasst zwei renovierte Doppelzimmer von etwa 16m²: Zimmer 6 im Erdgeschoss mit direktem Gartenzugang und Zimmer 2 im ersten Stock mit Blick auf Kampos.",
+      "Die Economy Kategorie umfasst zwei renovierte Doppelzimmer von etwa 16m²: Zimmer 6 im Erdgeschoss mit direktem Gartenzugang und Zimmer 2 im ersten Stock mit Blick auf Kambos.",
   },
   bestFor: {
     kicker: "Ideal für",
@@ -1643,7 +1643,7 @@ export const economyDoubleRoomsIt: RoomDetailData = {
     canonicalPath: "/it/stanze-a-chios/camera-doppia-economica-chios/",
     title: "Camera Doppia Economy a Chios | Voulamandis House",
     description:
-      "Camera doppia economy a Chios presso Voulamandis House. Una soluzione pratica e conveniente per 2 ospiti nella tranquilla zona di Kampos.",
+      "Camera doppia economy a Chios presso Voulamandis House. Una soluzione pratica e conveniente per 2 ospiti nella tranquilla zona di Kambos.",
   },
   hero: {
     ...economyDoubleRoomsEn.hero,
@@ -1659,10 +1659,10 @@ export const economyDoubleRoomsIt: RoomDetailData = {
   },
   overview: {
     kicker: "Panoramica camera",
-    title: "Un soggiorno pratico e conveniente a Kampos",
+    title: "Un soggiorno pratico e conveniente a Kambos",
     paragraphs: [
       "Le camere doppie economy sono ideali per chi cerca una base semplice e confortevole a Chios, senza pagare per spazio extra non necessario.",
-      "Sono adatte a coppie, viaggiatori singoli o due amici che desiderano esplorare l’isola durante il giorno e tornare in un ambiente tranquillo a Kampos.",
+      "Sono adatte a coppie, viaggiatori singoli o due amici che desiderano esplorare l’isola durante il giorno e tornare in un ambiente tranquillo a Kambos.",
       "È la categoria migliore se le tue priorità sono prezzo, posizione e comfort essenziale.",
     ],
     highlights: [
@@ -1694,7 +1694,7 @@ export const economyDoubleRoomsIt: RoomDetailData = {
     kicker: "Camere disponibili",
     title: "Scegli la tua camera economy",
     description:
-      "La categoria economy comprende due camere doppie rinnovate di circa 16m²: la Camera 6 al piano terra con accesso diretto al giardino e la Camera 2 al primo piano con vista su Kampos.",
+      "La categoria economy comprende due camere doppie rinnovate di circa 16m²: la Camera 6 al piano terra con accesso diretto al giardino e la Camera 2 al primo piano con vista su Kambos.",
   },
   bestFor: {
     kicker: "Ideale per",
@@ -1745,7 +1745,7 @@ export const economyDoubleRoomsEs: RoomDetailData = {
     canonicalPath: "/es/habitaciones-en-chios/economicas-habitaciones-en-chios/",
     title: "Habitación Doble Económica en Quíos | Voulamandis House",
     description:
-      "Habitación doble económica en Quíos en Voulamandis House. Una opción práctica y asequible para 2 personas en la tranquila zona de Kampos.",
+      "Habitación doble económica en Quíos en Voulamandis House. Una opción práctica y asequible para 2 personas en la tranquila zona de Kambos.",
   },
   hero: {
     ...economyDoubleRoomsEn.hero,
@@ -1761,10 +1761,10 @@ export const economyDoubleRoomsEs: RoomDetailData = {
   },
   overview: {
     kicker: "Resumen de la habitación",
-    title: "Una estancia práctica y económica en Kampos",
+    title: "Una estancia práctica y económica en Kambos",
     paragraphs: [
       "Las habitaciones dobles económicas son ideales para huéspedes que buscan una base sencilla y cómoda en Quíos sin pagar por espacio adicional que quizá no necesiten.",
-      "Son adecuadas para parejas, viajeros solos o dos amigos que desean explorar la isla durante el día y volver a un entorno tranquilo en Kampos.",
+      "Son adecuadas para parejas, viajeros solos o dos amigos que desean explorar la isla durante el día y volver a un entorno tranquilo en Kambos.",
       "Es la mejor categoría si tus prioridades son precio, ubicación y comodidad esencial.",
     ],
     highlights: [
@@ -1796,7 +1796,7 @@ export const economyDoubleRoomsEs: RoomDetailData = {
     kicker: "Habitaciones disponibles",
     title: "Elige tu habitación económica",
     description:
-      "La categoría económica incluye dos habitaciones dobles renovadas de unos 16m²: la Habitación 6 en planta baja con acceso directo al jardín y la Habitación 2 en primera planta con vistas a Kampos.",
+      "La categoría económica incluye dos habitaciones dobles renovadas de unos 16m²: la Habitación 6 en planta baja con acceso directo al jardín y la Habitación 2 en primera planta con vistas a Kambos.",
   },
   bestFor: {
     kicker: "Ideal para",
@@ -1847,7 +1847,7 @@ export const economyDoubleRoomsTr: RoomDetailData = {
     canonicalPath: "/tr/chios-odalari/sakiz-adasindaki-ekonomi-cift-kisilik-oda/",
     title: "Sakız Adası Ekonomi Çift Kişilik Oda | Voulamandis House",
     description:
-      "Sakız Adası’nda Voulamandis House’ta ekonomi çift kişilik oda. Kampos’un sakin bölgesinde 2 kişi için pratik ve uygun fiyatlı bir seçenek.",
+      "Sakız Adası’nda Voulamandis House’ta ekonomi çift kişilik oda. Kambos’un sakin bölgesinde 2 kişi için pratik ve uygun fiyatlı bir seçenek.",
   },
   hero: {
     ...economyDoubleRoomsEn.hero,
@@ -1863,10 +1863,10 @@ export const economyDoubleRoomsTr: RoomDetailData = {
   },
   overview: {
     kicker: "Oda özeti",
-    title: "Kampos’ta pratik ve ekonomik konaklama",
+    title: "Kambos’ta pratik ve ekonomik konaklama",
     paragraphs: [
       "Ekonomi çift kişilik odalar, Sakız Adası’nda sade ve konforlu bir konaklama arayan, ekstra alana ihtiyaç duymayan misafirler için idealdir.",
-      "Gün içinde adayı keşfedip akşam Kampos’un sakin atmosferine dönmek isteyen çiftler, tek seyahat edenler veya iki arkadaş için uygundur.",
+      "Gün içinde adayı keşfedip akşam Kambos’un sakin atmosferine dönmek isteyen çiftler, tek seyahat edenler veya iki arkadaş için uygundur.",
       "Önceliğiniz fiyat, konum ve temel konfor ise bu kategori en doğru seçimdir.",
     ],
     highlights: [
@@ -1898,7 +1898,7 @@ export const economyDoubleRoomsTr: RoomDetailData = {
     kicker: "Mevcut odalar",
     title: "Size uygun ekonomi odayı seçin",
     description:
-      "Ekonomi kategorisinde yaklaşık 16m² büyüklüğünde iki yenilenmiş çift kişilik oda bulunur: bahçeye doğrudan erişimi olan zemin kattaki Oda 6 ve Kampos manzaralı birinci kattaki Oda 2.",
+      "Ekonomi kategorisinde yaklaşık 16m² büyüklüğünde iki yenilenmiş çift kişilik oda bulunur: bahçeye doğrudan erişimi olan zemin kattaki Oda 6 ve Kambos manzaralı birinci kattaki Oda 2.",
   },
   bestFor: {
     kicker: "Kimler için ideal",
@@ -1950,7 +1950,7 @@ export const familyChiosApartmentsEn: RoomDetailData = {
     canonicalPath: "/chios-rooms/family-chios-apartments/",
     title: "Family Apartments in Chios | Voulamandis House",
     description:
-      "Family apartments in Chios at Voulamandis House in Kampos. Spacious 40–45m² apartments with kitchen, bedroom and living area.",
+      "Family apartments in Chios at Voulamandis House in Kambos. Spacious 40–45m² apartments with kitchen, bedroom and living area.",
     ogImage:
       "/images/rooms/chios-apartments-voulamandis.webp",
   },
@@ -2027,7 +2027,7 @@ export const familyChiosApartmentsEn: RoomDetailData = {
       { icon: "🍳", label: "Full kitchen", text: "Prepare simple meals during your stay." },
       { icon: "🛋️", label: "Living area", text: "Extra space to relax inside the apartment." },
       { icon: "🛏️", label: "Separate bedroom", text: "More privacy and comfort for families." },
-      { icon: "🌿", label: "Garden view", text: "A peaceful Kampos setting around the property." },
+      { icon: "🌿", label: "Garden view", text: "A peaceful Kambos setting around the property." },
       { icon: "🌞", label: "Private balcony", text: "Outdoor space for your stay." },
       { icon: "🚿", label: "Private bathroom", text: "Practical bathroom facilities." },
     ],
@@ -2354,7 +2354,7 @@ export const familyChiosApartmentsFr: RoomDetailData = {
     canonicalPath: "/fr/chambres-a-chios/appartements-familiaux-de-chios/",
     title: "Appartements Familiaux à Chios | Voulamandis House",
     description:
-      "Appartements familiaux à Chios au Voulamandis House à Kampos. Appartements spacieux de 40–45m² avec cuisine, chambre et salon.",
+      "Appartements familiaux à Chios au Voulamandis House à Kambos. Appartements spacieux de 40–45m² avec cuisine, chambre et salon.",
   },
   hero: {
     ...familyChiosApartmentsEn.hero,
@@ -2393,7 +2393,7 @@ export const familyChiosApartmentsFr: RoomDetailData = {
       { icon: "🍳", label: "Cuisine complète", text: "Préparez des repas simples pendant votre séjour." },
       { icon: "🛋️", label: "Salon", text: "Espace supplémentaire pour se détendre dans l’appartement." },
       { icon: "🛏️", label: "Chambre séparée", text: "Plus d’intimité et de confort pour les familles." },
-      { icon: "🌿", label: "Vue jardin", text: "Un cadre paisible de Kampos autour de la propriété." },
+      { icon: "🌿", label: "Vue jardin", text: "Un cadre paisible de Kambos autour de la propriété." },
       { icon: "🌞", label: "Balcon privé", text: "Espace extérieur pendant votre séjour." },
       { icon: "🚿", label: "Salle de bain privée", text: "Installations de salle de bain pratiques." },
     ],
@@ -2455,7 +2455,7 @@ export const familyChiosApartmentsDe: RoomDetailData = {
     canonicalPath: "/de/zimmer-chios/familienapartments-in-chios/",
     title: "Familienapartments auf Chios | Voulamandis House",
     description:
-      "Familienapartments auf Chios im Voulamandis House in Kampos. Geräumige Apartments mit 40–45m², Küche, Schlafzimmer und Wohnbereich.",
+      "Familienapartments auf Chios im Voulamandis House in Kambos. Geräumige Apartments mit 40–45m², Küche, Schlafzimmer und Wohnbereich.",
   },
   hero: {
     ...familyChiosApartmentsEn.hero,
@@ -2494,7 +2494,7 @@ export const familyChiosApartmentsDe: RoomDetailData = {
       { icon: "🍳", label: "Voll ausgestattete Küche", text: "Bereiten Sie einfache Mahlzeiten während Ihres Aufenthalts zu." },
       { icon: "🛋️", label: "Wohnbereich", text: "Zusätzlicher Platz zum Entspannen im Apartment." },
       { icon: "🛏️", label: "Separates Schlafzimmer", text: "Mehr Privatsphäre und Komfort für Familien." },
-      { icon: "🌿", label: "Gartenblick", text: "Eine ruhige Kampos-Umgebung rund um das Anwesen." },
+      { icon: "🌿", label: "Gartenblick", text: "Eine ruhige Kambos-Umgebung rund um das Anwesen." },
       { icon: "🌞", label: "Privater Balkon", text: "Außenbereich für Ihren Aufenthalt." },
       { icon: "🚿", label: "Eigenes Bad", text: "Praktische Badezimmereinrichtungen." },
     ],
@@ -2556,7 +2556,7 @@ export const familyChiosApartmentsIt: RoomDetailData = {
     canonicalPath: "/it/stanze-a-chios/appartamenti-familiari-a-chios/",
     title: "Appartamenti Familiari a Chios | Voulamandis House",
     description:
-      "Appartamenti familiari a Chios presso Voulamandis House a Kampos. Ampi appartamenti di 40–45m² con cucina, camera da letto e zona giorno.",
+      "Appartamenti familiari a Chios presso Voulamandis House a Kambos. Ampi appartamenti di 40–45m² con cucina, camera da letto e zona giorno.",
   },
   hero: {
     ...familyChiosApartmentsEn.hero,
@@ -2595,7 +2595,7 @@ export const familyChiosApartmentsIt: RoomDetailData = {
       { icon: "🍳", label: "Cucina completa", text: "Prepara pasti semplici durante il soggiorno." },
       { icon: "🛋️", label: "Zona giorno", text: "Spazio extra per rilassarsi nell’appartamento." },
       { icon: "🛏️", label: "Camera separata", text: "Più privacy e comfort per le famiglie." },
-      { icon: "🌿", label: "Vista giardino", text: "Un ambiente tranquillo di Kampos intorno alla struttura." },
+      { icon: "🌿", label: "Vista giardino", text: "Un ambiente tranquillo di Kambos intorno alla struttura." },
       { icon: "🌞", label: "Balcone privato", text: "Spazio esterno durante il soggiorno." },
       { icon: "🚿", label: "Bagno privato", text: "Servizi bagno pratici." },
     ],
@@ -2657,7 +2657,7 @@ export const familyChiosApartmentsEs: RoomDetailData = {
     canonicalPath: "/es/habitaciones-en-chios/apartamentos-familiares-en-chios/",
     title: "Apartamentos Familiares en Quíos | Voulamandis House",
     description:
-      "Apartamentos familiares en Quíos en Voulamandis House, Kampos. Amplios apartamentos de 40–45m² con cocina, dormitorio y zona de estar.",
+      "Apartamentos familiares en Quíos en Voulamandis House, Kambos. Amplios apartamentos de 40–45m² con cocina, dormitorio y zona de estar.",
   },
   hero: {
     ...familyChiosApartmentsEn.hero,
@@ -2696,7 +2696,7 @@ export const familyChiosApartmentsEs: RoomDetailData = {
       { icon: "🍳", label: "Cocina completa", text: "Prepara comidas sencillas durante la estancia." },
       { icon: "🛋️", label: "Zona de estar", text: "Espacio extra para relajarse dentro del apartamento." },
       { icon: "🛏️", label: "Dormitorio separado", text: "Más privacidad y comodidad para familias." },
-      { icon: "🌿", label: "Vista al jardín", text: "Un entorno tranquilo de Kampos alrededor de la propiedad." },
+      { icon: "🌿", label: "Vista al jardín", text: "Un entorno tranquilo de Kambos alrededor de la propiedad." },
       { icon: "🌞", label: "Balcón privado", text: "Espacio exterior durante tu estancia." },
       { icon: "🚿", label: "Baño privado", text: "Instalaciones prácticas de baño." },
     ],
@@ -2758,7 +2758,7 @@ export const familyChiosApartmentsTr: RoomDetailData = {
     canonicalPath: "/tr/chios-odalari/sakiz-adasinda-buyuk-aile-daireleri/",
     title: "Sakız Adası Aile Apartları | Voulamandis House",
     description:
-      "Sakız Adası Kampos’ta Voulamandis House aile apartları. Mutfak, yatak odası ve oturma alanı bulunan geniş 40–45m² daireler.",
+      "Sakız Adası Kambos’ta Voulamandis House aile apartları. Mutfak, yatak odası ve oturma alanı bulunan geniş 40–45m² daireler.",
   },
   hero: {
     ...familyChiosApartmentsEn.hero,
@@ -2797,7 +2797,7 @@ export const familyChiosApartmentsTr: RoomDetailData = {
       { icon: "🍳", label: "Tam mutfak", text: "Konaklamanız sırasında basit yemekler hazırlayın." },
       { icon: "🛋️", label: "Oturma alanı", text: "Apart içinde dinlenmek için ekstra alan." },
       { icon: "🛏️", label: "Ayrı yatak odası", text: "Aileler için daha fazla mahremiyet ve konfor." },
-      { icon: "🌿", label: "Bahçe manzarası", text: "Tesis çevresinde sakin Kampos atmosferi." },
+      { icon: "🌿", label: "Bahçe manzarası", text: "Tesis çevresinde sakin Kambos atmosferi." },
       { icon: "🌞", label: "Özel balkon", text: "Konaklamanız için açık alan." },
       { icon: "🚿", label: "Özel banyo", text: "Pratik banyo olanakları." },
     ],

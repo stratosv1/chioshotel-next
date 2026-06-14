@@ -199,7 +199,7 @@ const content: Record<LanguageCode, ChiosExplorerPageContent> = {
       eyebrow: "Discover the real Chios",
       title: "One stay, a whole island of stories",
       text:
-        "Voulamandis House is set in Kampos, one of the most atmospheric areas of Chios. From here, you can begin a day full of culture, nature, history and local character, returning in the evening to the calm of our garden.",
+        "Voulamandis House is set in Kambos, one of the most atmospheric areas of Chios. From here, you can begin a day full of culture, nature, history and local character, returning in the evening to the calm of our garden.",
     },
     highlights: {
       eyebrow: "Explorer stops",
@@ -253,13 +253,13 @@ const content: Record<LanguageCode, ChiosExplorerPageContent> = {
     },
     story: {
       eyebrow: "A perfect explorer day",
-      title: "From Kampos mornings to sunset by the sea",
+      title: "From Kambos mornings to sunset by the sea",
       text:
-        "Begin with a peaceful walk through Kampos, enjoy a handmade breakfast at Voulamandis House and let the island open up through culture, villages, nature and quiet moments.",
+        "Begin with a peaceful walk through Kambos, enjoy a handmade breakfast at Voulamandis House and let the island open up through culture, villages, nature and quiet moments.",
       steps: [
         {
           label: "Morning",
-          title: "Walk through Kampos",
+          title: "Walk through Kambos",
           text:
             "Start among citrus orchards and historic mansions, feeling the timeless character of Chios come to life before breakfast.",
         },
@@ -290,10 +290,10 @@ const content: Record<LanguageCode, ChiosExplorerPageContent> = {
       ],
     },
     stay: {
-      eyebrow: "Stay in Kampos",
+      eyebrow: "Stay in Kambos",
       title: "A calm base for curious travellers",
       text:
-        "Voulamandis House gives you the feeling of staying close to the real island. Wake up in Kampos, explore Chios during the day and return to a peaceful garden atmosphere in the evening.",
+        "Voulamandis House gives you the feeling of staying close to the real island. Wake up in Kambos, explore Chios during the day and return to a peaceful garden atmosphere in the evening.",
     },
     finalCta: {
       title: "Ready to design your stay?",
@@ -461,7 +461,7 @@ const content: Record<LanguageCode, ChiosExplorerPageContent> = {
       eyebrow: "Découvrez le vrai Chios",
       title: "Un séjour, toute une île d’histoires",
       text:
-        "Voulamandis House se trouve à Kampos, l’un des lieux les plus atmosphériques de Chios. De là, commencez une journée pleine de culture, de nature, d’histoire et de caractère local.",
+        "Voulamandis House se trouve à Kambos, l’un des lieux les plus atmosphériques de Chios. De là, commencez une journée pleine de culture, de nature, d’histoire et de caractère local.",
     },
     highlights: {
       eyebrow: "Étapes d’exploration",
@@ -515,13 +515,13 @@ const content: Record<LanguageCode, ChiosExplorerPageContent> = {
     },
     story: {
       eyebrow: "Une journée parfaite d’exploration",
-      title: "Des matins de Kampos au coucher du soleil sur la mer",
+      title: "Des matins de Kambos au coucher du soleil sur la mer",
       text:
-        "Commencez par une promenade paisible à Kampos, savourez un petit-déjeuner fait maison à Voulamandis House et laissez Chios se révéler.",
+        "Commencez par une promenade paisible à Kambos, savourez un petit-déjeuner fait maison à Voulamandis House et laissez Chios se révéler.",
       steps: [
         {
           label: "Matin",
-          title: "Promenade à Kampos",
+          title: "Promenade à Kambos",
           text:
             "Commencez parmi les vergers d’agrumes et les demeures historiques avant le petit-déjeuner.",
         },
@@ -552,10 +552,10 @@ const content: Record<LanguageCode, ChiosExplorerPageContent> = {
       ],
     },
     stay: {
-      eyebrow: "Séjourner à Kampos",
+      eyebrow: "Séjourner à Kambos",
       title: "Une base calme pour voyageurs curieux",
       text:
-        "Voulamandis House vous permet de rester proche du vrai Chios: réveil à Kampos, exploration pendant la journée et retour au calme le soir.",
+        "Voulamandis House vous permet de rester proche du vrai Chios: réveil à Kambos, exploration pendant la journée et retour au calme le soir.",
     },
     finalCta: {
       title: "Prêt à créer votre séjour ?",
@@ -592,7 +592,7 @@ const content: Record<LanguageCode, ChiosExplorerPageContent> = {
       eyebrow: "Das echte Chios entdecken",
       title: "Ein Aufenthalt, viele Geschichten der Insel",
       text:
-        "Voulamandis House liegt in Kampos, einer der stimmungsvollsten Gegenden von Chios. Von hier aus beginnt ein Tag voller Kultur, Natur, Geschichte und lokalem Charakter.",
+        "Voulamandis House liegt in Kambos, einer der stimmungsvollsten Gegenden von Chios. Von hier aus beginnt ein Tag voller Kultur, Natur, Geschichte und lokalem Charakter.",
     },
     highlights: {
       eyebrow: "Entdeckerstationen",
@@ -646,13 +646,13 @@ const content: Record<LanguageCode, ChiosExplorerPageContent> = {
     },
     story: {
       eyebrow: "Ein perfekter Entdeckertag",
-      title: "Von Kampos am Morgen bis zum Sonnenuntergang am Meer",
+      title: "Von Kambos am Morgen bis zum Sonnenuntergang am Meer",
       text:
-        "Beginnen Sie mit einem ruhigen Spaziergang durch Kampos, genießen Sie ein hausgemachtes Frühstück und entdecken Sie die Insel Schritt für Schritt.",
+        "Beginnen Sie mit einem ruhigen Spaziergang durch Kambos, genießen Sie ein hausgemachtes Frühstück und entdecken Sie die Insel Schritt für Schritt.",
       steps: [
         {
           label: "Morgen",
-          title: "Spaziergang durch Kampos",
+          title: "Spaziergang durch Kambos",
           text:
             "Starten Sie zwischen Zitrusgärten und historischen Herrenhäusern.",
         },
@@ -683,10 +683,10 @@ const content: Record<LanguageCode, ChiosExplorerPageContent> = {
       ],
     },
     stay: {
-      eyebrow: "Aufenthalt in Kampos",
+      eyebrow: "Aufenthalt in Kambos",
       title: "Eine ruhige Basis für neugierige Reisende",
       text:
-        "Voulamandis House bringt Sie nah an das echte Chios: morgens Kampos, tagsüber Entdeckungen und abends die Ruhe des Gartens.",
+        "Voulamandis House bringt Sie nah an das echte Chios: morgens Kambos, tagsüber Entdeckungen und abends die Ruhe des Gartens.",
     },
     finalCta: {
       title: "Bereit, Ihren Aufenthalt zu planen?",
@@ -723,7 +723,7 @@ const content: Record<LanguageCode, ChiosExplorerPageContent> = {
       eyebrow: "Scopri la vera Chios",
       title: "Un soggiorno, tante storie dell’isola",
       text:
-        "Voulamandis House si trova a Kampos, una delle zone più suggestive di Chios. Da qui puoi iniziare una giornata ricca di cultura, natura, storia e autenticità locale.",
+        "Voulamandis House si trova a Kambos, una delle zone più suggestive di Chios. Da qui puoi iniziare una giornata ricca di cultura, natura, storia e autenticità locale.",
     },
     highlights: {
       eyebrow: "Tappe da esplorare",
@@ -777,13 +777,13 @@ const content: Record<LanguageCode, ChiosExplorerPageContent> = {
     },
     story: {
       eyebrow: "Una giornata perfetta da esploratore",
-      title: "Dalle mattine di Kampos al tramonto sul mare",
+      title: "Dalle mattine di Kambos al tramonto sul mare",
       text:
-        "Inizia con una passeggiata tranquilla a Kampos, gusta una colazione fatta in casa e lascia che Chios si racconti attraverso cultura, villaggi e natura.",
+        "Inizia con una passeggiata tranquilla a Kambos, gusta una colazione fatta in casa e lascia che Chios si racconti attraverso cultura, villaggi e natura.",
       steps: [
         {
           label: "Mattina",
-          title: "Passeggiata a Kampos",
+          title: "Passeggiata a Kambos",
           text:
             "Comincia tra agrumeti e dimore storiche, respirando il carattere senza tempo di Chios.",
         },
@@ -814,10 +814,10 @@ const content: Record<LanguageCode, ChiosExplorerPageContent> = {
       ],
     },
     stay: {
-      eyebrow: "Soggiornare a Kampos",
+      eyebrow: "Soggiornare a Kambos",
       title: "Una base tranquilla per viaggiatori curiosi",
       text:
-        "Voulamandis House ti avvicina alla vera Chios: mattine a Kampos, esplorazioni durante il giorno e quiete in giardino la sera.",
+        "Voulamandis House ti avvicina alla vera Chios: mattine a Kambos, esplorazioni durante il giorno e quiete in giardino la sera.",
     },
     finalCta: {
       title: "Pronto a creare il tuo soggiorno?",
@@ -854,7 +854,7 @@ const content: Record<LanguageCode, ChiosExplorerPageContent> = {
       eyebrow: "Descubre la auténtica Quíos",
       title: "Una estancia, muchas historias de la isla",
       text:
-        "Voulamandis House está en Kampos, una de las zonas con más encanto de Quíos. Desde aquí puedes empezar un día lleno de cultura, naturaleza, historia y carácter local.",
+        "Voulamandis House está en Kambos, una de las zonas con más encanto de Quíos. Desde aquí puedes empezar un día lleno de cultura, naturaleza, historia y carácter local.",
     },
     highlights: {
       eyebrow: "Paradas de exploración",
@@ -908,13 +908,13 @@ const content: Record<LanguageCode, ChiosExplorerPageContent> = {
     },
     story: {
       eyebrow: "Un día perfecto de exploración",
-      title: "De las mañanas de Kampos al atardecer junto al mar",
+      title: "De las mañanas de Kambos al atardecer junto al mar",
       text:
-        "Empieza con un paseo tranquilo por Kampos, disfruta de un desayuno casero y deja que Quíos se revele a través de cultura, pueblos y naturaleza.",
+        "Empieza con un paseo tranquilo por Kambos, disfruta de un desayuno casero y deja que Quíos se revele a través de cultura, pueblos y naturaleza.",
       steps: [
         {
           label: "Mañana",
-          title: "Paseo por Kampos",
+          title: "Paseo por Kambos",
           text:
             "Comienza entre huertos de cítricos y mansiones históricas, sintiendo el carácter de Quíos.",
         },
@@ -945,10 +945,10 @@ const content: Record<LanguageCode, ChiosExplorerPageContent> = {
       ],
     },
     stay: {
-      eyebrow: "Alojarse en Kampos",
+      eyebrow: "Alojarse en Kambos",
       title: "Una base tranquila para viajeros curiosos",
       text:
-        "Voulamandis House te acerca a la verdadera Quíos: mañanas en Kampos, exploración durante el día y calma en el jardín por la noche.",
+        "Voulamandis House te acerca a la verdadera Quíos: mañanas en Kambos, exploración durante el día y calma en el jardín por la noche.",
     },
     finalCta: {
       title: "¿Listo para diseñar tu estancia?",
@@ -985,7 +985,7 @@ const content: Record<LanguageCode, ChiosExplorerPageContent> = {
       eyebrow: "Gerçek Sakız’ı keşfedin",
       title: "Tek konaklama, adanın birçok hikayesi",
       text:
-        "Voulamandis House, Sakız’ın en atmosferik bölgelerinden Kampos’ta yer alır. Buradan kültür, doğa, tarih ve yerel karakter dolu bir güne başlayabilirsiniz.",
+        "Voulamandis House, Sakız’ın en atmosferik bölgelerinden Kambos’ta yer alır. Buradan kültür, doğa, tarih ve yerel karakter dolu bir güne başlayabilirsiniz.",
     },
     highlights: {
       eyebrow: "Keşif durakları",
@@ -1039,13 +1039,13 @@ const content: Record<LanguageCode, ChiosExplorerPageContent> = {
     },
     story: {
       eyebrow: "Mükemmel bir keşif günü",
-      title: "Kampos sabahlarından deniz kenarında gün batımına",
+      title: "Kambos sabahlarından deniz kenarında gün batımına",
       text:
-        "Kampos’ta sakin bir yürüyüşle başlayın, Voulamandis House’ta ev yapımı kahvaltının tadını çıkarın ve adayı kültür, köyler ve doğa ile keşfedin.",
+        "Kambos’ta sakin bir yürüyüşle başlayın, Voulamandis House’ta ev yapımı kahvaltının tadını çıkarın ve adayı kültür, köyler ve doğa ile keşfedin.",
       steps: [
         {
           label: "Sabah",
-          title: "Kampos’ta yürüyüş",
+          title: "Kambos’ta yürüyüş",
           text:
             "Narenciye bahçeleri ve tarihi konaklar arasında güne başlayın.",
         },
@@ -1076,10 +1076,10 @@ const content: Record<LanguageCode, ChiosExplorerPageContent> = {
       ],
     },
     stay: {
-      eyebrow: "Kampos’ta konaklama",
+      eyebrow: "Kambos’ta konaklama",
       title: "Meraklı gezginler için sakin bir üs",
       text:
-        "Voulamandis House sizi gerçek Sakız’a yaklaştırır: Kampos’ta sabahlar, gün boyu keşif ve akşam bahçede huzur.",
+        "Voulamandis House sizi gerçek Sakız’a yaklaştırır: Kambos’ta sabahlar, gün boyu keşif ve akşam bahçede huzur.",
     },
     finalCta: {
       title: "Konaklamanı tasarlamaya hazır mısın?",

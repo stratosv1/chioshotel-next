@@ -105,7 +105,7 @@ export const chiosVillagesPageEn: ChiosVillagesPageData = {
       href: "#villages",
     },
     secondaryCta: {
-      label: "Stay in Kampos",
+      label: "Stay in Kambos",
       href: "/chios-rooms/",
     },
   },
@@ -118,7 +118,7 @@ export const chiosVillagesPageEn: ChiosVillagesPageData = {
       icon: "🏡",
       title: "Your local base for village routes",
       text:
-        "Voulamandis House in Kampos is a practical starting point for exploring the villages of Chios. You can combine southern mastic villages, beaches and Chios Town routes while staying in a calm historic area.",
+        "Voulamandis House in Kambos is a practical starting point for exploring the villages of Chios. You can combine southern mastic villages, beaches and Chios Town routes while staying in a calm historic area.",
       linkLabel: "View rooms at Voulamandis House",
       href: "/chios-rooms/",
     },
@@ -255,7 +255,7 @@ export const chiosVillagesPageEn: ChiosVillagesPageData = {
   },
   stay: {
     kicker: "Stay with local advice",
-    title: "Explore Chios villages from Kampos",
+    title: "Explore Chios villages from Kambos",
     text:
       "Voulamandis House gives you a calm base near Chios Town and the airport, while keeping you connected to routes toward southern mastic villages, seaside villages and northern Chios.",
     primaryCta: {
@@ -471,7 +471,7 @@ export const chiosVillagesPageFr: ChiosVillagesPageData = {
       href: "#villages",
     },
     secondaryCta: {
-      label: "Séjourner à Kampos",
+      label: "Séjourner à Kambos",
       href: "/fr/chambres-a-chios/",
     },
   },
@@ -484,7 +484,7 @@ export const chiosVillagesPageFr: ChiosVillagesPageData = {
       icon: "🏡",
       title: "Votre base locale pour explorer les villages",
       text:
-        "Voulamandis House à Kampos est un point de départ pratique pour découvrir les villages de Chios. Vous pouvez combiner villages du mastic, plages et ville de Chios tout en séjournant dans un quartier historique calme.",
+        "Voulamandis House à Kambos est un point de départ pratique pour découvrir les villages de Chios. Vous pouvez combiner villages du mastic, plages et ville de Chios tout en séjournant dans un quartier historique calme.",
       linkLabel: "Voir les chambres de Voulamandis House",
       href: "/fr/chambres-a-chios/",
     },
@@ -621,7 +621,7 @@ export const chiosVillagesPageFr: ChiosVillagesPageData = {
   },
   stay: {
     kicker: "Séjour avec conseils locaux",
-    title: "Explorez les villages de Chios depuis Kampos",
+    title: "Explorez les villages de Chios depuis Kambos",
     text:
       "Voulamandis House vous offre une base calme près de la ville et de l’aéroport, tout en vous reliant facilement aux villages du mastic, aux villages de bord de mer et au nord de Chios.",
     primaryCta: {
@@ -654,7 +654,7 @@ export const chiosVillagesPageDe: ChiosVillagesPageData = {
       href: "#villages",
     },
     secondaryCta: {
-      label: "In Kampos übernachten",
+      label: "In Kambos übernachten",
       href: "/de/chios-zimmer/",
     },
   },
@@ -667,7 +667,7 @@ export const chiosVillagesPageDe: ChiosVillagesPageData = {
       icon: "🏡",
       title: "Ihre lokale Basis für Dorfrouten",
       text:
-        "Voulamandis House in Kampos ist ein praktischer Ausgangspunkt, um die Dörfer von Chios zu erkunden. Sie können südliche Mastixdörfer, Strände und Chios-Stadt kombinieren und in einer ruhigen historischen Gegend wohnen.",
+        "Voulamandis House in Kambos ist ein praktischer Ausgangspunkt, um die Dörfer von Chios zu erkunden. Sie können südliche Mastixdörfer, Strände und Chios-Stadt kombinieren und in einer ruhigen historischen Gegend wohnen.",
       linkLabel: "Zimmer im Voulamandis House ansehen",
       href: "/de/chios-zimmer/",
     },
@@ -804,7 +804,7 @@ export const chiosVillagesPageDe: ChiosVillagesPageData = {
   },
   stay: {
     kicker: "Übernachten mit lokalen Tipps",
-    title: "Entdecken Sie Chios-Dörfer von Kampos aus",
+    title: "Entdecken Sie Chios-Dörfer von Kambos aus",
     text:
       "Voulamandis House bietet Ihnen eine ruhige Basis nahe Chios-Stadt und Flughafen und verbindet Sie zugleich mit Routen zu südlichen Mastixdörfern, Küstendörfern und Nord-Chios.",
     primaryCta: {
@@ -837,7 +837,7 @@ export const chiosVillagesPageIt: ChiosVillagesPageData = {
       href: "#villages",
     },
     secondaryCta: {
-      label: "Soggiorna a Kampos",
+      label: "Soggiorna a Kambos",
       href: "/it/camere-a-chios/",
     },
   },
@@ -850,7 +850,7 @@ export const chiosVillagesPageIt: ChiosVillagesPageData = {
       icon: "🏡",
       title: "La tua base locale per gli itinerari nei villaggi",
       text:
-        "Voulamandis House a Kampos è un punto di partenza pratico per esplorare i villaggi di Chios. Puoi combinare villaggi del mastice, spiagge e città di Chios soggiornando in una zona storica tranquilla.",
+        "Voulamandis House a Kambos è un punto di partenza pratico per esplorare i villaggi di Chios. Puoi combinare villaggi del mastice, spiagge e città di Chios soggiornando in una zona storica tranquilla.",
       linkLabel: "Vedi le camere di Voulamandis House",
       href: "/it/camere-a-chios/",
     },
@@ -987,7 +987,7 @@ export const chiosVillagesPageIt: ChiosVillagesPageData = {
   },
   stay: {
     kicker: "Soggiorna con consigli locali",
-    title: "Esplora i villaggi di Chios da Kampos",
+    title: "Esplora i villaggi di Chios da Kambos",
     text:
       "Voulamandis House ti offre una base tranquilla vicino alla città e all’aeroporto, restando ben collegata ai villaggi del mastice, ai villaggi sul mare e al nord di Chios.",
     primaryCta: {
@@ -1020,7 +1020,7 @@ export const chiosVillagesPageEs: ChiosVillagesPageData = {
       href: "#villages",
     },
     secondaryCta: {
-      label: "Alojarse en Kampos",
+      label: "Alojarse en Kambos",
       href: "/es/habitaciones-en-chios/",
     },
   },
@@ -1033,7 +1033,7 @@ export const chiosVillagesPageEs: ChiosVillagesPageData = {
       icon: "🏡",
       title: "Tu base local para rutas por pueblos",
       text:
-        "Voulamandis House en Kampos es un punto de partida práctico para explorar los pueblos de Chios. Puedes combinar pueblos del mastiha, playas y la ciudad de Chios mientras te alojas en una zona histórica tranquila.",
+        "Voulamandis House en Kambos es un punto de partida práctico para explorar los pueblos de Chios. Puedes combinar pueblos del mastiha, playas y la ciudad de Chios mientras te alojas en una zona histórica tranquila.",
       linkLabel: "Ver habitaciones en Voulamandis House",
       href: "/es/habitaciones-en-chios/",
     },
@@ -1170,7 +1170,7 @@ export const chiosVillagesPageEs: ChiosVillagesPageData = {
   },
   stay: {
     kicker: "Alojamiento con consejos locales",
-    title: "Explora los pueblos de Chios desde Kampos",
+    title: "Explora los pueblos de Chios desde Kambos",
     text:
       "Voulamandis House te ofrece una base tranquila cerca de la ciudad y el aeropuerto, manteniéndote conectado con las rutas hacia los pueblos del mastiha, los pueblos costeros y el norte de Chios.",
     primaryCta: {
@@ -1203,7 +1203,7 @@ export const chiosVillagesPageTr: ChiosVillagesPageData = {
       href: "#villages",
     },
     secondaryCta: {
-      label: "Kampos’ta konakla",
+      label: "Kambos’ta konakla",
       href: "/tr/sakiz-adasi-odalari/",
     },
   },
@@ -1216,7 +1216,7 @@ export const chiosVillagesPageTr: ChiosVillagesPageData = {
       icon: "🏡",
       title: "Köy rotaları için yerel üssünüz",
       text:
-        "Kampos’taki Voulamandis House, Sakız Adası köylerini keşfetmek için pratik bir başlangıç noktasıdır. Güney mastik köylerini, plajları ve Sakız şehir rotalarını sakin tarihi bir bölgede konaklayarak birleştirebilirsiniz.",
+        "Kambos’taki Voulamandis House, Sakız Adası köylerini keşfetmek için pratik bir başlangıç noktasıdır. Güney mastik köylerini, plajları ve Sakız şehir rotalarını sakin tarihi bir bölgede konaklayarak birleştirebilirsiniz.",
       linkLabel: "Voulamandis House odalarını görüntüleyin",
       href: "/tr/sakiz-adasi-odalari/",
     },
@@ -1353,7 +1353,7 @@ export const chiosVillagesPageTr: ChiosVillagesPageData = {
   },
   stay: {
     kicker: "Yerel tavsiyelerle konaklayın",
-    title: "Sakız köylerini Kampos’tan keşfedin",
+    title: "Sakız köylerini Kambos’tan keşfedin",
     text:
       "Voulamandis House, şehir ve havaalanına yakın sakin bir üs sunarken, güney mastik köyleri, sahil köyleri ve kuzey Sakız rotalarına kolay bağlantı sağlar.",
     primaryCta: {

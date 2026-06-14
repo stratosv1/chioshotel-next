@@ -107,7 +107,7 @@ export const chiosBeachesPageEn: ChiosBeachesPageData = {
       href: "#beaches",
     },
     secondaryCta: {
-      label: "Stay in Kampos",
+      label: "Stay in Kambos",
       href: "/chios-rooms/",
     },
   },
@@ -120,7 +120,7 @@ export const chiosBeachesPageEn: ChiosBeachesPageData = {
       icon: "🗺️",
       title: "Your strategic island outpost",
       text:
-        "To truly master your itinerary of beaches in Chios, make Voulamandis House in Kampos your home base. Our local team can help you choose beaches based on the weather, your route and the kind of day you want.",
+        "To truly master your itinerary of beaches in Chios, make Voulamandis House in Kambos your home base. Our local team can help you choose beaches based on the weather, your route and the kind of day you want.",
       linkLabel: "View rooms at Voulamandis House",
       href: "/chios-rooms/",
     },
@@ -145,7 +145,7 @@ export const chiosBeachesPageEn: ChiosBeachesPageData = {
       name: "Agia Fotia",
       title: "Agia Fotia",
       description:
-        "A popular beach with deep crystal waters, located close to the historic Kampos area and ideal for an easy swimming day from Voulamandis House.",
+        "A popular beach with deep crystal waters, located close to the historic Kambos area and ideal for an easy swimming day from Voulamandis House.",
       image: beachImages.agiaFotia,
       imageAlt: "Agia Fotia beach in Chios with deep crystal waters",
       href: "/chios/chios-beaches/agia-fotia-beach/",
@@ -282,7 +282,7 @@ export const chiosBeachesPageEn: ChiosBeachesPageData = {
   },
   stay: {
     kicker: "Stay with local advice",
-    title: "Start your beach days from Kampos",
+    title: "Start your beach days from Kambos",
     text:
       "Voulamandis House is a practical base for exploring Chios beaches, with easy access to Chios Town, the airport, south Chios routes and the east coast.",
     primaryCta: {
@@ -522,7 +522,7 @@ export const chiosBeachesPageFr: ChiosBeachesPageData = {
       href: "#beaches",
     },
     secondaryCta: {
-      label: "Séjourner à Kampos",
+      label: "Séjourner à Kambos",
       href: "/fr/chambres-a-chios/",
     },
   },
@@ -535,7 +535,7 @@ export const chiosBeachesPageFr: ChiosBeachesPageData = {
       icon: "🗺️",
       title: "Votre base stratégique sur l’île",
       text:
-        "Pour bien organiser vos plages à Chios, faites de Voulamandis House à Kampos votre base. Notre équipe locale peut vous aider à choisir les plages selon la météo, votre route et le type de journée que vous souhaitez.",
+        "Pour bien organiser vos plages à Chios, faites de Voulamandis House à Kambos votre base. Notre équipe locale peut vous aider à choisir les plages selon la météo, votre route et le type de journée que vous souhaitez.",
       linkLabel: "Voir les chambres de Voulamandis House",
       href: "/fr/chambres-a-chios/",
     },
@@ -560,7 +560,7 @@ export const chiosBeachesPageFr: ChiosBeachesPageData = {
       name: "Agia Fotia",
       title: "Agia Fotia",
       description:
-        "Une plage populaire aux eaux profondes et cristallines, proche de Kampos et idéale pour une baignade facile depuis Voulamandis House.",
+        "Une plage populaire aux eaux profondes et cristallines, proche de Kambos et idéale pour une baignade facile depuis Voulamandis House.",
       image: beachImages.agiaFotia,
       imageAlt: "Plage d’Agia Fotia à Chios avec eaux cristallines",
       href: "/fr/plages-de-chios/plage-agia-fotia/",
@@ -696,7 +696,7 @@ export const chiosBeachesPageFr: ChiosBeachesPageData = {
   },
   stay: {
     kicker: "Séjour avec conseils locaux",
-    title: "Commencez vos journées plage depuis Kampos",
+    title: "Commencez vos journées plage depuis Kambos",
     text:
       "Voulamandis House est une base pratique pour explorer les plages de Chios, avec un accès facile à la ville, à l’aéroport, aux routes du sud et à la côte est.",
     primaryCta: {
@@ -729,7 +729,7 @@ export const chiosBeachesPageDe: ChiosBeachesPageData = {
       href: "#beaches",
     },
     secondaryCta: {
-      label: "In Kampos übernachten",
+      label: "In Kambos übernachten",
       href: "/de/chios-zimmer/",
     },
   },
@@ -742,7 +742,7 @@ export const chiosBeachesPageDe: ChiosBeachesPageData = {
       icon: "🗺️",
       title: "Ihre strategische Inselbasis",
       text:
-        "Um Ihre Strandtage auf Chios gut zu planen, machen Sie Voulamandis House in Kampos zu Ihrer Basis. Unser lokales Team hilft Ihnen gern, Strände nach Wetter, Route und gewünschter Tagesstimmung auszuwählen.",
+        "Um Ihre Strandtage auf Chios gut zu planen, machen Sie Voulamandis House in Kambos zu Ihrer Basis. Unser lokales Team hilft Ihnen gern, Strände nach Wetter, Route und gewünschter Tagesstimmung auszuwählen.",
       linkLabel: "Zimmer im Voulamandis House ansehen",
       href: "/de/chios-zimmer/",
     },
@@ -767,7 +767,7 @@ export const chiosBeachesPageDe: ChiosBeachesPageData = {
       name: "Agia Fotia",
       title: "Agia Fotia",
       description:
-        "Ein beliebter Strand mit tiefem, kristallklarem Wasser, nahe dem historischen Kampos und ideal für einen unkomplizierten Badetag ab Voulamandis House.",
+        "Ein beliebter Strand mit tiefem, kristallklarem Wasser, nahe dem historischen Kambos und ideal für einen unkomplizierten Badetag ab Voulamandis House.",
       image: beachImages.agiaFotia,
       imageAlt: "Agia Fotia Strand auf Chios mit kristallklarem Wasser",
       href: "/de/straende-chios/agia-fotia-strand/",
@@ -903,7 +903,7 @@ export const chiosBeachesPageDe: ChiosBeachesPageData = {
   },
   stay: {
     kicker: "Übernachten mit lokalen Tipps",
-    title: "Starten Sie Ihre Strandtage von Kampos",
+    title: "Starten Sie Ihre Strandtage von Kambos",
     text:
       "Voulamandis House ist eine praktische Basis, um die Strände von Chios zu erkunden, mit einfachem Zugang zur Stadt, zum Flughafen, zu den Südrouten und zur Ostküste.",
     primaryCta: {
@@ -936,7 +936,7 @@ export const chiosBeachesPageIt: ChiosBeachesPageData = {
       href: "#beaches",
     },
     secondaryCta: {
-      label: "Soggiorna a Kampos",
+      label: "Soggiorna a Kambos",
       href: "/it/camere-a-chios/",
     },
   },
@@ -949,7 +949,7 @@ export const chiosBeachesPageIt: ChiosBeachesPageData = {
       icon: "🗺️",
       title: "La tua base strategica sull’isola",
       text:
-        "Per organizzare al meglio le spiagge di Chios, fai di Voulamandis House a Kampos la tua base. Il nostro team locale può aiutarti a scegliere le spiagge in base al meteo, al percorso e al tipo di giornata che desideri.",
+        "Per organizzare al meglio le spiagge di Chios, fai di Voulamandis House a Kambos la tua base. Il nostro team locale può aiutarti a scegliere le spiagge in base al meteo, al percorso e al tipo di giornata che desideri.",
       linkLabel: "Vedi le camere di Voulamandis House",
       href: "/it/camere-a-chios/",
     },
@@ -974,7 +974,7 @@ export const chiosBeachesPageIt: ChiosBeachesPageData = {
       name: "Agia Fotia",
       title: "Agia Fotia",
       description:
-        "Una spiaggia popolare con acque profonde e cristalline, vicina alla storica zona di Kampos e ideale per una giornata di mare facile da Voulamandis House.",
+        "Una spiaggia popolare con acque profonde e cristalline, vicina alla storica zona di Kambos e ideale per una giornata di mare facile da Voulamandis House.",
       image: beachImages.agiaFotia,
       imageAlt: "Spiaggia di Agia Fotia a Chios con acque cristalline",
       href: "/it/spiagge-chios/spiaggia-agia-fotia/",
@@ -1110,7 +1110,7 @@ export const chiosBeachesPageIt: ChiosBeachesPageData = {
   },
   stay: {
     kicker: "Soggiorna con consigli locali",
-    title: "Inizia le tue giornate al mare da Kampos",
+    title: "Inizia le tue giornate al mare da Kambos",
     text:
       "Voulamandis House è una base pratica per esplorare le spiagge di Chios, con facile accesso alla città, all’aeroporto, alle rotte verso sud e alla costa orientale.",
     primaryCta: {
@@ -1143,7 +1143,7 @@ export const chiosBeachesPageEs: ChiosBeachesPageData = {
       href: "#beaches",
     },
     secondaryCta: {
-      label: "Alojarse en Kampos",
+      label: "Alojarse en Kambos",
       href: "/es/habitaciones-en-chios/",
     },
   },
@@ -1156,7 +1156,7 @@ export const chiosBeachesPageEs: ChiosBeachesPageData = {
       icon: "🗺️",
       title: "Tu base estratégica en la isla",
       text:
-        "Para organizar bien tus días de playa en Chios, haz de Voulamandis House en Kampos tu base. Nuestro equipo local puede ayudarte a elegir playas según el tiempo, la ruta y el tipo de día que buscas.",
+        "Para organizar bien tus días de playa en Chios, haz de Voulamandis House en Kambos tu base. Nuestro equipo local puede ayudarte a elegir playas según el tiempo, la ruta y el tipo de día que buscas.",
       linkLabel: "Ver habitaciones en Voulamandis House",
       href: "/es/habitaciones-en-chios/",
     },
@@ -1181,7 +1181,7 @@ export const chiosBeachesPageEs: ChiosBeachesPageData = {
       name: "Agia Fotia",
       title: "Agia Fotia",
       description:
-        "Una playa popular con aguas profundas y cristalinas, cerca de la zona histórica de Kampos e ideal para un día de baño fácil desde Voulamandis House.",
+        "Una playa popular con aguas profundas y cristalinas, cerca de la zona histórica de Kambos e ideal para un día de baño fácil desde Voulamandis House.",
       image: beachImages.agiaFotia,
       imageAlt: "Playa Agia Fotia en Chios con aguas cristalinas",
       href: "/es/playas-chios/playa-agia-fotia/",
@@ -1317,7 +1317,7 @@ export const chiosBeachesPageEs: ChiosBeachesPageData = {
   },
   stay: {
     kicker: "Alojamiento con consejos locales",
-    title: "Empieza tus días de playa desde Kampos",
+    title: "Empieza tus días de playa desde Kambos",
     text:
       "Voulamandis House es una base práctica para explorar las playas de Chios, con fácil acceso a la ciudad, el aeropuerto, las rutas del sur y la costa este.",
     primaryCta: {
@@ -1350,7 +1350,7 @@ export const chiosBeachesPageTr: ChiosBeachesPageData = {
       href: "#beaches",
     },
     secondaryCta: {
-      label: "Kampos’ta konakla",
+      label: "Kambos’ta konakla",
       href: "/tr/sakiz-adasi-odalari/",
     },
   },
@@ -1363,7 +1363,7 @@ export const chiosBeachesPageTr: ChiosBeachesPageData = {
       icon: "🗺️",
       title: "Adadaki stratejik üssünüz",
       text:
-        "Sakız Adası plajlarını doğru planlamak için Kampos’taki Voulamandis House’u üssünüz yapın. Yerel ekibimiz hava durumuna, rotanıza ve istediğiniz güne göre plaj seçmenize yardımcı olabilir.",
+        "Sakız Adası plajlarını doğru planlamak için Kambos’taki Voulamandis House’u üssünüz yapın. Yerel ekibimiz hava durumuna, rotanıza ve istediğiniz güne göre plaj seçmenize yardımcı olabilir.",
       linkLabel: "Voulamandis House odalarını görüntüleyin",
       href: "/tr/sakiz-adasi-odalari/",
     },
@@ -1388,7 +1388,7 @@ export const chiosBeachesPageTr: ChiosBeachesPageData = {
       name: "Agia Fotia",
       title: "Agia Fotia",
       description:
-        "Derin kristal sulara sahip popüler bir plaj; tarihi Kampos bölgesine yakın ve Voulamandis House’tan kolay bir yüzme günü için ideal.",
+        "Derin kristal sulara sahip popüler bir plaj; tarihi Kambos bölgesine yakın ve Voulamandis House’tan kolay bir yüzme günü için ideal.",
       image: beachImages.agiaFotia,
       imageAlt: "Sakız Adası Agia Fotia Plajı kristal sular",
       href: "/tr/sakiz-adasi-plajlari/agia-fotia-plaji/",
@@ -1524,7 +1524,7 @@ export const chiosBeachesPageTr: ChiosBeachesPageData = {
   },
   stay: {
     kicker: "Yerel tavsiyelerle konaklayın",
-    title: "Plaj günlerinize Kampos’tan başlayın",
+    title: "Plaj günlerinize Kambos’tan başlayın",
     text:
       "Voulamandis House, Sakız Adası plajlarını keşfetmek için pratik bir üstür; şehir merkezine, havaalanına, güney rotalarına ve doğu kıyısına kolay erişim sunar.",
     primaryCta: {

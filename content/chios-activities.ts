@@ -606,7 +606,7 @@ const englishPages: Record<ChiosActivityKey, ChiosActivitiesPageData> = {
     intro: {
       title: "Discover authentic Chios experiences",
       text: [
-        "Chios is an island of culture, nature and living traditions. From the citrus estates of Kampos to the mastic villages, mountain trails and seaside landscapes, every day can become a different experience.",
+        "Chios is an island of culture, nature and living traditions. From the citrus estates of Kambos to the mastic villages, mountain trails and seaside landscapes, every day can become a different experience.",
         "Take a look below and discover the activities that match your interests, whether you love language, nature, local customs, wellness or unforgettable seasonal events.",
       ],
     },
@@ -621,7 +621,7 @@ const englishPages: Record<ChiosActivityKey, ChiosActivitiesPageData> = {
     seo: {
       title: "Chios Festival Mostra in Thymiana | Voulamandis House",
       description:
-        "Discover Mostra, the colorful carnival fiesta of Thymiana in Chios, with costumes, music, dancing and local tradition near Kampos.",
+        "Discover Mostra, the colorful carnival fiesta of Thymiana in Chios, with costumes, music, dancing and local tradition near Kambos.",
     },
     hero: {
       eyebrow: "Chios activities",
@@ -633,9 +633,9 @@ const englishPages: Record<ChiosActivityKey, ChiosActivitiesPageData> = {
     },
     sections: [
       {
-        title: "A colorful carnival tradition near Kampos",
+        title: "A colorful carnival tradition near Kambos",
         text: [
-          "Mostra takes place in the village of Thymiana, close to the Kampos region of Chios. The name comes from the Italian word for a show or display, and the celebration truly lives up to it.",
+          "Mostra takes place in the village of Thymiana, close to the Kambos region of Chios. The name comes from the Italian word for a show or display, and the celebration truly lives up to it.",
           "During the carnival period, the streets fill with music, dancing, masks, costumes and a festive village atmosphere that brings locals and visitors together.",
         ],
       },
@@ -649,8 +649,8 @@ const englishPages: Record<ChiosActivityKey, ChiosActivitiesPageData> = {
       {
         title: "Stay close to the celebration",
         text: [
-          "Voulamandis House in Kampos is a peaceful and convenient base for discovering Mostra, Thymiana and the surrounding area of Chios.",
-          "After the celebration, return to the calm atmosphere of Kampos and enjoy a more relaxed side of the island.",
+          "Voulamandis House in Kambos is a peaceful and convenient base for discovering Mostra, Thymiana and the surrounding area of Chios.",
+          "After the celebration, return to the calm atmosphere of Kambos and enjoy a more relaxed side of the island.",
         ],
       },
     ],
@@ -698,13 +698,13 @@ const englishPages: Record<ChiosActivityKey, ChiosActivitiesPageData> = {
       {
         title: "Discover Chios while you study",
         text: [
-          "Chios offers a rich setting for language learning, from Nea Moni and the medieval mastic villages to Kampos orchards, Easter customs and the island's distinctive flavors.",
-          "Voulamandis House offers a quiet base in Kampos for students and travelers who want to combine study with an authentic stay in Chios.",
+          "Chios offers a rich setting for language learning, from Nea Moni and the medieval mastic villages to Kambos orchards, Easter customs and the island's distinctive flavors.",
+          "Voulamandis House offers a quiet base in Kambos for students and travelers who want to combine study with an authentic stay in Chios.",
         ],
       },
     ],
     cta: {
-      title: "Combine your course with a stay in Kampos",
+      title: "Combine your course with a stay in Kambos",
       text: "Stay at Voulamandis House and enjoy a peaceful base while attending Greek language courses in Chios.",
       primaryLabel: "Visit Alexandria Institute",
       primaryHref: "https://alexandria-institute.com",
@@ -720,7 +720,7 @@ const englishPages: Record<ChiosActivityKey, ChiosActivitiesPageData> = {
     seo: {
       title: "Chios Hiking Trails | Voulamandis House",
       description:
-        "Explore Chios hiking routes through mastic villages, Kampos orchards, Amani mountains, coastal trails, forests and traditional villages.",
+        "Explore Chios hiking routes through mastic villages, Kambos orchards, Amani mountains, coastal trails, forests and traditional villages.",
     },
     hero: {
       eyebrow: "Chios activities",
@@ -734,7 +734,7 @@ const englishPages: Record<ChiosActivityKey, ChiosActivitiesPageData> = {
       {
         title: "Why hike in Chios?",
         text: [
-          "Hiking is one of the best ways to explore the nature of Chios. The island offers citrus orchards in Kampos, mastic trees in the south, rocky mountains, forests, ravines and coastal paths.",
+          "Hiking is one of the best ways to explore the nature of Chios. The island offers citrus orchards in Kambos, mastic trees in the south, rocky mountains, forests, ravines and coastal paths.",
           "Walking routes across the mastic villages reveal fortified medieval settlements, traditional architecture and the cultural importance of mastiha.",
         ],
       },
@@ -749,7 +749,7 @@ const englishPages: Record<ChiosActivityKey, ChiosActivitiesPageData> = {
         title: "Nature, history and local life",
         text: [
           "A hiking holiday in Chios can combine natural beauty with Byzantine monasteries, medieval villages, local tavernas and seasonal wildflowers.",
-          "Voulamandis House in Kampos is a comfortable base for exploring different parts of the island by car before starting your walks.",
+          "Voulamandis House in Kambos is a comfortable base for exploring different parts of the island by car before starting your walks.",
         ],
       },
     ],
@@ -760,7 +760,7 @@ const englishPages: Record<ChiosActivityKey, ChiosActivitiesPageData> = {
     cta: {
       ...baseCta("en"),
       title: "Start your Chios hiking holiday from Voulamandis House",
-      text: "Stay in Kampos and explore the hiking routes, villages and natural landscapes of Chios.",
+      text: "Stay in Kambos and explore the hiking routes, villages and natural landscapes of Chios.",
       secondaryLabel: "Back to Chios Activities",
       secondaryHref: chiosActivitiesPaths.en,
     },
@@ -799,10 +799,10 @@ const englishPages: Record<ChiosActivityKey, ChiosActivitiesPageData> = {
         ],
       },
       {
-        title: "A day trip from Kampos",
+        title: "A day trip from Kambos",
         text: [
           "From Voulamandis House, Agiasmata can be part of a longer day trip through the villages and landscapes of northern Chios.",
-          "Return to Kampos in the evening and enjoy the quiet atmosphere of the historic citrus area.",
+          "Return to Kambos in the evening and enjoy the quiet atmosphere of the historic citrus area.",
         ],
       },
     ],
@@ -822,7 +822,7 @@ const englishPages: Record<ChiosActivityKey, ChiosActivitiesPageData> = {
     seo: {
       title: "Rocket War of Chios | Voulamandis House",
       description:
-        "Experience the famous Rocket War of Chios, the spectacular Easter tradition in Vrontados, and stay at Voulamandis House in Kampos.",
+        "Experience the famous Rocket War of Chios, the spectacular Easter tradition in Vrontados, and stay at Voulamandis House in Kambos.",
     },
     hero: {
       eyebrow: "Chios activities",
@@ -851,7 +851,7 @@ const englishPages: Record<ChiosActivityKey, ChiosActivitiesPageData> = {
         title: "Watch safely and respectfully",
         text: [
           "Visitors should always follow local safety instructions and watch from recommended viewing areas.",
-          "Voulamandis House in Kampos offers a peaceful base for experiencing Easter in Chios while staying within reach of Vrontados and the island's other traditions.",
+          "Voulamandis House in Kambos offers a peaceful base for experiencing Easter in Chios while staying within reach of Vrontados and the island's other traditions.",
         ],
       },
     ],
@@ -1227,7 +1227,7 @@ const localizedActivityCopy: Partial<
       intro: {
         title: "Découvrez des expériences authentiques à Chios",
         text: [
-          "Chios est une île de culture, de nature et de traditions vivantes. Du Kampos aux villages de mastiha, des montagnes aux sentiers côtiers, chaque journée peut révéler une nouvelle facette de l'île.",
+          "Chios est une île de culture, de nature et de traditions vivantes. Du Kambos aux villages de mastiha, des montagnes aux sentiers côtiers, chaque journée peut révéler une nouvelle facette de l'île.",
           "Explorez les activités ci-dessous et choisissez celles qui correspondent à vos envies : langue, nature, coutumes locales, bien-être ou grands événements saisonniers.",
         ],
       },
@@ -1248,9 +1248,9 @@ const localizedActivityCopy: Partial<
       },
       sections: [
         {
-          title: "Une tradition vivante près de Kampos",
+          title: "Une tradition vivante près de Kambos",
           text: [
-            "Mostra se déroule à Thymiana, près de la région historique de Kampos. Son nom évoque l'idée de spectacle, et la fête porte bien ce sens.",
+            "Mostra se déroule à Thymiana, près de la région historique de Kambos. Son nom évoque l'idée de spectacle, et la fête porte bien ce sens.",
             "Pendant la période du carnaval, les rues se remplissent de musique, de danse, de masques, de costumes et d'une atmosphère villageoise festive.",
           ],
         },
@@ -1264,8 +1264,8 @@ const localizedActivityCopy: Partial<
         {
           title: "Séjourner près de la fête",
           text: [
-            "Voulamandis House, à Kampos, est une base paisible et pratique pour découvrir Mostra, Thymiana et les environs.",
-            "Après la fête, vous retrouvez le calme de Kampos et une autre facette de Chios.",
+            "Voulamandis House, à Kambos, est une base paisible et pratique pour découvrir Mostra, Thymiana et les environs.",
+            "Après la fête, vous retrouvez le calme de Kambos et une autre facette de Chios.",
           ],
         },
       ],
@@ -1307,13 +1307,13 @@ const localizedActivityCopy: Partial<
         {
           title: "Découvrir Chios pendant le séjour",
           text: [
-            "Chios offre un cadre riche pour apprendre, de Nea Moni aux villages de mastiha, en passant par Kampos, les coutumes de Pâques et les saveurs locales.",
-            "Voulamandis House offre une base calme à Kampos pour les étudiants et les voyageurs.",
+            "Chios offre un cadre riche pour apprendre, de Nea Moni aux villages de mastiha, en passant par Kambos, les coutumes de Pâques et les saveurs locales.",
+            "Voulamandis House offre une base calme à Kambos pour les étudiants et les voyageurs.",
           ],
         },
       ],
       cta: {
-        title: "Combinez vos cours avec un séjour à Kampos",
+        title: "Combinez vos cours avec un séjour à Kambos",
         text: "Séjournez à Voulamandis House et profitez d'une base paisible pendant vos cours de grec à Chios.",
         primaryLabel: "Voir Alexandria Institute",
         primaryHref: "https://alexandria-institute.com",
@@ -1325,7 +1325,7 @@ const localizedActivityCopy: Partial<
       seo: {
         title: "Randonnée à Chios | Voulamandis House",
         description:
-          "Explorez les sentiers de randonnée de Chios à travers villages de mastiha, Kampos, montagnes, forêts, côtes et villages traditionnels.",
+          "Explorez les sentiers de randonnée de Chios à travers villages de mastiha, Kambos, montagnes, forêts, côtes et villages traditionnels.",
       },
       hero: {
         eyebrow: "Activités à Chios",
@@ -1337,7 +1337,7 @@ const localizedActivityCopy: Partial<
         {
           title: "Pourquoi randonner à Chios ?",
           text: [
-            "La randonnée est l'une des meilleures façons de découvrir la nature de Chios. L'île offre des vergers d'agrumes à Kampos, des arbres à mastiha, des montagnes, des forêts, des ravins et des sentiers côtiers.",
+            "La randonnée est l'une des meilleures façons de découvrir la nature de Chios. L'île offre des vergers d'agrumes à Kambos, des arbres à mastiha, des montagnes, des forêts, des ravins et des sentiers côtiers.",
             "Les itinéraires dans les villages de mastiha révèlent des villages médiévaux, une architecture traditionnelle et l'importance culturelle de la mastiha.",
           ],
         },
@@ -1352,14 +1352,14 @@ const localizedActivityCopy: Partial<
           title: "Nature, histoire et vie locale",
           text: [
             "Une randonnée à Chios peut combiner nature, monastères byzantins, villages médiévaux, tavernes et fleurs sauvages de saison.",
-            "Voulamandis House, à Kampos, est une base confortable pour explorer différentes parties de l'île.",
+            "Voulamandis House, à Kambos, est une base confortable pour explorer différentes parties de l'île.",
           ],
         },
       ],
       cta: {
         ...baseCta("fr"),
         title: "Commencez vos randonnées depuis Voulamandis House",
-        text: "Séjournez à Kampos et explorez les sentiers, villages et paysages naturels de Chios.",
+        text: "Séjournez à Kambos et explorez les sentiers, villages et paysages naturels de Chios.",
         secondaryLabel: "Retour aux activités",
         secondaryHref: chiosActivitiesPaths.fr,
       },
@@ -1392,10 +1392,10 @@ const localizedActivityCopy: Partial<
           ],
         },
         {
-          title: "Une excursion depuis Kampos",
+          title: "Une excursion depuis Kambos",
           text: [
             "Depuis Voulamandis House, Agiasmata peut faire partie d'une excursion à travers les villages et paysages du nord de Chios.",
-            "Le soir, vous retrouvez l'atmosphère paisible de Kampos.",
+            "Le soir, vous retrouvez l'atmosphère paisible de Kambos.",
           ],
         },
       ],
@@ -1438,7 +1438,7 @@ const localizedActivityCopy: Partial<
           title: "Observer avec sécurité et respect",
           text: [
             "Les visiteurs doivent toujours suivre les consignes locales de sécurité et regarder depuis les zones recommandées.",
-            "Voulamandis House, à Kampos, offre une base paisible pour vivre Pâques à Chios.",
+            "Voulamandis House, à Kambos, offre une base paisible pour vivre Pâques à Chios.",
           ],
         },
       ],
@@ -1512,7 +1512,7 @@ const localizedActivityCopy: Partial<
       intro: {
         title: "Authentische Erlebnisse auf Chios",
         text: [
-          "Chios ist eine Insel voller Kultur, Natur und lebendiger Traditionen. Von Kampos und den Mastixdörfern bis zu Bergen, Wanderwegen und Küsten zeigt jeder Tag eine andere Seite der Insel.",
+          "Chios ist eine Insel voller Kultur, Natur und lebendiger Traditionen. Von Kambos und den Mastixdörfern bis zu Bergen, Wanderwegen und Küsten zeigt jeder Tag eine andere Seite der Insel.",
           "Entdecken Sie die Aktivitäten unten und wählen Sie, was zu Ihren Interessen passt: Sprache, Natur, lokale Bräuche, Wellness oder besondere saisonale Ereignisse.",
         ],
       },
@@ -1533,9 +1533,9 @@ const localizedActivityCopy: Partial<
       },
       sections: [
         {
-          title: "Eine farbenfrohe Tradition nahe Kampos",
+          title: "Eine farbenfrohe Tradition nahe Kambos",
           text: [
-            "Mostra findet im Dorf Thymiana nahe der historischen Region Kampos statt. Der Name erinnert an eine Schau oder Vorführung, und genau das bietet dieses Fest.",
+            "Mostra findet im Dorf Thymiana nahe der historischen Region Kambos statt. Der Name erinnert an eine Schau oder Vorführung, und genau das bietet dieses Fest.",
             "Während der Karnevalszeit füllen Musik, Tanz, Masken, Kostüme und festliche Stimmung die Straßen des Dorfes.",
           ],
         },
@@ -1549,8 +1549,8 @@ const localizedActivityCopy: Partial<
         {
           title: "Nahe am Fest übernachten",
           text: [
-            "Voulamandis House in Kampos ist eine ruhige und praktische Basis, um Mostra, Thymiana und die Umgebung zu entdecken.",
-            "Nach dem Fest kehren Sie in die entspannte Atmosphäre von Kampos zurück.",
+            "Voulamandis House in Kambos ist eine ruhige und praktische Basis, um Mostra, Thymiana und die Umgebung zu entdecken.",
+            "Nach dem Fest kehren Sie in die entspannte Atmosphäre von Kambos zurück.",
           ],
         },
       ],
@@ -1592,13 +1592,13 @@ const localizedActivityCopy: Partial<
         {
           title: "Chios während des Lernens entdecken",
           text: [
-            "Chios bietet ein reiches Umfeld zum Lernen, von Nea Moni und den Mastixdörfern bis zu Kampos, Osterbräuchen und lokalen Aromen.",
-            "Voulamandis House bietet eine ruhige Basis in Kampos für Studierende und Reisende.",
+            "Chios bietet ein reiches Umfeld zum Lernen, von Nea Moni und den Mastixdörfern bis zu Kambos, Osterbräuchen und lokalen Aromen.",
+            "Voulamandis House bietet eine ruhige Basis in Kambos für Studierende und Reisende.",
           ],
         },
       ],
       cta: {
-        title: "Kombinieren Sie Ihren Kurs mit einem Aufenthalt in Kampos",
+        title: "Kombinieren Sie Ihren Kurs mit einem Aufenthalt in Kambos",
         text: "Übernachten Sie im Voulamandis House und genießen Sie eine ruhige Basis während Ihres Griechischkurses auf Chios.",
         primaryLabel: "Alexandria Institute ansehen",
         primaryHref: "https://alexandria-institute.com",
@@ -1610,7 +1610,7 @@ const localizedActivityCopy: Partial<
       seo: {
         title: "Wandern auf Chios | Voulamandis House",
         description:
-          "Entdecken Sie Wanderwege auf Chios durch Mastixdörfer, Kampos, Berge, Wälder, Küsten und traditionelle Dörfer.",
+          "Entdecken Sie Wanderwege auf Chios durch Mastixdörfer, Kambos, Berge, Wälder, Küsten und traditionelle Dörfer.",
       },
       hero: {
         eyebrow: "Aktivitäten auf Chios",
@@ -1622,7 +1622,7 @@ const localizedActivityCopy: Partial<
         {
           title: "Warum auf Chios wandern?",
           text: [
-            "Wandern ist eine der besten Möglichkeiten, die Natur von Chios kennenzulernen. Die Insel bietet Zitrusgärten in Kampos, Mastixbäume im Süden, Berge, Wälder, Schluchten und Küstenwege.",
+            "Wandern ist eine der besten Möglichkeiten, die Natur von Chios kennenzulernen. Die Insel bietet Zitrusgärten in Kambos, Mastixbäume im Süden, Berge, Wälder, Schluchten und Küstenwege.",
             "Die Routen durch die Mastixdörfer zeigen mittelalterliche Siedlungen, traditionelle Architektur und die kulturelle Bedeutung von Mastiha.",
           ],
         },
@@ -1637,14 +1637,14 @@ const localizedActivityCopy: Partial<
           title: "Natur, Geschichte und lokales Leben",
           text: [
             "Eine Wanderreise auf Chios kann Natur, byzantinische Klöster, mittelalterliche Dörfer, Tavernen und saisonale Wildblumen verbinden.",
-            "Voulamandis House in Kampos ist eine komfortable Basis, um verschiedene Teile der Insel zu erkunden.",
+            "Voulamandis House in Kambos ist eine komfortable Basis, um verschiedene Teile der Insel zu erkunden.",
           ],
         },
       ],
       cta: {
         ...baseCta("de"),
         title: "Starten Sie Ihren Wanderurlaub im Voulamandis House",
-        text: "Übernachten Sie in Kampos und entdecken Sie die Wanderwege, Dörfer und Naturlandschaften von Chios.",
+        text: "Übernachten Sie in Kambos und entdecken Sie die Wanderwege, Dörfer und Naturlandschaften von Chios.",
         secondaryLabel: "Zurück zu den Aktivitäten",
         secondaryHref: chiosActivitiesPaths.de,
       },
@@ -1677,10 +1677,10 @@ const localizedActivityCopy: Partial<
           ],
         },
         {
-          title: "Ein Tagesausflug von Kampos",
+          title: "Ein Tagesausflug von Kambos",
           text: [
             "Vom Voulamandis House aus kann Agiasmata Teil eines Tagesausflugs durch die Dörfer und Landschaften Nordchios sein.",
-            "Am Abend kehren Sie in die ruhige Atmosphäre von Kampos zurück.",
+            "Am Abend kehren Sie in die ruhige Atmosphäre von Kambos zurück.",
           ],
         },
       ],
@@ -1723,7 +1723,7 @@ const localizedActivityCopy: Partial<
           title: "Sicher und respektvoll beobachten",
           text: [
             "Besucher sollten immer den lokalen Sicherheitshinweisen folgen und nur von empfohlenen Aussichtspunkten beobachten.",
-            "Voulamandis House in Kampos bietet eine ruhige Basis, um Ostern auf Chios zu erleben.",
+            "Voulamandis House in Kambos bietet eine ruhige Basis, um Ostern auf Chios zu erleben.",
           ],
         },
       ],
@@ -1797,7 +1797,7 @@ const localizedActivityCopy: Partial<
       intro: {
         title: "Scopri esperienze autentiche a Chios",
         text: [
-          "Chios è un'isola di cultura, natura e tradizioni vive. Da Kampos ai villaggi del mastice, dalle montagne ai sentieri costieri, ogni giorno può mostrare un volto diverso dell'isola.",
+          "Chios è un'isola di cultura, natura e tradizioni vive. Da Kambos ai villaggi del mastice, dalle montagne ai sentieri costieri, ogni giorno può mostrare un volto diverso dell'isola.",
           "Scopri le attività qui sotto e scegli quelle più adatte ai tuoi interessi: lingua, natura, usanze locali, benessere o eventi stagionali indimenticabili.",
         ],
       },
@@ -1818,9 +1818,9 @@ const localizedActivityCopy: Partial<
       },
       sections: [
         {
-          title: "Una tradizione colorata vicino a Kampos",
+          title: "Una tradizione colorata vicino a Kambos",
           text: [
-            "Mostra si svolge nel villaggio di Thymiana, vicino alla storica zona di Kampos. Il nome richiama l'idea di uno spettacolo, e la festa lo dimostra pienamente.",
+            "Mostra si svolge nel villaggio di Thymiana, vicino alla storica zona di Kambos. Il nome richiama l'idea di uno spettacolo, e la festa lo dimostra pienamente.",
             "Durante il periodo di carnevale, le strade si riempiono di musica, balli, maschere, costumi e atmosfera festosa.",
           ],
         },
@@ -1834,8 +1834,8 @@ const localizedActivityCopy: Partial<
         {
           title: "Soggiornare vicino alla festa",
           text: [
-            "Voulamandis House a Kampos è una base tranquilla e comoda per scoprire Mostra, Thymiana e la zona circostante.",
-            "Dopo la festa, si torna alla calma di Kampos e a un lato più rilassato dell'isola.",
+            "Voulamandis House a Kambos è una base tranquilla e comoda per scoprire Mostra, Thymiana e la zona circostante.",
+            "Dopo la festa, si torna alla calma di Kambos e a un lato più rilassato dell'isola.",
           ],
         },
       ],
@@ -1877,13 +1877,13 @@ const localizedActivityCopy: Partial<
         {
           title: "Scoprire Chios mentre studi",
           text: [
-            "Chios offre un contesto ricco per imparare, da Nea Moni ai villaggi del mastice, da Kampos alle tradizioni pasquali e ai sapori locali.",
-            "Voulamandis House offre una base tranquilla a Kampos per studenti e viaggiatori.",
+            "Chios offre un contesto ricco per imparare, da Nea Moni ai villaggi del mastice, da Kambos alle tradizioni pasquali e ai sapori locali.",
+            "Voulamandis House offre una base tranquilla a Kambos per studenti e viaggiatori.",
           ],
         },
       ],
       cta: {
-        title: "Abbina il corso a un soggiorno a Kampos",
+        title: "Abbina il corso a un soggiorno a Kambos",
         text: "Soggiorna al Voulamandis House e goditi una base tranquilla durante i corsi di greco a Chios.",
         primaryLabel: "Visita Alexandria Institute",
         primaryHref: "https://alexandria-institute.com",
@@ -1895,7 +1895,7 @@ const localizedActivityCopy: Partial<
       seo: {
         title: "Trekking a Chios | Voulamandis House",
         description:
-          "Esplora i percorsi trekking di Chios tra villaggi del mastice, Kampos, montagne, boschi, coste e villaggi tradizionali.",
+          "Esplora i percorsi trekking di Chios tra villaggi del mastice, Kambos, montagne, boschi, coste e villaggi tradizionali.",
       },
       hero: {
         eyebrow: "Attività a Chios",
@@ -1907,7 +1907,7 @@ const localizedActivityCopy: Partial<
         {
           title: "Perché fare trekking a Chios?",
           text: [
-            "Il trekking è uno dei modi migliori per scoprire la natura di Chios. L'isola offre agrumeti a Kampos, alberi di mastice, montagne, boschi, gole e sentieri costieri.",
+            "Il trekking è uno dei modi migliori per scoprire la natura di Chios. L'isola offre agrumeti a Kambos, alberi di mastice, montagne, boschi, gole e sentieri costieri.",
             "I percorsi nei villaggi del mastice rivelano insediamenti medievali, architettura tradizionale e l'importanza culturale della mastiha.",
           ],
         },
@@ -1922,14 +1922,14 @@ const localizedActivityCopy: Partial<
           title: "Natura, storia e vita locale",
           text: [
             "Un'esperienza trekking a Chios può combinare natura, monasteri bizantini, villaggi medievali, taverne e fiori selvatici stagionali.",
-            "Voulamandis House a Kampos è una base comoda per esplorare diverse zone dell'isola.",
+            "Voulamandis House a Kambos è una base comoda per esplorare diverse zone dell'isola.",
           ],
         },
       ],
       cta: {
         ...baseCta("it"),
         title: "Inizia la tua vacanza trekking da Voulamandis House",
-        text: "Soggiorna a Kampos e scopri sentieri, villaggi e paesaggi naturali di Chios.",
+        text: "Soggiorna a Kambos e scopri sentieri, villaggi e paesaggi naturali di Chios.",
         secondaryLabel: "Torna alle attività",
         secondaryHref: chiosActivitiesPaths.it,
       },
@@ -1962,10 +1962,10 @@ const localizedActivityCopy: Partial<
           ],
         },
         {
-          title: "Una gita da Kampos",
+          title: "Una gita da Kambos",
           text: [
             "Dal Voulamandis House, Agiasmata può diventare parte di una gita tra villaggi e paesaggi del nord dell'isola.",
-            "La sera si torna alla calma atmosfera di Kampos.",
+            "La sera si torna alla calma atmosfera di Kambos.",
           ],
         },
       ],
@@ -2008,7 +2008,7 @@ const localizedActivityCopy: Partial<
           title: "Osservare in sicurezza e con rispetto",
           text: [
             "I visitatori devono sempre seguire le indicazioni locali di sicurezza e osservare dagli spazi consigliati.",
-            "Voulamandis House a Kampos offre una base tranquilla per vivere la Pasqua a Chios.",
+            "Voulamandis House a Kambos offre una base tranquilla per vivere la Pasqua a Chios.",
           ],
         },
       ],
@@ -2082,7 +2082,7 @@ const localizedActivityCopy: Partial<
       intro: {
         title: "Descubre experiencias auténticas en Quíos",
         text: [
-          "Quíos es una isla de cultura, naturaleza y tradiciones vivas. Desde Kampos hasta los pueblos de mastiha, desde las montañas hasta los senderos costeros, cada día puede mostrar una parte diferente de la isla.",
+          "Quíos es una isla de cultura, naturaleza y tradiciones vivas. Desde Kambos hasta los pueblos de mastiha, desde las montañas hasta los senderos costeros, cada día puede mostrar una parte diferente de la isla.",
           "Mira las actividades de abajo y elige las que encajan con tus intereses: idioma, naturaleza, costumbres locales, bienestar o eventos estacionales inolvidables.",
         ],
       },
@@ -2103,9 +2103,9 @@ const localizedActivityCopy: Partial<
       },
       sections: [
         {
-          title: "Una tradición colorida cerca de Kampos",
+          title: "Una tradición colorida cerca de Kambos",
           text: [
-            "Mostra se celebra en el pueblo de Thymiana, cerca de la histórica zona de Kampos. Su nombre evoca la idea de espectáculo, y la celebración lo confirma.",
+            "Mostra se celebra en el pueblo de Thymiana, cerca de la histórica zona de Kambos. Su nombre evoca la idea de espectáculo, y la celebración lo confirma.",
             "Durante el carnaval, las calles se llenan de música, baile, máscaras, trajes y ambiente festivo.",
           ],
         },
@@ -2119,8 +2119,8 @@ const localizedActivityCopy: Partial<
         {
           title: "Alojarse cerca de la fiesta",
           text: [
-            "Voulamandis House en Kampos es una base tranquila y cómoda para descubrir Mostra, Thymiana y los alrededores.",
-            "Después de la fiesta, puedes volver a la calma de Kampos y disfrutar de un lado más relajado de la isla.",
+            "Voulamandis House en Kambos es una base tranquila y cómoda para descubrir Mostra, Thymiana y los alrededores.",
+            "Después de la fiesta, puedes volver a la calma de Kambos y disfrutar de un lado más relajado de la isla.",
           ],
         },
       ],
@@ -2162,13 +2162,13 @@ const localizedActivityCopy: Partial<
         {
           title: "Descubrir Quíos mientras estudias",
           text: [
-            "Quíos ofrece un entorno rico para aprender, desde Nea Moni y los pueblos de mastiha hasta Kampos, las costumbres de Pascua y los sabores locales.",
-            "Voulamandis House ofrece una base tranquila en Kampos para estudiantes y viajeros.",
+            "Quíos ofrece un entorno rico para aprender, desde Nea Moni y los pueblos de mastiha hasta Kambos, las costumbres de Pascua y los sabores locales.",
+            "Voulamandis House ofrece una base tranquila en Kambos para estudiantes y viajeros.",
           ],
         },
       ],
       cta: {
-        title: "Combina tu curso con una estancia en Kampos",
+        title: "Combina tu curso con una estancia en Kambos",
         text: "Alójate en Voulamandis House y disfruta de una base tranquila durante tus cursos de griego en Quíos.",
         primaryLabel: "Ver Alexandria Institute",
         primaryHref: "https://alexandria-institute.com",
@@ -2180,7 +2180,7 @@ const localizedActivityCopy: Partial<
       seo: {
         title: "Senderismo en Quíos | Voulamandis House",
         description:
-          "Explora rutas de senderismo en Quíos por pueblos de mastiha, Kampos, montañas, bosques, costas y pueblos tradicionales.",
+          "Explora rutas de senderismo en Quíos por pueblos de mastiha, Kambos, montañas, bosques, costas y pueblos tradicionales.",
       },
       hero: {
         eyebrow: "Actividades en Quíos",
@@ -2192,7 +2192,7 @@ const localizedActivityCopy: Partial<
         {
           title: "¿Por qué hacer senderismo en Quíos?",
           text: [
-            "El senderismo es una de las mejores formas de descubrir la naturaleza de Quíos. La isla ofrece huertos de cítricos en Kampos, árboles de mastiha, montañas, bosques, barrancos y senderos costeros.",
+            "El senderismo es una de las mejores formas de descubrir la naturaleza de Quíos. La isla ofrece huertos de cítricos en Kambos, árboles de mastiha, montañas, bosques, barrancos y senderos costeros.",
             "Las rutas por los pueblos de mastiha muestran asentamientos medievales, arquitectura tradicional y la importancia cultural de la mastiha.",
           ],
         },
@@ -2207,14 +2207,14 @@ const localizedActivityCopy: Partial<
           title: "Naturaleza, historia y vida local",
           text: [
             "Una experiencia de senderismo en Quíos puede combinar naturaleza, monasterios bizantinos, pueblos medievales, tabernas y flores silvestres de temporada.",
-            "Voulamandis House en Kampos es una base cómoda para explorar distintas zonas de la isla.",
+            "Voulamandis House en Kambos es una base cómoda para explorar distintas zonas de la isla.",
           ],
         },
       ],
       cta: {
         ...baseCta("es"),
         title: "Empieza tus rutas desde Voulamandis House",
-        text: "Alójate en Kampos y descubre senderos, pueblos y paisajes naturales de Quíos.",
+        text: "Alójate en Kambos y descubre senderos, pueblos y paisajes naturales de Quíos.",
         secondaryLabel: "Volver a actividades",
         secondaryHref: chiosActivitiesPaths.es,
       },
@@ -2247,10 +2247,10 @@ const localizedActivityCopy: Partial<
           ],
         },
         {
-          title: "Una excursión desde Kampos",
+          title: "Una excursión desde Kambos",
           text: [
             "Desde Voulamandis House, Agiasmata puede formar parte de una excursión por los pueblos y paisajes del norte de Quíos.",
-            "Por la noche, regresas a la tranquila atmósfera de Kampos.",
+            "Por la noche, regresas a la tranquila atmósfera de Kambos.",
           ],
         },
       ],
@@ -2293,7 +2293,7 @@ const localizedActivityCopy: Partial<
           title: "Observar con seguridad y respeto",
           text: [
             "Los visitantes deben seguir siempre las instrucciones locales de seguridad y mirar desde las zonas recomendadas.",
-            "Voulamandis House en Kampos ofrece una base tranquila para vivir la Pascua en Quíos.",
+            "Voulamandis House en Kambos ofrece una base tranquila para vivir la Pascua en Quíos.",
           ],
         },
       ],
@@ -2367,7 +2367,7 @@ const localizedActivityCopy: Partial<
       intro: {
         title: "Sakız Adası'nda otantik deneyimler",
         text: [
-          "Sakız Adası kültür, doğa ve yaşayan geleneklerle dolu bir adadır. Kampos'tan mastik köylerine, dağlardan kıyı yollarına kadar her gün adanın farklı bir yönünü gösterebilir.",
+          "Sakız Adası kültür, doğa ve yaşayan geleneklerle dolu bir adadır. Kambos'tan mastik köylerine, dağlardan kıyı yollarına kadar her gün adanın farklı bir yönünü gösterebilir.",
           "Aşağıdaki aktiviteleri inceleyin ve ilgi alanlarınıza uygun deneyimleri seçin: dil, doğa, yerel gelenekler, dinlenme veya unutulmaz mevsimsel etkinlikler.",
         ],
       },
@@ -2388,9 +2388,9 @@ const localizedActivityCopy: Partial<
       },
       sections: [
         {
-          title: "Kampos yakınında renkli bir gelenek",
+          title: "Kambos yakınında renkli bir gelenek",
           text: [
-            "Mostra, tarihi Kampos bölgesine yakın Thymiana köyünde düzenlenir. Adı bir gösteri fikrini çağrıştırır ve festival bunu tam anlamıyla yaşatır.",
+            "Mostra, tarihi Kambos bölgesine yakın Thymiana köyünde düzenlenir. Adı bir gösteri fikrini çağrıştırır ve festival bunu tam anlamıyla yaşatır.",
             "Karnaval döneminde sokaklar müzik, dans, maskeler, kostümler ve bayram havasıyla dolar.",
           ],
         },
@@ -2404,8 +2404,8 @@ const localizedActivityCopy: Partial<
         {
           title: "Kutlamaya yakın konaklama",
           text: [
-            "Kampos'taki Voulamandis House, Mostra'yı, Thymiana'yı ve çevreyi keşfetmek için sakin ve pratik bir konaklama noktasıdır.",
-            "Kutlamadan sonra Kampos'un huzurlu atmosferine dönebilirsiniz.",
+            "Kambos'taki Voulamandis House, Mostra'yı, Thymiana'yı ve çevreyi keşfetmek için sakin ve pratik bir konaklama noktasıdır.",
+            "Kutlamadan sonra Kambos'un huzurlu atmosferine dönebilirsiniz.",
           ],
         },
       ],
@@ -2447,13 +2447,13 @@ const localizedActivityCopy: Partial<
         {
           title: "Öğrenirken Sakız Adası'nı keşfedin",
           text: [
-            "Sakız Adası, Nea Moni'den mastik köylerine, Kampos'tan Paskalya geleneklerine ve yerel tatlara kadar zengin bir öğrenme ortamı sunar.",
-            "Voulamandis House, öğrenciler ve gezginler için Kampos'ta sakin bir konaklama noktasıdır.",
+            "Sakız Adası, Nea Moni'den mastik köylerine, Kambos'tan Paskalya geleneklerine ve yerel tatlara kadar zengin bir öğrenme ortamı sunar.",
+            "Voulamandis House, öğrenciler ve gezginler için Kambos'ta sakin bir konaklama noktasıdır.",
           ],
         },
       ],
       cta: {
-        title: "Kursunuzu Kampos'ta konaklama ile birleştirin",
+        title: "Kursunuzu Kambos'ta konaklama ile birleştirin",
         text: "Voulamandis House'ta konaklayın ve Sakız Adası'ndaki Yunanca kurslarınız sırasında sakin bir ortamın tadını çıkarın.",
         primaryLabel: "Alexandria Institute'u ziyaret edin",
         primaryHref: "https://alexandria-institute.com",
@@ -2465,7 +2465,7 @@ const localizedActivityCopy: Partial<
       seo: {
         title: "Sakız Adası Yürüyüş Rotaları | Voulamandis House",
         description:
-          "Sakız Adası'nda mastik köyleri, Kampos, dağlar, ormanlar, kıyılar ve geleneksel köyler arasında yürüyüş rotalarını keşfedin.",
+          "Sakız Adası'nda mastik köyleri, Kambos, dağlar, ormanlar, kıyılar ve geleneksel köyler arasında yürüyüş rotalarını keşfedin.",
       },
       hero: {
         eyebrow: "Sakız Adası aktiviteleri",
@@ -2477,7 +2477,7 @@ const localizedActivityCopy: Partial<
         {
           title: "Neden Sakız Adası'nda yürüyüş?",
           text: [
-            "Yürüyüş, Sakız Adası'nın doğasını tanımanın en iyi yollarından biridir. Ada Kampos'taki narenciye bahçeleri, güneydeki mastik ağaçları, dağlar, ormanlar, vadiler ve kıyı yolları sunar.",
+            "Yürüyüş, Sakız Adası'nın doğasını tanımanın en iyi yollarından biridir. Ada Kambos'taki narenciye bahçeleri, güneydeki mastik ağaçları, dağlar, ormanlar, vadiler ve kıyı yolları sunar.",
             "Mastik köylerindeki rotalar, Orta Çağ yerleşimlerini, geleneksel mimariyi ve mastiha kültürünün önemini gösterir.",
           ],
         },
@@ -2492,14 +2492,14 @@ const localizedActivityCopy: Partial<
           title: "Doğa, tarih ve yerel yaşam",
           text: [
             "Sakız Adası'nda yürüyüş, doğayı Bizans manastırları, Orta Çağ köyleri, tavernalar ve mevsimlik yabani çiçeklerle birleştirebilir.",
-            "Kampos'taki Voulamandis House, adanın farklı bölgelerini keşfetmek için rahat bir başlangıç noktasıdır.",
+            "Kambos'taki Voulamandis House, adanın farklı bölgelerini keşfetmek için rahat bir başlangıç noktasıdır.",
           ],
         },
       ],
       cta: {
         ...baseCta("tr"),
         title: "Yürüyüş tatilinize Voulamandis House'tan başlayın",
-        text: "Kampos'ta konaklayın ve Sakız Adası'nın yürüyüş rotalarını, köylerini ve doğal manzaralarını keşfedin.",
+        text: "Kambos'ta konaklayın ve Sakız Adası'nın yürüyüş rotalarını, köylerini ve doğal manzaralarını keşfedin.",
         secondaryLabel: "Aktivitelere dön",
         secondaryHref: chiosActivitiesPaths.tr,
       },
@@ -2532,10 +2532,10 @@ const localizedActivityCopy: Partial<
           ],
         },
         {
-          title: "Kampos'tan günübirlik gezi",
+          title: "Kambos'tan günübirlik gezi",
           text: [
             "Voulamandis House'tan Agiasmata, kuzey Sakız'ın köyleri ve manzaraları arasında bir günlük geziye dahil edilebilir.",
-            "Akşam Kampos'un huzurlu atmosferine dönebilirsiniz.",
+            "Akşam Kambos'un huzurlu atmosferine dönebilirsiniz.",
           ],
         },
       ],
@@ -2578,7 +2578,7 @@ const localizedActivityCopy: Partial<
           title: "Güvenli ve saygılı izleme",
           text: [
             "Ziyaretçiler her zaman yerel güvenlik talimatlarına uymalı ve önerilen izleme alanlarından takip etmelidir.",
-            "Kampos'taki Voulamandis House, Sakız Adası'nda Paskalya'yı yaşamak için huzurlu bir konaklama noktası sunar.",
+            "Kambos'taki Voulamandis House, Sakız Adası'nda Paskalya'yı yaşamak için huzurlu bir konaklama noktası sunar.",
           ],
         },
       ],

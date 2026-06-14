@@ -129,7 +129,7 @@ export const museumDetails: MuseumDetailData[] = [
       icon: "🗺️",
       title: "Your Strategic Base",
       text:
-        "From Voulamandis House in Kampos, the Mastic Museum fits naturally into a southern Chios day with villages, beaches and local food stops.",
+        "From Voulamandis House in Kambos, the Mastic Museum fits naturally into a southern Chios day with villages, beaches and local food stops.",
       linkLabel: "Stay with those who know best.",
       href: "/chios-rooms/",
     },
@@ -391,7 +391,7 @@ export const museumDetails: MuseumDetailData[] = [
           icon: "☕",
           title: "Town break",
           text:
-            "Combine your visit with coffee or lunch in Chios Town before heading back to Kampos.",
+            "Combine your visit with coffee or lunch in Chios Town before heading back to Kambos.",
         },
       ],
     },
@@ -399,7 +399,7 @@ export const museumDetails: MuseumDetailData[] = [
       icon: "🗺️",
       title: "Your Strategic Base",
       text:
-        "Voulamandis House gives you easy access to Chios Town culture while keeping your accommodation quiet and relaxed in Kampos.",
+        "Voulamandis House gives you easy access to Chios Town culture while keeping your accommodation quiet and relaxed in Kambos.",
       linkLabel: "Stay with those who know best.",
       href: "/chios-rooms/",
     },
@@ -481,7 +481,7 @@ export const museumDetails: MuseumDetailData[] = [
           icon: "🍽️",
           title: "Food after culture",
           text:
-            "Plan lunch or dinner in town after the museum before returning to Kampos.",
+            "Plan lunch or dinner in town after the museum before returning to Kambos.",
         },
       ],
     },
@@ -489,7 +489,7 @@ export const museumDetails: MuseumDetailData[] = [
       icon: "🗺️",
       title: "Your Strategic Base",
       text:
-        "Voulamandis House is close enough to Chios Town for easy museum visits and far enough to return to a calm Kampos setting.",
+        "Voulamandis House is close enough to Chios Town for easy museum visits and far enough to return to a calm Kambos setting.",
       linkLabel: "Stay with those who know best.",
       href: "/chios-rooms/",
     },
@@ -747,7 +747,7 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
     "baseTip": {
       "icon": "🗺️",
       "title": "Votre base stratégique",
-      "text": "Depuis Voulamandis House à Kampos, vous pouvez organiser facilement musées, villages, plages et gastronomie de Chios en belles journées équilibrées.",
+      "text": "Depuis Voulamandis House à Kambos, vous pouvez organiser facilement musées, villages, plages et gastronomie de Chios en belles journées équilibrées.",
       "linkLabel": "Séjournez avec ceux qui connaissent le mieux l’île.",
       "href": "/fr/chambres-a-chios/"
     },
@@ -829,7 +829,7 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
     "baseTip": {
       "icon": "🗺️",
       "title": "Ihre strategische Basis",
-      "text": "Von Voulamandis House in Kampos aus können Sie Museen, Dörfer, Strände und kulinarische Stopps auf Chios entspannt in Tagesrouten verbinden.",
+      "text": "Von Voulamandis House in Kambos aus können Sie Museen, Dörfer, Strände und kulinarische Stopps auf Chios entspannt in Tagesrouten verbinden.",
       "linkLabel": "Übernachten Sie bei Menschen, die die Insel kennen.",
       "href": "/de/chios-zimmer/"
     },
@@ -911,7 +911,7 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
     "baseTip": {
       "icon": "🗺️",
       "title": "La tua base strategica",
-      "text": "Da Voulamandis House a Kampos puoi organizzare facilmente musei, villaggi, spiagge e sapori di Chios in itinerari giornalieri equilibrati.",
+      "text": "Da Voulamandis House a Kambos puoi organizzare facilmente musei, villaggi, spiagge e sapori di Chios in itinerari giornalieri equilibrati.",
       "linkLabel": "Soggiorna con chi conosce meglio l’isola.",
       "href": "/it/camere-a-chios/"
     },
@@ -993,7 +993,7 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
     "baseTip": {
       "icon": "🗺️",
       "title": "Tu base estratégica",
-      "text": "Desde Voulamandis House en Kampos puedes organizar fácilmente museos, pueblos, playas y sabores de Chios en rutas diarias equilibradas.",
+      "text": "Desde Voulamandis House en Kambos puedes organizar fácilmente museos, pueblos, playas y sabores de Chios en rutas diarias equilibradas.",
       "linkLabel": "Alójate con quienes mejor conocen la isla.",
       "href": "/es/habitaciones-en-chios/"
     },
@@ -1075,7 +1075,7 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
     "baseTip": {
       "icon": "🗺️",
       "title": "Stratejik üssünüz",
-      "text": "Kampos’taki Voulamandis House’tan müzeleri, köyleri, plajları ve Sakız lezzetlerini dengeli günlük rotalar halinde kolayca planlayabilirsiniz.",
+      "text": "Kambos’taki Voulamandis House’tan müzeleri, köyleri, plajları ve Sakız lezzetlerini dengeli günlük rotalar halinde kolayca planlayabilirsiniz.",
       "linkLabel": "Adayı en iyi bilenlerle konaklayın.",
       "href": "/tr/sakiz-adasi-odalari/"
     },
@@ -1239,7 +1239,7 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
     "baseTip": {
       "icon": "🗺️",
       "title": "Votre base stratégique",
-      "text": "Depuis Voulamandis House à Kampos, vous pouvez organiser facilement musées, villages, plages et gastronomie de Chios en belles journées équilibrées.",
+      "text": "Depuis Voulamandis House à Kambos, vous pouvez organiser facilement musées, villages, plages et gastronomie de Chios en belles journées équilibrées.",
       "linkLabel": "Séjournez avec ceux qui connaissent le mieux l’île.",
       "href": "/fr/chambres-a-chios/"
     },
@@ -1321,7 +1321,7 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
     "baseTip": {
       "icon": "🗺️",
       "title": "Ihre strategische Basis",
-      "text": "Von Voulamandis House in Kampos aus können Sie Museen, Dörfer, Strände und kulinarische Stopps auf Chios entspannt in Tagesrouten verbinden.",
+      "text": "Von Voulamandis House in Kambos aus können Sie Museen, Dörfer, Strände und kulinarische Stopps auf Chios entspannt in Tagesrouten verbinden.",
       "linkLabel": "Übernachten Sie bei Menschen, die die Insel kennen.",
       "href": "/de/chios-zimmer/"
     },
@@ -1403,7 +1403,7 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
     "baseTip": {
       "icon": "🗺️",
       "title": "La tua base strategica",
-      "text": "Da Voulamandis House a Kampos puoi organizzare facilmente musei, villaggi, spiagge e sapori di Chios in itinerari giornalieri equilibrati.",
+      "text": "Da Voulamandis House a Kambos puoi organizzare facilmente musei, villaggi, spiagge e sapori di Chios in itinerari giornalieri equilibrati.",
       "linkLabel": "Soggiorna con chi conosce meglio l’isola.",
       "href": "/it/camere-a-chios/"
     },
@@ -1485,7 +1485,7 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
     "baseTip": {
       "icon": "🗺️",
       "title": "Tu base estratégica",
-      "text": "Desde Voulamandis House en Kampos puedes organizar fácilmente museos, pueblos, playas y sabores de Chios en rutas diarias equilibradas.",
+      "text": "Desde Voulamandis House en Kambos puedes organizar fácilmente museos, pueblos, playas y sabores de Chios en rutas diarias equilibradas.",
       "linkLabel": "Alójate con quienes mejor conocen la isla.",
       "href": "/es/habitaciones-en-chios/"
     },
@@ -1567,7 +1567,7 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
     "baseTip": {
       "icon": "🗺️",
       "title": "Stratejik üssünüz",
-      "text": "Kampos’taki Voulamandis House’tan müzeleri, köyleri, plajları ve Sakız lezzetlerini dengeli günlük rotalar halinde kolayca planlayabilirsiniz.",
+      "text": "Kambos’taki Voulamandis House’tan müzeleri, köyleri, plajları ve Sakız lezzetlerini dengeli günlük rotalar halinde kolayca planlayabilirsiniz.",
       "linkLabel": "Adayı en iyi bilenlerle konaklayın.",
       "href": "/tr/sakiz-adasi-odalari/"
     },
@@ -1731,7 +1731,7 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
     "baseTip": {
       "icon": "🗺️",
       "title": "Votre base stratégique",
-      "text": "Depuis Voulamandis House à Kampos, vous pouvez organiser facilement musées, villages, plages et gastronomie de Chios en belles journées équilibrées.",
+      "text": "Depuis Voulamandis House à Kambos, vous pouvez organiser facilement musées, villages, plages et gastronomie de Chios en belles journées équilibrées.",
       "linkLabel": "Séjournez avec ceux qui connaissent le mieux l’île.",
       "href": "/fr/chambres-a-chios/"
     },
@@ -1813,7 +1813,7 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
     "baseTip": {
       "icon": "🗺️",
       "title": "Ihre strategische Basis",
-      "text": "Von Voulamandis House in Kampos aus können Sie Museen, Dörfer, Strände und kulinarische Stopps auf Chios entspannt in Tagesrouten verbinden.",
+      "text": "Von Voulamandis House in Kambos aus können Sie Museen, Dörfer, Strände und kulinarische Stopps auf Chios entspannt in Tagesrouten verbinden.",
       "linkLabel": "Übernachten Sie bei Menschen, die die Insel kennen.",
       "href": "/de/chios-zimmer/"
     },
@@ -1895,7 +1895,7 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
     "baseTip": {
       "icon": "🗺️",
       "title": "La tua base strategica",
-      "text": "Da Voulamandis House a Kampos puoi organizzare facilmente musei, villaggi, spiagge e sapori di Chios in itinerari giornalieri equilibrati.",
+      "text": "Da Voulamandis House a Kambos puoi organizzare facilmente musei, villaggi, spiagge e sapori di Chios in itinerari giornalieri equilibrati.",
       "linkLabel": "Soggiorna con chi conosce meglio l’isola.",
       "href": "/it/camere-a-chios/"
     },
@@ -1977,7 +1977,7 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
     "baseTip": {
       "icon": "🗺️",
       "title": "Tu base estratégica",
-      "text": "Desde Voulamandis House en Kampos puedes organizar fácilmente museos, pueblos, playas y sabores de Chios en rutas diarias equilibradas.",
+      "text": "Desde Voulamandis House en Kambos puedes organizar fácilmente museos, pueblos, playas y sabores de Chios en rutas diarias equilibradas.",
       "linkLabel": "Alójate con quienes mejor conocen la isla.",
       "href": "/es/habitaciones-en-chios/"
     },
@@ -2059,7 +2059,7 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
     "baseTip": {
       "icon": "🗺️",
       "title": "Stratejik üssünüz",
-      "text": "Kampos’taki Voulamandis House’tan müzeleri, köyleri, plajları ve Sakız lezzetlerini dengeli günlük rotalar halinde kolayca planlayabilirsiniz.",
+      "text": "Kambos’taki Voulamandis House’tan müzeleri, köyleri, plajları ve Sakız lezzetlerini dengeli günlük rotalar halinde kolayca planlayabilirsiniz.",
       "linkLabel": "Adayı en iyi bilenlerle konaklayın.",
       "href": "/tr/sakiz-adasi-odalari/"
     },
@@ -2223,7 +2223,7 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
     "baseTip": {
       "icon": "🗺️",
       "title": "Votre base stratégique",
-      "text": "Depuis Voulamandis House à Kampos, vous pouvez organiser facilement musées, villages, plages et gastronomie de Chios en belles journées équilibrées.",
+      "text": "Depuis Voulamandis House à Kambos, vous pouvez organiser facilement musées, villages, plages et gastronomie de Chios en belles journées équilibrées.",
       "linkLabel": "Séjournez avec ceux qui connaissent le mieux l’île.",
       "href": "/fr/chambres-a-chios/"
     },
@@ -2305,7 +2305,7 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
     "baseTip": {
       "icon": "🗺️",
       "title": "Ihre strategische Basis",
-      "text": "Von Voulamandis House in Kampos aus können Sie Museen, Dörfer, Strände und kulinarische Stopps auf Chios entspannt in Tagesrouten verbinden.",
+      "text": "Von Voulamandis House in Kambos aus können Sie Museen, Dörfer, Strände und kulinarische Stopps auf Chios entspannt in Tagesrouten verbinden.",
       "linkLabel": "Übernachten Sie bei Menschen, die die Insel kennen.",
       "href": "/de/chios-zimmer/"
     },
@@ -2387,7 +2387,7 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
     "baseTip": {
       "icon": "🗺️",
       "title": "La tua base strategica",
-      "text": "Da Voulamandis House a Kampos puoi organizzare facilmente musei, villaggi, spiagge e sapori di Chios in itinerari giornalieri equilibrati.",
+      "text": "Da Voulamandis House a Kambos puoi organizzare facilmente musei, villaggi, spiagge e sapori di Chios in itinerari giornalieri equilibrati.",
       "linkLabel": "Soggiorna con chi conosce meglio l’isola.",
       "href": "/it/camere-a-chios/"
     },
@@ -2469,7 +2469,7 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
     "baseTip": {
       "icon": "🗺️",
       "title": "Tu base estratégica",
-      "text": "Desde Voulamandis House en Kampos puedes organizar fácilmente museos, pueblos, playas y sabores de Chios en rutas diarias equilibradas.",
+      "text": "Desde Voulamandis House en Kambos puedes organizar fácilmente museos, pueblos, playas y sabores de Chios en rutas diarias equilibradas.",
       "linkLabel": "Alójate con quienes mejor conocen la isla.",
       "href": "/es/habitaciones-en-chios/"
     },
@@ -2551,7 +2551,7 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
     "baseTip": {
       "icon": "🗺️",
       "title": "Stratejik üssünüz",
-      "text": "Kampos’taki Voulamandis House’tan müzeleri, köyleri, plajları ve Sakız lezzetlerini dengeli günlük rotalar halinde kolayca planlayabilirsiniz.",
+      "text": "Kambos’taki Voulamandis House’tan müzeleri, köyleri, plajları ve Sakız lezzetlerini dengeli günlük rotalar halinde kolayca planlayabilirsiniz.",
       "linkLabel": "Adayı en iyi bilenlerle konaklayın.",
       "href": "/tr/sakiz-adasi-odalari/"
     },
@@ -2715,7 +2715,7 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
     "baseTip": {
       "icon": "🗺️",
       "title": "Votre base stratégique",
-      "text": "Depuis Voulamandis House à Kampos, vous pouvez organiser facilement musées, villages, plages et gastronomie de Chios en belles journées équilibrées.",
+      "text": "Depuis Voulamandis House à Kambos, vous pouvez organiser facilement musées, villages, plages et gastronomie de Chios en belles journées équilibrées.",
       "linkLabel": "Séjournez avec ceux qui connaissent le mieux l’île.",
       "href": "/fr/chambres-a-chios/"
     },
@@ -2797,7 +2797,7 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
     "baseTip": {
       "icon": "🗺️",
       "title": "Ihre strategische Basis",
-      "text": "Von Voulamandis House in Kampos aus können Sie Museen, Dörfer, Strände und kulinarische Stopps auf Chios entspannt in Tagesrouten verbinden.",
+      "text": "Von Voulamandis House in Kambos aus können Sie Museen, Dörfer, Strände und kulinarische Stopps auf Chios entspannt in Tagesrouten verbinden.",
       "linkLabel": "Übernachten Sie bei Menschen, die die Insel kennen.",
       "href": "/de/chios-zimmer/"
     },
@@ -2879,7 +2879,7 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
     "baseTip": {
       "icon": "🗺️",
       "title": "La tua base strategica",
-      "text": "Da Voulamandis House a Kampos puoi organizzare facilmente musei, villaggi, spiagge e sapori di Chios in itinerari giornalieri equilibrati.",
+      "text": "Da Voulamandis House a Kambos puoi organizzare facilmente musei, villaggi, spiagge e sapori di Chios in itinerari giornalieri equilibrati.",
       "linkLabel": "Soggiorna con chi conosce meglio l’isola.",
       "href": "/it/camere-a-chios/"
     },
@@ -2961,7 +2961,7 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
     "baseTip": {
       "icon": "🗺️",
       "title": "Tu base estratégica",
-      "text": "Desde Voulamandis House en Kampos puedes organizar fácilmente museos, pueblos, playas y sabores de Chios en rutas diarias equilibradas.",
+      "text": "Desde Voulamandis House en Kambos puedes organizar fácilmente museos, pueblos, playas y sabores de Chios en rutas diarias equilibradas.",
       "linkLabel": "Alójate con quienes mejor conocen la isla.",
       "href": "/es/habitaciones-en-chios/"
     },
@@ -3043,7 +3043,7 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
     "baseTip": {
       "icon": "🗺️",
       "title": "Stratejik üssünüz",
-      "text": "Kampos’taki Voulamandis House’tan müzeleri, köyleri, plajları ve Sakız lezzetlerini dengeli günlük rotalar halinde kolayca planlayabilirsiniz.",
+      "text": "Kambos’taki Voulamandis House’tan müzeleri, köyleri, plajları ve Sakız lezzetlerini dengeli günlük rotalar halinde kolayca planlayabilirsiniz.",
       "linkLabel": "Adayı en iyi bilenlerle konaklayın.",
       "href": "/tr/sakiz-adasi-odalari/"
     },
@@ -3207,7 +3207,7 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
     "baseTip": {
       "icon": "🗺️",
       "title": "Votre base stratégique",
-      "text": "Depuis Voulamandis House à Kampos, vous pouvez organiser facilement musées, villages, plages et gastronomie de Chios en belles journées équilibrées.",
+      "text": "Depuis Voulamandis House à Kambos, vous pouvez organiser facilement musées, villages, plages et gastronomie de Chios en belles journées équilibrées.",
       "linkLabel": "Séjournez avec ceux qui connaissent le mieux l’île.",
       "href": "/fr/chambres-a-chios/"
     },
@@ -3289,7 +3289,7 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
     "baseTip": {
       "icon": "🗺️",
       "title": "Ihre strategische Basis",
-      "text": "Von Voulamandis House in Kampos aus können Sie Museen, Dörfer, Strände und kulinarische Stopps auf Chios entspannt in Tagesrouten verbinden.",
+      "text": "Von Voulamandis House in Kambos aus können Sie Museen, Dörfer, Strände und kulinarische Stopps auf Chios entspannt in Tagesrouten verbinden.",
       "linkLabel": "Übernachten Sie bei Menschen, die die Insel kennen.",
       "href": "/de/chios-zimmer/"
     },
@@ -3371,7 +3371,7 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
     "baseTip": {
       "icon": "🗺️",
       "title": "La tua base strategica",
-      "text": "Da Voulamandis House a Kampos puoi organizzare facilmente musei, villaggi, spiagge e sapori di Chios in itinerari giornalieri equilibrati.",
+      "text": "Da Voulamandis House a Kambos puoi organizzare facilmente musei, villaggi, spiagge e sapori di Chios in itinerari giornalieri equilibrati.",
       "linkLabel": "Soggiorna con chi conosce meglio l’isola.",
       "href": "/it/camere-a-chios/"
     },
@@ -3453,7 +3453,7 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
     "baseTip": {
       "icon": "🗺️",
       "title": "Tu base estratégica",
-      "text": "Desde Voulamandis House en Kampos puedes organizar fácilmente museos, pueblos, playas y sabores de Chios en rutas diarias equilibradas.",
+      "text": "Desde Voulamandis House en Kambos puedes organizar fácilmente museos, pueblos, playas y sabores de Chios en rutas diarias equilibradas.",
       "linkLabel": "Alójate con quienes mejor conocen la isla.",
       "href": "/es/habitaciones-en-chios/"
     },
@@ -3535,7 +3535,7 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
     "baseTip": {
       "icon": "🗺️",
       "title": "Stratejik üssünüz",
-      "text": "Kampos’taki Voulamandis House’tan müzeleri, köyleri, plajları ve Sakız lezzetlerini dengeli günlük rotalar halinde kolayca planlayabilirsiniz.",
+      "text": "Kambos’taki Voulamandis House’tan müzeleri, köyleri, plajları ve Sakız lezzetlerini dengeli günlük rotalar halinde kolayca planlayabilirsiniz.",
       "linkLabel": "Adayı en iyi bilenlerle konaklayın.",
       "href": "/tr/sakiz-adasi-odalari/"
     },

@@ -128,7 +128,7 @@ export const villageDetails: VillageDetailData[] = [
       icon: "🗺️",
       title: "Your Strategic Base",
       text:
-        "Starting from Voulamandis House in Kampos, Pyrgi is an easy and rewarding stop on a southern Chios day that can include villages, beaches and mastic culture.",
+        "Starting from Voulamandis House in Kambos, Pyrgi is an easy and rewarding stop on a southern Chios day that can include villages, beaches and mastic culture.",
       linkLabel: "Stay with those who know best.",
       href: "/chios-rooms/",
     },
@@ -309,7 +309,7 @@ export const villageDetails: VillageDetailData[] = [
       icon: "🗺️",
       title: "Your Strategic Base",
       text:
-        "Voulamandis House in Kampos gives you an easy starting point for exploring the quieter villages and western beach routes of Chios.",
+        "Voulamandis House in Kambos gives you an easy starting point for exploring the quieter villages and western beach routes of Chios.",
       linkLabel: "Stay with those who know best.",
       href: "/chios-rooms/",
     },
@@ -1295,7 +1295,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "Votre base stratégique",
-      text: "Depuis Voulamandis House à Kampos, vous pouvez organiser facilement vos itinéraires dans les villages de Chios, entre culture, plages et cuisine locale.",
+      text: "Depuis Voulamandis House à Kambos, vous pouvez organiser facilement vos itinéraires dans les villages de Chios, entre culture, plages et cuisine locale.",
       linkLabel: "Séjournez avec ceux qui connaissent le mieux l’île.",
       href: "/fr/chambres-a-chios/",
     },
@@ -1372,7 +1372,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "Votre base stratégique",
-      text: "Depuis Voulamandis House à Kampos, vous pouvez organiser facilement vos itinéraires dans les villages de Chios, entre culture, plages et cuisine locale.",
+      text: "Depuis Voulamandis House à Kambos, vous pouvez organiser facilement vos itinéraires dans les villages de Chios, entre culture, plages et cuisine locale.",
       linkLabel: "Séjournez avec ceux qui connaissent le mieux l’île.",
       href: "/fr/chambres-a-chios/",
     },
@@ -1449,7 +1449,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "Votre base stratégique",
-      text: "Depuis Voulamandis House à Kampos, vous pouvez organiser facilement vos itinéraires dans les villages de Chios, entre culture, plages et cuisine locale.",
+      text: "Depuis Voulamandis House à Kambos, vous pouvez organiser facilement vos itinéraires dans les villages de Chios, entre culture, plages et cuisine locale.",
       linkLabel: "Séjournez avec ceux qui connaissent le mieux l’île.",
       href: "/fr/chambres-a-chios/",
     },
@@ -1526,7 +1526,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "Votre base stratégique",
-      text: "Depuis Voulamandis House à Kampos, vous pouvez organiser facilement vos itinéraires dans les villages de Chios, entre culture, plages et cuisine locale.",
+      text: "Depuis Voulamandis House à Kambos, vous pouvez organiser facilement vos itinéraires dans les villages de Chios, entre culture, plages et cuisine locale.",
       linkLabel: "Séjournez avec ceux qui connaissent le mieux l’île.",
       href: "/fr/chambres-a-chios/",
     },
@@ -1603,7 +1603,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "Votre base stratégique",
-      text: "Depuis Voulamandis House à Kampos, vous pouvez organiser facilement vos itinéraires dans les villages de Chios, entre culture, plages et cuisine locale.",
+      text: "Depuis Voulamandis House à Kambos, vous pouvez organiser facilement vos itinéraires dans les villages de Chios, entre culture, plages et cuisine locale.",
       linkLabel: "Séjournez avec ceux qui connaissent le mieux l’île.",
       href: "/fr/chambres-a-chios/",
     },
@@ -1680,7 +1680,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "Votre base stratégique",
-      text: "Depuis Voulamandis House à Kampos, vous pouvez organiser facilement vos itinéraires dans les villages de Chios, entre culture, plages et cuisine locale.",
+      text: "Depuis Voulamandis House à Kambos, vous pouvez organiser facilement vos itinéraires dans les villages de Chios, entre culture, plages et cuisine locale.",
       linkLabel: "Séjournez avec ceux qui connaissent le mieux l’île.",
       href: "/fr/chambres-a-chios/",
     },
@@ -1757,7 +1757,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "Votre base stratégique",
-      text: "Depuis Voulamandis House à Kampos, vous pouvez organiser facilement vos itinéraires dans les villages de Chios, entre culture, plages et cuisine locale.",
+      text: "Depuis Voulamandis House à Kambos, vous pouvez organiser facilement vos itinéraires dans les villages de Chios, entre culture, plages et cuisine locale.",
       linkLabel: "Séjournez avec ceux qui connaissent le mieux l’île.",
       href: "/fr/chambres-a-chios/",
     },
@@ -1835,7 +1835,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "Ihre strategische Basis",
-      text: "Von Voulamandis House in Kampos aus können Sie Ihre Routen durch die Dörfer von Chios gut planen und Kultur, Strände und lokales Essen verbinden.",
+      text: "Von Voulamandis House in Kambos aus können Sie Ihre Routen durch die Dörfer von Chios gut planen und Kultur, Strände und lokales Essen verbinden.",
       linkLabel: "Übernachten Sie bei Menschen, die die Insel kennen.",
       href: "/de/chios-zimmer/",
     },
@@ -1912,7 +1912,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "Ihre strategische Basis",
-      text: "Von Voulamandis House in Kampos aus können Sie Ihre Routen durch die Dörfer von Chios gut planen und Kultur, Strände und lokales Essen verbinden.",
+      text: "Von Voulamandis House in Kambos aus können Sie Ihre Routen durch die Dörfer von Chios gut planen und Kultur, Strände und lokales Essen verbinden.",
       linkLabel: "Übernachten Sie bei Menschen, die die Insel kennen.",
       href: "/de/chios-zimmer/",
     },
@@ -1989,7 +1989,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "Ihre strategische Basis",
-      text: "Von Voulamandis House in Kampos aus können Sie Ihre Routen durch die Dörfer von Chios gut planen und Kultur, Strände und lokales Essen verbinden.",
+      text: "Von Voulamandis House in Kambos aus können Sie Ihre Routen durch die Dörfer von Chios gut planen und Kultur, Strände und lokales Essen verbinden.",
       linkLabel: "Übernachten Sie bei Menschen, die die Insel kennen.",
       href: "/de/chios-zimmer/",
     },
@@ -2066,7 +2066,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "Ihre strategische Basis",
-      text: "Von Voulamandis House in Kampos aus können Sie Ihre Routen durch die Dörfer von Chios gut planen und Kultur, Strände und lokales Essen verbinden.",
+      text: "Von Voulamandis House in Kambos aus können Sie Ihre Routen durch die Dörfer von Chios gut planen und Kultur, Strände und lokales Essen verbinden.",
       linkLabel: "Übernachten Sie bei Menschen, die die Insel kennen.",
       href: "/de/chios-zimmer/",
     },
@@ -2143,7 +2143,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "Ihre strategische Basis",
-      text: "Von Voulamandis House in Kampos aus können Sie Ihre Routen durch die Dörfer von Chios gut planen und Kultur, Strände und lokales Essen verbinden.",
+      text: "Von Voulamandis House in Kambos aus können Sie Ihre Routen durch die Dörfer von Chios gut planen und Kultur, Strände und lokales Essen verbinden.",
       linkLabel: "Übernachten Sie bei Menschen, die die Insel kennen.",
       href: "/de/chios-zimmer/",
     },
@@ -2220,7 +2220,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "Ihre strategische Basis",
-      text: "Von Voulamandis House in Kampos aus können Sie Ihre Routen durch die Dörfer von Chios gut planen und Kultur, Strände und lokales Essen verbinden.",
+      text: "Von Voulamandis House in Kambos aus können Sie Ihre Routen durch die Dörfer von Chios gut planen und Kultur, Strände und lokales Essen verbinden.",
       linkLabel: "Übernachten Sie bei Menschen, die die Insel kennen.",
       href: "/de/chios-zimmer/",
     },
@@ -2297,7 +2297,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "Ihre strategische Basis",
-      text: "Von Voulamandis House in Kampos aus können Sie Ihre Routen durch die Dörfer von Chios gut planen und Kultur, Strände und lokales Essen verbinden.",
+      text: "Von Voulamandis House in Kambos aus können Sie Ihre Routen durch die Dörfer von Chios gut planen und Kultur, Strände und lokales Essen verbinden.",
       linkLabel: "Übernachten Sie bei Menschen, die die Insel kennen.",
       href: "/de/chios-zimmer/",
     },
@@ -2375,7 +2375,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "La tua base strategica",
-      text: "Da Voulamandis House a Kampos puoi organizzare facilmente itinerari nei villaggi di Chios, combinando cultura, spiagge e cucina locale.",
+      text: "Da Voulamandis House a Kambos puoi organizzare facilmente itinerari nei villaggi di Chios, combinando cultura, spiagge e cucina locale.",
       linkLabel: "Soggiorna con chi conosce meglio l’isola.",
       href: "/it/camere-a-chios/",
     },
@@ -2452,7 +2452,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "La tua base strategica",
-      text: "Da Voulamandis House a Kampos puoi organizzare facilmente itinerari nei villaggi di Chios, combinando cultura, spiagge e cucina locale.",
+      text: "Da Voulamandis House a Kambos puoi organizzare facilmente itinerari nei villaggi di Chios, combinando cultura, spiagge e cucina locale.",
       linkLabel: "Soggiorna con chi conosce meglio l’isola.",
       href: "/it/camere-a-chios/",
     },
@@ -2529,7 +2529,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "La tua base strategica",
-      text: "Da Voulamandis House a Kampos puoi organizzare facilmente itinerari nei villaggi di Chios, combinando cultura, spiagge e cucina locale.",
+      text: "Da Voulamandis House a Kambos puoi organizzare facilmente itinerari nei villaggi di Chios, combinando cultura, spiagge e cucina locale.",
       linkLabel: "Soggiorna con chi conosce meglio l’isola.",
       href: "/it/camere-a-chios/",
     },
@@ -2606,7 +2606,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "La tua base strategica",
-      text: "Da Voulamandis House a Kampos puoi organizzare facilmente itinerari nei villaggi di Chios, combinando cultura, spiagge e cucina locale.",
+      text: "Da Voulamandis House a Kambos puoi organizzare facilmente itinerari nei villaggi di Chios, combinando cultura, spiagge e cucina locale.",
       linkLabel: "Soggiorna con chi conosce meglio l’isola.",
       href: "/it/camere-a-chios/",
     },
@@ -2683,7 +2683,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "La tua base strategica",
-      text: "Da Voulamandis House a Kampos puoi organizzare facilmente itinerari nei villaggi di Chios, combinando cultura, spiagge e cucina locale.",
+      text: "Da Voulamandis House a Kambos puoi organizzare facilmente itinerari nei villaggi di Chios, combinando cultura, spiagge e cucina locale.",
       linkLabel: "Soggiorna con chi conosce meglio l’isola.",
       href: "/it/camere-a-chios/",
     },
@@ -2760,7 +2760,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "La tua base strategica",
-      text: "Da Voulamandis House a Kampos puoi organizzare facilmente itinerari nei villaggi di Chios, combinando cultura, spiagge e cucina locale.",
+      text: "Da Voulamandis House a Kambos puoi organizzare facilmente itinerari nei villaggi di Chios, combinando cultura, spiagge e cucina locale.",
       linkLabel: "Soggiorna con chi conosce meglio l’isola.",
       href: "/it/camere-a-chios/",
     },
@@ -2837,7 +2837,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "La tua base strategica",
-      text: "Da Voulamandis House a Kampos puoi organizzare facilmente itinerari nei villaggi di Chios, combinando cultura, spiagge e cucina locale.",
+      text: "Da Voulamandis House a Kambos puoi organizzare facilmente itinerari nei villaggi di Chios, combinando cultura, spiagge e cucina locale.",
       linkLabel: "Soggiorna con chi conosce meglio l’isola.",
       href: "/it/camere-a-chios/",
     },
@@ -2915,7 +2915,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "Tu base estratégica",
-      text: "Desde Voulamandis House en Kampos puedes organizar fácilmente rutas por los pueblos de Chios, combinando cultura, playas y comida local.",
+      text: "Desde Voulamandis House en Kambos puedes organizar fácilmente rutas por los pueblos de Chios, combinando cultura, playas y comida local.",
       linkLabel: "Alójate con quienes mejor conocen la isla.",
       href: "/es/habitaciones-en-chios/",
     },
@@ -2992,7 +2992,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "Tu base estratégica",
-      text: "Desde Voulamandis House en Kampos puedes organizar fácilmente rutas por los pueblos de Chios, combinando cultura, playas y comida local.",
+      text: "Desde Voulamandis House en Kambos puedes organizar fácilmente rutas por los pueblos de Chios, combinando cultura, playas y comida local.",
       linkLabel: "Alójate con quienes mejor conocen la isla.",
       href: "/es/habitaciones-en-chios/",
     },
@@ -3069,7 +3069,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "Tu base estratégica",
-      text: "Desde Voulamandis House en Kampos puedes organizar fácilmente rutas por los pueblos de Chios, combinando cultura, playas y comida local.",
+      text: "Desde Voulamandis House en Kambos puedes organizar fácilmente rutas por los pueblos de Chios, combinando cultura, playas y comida local.",
       linkLabel: "Alójate con quienes mejor conocen la isla.",
       href: "/es/habitaciones-en-chios/",
     },
@@ -3146,7 +3146,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "Tu base estratégica",
-      text: "Desde Voulamandis House en Kampos puedes organizar fácilmente rutas por los pueblos de Chios, combinando cultura, playas y comida local.",
+      text: "Desde Voulamandis House en Kambos puedes organizar fácilmente rutas por los pueblos de Chios, combinando cultura, playas y comida local.",
       linkLabel: "Alójate con quienes mejor conocen la isla.",
       href: "/es/habitaciones-en-chios/",
     },
@@ -3223,7 +3223,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "Tu base estratégica",
-      text: "Desde Voulamandis House en Kampos puedes organizar fácilmente rutas por los pueblos de Chios, combinando cultura, playas y comida local.",
+      text: "Desde Voulamandis House en Kambos puedes organizar fácilmente rutas por los pueblos de Chios, combinando cultura, playas y comida local.",
       linkLabel: "Alójate con quienes mejor conocen la isla.",
       href: "/es/habitaciones-en-chios/",
     },
@@ -3300,7 +3300,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "Tu base estratégica",
-      text: "Desde Voulamandis House en Kampos puedes organizar fácilmente rutas por los pueblos de Chios, combinando cultura, playas y comida local.",
+      text: "Desde Voulamandis House en Kambos puedes organizar fácilmente rutas por los pueblos de Chios, combinando cultura, playas y comida local.",
       linkLabel: "Alójate con quienes mejor conocen la isla.",
       href: "/es/habitaciones-en-chios/",
     },
@@ -3377,7 +3377,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "Tu base estratégica",
-      text: "Desde Voulamandis House en Kampos puedes organizar fácilmente rutas por los pueblos de Chios, combinando cultura, playas y comida local.",
+      text: "Desde Voulamandis House en Kambos puedes organizar fácilmente rutas por los pueblos de Chios, combinando cultura, playas y comida local.",
       linkLabel: "Alójate con quienes mejor conocen la isla.",
       href: "/es/habitaciones-en-chios/",
     },
@@ -3455,7 +3455,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "Stratejik üssünüz",
-      text: "Kampos’taki Voulamandis House’tan Sakız köyleri rotalarını kolayca planlayabilir, kültürü, plajları ve yerel yemekleri birleştirebilirsiniz.",
+      text: "Kambos’taki Voulamandis House’tan Sakız köyleri rotalarını kolayca planlayabilir, kültürü, plajları ve yerel yemekleri birleştirebilirsiniz.",
       linkLabel: "Adayı en iyi bilenlerle konaklayın.",
       href: "/tr/sakiz-adasi-odalari/",
     },
@@ -3532,7 +3532,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "Stratejik üssünüz",
-      text: "Kampos’taki Voulamandis House’tan Sakız köyleri rotalarını kolayca planlayabilir, kültürü, plajları ve yerel yemekleri birleştirebilirsiniz.",
+      text: "Kambos’taki Voulamandis House’tan Sakız köyleri rotalarını kolayca planlayabilir, kültürü, plajları ve yerel yemekleri birleştirebilirsiniz.",
       linkLabel: "Adayı en iyi bilenlerle konaklayın.",
       href: "/tr/sakiz-adasi-odalari/",
     },
@@ -3609,7 +3609,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "Stratejik üssünüz",
-      text: "Kampos’taki Voulamandis House’tan Sakız köyleri rotalarını kolayca planlayabilir, kültürü, plajları ve yerel yemekleri birleştirebilirsiniz.",
+      text: "Kambos’taki Voulamandis House’tan Sakız köyleri rotalarını kolayca planlayabilir, kültürü, plajları ve yerel yemekleri birleştirebilirsiniz.",
       linkLabel: "Adayı en iyi bilenlerle konaklayın.",
       href: "/tr/sakiz-adasi-odalari/",
     },
@@ -3686,7 +3686,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "Stratejik üssünüz",
-      text: "Kampos’taki Voulamandis House’tan Sakız köyleri rotalarını kolayca planlayabilir, kültürü, plajları ve yerel yemekleri birleştirebilirsiniz.",
+      text: "Kambos’taki Voulamandis House’tan Sakız köyleri rotalarını kolayca planlayabilir, kültürü, plajları ve yerel yemekleri birleştirebilirsiniz.",
       linkLabel: "Adayı en iyi bilenlerle konaklayın.",
       href: "/tr/sakiz-adasi-odalari/",
     },
@@ -3763,7 +3763,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "Stratejik üssünüz",
-      text: "Kampos’taki Voulamandis House’tan Sakız köyleri rotalarını kolayca planlayabilir, kültürü, plajları ve yerel yemekleri birleştirebilirsiniz.",
+      text: "Kambos’taki Voulamandis House’tan Sakız köyleri rotalarını kolayca planlayabilir, kültürü, plajları ve yerel yemekleri birleştirebilirsiniz.",
       linkLabel: "Adayı en iyi bilenlerle konaklayın.",
       href: "/tr/sakiz-adasi-odalari/",
     },
@@ -3840,7 +3840,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "Stratejik üssünüz",
-      text: "Kampos’taki Voulamandis House’tan Sakız köyleri rotalarını kolayca planlayabilir, kültürü, plajları ve yerel yemekleri birleştirebilirsiniz.",
+      text: "Kambos’taki Voulamandis House’tan Sakız köyleri rotalarını kolayca planlayabilir, kültürü, plajları ve yerel yemekleri birleştirebilirsiniz.",
       linkLabel: "Adayı en iyi bilenlerle konaklayın.",
       href: "/tr/sakiz-adasi-odalari/",
     },
@@ -3917,7 +3917,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     baseTip: {
       icon: "🗺️",
       title: "Stratejik üssünüz",
-      text: "Kampos’taki Voulamandis House’tan Sakız köyleri rotalarını kolayca planlayabilir, kültürü, plajları ve yerel yemekleri birleştirebilirsiniz.",
+      text: "Kambos’taki Voulamandis House’tan Sakız köyleri rotalarını kolayca planlayabilir, kültürü, plajları ve yerel yemekleri birleştirebilirsiniz.",
       linkLabel: "Adayı en iyi bilenlerle konaklayın.",
       href: "/tr/sakiz-adasi-odalari/",
     },

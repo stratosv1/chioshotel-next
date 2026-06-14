@@ -254,12 +254,12 @@ export const homePageEn: HomePageData = {
   seo: {
     title: "Chios Hotels & Rooms",
     description:
-      "Peaceful rooms and apartments in Kampos, Chios. Stay at Voulamandis House near Chios airport, town and beaches, with authentic hospitality and direct booking benefits.",
+      "Peaceful rooms and apartments in Kambos, Chios. Stay at Voulamandis House near Chios airport, town and beaches, with authentic hospitality and direct booking benefits.",
     canonicalPath: "/",
     ogImage:
       "/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp",
     ogImageAlt:
-      "Voulamandis House in Kampos, Chios - authentic accommodation in a citrus estate",
+      "Voulamandis House in Kambos, Chios - authentic accommodation in a citrus estate",
   },
 
   hero: {
@@ -268,10 +268,10 @@ export const homePageEn: HomePageData = {
     kicker: "KAMPOS CHIOS • VOULAMANDIS HOUSE",
     title: "Chios Hotels and Apartments in Kambos",
     descriptionHtml:
-      'Looking for <strong>hotels in Chios</strong> or <strong>rooms in Chios</strong>? <strong>Voulamandis House</strong> is an authentic accommodation choice in Kampos, with comfortable rooms, peaceful surroundings and excellent guest reviews.',
+      'Looking for <strong>hotels in Chios</strong> or <strong>rooms in Chios</strong>? <strong>Voulamandis House</strong> is an authentic accommodation choice in Kambos, with comfortable rooms, peaceful surroundings and excellent guest reviews.',
     image:
       "/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp",
-    imageAlt: "Chios Hotels and Apartments in Kampos - Voulamandis House",
+    imageAlt: "Chios Hotels and Apartments in Kambos - Voulamandis House",
     primaryCta: {
       label: "Find your room",
       href: "/find-your-room/",
@@ -301,14 +301,14 @@ export const homePageEn: HomePageData = {
 
   intro: {
     left: {
-      kicker: "Authentic hospitality in Kampos, Chios",
+      kicker: "Authentic hospitality in Kambos, Chios",
       icon: "🏡",
       title: "Stay in Chios at Voulamandis House",
       bodyHtml:
-        'Looking for <strong>rooms in Chios</strong> or <strong>Chios accommodation</strong> for a peaceful and well-kept stay? Voulamandis House welcomes you to the historic Kampos area of Chios, offering an authentic hospitality experience in a setting of natural beauty. If you are searching for <strong>hotels in Chios</strong> but prefer something more personal, our property is a warm alternative.',
+        'Looking for <strong>rooms in Chios</strong> or <strong>Chios accommodation</strong> for a peaceful and well-kept stay? Voulamandis House welcomes you to the historic Kambos area of Chios, offering an authentic hospitality experience in a setting of natural beauty. If you are searching for <strong>hotels in Chios</strong> but prefer something more personal, our property is a warm alternative.',
       pills: [
         "🌴 Holidays in Chios",
-        "🍊 Kampos Chios",
+        "🍊 Kambos Chios",
         "🛏️ Comfortable rooms",
         "💎 Value for money",
       ],
@@ -324,7 +324,7 @@ export const homePageEn: HomePageData = {
         },
         {
           title: "🌿 Courtyard & calm",
-          text: "Quiet atmosphere, garden and authentic Kampos feeling for relaxation.",
+          text: "Quiet atmosphere, garden and authentic Kambos feeling for relaxation.",
         },
         {
           title: "🧭 Room Wizard",
@@ -375,7 +375,7 @@ export const homePageEn: HomePageData = {
     infoCard: {
       kicker: "Local information",
       title: "Voulamandis House",
-      addressLines: ["Mayor Kalvokoresi 117", "Kampos, Chios 82100"],
+      addressLines: ["Mayor Kalvokoresi 117", "Kambos, Chios 82100"],
       phoneLabel: "Tel:",
       phone: "+30 22710 31733",
       phoneHref: "tel:+302271031733",
@@ -407,10 +407,10 @@ export const homePageEn: HomePageData = {
       defaultCode: "WELCOME10",
     },
     copy: {
-      kicker: "Location – Kampos Chios",
+      kicker: "Location – Kambos Chios",
       title: "A special area for an authentic stay in Chios",
       paragraphsHtml: [
-        "<strong>Kampos of Chios</strong> is one of the island’s most distinctive and historic areas, known for its mansions, stone gateways, orchards and citrus aromas.",
+        "<strong>Kambos of Chios</strong> is one of the island’s most distinctive and historic areas, known for its mansions, stone gateways, orchards and citrus aromas.",
         "Its location is ideal for travelers who want to combine relaxation with easy access to Chios town, the airport and popular beaches.",
       ],
     },
@@ -420,7 +420,7 @@ export const homePageEn: HomePageData = {
     kicker: "Rooms & accommodation in Chios",
     icon: "🛏️",
     title: "Rooms in Chios for couples and families",
-    text: "Our rooms are cleaned daily and designed for a comfortable, peaceful and quality stay in Kampos, Chios.",
+    text: "Our rooms are cleaned daily and designed for a comfortable, peaceful and quality stay in Kambos, Chios.",
     primaryCta: {
       label: "Room Wizard",
       href: "/chios-rooms/",
@@ -434,7 +434,7 @@ export const homePageEn: HomePageData = {
     sideCard: {
       kicker: "Rooms in Chios",
       title: "From budget stays to family solutions",
-      text: "If you are looking for hotels in Chios but prefer more personal hospitality, Voulamandis House offers an authentic alternative in Kampos.",
+      text: "If you are looking for hotels in Chios but prefer more personal hospitality, Voulamandis House offers an authentic alternative in Kambos.",
     },
     rooms: [
       {
@@ -446,8 +446,8 @@ export const homePageEn: HomePageData = {
         directBadge: "🎁 -10% Discount",
         bedBadge: "🛏️ 1 double or 2 singles",
         description:
-          "Ideal for two guests who want a well-kept stay in Kampos, Chios.",
-        meta: ["👥 2 guests", "Economy", "🍊 Kampos"],
+          "Ideal for two guests who want a well-kept stay in Kambos, Chios.",
+        meta: ["👥 2 guests", "Economy", "🍊 Kambos"],
         amenities: ["❄️ A/C", "📶 Wi-Fi", "☕ Coffee", "🧊 Fridge"],
         cta: "View room",
       },
@@ -664,8 +664,8 @@ export const homePageEn: HomePageData = {
       },
       {
         id: "kampos",
-        title: "Kampos of Chios",
-        text: "Learn more about the area that makes staying in Kampos special.",
+        title: "Kambos of Chios",
+        text: "Learn more about the area that makes staying in Kambos special.",
         href: "/chios/kampos-chios/",
         imageClass: "vh-link-image--kampos",
         ctaIcon: "🍊",
@@ -716,12 +716,12 @@ export const homePageEn: HomePageData = {
       {
         question: "Is Voulamandis House a hotel?",
         answerHtml:
-          "Voulamandis House is a property with rooms and apartments in Kampos, Chios. If you are searching for a hotel in Chios but prefer quieter and more personal hospitality, it is an authentic alternative.",
+          "Voulamandis House is a property with rooms and apartments in Kambos, Chios. If you are searching for a hotel in Chios but prefer quieter and more personal hospitality, it is an authentic alternative.",
       },
       {
         question: "Where exactly is Voulamandis House located?",
         answerHtml:
-          "The property is located in historic <strong>Kampos, Chios</strong>. It is about 7 minutes by car from the airport and about 14 minutes from the port and town center.",
+          "The property is located in historic <strong>Kambos, Chios</strong>. It is about 7 minutes by car from the airport and about 14 minutes from the port and town center.",
       },
       {
         question: "Is breakfast available during the stay?",
@@ -750,7 +750,7 @@ export const homePageEn: HomePageData = {
     kicker: "Book your stay",
     icon: "✈️",
     title: "Your trip to Chios starts here",
-    text: "Warm hospitality, authentic atmosphere and an ideal location in Kampos.",
+    text: "Warm hospitality, authentic atmosphere and an ideal location in Kambos.",
     primaryCta: {
       label: "Book Direct",
       href: "/chios-hotels-rates/",
@@ -1249,21 +1249,21 @@ export const homePageFr: HomePageData = {
   seo: {
     title: "Hôtel à Chios",
     description:
-      "Chambres et appartements paisibles à Kampos, Chios. Séjournez à Voulamandis House, près de l’aéroport, de la ville, des plages et des villages de l’île.",
+      "Chambres et appartements paisibles à Kambos, Chios. Séjournez à Voulamandis House, près de l’aéroport, de la ville, des plages et des villages de l’île.",
     canonicalPath: "/fr/",
     ogImage: homePageEn.seo.ogImage,
     ogImageAlt:
-      "Voulamandis House à Kampos, Chios - hébergement authentique dans un domaine d’agrumes",
+      "Voulamandis House à Kambos, Chios - hébergement authentique dans un domaine d’agrumes",
   },
 
   hero: {
     ...homePageEn.hero,
     reviews: "143 avis",
     kicker: "KAMPOS CHIOS • VOULAMANDIS HOUSE",
-    title: "Hôtel et appartements à Chios, au cœur de Kampos",
+    title: "Hôtel et appartements à Chios, au cœur de Kambos",
     descriptionHtml:
-      'Vous cherchez un <strong>hôtel à Chios</strong> ou des <strong>chambres à Chios</strong> ? <strong>Voulamandis House</strong> vous accueille à Kampos avec des chambres confortables, une atmosphère paisible et une hospitalité authentique.',
-    imageAlt: "Hôtel et appartements à Chios - Voulamandis House à Kampos",
+      'Vous cherchez un <strong>hôtel à Chios</strong> ou des <strong>chambres à Chios</strong> ? <strong>Voulamandis House</strong> vous accueille à Kambos avec des chambres confortables, une atmosphère paisible et une hospitalité authentique.',
+    imageAlt: "Hôtel et appartements à Chios - Voulamandis House à Kambos",
     primaryCta: {
       label: "Trouvez votre chambre",
       href: "/fr/trouvez-votre-chambre/",
@@ -1293,14 +1293,14 @@ export const homePageFr: HomePageData = {
 
   intro: {
     left: {
-      kicker: "Hospitalité authentique à Kampos, Chios",
+      kicker: "Hospitalité authentique à Kambos, Chios",
       icon: "🏡",
       title: "Séjourner à Chios au Voulamandis House",
       bodyHtml:
-        'Vous recherchez des <strong>chambres à Chios</strong> ou un <strong>hébergement à Chios</strong> pour un séjour calme et soigné ? Voulamandis House vous accueille dans le quartier historique de Kampos, dans un cadre verdoyant et authentique. Si vous cherchez un <strong>hôtel à Chios</strong> mais préférez une expérience plus personnelle, notre maison est une alternative chaleureuse.',
+        'Vous recherchez des <strong>chambres à Chios</strong> ou un <strong>hébergement à Chios</strong> pour un séjour calme et soigné ? Voulamandis House vous accueille dans le quartier historique de Kambos, dans un cadre verdoyant et authentique. Si vous cherchez un <strong>hôtel à Chios</strong> mais préférez une expérience plus personnelle, notre maison est une alternative chaleureuse.',
       pills: [
         "🌴 Vacances à Chios",
-        "🍊 Kampos Chios",
+        "🍊 Kambos Chios",
         "🛏️ Chambres confortables",
         "💎 Excellent rapport qualité-prix",
       ],
@@ -1316,7 +1316,7 @@ export const homePageFr: HomePageData = {
         },
         {
           title: "🌿 Cour & tranquillité",
-          text: "Une atmosphère calme, un jardin et l’esprit authentique de Kampos pour se détendre.",
+          text: "Une atmosphère calme, un jardin et l’esprit authentique de Kambos pour se détendre.",
         },
         {
           title: "🧭 Room Wizard",
@@ -1357,7 +1357,7 @@ export const homePageFr: HomePageData = {
       ...homePageEn.location.infoCard,
       kicker: "Informations locales",
       title: "Voulamandis House",
-      addressLines: ["Mayor Kalvokoresi 117", "Kampos, Chios 82100"],
+      addressLines: ["Mayor Kalvokoresi 117", "Kambos, Chios 82100"],
       phoneLabel: "Tél :",
       emailLabel: "Email :",
       text: "L’établissement se trouve dans un endroit qui combine calme, accès facile et courtes distances vers les principaux points de Chios.",
@@ -1385,10 +1385,10 @@ export const homePageFr: HomePageData = {
       defaultCode: "WELCOME10",
     },
     copy: {
-      kicker: "Emplacement – Kampos Chios",
+      kicker: "Emplacement – Kambos Chios",
       title: "Un quartier unique pour un séjour authentique à Chios",
       paragraphsHtml: [
-        "<strong>Kampos de Chios</strong> est l’un des quartiers les plus caractéristiques et historiques de l’île, connu pour ses demeures, ses portails en pierre, ses vergers et ses parfums d’agrumes.",
+        "<strong>Kambos de Chios</strong> est l’un des quartiers les plus caractéristiques et historiques de l’île, connu pour ses demeures, ses portails en pierre, ses vergers et ses parfums d’agrumes.",
         "Son emplacement est idéal pour combiner détente, accès facile à la ville de Chios, à l’aéroport et aux plages populaires.",
       ],
     },
@@ -1398,7 +1398,7 @@ export const homePageFr: HomePageData = {
     ...homePageEn.roomsPreview,
     kicker: "Chambres & hébergement à Chios",
     title: "Chambres à Chios pour couples et familles",
-    text: "Nos chambres sont nettoyées chaque jour et pensées pour un séjour confortable, calme et de qualité à Kampos, Chios.",
+    text: "Nos chambres sont nettoyées chaque jour et pensées pour un séjour confortable, calme et de qualité à Kambos, Chios.",
     primaryCta: {
       label: "Room Wizard",
       href: "/fr/chambres-a-chios/",
@@ -1412,7 +1412,7 @@ export const homePageFr: HomePageData = {
     sideCard: {
       kicker: "Chambres à Chios",
       title: "Du séjour économique aux solutions familiales",
-      text: "Si vous cherchez un hôtel à Chios mais préférez une hospitalité plus personnelle, Voulamandis House offre une alternative authentique à Kampos.",
+      text: "Si vous cherchez un hôtel à Chios mais préférez une hospitalité plus personnelle, Voulamandis House offre une alternative authentique à Kambos.",
     },
     rooms: [
       {
@@ -1422,8 +1422,8 @@ export const homePageFr: HomePageData = {
         directBadge: "🎁 -10% Réduction",
         bedBadge: "🛏️ 1 lit double ou 2 lits simples",
         description:
-          "Idéale pour deux personnes qui souhaitent un séjour soigné à Kampos, Chios.",
-        meta: ["👥 2 personnes", "Économique", "🍊 Kampos"],
+          "Idéale pour deux personnes qui souhaitent un séjour soigné à Kambos, Chios.",
+        meta: ["👥 2 personnes", "Économique", "🍊 Kambos"],
         amenities: ["❄️ A/C", "📶 Wi-Fi", "☕ Café", "🧊 Réfrigérateur"],
         cta: "Voir la chambre",
       },
@@ -1580,8 +1580,8 @@ export const homePageFr: HomePageData = {
       },
       {
         ...homePageEn.chiosGuide.cards[2],
-        title: "Kampos de Chios",
-        text: "Découvrez le quartier historique qui rend un séjour à Kampos si particulier.",
+        title: "Kambos de Chios",
+        text: "Découvrez le quartier historique qui rend un séjour à Kambos si particulier.",
         href: "/fr/chios/kampos-chios/",
         ctaLabel: "Voir plus",
       },
@@ -1624,12 +1624,12 @@ export const homePageFr: HomePageData = {
       {
         question: "Voulamandis House est-il un hôtel ?",
         answerHtml:
-          "Voulamandis House est un hébergement avec chambres et appartements à Kampos, Chios. Si vous cherchez un hôtel à Chios mais préférez une hospitalité plus calme et personnelle, c’est une alternative authentique.",
+          "Voulamandis House est un hébergement avec chambres et appartements à Kambos, Chios. Si vous cherchez un hôtel à Chios mais préférez une hospitalité plus calme et personnelle, c’est une alternative authentique.",
       },
       {
         question: "Où se trouve exactement Voulamandis House ?",
         answerHtml:
-          "L’établissement se trouve dans le quartier historique de <strong>Kampos, Chios</strong>, à environ 7 minutes en voiture de l’aéroport et 14 minutes du port et du centre-ville.",
+          "L’établissement se trouve dans le quartier historique de <strong>Kambos, Chios</strong>, à environ 7 minutes en voiture de l’aéroport et 14 minutes du port et du centre-ville.",
       },
       {
         question: "Le petit-déjeuner est-il disponible ?",
@@ -1658,7 +1658,7 @@ export const homePageFr: HomePageData = {
     kicker: "Réservez votre séjour",
     icon: "✈️",
     title: "Votre voyage à Chios commence ici",
-    text: "Hospitalité chaleureuse, atmosphère authentique et emplacement idéal à Kampos.",
+    text: "Hospitalité chaleureuse, atmosphère authentique et emplacement idéal à Kambos.",
     primaryCta: {
       label: "Réserver en direct",
       href: "/fr/tarifs-des-hotels-a-chios/",
@@ -1689,21 +1689,21 @@ export const homePageDe: HomePageData = {
   seo: {
     title: "Hotel auf Chios",
     description:
-      "Ruhige Zimmer und Apartments in Kampos, Chios. Übernachten Sie im Voulamandis House nahe Flughafen, Stadt, Stränden und Dörfern.",
+      "Ruhige Zimmer und Apartments in Kambos, Chios. Übernachten Sie im Voulamandis House nahe Flughafen, Stadt, Stränden und Dörfern.",
     canonicalPath: "/de/",
     ogImage: homePageEn.seo.ogImage,
     ogImageAlt:
-      "Voulamandis House in Kampos, Chios - authentische Unterkunft in einem Zitrusgarten",
+      "Voulamandis House in Kambos, Chios - authentische Unterkunft in einem Zitrusgarten",
   },
 
   hero: {
     ...homePageEn.hero,
     reviews: "143 Bewertungen",
     kicker: "KAMPOS CHIOS • VOULAMANDIS HOUSE",
-    title: "Hotel und Apartments auf Chios in Kampos",
+    title: "Hotel und Apartments auf Chios in Kambos",
     descriptionHtml:
-      'Suchen Sie ein <strong>Hotel auf Chios</strong> oder <strong>Zimmer auf Chios</strong>? <strong>Voulamandis House</strong> ist eine authentische Unterkunft in Kampos mit komfortablen Zimmern, ruhiger Umgebung und herzlicher Gastfreundschaft.',
-    imageAlt: "Hotel und Apartments auf Chios in Kampos - Voulamandis House",
+      'Suchen Sie ein <strong>Hotel auf Chios</strong> oder <strong>Zimmer auf Chios</strong>? <strong>Voulamandis House</strong> ist eine authentische Unterkunft in Kambos mit komfortablen Zimmern, ruhiger Umgebung und herzlicher Gastfreundschaft.',
+    imageAlt: "Hotel und Apartments auf Chios in Kambos - Voulamandis House",
     primaryCta: {
       label: "Finde dein Zimmer",
       href: "/de/finde-dein-zimmer/",
@@ -1733,14 +1733,14 @@ export const homePageDe: HomePageData = {
 
   intro: {
     left: {
-      kicker: "Authentische Gastfreundschaft in Kampos, Chios",
+      kicker: "Authentische Gastfreundschaft in Kambos, Chios",
       icon: "🏡",
       title: "Übernachten auf Chios im Voulamandis House",
       bodyHtml:
-        'Suchen Sie <strong>Zimmer auf Chios</strong> oder eine ruhige, gepflegte <strong>Unterkunft auf Chios</strong>? Voulamandis House begrüßt Sie im historischen Kampos, in einer Umgebung voller natürlicher Schönheit. Wenn Sie ein <strong>Hotel auf Chios</strong> suchen, aber eine persönlichere Atmosphäre bevorzugen, ist unser Haus eine warme Alternative.',
+        'Suchen Sie <strong>Zimmer auf Chios</strong> oder eine ruhige, gepflegte <strong>Unterkunft auf Chios</strong>? Voulamandis House begrüßt Sie im historischen Kambos, in einer Umgebung voller natürlicher Schönheit. Wenn Sie ein <strong>Hotel auf Chios</strong> suchen, aber eine persönlichere Atmosphäre bevorzugen, ist unser Haus eine warme Alternative.',
       pills: [
         "🌴 Urlaub auf Chios",
-        "🍊 Kampos Chios",
+        "🍊 Kambos Chios",
         "🛏️ Komfortable Zimmer",
         "💎 Gutes Preis-Leistungs-Verhältnis",
       ],
@@ -1756,7 +1756,7 @@ export const homePageDe: HomePageData = {
         },
         {
           title: "🌿 Innenhof & Ruhe",
-          text: "Ruhige Atmosphäre, Garten und echtes Kampos-Gefühl zum Entspannen.",
+          text: "Ruhige Atmosphäre, Garten und echtes Kambos-Gefühl zum Entspannen.",
         },
         {
           title: "🧭 Room Wizard",
@@ -1797,7 +1797,7 @@ export const homePageDe: HomePageData = {
       ...homePageEn.location.infoCard,
       kicker: "Lokale Informationen",
       title: "Voulamandis House",
-      addressLines: ["Mayor Kalvokoresi 117", "Kampos, Chios 82100"],
+      addressLines: ["Mayor Kalvokoresi 117", "Kambos, Chios 82100"],
       phoneLabel: "Tel:",
       emailLabel: "Email:",
       text: "Die Unterkunft liegt an einem Ort, der Ruhe, einfache Erreichbarkeit und kurze Wege zu den wichtigsten Punkten von Chios verbindet.",
@@ -1825,10 +1825,10 @@ export const homePageDe: HomePageData = {
       defaultCode: "WELCOME10",
     },
     copy: {
-      kicker: "Lage – Kampos Chios",
+      kicker: "Lage – Kambos Chios",
       title: "Eine besondere Gegend für einen authentischen Aufenthalt auf Chios",
       paragraphsHtml: [
-        "<strong>Kampos auf Chios</strong> ist eine der charakteristischsten historischen Gegenden der Insel, bekannt für Herrenhäuser, Steintore, Gärten und den Duft von Zitrusfrüchten.",
+        "<strong>Kambos auf Chios</strong> ist eine der charakteristischsten historischen Gegenden der Insel, bekannt für Herrenhäuser, Steintore, Gärten und den Duft von Zitrusfrüchten.",
         "Die Lage ist ideal für Reisende, die Entspannung mit einfachem Zugang zur Stadt Chios, zum Flughafen und zu beliebten Stränden verbinden möchten.",
       ],
     },
@@ -1838,7 +1838,7 @@ export const homePageDe: HomePageData = {
     ...homePageEn.roomsPreview,
     kicker: "Zimmer & Unterkunft auf Chios",
     title: "Zimmer auf Chios für Paare und Familien",
-    text: "Unsere Zimmer werden täglich gereinigt und sind für einen komfortablen, ruhigen und hochwertigen Aufenthalt in Kampos gestaltet.",
+    text: "Unsere Zimmer werden täglich gereinigt und sind für einen komfortablen, ruhigen und hochwertigen Aufenthalt in Kambos gestaltet.",
     primaryCta: {
       label: "Room Wizard",
       href: "/de/chios-zimmer/",
@@ -1852,7 +1852,7 @@ export const homePageDe: HomePageData = {
     sideCard: {
       kicker: "Zimmer auf Chios",
       title: "Von günstigen Aufenthalten bis zu Familienlösungen",
-      text: "Wenn Sie ein Hotel auf Chios suchen, aber eine persönlichere Gastfreundschaft bevorzugen, bietet Voulamandis House eine authentische Alternative in Kampos.",
+      text: "Wenn Sie ein Hotel auf Chios suchen, aber eine persönlichere Gastfreundschaft bevorzugen, bietet Voulamandis House eine authentische Alternative in Kambos.",
     },
     rooms: [
       {
@@ -1862,8 +1862,8 @@ export const homePageDe: HomePageData = {
         directBadge: "🎁 -10% Rabatt",
         bedBadge: "🛏️ 1 Doppelbett oder 2 Einzelbetten",
         description:
-          "Ideal für zwei Gäste, die einen gepflegten Aufenthalt in Kampos suchen.",
-        meta: ["👥 2 Gäste", "Economy", "🍊 Kampos"],
+          "Ideal für zwei Gäste, die einen gepflegten Aufenthalt in Kambos suchen.",
+        meta: ["👥 2 Gäste", "Economy", "🍊 Kambos"],
         amenities: ["❄️ A/C", "📶 Wi-Fi", "☕ Kaffee", "🧊 Kühlschrank"],
         cta: "Zimmer ansehen",
       },
@@ -2020,8 +2020,8 @@ export const homePageDe: HomePageData = {
       },
       {
         ...homePageEn.chiosGuide.cards[2],
-        title: "Kampos auf Chios",
-        text: "Erfahren Sie mehr über die historische Gegend, die einen Aufenthalt in Kampos besonders macht.",
+        title: "Kambos auf Chios",
+        text: "Erfahren Sie mehr über die historische Gegend, die einen Aufenthalt in Kambos besonders macht.",
         href: "/de/chios/kampos-chios/",
         ctaLabel: "Mehr ansehen",
       },
@@ -2064,12 +2064,12 @@ export const homePageDe: HomePageData = {
       {
         question: "Ist Voulamandis House ein Hotel?",
         answerHtml:
-          "Voulamandis House ist eine Unterkunft mit Zimmern und Apartments in Kampos, Chios. Wenn Sie ein Hotel auf Chios suchen, aber eine ruhigere und persönlichere Gastfreundschaft bevorzugen, ist es eine authentische Alternative.",
+          "Voulamandis House ist eine Unterkunft mit Zimmern und Apartments in Kambos, Chios. Wenn Sie ein Hotel auf Chios suchen, aber eine ruhigere und persönlichere Gastfreundschaft bevorzugen, ist es eine authentische Alternative.",
       },
       {
         question: "Wo genau liegt Voulamandis House?",
         answerHtml:
-          "Die Unterkunft liegt im historischen <strong>Kampos, Chios</strong>, etwa 7 Autominuten vom Flughafen und etwa 14 Minuten vom Hafen und Stadtzentrum entfernt.",
+          "Die Unterkunft liegt im historischen <strong>Kambos, Chios</strong>, etwa 7 Autominuten vom Flughafen und etwa 14 Minuten vom Hafen und Stadtzentrum entfernt.",
       },
       {
         question: "Gibt es Frühstück?",
@@ -2098,7 +2098,7 @@ export const homePageDe: HomePageData = {
     kicker: "Aufenthalt buchen",
     icon: "✈️",
     title: "Ihre Reise nach Chios beginnt hier",
-    text: "Herzliche Gastfreundschaft, authentische Atmosphäre und eine ideale Lage in Kampos.",
+    text: "Herzliche Gastfreundschaft, authentische Atmosphäre und eine ideale Lage in Kambos.",
     primaryCta: {
       label: "Direkt buchen",
       href: "/de/hotelpreise-auf-der-insel-chios/",
@@ -2128,21 +2128,21 @@ export const homePageIt: HomePageData = {
   seo: {
     title: "Hotel a Chios",
     description:
-      "Camere e appartamenti tranquilli a Kampos, Chios. Soggiorna al Voulamandis House, vicino all’aeroporto, alla città, alle spiagge e ai villaggi dell’isola.",
+      "Camere e appartamenti tranquilli a Kambos, Chios. Soggiorna al Voulamandis House, vicino all’aeroporto, alla città, alle spiagge e ai villaggi dell’isola.",
     canonicalPath: "/it/",
     ogImage: homePageEn.seo.ogImage,
     ogImageAlt:
-      "Voulamandis House a Kampos, Chios - soggiorno autentico in un agrumeto",
+      "Voulamandis House a Kambos, Chios - soggiorno autentico in un agrumeto",
   },
 
   hero: {
     ...homePageEn.hero,
     reviews: "143 recensioni",
     kicker: "KAMPOS CHIOS • VOULAMANDIS HOUSE",
-    title: "Hotel e appartamenti a Chios, nel cuore di Kampos",
+    title: "Hotel e appartamenti a Chios, nel cuore di Kambos",
     descriptionHtml:
-      'Cerchi un <strong>hotel a Chios</strong> o <strong>camere a Chios</strong>? <strong>Voulamandis House</strong> ti accoglie a Kampos con camere confortevoli, atmosfera tranquilla e ospitalità autentica.',
-    imageAlt: "Hotel e appartamenti a Chios - Voulamandis House a Kampos",
+      'Cerchi un <strong>hotel a Chios</strong> o <strong>camere a Chios</strong>? <strong>Voulamandis House</strong> ti accoglie a Kambos con camere confortevoli, atmosfera tranquilla e ospitalità autentica.',
+    imageAlt: "Hotel e appartamenti a Chios - Voulamandis House a Kambos",
     primaryCta: {
       label: "Trova la tua camera",
       href: "/it/trova-la-tua-camera/",
@@ -2172,14 +2172,14 @@ export const homePageIt: HomePageData = {
 
   intro: {
     left: {
-      kicker: "Ospitalità autentica a Kampos, Chios",
+      kicker: "Ospitalità autentica a Kambos, Chios",
       icon: "🏡",
       title: "Soggiornare a Chios al Voulamandis House",
       bodyHtml:
-        'Se cerchi <strong>camere a Chios</strong> o un <strong>alloggio a Chios</strong> tranquillo e curato, Voulamandis House ti accoglie nello storico Kampos, in un ambiente verde e autentico. Se desideri un <strong>hotel a Chios</strong> ma preferisci un’esperienza più personale, la nostra struttura è un’alternativa calorosa e genuina.',
+        'Se cerchi <strong>camere a Chios</strong> o un <strong>alloggio a Chios</strong> tranquillo e curato, Voulamandis House ti accoglie nello storico Kambos, in un ambiente verde e autentico. Se desideri un <strong>hotel a Chios</strong> ma preferisci un’esperienza più personale, la nostra struttura è un’alternativa calorosa e genuina.',
       pills: [
         "🌴 Vacanze a Chios",
-        "🍊 Kampos Chios",
+        "🍊 Kambos Chios",
         "🛏️ Camere confortevoli",
         "💎 Ottimo rapporto qualità-prezzo",
       ],
@@ -2195,7 +2195,7 @@ export const homePageIt: HomePageData = {
         },
         {
           title: "🌿 Cortile e tranquillità",
-          text: "Atmosfera rilassante, giardino e il carattere autentico di Kampos.",
+          text: "Atmosfera rilassante, giardino e il carattere autentico di Kambos.",
         },
         {
           title: "🧭 Room Wizard",
@@ -2236,7 +2236,7 @@ export const homePageIt: HomePageData = {
       ...homePageEn.location.infoCard,
       kicker: "Informazioni locali",
       title: "Voulamandis House",
-      addressLines: ["Mayor Kalvokoresi 117", "Kampos, Chios 82100"],
+      addressLines: ["Mayor Kalvokoresi 117", "Kambos, Chios 82100"],
       phoneLabel: "Tel:",
       emailLabel: "Email:",
       text: "La struttura si trova in una zona che unisce tranquillità, accesso facile e brevi distanze dai punti principali di Chios.",
@@ -2264,10 +2264,10 @@ export const homePageIt: HomePageData = {
       defaultCode: "WELCOME10",
     },
     copy: {
-      kicker: "Posizione – Kampos Chios",
+      kicker: "Posizione – Kambos Chios",
       title: "Un quartiere speciale per un soggiorno autentico a Chios",
       paragraphsHtml: [
-        "<strong>Kampos di Chios</strong> è una delle zone storiche più caratteristiche dell’isola, conosciuta per le dimore signorili, i portali in pietra, i giardini e il profumo degli agrumi.",
+        "<strong>Kambos di Chios</strong> è una delle zone storiche più caratteristiche dell’isola, conosciuta per le dimore signorili, i portali in pietra, i giardini e il profumo degli agrumi.",
         "La posizione è ideale per chi desidera combinare relax, accesso facile alla città di Chios, all’aeroporto e alle spiagge più amate.",
       ],
     },
@@ -2277,7 +2277,7 @@ export const homePageIt: HomePageData = {
     ...homePageEn.roomsPreview,
     kicker: "Camere e alloggi a Chios",
     title: "Camere a Chios per coppie e famiglie",
-    text: "Le nostre camere vengono pulite ogni giorno e sono pensate per un soggiorno comodo, tranquillo e curato a Kampos, Chios.",
+    text: "Le nostre camere vengono pulite ogni giorno e sono pensate per un soggiorno comodo, tranquillo e curato a Kambos, Chios.",
     primaryCta: {
       label: "Room Wizard",
       href: "/it/camere-a-chios/",
@@ -2291,7 +2291,7 @@ export const homePageIt: HomePageData = {
     sideCard: {
       kicker: "Camere a Chios",
       title: "Dal soggiorno economico alle soluzioni per famiglie",
-      text: "Se cerchi un hotel a Chios ma preferisci un’accoglienza più personale, Voulamandis House offre un’alternativa autentica a Kampos.",
+      text: "Se cerchi un hotel a Chios ma preferisci un’accoglienza più personale, Voulamandis House offre un’alternativa autentica a Kambos.",
     },
     rooms: [
       {
@@ -2301,8 +2301,8 @@ export const homePageIt: HomePageData = {
         directBadge: "🎁 -10% Sconto",
         bedBadge: "🛏️ 1 letto matrimoniale o 2 letti singoli",
         description:
-          "Ideale per due persone che desiderano un soggiorno curato a Kampos.",
-        meta: ["👥 2 ospiti", "Economy", "🍊 Kampos"],
+          "Ideale per due persone che desiderano un soggiorno curato a Kambos.",
+        meta: ["👥 2 ospiti", "Economy", "🍊 Kambos"],
         amenities: ["❄️ A/C", "📶 Wi-Fi", "☕ Caffè", "🧊 Frigo"],
         cta: "Vedi camera",
       },
@@ -2459,8 +2459,8 @@ export const homePageIt: HomePageData = {
       },
       {
         ...homePageEn.chiosGuide.cards[2],
-        title: "Kampos di Chios",
-        text: "Scopri la zona storica che rende speciale il soggiorno a Kampos.",
+        title: "Kambos di Chios",
+        text: "Scopri la zona storica che rende speciale il soggiorno a Kambos.",
         href: "/it/chios/kampos-chios/",
         ctaLabel: "Vedi di più",
       },
@@ -2503,12 +2503,12 @@ export const homePageIt: HomePageData = {
       {
         question: "Voulamandis House è un hotel?",
         answerHtml:
-          "Voulamandis House è una struttura con camere e appartamenti a Kampos, Chios. Se cerchi un hotel a Chios ma preferisci un’ospitalità più tranquilla e personale, è un’alternativa autentica.",
+          "Voulamandis House è una struttura con camere e appartamenti a Kambos, Chios. Se cerchi un hotel a Chios ma preferisci un’ospitalità più tranquilla e personale, è un’alternativa autentica.",
       },
       {
         question: "Dove si trova esattamente Voulamandis House?",
         answerHtml:
-          "La struttura si trova nello storico <strong>Kampos, Chios</strong>, a circa 7 minuti in auto dall’aeroporto e 14 minuti dal porto e dal centro città.",
+          "La struttura si trova nello storico <strong>Kambos, Chios</strong>, a circa 7 minuti in auto dall’aeroporto e 14 minuti dal porto e dal centro città.",
       },
       {
         question: "La colazione è disponibile?",
@@ -2537,7 +2537,7 @@ export const homePageIt: HomePageData = {
     kicker: "Prenota il tuo soggiorno",
     icon: "✈️",
     title: "Il tuo viaggio a Chios inizia qui",
-    text: "Ospitalità calorosa, atmosfera autentica e posizione ideale a Kampos.",
+    text: "Ospitalità calorosa, atmosfera autentica e posizione ideale a Kambos.",
     primaryCta: {
       label: "Prenota diretto",
       href: "/it/prezzi-hotel-chios/",
@@ -2568,21 +2568,21 @@ export const homePageEs: HomePageData = {
   seo: {
     title: "Hotel en Chios",
     description:
-      "Habitaciones y apartamentos tranquilos en Kampos, Chios. Alójate en Voulamandis House, cerca del aeropuerto, la ciudad, las playas y los pueblos de la isla.",
+      "Habitaciones y apartamentos tranquilos en Kambos, Chios. Alójate en Voulamandis House, cerca del aeropuerto, la ciudad, las playas y los pueblos de la isla.",
     canonicalPath: "/es/",
     ogImage: homePageEn.seo.ogImage,
     ogImageAlt:
-      "Voulamandis House en Kampos, Chios - alojamiento auténtico entre cítricos",
+      "Voulamandis House en Kambos, Chios - alojamiento auténtico entre cítricos",
   },
 
   hero: {
     ...homePageEn.hero,
     reviews: "143 reseñas",
     kicker: "KAMPOS CHIOS • VOULAMANDIS HOUSE",
-    title: "Hotel y apartamentos en Chios, en Kampos",
+    title: "Hotel y apartamentos en Chios, en Kambos",
     descriptionHtml:
-      '¿Buscas un <strong>hotel en Chios</strong> o <strong>habitaciones en Chios</strong>? <strong>Voulamandis House</strong> te recibe en Kampos con habitaciones cómodas, ambiente tranquilo y hospitalidad auténtica.',
-    imageAlt: "Hotel y apartamentos en Chios - Voulamandis House en Kampos",
+      '¿Buscas un <strong>hotel en Chios</strong> o <strong>habitaciones en Chios</strong>? <strong>Voulamandis House</strong> te recibe en Kambos con habitaciones cómodas, ambiente tranquilo y hospitalidad auténtica.',
+    imageAlt: "Hotel y apartamentos en Chios - Voulamandis House en Kambos",
     primaryCta: {
       label: "Encuentra tu habitación",
       href: "/es/encuentra-tu-habitacion/",
@@ -2612,14 +2612,14 @@ export const homePageEs: HomePageData = {
 
   intro: {
     left: {
-      kicker: "Hospitalidad auténtica en Kampos, Chios",
+      kicker: "Hospitalidad auténtica en Kambos, Chios",
       icon: "🏡",
       title: "Alojarse en Chios en Voulamandis House",
       bodyHtml:
-        'Si buscas <strong>habitaciones en Chios</strong> o un <strong>alojamiento en Chios</strong> tranquilo y cuidado, Voulamandis House te espera en el histórico Kampos, en un entorno verde y auténtico. Si buscas un <strong>hotel en Chios</strong> pero prefieres una experiencia más personal, nuestra casa es una alternativa cálida y genuina.',
+        'Si buscas <strong>habitaciones en Chios</strong> o un <strong>alojamiento en Chios</strong> tranquilo y cuidado, Voulamandis House te espera en el histórico Kambos, en un entorno verde y auténtico. Si buscas un <strong>hotel en Chios</strong> pero prefieres una experiencia más personal, nuestra casa es una alternativa cálida y genuina.',
       pills: [
         "🌴 Vacaciones en Chios",
-        "🍊 Kampos Chios",
+        "🍊 Kambos Chios",
         "🛏️ Habitaciones cómodas",
         "💎 Buena relación calidad-precio",
       ],
@@ -2635,7 +2635,7 @@ export const homePageEs: HomePageData = {
         },
         {
           title: "🌿 Patio y tranquilidad",
-          text: "Ambiente tranquilo, jardín y el carácter auténtico de Kampos.",
+          text: "Ambiente tranquilo, jardín y el carácter auténtico de Kambos.",
         },
         {
           title: "🧭 Room Wizard",
@@ -2676,7 +2676,7 @@ export const homePageEs: HomePageData = {
       ...homePageEn.location.infoCard,
       kicker: "Información local",
       title: "Voulamandis House",
-      addressLines: ["Mayor Kalvokoresi 117", "Kampos, Chios 82100"],
+      addressLines: ["Mayor Kalvokoresi 117", "Kambos, Chios 82100"],
       phoneLabel: "Tel:",
       emailLabel: "Email:",
       text: "El alojamiento se encuentra en una zona que combina tranquilidad, acceso fácil y distancias cortas a los puntos principales de Chios.",
@@ -2704,10 +2704,10 @@ export const homePageEs: HomePageData = {
       defaultCode: "WELCOME10",
     },
     copy: {
-      kicker: "Ubicación – Kampos Chios",
+      kicker: "Ubicación – Kambos Chios",
       title: "Una zona especial para una estancia auténtica en Chios",
       paragraphsHtml: [
-        "<strong>Kampos de Chios</strong> es una de las zonas históricas más características de la isla, conocida por sus mansiones, portales de piedra, jardines y aromas cítricos.",
+        "<strong>Kambos de Chios</strong> es una de las zonas históricas más características de la isla, conocida por sus mansiones, portales de piedra, jardines y aromas cítricos.",
         "Su ubicación es ideal para combinar descanso, acceso fácil a la ciudad de Chios, al aeropuerto y a playas populares.",
       ],
     },
@@ -2717,7 +2717,7 @@ export const homePageEs: HomePageData = {
     ...homePageEn.roomsPreview,
     kicker: "Habitaciones y alojamiento en Chios",
     title: "Habitaciones en Chios para parejas y familias",
-    text: "Nuestras habitaciones se limpian cada día y están pensadas para una estancia cómoda, tranquila y cuidada en Kampos, Chios.",
+    text: "Nuestras habitaciones se limpian cada día y están pensadas para una estancia cómoda, tranquila y cuidada en Kambos, Chios.",
     primaryCta: {
       label: "Room Wizard",
       href: "/es/habitaciones-en-chios/",
@@ -2731,7 +2731,7 @@ export const homePageEs: HomePageData = {
     sideCard: {
       kicker: "Habitaciones en Chios",
       title: "Desde opciones económicas hasta soluciones familiares",
-      text: "Si buscas un hotel en Chios pero prefieres una hospitalidad más personal, Voulamandis House ofrece una alternativa auténtica en Kampos.",
+      text: "Si buscas un hotel en Chios pero prefieres una hospitalidad más personal, Voulamandis House ofrece una alternativa auténtica en Kambos.",
     },
     rooms: [
       {
@@ -2741,8 +2741,8 @@ export const homePageEs: HomePageData = {
         directBadge: "🎁 -10% Descuento",
         bedBadge: "🛏️ 1 cama doble o 2 camas individuales",
         description:
-          "Ideal para dos personas que desean una estancia cuidada en Kampos.",
-        meta: ["👥 2 huéspedes", "Económica", "🍊 Kampos"],
+          "Ideal para dos personas que desean una estancia cuidada en Kambos.",
+        meta: ["👥 2 huéspedes", "Económica", "🍊 Kambos"],
         amenities: ["❄️ A/C", "📶 Wi-Fi", "☕ Café", "🧊 Nevera"],
         cta: "Ver habitación",
       },
@@ -2899,8 +2899,8 @@ export const homePageEs: HomePageData = {
       },
       {
         ...homePageEn.chiosGuide.cards[2],
-        title: "Kampos de Chios",
-        text: "Conoce la zona histórica que hace especial alojarse en Kampos.",
+        title: "Kambos de Chios",
+        text: "Conoce la zona histórica que hace especial alojarse en Kambos.",
         href: "/es/chios/kampos-chios/",
         ctaLabel: "Ver más",
       },
@@ -2943,12 +2943,12 @@ export const homePageEs: HomePageData = {
       {
         question: "¿Voulamandis House es un hotel?",
         answerHtml:
-          "Voulamandis House es un alojamiento con habitaciones y apartamentos en Kampos, Chios. Si buscas un hotel en Chios pero prefieres una hospitalidad más tranquila y personal, es una alternativa auténtica.",
+          "Voulamandis House es un alojamiento con habitaciones y apartamentos en Kambos, Chios. Si buscas un hotel en Chios pero prefieres una hospitalidad más tranquila y personal, es una alternativa auténtica.",
       },
       {
         question: "¿Dónde está exactamente Voulamandis House?",
         answerHtml:
-          "La propiedad está en el histórico <strong>Kampos, Chios</strong>, a unos 7 minutos en coche del aeropuerto y unos 14 minutos del puerto y del centro.",
+          "La propiedad está en el histórico <strong>Kambos, Chios</strong>, a unos 7 minutos en coche del aeropuerto y unos 14 minutos del puerto y del centro.",
       },
       {
         question: "¿Hay desayuno?",
@@ -2977,7 +2977,7 @@ export const homePageEs: HomePageData = {
     kicker: "Reserva tu estancia",
     icon: "✈️",
     title: "Tu viaje a Chios empieza aquí",
-    text: "Hospitalidad cálida, ambiente auténtico y ubicación ideal en Kampos.",
+    text: "Hospitalidad cálida, ambiente auténtico y ubicación ideal en Kambos.",
     primaryCta: {
       label: "Reservar directo",
       href: "/es/los-mejores-precios-de-hotel-en-la-isla-chios/",
@@ -3008,21 +3008,21 @@ export const homePageTr: HomePageData = {
   seo: {
     title: "Sakız Adası Oteli",
     description:
-      "Kampos, Sakız Adası’nda sakin odalar ve daireler. Havaalanına, merkeze, plajlara ve köylere yakın Voulamandis House’ta konaklayın.",
+      "Kambos, Sakız Adası’nda sakin odalar ve daireler. Havaalanına, merkeze, plajlara ve köylere yakın Voulamandis House’ta konaklayın.",
     canonicalPath: "/tr/",
     ogImage: homePageEn.seo.ogImage,
     ogImageAlt:
-      "Kampos, Sakız Adası’nda Voulamandis House - narenciye bahçesi içinde otantik konaklama",
+      "Kambos, Sakız Adası’nda Voulamandis House - narenciye bahçesi içinde otantik konaklama",
   },
 
   hero: {
     ...homePageEn.hero,
     reviews: "143 yorum",
     kicker: "KAMPOS SAKIZ • VOULAMANDIS HOUSE",
-    title: "Sakız Adası’nda Kampos’ta otel ve daireler",
+    title: "Sakız Adası’nda Kambos’ta otel ve daireler",
     descriptionHtml:
-      '<strong>Sakız Adası’nda otel</strong> ya da <strong>Sakız Adası odaları</strong> mı arıyorsunuz? <strong>Voulamandis House</strong>, Kampos’ta rahat odalar, sakin bir atmosfer ve samimi misafirperverlik sunar.',
-    imageAlt: "Sakız Adası’nda otel ve daireler - Kampos Voulamandis House",
+      '<strong>Sakız Adası’nda otel</strong> ya da <strong>Sakız Adası odaları</strong> mı arıyorsunuz? <strong>Voulamandis House</strong>, Kambos’ta rahat odalar, sakin bir atmosfer ve samimi misafirperverlik sunar.',
+    imageAlt: "Sakız Adası’nda otel ve daireler - Kambos Voulamandis House",
     primaryCta: {
       label: "Odanı bul",
       href: "/tr/odani-bul/",
@@ -3052,14 +3052,14 @@ export const homePageTr: HomePageData = {
 
   intro: {
     left: {
-      kicker: "Kampos, Sakız Adası’nda otantik misafirperverlik",
+      kicker: "Kambos, Sakız Adası’nda otantik misafirperverlik",
       icon: "🏡",
       title: "Sakız Adası’nda Voulamandis House’ta konaklama",
       bodyHtml:
-        '<strong>Sakız Adası odaları</strong> veya sakin ve özenli bir <strong>Sakız Adası konaklama</strong> seçeneği arıyorsanız, Voulamandis House sizi tarihi Kampos bölgesinde karşılar. Bir <strong>Sakız Adası oteli</strong> arıyor ama daha kişisel bir deneyim istiyorsanız, burası sıcak ve otantik bir alternatiftir.',
+        '<strong>Sakız Adası odaları</strong> veya sakin ve özenli bir <strong>Sakız Adası konaklama</strong> seçeneği arıyorsanız, Voulamandis House sizi tarihi Kambos bölgesinde karşılar. Bir <strong>Sakız Adası oteli</strong> arıyor ama daha kişisel bir deneyim istiyorsanız, burası sıcak ve otantik bir alternatiftir.',
       pills: [
         "🌴 Sakız Adası tatili",
-        "🍊 Kampos Sakız",
+        "🍊 Kambos Sakız",
         "🛏️ Rahat odalar",
         "💎 İyi fiyat-performans",
       ],
@@ -3075,7 +3075,7 @@ export const homePageTr: HomePageData = {
         },
         {
           title: "🌿 Avlu ve huzur",
-          text: "Sakin atmosfer, bahçe ve Kampos’un gerçek ruhu ile dinlenme imkânı.",
+          text: "Sakin atmosfer, bahçe ve Kambos’un gerçek ruhu ile dinlenme imkânı.",
         },
         {
           title: "🧭 Room Wizard",
@@ -3116,7 +3116,7 @@ export const homePageTr: HomePageData = {
       ...homePageEn.location.infoCard,
       kicker: "Yerel bilgiler",
       title: "Voulamandis House",
-      addressLines: ["Mayor Kalvokoresi 117", "Kampos, Chios 82100"],
+      addressLines: ["Mayor Kalvokoresi 117", "Kambos, Chios 82100"],
       phoneLabel: "Tel:",
       emailLabel: "Email:",
       text: "Tesis, Sakız Adası’nın önemli noktalarına kısa mesafede; sakinlik ve kolay ulaşımı bir arada sunan bir konumdadır.",
@@ -3144,10 +3144,10 @@ export const homePageTr: HomePageData = {
       defaultCode: "WELCOME10",
     },
     copy: {
-      kicker: "Konum – Kampos Sakız",
+      kicker: "Konum – Kambos Sakız",
       title: "Sakız Adası’nda otantik bir konaklama için özel bir bölge",
       paragraphsHtml: [
-        "<strong>Sakız Adası Kampos</strong>, tarihi konakları, taş kapıları, bahçeleri ve narenciye kokusuyla adanın en karakteristik bölgelerinden biridir.",
+        "<strong>Sakız Adası Kambos</strong>, tarihi konakları, taş kapıları, bahçeleri ve narenciye kokusuyla adanın en karakteristik bölgelerinden biridir.",
         "Konumu; dinlenmeyi, Sakız şehir merkezine, havaalanına ve popüler plajlara kolay erişimle birleştirmek isteyenler için idealdir.",
       ],
     },
@@ -3157,7 +3157,7 @@ export const homePageTr: HomePageData = {
     ...homePageEn.roomsPreview,
     kicker: "Sakız Adası odaları ve konaklama",
     title: "Çiftler ve aileler için Sakız Adası odaları",
-    text: "Odalarımız her gün temizlenir ve Kampos’ta rahat, sakin ve kaliteli bir konaklama için hazırlanmıştır.",
+    text: "Odalarımız her gün temizlenir ve Kambos’ta rahat, sakin ve kaliteli bir konaklama için hazırlanmıştır.",
     primaryCta: {
       label: "Room Wizard",
       href: "/tr/sakiz-adasi-odalari/",
@@ -3171,7 +3171,7 @@ export const homePageTr: HomePageData = {
     sideCard: {
       kicker: "Sakız Adası odaları",
       title: "Ekonomik konaklamadan aile çözümlerine",
-      text: "Sakız Adası’nda otel arıyor ama daha kişisel bir misafirperverlik istiyorsanız, Voulamandis House Kampos’ta otantik bir alternatiftir.",
+      text: "Sakız Adası’nda otel arıyor ama daha kişisel bir misafirperverlik istiyorsanız, Voulamandis House Kambos’ta otantik bir alternatiftir.",
     },
     rooms: [
       {
@@ -3181,8 +3181,8 @@ export const homePageTr: HomePageData = {
         directBadge: "🎁 -10% İndirim",
         bedBadge: "🛏️ 1 çift kişilik veya 2 tek kişilik yatak",
         description:
-          "Kampos’ta özenli bir konaklama isteyen iki kişi için idealdir.",
-        meta: ["👥 2 misafir", "Ekonomik", "🍊 Kampos"],
+          "Kambos’ta özenli bir konaklama isteyen iki kişi için idealdir.",
+        meta: ["👥 2 misafir", "Ekonomik", "🍊 Kambos"],
         amenities: ["❄️ Klima", "📶 Wi-Fi", "☕ Kahve", "🧊 Buzdolabı"],
         cta: "Odayı gör",
       },
@@ -3339,8 +3339,8 @@ export const homePageTr: HomePageData = {
       },
       {
         ...homePageEn.chiosGuide.cards[2],
-        title: "Sakız Adası Kampos",
-        text: "Kampos’ta konaklamayı özel kılan tarihi bölge hakkında daha fazla bilgi alın.",
+        title: "Sakız Adası Kambos",
+        text: "Kambos’ta konaklamayı özel kılan tarihi bölge hakkında daha fazla bilgi alın.",
         href: "/tr/chios/kampos-chios/",
         ctaLabel: "Daha fazla gör",
       },
@@ -3383,12 +3383,12 @@ export const homePageTr: HomePageData = {
       {
         question: "Voulamandis House bir otel mi?",
         answerHtml:
-          "Voulamandis House, Kampos, Sakız Adası’nda odalar ve daireler sunan bir konaklama tesisidir. Sakız Adası’nda otel arıyor ama daha sakin ve kişisel bir misafirperverlik istiyorsanız, otantik bir alternatiftir.",
+          "Voulamandis House, Kambos, Sakız Adası’nda odalar ve daireler sunan bir konaklama tesisidir. Sakız Adası’nda otel arıyor ama daha sakin ve kişisel bir misafirperverlik istiyorsanız, otantik bir alternatiftir.",
       },
       {
         question: "Voulamandis House tam olarak nerede?",
         answerHtml:
-          "Tesis, tarihi <strong>Kampos, Sakız</strong> bölgesinde yer alır. Havaalanına yaklaşık 7 dakika, limana ve şehir merkezine yaklaşık 14 dakika sürüş mesafesindedir.",
+          "Tesis, tarihi <strong>Kambos, Sakız</strong> bölgesinde yer alır. Havaalanına yaklaşık 7 dakika, limana ve şehir merkezine yaklaşık 14 dakika sürüş mesafesindedir.",
       },
       {
         question: "Kahvaltı var mı?",
@@ -3417,7 +3417,7 @@ export const homePageTr: HomePageData = {
     kicker: "Konaklamanızı ayırtın",
     icon: "✈️",
     title: "Sakız Adası yolculuğunuz burada başlar",
-    text: "Samimi misafirperverlik, otantik atmosfer ve Kampos’ta ideal konum.",
+    text: "Samimi misafirperverlik, otantik atmosfer ve Kambos’ta ideal konum.",
     primaryCta: {
       label: "Direkt rezervasyon",
       href: "/tr/sakiz-adasi-rezervasyon/",

@@ -61,7 +61,7 @@ export const ratesPageEn: RatesPageData = {
     ogImage: ratesHeroImage,
   },
   hero: {
-    kicker: "Kampos, Chios • Voulamandis House",
+    kicker: "Kambos, Chios • Voulamandis House",
     title: "Direct Booking at the Best Rate",
     description:
       "Book your stay directly at Voulamandis House and enjoy the lowest available rates, exclusive perks, and a secure online booking experience in Chios.",
@@ -110,13 +110,13 @@ export const ratesPageEn: RatesPageData = {
     title: "Complete Your Booking",
     text:
       "Check real-time availability, choose your ideal room, and book your stay at Voulamandis House quickly and securely.",
-    iframeTitle: "Direct booking at Voulamandis House, Kampos Chios",
+    iframeTitle: "Direct booking at Voulamandis House, Kambos Chios",
     iframeSrc: bookingIframeSrc,
     fallbackHref: bookingIframeSrc,
   },
   seoCopy: {
     paragraphs: [
-      "If you are looking for direct booking in Chios, rooms in Kampos Chios, or a traditional and welcoming place to stay with excellent value for money, Voulamandis House is one of the most authentic accommodation choices for your stay on the island.",
+      "If you are looking for direct booking in Chios, rooms in Kambos Chios, or a traditional and welcoming place to stay with excellent value for money, Voulamandis House is one of the most authentic accommodation choices for your stay on the island.",
       "You can also explore available travel deals and special offers, learn more about the rooms at Voulamandis House, or contact us for any additional information regarding the booking process.",
     ],
     links: [
@@ -229,7 +229,7 @@ export const ratesPageFr: RatesPageData = {
     ogImage: ratesHeroImage,
   },
   hero: {
-    kicker: "Kampos, Chios • Voulamandis House",
+    kicker: "Kambos, Chios • Voulamandis House",
     title: "Réservez directement au meilleur tarif",
     description:
       "Réservez votre séjour directement à Voulamandis House et profitez des meilleurs tarifs disponibles, d’avantages exclusifs et d’une réservation en ligne sécurisée à Chios.",
@@ -278,13 +278,13 @@ export const ratesPageFr: RatesPageData = {
     title: "Finalisez votre réservation",
     text:
       "Consultez les disponibilités en temps réel, choisissez la chambre idéale et réservez votre séjour à Voulamandis House rapidement et en toute sécurité.",
-    iframeTitle: "Réservation directe à Voulamandis House, Kampos Chios",
+    iframeTitle: "Réservation directe à Voulamandis House, Kambos Chios",
     iframeSrc: bookingIframeSrc,
     fallbackHref: bookingIframeSrc,
   },
   seoCopy: {
     paragraphs: [
-      "Si vous recherchez une réservation directe à Chios, des chambres à Kampos Chios ou un lieu de séjour traditionnel et accueillant avec un excellent rapport qualité-prix, Voulamandis House est l’un des choix d’hébergement les plus authentiques de l’île.",
+      "Si vous recherchez une réservation directe à Chios, des chambres à Kambos Chios ou un lieu de séjour traditionnel et accueillant avec un excellent rapport qualité-prix, Voulamandis House est l’un des choix d’hébergement les plus authentiques de l’île.",
       "Vous pouvez également découvrir nos offres de voyage, en savoir plus sur les chambres de Voulamandis House ou nous contacter pour toute information complémentaire concernant la réservation.",
     ],
     links: [
@@ -313,7 +313,7 @@ export const ratesPageDe: RatesPageData = {
     ogImage: ratesHeroImage,
   },
   hero: {
-    kicker: "Kampos, Chios • Voulamandis House",
+    kicker: "Kambos, Chios • Voulamandis House",
     title: "Direkt zum besten verfügbaren Preis buchen",
     description:
       "Buchen Sie Ihren Aufenthalt direkt im Voulamandis House und profitieren Sie von den besten verfügbaren Preisen, exklusiven Vorteilen und einer sicheren Online-Buchung auf Chios.",
@@ -362,13 +362,13 @@ export const ratesPageDe: RatesPageData = {
     title: "Schließen Sie Ihre Buchung ab",
     text:
       "Prüfen Sie die Verfügbarkeit in Echtzeit, wählen Sie Ihr ideales Zimmer und buchen Sie Ihren Aufenthalt im Voulamandis House schnell und sicher.",
-    iframeTitle: "Direktbuchung im Voulamandis House, Kampos Chios",
+    iframeTitle: "Direktbuchung im Voulamandis House, Kambos Chios",
     iframeSrc: bookingIframeSrc,
     fallbackHref: bookingIframeSrc,
   },
   seoCopy: {
     paragraphs: [
-      "Wenn Sie eine Direktbuchung auf Chios, Zimmer in Kampos Chios oder eine traditionelle und gastfreundliche Unterkunft mit sehr gutem Preis-Leistungs-Verhältnis suchen, ist Voulamandis House eine der authentischsten Unterkünfte für Ihren Aufenthalt auf der Insel.",
+      "Wenn Sie eine Direktbuchung auf Chios, Zimmer in Kambos Chios oder eine traditionelle und gastfreundliche Unterkunft mit sehr gutem Preis-Leistungs-Verhältnis suchen, ist Voulamandis House eine der authentischsten Unterkünfte für Ihren Aufenthalt auf der Insel.",
       "Sie können außerdem verfügbare Reiseangebote entdecken, mehr über die Zimmer im Voulamandis House erfahren oder uns für weitere Informationen zum Buchungsprozess kontaktieren.",
     ],
     links: [
@@ -397,7 +397,7 @@ export const ratesPageIt: RatesPageData = {
     ogImage: ratesHeroImage,
   },
   hero: {
-    kicker: "Kampos, Chios • Voulamandis House",
+    kicker: "Kambos, Chios • Voulamandis House",
     title: "Prenota direttamente alla migliore tariffa",
     description:
       "Prenota il tuo soggiorno direttamente al Voulamandis House e approfitta delle migliori tariffe disponibili, di vantaggi esclusivi e di una prenotazione online sicura a Chios.",
@@ -446,13 +446,13 @@ export const ratesPageIt: RatesPageData = {
     title: "Completa la tua prenotazione",
     text:
       "Controlla la disponibilità in tempo reale, scegli la camera ideale e prenota il tuo soggiorno al Voulamandis House in modo rapido e sicuro.",
-    iframeTitle: "Prenotazione diretta al Voulamandis House, Kampos Chios",
+    iframeTitle: "Prenotazione diretta al Voulamandis House, Kambos Chios",
     iframeSrc: bookingIframeSrc,
     fallbackHref: bookingIframeSrc,
   },
   seoCopy: {
     paragraphs: [
-      "Se cerchi una prenotazione diretta a Chios, camere a Kampos Chios o un luogo tradizionale e accogliente dove soggiornare con un ottimo rapporto qualità-prezzo, Voulamandis House è una delle scelte più autentiche dell’isola.",
+      "Se cerchi una prenotazione diretta a Chios, camere a Kambos Chios o un luogo tradizionale e accogliente dove soggiornare con un ottimo rapporto qualità-prezzo, Voulamandis House è una delle scelte più autentiche dell’isola.",
       "Puoi anche scoprire offerte di viaggio e promozioni, conoscere meglio le camere del Voulamandis House o contattarci per qualsiasi informazione sulla procedura di prenotazione.",
     ],
     links: [
@@ -481,7 +481,7 @@ export const ratesPageEs: RatesPageData = {
     ogImage: ratesHeroImage,
   },
   hero: {
-    kicker: "Kampos, Chios • Voulamandis House",
+    kicker: "Kambos, Chios • Voulamandis House",
     title: "Reserva directa al mejor precio",
     description:
       "Reserva tu estancia directamente en Voulamandis House y disfruta de las mejores tarifas disponibles, ventajas exclusivas y una reserva online segura en Chios.",
@@ -530,13 +530,13 @@ export const ratesPageEs: RatesPageData = {
     title: "Completa tu reserva",
     text:
       "Consulta la disponibilidad en tiempo real, elige la habitación ideal y reserva tu estancia en Voulamandis House de forma rápida y segura.",
-    iframeTitle: "Reserva directa en Voulamandis House, Kampos Chios",
+    iframeTitle: "Reserva directa en Voulamandis House, Kambos Chios",
     iframeSrc: bookingIframeSrc,
     fallbackHref: bookingIframeSrc,
   },
   seoCopy: {
     paragraphs: [
-      "Si buscas reserva directa en Chios, habitaciones en Kampos Chios o un alojamiento tradicional y acogedor con una excelente relación calidad-precio, Voulamandis House es una de las opciones más auténticas para tu estancia en la isla.",
+      "Si buscas reserva directa en Chios, habitaciones en Kambos Chios o un alojamiento tradicional y acogedor con una excelente relación calidad-precio, Voulamandis House es una de las opciones más auténticas para tu estancia en la isla.",
       "También puedes explorar ofertas de viaje y promociones, conocer mejor las habitaciones de Voulamandis House o contactarnos para cualquier información adicional sobre el proceso de reserva.",
     ],
     links: [
@@ -565,7 +565,7 @@ export const ratesPageTr: RatesPageData = {
     ogImage: ratesHeroImage,
   },
   hero: {
-    kicker: "Kampos, Sakız Adası • Voulamandis House",
+    kicker: "Kambos, Sakız Adası • Voulamandis House",
     title: "En iyi fiyatla doğrudan rezervasyon",
     description:
       "Voulamandis House konaklamanızı doğrudan rezerve edin; en iyi mevcut fiyatlardan, özel avantajlardan ve Sakız Adası’nda güvenli online rezervasyondan yararlanın.",
@@ -614,13 +614,13 @@ export const ratesPageTr: RatesPageData = {
     title: "Rezervasyonunuzu tamamlayın",
     text:
       "Canlı müsaitliği kontrol edin, size en uygun odayı seçin ve Voulamandis House konaklamanızı hızlı ve güvenli şekilde rezerve edin.",
-    iframeTitle: "Voulamandis House, Kampos Sakız Adası direkt rezervasyon",
+    iframeTitle: "Voulamandis House, Kambos Sakız Adası direkt rezervasyon",
     iframeSrc: bookingIframeSrc,
     fallbackHref: bookingIframeSrc,
   },
   seoCopy: {
     paragraphs: [
-      "Sakız Adası’nda direkt rezervasyon, Kampos bölgesinde odalar veya iyi fiyat-performans sunan geleneksel ve samimi bir konaklama arıyorsanız, Voulamandis House adadaki en otantik konaklama seçeneklerinden biridir.",
+      "Sakız Adası’nda direkt rezervasyon, Kambos bölgesinde odalar veya iyi fiyat-performans sunan geleneksel ve samimi bir konaklama arıyorsanız, Voulamandis House adadaki en otantik konaklama seçeneklerinden biridir.",
       "Ayrıca seyahat fırsatlarını ve özel teklifleri inceleyebilir, Voulamandis House odaları hakkında daha fazla bilgi alabilir veya rezervasyon süreciyle ilgili ek bilgi için bizimle iletişime geçebilirsiniz.",
     ],
     links: [

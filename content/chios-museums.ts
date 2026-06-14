@@ -103,7 +103,7 @@ export const chiosMuseumsPageEn: ChiosMuseumsPageData = {
       href: "#museums",
     },
     secondaryCta: {
-      label: "Stay in Kampos",
+      label: "Stay in Kambos",
       href: "/chios-rooms/",
     },
   },
@@ -116,7 +116,7 @@ export const chiosMuseumsPageEn: ChiosMuseumsPageData = {
       icon: "🏛️",
       title: "Combine culture with your island routes",
       text:
-        "Many museums are in or near Chios Town, while the Mastic Museum is in south Chios near the mastic villages. Voulamandis House in Kampos is a practical base for combining museums, villages, beaches and local food.",
+        "Many museums are in or near Chios Town, while the Mastic Museum is in south Chios near the mastic villages. Voulamandis House in Kambos is a practical base for combining museums, villages, beaches and local food.",
       linkLabel: "View rooms at Voulamandis House",
       href: "/chios-rooms/",
     },
@@ -235,7 +235,7 @@ export const chiosMuseumsPageEn: ChiosMuseumsPageData = {
   },
   stay: {
     kicker: "Stay with local advice",
-    title: "Explore Chios culture from Kampos",
+    title: "Explore Chios culture from Kambos",
     text:
       "Voulamandis House is a quiet base close to Chios Town and the airport, while keeping you connected to cultural routes, villages, beaches and the southern mastic area.",
     primaryCta: {
@@ -433,7 +433,7 @@ export const chiosMuseumsPageFr: ChiosMuseumsPageData = {
       href: "#museums",
     },
     secondaryCta: {
-      label: "Séjourner à Kampos",
+      label: "Séjourner à Kambos",
       href: "/fr/chambres-a-chios/",
     },
   },
@@ -446,7 +446,7 @@ export const chiosMuseumsPageFr: ChiosMuseumsPageData = {
       icon: "🏛️",
       title: "Associez culture et itinéraires sur l’île",
       text:
-        "De nombreux musées se trouvent dans ou près de la ville de Chios, tandis que le Musée du Mastic est situé au sud, près des villages du mastic. Voulamandis House à Kampos est une base pratique pour combiner musées, villages, plages et cuisine locale.",
+        "De nombreux musées se trouvent dans ou près de la ville de Chios, tandis que le Musée du Mastic est situé au sud, près des villages du mastic. Voulamandis House à Kambos est une base pratique pour combiner musées, villages, plages et cuisine locale.",
       linkLabel: "Voir les chambres de Voulamandis House",
       href: "/fr/chambres-a-chios/",
     },
@@ -565,7 +565,7 @@ export const chiosMuseumsPageFr: ChiosMuseumsPageData = {
   },
   stay: {
     kicker: "Séjour avec conseils locaux",
-    title: "Explorez la culture de Chios depuis Kampos",
+    title: "Explorez la culture de Chios depuis Kambos",
     text:
       "Voulamandis House offre une base calme près de la ville et de l’aéroport, tout en restant bien reliée aux itinéraires culturels, aux villages, aux plages et à la région du mastic au sud.",
     primaryCta: {
@@ -598,7 +598,7 @@ export const chiosMuseumsPageDe: ChiosMuseumsPageData = {
       href: "#museums",
     },
     secondaryCta: {
-      label: "In Kampos übernachten",
+      label: "In Kambos übernachten",
       href: "/de/chios-zimmer/",
     },
   },
@@ -611,7 +611,7 @@ export const chiosMuseumsPageDe: ChiosMuseumsPageData = {
       icon: "🏛️",
       title: "Kultur mit Ihren Inselrouten verbinden",
       text:
-        "Viele Museen befinden sich in oder nahe Chios-Stadt, während das Mastix-Museum im Süden nahe der Mastixdörfer liegt. Voulamandis House in Kampos ist eine praktische Basis, um Museen, Dörfer, Strände und lokale Küche zu kombinieren.",
+        "Viele Museen befinden sich in oder nahe Chios-Stadt, während das Mastix-Museum im Süden nahe der Mastixdörfer liegt. Voulamandis House in Kambos ist eine praktische Basis, um Museen, Dörfer, Strände und lokale Küche zu kombinieren.",
       linkLabel: "Zimmer im Voulamandis House ansehen",
       href: "/de/chios-zimmer/",
     },
@@ -730,7 +730,7 @@ export const chiosMuseumsPageDe: ChiosMuseumsPageData = {
   },
   stay: {
     kicker: "Übernachten mit lokalen Tipps",
-    title: "Entdecken Sie Chios-Kultur von Kampos aus",
+    title: "Entdecken Sie Chios-Kultur von Kambos aus",
     text:
       "Voulamandis House bietet eine ruhige Basis nahe Chios-Stadt und Flughafen und verbindet Sie mit Kulturrouten, Dörfern, Stränden und dem südlichen Mastixgebiet.",
     primaryCta: {
@@ -763,7 +763,7 @@ export const chiosMuseumsPageIt: ChiosMuseumsPageData = {
       href: "#museums",
     },
     secondaryCta: {
-      label: "Soggiorna a Kampos",
+      label: "Soggiorna a Kambos",
       href: "/it/camere-a-chios/",
     },
   },
@@ -776,7 +776,7 @@ export const chiosMuseumsPageIt: ChiosMuseumsPageData = {
       icon: "🏛️",
       title: "Abbina cultura e itinerari sull’isola",
       text:
-        "Molti musei si trovano nella città di Chios o nelle vicinanze, mentre il Museo del Mastice si trova a sud, vicino ai villaggi del mastice. Voulamandis House a Kampos è una base pratica per combinare musei, villaggi, spiagge e cucina locale.",
+        "Molti musei si trovano nella città di Chios o nelle vicinanze, mentre il Museo del Mastice si trova a sud, vicino ai villaggi del mastice. Voulamandis House a Kambos è una base pratica per combinare musei, villaggi, spiagge e cucina locale.",
       linkLabel: "Vedi le camere di Voulamandis House",
       href: "/it/camere-a-chios/",
     },
@@ -895,7 +895,7 @@ export const chiosMuseumsPageIt: ChiosMuseumsPageData = {
   },
   stay: {
     kicker: "Soggiorna con consigli locali",
-    title: "Esplora la cultura di Chios da Kampos",
+    title: "Esplora la cultura di Chios da Kambos",
     text:
       "Voulamandis House offre una base tranquilla vicino alla città e all’aeroporto, mantenendoti collegato a itinerari culturali, villaggi, spiagge e alla zona del mastice a sud.",
     primaryCta: {
@@ -928,7 +928,7 @@ export const chiosMuseumsPageEs: ChiosMuseumsPageData = {
       href: "#museums",
     },
     secondaryCta: {
-      label: "Alojarse en Kampos",
+      label: "Alojarse en Kambos",
       href: "/es/habitaciones-en-chios/",
     },
   },
@@ -941,7 +941,7 @@ export const chiosMuseumsPageEs: ChiosMuseumsPageData = {
       icon: "🏛️",
       title: "Combina cultura con tus rutas por la isla",
       text:
-        "Muchos museos están en la ciudad de Chios o cerca de ella, mientras que el Museo de la Mastiha se encuentra en el sur, cerca de los pueblos de la mastiha. Voulamandis House en Kampos es una base práctica para combinar museos, pueblos, playas y comida local.",
+        "Muchos museos están en la ciudad de Chios o cerca de ella, mientras que el Museo de la Mastiha se encuentra en el sur, cerca de los pueblos de la mastiha. Voulamandis House en Kambos es una base práctica para combinar museos, pueblos, playas y comida local.",
       linkLabel: "Ver habitaciones en Voulamandis House",
       href: "/es/habitaciones-en-chios/",
     },
@@ -1060,7 +1060,7 @@ export const chiosMuseumsPageEs: ChiosMuseumsPageData = {
   },
   stay: {
     kicker: "Alojamiento con consejos locales",
-    title: "Explora la cultura de Chios desde Kampos",
+    title: "Explora la cultura de Chios desde Kambos",
     text:
       "Voulamandis House ofrece una base tranquila cerca de la ciudad y el aeropuerto, manteniéndote conectado con rutas culturales, pueblos, playas y la zona sur de la mastiha.",
     primaryCta: {
@@ -1093,7 +1093,7 @@ export const chiosMuseumsPageTr: ChiosMuseumsPageData = {
       href: "#museums",
     },
     secondaryCta: {
-      label: "Kampos’ta konakla",
+      label: "Kambos’ta konakla",
       href: "/tr/sakiz-adasi-odalari/",
     },
   },
@@ -1106,7 +1106,7 @@ export const chiosMuseumsPageTr: ChiosMuseumsPageData = {
       icon: "🏛️",
       title: "Kültürü ada rotalarınızla birleştirin",
       text:
-        "Birçok müze Sakız şehir merkezinde veya yakınındadır; Mastik Müzesi ise güneyde, mastik köylerine yakındır. Kampos’taki Voulamandis House, müzeleri, köyleri, plajları ve yerel yemek duraklarını birleştirmek için pratik bir üstür.",
+        "Birçok müze Sakız şehir merkezinde veya yakınındadır; Mastik Müzesi ise güneyde, mastik köylerine yakındır. Kambos’taki Voulamandis House, müzeleri, köyleri, plajları ve yerel yemek duraklarını birleştirmek için pratik bir üstür.",
       linkLabel: "Voulamandis House odalarını görüntüleyin",
       href: "/tr/sakiz-adasi-odalari/",
     },
@@ -1225,7 +1225,7 @@ export const chiosMuseumsPageTr: ChiosMuseumsPageData = {
   },
   stay: {
     kicker: "Yerel tavsiyelerle konaklayın",
-    title: "Sakız kültürünü Kampos’tan keşfedin",
+    title: "Sakız kültürünü Kambos’tan keşfedin",
     text:
       "Voulamandis House, şehir merkezine ve havaalanına yakın sakin bir üs sunarken kültür rotalarına, köylere, plajlara ve güney mastik bölgesine kolay bağlantı sağlar.",
     primaryCta: {
