@@ -69,6 +69,12 @@ function shouldReturnGone(pathname: string) {
   });
 }
 
+function isWordPressFeedPath(pathname: string) {
+  const normalizedPathname = normalizeLegacyPathname(pathname);
+
+  return normalizedPathname === "/feed" || normalizedPathname.endsWith("/feed");
+}
+
 function isStaffPath(pathname: string) {
   return (
     pathname === "/staff" ||
@@ -133,7 +139,7 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(url, 301);
   }
 
-  if (shouldReturnGone(pathname)) {
+  if (shouldReturnGone(pathname) || isWordPressFeedPath(pathname)) {
     return new NextResponse("Gone", {
       status: 410,
       headers: {
