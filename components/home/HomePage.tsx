@@ -78,7 +78,7 @@ export function HomePage({ data }: HomePageProps) {
                   <span>{data.hero.reviews}</span>
                 </div>
                 <div className="stars" aria-hidden="true">
-                  β…β…β…β…β…
+                  {"\u2605\u2605\u2605\u2605\u2605"}
                 </div>
               </div>
 
@@ -352,7 +352,7 @@ export function HomePage({ data }: HomePageProps) {
                       id="dc_submitBtn"
                       onClick={showDiscountCode}
                     >
-                      <span aria-hidden="true">π</span> {data.location.discount.revealCodeLabel}
+                      <span aria-hidden="true">{"\u{1F381}"}</span> {data.location.discount.revealCodeLabel}
                     </button>
 
                     <div id="discountSuccess" className="discount-success" aria-live="polite">
