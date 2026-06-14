@@ -959,10 +959,8 @@ const COPY: Record<Locale, Omit<Copy, "rooms">> = {
   },
 };
 
-function detectLocale(): Locale {
-  if (typeof window === "undefined") return "en";
-
-  const path = window.location.pathname.toLowerCase();
+function detectLocaleFromCanonicalPath(canonicalPath: string): Locale {
+  const path = canonicalPath.toLowerCase();
 
   if (path === "/el" || path.startsWith("/el/")) return "el";
   if (path === "/fr" || path.startsWith("/fr/")) return "fr";
@@ -1212,8 +1210,8 @@ function buildWhatsappMessage({
   ].join("\n");
 }
 
-export function LastMinuteDeals({ data }: { data: LastMinuteData }) {
-  const [locale, setLocale] = useState<Locale>("en");
+export function LastMinuteDeals({ data, canonicalPath }: { data: LastMinuteData; canonicalPath: string }) {
+  const locale = useMemo(() => detectLocaleFromCanonicalPath(canonicalPath), [canonicalPath]);
   const [deals, setDeals] = useState<DealsResponse | null>(null);
   const [guests, setGuests] = useState<number | null>(null);
   const [filters, setFilters] = useState<Set<FilterKey>>(() => new Set());
@@ -1224,10 +1222,6 @@ export function LastMinuteDeals({ data }: { data: LastMinuteData }) {
   const [countdown, setCountdown] = useState("00:00:00");
 
   const copy = useMemo(() => getCopy(locale), [locale]);
-
-  useEffect(() => {
-    setLocale(detectLocale());
-  }, []);
 
   useEffect(() => {
     function tick() {

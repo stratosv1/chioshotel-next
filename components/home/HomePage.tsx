@@ -457,7 +457,7 @@ export function HomePage({ data }: HomePageProps) {
           </div>
         </section>
 
-        <LastMinuteDeals data={data.lastMinute} />
+        <LastMinuteDeals data={data.lastMinute} canonicalPath={data.seo.canonicalPath} />
 
         <section className="vh-section vh-section--tight" aria-labelledby="vh-reviews-title">
           <div className="vh-wrap">
