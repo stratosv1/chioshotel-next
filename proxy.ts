@@ -19,17 +19,26 @@ const legacyRedirects: Record<string, string> = {
   "/en": "/",
   "/book%20the%20room%20you%20like": "/find-your-room/",
   "/book the room you like": "/find-your-room/",
+
   "/chios/chios-beaches/agia-dynami-beach":
     "/chios/chios-beaches/agia-dynami-beach-chios/",
   "/chios/chios-museums/the-kallimasia-folklore-museum":
     "/chios/chios-museums/kallimasia-folklore-museum/",
+  "/chios/chios-villages/pyrgi-voulamandis-house-chios-hotels":
+    "/chios/chios-villages/chios-pyrgi/",
+
   "/de/chios-insel/lagada-chios-3": "/de/doerfer-chios/lagada-dorf/",
+  "/fr/chios/musees-de-chios": "/fr/musees-de-chios/",
+
   "/tr/chios-odalari/sakiz-adasinin-plajlari": "/tr/sakiz-adasi-plajlari/",
+  "/tr/chios-odalari/vessa-koyu-chios": "/tr/sakiz-adasi-koyleri/vessa-koyu/",
+  "/tr/chios-odalari/mesta-koyu-chios": "/tr/sakiz-adasi-koyleri/mesta-koyu/",
+  "/tr/chios-odalari/volissos-koyu-chios":
+    "/tr/sakiz-adasi-koyleri/volissos-koyu/",
+
   "/el/chios-el/chios-armolia-village": "/el/xoria-xios/armolia-xios/",
   "/el/chios-el/chios-villages-el/armolia-xios/αρμόλια χίος":
     "/el/xoria-xios/armolia-xios/",
-  "/tr/chios-odalari/vessa-koyu-chios": "/tr/sakiz-adasi-koyleri/vessa-koyu/",
-  "/tr/chios-odalari/mesta-koyu-chios": "/tr/sakiz-adasi-koyleri/mesta-koyu/",
 };
 
 function normalizeLegacyPathname(pathname: string) {
