@@ -252,7 +252,7 @@
 
 export const homePageEn: HomePageData = {
   seo: {
-    title: "Chios Hotels & Rooms | Voulamandis House",
+    title: "Chios Hotels & Rooms",
     description:
       "Peaceful rooms and apartments in Kampos, Chios. Stay at Voulamandis House near Chios airport, town and beaches, with authentic hospitality and direct booking benefits.",
     canonicalPath: "/",
@@ -777,7 +777,7 @@ export const homePageEl: HomePageData = {
   ...homePageEn,
 
   seo: {
-    title: "Ξενοδοχείο στη Χίο | Voulamandis House",
+    title: "Ξενοδοχείο στη Χίο",
     description:
       "Ήσυχα δωμάτια και διαμερίσματα στον Κάμπο της Χίου. Διαμονή στο Voulamandis House κοντά σε αεροδρόμιο, πόλη και παραλίες.",
     canonicalPath: "/el/",
@@ -1247,7 +1247,7 @@ export const homePageFr: HomePageData = {
   ...homePageEn,
 
   seo: {
-    title: "Hôtel à Chios | Voulamandis House",
+    title: "Hôtel à Chios",
     description:
       "Chambres et appartements paisibles à Kampos, Chios. Séjournez à Voulamandis House, près de l’aéroport, de la ville, des plages et des villages de l’île.",
     canonicalPath: "/fr/",
@@ -1687,7 +1687,7 @@ export const homePageDe: HomePageData = {
   ...homePageEn,
 
   seo: {
-    title: "Hotel auf Chios | Voulamandis House",
+    title: "Hotel auf Chios",
     description:
       "Ruhige Zimmer und Apartments in Kampos, Chios. Übernachten Sie im Voulamandis House nahe Flughafen, Stadt, Stränden und Dörfern.",
     canonicalPath: "/de/",
@@ -2126,7 +2126,7 @@ export const homePageIt: HomePageData = {
   ...homePageEn,
 
   seo: {
-    title: "Hotel a Chios | Voulamandis House",
+    title: "Hotel a Chios",
     description:
       "Camere e appartamenti tranquilli a Kampos, Chios. Soggiorna al Voulamandis House, vicino all’aeroporto, alla città, alle spiagge e ai villaggi dell’isola.",
     canonicalPath: "/it/",
@@ -2566,7 +2566,7 @@ export const homePageEs: HomePageData = {
   ...homePageEn,
 
   seo: {
-    title: "Hotel en Chios | Voulamandis House",
+    title: "Hotel en Chios",
     description:
       "Habitaciones y apartamentos tranquilos en Kampos, Chios. Alójate en Voulamandis House, cerca del aeropuerto, la ciudad, las playas y los pueblos de la isla.",
     canonicalPath: "/es/",
@@ -3006,7 +3006,7 @@ export const homePageTr: HomePageData = {
   ...homePageEn,
 
   seo: {
-    title: "Sakız Adası Oteli | Voulamandis House",
+    title: "Sakız Adası Oteli",
     description:
       "Kampos, Sakız Adası’nda sakin odalar ve daireler. Havaalanına, merkeze, plajlara ve köylere yakın Voulamandis House’ta konaklayın.",
     canonicalPath: "/tr/",
