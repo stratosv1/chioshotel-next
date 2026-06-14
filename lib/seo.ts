@@ -40,6 +40,27 @@ function splitPath(path: string) {
   };
 }
 
+function normalizeMetadataTitle(title: string): string {
+  const trimmedTitle = title.trim();
+  const duplicateBrandSuffix = ` | ${siteName}`;
+
+  if (trimmedTitle.endsWith(duplicateBrandSuffix)) {
+    return trimmedTitle.slice(0, -duplicateBrandSuffix.length).trim();
+  }
+
+  return trimmedTitle;
+}
+
+function buildMetadataTitle(title: string): Metadata["title"] {
+  if (title.includes(siteName)) {
+    return {
+      absolute: title,
+    };
+  }
+
+  return title;
+}
+
 export function absoluteUrl(path: string): string {
   if (!path) {
     return `${siteUrl}/`;
@@ -166,6 +187,8 @@ export function buildPageMetadata(input: SeoInput): Metadata {
     : absoluteUrl(defaultOgImage);
   const locale = getLocaleForPath(input.path);
   const alternateLocale = getAlternateLocales(input.path);
+  const title = normalizeMetadataTitle(input.title);
+  const metadataTitle = buildMetadataTitle(title);
 
   const robots: Metadata["robots"] = input.noIndex
     ? {
@@ -193,7 +216,7 @@ export function buildPageMetadata(input: SeoInput): Metadata {
 
   return {
     metadataBase: new URL(siteUrl),
-    title: input.title,
+    title: metadataTitle,
     description: input.description,
     alternates: buildAlternates(input.path),
     robots,
@@ -201,7 +224,7 @@ export function buildPageMetadata(input: SeoInput): Metadata {
       type: input.ogType || "website",
       url: canonicalUrl,
       siteName,
-      title: input.title,
+      title,
       description: input.description,
       locale,
       alternateLocale,
@@ -210,13 +233,13 @@ export function buildPageMetadata(input: SeoInput): Metadata {
           url: imageUrl,
           width: 1200,
           height: 675,
-          alt: input.imageAlt || input.title,
+          alt: input.imageAlt || title,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: input.title,
+      title,
       description: input.description,
       images: [imageUrl],
     },
