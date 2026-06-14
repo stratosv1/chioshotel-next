@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { FindYourRoomPageData } from "@/content/find-your-room";
@@ -102,15 +102,15 @@ const ROOM_EXTRA_PER_NIGHT: Record<number, number> = {
 };
 
 const filters: { key: FilterKey; icon: string }[] = [
-  { key: "all", icon: "✨" },
-  { key: "budget", icon: "💸" },
-  { key: "stairs", icon: "🪜" },
-  { key: "upperFloor", icon: "🏛️" },
-  { key: "ground", icon: "🌿" },
-  { key: "gardenView", icon: "🌳" },
-  { key: "upperFloorView", icon: "🌾" },
-  { key: "kitchen", icon: "🍳" },
-  { key: "noKitchen", icon: "🚫🍳" },
+  { key: "all", icon: "β¨" },
+  { key: "budget", icon: "π’Έ" },
+  { key: "stairs", icon: "π" },
+  { key: "upperFloor", icon: "π›οΈ" },
+  { key: "ground", icon: "πΏ" },
+  { key: "gardenView", icon: "π³" },
+  { key: "upperFloorView", icon: "πΎ" },
+  { key: "kitchen", icon: "π³" },
+  { key: "noKitchen", icon: "π«π³" },
 ];
 
 const roomOptions: RoomOption[] = [
@@ -139,14 +139,14 @@ const roomOptions: RoomOption[] = [
       "/images/rooms/voulamandis-house-bathrooms-1.webp",
     ],
     amenities: [
-      { key: "wifi", icon: "📶", fallback: "Wi-Fi" },
-      { key: "kettle", icon: "☕", fallback: "Coffee and tea kettle" },
-      { key: "privateBalcony", icon: "🌤️", fallback: "Private balcony" },
-      { key: "upperFloorView", icon: "🌾", fallback: "Upper-floor view" },
-      { key: "accessByStairs", icon: "🪜", fallback: "Access by stairs" },
-      { key: "doubleBed", icon: "🛏️", fallback: "1 double bed" },
-      { key: "singleBeds2", icon: "🛏️", fallback: "2 single beds" },
-      { key: "twoSpacesNoDoor", icon: "🚪", fallback: "Two spaces, no connecting door" },
+      { key: "wifi", icon: "π“¶", fallback: "Wi-Fi" },
+      { key: "kettle", icon: "β•", fallback: "Coffee and tea kettle" },
+      { key: "privateBalcony", icon: "π¤οΈ", fallback: "Private balcony" },
+      { key: "upperFloorView", icon: "πΎ", fallback: "Upper-floor view" },
+      { key: "accessByStairs", icon: "π", fallback: "Access by stairs" },
+      { key: "doubleBed", icon: "π›οΈ", fallback: "1 double bed" },
+      { key: "singleBeds2", icon: "π›οΈ", fallback: "2 single beds" },
+      { key: "twoSpacesNoDoor", icon: "π", fallback: "Two spaces, no connecting door" },
     ],
     basePrice: 78,
   },
@@ -175,11 +175,11 @@ const roomOptions: RoomOption[] = [
       "/images/rooms/received_1385287484893642_1500478431120_1200x800_3240x2160-1.webp",
     ],
     amenities: [
-      { key: "wifi", icon: "📶", fallback: "Wi-Fi" },
-      { key: "kettle", icon: "☕", fallback: "Coffee and tea kettle" },
-      { key: "accessByStairs", icon: "🪜", fallback: "Access by stairs" },
-      { key: "doubleBed", icon: "🛏️", fallback: "1 double bed" },
-      { key: "openPlanSpace", icon: "📐", fallback: "Open-plan space" },
+      { key: "wifi", icon: "π“¶", fallback: "Wi-Fi" },
+      { key: "kettle", icon: "β•", fallback: "Coffee and tea kettle" },
+      { key: "accessByStairs", icon: "π", fallback: "Access by stairs" },
+      { key: "doubleBed", icon: "π›οΈ", fallback: "1 double bed" },
+      { key: "openPlanSpace", icon: "π“", fallback: "Open-plan space" },
     ],
     basePrice: 55,
   },
@@ -208,15 +208,15 @@ const roomOptions: RoomOption[] = [
       "/images/rooms/DSC07891-1.webp",
     ],
     amenities: [
-      { key: "wifi", icon: "📶", fallback: "Wi-Fi" },
-      { key: "kettle", icon: "☕", fallback: "Coffee and tea kettle" },
-      { key: "privateBalcony", icon: "🌤️", fallback: "Private balcony" },
-      { key: "upperFloorView", icon: "🌾", fallback: "Upper-floor view" },
-      { key: "kitchenette", icon: "🥣", fallback: "Kitchenette" },
-      { key: "accessByStairs", icon: "🪜", fallback: "Access by stairs" },
-      { key: "doubleBed", icon: "🛏️", fallback: "1 double bed" },
-      { key: "singleBed", icon: "🛏️", fallback: "1 single bed" },
-      { key: "twoSpacesNoDoor", icon: "🚪", fallback: "Two spaces, no connecting door" },
+      { key: "wifi", icon: "π“¶", fallback: "Wi-Fi" },
+      { key: "kettle", icon: "β•", fallback: "Coffee and tea kettle" },
+      { key: "privateBalcony", icon: "π¤οΈ", fallback: "Private balcony" },
+      { key: "upperFloorView", icon: "πΎ", fallback: "Upper-floor view" },
+      { key: "kitchenette", icon: "π¥£", fallback: "Kitchenette" },
+      { key: "accessByStairs", icon: "π", fallback: "Access by stairs" },
+      { key: "doubleBed", icon: "π›οΈ", fallback: "1 double bed" },
+      { key: "singleBed", icon: "π›οΈ", fallback: "1 single bed" },
+      { key: "twoSpacesNoDoor", icon: "π", fallback: "Two spaces, no connecting door" },
     ],
     basePrice: 70,
   },
@@ -244,15 +244,15 @@ const roomOptions: RoomOption[] = [
       "/images/rooms/received_1748356725253381.webp",
     ],
     amenities: [
-      { key: "wifi", icon: "📶", fallback: "Wi-Fi" },
-      { key: "kettle", icon: "☕", fallback: "Coffee and tea kettle" },
-      { key: "privateBalcony", icon: "🌤️", fallback: "Private balcony" },
-      { key: "upperFloorView", icon: "🌾", fallback: "Upper-floor view" },
-      { key: "kitchenette", icon: "🥣", fallback: "Kitchenette" },
-      { key: "accessByStairs", icon: "🪜", fallback: "Access by stairs" },
-      { key: "doubleBed", icon: "🛏️", fallback: "1 double bed" },
-      { key: "sofaBed", icon: "🛋️", fallback: "1 sofa bed" },
-      { key: "openPlanSpace", icon: "📐", fallback: "Open-plan space" },
+      { key: "wifi", icon: "π“¶", fallback: "Wi-Fi" },
+      { key: "kettle", icon: "β•", fallback: "Coffee and tea kettle" },
+      { key: "privateBalcony", icon: "π¤οΈ", fallback: "Private balcony" },
+      { key: "upperFloorView", icon: "πΎ", fallback: "Upper-floor view" },
+      { key: "kitchenette", icon: "π¥£", fallback: "Kitchenette" },
+      { key: "accessByStairs", icon: "π", fallback: "Access by stairs" },
+      { key: "doubleBed", icon: "π›οΈ", fallback: "1 double bed" },
+      { key: "sofaBed", icon: "π›‹οΈ", fallback: "1 sofa bed" },
+      { key: "openPlanSpace", icon: "π“", fallback: "Open-plan space" },
     ],
     basePrice: 70,
   },
@@ -281,13 +281,13 @@ const roomOptions: RoomOption[] = [
       "/images/rooms/hotels-chios-voulamandis_1620x1080.webp",
     ],
     amenities: [
-      { key: "wifi", icon: "📶", fallback: "Wi-Fi" },
-      { key: "kettle", icon: "☕", fallback: "Coffee and tea kettle" },
-      { key: "gardenView", icon: "🌿", fallback: "Ground-floor view" },
-      { key: "noStairs", icon: "🪜❌", fallback: "No stairs" },
-      { key: "doubleBed", icon: "🛏️", fallback: "1 double bed" },
-      { key: "singleBed", icon: "🛏️", fallback: "1 single bed" },
-      { key: "openPlanSpace", icon: "📐", fallback: "Open-plan space" },
+      { key: "wifi", icon: "π“¶", fallback: "Wi-Fi" },
+      { key: "kettle", icon: "β•", fallback: "Coffee and tea kettle" },
+      { key: "gardenView", icon: "πΏ", fallback: "Ground-floor view" },
+      { key: "noStairs", icon: "πβ", fallback: "No stairs" },
+      { key: "doubleBed", icon: "π›οΈ", fallback: "1 double bed" },
+      { key: "singleBed", icon: "π›οΈ", fallback: "1 single bed" },
+      { key: "openPlanSpace", icon: "π“", fallback: "Open-plan space" },
     ],
     basePrice: 70,
   },
@@ -316,12 +316,12 @@ const roomOptions: RoomOption[] = [
       "/images/rooms/received_1753969201358800.webp",
     ],
     amenities: [
-      { key: "wifi", icon: "📶", fallback: "Wi-Fi" },
-      { key: "kettle", icon: "☕", fallback: "Coffee and tea kettle" },
-      { key: "gardenView", icon: "🌿", fallback: "Ground-floor view" },
-      { key: "noStairs", icon: "🪜❌", fallback: "No stairs" },
-      { key: "doubleBed", icon: "🛏️", fallback: "1 double bed" },
-      { key: "openPlanSpace", icon: "📐", fallback: "Open-plan space" },
+      { key: "wifi", icon: "π“¶", fallback: "Wi-Fi" },
+      { key: "kettle", icon: "β•", fallback: "Coffee and tea kettle" },
+      { key: "gardenView", icon: "πΏ", fallback: "Ground-floor view" },
+      { key: "noStairs", icon: "πβ", fallback: "No stairs" },
+      { key: "doubleBed", icon: "π›οΈ", fallback: "1 double bed" },
+      { key: "openPlanSpace", icon: "π“", fallback: "Open-plan space" },
     ],
     basePrice: 55,
   },
@@ -350,13 +350,13 @@ const roomOptions: RoomOption[] = [
       "/images/rooms/voulamandis-stone-bathroom.webp",
     ],
     amenities: [
-      { key: "wifi", icon: "📶", fallback: "Wi-Fi" },
-      { key: "kettle", icon: "☕", fallback: "Coffee and tea kettle" },
-      { key: "gardenView", icon: "🌿", fallback: "Ground-floor view" },
-      { key: "noStairs", icon: "🪜❌", fallback: "No stairs" },
-      { key: "doubleBed", icon: "🛏️", fallback: "1 double bed" },
-      { key: "sofaBed", icon: "🛋️", fallback: "1 sofa bed" },
-      { key: "openPlanSpace", icon: "📐", fallback: "Open-plan space" },
+      { key: "wifi", icon: "π“¶", fallback: "Wi-Fi" },
+      { key: "kettle", icon: "β•", fallback: "Coffee and tea kettle" },
+      { key: "gardenView", icon: "πΏ", fallback: "Ground-floor view" },
+      { key: "noStairs", icon: "πβ", fallback: "No stairs" },
+      { key: "doubleBed", icon: "π›οΈ", fallback: "1 double bed" },
+      { key: "sofaBed", icon: "π›‹οΈ", fallback: "1 sofa bed" },
+      { key: "openPlanSpace", icon: "π“", fallback: "Open-plan space" },
     ],
     basePrice: 72,
   },
@@ -385,15 +385,15 @@ const roomOptions: RoomOption[] = [
       "/images/rooms/voulamandis-apartment-bathroom..webp",
     ],
     amenities: [
-      { key: "wifi", icon: "📶", fallback: "Wi-Fi" },
-      { key: "kettle", icon: "☕", fallback: "Coffee and tea kettle" },
-      { key: "privateBalcony", icon: "🌤️", fallback: "Private balcony" },
-      { key: "gardenView", icon: "🌿", fallback: "Ground-floor view" },
-      { key: "kitchen", icon: "🍳", fallback: "Kitchen" },
-      { key: "noStairs", icon: "🪜❌", fallback: "No stairs" },
-      { key: "doubleBed", icon: "🛏️", fallback: "1 double bed" },
-      { key: "singleBeds2", icon: "🛏️", fallback: "2 single beds" },
-      { key: "twoSpaces", icon: "🧩", fallback: "Two spaces" },
+      { key: "wifi", icon: "π“¶", fallback: "Wi-Fi" },
+      { key: "kettle", icon: "β•", fallback: "Coffee and tea kettle" },
+      { key: "privateBalcony", icon: "π¤οΈ", fallback: "Private balcony" },
+      { key: "gardenView", icon: "πΏ", fallback: "Ground-floor view" },
+      { key: "kitchen", icon: "π³", fallback: "Kitchen" },
+      { key: "noStairs", icon: "πβ", fallback: "No stairs" },
+      { key: "doubleBed", icon: "π›οΈ", fallback: "1 double bed" },
+      { key: "singleBeds2", icon: "π›οΈ", fallback: "2 single beds" },
+      { key: "twoSpaces", icon: "π§©", fallback: "Two spaces" },
     ],
     basePrice: 92,
   },
@@ -422,15 +422,15 @@ const roomOptions: RoomOption[] = [
       "/images/rooms/voulamandis-apartment-bathroom..webp",
     ],
     amenities: [
-      { key: "wifi", icon: "📶", fallback: "Wi-Fi" },
-      { key: "kettle", icon: "☕", fallback: "Coffee and tea kettle" },
-      { key: "privateBalcony", icon: "🌤️", fallback: "Private balcony" },
-      { key: "gardenView", icon: "🌿", fallback: "Ground-floor view" },
-      { key: "kitchen", icon: "🍳", fallback: "Kitchen" },
-      { key: "noStairs", icon: "🪜❌", fallback: "No stairs" },
-      { key: "doubleBed", icon: "🛏️", fallback: "1 double bed" },
-      { key: "singleBeds2", icon: "🛏️", fallback: "2 single beds" },
-      { key: "twoSpaces", icon: "🧩", fallback: "Two spaces" },
+      { key: "wifi", icon: "π“¶", fallback: "Wi-Fi" },
+      { key: "kettle", icon: "β•", fallback: "Coffee and tea kettle" },
+      { key: "privateBalcony", icon: "π¤οΈ", fallback: "Private balcony" },
+      { key: "gardenView", icon: "πΏ", fallback: "Ground-floor view" },
+      { key: "kitchen", icon: "π³", fallback: "Kitchen" },
+      { key: "noStairs", icon: "πβ", fallback: "No stairs" },
+      { key: "doubleBed", icon: "π›οΈ", fallback: "1 double bed" },
+      { key: "singleBeds2", icon: "π›οΈ", fallback: "2 single beds" },
+      { key: "twoSpaces", icon: "π§©", fallback: "Two spaces" },
     ],
     basePrice: 92,
   },
@@ -459,15 +459,15 @@ const roomOptions: RoomOption[] = [
       "/images/rooms/DSC07943.webp",
     ],
     amenities: [
-      { key: "wifi", icon: "📶", fallback: "Wi-Fi" },
-      { key: "kettle", icon: "☕", fallback: "Coffee and tea kettle" },
-      { key: "privateBalcony", icon: "🌤️", fallback: "Private balcony" },
-      { key: "gardenView", icon: "🌿", fallback: "Ground-floor view" },
-      { key: "kitchen", icon: "🍳", fallback: "Kitchen" },
-      { key: "noStairs", icon: "🪜❌", fallback: "No stairs" },
-      { key: "doubleBed", icon: "🛏️", fallback: "1 double bed" },
-      { key: "sofaBeds2", icon: "🛋️", fallback: "2 sofa beds" },
-      { key: "twoSpaces", icon: "🧩", fallback: "Two spaces" },
+      { key: "wifi", icon: "π“¶", fallback: "Wi-Fi" },
+      { key: "kettle", icon: "β•", fallback: "Coffee and tea kettle" },
+      { key: "privateBalcony", icon: "π¤οΈ", fallback: "Private balcony" },
+      { key: "gardenView", icon: "πΏ", fallback: "Ground-floor view" },
+      { key: "kitchen", icon: "π³", fallback: "Kitchen" },
+      { key: "noStairs", icon: "πβ", fallback: "No stairs" },
+      { key: "doubleBed", icon: "π›οΈ", fallback: "1 double bed" },
+      { key: "sofaBeds2", icon: "π›‹οΈ", fallback: "2 sofa beds" },
+      { key: "twoSpaces", icon: "π§©", fallback: "Two spaces" },
     ],
     basePrice: 98,
   },
@@ -475,41 +475,41 @@ const roomOptions: RoomOption[] = [
 
 const breakfastReviews: Record<string, string[]> = {
   en: [
-    "“The breakfast was very good, definitely worth the price.”",
-    "“The breakfast was fantastic, the garden on the premises was heavenly.”",
-    "“The homemade breakfast was one of the best parts of our stay.”",
-    "“Delicious homemade breakfast.”",
+    "β€The breakfast was very good, definitely worth the price.β€",
+    "β€The breakfast was fantastic, the garden on the premises was heavenly.β€",
+    "β€The homemade breakfast was one of the best parts of our stay.β€",
+    "β€Delicious homemade breakfast.β€",
   ],
   el: [
-    "“Το πρωινό ήταν πολύ καλό και άξιζε σίγουρα την τιμή.”",
-    "“Το πρωινό ήταν φανταστικό και ο κήπος ήταν υπέροχος.”",
-    "“Το σπιτικό πρωινό ήταν από τα καλύτερα σημεία της διαμονής μας.”",
-    "“Νόστιμο σπιτικό πρωινό.”",
+    "β€Ξ¤ΞΏ Ο€ΟΟ‰ΞΉΞ½Ο Ξ®Ο„Ξ±Ξ½ Ο€ΞΏΞ»Ο ΞΊΞ±Ξ»Ο ΞΊΞ±ΞΉ Ξ¬ΞΎΞΉΞ¶Ξµ ΟƒΞ―Ξ³ΞΏΟ…ΟΞ± Ο„Ξ·Ξ½ Ο„ΞΉΞΌΞ®.β€",
+    "β€Ξ¤ΞΏ Ο€ΟΟ‰ΞΉΞ½Ο Ξ®Ο„Ξ±Ξ½ Ο†Ξ±Ξ½Ο„Ξ±ΟƒΟ„ΞΉΞΊΟ ΞΊΞ±ΞΉ ΞΏ ΞΊΞ®Ο€ΞΏΟ‚ Ξ®Ο„Ξ±Ξ½ Ο…Ο€Ξ­ΟΞΏΟ‡ΞΏΟ‚.β€",
+    "β€Ξ¤ΞΏ ΟƒΟ€ΞΉΟ„ΞΉΞΊΟ Ο€ΟΟ‰ΞΉΞ½Ο Ξ®Ο„Ξ±Ξ½ Ξ±Ο€Ο Ο„Ξ± ΞΊΞ±Ξ»ΟΟ„ΞµΟΞ± ΟƒΞ·ΞΌΞµΞ―Ξ± Ο„Ξ·Ο‚ Ξ΄ΞΉΞ±ΞΌΞΏΞ½Ξ®Ο‚ ΞΌΞ±Ο‚.β€",
+    "β€ΞΟΟƒΟ„ΞΉΞΌΞΏ ΟƒΟ€ΞΉΟ„ΞΉΞΊΟ Ο€ΟΟ‰ΞΉΞ½Ο.β€",
   ],
   fr: [
-    "“Le petit-déjeuner était très bon, il valait vraiment le prix.”",
-    "“Le petit-déjeuner était fantastique, le jardin était magnifique.”",
-    "“Petit déjeuner fait maison délicieux.”",
+    "β€Le petit-dΓ©jeuner Γ©tait trΓ¨s bon, il valait vraiment le prix.β€",
+    "β€Le petit-dΓ©jeuner Γ©tait fantastique, le jardin Γ©tait magnifique.β€",
+    "β€Petit dΓ©jeuner fait maison dΓ©licieux.β€",
   ],
   de: [
-    "“Das Frühstück war sehr gut und den Preis wirklich wert.”",
-    "“Das Frühstück war fantastisch und der Garten war wunderschön.”",
-    "“Köstliches hausgemachtes Frühstück.”",
+    "β€Das FrΓΌhstΓΌck war sehr gut und den Preis wirklich wert.β€",
+    "β€Das FrΓΌhstΓΌck war fantastisch und der Garten war wunderschΓ¶n.β€",
+    "β€KΓ¶stliches hausgemachtes FrΓΌhstΓΌck.β€",
   ],
   it: [
-    "“La colazione era molto buona e valeva davvero il prezzo.”",
-    "“La colazione era fantastica e il giardino meraviglioso.”",
-    "“Colazione fatta in casa deliziosa.”",
+    "β€La colazione era molto buona e valeva davvero il prezzo.β€",
+    "β€La colazione era fantastica e il giardino meraviglioso.β€",
+    "β€Colazione fatta in casa deliziosa.β€",
   ],
   es: [
-    "“El desayuno era muy bueno y valía la pena.”",
-    "“El desayuno fue fantástico y el jardín era precioso.”",
-    "“Delicioso desayuno casero.”",
+    "β€El desayuno era muy bueno y valΓ­a la pena.β€",
+    "β€El desayuno fue fantΓ΅stico y el jardΓ­n era precioso.β€",
+    "β€Delicioso desayuno casero.β€",
   ],
   tr: [
-    "“Kahvaltı çok iyiydi ve kesinlikle değerdi.”",
-    "“Kahvaltı harikaydı, bahçe de çok güzeldi.”",
-    "“Lezzetli ev yapımı kahvaltı.”",
+    "β€KahvaltΔ± Γ§ok iyiydi ve kesinlikle deΔerdi.β€",
+    "β€KahvaltΔ± harikaydΔ±, bahΓ§e de Γ§ok gΓΌzeldi.β€",
+    "β€Lezzetli ev yapΔ±mΔ± kahvaltΔ±.β€",
   ],
 };
 
@@ -539,40 +539,40 @@ const serviceCopy: Record<
     selected: "Selected services",
   },
   el: {
-    title: "Θες να σε βοηθήσουμε και με τα υπόλοιπα;",
-    subtitle: "Διάλεξε τι χρειάζεσαι και θα το βάλουμε στο μήνυμα επικοινωνίας.",
-    car: "Αυτοκίνητο",
-    carText: "Θα ήθελα βοήθεια για ενοικίαση αυτοκινήτου.",
-    tickets: "Εισιτήρια",
-    ticketsText: "Θα ήθελα βοήθεια για εισιτήρια.",
-    noThanks: "Όχι, ευχαριστώ",
-    continue: "Συνέχεια",
-    selected: "Επιλεγμένες υπηρεσίες",
+    title: "ΞΞµΟ‚ Ξ½Ξ± ΟƒΞµ Ξ²ΞΏΞ·ΞΈΞ®ΟƒΞΏΟ…ΞΌΞµ ΞΊΞ±ΞΉ ΞΌΞµ Ο„Ξ± Ο…Ο€ΟΞ»ΞΏΞΉΟ€Ξ±;",
+    subtitle: "Ξ”ΞΉΞ¬Ξ»ΞµΞΎΞµ Ο„ΞΉ Ο‡ΟΞµΞΉΞ¬Ξ¶ΞµΟƒΞ±ΞΉ ΞΊΞ±ΞΉ ΞΈΞ± Ο„ΞΏ Ξ²Ξ¬Ξ»ΞΏΟ…ΞΌΞµ ΟƒΟ„ΞΏ ΞΌΞ®Ξ½Ο…ΞΌΞ± ΞµΟ€ΞΉΞΊΞΏΞΉΞ½Ο‰Ξ½Ξ―Ξ±Ο‚.",
+    car: "Ξ‘Ο…Ο„ΞΏΞΊΞ―Ξ½Ξ·Ο„ΞΏ",
+    carText: "ΞΞ± Ξ®ΞΈΞµΞ»Ξ± Ξ²ΞΏΞ®ΞΈΞµΞΉΞ± Ξ³ΞΉΞ± ΞµΞ½ΞΏΞΉΞΊΞ―Ξ±ΟƒΞ· Ξ±Ο…Ο„ΞΏΞΊΞΉΞ½Ξ®Ο„ΞΏΟ….",
+    tickets: "Ξ•ΞΉΟƒΞΉΟ„Ξ®ΟΞΉΞ±",
+    ticketsText: "ΞΞ± Ξ®ΞΈΞµΞ»Ξ± Ξ²ΞΏΞ®ΞΈΞµΞΉΞ± Ξ³ΞΉΞ± ΞµΞΉΟƒΞΉΟ„Ξ®ΟΞΉΞ±.",
+    noThanks: "ΞΟ‡ΞΉ, ΞµΟ…Ο‡Ξ±ΟΞΉΟƒΟ„Ο",
+    continue: "Ξ£Ο…Ξ½Ξ­Ο‡ΞµΞΉΞ±",
+    selected: "Ξ•Ο€ΞΉΞ»ΞµΞ³ΞΌΞ­Ξ½ΞµΟ‚ Ο…Ο€Ξ·ΟΞµΟƒΞ―ΞµΟ‚",
   },
   fr: {
-    title: "Souhaitez-vous de l’aide pour autre chose ?",
-    subtitle: "Dites-nous ce dont vous avez besoin et nous l’ajouterons à votre demande.",
+    title: "Souhaitez-vous de lβ€™aide pour autre chose ?",
+    subtitle: "Dites-nous ce dont vous avez besoin et nous lβ€™ajouterons Γ  votre demande.",
     car: "Voiture",
-    carText: "Je souhaite de l’aide pour une location de voiture.",
+    carText: "Je souhaite de lβ€™aide pour une location de voiture.",
     tickets: "Billets",
-    ticketsText: "Je souhaite de l’aide pour les billets.",
+    ticketsText: "Je souhaite de lβ€™aide pour les billets.",
     noThanks: "Non merci",
     continue: "Continuer",
-    selected: "Services sélectionnés",
+    selected: "Services sΓ©lectionnΓ©s",
   },
   de: {
-    title: "Möchtest du Hilfe bei etwas anderem?",
+    title: "MΓ¶chtest du Hilfe bei etwas anderem?",
     subtitle: "Sag uns, was du brauchst, und wir nehmen es in deine Anfrage auf.",
     car: "Auto",
-    carText: "Ich möchte Hilfe bei der Autovermietung.",
+    carText: "Ich mΓ¶chte Hilfe bei der Autovermietung.",
     tickets: "Tickets",
-    ticketsText: "Ich möchte Hilfe bei Tickets.",
+    ticketsText: "Ich mΓ¶chte Hilfe bei Tickets.",
     noThanks: "Nein, danke",
     continue: "Weiter",
-    selected: "Ausgewählte Services",
+    selected: "AusgewΓ¤hlte Services",
   },
   it: {
-    title: "Vuoi aiuto con qualcos’altro?",
+    title: "Vuoi aiuto con qualcosβ€™altro?",
     subtitle: "Dicci cosa ti serve e lo aggiungeremo alla tua richiesta.",
     car: "Auto",
     carText: "Vorrei aiuto per il noleggio auto.",
@@ -583,8 +583,8 @@ const serviceCopy: Record<
     selected: "Servizi selezionati",
   },
   es: {
-    title: "¿Quieres ayuda con algo más?",
-    subtitle: "Dinos qué necesitas y lo añadiremos a tu solicitud.",
+    title: "ΒΏQuieres ayuda con algo mΓ΅s?",
+    subtitle: "Dinos quΓ© necesitas y lo aΓ±adiremos a tu solicitud.",
     car: "Coche",
     carText: "Quisiera ayuda con el alquiler de coche.",
     tickets: "Billetes",
@@ -594,15 +594,15 @@ const serviceCopy: Record<
     selected: "Servicios seleccionados",
   },
   tr: {
-    title: "Başka bir konuda yardım ister misin?",
-    subtitle: "Neye ihtiyacın olduğunu söyle, talebine ekleyelim.",
+    title: "BaΕka bir konuda yardΔ±m ister misin?",
+    subtitle: "Neye ihtiyacΔ±n olduΔunu sΓ¶yle, talebine ekleyelim.",
     car: "Araba",
-    carText: "Araç kiralama konusunda yardım istiyorum.",
+    carText: "AraΓ§ kiralama konusunda yardΔ±m istiyorum.",
     tickets: "Biletler",
-    ticketsText: "Biletler konusunda yardım istiyorum.",
-    noThanks: "Hayır, teşekkürler",
+    ticketsText: "Biletler konusunda yardΔ±m istiyorum.",
+    noThanks: "HayΔ±r, teΕekkΓΌrler",
     continue: "Devam et",
-    selected: "Seçilen hizmetler",
+    selected: "SeΓ§ilen hizmetler",
   },
 };
 
@@ -1215,7 +1215,7 @@ function ScratchPriceCard({
                 opacity: hasStarted ? 0.35 : 1,
               }}
             >
-              <span style={{ fontSize: "1.35rem" }}>🖐️</span>
+              <span style={{ fontSize: "1.35rem" }}>π–οΈ</span>
               <span>{labels.scratchAndSee}</span>
             </div>
 
@@ -1591,10 +1591,10 @@ export function FindYourRoomEngine({ data }: FindYourRoomEngineProps) {
             <span className="find-room-live-dot" />
             {t.topBenefits.live}
           </span>
-          <span className="find-room-shine-pill">⚡ {t.topBenefits.directContact}</span>
-          <span className="find-room-shine-pill">🎁 {t.topBenefits.discount}</span>
+          <span className="find-room-shine-pill">β΅ {t.topBenefits.directContact}</span>
+          <span className="find-room-shine-pill">π {t.topBenefits.discount}</span>
           <span className="find-room-shine-pill">
-            💸 <span className="find-room-strike">{t.topBenefits.commissions}</span>
+            π’Έ <span className="find-room-strike">{t.topBenefits.commissions}</span>
           </span>
         </div>
 
@@ -1791,7 +1791,7 @@ export function FindYourRoomEngine({ data }: FindYourRoomEngineProps) {
                   }
                 }}
               >
-                ← Back
+                β† Back
               </button>
             </div>
 
@@ -1808,7 +1808,7 @@ export function FindYourRoomEngine({ data }: FindYourRoomEngineProps) {
                       onClick={() => openGallery(item.room)}
                       style={{ border: 0, padding: 0, textAlign: "left", cursor: "pointer" }}
                     >
-                      <div className="find-room-selected-badge">✓ {t.results.selected}</div>
+                      <div className="find-room-selected-badge">β“ {t.results.selected}</div>
                       <img src={item.room.images[0]} alt={item.room.name} />
                     </button>
 
@@ -1821,7 +1821,7 @@ export function FindYourRoomEngine({ data }: FindYourRoomEngineProps) {
                         </p>
                         <h3>{item.room.name}</h3>
                         <p>
-                          {getRoomDescription(item.room, t.roomLabels)} ·{" "}
+                          {getRoomDescription(item.room, t.roomLabels)} Β·{" "}
                           {guestRooms[index]?.guests || item.guests} {t.results.guests}
                         </p>
                       </div>
@@ -1899,7 +1899,7 @@ export function FindYourRoomEngine({ data }: FindYourRoomEngineProps) {
                             ))}
                         </div>
 
-                        <div className="find-room-gallery-hint">📷 {t.results.gallery}</div>
+                        <div className="find-room-gallery-hint">π“· {t.results.gallery}</div>
                       </button>
 
                       <div className="find-room-result-card__body">
@@ -1912,17 +1912,17 @@ export function FindYourRoomEngine({ data }: FindYourRoomEngineProps) {
                             </p>
                             <h3>{room.name}</h3>
                             <p>
-                              {getRoomDescription(room, t.roomLabels)} · {room.location}
+                              {getRoomDescription(room, t.roomLabels)} Β· {room.location}
                             </p>
                           </div>
                         </div>
 
                         <div className="find-room-badge-row">
                           <span className="find-room-soft-badge">
-                            🎁 {t.results.discount}
+                            π {t.results.discount}
                           </span>
                           <span className="find-room-green-badge">
-                            ⚡ {t.results.liveNow}
+                            β΅ {t.results.liveNow}
                           </span>
                         </div>
 
@@ -1986,7 +1986,7 @@ export function FindYourRoomEngine({ data }: FindYourRoomEngineProps) {
                 <strong>{formatMoney(selectedRoomsTotal, t.currencyLocale)}</strong>
               </div>
               <p>
-                {t.results.bestPriceGuarantee} · {t.results.discount}{" "}
+                {t.results.bestPriceGuarantee} Β· {t.results.discount}{" "}
                 {CONFIG.directDiscountPercent}%
               </p>
             </div>
@@ -2006,7 +2006,7 @@ export function FindYourRoomEngine({ data }: FindYourRoomEngineProps) {
             <div className="find-room-breakfast-card">
               <div className="find-room-breakfast-photo-wrap">
                 <img
-                  src="/images/booking/breakfast.jpg"
+                  src="/images/booking/breakfast-v2.webp"
                   alt={t.breakfast.title}
                   className="find-room-breakfast-photo"
                 />
@@ -2015,8 +2015,8 @@ export function FindYourRoomEngine({ data }: FindYourRoomEngineProps) {
 
               <div className="find-room-breakfast-side">
                 <p>
-                  {roomsCount} {roomsCount === 1 ? t.results.room : t.results.rooms} ·{" "}
-                  {totalGuests} {totalGuests === 1 ? t.results.guest : t.results.guests} ·{" "}
+                  {roomsCount} {roomsCount === 1 ? t.results.room : t.results.rooms} Β·{" "}
+                  {totalGuests} {totalGuests === 1 ? t.results.guest : t.results.guests} Β·{" "}
                   {nights} {nights === 1 ? t.results.night : t.results.nights}
                 </p>
 
@@ -2031,7 +2031,7 @@ export function FindYourRoomEngine({ data }: FindYourRoomEngineProps) {
                   <strong>{t.breakfast.reviewsTitle}</strong>
                   <span>{reviews[reviewIndex]}</span>
                   <small>
-                    {reviews.map((_, index) => (index === reviewIndex ? "●" : "○")).join(" ")}
+                    {reviews.map((_, index) => (index === reviewIndex ? "β—" : "β—‹")).join(" ")}
                   </small>
                 </div>
 
@@ -2041,7 +2041,7 @@ export function FindYourRoomEngine({ data }: FindYourRoomEngineProps) {
                     className={`find-room-choice-card ${breakfast ? "is-active" : ""}`}
                     onClick={() => chooseBreakfast(true)}
                   >
-                    <strong>🍳 {t.breakfast.withBreakfast}</strong>
+                    <strong>π³ {t.breakfast.withBreakfast}</strong>
                     <span>{t.breakfast.priceBadge}</span>
                   </button>
 
@@ -2050,7 +2050,7 @@ export function FindYourRoomEngine({ data }: FindYourRoomEngineProps) {
                     className={`find-room-choice-card ${!breakfast ? "is-active" : ""}`}
                     onClick={() => chooseBreakfast(false)}
                   >
-                    <strong>— {t.breakfast.withoutBreakfast}</strong>
+                    <strong>β€” {t.breakfast.withoutBreakfast}</strong>
                     <span>{t.breakfast.notAdded}</span>
                   </button>
                 </div>
@@ -2095,7 +2095,7 @@ export function FindYourRoomEngine({ data }: FindYourRoomEngineProps) {
                 }`}
                 onClick={() => toggleService("car")}
               >
-                <strong>🚗 {servicesText.car}</strong>
+                <strong>π— {servicesText.car}</strong>
                 <span>{servicesText.carText}</span>
               </button>
 
@@ -2107,7 +2107,7 @@ export function FindYourRoomEngine({ data }: FindYourRoomEngineProps) {
                   }`}
                   onClick={() => toggleService("tickets")}
                 >
-                  <strong>🎫 {servicesText.tickets}</strong>
+                  <strong>π« {servicesText.tickets}</strong>
                   <span>{servicesText.ticketsText}</span>
                 </button>
               ) : null}
@@ -2271,7 +2271,7 @@ export function FindYourRoomEngine({ data }: FindYourRoomEngineProps) {
                   color: "#433a35",
                 }}
               >
-                ✕
+                β•
               </button>
             </div>
 
@@ -2304,7 +2304,7 @@ export function FindYourRoomEngine({ data }: FindYourRoomEngineProps) {
                   cursor: "pointer",
                 }}
               >
-                ‹
+                β€Ή
               </button>
 
               <img
@@ -2338,7 +2338,7 @@ export function FindYourRoomEngine({ data }: FindYourRoomEngineProps) {
                   cursor: "pointer",
                 }}
               >
-                ›
+                β€Ί
               </button>
             </div>
 
@@ -2391,6 +2391,7 @@ export function FindYourRoomEngine({ data }: FindYourRoomEngineProps) {
     </div>
   );
 }
+
 
 
 

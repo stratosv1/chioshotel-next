@@ -88,7 +88,7 @@ const familyTravelImages = {
     alt: "Korais Library in Chios, a cultural visit for families",
   },
   playground: {
-    src: "/images/family/paidiki_xara_daskalopetras_210222_2.jpg",
+    src: "/images/family/paidiki_xara_daskalopetras_210222_2-v2.webp",
     alt: "Daskalopetra playground in Chios for children and families",
   },
   childrenActivity: {
