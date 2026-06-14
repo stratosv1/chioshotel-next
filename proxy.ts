@@ -39,6 +39,12 @@ const legacyRedirects: Record<string, string> = {
   "/el/chios-el/chios-armolia-village": "/el/xoria-xios/armolia-xios/",
   "/el/chios-el/chios-villages-el/armolia-xios/αρμόλια χίος":
     "/el/xoria-xios/armolia-xios/",
+
+  "/language/el/χίος/χωριά-χίος/αρμόλια": "/el/xoria-xios/armolia-xios/",
+  "/language/el/chios-el/chios-museums-el/chios-byzantine-museum-2":
+    "/el/mouseia-xios/vyzantino-mouseio-xios/",
+  "/it/chios-it/chios-villages-it/chios-armolia-village":
+    "/it/villaggi-chios/villaggio-armolia/",
 };
 
 function normalizeLegacyPathname(pathname: string) {
