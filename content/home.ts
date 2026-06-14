@@ -252,7 +252,7 @@
 
 export const homePageEn: HomePageData = {
   seo: {
-    title: "Chios Hotels & Rooms",
+    title: "Chios Hotels & Rooms 2026 | Voulamandis House",
     description:
       "Peaceful rooms and apartments in Kambos, Chios. Stay at Voulamandis House near Chios airport, town and beaches, with authentic hospitality and direct booking benefits.",
     canonicalPath: "/",
