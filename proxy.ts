@@ -19,6 +19,10 @@ const legacyRedirects: Record<string, string> = {
   "/en": "/",
   "/book%20the%20room%20you%20like": "/find-your-room/",
   "/book the room you like": "/find-your-room/",
+  "/chios/chios-beaches/agia-dynami-beach":
+    "/chios/chios-beaches/agia-dynami-beach-chios/",
+  "/chios/chios-museums/the-kallimasia-folklore-museum":
+    "/chios/chios-museums/kallimasia-folklore-museum/",
   "/de/chios-insel/lagada-chios-3": "/de/doerfer-chios/lagada-dorf/",
   "/tr/chios-odalari/sakiz-adasinin-plajlari": "/tr/sakiz-adasi-plajlari/",
   "/el/chios-el/chios-armolia-village": "/el/xoria-xios/armolia-xios/",
