@@ -48,8 +48,6 @@ const wordpressArchiveGonePrefixes = [
 
 const legacyRedirects: Record<string, string> = {
   "/en": "/",
-  "/fr": "/fr/",
-  "/el": "/el/",
   "/book the room you like": "/find-your-room/",
 
   // Rooms / booking / contact / deals
@@ -384,8 +382,17 @@ function normalizeLegacyPathname(pathname: string) {
 
 function getLegacyRedirectTarget(pathname: string) {
   const normalizedPathname = normalizeLegacyPathname(pathname);
+  const target = legacyRedirects[normalizedPathname] || null;
 
-  return legacyRedirects[normalizedPathname] || null;
+  if (!target) {
+    return null;
+  }
+
+  if (normalizeLegacyPathname(target) === normalizedPathname) {
+    return null;
+  }
+
+  return target;
 }
 
 function shouldReturnGone(pathname: string) {

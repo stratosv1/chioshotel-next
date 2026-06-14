@@ -351,7 +351,7 @@ export function HomePage({ data }: HomePageProps) {
                       id="dc_submitBtn"
                       onClick={showDiscountCode}
                     >
-                      <span aria-hidden="true">🎁</span> Show my discount code
+                      <span aria-hidden="true">🎁</span> {data.location.discount.revealCodeLabel}
                     </button>
 
                     <div id="discountSuccess" className="discount-success" aria-live="polite">

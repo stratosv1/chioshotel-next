@@ -1,4 +1,4 @@
-export type HomePageData = {
+﻿export type HomePageData = {
   seo: {
     title: string;
     description: string;
@@ -97,6 +97,7 @@ export type HomePageData = {
       submitLabel: string;
       consent: string;
       successText: string;
+      revealCodeLabel: string;
       defaultCode: string;
     };
     copy: {
@@ -402,6 +403,7 @@ export const homePageEn: HomePageData = {
       submitLabel: "GET CODE",
       consent: "I agree to receive offers from Voulamandis House.",
       successText: "Your discount code is:",
+      revealCodeLabel: "Show my discount code",
       defaultCode: "WELCOME10",
     },
     copy: {
@@ -924,6 +926,7 @@ export const homePageEl: HomePageData = {
       submitLabel: "ΛΗΨΗ ΚΩΔΙΚΟΥ",
       consent: "Συμφωνώ να λαμβάνω προσφορές από το Voulamandis House.",
       successText: "Ο εκπτωτικός σας κωδικός είναι:",
+      revealCodeLabel: "Δείξε μου τον κωδικό έκπτωσης",
       defaultCode: "WELCOME10",
     },
     copy: {
@@ -1378,6 +1381,7 @@ export const homePageFr: HomePageData = {
       submitLabel: "OBTENIR LE CODE",
       consent: "J’accepte de recevoir des offres de Voulamandis House.",
       successText: "Votre code de réduction est :",
+      revealCodeLabel: "Afficher mon code de réduction",
       defaultCode: "WELCOME10",
     },
     copy: {
@@ -1817,6 +1821,7 @@ export const homePageDe: HomePageData = {
       submitLabel: "CODE ERHALTEN",
       consent: "Ich möchte Angebote von Voulamandis House erhalten.",
       successText: "Ihr Rabattcode lautet:",
+      revealCodeLabel: "Meinen Rabattcode anzeigen",
       defaultCode: "WELCOME10",
     },
     copy: {
@@ -2255,6 +2260,7 @@ export const homePageIt: HomePageData = {
       submitLabel: "OTTIENI IL CODICE",
       consent: "Accetto di ricevere offerte da Voulamandis House.",
       successText: "Il tuo codice sconto è:",
+      revealCodeLabel: "Mostra il mio codice sconto",
       defaultCode: "WELCOME10",
     },
     copy: {
@@ -2694,6 +2700,7 @@ export const homePageEs: HomePageData = {
       submitLabel: "OBTENER CÓDIGO",
       consent: "Acepto recibir ofertas de Voulamandis House.",
       successText: "Tu código de descuento es:",
+      revealCodeLabel: "Mostrar mi código de descuento",
       defaultCode: "WELCOME10",
     },
     copy: {
@@ -3133,6 +3140,7 @@ export const homePageTr: HomePageData = {
       submitLabel: "KODU AL",
       consent: "Voulamandis House tekliflerini almayı kabul ediyorum.",
       successText: "İndirim kodunuz:",
+      revealCodeLabel: "İndirim kodumu göster",
       defaultCode: "WELCOME10",
     },
     copy: {
@@ -3433,4 +3441,6 @@ export const homePageTr: HomePageData = {
     },
   },
 };
+
+
 
