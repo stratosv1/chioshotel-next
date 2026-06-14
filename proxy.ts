@@ -12,29 +12,48 @@ const wordpressGonePrefixes = [
   "/wp-includes",
   "/elementor-landing-page-4251",
   "/.cloud/rum",
+  "/web-stories",
 ];
+
+const legacyRedirects: Record<string, string> = {
+  "/en": "/",
+  "/book%20the%20room%20you%20like": "/find-your-room/",
+  "/book the room you like": "/find-your-room/",
+  "/de/chios-insel/lagada-chios-3": "/de/doerfer-chios/lagada-dorf/",
+  "/tr/chios-odalari/sakiz-adasinin-plajlari": "/tr/sakiz-adasi-plajlari/",
+  "/el/chios-el/chios-armolia-village": "/el/xoria-xios/armolia-xios/",
+  "/el/chios-el/chios-villages-el/armolia-xios/αρμόλια χίος":
+    "/el/xoria-xios/armolia-xios/",
+  "/tr/chios-odalari/vessa-koyu-chios": "/tr/sakiz-adasi-koyleri/vessa-koyu/",
+  "/tr/chios-odalari/mesta-koyu-chios": "/tr/sakiz-adasi-koyleri/mesta-koyu/",
+};
+
+function normalizeLegacyPathname(pathname: string) {
+  return pathname.replace(/\/+$/, "");
+}
+
+function getLegacyRedirectTarget(pathname: string) {
+  const normalizedPathname = normalizeLegacyPathname(pathname);
+
+  if (legacyRedirects[normalizedPathname]) {
+    return legacyRedirects[normalizedPathname];
+  }
+
+  try {
+    const decodedPathname = normalizeLegacyPathname(
+      decodeURIComponent(pathname),
+    );
+
+    return legacyRedirects[decodedPathname] || null;
+  } catch {
+    return null;
+  }
+}
 
 function shouldReturnGone(pathname: string) {
   return wordpressGonePrefixes.some((prefix) => {
     return pathname === prefix || pathname.startsWith(`${prefix}/`);
   });
-}
-
-function isOldBookRoomUrl(pathname: string) {
-  const normalizedPathname = pathname.replace(/\/+$/, "");
-
-  if (
-    normalizedPathname === "/book%20the%20room%20you%20like" ||
-    normalizedPathname === "/book the room you like"
-  ) {
-    return true;
-  }
-
-  try {
-    return decodeURIComponent(normalizedPathname) === "/book the room you like";
-  } catch {
-    return false;
-  }
 }
 
 function isStaffPath(pathname: string) {
@@ -93,9 +112,11 @@ function isAuthorizedStaffRequest(request: NextRequest) {
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (isOldBookRoomUrl(pathname)) {
+  const legacyRedirectTarget = getLegacyRedirectTarget(pathname);
+
+  if (legacyRedirectTarget) {
     const url = request.nextUrl.clone();
-    url.pathname = "/find-your-room/";
+    url.pathname = legacyRedirectTarget;
     return NextResponse.redirect(url, 301);
   }
 
@@ -148,6 +169,7 @@ export const config = {
     "/wp-includes/:path*",
     "/elementor-landing-page-4251/:path*",
     "/.cloud/rum/:path*",
+    "/web-stories/:path*",
     "/staff/:path*",
     "/api/staff/:path*",
     "/((?!api|_next/static|_next/image|favicon|favicon.ico|robots.txt|sitemap.xml).*)",
