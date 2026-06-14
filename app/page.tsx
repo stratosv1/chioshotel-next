@@ -27,9 +27,13 @@ export const metadata: Metadata = {
     siteName: "Voulamandis House",
     title: homePageEn.seo.title,
     description: homePageEn.seo.description,
+    locale: "en_US",
+    alternateLocale: ["el_GR", "fr_FR", "de_DE", "it_IT", "es_ES", "tr_TR"],
     images: [
       {
-        url: homePageEn.seo.ogImage || "https://chioshotel.gr/images/voulamandis-house-og.jpg",
+        url:
+          homePageEn.seo.ogImage ||
+          "https://chioshotel.gr/images/voulamandis-house-og.jpg",
         width: 1200,
         height: 675,
         alt: homePageEn.seo.title,
@@ -40,7 +44,10 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: homePageEn.seo.title,
     description: homePageEn.seo.description,
-    images: [homePageEn.seo.ogImage || "https://chioshotel.gr/images/voulamandis-house-og.jpg"],
+    images: [
+      homePageEn.seo.ogImage ||
+        "https://chioshotel.gr/images/voulamandis-house-og.jpg",
+    ],
   },
   robots: {
     index: true,
