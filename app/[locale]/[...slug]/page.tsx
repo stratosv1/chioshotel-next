@@ -451,18 +451,45 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const route = getRouteByPath(requestedPath);
 
   if (route?.itemId === "chios-quiz" && route.action === "KEEP") {
+    const quizMetadataByLocale = {
+      el: {
+        title: "Quiz Διακοπών στη Χίο 2026",
+        description:
+          "Κάντε το quiz διακοπών στη Χίο, ανακαλύψτε ποια εμπειρία σας ταιριάζει και πάρτε ειδικό κωδικό έκπτωσης για τη διαμονή σας.",
+      },
+      fr: {
+        title: "Quiz vacances à Chios 2026",
+        description:
+          "Faites le quiz vacances à Chios, découvrez l’expérience qui vous correspond et obtenez un code de réduction spécial pour votre séjour.",
+      },
+      de: {
+        title: "Chios Urlaubsquiz 2026",
+        description:
+          "Machen Sie das Chios Urlaubsquiz, entdecken Sie, welches Erlebnis zu Ihnen passt, und erhalten Sie einen speziellen Rabattcode für Ihren Aufenthalt.",
+      },
+      it: {
+        title: "Quiz vacanze a Chios 2026",
+        description:
+          "Fai il quiz vacanze a Chios, scopri quale esperienza fa per te e ottieni un codice sconto speciale per il tuo soggiorno.",
+      },
+      es: {
+        title: "Quiz de vacaciones en Chios 2026",
+        description:
+          "Haz el quiz de vacaciones en Chios, descubre qué experiencia encaja contigo y consigue un código de descuento especial para tu estancia.",
+      },
+      tr: {
+        title: "Sakız Adası tatil testi 2026",
+        description:
+          "Sakız Adası tatil testini yapın, size en uygun deneyimi keşfedin ve konaklamanız için özel indirim kodu alın.",
+      },
+    } as const;
+
     const quizMetadata =
-      route.language === "el"
-        ? {
-            title: "Quiz Διακοπών στη Χίο 2026",
-            description:
-              "Κάντε το quiz διακοπών στη Χίο, ανακαλύψτε ποια εμπειρία σας ταιριάζει και πάρτε ειδικό κωδικό έκπτωσης για τη διαμονή σας.",
-          }
-        : {
-            title: "Chios Holiday Quiz",
-            description:
-              "Take the Chios Holiday Quiz by Voulamandis House, discover hidden island secrets and get a special discount code for your stay.",
-          };
+      quizMetadataByLocale[locale as keyof typeof quizMetadataByLocale] ?? {
+        title: "Chios Holiday Quiz",
+        description:
+          "Take the Chios Holiday Quiz by Voulamandis House, discover hidden island secrets and get a special discount code for your stay.",
+      };
 
     return buildLocalizedPageMetadata({
       path: route.path,
