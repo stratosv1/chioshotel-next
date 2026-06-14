@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { chiosActivityDetailPaths } from "@/content/chios-activities";
 
@@ -59,11 +59,11 @@ const chiosIslandPaths: Record<LanguageCode, string> = {
 const holidayQuizPaths: Record<LanguageCode, string> = {
   en: "/chios-holidays-quiz/",
   el: "/el/diakopes-sti-chio-quiz/",
-  fr: "/chios-holidays-quiz/",
-  de: "/chios-holidays-quiz/",
-  it: "/chios-holidays-quiz/",
-  es: "/chios-holidays-quiz/",
-  tr: "/chios-holidays-quiz/",
+  fr: "/fr/quiz-vacances-a-chios/",
+  de: "/de/chios-urlaubsquiz/",
+  it: "/it/quiz-vacanze-a-chios/",
+  es: "/es/quiz-vacaciones-en-quios/",
+  tr: "/tr/sakiz-adasi-tatil-testi/",
 };
 
 const beachPaths: Record<LanguageCode, string> = {
@@ -682,3 +682,4 @@ export function VoulamandisFooter() {
     </footer>
   );
 }
+
