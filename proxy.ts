@@ -213,6 +213,161 @@ const legacyRedirects: Record<string, string> = {
   "/chios/chios-orchids-voulamandis-house-chios-hotels": "/chios-orchids/",
   "/fr/chios/orchidees-de-chios": "/fr/orchidees-de-chios/",
 
+  // Final safe legacy redirects from last GSC sample - museums
+  "/chios/chios-museums/koraes-library-voulamandis-house-chios-hotels":
+    "/chios/chios-museums/koraes-library-chios/",
+  "/chios/chios-museums/chios-mastic-museum-voulamandis-house-chios-hotels":
+    "/chios/chios-museums/the-mastic-museum-chios/",
+  "/chios/chios-museums/chios-byzantine-museum-voulamandis-house-chios-hotels":
+    "/chios/chios-museums/chios-byzantine-museum/",
+  "/chios/chios-museums/chios-maritime-museum-voulamandis-house-chios-hotels":
+    "/chios/chios-museums/chios-maritime-museum/",
+  "/language/en/chios/chios-museums": "/chios/chios-museums/",
+  "/en/chios/chios-museums/the-mastic-museum-chios":
+    "/chios/chios-museums/the-mastic-museum-chios/",
+  "/el/chios-el/chios-mastic-museum-2":
+    "/el/mouseia-xios/mouseio-mastichas-xios/",
+  "/language/el/χίος/μουσείο-μαστίχας":
+    "/el/mouseia-xios/mouseio-mastichas-xios/",
+  "/language/el/χίος/αρχαιολογικό-μουσείο":
+    "/el/mouseia-xios/arxaiologiko-mouseio-xios/",
+  "/el/chios-el/chios-archaeological":
+    "/el/mouseia-xios/arxaiologiko-mouseio-xios/",
+  "/el/chios-el/chios-byzantine":
+    "/el/mouseia-xios/vyzantino-mouseio-xios/",
+  "/chios-el/chios-museums-el/chios-byzantine":
+    "/el/mouseia-xios/vyzantino-mouseio-xios/",
+  "/el/chios-el/chios-korais-library":
+    "/el/mouseia-xios/vivliothiki-korai-xios/",
+  "/chios-el/chios-museums-el/chios-korais-library":
+    "/el/mouseia-xios/vivliothiki-korai-xios/",
+  "/el/chios-el/chios-nautical-museum":
+    "/el/mouseia-xios/naftiko-mouseio-xios/",
+  "/chios-el/chios-museums-el/chios-nautical-museum":
+    "/el/mouseia-xios/naftiko-mouseio-xios/",
+  "/el/chios-el/chios-folklore-museum":
+    "/el/mouseia-xios/laografiko-mouseio-kallimasias/",
+  "/chios-el/chios-museums-el/chios-folklore-museum":
+    "/el/mouseia-xios/laografiko-mouseio-kallimasias/",
+
+  // Final safe legacy redirects from last GSC sample - activities
+  "/chios/chios-activities/the-chios-thermal-baths":
+    "/chios-thermal-baths/",
+  "/chios/chios-activities/chios-greek-language-courses":
+    "/greek-language-courses-chios/",
+  "/chios/chios-activities/chios-hiking-voulamandis-house-chios-hotels":
+    "/chios-hiking/",
+  "/en/chios/chios-activities/mostra-carnival-fiesta-chios":
+    "/chios-festival-mostra/",
+  "/chios-el/chios-activities-el/chios-hiking-2": "/chios-hiking/",
+  "/chios-el/chios-activities-el/greek-language-2":
+    "/greek-language-courses-chios/",
+  "/el/chios-el/greek-language-2": "/greek-language-courses-chios/",
+  "/chios-el/chios-activities-el/chios-orchids-2": "/el/orchidees-xiou/",
+  "/el/chios-el/chios-orchids-2": "/el/orchidees-xiou/",
+  "/fr/uncategorized-fr/orchidees-de-chios": "/fr/orchidees-de-chios/",
+  "/es/uncategorized-es/las-orquideas-de-chios": "/es/orquideas-de-quios/",
+
+  // Final safe legacy redirects from last GSC sample - villages
+  "/language/el/χίος/χωριά-χίος/βολισσός":
+    "/el/xoria-xios/volissos-xios/",
+  "/el/chios-el/chios-volissos": "/el/xoria-xios/volissos-xios/",
+  "/chios/chios-villages/volissos-voulamandis-house-chios-hotels":
+    "/chios/chios-villages/volissos-chios/",
+  "/de/chios-insel/volissos-chios-2": "/de/doerfer-chios/volissos-dorf/",
+  "/language/el/χίος/χωριά-χίος/ολύμποι":
+    "/el/xoria-xios/olympoi-xios/",
+  "/chios/chios-villages/olympoi-voulamandis-house-chios-hotels":
+    "/chios/chios-villages/olympoi-chios/",
+  "/chios/chios-villages/the-hospitable-village-olympoi":
+    "/chios/chios-villages/olympoi-chios/",
+  "/language/el/χίος/χωριά-χίος/μεστά": "/el/xoria-xios/mesta-xios/",
+  "/chios/chios-villages/mesta-voulamandis-house-chios-hotels":
+    "/chios/chios-villages/mesta-chios/",
+  "/chios/chios-villages/the-village-of-mesta":
+    "/chios/chios-villages/mesta-chios/",
+  "/language/el/χίος/χωριά-χίος/βέσσα": "/el/xoria-xios/vessa-xios/",
+  "/chios/chios-villages/the-village-of-lagada":
+    "/chios/chios-villages/lagada-chios/",
+  "/tr/chios-el/chios-villages-el/lagada-chios":
+    "/tr/sakiz-adasi-koyleri/lagada-koyu/",
+  "/en/chios/chios-villages": "/chios/chios-villages/",
+  "/language/en/chios/chios-villages": "/chios/chios-villages/",
+  "/chios/chios-villages/chios-villages": "/chios/chios-villages/",
+  "/de/chios-insel/armolia-chios-2": "/de/doerfer-chios/armolia-dorf/",
+  "/fr/ile-de-chios/pyrgi-chios": "/fr/villages-de-chios/village-pyrgi/",
+  "/it/uncategorized-it/di-villaggi-di-chios": "/it/villaggi-chios/",
+  "/es/uncategorized-es/pueblos-de-chios": "/es/pueblos-chios/",
+
+  // Final safe legacy redirects from last GSC sample - beaches
+  "/language/en/chios/chios-beaches": "/chios/chios-beaches/",
+  "/chios-el/chios-beaches-el/agia-dynami-beach-2":
+    "/el/paralies-xios/paralia-agia-dynami/",
+  "/language/el/παραλίες-χίου/λιθί": "/el/paralies-xios/paralia-lithi/",
+  "/language/el/παραλίες-χίου/ναγός": "/el/paralies-xios/paralia-nagos/",
+  "/chios-el/chios-beaches-el/chios-beach-nagos":
+    "/el/paralies-xios/paralia-nagos/",
+  "/el/chios-el/chios-beaches-el/chios-beach-komi":
+    "/el/paralies-xios/paralia-komi/",
+  "/chios-el/chios-beaches-el/komi-beach-2":
+    "/el/paralies-xios/paralia-komi/",
+  "/el/chios-el/chios-beaches-el/chios-beach-avlonia":
+    "/el/paralies-xios/paralia-avlonia/",
+  "/chios-el/chios-beaches-el/mavra-volia-2":
+    "/el/paralies-xios/paralia-mavra-volia/",
+  "/language/en/chios/mavra-volia": "/chios/chios-beaches/emporios-beach/",
+  "/chios/chios-beaches/nagos-beach-voulamandis-house-chios-hotels":
+    "/chios/chios-beaches/nagos-beach/",
+  "/chios/chios-beaches/salagona-voulamandis-house-chios-hotels":
+    "/chios/chios-beaches/salagona-beach/",
+  "/chios/chios-beaches/the-attractive-salagona-beach":
+    "/chios/chios-beaches/salagona-beach/",
+  "/chios/chios-beaches/lithi-beach-voulamandis-house-chios-hotels":
+    "/chios/chios-beaches/lithi-beach/",
+  "/chios/chios-beaches/agia-fotini-voulamandis-house-chios-hotels":
+    "/chios/chios-beaches/agia-fotia-beach/",
+  "/chios/chios-beaches/avlonia-beach-voulamandis-house-chios-hotels":
+    "/chios/chios-beaches/avlonia-beach2/",
+
+  // Final safe legacy redirects from last GSC sample - rooms / rates / contact
+  "/chios-rooms/family-chios-apartments-voulamandis-house-chios-hotels":
+    "/chios-rooms/family-chios-apartments/",
+  "/chios-rooms/double-trible-rooms-voulamandis-house-chios-hotels":
+    "/chios-rooms/standard-double-room/",
+  "/domatia-xios": "/el/domatia-xios/",
+  "/el/chios-rooms-2": "/el/domatia-xios/",
+  "/domatia-xios/diklina-triklina-domatia":
+    "/el/domatia-xios/diklina-triklina-domatia/",
+  "/domatia-xios/oikonomiko-diklino-domatio":
+    "/el/domatia-xios/oikonomiko-diklino-domatio/",
+  "/el/domatia-xios/chios-rooms-double-trible-rooms":
+    "/el/domatia-xios/diklina-triklina-domatia/",
+  "/el/domatia-xios/chios-rooms-economy-double":
+    "/el/domatia-xios/oikonomiko-diklino-domatio/",
+  "/best-rates-chios-hotels-voulamandis-house": "/chios-hotels-rates/",
+  "/en/chios-hotels-rates": "/chios-hotels-rates/",
+  "/en/best-chios-travel-deals-for-chios-hotels":
+    "/best-chios-travel-deals-for-chios-hotels/",
+  "/crazy-travel-deals-for-chios-hotels":
+    "/best-chios-travel-deals-for-chios-hotels/",
+  "/reservations": "/find-your-room/",
+  "/voulamandis-house-contact-form":
+    "/voulamandis-house-contact-us-form-fill-in-the-form/",
+  "/el/επικοινωνία": "/el/epikoinonia-voulamandis-house/",
+
+  // Final safe legacy redirects from last GSC sample - island / Kampos / home
+  "/chios": "/chios-island/",
+  "/chios/chios-kambos-voulamandis-house-chios-hotels":
+    "/chios/kampos-chios/",
+  "/es/uncategorized-es/kambos-en-chios": "/es/chios/kampos-chios/",
+  "/tr/uncategorized-tr/kambos-sakiz-adasi": "/tr/chios/kampos-chios/",
+  "/language/el/αρχική": "/el/",
+
+  // Old static URLs
+  "/de/chios-ist-die-beste-insel-griechenlands": "/de/chios/",
+  "/de/chios.html": "/de/chios/",
+  "/voulamandis-house.html": "/",
+
   // Italian old special route
   "/it/esplorare-chio": "/it/esplora-chios/",
 };
