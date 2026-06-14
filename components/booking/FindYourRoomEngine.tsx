@@ -1685,7 +1685,7 @@ export function FindYourRoomEngine({ data }: FindYourRoomEngineProps) {
                         onClick={() => updateGuests(room.id, value)}
                         aria-label={`${value} guests`}
                       >
-                        {"1".repeat(value)}
+                        {value === 1 ? "👤" : `👤 × ${value}`}
                       </button>
                     ))}
                   </div>
