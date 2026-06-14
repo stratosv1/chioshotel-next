@@ -1,4 +1,4 @@
-export type ChiosBeachesPageData = {
+﻿export type ChiosBeachesPageData = {
   seo: {
     canonicalPath: string;
     title: string;
@@ -91,7 +91,7 @@ const beachImages = {
 export const chiosBeachesPageEn: ChiosBeachesPageData = {
   seo: {
     canonicalPath: "/chios/chios-beaches/",
-    title: "Top Chios Beaches | Voulamandis House",
+    title: "Top Chios Beaches",
     description:
       "Discover the best beaches in Chios, from Mavra Volia and Agia Fotia to Komi, Lithi, Agia Dynami and hidden coves.",
     ogImage: beachImages.mavraVolia,
@@ -299,7 +299,7 @@ export const chiosBeachesPageEn: ChiosBeachesPageData = {
 export const chiosBeachesPageEl: ChiosBeachesPageData = {
   seo: {
     canonicalPath: "/el/paralies-xios/",
-    title: "Παραλίες Χίου | Voulamandis House",
+    title: "Παραλίες Χίου",
     description:
       "Ανακαλύψτε τις παραλίες της Χίου: Μαύρα Βόλια, Αγία Φωτιά, Κώμη, Λιθί, Αγία Δύναμη και κρυφοί κόλποι.",
     ogImage: beachImages.mavraVolia,
@@ -506,7 +506,7 @@ export const chiosBeachesPageEl: ChiosBeachesPageData = {
 export const chiosBeachesPageFr: ChiosBeachesPageData = {
   seo: {
     canonicalPath: "/fr/plages-de-chios/",
-    title: "Plages de Chios | Voulamandis House",
+    title: "Plages de Chios",
     description:
       "Découvrez les plages de Chios : Mavra Volia, Agia Fotia, Komi, Lithi, Agia Dynami et criques turquoise.",
     ogImage: beachImages.mavraVolia,
@@ -713,7 +713,7 @@ export const chiosBeachesPageFr: ChiosBeachesPageData = {
 export const chiosBeachesPageDe: ChiosBeachesPageData = {
   seo: {
     canonicalPath: "/de/straende-chios/",
-    title: "Strände auf Chios | Voulamandis House",
+    title: "Strände auf Chios",
     description:
       "Entdecken Sie Strände auf Chios: Mavra Volia, Agia Fotia, Komi, Lithi, Agia Dynami und versteckte Buchten.",
     ogImage: beachImages.mavraVolia,
@@ -920,7 +920,7 @@ export const chiosBeachesPageDe: ChiosBeachesPageData = {
 export const chiosBeachesPageIt: ChiosBeachesPageData = {
   seo: {
     canonicalPath: "/it/spiagge-chios/",
-    title: "Spiagge di Chios | Voulamandis House",
+    title: "Spiagge di Chios",
     description:
       "Scopri le spiagge di Chios: Mavra Volia, Agia Fotia, Komi, Lithi, Agia Dynami e baie nascoste.",
     ogImage: beachImages.mavraVolia,
@@ -1127,7 +1127,7 @@ export const chiosBeachesPageIt: ChiosBeachesPageData = {
 export const chiosBeachesPageEs: ChiosBeachesPageData = {
   seo: {
     canonicalPath: "/es/playas-chios/",
-    title: "Playas de Chios | Voulamandis House",
+    title: "Playas de Chios",
     description:
       "Descubre las playas de Chios: Mavra Volia, Agia Fotia, Komi, Lithi, Agia Dynami y calas escondidas.",
     ogImage: beachImages.mavraVolia,
@@ -1334,7 +1334,7 @@ export const chiosBeachesPageEs: ChiosBeachesPageData = {
 export const chiosBeachesPageTr: ChiosBeachesPageData = {
   seo: {
     canonicalPath: "/tr/sakiz-adasi-plajlari/",
-    title: "Sakız Adası Plajları | Voulamandis House",
+    title: "Sakız Adası Plajları",
     description:
       "Sakız Adası plajlarını keşfedin: Mavra Volia, Agia Fotia, Komi, Lithi, Agia Dynami ve gizli koylar.",
     ogImage: beachImages.mavraVolia,
@@ -1558,3 +1558,4 @@ export function getLocalizedChiosBeachesPageByPath(
       return undefined;
   }
 }
+
