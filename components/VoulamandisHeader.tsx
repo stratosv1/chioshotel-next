@@ -1427,7 +1427,7 @@ export function VoulamandisHeader() {
         >
           <span className="vh-header__logo-mark" aria-hidden="true">
             <img
-              src="/favicon/vh-heart-192x192.png"
+              src="/favicon/vh-heart-128.webp"
               alt=""
               className="vh-header__logo-heart"
             />
