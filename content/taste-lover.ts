@@ -112,7 +112,7 @@ const chiosGuideLinks: Record<LanguageCode, string> = {
 
 const images = {
   hero: {
-    src: "/images/taste/d8765ffe-dbf2-496c-9190-f1fb82e6318a-v2.webp",
+    src: "/images/taste/d8765ffe-dbf2-496c-9190-f1fb82e6318a.webp",
     alt: "Taste Lover Chios experience with local food and island atmosphere",
   },
   masourakia: {

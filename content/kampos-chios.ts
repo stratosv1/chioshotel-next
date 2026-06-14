@@ -54,7 +54,7 @@
   }[];
 };
 
-const heroImage = "/images/kampos/kambos-chios-v2.webp";
+const heroImage = "/images/kampos/kambos-chios.jpg";
 const mansionGardenImage = "/images/kampos/kampos-chios-mansion-garden.webp";
 const antouanikoImage = "/images/kampos/antouaniko-kampos-chios.webp";
 const citrusEstateImage = "/images/kampos/kampos-chios-citrus-estate.webp";

@@ -1709,7 +1709,7 @@ input{
   box-shadow:var(--vh-shadow-strong);
   background:
     linear-gradient(180deg,rgba(36,28,22,.22) 0%,rgba(36,28,22,.72) 72%,rgba(36,28,22,.88) 100%),
-    url("/images/site/Screenshot_2026-04-25-14-11-19-166_com.instagram.android-edit-1-v2.webp") center/cover no-repeat;
+    url("/images/site/Screenshot_2026-04-25-14-11-19-166_com.instagram.android-edit-1.webp") center/cover no-repeat;
   color:#fff;
   padding:44px;
   min-height:460px;
@@ -2311,7 +2311,7 @@ input{
     padding:18px 12px!important;
     background:
       linear-gradient(180deg,rgba(36,28,22,.05) 0%,rgba(36,28,22,.28) 45%,rgba(36,28,22,.78) 82%,rgba(36,28,22,.92) 100%),
-      url("/images/site/Screenshot_2026-04-25-14-11-19-166_com.instagram.android-edit-1-v2.webp") center/cover no-repeat!important;
+      url("/images/site/Screenshot_2026-04-25-14-11-19-166_com.instagram.android-edit-1.webp") center/cover no-repeat!important;
   }
 
   .vh-final-shell h2{
