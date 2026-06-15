@@ -7,13 +7,13 @@
     "goal": "Organize the large CSS, remove duplicate and obsolete CSS, then migrate gradually to Tailwind CSS without breaking the website."
   },
   "current_status": {
-    "git_status": "working tree contains completed Beach Lovers note card Tailwind migration before commit",
+    "git_status": "working tree contains completed full Beach Lovers page Tailwind migration before commit",
     "build_status": "passed",
     "preview_status": "OK",
     "tailwind_present": true,
     "tailwind_detected_by": "@import \"tailwindcss\";",
     "tailwind_migration_started": true,
-    "css_lines_removed_so_far": 418
+    "css_lines_removed_so_far": 667
   },
   "completed_work": [
     {
@@ -100,8 +100,27 @@
       ],
       "lines_removed": 31,
       "commit": {
-        "hash": "pending",
+        "hash": "a23e6aa",
         "message": "Migrate Beach Lovers note card to Tailwind"
+      }
+    },
+    {
+      "phase": "Full Beach Lovers page Tailwind migration",
+      "status": "completed",
+      "file": "components/landing/BeachLoversPage.tsx",
+      "css_file": "app/css-split/landing/beach-lovers.css",
+      "details": [
+        "Converted the remaining Beach Lovers page layout and visual styles to Tailwind constants",
+        "Migrated hero, overlay, responsive grids, intro section, beach cards, stay section, and final CTA",
+        "Confirmed no beach-lovers-* classes remain in BeachLoversPage.tsx",
+        "Replaced beach-lovers.css content with a placeholder import file",
+        "Build passed",
+        "Local preview was OK"
+      ],
+      "lines_removed_estimate": 249,
+      "commit": {
+        "hash": "pending",
+        "message": "Migrate full Beach Lovers page to Tailwind"
       }
     }
   ],
@@ -109,7 +128,7 @@
     "status": "completed",
     "remote": "origin",
     "branch": "main",
-    "latest_pushed_commit": "c5feda8"
+    "latest_pushed_commit": "a23e6aa"
   },
   "important_files": {
     "css_index": "app/css-split/globals.css",
@@ -141,21 +160,21 @@
     ]
   },
   "next_recommended_step": {
-    "phase": "Continue Beach Lovers Tailwind migration",
-    "recommended_file": "app/css-split/landing/beach-lovers.css",
+    "phase": "Choose next isolated Tailwind migration target",
+    "recommended_file": "app/css-split/landing/family-travel.css or another isolated landing page CSS file",
     "reason": [
-      "Beach Lovers page is still isolated and safe",
-      "Buttons and hero note card are done",
-      "Next small target should be another contained visual section",
-      "Continue one small block at a time with build and preview"
+      "Beach Lovers page is now migrated to Tailwind",
+      "Next safest approach is to migrate another isolated landing page, not homepage/header/footer",
+      "Continue with build, preview, state update, commit after each completed page"
     ],
     "process": [
-      "Choose the next small Beach Lovers section, likely intro/narrow section or beach card elements",
-      "Convert only that section to Tailwind",
-      "Remove only the CSS that was replaced",
+      "Pick the next isolated landing page",
+      "Convert its component to Tailwind",
+      "Keep CSS until build and preview pass",
+      "Remove unused CSS only after confirming no old classes remain",
       "Run npm.cmd run build",
       "Run npm.cmd run dev",
-      "Preview /chios-beach-lovers/",
+      "Preview the page",
       "Update this state file",
       "Commit if OK"
     ]
@@ -186,5 +205,5 @@
     ],
     "note": "Use shadcn/ui carefully. Keep the warm premium Voulamandis House style and avoid making the site look like a generic template."
   },
-  "short_summary": "CSS has been safely split, 339 obsolete or duplicate CSS lines were removed, Beach Lovers buttons were migrated to Tailwind removing 48 CSS lines, the Beach Lovers hero note card was migrated to Tailwind removing 31 more CSS lines, total CSS lines removed so far is 418, and the site builds and previews correctly."
+  "short_summary": "CSS has been safely split, 339 obsolete or duplicate CSS lines were removed, Beach Lovers buttons and note card were migrated to Tailwind, then the full Beach Lovers page was migrated to Tailwind. The Beach Lovers CSS file is now only a placeholder, total CSS lines removed so far is estimated at 667, and the site builds and previews correctly."
 }
