@@ -1,0 +1,152 @@
+{
+  "project": {
+    "name": "chioshotel-next / Voulamandis House",
+    "local_path": "C:\\Users\\Lenovo\\Documents\\chioshotel-live\\chioshotel-next",
+    "repository": "https://github.com/stratosv1/chioshotel-next.git",
+    "branch": "main",
+    "goal": "Organize the large CSS, remove duplicate and obsolete CSS, then migrate gradually to Tailwind CSS without breaking the website."
+  },
+  "current_status": {
+    "git_status": "clean before creating this documentation file",
+    "build_status": "passed",
+    "preview_status": "OK",
+    "tailwind_present": true,
+    "tailwind_detected_by": "@import \"tailwindcss\";",
+    "tailwind_migration_started": false,
+    "css_lines_removed_so_far": 339
+  },
+  "completed_work": [
+    {
+      "phase": "CSS split",
+      "status": "completed",
+      "details": [
+        "Created split-css.py",
+        "Split app/globals.css into app/css-split/",
+        "Verified split with: VERIFIED OK - concat(parts) == original body",
+        "Changed app/layout.tsx to import ./css-split/globals.css",
+        "Build passed",
+        "Local preview was OK"
+      ],
+      "commit": {
+        "hash": "2da4440",
+        "message": "Split global CSS into organized imports"
+      }
+    },
+    {
+      "phase": "Duplicate typography cleanup",
+      "status": "completed",
+      "file": "app/css-split/overrides/overrides.css",
+      "details": [
+        "Removed duplicate FINAL MOBILE TYPOGRAPHY OVERRIDE block",
+        "Kept one valid typography override block",
+        "Build passed",
+        "Local preview was OK"
+      ],
+      "lines_removed": 126,
+      "commit": {
+        "hash": "c89d5d7",
+        "message": "Remove duplicate mobile typography override"
+      }
+    },
+    {
+      "phase": "Old hero quiz animation cleanup",
+      "status": "completed",
+      "file": "app/css-split/overrides/overrides.css",
+      "details": [
+        "Removed old hero quiz animation override blocks",
+        "Removed old left-based and box-shadow animation attempts",
+        "Kept the newer transform-based performance block",
+        "Kept vhHeroQuizTransformShine",
+        "Kept vhQuizButtonTransformShine",
+        "Build passed after clearing .next",
+        "Local preview was OK"
+      ],
+      "lines_removed": 213,
+      "commit": {
+        "hash": "bce9f15",
+        "message": "Remove old hero quiz animation overrides"
+      }
+    }
+  ],
+  "pushed_to_github": {
+    "status": "completed",
+    "remote": "origin",
+    "branch": "main",
+    "range": "6a7177c..bce9f15"
+  },
+  "important_files": {
+    "css_index": "app/css-split/globals.css",
+    "original_css": "app/globals.css",
+    "layout": "app/layout.tsx",
+    "split_script": "split-css.py",
+    "overrides": "app/css-split/overrides/overrides.css",
+    "state_file": "docs/css-tailwind-migration-state.json"
+  },
+  "rules": {
+    "safety": [
+      "Work one small step at a time.",
+      "Run npm.cmd run build after every meaningful CSS change.",
+      "Run npm.cmd run dev and visually preview after build.",
+      "Commit after every safe completed step.",
+      "Do not edit many CSS sections together.",
+      "Do not start Tailwind migration from homepage, header, or footer."
+    ],
+    "css_order": [
+      "Keep @import order identical to original CSS order unless there is a very specific reason.",
+      "Keep @import \"tailwindcss\" first.",
+      "Keep overrides.css near the end because it intentionally wins the cascade.",
+      "Do not move imports casually."
+    ],
+    "next_generated_files": [
+      "next-env.d.ts may change automatically after build/dev.",
+      "Do not commit next-env.d.ts if it only changed because of Next generated route types.",
+      "If .next generated types break, remove .next and rebuild."
+    ]
+  },
+  "next_recommended_step": {
+    "phase": "First real Tailwind migration",
+    "recommended_file": "app/css-split/landing/beach-lovers.css",
+    "reason": [
+      "It is isolated.",
+      "It should not affect homepage, header, or footer.",
+      "It has scoped landing page classes.",
+      "It is a good low-risk test for Tailwind workflow."
+    ],
+    "process": [
+      "Find the page/component that uses beach-lovers classes.",
+      "Convert one small visual section to Tailwind.",
+      "Remove only the CSS that was replaced.",
+      "Run npm.cmd run build.",
+      "Run npm.cmd run dev.",
+      "Preview the related page.",
+      "Commit if OK."
+    ]
+  },
+  "do_not_do_next": [
+    "Do not migrate homepage first.",
+    "Do not migrate header/footer first.",
+    "Do not delete all overrides.css.",
+    "Do not change import order without checking cascade impact.",
+    "Do not add many UI libraries together.",
+    "Do not commit next-env.d.ts if it changes automatically."
+  ],
+  "future_ui_direction": {
+    "preferred_stack": [
+      "Tailwind CSS",
+      "shadcn/ui where useful",
+      "custom Voulamandis components"
+    ],
+    "possible_custom_components": [
+      "VhButton",
+      "VhCard",
+      "VhSection",
+      "VhBadge",
+      "VhRoomCard",
+      "VhInfoPanel",
+      "VhAccordion",
+      "VhBookingCTA"
+    ],
+    "note": "Use shadcn/ui carefully. Keep the warm premium Voulamandis House style and avoid making the site look like a generic template."
+  },
+  "short_summary": "CSS has been safely split, 339 obsolete or duplicate CSS lines were removed, the site builds and previews correctly, all work has been pushed to GitHub, and the next safe step is Tailwind migration starting from app/css-split/landing/beach-lovers.css."
+}
