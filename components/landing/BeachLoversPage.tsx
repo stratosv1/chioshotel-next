@@ -1,9 +1,27 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import type { BeachLoversPageData } from "@/content/beach-lovers";
 
 type BeachLoversPageProps = {
   data: BeachLoversPageData;
 };
+
+const beachLoversButtonBase =
+  "inline-flex items-center justify-center rounded-full px-6 py-[13px] text-sm font-[850] leading-none transition duration-200 ease-in-out";
+
+const beachLoversButtonPrimary =
+  beachLoversButtonBase +
+  " bg-cyan-400 text-slate-950 shadow-[0_14px_30px_rgba(34,211,238,0.25)] hover:-translate-y-px hover:bg-cyan-300";
+
+const beachLoversButtonSecondary =
+  beachLoversButtonBase +
+  " border border-white/45 text-white hover:bg-white/10";
+
+const beachLoversButtonDark =
+  beachLoversButtonBase +
+  " mt-[30px] bg-slate-950 !text-white hover:-translate-y-px hover:bg-slate-800";
+
+const beachLoversStayButton =
+  beachLoversButtonPrimary + " mt-[30px] w-fit";
 
 function getBookingHref(locale: BeachLoversPageData["locale"]) {
   switch (locale) {
@@ -66,17 +84,11 @@ export function BeachLoversPage({ data }: BeachLoversPageProps) {
             <p className="beach-lovers-subtitle">{data.hero.subtitle}</p>
 
             <div className="beach-lovers-actions">
-              <Link
-                href={bookingHref}
-                className="beach-lovers-btn beach-lovers-btn-primary"
-              >
+              <Link href={bookingHref} className={beachLoversButtonPrimary}>
                 {data.hero.primaryCta}
               </Link>
 
-              <a
-                href="#beaches"
-                className="beach-lovers-btn beach-lovers-btn-secondary"
-              >
+              <a href="#beaches" className={beachLoversButtonSecondary}>
                 {data.hero.secondaryCta}
               </a>
             </div>
@@ -151,10 +163,7 @@ export function BeachLoversPage({ data }: BeachLoversPageProps) {
 
           <p>{data.stay.text}</p>
 
-          <Link
-            href={roomsHref}
-            className="beach-lovers-btn beach-lovers-btn-primary"
-          >
+          <Link href={roomsHref} className={beachLoversStayButton}>
             {data.stay.cta}
           </Link>
         </div>
@@ -166,10 +175,7 @@ export function BeachLoversPage({ data }: BeachLoversPageProps) {
 
           <p>{data.finalCta.text}</p>
 
-          <Link
-            href={bookingHref}
-            className="beach-lovers-btn beach-lovers-btn-dark"
-          >
+          <Link href={bookingHref} className={beachLoversButtonDark}>
             {data.finalCta.button}
           </Link>
         </div>

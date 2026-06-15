@@ -93,49 +93,6 @@
   margin-top: 32px;
 }
 
-.beach-lovers-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999px;
-  padding: 13px 24px;
-  font-size: 14px;
-  font-weight: 850;
-  line-height: 1;
-  transition: 0.2s ease;
-}
-
-.beach-lovers-btn-primary {
-  background: #22d3ee;
-  color: #020617;
-  box-shadow: 0 14px 30px rgba(34, 211, 238, 0.25);
-}
-
-.beach-lovers-btn-primary:hover {
-  background: #67e8f9;
-  transform: translateY(-1px);
-}
-
-.beach-lovers-btn-secondary {
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  color: #ffffff;
-}
-
-.beach-lovers-btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.12);
-}
-
-.beach-lovers-btn-dark {
-  margin-top: 30px;
-  background: #020617;
-  color: #ffffff;
-}
-
-.beach-lovers-btn-dark:hover {
-  background: #1e293b;
-  transform: translateY(-1px);
-}
-
 .beach-lovers-note {
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 30px;
@@ -327,11 +284,6 @@
   color: #e2e8f0;
   font-size: 18px;
   line-height: 1.75;
-}
-
-.beach-lovers-stay-box .beach-lovers-btn {
-  width: fit-content;
-  margin-top: 30px;
 }
 
 .beach-lovers-final-wrap {

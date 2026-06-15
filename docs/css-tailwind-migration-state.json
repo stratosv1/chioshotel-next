@@ -12,8 +12,8 @@
     "preview_status": "OK",
     "tailwind_present": true,
     "tailwind_detected_by": "@import \"tailwindcss\";",
-    "tailwind_migration_started": false,
-    "css_lines_removed_so_far": 339
+    "tailwind_migration_started": true,
+    "css_lines_removed_so_far": 387
   },
   "completed_work": [
     {
@@ -66,6 +66,25 @@
         "hash": "bce9f15",
         "message": "Remove old hero quiz animation overrides"
       }
+    },
+    {
+      "phase": "Beach Lovers buttons Tailwind migration",
+      "status": "completed",
+      "file": "components/landing/BeachLoversPage.tsx",
+      "css_file": "app/css-split/landing/beach-lovers.css",
+      "details": [
+        "Converted Beach Lovers CTA buttons from scoped CSS classes to Tailwind classes",
+        "Added reusable Tailwind button constants inside BeachLoversPage.tsx",
+        "Fixed final dark CTA text with !text-white because old cascade affected link color",
+        "Removed old beach-lovers button CSS rules after confirming no beach-lovers-btn classes remained in the component",
+        "Build passed",
+        "Local preview was OK"
+      ],
+      "lines_removed": 48,
+      "commit": {
+        "hash": "pending",
+        "message": "Migrate Beach Lovers buttons to Tailwind"
+      }
     }
   ],
   "pushed_to_github": {
@@ -104,22 +123,22 @@
     ]
   },
   "next_recommended_step": {
-    "phase": "First real Tailwind migration",
+    "phase": "Continue Beach Lovers Tailwind migration",
     "recommended_file": "app/css-split/landing/beach-lovers.css",
     "reason": [
-      "It is isolated.",
-      "It should not affect homepage, header, or footer.",
-      "It has scoped landing page classes.",
-      "It is a good low-risk test for Tailwind workflow."
+      "Beach Lovers page is still isolated and safe",
+      "Buttons are done, so the next small target should be another contained visual section",
+      "Continue one small block at a time with build and preview"
     ],
     "process": [
-      "Find the page/component that uses beach-lovers classes.",
-      "Convert one small visual section to Tailwind.",
-      "Remove only the CSS that was replaced.",
-      "Run npm.cmd run build.",
-      "Run npm.cmd run dev.",
-      "Preview the related page.",
-      "Commit if OK."
+      "Choose the next small Beach Lovers section, likely hero note or section spacing",
+      "Convert only that section to Tailwind",
+      "Remove only the CSS that was replaced",
+      "Run npm.cmd run build",
+      "Run npm.cmd run dev",
+      "Preview /chios-beach-lovers/",
+      "Update this state file",
+      "Commit if OK"
     ]
   },
   "do_not_do_next": [
@@ -148,5 +167,5 @@
     ],
     "note": "Use shadcn/ui carefully. Keep the warm premium Voulamandis House style and avoid making the site look like a generic template."
   },
-  "short_summary": "CSS has been safely split, 339 obsolete or duplicate CSS lines were removed, the site builds and previews correctly, all work has been pushed to GitHub, and the next safe step is Tailwind migration starting from app/css-split/landing/beach-lovers.css."
+  "short_summary": "CSS has been safely split, 339 obsolete or duplicate CSS lines were removed, Beach Lovers buttons were migrated to Tailwind, 48 more CSS lines were removed, the site builds and previews correctly, and the next safe step is continuing Beach Lovers Tailwind migration one small section at a time."
 }
