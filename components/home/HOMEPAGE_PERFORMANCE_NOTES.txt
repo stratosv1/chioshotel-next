@@ -1,0 +1,111 @@
+﻿HOMEPAGE PERFORMANCE NOTES
+==========================
+
+Date: 2026-06-15
+Project: chioshotel-next / Voulamandis House
+Area: components/home
+
+What changed
+------------
+
+The homepage was refactored so that the main HomePage component is no longer a client component.
+
+Before:
+- components/home/HomePage.tsx had "use client"
+- It used useState, useEffect and useRef
+- It handled map click-to-load logic directly
+- It handled discount-code reveal logic directly
+- It loaded the Trustindex reviews script directly
+- This made the whole homepage hydrate as client JavaScript
+
+After:
+- components/home/HomePage.tsx is a server component
+- Only the small interactive parts are client components
+
+Current structure
+-----------------
+
+components/home/HomePage.tsx
+- Main homepage layout
+- Server component
+- Should NOT contain:
+  - "use client"
+  - useState
+  - useEffect
+  - useRef
+  - document.getElementById
+  - direct script injection
+
+components/home/HomeMap.tsx
+- Client component
+- Handles only the click-to-load Google Map behavior
+- Keeps the map iframe unloaded until the user clicks
+
+components/home/DiscountReveal.tsx
+- Client component
+- Handles only the discount-code reveal button
+
+components/home/HomeReviews.tsx
+- Client component
+- Lazy-loads the Trustindex reviews script only when the reviews section is near the viewport
+
+components/home/LastMinuteDeals.tsx
+- Still a client component
+- This is expected because it uses client-side state, dates, filters, timers, window and API fetch logic
+
+Languages affected
+------------------
+
+This refactor affects all homepage languages because all localized homepages use the same shared HomePage component.
+
+Affected routes:
+- /
+- /el/
+- /fr/
+- /de/
+- /it/
+- /es/
+- /tr/
+
+Important rules for future edits
+--------------------------------
+
+1. Do not add "use client" back to HomePage.tsx unless absolutely necessary.
+2. If a new interactive homepage feature is needed, create a small separate client component.
+3. Keep HomePage.tsx as the shared server-rendered layout.
+4. Do not put direct DOM logic or script injection inside HomePage.tsx.
+5. Test all localized homepage routes after changes.
+6. Run npm.cmd run build before committing.
+
+Useful checks
+-------------
+
+Check that HomePage.tsx is still server-only:
+
+Select-String -Path components\home\HomePage.tsx -Pattern '"use client"|useState|useEffect|useRef|document|reviewsRef|isMapLoaded|showDiscountCode'
+
+If this command prints nothing, HomePage.tsx is still clean.
+
+Build check:
+
+npm.cmd run build
+
+Local preview:
+
+npm.cmd run dev
+
+Then test:
+- http://localhost:3000/
+- http://localhost:3000/el/
+- http://localhost:3000/fr/
+- http://localhost:3000/de/
+- http://localhost:3000/it/
+- http://localhost:3000/es/
+- http://localhost:3000/tr/
+
+Original performance goal
+-------------------------
+
+Reduce unnecessary homepage JavaScript by moving only truly interactive behavior into small client components.
+
+This was done after PageSpeed showed unused JavaScript on the homepage.
