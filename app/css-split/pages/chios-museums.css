@@ -1,0 +1,735 @@
+/* =========================================================
+   CHIOS MUSEUMS LANDING PAGE
+   /chios/chios-museums/
+   Premium bento style aligned with beaches/villages
+   ========================================================= */
+
+.chios-museums-page {
+  --cm-bg: #f7efe5;
+  --cm-card: #fffdfa;
+  --cm-dark: #2f261f;
+  --cm-text: #574b3f;
+  --cm-muted: #766a61;
+  --cm-gold: #8e6607;
+  --cm-gold-2: #a87842;
+  --cm-line: rgba(142, 102, 7, 0.14);
+  --cm-shadow: 0 18px 45px rgba(47, 38, 31, 0.1);
+  --cm-shadow-strong: 0 30px 80px rgba(47, 38, 31, 0.18);
+  --cm-radius: 30px;
+  --cm-transition: all 0.35s ease;
+
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(168, 120, 66, 0.18), transparent 34rem),
+    linear-gradient(180deg, #fbf6ef 0%, #f4eadf 52%, #fbf6ef 100%);
+  color: var(--cm-dark);
+  overflow-x: hidden;
+}
+
+.chios-museums-page * {
+  box-sizing: border-box;
+}
+
+.chios-museums-page a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.cm-wrap {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+.cm-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 14px;
+  color: #6a4b00;
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.cm-kicker::before {
+  content: "";
+  width: 30px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.75;
+}
+
+.cm-kicker--light {
+  color: #fff;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.65);
+}
+
+/* HERO */
+
+.cm-hero {
+  position: relative;
+  min-height: 640px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  color: #fff;
+}
+
+.cm-hero-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.cm-hero-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cm-hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(90deg, rgba(32, 24, 18, 0.84) 0%, rgba(32, 24, 18, 0.54) 42%, rgba(32, 24, 18, 0.18) 100%),
+    linear-gradient(0deg, rgba(32, 24, 18, 0.74) 0%, transparent 58%);
+}
+
+.cm-hero-inner {
+  position: relative;
+  z-index: 2;
+  padding: 110px 0 76px;
+}
+
+.cm-hero-card {
+  width: min(760px, 100%);
+  padding: clamp(30px, 5vw, 56px);
+  border-radius: 34px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(0, 0, 0, 0.28));
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 34px 90px rgba(0, 0, 0, 0.28);
+}
+
+.cm-hero h1 {
+  margin: 0;
+  max-width: 11ch;
+  color: #fff;
+  font-size: clamp(46px, 7vw, 86px);
+  line-height: 0.94;
+  letter-spacing: -0.06em;
+  font-weight: 950;
+  text-shadow: 0 5px 24px rgba(0, 0, 0, 0.38);
+}
+
+.cm-hero p {
+  margin: 18px 0 0;
+  max-width: 680px;
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 18px;
+  line-height: 1.7;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.32);
+}
+
+.cm-hero-actions,
+.cm-stay-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+/* BUTTONS */
+
+.cm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 54px;
+  padding: 0 27px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: var(--cm-transition);
+}
+
+.cm-btn:hover {
+  transform: translateY(-3px);
+}
+
+.cm-btn--primary {
+  background: linear-gradient(135deg, #a87842, #8e6607);
+  color: #fff;
+  box-shadow: 0 14px 35px rgba(142, 102, 7, 0.32);
+}
+
+.cm-btn--secondary {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.38);
+}
+
+.cm-btn--outline {
+  background: #fff7ee;
+  color: #6a4b00;
+  border-color: rgba(142, 102, 7, 0.18);
+}
+
+/* SECTIONS */
+
+.cm-section {
+  padding: 82px 0;
+}
+
+.cm-section-head {
+  margin-bottom: 34px;
+  text-align: center;
+}
+
+.cm-section-head h2,
+.cm-intro-copy h2,
+.cm-planning-grid h2,
+.cm-stay-card h2 {
+  margin: 0;
+  color: var(--cm-dark);
+  font-size: clamp(32px, 4.6vw, 58px);
+  line-height: 1;
+  font-weight: 950;
+  letter-spacing: -0.055em;
+}
+
+.cm-section-head .cm-kicker {
+  justify-content: center;
+}
+
+.cm-section-head .cm-kicker::after {
+  content: "";
+  width: 30px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.75;
+}
+
+.cm-section-head p {
+  max-width: 780px;
+  margin: 16px auto 0;
+  color: var(--cm-text);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* INTRO */
+
+.cm-section--intro {
+  padding-bottom: 54px;
+}
+
+.cm-intro-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+  gap: 34px;
+  align-items: stretch;
+}
+
+.cm-intro-copy,
+.cm-tip-card {
+  padding: 34px;
+  border-radius: var(--cm-radius);
+  background: var(--cm-card);
+  border: 1px solid var(--cm-line);
+  box-shadow: var(--cm-shadow);
+}
+
+.cm-intro-copy p {
+  margin: 18px 0 0;
+  color: var(--cm-text);
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+.cm-tip-card {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  background:
+    radial-gradient(circle at top left, rgba(168, 120, 66, 0.16), transparent 18rem),
+    #fffdfa;
+}
+
+.cm-tip-icon {
+  width: 64px;
+  height: 64px;
+  flex: 0 0 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 22px;
+  background: #fff4e5;
+  border: 1px solid rgba(142, 102, 7, 0.14);
+  font-size: 30px;
+}
+
+.cm-tip-card h3 {
+  margin: 0;
+  color: var(--cm-dark);
+  font-size: 24px;
+  line-height: 1.05;
+  font-weight: 950;
+  letter-spacing: -0.035em;
+}
+
+.cm-tip-card p {
+  margin: 12px 0 0;
+  color: var(--cm-text);
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.cm-tip-card a {
+  display: inline-flex;
+  margin-top: 16px;
+  color: #6a4b00;
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* BENTO MUSEUM GRID */
+
+.cm-section--museums {
+  padding-top: 28px;
+}
+
+.cm-bento-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: 280px;
+  gap: 18px;
+}
+
+.cm-museum-card {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  min-height: 260px;
+  padding: 22px;
+  border-radius: 28px;
+  color: #fff;
+  background: #2f261f;
+  box-shadow: var(--cm-shadow);
+  isolation: isolate;
+  transition: var(--cm-transition);
+}
+
+.cm-museum-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--cm-shadow-strong);
+}
+
+.cm-museum-card--large {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.cm-museum-card--wide {
+  grid-column: span 2;
+  grid-row: span 1;
+}
+
+.cm-museum-card--tall {
+  grid-column: span 1;
+  grid-row: span 2;
+}
+
+.cm-museum-card--normal {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+.cm-museum-image {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+}
+
+.cm-museum-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.75s ease;
+}
+
+.cm-museum-card:hover .cm-museum-image img {
+  transform: scale(1.06);
+}
+
+.cm-museum-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(to top, rgba(34, 25, 18, 0.95) 0%, rgba(34, 25, 18, 0.56) 55%, rgba(34, 25, 18, 0.14) 100%),
+    radial-gradient(circle at top left, rgba(168, 120, 66, 0.18), transparent 18rem);
+  transition: var(--cm-transition);
+}
+
+.cm-museum-card:hover .cm-museum-overlay {
+  background:
+    linear-gradient(to top, rgba(34, 25, 18, 0.96) 0%, rgba(34, 25, 18, 0.66) 54%, rgba(34, 25, 18, 0.22) 100%),
+    radial-gradient(circle at top left, rgba(168, 120, 66, 0.22), transparent 18rem);
+}
+
+.cm-museum-content {
+  width: 100%;
+}
+
+.cm-museum-meta,
+.cm-museum-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.cm-museum-meta {
+  margin-bottom: 9px;
+}
+
+.cm-museum-badges {
+  margin-bottom: 12px;
+}
+
+.cm-museum-meta span,
+.cm-museum-badges span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 27px;
+  padding: 0 9px;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.cm-museum-meta span {
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+}
+
+.cm-museum-badges span {
+  background: rgba(255, 247, 238, 0.92);
+  color: #6a4b00;
+}
+
+.cm-museum-card h3 {
+  margin: 0;
+  color: #fff;
+  font-size: 25px;
+  line-height: 1;
+  font-weight: 950;
+  letter-spacing: -0.045em;
+  text-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
+}
+
+.cm-museum-card--large h3 {
+  max-width: 10ch;
+  font-size: clamp(34px, 4vw, 54px);
+}
+
+.cm-museum-card p {
+  margin: 10px 0 0;
+  max-width: 620px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  line-height: 1.5;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.36);
+}
+
+.cm-museum-card--normal p {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cm-museum-card strong {
+  display: inline-flex;
+  margin-top: 14px;
+  color: #f2d9a8;
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* PLANNING */
+
+.cm-section--planning {
+  padding-top: 46px;
+}
+
+.cm-planning-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 28px;
+  align-items: start;
+  padding: 34px;
+  border-radius: var(--cm-radius);
+  background: #fffdfa;
+  border: 1px solid var(--cm-line);
+  box-shadow: var(--cm-shadow);
+}
+
+.cm-planning-grid > article p {
+  margin: 18px 0 0;
+  color: var(--cm-text);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.cm-planning-list {
+  display: grid;
+  gap: 12px;
+}
+
+.cm-planning-item {
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 20px;
+  background: #fff7ee;
+  border: 1px solid rgba(142, 102, 7, 0.1);
+}
+
+.cm-planning-item > span {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  background: #fff;
+  border: 1px solid rgba(142, 102, 7, 0.1);
+  font-size: 22px;
+}
+
+.cm-planning-item h3 {
+  margin: 0;
+  color: var(--cm-dark);
+  font-size: 17px;
+  line-height: 1.15;
+  font-weight: 950;
+}
+
+.cm-planning-item p {
+  margin: 6px 0 0;
+  color: var(--cm-text);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+/* STAY CTA */
+
+.cm-section--stay {
+  padding-top: 0;
+}
+
+.cm-stay-card {
+  padding: clamp(30px, 5vw, 54px);
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at top left, rgba(168, 120, 66, 0.15), transparent 22rem),
+    #fffdfa;
+  border: 1px solid var(--cm-line);
+  box-shadow: var(--cm-shadow);
+  text-align: center;
+}
+
+.cm-stay-card p {
+  max-width: 760px;
+  margin: 18px auto 0;
+  color: var(--cm-text);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.cm-stay-actions {
+  justify-content: center;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1100px) {
+  .cm-bento-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .cm-museum-card--tall {
+    grid-row: span 1;
+  }
+}
+
+@media (max-width: 980px) {
+  .cm-intro-grid,
+  .cm-planning-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 767px) {
+  .cm-wrap,
+  .cm-hero-inner {
+    width: 100%;
+  }
+
+  .cm-hero {
+    min-height: 76svh;
+  }
+
+  .cm-hero-overlay {
+    background:
+      linear-gradient(180deg, rgba(32, 24, 18, 0.04) 0%, rgba(32, 24, 18, 0.2) 42%, rgba(32, 24, 18, 0.9) 100%);
+  }
+
+  .cm-hero-inner {
+    padding: 18px 12px 24px;
+  }
+
+  .cm-hero-card {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .cm-hero h1 {
+    max-width: 10ch;
+    font-size: 40px;
+    line-height: 0.96;
+  }
+
+  .cm-hero p {
+    font-size: 14px;
+    line-height: 1.48;
+  }
+
+  .cm-hero-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .cm-btn {
+    width: 100%;
+    min-height: 50px;
+    padding: 0 10px;
+    border-radius: 18px;
+    font-size: 10.5px;
+    line-height: 1.12;
+    white-space: normal;
+  }
+
+  .cm-section {
+    padding: 42px 12px;
+  }
+
+  .cm-section-head h2,
+  .cm-intro-copy h2,
+  .cm-planning-grid h2,
+  .cm-stay-card h2 {
+    font-size: 30px;
+    line-height: 1.04;
+  }
+
+  .cm-intro-copy,
+  .cm-tip-card,
+  .cm-planning-grid,
+  .cm-stay-card {
+    padding: 18px;
+    border-radius: 24px;
+  }
+
+  .cm-intro-copy p,
+  .cm-section-head p,
+  .cm-planning-grid > article p,
+  .cm-stay-card p {
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .cm-tip-card {
+    flex-direction: column;
+  }
+
+  .cm-bento-grid {
+    grid-template-columns: 1fr;
+    grid-auto-rows: 320px;
+    gap: 16px;
+  }
+
+  .cm-museum-card,
+  .cm-museum-card--large,
+  .cm-museum-card--wide,
+  .cm-museum-card--tall,
+  .cm-museum-card--normal {
+    grid-column: span 1;
+    grid-row: span 1;
+    border-radius: 24px;
+  }
+
+  .cm-museum-card {
+    padding: 18px;
+  }
+
+  .cm-museum-card h3,
+  .cm-museum-card--large h3 {
+    max-width: 11ch;
+    font-size: 30px;
+    line-height: 1;
+  }
+
+  .cm-museum-card p {
+    font-size: 13px;
+    line-height: 1.42;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .cm-museum-meta span,
+  .cm-museum-badges span {
+    min-height: 25px;
+    padding: 0 8px;
+    font-size: 8px;
+  }
+
+  .cm-planning-grid {
+    gap: 18px;
+  }
+
+  .cm-planning-item {
+    padding: 14px;
+  }
+
+  .cm-stay-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+}

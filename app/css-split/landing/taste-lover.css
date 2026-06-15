@@ -1,0 +1,363 @@
+/* Taste Lover landing page */
+.taste-lover-page {
+  background: #fffaf3;
+  color: #2f2118;
+}
+
+.taste-lover-container {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+.taste-lover-hero {
+  position: relative;
+  min-height: 78vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  color: #fff;
+}
+
+.taste-lover-hero__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.taste-lover-hero__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.taste-lover-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(38, 24, 12, 0.78), rgba(38, 24, 12, 0.42), rgba(38, 24, 12, 0.18)),
+    linear-gradient(0deg, rgba(38, 24, 12, 0.38), rgba(38, 24, 12, 0.18));
+}
+
+.taste-lover-hero__content {
+  position: relative;
+  z-index: 1;
+  padding: 140px 0 96px;
+  max-width: 780px;
+}
+
+.taste-lover-eyebrow,
+.taste-lover-kicker {
+  margin: 0 0 16px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #c77b28;
+}
+
+.taste-lover-hero .taste-lover-eyebrow {
+  color: #ffd493;
+}
+
+.taste-lover-hero h1 {
+  margin: 0;
+  max-width: 760px;
+  font-size: clamp(2.8rem, 7vw, 5.8rem);
+  line-height: 0.96;
+  letter-spacing: -0.06em;
+}
+
+.taste-lover-hero__subtitle {
+  max-width: 680px;
+  margin: 24px 0 0;
+  font-size: clamp(1.05rem, 2vw, 1.35rem);
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.taste-lover-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 32px;
+}
+
+.taste-lover-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 22px;
+  border-radius: 999px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.taste-lover-button:hover {
+  transform: translateY(-2px);
+}
+
+.taste-lover-button--primary {
+  background: #c77b28;
+  color: #fff;
+  box-shadow: 0 14px 30px rgba(103, 58, 18, 0.28);
+}
+
+.taste-lover-button--secondary {
+  background: rgba(255, 255, 255, 0.92);
+  color: #2f2118;
+}
+
+.taste-lover-button--light {
+  background: #fff;
+  color: #2f2118;
+}
+
+.taste-lover-section {
+  padding: 88px 0;
+}
+
+.taste-lover-section--warm {
+  background: #f6eadb;
+}
+
+.taste-lover-intro {
+  background: #fff;
+}
+
+.taste-lover-intro__grid {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 56px;
+  align-items: start;
+}
+
+.taste-lover-intro h2,
+.taste-lover-section-heading h2,
+.taste-lover-stay h2 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.taste-lover-intro p,
+.taste-lover-section-heading p,
+.taste-lover-card p,
+.taste-lover-experience p,
+.taste-lover-timeline p,
+.taste-lover-stay p {
+  line-height: 1.75;
+}
+
+.taste-lover-intro__grid > p {
+  margin: 0;
+  font-size: 1.12rem;
+  color: #5f4b3a;
+}
+
+.taste-lover-section-heading {
+  max-width: 760px;
+  margin-bottom: 42px;
+}
+
+.taste-lover-section-heading p:last-child {
+  margin: 18px 0 0;
+  color: #6b5847;
+  font-size: 1.05rem;
+}
+
+.taste-lover-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.taste-lover-card {
+  overflow: hidden;
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: 0 20px 48px rgba(82, 50, 20, 0.1);
+}
+
+.taste-lover-card img {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  display: block;
+}
+
+.taste-lover-card__body {
+  padding: 26px;
+}
+
+.taste-lover-card h3,
+.taste-lover-experience h3,
+.taste-lover-timeline h3,
+.taste-lover-stay__panel h3 {
+  margin: 0;
+  font-size: 1.35rem;
+  line-height: 1.2;
+}
+
+.taste-lover-card p {
+  margin: 14px 0 0;
+  color: #6b5847;
+}
+
+.taste-lover-experience-grid {
+  display: grid;
+  gap: 24px;
+}
+
+.taste-lover-experience {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 28px;
+  align-items: center;
+  padding: 18px;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 20px 48px rgba(82, 50, 20, 0.08);
+}
+
+.taste-lover-experience__image {
+  overflow: hidden;
+  border-radius: 22px;
+}
+
+.taste-lover-experience__image img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  display: block;
+}
+
+.taste-lover-experience__content {
+  padding: 10px 10px 10px 0;
+}
+
+.taste-lover-experience p {
+  margin: 14px 0 0;
+  color: #6b5847;
+}
+
+.taste-lover-day {
+  background: #fffaf3;
+}
+
+.taste-lover-timeline {
+  display: grid;
+  gap: 18px;
+}
+
+.taste-lover-timeline__item {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 28px;
+  padding: 24px;
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 16px 38px rgba(82, 50, 20, 0.08);
+}
+
+.taste-lover-timeline__time {
+  width: fit-content;
+  height: fit-content;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #f6eadb;
+  color: #9a5a18;
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.taste-lover-timeline p {
+  margin: 10px 0 0;
+  color: #6b5847;
+}
+
+.taste-lover-stay {
+  background: #2f2118;
+  color: #fff;
+}
+
+.taste-lover-stay__grid {
+  display: grid;
+  grid-template-columns: 1fr 0.9fr;
+  gap: 48px;
+  align-items: center;
+}
+
+.taste-lover-stay p {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.taste-lover-stay__panel {
+  padding: 34px;
+  border-radius: 30px;
+  background: #c77b28;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+}
+
+.taste-lover-stay__panel p {
+  margin: 16px 0 0;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+@media (max-width: 900px) {
+  .taste-lover-hero {
+    min-height: 72vh;
+  }
+
+  .taste-lover-hero__content {
+    padding: 120px 0 72px;
+  }
+
+  .taste-lover-intro__grid,
+  .taste-lover-card-grid,
+  .taste-lover-experience,
+  .taste-lover-stay__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .taste-lover-experience__content {
+    padding: 4px;
+  }
+
+  .taste-lover-timeline__item {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
+@media (max-width: 560px) {
+  .taste-lover-container {
+    width: min(100% - 24px, 1120px);
+  }
+
+  .taste-lover-section {
+    padding: 64px 0;
+  }
+
+  .taste-lover-actions {
+    flex-direction: column;
+  }
+
+  .taste-lover-button {
+    width: 100%;
+  }
+
+  .taste-lover-card img,
+  .taste-lover-experience__image img {
+    height: 220px;
+  }
+
+  .taste-lover-card__body,
+  .taste-lover-stay__panel {
+    padding: 22px;
+  }
+}

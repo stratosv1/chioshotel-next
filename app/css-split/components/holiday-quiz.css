@@ -1,0 +1,376 @@
+/* Chios Holiday Quiz */
+.chq-page {
+  padding: 44px 16px 56px;
+  background:
+    radial-gradient(circle at top left, rgba(199, 146, 91, 0.16), transparent 34%),
+    #fffaf4;
+}
+
+.chq-container {
+  --chq-bronze: #8b5e34;
+  --chq-gold: #c7925b;
+  --chq-cream: #fdfaf7;
+  --chq-dark: #2c241e;
+  --chq-success: #2f6f4e;
+  --chq-error: #a52a2a;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 40px;
+  background: var(--chq-cream);
+  border-radius: 25px;
+  border: 1px solid rgba(139, 94, 52, 0.15);
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.07);
+  color: var(--chq-dark);
+}
+
+.chq-header { text-align: center; }
+
+.chq-kicker {
+  display: inline-flex;
+  margin-bottom: 10px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(139, 94, 52, 0.1);
+  color: var(--chq-bronze);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.chq-header h1 {
+  margin: 0 0 10px;
+  color: var(--chq-dark);
+  font-size: clamp(28px, 4vw, 46px);
+  line-height: 1.05;
+}
+
+.chq-header p {
+  margin: 0 auto 24px;
+  max-width: 650px;
+  color: #5b5048;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+.chq-progress-container { margin-top: 24px; }
+
+.chq-stats {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 7px;
+  color: var(--chq-bronze);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.chq-bar-bg {
+  height: 10px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #eee5db;
+}
+
+.chq-bar-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--chq-bronze), var(--chq-gold));
+  transition: width 0.35s ease;
+}
+
+.chq-question-card {
+  margin-top: 28px;
+  animation: chqFadeIn 0.25s ease;
+}
+
+.chq-question-card h2 {
+  margin: 0 0 18px;
+  color: var(--chq-dark);
+  font-size: clamp(20px, 3vw, 28px);
+  line-height: 1.25;
+  text-align: center;
+}
+
+.chq-options {
+  display: grid;
+  gap: 12px;
+}
+
+.chq-option {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 18px;
+  background: #fff;
+  border: 2px solid #eee;
+  border-radius: 15px;
+  color: var(--chq-dark);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 750;
+  text-align: left;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.chq-option:hover:not(:disabled) {
+  border-color: var(--chq-gold);
+  transform: translateY(-1px);
+}
+
+.chq-option:disabled { cursor: default; }
+
+.chq-option--correct {
+  border-color: var(--chq-success) !important;
+  background: #f0f7f3 !important;
+}
+
+.chq-option--wrong {
+  border-color: var(--chq-error) !important;
+  background: #fdf2f2 !important;
+}
+
+.chq-tip {
+  margin-top: 20px;
+  padding: 18px;
+  background: #fff;
+  border-left: 4px solid var(--chq-gold);
+  border-radius: 10px;
+  color: #4d4239;
+  font-size: 15px;
+  line-height: 1.65;
+  animation: chqFadeIn 0.25s ease;
+}
+
+.chq-nav-buttons {
+  display: flex;
+  min-height: 58px;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 25px;
+}
+
+.chq-btn-outline,
+.chq-btn-bronze,
+.chq-btn-bronze-main {
+  display: inline-flex;
+  min-height: 54px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+.chq-btn-outline {
+  flex: 1;
+  padding: 0 22px;
+  background: transparent;
+  color: var(--chq-dark);
+  border: 2px solid var(--chq-dark);
+}
+
+.chq-btn-bronze {
+  flex: 2;
+  padding: 0 22px;
+  background: var(--chq-bronze);
+  color: #fff;
+  border: 0;
+}
+
+.chq-btn-bronze:hover,
+.chq-btn-bronze-main:hover {
+  transform: translateY(-1px);
+  background: var(--chq-gold);
+}
+
+.chq-btn-bronze-main {
+  padding: 16px 28px;
+  background: linear-gradient(135deg, var(--chq-bronze), var(--chq-gold));
+  color: #fff;
+  border: 0;
+}
+
+.chq-full-width { width: 100%; }
+
+.chq-result-card { animation: chqFadeIn 0.35s ease; }
+
+.chq-result-header { text-align: center; }
+
+.chq-result-header h2 {
+  margin: 0;
+  color: var(--chq-dark);
+  font-size: clamp(26px, 4vw, 40px);
+}
+
+.chq-result-header p {
+  max-width: 650px;
+  margin: 0 auto 10px;
+  color: #5b5048;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+.chq-score-badge {
+  margin: 10px 0;
+  color: var(--chq-bronze);
+  font-size: clamp(44px, 7vw, 64px);
+  font-weight: 950;
+  line-height: 1;
+  text-align: center;
+}
+
+.chq-divider {
+  margin: 28px 0;
+  border: 0;
+  border-top: 1px solid rgba(139, 94, 52, 0.18);
+}
+
+.chq-house-intro { text-align: center; }
+
+.chq-house-intro h3,
+.chq-mini-quests-section h3 {
+  margin: 0 0 10px;
+  color: var(--chq-dark);
+  font-size: 24px;
+}
+
+.chq-house-bio {
+  max-width: 680px;
+  margin: 0 auto;
+  color: #5b5048;
+  line-height: 1.7;
+}
+
+.chq-usp-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 22px 0 0;
+}
+
+.chq-usp-item {
+  display: flex;
+  min-height: 118px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 10px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 16px;
+  text-align: center;
+}
+
+.chq-usp-icon { font-size: 25px; }
+
+.chq-usp-text {
+  margin-top: 9px;
+  color: var(--chq-bronze);
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+.chq-promo-box {
+  margin: 28px 0;
+  padding: 30px;
+  background: #fff;
+  border: 2px dashed var(--chq-gold);
+  border-radius: 20px;
+  text-align: center;
+}
+
+.chq-promo-label {
+  display: block;
+  color: var(--chq-bronze);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.chq-code {
+  margin: 15px 0;
+  color: var(--chq-dark);
+  font-size: clamp(34px, 6vw, 46px);
+  font-weight: 950;
+  letter-spacing: 5px;
+}
+
+.chq-mini-quests-section { text-align: center; }
+
+.chq-mini-quest-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 15px;
+}
+
+.chq-quest-card {
+  padding: 18px 14px;
+  background: #fff;
+  border: 1px solid var(--chq-gold);
+  border-radius: 18px;
+  color: var(--chq-dark);
+  cursor: pointer;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 900;
+  text-align: center;
+  transition: background 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+.chq-quest-card:hover {
+  background: #fff8ee;
+  transform: translateY(-3px);
+}
+
+@keyframes chqFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 700px) {
+  .chq-page {
+    padding: 24px 12px 40px;
+  }
+
+  .chq-container {
+    padding: 22px;
+    border-radius: 20px;
+  }
+
+  .chq-nav-buttons {
+    flex-direction: column;
+  }
+
+  .chq-btn-outline,
+  .chq-btn-bronze {
+    width: 100%;
+    flex: unset;
+  }
+
+  .chq-usp-grid,
+  .chq-mini-quest-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .chq-code {
+    letter-spacing: 3px;
+  }
+}

@@ -1,0 +1,55 @@
+﻿@import "tailwindcss";
+
+
+/* ---- base ---- */
+@import "./base/tokens.css";
+@import "./base/base.css";
+
+/* ---- pages ---- */
+@import "./pages/home.css";
+@import "./pages/home-mobile-patch.css";
+@import "./pages/rooms-category.css";
+@import "./pages/room-wizard.css";
+@import "./pages/room-detail.css";
+@import "./pages/room-detail-cards.css";
+@import "./pages/rates.css";
+@import "./pages/contact.css";
+@import "./pages/deals.css";
+@import "./pages/chios-island.css";
+@import "./pages/chios-beaches.css";
+@import "./pages/chios-villages.css";
+@import "./pages/chios-museums.css";
+@import "./pages/beach-detail.css";
+@import "./pages/village-detail.css";
+@import "./pages/museum-detail.css";
+
+/* ---- components ---- */
+@import "./components/header.css";
+@import "./components/footer.css";
+@import "./components/language-switcher.css";
+
+/* ---- pages ---- */
+@import "./pages/room-detail-i18n-fix.css";
+
+/* ---- components ---- */
+@import "./components/holiday-quiz.css";
+@import "./components/last-minute-widget.css";
+
+/* ---- landing ---- */
+@import "./landing/beach-lovers.css";
+@import "./landing/family-travel.css";
+@import "./landing/taste-lover.css";
+@import "./landing/chios-explorer.css";
+@import "./landing/chios-activities.css";
+
+/* ---- components ---- */
+@import "./components/footer-mobile-patch.css";
+
+/* ---- pages ---- */
+@import "./pages/find-room.css";
+
+/* ---- overrides ---- */
+@import "./overrides/overrides.css";
+
+/* ---- pages ---- */
+@import "./pages/kampos.css";
