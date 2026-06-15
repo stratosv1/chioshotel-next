@@ -1,9 +1,9 @@
-﻿"use client";
-
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
 import type { HomePageData } from "@/content/home";
 import { LastMinuteDeals } from "@/components/home/LastMinuteDeals";
+import { HomeMap } from "@/components/home/HomeMap";
+import { DiscountReveal } from "@/components/home/DiscountReveal";
+import { HomeReviews } from "@/components/home/HomeReviews";
 
 type HomePageProps = {
   data: HomePageData;
@@ -14,42 +14,6 @@ function HtmlText({ html }: { html: string }) {
 }
 
 export function HomePage({ data }: HomePageProps) {
-  const [isMapLoaded, setIsMapLoaded] = useState(false);
-  const reviewsRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    if (!reviewsRef.current) {
-      return;
-    }
-
-    reviewsRef.current.innerHTML = "";
-
-    const script = document.createElement("script");
-    script.src = data.reviews.trustindexLoaderUrl;
-    script.async = true;
-    script.defer = true;
-
-    reviewsRef.current.appendChild(script);
-  }, [data.reviews.trustindexLoaderUrl]);
-
-  function loadMap() {
-    setIsMapLoaded(true);
-  }
-
-  function showDiscountCode() {
-    const successBox = document.getElementById("discountSuccess") as HTMLDivElement | null;
-    const feedbackBox = document.getElementById("discountFeedback") as HTMLDivElement | null;
-
-    if (feedbackBox) {
-      feedbackBox.style.display = "none";
-      feedbackBox.textContent = "";
-    }
-
-    if (successBox) {
-      successBox.style.display = "block";
-    }
-  }
-
   return (
     <>
       <main className="vh-homepage">
@@ -192,38 +156,9 @@ export function HomePage({ data }: HomePageProps) {
 
             <div className="bento">
               <article className="b-card b7">
-                <div
-                  className={`map-preview ${isMapLoaded ? "is-hidden" : ""}`}
-                  id="mapPreview"
-                  role="button"
-                  tabIndex={0}
-                  aria-controls="mapIframe"
-                  aria-label="Show interactive map"
-                  onClick={loadMap}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter" || event.key === " ") {
-                      event.preventDefault();
-                      loadMap();
-                    }
-                  }}
-                >
-                  <button
-                    className="vh-btn vh-btn--primary"
-                    id="mapLoadBtn"
-                    type="button"
-                    onClick={loadMap}
-                  >
-                    {data.location.map.buttonLabel}
-                  </button>
-                </div>
-
-                <iframe
-                  id="mapIframe"
-                  className={`map-iframe ${isMapLoaded ? "is-visible" : ""}`}
-                  title="Voulamandis House location map"
-                  src={isMapLoaded ? data.location.map.iframeSrc : undefined}
-                  loading="lazy"
-                  allowFullScreen
+                <HomeMap
+                  buttonLabel={data.location.map.buttonLabel}
+                  iframeSrc={data.location.map.iframeSrc}
                 />
 
                 <div className="distance-badge">
@@ -345,25 +280,11 @@ export function HomePage({ data }: HomePageProps) {
                     {data.location.discount.formIntro}
                   </p>
 
-                  <div id="discountCodeForm">
-                    <button
-                      type="button"
-                      className="vh-btn vh-btn--primary"
-                      id="dc_submitBtn"
-                      onClick={showDiscountCode}
-                    >
-                      <span aria-hidden="true">{"\u{1F381}"}</span> {data.location.discount.revealCodeLabel}
-                    </button>
-
-                    <div id="discountSuccess" className="discount-success" aria-live="polite">
-                      <div id="discountSuccessText">{data.location.discount.successText}</div>
-                      <div id="discountCodeValue" className="discount-code-value">
-                        {data.location.discount.defaultCode || "WELCOME10"}
-                      </div>
-                    </div>
-
-                    <div id="discountFeedback" className="discount-error" aria-live="polite" />
-                  </div>
+                  <DiscountReveal
+                    submitLabel={data.location.discount.submitLabel}
+                    successText={data.location.discount.successText}
+                    code={data.location.discount.defaultCode || "WELCOME10"}
+                  />
                 </div>
               </article>
             </div>
@@ -471,11 +392,7 @@ export function HomePage({ data }: HomePageProps) {
                 {data.reviews.title}
               </h2>
 
-              <div
-                ref={reviewsRef}
-                className="vh-reviews-widget"
-                style={{ textAlign: "center" }}
-              />
+              <HomeReviews loaderUrl={data.reviews.trustindexLoaderUrl} />
             </div>
           </div>
         </section>
