@@ -93,37 +93,6 @@
   margin-top: 32px;
 }
 
-.beach-lovers-note {
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 30px;
-  background: rgba(255, 255, 255, 0.12);
-  padding: 28px;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
-  backdrop-filter: blur(12px);
-}
-
-.beach-lovers-note small {
-  color: #cffafe;
-  font-size: 13px;
-  font-weight: 850;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-.beach-lovers-note strong {
-  display: block;
-  margin-top: 12px;
-  font-size: 30px;
-  line-height: 1.12;
-  font-weight: 950;
-}
-
-.beach-lovers-note p {
-  margin: 16px 0 0;
-  color: #e2e8f0;
-  line-height: 1.75;
-}
-
 .beach-lovers-section {
   max-width: 1180px;
   margin: 0 auto;

@@ -7,13 +7,13 @@
     "goal": "Organize the large CSS, remove duplicate and obsolete CSS, then migrate gradually to Tailwind CSS without breaking the website."
   },
   "current_status": {
-    "git_status": "clean before creating this documentation file",
+    "git_status": "working tree contains completed Beach Lovers note card Tailwind migration before commit",
     "build_status": "passed",
     "preview_status": "OK",
     "tailwind_present": true,
     "tailwind_detected_by": "@import \"tailwindcss\";",
     "tailwind_migration_started": true,
-    "css_lines_removed_so_far": 387
+    "css_lines_removed_so_far": 418
   },
   "completed_work": [
     {
@@ -82,8 +82,26 @@
       ],
       "lines_removed": 48,
       "commit": {
-        "hash": "pending",
+        "hash": "c5feda8",
         "message": "Migrate Beach Lovers buttons to Tailwind"
+      }
+    },
+    {
+      "phase": "Beach Lovers note card Tailwind migration",
+      "status": "completed",
+      "file": "components/landing/BeachLoversPage.tsx",
+      "css_file": "app/css-split/landing/beach-lovers.css",
+      "details": [
+        "Converted the Beach Lovers hero note card from scoped CSS classes to Tailwind constants",
+        "Kept the visual style equivalent: rounded glass card, border, shadow, blur, label, title, and text spacing",
+        "Removed old .beach-lovers-note CSS rules after build and visual preview passed",
+        "Build passed",
+        "Local preview was OK"
+      ],
+      "lines_removed": 31,
+      "commit": {
+        "hash": "pending",
+        "message": "Migrate Beach Lovers note card to Tailwind"
       }
     }
   ],
@@ -91,7 +109,7 @@
     "status": "completed",
     "remote": "origin",
     "branch": "main",
-    "range": "6a7177c..bce9f15"
+    "latest_pushed_commit": "c5feda8"
   },
   "important_files": {
     "css_index": "app/css-split/globals.css",
@@ -127,11 +145,12 @@
     "recommended_file": "app/css-split/landing/beach-lovers.css",
     "reason": [
       "Beach Lovers page is still isolated and safe",
-      "Buttons are done, so the next small target should be another contained visual section",
+      "Buttons and hero note card are done",
+      "Next small target should be another contained visual section",
       "Continue one small block at a time with build and preview"
     ],
     "process": [
-      "Choose the next small Beach Lovers section, likely hero note or section spacing",
+      "Choose the next small Beach Lovers section, likely intro/narrow section or beach card elements",
       "Convert only that section to Tailwind",
       "Remove only the CSS that was replaced",
       "Run npm.cmd run build",
@@ -167,5 +186,5 @@
     ],
     "note": "Use shadcn/ui carefully. Keep the warm premium Voulamandis House style and avoid making the site look like a generic template."
   },
-  "short_summary": "CSS has been safely split, 339 obsolete or duplicate CSS lines were removed, Beach Lovers buttons were migrated to Tailwind, 48 more CSS lines were removed, the site builds and previews correctly, and the next safe step is continuing Beach Lovers Tailwind migration one small section at a time."
+  "short_summary": "CSS has been safely split, 339 obsolete or duplicate CSS lines were removed, Beach Lovers buttons were migrated to Tailwind removing 48 CSS lines, the Beach Lovers hero note card was migrated to Tailwind removing 31 more CSS lines, total CSS lines removed so far is 418, and the site builds and previews correctly."
 }

@@ -23,6 +23,18 @@ const beachLoversButtonDark =
 const beachLoversStayButton =
   beachLoversButtonPrimary + " mt-[30px] w-fit";
 
+const beachLoversNote =
+  "rounded-[30px] border border-white/20 bg-white/10 p-7 shadow-[0_24px_60px_rgba(0,0,0,0.28)] backdrop-blur-[12px]";
+
+const beachLoversNoteLabel =
+  "text-[13px] font-[850] uppercase tracking-[0.16em] text-cyan-100";
+
+const beachLoversNoteTitle =
+  "mt-3 block text-[30px] font-[950] leading-[1.12]";
+
+const beachLoversNoteText =
+  "mt-4 leading-[1.75] text-slate-200";
+
 function getBookingHref(locale: BeachLoversPageData["locale"]) {
   switch (locale) {
     case "el":
@@ -94,10 +106,12 @@ export function BeachLoversPage({ data }: BeachLoversPageProps) {
             </div>
           </div>
 
-          <div className="beach-lovers-note">
-            <small>Voulamandis House</small>
-            <strong>Kampos base + beach days</strong>
-            <p>
+          <div className={beachLoversNote}>
+            <small className={beachLoversNoteLabel}>Voulamandis House</small>
+            <strong className={beachLoversNoteTitle}>
+              Kampos base + beach days
+            </strong>
+            <p className={beachLoversNoteText}>
               Peaceful mornings, South Chios beaches, garden evenings and direct
               booking from Voulamandis House.
             </p>
