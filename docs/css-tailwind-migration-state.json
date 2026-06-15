@@ -7,7 +7,7 @@
     "goal": "Organize the large CSS, remove duplicate and obsolete CSS, then migrate gradually to Tailwind CSS without breaking the website."
   },
   "current_status": {
-    "git_status": "working tree contains completed full Beach Lovers page Tailwind migration before commit",
+    "git_status": "clean after full Beach Lovers page Tailwind migration commit and push",
     "build_status": "passed",
     "preview_status": "OK",
     "tailwind_present": true,
@@ -119,7 +119,7 @@
       ],
       "lines_removed_estimate": 249,
       "commit": {
-        "hash": "pending",
+        "hash": "0db0c5c",
         "message": "Migrate full Beach Lovers page to Tailwind"
       }
     }
@@ -128,7 +128,7 @@
     "status": "completed",
     "remote": "origin",
     "branch": "main",
-    "latest_pushed_commit": "a23e6aa"
+    "latest_pushed_commit": "0db0c5c"
   },
   "important_files": {
     "css_index": "app/css-split/globals.css",
