@@ -699,7 +699,6 @@ function calculateSystemTotal(
   return Number(
     (
       Number(liveTotal || 0) +
-      roomExtraPerNight(room) * nights +
       extraGuestChargePerNight(room, guests) * nights +
       climateFeeTotal(nights)
     ).toFixed(2),
@@ -848,21 +847,6 @@ async function fetchAvailabilityForGuests({
       })
       .filter(Boolean) as RoomResult[];
 
-    const roomResults = available.filter((item) => !isApartment(item.room));
-    const apartmentResults = available.filter((item) => isApartment(item.room));
-
-    if (roomResults.length && apartmentResults.length) {
-      const maxRoomTotal = Math.max(...roomResults.map((item) => item.systemTotal));
-      const apartmentFloor = maxRoomTotal + 5 * nights;
-
-      apartmentResults.forEach((item) => {
-        if (item.systemTotal <= maxRoomTotal) {
-          item.systemTotal = Number(apartmentFloor.toFixed(2));
-          item.directTotal = directTotal(item.systemTotal);
-          item.save = Number((item.systemTotal - item.directTotal).toFixed(2));
-        }
-      });
-    }
 
     return available;
   } catch {
