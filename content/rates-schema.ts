@@ -68,7 +68,7 @@ function buildDirectBookingOfferSchema(data: RatesPageData): SchemaObject {
     priceCurrency: "EUR",
     eligibleCustomerType: {
       "@type": "BusinessEntityType",
-      name: "Direct hotel guests",
+      name: "Direct booking guests",
     },
     seller: {
       "@id": hotelId(),

@@ -25,10 +25,10 @@ function buildHomeWebPageSchema(): SchemaObject {
     "@type": "WebPage",
     "@id": webPageId(homepagePath),
     url: siteUrl,
-    name: "Voulamandis House - Chios Hotel in Kambos",
-    headline: "Voulamandis House - Chios Hotel in Kambos",
+    name: "Voulamandis House - Rooms & Apartments in Kambos, Chios",
+    headline: "Voulamandis House - Rooms & Apartments in Kambos, Chios",
     description:
-      "Stay at Voulamandis House, a family-run Chios hotel in Kambos with rooms and apartments close to Chios Town, the airport and the beaches of southern Chios.",
+      "Stay at Voulamandis House, a family-run accommodation in Chios with rooms and apartments in Kambos close to Chios Town, the airport and the beaches of southern Chios.",
     inLanguage: "en",
     isPartOf: {
       "@id": websiteId(),
@@ -125,8 +125,8 @@ export const homePageSchema = buildSchemaGraph([
   buildImageSchema(
     {
       url: "/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp",
-      alt: "Voulamandis House hotel in Kambos, Chios",
-      caption: `${siteName} hotel in Kambos, Chios`,
+      alt: "Voulamandis House rooms and apartments in Kambos, Chios",
+      caption: `${siteName} rooms and apartments in Kambos, Chios`,
     },
     homepagePath,
   ),

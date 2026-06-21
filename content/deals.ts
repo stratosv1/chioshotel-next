@@ -56,14 +56,14 @@ const offerTargetIso = "2026-09-30T23:59:59+03:00";
 export const dealsPageEn: DealsPageData = {
   seo: {
     canonicalPath: "/best-chios-travel-deals-for-chios-hotels/",
-    title: "Best Chios Travel Deals for Chios Hotels 2026 | Voulamandis House",
+    title: "Best Chios Accommodation Deals 2026 | Voulamandis House",
     description:
-      "Looking for the best Chios travel deals for Chios hotels? Discover exclusive Chios travel packages and Chios hotel offers at Voulamandis House for 2026.",
+      "Looking for the best Chios travel deals? Discover exclusive Chios travel packages and Chios accommodation offers at Voulamandis House for 2026.",
     ogImage: dealsHeroImage,
   },
   hero: {
     kicker: "Voulamandis House • Kambos, Chios",
-    title: "Best Chios Travel Deals for Chios Hotels",
+    title: "Best Chios Travel Deals for Accommodation",
     description:
       "Discover exclusive Chios travel packages, room offers and direct booking coupon codes for your stay at Voulamandis House.",
     image: dealsHeroImage,
@@ -76,8 +76,8 @@ export const dealsPageEn: DealsPageData = {
     expiredText: "Offer expired",
   },
   intro: {
-    kicker: "Chios hotel offers 2026",
-    title: "Discover Chios travel packages & hotel offers",
+    kicker: "Chios accommodation offers 2026",
+    title: "Discover Chios travel packages & accommodation offers",
     description:
       "Choose your preferred room category, copy the coupon code and continue to the secure booking page to unlock your direct booking offer.",
   },
@@ -86,14 +86,14 @@ export const dealsPageEn: DealsPageData = {
       id: "economy-double",
       title: "Economy Double",
       description:
-        "A value-focused Chios hotel offer for guests who want a simple, comfortable and budget-friendly stay in Kambos.",
+        "A value-focused Chios accommodation offer for guests who want a simple, comfortable and budget-friendly stay in Kambos.",
       image: economyRoomImage,
       imageAlt:
         "Best Chios travel deal for economy double room at Voulamandis House",
       tags: [
         "Chios travel deals",
         "Chios travel packages",
-        "Chios hotels offers",
+        "Chios accommodation offers",
         "Best price",
       ],
       tip: "Copy the coupon code for the next step.",
@@ -110,11 +110,11 @@ export const dealsPageEn: DealsPageData = {
         "A comfortable ground-floor room offer with easy access to the courtyard and garden atmosphere of Voulamandis House.",
       image: dealsHeroImage,
       imageAlt:
-        "Chios hotel offer for ground floor double room at Voulamandis House",
+        "Chios accommodation offer for ground floor double room at Voulamandis House",
       tags: [
         "Chios travel deals",
         "Chios travel packages",
-        "Chios hotels offers",
+        "Chios accommodation offers",
         "Garden view",
       ],
       tip: "Copy the code to save on your booking.",
@@ -135,7 +135,7 @@ export const dealsPageEn: DealsPageData = {
       tags: [
         "Chios travel deals",
         "Chios travel packages",
-        "Chios hotels offers",
+        "Chios accommodation offers",
         "Kambos view",
       ],
       tip: "Use this code at the checkout stage.",
@@ -149,13 +149,13 @@ export const dealsPageEn: DealsPageData = {
       id: "family-apartment",
       title: "Family Apartment",
       description:
-        "A family-friendly Chios hotel offer for guests who need more space, kitchen facilities and apartment-style comfort.",
+        "A family-friendly Chios accommodation offer for guests who need more space, kitchen facilities and apartment-style comfort.",
       image: familyApartmentImage,
-      imageAlt: "Chios hotels offer for family apartment at Voulamandis House",
+      imageAlt: "Chios accommodation offer for family apartment at Voulamandis House",
       tags: [
         "Chios travel deals",
         "Chios travel packages",
-        "Chios hotels offers",
+        "Chios accommodation offers",
         "Full kitchen",
       ],
       tip: "Copy the code to unlock your family apartment discount.",
@@ -362,14 +362,14 @@ export const dealsPageFr: DealsPageData = {
 export const dealsPageDe: DealsPageData = {
   seo: {
     canonicalPath: "/de/beste-reiseangebote-fur-chios-hotels-auf-chios/",
-    title: "Hotelangebote auf Chios 2026 | Voulamandis House",
+    title: "Unterkunftsangebote auf Chios 2026 | Voulamandis House",
     description:
-      "Entdecken Sie Reiseangebote, Hotelangebote und Rabattcodes für Ihre Direktbuchung im Voulamandis House auf Chios.",
+      "Entdecken Sie Reiseangebote, Unterkunftsangebote und Rabattcodes für Ihre Direktbuchung im Voulamandis House auf Chios.",
     ogImage: dealsHeroImage,
   },
   hero: {
     kicker: "Voulamandis House • Kambos, Chios",
-    title: "Hotelangebote und Reiseangebote auf Chios",
+    title: "Unterkunftsangebote und Reiseangebote auf Chios",
     description:
       "Entdecken Sie exklusive Angebote, Zimmeraktionen und Rabattcodes für Ihre Direktbuchung im Voulamandis House.",
     image: dealsHeroImage,
@@ -382,8 +382,8 @@ export const dealsPageDe: DealsPageData = {
     expiredText: "Angebot abgelaufen",
   },
   intro: {
-    kicker: "Chios Hotelangebote 2026",
-    title: "Entdecken Sie Reiseangebote und Hotelaktionen",
+    kicker: "Chios Unterkunftsangebote 2026",
+    title: "Entdecken Sie Reiseangebote und Unterkunftsaktionen",
     description:
       "Wählen Sie Ihre bevorzugte Zimmerkategorie, kopieren Sie den Rabattcode und fahren Sie mit der sicheren Buchungsseite fort.",
   },
@@ -392,11 +392,11 @@ export const dealsPageDe: DealsPageData = {
       id: "economy-double",
       title: "Economy Doppelzimmer",
       description:
-        "Ein preisbewusstes Hotelangebot auf Chios für Gäste, die einen einfachen, komfortablen und günstigen Aufenthalt in Kambos suchen.",
+        "Ein preisbewusstes Unterkunftsangebot auf Chios für Gäste, die einen einfachen, komfortablen und günstigen Aufenthalt in Kambos suchen.",
       image: economyRoomImage,
       imageAlt:
         "Chios Reiseangebot für Economy Doppelzimmer im Voulamandis House",
-      tags: ["Chios Angebote", "Reisepakete", "Hotels Chios", "Bester Preis"],
+      tags: ["Chios Angebote", "Reisepakete", "Unterkünfte Chios", "Bester Preis"],
       tip: "Kopieren Sie den Rabattcode für den nächsten Schritt.",
       couponCode: "ECOMAY10",
       discountLabel: "Economy Angebot",
@@ -411,8 +411,8 @@ export const dealsPageDe: DealsPageData = {
         "Ein komfortables Zimmerangebot im Erdgeschoss mit einfachem Zugang zum Hof und zur Gartenatmosphäre des Voulamandis House.",
       image: dealsHeroImage,
       imageAlt:
-        "Hotelangebot auf Chios für Doppelzimmer im Erdgeschoss im Voulamandis House",
-      tags: ["Chios Angebote", "Reisepakete", "Hotels Chios", "Garten"],
+        "Unterkunftsangebot auf Chios für Doppelzimmer im Erdgeschoss im Voulamandis House",
+      tags: ["Chios Angebote", "Reisepakete", "Unterkünfte Chios", "Garten"],
       tip: "Kopieren Sie den Code und sparen Sie bei Ihrer Buchung.",
       couponCode: "MAY10",
       discountLabel: "Angebot mit Gartenzugang",
@@ -428,7 +428,7 @@ export const dealsPageDe: DealsPageData = {
       image: firstFloorRoomImage,
       imageAlt:
         "Chios Reisepaket für Doppelzimmer im ersten Stock im Voulamandis House",
-      tags: ["Chios Angebote", "Reisepakete", "Hotels Chios", "Kambos Blick"],
+      tags: ["Chios Angebote", "Reisepakete", "Unterkünfte Chios", "Kambos Blick"],
       tip: "Verwenden Sie diesen Code beim Abschluss der Buchung.",
       couponCode: "MAY10",
       discountLabel: "Angebot erster Stock",
@@ -440,9 +440,9 @@ export const dealsPageDe: DealsPageData = {
       id: "family-apartment",
       title: "Familienapartment",
       description:
-        "Ein familienfreundliches Hotelangebot auf Chios für Gäste, die mehr Platz, Küchenausstattung und Apartment-Komfort benötigen.",
+        "Ein familienfreundliches Unterkunftsangebot auf Chios für Gäste, die mehr Platz, Küchenausstattung und Apartment-Komfort benötigen.",
       image: familyApartmentImage,
-      imageAlt: "Hotelangebot auf Chios für Familienapartment im Voulamandis House",
+      imageAlt: "Unterkunftsangebot auf Chios für Familienapartment im Voulamandis House",
       tags: ["Chios Angebote", "Reisepakete", "Apartment", "Küche"],
       tip: "Kopieren Sie den Code, um Ihren Familienapartment-Rabatt zu aktivieren.",
       couponCode: "FMAY10",

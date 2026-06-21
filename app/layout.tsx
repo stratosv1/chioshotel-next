@@ -10,7 +10,7 @@ import "./css-split/globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Chios Hotel Rooms & Apartments | Voulamandis House",
+    default: "Chios Rooms & Apartments | Voulamandis House",
     template: `%s | ${siteName}`,
   },
   description:

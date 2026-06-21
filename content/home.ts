@@ -252,7 +252,7 @@
 
 export const homePageEn: HomePageData = {
   seo: {
-    title: "Chios Hotels & Rooms 2026 | Voulamandis House",
+    title: "Chios Rooms & Apartments 2026 | Voulamandis House",
     description:
       "Peaceful rooms and apartments in Kambos, Chios. Stay at Voulamandis House near Chios airport, town and beaches, with authentic hospitality and direct booking benefits.",
     canonicalPath: "/",
@@ -266,12 +266,12 @@ export const homePageEn: HomePageData = {
     rating: "4.8 / 5",
     reviews: "143 reviews",
     kicker: "KAMPOS CHIOS • VOULAMANDIS HOUSE",
-    title: "Chios Hotels and Apartments in Kambos",
+    title: "Chios Rooms and Apartments in Kambos",
     descriptionHtml:
-      'Looking for <strong>hotels in Chios</strong> or <strong>rooms in Chios</strong>? <strong>Voulamandis House</strong> is an authentic accommodation choice in Kambos, with comfortable rooms, peaceful surroundings and excellent guest reviews.',
+      'Looking for <strong>accommodation in Chios</strong> or <strong>rooms in Chios</strong>? <strong>Voulamandis House</strong> is an authentic accommodation choice in Kambos, with comfortable rooms, peaceful surroundings and excellent guest reviews.',
     image:
       "/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp",
-    imageAlt: "Chios Hotels and Apartments in Kambos - Voulamandis House",
+    imageAlt: "Chios Rooms and Apartments in Kambos - Voulamandis House",
     primaryCta: {
       label: "Find your room",
       href: "/find-your-room/",
@@ -305,7 +305,7 @@ export const homePageEn: HomePageData = {
       icon: "🏡",
       title: "Stay in Chios at Voulamandis House",
       bodyHtml:
-        'Looking for <strong>rooms in Chios</strong> or <strong>Chios accommodation</strong> for a peaceful and well-kept stay? Voulamandis House welcomes you to the historic Kambos area of Chios, offering an authentic hospitality experience in a setting of natural beauty. If you are searching for <strong>hotels in Chios</strong> but prefer something more personal, our property is a warm alternative.',
+        'Looking for <strong>rooms in Chios</strong> or <strong>Chios accommodation</strong> for a peaceful and well-kept stay? Voulamandis House welcomes you to the historic Kambos area of Chios, offering an authentic hospitality experience in a setting of natural beauty. If you are searching for <strong>accommodation in Chios</strong> but prefer something more personal, our property is a warm alternative.',
       pills: [
         "🌴 Holidays in Chios",
         "🍊 Kambos Chios",
@@ -434,7 +434,7 @@ export const homePageEn: HomePageData = {
     sideCard: {
       kicker: "Rooms in Chios",
       title: "From budget stays to family solutions",
-      text: "If you are looking for hotels in Chios but prefer more personal hospitality, Voulamandis House offers an authentic alternative in Kambos.",
+      text: "If you are looking for accommodation in Chios but prefer more personal hospitality, Voulamandis House offers an authentic alternative in Kambos.",
     },
     rooms: [
       {
@@ -714,9 +714,9 @@ export const homePageEn: HomePageData = {
     title: "What you should know before booking your stay",
     items: [
       {
-        question: "Is Voulamandis House a hotel?",
+        question: "Is Voulamandis House an accommodation?",
         answerHtml:
-          "Voulamandis House is a property with rooms and apartments in Kambos, Chios. If you are searching for a hotel in Chios but prefer quieter and more personal hospitality, it is an authentic alternative.",
+          "Voulamandis House is a property with rooms and apartments in Kambos, Chios. If you are searching for accommodation in Chios but prefer quieter and more personal hospitality, it is an authentic alternative.",
       },
       {
         question: "Where exactly is Voulamandis House located?",
@@ -1687,7 +1687,7 @@ export const homePageDe: HomePageData = {
   ...homePageEn,
 
   seo: {
-    title: "Hotel auf Chios",
+    title: "Unterkunft auf Chios",
     description:
       "Ruhige Zimmer und Apartments in Kambos, Chios. Übernachten Sie im Voulamandis House nahe Flughafen, Stadt, Stränden und Dörfern.",
     canonicalPath: "/de/",
@@ -1700,10 +1700,10 @@ export const homePageDe: HomePageData = {
     ...homePageEn.hero,
     reviews: "143 Bewertungen",
     kicker: "KAMPOS CHIOS • VOULAMANDIS HOUSE",
-    title: "Hotel und Apartments auf Chios in Kambos",
+    title: "Unterkunft und Apartments auf Chios in Kambos",
     descriptionHtml:
-      'Suchen Sie ein <strong>Hotel auf Chios</strong> oder <strong>Zimmer auf Chios</strong>? <strong>Voulamandis House</strong> ist eine authentische Unterkunft in Kambos mit komfortablen Zimmern, ruhiger Umgebung und herzlicher Gastfreundschaft.',
-    imageAlt: "Hotel und Apartments auf Chios in Kambos - Voulamandis House",
+      'Suchen Sie eine <strong>Unterkunft auf Chios</strong> oder <strong>Zimmer auf Chios</strong>? <strong>Voulamandis House</strong> ist eine authentische Unterkunft in Kambos mit komfortablen Zimmern, ruhiger Umgebung und herzlicher Gastfreundschaft.',
+    imageAlt: "Unterkunft und Apartments auf Chios in Kambos - Voulamandis House",
     primaryCta: {
       label: "Finde dein Zimmer",
       href: "/de/finde-dein-zimmer/",
@@ -1737,7 +1737,7 @@ export const homePageDe: HomePageData = {
       icon: "🏡",
       title: "Übernachten auf Chios im Voulamandis House",
       bodyHtml:
-        'Suchen Sie <strong>Zimmer auf Chios</strong> oder eine ruhige, gepflegte <strong>Unterkunft auf Chios</strong>? Voulamandis House begrüßt Sie im historischen Kambos, in einer Umgebung voller natürlicher Schönheit. Wenn Sie ein <strong>Hotel auf Chios</strong> suchen, aber eine persönlichere Atmosphäre bevorzugen, ist unser Haus eine warme Alternative.',
+        'Suchen Sie <strong>Zimmer auf Chios</strong> oder eine ruhige, gepflegte <strong>Unterkunft auf Chios</strong>? Voulamandis House begrüßt Sie im historischen Kambos, in einer Umgebung voller natürlicher Schönheit. Wenn Sie eine <strong>Unterkunft auf Chios</strong> suchen, aber eine persönlichere Atmosphäre bevorzugen, ist unser Haus eine warme Alternative.',
       pills: [
         "🌴 Urlaub auf Chios",
         "🍊 Kambos Chios",
@@ -1852,7 +1852,7 @@ export const homePageDe: HomePageData = {
     sideCard: {
       kicker: "Zimmer auf Chios",
       title: "Von günstigen Aufenthalten bis zu Familienlösungen",
-      text: "Wenn Sie ein Hotel auf Chios suchen, aber eine persönlichere Gastfreundschaft bevorzugen, bietet Voulamandis House eine authentische Alternative in Kambos.",
+      text: "Wenn Sie eine Unterkunft auf Chios suchen, aber eine persönlichere Gastfreundschaft bevorzugen, bietet Voulamandis House eine authentische Alternative in Kambos.",
     },
     rooms: [
       {
@@ -2062,9 +2062,9 @@ export const homePageDe: HomePageData = {
     title: "Was Sie vor der Buchung wissen sollten",
     items: [
       {
-        question: "Ist Voulamandis House ein Hotel?",
+        question: "Ist Voulamandis House eine Unterkunft?",
         answerHtml:
-          "Voulamandis House ist eine Unterkunft mit Zimmern und Apartments in Kambos, Chios. Wenn Sie ein Hotel auf Chios suchen, aber eine ruhigere und persönlichere Gastfreundschaft bevorzugen, ist es eine authentische Alternative.",
+          "Voulamandis House ist eine Unterkunft mit Zimmern und Apartments in Kambos, Chios. Wenn Sie eine Unterkunft auf Chios suchen, aber eine ruhigere und persönlichere Gastfreundschaft bevorzugen, ist es eine authentische Alternative.",
       },
       {
         question: "Wo genau liegt Voulamandis House?",

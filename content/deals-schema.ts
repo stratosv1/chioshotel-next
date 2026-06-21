@@ -102,7 +102,7 @@ function buildDealOfferSchema(
     image: absoluteUrl(offer.image),
     eligibleCustomerType: {
       "@type": "BusinessEntityType",
-      name: "Direct hotel guests",
+      name: "Direct booking guests",
     },
     potentialAction: {
       "@type": "ReserveAction",
@@ -174,7 +174,7 @@ function buildDealsItemListSchema(data: DealsPageData): SchemaObject {
   return {
     "@type": "ItemList",
     "@id": schemaId(canonicalPath, "offers-list"),
-    name: "Chios hotel offers at Voulamandis House",
+    name: "Chios accommodation offers at Voulamandis House",
     description: data.intro.description,
     itemListOrder: "https://schema.org/ItemListOrderAscending",
     numberOfItems: data.offers.length,
@@ -205,7 +205,7 @@ function buildDealsReservationActionSchema(data: DealsPageData): SchemaObject {
   return {
     "@type": "ReserveAction",
     "@id": schemaId(canonicalPath, "reserve-action"),
-    name: "Book a Chios hotel offer",
+    name: "Book a Chios accommodation offer",
     description: data.intro.description,
     target: data.offers.map((offer) => ({
       "@type": "EntryPoint",

@@ -1,4 +1,5 @@
 ﻿import type { ChiosVillagesPageData } from "@/content/chios-villages";
+import { buildHotelSchema, hotelId } from "@/lib/structured-data";
 
 export function buildChiosVillagesSchema(data: ChiosVillagesPageData) {
   const canonicalUrl = `https://chioshotel.gr${data.seo.canonicalPath}`;
@@ -14,7 +15,7 @@ export function buildChiosVillagesSchema(data: ChiosVillagesPageData) {
         image: data.seo.ogImage,
         url: canonicalUrl,
         author: {
-          "@id": "https://chioshotel.gr/#hotel",
+          "@id": hotelId(),
         },
         publisher: {
           "@type": "Organization",
@@ -53,7 +54,7 @@ export function buildChiosVillagesSchema(data: ChiosVillagesPageData) {
             },
           },
           {
-            "@id": "https://chioshotel.gr/#hotel",
+            "@id": hotelId(),
           },
         ],
       },
@@ -97,23 +98,7 @@ export function buildChiosVillagesSchema(data: ChiosVillagesPageData) {
           },
         })),
       },
-      {
-        "@type": "Hotel",
-        "@id": "https://chioshotel.gr/#hotel",
-        name: "Voulamandis House",
-        url: "https://chioshotel.gr/",
-        telephone: "+30 694 476 4654",
-        image: data.seo.ogImage,
-        priceRange: "€€",
-        address: {
-          "@type": "PostalAddress",
-          streetAddress: "Kalvokoressi 117",
-          addressLocality: "Kampos",
-          addressRegion: "Chios",
-          postalCode: "82100",
-          addressCountry: "GR",
-        },
-      },
+      buildHotelSchema(),
       {
         "@type": "BreadcrumbList",
         "@id": `${canonicalUrl}#breadcrumb`,
