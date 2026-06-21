@@ -34,6 +34,8 @@ const beachDetailSchemaLabelsByLanguage: Record<
     travelDetails: string;
     beachGuideBy: string;
     stayNearChiosBeaches: string;
+    addressLocality: string;
+    addressRegion: string;
   }
 > = {
   en: {
@@ -45,6 +47,8 @@ const beachDetailSchemaLabelsByLanguage: Record<
     travelDetails: "travel details",
     beachGuideBy: "Chios beach guide by",
     stayNearChiosBeaches: "stay near Chios beaches",
+    addressLocality: "Chios",
+    addressRegion: "North Aegean",
   },
   el: {
     chiosIsland: "\u039d\u03b7\u03c3\u03af \u03a7\u03af\u03bf\u03c2",
@@ -55,6 +59,8 @@ const beachDetailSchemaLabelsByLanguage: Record<
     travelDetails: "\u03c0\u03bb\u03b7\u03c1\u03bf\u03c6\u03bf\u03c1\u03af\u03b5\u03c2 \u03c0\u03c1\u03cc\u03c3\u03b2\u03b1\u03c3\u03b7\u03c2",
     beachGuideBy: "\u03bf\u03b4\u03b7\u03b3\u03cc\u03c2 \u03c0\u03b1\u03c1\u03b1\u03bb\u03af\u03b1\u03c2 \u03a7\u03af\u03bf\u03c5 \u03b1\u03c0\u03cc",
     stayNearChiosBeaches: "\u03b4\u03b9\u03b1\u03bc\u03bf\u03bd\u03ae \u03ba\u03bf\u03bd\u03c4\u03ac \u03c3\u03c4\u03b9\u03c2 \u03c0\u03b1\u03c1\u03b1\u03bb\u03af\u03b5\u03c2 \u03c4\u03b7\u03c2 \u03a7\u03af\u03bf\u03c5",
+    addressLocality: "\u03a7\u03af\u03bf\u03c2",
+    addressRegion: "\u0392\u03cc\u03c1\u03b5\u03b9\u03bf \u0391\u03b9\u03b3\u03b1\u03af\u03bf",
   },
   de: {
     chiosIsland: "Insel Chios",
@@ -65,6 +71,8 @@ const beachDetailSchemaLabelsByLanguage: Record<
     travelDetails: "Reisedetails",
     beachGuideBy: "Strandf\u00fchrer f\u00fcr Chios von",
     stayNearChiosBeaches: "Aufenthalt in der N\u00e4he der Str\u00e4nde von Chios",
+    addressLocality: "Chios",
+    addressRegion: "N\u00f6rdliche \u00c4g\u00e4is",
   },
   fr: {
     chiosIsland: "\u00cele de Chios",
@@ -75,6 +83,8 @@ const beachDetailSchemaLabelsByLanguage: Record<
     travelDetails: "informations d\u2019acc\u00e8s",
     beachGuideBy: "guide des plages de Chios par",
     stayNearChiosBeaches: "s\u00e9jour pr\u00e8s des plages de Chios",
+    addressLocality: "Chios",
+    addressRegion: "\u00c9g\u00e9e du Nord",
   },
   it: {
     chiosIsland: "Isola di Chios",
@@ -85,6 +95,8 @@ const beachDetailSchemaLabelsByLanguage: Record<
     travelDetails: "dettagli di viaggio",
     beachGuideBy: "guida alle spiagge di Chios di",
     stayNearChiosBeaches: "soggiorno vicino alle spiagge di Chios",
+    addressLocality: "Chios",
+    addressRegion: "Egeo Settentrionale",
   },
   es: {
     chiosIsland: "Isla de Qu\u00edos",
@@ -95,6 +107,8 @@ const beachDetailSchemaLabelsByLanguage: Record<
     travelDetails: "detalles de viaje",
     beachGuideBy: "gu\u00eda de playas de Qu\u00edos por",
     stayNearChiosBeaches: "estancia cerca de las playas de Qu\u00edos",
+    addressLocality: "Qu\u00edos",
+    addressRegion: "Egeo Septentrional",
   },
   tr: {
     chiosIsland: "Sak\u0131z Adas\u0131",
@@ -105,13 +119,18 @@ const beachDetailSchemaLabelsByLanguage: Record<
     travelDetails: "ula\u015f\u0131m bilgileri",
     beachGuideBy: "Sak\u0131z plaj rehberi",
     stayNearChiosBeaches: "Sak\u0131z plajlar\u0131na yak\u0131n konaklama",
+    addressLocality: "Sak\u0131z",
+    addressRegion: "Kuzey Ege",
   },
 };
 
-function getBeachDetailSchemaLabels(language: string) {
-  return beachDetailSchemaLabelsByLanguage[language as BeachDetailSchemaLanguage] ?? beachDetailSchemaLabelsByLanguage.en;
+function isBeachDetailSchemaLanguage(language: string): language is BeachDetailSchemaLanguage {
+  return ["en", "el", "de", "fr", "it", "es", "tr"].includes(language);
 }
 
+function getBeachDetailSchemaLabels(language: string) {
+  return beachDetailSchemaLabelsByLanguage[isBeachDetailSchemaLanguage(language) ? language : "en"];
+}
 
 function buildBeachWebPageSchema(beach: BeachDetailData): SchemaObject {
   const canonicalPath = beach.seo.canonicalPath;
@@ -171,8 +190,8 @@ function buildBeachPlaceSchema(beach: BeachDetailData): SchemaObject {
     image: absoluteUrl(beach.hero.image || beach.seo.ogImage),
     address: {
       "@type": "PostalAddress",
-      addressLocality: "Chios",
-      addressRegion: "North Aegean",
+      addressLocality: labels.addressLocality,
+      addressRegion: labels.addressRegion,
       addressCountry: "GR",
     },
     touristType: beach.hero.tags,
@@ -323,7 +342,7 @@ export function buildBeachDetailSchema(beach: BeachDetailData) {
 
   return buildSchemaGraph([
     buildOrganizationSchema(),
-    buildHotelSchema(),
+    buildHotelSchema({ path: canonicalPath }),
     buildWebsiteSchema(),
     buildImageSchema(
       {
@@ -356,6 +375,7 @@ export function buildBeachDetailSchema(beach: BeachDetailData) {
     ]),
   ]);
 }
+
 
 
 

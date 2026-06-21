@@ -1,4 +1,4 @@
-import type { VillageDetailData } from "@/content/village-details";
+﻿import type { VillageDetailData } from "@/content/village-details";
 import {
   absoluteUrl,
   getCanonicalUrl,
@@ -19,6 +19,7 @@ import {
   webPageId,
   websiteId,
   type SchemaObject,
+  getLocalizedSchemaAddress,
 } from "@/lib/structured-data";
 
 function buildVillageWebPageSchema(village: VillageDetailData): SchemaObject {
@@ -78,8 +79,8 @@ function buildVillagePlaceSchema(village: VillageDetailData): SchemaObject {
     image: absoluteUrl(village.hero.image || village.seo.ogImage),
     address: {
       "@type": "PostalAddress",
-      addressLocality: "Chios",
-      addressRegion: "North Aegean",
+      addressLocality: getLocalizedSchemaAddress(canonicalPath).addressLocality,
+      addressRegion: getLocalizedSchemaAddress(canonicalPath).addressRegion,
       addressCountry: "GR",
     },
     touristType: village.hero.tags,
@@ -230,7 +231,7 @@ export function buildVillageDetailSchema(village: VillageDetailData) {
 
   return buildSchemaGraph([
     buildOrganizationSchema(),
-    buildHotelSchema(),
+    buildHotelSchema({ path: canonicalPath }),
     buildWebsiteSchema(),
     buildImageSchema(
       {

@@ -203,7 +203,7 @@ export function buildRoomDetailSchema(data: RoomDetailData) {
 
   return buildSchemaGraph([
     buildOrganizationSchema(),
-    buildHotelSchema(),
+    buildHotelSchema({ path: canonicalPath }),
     buildWebsiteSchema(),
     buildImageSchema(
       {

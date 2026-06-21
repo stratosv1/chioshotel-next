@@ -454,7 +454,7 @@ export function buildLandingPageSchema(data: LandingPageSchemaData) {
 
   return buildSchemaGraph([
     buildOrganizationSchema(),
-    buildHotelSchema(),
+    buildHotelSchema({ path: canonicalPath }),
     buildWebsiteSchema(),
     buildImageSchema(
       {

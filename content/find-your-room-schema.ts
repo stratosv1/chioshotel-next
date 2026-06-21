@@ -247,7 +247,7 @@ export function buildFindYourRoomSchema(data: FindYourRoomPageData) {
 
   return buildSchemaGraph([
     buildOrganizationSchema(),
-    buildHotelSchema(),
+    buildHotelSchema({ path: canonicalPath }),
     buildWebsiteSchema(),
     buildImageSchema(
       {

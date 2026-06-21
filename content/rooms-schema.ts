@@ -108,7 +108,7 @@ export function buildRoomsCategorySchema(data: RoomsCategoryPageData) {
 
   return buildSchemaGraph([
     buildOrganizationSchema(),
-    buildHotelSchema(),
+    buildHotelSchema({ path: canonicalPath }),
     buildWebsiteSchema(),
     buildImageSchema(
       {

@@ -300,7 +300,7 @@ export function buildChiosActivitiesSchema(data: ChiosActivitiesPageData) {
 
   return buildSchemaGraph([
     buildOrganizationSchema(),
-    buildHotelSchema(),
+    buildHotelSchema({ path: canonicalPath }),
     buildWebsiteSchema(),
     buildImageSchema(
       {

@@ -33,6 +33,8 @@ const beachSchemaLabelsByLanguage: Record<
     region: string;
     mood: string;
     tags: string;
+    addressLocality: string;
+    addressRegion: string;
   }
 > = {
   en: {
@@ -42,6 +44,8 @@ const beachSchemaLabelsByLanguage: Record<
     region: "Region",
     mood: "Mood",
     tags: "Tags",
+    addressLocality: "Chios",
+    addressRegion: "North Aegean",
   },
   el: {
     chiosIsland: "\u039d\u03b7\u03c3\u03af \u03a7\u03af\u03bf\u03c2",
@@ -50,6 +54,8 @@ const beachSchemaLabelsByLanguage: Record<
     region: "\u03a0\u03b5\u03c1\u03b9\u03bf\u03c7\u03ae",
     mood: "\u038e\u03c6\u03bf\u03c2",
     tags: "\u0395\u03c4\u03b9\u03ba\u03ad\u03c4\u03b5\u03c2",
+    addressLocality: "\u03a7\u03af\u03bf\u03c2",
+    addressRegion: "\u0392\u03cc\u03c1\u03b5\u03b9\u03bf \u0391\u03b9\u03b3\u03b1\u03af\u03bf",
   },
   de: {
     chiosIsland: "Insel Chios",
@@ -58,6 +64,8 @@ const beachSchemaLabelsByLanguage: Record<
     region: "Region",
     mood: "Atmosph\u00e4re",
     tags: "Merkmale",
+    addressLocality: "Chios",
+    addressRegion: "N\u00f6rdliche \u00c4g\u00e4is",
   },
   fr: {
     chiosIsland: "\u00cele de Chios",
@@ -66,6 +74,8 @@ const beachSchemaLabelsByLanguage: Record<
     region: "R\u00e9gion",
     mood: "Ambiance",
     tags: "Caract\u00e9ristiques",
+    addressLocality: "Chios",
+    addressRegion: "\u00c9g\u00e9e du Nord",
   },
   it: {
     chiosIsland: "Isola di Chios",
@@ -74,6 +84,8 @@ const beachSchemaLabelsByLanguage: Record<
     region: "Regione",
     mood: "Atmosfera",
     tags: "Caratteristiche",
+    addressLocality: "Chios",
+    addressRegion: "Egeo Settentrionale",
   },
   es: {
     chiosIsland: "Isla de Qu\u00edos",
@@ -82,6 +94,8 @@ const beachSchemaLabelsByLanguage: Record<
     region: "Regi\u00f3n",
     mood: "Ambiente",
     tags: "Caracter\u00edsticas",
+    addressLocality: "Qu\u00edos",
+    addressRegion: "Egeo Septentrional",
   },
   tr: {
     chiosIsland: "Sak\u0131z Adas\u0131",
@@ -90,13 +104,18 @@ const beachSchemaLabelsByLanguage: Record<
     region: "B\u00f6lge",
     mood: "Atmosfer",
     tags: "\u00d6zellikler",
+    addressLocality: "Sak\u0131z",
+    addressRegion: "Kuzey Ege",
   },
 };
 
-function getBeachSchemaLabels(language: string) {
-  return beachSchemaLabelsByLanguage[language as BeachSchemaLanguage] ?? beachSchemaLabelsByLanguage.en;
+function isBeachSchemaLanguage(language: string): language is BeachSchemaLanguage {
+  return ["en", "el", "de", "fr", "it", "es", "tr"].includes(language);
 }
 
+function getBeachSchemaLabels(language: string) {
+  return beachSchemaLabelsByLanguage[isBeachSchemaLanguage(language) ? language : "en"];
+}
 
 function buildChiosBeachesCollectionPageSchema(
   data: ChiosBeachesPageData,
@@ -154,7 +173,7 @@ function buildBeachPlaceSchema(
     address: {
       "@type": "PostalAddress",
       addressLocality: beach.region,
-      addressRegion: "Chios",
+      addressRegion: labels.addressRegion,
       addressCountry: "GR",
     },
     touristType: beach.badges,
@@ -275,7 +294,7 @@ export function buildChiosBeachesSchema(data: ChiosBeachesPageData) {
 
   return buildSchemaGraph([
     buildOrganizationSchema(),
-    buildHotelSchema(),
+    buildHotelSchema({ path: data.seo.canonicalPath }),
     buildWebsiteSchema(),
     buildImageSchema(
       {
@@ -303,5 +322,6 @@ export function buildChiosBeachesSchema(data: ChiosBeachesPageData) {
     ]),
   ]);
 }
+
 
 

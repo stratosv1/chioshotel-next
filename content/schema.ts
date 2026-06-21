@@ -302,7 +302,7 @@ export function buildHomePageSchema(data: HomePageData): SchemaObject {
 
   return buildSchemaGraph([
     buildOrganizationSchema(),
-    buildHotelSchema({ description: data.seo.description }),
+    buildHotelSchema({ description: data.seo.description, path: canonicalPath }),
     buildWebsiteSchema(),
     buildImageSchema(
       {

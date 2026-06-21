@@ -104,7 +104,7 @@ function buildContactPointSchema(data: ContactPageData): SchemaObject[] {
 
 function buildContactHotelSchema(data: ContactPageData): SchemaObject {
   return {
-    ...buildHotelSchema(),
+    ...buildHotelSchema({ path: data.seo.canonicalPath }),
     email: data.form.email,
     contactPoint: buildContactPointSchema(data),
   };

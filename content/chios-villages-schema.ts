@@ -195,7 +195,7 @@ export function buildChiosVillagesSchema(data: ChiosVillagesPageData) {
 
   return buildSchemaGraph([
     buildOrganizationSchema(),
-    buildHotelSchema(),
+    buildHotelSchema({ path: canonicalPath }),
     buildWebsiteSchema(),
     buildImageSchema(
       {

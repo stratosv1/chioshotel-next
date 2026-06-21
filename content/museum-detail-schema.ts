@@ -1,4 +1,4 @@
-import type { MuseumDetailData } from "@/content/museum-details";
+﻿import type { MuseumDetailData } from "@/content/museum-details";
 import {
   absoluteUrl,
   getCanonicalUrl,
@@ -19,6 +19,7 @@ import {
   webPageId,
   websiteId,
   type SchemaObject,
+  getLocalizedSchemaAddress,
 } from "@/lib/structured-data";
 
 function buildMuseumWebPageSchema(museum: MuseumDetailData): SchemaObject {
@@ -78,8 +79,8 @@ function buildMuseumPlaceSchema(museum: MuseumDetailData): SchemaObject {
     image: absoluteUrl(museum.hero.image || museum.seo.ogImage),
     address: {
       "@type": "PostalAddress",
-      addressLocality: "Chios",
-      addressRegion: "North Aegean",
+      addressLocality: getLocalizedSchemaAddress(canonicalPath).addressLocality,
+      addressRegion: getLocalizedSchemaAddress(canonicalPath).addressRegion,
       addressCountry: "GR",
     },
     touristType: museum.hero.tags,
@@ -231,7 +232,7 @@ export function buildMuseumDetailSchema(museum: MuseumDetailData) {
 
   return buildSchemaGraph([
     buildOrganizationSchema(),
-    buildHotelSchema(),
+    buildHotelSchema({ path: canonicalPath }),
     buildWebsiteSchema(),
     buildImageSchema(
       {

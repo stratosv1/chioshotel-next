@@ -159,7 +159,7 @@ function buildBookingActionSchema(data: RatesPageData): SchemaObject {
 
 function buildRatesHotelSchema(data: RatesPageData): SchemaObject {
   return {
-    ...buildHotelSchema(),
+    ...buildHotelSchema({ path: data.seo.canonicalPath }),
     amenityFeature: data.benefits.items.map((item) => ({
       "@type": "LocationFeatureSpecification",
       name: item.title,

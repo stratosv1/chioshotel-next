@@ -191,7 +191,7 @@ function buildDealsItemListSchema(data: DealsPageData): SchemaObject {
 
 function buildDealsHotelSchema(data: DealsPageData): SchemaObject {
   return {
-    ...buildHotelSchema(),
+    ...buildHotelSchema({ path: data.seo.canonicalPath }),
     telephone: normalizeTelephone(data.hero.phoneHref),
     makesOffer: data.offers.map((offer) => ({
       "@id": schemaId(data.seo.canonicalPath, `offer-${offer.id}`),

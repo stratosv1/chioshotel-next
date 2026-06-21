@@ -1,4 +1,4 @@
-import type { ChiosIslandPageData } from "@/content/chios-island";
+﻿import type { ChiosIslandPageData } from "@/content/chios-island";
 import {
   absoluteUrl,
   getCanonicalUrl,
@@ -20,6 +20,7 @@ import {
   webPageId,
   websiteId,
   type SchemaObject,
+  getLocalizedSchemaAddress,
 } from "@/lib/structured-data";
 
 function buildChiosIslandWebPageSchema(data: ChiosIslandPageData): SchemaObject {
@@ -73,8 +74,8 @@ function buildChiosDestinationSchema(data: ChiosIslandPageData): SchemaObject {
     image: absoluteUrl(data.seo.ogImage),
     address: {
       "@type": "PostalAddress",
-      addressLocality: "Chios",
-      addressRegion: "North Aegean",
+      addressLocality: getLocalizedSchemaAddress(canonicalPath).addressLocality,
+      addressRegion: getLocalizedSchemaAddress(canonicalPath).addressRegion,
       addressCountry: "GR",
     },
     touristType: [
@@ -106,8 +107,8 @@ function buildExperiencePlaceSchema(
     image: absoluteUrl(item.image),
     address: {
       "@type": "PostalAddress",
-      addressLocality: "Chios",
-      addressRegion: "North Aegean",
+      addressLocality: getLocalizedSchemaAddress(item.href).addressLocality,
+      addressRegion: getLocalizedSchemaAddress(item.href).addressRegion,
       addressCountry: "GR",
     },
     touristType: item.tags,
@@ -191,7 +192,7 @@ export function buildChiosIslandSchema(data: ChiosIslandPageData) {
 
   return buildSchemaGraph([
     buildOrganizationSchema(),
-    buildHotelSchema(),
+    buildHotelSchema({ path: canonicalPath }),
     buildWebsiteSchema(),
     buildImageSchema(
       {
@@ -215,3 +216,4 @@ export function buildChiosIslandSchema(data: ChiosIslandPageData) {
     ]),
   ]);
 }
+

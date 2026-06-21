@@ -218,20 +218,101 @@ export function buildOrganizationSchema(): SchemaObject {
   };
 }
 
-export function buildHotelSchema(options: { description?: string } = {}): SchemaObject {
+
+type GlobalSchemaLanguage = "en" | "el" | "de" | "fr" | "it" | "es" | "tr";
+
+const lodgingBusinessLabelsByLanguage: Record<
+  GlobalSchemaLanguage,
+  {
+    description: string;
+    addressLocality: string;
+    addressRegion: string;
+  }
+> = {
+  en: {
+    description:
+      "Voulamandis House is a family-run accommodation in Kambos, Chios, offering rooms and apartments close to Chios Town, the airport and the beaches of southern Chios.",
+    addressLocality: "Chios",
+    addressRegion: "North Aegean",
+  },
+  el: {
+    description:
+      "\u03a4\u03bf Voulamandis House \u03b5\u03af\u03bd\u03b1\u03b9 \u03bf\u03b9\u03ba\u03bf\u03b3\u03b5\u03bd\u03b5\u03b9\u03b1\u03ba\u03cc \u03ba\u03b1\u03c4\u03ac\u03bb\u03c5\u03bc\u03b1 \u03c3\u03c4\u03bf\u03bd \u039a\u03ac\u03bc\u03c0\u03bf \u03c4\u03b7\u03c2 \u03a7\u03af\u03bf\u03c5, \u03bc\u03b5 \u03b4\u03c9\u03bc\u03ac\u03c4\u03b9\u03b1 \u03ba\u03b1\u03b9 \u03b4\u03b9\u03b1\u03bc\u03b5\u03c1\u03af\u03c3\u03bc\u03b1\u03c4\u03b1 \u03ba\u03bf\u03bd\u03c4\u03ac \u03c3\u03c4\u03b7\u03bd \u03c0\u03cc\u03bb\u03b7 \u03c4\u03b7\u03c2 \u03a7\u03af\u03bf\u03c5, \u03c4\u03bf \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03bf \u03ba\u03b1\u03b9 \u03c4\u03b9\u03c2 \u03c0\u03b1\u03c1\u03b1\u03bb\u03af\u03b5\u03c2 \u03c4\u03b7\u03c2 \u03bd\u03cc\u03c4\u03b9\u03b1\u03c2 \u03a7\u03af\u03bf\u03c5.",
+    addressLocality: "\u03a7\u03af\u03bf\u03c2",
+    addressRegion: "\u0392\u03cc\u03c1\u03b5\u03b9\u03bf \u0391\u03b9\u03b3\u03b1\u03af\u03bf",
+  },
+  de: {
+    description:
+      "Voulamandis House ist eine familiengef\u00fchrte Unterkunft in Kambos auf Chios mit Zimmern und Apartments nahe der Stadt Chios, dem Flughafen und den Str\u00e4nden im S\u00fcden der Insel.",
+    addressLocality: "Chios",
+    addressRegion: "N\u00f6rdliche \u00c4g\u00e4is",
+  },
+  fr: {
+    description:
+      "Voulamandis House est un h\u00e9bergement familial situ\u00e9 \u00e0 Kambos, \u00e0 Chios, avec des chambres et des appartements proches de la ville de Chios, de l\u2019a\u00e9roport et des plages du sud de l\u2019\u00eele.",
+    addressLocality: "Chios",
+    addressRegion: "\u00c9g\u00e9e du Nord",
+  },
+  it: {
+    description:
+      "Voulamandis House \u00e8 una struttura ricettiva a conduzione familiare a Kambos, Chios, con camere e appartamenti vicino alla citt\u00e0 di Chios, all\u2019aeroporto e alle spiagge del sud dell\u2019isola.",
+    addressLocality: "Chios",
+    addressRegion: "Egeo Settentrionale",
+  },
+  es: {
+    description:
+      "Voulamandis House es un alojamiento familiar en Kambos, Qu\u00edos, con habitaciones y apartamentos cerca de la ciudad de Qu\u00edos, del aeropuerto y de las playas del sur de la isla.",
+    addressLocality: "Qu\u00edos",
+    addressRegion: "Egeo Septentrional",
+  },
+  tr: {
+    description:
+      "Voulamandis House, Sak\u0131z Adas\u0131 Kambos b\u00f6lgesinde yer alan, Sak\u0131z \u015fehrine, havaalan\u0131na ve adan\u0131n g\u00fcney plajlar\u0131na yak\u0131n oda ve daireler sunan aile i\u015fletmesi bir konaklama tesisidir.",
+    addressLocality: "Sak\u0131z",
+    addressRegion: "Kuzey Ege",
+  },
+};
+
+function getGlobalSchemaLanguage(path?: string): GlobalSchemaLanguage {
+  const language = path ? getLanguageForPath(path) : "en";
+  return ["en", "el", "de", "fr", "it", "es", "tr"].includes(language)
+    ? (language as GlobalSchemaLanguage)
+    : "en";
+}
+
+function getLodgingBusinessLabels(path?: string) {
+  return lodgingBusinessLabelsByLanguage[getGlobalSchemaLanguage(path)];
+}
+
+export function getLocalizedSchemaAddress(path?: string) {
+  const labels = getLodgingBusinessLabels(path);
+
+  return {
+    addressLocality: labels.addressLocality,
+    addressRegion: labels.addressRegion,
+  };
+}
+
+export function buildHotelSchema(
+  options: { description?: string; path?: string } = {},
+): SchemaObject {
+  const labels = getLodgingBusinessLabels(options.path);
+
   return {
     "@type": "LodgingBusiness",
     "@id": hotelId(),
     name: businessData.name,
     url: businessData.url,
     image: businessData.images,
-    description: options.description ?? "Voulamandis House is a family-run accommodation in Kambos, Chios, offering rooms and apartments close to Chios Town, the airport and the beaches of southern Chios.",
+    description: options.description ?? labels.description,
     telephone: businessData.telephone,
     email: businessData.email,
     priceRange: businessData.priceRange,
     address: {
       "@type": "PostalAddress",
       ...businessData.address,
+      addressLocality: labels.addressLocality,
+      addressRegion: labels.addressRegion,
     },
     geo: {
       "@type": "GeoCoordinates",
@@ -466,7 +547,7 @@ export function buildSchemaGraph(
 export function buildBasePageSchema(input: WebPageSchemaInput): SchemaObject {
   return buildSchemaGraph([
     buildOrganizationSchema(),
-    buildHotelSchema(),
+    buildHotelSchema({ path: input.path }),
     buildWebsiteSchema(),
     input.image
       ? buildImageSchema(
