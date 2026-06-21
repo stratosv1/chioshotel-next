@@ -26,9 +26,13 @@ import {
   normalizePath,
 } from "@/lib/languages";
 import { getLocalizedChiosIslandPageByPath } from "@/content/chios-island";
+import { buildChiosIslandSchema } from "@/content/chios-island-schema";
 import { getLocalizedDealsPageByPath } from "@/content/deals";
+import { buildDealsSchema } from "@/content/deals-schema";
 import { getLocalizedContactPageByPath } from "@/content/contact";
+import { buildContactSchema } from "@/content/contact-schema";
 import { getLocalizedRatesPageByPath } from "@/content/rates";
+import { buildRatesSchema } from "@/content/rates-schema";
 import { getLocalizedChiosBeachesPageByPath } from "@/content/chios-beaches";
 import { buildChiosBeachesSchema } from "@/content/chios-beaches-schema";
 import { getLocalizedChiosVillagesPageByPath } from "@/content/chios-villages";
@@ -40,7 +44,10 @@ import { getChiosExplorerPageByPath } from "@/content/chios-explorer";
 import { getFamilyTravelPageByPath } from "@/content/family-travel";
 import { getTasteLoverPageByPath } from "@/content/taste-lover";
 import { getChiosActivitiesPageByPath } from "@/content/chios-activities";
+import { buildChiosActivitiesSchema } from "@/content/chios-activities-schema";
 import { getFindYourRoomPageByPath } from "@/content/find-your-room";
+import { buildFindYourRoomSchema } from "@/content/find-your-room-schema";
+import { buildLandingPageSchema } from "@/content/landing-schema";
 import {
   roomsCategoryDe,
   roomsCategoryEl,
@@ -514,25 +521,45 @@ export default async function Page({ params }: PageProps) {
   const chiosIslandData = getLocalizedChiosIslandPageByPath(requestedPath);
 
   if (chiosIslandData) {
-    return <ChiosIslandPage data={chiosIslandData} />;
+    return (
+      <>
+        <JsonLd data={buildChiosIslandSchema(chiosIslandData)} />
+        <ChiosIslandPage data={chiosIslandData} />
+      </>
+    );
   }
 
   const dealsData = getLocalizedDealsPageByPath(requestedPath);
 
   if (dealsData) {
-    return <DealsPage data={dealsData} />;
+    return (
+      <>
+        <JsonLd data={buildDealsSchema(dealsData)} />
+        <DealsPage data={dealsData} />
+      </>
+    );
   }
 
   const contactData = getLocalizedContactPageByPath(requestedPath);
 
   if (contactData) {
-    return <ContactPage data={contactData} />;
+    return (
+      <>
+        <JsonLd data={buildContactSchema(contactData)} />
+        <ContactPage data={contactData} />
+      </>
+    );
   }
 
   const ratesData = getLocalizedRatesPageByPath(requestedPath);
 
   if (ratesData) {
-    return <RatesPage data={ratesData} />;
+    return (
+      <>
+        <JsonLd data={buildRatesSchema(ratesData)} />
+        <RatesPage data={ratesData} />
+      </>
+    );
   }
 
   const chiosBeachesData = getLocalizedChiosBeachesPageByPath(requestedPath);
@@ -626,37 +653,67 @@ export default async function Page({ params }: PageProps) {
   const beachLoversData = getBeachLoversPageByPath(requestedPath);
 
   if (beachLoversData) {
-    return <BeachLoversPage data={beachLoversData} />;
+    return (
+      <>
+        <JsonLd data={buildLandingPageSchema(beachLoversData)} />
+        <BeachLoversPage data={beachLoversData} />
+      </>
+    );
   }
 
   const familyTravelData = getFamilyTravelPageByPath(requestedPath);
 
   if (familyTravelData) {
-    return <FamilyTravelPage data={familyTravelData} />;
+    return (
+      <>
+        <JsonLd data={buildLandingPageSchema(familyTravelData)} />
+        <FamilyTravelPage data={familyTravelData} />
+      </>
+    );
   }
 
   const tasteLoverData = getTasteLoverPageByPath(requestedPath);
 
   if (tasteLoverData) {
-    return <TasteLoverPage data={tasteLoverData} />;
+    return (
+      <>
+        <JsonLd data={buildLandingPageSchema(tasteLoverData)} />
+        <TasteLoverPage data={tasteLoverData} />
+      </>
+    );
   }
 
   const chiosExplorerData = getChiosExplorerPageByPath(requestedPath);
 
   if (chiosExplorerData) {
-    return <ChiosExplorerPage data={chiosExplorerData} />;
+    return (
+      <>
+        <JsonLd data={buildLandingPageSchema(chiosExplorerData)} />
+        <ChiosExplorerPage data={chiosExplorerData} />
+      </>
+    );
   }
 
   const chiosActivitiesData = getChiosActivitiesPageByPath(requestedPath);
 
   if (chiosActivitiesData) {
-    return <ChiosActivitiesPage data={chiosActivitiesData} />;
+    return (
+      <>
+        <JsonLd data={buildChiosActivitiesSchema(chiosActivitiesData)} />
+        <ChiosActivitiesPage data={chiosActivitiesData} />
+      </>
+    );
   }
 
   const findYourRoomData = getFindYourRoomPageByPath(requestedPath);
 
   if (findYourRoomData) {
-    return <FindYourRoomPage data={findYourRoomData} />;
+    return (
+      <>
+        <JsonLd data={buildFindYourRoomSchema(findYourRoomData)} />
+        <FindYourRoomPage data={findYourRoomData} />
+      </>
+    );
   }
 
   const route = getRouteByPath(requestedPath);

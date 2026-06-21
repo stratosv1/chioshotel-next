@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import FindYourRoomPage from "@/components/booking/FindYourRoomPage";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { getFindYourRoomPageByLanguage } from "@/content/find-your-room";
+import { buildFindYourRoomSchema } from "@/content/find-your-room-schema";
 import { absoluteUrl, buildPageMetadata } from "@/lib/seo";
 import { getRoutesByItemId } from "@/lib/url-map";
 
@@ -35,5 +37,10 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <FindYourRoomPage data={data} />;
+  return (
+    <>
+      <JsonLd data={buildFindYourRoomSchema(data)} />
+      <FindYourRoomPage data={data} />
+    </>
+  );
 }
