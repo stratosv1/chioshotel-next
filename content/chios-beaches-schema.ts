@@ -1,4 +1,4 @@
-import type { ChiosBeachesPageData } from "@/content/chios-beaches";
+﻿import type { ChiosBeachesPageData } from "@/content/chios-beaches";
 import {
   absoluteUrl,
   getCanonicalUrl,
@@ -21,6 +21,82 @@ import {
   websiteId,
   type SchemaObject,
 } from "@/lib/structured-data";
+
+type BeachSchemaLanguage = "en" | "el" | "de" | "fr" | "it" | "es" | "tr";
+
+const beachSchemaLabelsByLanguage: Record<
+  BeachSchemaLanguage,
+  {
+    chiosIsland: string;
+    chiosBeaches: string;
+    topChiosBeaches: string;
+    region: string;
+    mood: string;
+    tags: string;
+  }
+> = {
+  en: {
+    chiosIsland: "Chios Island",
+    chiosBeaches: "Chios Beaches",
+    topChiosBeaches: "Top Chios beaches",
+    region: "Region",
+    mood: "Mood",
+    tags: "Tags",
+  },
+  el: {
+    chiosIsland: "\u039d\u03b7\u03c3\u03af \u03a7\u03af\u03bf\u03c2",
+    chiosBeaches: "\u03a0\u03b1\u03c1\u03b1\u03bb\u03af\u03b5\u03c2 \u03a7\u03af\u03bf\u03c5",
+    topChiosBeaches: "\u039a\u03bf\u03c1\u03c5\u03c6\u03b1\u03af\u03b5\u03c2 \u03c0\u03b1\u03c1\u03b1\u03bb\u03af\u03b5\u03c2 \u03c4\u03b7\u03c2 \u03a7\u03af\u03bf\u03c5",
+    region: "\u03a0\u03b5\u03c1\u03b9\u03bf\u03c7\u03ae",
+    mood: "\u038e\u03c6\u03bf\u03c2",
+    tags: "\u0395\u03c4\u03b9\u03ba\u03ad\u03c4\u03b5\u03c2",
+  },
+  de: {
+    chiosIsland: "Insel Chios",
+    chiosBeaches: "Str\u00e4nde von Chios",
+    topChiosBeaches: "Die sch\u00f6nsten Str\u00e4nde auf Chios",
+    region: "Region",
+    mood: "Atmosph\u00e4re",
+    tags: "Merkmale",
+  },
+  fr: {
+    chiosIsland: "\u00cele de Chios",
+    chiosBeaches: "Plages de Chios",
+    topChiosBeaches: "Les plus belles plages de Chios",
+    region: "R\u00e9gion",
+    mood: "Ambiance",
+    tags: "Caract\u00e9ristiques",
+  },
+  it: {
+    chiosIsland: "Isola di Chios",
+    chiosBeaches: "Spiagge di Chios",
+    topChiosBeaches: "Le migliori spiagge di Chios",
+    region: "Regione",
+    mood: "Atmosfera",
+    tags: "Caratteristiche",
+  },
+  es: {
+    chiosIsland: "Isla de Qu\u00edos",
+    chiosBeaches: "Playas de Qu\u00edos",
+    topChiosBeaches: "Las mejores playas de Qu\u00edos",
+    region: "Regi\u00f3n",
+    mood: "Ambiente",
+    tags: "Caracter\u00edsticas",
+  },
+  tr: {
+    chiosIsland: "Sak\u0131z Adas\u0131",
+    chiosBeaches: "Sak\u0131z Plajlar\u0131",
+    topChiosBeaches: "Sak\u0131z Adas\u0131\u2019n\u0131n en iyi plajlar\u0131",
+    region: "B\u00f6lge",
+    mood: "Atmosfer",
+    tags: "\u00d6zellikler",
+  },
+};
+
+function getBeachSchemaLabels(language: string) {
+  return beachSchemaLabelsByLanguage[language as BeachSchemaLanguage] ?? beachSchemaLabelsByLanguage.en;
+}
+
 
 function buildChiosBeachesCollectionPageSchema(
   data: ChiosBeachesPageData,
@@ -65,6 +141,8 @@ function buildChiosBeachesCollectionPageSchema(
 function buildBeachPlaceSchema(
   beach: ChiosBeachesPageData["beaches"][number],
 ): SchemaObject {
+  const labels = getBeachSchemaLabels(getLanguageForPath(beach.href));
+
   return {
     "@type": ["Beach", "TouristAttraction"],
     "@id": schemaId(beach.href, "beach"),
@@ -89,17 +167,17 @@ function buildBeachPlaceSchema(
     additionalProperty: [
       {
         "@type": "PropertyValue",
-        name: "Region",
+        name: labels.region,
         value: beach.region,
       },
       {
         "@type": "PropertyValue",
-        name: "Mood",
+        name: labels.mood,
         value: beach.mood,
       },
       {
         "@type": "PropertyValue",
-        name: "Tags",
+        name: labels.tags,
         value: beach.badges.join(", "),
       },
     ],
@@ -108,11 +186,12 @@ function buildBeachPlaceSchema(
 
 function buildBeachesItemListSchema(data: ChiosBeachesPageData): SchemaObject {
   const canonicalPath = data.seo.canonicalPath;
+  const labels = getBeachSchemaLabels(getLanguageForPath(canonicalPath));
 
   return {
     "@type": "ItemList",
     "@id": itemListId(canonicalPath),
-    name: "Top Chios beaches",
+    name: labels.topChiosBeaches,
     description: data.intro.description,
     itemListOrder: "https://schema.org/ItemListOrderAscending",
     numberOfItems: data.beaches.length,
@@ -192,6 +271,7 @@ function buildBeachStayActionSchema(data: ChiosBeachesPageData): SchemaObject {
 
 export function buildChiosBeachesSchema(data: ChiosBeachesPageData) {
   const canonicalPath = data.seo.canonicalPath;
+  const labels = getBeachSchemaLabels(getLanguageForPath(canonicalPath));
 
   return buildSchemaGraph([
     buildOrganizationSchema(),
@@ -209,17 +289,19 @@ export function buildChiosBeachesSchema(data: ChiosBeachesPageData) {
     buildBeachesItemListSchema(data),
     buildBeachPlanningSchema(data),
     buildBeachGuideTipSchema(data),
-    ...data.beaches.map(buildBeachPlaceSchema),
+    ...data.beaches.map((beach) => buildBeachPlaceSchema(beach)),
     buildBeachStayActionSchema(data),
     buildBreadcrumbSchema(canonicalPath, [
       {
-        name: "Chios Island",
+        name: labels.chiosIsland,
         path: "/chios-island/",
       },
       {
-        name: "Chios Beaches",
+        name: labels.chiosBeaches,
         path: canonicalPath,
       },
     ]),
   ]);
 }
+
+

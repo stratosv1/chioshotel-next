@@ -1,4 +1,4 @@
-import type { BeachDetailData } from "@/content/beach-details";
+﻿import type { BeachDetailData } from "@/content/beach-details";
 import {
   absoluteUrl,
   getCanonicalUrl,
@@ -20,6 +20,98 @@ import {
   websiteId,
   type SchemaObject,
 } from "@/lib/structured-data";
+
+type BeachDetailSchemaLanguage = "en" | "el" | "de" | "fr" | "it" | "es" | "tr";
+
+const beachDetailSchemaLabelsByLanguage: Record<
+  BeachDetailSchemaLanguage,
+  {
+    chiosIsland: string;
+    chiosBeaches: string;
+    distanceFromVoulamandis: string;
+    travelTimeFromVoulamandis: string;
+    tags: string;
+    travelDetails: string;
+    beachGuideBy: string;
+    stayNearChiosBeaches: string;
+  }
+> = {
+  en: {
+    chiosIsland: "Chios Island",
+    chiosBeaches: "Chios Beaches",
+    distanceFromVoulamandis: "Distance from Voulamandis House",
+    travelTimeFromVoulamandis: "Travel time from Voulamandis House",
+    tags: "Tags",
+    travelDetails: "travel details",
+    beachGuideBy: "Chios beach guide by",
+    stayNearChiosBeaches: "stay near Chios beaches",
+  },
+  el: {
+    chiosIsland: "\u039d\u03b7\u03c3\u03af \u03a7\u03af\u03bf\u03c2",
+    chiosBeaches: "\u03a0\u03b1\u03c1\u03b1\u03bb\u03af\u03b5\u03c2 \u03a7\u03af\u03bf\u03c5",
+    distanceFromVoulamandis: "\u0391\u03c0\u03cc\u03c3\u03c4\u03b1\u03c3\u03b7 \u03b1\u03c0\u03cc \u03c4\u03bf Voulamandis House",
+    travelTimeFromVoulamandis: "\u03a7\u03c1\u03cc\u03bd\u03bf\u03c2 \u03b4\u03b9\u03b1\u03b4\u03c1\u03bf\u03bc\u03ae\u03c2 \u03b1\u03c0\u03cc \u03c4\u03bf Voulamandis House",
+    tags: "\u0395\u03c4\u03b9\u03ba\u03ad\u03c4\u03b5\u03c2",
+    travelDetails: "\u03c0\u03bb\u03b7\u03c1\u03bf\u03c6\u03bf\u03c1\u03af\u03b5\u03c2 \u03c0\u03c1\u03cc\u03c3\u03b2\u03b1\u03c3\u03b7\u03c2",
+    beachGuideBy: "\u03bf\u03b4\u03b7\u03b3\u03cc\u03c2 \u03c0\u03b1\u03c1\u03b1\u03bb\u03af\u03b1\u03c2 \u03a7\u03af\u03bf\u03c5 \u03b1\u03c0\u03cc",
+    stayNearChiosBeaches: "\u03b4\u03b9\u03b1\u03bc\u03bf\u03bd\u03ae \u03ba\u03bf\u03bd\u03c4\u03ac \u03c3\u03c4\u03b9\u03c2 \u03c0\u03b1\u03c1\u03b1\u03bb\u03af\u03b5\u03c2 \u03c4\u03b7\u03c2 \u03a7\u03af\u03bf\u03c5",
+  },
+  de: {
+    chiosIsland: "Insel Chios",
+    chiosBeaches: "Str\u00e4nde von Chios",
+    distanceFromVoulamandis: "Entfernung vom Voulamandis House",
+    travelTimeFromVoulamandis: "Fahrzeit vom Voulamandis House",
+    tags: "Merkmale",
+    travelDetails: "Reisedetails",
+    beachGuideBy: "Strandf\u00fchrer f\u00fcr Chios von",
+    stayNearChiosBeaches: "Aufenthalt in der N\u00e4he der Str\u00e4nde von Chios",
+  },
+  fr: {
+    chiosIsland: "\u00cele de Chios",
+    chiosBeaches: "Plages de Chios",
+    distanceFromVoulamandis: "Distance depuis Voulamandis House",
+    travelTimeFromVoulamandis: "Temps de trajet depuis Voulamandis House",
+    tags: "Caract\u00e9ristiques",
+    travelDetails: "informations d\u2019acc\u00e8s",
+    beachGuideBy: "guide des plages de Chios par",
+    stayNearChiosBeaches: "s\u00e9jour pr\u00e8s des plages de Chios",
+  },
+  it: {
+    chiosIsland: "Isola di Chios",
+    chiosBeaches: "Spiagge di Chios",
+    distanceFromVoulamandis: "Distanza da Voulamandis House",
+    travelTimeFromVoulamandis: "Tempo di percorrenza da Voulamandis House",
+    tags: "Caratteristiche",
+    travelDetails: "dettagli di viaggio",
+    beachGuideBy: "guida alle spiagge di Chios di",
+    stayNearChiosBeaches: "soggiorno vicino alle spiagge di Chios",
+  },
+  es: {
+    chiosIsland: "Isla de Qu\u00edos",
+    chiosBeaches: "Playas de Qu\u00edos",
+    distanceFromVoulamandis: "Distancia desde Voulamandis House",
+    travelTimeFromVoulamandis: "Tiempo de trayecto desde Voulamandis House",
+    tags: "Caracter\u00edsticas",
+    travelDetails: "detalles de viaje",
+    beachGuideBy: "gu\u00eda de playas de Qu\u00edos por",
+    stayNearChiosBeaches: "estancia cerca de las playas de Qu\u00edos",
+  },
+  tr: {
+    chiosIsland: "Sak\u0131z Adas\u0131",
+    chiosBeaches: "Sak\u0131z Plajlar\u0131",
+    distanceFromVoulamandis: "Voulamandis House\u2019a uzakl\u0131k",
+    travelTimeFromVoulamandis: "Voulamandis House\u2019tan yolculuk s\u00fcresi",
+    tags: "\u00d6zellikler",
+    travelDetails: "ula\u015f\u0131m bilgileri",
+    beachGuideBy: "Sak\u0131z plaj rehberi",
+    stayNearChiosBeaches: "Sak\u0131z plajlar\u0131na yak\u0131n konaklama",
+  },
+};
+
+function getBeachDetailSchemaLabels(language: string) {
+  return beachDetailSchemaLabelsByLanguage[language as BeachDetailSchemaLanguage] ?? beachDetailSchemaLabelsByLanguage.en;
+}
+
 
 function buildBeachWebPageSchema(beach: BeachDetailData): SchemaObject {
   const canonicalPath = beach.seo.canonicalPath;
@@ -64,6 +156,7 @@ function buildBeachWebPageSchema(beach: BeachDetailData): SchemaObject {
 
 function buildBeachPlaceSchema(beach: BeachDetailData): SchemaObject {
   const canonicalPath = beach.seo.canonicalPath;
+  const labels = getBeachDetailSchemaLabels(getLanguageForPath(canonicalPath));
 
   return {
     "@type": ["Beach", "TouristAttraction"],
@@ -98,17 +191,17 @@ function buildBeachPlaceSchema(beach: BeachDetailData): SchemaObject {
       })),
       {
         "@type": "PropertyValue",
-        name: "Distance from Voulamandis House",
+        name: labels.distanceFromVoulamandis,
         value: beach.media.map.distance,
       },
       {
         "@type": "PropertyValue",
-        name: "Travel time from Voulamandis House",
+        name: labels.travelTimeFromVoulamandis,
         value: beach.media.map.time,
       },
       {
         "@type": "PropertyValue",
-        name: "Tags",
+        name: labels.tags,
         value: beach.hero.tags.join(", "),
       },
     ],
@@ -159,11 +252,12 @@ function buildBeachMapSchema(beach: BeachDetailData): SchemaObject {
 
 function buildBeachDetailsItemListSchema(beach: BeachDetailData): SchemaObject {
   const canonicalPath = beach.seo.canonicalPath;
+  const labels = getBeachDetailSchemaLabels(getLanguageForPath(canonicalPath));
 
   return {
     "@type": "ItemList",
     "@id": schemaId(canonicalPath, "beach-details"),
-    name: `${beach.hero.title} travel details`,
+    name: `${beach.hero.title} ${labels.travelDetails}`,
     description: beach.hero.description,
     itemListOrder: "https://schema.org/ItemListOrderAscending",
     numberOfItems: beach.details.length,
@@ -198,6 +292,7 @@ function buildBeachLocalTipSchema(beach: BeachDetailData): SchemaObject {
 
 function buildBeachStayActionSchema(beach: BeachDetailData): SchemaObject {
   const canonicalPath = beach.seo.canonicalPath;
+  const labels = getBeachDetailSchemaLabels(getLanguageForPath(canonicalPath));
 
   return {
     "@type": "ReserveAction",
@@ -217,13 +312,14 @@ function buildBeachStayActionSchema(beach: BeachDetailData): SchemaObject {
     },
     result: {
       "@type": "LodgingReservation",
-      name: `${siteName} stay near Chios beaches`,
+      name: `${siteName} ${labels.stayNearChiosBeaches}`,
     },
   };
 }
 
 export function buildBeachDetailSchema(beach: BeachDetailData) {
   const canonicalPath = beach.seo.canonicalPath;
+  const labels = getBeachDetailSchemaLabels(getLanguageForPath(canonicalPath));
 
   return buildSchemaGraph([
     buildOrganizationSchema(),
@@ -233,7 +329,7 @@ export function buildBeachDetailSchema(beach: BeachDetailData) {
       {
         url: beach.seo.ogImage || beach.hero.image,
         alt: beach.hero.title,
-        caption: `${beach.hero.title} - Chios beach guide by ${siteName}`,
+        caption: `${beach.hero.title} - ${labels.beachGuideBy} ${siteName}`,
       },
       canonicalPath,
     ),
@@ -246,11 +342,11 @@ export function buildBeachDetailSchema(beach: BeachDetailData) {
     buildBeachStayActionSchema(beach),
     buildBreadcrumbSchema(canonicalPath, [
       {
-        name: "Chios Island",
+        name: labels.chiosIsland,
         path: "/chios-island/",
       },
       {
-        name: "Chios Beaches",
+        name: labels.chiosBeaches,
         path: "/chios/chios-beaches/",
       },
       {
@@ -260,3 +356,6 @@ export function buildBeachDetailSchema(beach: BeachDetailData) {
     ]),
   ]);
 }
+
+
+
