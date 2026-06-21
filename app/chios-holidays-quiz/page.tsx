@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { ChiosHolidayQuizPage } from "@/components/chios/ChiosHolidayQuizPage";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { buildChiosQuizSchema } from "@/content/chios-quiz-schema";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -11,5 +13,10 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 export default function Page() {
-  return <ChiosHolidayQuizPage locale="en" />;
+  return (
+    <>
+      <JsonLd data={buildChiosQuizSchema("en")} />
+      <ChiosHolidayQuizPage locale="en" />
+    </>
+  );
 }
