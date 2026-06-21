@@ -1,4 +1,4 @@
-import type { RoomCategoryCard, RoomsCategoryPageData } from "@/content/rooms";
+﻿import type { RoomCategoryCard, RoomsCategoryPageData } from "@/content/rooms";
 import {
   absoluteUrl,
   getCanonicalUrl,
@@ -70,6 +70,22 @@ function buildRoomsItemListSchema(data: RoomsCategoryPageData): SchemaObject {
   };
 }
 
+type RoomsSchemaLanguage = "en" | "el" | "de" | "fr" | "it" | "es" | "tr";
+
+const roomsSchemaLabelsByLanguage: Record<RoomsSchemaLanguage, { breadcrumbName: string }> = {
+  en: { breadcrumbName: "Chios rooms and apartments" },
+  el: { breadcrumbName: "ωμάτια και διαμερίσματα στη ίο" },
+  de: { breadcrumbName: "Zimmer und Apartments auf Chios" },
+  fr: { breadcrumbName: "Chambres et appartements à Chios" },
+  it: { breadcrumbName: "Camere e appartamenti a Chios" },
+  es: { breadcrumbName: "Habitaciones y apartamentos en Quíos" },
+  tr: { breadcrumbName: "Sakız Adası odaları ve daireleri" },
+};
+
+function getRoomsSchemaLabels(path: string) {
+  const language = getLanguageForPath(path) as RoomsSchemaLanguage;
+  return roomsSchemaLabelsByLanguage[language] ?? roomsSchemaLabelsByLanguage.en;
+}
 function buildRoomsCollectionPageSchema(data: RoomsCategoryPageData): SchemaObject {
   const canonicalPath = data.seo.canonicalPath;
   const language = getLanguageForPath(canonicalPath);
@@ -105,6 +121,7 @@ function buildRoomsCollectionPageSchema(data: RoomsCategoryPageData): SchemaObje
 
 export function buildRoomsCategorySchema(data: RoomsCategoryPageData) {
   const canonicalPath = data.seo.canonicalPath;
+  const labels = getRoomsSchemaLabels(canonicalPath);
 
   return buildSchemaGraph([
     buildOrganizationSchema(),
@@ -123,9 +140,11 @@ export function buildRoomsCategorySchema(data: RoomsCategoryPageData) {
     ...data.cards.map(buildRoomCardSchema),
     buildBreadcrumbSchema(canonicalPath, [
       {
-        name: "Chios Rooms",
+        name: labels.breadcrumbName,
         path: canonicalPath,
       },
     ]),
   ]);
 }
+
+

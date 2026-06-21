@@ -1,4 +1,4 @@
-import type {
+﻿import type {
   IndividualRoomData,
   RoomDetailData,
 } from "@/content/room-details";
@@ -27,6 +27,90 @@ import {
 
 function uniqueItems<T>(items: T[]): T[] {
   return Array.from(new Set(items.filter(Boolean)));
+}
+
+type RoomSchemaLanguage = "en" | "el" | "de" | "fr" | "it" | "es" | "tr";
+
+const roomSchemaLabelsByLanguage: Record<
+  RoomSchemaLanguage,
+  {
+    roomType: string;
+    location: string;
+    beds: string;
+    highlights: string;
+    guests: string;
+    roomsBreadcrumbName: string;
+    roomsBreadcrumbPath: string;
+  }
+> = {
+  en: {
+    roomType: "Room type",
+    location: "Location",
+    beds: "Beds",
+    highlights: "Highlights",
+    guests: "guests",
+    roomsBreadcrumbName: "Chios rooms and apartments",
+    roomsBreadcrumbPath: "/chios-rooms/",
+  },
+  el: {
+    roomType: "Τύπος δωματίου",
+    location: "Τοποθεσία",
+    beds: "Κρεβάτια",
+    highlights: "Χαρακτηριστικά",
+    guests: "επισκέπτες",
+    roomsBreadcrumbName: "Δωμάτια και διαμερίσματα στη Χίο",
+    roomsBreadcrumbPath: "/el/domatia-xios/",
+  },
+  de: {
+    roomType: "Zimmertyp",
+    location: "Lage",
+    beds: "Betten",
+    highlights: "Highlights",
+    guests: "Gäste",
+    roomsBreadcrumbName: "Zimmer und Apartments auf Chios",
+    roomsBreadcrumbPath: "/de/zimmer-chios/",
+  },
+  fr: {
+    roomType: "Type de chambre",
+    location: "Emplacement",
+    beds: "Lits",
+    highlights: "Points forts",
+    guests: "hôtes",
+    roomsBreadcrumbName: "Chambres et appartements à Chios",
+    roomsBreadcrumbPath: "/fr/chambres-a-chios/",
+  },
+  it: {
+    roomType: "Tipo di camera",
+    location: "Posizione",
+    beds: "Letti",
+    highlights: "Caratteristiche",
+    guests: "ospiti",
+    roomsBreadcrumbName: "Camere e appartamenti a Chios",
+    roomsBreadcrumbPath: "/it/stanze-a-chios/",
+  },
+  es: {
+    roomType: "Tipo de habitación",
+    location: "Ubicación",
+    beds: "Camas",
+    highlights: "Características",
+    guests: "huéspedes",
+    roomsBreadcrumbName: "Habitaciones y apartamentos en Quíos",
+    roomsBreadcrumbPath: "/es/habitaciones-en-chios/",
+  },
+  tr: {
+    roomType: "Oda tipi",
+    location: "Konum",
+    beds: "Yataklar",
+    highlights: "Öne çıkan özellikler",
+    guests: "misafir",
+    roomsBreadcrumbName: "Sakız Adası odaları ve daireleri",
+    roomsBreadcrumbPath: "/tr/chios-odalari/",
+  },
+};
+
+function getRoomSchemaLabels(path: string) {
+  const language = getLanguageForPath(path) as RoomSchemaLanguage;
+  return roomSchemaLabelsByLanguage[language] ?? roomSchemaLabelsByLanguage.en;
 }
 
 function getRoomDetailImages(data: RoomDetailData): string[] {
@@ -77,6 +161,7 @@ function buildIndividualRoomSchema(
   parentData: RoomDetailData,
 ): SchemaObject {
   const canonicalPath = parentData.seo.canonicalPath;
+  const labels = getRoomSchemaLabels(canonicalPath);
   const roomUrl = `${getCanonicalUrl(canonicalPath)}#${room.id}`;
 
   return {
@@ -96,7 +181,7 @@ function buildIndividualRoomSchema(
     occupancy: {
       "@type": "QuantitativeValue",
       maxValue: room.maxGuests,
-      unitText: "guests",
+      unitText: labels.guests,
     },
     bed: buildBedDescription(room),
     amenityFeature: room.amenities.map((amenity) => ({
@@ -107,22 +192,22 @@ function buildIndividualRoomSchema(
     additionalProperty: [
       {
         "@type": "PropertyValue",
-        name: "Room type",
+        name: labels.roomType,
         value: room.type,
       },
       {
         "@type": "PropertyValue",
-        name: "Location",
+        name: labels.location,
         value: room.location,
       },
       {
         "@type": "PropertyValue",
-        name: "Beds",
+        name: labels.beds,
         value: room.beds.join(", "),
       },
       {
         "@type": "PropertyValue",
-        name: "Highlights",
+        name: labels.highlights,
         value: room.badges.join(", "),
       },
     ].filter((item) => item.value),
@@ -131,6 +216,7 @@ function buildIndividualRoomSchema(
 
 function buildRoomSchema(data: RoomDetailData): SchemaObject {
   const canonicalPath = data.seo.canonicalPath;
+  const labels = getRoomSchemaLabels(canonicalPath);
   const maxGuests = getMaxGuests(data);
   const allImages = getRoomDetailImages(data);
 
@@ -155,7 +241,7 @@ function buildRoomSchema(data: RoomDetailData): SchemaObject {
       ? {
           "@type": "QuantitativeValue",
           maxValue: maxGuests,
-          unitText: "guests",
+          unitText: labels.guests,
         }
       : undefined,
     amenityFeature: getRoomDetailAmenities(data),
@@ -200,7 +286,7 @@ function buildRoomWebPageSchema(data: RoomDetailData): SchemaObject {
 
 export function buildRoomDetailSchema(data: RoomDetailData) {
   const canonicalPath = data.seo.canonicalPath;
-
+  const labels = getRoomSchemaLabels(canonicalPath);
   return buildSchemaGraph([
     buildOrganizationSchema(),
     buildHotelSchema({ path: canonicalPath }),
@@ -220,8 +306,8 @@ export function buildRoomDetailSchema(data: RoomDetailData) {
     ),
     buildBreadcrumbSchema(canonicalPath, [
       {
-        name: "Chios Rooms",
-        path: "/chios-rooms/",
+        name: labels.roomsBreadcrumbName,
+        path: labels.roomsBreadcrumbPath,
       },
       {
         name: data.hero.title,
@@ -234,3 +320,7 @@ export function buildRoomDetailSchema(data: RoomDetailData) {
     }),
   ]);
 }
+
+
+
+
