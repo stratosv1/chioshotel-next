@@ -173,7 +173,7 @@ export function schemaId(path: string, id: string): string {
 }
 
 export function hotelId(): string {
-  return `${siteUrl}/#hotel`;
+  return `${siteUrl}/#lodging-business`;
 }
 
 export function organizationId(): string {
@@ -220,13 +220,13 @@ export function buildOrganizationSchema(): SchemaObject {
 
 export function buildHotelSchema(): SchemaObject {
   return {
-    "@type": "Hotel",
+    "@type": "LodgingBusiness",
     "@id": hotelId(),
     name: businessData.name,
     url: businessData.url,
     image: businessData.images,
     description:
-      "Voulamandis House is a family-run hotel and guesthouse in Kampos, Chios, offering rooms and apartments close to Chios Town, the airport and the beaches of southern Chios.",
+      "Voulamandis House is a family-run accommodation in Kambos, Chios, offering rooms and apartments close to Chios Town, the airport and the beaches of southern Chios.",
     telephone: businessData.telephone,
     email: businessData.email,
     priceRange: businessData.priceRange,
