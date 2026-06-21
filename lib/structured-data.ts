@@ -1,4 +1,4 @@
-import {
+﻿import {
   absoluteUrl,
   getCanonicalUrl,
   getLanguageForPath,
@@ -218,15 +218,14 @@ export function buildOrganizationSchema(): SchemaObject {
   };
 }
 
-export function buildHotelSchema(): SchemaObject {
+export function buildHotelSchema(options: { description?: string } = {}): SchemaObject {
   return {
     "@type": "LodgingBusiness",
     "@id": hotelId(),
     name: businessData.name,
     url: businessData.url,
     image: businessData.images,
-    description:
-      "Voulamandis House is a family-run accommodation in Kambos, Chios, offering rooms and apartments close to Chios Town, the airport and the beaches of southern Chios.",
+    description: options.description ?? "Voulamandis House is a family-run accommodation in Kambos, Chios, offering rooms and apartments close to Chios Town, the airport and the beaches of southern Chios.",
     telephone: businessData.telephone,
     email: businessData.email,
     priceRange: businessData.priceRange,
@@ -482,3 +481,4 @@ export function buildBasePageSchema(input: WebPageSchemaInput): SchemaObject {
     buildWebPageSchema(input),
   ]);
 }
+

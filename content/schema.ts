@@ -1,4 +1,4 @@
-import {
+﻿import {
   absoluteUrl,
   siteName,
   siteUrl,
@@ -146,7 +146,7 @@ export function buildHomePageSchema(data: HomePageData): SchemaObject {
 
   return buildSchemaGraph([
     buildOrganizationSchema(),
-    buildHotelSchema(),
+    buildHotelSchema({ description: data.seo.description }),
     buildWebsiteSchema(),
     buildImageSchema(
       {
@@ -164,3 +164,4 @@ export function buildHomePageSchema(data: HomePageData): SchemaObject {
 }
 
 export const homePageSchema = buildHomePageSchema(homePageEn);
+
