@@ -4,6 +4,10 @@ import {
   siteUrl,
 } from "@/lib/seo";
 import {
+  homePageEn,
+  type HomePageData,
+} from "@/content/home";
+import {
   buildBreadcrumbSchema,
   buildHotelSchema,
   buildImageSchema,
@@ -18,18 +22,37 @@ import {
   type SchemaObject,
 } from "@/lib/structured-data";
 
-const homepagePath = "/";
+function getHomePageLanguage(canonicalPath: string): string {
+  switch (canonicalPath) {
+    case "/el/":
+      return "el";
+    case "/de/":
+      return "de";
+    case "/fr/":
+      return "fr";
+    case "/it/":
+      return "it";
+    case "/es/":
+      return "es";
+    case "/tr/":
+      return "tr";
+    case "/":
+    default:
+      return "en";
+  }
+}
 
-function buildHomeWebPageSchema(): SchemaObject {
+function buildHomeWebPageSchema(data: HomePageData): SchemaObject {
+  const canonicalPath = data.seo.canonicalPath;
+
   return {
     "@type": "WebPage",
-    "@id": webPageId(homepagePath),
-    url: siteUrl,
-    name: "Voulamandis House - Rooms & Apartments in Kambos, Chios",
-    headline: "Voulamandis House - Rooms & Apartments in Kambos, Chios",
-    description:
-      "Stay at Voulamandis House, a family-run accommodation in Chios with rooms and apartments in Kambos close to Chios Town, the airport and the beaches of southern Chios.",
-    inLanguage: "en",
+    "@id": webPageId(canonicalPath),
+    url: absoluteUrl(canonicalPath),
+    name: data.seo.title,
+    headline: data.seo.title,
+    description: data.seo.description,
+    inLanguage: getHomePageLanguage(canonicalPath),
     isPartOf: {
       "@id": websiteId(),
     },
@@ -40,18 +63,18 @@ function buildHomeWebPageSchema(): SchemaObject {
       "@id": hotelId(),
     },
     breadcrumb: {
-      "@id": schemaId(homepagePath, "breadcrumb"),
+      "@id": schemaId(canonicalPath, "breadcrumb"),
     },
     primaryImageOfPage: {
-      "@id": schemaId(homepagePath, "primaryimage"),
+      "@id": schemaId(canonicalPath, "primaryimage"),
     },
   };
 }
 
-function buildHomeRoomsItemListSchema(): SchemaObject {
+function buildHomeRoomsItemListSchema(canonicalPath: string): SchemaObject {
   return {
     "@type": "ItemList",
-    "@id": itemListId(homepagePath),
+    "@id": itemListId(canonicalPath),
     name: "Rooms and apartments at Voulamandis House",
     description:
       "A selection of rooms and apartments at Voulamandis House in Kambos, Chios.",
@@ -118,20 +141,26 @@ function buildHomeRoomReferencesSchema(): SchemaObject[] {
   ];
 }
 
-export const homePageSchema = buildSchemaGraph([
-  buildOrganizationSchema(),
-  buildHotelSchema(),
-  buildWebsiteSchema(),
-  buildImageSchema(
-    {
-      url: "/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp",
-      alt: "Voulamandis House rooms and apartments in Kambos, Chios",
-      caption: `${siteName} rooms and apartments in Kambos, Chios`,
-    },
-    homepagePath,
-  ),
-  buildHomeWebPageSchema(),
-  buildHomeRoomsItemListSchema(),
-  ...buildHomeRoomReferencesSchema(),
-  buildBreadcrumbSchema(homepagePath, []),
-]);
+export function buildHomePageSchema(data: HomePageData): SchemaObject {
+  const canonicalPath = data.seo.canonicalPath;
+
+  return buildSchemaGraph([
+    buildOrganizationSchema(),
+    buildHotelSchema(),
+    buildWebsiteSchema(),
+    buildImageSchema(
+      {
+        url: data.seo.ogImage,
+        alt: data.seo.ogImageAlt,
+        caption: data.seo.title || data.seo.ogImageAlt || siteName,
+      },
+      canonicalPath,
+    ),
+    buildHomeWebPageSchema(data),
+    buildHomeRoomsItemListSchema(canonicalPath),
+    ...buildHomeRoomReferencesSchema(),
+    buildBreadcrumbSchema(canonicalPath, []),
+  ]);
+}
+
+export const homePageSchema = buildHomePageSchema(homePageEn);

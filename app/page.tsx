@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { HomePage } from "@/components/home/HomePage";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { homePageEn } from "@/content/home";
-import { homePageSchema } from "@/content/schema";
+import { buildHomePageSchema } from "@/content/schema";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://chioshotel.gr"),
@@ -65,7 +65,7 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <>
-      <JsonLd data={homePageSchema} />
+      <JsonLd data={buildHomePageSchema(homePageEn)} />
       <HomePage data={homePageEn} />
     </>
   );

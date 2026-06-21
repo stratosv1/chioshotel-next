@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { HomePage } from "@/components/home/HomePage";
+import { JsonLd } from "@/components/seo/JsonLd";
 import {
   homePageDe,
   homePageEl,
@@ -11,6 +12,7 @@ import {
   homePageTr,
 } from "@/content/home";
 import type { HomePageData } from "@/content/home";
+import { buildHomePageSchema } from "@/content/schema";
 import { buildPageMetadata } from "@/lib/seo";
 import { defaultLanguage, isLanguageCode, languages } from "@/lib/languages";
 
@@ -75,5 +77,10 @@ export default async function Page({ params }: PageProps) {
 
   const data = getLocalizedHomePageData(locale);
 
-  return <HomePage data={data} />;
+  return (
+    <>
+      <JsonLd data={buildHomePageSchema(data)} />
+      <HomePage data={data} />
+    </>
+  );
 }
