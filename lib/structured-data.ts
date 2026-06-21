@@ -46,43 +46,31 @@ export const businessData = {
   amenities: [
     {
       name: "Free WiFi",
-      description: "High-speed wireless internet access throughout the property",
+      description: "Wireless internet access for guests",
     },
     {
-      name: "Air Conditioning",
-      description: "Climate control in all rooms",
+      name: "Air conditioning",
+      description: "Air conditioning in the accommodation",
     },
     {
-      name: "24-Hour Front Desk",
-      description: "Always available to assist you",
-    },
-    {
-      name: "Room Service",
-      description: "Food and beverage delivery to your room",
-    },
-    {
-      name: "Daily Housekeeping",
-      description: "Professional cleaning services",
+      name: "Private bathroom",
+      description: "Private bathroom facilities",
     },
     {
       name: "Flat-screen TV",
-      description: "Entertainment in every room",
+      description: "Television in the accommodation",
     },
     {
-      name: "Private Bathroom",
-      description: "En-suite facilities with shower",
+      name: "Garden and terrace",
+      description: "Outdoor garden and terrace areas",
     },
     {
-      name: "Wake-up Service",
-      description: "Morning call service upon request",
+      name: "Parking available",
+      description: "Parking available for guests",
     },
     {
-      name: "Garden Terrace",
-      description: "Outdoor relaxation area with views",
-    },
-    {
-      name: "Parking Available",
-      description: "On-site parking for guests",
+      name: "Cleaning service",
+      description: "Cleaning service during the stay",
     },
   ] as AmenityInput[],
 };
@@ -280,6 +268,76 @@ function getGlobalSchemaLanguage(path?: string): GlobalSchemaLanguage {
     : "en";
 }
 
+const lodgingBusinessAmenitiesByLanguage: Record<GlobalSchemaLanguage, AmenityInput[]> = {
+  en: [
+    { name: "Free WiFi", description: "Wireless internet access for guests" },
+    { name: "Air conditioning", description: "Air conditioning in the accommodation" },
+    { name: "Private bathroom", description: "Private bathroom facilities" },
+    { name: "Flat-screen TV", description: "Television in the accommodation" },
+    { name: "Garden and terrace", description: "Outdoor garden and terrace areas" },
+    { name: "Parking available", description: "Parking available for guests" },
+    { name: "Cleaning service", description: "Cleaning service during the stay" },
+  ],
+  el: [
+    { name: "ωρεάν WiFi", description: "σύρματη πρόσβαση στο διαδίκτυο για τους επισκέπτες" },
+    { name: "λιματισμός", description: "λιματισμός στα καταλύματα" },
+    { name: "διωτικό μπάνιο", description: "διωτικές εγκαταστάσεις μπάνιου" },
+    { name: "ηλεόραση επίπεδης οθόνης", description: "ηλεόραση στο κατάλυμα" },
+    { name: "ήπος και βεράντα", description: "ξωτερικοί χώροι κήπου και βεράντας" },
+    { name: "ιαθέσιμος χώρος στάθμευσης", description: "ώρος στάθμευσης διαθέσιμος για τους επισκέπτες" },
+    { name: "πηρεσία καθαριότητας", description: "πηρεσία καθαριότητας κατά τη διάρκεια της διαμονής" },
+  ],
+  de: [
+    { name: "Kostenloses WLAN", description: "Drahtloser Internetzugang für Gäste" },
+    { name: "Klimaanlage", description: "Klimaanlage in der Unterkunft" },
+    { name: "Eigenes Bad", description: "Private Badezimmereinrichtungen" },
+    { name: "Flachbildfernseher", description: "Fernseher in der Unterkunft" },
+    { name: "Garten und Terrasse", description: "Außenbereiche mit Garten und Terrasse" },
+    { name: "Parkmöglichkeiten", description: "Parkmöglichkeiten für Gäste" },
+    { name: "Reinigungsservice", description: "Reinigungsservice während des Aufenthalts" },
+  ],
+  fr: [
+    { name: "Wi-Fi gratuit", description: "Accès Internet sans fil pour les hôtes" },
+    { name: "Climatisation", description: "Climatisation dans l’hébergement" },
+    { name: "Salle de bain privée", description: "Équipements de salle de bain privée" },
+    { name: "Télévision à écran plat", description: "Télévision dans l’hébergement" },
+    { name: "Jardin et terrasse", description: "Espaces extérieurs avec jardin et terrasse" },
+    { name: "Parking disponible", description: "Parking disponible pour les hôtes" },
+    { name: "Service de nettoyage", description: "Service de nettoyage pendant le séjour" },
+  ],
+  it: [
+    { name: "Wi-Fi gratuito", description: "Accesso Internet wireless per gli ospiti" },
+    { name: "Aria condizionata", description: "Aria condizionata nell’alloggio" },
+    { name: "Bagno privato", description: "Servizi bagno privati" },
+    { name: "TV a schermo piatto", description: "Televisione nell’alloggio" },
+    { name: "Giardino e terrazza", description: "Spazi esterni con giardino e terrazza" },
+    { name: "Parcheggio disponibile", description: "Parcheggio disponibile per gli ospiti" },
+    { name: "Servizio di pulizia", description: "Servizio di pulizia durante il soggiorno" },
+  ],
+  es: [
+    { name: "WiFi gratuito", description: "Acceso inalámbrico a Internet para los huéspedes" },
+    { name: "Aire acondicionado", description: "Aire acondicionado en el alojamiento" },
+    { name: "Baño privado", description: "Instalaciones de baño privado" },
+    { name: "Televisión de pantalla plana", description: "Televisión en el alojamiento" },
+    { name: "Jardín y terraza", description: "Zonas exteriores con jardín y terraza" },
+    { name: "Aparcamiento disponible", description: "Aparcamiento disponible para los huéspedes" },
+    { name: "Servicio de limpieza", description: "Servicio de limpieza durante la estancia" },
+  ],
+  tr: [
+    { name: "Ücretsiz WiFi", description: "Misafirler için kablosuz internet erişimi" },
+    { name: "Klima", description: "Konaklama birimlerinde klima" },
+    { name: "Özel banyo", description: "Özel banyo olanakları" },
+    { name: "Düz ekran TV", description: "Konaklama biriminde televizyon" },
+    { name: "Bahçe ve teras", description: "Bahçe ve teras alanları" },
+    { name: "Otopark mevcut", description: "Misafirler için otopark imkanı" },
+    { name: "Temizlik hizmeti", description: "Konaklama sırasında temizlik hizmeti" },
+  ],
+};
+
+function getLodgingBusinessAmenities(path?: string) {
+  return lodgingBusinessAmenitiesByLanguage[getGlobalSchemaLanguage(path)];
+}
+
 function getLodgingBusinessLabels(path?: string) {
   return lodgingBusinessLabelsByLanguage[getGlobalSchemaLanguage(path)];
 }
@@ -321,7 +379,7 @@ export function buildHotelSchema(
     parentOrganization: {
       "@id": organizationId(),
     },
-    amenityFeature: businessData.amenities.map((amenity) => ({
+    amenityFeature: getLodgingBusinessAmenities(options.path).map((amenity) => ({
       "@type": "LocationFeatureSpecification",
       name: amenity.name,
       description: amenity.description,
