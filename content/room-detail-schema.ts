@@ -165,7 +165,7 @@ function buildIndividualRoomSchema(
   const roomUrl = `${getCanonicalUrl(canonicalPath)}#${room.id}`;
 
   return {
-    "@type": "HotelRoom",
+    "@type": "Room",
     "@id": schemaId(canonicalPath, room.id),
     name: room.name,
     alternateName: room.type,
@@ -221,7 +221,7 @@ function buildRoomSchema(data: RoomDetailData): SchemaObject {
   const allImages = getRoomDetailImages(data);
 
   return {
-    "@type": "HotelRoom",
+    "@type": "Accommodation",
     "@id": schemaId(canonicalPath, "room"),
     name: data.hero.title,
     alternateName: data.hero.subtitle,
@@ -320,6 +320,7 @@ export function buildRoomDetailSchema(data: RoomDetailData) {
     }),
   ]);
 }
+
 
 
 

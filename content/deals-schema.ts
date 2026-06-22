@@ -1,4 +1,4 @@
-import type { DealsPageData } from "@/content/deals";
+﻿import type { DealsPageData } from "@/content/deals";
 import {
   absoluteUrl,
   getCanonicalUrl,
@@ -89,7 +89,7 @@ function buildDealOfferSchema(
       "@id": hotelId(),
     },
     itemOffered: {
-      "@type": "HotelRoom",
+      "@type": "Accommodation",
       "@id": schemaId(offer.roomPageHref, "room"),
       name: offer.title,
       url: absoluteUrl(offer.roomPageHref),

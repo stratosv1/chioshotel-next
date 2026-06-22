@@ -24,7 +24,7 @@ import {
 
 function buildRoomCardSchema(card: RoomCategoryCard): SchemaObject {
   return {
-    "@type": "HotelRoom",
+    "@type": "Accommodation",
     "@id": schemaId(card.href, "room"),
     name: card.title,
     alternateName: card.subtitle,
@@ -146,5 +146,6 @@ export function buildRoomsCategorySchema(data: RoomsCategoryPageData) {
     ]),
   ]);
 }
+
 
 

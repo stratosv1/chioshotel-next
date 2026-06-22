@@ -535,7 +535,7 @@ export function buildAccommodationSchema(
   input: AccommodationInput,
 ): SchemaObject {
   return {
-    "@type": "HotelRoom",
+    "@type": "Accommodation",
     "@id": schemaId(input.path, "room"),
     name: input.name,
     url: getCanonicalUrl(input.path),
@@ -620,4 +620,5 @@ export function buildBasePageSchema(input: WebPageSchemaInput): SchemaObject {
     buildWebPageSchema(input),
   ]);
 }
+
 

@@ -287,7 +287,7 @@ function buildHomeRoomReferencesSchema(canonicalPath: string): SchemaObject[] {
   const roomContent = getHomeRoomSchemaContent(canonicalPath);
 
   return roomContent.rooms.map((room) => ({
-    "@type": "HotelRoom",
+    "@type": "Accommodation",
     "@id": schemaId(room.urlPath, "room"),
     name: room.name,
     url: absoluteUrl(room.urlPath),
@@ -320,5 +320,6 @@ export function buildHomePageSchema(data: HomePageData): SchemaObject {
 }
 
 export const homePageSchema = buildHomePageSchema(homePageEn);
+
 
 
