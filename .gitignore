@@ -30,3 +30,7 @@ Thumbs.db
 .vercel/
 .vercel
 .env*
+# Local audit backups and generated reports
+backups/
+reports/
+room-detail-schema-paths-check.txt
