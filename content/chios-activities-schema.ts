@@ -1,4 +1,4 @@
-import type { ChiosActivitiesPageData } from "@/content/chios-activities";
+﻿import type { ChiosActivitiesPageData } from "@/content/chios-activities";
 import {
   absoluteUrl,
   getCanonicalUrl,
@@ -157,6 +157,49 @@ function buildSingleActivitySchema(data: ChiosActivitiesPageData): SchemaObject 
   };
 }
 
+function buildGreekCourseSchema(data: ChiosActivitiesPageData): SchemaObject | null {
+  const canonicalPath = data.path;
+
+  if (data.key !== "greekCourses") {
+    return null;
+  }
+
+  const language = getLanguageForPath(canonicalPath);
+  const sectionText = data.sections
+    ?.flatMap((section) => section.text)
+    .join(" ");
+
+  return {
+    "@type": "Course",
+    "@id": schemaId(canonicalPath, "course"),
+    name: data.hero.title,
+    alternateName: data.hero.eyebrow,
+    url: getCanonicalUrl(canonicalPath),
+    description: data.hero.subtitle || data.seo.description,
+    inLanguage: language,
+    image: data.hero.image ? absoluteUrl(data.hero.image) : undefined,
+    text: sectionText,
+    provider: {
+      "@type": "Organization",
+      name: "Alexandria Institute",
+      url: "https://alexandria-institute.com",
+    },
+    about: [
+      {
+        "@id": schemaId("/chios-island/", "destination"),
+      },
+      {
+        "@id": schemaId(canonicalPath, "activity"),
+      },
+    ],
+    teaches: "Greek language and culture",
+    educationalLevel: "All levels",
+    courseMode: "Onsite",
+    subjectOf: {
+      "@id": webPageId(canonicalPath),
+    },
+  };
+}
 function buildActivitySectionsSchema(data: ChiosActivitiesPageData): SchemaObject | null {
   const canonicalPath = data.path;
 
@@ -314,6 +357,7 @@ export function buildChiosActivitiesSchema(data: ChiosActivitiesPageData) {
     hubItemList,
     ...(data.cards?.map(buildActivityCardSchema) || []),
     buildSingleActivitySchema(data),
+    buildGreekCourseSchema(data),
     buildActivitySectionsSchema(data),
     buildActivityGallerySchema(data),
     buildActivityCtaActionSchema(data),
@@ -321,4 +365,5 @@ export function buildChiosActivitiesSchema(data: ChiosActivitiesPageData) {
     buildActivityBreadcrumbs(data),
   ]);
 }
+
 
