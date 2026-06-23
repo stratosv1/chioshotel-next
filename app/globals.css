@@ -17679,12 +17679,49 @@ a.vh-btn.vh-btn--primary[href*="viber"],
     width: 100%;
   }
 }
+/* SCRATCH DESKTOP POSITION V2 */
+@media (min-width: 900px) {
+  .discount-box {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 380px !important;
+    column-gap: 36px !important;
+    align-items: center !important;
+  }
 
+  .discount-box > span,
+  .discount-box > h3,
+  .discount-box > p,
+  .discount-box > ul {
+    grid-column: 1 !important;
+  }
 
+  .discount-box > div:last-child {
+    grid-column: 2 !important;
+    grid-row: 1 / span 5 !important;
+    align-self: center !important;
+    justify-self: end !important;
+    width: 100% !important;
+    border-top: 0 !important;
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+  }
 
+  .discount-box > div:last-child > p {
+    text-align: center !important;
+    margin-bottom: 10px !important;
+  }
 
+  .discount-box #discountCodeForm {
+    margin-top: 0 !important;
+  }
+}
 
+@media (max-width: 899px) {
+  .discount-box {
+    display: block !important;
+  }
 
-
-
-
+  .discount-box #discountCodeForm {
+    margin-top: 16px !important;
+  }
+}

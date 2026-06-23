@@ -1,6 +1,7 @@
 ﻿"use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import type { PointerEvent } from "react";
 
 type DiscountRevealProps = {
   submitLabel: string;
@@ -8,28 +9,324 @@ type DiscountRevealProps = {
   code: string;
 };
 
-export function DiscountReveal({ submitLabel, successText, code }: DiscountRevealProps) {
-  const [isVisible, setIsVisible] = useState(false);
+type Locale = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
+
+const REVEAL_PERCENT = 58;
+
+const COPY: Record<
+  Locale,
+  {
+    title: string;
+    coverLine1: string;
+    coverLine2: string;
+    codeLabel: string;
+    hiddenNote: string;
+  }
+> = {
+  en: {
+    title: "Scratch to reveal your discount",
+    coverLine1: "Scratch to reveal",
+    coverLine2: "your discount",
+    codeLabel: "Direct booking code",
+    hiddenNote: "Scratch the card to reveal your 10% discount code.",
+  },
+  el: {
+    title: "Ξύσε για να δεις την έκπτωση",
+    coverLine1: "Ξύσε για να δεις",
+    coverLine2: "την έκπτωση",
+    codeLabel: "Κωδικός απευθείας κράτησης",
+    hiddenNote: "Ξύσε την κάρτα για να εμφανιστεί ο κωδικός έκπτωσης 10%.",
+  },
+  fr: {
+    title: "Grattez pour voir la réduction",
+    coverLine1: "Grattez pour voir",
+    coverLine2: "la réduction",
+    codeLabel: "Code de réservation directe",
+    hiddenNote: "Grattez la carte pour révéler votre code de réduction de 10%.",
+  },
+  de: {
+    title: "Rabatt freirubbeln",
+    coverLine1: "Freirubbeln",
+    coverLine2: "Rabatt sehen",
+    codeLabel: "Direktbuchungscode",
+    hiddenNote: "Rubbeln Sie die Karte frei, um Ihren 10%-Rabattcode zu sehen.",
+  },
+  it: {
+    title: "Gratta per vedere lo sconto",
+    coverLine1: "Gratta per vedere",
+    coverLine2: "lo sconto",
+    codeLabel: "Codice prenotazione diretta",
+    hiddenNote: "Gratta la card per rivelare il codice sconto del 10%.",
+  },
+  es: {
+    title: "Rasca para ver el descuento",
+    coverLine1: "Rasca para ver",
+    coverLine2: "el descuento",
+    codeLabel: "Código de reserva directa",
+    hiddenNote: "Rasca la tarjeta para revelar tu código de descuento del 10%.",
+  },
+  tr: {
+    title: "İndirimi görmek için kazıyın",
+    coverLine1: "İndirimi görmek",
+    coverLine2: "için kazıyın",
+    codeLabel: "Doğrudan rezervasyon kodu",
+    hiddenNote: "%10 indirim kodunuzu görmek için kartı kazıyın.",
+  },
+};
+
+function getLocaleFromPath(): Locale {
+  if (typeof window === "undefined") return "en";
+
+  const path = window.location.pathname.toLowerCase();
+
+  if (path === "/el" || path.startsWith("/el/")) return "el";
+  if (path === "/fr" || path.startsWith("/fr/")) return "fr";
+  if (path === "/de" || path.startsWith("/de/")) return "de";
+  if (path === "/it" || path.startsWith("/it/")) return "it";
+  if (path === "/es" || path.startsWith("/es/")) return "es";
+  if (path === "/tr" || path.startsWith("/tr/")) return "tr";
+
+  return "en";
+}
+
+export function DiscountReveal({ successText, code }: DiscountRevealProps) {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const cardRef = useRef<HTMLDivElement | null>(null);
+  const isDrawingRef = useRef(false);
+  const checkCounterRef = useRef(0);
+
+  const [isRevealed, setIsRevealed] = useState(false);
+  const [locale, setLocale] = useState<Locale>("en");
+
+  useEffect(() => {
+    setLocale(getLocaleFromPath());
+  }, []);
+
+  const text = COPY[locale];
+
+  const drawCover = useCallback(() => {
+    const canvas = canvasRef.current;
+    const card = cardRef.current;
+
+    if (!canvas || !card || isRevealed) return;
+
+    const rect = card.getBoundingClientRect();
+    const ratio = window.devicePixelRatio || 1;
+    const ctx = canvas.getContext("2d");
+
+    if (!ctx) return;
+
+    canvas.width = Math.max(1, Math.floor(rect.width * ratio));
+    canvas.height = Math.max(1, Math.floor(rect.height * ratio));
+    canvas.style.width = `${rect.width}px`;
+    canvas.style.height = `${rect.height}px`;
+
+    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    ctx.globalCompositeOperation = "source-over";
+
+    const gradient = ctx.createLinearGradient(0, 0, rect.width, rect.height);
+    gradient.addColorStop(0, "#b98618");
+    gradient.addColorStop(0.5, "#d9b76c");
+    gradient.addColorStop(1, "#916006");
+
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, rect.width, rect.height);
+
+    ctx.fillStyle = "rgba(255,255,255,0.15)";
+    for (let x = 0; x < rect.width; x += 16) {
+      ctx.fillRect(x, 0, 7, rect.height);
+    }
+
+    ctx.fillStyle = "#fffaf1";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    ctx.font = "700 17px Arial, sans-serif";
+    ctx.fillText(text.coverLine1, rect.width / 2, rect.height / 2 - 10);
+
+    ctx.font = "700 15px Arial, sans-serif";
+    ctx.fillText(text.coverLine2, rect.width / 2, rect.height / 2 + 14);
+  }, [isRevealed, text.coverLine1, text.coverLine2]);
+
+  useEffect(() => {
+    drawCover();
+
+    function onResize() {
+      drawCover();
+    }
+
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [drawCover]);
+
+  function scratch(clientX: number, clientY: number) {
+    const canvas = canvasRef.current;
+    if (!canvas || isRevealed) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+
+    ctx.globalCompositeOperation = "destination-out";
+    ctx.beginPath();
+    ctx.arc(x, y, 20, 0, Math.PI * 2);
+    ctx.fill();
+
+    checkCounterRef.current += 1;
+
+    if (checkCounterRef.current % 6 === 0) {
+      checkRevealPercent();
+    }
+  }
+
+  function checkRevealPercent() {
+    const canvas = canvasRef.current;
+    if (!canvas || isRevealed) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const pixels = imageData.data;
+    let transparentPixels = 0;
+
+    for (let i = 3; i < pixels.length; i += 4) {
+      if (pixels[i] === 0) transparentPixels += 1;
+    }
+
+    const percent = (transparentPixels / (pixels.length / 4)) * 100;
+
+    if (percent >= REVEAL_PERCENT) {
+      setIsRevealed(true);
+    }
+  }
+
+  function handlePointerDown(event: PointerEvent<HTMLCanvasElement>) {
+    if (isRevealed) return;
+    isDrawingRef.current = true;
+    event.currentTarget.setPointerCapture(event.pointerId);
+    scratch(event.clientX, event.clientY);
+  }
+
+  function handlePointerMove(event: PointerEvent<HTMLCanvasElement>) {
+    if (!isDrawingRef.current || isRevealed) return;
+    event.preventDefault();
+    scratch(event.clientX, event.clientY);
+  }
+
+  function handlePointerUp() {
+    isDrawingRef.current = false;
+    checkRevealPercent();
+  }
 
   return (
-    <div id="discountCodeForm">
-      <button
-        type="button"
-        className="vh-btn vh-btn--primary"
-        id="dc_submitBtn"
-        onClick={() => setIsVisible(true)}
+    <div
+      id="discountCodeForm"
+      style={{
+        width: "100%",
+        maxWidth: 360,
+        margin: "18px auto 0",
+      }}
+    >
+      <div
+        style={{
+          margin: "0 0 9px",
+          color: "#5e513f",
+          fontSize: 13,
+          fontWeight: 800,
+          lineHeight: 1.35,
+          textAlign: "center",
+        }}
       >
-        <span aria-hidden="true">🎁</span> {submitLabel}
-      </button>
+        🎁 {text.title}
+      </div>
 
-      {isVisible ? (
-        <div id="discountSuccess" className="discount-success" aria-live="polite">
-          <div id="discountSuccessText">{successText}</div>
-          <div id="discountCodeValue" className="discount-code-value">
-            {code}
+      <div
+        ref={cardRef}
+        aria-label={text.title}
+        style={{
+          position: "relative",
+          width: "100%",
+          height: 120,
+          border: "2px dashed rgba(142,102,7,.24)",
+          borderRadius: 18,
+          overflow: "hidden",
+          background:
+            "radial-gradient(circle at 20% 20%, rgba(255,255,255,.78), transparent 30%), linear-gradient(135deg, #fff6e5, #f2d79e)",
+          boxShadow: "0 10px 24px rgba(142,102,7,.10)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          textAlign: "center",
+          userSelect: "none",
+        }}
+      >
+        <div style={{ padding: "12px 16px" }}>
+          <div style={{ fontSize: 21, marginBottom: 3 }} aria-hidden="true">
+            🎁
+          </div>
+
+          <div
+            style={{
+              marginBottom: 5,
+              color: "#6f645b",
+              fontSize: 9,
+              fontWeight: 900,
+              letterSpacing: ".12em",
+              textTransform: "uppercase",
+            }}
+          >
+            {text.codeLabel}
+          </div>
+
+          <div
+            id="discountCodeValue"
+            style={{
+              color: "#8E6607",
+              fontFamily: "Georgia, serif",
+              fontSize: "clamp(27px, 8vw, 38px)",
+              fontWeight: 900,
+              letterSpacing: ".03em",
+              lineHeight: 1,
+            }}
+          >
+            {code || "WELCOME10"}
+          </div>
+
+          <div
+            style={{
+              marginTop: 7,
+              color: "#6f645b",
+              fontSize: 11,
+              fontWeight: 700,
+              lineHeight: 1.3,
+            }}
+          >
+            {isRevealed ? successText : text.hiddenNote}
           </div>
         </div>
-      ) : null}
+
+        {!isRevealed ? (
+          <canvas
+            ref={canvasRef}
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            onPointerCancel={handlePointerUp}
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              cursor: "grab",
+              touchAction: "none",
+            }}
+          />
+        ) : null}
+      </div>
 
       <div id="discountFeedback" className="discount-error" aria-live="polite" />
     </div>
