@@ -17894,3 +17894,58 @@ a.vh-btn.vh-btn--primary[href*="viber"],
     width: 100% !important;
   }
 }
+
+/* EMERGENCY MOBILE FIX: direct booking scratch section */
+@media (max-width: 900px) {
+  .b-card.b12.b-pad.discount-box {
+    display: block !important;
+    padding: 22px !important;
+    overflow: hidden !important;
+  }
+
+  .b-card.b12.b-pad.discount-box .discount-box-grid {
+    display: block !important;
+    grid-template-columns: none !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .b-card.b12.b-pad.discount-box .discount-box-grid > div {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .b-card.b12.b-pad.discount-box .discount-box-scratch {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-top: 18px !important;
+    justify-self: auto !important;
+  }
+
+  .b-card.b12.b-pad.discount-box .discount-box-scratch #discountCodeForm {
+    width: 100% !important;
+    max-width: 420px !important;
+    margin: 0 auto !important;
+  }
+
+  .b-card.b12.b-pad.discount-box .discount-badge {
+    display: inline-flex !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+    line-height: 1.35 !important;
+  }
+
+  .b-card.b12.b-pad.discount-box h3 {
+    font-size: clamp(28px, 9vw, 36px) !important;
+    line-height: 1.08 !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+  }
+
+  .b-card.b12.b-pad.discount-box p,
+  .b-card.b12.b-pad.discount-box li {
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+  }
+}
