@@ -1,4 +1,4 @@
-﻿import Image from "next/image";
+import Image from "next/image";
 import type { HomePageData } from "@/content/home";
 import { LastMinuteDeals } from "@/components/home/LastMinuteDeals";
 import { HomeMap } from "@/components/home/HomeMap";
@@ -234,62 +234,59 @@ export function HomePage({ data }: HomePageProps) {
                 </div>
               </article>
 
-              <article className="b-card b12 b-pad discount-box direct-booking-discount-box">
-  <div className="direct-booking-discount-grid">
-    <div className="direct-booking-discount-copy">
-      <span className="discount-badge">{data.location.discount.badge}</span>
+              <article className="b-card b12 b-pad discount-box">
+                <span className="discount-badge">{data.location.discount.badge}</span>
 
-      <h3
-        style={{
-          margin: "14px 0 10px",
-          fontFamily: "Georgia,serif",
-          fontSize: 28,
-          color: "#8E6607",
-          lineHeight: 1.1,
-          fontWeight: 700,
-        }}
-      >
-        {data.location.discount.title}
-      </h3>
+                <h3
+                  style={{
+                    margin: "14px 0 10px",
+                    fontFamily: "Georgia,serif",
+                    fontSize: 28,
+                    color: "#8E6607",
+                    lineHeight: 1.1,
+                    fontWeight: 700,
+                  }}
+                >
+                  {data.location.discount.title}
+                </h3>
 
-      <p
-        style={{
-          fontSize: 15,
-          color: "var(--vh-muted)",
-          lineHeight: 1.8,
-          margin: 0,
-        }}
-      >
-        {data.location.discount.text}
-      </p>
+                <p
+                  style={{
+                    fontSize: 15,
+                    color: "var(--vh-muted)",
+                    lineHeight: 1.8,
+                    margin: 0,
+                  }}
+                >
+                  {data.location.discount.text}
+                </p>
 
-      <ul className="vh-check-list">
-        {data.location.discount.benefits.map((benefit) => (
-          <li key={benefit}>{benefit}</li>
-        ))}
-      </ul>
+                <ul className="vh-check-list">
+                  {data.location.discount.benefits.map((benefit) => (
+                    <li key={benefit}>{benefit}</li>
+                  ))}
+                </ul>
 
-      <p
-        style={{
-          margin: "18px 0 0",
-          fontSize: 14,
-          fontWeight: 800,
-          color: "var(--vh-dark)",
-        }}
-      >
-        {data.location.discount.formIntro}
-      </p>
-    </div>
+                <div
+                  style={{
+                    marginTop: 20,
+                    borderTop: "1px solid rgba(142,102,7,.1)",
+                    paddingTop: 15,
+                    position: "relative",
+                    zIndex: 1,
+                  }}
+                >
+                  <p style={{ fontSize: 14, fontWeight: 700, color: "var(--vh-dark)" }}>
+                    {data.location.discount.formIntro}
+                  </p>
 
-    <div className="direct-booking-discount-scratch">
-      <DiscountReveal
-        submitLabel={data.location.discount.submitLabel}
-        successText={data.location.discount.successText}
-        code={data.location.discount.defaultCode || "WELCOME10"}
-      />
-    </div>
-  </div>
-</article>
+                  <DiscountReveal
+                    submitLabel={data.location.discount.submitLabel}
+                    successText={data.location.discount.successText}
+                    code={data.location.discount.defaultCode || "WELCOME10"}
+                  />
+                </div>
+              </article>
             </div>
 
             <div className="vh-location-copy">
@@ -579,6 +576,3 @@ export function HomePage({ data }: HomePageProps) {
     </>
   );
 }
-
-
-
