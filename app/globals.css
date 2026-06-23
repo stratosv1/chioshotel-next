@@ -17949,3 +17949,82 @@ a.vh-btn.vh-btn--primary[href*="viber"],
     overflow-wrap: normal !important;
   }
 }
+
+/* FINAL SAFE FIX: direct booking scratch card */
+.direct-booking-discount-box {
+  display: block !important;
+  overflow: hidden !important;
+}
+
+.direct-booking-discount-grid {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.direct-booking-discount-copy,
+.direct-booking-discount-scratch {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+
+.direct-booking-discount-copy * {
+  word-break: normal !important;
+  overflow-wrap: normal !important;
+  white-space: normal !important;
+}
+
+.direct-booking-discount-box .discount-badge {
+  display: inline-flex !important;
+  width: auto !important;
+  max-width: 100% !important;
+  white-space: normal !important;
+  line-height: 1.35 !important;
+}
+
+.direct-booking-discount-box h3 {
+  word-break: normal !important;
+  overflow-wrap: normal !important;
+  white-space: normal !important;
+}
+
+.direct-booking-discount-scratch {
+  margin-top: 18px !important;
+}
+
+.direct-booking-discount-scratch #discountCodeForm {
+  width: 100% !important;
+  max-width: 420px !important;
+  margin: 0 auto !important;
+}
+
+@media (min-width: 901px) {
+  .direct-booking-discount-grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 420px) !important;
+    gap: 32px !important;
+    align-items: center !important;
+  }
+
+  .direct-booking-discount-scratch {
+    margin-top: 0 !important;
+    justify-self: end !important;
+  }
+
+  .direct-booking-discount-scratch #discountCodeForm {
+    margin: 0 !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .direct-booking-discount-box {
+    padding: 22px !important;
+  }
+
+  .direct-booking-discount-box h3 {
+    font-size: clamp(28px, 8vw, 36px) !important;
+    line-height: 1.08 !important;
+  }
+}

@@ -234,18 +234,9 @@ export function HomePage({ data }: HomePageProps) {
                 </div>
               </article>
 
-              <article className="b-card b12 b-pad discount-box">
-  <div
-    className="discount-box-grid"
-    style={{
-      display: "grid",
-      gridTemplateColumns: "minmax(0, 1fr) minmax(320px, 420px)",
-      gap: 32,
-      alignItems: "center",
-      width: "100%",
-    }}
-  >
-    <div>
+              <article className="b-card b12 b-pad discount-box direct-booking-discount-box">
+  <div className="direct-booking-discount-grid">
+    <div className="direct-booking-discount-copy">
       <span className="discount-badge">{data.location.discount.badge}</span>
 
       <h3
@@ -290,15 +281,7 @@ export function HomePage({ data }: HomePageProps) {
       </p>
     </div>
 
-    <div
-      className="discount-box-scratch"
-      style={{
-        width: "100%",
-        maxWidth: 420,
-        justifySelf: "end",
-        alignSelf: "center",
-      }}
-    >
+    <div className="direct-booking-discount-scratch">
       <DiscountReveal
         submitLabel={data.location.discount.submitLabel}
         successText={data.location.discount.successText}
@@ -596,5 +579,6 @@ export function HomePage({ data }: HomePageProps) {
     </>
   );
 }
+
 
 
