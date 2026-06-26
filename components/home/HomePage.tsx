@@ -1,6 +1,6 @@
 ﻿import Image from "next/image";
 import type { HomePageData } from "@/content/home";
-import { LastMinuteDeals } from "@/components/home/LastMinuteDeals";
+import { LazyLastMinuteDeals } from "@/components/home/LazyLastMinuteDeals";
 import { HomeMap } from "@/components/home/HomeMap";
 import { DiscountReveal } from "@/components/home/DiscountReveal";
 import { HomeReviews } from "@/components/home/HomeReviews";
@@ -383,7 +383,7 @@ export function HomePage({ data }: HomePageProps) {
           </div>
         </section>
 
-        <LastMinuteDeals data={data.lastMinute} canonicalPath={data.seo.canonicalPath} />
+        <LazyLastMinuteDeals data={data.lastMinute} canonicalPath={data.seo.canonicalPath} />
 
         <section className="vh-section vh-section--tight" aria-labelledby="vh-reviews-title">
           <div className="vh-wrap">
