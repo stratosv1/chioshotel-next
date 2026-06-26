@@ -56,7 +56,7 @@ export default async function RootLayout({
       <body>
         <VoulamandisHeader />
         {children}
-        <VoulamandisFooter />
+        <VoulamandisFooter language={htmlLanguage as "en" | "el" | "fr" | "de" | "it" | "es" | "tr"} />
         <SpeedInsights />
         <Analytics />
       </body>

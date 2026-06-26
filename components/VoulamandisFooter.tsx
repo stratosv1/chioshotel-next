@@ -1,8 +1,4 @@
-﻿"use client";
-
 import { chiosActivityDetailPaths } from "@/content/chios-activities";
-
-import { usePathname } from "next/navigation";
 
 type LanguageCode = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
 
@@ -597,9 +593,8 @@ function getFooterGroups(language: LanguageCode) {
   ];
 }
 
-export function VoulamandisFooter() {
-  const pathname = usePathname() || "/";
-  const currentLanguage = getCurrentLanguage(pathname);
+export function VoulamandisFooter({ language = "en" }: { language?: LanguageCode }) {
+  const currentLanguage = language;
   const copy = footerCopy[currentLanguage];
   const footerGroups = getFooterGroups(currentLanguage);
   const year = new Date().getFullYear();
