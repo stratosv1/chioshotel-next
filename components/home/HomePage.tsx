@@ -348,30 +348,30 @@ export function HomePage({ data }: HomePageProps) {
               </article>
             </div>
 
-            <div className="vh-room-grid">
+            <div className="grid grid-cols-4 gap-[22px] max-[1180px]:grid-cols-2 max-[767px]:grid-cols-1 max-[767px]:gap-[10px] max-[767px]:p-0 max-[767px]:m-0">
               {data.roomsPreview.rooms.map((room) => (
-                <a className="vh-room-card" href={room.href} key={room.id}>
-                  <div className={`vh-room-image ${room.imageClass}`} aria-hidden="true">
-                    <div className="room-offer-stack">
-                      <span className="room-live-badge">{room.liveBadge}</span>
-                      <span className="room-direct-badge">{room.directBadge}</span>
+                <a className="w-full overflow-hidden rounded-[26px] border border-[rgba(154,107,63,.10)] bg-[#fffdfa] shadow-[var(--vh-shadow)] transition hover:-translate-y-1 hover:shadow-[var(--vh-shadow-strong)] flex flex-col max-[767px]:grid max-[767px]:grid-cols-[44%_56%] max-[767px]:min-h-[220px] max-[767px]:rounded-none max-[767px]:border-x-0 max-[767px]:shadow-none" href={room.href} key={room.id}>
+                  <div className={`relative aspect-[4/3] w-full overflow-hidden bg-[#e8ddcf] bg-cover bg-center max-[767px]:h-full max-[767px]:min-h-[220px] max-[767px]:aspect-auto ${room.imageClass}`} aria-hidden="true">
+                    <div className="absolute left-[10px] right-[10px] top-[10px] z-[5] flex items-start justify-between gap-2 max-[767px]:left-2 max-[767px]:right-2 max-[767px]:top-2 max-[767px]:gap-1.5">
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-br from-[#22c55e] to-[#16a34a] px-3 py-2 text-[11px] font-black text-white shadow-[0_8px_18px_rgba(0,0,0,.16)] before:h-2 before:w-2 before:rounded-full before:bg-[#bbf7d0] before:content-[''] max-[767px]:px-2 max-[767px]:py-1.5 max-[767px]:text-[9px]">{room.liveBadge}</span>
+                      <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-[rgba(240,253,244,.96)] px-2.5 py-[7px] text-[11px] font-black text-[#15803d] shadow-[0_8px_18px_rgba(0,0,0,.16)] max-[767px]:max-w-[56%] max-[767px]:overflow-hidden max-[767px]:text-ellipsis max-[767px]:px-2 max-[767px]:py-1.5 max-[767px]:text-[9px]">{room.directBadge}</span>
                     </div>
-                    <span className="room-bed-badge">{room.bedBadge}</span>
+                    <span className="absolute bottom-[10px] left-[10px] z-[2] inline-flex items-center gap-1.5 rounded-full bg-white/95 px-2.5 py-[7px] text-[11px] font-black text-[#3d3530] shadow-[0_8px_18px_rgba(0,0,0,.16)] max-[767px]:bottom-[9px] max-[767px]:left-2 max-[767px]:max-w-[calc(100%-16px)] max-[767px]:overflow-hidden max-[767px]:text-ellipsis max-[767px]:px-2 max-[767px]:py-1.5 max-[767px]:text-[9.5px]">{room.bedBadge}</span>
                   </div>
 
-                  <div className="vh-room-body">
-                    <h3>{room.title}</h3>
-                    <p>{room.description}</p>
+                  <div className="flex flex-1 flex-col p-6 max-[767px]:min-w-0 max-[767px]:p-[12px_10px]">
+                    <h3 className="m-0 mb-[10px] font-serif text-[28px] font-bold leading-[1.12] text-[#8E6607] max-[767px]:mb-[7px] max-[767px]:text-[25px] max-[767px]:leading-none max-[767px]:tracking-[-.025em]">{room.title}</h3>
+                    <p className="m-0 mb-[18px] flex-1 text-[15px] leading-[1.75] text-[#574B3F] max-[767px]:mb-2 max-[767px]:line-clamp-2 max-[767px]:text-[13px] max-[767px]:leading-[1.32]">{room.description}</p>
 
-                    <div className="vh-room-meta">
+                    <div className="mb-3 grid grid-cols-3 gap-2 max-[767px]:mb-[7px] max-[767px]:gap-[5px]">
                       {room.meta.map((item) => (
-                        <span key={item}>{item}</span>
+                        <span className="inline-flex min-h-[34px] items-center justify-center overflow-hidden text-ellipsis whitespace-nowrap rounded-full border border-[rgba(154,107,63,.10)] bg-[#f3eadf] px-2 text-center text-[11px] font-extrabold text-[#8E6607] max-[767px]:min-h-[26px] max-[767px]:px-[3px] max-[767px]:text-[8px] max-[767px]:leading-none">{item}</span>
                       ))}
                     </div>
 
-                    <div className="vh-room-amenities">
+                    <div className="mb-3 grid grid-cols-4 gap-2 max-[767px]:mb-2 max-[767px]:gap-1">
                       {room.amenities.map((item) => (
-                        <span key={item}>{item}</span>
+                        <span className="inline-flex min-h-[34px] items-center justify-center overflow-hidden text-ellipsis whitespace-nowrap rounded-full border border-[rgba(154,107,63,.10)] bg-[#f3eadf] px-2 text-center text-[11px] font-extrabold text-[#8E6607] max-[767px]:min-h-[26px] max-[767px]:px-[3px] max-[767px]:text-[8px] max-[767px]:leading-none">{item}</span>
                       ))}
                     </div>
 
@@ -580,6 +580,7 @@ export function HomePage({ data }: HomePageProps) {
     </>
   );
 }
+
 
 
 
