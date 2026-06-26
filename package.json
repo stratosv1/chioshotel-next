@@ -11,6 +11,7 @@
     "@vercel/speed-insights": "^2.0.0",
     "next": "latest",
     "nodemailer": "^8.0.10",
+    "pg": "^8.22.0",
     "postcss": "^8.5.15",
     "react": "latest",
     "react-dom": "latest",

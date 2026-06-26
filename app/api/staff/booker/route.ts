@@ -29,8 +29,8 @@ const roomMappings: RoomMapping[] = [
   { roomId: 268803, unitId: 2, label: "Room 6", categoryLabel: "Economy" },
   { roomId: 626129, unitId: 2, label: "Room 7", categoryLabel: "Ground Floor" },
   { roomId: 265595, unitId: 1, label: "Apartment 8", categoryLabel: "Family Apartment" },
-  { roomId: 265595, unitId: 2, label: "Apartment 9", categoryLabel: "Family Apartment" },
-  { roomId: 265595, unitId: 3, label: "Apartment 10", categoryLabel: "Family Apartment" },
+  { roomId: 265595, unitId: 2, label: "Apartment 9", categoryLabel: "Family Apartment" },  { roomId: 265595, unitId: 3, label: "Apartment 10", categoryLabel: "Family Apartment" },
+  { roomId: 345347, unitId: 1, label: "Apt 11", categoryLabel: "Apt 11" },
 ];
 
 function noStoreHeaders() {
@@ -126,7 +126,7 @@ async function exchangeInviteCode() {
   const inviteCode = process.env.BEDS24_INVITE_CODE;
 
   if (!inviteCode) {
-    throw new Error("Missing BEDS24_REFRESH_TOKEN or BEDS24_INVITE_CODE.");
+    throw new Error("Missing BEDS24_REFRESH_TOKEN, BEDS24_LONG_LIFE_TOKEN or BEDS24_INVITE_CODE.");
   }
 
   const response = await fetch(`${beds24BaseUrl}/authentication/setup`, {
@@ -148,7 +148,7 @@ async function exchangeInviteCode() {
 }
 
 async function getAccessToken() {
-  let refreshToken = process.env.BEDS24_REFRESH_TOKEN;
+  let refreshToken = process.env.BEDS24_REFRESH_TOKEN || process.env.BEDS24_LONG_LIFE_TOKEN;
 
   if (!refreshToken) {
     refreshToken = await exchangeInviteCode();
@@ -297,7 +297,7 @@ export async function GET(request: NextRequest) {
   return jsonResponse({
     rooms: roomMappings,
     hasPropertyId: Boolean(process.env.BEDS24_PROPERTY_ID),
-    hasRefreshToken: Boolean(process.env.BEDS24_REFRESH_TOKEN),
+    hasRefreshToken: Boolean(process.env.BEDS24_REFRESH_TOKEN || process.env.BEDS24_LONG_LIFE_TOKEN),
     hasInviteCode: Boolean(process.env.BEDS24_INVITE_CODE),
     viberLink: process.env.BEDS24_VIBER_LINK || "",
   });
@@ -464,3 +464,6 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+
+

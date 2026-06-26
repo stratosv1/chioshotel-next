@@ -1,6 +1,10 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
+
+const DAY_WIDTH = 96;
+const ROOM_WIDTH = 210;
+const ROW_HEIGHT = 78;
 
 type CalendarUnit = {
   room_id: string;
@@ -23,14 +27,44 @@ type AvailabilityRow = {
 
 type BookingRow = {
   booking_id: string;
+  book_id: string | null;
   room_id: string;
   unit_id: string;
   guest_name: string | null;
+  first_name: string | null;
+  last_name: string | null;
+  email: string | null;
+  phone: string | null;
+  mobile: string | null;
+  num_adult: number | null;
+  num_child: number | null;
   arrival: string;
   departure: string;
   status: string | null;
   referrer: string | null;
+  referrer_label: string | null;
+  channel: string | null;
+  source: string | null;
+  raw_booking: unknown;
   price: number | null;
+};
+
+type NewBookingDraft = {
+  roomId: string;
+  unitId: string;
+  roomLabel: string;
+  category: string;
+  arrival: string;
+  departure: string;
+  price: number | null;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  mobile: string;
+  adults: number;
+  children: number;
+  notes: string;
 };
 
 type CalendarPayload = {
@@ -61,6 +95,12 @@ function endOfMonth(date: Date) {
 function parseDate(value: string) {
   const [year, month, day] = value.split("-").map(Number);
   return new Date(year, month - 1, day);
+}
+
+function addDays(value: string, amount: number) {
+  const date = parseDate(value);
+  date.setDate(date.getDate() + amount);
+  return dateOnly(date);
 }
 
 function makeDays(start: string, end: string) {
@@ -100,48 +140,82 @@ function bookingColor(referrer: string | null) {
   const text = String(referrer || "").toLowerCase();
 
   if (text.includes("booking")) {
-    return "border-sky-300 bg-sky-100 text-sky-950";
+    return "border-sky-300 bg-sky-50 text-sky-950";
   }
 
   if (text.includes("expedia")) {
-    return "border-yellow-300 bg-yellow-100 text-yellow-950";
+    return "border-amber-300 bg-amber-50 text-amber-950";
   }
 
   if (text.includes("direct")) {
-    return "border-emerald-300 bg-emerald-100 text-emerald-950";
+    return "border-emerald-300 bg-emerald-50 text-emerald-950";
   }
 
-  return "border-violet-300 bg-violet-100 text-violet-950";
+  return "border-stone-300 bg-stone-50 text-stone-950";
 }
 
-function unitColor(category: string) {
+function unitStyle(category: string) {
   const text = category.toLowerCase();
 
   if (text.includes("economy")) {
-    return "from-emerald-500 to-emerald-600";
+    return "border-emerald-200 bg-emerald-50 text-emerald-950";
   }
 
   if (text.includes("ground")) {
-    return "from-orange-500 to-orange-600";
+    return "border-orange-200 bg-orange-50 text-orange-950";
   }
 
   if (text.includes("first")) {
-    return "from-blue-500 to-blue-600";
+    return "border-blue-200 bg-blue-50 text-blue-950";
   }
 
   if (text.includes("apt 11")) {
-    return "from-pink-600 to-pink-700";
+    return "border-rose-200 bg-rose-50 text-rose-950";
   }
 
-  return "from-violet-500 to-violet-600";
+  return "border-violet-200 bg-violet-50 text-violet-950";
+}
+
+function isCancelled(status: string | null) {
+  const value = String(status || "").toLowerCase();
+  return value.includes("cancel") || value.includes("deleted");
 }
 
 function isBookingOnDate(booking: BookingRow, date: string) {
+  if (isCancelled(booking.status)) return false;
   return booking.arrival <= date && booking.departure > date;
 }
 
-function isBookingStart(booking: BookingRow, date: string) {
-  return booking.arrival === date;
+function clampDate(value: string, min: string, maxExclusive: string) {
+  if (value < min) return min;
+  if (value > maxExclusive) return maxExclusive;
+  return value;
+}
+
+function getBookingBarPosition(booking: BookingRow, days: string[]) {
+  if (days.length === 0) return null;
+
+  const rangeStart = days[0];
+  const rangeEndExclusive = addDays(days[days.length - 1], 1);
+
+  const visibleStart = clampDate(booking.arrival, rangeStart, rangeEndExclusive);
+  const visibleEnd = clampDate(booking.departure, rangeStart, rangeEndExclusive);
+
+  const startIndex = days.indexOf(visibleStart);
+  let endIndex = days.indexOf(visibleEnd);
+
+  if (startIndex === -1) return null;
+  if (endIndex === -1) {
+    endIndex = visibleEnd >= rangeEndExclusive ? days.length : startIndex + 1;
+  }
+
+  const span = Math.max(0, endIndex - startIndex);
+  if (span <= 0) return null;
+
+  return {
+    left: startIndex * DAY_WIDTH + 4,
+    width: span * DAY_WIDTH - 8,
+  };
 }
 
 async function readCalendarPayload(response: Response) {
@@ -175,6 +249,9 @@ export default function CalendarApp() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedBooking, setSelectedBooking] = useState<BookingRow | null>(null);
+  const [newBooking, setNewBooking] = useState<NewBookingDraft | null>(null);
+  const [newBookingSaving, setNewBookingSaving] = useState(false);
+  const [newBookingError, setNewBookingError] = useState("");
 
   const range = useMemo(() => {
     const start = dateOnly(startOfMonth(anchorMonth));
@@ -239,18 +316,20 @@ export default function CalendarApp() {
   const bookingsByUnit = useMemo(() => {
     const map = new Map<string, BookingRow[]>();
 
-    data?.bookings.forEach((booking) => {
-      const key = unitKey(booking.room_id, booking.unit_id);
-      const list = map.get(key) || [];
-      list.push(booking);
-      map.set(key, list);
-    });
+    data?.bookings
+      .filter((booking) => !isCancelled(booking.status))
+      .forEach((booking) => {
+        const key = unitKey(booking.room_id, booking.unit_id);
+        const list = map.get(key) || [];
+        list.push(booking);
+        map.set(key, list);
+      });
 
     return map;
   }, [data]);
 
   const stats = useMemo(() => {
-    const bookings = data?.bookings || [];
+    const bookings = (data?.bookings || []).filter((booking) => !isCancelled(booking.status));
     const arrivals = bookings.filter(
       (booking) => booking.arrival >= range.start && booking.arrival <= range.end,
     ).length;
@@ -281,103 +360,184 @@ export default function CalendarApp() {
     setAnchorMonth(startOfMonth(new Date()));
   }
 
+  function openNewBooking(unit: CalendarUnit, day: string, price: number | null) {
+    setNewBookingError("");
+    setNewBooking({
+      roomId: unit.room_id,
+      unitId: unit.unit_id,
+      roomLabel: unit.display_name,
+      category: unit.category,
+      arrival: day,
+      departure: addDays(day, 1),
+      price,
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      mobile: "",
+      adults: 2,
+      children: 0,
+      notes: "",
+    });
+  }
+
+  async function submitNewBooking() {
+    if (!newBooking || newBookingSaving) return;
+
+    setNewBookingSaving(true);
+    setNewBookingError("");
+
+    try {
+      const response = await fetch("/api/staff/booker", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
+        cache: "no-store",
+        body: JSON.stringify({
+          roomId: Number(newBooking.roomId),
+          unitId: Number(newBooking.unitId),
+          arrival: newBooking.arrival,
+          departure: newBooking.departure,
+          firstName: newBooking.firstName,
+          lastName: newBooking.lastName,
+          email: newBooking.email,
+          phone: newBooking.phone,
+          mobile: newBooking.mobile,
+          adults: Number(newBooking.adults || 1),
+          children: Number(newBooking.children || 0),
+          price: newBooking.price ?? "",
+          notes: newBooking.notes,
+          comments: newBooking.notes,
+          referrer: "Staff Direct",
+          language: "en",
+        }),
+      });
+
+      const text = await response.text();
+      let result: any = null;
+
+      try {
+        result = JSON.parse(text);
+      } catch {
+        result = null;
+      }
+
+      if (!response.ok) {
+        throw new Error(result?.message || text || `Booking error ${response.status}`);
+      }
+
+      await fetch("/api/staff/calendar/sync", {
+        method: "POST",
+        credentials: "same-origin",
+        cache: "no-store",
+      }).catch(() => null);
+
+      alert(`Booking created in Beds24${result?.bookingId ? `: ${result.bookingId}` : ""}`);
+      setNewBooking(null);
+      window.location.reload();
+    } catch (error) {
+      setNewBookingError(error instanceof Error ? error.message : "Unknown booking error.");
+    } finally {
+      setNewBookingSaving(false);
+    }
+  }
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100">
+    <main className="min-h-screen bg-[#f7f3ea] text-slate-800">
       <div className="mx-auto flex min-h-screen w-full max-w-[1800px] flex-col">
-        <header className="sticky top-0 z-30 border-b border-white/10 bg-slate-950/90 px-4 py-4 backdrop-blur-xl sm:px-6">
+        <header className="sticky top-0 z-30 border-b border-stone-200 bg-white/95 px-4 py-4 shadow-sm backdrop-blur-xl sm:px-6">
           <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
             <div>
               <a
                 href="/staff"
-                className="mb-3 inline-flex rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-black text-slate-200 transition hover:bg-white/10"
+                className="mb-3 inline-flex rounded-full border border-stone-200 bg-stone-50 px-3 py-1.5 text-xs font-black text-stone-700 transition hover:bg-stone-100"
               >
                 ← Επιστροφή στο Staff
               </a>
 
               <div className="flex items-center gap-3">
-                <div className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-cyan-400 to-emerald-400 text-2xl shadow-lg shadow-cyan-500/20">
-                  🏨
+                <div className="grid h-12 w-12 place-items-center rounded-2xl border border-emerald-200 bg-emerald-50 text-2xl text-emerald-800 shadow-sm">
+                  🏡
                 </div>
                 <div>
-                  <h1 className="text-2xl font-black tracking-tight text-white sm:text-3xl">
-                    Hotel Calendar
+                  <h1 className="text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">
+                    Staff Calendar
                   </h1>
-                  <p className="text-sm font-bold text-slate-400">
-                    Modern PMS view · rooms · availability · bookings
+                  <p className="text-sm font-bold text-slate-500">
+                    Voulamandis House · availability · bookings · live rates
                   </p>
                 </div>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-5 xl:min-w-[760px]">
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
-                <div className="text-xs font-black uppercase text-slate-400">Units</div>
-                <div className="mt-1 text-2xl font-black text-white">{stats.units}</div>
+              <div className="rounded-2xl border border-stone-200 bg-white p-3 shadow-sm">
+                <div className="text-xs font-black uppercase text-slate-500">Units</div>
+                <div className="mt-1 text-2xl font-black text-slate-950">{stats.units}</div>
               </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
-                <div className="text-xs font-black uppercase text-slate-400">Bookings</div>
-                <div className="mt-1 text-2xl font-black text-white">{stats.bookings}</div>
+              <div className="rounded-2xl border border-stone-200 bg-white p-3 shadow-sm">
+                <div className="text-xs font-black uppercase text-slate-500">Bookings</div>
+                <div className="mt-1 text-2xl font-black text-slate-950">{stats.bookings}</div>
               </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
-                <div className="text-xs font-black uppercase text-slate-400">Arrivals</div>
-                <div className="mt-1 text-2xl font-black text-emerald-300">{stats.arrivals}</div>
+              <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-3 shadow-sm">
+                <div className="text-xs font-black uppercase text-emerald-700">Arrivals</div>
+                <div className="mt-1 text-2xl font-black text-emerald-800">{stats.arrivals}</div>
               </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
-                <div className="text-xs font-black uppercase text-slate-400">Departures</div>
-                <div className="mt-1 text-2xl font-black text-rose-300">{stats.departures}</div>
+              <div className="rounded-2xl border border-rose-200 bg-rose-50 p-3 shadow-sm">
+                <div className="text-xs font-black uppercase text-rose-700">Departures</div>
+                <div className="mt-1 text-2xl font-black text-rose-800">{stats.departures}</div>
               </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
-                <div className="text-xs font-black uppercase text-slate-400">Prices</div>
-                <div className="mt-1 text-2xl font-black text-amber-300">{stats.availablePrices}</div>
+              <div className="rounded-2xl border border-amber-200 bg-amber-50 p-3 shadow-sm">
+                <div className="text-xs font-black uppercase text-amber-700">Prices</div>
+                <div className="mt-1 text-2xl font-black text-amber-800">{stats.availablePrices}</div>
               </div>
             </div>
           </div>
         </header>
 
-        <section className="border-b border-white/10 bg-slate-900/70 px-4 py-3 sm:px-6">
+        <section className="border-b border-stone-200 bg-[#fbfaf6] px-4 py-3 sm:px-6">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={previousMonth}
-                className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-black text-white transition hover:bg-white/10"
+                className="rounded-2xl border border-stone-200 bg-white px-4 py-2 text-sm font-black text-slate-700 shadow-sm transition hover:bg-stone-50"
               >
                 ←
               </button>
               <button
                 type="button"
                 onClick={goToday}
-                className="rounded-2xl border border-cyan-300/30 bg-cyan-300/10 px-4 py-2 text-sm font-black text-cyan-100 transition hover:bg-cyan-300/20"
+                className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-black text-emerald-800 shadow-sm transition hover:bg-emerald-100"
               >
                 Today
               </button>
               <button
                 type="button"
                 onClick={nextMonth}
-                className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-black text-white transition hover:bg-white/10"
+                className="rounded-2xl border border-stone-200 bg-white px-4 py-2 text-sm font-black text-slate-700 shadow-sm transition hover:bg-stone-50"
               >
                 →
               </button>
             </div>
 
-            <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-center">
-              <div className="text-lg font-black capitalize text-white">{monthLabel(anchorMonth)}</div>
-              <div className="text-xs font-bold text-slate-400">
+            <div className="rounded-2xl border border-stone-200 bg-white px-4 py-3 text-center shadow-sm">
+              <div className="text-lg font-black capitalize text-slate-950">{monthLabel(anchorMonth)}</div>
+              <div className="text-xs font-bold text-slate-500">
                 {range.start} → {range.end}
               </div>
             </div>
 
             <div className="flex flex-wrap gap-2 text-xs font-black">
-              <span className="rounded-full border border-sky-300/30 bg-sky-300/10 px-3 py-2 text-sky-100">
+              <span className="rounded-full border border-sky-200 bg-sky-50 px-3 py-2 text-sky-800">
                 Booking.com
               </span>
-              <span className="rounded-full border border-yellow-300/30 bg-yellow-300/10 px-3 py-2 text-yellow-100">
+              <span className="rounded-full border border-amber-200 bg-amber-50 px-3 py-2 text-amber-800">
                 Expedia
               </span>
-              <span className="rounded-full border border-emerald-300/30 bg-emerald-300/10 px-3 py-2 text-emerald-100">
+              <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-2 text-emerald-800">
                 Direct
               </span>
-              <span className="rounded-full border border-violet-300/30 bg-violet-300/10 px-3 py-2 text-violet-100">
+              <span className="rounded-full border border-stone-200 bg-stone-50 px-3 py-2 text-stone-700">
                 Other
               </span>
             </div>
@@ -386,144 +546,179 @@ export default function CalendarApp() {
 
         {loading ? (
           <section className="grid flex-1 place-items-center p-8">
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-8 text-center shadow-2xl">
-              <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-cyan-300/20 border-t-cyan-300" />
-              <div className="text-lg font-black text-white">Loading calendar...</div>
-              <div className="mt-1 text-sm font-bold text-slate-400">Διαβάζω τη Neon βάση.</div>
+            <div className="rounded-3xl border border-stone-200 bg-white p-8 text-center shadow-sm">
+              <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-emerald-100 border-t-emerald-500" />
+              <div className="text-lg font-black text-slate-950">Loading calendar...</div>
+              <div className="mt-1 text-sm font-bold text-slate-500">Διαβάζω τη Neon βάση.</div>
             </div>
           </section>
         ) : error ? (
           <section className="grid flex-1 place-items-center p-8">
-            <div className="max-w-xl rounded-3xl border border-rose-300/20 bg-rose-950/40 p-8 text-center shadow-2xl">
+            <div className="max-w-xl rounded-3xl border border-rose-200 bg-rose-50 p-8 text-center shadow-sm">
               <div className="text-4xl">⚠️</div>
-              <h2 className="mt-3 text-xl font-black text-white">Calendar error</h2>
-              <p className="mt-2 whitespace-pre-wrap break-words text-sm font-bold text-rose-100">
+              <h2 className="mt-3 text-xl font-black text-rose-950">Calendar error</h2>
+              <p className="mt-2 whitespace-pre-wrap break-words text-sm font-bold text-rose-800">
                 {error}
               </p>
             </div>
           </section>
         ) : (
-          <section className="flex-1 overflow-hidden">
-            <div className="h-full overflow-auto">
-              <div
-                className="grid min-w-max"
-                style={{
-                  gridTemplateColumns: `210px repeat(${days.length}, 96px)`,
-                }}
-              >
-                <div className="sticky left-0 top-0 z-20 border-b border-r border-white/10 bg-slate-900 p-3 text-sm font-black text-white">
-                  Room / Unit
+          <section className="flex-1 overflow-hidden bg-[#f7f3ea]">
+            <div className="h-full overflow-auto p-4">
+              <div className="min-w-max overflow-hidden rounded-3xl border border-stone-200 bg-white shadow-sm">
+                <div className="flex">
+                  <div
+                    className="sticky left-0 top-0 z-30 border-b border-r border-stone-200 bg-stone-100 p-3 text-sm font-black text-slate-900"
+                    style={{ width: ROOM_WIDTH, minWidth: ROOM_WIDTH }}
+                  >
+                    Room / Unit
+                  </div>
+
+                  <div
+                    className="grid"
+                    style={{
+                      width: days.length * DAY_WIDTH,
+                      gridTemplateColumns: `repeat(${days.length}, ${DAY_WIDTH}px)`,
+                    }}
+                  >
+                    {days.map((day) => {
+                      const label = shortDayLabel(day);
+                      const isToday = day === dateOnly(new Date());
+
+                      return (
+                        <div
+                          key={day}
+                          className={[
+                            "sticky top-0 z-20 border-b border-r border-stone-200 p-2 text-center",
+                            isToday
+                              ? "bg-emerald-100 text-emerald-950"
+                              : "bg-stone-50 text-slate-700",
+                          ].join(" ")}
+                        >
+                          <div className="text-base font-black">{label.day}</div>
+                          <div className="text-[10px] font-black uppercase opacity-70">
+                            {label.week}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-
-                {days.map((day) => {
-                  const label = shortDayLabel(day);
-                  const isToday = day === dateOnly(new Date());
-
-                  return (
-                    <div
-                      key={day}
-                      className={[
-                        "sticky top-0 z-10 border-b border-r border-white/10 p-2 text-center",
-                        isToday ? "bg-cyan-500 text-white" : "bg-slate-900 text-slate-200",
-                      ].join(" ")}
-                    >
-                      <div className="text-base font-black">{label.day}</div>
-                      <div className="text-[10px] font-black uppercase opacity-80">{label.week}</div>
-                    </div>
-                  );
-                })}
 
                 {(data?.units || []).map((unit) => {
                   const key = unitKey(unit.room_id, unit.unit_id);
                   const unitBookings = bookingsByUnit.get(key) || [];
 
                   return (
-                    <div key={key} className="contents">
+                    <div key={key} className="flex">
                       <div
-                        className={`sticky left-0 z-10 border-b border-r border-white/10 bg-gradient-to-br ${unitColor(
+                        className={`sticky left-0 z-10 border-b border-r p-3 shadow-sm ${unitStyle(
                           unit.category,
-                        )} p-3 shadow-xl shadow-slate-950/20`}
+                        )}`}
+                        style={{ width: ROOM_WIDTH, minWidth: ROOM_WIDTH, height: ROW_HEIGHT }}
                       >
-                        <div className="text-sm font-black text-white">{unit.display_name}</div>
-                        <div className="mt-1 text-[11px] font-bold text-white/85">{unit.category}</div>
+                        <div className="text-sm font-black">{unit.display_name}</div>
+                        <div className="mt-1 text-[11px] font-bold opacity-80">{unit.category}</div>
                         <div className="mt-2 flex flex-wrap gap-1">
                           {unit.floor ? (
-                            <span className="rounded-full bg-white/20 px-2 py-1 text-[10px] font-black text-white">
+                            <span className="rounded-full bg-white/70 px-2 py-1 text-[10px] font-black">
                               {unit.floor}
                             </span>
                           ) : null}
                           {unit.max_guests ? (
-                            <span className="rounded-full bg-white/20 px-2 py-1 text-[10px] font-black text-white">
+                            <span className="rounded-full bg-white/70 px-2 py-1 text-[10px] font-black">
                               {unit.max_guests} pax
                             </span>
                           ) : null}
                         </div>
                       </div>
 
-                      {days.map((day) => {
-                        const booking = unitBookings.find((item) => isBookingOnDate(item, day));
-                        const availability = availabilityMap.get(`${key}:${day}`);
+                      <div
+                        className="relative"
+                        style={{
+                          width: days.length * DAY_WIDTH,
+                          minWidth: days.length * DAY_WIDTH,
+                          height: ROW_HEIGHT,
+                        }}
+                      >
+                        <div
+                          className="absolute inset-0 grid"
+                          style={{
+                            gridTemplateColumns: `repeat(${days.length}, ${DAY_WIDTH}px)`,
+                          }}
+                        >
+                          {days.map((day) => {
+                            const booking = unitBookings.find((item) => isBookingOnDate(item, day));
+                            const availability = availabilityMap.get(`${key}:${day}`);
+                            const price =
+                              availability?.available && Number(availability.price || 0) > 0
+                                ? Number(availability.price)
+                                : null;
 
-                        if (booking) {
-                          const starts = isBookingStart(booking, day);
+                            return (
+                              <button
+                                key={`${key}-${day}`}
+                                type="button"
+                                onClick={() => {
+                                  if (!booking && price) {
+                                    openNewBooking(unit, day, price);
+                                  }
+                                }}
+                                className={[
+                                  "grid border-b border-r border-stone-200 p-1 text-center",
+                                  booking
+                                    ? "bg-white"
+                                    : price
+                                      ? "place-items-center bg-lime-50 text-lime-900 transition hover:bg-lime-100 hover:ring-2 hover:ring-emerald-300"
+                                      : "place-items-center bg-white text-stone-300",
+                                ].join(" ")}
+                              >
+                                {!booking && price ? (
+                                  <div className="rounded-xl border border-lime-200 bg-white px-2 py-1 text-xs font-black shadow-sm">
+                                    €{price.toFixed(0)}
+                                  </div>
+                                ) : null}
 
-                          return (
-                            <button
-                              key={`${key}-${day}`}
-                              type="button"
-                              onClick={() => setSelectedBooking(booking)}
-                              className={[
-                                "relative min-h-[72px] border-b border-r border-white/10 p-1 text-left transition hover:brightness-110",
-                                bookingColor(booking.referrer),
-                              ].join(" ")}
-                            >
-                              {starts ? (
-                                <div className="h-full rounded-xl border border-current/20 bg-white/35 p-2">
-                                  <div className="truncate text-xs font-black">
-                                    {booking.guest_name || "Guest"}
-                                  </div>
-                                  <div className="mt-1 truncate text-[10px] font-black opacity-80">
-                                    {booking.referrer || "Other"}
-                                  </div>
-                                  <div className="mt-1 text-[10px] font-black opacity-80">
-                                    {booking.arrival.slice(5)} → {booking.departure.slice(5)}
-                                  </div>
+                                {!booking && !price ? (
+                                  <div className="text-[10px] font-black text-stone-200">—</div>
+                                ) : null}
+                              </button>
+                            );
+                          })}
+                        </div>
+
+                        <div className="pointer-events-none absolute inset-0">
+                          {unitBookings.map((booking) => {
+                            const position = getBookingBarPosition(booking, days);
+                            if (!position) return null;
+
+                            return (
+                              <button
+                                key={booking.booking_id}
+                                type="button"
+                                onClick={() => setSelectedBooking(booking)}
+                                className={[
+                                  "pointer-events-auto absolute top-2 h-[58px] overflow-hidden rounded-2xl border px-3 py-2 text-left shadow-sm transition hover:brightness-95",
+                                  bookingColor(booking.referrer),
+                                ].join(" ")}
+                                style={{
+                                  left: position.left,
+                                  width: position.width,
+                                }}
+                              >
+                                <div className="truncate text-sm font-black">
+                                  {booking.guest_name || "Guest"}
                                 </div>
-                              ) : (
-                                <div className="grid h-full place-items-center text-[10px] font-black opacity-70">
-                                  stay
+                                <div className="mt-1 truncate text-[10px] font-black opacity-75">
+                                  {(booking.referrer || "Other").toLowerCase()} ·{" "}
+                                  {booking.arrival.slice(5)} → {booking.departure.slice(5)} · ID{" "}
+                                  {booking.booking_id}
                                 </div>
-                              )}
-                            </button>
-                          );
-                        }
-
-                        if (availability?.available && Number(availability.price || 0) > 0) {
-                          return (
-                            <div
-                              key={`${key}-${day}`}
-                              className="grid min-h-[72px] place-items-center border-b border-r border-white/10 bg-lime-100 p-1 text-lime-950"
-                            >
-                              <div className="rounded-xl border border-lime-700/20 bg-white/70 px-2 py-1 text-xs font-black">
-                                €{Number(availability.price).toFixed(0)}
-                              </div>
-                            </div>
-                          );
-                        }
-
-                        return (
-                          <div
-                            key={`${key}-${day}`}
-                            className="min-h-[72px] border-b border-r border-white/10 bg-slate-900/70 p-1"
-                          >
-                            {availability?.reason ? (
-                              <div className="grid h-full place-items-center text-[10px] font-black uppercase text-slate-600">
-                                {availability.reason}
-                              </div>
-                            ) : null}
-                          </div>
-                        );
-                      })}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
                     </div>
                   );
                 })}
@@ -532,12 +727,12 @@ export default function CalendarApp() {
 
             {data?.units.length === 0 ? (
               <div className="p-8">
-                <div className="rounded-3xl border border-amber-300/20 bg-amber-950/30 p-8 text-center">
+                <div className="rounded-3xl border border-amber-200 bg-amber-50 p-8 text-center shadow-sm">
                   <div className="text-4xl">🗄️</div>
-                  <h2 className="mt-3 text-xl font-black text-white">
+                  <h2 className="mt-3 text-xl font-black text-amber-950">
                     Δεν υπάρχουν units στη Neon βάση.
                   </h2>
-                  <p className="mt-2 text-sm font-bold text-amber-100">
+                  <p className="mt-2 text-sm font-bold text-amber-800">
                     Πρώτα πρέπει να υπάρχει το staff_units seed.
                   </p>
                 </div>
@@ -547,13 +742,157 @@ export default function CalendarApp() {
         )}
       </div>
 
+      {newBooking ? (
+        <div
+          className="fixed inset-0 z-50 grid place-items-center bg-slate-950/40 p-4 backdrop-blur"
+          onClick={() => setNewBooking(null)}
+        >
+          <div
+            className="w-full max-w-xl rounded-3xl border border-stone-200 bg-white p-5 text-slate-950 shadow-2xl"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <div className="text-xs font-black uppercase text-emerald-700">New Booking</div>
+                <h2 className="mt-1 text-2xl font-black">{newBooking.roomLabel}</h2>
+                <p className="mt-1 text-sm font-bold text-slate-500">
+                  {newBooking.arrival} → {newBooking.departure} · €{newBooking.price ?? "—"}
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setNewBooking(null)}
+                className="grid h-10 w-10 place-items-center rounded-full bg-stone-100 text-xl font-black"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              <label className="block">
+                <span className="text-xs font-black uppercase text-slate-500">First name</span>
+                <input
+                  value={newBooking.firstName}
+                  onChange={(event) => setNewBooking({ ...newBooking, firstName: event.target.value })}
+                  className="mt-1 w-full rounded-2xl border border-stone-200 px-4 py-3 text-sm font-bold outline-none focus:border-emerald-400"
+                />
+              </label>
+
+              <label className="block">
+                <span className="text-xs font-black uppercase text-slate-500">Last name</span>
+                <input
+                  value={newBooking.lastName}
+                  onChange={(event) => setNewBooking({ ...newBooking, lastName: event.target.value })}
+                  className="mt-1 w-full rounded-2xl border border-stone-200 px-4 py-3 text-sm font-bold outline-none focus:border-emerald-400"
+                />
+              </label>
+
+              <label className="block">
+                <span className="text-xs font-black uppercase text-slate-500">Arrival</span>
+                <input
+                  type="date"
+                  value={newBooking.arrival}
+                  onChange={(event) => setNewBooking({ ...newBooking, arrival: event.target.value })}
+                  className="mt-1 w-full rounded-2xl border border-stone-200 px-4 py-3 text-sm font-bold outline-none focus:border-emerald-400"
+                />
+              </label>
+
+              <label className="block">
+                <span className="text-xs font-black uppercase text-slate-500">Departure</span>
+                <input
+                  type="date"
+                  value={newBooking.departure}
+                  onChange={(event) => setNewBooking({ ...newBooking, departure: event.target.value })}
+                  className="mt-1 w-full rounded-2xl border border-stone-200 px-4 py-3 text-sm font-bold outline-none focus:border-emerald-400"
+                />
+              </label>
+
+              <label className="block">
+                <span className="text-xs font-black uppercase text-slate-500">Email</span>
+                <input
+                  type="email"
+                  value={newBooking.email}
+                  onChange={(event) => setNewBooking({ ...newBooking, email: event.target.value })}
+                  className="mt-1 w-full rounded-2xl border border-stone-200 px-4 py-3 text-sm font-bold outline-none focus:border-emerald-400"
+                />
+              </label>
+
+              <label className="block">
+                <span className="text-xs font-black uppercase text-slate-500">Mobile</span>
+                <input
+                  value={newBooking.mobile}
+                  onChange={(event) => setNewBooking({ ...newBooking, mobile: event.target.value })}
+                  className="mt-1 w-full rounded-2xl border border-stone-200 px-4 py-3 text-sm font-bold outline-none focus:border-emerald-400"
+                />
+              </label>
+
+              <label className="block">
+                <span className="text-xs font-black uppercase text-slate-500">Adults</span>
+                <input
+                  type="number"
+                  min="1"
+                  value={newBooking.adults}
+                  onChange={(event) => setNewBooking({ ...newBooking, adults: Number(event.target.value) })}
+                  className="mt-1 w-full rounded-2xl border border-stone-200 px-4 py-3 text-sm font-bold outline-none focus:border-emerald-400"
+                />
+              </label>
+
+              <label className="block">
+                <span className="text-xs font-black uppercase text-slate-500">Children</span>
+                <input
+                  type="number"
+                  min="0"
+                  value={newBooking.children}
+                  onChange={(event) => setNewBooking({ ...newBooking, children: Number(event.target.value) })}
+                  className="mt-1 w-full rounded-2xl border border-stone-200 px-4 py-3 text-sm font-bold outline-none focus:border-emerald-400"
+                />
+              </label>
+            </div>
+
+            <label className="mt-3 block">
+              <span className="text-xs font-black uppercase text-slate-500">Notes</span>
+              <textarea
+                value={newBooking.notes}
+                onChange={(event) => setNewBooking({ ...newBooking, notes: event.target.value })}
+                className="mt-1 min-h-24 w-full rounded-2xl border border-stone-200 px-4 py-3 text-sm font-bold outline-none focus:border-emerald-400"
+              />
+            </label>
+
+            {newBookingError ? (
+              <div className="mt-3 rounded-2xl border border-rose-200 bg-rose-50 p-3 text-sm font-bold text-rose-800">
+                {newBookingError}
+              </div>
+            ) : null}
+
+            <div className="mt-5 grid gap-2 sm:grid-cols-2">
+              <button
+                type="button"
+                onClick={() => setNewBooking(null)}
+                className="rounded-2xl bg-stone-100 px-4 py-3 text-sm font-black text-slate-700"
+              >
+                Cancel
+              </button>
+
+              <button
+                type="button"
+                disabled={newBookingSaving}
+                onClick={submitNewBooking}
+                className="rounded-2xl bg-emerald-700 px-4 py-3 text-sm font-black text-white disabled:opacity-50"
+              >
+                {newBookingSaving ? "Saving..." : "Create booking"}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
       {selectedBooking ? (
         <div
-          className="fixed inset-0 z-50 grid place-items-center bg-slate-950/80 p-4 backdrop-blur"
+          className="fixed inset-0 z-50 grid place-items-center bg-slate-950/40 p-4 backdrop-blur"
           onClick={() => setSelectedBooking(null)}
         >
           <div
-            className="w-full max-w-lg rounded-3xl border border-white/10 bg-white p-5 text-slate-950 shadow-2xl"
+            className="w-full max-w-lg rounded-3xl border border-stone-200 bg-white p-5 text-slate-950 shadow-2xl"
             onClick={(event) => event.stopPropagation()}
           >
             <div className="flex items-start justify-between gap-4">
@@ -564,34 +903,81 @@ export default function CalendarApp() {
               <button
                 type="button"
                 onClick={() => setSelectedBooking(null)}
-                className="grid h-10 w-10 place-items-center rounded-full bg-slate-100 text-xl font-black"
+                className="grid h-10 w-10 place-items-center rounded-full bg-stone-100 text-xl font-black"
               >
                 ×
               </button>
             </div>
 
             <div className="mt-5 grid gap-3 sm:grid-cols-2">
-              <div className="rounded-2xl bg-slate-100 p-4">
+              <div className="rounded-2xl bg-stone-100 p-4">
                 <div className="text-xs font-black uppercase text-slate-500">Booking ID</div>
                 <div className="mt-1 break-all text-sm font-black">{selectedBooking.booking_id}</div>
               </div>
-              <div className="rounded-2xl bg-slate-100 p-4">
-                <div className="text-xs font-black uppercase text-slate-500">Referrer</div>
-                <div className="mt-1 text-sm font-black">{selectedBooking.referrer || "Other"}</div>
+
+              <div className="rounded-2xl bg-stone-100 p-4">
+                <div className="text-xs font-black uppercase text-slate-500">Book ID</div>
+                <div className="mt-1 break-all text-sm font-black">{selectedBooking.book_id || "—"}</div>
               </div>
+
               <div className="rounded-2xl bg-emerald-50 p-4">
                 <div className="text-xs font-black uppercase text-emerald-700">Arrival</div>
                 <div className="mt-1 text-sm font-black">{selectedBooking.arrival}</div>
               </div>
+
               <div className="rounded-2xl bg-rose-50 p-4">
                 <div className="text-xs font-black uppercase text-rose-700">Departure</div>
                 <div className="mt-1 text-sm font-black">{selectedBooking.departure}</div>
               </div>
-              <div className="rounded-2xl bg-slate-100 p-4">
+
+              <div className="rounded-2xl bg-sky-50 p-4">
+                <div className="text-xs font-black uppercase text-sky-700">Guest</div>
+                <div className="mt-1 text-sm font-black">
+                  {selectedBooking.guest_name ||
+                    `${selectedBooking.first_name || ""} ${selectedBooking.last_name || ""}`.trim() ||
+                    "—"}
+                </div>
+              </div>
+
+              <div className="rounded-2xl bg-amber-50 p-4">
+                <div className="text-xs font-black uppercase text-amber-700">Guests</div>
+                <div className="mt-1 text-sm font-black">
+                  Adults: {selectedBooking.num_adult ?? "—"} · Children: {selectedBooking.num_child ?? "—"}
+                </div>
+              </div>
+
+              <div className="rounded-2xl bg-stone-100 p-4">
+                <div className="text-xs font-black uppercase text-slate-500">Email</div>
+                <div className="mt-1 break-all text-sm font-black">{selectedBooking.email || "—"}</div>
+              </div>
+
+              <div className="rounded-2xl bg-stone-100 p-4">
+                <div className="text-xs font-black uppercase text-slate-500">Phone / Mobile</div>
+                <div className="mt-1 text-sm font-black">
+                  {selectedBooking.mobile || selectedBooking.phone || "—"}
+                </div>
+              </div>
+
+              <div className="rounded-2xl bg-stone-100 p-4">
+                <div className="text-xs font-black uppercase text-slate-500">Referrer</div>
+                <div className="mt-1 text-sm font-black">
+                  {selectedBooking.referrer_label || selectedBooking.referrer || "Other"}
+                </div>
+              </div>
+
+              <div className="rounded-2xl bg-stone-100 p-4">
+                <div className="text-xs font-black uppercase text-slate-500">Channel / Source</div>
+                <div className="mt-1 text-sm font-black">
+                  {selectedBooking.channel || "—"} / {selectedBooking.source || "—"}
+                </div>
+              </div>
+
+              <div className="rounded-2xl bg-stone-100 p-4">
                 <div className="text-xs font-black uppercase text-slate-500">Status</div>
                 <div className="mt-1 text-sm font-black">{selectedBooking.status || "—"}</div>
               </div>
-              <div className="rounded-2xl bg-slate-100 p-4">
+
+              <div className="rounded-2xl bg-stone-100 p-4">
                 <div className="text-xs font-black uppercase text-slate-500">Price</div>
                 <div className="mt-1 text-sm font-black">
                   {selectedBooking.price ? `€${Number(selectedBooking.price).toFixed(2)}` : "—"}
@@ -599,10 +985,30 @@ export default function CalendarApp() {
               </div>
             </div>
 
+            <div className="mt-4 grid gap-2 sm:grid-cols-3">
+              {selectedBooking.email ? (
+                <a href={`mailto:${selectedBooking.email}`} className="rounded-2xl bg-indigo-700 px-4 py-3 text-center text-sm font-black text-white shadow-sm hover:bg-indigo-800">
+                  Send Email
+                </a>
+              ) : null}
+
+              {selectedBooking.mobile || selectedBooking.phone ? (
+                <a href={`tel:${selectedBooking.mobile || selectedBooking.phone}`} className="rounded-2xl bg-emerald-700 px-4 py-3 text-center text-sm font-black text-white">
+                  Call Guest
+                </a>
+              ) : null}
+
+              {selectedBooking.mobile || selectedBooking.phone ? (
+                <a href={`sms:${selectedBooking.mobile || selectedBooking.phone}`} className="rounded-2xl bg-sky-700 px-4 py-3 text-center text-sm font-black text-white">
+                  SMS
+                </a>
+              ) : null}
+            </div>
+
             <button
               type="button"
               onClick={() => setSelectedBooking(null)}
-              className="mt-5 w-full rounded-2xl bg-slate-950 px-4 py-3 text-sm font-black text-white"
+              className="mt-5 w-full rounded-2xl bg-slate-900 px-4 py-3 text-sm font-black text-white"
             >
               Κλείσιμο
             </button>
@@ -612,3 +1018,13 @@ export default function CalendarApp() {
     </main>
   );
 }
+
+
+
+
+
+
+
+
+
+

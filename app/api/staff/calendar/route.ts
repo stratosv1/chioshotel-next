@@ -42,9 +42,37 @@ function isoDateOnly(value: Date) {
   return value.toISOString().slice(0, 10);
 }
 
+function parseDate(value: string) {
+  const [year, month, day] = value.split("-").map(Number);
+  return new Date(year, month - 1, day);
+}
+
+function makeDays(start: string, end: string) {
+  const days: string[] = [];
+  const current = parseDate(start);
+  const last = parseDate(end);
+
+  while (current <= last) {
+    days.push(isoDateOnly(current));
+    current.setDate(current.getDate() + 1);
+  }
+
+  return days;
+}
+
 function safeDateParam(value: string | null, fallback: string) {
   if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return fallback;
   return value;
+}
+
+function isCanceledStatus(status: unknown) {
+  const value = String(status || "").toLowerCase();
+  return value.includes("cancel") || value.includes("deleted");
+}
+
+function bookingCoversDate(booking: any, date: string) {
+  if (isCanceledStatus(booking.status)) return false;
+  return booking.arrival <= date && booking.departure > date;
 }
 
 export async function GET(request: NextRequest) {
@@ -90,7 +118,7 @@ export async function GET(request: NextRequest) {
       order by id asc
     `;
 
-    const availability = await sql`
+    let availability = await sql`
       select
         stay_date::text as date,
         room_id::text as room_id,
@@ -107,19 +135,76 @@ export async function GET(request: NextRequest) {
     const bookings = await sql`
       select
         beds24_booking_id::text as booking_id,
+        book_id::text as book_id,
         room_id::text as room_id,
         unit_id::text as unit_id,
         guest_name,
+        first_name,
+        last_name,
+        email,
+        phone,
+        mobile,
+        num_adult,
+        num_child,
         arrival::text as arrival,
         departure::text as departure,
         status,
-        coalesce(referrer, channel, source) as referrer,
+        referrer,
+        channel,
+        source,
+        coalesce(referrer, channel, source) as referrer_label,
+        raw_booking,
         null::numeric as price
       from staff_bookings_snapshot
       where arrival <= ${end}::date
         and departure >= ${start}::date
       order by arrival asc, room_id::int, unit_id::int
     `;
+
+    if (availability.length === 0) {
+      const rates = await sql`
+        select
+          room_id::text as room_id,
+          stay_date::text as date,
+          price
+        from staff_rate_cache
+        where stay_date >= ${start}::date
+          and stay_date <= ${end}::date
+        order by stay_date asc, room_id::text asc
+      `;
+
+      const rateMap = new Map<string, number>();
+
+      for (const rate of rates as any[]) {
+        rateMap.set(`${rate.room_id}:${rate.date}`, Number(rate.price || 0));
+      }
+
+      const days = makeDays(start, end);
+      const generatedAvailability: any[] = [];
+
+      for (const unit of units as any[]) {
+        for (const day of days) {
+          const price = rateMap.get(`${unit.room_id}:${day}`) ?? null;
+          const booked = (bookings as any[]).some(
+            (booking) =>
+              String(booking.room_id) === String(unit.room_id) &&
+              String(booking.unit_id) === String(unit.unit_id) &&
+              bookingCoversDate(booking, day),
+          );
+
+          generatedAvailability.push({
+            date: day,
+            room_id: String(unit.room_id),
+            unit_id: String(unit.unit_id),
+            price,
+            available: !booked && Number(price || 0) > 0,
+            reason: booked ? "BOOKED" : Number(price || 0) > 0 ? null : "NO_PRICE",
+          });
+        }
+      }
+
+      availability = generatedAvailability as any;
+    }
 
     return NextResponse.json(
       {
@@ -156,3 +241,4 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+

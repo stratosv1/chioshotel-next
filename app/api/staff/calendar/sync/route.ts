@@ -176,13 +176,13 @@ async function getRefreshTokenFromInviteCode() {
 }
 
 async function getBeds24RefreshToken() {
-  const existingRefreshToken = text(process.env.BEDS24_REFRESH_TOKEN);
+  const existingRefreshToken = text(process.env.BEDS24_REFRESH_TOKEN || process.env.BEDS24_LONG_LIFE_TOKEN);
   if (existingRefreshToken) return existingRefreshToken;
 
   const refreshTokenFromInviteCode = await getRefreshTokenFromInviteCode();
   if (refreshTokenFromInviteCode) return refreshTokenFromInviteCode;
 
-  throw new Error("Missing BEDS24_REFRESH_TOKEN or BEDS24_INVITE_CODE.");
+  throw new Error("Missing BEDS24_REFRESH_TOKEN, BEDS24_LONG_LIFE_TOKEN or BEDS24_INVITE_CODE.");
 }
 
 async function getBeds24Token() {
@@ -451,3 +451,4 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   return POST(request);
 }
+
