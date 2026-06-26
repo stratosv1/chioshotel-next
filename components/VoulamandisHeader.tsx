@@ -1,7 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import {
   chiosActivitiesPaths,
   chiosActivityDetailPaths,
@@ -1139,20 +1138,14 @@ function getExploreLinks(language: LanguageCode) {
   ];
 }
 
-function LanguageSwitcher({ onNavigate }: { onNavigate?: () => void }) {
-  const pathname = usePathname() || "/";
-  const currentLanguage = getCurrentLanguage(pathname);
+function LanguageSwitcher({ currentLanguage, pathname, onNavigate }: { currentLanguage: LanguageCode; pathname: string; onNavigate?: () => void }) {
   const copy = navigationCopy[currentLanguage];
 
-  const links = useMemo(
-    () =>
-      languageOptions.map((language) => ({
-        ...language,
-        href: getLanguageHref(pathname, language.code),
-        isActive: language.code === currentLanguage,
-      })),
-    [currentLanguage, pathname],
-  );
+  const links = languageOptions.map((language) => ({
+    ...language,
+    href: getLanguageHref(pathname, language.code),
+    isActive: language.code === currentLanguage,
+  }));
 
   return (
     <nav className="vh-language-switcher" aria-label={copy.ariaLanguage}>
@@ -1174,9 +1167,8 @@ function LanguageSwitcher({ onNavigate }: { onNavigate?: () => void }) {
   );
 }
 
-export function VoulamandisHeader() {
-  const pathname = usePathname() || "/";
-  const currentLanguage = getCurrentLanguage(pathname);
+export function VoulamandisHeader({ language = "en", pathname = "/" }: { language?: LanguageCode; pathname?: string }) {
+  const currentLanguage = language;
   const copy = navigationCopy[currentLanguage];
   const mainLinks = getMainLinks(currentLanguage);
   const exploreLinks = getExploreLinks(currentLanguage);
@@ -1453,7 +1445,7 @@ export function VoulamandisHeader() {
         </nav>
 
         <div className="vh-header__actions">
-          <LanguageSwitcher />
+          <LanguageSwitcher currentLanguage={currentLanguage} pathname={pathname} />
 
           <a className="vh-header__book" href={ratesPaths[currentLanguage]}>
             {copy.bookNow}
@@ -1495,7 +1487,7 @@ export function VoulamandisHeader() {
 
           <div className="vh-mobile-menu__section">
             <span className="vh-mobile-menu__label">{copy.language}</span>
-            <LanguageSwitcher onNavigate={closeMenu} />
+            <LanguageSwitcher currentLanguage={currentLanguage} pathname={pathname} onNavigate={closeMenu} />
           </div>
 
           <a
