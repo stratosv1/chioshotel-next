@@ -583,34 +583,6 @@ input{
   line-height:1.8;
 }
 
-.vh-room-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:22px;
-}
-
-.vh-room-card{
-  border-radius:var(--vh-radius-xl);
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-  transition:var(--transition);
-  width:100%;
-}
-
-.vh-room-card:hover{
-  transform:translateY(-4px);
-  box-shadow:var(--vh-shadow-strong);
-}
-
-.vh-room-image{
-  position:relative;
-  aspect-ratio:4/3;
-  background:#e8ddcf center/cover no-repeat;
-  width:100%;
-  overflow:hidden;
-}
-
 .vh-room-image--economy{
   background-image:url("/images/rooms/DSC07803-1.webp");
 }
@@ -635,69 +607,6 @@ input{
   background-image:url("/images/rooms/chios-hotels-family-apartments.webp");
 }
 
-.room-offer-stack{
-  position:absolute!important;
-  top:10px!important;
-  left:10px!important;
-  right:10px!important;
-  width:auto!important;
-  max-width:none!important;
-  display:flex!important;
-  flex-direction:row!important;
-  justify-content:space-between!important;
-  align-items:flex-start!important;
-  gap:8px!important;
-  z-index:5!important;
-}
-
-.room-live-badge,
-.room-direct-badge,
-.room-bed-badge{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  border-radius:999px;
-  font-size:11px;
-  font-weight:900;
-  white-space:nowrap;
-  box-shadow:0 8px 18px rgba(0,0,0,.16);
-}
-
-.room-live-badge{
-  order:1!important;
-  padding:8px 12px;
-  background:linear-gradient(135deg,#22c55e,#16a34a);
-  color:#fff;
-}
-
-.room-live-badge::before{
-  content:"";
-  width:8px;
-  height:8px;
-  border-radius:999px;
-  background:#bbf7d0;
-  box-shadow:0 0 0 0 rgba(187,247,208,.9);
-  animation:pulseDotLight 1.35s infinite;
-}
-
-.room-direct-badge{
-  order:2!important;
-  margin-left:auto!important;
-  padding:7px 10px;
-  background:rgba(240,253,244,.96);
-  color:#15803d;
-}
-
-.room-bed-badge{
-  position:absolute;
-  left:10px;
-  bottom:10px;
-  z-index:2;
-  padding:7px 10px;
-  background:rgba(255,255,255,.94);
-  color:#3d3530;
-}
-
 @keyframes pulseDotLight{
   0%{
     box-shadow:0 0 0 0 rgba(187,247,208,.9);
@@ -710,71 +619,6 @@ input{
   100%{
     box-shadow:0 0 0 0 rgba(187,247,208,0);
   }
-}
-
-.vh-room-body{
-  padding:24px;
-  display:flex;
-  flex-direction:column;
-  flex:1;
-}
-
-.vh-room-body h3{
-  margin:0 0 10px;
-  font-family:Georgia,"Times New Roman",serif;
-  font-size:28px;
-  line-height:1.12;
-  color:var(--vh-accent-dark)!important;
-  font-weight:700!important;
-}
-
-.vh-room-body p{
-  margin:0 0 18px;
-  color:var(--vh-muted);
-  font-size:15px;
-  line-height:1.75;
-  flex:1;
-}
-
-.vh-room-meta,
-.vh-room-amenities{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:8px;
-  margin-bottom:12px;
-}
-
-.vh-room-amenities{
-  grid-template-columns:repeat(4,minmax(0,1fr));
-}
-
-.vh-room-meta span,
-.vh-room-amenities span{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  min-height:34px;
-  padding:0 8px;
-  border-radius:999px;
-  background:var(--vh-surface-2);
-  border:1px solid rgba(154,107,63,.10);
-  color:var(--vh-accent-dark)!important;
-  font-size:11px;
-  font-weight:800;
-  letter-spacing:.04em;
-  text-transform:uppercase;
-  text-align:center;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-.vh-room-amenities span{
-  background:#fff;
-  color:#3D3530!important;
-  font-size:10.5px;
-  text-transform:none;
-  letter-spacing:0;
 }
 
 /* LAST MINUTE WIDGET */
@@ -17272,4 +17116,5 @@ a.vh-btn.vh-btn--primary[href*="viber"],
     margin-top: 16px !important;
   }
 }
+
 
