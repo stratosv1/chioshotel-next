@@ -6,6 +6,29 @@ import type { HomePageData } from "@/content/home";
 
 type LastMinuteData = HomePageData["lastMinute"];
 
+const LAST_MINUTE_CSS_ID = "last-minute-widget-css";
+
+function loadLastMinuteStyles() {
+  if (typeof document === "undefined") {
+    return Promise.resolve();
+  }
+
+  if (document.getElementById(LAST_MINUTE_CSS_ID)) {
+    return Promise.resolve();
+  }
+
+  return new Promise<void>((resolve) => {
+    const link = document.createElement("link");
+    link.id = LAST_MINUTE_CSS_ID;
+    link.rel = "stylesheet";
+    link.href = "/css/last-minute-widget.css";
+    link.onload = () => resolve();
+    link.onerror = () => resolve();
+
+    document.head.appendChild(link);
+  });
+}
+
 const LastMinuteDealsClient = dynamic(
   () => import("@/components/home/LastMinuteDeals").then((module) => module.LastMinuteDeals),
   {
@@ -24,6 +47,10 @@ export function LazyLastMinuteDeals({
   const rootRef = useRef<HTMLDivElement | null>(null);
   const [shouldLoad, setShouldLoad] = useState(false);
 
+  function revealDeals() {
+    void loadLastMinuteStyles().finally(() => setShouldLoad(true));
+  }
+
   useEffect(() => {
     const element = rootRef.current;
 
@@ -39,7 +66,7 @@ export function LazyLastMinuteDeals({
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries.some((entry) => entry.isIntersecting)) {
-          setShouldLoad(true);
+          revealDeals();
           observer.disconnect();
         }
       },
@@ -78,7 +105,7 @@ export function LazyLastMinuteDeals({
             <button
               type="button"
               className="vh-btn vh-btn--primary"
-              onClick={() => setShouldLoad(true)}
+              onClick={revealDeals}
             >
               {data.title}
             </button>

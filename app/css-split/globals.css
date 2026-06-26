@@ -33,7 +33,6 @@
 
 /* ---- components ---- */
 @import "./components/holiday-quiz.css";
-@import "./components/last-minute-widget.css";
 
 /* ---- landing ---- */
 @import "./landing/beach-lovers.css";
