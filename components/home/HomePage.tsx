@@ -75,10 +75,10 @@ export function HomePage({ data }: HomePageProps) {
                   {data.hero.quizCard.icon}
                 </span>
 
-                <span className="min-w-0">
+                <span className="flex min-w-0 flex-col">
                   <span className="mb-1 inline-flex items-center gap-[5px] text-[10px] font-black uppercase tracking-[.1em] text-[#bbf7d0]">{data.hero.quizCard.liveLabel}</span>
-                  <strong>{data.hero.quizCard.title}</strong>
-                  <span>{data.hero.quizCard.text}</span>
+                  <strong className="block text-[13px] font-black uppercase tracking-[.04em] max-[767px]:text-xs">{data.hero.quizCard.title}</strong>
+                  <span className="mt-0.5 block text-xs leading-[1.35] text-white/90 max-[767px]:line-clamp-2 max-[767px]:text-[11.5px]">{data.hero.quizCard.text}</span>
                 </span>
 
                 <span className="inline-flex min-h-9 items-center justify-center rounded-full bg-white px-3 text-[10px] font-black uppercase tracking-[.08em] text-[#8E6607] max-[767px]:col-span-2 max-[767px]:w-full">{data.hero.quizCard.cta}</span>
@@ -580,4 +580,6 @@ export function HomePage({ data }: HomePageProps) {
     </>
   );
 }
+
+
 
