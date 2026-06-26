@@ -35,50 +35,6 @@
     margin-top:14px!important;
   }
 
-  .room-offer-stack{
-    top:8px!important;
-    left:8px!important;
-    right:8px!important;
-    gap:6px!important;
-  }
-
-  .room-live-badge,
-  .room-direct-badge{
-    font-size:9px!important;
-    padding:6px 8px!important;
-  }
-
-  .room-direct-badge{
-    max-width:56%!important;
-    overflow:hidden!important;
-    text-overflow:ellipsis!important;
-  }
-
-  .room-bed-badge{
-    left:8px!important;
-    bottom:9px!important;
-    padding:6px 8px!important;
-    font-size:9.5px!important;
-    max-width:calc(100% - 16px)!important;
-    overflow:hidden!important;
-    text-overflow:ellipsis!important;
-  }
-
-  .vh-room-amenities span{
-    font-size:7.8px!important;
-    letter-spacing:0!important;
-  }
-
-  .vh-room-body .vh-btn{
-    margin-top:auto!important;
-    width:100%!important;
-    min-height:36px!important;
-    border-radius:12px!important;
-    font-size:9px!important;
-    padding:0 7px!important;
-    letter-spacing:.08em!important;
-  }
-
   .distance-badge{
     grid-template-columns:repeat(3,minmax(0,1fr))!important;
     gap:6px!important;
