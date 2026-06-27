@@ -32,7 +32,7 @@ function SectionTitle({
 }) {
   return (
     <header className={centered ? "mx-auto mb-10 max-w-3xl text-center" : "mb-8 max-w-3xl"}>
-      <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] text-amber-700">
+      <p className="break-words mb-3 text-xs font-black uppercase tracking-[0.22em] text-amber-700">
         {kicker}
       </p>
       <h2 className="text-balance break-words font-serif text-3xl font-bold leading-tight text-stone-900 md:text-5xl">
@@ -56,7 +56,7 @@ function PrimaryButton({
   return (
     <a
       href={href}
-      className="inline-flex min-h-12 items-center justify-center rounded-full bg-amber-700 px-6 text-sm font-black uppercase tracking-[0.08em] text-white shadow-lg shadow-amber-900/20 transition hover:-translate-y-0.5 hover:bg-amber-800"
+      className="break-words inline-flex min-h-12 items-center justify-center rounded-full bg-amber-700 px-6 text-sm font-black uppercase tracking-[0.08em] text-white shadow-lg shadow-amber-900/20 transition hover:-translate-y-0.5 hover:bg-amber-800"
     >
       {children}
     </a>
@@ -73,7 +73,7 @@ function SecondaryButton({
   return (
     <a
       href={href}
-      className="inline-flex min-h-12 items-center justify-center rounded-full border border-amber-800/20 bg-white px-6 text-sm font-black uppercase tracking-[0.08em] text-amber-800 shadow-sm transition hover:-translate-y-0.5 hover:bg-amber-50"
+      className="break-words inline-flex min-h-12 items-center justify-center rounded-full border border-amber-800/20 bg-white px-6 text-sm font-black uppercase tracking-[0.08em] text-amber-800 shadow-sm transition hover:-translate-y-0.5 hover:bg-amber-50"
     >
       {children}
     </a>
@@ -111,7 +111,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
                 <span className="text-stone-500">{data.hero.reviews}</span>
               </div>
 
-              <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] text-white/85">
+              <p className="break-words mb-3 text-xs font-black uppercase tracking-[0.22em] text-white/85">
                 {data.hero.kicker}
               </p>
 
@@ -126,7 +126,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
               <div className="mt-7 grid grid-cols-2 gap-3">
                 <a
                   href={data.hero.primaryCta.href}
-                  className="inline-flex min-h-14 items-center justify-center rounded-2xl bg-orange-500 px-4 text-center text-xs font-black uppercase tracking-[0.08em] text-white shadow-lg shadow-orange-900/25 transition hover:-translate-y-0.5 hover:bg-orange-600 md:rounded-full"
+                  className="break-words inline-flex min-h-14 items-center justify-center rounded-2xl bg-orange-500 px-4 text-center text-xs font-black uppercase tracking-[0.08em] text-white shadow-lg shadow-orange-900/25 transition hover:-translate-y-0.5 hover:bg-orange-600 md:rounded-full"
                 >
                   <span className="mr-2" aria-hidden="true">{data.hero.primaryCta.icon}</span>
                   {data.hero.primaryCta.label}
@@ -134,7 +134,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
 
                 <a
                   href={data.hero.secondaryCta.href}
-                  className="inline-flex min-h-14 items-center justify-center rounded-2xl border border-white/35 bg-white/10 px-4 text-center text-xs font-black uppercase tracking-[0.08em] text-white backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/20 md:rounded-full"
+                  className="break-words inline-flex min-h-14 items-center justify-center rounded-2xl border border-white/35 bg-white/10 px-4 text-center text-xs font-black uppercase tracking-[0.08em] text-white backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/20 md:rounded-full"
                 >
                   <span className="mr-2" aria-hidden="true">{data.hero.secondaryCta.icon}</span>
                   {data.hero.secondaryCta.label}
@@ -149,7 +149,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
                   {data.hero.quizCard.icon}
                 </span>
                 <span>
-                  <span className="text-[11px] font-black uppercase tracking-[0.14em] text-emerald-200">
+                  <span className="break-words text-[11px] font-black uppercase tracking-[0.14em] text-emerald-200">
                     {data.hero.quizCard.liveLabel}
                   </span>
                   <strong className="mt-1 block text-sm font-black uppercase">
@@ -181,7 +181,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
         <section className="px-4 py-12 md:px-8 md:py-18">
           <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[1.05fr_0.95fr]">
             <article className="rounded-[1.6rem] sm:rounded-[2rem] bg-white p-6 shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 md:p-9">
-              <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] text-amber-700">
+              <p className="break-words mb-3 text-xs font-black uppercase tracking-[0.22em] text-amber-700">
                 {data.intro.left.kicker}
               </p>
               <h2 className="break-words font-serif text-3xl font-bold leading-tight text-stone-900 md:text-5xl">
@@ -204,7 +204,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
             </article>
 
             <article className="rounded-[1.6rem] sm:rounded-[2rem] bg-[#2f241d] p-6 text-white shadow-lg shadow-stone-900/10 md:p-9">
-              <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] text-amber-200">
+              <p className="break-words mb-3 text-xs font-black uppercase tracking-[0.22em] text-amber-200">
                 {data.intro.right.kicker}
               </p>
               <h3 className="break-words font-serif text-3xl font-bold leading-tight">
@@ -260,10 +260,10 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
               </article>
 
               <article className="rounded-[1.6rem] sm:rounded-[2rem] bg-white p-6 shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 md:p-8">
-                <p className="text-xs font-black uppercase tracking-[0.22em] text-amber-700">
+                <p className="break-words text-xs font-black uppercase tracking-[0.22em] text-amber-700">
                   {data.location.infoCard.kicker}
                 </p>
-                <h3 className="mt-3 font-serif text-3xl font-bold text-amber-800">
+                <h3 className="break-words mt-3 font-serif text-3xl font-bold text-amber-800">
                   {data.location.infoCard.title}
                 </h3>
                 <address className="mt-5 not-italic leading-8 text-stone-600">
@@ -296,7 +296,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
 
               <div className="relative min-w-0 grid gap-0 lg:grid-cols-[1.05fr_0.95fr]">
                 <div className="p-6 md:p-10">
-                  <span className="inline-flex rounded-full bg-white/85 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-orange-800 shadow-sm ring-1 ring-amber-900/10">
+                  <span className="break-words inline-flex rounded-full bg-white/85 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-orange-800 shadow-sm ring-1 ring-amber-900/10">
                     {data.location.discount.badge}
                   </span>
 
@@ -324,9 +324,9 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
                 </div>
 
                 <div className="flex items-center p-4 md:p-8">
-                  <div className="w-full rounded-[1.6rem] sm:rounded-[2rem] bg-gradient-to-br from-[#3a271b] via-[#7a3f11] to-[#d97706] p-5 text-white shadow-2xl shadow-orange-900/25 md:p-7">
-                    <div className="rounded-[1.5rem] border border-white/15 bg-white/10 p-5 backdrop-blur md:p-6">
-                      <p className="text-xs font-black uppercase tracking-[0.18em] text-amber-100">
+                  <div className="w-full rounded-[1.6rem] sm:rounded-[2rem] bg-gradient-to-br from-[#3a271b] via-[#7a3f11] to-[#d97706] p-5 text-white shadow-2xl shadow-orange-900/25 md:p-7 mx-auto max-w-[calc(100vw-2rem)] min-w-0 overflow-hidden">
+                    <div className="rounded-[1.5rem] border border-white/15 bg-white/10 p-5 backdrop-blur md:p-6 min-w-0 max-w-full overflow-hidden">
+                      <p className="break-words text-xs font-black uppercase tracking-[0.18em] text-amber-100">
                         {data.location.discount.badge}
                       </p>
                       <p className="mt-3 break-words font-serif text-3xl font-bold leading-tight">
@@ -336,7 +336,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
                         {data.location.discount.formIntro}
                       </p>
 
-                      <div className="mt-6 rounded-[1.4rem] bg-white p-4 text-stone-900 shadow-xl shadow-black/20">
+                      <div className="mt-6 rounded-[1.4rem] bg-white p-4 text-stone-900 shadow-xl shadow-black/20 min-w-0 max-w-full overflow-hidden">
                         <DiscountReveal
                           submitLabel={data.location.discount.submitLabel}
                           successText={data.location.discount.successText}
@@ -350,10 +350,10 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
             </article>
 
             <article className="mx-auto mt-12 max-w-4xl text-center">
-              <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] text-amber-700">
+              <p className="break-words mb-3 text-xs font-black uppercase tracking-[0.22em] text-amber-700">
                 {data.location.copy.kicker}
               </p>
-              <h2 className="font-serif text-3xl font-bold text-stone-900 md:text-5xl">
+              <h2 className="break-words font-serif text-3xl font-bold text-stone-900 md:text-5xl">
                 {data.location.copy.title}
               </h2>
               <div className="mt-6 space-y-5 text-lg leading-9 text-stone-600">
@@ -371,7 +371,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
           <div className="mx-auto max-w-7xl">
             <div className="grid gap-6 lg:grid-cols-[1fr_0.75fr]">
               <article className="rounded-[1.6rem] sm:rounded-[2rem] bg-[#2f241d] p-6 text-white shadow-xl shadow-stone-900/10 md:p-10">
-                <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] text-amber-200">
+                <p className="break-words mb-3 text-xs font-black uppercase tracking-[0.22em] text-amber-200">
                   {data.roomsPreview.kicker}
                 </p>
                 <h2 className="break-words font-serif text-3xl font-bold leading-tight md:text-5xl">
@@ -386,7 +386,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
                   </PrimaryButton>
                   <a
                     href={data.roomsPreview.secondaryCta.href}
-                    className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/25 bg-white/10 px-6 text-sm font-black uppercase tracking-[0.08em] text-white transition hover:bg-white/20"
+                    className="break-words inline-flex min-h-12 items-center justify-center rounded-full border border-white/25 bg-white/10 px-6 text-sm font-black uppercase tracking-[0.08em] text-white transition hover:bg-white/20"
                   >
                     <span className="mr-2" aria-hidden="true">{data.roomsPreview.secondaryCta.icon}</span>
                     {data.roomsPreview.secondaryCta.label}
@@ -395,10 +395,10 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
               </article>
 
               <article className="rounded-[1.6rem] sm:rounded-[2rem] bg-white p-6 shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 md:p-8">
-                <p className="text-xs font-black uppercase tracking-[0.22em] text-amber-700">
+                <p className="break-words text-xs font-black uppercase tracking-[0.22em] text-amber-700">
                   {data.roomsPreview.sideCard.kicker}
                 </p>
-                <h3 className="mt-3 font-serif text-3xl font-bold text-stone-900">
+                <h3 className="break-words mt-3 font-serif text-3xl font-bold text-stone-900">
                   {data.roomsPreview.sideCard.title}
                 </h3>
                 <p className="mt-4 leading-8 text-stone-600">{data.roomsPreview.sideCard.text}</p>
@@ -434,7 +434,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
                       </div>
                     </div>
                     <div className="p-5">
-                      <h3 className="font-serif text-2xl font-bold leading-tight text-amber-800">
+                      <h3 className="break-words font-serif text-2xl font-bold leading-tight text-amber-800">
                         {room.title}
                       </h3>
                       <p className="mt-3 min-h-[56px] text-sm leading-7 text-stone-600">{room.description}</p>
@@ -523,7 +523,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/55 to-black/10" />
                     <div className="absolute inset-x-0 bottom-0 p-6 text-white">
-                      <h3 className="font-serif text-3xl font-bold text-white drop-shadow-[0_3px_12px_rgba(0,0,0,.7)]">{card.title}</h3>
+                      <h3 className="break-words font-serif text-3xl font-bold text-white drop-shadow-[0_3px_12px_rgba(0,0,0,.7)]">{card.title}</h3>
                       <p className="mt-3 text-sm leading-7 text-white/80">{card.text}</p>
                       <span className="mt-5 inline-flex rounded-full bg-white px-4 py-2 text-xs font-black uppercase text-amber-800">
                         {card.cta}
@@ -565,7 +565,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
                       />
                     </div>
                     <div className="p-6">
-                      <h3 className="font-serif text-2xl font-bold text-stone-900">{card.title}</h3>
+                      <h3 className="break-words font-serif text-2xl font-bold text-stone-900">{card.title}</h3>
                       <p className="mt-3 leading-7 text-stone-600">{card.text}</p>
                       <span className="mt-5 inline-flex rounded-full border border-amber-800/20 px-4 py-2 text-xs font-black uppercase text-amber-800">
                         <span className="mr-2" aria-hidden="true">{card.ctaIcon}</span>
@@ -582,7 +582,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
         <section className="px-4 py-10 md:px-8">
           <div className="mx-auto grid max-w-7xl gap-5 rounded-[1.6rem] sm:rounded-[2rem] bg-[#2f241d] p-6 text-white md:grid-cols-[1fr_auto] md:items-center md:p-8">
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.22em] text-amber-200">
+              <p className="break-words text-xs font-black uppercase tracking-[0.22em] text-amber-200">
                 {data.quizBar.label}
               </p>
               <p className="mt-2 max-w-3xl text-lg leading-8 text-white/85">{data.quizBar.text}</p>
@@ -643,7 +643,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(245,158,11,0.12),transparent_36%)]" />
 
             <div className="relative min-w-0 z-10 max-w-3xl p-8 md:p-14">
-              <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] text-amber-200">
+              <p className="break-words mb-3 text-xs font-black uppercase tracking-[0.22em] text-amber-200">
                 {data.finalCta.kicker}
               </p>
 
@@ -664,7 +664,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
 
                 <a
                   href={data.finalCta.secondaryCta.href}
-                  className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/25 bg-white/10 px-6 text-sm font-black uppercase tracking-[0.08em] text-white backdrop-blur transition hover:bg-white/20"
+                  className="break-words inline-flex min-h-12 items-center justify-center rounded-full border border-white/25 bg-white/10 px-6 text-sm font-black uppercase tracking-[0.08em] text-white backdrop-blur transition hover:bg-white/20"
                 >
                   <span className="mr-2" aria-hidden="true">{data.finalCta.secondaryCta.icon}</span>
                   {data.finalCta.secondaryCta.label}
