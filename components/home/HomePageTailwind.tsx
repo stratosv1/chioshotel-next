@@ -86,7 +86,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
       <main className="bg-[#fffaf3] text-stone-900">
         <section
           className="relative flex min-h-[680px] items-end overflow-hidden bg-stone-950 text-white md:min-h-[82vh]"
-          aria-label="Rooms and apartments in Chios, Kampos"
+          aria-label={data.hero.title}
         >
           <Image
             src={data.hero.image}
@@ -104,7 +104,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
             <div className="w-full max-w-xl rounded-[2rem] border border-white/15 bg-stone-950/55 p-5 shadow-2xl shadow-black/30 backdrop-blur-md md:p-8">
               <div
                 className="mb-5 inline-flex items-center gap-3 rounded-full bg-white px-4 py-2 text-sm font-bold text-stone-800 shadow-lg"
-                aria-label={`Guest rating ${data.hero.rating} from ${data.hero.reviews}`}
+                aria-label={`${data.hero.rating} - ${data.hero.reviews}`}
               >
                 <span>{data.hero.rating}</span>
                 <span className="text-amber-400" aria-hidden="true">★★★★★</span>
@@ -327,13 +327,13 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
                   <div className="w-full rounded-[2rem] bg-gradient-to-br from-[#3a271b] via-[#7a3f11] to-[#d97706] p-5 text-white shadow-2xl shadow-orange-900/25 md:p-7">
                     <div className="rounded-[1.5rem] border border-white/15 bg-white/10 p-5 backdrop-blur md:p-6">
                       <p className="text-xs font-black uppercase tracking-[0.18em] text-amber-100">
-                        Direct booking gift
+                        {data.location.discount.badge}
                       </p>
                       <p className="mt-3 font-serif text-3xl font-bold leading-tight">
-                        Scratch and reveal your private code
+                        {data.location.discount.title}
                       </p>
                       <p className="mt-3 text-sm leading-7 text-white/80">
-                        Scratch the card to reveal your direct booking gift.
+                        {data.location.discount.formIntro}
                       </p>
 
                       <div className="mt-6 rounded-[1.4rem] bg-white p-4 text-stone-900 shadow-xl shadow-black/20">
@@ -590,7 +590,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
             <a
               href={data.quizBar.href}
               className="inline-flex min-w-[300px] max-w-full items-center justify-center rounded-full bg-white px-6 py-3 text-center shadow-lg transition hover:-translate-y-0.5 hover:bg-amber-50"
-              aria-label="Start the Chios holiday quiz"
+              aria-label={data.quizBar.cta}
               style={{
                 color: "#92400e",
                 fontSize: "14px",
@@ -599,7 +599,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
                 textTransform: "uppercase"
               }}
             >
-              Start the quiz
+              {data.quizBar.cta}
             </a>
           </div>
         </section>
