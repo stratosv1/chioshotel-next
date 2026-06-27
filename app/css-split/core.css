@@ -1,0 +1,11 @@
+﻿@import "tailwindcss";
+
+/* ---- base ---- */
+@import "./base/tokens.css";
+@import "./base/base.css";
+
+/* ---- components needed globally ---- */
+@import "./components/header.css";
+@import "./components/footer.css";
+@import "./components/language-switcher.css";
+@import "./components/footer-mobile-patch.css";

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { HomePage } from "@/components/home/HomePage";
+import { HomePageTailwind } from "@/components/home/HomePageTailwind";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { homePageEn } from "@/content/home";
 import { buildHomePageSchema } from "@/content/schema";
@@ -66,7 +66,7 @@ export default function Page() {
   return (
     <>
       <JsonLd data={buildHomePageSchema(homePageEn)} />
-      <HomePage data={homePageEn} />
+      <HomePageTailwind data={homePageEn} />
     </>
   );
 }

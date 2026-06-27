@@ -5,7 +5,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { VoulamandisFooter } from "@/components/VoulamandisFooter";
 import { VoulamandisHeader } from "@/components/VoulamandisHeader";
 import { siteName, siteUrl } from "@/lib/seo";
-import "./css-split/globals.css";
+import "./css-split/core.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

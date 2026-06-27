@@ -614,13 +614,13 @@ export function VoulamandisFooter({ language = "en" }: { language?: LanguageCode
 
           <p>{copy.description}</p>
 
-          <div className="vh-footer__cta-row">
-            <a className="vh-footer__primary" href={ratesPaths[currentLanguage]}>
+          <div className="vh-footer__cta-row !grid !grid-cols-2 !gap-2 md:!flex md:!flex-wrap md:!gap-2.5">
+            <a className="vh-footer__primary !w-auto !min-w-0 !min-h-10 !px-2 !text-[11px] !leading-tight !tracking-[0.04em] md:!min-h-[46px] md:!px-[18px]" href={ratesPaths[currentLanguage]}>
               {copy.bookStay}
             </a>
 
             <a
-              className="vh-footer__secondary"
+              className="vh-footer__secondary !w-auto !min-w-0 !min-h-10 !px-2 !text-[11px] !leading-tight !tracking-[0.04em] md:!min-h-[46px] md:!px-[18px]"
               href="https://wa.me/306944474226"
               target="_blank"
               rel="noopener"
@@ -628,7 +628,7 @@ export function VoulamandisFooter({ language = "en" }: { language?: LanguageCode
               WhatsApp
             </a>
             <a
-              className="vh-footer__secondary"
+              className="vh-footer__secondary !w-auto !min-w-0 !min-h-10 !px-2 !text-[11px] !leading-tight !tracking-[0.04em] md:!min-h-[46px] md:!px-[18px]"
               href="https://www.instagram.com/chioshotels/"
               target="_blank"
               rel="noopener"
@@ -637,7 +637,7 @@ export function VoulamandisFooter({ language = "en" }: { language?: LanguageCode
             </a>
 
             <a
-              className="vh-footer__secondary"
+              className="vh-footer__secondary !w-auto !min-w-0 !min-h-10 !px-2 !text-[11px] !leading-tight !tracking-[0.04em] md:!min-h-[46px] md:!px-[18px]"
               href="https://www.facebook.com/people/Voulamandis-House/100063584320703/"
               target="_blank"
               rel="noopener"
