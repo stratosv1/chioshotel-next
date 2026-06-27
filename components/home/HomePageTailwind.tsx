@@ -35,7 +35,7 @@ function SectionTitle({
       <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] text-amber-700">
         {kicker}
       </p>
-      <h2 className="text-balance font-serif text-3xl font-bold leading-tight text-stone-900 md:text-5xl">
+      <h2 className="text-balance break-words font-serif text-3xl font-bold leading-tight text-stone-900 md:text-5xl">
         {icon ? <span className="mr-2" aria-hidden="true">{icon}</span> : null}
         {title}
       </h2>
@@ -83,9 +83,9 @@ function SecondaryButton({
 export function HomePageTailwind({ data }: HomePageTailwindProps) {
   return (
     <>
-      <main className="bg-[#fffaf3] text-stone-900">
+      <main className="overflow-x-hidden bg-[#fffaf3] text-stone-900">
         <section
-          className="relative flex min-h-[680px] items-end overflow-hidden bg-stone-950 text-white md:min-h-[82vh]"
+          className="relative min-w-0 flex min-h-[680px] items-end overflow-hidden bg-stone-950 text-white md:min-h-[82vh]"
           aria-label={data.hero.title}
         >
           <Image
@@ -100,8 +100,8 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-black/10 md:bg-gradient-to-l md:from-black/75 md:via-black/25 md:to-transparent" />
 
-          <div className="relative z-10 mx-auto flex w-full max-w-7xl justify-end px-4 pb-10 pt-28 md:px-8 md:pb-14 md:pt-32">
-            <div className="w-full max-w-xl rounded-[2rem] border border-white/15 bg-stone-950/55 p-5 shadow-2xl shadow-black/30 backdrop-blur-md md:p-8">
+          <div className="relative min-w-0 z-10 mx-auto flex w-full max-w-7xl justify-end px-4 pb-10 pt-28 md:px-8 md:pb-14 md:pt-32">
+            <div className="w-full max-w-xl rounded-[1.6rem] sm:rounded-[2rem] border border-white/15 bg-stone-950/55 p-5 shadow-2xl shadow-black/30 backdrop-blur-md md:p-8">
               <div
                 className="mb-5 inline-flex items-center gap-3 rounded-full bg-white px-4 py-2 text-sm font-bold text-stone-800 shadow-lg"
                 aria-label={`${data.hero.rating} - ${data.hero.reviews}`}
@@ -169,7 +169,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
 
         <a
           href={data.announceBar.href}
-          className="relative z-20 mx-auto -mt-5 flex w-[min(1120px,92vw)] items-center justify-between gap-4 rounded-3xl bg-white px-5 py-4 text-stone-800 shadow-xl shadow-stone-900/10 ring-1 ring-amber-900/10 md:px-7"
+          className="relative min-w-0 z-20 mx-auto -mt-5 flex w-[min(1120px,92vw)] items-center justify-between gap-4 rounded-3xl bg-white px-5 py-4 text-stone-800 shadow-xl shadow-stone-900/10 ring-1 ring-amber-900/10 md:px-7"
         >
           <span className="text-2xl" aria-hidden="true">{data.announceBar.icon}</span>
           <span className="flex-1 text-sm font-semibold md:text-base">
@@ -180,11 +180,11 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
 
         <section className="px-4 py-12 md:px-8 md:py-18">
           <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-            <article className="rounded-[2rem] bg-white p-6 shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 md:p-9">
+            <article className="rounded-[1.6rem] sm:rounded-[2rem] bg-white p-6 shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 md:p-9">
               <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] text-amber-700">
                 {data.intro.left.kicker}
               </p>
-              <h2 className="font-serif text-3xl font-bold leading-tight text-stone-900 md:text-5xl">
+              <h2 className="break-words font-serif text-3xl font-bold leading-tight text-stone-900 md:text-5xl">
                 <span className="mr-2" aria-hidden="true">{data.intro.left.icon}</span>
                 {data.intro.left.title}
               </h2>
@@ -203,11 +203,11 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
               </div>
             </article>
 
-            <article className="rounded-[2rem] bg-[#2f241d] p-6 text-white shadow-lg shadow-stone-900/10 md:p-9">
+            <article className="rounded-[1.6rem] sm:rounded-[2rem] bg-[#2f241d] p-6 text-white shadow-lg shadow-stone-900/10 md:p-9">
               <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] text-amber-200">
                 {data.intro.right.kicker}
               </p>
-              <h3 className="font-serif text-3xl font-bold leading-tight">
+              <h3 className="break-words font-serif text-3xl font-bold leading-tight">
                 {data.intro.right.title}
               </h3>
               <div className="mt-6 grid grid-cols-2 gap-3">
@@ -232,8 +232,8 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
             />
 
             <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-              <article className="overflow-hidden rounded-[2rem] bg-white shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10">
-                <div className="relative min-h-[360px]">
+              <article className="overflow-hidden rounded-[1.6rem] sm:rounded-[2rem] bg-white shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10">
+                <div className="relative min-w-0 min-h-[360px]">
                   <Image
                     src={data.location.map.previewImage}
                     alt={data.location.title}
@@ -259,7 +259,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
                 </div>
               </article>
 
-              <article className="rounded-[2rem] bg-white p-6 shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 md:p-8">
+              <article className="rounded-[1.6rem] sm:rounded-[2rem] bg-white p-6 shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 md:p-8">
                 <p className="text-xs font-black uppercase tracking-[0.22em] text-amber-700">
                   {data.location.infoCard.kicker}
                 </p>
@@ -289,18 +289,18 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
               </article>
             </div>
 
-            <article className="relative mt-8 overflow-hidden rounded-[2.5rem] border border-amber-900/10 bg-[#fff8ea] shadow-2xl shadow-amber-900/10">
+            <article className="relative min-w-0 mt-8 overflow-hidden rounded-[1.8rem] sm:rounded-[2.5rem] border border-amber-900/10 bg-[#fff8ea] shadow-2xl shadow-amber-900/10">
               <div className="absolute -left-24 -top-24 h-56 w-56 rounded-full bg-orange-300/25 blur-3xl" />
               <div className="absolute -bottom-28 right-12 h-72 w-72 rounded-full bg-amber-500/15 blur-3xl" />
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(251,191,36,0.20),transparent_34%),linear-gradient(135deg,rgba(255,255,255,0.92),rgba(255,247,237,0.78))]" />
 
-              <div className="relative grid gap-0 lg:grid-cols-[1.05fr_0.95fr]">
+              <div className="relative min-w-0 grid gap-0 lg:grid-cols-[1.05fr_0.95fr]">
                 <div className="p-6 md:p-10">
                   <span className="inline-flex rounded-full bg-white/85 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-orange-800 shadow-sm ring-1 ring-amber-900/10">
                     {data.location.discount.badge}
                   </span>
 
-                  <h3 className="mt-6 max-w-xl font-serif text-4xl font-bold leading-tight text-stone-950 md:text-5xl">
+                  <h3 className="mt-6 max-w-xl break-words font-serif text-4xl font-bold leading-tight text-stone-950 md:text-5xl">
                     {data.location.discount.title}
                   </h3>
 
@@ -324,12 +324,12 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
                 </div>
 
                 <div className="flex items-center p-4 md:p-8">
-                  <div className="w-full rounded-[2rem] bg-gradient-to-br from-[#3a271b] via-[#7a3f11] to-[#d97706] p-5 text-white shadow-2xl shadow-orange-900/25 md:p-7">
+                  <div className="w-full rounded-[1.6rem] sm:rounded-[2rem] bg-gradient-to-br from-[#3a271b] via-[#7a3f11] to-[#d97706] p-5 text-white shadow-2xl shadow-orange-900/25 md:p-7">
                     <div className="rounded-[1.5rem] border border-white/15 bg-white/10 p-5 backdrop-blur md:p-6">
                       <p className="text-xs font-black uppercase tracking-[0.18em] text-amber-100">
                         {data.location.discount.badge}
                       </p>
-                      <p className="mt-3 font-serif text-3xl font-bold leading-tight">
+                      <p className="mt-3 break-words font-serif text-3xl font-bold leading-tight">
                         {data.location.discount.title}
                       </p>
                       <p className="mt-3 text-sm leading-7 text-white/80">
@@ -370,11 +370,11 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
         <section className="px-4 py-12 md:px-8 md:py-18">
           <div className="mx-auto max-w-7xl">
             <div className="grid gap-6 lg:grid-cols-[1fr_0.75fr]">
-              <article className="rounded-[2rem] bg-[#2f241d] p-6 text-white shadow-xl shadow-stone-900/10 md:p-10">
+              <article className="rounded-[1.6rem] sm:rounded-[2rem] bg-[#2f241d] p-6 text-white shadow-xl shadow-stone-900/10 md:p-10">
                 <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] text-amber-200">
                   {data.roomsPreview.kicker}
                 </p>
-                <h2 className="font-serif text-3xl font-bold leading-tight md:text-5xl">
+                <h2 className="break-words font-serif text-3xl font-bold leading-tight md:text-5xl">
                   <span className="mr-2" aria-hidden="true">{data.roomsPreview.icon}</span>
                   {data.roomsPreview.title}
                 </h2>
@@ -394,7 +394,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
                 </div>
               </article>
 
-              <article className="rounded-[2rem] bg-white p-6 shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 md:p-8">
+              <article className="rounded-[1.6rem] sm:rounded-[2rem] bg-white p-6 shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 md:p-8">
                 <p className="text-xs font-black uppercase tracking-[0.22em] text-amber-700">
                   {data.roomsPreview.sideCard.kicker}
                 </p>
@@ -413,9 +413,9 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
                   <a
                     key={room.id}
                     href={room.href}
-                    className="group overflow-hidden rounded-[2rem] bg-white shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 transition hover:-translate-y-1 hover:shadow-xl"
+                    className="group overflow-hidden rounded-[1.6rem] sm:rounded-[2rem] bg-white shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 transition hover:-translate-y-1 hover:shadow-xl"
                   >
-                    <div className="relative aspect-[4/3] overflow-hidden">
+                    <div className="relative min-w-0 aspect-[4/3] overflow-hidden">
                       <Image
                         src={imageSrc}
                         alt={room.title}
@@ -462,7 +462,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
         <LazyLastMinuteDeals data={data.lastMinute} canonicalPath={data.seo.canonicalPath} />
 
         <section className="px-4 py-12 md:px-8 md:py-18">
-          <div className="mx-auto max-w-5xl rounded-[2rem] bg-white p-6 text-center shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 md:p-10">
+          <div className="mx-auto max-w-5xl rounded-[1.6rem] sm:rounded-[2rem] bg-white p-6 text-center shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 md:p-10">
             <SectionTitle
               kicker={data.reviews.kicker}
               icon={data.reviews.icon}
@@ -512,7 +512,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
                   <a
                     key={card.id}
                     href={card.href}
-                    className="group relative min-h-[360px] overflow-hidden rounded-[2rem] bg-stone-950 text-white shadow-xl shadow-stone-900/10"
+                    className="group relative min-h-[360px] overflow-hidden rounded-[1.6rem] sm:rounded-[2rem] bg-stone-950 text-white shadow-xl shadow-stone-900/10"
                   >
                     <Image
                       src={imageSrc}
@@ -553,9 +553,9 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
                   <a
                     key={card.id}
                     href={card.href}
-                    className="group overflow-hidden rounded-[2rem] bg-white shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 transition hover:-translate-y-1"
+                    className="group overflow-hidden rounded-[1.6rem] sm:rounded-[2rem] bg-white shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 transition hover:-translate-y-1"
                   >
-                    <div className="relative aspect-[16/10] overflow-hidden">
+                    <div className="relative min-w-0 aspect-[16/10] overflow-hidden">
                       <Image
                         src={imageSrc}
                         alt={card.title}
@@ -580,7 +580,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
         </section>
 
         <section className="px-4 py-10 md:px-8">
-          <div className="mx-auto grid max-w-7xl gap-5 rounded-[2rem] bg-[#2f241d] p-6 text-white md:grid-cols-[1fr_auto] md:items-center md:p-8">
+          <div className="mx-auto grid max-w-7xl gap-5 rounded-[1.6rem] sm:rounded-[2rem] bg-[#2f241d] p-6 text-white md:grid-cols-[1fr_auto] md:items-center md:p-8">
             <div>
               <p className="text-xs font-black uppercase tracking-[0.22em] text-amber-200">
                 {data.quizBar.label}
@@ -589,7 +589,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
             </div>
             <a
               href={data.quizBar.href}
-              className="inline-flex min-w-[300px] max-w-full items-center justify-center rounded-full bg-white px-6 py-3 text-center shadow-lg transition hover:-translate-y-0.5 hover:bg-amber-50"
+              className="inline-flex w-full max-w-full sm:min-w-[300px] sm:w-auto items-center justify-center rounded-full bg-white px-6 py-3 text-center shadow-lg transition hover:-translate-y-0.5 hover:bg-amber-50"
               aria-label={data.quizBar.cta}
               style={{
                 color: "#92400e",
@@ -630,7 +630,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
         </section>
 
         <section className="px-4 pb-16 pt-4 md:px-8 md:pb-20">
-          <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] bg-stone-950 text-white shadow-2xl shadow-stone-900/20">
+          <div className="relative min-w-0 mx-auto max-w-7xl overflow-hidden rounded-[1.8rem] sm:rounded-[2.5rem] bg-stone-950 text-white shadow-2xl shadow-stone-900/20">
             <Image
               src="/images/site/Screenshot_2026-04-25-14-11-19-166_com.instagram.android-edit-1.webp"
               alt=""
@@ -642,12 +642,12 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
             <div className="absolute inset-0 bg-gradient-to-r from-black/78 via-black/48 to-black/10" />
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(245,158,11,0.12),transparent_36%)]" />
 
-            <div className="relative z-10 max-w-3xl p-8 md:p-14">
+            <div className="relative min-w-0 z-10 max-w-3xl p-8 md:p-14">
               <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] text-amber-200">
                 {data.finalCta.kicker}
               </p>
 
-              <h2 className="font-serif text-4xl font-bold leading-tight md:text-6xl">
+              <h2 className="break-words font-serif text-4xl font-bold leading-tight md:text-6xl">
                 <span className="mr-2" aria-hidden="true">{data.finalCta.icon}</span>
                 {data.finalCta.title}
               </h2>
