@@ -400,7 +400,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
                         sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw"
                         className="object-cover transition duration-500 group-hover:scale-105"
                       />
-                      <div className="absolute left-3 top-3 rounded-full bg-emerald-500 px-3 py-1.5 text-xs font-black text-white">
+                      <div className="absolute left-3 top-3 rounded-full bg-emerald-700 px-3 py-1.5 text-xs font-black text-white">
                         {room.liveBadge}
                       </div>
                       <div className="absolute right-3 top-3 rounded-full bg-white/95 px-3 py-1.5 text-xs font-black text-emerald-700">
