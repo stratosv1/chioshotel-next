@@ -192,16 +192,19 @@ export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
 
           <div className="grid auto-rows-[minmax(340px,auto)] gap-4 md:grid-cols-4 md:gap-5">
             {data.beaches.map((beach, index) => (
-              <a className={getBeachCardClass(beach.size)} href={beach.href} key={beach.href}>
-                <img
-                  src={beach.image}
-                  alt=""
-                  loading={index < 2 ? "eager" : "lazy"}
-                  className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-slate-950/20 to-transparent" />
+              <a
+                className={getBeachCardClass(beach.size)}
+                href={beach.href}
+                key={beach.href}
+                style={{
+                  backgroundImage: `url(${beach.image})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/15 to-transparent transition duration-700 group-hover:from-black/55" />
 
-                <div className="absolute inset-x-0 bottom-0 z-10 p-5 text-white md:p-7">
+                <div className="absolute inset-x-0 bottom-0 z-20 p-5 text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.75)] md:p-7">
                   <div className="mb-3 flex flex-wrap gap-2 text-[11px] font-black uppercase tracking-[0.12em] text-white/80">
                     <span>{beach.region}</span>
                     <span>•</span>
@@ -211,7 +214,7 @@ export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
                   <div className="mb-4 flex flex-wrap gap-2">
                     {beach.badges.map((badge) => (
                       <span
-                        className="rounded-full border border-white/25 bg-white/15 px-3 py-1 text-[11px] font-bold text-white backdrop-blur"
+                        className="rounded-full border border-white/35 bg-white/18 px-3.5 py-1.5 text-[11px] font-black uppercase tracking-[0.04em] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_6px_18px_rgba(0,0,0,0.18)] backdrop-blur-md"
                         key={badge}
                       >
                         {badge}
@@ -297,6 +300,10 @@ export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
     </main>
   );
 }
+
+
+
+
 
 
 
