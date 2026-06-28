@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { VillageDetailPage } from "@/components/chios/VillageDetailPage";
+import { VillageDetailPageTailwind } from "@/components/chios/VillageDetailPageTailwind";
 import { buildVillageDetailSchema } from "@/content/village-detail-schema";
 import { getVillageDetailBySlug, getVillageSlugs } from "@/content/village-details";
 import { buildPageMetadata } from "@/lib/seo";
@@ -45,7 +45,7 @@ export default async function Page({ params }: PageProps) {
   return (
     <>
       <JsonLd data={buildVillageDetailSchema(village)} />
-      <VillageDetailPage village={village} />
+      <VillageDetailPageTailwind village={village} />
     </>
   );
 }
