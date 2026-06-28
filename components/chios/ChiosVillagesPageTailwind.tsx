@@ -94,18 +94,38 @@ export function ChiosVillagesPageTailwind({ data }: ChiosVillagesPageProps) {
   const language = getVillagesPageLanguage(data);
   const copy = villagesPageUiCopy[language];
 
+  const getVillageCardClassName = (size: string) => {
+    const base =
+      "group relative flex min-h-[340px] overflow-hidden rounded-[30px] bg-slate-900 shadow-xl shadow-black/10 transition duration-300 hover:-translate-y-1 hover:shadow-2xl";
+
+    if (size === "large") {
+      return base + " md:col-span-6 md:row-span-2 md:min-h-[520px]";
+    }
+
+    if (size === "wide") {
+      return base + " md:col-span-6 md:min-h-[340px]";
+    }
+
+    if (size === "tall") {
+      return base + " md:col-span-3 md:row-span-2 md:min-h-[520px]";
+    }
+
+    return base + " md:col-span-3 md:min-h-[340px]";
+  };
+
+
   return (
-    <main className="chios-villages-page">
-      <section className="cv-hero" aria-labelledby="cv-hero-title">
-        <div className="cv-hero-media" aria-hidden="true">
-          <img src={data.hero.image} alt="" loading="eager" />
+    <main className="overflow-hidden bg-[#f7efe5] text-[#2f261f]">
+      <section className="relative flex min-h-[68svh] items-end overflow-hidden text-white md:min-h-[620px]" aria-labelledby="cv-hero-title">
+        <div className="absolute inset-0" aria-hidden="true">
+          <img src={data.hero.image} alt="" loading="eager" className="h-full w-full object-cover" />
         </div>
 
-        <div className="cv-hero-overlay" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/45 to-black/15" aria-hidden="true" />
 
-        <div className="cv-wrap cv-hero-inner">
-          <div className="cv-hero-card">
-            <span className="cv-kicker cv-kicker--light">
+        <div className="relative z-10 mx-auto w-full max-w-[1240px] px-4 py-16 md:px-6 md:py-24">
+          <div className="max-w-[720px] rounded-[34px] border border-white/25 bg-white/15 p-6 shadow-2xl backdrop-blur-md md:p-12">
+            <span className="mb-4 inline-flex items-center gap-3 text-xs font-black uppercase tracking-[0.18em] text-white/90 before:h-px before:w-8 before:bg-current">
               {data.hero.kicker}
             </span>
 
@@ -113,16 +133,16 @@ export function ChiosVillagesPageTailwind({ data }: ChiosVillagesPageProps) {
 
             <p>{data.hero.description}</p>
 
-            <div className="cv-hero-actions">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <a
-                className="cv-btn cv-btn--primary"
+                className="inline-flex min-h-[54px] items-center justify-center rounded-full bg-gradient-to-r from-[#a87842] to-[#8e6607] px-7 text-xs font-black uppercase tracking-[0.12em] text-white shadow-xl transition hover:-translate-y-1"
                 href={data.hero.primaryCta.href}
               >
                 {data.hero.primaryCta.label}
               </a>
 
               <a
-                className="cv-btn cv-btn--secondary"
+                className="inline-flex min-h-[54px] items-center justify-center rounded-full border border-white/40 bg-white/15 px-7 text-xs font-black uppercase tracking-[0.12em] text-white transition hover:-translate-y-1 hover:bg-white/25"
                 href={data.hero.secondaryCta.href}
               >
                 {data.hero.secondaryCta.label}
@@ -133,18 +153,18 @@ export function ChiosVillagesPageTailwind({ data }: ChiosVillagesPageProps) {
       </section>
 
       <section
-        className="cv-section cv-section--intro"
+        className="px-4 py-14 md:px-6 md:py-24"
         aria-labelledby="cv-intro-title"
       >
-        <div className="cv-wrap cv-intro-grid">
-          <article className="cv-intro-copy">
-            <span className="cv-kicker">{data.intro.kicker}</span>
+        <div className="mx-auto grid max-w-[1180px] gap-5 md:grid-cols-[1.05fr_0.95fr]">
+          <article className="rounded-[32px] border border-[#8e6607]/15 bg-white/90 p-6 shadow-xl shadow-black/5 md:p-9">
+            <span className="text-xs font-black uppercase tracking-[0.16em] text-[#8e6607]">{data.intro.kicker}</span>
             <h2 id="cv-intro-title">{data.intro.title}</h2>
             <p>{data.intro.description}</p>
           </article>
 
-          <aside className="cv-tip-card">
-            <div className="cv-tip-icon" aria-hidden="true">
+          <aside className="flex gap-5 rounded-[32px] border border-[#8e6607]/15 bg-[#fffdfa] p-6 shadow-xl shadow-black/5 md:p-9">
+            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-[#fff4df] text-3xl shadow" aria-hidden="true">
               {data.intro.tip.icon}
             </div>
 
@@ -158,25 +178,25 @@ export function ChiosVillagesPageTailwind({ data }: ChiosVillagesPageProps) {
       </section>
 
       <section
-        className="cv-section cv-section--villages"
+        className="px-4 py-14 md:px-6 md:py-24"
         id="villages"
         aria-labelledby="cv-villages-title"
       >
-        <div className="cv-wrap">
-          <header className="cv-section-head">
-            <span className="cv-kicker">{copy.villagesKicker}</span>
+        <div className="mx-auto max-w-[1180px]">
+          <header className="mb-8 max-w-[860px]">
+            <span className="text-xs font-black uppercase tracking-[0.16em] text-[#8e6607]">{copy.villagesKicker}</span>
             <h2 id="cv-villages-title">{copy.villagesTitle}</h2>
             <p>{copy.villagesText}</p>
           </header>
 
-          <div className="cv-bento-grid">
+          <div className="grid auto-rows-[minmax(320px,auto)] gap-4 md:grid-cols-12 md:gap-5">
             {data.villages.map((village, index) => (
               <a
-                className={`cv-village-card cv-village-card--${village.size}`}
+                className={getVillageCardClassName(village.size)}
                 href={village.href}
                 key={village.href}
               >
-                <div className="cv-village-image" aria-hidden="true">
+                <div className="absolute inset-0" aria-hidden="true">
                   <img
                     src={village.image}
                     alt=""
@@ -184,15 +204,15 @@ export function ChiosVillagesPageTailwind({ data }: ChiosVillagesPageProps) {
                   />
                 </div>
 
-                <div className="cv-village-overlay" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" aria-hidden="true" />
 
-                <div className="cv-village-content">
-                  <div className="cv-village-meta">
+                <div className="relative z-10 mt-auto w-full p-5 text-white md:p-7">
+                  <div className="mb-3 flex flex-wrap gap-2">
                     <span>{village.region}</span>
                     <span>{village.mood}</span>
                   </div>
 
-                  <div className="cv-village-badges">
+                  <div className="mb-4 flex flex-wrap gap-2">
                     {village.badges.map((badge) => (
                       <span key={badge}>{badge}</span>
                     ))}
@@ -210,19 +230,19 @@ export function ChiosVillagesPageTailwind({ data }: ChiosVillagesPageProps) {
       </section>
 
       <section
-        className="cv-section cv-section--planning"
+        className="px-4 py-14 md:px-6 md:py-24"
         aria-labelledby="cv-planning-title"
       >
-        <div className="cv-wrap cv-planning-grid">
+        <div className="mx-auto grid max-w-[1180px] gap-6 rounded-[34px] border border-[#8e6607]/15 bg-white p-6 shadow-xl shadow-black/5 md:grid-cols-[0.9fr_1.1fr] md:p-10">
           <article>
-            <span className="cv-kicker">{data.planning.kicker}</span>
+            <span className="text-xs font-black uppercase tracking-[0.16em] text-[#8e6607]">{data.planning.kicker}</span>
             <h2 id="cv-planning-title">{data.planning.title}</h2>
             <p>{data.planning.description}</p>
           </article>
 
-          <div className="cv-planning-list">
+          <div className="grid gap-4">
             {data.planning.items.map((item) => (
-              <div className="cv-planning-item" key={item.title}>
+              <div className="flex gap-4 rounded-2xl border border-[#8e6607]/10 bg-[#fffdfa] p-5" key={item.title}>
                 <span aria-hidden="true">{item.icon}</span>
 
                 <div>
@@ -236,25 +256,25 @@ export function ChiosVillagesPageTailwind({ data }: ChiosVillagesPageProps) {
       </section>
 
       <section
-        className="cv-section cv-section--stay"
+        className="px-4 py-14 md:px-6 md:py-24"
         aria-labelledby="cv-stay-title"
       >
-        <div className="cv-wrap">
-          <article className="cv-stay-card">
-            <span className="cv-kicker">{data.stay.kicker}</span>
+        <div className="mx-auto max-w-[1180px]">
+          <article className="rounded-[36px] bg-gradient-to-r from-[#2f261f] to-[#8e6607] p-6 text-white shadow-2xl md:p-12">
+            <span className="text-xs font-black uppercase tracking-[0.16em] text-white/80">{data.stay.kicker}</span>
             <h2 id="cv-stay-title">{data.stay.title}</h2>
             <p>{data.stay.text}</p>
 
-            <div className="cv-stay-actions">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <a
-                className="cv-btn cv-btn--primary"
+                className="inline-flex min-h-[54px] items-center justify-center rounded-full bg-gradient-to-r from-[#a87842] to-[#8e6607] px-7 text-xs font-black uppercase tracking-[0.12em] text-white shadow-xl transition hover:-translate-y-1"
                 href={data.stay.primaryCta.href}
               >
                 {data.stay.primaryCta.label}
               </a>
 
               <a
-                className="cv-btn cv-btn--outline"
+                className="inline-flex min-h-[54px] items-center justify-center rounded-full border border-white/35 px-7 text-xs font-black uppercase tracking-[0.12em] text-white transition hover:-translate-y-1 hover:bg-white/10"
                 href={data.stay.secondaryCta.href}
               >
                 {data.stay.secondaryCta.label}
