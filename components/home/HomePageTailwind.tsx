@@ -126,7 +126,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
               <div className="mt-7 grid grid-cols-2 gap-3">
                 <a
                   href={data.hero.primaryCta.href}
-                  className="break-words inline-flex min-h-14 items-center justify-center rounded-2xl bg-orange-500 px-4 text-center text-xs font-black uppercase tracking-[0.08em] text-white shadow-lg shadow-orange-900/25 transition hover:-translate-y-0.5 hover:bg-orange-600 md:rounded-full"
+                  className="break-words inline-flex min-h-14 items-center justify-center rounded-2xl bg-orange-700 px-4 text-center text-xs font-black uppercase tracking-[0.08em] text-white shadow-lg shadow-orange-900/25 transition hover:-translate-y-0.5 hover:bg-orange-800 md:rounded-full"
                 >
                   <span className="mr-2" aria-hidden="true">{data.hero.primaryCta.icon}</span>
                   {data.hero.primaryCta.label}
@@ -668,5 +668,6 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
     </>
   );
 }
+
 
 
