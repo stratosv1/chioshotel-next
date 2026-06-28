@@ -140,29 +140,6 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
                   {data.hero.secondaryCta.label}
                 </a>
               </div>
-
-              <a
-                href={data.hero.quizCard.href}
-                className="mt-4 grid grid-cols-[auto_1fr] gap-3 rounded-3xl border border-white/20 bg-white/10 p-4 text-white transition hover:bg-white/15 md:grid-cols-[auto_1fr_auto]"
-              >
-                <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/15 text-2xl">
-                  {data.hero.quizCard.icon}
-                </span>
-                <span>
-                  <span className="break-words text-[11px] font-black uppercase tracking-[0.14em] text-emerald-200">
-                    {data.hero.quizCard.liveLabel}
-                  </span>
-                  <strong className="mt-1 block text-sm font-black uppercase">
-                    {data.hero.quizCard.title}
-                  </strong>
-                  <span className="mt-1 block text-sm leading-6 text-white/85">
-                    {data.hero.quizCard.text}
-                  </span>
-                </span>
-                <span className="col-span-2 inline-flex items-center justify-center rounded-full bg-white px-4 py-2 text-xs font-black uppercase text-amber-800 md:col-span-1">
-                  {data.hero.quizCard.cta}
-                </span>
-              </a>
             </div>
           </div>
         </section>
@@ -688,3 +665,4 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
     </>
   );
 }
+
