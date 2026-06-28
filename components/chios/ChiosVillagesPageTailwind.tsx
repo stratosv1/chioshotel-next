@@ -10,49 +10,49 @@ const villagesPageUiCopy = {
     villagesTitle: "A visual guide to local character",
     villagesText:
       "From medieval fortress villages and mastic traditions to seaside food stops, these villages show the deeper identity of Chios.",
-    exploreVillage: "Explore village →",
+    exploreVillage: "Explore village \u2192",
   },
   el: {
-    villagesKicker: "Κορυφαία χωριά της Χίου",
-    villagesTitle: "Οπτικός οδηγός τοπικού χαρακτήρα",
+    villagesKicker: "\u039a\u03bf\u03c1\u03c5\u03c6\u03b1\u03af\u03b1 \u03c7\u03c9\u03c1\u03b9\u03ac \u03c4\u03b7\u03c2 \u03a7\u03af\u03bf\u03c5",
+    villagesTitle: "\u0388\u03bd\u03b1\u03c2 \u03bf\u03c0\u03c4\u03b9\u03ba\u03cc\u03c2 \u03bf\u03b4\u03b7\u03b3\u03cc\u03c2 \u03c3\u03c4\u03bf\u03bd \u03c4\u03bf\u03c0\u03b9\u03ba\u03cc \u03c7\u03b1\u03c1\u03b1\u03ba\u03c4\u03ae\u03c1\u03b1",
     villagesText:
-      "Από μεσαιωνικά καστροχώρια και παραδόσεις μαστίχας μέχρι παραθαλάσσιες στάσεις για φαγητό, αυτά τα χωριά δείχνουν τη βαθύτερη ταυτότητα της Χίου.",
-    exploreVillage: "Δείτε το χωριό →",
+      "\u0391\u03c0\u03cc \u03bc\u03b5\u03c3\u03b1\u03b9\u03c9\u03bd\u03b9\u03ba\u03ac \u03ba\u03b1\u03c3\u03c4\u03c1\u03bf\u03c7\u03ce\u03c1\u03b9\u03b1 \u03ba\u03b1\u03b9 \u03c0\u03b1\u03c1\u03b1\u03b4\u03cc\u03c3\u03b5\u03b9\u03c2 \u03bc\u03b1\u03c3\u03c4\u03af\u03c7\u03b1\u03c2 \u03bc\u03ad\u03c7\u03c1\u03b9 \u03c0\u03b1\u03c1\u03b1\u03b8\u03b1\u03bb\u03ac\u03c3\u03c3\u03b9\u03b5\u03c2 \u03c3\u03c4\u03ac\u03c3\u03b5\u03b9\u03c2 \u03b3\u03b9\u03b1 \u03c6\u03b1\u03b3\u03b7\u03c4\u03cc, \u03b1\u03c5\u03c4\u03ac \u03c4\u03b1 \u03c7\u03c9\u03c1\u03b9\u03ac \u03b4\u03b5\u03af\u03c7\u03bd\u03bf\u03c5\u03bd \u03c4\u03b7 \u03b2\u03b1\u03b8\u03cd\u03c4\u03b5\u03c1\u03b7 \u03c4\u03b1\u03c5\u03c4\u03cc\u03c4\u03b7\u03c4\u03b1 \u03c4\u03b7\u03c2 \u03a7\u03af\u03bf\u03c5.",
+    exploreVillage: "\u0394\u03b5\u03af\u03c4\u03b5 \u03c4\u03bf \u03c7\u03c9\u03c1\u03b9\u03cc \u2192",
   },
   fr: {
     villagesKicker: "Villages incontournables de Chios",
-    villagesTitle: "Un guide visuel du caractère local",
+    villagesTitle: "Un guide visuel du caract\u00e8re local",
     villagesText:
-      "Des villages fortifiés médiévaux et des traditions du mastic aux haltes gourmandes en bord de mer, ces villages révèlent l’identité profonde de Chios.",
-    exploreVillage: "Explorer le village →",
+      "Des villages fortifi\u00e9s m\u00e9di\u00e9vaux et des traditions du mastic aux haltes gourmandes en bord de mer, ces villages r\u00e9v\u00e8lent l\u2019identit\u00e9 profonde de Chios.",
+    exploreVillage: "Explorer le village \u2192",
   },
   de: {
-    villagesKicker: "Top-Dörfer auf Chios",
+    villagesKicker: "Top-D\u00f6rfer auf Chios",
     villagesTitle: "Ein visueller Guide zum lokalen Charakter",
     villagesText:
-      "Von mittelalterlichen Wehrdörfern und Mastixtraditionen bis zu Essensstopps am Meer zeigen diese Dörfer die tiefere Identität von Chios.",
-    exploreVillage: "Dorf ansehen →",
+      "Von mittelalterlichen Wehrd\u00f6rfern und Mastixtraditionen bis zu Essensstopps am Meer zeigen diese D\u00f6rfer die tiefere Identit\u00e4t von Chios.",
+    exploreVillage: "Dorf ansehen \u2192",
   },
   it: {
     villagesKicker: "I migliori villaggi di Chios",
     villagesTitle: "Una guida visiva al carattere locale",
     villagesText:
-      "Dai villaggi fortificati medievali e le tradizioni del mastice alle soste gastronomiche sul mare, questi villaggi mostrano l’identità più profonda di Chios.",
-    exploreVillage: "Esplora il villaggio →",
+      "Dai villaggi fortificati medievali e le tradizioni del mastice alle soste gastronomiche sul mare, questi villaggi mostrano l\u2019identit\u00e0 pi\u00f9 profonda di Chios.",
+    exploreVillage: "Esplora il villaggio \u2192",
   },
   es: {
     villagesKicker: "Pueblos imprescindibles de Chios",
-    villagesTitle: "Una guía visual del carácter local",
+    villagesTitle: "Una gu\u00eda visual del car\u00e1cter local",
     villagesText:
-      "Desde pueblos fortaleza medievales y tradiciones del mastiha hasta paradas gastronómicas junto al mar, estos pueblos muestran la identidad más profunda de Chios.",
-    exploreVillage: "Explorar pueblo →",
+      "Desde pueblos fortaleza medievales y tradiciones del mastiha hasta paradas gastron\u00f3micas junto al mar, estos pueblos muestran la identidad m\u00e1s profunda de Chios.",
+    exploreVillage: "Explorar pueblo \u2192",
   },
   tr: {
-    villagesKicker: "Sakız Adası’nın öne çıkan köyleri",
-    villagesTitle: "Yerel karakter için görsel bir rehber",
+    villagesKicker: "Sak\u0131z Adas\u0131\u2019n\u0131n \u00f6ne \u00e7\u0131kan k\u00f6yleri",
+    villagesTitle: "Yerel karakter i\u00e7in g\u00f6rsel bir rehber",
     villagesText:
-      "Orta Çağ kale köylerinden mastik geleneklerine ve deniz kenarı lezzet duraklarına kadar bu köyler Sakız Adası’nın daha derin kimliğini gösterir.",
-    exploreVillage: "Köyü keşfet →",
+      "Orta \u00c7a\u011f kale k\u00f6ylerinden mastika geleneklerine ve deniz kenar\u0131ndaki lezzet duraklar\u0131na kadar bu k\u00f6yler, Sak\u0131z Adas\u0131\u2019n\u0131n daha derin kimli\u011fini g\u00f6sterir.",
+    exploreVillage: "K\u00f6y\u00fc ke\u015ffet \u2192",
   },
 } as const;
 
