@@ -1,5 +1,4 @@
-import type { ReactNode } from "react";
-import "../../../css-split/pages/beach-detail.css";
+﻿import type { ReactNode } from "react";
 
 export default function RouteCssLayout({
   children,
