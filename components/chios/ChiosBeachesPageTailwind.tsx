@@ -278,10 +278,10 @@ export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
 
             <div className="mt-7 grid grid-cols-2 gap-2.5 md:flex md:flex-wrap md:gap-3">
               <a
-                className="inline-flex min-h-[50px] items-center justify-center rounded-2xl bg-white px-3 text-center text-[10.5px] font-black uppercase tracking-[0.08em] text-slate-950 transition hover:-translate-y-0.5 md:rounded-full md:px-7 md:text-xs"
+                className="inline-flex min-h-[50px] items-center justify-center rounded-2xl bg-white px-3 text-center text-[10.5px] font-black uppercase tracking-[0.08em] !text-slate-950 transition hover:-translate-y-0.5 md:rounded-full md:px-7 md:text-xs"
                 href={data.stay.primaryCta.href}
               >
-                {data.stay.primaryCta.label}
+                {data.stay.primaryCta.label || "View rooms"}
               </a>
 
               <a
@@ -297,3 +297,4 @@ export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
     </main>
   );
 }
+
