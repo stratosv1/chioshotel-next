@@ -199,7 +199,7 @@ export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
                   loading={index < 2 ? "eager" : "lazy"}
                   className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-slate-950/20 to-transparent" />
 
                 <div className="absolute inset-x-0 bottom-0 z-10 p-5 text-white md:p-7">
                   <div className="mb-3 flex flex-wrap gap-2 text-[11px] font-black uppercase tracking-[0.12em] text-white/80">
@@ -297,6 +297,7 @@ export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
     </main>
   );
 }
+
 
 
 

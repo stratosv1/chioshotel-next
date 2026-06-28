@@ -101,7 +101,7 @@ export const chiosBeachesPageEn: ChiosBeachesPageData = {
     title: "Top beaches of Chios",
     description:
       "An insider coastal guide to volcanic shores, emerald coves, family-friendly sandy beaches and the best swimming spots around Chios Island.",
-    image: beachImages.mavraVolia,
+    image: beachImages.agiaDynami,
     primaryCta: {
       label: "Explore beaches",
       href: "#beaches",
@@ -309,7 +309,7 @@ export const chiosBeachesPageEl: ChiosBeachesPageData = {
     title: "Οι καλύτερες παραλίες της Χίου",
     description:
       "Ένας τοπικός οδηγός για ηφαιστειακές ακτές, σμαραγδένιους όρμους, οικογενειακές αμμώδεις παραλίες και τα καλύτερα σημεία για μπάνιο στη Χίο.",
-    image: beachImages.mavraVolia,
+    image: beachImages.agiaDynami,
     primaryCta: {
       label: "Δείτε τις παραλίες",
       href: "#beaches",
@@ -516,7 +516,7 @@ export const chiosBeachesPageFr: ChiosBeachesPageData = {
     title: "Les plus belles plages de Chios",
     description:
       "Un guide local du littoral de Chios : rivages volcaniques, criques émeraude, plages de sable pour les familles et les meilleurs endroits pour se baigner.",
-    image: beachImages.mavraVolia,
+    image: beachImages.agiaDynami,
     primaryCta: {
       label: "Explorer les plages",
       href: "#beaches",
@@ -723,7 +723,7 @@ export const chiosBeachesPageDe: ChiosBeachesPageData = {
     title: "Die schönsten Strände auf Chios",
     description:
       "Ein lokaler Küstenführer zu vulkanischen Stränden, smaragdgrünen Buchten, familienfreundlichen Sandstränden und den besten Badeplätzen auf Chios.",
-    image: beachImages.mavraVolia,
+    image: beachImages.agiaDynami,
     primaryCta: {
       label: "Strände entdecken",
       href: "#beaches",
@@ -930,7 +930,7 @@ export const chiosBeachesPageIt: ChiosBeachesPageData = {
     title: "Le migliori spiagge di Chios",
     description:
       "Una guida locale alla costa di Chios: spiagge vulcaniche, baie smeraldo, spiagge sabbiose per famiglie e i migliori luoghi per nuotare sull’isola.",
-    image: beachImages.mavraVolia,
+    image: beachImages.agiaDynami,
     primaryCta: {
       label: "Esplora le spiagge",
       href: "#beaches",
@@ -1137,7 +1137,7 @@ export const chiosBeachesPageEs: ChiosBeachesPageData = {
     title: "Las mejores playas de Chios",
     description:
       "Una guía local de la costa de Chios: playas volcánicas, calas esmeralda, playas de arena para familias y los mejores lugares para bañarse en la isla.",
-    image: beachImages.mavraVolia,
+    image: beachImages.agiaDynami,
     primaryCta: {
       label: "Explorar playas",
       href: "#beaches",
@@ -1344,7 +1344,7 @@ export const chiosBeachesPageTr: ChiosBeachesPageData = {
     title: "Sakız Adası’nın en güzel plajları",
     description:
       "Volkanik kıyılar, zümrüt koylar, aile dostu kum plajları ve Sakız Adası çevresindeki en iyi yüzme noktaları için yerel bir sahil rehberi.",
-    image: beachImages.mavraVolia,
+    image: beachImages.agiaDynami,
     primaryCta: {
       label: "Plajları keşfet",
       href: "#beaches",
@@ -1558,4 +1558,5 @@ export function getLocalizedChiosBeachesPageByPath(
       return undefined;
   }
 }
+
 
