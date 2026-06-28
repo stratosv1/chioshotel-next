@@ -92,6 +92,20 @@ export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
   const language = getBeachesPageLanguage(data);
   const copy = beachesPageUiCopy[language];
 
+  const getExploreBeachLabel = (beachTitle: string) => {
+    const beachName = beachTitle.split(":")[0].trim();
+
+    if (language === "el") return `Δείτε ${beachName} →`;
+    if (language === "fr") return `Voir ${beachName} →`;
+    if (language === "de") return `${beachName} ansehen →`;
+    if (language === "it") return `Scopri ${beachName} →`;
+    if (language === "es") return `Ver ${beachName} →`;
+    if (language === "tr") return `${beachName} keşfet →`;
+
+    return `Explore ${beachName} →`;
+  };
+
+
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#eef7f4] text-slate-950">
       <section
@@ -225,7 +239,7 @@ export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
                   <h3 className="text-2xl font-black tracking-[-0.04em] md:text-3xl">{beach.title}</h3>
                   <p className="mt-2 line-clamp-3 text-sm leading-6 text-white/82">{beach.description}</p>
                   <strong className="mt-4 inline-flex text-sm font-black text-cyan-100">
-                    {copy.exploreBeach}
+                    {getExploreBeachLabel(beach.title)}
                   </strong>
                 </div>
               </a>

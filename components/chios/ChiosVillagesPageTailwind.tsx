@@ -1,4 +1,4 @@
-import type { ChiosVillagesPageData } from "@/content/chios-villages";
+﻿import type { ChiosVillagesPageData } from "@/content/chios-villages";
 
 type ChiosVillagesPageProps = {
   data: ChiosVillagesPageData;
@@ -90,48 +90,55 @@ function getVillagesPageLanguage(
   return "en";
 }
 
+
 export function ChiosVillagesPageTailwind({ data }: ChiosVillagesPageProps) {
   const language = getVillagesPageLanguage(data);
   const copy = villagesPageUiCopy[language];
 
-  const getVillageCardClassName = (size: string) => {
-    const base =
-      "group relative flex min-h-[340px] overflow-hidden rounded-[30px] bg-slate-900 shadow-xl shadow-black/10 transition duration-300 hover:-translate-y-1 hover:shadow-2xl";
+  const getExploreVillageLabel = (villageTitle: string) => {
+    const villageName = villageTitle.split(":")[0].trim();
 
-    if (size === "large") {
-      return base + " md:col-span-6 md:row-span-2 md:min-h-[520px]";
-    }
+    if (language === "el") return `Δείτε το ${villageName} →`;
+    if (language === "fr") return `Voir ${villageName} →`;
+    if (language === "de") return `${villageName} ansehen →`;
+    if (language === "it") return `Scopri ${villageName} →`;
+    if (language === "es") return `Ver ${villageName} →`;
+    if (language === "tr") return `${villageName} köyünü keşfet →`;
 
-    if (size === "wide") {
-      return base + " md:col-span-6 md:min-h-[340px]";
-    }
-
-    if (size === "tall") {
-      return base + " md:col-span-3 md:row-span-2 md:min-h-[520px]";
-    }
-
-    return base + " md:col-span-3 md:min-h-[340px]";
+    return `Explore ${villageName} →`;
   };
 
 
   return (
     <main className="overflow-hidden bg-[#f7efe5] text-[#2f261f]">
-      <section className="relative flex min-h-[68svh] items-end overflow-hidden text-white md:min-h-[620px]" aria-labelledby="cv-hero-title">
-        <div className="absolute inset-0" aria-hidden="true">
-          <img src={data.hero.image} alt="" loading="eager" className="h-full w-full object-cover" />
-        </div>
+      <section
+        className="relative flex min-h-[68svh] items-end overflow-hidden text-white md:min-h-[620px]"
+        aria-labelledby="villages-hero-title"
+      >
+        <img
+          src={data.hero.image}
+          alt=""
+          loading="eager"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-black/50" aria-hidden="true" />
 
-        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/45 to-black/15" aria-hidden="true" />
-
-        <div className="relative z-10 mx-auto w-full max-w-[1240px] px-4 py-16 md:px-6 md:py-24">
-          <div className="max-w-[720px] rounded-[34px] border border-white/25 bg-white/15 p-6 shadow-2xl backdrop-blur-md md:p-12">
+        <div className="relative z-10 mx-auto w-full max-w-[1180px] px-4 py-16 md:px-6 md:py-24">
+          <div className="max-w-[720px] rounded-[34px] border border-white/25 bg-black/35 p-6 shadow-2xl backdrop-blur-md md:p-10">
             <span className="mb-4 inline-flex items-center gap-3 text-xs font-black uppercase tracking-[0.18em] text-white/90 before:h-px before:w-8 before:bg-current">
               {data.hero.kicker}
             </span>
 
-            <h1 id="cv-hero-title">{data.hero.title}</h1>
+            <h1
+              id="villages-hero-title"
+              className="max-w-[12ch] text-[42px] font-black leading-[0.95] tracking-[-0.055em] text-white drop-shadow-xl md:text-[clamp(54px,7vw,88px)]"
+            >
+              {data.hero.title}
+            </h1>
 
-            <p>{data.hero.description}</p>
+            <p className="mt-6 max-w-[650px] text-base font-semibold leading-8 text-white/90 md:text-lg">
+              {data.hero.description}
+            </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <a
@@ -152,76 +159,121 @@ export function ChiosVillagesPageTailwind({ data }: ChiosVillagesPageProps) {
         </div>
       </section>
 
-      <section
-        className="px-4 py-14 md:px-6 md:py-24"
-        aria-labelledby="cv-intro-title"
-      >
+      <section className="px-4 py-14 md:px-6 md:py-20" aria-labelledby="villages-intro-title">
         <div className="mx-auto grid max-w-[1180px] gap-5 md:grid-cols-[1.05fr_0.95fr]">
-          <article className="rounded-[32px] border border-[#8e6607]/15 bg-white/90 p-6 shadow-xl shadow-black/5 md:p-9">
-            <span className="text-xs font-black uppercase tracking-[0.16em] text-[#8e6607]">{data.intro.kicker}</span>
-            <h2 id="cv-intro-title">{data.intro.title}</h2>
-            <p>{data.intro.description}</p>
+          <article className="rounded-[32px] border border-[#8e6607]/15 bg-white p-6 shadow-xl shadow-black/5 md:p-9">
+            <span className="text-xs font-black uppercase tracking-[0.16em] text-[#8e6607]">
+              {data.intro.kicker}
+            </span>
+
+            <h2
+              id="villages-intro-title"
+              className="mt-4 text-3xl font-black leading-none tracking-[-0.05em] text-[#2f261f] md:text-5xl"
+            >
+              {data.intro.title}
+            </h2>
+
+            <p className="mt-5 text-base leading-8 text-[#574b3f] md:text-lg">
+              {data.intro.description}
+            </p>
           </article>
 
-          <aside className="flex gap-5 rounded-[32px] border border-[#8e6607]/15 bg-[#fffdfa] p-6 shadow-xl shadow-black/5 md:p-9">
-            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-[#fff4df] text-3xl shadow" aria-hidden="true">
+          <aside className="flex gap-5 rounded-[32px] border border-[#8e6607]/15 bg-white p-6 shadow-xl shadow-black/5 md:p-9">
+            <div
+              className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-[#fff4df] text-3xl shadow"
+              aria-hidden="true"
+            >
               {data.intro.tip.icon}
             </div>
 
             <div>
-              <h3>{data.intro.tip.title}</h3>
-              <p>{data.intro.tip.text}</p>
-              <a href={data.intro.tip.href}>{data.intro.tip.linkLabel}</a>
+              <h3 className="text-2xl font-black leading-tight tracking-[-0.04em] text-[#2f261f]">
+                {data.intro.tip.title}
+              </h3>
+
+              <p className="mt-3 text-base leading-7 text-[#574b3f]">
+                {data.intro.tip.text}
+              </p>
+
+              <a
+                className="mt-4 inline-flex text-sm font-black uppercase tracking-[0.1em] text-[#8e6607]"
+                href={data.intro.tip.href}
+              >
+                {data.intro.tip.linkLabel}
+              </a>
             </div>
           </aside>
         </div>
       </section>
 
-      <section
-        className="px-4 py-14 md:px-6 md:py-24"
-        id="villages"
-        aria-labelledby="cv-villages-title"
-      >
+      <section className="px-4 py-14 md:px-6 md:py-20" id="villages" aria-labelledby="villages-list-title">
         <div className="mx-auto max-w-[1180px]">
-          <header className="mb-8 max-w-[860px]">
-            <span className="text-xs font-black uppercase tracking-[0.16em] text-[#8e6607]">{copy.villagesKicker}</span>
-            <h2 id="cv-villages-title">{copy.villagesTitle}</h2>
-            <p>{copy.villagesText}</p>
+          <header className="mb-8 max-w-[820px]">
+            <span className="text-xs font-black uppercase tracking-[0.16em] text-[#8e6607]">
+              {copy.villagesKicker}
+            </span>
+
+            <h2
+              id="villages-list-title"
+              className="mt-4 text-3xl font-black leading-none tracking-[-0.05em] text-[#2f261f] md:text-5xl"
+            >
+              {copy.villagesTitle}
+            </h2>
+
+            <p className="mt-5 max-w-[760px] text-base leading-8 text-[#574b3f] md:text-lg">
+              {copy.villagesText}
+            </p>
           </header>
 
-          <div className="grid auto-rows-[minmax(320px,auto)] gap-4 md:grid-cols-12 md:gap-5">
+          <div className="grid items-stretch gap-7 md:grid-cols-2 xl:grid-cols-3">
             {data.villages.map((village, index) => (
               <a
-                className={getVillageCardClassName(village.size)}
+                className="group flex min-h-[560px] flex-col overflow-hidden rounded-[30px] bg-white shadow-xl shadow-black/10 ring-1 ring-[#8e6607]/10 transition duration-300 hover:-translate-y-1 hover:shadow-2xl"
                 href={village.href}
                 key={village.href}
               >
-                <div className="absolute inset-0" aria-hidden="true">
+                <div className="h-[260px] w-full shrink-0 overflow-hidden bg-white">
                   <img
                     src={village.image}
                     alt=""
                     loading={index < 2 ? "eager" : "lazy"}
+                    className="block h-full w-full object-cover transition duration-700 group-hover:scale-105"
                   />
                 </div>
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" aria-hidden="true" />
-
-                <div className="relative z-10 mt-auto w-full p-5 text-white md:p-7">
+                <div className="flex flex-1 flex-col bg-white p-6 text-[#2f261f] md:p-7">
                   <div className="mb-3 flex flex-wrap gap-2">
-                    <span>{village.region}</span>
-                    <span>{village.mood}</span>
+                    <span className="rounded-full bg-white px-3 py-2 text-[10px] font-black uppercase tracking-[0.08em] text-[#6a4b00] shadow-sm ring-1 ring-[#8e6607]/15">
+                      {village.region}
+                    </span>
+
+                    <span className="rounded-full bg-[#fff4df] px-3 py-2 text-[10px] font-black uppercase tracking-[0.08em] text-[#6a4b00] ring-1 ring-[#8e6607]/20">
+                      {village.mood}
+                    </span>
                   </div>
 
                   <div className="mb-4 flex flex-wrap gap-2">
                     {village.badges.map((badge) => (
-                      <span key={badge}>{badge}</span>
+                      <span
+                        className="rounded-full bg-[#8e6607] px-3 py-2 text-[10px] font-black uppercase tracking-[0.08em] text-white"
+                        key={badge}
+                      >
+                        {badge}
+                      </span>
                     ))}
                   </div>
 
-                  <h3>{village.title}</h3>
-                  <p>{village.description}</p>
+                  <h3 className="text-2xl font-black leading-[0.95] tracking-[-0.05em] text-[#2f261f] md:text-3xl">
+                    {village.title}
+                  </h3>
 
-                  <strong>{copy.exploreVillage}</strong>
+                  <p className="mt-3 line-clamp-3 text-sm font-semibold leading-6 text-[#574b3f]">
+                    {village.description}
+                  </p>
+
+                  <strong className="mt-auto inline-flex pt-6 text-xs font-black uppercase tracking-[0.12em] text-[#8e6607]">
+                    {getExploreVillageLabel(village.title)}
+                  </strong>
                 </div>
               </a>
             ))}
@@ -229,25 +281,46 @@ export function ChiosVillagesPageTailwind({ data }: ChiosVillagesPageProps) {
         </div>
       </section>
 
-      <section
-        className="px-4 py-14 md:px-6 md:py-24"
-        aria-labelledby="cv-planning-title"
-      >
+      <section className="px-4 py-14 md:px-6 md:py-20" aria-labelledby="villages-planning-title">
         <div className="mx-auto grid max-w-[1180px] gap-6 rounded-[34px] border border-[#8e6607]/15 bg-white p-6 shadow-xl shadow-black/5 md:grid-cols-[0.9fr_1.1fr] md:p-10">
           <article>
-            <span className="text-xs font-black uppercase tracking-[0.16em] text-[#8e6607]">{data.planning.kicker}</span>
-            <h2 id="cv-planning-title">{data.planning.title}</h2>
-            <p>{data.planning.description}</p>
+            <span className="text-xs font-black uppercase tracking-[0.16em] text-[#8e6607]">
+              {data.planning.kicker}
+            </span>
+
+            <h2
+              id="villages-planning-title"
+              className="mt-4 text-3xl font-black leading-none tracking-[-0.05em] text-[#2f261f] md:text-5xl"
+            >
+              {data.planning.title}
+            </h2>
+
+            <p className="mt-5 text-base leading-8 text-[#574b3f] md:text-lg">
+              {data.planning.description}
+            </p>
           </article>
 
           <div className="grid gap-4">
             {data.planning.items.map((item) => (
-              <div className="flex gap-4 rounded-2xl border border-[#8e6607]/10 bg-[#fffdfa] p-5" key={item.title}>
-                <span aria-hidden="true">{item.icon}</span>
+              <div
+                className="flex gap-4 rounded-2xl border border-[#8e6607]/10 bg-[#fffdfa] p-5"
+                key={item.title}
+              >
+                <span
+                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#fff4df] text-2xl"
+                  aria-hidden="true"
+                >
+                  {item.icon}
+                </span>
 
                 <div>
-                  <h3>{item.title}</h3>
-                  <p>{item.text}</p>
+                  <h3 className="text-lg font-black text-[#2f261f]">
+                    {item.title}
+                  </h3>
+
+                  <p className="mt-2 text-sm leading-6 text-[#574b3f]">
+                    {item.text}
+                  </p>
                 </div>
               </div>
             ))}
@@ -255,30 +328,48 @@ export function ChiosVillagesPageTailwind({ data }: ChiosVillagesPageProps) {
         </div>
       </section>
 
-      <section
-        className="px-4 py-14 md:px-6 md:py-24"
-        aria-labelledby="cv-stay-title"
-      >
+      <section className="px-4 py-14 md:px-6 md:py-20" aria-labelledby="villages-stay-title">
         <div className="mx-auto max-w-[1180px]">
-          <article className="rounded-[36px] bg-gradient-to-r from-[#2f261f] to-[#8e6607] p-6 text-white shadow-2xl md:p-12">
-            <span className="text-xs font-black uppercase tracking-[0.16em] text-white/80">{data.stay.kicker}</span>
-            <h2 id="cv-stay-title">{data.stay.title}</h2>
-            <p>{data.stay.text}</p>
+          <article className="relative overflow-hidden rounded-[36px] bg-[#2f261f] p-6 text-white shadow-2xl md:p-12">
+            <img
+              src="/images/beaches/voulamandis-house-chios-courtyard-hero-desktop.webp"
+              alt=""
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+            <div className="absolute inset-0 bg-black/55" aria-hidden="true" />
 
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <a
-                className="inline-flex min-h-[54px] items-center justify-center rounded-full bg-gradient-to-r from-[#a87842] to-[#8e6607] px-7 text-xs font-black uppercase tracking-[0.12em] text-white shadow-xl transition hover:-translate-y-1"
-                href={data.stay.primaryCta.href}
-              >
-                {data.stay.primaryCta.label}
-              </a>
+            <div className="relative z-10 max-w-[760px]">
+              <span className="text-xs font-black uppercase tracking-[0.16em] text-white/80">
+                {data.stay.kicker}
+              </span>
 
-              <a
-                className="inline-flex min-h-[54px] items-center justify-center rounded-full border border-white/35 px-7 text-xs font-black uppercase tracking-[0.12em] text-white transition hover:-translate-y-1 hover:bg-white/10"
-                href={data.stay.secondaryCta.href}
+              <h2
+                id="villages-stay-title"
+                className="mt-4 text-3xl font-black leading-none tracking-[-0.05em] text-white md:text-5xl"
               >
-                {data.stay.secondaryCta.label}
-              </a>
+                {data.stay.title}
+              </h2>
+
+              <p className="mt-5 text-base leading-8 text-white/90 md:text-lg">
+                {data.stay.text}
+              </p>
+
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                <a
+                  className="inline-flex min-h-[54px] items-center justify-center rounded-full bg-white px-7 text-xs font-black uppercase tracking-[0.12em] text-[#2f261f] transition hover:-translate-y-1"
+                  href={data.stay.primaryCta.href}
+                >
+                  {data.stay.primaryCta.label}
+                </a>
+
+                <a
+                  className="inline-flex min-h-[54px] items-center justify-center rounded-full border border-white/35 px-7 text-xs font-black uppercase tracking-[0.12em] text-white transition hover:-translate-y-1 hover:bg-white/10"
+                  href={data.stay.secondaryCta.href}
+                >
+                  {data.stay.secondaryCta.label}
+                </a>
+              </div>
             </div>
           </article>
         </div>
@@ -286,3 +377,4 @@ export function ChiosVillagesPageTailwind({ data }: ChiosVillagesPageProps) {
     </main>
   );
 }
+
