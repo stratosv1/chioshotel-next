@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { BeachDetailPage } from "@/components/chios/BeachDetailPage";
+import { BeachDetailPageTailwind } from "@/components/chios/BeachDetailPageTailwind";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { buildBeachDetailSchema } from "@/content/beach-detail-schema";
 import { getBeachDetailBySlug, getBeachSlugs } from "@/content/beach-details";
@@ -45,7 +45,7 @@ export default async function Page({ params }: PageProps) {
   return (
     <>
       <JsonLd data={buildBeachDetailSchema(beach)} />
-      <BeachDetailPage beach={beach} />
+      <BeachDetailPageTailwind beach={beach} />
     </>
   );
 }

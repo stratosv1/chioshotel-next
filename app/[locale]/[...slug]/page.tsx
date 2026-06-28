@@ -1,11 +1,11 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { ChiosIslandPage } from "@/components/chios/ChiosIslandPage";
 import { ChiosBeachesPageTailwind } from "@/components/chios/ChiosBeachesPageTailwind";
 import { ChiosVillagesPageTailwind } from "@/components/chios/ChiosVillagesPageTailwind";
 import { ChiosMuseumsPage } from "@/components/chios/ChiosMuseumsPage";
 import { ChiosHolidayQuizPage } from "@/components/chios/ChiosHolidayQuizPage";
-import { BeachDetailPage } from "@/components/chios/BeachDetailPage";
+import { BeachDetailPageTailwind } from "@/components/chios/BeachDetailPageTailwind";
 import { VillageDetailPageTailwind } from "@/components/chios/VillageDetailPageTailwind";
 import { MuseumDetailPage } from "@/components/chios/MuseumDetailPage";
 import { BeachLoversPage } from "@/components/landing/BeachLoversPage";
@@ -623,7 +623,7 @@ export default async function Page({ params }: PageProps) {
     return (
       <>
         <JsonLd data={buildBeachDetailSchema(beachDetailData)} />
-        <BeachDetailPage beach={beachDetailData} />
+        <BeachDetailPageTailwind beach={beachDetailData} />
       </>
     );
   }
