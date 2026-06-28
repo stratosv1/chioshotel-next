@@ -657,12 +657,16 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
           <SecondaryButton href={data.mobileSticky.call.href}>
             {data.mobileSticky.call.label}
           </SecondaryButton>
-          <PrimaryButton href={data.mobileSticky.viber.href}>
+          <a
+            href={data.mobileSticky.viber.href}
+            className="break-words inline-flex min-h-12 items-center justify-center rounded-full bg-green-600 px-6 text-sm font-black uppercase tracking-[0.08em] text-white shadow-lg shadow-green-900/20 transition hover:-translate-y-0.5 hover:bg-green-700"
+          >
             {data.mobileSticky.viber.label}
-          </PrimaryButton>
+          </a>
         </div>
       </div>
     </>
   );
 }
+
 

@@ -768,8 +768,8 @@ export const homePageEn: HomePageData = {
       href: "tel:+306944764654",
     },
     viber: {
-      label: "💬 VIBER",
-      href: "viber://chat?number=%2B306944474226",
+      label: "💬 WhatsApp",
+      href: "https://wa.me/306944474226",
     },
   },
 };
@@ -1238,8 +1238,8 @@ export const homePageEl: HomePageData = {
       href: "tel:+306944764654",
     },
     viber: {
-      label: "💬 VIBER",
-      href: "viber://chat?number=%2B306944474226",
+      label: "💬 WhatsApp",
+      href: "https://wa.me/306944474226",
     },
   },
 };
@@ -1677,8 +1677,8 @@ export const homePageFr: HomePageData = {
       href: "tel:+306944764654",
     },
     viber: {
-      label: "💬 VIBER",
-      href: "viber://chat?number=%2B306944474226",
+      label: "💬 WhatsApp",
+      href: "https://wa.me/306944474226",
     },
   },
 };
@@ -2117,8 +2117,8 @@ export const homePageDe: HomePageData = {
       href: "tel:+306944764654",
     },
     viber: {
-      label: "💬 VIBER",
-      href: "viber://chat?number=%2B306944474226",
+      label: "💬 WhatsApp",
+      href: "https://wa.me/306944474226",
     },
   },
 };
@@ -2556,8 +2556,8 @@ export const homePageIt: HomePageData = {
       href: "tel:+306944764654",
     },
     viber: {
-      label: "💬 VIBER",
-      href: "viber://chat?number=%2B306944474226",
+      label: "💬 WhatsApp",
+      href: "https://wa.me/306944474226",
     },
   },
 };
@@ -2996,8 +2996,8 @@ export const homePageEs: HomePageData = {
       href: "tel:+306944764654",
     },
     viber: {
-      label: "💬 VIBER",
-      href: "viber://chat?number=%2B306944474226",
+      label: "💬 WhatsApp",
+      href: "https://wa.me/306944474226",
     },
   },
 };
@@ -3436,11 +3436,12 @@ export const homePageTr: HomePageData = {
       href: "tel:+306944764654",
     },
     viber: {
-      label: "💬 VIBER",
-      href: "viber://chat?number=%2B306944474226",
+      label: "💬 WhatsApp",
+      href: "https://wa.me/306944474226",
     },
   },
 };
+
 
 
 
