@@ -2,11 +2,11 @@
 import { notFound, redirect } from "next/navigation";
 import { ChiosIslandPage } from "@/components/chios/ChiosIslandPage";
 import { ChiosBeachesPage } from "@/components/chios/ChiosBeachesPage";
-import { ChiosVillagesPage } from "@/components/chios/ChiosVillagesPage";
+import { ChiosVillagesPageTailwind } from "@/components/chios/ChiosVillagesPageTailwind";
 import { ChiosMuseumsPage } from "@/components/chios/ChiosMuseumsPage";
 import { ChiosHolidayQuizPage } from "@/components/chios/ChiosHolidayQuizPage";
 import { BeachDetailPage } from "@/components/chios/BeachDetailPage";
-import { VillageDetailPage } from "@/components/chios/VillageDetailPage";
+import { VillageDetailPageTailwind } from "@/components/chios/VillageDetailPageTailwind";
 import { MuseumDetailPage } from "@/components/chios/MuseumDetailPage";
 import { BeachLoversPage } from "@/components/landing/BeachLoversPage";
 import ChiosExplorerPage from "@/components/landing/ChiosExplorerPage";
@@ -579,7 +579,7 @@ export default async function Page({ params }: PageProps) {
     return (
       <>
         <JsonLd data={buildChiosVillagesSchema(chiosVillagesData)} />
-        <ChiosVillagesPage data={chiosVillagesData} />
+        <ChiosVillagesPageTailwind data={chiosVillagesData} />
       </>
     );
   }
@@ -634,7 +634,7 @@ export default async function Page({ params }: PageProps) {
     return (
       <>
         <JsonLd data={buildVillageDetailSchema(villageDetailData)} />
-        <VillageDetailPage village={villageDetailData} />
+        <VillageDetailPageTailwind village={villageDetailData} />
       </>
     );
   }

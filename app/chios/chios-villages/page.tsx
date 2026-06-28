@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
-import { ChiosVillagesPage } from "@/components/chios/ChiosVillagesPage";
+﻿import type { Metadata } from "next";
+import { ChiosVillagesPageTailwind } from "@/components/chios/ChiosVillagesPageTailwind";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { chiosVillagesPageEn } from "@/content/chios-villages";
 import { buildChiosVillagesSchema } from "@/content/chios-villages-schema";
@@ -16,7 +16,7 @@ export default function Page() {
   return (
     <>
       <JsonLd data={buildChiosVillagesSchema(chiosVillagesPageEn)} />
-      <ChiosVillagesPage data={chiosVillagesPageEn} />
+      <ChiosVillagesPageTailwind data={chiosVillagesPageEn} />
     </>
   );
 }
