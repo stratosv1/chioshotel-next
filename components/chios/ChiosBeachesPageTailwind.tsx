@@ -95,14 +95,14 @@ export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#eef7f4] text-slate-950">
       <section
-        className="relative flex min-h-[76svh] items-end overflow-hidden text-white md:min-h-[640px]"
+        className="relative flex min-h-[64svh] items-end overflow-hidden text-white md:min-h-[520px]"
         aria-labelledby="cb-hero-title"
       >
         <img
           src={data.hero.image}
           alt=""
           loading="eager"
-          className="absolute inset-0 z-0 h-full w-full object-cover"
+          className="absolute inset-0 z-0 h-full w-full object-cover object-center"
         />
         <div className="absolute inset-0 z-10 bg-gradient-to-t from-slate-950 via-slate-950/45 to-transparent md:bg-[linear-gradient(90deg,rgba(2,34,44,0.86),rgba(2,34,44,0.46),rgba(2,34,44,0.08))]" />
 
@@ -297,5 +297,6 @@ export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
     </main>
   );
 }
+
 
 
