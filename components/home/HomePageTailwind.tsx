@@ -300,20 +300,20 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
                   </ul>
                 </div>
 
-                <div className="flex items-center p-4 md:p-8">
+                <div className="flex min-w-0 items-center overflow-hidden p-4 md:p-8">
                   <div className="w-full rounded-[1.6rem] sm:rounded-[2rem] bg-gradient-to-br from-[#3a271b] via-[#7a3f11] to-[#d97706] p-5 text-white shadow-2xl shadow-orange-900/25 md:p-7 mx-auto max-w-[calc(100vw-2rem)] min-w-0 overflow-hidden">
                     <div className="rounded-[1.5rem] border border-white/15 bg-white/10 p-5 backdrop-blur md:p-6 min-w-0 max-w-full overflow-hidden">
                       <p className="break-words text-xs font-black uppercase tracking-[0.18em] text-amber-100">
                         {data.location.discount.badge}
                       </p>
-                      <p className="mt-3 break-words font-serif text-3xl font-bold leading-tight">
+                      <p className="mt-3 max-w-full break-words text-balance font-serif text-3xl font-bold leading-tight">
                         {data.location.discount.title}
                       </p>
                       <p className="mt-3 text-sm leading-7 text-white/80">
                         {data.location.discount.formIntro}
                       </p>
 
-                      <div className="mt-6 rounded-[1.4rem] bg-white p-4 text-stone-900 shadow-xl shadow-black/20 min-w-0 max-w-full overflow-hidden">
+                      <div className="mt-6 w-full max-w-full min-w-0 overflow-hidden rounded-[1.4rem] bg-white p-4 text-stone-900 shadow-xl shadow-black/20">
                         <DiscountReveal
                           submitLabel={data.location.discount.submitLabel}
                           successText={data.location.discount.successText}
