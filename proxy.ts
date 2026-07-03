@@ -1,4 +1,4 @@
-import type { NextRequest } from "next/server";
+﻿import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 const wordpressGonePrefixes = [
@@ -64,7 +64,7 @@ const legacyRedirects: Record<string, string> = {
     "/voulamandis-house-contact-us-form-fill-in-the-form/",
   "/el/epikoinonia": "/el/epikoinonia-voulamandis-house/",
   "/best-room-selection-wizard": "/find-your-room/",
-  "/language/el/κρατηση": "/el/amesi-kratisi-voulamandis-house/",
+  "/language/el/ΞΊΟΞ±Ο„Ξ·ΟƒΞ·": "/el/amesi-kratisi-voulamandis-house/",
   "/el/amesi-kratisi-voulamandis-house":
     "/el/amesi-kratisi-voulamandis-house/",
   "/el/direct-booking-to-voulamandis-house":
@@ -81,12 +81,12 @@ const legacyRedirects: Record<string, string> = {
     "/chios/chios-beaches/agia-dynami-beach-chios/",
   "/chios/chios-beaches/agia-dynami-beach-voulamandis-house-chios-hotels":
     "/chios/chios-beaches/agia-dynami-beach-chios/",
-  "/language/el/παραλίες-χίου/παραλία-αγία-δύναμη":
+  "/language/el/Ο€Ξ±ΟΞ±Ξ»Ξ―ΞµΟ‚-Ο‡Ξ―ΞΏΟ…/Ο€Ξ±ΟΞ±Ξ»Ξ―Ξ±-Ξ±Ξ³Ξ―Ξ±-Ξ΄ΟΞ½Ξ±ΞΌΞ·":
     "/el/paralies-xios/paralia-agia-dynami/",
 
   "/chios/chios-beaches/avlonia-beach":
     "/chios/chios-beaches/avlonia-beach2/",
-  "/de/chios-insel/παραλίες-χίος/avlonia-strand":
+  "/de/chios-insel/Ο€Ξ±ΟΞ±Ξ»Ξ―ΞµΟ‚-Ο‡Ξ―ΞΏΟ‚/avlonia-strand":
     "/de/straende-chios/avlonia-strand/",
 
   "/chios/chios-beaches/the-authentic-beach-agia-fotini":
@@ -101,7 +101,7 @@ const legacyRedirects: Record<string, string> = {
     "/chios/chios-beaches/lefkathia-beach/",
   "/chios/chios-beaches/the-promising-lefkathia-beach":
     "/chios/chios-beaches/lefkathia-beach/",
-  "/language/el/παραλίες-χίου/λευκάθια":
+  "/language/el/Ο€Ξ±ΟΞ±Ξ»Ξ―ΞµΟ‚-Ο‡Ξ―ΞΏΟ…/Ξ»ΞµΟ…ΞΊΞ¬ΞΈΞΉΞ±":
     "/el/paralies-xios/paralia-lefkathia/",
 
   "/chios/chios-beaches/mavra-volia":
@@ -110,7 +110,7 @@ const legacyRedirects: Record<string, string> = {
     "/chios/chios-beaches/emporios-beach/",
 
   // Villages hubs
-  "/language/el/χωρια-χιος": "/el/xoria-xios/",
+  "/language/el/Ο‡Ο‰ΟΞΉΞ±-Ο‡ΞΉΞΏΟ‚": "/el/xoria-xios/",
   "/chios/the-eye-caching-chios-villages": "/chios/chios-villages/",
   "/fr/chios/villages-de-chios": "/fr/villages-de-chios/",
   "/de/uncategorized-de/dorfer-von-chios": "/de/doerfer-chios/",
@@ -122,7 +122,7 @@ const legacyRedirects: Record<string, string> = {
     "/chios/chios-villages/chios-pyrgi/",
   "/chios/chios-villages/pyrgi-voulamandis-house-chios-hotels":
     "/chios/chios-villages/chios-pyrgi/",
-  "/language/el/χίος/χωριά-χίος/πυργί": "/el/xoria-xios/pyrgi-xios/",
+  "/language/el/Ο‡Ξ―ΞΏΟ‚/Ο‡Ο‰ΟΞΉΞ¬-Ο‡Ξ―ΞΏΟ‚/Ο€Ο…ΟΞ³Ξ―": "/el/xoria-xios/pyrgi-xios/",
   "/el/chios-el/chios-pyrgi-village": "/el/xoria-xios/pyrgi-xios/",
   "/de/chios-insel/pyrgi-chios": "/de/doerfer-chios/pyrgi-dorf/",
   "/tr/chios-odalari/pyrgi-sakiz-adasi-koyu":
@@ -159,10 +159,10 @@ const legacyRedirects: Record<string, string> = {
   // Armolia
   "/chios/chios-villages/the-village-of-armolia":
     "/chios/chios-villages/armolia-chios/",
-  "/language/el/χίος/χωριά-χίος/αρμόλια":
+  "/language/el/Ο‡Ξ―ΞΏΟ‚/Ο‡Ο‰ΟΞΉΞ¬-Ο‡Ξ―ΞΏΟ‚/Ξ±ΟΞΌΟΞ»ΞΉΞ±":
     "/el/xoria-xios/armolia-xios/",
   "/el/chios-el/chios-armolia-village": "/el/xoria-xios/armolia-xios/",
-  "/el/chios-el/chios-villages-el/armolia-xios/αρμόλια χίος":
+  "/el/chios-el/chios-villages-el/armolia-xios/Ξ±ΟΞΌΟΞ»ΞΉΞ± Ο‡Ξ―ΞΏΟ‚":
     "/el/xoria-xios/armolia-xios/",
   "/chios-el/chios-villages-el/chios-armolia-village":
     "/el/xoria-xios/armolia-xios/",
@@ -188,7 +188,7 @@ const legacyRedirects: Record<string, string> = {
 
   // Museums detail
   "/chios/mastic-gum": "/chios/chios-museums/the-mastic-museum-chios/",
-  "/language/el/χίος/μουσεία-χίος/μουσείο-μαστίχας":
+  "/language/el/Ο‡Ξ―ΞΏΟ‚/ΞΌΞΏΟ…ΟƒΞµΞ―Ξ±-Ο‡Ξ―ΞΏΟ‚/ΞΌΞΏΟ…ΟƒΞµΞ―ΞΏ-ΞΌΞ±ΟƒΟ„Ξ―Ο‡Ξ±Ο‚":
     "/el/mouseia-xios/mouseio-mastichas-xios/",
   "/language/el/chios-el/chios-museums-el/chios-archaeological-museum":
     "/el/mouseia-xios/arxaiologiko-mouseio-xios/",
@@ -225,9 +225,9 @@ const legacyRedirects: Record<string, string> = {
     "/chios/chios-museums/the-mastic-museum-chios/",
   "/el/chios-el/chios-mastic-museum-2":
     "/el/mouseia-xios/mouseio-mastichas-xios/",
-  "/language/el/χίος/μουσείο-μαστίχας":
+  "/language/el/Ο‡Ξ―ΞΏΟ‚/ΞΌΞΏΟ…ΟƒΞµΞ―ΞΏ-ΞΌΞ±ΟƒΟ„Ξ―Ο‡Ξ±Ο‚":
     "/el/mouseia-xios/mouseio-mastichas-xios/",
-  "/language/el/χίος/αρχαιολογικό-μουσείο":
+  "/language/el/Ο‡Ξ―ΞΏΟ‚/Ξ±ΟΟ‡Ξ±ΞΉΞΏΞ»ΞΏΞ³ΞΉΞΊΟ-ΞΌΞΏΟ…ΟƒΞµΞ―ΞΏ":
     "/el/mouseia-xios/arxaiologiko-mouseio-xios/",
   "/el/chios-el/chios-archaeological":
     "/el/mouseia-xios/arxaiologiko-mouseio-xios/",
@@ -267,24 +267,24 @@ const legacyRedirects: Record<string, string> = {
   "/es/uncategorized-es/las-orquideas-de-chios": "/es/orquideas-de-quios/",
 
   // Final safe legacy redirects from last GSC sample - villages
-  "/language/el/χίος/χωριά-χίος/βολισσός":
+  "/language/el/Ο‡Ξ―ΞΏΟ‚/Ο‡Ο‰ΟΞΉΞ¬-Ο‡Ξ―ΞΏΟ‚/Ξ²ΞΏΞ»ΞΉΟƒΟƒΟΟ‚":
     "/el/xoria-xios/volissos-xios/",
   "/el/chios-el/chios-volissos": "/el/xoria-xios/volissos-xios/",
   "/chios/chios-villages/volissos-voulamandis-house-chios-hotels":
     "/chios/chios-villages/volissos-chios/",
   "/de/chios-insel/volissos-chios-2": "/de/doerfer-chios/volissos-dorf/",
-  "/language/el/χίος/χωριά-χίος/ολύμποι":
+  "/language/el/Ο‡Ξ―ΞΏΟ‚/Ο‡Ο‰ΟΞΉΞ¬-Ο‡Ξ―ΞΏΟ‚/ΞΏΞ»ΟΞΌΟ€ΞΏΞΉ":
     "/el/xoria-xios/olympoi-xios/",
   "/chios/chios-villages/olympoi-voulamandis-house-chios-hotels":
     "/chios/chios-villages/olympoi-chios/",
   "/chios/chios-villages/the-hospitable-village-olympoi":
     "/chios/chios-villages/olympoi-chios/",
-  "/language/el/χίος/χωριά-χίος/μεστά": "/el/xoria-xios/mesta-xios/",
+  "/language/el/Ο‡Ξ―ΞΏΟ‚/Ο‡Ο‰ΟΞΉΞ¬-Ο‡Ξ―ΞΏΟ‚/ΞΌΞµΟƒΟ„Ξ¬": "/el/xoria-xios/mesta-xios/",
   "/chios/chios-villages/mesta-voulamandis-house-chios-hotels":
     "/chios/chios-villages/mesta-chios/",
   "/chios/chios-villages/the-village-of-mesta":
     "/chios/chios-villages/mesta-chios/",
-  "/language/el/χίος/χωριά-χίος/βέσσα": "/el/xoria-xios/vessa-xios/",
+  "/language/el/Ο‡Ξ―ΞΏΟ‚/Ο‡Ο‰ΟΞΉΞ¬-Ο‡Ξ―ΞΏΟ‚/Ξ²Ξ­ΟƒΟƒΞ±": "/el/xoria-xios/vessa-xios/",
   "/chios/chios-villages/the-village-of-lagada":
     "/chios/chios-villages/lagada-chios/",
   "/tr/chios-el/chios-villages-el/lagada-chios":
@@ -301,8 +301,8 @@ const legacyRedirects: Record<string, string> = {
   "/language/en/chios/chios-beaches": "/chios/chios-beaches/",
   "/chios-el/chios-beaches-el/agia-dynami-beach-2":
     "/el/paralies-xios/paralia-agia-dynami/",
-  "/language/el/παραλίες-χίου/λιθί": "/el/paralies-xios/paralia-lithi/",
-  "/language/el/παραλίες-χίου/ναγός": "/el/paralies-xios/paralia-nagos/",
+  "/language/el/Ο€Ξ±ΟΞ±Ξ»Ξ―ΞµΟ‚-Ο‡Ξ―ΞΏΟ…/Ξ»ΞΉΞΈΞ―": "/el/paralies-xios/paralia-lithi/",
+  "/language/el/Ο€Ξ±ΟΞ±Ξ»Ξ―ΞµΟ‚-Ο‡Ξ―ΞΏΟ…/Ξ½Ξ±Ξ³ΟΟ‚": "/el/paralies-xios/paralia-nagos/",
   "/chios-el/chios-beaches-el/chios-beach-nagos":
     "/el/paralies-xios/paralia-nagos/",
   "/el/chios-el/chios-beaches-el/chios-beach-komi":
@@ -351,7 +351,7 @@ const legacyRedirects: Record<string, string> = {
   "/reservations": "/find-your-room/",
   "/voulamandis-house-contact-form":
     "/voulamandis-house-contact-us-form-fill-in-the-form/",
-  "/el/επικοινωνία": "/el/epikoinonia-voulamandis-house/",
+  "/el/ΞµΟ€ΞΉΞΊΞΏΞΉΞ½Ο‰Ξ½Ξ―Ξ±": "/el/epikoinonia-voulamandis-house/",
 
   // Final safe legacy redirects from last GSC sample - island / Kampos / home
   "/chios": "/chios-island/",
@@ -359,7 +359,7 @@ const legacyRedirects: Record<string, string> = {
     "/chios/kampos-chios/",
   "/es/uncategorized-es/kambos-en-chios": "/es/chios/kampos-chios/",
   "/tr/uncategorized-tr/kambos-sakiz-adasi": "/tr/chios/kampos-chios/",
-  "/language/el/αρχική": "/el/",
+  "/language/el/Ξ±ΟΟ‡ΞΉΞΊΞ®": "/el/",
 
   // Old static URLs
   "/de/chios-ist-die-beste-insel-griechenlands": "/de/chios/",
@@ -477,6 +477,13 @@ function isAuthorizedStaffRequest(request: NextRequest) {
 }
 
 export function proxy(request: NextRequest) {
+  const host = request.headers.get("host");
+
+  if (host === "www.chioshotel.gr") {
+    const url = request.nextUrl.clone();
+    url.hostname = "chioshotel.gr";
+    return NextResponse.redirect(url, 308);
+  }
   const { pathname } = request.nextUrl;
 
   const legacyRedirectTarget = getLegacyRedirectTarget(pathname);
