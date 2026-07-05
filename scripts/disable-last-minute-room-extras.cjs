@@ -1,9 +1,6 @@
 const fs = require("fs");
 const path = require("path");
 
-const filePath = path.join(process.cwd(), "components", "home", "LastMinuteDeals.tsx");
-const source = fs.readFileSync(filePath, "utf8");
-
 const currentBlock = `const ROOM_EXTRA_PER_NIGHT: Record<number, number> = {
   1: 10,
   2: 5,
@@ -30,10 +27,25 @@ const zeroRoomExtrasBlock = `const ROOM_EXTRA_PER_NIGHT: Record<number, number> 
   10: 0,
 };`;
 
-if (!source.includes(currentBlock) && !source.includes(zeroRoomExtrasBlock)) {
-  throw new Error("Could not verify LastMinuteDeals ROOM_EXTRA_PER_NIGHT block.");
-}
+const targets = [
+  {
+    label: "LastMinuteDeals",
+    filePath: path.join(process.cwd(), "components", "home", "LastMinuteDeals.tsx"),
+  },
+  {
+    label: "FindYourRoomEngine",
+    filePath: path.join(process.cwd(), "components", "booking", "FindYourRoomEngine.tsx"),
+  },
+];
 
-if (source.includes(currentBlock)) {
-  fs.writeFileSync(filePath, source.replace(currentBlock, zeroRoomExtrasBlock), "utf8");
+for (const target of targets) {
+  const source = fs.readFileSync(target.filePath, "utf8");
+
+  if (!source.includes(currentBlock) && !source.includes(zeroRoomExtrasBlock)) {
+    throw new Error(`Could not verify ${target.label} ROOM_EXTRA_PER_NIGHT block.`);
+  }
+
+  if (source.includes(currentBlock)) {
+    fs.writeFileSync(target.filePath, source.replace(currentBlock, zeroRoomExtrasBlock), "utf8");
+  }
 }
