@@ -7,6 +7,7 @@ import { VoulamandisFooter } from "@/components/VoulamandisFooter";
 import { VoulamandisHeader } from "@/components/VoulamandisHeader";
 import { siteName, siteUrl } from "@/lib/seo";
 import "./css-split/core.css";
+import "./css-split/overrides/home-mobile-hero-safe.css";
 
 const googleAnalyticsId = "G-844GGQ1TC7";
 
