@@ -1,4 +1,5 @@
 ﻿import type { Metadata } from "next";
+import Script from "next/script";
 import { headers } from "next/headers";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
@@ -6,6 +7,8 @@ import { VoulamandisFooter } from "@/components/VoulamandisFooter";
 import { VoulamandisHeader } from "@/components/VoulamandisHeader";
 import { siteName, siteUrl } from "@/lib/seo";
 import "./css-split/core.css";
+
+const googleAnalyticsId = "G-844GGQ1TC7";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -71,6 +74,18 @@ export default async function RootLayout({
         ) : null}
         {children}
         <VoulamandisFooter language={htmlLanguage} />
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${googleAnalyticsId}');
+          `}
+        </Script>
         <SpeedInsights />
         <Analytics />
       </body>
