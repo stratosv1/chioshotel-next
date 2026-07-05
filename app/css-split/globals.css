@@ -45,6 +45,7 @@
 
 /* ---- overrides ---- */
 @import "./overrides/overrides.css";
+@import "./overrides/room-detail-mobile-compact.css";
 
 /* ---- pages ---- */
 @import "./pages/kampos.css";
