@@ -32,14 +32,25 @@ export const metadata: Metadata = {
   manifest: "/favicon/site.webmanifest",
 };
 
-function getHtmlLanguage(pathname: string): string {
+type SiteLanguage = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
+
+function getHtmlLanguage(pathname: string): SiteLanguage {
   const firstSegment = pathname.split("/").filter(Boolean)[0];
 
   if (["el", "fr", "de", "it", "es", "tr"].includes(firstSegment)) {
-    return firstSegment;
+    return firstSegment as SiteLanguage;
   }
 
   return "en";
+}
+
+function isPreArrivalPath(pathname: string): boolean {
+  const normalizedPathname = pathname.endsWith("/") ? pathname : `${pathname}/`;
+
+  return (
+    normalizedPathname === "/pre-arrival/" ||
+    normalizedPathname.endsWith("/pre-arrival/")
+  );
 }
 
 export default async function RootLayout({
@@ -50,13 +61,16 @@ export default async function RootLayout({
   const requestHeaders = await headers();
   const pathname = requestHeaders.get("x-current-pathname") || "/";
   const htmlLanguage = getHtmlLanguage(pathname);
+  const hideHeader = isPreArrivalPath(pathname);
 
   return (
     <html lang={htmlLanguage}>
       <body>
-        <VoulamandisHeader language={htmlLanguage as "en" | "el" | "fr" | "de" | "it" | "es" | "tr"} pathname={pathname} />
+        {!hideHeader ? (
+          <VoulamandisHeader language={htmlLanguage} pathname={pathname} />
+        ) : null}
         {children}
-        <VoulamandisFooter language={htmlLanguage as "en" | "el" | "fr" | "de" | "it" | "es" | "tr"} />
+        <VoulamandisFooter language={htmlLanguage} />
         <SpeedInsights />
         <Analytics />
       </body>
