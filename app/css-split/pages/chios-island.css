@@ -625,4 +625,23 @@
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
   }
+
+  .ci-mobile-sticky .ci-btn {
+    min-width: 0;
+    gap: 7px;
+    overflow: visible;
+    padding-inline: 8px;
+    font-size: 10.5px;
+    letter-spacing: 0.07em;
+    white-space: nowrap;
+  }
+
+  .ci-mobile-sticky .ci-btn--whatsapp {
+    color: #fff !important;
+  }
+
+  .ci-mobile-sticky .ci-btn--book {
+    color: #fff !important;
+    background: var(--ci-dark) !important;
+  }
 }
