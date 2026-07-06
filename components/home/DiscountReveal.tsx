@@ -14,6 +14,41 @@ type Locale = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
 const REVEAL_PERCENT = 58;
 
 const COMPACT_SECTION_CSS = `
+@media (max-width: 767px) {
+  main > section:nth-of-type(2) {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  main > section:nth-of-type(2) > div {
+    gap: 1rem;
+  }
+
+  main > section:nth-of-type(2) article:first-child {
+    padding: 1.25rem;
+    border-radius: 1.5rem;
+  }
+
+  main > section:nth-of-type(2) article:first-child h2 {
+    font-size: clamp(2rem, 8vw, 2.6rem);
+    line-height: 1.05;
+  }
+
+  main > section:nth-of-type(2) article:first-child p:nth-of-type(2) {
+    margin-top: 1rem;
+    font-size: .95rem;
+    line-height: 1.65;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  main > section:nth-of-type(2) article:first-child > div.mt-7 {
+    margin-top: 1.1rem;
+  }
+}
+
 @supports selector(article:has(#discountCodeForm)) {
   article:has(#discountCodeForm) {
     margin-top: 2rem;
