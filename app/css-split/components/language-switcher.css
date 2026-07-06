@@ -40,25 +40,42 @@
 
 .vh-mobile-menu .vh-language-switcher {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: flex-start;
-  gap: 8px;
+  gap: 5px;
+  width: 100%;
   padding: 0;
   border: none;
   background: transparent;
 }
 
 .vh-mobile-menu .vh-language-switcher a {
-  min-width: 42px;
-  height: 36px;
+  min-width: 36px;
+  height: 34px;
+  padding: 0 4px;
   border: 1px solid rgba(166, 139, 109, 0.22);
   background: #ffffff;
+  font-size: 0.74rem;
+  white-space: nowrap;
 }
 
 .vh-mobile-menu .vh-language-switcher a.is-active {
   background: #a68b6d;
   border-color: #a68b6d;
   color: #ffffff;
+}
+
+@media (max-width: 380px) {
+  .vh-mobile-menu .vh-language-switcher {
+    gap: 4px;
+  }
+
+  .vh-mobile-menu .vh-language-switcher a {
+    min-width: 34px;
+    height: 32px;
+    padding: 0 3px;
+    font-size: 0.72rem;
+  }
 }
 
 @media (max-width: 1100px) {
