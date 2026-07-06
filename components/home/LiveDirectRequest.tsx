@@ -24,6 +24,13 @@ const CONTACT = {
   whatsapp: "306944474226",
 };
 
+const TRUST_ITEMS = [
+  { icon: "🏷️", text: "Best direct offer" },
+  { icon: "💬", text: "Direct reply" },
+  { icon: "🛏️", text: "Choose room" },
+  { icon: "💳", text: "No card" },
+];
+
 function requestHref(room: RoomMeta | null, date: string | null, guests: number, price: number | null) {
   const text = [
     "Instant request to reception - Voulamandis House",
@@ -144,7 +151,7 @@ export function LiveDirectRequest({ data }: { data: LastMinuteData; canonicalPat
                 <div className="rounded-3xl bg-white p-6 text-sm font-bold text-stone-600 ring-1 ring-amber-900/10">No available rooms match these guests right now.</div>
               ) : null}
               {!loading && !error && rooms.length ? (
-                <div className="flex snap-x gap-4 overflow-x-auto pb-3">
+                <div className="flex snap-x gap-3 overflow-x-auto pb-3 md:gap-4">
                   {rooms.map((room, index) => {
                     const active = selectedRoom && roomKey(selectedRoom) === roomKey(room);
                     const amount = minDirectPrice(deals, room);
@@ -156,10 +163,10 @@ export function LiveDirectRequest({ data }: { data: LastMinuteData; canonicalPat
                           setSelectedKey(roomKey(room));
                           setSelectedDate(firstAvailableDate(deals, room));
                         }}
-                        className={`group min-w-[245px] snap-start overflow-hidden rounded-[1.35rem] bg-white p-2 text-left shadow-lg shadow-stone-900/5 ring-1 transition md:min-w-[260px] ${active ? "ring-2 ring-amber-700" : "ring-amber-900/10 hover:-translate-y-1 hover:ring-amber-700/40"}`}
+                        className={`group min-w-[212px] snap-start overflow-hidden rounded-[1.35rem] bg-white p-2 text-left shadow-lg shadow-stone-900/5 ring-1 transition md:min-w-[250px] ${active ? "ring-2 ring-amber-700" : "ring-amber-900/10 hover:-translate-y-1 hover:ring-amber-700/40"}`}
                       >
                         <div className="relative aspect-[4/3] overflow-hidden rounded-[1.05rem] bg-stone-100">
-                          <Image src={room.images[0]} alt={`${room.displayName} ${room.type}`} width={520} height={390} sizes="260px" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+                          <Image src={room.images[0]} alt={`${room.displayName} ${room.type}`} width={520} height={390} sizes="250px" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
                           {index === 0 ? <span className="absolute left-2 top-2 rounded-full bg-amber-100 px-3 py-1.5 text-[11px] font-black text-amber-900 shadow-sm">Best match</span> : null}
                           {active ? <span className="absolute right-2 top-2 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white text-amber-800 shadow-lg">✓</span> : null}
                         </div>
@@ -170,7 +177,7 @@ export function LiveDirectRequest({ data }: { data: LastMinuteData; canonicalPat
                             <span className="rounded-full bg-stone-100 px-2.5 py-1 text-[11px] font-bold text-stone-700">{room.location}</span>
                             <span className="rounded-full bg-stone-100 px-2.5 py-1 text-[11px] font-bold text-stone-700">Wi-Fi</span>
                           </div>
-                          {amount ? <div className="mt-5 flex items-end gap-2"><span className="text-sm text-stone-500">from</span><strong className="text-2xl font-black text-[#17351f]">{money(amount)}</strong></div> : null}
+                          {amount ? <div className="mt-4 flex items-end gap-2"><span className="text-sm text-stone-500">from</span><strong className="text-2xl font-black text-[#17351f]">{money(amount)}</strong></div> : null}
                         </div>
                       </button>
                     );
@@ -180,7 +187,7 @@ export function LiveDirectRequest({ data }: { data: LastMinuteData; canonicalPat
             </div>
 
             {selectedRoom && deals?.days?.length ? (
-              <div className="mt-4 flex snap-x gap-3 overflow-x-auto pb-3">
+              <div className="mt-4 flex snap-x gap-2 overflow-x-auto pb-3 md:gap-3">
                 {deals.days.slice(0, 7).map((day) => {
                   const info = getNightInfo(deals, selectedRoom, day.checkin);
                   const active = selectedDate === day.checkin;
@@ -190,27 +197,25 @@ export function LiveDirectRequest({ data }: { data: LastMinuteData; canonicalPat
                       type="button"
                       disabled={!info}
                       onClick={() => setSelectedDate(day.checkin)}
-                      className={`min-w-[86px] snap-start rounded-2xl border px-3 py-4 text-center shadow-sm transition md:min-w-[100px] ${active ? "border-[#17351f] bg-[#17351f] text-white" : info ? "border-stone-200 bg-white text-stone-800 hover:border-amber-700" : "border-stone-200 bg-stone-100 text-stone-400"}`}
+                      className={`min-w-[76px] snap-start rounded-2xl border px-2 py-3 text-center shadow-sm transition md:min-w-[96px] ${active ? "border-[#17351f] bg-[#17351f] text-white" : info ? "border-stone-200 bg-white text-stone-800 hover:border-amber-700" : "border-stone-200 bg-stone-100 text-stone-400"}`}
                     >
-                      <span className="block text-sm font-black leading-5">{formatDate(day.checkin)}</span>
-                      <span className="mt-2 block text-xs font-bold">{info ? "Available" : "-"}</span>
-                      {info ? <span className="mt-1 block text-sm font-black">{money(info.price)}</span> : null}
+                      <span className="block text-xs font-black leading-4 md:text-sm">{formatDate(day.checkin)}</span>
+                      <span className="mt-2 block text-[11px] font-bold leading-4 md:text-xs">{info ? "Available" : "-"}</span>
                     </button>
                   );
                 })}
               </div>
             ) : null}
 
-            <div className="mt-3 grid grid-cols-2 gap-3 rounded-[1.4rem] bg-white p-4 text-center shadow-sm ring-1 ring-amber-900/10 md:grid-cols-4">
-              {["Best direct offer", "Direct reply", "Choose your room", "No credit card"].map((item) => (
-                <div key={item} className="text-xs font-black leading-5 text-stone-900 md:text-sm"><span className="mb-1 block text-xl text-amber-700">✓</span>{item}</div>
+            <div className="mt-3 grid grid-cols-4 gap-2 rounded-[1.4rem] bg-white p-3 text-center shadow-sm ring-1 ring-amber-900/10 md:p-4">
+              {TRUST_ITEMS.map((item) => (
+                <div key={item.text} className="text-[10px] font-black leading-4 text-stone-900 md:text-sm md:leading-5">
+                  <span className="mb-1 block text-base text-amber-700 md:text-xl" aria-hidden="true">{item.icon}</span>
+                  {item.text}
+                </div>
               ))}
             </div>
 
-            <div className="mt-5 grid grid-cols-2 gap-3 lg:hidden">
-              <a href={CONTACT.phoneHref} className="flex min-h-14 items-center justify-center rounded-2xl border border-stone-300 bg-white px-5 text-center text-sm font-black uppercase tracking-[0.08em] text-stone-800 shadow-sm">☎ Call</a>
-              <a href={href} target="_blank" rel="noopener noreferrer" className="flex min-h-14 items-center justify-center rounded-2xl bg-[#17351f] px-5 text-center text-sm font-black uppercase tracking-[0.08em] text-white shadow-lg shadow-emerald-950/20">WhatsApp</a>
-            </div>
             <p className="mt-4 text-center text-xs font-semibold text-stone-500 lg:hidden">Your instant request at chioshotel.gr</p>
           </div>
 
