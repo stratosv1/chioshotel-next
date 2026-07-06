@@ -168,6 +168,21 @@ export function formatDate(value: string | null, locale = "en-GB") {
     : date.toLocaleDateString(locale, { weekday: "short", day: "numeric", month: "short" });
 }
 
+function roomIdFromName(value?: string) {
+  const match = String(value || "").match(/(?:room|apartment)\s*(\d+)/i);
+  return match ? Number(match[1]) : 0;
+}
+
+function findBaseRoom(room: DealRoom) {
+  const byLiveKey = ROOM_BASE.find((item) => item.roomId === room.roomId && item.unitId === room.unitId);
+  if (byLiveKey) return byLiveKey;
+
+  const byName = ROOM_BASE.find((item) => item.id === roomIdFromName(room.displayName));
+  if (byName) return byName;
+
+  return ROOM_BASE.find((item) => item.id === Number(room.id));
+}
+
 function apiBaseGuests(room: RoomMeta) {
   return [8, 9, 10].includes(Number(room.id)) ? 4 : 2;
 }
@@ -225,7 +240,7 @@ export function selectionTotals(deals: DealsResponse | null, room: RoomMeta | nu
 
 export function mergeDealRooms(deals: DealsResponse | null): RoomMeta[] {
   return (deals?.rooms || []).map((room) => {
-    const base = ROOM_BASE.find((item) => item.roomId === room.roomId && item.unitId === room.unitId);
+    const base = findBaseRoom(room);
 
     return {
       id: base?.id || room.id || 0,
