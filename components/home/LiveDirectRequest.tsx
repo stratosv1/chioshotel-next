@@ -57,7 +57,10 @@ export function LiveDirectRequest({ data }: { data: LastMinuteData; canonicalPat
       setError("");
 
       try {
-        const response = await fetch(CONTACT.endpoint, { headers: { Accept: "application/json" }, cache: "no-store" });
+        const response = await fetch(CONTACT.endpoint, {
+          headers: { Accept: "application/json" },
+          cache: "no-store",
+        });
         if (!response.ok) throw new Error("Live availability is temporarily unavailable.");
         const json = (await response.json()) as DealsResponse;
         if (active) setDeals(json);
@@ -98,21 +101,24 @@ export function LiveDirectRequest({ data }: { data: LastMinuteData; canonicalPat
   const href = requestHref(selectedRoom, selectedDate, guests, currentPrice);
 
   return (
-    <section className="px-4 py-12 md:px-8 md:py-18" aria-labelledby="live-direct-title">
+    <section className="px-4 py-10 md:px-8 md:py-18" aria-labelledby="live-direct-title">
       <div className="mx-auto max-w-7xl overflow-hidden rounded-[2rem] border border-amber-900/10 bg-[#fffaf3] shadow-2xl shadow-stone-900/10 md:rounded-[2.5rem]">
-        <div className="grid min-w-0 lg:grid-cols-[1fr_360px]">
+        <div className="grid min-w-0 lg:grid-cols-[minmax(0,1fr)_360px]">
           <div className="min-w-0 p-5 md:p-9 lg:p-10">
-            <span className="inline-flex items-center gap-2 rounded-full bg-amber-100 px-4 py-2 text-[11px] font-black uppercase tracking-[0.16em] text-amber-800 ring-1 ring-amber-900/10">
-              <span aria-hidden="true">⚡</span>Instant request to reception
-            </span>
+            <div className="mb-6 flex justify-center rounded-full bg-amber-100 px-4 py-3 text-[11px] font-black uppercase tracking-[0.16em] text-amber-800 ring-1 ring-amber-900/10 md:inline-flex md:justify-start">
+              <span className="mr-2" aria-hidden="true">⚡</span>Instant request to reception
+            </div>
 
-            <div className="mt-6 grid gap-6 xl:grid-cols-[1fr_260px] xl:items-end">
+            <div className="grid gap-5 xl:grid-cols-[1fr_260px] xl:items-end">
               <div>
-                <h2 id="live-direct-title" className="text-balance font-serif text-4xl font-bold leading-[0.98] tracking-[-0.03em] text-[#17351f] md:text-6xl">
+                <h2 id="live-direct-title" className="text-balance font-serif text-[2.55rem] font-bold leading-[0.98] tracking-[-0.04em] text-[#17351f] md:text-6xl">
                   {data.title}
                 </h2>
-                <p className="mt-5 max-w-2xl text-base leading-8 text-stone-700 md:text-lg">{data.subtitle}</p>
+                <p className="mt-5 max-w-2xl text-base leading-8 text-stone-700 md:text-lg">
+                  Send an instant request to reception and get the best direct offer.
+                </p>
               </div>
+
               <label className="block">
                 <span className="mb-2 block text-xs font-black uppercase tracking-[0.16em] text-stone-500">Guests</span>
                 <select
@@ -150,9 +156,9 @@ export function LiveDirectRequest({ data }: { data: LastMinuteData; canonicalPat
                           setSelectedKey(roomKey(room));
                           setSelectedDate(firstAvailableDate(deals, room));
                         }}
-                        className={`group min-w-[245px] snap-start overflow-hidden rounded-[1.4rem] bg-white p-2 text-left shadow-lg shadow-stone-900/5 ring-1 transition md:min-w-[260px] ${active ? "ring-2 ring-amber-700" : "ring-amber-900/10 hover:-translate-y-1 hover:ring-amber-700/40"}`}
+                        className={`group min-w-[245px] snap-start overflow-hidden rounded-[1.35rem] bg-white p-2 text-left shadow-lg shadow-stone-900/5 ring-1 transition md:min-w-[260px] ${active ? "ring-2 ring-amber-700" : "ring-amber-900/10 hover:-translate-y-1 hover:ring-amber-700/40"}`}
                       >
-                        <div className="relative aspect-[4/3] overflow-hidden rounded-[1.1rem] bg-stone-100">
+                        <div className="relative aspect-[4/3] overflow-hidden rounded-[1.05rem] bg-stone-100">
                           <Image src={room.images[0]} alt={`${room.displayName} ${room.type}`} width={520} height={390} sizes="260px" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
                           {index === 0 ? <span className="absolute left-2 top-2 rounded-full bg-amber-100 px-3 py-1.5 text-[11px] font-black text-amber-900 shadow-sm">Best match</span> : null}
                           {active ? <span className="absolute right-2 top-2 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white text-amber-800 shadow-lg">✓</span> : null}
@@ -172,10 +178,44 @@ export function LiveDirectRequest({ data }: { data: LastMinuteData; canonicalPat
                 </div>
               ) : null}
             </div>
+
+            {selectedRoom && deals?.days?.length ? (
+              <div className="mt-4 flex snap-x gap-3 overflow-x-auto pb-3">
+                {deals.days.slice(0, 7).map((day) => {
+                  const info = getNightInfo(deals, selectedRoom, day.checkin);
+                  const active = selectedDate === day.checkin;
+                  return (
+                    <button
+                      key={day.checkin}
+                      type="button"
+                      disabled={!info}
+                      onClick={() => setSelectedDate(day.checkin)}
+                      className={`min-w-[86px] snap-start rounded-2xl border px-3 py-4 text-center shadow-sm transition md:min-w-[100px] ${active ? "border-[#17351f] bg-[#17351f] text-white" : info ? "border-stone-200 bg-white text-stone-800 hover:border-amber-700" : "border-stone-200 bg-stone-100 text-stone-400"}`}
+                    >
+                      <span className="block text-sm font-black leading-5">{formatDate(day.checkin)}</span>
+                      <span className="mt-2 block text-xs font-bold">{info ? "Available" : "-"}</span>
+                      {info ? <span className="mt-1 block text-sm font-black">{money(info.price)}</span> : null}
+                    </button>
+                  );
+                })}
+              </div>
+            ) : null}
+
+            <div className="mt-3 grid grid-cols-2 gap-3 rounded-[1.4rem] bg-white p-4 text-center shadow-sm ring-1 ring-amber-900/10 md:grid-cols-4">
+              {["Best direct offer", "Direct reply", "Choose your room", "No credit card"].map((item) => (
+                <div key={item} className="text-xs font-black leading-5 text-stone-900 md:text-sm"><span className="mb-1 block text-xl text-amber-700">✓</span>{item}</div>
+              ))}
+            </div>
+
+            <div className="mt-5 grid grid-cols-2 gap-3 lg:hidden">
+              <a href={CONTACT.phoneHref} className="flex min-h-14 items-center justify-center rounded-2xl border border-stone-300 bg-white px-5 text-center text-sm font-black uppercase tracking-[0.08em] text-stone-800 shadow-sm">☎ Call</a>
+              <a href={href} target="_blank" rel="noopener noreferrer" className="flex min-h-14 items-center justify-center rounded-2xl bg-[#17351f] px-5 text-center text-sm font-black uppercase tracking-[0.08em] text-white shadow-lg shadow-emerald-950/20">WhatsApp</a>
+            </div>
+            <p className="mt-4 text-center text-xs font-semibold text-stone-500 lg:hidden">Your instant request at chioshotel.gr</p>
           </div>
 
-          <aside className="border-t border-amber-900/10 bg-white/70 p-5 md:p-8 lg:border-l lg:border-t-0">
-            <div className="sticky top-24 rounded-[1.7rem] bg-white p-5 shadow-xl shadow-stone-900/10 ring-1 ring-amber-900/10 md:p-6">
+          <aside className="hidden border-l border-amber-900/10 bg-white/70 p-8 lg:block">
+            <div className="sticky top-24 rounded-[1.7rem] bg-white p-6 shadow-xl shadow-stone-900/10 ring-1 ring-amber-900/10">
               <div className="mb-5 flex items-center justify-between gap-4"><h3 className="text-xl font-black text-stone-950">Your request summary</h3><span className="text-3xl text-amber-700">⚡</span></div>
               <div className="space-y-3">
                 <div className="rounded-2xl border border-stone-200 bg-white p-4"><span className="block text-xs font-bold uppercase tracking-[0.12em] text-stone-400">Room</span><strong className="mt-1 block text-base text-stone-950">{selectedRoom?.displayName || "-"}</strong><span className="mt-1 block text-sm text-stone-500">{selectedRoom?.type || ""}</span></div>
