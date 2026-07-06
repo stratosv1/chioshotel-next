@@ -152,7 +152,7 @@ const ROOM_BASE = [
   },
 ] as const;
 
-const ALLOWED_ROOM_IDS = new Set(ROOM_BASE.map((room) => room.id));
+const ALLOWED_ROOM_IDS: ReadonlySet<number> = new Set<number>(ROOM_BASE.map((room) => room.id));
 
 export function roomKey(room: Pick<DealRoom, "roomId" | "unitId">) {
   return `${room.roomId}_${room.unitId}`;
