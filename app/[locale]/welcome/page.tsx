@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { WelcomePage } from "@/components/welcome/WelcomePage";
-import { getWelcomePageByLocale } from "@/content/welcome";
+import { getWelcomeCopy } from "@/content/welcome";
 import { buildPageMetadata } from "@/lib/seo";
 import { defaultLanguage, isLanguageCode, languages } from "@/lib/languages";
 
@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return {};
   }
 
-  const data = getWelcomePageByLocale(locale);
+  const data = getWelcomeCopy(locale);
 
   return {
     ...buildPageMetadata({
@@ -49,7 +49,7 @@ export default async function Page({ params }: PageProps) {
     notFound();
   }
 
-  const data = getWelcomePageByLocale(locale);
+  const data = getWelcomeCopy(locale);
 
   return <WelcomePage data={data} />;
 }
