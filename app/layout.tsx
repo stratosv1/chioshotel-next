@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import Script from "next/script";
 import { headers } from "next/headers";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -8,6 +8,7 @@ import { VoulamandisHeader } from "@/components/VoulamandisHeader";
 import { siteName, siteUrl } from "@/lib/seo";
 import "./css-split/core.css";
 import "./css-split/overrides/home-mobile-hero-safe.css";
+import "./css-split/overrides/header-mobile-menu-icons.css";
 
 const googleAnalyticsId = "G-844GGQ1TC7";
 
