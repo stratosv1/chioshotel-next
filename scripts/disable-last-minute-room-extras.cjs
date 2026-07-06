@@ -49,3 +49,15 @@ for (const target of targets) {
     fs.writeFileSync(target.filePath, source.replace(currentBlock, zeroRoomExtrasBlock), "utf8");
   }
 }
+
+const consentPath = path.join(process.cwd(), "components", "analytics", "ConsentAnalytics.tsx");
+if (fs.existsSync(consentPath)) {
+  let source = fs.readFileSync(consentPath, "utf8");
+  const wrongImport = 'import { Analytics, track } from "@vercel/analytics/react";';
+  const correctImport = 'import { track } from "@vercel/analytics";\nimport { Analytics } from "@vercel/analytics/react";';
+
+  if (source.includes(wrongImport)) {
+    source = source.replace(wrongImport, correctImport);
+    fs.writeFileSync(consentPath, source, "utf8");
+  }
+}
