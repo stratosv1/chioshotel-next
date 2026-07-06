@@ -47,6 +47,24 @@ const COMPACT_SECTION_CSS = `
   main > section:nth-of-type(2) article:first-child > div.mt-7 {
     margin-top: 1.1rem;
   }
+
+  main > section:last-of-type > div {
+    min-height: 430px;
+  }
+
+  main > section:last-of-type img {
+    object-position: 52% 30%;
+    transform: scale(1.06);
+  }
+
+  main > section:last-of-type > div > div.absolute {
+    background: linear-gradient(180deg, rgba(0,0,0,.58), rgba(0,0,0,.74));
+  }
+
+  main > section:last-of-type > div > div.relative {
+    max-width: 92%;
+    padding: 1.5rem;
+  }
 }
 
 @supports selector(article:has(#discountCodeForm)) {
