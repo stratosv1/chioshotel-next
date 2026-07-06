@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
@@ -6,31 +6,8 @@ import type { HomePageData } from "@/content/home";
 
 type LastMinuteData = HomePageData["lastMinute"];
 
-const LAST_MINUTE_CSS_ID = "last-minute-widget-css";
-
-function loadLastMinuteStyles() {
-  if (typeof document === "undefined") {
-    return Promise.resolve();
-  }
-
-  if (document.getElementById(LAST_MINUTE_CSS_ID)) {
-    return Promise.resolve();
-  }
-
-  return new Promise<void>((resolve) => {
-    const link = document.createElement("link");
-    link.id = LAST_MINUTE_CSS_ID;
-    link.rel = "stylesheet";
-    link.href = "/css/last-minute-widget.css";
-    link.onload = () => resolve();
-    link.onerror = () => resolve();
-
-    document.head.appendChild(link);
-  });
-}
-
-const LastMinuteDealsClient = dynamic(
-  () => import("@/components/home/LastMinuteDeals").then((module) => module.LastMinuteDeals),
+const LiveDirectRequestClient = dynamic(
+  () => import("@/components/home/LiveDirectRequest").then((module) => module.LiveDirectRequest),
   {
     ssr: false,
     loading: () => null,
@@ -47,10 +24,6 @@ export function LazyLastMinuteDeals({
   const rootRef = useRef<HTMLDivElement | null>(null);
   const [shouldLoad, setShouldLoad] = useState(false);
 
-  function revealDeals() {
-    void loadLastMinuteStyles().finally(() => setShouldLoad(true));
-  }
-
   useEffect(() => {
     const element = rootRef.current;
 
@@ -66,7 +39,7 @@ export function LazyLastMinuteDeals({
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries.some((entry) => entry.isIntersecting)) {
-          revealDeals();
+          setShouldLoad(true);
           observer.disconnect();
         }
       },
@@ -81,35 +54,19 @@ export function LazyLastMinuteDeals({
   }, [shouldLoad]);
 
   if (shouldLoad) {
-    return <LastMinuteDealsClient data={data} canonicalPath={canonicalPath} />;
+    return <LiveDirectRequestClient data={data} canonicalPath={canonicalPath} />;
   }
 
   return (
     <div ref={rootRef}>
-      <section className="vh-section vh-section--tight" aria-labelledby="vh-lastminute-title">
-        <div className="vh-wrap">
-          <header className="vh-section-head" style={{ textAlign: "center" }}>
-            <span className="vh-kicker">{data.kicker}</span>
-            <h2 className="vh-title" id="vh-lastminute-title">
-              <span aria-hidden="true" style={{ marginRight: 8 }}>
-                {data.icon}
-              </span>
-              {data.title}
-            </h2>
-            <p className="vh-subtitle" style={{ margin: "0 auto", maxWidth: 900 }}>
-              {data.subtitle}
-            </p>
-          </header>
-
-          <div style={{ marginTop: "1.5rem", textAlign: "center" }}>
-            <button
-              type="button"
-              className="vh-btn vh-btn--primary"
-              onClick={revealDeals}
-            >
-              {data.title}
-            </button>
-          </div>
+      <section className="px-4 py-12 md:px-8 md:py-18" aria-labelledby="live-direct-placeholder-title">
+        <div className="mx-auto max-w-7xl rounded-[2rem] border border-amber-900/10 bg-[#fffaf3] p-6 text-center shadow-lg shadow-stone-900/5 md:p-10">
+          <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] text-amber-700">{data.kicker}</p>
+          <h2 id="live-direct-placeholder-title" className="font-serif text-3xl font-bold leading-tight text-stone-900 md:text-5xl">
+            <span className="mr-2" aria-hidden="true">{data.icon}</span>
+            {data.title}
+          </h2>
+          <p className="mx-auto mt-4 max-w-3xl text-base leading-8 text-stone-600 md:text-lg">{data.subtitle}</p>
         </div>
       </section>
     </div>
