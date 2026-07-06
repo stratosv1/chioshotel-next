@@ -152,6 +152,8 @@ const ROOM_BASE = [
   },
 ] as const;
 
+const ALLOWED_ROOM_IDS = new Set(ROOM_BASE.map((room) => room.id));
+
 export function roomKey(room: Pick<DealRoom, "roomId" | "unitId">) {
   return `${room.roomId}_${room.unitId}`;
 }
@@ -174,13 +176,20 @@ function roomIdFromName(value?: string) {
 }
 
 function findBaseRoom(room: DealRoom) {
-  const byName = ROOM_BASE.find((item) => item.id === roomIdFromName(room.displayName));
+  const displayedId = roomIdFromName(room.displayName);
+
+  if (displayedId && !ALLOWED_ROOM_IDS.has(displayedId)) return null;
+
+  const byName = ROOM_BASE.find((item) => item.id === displayedId);
   if (byName) return byName;
 
-  const byId = ROOM_BASE.find((item) => item.id === Number(room.id));
+  const numericId = Number(room.id || 0);
+  if (numericId && !ALLOWED_ROOM_IDS.has(numericId)) return null;
+
+  const byId = ROOM_BASE.find((item) => item.id === numericId);
   if (byId) return byId;
 
-  return ROOM_BASE.find((item) => item.roomId === room.roomId && item.unitId === room.unitId);
+  return null;
 }
 
 function apiBaseGuests(room: RoomMeta) {
@@ -239,20 +248,23 @@ export function selectionTotals(deals: DealsResponse | null, room: RoomMeta | nu
 }
 
 export function mergeDealRooms(deals: DealsResponse | null): RoomMeta[] {
-  return (deals?.rooms || []).map((room) => {
-    const base = findBaseRoom(room);
+  return (deals?.rooms || [])
+    .map((room) => {
+      const base = findBaseRoom(room);
+      if (!base) return null;
 
-    return {
-      id: base?.id || room.id || 0,
-      roomId: room.roomId,
-      unitId: room.unitId,
-      displayName: base?.displayName || room.displayName || `Room ${room.unitId}`,
-      type: base?.type || room.type || "Room / Apartment",
-      location: base?.location || room.location || "Voulamandis House",
-      maxGuests: base?.maxGuests || room.maxGuests || 2,
-      images: [base?.image || "/images/rooms/voulamandis-house-rooms.webp", ...(room.images || [])],
-      primaryBadge: base?.primaryBadge || "Direct offer",
-      featureBadges: [...(base?.featureBadges || []), "Wi‑Fi"].slice(0, 4),
-    };
-  });
+      return {
+        id: base.id,
+        roomId: room.roomId,
+        unitId: room.unitId,
+        displayName: base.displayName,
+        type: base.type,
+        location: base.location,
+        maxGuests: base.maxGuests,
+        images: [base.image],
+        primaryBadge: base.primaryBadge,
+        featureBadges: [...base.featureBadges, "Wi‑Fi"].slice(0, 4),
+      };
+    })
+    .filter((room): room is RoomMeta => Boolean(room));
 }
