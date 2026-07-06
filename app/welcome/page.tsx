@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { WelcomePage } from "@/components/welcome/WelcomePage";
-import { getWelcomePageByLocale } from "@/content/welcome";
+import { getWelcomeCopy } from "@/content/welcome";
 import { buildPageMetadata } from "@/lib/seo";
 
-const data = getWelcomePageByLocale("en");
+const data = getWelcomeCopy("en");
 
 export const metadata: Metadata = {
   ...buildPageMetadata({
