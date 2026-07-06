@@ -73,7 +73,7 @@ export default async function RootLayout({
           <VoulamandisHeader language={htmlLanguage} pathname={pathname} />
         ) : null}
         {children}
-        <VoulamandisFooter language={htmlLanguage} />
+        {!hideHeader ? <VoulamandisFooter language={htmlLanguage} /> : null}
         <ConsentAnalytics language={htmlLanguage} />
         <SpeedInsights />
       </body>

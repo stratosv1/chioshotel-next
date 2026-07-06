@@ -1,4 +1,9 @@
-"use client";
+﻿const fs = require("fs");
+
+const componentFile = "components/pre-arrival/PreArrivalPage.tsx";
+const layoutFile = "app/layout.tsx";
+
+const component = `"use client";
 
 import type { PreArrivalPageData } from "@/content/pre-arrival";
 import {
@@ -369,11 +374,11 @@ export function PreArrivalPage({ data }: PreArrivalPageProps) {
   const pageCopy = copy[data.locale] ?? copy.en;
   const homeHref = homeLinks[data.locale] ?? homeLinks.en;
 
-  const whatsappHref = `${preArrivalContact.whatsappBase}?text=${encodeURIComponent(pageCopy.message)}`;
-  const smsHref = `${preArrivalContact.smsBase}?body=${encodeURIComponent(pageCopy.message)}`;
-  const emailHref = `mailto:${preArrivalContact.email}?subject=${encodeURIComponent(
+  const whatsappHref = \`\${preArrivalContact.whatsappBase}?text=\${encodeURIComponent(pageCopy.message)}\`;
+  const smsHref = \`\${preArrivalContact.smsBase}?body=\${encodeURIComponent(pageCopy.message)}\`;
+  const emailHref = \`mailto:\${preArrivalContact.email}?subject=\${encodeURIComponent(
     "Voulamandis House arrival information",
-  )}&body=${encodeURIComponent(pageCopy.message)}`;
+  )}&body=\${encodeURIComponent(pageCopy.message)}\`;
 
   return (
     <main className="min-h-screen bg-[#eef7f4] px-4 py-4 text-slate-950 md:px-6 md:py-6">
@@ -388,11 +393,11 @@ export function PreArrivalPage({ data }: PreArrivalPageProps) {
                 <a
                   href={item.href}
                   key={item.locale}
-                  className={`rounded-full px-4 py-2 text-sm font-black transition ${
+                  className={\`rounded-full px-4 py-2 text-sm font-black transition \${
                     item.locale === data.locale
                       ? "bg-teal-800 !text-white"
                       : "bg-slate-100 !text-slate-950 hover:bg-slate-200"
-                  }`}
+                  }\`}
                 >
                   {item.label}
                 </a>
@@ -502,3 +507,15 @@ export function PreArrivalPage({ data }: PreArrivalPageProps) {
     </main>
   );
 }
+`;
+
+fs.writeFileSync(componentFile, component, "utf8");
+
+let layout = fs.readFileSync(layoutFile, "utf8");
+layout = layout.replace(
+  "        <VoulamandisFooter language={htmlLanguage} />",
+  "        {!hideHeader ? <VoulamandisFooter language={htmlLanguage} /> : null}"
+);
+fs.writeFileSync(layoutFile, layout, "utf8");
+
+console.log("Fixed full pre-arrival component and footer visibility.");
