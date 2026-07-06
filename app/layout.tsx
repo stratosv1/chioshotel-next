@@ -47,12 +47,14 @@ function getHtmlLanguage(pathname: string): SiteLanguage {
   return "en";
 }
 
-function isPreArrivalPath(pathname: string): boolean {
-  const normalizedPathname = pathname.endsWith("/") ? pathname : `${pathname}/`;
+function isGuidePath(pathname: string): boolean {
+  const normalizedPathname = pathname.endsWith("/") ? pathname : pathname + "/";
 
   return (
     normalizedPathname === "/pre-arrival/" ||
-    normalizedPathname.endsWith("/pre-arrival/")
+    normalizedPathname.endsWith("/pre-arrival/") ||
+    normalizedPathname === "/welcome/" ||
+    normalizedPathname.endsWith("/welcome/")
   );
 }
 
@@ -64,7 +66,7 @@ export default async function RootLayout({
   const requestHeaders = await headers();
   const pathname = requestHeaders.get("x-current-pathname") || "/";
   const htmlLanguage = getHtmlLanguage(pathname);
-  const hideHeader = isPreArrivalPath(pathname);
+  const hideHeader = isGuidePath(pathname);
 
   return (
     <html lang={htmlLanguage}>
