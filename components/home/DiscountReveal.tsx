@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { PointerEvent } from "react";
@@ -12,6 +12,124 @@ type DiscountRevealProps = {
 type Locale = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
 
 const REVEAL_PERCENT = 58;
+
+const COMPACT_SECTION_CSS = `
+@supports selector(article:has(#discountCodeForm)) {
+  article:has(#discountCodeForm) {
+    margin-top: 2rem;
+    border-radius: 1.75rem;
+    background: #fff8ea;
+    box-shadow: 0 14px 32px rgba(68, 64, 60, .08);
+  }
+
+  article:has(#discountCodeForm) > div.absolute {
+    display: none;
+  }
+
+  article:has(#discountCodeForm) > div.relative {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  article:has(#discountCodeForm) > div.relative > div:first-child {
+    padding: 1.35rem 1.35rem .5rem;
+  }
+
+  article:has(#discountCodeForm) > div.relative > div:first-child h3 {
+    margin-top: 1rem;
+    max-width: 18rem;
+    font-size: clamp(2rem, 9vw, 3rem);
+    line-height: 1.05;
+  }
+
+  article:has(#discountCodeForm) > div.relative > div:first-child p {
+    display: none;
+  }
+
+  article:has(#discountCodeForm) > div.relative > div:first-child ul {
+    margin-top: 1rem;
+    display: flex;
+    gap: .5rem;
+    overflow-x: auto;
+    padding-bottom: .25rem;
+    scrollbar-width: none;
+  }
+
+  article:has(#discountCodeForm) > div.relative > div:first-child ul::-webkit-scrollbar {
+    display: none;
+  }
+
+  article:has(#discountCodeForm) > div.relative > div:first-child li {
+    min-width: max-content;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    border-radius: 999px;
+    padding: .65rem .85rem;
+    font-size: .78rem;
+    line-height: 1.15;
+  }
+
+  article:has(#discountCodeForm) > div.relative > div:first-child li span:first-child {
+    margin: 0;
+    height: 1.6rem;
+    min-width: 1.6rem;
+    font-size: .62rem;
+  }
+
+  article:has(#discountCodeForm) > div.relative > div:last-child {
+    padding: .5rem 1.25rem 1.35rem;
+  }
+
+  article:has(#discountCodeForm) > div.relative > div:last-child > div {
+    max-width: 100%;
+    border-radius: 1.45rem;
+    padding: .75rem;
+    background: linear-gradient(135deg, #6f3f1d, #a35b1e);
+    box-shadow: 0 10px 22px rgba(68, 64, 60, .12);
+  }
+
+  article:has(#discountCodeForm) > div.relative > div:last-child > div > div {
+    border-radius: 1.25rem;
+    padding: .9rem;
+  }
+
+  article:has(#discountCodeForm) > div.relative > div:last-child > div > div > p {
+    display: none;
+  }
+
+  article:has(#discountCodeForm) > div.relative > div:last-child > div > div > div {
+    margin-top: 0;
+    padding: .8rem;
+    box-shadow: 0 8px 18px rgba(68, 64, 60, .12);
+  }
+}
+
+@media (min-width: 1024px) {
+  @supports selector(article:has(#discountCodeForm)) {
+    article:has(#discountCodeForm) > div.relative {
+      grid-template-columns: minmax(0, 1fr) 360px;
+      align-items: center;
+    }
+
+    article:has(#discountCodeForm) > div.relative > div:first-child {
+      padding: 2rem 2.5rem;
+    }
+
+    article:has(#discountCodeForm) > div.relative > div:first-child h3 {
+      max-width: 36rem;
+      font-size: 3rem;
+    }
+
+    article:has(#discountCodeForm) > div.relative > div:first-child ul {
+      overflow: visible;
+    }
+
+    article:has(#discountCodeForm) > div.relative > div:last-child {
+      padding: 1.5rem 2rem 1.5rem 0;
+    }
+  }
+}
+`;
 
 const COPY: Record<
   Locale,
@@ -141,11 +259,11 @@ export function DiscountReveal({ successText, code }: DiscountRevealProps) {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
-    ctx.font = "700 17px Arial, sans-serif";
-    ctx.fillText(text.coverLine1, rect.width / 2, rect.height / 2 - 10);
+    ctx.font = "700 16px Arial, sans-serif";
+    ctx.fillText(text.coverLine1, rect.width / 2, rect.height / 2 - 9);
 
-    ctx.font = "700 15px Arial, sans-serif";
-    ctx.fillText(text.coverLine2, rect.width / 2, rect.height / 2 + 14);
+    ctx.font = "700 14px Arial, sans-serif";
+    ctx.fillText(text.coverLine2, rect.width / 2, rect.height / 2 + 13);
   }, [isRevealed, text.coverLine1, text.coverLine2]);
 
   useEffect(() => {
@@ -223,112 +341,112 @@ export function DiscountReveal({ successText, code }: DiscountRevealProps) {
   }
 
   return (
-    <div
-      id="discountCodeForm"
-      style={{
-        width: "100%",
-        maxWidth: 360,
-        margin: "18px auto 0",
-      }}
-    >
+    <>
+      <style jsx global>{COMPACT_SECTION_CSS}</style>
       <div
+        id="discountCodeForm"
         style={{
-          margin: "0 0 9px",
-          color: "#5e513f",
-          fontSize: 13,
-          fontWeight: 800,
-          lineHeight: 1.35,
-          textAlign: "center",
-        }}
-      >
-        🎁 {text.title}
-      </div>
-
-      <div
-        ref={cardRef}
-        aria-label={text.title}
-        style={{
-          position: "relative",
           width: "100%",
-          height: 120,
-          border: "2px dashed rgba(142,102,7,.24)",
-          borderRadius: 18,
-          overflow: "hidden",
-          background:
-            "radial-gradient(circle at 20% 20%, rgba(255,255,255,.78), transparent 30%), linear-gradient(135deg, #fff6e5, #f2d79e)",
-          boxShadow: "0 10px 24px rgba(142,102,7,.10)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          textAlign: "center",
-          userSelect: "none",
+          maxWidth: 300,
+          margin: "0 auto",
         }}
       >
-        <div style={{ padding: "12px 16px" }}>
-          <div style={{ fontSize: 21, marginBottom: 3 }} aria-hidden="true">
-            🎁
-          </div>
-
-          <div
-            style={{
-              marginBottom: 5,
-              color: "#6f645b",
-              fontSize: 9,
-              fontWeight: 900,
-              letterSpacing: ".12em",
-              textTransform: "uppercase",
-            }}
-          >
-            {text.codeLabel}
-          </div>
-
-          <div
-            id="discountCodeValue"
-            style={{
-              color: "#8E6607",
-              fontFamily: "Georgia, serif",
-              fontSize: "clamp(27px, 8vw, 38px)",
-              fontWeight: 900,
-              letterSpacing: ".03em",
-              lineHeight: 1,
-            }}
-          >
-            {code || "WELCOME10"}
-          </div>
-
-          <div
-            style={{
-              marginTop: 7,
-              color: "#6f645b",
-              fontSize: 11,
-              fontWeight: 700,
-              lineHeight: 1.3,
-            }}
-          >
-            {isRevealed ? successText : text.hiddenNote}
-          </div>
+        <div
+          style={{
+            display: "none",
+          }}
+        >
+          🎁 {text.title}
         </div>
 
-        {!isRevealed ? (
-          <canvas
-            ref={canvasRef}
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp}
-            onPointerCancel={handlePointerUp}
-            style={{
-              position: "absolute",
-              inset: 0,
-              width: "100%",
-              height: "100%",
-              cursor: "grab",
-              touchAction: "none",
-            }}
-          />
-        ) : null}
-      </div>
+        <div
+          ref={cardRef}
+          aria-label={text.title}
+          style={{
+            position: "relative",
+            width: "100%",
+            height: 96,
+            border: "2px dashed rgba(142,102,7,.24)",
+            borderRadius: 16,
+            overflow: "hidden",
+            background:
+              "radial-gradient(circle at 20% 20%, rgba(255,255,255,.78), transparent 30%), linear-gradient(135deg, #fff6e5, #f2d79e)",
+            boxShadow: "0 8px 18px rgba(142,102,7,.10)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            textAlign: "center",
+            userSelect: "none",
+          }}
+        >
+          <div style={{ padding: "9px 14px" }}>
+            <div style={{ fontSize: 16, marginBottom: 2 }} aria-hidden="true">
+              🎁
+            </div>
 
-      <div id="discountFeedback" className="discount-error" aria-live="polite" />
-    </div>
+            <div
+              style={{
+                marginBottom: 4,
+                color: "#6f645b",
+                fontSize: 8,
+                fontWeight: 900,
+                letterSpacing: ".12em",
+                textTransform: "uppercase",
+              }}
+            >
+              {text.codeLabel}
+            </div>
+
+            <div
+              id="discountCodeValue"
+              style={{
+                color: "#8E6607",
+                fontFamily: "Georgia, serif",
+                fontSize: "clamp(23px, 7vw, 32px)",
+                fontWeight: 900,
+                letterSpacing: ".03em",
+                lineHeight: 1,
+              }}
+            >
+              {code || "WELCOME10"}
+            </div>
+
+            {isRevealed ? (
+              <div
+                style={{
+                  marginTop: 5,
+                  color: "#6f645b",
+                  fontSize: 10,
+                  fontWeight: 700,
+                  lineHeight: 1.25,
+                }}
+              >
+                {successText}
+              </div>
+            ) : null}
+          </div>
+
+          {!isRevealed ? (
+            <canvas
+              ref={canvasRef}
+              onPointerDown={handlePointerDown}
+              onPointerMove={handlePointerMove}
+              onPointerUp={handlePointerUp}
+              onPointerCancel={handlePointerUp}
+              style={{
+                position: "absolute",
+                inset: 0,
+                width: "100%",
+                height: "100%",
+                cursor: "grab",
+                touchAction: "none",
+              }}
+            />
+          ) : null}
+        </div>
+
+        <div id="discountFeedback" className="discount-error" aria-live="polite" />
+      </div>
+    </>
   );
 }
