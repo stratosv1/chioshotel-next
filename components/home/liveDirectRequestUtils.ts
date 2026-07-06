@@ -205,6 +205,9 @@ function findBaseRoom(room: DealRoom) {
   const byId = ROOM_BASE.find((item) => item.id === numericId);
   if (byId) return byId;
 
+  const byLiveKey = ROOM_BASE.find((item) => item.roomId === room.roomId && item.unitId === room.unitId);
+  if (byLiveKey) return byLiveKey;
+
   return null;
 }
 
