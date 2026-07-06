@@ -1,0 +1,11 @@
+@media (max-width: 767px) {
+  main > section:last-of-type img {
+    object-position: 52% 34% !important;
+    transform: scale(1.02) !important;
+    filter: none !important;
+  }
+
+  main > section:last-of-type > div > div.absolute {
+    background: linear-gradient(180deg, rgba(0, 0, 0, .22), rgba(0, 0, 0, .46)) !important;
+  }
+}
