@@ -174,13 +174,13 @@ function roomIdFromName(value?: string) {
 }
 
 function findBaseRoom(room: DealRoom) {
-  const byLiveKey = ROOM_BASE.find((item) => item.roomId === room.roomId && item.unitId === room.unitId);
-  if (byLiveKey) return byLiveKey;
-
   const byName = ROOM_BASE.find((item) => item.id === roomIdFromName(room.displayName));
   if (byName) return byName;
 
-  return ROOM_BASE.find((item) => item.id === Number(room.id));
+  const byId = ROOM_BASE.find((item) => item.id === Number(room.id));
+  if (byId) return byId;
+
+  return ROOM_BASE.find((item) => item.roomId === room.roomId && item.unitId === room.unitId);
 }
 
 function apiBaseGuests(room: RoomMeta) {
