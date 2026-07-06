@@ -48,6 +48,24 @@ const COMPACT_SECTION_CSS = `
     margin-top: 1.1rem;
   }
 
+  main > section:nth-of-type(4) article:first-child > div.mt-7 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .65rem;
+  }
+
+  main > section:nth-of-type(4) article:first-child > div.mt-7 a {
+    min-height: 4.75rem;
+    width: 100%;
+    padding-left: .55rem;
+    padding-right: .55rem;
+    border-radius: 1.35rem;
+    font-size: .78rem;
+    line-height: 1.25;
+    letter-spacing: .08em;
+    white-space: normal;
+  }
+
   main > section:last-of-type > div {
     min-height: 430px;
   }
