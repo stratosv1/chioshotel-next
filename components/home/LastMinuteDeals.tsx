@@ -154,16 +154,16 @@ const CONFIG = {
 };
 
 const ROOM_EXTRA_PER_NIGHT: Record<number, number> = {
-  1: 10,
-  2: 5,
-  3: 7,
+  1: 0,
+  2: 0,
+  3: 0,
   4: 0,
   5: 0,
   6: 0,
-  7: 10,
+  7: 0,
   8: 0,
   9: 0,
-  10: 5,
+  10: 0,
 };
 
 const ROOM_META_BASE = [

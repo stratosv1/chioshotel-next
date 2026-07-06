@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Analytics, track } from "@vercel/analytics/react";
+import { track } from "@vercel/analytics";
+import { Analytics } from "@vercel/analytics/react";
 
 type LanguageCode = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
 type ConsentValue = "accepted" | "rejected";

@@ -1,18 +1,5 @@
-const fs = require("fs");
+﻿const fs = require("fs");
 const path = require("path");
-
-const currentBlock = `const ROOM_EXTRA_PER_NIGHT: Record<number, number> = {
-  1: 10,
-  2: 5,
-  3: 7,
-  4: 0,
-  5: 0,
-  6: 0,
-  7: 10,
-  8: 0,
-  9: 0,
-  10: 5,
-};`;
 
 const zeroRoomExtrasBlock = `const ROOM_EXTRA_PER_NIGHT: Record<number, number> = {
   1: 0,
@@ -38,26 +25,48 @@ const targets = [
   },
 ];
 
-for (const target of targets) {
-  const source = fs.readFileSync(target.filePath, "utf8");
+const roomExtrasRegex =
+  /const ROOM_EXTRA_PER_NIGHT:\s*Record<number,\s*number>\s*=\s*\{[\s\S]*?\};/m;
 
-  if (!source.includes(currentBlock) && !source.includes(zeroRoomExtrasBlock)) {
-    throw new Error(`Could not verify ${target.label} ROOM_EXTRA_PER_NIGHT block.`);
+for (const target of targets) {
+  if (!fs.existsSync(target.filePath)) {
+    console.warn(`Skipping ${target.label}: file not found.`);
+    continue;
   }
 
-  if (source.includes(currentBlock)) {
-    fs.writeFileSync(target.filePath, source.replace(currentBlock, zeroRoomExtrasBlock), "utf8");
+  const source = fs.readFileSync(target.filePath, "utf8");
+
+  if (!source.includes("ROOM_EXTRA_PER_NIGHT")) {
+    console.warn(`Skipping ${target.label}: ROOM_EXTRA_PER_NIGHT not found.`);
+    continue;
+  }
+
+  if (!roomExtrasRegex.test(source)) {
+    console.warn(`Skipping ${target.label}: ROOM_EXTRA_PER_NIGHT block format not matched.`);
+    continue;
+  }
+
+  const nextSource = source.replace(roomExtrasRegex, zeroRoomExtrasBlock);
+
+  if (nextSource !== source) {
+    fs.writeFileSync(target.filePath, nextSource, "utf8");
+    console.log(`Updated ${target.label}: room extras set to zero.`);
+  } else {
+    console.log(`No change needed for ${target.label}.`);
   }
 }
 
 const consentPath = path.join(process.cwd(), "components", "analytics", "ConsentAnalytics.tsx");
+
 if (fs.existsSync(consentPath)) {
   let source = fs.readFileSync(consentPath, "utf8");
   const wrongImport = 'import { Analytics, track } from "@vercel/analytics/react";';
-  const correctImport = 'import { track } from "@vercel/analytics";\nimport { Analytics } from "@vercel/analytics/react";';
+  const correctImport =
+    'import { track } from "@vercel/analytics";\nimport { Analytics } from "@vercel/analytics/react";';
 
   if (source.includes(wrongImport)) {
     source = source.replace(wrongImport, correctImport);
     fs.writeFileSync(consentPath, source, "utf8");
+    console.log("Fixed ConsentAnalytics import.");
   }
 }
