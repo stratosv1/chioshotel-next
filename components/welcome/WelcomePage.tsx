@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+﻿import type { ReactNode } from "react";
 import { welcomeContact, welcomeImages } from "@/content/welcome";
 import type { WelcomeButton, WelcomeItem, WelcomePageCopy } from "@/content/welcome";
 
@@ -261,7 +261,30 @@ export function WelcomePage({ data }: { data: WelcomePageCopy }) {
           <p className="text-lg leading-8 text-slate-700">{data.sections.delivery.intro}</p>
           <Highlight>{data.sections.delivery.important.map((line) => <p key={line} className="leading-8">{line}</p>)}</Highlight>
           <p className="mt-5 leading-8 text-slate-700">{data.sections.delivery.accountIntro}</p>
-          <InfoGrid items={data.sections.delivery.items} />
+
+          <div className="mt-5 grid gap-4 md:grid-cols-2">
+            <article className="rounded-[22px] border border-yellow-300 bg-slate-50 p-5 shadow-sm">
+              <h3 className="text-lg font-black text-slate-800">Fagi Login Details</h3>
+              <div className="mt-3 space-y-2 text-base leading-7 text-slate-700">
+                <p><strong>Username:</strong> vhouse.reservations@gmail.com</p>
+                <p><strong>Password:</strong> chioshotel.gr</p>
+              </div>
+            </article>
+
+            <article className="rounded-[22px] border border-yellow-300 bg-slate-50 p-5 shadow-sm">
+              <h3 className="text-lg font-black text-slate-800">Download the App</h3>
+              <p className="mt-3 text-base leading-7 text-slate-700">
+                Download the Fagi app and use the login details above to place your order.
+              </p>
+              <div className="mt-4">
+                <GuideButton href="https://play.google.com/store/apps/details?id=com.fagi.fagi.gr&hl=el" external>
+                  Download Fagi App
+                </GuideButton>
+              </div>
+            </article>
+          </div>
+
+          <InfoGrid items={data.sections.delivery.items.slice(2)} />
         </Section>
 
         <Section id="nearby-thymiana" title={data.sections.nearby.title} eyebrow="Around the house">
@@ -315,3 +338,4 @@ export function WelcomePage({ data }: { data: WelcomePageCopy }) {
     </main>
   );
 }
+
