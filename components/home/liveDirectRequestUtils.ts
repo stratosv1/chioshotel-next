@@ -60,7 +60,12 @@ export function directPrice(value: number | string | undefined) {
 export function getNightInfo(deals: DealsResponse | null, room: RoomMeta, date: string | null) {
   if (!deals || !date) return null;
   const raw = deals.days?.find((day) => day.checkin === date)?.results?.[roomKey(room)];
-  return raw?.available ? { price: directPrice(raw.totalPrice) } : null;
+  if (!raw?.available) return null;
+
+  const original = Math.round(Number(raw.totalPrice || 0) + 2);
+  const direct = directPrice(raw.totalPrice);
+
+  return { original, direct };
 }
 
 export function firstAvailableDate(deals: DealsResponse | null, room: RoomMeta) {
@@ -70,9 +75,25 @@ export function firstAvailableDate(deals: DealsResponse | null, room: RoomMeta) 
 export function minDirectPrice(deals: DealsResponse | null, room: RoomMeta) {
   const prices = (deals?.days || [])
     .slice(0, 7)
-    .map((day) => getNightInfo(deals, room, day.checkin)?.price)
+    .map((day) => getNightInfo(deals, room, day.checkin)?.direct)
     .filter((item): item is number => typeof item === "number");
   return prices.length ? Math.min(...prices) : null;
+}
+
+export function selectionTotals(deals: DealsResponse | null, room: RoomMeta | null, dates: string[]) {
+  if (!room || !dates.length) return null;
+
+  const nights = dates.map((date) => getNightInfo(deals, room, date));
+  if (nights.some((night) => !night)) return null;
+
+  return nights.reduce(
+    (total, night) => ({
+      original: total.original + Number(night?.original || 0),
+      direct: total.direct + Number(night?.direct || 0),
+      nights: total.nights + 1,
+    }),
+    { original: 0, direct: 0, nights: 0 },
+  );
 }
 
 export function mergeDealRooms(deals: DealsResponse | null): RoomMeta[] {
