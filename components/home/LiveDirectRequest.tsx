@@ -28,8 +28,8 @@ const CONTACT = {
 const TRUST_ITEMS = [
   { icon: "◇", title: "Best direct offer", text: "Best available rate" },
   { icon: "◌", title: "Direct reply", text: "Reception response" },
-  { icon: "▭", title: "Choose your room", text: "Pick what suits you" },
-  { icon: "▣", title: "No credit card", text: "No payment now" },
+  { icon: "▭", title: "Choose room", text: "Pick what suits you" },
+  { icon: "▣", title: "No card", text: "No payment now" },
 ];
 
 function buildRequestHref(room: RoomMeta | null, dates: string[], guests: number, totals: { original: number; direct: number; nights: number } | null) {
@@ -124,6 +124,7 @@ export function LiveDirectRequest({ data }: { data: LastMinuteData; canonicalPat
 
   const totals = selectionTotals(deals, selectedRoom, selectedDates);
   const requestHref = buildRequestHref(selectedRoom, selectedDates, guests, totals);
+  const selectedDateLabel = selectedDates.length ? selectedDates.map((date) => formatDate(date)).join(" → ") : "";
 
   useEffect(() => {
     updateStickyRequestLink(requestHref);
@@ -187,7 +188,7 @@ export function LiveDirectRequest({ data }: { data: LastMinuteData; canonicalPat
               {error ? <div className="rounded-3xl bg-white p-6 text-sm font-bold text-stone-600 ring-1 ring-amber-900/10">{error}</div> : null}
               {!loading && !error && !rooms.length ? <div className="rounded-3xl bg-white p-6 text-sm font-bold text-stone-600 ring-1 ring-amber-900/10">No available rooms match these guests right now.</div> : null}
               {!loading && !error && rooms.length ? (
-                <div className="flex snap-x gap-3 overflow-x-auto pb-3 md:gap-4">
+                <div className="flex snap-x gap-3 overflow-x-auto pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:gap-4">
                   {rooms.map((room, index) => {
                     const active = selectedRoom && roomKey(selectedRoom) === roomKey(room);
                     const amount = minDirectPrice(deals, room);
@@ -214,8 +215,26 @@ export function LiveDirectRequest({ data }: { data: LastMinuteData; canonicalPat
               ) : null}
             </div>
 
+            {selectedRoom ? (
+              <div className="mt-4 hidden gap-4 rounded-[1.45rem] bg-white p-4 shadow-sm ring-1 ring-amber-900/10 md:grid md:grid-cols-[240px_1fr]">
+                <div className="relative min-h-[170px] overflow-hidden rounded-[1.1rem] bg-stone-100">
+                  <Image src={selectedRoom.images[0]} alt={`${selectedRoom.displayName} ${selectedRoom.type}`} fill sizes="240px" className="object-cover" />
+                </div>
+                <div className="min-w-0 self-center">
+                  <span className="inline-flex rounded-full bg-amber-50 px-3 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-amber-800">Best match</span>
+                  <h3 className="mt-2 font-serif text-3xl font-bold leading-tight text-stone-950">{selectedRoom.displayName}</h3>
+                  <p className="mt-1 font-bold text-amber-800">{selectedRoom.type}</p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <span className="rounded-full bg-stone-100 px-3 py-1.5 text-xs font-bold text-stone-700">{selectedRoom.location}</span>
+                    <span className="rounded-full bg-stone-100 px-3 py-1.5 text-xs font-bold text-stone-700">Wi‑Fi</span>
+                  </div>
+                  <p className="mt-4 max-w-2xl text-sm leading-6 text-stone-600">Send a direct request for this room and receive a personal reply from reception with the best available offer.</p>
+                </div>
+              </div>
+            ) : null}
+
             {selectedRoom && visibleDays.length ? (
-              <div className="mt-3 flex snap-x gap-2 overflow-x-auto pb-3 md:gap-3">
+              <div className="mt-3 flex snap-x gap-2 overflow-x-auto pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:gap-3">
                 {visibleDays.map((day) => {
                   const info = getNightInfo(deals, selectedRoom, day.checkin);
                   const active = selectedDates.includes(day.checkin);
@@ -233,6 +252,7 @@ export function LiveDirectRequest({ data }: { data: LastMinuteData; canonicalPat
             {totals ? (
               <div className="mt-2 rounded-[1.25rem] bg-white px-4 py-3 text-center shadow-sm ring-1 ring-amber-900/10 md:rounded-[1.4rem] md:py-4">
                 <div className="text-[11px] font-black uppercase tracking-[0.14em] text-stone-500 md:text-xs">Direct offer · {totals.nights} {totals.nights === 1 ? "night" : "nights"}</div>
+                <div className="mt-1 text-[11px] font-bold text-stone-500 md:text-xs">{selectedDateLabel}</div>
                 <div className="mt-1.5 flex items-end justify-center gap-3">
                   <span className="text-base font-black text-red-600 line-through md:text-lg">{money(totals.original)}</span>
                   <strong className="text-2xl font-black text-emerald-700 md:text-3xl">{money(totals.direct)}</strong>
@@ -250,12 +270,7 @@ export function LiveDirectRequest({ data }: { data: LastMinuteData; canonicalPat
               ))}
             </div>
 
-            <div className="mt-4 hidden grid-cols-2 gap-3 md:hidden">
-              <a href={CONTACT.phoneHref} className="flex min-h-12 items-center justify-center rounded-2xl border border-stone-300 bg-white px-5 text-sm font-black uppercase tracking-[0.08em] text-stone-800">Call</a>
-              <a href={requestHref} target="_blank" rel="noopener noreferrer" className="flex min-h-12 items-center justify-center rounded-2xl bg-[#17351f] px-5 text-sm font-black uppercase tracking-[0.08em] text-white">WhatsApp</a>
-            </div>
-
-            <p className="mt-4 pb-14 text-center text-xs font-semibold text-stone-500 lg:hidden md:pb-0">Your instant request at chioshotel.gr</p>
+            <p className="mt-4 pb-28 text-center text-xs font-semibold text-stone-500 lg:hidden md:pb-0">Your instant request at chioshotel.gr</p>
           </div>
 
           <aside className="hidden border-l border-amber-900/10 bg-white/70 p-8 lg:block">
@@ -263,7 +278,7 @@ export function LiveDirectRequest({ data }: { data: LastMinuteData; canonicalPat
               <div className="mb-5 flex items-center justify-between gap-4"><h3 className="text-xl font-black text-stone-950">Your request summary</h3><span className="text-3xl text-amber-700">⚡</span></div>
               <div className="space-y-3">
                 <div className="rounded-2xl border border-stone-200 bg-white p-4"><span className="block text-xs font-bold uppercase tracking-[0.12em] text-stone-400">Room</span><strong className="mt-1 block text-base text-stone-950">{selectedRoom?.displayName || "-"}</strong><span className="mt-1 block text-sm text-stone-500">{selectedRoom?.type || ""}</span></div>
-                <div className="rounded-2xl border border-stone-200 bg-white p-4"><span className="block text-xs font-bold uppercase tracking-[0.12em] text-stone-400">Dates</span><strong className="mt-1 block text-base text-stone-950">{selectedDates.length ? selectedDates.map((date) => formatDate(date)).join(" → ") : "-"}</strong></div>
+                <div className="rounded-2xl border border-stone-200 bg-white p-4"><span className="block text-xs font-bold uppercase tracking-[0.12em] text-stone-400">Dates</span><strong className="mt-1 block text-base text-stone-950">{selectedDateLabel || "-"}</strong></div>
                 <div className="rounded-2xl border border-stone-200 bg-white p-4"><span className="block text-xs font-bold uppercase tracking-[0.12em] text-stone-400">Guests</span><strong className="mt-1 block text-base text-stone-950">{guests}</strong></div>
                 {totals ? <div className="rounded-2xl border border-stone-200 bg-white p-4"><span className="block text-xs font-bold uppercase tracking-[0.12em] text-stone-400">Direct offer</span><div className="mt-2 flex items-end gap-3"><span className="text-base font-black text-red-600 line-through">{money(totals.original)}</span><strong className="text-2xl font-black text-emerald-700">{money(totals.direct)}</strong></div></div> : null}
                 <div className="rounded-2xl border border-stone-200 bg-white p-4"><span className="block text-xs font-bold uppercase tracking-[0.12em] text-stone-400">What happens next?</span><p className="mt-2 text-sm font-semibold leading-6 text-stone-700">We will reply with our best available direct offer.</p></div>
