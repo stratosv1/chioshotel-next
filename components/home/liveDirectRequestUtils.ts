@@ -26,10 +26,24 @@ export type RoomMeta = Required<Pick<DealRoom, "id" | "roomId" | "unitId" | "dis
   featureBadges: string[];
 };
 
+type VerifiedRoom = {
+  id: number;
+  roomId: number;
+  unitId: number;
+  displayName: string;
+  type: string;
+  location: string;
+  maxGuests: number;
+  image: string;
+  primaryBadge: string;
+  featureBadges: string[];
+};
+
 const DIRECT_DISCOUNT_PERCENT = 15;
 const CLIMATE_FEE_PER_NIGHT = 2;
+const ALLOWED_ROOM_IDS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-const ROOM_BASE = [
+const ROOM_BASE: VerifiedRoom[] = [
   {
     id: 1,
     roomId: 267788,
@@ -150,9 +164,7 @@ const ROOM_BASE = [
     primaryBadge: "Apartment",
     featureBadges: ["Apartment", "Kitchen", "Up to 4 guests"],
   },
-] as const;
-
-const ALLOWED_ROOM_IDS: ReadonlySet<number> = new Set<number>(ROOM_BASE.map((room) => room.id));
+];
 
 export function roomKey(room: Pick<DealRoom, "roomId" | "unitId">) {
   return `${room.roomId}_${room.unitId}`;
@@ -175,16 +187,20 @@ function roomIdFromName(value?: string) {
   return match ? Number(match[1]) : 0;
 }
 
+function isAllowedRoomId(id: number) {
+  return ALLOWED_ROOM_IDS.includes(id);
+}
+
 function findBaseRoom(room: DealRoom) {
   const displayedId = roomIdFromName(room.displayName);
 
-  if (displayedId && !ALLOWED_ROOM_IDS.has(displayedId)) return null;
+  if (displayedId && !isAllowedRoomId(displayedId)) return null;
 
   const byName = ROOM_BASE.find((item) => item.id === displayedId);
   if (byName) return byName;
 
   const numericId = Number(room.id || 0);
-  if (numericId && !ALLOWED_ROOM_IDS.has(numericId)) return null;
+  if (numericId && !isAllowedRoomId(numericId)) return null;
 
   const byId = ROOM_BASE.find((item) => item.id === numericId);
   if (byId) return byId;
