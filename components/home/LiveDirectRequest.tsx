@@ -188,23 +188,39 @@ export function LiveDirectRequest({ data }: { data: LastMinuteData; canonicalPat
               {error ? <div className="rounded-3xl bg-white p-6 text-sm font-bold text-stone-600 ring-1 ring-amber-900/10">{error}</div> : null}
               {!loading && !error && !rooms.length ? <div className="rounded-3xl bg-white p-6 text-sm font-bold text-stone-600 ring-1 ring-amber-900/10">No available rooms match these guests right now.</div> : null}
               {!loading && !error && rooms.length ? (
-                <div className="flex snap-x gap-3 overflow-x-auto pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:gap-4">
+                <div className="-mx-1 flex snap-x gap-3 overflow-x-auto px-1 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:gap-4">
                   {rooms.map((room, index) => {
                     const active = selectedRoom && roomKey(selectedRoom) === roomKey(room);
                     const amount = minDirectPrice(deals, room);
                     return (
-                      <button key={roomKey(room)} type="button" onClick={() => { setSelectedKey(roomKey(room)); const date = firstAvailableDate(deals, room); setSelectedDates(date ? [date] : []); }} className={`group w-[170px] flex-none snap-start overflow-hidden rounded-[1.15rem] bg-white p-2 text-left shadow-md shadow-stone-900/5 ring-1 transition md:w-[240px] md:rounded-[1.35rem] ${active ? "ring-[1.5px] ring-amber-700/80" : "ring-amber-900/10 hover:-translate-y-1 hover:ring-amber-700/40"}`}>
-                        <div className="relative aspect-[4/3] overflow-hidden rounded-[0.95rem] bg-stone-100 md:rounded-[1.05rem]">
-                          <Image src={room.images[0]} alt={`${room.displayName} ${room.type}`} width={480} height={360} sizes="240px" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
-                          {index === 0 ? <span className="absolute left-1.5 top-1.5 rounded-full bg-amber-100 px-2.5 py-1 text-[10px] font-black text-amber-900 shadow-sm md:left-2 md:top-2 md:text-[11px]">Best match</span> : null}
+                      <button
+                        key={roomKey(room)}
+                        type="button"
+                        onClick={() => {
+                          setSelectedKey(roomKey(room));
+                          const date = firstAvailableDate(deals, room);
+                          setSelectedDates(date ? [date] : []);
+                        }}
+                        className={`group w-[198px] flex-none snap-start rounded-[1.25rem] border bg-white p-2 text-left transition md:w-[250px] md:rounded-[1.35rem] ${
+                          active
+                            ? "border-amber-700 shadow-xl shadow-amber-900/20"
+                            : "border-amber-900/10 shadow-md shadow-stone-900/5 hover:-translate-y-1 hover:border-amber-700/40 hover:shadow-lg hover:shadow-stone-900/10"
+                        }`}
+                      >
+                        <div className="relative h-[136px] overflow-hidden rounded-[1rem] bg-stone-100 md:h-[155px] md:rounded-[1.05rem]">
+                          <Image src={room.images[0]} alt={`${room.displayName} ${room.type}`} width={500} height={380} sizes="250px" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+                          {index === 0 ? <span className="absolute left-2 top-2 rounded-full bg-amber-100 px-2.5 py-1 text-[10px] font-black text-amber-900 shadow-sm md:text-[11px]">Best match</span> : <span className="absolute left-2 top-2 rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-black text-amber-800 shadow-sm md:text-[11px]">{room.primaryBadge}</span>}
                           {active ? <span className="absolute right-2 top-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/95 text-lg font-black text-amber-800 shadow-md md:h-9 md:w-9">✓</span> : null}
                         </div>
                         <div className="px-1.5 pb-2 pt-3 md:px-2 md:pb-3 md:pt-4">
-                          <h3 className="truncate text-[15px] font-black leading-5 text-stone-950 md:text-lg md:leading-6">{room.displayName}</h3>
-                          <p className="mt-1 truncate text-xs text-stone-600 md:text-sm">{room.type}</p>
+                          <h3 className="truncate text-[16px] font-black leading-5 text-stone-950 md:text-lg md:leading-6">{room.displayName}</h3>
+                          <p className="mt-1 truncate text-[13px] text-stone-600 md:text-sm">{room.type}</p>
                           <div className="mt-3 flex flex-wrap gap-1.5 md:mt-4">
-                            <span className="rounded-full bg-stone-100 px-2 py-1 text-[10px] font-bold text-stone-700 md:px-2.5 md:text-[11px]">{room.location}</span>
-                            <span className="rounded-full bg-stone-100 px-2 py-1 text-[10px] font-bold text-stone-700 md:px-2.5 md:text-[11px]">Wi‑Fi</span>
+                            {room.featureBadges.slice(0, 3).map((badge) => (
+                              <span key={badge} className="rounded-full bg-stone-100 px-2 py-1 text-[10px] font-bold text-stone-700 md:px-2.5 md:text-[11px]">
+                                {badge}
+                              </span>
+                            ))}
                           </div>
                           {amount ? <div className="mt-3 flex items-end gap-1.5 md:mt-4"><span className="text-xs text-stone-500 md:text-sm">from</span><strong className="text-xl font-black text-[#17351f] md:text-2xl">{money(amount)}</strong></div> : null}
                         </div>
@@ -217,16 +233,17 @@ export function LiveDirectRequest({ data }: { data: LastMinuteData; canonicalPat
 
             {selectedRoom ? (
               <div className="mt-4 hidden gap-4 rounded-[1.45rem] bg-white p-4 shadow-sm ring-1 ring-amber-900/10 md:grid md:grid-cols-[240px_1fr]">
-                <div className="relative min-h-[170px] overflow-hidden rounded-[1.1rem] bg-stone-100">
+                <div className="relative min-h-[180px] overflow-hidden rounded-[1.1rem] bg-stone-100">
                   <Image src={selectedRoom.images[0]} alt={`${selectedRoom.displayName} ${selectedRoom.type}`} fill sizes="240px" className="object-cover" />
                 </div>
                 <div className="min-w-0 self-center">
-                  <span className="inline-flex rounded-full bg-amber-50 px-3 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-amber-800">Best match</span>
+                  <span className="inline-flex rounded-full bg-amber-50 px-3 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-amber-800">{selectedRoom.primaryBadge}</span>
                   <h3 className="mt-2 font-serif text-3xl font-bold leading-tight text-stone-950">{selectedRoom.displayName}</h3>
                   <p className="mt-1 font-bold text-amber-800">{selectedRoom.type}</p>
                   <div className="mt-3 flex flex-wrap gap-2">
-                    <span className="rounded-full bg-stone-100 px-3 py-1.5 text-xs font-bold text-stone-700">{selectedRoom.location}</span>
-                    <span className="rounded-full bg-stone-100 px-3 py-1.5 text-xs font-bold text-stone-700">Wi‑Fi</span>
+                    {selectedRoom.featureBadges.map((badge) => (
+                      <span key={badge} className="rounded-full bg-stone-100 px-3 py-1.5 text-xs font-bold text-stone-700">{badge}</span>
+                    ))}
                   </div>
                   <p className="mt-4 max-w-2xl text-sm leading-6 text-stone-600">Send a direct request for this room and receive a personal reply from reception with the best available offer.</p>
                 </div>
