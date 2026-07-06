@@ -78,20 +78,20 @@ function SalesBadges({ compact = false }: { compact?: boolean }) {
   const size = compact ? "px-2 py-1 text-[10px]" : "px-3 py-1.5 text-xs";
   return (
     <div className="flex flex-wrap gap-1.5">
-      <span className={`rounded-md bg-[#003b95] font-black text-white ${size}`}>Best direct offer</span>
-      <span className={`rounded-md bg-emerald-50 font-black text-emerald-800 ring-1 ring-emerald-200 ${size}`}>No card needed</span>
-      <span className={`rounded-md bg-sky-50 font-black text-sky-800 ring-1 ring-sky-200 ${size}`}>Direct reply</span>
+      <span className={`rounded-md bg-amber-100 font-black text-amber-900 ring-1 ring-amber-200 ${size}`}>Best direct offer</span>
+      <span className={`rounded-md bg-stone-100 font-black text-stone-700 ring-1 ring-stone-200 ${size}`}>No card needed</span>
+      <span className={`rounded-md bg-[#eef2dc] font-black text-[#5f6f35] ring-1 ring-[#d9dfbc] ${size}`}>Direct reply</span>
     </div>
   );
 }
 
 function RoomCard({ room, active, index, amount, onSelect }: { room: RoomMeta; active: boolean | null; index: number; amount: number | null; onSelect: () => void }) {
   return (
-    <button type="button" onClick={onSelect} className={`group w-[82vw] max-w-[340px] flex-none snap-start rounded-[1.35rem] bg-white p-2.5 text-left transition md:w-[240px] md:max-w-none md:rounded-[1.3rem] ${active ? "border border-amber-700 shadow-[0_14px_34px_rgba(146,64,14,0.18)] ring-1 ring-amber-600/40" : "border border-stone-200/70 shadow-md shadow-stone-900/5 hover:-translate-y-1 hover:border-amber-700/40 hover:shadow-lg hover:shadow-stone-900/10"}`}>
+    <button type="button" onClick={onSelect} className={`group w-[82vw] max-w-[340px] flex-none snap-start rounded-[1.35rem] bg-white p-2.5 text-left transition md:w-[240px] md:max-w-none md:rounded-[1.3rem] ${active ? "border border-[#7b8a4b] shadow-sm shadow-stone-300/60 ring-1 ring-[#7b8a4b]/35" : "border border-stone-200/70 shadow-md shadow-stone-900/5 hover:-translate-y-1 hover:border-[#7b8a4b]/40 hover:shadow-lg hover:shadow-stone-900/10"}`}>
       <div className="relative h-[190px] overflow-hidden rounded-[1.1rem] bg-stone-100 md:h-[150px] md:rounded-[1rem]">
         <Image src={room.images[0]} alt={`${room.displayName} ${room.type}`} width={640} height={460} sizes="(max-width: 768px) 82vw, 240px" className="h-full w-full scale-110 object-cover object-center transition duration-500 group-hover:scale-[1.16]" />
-        {index === 0 ? <span className="absolute left-2 top-2 rounded-md bg-[#003b95] px-2.5 py-1.5 text-[10px] font-black text-white shadow-sm md:text-[11px]">Top pick</span> : <span className="absolute left-2 top-2 rounded-md bg-white/95 px-2.5 py-1.5 text-[10px] font-black text-[#003b95] shadow-sm ring-1 ring-white/80">Direct deal</span>}
-        {active ? <span className="absolute right-2 top-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/95 text-lg font-black text-amber-800 shadow-md md:h-9 md:w-9">✓</span> : <span className="absolute right-2 top-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-stone-950/30 text-white backdrop-blur-sm"><HeartIcon /></span>}
+        {index === 0 ? <span className="absolute left-2 top-2 rounded-md bg-amber-100 px-2.5 py-1.5 text-[10px] font-black text-amber-900 shadow-sm ring-1 ring-amber-200 md:text-[11px]">Top pick</span> : <span className="absolute left-2 top-2 rounded-md bg-[#f8f1e4]/95 px-2.5 py-1.5 text-[10px] font-black text-[#765735] shadow-sm ring-1 ring-white/80">Direct deal</span>}
+        {active ? <span className="absolute right-2 top-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/95 text-lg font-black text-[#6f7f3f] shadow-sm ring-1 ring-[#7b8a4b]/20 md:h-9 md:w-9">✓</span> : <span className="absolute right-2 top-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-stone-950/30 text-white backdrop-blur-sm"><HeartIcon /></span>}
       </div>
       <div className="px-1.5 pb-2 pt-3 md:px-2 md:pb-3 md:pt-4">
         <h3 className="truncate text-[18px] font-black leading-6 text-stone-950 md:text-lg md:leading-6">{room.displayName}</h3>
