@@ -65,7 +65,7 @@ export function getNightInfo(deals: DealsResponse | null, room: RoomMeta, date: 
   const original = Math.round(Number(raw.totalPrice || 0) + 2);
   const direct = directPrice(raw.totalPrice);
 
-  return { original, direct };
+  return { original, direct, price: direct };
 }
 
 export function firstAvailableDate(deals: DealsResponse | null, room: RoomMeta) {
