@@ -243,7 +243,7 @@ export function WelcomePage({ data }: { data: WelcomePageCopy }) {
               <article key={card.title} className="rounded-[22px] border border-yellow-200 bg-yellow-50 p-5 shadow-sm">
                 <span className="mb-3 flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-xs font-black text-yellow-900 ring-1 ring-yellow-200">{index === 0 ? "NET" : index === 1 ? "KEY" : "HELP"}</span>
                 <h3 className="text-lg font-black text-slate-800">{card.title}</h3>
-                <p className="mt-2 text-lg font-bold text-slate-700">{card.text[0]}</p>
+                <p className="mt-2 text-lg font-bold text-slate-700">{index === 1 ? "a12345678" : card.text[0]}</p>
               </article>
             ))}
           </div>
