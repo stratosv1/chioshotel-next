@@ -160,26 +160,29 @@ export function LiveDirectRequest({ data }: { data: LastMinuteData; canonicalPat
               {error ? <div className="rounded-3xl bg-white p-6 text-sm font-bold text-stone-600 ring-1 ring-amber-900/10">{error}</div> : null}
               {!loading && !error && !rooms.length ? <div className="rounded-3xl bg-white p-6 text-sm font-bold text-stone-600 ring-1 ring-amber-900/10">No available rooms match these guests right now.</div> : null}
               {!loading && !error && rooms.length ? (
-                <div className="flex snap-x gap-3 overflow-x-auto px-1 pb-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:gap-4">
-                  {rooms.map((room, index) => {
-                    const active = selectedRoom && roomKey(selectedRoom) === roomKey(room);
-                    const amount = minDirectPrice(deals, room, guests);
-                    return (
-                      <button key={roomKey(room)} type="button" onClick={() => { setSelectedKey(roomKey(room)); const date = firstAvailableDate(deals, room, guests); setSelectedDates(date ? [date] : []); }} className={`group w-[178px] flex-none snap-start rounded-[1.15rem] bg-white p-2 text-left transition md:w-[240px] md:rounded-[1.3rem] ${active ? "border border-amber-700 shadow-[0_14px_34px_rgba(146,64,14,0.18)] ring-1 ring-amber-600/40" : "border border-stone-200/70 shadow-md shadow-stone-900/5 hover:-translate-y-1 hover:border-amber-700/40 hover:shadow-lg hover:shadow-stone-900/10"}`}>
-                        <div className="relative h-[122px] overflow-hidden rounded-[0.95rem] bg-stone-100 md:h-[150px] md:rounded-[1rem]">
-                          <Image src={room.images[0]} alt={`${room.displayName} ${room.type}`} width={500} height={380} sizes="240px" className="h-full w-full scale-110 object-cover object-center transition duration-500 group-hover:scale-[1.16]" />
-                          {index === 0 ? <span className="absolute left-2 top-2 rounded-full bg-amber-100/95 px-2.5 py-1 text-[10px] font-black text-amber-900 shadow-sm md:text-[11px]">Best match</span> : null}
-                          {active ? <span className="absolute right-2 top-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/95 text-lg font-black text-amber-800 shadow-md md:h-9 md:w-9">✓</span> : <span className="absolute right-2 top-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-stone-950/30 text-white backdrop-blur-sm"><HeartIcon /></span>}
-                        </div>
-                        <div className="px-1.5 pb-2 pt-3 md:px-2 md:pb-3 md:pt-4">
-                          <h3 className="truncate text-[16px] font-black leading-5 text-stone-950 md:text-lg md:leading-6">{room.displayName}</h3>
-                          <p className="mt-1 truncate text-[13px] text-stone-600 md:text-sm">{room.type}</p>
-                          <div className="mt-3 flex flex-wrap gap-1.5 md:mt-4">{room.featureBadges.slice(0, 3).map((badge) => <span key={badge} className="inline-flex items-center rounded-md bg-stone-100/90 px-1.5 py-1 text-[9px] font-bold text-stone-700 ring-1 ring-stone-200 md:px-2 md:text-[10px]">{badge}</span>)}</div>
-                          {amount ? <div className="mt-3 flex items-end gap-1.5 md:mt-4"><span className="text-xs text-stone-500 md:text-sm">from</span><strong className="text-xl font-black text-[#17351f] md:text-2xl">{money(amount)}</strong></div> : null}
-                        </div>
-                      </button>
-                    );
-                  })}
+                <div className="relative -mx-4 md:mx-0">
+                  <span className="pointer-events-none absolute right-3 top-[88px] z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-xl font-black text-[#17351f] shadow-lg ring-1 ring-amber-900/10 md:hidden" aria-hidden="true">→</span>
+                  <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-5 pr-14 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:px-1 md:pr-1 md:gap-4">
+                    {rooms.map((room, index) => {
+                      const active = selectedRoom && roomKey(selectedRoom) === roomKey(room);
+                      const amount = minDirectPrice(deals, room, guests);
+                      return (
+                        <button key={roomKey(room)} type="button" onClick={() => { setSelectedKey(roomKey(room)); const date = firstAvailableDate(deals, room, guests); setSelectedDates(date ? [date] : []); }} className={`group w-[82vw] max-w-[340px] flex-none snap-start rounded-[1.35rem] bg-white p-2.5 text-left transition md:w-[240px] md:max-w-none md:rounded-[1.3rem] ${active ? "border border-amber-700 shadow-[0_14px_34px_rgba(146,64,14,0.18)] ring-1 ring-amber-600/40" : "border border-stone-200/70 shadow-md shadow-stone-900/5 hover:-translate-y-1 hover:border-amber-700/40 hover:shadow-lg hover:shadow-stone-900/10"}`}>
+                          <div className="relative h-[190px] overflow-hidden rounded-[1.1rem] bg-stone-100 md:h-[150px] md:rounded-[1rem]">
+                            <Image src={room.images[0]} alt={`${room.displayName} ${room.type}`} width={640} height={460} sizes="(max-width: 768px) 82vw, 240px" className="h-full w-full scale-110 object-cover object-center transition duration-500 group-hover:scale-[1.16]" />
+                            {index === 0 ? <span className="absolute left-2 top-2 rounded-full bg-amber-100/95 px-2.5 py-1 text-[10px] font-black text-amber-900 shadow-sm md:text-[11px]">Best match</span> : null}
+                            {active ? <span className="absolute right-2 top-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/95 text-lg font-black text-amber-800 shadow-md md:h-9 md:w-9">✓</span> : <span className="absolute right-2 top-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-stone-950/30 text-white backdrop-blur-sm"><HeartIcon /></span>}
+                          </div>
+                          <div className="px-1.5 pb-2 pt-3 md:px-2 md:pb-3 md:pt-4">
+                            <h3 className="truncate text-[18px] font-black leading-6 text-stone-950 md:text-lg md:leading-6">{room.displayName}</h3>
+                            <p className="mt-1 truncate text-[13px] text-stone-600 md:text-sm">{room.type}</p>
+                            <div className="mt-3 flex flex-wrap gap-1.5 md:mt-4">{room.featureBadges.slice(0, 4).map((badge) => <span key={badge} className="inline-flex items-center rounded-md bg-stone-100/90 px-1.5 py-1 text-[9px] font-bold text-stone-700 ring-1 ring-stone-200 md:px-2 md:text-[10px]">{badge}</span>)}</div>
+                            {amount ? <div className="mt-3 flex items-end gap-1.5 md:mt-4"><span className="text-xs text-stone-500 md:text-sm">from</span><strong className="text-2xl font-black text-[#17351f] md:text-2xl">{money(amount)}</strong></div> : null}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
               ) : null}
             </div>
@@ -191,7 +194,7 @@ export function LiveDirectRequest({ data }: { data: LastMinuteData; canonicalPat
                 {visibleDays.map((day) => {
                   const info = getNightInfo(deals, selectedRoom, day.checkin, guests);
                   const active = selectedDates.includes(day.checkin);
-                  return <button key={day.checkin} type="button" disabled={!info} onClick={() => handleDateClick(day.checkin)} className={`relative w-[66px] flex-none snap-start rounded-2xl border px-1.5 py-3 text-center shadow-sm transition md:w-[88px] ${active ? "border-[#17351f] bg-[#17351f] text-white shadow-lg shadow-emerald-950/15" : info ? "border-stone-200 bg-white text-stone-900 hover:border-amber-700" : "border-stone-200 bg-stone-100 text-stone-400"}`}><span className="block text-[11px] font-black leading-4 md:text-sm">{formatDate(day.checkin)}</span>{active ? <span className="mx-auto my-1 flex h-6 w-6 items-center justify-center rounded-full bg-amber-500 text-xs font-black text-white shadow-sm">✓</span> : <span className="block h-2" aria-hidden="true" />}<span className="block text-[10px] font-bold leading-4 md:text-xs">{info ? "Available" : "-"}</span><span className={`mt-1 block text-[12px] font-black leading-4 md:text-sm ${active ? "text-white" : "text-[#17351f]"}`}>{info ? money(info.direct) : ""}</span></button>;
+                  return <button key={day.checkin} type="button" disabled={!info} onClick={() => handleDateClick(day.checkin)} className={`relative w-[72px] flex-none snap-start rounded-2xl border px-1.5 py-3 text-center shadow-sm transition md:w-[92px] ${active ? "border-[#17351f] bg-[#17351f] text-white shadow-lg shadow-emerald-950/15" : info ? "border-stone-200 bg-white text-stone-900 hover:border-amber-700" : "border-stone-200 bg-stone-100 text-stone-400"}`}><span className="block text-[11px] font-black leading-4 md:text-sm">{formatDate(day.checkin)}</span>{active ? <span className="mx-auto my-1 flex h-5 w-5 items-center justify-center rounded-full bg-amber-500 text-[11px] font-black text-white shadow-sm">✓</span> : <span className="block h-2" aria-hidden="true" />}<span className="block text-[10px] font-bold leading-4 md:text-xs">{info ? "Available" : "-"}</span>{info ? active ? <span className="mt-1 block"><span className="block text-[10px] font-black leading-3 text-white/70 line-through">{money(info.original)}</span><span className="block text-[13px] font-black leading-4 text-white md:text-sm">{money(info.direct)}</span></span> : <span className="mt-1 block text-[12px] font-black leading-4 text-[#17351f] md:text-sm">{money(info.original)}</span> : null}</button>;
                 })}
               </div>
             ) : null}
