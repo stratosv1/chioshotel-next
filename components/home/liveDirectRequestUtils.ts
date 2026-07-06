@@ -26,6 +26,9 @@ export type RoomMeta = Required<Pick<DealRoom, "id" | "roomId" | "unitId" | "dis
   featureBadges: string[];
 };
 
+const DIRECT_DISCOUNT_PERCENT = 15;
+const CLIMATE_FEE_PER_NIGHT = 2;
+
 const ROOM_BASE = [
   {
     id: 1,
@@ -36,7 +39,7 @@ const ROOM_BASE = [
     location: "Upper floor",
     maxGuests: 4,
     image: "/images/rooms/DSC07776-2-e1675109942622.webp",
-    primaryBadge: "Flexible stay",
+    primaryBadge: "Upper floor",
     featureBadges: ["Upper floor", "Up to 4 guests", "Stairs"],
   },
   {
@@ -48,7 +51,7 @@ const ROOM_BASE = [
     location: "Upper floor",
     maxGuests: 2,
     image: "/images/rooms/DSC07803-1.webp",
-    primaryBadge: "Economy choice",
+    primaryBadge: "Economy",
     featureBadges: ["Economy", "Upper floor", "2 guests"],
   },
   {
@@ -96,7 +99,7 @@ const ROOM_BASE = [
     location: "Ground floor",
     maxGuests: 2,
     image: "/images/rooms/received_1753964631359257.webp",
-    primaryBadge: "Economy choice",
+    primaryBadge: "Economy",
     featureBadges: ["Economy", "Ground floor", "Garden view"],
   },
   {
@@ -120,7 +123,7 @@ const ROOM_BASE = [
     location: "Independent",
     maxGuests: 4,
     image: "/images/rooms/chios-apartments-voulamandis.webp",
-    primaryBadge: "Family apartment",
+    primaryBadge: "Apartment",
     featureBadges: ["Apartment", "Kitchen", "Up to 4 guests"],
   },
   {
@@ -132,7 +135,7 @@ const ROOM_BASE = [
     location: "Independent",
     maxGuests: 4,
     image: "/images/rooms/chios-apartments-voulamandis.webp",
-    primaryBadge: "Family apartment",
+    primaryBadge: "Apartment",
     featureBadges: ["Apartment", "Kitchen", "Up to 4 guests"],
   },
   {
@@ -144,7 +147,7 @@ const ROOM_BASE = [
     location: "Independent",
     maxGuests: 4,
     image: "/images/rooms/DSC07899.webp",
-    primaryBadge: "Family apartment",
+    primaryBadge: "Apartment",
     featureBadges: ["Apartment", "Kitchen", "Up to 4 guests"],
   },
 ] as const;
@@ -165,38 +168,49 @@ export function formatDate(value: string | null, locale = "en-GB") {
     : date.toLocaleDateString(locale, { weekday: "short", day: "numeric", month: "short" });
 }
 
-export function directPrice(value: number | string | undefined) {
-  const base = Number(value || 0);
-  return Math.round(base * 0.85 + 2);
+function apiBaseGuests(room: RoomMeta) {
+  return [8, 9, 10].includes(Number(room.id)) ? 4 : 2;
 }
 
-export function getNightInfo(deals: DealsResponse | null, room: RoomMeta, date: string | null) {
+function extraGuestChargePerNight(room: RoomMeta, guests: number) {
+  const base = apiBaseGuests(room);
+
+  if (base >= 4) return 0;
+  if (guests === 3) return 20;
+  if (guests >= 4) return 30;
+
+  return 0;
+}
+
+export function getNightInfo(deals: DealsResponse | null, room: RoomMeta, date: string | null, guests = 2) {
   if (!deals || !date) return null;
   const raw = deals.days?.find((day) => day.checkin === date)?.results?.[roomKey(room)];
   if (!raw?.available) return null;
 
-  const original = Math.round(Number(raw.totalPrice || 0) + 2);
-  const direct = directPrice(raw.totalPrice);
+  const base = Number(raw.totalPrice || 0);
+  const discountableNight = base + extraGuestChargePerNight(room, guests);
+  const original = Math.round(discountableNight + CLIMATE_FEE_PER_NIGHT);
+  const direct = Math.round(discountableNight * (1 - DIRECT_DISCOUNT_PERCENT / 100) + CLIMATE_FEE_PER_NIGHT);
 
   return { original, direct, price: direct };
 }
 
-export function firstAvailableDate(deals: DealsResponse | null, room: RoomMeta) {
-  return (deals?.days || []).slice(0, 7).find((day) => getNightInfo(deals, room, day.checkin))?.checkin || null;
+export function firstAvailableDate(deals: DealsResponse | null, room: RoomMeta, guests = 2) {
+  return (deals?.days || []).slice(0, 7).find((day) => getNightInfo(deals, room, day.checkin, guests))?.checkin || null;
 }
 
-export function minDirectPrice(deals: DealsResponse | null, room: RoomMeta) {
+export function minDirectPrice(deals: DealsResponse | null, room: RoomMeta, guests = 2) {
   const prices = (deals?.days || [])
     .slice(0, 7)
-    .map((day) => getNightInfo(deals, room, day.checkin)?.direct)
+    .map((day) => getNightInfo(deals, room, day.checkin, guests)?.direct)
     .filter((item): item is number => typeof item === "number");
   return prices.length ? Math.min(...prices) : null;
 }
 
-export function selectionTotals(deals: DealsResponse | null, room: RoomMeta | null, dates: string[]) {
+export function selectionTotals(deals: DealsResponse | null, room: RoomMeta | null, dates: string[], guests = 2) {
   if (!room || !dates.length) return null;
 
-  const nights = dates.map((date) => getNightInfo(deals, room, date));
+  const nights = dates.map((date) => getNightInfo(deals, room, date, guests));
   if (nights.some((night) => !night)) return null;
 
   return nights.reduce(
