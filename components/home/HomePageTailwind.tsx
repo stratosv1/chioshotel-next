@@ -1,4 +1,4 @@
-﻿import Image from "next/image";
+import Image from "next/image";
 import type { HomePageData } from "@/content/home";
 import { DiscountReveal } from "@/components/home/DiscountReveal";
 import { HomeReviews } from "@/components/home/HomeReviews";
@@ -382,7 +382,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
               </article>
             </div>
 
-            <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+            <div className="mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 xl:grid-cols-4">
               {data.roomsPreview.rooms.map((room) => {
                 const imageSrc = homeRoomImages[room.imageClass] || data.hero.image;
 
@@ -390,14 +390,14 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
                   <a
                     key={room.id}
                     href={room.href}
-                    className="group overflow-hidden rounded-[1.6rem] sm:rounded-[2rem] bg-white shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 transition hover:-translate-y-1 hover:shadow-xl"
+                    className="group w-[86vw] max-w-[390px] flex-none snap-start overflow-hidden rounded-[1.6rem] bg-white shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 transition hover:-translate-y-1 hover:shadow-xl md:w-auto md:max-w-none sm:rounded-[2rem]"
                   >
                     <div className="relative min-w-0 aspect-[4/3] overflow-hidden">
                       <Image
                         src={imageSrc}
                         alt={room.title}
                         fill
-                        sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw"
+                        sizes="(max-width: 768px) 86vw, (max-width: 1280px) 50vw, 25vw"
                         className="object-cover transition duration-500 group-hover:scale-105"
                       />
                       <div className="absolute left-3 top-3 rounded-full bg-emerald-700 px-3 py-1.5 text-xs font-black text-white">
@@ -481,7 +481,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
               subtitle={data.traveler.subtitle}
             />
 
-            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+            <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 xl:grid-cols-4">
               {data.traveler.cards.map((card) => {
                 const imageSrc = homeTravelerImages[card.className] || data.hero.image;
 
@@ -489,13 +489,13 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
                   <a
                     key={card.id}
                     href={card.href}
-                    className="group relative min-h-[360px] overflow-hidden rounded-[1.6rem] sm:rounded-[2rem] bg-stone-950 text-white shadow-xl shadow-stone-900/10"
+                    className="group relative min-h-[360px] w-[86vw] max-w-[390px] flex-none snap-start overflow-hidden rounded-[1.6rem] bg-stone-950 text-white shadow-xl shadow-stone-900/10 md:w-auto md:max-w-none sm:rounded-[2rem]"
                   >
                     <Image
                       src={imageSrc}
                       alt={card.title}
                       fill
-                      sizes="(max-width: 768px) 100vw, 25vw"
+                      sizes="(max-width: 768px) 86vw, 25vw"
                       className="object-cover transition duration-500 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/55 to-black/10" />
@@ -522,7 +522,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
               subtitle={data.chiosGuide.subtitle}
             />
 
-            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 xl:grid-cols-3">
               {data.chiosGuide.cards.map((card) => {
                 const imageSrc = homeGuideImages[card.imageClass] || data.hero.image;
 
@@ -530,14 +530,14 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
                   <a
                     key={card.id}
                     href={card.href}
-                    className="group overflow-hidden rounded-[1.6rem] sm:rounded-[2rem] bg-white shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 transition hover:-translate-y-1"
+                    className="group w-[86vw] max-w-[390px] flex-none snap-start overflow-hidden rounded-[1.6rem] bg-white shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 transition hover:-translate-y-1 md:w-auto md:max-w-none sm:rounded-[2rem]"
                   >
                     <div className="relative min-w-0 aspect-[16/10] overflow-hidden">
                       <Image
                         src={imageSrc}
                         alt={card.title}
                         fill
-                        sizes="(max-width: 768px) 100vw, 33vw"
+                        sizes="(max-width: 768px) 86vw, 33vw"
                         className="object-cover transition duration-500 group-hover:scale-105"
                       />
                     </div>
@@ -668,6 +668,3 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
     </>
   );
 }
-
-
-
