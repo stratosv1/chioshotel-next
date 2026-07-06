@@ -63,12 +63,12 @@ export type PreArrivalPageData = {
 };
 
 export const preArrivalContact = {
-  phoneDisplay: "+30 6944764654",
+  phoneDisplay: "+306944764654",
   phoneHref: "tel:+306944764654",
-  whatsappDisplay: "+30 6944474226",
+  whatsappDisplay: "+306944474226",
   whatsappBase: "https://wa.me/306944474226",
-  smsDisplay: "+30 6944474226",
-  smsBase: "sms:+306944474226",
+  smsDisplay: "+6944474226",
+  smsBase: "sms:+6944474226",
   email: "chioshotel@gmail.com",
 };
 
