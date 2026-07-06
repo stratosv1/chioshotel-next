@@ -1,0 +1,106 @@
+.vh-consent {
+  position: fixed;
+  inset: auto 14px 14px 14px;
+  z-index: 3000;
+  pointer-events: none;
+}
+
+.vh-consent__card {
+  width: min(920px, 100%);
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 24px;
+  background: rgba(255, 253, 250, 0.96);
+  border: 1px solid rgba(142, 102, 7, 0.16);
+  box-shadow: 0 22px 70px rgba(32, 24, 18, 0.24);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  pointer-events: auto;
+}
+
+.vh-consent strong {
+  display: block;
+  color: #2f261f;
+  font-size: 18px;
+  line-height: 1.1;
+  font-weight: 950;
+}
+
+.vh-consent p {
+  margin: 8px 0 0;
+  max-width: 72ch;
+  color: #574b3f;
+  font-size: 13.5px;
+  line-height: 1.45;
+  font-weight: 650;
+}
+
+.vh-consent__actions {
+  display: grid;
+  gap: 8px;
+  min-width: 165px;
+}
+
+.vh-consent__actions button {
+  min-height: 42px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(142, 102, 7, 0.16);
+  background: #fff7ee;
+  color: #2f261f;
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.vh-consent__actions button:first-child {
+  background: linear-gradient(135deg, #10b981, #059669);
+  border-color: rgba(5, 150, 105, 0.3);
+  color: #ffffff;
+  box-shadow: 0 12px 26px rgba(5, 150, 105, 0.24);
+}
+
+.vh-consent__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.vh-consent__links a {
+  color: #6a4b00;
+  font-size: 12px;
+  font-weight: 850;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 767px) {
+  .vh-consent {
+    inset: auto 10px 10px 10px;
+  }
+
+  .vh-consent__card {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 14px;
+    border-radius: 22px;
+  }
+
+  .vh-consent strong {
+    font-size: 16px;
+  }
+
+  .vh-consent p {
+    font-size: 12.5px;
+  }
+
+  .vh-consent__actions {
+    min-width: 0;
+  }
+}
