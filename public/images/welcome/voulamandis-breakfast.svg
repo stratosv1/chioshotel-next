@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-label="Voulamandis House homemade breakfast">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fff8df"/>
+      <stop offset="0.52" stop-color="#f7d873"/>
+      <stop offset="1" stop-color="#e59b34"/>
+    </linearGradient>
+    <filter id="shadow" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="28" stdDeviation="24" flood-color="#2f2414" flood-opacity="0.28"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <circle cx="1320" cy="165" r="130" fill="#fff3bf" opacity="0.75"/>
+  <g opacity="0.16" fill="#6b3f17">
+    <circle cx="175" cy="150" r="90"/>
+    <circle cx="365" cy="115" r="42"/>
+    <circle cx="1460" cy="675" r="100"/>
+    <circle cx="1270" cy="760" r="55"/>
+  </g>
+  <g filter="url(#shadow)">
+    <ellipse cx="800" cy="540" rx="480" ry="210" fill="#fffdf3"/>
+    <ellipse cx="800" cy="540" rx="390" ry="158" fill="#f8f0d4"/>
+    <circle cx="650" cy="510" r="86" fill="#f6c34f"/>
+    <circle cx="650" cy="510" r="52" fill="#ffec9a"/>
+    <circle cx="790" cy="525" r="92" fill="#d97936"/>
+    <circle cx="790" cy="525" r="58" fill="#f8b64a"/>
+    <circle cx="940" cy="500" r="78" fill="#6f9a50"/>
+    <path d="M505 600 C635 675 980 680 1100 585 C1020 760 595 755 505 600Z" fill="#c07435"/>
+    <path d="M515 602 C650 650 960 650 1088 588" fill="none" stroke="#fff0bf" stroke-width="22" stroke-linecap="round" opacity="0.65"/>
+  </g>
+  <g fill="#315b4f" opacity="0.88">
+    <path d="M210 580 C320 520 410 520 505 590 C405 575 325 615 250 700 Z"/>
+    <path d="M1390 490 C1280 450 1190 475 1120 570 C1215 525 1295 555 1375 620 Z"/>
+  </g>
+  <text x="90" y="150" fill="#2c3e50" font-family="Arial, sans-serif" font-size="70" font-weight="800">Homemade Breakfast</text>
+  <text x="95" y="215" fill="#475569" font-family="Arial, sans-serif" font-size="34" font-weight="600">Local Chios citrus flavours · 12€ per person</text>
+</svg>
