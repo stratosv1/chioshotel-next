@@ -14,30 +14,12 @@ s = s.replace(
 }) {`
 );
 
-s = s.replace(
-  `>Best direct offer</span>`,
-  `>{copy.trustItems[0].title}</span>`
-);
+s = s.replace(`>Best direct offer</span>`, `>{copy.trustItems[0].title}</span>`);
+s = s.replace(`>No card needed</span>`, `>{copy.trustItems[3].title}</span>`);
+s = s.replace(`>Direct reply</span>`, `>{copy.trustItems[1].title}</span>`);
 
-s = s.replace(
-  `>No card needed</span>`,
-  `>{copy.trustItems[3].title}</span>`
-);
-
-s = s.replace(
-  `>Direct reply</span>`,
-  `>{copy.trustItems[1].title}</span>`
-);
-
-s = s.replaceAll(
-  `<SalesBadges compact />`,
-  `<SalesBadges compact copy={copy} />`
-);
-
-s = s.replaceAll(
-  `<SalesBadges />`,
-  `<SalesBadges copy={copy} />`
-);
+s = s.replaceAll(`<SalesBadges compact />`, `<SalesBadges compact copy={copy} />`);
+s = s.replaceAll(`<SalesBadges />`, `<SalesBadges copy={copy} />`);
 
 fs.writeFileSync(file, s, "utf8");
-console.log("Localized SalesBadges labels.");
+console.log("Localized live request sales badges.");
