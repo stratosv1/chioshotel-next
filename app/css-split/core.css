@@ -40,3 +40,27 @@ a[href="/tr/sakiz-odalari/"].bg-white {
 a[href*="quiz"].bg-white {
   color: #7c2d12 !important;
 }
+
+/* Final homepage CTA: show both actions side-by-side on mobile and reveal more of the hosts photo. */
+section .bg-stone-950.text-white.shadow-2xl > div.absolute.inset-0.bg-gradient-to-r {
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.54), rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.04)) !important;
+}
+
+section .bg-stone-950.text-white.shadow-2xl > div.absolute.inset-0[class*="radial-gradient"] {
+  opacity: 0.55 !important;
+}
+
+@media (max-width: 767px) {
+  section .bg-stone-950.text-white.shadow-2xl .mt-8.flex {
+    flex-wrap: nowrap !important;
+    gap: 0.75rem !important;
+  }
+
+  section .bg-stone-950.text-white.shadow-2xl .mt-8.flex > a {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    min-height: 50px !important;
+    padding-inline: 0.85rem !important;
+    text-align: center !important;
+  }
+}
