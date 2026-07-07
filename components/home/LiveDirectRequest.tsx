@@ -324,171 +324,131 @@ export function LiveDirectRequest({ data }: { data: LastMinuteData; canonicalPat
   return (
     <section className="px-4 py-8 md:px-8 md:py-16" aria-labelledby="live-direct-title">
       <div className="mx-auto max-w-7xl overflow-hidden rounded-[2rem] border border-amber-900/10 bg-[#fffaf3] shadow-2xl shadow-stone-900/10 md:rounded-[2.5rem]">
-        <div className="grid min-w-0 lg:grid-cols-[minmax(0,1fr)_360px]">
-          <div className="relative min-w-0 p-4 pb-5 md:p-8 md:pb-6 lg:col-span-2 lg:p-9 lg:pb-5">
-            <div className="mb-4 flex justify-center rounded-full bg-amber-100/90 px-4 py-2.5 text-[10px] font-black uppercase tracking-[0.15em] text-amber-800 ring-1 ring-amber-900/10 md:inline-flex md:justify-start md:text-[11px]">
-              <span className="mr-2" aria-hidden="true">⚡</span>
-              Instant request to reception
-            </div>
-            <span className="pointer-events-none absolute right-7 top-24 text-5xl font-black text-amber-700/80 md:hidden" aria-hidden="true">⚡</span>
+        <div className="min-w-0 p-4 md:p-8 lg:p-9">
+          <div className="mb-4 flex justify-center rounded-full bg-amber-100/90 px-4 py-2.5 text-[10px] font-black uppercase tracking-[0.15em] text-amber-800 ring-1 ring-amber-900/10 md:inline-flex md:justify-start md:text-[11px]">
+            <span className="mr-2" aria-hidden="true">⚡</span>
+            Instant request to reception
+          </div>
+          <span className="pointer-events-none absolute right-7 top-24 text-5xl font-black text-amber-700/80 md:hidden" aria-hidden="true">⚡</span>
 
-            <div className="grid gap-4 xl:grid-cols-[1fr_250px] xl:items-end">
-              <div>
-                <h2 id="live-direct-title" className="max-w-[640px] pr-12 font-serif text-[2.35rem] font-bold leading-[0.98] tracking-[-0.04em] text-[#17351f] md:pr-0 md:text-6xl">
-                  {data.title}
-                </h2>
-                <p className="mt-4 max-w-2xl text-[15px] leading-7 text-stone-700 md:text-lg md:leading-8">
-                  Send an instant request to reception and get the best direct offer.
+          <div className="grid gap-4 xl:grid-cols-[1fr_250px] xl:items-end">
+            <div>
+              <h2 id="live-direct-title" className="max-w-[640px] pr-12 font-serif text-[2.35rem] font-bold leading-[0.98] tracking-[-0.04em] text-[#17351f] md:pr-0 md:text-6xl">
+                {data.title}
+              </h2>
+              <p className="mt-4 max-w-2xl text-[15px] leading-7 text-stone-700 md:text-lg md:leading-8">
+                Send an instant request to reception and get the best direct offer.
+              </p>
+            </div>
+
+            <label className="block">
+              <span className="mb-2 block text-[11px] font-black uppercase tracking-[0.16em] text-stone-500 md:text-xs">Guests</span>
+              <select
+                value={guests}
+                onChange={(event) => setGuests(Number(event.target.value))}
+                className="h-12 w-full rounded-2xl border border-stone-200 bg-white px-4 text-base font-black text-stone-900 shadow-sm outline-none ring-amber-700/20 transition focus:ring-4 md:h-14"
+              >
+                {data.widget.guestButtons.map((button) => (
+                  <option key={button.value} value={button.value}>{button.label}</option>
+                ))}
+              </select>
+            </label>
+          </div>
+
+          <div className="mt-6">
+            {loading ? <div className="rounded-3xl bg-white p-6 text-sm font-bold text-stone-600 ring-1 ring-amber-900/10">{data.widget.loadingText}</div> : null}
+            {error ? <div className="rounded-3xl bg-white p-6 text-sm font-bold text-stone-600 ring-1 ring-amber-900/10">{error}</div> : null}
+            {!loading && !error && !rooms.length ? <div className="rounded-3xl bg-white p-6 text-sm font-bold text-stone-600 ring-1 ring-amber-900/10">No available rooms match these guests right now.</div> : null}
+            {!loading && !error && rooms.length ? (
+              <div className="relative -mx-4 md:mx-0 lg:-mx-2">
+                <span className="pointer-events-none absolute right-3 top-[88px] z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-xl font-black text-[#17351f] shadow-lg ring-1 ring-amber-900/10 md:right-4 md:top-[84px] md:h-11 md:w-11 md:text-2xl" aria-hidden="true">→</span>
+                <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-5 pr-14 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:gap-4 md:px-2 md:pr-16 xl:gap-5">
+                  {rooms.map((room, index) => (
+                    <RoomCard
+                      key={roomKey(room)}
+                      room={room}
+                      index={index}
+                      active={selectedRoom && roomKey(selectedRoom) === roomKey(room)}
+                      amount={minDirectPrice(deals, room, guests)}
+                      onSelect={() => {
+                        setSelectedKey(roomKey(room));
+                        const date = firstAvailableDate(deals, room, guests);
+                        setSelectedDates(date ? [date] : []);
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+            ) : null}
+          </div>
+
+          {selectedRoom ? (
+            <div className="mt-0 hidden gap-4 rounded-[1.45rem] bg-white p-4 shadow-sm ring-1 ring-amber-900/10 md:grid md:grid-cols-[240px_1fr]">
+              <div className="relative min-h-[180px] overflow-hidden rounded-[1.1rem] bg-stone-100">
+                <Image
+                  src={selectedRoom.images[0]}
+                  alt={`${selectedRoom.displayName} ${selectedRoom.type}`}
+                  fill
+                  sizes="240px"
+                  className="scale-110 object-cover object-center"
+                />
+              </div>
+              <div className="min-w-0 self-center">
+                <span className="inline-flex rounded-full bg-amber-50 px-3 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-amber-800 ring-1 ring-amber-900/10">{selectedRoom.primaryBadge}</span>
+                <h3 className="mt-2 font-serif text-3xl font-bold leading-tight text-stone-950">{selectedRoom.displayName}</h3>
+                <p className="mt-1 font-bold text-amber-800">{selectedRoom.type}</p>
+                <div className="mt-3"><SalesBadges /></div>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {selectedRoom.featureBadges.map((badge) => (
+                    <span key={badge} className="rounded-md bg-stone-100/90 px-3 py-1.5 text-xs font-bold text-stone-700 ring-1 ring-stone-200">{badge}</span>
+                  ))}
+                </div>
+                <p className="mt-4 max-w-2xl text-sm leading-6 text-stone-600">
+                  Send a direct request for this room and receive a personal reply from reception with the best available offer.
                 </p>
               </div>
-
-              <label className="block">
-                <span className="mb-2 block text-[11px] font-black uppercase tracking-[0.16em] text-stone-500 md:text-xs">Guests</span>
-                <select
-                  value={guests}
-                  onChange={(event) => setGuests(Number(event.target.value))}
-                  className="h-12 w-full rounded-2xl border border-stone-200 bg-white px-4 text-base font-black text-stone-900 shadow-sm outline-none ring-amber-700/20 transition focus:ring-4 md:h-14"
-                >
-                  {data.widget.guestButtons.map((button) => (
-                    <option key={button.value} value={button.value}>{button.label}</option>
-                  ))}
-                </select>
-              </label>
             </div>
+          ) : null}
 
-            <div className="mt-6">
-              {loading ? <div className="rounded-3xl bg-white p-6 text-sm font-bold text-stone-600 ring-1 ring-amber-900/10">{data.widget.loadingText}</div> : null}
-              {error ? <div className="rounded-3xl bg-white p-6 text-sm font-bold text-stone-600 ring-1 ring-amber-900/10">{error}</div> : null}
-              {!loading && !error && !rooms.length ? <div className="rounded-3xl bg-white p-6 text-sm font-bold text-stone-600 ring-1 ring-amber-900/10">No available rooms match these guests right now.</div> : null}
-              {!loading && !error && rooms.length ? (
-                <div className="relative -mx-4 md:mx-0 lg:-mx-2">
-                  <span className="pointer-events-none absolute right-3 top-[88px] z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-xl font-black text-[#17351f] shadow-lg ring-1 ring-amber-900/10 md:right-4 md:top-[84px] md:h-11 md:w-11 md:text-2xl" aria-hidden="true">→</span>
-                  <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-5 pr-14 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:gap-4 md:px-2 md:pr-16 xl:gap-5">
-                    {rooms.map((room, index) => (
-                      <RoomCard
-                        key={roomKey(room)}
-                        room={room}
-                        index={index}
-                        active={selectedRoom && roomKey(selectedRoom) === roomKey(room)}
-                        amount={minDirectPrice(deals, room, guests)}
-                        onSelect={() => {
-                          setSelectedKey(roomKey(room));
-                          const date = firstAvailableDate(deals, room, guests);
-                          setSelectedDates(date ? [date] : []);
-                        }}
-                      />
-                    ))}
-                  </div>
-                </div>
-              ) : null}
+          {selectedRoom && visibleDays.length ? (
+            <div className="mt-3 flex snap-x gap-2 overflow-x-auto pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:gap-3">
+              {visibleDays.map((day) => {
+                const info = getNightInfo(deals, selectedRoom, day.checkin, guests);
+                return <DateChip key={day.checkin} day={day.checkin} info={info} active={selectedDates.includes(day.checkin)} onClick={() => handleDateClick(day.checkin)} />;
+              })}
             </div>
+          ) : null}
+
+          {totals ? (
+            <div className="mt-2 rounded-[1.25rem] bg-white px-4 py-3 text-center shadow-sm ring-1 ring-amber-900/10 md:rounded-[1.4rem] md:py-4">
+              <div className="text-[11px] font-black uppercase tracking-[0.14em] text-stone-500 md:text-xs">
+                {selectedRoom?.displayName || "Selected room"} · Direct offer · {totals.nights} {totals.nights === 1 ? "night" : "nights"}
+              </div>
+              <div className="mt-1 text-[11px] font-bold text-stone-500 md:text-xs">{selectedDateLabel}</div>
+              <div className="mt-1.5 flex items-end justify-center gap-3">
+                <span className="text-base font-black text-red-600 line-through md:text-lg">{money(totals.original)}</span>
+                <strong className="text-2xl font-black text-emerald-700 md:text-3xl">{money(totals.direct)}</strong>
+              </div>
+            </div>
+          ) : null}
+
+          <div className="mt-3 grid grid-cols-4 gap-0 rounded-[1.25rem] bg-white p-3 text-center shadow-sm ring-1 ring-amber-900/10 md:rounded-[1.4rem] md:p-4">
+            {TRUST_ITEMS.map((item) => (
+              <div key={item.title} className="border-r border-stone-200 px-1 text-[9px] font-semibold leading-4 text-stone-800 last:border-r-0 md:text-xs md:leading-5">
+                <span className="mb-1 flex justify-center" aria-hidden="true"><TrustIcon type={item.icon} /></span>
+                <strong className="block font-black">{item.title}</strong>
+                <span className="hidden text-stone-500 md:block">{item.text}</span>
+              </div>
+            ))}
           </div>
 
-          <div className="relative min-w-0 px-4 pb-4 md:px-8 md:pb-8 lg:p-9 lg:pt-0">
-            {selectedRoom ? (
-              <div className="mt-0 hidden gap-4 rounded-[1.45rem] bg-white p-4 shadow-sm ring-1 ring-amber-900/10 md:grid md:grid-cols-[240px_1fr]">
-                <div className="relative min-h-[180px] overflow-hidden rounded-[1.1rem] bg-stone-100">
-                  <Image
-                    src={selectedRoom.images[0]}
-                    alt={`${selectedRoom.displayName} ${selectedRoom.type}`}
-                    fill
-                    sizes="240px"
-                    className="scale-110 object-cover object-center"
-                  />
-                </div>
-                <div className="min-w-0 self-center">
-                  <span className="inline-flex rounded-full bg-amber-50 px-3 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-amber-800 ring-1 ring-amber-900/10">{selectedRoom.primaryBadge}</span>
-                  <h3 className="mt-2 font-serif text-3xl font-bold leading-tight text-stone-950">{selectedRoom.displayName}</h3>
-                  <p className="mt-1 font-bold text-amber-800">{selectedRoom.type}</p>
-                  <div className="mt-3"><SalesBadges /></div>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {selectedRoom.featureBadges.map((badge) => (
-                      <span key={badge} className="rounded-md bg-stone-100/90 px-3 py-1.5 text-xs font-bold text-stone-700 ring-1 ring-stone-200">{badge}</span>
-                    ))}
-                  </div>
-                  <p className="mt-4 max-w-2xl text-sm leading-6 text-stone-600">
-                    Send a direct request for this room and receive a personal reply from reception with the best available offer.
-                  </p>
-                </div>
-              </div>
-            ) : null}
-
-            {selectedRoom && visibleDays.length ? (
-              <div className="mt-3 flex snap-x gap-2 overflow-x-auto pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:gap-3">
-                {visibleDays.map((day) => {
-                  const info = getNightInfo(deals, selectedRoom, day.checkin, guests);
-                  return <DateChip key={day.checkin} day={day.checkin} info={info} active={selectedDates.includes(day.checkin)} onClick={() => handleDateClick(day.checkin)} />;
-                })}
-              </div>
-            ) : null}
-
-            {totals ? (
-              <div className="mt-2 rounded-[1.25rem] bg-white px-4 py-3 text-center shadow-sm ring-1 ring-amber-900/10 md:rounded-[1.4rem] md:py-4">
-                <div className="text-[11px] font-black uppercase tracking-[0.14em] text-stone-500 md:text-xs">
-                  {selectedRoom?.displayName || "Selected room"} · Direct offer · {totals.nights} {totals.nights === 1 ? "night" : "nights"}
-                </div>
-                <div className="mt-1 text-[11px] font-bold text-stone-500 md:text-xs">{selectedDateLabel}</div>
-                <div className="mt-1.5 flex items-end justify-center gap-3">
-                  <span className="text-base font-black text-red-600 line-through md:text-lg">{money(totals.original)}</span>
-                  <strong className="text-2xl font-black text-emerald-700 md:text-3xl">{money(totals.direct)}</strong>
-                </div>
-              </div>
-            ) : null}
-
-            <div className="mt-3 grid grid-cols-4 gap-0 rounded-[1.25rem] bg-white p-3 text-center shadow-sm ring-1 ring-amber-900/10 md:rounded-[1.4rem] md:p-4">
-              {TRUST_ITEMS.map((item) => (
-                <div key={item.title} className="border-r border-stone-200 px-1 text-[9px] font-semibold leading-4 text-stone-800 last:border-r-0 md:text-xs md:leading-5">
-                  <span className="mb-1 flex justify-center" aria-hidden="true"><TrustIcon type={item.icon} /></span>
-                  <strong className="block font-black">{item.title}</strong>
-                  <span className="hidden text-stone-500 md:block">{item.text}</span>
-                </div>
-              ))}
-            </div>
-            <p className="mt-4 pb-28 text-center text-xs font-semibold text-stone-500 lg:hidden md:pb-0">Your instant request at chioshotel.gr</p>
+          <div className="mt-4 grid gap-3 pb-28 md:grid-cols-3 md:pb-0">
+            <a href={requestHref} target="_blank" rel="noopener noreferrer" className="flex min-h-14 items-center justify-center rounded-2xl bg-[#17351f] px-5 text-center text-sm font-black uppercase tracking-[0.08em] text-white shadow-lg shadow-emerald-950/20 transition hover:-translate-y-0.5 hover:bg-[#224d2d]">Send request</a>
+            <a href={CONTACT.phoneHref} className="flex min-h-14 items-center justify-center rounded-2xl border border-stone-300 bg-white px-5 text-center text-sm font-black uppercase tracking-[0.08em] text-stone-800 transition hover:border-amber-700 hover:bg-amber-50">Call reception<br />{CONTACT.phoneDisplay}</a>
+            <a href={requestHref} target="_blank" rel="noopener noreferrer" className="flex min-h-14 items-center justify-center rounded-2xl border border-emerald-700/30 bg-white px-5 text-center text-sm font-black uppercase tracking-[0.08em] text-emerald-800 transition hover:bg-emerald-50">WhatsApp</a>
           </div>
 
-          <aside className="hidden border-l border-amber-900/10 bg-white/70 p-8 pt-0 lg:block">
-            <div className="sticky top-24 rounded-[1.7rem] bg-white p-6 shadow-xl shadow-stone-900/10 ring-1 ring-amber-900/10">
-              <div className="mb-5 flex items-center justify-between gap-4">
-                <h3 className="text-xl font-black text-stone-950">Your request summary</h3>
-                <span className="text-3xl text-amber-700">⚡</span>
-              </div>
-              <div className="space-y-3">
-                <div className="rounded-2xl border border-stone-200 bg-white p-4">
-                  <span className="block text-xs font-bold uppercase tracking-[0.12em] text-stone-400">Room</span>
-                  <strong className="mt-1 block text-base text-stone-950">{selectedRoom?.displayName || "-"}</strong>
-                  <span className="mt-1 block text-sm text-stone-500">{selectedRoom?.type || ""}</span>
-                </div>
-                <div className="rounded-2xl border border-stone-200 bg-white p-4">
-                  <span className="block text-xs font-bold uppercase tracking-[0.12em] text-stone-400">Dates</span>
-                  <strong className="mt-1 block text-base text-stone-950">{selectedDateLabel || "-"}</strong>
-                </div>
-                <div className="rounded-2xl border border-stone-200 bg-white p-4">
-                  <span className="block text-xs font-bold uppercase tracking-[0.12em] text-stone-400">Guests</span>
-                  <strong className="mt-1 block text-base text-stone-950">{guests}</strong>
-                </div>
-                {totals ? (
-                  <div className="rounded-2xl border border-stone-200 bg-white p-4">
-                    <span className="block text-xs font-bold uppercase tracking-[0.12em] text-stone-400">Direct offer</span>
-                    <div className="mt-2 flex items-end gap-3">
-                      <span className="text-base font-black text-red-600 line-through">{money(totals.original)}</span>
-                      <strong className="text-2xl font-black text-emerald-700">{money(totals.direct)}</strong>
-                    </div>
-                  </div>
-                ) : null}
-                <div className="rounded-2xl border border-stone-200 bg-white p-4">
-                  <span className="block text-xs font-bold uppercase tracking-[0.12em] text-stone-400">What happens next?</span>
-                  <p className="mt-2 text-sm font-semibold leading-6 text-stone-700">We will reply with our best available direct offer.</p>
-                </div>
-              </div>
-              <div className="mt-5 space-y-3">
-                <a href={requestHref} target="_blank" rel="noopener noreferrer" className="flex min-h-14 items-center justify-center rounded-2xl bg-[#17351f] px-5 text-center text-sm font-black uppercase tracking-[0.08em] text-white shadow-lg shadow-emerald-950/20 transition hover:-translate-y-0.5 hover:bg-[#224d2d]">Send request</a>
-                <a href={CONTACT.phoneHref} className="flex min-h-14 items-center justify-center rounded-2xl border border-stone-300 bg-white px-5 text-center text-sm font-black uppercase tracking-[0.08em] text-stone-800 transition hover:border-amber-700 hover:bg-amber-50">Call reception<br />{CONTACT.phoneDisplay}</a>
-                <a href={requestHref} target="_blank" rel="noopener noreferrer" className="flex min-h-14 items-center justify-center rounded-2xl border border-emerald-700/30 bg-white px-5 text-center text-sm font-black uppercase tracking-[0.08em] text-emerald-800 transition hover:bg-emerald-50">WhatsApp</a>
-              </div>
-              <p className="mt-5 text-center text-xs font-semibold text-stone-500">Your instant request at chioshotel.gr</p>
-            </div>
-          </aside>
+          <p className="mt-4 text-center text-xs font-semibold text-stone-500">Your instant request at chioshotel.gr</p>
         </div>
       </div>
     </section>
