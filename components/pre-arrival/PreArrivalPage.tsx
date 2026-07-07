@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import type { PreArrivalPageData } from "@/content/pre-arrival";
 import {
   preArrivalContact,
@@ -60,6 +61,16 @@ const homeLinks: Record<string, string> = {
   it: "/it/",
   es: "/es/",
   tr: "/tr/",
+};
+
+const routeCarouselCopy: Record<string, { hint: string; next: string }> = {
+  en: { hint: "Swipe or tap the arrow to see all arrival options", next: "Next arrival option" },
+  el: { hint: "Σύρε ή πάτησε το βελάκι για όλους τους τρόπους άφιξης", next: "Επόμενος τρόπος άφιξης" },
+  fr: { hint: "Faites glisser ou touchez la flèche pour voir toutes les options", next: "Option d’arrivée suivante" },
+  de: { hint: "Wischen oder Pfeil tippen, um alle Anreiseoptionen zu sehen", next: "Nächste Anreiseoption" },
+  it: { hint: "Scorri o tocca la freccia per vedere tutte le opzioni", next: "Opzione di arrivo successiva" },
+  es: { hint: "Desliza o toca la flecha para ver todas las opciones", next: "Siguiente opción de llegada" },
+  tr: { hint: "Tüm varış seçenekleri için kaydırın veya oka dokunun", next: "Sonraki varış seçeneği" },
 };
 
 const airportStepsEn = [
@@ -311,7 +322,7 @@ function RouteCard({
   pageCopy: PageCopy;
 }) {
   return (
-    <section className="rounded-[24px] bg-white p-5 shadow-sm ring-1 ring-slate-900/10 md:p-6">
+    <section className="h-full w-[86vw] shrink-0 snap-start rounded-[24px] bg-white p-5 shadow-sm ring-1 ring-slate-900/10 md:w-auto md:p-6">
       <div className="grid gap-4 md:grid-cols-[1fr_280px] md:items-start">
         <div>
           <h2 className="text-2xl font-black leading-tight tracking-[-0.03em] text-slate-950 md:text-3xl">
@@ -362,6 +373,56 @@ function RouteCard({
         ))}
       </ol>
     </section>
+  );
+}
+
+function RoutesCarousel({ routes, pageCopy, locale }: { routes: RouteSection[]; pageCopy: PageCopy; locale: string }) {
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const carouselCopy = routeCarouselCopy[locale] ?? routeCarouselCopy.en;
+
+  function scrollToNextRoute() {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+
+    const firstCard = carousel.querySelector<HTMLElement>("section");
+    const scrollDistance = firstCard ? firstCard.offsetWidth + 16 : carousel.clientWidth * 0.86;
+    const maxScrollLeft = carousel.scrollWidth - carousel.clientWidth;
+    const shouldRestart = carousel.scrollLeft + scrollDistance >= maxScrollLeft - 8;
+
+    carousel.scrollTo({
+      left: shouldRestart ? 0 : carousel.scrollLeft + scrollDistance,
+      behavior: "smooth",
+    });
+  }
+
+  return (
+    <div className="relative mt-4 -mx-4 overflow-hidden pl-4 md:mx-0 md:overflow-visible md:pl-0">
+      <div className="mb-3 flex items-center justify-between gap-3 md:hidden">
+        <p className="rounded-full bg-white/90 px-4 py-2 text-xs font-black uppercase tracking-[0.08em] text-teal-900 shadow-sm ring-1 ring-teal-900/10">
+          ↔ {carouselCopy.hint}
+        </p>
+      </div>
+
+      <div
+        ref={carouselRef}
+        className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pr-12 [scrollbar-width:none] [-webkit-overflow-scrolling:touch] md:grid md:overflow-visible md:pr-0 [&::-webkit-scrollbar]:hidden"
+      >
+        {routes.map((route) => (
+          <RouteCard route={route} pageCopy={pageCopy} key={route.title} />
+        ))}
+      </div>
+
+      <button
+        type="button"
+        onClick={scrollToNextRoute}
+        aria-label={carouselCopy.next}
+        className="absolute right-3 top-1/2 z-10 grid h-12 w-12 -translate-y-1/2 place-items-center rounded-full bg-slate-950 text-3xl font-black leading-none text-white shadow-xl ring-4 ring-white/80 md:hidden"
+      >
+        <span aria-hidden="true" className="-mt-1">›</span>
+      </button>
+
+      <div className="pointer-events-none absolute bottom-0 right-0 top-14 w-16 bg-gradient-to-l from-[#eef7f4] to-transparent md:hidden" />
+    </div>
   );
 }
 
@@ -457,11 +518,7 @@ export function PreArrivalPage({ data }: PreArrivalPageProps) {
           </div>
         </section>
 
-        <div className="mt-4 grid gap-4">
-          {pageCopy.routes.map((route) => (
-            <RouteCard route={route} pageCopy={pageCopy} key={route.title} />
-          ))}
-        </div>
+        <RoutesCarousel routes={pageCopy.routes} pageCopy={pageCopy} locale={data.locale} />
 
         <section className="mt-4 rounded-[24px] bg-white p-5 shadow-sm ring-1 ring-slate-900/10 md:p-6">
           <h2 className="text-2xl font-black tracking-[-0.03em]">{pageCopy.helpTitle}</h2>
