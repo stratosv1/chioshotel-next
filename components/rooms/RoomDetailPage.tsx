@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { IndividualRoomData, RoomDetailData } from "@/content/room-details";
 
 type RoomDetailPageProps = { data: RoomDetailData };
@@ -26,6 +26,16 @@ const roomLabels: Record<RoomLanguage, { upToGuests: (count: number) => string; 
   it: { upToGuests: (count) => `Fino a ${count} ospiti`, faqKicker: "Domande", faqTitle: "FAQ della camera" },
   es: { upToGuests: (count) => `Hasta ${count} personas`, faqKicker: "Preguntas", faqTitle: "Preguntas frecuentes de la habitación" },
   tr: { upToGuests: (count) => `${count} kişiye kadar`, faqKicker: "Sorular", faqTitle: "Oda SSS" },
+};
+
+const carouselNextLabels: Record<RoomLanguage, string> = {
+  en: "Next room",
+  el: "Επόμενο δωμάτιο",
+  fr: "Chambre suivante",
+  de: "Nächstes Zimmer",
+  it: "Camera successiva",
+  es: "Habitación siguiente",
+  tr: "Sonraki oda",
 };
 
 const roomSectionLabels: Record<RoomLanguage, { groundTitle: string; groundText: string; firstTitle: string; firstText: string }> = {
@@ -166,9 +176,27 @@ function IndividualRoomCard({ room, language }: { room: IndividualRoomData; lang
 }
 
 function FloorRoomGroup({ title, text, rooms, language }: { title: string; text: string; rooms: IndividualRoomData[]; language: RoomLanguage }) {
+  const carouselRef = useRef<HTMLDivElement>(null);
+
   if (!rooms.length) return null;
 
-  return <section className="rd-floor-group" aria-label={title}><header className="rd-floor-head"><h3>{title}</h3><p>{text}</p></header><div className="rd-individual-list rd-individual-list--carousel">{rooms.map((room) => <IndividualRoomCard room={room} language={language} key={room.id} />)}</div></section>;
+  function scrollToNextRoom() {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+
+    const firstCard = carousel.querySelector<HTMLElement>(".rd-room-card");
+    const scrollDistance = firstCard ? firstCard.offsetWidth + 14 : carousel.clientWidth * 0.86;
+
+    carousel.scrollBy({ left: scrollDistance, behavior: "smooth" });
+  }
+
+  return (
+    <section className="rd-floor-group" aria-label={title}>
+      <header className="rd-floor-head"><h3>{title}</h3><p>{text}</p></header>
+      <div className="rd-individual-list rd-individual-list--carousel" ref={carouselRef}>{rooms.map((room) => <IndividualRoomCard room={room} language={language} key={room.id} />)}</div>
+      {rooms.length > 1 ? <button type="button" className="rd-carousel-next" onClick={scrollToNextRoom} aria-label={carouselNextLabels[language]}><span aria-hidden="true">›</span></button> : null}
+    </section>
+  );
 }
 
 function IndividualRoomsSection({ data }: { data: RoomDetailData }) {
