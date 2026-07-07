@@ -37,7 +37,7 @@ export function MobileStickyContact({ call, chat }: MobileStickyContactProps) {
       <div className="grid grid-cols-2 gap-3">
         <a
           href={call.href}
-          className="break-words inline-flex min-h-12 items-center justify-center rounded-full border border-amber-800/20 bg-white px-6 text-sm font-black uppercase tracking-[0.08em] text-amber-800 shadow-sm transition hover:-translate-y-0.5 hover:bg-amber-50"
+          className="break-words inline-flex min-h-12 items-center justify-center rounded-full border border-emerald-950 bg-emerald-950 px-6 text-sm font-black uppercase tracking-[0.08em] text-white shadow-lg shadow-emerald-950/20 transition hover:-translate-y-0.5 hover:bg-emerald-900"
         >
           {call.label}
         </a>
