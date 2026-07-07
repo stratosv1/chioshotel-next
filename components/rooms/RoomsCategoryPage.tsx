@@ -21,6 +21,24 @@ function getWizardLanguage(path: string) {
   return "en";
 }
 
+const heroActionStyle = {
+  display: "flex",
+  flexWrap: "nowrap",
+  gap: 10,
+  width: "100%",
+} as const;
+
+const heroButtonStyle = {
+  flex: "1 1 0",
+  width: "auto",
+  minWidth: 0,
+  paddingInline: 10,
+  textAlign: "center",
+  whiteSpace: "nowrap",
+  letterSpacing: "0.08em",
+  fontSize: "clamp(10px, 2.7vw, 12px)",
+} as const;
+
 export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
   return (
     <main className="rooms-page">
@@ -35,22 +53,11 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
 
             <p>{data.hero.description}</p>
 
-            <div
-              className="rooms-hero__actions"
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-              }}
-            >
+            <div className="rooms-hero__actions" style={heroActionStyle}>
               <a
                 className="rooms-btn rooms-btn--primary"
                 href={data.hero.primaryCta.href}
-                style={{
-                  width: "100%",
-                  minWidth: 0,
-                  paddingInline: 12,
-                  textAlign: "center",
-                }}
+                style={heroButtonStyle}
               >
                 {data.hero.primaryCta.label}
               </a>
@@ -58,12 +65,7 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
               <a
                 className="rooms-btn rooms-btn--secondary"
                 href={data.hero.secondaryCta.href}
-                style={{
-                  width: "100%",
-                  minWidth: 0,
-                  paddingInline: 12,
-                  textAlign: "center",
-                }}
+                style={heroButtonStyle}
               >
                 {data.hero.secondaryCta.label}
               </a>
