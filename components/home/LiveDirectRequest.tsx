@@ -54,6 +54,13 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
   footer: string;
   messageTitle: string;
   messageConfirm: string;
+  topPick: string;
+  directDeal: string;
+  from: string;
+  roomWord: string;
+  apartmentWord: string;
+  roomTypes: Record<string, string>;
+  badges: Record<string, string>;
   trustItems: { icon: TrustIconType; title: string; text: string }[];
 }> = {
   en: {
@@ -73,6 +80,27 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     footer: "Your instant request at chioshotel.gr",
     messageTitle: "Instant request to reception - Voulamandis House",
     messageConfirm: "Please confirm availability and send your best direct offer.",
+    topPick: "Top pick",
+    directDeal: "Direct deal",
+    from: "from",
+    roomWord: "Room",
+    apartmentWord: "Apartment",
+    roomTypes: {
+      "Upper Floor Double / Triple": "Upper Floor Double / Triple",
+      "Economy Double": "Economy Double",
+      "Ground Floor Double / Triple": "Ground Floor Double / Triple",
+      "Family Apartment": "Family Apartment",
+    },
+    badges: {
+      Economy: "Economy",
+      Kitchenette: "Kitchenette",
+      Kitchen: "Kitchen",
+      "First floor": "First floor",
+      "Ground floor": "Ground floor",
+      "No kitchenette": "No kitchenette",
+      Stairs: "Stairs",
+      "No stairs": "No stairs",
+    },
     trustItems: [
       { icon: "tag", title: "Best direct offer", text: "Best available rate" },
       { icon: "chat", title: "Direct reply", text: "Reception response" },
@@ -97,6 +125,27 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     footer: "Το άμεσο αίτημά σας στο chioshotel.gr",
     messageTitle: "Άμεσο αίτημα στη ρεσεψιόν - Voulamandis House",
     messageConfirm: "Παρακαλώ επιβεβαιώστε τη διαθεσιμότητα και στείλτε μου την καλύτερη απευθείας προσφορά.",
+    topPick: "Κορυφαία επιλογή",
+    directDeal: "Απευθείας προσφορά",
+    from: "από",
+    roomWord: "Δωμάτιο",
+    apartmentWord: "Διαμέρισμα",
+    roomTypes: {
+      "Upper Floor Double / Triple": "Δίκλινο / Τρίκλινο στον επάνω όροφο",
+      "Economy Double": "Οικονομικό δίκλινο",
+      "Ground Floor Double / Triple": "Δίκλινο / Τρίκλινο στο ισόγειο",
+      "Family Apartment": "Οικογενειακό διαμέρισμα",
+    },
+    badges: {
+      Economy: "Οικονομικό",
+      Kitchenette: "Μικρή κουζίνα",
+      Kitchen: "Κουζίνα",
+      "First floor": "Επάνω όροφος",
+      "Ground floor": "Ισόγειο",
+      "No kitchenette": "Χωρίς μικρή κουζίνα",
+      Stairs: "Σκάλες",
+      "No stairs": "Χωρίς σκάλες",
+    },
     trustItems: [
       { icon: "tag", title: "Καλύτερη απευθείας προσφορά", text: "Καλύτερη διαθέσιμη τιμή" },
       { icon: "chat", title: "Άμεση απάντηση", text: "Απάντηση από τη ρεσεψιόν" },
@@ -121,6 +170,27 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     footer: "Votre demande instantanée sur chioshotel.gr",
     messageTitle: "Demande instantanée à la réception - Voulamandis House",
     messageConfirm: "Merci de confirmer la disponibilité et de m’envoyer votre meilleure offre directe.",
+    topPick: "Meilleur choix",
+    directDeal: "Offre directe",
+    from: "à partir de",
+    roomWord: "Chambre",
+    apartmentWord: "Appartement",
+    roomTypes: {
+      "Upper Floor Double / Triple": "Double / triple à l’étage",
+      "Economy Double": "Double économique",
+      "Ground Floor Double / Triple": "Double / triple au rez-de-chaussée",
+      "Family Apartment": "Appartement familial",
+    },
+    badges: {
+      Economy: "Économique",
+      Kitchenette: "Kitchenette",
+      Kitchen: "Cuisine",
+      "First floor": "Étage",
+      "Ground floor": "Rez-de-chaussée",
+      "No kitchenette": "Sans kitchenette",
+      Stairs: "Escaliers",
+      "No stairs": "Sans escaliers",
+    },
     trustItems: [
       { icon: "tag", title: "Meilleure offre directe", text: "Meilleur tarif disponible" },
       { icon: "chat", title: "Réponse directe", text: "Réponse de la réception" },
@@ -145,6 +215,27 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     footer: "Ihre Sofortanfrage auf chioshotel.gr",
     messageTitle: "Sofortanfrage an die Rezeption - Voulamandis House",
     messageConfirm: "Bitte bestätigen Sie die Verfügbarkeit und senden Sie mir Ihr bestes Direktangebot.",
+    topPick: "Beste Wahl",
+    directDeal: "Direktangebot",
+    from: "ab",
+    roomWord: "Zimmer",
+    apartmentWord: "Apartment",
+    roomTypes: {
+      "Upper Floor Double / Triple": "Doppel- / Dreibettzimmer im Obergeschoss",
+      "Economy Double": "Economy Doppelzimmer",
+      "Ground Floor Double / Triple": "Doppel- / Dreibettzimmer im Erdgeschoss",
+      "Family Apartment": "Familienapartment",
+    },
+    badges: {
+      Economy: "Economy",
+      Kitchenette: "Kitchenette",
+      Kitchen: "Küche",
+      "First floor": "Obergeschoss",
+      "Ground floor": "Erdgeschoss",
+      "No kitchenette": "Keine Kitchenette",
+      Stairs: "Treppen",
+      "No stairs": "Keine Treppen",
+    },
     trustItems: [
       { icon: "tag", title: "Bestes Direktangebot", text: "Bester verfügbarer Preis" },
       { icon: "chat", title: "Direkte Antwort", text: "Antwort der Rezeption" },
@@ -169,6 +260,27 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     footer: "La tua richiesta immediata su chioshotel.gr",
     messageTitle: "Richiesta immediata alla reception - Voulamandis House",
     messageConfirm: "Per favore confermate la disponibilità e inviatemi la vostra migliore offerta diretta.",
+    topPick: "Scelta migliore",
+    directDeal: "Offerta diretta",
+    from: "da",
+    roomWord: "Camera",
+    apartmentWord: "Appartamento",
+    roomTypes: {
+      "Upper Floor Double / Triple": "Doppia / tripla al piano superiore",
+      "Economy Double": "Doppia economy",
+      "Ground Floor Double / Triple": "Doppia / tripla al piano terra",
+      "Family Apartment": "Appartamento familiare",
+    },
+    badges: {
+      Economy: "Economy",
+      Kitchenette: "Angolo cottura",
+      Kitchen: "Cucina",
+      "First floor": "Piano superiore",
+      "Ground floor": "Piano terra",
+      "No kitchenette": "Senza angolo cottura",
+      Stairs: "Scale",
+      "No stairs": "Senza scale",
+    },
     trustItems: [
       { icon: "tag", title: "Migliore offerta diretta", text: "Miglior prezzo disponibile" },
       { icon: "chat", title: "Risposta diretta", text: "Risposta dalla reception" },
@@ -193,6 +305,27 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     footer: "Su solicitud instantánea en chioshotel.gr",
     messageTitle: "Solicitud instantánea a recepción - Voulamandis House",
     messageConfirm: "Por favor confirme la disponibilidad y envíeme su mejor oferta directa.",
+    topPick: "Mejor opción",
+    directDeal: "Oferta directa",
+    from: "desde",
+    roomWord: "Habitación",
+    apartmentWord: "Apartamento",
+    roomTypes: {
+      "Upper Floor Double / Triple": "Doble / triple en planta superior",
+      "Economy Double": "Doble económica",
+      "Ground Floor Double / Triple": "Doble / triple en planta baja",
+      "Family Apartment": "Apartamento familiar",
+    },
+    badges: {
+      Economy: "Económica",
+      Kitchenette: "Kitchenette",
+      Kitchen: "Cocina",
+      "First floor": "Planta superior",
+      "Ground floor": "Planta baja",
+      "No kitchenette": "Sin kitchenette",
+      Stairs: "Escaleras",
+      "No stairs": "Sin escaleras",
+    },
     trustItems: [
       { icon: "tag", title: "Mejor oferta directa", text: "Mejor tarifa disponible" },
       { icon: "chat", title: "Respuesta directa", text: "Respuesta de recepción" },
@@ -217,6 +350,27 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     footer: "chioshotel.gr üzerinden anında talebiniz",
     messageTitle: "Resepsiyona anında talep - Voulamandis House",
     messageConfirm: "Lütfen uygunluğu onaylayın ve en iyi doğrudan teklifinizi gönderin.",
+    topPick: "En iyi seçim",
+    directDeal: "Doğrudan teklif",
+    from: "başlayan",
+    roomWord: "Oda",
+    apartmentWord: "Daire",
+    roomTypes: {
+      "Upper Floor Double / Triple": "Üst kat çift / üç kişilik",
+      "Economy Double": "Ekonomik çift kişilik",
+      "Ground Floor Double / Triple": "Zemin kat çift / üç kişilik",
+      "Family Apartment": "Aile dairesi",
+    },
+    badges: {
+      Economy: "Ekonomik",
+      Kitchenette: "Mini mutfak",
+      Kitchen: "Mutfak",
+      "First floor": "Üst kat",
+      "Ground floor": "Zemin kat",
+      "No kitchenette": "Mini mutfak yok",
+      Stairs: "Merdiven",
+      "No stairs": "Merdiven yok",
+    },
     trustItems: [
       { icon: "tag", title: "En iyi doğrudan teklif", text: "En iyi mevcut fiyat" },
       { icon: "chat", title: "Doğrudan yanıt", text: "Resepsiyondan yanıt" },
@@ -234,6 +388,21 @@ function getLiveRequestLocale(canonicalPath: string): LiveRequestLocale {
   if (canonicalPath.startsWith("/es")) return "es";
   if (canonicalPath.startsWith("/tr")) return "tr";
   return "en";
+}
+
+function localizeRoomName(value: string, copy: (typeof LIVE_REQUEST_COPY)[LiveRequestLocale]) {
+  return value
+    .replace(/^Room\s+(\d+)/i, `${copy.roomWord} $1`)
+    .replace(/^Apartment\s+(\d+)/i, `${copy.apartmentWord} $1`);
+}
+
+function localizeRoomType(value: string, copy: (typeof LIVE_REQUEST_COPY)[LiveRequestLocale]) {
+  return copy.roomTypes[value] || value;
+}
+
+function localizeBadge(value: string, copy: (typeof LIVE_REQUEST_COPY)[LiveRequestLocale]) {
+  if (/^👤×\d+/.test(value)) return value;
+  return copy.badges[value] || value;
 }
 
 function buildRequestHref(
@@ -336,13 +505,19 @@ function RoomCard({
   index,
   amount,
   onSelect,
+  copy,
 }: {
   room: RoomMeta;
   active: boolean | null;
   index: number;
   amount: number | null;
   onSelect: () => void;
+  copy: (typeof LIVE_REQUEST_COPY)[LiveRequestLocale];
 }) {
+  const roomName = localizeRoomName(room.displayName, copy);
+  const roomType = localizeRoomType(room.type, copy);
+  const primaryBadge = localizeBadge(room.primaryBadge, copy);
+  const featureBadges = room.featureBadges.map((badge) => localizeBadge(badge, copy));
   return (
     <button
       type="button"
@@ -356,16 +531,16 @@ function RoomCard({
       <div className="relative h-[190px] overflow-hidden rounded-[1.1rem] bg-stone-100 md:h-[150px] md:rounded-[1rem]">
         <Image
           src={room.images[0]}
-          alt={`${room.displayName} ${room.type}`}
+          alt={`${roomName} ${roomType}`}
           width={640}
           height={460}
           sizes="(max-width: 768px) 82vw, 270px"
           className="h-full w-full scale-110 object-cover object-center transition duration-500 group-hover:scale-[1.16]"
         />
         {index === 0 ? (
-          <span className="absolute left-2 top-2 rounded-md bg-amber-100 px-2.5 py-1.5 text-[10px] font-black text-amber-900 shadow-sm ring-1 ring-amber-200 md:text-[11px]">Top pick</span>
+          <span className="absolute left-2 top-2 rounded-md bg-amber-100 px-2.5 py-1.5 text-[10px] font-black text-amber-900 shadow-sm ring-1 ring-amber-200 md:text-[11px]">{copy.topPick}</span>
         ) : (
-          <span className="absolute left-2 top-2 rounded-md bg-[#f8f1e4]/95 px-2.5 py-1.5 text-[10px] font-black text-[#765735] shadow-sm ring-1 ring-white/80">Direct deal</span>
+          <span className="absolute left-2 top-2 rounded-md bg-[#f8f1e4]/95 px-2.5 py-1.5 text-[10px] font-black text-[#765735] shadow-sm ring-1 ring-white/80">{copy.directDeal}</span>
         )}
         {active ? (
           <span className="absolute right-2 top-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/95 text-lg font-black text-[#6f7f3f] shadow-sm ring-1 ring-[#7b8a4b]/20 md:h-9 md:w-9">✓</span>
@@ -374,17 +549,17 @@ function RoomCard({
         )}
       </div>
       <div className="px-1.5 pb-2 pt-3 md:px-2 md:pb-3 md:pt-4">
-        <h3 className="truncate text-[18px] font-black leading-6 text-stone-950 md:text-lg md:leading-6">{room.displayName}</h3>
-        <p className="mt-1 truncate text-[13px] text-stone-600 md:text-sm">{room.type}</p>
+        <h3 className="truncate text-[18px] font-black leading-6 text-stone-950 md:text-lg md:leading-6">{roomName}</h3>
+        <p className="mt-1 truncate text-[13px] text-stone-600 md:text-sm">{roomType}</p>
         <div className="mt-2"><SalesBadges compact /></div>
         <div className="mt-3 flex flex-wrap gap-1.5 md:mt-4">
-          {room.featureBadges.slice(0, 4).map((badge) => (
+          {featureBadges.slice(0, 4).map((badge) => (
             <span key={badge} className="inline-flex items-center rounded-md bg-stone-100/90 px-1.5 py-1 text-[9px] font-bold text-stone-700 ring-1 ring-stone-200 md:px-2 md:text-[10px]">{badge}</span>
           ))}
         </div>
         {amount ? (
           <div className="mt-3 flex items-end gap-1.5 md:mt-4">
-            <span className="text-xs text-stone-500 md:text-sm">from</span>
+            <span className="text-xs text-stone-500 md:text-sm">{copy.from}</span>
             <strong className="text-2xl font-black text-[#17351f] md:text-2xl">{money(amount)}</strong>
           </div>
         ) : null}
@@ -597,6 +772,7 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
                     <RoomCard
                       key={roomKey(room)}
                       room={room}
+                      copy={copy}
                       index={index}
                       active={selectedRoom && roomKey(selectedRoom) === roomKey(room)}
                       amount={minDirectPrice(deals, room, guests)}
@@ -617,20 +793,20 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
               <div className="relative min-h-[180px] overflow-hidden rounded-[1.1rem] bg-stone-100">
                 <Image
                   src={selectedRoom.images[0]}
-                  alt={`${selectedRoom.displayName} ${selectedRoom.type}`}
+                  alt={`${localizeRoomName(selectedRoom.displayName, copy)} ${localizeRoomType(selectedRoom.type, copy)}`}
                   fill
                   sizes="240px"
                   className="scale-110 object-cover object-center"
                 />
               </div>
               <div className="min-w-0 self-center">
-                <span className="inline-flex rounded-full bg-amber-50 px-3 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-amber-800 ring-1 ring-amber-900/10">{selectedRoom.primaryBadge}</span>
-                <h3 className="mt-2 font-serif text-3xl font-bold leading-tight text-stone-950">{selectedRoom.displayName}</h3>
-                <p className="mt-1 font-bold text-amber-800">{selectedRoom.type}</p>
+                <span className="inline-flex rounded-full bg-amber-50 px-3 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-amber-800 ring-1 ring-amber-900/10">{localizeBadge(selectedRoom.primaryBadge, copy)}</span>
+                <h3 className="mt-2 font-serif text-3xl font-bold leading-tight text-stone-950">{localizeRoomName(selectedRoom.displayName, copy)}</h3>
+                <p className="mt-1 font-bold text-amber-800">{localizeRoomType(selectedRoom.type, copy)}</p>
                 <div className="mt-3"><SalesBadges /></div>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {selectedRoom.featureBadges.map((badge) => (
-                    <span key={badge} className="rounded-md bg-stone-100/90 px-3 py-1.5 text-xs font-bold text-stone-700 ring-1 ring-stone-200">{badge}</span>
+                    <span key={badge} className="rounded-md bg-stone-100/90 px-3 py-1.5 text-xs font-bold text-stone-700 ring-1 ring-stone-200">{localizeBadge(badge, copy)}</span>
                   ))}
                 </div>
                 <p className="mt-4 max-w-2xl text-sm leading-6 text-stone-600">
@@ -652,7 +828,7 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
           {totals ? (
             <div className="mt-2 rounded-[1.25rem] bg-white px-4 py-3 text-center shadow-sm ring-1 ring-amber-900/10 md:rounded-[1.4rem] md:py-4">
               <div className="text-[11px] font-black uppercase tracking-[0.14em] text-stone-500 md:text-xs">
-                {selectedRoom?.displayName || "-"} · {copy.directOffer} · {totals.nights} {totals.nights === 1 ? copy.night : copy.nights}
+                {selectedRoom ? localizeRoomName(selectedRoom.displayName, copy) : "-"} · {copy.directOffer} · {totals.nights} {totals.nights === 1 ? copy.night : copy.nights}
               </div>
               <div className="mt-1 text-[11px] font-bold text-stone-500 md:text-xs">{selectedDateLabel}</div>
               <div className="mt-1.5 flex items-end justify-center gap-3">
