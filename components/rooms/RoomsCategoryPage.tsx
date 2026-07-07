@@ -1,4 +1,4 @@
-﻿import Image from "next/image";
+import Image from "next/image";
 import { RoomWizard } from "@/components/rooms/RoomWizard";
 import type { RoomsCategoryPageData } from "@/content/rooms";
 
@@ -35,10 +35,22 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
 
             <p>{data.hero.description}</p>
 
-            <div className="rooms-hero__actions">
+            <div
+              className="rooms-hero__actions"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+              }}
+            >
               <a
                 className="rooms-btn rooms-btn--primary"
                 href={data.hero.primaryCta.href}
+                style={{
+                  width: "100%",
+                  minWidth: 0,
+                  paddingInline: 12,
+                  textAlign: "center",
+                }}
               >
                 {data.hero.primaryCta.label}
               </a>
@@ -46,6 +58,12 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
               <a
                 className="rooms-btn rooms-btn--secondary"
                 href={data.hero.secondaryCta.href}
+                style={{
+                  width: "100%",
+                  minWidth: 0,
+                  paddingInline: 12,
+                  textAlign: "center",
+                }}
               >
                 {data.hero.secondaryCta.label}
               </a>
