@@ -1,13 +1,2 @@
 @media (max-width: 767px) {
-  a[href*="chios-holidays-quiz"],
-  a[href*="diakopes-sti-chio-quiz"] {
-    color: #92400e !important;
-    font-size: 12px !important;
-    line-height: 1.2 !important;
-    white-space: normal !important;
-    min-height: 48px !important;
-    padding-left: 16px !important;
-    padding-right: 16px !important;
-    overflow-wrap: anywhere !important;
-  }
 }
