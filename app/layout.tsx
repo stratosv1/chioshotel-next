@@ -8,6 +8,7 @@ import { siteName, siteUrl } from "@/lib/seo";
 import "./css-split/core.css";
 import "./css-split/overrides/home-mobile-hero-safe.css";
 import "./css-split/overrides/header-mobile-menu-icons.css";
+import "./css-split/overrides/home-compact-mobile-fixes.css";
 import "./css-split/components/consent.css";
 
 export const metadata: Metadata = {
