@@ -34,14 +34,217 @@ const TRUST_ITEMS: { icon: TrustIconType; title: string; text: string }[] = [
   { icon: "card", title: "No card needed", text: "No payment now" },
 ];
 
+
+type LiveRequestLocale = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
+
+const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
+  dateLocale: string;
+  pill: string;
+  subtitle: string;
+  guests: string;
+  available: string;
+  empty: string;
+  selectedText: string;
+  directOffer: string;
+  night: string;
+  nights: string;
+  whatsapp: string;
+  sms: string;
+  call: string;
+  footer: string;
+  messageTitle: string;
+  messageConfirm: string;
+  trustItems: { icon: TrustIconType; title: string; text: string }[];
+}> = {
+  en: {
+    dateLocale: "en-GB",
+    pill: "Instant request to reception",
+    subtitle: "Send an instant request to reception and get the best direct offer.",
+    guests: "Guests",
+    available: "Available",
+    empty: "No available rooms match these guests right now.",
+    selectedText: "Send a direct request for this room and receive a personal reply from reception with the best available offer.",
+    directOffer: "Direct offer",
+    night: "night",
+    nights: "nights",
+    whatsapp: "WhatsApp",
+    sms: "Send SMS",
+    call: "Call +30 22710 31733",
+    footer: "Your instant request at chioshotel.gr",
+    messageTitle: "Instant request to reception - Voulamandis House",
+    messageConfirm: "Please confirm availability and send your best direct offer.",
+    trustItems: [
+      { icon: "tag", title: "Best direct offer", text: "Best available rate" },
+      { icon: "chat", title: "Direct reply", text: "Reception response" },
+      { icon: "bed", title: "Choose room", text: "Pick what suits you" },
+      { icon: "card", title: "No card needed", text: "No payment now" },
+    ],
+  },
+  el: {
+    dateLocale: "el-GR",
+    pill: "Άμεσο αίτημα στη ρεσεψιόν",
+    subtitle: "Στείλτε άμεσο αίτημα στη ρεσεψιόν και λάβετε την καλύτερη απευθείας προσφορά.",
+    guests: "Επισκέπτες",
+    available: "Διαθέσιμο",
+    empty: "Δεν υπάρχουν διαθέσιμα δωμάτια για αυτόν τον αριθμό επισκεπτών αυτή τη στιγμή.",
+    selectedText: "Στείλτε απευθείας αίτημα για αυτό το δωμάτιο και θα λάβετε προσωπική απάντηση από τη ρεσεψιόν με την καλύτερη διαθέσιμη προσφορά.",
+    directOffer: "Απευθείας προσφορά",
+    night: "νύχτα",
+    nights: "νύχτες",
+    whatsapp: "WhatsApp",
+    sms: "Αποστολή SMS",
+    call: "Κλήση +30 22710 31733",
+    footer: "Το άμεσο αίτημά σας στο chioshotel.gr",
+    messageTitle: "Άμεσο αίτημα στη ρεσεψιόν - Voulamandis House",
+    messageConfirm: "Παρακαλώ επιβεβαιώστε τη διαθεσιμότητα και στείλτε μου την καλύτερη απευθείας προσφορά.",
+    trustItems: [
+      { icon: "tag", title: "Καλύτερη απευθείας προσφορά", text: "Καλύτερη διαθέσιμη τιμή" },
+      { icon: "chat", title: "Άμεση απάντηση", text: "Απάντηση από τη ρεσεψιόν" },
+      { icon: "bed", title: "Επιλογή δωματίου", text: "Διαλέξτε αυτό που σας ταιριάζει" },
+      { icon: "card", title: "Χωρίς κάρτα", text: "Καμία πληρωμή τώρα" },
+    ],
+  },
+  fr: {
+    dateLocale: "fr-FR",
+    pill: "Demande instantanée à la réception",
+    subtitle: "Envoyez une demande instantanée à la réception et recevez la meilleure offre directe.",
+    guests: "Voyageurs",
+    available: "Disponible",
+    empty: "Aucune chambre disponible ne correspond à ce nombre de voyageurs pour le moment.",
+    selectedText: "Envoyez une demande directe pour cette chambre et recevez une réponse personnalisée de la réception avec la meilleure offre disponible.",
+    directOffer: "Offre directe",
+    night: "nuit",
+    nights: "nuits",
+    whatsapp: "WhatsApp",
+    sms: "Envoyer SMS",
+    call: "Appeler +30 22710 31733",
+    footer: "Votre demande instantanée sur chioshotel.gr",
+    messageTitle: "Demande instantanée à la réception - Voulamandis House",
+    messageConfirm: "Merci de confirmer la disponibilité et de m’envoyer votre meilleure offre directe.",
+    trustItems: [
+      { icon: "tag", title: "Meilleure offre directe", text: "Meilleur tarif disponible" },
+      { icon: "chat", title: "Réponse directe", text: "Réponse de la réception" },
+      { icon: "bed", title: "Choisir la chambre", text: "Choisissez ce qui vous convient" },
+      { icon: "card", title: "Sans carte bancaire", text: "Aucun paiement maintenant" },
+    ],
+  },
+  de: {
+    dateLocale: "de-DE",
+    pill: "Sofortanfrage an die Rezeption",
+    subtitle: "Senden Sie eine Sofortanfrage an die Rezeption und erhalten Sie das beste Direktangebot.",
+    guests: "Gäste",
+    available: "Verfügbar",
+    empty: "Für diese Gästezahl sind derzeit keine passenden Zimmer verfügbar.",
+    selectedText: "Senden Sie eine Direktanfrage für dieses Zimmer und erhalten Sie eine persönliche Antwort der Rezeption mit dem besten verfügbaren Angebot.",
+    directOffer: "Direktangebot",
+    night: "Nacht",
+    nights: "Nächte",
+    whatsapp: "WhatsApp",
+    sms: "SMS senden",
+    call: "Anrufen +30 22710 31733",
+    footer: "Ihre Sofortanfrage auf chioshotel.gr",
+    messageTitle: "Sofortanfrage an die Rezeption - Voulamandis House",
+    messageConfirm: "Bitte bestätigen Sie die Verfügbarkeit und senden Sie mir Ihr bestes Direktangebot.",
+    trustItems: [
+      { icon: "tag", title: "Bestes Direktangebot", text: "Bester verfügbarer Preis" },
+      { icon: "chat", title: "Direkte Antwort", text: "Antwort der Rezeption" },
+      { icon: "bed", title: "Zimmer wählen", text: "Wählen Sie, was passt" },
+      { icon: "card", title: "Keine Karte nötig", text: "Keine Zahlung jetzt" },
+    ],
+  },
+  it: {
+    dateLocale: "it-IT",
+    pill: "Richiesta immediata alla reception",
+    subtitle: "Invia una richiesta immediata alla reception e ricevi la migliore offerta diretta.",
+    guests: "Ospiti",
+    available: "Disponibile",
+    empty: "Al momento non ci sono camere disponibili per questo numero di ospiti.",
+    selectedText: "Invia una richiesta diretta per questa camera e ricevi una risposta personale dalla reception con la migliore offerta disponibile.",
+    directOffer: "Offerta diretta",
+    night: "notte",
+    nights: "notti",
+    whatsapp: "WhatsApp",
+    sms: "Invia SMS",
+    call: "Chiama +30 22710 31733",
+    footer: "La tua richiesta immediata su chioshotel.gr",
+    messageTitle: "Richiesta immediata alla reception - Voulamandis House",
+    messageConfirm: "Per favore confermate la disponibilità e inviatemi la vostra migliore offerta diretta.",
+    trustItems: [
+      { icon: "tag", title: "Migliore offerta diretta", text: "Miglior prezzo disponibile" },
+      { icon: "chat", title: "Risposta diretta", text: "Risposta dalla reception" },
+      { icon: "bed", title: "Scegli camera", text: "Scegli ciò che fa per te" },
+      { icon: "card", title: "Senza carta", text: "Nessun pagamento ora" },
+    ],
+  },
+  es: {
+    dateLocale: "es-ES",
+    pill: "Solicitud instantánea a recepción",
+    subtitle: "Envíe una solicitud instantánea a recepción y reciba la mejor oferta directa.",
+    guests: "Huéspedes",
+    available: "Disponible",
+    empty: "No hay habitaciones disponibles para este número de huéspedes en este momento.",
+    selectedText: "Envíe una solicitud directa para esta habitación y reciba una respuesta personal de recepción con la mejor oferta disponible.",
+    directOffer: "Oferta directa",
+    night: "noche",
+    nights: "noches",
+    whatsapp: "WhatsApp",
+    sms: "Enviar SMS",
+    call: "Llamar +30 22710 31733",
+    footer: "Su solicitud instantánea en chioshotel.gr",
+    messageTitle: "Solicitud instantánea a recepción - Voulamandis House",
+    messageConfirm: "Por favor confirme la disponibilidad y envíeme su mejor oferta directa.",
+    trustItems: [
+      { icon: "tag", title: "Mejor oferta directa", text: "Mejor tarifa disponible" },
+      { icon: "chat", title: "Respuesta directa", text: "Respuesta de recepción" },
+      { icon: "bed", title: "Elija habitación", text: "Elija lo que le conviene" },
+      { icon: "card", title: "Sin tarjeta", text: "Sin pago ahora" },
+    ],
+  },
+  tr: {
+    dateLocale: "tr-TR",
+    pill: "Resepsiyona anında talep",
+    subtitle: "Resepsiyona anında talep gönderin ve en iyi doğrudan teklifi alın.",
+    guests: "Misafirler",
+    available: "Uygun",
+    empty: "Şu anda bu misafir sayısı için uygun oda bulunmuyor.",
+    selectedText: "Bu oda için doğrudan talep gönderin ve resepsiyondan en iyi mevcut teklif ile kişisel yanıt alın.",
+    directOffer: "Doğrudan teklif",
+    night: "gece",
+    nights: "gece",
+    whatsapp: "WhatsApp",
+    sms: "SMS gönder",
+    call: "Ara +30 22710 31733",
+    footer: "chioshotel.gr üzerinden anında talebiniz",
+    messageTitle: "Resepsiyona anında talep - Voulamandis House",
+    messageConfirm: "Lütfen uygunluğu onaylayın ve en iyi doğrudan teklifinizi gönderin.",
+    trustItems: [
+      { icon: "tag", title: "En iyi doğrudan teklif", text: "En iyi mevcut fiyat" },
+      { icon: "chat", title: "Doğrudan yanıt", text: "Resepsiyondan yanıt" },
+      { icon: "bed", title: "Oda seçin", text: "Size uygun olanı seçin" },
+      { icon: "card", title: "Kart gerekmez", text: "Şimdi ödeme yok" },
+    ],
+  },
+};
+
+function getLiveRequestLocale(canonicalPath: string): LiveRequestLocale {
+  if (canonicalPath.startsWith("/el")) return "el";
+  if (canonicalPath.startsWith("/fr")) return "fr";
+  if (canonicalPath.startsWith("/de")) return "de";
+  if (canonicalPath.startsWith("/it")) return "it";
+  if (canonicalPath.startsWith("/es")) return "es";
+  if (canonicalPath.startsWith("/tr")) return "tr";
+  return "en";
+}
+
 function buildRequestHref(
+  copy: (typeof LIVE_REQUEST_COPY)[LiveRequestLocale],
   room: RoomMeta | null,
   dates: string[],
   guests: number,
   totals: { original: number; direct: number; nights: number } | null,
 ) {
   const text = [
-    "Instant request to reception - Voulamandis House",
+    copy.messageTitle,
     "",
     `Room: ${room ? `${room.displayName} - ${room.type}` : "-"}`,
     `Guests: ${guests}`,
@@ -50,7 +253,7 @@ function buildRequestHref(
     totals ? `Original price: ${money(totals.original)}` : null,
     totals ? `Direct offer: ${money(totals.direct)}` : null,
     "",
-    "Please confirm availability and send your best direct offer.",
+    copy.messageConfirm,
   ]
     .filter(Boolean)
     .join("\n");
@@ -190,7 +393,19 @@ function RoomCard({
   );
 }
 
-function DateChip({ day, info, active, onClick }: { day: string; info: NightInfo | null; active: boolean; onClick: () => void }) {
+function DateChip({
+  day,
+  info,
+  active,
+  onClick,
+  copy,
+}: {
+  day: string;
+  info: NightInfo | null;
+  active: boolean;
+  onClick: () => void;
+  copy: (typeof LIVE_REQUEST_COPY)[LiveRequestLocale];
+}) {
   return (
     <button
       type="button"
@@ -204,9 +419,9 @@ function DateChip({ day, info, active, onClick }: { day: string; info: NightInfo
             : "border-stone-200 bg-stone-100 text-stone-400"
       }`}
     >
-      <span className="block text-[11px] font-black leading-4 md:text-sm">{formatDate(day)}</span>
+      <span className="block text-[11px] font-black leading-4 md:text-sm">{formatDate(day, copy.dateLocale)}</span>
       {active ? <span className="mx-auto my-1 flex h-5 w-5 items-center justify-center rounded-full bg-amber-500 text-[11px] font-black text-white shadow-sm">✓</span> : <span className="block h-2" aria-hidden="true" />}
-      <span className="block text-[10px] font-bold leading-4 md:text-xs">{info ? "Available" : "-"}</span>
+      <span className="block text-[10px] font-bold leading-4 md:text-xs">{info ? copy.available : "-"}</span>
       {info ? (
         active ? (
           <span className="mt-1 block">
@@ -221,13 +436,14 @@ function DateChip({ day, info, active, onClick }: { day: string; info: NightInfo
   );
 }
 
-export function LiveDirectRequest({ data }: { data: LastMinuteData; canonicalPath: string }) {
+export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteData; canonicalPath: string }) {
   const [deals, setDeals] = useState<DealsResponse | null>(null);
   const [guests, setGuests] = useState(2);
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const copy = LIVE_REQUEST_COPY[getLiveRequestLocale(canonicalPath)];
   const roomsScrollerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -292,9 +508,9 @@ export function LiveDirectRequest({ data }: { data: LastMinuteData; canonicalPat
   }, [deals, guests, selectedDates, selectedKey, selectedRoom]);
 
   const totals = selectionTotals(deals, selectedRoom, selectedDates, guests);
-  const requestHref = buildRequestHref(selectedRoom, selectedDates, guests, totals);
+  const requestHref = buildRequestHref(copy, selectedRoom, selectedDates, guests, totals);
   const smsText = [
-    "Instant request to reception - Voulamandis House",
+    copy.messageTitle,
     "",
     `Room: ${selectedRoom ? `${selectedRoom.displayName} - ${selectedRoom.type}` : "-"}`,
     `Guests: ${guests}`,
@@ -303,10 +519,10 @@ export function LiveDirectRequest({ data }: { data: LastMinuteData; canonicalPat
     totals ? `Original price: ${money(totals.original)}` : null,
     totals ? `Direct offer: ${money(totals.direct)}` : null,
     "",
-    "Please confirm availability and send your best direct offer.",
+    copy.messageConfirm,
   ].filter(Boolean).join("\n");
   const smsHref = `sms:+306944474226?&body=${encodeURIComponent(smsText)}`;
-  const selectedDateLabel = selectedDates.length ? selectedDates.map((date) => formatDate(date)).join(" → ") : "";
+  const selectedDateLabel = selectedDates.length ? selectedDates.map((date) => formatDate(date, copy.dateLocale)).join(" → ") : "";
 
   useEffect(() => {
     updateStickyRequestLink(requestHref);
@@ -341,7 +557,7 @@ export function LiveDirectRequest({ data }: { data: LastMinuteData; canonicalPat
         <div className="min-w-0 p-4 md:p-8 lg:p-9">
           <div className="mb-4 flex justify-center rounded-full bg-amber-100/90 px-4 py-2.5 text-[10px] font-black uppercase tracking-[0.15em] text-amber-800 ring-1 ring-amber-900/10 md:inline-flex md:justify-start md:text-[11px]">
             <span className="mr-2" aria-hidden="true">⚡</span>
-            Instant request to reception
+            {copy.pill}
           </div>
           <span className="pointer-events-none absolute right-7 top-24 text-5xl font-black text-amber-700/80 md:hidden" aria-hidden="true">⚡</span>
 
@@ -351,12 +567,12 @@ export function LiveDirectRequest({ data }: { data: LastMinuteData; canonicalPat
                 {data.title}
               </h2>
               <p className="mt-4 max-w-2xl text-[15px] leading-7 text-stone-700 md:text-lg md:leading-8">
-                Send an instant request to reception and get the best direct offer.
+                {copy.subtitle}
               </p>
             </div>
 
             <label className="block">
-              <span className="mb-2 block text-[11px] font-black uppercase tracking-[0.16em] text-stone-500 md:text-xs">Guests</span>
+              <span className="mb-2 block text-[11px] font-black uppercase tracking-[0.16em] text-stone-500 md:text-xs">{copy.guests}</span>
               <select
                 value={guests}
                 onChange={(event) => setGuests(Number(event.target.value))}
@@ -372,7 +588,7 @@ export function LiveDirectRequest({ data }: { data: LastMinuteData; canonicalPat
           <div className="mt-6">
             {loading ? <div className="rounded-3xl bg-white p-6 text-sm font-bold text-stone-600 ring-1 ring-amber-900/10">{data.widget.loadingText}</div> : null}
             {error ? <div className="rounded-3xl bg-white p-6 text-sm font-bold text-stone-600 ring-1 ring-amber-900/10">{error}</div> : null}
-            {!loading && !error && !rooms.length ? <div className="rounded-3xl bg-white p-6 text-sm font-bold text-stone-600 ring-1 ring-amber-900/10">No available rooms match these guests right now.</div> : null}
+            {!loading && !error && !rooms.length ? <div className="rounded-3xl bg-white p-6 text-sm font-bold text-stone-600 ring-1 ring-amber-900/10">{copy.empty}</div> : null}
             {!loading && !error && rooms.length ? (
               <div className="relative -mx-4 md:mx-0 lg:-mx-2">
                 <button type="button" onClick={() => roomsScrollerRef.current?.scrollBy({ left: 330, behavior: "smooth" })} className="absolute right-3 top-[88px] z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-xl font-black text-[#17351f] shadow-lg ring-1 ring-amber-900/10 transition hover:scale-105 hover:bg-amber-50 md:right-4 md:top-[84px] md:h-11 md:w-11 md:text-2xl" aria-label="Show more available rooms">→</button>
@@ -418,7 +634,7 @@ export function LiveDirectRequest({ data }: { data: LastMinuteData; canonicalPat
                   ))}
                 </div>
                 <p className="mt-4 max-w-2xl text-sm leading-6 text-stone-600">
-                  Send a direct request for this room and receive a personal reply from reception with the best available offer.
+                  {copy.selectedText}
                 </p>
               </div>
             </div>
@@ -428,7 +644,7 @@ export function LiveDirectRequest({ data }: { data: LastMinuteData; canonicalPat
             <div className="mt-3 flex snap-x gap-2 overflow-x-auto pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:gap-3">
               {visibleDays.map((day) => {
                 const info = getNightInfo(deals, selectedRoom, day.checkin, guests);
-                return <DateChip key={day.checkin} day={day.checkin} info={info} active={selectedDates.includes(day.checkin)} onClick={() => handleDateClick(day.checkin)} />;
+                return <DateChip key={day.checkin} day={day.checkin} info={info} active={selectedDates.includes(day.checkin)} onClick={() => handleDateClick(day.checkin)} copy={copy} />;
               })}
             </div>
           ) : null}
@@ -436,7 +652,7 @@ export function LiveDirectRequest({ data }: { data: LastMinuteData; canonicalPat
           {totals ? (
             <div className="mt-2 rounded-[1.25rem] bg-white px-4 py-3 text-center shadow-sm ring-1 ring-amber-900/10 md:rounded-[1.4rem] md:py-4">
               <div className="text-[11px] font-black uppercase tracking-[0.14em] text-stone-500 md:text-xs">
-                {selectedRoom?.displayName || "Selected room"} · Direct offer · {totals.nights} {totals.nights === 1 ? "night" : "nights"}
+                {selectedRoom?.displayName || "-"} · {copy.directOffer} · {totals.nights} {totals.nights === 1 ? copy.night : copy.nights}
               </div>
               <div className="mt-1 text-[11px] font-bold text-stone-500 md:text-xs">{selectedDateLabel}</div>
               <div className="mt-1.5 flex items-end justify-center gap-3">
@@ -447,7 +663,7 @@ export function LiveDirectRequest({ data }: { data: LastMinuteData; canonicalPat
           ) : null}
 
           <div className="mt-3 grid grid-cols-4 gap-0 rounded-[1.25rem] bg-white p-3 text-center shadow-sm ring-1 ring-amber-900/10 md:rounded-[1.4rem] md:p-4">
-            {TRUST_ITEMS.map((item) => (
+            {copy.trustItems.map((item) => (
               <div key={item.title} className="border-r border-stone-200 px-1 text-[9px] font-semibold leading-4 text-stone-800 last:border-r-0 md:text-xs md:leading-5">
                 <span className="mb-1 flex justify-center" aria-hidden="true"><TrustIcon type={item.icon} /></span>
                 <strong className="block font-black">{item.title}</strong>
@@ -457,11 +673,11 @@ export function LiveDirectRequest({ data }: { data: LastMinuteData; canonicalPat
           </div>
 
           <div className="mt-4 grid gap-3 pb-10 md:grid-cols-3 md:pb-0">
-            <a href={requestHref} target="_blank" rel="noopener noreferrer" className="flex min-h-14 items-center justify-center rounded-2xl bg-[#17351f] px-5 text-center text-sm font-black uppercase tracking-[0.08em] !text-white shadow-lg shadow-emerald-950/20 transition hover:-translate-y-0.5 hover:bg-[#224d2d]">WhatsApp</a>
-            <a href={smsHref} className="flex min-h-14 items-center justify-center rounded-2xl border border-emerald-700/30 bg-white px-5 text-center text-sm font-black uppercase tracking-[0.08em] !text-emerald-800 transition hover:bg-emerald-50">Send SMS</a>
-            <a href={CONTACT.phoneHref} className="flex min-h-14 items-center justify-center rounded-2xl border border-stone-300 bg-white px-5 text-center text-sm font-black uppercase tracking-[0.08em] !text-stone-800 transition hover:border-amber-700 hover:bg-amber-50">Call +30 22710 31733</a>
+            <a href={requestHref} target="_blank" rel="noopener noreferrer" className="flex min-h-14 items-center justify-center rounded-2xl bg-[#17351f] px-5 text-center text-sm font-black uppercase tracking-[0.08em] !text-white shadow-lg shadow-emerald-950/20 transition hover:-translate-y-0.5 hover:bg-[#224d2d]">{copy.whatsapp}</a>
+            <a href={smsHref} className="flex min-h-14 items-center justify-center rounded-2xl border border-emerald-700/30 bg-white px-5 text-center text-sm font-black uppercase tracking-[0.08em] !text-emerald-800 transition hover:bg-emerald-50">{copy.sms}</a>
+            <a href={CONTACT.phoneHref} className="flex min-h-14 items-center justify-center rounded-2xl border border-stone-300 bg-white px-5 text-center text-sm font-black uppercase tracking-[0.08em] !text-stone-800 transition hover:border-amber-700 hover:bg-amber-50">{copy.call}</a>
           </div>
-          <p className="mt-4 text-center text-xs font-semibold text-stone-500">Your instant request at chioshotel.gr</p>
+          <p className="mt-4 text-center text-xs font-semibold text-stone-500">{copy.footer}</p>
         </div>
       </div>
     </section>
