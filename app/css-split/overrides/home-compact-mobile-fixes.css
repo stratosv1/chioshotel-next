@@ -23,26 +23,36 @@
   }
 
   main > section:last-of-type img {
-    display: none !important;
+    display: block !important;
+    opacity: 0.72 !important;
+    filter: brightness(1.18) saturate(1.04) !important;
+    object-position: center center !important;
   }
 
-  main > section:last-of-type > div > div:last-child {
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.35), transparent) !important;
+  main > section:last-of-type > div > div:nth-of-type(1) {
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.58), rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.12)) !important;
+  }
+
+  main > section:last-of-type > div > div:nth-of-type(2) {
+    background: radial-gradient(circle at top right, rgba(245, 158, 11, 0.08), transparent 34%) !important;
   }
 
   main > section:last-of-type .relative.z-10 {
     padding: 24px !important;
+    max-width: 100% !important;
   }
 
   main > section:last-of-type h2 {
     font-size: 32px !important;
     line-height: 1.08 !important;
     letter-spacing: -0.02em !important;
+    text-shadow: 0 3px 18px rgba(0, 0, 0, 0.45) !important;
   }
 
   main > section:last-of-type p:not(:first-child) {
     font-size: 15px !important;
     line-height: 1.75 !important;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45) !important;
   }
 
   main > section:last-of-type .mt-8 {
