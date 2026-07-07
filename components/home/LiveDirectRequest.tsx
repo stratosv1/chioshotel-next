@@ -487,14 +487,20 @@ function HeartIcon() {
   );
 }
 
-function SalesBadges({ compact = false }: { compact?: boolean }) {
+function SalesBadges({
+  compact = false,
+  copy,
+}: {
+  compact?: boolean;
+  copy: (typeof LIVE_REQUEST_COPY)[LiveRequestLocale];
+}) {
   const size = compact ? "px-2 py-1 text-[10px]" : "px-3 py-1.5 text-xs";
 
   return (
     <div className="flex flex-wrap gap-1.5">
-      <span className={`rounded-md bg-amber-100 font-black text-amber-900 ring-1 ring-amber-200 ${size}`}>Best direct offer</span>
-      <span className={`rounded-md bg-stone-100 font-black text-stone-700 ring-1 ring-stone-200 ${size}`}>No card needed</span>
-      <span className={`rounded-md bg-[#eef2dc] font-black text-[#5f6f35] ring-1 ring-[#d9dfbc] ${size}`}>Direct reply</span>
+      <span className={`rounded-md bg-amber-100 font-black text-amber-900 ring-1 ring-amber-200 ${size}`}>{copy.trustItems[0].title}</span>
+      <span className={`rounded-md bg-stone-100 font-black text-stone-700 ring-1 ring-stone-200 ${size}`}>{copy.trustItems[3].title}</span>
+      <span className={`rounded-md bg-[#eef2dc] font-black text-[#5f6f35] ring-1 ring-[#d9dfbc] ${size}`}>{copy.trustItems[1].title}</span>
     </div>
   );
 }
@@ -551,7 +557,7 @@ function RoomCard({
       <div className="px-1.5 pb-2 pt-3 md:px-2 md:pb-3 md:pt-4">
         <h3 className="truncate text-[18px] font-black leading-6 text-stone-950 md:text-lg md:leading-6">{roomName}</h3>
         <p className="mt-1 truncate text-[13px] text-stone-600 md:text-sm">{roomType}</p>
-        <div className="mt-2"><SalesBadges compact /></div>
+        <div className="mt-2"><SalesBadges compact copy={copy} /></div>
         <div className="mt-3 flex flex-wrap gap-1.5 md:mt-4">
           {featureBadges.slice(0, 4).map((badge) => (
             <span key={badge} className="inline-flex items-center rounded-md bg-stone-100/90 px-1.5 py-1 text-[9px] font-bold text-stone-700 ring-1 ring-stone-200 md:px-2 md:text-[10px]">{badge}</span>
@@ -803,7 +809,7 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
                 <span className="inline-flex rounded-full bg-amber-50 px-3 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-amber-800 ring-1 ring-amber-900/10">{localizeBadge(selectedRoom.primaryBadge, copy)}</span>
                 <h3 className="mt-2 font-serif text-3xl font-bold leading-tight text-stone-950">{localizeRoomName(selectedRoom.displayName, copy)}</h3>
                 <p className="mt-1 font-bold text-amber-800">{localizeRoomType(selectedRoom.type, copy)}</p>
-                <div className="mt-3"><SalesBadges /></div>
+                <div className="mt-3"><SalesBadges copy={copy} /></div>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {selectedRoom.featureBadges.map((badge) => (
                     <span key={badge} className="rounded-md bg-stone-100/90 px-3 py-1.5 text-xs font-bold text-stone-700 ring-1 ring-stone-200">{localizeBadge(badge, copy)}</span>
