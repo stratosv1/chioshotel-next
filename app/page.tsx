@@ -2,12 +2,15 @@ import type { Metadata } from "next";
 import { HomePageTailwind } from "@/components/home/HomePageTailwind";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { homePageEn } from "@/content/home";
+import { withUpdatedIntroReasons } from "@/content/homeIntroReasons";
 import { buildHomePageSchema } from "@/content/schema";
+
+const homePageData = withUpdatedIntroReasons(homePageEn);
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://chioshotel.gr"),
-  title: homePageEn.seo.title,
-  description: homePageEn.seo.description,
+  title: homePageData.seo.title,
+  description: homePageData.seo.description,
   alternates: {
     canonical: "https://chioshotel.gr/",
     languages: {
@@ -25,27 +28,27 @@ export const metadata: Metadata = {
     type: "website",
     url: "https://chioshotel.gr/",
     siteName: "Voulamandis House",
-    title: homePageEn.seo.title,
-    description: homePageEn.seo.description,
+    title: homePageData.seo.title,
+    description: homePageData.seo.description,
     locale: "en_US",
     alternateLocale: ["el_GR", "fr_FR", "de_DE", "it_IT", "es_ES", "tr_TR"],
     images: [
       {
         url:
-          homePageEn.seo.ogImage ||
+          homePageData.seo.ogImage ||
           "https://chioshotel.gr/images/voulamandis-house-og.jpg",
         width: 1200,
         height: 675,
-        alt: homePageEn.seo.title,
+        alt: homePageData.seo.title,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: homePageEn.seo.title,
-    description: homePageEn.seo.description,
+    title: homePageData.seo.title,
+    description: homePageData.seo.description,
     images: [
-      homePageEn.seo.ogImage ||
+      homePageData.seo.ogImage ||
         "https://chioshotel.gr/images/voulamandis-house-og.jpg",
     ],
   },
@@ -65,8 +68,8 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <>
-      <JsonLd data={buildHomePageSchema(homePageEn)} />
-      <HomePageTailwind data={homePageEn} />
+      <JsonLd data={buildHomePageSchema(homePageData)} />
+      <HomePageTailwind data={homePageData} />
     </>
   );
 }
