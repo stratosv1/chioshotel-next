@@ -4,6 +4,8 @@ type IntroRight = HomePageData["intro"]["right"];
 
 type SupportedLocale = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
 
+const googleMapsLink = "https://www.google.com/maps/search/?api=1&query=Voulamandis%20House%20Kambos%20Chios";
+
 const introReasonsByLocale: Record<SupportedLocale, IntroRight> = {
   en: {
     kicker: "What makes Voulamandis House special",
@@ -235,6 +237,13 @@ export function withUpdatedIntroReasons(data: HomePageData): HomePageData {
     intro: {
       ...data.intro,
       right: introReasonsByLocale[locale],
+    },
+    location: {
+      ...data.location,
+      map: {
+        ...data.location.map,
+        iframeSrc: googleMapsLink,
+      },
     },
   };
 }
