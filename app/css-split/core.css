@@ -35,3 +35,8 @@ a[href="/tr/sakiz-odalari/"].bg-white {
     font-weight: 900 !important;
   }
 }
+
+/* Keep quiz CTA text readable on white buttons inside dark sections. */
+a[href*="quiz"].bg-white {
+  color: #7c2d12 !important;
+}
