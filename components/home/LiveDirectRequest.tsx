@@ -24,6 +24,7 @@ const CONTACT = {
   endpoint: "/api/deals",
   phoneHref: "tel:+302271031733",
   phoneDisplay: "+30 22710 31733",
+  emailHref: "mailto:chioshotel@gmail.com?subject=Direct%20request%20-%20Voulamandis%20House",
   whatsapp: "306944474226",
 };
 
@@ -76,7 +77,7 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     nights: "nights",
     whatsapp: "WhatsApp",
     sms: "Send SMS",
-    call: "Call +30 22710 31733",
+    call: "Email chioshotel@gmail.com",
     footer: "Your instant request at chioshotel.gr",
     messageTitle: "Instant request to reception - Voulamandis House",
     messageConfirm: "Please confirm availability and send your best direct offer.",
@@ -121,7 +122,7 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     nights: "νύχτες",
     whatsapp: "WhatsApp",
     sms: "Αποστολή SMS",
-    call: "Κλήση +30 22710 31733",
+    call: "Email chioshotel@gmail.com",
     footer: "Το άμεσο αίτημά σας στο chioshotel.gr",
     messageTitle: "Άμεσο αίτημα στη ρεσεψιόν - Voulamandis House",
     messageConfirm: "Παρακαλώ επιβεβαιώστε τη διαθεσιμότητα και στείλτε μου την καλύτερη απευθείας προσφορά.",
@@ -166,7 +167,7 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     nights: "nuits",
     whatsapp: "WhatsApp",
     sms: "Envoyer SMS",
-    call: "Appeler +30 22710 31733",
+    call: "Email chioshotel@gmail.com",
     footer: "Votre demande instantanée sur chioshotel.gr",
     messageTitle: "Demande instantanée à la réception - Voulamandis House",
     messageConfirm: "Merci de confirmer la disponibilité et de m’envoyer votre meilleure offre directe.",
@@ -211,7 +212,7 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     nights: "Nächte",
     whatsapp: "WhatsApp",
     sms: "SMS senden",
-    call: "Anrufen +30 22710 31733",
+    call: "E-Mail chioshotel@gmail.com",
     footer: "Ihre Sofortanfrage auf chioshotel.gr",
     messageTitle: "Sofortanfrage an die Rezeption - Voulamandis House",
     messageConfirm: "Bitte bestätigen Sie die Verfügbarkeit und senden Sie mir Ihr bestes Direktangebot.",
@@ -256,7 +257,7 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     nights: "notti",
     whatsapp: "WhatsApp",
     sms: "Invia SMS",
-    call: "Chiama +30 22710 31733",
+    call: "Email chioshotel@gmail.com",
     footer: "La tua richiesta immediata su chioshotel.gr",
     messageTitle: "Richiesta immediata alla reception - Voulamandis House",
     messageConfirm: "Per favore confermate la disponibilità e inviatemi la vostra migliore offerta diretta.",
@@ -301,7 +302,7 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     nights: "noches",
     whatsapp: "WhatsApp",
     sms: "Enviar SMS",
-    call: "Llamar +30 22710 31733",
+    call: "Email chioshotel@gmail.com",
     footer: "Su solicitud instantánea en chioshotel.gr",
     messageTitle: "Solicitud instantánea a recepción - Voulamandis House",
     messageConfirm: "Por favor confirme la disponibilidad y envíeme su mejor oferta directa.",
@@ -869,10 +870,10 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
             ))}
           </div>
 
-          <div className="mt-4 grid gap-3 pb-10 md:grid-cols-3 md:pb-0">
+          <div className="mt-4 hidden gap-3 pb-10 md:grid md:grid-cols-3 md:pb-0">
             <a href={requestHref} target="_blank" rel="noopener noreferrer" className="flex min-h-14 items-center justify-center rounded-2xl bg-[#17351f] px-5 text-center text-sm font-black uppercase tracking-[0.08em] !text-white shadow-lg shadow-emerald-950/20 transition hover:-translate-y-0.5 hover:bg-[#224d2d]">{copy.whatsapp}</a>
             <a href={smsHref} className="flex min-h-14 items-center justify-center rounded-2xl border border-emerald-700/30 bg-white px-5 text-center text-sm font-black uppercase tracking-[0.08em] !text-emerald-800 transition hover:bg-emerald-50">{copy.sms}</a>
-            <a href={CONTACT.phoneHref} className="flex min-h-14 items-center justify-center rounded-2xl border border-stone-300 bg-white px-5 text-center text-sm font-black uppercase tracking-[0.08em] !text-stone-800 transition hover:border-amber-700 hover:bg-amber-50">{copy.call}</a>
+            <a href={CONTACT.emailHref} className="flex min-h-14 items-center justify-center rounded-2xl border border-stone-300 bg-white px-5 text-center text-sm font-black uppercase tracking-[0.08em] !text-stone-800 transition hover:border-amber-700 hover:bg-amber-50">{copy.call}</a>
           </div>
           <p className="mt-4 text-center text-xs font-semibold text-stone-500">{copy.footer}</p>
         </div>
