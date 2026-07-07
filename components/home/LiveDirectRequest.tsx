@@ -772,7 +772,22 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
             {!loading && !error && !rooms.length ? <div className="rounded-3xl bg-white p-6 text-sm font-bold text-stone-600 ring-1 ring-amber-900/10">{copy.empty}</div> : null}
             {!loading && !error && rooms.length ? (
               <div className="relative -mx-4 md:mx-0 lg:-mx-2">
-                <button type="button" onClick={() => roomsScrollerRef.current?.scrollBy({ left: 330, behavior: "smooth" })} className="absolute right-3 top-[88px] z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-xl font-black text-[#17351f] shadow-lg ring-1 ring-amber-900/10 transition hover:scale-105 hover:bg-amber-50 md:right-4 md:top-[84px] md:h-11 md:w-11 md:text-2xl" aria-label="Show more available rooms">→</button>
+                <button
+                  type="button"
+                  onClick={() => roomsScrollerRef.current?.scrollBy({ left: -330, behavior: "smooth" })}
+                  className="absolute left-3 top-[88px] z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-xl font-black text-[#17351f] shadow-lg ring-1 ring-amber-900/10 transition hover:scale-105 hover:bg-amber-50 md:left-4 md:top-[84px] md:h-11 md:w-11 md:text-2xl"
+                  aria-label="Show previous available rooms"
+                >
+                  ←
+                </button>
+                <button
+                  type="button"
+                  onClick={() => roomsScrollerRef.current?.scrollBy({ left: 330, behavior: "smooth" })}
+                  className="absolute right-3 top-[88px] z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-xl font-black text-[#17351f] shadow-lg ring-1 ring-amber-900/10 transition hover:scale-105 hover:bg-amber-50 md:right-4 md:top-[84px] md:h-11 md:w-11 md:text-2xl"
+                  aria-label="Show more available rooms"
+                >
+                  →
+                </button>
                 <div ref={roomsScrollerRef} className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-5 pr-14 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:gap-4 md:px-2 md:pr-16 xl:gap-5">
                   {rooms.map((room, index) => (
                     <RoomCard
