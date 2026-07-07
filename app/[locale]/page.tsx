@@ -12,6 +12,7 @@ import {
   homePageTr,
 } from "@/content/home";
 import type { HomePageData } from "@/content/home";
+import { withUpdatedIntroReasons } from "@/content/homeIntroReasons";
 import { buildHomePageSchema } from "@/content/schema";
 import { buildPageMetadata } from "@/lib/seo";
 import { defaultLanguage, isLanguageCode, languages } from "@/lib/languages";
@@ -29,19 +30,19 @@ const localizedLanguages = languages.filter(
 function getLocalizedHomePageData(locale: string): HomePageData {
   switch (locale) {
     case "el":
-      return homePageEl;
+      return withUpdatedIntroReasons(homePageEl);
     case "fr":
-      return homePageFr;
+      return withUpdatedIntroReasons(homePageFr);
     case "de":
-      return homePageDe;
+      return withUpdatedIntroReasons(homePageDe);
     case "it":
-      return homePageIt;
+      return withUpdatedIntroReasons(homePageIt);
     case "es":
-      return homePageEs;
+      return withUpdatedIntroReasons(homePageEs);
     case "tr":
-      return homePageTr;
+      return withUpdatedIntroReasons(homePageTr);
     default:
-      return homePageEn;
+      return withUpdatedIntroReasons(homePageEn);
   }
 }
 
