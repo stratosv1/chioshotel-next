@@ -19,6 +19,7 @@ import {
 type LastMinuteData = HomePageData["lastMinute"];
 type TrustIconType = "tag" | "chat" | "bed" | "card";
 type NightInfo = NonNullable<ReturnType<typeof getNightInfo>>;
+type LiveRequestLocale = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
 
 const CONTACT = {
   endpoint: "/api/deals",
@@ -27,16 +28,6 @@ const CONTACT = {
   emailHref: "mailto:chioshotel@gmail.com?subject=Direct%20request%20-%20Voulamandis%20House",
   whatsapp: "306944474226",
 };
-
-const TRUST_ITEMS: { icon: TrustIconType; title: string; text: string }[] = [
-  { icon: "tag", title: "Best direct offer", text: "Best available rate" },
-  { icon: "chat", title: "Direct reply", text: "Reception response" },
-  { icon: "bed", title: "Choose room", text: "Pick what suits you" },
-  { icon: "card", title: "No card needed", text: "No payment now" },
-];
-
-
-type LiveRequestLocale = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
 
 const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
   dateLocale: string;
@@ -347,7 +338,7 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     nights: "gece",
     whatsapp: "WhatsApp",
     sms: "SMS gönder",
-    call: "Ara +30 22710 31733",
+    call: "E-mail chioshotel@gmail.com",
     footer: "chioshotel.gr üzerinden anında talebiniz",
     messageTitle: "Resepsiyona anında talep - Voulamandis House",
     messageConfirm: "Lütfen uygunluğu onaylayın ve en iyi doğrudan teklifinizi gönderin.",
@@ -523,51 +514,49 @@ function RoomCard({
 }) {
   const roomName = localizeRoomName(room.displayName, copy);
   const roomType = localizeRoomType(room.type, copy);
-  const primaryBadge = localizeBadge(room.primaryBadge, copy);
   const featureBadges = room.featureBadges.map((badge) => localizeBadge(badge, copy));
+
   return (
     <button
       type="button"
       onClick={onSelect}
-      className={`group w-[82vw] max-w-[340px] flex-none snap-start rounded-[1.35rem] bg-white p-2.5 text-left transition md:w-[245px] md:max-w-none md:rounded-[1.3rem] xl:w-[270px] ${
+      className={`group w-[78vw] max-w-[315px] flex-none snap-start rounded-[1.25rem] bg-white p-2 text-left transition md:w-[230px] md:max-w-none xl:w-[255px] ${
         active
-          ? "border border-[#7b8a4b] shadow-sm shadow-stone-300/60 ring-1 ring-[#7b8a4b]/35"
+          ? "border border-[#7b8a4b] shadow-md shadow-stone-300/70 ring-2 ring-[#7b8a4b]/30"
           : "border border-stone-200/70 shadow-md shadow-stone-900/5 hover:-translate-y-1 hover:border-[#7b8a4b]/40 hover:shadow-lg hover:shadow-stone-900/10"
       }`}
     >
-      <div className="relative h-[190px] overflow-hidden rounded-[1.1rem] bg-stone-100 md:h-[150px] md:rounded-[1rem]">
+      <div className="relative h-[165px] overflow-hidden rounded-[1rem] bg-stone-100 md:h-[132px]">
         <Image
           src={room.images[0]}
           alt={`${roomName} ${roomType}`}
           width={640}
           height={460}
-          sizes="(max-width: 768px) 82vw, 270px"
+          sizes="(max-width: 768px) 78vw, 255px"
           className="h-full w-full scale-110 object-cover object-center transition duration-500 group-hover:scale-[1.16]"
         />
-        {index === 0 ? (
-          <span className="absolute left-2 top-2 rounded-md bg-amber-100 px-2.5 py-1.5 text-[10px] font-black text-amber-900 shadow-sm ring-1 ring-amber-200 md:text-[11px]">{copy.topPick}</span>
-        ) : (
-          <span className="absolute left-2 top-2 rounded-md bg-[#f8f1e4]/95 px-2.5 py-1.5 text-[10px] font-black text-[#765735] shadow-sm ring-1 ring-white/80">{copy.directDeal}</span>
-        )}
+        <span className="absolute left-2 top-2 rounded-md bg-[#f8f1e4]/95 px-2.5 py-1 text-[10px] font-black text-[#765735] shadow-sm ring-1 ring-white/80">
+          {index === 0 ? copy.topPick : copy.directDeal}
+        </span>
         {active ? (
-          <span className="absolute right-2 top-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/95 text-lg font-black text-[#6f7f3f] shadow-sm ring-1 ring-[#7b8a4b]/20 md:h-9 md:w-9">✓</span>
+          <span className="absolute right-2 top-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/95 text-lg font-black text-[#6f7f3f] shadow-sm ring-1 ring-[#7b8a4b]/20">✓</span>
         ) : (
           <span className="absolute right-2 top-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-stone-950/30 text-white backdrop-blur-sm"><HeartIcon /></span>
         )}
       </div>
-      <div className="px-1.5 pb-2 pt-3 md:px-2 md:pb-3 md:pt-4">
-        <h3 className="truncate text-[18px] font-black leading-6 text-stone-950 md:text-lg md:leading-6">{roomName}</h3>
-        <p className="mt-1 truncate text-[13px] text-stone-600 md:text-sm">{roomType}</p>
+      <div className="px-1.5 pb-2 pt-2.5 md:px-2">
+        <h3 className="truncate text-[17px] font-black leading-6 text-stone-950 md:text-lg">{roomName}</h3>
+        <p className="mt-0.5 truncate text-[13px] font-semibold text-amber-800 md:text-sm">{roomType}</p>
         <div className="mt-2"><SalesBadges compact copy={copy} /></div>
-        <div className="mt-3 flex flex-wrap gap-1.5 md:mt-4">
+        <div className="mt-2 flex flex-wrap gap-1.5">
           {featureBadges.slice(0, 4).map((badge) => (
             <span key={badge} className="inline-flex items-center rounded-md bg-stone-100/90 px-1.5 py-1 text-[9px] font-bold text-stone-700 ring-1 ring-stone-200 md:px-2 md:text-[10px]">{badge}</span>
           ))}
         </div>
         {amount ? (
-          <div className="mt-3 flex items-end gap-1.5 md:mt-4">
+          <div className="mt-2 flex items-end gap-1.5">
             <span className="text-xs text-stone-500 md:text-sm">{copy.from}</span>
-            <strong className="text-2xl font-black text-[#17351f] md:text-2xl">{money(amount)}</strong>
+            <strong className="text-[1.35rem] font-black leading-none text-[#17351f] md:text-2xl">{money(amount)}</strong>
           </div>
         ) : null}
       </div>
@@ -593,21 +582,21 @@ function DateChip({
       type="button"
       disabled={!info}
       onClick={onClick}
-      className={`relative w-[72px] flex-none snap-start rounded-2xl border px-1.5 py-3 text-center shadow-sm transition md:w-[92px] ${
+      className={`relative flex h-[86px] w-[70px] flex-none snap-start flex-col justify-center rounded-2xl border px-1.5 py-2 text-center shadow-sm transition md:h-[94px] md:w-[86px] ${
         active
           ? "border-[#17351f] bg-[#17351f] text-white shadow-lg shadow-emerald-950/15"
           : info
             ? "border-stone-200 bg-white text-stone-900 hover:border-amber-700"
-            : "border-stone-200 bg-stone-100 text-stone-400"
+            : "border-stone-200 bg-stone-100/80 text-stone-400"
       }`}
     >
-      <span className="block text-[11px] font-black leading-4 md:text-sm">{formatDate(day, copy.dateLocale)}</span>
-      {active ? <span className="mx-auto my-1 flex h-5 w-5 items-center justify-center rounded-full bg-amber-500 text-[11px] font-black text-white shadow-sm">✓</span> : <span className="block h-2" aria-hidden="true" />}
-      <span className="block text-[10px] font-bold leading-4 md:text-xs">{info ? copy.available : "-"}</span>
+      {active ? <span className="absolute -right-1.5 -top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-amber-500 text-[11px] font-black text-white shadow-sm">✓</span> : null}
+      <span className="block text-[10px] font-black leading-3 md:text-xs md:leading-4">{formatDate(day, copy.dateLocale)}</span>
+      <span className="mt-1 block text-[9px] font-bold leading-3 md:text-[11px]">{info ? copy.available : "-"}</span>
       {info ? (
         active ? (
           <span className="mt-1 block">
-            <span className="block text-[10px] font-black leading-3 text-white/70 line-through">{money(info.original)}</span>
+            <span className="block text-[9px] font-black leading-3 text-white/70 line-through">{money(info.original)}</span>
             <span className="block text-[13px] font-black leading-4 text-white md:text-sm">{money(info.direct)}</span>
           </span>
         ) : (
@@ -734,9 +723,9 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
   }
 
   return (
-    <section className="px-4 py-8 md:px-8 md:pt-16 md:pb-8" aria-labelledby="live-direct-title">
+    <section className="px-4 py-6 md:px-8 md:pt-10 md:pb-8" aria-labelledby="live-direct-title">
       <div className="mx-auto max-w-7xl overflow-hidden rounded-[2rem] border border-amber-900/10 bg-[#fffaf3] shadow-2xl shadow-stone-900/10 md:rounded-[2.5rem]">
-        <div className="min-w-0 p-4 md:p-8 lg:p-9">
+        <div className="min-w-0 p-4 md:p-7 lg:p-8">
           <div className="mb-4 flex justify-center rounded-full bg-amber-100/90 px-4 py-2.5 text-[10px] font-black uppercase tracking-[0.15em] text-amber-800 ring-1 ring-amber-900/10 md:inline-flex md:justify-start md:text-[11px]">
             <span className="mr-2" aria-hidden="true">⚡</span>
             {copy.pill}
@@ -745,10 +734,10 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
 
           <div className="grid gap-4 xl:grid-cols-[1fr_250px] xl:items-end">
             <div>
-              <h2 id="live-direct-title" className="max-w-[640px] pr-12 font-serif text-[2.35rem] font-bold leading-[0.98] tracking-[-0.04em] text-[#17351f] md:pr-0 md:text-6xl">
+              <h2 id="live-direct-title" className="max-w-[640px] pr-12 font-serif text-[2.35rem] font-bold leading-[0.98] tracking-[-0.04em] text-[#17351f] md:pr-0 md:text-5xl xl:text-6xl">
                 {data.title}
               </h2>
-              <p className="mt-4 max-w-2xl text-[15px] leading-7 text-stone-700 md:text-lg md:leading-8">
+              <p className="mt-3 max-w-2xl text-[15px] leading-7 text-stone-700 md:text-lg md:leading-8">
                 {copy.subtitle}
               </p>
             </div>
@@ -767,7 +756,7 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
             </label>
           </div>
 
-          <div className="mt-6">
+          <div className="mt-5">
             {loading ? <div className="rounded-3xl bg-white p-6 text-sm font-bold text-stone-600 ring-1 ring-amber-900/10">{data.widget.loadingText}</div> : null}
             {error ? <div className="rounded-3xl bg-white p-6 text-sm font-bold text-stone-600 ring-1 ring-amber-900/10">{error}</div> : null}
             {!loading && !error && !rooms.length ? <div className="rounded-3xl bg-white p-6 text-sm font-bold text-stone-600 ring-1 ring-amber-900/10">{copy.empty}</div> : null}
@@ -775,21 +764,21 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
               <div className="relative -mx-4 md:mx-0 lg:-mx-2">
                 <button
                   type="button"
-                  onClick={() => roomsScrollerRef.current?.scrollBy({ left: -330, behavior: "smooth" })}
-                  className="absolute left-3 top-[88px] z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-xl font-black text-[#17351f] shadow-lg ring-1 ring-amber-900/10 transition hover:scale-105 hover:bg-amber-50 md:left-4 md:top-[84px] md:h-11 md:w-11 md:text-2xl"
+                  onClick={() => roomsScrollerRef.current?.scrollBy({ left: -310, behavior: "smooth" })}
+                  className="absolute left-3 top-[76px] z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-xl font-black text-[#17351f] shadow-lg ring-1 ring-amber-900/10 transition hover:scale-105 hover:bg-amber-50 md:left-4 md:top-[67px] md:h-10 md:w-10 md:text-2xl"
                   aria-label="Show previous available rooms"
                 >
                   ←
                 </button>
                 <button
                   type="button"
-                  onClick={() => roomsScrollerRef.current?.scrollBy({ left: 330, behavior: "smooth" })}
-                  className="absolute right-3 top-[88px] z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-xl font-black text-[#17351f] shadow-lg ring-1 ring-amber-900/10 transition hover:scale-105 hover:bg-amber-50 md:right-4 md:top-[84px] md:h-11 md:w-11 md:text-2xl"
+                  onClick={() => roomsScrollerRef.current?.scrollBy({ left: 310, behavior: "smooth" })}
+                  className="absolute right-3 top-[76px] z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-xl font-black text-[#17351f] shadow-lg ring-1 ring-amber-900/10 transition hover:scale-105 hover:bg-amber-50 md:right-4 md:top-[67px] md:h-10 md:w-10 md:text-2xl"
                   aria-label="Show more available rooms"
                 >
                   →
                 </button>
-                <div ref={roomsScrollerRef} className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-5 pr-14 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:gap-4 md:px-2 md:pr-16 xl:gap-5">
+                <div ref={roomsScrollerRef} className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-4 pr-14 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:gap-4 md:px-2 md:pr-16 xl:gap-5">
                   {rooms.map((room, index) => (
                     <RoomCard
                       key={roomKey(room)}
@@ -811,35 +800,51 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
           </div>
 
           {selectedRoom ? (
-            <div className="mt-0 hidden gap-4 rounded-[1.45rem] bg-white p-4 shadow-sm ring-1 ring-amber-900/10 md:grid md:grid-cols-[240px_1fr]">
-              <div className="relative min-h-[180px] overflow-hidden rounded-[1.1rem] bg-stone-100">
+            <div className="mt-1 hidden gap-4 rounded-[1.45rem] bg-white p-3 shadow-sm ring-1 ring-amber-900/10 md:grid md:grid-cols-[170px_minmax(0,1fr)_210px] md:items-center lg:grid-cols-[190px_minmax(0,1fr)_230px]">
+              <div className="relative h-[145px] overflow-hidden rounded-[1.05rem] bg-stone-100 lg:h-[155px]">
                 <Image
                   src={selectedRoom.images[0]}
                   alt={`${localizeRoomName(selectedRoom.displayName, copy)} ${localizeRoomType(selectedRoom.type, copy)}`}
                   fill
-                  sizes="240px"
+                  sizes="190px"
                   className="scale-110 object-cover object-center"
                 />
               </div>
-              <div className="min-w-0 self-center">
+              <div className="min-w-0 py-1">
                 <span className="inline-flex rounded-full bg-amber-50 px-3 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-amber-800 ring-1 ring-amber-900/10">{localizeBadge(selectedRoom.primaryBadge, copy)}</span>
-                <h3 className="mt-2 font-serif text-3xl font-bold leading-tight text-stone-950">{localizeRoomName(selectedRoom.displayName, copy)}</h3>
-                <p className="mt-1 font-bold text-amber-800">{localizeRoomType(selectedRoom.type, copy)}</p>
-                <div className="mt-3"><SalesBadges copy={copy} /></div>
-                <div className="mt-3 flex flex-wrap gap-2">
+                <h3 className="mt-1.5 font-serif text-2xl font-bold leading-tight text-stone-950 lg:text-3xl">{localizeRoomName(selectedRoom.displayName, copy)}</h3>
+                <p className="mt-0.5 font-bold text-amber-800">{localizeRoomType(selectedRoom.type, copy)}</p>
+                <div className="mt-2"><SalesBadges copy={copy} /></div>
+                <div className="mt-2 flex flex-wrap gap-1.5">
                   {selectedRoom.featureBadges.map((badge) => (
-                    <span key={badge} className="rounded-md bg-stone-100/90 px-3 py-1.5 text-xs font-bold text-stone-700 ring-1 ring-stone-200">{localizeBadge(badge, copy)}</span>
+                    <span key={badge} className="rounded-md bg-stone-100/90 px-2.5 py-1 text-[11px] font-bold text-stone-700 ring-1 ring-stone-200">{localizeBadge(badge, copy)}</span>
                   ))}
                 </div>
-                <p className="mt-4 max-w-2xl text-sm leading-6 text-stone-600">
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-stone-600">
                   {copy.selectedText}
                 </p>
+              </div>
+              <div className="rounded-[1.1rem] bg-[#f8f1e4] p-4 text-center ring-1 ring-amber-900/10">
+                <div className="text-[10px] font-black uppercase tracking-[0.14em] text-stone-500">
+                  {copy.directOffer}
+                </div>
+                {totals ? (
+                  <>
+                    <div className="mt-1 text-[11px] font-bold text-stone-500">{totals.nights} {totals.nights === 1 ? copy.night : copy.nights}</div>
+                    <div className="mt-2 flex items-end justify-center gap-2">
+                      <span className="text-sm font-black text-red-600 line-through">{money(totals.original)}</span>
+                      <strong className="text-3xl font-black leading-none text-emerald-700">{money(totals.direct)}</strong>
+                    </div>
+                  </>
+                ) : (
+                  <strong className="mt-2 block text-2xl font-black text-[#17351f]">{money(minDirectPrice(deals, selectedRoom, guests) || 0)}</strong>
+                )}
               </div>
             </div>
           ) : null}
 
           {selectedRoom && visibleDays.length ? (
-            <div className="mt-3 flex snap-x gap-2 overflow-x-auto pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:gap-3">
+            <div className="mt-3 flex snap-x gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:gap-2.5">
               {visibleDays.map((day) => {
                 const info = getNightInfo(deals, selectedRoom, day.checkin, guests);
                 return <DateChip key={day.checkin} day={day.checkin} info={info} active={selectedDates.includes(day.checkin)} onClick={() => handleDateClick(day.checkin)} copy={copy} />;
@@ -848,19 +853,19 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
           ) : null}
 
           {totals ? (
-            <div className="mt-2 rounded-[1.25rem] bg-white px-4 py-3 text-center shadow-sm ring-1 ring-amber-900/10 md:rounded-[1.4rem] md:py-4">
-              <div className="text-[11px] font-black uppercase tracking-[0.14em] text-stone-500 md:text-xs">
+            <div className="mt-2 rounded-[1.25rem] bg-white px-4 py-2.5 text-center shadow-sm ring-1 ring-amber-900/10 md:rounded-[1.4rem] md:py-3">
+              <div className="text-[10px] font-black uppercase tracking-[0.14em] text-stone-500 md:text-xs">
                 {selectedRoom ? localizeRoomName(selectedRoom.displayName, copy) : "-"} · {copy.directOffer} · {totals.nights} {totals.nights === 1 ? copy.night : copy.nights}
               </div>
               <div className="mt-1 text-[11px] font-bold text-stone-500 md:text-xs">{selectedDateLabel}</div>
-              <div className="mt-1.5 flex items-end justify-center gap-3">
+              <div className="mt-1 flex items-end justify-center gap-3">
                 <span className="text-base font-black text-red-600 line-through md:text-lg">{money(totals.original)}</span>
                 <strong className="text-2xl font-black text-emerald-700 md:text-3xl">{money(totals.direct)}</strong>
               </div>
             </div>
           ) : null}
 
-          <div className="mt-3 grid grid-cols-4 gap-0 rounded-[1.25rem] bg-white p-3 text-center shadow-sm ring-1 ring-amber-900/10 md:rounded-[1.4rem] md:p-4">
+          <div className="mt-3 grid grid-cols-4 gap-0 rounded-[1.25rem] bg-white p-2.5 text-center shadow-sm ring-1 ring-amber-900/10 md:rounded-[1.4rem] md:p-3">
             {copy.trustItems.map((item) => (
               <div key={item.title} className="border-r border-stone-200 px-1 text-[9px] font-semibold leading-4 text-stone-800 last:border-r-0 md:text-xs md:leading-5">
                 <span className="mb-1 flex justify-center" aria-hidden="true"><TrustIcon type={item.icon} /></span>
