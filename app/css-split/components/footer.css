@@ -244,8 +244,9 @@
   }
 
   .vh-footer__nav {
-    grid-template-columns: 1fr;
-    gap: 26px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 28px;
+    row-gap: 34px;
   }
 
   .vh-footer__brand p {
@@ -255,7 +256,7 @@
 
   .vh-footer__cta-row {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .vh-footer__primary,
@@ -266,6 +267,14 @@
   .vh-footer__bottom {
     flex-direction: column;
     align-items: flex-start;
-    padding: 20px 0 24px;
+    padding: 20px 0 120px;
+  }
+
+  .uwy,
+  .userway_buttons_wrapper,
+  [id*="userway"],
+  [class*="userway"] {
+    bottom: 102px !important;
+    right: 12px !important;
   }
 }
