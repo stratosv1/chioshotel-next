@@ -1,0 +1,123 @@
+/* =========================================================
+   ROOM DETAIL — FLOOR GROUPS FOR STANDARD / ECONOMY ROOMS
+   Scoped to RoomDetailPage grouped sections only.
+   ========================================================= */
+
+.rd-section--grouped {
+  padding-top: 0;
+}
+
+.rd-floor-groups {
+  display: grid;
+  gap: 34px;
+}
+
+.rd-floor-group {
+  min-width: 0;
+  padding: 22px;
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at top left, rgba(168, 120, 66, 0.12), transparent 22rem),
+    rgba(255, 253, 250, 0.84);
+  border: 1px solid rgba(142, 102, 7, 0.14);
+  box-shadow: 0 16px 42px rgba(47, 38, 31, 0.08);
+}
+
+.rd-floor-head {
+  margin-bottom: 18px;
+}
+
+.rd-floor-head h3 {
+  margin: 0;
+  color: var(--rd-dark);
+  font-size: clamp(28px, 3.4vw, 44px);
+  line-height: 1;
+  font-weight: 950;
+  letter-spacing: -0.05em;
+}
+
+.rd-floor-head p {
+  max-width: 760px;
+  margin: 10px 0 0;
+  color: var(--rd-text);
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.rd-individual-list--carousel {
+  gap: 18px;
+}
+
+.rd-individual-list--carousel .rd-room-card {
+  min-width: 0;
+}
+
+@media (min-width: 901px) {
+  .rd-individual-list--carousel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .rd-individual-list--carousel .rd-room-card {
+    grid-template-columns: 1fr;
+  }
+
+  .rd-individual-list--carousel .rd-room-card__media {
+    grid-template-rows: auto auto;
+  }
+
+  .rd-individual-list--carousel .rd-room-main-image img {
+    min-height: 0;
+    aspect-ratio: 4 / 3;
+  }
+}
+
+@media (max-width: 767px) {
+  .rd-floor-groups {
+    gap: 24px;
+  }
+
+  .rd-floor-group {
+    padding: 16px 0 18px 16px;
+    border-radius: 28px;
+  }
+
+  .rd-floor-head {
+    padding-right: 16px;
+    margin-bottom: 14px;
+  }
+
+  .rd-floor-head h3 {
+    font-size: 28px;
+    line-height: 1.04;
+  }
+
+  .rd-floor-head p {
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+
+  .rd-individual-list--carousel {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    padding-right: 16px;
+    padding-bottom: 6px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .rd-individual-list--carousel::-webkit-scrollbar {
+    display: none;
+  }
+
+  .rd-individual-list--carousel .rd-room-card {
+    width: min(84vw, 370px);
+    flex: 0 0 min(84vw, 370px);
+    scroll-snap-align: start;
+  }
+
+  .rd-individual-list--carousel .rd-room-card h3 {
+    font-size: 30px;
+  }
+}
