@@ -1,1 +1,126 @@
-.welcome-mobile-carousel-placeholder{display:block}
+@media (max-width: 767px){
+  main > div > header + section div.mt-5.grid{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:10px!important;
+  }
+
+  main > div > header + section div.mt-5.grid > a{
+    min-height:104px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:center!important;
+    justify-content:center!important;
+    padding:10px 6px!important;
+    border-radius:18px!important;
+    text-align:center!important;
+  }
+
+  main > div > header + section div.mt-5.grid > a > span:first-child{
+    width:40px!important;
+    height:40px!important;
+    margin:0 0 8px!important;
+    font-size:10px!important;
+    border-radius:16px!important;
+  }
+
+  main > div > header + section div.mt-5.grid > a > span:last-child{
+    font-size:12px!important;
+    line-height:1.12!important;
+  }
+
+  #wifi div.mt-5.grid,
+  #delivery div.mt-5.grid,
+  #nearby-thymiana div.mt-5.grid,
+  #marmalade div.mt-5.grid,
+  #house-rules div.mt-5.grid{
+    position:relative!important;
+    display:flex!important;
+    gap:14px!important;
+    overflow-x:auto!important;
+    margin-left:-20px!important;
+    margin-right:-20px!important;
+    padding:44px 54px 8px 20px!important;
+    scroll-snap-type:x mandatory!important;
+    -webkit-overflow-scrolling:touch!important;
+    scrollbar-width:none!important;
+  }
+
+  #wifi div.mt-5.grid::-webkit-scrollbar,
+  #delivery div.mt-5.grid::-webkit-scrollbar,
+  #nearby-thymiana div.mt-5.grid::-webkit-scrollbar,
+  #marmalade div.mt-5.grid::-webkit-scrollbar,
+  #house-rules div.mt-5.grid::-webkit-scrollbar{
+    display:none!important;
+  }
+
+  #wifi div.mt-5.grid:before,
+  #delivery div.mt-5.grid:before,
+  #nearby-thymiana div.mt-5.grid:before,
+  #marmalade div.mt-5.grid:before,
+  #house-rules div.mt-5.grid:before{
+    content:"Swipe for more";
+    position:absolute;
+    top:0;
+    left:20px;
+    z-index:2;
+    display:inline-flex;
+    align-items:center;
+    min-height:32px;
+    padding:0 12px;
+    border-radius:999px;
+    background:#0f172a;
+    color:#fff;
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+  }
+
+  html[lang="el"] #wifi div.mt-5.grid:before,
+  html[lang="el"] #delivery div.mt-5.grid:before,
+  html[lang="el"] #nearby-thymiana div.mt-5.grid:before,
+  html[lang="el"] #marmalade div.mt-5.grid:before,
+  html[lang="el"] #house-rules div.mt-5.grid:before{
+    content:"Σύρε για περισσότερα";
+  }
+
+  #wifi div.mt-5.grid:after,
+  #delivery div.mt-5.grid:after,
+  #nearby-thymiana div.mt-5.grid:after,
+  #marmalade div.mt-5.grid:after,
+  #house-rules div.mt-5.grid:after{
+    content:"›";
+    position:sticky;
+    right:8px;
+    z-index:3;
+    align-self:center;
+    display:grid;
+    place-items:center;
+    flex:0 0 44px;
+    width:44px;
+    height:44px;
+    margin-left:-44px;
+    border-radius:999px;
+    background:#0f172a;
+    color:#fff;
+    font-size:34px;
+    font-weight:900;
+    box-shadow:0 14px 32px rgba(15,23,42,.22);
+    pointer-events:none;
+  }
+
+  #wifi div.mt-5.grid > article,
+  #delivery div.mt-5.grid > article,
+  #nearby-thymiana div.mt-5.grid > article,
+  #marmalade div.mt-5.grid > article,
+  #house-rules div.mt-5.grid > article{
+    width:min(82vw,360px)!important;
+    min-width:min(82vw,360px)!important;
+    flex:0 0 min(82vw,360px)!important;
+    scroll-snap-align:start!important;
+    border-radius:24px!important;
+    background:#f8fafc!important;
+    border:1px solid rgba(15,23,42,.08)!important;
+    box-shadow:0 12px 30px rgba(15,23,42,.08)!important;
+  }
+}
