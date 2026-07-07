@@ -57,7 +57,6 @@ const goneExactPaths = new Set([
   "/el/albums",
   "/test-2",
   "/privacy-policy",
-  "/favicon/site.webmanifest",
 ]);
 
 function normalizePath(pathname: string) {
