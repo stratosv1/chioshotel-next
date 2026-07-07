@@ -54,11 +54,15 @@ export function LazyLastMinuteDeals({
   }, [shouldLoad]);
 
   if (shouldLoad) {
-    return <LiveDirectRequestClient data={data} canonicalPath={canonicalPath} />;
+    return (
+      <div id="vh-lastminute-title" ref={rootRef} className="scroll-mt-24 md:scroll-mt-28">
+        <LiveDirectRequestClient data={data} canonicalPath={canonicalPath} />
+      </div>
+    );
   }
 
   return (
-    <div ref={rootRef}>
+    <div id="vh-lastminute-title" ref={rootRef} className="scroll-mt-24 md:scroll-mt-28">
       <section className="px-4 py-12 md:px-8 md:py-18" aria-labelledby="live-direct-placeholder-title">
         <div className="mx-auto max-w-7xl rounded-[2rem] border border-amber-900/10 bg-[#fffaf3] p-6 text-center shadow-lg shadow-stone-900/5 md:p-10">
           <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] text-amber-700">{data.kicker}</p>
