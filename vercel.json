@@ -1,0 +1,29 @@
+{
+  "redirects": [
+    {
+      "source": "/our-rooms/",
+      "destination": "/chios-rooms/",
+      "permanent": true
+    },
+    {
+      "source": "/reservations/",
+      "destination": "/chios-hotels-rates/",
+      "permanent": true
+    },
+    {
+      "source": "/domatia-xios/",
+      "destination": "/el/domatia-xios/",
+      "permanent": true
+    },
+    {
+      "source": "/chios-rooms/double-triple-rooms/",
+      "destination": "/chios-rooms/standard-double-room/",
+      "permanent": true
+    },
+    {
+      "source": "/chios-rooms/economy-double-room/",
+      "destination": "/chios-rooms/economy-double-rooms/",
+      "permanent": true
+    }
+  ]
+}
