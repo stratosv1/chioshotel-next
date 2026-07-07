@@ -6,6 +6,7 @@ import type { IndividualRoomData, RoomDetailData } from "@/content/room-details"
 
 type RoomDetailPageProps = { data: RoomDetailData };
 type RoomLanguage = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
+type FloorKind = "ground" | "first" | "other";
 
 function getRoomLanguage(path: string): RoomLanguage {
   if (path.startsWith("/el/")) return "el";
@@ -124,28 +125,29 @@ function shouldGroupRoomsByFloor(data: RoomDetailData) {
   return data.id === "standard-double-room" || data.id === "economy-double-rooms";
 }
 
+function getFloorKind(room: IndividualRoomData): FloorKind {
+  const location = room.location.trim().toLowerCase();
+  const values = [location, ...room.badges.map((badge) => badge.trim().toLowerCase())];
+
+  if (values.some((value) => ["ground floor", "ισόγειο", "rez-de-chaussée", "erdgeschoss", "piano terra", "planta baja", "zemin kat"].includes(value))) {
+    return "ground";
+  }
+
+  if (values.some((value) => ["first floor", "πρώτος όροφος", "premier étage", "erster stock", "primo piano", "primera planta", "birinci kat"].includes(value))) {
+    return "first";
+  }
+
+  return "other";
+}
+
 function RoomGallery({ data }: { data: RoomDetailData }) {
   const [activeImage, setActiveImage] = useState(data.gallery.images[0]);
 
   return (
     <section className="rd-section rd-section--gallery" aria-labelledby="rd-gallery-title">
       <div className="rd-wrap">
-        <header className="rd-section-head">
-          <span className="rd-kicker">{data.gallery.kicker}</span>
-          <h2 id="rd-gallery-title">{data.gallery.title}</h2>
-        </header>
-        <div className="rd-gallery">
-          <div className="rd-gallery-main">
-            <Image src={activeImage.src} alt={activeImage.alt} width={1200} height={800} sizes="(max-width: 768px) 100vw, 900px" />
-          </div>
-          <div className="rd-gallery-thumbs" aria-label="Room gallery thumbnails">
-            {data.gallery.images.map((image, index) => (
-              <button type="button" className={`rd-gallery-thumb ${activeImage.src === image.src ? "is-active" : ""}`} key={image.src} onClick={() => setActiveImage(image)} aria-label={`Show photo ${index + 1}`}>
-                <Image src={image.src} alt={image.alt} width={220} height={150} sizes="110px" />
-              </button>
-            ))}
-          </div>
-        </div>
+        <header className="rd-section-head"><span className="rd-kicker">{data.gallery.kicker}</span><h2 id="rd-gallery-title">{data.gallery.title}</h2></header>
+        <div className="rd-gallery"><div className="rd-gallery-main"><Image src={activeImage.src} alt={activeImage.alt} width={1200} height={800} sizes="(max-width: 768px) 100vw, 900px" /></div><div className="rd-gallery-thumbs" aria-label="Room gallery thumbnails">{data.gallery.images.map((image, index) => <button type="button" className={`rd-gallery-thumb ${activeImage.src === image.src ? "is-active" : ""}`} key={image.src} onClick={() => setActiveImage(image)} aria-label={`Show photo ${index + 1}`}><Image src={image.src} alt={image.alt} width={220} height={150} sizes="110px" /></button>)}</div></div>
       </div>
     </section>
   );
@@ -157,37 +159,8 @@ function IndividualRoomCard({ room, language }: { room: IndividualRoomData; lang
 
   return (
     <article className="rd-room-card">
-      <div className="rd-room-card__media">
-        <div className="rd-room-main-image">
-          <Image src={activeImage.src} alt={activeImage.alt} width={900} height={600} sizes="(max-width: 768px) 84vw, 640px" />
-          <span>{localizeRoomText(activeImage.caption, language)}</span>
-        </div>
-        <div className="rd-room-thumbs" aria-label={`${room.name} photos`}>
-          {room.images.map((image, index) => (
-            <button type="button" className={`rd-room-thumb ${activeImage.src === image.src ? "is-active" : ""}`} key={image.src} onClick={() => setActiveImage(image)} aria-label={`Show ${room.name} photo ${index + 1}`}>
-              <Image src={image.src} alt={image.alt} width={220} height={150} sizes="110px" />
-            </button>
-          ))}
-        </div>
-      </div>
-      <div className="rd-room-card__body">
-        <div className="rd-room-topline">
-          <span>{localizeRoomText(room.location, language)}</span>
-          <strong>{labels.upToGuests(room.maxGuests)}</strong>
-        </div>
-        <h3>{room.name}</h3>
-        <p className="rd-room-type">{localizeRoomText(room.type, language)}</p>
-        <p className="rd-room-description">{room.description}</p>
-        <div className="rd-room-badges" aria-label={`${room.name} highlights`}>
-          {room.badges.map((badge) => <span key={badge}>{localizeRoomText(badge, language)}</span>)}
-        </div>
-        <div className="rd-room-beds" aria-label={`${room.name} beds`}>
-          {room.beds.map((bed) => <span key={bed}>🛏️ {localizeRoomText(bed, language)}</span>)}
-        </div>
-        <div className="rd-room-amenities" aria-label={`${room.name} amenities`}>
-          {room.amenities.map((amenity) => <span key={`${amenity.icon}-${amenity.label}`}>{amenity.icon} {localizeRoomText(amenity.label, language)}</span>)}
-        </div>
-      </div>
+      <div className="rd-room-card__media"><div className="rd-room-main-image"><Image src={activeImage.src} alt={activeImage.alt} width={900} height={600} sizes="(max-width: 768px) 84vw, 640px" /><span>{localizeRoomText(activeImage.caption, language)}</span></div><div className="rd-room-thumbs" aria-label={`${room.name} photos`}>{room.images.map((image, index) => <button type="button" className={`rd-room-thumb ${activeImage.src === image.src ? "is-active" : ""}`} key={image.src} onClick={() => setActiveImage(image)} aria-label={`Show ${room.name} photo ${index + 1}`}><Image src={image.src} alt={image.alt} width={220} height={150} sizes="110px" /></button>)}</div></div>
+      <div className="rd-room-card__body"><div className="rd-room-topline"><span>{localizeRoomText(room.location, language)}</span><strong>{labels.upToGuests(room.maxGuests)}</strong></div><h3>{room.name}</h3><p className="rd-room-type">{localizeRoomText(room.type, language)}</p><p className="rd-room-description">{room.description}</p><div className="rd-room-badges" aria-label={`${room.name} highlights`}>{room.badges.map((badge) => <span key={badge}>{localizeRoomText(badge, language)}</span>)}</div><div className="rd-room-beds" aria-label={`${room.name} beds`}>{room.beds.map((bed) => <span key={bed}>🛏️ {localizeRoomText(bed, language)}</span>)}</div><div className="rd-room-amenities" aria-label={`${room.name} amenities`}>{room.amenities.map((amenity) => <span key={`${amenity.icon}-${amenity.label}`}>{amenity.icon} {localizeRoomText(amenity.label, language)}</span>)}</div></div>
     </article>
   );
 }
@@ -195,17 +168,7 @@ function IndividualRoomCard({ room, language }: { room: IndividualRoomData; lang
 function FloorRoomGroup({ title, text, rooms, language }: { title: string; text: string; rooms: IndividualRoomData[]; language: RoomLanguage }) {
   if (!rooms.length) return null;
 
-  return (
-    <section className="rd-floor-group" aria-label={title}>
-      <header className="rd-floor-head">
-        <h3>{title}</h3>
-        <p>{text}</p>
-      </header>
-      <div className="rd-individual-list rd-individual-list--carousel">
-        {rooms.map((room) => <IndividualRoomCard room={room} language={language} key={room.id} />)}
-      </div>
-    </section>
-  );
+  return <section className="rd-floor-group" aria-label={title}><header className="rd-floor-head"><h3>{title}</h3><p>{text}</p></header><div className="rd-individual-list rd-individual-list--carousel">{rooms.map((room) => <IndividualRoomCard room={room} language={language} key={room.id} />)}</div></section>;
 }
 
 function IndividualRoomsSection({ data }: { data: RoomDetailData }) {
@@ -215,40 +178,18 @@ function IndividualRoomsSection({ data }: { data: RoomDetailData }) {
   if (!data.individualRooms.rooms.length) return null;
 
   if (shouldGroupRoomsByFloor(data)) {
-    const groundFloorRooms = data.individualRooms.rooms.filter((room) => room.location === "Ground floor");
-    const firstFloorRooms = data.individualRooms.rooms.filter((room) => room.location === "First floor");
+    const groundFloorRooms = data.individualRooms.rooms.filter((room) => getFloorKind(room) === "ground");
+    const firstFloorRooms = data.individualRooms.rooms.filter((room) => getFloorKind(room) === "first");
+    const otherRooms = data.individualRooms.rooms.filter((room) => getFloorKind(room) === "other");
 
     return (
       <section className="rd-section rd-section--individual rd-section--grouped" aria-labelledby="rd-individual-title">
-        <div className="rd-wrap">
-          <header className="rd-section-head">
-            <span className="rd-kicker">{data.individualRooms.kicker}</span>
-            <h2 id="rd-individual-title">{data.individualRooms.title}</h2>
-            <p>{data.individualRooms.description}</p>
-          </header>
-          <div className="rd-floor-groups">
-            <FloorRoomGroup title={sectionLabels.groundTitle} text={sectionLabels.groundText} rooms={groundFloorRooms} language={language} />
-            <FloorRoomGroup title={sectionLabels.firstTitle} text={sectionLabels.firstText} rooms={firstFloorRooms} language={language} />
-          </div>
-        </div>
+        <div className="rd-wrap"><header className="rd-section-head"><span className="rd-kicker">{data.individualRooms.kicker}</span><h2 id="rd-individual-title">{data.individualRooms.title}</h2><p>{data.individualRooms.description}</p></header><div className="rd-floor-groups"><FloorRoomGroup title={sectionLabels.groundTitle} text={sectionLabels.groundText} rooms={groundFloorRooms} language={language} /><FloorRoomGroup title={sectionLabels.firstTitle} text={sectionLabels.firstText} rooms={firstFloorRooms} language={language} />{otherRooms.length ? <div className="rd-individual-list rd-individual-list--carousel">{otherRooms.map((room) => <IndividualRoomCard room={room} language={language} key={room.id} />)}</div> : null}</div></div>
       </section>
     );
   }
 
-  return (
-    <section className="rd-section rd-section--individual" aria-labelledby="rd-individual-title">
-      <div className="rd-wrap">
-        <header className="rd-section-head">
-          <span className="rd-kicker">{data.individualRooms.kicker}</span>
-          <h2 id="rd-individual-title">{data.individualRooms.title}</h2>
-          <p>{data.individualRooms.description}</p>
-        </header>
-        <div className="rd-individual-list">
-          {data.individualRooms.rooms.map((room) => <IndividualRoomCard room={room} language={language} key={room.id} />)}
-        </div>
-      </div>
-    </section>
-  );
+  return <section className="rd-section rd-section--individual" aria-labelledby="rd-individual-title"><div className="rd-wrap"><header className="rd-section-head"><span className="rd-kicker">{data.individualRooms.kicker}</span><h2 id="rd-individual-title">{data.individualRooms.title}</h2><p>{data.individualRooms.description}</p></header><div className="rd-individual-list">{data.individualRooms.rooms.map((room) => <IndividualRoomCard room={room} language={language} key={room.id} />)}</div></div></section>;
 }
 
 export function RoomDetailPage({ data }: RoomDetailPageProps) {
@@ -258,35 +199,10 @@ export function RoomDetailPage({ data }: RoomDetailPageProps) {
 
   return (
     <main className="room-detail-page">
-      <section className="rd-hero" aria-labelledby="rd-hero-title">
-        <div className="rd-hero-media" aria-hidden="true"><Image src={data.hero.image} alt="" fill priority fetchPriority="high" sizes="100vw" /></div>
-        <div className="rd-hero-overlay" />
-        <div className="rd-hero-inner">
-          <div className="rd-hero-card">
-            <span className="rd-kicker rd-kicker--light">{data.hero.kicker}</span>
-            <h1 id="rd-hero-title">{data.hero.title}</h1>
-            <p className="rd-hero-subtitle">{data.hero.subtitle}</p>
-            <p className="rd-hero-description">{data.hero.description}</p>
-            <div className="rd-hero-badges" aria-label="Room highlights">{data.hero.badges.map((badge) => <span key={badge}>{localizeRoomText(badge, language)}</span>)}</div>
-            <div className="rd-hero-actions"><a className="rd-btn rd-btn--primary" href={data.hero.primaryCta.href}>{data.hero.primaryCta.label}</a><a className="rd-btn rd-btn--secondary" href={data.hero.secondaryCta.href}>{data.hero.secondaryCta.label}</a></div>
-          </div>
-        </div>
-      </section>
-
-      <section className="rd-section rd-section--overview" aria-labelledby="rd-overview-title">
-        <div className="rd-wrap rd-overview-grid">
-          <article className="rd-overview-copy">
-            <span className="rd-kicker">{data.overview.kicker}</span>
-            <h2 id="rd-overview-title">{data.overview.title}</h2>
-            {data.overview.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-          </article>
-          <aside className="rd-highlight-panel" aria-label="Room key details">{data.overview.highlights.map((highlight) => <div className="rd-highlight-item" key={highlight.label}><span>{highlight.label}</span><strong>{localizeRoomText(highlight.value, language)}</strong></div>)}</aside>
-        </div>
-      </section>
-
+      <section className="rd-hero" aria-labelledby="rd-hero-title"><div className="rd-hero-media" aria-hidden="true"><Image src={data.hero.image} alt="" fill priority fetchPriority="high" sizes="100vw" /></div><div className="rd-hero-overlay" /><div className="rd-hero-inner"><div className="rd-hero-card"><span className="rd-kicker rd-kicker--light">{data.hero.kicker}</span><h1 id="rd-hero-title">{data.hero.title}</h1><p className="rd-hero-subtitle">{data.hero.subtitle}</p><p className="rd-hero-description">{data.hero.description}</p><div className="rd-hero-badges" aria-label="Room highlights">{data.hero.badges.map((badge) => <span key={badge}>{localizeRoomText(badge, language)}</span>)}</div><div className="rd-hero-actions"><a className="rd-btn rd-btn--primary" href={data.hero.primaryCta.href}>{data.hero.primaryCta.label}</a><a className="rd-btn rd-btn--secondary" href={data.hero.secondaryCta.href}>{data.hero.secondaryCta.label}</a></div></div></div></section>
+      <section className="rd-section rd-section--overview" aria-labelledby="rd-overview-title"><div className="rd-wrap rd-overview-grid"><article className="rd-overview-copy"><span className="rd-kicker">{data.overview.kicker}</span><h2 id="rd-overview-title">{data.overview.title}</h2>{data.overview.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</article><aside className="rd-highlight-panel" aria-label="Room key details">{data.overview.highlights.map((highlight) => <div className="rd-highlight-item" key={highlight.label}><span>{highlight.label}</span><strong>{localizeRoomText(highlight.value, language)}</strong></div>)}</aside></div></section>
       {showMixedGallery ? <RoomGallery data={data} /> : null}
       <IndividualRoomsSection data={data} />
-
       <section className="rd-section" aria-labelledby="rd-amenities-title"><div className="rd-wrap"><header className="rd-section-head"><span className="rd-kicker">{data.amenities.kicker}</span><h2 id="rd-amenities-title">{data.amenities.title}</h2></header><div className="rd-amenities-grid">{data.amenities.items.map((item) => <article className="rd-amenity-card" key={item.label}><div className="rd-amenity-icon" aria-hidden="true">{item.icon}</div><div><h3>{localizeRoomText(item.label, language)}</h3><p>{item.text}</p></div></article>)}</div></div></section>
       <section className="rd-section rd-section--best" aria-labelledby="rd-best-title"><div className="rd-wrap rd-best-grid"><article><span className="rd-kicker">{data.bestFor.kicker}</span><h2 id="rd-best-title">{data.bestFor.title}</h2></article><div className="rd-best-list">{data.bestFor.items.map((item) => <div className="rd-best-item" key={item}><span aria-hidden="true">✓</span><p>{item}</p></div>)}</div></div></section>
       <section className="rd-section rd-section--booking" aria-labelledby="rd-booking-title"><div className="rd-wrap"><div className="rd-booking-card"><div><span className="rd-kicker rd-kicker--light">{data.booking.kicker}</span><h2 id="rd-booking-title">{data.booking.title}</h2><p>{data.booking.text}</p><small>{data.booking.note}</small></div><div className="rd-booking-actions"><a className="rd-btn rd-btn--primary" href={data.booking.whatsappHref}>{data.booking.whatsappLabel}</a><a className="rd-btn rd-btn--secondary" href={data.booking.phoneHref}>{data.booking.phoneLabel}</a></div></div></div></section>
