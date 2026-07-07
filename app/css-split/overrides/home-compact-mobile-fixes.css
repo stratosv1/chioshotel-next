@@ -11,6 +11,30 @@
     overflow-wrap: anywhere !important;
   }
 
+  a[href*="chios-rooms"]:has(+ a[href*="chios-rooms"]),
+  a[href*="domatia-xios"]:has(+ a[href*="domatia-xios"]) {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    min-height: 48px !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    font-size: 11px !important;
+    letter-spacing: 0.06em !important;
+    white-space: nowrap !important;
+  }
+
+  a[href*="chios-rooms"]:has(+ a[href*="chios-rooms"]) + a[href*="chios-rooms"],
+  a[href*="domatia-xios"]:has(+ a[href*="domatia-xios"]) + a[href*="domatia-xios"] {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    min-height: 48px !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    font-size: 11px !important;
+    letter-spacing: 0.06em !important;
+    white-space: nowrap !important;
+  }
+
   main > section:last-of-type {
     padding-top: 16px !important;
     padding-bottom: 88px !important;
