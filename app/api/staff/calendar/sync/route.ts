@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { neon } from "@neondatabase/serverless";
 
 export const runtime = "nodejs";
@@ -18,12 +18,15 @@ function unauthorized() {
 }
 
 function isAuthorized(request: NextRequest) {
+  const cronSecret = text(process.env.CRON_SECRET);
+  const auth = request.headers.get("authorization");
+
+  if (cronSecret && auth === `Bearer ${cronSecret}`) return true;
+
   const expectedUser = process.env.STAFF_USERNAME;
   const expectedPass = process.env.STAFF_PASSWORD;
 
   if (!expectedUser || !expectedPass) return false;
-
-  const auth = request.headers.get("authorization");
   if (!auth?.startsWith("Basic ")) return false;
 
   try {
@@ -407,6 +410,7 @@ export async function POST(request: NextRequest) {
         saved,
         skipped,
         durationMs,
+        generatedAt: new Date().toISOString(),
       },
       {
         headers: {
@@ -451,4 +455,3 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   return POST(request);
 }
-
