@@ -582,7 +582,7 @@ function DateChip({
       type="button"
       disabled={!info}
       onClick={onClick}
-      className={`relative flex h-[86px] w-[70px] flex-none snap-start flex-col justify-center rounded-2xl border px-1.5 py-2 text-center shadow-sm transition md:h-[94px] md:w-[86px] ${
+      className={`relative flex h-[86px] w-[70px] flex-none snap-start flex-col justify-center rounded-2xl border px-1.5 py-2 text-center shadow-sm transition md:h-[94px] md:w-full md:flex-auto ${
         active
           ? "border-[#17351f] bg-[#17351f] text-white shadow-lg shadow-emerald-950/15"
           : info
@@ -844,7 +844,7 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
           ) : null}
 
           {selectedRoom && visibleDays.length ? (
-            <div className="mt-3 flex snap-x gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:gap-2.5">
+            <div className="mt-3 flex snap-x gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-7 md:gap-3 md:overflow-visible md:pb-0">
               {visibleDays.map((day) => {
                 const info = getNightInfo(deals, selectedRoom, day.checkin, guests);
                 return <DateChip key={day.checkin} day={day.checkin} info={info} active={selectedDates.includes(day.checkin)} onClick={() => handleDateClick(day.checkin)} copy={copy} />;
