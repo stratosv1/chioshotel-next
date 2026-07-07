@@ -336,7 +336,7 @@ export function LiveDirectRequest({ data }: { data: LastMinuteData; canonicalPat
   }
 
   return (
-    <section className="px-4 py-8 md:px-8 md:py-16" aria-labelledby="live-direct-title">
+    <section className="px-4 py-8 md:px-8 md:pt-16 md:pb-8" aria-labelledby="live-direct-title">
       <div className="mx-auto max-w-7xl overflow-hidden rounded-[2rem] border border-amber-900/10 bg-[#fffaf3] shadow-2xl shadow-stone-900/10 md:rounded-[2.5rem]">
         <div className="min-w-0 p-4 md:p-8 lg:p-9">
           <div className="mb-4 flex justify-center rounded-full bg-amber-100/90 px-4 py-2.5 text-[10px] font-black uppercase tracking-[0.15em] text-amber-800 ring-1 ring-amber-900/10 md:inline-flex md:justify-start md:text-[11px]">
@@ -456,10 +456,10 @@ export function LiveDirectRequest({ data }: { data: LastMinuteData; canonicalPat
             ))}
           </div>
 
-          <div className="mt-4 grid gap-3 pb-28 md:grid-cols-3 md:pb-0">
-            <a href={smsHref} className="flex min-h-14 items-center justify-center rounded-2xl bg-[#17351f] px-5 text-center text-sm font-black uppercase tracking-[0.08em] text-white shadow-lg shadow-emerald-950/20 transition hover:-translate-y-0.5 hover:bg-[#224d2d]">Send SMS</a>
-            <a href={requestHref} target="_blank" rel="noopener noreferrer" className="flex min-h-14 items-center justify-center rounded-2xl border border-emerald-700/30 bg-white px-5 text-center text-sm font-black uppercase tracking-[0.08em] text-emerald-800 transition hover:bg-emerald-50">WhatsApp</a>
-            <a href={CONTACT.phoneHref} className="flex min-h-14 items-center justify-center rounded-2xl border border-stone-300 bg-white px-5 text-center text-sm font-black uppercase tracking-[0.08em] text-stone-800 transition hover:border-amber-700 hover:bg-amber-50">Call +30 22710 31733</a>
+          <div className="mt-4 grid gap-3 pb-10 md:grid-cols-3 md:pb-0">
+            <a href={requestHref} target="_blank" rel="noopener noreferrer" className="flex min-h-14 items-center justify-center rounded-2xl bg-[#17351f] px-5 text-center text-sm font-black uppercase tracking-[0.08em] !text-white shadow-lg shadow-emerald-950/20 transition hover:-translate-y-0.5 hover:bg-[#224d2d]">WhatsApp</a>
+            <a href={smsHref} className="flex min-h-14 items-center justify-center rounded-2xl border border-emerald-700/30 bg-white px-5 text-center text-sm font-black uppercase tracking-[0.08em] !text-emerald-800 transition hover:bg-emerald-50">Send SMS</a>
+            <a href={CONTACT.phoneHref} className="flex min-h-14 items-center justify-center rounded-2xl border border-stone-300 bg-white px-5 text-center text-sm font-black uppercase tracking-[0.08em] !text-stone-800 transition hover:border-amber-700 hover:bg-amber-50">Call +30 22710 31733</a>
           </div>
           <p className="mt-4 text-center text-xs font-semibold text-stone-500">Your instant request at chioshotel.gr</p>
         </div>
