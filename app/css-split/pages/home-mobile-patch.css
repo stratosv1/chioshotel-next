@@ -337,3 +337,26 @@
     text-align:center!important;
   }
 }
+
+main a[href="/tr/sakiz-adasi-tatil-testi/"]{
+  background:#b45309!important;
+  color:#fff!important;
+  border-color:#b45309!important;
+  min-height:52px!important;
+  white-space:normal!important;
+  overflow:visible!important;
+  line-height:1.25!important;
+  font-size:12px!important;
+  letter-spacing:.04em!important;
+  text-align:center!important;
+  box-shadow:0 18px 36px rgba(120,53,15,.22)!important;
+}
+
+main a[href="/tr/sakiz-adasi-tatil-testi/"]:hover{
+  background:#92400e!important;
+  color:#fff!important;
+}
+
+main a[href="/tr/sakiz-adasi-tatil-testi/"] *{
+  color:inherit!important;
+}
