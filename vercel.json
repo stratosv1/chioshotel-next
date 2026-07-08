@@ -1,4 +1,10 @@
 {
+  "crons": [
+    {
+      "path": "/api/staff/calendar/sheet-sync",
+      "schedule": "*/5 * * * *"
+    }
+  ],
   "redirects": [
     {
       "source": "/our-rooms/",
