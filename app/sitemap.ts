@@ -3,6 +3,8 @@ import { getBeachSlugs } from "@/content/beach-details";
 import { familyBeachPaths } from "@/content/family-beaches";
 import { organizedBeachPaths } from "@/content/organized-beaches";
 import { shelteredBeachPaths } from "@/content/sheltered-beaches";
+import { quietBeachPaths } from "@/content/quiet-beaches";
+import { nearbyBeachPaths } from "@/content/nearby-beaches";
 import { getVillageSlugs } from "@/content/village-details";
 import { getMuseumSlugs } from "@/content/museum-details";
 import { routeMap } from "@/lib/url-map";
@@ -44,6 +46,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
+  const quietBeachRoutes = Object.values(quietBeachPaths).map((path) => ({
+    url: absoluteUrl(path),
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
+
+  const nearbyBeachRoutes = Object.values(nearbyBeachPaths).map((path) => ({
+    url: absoluteUrl(path),
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
+
   const beachDetailRoutes = getBeachSlugs().map((slug) => ({
     url: absoluteUrl(`/chios/chios-beaches/${slug}/`),
     lastModified: now,
@@ -70,6 +86,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...familyBeachRoutes,
     ...organizedBeachRoutes,
     ...shelteredBeachRoutes,
+    ...quietBeachRoutes,
+    ...nearbyBeachRoutes,
     ...beachDetailRoutes,
     ...villageDetailRoutes,
     ...museumDetailRoutes,
