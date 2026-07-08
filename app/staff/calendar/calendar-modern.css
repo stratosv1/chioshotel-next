@@ -78,25 +78,11 @@
   color: #064e3b !important;
 }
 
-/* Available cells: option B requested — neutral/white cell with only a green price pill. */
-.staff-calendar-modern button:has(> div.rounded-xl),
-.staff-calendar-modern button:has(> div.inline-flex) {
-  background: #ffffff !important;
-}
-
-.staff-calendar-modern button:has(> div.rounded-xl):hover,
-.staff-calendar-modern button:has(> div.inline-flex):hover {
-  background: #ecfdf5 !important;
-  box-shadow: inset 0 0 0 2px #a7f3d0 !important;
-}
-
+/* Avoid CSS :has() on the large calendar grid. It caused expensive repaints in Chrome. */
 .staff-calendar-modern button > div.rounded-xl,
-.staff-calendar-modern button > div.inline-flex {
-  border: 1px solid #bbf7d0 !important;
-  background: #f0fdf4 !important;
-  color: #166534 !important;
+.staff-calendar-modern button > div.inline-flex,
+.staff-calendar-modern button > span.rounded-full {
   border-radius: 999px !important;
-  box-shadow: 0 2px 8px rgba(22, 101, 52, 0.10) !important;
 }
 
 /* Booking bars: keep strong channel recognition, but softer PMS-like surfaces. */
