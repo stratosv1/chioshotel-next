@@ -1,0 +1,176 @@
+/* Staff Calendar UX polish
+   Goal: Cloudbeds/Beds24-like clarity without heavy UI dependencies.
+   Available cells stay mostly white with a small green price pill.
+   Booking.com stays blue, Expedia stays amber/yellow, Direct stays green, other channels stay neutral.
+*/
+
+.staff-calendar-modern main {
+  background: #f4f6f8 !important;
+  color: #0f172a !important;
+}
+
+.staff-calendar-modern main > div {
+  max-width: 1840px !important;
+  padding: 14px !important;
+  gap: 16px !important;
+}
+
+.staff-calendar-modern header {
+  position: relative !important;
+  top: auto !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 28px !important;
+  background: rgba(255, 255, 255, 0.98) !important;
+  box-shadow: 0 16px 46px rgba(15, 23, 42, 0.06) !important;
+}
+
+.staff-calendar-modern header + section {
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 28px !important;
+  background: rgba(255, 255, 255, 0.98) !important;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.04) !important;
+  margin-top: 0 !important;
+}
+
+.staff-calendar-modern section.flex-1 {
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 30px !important;
+  background: #ffffff !important;
+  box-shadow: 0 16px 46px rgba(15, 23, 42, 0.06) !important;
+}
+
+.staff-calendar-modern .min-w-max {
+  border-color: #dbe3ec !important;
+  border-radius: 26px !important;
+  box-shadow: none !important;
+}
+
+.staff-calendar-modern .min-w-max > .flex:first-child > div:first-child,
+.staff-calendar-modern .min-w-max .sticky.left-0 {
+  background: #ffffff !important;
+  border-color: #dbe3ec !important;
+  box-shadow: 8px 0 22px rgba(15, 23, 42, 0.045) !important;
+}
+
+.staff-calendar-modern .min-w-max .sticky.top-0 {
+  border-color: #dbe3ec !important;
+  background: #ffffff !important;
+}
+
+.staff-calendar-modern .min-w-max .sticky.top-0.bg-emerald-100 {
+  background: #c8f7df !important;
+  color: #064e3b !important;
+}
+
+/* Available cells: option B requested — neutral/white cell with only a green price pill. */
+.staff-calendar-modern button:has(> div.rounded-xl),
+.staff-calendar-modern button:has(> div.inline-flex) {
+  background: #ffffff !important;
+}
+
+.staff-calendar-modern button:has(> div.rounded-xl):hover,
+.staff-calendar-modern button:has(> div.inline-flex):hover {
+  background: #ecfdf5 !important;
+  box-shadow: inset 0 0 0 2px #a7f3d0 !important;
+}
+
+.staff-calendar-modern button > div.rounded-xl,
+.staff-calendar-modern button > div.inline-flex {
+  border: 1px solid #bbf7d0 !important;
+  background: #f0fdf4 !important;
+  color: #166534 !important;
+  border-radius: 999px !important;
+  box-shadow: 0 2px 8px rgba(22, 101, 52, 0.10) !important;
+}
+
+/* Booking bars: keep strong channel recognition, but softer PMS-like surfaces. */
+.staff-calendar-modern button.absolute {
+  border-radius: 16px !important;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08) !important;
+  transform: translateZ(0);
+}
+
+.staff-calendar-modern button.absolute:hover {
+  transform: translateY(-1px) !important;
+  filter: brightness(0.99) !important;
+}
+
+/* Booking.com = blue. */
+.staff-calendar-modern button.absolute.bg-sky-50,
+.staff-calendar-modern button.absolute[class*="bg-sky-50"] {
+  background: #e0f2fe !important;
+  border-color: #38bdf8 !important;
+  color: #082f49 !important;
+}
+
+/* Expedia = yellow / amber. */
+.staff-calendar-modern button.absolute.bg-amber-50,
+.staff-calendar-modern button.absolute[class*="bg-amber-50"] {
+  background: #fef3c7 !important;
+  border-color: #f59e0b !important;
+  color: #78350f !important;
+}
+
+/* Direct / Voulamandis = calm green. */
+.staff-calendar-modern button.absolute.bg-emerald-50,
+.staff-calendar-modern button.absolute[class*="bg-emerald-50"] {
+  background: #dcfce7 !important;
+  border-color: #34d399 !important;
+  color: #064e3b !important;
+}
+
+/* Other / iframe / api = neutral. */
+.staff-calendar-modern button.absolute.bg-stone-50,
+.staff-calendar-modern button.absolute[class*="bg-stone-50"] {
+  background: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+.staff-calendar-modern button.absolute .truncate:first-child {
+  letter-spacing: -0.01em;
+}
+
+.staff-calendar-modern button.absolute .text-\[10px\] {
+  color: currentColor !important;
+  opacity: 0.68 !important;
+}
+
+/* Softer room/unit column, with category color kept as a small left accent from Tailwind border. */
+.staff-calendar-modern .sticky.left-0.z-10 {
+  background: #ffffff !important;
+}
+
+.staff-calendar-modern .sticky.left-0.z-10 .rounded-full {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #475569 !important;
+}
+
+/* Cleaner booking modal. */
+.staff-calendar-modern .fixed.inset-0 {
+  background: rgba(15, 23, 42, 0.58) !important;
+}
+
+.staff-calendar-modern .fixed.inset-0 > div {
+  border-radius: 32px !important;
+  border-color: rgba(255, 255, 255, 0.74) !important;
+  background: #fffdf8 !important;
+  box-shadow: 0 30px 90px rgba(15, 23, 42, 0.28) !important;
+}
+
+.staff-calendar-modern details summary::-webkit-details-marker {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .staff-calendar-modern main > div {
+    padding: 10px !important;
+  }
+
+  .staff-calendar-modern header,
+  .staff-calendar-modern header + section,
+  .staff-calendar-modern section.flex-1 {
+    border-radius: 22px !important;
+  }
+}
