@@ -181,4 +181,66 @@
   .staff-calendar-modern section.flex-1 {
     border-radius: 22px !important;
   }
+
+  /* Mobile: show only room numbers to save horizontal space. */
+  .staff-calendar-modern .min-w-max > .flex:first-child > div:first-child,
+  .staff-calendar-modern .min-w-max > .flex > .sticky.left-0 {
+    width: 58px !important;
+    min-width: 58px !important;
+    max-width: 58px !important;
+    padding: 0 !important;
+    display: grid !important;
+    place-items: center !important;
+    text-align: center !important;
+    overflow: hidden !important;
+  }
+
+  .staff-calendar-modern .min-w-max > .flex:first-child > div:first-child {
+    font-size: 0 !important;
+  }
+
+  .staff-calendar-modern .min-w-max > .flex:first-child > div:first-child::before {
+    content: "No.";
+    font-size: 11px;
+    font-weight: 900;
+    color: #334155;
+  }
+
+  .staff-calendar-modern .min-w-max > .flex:not(:first-child) > .sticky.left-0 {
+    font-size: 0 !important;
+  }
+
+  .staff-calendar-modern .min-w-max > .flex:not(:first-child) > .sticky.left-0 > * {
+    display: none !important;
+  }
+
+  .staff-calendar-modern .min-w-max > .flex:not(:first-child) > .sticky.left-0::before {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    color: #0f172a;
+    font-size: 14px;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  .staff-calendar-modern .min-w-max > .flex:nth-child(2) > .sticky.left-0::before { content: "1"; }
+  .staff-calendar-modern .min-w-max > .flex:nth-child(3) > .sticky.left-0::before { content: "2"; }
+  .staff-calendar-modern .min-w-max > .flex:nth-child(4) > .sticky.left-0::before { content: "3"; }
+  .staff-calendar-modern .min-w-max > .flex:nth-child(5) > .sticky.left-0::before { content: "4"; }
+  .staff-calendar-modern .min-w-max > .flex:nth-child(6) > .sticky.left-0::before { content: "5"; }
+  .staff-calendar-modern .min-w-max > .flex:nth-child(7) > .sticky.left-0::before { content: "6"; }
+  .staff-calendar-modern .min-w-max > .flex:nth-child(8) > .sticky.left-0::before { content: "7"; }
+  .staff-calendar-modern .min-w-max > .flex:nth-child(9) > .sticky.left-0::before { content: "8"; }
+  .staff-calendar-modern .min-w-max > .flex:nth-child(10) > .sticky.left-0::before { content: "9"; }
+  .staff-calendar-modern .min-w-max > .flex:nth-child(11) > .sticky.left-0::before { content: "10"; }
+  .staff-calendar-modern .min-w-max > .flex:nth-child(12) > .sticky.left-0::before { content: "11"; }
+  .staff-calendar-modern .min-w-max > .flex:nth-child(13) > .sticky.left-0::before { content: "12"; }
+  .staff-calendar-modern .min-w-max > .flex:nth-child(14) > .sticky.left-0::before { content: "13"; }
+  .staff-calendar-modern .min-w-max > .flex:nth-child(15) > .sticky.left-0::before { content: "14"; }
+  .staff-calendar-modern .min-w-max > .flex:nth-child(16) > .sticky.left-0::before { content: "15"; }
 }
