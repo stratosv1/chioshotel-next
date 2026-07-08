@@ -178,9 +178,9 @@ export function TopicBadges({ locale, context, className = "" }: TopicBadgesProp
   return (
     <nav
       aria-label="Related topics"
-      className={`bg-[#fbf7ef] px-4 py-4 md:px-8 ${className}`}
+      className={`relative bg-[#fbf7ef] px-4 py-4 md:px-8 ${className}`}
     >
-      <div className="mx-auto flex max-w-7xl gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:flex-wrap md:overflow-visible">
+      <div className="mx-auto flex max-w-7xl gap-2 overflow-x-auto pb-1 pr-12 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:flex-wrap md:overflow-visible md:pr-0">
         {items.map((item) => (
           <a
             key={`${context}-${item.key}`}
@@ -191,6 +191,14 @@ export function TopicBadges({ locale, context, className = "" }: TopicBadgesProp
             <span>{item.label}</span>
           </a>
         ))}
+      </div>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-y-0 right-0 flex items-center bg-gradient-to-l from-[#fbf7ef] via-[#fbf7ef] to-transparent pl-8 pr-3 md:hidden"
+      >
+        <span className="flex h-8 w-8 items-center justify-center rounded-full border border-amber-800/15 bg-white text-lg font-black text-amber-800 shadow-md">
+          →
+        </span>
       </div>
     </nav>
   );
