@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useRef, useState } from "react";
+import { TopicBadges } from "@/components/seo/TopicBadges";
 import type { IndividualRoomData, RoomDetailData } from "@/content/room-details";
 
 type RoomDetailPageProps = { data: RoomDetailData };
@@ -114,7 +115,6 @@ const roomTextTranslations: Record<string, Partial<Record<RoomLanguage, string>>
   "1 double bed": { el: "1 διπλό κρεβάτι", fr: "1 lit double", de: "1 Doppelbett", it: "1 letto matrimoniale", es: "1 cama doble", tr: "1 çift kişilik yatak" },
   "1 single bed": { el: "1 μονό κρεβάτι", fr: "1 lit simple", de: "1 Einzelbett", it: "1 letto singolo", es: "1 cama individual", tr: "1 tek kişilik yatak" },
   "2 single beds": { el: "2 μονά κρεβάτια", fr: "2 lits simples", de: "2 Einzelbetten", it: "2 letti singoli", es: "2 camas individuales", tr: "2 tek kişilik yatak" },
-  "1 sofa bed": { el: "1 καναπές-κρεβάτι", fr: "1 canapé-lit", de: "1 Schlafsofa", it: "1 divano letto", es: "1 sofá cama", tr: "1 çekyat" },
   "2 sofa beds": { el: "2 καναπέδες-κρεβάτια", fr: "2 canapés-lits", de: "2 Schlafsofas", it: "2 divani letto", es: "2 sofás cama", tr: "2 çekyat" },
   "Coffee and tea kettle": { el: "Βραστήρας για καφέ και τσάι", fr: "Bouilloire pour café et thé", de: "Wasserkocher für Kaffee und Tee", it: "Bollitore per caffè e tè", es: "Hervidor para café y té", tr: "Kahve ve çay için su ısıtıcısı" },
   "Ground-floor view": { el: "Θέα ισογείου", fr: "Vue du rez-de-chaussée", de: "Blick im Erdgeschoss", it: "Vista dal piano terra", es: "Vista de planta baja", tr: "Zemin kat manzarası" },
@@ -228,6 +228,7 @@ export function RoomDetailPage({ data }: RoomDetailPageProps) {
   return (
     <main className="room-detail-page">
       <section className="rd-hero" aria-labelledby="rd-hero-title"><div className="rd-hero-media" aria-hidden="true"><Image src={data.hero.image} alt="" fill priority fetchPriority="high" sizes="100vw" /></div><div className="rd-hero-overlay" /><div className="rd-hero-inner"><div className="rd-hero-card"><span className="rd-kicker rd-kicker--light">{data.hero.kicker}</span><h1 id="rd-hero-title">{data.hero.title}</h1><p className="rd-hero-subtitle">{data.hero.subtitle}</p><p className="rd-hero-description">{data.hero.description}</p><div className="rd-hero-badges" aria-label="Room highlights">{data.hero.badges.map((badge) => <span key={badge}>{localizeRoomText(badge, language)}</span>)}</div><div className="rd-hero-actions"><a className="rd-btn rd-btn--primary" href={data.hero.primaryCta.href}>{data.hero.primaryCta.label}</a><a className="rd-btn rd-btn--secondary" href={data.hero.secondaryCta.href}>{data.hero.secondaryCta.label}</a></div></div></div></section>
+      <TopicBadges locale={language} context="room-detail" className="border-b border-amber-900/10" />
       <section className="rd-section rd-section--overview" aria-labelledby="rd-overview-title"><div className="rd-wrap rd-overview-grid"><article className="rd-overview-copy"><span className="rd-kicker">{data.overview.kicker}</span><h2 id="rd-overview-title">{data.overview.title}</h2>{data.overview.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</article><aside className="rd-highlight-panel" aria-label="Room key details">{data.overview.highlights.map((highlight) => <div className="rd-highlight-item" key={highlight.label}><span>{highlight.label}</span><strong>{localizeRoomText(highlight.value, language)}</strong></div>)}</aside></div></section>
       {showMixedGallery ? <RoomGallery data={data} /> : null}
       <IndividualRoomsSection data={data} />
