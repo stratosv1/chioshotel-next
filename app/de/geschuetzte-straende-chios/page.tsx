@@ -1,0 +1,30 @@
+import type { Metadata } from "next";
+import { OrganizedBeachesPage } from "@/components/landing/OrganizedBeachesPage";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { getShelteredBeachesPageByLocale, shelteredBeachAlternates } from "@/content/sheltered-beaches";
+import { buildLandingPageSchema } from "@/content/landing-schema";
+import { absoluteUrl, buildPageMetadata } from "@/lib/seo";
+
+const data = getShelteredBeachesPageByLocale("de");
+
+export const metadata: Metadata = {
+  ...buildPageMetadata({
+    path: data.seo.canonicalPath,
+    title: data.seo.title,
+    description: data.seo.description,
+    image: data.seo.ogImage,
+  }),
+  alternates: {
+    canonical: absoluteUrl(data.seo.canonicalPath),
+    languages: shelteredBeachAlternates,
+  },
+};
+
+export default function Page() {
+  return (
+    <>
+      <JsonLd data={buildLandingPageSchema(data)} />
+      <OrganizedBeachesPage data={data} />
+    </>
+  );
+}
