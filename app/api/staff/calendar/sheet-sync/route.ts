@@ -57,10 +57,8 @@ function isoDateOnly(value: Date) {
 function normalizeDate(value: unknown) {
   const raw = text(value);
   if (!raw) return "";
-
   const iso = raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
   if (iso) return `${iso[1]}-${iso[2]}-${iso[3]}`;
-
   const dmy = raw.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{2,4})$/);
   if (dmy) {
     const day = dmy[1].padStart(2, "0");
@@ -68,7 +66,6 @@ function normalizeDate(value: unknown) {
     const year = dmy[3].length === 2 ? `20${dmy[3]}` : dmy[3];
     return `${year}-${month}-${day}`;
   }
-
   const parsed = new Date(raw);
   if (!Number.isNaN(parsed.getTime())) return isoDateOnly(parsed);
   return "";
@@ -103,11 +100,9 @@ function isAuthorized(request: NextRequest) {
   const cronSecret = text(process.env.CRON_SECRET);
   const auth = request.headers.get("authorization");
   if (cronSecret && auth === `Bearer ${cronSecret}`) return true;
-
   const expectedUser = process.env.STAFF_USERNAME;
   const expectedPass = process.env.STAFF_PASSWORD;
   if (!expectedUser || !expectedPass || !auth?.startsWith("Basic ")) return false;
-
   try {
     const decoded = Buffer.from(auth.slice(6), "base64").toString("utf8");
     const separatorIndex = decoded.indexOf(":");
@@ -149,19 +144,31 @@ function rowIsBookedNight(row: RawRecord) {
 }
 
 function financialsFromRow(row: RawRecord) {
-  const bookingTotal = numberOrNull(getValue(row, ["bookingTotal", "booking total", "price", "total", "bookingPrice"]));
+  const bookingTotal = numberOrNull(getValue(row, ["bookingTotal", "booking total", "bookingPrice", "booking price", "finalTotal", "final total"]));
   const taxTotal = numberOrNull(getValue(row, ["taxTotal", "tax total", "tax"]));
   const roomChargeTotal =
     numberOrNull(getValue(row, ["roomChargeTotal", "room charge total", "roomTotal", "room total", "accommodationTotal"])) ??
     (bookingTotal !== null && taxTotal !== null ? Math.round((bookingTotal - taxTotal) * 100) / 100 : null);
-  const nightlyRate = numberOrNull(getValue(row, ["nightlyRate", "nightly rate", "rate", "dailyRate"]));
+  const nightlyRate = numberOrNull(getValue(row, ["nightlyRate", "nightly rate", "rate", "dailyRate", "price"]));
+  const deposit = numberOrNull(getValue(row, ["deposit", "depositTotal", "deposit total"]));
+  const commission = numberOrNull(getValue(row, ["commission", "commissionTotal", "commission total"]));
   const rateDescription = text(getValue(row, ["rateDescription", "rate description"]));
+  const rawChargeLines = text(getValue(row, ["bookingChargeLines", "booking charge lines", "chargeLines", "charge lines"]));
 
-  const chargeLines: Array<{ description: string; amount: number | null; type: string }> = [];
-  if (roomChargeTotal !== null) chargeLines.push({ description: "Room charge", amount: roomChargeTotal, type: "room" });
-  if (taxTotal !== null && taxTotal !== 0) chargeLines.push({ description: "Tax", amount: taxTotal, type: "tax" });
+  let bookingChargeLines: Array<{ description: string; amount: number | null; type: string }> = [];
+  if (rawChargeLines) {
+    try {
+      const parsed = JSON.parse(rawChargeLines);
+      if (Array.isArray(parsed)) bookingChargeLines = parsed;
+    } catch {}
+  }
 
-  return { bookingTotal, taxTotal, roomChargeTotal, nightlyRate, rateDescription, bookingChargeLines: chargeLines };
+  if (!bookingChargeLines.length) {
+    if (roomChargeTotal !== null) bookingChargeLines.push({ description: rateDescription || "Room charge", amount: roomChargeTotal, type: "room" });
+    if (taxTotal !== null && taxTotal !== 0) bookingChargeLines.push({ description: "Tax", amount: taxTotal, type: "tax" });
+  }
+
+  return { bookingTotal, taxTotal, roomChargeTotal, nightlyRate, deposit, commission, rateDescription, bookingChargeLines };
 }
 
 function bookingFromGroup(row: RawRecord, roomId: string, unitId: string, bookingId: string, arrival: string, departure: string): SheetBooking {
@@ -228,11 +235,9 @@ function normalizeAvailabilityRowsToBookings(rows: RawRecord[]) {
     if (!uniqueDates.length) continue;
     let segmentStart = uniqueDates[0];
     let previous = uniqueDates[0];
-
     function pushSegment(start: string, lastNight: string) {
       bookings.push(bookingFromGroup(group.row, group.roomId, group.unitId, group.bookingId, start, addDays(lastNight, 1)));
     }
-
     for (let i = 1; i < uniqueDates.length; i += 1) {
       const expectedNext = addDays(previous, 1);
       if (uniqueDates[i] !== expectedNext) {
@@ -249,14 +254,12 @@ function normalizeAvailabilityRowsToBookings(rows: RawRecord[]) {
 async function fetchSheetRows(start: string, end: string) {
   const scriptUrl = text(process.env.OCCUPANCY_SCRIPT_URL);
   if (!scriptUrl) throw new Error("OCCUPANCY_SCRIPT_URL is missing.");
-
   const url = new URL(scriptUrl);
   url.searchParams.set("action", "bookings");
   url.searchParams.set("start", start);
   url.searchParams.set("end", end);
   const secret = text(process.env.OCCUPANCY_SCRIPT_SECRET);
   if (secret) url.searchParams.set("secret", secret);
-
   const response = await fetch(url.toString(), { cache: "no-store" });
   const payload = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(`Occupancy sheet error ${response.status}: ${JSON.stringify(payload).slice(0, 500)}`);
@@ -265,10 +268,8 @@ async function fetchSheetRows(start: string, end: string) {
 
 async function syncSheetToNeon(request: NextRequest) {
   if (!isAuthorized(request)) return unauthorized();
-
   const databaseUrl = process.env.DATABASE_URL;
   if (!databaseUrl) return NextResponse.json({ ok: false, error: "DATABASE_URL is missing." }, { status: 500 });
-
   const today = new Date();
   const defaultStart = isoDateOnly(new Date(today.getFullYear(), today.getMonth() - 2, 1));
   const defaultEnd = isoDateOnly(new Date(today.getFullYear(), today.getMonth() + 13, 0));
@@ -276,104 +277,34 @@ async function syncSheetToNeon(request: NextRequest) {
   const start = safeDateParam(searchParams.get("start"), defaultStart);
   const end = safeDateParam(searchParams.get("end"), defaultEnd);
   const startedAt = Date.now();
-
   const rows = await fetchSheetRows(start, end);
   const bookings = normalizeAvailabilityRowsToBookings(rows).filter((booking) => booking.arrival <= end && booking.departure >= start);
   const sql = neon(databaseUrl);
-
   await sql`delete from staff_bookings_snapshot where source = 'occupancy-sheet' and arrival <= ${end}::date and departure >= ${start}::date`;
-
   let saved = 0;
   for (const booking of bookings) {
     await sql`
       insert into staff_bookings_snapshot (
-        beds24_booking_id,
-        book_id,
-        room_id,
-        unit_id,
-        arrival,
-        departure,
-        status,
-        first_name,
-        last_name,
-        guest_name,
-        email,
-        phone,
-        mobile,
-        num_adult,
-        num_child,
-        referrer,
-        channel,
-        source,
-        raw_booking,
-        fetched_at,
-        updated_at
-      )
-      values (
-        ${booking.booking_id},
-        ${booking.book_id},
-        ${booking.room_id},
-        ${booking.unit_id},
-        ${booking.arrival}::date,
-        ${booking.departure}::date,
-        ${booking.status},
-        ${booking.first_name},
-        ${booking.last_name},
-        ${booking.guest_name},
-        ${booking.email},
-        ${booking.phone},
-        ${booking.mobile},
-        ${booking.num_adult},
-        ${booking.num_child},
-        ${booking.referrer},
-        ${booking.channel},
-        ${booking.source},
-        ${JSON.stringify(booking.raw_booking)}::jsonb,
-        now(),
-        now()
+        beds24_booking_id, book_id, room_id, unit_id, arrival, departure, status, first_name, last_name, guest_name,
+        email, phone, mobile, num_adult, num_child, referrer, channel, source, raw_booking, fetched_at, updated_at
+      ) values (
+        ${booking.booking_id}, ${booking.book_id}, ${booking.room_id}, ${booking.unit_id}, ${booking.arrival}::date, ${booking.departure}::date,
+        ${booking.status}, ${booking.first_name}, ${booking.last_name}, ${booking.guest_name}, ${booking.email}, ${booking.phone}, ${booking.mobile},
+        ${booking.num_adult}, ${booking.num_child}, ${booking.referrer}, ${booking.channel}, ${booking.source}, ${JSON.stringify(booking.raw_booking)}::jsonb,
+        now(), now()
       )
       on conflict (beds24_booking_id)
       do update set
-        book_id = excluded.book_id,
-        room_id = excluded.room_id,
-        unit_id = excluded.unit_id,
-        arrival = excluded.arrival,
-        departure = excluded.departure,
-        status = excluded.status,
-        first_name = excluded.first_name,
-        last_name = excluded.last_name,
-        guest_name = excluded.guest_name,
-        email = excluded.email,
-        phone = excluded.phone,
-        mobile = excluded.mobile,
-        num_adult = excluded.num_adult,
-        num_child = excluded.num_child,
-        referrer = excluded.referrer,
-        channel = excluded.channel,
-        source = excluded.source,
-        raw_booking = excluded.raw_booking,
-        fetched_at = now(),
-        updated_at = now()
+        book_id = excluded.book_id, room_id = excluded.room_id, unit_id = excluded.unit_id, arrival = excluded.arrival, departure = excluded.departure,
+        status = excluded.status, first_name = excluded.first_name, last_name = excluded.last_name, guest_name = excluded.guest_name,
+        email = excluded.email, phone = excluded.phone, mobile = excluded.mobile, num_adult = excluded.num_adult, num_child = excluded.num_child,
+        referrer = excluded.referrer, channel = excluded.channel, source = excluded.source, raw_booking = excluded.raw_booking, fetched_at = now(), updated_at = now()
     `;
     saved += 1;
   }
-
   return NextResponse.json(
-    {
-      ok: true,
-      range: { start, end },
-      rows: rows.length,
-      fetched: bookings.length,
-      saved,
-      durationMs: Date.now() - startedAt,
-      generatedAt: new Date().toISOString(),
-    },
-    {
-      headers: {
-        "X-Robots-Tag": "noindex, nofollow",
-        "Cache-Control": "no-store",
-      },
-    },
+    { ok: true, range: { start, end }, rows: rows.length, fetched: bookings.length, saved, durationMs: Date.now() - startedAt, generatedAt: new Date().toISOString() },
+    { headers: { "X-Robots-Tag": "noindex, nofollow", "Cache-Control": "no-store" } },
   );
 }
 
