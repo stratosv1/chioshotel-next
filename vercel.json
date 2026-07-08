@@ -30,6 +30,201 @@
       "source": "/chios-rooms/economy-double-room/",
       "destination": "/chios-rooms/economy-double-rooms/",
       "permanent": true
+    },
+    {
+      "source": "/topics/chios-rooms/chios-hotels-rooms-economy-double/page/2/",
+      "destination": "/chios-rooms/economy-double-rooms/",
+      "permanent": true
+    },
+    {
+      "source": "/topics/chios-rooms/chios-hotels-rooms-economy-double/",
+      "destination": "/chios-rooms/economy-double-rooms/",
+      "permanent": true
+    },
+    {
+      "source": "/topics/chios/chios-beaches/",
+      "destination": "/chios/chios-beaches/",
+      "permanent": true
+    },
+    {
+      "source": "/topics/:path*",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/chios-rooms/first-floor-rooms/",
+      "destination": "/chios-rooms/",
+      "permanent": true
+    },
+    {
+      "source": "/chios-rooms/voulamandis-house-hios/",
+      "destination": "/chios-rooms/",
+      "permanent": true
+    },
+    {
+      "source": "/tr/sakiz-adasi-en-iyi-plajlar/",
+      "destination": "/tr/sakiz-adasi-plajlari/",
+      "permanent": true
+    },
+    {
+      "source": "/tr/sakiz-adasi-gezi-rehberi/",
+      "destination": "/tr/sakiz-adasi/",
+      "permanent": true
+    },
+    {
+      "source": "/tr/chios-gastronomi-deneyimi/",
+      "destination": "/taste-lover-chios/",
+      "permanent": true
+    },
+    {
+      "source": "/fr/sperienza-per-amanti-del-gusto-a-chio/",
+      "destination": "/taste-lover-chios/",
+      "permanent": true
+    },
+    {
+      "source": "/es/descubre-los-secretos-de-quios/",
+      "destination": "/es/chios-en-grecia/",
+      "permanent": true
+    },
+    {
+      "source": "/de/wie-gut-kennst-du-chios-mach-das-insider-quiz/",
+      "destination": "/de/",
+      "permanent": true
+    },
+    {
+      "source": "/chios/chios-kambos/",
+      "destination": "/chios/kampos-chios/",
+      "permanent": true
+    },
+    {
+      "source": "/chios/chios-mastic/",
+      "destination": "/chios/chios-museums/the-mastic-museum-chios/",
+      "permanent": true
+    },
+    {
+      "source": "/el/chios-el/chios-mastic-2/",
+      "destination": "/el/mouseia-xios/mouseio-mastichas-xios/",
+      "permanent": true
+    },
+    {
+      "source": "/de/uncategorized-de/standard-doppelzimmer-auf-chios/",
+      "destination": "/de/zimmer-auf-chios/",
+      "permanent": true
+    },
+    {
+      "source": "/de/uncategorized-de/familienapartments-in-chios/",
+      "destination": "/de/zimmer-auf-chios/",
+      "permanent": true
+    },
+    {
+      "source": "/de/uncategorized-de/economy-zimmer-auf-chios/",
+      "destination": "/de/zimmer-auf-chios/",
+      "permanent": true
+    },
+    {
+      "source": "/fr/faq-fr-voulamandis/",
+      "destination": "/fr/contact-voulamandis/",
+      "permanent": true
+    },
+    {
+      "source": "/tr/faq-tr-voulamandis/",
+      "destination": "/tr/iletisim-voulamandis/",
+      "permanent": true
+    },
+    {
+      "source": "/it/camere-a-chios/-2",
+      "destination": "/it/camere-a-chios/",
+      "permanent": true
+    },
+    {
+      "source": "/es/habitaciones-en-chios/-2",
+      "destination": "/es/habitaciones-en-chios/",
+      "permanent": true
+    },
+    {
+      "source": "/tr/chios-odalari/armolia-koyu-chios/",
+      "destination": "/tr/sakiz-adasi-koyleri/armolia-koyu/",
+      "permanent": true
+    },
+    {
+      "source": "/tr/chios-odalari/lagada-koyu-chios/",
+      "destination": "/tr/sakiz-adasi-koyleri/lagada-koyu/",
+      "permanent": true
+    },
+    {
+      "source": "/tr/chios-odalari/vessa-koyu-chios/",
+      "destination": "/tr/sakiz-adasi-koyleri/vessa-koyu/",
+      "permanent": true
+    },
+    {
+      "source": "/tr/chios-odalari/mesta-koyu-chios/",
+      "destination": "/tr/sakiz-adasi-koyleri/mesta-koyu/",
+      "permanent": true
+    },
+    {
+      "source": "/tr/chios-odalari/sakiz-adasinin-plajlari/",
+      "destination": "/tr/sakiz-adasi-plajlari/",
+      "permanent": true
+    },
+    {
+      "source": "/tr/chios-odalari/sakiz-adasi-plajlari/",
+      "destination": "/tr/sakiz-adasi-plajlari/",
+      "permanent": true
+    },
+    {
+      "source": "/it/chios-it/chios-villages-it/lagada-chios/",
+      "destination": "/it/villaggi-chios/villaggio-lagada/",
+      "permanent": true
+    },
+    {
+      "source": "/el/chios-el/chios-armolia-village/",
+      "destination": "/el/xoria-xios/armolia-xios/",
+      "permanent": true
+    },
+    {
+      "source": "/book-the-room-you-like/",
+      "destination": "/find-your-room/",
+      "permanent": true
+    },
+    {
+      "source": "/erotisis-voulamandis-house-2/",
+      "destination": "/voulamandis-house-contact-us-form-fill-in-the-form/",
+      "permanent": true
+    },
+    {
+      "source": "/index.aspx",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/nl/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/gr/",
+      "destination": "/el/",
+      "permanent": true
+    },
+    {
+      "source": "/web-stories/:path*",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/elementor-landing-page-4251/:path*",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/wp-includes/:path*",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/cdn-cgi/l/email-protection",
+      "destination": "/",
+      "permanent": true
     }
   ]
 }
