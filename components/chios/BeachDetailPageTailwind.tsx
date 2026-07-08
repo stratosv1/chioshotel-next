@@ -17,6 +17,8 @@ type BeachDetailPageProps = {
 const beachUiCopy = {
   en: {
     tagsLabel: "Beach tags",
+    answerKicker: "Quick answer",
+    answerTitlePrefix: "Why visit",
     detailsLabel: "Beach details",
     mediaLabel: "Beach video and route",
     videoTitle: "Video",
@@ -24,7 +26,6 @@ const beachUiCopy = {
     distance: "Distance",
     time: "Time",
     openGps: "Open in GPS",
-    localTipLabel: "Voulamandis House local tip",
     relatedKicker: "Chios beach guide",
     exploreBeach: "Explore beach",
     watchVideo: "Watch video",
@@ -33,9 +34,12 @@ const beachUiCopy = {
     stayKicker: "Stay at Voulamandis House",
     stayTitle: "Your beach base in Kambos",
     routeFrom: "Route from Voulamandis House",
+    swipeHint: "Swipe to explore more beaches",
   },
   el: {
     tagsLabel: "Χαρακτηριστικά παραλίας",
+    answerKicker: "Γρήγορη απάντηση",
+    answerTitlePrefix: "Γιατί να δείτε",
     detailsLabel: "Πληροφορίες παραλίας",
     mediaLabel: "Βίντεο και διαδρομή παραλίας",
     videoTitle: "Βίντεο",
@@ -43,7 +47,6 @@ const beachUiCopy = {
     distance: "Απόσταση",
     time: "Χρόνος",
     openGps: "Άνοιγμα στο GPS",
-    localTipLabel: "Τοπική συμβουλή Voulamandis House",
     relatedKicker: "Οδηγός παραλιών Χίου",
     exploreBeach: "Δείτε την παραλία",
     watchVideo: "Δείτε βίντεο",
@@ -52,9 +55,12 @@ const beachUiCopy = {
     stayKicker: "Διαμονή στο Voulamandis House",
     stayTitle: "Η βάση σας στον Κάμπο",
     routeFrom: "Διαδρομή από το Voulamandis House",
+    swipeHint: "Σύρετε για περισσότερες παραλίες",
   },
   fr: {
     tagsLabel: "Caractéristiques de la plage",
+    answerKicker: "Réponse rapide",
+    answerTitlePrefix: "Pourquoi visiter",
     detailsLabel: "Détails de la plage",
     mediaLabel: "Vidéo et itinéraire",
     videoTitle: "Vidéo",
@@ -62,7 +68,6 @@ const beachUiCopy = {
     distance: "Distance",
     time: "Temps",
     openGps: "Ouvrir dans le GPS",
-    localTipLabel: "Conseil local de Voulamandis House",
     relatedKicker: "Guide des plages de Chios",
     exploreBeach: "Explorer la plage",
     watchVideo: "Voir la vidéo",
@@ -71,9 +76,12 @@ const beachUiCopy = {
     stayKicker: "Séjourner à Voulamandis House",
     stayTitle: "Votre base à Kambos",
     routeFrom: "Itinéraire depuis Voulamandis House",
+    swipeHint: "Faites glisser pour voir plus de plages",
   },
   de: {
     tagsLabel: "Strandmerkmale",
+    answerKicker: "Kurze Antwort",
+    answerTitlePrefix: "Warum besuchen",
     detailsLabel: "Stranddetails",
     mediaLabel: "Strandvideo und Route",
     videoTitle: "Video",
@@ -81,7 +89,6 @@ const beachUiCopy = {
     distance: "Entfernung",
     time: "Zeit",
     openGps: "Im GPS öffnen",
-    localTipLabel: "Lokaler Tipp von Voulamandis House",
     relatedKicker: "Strandführer für Chios",
     exploreBeach: "Strand ansehen",
     watchVideo: "Video ansehen",
@@ -90,9 +97,12 @@ const beachUiCopy = {
     stayKicker: "Aufenthalt im Voulamandis House",
     stayTitle: "Ihre Basis in Kambos",
     routeFrom: "Route vom Voulamandis House",
+    swipeHint: "Wischen Sie für weitere Strände",
   },
   it: {
     tagsLabel: "Caratteristiche della spiaggia",
+    answerKicker: "Risposta rapida",
+    answerTitlePrefix: "Perché visitare",
     detailsLabel: "Dettagli della spiaggia",
     mediaLabel: "Video e percorso",
     videoTitle: "Video",
@@ -100,7 +110,6 @@ const beachUiCopy = {
     distance: "Distanza",
     time: "Tempo",
     openGps: "Apri nel GPS",
-    localTipLabel: "Consiglio locale di Voulamandis House",
     relatedKicker: "Guida alle spiagge di Chios",
     exploreBeach: "Esplora la spiaggia",
     watchVideo: "Guarda il video",
@@ -109,9 +118,12 @@ const beachUiCopy = {
     stayKicker: "Soggiorna al Voulamandis House",
     stayTitle: "La tua base a Kambos",
     routeFrom: "Percorso da Voulamandis House",
+    swipeHint: "Scorri per altre spiagge",
   },
   es: {
     tagsLabel: "Características de la playa",
+    answerKicker: "Respuesta rápida",
+    answerTitlePrefix: "Por qué visitar",
     detailsLabel: "Detalles de la playa",
     mediaLabel: "Vídeo y ruta",
     videoTitle: "Vídeo",
@@ -119,7 +131,6 @@ const beachUiCopy = {
     distance: "Distancia",
     time: "Tiempo",
     openGps: "Abrir en GPS",
-    localTipLabel: "Consejo local de Voulamandis House",
     relatedKicker: "Guía de playas de Chios",
     exploreBeach: "Explorar playa",
     watchVideo: "Ver vídeo",
@@ -128,9 +139,12 @@ const beachUiCopy = {
     stayKicker: "Estancia en Voulamandis House",
     stayTitle: "Tu base en Kambos",
     routeFrom: "Ruta desde Voulamandis House",
+    swipeHint: "Desliza para ver más playas",
   },
   tr: {
     tagsLabel: "Plaj özellikleri",
+    answerKicker: "Kısa cevap",
+    answerTitlePrefix: "Neden ziyaret etmeli",
     detailsLabel: "Plaj detayları",
     mediaLabel: "Plaj videosu ve rota",
     videoTitle: "Video",
@@ -138,7 +152,6 @@ const beachUiCopy = {
     distance: "Mesafe",
     time: "Süre",
     openGps: "GPS’te aç",
-    localTipLabel: "Voulamandis House yerel tavsiyesi",
     relatedKicker: "Sakız Adası plaj rehberi",
     exploreBeach: "Plajı keşfet",
     watchVideo: "Videoyu izle",
@@ -147,6 +160,7 @@ const beachUiCopy = {
     stayKicker: "Voulamandis House’ta konaklayın",
     stayTitle: "Kambos’taki üssünüz",
     routeFrom: "Voulamandis House’tan rota",
+    swipeHint: "Daha fazla plaj için kaydırın",
   },
 } as const;
 
@@ -165,9 +179,7 @@ function getBeachLanguage(beach: BeachDetailData): BeachUiLanguage {
   return "en";
 }
 
-function getChiosBeachesPageForLanguage(
-  language: BeachUiLanguage,
-): ChiosBeachesPageData {
+function getChiosBeachesPageForLanguage(language: BeachUiLanguage): ChiosBeachesPageData {
   switch (language) {
     case "el":
       return chiosBeachesPageEl;
@@ -187,20 +199,6 @@ function getChiosBeachesPageForLanguage(
   }
 }
 
-function getRelatedCardClass(size: string) {
-  switch (size) {
-    case "large":
-      return "md:col-span-2 md:row-span-2 min-h-[420px]";
-    case "wide":
-      return "md:col-span-2 min-h-[320px]";
-    case "tall":
-      return "md:row-span-2 min-h-[420px]";
-    case "normal":
-    default:
-      return "min-h-[320px]";
-  }
-}
-
 function getYouTubeWatchUrl(embedUrl: string) {
   const match = embedUrl.match(/\/embed\/([^?&/]+)/);
   return match?.[1] ? `https://www.youtube.com/watch?v=${match[1]}` : embedUrl;
@@ -213,6 +211,10 @@ function getYouTubeThumbnail(embedUrl: string, fallbackImage: string) {
     : fallbackImage;
 }
 
+function getBeachDisplayName(title: string) {
+  return title.split(":")[0].trim();
+}
+
 export function BeachDetailPageTailwind({ beach }: BeachDetailPageProps) {
   const language = getBeachLanguage(beach);
   const copy = beachUiCopy[language];
@@ -223,10 +225,10 @@ export function BeachDetailPageTailwind({ beach }: BeachDetailPageProps) {
   const videoHref = getYouTubeWatchUrl(beach.media.video.embedUrl);
   const videoImage = getYouTubeThumbnail(beach.media.video.embedUrl, beach.hero.image);
   const roomsLabel = copy.viewRooms;
-  const gpsLabel = copy.openGps || "Open in GPS";
+  const beachName = getBeachDisplayName(beach.hero.title);
 
   return (
-    <main className="bg-[#f7fbfc] text-slate-950">
+    <main className="overflow-hidden bg-[#f7fbfc] text-slate-950">
       <section
         className="relative flex min-h-[68svh] items-end overflow-hidden text-white md:min-h-[620px]"
         aria-labelledby="bd-hero-title"
@@ -244,18 +246,15 @@ export function BeachDetailPageTailwind({ beach }: BeachDetailPageProps) {
             <span className="text-xs font-black uppercase tracking-[0.18em] text-cyan-200">
               {beach.hero.kicker}
             </span>
-
             <h1
               id="bd-hero-title"
               className="mt-4 text-4xl font-black leading-[0.95] tracking-[-0.06em] md:text-7xl"
             >
               {beach.hero.title}
             </h1>
-
             <p className="mt-5 max-w-[680px] text-base leading-8 text-white/82 md:text-lg">
               {beach.hero.description}
             </p>
-
             <div className="mt-6 flex flex-wrap gap-2" aria-label={copy.tagsLabel}>
               {beach.hero.tags.map((tag) => (
                 <span
@@ -267,6 +266,30 @@ export function BeachDetailPageTailwind({ beach }: BeachDetailPageProps) {
               ))}
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="px-3 py-8 md:px-5 md:py-10" aria-label={copy.answerKicker}>
+        <div className="mx-auto max-w-[1180px] rounded-[28px] bg-white p-5 shadow-xl shadow-black/5 ring-1 ring-cyan-900/10 md:rounded-[32px] md:p-8">
+          <span className="text-[10px] font-black uppercase tracking-[0.16em] text-cyan-800 md:text-xs">
+            {copy.answerKicker}
+          </span>
+          <h2 className="mt-3 font-serif text-[2rem] font-bold leading-tight text-slate-950 md:text-5xl">
+            {copy.answerTitlePrefix} {beachName}?
+          </h2>
+          <p className="mt-4 text-sm font-semibold leading-7 text-slate-700 md:text-lg md:leading-8">
+            {beach.hero.description}
+          </p>
+          <ul className="mt-5 grid gap-2 md:grid-cols-2 md:gap-3">
+            {beach.details.slice(0, 3).map((detail) => (
+              <li
+                className="rounded-2xl bg-cyan-50 px-4 py-3 text-sm font-bold leading-6 text-slate-800 ring-1 ring-cyan-900/10"
+                key={detail.title}
+              >
+                {detail.title}: <span className="font-semibold">{detail.text}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
@@ -303,7 +326,6 @@ export function BeachDetailPageTailwind({ beach }: BeachDetailPageProps) {
                 className="absolute inset-0 h-full w-full object-cover opacity-75 transition duration-700 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/55 to-slate-950/10" />
-
               <div className="relative z-10 flex min-h-[282px] flex-col justify-between md:min-h-[326px]">
                 <div>
                   <span className="text-xs font-black uppercase tracking-[0.16em] text-cyan-200">
@@ -313,7 +335,6 @@ export function BeachDetailPageTailwind({ beach }: BeachDetailPageProps) {
                     {beach.media.video.title}
                   </h2>
                 </div>
-
                 <div>
                   <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-white text-2xl text-slate-950 shadow-2xl transition group-hover:scale-105">
                     ▶
@@ -332,9 +353,6 @@ export function BeachDetailPageTailwind({ beach }: BeachDetailPageProps) {
           <article className="overflow-hidden rounded-[34px] bg-white shadow-2xl ring-1 ring-slate-900/5">
             <div className="relative min-h-[330px] overflow-hidden p-6 md:min-h-[390px] md:p-8">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(14,165,233,0.20),transparent_34%),linear-gradient(135deg,#ffffff_0%,#ecfeff_52%,#e2e8f0_100%)]" />
-              <div className="absolute right-8 top-8 h-32 w-32 rounded-full bg-cyan-200/40 blur-3xl" />
-              <div className="absolute bottom-8 left-8 h-32 w-32 rounded-full bg-slate-900/10 blur-3xl" />
-
               <div className="relative z-10 flex min-h-[282px] flex-col justify-between md:min-h-[326px]">
                 <div>
                   <span className="text-xs font-black uppercase tracking-[0.16em] text-cyan-800">
@@ -344,7 +362,6 @@ export function BeachDetailPageTailwind({ beach }: BeachDetailPageProps) {
                     {copy.routeFrom}
                   </h2>
                 </div>
-
                 <div className="rounded-[28px] border border-slate-900/10 bg-white/70 p-5 shadow-xl backdrop-blur">
                   <div className="mb-5 grid gap-3 sm:grid-cols-2">
                     <div className="rounded-2xl bg-slate-950 px-4 py-3 text-white">
@@ -360,14 +377,13 @@ export function BeachDetailPageTailwind({ beach }: BeachDetailPageProps) {
                       <strong className="mt-1 block text-xl">{beach.media.map.time}</strong>
                     </div>
                   </div>
-
                   <a
                     className="inline-flex w-full items-center justify-center rounded-full bg-slate-950 px-6 py-3 text-sm font-black !text-white shadow-lg transition hover:-translate-y-0.5 sm:w-auto"
                     href={beach.media.map.gpsHref}
                     target="_blank"
                     rel="noopener"
                   >
-                    {gpsLabel}
+                    {copy.openGps}
                   </a>
                 </div>
               </div>
@@ -376,7 +392,7 @@ export function BeachDetailPageTailwind({ beach }: BeachDetailPageProps) {
         </div>
       </section>
 
-      <section className="px-3 py-10 md:px-5 md:py-16" aria-label={copy.localTipLabel}>
+      <section className="px-3 py-10 md:px-5 md:py-16" aria-label={copy.stayKicker}>
         <div className="mx-auto max-w-[1180px]">
           <article className="grid overflow-hidden rounded-[38px] bg-cyan-950 text-white shadow-2xl md:grid-cols-[1.05fr_0.95fr]">
             <div className="p-6 md:p-10">
@@ -384,20 +400,16 @@ export function BeachDetailPageTailwind({ beach }: BeachDetailPageProps) {
                 <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-cyan-300/15 text-3xl">
                   {beach.baseTip.icon}
                 </div>
-
                 <span className="text-xs font-black uppercase tracking-[0.16em] text-cyan-200">
                   {copy.stayKicker}
                 </span>
               </div>
-
               <h2 className="mt-6 text-3xl font-black tracking-[-0.05em] md:text-5xl">
                 {copy.stayTitle}
               </h2>
-
               <p className="mt-4 max-w-[760px] text-base leading-8 text-white/78">
                 {beach.baseTip.text}
               </p>
-
               <div className="mt-7 flex flex-wrap gap-3">
                 <a
                   className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-black !text-slate-950 shadow-lg transition hover:-translate-y-0.5"
@@ -405,7 +417,6 @@ export function BeachDetailPageTailwind({ beach }: BeachDetailPageProps) {
                 >
                   {roomsLabel}
                 </a>
-
                 <a
                   className="inline-flex items-center justify-center rounded-full border border-white/25 px-6 py-3 text-sm font-black !text-white transition hover:-translate-y-0.5 hover:bg-white/10"
                   href="/chios-hotels-rates/"
@@ -414,7 +425,6 @@ export function BeachDetailPageTailwind({ beach }: BeachDetailPageProps) {
                 </a>
               </div>
             </div>
-
             <div className="relative min-h-[280px] md:min-h-full">
               <img
                 src="/images/beaches/voulamandis-house-chios-courtyard-hero-desktop.webp"
@@ -429,52 +439,65 @@ export function BeachDetailPageTailwind({ beach }: BeachDetailPageProps) {
       </section>
 
       <section className="px-3 py-14 md:px-5 md:py-24" aria-labelledby="bd-related-title">
-        <div className="mx-auto max-w-[1180px]">
+        <div className="mx-auto max-w-7xl">
           <header className="mb-8 max-w-[780px] md:mb-12">
             <span className="text-xs font-black uppercase tracking-[0.16em] text-cyan-800">
               {copy.relatedKicker}
             </span>
             <h2
               id="bd-related-title"
-              className="mt-3 text-3xl font-black leading-none tracking-[-0.05em] md:text-5xl"
+              className="mt-3 font-serif text-[2rem] font-bold leading-tight text-slate-950 md:text-5xl"
             >
               {beach.relatedTitle}
             </h2>
             <p className="mt-4 text-base leading-8 text-slate-700">{beach.relatedText}</p>
+            <p className="mt-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-black uppercase tracking-[0.1em] text-cyan-800 shadow-sm ring-1 ring-cyan-900/10 md:hidden">
+              {copy.swipeHint} <span aria-hidden="true">→</span>
+            </p>
           </header>
 
-          <div className="grid auto-rows-[minmax(300px,auto)] gap-4 md:grid-cols-4 md:gap-5">
-            {relatedBeaches.slice(0, 8).map((related, index) => (
-              <a
-                className={`group relative overflow-hidden rounded-[32px] bg-slate-900 shadow-xl ring-1 ring-slate-900/5 transition duration-500 hover:-translate-y-1 ${getRelatedCardClass(
-                  related.size,
-                )}`}
-                href={related.href}
-                key={related.href}
-                style={{
-                  backgroundImage: `url(${related.image})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-t from-black/62 via-black/18 to-transparent transition duration-700 group-hover:from-black/70" />
-
-                <div className="absolute inset-x-0 bottom-0 z-10 p-5 text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.75)] md:p-7">
-                  <span className="rounded-full border border-white/30 bg-white/15 px-3 py-1 text-[11px] font-black uppercase tracking-[0.05em] text-white backdrop-blur">
-                    {related.badges[0]}
-                  </span>
-                  <h3 className="mt-4 text-2xl font-black tracking-[-0.04em]">
-                    {related.name}
-                  </h3>
-                  <p className="mt-2 line-clamp-3 text-sm leading-6 text-white/80">
-                    {related.description}
-                  </p>
-                  <strong className="mt-4 inline-flex text-sm font-black text-cyan-100">
-                    {copy.exploreBeach} →
-                  </strong>
-                </div>
-              </a>
-            ))}
+          <div className="relative">
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute right-2 top-[38%] z-20 flex h-10 w-10 items-center justify-center rounded-full bg-cyan-950/95 text-xl font-black text-white shadow-xl md:hidden"
+            >
+              →
+            </div>
+            <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 xl:grid-cols-4">
+              {relatedBeaches.slice(0, 8).map((related, index) => (
+                <a
+                  className="group w-[84vw] max-w-[380px] flex-none snap-start overflow-hidden rounded-[1.5rem] bg-white shadow-lg shadow-stone-900/5 ring-1 ring-cyan-900/10 transition hover:shadow-xl md:w-auto md:max-w-none md:rounded-[2rem]"
+                  href={related.href}
+                  key={related.href}
+                >
+                  <div className="relative aspect-[4/3] overflow-hidden">
+                    <img
+                      src={related.image}
+                      alt={related.imageAlt}
+                      loading={index < 2 ? "eager" : "lazy"}
+                      className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                    />
+                    <span className="absolute left-3 top-3 rounded-full bg-emerald-700 px-3 py-1.5 text-xs font-black text-white">
+                      {related.badges[0]}
+                    </span>
+                    <span className="absolute right-3 top-3 rounded-full bg-white/95 px-3 py-1.5 text-xs font-black text-emerald-700">
+                      {related.region}
+                    </span>
+                  </div>
+                  <div className="p-5">
+                    <h3 className="break-words font-serif text-2xl font-bold leading-tight text-teal-800">
+                      {related.name}
+                    </h3>
+                    <p className="mt-3 line-clamp-3 text-sm leading-7 text-stone-600">
+                      {related.description}
+                    </p>
+                    <span className="mt-5 inline-flex rounded-full border border-teal-800/20 px-4 py-2 text-xs font-black uppercase text-teal-800">
+                      {copy.exploreBeach} →
+                    </span>
+                  </div>
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </section>
