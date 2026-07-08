@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
@@ -22,6 +22,8 @@ type StaffExpense = {
 };
 
 type Area = "kampos" | "home";
+
+type FilterAccount = "all" | "kampos" | "family";
 
 function todayIso() {
   return new Date().toISOString().slice(0, 10);
@@ -85,7 +87,7 @@ export default function ExpensesApp() {
   const [comments, setComments] = useState("");
 
   const [filterMonth, setFilterMonth] = useState(currentMonth());
-  const [filterAccount, setFilterAccount] = useState<"all" | "kampos" | "family">("all");
+  const [filterAccount, setFilterAccount] = useState<FilterAccount>("all");
   const [search, setSearch] = useState("");
   const [toast, setToast] = useState("");
 
@@ -278,7 +280,7 @@ export default function ExpensesApp() {
     setAmount("");
     setComments("");
     setSubject("");
-    showToast("Το έξοδο αποθηκεύτηκε στη Neon database.");
+    showToast("Το έξοδο αποθηκεύτηκε.");
   }
 
   async function deleteExpense(id: string) {
@@ -347,51 +349,57 @@ export default function ExpensesApp() {
   }
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,#fff7ed,transparent_34%),linear-gradient(135deg,#fdfcfb_0%,#e2d1c3_100%)] px-4 py-6 text-slate-950 md:px-8">
+    <main className="min-h-screen bg-[linear-gradient(135deg,#fdfcfb_0%,#e2d1c3_100%)] px-3 py-4 text-slate-950 md:px-8 md:py-6">
       {toast ? (
-        <div className="fixed right-4 top-4 z-50 max-w-sm rounded-2xl border border-emerald-200 bg-white/90 px-5 py-4 text-sm font-black text-emerald-900 shadow-2xl backdrop-blur-xl">
+        <div className="fixed inset-x-3 top-3 z-50 rounded-2xl border border-emerald-200 bg-white px-4 py-3 text-sm font-black text-emerald-900 shadow-2xl md:left-auto md:right-4 md:max-w-sm">
           {toast}
         </div>
       ) : null}
 
       <div className="mx-auto max-w-7xl">
-        <header className="mb-6 overflow-hidden rounded-[2rem] border border-white/60 bg-white/50 p-6 shadow-2xl shadow-stone-900/10 backdrop-blur-2xl md:p-8">
-          <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+        <header className="mb-4 rounded-3xl border border-white/70 bg-white/70 p-4 shadow-xl shadow-stone-900/10 md:mb-6 md:rounded-[2rem] md:p-8">
+          <Link
+            href="/staff"
+            className="mb-3 inline-flex rounded-2xl bg-white px-3 py-2 text-xs font-black text-amber-800 shadow-sm ring-1 ring-amber-200 hover:bg-amber-50 md:text-sm"
+          >
+            ← Staff
+          </Link>
+
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
-              <Link
-                href="/staff"
-                className="mb-4 inline-flex items-center rounded-2xl bg-white px-4 py-2 text-sm font-black text-amber-800 shadow-sm ring-1 ring-amber-200 hover:bg-amber-50"
-              >
-                ← Επιστροφή στην κεντρική πλατφόρμα Staff
-              </Link>
-              <p className="text-xs font-black uppercase tracking-[0.28em] text-[#bc6c25]">
+              <p className="text-[11px] font-black uppercase tracking-[0.22em] text-[#bc6c25]">
                 Voulamandis House
               </p>
-              <h1 className="mt-2 text-4xl font-black tracking-tight text-[#5d4037] md:text-6xl">
-                Έξοδα Κάμπου & Οικογένειας
+              <h1 className="mt-1 text-3xl font-black tracking-tight text-[#5d4037] md:text-6xl">
+                Έξοδα
               </h1>
-              <p className="mt-3 max-w-3xl text-sm font-medium leading-7 text-[#5d4037]/75 md:text-base">
-                Γρήγορη καταχώρηση εξόδων, live reports, αναζήτηση, CSV export και
-                browser PDF/print. Τα δεδομένα αποθηκεύονται στη Neon database.
+              <p className="mt-2 text-sm font-medium leading-6 text-[#5d4037]/75 md:max-w-3xl md:text-base">
+                Γρήγορη καταχώρηση και απλή προβολή από κινητό.
               </p>
             </div>
 
-            <div className="grid grid-cols-3 gap-3">
-              <div className="rounded-2xl border border-white/70 bg-white/60 p-4 text-center shadow-sm">
-                <p className="text-xs font-black uppercase text-slate-500">Σήμερα</p>
-                <p className="mt-1 text-lg font-black text-[#5d4037]">
+            <div className="grid grid-cols-3 gap-2 md:gap-3">
+              <div className="rounded-2xl border border-white/80 bg-white/70 p-3 text-center shadow-sm md:p-4">
+                <p className="text-[10px] font-black uppercase text-slate-500 md:text-xs">
+                  Σήμερα
+                </p>
+                <p className="mt-1 text-sm font-black text-[#5d4037] md:text-lg">
                   {formatMoney(todayTotal)}
                 </p>
               </div>
-              <div className="rounded-2xl border border-white/70 bg-white/60 p-4 text-center shadow-sm">
-                <p className="text-xs font-black uppercase text-slate-500">Μήνας</p>
-                <p className="mt-1 text-lg font-black text-[#5d4037]">
+              <div className="rounded-2xl border border-white/80 bg-white/70 p-3 text-center shadow-sm md:p-4">
+                <p className="text-[10px] font-black uppercase text-slate-500 md:text-xs">
+                  Μήνας
+                </p>
+                <p className="mt-1 text-sm font-black text-[#5d4037] md:text-lg">
                   {formatMoney(monthTotal)}
                 </p>
               </div>
-              <div className="rounded-2xl border border-white/70 bg-white/60 p-4 text-center shadow-sm">
-                <p className="text-xs font-black uppercase text-slate-500">Σύνολο</p>
-                <p className="mt-1 text-lg font-black text-[#5d4037]">
+              <div className="rounded-2xl border border-white/80 bg-white/70 p-3 text-center shadow-sm md:p-4">
+                <p className="text-[10px] font-black uppercase text-slate-500 md:text-xs">
+                  Σύνολο
+                </p>
+                <p className="mt-1 text-sm font-black text-[#5d4037] md:text-lg">
                   {formatMoney(allTotal)}
                 </p>
               </div>
@@ -399,11 +407,11 @@ export default function ExpensesApp() {
           </div>
         </header>
 
-        <div className="grid gap-6 xl:grid-cols-[0.95fr_1.3fr]">
-          <section className="rounded-[2rem] border border-white/70 bg-white/60 p-5 shadow-2xl shadow-stone-900/10 backdrop-blur-2xl md:p-6">
-            <div className="mb-5 flex items-center justify-between gap-4">
+        <div className="grid gap-4 xl:grid-cols-[0.9fr_1.35fr] xl:gap-6">
+          <section className="rounded-3xl border border-white/70 bg-white/75 p-4 shadow-xl shadow-stone-900/10 md:rounded-[2rem] md:p-6">
+            <div className="mb-4 flex items-center justify-between gap-3">
               <div>
-                <p className="text-xs font-black uppercase tracking-[0.22em] text-[#bc6c25]">
+                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#bc6c25]">
                   Νέα καταχώρηση
                 </p>
                 <h2 className="mt-1 text-2xl font-black text-[#5d4037]">
@@ -415,8 +423,8 @@ export default function ExpensesApp() {
               </div>
             </div>
 
-            <form onSubmit={addExpense} className="space-y-5">
-              <div className="grid gap-3 md:grid-cols-2">
+            <form onSubmit={addExpense} className="space-y-4">
+              <div className="grid grid-cols-2 gap-3">
                 <label className="block">
                   <span className="mb-2 block text-sm font-black text-[#5d4037]">
                     Ημερομηνία
@@ -425,7 +433,7 @@ export default function ExpensesApp() {
                     type="date"
                     value={expenseDate}
                     onChange={(event) => setExpenseDate(event.target.value)}
-                    className="w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 font-bold outline-none ring-[#bc6c25]/20 focus:ring-4"
+                    className="w-full rounded-2xl border border-stone-200 bg-white px-3 py-3 text-sm font-bold outline-none ring-[#bc6c25]/20 focus:ring-4 md:px-4 md:text-base"
                   />
                 </label>
 
@@ -437,31 +445,50 @@ export default function ExpensesApp() {
                     value={amount}
                     onChange={(event) => setAmount(event.target.value)}
                     inputMode="decimal"
-                    placeholder="π.χ. 85,50"
-                    className="w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 font-bold outline-none ring-[#bc6c25]/20 focus:ring-4"
+                    placeholder="85,50"
+                    className="w-full rounded-2xl border border-stone-200 bg-white px-3 py-3 text-sm font-bold outline-none ring-[#bc6c25]/20 focus:ring-4 md:px-4 md:text-base"
                   />
                 </label>
               </div>
 
               <div>
-                <p className="mb-2 text-sm font-black text-[#5d4037]">
-                  Κατηγορία εξόδου
-                </p>
-                <div className="flex max-h-72 flex-wrap gap-2 overflow-auto rounded-3xl border border-stone-200 bg-white/55 p-3">
-                  {staffExpenseCategories.map((item) => (
-                    <button
-                      key={item.slug}
-                      type="button"
-                      onClick={() => chooseCategory(item.slug)}
-                      className={`rounded-full border px-3 py-2 text-sm font-black transition ${
-                        item.slug === category
-                          ? "border-slate-950 bg-slate-950 text-white shadow-lg"
-                          : "border-stone-200 bg-white text-slate-700 hover:border-[#bc6c25] hover:bg-orange-50"
-                      }`}
-                    >
-                      {item.icon} {item.label}
-                    </button>
-                  ))}
+                <label className="block md:hidden">
+                  <span className="mb-2 block text-sm font-black text-[#5d4037]">
+                    Κατηγορία εξόδου
+                  </span>
+                  <select
+                    value={category}
+                    onChange={(event) => chooseCategory(event.target.value)}
+                    className="w-full rounded-2xl border border-stone-200 bg-white px-4 py-4 text-base font-black outline-none ring-[#bc6c25]/20 focus:ring-4"
+                  >
+                    {staffExpenseCategories.map((item) => (
+                      <option key={item.slug} value={item.slug}>
+                        {item.icon} {item.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                <div className="hidden md:block">
+                  <p className="mb-2 text-sm font-black text-[#5d4037]">
+                    Κατηγορία εξόδου
+                  </p>
+                  <div className="flex max-h-64 flex-wrap gap-2 overflow-auto rounded-3xl border border-stone-200 bg-white/55 p-3">
+                    {staffExpenseCategories.map((item) => (
+                      <button
+                        key={item.slug}
+                        type="button"
+                        onClick={() => chooseCategory(item.slug)}
+                        className={`rounded-full border px-3 py-2 text-sm font-black transition ${
+                          item.slug === category
+                            ? "border-slate-950 bg-slate-950 text-white shadow-lg"
+                            : "border-stone-200 bg-white text-slate-700 hover:border-[#bc6c25] hover:bg-orange-50"
+                        }`}
+                      >
+                        {item.icon} {item.label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
 
@@ -478,7 +505,7 @@ export default function ExpensesApp() {
                       setPerson("");
                       setSubject("");
                     }}
-                    className={`rounded-2xl border p-4 text-left font-black transition ${
+                    className={`rounded-2xl border px-3 py-4 text-left text-sm font-black transition md:p-4 md:text-base ${
                       area === "kampos"
                         ? "border-[#6b8e23] bg-[#6b8e23]/15 text-[#334414]"
                         : "border-stone-200 bg-white hover:border-[#6b8e23]"
@@ -493,7 +520,7 @@ export default function ExpensesApp() {
                       setArea("home");
                       setSubject("");
                     }}
-                    className={`rounded-2xl border p-4 text-left font-black transition ${
+                    className={`rounded-2xl border px-3 py-4 text-left text-sm font-black transition md:p-4 md:text-base ${
                       area === "home"
                         ? "border-[#4a6984] bg-[#4a6984]/15 text-[#263847]"
                         : "border-stone-200 bg-white hover:border-[#4a6984]"
@@ -509,7 +536,7 @@ export default function ExpensesApp() {
                   <p className="mb-2 text-sm font-black text-[#5d4037]">
                     Πρόσωπο {needsPerson ? "— υποχρεωτικό" : ""}
                   </p>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="grid grid-cols-2 gap-2 md:flex md:flex-wrap">
                     {hasHome ? (
                       <button
                         type="button"
@@ -517,7 +544,7 @@ export default function ExpensesApp() {
                           setPerson("");
                           setSubject("");
                         }}
-                        className={`rounded-full border px-3 py-2 text-sm font-black ${
+                        className={`rounded-2xl border px-3 py-3 text-sm font-black md:rounded-full md:py-2 ${
                           person === ""
                             ? "border-slate-950 bg-slate-950 text-white"
                             : "border-stone-200 bg-white"
@@ -535,7 +562,7 @@ export default function ExpensesApp() {
                           setPerson(item.slug);
                           setSubject("");
                         }}
-                        className={`rounded-full border px-3 py-2 text-sm font-black ${
+                        className={`rounded-2xl border px-3 py-3 text-sm font-black md:rounded-full md:py-2 ${
                           person === item.slug
                             ? "border-slate-950 bg-slate-950 text-white"
                             : "border-stone-200 bg-white"
@@ -553,13 +580,13 @@ export default function ExpensesApp() {
                   <p className="mb-2 text-sm font-black text-[#5d4037]">
                     Μάθημα
                   </p>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="grid grid-cols-2 gap-2 md:flex md:flex-wrap">
                     {staffTuitionSubjects.map((item) => (
                       <button
                         key={item}
                         type="button"
                         onClick={() => setSubject(item)}
-                        className={`rounded-full border px-3 py-2 text-sm font-black ${
+                        className={`rounded-2xl border px-3 py-3 text-sm font-black md:rounded-full md:py-2 ${
                           subject === item
                             ? "border-slate-950 bg-slate-950 text-white"
                             : "border-stone-200 bg-white"
@@ -573,7 +600,7 @@ export default function ExpensesApp() {
               ) : null}
 
               <div className="rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm font-black text-[#5d4037]">
-                Επιλεγμένο: {selectedCategory?.icon} {selectedCategory?.label} →{" "}
+                Επιλογή: {selectedCategory?.icon} {selectedCategory?.label} →{" "}
                 {entityBySlug(entity)?.icon} {entityBySlug(entity)?.label}
               </div>
 
@@ -584,11 +611,11 @@ export default function ExpensesApp() {
                 <textarea
                   value={comments}
                   onChange={(event) => setComments(event.target.value)}
-                  rows={4}
+                  rows={3}
                   placeholder={
                     category === "service"
                       ? "Υποχρεωτικό για Υπηρεσία"
-                      : "Προαιρετικό σχόλιο, π.χ. απόδειξη, προμηθευτής, λόγος"
+                      : "Προαιρετικό σχόλιο"
                   }
                   className="w-full resize-y rounded-2xl border border-stone-200 bg-white px-4 py-3 font-medium outline-none ring-[#bc6c25]/20 focus:ring-4"
                 />
@@ -597,18 +624,18 @@ export default function ExpensesApp() {
               <button
                 type="submit"
                 disabled={saving}
-                className="w-full rounded-2xl bg-gradient-to-r from-[#bc6c25] to-[#5d4037] px-5 py-4 text-base font-black text-white shadow-xl shadow-[#bc6c25]/20 transition hover:scale-[1.01] disabled:cursor-progress disabled:opacity-60"
+                className="sticky bottom-3 z-10 w-full rounded-2xl bg-gradient-to-r from-[#bc6c25] to-[#5d4037] px-5 py-4 text-base font-black text-white shadow-xl shadow-[#bc6c25]/20 transition hover:scale-[1.01] disabled:cursor-progress disabled:opacity-60 md:static"
               >
                 {saving ? "Αποθήκευση..." : "Καταχώρηση εξόδου"}
               </button>
             </form>
           </section>
 
-          <section className="space-y-6">
-            <div className="rounded-[2rem] border border-white/70 bg-white/60 p-5 shadow-2xl shadow-stone-900/10 backdrop-blur-2xl md:p-6">
-              <div className="mb-5 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <section className="space-y-4 md:space-y-6">
+            <div className="rounded-3xl border border-white/70 bg-white/75 p-4 shadow-xl shadow-stone-900/10 md:rounded-[2rem] md:p-6">
+              <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
                 <div>
-                  <p className="text-xs font-black uppercase tracking-[0.22em] text-[#bc6c25]">
+                  <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#bc6c25]">
                     Reports
                   </p>
                   <h2 className="mt-1 text-2xl font-black text-[#5d4037]">
@@ -616,32 +643,32 @@ export default function ExpensesApp() {
                   </h2>
                 </div>
 
-                <div className="flex flex-wrap gap-2">
+                <div className="grid grid-cols-3 gap-2 md:flex md:flex-wrap">
                   <button
                     type="button"
                     onClick={exportCsv}
-                    className="rounded-full border border-stone-200 bg-white px-4 py-2 text-sm font-black text-slate-800 hover:bg-stone-50"
+                    className="rounded-full border border-stone-200 bg-white px-3 py-2 text-xs font-black text-slate-800 hover:bg-stone-50 md:px-4 md:text-sm"
                   >
-                    Export CSV
+                    CSV
                   </button>
                   <button
                     type="button"
                     onClick={() => window.print()}
-                    className="rounded-full border border-stone-200 bg-white px-4 py-2 text-sm font-black text-slate-800 hover:bg-stone-50"
+                    className="rounded-full border border-stone-200 bg-white px-3 py-2 text-xs font-black text-slate-800 hover:bg-stone-50 md:px-4 md:text-sm"
                   >
-                    Print / PDF
+                    PDF
                   </button>
                   <button
                     type="button"
                     onClick={() => void loadExpenses()}
-                    className="rounded-full bg-slate-950 px-4 py-2 text-sm font-black text-white"
+                    className="rounded-full bg-slate-950 px-3 py-2 text-xs font-black text-white md:px-4 md:text-sm"
                   >
                     Refresh
                   </button>
                 </div>
               </div>
 
-              <div className="grid gap-3 md:grid-cols-3">
+              <div className="grid gap-2 md:grid-cols-3 md:gap-3">
                 <input
                   value={filterMonth}
                   onChange={(event) => setFilterMonth(event.target.value)}
@@ -650,9 +677,7 @@ export default function ExpensesApp() {
                 />
                 <select
                   value={filterAccount}
-                  onChange={(event) =>
-                    setFilterAccount(event.target.value as "all" | "kampos" | "family")
-                  }
+                  onChange={(event) => setFilterAccount(event.target.value as FilterAccount)}
                   className="rounded-2xl border border-stone-200 bg-white px-4 py-3 font-bold outline-none"
                 >
                   <option value="all">Όλα</option>
@@ -667,39 +692,43 @@ export default function ExpensesApp() {
                 />
               </div>
 
-              <div className="mt-5 grid gap-3 md:grid-cols-4">
-                <div className="rounded-2xl bg-slate-950 p-4 text-white">
-                  <p className="text-xs font-black uppercase text-white/60">
-                    Φίλτρο σύνολο
+              <div className="mt-4 grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-3">
+                <div className="rounded-2xl bg-slate-950 p-3 text-white md:p-4">
+                  <p className="text-[10px] font-black uppercase text-white/60 md:text-xs">
+                    Φίλτρο
                   </p>
-                  <p className="mt-1 text-2xl font-black">{formatMoney(filteredTotal)}</p>
+                  <p className="mt-1 text-lg font-black md:text-2xl">
+                    {formatMoney(filteredTotal)}
+                  </p>
                 </div>
-                <div className="rounded-2xl bg-[#6b8e23]/15 p-4 text-[#334414]">
-                  <p className="text-xs font-black uppercase">ΚΑΜΠΟΣ</p>
-                  <p className="mt-1 text-2xl font-black">
+                <div className="rounded-2xl bg-[#6b8e23]/15 p-3 text-[#334414] md:p-4">
+                  <p className="text-[10px] font-black uppercase md:text-xs">ΚΑΜΠΟΣ</p>
+                  <p className="mt-1 text-lg font-black md:text-2xl">
                     {formatMoney(kamposFilteredTotal)}
                   </p>
                 </div>
-                <div className="rounded-2xl bg-[#4a6984]/15 p-4 text-[#263847]">
-                  <p className="text-xs font-black uppercase">ΣΠΙΤΙ</p>
-                  <p className="mt-1 text-2xl font-black">
+                <div className="rounded-2xl bg-[#4a6984]/15 p-3 text-[#263847] md:p-4">
+                  <p className="text-[10px] font-black uppercase md:text-xs">ΣΠΙΤΙ</p>
+                  <p className="mt-1 text-lg font-black md:text-2xl">
                     {formatMoney(familyFilteredTotal)}
                   </p>
                 </div>
-                <div className="rounded-2xl bg-[#bc6c25]/15 p-4 text-[#5d4037]">
-                  <p className="text-xs font-black uppercase">Κινήσεις</p>
-                  <p className="mt-1 text-2xl font-black">{filteredExpenses.length}</p>
+                <div className="rounded-2xl bg-[#bc6c25]/15 p-3 text-[#5d4037] md:p-4">
+                  <p className="text-[10px] font-black uppercase md:text-xs">Κινήσεις</p>
+                  <p className="mt-1 text-lg font-black md:text-2xl">
+                    {filteredExpenses.length}
+                  </p>
                 </div>
               </div>
             </div>
 
-            <div className="grid gap-6 2xl:grid-cols-[0.8fr_1.2fr]">
-              <div className="rounded-[2rem] border border-white/70 bg-white/60 p-5 shadow-2xl shadow-stone-900/10 backdrop-blur-2xl md:p-6">
+            <div className="grid gap-4 2xl:grid-cols-[0.75fr_1.25fr] 2xl:gap-6">
+              <div className="rounded-3xl border border-white/70 bg-white/75 p-4 shadow-xl shadow-stone-900/10 md:rounded-[2rem] md:p-6">
                 <h3 className="text-xl font-black text-[#5d4037]">
                   Σύνολα ανά κατηγορία
                 </h3>
 
-                <div className="mt-4 space-y-3">
+                <div className="mt-4 grid gap-2 md:space-y-3">
                   {categoryTotals.length === 0 ? (
                     <p className="rounded-2xl border border-dashed border-stone-300 p-5 text-center text-sm font-bold text-slate-500">
                       Δεν υπάρχουν κινήσεις για το φίλτρο.
@@ -708,7 +737,7 @@ export default function ExpensesApp() {
                     categoryTotals.map((item) => (
                       <div
                         key={item.slug}
-                        className="rounded-2xl border border-stone-200 bg-white p-4"
+                        className="rounded-2xl border border-stone-200 bg-white p-3 md:p-4"
                       >
                         <div className="flex items-center justify-between gap-3">
                           <span className="font-black text-[#5d4037]">
@@ -735,12 +764,10 @@ export default function ExpensesApp() {
                 </div>
               </div>
 
-              <div className="rounded-[2rem] border border-white/70 bg-white/60 p-5 shadow-2xl shadow-stone-900/10 backdrop-blur-2xl md:p-6">
-                <h3 className="text-xl font-black text-[#5d4037]">
-                  Κινήσεις
-                </h3>
+              <div className="rounded-3xl border border-white/70 bg-white/75 p-4 shadow-xl shadow-stone-900/10 md:rounded-[2rem] md:p-6">
+                <h3 className="text-xl font-black text-[#5d4037]">Κινήσεις</h3>
 
-                <div className="mt-4 overflow-hidden rounded-2xl border border-stone-200 bg-white">
+                <div className="mt-4 rounded-2xl border border-stone-200 bg-white">
                   {loading ? (
                     <p className="p-8 text-center font-black text-slate-500">
                       Φόρτωση από Neon...
@@ -750,62 +777,104 @@ export default function ExpensesApp() {
                       Δεν υπάρχουν κινήσεις.
                     </p>
                   ) : (
-                    <div className="max-h-[680px] overflow-auto">
-                      <table className="w-full min-w-[820px] text-left text-sm">
-                        <thead className="sticky top-0 bg-stone-50 text-xs uppercase tracking-wide text-slate-500">
-                          <tr>
-                            <th className="px-4 py-3">Ημερομηνία</th>
-                            <th className="px-4 py-3">Ποσό</th>
-                            <th className="px-4 py-3">Πρωτοβάθμιος</th>
-                            <th className="px-4 py-3">Κατηγορία</th>
-                            <th className="px-4 py-3">Ενότητα</th>
-                            <th className="px-4 py-3">Σχόλιο</th>
-                            <th className="px-4 py-3"></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {filteredExpenses.map((expense) => {
-                            const expenseCategory = categoryBySlug(expense.category);
-                            const expenseEntity = entityBySlug(expense.entity);
+                    <>
+                      <div className="divide-y divide-stone-100 md:hidden">
+                        {filteredExpenses.map((expense) => {
+                          const expenseCategory = categoryBySlug(expense.category);
+                          const expenseEntity = entityBySlug(expense.entity);
 
-                            return (
-                              <tr
-                                key={expense.id}
-                                className="border-t border-stone-100 align-top"
-                              >
-                                <td className="px-4 py-3 font-bold">
-                                  {formatDate(expense.expenseDate)}
-                                </td>
-                                <td className="px-4 py-3 font-black text-slate-950">
+                          return (
+                            <article key={expense.id} className="p-4">
+                              <div className="flex items-start justify-between gap-3">
+                                <div>
+                                  <p className="text-xs font-black text-slate-500">
+                                    {formatDate(expense.expenseDate)} • {accountLabel(expense.primaryAccount)}
+                                  </p>
+                                  <h4 className="mt-1 text-base font-black text-[#5d4037]">
+                                    {expenseCategory?.icon} {expenseCategory?.label}
+                                  </h4>
+                                  <p className="mt-1 text-sm font-bold text-slate-600">
+                                    {expenseEntity?.icon} {expenseEntity?.label}
+                                  </p>
+                                </div>
+                                <p className="shrink-0 text-base font-black text-slate-950">
                                   {formatMoney(expense.amount)}
-                                </td>
-                                <td className="px-4 py-3 font-bold">
-                                  {accountLabel(expense.primaryAccount)}
-                                </td>
-                                <td className="px-4 py-3 font-bold">
-                                  {expenseCategory?.icon} {expenseCategory?.label}
-                                </td>
-                                <td className="px-4 py-3 font-bold">
-                                  {expenseEntity?.icon} {expenseEntity?.label}
-                                </td>
-                                <td className="max-w-xs px-4 py-3 text-slate-600">
-                                  {expense.comments || "—"}
-                                </td>
-                                <td className="px-4 py-3 text-right">
-                                  <button
-                                    type="button"
-                                    onClick={() => void deleteExpense(expense.id)}
-                                    className="rounded-full bg-red-50 px-3 py-2 text-xs font-black text-red-700 hover:bg-red-100"
-                                  >
-                                    Διαγραφή
-                                  </button>
-                                </td>
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                      </table>
-                    </div>
+                                </p>
+                              </div>
+                              {expense.comments ? (
+                                <p className="mt-3 rounded-2xl bg-stone-50 px-3 py-2 text-sm font-medium text-slate-600">
+                                  {expense.comments}
+                                </p>
+                              ) : null}
+                              <button
+                                type="button"
+                                onClick={() => void deleteExpense(expense.id)}
+                                className="mt-3 rounded-full bg-red-50 px-3 py-2 text-xs font-black text-red-700"
+                              >
+                                Διαγραφή
+                              </button>
+                            </article>
+                          );
+                        })}
+                      </div>
+
+                      <div className="hidden max-h-[680px] overflow-auto md:block">
+                        <table className="w-full min-w-[820px] text-left text-sm">
+                          <thead className="sticky top-0 bg-stone-50 text-xs uppercase tracking-wide text-slate-500">
+                            <tr>
+                              <th className="px-4 py-3">Ημερομηνία</th>
+                              <th className="px-4 py-3">Ποσό</th>
+                              <th className="px-4 py-3">Πρωτοβάθμιος</th>
+                              <th className="px-4 py-3">Κατηγορία</th>
+                              <th className="px-4 py-3">Ενότητα</th>
+                              <th className="px-4 py-3">Σχόλιο</th>
+                              <th className="px-4 py-3"></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {filteredExpenses.map((expense) => {
+                              const expenseCategory = categoryBySlug(expense.category);
+                              const expenseEntity = entityBySlug(expense.entity);
+
+                              return (
+                                <tr
+                                  key={expense.id}
+                                  className="border-t border-stone-100 align-top"
+                                >
+                                  <td className="px-4 py-3 font-bold">
+                                    {formatDate(expense.expenseDate)}
+                                  </td>
+                                  <td className="px-4 py-3 font-black text-slate-950">
+                                    {formatMoney(expense.amount)}
+                                  </td>
+                                  <td className="px-4 py-3 font-bold">
+                                    {accountLabel(expense.primaryAccount)}
+                                  </td>
+                                  <td className="px-4 py-3 font-bold">
+                                    {expenseCategory?.icon} {expenseCategory?.label}
+                                  </td>
+                                  <td className="px-4 py-3 font-bold">
+                                    {expenseEntity?.icon} {expenseEntity?.label}
+                                  </td>
+                                  <td className="max-w-xs px-4 py-3 text-slate-600">
+                                    {expense.comments || "—"}
+                                  </td>
+                                  <td className="px-4 py-3 text-right">
+                                    <button
+                                      type="button"
+                                      onClick={() => void deleteExpense(expense.id)}
+                                      className="rounded-full bg-red-50 px-3 py-2 text-xs font-black text-red-700 hover:bg-red-100"
+                                    >
+                                      Διαγραφή
+                                    </button>
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+                    </>
                   )}
                 </div>
               </div>
@@ -816,4 +885,3 @@ export default function ExpensesApp() {
     </main>
   );
 }
-
