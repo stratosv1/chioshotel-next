@@ -39,11 +39,14 @@
   box-shadow: 0 16px 46px rgba(15, 23, 42, 0.06) !important;
 }
 
+/* The scroll must live on the outer .overflow-auto container, not on the grid itself.
+   If the grid has overflow-hidden, horizontal sticky cannot work in Chrome. */
 .staff-calendar-modern .min-w-max {
   border-color: #dbe3ec !important;
   border-radius: 26px !important;
   box-shadow: none !important;
   isolation: isolate;
+  overflow: visible !important;
 }
 
 /* Critical: keep the room/unit column visible while scrolling horizontally. */
@@ -64,7 +67,8 @@
 }
 
 .staff-calendar-modern .sticky.left-0.z-10,
-.staff-calendar-modern .min-w-max .sticky.left-0.z-10 {
+.staff-calendar-modern .min-w-max .sticky.left-0.z-10,
+.staff-calendar-modern .sticky.left-0[class*="z-\[70\]"] {
   z-index: 70 !important;
 }
 
@@ -139,11 +143,13 @@
 }
 
 /* Softer room/unit column, with category color kept as a small left accent from Tailwind border. */
-.staff-calendar-modern .sticky.left-0.z-10 {
+.staff-calendar-modern .sticky.left-0.z-10,
+.staff-calendar-modern .sticky.left-0[class*="z-\[70\]"] {
   background: #ffffff !important;
 }
 
-.staff-calendar-modern .sticky.left-0.z-10 .rounded-full {
+.staff-calendar-modern .sticky.left-0.z-10 .rounded-full,
+.staff-calendar-modern .sticky.left-0[class*="z-\[70\]"] .rounded-full {
   background: #f8fafc !important;
   border: 1px solid #e2e8f0 !important;
   color: #475569 !important;
