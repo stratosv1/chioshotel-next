@@ -1,8 +1,9 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
+import "./calendar-modern.css";
 import CalendarApp from "./CalendarApp";
 
 export const metadata: Metadata = {
-  title: "Staff Hotel Calendar | Voulamandis House",
+  title: "Staff Calendar | Voulamandis House",
   robots: {
     index: false,
     follow: false,
@@ -10,5 +11,9 @@ export const metadata: Metadata = {
 };
 
 export default function StaffCalendarPage() {
-  return <CalendarApp />;
+  return (
+    <div className="staff-calendar-modern">
+      <CalendarApp />
+    </div>
+  );
 }
