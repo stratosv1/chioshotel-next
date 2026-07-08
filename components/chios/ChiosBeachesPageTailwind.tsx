@@ -180,14 +180,14 @@ export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
       </section>
 
       <section className="px-4 py-12 md:px-6 md:py-18" id="beaches" aria-labelledby="beaches-list-title">
-        <div className="mx-auto max-w-[1180px]">
+        <div className="mx-auto max-w-7xl">
           <header className="mb-6 max-w-[820px] md:mb-8">
             <span className="text-xs font-black uppercase tracking-[0.16em] text-teal-800">
               {copy.beachesKicker}
             </span>
             <h2
               id="beaches-list-title"
-              className="mt-4 text-3xl font-black leading-none tracking-[-0.05em] text-[#102b2d] md:text-5xl"
+              className="mt-4 font-serif text-[2rem] font-bold leading-tight text-slate-950 md:text-5xl"
             >
               {copy.beachesTitle}
             </h2>
@@ -202,53 +202,51 @@ export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
           <div className="relative">
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute right-1 top-[42%] z-20 flex h-11 w-11 items-center justify-center rounded-full bg-teal-950 text-2xl font-black text-white shadow-xl md:hidden"
+              className="pointer-events-none absolute right-2 top-[38%] z-20 flex h-10 w-10 items-center justify-center rounded-full bg-teal-950/95 text-xl font-black text-white shadow-xl md:hidden"
             >
               →
             </div>
-            <div className="grid auto-cols-[86%] grid-flow-col gap-4 overflow-x-auto overscroll-x-contain pb-4 pr-12 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid-flow-row md:auto-cols-auto md:grid-cols-2 md:gap-7 md:overflow-visible md:pb-0 md:pr-0 xl:grid-cols-3">
+            <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 xl:grid-cols-4">
               {data.beaches.map((beach, index) => (
                 <a
-                  className="group flex min-h-[520px] snap-start flex-col overflow-hidden rounded-[30px] bg-white shadow-xl shadow-black/10 ring-1 ring-teal-900/10 transition duration-300 hover:-translate-y-1 hover:shadow-2xl md:min-h-[560px]"
+                  className="group w-[84vw] max-w-[380px] flex-none snap-start overflow-hidden rounded-[1.5rem] bg-white shadow-lg shadow-stone-900/5 ring-1 ring-teal-900/10 transition hover:shadow-xl md:w-auto md:max-w-none md:rounded-[2rem]"
                   href={beach.href}
                   key={beach.href}
                 >
-                  <div className="h-[245px] w-full shrink-0 overflow-hidden bg-white md:h-[260px]">
+                  <div className="relative aspect-[4/3] overflow-hidden">
                     <img
                       src={beach.image}
                       alt={beach.imageAlt}
                       loading={index < 2 ? "eager" : "lazy"}
-                      className="block h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                      className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                     />
-                  </div>
-                  <div className="flex flex-1 flex-col bg-white p-5 text-[#102b2d] md:p-7">
-                    <div className="mb-3 flex flex-wrap gap-2">
-                      <span className="rounded-full bg-white px-3 py-2 text-[10px] font-black uppercase tracking-[0.08em] text-teal-900 shadow-sm ring-1 ring-teal-900/15">
-                        {beach.region}
-                      </span>
-                      <span className="rounded-full bg-teal-50 px-3 py-2 text-[10px] font-black uppercase tracking-[0.08em] text-teal-900 ring-1 ring-teal-900/15">
-                        {beach.mood}
-                      </span>
+                    <div className="absolute left-3 top-3 rounded-full bg-emerald-700 px-3 py-1.5 text-xs font-black text-white">
+                      {beach.region}
                     </div>
-                    <div className="mb-4 flex flex-wrap gap-2">
+                    <div className="absolute right-3 top-3 rounded-full bg-white/95 px-3 py-1.5 text-xs font-black text-emerald-700">
+                      {beach.mood}
+                    </div>
+                  </div>
+                  <div className="p-5">
+                    <h3 className="break-words font-serif text-2xl font-bold leading-tight text-teal-800">
+                      {beach.title}
+                    </h3>
+                    <p className="mt-3 text-sm leading-7 text-stone-600">
+                      {beach.description}
+                    </p>
+                    <div className="mt-4 flex flex-wrap gap-2">
                       {beach.badges.map((badge) => (
                         <span
-                          className="rounded-full bg-teal-800 px-3 py-2 text-[10px] font-black uppercase tracking-[0.08em] text-white"
+                          className="rounded-full bg-teal-50 px-3 py-1.5 text-[11px] font-bold text-teal-800"
                           key={badge}
                         >
                           {badge}
                         </span>
                       ))}
                     </div>
-                    <h3 className="text-2xl font-black leading-[0.95] tracking-[-0.05em] text-[#102b2d] md:text-3xl">
-                      {beach.title}
-                    </h3>
-                    <p className="mt-3 text-sm font-semibold leading-6 text-slate-700">
-                      {beach.description}
-                    </p>
-                    <strong className="mt-auto inline-flex pt-6 text-xs font-black uppercase tracking-[0.12em] text-teal-800">
+                    <span className="mt-5 inline-flex rounded-full border border-teal-800/20 px-4 py-2 text-xs font-black uppercase text-teal-800">
                       {getExploreBeachLabel(language, beach.title)}
-                    </strong>
+                    </span>
                   </div>
                 </a>
               ))}
