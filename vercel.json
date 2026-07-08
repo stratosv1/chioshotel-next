@@ -225,6 +225,106 @@
       "source": "/cdn-cgi/l/email-protection",
       "destination": "/",
       "permanent": true
+    },
+    {
+      "source": "/en/contact-voulamandis-house/",
+      "destination": "/voulamandis-house-contact-us-form-fill-in-the-form/",
+      "permanent": true
+    },
+    {
+      "source": "/contact-voulamandis-house/",
+      "destination": "/voulamandis-house-contact-us-form-fill-in-the-form/",
+      "permanent": true
+    },
+    {
+      "source": "/el/epikoinonia/",
+      "destination": "/el/contact-voulamandis/",
+      "permanent": true
+    },
+    {
+      "source": "/faq/",
+      "destination": "/voulamandis-house-contact-us-form-fill-in-the-form/",
+      "permanent": true
+    },
+    {
+      "source": "/el/faq-2/",
+      "destination": "/el/contact-voulamandis/",
+      "permanent": true
+    },
+    {
+      "source": "/en/erotisis-voulamandis-house-2/",
+      "destination": "/voulamandis-house-contact-us-form-fill-in-the-form/",
+      "permanent": true
+    },
+    {
+      "source": "/en/albums",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/en/albums/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/el/albums",
+      "destination": "/el/",
+      "permanent": true
+    },
+    {
+      "source": "/el/albums/",
+      "destination": "/el/",
+      "permanent": true
+    },
+    {
+      "source": "/tr/voulamandis-house-photos/",
+      "destination": "/tr/",
+      "permanent": true
+    },
+    {
+      "source": "/tr/chios-videos-2/",
+      "destination": "/tr/sakiz-adasi/",
+      "permanent": true
+    },
+    {
+      "source": "/platform-voulamandis/",
+      "destination": "/find-your-room/",
+      "permanent": true
+    },
+    {
+      "source": "/flio-box/",
+      "destination": "/find-your-room/",
+      "permanent": true
+    },
+    {
+      "source": "/best-room-selection-wizard/",
+      "destination": "/find-your-room/",
+      "permanent": true
+    },
+    {
+      "source": "/best-travel-deals-for-chios-hotels/",
+      "destination": "/chios-hotels-rates/",
+      "permanent": true
+    },
+    {
+      "source": "/tr/sakiz-adasindaki-otel-firsatlari/",
+      "destination": "/tr/sakiz-adasi-otel-firsatlari/",
+      "permanent": true
+    },
+    {
+      "source": "/es/chios-hotels-rates/",
+      "destination": "/es/tarifas-hoteles-chios/",
+      "permanent": true
+    },
+    {
+      "source": "/language/el/κρατηση/",
+      "destination": "/el/kratiseis-xios/",
+      "permanent": true
+    },
+    {
+      "source": "/el/direct-booking-to-voulamandis-house/",
+      "destination": "/el/kratiseis-xios/",
+      "permanent": true
     }
   ]
 }
