@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getBeachSlugs } from "@/content/beach-details";
 import { familyBeachPaths } from "@/content/family-beaches";
+import { organizedBeachPaths } from "@/content/organized-beaches";
 import { getVillageSlugs } from "@/content/village-details";
 import { getMuseumSlugs } from "@/content/museum-details";
 import { routeMap } from "@/lib/url-map";
@@ -22,6 +23,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }));
 
   const familyBeachRoutes = Object.values(familyBeachPaths).map((path) => ({
+    url: absoluteUrl(path),
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
+
+  const organizedBeachRoutes = Object.values(organizedBeachPaths).map((path) => ({
     url: absoluteUrl(path),
     lastModified: now,
     changeFrequency: "monthly" as const,
@@ -52,6 +60,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     ...routes,
     ...familyBeachRoutes,
+    ...organizedBeachRoutes,
     ...beachDetailRoutes,
     ...villageDetailRoutes,
     ...museumDetailRoutes,
