@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./calendar-modern.css";
-import StableAvailabilityCalendar from "./StableAvailabilityCalendar";
+import CalendarApp from "./CalendarApp";
 
 export const metadata: Metadata = {
   title: "Staff Calendar | Voulamandis House",
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function StaffCalendarPage() {
   return (
     <div className="staff-calendar-modern">
-      <StableAvailabilityCalendar />
+      <CalendarApp />
     </div>
   );
 }
