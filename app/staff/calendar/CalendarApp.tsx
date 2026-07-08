@@ -73,17 +73,17 @@ type CalendarPayload = {
   units: CalendarUnit[];
   availability: AvailabilityRow[];
   bookings: BookingRow[];
+  sources?: {
+    occupancySheet?: {
+      enabled?: boolean;
+      bookings?: number;
+      error?: string | null;
+    };
+    snapshot?: {
+      bookings?: number;
+    };
+  };
   generatedAt: string;
-  error?: string;
-};
-
-type SyncPayload = {
-  ok: boolean;
-  fetched?: number;
-  saved?: number;
-  skipped?: number;
-  durationMs?: number;
-  generatedAt?: string;
   error?: string;
 };
 
@@ -236,8 +236,6 @@ export default function CalendarApp() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [reloadToken, setReloadToken] = useState(0);
-  const [syncing, setSyncing] = useState(false);
-  const [syncMessage, setSyncMessage] = useState("");
   const [selectedBooking, setSelectedBooking] = useState<BookingRow | null>(null);
   const [newBooking, setNewBooking] = useState<NewBookingDraft | null>(null);
   const [newBookingSaving, setNewBookingSaving] = useState(false);
@@ -310,6 +308,12 @@ export default function CalendarApp() {
     return { units: data?.units.length || 0, bookings: bookings.length, arrivals, departures, availablePrices };
   }, [data, range.end, range.start]);
 
+  const sourceInfo = data?.sources;
+  const sheetBookings = sourceInfo?.occupancySheet?.bookings ?? 0;
+  const sheetEnabled = sourceInfo?.occupancySheet?.enabled ?? false;
+  const sheetError = sourceInfo?.occupancySheet?.error || "";
+  const snapshotBookings = sourceInfo?.snapshot?.bookings ?? 0;
+
   function previousMonth() {
     setAnchorMonth(new Date(anchorMonth.getFullYear(), anchorMonth.getMonth() - 1, 1));
   }
@@ -341,32 +345,6 @@ export default function CalendarApp() {
       children: 0,
       notes: "",
     });
-  }
-
-  async function refreshFromBeds24(showSuccessAlert = true) {
-    if (syncing) return;
-
-    setSyncing(true);
-    setSyncMessage("Syncing Beds24...");
-
-    try {
-      const response = await fetch("/api/staff/calendar/sync", {
-        method: "POST",
-        credentials: "same-origin",
-        cache: "no-store",
-      });
-      const payload = await readJsonResponse<SyncPayload>(response, "Beds24 sync");
-      const message = `Beds24 updated: fetched ${payload.fetched ?? 0}, saved ${payload.saved ?? 0}, skipped ${payload.skipped ?? 0}.`;
-      setSyncMessage(message);
-      setReloadToken((value) => value + 1);
-      if (showSuccessAlert) alert(message);
-    } catch (err) {
-      const message = err instanceof Error ? err.message : "Unknown Beds24 sync error.";
-      setSyncMessage(`Sync failed: ${message}`);
-      if (showSuccessAlert) alert(`Beds24 sync failed: ${message}`);
-    } finally {
-      setSyncing(false);
-    }
   }
 
   async function submitNewBooking() {
@@ -403,8 +381,8 @@ export default function CalendarApp() {
 
       const result = await readJsonResponse<{ bookingId?: string }>(response, "booking API");
       setNewBooking(null);
-      await refreshFromBeds24(false);
-      alert(`Booking created in Beds24${result.bookingId ? `: ${result.bookingId}` : ""}`);
+      setReloadToken((value) => value + 1);
+      alert(`Booking created in Beds24${result.bookingId ? `: ${result.bookingId}` : ""}. Το calendar διαβάζει το occupancy sheet, οπότε θα φανεί όταν συγχρονιστεί το Sheet.`);
     } catch (err) {
       setNewBookingError(err instanceof Error ? err.message : "Unknown booking error.");
     } finally {
@@ -426,7 +404,7 @@ export default function CalendarApp() {
                 <div className="grid h-12 w-12 place-items-center rounded-2xl border border-emerald-200 bg-emerald-50 text-2xl text-emerald-800 shadow-sm">🏡</div>
                 <div>
                   <h1 className="text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">Staff Calendar</h1>
-                  <p className="text-sm font-bold text-slate-500">Voulamandis House · availability · bookings · live rates</p>
+                  <p className="text-sm font-bold text-slate-500">Voulamandis House · occupancy sheet · availability · live rates</p>
                   <p className="mt-1 text-xs font-bold text-slate-400">Calendar loaded: {formatDateTime(data?.generatedAt)}</p>
                 </div>
               </div>
@@ -448,13 +426,8 @@ export default function CalendarApp() {
               <button type="button" onClick={previousMonth} className="rounded-2xl border border-stone-200 bg-white px-4 py-2 text-sm font-black text-slate-700 shadow-sm transition hover:bg-stone-50">←</button>
               <button type="button" onClick={goToday} className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-black text-emerald-800 shadow-sm transition hover:bg-emerald-100">Today</button>
               <button type="button" onClick={nextMonth} className="rounded-2xl border border-stone-200 bg-white px-4 py-2 text-sm font-black text-slate-700 shadow-sm transition hover:bg-stone-50">→</button>
-              <button
-                type="button"
-                disabled={syncing}
-                onClick={() => refreshFromBeds24(true)}
-                className="rounded-2xl border border-emerald-700 bg-emerald-700 px-4 py-2 text-sm font-black text-white shadow-sm transition hover:bg-emerald-800 disabled:cursor-wait disabled:opacity-60"
-              >
-                {syncing ? "Refreshing Beds24..." : "Refresh Beds24"}
+              <button type="button" onClick={() => setReloadToken((value) => value + 1)} className="rounded-2xl border border-emerald-700 bg-emerald-700 px-4 py-2 text-sm font-black text-white shadow-sm transition hover:bg-emerald-800">
+                Reload Sheet
               </button>
             </div>
 
@@ -471,15 +444,14 @@ export default function CalendarApp() {
             </div>
           </div>
 
-          {syncMessage ? (
-            <div className="mt-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-2 text-xs font-black text-emerald-900">
-              {syncMessage}
-            </div>
-          ) : null}
+          <div className={["mt-3 rounded-2xl border px-4 py-2 text-xs font-black", sheetError ? "border-rose-200 bg-rose-50 text-rose-900" : "border-emerald-200 bg-emerald-50 text-emerald-900"].join(" ")}>
+            Primary source: Occupancy Sheet {sheetEnabled ? "active" : "not configured"} · Sheet bookings: {sheetBookings} · Neon fallback: {snapshotBookings}
+            {sheetError ? <span className="block pt-1">Sheet parser/API error: {sheetError}</span> : null}
+          </div>
         </section>
 
         {loading ? (
-          <CenteredMessage title="Loading calendar..." body="Διαβάζω τη Neon βάση." />
+          <CenteredMessage title="Loading calendar..." body="Διαβάζω το occupancy sheet και τη Neon fallback βάση." />
         ) : error ? (
           <CenteredMessage title="Calendar error" body={error} danger />
         ) : (
@@ -699,7 +671,7 @@ function CenteredMessage({ title, body, danger = false }: { title: string; body:
   return (
     <section className="grid flex-1 place-items-center p-8">
       <div className={`max-w-xl rounded-3xl border p-8 text-center shadow-sm ${danger ? "border-rose-200 bg-rose-50" : "border-stone-200 bg-white"}`}>
-        <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-emerald-100 border-t-emerald-500" />
+        {danger ? <div className="mb-4 text-4xl">⚠️</div> : <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-emerald-100 border-t-emerald-500" />}
         <div className={`text-lg font-black ${danger ? "text-rose-950" : "text-slate-950"}`}>{title}</div>
         <div className={`mt-1 whitespace-pre-wrap break-words text-sm font-bold ${danger ? "text-rose-800" : "text-slate-500"}`}>{body}</div>
       </div>
