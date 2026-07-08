@@ -1,6 +1,5 @@
 ﻿import type { Metadata } from "next";
 import { ChiosBeachesPageTailwind } from "@/components/chios/ChiosBeachesPageTailwind";
-import { AnswerFirstSeoBlock } from "@/components/seo/AnswerFirstSeoBlock";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { chiosBeachesPageEn } from "@/content/chios-beaches";
 import { buildChiosBeachesSchema } from "@/content/chios-beaches-schema";
@@ -17,7 +16,6 @@ export default function Page() {
   return (
     <>
       <JsonLd data={buildChiosBeachesSchema(chiosBeachesPageEn)} />
-      <AnswerFirstSeoBlock kind="beaches" language="en" />
       <ChiosBeachesPageTailwind data={chiosBeachesPageEn} />
     </>
   );
