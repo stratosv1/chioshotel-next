@@ -43,13 +43,29 @@
   border-color: #dbe3ec !important;
   border-radius: 26px !important;
   box-shadow: none !important;
+  isolation: isolate;
 }
 
+/* Critical: keep the room/unit column visible while scrolling horizontally. */
 .staff-calendar-modern .min-w-max > .flex:first-child > div:first-child,
-.staff-calendar-modern .min-w-max .sticky.left-0 {
+.staff-calendar-modern .min-w-max .sticky.left-0,
+.staff-calendar-modern .sticky.left-0 {
+  position: sticky !important;
+  left: 0 !important;
+  min-width: 210px !important;
   background: #ffffff !important;
   border-color: #dbe3ec !important;
-  box-shadow: 8px 0 22px rgba(15, 23, 42, 0.045) !important;
+  box-shadow: 10px 0 24px rgba(15, 23, 42, 0.08) !important;
+  transform: translateZ(0);
+}
+
+.staff-calendar-modern .min-w-max > .flex:first-child > div:first-child {
+  z-index: 90 !important;
+}
+
+.staff-calendar-modern .sticky.left-0.z-10,
+.staff-calendar-modern .min-w-max .sticky.left-0.z-10 {
+  z-index: 70 !important;
 }
 
 .staff-calendar-modern .min-w-max .sticky.top-0 {
