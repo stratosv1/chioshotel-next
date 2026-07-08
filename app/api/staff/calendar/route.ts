@@ -55,10 +55,7 @@ function isAuthorized(request: NextRequest) {
     const separatorIndex = decoded.indexOf(":");
     if (separatorIndex === -1) return false;
 
-    const username = decoded.slice(0, separatorIndex);
-    const password = decoded.slice(separatorIndex + 1);
-
-    return username === expectedUser && password === expectedPass;
+    return decoded.slice(0, separatorIndex) === expectedUser && decoded.slice(separatorIndex + 1) === expectedPass;
   } catch {
     return false;
   }
@@ -118,6 +115,12 @@ function parseDate(value: string) {
   return new Date(year, month - 1, day);
 }
 
+function addDays(value: string, amount: number) {
+  const date = parseDate(value);
+  date.setDate(date.getDate() + amount);
+  return isoDateOnly(date);
+}
+
 function makeDays(start: string, end: string) {
   const days: string[] = [];
   const current = parseDate(start);
@@ -141,7 +144,7 @@ function isCanceledStatus(status: unknown) {
   return value.includes("cancel") || value.includes("deleted");
 }
 
-function bookingCoversDate(booking: any, date: string) {
+function bookingCoversDate(booking: { status?: unknown; arrival: string; departure: string }, date: string) {
   if (isCanceledStatus(booking.status)) return false;
   return booking.arrival <= date && booking.departure > date;
 }
@@ -151,7 +154,6 @@ function extractBookingArray(payload: unknown) {
 
   if (payload && typeof payload === "object") {
     const objectPayload = payload as Record<string, unknown>;
-
     for (const key of ["bookings", "occupancy", "data", "items", "rows", "values"]) {
       const value = objectPayload[key];
       if (Array.isArray(value)) return value as RawRecord[];
@@ -161,6 +163,10 @@ function extractBookingArray(payload: unknown) {
   return [];
 }
 
+function stableBookingId(value: string) {
+  return value.toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
+}
+
 function buildStableBookingId(row: RawRecord, roomId: string, unitId: string, arrival: string, departure: string) {
   const explicitId = text(
     getValue(row, [
@@ -168,6 +174,8 @@ function buildStableBookingId(row: RawRecord, roomId: string, unitId: string, ar
       "booking id",
       "beds24_booking_id",
       "beds24 booking id",
+      "bookingId",
+      "booking id",
       "id",
       "bookId",
       "book id",
@@ -179,14 +187,10 @@ function buildStableBookingId(row: RawRecord, roomId: string, unitId: string, ar
   if (explicitId) return explicitId;
 
   const guest = text(getValue(row, ["guest_name", "guest name", "guest", "name", "customer", "client"]));
-  return `sheet-${roomId}-${unitId}-${arrival}-${departure}-${guest}`
-    .toLowerCase()
-    .replace(/[^a-z0-9-]+/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "");
+  return stableBookingId(`sheet-${roomId}-${unitId}-${arrival}-${departure}-${guest}`);
 }
 
-function normalizeSheetBooking(row: RawRecord): NormalizedBooking | null {
+function normalizeDirectBooking(row: RawRecord): NormalizedBooking | null {
   const arrival = normalizeDate(
     getValue(row, ["arrival", "checkin", "check in", "check_in", "start", "start date", "from", "date from"]),
   );
@@ -196,13 +200,17 @@ function normalizeSheetBooking(row: RawRecord): NormalizedBooking | null {
 
   if (!arrival || !departure) return null;
 
-  const rawRoom = text(getValue(row, ["room_id", "room id", "roomid", "room", "unit", "unit name", "room name"]));
-  const rawUnit = text(getValue(row, ["unit_id", "unit id", "unitid", "unit", "room", "room id"]));
+  const rawRoom = text(getValue(row, ["room_id", "room id", "roomid", "roomId", "room", "unit", "unit name", "room name"]));
+  const rawUnit = text(getValue(row, ["unit_id", "unit id", "unitid", "unitId", "unit", "room", "room id"]));
   const roomId = text(rawRoom.match(/\d+/)?.[0] || rawRoom);
   const unitId = text(rawUnit.match(/\d+/)?.[0] || roomId);
 
   if (!roomId || !unitId) return null;
 
+  return buildBookingFromRow(row, roomId, unitId, arrival, departure);
+}
+
+function buildBookingFromRow(row: RawRecord, roomId: string, unitId: string, arrival: string, departure: string): NormalizedBooking {
   const firstName = text(getValue(row, ["first_name", "first name", "firstname", "guest first name"]));
   const lastName = text(getValue(row, ["last_name", "last name", "lastname", "guest last name"]));
   const guestName =
@@ -213,17 +221,17 @@ function normalizeSheetBooking(row: RawRecord): NormalizedBooking | null {
 
   return {
     booking_id: buildStableBookingId(row, roomId, unitId, arrival, departure),
-    book_id: text(getValue(row, ["book_id", "book id", "bookId"])) || null,
+    book_id: text(getValue(row, ["book_id", "book id", "bookId", "bookingId", "booking id"])) || null,
     room_id: roomId,
     unit_id: unitId,
     guest_name: guestName,
     first_name: firstName || null,
     last_name: lastName || null,
-    email: text(getValue(row, ["email", "guest email"])) || null,
-    phone: text(getValue(row, ["phone", "telephone", "guest phone"])) || null,
-    mobile: text(getValue(row, ["mobile", "cell", "guest mobile"])) || null,
-    num_adult: numberOrNull(getValue(row, ["num_adult", "adults", "adult", "persons", "pax"])),
-    num_child: numberOrNull(getValue(row, ["num_child", "children", "child", "kids"])),
+    email: text(getValue(row, ["email", "guest email", "guestEmail"])) || null,
+    phone: text(getValue(row, ["phone", "telephone", "guest phone", "guestPhone"])) || null,
+    mobile: text(getValue(row, ["mobile", "cell", "guest mobile", "guestMobile"])) || null,
+    num_adult: numberOrNull(getValue(row, ["num_adult", "numAdult", "adults", "adult", "persons", "pax"])),
+    num_child: numberOrNull(getValue(row, ["num_child", "numChild", "children", "child", "kids"])),
     arrival,
     departure,
     status: text(getValue(row, ["status", "booking status"])) || "confirmed",
@@ -236,12 +244,80 @@ function normalizeSheetBooking(row: RawRecord): NormalizedBooking | null {
   };
 }
 
+function rowIsBookedNight(row: RawRecord) {
+  const available = text(getValue(row, ["available"])).toUpperCase();
+  const reason = text(getValue(row, ["reason"])).toUpperCase();
+  const bookingId = text(getValue(row, ["bookingId", "booking id", "booking_id", "bookId", "book id"]));
+
+  return bookingId || available === "NO" || reason === "BOOKED";
+}
+
+function normalizeAvailabilityRowsToBookings(rows: RawRecord[]) {
+  const bookedRows = rows
+    .map((row) => {
+      const date = normalizeDate(getValue(row, ["date", "stay_date", "stay date", "day"]));
+      const roomId = text(getValue(row, ["roomId", "room_id", "room id", "roomid"]));
+      const unitId = text(getValue(row, ["unitId", "unit_id", "unit id", "unitid"]));
+      const status = text(getValue(row, ["status"]));
+
+      if (!date || !roomId || !unitId || isCanceledStatus(status) || !rowIsBookedNight(row)) return null;
+
+      const bookingId = text(getValue(row, ["bookingId", "booking id", "booking_id", "bookId", "book id"])) ||
+        stableBookingId(`sheet-night-${roomId}-${unitId}-${date}-${text(getValue(row, ["guest", "guest_name", "guest name"]))}`);
+
+      return { row, date, roomId, unitId, bookingId };
+    })
+    .filter((item): item is { row: RawRecord; date: string; roomId: string; unitId: string; bookingId: string } => Boolean(item))
+    .sort((a, b) => `${a.bookingId}-${a.date}`.localeCompare(`${b.bookingId}-${b.date}`));
+
+  const groups = new Map<string, { row: RawRecord; dates: string[]; roomId: string; unitId: string; bookingId: string }>();
+
+  for (const item of bookedRows) {
+    const key = `${item.bookingId}|${item.roomId}|${item.unitId}`;
+    const group = groups.get(key) || { row: item.row, dates: [], roomId: item.roomId, unitId: item.unitId, bookingId: item.bookingId };
+    group.dates.push(item.date);
+    groups.set(key, group);
+  }
+
+  const bookings: NormalizedBooking[] = [];
+
+  for (const group of groups.values()) {
+    const uniqueDates = Array.from(new Set(group.dates)).sort();
+    if (!uniqueDates.length) continue;
+
+    let segmentStart = uniqueDates[0];
+    let previous = uniqueDates[0];
+
+    function pushSegment(start: string, lastNight: string) {
+      const departure = addDays(lastNight, 1);
+      const booking = buildBookingFromRow(group.row, group.roomId, group.unitId, start, departure);
+      booking.booking_id = group.bookingId;
+      booking.book_id = group.bookingId;
+      bookings.push(booking);
+    }
+
+    for (let i = 1; i < uniqueDates.length; i += 1) {
+      const expectedNext = addDays(previous, 1);
+      if (uniqueDates[i] !== expectedNext) {
+        pushSegment(segmentStart, previous);
+        segmentStart = uniqueDates[i];
+      }
+      previous = uniqueDates[i];
+    }
+
+    pushSegment(segmentStart, previous);
+  }
+
+  return bookings;
+}
+
 async function fetchOccupancySheetBookings(start: string, end: string) {
   const scriptUrl = text(process.env.OCCUPANCY_SCRIPT_URL);
-  if (!scriptUrl) return { bookings: [] as NormalizedBooking[], error: "" };
+  if (!scriptUrl) return { bookings: [] as NormalizedBooking[], error: "", rows: 0 };
 
   try {
     const url = new URL(scriptUrl);
+    url.searchParams.set("action", "bookings");
     url.searchParams.set("start", start);
     url.searchParams.set("end", end);
 
@@ -254,20 +330,25 @@ async function fetchOccupancySheetBookings(start: string, end: string) {
     if (!response.ok) {
       return {
         bookings: [] as NormalizedBooking[],
+        rows: 0,
         error: `Occupancy sheet error ${response.status}: ${JSON.stringify(payload).slice(0, 300)}`,
       };
     }
 
     const rows = extractBookingArray(payload);
-    const bookings = rows
-      .map((row) => normalizeSheetBooking(row))
-      .filter((booking): booking is NormalizedBooking => Boolean(booking))
-      .filter((booking) => booking.arrival <= end && booking.departure >= start);
+    const directBookings = rows
+      .map((row) => normalizeDirectBooking(row))
+      .filter((booking): booking is NormalizedBooking => Boolean(booking));
 
-    return { bookings, error: "" };
+    const nightBookings = normalizeAvailabilityRowsToBookings(rows);
+    const rawBookings = directBookings.length ? directBookings : nightBookings;
+    const bookings = rawBookings.filter((booking) => booking.arrival <= end && booking.departure >= start);
+
+    return { bookings, rows: rows.length, error: "" };
   } catch (error) {
     return {
       bookings: [] as NormalizedBooking[],
+      rows: 0,
       error: error instanceof Error ? error.message : "Unknown occupancy sheet error.",
     };
   }
@@ -339,7 +420,6 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const start = safeDateParam(searchParams.get("start"), defaultStart);
   const end = safeDateParam(searchParams.get("end"), defaultEnd);
-
   const sql = neon(databaseUrl);
 
   try {
@@ -416,7 +496,6 @@ export async function GET(request: NextRequest) {
       `;
 
       const rateMap = new Map<string, number>();
-
       for (const rate of rates as any[]) {
         rateMap.set(`${rate.room_id}:${rate.date}`, Number(rate.price || 0));
       }
@@ -458,6 +537,7 @@ export async function GET(request: NextRequest) {
         sources: {
           occupancySheet: {
             enabled: Boolean(text(process.env.OCCUPANCY_SCRIPT_URL)),
+            rows: occupancyResult.rows,
             bookings: occupancyResult.bookings.length,
             error: occupancyResult.error || null,
           },
@@ -478,11 +558,7 @@ export async function GET(request: NextRequest) {
     const message = error instanceof Error ? error.message : "Unknown calendar API error.";
 
     return NextResponse.json(
-      {
-        ok: false,
-        error: message,
-        range: { start, end },
-      },
+      { ok: false, error: message, range: { start, end } },
       {
         status: 500,
         headers: {
