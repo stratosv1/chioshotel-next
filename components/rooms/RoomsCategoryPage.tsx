@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { RoomWizard } from "@/components/rooms/RoomWizard";
+import { TopicBadges } from "@/components/seo/TopicBadges";
 import type { RoomsCategoryPageData } from "@/content/rooms";
+import type { LanguageCode } from "@/lib/languages";
 
 type RoomsCategoryPageProps = {
   data: RoomsCategoryPageData;
@@ -10,7 +12,7 @@ function HtmlText({ html }: { html: string }) {
   return <span dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
-function getWizardLanguage(path: string) {
+function getWizardLanguage(path: string): LanguageCode {
   if (path.startsWith("/el/")) return "el";
   if (path.startsWith("/fr/")) return "fr";
   if (path.startsWith("/de/")) return "de";
@@ -40,6 +42,8 @@ const heroButtonStyle = {
 } as const;
 
 export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
+  const language = getWizardLanguage(data.seo.canonicalPath);
+
   return (
     <main className="rooms-page">
       <section className="rooms-hero" aria-labelledby="rooms-hero-title">
@@ -73,6 +77,8 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
           </div>
         </div>
       </section>
+
+      <TopicBadges locale={language} context="rooms-category" className="border-b border-amber-900/10" />
 
       <section
         className="v-master-wrapper"
@@ -137,7 +143,7 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
         <RoomWizard
           rooms={data.wizard.rooms}
           whatsappPhone={data.wizard.whatsappPhone}
-          language={getWizardLanguage(data.seo.canonicalPath)}
+          language={language}
         />
       </section>
     </main>
