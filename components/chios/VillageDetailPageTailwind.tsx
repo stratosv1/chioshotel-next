@@ -12,6 +12,8 @@ const villageUiCopy = {
     answerTitlePrefix: "Why visit",
     detailsLabel: "Village details",
     storyKicker: "Village guide",
+    specialTitlePrefix: "What makes",
+    specialTitleSuffix: "special?",
     routesKicker: "Route ideas",
     localTipLabel: "Voulamandis House local tip",
     relatedKicker: "Chios village guide",
@@ -24,6 +26,8 @@ const villageUiCopy = {
     answerTitlePrefix: "Γιατί να δείτε",
     detailsLabel: "Πληροφορίες χωριού",
     storyKicker: "Οδηγός χωριού",
+    specialTitlePrefix: "Τι κάνει",
+    specialTitleSuffix: "ξεχωριστό;",
     routesKicker: "Ιδέες διαδρομής",
     localTipLabel: "Τοπική συμβουλή από το Voulamandis House",
     relatedKicker: "Οδηγός χωριών Χίου",
@@ -36,6 +40,8 @@ const villageUiCopy = {
     answerTitlePrefix: "Pourquoi visiter",
     detailsLabel: "Détails du village",
     storyKicker: "Guide du village",
+    specialTitlePrefix: "Qu’est-ce qui rend",
+    specialTitleSuffix: "si spécial ?",
     routesKicker: "Idées d’itinéraire",
     localTipLabel: "Conseil local de Voulamandis House",
     relatedKicker: "Guide des villages de Chios",
@@ -48,6 +54,8 @@ const villageUiCopy = {
     answerTitlePrefix: "Warum besuchen",
     detailsLabel: "Dorfdetails",
     storyKicker: "Dorfführer",
+    specialTitlePrefix: "Was macht",
+    specialTitleSuffix: "besonders?",
     routesKicker: "Routenideen",
     localTipLabel: "Lokaler Tipp von Voulamandis House",
     relatedKicker: "Dorfführer für Chios",
@@ -60,6 +68,8 @@ const villageUiCopy = {
     answerTitlePrefix: "Perché visitare",
     detailsLabel: "Dettagli del villaggio",
     storyKicker: "Guida del villaggio",
+    specialTitlePrefix: "Cosa rende",
+    specialTitleSuffix: "speciale?",
     routesKicker: "Idee di itinerario",
     localTipLabel: "Consiglio locale di Voulamandis House",
     relatedKicker: "Guida ai villaggi di Chios",
@@ -72,6 +82,8 @@ const villageUiCopy = {
     answerTitlePrefix: "Por qué visitar",
     detailsLabel: "Detalles del pueblo",
     storyKicker: "Guía del pueblo",
+    specialTitlePrefix: "Qué hace especial a",
+    specialTitleSuffix: "?",
     routesKicker: "Ideas de ruta",
     localTipLabel: "Consejo local de Voulamandis House",
     relatedKicker: "Guía de pueblos de Chios",
@@ -84,6 +96,8 @@ const villageUiCopy = {
     answerTitlePrefix: "Neden ziyaret etmeli",
     detailsLabel: "Köy detayları",
     storyKicker: "Köy rehberi",
+    specialTitlePrefix: "Neden",
+    specialTitleSuffix: "özel?",
     routesKicker: "Rota fikirleri",
     localTipLabel: "Voulamandis House yerel tavsiyesi",
     relatedKicker: "Sakız Adası köy rehberi",
@@ -231,7 +245,7 @@ export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
               id="village-story-title"
               className="mt-4 text-3xl font-black leading-none tracking-[-0.05em] text-[#2f261f] md:text-5xl"
             >
-              {village.experience.title}
+              {copy.specialTitlePrefix} {villageName} {copy.specialTitleSuffix}
             </h2>
             <div className="mt-6 space-y-5">
               {village.experience.paragraphs.map((paragraph) => (
