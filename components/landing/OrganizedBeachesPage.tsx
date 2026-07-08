@@ -36,7 +36,7 @@ export function OrganizedBeachesPage({ data }: OrganizedBeachesPageProps) {
       <section id="organized-beaches" className="scroll-mt-28 px-4 py-14 md:px-6 md:py-22" aria-labelledby="organized-beaches-title">
         <div className="mx-auto max-w-[1180px]">
           <header className="mb-8 max-w-[820px] md:mb-12">
-            <p className="text-xs font-black uppercase tracking-[0.18em] text-cyan-700">⛱ Organized beach guide</p>
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-cyan-700">{data.hero.eyebrow}</p>
             <h2 id="organized-beaches-title" className="mt-3 text-3xl font-black leading-none tracking-[-0.05em] md:text-5xl">{data.highlights.title}</h2>
             <p className="mt-4 text-base leading-8 text-slate-700">{data.highlights.subtitle}</p>
           </header>
