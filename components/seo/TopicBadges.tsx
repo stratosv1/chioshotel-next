@@ -131,14 +131,28 @@ const badgeCopy: Record<LanguageCode, Record<TopicBadgeKey, TopicBadgeCopy>> = {
   },
 };
 
+const allTopicBadges: TopicBadgeKey[] = [
+  "rooms",
+  "groundRooms",
+  "firstFloorRooms",
+  "familyStay",
+  "airportStay",
+  "beaches",
+  "villages",
+  "museums",
+  "chiosGuide",
+  "kambosStay",
+  "location",
+];
+
 const badgesByContext: Record<TopicBadgeContext, TopicBadgeKey[]> = {
-  home: ["rooms", "beaches", "villages", "chiosGuide", "kambosStay"],
-  "rooms-category": ["rooms", "groundRooms", "firstFloorRooms", "familyStay", "airportStay"],
-  "room-detail": ["rooms", "kambosStay", "airportStay", "familyStay"],
-  "beach-detail": ["beaches", "chiosGuide", "rooms", "kambosStay"],
-  "village-detail": ["villages", "chiosGuide", "rooms", "kambosStay"],
-  contact: ["location", "kambosStay", "airportStay", "rooms"],
-  "chios-guide": ["beaches", "villages", "museums", "rooms"],
+  home: allTopicBadges,
+  "rooms-category": allTopicBadges,
+  "room-detail": allTopicBadges,
+  "beach-detail": allTopicBadges,
+  "village-detail": allTopicBadges,
+  contact: allTopicBadges,
+  "chios-guide": allTopicBadges,
 };
 
 function getPathForItem(itemId?: string, locale: LanguageCode = defaultLanguage) {
