@@ -1,4 +1,4 @@
-﻿import type { FamilyBeachesPageData } from "@/content/family-beaches";
+import type { FamilyBeachesPageData } from "@/content/family-beaches";
 
 type FamilyBeachesPageProps = {
   data: FamilyBeachesPageData;
@@ -103,33 +103,41 @@ export function FamilyBeachesPage({ data }: FamilyBeachesPageProps) {
             <p className="mt-4 text-base leading-8 text-slate-700">{data.highlights.subtitle}</p>
           </header>
 
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-            {data.highlights.cards.map((beach) => (
-              <a
-                key={beach.name}
-                href={beach.href}
-                className="group overflow-hidden rounded-[32px] bg-white shadow-lg ring-1 ring-slate-900/5 transition hover:-translate-y-1 hover:shadow-2xl"
-              >
-                <div className="relative aspect-[4/3] overflow-hidden bg-white">
-                  <img
-                    src={beach.image}
-                    alt={beach.name}
-                    loading="lazy"
-                    className="absolute inset-0 !h-full !w-full object-cover transition duration-500 group-hover:scale-105" style={{ height: "100%", width: "100%", objectFit: "cover" }}
-                  />
-                </div>
-                <div className="p-5">
-                  <span className="inline-flex rounded-full bg-amber-100 px-3 py-1 text-[11px] font-black uppercase tracking-[0.08em] text-amber-900">
-                    {beach.tag}
-                  </span>
-                  <h3 className="mt-3 text-2xl font-black tracking-[-0.04em]">{beach.name}</h3>
-                  <p className="mt-2 text-sm leading-6 text-slate-700">{beach.description}</p>
-                  <p className="mt-4 rounded-2xl bg-[#fff8ed] p-3 text-sm font-bold leading-6 text-slate-800">
-                    {beach.why}
-                  </p>
-                </div>
-              </a>
-            ))}
+          <div className="relative">
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute right-2 top-[34%] z-20 flex h-10 w-10 items-center justify-center rounded-full bg-slate-950/95 text-xl font-black text-white shadow-xl md:hidden"
+            >
+              →
+            </div>
+            <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-12 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 xl:grid-cols-4">
+              {data.highlights.cards.map((beach) => (
+                <a
+                  key={beach.name}
+                  href={beach.href}
+                  className="group w-[84vw] max-w-[380px] flex-none snap-start overflow-hidden rounded-[32px] bg-white shadow-lg ring-1 ring-slate-900/5 transition hover:-translate-y-1 hover:shadow-2xl md:w-auto md:max-w-none"
+                >
+                  <div className="relative aspect-[4/3] overflow-hidden bg-white">
+                    <img
+                      src={beach.image}
+                      alt={beach.name}
+                      loading="lazy"
+                      className="absolute inset-0 !h-full !w-full object-cover transition duration-500 group-hover:scale-105" style={{ height: "100%", width: "100%", objectFit: "cover" }}
+                    />
+                  </div>
+                  <div className="p-5">
+                    <span className="inline-flex rounded-full bg-amber-100 px-3 py-1 text-[11px] font-black uppercase tracking-[0.08em] text-amber-900">
+                      {beach.tag}
+                    </span>
+                    <h3 className="mt-3 text-2xl font-black tracking-[-0.04em]">{beach.name}</h3>
+                    <p className="mt-2 text-sm leading-6 text-slate-700">{beach.description}</p>
+                    <p className="mt-4 rounded-2xl bg-[#fff8ed] p-3 text-sm font-bold leading-6 text-slate-800">
+                      {beach.why}
+                    </p>
+                  </div>
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -188,5 +196,3 @@ export function FamilyBeachesPage({ data }: FamilyBeachesPageProps) {
     </main>
   );
 }
-
-
