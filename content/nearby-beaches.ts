@@ -1,13 +1,13 @@
-import type { LanguageCode } from "@/lib/languages";
+﻿import type { LanguageCode } from "@/lib/languages";
 import { absoluteUrl } from "@/lib/seo";
 import type { OrganizedBeachesPageData, OrganizedBeachCard } from "@/content/organized-beaches";
 
 const images = {
   hero: "/images/beaches/agia-fotia.jpg",
-  karfas: "/images/beaches/agia-fotia.jpg",
-  glari: "/images/beaches/agia-fotia.jpg",
+  karfas: "/images/beaches/karfas-beach-chios.jpg",
+  glari: "/images/beaches/paralia-ton-glaron-4.jpg",
   agiaFotia: "/images/beaches/agia-fotia.jpg",
-  daskalopetra: "/images/beaches/agia-fotia.jpg",
+  daskalopetra: "/images/beaches/daskalopetra-beach-chios.jpg",
   stay: "/images/beaches/voulamandis-house-chios-courtyard-hero-desktop.webp",
 };
 
@@ -85,3 +85,4 @@ export const nearbyBeachesPages: Record<LanguageCode, OrganizedBeachesPageData> 
 
 export function getNearbyBeachesPageByLocale(locale: LanguageCode) { return nearbyBeachesPages[locale]; }
 export function getNearbyBeachesPageByPath(path: string) { return Object.values(nearbyBeachesPages).find((page) => page.path === path); }
+
