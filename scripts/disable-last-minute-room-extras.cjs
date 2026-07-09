@@ -86,3 +86,31 @@ if (fs.existsSync(villageCategoriesPath)) {
     console.log("Fixed village category card size type.");
   }
 }
+
+const villagesPagePath = path.join(process.cwd(), "components", "chios", "ChiosVillagesPageTailwind.tsx");
+
+if (fs.existsSync(villagesPagePath)) {
+  let source = fs.readFileSync(villagesPagePath, "utf8");
+
+  const plainCategoryCarouselOpening =
+    '            <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 pr-8 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-3 md:overflow-visible md:pr-0">';
+  const activeCategoryCarouselOpening =
+    '            <div className="relative">\n' +
+    '              <div\n' +
+    '                aria-hidden="true"\n' +
+    '                className="pointer-events-none absolute right-2 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-[#2f261f]/95 text-xl font-black text-white shadow-xl md:hidden"\n' +
+    '              >\n' +
+    '                →\n' +
+    '              </div>\n' +
+    '              <div data-carousel-track="true" className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 pr-12 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-3 md:overflow-visible md:pr-0">';
+
+  if (source.includes(plainCategoryCarouselOpening)) {
+    source = source.replace(plainCategoryCarouselOpening, activeCategoryCarouselOpening);
+    source = source.replace(
+      '              ))}\n            </div>\n          </div>\n        </section>\n      ) : null}',
+      '              ))}\n              </div>\n            </div>\n          </div>\n        </section>\n      ) : null}',
+    );
+    fs.writeFileSync(villagesPagePath, source, "utf8");
+    console.log("Added active village category carousel arrow.");
+  }
+}
