@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ConsentAnalytics } from "@/components/analytics/ConsentAnalytics";
+import { BeachCategoryLanguageLinksHydrator } from "@/components/ui/BeachCategoryLanguageLinksHydrator";
 import { CarouselArrowHydrator } from "@/components/ui/CarouselArrowHydrator";
 import { VoulamandisFooter } from "@/components/VoulamandisFooter";
 import { VoulamandisHeader } from "@/components/VoulamandisHeader";
@@ -78,6 +79,7 @@ export default async function RootLayout({
         ) : null}
         {children}
         {!hideHeader ? <VoulamandisFooter language={htmlLanguage} /> : null}
+        <BeachCategoryLanguageLinksHydrator />
         <CarouselArrowHydrator />
         <ConsentAnalytics language={htmlLanguage} />
         <SpeedInsights />
