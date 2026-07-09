@@ -1,4 +1,4 @@
-import type { FamilyBeachesPageData } from "@/content/family-beaches";
+﻿import type { FamilyBeachesPageData } from "@/content/family-beaches";
 
 type FamilyBeachesPageProps = {
   data: FamilyBeachesPageData;
@@ -115,7 +115,7 @@ export function FamilyBeachesPage({ data }: FamilyBeachesPageProps) {
                     src={beach.image}
                     alt={beach.name}
                     loading="lazy"
-                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                    className="block !h-full !w-full object-cover transition duration-500 group-hover:scale-105" style={{ height: "100%", width: "100%", objectFit: "cover", display: "block" }}
                   />
                 </div>
                 <div className="p-5">
@@ -188,3 +188,4 @@ export function FamilyBeachesPage({ data }: FamilyBeachesPageProps) {
     </main>
   );
 }
+

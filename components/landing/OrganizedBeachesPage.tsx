@@ -1,4 +1,4 @@
-import type { OrganizedBeachesPageData } from "@/content/organized-beaches";
+﻿import type { OrganizedBeachesPageData } from "@/content/organized-beaches";
 
 type OrganizedBeachesPageProps = { data: OrganizedBeachesPageData };
 
@@ -63,7 +63,7 @@ export function OrganizedBeachesPage({ data }: OrganizedBeachesPageProps) {
             {data.highlights.cards.map((beach) => (
               <a key={beach.name} href={beach.href} className="group overflow-hidden rounded-[32px] bg-white shadow-lg ring-1 ring-slate-900/5 transition hover:-translate-y-1 hover:shadow-2xl">
                 <div className="aspect-[4/3] overflow-hidden bg-slate-200">
-                  <img src={beach.image} alt={beach.name} loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+                  <img src={beach.image} alt={beach.name} loading="lazy" className="block !h-full !w-full object-cover transition duration-500 group-hover:scale-105" style={{ height: "100%", width: "100%", objectFit: "cover", display: "block" }} />
                 </div>
                 <div className="p-5">
                   <span className="inline-flex rounded-full bg-cyan-100 px-3 py-1 text-[11px] font-black uppercase tracking-[0.08em] !text-cyan-950">{beach.tag}</span>
@@ -113,3 +113,4 @@ export function OrganizedBeachesPage({ data }: OrganizedBeachesPageProps) {
     </main>
   );
 }
+
