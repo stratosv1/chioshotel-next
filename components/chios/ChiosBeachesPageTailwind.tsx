@@ -206,7 +206,7 @@ export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
             >
               →
             </div>
-            <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 xl:grid-cols-4">
+            <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 xl:grid-cols-3">
               {data.beaches.map((beach, index) => (
                 <a
                   className="group w-[84vw] max-w-[380px] flex-none snap-start overflow-hidden rounded-[1.5rem] bg-white shadow-lg shadow-stone-900/5 ring-1 ring-teal-900/10 transition hover:shadow-xl md:w-auto md:max-w-none md:rounded-[2rem]"
@@ -271,67 +271,17 @@ export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
               {data.planning.description}
             </p>
           </article>
-          <div className="grid gap-4">
+          <div className="grid gap-4 sm:grid-cols-2">
             {data.planning.items.map((item) => (
-              <div
-                className="flex gap-4 rounded-2xl border border-teal-900/10 bg-teal-50/40 p-5"
-                key={item.title}
-              >
-                <span
-                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-2xl shadow-sm"
-                  aria-hidden="true"
-                >
+              <article className="rounded-[26px] bg-teal-50 p-5 ring-1 ring-teal-900/10" key={item.title}>
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-2xl shadow" aria-hidden="true">
                   {item.icon}
-                </span>
-                <div>
-                  <h3 className="text-lg font-black text-[#102b2d]">{item.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-slate-700">{item.text}</p>
                 </div>
-              </div>
+                <h3 className="text-lg font-black text-[#102b2d]">{item.title}</h3>
+                <p className="mt-2 text-sm leading-7 text-slate-700">{item.text}</p>
+              </article>
             ))}
           </div>
-        </div>
-      </section>
-
-      <section className="px-4 py-12 md:px-6 md:py-18" aria-labelledby="beaches-stay-title">
-        <div className="mx-auto max-w-[1180px]">
-          <article className="relative overflow-hidden rounded-[36px] bg-teal-950 p-6 text-white shadow-2xl md:p-12">
-            <img
-              src="/images/beaches/voulamandis-house-chios-courtyard-hero-desktop.webp"
-              alt=""
-              loading="lazy"
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-            <div className="absolute inset-0 bg-teal-950/70" aria-hidden="true" />
-            <div className="relative z-10 max-w-[760px]">
-              <span className="text-xs font-black uppercase tracking-[0.16em] text-white/80">
-                {data.stay.kicker}
-              </span>
-              <h2
-                id="beaches-stay-title"
-                className="mt-4 text-3xl font-black leading-none tracking-[-0.05em] text-white md:text-5xl"
-              >
-                {data.stay.title}
-              </h2>
-              <p className="mt-5 text-base leading-8 text-white/90 md:text-lg">
-                {data.stay.text}
-              </p>
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                <a
-                  className="inline-flex min-h-[54px] items-center justify-center rounded-full bg-white px-7 text-xs font-black uppercase tracking-[0.12em] text-teal-950 transition hover:-translate-y-1"
-                  href={data.stay.primaryCta.href}
-                >
-                  {data.stay.primaryCta.label}
-                </a>
-                <a
-                  className="inline-flex min-h-[54px] items-center justify-center rounded-full border border-white/35 px-7 text-xs font-black uppercase tracking-[0.12em] text-white transition hover:-translate-y-1 hover:bg-white/10"
-                  href={data.stay.secondaryCta.href}
-                >
-                  {data.stay.secondaryCta.label}
-                </a>
-              </div>
-            </div>
-          </article>
         </div>
       </section>
     </main>
