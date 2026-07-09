@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ConsentAnalytics } from "@/components/analytics/ConsentAnalytics";
+import { CarouselArrowHydrator } from "@/components/ui/CarouselArrowHydrator";
 import { VoulamandisFooter } from "@/components/VoulamandisFooter";
 import { VoulamandisHeader } from "@/components/VoulamandisHeader";
 import { siteName, siteUrl } from "@/lib/seo";
@@ -77,6 +78,7 @@ export default async function RootLayout({
         ) : null}
         {children}
         {!hideHeader ? <VoulamandisFooter language={htmlLanguage} /> : null}
+        <CarouselArrowHydrator />
         <ConsentAnalytics language={htmlLanguage} />
         <SpeedInsights />
       </body>
