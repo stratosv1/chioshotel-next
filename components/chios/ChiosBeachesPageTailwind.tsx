@@ -57,6 +57,100 @@ const beachesPageUiCopy = {
   },
 } as const;
 
+const beachCategoryGuideCopy = {
+  en: {
+    kicker: "Beach finder",
+    title: "Find the right Chios beach for your day",
+    text: "Choose by beach style, distance from Voulamandis House or the kind of sea day you want.",
+    items: [
+      { label: "Organized beaches", href: "/chios-organized-beaches/", icon: "☕" },
+      { label: "Family beaches", href: "/chios-family-beaches/", icon: "👨‍👩‍👧" },
+      { label: "Sheltered beaches", href: "/chios-sheltered-beaches/", icon: "🌤️" },
+      { label: "Sandy beaches", href: "/chios-sandy-beaches/", icon: "🏖️" },
+      { label: "Quiet beaches", href: "/chios-quiet-beaches/", icon: "🧘" },
+      { label: "Near Voulamandis House", href: "/beaches-near-voulamandis-house/", icon: "📍" },
+    ],
+  },
+  el: {
+    kicker: "Οδηγός επιλογής",
+    title: "Βρείτε την κατάλληλη παραλία στη Χίο",
+    text: "Επιλέξτε ανάλογα με το στυλ παραλίας, την απόσταση από το Voulamandis House ή τη μέρα που θέλετε να οργανώσετε.",
+    items: [
+      { label: "Οργανωμένες παραλίες", href: "/el/organomenes-paralies-xios/", icon: "☕" },
+      { label: "Παραλίες για παιδιά", href: "/el/paralies-xios-gia-paidia/", icon: "👨‍👩‍👧" },
+      { label: "Απάνεμες παραλίες", href: "/el/apanemes-paralies-xios/", icon: "🌤️" },
+      { label: "Παραλίες με άμμο", href: "/el/paralies-me-ammo-xios/", icon: "🏖️" },
+      { label: "Ήσυχες παραλίες", href: "/el/isixes-paralies-xios/", icon: "🧘" },
+      { label: "Κοντινές στο Voulamandis", href: "/el/kontines-paralies-voulamandis-house/", icon: "📍" },
+    ],
+  },
+  fr: {
+    kicker: "Guide de choix",
+    title: "Trouvez la plage de Chios adaptée à votre journée",
+    text: "Choisissez selon le style de plage, la distance depuis Voulamandis House ou l’ambiance souhaitée.",
+    items: [
+      { label: "Plages organisées", href: "/fr/plages-organisees-chios/", icon: "☕" },
+      { label: "Plages pour enfants", href: "/fr/plages-de-chios-pour-enfants/", icon: "👨‍👩‍👧" },
+      { label: "Plages abritées", href: "/fr/plages-abritees-chios/", icon: "🌤️" },
+      { label: "Plages de sable", href: "/fr/plages-de-sable-chios/", icon: "🏖️" },
+      { label: "Plages calmes", href: "/fr/plages-calmes-chios/", icon: "🧘" },
+      { label: "Près de Voulamandis", href: "/fr/plages-proches-voulamandis-house/", icon: "📍" },
+    ],
+  },
+  de: {
+    kicker: "Strandfinder",
+    title: "Finden Sie den passenden Strand auf Chios",
+    text: "Wählen Sie nach Strandtyp, Entfernung von Voulamandis House oder gewünschter Tagesstimmung.",
+    items: [
+      { label: "Organisierte Strände", href: "/de/organisierte-straende-chios/", icon: "☕" },
+      { label: "Strände für Kinder", href: "/de/chios-straende-fuer-kinder/", icon: "👨‍👩‍👧" },
+      { label: "Geschützte Strände", href: "/de/geschuetzte-straende-chios/", icon: "🌤️" },
+      { label: "Sandstrände", href: "/de/sandstraende-chios/", icon: "🏖️" },
+      { label: "Ruhige Strände", href: "/de/ruhige-straende-chios/", icon: "🧘" },
+      { label: "Nahe Voulamandis", href: "/de/straende-nahe-voulamandis-house/", icon: "📍" },
+    ],
+  },
+  it: {
+    kicker: "Guida alla scelta",
+    title: "Trova la spiaggia di Chios giusta per la tua giornata",
+    text: "Scegli in base al tipo di spiaggia, alla distanza da Voulamandis House o all’atmosfera che cerchi.",
+    items: [
+      { label: "Spiagge attrezzate", href: "/it/spiagge-attrezzate-chios/", icon: "☕" },
+      { label: "Spiagge per bambini", href: "/it/spiagge-chios-per-bambini/", icon: "👨‍👩‍👧" },
+      { label: "Spiagge riparate", href: "/it/spiagge-riparate-chios/", icon: "🌤️" },
+      { label: "Spiagge di sabbia", href: "/it/spiagge-di-sabbia-chios/", icon: "🏖️" },
+      { label: "Spiagge tranquille", href: "/it/spiagge-tranquille-chios/", icon: "🧘" },
+      { label: "Vicino a Voulamandis", href: "/it/spiagge-vicine-voulamandis-house/", icon: "📍" },
+    ],
+  },
+  es: {
+    kicker: "Guía de elección",
+    title: "Encuentra la playa de Chios adecuada para tu día",
+    text: "Elige por tipo de playa, distancia desde Voulamandis House o el ambiente que buscas.",
+    items: [
+      { label: "Playas organizadas", href: "/es/playas-organizadas-quios/", icon: "☕" },
+      { label: "Playas para niños", href: "/es/playas-de-quios-para-ninos/", icon: "👨‍👩‍👧" },
+      { label: "Playas resguardadas", href: "/es/playas-resguardadas-quios/", icon: "🌤️" },
+      { label: "Playas de arena", href: "/es/playas-de-arena-quios/", icon: "🏖️" },
+      { label: "Playas tranquilas", href: "/es/playas-tranquilas-quios/", icon: "🧘" },
+      { label: "Cerca de Voulamandis", href: "/es/playas-cerca-voulamandis-house/", icon: "📍" },
+    ],
+  },
+  tr: {
+    kicker: "Plaj seçimi",
+    title: "Gününüz için doğru Sakız Adası plajını bulun",
+    text: "Plaj tipine, Voulamandis House’a yakınlığa veya istediğiniz deniz günü atmosferine göre seçin.",
+    items: [
+      { label: "Düzenli plajlar", href: "/tr/sakiz-adasi-duzenli-plajlar/", icon: "☕" },
+      { label: "Çocuklar için plajlar", href: "/tr/cocuklar-icin-sakiz-adasi-plajlari/", icon: "👨‍👩‍👧" },
+      { label: "Korunaklı plajlar", href: "/tr/sakiz-adasi-korunakli-plajlar/", icon: "🌤️" },
+      { label: "Kumlu plajlar", href: "/tr/sakiz-adasi-kumlu-plajlar/", icon: "🏖️" },
+      { label: "Sakin plajlar", href: "/tr/sakiz-adasi-sakin-plajlar/", icon: "🧘" },
+      { label: "Voulamandis yakınında", href: "/tr/voulamandis-house-yakin-plajlar/", icon: "📍" },
+    ],
+  },
+} as const;
+
 type BeachesPageUiLanguage = keyof typeof beachesPageUiCopy;
 
 function getBeachesPageLanguage(data: ChiosBeachesPageData): BeachesPageUiLanguage {
@@ -88,6 +182,7 @@ function getExploreBeachLabel(language: BeachesPageUiLanguage, title: string) {
 export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
   const language = getBeachesPageLanguage(data);
   const copy = beachesPageUiCopy[language];
+  const categoryGuide = beachCategoryGuideCopy[language];
 
   return (
     <main className="overflow-hidden bg-[#eaf5f3] text-[#102b2d]">
@@ -136,6 +231,36 @@ export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
       </section>
 
       <AnswerFirstSeoBlock kind="beaches" language={language} />
+
+      <section className="px-4 pt-4 md:px-6 md:pt-6" aria-labelledby="beach-category-guide-title">
+        <div className="mx-auto max-w-[1180px] rounded-[30px] border border-teal-900/10 bg-white/95 p-4 shadow-xl shadow-black/5 md:p-6">
+          <div className="mb-4 md:flex md:items-end md:justify-between md:gap-6">
+            <div>
+              <span className="text-[11px] font-black uppercase tracking-[0.16em] text-teal-800">
+                {categoryGuide.kicker}
+              </span>
+              <h2 id="beach-category-guide-title" className="mt-2 text-2xl font-black leading-tight tracking-[-0.04em] text-[#102b2d] md:text-3xl">
+                {categoryGuide.title}
+              </h2>
+            </div>
+            <p className="mt-3 max-w-[520px] text-sm leading-6 text-slate-600 md:mt-0 md:text-right">
+              {categoryGuide.text}
+            </p>
+          </div>
+          <nav aria-label={categoryGuide.title} className="flex gap-3 overflow-x-auto pb-1 pr-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:flex-wrap md:overflow-visible md:pr-0">
+            {categoryGuide.items.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                className="inline-flex shrink-0 items-center gap-2 rounded-full border border-teal-900/10 bg-white px-4 py-3 text-sm font-black text-[#102b2d] shadow-sm transition hover:-translate-y-0.5 hover:border-teal-700/30 hover:bg-teal-50 hover:text-teal-900 md:px-5"
+              >
+                <span aria-hidden="true">{item.icon}</span>
+                <span>{item.label}</span>
+              </a>
+            ))}
+          </nav>
+        </div>
+      </section>
 
       <section className="px-4 py-12 md:px-6 md:py-18" aria-labelledby="beaches-intro-title">
         <div className="mx-auto grid max-w-[1180px] gap-5 md:grid-cols-[1.05fr_0.95fr]">
