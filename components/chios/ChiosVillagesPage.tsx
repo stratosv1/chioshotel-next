@@ -169,42 +169,50 @@ export function ChiosVillagesPage({ data }: ChiosVillagesPageProps) {
             <p>{copy.villagesText}</p>
           </header>
 
-          <div className="cv-bento-grid">
-            {data.villages.map((village, index) => (
-              <a
-                className={`cv-village-card cv-village-card--${village.size}`}
-                href={village.href}
-                key={village.href}
-              >
-                <div className="cv-village-image" aria-hidden="true">
-                  <img
-                    src={village.image}
-                    alt=""
-                    loading={index < 2 ? "eager" : "lazy"}
-                  />
-                </div>
-
-                <div className="cv-village-overlay" />
-
-                <div className="cv-village-content">
-                  <div className="cv-village-meta">
-                    <span>{village.region}</span>
-                    <span>{village.mood}</span>
+          <div className="relative">
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute right-2 top-[38%] z-20 flex h-10 w-10 items-center justify-center rounded-full bg-[#2f261f]/95 text-xl font-black text-white shadow-xl md:hidden"
+            >
+              →
+            </div>
+            <div className="cv-bento-grid !flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-12 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:!grid md:overflow-visible md:pr-0">
+              {data.villages.map((village, index) => (
+                <a
+                  className={`cv-village-card cv-village-card--${village.size} w-[84vw] max-w-[390px] flex-none snap-start md:w-auto md:max-w-none`}
+                  href={village.href}
+                  key={village.href}
+                >
+                  <div className="cv-village-image" aria-hidden="true">
+                    <img
+                      src={village.image}
+                      alt=""
+                      loading={index < 2 ? "eager" : "lazy"}
+                    />
                   </div>
 
-                  <div className="cv-village-badges">
-                    {village.badges.map((badge) => (
-                      <span key={badge}>{badge}</span>
-                    ))}
+                  <div className="cv-village-overlay" />
+
+                  <div className="cv-village-content">
+                    <div className="cv-village-meta">
+                      <span>{village.region}</span>
+                      <span>{village.mood}</span>
+                    </div>
+
+                    <div className="cv-village-badges">
+                      {village.badges.map((badge) => (
+                        <span key={badge}>{badge}</span>
+                      ))}
+                    </div>
+
+                    <h3>{village.title}</h3>
+                    <p>{village.description}</p>
+
+                    <strong>{copy.exploreVillage}</strong>
                   </div>
-
-                  <h3>{village.title}</h3>
-                  <p>{village.description}</p>
-
-                  <strong>{copy.exploreVillage}</strong>
-                </div>
-              </a>
-            ))}
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </section>
