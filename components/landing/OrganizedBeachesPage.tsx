@@ -76,7 +76,7 @@ export function OrganizedBeachesPage({ data }: OrganizedBeachesPageProps) {
             <h2 id="organized-stay-title" className="mt-3 text-3xl font-black leading-none tracking-[-0.05em] !text-slate-950 md:text-5xl">{data.stay.title}</h2>
             <p className="mt-5 text-base leading-8 !text-slate-700">{data.stay.text}</p>
             <div className="mt-7 grid grid-cols-2 gap-3 md:flex md:flex-wrap">
-              <a href={data.stay.primaryCta.href} className="inline-flex min-h-[50px] items-center justify-center rounded-2xl bg-slate-950 px-4 text-center text-xs font-black uppercase tracking-[0.08em] !text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-slate-800 md:rounded-full md:px-7">{data.stay.primaryCta.label}</a>
+              <a href={data.stay.primaryCta.href} style={{ color: "#ffffff" }} className="inline-flex min-h-[50px] items-center justify-center rounded-2xl bg-slate-950 px-4 text-center text-xs font-black uppercase tracking-[0.08em] !text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-slate-800 md:rounded-full md:px-7"><span style={{ color: "#ffffff" }}>{data.stay.primaryCta.label}</span></a>
               <a href={data.stay.secondaryCta.href} className="inline-flex min-h-[50px] items-center justify-center rounded-2xl border border-slate-950 bg-white px-4 text-center text-xs font-black uppercase tracking-[0.08em] !text-slate-950 shadow-sm transition hover:-translate-y-0.5 hover:bg-slate-100 md:rounded-full md:px-7">{data.stay.secondaryCta.label}</a>
             </div>
           </article>
@@ -88,7 +88,7 @@ export function OrganizedBeachesPage({ data }: OrganizedBeachesPageProps) {
           <h2 id="organized-final-title" className="text-3xl font-black leading-none tracking-[-0.05em] !text-slate-950 md:text-5xl">{data.finalCta.title}</h2>
           <p className="mx-auto mt-4 max-w-[720px] text-base leading-8 !text-slate-700">{data.finalCta.text}</p>
           <div className="mt-7 flex flex-wrap justify-center gap-3">
-            <a href={data.finalCta.primaryCta.href} className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-slate-950 px-7 text-xs font-black uppercase tracking-[0.08em] !text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-slate-800">{data.finalCta.primaryCta.label}</a>
+            <a href={data.finalCta.primaryCta.href} style={{ color: "#ffffff" }} className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-slate-950 px-7 text-xs font-black uppercase tracking-[0.08em] !text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-slate-800"><span style={{ color: "#ffffff" }}>{data.finalCta.primaryCta.label}</span></a>
             <a href={data.finalCta.secondaryCta.href} className="inline-flex min-h-[50px] items-center justify-center rounded-full border border-slate-950 bg-white px-7 text-xs font-black uppercase tracking-[0.08em] !text-slate-950 shadow-sm transition hover:-translate-y-0.5 hover:bg-slate-100">{data.finalCta.secondaryCta.label}</a>
           </div>
         </div>
