@@ -1,5 +1,6 @@
 import type { ChiosBeachesPageData } from "@/content/chios-beaches";
 import { AnswerFirstSeoBlock } from "@/components/seo/AnswerFirstSeoBlock";
+import { HorizontalChipScroller } from "@/components/ui/HorizontalChipScroller";
 
 type ChiosBeachesPageProps = {
   data: ChiosBeachesPageData;
@@ -247,18 +248,7 @@ export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
               {categoryGuide.text}
             </p>
           </div>
-          <nav aria-label={categoryGuide.title} className="flex gap-3 overflow-x-auto pb-1 pr-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:flex-wrap md:overflow-visible md:pr-0">
-            {categoryGuide.items.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className="inline-flex shrink-0 items-center gap-2 rounded-full border border-teal-900/10 bg-white px-4 py-3 text-sm font-black text-[#102b2d] shadow-sm transition hover:-translate-y-0.5 hover:border-teal-700/30 hover:bg-teal-50 hover:text-teal-900 md:px-5"
-              >
-                <span aria-hidden="true">{item.icon}</span>
-                <span>{item.label}</span>
-              </a>
-            ))}
-          </nav>
+          <HorizontalChipScroller ariaLabel={categoryGuide.title} items={categoryGuide.items} />
         </div>
       </section>
 
