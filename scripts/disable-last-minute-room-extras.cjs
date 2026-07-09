@@ -114,3 +114,63 @@ if (fs.existsSync(villagesPagePath)) {
     console.log("Added active village category carousel arrow.");
   }
 }
+
+const nextConfigPath = path.join(process.cwd(), "next.config.ts");
+
+if (fs.existsSync(nextConfigPath)) {
+  let source = fs.readFileSync(nextConfigPath, "utf8");
+  const redirectMarker = "// gsc-2026-07-turkish-legacy-redirects";
+
+  if (!source.includes(redirectMarker)) {
+    const redirectBlock = `${redirectMarker}
+  {
+    source: "/tr/chios-odalari/sakiz-adasinin-plajlari",
+    destination: "/tr/sakiz-adasi-plajlari",
+    permanent: true,
+  },
+  {
+    source: "/tr/chios-odalari/pyrgi-sakiz-adasi-koyu",
+    destination: "/tr/sakiz-adasi-koyleri/pyrgi-koyu",
+    permanent: true,
+  },
+  {
+    source: "/tr/chios-odalari/mesta-koyu-chios",
+    destination: "/tr/sakiz-adasi-koyleri/mesta-koyu",
+    permanent: true,
+  },
+  {
+    source: "/tr/chios-odalari/vessa-koyu-chios",
+    destination: "/tr/sakiz-adasi-koyleri/vessa-koyu",
+    permanent: true,
+  },
+  {
+    source: "/tr/chios-odalari/olympoi-koyu-chios",
+    destination: "/tr/sakiz-adasi-koyleri/olympoi-koyu",
+    permanent: true,
+  },
+  {
+    source: "/tr/chios-odalari/volissos-koyu-chios",
+    destination: "/tr/sakiz-adasi-koyleri/volissos-koyu",
+    permanent: true,
+  },
+  {
+    source: "/tr/chios-odalari/armolia-koyu-chios",
+    destination: "/tr/sakiz-adasi-koyleri/armolia-koyu",
+    permanent: true,
+  },
+  {
+    source: "/tr/chios-odalari/lagada-koyu-chios",
+    destination: "/tr/sakiz-adasi-koyleri/lagada-koyu",
+    permanent: true,
+  },
+  {
+    source: "/tr/chios-odalari/kambos-sakiz-adasi",
+    destination: "/tr/sakiz-adasi",
+    permanent: true,
+  },
+`;
+    source = source.replace("const legacyRedirects = [", `const legacyRedirects = [\n  ${redirectBlock}`);
+    fs.writeFileSync(nextConfigPath, source, "utf8");
+    console.log("Added Search Console Turkish legacy redirects.");
+  }
+}
