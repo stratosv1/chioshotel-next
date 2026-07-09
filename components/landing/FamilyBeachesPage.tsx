@@ -169,8 +169,8 @@ export function FamilyBeachesPage({ data }: FamilyBeachesPageProps) {
             </h2>
             <p className="mt-5 text-base leading-8 text-slate-700">{data.stay.text}</p>
             <div className="mt-7 grid grid-cols-2 gap-3 md:flex md:flex-wrap">
-              <a href={data.stay.primaryCta.href} className="inline-flex min-h-[50px] items-center justify-center rounded-2xl bg-slate-950 px-4 text-center text-xs font-black uppercase tracking-[0.08em] text-white md:rounded-full md:px-7">
-                {data.stay.primaryCta.label}
+              <a href={data.stay.primaryCta.href} style={{ color: "#ffffff" }} className="inline-flex min-h-[50px] items-center justify-center rounded-2xl bg-slate-950 px-4 text-center text-xs font-black uppercase tracking-[0.08em] !text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-slate-800 md:rounded-full md:px-7">
+                <span style={{ color: "#ffffff" }}>{data.stay.primaryCta.label}</span>
               </a>
               <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[50px] items-center justify-center rounded-2xl bg-green-600 px-4 text-center text-xs font-black uppercase tracking-[0.08em] text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-green-700 md:rounded-full md:px-7">
                 {whatsappLabel}
