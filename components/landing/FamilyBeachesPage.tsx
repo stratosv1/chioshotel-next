@@ -4,7 +4,25 @@ type FamilyBeachesPageProps = {
   data: FamilyBeachesPageData;
 };
 
+const whatsappLabels = {
+  en: "WhatsApp",
+  el: "WhatsApp",
+  fr: "WhatsApp",
+  de: "WhatsApp",
+  it: "WhatsApp",
+  es: "WhatsApp",
+  tr: "WhatsApp",
+};
+
+function getWhatsAppHref(data: FamilyBeachesPageData) {
+  const message = `Hello Voulamandis House, I need help choosing a Chios beach. Page: ${data.seo.title}`;
+  return `https://wa.me/302271031733?text=${encodeURIComponent(message)}`;
+}
+
 export function FamilyBeachesPage({ data }: FamilyBeachesPageProps) {
+  const whatsappHref = getWhatsAppHref(data);
+  const whatsappLabel = whatsappLabels[data.locale] || "WhatsApp";
+
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#fff8ed] text-slate-950">
       <section className="relative flex min-h-[68svh] items-end overflow-hidden bg-slate-950 text-white md:min-h-[620px]">
@@ -146,6 +164,9 @@ export function FamilyBeachesPage({ data }: FamilyBeachesPageProps) {
               <a href={data.stay.primaryCta.href} className="inline-flex min-h-[50px] items-center justify-center rounded-2xl bg-slate-950 px-4 text-center text-xs font-black uppercase tracking-[0.08em] text-white md:rounded-full md:px-7">
                 {data.stay.primaryCta.label}
               </a>
+              <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[50px] items-center justify-center rounded-2xl bg-green-600 px-4 text-center text-xs font-black uppercase tracking-[0.08em] text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-green-700 md:rounded-full md:px-7">
+                {whatsappLabel}
+              </a>
               <a href={data.stay.secondaryCta.href} className="inline-flex min-h-[50px] items-center justify-center rounded-2xl border border-slate-300 px-4 text-center text-xs font-black uppercase tracking-[0.08em] text-slate-950 md:rounded-full md:px-7">
                 {data.stay.secondaryCta.label}
               </a>
@@ -161,9 +182,6 @@ export function FamilyBeachesPage({ data }: FamilyBeachesPageProps) {
           </h2>
           <p className="mx-auto mt-4 max-w-[720px] text-base leading-8 text-slate-700">{data.finalCta.text}</p>
           <div className="mt-7 flex flex-wrap justify-center gap-3">
-            <a href={data.finalCta.primaryCta.href} className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-slate-950 px-7 text-xs font-black uppercase tracking-[0.08em] text-white">
-              {data.finalCta.primaryCta.label}
-            </a>
             <a href={data.finalCta.secondaryCta.href} className="inline-flex min-h-[50px] items-center justify-center rounded-full border border-amber-900/20 bg-white px-7 text-xs font-black uppercase tracking-[0.08em] text-slate-950">
               {data.finalCta.secondaryCta.label}
             </a>
