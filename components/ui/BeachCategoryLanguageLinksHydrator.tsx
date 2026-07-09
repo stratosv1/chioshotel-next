@@ -73,6 +73,41 @@ const beachCategoryPathGroups: LanguagePathGroup[] = [
   },
 ];
 
+const villageCategoryPathGroups: LanguagePathGroup[] = [
+  {
+    en: "/chios-mastic-villages/",
+    el: "/el/mastichochoria-xios/",
+    fr: "/fr/villages-du-mastic-chios/",
+    de: "/de/mastixdoerfer-chios/",
+    it: "/it/villaggi-del-mastice-chios/",
+    es: "/es/pueblos-del-mastiha-quios/",
+    tr: "/tr/sakiz-adasi-mastik-koyleri/",
+  },
+  {
+    en: "/chios-medieval-villages/",
+    el: "/el/mesaionika-xoria-xios/",
+    fr: "/fr/villages-medievaux-chios/",
+    de: "/de/mittelalterliche-doerfer-chios/",
+    it: "/it/villaggi-medievali-chios/",
+    es: "/es/pueblos-medievales-quios/",
+    tr: "/tr/sakiz-adasi-orta-cag-koyleri/",
+  },
+  {
+    en: "/chios-seaside-villages/",
+    el: "/el/parathalassia-xoria-xios/",
+    fr: "/fr/villages-en-bord-de-mer-chios/",
+    de: "/de/kuestendoerfer-chios/",
+    it: "/it/villaggi-sul-mare-chios/",
+    es: "/es/pueblos-costeros-quios/",
+    tr: "/tr/sakiz-adasi-sahil-koyleri/",
+  },
+];
+
+const translatedPathGroups = [
+  ...beachCategoryPathGroups,
+  ...villageCategoryPathGroups,
+];
+
 function normalizePath(path: string) {
   if (!path) {
     return "/";
@@ -91,7 +126,7 @@ function normalizePath(path: string) {
 function getMatchingPathGroup(pathname: string) {
   const normalizedPath = normalizePath(pathname);
 
-  return beachCategoryPathGroups.find((group) =>
+  return translatedPathGroups.find((group) =>
     Object.values(group).includes(normalizedPath),
   );
 }
