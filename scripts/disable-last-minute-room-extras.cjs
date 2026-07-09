@@ -1,4 +1,4 @@
-﻿const fs = require("fs");
+const fs = require("fs");
 const path = require("path");
 
 const zeroRoomExtrasBlock = `const ROOM_EXTRA_PER_NIGHT: Record<number, number> = {
@@ -68,5 +68,21 @@ if (fs.existsSync(consentPath)) {
     source = source.replace(wrongImport, correctImport);
     fs.writeFileSync(consentPath, source, "utf8");
     console.log("Fixed ConsentAnalytics import.");
+  }
+}
+
+const villageCategoriesPath = path.join(process.cwd(), "content", "village-categories.ts");
+
+if (fs.existsSync(villageCategoriesPath)) {
+  let source = fs.readFileSync(villageCategoriesPath, "utf8");
+  const looseVillageSize =
+    '      size: index === 0 ? "large" : index === 1 ? "tall" : index === 2 ? "wide" : "normal",';
+  const typedVillageSize =
+    '      size: (index === 0 ? "large" : index === 1 ? "tall" : index === 2 ? "wide" : "normal") as ChiosVillagesPageData["villages"][number]["size"],';
+
+  if (source.includes(looseVillageSize)) {
+    source = source.replace(looseVillageSize, typedVillageSize);
+    fs.writeFileSync(villageCategoriesPath, source, "utf8");
+    console.log("Fixed village category card size type.");
   }
 }
