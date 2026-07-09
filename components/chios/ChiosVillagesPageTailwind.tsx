@@ -1,4 +1,4 @@
-﻿import type { ChiosVillagesPageData } from "@/content/chios-villages";
+import type { ChiosVillagesPageData } from "@/content/chios-villages";
 import { AnswerFirstSeoBlock } from "@/components/seo/AnswerFirstSeoBlock";
 
 type ChiosVillagesPageProps = {
@@ -57,6 +57,163 @@ const villagesPageUiCopy = {
   },
 } as const;
 
+const villageCategoryGuideCopy = {
+  en: {
+    kicker: "Village routes",
+    title: "Find Chios villages by experience",
+    text: "Choose a route before you start driving: mastic culture, medieval stone villages or relaxed seaside stops.",
+    items: [
+      {
+        label: "Mastic villages",
+        text: "Pyrgi, Mesta, Olympoi, Armolia and Vessa in southern Chios.",
+        href: "/chios-mastic-villages/",
+      },
+      {
+        label: "Medieval villages",
+        text: "Fortress layouts, stone alleys, castles and historic squares.",
+        href: "/chios-medieval-villages/",
+      },
+      {
+        label: "Seaside villages",
+        text: "Harbor views, fish taverns and slower coastal routes.",
+        href: "/chios-seaside-villages/",
+      },
+    ],
+  },
+  el: {
+    kicker: "Διαδρομές χωριών",
+    title: "Βρείτε χωριά της Χίου ανά εμπειρία",
+    text: "Διαλέξτε πρώτα τύπο διαδρομής: μαστιχική παράδοση, μεσαιωνικά χωριά ή χαλαρές παραθαλάσσιες στάσεις.",
+    items: [
+      {
+        label: "Μαστιχοχώρια",
+        text: "Πυργί, Μεστά, Ολύμποι, Αρμόλια και Βέσσα στη νότια Χίο.",
+        href: "/el/mastichochoria-xios/",
+      },
+      {
+        label: "Μεσαιωνικά χωριά",
+        text: "Καστροχωρίτικη δομή, πέτρινα σοκάκια, κάστρα και ιστορικές πλατείες.",
+        href: "/el/mesaionika-xoria-xios/",
+      },
+      {
+        label: "Παραθαλάσσια χωριά",
+        text: "Λιμανάκια, ψαροταβέρνες και πιο χαλαρές διαδρομές κοντά στη θάλασσα.",
+        href: "/el/parathalassia-xoria-xios/",
+      },
+    ],
+  },
+  fr: {
+    kicker: "Routes de villages",
+    title: "Trouvez les villages de Chios par expérience",
+    text: "Choisissez votre route : culture du mastic, villages médiévaux en pierre ou haltes calmes en bord de mer.",
+    items: [
+      {
+        label: "Villages du mastic",
+        text: "Pyrgi, Mesta, Olympoi, Armolia et Vessa dans le sud de Chios.",
+        href: "/fr/villages-du-mastic-chios/",
+      },
+      {
+        label: "Villages médiévaux",
+        text: "Villages fortifiés, ruelles de pierre, châteaux et places historiques.",
+        href: "/fr/villages-medievaux-chios/",
+      },
+      {
+        label: "Villages en bord de mer",
+        text: "Ports, tavernes de poisson et routes côtières plus lentes.",
+        href: "/fr/villages-en-bord-de-mer-chios/",
+      },
+    ],
+  },
+  de: {
+    kicker: "Dörfer-Routen",
+    title: "Dörfer auf Chios nach Erlebnis finden",
+    text: "Wählen Sie Ihre Route: Mastixkultur, mittelalterliche Steindörfer oder entspannte Stopps am Meer.",
+    items: [
+      {
+        label: "Mastixdörfer",
+        text: "Pyrgi, Mesta, Olympoi, Armolia und Vessa im Süden von Chios.",
+        href: "/de/mastixdoerfer-chios/",
+      },
+      {
+        label: "Mittelalterliche Dörfer",
+        text: "Wehrstrukturen, Steingassen, Burgen und historische Plätze.",
+        href: "/de/mittelalterliche-doerfer-chios/",
+      },
+      {
+        label: "Küstendörfer",
+        text: "Hafenblicke, Fischtavernen und ruhige Küstenrouten.",
+        href: "/de/kuestendoerfer-chios/",
+      },
+    ],
+  },
+  it: {
+    kicker: "Itinerari nei villaggi",
+    title: "Trova i villaggi di Chios per esperienza",
+    text: "Scegli la rotta: cultura del mastice, villaggi medievali in pietra o soste rilassate sul mare.",
+    items: [
+      {
+        label: "Villaggi del mastice",
+        text: "Pyrgi, Mesta, Olympoi, Armolia e Vessa nel sud di Chios.",
+        href: "/it/villaggi-del-mastice-chios/",
+      },
+      {
+        label: "Villaggi medievali",
+        text: "Strutture fortificate, vicoli in pietra, castelli e piazze storiche.",
+        href: "/it/villaggi-medievali-chios/",
+      },
+      {
+        label: "Villaggi sul mare",
+        text: "Porti, taverne di pesce e itinerari costieri più lenti.",
+        href: "/it/villaggi-sul-mare-chios/",
+      },
+    ],
+  },
+  es: {
+    kicker: "Rutas por pueblos",
+    title: "Encuentra pueblos de Chios por experiencia",
+    text: "Elige una ruta: cultura del mastiha, pueblos medievales de piedra o paradas costeras tranquilas.",
+    items: [
+      {
+        label: "Pueblos del mastiha",
+        text: "Pyrgi, Mesta, Olympoi, Armolia y Vessa en el sur de Chios.",
+        href: "/es/pueblos-del-mastiha-quios/",
+      },
+      {
+        label: "Pueblos medievales",
+        text: "Trazados fortificados, callejones de piedra, castillos y plazas históricas.",
+        href: "/es/pueblos-medievales-quios/",
+      },
+      {
+        label: "Pueblos costeros",
+        text: "Puertos, tabernas de pescado y rutas costeras más tranquilas.",
+        href: "/es/pueblos-costeros-quios/",
+      },
+    ],
+  },
+  tr: {
+    kicker: "Köy rotaları",
+    title: "Sakız Adası köylerini deneyime göre bulun",
+    text: "Rotanızı seçin: mastik kültürü, Orta Çağ taş köyleri veya sakin sahil durakları.",
+    items: [
+      {
+        label: "Mastik köyleri",
+        text: "Güney Sakız’da Pyrgi, Mesta, Olympoi, Armolia ve Vessa.",
+        href: "/tr/sakiz-adasi-mastik-koyleri/",
+      },
+      {
+        label: "Orta Çağ köyleri",
+        text: "Kale dokusu, taş sokaklar, kaleler ve tarihi meydanlar.",
+        href: "/tr/sakiz-adasi-orta-cag-koyleri/",
+      },
+      {
+        label: "Sahil köyleri",
+        text: "Liman manzaraları, balık tavernaları ve sakin kıyı rotaları.",
+        href: "/tr/sakiz-adasi-sahil-koyleri/",
+      },
+    ],
+  },
+} as const;
+
 type VillagesPageUiLanguage = keyof typeof villagesPageUiCopy;
 
 function getVillagesPageLanguage(
@@ -90,6 +247,8 @@ function getExploreVillageLabel(language: VillagesPageUiLanguage, title: string)
 export function ChiosVillagesPageTailwind({ data }: ChiosVillagesPageProps) {
   const language = getVillagesPageLanguage(data);
   const copy = villagesPageUiCopy[language];
+  const categoryGuide = villageCategoryGuideCopy[language];
+  const shouldShowCategoryGuide = data.villages.length > 5;
 
   return (
     <main className="overflow-hidden bg-[#f7efe5] text-[#2f261f]">
@@ -138,6 +297,49 @@ export function ChiosVillagesPageTailwind({ data }: ChiosVillagesPageProps) {
       </section>
 
       <AnswerFirstSeoBlock kind="villages" language={language} />
+
+      {shouldShowCategoryGuide ? (
+        <section className="px-4 py-10 md:px-6 md:py-14" aria-labelledby="village-category-guide-title">
+          <div className="mx-auto max-w-[1180px] rounded-[32px] border border-[#8e6607]/15 bg-white/80 p-5 shadow-xl shadow-black/5 backdrop-blur md:p-8">
+            <div className="mb-5 max-w-[760px] md:mb-7">
+              <span className="text-xs font-black uppercase tracking-[0.16em] text-[#8e6607]">
+                {categoryGuide.kicker}
+              </span>
+              <h2
+                id="village-category-guide-title"
+                className="mt-3 text-2xl font-black leading-tight tracking-[-0.04em] text-[#2f261f] md:text-4xl"
+              >
+                {categoryGuide.title}
+              </h2>
+              <p className="mt-4 text-sm leading-7 text-[#574b3f] md:text-base">
+                {categoryGuide.text}
+              </p>
+            </div>
+            <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 pr-8 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-3 md:overflow-visible md:pr-0">
+              {categoryGuide.items.map((item) => (
+                <a
+                  className="group flex w-[82vw] max-w-[360px] flex-none snap-start flex-col justify-between rounded-[24px] border border-[#8e6607]/15 bg-[#fffdfa] p-5 shadow-sm transition hover:-translate-y-1 hover:border-[#8e6607]/35 hover:shadow-xl md:w-auto md:max-w-none"
+                  href={item.href}
+                  key={item.href}
+                >
+                  <span className="inline-flex w-fit rounded-full bg-[#fff4df] px-3 py-1 text-[11px] font-black uppercase tracking-[0.12em] text-[#8e6607]">
+                    {categoryGuide.kicker}
+                  </span>
+                  <h3 className="mt-4 text-xl font-black leading-tight tracking-[-0.03em] text-[#2f261f]">
+                    {item.label}
+                  </h3>
+                  <p className="mt-3 text-sm leading-6 text-[#574b3f]">
+                    {item.text}
+                  </p>
+                  <span className="mt-5 inline-flex text-sm font-black text-[#8e6607]">
+                    {item.label} <span aria-hidden="true" className="ml-2 transition group-hover:translate-x-1">→</span>
+                  </span>
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       <section className="px-4 py-12 md:px-6 md:py-18" aria-labelledby="villages-intro-title">
         <div className="mx-auto grid max-w-[1180px] gap-5 md:grid-cols-[1.05fr_0.95fr]">
