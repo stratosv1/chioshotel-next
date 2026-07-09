@@ -5,6 +5,7 @@ import { organizedBeachPaths } from "@/content/organized-beaches";
 import { shelteredBeachPaths } from "@/content/sheltered-beaches";
 import { quietBeachPaths } from "@/content/quiet-beaches";
 import { nearbyBeachPaths } from "@/content/nearby-beaches";
+import { sandyBeachPaths } from "@/content/sandy-beaches";
 import { getVillageSlugs } from "@/content/village-details";
 import { getMuseumSlugs } from "@/content/museum-details";
 import { routeMap } from "@/lib/url-map";
@@ -60,6 +61,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
+  const sandyBeachRoutes = Object.values(sandyBeachPaths).map((path) => ({
+    url: absoluteUrl(path),
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
+
   const beachDetailRoutes = getBeachSlugs().map((slug) => ({
     url: absoluteUrl(`/chios/chios-beaches/${slug}/`),
     lastModified: now,
@@ -88,6 +96,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...shelteredBeachRoutes,
     ...quietBeachRoutes,
     ...nearbyBeachRoutes,
+    ...sandyBeachRoutes,
     ...beachDetailRoutes,
     ...villageDetailRoutes,
     ...museumDetailRoutes,
