@@ -64,3 +64,81 @@ section .bg-stone-950.text-white.shadow-2xl > div.absolute.inset-0[class*="radia
     text-align: center !important;
   }
 }
+
+/* Room detail mobile compact pass: temporary safe overrides while legacy rd-* classes are being migrated to Tailwind. */
+@media (max-width: 767px) {
+  .rd-room-thumbs {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    overflow-x: visible !important;
+    padding-bottom: 0 !important;
+    scroll-snap-type: none !important;
+  }
+
+  .rd-room-thumb {
+    width: auto !important;
+    height: auto !important;
+    flex: initial !important;
+    aspect-ratio: 1 / 1 !important;
+    border-radius: 14px !important;
+  }
+
+  .rd-amenities-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+
+  .rd-amenity-card {
+    min-height: 0 !important;
+    padding: 12px 10px !important;
+    border-radius: 18px !important;
+    gap: 8px !important;
+    align-items: flex-start !important;
+  }
+
+  .rd-amenity-icon {
+    width: 34px !important;
+    height: 34px !important;
+    flex-basis: 34px !important;
+    flex-shrink: 0 !important;
+    border-radius: 12px !important;
+    font-size: 19px !important;
+  }
+
+  .rd-amenity-card h3 {
+    font-size: 13.5px !important;
+    line-height: 1.12 !important;
+    margin-bottom: 4px !important;
+  }
+
+  .rd-amenity-card p {
+    font-size: 11.5px !important;
+    line-height: 1.28 !important;
+  }
+
+  .rd-best-list {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+
+  .rd-best-item {
+    display: grid !important;
+    grid-template-columns: auto 1fr !important;
+    gap: 7px !important;
+    padding: 12px 10px !important;
+    border-radius: 16px !important;
+    align-items: start !important;
+  }
+
+  .rd-best-item p {
+    font-size: 12px !important;
+    line-height: 1.34 !important;
+  }
+
+  .rd-best-grid {
+    gap: 14px !important;
+  }
+}
