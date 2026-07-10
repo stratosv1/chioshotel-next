@@ -66,6 +66,10 @@ section .bg-stone-950.text-white.shadow-2xl > div.absolute.inset-0[class*="radia
 }
 
 /* Room detail mobile compact pass: temporary safe overrides while legacy rd-* classes are being migrated to Tailwind. */
+.rd-section--gallery {
+  display: none !important;
+}
+
 @media (max-width: 767px) {
   aside[aria-label="Room key details"] {
     padding: 14px !important;
@@ -99,6 +103,20 @@ section .bg-stone-950.text-white.shadow-2xl > div.absolute.inset-0[class*="radia
 
   .rd-section--individual {
     padding-top: 28px !important;
+  }
+
+  .rd-section--individual:not(.rd-section--grouped) .rd-individual-list {
+    display: flex !important;
+    gap: 14px !important;
+    overflow-x: auto !important;
+    padding: 0 4px 12px !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .rd-section--individual:not(.rd-section--grouped) .rd-room-card {
+    flex: 0 0 86% !important;
+    scroll-snap-align: start !important;
   }
 
   .rd-room-thumbs {
