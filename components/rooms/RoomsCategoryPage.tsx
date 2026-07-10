@@ -25,7 +25,6 @@ function getWizardLanguage(path: string): LanguageCode {
 
 export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
   const language = getWizardLanguage(data.seo.canonicalPath);
-  const heroImage = data.cards[0];
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#fbf6ef] text-[#2f261f]">
@@ -33,23 +32,10 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
         className="relative isolate overflow-hidden bg-[#2f261f] px-4 py-14 text-white sm:px-6 lg:px-8 lg:py-24"
         aria-labelledby="rooms-hero-title"
       >
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,rgba(245,158,11,0.28),transparent_34rem),linear-gradient(135deg,rgba(47,38,31,0.96),rgba(92,64,38,0.9))]" />
-        {heroImage ? (
-          <div className="absolute inset-0 -z-10 opacity-18 sm:opacity-22">
-            <Image
-              src={heroImage.image}
-              alt=""
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover"
-            />
-            <div className="absolute inset-0 bg-[#2f261f]/70" />
-          </div>
-        ) : null}
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(245,158,11,0.28),transparent_34rem),linear-gradient(135deg,rgba(47,38,31,0.97),rgba(92,64,38,0.94))]" />
         <div className="absolute inset-x-6 bottom-0 -z-10 h-px bg-gradient-to-r from-transparent via-amber-200/35 to-transparent" />
 
-        <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[1.06fr_0.94fr] lg:items-center">
+        <div className="mx-auto max-w-6xl">
           <div className="max-w-3xl">
             <span className="inline-flex rounded-full border border-amber-200/30 bg-white/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.28em] text-amber-100">
               {data.hero.kicker}
@@ -84,27 +70,6 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
               </a>
             </div>
           </div>
-
-          {heroImage ? (
-            <div className="relative mt-2 aspect-[16/11] overflow-hidden rounded-[32px] border border-white/15 bg-stone-200 shadow-[0_30px_90px_rgba(0,0,0,0.32)] lg:mt-0">
-              <Image
-                src={heroImage.image}
-                alt={heroImage.imageAlt}
-                fill
-                priority
-                sizes="(min-width: 1024px) 44vw, 100vw"
-                className="object-cover"
-              />
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-5">
-                <p className="text-sm font-black uppercase tracking-[0.16em] text-amber-100">
-                  {heroImage.badge}
-                </p>
-                <p className="mt-1 text-2xl font-black tracking-[-0.03em] text-white">
-                  {heroImage.title}
-                </p>
-              </div>
-            </div>
-          ) : null}
         </div>
       </section>
 
