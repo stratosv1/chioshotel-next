@@ -65,19 +65,18 @@ section .bg-stone-950.text-white.shadow-2xl > div.absolute.inset-0[class*="radia
   }
 }
 
-/* Room detail mobile compact pass: temporary safe overrides while legacy rd-* classes are being migrated to Tailwind. */
-.rd-section--gallery {
-  display: none !important;
-}
-
+/* Room detail visual polish while the card classes are being finalized in Tailwind. */
 @media (max-width: 767px) {
+  section[aria-labelledby="rd-overview-title"] {
+    padding-bottom: 32px !important;
+  }
+
   aside[aria-label="Room key details"] {
     padding: 14px !important;
     border-radius: 24px !important;
   }
 
   aside[aria-label="Room key details"] > div {
-    display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 10px !important;
   }
@@ -97,100 +96,89 @@ section .bg-stone-950.text-white.shadow-2xl > div.absolute.inset-0[class*="radia
     line-height: 1.18 !important;
   }
 
-  section[aria-labelledby="rd-overview-title"] {
-    padding-bottom: 36px !important;
-  }
-
-  .rd-section--individual {
+  section[aria-labelledby="rd-individual-title"] {
     padding-top: 28px !important;
   }
 
-  .rd-section--individual:not(.rd-section--grouped) .rd-individual-list {
-    display: flex !important;
-    gap: 14px !important;
-    overflow-x: auto !important;
-    padding: 0 4px 12px !important;
-    scroll-snap-type: x mandatory !important;
-    -webkit-overflow-scrolling: touch !important;
+  section[aria-labelledby="rd-individual-title"] > header {
+    text-align: left !important;
   }
 
-  .rd-section--individual:not(.rd-section--grouped) .rd-room-card {
-    flex: 0 0 86% !important;
-    scroll-snap-align: start !important;
+  section[aria-labelledby="rd-individual-title"] > header h2 {
+    font-size: 2rem !important;
+    line-height: 0.98 !important;
   }
 
-  .rd-room-thumbs {
-    display: grid !important;
-    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-    gap: 8px !important;
-    overflow-x: visible !important;
-    padding-bottom: 0 !important;
-    scroll-snap-type: none !important;
+  section[aria-labelledby="rd-individual-title"] .overflow-x-auto {
+    scrollbar-width: none !important;
   }
 
-  .rd-room-thumb {
-    width: auto !important;
-    height: auto !important;
-    flex: initial !important;
-    aspect-ratio: 1 / 1 !important;
-    border-radius: 14px !important;
+  section[aria-labelledby="rd-individual-title"] .overflow-x-auto::-webkit-scrollbar {
+    display: none !important;
   }
 
-  .rd-amenities-grid {
-    display: grid !important;
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 10px !important;
+  section[aria-labelledby="rd-individual-title"] article {
+    border-radius: 24px !important;
+    box-shadow: 0 14px 34px rgba(47, 38, 31, 0.08) !important;
   }
 
-  .rd-amenity-card {
-    min-height: 0 !important;
-    padding: 12px 10px !important;
-    border-radius: 18px !important;
-    gap: 8px !important;
-    align-items: flex-start !important;
+  section[aria-labelledby="rd-individual-title"] article > div:first-child {
+    padding: 0 !important;
   }
 
-  .rd-amenity-icon {
-    width: 34px !important;
-    height: 34px !important;
-    flex-basis: 34px !important;
-    flex-shrink: 0 !important;
-    border-radius: 12px !important;
-    font-size: 19px !important;
+  section[aria-labelledby="rd-individual-title"] article > div:first-child > div:first-child {
+    border-radius: 24px 24px 0 0 !important;
+    aspect-ratio: 4 / 3 !important;
   }
 
-  .rd-amenity-card h3 {
-    font-size: 13.5px !important;
-    line-height: 1.12 !important;
-    margin-bottom: 4px !important;
+  section[aria-labelledby="rd-individual-title"] article > div:first-child > div:first-child span {
+    left: 12px !important;
+    bottom: 12px !important;
+    padding: 7px 12px !important;
+    font-size: 10px !important;
   }
 
-  .rd-amenity-card p {
-    font-size: 11.5px !important;
-    line-height: 1.28 !important;
+  section[aria-labelledby="rd-individual-title"] article > div:first-child > div:nth-child(2) {
+    margin-top: 0 !important;
+    padding: 10px !important;
+    background: #fffdfa !important;
   }
 
-  .rd-best-list {
-    display: grid !important;
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 10px !important;
+  section[aria-labelledby="rd-individual-title"] article > div:first-child > div:nth-child(2) button {
+    border-radius: 13px !important;
   }
 
-  .rd-best-item {
-    display: grid !important;
-    grid-template-columns: auto 1fr !important;
+  section[aria-labelledby="rd-individual-title"] article > div:nth-child(2) {
+    padding: 16px !important;
+    border-top: 1px solid rgba(120, 53, 15, 0.08) !important;
+  }
+
+  section[aria-labelledby="rd-individual-title"] article h3 {
+    margin-top: 14px !important;
+    font-size: 2rem !important;
+    line-height: 0.98 !important;
+  }
+
+  section[aria-labelledby="rd-individual-title"] article p {
+    line-height: 1.55 !important;
+  }
+
+  section[aria-labelledby="rd-individual-title"] article p.mt-4 {
+    display: -webkit-box !important;
+    -webkit-line-clamp: 3 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+  }
+
+  section[aria-labelledby="rd-individual-title"] article div.mt-5,
+  section[aria-labelledby="rd-individual-title"] article div.mt-4 {
+    margin-top: 12px !important;
     gap: 7px !important;
-    padding: 12px 10px !important;
-    border-radius: 16px !important;
-    align-items: start !important;
   }
 
-  .rd-best-item p {
-    font-size: 12px !important;
-    line-height: 1.34 !important;
-  }
-
-  .rd-best-grid {
-    gap: 14px !important;
+  section[aria-labelledby="rd-individual-title"] article div.mt-5 span,
+  section[aria-labelledby="rd-individual-title"] article div.mt-4 span {
+    padding: 7px 10px !important;
+    font-size: 11px !important;
   }
 }
