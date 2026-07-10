@@ -427,7 +427,7 @@ export function BeachDetailPageTailwind({ beach }: BeachDetailPageProps) {
             </div>
             <div className="relative min-h-[280px] md:min-h-full">
               <img
-                src="/images/beaches/voulamandis-house-chios-courtyard-hero-desktop.webp"
+                src="/images/beaches/voulamandis-house-courtyard-chios.webp"
                 alt="Voulamandis House courtyard in Kambos Chios"
                 loading="lazy"
                 className="absolute inset-0 h-full w-full object-cover object-center"

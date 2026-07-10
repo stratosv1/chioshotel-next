@@ -45,17 +45,17 @@ export type BeachLoversPageData = {
 };
 
 const images = {
-  hero: "/images/beaches/agia-fotia.jpg",
+  hero: "/images/beaches/agia-fotia-beach-chios.webp",
   mavraVolia:
-    "/images/beaches/emporios3-e1702727598897.webp",
-  agiaFotia: "/images/beaches/agia-fotia.jpg",
-  komi: "/images/beaches/sakiz-adasi-chios-greece-komi-be-2.jpg",
+    "/images/beaches/mavra-volia-beach-chios.webp",
+  agiaFotia: "/images/beaches/agia-fotia-beach-chios.webp",
+  komi: "/images/beaches/komi-beach-chios.webp",
   salagona:
-    "/images/beaches/sakiz-adasi-chios-greece-komi-be-2.jpg",
+    "/images/beaches/komi-beach-chios.webp",
   vroulidia: "/images/beaches/vroulidia-2-1.jpg",
-  katoFana: "/images/beaches/kato-fana-3.jpg",
+  katoFana: "/images/beaches/kato-fana-beach-chios.webp",
   voulamandis:
-    "/images/beaches/voulamandis-house-chios-courtyard-hero-desktop.webp",
+    "/images/beaches/voulamandis-house-courtyard-chios.webp",
 };
 
 export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {

@@ -56,12 +56,12 @@ export type FamilyBeachesPageData = {
 };
 
 const images = {
-  hero: "/images/beaches/2017-06-28-1024x768.webp",
-  komi: "/images/beaches/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
-  karfas: "/images/beaches/agia-fotia.jpg",
-  lithi: "/images/beaches/2017-06-28-1024x768.webp",
-  agiaDynami: "/images/beaches/691-e1645969589226.webp",
-  stay: "/images/beaches/voulamandis-house-chios-courtyard-hero-desktop.webp",
+  hero: "/images/beaches/lithi-beach-chios.webp",
+  komi: "/images/beaches/komi-sandy-beach-chios.webp",
+  karfas: "/images/beaches/agia-fotia-beach-chios.webp",
+  lithi: "/images/beaches/lithi-beach-chios.webp",
+  agiaDynami: "/images/beaches/agia-dynami-beach-chios.webp",
+  stay: "/images/beaches/voulamandis-house-courtyard-chios.webp",
 };
 
 export const familyBeachPaths: Record<LanguageCode, string> = {

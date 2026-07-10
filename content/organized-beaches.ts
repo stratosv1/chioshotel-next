@@ -15,14 +15,14 @@ export type OrganizedBeachesPageData = {
 };
 
 const images = {
-  hero: "/images/beaches/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
-  karfas: "/images/beaches/agia-fotia.jpg",
-  agiaFotia: "/images/beaches/agia-fotia.jpg",
-  komi: "/images/beaches/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
-  emporios: "/images/beaches/emporios3-e1702727598897.webp",
+  hero: "/images/beaches/komi-sandy-beach-chios.webp",
+  karfas: "/images/beaches/agia-fotia-beach-chios.webp",
+  agiaFotia: "/images/beaches/agia-fotia-beach-chios.webp",
+  komi: "/images/beaches/komi-sandy-beach-chios.webp",
+  emporios: "/images/beaches/mavra-volia-beach-chios.webp",
   lefkathia: "/images/beaches/lefkathia-2.jpg",
-  lithi: "/images/beaches/2017-06-28-1024x768.webp",
-  stay: "/images/beaches/voulamandis-house-chios-courtyard-hero-desktop.webp",
+  lithi: "/images/beaches/lithi-beach-chios.webp",
+  stay: "/images/beaches/voulamandis-house-courtyard-chios.webp",
 };
 
 export const organizedBeachPaths: Record<LanguageCode, string> = {

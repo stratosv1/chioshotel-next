@@ -3,13 +3,13 @@ import { absoluteUrl } from "@/lib/seo";
 import type { OrganizedBeachesPageData, OrganizedBeachCard } from "@/content/organized-beaches";
 
 const images = {
-  hero: "/images/beaches/salagona-e1645969502155.webp",
-  salagona: "/images/beaches/salagona-e1645969502155.webp",
-  agiaDynami: "/images/beaches/691-e1645969589226.webp",
+  hero: "/images/beaches/salagona-beach-chios.webp",
+  salagona: "/images/beaches/salagona-beach-chios.webp",
+  agiaDynami: "/images/beaches/agia-dynami-beach-chios.webp",
   vroulidia: "/images/beaches/vroulidia-2-1.jpg",
-  katoFana: "/images/beaches/kato-fana-3.jpg",
-  elinta: "/images/beaches/salagona-e1645969502155.webp",
-  stay: "/images/beaches/voulamandis-house-chios-courtyard-hero-desktop.webp",
+  katoFana: "/images/beaches/kato-fana-beach-chios.webp",
+  elinta: "/images/beaches/salagona-beach-chios.webp",
+  stay: "/images/beaches/voulamandis-house-courtyard-chios.webp",
 };
 
 export const shelteredBeachPaths: Record<LanguageCode, string> = {

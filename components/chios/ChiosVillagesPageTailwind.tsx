@@ -315,7 +315,14 @@ export function ChiosVillagesPageTailwind({ data }: ChiosVillagesPageProps) {
                 {categoryGuide.text}
               </p>
             </div>
-            <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 pr-8 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-3 md:overflow-visible md:pr-0">
+            <div className="relative">
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute right-2 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-[#2f261f]/95 text-xl font-black text-white shadow-xl md:hidden"
+              >
+                →
+              </div>
+              <div data-carousel-track="true" className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 pr-12 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-3 md:overflow-visible md:pr-0">
               {categoryGuide.items.map((item) => (
                 <a
                   className="group flex w-[82vw] max-w-[360px] flex-none snap-start flex-col justify-between rounded-[24px] border border-[#8e6607]/15 bg-[#fffdfa] p-5 shadow-sm transition hover:-translate-y-1 hover:border-[#8e6607]/35 hover:shadow-xl md:w-auto md:max-w-none"
@@ -501,7 +508,7 @@ export function ChiosVillagesPageTailwind({ data }: ChiosVillagesPageProps) {
         <div className="mx-auto max-w-[1180px]">
           <article className="relative overflow-hidden rounded-[36px] bg-[#2f261f] p-6 text-white shadow-2xl md:p-12">
             <img
-              src="/images/beaches/voulamandis-house-chios-courtyard-hero-desktop.webp"
+              src="/images/beaches/voulamandis-house-courtyard-chios.webp"
               alt=""
               loading="lazy"
               className="absolute inset-0 h-full w-full object-cover"

@@ -3,12 +3,12 @@ import { absoluteUrl } from "@/lib/seo";
 import type { OrganizedBeachesPageData, OrganizedBeachCard } from "@/content/organized-beaches";
 
 const images = {
-  hero: "/images/beaches/agia-fotia.jpg",
-  karfas: "/images/beaches/karfas-beach-chios.jpg",
-  glari: "/images/beaches/paralia-ton-glaron-4.jpg",
-  agiaFotia: "/images/beaches/agia-fotia.jpg",
-  daskalopetra: "/images/beaches/daskalopetra-beach-chios.jpg",
-  stay: "/images/beaches/voulamandis-house-chios-courtyard-hero-desktop.webp",
+  hero: "/images/beaches/agia-fotia-beach-chios.webp",
+  karfas: "/images/beaches/karfas-beach-chios.webp",
+  glari: "/images/beaches/paralia-glaron-beach-chios.webp",
+  agiaFotia: "/images/beaches/agia-fotia-beach-chios.webp",
+  daskalopetra: "/images/beaches/daskalopetra-beach-chios.webp",
+  stay: "/images/beaches/voulamandis-house-courtyard-chios.webp",
 };
 
 export const nearbyBeachPaths: Record<LanguageCode, string> = {

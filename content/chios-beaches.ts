@@ -71,21 +71,21 @@
 
 const beachImages = {
   mavraVolia:
-    "/images/beaches/emporios3-e1702727598897.webp",
-  agiaFotia: "/images/beaches/agia-fotia.jpg",
+    "/images/beaches/mavra-volia-beach-chios.webp",
+  agiaFotia: "/images/beaches/agia-fotia-beach-chios.webp",
   komi:
-    "/images/beaches/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
+    "/images/beaches/komi-sandy-beach-chios.webp",
   salagona:
-    "/images/beaches/salagona-e1645969502155.webp",
+    "/images/beaches/salagona-beach-chios.webp",
   lithi:
-    "/images/beaches/2017-06-28-1024x768.webp",
+    "/images/beaches/lithi-beach-chios.webp",
   agiaDynami:
-    "/images/beaches/691-e1645969589226.webp",
+    "/images/beaches/agia-dynami-beach-chios.webp",
   avlonia:
     "/images/beaches/avlonia-1024x768.webp",
   lefkathia: "/images/beaches/lefkathia-2.jpg",
   nagos:
-    "/images/beaches/nagos-e1645969566121.webp",
+    "/images/beaches/nagos-beach-chios.webp",
 };
 
 export const chiosBeachesPageEn: ChiosBeachesPageData = {

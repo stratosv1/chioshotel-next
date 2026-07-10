@@ -311,7 +311,7 @@ export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
           <article className="grid overflow-hidden rounded-[36px] border border-[#8e6607]/15 bg-white shadow-2xl shadow-black/10 md:grid-cols-[0.9fr_1.1fr]">
             <div className="relative min-h-[260px] overflow-hidden bg-[#efe0cc] md:min-h-[360px]">
               <img
-                src="/images/beaches/voulamandis-house-chios-courtyard-hero-desktop.webp"
+                src="/images/beaches/voulamandis-house-courtyard-chios.webp"
                 alt="Voulamandis House in Kampos, Chios"
                 loading="lazy"
                 className="absolute inset-0 h-full w-full object-cover"

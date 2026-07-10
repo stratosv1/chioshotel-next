@@ -76,7 +76,7 @@ const familyTravelImages = {
     alt: "The peaceful garden of Voulamandis House in Kambos Chios",
   },
   sandyBeach: {
-    src: "/images/beaches/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
+    src: "/images/beaches/komi-sandy-beach-chios.webp",
     alt: "Komi sandy beach in Chios, ideal for relaxed family beach days",
   },
   museum: {

@@ -3,11 +3,11 @@ import { absoluteUrl } from "@/lib/seo";
 import type { OrganizedBeachesPageData, OrganizedBeachCard } from "@/content/organized-beaches";
 
 const images = {
-  hero: "/images/beaches/2017-06-28-1024x768.webp",
-  lithi: "/images/beaches/2017-06-28-1024x768.webp",
-  karfas: "/images/beaches/agia-fotia.jpg",
-  komi: "/images/beaches/42ba5ae2ff96d99dfb12b1e06fa90b45-e1703437426681.webp",
-  stay: "/images/beaches/voulamandis-house-chios-courtyard-hero-desktop.webp",
+  hero: "/images/beaches/lithi-beach-chios.webp",
+  lithi: "/images/beaches/lithi-beach-chios.webp",
+  karfas: "/images/beaches/agia-fotia-beach-chios.webp",
+  komi: "/images/beaches/komi-sandy-beach-chios.webp",
+  stay: "/images/beaches/voulamandis-house-courtyard-chios.webp",
 };
 
 export const sandyBeachPaths: Record<LanguageCode, string> = {
