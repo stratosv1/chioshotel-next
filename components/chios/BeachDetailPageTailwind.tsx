@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { BeachDetailData } from "@/content/beach-details";
 import {
   chiosBeachesPageDe,
@@ -160,7 +161,7 @@ const beachUiCopy = {
     stayKicker: "Voulamandis House’ta konaklayın",
     stayTitle: "Kambos’taki üssünüz",
     routeFrom: "Voulamandis House’tan rota",
-    swipeHint: "Daha fazla plaj için kaydırın",
+    swipeHint: "Daha fazla plaj için kaydır",
   },
 } as const;
 
@@ -233,10 +234,12 @@ export function BeachDetailPageTailwind({ beach }: BeachDetailPageProps) {
         className="relative flex min-h-[68svh] items-end overflow-hidden text-white md:min-h-[620px]"
         aria-labelledby="bd-hero-title"
       >
-        <img
+        <Image
           src={beach.hero.image}
           alt=""
-          loading="eager"
+          fill
+          priority
+          sizes="100vw"
           className="absolute inset-0 z-0 h-full w-full object-cover"
         />
         <div className="absolute inset-0 z-10 bg-gradient-to-t from-slate-950/88 via-slate-950/35 to-transparent" />
@@ -319,11 +322,10 @@ export function BeachDetailPageTailwind({ beach }: BeachDetailPageProps) {
               target="_blank"
               rel="noopener nofollow"
             >
-              <img
-                src={videoImage}
-                alt=""
-                loading="lazy"
-                className="absolute inset-0 h-full w-full object-cover opacity-75 transition duration-700 group-hover:scale-105"
+              <div
+                className="absolute inset-0 bg-cover bg-center opacity-75 transition duration-700 group-hover:scale-105"
+                style={{ backgroundImage: `url(${videoImage})` }}
+                aria-hidden="true"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/55 to-slate-950/10" />
               <div className="relative z-10 flex min-h-[282px] flex-col justify-between md:min-h-[326px]">
@@ -426,10 +428,11 @@ export function BeachDetailPageTailwind({ beach }: BeachDetailPageProps) {
               </div>
             </div>
             <div className="relative min-h-[280px] md:min-h-full">
-              <img
+              <Image
                 src="/images/beaches/voulamandis-house-courtyard-chios.webp"
                 alt="Voulamandis House courtyard in Kambos Chios"
-                loading="lazy"
+                fill
+                sizes="(min-width: 768px) 45vw, 100vw"
                 className="absolute inset-0 h-full w-full object-cover object-center"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-cyan-950/55 via-transparent to-transparent md:bg-gradient-to-r md:from-cyan-950/35 md:via-transparent md:to-transparent" />
@@ -471,28 +474,27 @@ export function BeachDetailPageTailwind({ beach }: BeachDetailPageProps) {
                   key={related.href}
                 >
                   <div className="relative aspect-[4/3] overflow-hidden">
-                    <img
+                    <Image
                       src={related.image}
                       alt={related.imageAlt}
-                      loading={index < 2 ? "eager" : "lazy"}
+                      fill
+                      priority={index < 2}
+                      sizes="(min-width: 1280px) 25vw, (min-width: 768px) 50vw, 84vw"
                       className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                     />
                     <span className="absolute left-3 top-3 rounded-full bg-emerald-700 px-3 py-1.5 text-xs font-black text-white">
                       {related.badges[0]}
                     </span>
-                    <span className="absolute right-3 top-3 rounded-full bg-white/95 px-3 py-1.5 text-xs font-black text-emerald-700">
-                      {related.region}
-                    </span>
                   </div>
                   <div className="p-5">
-                    <h3 className="break-words font-serif text-2xl font-bold leading-tight text-teal-800">
-                      {related.name}
+                    <h3 className="break-words font-serif text-xl font-bold leading-tight text-cyan-900">
+                      {related.title}
                     </h3>
-                    <p className="mt-3 line-clamp-3 text-sm leading-7 text-stone-600">
+                    <p className="mt-3 text-sm leading-7 text-slate-600">
                       {related.description}
                     </p>
-                    <span className="mt-5 inline-flex rounded-full border border-teal-800/20 px-4 py-2 text-xs font-black uppercase text-teal-800">
-                      {copy.exploreBeach} →
+                    <span className="mt-5 inline-flex rounded-full border border-cyan-800/20 px-4 py-2 text-xs font-black uppercase text-cyan-800">
+                      {copy.exploreBeach}
                     </span>
                   </div>
                 </a>
