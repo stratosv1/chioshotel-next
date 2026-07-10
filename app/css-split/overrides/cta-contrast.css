@@ -1,0 +1,7 @@
+/* Ensure amber CTA buttons keep accessible white labels in Lighthouse/PageSpeed. */
+a.bg-amber-700,
+a.bg-amber-700:hover,
+a.bg-amber-700:focus-visible,
+a.bg-amber-700 * {
+  color: #ffffff !important;
+}
