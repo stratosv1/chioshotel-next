@@ -23,6 +23,55 @@ function getWizardLanguage(path: string): LanguageCode {
   return "en";
 }
 
+const cardCtaLabels: Record<LanguageCode, Record<string, string>> = {
+  en: {
+    "first-floor": "View first floor rooms",
+    "ground-floor": "View ground floor rooms",
+    "economy-double": "View economy double rooms",
+    "family-apartments": "View family apartments",
+  },
+  el: {
+    "first-floor": "Δείτε δωμάτια ορόφου",
+    "ground-floor": "Δείτε δωμάτια ισογείου",
+    "economy-double": "Δείτε economy double rooms",
+    "family-apartments": "Δείτε οικογενειακά διαμερίσματα",
+  },
+  fr: {
+    "first-floor": "Voir les chambres à l’étage",
+    "ground-floor": "Voir les chambres au rez-de-chaussée",
+    "economy-double": "Voir les economy double rooms",
+    "family-apartments": "Voir les appartements familiaux",
+  },
+  de: {
+    "first-floor": "Zimmer im Obergeschoss ansehen",
+    "ground-floor": "Zimmer im Erdgeschoss ansehen",
+    "economy-double": "Economy Double Rooms ansehen",
+    "family-apartments": "Familienapartments ansehen",
+  },
+  it: {
+    "first-floor": "Vedi camere al primo piano",
+    "ground-floor": "Vedi camere al piano terra",
+    "economy-double": "Vedi economy double rooms",
+    "family-apartments": "Vedi appartamenti familiari",
+  },
+  es: {
+    "first-floor": "Ver habitaciones en primera planta",
+    "ground-floor": "Ver habitaciones en planta baja",
+    "economy-double": "Ver economy double rooms",
+    "family-apartments": "Ver apartamentos familiares",
+  },
+  tr: {
+    "first-floor": "Üst kat odalarını görüntüle",
+    "ground-floor": "Zemin kat odalarını görüntüle",
+    "economy-double": "Economy double rooms görüntüle",
+    "family-apartments": "Aile apartlarını görüntüle",
+  },
+};
+
+function getCardCtaLabel(cardId: string, language: LanguageCode, fallback: string) {
+  return cardCtaLabels[language]?.[cardId] ?? cardCtaLabels.en[cardId] ?? fallback;
+}
+
 export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
   const language = getWizardLanguage(data.seo.canonicalPath);
 
@@ -146,7 +195,7 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
                 </p>
 
                 <div className="mt-5 inline-flex items-center gap-2 rounded-full bg-[#2f261f] px-4 py-2 text-xs font-black uppercase tracking-[0.14em] text-white transition group-hover:bg-amber-800">
-                  {card.ctaLabel} <span aria-hidden="true">→</span>
+                  {getCardCtaLabel(card.id, language, card.ctaLabel)} <span aria-hidden="true">→</span>
                 </div>
               </div>
             </a>
