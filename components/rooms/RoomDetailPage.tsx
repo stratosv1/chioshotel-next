@@ -32,48 +32,13 @@ const labels: Record<RoomLanguage, { upToGuests: (count: number) => string; faqK
 };
 
 const sectionLabels: Record<RoomLanguage, { groundTitle: string; groundText: string; firstTitle: string; firstText: string }> = {
-  en: {
-    groundTitle: "Ground floor rooms",
-    groundText: "Rooms with easy courtyard and garden access, ideal if you prefer fewer steps and a simple outdoor connection.",
-    firstTitle: "First floor rooms",
-    firstText: "Brighter upper-floor rooms with terrace feel or Kambos views, accessed by stairs.",
-  },
-  el: {
-    groundTitle: "Δωμάτια ισογείου",
-    groundText: "Δωμάτια με εύκολη πρόσβαση στην αυλή και στον κήπο, ιδανικά αν προτιμάτε λιγότερα σκαλιά και άμεση επαφή με τον εξωτερικό χώρο.",
-    firstTitle: "Δωμάτια ορόφου",
-    firstText: "Πιο φωτεινά δωμάτια στον όροφο με αίσθηση βεράντας ή θέα προς τον Κάμπο, με πρόσβαση από σκάλες.",
-  },
-  fr: {
-    groundTitle: "Chambres au rez-de-chaussée",
-    groundText: "Chambres avec accès facile à la cour et au jardin, idéales si vous préférez peu de marches.",
-    firstTitle: "Chambres au premier étage",
-    firstText: "Chambres plus lumineuses à l’étage, avec atmosphère de terrasse ou vue sur Kambos.",
-  },
-  de: {
-    groundTitle: "Zimmer im Erdgeschoss",
-    groundText: "Zimmer mit einfachem Zugang zum Hof und Garten, ideal bei wenigen Treppen.",
-    firstTitle: "Zimmer im Obergeschoss",
-    firstText: "Hellere Zimmer im Obergeschoss mit Terrassengefühl oder Blick auf Kambos.",
-  },
-  it: {
-    groundTitle: "Camere al piano terra",
-    groundText: "Camere con facile accesso al cortile e al giardino, ideali se preferisci pochi gradini.",
-    firstTitle: "Camere al primo piano",
-    firstText: "Camere più luminose al piano superiore, con atmosfera da terrazza o vista su Kambos.",
-  },
-  es: {
-    groundTitle: "Habitaciones en planta baja",
-    groundText: "Habitaciones con fácil acceso al patio y al jardín, ideales si prefieres menos escaleras.",
-    firstTitle: "Habitaciones en primera planta",
-    firstText: "Habitaciones más luminosas en planta superior, con ambiente de terraza o vistas a Kambos.",
-  },
-  tr: {
-    groundTitle: "Zemin kat odaları",
-    groundText: "Avlu ve bahçeye kolay erişimli odalar; az merdiven isteyenler için idealdir.",
-    firstTitle: "Üst kat odaları",
-    firstText: "Teras hissi veya Kambos manzarası sunan daha aydınlık üst kat odaları.",
-  },
+  en: { groundTitle: "Ground floor rooms", groundText: "Rooms with easy courtyard and garden access, ideal if you prefer fewer steps and a simple outdoor connection.", firstTitle: "First floor rooms", firstText: "Brighter upper-floor rooms with terrace feel or Kambos views, accessed by stairs." },
+  el: { groundTitle: "Δωμάτια ισογείου", groundText: "Δωμάτια με εύκολη πρόσβαση στην αυλή και στον κήπο, ιδανικά αν προτιμάτε λιγότερα σκαλιά και άμεση επαφή με τον εξωτερικό χώρο.", firstTitle: "Δωμάτια ορόφου", firstText: "Πιο φωτεινά δωμάτια στον όροφο με αίσθηση βεράντας ή θέα προς τον Κάμπο, με πρόσβαση από σκάλες." },
+  fr: { groundTitle: "Chambres au rez-de-chaussée", groundText: "Chambres avec accès facile à la cour et au jardin, idéales si vous préférez peu de marches.", firstTitle: "Chambres au premier étage", firstText: "Chambres plus lumineuses à l’étage, avec atmosphère de terrasse ou vue sur Kambos." },
+  de: { groundTitle: "Zimmer im Erdgeschoss", groundText: "Zimmer mit einfachem Zugang zum Hof und Garten, ideal bei wenigen Treppen.", firstTitle: "Zimmer im Obergeschoss", firstText: "Hellere Zimmer im Obergeschoss mit Terrassengefühl oder Blick auf Kambos." },
+  it: { groundTitle: "Camere al piano terra", groundText: "Camere con facile accesso al cortile e al giardino, ideali se preferisci pochi gradini.", firstTitle: "Camere al primo piano", firstText: "Camere più luminose al piano superiore, con atmosfera da terrazza o vista su Kambos." },
+  es: { groundTitle: "Habitaciones en planta baja", groundText: "Habitaciones con fácil acceso al patio y al jardín, ideales si prefieres menos escaleras.", firstTitle: "Habitaciones en primera planta", firstText: "Habitaciones más luminosas en planta superior, con ambiente de terraza o vistas a Kambos." },
+  tr: { groundTitle: "Zemin kat odaları", groundText: "Avlu ve bahçeye kolay erişimli odalar; az merdiven isteyenler için idealdir.", firstTitle: "Üst kat odaları", firstText: "Teras hissi veya Kambos manzarası sunan daha aydınlık üst kat odaları." },
 };
 
 const dictionary: Record<string, RoomDictionary> = {
@@ -107,7 +72,6 @@ const dictionary: Record<string, RoomDictionary> = {
   "2 single beds": { el: "2 μονά κρεβάτια", fr: "2 lits simples", de: "2 Einzelbetten", it: "2 letti singoli", es: "2 camas individuales", tr: "2 tek kişilik yatak" },
   "1 sofa bed": { el: "1 καναπές-κρεβάτι", fr: "1 canapé-lit", de: "1 Schlafsofa", it: "1 divano letto", es: "1 sofá cama", tr: "1 çekyat" },
   "2 sofa beds": { el: "2 καναπέδες-κρεβάτια", fr: "2 canapés-lits", de: "2 Schlafsofas", it: "2 divani letto", es: "2 sofás cama", tr: "2 çekyat" },
-  "Room": { el: "Δωμάτιο", fr: "Chambre", de: "Zimmer", it: "Camera", es: "Habitación", tr: "Oda" },
   "Room view": { el: "Θέα δωματίου", fr: "Vue de la chambre", de: "Zimmerblick", it: "Vista camera", es: "Vista de la habitación", tr: "Oda manzarası" },
   "Bedroom": { el: "Υπνοδωμάτιο", fr: "Chambre", de: "Schlafzimmer", it: "Camera da letto", es: "Dormitorio", tr: "Yatak odası" },
   "Double bed": { el: "Διπλό κρεβάτι", fr: "Lit double", de: "Doppelbett", it: "Letto matrimoniale", es: "Cama doble", tr: "Çift kişilik yatak" },
@@ -143,9 +107,9 @@ function translate(text: string, language: RoomLanguage) {
 function localizeName(name: string, language: RoomLanguage) {
   if (language === "en") return name;
   const roomMatch = name.match(/^Room (\d+)$/);
-  if (roomMatch) return `${dictionary.Room[language]} ${roomMatch[1]}`;
+  if (roomMatch) return `${dictionary.Room?.[language] ?? "Room"} ${roomMatch[1]}`;
   const apartmentMatch = name.match(/^Apartment (\d+)$/);
-  if (apartmentMatch) return `${dictionary.Apartment[language]} ${apartmentMatch[1]}`;
+  if (apartmentMatch) return `${dictionary.Apartment?.[language] ?? "Apartment"} ${apartmentMatch[1]}`;
   return translate(name, language);
 }
 
@@ -160,7 +124,7 @@ function shouldGroupRoomsByFloor(data: RoomDetailData) {
   return data.id === "standard-double-room" || data.id === "economy-double-rooms";
 }
 
-function shouldShowMixedGallery(data: RoomDetailData) {
+function shouldShowMixedGallery(_data: RoomDetailData) {
   return false;
 }
 
@@ -171,32 +135,6 @@ function getFloorKind(room: IndividualRoomData): FloorKind {
   if (values.some((value) => groundValues.includes(value))) return "ground";
   if (values.some((value) => firstValues.includes(value))) return "first";
   return "other";
-}
-
-function RoomGallery({ data, language }: { data: RoomDetailData; language: RoomLanguage }) {
-  const [activeImage, setActiveImage] = useState(data.gallery.images[0]);
-  if (!activeImage) return null;
-
-  return (
-    <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8" aria-labelledby="rd-gallery-title">
-      <header className="mx-auto max-w-3xl text-center">
-        <span className="inline-flex text-[11px] font-black uppercase tracking-[0.28em] text-amber-800">{data.gallery.kicker}</span>
-        <h2 id="rd-gallery-title" className="mt-4 text-balance text-3xl font-black tracking-[-0.04em] text-[#2f261f] sm:text-4xl">{data.gallery.title}</h2>
-      </header>
-      <div className="mt-8 overflow-hidden rounded-[30px] bg-white p-3 shadow-[0_18px_45px_rgba(47,38,31,0.10)]">
-        <div className="relative aspect-[4/3] overflow-hidden rounded-[24px] bg-stone-200 sm:aspect-[16/10]">
-          <Image src={activeImage.src} alt={activeImage.alt} fill sizes="(min-width: 1024px) 900px, 100vw" className="object-cover" />
-        </div>
-        <div className="mt-3 grid grid-cols-4 gap-2">
-          {data.gallery.images.slice(0, 4).map((image, index) => (
-            <button key={image.src} type="button" onClick={() => setActiveImage(image)} className={`relative aspect-square overflow-hidden rounded-2xl border-2 ${activeImage.src === image.src ? "border-[#2f261f]" : "border-white"}`} aria-label={`${labels[language].nextRoom} ${index + 1}`}>
-              <Image src={image.src} alt={image.alt} fill sizes="25vw" className="object-cover" />
-            </button>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
 }
 
 function IndividualRoomCard({ room, language }: { room: IndividualRoomData; language: RoomLanguage }) {
@@ -361,7 +299,6 @@ export function RoomDetailPage({ data }: RoomDetailPageProps) {
         </div>
       </section>
 
-      {shouldShowMixedGallery(data) ? <RoomGallery data={data} language={language} /> : null}
       <IndividualRoomsSection data={data} language={language} />
 
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8" aria-labelledby="rd-amenities-title">
