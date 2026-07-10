@@ -345,6 +345,7 @@ export function ChiosVillagesPageTailwind({ data }: ChiosVillagesPageProps) {
               ))}
             </div>
           </div>
+          </div>
         </section>
       ) : null}
 
