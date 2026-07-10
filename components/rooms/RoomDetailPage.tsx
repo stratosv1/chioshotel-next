@@ -227,19 +227,19 @@ export function RoomDetailPage({ data }: RoomDetailPageProps) {
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#fbf6ef] text-[#2f261f]">
-      <section className="relative isolate overflow-hidden px-4 py-16 text-white sm:px-6 lg:px-8 lg:py-24" aria-labelledby="rd-hero-title">
+      <section className="relative isolate overflow-hidden px-4 py-12 text-white sm:px-6 sm:py-16 lg:px-8 lg:py-20" aria-labelledby="rd-hero-title">
         <Image src={data.hero.image} alt="" fill priority fetchPriority="high" sizes="100vw" className="-z-20 object-cover" />
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-black/78 via-black/48 to-black/18" />
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(245,158,11,0.24),transparent_32rem)]" />
         <div className="mx-auto max-w-6xl">
-          <div className="max-w-3xl rounded-[32px] border border-white/16 bg-[#2f261f]/72 p-5 shadow-[0_30px_90px_rgba(0,0,0,0.32)] backdrop-blur sm:p-8 lg:p-10">
-            <span className="inline-flex rounded-full border border-amber-200/30 bg-white/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.28em] text-amber-100">
+          <div className="max-w-3xl rounded-[30px] border border-white/16 bg-[#2f261f]/72 p-4 shadow-[0_30px_90px_rgba(0,0,0,0.32)] backdrop-blur sm:p-6 lg:p-8">
+            <span className="inline-flex rounded-full border border-amber-200/30 bg-white/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.24em] text-amber-100">
               {data.hero.kicker}
             </span>
-            <h1 id="rd-hero-title" className="mt-5 text-balance text-4xl font-black leading-[0.98] tracking-[-0.04em] text-white sm:text-5xl lg:text-7xl">
+            <h1 id="rd-hero-title" className="mt-5 text-balance text-[2.45rem] font-black leading-[0.98] tracking-[-0.04em] text-white sm:text-5xl lg:text-6xl">
               {data.hero.title}
             </h1>
-            <p className="mt-5 text-lg font-extrabold text-amber-100 sm:text-xl">
+            <p className="mt-5 text-base font-extrabold text-amber-100 sm:text-xl">
               {data.hero.subtitle}
             </p>
             <p className="mt-4 max-w-2xl text-pretty text-base leading-8 text-white/88 sm:text-lg">
@@ -252,9 +252,9 @@ export function RoomDetailPage({ data }: RoomDetailPageProps) {
                 </span>
               ))}
             </div>
-            <div className="mt-8 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap">
-              <a className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-amber-200 px-4 text-center text-[11px] font-black uppercase tracking-[0.12em] !text-[#2f261f] shadow-[0_18px_40px_rgba(0,0,0,0.22)] transition hover:-translate-y-0.5 hover:bg-white sm:px-6 sm:text-xs" href={data.hero.primaryCta.href} style={{ color: "#2f261f" }}>{data.hero.primaryCta.label}</a>
-              <a className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/30 bg-white/10 px-4 text-center text-[11px] font-black uppercase tracking-[0.12em] text-white backdrop-blur transition hover:-translate-y-0.5 hover:bg-white hover:text-[#2f261f] sm:px-6 sm:text-xs" href={data.hero.secondaryCta.href}>{data.hero.secondaryCta.label}</a>
+            <div className="mt-7 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap">
+              <a className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-amber-200 px-4 text-center text-[11px] font-black uppercase tracking-[0.12em] !text-[#2f261f] shadow-[0_18px_40px_rgba(0,0,0,0.22)] transition hover:-translate-y-0.5 hover:bg-white sm:px-6 sm:text-xs" href={data.hero.primaryCta.href} style={{ color: "#2f261f" }}>{data.hero.primaryCta.label}</a>
+              <a className="inline-flex min-h-[50px] items-center justify-center rounded-full border border-white/30 bg-white/10 px-4 text-center text-[11px] font-black uppercase tracking-[0.12em] text-white backdrop-blur transition hover:-translate-y-0.5 hover:bg-white hover:text-[#2f261f] sm:px-6 sm:text-xs" href={data.hero.secondaryCta.href}>{data.hero.secondaryCta.label}</a>
             </div>
           </div>
         </div>
@@ -289,7 +289,30 @@ export function RoomDetailPage({ data }: RoomDetailPageProps) {
       <IndividualRoomsSection data={data} />
       <section className="rd-section" aria-labelledby="rd-amenities-title"><div className="rd-wrap"><header className="rd-section-head"><span className="rd-kicker">{data.amenities.kicker}</span><h2 id="rd-amenities-title">{data.amenities.title}</h2></header><div className="rd-amenities-grid">{data.amenities.items.map((item) => <article className="rd-amenity-card" key={item.label}><div className="rd-amenity-icon" aria-hidden="true">{item.icon}</div><div><h3>{localizeRoomText(item.label, language)}</h3><p>{item.text}</p></div></article>)}</div></div></section>
       <section className="rd-section rd-section--best" aria-labelledby="rd-best-title"><div className="rd-wrap rd-best-grid"><article><span className="rd-kicker">{data.bestFor.kicker}</span><h2 id="rd-best-title">{data.bestFor.title}</h2></article><div className="rd-best-list">{data.bestFor.items.map((item) => <div className="rd-best-item" key={item}><span aria-hidden="true">✓</span><p>{item}</p></div>)}</div></div></section>
-      <section className="rd-section rd-section--booking" aria-labelledby="rd-booking-title"><div className="rd-wrap"><div className="rd-booking-card"><div><span className="rd-kicker rd-kicker--light">{data.booking.kicker}</span><h2 id="rd-booking-title">{data.booking.title}</h2><p>{data.booking.text}</p><small>{data.booking.note}</small></div><div className="rd-booking-actions"><a className="rd-btn rd-btn--primary" href={data.booking.whatsappHref}>{data.booking.whatsappLabel}</a><a className="rd-btn rd-btn--secondary" href={data.booking.phoneHref}>{data.booking.phoneLabel}</a></div></div></div></section>
+      <section className="mx-auto max-w-7xl px-4 pt-16 pb-12 sm:px-6 lg:px-8 lg:pt-20" aria-labelledby="rd-booking-title">
+        <div className="overflow-hidden rounded-[30px] bg-gradient-to-br from-[#2f261f] via-[#5f421f] to-[#9a6f11] p-5 text-white shadow-[0_28px_70px_rgba(47,38,31,0.22)] sm:p-8 lg:p-10">
+          <div className="grid gap-7 lg:grid-cols-[1fr_auto] lg:items-center">
+            <div>
+              <span className="inline-flex items-center gap-3 text-[11px] font-black uppercase tracking-[0.28em] text-amber-100 before:h-px before:w-10 before:bg-amber-200/70">
+                {data.booking.kicker}
+              </span>
+              <h2 id="rd-booking-title" className="mt-5 text-balance text-3xl font-black leading-tight tracking-[-0.035em] text-white sm:text-4xl lg:text-5xl">
+                {data.booking.title}
+              </h2>
+              <p className="mt-5 max-w-3xl text-base leading-8 text-white/88 sm:text-lg">
+                {data.booking.text}
+              </p>
+              <small className="mt-4 block text-sm leading-6 text-white/72">
+                {data.booking.note}
+              </small>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[320px] lg:grid-cols-1">
+              <a className="inline-flex min-h-[54px] items-center justify-center rounded-full bg-[#25D366] px-6 text-center text-xs font-black uppercase tracking-[0.16em] text-white shadow-[0_18px_38px_rgba(37,211,102,0.26)] transition hover:-translate-y-0.5 hover:bg-[#1ebe5d]" href={data.booking.whatsappHref}>{data.booking.whatsappLabel}</a>
+              <a className="inline-flex min-h-[54px] items-center justify-center rounded-full border border-white/32 bg-white/10 px-6 text-center text-xs font-black uppercase tracking-[0.16em] text-white transition hover:-translate-y-0.5 hover:bg-white hover:text-[#2f261f]" href={data.booking.phoneHref}>{data.booking.phoneLabel}</a>
+            </div>
+          </div>
+        </div>
+      </section>
       <section className="rd-section rd-section--faq" aria-labelledby="rd-faq-title"><div className="rd-wrap"><header className="rd-section-head"><span className="rd-kicker">{labels.faqKicker}</span><h2 id="rd-faq-title">{labels.faqTitle}</h2></header><div className="rd-faq-list">{data.faq.map((item) => <details className="rd-faq-item" key={item.question}><summary>{item.question}</summary><p>{item.answer}</p></details>)}</div></div></section>
     </main>
   );
