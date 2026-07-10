@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { FamilyBeachesPageData } from "@/content/family-beaches";
 
 type FamilyBeachesPageProps = {
@@ -26,10 +27,12 @@ export function FamilyBeachesPage({ data }: FamilyBeachesPageProps) {
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#fff8ed] text-slate-950">
       <section className="relative flex min-h-[68svh] items-end overflow-hidden bg-slate-950 text-white md:min-h-[620px]">
-        <img
+        <Image
           src={data.hero.image.src}
           alt=""
-          loading="eager"
+          fill
+          priority
+          sizes="100vw"
           className="absolute inset-0 h-full w-full object-cover opacity-70"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/55 to-slate-950/10 md:bg-[linear-gradient(90deg,rgba(15,23,42,0.92),rgba(15,23,42,0.56),rgba(15,23,42,0.14))]" />
@@ -111,18 +114,20 @@ export function FamilyBeachesPage({ data }: FamilyBeachesPageProps) {
               →
             </div>
             <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-12 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 xl:grid-cols-4">
-              {data.highlights.cards.map((beach) => (
+              {data.highlights.cards.map((beach, index) => (
                 <a
                   key={beach.name}
                   href={beach.href}
                   className="group w-[84vw] max-w-[380px] flex-none snap-start overflow-hidden rounded-[32px] bg-white shadow-lg ring-1 ring-slate-900/5 transition hover:-translate-y-1 hover:shadow-2xl md:w-auto md:max-w-none"
                 >
                   <div className="relative aspect-[4/3] overflow-hidden bg-white">
-                    <img
+                    <Image
                       src={beach.image}
                       alt={beach.name}
-                      loading="lazy"
-                      className="absolute inset-0 !h-full !w-full object-cover transition duration-500 group-hover:scale-105" style={{ height: "100%", width: "100%", objectFit: "cover" }}
+                      fill
+                      priority={index < 2}
+                      sizes="(min-width: 1280px) 25vw, (min-width: 768px) 50vw, 84vw"
+                      className="absolute inset-0 !h-full !w-full object-cover transition duration-500 group-hover:scale-105"
                     />
                   </div>
                   <div className="p-5">
@@ -161,7 +166,15 @@ export function FamilyBeachesPage({ data }: FamilyBeachesPageProps) {
 
       <section className="px-4 py-14 md:px-6 md:py-22" aria-labelledby="family-stay-title">
         <div className="mx-auto grid max-w-[1180px] overflow-hidden rounded-[38px] bg-white shadow-xl ring-1 ring-slate-900/5 md:grid-cols-2">
-          <img src={data.stay.image} alt="Voulamandis House" loading="lazy" className="h-full min-h-[320px] w-full object-cover" />
+          <div className="relative min-h-[320px]">
+            <Image
+              src={data.stay.image}
+              alt="Voulamandis House"
+              fill
+              sizes="(min-width: 768px) 50vw, 100vw"
+              className="h-full w-full object-cover"
+            />
+          </div>
           <article className="p-7 md:p-12">
             <p className="text-xs font-black uppercase tracking-[0.18em] text-amber-700">Voulamandis House</p>
             <h2 id="family-stay-title" className="mt-3 text-3xl font-black leading-none tracking-[-0.05em] md:text-5xl">
