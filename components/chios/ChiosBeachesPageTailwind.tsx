@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { ChiosBeachesPageData } from "@/content/chios-beaches";
 import { AnswerFirstSeoBlock } from "@/components/seo/AnswerFirstSeoBlock";
 import { HorizontalChipScroller } from "@/components/ui/HorizontalChipScroller";
@@ -191,10 +192,12 @@ export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
         className="relative flex min-h-[68svh] items-end overflow-hidden text-white md:min-h-[620px]"
         aria-labelledby="beaches-hero-title"
       >
-        <img
+        <Image
           src={data.hero.image}
           alt=""
-          loading="eager"
+          fill
+          priority
+          sizes="100vw"
           className="absolute inset-0 h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-slate-950/45" aria-hidden="true" />
@@ -329,10 +332,12 @@ export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
                   key={beach.href}
                 >
                   <div className="relative aspect-[4/3] overflow-hidden">
-                    <img
+                    <Image
                       src={beach.image}
                       alt={beach.imageAlt}
-                      loading={index < 2 ? "eager" : "lazy"}
+                      fill
+                      priority={index < 2}
+                      sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 84vw"
                       className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                     />
                     <div className="absolute left-3 top-3 rounded-full bg-emerald-700 px-3 py-1.5 text-xs font-black text-white">
