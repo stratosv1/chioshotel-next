@@ -226,10 +226,65 @@ export function RoomDetailPage({ data }: RoomDetailPageProps) {
   const showMixedGallery = !shouldGroupRoomsByFloor(data);
 
   return (
-    <main className="room-detail-page">
-      <section className="rd-hero" aria-labelledby="rd-hero-title"><div className="rd-hero-media" aria-hidden="true"><Image src={data.hero.image} alt="" fill priority fetchPriority="high" sizes="100vw" /></div><div className="rd-hero-overlay" /><div className="rd-hero-inner"><div className="rd-hero-card"><span className="rd-kicker rd-kicker--light">{data.hero.kicker}</span><h1 id="rd-hero-title">{data.hero.title}</h1><p className="rd-hero-subtitle">{data.hero.subtitle}</p><p className="rd-hero-description">{data.hero.description}</p><div className="rd-hero-badges" aria-label="Room highlights">{data.hero.badges.map((badge) => <span key={badge}>{localizeRoomText(badge, language)}</span>)}</div><div className="rd-hero-actions"><a className="rd-btn rd-btn--primary" href={data.hero.primaryCta.href}>{data.hero.primaryCta.label}</a><a className="rd-btn rd-btn--secondary" href={data.hero.secondaryCta.href}>{data.hero.secondaryCta.label}</a></div></div></div></section>
+    <main className="min-h-screen overflow-x-hidden bg-[#fbf6ef] text-[#2f261f]">
+      <section className="relative isolate overflow-hidden px-4 py-16 text-white sm:px-6 lg:px-8 lg:py-24" aria-labelledby="rd-hero-title">
+        <Image src={data.hero.image} alt="" fill priority fetchPriority="high" sizes="100vw" className="-z-20 object-cover" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-black/78 via-black/48 to-black/18" />
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(245,158,11,0.24),transparent_32rem)]" />
+        <div className="mx-auto max-w-6xl">
+          <div className="max-w-3xl rounded-[32px] border border-white/16 bg-[#2f261f]/72 p-5 shadow-[0_30px_90px_rgba(0,0,0,0.32)] backdrop-blur sm:p-8 lg:p-10">
+            <span className="inline-flex rounded-full border border-amber-200/30 bg-white/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.28em] text-amber-100">
+              {data.hero.kicker}
+            </span>
+            <h1 id="rd-hero-title" className="mt-5 text-balance text-4xl font-black leading-[0.98] tracking-[-0.04em] text-white sm:text-5xl lg:text-7xl">
+              {data.hero.title}
+            </h1>
+            <p className="mt-5 text-lg font-extrabold text-amber-100 sm:text-xl">
+              {data.hero.subtitle}
+            </p>
+            <p className="mt-4 max-w-2xl text-pretty text-base leading-8 text-white/88 sm:text-lg">
+              {data.hero.description}
+            </p>
+            <div className="mt-6 flex flex-wrap gap-2" aria-label="Room highlights">
+              {data.hero.badges.map((badge) => (
+                <span key={badge} className="rounded-full border border-white/16 bg-white/12 px-3 py-1.5 text-xs font-extrabold text-white backdrop-blur">
+                  {localizeRoomText(badge, language)}
+                </span>
+              ))}
+            </div>
+            <div className="mt-8 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap">
+              <a className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-amber-200 px-4 text-center text-[11px] font-black uppercase tracking-[0.12em] !text-[#2f261f] shadow-[0_18px_40px_rgba(0,0,0,0.22)] transition hover:-translate-y-0.5 hover:bg-white sm:px-6 sm:text-xs" href={data.hero.primaryCta.href} style={{ color: "#2f261f" }}>{data.hero.primaryCta.label}</a>
+              <a className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/30 bg-white/10 px-4 text-center text-[11px] font-black uppercase tracking-[0.12em] text-white backdrop-blur transition hover:-translate-y-0.5 hover:bg-white hover:text-[#2f261f] sm:px-6 sm:text-xs" href={data.hero.secondaryCta.href}>{data.hero.secondaryCta.label}</a>
+            </div>
+          </div>
+        </div>
+      </section>
       <TopicBadges locale={language} context="room-detail" className="border-b border-amber-900/10" />
-      <section className="rd-section rd-section--overview" aria-labelledby="rd-overview-title"><div className="rd-wrap rd-overview-grid"><article className="rd-overview-copy"><span className="rd-kicker">{data.overview.kicker}</span><h2 id="rd-overview-title">{data.overview.title}</h2>{data.overview.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</article><aside className="rd-highlight-panel" aria-label="Room key details">{data.overview.highlights.map((highlight) => <div className="rd-highlight-item" key={highlight.label}><span>{highlight.label}</span><strong>{localizeRoomText(highlight.value, language)}</strong></div>)}</aside></div></section>
+      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16" aria-labelledby="rd-overview-title">
+        <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+          <article className="rounded-[30px] border border-amber-900/10 bg-white p-5 shadow-[0_18px_45px_rgba(47,38,31,0.10)] sm:p-8">
+            <span className="inline-flex rounded-full border border-amber-900/10 bg-amber-50 px-4 py-2 text-[11px] font-black uppercase tracking-[0.28em] text-amber-800">
+              {data.overview.kicker}
+            </span>
+            <h2 id="rd-overview-title" className="mt-5 text-balance text-3xl font-black tracking-[-0.035em] text-[#2f261f] sm:text-4xl">
+              {data.overview.title}
+            </h2>
+            <div className="mt-5 space-y-4 text-base leading-8 text-[#574b3f]">
+              {data.overview.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+            </div>
+          </article>
+          <aside className="rounded-[30px] border border-amber-900/10 bg-[#fffdfa] p-5 shadow-[0_18px_45px_rgba(47,38,31,0.08)] sm:p-6" aria-label="Room key details">
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+              {data.overview.highlights.map((highlight) => (
+                <div className="rounded-2xl bg-amber-50/70 p-4 ring-1 ring-amber-900/10" key={highlight.label}>
+                  <span className="text-[11px] font-black uppercase tracking-[0.18em] text-amber-800">{highlight.label}</span>
+                  <strong className="mt-1 block text-base font-black text-[#2f261f]">{localizeRoomText(highlight.value, language)}</strong>
+                </div>
+              ))}
+            </div>
+          </aside>
+        </div>
+      </section>
       {showMixedGallery ? <RoomGallery data={data} /> : null}
       <IndividualRoomsSection data={data} />
       <section className="rd-section" aria-labelledby="rd-amenities-title"><div className="rd-wrap"><header className="rd-section-head"><span className="rd-kicker">{data.amenities.kicker}</span><h2 id="rd-amenities-title">{data.amenities.title}</h2></header><div className="rd-amenities-grid">{data.amenities.items.map((item) => <article className="rd-amenity-card" key={item.label}><div className="rd-amenity-icon" aria-hidden="true">{item.icon}</div><div><h3>{localizeRoomText(item.label, language)}</h3><p>{item.text}</p></div></article>)}</div></div></section>
