@@ -15,6 +15,12 @@ export const metadata: Metadata = buildPageMetadata({
 export default function Page() {
   return (
     <>
+      <link
+        rel="preload"
+        as="image"
+        href={chiosVillagesPageEn.hero.image}
+        fetchPriority="high"
+      />
       <JsonLd data={buildChiosVillagesSchema(chiosVillagesPageEn)} />
       <ChiosVillagesPageTailwind data={chiosVillagesPageEn} />
     </>
