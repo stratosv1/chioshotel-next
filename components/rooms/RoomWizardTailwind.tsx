@@ -236,7 +236,7 @@ function RoomCard({ room, bestRoom, lead, prefs, whatsappPhone, copy, label }: {
   const tags = getTags(room, prefs, copy);
   const priceText = room.priceLevel > bestRoom.priceLevel ? copy.more : room.priceLevel < bestRoom.priceLevel ? copy.less : copy.same;
   return (
-    <article className="rounded-[2rem] border border-[#6f7f3f]/20 bg-white p-5 shadow-xl shadow-stone-900/5 md:p-7">
+    <article className="w-[86vw] max-w-[430px] flex-none snap-start rounded-[2rem] border border-[#6f7f3f]/20 bg-white p-5 shadow-xl shadow-stone-900/5 md:w-[560px] md:max-w-[560px] md:p-7">
       <span className="inline-flex rounded-full bg-[#3f4f2f] px-3 py-1.5 text-xs font-black uppercase tracking-[0.1em] text-white">{label}</span>
       <h3 className="mt-4 text-3xl font-black leading-none tracking-[-0.04em] text-[#2f261f] md:text-4xl">{room.name}</h3>
       <p className="mt-2 text-sm italic text-stone-600">{room.type} • {room.location}</p>
@@ -342,11 +342,24 @@ export function RoomWizardTailwind({ rooms, whatsappPhone, language = "en" }: Ro
         ) : null}
 
         {isFinished && bestRoom ? (
-          <div className="grid gap-6">
-            <RoomCard room={bestRoom} bestRoom={bestRoom} lead={lead} prefs={prefs} whatsappPhone={whatsappPhone} copy={copy} label={copy.bestMatch} />
-            {alternativeRooms.length ? <h3 className="mt-3 text-2xl font-black tracking-[-0.04em] text-[#2f261f]">{copy.alternatives}</h3> : null}
-            {alternativeRooms.map((room) => <RoomCard key={room.id} room={room} bestRoom={bestRoom} lead={lead} prefs={prefs} whatsappPhone={whatsappPhone} copy={copy} label={copy.alternatives} />)}
-            <button type="button" className="rounded-full border border-[#6f7f3f]/20 bg-[#eef3e5] px-6 py-4 text-sm font-black uppercase tracking-[0.12em] text-[#3f4f2f]" onClick={() => { setHasStarted(false); setStep(0); setPrefs({}); }}>{copy.startOver}</button>
+          <div className="relative -mx-2 md:-mx-4">
+            <div className="mb-4 flex items-center justify-between gap-3 px-2 md:px-4">
+              <h3 className="text-2xl font-black tracking-[-0.04em] text-[#2f261f]">{copy.bestMatch}</h3>
+              <span className="rounded-full bg-[#eef3e5] px-4 py-2 text-[11px] font-black uppercase tracking-[0.12em] text-[#3f4f2f]">Swipe →</span>
+            </div>
+
+            <div aria-hidden="true" className="pointer-events-none absolute right-1 top-[46%] z-20 flex h-12 w-12 items-center justify-center rounded-full bg-[#3f4f2f] text-2xl font-black text-white shadow-2xl md:right-3">
+              →
+            </div>
+
+            <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto px-2 pb-5 pr-16 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:gap-5 md:px-4 md:pr-20">
+              <RoomCard room={bestRoom} bestRoom={bestRoom} lead={lead} prefs={prefs} whatsappPhone={whatsappPhone} copy={copy} label={copy.bestMatch} />
+              {alternativeRooms.map((room) => <RoomCard key={room.id} room={room} bestRoom={bestRoom} lead={lead} prefs={prefs} whatsappPhone={whatsappPhone} copy={copy} label={copy.alternatives} />)}
+            </div>
+
+            <div className="px-2 md:px-4">
+              <button type="button" className="mt-2 w-full rounded-full border border-[#6f7f3f]/20 bg-[#eef3e5] px-6 py-4 text-sm font-black uppercase tracking-[0.12em] text-[#3f4f2f]" onClick={() => { setHasStarted(false); setStep(0); setPrefs({}); }}>{copy.startOver}</button>
+            </div>
           </div>
         ) : null}
       </div>
