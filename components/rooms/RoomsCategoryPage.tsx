@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { RoomWizard } from "@/components/rooms/RoomWizard";
+import { RoomWizardTailwind } from "@/components/rooms/RoomWizardTailwind";
 import { TopicBadges } from "@/components/seo/TopicBadges";
 import type { RoomsCategoryPageData } from "@/content/rooms";
 import type { LanguageCode } from "@/lib/languages";
@@ -230,7 +230,7 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
         </div>
 
         <div className="mt-8">
-          <RoomWizard
+          <RoomWizardTailwind
             rooms={data.wizard.rooms}
             whatsappPhone={data.wizard.whatsappPhone}
             language={language}
