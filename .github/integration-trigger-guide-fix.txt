@@ -1,0 +1,1 @@
+Trigger GuideSection data-model correction on integrate-localized-css-main.
