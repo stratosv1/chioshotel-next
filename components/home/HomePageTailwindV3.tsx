@@ -1,5 +1,5 @@
 import type { HomePageData } from "@/content/home";
-import { HomePageTailwindV2 } from "@/components/home/HomePageTailwindV2";
+import { HomePageTailwind } from "@/components/home/HomePageTailwind";
 
 type HomePageTailwindV3Props = {
   data: HomePageData;
@@ -53,7 +53,7 @@ export function HomePageTailwindV3({ data }: HomePageTailwindV3Props) {
           }
         }
       `}</style>
-      <HomePageTailwindV2 data={data} />
+      <HomePageTailwind data={data} />
     </>
   );
 }
