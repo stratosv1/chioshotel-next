@@ -23,24 +23,82 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
+          import re
 
           path = Path('components/home/HomePageTailwindV2.tsx')
           text = path.read_text(encoding='utf-8')
+
           replacements = {
               'data.intro.right.items.map((item) => (': 'data.intro.right.cards.map((item) => (',
               'data.roomsPreview.subtitle': 'data.roomsPreview.text',
               '{card.kicker}': '{card.cta}',
+              'data.finalCta.primary.href': 'data.finalCta.primaryCta.href',
+              'data.finalCta.primary.label': 'data.finalCta.primaryCta.label',
+              'data.finalCta.secondary.href': 'data.finalCta.secondaryCta.href',
+              'data.finalCta.secondary.label': 'data.finalCta.secondaryCta.label',
+              'src={data.finalCta.image}': 'src={data.hero.image}',
           }
 
           updated = text
           for old, new in replacements.items():
               updated = updated.replace(old, new)
 
+          guide_section = '''function GuideSection({ data }: { data: HomePageData }) {
+  const [featured, ...links] = data.chiosGuide.cards;
+
+  if (!featured) return null;
+
+  return (
+    <Section>
+      <SectionTitle kicker={data.chiosGuide.kicker} icon={data.chiosGuide.icon} title={data.chiosGuide.title} subtitle={data.chiosGuide.subtitle} />
+      <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
+        <a href={featured.href} className="group overflow-hidden rounded-[2rem] border border-amber-900/10 bg-white shadow-xl shadow-stone-900/5 transition hover:-translate-y-1 md:rounded-[2.5rem]">
+          <div className="relative aspect-[16/10] overflow-hidden">
+            <Image src={homeGuideImages[featured.imageClass] || data.hero.image} alt={featured.title} fill sizes="(max-width: 1024px) 100vw, 58vw" className="object-cover transition duration-500 group-hover:scale-105" loading="lazy" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+            <span className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1.5 text-xs font-black text-[#8b5e34]">{featured.ctaLabel}</span>
+            <div className="absolute bottom-0 left-0 right-0 p-5 text-white md:p-7">
+              <h3 className="font-serif text-3xl font-bold leading-tight md:text-5xl">{featured.title}</h3>
+              <p className="mt-3 max-w-2xl text-sm leading-7 text-white/82 md:text-base md:leading-8">{featured.text}</p>
+            </div>
+          </div>
+        </a>
+
+        <div className="grid gap-3">
+          {links.map((link) => (
+            <a key={link.id} href={link.href} className="group flex items-center gap-4 rounded-[1.5rem] border border-amber-900/10 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg">
+              <div className="relative h-20 w-24 shrink-0 overflow-hidden rounded-2xl bg-[#fff3df]">
+                <Image src={homeGuideImages[link.imageClass] || data.hero.image} alt={link.title} fill sizes="96px" className="object-cover transition duration-500 group-hover:scale-105" loading="lazy" />
+              </div>
+              <div className="min-w-0">
+                <h3 className="text-base font-black leading-tight text-[#241d18]">{link.title}</h3>
+                <p className="mt-1 line-clamp-2 text-sm leading-6 text-[#6f6257]">{link.text}</p>
+              </div>
+              <span className="ml-auto text-[#8b5e34]" aria-hidden="true">{link.ctaIcon || "→"}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </Section>
+  );
+}'''
+
+          updated, count = re.subn(
+              r'function GuideSection\(\{ data \}: \{ data: HomePageData \}\) \{.*?\n\}\n\nfunction FinalCta',
+              guide_section + '\n\nfunction FinalCta',
+              updated,
+              count=1,
+              flags=re.S,
+          )
+
+          if count != 1:
+              raise SystemExit('GuideSection replacement target not found exactly once.')
+
           if updated == text:
               print('Homepage data fields already fixed or not found.')
           else:
               path.write_text(updated, encoding='utf-8')
-              print('Updated invalid homepage data field references.')
+              print('Updated homepage guide and final CTA data references.')
           PY
 
       - name: Commit correction
@@ -53,5 +111,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add components/home/HomePageTailwindV2.tsx
-          git commit -m "Fix Tailwind homepage data fields"
+          git commit -m "Fix Tailwind homepage guide data model"
           git push origin HEAD:integrate-localized-css-main
