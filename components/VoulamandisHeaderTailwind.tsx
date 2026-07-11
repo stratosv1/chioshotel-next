@@ -17,14 +17,12 @@ type HeaderCopy = {
   stay: string;
   explore: string;
   directBestRates: string;
-  open: string;
   opensAgain: string;
-  liveReception: string;
   nav: string;
   language: string;
   links: {
     rooms: string;
-    findRoom: string;
+    rates: string;
     deals: string;
     chios: string;
     beaches: string;
@@ -43,12 +41,10 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     stay: "Stay",
     explore: "Explore Chios",
     directBestRates: "Direct Best Rates",
-    open: "Open",
     opensAgain: "Opens again 06:00",
-    liveReception: "Live reception",
     nav: "Main navigation",
     language: "Language",
-    links: { rooms: "Rooms", findRoom: "Find your room", deals: "Deals", chios: "Chios Island", beaches: "Beaches", villages: "Villages", museums: "Museums", activities: "Activities", contact: "Contact" },
+    links: { rooms: "Rooms", rates: "Rates", deals: "Deals", chios: "Chios Island", beaches: "Beaches", villages: "Villages", museums: "Museums", activities: "Do in Chios", contact: "Contact" },
   },
   el: {
     bookNow: "Κράτηση",
@@ -57,12 +53,10 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     stay: "Διαμονή",
     explore: "Ανακαλύψτε τη Χίο",
     directBestRates: "Direct Best Rates",
-    open: "Open",
     opensAgain: "Opens again 06:00",
-    liveReception: "Live reception",
     nav: "Κύρια πλοήγηση",
     language: "Γλώσσα",
-    links: { rooms: "Δωμάτια", findRoom: "Βρες δωμάτιο", deals: "Προσφορές", chios: "Χίος", beaches: "Παραλίες", villages: "Χωριά", museums: "Μουσεία", activities: "Δραστηριότητες", contact: "Επικοινωνία" },
+    links: { rooms: "Δωμάτια", rates: "Τιμές", deals: "Προσφορές", chios: "Χίος", beaches: "Παραλίες", villages: "Χωριά", museums: "Μουσεία", activities: "Τι να κάνεις", contact: "Επικοινωνία" },
   },
   fr: {
     bookNow: "Réserver",
@@ -71,12 +65,10 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     stay: "Séjour",
     explore: "Explorer Chios",
     directBestRates: "Direct Best Rates",
-    open: "Open",
     opensAgain: "Opens again 06:00",
-    liveReception: "Live reception",
     nav: "Navigation principale",
     language: "Langue",
-    links: { rooms: "Chambres", findRoom: "Trouver une chambre", deals: "Offres", chios: "Île de Chios", beaches: "Plages", villages: "Villages", museums: "Musées", activities: "Activités", contact: "Contact" },
+    links: { rooms: "Chambres", rates: "Tarifs", deals: "Offres", chios: "Île de Chios", beaches: "Plages", villages: "Villages", museums: "Musées", activities: "À faire", contact: "Contact" },
   },
   de: {
     bookNow: "Buchen",
@@ -85,12 +77,10 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     stay: "Aufenthalt",
     explore: "Chios entdecken",
     directBestRates: "Direct Best Rates",
-    open: "Open",
     opensAgain: "Opens again 06:00",
-    liveReception: "Live reception",
     nav: "Hauptnavigation",
     language: "Sprache",
-    links: { rooms: "Zimmer", findRoom: "Zimmer finden", deals: "Angebote", chios: "Insel Chios", beaches: "Strände", villages: "Dörfer", museums: "Museen", activities: "Aktivitäten", contact: "Kontakt" },
+    links: { rooms: "Zimmer", rates: "Preise", deals: "Angebote", chios: "Insel Chios", beaches: "Strände", villages: "Dörfer", museums: "Museen", activities: "Aktivitäten", contact: "Kontakt" },
   },
   it: {
     bookNow: "Prenota",
@@ -99,12 +89,10 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     stay: "Soggiorno",
     explore: "Esplora Chios",
     directBestRates: "Direct Best Rates",
-    open: "Open",
     opensAgain: "Opens again 06:00",
-    liveReception: "Live reception",
     nav: "Navigazione principale",
     language: "Lingua",
-    links: { rooms: "Camere", findRoom: "Trova camera", deals: "Offerte", chios: "Isola di Chios", beaches: "Spiagge", villages: "Villaggi", museums: "Musei", activities: "Attività", contact: "Contatti" },
+    links: { rooms: "Camere", rates: "Prezzi", deals: "Offerte", chios: "Isola di Chios", beaches: "Spiagge", villages: "Villaggi", museums: "Musei", activities: "Cosa fare", contact: "Contatti" },
   },
   es: {
     bookNow: "Reservar",
@@ -113,12 +101,10 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     stay: "Estancia",
     explore: "Explorar Chios",
     directBestRates: "Direct Best Rates",
-    open: "Open",
     opensAgain: "Opens again 06:00",
-    liveReception: "Live reception",
     nav: "Navegación principal",
     language: "Idioma",
-    links: { rooms: "Habitaciones", findRoom: "Encuentra habitación", deals: "Ofertas", chios: "Isla de Chios", beaches: "Playas", villages: "Pueblos", museums: "Museos", activities: "Actividades", contact: "Contacto" },
+    links: { rooms: "Habitaciones", rates: "Precios", deals: "Ofertas", chios: "Isla de Chios", beaches: "Playas", villages: "Pueblos", museums: "Museos", activities: "Qué hacer", contact: "Contacto" },
   },
   tr: {
     bookNow: "Rezervasyon",
@@ -127,19 +113,17 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     stay: "Konaklama",
     explore: "Sakız’ı keşfet",
     directBestRates: "Direct Best Rates",
-    open: "Open",
     opensAgain: "Opens again 06:00",
-    liveReception: "Live reception",
     nav: "Ana gezinme",
     language: "Dil",
-    links: { rooms: "Odalar", findRoom: "Odanı bul", deals: "Fırsatlar", chios: "Sakız Adası", beaches: "Plajlar", villages: "Köyler", museums: "Müzeler", activities: "Aktiviteler", contact: "İletişim" },
+    links: { rooms: "Odalar", rates: "Fiyatlar", deals: "Fırsatlar", chios: "Sakız Adası", beaches: "Plajlar", villages: "Köyler", museums: "Müzeler", activities: "Ne yapılır", contact: "İletişim" },
   },
 };
 
 const routeIds = {
   home: "home",
   rooms: "rooms-category",
-  findRoom: "find-your-room",
+  rates: "find-your-room",
   deals: "deals",
   chios: "chios-index",
   beaches: "beaches-index",
@@ -177,11 +161,7 @@ function getAthensNow() {
   const hour = Number(value("hour"));
   const minute = Number(value("minute"));
 
-  return {
-    hour,
-    minute,
-    dateLabel: `${value("day")} ${value("month")}`,
-  };
+  return { hour, minute, dateLabel: `${value("day")} ${value("month")}` };
 }
 
 function useReceptionStatus() {
@@ -197,7 +177,6 @@ function useReceptionStatus() {
 
     updateStatus();
     const interval = window.setInterval(updateStatus, 60_000);
-
     return () => window.clearInterval(interval);
   }, []);
 
@@ -226,7 +205,7 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/" }: H
   const statusLabel = reception.isOpen ? "OPEN 06:00–00:00" : copy.opensAgain.toUpperCase();
   const links = [
     { label: copy.links.rooms, href: pathFor(routeIds.rooms, language), icon: "🛏️" },
-    { label: copy.links.findRoom, href: pathFor(routeIds.findRoom, language), icon: "🔎" },
+    { label: copy.links.rates, href: pathFor(routeIds.rates, language), icon: "💶" },
     { label: copy.links.deals, href: pathFor(routeIds.deals, language), icon: "🔥" },
     { label: copy.links.chios, href: pathFor(routeIds.chios, language), icon: "🏝️" },
     { label: copy.links.activities, href: pathFor(routeIds.activities, language), icon: "✨" },
@@ -245,42 +224,35 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/" }: H
 
   return (
     <header className="sticky top-0 z-50 border-b border-stone-900/10 bg-[#fffaf3]/92 shadow-[0_10px_30px_rgba(41,30,20,0.07)] backdrop-blur-xl supports-[backdrop-filter]:bg-[#fffaf3]/82">
-      <div className="mx-auto flex h-[72px] w-full max-w-[1440px] items-center gap-4 px-3 sm:px-5 lg:h-[84px] lg:px-6 xl:px-8">
-        <a href={pathFor(routeIds.home, language)} onClick={closeMenu} className="group flex min-w-[250px] flex-1 items-center gap-3 xl:flex-none">
+      <div className="mx-auto flex h-[72px] w-full max-w-none items-center gap-3 px-3 sm:px-5 lg:h-[84px] lg:px-6 xl:px-8">
+        <a href={pathFor(routeIds.home, language)} onClick={closeMenu} className="group flex min-w-0 flex-1 items-center gap-3 lg:max-w-[460px] xl:flex-[0_1_430px] 2xl:flex-[0_1_520px]">
           <span className="relative flex h-[54px] w-[54px] shrink-0 items-center justify-center rounded-2xl border border-amber-900/10 bg-white shadow-lg shadow-stone-900/10 lg:h-[58px] lg:w-[58px]">
             <span className="absolute inset-0 rounded-2xl bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,.95),transparent_55%)]" />
             <img src="/favicon/vh-heart-128.webp" alt="" className="relative h-[52px] w-[52px] animate-pulse object-contain transition duration-300 group-hover:scale-110 lg:h-[56px] lg:w-[56px]" />
           </span>
           <span className="min-w-0">
-            <strong className="block truncate text-[1.08rem] font-black leading-none tracking-[-0.055em] text-stone-900 sm:text-[1.28rem] lg:text-[1.45rem]">Voulamandis House</strong>
-            <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] font-black uppercase tracking-[0.14em] text-stone-500 sm:text-[11px]">
+            <strong className="block truncate text-[1.08rem] font-black leading-none tracking-[-0.055em] text-stone-900 sm:text-[1.28rem] lg:text-[1.42rem]">Voulamandis House</strong>
+            <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] font-black uppercase tracking-[0.12em] text-stone-500 sm:text-[11px]">
               <span>Kampos, Chios</span>
               <span className="hidden h-1.5 w-1.5 rounded-full bg-emerald-500 sm:block" />
-              <span className="hidden rounded-full bg-emerald-50 px-2 py-0.5 text-emerald-700 ring-1 ring-emerald-700/10 lg:inline-flex">{statusLabel}</span>
-              <span className="hidden text-amber-800 xl:inline">{copy.directBestRates}</span>
-              <span className="hidden text-stone-400 2xl:inline">{reception.dateLabel}</span>
+              <span className="hidden text-emerald-700 lg:inline">{statusLabel}</span>
+              <span className="hidden text-amber-800 lg:inline">{copy.directBestRates}</span>
+              <span className="hidden text-stone-400 xl:inline">{reception.dateLabel}</span>
             </span>
           </span>
         </a>
 
-        <nav aria-label={copy.nav} className="hidden flex-1 items-center justify-center gap-1 rounded-full border border-stone-900/10 bg-white/66 p-1.5 shadow-sm shadow-stone-900/5 xl:flex">
-          {links.slice(0, 5).map((link) => (
-            <a key={link.href} href={link.href} className="rounded-full px-4 py-2 text-[13px] font-black text-stone-700 transition hover:bg-amber-50 hover:text-amber-900">
+        <nav aria-label={copy.nav} className="hidden flex-[1_1_auto] items-center justify-center gap-1 rounded-full border border-stone-900/10 bg-white/66 p-1.5 shadow-sm shadow-stone-900/5 xl:flex">
+          {links.map((link) => (
+            <a key={link.href} href={link.href} className="rounded-full px-3 py-2 text-center text-[13px] font-black text-stone-700 transition hover:bg-amber-50 hover:text-amber-900 2xl:px-4">
               {link.label}
             </a>
           ))}
         </nav>
 
-        <div className="hidden items-center gap-2 lg:flex">
+        <div className="hidden shrink-0 items-center gap-2 lg:flex">
           <LanguagePills currentLanguage={language} pathname={pathname} />
-          <a href="https://wa.me/306944474226" target="_blank" rel="noopener" className="hidden min-h-[48px] items-center gap-3 rounded-full border border-emerald-700/15 bg-white px-4 text-left shadow-sm shadow-stone-900/5 transition hover:-translate-y-0.5 hover:border-emerald-700/25 hover:bg-emerald-50 2xl:inline-flex">
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-500 text-lg text-white shadow-sm shadow-emerald-900/20">☏</span>
-            <span className="leading-none">
-              <span className="block text-[11px] font-black uppercase tracking-[0.12em] text-emerald-700">{copy.liveReception}</span>
-              <span className="mt-1 block text-[12px] font-black text-stone-800">+30 694 447 4226</span>
-            </span>
-          </a>
-          <a href={pathFor(routeIds.findRoom, language)} className="inline-flex h-12 min-w-[116px] items-center justify-center rounded-full bg-gradient-to-br from-[#a87842] to-[#8e6607] px-5 text-center text-xs font-black uppercase leading-none tracking-[0.1em] !text-white shadow-lg shadow-amber-900/20 transition hover:-translate-y-0.5">
+          <a href={pathFor(routeIds.rates, language)} className="inline-flex h-12 min-w-[112px] items-center justify-center rounded-full bg-gradient-to-br from-[#a87842] to-[#8e6607] px-5 text-center text-xs font-black uppercase leading-none tracking-[0.1em] !text-white shadow-lg shadow-amber-900/20 transition hover:-translate-y-0.5">
             {copy.bookNow}
           </a>
         </div>
@@ -319,7 +291,7 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/" }: H
             <LanguagePills currentLanguage={language} pathname={pathname} onNavigate={closeMenu} />
           </div>
 
-          <a href={pathFor(routeIds.findRoom, language)} onClick={closeMenu} className="mb-3 flex min-h-[52px] items-center justify-center rounded-full bg-gradient-to-br from-[#b8873f] to-[#8e6607] px-5 text-sm font-black uppercase tracking-[0.1em] !text-white shadow-lg shadow-amber-900/15">
+          <a href={pathFor(routeIds.rates, language)} onClick={closeMenu} className="mb-3 flex min-h-[52px] items-center justify-center rounded-full bg-gradient-to-br from-[#b8873f] to-[#8e6607] px-5 text-sm font-black uppercase tracking-[0.1em] !text-white shadow-lg shadow-amber-900/15">
             {copy.bookNow}
           </a>
 
