@@ -221,7 +221,7 @@ function IntroSection({ data }: { data: HomePageData }) {
           <p className="mb-3 text-xs font-black uppercase tracking-[0.2em] text-amber-100">{data.intro.right.kicker}</p>
           <h3 className="font-serif text-[1.85rem] font-bold leading-tight tracking-[-0.035em] md:text-4xl">{introRightTitle}</h3>
           <div className="mt-5 grid gap-2 sm:grid-cols-2">
-            {data.intro.right.items.map((item) => (
+            {data.intro.right.cards.map((item) => (
               <div key={item.title} className="rounded-2xl bg-white/10 p-3 ring-1 ring-white/10">
                 <p className="text-sm font-black text-white">{item.title}</p>
                 <p className="mt-1 text-xs leading-5 text-white/70">{item.text}</p>
