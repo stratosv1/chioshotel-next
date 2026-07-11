@@ -1,3 +1,11 @@
+/* Footer booking CTA: keep the label dark and readable on its white background. */
+footer section > div.mt-4.grid > a:first-child,
+footer section > div.mt-4.grid > a:first-child span {
+  color: #1c1917 !important;
+  -webkit-text-fill-color: #1c1917 !important;
+  opacity: 1 !important;
+}
+
 @media (max-width: 767px) {
   /* Homepage rooms CTA row: keep both actions side by side in every locale. */
   article[class*="bg-[#2f241d]"] > div.mt-5 {
