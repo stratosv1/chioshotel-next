@@ -1,4 +1,4 @@
-name: Fix Home Tailwind Intro Field
+name: Fix Home Tailwind Data Fields
 
 on:
   push:
@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 jobs:
-  fix-field:
+  fix-fields:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout integration branch
@@ -19,21 +19,27 @@ jobs:
           ref: integrate-localized-css-main
           fetch-depth: 0
 
-      - name: Replace invalid intro field
+      - name: Replace invalid homepage data fields
         run: |
           python - <<'PY'
           from pathlib import Path
 
           path = Path('components/home/HomePageTailwindV2.tsx')
           text = path.read_text(encoding='utf-8')
-          old = 'data.intro.right.items.map((item) => ('
-          new = 'data.intro.right.cards.map((item) => ('
+          replacements = {
+              'data.intro.right.items.map((item) => (': 'data.intro.right.cards.map((item) => (',
+              'data.roomsPreview.subtitle': 'data.roomsPreview.text',
+          }
 
-          if old not in text:
-              print('Target already fixed or not found.')
+          updated = text
+          for old, new in replacements.items():
+              updated = updated.replace(old, new)
+
+          if updated == text:
+              print('Homepage data fields already fixed or not found.')
           else:
-              path.write_text(text.replace(old, new, 1), encoding='utf-8')
-              print('Replaced intro.right.items with intro.right.cards.')
+              path.write_text(updated, encoding='utf-8')
+              print('Updated invalid homepage data field references.')
           PY
 
       - name: Commit correction
@@ -46,5 +52,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add components/home/HomePageTailwindV2.tsx
-          git commit -m "Fix Tailwind homepage intro cards field"
+          git commit -m "Fix Tailwind homepage data fields"
           git push origin HEAD:integrate-localized-css-main
