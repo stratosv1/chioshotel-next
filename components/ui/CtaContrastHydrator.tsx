@@ -25,6 +25,18 @@ const lightBackgroundMarkers = [
   "bg-stone-50",
 ];
 
+const headerActivitiesLabels = {
+  en: { from: "Do in Chios", to: "What to see in Chios" },
+  el: { from: "Τι να κάνεις", to: "Τι να δω στη Χίο" },
+  fr: { from: "À faire", to: "Que voir à Chios" },
+  de: { from: "Aktivitäten", to: "Sehenswertes auf Chios" },
+  it: { from: "Cosa fare", to: "Cosa vedere a Chios" },
+  es: { from: "Qué hacer", to: "Qué ver en Quíos" },
+  tr: { from: "Ne yapılır", to: "Sakız Adası'nda görülecekler" },
+} as const;
+
+type HeaderLanguage = keyof typeof headerActivitiesLabels;
+
 function hasExactClass(element: HTMLElement, markers: string[]) {
   return markers.some((marker) => element.classList.contains(marker));
 }
@@ -56,12 +68,63 @@ function hydrateCtaContrast() {
   }
 }
 
+function hydrateHeaderActivitiesLabel() {
+  const header = document.querySelector<HTMLElement>("header");
+  if (!header) return;
+
+  const rawLanguage = document.documentElement.lang.split("-")[0] as HeaderLanguage;
+  const language: HeaderLanguage = rawLanguage in headerActivitiesLabels ? rawLanguage : "en";
+  const label = headerActivitiesLabels[language];
+
+  for (const anchor of Array.from(header.querySelectorAll<HTMLAnchorElement>("a"))) {
+    const strong = anchor.querySelector<HTMLElement>("strong");
+
+    if (strong?.textContent?.trim() === label.from || strong?.textContent?.trim() === label.to) {
+      strong.textContent = label.to;
+      strong.classList.remove("truncate");
+      strong.classList.add("whitespace-normal", "break-words");
+      anchor.style.minHeight = "64px";
+      anchor.style.alignItems = "center";
+      continue;
+    }
+
+    if (anchor.children.length === 0 && (anchor.textContent?.trim() === label.from || anchor.textContent?.trim() === label.to)) {
+      anchor.textContent = label.to;
+      anchor.style.whiteSpace = "nowrap";
+      anchor.style.fontSize = "12.5px";
+      anchor.style.paddingInline = "10px";
+    }
+  }
+
+  const desktopNav = header.querySelector<HTMLElement>('nav[aria-label]:not([class*="overflow-x-auto"])');
+  if (desktopNav) {
+    desktopNav.style.maxWidth = "780px";
+    desktopNav.style.minWidth = "0";
+    desktopNav.style.paddingInline = "6px";
+  }
+
+  const mobilePanel = header.querySelector<HTMLElement>('div[class*="w-[min(92vw,420px)]"]');
+  if (mobilePanel) {
+    mobilePanel.style.width = "min(96vw, 460px)";
+  }
+}
+
 export function CtaContrastHydrator() {
   useEffect(() => {
-    hydrateCtaContrast();
-    const observer = new MutationObserver(() => hydrateCtaContrast());
+    function hydrateUi() {
+      hydrateCtaContrast();
+      hydrateHeaderActivitiesLabel();
+    }
+
+    hydrateUi();
+    const observer = new MutationObserver(() => hydrateUi());
     observer.observe(document.body, { childList: true, subtree: true });
-    return () => observer.disconnect();
+    window.addEventListener("resize", hydrateHeaderActivitiesLabel);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", hydrateHeaderActivitiesLabel);
+    };
   }, []);
 
   return null;
