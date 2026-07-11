@@ -7,8 +7,6 @@
 
 /* ---- pages ---- */
 @import "./pages/rooms-category.css";
-@import "./pages/chios-museums.css";
-@import "./pages/museum-detail.css";
 
 /* ---- components ---- */
 @import "./components/header.css";
