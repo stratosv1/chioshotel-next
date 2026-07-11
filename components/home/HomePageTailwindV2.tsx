@@ -239,7 +239,7 @@ function RoomsPreview({ data }: { data: HomePageData }) {
     <Section>
       <div className="grid gap-5 lg:grid-cols-[1.05fr_0.95fr]">
         <article>
-          <SectionTitle kicker={data.roomsPreview.kicker} icon={data.roomsPreview.icon} title={data.roomsPreview.title} subtitle={data.roomsPreview.subtitle} centered={false} />
+          <SectionTitle kicker={data.roomsPreview.kicker} icon={data.roomsPreview.icon} title={data.roomsPreview.title} subtitle={data.roomsPreview.text} centered={false} />
           <div className="flex flex-wrap gap-3">
             <PrimaryButton href={data.roomsPreview.primaryCta.href}>{data.roomsPreview.primaryCta.label}</PrimaryButton>
             <SecondaryButton href={data.roomsPreview.secondaryCta.href}>{data.roomsPreview.secondaryCta.label}</SecondaryButton>
