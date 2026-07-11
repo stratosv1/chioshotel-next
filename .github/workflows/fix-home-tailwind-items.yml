@@ -29,6 +29,7 @@ jobs:
           replacements = {
               'data.intro.right.items.map((item) => (': 'data.intro.right.cards.map((item) => (',
               'data.roomsPreview.subtitle': 'data.roomsPreview.text',
+              '{card.kicker}': '{card.cta}',
           }
 
           updated = text
