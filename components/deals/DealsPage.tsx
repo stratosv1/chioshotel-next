@@ -159,7 +159,7 @@ export function DealsPage({ data }: DealsPageProps) {
 
                   <div className="mt-6 grid gap-3 sm:grid-cols-2">
                     <a
-                      className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-amber-800 px-4 text-[11px] font-black uppercase tracking-[0.1em] text-white"
+                      className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-amber-800 px-4 text-[11px] font-black uppercase tracking-[0.1em] !text-white shadow-lg shadow-amber-900/15"
                       href={offer.bookingHref}
                       target="_blank"
                       rel="noopener noreferrer"
