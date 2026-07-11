@@ -6,8 +6,6 @@
 @import "./base/base.css";
 
 /* ---- pages ---- */
-@import "./pages/home.css";
-@import "./pages/home-mobile-patch.css";
 @import "./pages/rooms-category.css";
 @import "./pages/rates.css";
 @import "./pages/contact.css";
