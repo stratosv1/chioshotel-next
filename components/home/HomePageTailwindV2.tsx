@@ -92,8 +92,8 @@ function PrimaryButton({ href, children, dark = false }: { href: string; childre
     <a
       href={href}
       className={dark
-        ? "inline-flex min-h-12 items-center justify-center rounded-full bg-[#2f261f] px-6 text-center text-xs font-black uppercase tracking-[0.08em] text-white shadow-lg shadow-stone-900/20 transition hover:-translate-y-0.5 hover:bg-[#4b3728] md:text-sm"
-        : "inline-flex min-h-12 items-center justify-center rounded-full bg-[#8b5e34] px-6 text-center text-xs font-black uppercase tracking-[0.08em] text-white shadow-lg shadow-amber-900/20 transition hover:-translate-y-0.5 hover:bg-[#6f4828] md:text-sm"
+        ? "inline-flex min-h-12 items-center justify-center rounded-full bg-[#2f261f] px-6 text-center text-xs font-black uppercase tracking-[0.08em] !text-white shadow-lg shadow-stone-900/20 transition hover:-translate-y-0.5 hover:bg-[#4b3728] md:text-sm"
+        : "inline-flex min-h-12 items-center justify-center rounded-full bg-[#8b5e34] px-6 text-center text-xs font-black uppercase tracking-[0.08em] !text-white shadow-lg shadow-amber-900/20 transition hover:-translate-y-0.5 hover:bg-[#6f4828] md:text-sm"
       }
     >
       {children}
@@ -210,7 +210,7 @@ function IntroSection({ data }: { data: HomePageData }) {
           </p>
           <div className="mt-5 flex snap-x snap-mandatory gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:flex-wrap sm:overflow-visible sm:pb-0">
             {data.intro.left.pills.map((pill) => (
-              <span key={pill} className="inline-flex min-h-10 shrink-0 snap-start items-center justify-center rounded-full bg-[#fff3df] px-4 text-center text-xs font-black leading-tight text-[#8b5e34] ring-1 ring-amber-900/10 sm:text-sm">
+              <span key={pill} className="inline-flex min-h-10 shrink-0 snap-start items-center justify-center rounded-full bg-[#fff3df] px-4 text-center text-xs font-black text-[#8b5e34] shadow-sm">
                 {pill}
               </span>
             ))}
@@ -218,17 +218,13 @@ function IntroSection({ data }: { data: HomePageData }) {
         </article>
 
         <article className="rounded-[2rem] border border-amber-900/10 bg-[#2f261f] p-5 text-white shadow-xl shadow-stone-900/10 md:p-8">
-          <p className="mb-3 text-xs font-black uppercase tracking-[0.2em] text-amber-200">{data.intro.right.kicker}</p>
-          <h3 className="font-serif text-[2rem] font-bold leading-tight tracking-[-0.035em] text-white md:text-5xl">
-            {introRightTitle}
-          </h3>
-          <div className="mt-5 grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-3">
-            {data.intro.right.cards.map((card, index) => (
-              <div key={card.title} className={index === 0 ? "col-span-2 rounded-3xl bg-white p-4 text-[#2f261f] md:col-span-1" : "rounded-3xl border border-white/10 bg-white/10 p-3"}>
-                <strong className="block text-sm font-black leading-5">{card.title}</strong>
-                <span className={index === 0 ? "mt-2 block text-xs leading-5 text-[#6f6257]" : "mt-2 block text-xs leading-5 text-white/75"}>
-                  {card.text}
-                </span>
+          <p className="mb-3 text-xs font-black uppercase tracking-[0.2em] text-amber-100">{data.intro.right.kicker}</p>
+          <h3 className="font-serif text-[1.85rem] font-bold leading-tight tracking-[-0.035em] md:text-4xl">{introRightTitle}</h3>
+          <div className="mt-5 grid gap-2 sm:grid-cols-2">
+            {data.intro.right.items.map((item) => (
+              <div key={item.title} className="rounded-2xl bg-white/10 p-3 ring-1 ring-white/10">
+                <p className="text-sm font-black text-white">{item.title}</p>
+                <p className="mt-1 text-xs leading-5 text-white/70">{item.text}</p>
               </div>
             ))}
           </div>
@@ -238,26 +234,15 @@ function IntroSection({ data }: { data: HomePageData }) {
   );
 }
 
-function RoomsSection({ data }: { data: HomePageData }) {
+function RoomsPreview({ data }: { data: HomePageData }) {
   return (
     <Section>
-      <div className="grid gap-4 lg:grid-cols-[0.88fr_1.12fr] lg:items-end">
-        <article className="rounded-[2rem] bg-[#2f261f] p-5 text-white shadow-xl shadow-stone-900/10 md:p-9">
-          <p className="mb-3 text-xs font-black uppercase tracking-[0.20em] text-amber-200">{data.roomsPreview.kicker}</p>
-          <h2 className="font-serif text-[2rem] font-bold leading-tight tracking-[-0.035em] md:text-5xl">
-            <span className="mr-2" aria-hidden="true">{data.roomsPreview.icon}</span>
-            {data.roomsPreview.title}
-          </h2>
-          <p className="mt-4 text-sm leading-7 text-white/78 md:text-lg md:leading-8">{data.roomsPreview.text}</p>
-          <div className="mt-6 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap">
-            <PrimaryButton href={data.roomsPreview.primaryCta.href}>
-              <span className="mr-2" aria-hidden="true">{data.roomsPreview.primaryCta.icon}</span>
-              {data.roomsPreview.primaryCta.label}
-            </PrimaryButton>
-            <SecondaryButton href={data.roomsPreview.secondaryCta.href} light>
-              <span className="mr-2" aria-hidden="true">{data.roomsPreview.secondaryCta.icon}</span>
-              {data.roomsPreview.secondaryCta.label}
-            </SecondaryButton>
+      <div className="grid gap-5 lg:grid-cols-[1.05fr_0.95fr]">
+        <article>
+          <SectionTitle kicker={data.roomsPreview.kicker} icon={data.roomsPreview.icon} title={data.roomsPreview.title} subtitle={data.roomsPreview.subtitle} centered={false} />
+          <div className="flex flex-wrap gap-3">
+            <PrimaryButton href={data.roomsPreview.primaryCta.href}>{data.roomsPreview.primaryCta.label}</PrimaryButton>
+            <SecondaryButton href={data.roomsPreview.secondaryCta.href}>{data.roomsPreview.secondaryCta.label}</SecondaryButton>
           </div>
         </article>
 
@@ -456,12 +441,12 @@ function TravelerSection({ data }: { data: HomePageData }) {
 
           return (
             <a key={card.id} href={card.href} className="group relative min-h-[330px] w-[84vw] max-w-[390px] flex-none snap-start overflow-hidden rounded-[1.6rem] bg-[#1f1712] text-white shadow-2xl shadow-stone-900/10 transition hover:-translate-y-1 md:w-auto md:max-w-none md:rounded-[2rem]">
-              <Image src={imageSrc} alt={card.title} fill sizes="(max-width: 768px) 84vw, 25vw" className="object-cover transition duration-500 group-hover:scale-105" loading="lazy" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/52 to-black/5" />
-              <div className="absolute inset-x-0 bottom-0 p-6 text-white">
-                <h3 className="font-serif text-3xl font-bold tracking-[-0.03em] text-white drop-shadow-[0_3px_12px_rgba(0,0,0,.7)]">{card.title}</h3>
-                <p className="mt-3 text-sm leading-7 text-white/80">{card.text}</p>
-                <span className="mt-5 inline-flex rounded-full bg-white px-4 py-2 text-xs font-black uppercase tracking-[0.08em] text-[#8b5e34]">{card.cta}</span>
+              <Image src={imageSrc} alt={card.title} fill sizes="(max-width: 768px) 84vw, (max-width: 1280px) 50vw, 25vw" className="object-cover transition duration-500 group-hover:scale-105" loading="lazy" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-5">
+                <span className="mb-3 inline-flex rounded-full bg-white/95 px-3 py-1 text-xs font-black text-[#8b5e34]">{card.kicker}</span>
+                <h3 className="font-serif text-2xl font-bold leading-tight">{card.title}</h3>
+                <p className="mt-2 text-sm leading-6 text-white/78">{card.text}</p>
               </div>
             </a>
           );
@@ -471,63 +456,35 @@ function TravelerSection({ data }: { data: HomePageData }) {
   );
 }
 
-function ChiosGuideSection({ data }: { data: HomePageData }) {
+function GuideSection({ data }: { data: HomePageData }) {
   return (
     <Section>
-      <SectionTitle kicker={data.chiosGuide.kicker} icon={data.chiosGuide.icon} title={data.chiosGuide.title} subtitle={data.chiosGuide.subtitle} />
-      <MobileSwipeHint />
-      <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-12 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 xl:grid-cols-3">
-        {data.chiosGuide.cards.map((card) => {
-          const imageSrc = homeGuideImages[card.imageClass] || data.hero.image;
-
-          return (
-            <a key={card.id} href={card.href} className="group w-[84vw] max-w-[390px] flex-none snap-start overflow-hidden rounded-[1.6rem] border border-amber-900/10 bg-white shadow-xl shadow-stone-900/5 transition hover:-translate-y-1 hover:shadow-2xl md:w-auto md:max-w-none md:rounded-[2rem]">
-              <div className="relative aspect-[16/10] overflow-hidden">
-                <Image src={imageSrc} alt={card.title} fill sizes="(max-width: 768px) 84vw, 33vw" className="object-cover transition duration-500 group-hover:scale-105" loading="lazy" />
-              </div>
-              <div className="p-5">
-                <h3 className="font-serif text-2xl font-bold tracking-[-0.03em] text-[#241d18]">{card.title}</h3>
-                <p className="mt-3 text-sm leading-7 text-[#6f6257] md:text-base">{card.text}</p>
-                <span className="mt-5 inline-flex rounded-full border border-[#8b5e34]/20 px-4 py-2 text-xs font-black uppercase tracking-[0.08em] text-[#8b5e34]">
-                  <span className="mr-2" aria-hidden="true">{card.ctaIcon}</span>
-                  {card.ctaLabel}
-                </span>
-              </div>
-            </a>
-          );
-        })}
-      </div>
-    </Section>
-  );
-}
-
-function QuizBar({ data }: { data: HomePageData }) {
-  return (
-    <Section className="py-8 md:py-10">
-      <div className="grid gap-5 rounded-[2rem] bg-[#2f261f] p-6 text-white shadow-2xl shadow-stone-900/10 md:grid-cols-[1fr_auto] md:items-center md:p-8">
-        <div>
-          <p className="text-xs font-black uppercase tracking-[0.20em] text-amber-200">{data.quizBar.label}</p>
-          <p className="mt-2 max-w-3xl text-base leading-7 text-white/85 md:text-lg md:leading-8">{data.quizBar.text}</p>
-        </div>
-        <a href={data.quizBar.href} className="inline-flex w-full items-center justify-center rounded-full bg-white px-6 py-3 text-center text-sm font-black uppercase tracking-[0.06em] text-[#8b5e34] shadow-lg transition hover:bg-[#fff7ed] sm:w-auto sm:min-w-[300px]" aria-label={data.quizBar.cta}>
-          {data.quizBar.cta}
+      <SectionTitle kicker={data.guide.kicker} icon={data.guide.icon} title={data.guide.title} subtitle={data.guide.subtitle} />
+      <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
+        <a href={data.guide.featured.href} className="group overflow-hidden rounded-[2rem] border border-amber-900/10 bg-white shadow-xl shadow-stone-900/5 transition hover:-translate-y-1 md:rounded-[2.5rem]">
+          <div className="relative aspect-[16/10] overflow-hidden">
+            <Image src={homeGuideImages[data.guide.featured.imageClass] || data.hero.image} alt={data.guide.featured.title} fill sizes="(max-width: 1024px) 100vw, 58vw" className="object-cover transition duration-500 group-hover:scale-105" loading="lazy" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+            <span className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1.5 text-xs font-black text-[#8b5e34]">{data.guide.featured.kicker}</span>
+            <div className="absolute bottom-0 left-0 right-0 p-5 text-white md:p-7">
+              <h3 className="font-serif text-3xl font-bold leading-tight md:text-5xl">{data.guide.featured.title}</h3>
+              <p className="mt-3 max-w-2xl text-sm leading-7 text-white/82 md:text-base md:leading-8">{data.guide.featured.text}</p>
+            </div>
+          </div>
         </a>
-      </div>
-    </Section>
-  );
-}
 
-function FaqSection({ data }: { data: HomePageData }) {
-  return (
-    <Section>
-      <div className="mx-auto max-w-5xl">
-        <SectionTitle kicker={data.faq.kicker} icon={data.faq.icon} title={data.faq.title} />
         <div className="grid gap-3">
-          {data.faq.items.map((item) => (
-            <details key={item.question} className="group rounded-3xl border border-amber-900/10 bg-white p-5 shadow-sm">
-              <summary className="cursor-pointer list-none font-bold text-[#241d18]">{item.question}</summary>
-              <div className="mt-4 leading-8 text-[#6f6257]"><HtmlText html={item.answerHtml} /></div>
-            </details>
+          {data.guide.links.map((link) => (
+            <a key={link.href} href={link.href} className="group flex items-center gap-4 rounded-[1.5rem] border border-amber-900/10 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg">
+              <div className="relative h-20 w-24 shrink-0 overflow-hidden rounded-2xl bg-[#fff3df]">
+                <Image src={homeGuideImages[link.imageClass] || data.hero.image} alt={link.title} fill sizes="96px" className="object-cover transition duration-500 group-hover:scale-105" loading="lazy" />
+              </div>
+              <div className="min-w-0">
+                <h3 className="text-base font-black leading-tight text-[#241d18]">{link.title}</h3>
+                <p className="mt-1 line-clamp-2 text-sm leading-6 text-[#6f6257]">{link.text}</p>
+              </div>
+              <span className="ml-auto text-[#8b5e34]">→</span>
+            </a>
           ))}
         </div>
       </div>
@@ -537,67 +494,41 @@ function FaqSection({ data }: { data: HomePageData }) {
 
 function FinalCta({ data }: { data: HomePageData }) {
   return (
-    <section className="px-4 pb-16 pt-4 md:px-8 md:pb-20">
-      <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2rem] bg-[#1f1712] text-white shadow-2xl shadow-stone-900/20 md:rounded-[2.6rem]">
-        <Image src="/images/site/Screenshot_2026-04-25-14-11-19-166_com.instagram.android-edit-1.webp" alt="" fill sizes="(max-width: 768px) 100vw, 1280px" className="object-cover object-center" loading="lazy" aria-hidden="true" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/68 via-black/38 to-black/5" />
-        <div className="relative z-10 max-w-3xl p-7 md:p-14">
-          <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] text-amber-200">{data.finalCta.kicker}</p>
-          <h2 className="font-serif text-4xl font-bold leading-tight tracking-[-0.04em] md:text-6xl">
-            <span className="mr-2" aria-hidden="true">{data.finalCta.icon}</span>
-            {data.finalCta.title}
-          </h2>
-          <p className="mt-5 max-w-2xl text-base leading-8 text-white/85 md:text-lg md:leading-9">{data.finalCta.text}</p>
-          <div className="mt-8 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap">
-            <PrimaryButton href={data.finalCta.primaryCta.href}>
-              <span className="mr-2" aria-hidden="true">{data.finalCta.primaryCta.icon}</span>
-              {data.finalCta.primaryCta.label}
-            </PrimaryButton>
-            <SecondaryButton href={data.finalCta.secondaryCta.href} light>
-              <span className="mr-2" aria-hidden="true">{data.finalCta.secondaryCta.icon}</span>
-              {data.finalCta.secondaryCta.label}
-            </SecondaryButton>
+    <Section className="pb-10 md:pb-16">
+      <article className="relative overflow-hidden rounded-[2rem] bg-stone-950 p-6 text-white shadow-2xl shadow-stone-900/20 md:rounded-[2.5rem] md:p-10 lg:p-12">
+        <Image src={data.finalCta.image} alt={data.finalCta.title} fill sizes="100vw" className="object-cover opacity-60" loading="lazy" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/65 via-black/38 to-transparent" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(255,255,255,.18),transparent_26rem)]" />
+        <div className="relative z-10 max-w-2xl">
+          <p className="mb-3 text-xs font-black uppercase tracking-[0.20em] text-amber-100">{data.finalCta.kicker}</p>
+          <h2 className="font-serif text-[2.25rem] font-bold leading-tight tracking-[-0.035em] md:text-6xl">{data.finalCta.title}</h2>
+          <p className="mt-4 text-base leading-8 text-white/86 md:text-lg md:leading-9">{data.finalCta.text}</p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <PrimaryButton href={data.finalCta.primary.href}>{data.finalCta.primary.label}</PrimaryButton>
+            <SecondaryButton href={data.finalCta.secondary.href} light>{data.finalCta.secondary.label}</SecondaryButton>
           </div>
         </div>
-      </div>
-    </section>
-  );
-}
-
-function MobileSticky({ data }: { data: HomePageData }) {
-  return (
-    <div className="fixed inset-x-0 bottom-0 z-50 border-t border-amber-900/10 bg-white/95 p-3 shadow-2xl backdrop-blur md:hidden">
-      <div className="grid grid-cols-2 gap-3">
-        <SecondaryButton href={data.mobileSticky.call.href}>{data.mobileSticky.call.label}</SecondaryButton>
-        <a href={data.mobileSticky.viber.href} className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#25d366] px-6 text-sm font-black uppercase tracking-[0.08em] text-white shadow-lg shadow-green-900/20 transition hover:bg-green-700">
-          {data.mobileSticky.viber.label}
-        </a>
-      </div>
-    </div>
+      </article>
+    </Section>
   );
 }
 
 export function HomePageTailwindV2({ data }: HomePageTailwindV2Props) {
   return (
-    <>
-      <PageShell>
-        <Hero data={data} />
-        <AnnounceBar data={data} />
-        <IntroSection data={data} />
-        <RoomsSection data={data} />
-        <LazyLastMinuteDeals data={data.lastMinute} canonicalPath={data.seo.canonicalPath} />
-        <DirectBookingBox data={data} />
-        <KambosStory data={data} />
-        <LocationAndDirect data={data} />
-        <ReviewsSection data={data} />
-        <AmenitiesSection data={data} />
-        <TravelerSection data={data} />
-        <ChiosGuideSection data={data} />
-        <QuizBar data={data} />
-        <FaqSection data={data} />
-        <FinalCta data={data} />
-      </PageShell>
-      <MobileSticky data={data} />
-    </>
+    <PageShell>
+      <Hero data={data} />
+      <AnnounceBar data={data} />
+      <LazyLastMinuteDeals data={data.lastMinute} canonicalPath={data.seo.canonicalPath} />
+      <IntroSection data={data} />
+      <RoomsPreview data={data} />
+      <DirectBookingBox data={data} />
+      <KambosStory data={data} />
+      <LocationAndDirect data={data} />
+      <ReviewsSection data={data} />
+      <AmenitiesSection data={data} />
+      <TravelerSection data={data} />
+      <GuideSection data={data} />
+      <FinalCta data={data} />
+    </PageShell>
   );
 }
