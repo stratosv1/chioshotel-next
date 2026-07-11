@@ -5,6 +5,8 @@ import { useEffect } from "react";
 const darkBackgroundMarkers = [
   "bg-[#17351f]",
   "bg-[#2f261f]",
+  "bg-[#8b5e34]",
+  "bg-[#6f4828]",
   "bg-stone-950",
   "bg-stone-900",
   "bg-black",
