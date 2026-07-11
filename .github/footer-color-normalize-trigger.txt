@@ -1,0 +1,1 @@
+Trigger normalized footer CTA color fix.
