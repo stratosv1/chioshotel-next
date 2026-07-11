@@ -1,0 +1,29 @@
+name: Prepare Safe Preview Merge
+
+on:
+  push:
+    branches:
+      - safe-preview-to-main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  merge-main-history:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: safe-preview-to-main
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Record main as merged while preserving tested preview tree
+        run: |
+          git fetch origin main
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git merge -s ours origin/main -m "Safely reconcile tested preview with main history"
+          git push origin HEAD:safe-preview-to-main
