@@ -23,13 +23,14 @@ const lightBackgroundMarkers = [
   "bg-stone-50",
 ];
 
-function hasAnyClass(element: HTMLElement, markers: string[]) {
-  const className = element.className.toString();
-  return markers.some((marker) => className.includes(marker));
+function hasExactClass(element: HTMLElement, markers: string[]) {
+  return markers.some((marker) => element.classList.contains(marker));
 }
 
 function isCta(element: HTMLElement) {
   if (element.tagName !== "A" && element.tagName !== "BUTTON") return false;
+  if (element.closest("header, footer")) return false;
+
   const className = element.className.toString();
   return className.includes("rounded-full") || className.includes("rounded-2xl") || className.includes("min-h-") || className.includes("uppercase");
 }
@@ -39,8 +40,8 @@ function hydrateCtaContrast() {
 
   for (const cta of ctas) {
     const className = cta.className.toString();
-    const isDark = hasAnyClass(cta, darkBackgroundMarkers) || className.includes("from-[#") || className.includes("to-[#8e6607]");
-    const isLight = hasAnyClass(cta, lightBackgroundMarkers);
+    const isDark = hasExactClass(cta, darkBackgroundMarkers) || className.includes("from-[#") || className.includes("to-[#8e6607]");
+    const isLight = hasExactClass(cta, lightBackgroundMarkers);
 
     if (isDark && !className.includes("text-white") && !className.includes("!text-white")) {
       cta.classList.add("!text-white");
