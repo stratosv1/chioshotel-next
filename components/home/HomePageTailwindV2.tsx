@@ -457,25 +457,29 @@ function TravelerSection({ data }: { data: HomePageData }) {
 }
 
 function GuideSection({ data }: { data: HomePageData }) {
+  const [featured, ...links] = data.chiosGuide.cards;
+
+  if (!featured) return null;
+
   return (
     <Section>
-      <SectionTitle kicker={data.guide.kicker} icon={data.guide.icon} title={data.guide.title} subtitle={data.guide.subtitle} />
+      <SectionTitle kicker={data.chiosGuide.kicker} icon={data.chiosGuide.icon} title={data.chiosGuide.title} subtitle={data.chiosGuide.subtitle} />
       <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-        <a href={data.guide.featured.href} className="group overflow-hidden rounded-[2rem] border border-amber-900/10 bg-white shadow-xl shadow-stone-900/5 transition hover:-translate-y-1 md:rounded-[2.5rem]">
+        <a href={featured.href} className="group overflow-hidden rounded-[2rem] border border-amber-900/10 bg-white shadow-xl shadow-stone-900/5 transition hover:-translate-y-1 md:rounded-[2.5rem]">
           <div className="relative aspect-[16/10] overflow-hidden">
-            <Image src={homeGuideImages[data.guide.featured.imageClass] || data.hero.image} alt={data.guide.featured.title} fill sizes="(max-width: 1024px) 100vw, 58vw" className="object-cover transition duration-500 group-hover:scale-105" loading="lazy" />
+            <Image src={homeGuideImages[featured.imageClass] || data.hero.image} alt={featured.title} fill sizes="(max-width: 1024px) 100vw, 58vw" className="object-cover transition duration-500 group-hover:scale-105" loading="lazy" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-            <span className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1.5 text-xs font-black text-[#8b5e34]">{data.guide.featured.kicker}</span>
+            <span className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1.5 text-xs font-black text-[#8b5e34]">{featured.ctaLabel}</span>
             <div className="absolute bottom-0 left-0 right-0 p-5 text-white md:p-7">
-              <h3 className="font-serif text-3xl font-bold leading-tight md:text-5xl">{data.guide.featured.title}</h3>
-              <p className="mt-3 max-w-2xl text-sm leading-7 text-white/82 md:text-base md:leading-8">{data.guide.featured.text}</p>
+              <h3 className="font-serif text-3xl font-bold leading-tight md:text-5xl">{featured.title}</h3>
+              <p className="mt-3 max-w-2xl text-sm leading-7 text-white/82 md:text-base md:leading-8">{featured.text}</p>
             </div>
           </div>
         </a>
 
         <div className="grid gap-3">
-          {data.guide.links.map((link) => (
-            <a key={link.href} href={link.href} className="group flex items-center gap-4 rounded-[1.5rem] border border-amber-900/10 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg">
+          {links.map((link) => (
+            <a key={link.id} href={link.href} className="group flex items-center gap-4 rounded-[1.5rem] border border-amber-900/10 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg">
               <div className="relative h-20 w-24 shrink-0 overflow-hidden rounded-2xl bg-[#fff3df]">
                 <Image src={homeGuideImages[link.imageClass] || data.hero.image} alt={link.title} fill sizes="96px" className="object-cover transition duration-500 group-hover:scale-105" loading="lazy" />
               </div>
@@ -483,7 +487,7 @@ function GuideSection({ data }: { data: HomePageData }) {
                 <h3 className="text-base font-black leading-tight text-[#241d18]">{link.title}</h3>
                 <p className="mt-1 line-clamp-2 text-sm leading-6 text-[#6f6257]">{link.text}</p>
               </div>
-              <span className="ml-auto text-[#8b5e34]">→</span>
+              <span className="ml-auto text-[#8b5e34]" aria-hidden="true">{link.ctaIcon || "→"}</span>
             </a>
           ))}
         </div>
@@ -496,7 +500,7 @@ function FinalCta({ data }: { data: HomePageData }) {
   return (
     <Section className="pb-10 md:pb-16">
       <article className="relative overflow-hidden rounded-[2rem] bg-stone-950 p-6 text-white shadow-2xl shadow-stone-900/20 md:rounded-[2.5rem] md:p-10 lg:p-12">
-        <Image src={data.finalCta.image} alt={data.finalCta.title} fill sizes="100vw" className="object-cover opacity-60" loading="lazy" />
+        <Image src={data.hero.image} alt={data.finalCta.title} fill sizes="100vw" className="object-cover opacity-60" loading="lazy" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/65 via-black/38 to-transparent" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(255,255,255,.18),transparent_26rem)]" />
         <div className="relative z-10 max-w-2xl">
@@ -504,8 +508,8 @@ function FinalCta({ data }: { data: HomePageData }) {
           <h2 className="font-serif text-[2.25rem] font-bold leading-tight tracking-[-0.035em] md:text-6xl">{data.finalCta.title}</h2>
           <p className="mt-4 text-base leading-8 text-white/86 md:text-lg md:leading-9">{data.finalCta.text}</p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <PrimaryButton href={data.finalCta.primary.href}>{data.finalCta.primary.label}</PrimaryButton>
-            <SecondaryButton href={data.finalCta.secondary.href} light>{data.finalCta.secondary.label}</SecondaryButton>
+            <PrimaryButton href={data.finalCta.primaryCta.href}>{data.finalCta.primaryCta.label}</PrimaryButton>
+            <SecondaryButton href={data.finalCta.secondaryCta.href} light>{data.finalCta.secondaryCta.label}</SecondaryButton>
           </div>
         </div>
       </article>
