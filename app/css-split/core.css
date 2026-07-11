@@ -4,12 +4,6 @@
 @import "./base/tokens.css";
 @import "./base/base.css";
 
-/* ---- components needed globally ---- */
-@import "./components/header.css";
-@import "./components/footer.css";
-@import "./components/language-switcher.css";
-@import "./components/footer-mobile-patch.css";
-
 /* ---- safe global fixes ---- */
 a[href="/chios-rooms/"].bg-white,
 a[href="/el/domatia-xios/"].bg-white,
