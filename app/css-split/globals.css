@@ -10,9 +10,6 @@
 @import "./pages/home-mobile-patch.css";
 @import "./pages/rooms-category.css";
 @import "./pages/room-wizard.css";
-@import "./pages/room-detail.css";
-@import "./pages/room-detail-cards.css";
-@import "./pages/room-detail-floor-groups.css";
 @import "./pages/rates.css";
 @import "./pages/contact.css";
 @import "./pages/deals.css";
@@ -24,9 +21,6 @@
 @import "./components/header.css";
 @import "./components/footer.css";
 @import "./components/language-switcher.css";
-
-/* ---- pages ---- */
-@import "./pages/room-detail-i18n-fix.css";
 
 /* ---- components ---- */
 @import "./components/holiday-quiz.css";
@@ -46,7 +40,6 @@
 
 /* ---- overrides ---- */
 @import "./overrides/overrides.css";
-@import "./overrides/room-detail-mobile-compact.css";
 @import "./overrides/cta-contrast.css";
 
 /* ---- pages ---- */
