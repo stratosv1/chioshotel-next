@@ -1,0 +1,141 @@
+/* Scoped styles for localized Deals, Chios Activities and Chios Island pages. */
+
+/* Deals */
+.deals-page { min-height: 100vh; overflow-x: hidden; background: radial-gradient(circle at top left, rgba(142,102,7,.12), transparent 30rem), linear-gradient(180deg, #fffdfa 0%, #faf9f6 100%); color: #1b2b1b; }
+.deals-page a { color: inherit; text-decoration: none; }
+.deals-wrap { width: min(1240px, calc(100% - 40px)); margin: 0 auto; }
+.deals-top-bar { position: relative; z-index: 5; padding: 12px 16px; background: #fff; border-bottom: 1px solid rgba(142,102,7,.15); text-align: center; }
+.deals-top-bar a { color: #8e6607; font-size: 13px; font-weight: 950; letter-spacing: .1em; text-transform: uppercase; }
+.deals-hero { position: relative; min-height: 500px; display: flex; align-items: flex-end; overflow: hidden; color: #fff; }
+.deals-hero-bg { position: absolute; inset: 0; z-index: 0; }
+.deals-hero-bg img { width: 100%; height: 100%; object-fit: cover; }
+.deals-hero-overlay { position: absolute; inset: 0; z-index: 1; background: linear-gradient(135deg, rgba(18,25,18,.86) 0%, rgba(55,43,24,.56) 58%, rgba(18,25,18,.26) 100%), linear-gradient(0deg, rgba(18,25,18,.78) 0%, transparent 62%); }
+.deals-hero-inner { position: relative; z-index: 2; padding: 110px 0 82px; }
+.deals-hero-content { max-width: 850px; padding: clamp(30px, 5vw, 54px); border-radius: 34px; background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(0,0,0,.26)); border: 1px solid rgba(255,255,255,.22); box-shadow: 0 34px 90px rgba(0,0,0,.24); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.deals-kicker { display: inline-flex; align-items: center; min-height: 32px; padding: 0 14px; border-radius: 999px; background: #f1eadc; color: #8e6607; font-size: 11px; font-weight: 950; letter-spacing: .12em; text-transform: uppercase; }
+.deals-kicker--light { margin-bottom: 18px; color: #fff; background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.25); }
+.deals-hero h1 { margin: 0; max-width: 13ch; color: #fff; font-size: clamp(42px, 6vw, 78px); line-height: .96; letter-spacing: -.055em; font-weight: 950; text-shadow: 0 5px 24px rgba(0,0,0,.34); }
+.deals-hero p { margin: 18px 0 0; max-width: 720px; color: rgba(255,255,255,.94); font-size: 18px; line-height: 1.7; }
+.deals-countdown { position: relative; z-index: 4; width: min(620px, calc(100% - 32px)); margin: -42px auto 0; padding: 18px 22px; border-radius: 999px; background: #fff; border: 1px solid rgba(142,102,7,.15); box-shadow: 0 30px 80px rgba(27,43,27,.16); display: flex; gap: 20px; align-items: center; justify-content: center; }
+.deals-countdown-label { color: #8e6607; font-size: 11px; font-weight: 950; letter-spacing: .12em; text-transform: uppercase; }
+.deals-countdown-units { display: flex; gap: 18px; align-items: center; }
+.deals-countdown-units div { min-width: 54px; text-align: center; }
+.deals-countdown-units strong { display: block; color: #8e6607; font-size: 28px; line-height: 1; font-weight: 950; }
+.deals-countdown-units span { display: block; margin-top: 4px; color: #1b2b1b; font-size: 9px; font-weight: 950; letter-spacing: .11em; text-transform: uppercase; }
+.deals-countdown--expired { color: #8e6607; font-size: 15px; font-weight: 950; letter-spacing: .12em; text-transform: uppercase; }
+.deals-section { padding: 74px 0 86px; }
+.deals-section-head { max-width: 840px; margin: 0 auto 44px; text-align: center; }
+.deals-section-head h2 { margin: 16px 0 0; color: #8e6607; font-size: clamp(34px, 5vw, 62px); line-height: 1; letter-spacing: -.055em; font-weight: 950; }
+.deals-section-head p { margin: 18px auto 0; max-width: 760px; color: #5f6758; font-size: 16px; line-height: 1.7; }
+.deals-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; }
+.deals-card { overflow: hidden; border-radius: 32px; background: #fff; border: 1px solid rgba(142,102,7,.15); box-shadow: 0 20px 50px rgba(27,43,27,.08); transition: transform .35s ease, box-shadow .35s ease; }
+.deals-card:hover { transform: translateY(-8px); box-shadow: 0 30px 80px rgba(27,43,27,.16); }
+.deals-card-image { height: 360px; overflow: hidden; background: #e8dfcf; }
+.deals-card-image img { width: 100%; height: 100%; object-fit: cover; transition: transform .7s ease; }
+.deals-card:hover .deals-card-image img { transform: scale(1.045); }
+.deals-card-body { padding: clamp(24px, 4vw, 38px); text-align: center; }
+.deals-offer-label { display: inline-flex; align-items: center; min-height: 30px; padding: 0 12px; border-radius: 999px; background: rgba(142,102,7,.06); color: #8e6607; border: 1px solid rgba(142,102,7,.15); font-size: 10px; font-weight: 950; letter-spacing: .12em; text-transform: uppercase; }
+.deals-card h3 { margin: 16px 0 0; color: #8e6607; font-size: clamp(30px, 4vw, 46px); line-height: 1; letter-spacing: -.045em; font-weight: 950; }
+.deals-card p { margin: 14px 0 0; color: #5f6758; font-size: 15px; line-height: 1.65; }
+.deals-tags { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+.deals-tags span { display: inline-flex; align-items: center; min-height: 28px; padding: 0 10px; border-radius: 999px; color: #8e6607; background: #fff; border: 1px solid rgba(142,102,7,.24); font-size: 9px; font-weight: 950; letter-spacing: .1em; text-transform: uppercase; }
+.deals-tip { margin-top: 18px; padding: 13px 16px; border-radius: 18px; background: rgba(142,102,7,.06); border: 1px solid rgba(142,102,7,.15); color: #1b2b1b; font-size: 13px; line-height: 1.45; }
+.deals-tip strong { color: #8e6607; }
+.deals-coupon { margin-top: 16px; padding: 16px; border-radius: 20px; background: #f8f7f2; border: 2px dashed #8e6607; }
+.deals-coupon span { display: block; margin-bottom: 7px; color: #5f6758; font-size: 10px; font-weight: 950; letter-spacing: .12em; text-transform: uppercase; }
+.deals-coupon strong { display: block; color: #8e6607; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 30px; line-height: 1; font-weight: 950; letter-spacing: .06em; }
+.deals-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 22px; }
+.deals-btn { min-height: 50px; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; font-size: 11px; font-weight: 950; letter-spacing: .1em; text-transform: uppercase; }
+.deals-btn--primary { background: #8e6607; color: #fff; }
+.deals-btn--secondary { background: #fff7ee; color: #6a4b00; border: 1px solid rgba(142,102,7,.18); }
+
+/* Chios Activities */
+.chios-activities-page { overflow: hidden; background: #fffaf3; color: #243528; }
+.chios-activities-container { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
+.chios-activities-container--narrow { width: min(860px, calc(100% - 32px)); }
+.chios-activities-eyebrow { margin: 0 0 14px; color: #9b6a2f; font-size: .78rem; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; }
+.chios-activities-hero { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(360px, .82fr); gap: 38px; align-items: center; padding: clamp(70px, 9vw, 120px) max(24px, calc((100vw - 1120px) / 2)); background: radial-gradient(circle at top left, rgba(168,120,66,.18), transparent 28rem), linear-gradient(135deg, #fffaf3, #f4eadb); }
+.chios-activities-hero__content { max-width: 720px; }
+.chios-activities-hero h1 { margin: 0; color: #213426; font-size: clamp(2.6rem, 6vw, 5.2rem); line-height: .96; letter-spacing: -.06em; font-weight: 950; }
+.chios-activities-hero__subtitle { max-width: 660px; margin: 22px 0 0; color: #4e5b51; font-size: clamp(1.02rem, 1.8vw, 1.22rem); line-height: 1.75; }
+.chios-activities-hero__actions, .chios-activities-final-cta__actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px; }
+.chios-activities-button { display: inline-flex; align-items: center; justify-content: center; min-height: 50px; padding: 0 24px; border-radius: 999px; background: #d99b45; color: #1f261e; font-weight: 900; text-decoration: none; box-shadow: 0 16px 34px rgba(108,69,22,.18); }
+.chios-activities-button--ghost, .chios-activities-button--light { background: rgba(255,255,255,.78); border: 1px solid rgba(36,53,40,.16); color: #243528; }
+.chios-activities-hero__image-wrap, .chios-activities-final-cta__image-wrap { overflow: hidden; border-radius: 34px; background: #e8dfcf; box-shadow: 0 28px 70px rgba(40,58,44,.14); }
+.chios-activities-hero__image, .chios-activities-final-cta__image { width: 100%; height: 100%; min-height: 420px; object-fit: cover; display: block; }
+.chios-activities-section { padding: 78px 0; }
+.chios-activities-intro p, .chios-activities-text-block p, .chios-activities-section-heading p, .chios-activities-final-cta__copy p { color: #5b665c; font-size: 1rem; line-height: 1.75; }
+.chios-activities-intro h2, .chios-activities-section-heading h2, .chios-activities-text-block h2, .chios-activities-final-cta__copy h2 { margin: 0; color: #213426; font-size: clamp(2rem, 4vw, 3.4rem); line-height: 1.02; letter-spacing: -.045em; font-weight: 950; }
+.chios-activities-section-heading { max-width: 780px; margin: 0 auto 36px; text-align: center; }
+.chios-activities-content-stack { display: grid; gap: 28px; }
+.chios-activities-text-block { padding: 30px; border-radius: 28px; background: #fff; border: 1px solid rgba(36,53,40,.1); box-shadow: 0 16px 40px rgba(40,58,44,.07); }
+.chios-activities-gallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.chios-activities-gallery__item { margin: 0; overflow: hidden; border-radius: 28px; background: #e8dfcf; box-shadow: 0 18px 44px rgba(40,58,44,.08); }
+.chios-activities-gallery__item img { width: 100%; height: 280px; object-fit: cover; display: block; }
+.chios-activities-final-cta { padding-top: 40px; }
+.chios-activities-final-cta__inner { display: grid; grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); gap: 44px; align-items: center; padding: clamp(34px, 6vw, 62px); border-radius: 38px; background: linear-gradient(135deg, rgba(36,53,40,.94), rgba(56,86,59,.94)); color: #fff; box-shadow: 0 28px 70px rgba(40,58,44,.16); }
+.chios-activities-final-cta__copy h2, .chios-activities-final-cta__copy p, .chios-activities-final-cta .chios-activities-eyebrow { color: #fff; }
+
+/* Chios Island */
+.chios-island-page { min-height: 100vh; overflow-x: hidden; background: radial-gradient(circle at top left, rgba(168,120,66,.18), transparent 34rem), linear-gradient(180deg, #fbf6ef 0%, #f4eadf 52%, #fbf6ef 100%); color: #2f261f; }
+.chios-island-page a { color: inherit; text-decoration: none; }
+.ci-wrap { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
+.ci-kicker { display: inline-flex; align-items: center; gap: 9px; margin-bottom: 14px; color: #6a4b00; font-size: 12px; font-weight: 950; letter-spacing: .16em; text-transform: uppercase; }
+.ci-kicker::before { content: ""; width: 30px; height: 1px; background: currentColor; opacity: .75; }
+.ci-kicker--light { color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,.65); }
+.ci-hero { position: relative; min-height: 640px; display: flex; align-items: flex-end; overflow: hidden; color: #fff; }
+.ci-hero-media { position: absolute; inset: 0; z-index: 0; }
+.ci-hero-media img { width: 100%; height: 100%; object-fit: cover; }
+.ci-hero-overlay { position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(32,24,18,.84) 0%, rgba(32,24,18,.54) 42%, rgba(32,24,18,.18) 100%), linear-gradient(0deg, rgba(32,24,18,.72) 0%, transparent 58%); }
+.ci-hero-inner { position: relative; z-index: 2; padding: 110px 0 76px; }
+.ci-hero-card { width: min(720px, 100%); padding: clamp(30px, 5vw, 56px); border-radius: 34px; background: linear-gradient(180deg, rgba(255,255,255,.15), rgba(0,0,0,.28)); border: 1px solid rgba(255,255,255,.24); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 34px 90px rgba(0,0,0,.28); }
+.ci-hero h1 { margin: 0; max-width: 11ch; color: #fff; font-size: clamp(46px, 7vw, 86px); line-height: .94; letter-spacing: -.06em; font-weight: 950; text-shadow: 0 5px 24px rgba(0,0,0,.38); }
+.ci-hero p { margin: 18px 0 0; max-width: 640px; color: rgba(255,255,255,.94); font-size: 18px; line-height: 1.7; }
+.ci-hero-actions, .ci-stay-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+.ci-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 54px; padding: 0 27px; border-radius: 999px; border: 1px solid transparent; font-size: 12px; font-weight: 950; letter-spacing: .1em; text-transform: uppercase; transition: all .25s ease; }
+.ci-btn--primary { background: linear-gradient(135deg, #a87842, #8e6607); color: #fff; box-shadow: 0 14px 35px rgba(142,102,7,.32); }
+.ci-btn--secondary { background: rgba(255,255,255,.14); color: #fff; border-color: rgba(255,255,255,.38); }
+.ci-btn--outline { background: #fff7ee; color: #6a4b00; border-color: rgba(142,102,7,.18); }
+.ci-section { padding: 82px 0; }
+.ci-section-head { margin-bottom: 34px; text-align: center; }
+.ci-section-head h2, .ci-intro-copy h2, .ci-quiz-card h2, .ci-stay-card h2 { margin: 0; color: #2f261f; font-size: clamp(32px, 4.6vw, 58px); line-height: 1; font-weight: 950; letter-spacing: -.055em; }
+.ci-section-head p, .ci-intro-copy p, .ci-experience-card p { color: #574b3f; font-size: 16px; line-height: 1.7; }
+.ci-intro-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(320px, .65fr); gap: 34px; align-items: start; }
+.ci-intro-copy, .ci-highlight-panel, .ci-quiz-card, .ci-stay-card { padding: 34px; border-radius: 30px; background: #fffdfa; border: 1px solid rgba(142,102,7,.14); box-shadow: 0 18px 45px rgba(47,38,31,.1); }
+.ci-highlight-panel { display: grid; gap: 12px; padding: 20px; }
+.ci-highlight-item { padding: 18px; border-radius: 20px; background: #fff; border: 1px solid rgba(142,102,7,.12); }
+.ci-experience-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 22px; }
+.ci-experience-card { overflow: hidden; border-radius: 30px; background: #fffdfa; border: 1px solid rgba(142,102,7,.14); box-shadow: 0 18px 45px rgba(47,38,31,.1); transition: all .25s ease; }
+.ci-experience-card:hover { transform: translateY(-7px); box-shadow: 0 30px 80px rgba(47,38,31,.18); }
+.ci-experience-image { height: 260px; overflow: hidden; background: #e6d8c7; }
+.ci-experience-image img { width: 100%; height: 100%; object-fit: cover; }
+.ci-experience-body { padding: 24px; }
+.ci-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 16px; }
+.ci-tags span { display: inline-flex; align-items: center; min-height: 28px; padding: 0 10px; border-radius: 999px; background: #fff7ee; color: #6a4b00; border: 1px solid rgba(142,102,7,.12); font-size: 9px; font-weight: 950; letter-spacing: .09em; text-transform: uppercase; }
+.ci-experience-card h3 { margin: 0; color: #2f261f; font-size: 28px; line-height: 1; font-weight: 950; letter-spacing: -.04em; }
+.ci-card-link { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; margin-top: 20px; padding: 0 20px; border-radius: 999px; background: linear-gradient(135deg, #a87842, #8e6607); color: #fff; font-size: 11px; font-weight: 950; letter-spacing: .1em; text-transform: uppercase; }
+
+@media (max-width: 980px) {
+  .deals-grid, .chios-activities-hero, .chios-activities-final-cta__inner, .ci-intro-grid, .ci-experience-grid { grid-template-columns: 1fr; }
+  .chios-activities-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 767px) {
+  .deals-wrap, .ci-wrap { width: calc(100% - 24px); }
+  .deals-hero { min-height: 76svh; }
+  .deals-hero-inner { padding: 18px 0 54px; }
+  .deals-hero-content { padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .deals-hero h1 { font-size: 40px; }
+  .deals-countdown { flex-direction: column; gap: 10px; border-radius: 28px; }
+  .deals-grid, .deals-actions { grid-template-columns: 1fr; }
+  .deals-card-image { height: 260px; }
+  .chios-activities-hero { padding: 58px 12px; }
+  .chios-activities-hero__image, .chios-activities-final-cta__image { min-height: 300px; }
+  .chios-activities-gallery { grid-template-columns: 1fr; }
+  .chios-activities-final-cta__inner { padding: 28px; border-radius: 30px; }
+  .ci-hero { min-height: 76svh; }
+  .ci-hero-inner { padding: 24px 0 54px; }
+  .ci-hero-card { padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .ci-hero h1 { font-size: 42px; }
+  .ci-section { padding: 54px 0; }
+  .ci-experience-grid { grid-template-columns: 1fr; }
+}
