@@ -34,9 +34,26 @@ function applyWhatsAppStyle(element: HTMLElement) {
   );
 }
 
+function hydrateBeds24Iframes() {
+  const frames = Array.from(
+    document.querySelectorAll<HTMLIFrameElement>('iframe[src*="beds24.com/booking2.php"]'),
+  );
+
+  for (const frame of frames) {
+    const mobile = window.matchMedia("(max-width: 767px)").matches;
+
+    frame.setAttribute("scrolling", "no");
+    frame.style.overflow = "hidden";
+    frame.style.height = mobile ? "1350px" : "1200px";
+    frame.style.minHeight = mobile ? "1350px" : "1200px";
+    frame.style.border = "0";
+    frame.dataset.beds24NoScrollbar = "true";
+  }
+}
+
 export function WhatsAppCtaHydrator() {
   useEffect(() => {
-    function hydrateWhatsAppCtas() {
+    function hydratePageCtas() {
       const candidates = Array.from(document.querySelectorAll<HTMLElement>("a, button"));
 
       for (const element of candidates) {
@@ -44,13 +61,19 @@ export function WhatsAppCtaHydrator() {
         applyWhatsAppStyle(element);
         element.dataset.whatsappCtaReady = "true";
       }
+
+      hydrateBeds24Iframes();
     }
 
-    hydrateWhatsAppCtas();
-    const observer = new MutationObserver(() => hydrateWhatsAppCtas());
+    hydratePageCtas();
+    const observer = new MutationObserver(() => hydratePageCtas());
     observer.observe(document.body, { childList: true, subtree: true });
+    window.addEventListener("resize", hydrateBeds24Iframes);
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", hydrateBeds24Iframes);
+    };
   }, []);
 
   return null;
