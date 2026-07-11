@@ -9,6 +9,23 @@ export function HomePageTailwindV3({ data }: HomePageTailwindV3Props) {
   return (
     <>
       <style>{`
+        main > section:first-child a[href*="chios-rooms"],
+        main > section:first-child a[href*="domatia-xios"],
+        main > section:first-child a[href*="chambres-chios"],
+        main > section:first-child a[href*="zimmer-chios"],
+        main > section:first-child a[href*="camere-chios"],
+        main > section:first-child a[href*="habitaciones-chios"],
+        main > section:first-child a[href*="sakiz-odalari"],
+        main > section:first-child a[href*="chios-rooms"] *,
+        main > section:first-child a[href*="domatia-xios"] *,
+        main > section:first-child a[href*="chambres-chios"] *,
+        main > section:first-child a[href*="zimmer-chios"] *,
+        main > section:first-child a[href*="camere-chios"] *,
+        main > section:first-child a[href*="habitaciones-chios"] *,
+        main > section:first-child a[href*="sakiz-odalari"] * {
+          color: #fff !important;
+        }
+
         @media (min-width: 768px) {
           main > section:first-child > div:nth-of-type(1) {
             background: rgba(0,0,0,0.08) !important;
