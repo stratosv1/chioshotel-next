@@ -26,6 +26,23 @@ export function HomePageTailwindV3({ data }: HomePageTailwindV3Props) {
           color: #fff !important;
         }
 
+        main a[href="/chios-hotels-rates/"],
+        main a[href="/el/amesi-kratisi-voulamandis-house/"],
+        main a[href="/fr/tarifs-des-hotels-a-chios/"],
+        main a[href="/de/hotelpreise-auf-der-insel-chios/"],
+        main a[href="/it/prezzi-hotel-chios/"],
+        main a[href="/es/los-mejores-precios-de-hotel-en-la-isla-chios/"],
+        main a[href="/tr/sakiz-adasi-rezervasyon/"],
+        main a[href="/chios-hotels-rates/"] *,
+        main a[href="/el/amesi-kratisi-voulamandis-house/"] *,
+        main a[href="/fr/tarifs-des-hotels-a-chios/"] *,
+        main a[href="/de/hotelpreise-auf-der-insel-chios/"] *,
+        main a[href="/it/prezzi-hotel-chios/"] *,
+        main a[href="/es/los-mejores-precios-de-hotel-en-la-isla-chios/"] *,
+        main a[href="/tr/sakiz-adasi-rezervasyon/"] * {
+          color: #fff !important;
+        }
+
         @media (min-width: 768px) {
           main > section:first-child > div:nth-of-type(1) {
             background: rgba(0,0,0,0.08) !important;
