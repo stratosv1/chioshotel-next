@@ -13,37 +13,23 @@ jobs:
   fix-fields:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout integration branch
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           ref: integrate-localized-css-main
           fetch-depth: 0
 
-      - name: Replace invalid homepage data fields
+      - name: Fix homepage data references
         run: |
           python - <<'PY'
           from pathlib import Path
-          import re
 
           path = Path('components/home/HomePageTailwindV2.tsx')
           text = path.read_text(encoding='utf-8')
 
-          replacements = {
-              'data.intro.right.items.map((item) => (': 'data.intro.right.cards.map((item) => (',
-              'data.roomsPreview.subtitle': 'data.roomsPreview.text',
-              '{card.kicker}': '{card.cta}',
-              'data.finalCta.primary.href': 'data.finalCta.primaryCta.href',
-              'data.finalCta.primary.label': 'data.finalCta.primaryCta.label',
-              'data.finalCta.secondary.href': 'data.finalCta.secondaryCta.href',
-              'data.finalCta.secondary.label': 'data.finalCta.secondaryCta.label',
-              'src={data.finalCta.image}': 'src={data.hero.image}',
-          }
+          start = text.index('function GuideSection')
+          end = text.index('function FinalCta')
 
-          updated = text
-          for old, new in replacements.items():
-              updated = updated.replace(old, new)
-
-          guide_section = '''function GuideSection({ data }: { data: HomePageData }) {
+          guide = '''function GuideSection({ data }: { data: HomePageData }) {
   const [featured, ...links] = data.chiosGuide.cards;
 
   if (!featured) return null;
@@ -81,33 +67,23 @@ jobs:
       </div>
     </Section>
   );
-}'''
+}
 
-          updated, count = re.subn(
-              r'function GuideSection\(\{ data \}: \{ data: HomePageData \}\) \{.*?\n\}\n\nfunction FinalCta',
-              guide_section + '\n\nfunction FinalCta',
-              updated,
-              count=1,
-              flags=re.S,
-          )
+'''
 
-          if count != 1:
-              raise SystemExit('GuideSection replacement target not found exactly once.')
+          updated = text[:start] + guide + text[end:]
+          updated = updated.replace('src={data.finalCta.image}', 'src={data.hero.image}')
+          updated = updated.replace('data.finalCta.primary.href', 'data.finalCta.primaryCta.href')
+          updated = updated.replace('data.finalCta.primary.label', 'data.finalCta.primaryCta.label')
+          updated = updated.replace('data.finalCta.secondary.href', 'data.finalCta.secondaryCta.href')
+          updated = updated.replace('data.finalCta.secondary.label', 'data.finalCta.secondaryCta.label')
 
-          if updated == text:
-              print('Homepage data fields already fixed or not found.')
-          else:
-              path.write_text(updated, encoding='utf-8')
-              print('Updated homepage guide and final CTA data references.')
+          path.write_text(updated, encoding='utf-8')
           PY
 
       - name: Commit correction
         run: |
-          if git diff --quiet; then
-            echo "No changes to commit."
-            exit 0
-          fi
-
+          if git diff --quiet; then exit 0; fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add components/home/HomePageTailwindV2.tsx
