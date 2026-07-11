@@ -166,21 +166,20 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/" }: H
           <span className="min-w-0 flex-1">
             <span className="flex min-w-0 items-center gap-2">
               <strong className="block min-w-0 truncate text-[1.08rem] font-black leading-none tracking-[-0.055em] text-stone-900 sm:text-[1.28rem] lg:text-[1.42rem]">Voulamandis House</strong>
-              <span className="shrink-0 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-emerald-700 ring-1 ring-emerald-700/10">{statusLabel}</span>
+              <span className="shrink-0 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-emerald-700 ring-1 ring-emerald-700/10">{statusLabel}<span className="ml-1.5 text-emerald-700/70">{reception.dateLabel}</span></span>
             </span>
             <span className="mt-1 block truncate text-[10px] font-black uppercase tracking-[0.12em] text-stone-500 sm:text-[11px]">
               <span>Kampos, Chios</span>
               <span className="px-1.5 text-amber-800">·</span>
               <span className="text-amber-800">{copy.directLine}</span>
-              <span className="hidden px-1.5 text-stone-400 xl:inline">·</span>
-              <span className="hidden text-stone-400 xl:inline">{reception.dateLabel}</span>
+              
             </span>
           </span>
         </a>
 
-        <nav aria-label={copy.nav} className="hidden flex-[1_1_auto] items-center justify-center gap-1 rounded-full border border-stone-900/10 bg-white/66 p-1.5 shadow-sm shadow-stone-900/5 xl:flex">
+        <nav aria-label={copy.nav} className="hidden max-w-[650px] flex-[1_1_auto] items-center justify-center gap-0.5 rounded-full border border-stone-900/10 bg-white/66 p-1 shadow-sm shadow-stone-900/5 xl:flex">
           {links.map((link) => (
-            <a key={link.href} href={link.href} className="rounded-full px-3 py-2 text-center text-[14.5px] font-black text-stone-700 transition hover:bg-amber-50 hover:text-amber-900 2xl:px-4">
+            <a key={link.href} href={link.href} className="rounded-full px-2.5 py-2 text-center text-[13.5px] font-black text-stone-700 transition hover:bg-amber-50 hover:text-amber-900 2xl:px-3">
               {link.label}
             </a>
           ))}
@@ -210,7 +209,7 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/" }: H
             <div className="min-w-0">
               <div className="flex min-w-0 items-center gap-2">
                 <h2 className="truncate text-[1.25rem] font-black leading-none tracking-[-0.045em] text-stone-900">Voulamandis House</h2>
-                <span className="shrink-0 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-emerald-700 ring-1 ring-emerald-700/10">{statusLabel}</span>
+                <span className="shrink-0 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-emerald-700 ring-1 ring-emerald-700/10">{statusLabel}<span className="ml-1.5 text-emerald-700/70">{reception.dateLabel}</span></span>
               </div>
               <p className="mt-1 truncate text-[10px] font-black uppercase tracking-[0.1em] text-stone-500">Kampos, Chios · {copy.directLine} · {reception.dateLabel}</p>
             </div>
