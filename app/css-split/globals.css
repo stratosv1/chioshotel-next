@@ -16,9 +16,6 @@
 /* ---- components ---- */
 @import "./components/holiday-quiz.css";
 
-/* ---- landing ---- */
-@import "./landing/chios-activities.css";
-
 /* ---- components ---- */
 @import "./components/footer-mobile-patch.css";
 
