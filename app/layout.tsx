@@ -6,14 +6,14 @@ import { BookNowCtaHydrator } from "@/components/booking/BookNowCtaHydrator";
 import { ContactEmailHydrator } from "@/components/contact/ContactEmailHydrator";
 import { BeachCategoryLanguageLinksHydrator } from "@/components/ui/BeachCategoryLanguageLinksHydrator";
 import { CarouselArrowHydrator } from "@/components/ui/CarouselArrowHydrator";
-import { VoulamandisFooter } from "@/components/VoulamandisFooter";
-import { VoulamandisHeader } from "@/components/VoulamandisHeader";
+import { CtaContrastHydrator } from "@/components/ui/CtaContrastHydrator";
+import { WhatsAppCtaHydrator } from "@/components/ui/WhatsAppCtaHydrator";
+import { VoulamandisFooterTailwind } from "@/components/VoulamandisFooterTailwind";
+import { VoulamandisHeaderTailwind } from "@/components/VoulamandisHeaderTailwind";
 import { siteName, siteUrl } from "@/lib/seo";
 import "./css-split/core.css";
 import "./css-split/overrides/home-mobile-hero-safe.css";
-import "./css-split/overrides/header-mobile-menu-icons.css";
 import "./css-split/overrides/home-compact-mobile-fixes.css";
-import "./css-split/overrides/contact-mobile-compact.css";
 import "./css-split/components/consent.css";
 
 export const metadata: Metadata = {
@@ -78,14 +78,16 @@ export default async function RootLayout({
     <html lang={htmlLanguage}>
       <body>
         {!hideHeader ? (
-          <VoulamandisHeader language={htmlLanguage} pathname={pathname} />
+          <VoulamandisHeaderTailwind language={htmlLanguage} pathname={pathname} />
         ) : null}
         {children}
-        {!hideHeader ? <VoulamandisFooter language={htmlLanguage} /> : null}
+        {!hideHeader ? <VoulamandisFooterTailwind language={htmlLanguage} /> : null}
         <BookNowCtaHydrator />
         <ContactEmailHydrator />
         <BeachCategoryLanguageLinksHydrator />
         <CarouselArrowHydrator />
+        <WhatsAppCtaHydrator />
+        <CtaContrastHydrator />
         <ConsentAnalytics language={htmlLanguage} />
         <SpeedInsights />
       </body>

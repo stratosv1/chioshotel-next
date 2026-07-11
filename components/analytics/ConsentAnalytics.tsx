@@ -58,7 +58,31 @@ function pageType(pathname: string) {
   return "content";
 }
 
-function eventName(anchor: HTMLAnchorElement) {
+function detectDeviceArea() {
+  if (typeof window === "undefined") return "unknown";
+  if (window.matchMedia("(max-width: 767px)").matches) return "mobile";
+  if (window.matchMedia("(max-width: 1199px)").matches) return "tablet";
+  return "desktop";
+}
+
+function normalizeUrl(href: string) {
+  try {
+    const url = new URL(href);
+    return `${url.pathname}${url.search}${url.hash}` || "/";
+  } catch {
+    return href;
+  }
+}
+
+function getLocation(element: HTMLElement) {
+  const explicit = element.dataset.analyticsLocation;
+  if (explicit) return explicit;
+  if (element.closest("header")) return "header";
+  if (element.closest("footer")) return "footer";
+  return "content";
+}
+
+function fallbackEventName(anchor: HTMLAnchorElement) {
   const href = anchor.href.toLowerCase();
   const label = (anchor.textContent || "").toLowerCase();
   if (href.includes("wa.me") || href.includes("whatsapp")) return "whatsapp_click";
@@ -66,7 +90,25 @@ function eventName(anchor: HTMLAnchorElement) {
   if (href.includes("find-your-room")) return "find_room_click";
   if (href.includes("rates") || label.includes("availability")) return "availability_click";
   if (label.includes("book") || label.includes("κρατ") || label.includes("prenota")) return "book_now_click";
+  if (anchor.closest("header")) return "header_link_click";
+  if (anchor.closest("footer")) return "footer_link_click";
   return null;
+}
+
+function fallbackButtonEvent(button: HTMLButtonElement) {
+  if (!button.closest("header")) return null;
+  const expanded = button.getAttribute("aria-expanded");
+  if (expanded === "false") return "mobile_menu_open";
+  if (expanded === "true") return "mobile_menu_close";
+  return null;
+}
+
+function getLabel(element: HTMLElement, anchor: HTMLAnchorElement | null) {
+  return (
+    element.dataset.analyticsLabel ||
+    anchor?.dataset.analyticsLabel ||
+    (anchor?.textContent || element.textContent || "").trim().replace(/\s+/g, " ").slice(0, 80)
+  );
 }
 
 export function ConsentAnalytics({ language }: { language: LanguageCode }) {
@@ -86,21 +128,37 @@ export function ConsentAnalytics({ language }: { language: LanguageCode }) {
 
   useEffect(() => {
     if (!accepted) return;
+
     function handleClick(event: MouseEvent) {
       const target = event.target as HTMLElement | null;
-      const anchor = target?.closest("a") as HTMLAnchorElement | null;
-      if (!anchor) return;
-      const name = eventName(anchor);
-      if (!name) return;
+      const element = target?.closest("[data-analytics-event]") as HTMLElement | null;
+      const anchor = (element?.closest("a") || target?.closest("a")) as HTMLAnchorElement | null;
+      const button = (element?.closest("button") || target?.closest("button")) as HTMLButtonElement | null;
+      const baseElement = element || anchor || button;
+      const name = element?.dataset.analyticsEvent || (anchor ? fallbackEventName(anchor) : button ? fallbackButtonEvent(button) : null);
+      if (!baseElement || !name) return;
+
       track(name, {
         language,
         page_type: pageType(window.location.pathname),
-        link_text: (anchor.textContent || "").trim().slice(0, 80),
+        pathname: window.location.pathname,
+        href: anchor ? normalizeUrl(anchor.href) : "",
+        link_text: getLabel(baseElement, anchor),
+        cta_location: getLocation(baseElement),
+        device_area: detectDeviceArea(),
       });
     }
+
     function handleSubmit() {
-      track("contact_form_submit", { language, page_type: pageType(window.location.pathname) });
+      track("contact_form_submit", {
+        language,
+        page_type: pageType(window.location.pathname),
+        pathname: window.location.pathname,
+        cta_location: "contact_form",
+        device_area: detectDeviceArea(),
+      });
     }
+
     document.addEventListener("click", handleClick);
     document.addEventListener("submit", handleSubmit);
     return () => {

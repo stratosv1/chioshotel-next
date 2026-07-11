@@ -83,21 +83,25 @@ export default function ChiosActivitiesPage({ data }: ChiosActivitiesPageProps) 
   const copy = activitiesUiCopy[data.locale] ?? activitiesUiCopy.en;
 
   return (
-    <main className="chios-activities-page">
-      <section className="chios-activities-hero">
-        <div className="chios-activities-hero__content">
-          <p className="chios-activities-eyebrow">{data.hero.eyebrow}</p>
-          <h1>{data.hero.title}</h1>
-          <p className="chios-activities-hero__subtitle">{data.hero.subtitle}</p>
+    <main className="overflow-hidden bg-[#fffaf3] text-stone-800">
+      <section className="grid items-center gap-9 bg-[radial-gradient(circle_at_top_left,rgba(168,120,66,.18),transparent_28rem),linear-gradient(135deg,#fffaf3,#f4eadb)] px-3 py-14 md:px-[max(24px,calc((100vw-1120px)/2))] md:py-24 lg:grid-cols-[minmax(0,1fr)_minmax(360px,.82fr)]">
+        <div className="max-w-[720px]">
+          <p className="mb-4 text-[0.78rem] font-black uppercase tracking-[0.14em] text-[#9b6a2f]">{data.hero.eyebrow}</p>
+          <h1 className="m-0 text-[clamp(2.6rem,6vw,5.2rem)] font-black leading-[0.96] tracking-[-0.06em] text-[#213426]">
+            {data.hero.title}
+          </h1>
+          <p className="mt-6 max-w-[660px] text-[clamp(1.02rem,1.8vw,1.22rem)] leading-8 text-[#4e5b51]">
+            {data.hero.subtitle}
+          </p>
 
-          <div className="chios-activities-hero__actions">
-            <Link className="chios-activities-button" href={data.cta.primaryHref}>
+          <div className="mt-8 flex flex-wrap gap-3.5">
+            <Link className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-[#d99b45] px-6 font-black text-[#1f261e] shadow-lg shadow-amber-900/10" href={data.cta.primaryHref}>
               {data.cta.primaryLabel}
             </Link>
 
             {data.cta.secondaryHref && data.cta.secondaryLabel ? (
               <Link
-                className="chios-activities-button chios-activities-button--ghost"
+                className="inline-flex min-h-[50px] items-center justify-center rounded-full border border-stone-800/15 bg-white/80 px-6 font-black text-[#243528]"
                 href={data.cta.secondaryHref}
               >
                 {data.cta.secondaryLabel}
@@ -107,9 +111,9 @@ export default function ChiosActivitiesPage({ data }: ChiosActivitiesPageProps) 
         </div>
 
         {data.hero.image ? (
-          <div className="chios-activities-hero__image-wrap">
+          <div className="overflow-hidden rounded-[2rem] bg-[#e8dfcf] shadow-2xl shadow-stone-900/10">
             <img
-              className="chios-activities-hero__image"
+              className="block min-h-[300px] w-full object-cover md:min-h-[420px]"
               src={data.hero.image}
               alt={data.hero.imageAlt || data.hero.title}
             />
@@ -118,23 +122,27 @@ export default function ChiosActivitiesPage({ data }: ChiosActivitiesPageProps) 
       </section>
 
       {data.intro ? (
-        <section className="chios-activities-section chios-activities-intro">
-          <div className="chios-activities-container chios-activities-container--narrow">
-            <h2>{data.intro.title}</h2>
+        <section className="py-16 md:py-20">
+          <div className="mx-auto w-[min(860px,calc(100%-32px))]">
+            <h2 className="m-0 text-[clamp(2rem,4vw,3.4rem)] font-black leading-none tracking-[-0.045em] text-[#213426]">
+              {data.intro.title}
+            </h2>
             {data.intro.text.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
+              <p className="mt-5 text-base leading-8 text-[#5b665c]" key={paragraph}>{paragraph}</p>
             ))}
           </div>
         </section>
       ) : null}
 
       {isHub && data.cards ? (
-        <section className="chios-activities-section">
-          <div className="chios-activities-container">
-            <div className="chios-activities-section-heading">
-              <p className="chios-activities-eyebrow">{copy.cardsKicker}</p>
-              <h2>{data.hero.title}</h2>
-              <p>{copy.cardsText}</p>
+        <section className="py-16 md:py-20">
+          <div className="mx-auto w-[min(1120px,calc(100%-32px))]">
+            <div className="mx-auto mb-9 max-w-[780px] text-center">
+              <p className="mb-4 text-[0.78rem] font-black uppercase tracking-[0.14em] text-[#9b6a2f]">{copy.cardsKicker}</p>
+              <h2 className="m-0 text-[clamp(2rem,4vw,3.4rem)] font-black leading-none tracking-[-0.045em] text-[#213426]">
+                {data.hero.title}
+              </h2>
+              <p className="mt-5 text-base leading-8 text-[#5b665c]">{copy.cardsText}</p>
               <p className="mt-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-black uppercase tracking-[0.1em] text-[#8e6607] shadow-sm ring-1 ring-[#8e6607]/10 md:hidden">
                 {copy.swipeHint} <span aria-hidden="true">→</span>
               </p>
@@ -186,14 +194,16 @@ export default function ChiosActivitiesPage({ data }: ChiosActivitiesPageProps) 
       ) : null}
 
       {data.sections?.length ? (
-        <section className="chios-activities-section">
-          <div className="chios-activities-container chios-activities-container--narrow">
-            <div className="chios-activities-content-stack">
+        <section className="py-16 md:py-20">
+          <div className="mx-auto w-[min(860px,calc(100%-32px))]">
+            <div className="grid gap-7">
               {data.sections.map((section) => (
-                <section className="chios-activities-text-block" key={section.title}>
-                  <h2>{section.title}</h2>
+                <section className="rounded-[1.75rem] border border-stone-800/10 bg-white p-7 shadow-lg shadow-stone-900/5" key={section.title}>
+                  <h2 className="m-0 text-[clamp(2rem,4vw,3rem)] font-black leading-none tracking-[-0.045em] text-[#213426]">
+                    {section.title}
+                  </h2>
                   {section.text.map((paragraph) => (
-                    <p key={paragraph}>{paragraph}</p>
+                    <p className="mt-5 text-base leading-8 text-[#5b665c]" key={paragraph}>{paragraph}</p>
                   ))}
                 </section>
               ))}
@@ -203,17 +213,19 @@ export default function ChiosActivitiesPage({ data }: ChiosActivitiesPageProps) 
       ) : null}
 
       {data.gallery?.length ? (
-        <section className="chios-activities-section chios-activities-gallery-section">
-          <div className="chios-activities-container">
-            <div className="chios-activities-section-heading">
-              <p className="chios-activities-eyebrow">{copy.galleryKicker}</p>
-              <h2>{copy.galleryTitle}</h2>
+        <section className="py-16 md:py-20">
+          <div className="mx-auto w-[min(1120px,calc(100%-32px))]">
+            <div className="mb-9 text-center">
+              <p className="mb-4 text-[0.78rem] font-black uppercase tracking-[0.14em] text-[#9b6a2f]">{copy.galleryKicker}</p>
+              <h2 className="m-0 text-[clamp(2rem,4vw,3.4rem)] font-black leading-none tracking-[-0.045em] text-[#213426]">
+                {copy.galleryTitle}
+              </h2>
             </div>
 
-            <div className="chios-activities-gallery">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {data.gallery.map((image) => (
-                <figure className="chios-activities-gallery__item" key={image.src}>
-                  <img src={image.src} alt={image.alt} />
+                <figure className="m-0 overflow-hidden rounded-[1.75rem] bg-[#e8dfcf] shadow-lg shadow-stone-900/5" key={image.src}>
+                  <img className="block h-[280px] w-full object-cover" src={image.src} alt={image.alt} />
                 </figure>
               ))}
             </div>
@@ -221,21 +233,23 @@ export default function ChiosActivitiesPage({ data }: ChiosActivitiesPageProps) 
         </section>
       ) : null}
 
-      <section className="chios-activities-section chios-activities-final-cta">
-        <div className="chios-activities-container chios-activities-final-cta__inner">
-          <div className="chios-activities-final-cta__copy">
-            <p className="chios-activities-eyebrow">{copy.finalKicker}</p>
-            <h2>{data.cta.title}</h2>
-            <p>{data.cta.text}</p>
+      <section className="px-0 pb-16 pt-8 md:pb-20">
+        <div className="mx-auto grid w-[min(1120px,calc(100%-32px))] items-center gap-10 rounded-[2.25rem] bg-gradient-to-br from-[#243528] to-[#38563b] p-[clamp(30px,6vw,62px)] text-white shadow-2xl shadow-stone-900/10 lg:grid-cols-[minmax(0,.95fr)_minmax(0,1.05fr)]">
+          <div>
+            <p className="mb-4 text-[0.78rem] font-black uppercase tracking-[0.14em] text-white/90">{copy.finalKicker}</p>
+            <h2 className="m-0 text-[clamp(2rem,4vw,3.4rem)] font-black leading-none tracking-[-0.045em] text-white">
+              {data.cta.title}
+            </h2>
+            <p className="mt-5 text-base leading-8 text-white/85">{data.cta.text}</p>
 
-            <div className="chios-activities-final-cta__actions">
-              <Link className="chios-activities-button" href={data.cta.primaryHref}>
+            <div className="mt-8 flex flex-wrap gap-3.5">
+              <Link className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-[#d99b45] px-6 font-black text-[#1f261e]" href={data.cta.primaryHref}>
                 {data.cta.primaryLabel}
               </Link>
 
               {data.cta.secondaryHref && data.cta.secondaryLabel ? (
                 <Link
-                  className="chios-activities-button chios-activities-button--light"
+                  className="inline-flex min-h-[50px] items-center justify-center rounded-full border border-white/25 bg-white/10 px-6 font-black text-white"
                   href={data.cta.secondaryHref}
                 >
                   {data.cta.secondaryLabel}
@@ -244,11 +258,11 @@ export default function ChiosActivitiesPage({ data }: ChiosActivitiesPageProps) 
             </div>
           </div>
 
-          <div className="chios-activities-final-cta__image-wrap">
+          <div className="overflow-hidden rounded-[2rem] bg-[#e8dfcf] shadow-2xl shadow-stone-950/20">
             <img
               src="/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp"
               alt="Voulamandis House in Kampos Chios"
-              className="chios-activities-final-cta__image"
+              className="block min-h-[300px] w-full object-cover md:min-h-[420px]"
             />
           </div>
         </div>

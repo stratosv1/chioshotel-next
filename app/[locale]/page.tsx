@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { HomePageTailwind } from "@/components/home/HomePageTailwind";
+import { HomePageTailwindV3 } from "@/components/home/HomePageTailwindV3";
 import { JsonLd } from "@/components/seo/JsonLd";
 import {
   homePageDe,
@@ -81,7 +81,7 @@ export default async function Page({ params }: PageProps) {
   return (
     <>
       <JsonLd data={buildHomePageSchema(data)} />
-      <HomePageTailwind data={data} />
+      <HomePageTailwindV3 data={data} />
     </>
   );
 }

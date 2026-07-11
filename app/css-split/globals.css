@@ -6,16 +6,7 @@
 @import "./base/base.css";
 
 /* ---- pages ---- */
-@import "./pages/home.css";
-@import "./pages/home-mobile-patch.css";
 @import "./pages/rooms-category.css";
-@import "./pages/room-wizard.css";
-@import "./pages/rates.css";
-@import "./pages/contact.css";
-@import "./pages/deals.css";
-@import "./pages/chios-island.css";
-@import "./pages/chios-museums.css";
-@import "./pages/museum-detail.css";
 
 /* ---- components ---- */
 @import "./components/header.css";
@@ -24,13 +15,6 @@
 
 /* ---- components ---- */
 @import "./components/holiday-quiz.css";
-
-/* ---- landing ---- */
-@import "./landing/beach-lovers.css";
-@import "./landing/family-travel.css";
-@import "./landing/taste-lover.css";
-@import "./landing/chios-explorer.css";
-@import "./landing/chios-activities.css";
 
 /* ---- components ---- */
 @import "./components/footer-mobile-patch.css";
