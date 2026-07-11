@@ -41,11 +41,13 @@ function hydrateBeds24Iframes() {
 
   for (const frame of frames) {
     const mobile = window.matchMedia("(max-width: 767px)").matches;
+    const iframeHeight = mobile ? "5600px" : "3600px";
 
     frame.setAttribute("scrolling", "no");
     frame.style.overflow = "hidden";
-    frame.style.height = mobile ? "1350px" : "1200px";
-    frame.style.minHeight = mobile ? "1350px" : "1200px";
+    frame.style.height = iframeHeight;
+    frame.style.minHeight = iframeHeight;
+    frame.style.maxHeight = "none";
     frame.style.border = "0";
     frame.dataset.beds24NoScrollbar = "true";
   }
