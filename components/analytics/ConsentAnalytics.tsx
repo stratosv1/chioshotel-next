@@ -58,7 +58,26 @@ function pageType(pathname: string) {
   return "content";
 }
 
+function detectDeviceArea() {
+  if (typeof window === "undefined") return "unknown";
+  if (window.matchMedia("(max-width: 767px)").matches) return "mobile";
+  if (window.matchMedia("(max-width: 1199px)").matches) return "tablet";
+  return "desktop";
+}
+
+function normalizeUrl(href: string) {
+  try {
+    const url = new URL(href);
+    return `${url.pathname}${url.search}${url.hash}` || "/";
+  } catch {
+    return href;
+  }
+}
+
 function eventName(anchor: HTMLAnchorElement) {
+  const explicit = anchor.dataset.analyticsEvent;
+  if (explicit) return explicit;
+
   const href = anchor.href.toLowerCase();
   const label = (anchor.textContent || "").toLowerCase();
   if (href.includes("wa.me") || href.includes("whatsapp")) return "whatsapp_click";
@@ -86,21 +105,39 @@ export function ConsentAnalytics({ language }: { language: LanguageCode }) {
 
   useEffect(() => {
     if (!accepted) return;
+
     function handleClick(event: MouseEvent) {
       const target = event.target as HTMLElement | null;
       const anchor = target?.closest("a") as HTMLAnchorElement | null;
       if (!anchor) return;
       const name = eventName(anchor);
       if (!name) return;
+
+      const label = anchor.dataset.analyticsLabel || (anchor.textContent || "").trim().replace(/\s+/g, " ").slice(0, 80);
+      const href = normalizeUrl(anchor.href);
+      const location = anchor.dataset.analyticsLocation || anchor.closest("header") ? "header" : anchor.closest("footer") ? "footer" : "content";
+
       track(name, {
         language,
         page_type: pageType(window.location.pathname),
-        link_text: (anchor.textContent || "").trim().slice(0, 80),
+        pathname: window.location.pathname,
+        href,
+        link_text: label,
+        cta_location: location,
+        device_area: detectDeviceArea(),
       });
     }
+
     function handleSubmit() {
-      track("contact_form_submit", { language, page_type: pageType(window.location.pathname) });
+      track("contact_form_submit", {
+        language,
+        page_type: pageType(window.location.pathname),
+        pathname: window.location.pathname,
+        cta_location: "contact_form",
+        device_area: detectDeviceArea(),
+      });
     }
+
     document.addEventListener("click", handleClick);
     document.addEventListener("submit", handleSubmit);
     return () => {
