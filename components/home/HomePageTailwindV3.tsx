@@ -45,6 +45,18 @@ export function HomePageTailwindV3({ data }: HomePageTailwindV3Props) {
           -webkit-text-fill-color: #fff !important;
         }
 
+        a[href^="https://wa.me/"],
+        a[href^="https://wa.me/"] * {
+          color: #fff !important;
+          -webkit-text-fill-color: #fff !important;
+        }
+
+        header span.rounded-full.bg-emerald-50,
+        header span.rounded-full.bg-emerald-50 * {
+          color: #047857 !important;
+          -webkit-text-fill-color: #047857 !important;
+        }
+
         @media (min-width: 768px) {
           main > section:first-child > div:nth-of-type(1) {
             background: rgba(0,0,0,0.08) !important;
