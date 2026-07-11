@@ -16,20 +16,6 @@ export default function Page() {
   return (
     <>
       <JsonLd data={buildRatesSchema(ratesPageEn)} />
-      <style>{`
-        iframe[src*="beds24.com/booking2.php"] {
-          height: 980px !important;
-          min-height: 980px !important;
-          display: block !important;
-        }
-
-        @media (max-width: 767px) {
-          iframe[src*="beds24.com/booking2.php"] {
-            height: 820px !important;
-            min-height: 820px !important;
-          }
-        }
-      `}</style>
       <RatesPage data={ratesPageEn} />
     </>
   );
