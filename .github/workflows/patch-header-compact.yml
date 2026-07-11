@@ -1,0 +1,42 @@
+name: Patch Header Compact
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Patch header
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('components/VoulamandisHeaderTailwind.tsx')
+          s = p.read_text(encoding='utf-8')
+          old = '<span className="shrink-0 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-emerald-700 ring-1 ring-emerald-700/10">{statusLabel}</span>'
+          new = '<span className="shrink-0 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-emerald-700 ring-1 ring-emerald-700/10">{statusLabel}<span className="ml-1.5 text-emerald-700/70">{reception.dateLabel}</span></span>'
+          s = s.replace(old, new)
+          s = s.replace('<span className="hidden px-1.5 text-stone-400 xl:inline">·</span>\n              <span className="hidden text-stone-400 xl:inline">{reception.dateLabel}</span>', '')
+          s = s.replace('className="hidden flex-[1_1_auto] items-center justify-center gap-1 rounded-full border border-stone-900/10 bg-white/66 p-1.5 shadow-sm shadow-stone-900/5 xl:flex"', 'className="hidden max-w-[650px] flex-[1_1_auto] items-center justify-center gap-0.5 rounded-full border border-stone-900/10 bg-white/66 p-1 shadow-sm shadow-stone-900/5 xl:flex"')
+          s = s.replace('className="rounded-full px-3 py-2 text-center text-[14.5px] font-black text-stone-700 transition hover:bg-amber-50 hover:text-amber-900 2xl:px-4"', 'className="rounded-full px-2.5 py-2 text-center text-[13.5px] font-black text-stone-700 transition hover:bg-amber-50 hover:text-amber-900 2xl:px-3"')
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit patch
+        run: |
+          if git diff --quiet; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add components/VoulamandisHeaderTailwind.tsx
+          git commit -m "Compact header menu and move date beside status"
+          git push origin HEAD:main
