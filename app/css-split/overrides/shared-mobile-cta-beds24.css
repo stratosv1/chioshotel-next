@@ -1,0 +1,48 @@
+/* Shared fixes for all localized room-category and rates pages. */
+
+/* Keep the two room hero CTAs side by side on mobile in every language. */
+section[aria-labelledby="rooms-hero-title"] .max-w-3xl > div.mt-8 {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 0.75rem !important;
+}
+
+section[aria-labelledby="rooms-hero-title"] .max-w-3xl > div.mt-8 > a {
+  width: 100% !important;
+  min-width: 0 !important;
+  padding-inline: 0.75rem !important;
+  white-space: normal !important;
+  line-height: 1.2 !important;
+}
+
+/* Hide the Beds24 iframe scrollbar without blocking touch or wheel interaction. */
+iframe[src*="beds24.com/booking2.php"] {
+  display: block !important;
+  width: calc(100% + 20px) !important;
+  height: 980px !important;
+  min-height: 980px !important;
+  margin-right: -20px !important;
+  border: 0 !important;
+  scrollbar-width: none !important;
+}
+
+iframe[src*="beds24.com/booking2.php"]::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+@media (max-width: 767px) {
+  iframe[src*="beds24.com/booking2.php"] {
+    width: calc(100% + 24px) !important;
+    height: 900px !important;
+    min-height: 900px !important;
+    margin-right: -24px !important;
+  }
+
+  section[aria-labelledby="rooms-hero-title"] .max-w-3xl > div.mt-8 > a {
+    min-height: 52px !important;
+    font-size: 0.68rem !important;
+    letter-spacing: 0.08em !important;
+  }
+}
