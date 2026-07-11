@@ -444,7 +444,7 @@ function TravelerSection({ data }: { data: HomePageData }) {
               <Image src={imageSrc} alt={card.title} fill sizes="(max-width: 768px) 84vw, (max-width: 1280px) 50vw, 25vw" className="object-cover transition duration-500 group-hover:scale-105" loading="lazy" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
               <div className="absolute inset-x-0 bottom-0 p-5">
-                <span className="mb-3 inline-flex rounded-full bg-white/95 px-3 py-1 text-xs font-black text-[#8b5e34]">{card.kicker}</span>
+                <span className="mb-3 inline-flex rounded-full bg-white/95 px-3 py-1 text-xs font-black text-[#8b5e34]">{card.cta}</span>
                 <h3 className="font-serif text-2xl font-bold leading-tight">{card.title}</h3>
                 <p className="mt-2 text-sm leading-6 text-white/78">{card.text}</p>
               </div>
