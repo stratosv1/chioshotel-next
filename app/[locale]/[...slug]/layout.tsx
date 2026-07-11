@@ -1,5 +1,3 @@
-import "../../css-split/globals.css";
-
 export default function LocalizedSlugLayout({
   children,
 }: {
