@@ -29,8 +29,21 @@ const localizedLanguages = languages.filter(
 
 function getLocalizedHomePageData(locale: string): HomePageData {
   switch (locale) {
-    case "el":
-      return withUpdatedIntroReasons(homePageEl);
+    case "el": {
+      const data = withUpdatedIntroReasons(homePageEl);
+
+      return {
+        ...data,
+        hero: {
+          ...data.hero,
+          secondaryCta: {
+            label: "Κράτηση",
+            href: "/el/amesi-kratisi-voulamandis-house/",
+            icon: "📅",
+          },
+        },
+      };
+    }
     case "fr":
       return withUpdatedIntroReasons(homePageFr);
     case "de":
