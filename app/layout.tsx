@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ConsentAnalytics } from "@/components/analytics/ConsentAnalytics";
+import { ContactEmailHydrator } from "@/components/contact/ContactEmailHydrator";
 import { BeachCategoryLanguageLinksHydrator } from "@/components/ui/BeachCategoryLanguageLinksHydrator";
 import { CarouselArrowHydrator } from "@/components/ui/CarouselArrowHydrator";
 import { VoulamandisFooter } from "@/components/VoulamandisFooter";
@@ -11,6 +12,7 @@ import "./css-split/core.css";
 import "./css-split/overrides/home-mobile-hero-safe.css";
 import "./css-split/overrides/header-mobile-menu-icons.css";
 import "./css-split/overrides/home-compact-mobile-fixes.css";
+import "./css-split/overrides/contact-mobile-compact.css";
 import "./css-split/components/consent.css";
 
 export const metadata: Metadata = {
@@ -79,6 +81,7 @@ export default async function RootLayout({
         ) : null}
         {children}
         {!hideHeader ? <VoulamandisFooter language={htmlLanguage} /> : null}
+        <ContactEmailHydrator />
         <BeachCategoryLanguageLinksHydrator />
         <CarouselArrowHydrator />
         <ConsentAnalytics language={htmlLanguage} />
