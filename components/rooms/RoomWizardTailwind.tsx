@@ -219,11 +219,11 @@ function RoomGallery({ room }: { room: RoomWizardRoom }) {
   const [activeImage, setActiveImage] = useState(room.images[0] || "");
   if (!room.images.length) return null;
   return (
-    <div className="my-5 overflow-hidden rounded-3xl border border-amber-900/10 bg-white">
+    <div className="my-5 overflow-hidden rounded-3xl border border-[#6f7f3f]/20 bg-white">
       <img className="h-[240px] w-full object-cover md:h-[300px]" src={activeImage} alt={room.name} loading="lazy" />
       <div className="grid grid-cols-4 gap-2 p-2">
         {room.images.slice(0, 4).map((image, index) => (
-          <button type="button" className={`aspect-square overflow-hidden rounded-2xl border-2 ${activeImage === image ? "border-amber-700" : "border-transparent"}`} key={image} onClick={() => setActiveImage(image)} aria-label={`${room.name} photo ${index + 1}`}>
+          <button type="button" className={`aspect-square overflow-hidden rounded-2xl border-2 ${activeImage === image ? "border-[#3f4f2f]" : "border-transparent"}`} key={image} onClick={() => setActiveImage(image)} aria-label={`${room.name} photo ${index + 1}`}>
             <img className="h-full w-full object-cover" src={image} alt={`${room.name} ${index + 1}`} loading="lazy" />
           </button>
         ))}
@@ -236,13 +236,13 @@ function RoomCard({ room, bestRoom, lead, prefs, whatsappPhone, copy, label }: {
   const tags = getTags(room, prefs, copy);
   const priceText = room.priceLevel > bestRoom.priceLevel ? copy.more : room.priceLevel < bestRoom.priceLevel ? copy.less : copy.same;
   return (
-    <article className="rounded-[2rem] border border-amber-900/15 bg-white p-5 shadow-xl shadow-stone-900/5 md:p-7">
-      <span className="inline-flex rounded-full bg-amber-700 px-3 py-1.5 text-xs font-black uppercase tracking-[0.1em] text-white">{label}</span>
+    <article className="rounded-[2rem] border border-[#6f7f3f]/20 bg-white p-5 shadow-xl shadow-stone-900/5 md:p-7">
+      <span className="inline-flex rounded-full bg-[#3f4f2f] px-3 py-1.5 text-xs font-black uppercase tracking-[0.1em] text-white">{label}</span>
       <h3 className="mt-4 text-3xl font-black leading-none tracking-[-0.04em] text-[#2f261f] md:text-4xl">{room.name}</h3>
       <p className="mt-2 text-sm italic text-stone-600">{room.type} • {room.location}</p>
       <div className="mt-4 flex flex-wrap gap-2">
-        <span className="inline-flex rounded-full border border-amber-800/15 bg-amber-50 px-3 py-1.5 text-xs font-black text-amber-900">{priceText}</span>
-        {tags.map((tag) => <span className={`inline-flex rounded-full px-3 py-1.5 text-xs font-black ${tag.good ? "bg-emerald-50 text-emerald-800" : "bg-rose-50 text-rose-800"}`} key={tag.text}>{tag.text}</span>)}
+        <span className="inline-flex rounded-full border border-[#6f7f3f]/20 bg-[#eef3e5] px-3 py-1.5 text-xs font-black text-[#3f4f2f]">{priceText}</span>
+        {tags.map((tag) => <span className={`inline-flex rounded-full px-3 py-1.5 text-xs font-black ${tag.good ? "bg-[#eef3e5] text-[#3f4f2f]" : "bg-rose-50 text-rose-800"}`} key={tag.text}>{tag.text}</span>)}
       </div>
       <div className="mt-4 flex flex-wrap gap-2" aria-label={copy.beds}>
         {room.beds.double > 0 && <span className="rounded-full border border-stone-200 bg-white px-3 py-1.5 text-xs font-bold">🛏️ Double x{room.beds.double}</span>}
@@ -250,13 +250,13 @@ function RoomCard({ room, bestRoom, lead, prefs, whatsappPhone, copy, label }: {
         {room.beds.sofa > 0 && <span className="rounded-full border border-stone-200 bg-white px-3 py-1.5 text-xs font-bold">🛋️ Sofa x{room.beds.sofa}</span>}
       </div>
       <RoomGallery room={room} />
-      <div className="rounded-3xl border border-amber-900/10 bg-[#fffaf3] p-4">
-        <h4 className="text-xs font-black uppercase tracking-[0.12em] text-amber-800">{copy.why}</h4>
+      <div className="rounded-3xl border border-[#6f7f3f]/20 bg-[#f7f9f1] p-4">
+        <h4 className="text-xs font-black uppercase tracking-[0.12em] text-[#3f4f2f]">{copy.why}</h4>
         <p className="mt-2 text-sm leading-6 text-stone-600">{copy.perfect}</p>
       </div>
       <div className="mt-5 grid gap-3 sm:grid-cols-2">
         <a className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#25d366] px-5 text-xs font-black uppercase tracking-[0.1em] text-white" href={getWhatsAppUrl(room, lead, prefs, whatsappPhone, copy)} target="_blank" rel="noopener noreferrer">{copy.whatsapp}</a>
-        <a className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#2f261f] px-5 text-xs font-black uppercase tracking-[0.1em] text-white" href={`mailto:info@chioshotel.gr?subject=${encodeURIComponent(`${copy.room} - ${lead.firstName} ${lead.lastName} - ${room.name}`)}`}>{copy.emailCta}</a>
+        <a className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#3f4f2f] px-5 text-xs font-black uppercase tracking-[0.1em] text-white" href={`mailto:info@chioshotel.gr?subject=${encodeURIComponent(`${copy.room} - ${lead.firstName} ${lead.lastName} - ${room.name}`)}`}>{copy.emailCta}</a>
       </div>
     </article>
   );
@@ -287,14 +287,14 @@ export function RoomWizardTailwind({ rooms, whatsappPhone, language = "en" }: Ro
 
   return (
     <section className="mx-auto mb-12 w-[min(780px,100%)] scroll-mt-20" id="room-wizard-app" aria-labelledby="rw-main-title">
-      <div className="overflow-hidden rounded-[2rem] border border-amber-900/15 bg-[radial-gradient(circle_at_top_left,rgba(168,120,66,.16),transparent_22rem),linear-gradient(180deg,#fffdfa,#fff7ee)] p-[clamp(24px,5vw,46px)] shadow-2xl shadow-stone-900/10">
+      <div className="overflow-hidden rounded-[2rem] border border-[#6f7f3f]/20 bg-[radial-gradient(circle_at_top_left,rgba(111,127,63,.16),transparent_22rem),linear-gradient(180deg,#fffdfa,#f7f9f1)] p-[clamp(24px,5vw,46px)] shadow-2xl shadow-stone-900/10">
         {hasStarted && !isFinished ? (
           <header className="mb-8">
             <div className="mb-3 flex items-end justify-between gap-3">
               <div className="text-xl font-black text-[#2f261f]">🏠 {copy.title}</div>
-              <div className="text-xs font-black uppercase tracking-[0.12em] text-amber-800">{copy.step} {Math.min(step + 1, copy.questions.length)}/{copy.questions.length}</div>
+              <div className="text-xs font-black uppercase tracking-[0.12em] text-[#3f4f2f]">{copy.step} {Math.min(step + 1, copy.questions.length)}/{copy.questions.length}</div>
             </div>
-            <div className="h-2 overflow-hidden rounded-full bg-amber-900/10"><div className="h-full rounded-full bg-gradient-to-r from-amber-700 to-amber-500 transition-all" style={{ width: `${((step + 1) / copy.questions.length) * 100}%` }} /></div>
+            <div className="h-2 overflow-hidden rounded-full bg-[#6f7f3f]/15"><div className="h-full rounded-full bg-gradient-to-r from-[#3f4f2f] to-[#6f7f3f] transition-all" style={{ width: `${((step + 1) / copy.questions.length) * 100}%` }} /></div>
           </header>
         ) : null}
 
@@ -315,13 +315,13 @@ export function RoomWizardTailwind({ rooms, whatsappPhone, language = "en" }: Ro
                   ["phone", copy.phone, "tel", "tel"],
                 ].map(([key, label, autoComplete, type]) => (
                   <label className="grid gap-2" key={key}>
-                    <span className="ml-3 text-[10px] font-black uppercase tracking-[0.12em] text-amber-800">{label}</span>
-                    <input className="min-h-[58px] rounded-full border-2 border-amber-900/15 bg-white px-5 text-base text-[#2f261f] outline-none transition focus:border-amber-700 focus:ring-4 focus:ring-amber-700/10" type={type} min={type === "date" ? minDate : undefined} required autoComplete={autoComplete} value={lead[key as keyof LeadData]} onChange={(event) => setLead((current) => ({ ...current, [key]: event.target.value }))} />
+                    <span className="ml-3 text-[10px] font-black uppercase tracking-[0.12em] text-[#3f4f2f]">{label}</span>
+                    <input className="min-h-[58px] rounded-full border-2 border-[#6f7f3f]/20 bg-white px-5 text-base text-[#2f261f] outline-none transition focus:border-[#3f4f2f] focus:ring-4 focus:ring-[#6f7f3f]/15" type={type} min={type === "date" ? minDate : undefined} required autoComplete={autoComplete} value={lead[key as keyof LeadData]} onChange={(event) => setLead((current) => ({ ...current, [key]: event.target.value }))} />
                   </label>
                 ))}
-                <label className="flex items-start gap-3 px-2 text-sm leading-6 text-stone-600 md:col-span-2"><input className="mt-1 h-5 w-5 accent-amber-700" type="checkbox" required />{copy.consent}</label>
+                <label className="flex items-start gap-3 px-2 text-sm leading-6 text-stone-600 md:col-span-2"><input className="mt-1 h-5 w-5 accent-[#3f4f2f]" type="checkbox" required />{copy.consent}</label>
               </div>
-              <button type="submit" className="mt-7 w-full rounded-full bg-[#2f261f] px-6 py-4 text-sm font-black uppercase tracking-[0.12em] text-white shadow-xl shadow-stone-900/15 transition hover:-translate-y-0.5 hover:bg-amber-800">{copy.start}</button>
+              <button type="submit" className="mt-7 w-full rounded-full bg-[#3f4f2f] px-6 py-4 text-sm font-black uppercase tracking-[0.12em] text-white shadow-xl shadow-stone-900/15 transition hover:-translate-y-0.5 hover:bg-[#53683b]">{copy.start}</button>
             </form>
           </>
         ) : null}
@@ -331,13 +331,13 @@ export function RoomWizardTailwind({ rooms, whatsappPhone, language = "en" }: Ro
             <h3 className="text-[clamp(26px,4vw,40px)] font-black leading-none tracking-[-0.045em] text-[#2f261f]">{currentQuestion.question}</h3>
             <div className="mt-6 grid gap-4">
               {currentQuestion.options.map((option) => (
-                <button type="button" className="group flex w-full items-center gap-4 rounded-3xl border-2 border-transparent bg-white p-4 text-left shadow-lg shadow-stone-900/5 transition hover:-translate-y-0.5 hover:border-amber-700/40 hover:shadow-xl" key={option.title} onClick={() => { setPrefs((current) => ({ ...current, [currentQuestion.id]: option.value })); setStep((current) => current + 1); }}>
-                  <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-amber-50 text-3xl ring-1 ring-amber-900/10">{option.icon}</span>
+                <button type="button" className="group flex w-full items-center gap-4 rounded-3xl border-2 border-transparent bg-white p-4 text-left shadow-lg shadow-stone-900/5 transition hover:-translate-y-0.5 hover:border-[#3f4f2f]/40 hover:shadow-xl" key={option.title} onClick={() => { setPrefs((current) => ({ ...current, [currentQuestion.id]: option.value })); setStep((current) => current + 1); }}>
+                  <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#eef3e5] text-3xl ring-1 ring-[#6f7f3f]/20">{option.icon}</span>
                   <span><strong className="block text-lg font-black text-[#2f261f]">{option.title}</strong><small className="mt-1 block text-sm leading-6 text-stone-600">{option.hint}</small></span>
                 </button>
               ))}
             </div>
-            <button type="button" className="mt-5 rounded-full border border-amber-900/15 px-5 py-3 text-sm font-black text-[#2f261f]" onClick={() => setStep((current) => Math.max(0, current - 1))}>{copy.back}</button>
+            <button type="button" className="mt-5 rounded-full border border-[#6f7f3f]/20 bg-white px-5 py-3 text-sm font-black text-[#3f4f2f]" onClick={() => setStep((current) => Math.max(0, current - 1))}>{copy.back}</button>
           </div>
         ) : null}
 
@@ -346,7 +346,7 @@ export function RoomWizardTailwind({ rooms, whatsappPhone, language = "en" }: Ro
             <RoomCard room={bestRoom} bestRoom={bestRoom} lead={lead} prefs={prefs} whatsappPhone={whatsappPhone} copy={copy} label={copy.bestMatch} />
             {alternativeRooms.length ? <h3 className="mt-3 text-2xl font-black tracking-[-0.04em] text-[#2f261f]">{copy.alternatives}</h3> : null}
             {alternativeRooms.map((room) => <RoomCard key={room.id} room={room} bestRoom={bestRoom} lead={lead} prefs={prefs} whatsappPhone={whatsappPhone} copy={copy} label={copy.alternatives} />)}
-            <button type="button" className="rounded-full border border-amber-900/15 bg-white px-6 py-4 text-sm font-black uppercase tracking-[0.12em] text-[#2f261f]" onClick={() => { setHasStarted(false); setStep(0); setPrefs({}); }}>{copy.startOver}</button>
+            <button type="button" className="rounded-full border border-[#6f7f3f]/20 bg-[#eef3e5] px-6 py-4 text-sm font-black uppercase tracking-[0.12em] text-[#3f4f2f]" onClick={() => { setHasStarted(false); setStep(0); setPrefs({}); }}>{copy.startOver}</button>
           </div>
         ) : null}
       </div>
