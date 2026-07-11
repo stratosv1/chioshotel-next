@@ -1,4 +1,4 @@
-import "../../css-split/globals.css";
+import "../../css-split/tailwind/localized-contact-wizard.css";
 
 export default function LocalizedSlugLayout({
   children,
