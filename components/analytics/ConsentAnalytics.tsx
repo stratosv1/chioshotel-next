@@ -74,6 +74,14 @@ function normalizeUrl(href: string) {
   }
 }
 
+function getLocation(element: HTMLElement) {
+  const explicit = element.dataset.analyticsLocation;
+  if (explicit) return explicit;
+  if (element.closest("header")) return "header";
+  if (element.closest("footer")) return "footer";
+  return "content";
+}
+
 function fallbackEventName(anchor: HTMLAnchorElement) {
   const href = anchor.href.toLowerCase();
   const label = (anchor.textContent || "").toLowerCase();
@@ -82,15 +90,17 @@ function fallbackEventName(anchor: HTMLAnchorElement) {
   if (href.includes("find-your-room")) return "find_room_click";
   if (href.includes("rates") || label.includes("availability")) return "availability_click";
   if (label.includes("book") || label.includes("κρατ") || label.includes("prenota")) return "book_now_click";
+  if (anchor.closest("header")) return "header_link_click";
+  if (anchor.closest("footer")) return "footer_link_click";
   return null;
 }
 
-function getLocation(element: HTMLElement) {
-  const explicit = element.dataset.analyticsLocation;
-  if (explicit) return explicit;
-  if (element.closest("header")) return "header";
-  if (element.closest("footer")) return "footer";
-  return "content";
+function fallbackButtonEvent(button: HTMLButtonElement) {
+  if (!button.closest("header")) return null;
+  const expanded = button.getAttribute("aria-expanded");
+  if (expanded === "false") return "mobile_menu_open";
+  if (expanded === "true") return "mobile_menu_close";
+  return null;
 }
 
 function getLabel(element: HTMLElement, anchor: HTMLAnchorElement | null) {
@@ -123,16 +133,18 @@ export function ConsentAnalytics({ language }: { language: LanguageCode }) {
       const target = event.target as HTMLElement | null;
       const element = target?.closest("[data-analytics-event]") as HTMLElement | null;
       const anchor = (element?.closest("a") || target?.closest("a")) as HTMLAnchorElement | null;
-      const name = element?.dataset.analyticsEvent || (anchor ? fallbackEventName(anchor) : null);
-      if (!name) return;
+      const button = (element?.closest("button") || target?.closest("button")) as HTMLButtonElement | null;
+      const baseElement = element || anchor || button;
+      const name = element?.dataset.analyticsEvent || (anchor ? fallbackEventName(anchor) : button ? fallbackButtonEvent(button) : null);
+      if (!baseElement || !name) return;
 
       track(name, {
         language,
         page_type: pageType(window.location.pathname),
         pathname: window.location.pathname,
         href: anchor ? normalizeUrl(anchor.href) : "",
-        link_text: getLabel(element || anchor, anchor),
-        cta_location: getLocation(element || anchor),
+        link_text: getLabel(baseElement, anchor),
+        cta_location: getLocation(baseElement),
         device_area: detectDeviceArea(),
       });
     }
