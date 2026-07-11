@@ -1,0 +1,42 @@
+name: Fix Beds24 Mobile Embed
+
+on:
+  push:
+    branches:
+      - fix-header-footer-compact
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch-booking:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix-header-footer-compact
+          persist-credentials: true
+
+      - name: Expand Beds24 iframe on mobile
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('components/rates/RatesPage.tsx')
+          text = path.read_text(encoding='utf-8')
+          old = 'className="block h-[760px] w-full border-0 max-md:h-[680px]"\n                loading="lazy"'
+          new = 'className="block h-[1100px] w-full border-0 max-md:h-[1450px]"\n                loading="eager"'
+          if old not in text:
+              raise SystemExit('Expected Beds24 iframe block not found')
+          path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
+
+      - name: Commit booking embed fix
+        run: |
+          if git diff --quiet; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add components/rates/RatesPage.tsx
+          git commit -m "Fix Beds24 booking embed height on mobile"
+          git push origin HEAD:fix-header-footer-compact
