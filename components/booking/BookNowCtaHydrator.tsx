@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 const BOOKING_PAGE = "/chios-hotels-rates/";
 
-const BOOK_NOW_LABELS = new Set([
+const BOOK_NOW_LABELS = [
   "book now",
   "book your stay",
   "book direct",
@@ -24,24 +24,33 @@ const BOOK_NOW_LABELS = new Set([
   "şimdi rezervasyon yap",
   "hemen rezervasyon yap",
   "şimdi rezervasyon",
-]);
+];
 
 function normalizeLabel(value: string) {
   return value.replace(/\s+/g, " ").trim().toLocaleLowerCase();
 }
 
+function isBookNowLink(link: HTMLAnchorElement) {
+  const label = normalizeLabel(link.textContent || "");
+  return BOOK_NOW_LABELS.some((bookNowLabel) => label.includes(bookNowLabel));
+}
+
+function updateLink(link: HTMLAnchorElement) {
+  if (!isBookNowLink(link)) {
+    return;
+  }
+
+  link.setAttribute("href", BOOKING_PAGE);
+  link.removeAttribute("target");
+  link.removeAttribute("rel");
+}
+
 function updateBookNowLinks(root: ParentNode = document) {
-  root.querySelectorAll<HTMLAnchorElement>("a[href]").forEach((link) => {
-    const label = normalizeLabel(link.textContent || "");
+  if (root instanceof HTMLAnchorElement) {
+    updateLink(root);
+  }
 
-    if (!BOOK_NOW_LABELS.has(label)) {
-      return;
-    }
-
-    link.href = BOOKING_PAGE;
-    link.removeAttribute("target");
-    link.removeAttribute("rel");
-  });
+  root.querySelectorAll<HTMLAnchorElement>("a[href]").forEach(updateLink);
 }
 
 export function BookNowCtaHydrator() {
