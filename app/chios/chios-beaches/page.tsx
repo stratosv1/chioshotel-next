@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { BeachesCardComparison } from "@/components/chios/BeachesCardComparison";
 import { ChiosBeachesPageTailwind } from "@/components/chios/ChiosBeachesPageTailwind";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { chiosBeachesPageEn } from "@/content/chios-beaches";
@@ -14,13 +13,10 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 export default function Page() {
-  const exampleBeach = chiosBeachesPageEn.beaches[0];
-
   return (
     <>
       <JsonLd data={buildChiosBeachesSchema(chiosBeachesPageEn)} />
       <ChiosBeachesPageTailwind data={chiosBeachesPageEn} />
-      <BeachesCardComparison beach={exampleBeach} />
     </>
   );
 }
