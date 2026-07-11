@@ -117,9 +117,13 @@
   transition: all 0.25s ease;
 }
 
+.vh-footer__primary,
+.vh-footer__primary * {
+  color: #2f261f !important;
+}
+
 .vh-footer__primary {
   background: #fff7ee;
-  color: #2f261f;
   box-shadow: 0 18px 42px rgba(0, 0, 0, 0.22);
 }
 
