@@ -1,0 +1,50 @@
+name: Fix Home Tailwind Intro Field
+
+on:
+  push:
+    branches:
+      - integrate-localized-css-main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix-field:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout integration branch
+        uses: actions/checkout@v4
+        with:
+          ref: integrate-localized-css-main
+          fetch-depth: 0
+
+      - name: Replace invalid intro field
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('components/home/HomePageTailwindV2.tsx')
+          text = path.read_text(encoding='utf-8')
+          old = 'data.intro.right.items.map((item) => ('
+          new = 'data.intro.right.cards.map((item) => ('
+
+          if old not in text:
+              print('Target already fixed or not found.')
+          else:
+              path.write_text(text.replace(old, new, 1), encoding='utf-8')
+              print('Replaced intro.right.items with intro.right.cards.')
+          PY
+
+      - name: Commit correction
+        run: |
+          if git diff --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add components/home/HomePageTailwindV2.tsx
+          git commit -m "Fix Tailwind homepage intro cards field"
+          git push origin HEAD:integrate-localized-css-main
