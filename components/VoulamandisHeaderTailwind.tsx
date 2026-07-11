@@ -189,7 +189,7 @@ function LanguagePills({ currentLanguage, pathname, onNavigate }: { currentLangu
       {languages.map((item) => {
         const active = item.code === currentLanguage;
         return (
-          <a key={item.code} href={languageHref(pathname, item.code)} hrefLang={item.code} lang={item.code} aria-current={active ? "page" : undefined} title={item.label} onClick={onNavigate} className={`flex h-8 min-w-9 items-center justify-center rounded-full px-2 text-[11px] font-black uppercase tracking-[0.08em] transition ${active ? "bg-stone-900 text-white shadow-sm" : "text-stone-700 hover:bg-amber-50 hover:text-amber-900"}`}>
+          <a key={item.code} href={languageHref(pathname, item.code)} hrefLang={item.code} lang={item.code} aria-current={active ? "page" : undefined} title={item.label} onClick={onNavigate} className={`flex h-8 min-w-9 items-center justify-center rounded-full px-2 text-[11px] font-black uppercase tracking-[0.08em] transition ${active ? "bg-[#fff4df] text-amber-900 shadow-sm ring-1 ring-amber-800/20" : "text-stone-700 hover:bg-amber-50 hover:text-amber-900"}`}>
             {item.code.toUpperCase()}
           </a>
         );
@@ -244,7 +244,7 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/" }: H
 
         <nav aria-label={copy.nav} className="hidden flex-[1_1_auto] items-center justify-center gap-1 rounded-full border border-stone-900/10 bg-white/66 p-1.5 shadow-sm shadow-stone-900/5 xl:flex">
           {links.map((link) => (
-            <a key={link.href} href={link.href} className="rounded-full px-3 py-2 text-center text-[13px] font-black text-stone-700 transition hover:bg-amber-50 hover:text-amber-900 2xl:px-4">
+            <a key={link.href} href={link.href} className="rounded-full px-3 py-2 text-center text-[14.5px] font-black text-stone-700 transition hover:bg-amber-50 hover:text-amber-900 2xl:px-4">
               {link.label}
             </a>
           ))}
