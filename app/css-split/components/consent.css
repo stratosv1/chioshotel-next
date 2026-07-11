@@ -13,8 +13,8 @@
   gap: 16px;
   padding: 16px;
   border-radius: 24px;
-  background: rgba(255, 253, 250, 0.96);
-  border: 1px solid rgba(142, 102, 7, 0.16);
+  background: rgba(255, 253, 250, 0.98);
+  border: 1px solid rgba(106, 75, 0, 0.24);
   box-shadow: 0 22px 70px rgba(32, 24, 18, 0.24);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
@@ -23,7 +23,7 @@
 
 .vh-consent strong {
   display: block;
-  color: #2f261f;
+  color: #241c16;
   font-size: 18px;
   line-height: 1.1;
   font-weight: 950;
@@ -32,7 +32,7 @@
 .vh-consent p {
   margin: 8px 0 0;
   max-width: 72ch;
-  color: #574b3f;
+  color: #493d33;
   font-size: 13.5px;
   line-height: 1.45;
   font-weight: 650;
@@ -48,9 +48,10 @@
   min-height: 42px;
   padding: 0 14px;
   border-radius: 999px;
-  border: 1px solid rgba(142, 102, 7, 0.16);
-  background: #fff7ee;
-  color: #2f261f;
+  border: 1px solid #6a4b00;
+  background: #ffffff;
+  color: #241c16 !important;
+  -webkit-text-fill-color: #241c16 !important;
   font-size: 12px;
   font-weight: 950;
   letter-spacing: 0.05em;
@@ -59,9 +60,10 @@
 }
 
 .vh-consent__actions button:first-child {
-  background: linear-gradient(135deg, #10b981, #059669);
-  border-color: rgba(5, 150, 105, 0.3);
-  color: #ffffff;
+  background: #047857;
+  border-color: #065f46;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
   box-shadow: 0 12px 26px rgba(5, 150, 105, 0.24);
 }
 
@@ -73,7 +75,7 @@
 }
 
 .vh-consent__links a {
-  color: #6a4b00;
+  color: #5c4100;
   font-size: 12px;
   font-weight: 850;
   text-decoration: underline;
