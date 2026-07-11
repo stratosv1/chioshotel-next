@@ -4,6 +4,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ConsentAnalytics } from "@/components/analytics/ConsentAnalytics";
 import { BeachCategoryLanguageLinksHydrator } from "@/components/ui/BeachCategoryLanguageLinksHydrator";
 import { CarouselArrowHydrator } from "@/components/ui/CarouselArrowHydrator";
+import { WhatsAppCtaHydrator } from "@/components/ui/WhatsAppCtaHydrator";
 import { VoulamandisFooterTailwind } from "@/components/VoulamandisFooterTailwind";
 import { VoulamandisHeaderTailwind } from "@/components/VoulamandisHeaderTailwind";
 import { siteName, siteUrl } from "@/lib/seo";
@@ -81,6 +82,7 @@ export default async function RootLayout({
         {!hideHeader ? <VoulamandisFooterTailwind language={htmlLanguage} /> : null}
         <BeachCategoryLanguageLinksHydrator />
         <CarouselArrowHydrator />
+        <WhatsAppCtaHydrator />
         <ConsentAnalytics language={htmlLanguage} />
         <SpeedInsights />
       </body>
