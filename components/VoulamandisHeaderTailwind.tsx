@@ -203,6 +203,7 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/" }: H
   const copy = copyByLanguage[language] || copyByLanguage.en;
   const reception = useReceptionStatus();
   const statusLabel = reception.isOpen ? "OPEN 06:00–00:00" : copy.opensAgain.toUpperCase();
+  const mobileStatusLabel = reception.isOpen ? "OPEN" : "06:00";
   const links = [
     { label: copy.links.rooms, href: pathFor(routeIds.rooms, language), icon: "🛏️" },
     { label: copy.links.rates, href: pathFor(routeIds.rates, language), icon: "💶" },
@@ -217,6 +218,7 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/" }: H
     { label: copy.links.museums, href: pathFor(routeIds.museums, language), text: "Culture", icon: "🏛️" },
     { label: copy.links.activities, href: pathFor(routeIds.activities, language), text: "Local moments", icon: "🌿" },
   ];
+  const mobileLinks = [...links, ...exploreLinks];
 
   function closeMenu() {
     setIsOpen(false);
@@ -234,7 +236,9 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/" }: H
             <strong className="block truncate text-[1.08rem] font-black leading-none tracking-[-0.055em] text-stone-900 sm:text-[1.28rem] lg:text-[1.42rem]">Voulamandis House</strong>
             <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] font-black uppercase tracking-[0.12em] text-stone-500 sm:text-[11px]">
               <span>Kampos, Chios</span>
-              <span className="hidden h-1.5 w-1.5 rounded-full bg-emerald-500 sm:block" />
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+              <span className="rounded-full bg-emerald-50 px-1.5 py-0.5 text-emerald-700 ring-1 ring-emerald-700/10 lg:hidden">{mobileStatusLabel}</span>
+              <span className="text-amber-800 lg:hidden">Best Rates</span>
               <span className="hidden text-emerald-700 lg:inline">{statusLabel}</span>
               <span className="hidden text-amber-800 lg:inline">{copy.directBestRates}</span>
               <span className="hidden text-stone-400 xl:inline">{reception.dateLabel}</span>
@@ -267,55 +271,35 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/" }: H
         </button>
       </div>
 
-      <div className={`fixed inset-0 top-[72px] z-50 bg-stone-950/25 backdrop-blur-[2px] transition lg:hidden ${isOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}>
+      <div className={`fixed inset-0 top-[72px] z-50 bg-stone-950/15 backdrop-blur-[1px] transition lg:hidden ${isOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}>
         <button type="button" aria-label={copy.close} onClick={closeMenu} className="absolute inset-0 h-full w-full" />
-        <div className={`absolute right-0 top-0 h-[calc(100svh-72px)] w-[min(92vw,420px)] overflow-y-auto rounded-l-[1.5rem] bg-[#fffaf3] p-4 pb-28 shadow-2xl shadow-stone-950/20 transition duration-300 ${isOpen ? "translate-x-0" : "translate-x-full"}`}>
-          <div className="mb-3 flex items-center justify-between gap-4 rounded-[1.35rem] border border-amber-900/10 bg-white p-4 shadow-sm shadow-stone-900/5">
-            <div>
-              <span className="text-[11px] font-black uppercase tracking-[0.16em] text-amber-800/70">{copy.menu}</span>
-              <h2 className="mt-1 text-[1.45rem] font-black leading-none tracking-[-0.045em] text-stone-900">Voulamandis House</h2>
+        <div className={`absolute right-0 top-0 w-[min(92vw,420px)] rounded-l-[1.5rem] bg-[#fffaf3] p-3 pb-5 shadow-2xl shadow-stone-950/18 transition duration-300 ${isOpen ? "translate-x-0" : "translate-x-full"}`}>
+          <div className="mb-2 flex items-center justify-between gap-3 rounded-[1.15rem] border border-amber-900/10 bg-white p-3 shadow-sm shadow-stone-900/5">
+            <div className="min-w-0">
+              <span className="text-[10px] font-black uppercase tracking-[0.16em] text-amber-800/70">{copy.menu}</span>
+              <h2 className="mt-0.5 truncate text-[1.25rem] font-black leading-none tracking-[-0.045em] text-stone-900">Voulamandis House</h2>
+              <p className="mt-1 text-[10px] font-black uppercase tracking-[0.1em] text-emerald-700">{mobileStatusLabel} · {copy.directBestRates} · {reception.dateLabel}</p>
             </div>
-            <button type="button" onClick={closeMenu} className="flex h-10 w-10 items-center justify-center rounded-full bg-stone-900 text-2xl text-white">×</button>
+            <button type="button" onClick={closeMenu} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#fff4df] text-xl font-black text-stone-900 ring-1 ring-amber-800/15">×</button>
           </div>
 
-          <div className="mb-3 rounded-[1.35rem] border border-emerald-700/10 bg-emerald-50 p-3 text-emerald-900">
-            <div className="flex items-center justify-between gap-3">
-              <span className="text-[11px] font-black uppercase tracking-[0.12em]">{statusLabel}</span>
-              <span className="text-[11px] font-black uppercase tracking-[0.12em]">{reception.dateLabel}</span>
-            </div>
-            <p className="mt-1 text-sm font-black">{copy.directBestRates}</p>
-          </div>
-
-          <div className="mb-3">
-            <p className="mb-2 px-2 text-[11px] font-black uppercase tracking-[0.16em] text-stone-500">{copy.language}</p>
+          <div className="mb-2">
             <LanguagePills currentLanguage={language} pathname={pathname} onNavigate={closeMenu} />
           </div>
 
-          <a href={pathFor(routeIds.rates, language)} onClick={closeMenu} className="mb-3 flex min-h-[52px] items-center justify-center rounded-full bg-gradient-to-br from-[#b8873f] to-[#8e6607] px-5 text-sm font-black uppercase tracking-[0.1em] !text-white shadow-lg shadow-amber-900/15">
+          <a href={pathFor(routeIds.rates, language)} onClick={closeMenu} className="mb-2 flex min-h-[44px] items-center justify-center rounded-full bg-gradient-to-br from-[#b8873f] to-[#8e6607] px-5 text-sm font-black uppercase tracking-[0.1em] !text-white shadow-lg shadow-amber-900/12">
             {copy.bookNow}
           </a>
 
-          <section className="mb-4 rounded-[1.35rem] border border-stone-900/10 bg-white p-3 shadow-sm shadow-stone-900/5">
-            <p className="mb-2 px-2 text-[11px] font-black uppercase tracking-[0.16em] text-stone-500">{copy.stay}</p>
+          <section className="rounded-[1.15rem] border border-stone-900/10 bg-white p-2.5 shadow-sm shadow-stone-900/5">
+            <p className="mb-2 px-1 text-[10px] font-black uppercase tracking-[0.16em] text-stone-500">{copy.nav}</p>
             <div className="grid grid-cols-2 gap-2">
-              {links.map((link) => (
-                <a key={link.href} href={link.href} onClick={closeMenu} className="flex min-h-[74px] flex-col justify-center rounded-2xl bg-[#fff7ea] px-3 py-3 text-stone-800 ring-1 ring-amber-900/10">
-                  <span className="mb-1 text-xl" aria-hidden="true">{link.icon}</span>
-                  <strong className="text-sm font-black leading-tight">{link.label}</strong>
-                </a>
-              ))}
-            </div>
-          </section>
-
-          <section className="rounded-[1.35rem] border border-stone-900/10 bg-white p-3 shadow-sm shadow-stone-900/5">
-            <p className="mb-2 px-2 text-[11px] font-black uppercase tracking-[0.16em] text-stone-500">{copy.explore}</p>
-            <div className="grid grid-cols-2 gap-2">
-              {exploreLinks.map((link) => (
-                <a key={link.href} href={link.href} onClick={closeMenu} className="flex min-h-[84px] flex-col justify-between rounded-2xl bg-gradient-to-br from-white to-[#fff4df] p-3 text-stone-800 ring-1 ring-amber-900/10 shadow-sm shadow-stone-900/5">
-                  <span className="text-2xl" aria-hidden="true">{link.icon}</span>
-                  <span>
-                    <strong className="block text-sm font-black leading-tight">{link.label}</strong>
-                    <small className="mt-1 block text-[10px] font-black uppercase tracking-[0.12em] text-amber-800/70">{link.text}</small>
+              {mobileLinks.map((link) => (
+                <a key={link.href} href={link.href} onClick={closeMenu} className="flex min-h-[54px] items-center gap-2 rounded-2xl bg-gradient-to-br from-white to-[#fff7ea] px-3 py-2 text-stone-800 ring-1 ring-amber-900/10 shadow-sm shadow-stone-900/[0.03]">
+                  <span className="text-[19px]" aria-hidden="true">{link.icon}</span>
+                  <span className="min-w-0">
+                    <strong className="block truncate text-[13px] font-black leading-tight">{link.label}</strong>
+                    {"text" in link ? <small className="mt-0.5 block truncate text-[9px] font-black uppercase tracking-[0.1em] text-amber-800/70">{link.text}</small> : null}
                   </span>
                 </a>
               ))}
