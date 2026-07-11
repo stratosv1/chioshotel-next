@@ -5,7 +5,18 @@ import { homePageEn } from "@/content/home";
 import { withUpdatedIntroReasons } from "@/content/homeIntroReasons";
 import { buildHomePageSchema } from "@/content/schema";
 
-const homePageData = withUpdatedIntroReasons(homePageEn);
+const baseHomePageData = withUpdatedIntroReasons(homePageEn);
+const homePageData = {
+  ...baseHomePageData,
+  hero: {
+    ...baseHomePageData.hero,
+    secondaryCta: {
+      label: "Book",
+      href: "/chios-hotels-rates/",
+      icon: "📅",
+    },
+  },
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://chioshotel.gr"),
