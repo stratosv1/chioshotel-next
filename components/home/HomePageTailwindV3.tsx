@@ -24,6 +24,7 @@ export function HomePageTailwindV3({ data }: HomePageTailwindV3Props) {
         main > section:first-child a[href*="habitaciones-chios"] *,
         main > section:first-child a[href*="sakiz-odalari"] * {
           color: #fff !important;
+          -webkit-text-fill-color: #fff !important;
         }
 
         main a[href="/chios-hotels-rates/"],
@@ -41,6 +42,7 @@ export function HomePageTailwindV3({ data }: HomePageTailwindV3Props) {
         main a[href="/es/los-mejores-precios-de-hotel-en-la-isla-chios/"] *,
         main a[href="/tr/sakiz-adasi-rezervasyon/"] * {
           color: #fff !important;
+          -webkit-text-fill-color: #fff !important;
         }
 
         @media (min-width: 768px) {
