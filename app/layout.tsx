@@ -4,8 +4,8 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ConsentAnalytics } from "@/components/analytics/ConsentAnalytics";
 import { BeachCategoryLanguageLinksHydrator } from "@/components/ui/BeachCategoryLanguageLinksHydrator";
 import { CarouselArrowHydrator } from "@/components/ui/CarouselArrowHydrator";
-import { VoulamandisFooter } from "@/components/VoulamandisFooter";
-import { VoulamandisHeader } from "@/components/VoulamandisHeader";
+import { VoulamandisFooterTailwind } from "@/components/VoulamandisFooterTailwind";
+import { VoulamandisHeaderTailwind } from "@/components/VoulamandisHeaderTailwind";
 import { siteName, siteUrl } from "@/lib/seo";
 import "./css-split/core.css";
 import "./css-split/overrides/home-mobile-hero-safe.css";
@@ -75,10 +75,10 @@ export default async function RootLayout({
     <html lang={htmlLanguage}>
       <body>
         {!hideHeader ? (
-          <VoulamandisHeader language={htmlLanguage} pathname={pathname} />
+          <VoulamandisHeaderTailwind language={htmlLanguage} pathname={pathname} />
         ) : null}
         {children}
-        {!hideHeader ? <VoulamandisFooter language={htmlLanguage} /> : null}
+        {!hideHeader ? <VoulamandisFooterTailwind language={htmlLanguage} /> : null}
         <BeachCategoryLanguageLinksHydrator />
         <CarouselArrowHydrator />
         <ConsentAnalytics language={htmlLanguage} />
