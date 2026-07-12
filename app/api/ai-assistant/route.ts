@@ -72,14 +72,24 @@ const ROOM_META: Record<string, { features: string[]; image: string; type: RoomT
 };
 
 function detectLanguage(messages: ChatMessage[]): SupportedLanguage {
-  const text = [...messages].reverse().find((message) => message.role === "user")?.content || "";
-  if (/[Α-Ωα-ωΆ-ώ]/.test(text)) return "el";
-  if (/[ğüşöçıİĞÜŞÖÇ]/i.test(text)) return "tr";
-  if (/[äöüß]/i.test(text) || /\b(ich|zimmer|verfügbarkeit|preis|möchte)\b/i.test(text)) return "de";
-  if (/[éèêëàâçîïôùûüÿœ]/i.test(text) || /\b(je|chambre|prix|disponible|voudrais)\b/i.test(text)) return "fr";
-  if (/\b(quiero|habitación|precio|disponible|huéspedes)\b/i.test(text)) return "es";
-  if (/\b(vorrei|camera|prezzo|disponibile|ospiti)\b/i.test(text)) return "it";
-  return "en";
+  const userTexts = messages
+    .filter((message) => message.role === "user")
+    .map((message) => message.content)
+    .reverse();
+
+  for (const text of userTexts) {
+    if (!/[\p{L}]/u.test(text)) continue;
+    if (/[Α-Ωα-ωΆ-ώ]/.test(text)) return "el";
+    if (/[ğüşöçıİĞÜŞÖÇ]/i.test(text)) return "tr";
+    if (/[äöüß]/i.test(text) || /\b(ich|zimmer|verfügbarkeit|preis|möchte)\b/i.test(text)) return "de";
+    if (/[éèêëàâçîïôùûüÿœ]/i.test(text) || /\b(je|chambre|prix|disponible|voudrais)\b/i.test(text)) return "fr";
+    if (/\b(quiero|habitación|precio|disponible|huéspedes)\b/i.test(text)) return "es";
+    if (/\b(vorrei|camera|prezzo|disponibile|ospiti)\b/i.test(text)) return "it";
+    if (/[A-Za-z]/.test(text)) return "en";
+  }
+
+  const hasGreekAssistant = messages.some((message) => message.role === "assistant" && /[Α-Ωα-ωΆ-ώ]/.test(message.content));
+  return hasGreekAssistant ? "el" : "en";
 }
 
 function validDate(value?: string) {
@@ -121,7 +131,7 @@ function resolveFutureDate(day: number, month: number, year?: number) {
 }
 
 function parseDeterministicState(messages: ChatMessage[], current: SearchState) {
-  const latest = [...messages].reverse().find((message) => message.role === "user")?.content || "";
+  const latest = [...messages].reverse().find((message) => message.role === "user")?.content.trim() || "";
   const next: SearchState = { ...current };
 
   const dateMatches = [...latest.matchAll(/\b(\d{1,2})[\/-](\d{1,2})(?:[\/-](\d{2,4}))?\b/g)];
@@ -151,6 +161,16 @@ function parseDeterministicState(messages: ChatMessage[], current: SearchState) 
   const nightsMatch = latest.match(/\b(\d{1,2})\s*(?:νύχτες|νυχτες|βράδια|βραδια|nights?|nächte|nuits|notti|noches|gece)\b/i);
   if (nightsMatch && next.checkin) {
     next.checkout = addDays(next.checkin, Number(nightsMatch[1]));
+  }
+
+  const bareNumberMatch = latest.match(/^\s*(\d{1,2})\s*$/);
+  if (bareNumberMatch) {
+    const value = Number(bareNumberMatch[1]);
+    if (next.checkin && !next.checkout) {
+      next.checkout = addDays(next.checkin, value);
+    } else if (next.checkin && next.checkout && !next.guests) {
+      next.guests = Math.max(1, Math.min(value, 10));
+    }
   }
 
   return next;
@@ -246,7 +266,7 @@ async function getOffers(search: SearchState, language: SupportedLanguage): Prom
   url.searchParams.set("guests", String(search.guests));
 
   const response = await fetch(url.toString(), {
-    headers: { Accept: "application/json", "User-Agent": "VoulamandisHouseAI/2.1" },
+    headers: { Accept: "application/json", "User-Agent": "VoulamandisHouseAI/2.2" },
     cache: "no-store",
   });
   const data = await response.json().catch(() => null);
