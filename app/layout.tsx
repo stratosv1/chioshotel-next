@@ -1,14 +1,11 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import { ConsentAnalytics } from "@/components/analytics/ConsentAnalytics";
 import { VoulamandisFooterTailwind } from "@/components/VoulamandisFooterTailwind";
 import { VoulamandisHeaderTailwind } from "@/components/VoulamandisHeaderTailwind";
 import { siteName, siteUrl } from "@/lib/seo";
 import "./css-split/core.css";
 import "./css-split/overrides/home-mobile-hero-safe.css";
 import "./css-split/overrides/home-compact-mobile-fixes.css";
-import "./css-split/components/consent.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -76,8 +73,6 @@ export default async function RootLayout({
         ) : null}
         {children}
         {!hideHeader ? <VoulamandisFooterTailwind language={htmlLanguage} /> : null}
-        <ConsentAnalytics language={htmlLanguage} />
-        <SpeedInsights />
       </body>
     </html>
   );
