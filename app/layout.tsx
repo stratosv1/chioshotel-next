@@ -10,7 +10,7 @@ import { CtaContrastHydrator } from "@/components/ui/CtaContrastHydrator";
 import { WhatsAppCtaHydrator } from "@/components/ui/WhatsAppCtaHydrator";
 import { VoulamandisFooterTailwind } from "@/components/VoulamandisFooterTailwind";
 import { VoulamandisHeaderTailwind } from "@/components/VoulamandisHeaderTailwind";
-import { siteUrl } from "@/lib/seo";
+import { siteName, siteUrl } from "@/lib/seo";
 import "./css-split/core.css";
 import "./css-split/overrides/home-mobile-hero-safe.css";
 import "./css-split/overrides/home-compact-mobile-fixes.css";
@@ -18,7 +18,10 @@ import "./css-split/components/consent.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "Chios Rooms & Apartments | Voulamandis House",
+  title: {
+    default: "Chios Rooms & Apartments | Voulamandis House",
+    template: `%s | ${siteName}`,
+  },
   description:
     "Quiet rooms and apartments in Kampos, Chios. Stay at Voulamandis House near Chios Town, the airport, beaches, villages and local attractions.",
   icons: {
