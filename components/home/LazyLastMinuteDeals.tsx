@@ -31,26 +31,44 @@ export function LazyLastMinuteDeals({
       return;
     }
 
+    let idleId: number | null = null;
+    let timeoutId: number | null = null;
+
+    const loadWhenIdle = () => {
+      if ("requestIdleCallback" in window) {
+        idleId = window.requestIdleCallback(() => setShouldLoad(true), { timeout: 1200 });
+      } else {
+        timeoutId = window.setTimeout(() => setShouldLoad(true), 250);
+      }
+    };
+
     if (!("IntersectionObserver" in window)) {
-      setShouldLoad(true);
-      return;
+      loadWhenIdle();
+      return () => {
+        if (idleId !== null && "cancelIdleCallback" in window) window.cancelIdleCallback(idleId);
+        if (timeoutId !== null) window.clearTimeout(timeoutId);
+      };
     }
 
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries.some((entry) => entry.isIntersecting)) {
-          setShouldLoad(true);
           observer.disconnect();
+          loadWhenIdle();
         }
       },
       {
-        rootMargin: "700px 0px",
+        rootMargin: "80px 0px",
       },
     );
 
     observer.observe(element);
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      if (idleId !== null && "cancelIdleCallback" in window) window.cancelIdleCallback(idleId);
+      if (timeoutId !== null) window.clearTimeout(timeoutId);
+    };
   }, [shouldLoad]);
 
   if (shouldLoad) {
