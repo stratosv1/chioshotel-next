@@ -7,56 +7,78 @@ const DIRECT_DISCOUNT_PERCENT = 10;
 const DEFAULT_BOOKING_WEBAPP_URL =
   "https://script.google.com/macros/s/AKfycbwZ8qG1eE1YXr-Ag2LXNHrgFIkf7kCvDiTMF38NfPNC9ZGAquGMIXvn3QWPfpiKpTaa/exec";
 
-const ROOM_META: Record<string, { features: string[]; image: string; detailsUrl: string }> = {
-  "267788:1": { features: ["First floor", "Wi-Fi", "Coffee & tea kettle", "Private balcony", "Upper-floor view", "Stairs", "1 double bed", "2 single beds", "Two spaces"], image: "/images/rooms/DSC07776-2-e1675109942622.webp", detailsUrl: "/rooms/standard-double" },
-  "268803:1": { features: ["First floor", "Wi-Fi", "Coffee & tea kettle", "Stairs", "1 double bed", "Open-plan space"], image: "/images/rooms/DSC07803-1.webp", detailsUrl: "/rooms/economy-double" },
-  "267788:2": { features: ["First floor", "Wi-Fi", "Coffee & tea kettle", "Private balcony", "Upper-floor view", "Kitchenette", "Stairs", "1 double bed", "1 single bed", "Two spaces"], image: "/images/rooms/DSC07867-1.webp", detailsUrl: "/rooms/standard-double" },
-  "267788:3": { features: ["First floor", "Wi-Fi", "Coffee & tea kettle", "Private balcony", "Upper-floor view", "Kitchenette", "Stairs", "1 double bed", "1 sofa bed", "Open-plan space"], image: "/images/rooms/received_1748354861920234.webp", detailsUrl: "/rooms/standard-double" },
-  "626129:1": { features: ["Ground floor", "Wi-Fi", "Coffee & tea kettle", "Garden view", "No stairs", "1 double bed", "1 single bed", "Open-plan space"], image: "/images/rooms/voulamandis-house-rooms.webp", detailsUrl: "/rooms/standard-double" },
-  "268803:2": { features: ["Ground floor", "Wi-Fi", "Coffee & tea kettle", "Garden view", "No stairs", "1 double bed", "Open-plan space"], image: "/images/rooms/received_1753964631359257.webp", detailsUrl: "/rooms/economy-double" },
-  "626129:2": { features: ["Ground floor", "Wi-Fi", "Coffee & tea kettle", "Garden view", "No stairs", "1 double bed", "1 single bed"], image: "/images/rooms/double-triple-room.jpg", detailsUrl: "/rooms/standard-double" },
-  "265595:1": { features: ["Independent apartment", "Kitchen", "Garden view", "Up to 4 guests"], image: "/images/rooms/chios-apartments-voulamandis.webp", detailsUrl: "/rooms/family-apartments" },
-  "265595:2": { features: ["Independent apartment", "Kitchen", "Garden view", "Up to 4 guests"], image: "/images/rooms/chios-apartments-voulamandis.webp", detailsUrl: "/rooms/family-apartments" },
-  "265595:3": { features: ["Independent apartment", "Kitchen", "Garden view", "Up to 4 guests"], image: "/images/rooms/DSC07899.webp", detailsUrl: "/rooms/family-apartments" },
+type SupportedLanguage = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
+type RoomType = "standard" | "economy" | "family";
+
+const ROOM_URLS: Record<RoomType, Record<SupportedLanguage, string>> = {
+  standard: {
+    en: "/chios-rooms/standard-double-room/",
+    el: "/el/domatia-xios/diklina-triklina-domatia/",
+    fr: "/fr/chambres-a-chios/chambres-doubles-standard/",
+    de: "/de/zimmer-chios/standard-doppelzimmer-auf-chios/",
+    it: "/it/stanze-a-chios/camere-doppie-standard-chios/",
+    es: "/es/habitaciones-en-chios/habitaciones-dobles-estandar/",
+    tr: "/tr/chios-odalari/standart-cift-kisilik-odalar/",
+  },
+  economy: {
+    en: "/chios-rooms/economy-double-rooms/",
+    el: "/el/domatia-xios/oikonomiko-diklino-domatio/",
+    fr: "/fr/chambres-a-chios/chambres-doubles-economiques/",
+    de: "/de/zimmer-chios/economy-zimmer-auf-chios/",
+    it: "/it/stanze-a-chios/camera-doppia-economica-chios/",
+    es: "/es/habitaciones-en-chios/economicas-habitaciones-en-chios/",
+    tr: "/tr/chios-odalari/sakiz-adasindaki-ekonomi-cift-kisilik-oda/",
+  },
+  family: {
+    en: "/chios-rooms/family-chios-apartments/",
+    el: "/el/domatia-xios/oikogeneiako-diamerisma/",
+    fr: "/fr/chambres-a-chios/appartements-familiaux-de-chios/",
+    de: "/de/zimmer-chios/familienapartments-in-chios/",
+    it: "/it/stanze-a-chios/appartamenti-familiari-a-chios/",
+    es: "/es/habitaciones-en-chios/apartamentos-familiares-en-chios/",
+    tr: "/tr/chios-odalari/sakiz-adasinda-buyuk-aile-daireleri/",
+  },
+};
+
+const ROOM_META: Record<string, { features: string[]; image: string; type: RoomType }> = {
+  "267788:1": { features: ["First floor", "Wi-Fi", "Coffee & tea kettle", "Private balcony", "Upper-floor view", "Stairs", "1 double bed", "2 single beds", "Two spaces"], image: "/images/rooms/DSC07776-2-e1675109942622.webp", type: "standard" },
+  "268803:1": { features: ["First floor", "Wi-Fi", "Coffee & tea kettle", "Stairs", "1 double bed", "Open-plan space"], image: "/images/rooms/DSC07803-1.webp", type: "economy" },
+  "267788:2": { features: ["First floor", "Wi-Fi", "Coffee & tea kettle", "Private balcony", "Upper-floor view", "Kitchenette", "Stairs", "1 double bed", "1 single bed", "Two spaces"], image: "/images/rooms/DSC07867-1.webp", type: "standard" },
+  "267788:3": { features: ["First floor", "Wi-Fi", "Coffee & tea kettle", "Private balcony", "Upper-floor view", "Kitchenette", "Stairs", "1 double bed", "1 sofa bed", "Open-plan space"], image: "/images/rooms/received_1748354861920234.webp", type: "standard" },
+  "626129:1": { features: ["Ground floor", "Wi-Fi", "Coffee & tea kettle", "Garden view", "No stairs", "1 double bed", "1 single bed", "Open-plan space"], image: "/images/rooms/voulamandis-house-rooms.webp", type: "standard" },
+  "268803:2": { features: ["Ground floor", "Wi-Fi", "Coffee & tea kettle", "Garden view", "No stairs", "1 double bed", "Open-plan space"], image: "/images/rooms/received_1753964631359257.webp", type: "economy" },
+  "626129:2": { features: ["Ground floor", "Wi-Fi", "Coffee & tea kettle", "Garden view", "No stairs", "1 double bed", "1 single bed"], image: "/images/rooms/double-triple-room.jpg", type: "standard" },
+  "265595:1": { features: ["Independent apartment", "Kitchen", "Garden view", "Up to 4 guests"], image: "/images/rooms/chios-apartments-voulamandis.webp", type: "family" },
+  "265595:2": { features: ["Independent apartment", "Kitchen", "Garden view", "Up to 4 guests"], image: "/images/rooms/chios-apartments-voulamandis.webp", type: "family" },
+  "265595:3": { features: ["Independent apartment", "Kitchen", "Garden view", "Up to 4 guests"], image: "/images/rooms/DSC07899.webp", type: "family" },
 };
 
 const SYSTEM_PROMPT = `You are the digital guest assistant for Voulamandis House, rooms and apartments in Kampos, Chios, Greece.
-
-Conversation rules:
-1. Reply in the same language as the guest, naturally and clearly.
-2. Answer the exact question first in 1-3 short sentences.
-3. Never pretend you performed an availability check, booking request, reservation or contact action unless the application actually did it.
-4. Never tell the guest to use a booking-request button when CURRENT ROOM CONTEXT is empty.
-5. When there are no current live room results, politely ask the guest to select arrival, departure and guests in the search panel and press “View availability”. Do not discuss a specific available room before that check.
-6. Never ask the guest to repeat dates, guests or room when those are already present in CURRENT ROOM CONTEXT.
-7. If the guest asks for photos or more room details, use the supplied features and direct them to the visible “Photos & details” action.
-8. If the guest asks to book, reserve, send a request, or contact reception and a current room exists, direct them to the visible “Booking request” action. The form already carries room, dates, guests and price.
-9. If the guest asks for one room only and multiple current offers exist, recommend the lowest-priced suitable current offer and explain the choice briefly.
-10. Do not repeat the complete availability list in follow-ups.
-11. When the guest mentions a specific room, answer only about that room.
-12. Never call Voulamandis House a hotel. Use rooms and apartments, accommodation or property.
-13. Never invent availability, prices, amenities, policies or booking confirmation.
-14. A direct booking receives 10% off once and never combines with another offer.
-15. A booking request is not a confirmed booking. Reception confirms it.
-16. Ask at most one useful follow-up question and avoid long menus, apologies or generic statements.
-17. Breakfast is available for €12 per person.`;
+Reply in the same language as the guest. Be concise. Never invent availability, prices, amenities or booking confirmation. Never call Voulamandis House a hotel. Direct bookings receive 10% off once and never combine with another offer. A booking request is not a confirmed booking. When a room exists in CURRENT ROOM CONTEXT, use its supplied detailsUrl and visible actions.`;
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
 type SearchRequest = { checkin?: string; checkout?: string; guests?: number };
 type Action = { label: string; href?: string; action?: "open_request"; roomId?: string; unitId?: string };
-type Offer = {
-  roomId: string; unitId: string; name: string; category: string; floor: string;
-  maxGuests: number; features: string[]; image: string; detailsUrl: string;
-  bookingUrl: string; nights: number; originalTotal: number; directTotal: number; saving: number;
-};
+type Offer = { roomId: string; unitId: string; name: string; category: string; floor: string; maxGuests: number; features: string[]; image: string; detailsUrl: string; bookingUrl: string; nights: number; originalTotal: number; directTotal: number; saving: number };
+
+function detectLanguage(messages: ChatMessage[]): SupportedLanguage {
+  const naturalUserMessage = [...messages].reverse().find((message) => message.role === "user" && !message.content.startsWith("Έλεγξε διαθεσιμότητα"));
+  const text = naturalUserMessage?.content || "";
+  if (/[Α-Ωα-ωΆ-ώ]/.test(text)) return "el";
+  if (/[ğüşöçıİĞÜŞÖÇ]/i.test(text)) return "tr";
+  if (/[äöüß]/i.test(text) || /\b(ich|zimmer|verfügbarkeit|preis|möchte|ist|sind)\b/i.test(text)) return "de";
+  if (/[éèêëàâçîïôùûüÿœ]/i.test(text) || /\b(je|chambre|prix|disponible|voudrais|est|sont)\b/i.test(text)) return "fr";
+  if (/\b(quiero|habitación|precio|disponible|para|es|son)\b/i.test(text)) return "es";
+  if (/\b(vorrei|camera|prezzo|disponibile|per|è|sono)\b/i.test(text)) return "it";
+  return "en";
+}
 
 function extractText(payload: any): string {
   if (typeof payload?.output_text === "string" && payload.output_text.trim()) return payload.output_text.trim();
   const texts: string[] = [];
-  if (Array.isArray(payload?.output)) {
-    for (const item of payload.output) {
-      if (!Array.isArray(item?.content)) continue;
-      for (const part of item.content) if (typeof part?.text === "string" && part.text.trim()) texts.push(part.text.trim());
+  for (const item of Array.isArray(payload?.output) ? payload.output : []) {
+    for (const part of Array.isArray(item?.content) ? item.content : []) {
+      if (typeof part?.text === "string" && part.text.trim()) texts.push(part.text.trim());
     }
   }
   return texts.join("\n").trim();
@@ -75,68 +97,18 @@ function findMentionedOffer(text: string, offers: Offer[]) {
   }) || (offers.length === 1 ? offers[0] : undefined);
 }
 
-function featureText(offer: Offer) {
-  return offer.features.slice(0, 7).join(", ");
-}
-
-function detectNoOfferResponse(text: string, offers: Offer[]): { answer: string; actions: Action[] } | null {
-  if (offers.length) return null;
-  const asksAvailabilityOrBooking = /(διαθέσιμ|διαθεσιμ|δωμάτι|δωματι|οικογενειακ|κράτη|κρατη|reserve|book|room|apartment)/i.test(text);
-  if (!asksAvailabilityOrBooking) return null;
-  return {
-    answer: "Για να προτείνω πραγματικά διαθέσιμο δωμάτιο, επίλεξε άφιξη, αναχώρηση και επισκέπτες στο πλαίσιο «Η διαμονή σας» και πάτησε «Δείτε διαθεσιμότητα». Μετά θα σου δείξω μόνο τις διαθέσιμες επιλογές με φωτογραφίες και τιμές.",
-    actions: [],
-  };
-}
-
 function detectQuickResponse(text: string, offers: Offer[]): { answer: string; actions: Action[] } | null {
-  const noOffer = detectNoOfferResponse(text, offers);
-  if (noOffer) return noOffer;
-
-  const lower = text.toLocaleLowerCase("el-GR");
-  const asksOneRoom = /(ένα μόνο|ενα μονο|μόνο ένα|μονο ενα|one room|single option|συγκεκριμένο διαθέσιμο|συγκεκριμενο διαθεσιμο)/i.test(lower);
-  if (asksOneRoom && offers.length) {
-    const offer = offers[0];
-    return {
-      answer: `Η καλύτερη διαθέσιμη επιλογή αυτή τη στιγμή είναι το ${offer.name}, με τιμή απευθείας κράτησης ${offer.directTotal.toFixed(2)} € για ${offer.nights} ${offer.nights === 1 ? "νύχτα" : "νύχτες"}. Το προτείνω επειδή είναι η οικονομικότερη διαθέσιμη επιλογή που καλύπτει τον αριθμό επισκεπτών.`,
-      actions: [
-        { label: "Αίτημα κράτησης", action: "open_request", roomId: offer.roomId, unitId: offer.unitId },
-        { label: "Φωτογραφίες & λεπτομέρειες", href: offer.detailsUrl },
-      ],
-    };
-  }
-
+  if (!offers.length) return null;
   const offer = findMentionedOffer(text, offers);
   if (!offer) return null;
-
-  const asksPhotos = /(φωτο|εικόν|εικον|photo|picture)/i.test(lower);
-  const asksDetails = /(περισσότερ.*πληροφορ|πληροφορί|πληροφορι|details|λεπτομέρ|λεπτομερ|χαρακτηριστ|παροχ)/i.test(lower);
-  const asksLink = /(link|σύνδεσ|συνδεσ|url)/i.test(lower);
-  const asksBooking = /(κράτη|κρατη|reserve|book|reception|ρεσεψ|αίτημα|αιτημα|ενδιαφέρομαι|ενδιαφερομαι)/i.test(lower);
-
-  if (asksDetails || asksPhotos || (asksLink && !asksBooking)) {
-    return {
-      answer: `Το ${offer.name} είναι ${offer.category.toLowerCase()} για έως ${offer.maxGuests} άτομα. Βασικά χαρακτηριστικά: ${featureText(offer)}. Για όλες τις φωτογραφίες και την πλήρη περιγραφή, πάτησε «Φωτογραφίες & λεπτομέρειες».`,
-      actions: [
-        { label: "Φωτογραφίες & λεπτομέρειες", href: offer.detailsUrl },
-        { label: "Αίτημα κράτησης", action: "open_request", roomId: offer.roomId, unitId: offer.unitId },
-      ],
-    };
-  }
-
-  if (asksBooking || asksLink) {
-    return {
-      answer: `Για το ${offer.name}, πάτησε «Αίτημα κράτησης». Το δωμάτιο, οι ημερομηνίες, οι επισκέπτες και η τιμή έχουν ήδη συμπληρωθεί· χρειάζονται μόνο το όνομα και ένα στοιχείο επικοινωνίας.`,
-      actions: [
-        { label: "Αίτημα κράτησης", action: "open_request", roomId: offer.roomId, unitId: offer.unitId },
-        { label: "Φωτογραφίες & λεπτομέρειες", href: offer.detailsUrl },
-      ],
-    };
-  }
+  const asksDetails = /(φωτο|εικόν|εικον|photo|picture|πληροφορί|πληροφορι|details|λεπτομέρ|λεπτομερ|χαρακτηριστ|παροχ)/i.test(text);
+  const asksBooking = /(κράτη|κρατη|reserve|book|reception|ρεσεψ|αίτημα|αιτημα|ενδιαφέρομαι|ενδιαφερομαι|link|σύνδεσ|συνδεσ|url)/i.test(text);
+  if (asksDetails) return { answer: `Για το ${offer.name}, χρησιμοποίησε το κουμπί «Φωτογραφίες & λεπτομέρειες».`, actions: [{ label: "Φωτογραφίες & λεπτομέρειες", href: offer.detailsUrl }, { label: "Αίτημα κράτησης", action: "open_request", roomId: offer.roomId, unitId: offer.unitId }] };
+  if (asksBooking) return { answer: `Για το ${offer.name}, πάτησε «Αίτημα κράτησης».`, actions: [{ label: "Αίτημα κράτησης", action: "open_request", roomId: offer.roomId, unitId: offer.unitId }, { label: "Φωτογραφίες & λεπτομέρειες", href: offer.detailsUrl }] };
   return null;
 }
 
-async function getOffers(search: SearchRequest): Promise<Offer[]> {
+async function getOffers(search: SearchRequest, language: SupportedLanguage): Promise<Offer[]> {
   if (!validDate(search.checkin) || !validDate(search.checkout)) return [];
   const guests = Math.max(1, Math.min(Number(search.guests || 2), 10));
   const nights = nightsBetween(search.checkin!, search.checkout!);
@@ -147,9 +119,11 @@ async function getOffers(search: SearchRequest): Promise<Offer[]> {
   const data = await response.json().catch(() => null);
   if (!response.ok || !data?.success || !Array.isArray(data?.rooms?.available)) return [];
   return data.rooms.available.filter((item: any) => Number(item?.maxGuests || 0) >= guests).map((item: any) => {
-    const originalTotal = Number(item?.totalPrice || 0); const directTotal = Math.round(originalTotal * 0.9 * 100) / 100; const key = `${item.roomId}:${item.unitId}`;
-    const roomMeta = ROOM_META[key] || { features: [], image: "/images/rooms/voulamandis-house-rooms.webp", detailsUrl: "/rooms" };
-    return { roomId: String(item.roomId), unitId: String(item.unitId), name: String(item.displayName || item.name || `Room ${item.unitId}`), category: String(item.category || item.roomName || "Room"), floor: String(item.location || ""), maxGuests: Number(item.maxGuests || 0), features: roomMeta.features, image: roomMeta.image, detailsUrl: roomMeta.detailsUrl, bookingUrl: "/book-now", nights, originalTotal: Math.round(originalTotal * 100) / 100, directTotal, saving: Math.round((originalTotal - directTotal) * 100) / 100 } satisfies Offer;
+    const originalTotal = Number(item?.totalPrice || 0);
+    const directTotal = Math.round(originalTotal * 0.9 * 100) / 100;
+    const key = `${item.roomId}:${item.unitId}`;
+    const roomMeta = ROOM_META[key] || { features: [], image: "/images/rooms/voulamandis-house-rooms.webp", type: "standard" as RoomType };
+    return { roomId: String(item.roomId), unitId: String(item.unitId), name: String(item.displayName || item.name || `Room ${item.unitId}`), category: String(item.category || item.roomName || "Room"), floor: String(item.location || ""), maxGuests: Number(item.maxGuests || 0), features: roomMeta.features, image: roomMeta.image, detailsUrl: ROOM_URLS[roomMeta.type][language] || ROOM_URLS[roomMeta.type].en, bookingUrl: "/book-now", nights, originalTotal: Math.round(originalTotal * 100) / 100, directTotal, saving: Math.round((originalTotal - directTotal) * 100) / 100 } satisfies Offer;
   }).filter((offer: Offer) => offer.originalTotal > 0).sort((a: Offer, b: Offer) => a.directTotal - b.directTotal).slice(0, 10);
 }
 
@@ -160,25 +134,21 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const messages: ChatMessage[] = Array.isArray(body?.messages) ? body.messages.filter((message: any) => (message?.role === "user" || message?.role === "assistant") && typeof message?.content === "string").slice(-10).map((message: ChatMessage) => ({ role: message.role, content: message.content.trim().slice(0, 1400) })).filter((message: ChatMessage) => message.content.length > 0) : [];
     if (!messages.length || messages[messages.length - 1].role !== "user") return NextResponse.json({ error: "Please enter a question." }, { status: 400 });
-
+    const language = detectLanguage(messages);
     const search: SearchRequest = body?.search || {};
     const includeOffers = body?.includeOffers === true;
     const previousOffers = cleanOffers(body?.activeOffers);
-    const offers = includeOffers ? await getOffers(search) : previousOffers;
+    const offers = includeOffers ? await getOffers(search, language) : previousOffers;
     const latestText = messages[messages.length - 1].content;
     const quick = !includeOffers ? detectQuickResponse(latestText, offers) : null;
-    if (quick) return NextResponse.json({ answer: quick.answer, actions: quick.actions, offers: [], discountPercent: DIRECT_DISCOUNT_PERCENT });
-
-    const roomContext = offers.length ? `\n\nCURRENT ROOM CONTEXT:\n${JSON.stringify(offers.map(({ image, ...offer }) => offer))}` : "\n\nCURRENT ROOM CONTEXT is empty. No live room has been selected.";
-    const turnContext = includeOffers && validDate(search.checkin) && validDate(search.checkout)
-      ? `\n\nLIVE SEARCH FOR THIS TURN: Check-in ${search.checkin}, check-out ${search.checkout}, guests ${search.guests || 2}. Summarize the best options in no more than 3 short sentences. Detailed cards are shown by the UI.`
-      : `\n\nFOLLOW-UP TURN: Use CURRENT ROOM CONTEXT. If it is empty, instruct the guest to use the search panel. Never suggest a booking request without a current offer.`;
-    const openAIResponse = await fetch("https://api.openai.com/v1/responses", { method: "POST", headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" }, body: JSON.stringify({ model: process.env.OPENAI_MODEL || "gpt-5-mini", instructions: SYSTEM_PROMPT + roomContext + turnContext, input: messages, reasoning: { effort: "minimal" }, max_output_tokens: 450 }), cache: "no-store" });
+    if (quick) return NextResponse.json({ answer: quick.answer, actions: quick.actions, offers: [], language, discountPercent: DIRECT_DISCOUNT_PERCENT });
+    const roomContext = offers.length ? `\n\nCURRENT ROOM CONTEXT:\n${JSON.stringify(offers.map(({ image, ...offer }) => offer))}` : "\n\nCURRENT ROOM CONTEXT is empty.";
+    const openAIResponse = await fetch("https://api.openai.com/v1/responses", { method: "POST", headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" }, body: JSON.stringify({ model: process.env.OPENAI_MODEL || "gpt-5-mini", instructions: SYSTEM_PROMPT + roomContext, input: messages, reasoning: { effort: "minimal" }, max_output_tokens: 450 }), cache: "no-store" });
     const payload = await openAIResponse.json();
     if (!openAIResponse.ok) return NextResponse.json({ error: "The assistant is temporarily unavailable. Please try again shortly." }, { status: 502 });
     const answer = extractText(payload);
     if (!answer) return NextResponse.json({ error: "The assistant could not compose the answer. Please try again." }, { status: 502 });
-    return NextResponse.json({ answer, actions: [], offers: includeOffers ? offers : [], discountPercent: DIRECT_DISCOUNT_PERCENT });
+    return NextResponse.json({ answer, actions: [], offers: includeOffers ? offers : [], language, discountPercent: DIRECT_DISCOUNT_PERCENT });
   } catch (error) {
     console.error("AI assistant route error", error);
     return NextResponse.json({ error: "Something went wrong. Please try again." }, { status: 500 });
