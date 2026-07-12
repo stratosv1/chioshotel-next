@@ -42,7 +42,12 @@ const entries = [
   ["Spiaggia di Komi Chios | Sabbia dorata e vita da spiaggia organizzata", "Spiaggia di Komi Chios | Sabbia e servizi"],
   ["Παραλία Αγία Φωτιά Χίος | Κοσμοπολίτικη οργανωμένη παραλία", "Παραλία Αγία Φωτιά Χίου | Πρόσβαση & παροχές"],
   ["Παραλία Κώμη Χίος | Ατελείωτη χρυσή άμμος & οργανωμένη ζωή", "Παραλία Κώμη Χίου | Χρυσή άμμος & παροχές"],
-  ["Παραλία Λιθί Χίος | Αμμώδης οικογενειακή παραλία & ψαροταβέρνες", "Παραλία Λιθί Χίου | Οικογενειακή παραλία"]
+  ["Παραλία Λιθί Χίος | Αμμώδης οικογενειακή παραλία & ψαροταβέρνες", "Παραλία Λιθί Χίου | Οικογενειακή παραλία"],
+  ["Mesta Chios | Medieval Fortress Village in the Mastichochoria", "Mesta Chios | Medieval Mastic Village"],
+  ["Chios Byzantine Museum | Byzantine Art, Icons & Island Culture", "Chios Byzantine Museum | Art & Icons"],
+  ["Lithi Strand Chios | Familienfreundlicher Sandstrand & frischer Fisch", "Lithi Strand Chios | Sandstrand & Fisch"],
+  ["Playa de Komi Chios | Arena dorada y vida de playa organizada", "Playa de Komi Chios | Arena y servicios"],
+  ["Spiaggia Agia Fotia Chios | Spiaggia organizzata e cosmopolita", "Spiaggia Agia Fotia | Servizi e accesso"]
 ];
 
 const missingLines = entries
