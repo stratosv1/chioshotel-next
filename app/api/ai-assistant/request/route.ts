@@ -4,6 +4,8 @@ import { neon } from "@neondatabase/serverless";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+const RECEPTION_EMAIL = "chioshotel@gmail.com";
+
 type ConversationMessage = { role?: string; content?: string };
 type RequestBody = {
   name?: string;
@@ -176,9 +178,9 @@ export async function POST(request: NextRequest) {
     const requestId = String((inserted as any[])?.[0]?.id || "");
     let emailSent = false;
     const resendKey = process.env.RESEND_API_KEY;
-    const receptionEmail = process.env.RECEPTION_EMAIL;
+    const receptionEmail = process.env.RECEPTION_EMAIL || RECEPTION_EMAIL;
 
-    if (resendKey && receptionEmail) {
+    if (resendKey) {
       const emailResponse = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {
@@ -188,32 +190,48 @@ export async function POST(request: NextRequest) {
         body: JSON.stringify({
           from: process.env.RECEPTION_FROM_EMAIL || "Voulamandis House <bookings@chioshotel.gr>",
           to: [receptionEmail],
-          subject: `Νέο AI αίτημα #${requestId}: ${roomName} (${checkin}–${checkout})`,
+          subject: `Νέο αίτημα από Guest Assistant #${requestId} — ${roomName}`,
           text: [
-            "ΣΥΝΟΨΗ ΣΥΖΗΤΗΣΗΣ",
-            conversationSummary,
+            "ΝΕΟ ΑΙΤΗΜΑ ΑΠΟ ΤΟ GUEST ASSISTANT",
+            "",
+            `Αριθμός αιτήματος: #${requestId}`,
             "",
             "ΣΤΟΙΧΕΙΑ ΠΕΛΑΤΗ",
             `Όνομα: ${name}`,
-            `Επικοινωνία: ${contact}`,
+            `Τηλέφωνο ή email: ${contact}`,
+            message ? `Μήνυμα πελάτη: ${message}` : "Μήνυμα πελάτη: —",
+            "",
+            "ΣΤΟΙΧΕΙΑ ΔΙΑΜΟΝΗΣ",
             `Δωμάτιο: ${roomName}`,
+            `Room ID / Unit ID: ${roomId || "—"} / ${unitId || "—"}`,
             `Άφιξη: ${checkin}`,
             `Αναχώρηση: ${checkout}`,
             `Επισκέπτες: ${guests}`,
             `Αρχική τιμή: €${originalTotal.toFixed(2)}`,
             `Τιμή απευθείας κράτησης: €${directTotal.toFixed(2)}`,
-            message ? `Μήνυμα πελάτη: ${message}` : "",
+            "Δεν περιλαμβάνονται: φόρος ανθεκτικότητας 2 € ανά διανυκτέρευση και προαιρετικό πρωινό 12 € ανά άτομο ανά ημέρα.",
+            "",
+            "ΣΥΝΟΨΗ ΣΥΖΗΤΗΣΗΣ",
+            conversationSummary,
             conversationTranscript ? "\nΠΛΗΡΗΣ ΣΥΖΗΤΗΣΗ\n" + conversationTranscript : "",
+            "",
+            "ΕΝΕΡΓΕΙΑ RECEPTION",
+            `Επικοινωνήστε με τον πελάτη στο: ${contact}`,
           ].filter(Boolean).join("\n"),
         }),
         cache: "no-store",
       });
       emailSent = emailResponse.ok;
-      if (!emailResponse.ok) console.error("Reception email failed", emailResponse.status);
+      if (!emailResponse.ok) {
+        const errorText = await emailResponse.text().catch(() => "");
+        console.error("Reception email failed", emailResponse.status, errorText.slice(0, 500));
+      }
+    } else {
+      console.error("Reception email not sent: RESEND_API_KEY is missing");
     }
 
     return NextResponse.json(
-      { ok: true, requestId, emailSent, summarySaved: true },
+      { ok: true, requestId, emailSent, summarySaved: true, receptionEmail },
       { headers: { "Cache-Control": "no-store" } },
     );
   } catch (error) {
