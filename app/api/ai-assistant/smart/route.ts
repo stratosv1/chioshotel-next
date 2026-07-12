@@ -3,7 +3,7 @@ import { interpretAssistantMessage } from "@/lib/ai-assistant/intent";
 import { searchSalesKnowledge, type KnowledgeKind } from "@/lib/ai-assistant/knowledge";
 import { searchExtraKnowledge } from "@/lib/ai-assistant/knowledge-extra";
 import { recommendRooms } from "@/lib/ai-assistant/room-catalog";
-import type { AssistantAction, AssistantLanguage, ConversationContext } from "@/lib/ai-assistant/types";
+import type { AssistantAction, AssistantCommand, AssistantLanguage, ConversationContext } from "@/lib/ai-assistant/types";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -15,6 +15,66 @@ type RoomCard = ReturnType<typeof recommendRooms>[number];
 
 function getLatestUserMessage(messages: ChatMessage[]) {
   return [...messages].reverse().find((message) => message.role === "user")?.content.trim() || "";
+}
+
+function normalize(value: string) {
+  return value.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, " ").trim();
+}
+
+function shortDateToIso(message: string) {
+  const match = message.trim().match(/^(\d{1,2})\s*[\/.\-]\s*(\d{1,2})(?:\s*[\/.\-]\s*(\d{2}|\d{4}))?$/);
+  if (!match) return undefined;
+  const day = Number(match[1]);
+  const month = Number(match[2]);
+  if (day < 1 || day > 31 || month < 1 || month > 12) return undefined;
+
+  const now = new Date();
+  let year = match[3] ? Number(match[3]) : now.getUTCFullYear();
+  if (year < 100) year += 2000;
+  let candidate = new Date(Date.UTC(year, month - 1, day, 12));
+  if (candidate.getUTCDate() !== day || candidate.getUTCMonth() !== month - 1) return undefined;
+
+  const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 12));
+  if (!match[3] && candidate < today) candidate = new Date(Date.UTC(year + 1, month - 1, day, 12));
+  return candidate.toISOString().slice(0, 10);
+}
+
+function forcedDateContinuation(input: {
+  latest: string;
+  messages: ChatMessage[];
+  search: SearchState;
+  language: AssistantLanguage;
+  selectedRoom?: number;
+}): AssistantCommand | undefined {
+  const date = shortDateToIso(input.latest);
+  if (!date) return undefined;
+
+  const assistantContext = input.messages
+    .filter((message) => message.role === "assistant")
+    .slice(-4)
+    .map((message) => normalize(message.content))
+    .join(" ");
+  const allContext = input.messages.slice(-8).map((message) => normalize(message.content)).join(" ");
+
+  const askedArrival = /arrival|check.?in|arrivee|ankunft|arrivo|llegada|varis|αφιξ|ημερομηνια.*αφιξ/.test(assistantContext);
+  const askedDeparture = /departure|check.?out|depart|abreise|partenza|salida|ayrilis|αναχωρ/.test(assistantContext);
+  const isAvailabilityFlow = /availability|διαθεσιμ|verfugbar|disponibil|musait|price|rate|τιμ|preis|prix|prezzo|precio|fiyat/.test(allContext);
+
+  if (!askedArrival && !askedDeparture && !isAvailabilityFlow && !input.search.checkin) return undefined;
+
+  const action: AssistantAction = {
+    type: "search_availability",
+    checkin: askedDeparture || input.search.checkin ? input.search.checkin : date,
+    checkout: askedDeparture || input.search.checkin ? date : input.search.checkout,
+    guests: input.search.guests,
+  };
+
+  return {
+    language: input.language,
+    replyMode: "execute",
+    selectedRoom: input.selectedRoom,
+    actions: [action],
+  };
 }
 
 function actionKinds(action: AssistantAction): KnowledgeKind[] | undefined {
@@ -38,6 +98,19 @@ function actionKinds(action: AssistantAction): KnowledgeKind[] | undefined {
   }
 }
 
+function clarification(language: AssistantLanguage, missing: "checkin" | "checkout" | "guests") {
+  const copy: Record<AssistantLanguage, Record<typeof missing, string>> = {
+    el: { checkin: "Ποια ημερομηνία σκέφτεστε για άφιξη;", checkout: "Ωραία. Ποια ημερομηνία θέλετε για αναχώρηση;", guests: "Για πόσα άτομα να ελέγξω τη διαθεσιμότητα;" },
+    en: { checkin: "What date are you considering for arrival?", checkout: "Great. What date would you like to check out?", guests: "How many guests should I check availability for?" },
+    fr: { checkin: "Quelle date envisagez-vous pour l’arrivée ?", checkout: "Très bien. Quelle date souhaitez-vous pour le départ ?", guests: "Pour combien de personnes dois-je vérifier la disponibilité ?" },
+    de: { checkin: "Welches Anreisedatum wünschen Sie?", checkout: "Gut. Welches Abreisedatum wünschen Sie?", guests: "Für wie viele Gäste soll ich die Verfügbarkeit prüfen?" },
+    it: { checkin: "Quale data state considerando per l’arrivo?", checkout: "Perfetto. Quale data desiderate per la partenza?", guests: "Per quante persone devo controllare la disponibilità?" },
+    es: { checkin: "¿Qué fecha está considerando para la llegada?", checkout: "Perfecto. ¿Qué fecha desea para la salida?", guests: "¿Para cuántas personas compruebo la disponibilidad?" },
+    tr: { checkin: "Giriş için hangi tarihi düşünüyorsunuz?", checkout: "Tamam. Çıkış tarihi ne olsun?", guests: "Kaç kişi için müsaitlik kontrolü yapayım?" },
+  };
+  return copy[language][missing];
+}
+
 function localizedFallback(language: AssistantLanguage, hasResults: boolean, roomCards: number) {
   if (roomCards) {
     if (language === "el") return `Βρήκα ${roomCards} κατάλληλες επιλογές. Πατήστε σε κάθε κάρτα για φωτογραφίες και παροχές. Για πραγματική τιμή και διαθεσιμότητα χρειάζομαι ημερομηνίες και αριθμό ατόμων.`;
@@ -53,7 +126,7 @@ function localizedFallback(language: AssistantLanguage, hasResults: boolean, roo
     if (language === "fr") return "J’ai trouvé des informations pertinentes dans le contenu officiel de Voulamandis House :";
     if (language === "de") return "Ich habe passende Informationen aus den offiziellen Inhalten von Voulamandis House gefunden:";
     if (language === "it") return "Ho trovato informazioni pertinenti nei contenuti ufficiali di Voulamandis House:";
-    if (language === "es") return "He encontrado información relevante en el contenido oficial de Voulamandis House:";
+    if (language === "es") return "He encontrado información relevante en el contenido ufficiale di Voulamandis House:";
     if (language === "tr") return "Voulamandis House’un resmi içeriğinde ilgili bilgiler buldum:";
     return "I found relevant information from the official Voulamandis House content:";
   }
@@ -66,15 +139,10 @@ function deterministicAnswer(input: { language: AssistantLanguage; results: Know
   return body ? `${intro}\n${body}` : intro;
 }
 
-async function composeAvailabilityAnswer(input: {
-  language: AssistantLanguage;
-  message: string;
-  legacyPayload: any;
-}) {
+async function composeAvailabilityAnswer(input: { language: AssistantLanguage; message: string; legacyPayload: any }) {
   const fallback = typeof input.legacyPayload?.answer === "string" ? input.legacyPayload.answer : "";
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey || !fallback) return fallback;
-
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 12000);
   try {
@@ -105,15 +173,9 @@ async function composeAvailabilityAnswer(input: {
   }
 }
 
-async function composeGroundedAnswer(input: {
-  language: AssistantLanguage;
-  message: string;
-  results: KnowledgeResult[];
-  roomCards: RoomCard[];
-}) {
+async function composeGroundedAnswer(input: { language: AssistantLanguage; message: string; results: KnowledgeResult[]; roomCards: RoomCard[] }) {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey || (!input.results.length && !input.roomCards.length)) return deterministicAnswer(input);
-
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 12000);
   try {
@@ -154,24 +216,34 @@ export async function POST(request: NextRequest) {
     if (!latest) return NextResponse.json({ error: "Please enter a message." }, { status: 400 });
 
     const search: SearchState = body?.search && typeof body.search === "object" ? body.search : {};
-    const context: ConversationContext = {
-      checkin: search.checkin,
-      checkout: search.checkout,
-      guests: search.guests,
-      language: body?.language,
-      selectedRoom: typeof body?.selectedRoom === "number" ? body.selectedRoom : undefined,
-      recentMessages: messages.slice(-10),
-    };
+    const language: AssistantLanguage = ["el", "en", "fr", "de", "it", "es", "tr"].includes(body?.language) ? body.language : "en";
+    const selectedRoom = typeof body?.selectedRoom === "number" ? body.selectedRoom : undefined;
+    const context: ConversationContext = { ...search, language, selectedRoom, recentMessages: messages.slice(-10) };
 
-    const command = await interpretAssistantMessage(latest, context);
+    const forcedCommand = forcedDateContinuation({ latest, messages, search, language, selectedRoom });
+    const command = forcedCommand || await interpretAssistantMessage(latest, context);
     const availabilityAction = command.actions.find((action) => action.type === "search_availability");
 
     if (availabilityAction) {
-      const mergedSearch = {
+      const mergedSearch: SearchState = {
         checkin: availabilityAction.checkin || search.checkin,
         checkout: availabilityAction.checkout || search.checkout,
         guests: availabilityAction.guests || search.guests,
       };
+
+      const missing = !mergedSearch.checkin ? "checkin" : !mergedSearch.checkout ? "checkout" : !mergedSearch.guests ? "guests" : null;
+      if (missing) {
+        return NextResponse.json({
+          answer: clarification(command.language, missing),
+          search: mergedSearch,
+          offers: [],
+          knowledge: [],
+          language: command.language,
+          selectedRoom: command.selectedRoom,
+          command,
+        });
+      }
+
       const legacyResponse = await fetch(new URL("/api/ai-assistant", request.nextUrl.origin), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -185,6 +257,7 @@ export async function POST(request: NextRequest) {
       const answer = await composeAvailabilityAnswer({ language: command.language, message: latest, legacyPayload });
       return NextResponse.json({
         ...legacyPayload,
+        search: mergedSearch,
         answer: answer || legacyPayload.answer,
         command,
         selectedRoom: command.selectedRoom,
@@ -200,9 +273,10 @@ export async function POST(request: NextRequest) {
     const roomCards = [...roomMap.values()].slice(0, 6);
 
     const resultMap = new Map<string, KnowledgeResult>();
-    for (const action of command.actions) {
+    for (const action of command.actions.filter((item) => item.type !== "ask_clarification")) {
       const query = [latest, action.query, action.roomNumber ? `room ${action.roomNumber}` : "", action.roomNumbers?.map((room) => `room ${room}`).join(" ")].filter(Boolean).join(" ");
       const kinds = actionKinds(action);
+      if (action.type === "search_content" && (!action.topic || action.topic === "general") && /^\d{1,2}\s*[\/.\-]\s*\d{1,2}/.test(latest)) continue;
       const limit = action.type === "build_itinerary" ? 8 : 5;
       const baseResults = searchSalesKnowledge({ query, language: command.language, kinds, preferences: action.preferences, limit });
       const extraResults = searchExtraKnowledge({ query, language: command.language, kinds, preferences: action.preferences, limit });
@@ -215,15 +289,7 @@ export async function POST(request: NextRequest) {
     const results = [...resultMap.values()].sort((a, b) => b.score - a.score).slice(0, 10);
     const answer = await composeGroundedAnswer({ language: command.language, message: latest, results, roomCards });
 
-    return NextResponse.json({
-      answer,
-      search,
-      offers: roomCards,
-      language: command.language,
-      selectedRoom: command.selectedRoom,
-      command,
-      knowledge: results,
-    });
+    return NextResponse.json({ answer, search, offers: roomCards, language: command.language, selectedRoom: command.selectedRoom, command, knowledge: results });
   } catch (error) {
     console.error("Smart AI assistant error", error);
     return NextResponse.json({ error: error instanceof Error ? error.message : "The concierge is temporarily unavailable." }, { status: 502 });
