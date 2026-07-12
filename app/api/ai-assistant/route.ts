@@ -105,10 +105,61 @@ function formatDate(value: string, language: SupportedLanguage) {
   return new Intl.DateTimeFormat(locale, { day: "2-digit", month: "2-digit", year: "numeric" }).format(new Date(`${value}T12:00:00Z`));
 }
 
+function resolveFutureDate(day: number, month: number, year?: number) {
+  const today = new Date();
+  let resolvedYear = year || today.getUTCFullYear();
+  let candidate = new Date(Date.UTC(resolvedYear, month - 1, day, 12));
+  const todayStart = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate(), 0));
+
+  if (!year && candidate < todayStart) {
+    resolvedYear += 1;
+    candidate = new Date(Date.UTC(resolvedYear, month - 1, day, 12));
+  }
+
+  if (candidate.getUTCDate() !== day || candidate.getUTCMonth() !== month - 1) return undefined;
+  return candidate.toISOString().slice(0, 10);
+}
+
+function parseDeterministicState(messages: ChatMessage[], current: SearchState) {
+  const latest = [...messages].reverse().find((message) => message.role === "user")?.content || "";
+  const next: SearchState = { ...current };
+
+  const dateMatches = [...latest.matchAll(/\b(\d{1,2})[\/-](\d{1,2})(?:[\/-](\d{2,4}))?\b/g)];
+  const parsedDates = dateMatches
+    .map((match) => {
+      const yearRaw = match[3] ? Number(match[3]) : undefined;
+      const year = yearRaw && yearRaw < 100 ? 2000 + yearRaw : yearRaw;
+      return resolveFutureDate(Number(match[1]), Number(match[2]), year);
+    })
+    .filter((value): value is string => Boolean(value));
+
+  if (parsedDates.length >= 2) {
+    next.checkin = parsedDates[0];
+    next.checkout = parsedDates[1];
+  } else if (parsedDates.length === 1) {
+    if (!next.checkin || /\b(άφιξη|αφιξη|έρθω|ερθω|come|arrive|anreise|arrivo|llegada|geliş)\b/i.test(latest)) {
+      next.checkin = parsedDates[0];
+      if (next.checkout && next.checkout <= next.checkin) next.checkout = undefined;
+    } else if (/\b(αναχώρηση|αναχωρηση|checkout|departure|abreise|partenza|salida|çıkış)\b/i.test(latest)) {
+      next.checkout = parsedDates[0];
+    }
+  }
+
+  const guestsMatch = latest.match(/\b(\d{1,2})\s*(?:άτομα|ατομα|επισκέπτες|επισκεπτες|guests?|persons?|people|personen|ospiti|personas|kişi)\b/i);
+  if (guestsMatch) next.guests = Math.max(1, Math.min(Number(guestsMatch[1]), 10));
+
+  const nightsMatch = latest.match(/\b(\d{1,2})\s*(?:νύχτες|νυχτες|βράδια|βραδια|nights?|nächte|nuits|notti|noches|gece)\b/i);
+  if (nightsMatch && next.checkin) {
+    next.checkout = addDays(next.checkin, Number(nightsMatch[1]));
+  }
+
+  return next;
+}
+
 function questionForMissing(state: SearchState, language: SupportedLanguage) {
   const copy = {
     el: {
-      checkin: "Πότε θέλετε να έρθετε; Μπορείτε να γράψετε π.χ. «22 Αυγούστου».",
+      checkin: "Πότε θέλετε να έρθετε; Μπορείτε να γράψετε π.χ. «22 Αυγούστου» ή «22/08».",
       checkout: "Για πόσες νύχτες θέλετε να μείνετε ή ποια θα είναι η αναχώρηση;",
       guests: "Για πόσα άτομα είναι η διαμονή;",
     },
@@ -127,6 +178,7 @@ function questionForMissing(state: SearchState, language: SupportedLanguage) {
 }
 
 async function extractSearchState(apiKey: string, messages: ChatMessage[], current: SearchState) {
+  const deterministic = parseDeterministicState(messages, current);
   const today = new Date().toISOString().slice(0, 10);
   const response = await fetch("https://api.openai.com/v1/responses", {
     method: "POST",
@@ -135,7 +187,7 @@ async function extractSearchState(apiKey: string, messages: ChatMessage[], curre
       model: process.env.OPENAI_MODEL || "gpt-5-mini",
       instructions: `Extract booking search details from the conversation. Today is ${today}. Preserve existing values unless the guest clearly changes them. Resolve dates to YYYY-MM-DD. If the guest gives nights and a check-in date, calculate checkout. Do not guess missing information.`,
       input: [
-        { role: "user", content: `Existing state: ${JSON.stringify(current)}\nConversation: ${JSON.stringify(messages.slice(-8))}` },
+        { role: "user", content: `Existing state: ${JSON.stringify(deterministic)}\nConversation: ${JSON.stringify(messages.slice(-8))}` },
       ],
       reasoning: { effort: "minimal" },
       text: {
@@ -161,24 +213,24 @@ async function extractSearchState(apiKey: string, messages: ChatMessage[], curre
     cache: "no-store",
   });
 
-  if (!response.ok) return current;
+  if (!response.ok) return deterministic;
   const payload = await response.json();
   const raw = payload?.output_text || payload?.output?.[0]?.content?.[0]?.text;
-  if (!raw) return current;
+  if (!raw) return deterministic;
 
   try {
     const parsed = JSON.parse(raw);
     const next: SearchState = {
-      checkin: validDate(parsed.checkin) ? parsed.checkin : current.checkin,
-      checkout: validDate(parsed.checkout) ? parsed.checkout : current.checkout,
-      guests: Number.isInteger(parsed.guests) && parsed.guests > 0 ? Math.min(parsed.guests, 10) : current.guests,
+      checkin: validDate(parsed.checkin) ? parsed.checkin : deterministic.checkin,
+      checkout: validDate(parsed.checkout) ? parsed.checkout : deterministic.checkout,
+      guests: Number.isInteger(parsed.guests) && parsed.guests > 0 ? Math.min(parsed.guests, 10) : deterministic.guests,
     };
     if (!next.checkout && next.checkin && Number.isInteger(parsed.nights) && parsed.nights > 0) {
       next.checkout = addDays(next.checkin, parsed.nights);
     }
     return next;
   } catch {
-    return current;
+    return deterministic;
   }
 }
 
@@ -194,7 +246,7 @@ async function getOffers(search: SearchState, language: SupportedLanguage): Prom
   url.searchParams.set("guests", String(search.guests));
 
   const response = await fetch(url.toString(), {
-    headers: { Accept: "application/json", "User-Agent": "VoulamandisHouseAI/2.0" },
+    headers: { Accept: "application/json", "User-Agent": "VoulamandisHouseAI/2.1" },
     cache: "no-store",
   });
   const data = await response.json().catch(() => null);
