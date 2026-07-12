@@ -63,6 +63,18 @@ const preferredMetadataTitles = new Map<string, string>([
   ["Komi Plajı Sakız Adası", "Komi Plajı, Sakız Adası | Ulaşım ve olanaklar"],
 ]);
 
+const manualLocalizedPathGroups: ReadonlyArray<Partial<Record<LanguageCode, string>>> = [
+  {
+    en: "/chios/kampos-chios/",
+    el: "/el/chios/kampos-chios/",
+    fr: "/fr/chios/kampos-chios/",
+    de: "/de/chios/kampos-chios/",
+    it: "/it/chios/kampos-chios/",
+    es: "/es/chios/kampos-chios/",
+    tr: "/tr/chios/kampos-chios/",
+  },
+];
+
 function splitPath(path: string) {
   const hashIndex = path.indexOf("#");
   const queryIndex = path.indexOf("?");
@@ -140,17 +152,45 @@ function isIndexableRoute(route: ReturnType<typeof getLocalizedRoutes>[number]) 
   return route.action === "KEEP";
 }
 
+function getManualAlternates(path: string): Record<string, string> {
+  const normalizedPath = normalizePath(path);
+  const group = manualLocalizedPathGroups.find((candidate) =>
+    Object.values(candidate).some((candidatePath) =>
+      candidatePath ? normalizePath(candidatePath) === normalizedPath : false,
+    ),
+  );
+
+  if (!group) {
+    return {};
+  }
+
+  const alternates: Record<string, string> = {};
+
+  for (const language of languages) {
+    const localizedPath = group[language.code];
+    if (localizedPath) {
+      alternates[language.hreflang] = absoluteUrl(localizedPath);
+    }
+  }
+
+  if (group.en) {
+    alternates["x-default"] = absoluteUrl(group.en);
+  }
+
+  return alternates;
+}
+
 export function getAlternates(path: string): Record<string, string> {
   const localizedRoutes = getLocalizedRoutes(path);
 
   if (!localizedRoutes.length) {
-    return {};
+    return getManualAlternates(path);
   }
 
   const publishedRoutes = localizedRoutes.filter(isIndexableRoute);
 
   if (!publishedRoutes.length) {
-    return {};
+    return getManualAlternates(path);
   }
 
   const alternates: Record<string, string> = {};
