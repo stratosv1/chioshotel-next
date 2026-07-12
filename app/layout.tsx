@@ -51,7 +51,8 @@ function isGuidePath(pathname: string): boolean {
     normalizedPathname === "/pre-arrival/" ||
     normalizedPathname.endsWith("/pre-arrival/") ||
     normalizedPathname === "/welcome/" ||
-    normalizedPathname.endsWith("/welcome/")
+    normalizedPathname.endsWith("/welcome/") ||
+    normalizedPathname === "/ai-assistant/"
   );
 }
 
