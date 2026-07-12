@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { FormEvent, useMemo, useRef, useState } from "react";
 
 type Offer = {
@@ -12,16 +13,27 @@ type Offer = {
   maxGuests: number;
   features: string[];
   image: string;
+  detailsUrl: string;
+  bookingUrl: string;
   nights: number;
   originalTotal: number;
   directTotal: number;
   saving: number;
 };
 
+type Action = {
+  label: string;
+  href?: string;
+  action?: "open_request";
+  roomId?: string;
+  unitId?: string;
+};
+
 type Message = {
   role: "user" | "assistant";
   content: string;
   offers?: Offer[];
+  actions?: Action[];
 };
 
 const starterQuestions = [
@@ -56,6 +68,7 @@ export function GuestAssistant() {
         "Γεια σας! Επιλέξτε ημερομηνίες και επισκέπτες για να δω διαθέσιμα δωμάτια, φωτογραφίες και τιμές απευθείας κράτησης.",
     },
   ]);
+  const [activeOffers, setActiveOffers] = useState<Offer[]>([]);
   const [input, setInput] = useState("");
   const [checkin, setCheckin] = useState("");
   const [checkout, setCheckout] = useState("");
@@ -69,6 +82,20 @@ export function GuestAssistant() {
   const [requestSending, setRequestSending] = useState(false);
   const [requestSuccess, setRequestSuccess] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+
+  function findOffer(roomId?: string, unitId?: string) {
+    return activeOffers.find(
+      (offer) => offer.roomId === roomId && offer.unitId === unitId,
+    );
+  }
+
+  function openRequest(offer: Offer) {
+    setSelectedOffer(offer);
+    setRequestSuccess("");
+    setRequestName("");
+    setRequestContact("");
+    setRequestMessage("");
+  }
 
   async function sendMessage(text: string, includeOffers = false) {
     const trimmed = text.trim();
@@ -88,6 +115,7 @@ export function GuestAssistant() {
           messages: nextMessages.map(({ role, content }) => ({ role, content })),
           search: { checkin, checkout, guests },
           includeOffers,
+          activeOffers,
         }),
       });
       const data = await response.json();
@@ -96,12 +124,16 @@ export function GuestAssistant() {
         throw new Error(data?.error || "The assistant is unavailable.");
       }
 
+      const returnedOffers = includeOffers && Array.isArray(data.offers) ? data.offers : [];
+      if (includeOffers) setActiveOffers(returnedOffers);
+
       setMessages((current) => [
         ...current,
         {
           role: "assistant",
           content: data.answer,
-          offers: includeOffers && Array.isArray(data.offers) ? data.offers : [],
+          offers: returnedOffers,
+          actions: Array.isArray(data.actions) ? data.actions : [],
         },
       ]);
     } catch (requestError) {
@@ -130,18 +162,11 @@ export function GuestAssistant() {
       setError("Η αναχώρηση πρέπει να είναι μετά την άφιξη.");
       return;
     }
+    setActiveOffers([]);
     void sendMessage(
       `Έλεγξε διαθεσιμότητα για ${guests} επισκέπτες από ${checkin} έως ${checkout}.`,
       true,
     );
-  }
-
-  function openRequest(offer: Offer) {
-    setSelectedOffer(offer);
-    setRequestSuccess("");
-    setRequestName("");
-    setRequestContact("");
-    setRequestMessage("");
   }
 
   async function submitBookingRequest(event: FormEvent<HTMLFormElement>) {
@@ -255,6 +280,37 @@ export function GuestAssistant() {
                       </div>
                     </div>
 
+                    {message.role === "assistant" && message.actions?.length ? (
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {message.actions.map((action, actionIndex) => {
+                          if (action.action === "open_request") {
+                            const offer = findOffer(action.roomId, action.unitId);
+                            return (
+                              <button
+                                key={`${action.label}-${actionIndex}`}
+                                type="button"
+                                disabled={!offer}
+                                onClick={() => offer && openRequest(offer)}
+                                className="rounded-2xl bg-stone-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-stone-800 disabled:cursor-not-allowed disabled:opacity-40"
+                              >
+                                {action.label}
+                              </button>
+                            );
+                          }
+
+                          return action.href ? (
+                            <Link
+                              key={`${action.label}-${actionIndex}`}
+                              href={action.href}
+                              className="rounded-2xl border border-emerald-300 bg-emerald-50 px-4 py-2.5 text-sm font-semibold text-emerald-900 hover:bg-emerald-100"
+                            >
+                              {action.label}
+                            </Link>
+                          ) : null;
+                        })}
+                      </div>
+                    ) : null}
+
                     {message.role === "assistant" && message.offers?.length ? (
                       <div className="mt-5 grid gap-5 xl:grid-cols-2">
                         {message.offers.map((offer) => (
@@ -282,7 +338,7 @@ export function GuestAssistant() {
                                 </div>
                               </div>
                               <div className="mt-4 grid grid-cols-2 gap-2">
-                                <button type="button" onClick={() => void sendMessage(`Θέλω περισσότερες πληροφορίες για το ${offer.name}.`, false)} className="rounded-2xl border border-stone-300 px-4 py-3 text-sm font-semibold text-stone-800 hover:bg-stone-50">Λεπτομέρειες</button>
+                                <Link href={offer.detailsUrl} className="rounded-2xl border border-stone-300 px-4 py-3 text-center text-sm font-semibold text-stone-800 hover:bg-stone-50">Φωτογραφίες & λεπτομέρειες</Link>
                                 <button type="button" onClick={() => openRequest(offer)} className="rounded-2xl bg-stone-900 px-4 py-3 text-sm font-semibold text-white hover:bg-stone-800">Αίτημα κράτησης</button>
                               </div>
                             </div>
