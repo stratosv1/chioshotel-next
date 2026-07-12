@@ -7,17 +7,47 @@ const DIRECT_DISCOUNT_PERCENT = 10;
 const DEFAULT_BOOKING_WEBAPP_URL =
   "https://script.google.com/macros/s/AKfycbwZ8qG1eE1YXr-Ag2LXNHrgFIkf7kCvDiTMF38NfPNC9ZGAquGMIXvn3QWPfpiKpTaa/exec";
 
-const ROOM_FEATURES: Record<string, string[]> = {
-  "267788:1": ["First floor", "Wi-Fi", "coffee and tea kettle", "private balcony", "upper-floor view", "stairs", "1 double bed", "2 single beds", "two spaces without connecting door"],
-  "268803:1": ["First floor", "Wi-Fi", "coffee and tea kettle", "stairs", "1 double bed", "open-plan space"],
-  "267788:2": ["First floor", "Wi-Fi", "coffee and tea kettle", "private balcony", "upper-floor view", "kitchenette", "stairs", "1 double bed", "1 single bed", "two spaces without connecting door"],
-  "267788:3": ["First floor", "Wi-Fi", "coffee and tea kettle", "private balcony", "upper-floor view", "kitchenette", "stairs", "1 double bed", "1 sofa bed", "open-plan space"],
-  "626129:1": ["Ground floor", "Wi-Fi", "coffee and tea kettle", "garden view", "no stairs", "1 double bed", "1 single bed", "open-plan space"],
-  "268803:2": ["Ground floor", "Wi-Fi", "coffee and tea kettle", "garden view", "no stairs", "1 double bed", "open-plan space"],
-  "626129:2": ["Ground floor", "Wi-Fi", "coffee and tea kettle", "garden view", "no stairs", "1 double bed", "1 single bed"],
-  "265595:1": ["Independent apartment", "kitchen", "garden view", "up to 4 guests"],
-  "265595:2": ["Independent apartment", "kitchen", "garden view", "up to 4 guests"],
-  "265595:3": ["Independent apartment", "kitchen", "garden view", "up to 4 guests"],
+const ROOM_META: Record<string, { features: string[]; image: string }> = {
+  "267788:1": {
+    features: ["First floor", "Wi-Fi", "Coffee & tea kettle", "Private balcony", "Upper-floor view", "Stairs", "1 double bed", "2 single beds", "Two spaces"],
+    image: "/images/rooms/DSC07776-2-e1675109942622.webp",
+  },
+  "268803:1": {
+    features: ["First floor", "Wi-Fi", "Coffee & tea kettle", "Stairs", "1 double bed", "Open-plan space"],
+    image: "/images/rooms/DSC07803-1.webp",
+  },
+  "267788:2": {
+    features: ["First floor", "Wi-Fi", "Coffee & tea kettle", "Private balcony", "Upper-floor view", "Kitchenette", "Stairs", "1 double bed", "1 single bed", "Two spaces"],
+    image: "/images/rooms/DSC07867-1.webp",
+  },
+  "267788:3": {
+    features: ["First floor", "Wi-Fi", "Coffee & tea kettle", "Private balcony", "Upper-floor view", "Kitchenette", "Stairs", "1 double bed", "1 sofa bed", "Open-plan space"],
+    image: "/images/rooms/received_1748354861920234.webp",
+  },
+  "626129:1": {
+    features: ["Ground floor", "Wi-Fi", "Coffee & tea kettle", "Garden view", "No stairs", "1 double bed", "1 single bed", "Open-plan space"],
+    image: "/images/rooms/voulamandis-house-rooms.webp",
+  },
+  "268803:2": {
+    features: ["Ground floor", "Wi-Fi", "Coffee & tea kettle", "Garden view", "No stairs", "1 double bed", "Open-plan space"],
+    image: "/images/rooms/received_1753964631359257.webp",
+  },
+  "626129:2": {
+    features: ["Ground floor", "Wi-Fi", "Coffee & tea kettle", "Garden view", "No stairs", "1 double bed", "1 single bed"],
+    image: "/images/rooms/double-triple-room.jpg",
+  },
+  "265595:1": {
+    features: ["Independent apartment", "Kitchen", "Garden view", "Up to 4 guests"],
+    image: "/images/rooms/chios-apartments-voulamandis.webp",
+  },
+  "265595:2": {
+    features: ["Independent apartment", "Kitchen", "Garden view", "Up to 4 guests"],
+    image: "/images/rooms/chios-apartments-voulamandis.webp",
+  },
+  "265595:3": {
+    features: ["Independent apartment", "Kitchen", "Garden view", "Up to 4 guests"],
+    image: "/images/rooms/DSC07899.webp",
+  },
 };
 
 const SYSTEM_PROMPT = `You are the digital guest assistant for Voulamandis House, rooms and apartments in Kampos, Chios, Greece.
@@ -49,6 +79,7 @@ type Offer = {
   floor: string;
   maxGuests: number;
   features: string[];
+  image: string;
   nights: number;
   originalTotal: number;
   directTotal: number;
@@ -108,6 +139,7 @@ async function getOffers(search: SearchRequest): Promise<Offer[]> {
       const originalTotal = Number(item?.totalPrice || 0);
       const directTotal = Math.round(originalTotal * 0.9 * 100) / 100;
       const key = `${item.roomId}:${item.unitId}`;
+      const roomMeta = ROOM_META[key] || { features: [], image: "/images/rooms/voulamandis-house-rooms.webp" };
       return {
         roomId: String(item.roomId),
         unitId: String(item.unitId),
@@ -115,7 +147,8 @@ async function getOffers(search: SearchRequest): Promise<Offer[]> {
         category: String(item.category || item.roomName || "Room"),
         floor: String(item.location || ""),
         maxGuests: Number(item.maxGuests || 0),
-        features: ROOM_FEATURES[key] || [],
+        features: roomMeta.features,
+        image: roomMeta.image,
         nights,
         originalTotal: Math.round(originalTotal * 100) / 100,
         directTotal,
@@ -150,7 +183,7 @@ export async function POST(request: NextRequest) {
     const offers = includeOffers ? await getOffers(search) : [];
 
     const availabilityContext = includeOffers && validDate(search.checkin) && validDate(search.checkout)
-      ? `\n\nLIVE SEARCH USED FOR THIS TURN ONLY:\nCheck-in: ${search.checkin}\nCheck-out: ${search.checkout}\nGuests: ${search.guests || 2}\nResults: ${JSON.stringify(offers)}\nSummarize the best options briefly. The UI will display detailed room cards, so do not duplicate every amenity and every price in the text. If results are empty, say the live service did not return a complete priced option.`
+      ? `\n\nLIVE SEARCH USED FOR THIS TURN ONLY:\nCheck-in: ${search.checkin}\nCheck-out: ${search.checkout}\nGuests: ${search.guests || 2}\nResults: ${JSON.stringify(offers)}\nSummarize the best options in no more than 3 short sentences. The UI displays detailed cards with photos, amenities and prices, so do not duplicate all details. If results are empty, say the live service did not return a complete priced option.`
       : `\n\nFOLLOW-UP TURN: Do not repeat the previous room list or prices unless the user explicitly asks for them. Use the conversation history to answer the specific follow-up question.`;
 
     const openAIResponse = await fetch("https://api.openai.com/v1/responses", {
@@ -161,7 +194,7 @@ export async function POST(request: NextRequest) {
         instructions: SYSTEM_PROMPT + availabilityContext,
         input: messages,
         reasoning: { effort: "minimal" },
-        max_output_tokens: 700,
+        max_output_tokens: 600,
       }),
       cache: "no-store",
     });
