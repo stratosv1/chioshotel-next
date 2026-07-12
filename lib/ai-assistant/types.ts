@@ -55,10 +55,16 @@ export type AssistantCommand = {
   actions: AssistantAction[];
 };
 
+export type ConversationMessage = {
+  role: "user" | "assistant";
+  content: string;
+};
+
 export type ConversationContext = {
   selectedRoom?: number;
   checkin?: string;
   checkout?: string;
   guests?: number;
   language?: AssistantLanguage;
+  recentMessages?: ConversationMessage[];
 };
