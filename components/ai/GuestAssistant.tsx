@@ -42,7 +42,7 @@ export function GuestAssistant() {
     {
       role: "assistant",
       content:
-        "Γεια σας! Επιλέξτε ημερομηνίες και επισκέπτες για να ελέγξω ζωντανά διαθεσιμότητα και τιμές από τη βάση μας. Η τιμή απευθείας κράτησης περιλαμβάνει μία έκπτωση 10% και δεν συνδυάζεται με άλλη προσφορά.",
+        "Γεια σας! Επιλέξτε ημερομηνίες και επισκέπτες για ζωντανό έλεγχο διαθεσιμότητας και τιμών. Μπορείτε επίσης να με ρωτήσετε για τα χαρακτηριστικά ενός συγκεκριμένου δωματίου.",
     },
   ]);
   const [input, setInput] = useState("");
@@ -53,7 +53,7 @@ export function GuestAssistant() {
   const [error, setError] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
-  async function sendMessage(text: string) {
+  async function sendMessage(text: string, includeOffers = false) {
     const trimmed = text.trim();
     if (!trimmed || loading) return;
 
@@ -70,6 +70,7 @@ export function GuestAssistant() {
         body: JSON.stringify({
           messages: nextMessages.map(({ role, content }) => ({ role, content })),
           search: { checkin, checkout, guests },
+          includeOffers,
         }),
       });
       const data = await response.json();
@@ -83,7 +84,7 @@ export function GuestAssistant() {
         {
           role: "assistant",
           content: data.answer,
-          offers: Array.isArray(data.offers) ? data.offers : [],
+          offers: includeOffers && Array.isArray(data.offers) ? data.offers : [],
         },
       ]);
     } catch (requestError) {
@@ -100,7 +101,7 @@ export function GuestAssistant() {
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    void sendMessage(input);
+    void sendMessage(input, false);
   }
 
   function checkAvailability() {
@@ -113,7 +114,8 @@ export function GuestAssistant() {
       return;
     }
     void sendMessage(
-      `Έλεγξε διαθεσιμότητα για ${guests} επισκέπτες από ${checkin} έως ${checkout} και δείξε αρχική τιμή, τιμή απευθείας κράτησης και χαρακτηριστικά δωματίου.`,
+      `Έλεγξε διαθεσιμότητα για ${guests} επισκέπτες από ${checkin} έως ${checkout}. Δείξε τις καλύτερες διαθέσιμες επιλογές με αρχική τιμή και τιμή απευθείας κράτησης.`,
+      true,
     );
   }
 
@@ -127,8 +129,8 @@ export function GuestAssistant() {
           Voulamandis Guest Assistant
         </h1>
         <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-stone-600 sm:text-base">
-          Ζωντανός έλεγχος διαθεσιμότητας και τιμής από τη Neon. Η έκπτωση 10%
-          εφαρμόζεται μόνο μία φορά και δεν συνδυάζεται με άλλη προσφορά.
+          Ζωντανός έλεγχος μέσω του ίδιου συστήματος με το Find Your Room. Η έκπτωση
+          απευθείας κράτησης είναι 10% και δεν συνδυάζεται με άλλη προσφορά.
         </p>
       </div>
 
@@ -217,6 +219,7 @@ export function GuestAssistant() {
                       <div className="mt-3 flex flex-wrap gap-2">
                         {[offer.floor, ...offer.features]
                           .filter(Boolean)
+                          .filter((feature, featureIndex, all) => all.indexOf(feature) === featureIndex)
                           .map((feature) => (
                             <span
                               key={feature}
@@ -238,7 +241,7 @@ export function GuestAssistant() {
                           Κερδίζετε {formatEuro(offer.saving)} για {offer.nights} νύχτες
                         </p>
                         <p className="mt-2 text-xs leading-5 text-stone-500">
-                          Η έκπτωση 10% εφαρμόζεται μία φορά και δεν συνδυάζεται με άλλη προσφορά.
+                          Η έκπτωση εφαρμόζεται μία φορά και δεν συνδυάζεται με άλλη προσφορά.
                         </p>
                       </div>
                     </article>
@@ -251,7 +254,7 @@ export function GuestAssistant() {
           {loading ? (
             <div className="flex justify-start">
               <div className="rounded-2xl bg-stone-100 px-4 py-3 text-sm text-stone-600">
-                Ελέγχω διαθεσιμότητα και τιμές…
+                Επεξεργάζομαι το αίτημά σας…
               </div>
             </div>
           ) : null}
@@ -264,7 +267,7 @@ export function GuestAssistant() {
                 <button
                   key={question}
                   type="button"
-                  onClick={() => void sendMessage(question)}
+                  onClick={() => void sendMessage(question, false)}
                   className="shrink-0 rounded-full border border-stone-300 bg-white px-3 py-2 text-xs font-medium text-stone-700 hover:bg-stone-50"
                 >
                   {question}
@@ -290,7 +293,7 @@ export function GuestAssistant() {
               onChange={(event) => setInput(event.target.value)}
               maxLength={1200}
               disabled={loading}
-              placeholder="Ρωτήστε για δωμάτια, παροχές ή τη διαμονή σας…"
+              placeholder="Ρωτήστε κάτι συγκεκριμένο για δωμάτιο, παροχή ή κράτηση…"
               autoComplete="off"
               className="min-w-0 flex-1 rounded-full border border-stone-300 bg-white px-4 py-3 text-base text-stone-900 outline-none placeholder:text-stone-400 focus:border-stone-500 focus:ring-2 focus:ring-stone-200 disabled:opacity-60"
             />
