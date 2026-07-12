@@ -1,7 +1,7 @@
 {
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/disable-last-minute-room-extras.cjs && next build",
+    "build": "node scripts/fix-image-alt-text.cjs && node scripts/disable-last-minute-room-extras.cjs && next build",
     "start": "next start"
   },
   "dependencies": {
