@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { interpretAssistantMessage } from "@/lib/ai-assistant/intent";
 import { searchSalesKnowledge, type KnowledgeKind } from "@/lib/ai-assistant/knowledge";
+import { searchExtraKnowledge } from "@/lib/ai-assistant/knowledge-extra";
 import type { AssistantAction, AssistantLanguage, ConversationContext } from "@/lib/ai-assistant/types";
 
 export const runtime = "nodejs";
@@ -8,6 +9,8 @@ export const dynamic = "force-dynamic";
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
 type SearchState = { checkin?: string; checkout?: string; guests?: number };
+
+type KnowledgeResult = ReturnType<typeof searchSalesKnowledge>[number];
 
 function getLatestUserMessage(messages: ChatMessage[]) {
   return [...messages].reverse().find((message) => message.role === "user")?.content.trim() || "";
@@ -36,21 +39,40 @@ function actionKinds(action: AssistantAction): KnowledgeKind[] | undefined {
     case "build_itinerary":
       return ["beach", "village", "museum", "activity", "family"];
     case "search_content":
-      return action.topic && action.topic !== "general" ? [action.topic === "rooms" ? "room" : action.topic === "beaches" ? "beach" : action.topic === "villages" ? "village" : action.topic === "museums" ? "museum" : action.topic === "activities" ? "activity" : action.topic === "family" ? "family" : action.topic === "property" ? "property" : action.topic === "transport" ? "transport" : "property"] : undefined;
+      if (!action.topic || action.topic === "general") return undefined;
+      return [
+        action.topic === "rooms" ? "room" :
+        action.topic === "beaches" ? "beach" :
+        action.topic === "villages" ? "village" :
+        action.topic === "museums" ? "museum" :
+        action.topic === "activities" ? "activity" :
+        action.topic === "family" ? "family" :
+        action.topic === "property" ? "property" :
+        action.topic === "transport" ? "transport" : "property",
+      ];
     default:
       return undefined;
   }
 }
 
 function localizedFallback(language: AssistantLanguage, hasResults: boolean) {
-  if (hasResults) return language === "el" ? "Βρήκα σχετικές πληροφορίες από το επίσημο περιεχόμενο του Voulamandis House:" : "I found relevant information from the official Voulamandis House content:";
-  return language === "el" ? "Δεν βρήκα αρκετή επιβεβαιωμένη πληροφορία στο περιεχόμενο του site. Μπορώ να βοηθήσω με δωμάτια, διαθεσιμότητα, τιμές και προτάσεις για τη Χίο." : "I could not find enough verified information in the site content. I can help with rooms, availability, prices and Chios recommendations.";
+  if (hasResults) {
+    if (language === "el") return "Βρήκα σχετικές πληροφορίες από το επίσημο περιεχόμενο του Voulamandis House:";
+    if (language === "fr") return "J’ai trouvé des informations pertinentes dans le contenu officiel de Voulamandis House :";
+    if (language === "de") return "Ich habe passende Informationen aus den offiziellen Inhalten von Voulamandis House gefunden:";
+    if (language === "it") return "Ho trovato informazioni pertinenti nei contenuti ufficiali di Voulamandis House:";
+    if (language === "es") return "He encontrado información relevante en el contenido oficial de Voulamandis House:";
+    if (language === "tr") return "Voulamandis House’un resmi içeriğinde ilgili bilgiler buldum:";
+    return "I found relevant information from the official Voulamandis House content:";
+  }
+  if (language === "el") return "Δεν βρήκα αρκετή επιβεβαιωμένη πληροφορία στο περιεχόμενο του site. Μπορώ να βοηθήσω με δωμάτια, διαθεσιμότητα, τιμές και προτάσεις για τη Χίο.";
+  return "I could not find enough verified information in the site content. I can help with rooms, availability, prices and Chios recommendations.";
 }
 
 async function composeGroundedAnswer(input: {
   language: AssistantLanguage;
   message: string;
-  results: ReturnType<typeof searchSalesKnowledge>;
+  results: KnowledgeResult[];
 }) {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey || !input.results.length) {
@@ -64,7 +86,7 @@ async function composeGroundedAnswer(input: {
     headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
     body: JSON.stringify({
       model: process.env.OPENAI_CONCIERGE_MODEL || "gpt-5-mini",
-      instructions: `You are the sales concierge for Voulamandis House in Chios. Answer in language code ${input.language}. Use only the supplied verified knowledge. Never invent prices, availability, distances, opening hours or amenities. Be helpful, persuasive but honest. Explain why a suggestion fits the guest. Mention that live prices and availability require dates and guest count when relevant. Include useful supplied URLs naturally. Keep the answer concise and practical.`,
+      instructions: `You are the expert sales concierge for Voulamandis House in Chios. Answer in language code ${input.language}. Use only the supplied verified knowledge. Never invent prices, availability, distances, opening hours, amenities or policies. Be warm, persuasive and practical without pressure. Explain why each suggestion fits the guest. When the guest is considering accommodation, naturally guide them toward checking live availability or sending a booking request. When dates or guest count are missing, ask only for the missing details needed for a live quote. Include useful supplied URLs naturally. Prefer two or three strong recommendations over a long generic list.`,
       input: JSON.stringify({ userMessage: input.message, verifiedKnowledge: input.results }),
     }),
   });
@@ -94,6 +116,7 @@ export async function POST(request: NextRequest) {
       checkout: search.checkout,
       guests: search.guests,
       language: body?.language,
+      selectedRoom: typeof body?.selectedRoom === "number" ? body.selectedRoom : undefined,
     };
 
     const command = await interpretAssistantMessage(latest, context);
@@ -112,23 +135,32 @@ export async function POST(request: NextRequest) {
         cache: "no-store",
       });
       const legacyPayload = await legacyResponse.json().catch(() => null);
-      return NextResponse.json(legacyPayload || { error: "Availability search failed." }, { status: legacyResponse.status });
+      return NextResponse.json({
+        ...(legacyPayload || { error: "Availability search failed." }),
+        command,
+        selectedRoom: command.selectedRoom,
+      }, { status: legacyResponse.status });
     }
 
-    const resultMap = new Map<string, ReturnType<typeof searchSalesKnowledge>[number]>();
+    const resultMap = new Map<string, KnowledgeResult>();
     for (const action of command.actions) {
-      const query = [latest, action.query, action.roomNumber ? `room ${action.roomNumber}` : "", action.roomNumbers?.map((room) => `room ${room}`).join(" ")].filter(Boolean).join(" ");
-      const results = searchSalesKnowledge({
-        query,
-        language: command.language,
-        kinds: actionKinds(action),
-        preferences: action.preferences,
-        limit: action.type === "build_itinerary" ? 8 : 5,
-      });
-      for (const result of results) resultMap.set(result.id, result);
+      const query = [
+        latest,
+        action.query,
+        action.roomNumber ? `room ${action.roomNumber}` : "",
+        action.roomNumbers?.map((room) => `room ${room}`).join(" "),
+      ].filter(Boolean).join(" ");
+      const kinds = actionKinds(action);
+      const limit = action.type === "build_itinerary" ? 8 : 5;
+      const baseResults = searchSalesKnowledge({ query, language: command.language, kinds, preferences: action.preferences, limit });
+      const extraResults = searchExtraKnowledge({ query, language: command.language, kinds, preferences: action.preferences, limit });
+      for (const result of [...baseResults, ...extraResults]) {
+        const existing = resultMap.get(result.id);
+        if (!existing || result.score > existing.score) resultMap.set(result.id, result);
+      }
     }
 
-    const results = [...resultMap.values()].slice(0, 10);
+    const results = [...resultMap.values()].sort((a, b) => b.score - a.score).slice(0, 10);
     const answer = await composeGroundedAnswer({ language: command.language, message: latest, results });
 
     return NextResponse.json({
@@ -136,6 +168,7 @@ export async function POST(request: NextRequest) {
       search,
       offers: [],
       language: command.language,
+      selectedRoom: command.selectedRoom,
       command,
       knowledge: results,
     });
