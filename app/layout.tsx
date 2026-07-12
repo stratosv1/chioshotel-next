@@ -85,7 +85,7 @@ export default async function RootLayout({
         <CarouselArrowHydrator />
         <WhatsAppCtaHydrator />
         <CtaContrastHydrator />
-        <ConsentAnalytics />
+        <ConsentAnalytics language={htmlLanguage} />
         <SpeedInsights />
       </body>
     </html>
