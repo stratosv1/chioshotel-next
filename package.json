@@ -2,7 +2,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "node scripts/disable-last-minute-room-extras.cjs && node scripts/patch-long-seo-titles.cjs && node scripts/optimize-frog-images.cjs && node scripts/patch-ai-gmail-email.cjs && node scripts/enable-smart-ai-concierge.cjs && next build",
-    "start": "next start"
+    "start": "next start",
+    "qa:ai": "node scripts/qa-ai-concierge.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
