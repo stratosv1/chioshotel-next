@@ -9,7 +9,9 @@ type RoomCarouselProps = {
 };
 
 export function RoomCarousel({ images, roomName }: RoomCarouselProps) {
-  const safeImages = images.filter(Boolean);
+  const isApartment = /^apartment\s+/i.test(roomName.trim());
+  const filteredImages = images.filter(Boolean);
+  const safeImages = isApartment ? filteredImages.slice(0, 1) : filteredImages;
   const [index, setIndex] = useState(0);
   const touchStartX = useRef<number | null>(null);
 
