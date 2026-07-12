@@ -49,22 +49,27 @@ function isCta(element: HTMLElement) {
   return className.includes("rounded-full") || className.includes("rounded-2xl") || className.includes("min-h-") || className.includes("uppercase");
 }
 
-function hydrateCtaContrast() {
-  const ctas = Array.from(document.querySelectorAll<HTMLElement>("a, button")).filter(isCta);
+function hydrateCta(element: HTMLElement) {
+  if (!isCta(element)) return;
 
-  for (const cta of ctas) {
-    const className = cta.className.toString();
-    const isDark = hasExactClass(cta, darkBackgroundMarkers) || className.includes("from-[#") || className.includes("to-[#8e6607]");
-    const isLight = hasExactClass(cta, lightBackgroundMarkers);
+  const className = element.className.toString();
+  const isDark = hasExactClass(element, darkBackgroundMarkers) || className.includes("from-[#") || className.includes("to-[#8e6607]");
+  const isLight = hasExactClass(element, lightBackgroundMarkers);
 
-    if (isDark && !className.includes("text-white") && !className.includes("!text-white")) {
-      cta.classList.add("!text-white");
-    }
+  if (isDark && !className.includes("text-white") && !className.includes("!text-white")) {
+    element.classList.add("!text-white");
+  }
 
-    if (isLight && (className.includes("text-white") || className.includes("!text-white"))) {
-      cta.classList.remove("text-white", "!text-white");
-      cta.classList.add("!text-stone-900");
-    }
+  if (isLight && (className.includes("text-white") || className.includes("!text-white"))) {
+    element.classList.remove("text-white", "!text-white");
+    element.classList.add("!text-stone-900");
+  }
+}
+
+function hydrateCtasInRoot(root: ParentNode) {
+  if (root instanceof HTMLElement) hydrateCta(root);
+  for (const element of Array.from(root.querySelectorAll<HTMLElement>("a, button"))) {
+    hydrateCta(element);
   }
 }
 
@@ -111,18 +116,37 @@ function hydrateHeaderActivitiesLabel() {
 
 export function CtaContrastHydrator() {
   useEffect(() => {
-    function hydrateUi() {
-      hydrateCtaContrast();
-      hydrateHeaderActivitiesLabel();
-    }
+    hydrateCtasInRoot(document);
+    hydrateHeaderActivitiesLabel();
 
-    hydrateUi();
-    const observer = new MutationObserver(() => hydrateUi());
+    let frameId: number | null = null;
+    const pendingRoots = new Set<HTMLElement>();
+
+    const flush = () => {
+      frameId = null;
+      for (const root of pendingRoots) hydrateCtasInRoot(root);
+      pendingRoots.clear();
+      hydrateHeaderActivitiesLabel();
+    };
+
+    const observer = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        for (const node of Array.from(mutation.addedNodes)) {
+          if (node instanceof HTMLElement) pendingRoots.add(node);
+        }
+      }
+
+      if (pendingRoots.size && frameId === null) {
+        frameId = window.requestAnimationFrame(flush);
+      }
+    });
+
     observer.observe(document.body, { childList: true, subtree: true });
-    window.addEventListener("resize", hydrateHeaderActivitiesLabel);
+    window.addEventListener("resize", hydrateHeaderActivitiesLabel, { passive: true });
 
     return () => {
       observer.disconnect();
+      if (frameId !== null) window.cancelAnimationFrame(frameId);
       window.removeEventListener("resize", hydrateHeaderActivitiesLabel);
     };
   }, []);
