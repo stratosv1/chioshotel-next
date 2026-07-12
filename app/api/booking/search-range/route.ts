@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 export const revalidate = 840;
@@ -9,25 +9,28 @@ const DEFAULT_BOOKING_WEBAPP_URL =
 const MAX_NIGHTS = 30;
 const MAX_GUESTS = 10;
 
+const ROOM_NUMBER_BY_KEY: Record<string, number> = {
+  "267788:1": 1,
+  "268803:1": 2,
+  "267788:2": 3,
+  "267788:3": 4,
+  "626129:1": 5,
+  "268803:2": 6,
+  "626129:2": 7,
+  "265595:1": 8,
+  "265595:2": 9,
+  "265595:3": 10,
+};
+
 function getBookingWebAppUrl() {
   return process.env.GOOGLE_BOOKING_SEARCH_WEBAPP_URL || DEFAULT_BOOKING_WEBAPP_URL;
 }
 
 function normalizeGuests(value: string | null) {
   const parsed = Number.parseInt(value || "2", 10);
-
-  if (!Number.isFinite(parsed)) {
-    return 2;
-  }
-
-  if (parsed < 1) {
-    return 1;
-  }
-
-  if (parsed > MAX_GUESTS) {
-    return MAX_GUESTS;
-  }
-
+  if (!Number.isFinite(parsed)) return 2;
+  if (parsed < 1) return 1;
+  if (parsed > MAX_GUESTS) return MAX_GUESTS;
   return parsed;
 }
 
@@ -36,49 +39,28 @@ function isDate(value: string) {
 }
 
 function validateSearchParams(checkin: string, checkout: string, guests: number) {
-  if (!isDate(checkin) || !isDate(checkout)) {
-    return "Invalid dates";
-  }
-
+  if (!isDate(checkin) || !isDate(checkout)) return "Invalid dates";
   const checkinDate = new Date(`${checkin}T12:00:00Z`);
   const checkoutDate = new Date(`${checkout}T12:00:00Z`);
-
-  if (
-    Number.isNaN(checkinDate.getTime()) ||
-    Number.isNaN(checkoutDate.getTime()) ||
-    checkoutDate <= checkinDate
-  ) {
-    return "Checkout must be after checkin";
-  }
-
-  const nights = Math.round(
-    (checkoutDate.getTime() - checkinDate.getTime()) / (24 * 60 * 60 * 1000)
-  );
-
-  if (nights < 1) {
-    return "Invalid stay length";
-  }
-
-  if (nights > MAX_NIGHTS) {
-    return "Stay too long";
-  }
-
-  if (guests < 1 || guests > MAX_GUESTS) {
-    return "Invalid guests";
-  }
-
+  if (Number.isNaN(checkinDate.getTime()) || Number.isNaN(checkoutDate.getTime()) || checkoutDate <= checkinDate) return "Checkout must be after checkin";
+  const nights = Math.round((checkoutDate.getTime() - checkinDate.getTime()) / 86400000);
+  if (nights < 1) return "Invalid stay length";
+  if (nights > MAX_NIGHTS) return "Stay too long";
+  if (guests < 1 || guests > MAX_GUESTS) return "Invalid guests";
   return "";
 }
 
-type RoomWithGuests = {
+type RoomRecord = {
+  roomId?: number | string;
+  unitId?: number | string;
   maxGuests?: number | string;
   [key: string]: unknown;
 };
 
 type BookingSearchPayload = {
   rooms?: {
-    available?: RoomWithGuests[];
-    unavailable?: RoomWithGuests[];
+    available?: RoomRecord[];
+    unavailable?: RoomRecord[];
     [key: string]: unknown;
   };
   summary?: {
@@ -89,67 +71,53 @@ type BookingSearchPayload = {
   [key: string]: unknown;
 };
 
-function applyCapacitySafetyFilter(data: BookingSearchPayload, guests: number) {
-  if (data.rooms?.available && Array.isArray(data.rooms.available)) {
-    data.rooms.available = data.rooms.available.filter((room) => {
-      const maxGuests = Number(room.maxGuests || 0);
-      return maxGuests >= guests;
-    });
-  }
+function roomNumber(room: RoomRecord) {
+  return ROOM_NUMBER_BY_KEY[`${String(room.roomId || "")}:${String(room.unitId || "")}`];
+}
 
-  if (data.rooms?.unavailable && Array.isArray(data.rooms.unavailable)) {
-    data.rooms.unavailable = data.rooms.unavailable.filter((room) => {
-      const maxGuests = Number(room.maxGuests || 0);
-      return maxGuests >= guests;
-    });
-  }
+function roomAllowedForGuests(room: RoomRecord, guests: number) {
+  const number = roomNumber(room);
+  if (!number || number === 11) return false;
+  if (guests <= 2) return number >= 1 && number <= 10;
+  if (guests === 3) return [1, 3, 4, 5, 7, 8, 9, 10].includes(number);
+  if (guests === 4) return [1, 8, 9, 10].includes(number);
+  if (guests === 5) return number === 10;
+  return false;
+}
 
+function applyRoomRules(data: BookingSearchPayload, guests: number) {
+  if (Array.isArray(data.rooms?.available)) {
+    data.rooms.available = data.rooms.available.filter((room) => roomAllowedForGuests(room, guests));
+  }
+  if (Array.isArray(data.rooms?.unavailable)) {
+    data.rooms.unavailable = data.rooms.unavailable.filter((room) => roomAllowedForGuests(room, guests));
+  }
   if (data.summary && typeof data.summary === "object") {
-    data.summary.availableRooms = Array.isArray(data.rooms?.available)
-      ? data.rooms.available.length
-      : 0;
-    data.summary.unavailableRooms = Array.isArray(data.rooms?.unavailable)
-      ? data.rooms.unavailable.length
-      : 0;
+    data.summary.availableRooms = Array.isArray(data.rooms?.available) ? data.rooms.available.length : 0;
+    data.summary.unavailableRooms = Array.isArray(data.rooms?.unavailable) ? data.rooms.unavailable.length : 0;
   }
-
   return data;
 }
 
 async function readJsonResponse(response: Response) {
   const text = await response.text();
-
   try {
-    return {
-      text,
-      json: JSON.parse(text) as BookingSearchPayload,
-    };
+    return { text, json: JSON.parse(text) as BookingSearchPayload };
   } catch {
-    return {
-      text,
-      json: null,
-    };
+    return { text, json: null };
   }
 }
 
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
-
     const checkin = searchParams.get("checkin") || "";
     const checkout = searchParams.get("checkout") || "";
     const guests = normalizeGuests(searchParams.get("guests"));
-
     const validationError = validateSearchParams(checkin, checkout, guests);
 
     if (validationError) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: validationError,
-        },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, message: validationError }, { status: 400 });
     }
 
     const url = new URL(getBookingWebAppUrl());
@@ -160,68 +128,40 @@ export async function GET(request: NextRequest) {
 
     const response = await fetch(url.toString(), {
       method: "GET",
-      headers: {
-        Accept: "application/json",
-        "User-Agent": "VoulamandisHouseNext/1.0",
-      },
-      next: {
-        revalidate: 840,
-      },
+      headers: { Accept: "application/json", "User-Agent": "VoulamandisHouseNext/1.0" },
+      next: { revalidate: 840 },
     });
 
     const parsed = await readJsonResponse(response);
-
     if (!response.ok || !parsed.json || typeof parsed.json !== "object") {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Invalid response from availability service",
-          statusCode: response.status,
-          debug: {
-            bodyPreview: parsed.text.slice(0, 500),
-          },
-          _booking_engine: {
-            cached: false,
-            source: "next_proxy",
-          },
-        },
-        { status: 502 }
-      );
+      return NextResponse.json({
+        success: false,
+        message: "Invalid response from availability service",
+        statusCode: response.status,
+        debug: { bodyPreview: parsed.text.slice(0, 500) },
+        _booking_engine: { cached: false, source: "next_proxy" },
+      }, { status: 502 });
     }
 
-    const data = applyCapacitySafetyFilter(parsed.json, guests);
-
-    return NextResponse.json(
-      {
-        ...data,
-        _booking_engine: {
-          cached: false,
-          ttlMinutes: 14,
-          generatedAt: new Date().toISOString(),
-          source: "next_proxy_apps_script",
-        },
+    const data = applyRoomRules(parsed.json, guests);
+    return NextResponse.json({
+      ...data,
+      _booking_engine: {
+        cached: false,
+        ttlMinutes: 14,
+        generatedAt: new Date().toISOString(),
+        source: "next_proxy_apps_script",
       },
-      {
-        status: 200,
-        headers: {
-          "Cache-Control": "s-maxage=840, stale-while-revalidate=3600",
-        },
-      }
-    );
+    }, {
+      status: 200,
+      headers: { "Cache-Control": "s-maxage=840, stale-while-revalidate=3600" },
+    });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Unknown booking search error";
-
-    return NextResponse.json(
-      {
-        success: false,
-        message,
-        _booking_engine: {
-          cached: false,
-          source: "next_proxy_exception",
-        },
-      },
-      { status: 500 }
-    );
+    const message = error instanceof Error ? error.message : "Unknown booking search error";
+    return NextResponse.json({
+      success: false,
+      message,
+      _booking_engine: { cached: false, source: "next_proxy_exception" },
+    }, { status: 500 });
   }
 }
