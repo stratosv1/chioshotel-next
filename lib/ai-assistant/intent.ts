@@ -1,4 +1,4 @@
-import type { AssistantCommand, ConversationContext } from "./types";
+import type { AssistantCommand, AssistantLanguage, ConversationContext } from "./types";
 
 const COMMAND_SCHEMA = {
   type: "object",
@@ -63,7 +63,8 @@ const COMMAND_SCHEMA = {
 const SYSTEM_PROMPT = `You are the intent router for the Voulamandis House digital concierge in Chios.
 Convert every user message, in any supported language, into safe structured actions.
 Do not answer the user directly and do not invent facts, prices, availability, room details, distances or opening hours.
-Use conversation context for references such as “it”, “that room”, “show me photos”, or their equivalents.
+Use the recent conversation and selected-room context for references such as “it”, “that room”, “the second option”, “show me photos”, or their equivalents.
+When the user corrects dates, guest count or preferences, replace the old value instead of preserving the earlier one.
 Dates are required only for live availability and prices, never for browsing rooms, galleries, beaches, villages, museums or activities.
 A message can require multiple actions. Example: a family asking for a room and child-friendly beaches should create recommend_rooms and recommend_beaches.
 Understand natural guest counts, e.g. “me and my wife” = 2, “two adults and two children” = 4.
@@ -84,45 +85,104 @@ function getOutputText(payload: any): string {
   return "";
 }
 
+function detectFallbackLanguage(message: string, supplied?: AssistantLanguage): AssistantLanguage {
+  if (supplied) return supplied;
+  if (/[Α-Ωα-ωΆ-ώ]/.test(message)) return "el";
+  if (/[ğüşöçıİĞÜŞÖÇ]/i.test(message)) return "tr";
+  if (/[äöüß]/i.test(message)) return "de";
+  if (/[éèêëàâçîïôùûüÿœ]/i.test(message)) return "fr";
+  if (/\b(habitación|playa|pueblo|museo|niños)\b/i.test(message)) return "es";
+  if (/\b(camera|spiaggia|villaggio|museo|bambini)\b/i.test(message)) return "it";
+  return "en";
+}
+
+function fallbackCommand(message: string, context: ConversationContext): AssistantCommand {
+  const language = detectFallbackLanguage(message, context.language);
+  const text = message.toLowerCase();
+  const roomMatch = text.match(/(?:room|δωμάτιο|δωματιο|zimmer|chambre|camera|habitación|oda|apartment|διαμέρισμα|διαμερισμα)\s*(10|[1-9])\b/i);
+  const roomNumber = roomMatch ? Number(roomMatch[1]) : context.selectedRoom;
+  const preferences = {
+    noStairs: /χωρίς\s+σκάλα|χωρις\s+σκαλα|no\s+stairs|without\s+stairs|ohne\s+treppe|sans\s+escalier|senza\s+scale|sin\s+escaleras|merdivensiz/i.test(text) || undefined,
+    floor: /χωρίς\s+σκάλα|χωρις\s+σκαλα|ground\s*floor|ισόγει|isogei|erdgeschoss|rez.de.chaussée|piano\s+terra|planta\s+baja|zemin\s+kat/i.test(text) ? "ground" as const : undefined,
+    fullKitchen: /full\s+kitchen|πλήρη\s+κουζίνα|πληρη\s+κουζινα|voll.*küche|cuisine\s+complète|cucina\s+completa|cocina\s+completa|tam\s+mutfak/i.test(text) || undefined,
+    familyFriendly: /family|οικογέν|παιδι|children|kids|familie|enfant|bambin|niñ|çocuk/i.test(text) || undefined,
+    nearby: /near|nearby|κοντά|κοντιν|proche|nahe|vicin|cerca|yakın/i.test(text) || undefined,
+    quiet: /quiet|ήσυχ|ησυχ|ruhig|calme|tranquill|tranquil|sakin/i.test(text) || undefined,
+  };
+
+  if (/availability|διαθεσιμό|διαθεσιμο|price|τιμ|rate|preis|prix|prezzo|precio|fiyat|book|κράτηση|κρατηση/i.test(text)) {
+    return { language, replyMode: "execute", selectedRoom: roomNumber, actions: [{ type: "search_availability", guests: context.guests, checkin: context.checkin, checkout: context.checkout, preferences }] };
+  }
+  if (/photo|gallery|φωτογραφ|bilder|photos|foto|fotos|resim/i.test(text)) {
+    return { language, replyMode: "execute", selectedRoom: roomNumber, actions: [{ type: "show_gallery", roomNumber, preferences }] };
+  }
+  if (/beach|παραλί|παραλι|strand|plage|spiaggia|playa|plaj/i.test(text)) {
+    return { language, replyMode: "answer", selectedRoom: roomNumber, actions: [{ type: "recommend_beaches", query: message, preferences }] };
+  }
+  if (/village|χωρι|dorf|village|villaggio|pueblo|köy/i.test(text)) {
+    return { language, replyMode: "answer", selectedRoom: roomNumber, actions: [{ type: "recommend_villages", query: message, preferences }] };
+  }
+  if (/museum|μουσεί|μουσει|musee|museo|müze/i.test(text)) {
+    return { language, replyMode: "answer", selectedRoom: roomNumber, actions: [{ type: "recommend_museums", query: message, preferences }] };
+  }
+  if (/room|δωμάτι|δωματι|zimmer|chambre|camera|habitación|oda|apartment|διαμέρισμα|διαμερισμα/i.test(text)) {
+    return { language, replyMode: "execute", selectedRoom: roomNumber, actions: [{ type: roomNumber ? "show_room" : "recommend_rooms", roomNumber, guests: context.guests, preferences }] };
+  }
+  return { language, replyMode: "answer", selectedRoom: roomNumber, actions: [{ type: "search_content", topic: "general", query: message, preferences }] };
+}
+
 export async function interpretAssistantMessage(
   message: string,
   context: ConversationContext = {},
 ): Promise<AssistantCommand> {
   const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) throw new Error("OPENAI_API_KEY is not configured");
+  if (!apiKey) return fallbackCommand(message, context);
 
-  const response = await fetch("https://api.openai.com/v1/responses", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model: process.env.OPENAI_INTENT_MODEL || "gpt-5-mini",
-      instructions: SYSTEM_PROMPT,
-      input: JSON.stringify({ message, context }),
-      text: {
-        format: {
-          type: "json_schema",
-          name: "assistant_command",
-          strict: true,
-          schema: COMMAND_SCHEMA,
-        },
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 12000);
+
+  try {
+    const response = await fetch("https://api.openai.com/v1/responses", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
       },
-    }),
-  });
+      signal: controller.signal,
+      body: JSON.stringify({
+        model: process.env.OPENAI_INTENT_MODEL || "gpt-5-mini",
+        instructions: SYSTEM_PROMPT,
+        input: JSON.stringify({
+          message,
+          context: {
+            ...context,
+            recentMessages: context.recentMessages?.slice(-10),
+          },
+        }),
+        text: {
+          format: {
+            type: "json_schema",
+            name: "assistant_command",
+            strict: true,
+            schema: COMMAND_SCHEMA,
+          },
+        },
+      }),
+    });
 
-  const payload = await response.json().catch(() => null);
-  if (!response.ok) {
-    throw new Error(payload?.error?.message || "Intent interpretation failed");
+    const payload = await response.json().catch(() => null);
+    if (!response.ok) throw new Error(payload?.error?.message || "Intent interpretation failed");
+
+    const text = getOutputText(payload);
+    if (!text) throw new Error("Intent model returned an empty response");
+
+    const command = JSON.parse(text) as AssistantCommand;
+    if (!Array.isArray(command.actions) || !command.actions.length) throw new Error("Intent model returned no actions");
+    return command;
+  } catch (error) {
+    console.error("Intent routing fallback used", error);
+    return fallbackCommand(message, context);
+  } finally {
+    clearTimeout(timeout);
   }
-
-  const text = getOutputText(payload);
-  if (!text) throw new Error("Intent model returned an empty response");
-
-  const command = JSON.parse(text) as AssistantCommand;
-  if (!Array.isArray(command.actions) || !command.actions.length) {
-    throw new Error("Intent model returned no actions");
-  }
-  return command;
 }
