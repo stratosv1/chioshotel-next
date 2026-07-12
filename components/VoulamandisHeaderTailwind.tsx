@@ -161,7 +161,7 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/" }: H
         <a href={pathFor(routeIds.home, language)} onClick={closeMenu} className="group flex min-w-0 flex-1 items-center gap-3 lg:max-w-[500px] xl:flex-[0_1_470px] 2xl:flex-[0_1_560px]">
           <span className="relative flex h-[54px] w-[54px] shrink-0 items-center justify-center rounded-2xl border border-amber-900/10 bg-white shadow-lg shadow-stone-900/10 lg:h-[58px] lg:w-[58px]">
             <span className="absolute inset-0 rounded-2xl bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,.95),transparent_55%)]" />
-            <img src="/favicon/vh-heart-128.webp" alt="" className="relative h-[52px] w-[52px] animate-pulse object-contain transition duration-300 group-hover:scale-110 lg:h-[56px] lg:w-[56px]" />
+            <img src="/favicon/vh-heart-128.webp" alt="Voulamandis House logo" className="relative h-[52px] w-[52px] animate-pulse object-contain transition duration-300 group-hover:scale-110 lg:h-[56px] lg:w-[56px]" />
           </span>
           <span className="min-w-0 flex-1">
             <span className="flex min-w-0 items-center gap-2">
