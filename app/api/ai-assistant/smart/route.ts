@@ -66,6 +66,45 @@ function deterministicAnswer(input: { language: AssistantLanguage; results: Know
   return body ? `${intro}\n${body}` : intro;
 }
 
+async function composeAvailabilityAnswer(input: {
+  language: AssistantLanguage;
+  message: string;
+  legacyPayload: any;
+}) {
+  const fallback = typeof input.legacyPayload?.answer === "string" ? input.legacyPayload.answer : "";
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey || !fallback) return fallback;
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 12000);
+  try {
+    const response = await fetch("https://api.openai.com/v1/responses", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+      signal: controller.signal,
+      body: JSON.stringify({
+        model: process.env.OPENAI_CONCIERGE_MODEL || "gpt-5-mini",
+        instructions: `You are the sales concierge for Voulamandis House in Chios. Answer in language code ${input.language}. The supplied availability result is the only source of truth. Rewrite it into warm, natural, concise language. Preserve every date, guest count, room, price, discount, total and availability status exactly. Never calculate, alter, omit or invent numbers. If the system is asking for missing dates, nights or guest count, ask only that one necessary question. If no rooms are available, say so clearly and suggest only one practical next step. Do not mention JSON, APIs, systems or internal processing.`,
+        input: JSON.stringify({ userMessage: input.message, verifiedAvailabilityResult: input.legacyPayload }),
+      }),
+    });
+    const payload = await response.json().catch(() => null);
+    if (!response.ok) throw new Error(payload?.error?.message || "Availability composition failed");
+    if (typeof payload?.output_text === "string" && payload.output_text.trim()) return payload.output_text.trim();
+    for (const item of Array.isArray(payload?.output) ? payload.output : []) {
+      for (const content of Array.isArray(item?.content) ? item.content : []) {
+        if (typeof content?.text === "string" && content.text.trim()) return content.text.trim();
+      }
+    }
+    return fallback;
+  } catch (error) {
+    console.error("Availability answer fallback used", error);
+    return fallback;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 async function composeGroundedAnswer(input: {
   language: AssistantLanguage;
   message: string;
@@ -140,7 +179,17 @@ export async function POST(request: NextRequest) {
         cache: "no-store",
       });
       const legacyPayload = await legacyResponse.json().catch(() => null);
-      return NextResponse.json({ ...(legacyPayload || { error: "Availability search failed." }), command, selectedRoom: command.selectedRoom }, { status: legacyResponse.status });
+      if (!legacyResponse.ok || !legacyPayload) {
+        return NextResponse.json(legacyPayload || { error: "Availability search failed." }, { status: legacyResponse.status });
+      }
+      const answer = await composeAvailabilityAnswer({ language: command.language, message: latest, legacyPayload });
+      return NextResponse.json({
+        ...legacyPayload,
+        answer: answer || legacyPayload.answer,
+        command,
+        selectedRoom: command.selectedRoom,
+        sourceAnswer: legacyPayload.answer,
+      }, { status: legacyResponse.status });
     }
 
     const roomMap = new Map<string, RoomCard>();
