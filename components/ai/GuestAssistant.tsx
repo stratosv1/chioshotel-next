@@ -75,6 +75,7 @@ export function GuestAssistant() {
   const [guests, setGuests] = useState(2);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [detailsOffer, setDetailsOffer] = useState<Offer | null>(null);
   const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
   const [requestName, setRequestName] = useState("");
   const [requestContact, setRequestContact] = useState("");
@@ -90,6 +91,7 @@ export function GuestAssistant() {
   }
 
   function openRequest(offer: Offer) {
+    setDetailsOffer(null);
     setSelectedOffer(offer);
     setRequestSuccess("");
     setRequestName("");
@@ -163,6 +165,7 @@ export function GuestAssistant() {
       return;
     }
     setActiveOffers([]);
+    setDetailsOffer(null);
     void sendMessage(
       `Έλεγξε διαθεσιμότητα για ${guests} επισκέπτες από ${checkin} έως ${checkout}.`,
       true,
@@ -243,26 +246,88 @@ export function GuestAssistant() {
                 {messages.map((message, index) => (
                   <div key={`${message.role}-${index}`}>
                     <div className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}><div className={`max-w-[92%] whitespace-pre-wrap rounded-3xl px-4 py-3 text-sm leading-6 sm:max-w-[78%] ${message.role === "user" ? "rounded-br-lg bg-stone-900 text-white" : "rounded-bl-lg bg-stone-100 text-stone-800"}`}>{message.content}</div></div>
+
                     {message.role === "assistant" && message.actions?.length ? <div className="mt-3 flex flex-wrap gap-2">{message.actions.map((action, actionIndex) => {
                       if (action.action === "open_request") { const offer = findOffer(action.roomId, action.unitId); return <button key={`${action.label}-${actionIndex}`} type="button" disabled={!offer} onClick={() => offer && openRequest(offer)} className="rounded-2xl bg-stone-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-stone-800 disabled:opacity-40">{action.label}</button>; }
                       return action.href ? <Link key={`${action.label}-${actionIndex}`} href={action.href} className="rounded-2xl border border-emerald-300 bg-emerald-50 px-4 py-2.5 text-sm font-semibold text-emerald-900 hover:bg-emerald-100">{action.label}</Link> : null;
                     })}</div> : null}
-                    {message.role === "assistant" && message.offers?.length ? <div className="mt-5 grid gap-5 xl:grid-cols-2">{message.offers.map((offer) => <article key={`${offer.roomId}:${offer.unitId}`} className="group overflow-hidden rounded-[1.75rem] border border-stone-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-xl">
-                      <div className="relative aspect-[16/10] overflow-hidden bg-stone-100"><Image src={offer.image} alt={`${offer.name} - ${offer.category}`} fill sizes="(max-width: 1279px) 100vw, 50vw" className="object-cover transition duration-500 group-hover:scale-[1.03]" /><div className="absolute inset-x-0 top-0 flex items-start justify-between gap-3 p-3"><span className="rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold text-stone-900 shadow-sm">Διαθέσιμο</span><span className="rounded-full bg-emerald-700 px-3 py-1.5 text-xs font-bold text-white shadow-sm">-10% απευθείας</span></div></div>
-                      <div className="p-4 sm:p-5"><div className="flex items-start justify-between gap-3"><div><h3 className="text-xl font-semibold text-stone-950">{offer.name}</h3><p className="mt-1 text-sm text-stone-600">{offer.category}</p></div><span className="rounded-full bg-stone-100 px-2.5 py-1 text-xs font-medium text-stone-700">έως {offer.maxGuests} άτομα</span></div>
-                      <div className="mt-4 flex flex-wrap gap-2">{[offer.floor, ...offer.features].filter(Boolean).filter((feature, i, all) => all.indexOf(feature) === i).slice(0, 6).map((feature) => <span key={feature} className="rounded-full border border-stone-200 bg-stone-50 px-2.5 py-1 text-xs text-stone-700">{feature}</span>)}</div>
-                      <div className="mt-5 rounded-2xl bg-emerald-50 p-4"><div className="flex items-end justify-between gap-4"><div><p className="text-xs text-stone-500">Αρχική τιμή <span className="line-through">{formatEuro(offer.originalTotal)}</span></p><p className="mt-1 text-2xl font-bold text-emerald-800">{formatEuro(offer.directTotal)}</p><p className="mt-1 text-xs text-emerald-700">για {offer.nights} {offer.nights === 1 ? "νύχτα" : "νύχτες"}</p></div><div className="text-right"><p className="text-xs text-stone-500">Κερδίζετε</p><p className="text-base font-semibold text-emerald-700">{formatEuro(offer.saving)}</p></div></div></div>
-                      <div className="mt-4 grid grid-cols-2 gap-2"><Link href={offer.detailsUrl} className="rounded-2xl border border-stone-300 px-4 py-3 text-center text-sm font-semibold text-stone-800 hover:bg-stone-50">Φωτογραφίες & λεπτομέρειες</Link><button type="button" onClick={() => openRequest(offer)} className="rounded-2xl bg-stone-900 px-4 py-3 text-sm font-semibold text-white hover:bg-stone-800">Αίτημα κράτησης</button></div></div>
-                    </article>)}</div> : null}
+
+                    {message.role === "assistant" && message.offers?.length ? (
+                      <div className="mt-5 space-y-3">
+                        <div className="flex items-center justify-between gap-3 px-1">
+                          <p className="text-sm font-semibold text-stone-900">{message.offers.length} διαθέσιμες επιλογές</p>
+                          <p className="text-xs text-stone-500">Πατήστε ένα δωμάτιο για λεπτομέρειες</p>
+                        </div>
+                        {message.offers.map((offer) => (
+                          <button
+                            key={`${offer.roomId}:${offer.unitId}`}
+                            type="button"
+                            onClick={() => setDetailsOffer(offer)}
+                            className="group flex w-full items-stretch overflow-hidden rounded-2xl border border-stone-200 bg-white text-left shadow-sm transition hover:border-emerald-300 hover:shadow-md focus:outline-none focus:ring-4 focus:ring-emerald-100"
+                            aria-label={`Προβολή λεπτομερειών για ${offer.name}`}
+                          >
+                            <div className="relative w-28 shrink-0 bg-stone-100 sm:w-36">
+                              <Image src={offer.image} alt={`${offer.name} - ${offer.category}`} fill sizes="144px" className="object-cover transition duration-300 group-hover:scale-[1.03]" />
+                            </div>
+                            <div className="flex min-w-0 flex-1 items-center justify-between gap-3 p-3 sm:p-4">
+                              <div className="min-w-0">
+                                <div className="flex flex-wrap items-center gap-2">
+                                  <h3 className="truncate text-base font-semibold text-stone-950 sm:text-lg">{offer.name}</h3>
+                                  <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-800">-10%</span>
+                                </div>
+                                <p className="mt-1 truncate text-xs text-stone-500 sm:text-sm">{offer.category} · έως {offer.maxGuests} άτομα</p>
+                                <div className="mt-2 flex flex-wrap gap-1.5">
+                                  {[offer.floor, ...offer.features].filter(Boolean).filter((feature, i, all) => all.indexOf(feature) === i).slice(0, 3).map((feature) => <span key={feature} className="rounded-full bg-stone-100 px-2 py-1 text-[10px] text-stone-600 sm:text-xs">{feature}</span>)}
+                                </div>
+                              </div>
+                              <div className="shrink-0 text-right">
+                                <p className="text-[11px] text-stone-400 line-through">{formatEuro(offer.originalTotal)}</p>
+                                <p className="text-lg font-bold text-emerald-800 sm:text-xl">{formatEuro(offer.directTotal)}</p>
+                                <p className="mt-0.5 text-[11px] text-emerald-700">{offer.nights} {offer.nights === 1 ? "νύχτα" : "νύχτες"}</p>
+                                <span className="mt-2 inline-flex h-7 w-7 items-center justify-center rounded-full bg-stone-100 text-stone-700 transition group-hover:bg-emerald-100 group-hover:text-emerald-800">›</span>
+                              </div>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    ) : null}
                   </div>
                 ))}
                 {loading ? <div className="flex justify-start"><div className="flex items-center gap-2 rounded-3xl rounded-bl-lg bg-stone-100 px-4 py-3 text-sm text-stone-600"><span className="h-2 w-2 animate-pulse rounded-full bg-emerald-600" />Επεξεργάζομαι το αίτημά σας…</div></div> : null}
               </div>
+
               <div className="border-t border-stone-200 bg-white p-4 sm:p-5">{messages.length === 1 ? <div className="mb-3 flex gap-2 overflow-x-auto pb-1">{starterQuestions.map((question) => <button key={question} type="button" onClick={() => void sendMessage(question, false)} className="shrink-0 rounded-full border border-stone-300 bg-white px-3 py-2 text-xs font-medium text-stone-700 hover:border-emerald-300 hover:bg-emerald-50">{question}</button>)}</div> : null}{error ? <p className="mb-3 rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">{error}</p> : null}<form onSubmit={handleSubmit} className="flex items-center gap-2 rounded-2xl border border-stone-300 bg-stone-50 p-1.5 focus-within:border-emerald-500 focus-within:ring-4 focus-within:ring-emerald-100"><label htmlFor="guest-question" className="sr-only">Γράψτε την ερώτησή σας</label><input ref={inputRef} id="guest-question" value={input} onChange={(event) => setInput(event.target.value)} maxLength={1200} disabled={loading} placeholder="Ρωτήστε για δωμάτια, παροχές ή τη διαμονή σας…" autoComplete="off" className="min-w-0 flex-1 bg-transparent px-3 py-2.5 text-base text-stone-900 outline-none placeholder:text-stone-400 disabled:opacity-60" /><button type="submit" disabled={loading || !input.trim()} className="shrink-0 rounded-xl bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-600 disabled:opacity-40">Αποστολή</button></form></div>
             </section>
           </div>
         </div>
       </section>
+
+      {detailsOffer ? (
+        <div className="fixed inset-0 z-40 flex items-end justify-center bg-stone-950/55 backdrop-blur-sm sm:items-center sm:p-4" role="dialog" aria-modal="true" aria-label={`Λεπτομέρειες ${detailsOffer.name}`}>
+          <div className="max-h-[92dvh] w-full max-w-2xl overflow-y-auto rounded-t-[2rem] bg-white shadow-2xl sm:rounded-[2rem]">
+            <div className="relative aspect-[16/9] overflow-hidden bg-stone-100 sm:rounded-t-[2rem]">
+              <Image src={detailsOffer.image} alt={`${detailsOffer.name} - ${detailsOffer.category}`} fill sizes="(max-width: 768px) 100vw, 672px" className="object-cover" />
+              <button type="button" onClick={() => setDetailsOffer(null)} className="absolute right-4 top-4 rounded-full bg-white/95 px-3 py-2 text-sm font-semibold text-stone-700 shadow" aria-label="Κλείσιμο">✕</button>
+              <span className="absolute left-4 top-4 rounded-full bg-emerald-700 px-3 py-1.5 text-xs font-bold text-white shadow">-10% απευθείας</span>
+            </div>
+            <div className="p-5 sm:p-6">
+              <div className="flex items-start justify-between gap-4">
+                <div><h2 className="text-2xl font-semibold text-stone-950">{detailsOffer.name}</h2><p className="mt-1 text-sm text-stone-600">{detailsOffer.category} · έως {detailsOffer.maxGuests} άτομα</p></div>
+                <div className="text-right"><p className="text-xs text-stone-400 line-through">{formatEuro(detailsOffer.originalTotal)}</p><p className="text-2xl font-bold text-emerald-800">{formatEuro(detailsOffer.directTotal)}</p><p className="text-xs text-emerald-700">Κερδίζετε {formatEuro(detailsOffer.saving)}</p></div>
+              </div>
+
+              <div className="mt-5 flex flex-wrap gap-2">{[detailsOffer.floor, ...detailsOffer.features].filter(Boolean).filter((feature, i, all) => all.indexOf(feature) === i).map((feature) => <span key={feature} className="rounded-full border border-stone-200 bg-stone-50 px-3 py-1.5 text-xs text-stone-700">{feature}</span>)}</div>
+
+              <div className="mt-5 rounded-2xl bg-emerald-50 p-4 text-sm text-emerald-950"><strong>{formatDate(checkin)} → {formatDate(checkout)}</strong><br />{guests} {guests === 1 ? "επισκέπτης" : "επισκέπτες"} · {detailsOffer.nights} {detailsOffer.nights === 1 ? "νύχτα" : "νύχτες"}</div>
+
+              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                <Link href={detailsOffer.detailsUrl} className="rounded-2xl border border-stone-300 px-5 py-3.5 text-center text-sm font-semibold text-stone-800 hover:bg-stone-50">Όλες οι φωτογραφίες</Link>
+                <button type="button" onClick={() => openRequest(detailsOffer)} className="rounded-2xl bg-stone-900 px-5 py-3.5 text-sm font-semibold text-white hover:bg-stone-800">Αίτημα κράτησης</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
 
       {selectedOffer ? <div className="fixed inset-0 z-50 flex items-end justify-center bg-stone-950/55 p-0 backdrop-blur-sm sm:items-center sm:p-4" role="dialog" aria-modal="true" aria-label="Αίτημα κράτησης"><div className="max-h-[92dvh] w-full max-w-lg overflow-y-auto rounded-t-[2rem] bg-white p-5 shadow-2xl sm:rounded-[2rem] sm:p-6"><div className="flex items-start justify-between gap-4"><div><p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-700">Αίτημα προς reception</p><h2 className="mt-1 text-2xl font-semibold">{selectedOffer.name}</h2><p className="mt-1 text-sm text-stone-600">{formatDate(checkin)} → {formatDate(checkout)} · {guests} άτομα</p></div><button type="button" onClick={() => setSelectedOffer(null)} className="rounded-full border border-stone-200 px-3 py-2 text-sm text-stone-600 hover:bg-stone-50" aria-label="Κλείσιμο">✕</button></div>
       <div className="mt-4 rounded-2xl bg-emerald-50 p-4"><p className="text-sm text-stone-500">Τιμή απευθείας κράτησης</p><p className="mt-1 text-2xl font-bold text-emerald-800">{formatEuro(selectedOffer.directTotal)}</p><p className="mt-1 text-xs text-stone-500">Η κράτηση επιβεβαιώνεται μόνο από τη reception.</p></div>
