@@ -72,6 +72,7 @@ Interpret “I do not want stairs” as noStairs=true and floor=ground.
 For room photos use show_gallery. For general room browsing use recommend_rooms or show_room.
 For information contained in the Chios website use search_content or the specific recommendation action.
 Ask clarification only when a required field for the requested action is genuinely missing.
+IMPORTANT: A short numeric reply such as 10/10, 10-10, 10.10 or 10 October, when the previous assistant message asked for arrival or departure, is a date continuation. It must never be interpreted as room 10 or as a general content search.
 Return only JSON matching the provided schema.`;
 
 function getOutputText(payload: any): string {
@@ -96,7 +97,74 @@ function detectFallbackLanguage(message: string, supplied?: AssistantLanguage): 
   return "en";
 }
 
+function normalizeText(value: string) {
+  return value.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, " ").trim();
+}
+
+function isoDateFromShortReply(message: string) {
+  const match = message.trim().match(/^(\d{1,2})\s*[\/.\-]\s*(\d{1,2})(?:\s*[\/.\-]\s*(\d{2}|\d{4}))?$/);
+  if (!match) return undefined;
+  const day = Number(match[1]);
+  const month = Number(match[2]);
+  if (day < 1 || day > 31 || month < 1 || month > 12) return undefined;
+
+  const now = new Date();
+  let year = match[3] ? Number(match[3]) : now.getUTCFullYear();
+  if (year < 100) year += 2000;
+  let candidate = new Date(Date.UTC(year, month - 1, day, 12));
+  if (candidate.getUTCDate() !== day || candidate.getUTCMonth() !== month - 1) return undefined;
+
+  const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 12));
+  if (!match[3] && candidate < today) candidate = new Date(Date.UTC(year + 1, month - 1, day, 12));
+  return candidate.toISOString().slice(0, 10);
+}
+
+function dateContinuationCommand(message: string, context: ConversationContext): AssistantCommand | undefined {
+  const date = isoDateFromShortReply(message);
+  if (!date) return undefined;
+
+  const recent = context.recentMessages || [];
+  const previousAssistant = [...recent].reverse().find((item) => item.role === "assistant")?.content || "";
+  const previous = normalizeText(previousAssistant);
+  const language = detectFallbackLanguage(message, context.language);
+
+  const askedArrival = /arrival|check.?in|arrivee|ankunft|arrivo|llegada|varis|αφιξ|ημερομηνια σκεφτεστε για αφιξ/i.test(previous);
+  const askedDeparture = /departure|check.?out|depart|abreise|partenza|salida|ayrilis|αναχωρ/i.test(previous);
+  const availabilityConversation = recent.some((item) => /availability|διαθεσιμ|verfugbar|disponibil|musait|τιμ|price|rate|preis|prix|prezzo|precio|fiyat/i.test(normalizeText(item.content)));
+
+  if (!askedArrival && !askedDeparture && !availabilityConversation && !context.checkin) return undefined;
+
+  if (askedDeparture || context.checkin) {
+    return {
+      language,
+      replyMode: "execute",
+      selectedRoom: context.selectedRoom,
+      actions: [{
+        type: "search_availability",
+        checkin: context.checkin,
+        checkout: date,
+        guests: context.guests,
+      }],
+    };
+  }
+
+  return {
+    language,
+    replyMode: "execute",
+    selectedRoom: context.selectedRoom,
+    actions: [{
+      type: "search_availability",
+      checkin: date,
+      checkout: context.checkout,
+      guests: context.guests,
+    }],
+  };
+}
+
 function fallbackCommand(message: string, context: ConversationContext): AssistantCommand {
+  const dateContinuation = dateContinuationCommand(message, context);
+  if (dateContinuation) return dateContinuation;
+
   const language = detectFallbackLanguage(message, context.language);
   const text = message.toLowerCase();
   const roomMatch = text.match(/(?:room|δωμάτιο|δωματιο|zimmer|chambre|camera|habitación|oda|apartment|διαμέρισμα|διαμερισμα)\s*(10|[1-9])\b/i);
@@ -135,6 +203,9 @@ export async function interpretAssistantMessage(
   message: string,
   context: ConversationContext = {},
 ): Promise<AssistantCommand> {
+  const deterministicDateContinuation = dateContinuationCommand(message, context);
+  if (deterministicDateContinuation) return deterministicDateContinuation;
+
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) return fallbackCommand(message, context);
 
