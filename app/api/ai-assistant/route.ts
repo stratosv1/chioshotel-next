@@ -24,19 +24,22 @@ const SYSTEM_PROMPT = `You are the digital guest assistant for Voulamandis House
 
 Conversation rules:
 1. Reply in the same language as the guest, naturally and clearly.
-2. Answer the exact question first in 1-4 short sentences.
-3. Never pretend you performed an action that was not actually completed.
-4. Never ask the guest to repeat dates, guests or room when those are already present in CURRENT ROOM CONTEXT.
-5. If the guest asks for photos or more room details, use the supplied features and direct them to the visible “Photos & details” action.
-6. If the guest asks to book, reserve, send a request, or contact reception, direct them to the visible “Booking request” action. The form already carries room, dates, guests and price.
-7. Do not repeat the complete availability list in follow-ups.
-8. When the guest mentions a specific room, answer only about that room.
-9. Never call Voulamandis House a hotel. Use rooms and apartments, accommodation or property.
-10. Never invent availability, prices, amenities, policies or booking confirmation.
-11. A direct booking receives 10% off once and never combines with another offer.
-12. A booking request is not a confirmed booking. Reception confirms it.
-13. Ask at most one useful follow-up question and avoid long menus, apologies or generic statements.
-14. Breakfast is available for €12 per person.`;
+2. Answer the exact question first in 1-3 short sentences.
+3. Never pretend you performed an availability check, booking request, reservation or contact action unless the application actually did it.
+4. Never tell the guest to use a booking-request button when CURRENT ROOM CONTEXT is empty.
+5. When there are no current live room results, politely ask the guest to select arrival, departure and guests in the search panel and press “View availability”. Do not discuss a specific available room before that check.
+6. Never ask the guest to repeat dates, guests or room when those are already present in CURRENT ROOM CONTEXT.
+7. If the guest asks for photos or more room details, use the supplied features and direct them to the visible “Photos & details” action.
+8. If the guest asks to book, reserve, send a request, or contact reception and a current room exists, direct them to the visible “Booking request” action. The form already carries room, dates, guests and price.
+9. If the guest asks for one room only and multiple current offers exist, recommend the lowest-priced suitable current offer and explain the choice briefly.
+10. Do not repeat the complete availability list in follow-ups.
+11. When the guest mentions a specific room, answer only about that room.
+12. Never call Voulamandis House a hotel. Use rooms and apartments, accommodation or property.
+13. Never invent availability, prices, amenities, policies or booking confirmation.
+14. A direct booking receives 10% off once and never combines with another offer.
+15. A booking request is not a confirmed booking. Reception confirms it.
+16. Ask at most one useful follow-up question and avoid long menus, apologies or generic statements.
+17. Breakfast is available for €12 per person.`;
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
 type SearchRequest = { checkin?: string; checkout?: string; guests?: number };
@@ -76,9 +79,33 @@ function featureText(offer: Offer) {
   return offer.features.slice(0, 7).join(", ");
 }
 
+function detectNoOfferResponse(text: string, offers: Offer[]): { answer: string; actions: Action[] } | null {
+  if (offers.length) return null;
+  const asksAvailabilityOrBooking = /(διαθέσιμ|διαθεσιμ|δωμάτι|δωματι|οικογενειακ|κράτη|κρατη|reserve|book|room|apartment)/i.test(text);
+  if (!asksAvailabilityOrBooking) return null;
+  return {
+    answer: "Για να προτείνω πραγματικά διαθέσιμο δωμάτιο, επίλεξε άφιξη, αναχώρηση και επισκέπτες στο πλαίσιο «Η διαμονή σας» και πάτησε «Δείτε διαθεσιμότητα». Μετά θα σου δείξω μόνο τις διαθέσιμες επιλογές με φωτογραφίες και τιμές.",
+    actions: [],
+  };
+}
+
 function detectQuickResponse(text: string, offers: Offer[]): { answer: string; actions: Action[] } | null {
-  if (!offers.length) return null;
+  const noOffer = detectNoOfferResponse(text, offers);
+  if (noOffer) return noOffer;
+
   const lower = text.toLocaleLowerCase("el-GR");
+  const asksOneRoom = /(ένα μόνο|ενα μονο|μόνο ένα|μονο ενα|one room|single option|συγκεκριμένο διαθέσιμο|συγκεκριμενο διαθεσιμο)/i.test(lower);
+  if (asksOneRoom && offers.length) {
+    const offer = offers[0];
+    return {
+      answer: `Η καλύτερη διαθέσιμη επιλογή αυτή τη στιγμή είναι το ${offer.name}, με τιμή απευθείας κράτησης ${offer.directTotal.toFixed(2)} € για ${offer.nights} ${offer.nights === 1 ? "νύχτα" : "νύχτες"}. Το προτείνω επειδή είναι η οικονομικότερη διαθέσιμη επιλογή που καλύπτει τον αριθμό επισκεπτών.`,
+      actions: [
+        { label: "Αίτημα κράτησης", action: "open_request", roomId: offer.roomId, unitId: offer.unitId },
+        { label: "Φωτογραφίες & λεπτομέρειες", href: offer.detailsUrl },
+      ],
+    };
+  }
+
   const offer = findMentionedOffer(text, offers);
   if (!offer) return null;
 
@@ -134,12 +161,18 @@ export async function POST(request: NextRequest) {
     const messages: ChatMessage[] = Array.isArray(body?.messages) ? body.messages.filter((message: any) => (message?.role === "user" || message?.role === "assistant") && typeof message?.content === "string").slice(-10).map((message: ChatMessage) => ({ role: message.role, content: message.content.trim().slice(0, 1400) })).filter((message: ChatMessage) => message.content.length > 0) : [];
     if (!messages.length || messages[messages.length - 1].role !== "user") return NextResponse.json({ error: "Please enter a question." }, { status: 400 });
 
-    const search: SearchRequest = body?.search || {}; const includeOffers = body?.includeOffers === true; const previousOffers = cleanOffers(body?.activeOffers); const offers = includeOffers ? await getOffers(search) : previousOffers; const latestText = messages[messages.length - 1].content;
+    const search: SearchRequest = body?.search || {};
+    const includeOffers = body?.includeOffers === true;
+    const previousOffers = cleanOffers(body?.activeOffers);
+    const offers = includeOffers ? await getOffers(search) : previousOffers;
+    const latestText = messages[messages.length - 1].content;
     const quick = !includeOffers ? detectQuickResponse(latestText, offers) : null;
     if (quick) return NextResponse.json({ answer: quick.answer, actions: quick.actions, offers: [], discountPercent: DIRECT_DISCOUNT_PERCENT });
 
-    const roomContext = offers.length ? `\n\nCURRENT ROOM CONTEXT:\n${JSON.stringify(offers.map(({ image, ...offer }) => offer))}` : "\n\nNo current room results are available.";
-    const turnContext = includeOffers && validDate(search.checkin) && validDate(search.checkout) ? `\n\nLIVE SEARCH FOR THIS TURN: Check-in ${search.checkin}, check-out ${search.checkout}, guests ${search.guests || 2}. Summarize the best options in no more than 3 short sentences. Detailed cards are shown by the UI.` : `\n\nFOLLOW-UP TURN: Use CURRENT ROOM CONTEXT. Refer to the visible buttons when appropriate.`;
+    const roomContext = offers.length ? `\n\nCURRENT ROOM CONTEXT:\n${JSON.stringify(offers.map(({ image, ...offer }) => offer))}` : "\n\nCURRENT ROOM CONTEXT is empty. No live room has been selected.";
+    const turnContext = includeOffers && validDate(search.checkin) && validDate(search.checkout)
+      ? `\n\nLIVE SEARCH FOR THIS TURN: Check-in ${search.checkin}, check-out ${search.checkout}, guests ${search.guests || 2}. Summarize the best options in no more than 3 short sentences. Detailed cards are shown by the UI.`
+      : `\n\nFOLLOW-UP TURN: Use CURRENT ROOM CONTEXT. If it is empty, instruct the guest to use the search panel. Never suggest a booking request without a current offer.`;
     const openAIResponse = await fetch("https://api.openai.com/v1/responses", { method: "POST", headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" }, body: JSON.stringify({ model: process.env.OPENAI_MODEL || "gpt-5-mini", instructions: SYSTEM_PROMPT + roomContext + turnContext, input: messages, reasoning: { effort: "minimal" }, max_output_tokens: 450 }), cache: "no-store" });
     const payload = await openAIResponse.json();
     if (!openAIResponse.ok) return NextResponse.json({ error: "The assistant is temporarily unavailable. Please try again shortly." }, { status: 502 });
