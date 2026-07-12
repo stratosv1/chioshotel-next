@@ -24,6 +24,13 @@ export type AssistantRoom = {
   note?: string;
 };
 
+export type PersonalizedRoomMeta = {
+  matchScore: number;
+  bestMatch: boolean;
+  recommendationReason: string;
+  recommendationReasons: string[];
+};
+
 const COMMON = ["Κλιματισμός", "Δωρεάν Wi‑Fi", "Ψυγείο", "Ιδιωτικό μπάνιο", "Επίπεδη τηλεόραση", "Βραστήρας καφέ / τσαγιού", "Δωμάτιο μη καπνιστών"];
 
 const standardUrls = {
@@ -58,6 +65,16 @@ export const ASSISTANT_ROOMS: AssistantRoom[] = [
   { number: 10, roomId: "265595", unitId: "3", type: "family", category: "Ανεξάρτητο διαμέρισμα", floor: "Ισόγειο · ανεξάρτητη είσοδος", maxGuests: 5, beds: "1 διπλό κρεβάτι, 2 καναπέδες-κρεβάτια και πρόσθετο κρεβάτι για 5ο άτομο", features: ["Πλήρης κουζίνα", "Δύο χώροι", "Πρόσβαση κήπου", ...COMMON], image: "/images/rooms/DSC07899.webp", priceRank: 10, detailsUrls: familyUrls, attributes: { groundFloor: true, noStairs: true, fullKitchen: true, familyFriendly: true }, note: "Για 5 άτομα διατίθεται υπό προϋποθέσεις: ο χώρος είναι πιο περιορισμένος και προστίθεται επιπλέον κρεβάτι, συνήθως στο δωμάτιο των γονιών." },
 ];
 
+const reasonText: Record<AssistantLanguage, Record<string, string>> = {
+  el: { capacity: "καλύπτει άνετα τον αριθμό των επισκεπτών", exactCapacity: "έχει χωρητικότητα ακριβώς για την παρέα σας", ground: "είναι ισόγειο", noStairs: "δεν απαιτεί σκάλες", kitchenette: "διαθέτει kitchenette", fullKitchen: "διαθέτει πλήρη κουζίνα", family: "ταιριάζει σε οικογένεια", budget: "είναι από τις πιο οικονομικές επιλογές", first: "βρίσκεται στον πρώτο όροφο", flexible: "προσφέρει καλή ισορροπία χώρου και τιμής", best: "Καλύτερη επιλογή για όσα ζητήσατε" },
+  en: { capacity: "comfortably supports your guest count", exactCapacity: "fits your group size exactly", ground: "is on the ground floor", noStairs: "requires no stairs", kitchenette: "includes a kitchenette", fullKitchen: "includes a full kitchen", family: "is well suited to families", budget: "is among the most economical options", first: "is on the first floor", flexible: "offers a good balance of space and value", best: "Best match for your request" },
+  fr: { capacity: "convient au nombre de personnes", exactCapacity: "correspond exactement à la taille de votre groupe", ground: "se trouve au rez-de-chaussée", noStairs: "ne nécessite pas d'escaliers", kitchenette: "dispose d'une kitchenette", fullKitchen: "dispose d'une cuisine complète", family: "convient bien aux familles", budget: "fait partie des options les plus économiques", first: "se trouve au premier étage", flexible: "offre un bon équilibre entre espace et prix", best: "Meilleur choix pour votre demande" },
+  de: { capacity: "passt gut zu Ihrer Gästezahl", exactCapacity: "passt genau zu Ihrer Gruppengröße", ground: "liegt im Erdgeschoss", noStairs: "erfordert keine Treppen", kitchenette: "hat eine Küchenzeile", fullKitchen: "hat eine vollständige Küche", family: "ist gut für Familien geeignet", budget: "gehört zu den günstigsten Optionen", first: "liegt im ersten Stock", flexible: "bietet ein gutes Verhältnis von Platz und Preis", best: "Beste Wahl für Ihre Wünsche" },
+  it: { capacity: "è adatta al numero di ospiti", exactCapacity: "corrisponde esattamente al vostro gruppo", ground: "si trova al piano terra", noStairs: "non richiede scale", kitchenette: "dispone di angolo cottura", fullKitchen: "dispone di cucina completa", family: "è adatta alle famiglie", budget: "è tra le opzioni più economiche", first: "si trova al primo piano", flexible: "offre un buon equilibrio tra spazio e prezzo", best: "Scelta migliore per la richiesta" },
+  es: { capacity: "admite cómodamente a su grupo", exactCapacity: "se ajusta exactamente al tamaño del grupo", ground: "está en la planta baja", noStairs: "no requiere escaleras", kitchenette: "incluye cocina pequeña", fullKitchen: "incluye cocina completa", family: "es adecuada para familias", budget: "está entre las opciones más económicas", first: "está en la primera planta", flexible: "ofrece un buen equilibrio entre espacio y precio", best: "Mejor opción para su solicitud" },
+  tr: { capacity: "misafir sayınıza uygundur", exactCapacity: "grupunuzun büyüklüğüne tam uyar", ground: "zemin kattadır", noStairs: "merdiven gerektirmez", kitchenette: "mini mutfağı vardır", fullKitchen: "tam mutfağı vardır", family: "aileler için uygundur", budget: "en ekonomik seçenekler arasındadır", first: "birinci kattadır", flexible: "alan ve fiyat arasında iyi denge sunar", best: "Talebiniz için en uygun seçenek" },
+};
+
 function matchesPreferences(room: AssistantRoom, preferences?: AssistantPreferences) {
   if (!preferences) return true;
   if (preferences.floor === "ground" && !room.attributes.groundFloor) return false;
@@ -71,30 +88,72 @@ function matchesPreferences(room: AssistantRoom, preferences?: AssistantPreferen
   return true;
 }
 
+function personalize(room: AssistantRoom, action: AssistantAction, language: AssistantLanguage) {
+  const t = reasonText[language] || reasonText.en;
+  const guests = action.guests;
+  const preferences = action.preferences || {};
+  let score = 20 - room.priceRank;
+  const reasons: string[] = [];
+
+  if (guests) {
+    if (room.maxGuests === guests) { score += 20; reasons.push(t.exactCapacity); }
+    else if (room.maxGuests > guests) { score += 12; reasons.push(t.capacity); }
+  }
+  if (preferences.noStairs && room.attributes.noStairs) { score += 30; reasons.push(t.noStairs); }
+  else if (preferences.floor === "ground" && room.attributes.groundFloor) { score += 24; reasons.push(t.ground); }
+  if (preferences.floor === "first" && room.attributes.firstFloor) { score += 20; reasons.push(t.first); }
+  if (preferences.kitchenette && room.attributes.kitchenette) { score += 24; reasons.push(t.kitchenette); }
+  if (preferences.fullKitchen && room.attributes.fullKitchen) { score += 30; reasons.push(t.fullKitchen); }
+  if ((preferences.familyFriendly || (guests && guests >= 3)) && room.attributes.familyFriendly) { score += 16; reasons.push(t.family); }
+  if (preferences.budget === "lowest" && room.type === "economy") { score += 30; reasons.push(t.budget); }
+  if (!reasons.length) reasons.push(t.flexible);
+
+  return { room, score, reasons: Array.from(new Set(reasons)).slice(0, 3) };
+}
+
+export function getPersonalizedRoomMeta(roomId: string, unitId: string, action: AssistantAction, language: AssistantLanguage): PersonalizedRoomMeta | null {
+  const room = ASSISTANT_ROOMS.find((item) => item.roomId === String(roomId) && item.unitId === String(unitId));
+  if (!room) return null;
+  const result = personalize(room, action, language);
+  return {
+    matchScore: result.score,
+    bestMatch: false,
+    recommendationReason: result.reasons.join(" · "),
+    recommendationReasons: result.reasons,
+  };
+}
+
 export function recommendRooms(action: AssistantAction, language: AssistantLanguage) {
   const explicit = action.roomNumber ? [action.roomNumber] : action.roomNumbers || [];
   const guests = action.guests;
-  return ASSISTANT_ROOMS
+  const ranked = ASSISTANT_ROOMS
     .filter((room) => !explicit.length || explicit.includes(room.number))
     .filter((room) => !guests || room.maxGuests >= guests)
     .filter((room) => matchesPreferences(room, action.preferences))
-    .sort((a, b) => a.priceRank - b.priceRank)
-    .slice(0, explicit.length ? explicit.length : 4)
-    .map((room) => ({
-      roomId: room.roomId,
-      unitId: room.unitId,
-      name: `Room ${room.number}`,
-      category: `${room.category} · ${room.floor}`,
-      floor: room.floor,
-      maxGuests: room.maxGuests,
-      features: [room.beds, ...room.features, ...(room.note ? [room.note] : [])],
-      image: room.image,
-      detailsUrl: room.detailsUrls[language] || room.detailsUrls.en || "/chios-rooms/",
-      bookingUrl: "/book-now",
-      nights: 0,
-      originalTotal: 0,
-      directTotal: 0,
-      saving: 0,
-      preview: true,
-    }));
+    .map((room) => personalize(room, action, language))
+    .sort((a, b) => b.score - a.score || a.room.priceRank - b.room.priceRank)
+    .slice(0, explicit.length ? explicit.length : 4);
+
+  return ranked.map(({ room, score, reasons }, index) => ({
+    roomId: room.roomId,
+    unitId: room.unitId,
+    name: `Room ${room.number}`,
+    category: `${room.category} · ${room.floor}`,
+    floor: room.floor,
+    maxGuests: room.maxGuests,
+    features: [room.beds, ...room.features, ...(room.note ? [room.note] : [])],
+    image: room.image,
+    detailsUrl: room.detailsUrls[language] || room.detailsUrls.en || "/chios-rooms/",
+    bookingUrl: "/book-now",
+    nights: 0,
+    originalTotal: 0,
+    directTotal: 0,
+    saving: 0,
+    preview: true,
+    matchScore: score,
+    bestMatch: index === 0 && ranked.length > 1,
+    bestMatchLabel: reasonText[language]?.best || reasonText.en.best,
+    recommendationReason: reasons.join(" · "),
+    recommendationReasons: reasons,
+  }));
 }
