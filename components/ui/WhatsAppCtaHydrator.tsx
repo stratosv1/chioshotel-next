@@ -14,6 +14,8 @@ function isWhatsAppElement(element: HTMLElement) {
 function applyWhatsAppStyle(element: HTMLElement) {
   const target = element.closest<HTMLElement>("a, button") || element;
 
+  if (target.dataset.whatsappCtaReady === "true") return;
+
   target.classList.remove(
     "bg-[#17351f]",
     "bg-[#224d2d]",
@@ -32,6 +34,17 @@ function applyWhatsAppStyle(element: HTMLElement) {
     "shadow-[#25D366]/25",
     "hover:!bg-[#1ebe5d]",
   );
+  target.dataset.whatsappCtaReady = "true";
+}
+
+function hydrateWhatsAppInRoot(root: ParentNode) {
+  if (root instanceof HTMLElement && isWhatsAppElement(root)) {
+    applyWhatsAppStyle(root);
+  }
+
+  for (const element of Array.from(root.querySelectorAll<HTMLElement>("a, button"))) {
+    if (isWhatsAppElement(element)) applyWhatsAppStyle(element);
+  }
 }
 
 function hydrateBeds24Iframes() {
@@ -55,25 +68,36 @@ function hydrateBeds24Iframes() {
 
 export function WhatsAppCtaHydrator() {
   useEffect(() => {
-    function hydratePageCtas() {
-      const candidates = Array.from(document.querySelectorAll<HTMLElement>("a, button"));
+    hydrateWhatsAppInRoot(document);
+    hydrateBeds24Iframes();
 
-      for (const element of candidates) {
-        if (!isWhatsAppElement(element)) continue;
-        applyWhatsAppStyle(element);
-        element.dataset.whatsappCtaReady = "true";
+    let frameId: number | null = null;
+    const pendingRoots = new Set<HTMLElement>();
+
+    const flush = () => {
+      frameId = null;
+      for (const root of pendingRoots) hydrateWhatsAppInRoot(root);
+      pendingRoots.clear();
+    };
+
+    const observer = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        for (const node of Array.from(mutation.addedNodes)) {
+          if (node instanceof HTMLElement) pendingRoots.add(node);
+        }
       }
 
-      hydrateBeds24Iframes();
-    }
+      if (pendingRoots.size && frameId === null) {
+        frameId = window.requestAnimationFrame(flush);
+      }
+    });
 
-    hydratePageCtas();
-    const observer = new MutationObserver(() => hydratePageCtas());
     observer.observe(document.body, { childList: true, subtree: true });
-    window.addEventListener("resize", hydrateBeds24Iframes);
+    window.addEventListener("resize", hydrateBeds24Iframes, { passive: true });
 
     return () => {
       observer.disconnect();
+      if (frameId !== null) window.cancelAnimationFrame(frameId);
       window.removeEventListener("resize", hydrateBeds24Iframes);
     };
   }, []);
