@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { GuestAssistantSales } from "@/components/ai/GuestAssistantSales";
+import { GuestAssistantLeadFlow } from "@/components/ai/GuestAssistantLeadFlow";
 
 export const metadata: Metadata = {
   title: "AI Guest Assistant Test",
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default function AiAssistantPage() {
   return (
     <main className="min-h-[100dvh] bg-stone-50">
-      <GuestAssistantSales />
+      <GuestAssistantLeadFlow />
     </main>
   );
 }
