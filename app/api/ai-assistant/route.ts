@@ -54,7 +54,7 @@ const ROOM_META: Record<string, { features: string[]; image: string; type: RoomT
 };
 
 const SYSTEM_PROMPT = `You are the digital guest assistant for Voulamandis House, rooms and apartments in Kampos, Chios, Greece.
-Reply in the same language as the guest. Be concise. Never invent availability, prices, amenities or booking confirmation. Never call Voulamandis House a hotel. Direct bookings receive 10% off once and never combine with another offer. A booking request is not a confirmed booking. When a room exists in CURRENT ROOM CONTEXT, use its supplied detailsUrl and visible actions.`;
+Reply in the same language as the guest. Be concise. Never invent availability, prices, amenities or booking confirmation. Never call Voulamandis House a hotel. Direct bookings receive 10% off once and never combine with another offer. A booking request is not a confirmed booking. Never ask again for information already present in SEARCH FORM CONTEXT.`;
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
 type SearchRequest = { checkin?: string; checkout?: string; guests?: number };
@@ -89,6 +89,26 @@ function nightsBetween(checkin: string, checkout: string) { return Math.round((n
 function bookingWebAppUrl() { return process.env.GOOGLE_BOOKING_SEARCH_WEBAPP_URL || DEFAULT_BOOKING_WEBAPP_URL; }
 function cleanOffers(value: unknown): Offer[] { return Array.isArray(value) ? value.slice(0, 10).filter((item: any) => item && typeof item.name === "string" && typeof item.roomId === "string") as Offer[] : []; }
 
+function formatIsoDate(value: string, language: SupportedLanguage) {
+  const locale = language === "el" ? "el-GR" : language === "de" ? "de-DE" : language === "fr" ? "fr-FR" : language === "it" ? "it-IT" : language === "es" ? "es-ES" : language === "tr" ? "tr-TR" : "en-GB";
+  return new Intl.DateTimeFormat(locale, { day: "2-digit", month: "2-digit", year: "numeric" }).format(new Date(`${value}T12:00:00Z`));
+}
+
+function partialSearchResponse(search: SearchRequest, language: SupportedLanguage): string | null {
+  if (!validDate(search.checkin)) {
+    return language === "el"
+      ? "Συμπλήρωσε πρώτα την ημερομηνία άφιξης στο πλαίσιο «Η διαμονή σας»."
+      : "Please select your arrival date in the stay form first.";
+  }
+  if (!validDate(search.checkout)) {
+    const arrival = formatIsoDate(search.checkin!, language);
+    return language === "el"
+      ? `Έχω ήδη άφιξη ${arrival} και ${search.guests || 2} επισκέπτες. Συμπλήρωσε μόνο την ημερομηνία αναχώρησης και πάτησε «Δείτε διαθεσιμότητα».`
+      : `I already have arrival ${arrival} and ${search.guests || 2} guests. Please add only the departure date and press “View availability”.`;
+  }
+  return null;
+}
+
 function findMentionedOffer(text: string, offers: Offer[]) {
   const normalized = text.toLocaleLowerCase("el-GR");
   return offers.find((offer) => {
@@ -114,7 +134,10 @@ async function getOffers(search: SearchRequest, language: SupportedLanguage): Pr
   const nights = nightsBetween(search.checkin!, search.checkout!);
   if (nights < 1 || nights > 30) return [];
   const url = new URL(bookingWebAppUrl());
-  url.searchParams.set("action", "search_range"); url.searchParams.set("checkin", search.checkin!); url.searchParams.set("checkout", search.checkout!); url.searchParams.set("guests", String(guests));
+  url.searchParams.set("action", "search_range");
+  url.searchParams.set("checkin", search.checkin!);
+  url.searchParams.set("checkout", search.checkout!);
+  url.searchParams.set("guests", String(guests));
   const response = await fetch(url.toString(), { headers: { Accept: "application/json", "User-Agent": "VoulamandisHouseAI/1.0" }, cache: "no-store" });
   const data = await response.json().catch(() => null);
   if (!response.ok || !data?.success || !Array.isArray(data?.rooms?.available)) return [];
@@ -134,16 +157,25 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const messages: ChatMessage[] = Array.isArray(body?.messages) ? body.messages.filter((message: any) => (message?.role === "user" || message?.role === "assistant") && typeof message?.content === "string").slice(-10).map((message: ChatMessage) => ({ role: message.role, content: message.content.trim().slice(0, 1400) })).filter((message: ChatMessage) => message.content.length > 0) : [];
     if (!messages.length || messages[messages.length - 1].role !== "user") return NextResponse.json({ error: "Please enter a question." }, { status: 400 });
+
     const language = detectLanguage(messages);
     const search: SearchRequest = body?.search || {};
     const includeOffers = body?.includeOffers === true;
     const previousOffers = cleanOffers(body?.activeOffers);
-    const offers = includeOffers ? await getOffers(search, language) : previousOffers;
     const latestText = messages[messages.length - 1].content;
+
+    if (!includeOffers && !previousOffers.length) {
+      const partial = partialSearchResponse(search, language);
+      if (partial) return NextResponse.json({ answer: partial, actions: [], offers: [], language, discountPercent: DIRECT_DISCOUNT_PERCENT });
+    }
+
+    const offers = includeOffers ? await getOffers(search, language) : previousOffers;
     const quick = !includeOffers ? detectQuickResponse(latestText, offers) : null;
     if (quick) return NextResponse.json({ answer: quick.answer, actions: quick.actions, offers: [], language, discountPercent: DIRECT_DISCOUNT_PERCENT });
+
     const roomContext = offers.length ? `\n\nCURRENT ROOM CONTEXT:\n${JSON.stringify(offers.map(({ image, ...offer }) => offer))}` : "\n\nCURRENT ROOM CONTEXT is empty.";
-    const openAIResponse = await fetch("https://api.openai.com/v1/responses", { method: "POST", headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" }, body: JSON.stringify({ model: process.env.OPENAI_MODEL || "gpt-5-mini", instructions: SYSTEM_PROMPT + roomContext, input: messages, reasoning: { effort: "minimal" }, max_output_tokens: 450 }), cache: "no-store" });
+    const searchContext = `\n\nSEARCH FORM CONTEXT: check-in=${search.checkin || "missing"}, check-out=${search.checkout || "missing"}, guests=${search.guests || 2}. Never ask again for fields already present.`;
+    const openAIResponse = await fetch("https://api.openai.com/v1/responses", { method: "POST", headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" }, body: JSON.stringify({ model: process.env.OPENAI_MODEL || "gpt-5-mini", instructions: SYSTEM_PROMPT + roomContext + searchContext, input: messages, reasoning: { effort: "minimal" }, max_output_tokens: 350 }), cache: "no-store" });
     const payload = await openAIResponse.json();
     if (!openAIResponse.ok) return NextResponse.json({ error: "The assistant is temporarily unavailable. Please try again shortly." }, { status: 502 });
     const answer = extractText(payload);
