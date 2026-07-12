@@ -9,6 +9,24 @@ const DEFAULT_BOOKING_WEBAPP_URL =
 
 type SupportedLanguage = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
 type RoomType = "standard" | "economy" | "family";
+type ChatMessage = { role: "user" | "assistant"; content: string };
+type SearchState = { checkin?: string; checkout?: string; guests?: number };
+type Offer = {
+  roomId: string;
+  unitId: string;
+  name: string;
+  category: string;
+  floor: string;
+  maxGuests: number;
+  features: string[];
+  image: string;
+  detailsUrl: string;
+  bookingUrl: string;
+  nights: number;
+  originalTotal: number;
+  directTotal: number;
+  saving: number;
+};
 
 const ROOM_URLS: Record<RoomType, Record<SupportedLanguage, string>> = {
   standard: {
@@ -53,170 +71,213 @@ const ROOM_META: Record<string, { features: string[]; image: string; type: RoomT
   "265595:3": { features: ["Independent apartment", "Kitchen", "Garden view", "Up to 4 guests"], image: "/images/rooms/DSC07899.webp", type: "family" },
 };
 
-const SYSTEM_PROMPT = `You are the digital guest assistant for Voulamandis House, rooms and apartments in Kampos, Chios, Greece.
-Reply in the same language as the guest. Be concise. Never invent availability, prices, amenities or booking confirmation. Never call Voulamandis House a hotel. Direct bookings receive 10% off once and never combine with another offer. A booking request is not a confirmed booking. Never ask again for information already present in SEARCH FORM CONTEXT.`;
-
-type ChatMessage = { role: "user" | "assistant"; content: string };
-type SearchRequest = { checkin?: string; checkout?: string; guests?: number };
-type Action = { label: string; href?: string; action?: "open_request"; roomId?: string; unitId?: string };
-type Offer = { roomId: string; unitId: string; name: string; category: string; floor: string; maxGuests: number; features: string[]; image: string; detailsUrl: string; bookingUrl: string; nights: number; originalTotal: number; directTotal: number; saving: number };
-
 function detectLanguage(messages: ChatMessage[]): SupportedLanguage {
   const text = [...messages].reverse().find((message) => message.role === "user")?.content || "";
   if (/[Α-Ωα-ωΆ-ώ]/.test(text)) return "el";
   if (/[ğüşöçıİĞÜŞÖÇ]/i.test(text)) return "tr";
-  if (/[äöüß]/i.test(text) || /\b(ich|zimmer|verfügbarkeit|preis|möchte|ist|sind)\b/i.test(text)) return "de";
-  if (/[éèêëàâçîïôùûüÿœ]/i.test(text) || /\b(je|chambre|prix|disponible|voudrais|est|sont)\b/i.test(text)) return "fr";
-  if (/\b(quiero|habitación|precio|disponible|para|es|son)\b/i.test(text)) return "es";
-  if (/\b(vorrei|camera|prezzo|disponibile|per|è|sono)\b/i.test(text)) return "it";
+  if (/[äöüß]/i.test(text) || /\b(ich|zimmer|verfügbarkeit|preis|möchte)\b/i.test(text)) return "de";
+  if (/[éèêëàâçîïôùûüÿœ]/i.test(text) || /\b(je|chambre|prix|disponible|voudrais)\b/i.test(text)) return "fr";
+  if (/\b(quiero|habitación|precio|disponible|huéspedes)\b/i.test(text)) return "es";
+  if (/\b(vorrei|camera|prezzo|disponibile|ospiti)\b/i.test(text)) return "it";
   return "en";
 }
 
-function extractText(payload: any): string {
-  if (typeof payload?.output_text === "string" && payload.output_text.trim()) return payload.output_text.trim();
-  const texts: string[] = [];
-  for (const item of Array.isArray(payload?.output) ? payload.output : []) {
-    for (const part of Array.isArray(item?.content) ? item.content : []) {
-      if (typeof part?.text === "string" && part.text.trim()) texts.push(part.text.trim());
-    }
-  }
-  return texts.join("\n").trim();
+function validDate(value?: string) {
+  return Boolean(value && /^\d{4}-\d{2}-\d{2}$/.test(value));
 }
 
-function validDate(value?: string) { return Boolean(value && /^\d{4}-\d{2}-\d{2}$/.test(value)); }
-function nightsBetween(checkin: string, checkout: string) { return Math.round((new Date(`${checkout}T12:00:00Z`).getTime() - new Date(`${checkin}T12:00:00Z`).getTime()) / 86400000); }
-function bookingWebAppUrl() { return process.env.GOOGLE_BOOKING_SEARCH_WEBAPP_URL || DEFAULT_BOOKING_WEBAPP_URL; }
-function cleanOffers(value: unknown): Offer[] { return Array.isArray(value) ? value.slice(0, 10).filter((item: any) => item && typeof item.name === "string" && typeof item.roomId === "string") as Offer[] : []; }
+function addDays(date: string, days: number) {
+  const value = new Date(`${date}T12:00:00Z`);
+  value.setUTCDate(value.getUTCDate() + days);
+  return value.toISOString().slice(0, 10);
+}
 
-function formatIsoDate(value: string, language: SupportedLanguage) {
+function nightsBetween(checkin: string, checkout: string) {
+  return Math.round((new Date(`${checkout}T12:00:00Z`).getTime() - new Date(`${checkin}T12:00:00Z`).getTime()) / 86400000);
+}
+
+function bookingWebAppUrl() {
+  return process.env.GOOGLE_BOOKING_SEARCH_WEBAPP_URL || DEFAULT_BOOKING_WEBAPP_URL;
+}
+
+function formatDate(value: string, language: SupportedLanguage) {
   const locale = language === "el" ? "el-GR" : language === "de" ? "de-DE" : language === "fr" ? "fr-FR" : language === "it" ? "it-IT" : language === "es" ? "es-ES" : language === "tr" ? "tr-TR" : "en-GB";
   return new Intl.DateTimeFormat(locale, { day: "2-digit", month: "2-digit", year: "numeric" }).format(new Date(`${value}T12:00:00Z`));
 }
 
-function partialSearchResponse(search: SearchRequest, language: SupportedLanguage): string | null {
-  if (!validDate(search.checkin)) return language === "el" ? "Συμπλήρωσε πρώτα την ημερομηνία άφιξης στο πλαίσιο «Η διαμονή σας»." : "Please select your arrival date in the stay form first.";
-  if (!validDate(search.checkout)) {
-    const arrival = formatIsoDate(search.checkin!, language);
-    return language === "el" ? `Έχω ήδη άφιξη ${arrival} και ${search.guests || 2} επισκέπτες. Συμπλήρωσε μόνο την ημερομηνία αναχώρησης και πάτησε «Δείτε διαθεσιμότητα».` : `I already have arrival ${arrival} and ${search.guests || 2} guests. Please add only the departure date and press “View availability”.`;
-  }
-  return null;
+function questionForMissing(state: SearchState, language: SupportedLanguage) {
+  const copy = {
+    el: {
+      checkin: "Πότε θέλετε να έρθετε; Μπορείτε να γράψετε π.χ. «22 Αυγούστου».",
+      checkout: "Για πόσες νύχτες θέλετε να μείνετε ή ποια θα είναι η αναχώρηση;",
+      guests: "Για πόσα άτομα είναι η διαμονή;",
+    },
+    en: { checkin: "When would you like to arrive?", checkout: "How many nights would you like to stay, or what is your departure date?", guests: "How many guests will be staying?" },
+    de: { checkin: "Wann möchten Sie anreisen?", checkout: "Wie viele Nächte möchten Sie bleiben oder wann reisen Sie ab?", guests: "Für wie viele Gäste ist der Aufenthalt?" },
+    fr: { checkin: "Quand souhaitez-vous arriver ?", checkout: "Combien de nuits souhaitez-vous rester ou quelle est votre date de départ ?", guests: "Pour combien de personnes ?" },
+    it: { checkin: "Quando desidera arrivare?", checkout: "Quante notti desidera soggiornare o qual è la data di partenza?", guests: "Per quante persone?" },
+    es: { checkin: "¿Cuándo desea llegar?", checkout: "¿Cuántas noches desea alojarse o cuál es la fecha de salida?", guests: "¿Para cuántas personas?" },
+    tr: { checkin: "Ne zaman gelmek istersiniz?", checkout: "Kaç gece kalmak istersiniz veya çıkış tarihiniz nedir?", guests: "Kaç kişi konaklayacak?" },
+  }[language];
+
+  if (!validDate(state.checkin)) return copy.checkin;
+  if (!validDate(state.checkout)) return copy.checkout;
+  if (!state.guests || state.guests < 1) return copy.guests;
+  return "";
 }
 
-function liveSearchAnswer(language: SupportedLanguage, offers: Offer[], search: SearchRequest) {
-  const checkin = formatIsoDate(search.checkin!, language);
-  const checkout = formatIsoDate(search.checkout!, language);
-  const guests = Number(search.guests || 2);
-  const count = offers.length;
+async function extractSearchState(apiKey: string, messages: ChatMessage[], current: SearchState) {
+  const today = new Date().toISOString().slice(0, 10);
+  const response = await fetch("https://api.openai.com/v1/responses", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: process.env.OPENAI_MODEL || "gpt-5-mini",
+      instructions: `Extract booking search details from the conversation. Today is ${today}. Preserve existing values unless the guest clearly changes them. Resolve dates to YYYY-MM-DD. If the guest gives nights and a check-in date, calculate checkout. Do not guess missing information.`,
+      input: [
+        { role: "user", content: `Existing state: ${JSON.stringify(current)}\nConversation: ${JSON.stringify(messages.slice(-8))}` },
+      ],
+      reasoning: { effort: "minimal" },
+      text: {
+        format: {
+          type: "json_schema",
+          name: "booking_search",
+          strict: true,
+          schema: {
+            type: "object",
+            additionalProperties: false,
+            properties: {
+              checkin: { type: ["string", "null"] },
+              checkout: { type: ["string", "null"] },
+              nights: { type: ["integer", "null"] },
+              guests: { type: ["integer", "null"] },
+            },
+            required: ["checkin", "checkout", "nights", "guests"],
+          },
+        },
+      },
+      max_output_tokens: 220,
+    }),
+    cache: "no-store",
+  });
 
-  if (!count) {
-    const answers: Record<SupportedLanguage, string> = {
-      el: `Δεν βρέθηκε διαθέσιμο δωμάτιο για ${guests} επισκέπτες από ${checkin} έως ${checkout}.`,
-      en: `No room was found for ${guests} guests from ${checkin} to ${checkout}.`,
-      de: `Für ${guests} Gäste vom ${checkin} bis ${checkout} wurde kein verfügbares Zimmer gefunden.`,
-      fr: `Aucune chambre disponible n’a été trouvée pour ${guests} personnes du ${checkin} au ${checkout}.`,
-      it: `Non è stata trovata alcuna camera disponibile per ${guests} ospiti dal ${checkin} al ${checkout}.`,
-      es: `No se encontró ninguna habitación disponible para ${guests} huéspedes del ${checkin} al ${checkout}.`,
-      tr: `${checkin}–${checkout} tarihleri arasında ${guests} kişi için uygun oda bulunamadı.`,
+  if (!response.ok) return current;
+  const payload = await response.json();
+  const raw = payload?.output_text || payload?.output?.[0]?.content?.[0]?.text;
+  if (!raw) return current;
+
+  try {
+    const parsed = JSON.parse(raw);
+    const next: SearchState = {
+      checkin: validDate(parsed.checkin) ? parsed.checkin : current.checkin,
+      checkout: validDate(parsed.checkout) ? parsed.checkout : current.checkout,
+      guests: Number.isInteger(parsed.guests) && parsed.guests > 0 ? Math.min(parsed.guests, 10) : current.guests,
     };
-    return answers[language];
+    if (!next.checkout && next.checkin && Number.isInteger(parsed.nights) && parsed.nights > 0) {
+      next.checkout = addDays(next.checkin, parsed.nights);
+    }
+    return next;
+  } catch {
+    return current;
   }
-
-  const answers: Record<SupportedLanguage, string> = {
-    el: `Βρέθηκαν ${count} διαθέσιμες ${count === 1 ? "επιλογή" : "επιλογές"} για ${guests} επισκέπτες από ${checkin} έως ${checkout}. Πατήστε σε οποιοδήποτε δωμάτιο για να δείτε φωτογραφίες, χαρακτηριστικά, αρχική τιμή και τιμή απευθείας κράτησης.`,
-    en: `${count} available ${count === 1 ? "option was" : "options were"} found for ${guests} guests from ${checkin} to ${checkout}. Tap any room to view photos, features, the original price and the direct-booking price.`,
-    de: `${count} verfügbare ${count === 1 ? "Option wurde" : "Optionen wurden"} für ${guests} Gäste vom ${checkin} bis ${checkout} gefunden. Tippen Sie auf ein Zimmer, um Fotos, Ausstattung sowie Original- und Direktbuchungspreis zu sehen.`,
-    fr: `${count} ${count === 1 ? "option disponible a été trouvée" : "options disponibles ont été trouvées"} pour ${guests} personnes du ${checkin} au ${checkout}. Touchez une chambre pour voir les photos, les équipements et les tarifs.`,
-    it: `Sono state trovate ${count} ${count === 1 ? "opzione disponibile" : "opzioni disponibili"} per ${guests} ospiti dal ${checkin} al ${checkout}. Tocca una camera per vedere foto, caratteristiche e prezzi.`,
-    es: `Se encontraron ${count} ${count === 1 ? "opción disponible" : "opciones disponibles"} para ${guests} huéspedes del ${checkin} al ${checkout}. Pulsa una habitación para ver fotos, características y precios.`,
-    tr: `${checkin}–${checkout} tarihleri arasında ${guests} kişi için ${count} uygun seçenek bulundu. Fotoğrafları, özellikleri ve fiyatları görmek için bir odaya dokunun.`,
-  };
-  return answers[language];
 }
 
-function findMentionedOffer(text: string, offers: Offer[]) {
-  const normalized = text.toLocaleLowerCase("el-GR");
-  return offers.find((offer) => {
-    const roomNumber = offer.name.match(/\d+/)?.[0];
-    return normalized.includes(offer.name.toLocaleLowerCase("el-GR")) || Boolean(roomNumber && new RegExp(`(?:room|δωμάτιο|δωματιο)\\s*${roomNumber}(?:\\D|$)`, "i").test(text));
-  }) || (offers.length === 1 ? offers[0] : undefined);
-}
-
-function detectQuickResponse(text: string, offers: Offer[]): { answer: string; actions: Action[] } | null {
-  if (!offers.length) return null;
-  const offer = findMentionedOffer(text, offers);
-  if (!offer) return null;
-  const asksDetails = /(φωτο|εικόν|εικον|photo|picture|πληροφορί|πληροφορι|details|λεπτομέρ|λεπτομερ|χαρακτηριστ|παροχ)/i.test(text);
-  const asksBooking = /(κράτη|κρατη|reserve|book|reception|ρεσεψ|αίτημα|αιτημα|ενδιαφέρομαι|ενδιαφερομαι|link|σύνδεσ|συνδεσ|url)/i.test(text);
-  if (asksDetails) return { answer: `Για το ${offer.name}, χρησιμοποίησε το κουμπί «Φωτογραφίες & λεπτομέρειες».`, actions: [{ label: "Φωτογραφίες & λεπτομέρειες", href: offer.detailsUrl }, { label: "Αίτημα κράτησης", action: "open_request", roomId: offer.roomId, unitId: offer.unitId }] };
-  if (asksBooking) return { answer: `Για το ${offer.name}, πάτησε «Αίτημα κράτησης».`, actions: [{ label: "Αίτημα κράτησης", action: "open_request", roomId: offer.roomId, unitId: offer.unitId }, { label: "Φωτογραφίες & λεπτομέρειες", href: offer.detailsUrl }] };
-  return null;
-}
-
-async function getOffers(search: SearchRequest, language: SupportedLanguage): Promise<Offer[]> {
-  if (!validDate(search.checkin) || !validDate(search.checkout)) return [];
-  const guests = Math.max(1, Math.min(Number(search.guests || 2), 10));
+async function getOffers(search: SearchState, language: SupportedLanguage): Promise<Offer[]> {
+  if (!validDate(search.checkin) || !validDate(search.checkout) || !search.guests) return [];
   const nights = nightsBetween(search.checkin!, search.checkout!);
   if (nights < 1 || nights > 30) return [];
+
   const url = new URL(bookingWebAppUrl());
   url.searchParams.set("action", "search_range");
   url.searchParams.set("checkin", search.checkin!);
   url.searchParams.set("checkout", search.checkout!);
-  url.searchParams.set("guests", String(guests));
-  const response = await fetch(url.toString(), { headers: { Accept: "application/json", "User-Agent": "VoulamandisHouseAI/1.0" }, cache: "no-store" });
+  url.searchParams.set("guests", String(search.guests));
+
+  const response = await fetch(url.toString(), {
+    headers: { Accept: "application/json", "User-Agent": "VoulamandisHouseAI/2.0" },
+    cache: "no-store",
+  });
   const data = await response.json().catch(() => null);
   if (!response.ok || !data?.success || !Array.isArray(data?.rooms?.available)) return [];
-  return data.rooms.available.filter((item: any) => Number(item?.maxGuests || 0) >= guests).map((item: any) => {
-    const originalTotal = Number(item?.totalPrice || 0);
-    const directTotal = Math.round(originalTotal * 0.9 * 100) / 100;
-    const key = `${item.roomId}:${item.unitId}`;
-    const roomMeta = ROOM_META[key] || { features: [], image: "/images/rooms/voulamandis-house-rooms.webp", type: "standard" as RoomType };
-    return { roomId: String(item.roomId), unitId: String(item.unitId), name: String(item.displayName || item.name || `Room ${item.unitId}`), category: String(item.category || item.roomName || "Room"), floor: String(item.location || ""), maxGuests: Number(item.maxGuests || 0), features: roomMeta.features, image: roomMeta.image, detailsUrl: ROOM_URLS[roomMeta.type][language] || ROOM_URLS[roomMeta.type].en, bookingUrl: "/book-now", nights, originalTotal: Math.round(originalTotal * 100) / 100, directTotal, saving: Math.round((originalTotal - directTotal) * 100) / 100 } satisfies Offer;
-  }).filter((offer: Offer) => offer.originalTotal > 0).sort((a: Offer, b: Offer) => a.directTotal - b.directTotal).slice(0, 10);
+
+  return data.rooms.available
+    .filter((item: any) => Number(item?.maxGuests || 0) >= Number(search.guests))
+    .map((item: any) => {
+      const originalTotal = Number(item?.totalPrice || 0);
+      const directTotal = Math.round(originalTotal * 0.9 * 100) / 100;
+      const key = `${item.roomId}:${item.unitId}`;
+      const meta = ROOM_META[key] || { features: [], image: "/images/rooms/voulamandis-house-rooms.webp", type: "standard" as RoomType };
+      return {
+        roomId: String(item.roomId),
+        unitId: String(item.unitId),
+        name: String(item.displayName || item.name || `Room ${item.unitId}`),
+        category: String(item.category || item.roomName || "Room"),
+        floor: String(item.location || ""),
+        maxGuests: Number(item.maxGuests || 0),
+        features: meta.features,
+        image: meta.image,
+        detailsUrl: ROOM_URLS[meta.type][language] || ROOM_URLS[meta.type].en,
+        bookingUrl: "/book-now",
+        nights,
+        originalTotal: Math.round(originalTotal * 100) / 100,
+        directTotal,
+        saving: Math.round((originalTotal - directTotal) * 100) / 100,
+      } satisfies Offer;
+    })
+    .filter((offer: Offer) => offer.originalTotal > 0)
+    .sort((a: Offer, b: Offer) => a.directTotal - b.directTotal)
+    .slice(0, 10);
+}
+
+function resultsAnswer(language: SupportedLanguage, offers: Offer[], search: SearchState) {
+  const count = offers.length;
+  const checkin = formatDate(search.checkin!, language);
+  const checkout = formatDate(search.checkout!, language);
+  const guests = search.guests;
+  if (language === "el") {
+    return count
+      ? `Βρήκα ${count} διαθέσιμες ${count === 1 ? "επιλογή" : "επιλογές"} για ${guests} ${guests === 1 ? "άτομο" : "άτομα"}, ${checkin}–${checkout}. Πατήστε σε ένα δωμάτιο για λεπτομέρειες.`
+      : `Δεν βρέθηκε διαθέσιμο δωμάτιο για ${guests} ${guests === 1 ? "άτομο" : "άτομα"}, ${checkin}–${checkout}.`;
+  }
+  return count
+    ? `I found ${count} available ${count === 1 ? "option" : "options"} for ${guests} guests, ${checkin}–${checkout}. Tap a room for details.`
+    : `No available room was found for ${guests} guests, ${checkin}–${checkout}.`;
 }
 
 export async function POST(request: NextRequest) {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) return NextResponse.json({ error: "The AI assistant is not configured yet." }, { status: 503 });
+
   try {
     const body = await request.json();
-    const messages: ChatMessage[] = Array.isArray(body?.messages) ? body.messages.filter((message: any) => (message?.role === "user" || message?.role === "assistant") && typeof message?.content === "string").slice(-10).map((message: ChatMessage) => ({ role: message.role, content: message.content.trim().slice(0, 1400) })).filter((message: ChatMessage) => message.content.length > 0) : [];
-    if (!messages.length || messages[messages.length - 1].role !== "user") return NextResponse.json({ error: "Please enter a question." }, { status: 400 });
+    const messages: ChatMessage[] = Array.isArray(body?.messages)
+      ? body.messages
+          .filter((message: any) => (message?.role === "user" || message?.role === "assistant") && typeof message?.content === "string")
+          .slice(-12)
+          .map((message: ChatMessage) => ({ role: message.role, content: message.content.trim().slice(0, 1400) }))
+      : [];
+
+    if (!messages.length || messages[messages.length - 1].role !== "user") {
+      return NextResponse.json({ error: "Please enter a message." }, { status: 400 });
+    }
 
     const language = detectLanguage(messages);
-    const search: SearchRequest = body?.search || {};
-    const includeOffers = body?.includeOffers === true;
-    const previousOffers = cleanOffers(body?.activeOffers);
-    const latestText = messages[messages.length - 1].content;
+    const current: SearchState = body?.search || {};
+    const search = await extractSearchState(apiKey, messages, current);
+    const missingQuestion = questionForMissing(search, language);
 
-    if (!includeOffers && !previousOffers.length) {
-      const partial = partialSearchResponse(search, language);
-      if (partial) return NextResponse.json({ answer: partial, actions: [], offers: [], language, discountPercent: DIRECT_DISCOUNT_PERCENT });
+    if (missingQuestion) {
+      return NextResponse.json({ answer: missingQuestion, search, offers: [], language });
     }
 
-    const offers = includeOffers ? await getOffers(search, language) : previousOffers;
-
-    if (includeOffers) {
-      return NextResponse.json({
-        answer: liveSearchAnswer(language, offers, search),
-        actions: [],
-        offers,
-        language,
-        discountPercent: DIRECT_DISCOUNT_PERCENT,
-      });
-    }
-
-    const quick = detectQuickResponse(latestText, offers);
-    if (quick) return NextResponse.json({ answer: quick.answer, actions: quick.actions, offers: [], language, discountPercent: DIRECT_DISCOUNT_PERCENT });
-
-    const apiKey = process.env.OPENAI_API_KEY;
-    if (!apiKey) return NextResponse.json({ error: "The AI assistant is not configured yet." }, { status: 503 });
-
-    const roomContext = offers.length ? `\n\nCURRENT ROOM CONTEXT:\n${JSON.stringify(offers.map(({ image, ...offer }) => offer))}` : "\n\nCURRENT ROOM CONTEXT is empty.";
-    const searchContext = `\n\nSEARCH FORM CONTEXT: check-in=${search.checkin || "missing"}, check-out=${search.checkout || "missing"}, guests=${search.guests || 2}. Never ask again for fields already present.`;
-    const openAIResponse = await fetch("https://api.openai.com/v1/responses", { method: "POST", headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" }, body: JSON.stringify({ model: process.env.OPENAI_MODEL || "gpt-5-mini", instructions: SYSTEM_PROMPT + roomContext + searchContext, input: messages, reasoning: { effort: "minimal" }, max_output_tokens: 350 }), cache: "no-store" });
-    const payload = await openAIResponse.json();
-    if (!openAIResponse.ok) return NextResponse.json({ error: "The assistant is temporarily unavailable. Please try again shortly." }, { status: 502 });
-    const answer = extractText(payload);
-    if (!answer) return NextResponse.json({ error: "The assistant could not compose the answer. Please try again." }, { status: 502 });
-    return NextResponse.json({ answer, actions: [], offers: [], language, discountPercent: DIRECT_DISCOUNT_PERCENT });
+    const offers = await getOffers(search, language);
+    return NextResponse.json({
+      answer: resultsAnswer(language, offers, search),
+      search,
+      offers,
+      language,
+      discountPercent: DIRECT_DISCOUNT_PERCENT,
+    });
   } catch (error) {
     console.error("AI assistant route error", error);
     return NextResponse.json({ error: "Something went wrong. Please try again." }, { status: 500 });
