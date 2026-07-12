@@ -60,6 +60,12 @@ function localizedFallback(language: AssistantLanguage, hasResults: boolean, roo
   return language === "el" ? "Δεν βρήκα αρκετή επιβεβαιωμένη πληροφορία στο site. Μπορώ να βοηθήσω με δωμάτια, διαθεσιμότητα, τιμές και προτάσεις για τη Χίο." : "I could not find enough verified information in the site content. I can help with rooms, availability, prices and Chios recommendations.";
 }
 
+function deterministicAnswer(input: { language: AssistantLanguage; results: KnowledgeResult[]; roomCards: RoomCard[] }) {
+  const intro = localizedFallback(input.language, input.results.length > 0, input.roomCards.length);
+  const body = input.results.slice(0, 3).map((result) => `• ${result.title}: ${result.summary}${result.url ? ` — ${result.url}` : ""}`).join("\n");
+  return body ? `${intro}\n${body}` : intro;
+}
+
 async function composeGroundedAnswer(input: {
   language: AssistantLanguage;
   message: string;
@@ -67,30 +73,36 @@ async function composeGroundedAnswer(input: {
   roomCards: RoomCard[];
 }) {
   const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey || (!input.results.length && !input.roomCards.length)) {
-    const intro = localizedFallback(input.language, input.results.length > 0, input.roomCards.length);
-    const body = input.results.map((result) => `• ${result.title}: ${result.summary}${result.url ? ` — ${result.url}` : ""}`).join("\n");
-    return body ? `${intro}\n${body}` : intro;
-  }
+  if (!apiKey || (!input.results.length && !input.roomCards.length)) return deterministicAnswer(input);
 
-  const response = await fetch("https://api.openai.com/v1/responses", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      model: process.env.OPENAI_CONCIERGE_MODEL || "gpt-5-mini",
-      instructions: `You are the expert sales concierge for Voulamandis House in Chios. Answer in language code ${input.language}. Use only supplied verified knowledge and room card data. Never invent prices, availability, distances, opening hours, amenities or policies. Be warm, persuasive and practical without pressure. Explain briefly why the shown room cards or Chios suggestions fit the guest. Room cards without live totals are previews only; say that dates and guest count are needed for a live quote. End with exactly one useful next step. Prefer two or three strong recommendations over a generic list.`,
-      input: JSON.stringify({ userMessage: input.message, verifiedKnowledge: input.results, roomCards: input.roomCards }),
-    }),
-  });
-  const payload = await response.json().catch(() => null);
-  if (!response.ok) throw new Error(payload?.error?.message || "Concierge response failed");
-  if (typeof payload?.output_text === "string" && payload.output_text.trim()) return payload.output_text.trim();
-  for (const item of Array.isArray(payload?.output) ? payload.output : []) {
-    for (const content of Array.isArray(item?.content) ? item.content : []) {
-      if (typeof content?.text === "string" && content.text.trim()) return content.text.trim();
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 12000);
+  try {
+    const response = await fetch("https://api.openai.com/v1/responses", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+      signal: controller.signal,
+      body: JSON.stringify({
+        model: process.env.OPENAI_CONCIERGE_MODEL || "gpt-5-mini",
+        instructions: `You are the expert sales concierge for Voulamandis House in Chios. Answer in language code ${input.language}. Use only supplied verified knowledge and room card data. Never invent prices, availability, distances, opening hours, amenities or policies. Be warm, persuasive and practical without pressure. Explain briefly why the shown room cards or Chios suggestions fit the guest. Room cards without live totals are previews only; say that dates and guest count are needed for a live quote. End with exactly one useful next step. Prefer two or three strong recommendations over a generic list.`,
+        input: JSON.stringify({ userMessage: input.message, verifiedKnowledge: input.results, roomCards: input.roomCards }),
+      }),
+    });
+    const payload = await response.json().catch(() => null);
+    if (!response.ok) throw new Error(payload?.error?.message || "Concierge response failed");
+    if (typeof payload?.output_text === "string" && payload.output_text.trim()) return payload.output_text.trim();
+    for (const item of Array.isArray(payload?.output) ? payload.output : []) {
+      for (const content of Array.isArray(item?.content) ? item.content : []) {
+        if (typeof content?.text === "string" && content.text.trim()) return content.text.trim();
+      }
     }
+    throw new Error("Concierge returned an empty answer");
+  } catch (error) {
+    console.error("Grounded answer fallback used", error);
+    return deterministicAnswer(input);
+  } finally {
+    clearTimeout(timeout);
   }
-  throw new Error("Concierge returned an empty answer");
 }
 
 export async function POST(request: NextRequest) {
@@ -109,6 +121,7 @@ export async function POST(request: NextRequest) {
       guests: search.guests,
       language: body?.language,
       selectedRoom: typeof body?.selectedRoom === "number" ? body.selectedRoom : undefined,
+      recentMessages: messages.slice(-10),
     };
 
     const command = await interpretAssistantMessage(latest, context);
