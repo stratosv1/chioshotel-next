@@ -10,9 +10,21 @@ type RoomType = "standard" | "economy" | "family";
 type ChatMessage = { role: "user" | "assistant"; content: string };
 type SearchState = { checkin?: string; checkout?: string; guests?: number };
 type Offer = {
-  roomId: string; unitId: string; name: string; category: string; floor: string;
-  maxGuests: number; features: string[]; image: string; detailsUrl: string;
-  bookingUrl: string; nights: number; originalTotal: number; directTotal: number; saving: number;
+  roomId: string;
+  unitId: string;
+  name: string;
+  category: string;
+  floor: string;
+  maxGuests: number;
+  features: string[];
+  image: string;
+  detailsUrl: string;
+  bookingUrl: string;
+  nights: number;
+  originalTotal: number;
+  directTotal: number;
+  saving: number;
+  preview?: boolean;
 };
 
 type RoomKnowledge = {
@@ -32,26 +44,43 @@ type RoomKnowledge = {
 
 const ROOM_URLS: Record<RoomType, Record<Language, string>> = {
   standard: {
-    en: "/chios-rooms/standard-double-room/", el: "/el/domatia-xios/diklina-triklina-domatia/",
-    fr: "/fr/chambres-a-chios/chambres-doubles-standard/", de: "/de/zimmer-chios/standard-doppelzimmer-auf-chios/",
-    it: "/it/stanze-a-chios/camere-doppie-standard-chios/", es: "/es/habitaciones-en-chios/habitaciones-dobles-estandar/",
+    en: "/chios-rooms/standard-double-room/",
+    el: "/el/domatia-xios/diklina-triklina-domatia/",
+    fr: "/fr/chambres-a-chios/chambres-doubles-standard/",
+    de: "/de/zimmer-chios/standard-doppelzimmer-auf-chios/",
+    it: "/it/stanze-a-chios/camere-doppie-standard-chios/",
+    es: "/es/habitaciones-en-chios/habitaciones-dobles-estandar/",
     tr: "/tr/chios-odalari/standart-cift-kisilik-odalar/",
   },
   economy: {
-    en: "/chios-rooms/economy-double-rooms/", el: "/el/domatia-xios/oikonomiko-diklino-domatio/",
-    fr: "/fr/chambres-a-chios/chambres-doubles-economiques/", de: "/de/zimmer-chios/economy-zimmer-auf-chios/",
-    it: "/it/stanze-a-chios/camera-doppia-economica-chios/", es: "/es/habitaciones-en-chios/economicas-habitaciones-en-chios/",
+    en: "/chios-rooms/economy-double-rooms/",
+    el: "/el/domatia-xios/oikonomiko-diklino-domatio/",
+    fr: "/fr/chambres-a-chios/chambres-doubles-economiques/",
+    de: "/de/zimmer-chios/economy-zimmer-auf-chios/",
+    it: "/it/stanze-a-chios/camera-doppia-economica-chios/",
+    es: "/es/habitaciones-en-chios/economicas-habitaciones-en-chios/",
     tr: "/tr/chios-odalari/sakiz-adasindaki-ekonomi-cift-kisilik-oda/",
   },
   family: {
-    en: "/chios-rooms/family-chios-apartments/", el: "/el/domatia-xios/oikogeneiako-diamerisma/",
-    fr: "/fr/chambres-a-chios/appartements-familiaux-de-chios/", de: "/de/zimmer-chios/familienapartments-in-chios/",
-    it: "/it/stanze-a-chios/appartamenti-familiari-a-chios/", es: "/es/habitaciones-en-chios/apartamentos-familiares-en-chios/",
+    en: "/chios-rooms/family-chios-apartments/",
+    el: "/el/domatia-xios/oikogeneiako-diamerisma/",
+    fr: "/fr/chambres-a-chios/appartements-familiaux-de-chios/",
+    de: "/de/zimmer-chios/familienapartments-in-chios/",
+    it: "/it/stanze-a-chios/appartamenti-familiari-a-chios/",
+    es: "/es/habitaciones-en-chios/apartamentos-familiares-en-chios/",
     tr: "/tr/chios-odalari/sakiz-adasinda-buyuk-aile-daireleri/",
   },
 };
 
-const COMMON_FEATURES = ["Κλιματισμός", "Δωρεάν Wi‑Fi", "Ψυγείο", "Ιδιωτικό μπάνιο", "Επίπεδη τηλεόραση", "Βραστήρας καφέ / τσαγιού", "Δωμάτιο μη καπνιστών"];
+const COMMON_FEATURES = [
+  "Κλιματισμός",
+  "Δωρεάν Wi‑Fi",
+  "Ψυγείο",
+  "Ιδιωτικό μπάνιο",
+  "Επίπεδη τηλεόραση",
+  "Βραστήρας καφέ / τσαγιού",
+  "Δωμάτιο μη καπνιστών",
+];
 
 const ROOMS: RoomKnowledge[] = [
   { number: 1, roomId: "267788", unitId: "1", type: "standard", categoryEl: "Δωμάτιο ορόφου", floorEl: "Πρώτος όροφος · πρόσβαση με σκάλες", maxGuests: 4, bedsEl: "1 διπλό κρεβάτι και 2 μονά κρεβάτια", featuresEl: ["Ιδιωτικό μπαλκόνι", "Δύο χώροι χωρίς ενδιάμεση πόρτα", "Θέα ορόφου", ...COMMON_FEATURES], image: "/images/rooms/DSC07776-2-e1675109942622.webp", priceRank: 5 },
@@ -73,8 +102,8 @@ function detectLanguage(messages: ChatMessage[], supplied?: string): Language {
   const text = messages.filter((m) => m.role === "user").map((m) => m.content).join(" ");
   if (/[Α-Ωα-ωΆ-ώ]/.test(text)) return "el";
   if (/[ğüşöçıİĞÜŞÖÇ]/i.test(text)) return "tr";
-  if (/[äöüß]/i.test(text) || /\b(ich|zimmer|preis|möchte)\b/i.test(text)) return "de";
-  if (/[éèêëàâçîïôùûüÿœ]/i.test(text) || /\b(je|chambre|prix|voudrais)\b/i.test(text)) return "fr";
+  if (/[äöüß]/i.test(text)) return "de";
+  if (/[éèêëàâçîïôùûüÿœ]/i.test(text)) return "fr";
   if (/\b(quiero|habitación|huéspedes)\b/i.test(text)) return "es";
   if (/\b(vorrei|camera|ospiti)\b/i.test(text)) return "it";
   return "el";
@@ -83,39 +112,19 @@ function detectLanguage(messages: ChatMessage[], supplied?: string): Language {
 const isDate = (value?: string) => Boolean(value && /^\d{4}-\d{2}-\d{2}$/.test(value));
 function addDays(date: string, days: number) { const d = new Date(`${date}T12:00:00Z`); d.setUTCDate(d.getUTCDate() + days); return d.toISOString().slice(0, 10); }
 function stayNights(s: SearchState) { return Math.round((new Date(`${s.checkout}T12:00:00Z`).getTime() - new Date(`${s.checkin}T12:00:00Z`).getTime()) / 86400000); }
-
-function resolveDate(day: number, month: number, year?: number) {
-  const now = new Date(); let y = year || now.getUTCFullYear();
-  let value = new Date(Date.UTC(y, month - 1, day, 12));
-  const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-  if (!year && value < today) value = new Date(Date.UTC(++y, month - 1, day, 12));
-  if (value.getUTCDate() !== day || value.getUTCMonth() !== month - 1) return undefined;
-  return value.toISOString().slice(0, 10);
-}
+function resolveDate(day: number, month: number, year?: number) { const now = new Date(); let y = year || now.getUTCFullYear(); let value = new Date(Date.UTC(y, month - 1, day, 12)); const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())); if (!year && value < today) value = new Date(Date.UTC(++y, month - 1, day, 12)); if (value.getUTCDate() !== day || value.getUTCMonth() !== month - 1) return undefined; return value.toISOString().slice(0, 10); }
 
 function parseState(messages: ChatMessage[], current: SearchState): SearchState {
   const latest = [...messages].reverse().find((m) => m.role === "user")?.content.trim() || "";
   const wantsReset = /νέες?\s+ημερομην|αλλαγή\s+ημερομην|άλλες?\s+ημερομην|new\s+dates?|different\s+dates?/i.test(latest);
   const next: SearchState = wantsReset ? { guests: current.guests } : { ...current };
-  const dates = [...latest.matchAll(/\b(\d{1,2})[\/-](\d{1,2})(?:[\/-](\d{2,4}))?\b/g)]
-    .map((m) => resolveDate(Number(m[1]), Number(m[2]), m[3] ? (Number(m[3]) < 100 ? 2000 + Number(m[3]) : Number(m[3])) : undefined))
-    .filter((v): v is string => Boolean(v));
+  const dates = [...latest.matchAll(/\b(\d{1,2})[\/-](\d{1,2})(?:[\/-](\d{2,4}))?\b/g)].map((m) => resolveDate(Number(m[1]), Number(m[2]), m[3] ? (Number(m[3]) < 100 ? 2000 + Number(m[3]) : Number(m[3])) : undefined)).filter((v): v is string => Boolean(v));
   const nightMatch = latest.match(/\b(\d{1,2})\s*(?:νύχτες|νυχτες|βράδια|βραδια|βραδιά|nights?|nächte|nuits|notti|noches|gece)\b/i);
   if (dates.length >= 2) { next.checkin = dates[0]; next.checkout = dates[1]; }
-  else if (dates.length === 1) {
-    const clearlyNewStay = Boolean(nightMatch) || /\b(θέλω|θελω|από|απο|άφιξη|αφιξη|έρχομαι|ερχομαι|new|from|arrive)\b/i.test(latest);
-    if (!next.checkin || clearlyNewStay || wantsReset) { next.checkin = dates[0]; next.checkout = undefined; }
-    else next.checkout = dates[0];
-  }
+  else if (dates.length === 1) { if (!next.checkin || nightMatch || wantsReset) { next.checkin = dates[0]; next.checkout = undefined; } else next.checkout = dates[0]; }
   const guestMatch = latest.match(/\b(\d{1,2})\s*(?:άτομα|ατομα|επισκέπτες|επισκεπτες|guests?|people|personen|ospiti|personas|kişi)\b/i);
   if (guestMatch) next.guests = Math.min(10, Math.max(1, Number(guestMatch[1])));
   if (nightMatch && next.checkin) next.checkout = addDays(next.checkin, Number(nightMatch[1]));
-  const bareNumber = latest.match(/^\s*(\d{1,2})\s*$/);
-  if (bareNumber) {
-    const number = Number(bareNumber[1]);
-    if (next.checkin && !next.checkout) next.checkout = addDays(next.checkin, number);
-    else if (next.checkin && next.checkout && !next.guests) next.guests = Math.min(10, Math.max(1, number));
-  }
   return next;
 }
 
@@ -144,28 +153,58 @@ function roomAllowedForGuests(room: RoomKnowledge, guests: number) {
   return false;
 }
 
-function answerRoomQuestion(text: string, language: Language) {
-  if (language !== "el") return "";
-  const normalized = text.toLowerCase();
-  const isRoomQuestion = /δωμάτι|διαμέρισ|κρεβ|κρεβά|ψυγ|κουζ|σκάλα|ισόγει|όροφο|μπαλκόν|wifi|wi-fi|κλιματισ|μπάνιο|τηλεόρα|βραστήρ|5\s*άτομα|πέντε\s*άτομα/.test(normalized);
-  if (!isRoomQuestion) return "";
-
-  const roomNumberMatch = normalized.match(/(?:δωμάτιο|room|διαμέρισμα)\s*(10|[1-9])\b/);
-  if (roomNumberMatch) {
-    const room = ROOMS.find((item) => item.number === Number(roomNumberMatch[1]));
-    if (!room) return "";
-    const note = room.fiveGuestNote ? ` ${room.fiveGuestNote}` : "";
-    return `Το δωμάτιο ${room.number} είναι ${room.categoryEl.toLowerCase()} και βρίσκεται: ${room.floorEl}. Φιλοξενεί έως ${room.maxGuests} άτομα. Διαθέτει ${room.bedsEl}. Βασικά χαρακτηριστικά: ${room.featuresEl.join(", ")}.${note}`;
+function findReferencedRoom(messages: ChatMessage[]) {
+  const userTexts = messages.filter((m) => m.role === "user").map((m) => m.content).reverse();
+  for (const text of userTexts) {
+    const normalized = text.toLowerCase();
+    const match = normalized.match(/(?:δωμάτιο|room|διαμέρισμα|apartment)?\s*(10|[1-9])\b/);
+    if (match && /(δωμάτι|room|διαμέρισ|apartment|δείξε|δειξε|φωτογραφ|photo|θέλω\s+να\s+δω|θελω\s+να\s+δω)/i.test(normalized)) {
+      return ROOMS.find((room) => room.number === Number(match[1]));
+    }
   }
+  return undefined;
+}
 
-  if (/ψυγ/.test(normalized)) return "Ναι. Όλα τα δωμάτια και τα διαμερίσματα 1–10 διαθέτουν ψυγείο.";
-  if (/χωρίς\s+σκάλα|δεν\s+έχει\s+σκάλα|ισόγει/.test(normalized)) return "Χωρίς σκάλες είναι τα δωμάτια 5, 6 και 7, καθώς και τα ισόγεια ανεξάρτητα διαμερίσματα 8, 9 και 10.";
-  if (/κουζ/.test(normalized)) return "Kitchenette διαθέτουν τα δωμάτια 3 και 4. Πλήρη κουζίνα διαθέτουν τα ανεξάρτητα διαμερίσματα 8, 9 και 10.";
-  if (/μπαλκόν/.test(normalized)) return "Ιδιωτικό μπαλκόνι διαθέτουν τα δωμάτια 1 και 4.";
-  if (/5\s*άτομα|πέντε\s*άτομα/.test(normalized)) return `Για 5 άτομα μπορεί να προταθεί μόνο το διαμέρισμα 10, υπό προϋποθέσεις. ${ROOMS.find((room) => room.number === 10)?.fiveGuestNote}`;
-  if (/οικονομ/.test(normalized)) return "Τα οικονομικά δίκλινα είναι τα δωμάτια 2 και 6. Και τα δύο έχουν μόνο 1 διπλό κρεβάτι και φιλοξενούν έως 2 άτομα.";
-  if (/σειρά|φθην|οικονομικότερο|τιμή/.test(normalized)) return "Η σειρά των κατηγοριών από οικονομικότερη προς ακριβότερη είναι: οικονομικά δίκλινα 2 και 6, δωμάτια ισογείου 5 και 7, δωμάτια ορόφου 1, 3 και 4, και τέλος διαμερίσματα 8, 9 και 10.";
-  return "Μπορώ να σας εξηγήσω αναλυτικά τη θέση, τα κρεβάτια και τις παροχές κάθε δωματίου. Γράψτε μου τον αριθμό του δωματίου ή το χαρακτηριστικό που σας ενδιαφέρει.";
+function previewOffer(room: RoomKnowledge, language: Language): Offer {
+  return {
+    roomId: room.roomId,
+    unitId: room.unitId,
+    name: `Room ${room.number}`,
+    category: `${room.categoryEl} · ${room.floorEl}`,
+    floor: room.floorEl,
+    maxGuests: room.maxGuests,
+    features: [room.bedsEl, ...room.featuresEl, ...(room.fiveGuestNote ? [room.fiveGuestNote] : [])],
+    image: room.image,
+    detailsUrl: ROOM_URLS[room.type][language] || ROOM_URLS[room.type].en,
+    bookingUrl: "/book-now",
+    nights: 0,
+    originalTotal: 0,
+    directTotal: 0,
+    saving: 0,
+    preview: true,
+  };
+}
+
+function roomKnowledge(messages: ChatMessage[], language: Language) {
+  if (language !== "el") return null;
+  const latest = [...messages].reverse().find((m) => m.role === "user")?.content.toLowerCase() || "";
+  const room = findReferencedRoom(messages);
+  const wantsPhotos = /φωτογραφ|photo|δείξε|δειξε|θέλω\s+να\s+δω|θελω\s+να\s+δω/.test(latest);
+  if (room && (wantsPhotos || /δωμάτι|διαμέρισ|room|apartment/.test(latest))) {
+    const note = room.fiveGuestNote ? ` ${room.fiveGuestNote}` : "";
+    return {
+      answer: `Αυτό είναι το δωμάτιο ${room.number}. Είναι ${room.categoryEl.toLowerCase()} και βρίσκεται: ${room.floorEl}. Φιλοξενεί έως ${room.maxGuests} άτομα και διαθέτει ${room.bedsEl}. Πατήστε την κάρτα για να δείτε όλες τις σωστές φωτογραφίες και τις παροχές.${note}`,
+      offers: [previewOffer(room, language)],
+    };
+  }
+  if (/δεν\s+ξέρω\s+ακόμα|δεν\s+ξερω\s+ακομα|δεν\s+έχω\s+ημερομην|δεν\s+εχω\s+ημερομην/.test(latest)) {
+    return { answer: "Κανένα πρόβλημα. Μπορείτε πρώτα να δείτε τα δωμάτια και τις φωτογραφίες τους. Γράψτε, για παράδειγμα, «δείξε μου το δωμάτιο 2».", offers: [] as Offer[] };
+  }
+  if (/ψυγ/.test(latest)) return { answer: "Ναι. Όλα τα δωμάτια και τα διαμερίσματα 1–10 διαθέτουν ψυγείο.", offers: [] as Offer[] };
+  if (/χωρίς\s+σκάλα|δεν\s+έχει\s+σκάλα|ισόγει/.test(latest)) return { answer: "Χωρίς σκάλες είναι τα δωμάτια 5, 6 και 7, καθώς και τα ισόγεια ανεξάρτητα διαμερίσματα 8, 9 και 10.", offers: [] as Offer[] };
+  if (/κουζ/.test(latest)) return { answer: "Kitchenette διαθέτουν τα δωμάτια 3 και 4. Πλήρη κουζίνα διαθέτουν τα ανεξάρτητα διαμερίσματα 8, 9 και 10.", offers: [] as Offer[] };
+  if (/οικονομ/.test(latest)) return { answer: "Τα οικονομικά δίκλινα είναι τα δωμάτια 2 και 6. Και τα δύο έχουν μόνο 1 διπλό κρεβάτι και φιλοξενούν έως 2 άτομα.", offers: [] as Offer[] };
+  return null;
 }
 
 async function searchOffers(search: SearchState, language: Language, origin: string): Promise<Offer[]> {
@@ -185,7 +224,6 @@ async function searchOffers(search: SearchState, language: Language, origin: str
     if (!(rawTotal > 0)) return null;
     const originalTotal = Math.round(rawTotal * 100) / 100;
     const directTotal = Math.round(originalTotal * 0.9 * 100) / 100;
-    const fiveGuestFeature = Number(search.guests) === 5 && meta.fiveGuestNote ? [meta.fiveGuestNote] : [];
     return {
       roomId: meta.roomId,
       unitId: meta.unitId,
@@ -193,7 +231,7 @@ async function searchOffers(search: SearchState, language: Language, origin: str
       category: `${meta.categoryEl} · ${meta.floorEl}`,
       floor: meta.floorEl,
       maxGuests: meta.maxGuests,
-      features: [meta.bedsEl, ...meta.featuresEl, ...fiveGuestFeature],
+      features: [meta.bedsEl, ...meta.featuresEl],
       image: meta.image,
       detailsUrl: ROOM_URLS[meta.type][language] || ROOM_URLS[meta.type].en,
       bookingUrl: "/book-now",
@@ -207,35 +245,8 @@ async function searchOffers(search: SearchState, language: Language, origin: str
 }
 
 function offerIntro(language: Language) {
-  if (language === "el") return "Οι επιλογές εμφανίζονται από την οικονομικότερη κατηγορία προς την ακριβότερη: οικονομικά δίκλινα, δωμάτια ισογείου, δωμάτια ορόφου και διαμερίσματα. Σε κάθε επιλογή αναγράφεται αν είναι ισόγειο ή όροφος.";
-  if (language === "de") return "Die Optionen werden von der günstigsten bis zur teuersten Kategorie angezeigt: Economy-Doppelzimmer, Erdgeschosszimmer, Zimmer im Obergeschoss und Apartments. Bei jeder Option ist die Etage angegeben.";
-  if (language === "fr") return "Les options sont classées de la catégorie la moins chère à la plus chère : doubles économiques, chambres au rez-de-chaussée, chambres à l’étage et appartements. L’étage est indiqué pour chaque option.";
-  if (language === "it") return "Le opzioni sono mostrate dalla categoria più economica alla più costosa: doppie economy, camere al piano terra, camere al primo piano e appartamenti. Per ogni opzione è indicato il piano.";
-  if (language === "es") return "Las opciones se muestran de la categoría más económica a la más cara: dobles económicas, habitaciones en planta baja, habitaciones en planta superior y apartamentos. En cada opción se indica la planta.";
-  if (language === "tr") return "Seçenekler en ekonomik kategoriden en pahalıya doğru gösterilir: ekonomik çift kişilik odalar, zemin kat odaları, üst kat odaları ve daireler. Her seçenekte kat bilgisi belirtilir.";
-  return "Options are shown from the least expensive category to the most expensive: economy doubles, ground-floor rooms, first-floor rooms and apartments. The floor is stated on every option.";
-}
-
-async function findNearby(search: SearchState, language: Language, origin: string) {
-  const nights = stayNights(search);
-  for (const offset of [-1, 1, -2, 2, -3, 3]) {
-    const candidate = { checkin: addDays(search.checkin!, offset), checkout: addDays(search.checkin!, offset + nights), guests: search.guests };
-    const offers = await searchOffers(candidate, language, origin).catch(() => []);
-    if (offers.length) return { search: candidate, offers };
-  }
-  return null;
-}
-
-async function findSplitStay(search: SearchState, language: Language, origin: string) {
-  const nights = stayNights(search);
-  if (nights < 2 || nights > 7) return null;
-  for (let split = 1; split < nights; split++) {
-    const first = { checkin: search.checkin, checkout: addDays(search.checkin!, split), guests: search.guests };
-    const second = { checkin: first.checkout, checkout: search.checkout, guests: search.guests };
-    const [a, b] = await Promise.all([searchOffers(first, language, origin).catch(() => []), searchOffers(second, language, origin).catch(() => [])]);
-    if (a.length && b.length) return { first: a[0], second: b[0], changeDate: first.checkout };
-  }
-  return null;
+  if (language === "el") return "Οι επιλογές εμφανίζονται από την οικονομικότερη κατηγορία προς την ακριβότερη. Σε κάθε επιλογή αναγράφεται αν είναι ισόγειο ή όροφος.";
+  return "Options are shown from the least expensive category to the most expensive, with the floor stated on every option.";
 }
 
 export async function POST(request: NextRequest) {
@@ -243,10 +254,10 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const messages: ChatMessage[] = Array.isArray(body?.messages) ? body.messages.filter((m: any) => (m?.role === "user" || m?.role === "assistant") && typeof m?.content === "string").slice(-12) : [];
     if (!messages.length) return NextResponse.json({ error: "Please enter a message." }, { status: 400 });
+
     const language = detectLanguage(messages, body?.language);
-    const latest = [...messages].reverse().find((m) => m.role === "user")?.content || "";
-    const knowledgeAnswer = answerRoomQuestion(latest, language);
-    if (knowledgeAnswer) return NextResponse.json({ answer: knowledgeAnswer, search: body?.search || {}, offers: [], language });
+    const knowledge = roomKnowledge(messages, language);
+    if (knowledge) return NextResponse.json({ answer: knowledge.answer, search: body?.search || {}, offers: knowledge.offers, language });
 
     const search = parseState(messages, body?.search || {});
     const question = missingQuestion(search, language);
@@ -256,26 +267,21 @@ export async function POST(request: NextRequest) {
     const checkin = formatDate(search.checkin!, language);
     const checkout = formatDate(search.checkout!, language);
     if (offers.length) {
-      const fiveGuestWarning = Number(search.guests) === 5 && language === "el" ? ` ${ROOMS.find((room) => room.number === 10)?.fiveGuestNote}` : "";
       const answer = language === "el"
-        ? `Βρήκα ${offers.length} ${offers.length === 1 ? "διαθέσιμη επιλογή" : "διαθέσιμες επιλογές"} για ${search.guests} άτομα, ${checkin}–${checkout}. ${offerIntro(language)}${fiveGuestWarning}`
+        ? `Βρήκα ${offers.length} ${offers.length === 1 ? "διαθέσιμη επιλογή" : "διαθέσιμες επιλογές"} για ${search.guests} άτομα, ${checkin}–${checkout}. ${offerIntro(language)}`
         : `I found ${offers.length} available options for ${search.guests} guests, ${checkin}–${checkout}. ${offerIntro(language)}`;
       return NextResponse.json({ answer, search, offers, language, discountPercent: DIRECT_DISCOUNT_PERCENT });
     }
 
-    const [nearby, split] = await Promise.all([findNearby(search, language, request.nextUrl.origin), findSplitStay(search, language, request.nextUrl.origin)]);
-    if (language === "el") {
-      if (nearby) {
-        const nIn = formatDate(nearby.search.checkin!, language); const nOut = formatDate(nearby.search.checkout!, language);
-        const splitText = split ? ` Υπάρχει επίσης δυνατότητα split stay στις αρχικές ημερομηνίες, με μία αλλαγή δωματίου στις ${formatDate(split.changeDate!, language)} (${split.first.name} και μετά ${split.second.name}).` : "";
-        return NextResponse.json({ answer: `Δεν βρήκα ένα δωμάτιο για όλες τις αρχικές ημερομηνίες, αλλά βρήκα μια κοντινή λύση: ${nIn}–${nOut}.${splitText} ${offerIntro(language)}`, search: nearby.search, offers: nearby.offers, language, discountPercent: DIRECT_DISCOUNT_PERCENT });
-      }
-      if (split) return NextResponse.json({ answer: `Δεν υπάρχει ένα δωμάτιο για ολόκληρη τη διαμονή, αλλά μπορούμε να σας φιλοξενήσουμε με μία μόνο αλλαγή δωματίου: ${split.first.name} και από ${formatDate(split.changeDate!, language)} ${split.second.name}. Η reception μπορεί να οργανώσει την αλλαγή όσο πιο άνετα γίνεται.`, search, offers: [], language, discountPercent: DIRECT_DISCOUNT_PERCENT });
-      return NextResponse.json({ answer: `Δεν βρήκα διαθεσιμότητα για ${checkin}–${checkout}. Αν οι ημερομηνίες σας είναι λίγο ευέλικτες, γράψτε μου μία κοντινή ημερομηνία ή «νέες ημερομηνίες» και θα ψάξω ξανά.`, search, offers: [], language, discountPercent: DIRECT_DISCOUNT_PERCENT });
-    }
-    return NextResponse.json({ answer: "I couldn't find one room for the full stay, but I can check nearby dates or a split stay with only one room change. Are your dates flexible?", search, offers: nearby?.offers || [], language, discountPercent: DIRECT_DISCOUNT_PERCENT });
+    return NextResponse.json({
+      answer: language === "el" ? `Δεν βρήκα διαθεσιμότητα για ${checkin}–${checkout}. Δοκιμάστε κοντινές ημερομηνίες.` : `I couldn't find availability for ${checkin}–${checkout}. Please try nearby dates.`,
+      search,
+      offers: [],
+      language,
+      discountPercent: DIRECT_DISCOUNT_PERCENT,
+    });
   } catch (error) {
     console.error("AI assistant route error", error);
-    return NextResponse.json({ error: "Δεν μπόρεσα να ολοκληρώσω τον ζωντανό έλεγχο αυτή τη στιγμή. Παρακαλώ δοκιμάστε ξανά σε λίγο." }, { status: 502 });
+    return NextResponse.json({ error: "Δεν μπόρεσα να ολοκληρώσω τον έλεγχο αυτή τη στιγμή. Παρακαλώ δοκιμάστε ξανά σε λίγο." }, { status: 502 });
   }
 }
