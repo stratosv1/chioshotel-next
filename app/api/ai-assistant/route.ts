@@ -65,15 +65,21 @@ function extractText(payload: any): string {
     return payload.output_text.trim();
   }
 
-  const parts = Array.isArray(payload?.output)
-    ? payload.output.flatMap((item: any) => (Array.isArray(item?.content) ? item.content : []))
-    : [];
+  const texts: string[] = [];
 
-  return parts
-    .filter((part: any) => part?.type === "output_text" && typeof part?.text === "string")
-    .map((part: any) => part.text)
-    .join("\n")
-    .trim();
+  if (Array.isArray(payload?.output)) {
+    for (const item of payload.output) {
+      if (!Array.isArray(item?.content)) continue;
+
+      for (const part of item.content) {
+        if (typeof part?.text === "string" && part.text.trim()) {
+          texts.push(part.text.trim());
+        }
+      }
+    }
+  }
+
+  return texts.join("\n").trim();
 }
 
 function validDate(value?: string) {
@@ -196,7 +202,8 @@ export async function POST(request: NextRequest) {
         model: process.env.OPENAI_MODEL || "gpt-5-mini",
         instructions: SYSTEM_PROMPT + availabilityContext,
         input: messages,
-        max_output_tokens: 450,
+        reasoning: { effort: "minimal" },
+        max_output_tokens: 1200,
       }),
       cache: "no-store",
     });
@@ -213,7 +220,23 @@ export async function POST(request: NextRequest) {
 
     const answer = extractText(payload);
     if (!answer) {
-      return NextResponse.json({ error: "The assistant did not return an answer." }, { status: 502 });
+      console.error("OpenAI returned no visible text", {
+        status: payload?.status,
+        incompleteDetails: payload?.incomplete_details,
+        outputTypes: Array.isArray(payload?.output)
+          ? payload.output.map((item: any) => ({
+              type: item?.type,
+              contentTypes: Array.isArray(item?.content)
+                ? item.content.map((part: any) => part?.type)
+                : [],
+            }))
+          : [],
+      });
+
+      return NextResponse.json(
+        { error: "The assistant could not compose the answer. Please try again." },
+        { status: 502 },
+      );
     }
 
     return NextResponse.json({ answer, offers, discountPercent: DIRECT_DISCOUNT_PERCENT });
