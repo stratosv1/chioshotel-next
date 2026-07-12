@@ -1,5 +1,6 @@
 import type { AssistantLanguage, AssistantPreferences } from "./types";
 import type { KnowledgeItem, KnowledgeKind } from "./knowledge";
+import { searchExpandedChiosKnowledge } from "./knowledge-chios-expanded";
 
 const EXTRA_KNOWLEDGE: KnowledgeItem[] = [
   {
@@ -180,7 +181,7 @@ export function searchExtraKnowledge(input: {
   const query = normalize(input.query);
   const terms = query.split(" ").filter((term) => term.length > 1);
   const limit = Math.max(1, Math.min(input.limit || 5, 10));
-  return EXTRA_KNOWLEDGE
+  const originalResults = EXTRA_KNOWLEDGE
     .filter((item) => !input.kinds?.length || input.kinds.includes(item.kind))
     .map((item) => {
       const haystack = normalize([item.title, item.summary, ...item.facts, ...item.tags].join(" "));
@@ -189,7 +190,13 @@ export function searchExtraKnowledge(input: {
       return { item, score: lexical + exactTag + preferenceScore(item, input.preferences) };
     })
     .filter((result) => result.score > 0 || Boolean(input.preferences))
-    .sort((a, b) => b.score - a.score)
-    .slice(0, limit)
     .map(({ item, score }) => ({ ...item, score, url: item.links?.[input.language || "en"] || item.links?.en }));
+
+  const expandedResults = searchExpandedChiosKnowledge(input);
+  const combined = new Map<string, (typeof originalResults)[number]>();
+  for (const result of [...originalResults, ...expandedResults]) {
+    const existing = combined.get(result.id);
+    if (!existing || result.score > existing.score) combined.set(result.id, result);
+  }
+  return [...combined.values()].sort((a, b) => b.score - a.score).slice(0, limit);
 }
