@@ -14,7 +14,7 @@ const replacements = new Map([
 for (const [from, to] of replacements) source = source.replace(from, to);
 
 if (!source.includes('"626129:2"')) {
-  source = source.replace('\n};\n\nexport function presentLiveOffers', `,
+  source = source.replace('\n};\n\nexport function presentLiveOffers', `
   "626129:2": {
     number: 7,
     gallery: ["/images/rooms/double-triple-room.jpg", "/images/rooms/view-double-room-chios-hotels.webp", "/images/rooms/double-room-bathroom.webp", "/images/rooms/voulamandis-stone-bathroom.webp"],
