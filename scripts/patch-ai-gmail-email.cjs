@@ -1,7 +1,26 @@
 const fs = require('fs');
 
 const path = 'app/api/ai-assistant/request/route.ts';
+
+if (!fs.existsSync(path)) {
+  console.log('patch-ai-gmail-email: target missing, skipping');
+  process.exit(0);
+}
+
 let source = fs.readFileSync(path, 'utf8');
+
+// The current AI request flow sends mail through dedicated SMTP routes.
+// In that architecture this old build-time patch is no longer required.
+const usesDedicatedEmailRoute =
+  fs.existsSync('app/api/ai-assistant/request-email/route.ts') ||
+  fs.existsSync('app/api/ai-assistant/no-availability-request/route.ts');
+
+const hasLegacyEmailBlock = source.includes('    let emailSent = false;');
+
+if (usesDedicatedEmailRoute && !hasLegacyEmailBlock) {
+  console.log('patch-ai-gmail-email: dedicated SMTP email flow detected, no change needed');
+  process.exit(0);
+}
 
 if (!source.includes('import nodemailer from "nodemailer";')) {
   source = source.replace(
@@ -12,11 +31,12 @@ if (!source.includes('import nodemailer from "nodemailer";')) {
 
 const start = source.indexOf('    let emailSent = false;');
 const endMarker = '    return NextResponse.json(\n';
-const end = source.indexOf(endMarker, start);
+const end = start === -1 ? -1 : source.indexOf(endMarker, start);
 
+// Never fail production builds because a legacy patch target changed.
 if (start === -1 || end === -1) {
-  console.error('patch-ai-gmail-email: email block not found');
-  process.exit(1);
+  console.log('patch-ai-gmail-email: legacy email block not found, skipping');
+  process.exit(0);
 }
 
 const replacement = [
