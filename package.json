@@ -3,7 +3,8 @@
     "dev": "next dev",
     "build": "node scripts/prepare-build.cjs && next build",
     "start": "next start",
-    "qa:ai": "node scripts/qa-ai-concierge.mjs"
+    "qa:ai": "node scripts/qa-ai-concierge.mjs",
+    "optimize:images": "node scripts/optimize-frog-images.cjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
