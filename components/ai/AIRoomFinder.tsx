@@ -30,7 +30,8 @@ const COPY = {
     placeholder: "Γράψτε ημερομηνία ή απάντηση…",
     send: "Αποστολή",
     loading: "Ελέγχω τη διαθεσιμότητα…",
-    live: "Live τιμή",
+    live: "Απευθείας προσφορά",
+    best: "Κορυφαία επιλογή",
     upTo: "έως",
     guests: "άτομα",
     close: "Κλείσιμο",
@@ -55,7 +56,8 @@ const COPY = {
     placeholder: "Enter a date or reply…",
     send: "Send",
     loading: "Checking availability…",
-    live: "Live rate",
+    live: "Direct offer",
+    best: "Top choice",
     upTo: "up to",
     guests: "guests",
     close: "Close",
@@ -93,6 +95,10 @@ function roomNumber(text: string) {
   return value.match(/(?:room|δωματιο|διαμερισμα|apartment|το)?\s*(10|[1-9])\s*$/i)?.[1] || null;
 }
 
+function cardPills(offer: Offer) {
+  return [offer.floor, `👤×${offer.maxGuests}`, ...offer.features].filter(Boolean).slice(0, 4);
+}
+
 export function AIRoomFinder() {
   const [language, setLanguage] = useState<Language>("el");
   const t = COPY[language];
@@ -109,9 +115,21 @@ export function AIRoomFinder() {
   const [sending, setSending] = useState(false);
   const [success, setSuccess] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
-  const lastOffers = useMemo(() => [...messages].reverse().find((item) => item.offers?.length)?.offers || [], [messages]);
-  const gallery = useMemo(() => activeOffer ? Array.from(new Set([activeOffer.image, ...(ROOM_GALLERIES[`${activeOffer.roomId}:${activeOffer.unitId}`] || [])])) : [], [activeOffer]);
-  const money = (value: number) => new Intl.NumberFormat(language === "el" ? "el-GR" : "en-GB", { style: "currency", currency: "EUR" }).format(value);
+
+  const lastOffers = useMemo(
+    () => [...messages].reverse().find((item) => item.offers?.length)?.offers || [],
+    [messages],
+  );
+  const gallery = useMemo(
+    () => activeOffer
+      ? Array.from(new Set([activeOffer.image, ...(ROOM_GALLERIES[`${activeOffer.roomId}:${activeOffer.unitId}`] || [])]))
+      : [],
+    [activeOffer],
+  );
+  const money = (value: number) => new Intl.NumberFormat(language === "el" ? "el-GR" : "en-GB", {
+    style: "currency",
+    currency: "EUR",
+  }).format(value);
 
   async function sendMessage(raw: string) {
     const text = raw.trim();
@@ -203,30 +221,159 @@ export function AIRoomFinder() {
     <main className="min-h-[100dvh] bg-[#fbfaf7] text-stone-950">
       <header className="border-b border-stone-200 bg-white">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4 sm:px-8">
-          <div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Voulamandis House</p><h1 className="mt-1 text-2xl font-bold">{t.title}</h1></div>
-          <div className="flex items-center gap-2"><select value={language} onChange={(event) => { const next = event.target.value as Language; setLanguage(next); setMessages([{ role: "assistant", content: COPY[next].welcome }]); setSearch({}); }} className="rounded-xl border px-3 py-2"><option value="el">EL</option><option value="en">EN</option></select><span className="hidden rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800 sm:block">{t.badge}</span></div>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Voulamandis House</p>
+            <h1 className="mt-1 text-2xl font-bold">{t.title}</h1>
+          </div>
+          <div className="flex items-center gap-2">
+            <select
+              value={language}
+              onChange={(event) => {
+                const next = event.target.value as Language;
+                setLanguage(next);
+                setMessages([{ role: "assistant", content: COPY[next].welcome }]);
+                setSearch({});
+              }}
+              className="rounded-xl border px-3 py-2"
+            >
+              <option value="el">EL</option>
+              <option value="en">EN</option>
+            </select>
+            <span className="hidden rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800 sm:block">{t.badge}</span>
+          </div>
         </div>
       </header>
 
       <section className="mx-auto flex min-h-[calc(100dvh-82px)] max-w-5xl flex-col px-4 sm:px-8">
         <div className="flex-1 space-y-5 py-8">
-          {messages.map((message, index) => <div key={`${message.role}-${index}`}>
-            <div className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}><div className={`max-w-[92%] rounded-2xl px-4 py-3 text-[15px] leading-6 sm:max-w-[75%] ${message.role === "user" ? "bg-stone-950 text-white" : "border bg-white shadow-sm"}`}>{message.content}</div></div>
-            {message.offers?.length ? <div className="mt-5 grid gap-4 md:grid-cols-2 lg:grid-cols-3">{message.offers.map((offer) => <button key={`${offer.roomId}:${offer.unitId}`} onClick={() => setActiveOffer(offer)} className="overflow-hidden rounded-3xl border bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"><div className="relative aspect-[4/3]"><Image src={offer.image} alt={offer.name} fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover" /></div><div className="p-4"><div className="flex items-start justify-between gap-3"><div><h2 className="text-lg font-bold">{offer.name}</h2><p className="mt-1 text-xs text-stone-500">{offer.category} · {t.upTo} {offer.maxGuests} {t.guests}</p></div><span className="rounded-full bg-emerald-100 px-2 py-1 text-[11px] font-semibold text-emerald-800">{t.live}</span></div><div className="mt-4 flex items-end justify-between"><div><p className="text-xs text-stone-400 line-through">{money(offer.originalTotal)}</p><p className="text-2xl font-bold text-emerald-800">{money(offer.directTotal)}</p></div><p className="text-xs text-stone-500">{offer.nights} {t.nights[offer.nights === 1 ? 0 : 1]}</p></div></div></button>)}</div> : null}
-          </div>)}
+          {messages.map((message, index) => (
+            <div key={`${message.role}-${index}`}>
+              <div className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
+                <div className={`max-w-[92%] rounded-2xl px-4 py-3 text-[15px] leading-6 sm:max-w-[75%] ${message.role === "user" ? "bg-stone-950 text-white" : "border bg-white shadow-sm"}`}>
+                  {message.content}
+                </div>
+              </div>
+
+              {message.offers?.length ? (
+                <div className="mt-5 -mx-1 flex snap-x snap-mandatory gap-4 overflow-x-auto px-1 pb-3 [scrollbar-width:thin]">
+                  {message.offers.map((offer, offerIndex) => (
+                    <button
+                      key={`${offer.roomId}:${offer.unitId}`}
+                      onClick={() => setActiveOffer(offer)}
+                      className={`group relative w-[300px] shrink-0 snap-start overflow-hidden rounded-[20px] border bg-white text-left shadow-[0_8px_24px_rgba(46,35,27,0.10)] transition hover:-translate-y-0.5 hover:shadow-[0_14px_34px_rgba(46,35,27,0.16)] sm:w-[310px] ${offerIndex === 0 ? "border-[#a7b777] ring-1 ring-[#dce5bf]" : "border-[#e7dfd5]"}`}
+                    >
+                      <div className="relative h-[166px] overflow-hidden bg-stone-100">
+                        <Image
+                          src={offer.image}
+                          alt={offer.name}
+                          fill
+                          sizes="310px"
+                          className="object-cover transition duration-300 group-hover:scale-[1.02]"
+                        />
+                        <span className="absolute left-3 top-3 rounded-lg border border-[#ead6b5] bg-[#fff5df]/95 px-2.5 py-1 text-[10px] font-extrabold text-[#8a5a19] shadow-sm">
+                          {offerIndex === 0 ? t.best : t.live}
+                        </span>
+                        <span className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full bg-stone-900/55 text-sm text-white backdrop-blur">♡</span>
+                      </div>
+
+                      <div className="p-3.5">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <h2 className="truncate text-[20px] font-black leading-tight text-stone-950">{offer.name}</h2>
+                            <p className="mt-0.5 truncate text-[12px] font-bold text-[#b45309]">{offer.category}</p>
+                          </div>
+                          <div className="shrink-0 text-right">
+                            <p className="text-[11px] text-stone-400 line-through">{money(offer.originalTotal)}</p>
+                            <p className="text-[23px] font-black leading-none text-[#43551b]">{money(offer.directTotal)}</p>
+                          </div>
+                        </div>
+
+                        <div className="mt-3 flex flex-wrap gap-1.5">
+                          <span className="rounded-md border border-[#ead6b5] bg-[#fff5df] px-2 py-1 text-[10px] font-bold text-[#8a5a19]">{t.live}</span>
+                          {cardPills(offer).map((pill) => (
+                            <span key={pill} className="max-w-full truncate rounded-md border border-stone-200 bg-stone-50 px-2 py-1 text-[10px] font-semibold text-stone-700">
+                              {pill}
+                            </span>
+                          ))}
+                        </div>
+
+                        <p className="mt-3 text-[12px] font-semibold text-[#5f6f28]">
+                          {offer.nights} {t.nights[offer.nights === 1 ? 0 : 1]}
+                        </p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          ))}
           {loading ? <div className="w-fit rounded-2xl border bg-white px-4 py-3 text-sm text-stone-600 shadow-sm">{t.loading}</div> : null}
         </div>
 
         <div className="sticky bottom-0 border-t bg-[#fbfaf7]/95 py-4 backdrop-blur">
           {error ? <p className="mb-3 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p> : null}
-          <form onSubmit={(event) => { event.preventDefault(); void sendMessage(input); }} className="flex gap-2 rounded-2xl border bg-white p-2 shadow-lg"><input ref={inputRef} value={input} onChange={(event) => setInput(event.target.value)} placeholder={t.placeholder} className="min-w-0 flex-1 bg-transparent px-3 py-2.5 outline-none" /><button disabled={loading || !input.trim()} className="rounded-xl bg-emerald-700 px-5 py-3 text-sm font-semibold text-white disabled:opacity-40">{t.send}</button></form>
+          <form onSubmit={(event) => { event.preventDefault(); void sendMessage(input); }} className="flex gap-2 rounded-2xl border bg-white p-2 shadow-lg">
+            <input ref={inputRef} value={input} onChange={(event) => setInput(event.target.value)} placeholder={t.placeholder} className="min-w-0 flex-1 bg-transparent px-3 py-2.5 outline-none" />
+            <button disabled={loading || !input.trim()} className="rounded-xl bg-emerald-700 px-5 py-3 text-sm font-semibold text-white disabled:opacity-40">{t.send}</button>
+          </form>
           <p className="mt-2 text-center text-xs text-stone-500">{t.disclaimer}</p>
         </div>
       </section>
 
-      {activeOffer ? <div className="fixed inset-0 z-40 flex items-end justify-center bg-stone-950/60 sm:items-center sm:p-5" role="dialog" aria-modal="true"><div className="relative flex max-h-[96dvh] w-full max-w-3xl flex-col overflow-hidden rounded-t-[2rem] bg-white shadow-2xl sm:rounded-[2rem]"><div className="relative"><RoomCarousel images={gallery} roomName={activeOffer.name} /><button onClick={() => setActiveOffer(null)} className="absolute right-4 top-4 z-10 grid h-11 w-11 place-items-center rounded-full bg-white text-xl shadow">✕</button></div><div className="overflow-y-auto p-5 pb-24"><h2 className="text-2xl font-bold">{activeOffer.name}</h2><p className="mt-1 text-sm text-stone-600">{activeOffer.category} · {t.upTo} {activeOffer.maxGuests} {t.guests}</p><div className="mt-4 flex flex-wrap gap-2">{[activeOffer.floor, ...activeOffer.features].filter(Boolean).map((feature) => <span key={feature} className="rounded-full border bg-stone-50 px-3 py-1.5 text-xs">{feature}</span>)}</div></div><div className="absolute inset-x-0 bottom-0 flex items-center justify-between border-t bg-white p-4"><p className="text-2xl font-bold text-emerald-800">{money(activeOffer.directTotal)}</p><button onClick={() => { setRequestOffer(activeOffer); setActiveOffer(null); setSuccess(""); }} className="rounded-2xl bg-stone-950 px-5 py-3 text-sm font-semibold text-white">{t.interested}</button></div></div></div> : null}
+      {activeOffer ? (
+        <div className="fixed inset-0 z-40 flex items-end justify-center bg-stone-950/60 sm:items-center sm:p-5" role="dialog" aria-modal="true">
+          <div className="relative flex max-h-[96dvh] w-full max-w-3xl flex-col overflow-hidden rounded-t-[2rem] bg-white shadow-2xl sm:rounded-[2rem]">
+            <div className="relative">
+              <RoomCarousel images={gallery} roomName={activeOffer.name} />
+              <button onClick={() => setActiveOffer(null)} className="absolute right-4 top-4 z-10 grid h-11 w-11 place-items-center rounded-full bg-white text-xl shadow">✕</button>
+            </div>
+            <div className="overflow-y-auto p-5 pb-24">
+              <h2 className="text-2xl font-bold">{activeOffer.name}</h2>
+              <p className="mt-1 text-sm font-semibold text-[#b45309]">{activeOffer.category} · {t.upTo} {activeOffer.maxGuests} {t.guests}</p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {[activeOffer.floor, ...activeOffer.features].filter(Boolean).map((feature) => (
+                  <span key={feature} className="rounded-full border bg-stone-50 px-3 py-1.5 text-xs">{feature}</span>
+                ))}
+              </div>
+            </div>
+            <div className="absolute inset-x-0 bottom-0 flex items-center justify-between border-t bg-white p-4">
+              <div>
+                <p className="text-xs text-stone-400 line-through">{money(activeOffer.originalTotal)}</p>
+                <p className="text-2xl font-black text-[#43551b]">{money(activeOffer.directTotal)}</p>
+              </div>
+              <button onClick={() => { setRequestOffer(activeOffer); setActiveOffer(null); setSuccess(""); }} className="rounded-2xl bg-stone-950 px-5 py-3 text-sm font-semibold text-white">{t.interested}</button>
+            </div>
+          </div>
+        </div>
+      ) : null}
 
-      {requestOffer ? <div className="fixed inset-0 z-50 flex items-end justify-center bg-stone-950/55 sm:items-center sm:p-5" role="dialog" aria-modal="true"><div className="max-h-[92dvh] w-full max-w-lg overflow-y-auto rounded-t-[2rem] bg-white p-5 shadow-2xl sm:rounded-[2rem]"><div className="flex justify-between"><div><p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">{t.requestTitle}</p><h2 className="mt-1 text-2xl font-bold">{requestOffer.name}</h2></div><button onClick={() => setRequestOffer(null)} className="rounded-full border px-3 py-2">✕</button></div>{success ? <div className="mt-5 rounded-2xl border border-emerald-200 bg-emerald-50 p-4"><p className="font-semibold">{t.successTitle}</p><p className="mt-1 text-sm">{success}</p></div> : <form onSubmit={submitRequest} className="mt-5 space-y-4"><label className="block text-sm font-medium">{t.name}<input required value={name} onChange={(event) => setName(event.target.value)} className="mt-1.5 w-full rounded-2xl border px-4 py-3" /></label><label className="block text-sm font-medium">{t.contact}<input required value={contact} onChange={(event) => setContact(event.target.value)} className="mt-1.5 w-full rounded-2xl border px-4 py-3" /></label><label className="block text-sm font-medium">{t.message} <span className="font-normal text-stone-400">({t.optional})</span><textarea rows={3} value={note} onChange={(event) => setNote(event.target.value)} className="mt-1.5 w-full rounded-2xl border px-4 py-3" /></label><button disabled={sending} className="w-full rounded-2xl bg-stone-950 px-5 py-3.5 text-sm font-semibold text-white disabled:opacity-50">{sending ? t.sending : t.submit}</button><p className="text-center text-xs text-stone-500">{t.disclaimer}</p></form>}</div></div> : null}
+      {requestOffer ? (
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-stone-950/55 sm:items-center sm:p-5" role="dialog" aria-modal="true">
+          <div className="max-h-[92dvh] w-full max-w-lg overflow-y-auto rounded-t-[2rem] bg-white p-5 shadow-2xl sm:rounded-[2rem]">
+            <div className="flex justify-between">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">{t.requestTitle}</p>
+                <h2 className="mt-1 text-2xl font-bold">{requestOffer.name}</h2>
+              </div>
+              <button onClick={() => setRequestOffer(null)} className="rounded-full border px-3 py-2">✕</button>
+            </div>
+            {success ? (
+              <div className="mt-5 rounded-2xl border border-emerald-200 bg-emerald-50 p-4">
+                <p className="font-semibold">{t.successTitle}</p>
+                <p className="mt-1 text-sm">{success}</p>
+              </div>
+            ) : (
+              <form onSubmit={submitRequest} className="mt-5 space-y-4">
+                <label className="block text-sm font-medium">{t.name}<input required value={name} onChange={(event) => setName(event.target.value)} className="mt-1.5 w-full rounded-2xl border px-4 py-3" /></label>
+                <label className="block text-sm font-medium">{t.contact}<input required value={contact} onChange={(event) => setContact(event.target.value)} className="mt-1.5 w-full rounded-2xl border px-4 py-3" /></label>
+                <label className="block text-sm font-medium">{t.message} <span className="font-normal text-stone-400">({t.optional})</span><textarea rows={3} value={note} onChange={(event) => setNote(event.target.value)} className="mt-1.5 w-full rounded-2xl border px-4 py-3" /></label>
+                <button disabled={sending} className="w-full rounded-2xl bg-stone-950 px-5 py-3.5 text-sm font-semibold text-white disabled:opacity-50">{sending ? t.sending : t.submit}</button>
+                <p className="text-center text-xs text-stone-500">{t.disclaimer}</p>
+              </form>
+            )}
+          </div>
+        </div>
+      ) : null}
     </main>
   );
 }
