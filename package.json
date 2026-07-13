@@ -1,7 +1,7 @@
 {
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/disable-last-minute-room-extras.cjs && node scripts/patch-long-seo-titles.cjs && node scripts/optimize-frog-images.cjs && node scripts/patch-ai-gmail-email.cjs && node scripts/enable-smart-ai-concierge.cjs && node scripts/fix-ai-availability-flow.cjs && node scripts/patch-ai-live-offer-presentation.cjs && node scripts/patch-ai-find-your-room-galleries.cjs && node scripts/patch-ai-room-ui.cjs && node scripts/patch-ai-request-live-verification.cjs && node scripts/patch-ai-gmail-fallback.cjs && node scripts/patch-ai-safe-fallback-backend.cjs && node scripts/patch-ai-safe-fallback-frontend.cjs && node scripts/patch-ai-date-order-validation.cjs && node scripts/patch-ai-compact-room-modal.cjs && next build",
+    "build": "node scripts/disable-last-minute-room-extras.cjs && node scripts/patch-long-seo-titles.cjs && node scripts/optimize-frog-images.cjs && node scripts/patch-ai-gmail-email.cjs && node scripts/enable-smart-ai-concierge.cjs && node scripts/fix-ai-availability-flow.cjs && node scripts/patch-ai-live-offer-presentation.cjs && node scripts/patch-ai-find-your-room-galleries.cjs && node scripts/patch-ai-room-ui.cjs && node scripts/patch-ai-request-live-verification.cjs && node scripts/patch-ai-gmail-fallback.cjs && node scripts/patch-ai-safe-fallback-backend.cjs && node scripts/patch-ai-safe-fallback-frontend.cjs && node scripts/patch-ai-date-order-validation.cjs && next build",
     "start": "next start",
     "qa:ai": "node scripts/qa-ai-concierge.mjs"
   },
