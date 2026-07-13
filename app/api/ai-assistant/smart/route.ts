@@ -31,10 +31,27 @@ function noAvailabilityMessage(language?: string) {
   return "Με βάση τα πιο πρόσφατα στοιχεία, δεν προκύπτει αυτή τη στιγμή επιβεβαιωμένη διαθεσιμότητα για τα συγκεκριμένα δεδομένα. Η reception μπορεί να το ελέγξει άμεσα και να σας απαντήσει απευθείας. Θέλετε να της στείλω μήνυμα τώρα;";
 }
 
-/**
- * Compatibility endpoint used by the existing room-finder frontend.
- * Every message is handled by the central AI orchestrator in ../route.ts.
- */
+function splitStayMessage(language?: string) {
+  if (language === "en") return "I found a smart split-stay option that covers your full stay with only one room change. As a thank-you for the change, it includes an extra 10% discount on top of the direct rate.";
+  return "Βρήκα μια έξυπνη λύση split stay που καλύπτει ολόκληρη τη διαμονή σας με μία μόνο αλλαγή δωματίου. Ως επιβράβευση για την αλλαγή, περιλαμβάνει επιπλέον έκπτωση 10% πάνω στην απευθείας τιμή.";
+}
+
+async function findSplitStays(request: NextRequest, search: any) {
+  try {
+    const url = new URL("/api/booking/split-stay", request.nextUrl.origin);
+    url.searchParams.set("checkin", String(search.checkin));
+    url.searchParams.set("checkout", String(search.checkout));
+    url.searchParams.set("guests", String(search.guests));
+    const response = await fetch(url, { cache: "no-store" });
+    const payload = await response.json().catch(() => null);
+    if (!response.ok || !Array.isArray(payload?.splitStays)) return [];
+    return payload.splitStays;
+  } catch (error) {
+    console.error("Split-stay lookup failed", error);
+    return [];
+  }
+}
+
 export async function POST(request: NextRequest) {
   const response = await handleAssistantPost(request);
   const payload = await response.clone().json().catch(() => null);
@@ -45,11 +62,29 @@ export async function POST(request: NextRequest) {
   const isCompletedSearch = payload.action === "search_rooms" && payload.search?.checkin && payload.search?.checkout && payload.search?.guests;
 
   if (isCompletedSearch && offers.length === 0 && response.ok) {
+    const splitStays = await findSplitStays(request, payload.search);
+    if (splitStays.length) {
+      return NextResponse.json(
+        {
+          ...payload,
+          answer: splitStayMessage(payload.language),
+          offers: [],
+          splitStays,
+          splitStayAvailable: true,
+          noAvailability: false,
+          receptionHandoffOffered: false,
+          bookingConfirmed: false,
+        },
+        { status: response.status },
+      );
+    }
+
     return NextResponse.json(
       {
         ...payload,
         answer: noAvailabilityMessage(payload.language),
         offers: [],
+        splitStays: [],
         noAvailability: true,
         receptionHandoffOffered: true,
         bookingConfirmed: false,
