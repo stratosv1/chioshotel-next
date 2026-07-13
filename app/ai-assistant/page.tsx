@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { GuestAssistantSafeFlow } from "@/components/ai/GuestAssistantSafeFlow";
+import { AIRoomFinder } from "@/components/ai/AIRoomFinder";
 
 export const metadata: Metadata = {
-  title: "AI Guest Assistant Test",
-  description: "Private AI guest assistant test page for Voulamandis House.",
+  title: "AI Room Finder | Voulamandis House",
+  description: "Find live room availability and send an enquiry to reception.",
   robots: {
     index: false,
     follow: false,
@@ -12,9 +12,5 @@ export const metadata: Metadata = {
 };
 
 export default function AiAssistantPage() {
-  return (
-    <main className="min-h-[100dvh] bg-stone-50">
-      <GuestAssistantSafeFlow />
-    </main>
-  );
+  return <AIRoomFinder />;
 }
