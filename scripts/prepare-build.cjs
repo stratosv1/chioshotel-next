@@ -4,7 +4,6 @@ const { performance } = require("node:perf_hooks");
 const PATCHES = [
   "disable-last-minute-room-extras.cjs",
   "patch-long-seo-titles.cjs",
-  "optimize-frog-images.cjs",
   "patch-ai-gmail-email.cjs",
   "enable-smart-ai-concierge.cjs",
   "fix-ai-availability-flow.cjs",
