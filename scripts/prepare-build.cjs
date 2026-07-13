@@ -1,4 +1,3 @@
-const { spawnSync } = require("node:child_process");
 const { performance } = require("node:perf_hooks");
 
 const PATCHES = [
@@ -23,17 +22,10 @@ const SLOW_PATCH_MS = 500;
 
 function runPatch(filename) {
   const startedAt = performance.now();
-  const result = spawnSync(process.execPath, [require.resolve(`./${filename}`)], {
-    cwd: process.cwd(),
-    env: process.env,
-    stdio: "inherit",
-  });
+  const modulePath = require.resolve(`./${filename}`);
 
-  if (result.error) throw result.error;
-
-  if (result.status !== 0) {
-    throw new Error(`${filename} failed with exit code ${result.status ?? "unknown"}`);
-  }
+  delete require.cache[modulePath];
+  require(modulePath);
 
   const duration = Math.round(performance.now() - startedAt);
   console.log(`✓ ${filename} (${duration}ms)`);
