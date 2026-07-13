@@ -22,6 +22,8 @@ type Offer = {
 };
 type Message = { role: "user" | "assistant"; content: string; offers?: Offer[] };
 
+const WHATSAPP_NUMBER = "306944474226";
+
 const COPY = {
   el: {
     title: "AI Room Finder",
@@ -35,19 +37,21 @@ const COPY = {
     upTo: "έως",
     guests: "άτομα",
     close: "Κλείσιμο",
-    interested: "Ενδιαφέρομαι",
+    email: "Email",
+    whatsapp: "WhatsApp",
     requestTitle: "Αίτημα προς reception",
     name: "Ονοματεπώνυμο",
     contact: "Τηλέφωνο ή email",
     message: "Μήνυμα",
     optional: "προαιρετικό",
-    submit: "Στείλε αίτημα",
+    submit: "Στείλε email",
     sending: "Αποστολή…",
     successTitle: "Το αίτημα στάλθηκε.",
     success: "Η reception θα επικοινωνήσει μαζί σας. Δεν έχει πραγματοποιηθεί κράτηση.",
     disclaimer: "Δεν γίνεται κράτηση ή πληρωμή. Στέλνεται μόνο αίτημα ενδιαφέροντος στη reception.",
     error: "Κάτι πήγε στραβά. Δοκιμάστε ξανά.",
     nights: ["νύχτα", "νύχτες"],
+    whatsappIntro: "Γεια σας, ενδιαφέρομαι για αυτό το δωμάτιο:",
   },
   en: {
     title: "AI Room Finder",
@@ -61,33 +65,85 @@ const COPY = {
     upTo: "up to",
     guests: "guests",
     close: "Close",
-    interested: "I'm interested",
+    email: "Email",
+    whatsapp: "WhatsApp",
     requestTitle: "Request to reception",
     name: "Full name",
     contact: "Phone or email",
     message: "Message",
     optional: "optional",
-    submit: "Send request",
+    submit: "Send email",
     sending: "Sending…",
     successTitle: "Request sent.",
     success: "Reception will contact you. No booking has been made.",
     disclaimer: "No booking or payment is completed. This only sends an enquiry to reception.",
     error: "Something went wrong. Please try again.",
     nights: ["night", "nights"],
+    whatsappIntro: "Hello, I am interested in this room:",
   },
 } as const;
 
 const ROOM_GALLERIES: Record<string, string[]> = {
-  "267788:1": ["/images/rooms/DSC07776-2-e1675109942622.webp", "/images/rooms/DSC07769-1.webp"],
-  "268803:1": ["/images/rooms/DSC07803-1.webp", "/images/rooms/DSC07839.webp"],
-  "267788:2": ["/images/rooms/DSC07867-1.webp", "/images/rooms/DSC07860-1.webp"],
-  "267788:3": ["/images/rooms/received_1748354861920234.webp"],
-  "626129:1": ["/images/rooms/voulamandis-house-rooms.webp"],
-  "268803:2": ["/images/rooms/received_1753964631359257.webp"],
-  "626129:2": ["/images/rooms/double-triple-room.jpg"],
-  "265595:1": ["/images/rooms/chios-apartments-voulamandis.webp"],
-  "265595:2": ["/images/rooms/chios-apartments-voulamandis.webp"],
-  "265595:3": ["/images/rooms/DSC07899.webp"],
+  "267788:1": [
+    "/images/rooms/DSC07776-2-e1675109942622.webp",
+    "/images/rooms/DSC07769-1.webp",
+    "/images/rooms/----1-1.webp",
+    "/images/rooms/voulamandis-house-bathrooms-1.webp",
+  ],
+  "268803:1": [
+    "/images/rooms/DSC07803-1.webp",
+    "/images/rooms/DSC07839.webp",
+    "/images/rooms/DSC07832.webp",
+    "/images/rooms/received_1385287484893642_1500478431120_1200x800_3240x2160-1.webp",
+  ],
+  "267788:2": [
+    "/images/rooms/DSC07867-1.webp",
+    "/images/rooms/DSC07860-1.webp",
+    "/images/rooms/DSC07849-1.webp",
+    "/images/rooms/DSC07891-1.webp",
+  ],
+  "267788:3": [
+    "/images/rooms/received_1748354861920234.webp",
+    "/images/rooms/received_1748358935253160.webp",
+    "/images/rooms/received_1748356725253381.webp",
+    "/images/rooms/received_1748356718586715.webp",
+  ],
+  "626129:1": [
+    "/images/rooms/voulamandis-house-rooms.webp",
+    "/images/rooms/chios-hotels-triple-rooms_1646x1080.webp",
+    "/images/rooms/voulamandis-house-double-room-bathroom_1620x1080.webp",
+    "/images/rooms/hotels-chios-voulamandis_1620x1080.webp",
+  ],
+  "268803:2": [
+    "/images/rooms/received_1753964631359257.webp",
+    "/images/rooms/received_1753964581359262.webp",
+    "/images/rooms/received_1753968691358851.webp",
+    "/images/rooms/received_1753969201358800.webp",
+  ],
+  "626129:2": [
+    "/images/rooms/double-triple-room.jpg",
+    "/images/rooms/view-double-room-chios-hotels.webp",
+    "/images/rooms/double-room-bathroom.webp",
+    "/images/rooms/voulamandis-stone-bathroom.webp",
+  ],
+  "265595:1": [
+    "/images/rooms/chios-apartments-voulamandis.webp",
+    "/images/rooms/chios-hotels-family-apartments.webp",
+    "/images/rooms/family-room.webp",
+    "/images/rooms/voulamandis-apartment-bathroom..webp",
+  ],
+  "265595:2": [
+    "/images/rooms/chios-apartments-voulamandis.webp",
+    "/images/rooms/chios-hotels-family-apartments.webp",
+    "/images/rooms/family-room.webp",
+    "/images/rooms/voulamandis-apartment-bathroom..webp",
+  ],
+  "265595:3": [
+    "/images/rooms/DSC07899.webp",
+    "/images/rooms/DSC07909.webp",
+    "/images/rooms/DSC07940.webp",
+    "/images/rooms/DSC07943.webp",
+  ],
 };
 
 function roomNumber(text: string) {
@@ -120,16 +176,33 @@ export function AIRoomFinder() {
     () => [...messages].reverse().find((item) => item.offers?.length)?.offers || [],
     [messages],
   );
-  const gallery = useMemo(
-    () => activeOffer
-      ? Array.from(new Set([activeOffer.image, ...(ROOM_GALLERIES[`${activeOffer.roomId}:${activeOffer.unitId}`] || [])]))
-      : [],
-    [activeOffer],
-  );
+
+  const gallery = useMemo(() => {
+    if (!activeOffer) return [];
+    const verified = ROOM_GALLERIES[`${activeOffer.roomId}:${activeOffer.unitId}`] || [activeOffer.image];
+    return Array.from(new Set(verified)).slice(0, 4);
+  }, [activeOffer]);
+
   const money = (value: number) => new Intl.NumberFormat(language === "el" ? "el-GR" : "en-GB", {
     style: "currency",
     currency: "EUR",
   }).format(value);
+
+  const whatsappHref = useMemo(() => {
+    if (!activeOffer) return "#";
+    const text = [
+      t.whatsappIntro,
+      "",
+      `${activeOffer.name} · ${activeOffer.category}`,
+      search.checkin ? `Check-in: ${search.checkin}` : "",
+      search.checkout ? `Check-out: ${search.checkout}` : "",
+      search.guests ? `${language === "el" ? "Επισκέπτες" : "Guests"}: ${search.guests}` : "",
+      `${language === "el" ? "Τιμή" : "Price"}: ${money(activeOffer.directTotal)}`,
+      "",
+      language === "el" ? "Παρακαλώ επικοινωνήστε μαζί μου. Δεν πρόκειται για επιβεβαιωμένη κράτηση." : "Please contact me. This is not a confirmed booking.",
+    ].filter(Boolean).join("\n");
+    return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
+  }, [activeOffer, language, money, search.checkin, search.checkout, search.guests, t.whatsappIntro]);
 
   async function sendMessage(raw: string) {
     const text = raw.trim();
@@ -204,11 +277,13 @@ export function AIRoomFinder() {
       const result = await response.json();
       if (!response.ok || !result?.ok) throw new Error(result?.error || t.error);
 
-      await fetch("/api/ai-assistant/request-email", {
+      const emailResponse = await fetch("/api/ai-assistant/request-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...payload, requestId: result.requestId }),
       });
+      const emailResult = await emailResponse.json().catch(() => null);
+      if (!emailResponse.ok || !emailResult?.ok) throw new Error(emailResult?.error || t.error);
       setSuccess(t.success);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : t.error);
@@ -263,17 +338,10 @@ export function AIRoomFinder() {
                       className={`group relative w-[300px] shrink-0 snap-start overflow-hidden rounded-[20px] border bg-white text-left shadow-[0_8px_24px_rgba(46,35,27,0.10)] transition hover:-translate-y-0.5 hover:shadow-[0_14px_34px_rgba(46,35,27,0.16)] sm:w-[310px] ${offerIndex === 0 ? "border-[#a7b777] ring-1 ring-[#dce5bf]" : "border-[#e7dfd5]"}`}
                     >
                       <div className="relative h-[166px] overflow-hidden bg-stone-100">
-                        <Image
-                          src={offer.image}
-                          alt={offer.name}
-                          fill
-                          sizes="310px"
-                          className="object-cover transition duration-300 group-hover:scale-[1.02]"
-                        />
+                        <Image src={offer.image} alt={offer.name} fill sizes="310px" className="object-cover transition duration-300 group-hover:scale-[1.02]" />
                         <span className="absolute left-3 top-3 rounded-lg border border-[#ead6b5] bg-[#fff5df]/95 px-2.5 py-1 text-[10px] font-extrabold text-[#8a5a19] shadow-sm">
                           {offerIndex === 0 ? t.best : t.live}
                         </span>
-                        <span className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full bg-stone-900/55 text-sm text-white backdrop-blur">♡</span>
                       </div>
 
                       <div className="p-3.5">
@@ -291,15 +359,11 @@ export function AIRoomFinder() {
                         <div className="mt-3 flex flex-wrap gap-1.5">
                           <span className="rounded-md border border-[#ead6b5] bg-[#fff5df] px-2 py-1 text-[10px] font-bold text-[#8a5a19]">{t.live}</span>
                           {cardPills(offer).map((pill) => (
-                            <span key={pill} className="max-w-full truncate rounded-md border border-stone-200 bg-stone-50 px-2 py-1 text-[10px] font-semibold text-stone-700">
-                              {pill}
-                            </span>
+                            <span key={pill} className="max-w-full truncate rounded-md border border-stone-200 bg-stone-50 px-2 py-1 text-[10px] font-semibold text-stone-700">{pill}</span>
                           ))}
                         </div>
 
-                        <p className="mt-3 text-[12px] font-semibold text-[#5f6f28]">
-                          {offer.nights} {t.nights[offer.nights === 1 ? 0 : 1]}
-                        </p>
+                        <p className="mt-3 text-[12px] font-semibold text-[#5f6f28]">{offer.nights} {t.nights[offer.nights === 1 ? 0 : 1]}</p>
                       </div>
                     </button>
                   ))}
@@ -325,9 +389,9 @@ export function AIRoomFinder() {
           <div className="relative flex max-h-[96dvh] w-full max-w-3xl flex-col overflow-hidden rounded-t-[2rem] bg-white shadow-2xl sm:rounded-[2rem]">
             <div className="relative">
               <RoomCarousel images={gallery} roomName={activeOffer.name} />
-              <button onClick={() => setActiveOffer(null)} className="absolute right-4 top-4 z-10 grid h-11 w-11 place-items-center rounded-full bg-white text-xl shadow">✕</button>
+              <button onClick={() => setActiveOffer(null)} className="absolute right-4 top-4 z-10 grid h-11 w-11 place-items-center rounded-full bg-white text-xl shadow" aria-label={t.close}>✕</button>
             </div>
-            <div className="overflow-y-auto p-5 pb-24">
+            <div className="overflow-y-auto p-5 pb-28">
               <h2 className="text-2xl font-bold">{activeOffer.name}</h2>
               <p className="mt-1 text-sm font-semibold text-[#b45309]">{activeOffer.category} · {t.upTo} {activeOffer.maxGuests} {t.guests}</p>
               <div className="mt-4 flex flex-wrap gap-2">
@@ -336,12 +400,29 @@ export function AIRoomFinder() {
                 ))}
               </div>
             </div>
-            <div className="absolute inset-x-0 bottom-0 flex items-center justify-between border-t bg-white p-4">
-              <div>
-                <p className="text-xs text-stone-400 line-through">{money(activeOffer.originalTotal)}</p>
-                <p className="text-2xl font-black text-[#43551b]">{money(activeOffer.directTotal)}</p>
+            <div className="absolute inset-x-0 bottom-0 border-t bg-white p-4">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-xs text-stone-400 line-through">{money(activeOffer.originalTotal)}</p>
+                  <p className="text-2xl font-black text-[#43551b]">{money(activeOffer.directTotal)}</p>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    onClick={() => { setRequestOffer(activeOffer); setActiveOffer(null); setSuccess(""); }}
+                    className="rounded-2xl bg-stone-950 px-4 py-3 text-sm font-semibold text-white"
+                  >
+                    ✉️ {t.email}
+                  </button>
+                  <a
+                    href={whatsappHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-2xl bg-[#25D366] px-4 py-3 text-center text-sm font-semibold text-white"
+                  >
+                    💬 {t.whatsapp}
+                  </a>
+                </div>
               </div>
-              <button onClick={() => { setRequestOffer(activeOffer); setActiveOffer(null); setSuccess(""); }} className="rounded-2xl bg-stone-950 px-5 py-3 text-sm font-semibold text-white">{t.interested}</button>
             </div>
           </div>
         </div>
@@ -355,7 +436,7 @@ export function AIRoomFinder() {
                 <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">{t.requestTitle}</p>
                 <h2 className="mt-1 text-2xl font-bold">{requestOffer.name}</h2>
               </div>
-              <button onClick={() => setRequestOffer(null)} className="rounded-full border px-3 py-2">✕</button>
+              <button onClick={() => setRequestOffer(null)} className="rounded-full border px-3 py-2" aria-label={t.close}>✕</button>
             </div>
             {success ? (
               <div className="mt-5 rounded-2xl border border-emerald-200 bg-emerald-50 p-4">
