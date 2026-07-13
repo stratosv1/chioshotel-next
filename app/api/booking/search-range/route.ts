@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { neon } from "@neondatabase/serverless";
 import { readBookingSearchCache, writeBookingSearchCache } from "@/lib/booking-search-cache";
 
 export const runtime = "nodejs";
@@ -39,12 +40,16 @@ function isDate(value: string) {
   return /^\d{4}-\d{2}-\d{2}$/.test(value);
 }
 
+function stayNights(checkin: string, checkout: string) {
+  return Math.round((new Date(`${checkout}T12:00:00Z`).getTime() - new Date(`${checkin}T12:00:00Z`).getTime()) / 86400000);
+}
+
 function validateSearchParams(checkin: string, checkout: string, guests: number) {
   if (!isDate(checkin) || !isDate(checkout)) return "Invalid dates";
   const checkinDate = new Date(`${checkin}T12:00:00Z`);
   const checkoutDate = new Date(`${checkout}T12:00:00Z`);
   if (Number.isNaN(checkinDate.getTime()) || Number.isNaN(checkoutDate.getTime()) || checkoutDate <= checkinDate) return "Checkout must be after checkin";
-  const nights = Math.round((checkoutDate.getTime() - checkinDate.getTime()) / 86400000);
+  const nights = stayNights(checkin, checkout);
   if (nights < 1) return "Invalid stay length";
   if (nights > MAX_NIGHTS) return "Stay too long";
   if (guests < 1 || guests > MAX_GUESTS) return "Invalid guests";
@@ -59,6 +64,11 @@ type RoomRecord = {
 };
 
 type BookingSearchPayload = {
+  success?: boolean;
+  checkin?: string;
+  checkout?: string;
+  guests?: number;
+  nights?: number;
   rooms?: {
     available?: RoomRecord[];
     unavailable?: RoomRecord[];
@@ -130,6 +140,179 @@ async function fetchLiveSearch(checkin: string, checkout: string, guests: number
   return applyRoomRules(parsed.json, guests);
 }
 
+function asMoney(value: unknown) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? Math.round(parsed * 100) / 100 : null;
+}
+
+async function fetchNeonSearch(checkin: string, checkout: string, guests: number): Promise<BookingSearchPayload | null> {
+  const databaseUrl = process.env.DATABASE_URL;
+  if (!databaseUrl) return null;
+
+  const nights = stayNights(checkin, checkout);
+  const sql = neon(databaseUrl);
+
+  const units = await sql`
+    select
+      room_id::text as room_id,
+      unit_id::text as unit_id,
+      label as display_name,
+      room_name as category,
+      location as floor,
+      max_guests
+    from staff_units
+    where is_active = true
+    order by id asc
+  `;
+
+  if (!units.length) return null;
+
+  const availability = await sql`
+    select
+      stay_date::text as date,
+      room_id::text as room_id,
+      unit_id::text as unit_id,
+      price,
+      available,
+      reason
+    from staff_availability_calendar
+    where stay_date >= ${checkin}::date
+      and stay_date < ${checkout}::date
+    order by stay_date asc
+  `;
+
+  const rates = await sql`
+    select
+      stay_date::text as date,
+      room_id::text as room_id,
+      price
+    from staff_rate_cache
+    where stay_date >= ${checkin}::date
+      and stay_date < ${checkout}::date
+    order by stay_date asc
+  `;
+
+  const bookings = await sql`
+    select
+      room_id::text as room_id,
+      unit_id::text as unit_id,
+      arrival::text as arrival,
+      departure::text as departure,
+      status
+    from staff_bookings_snapshot
+    where arrival < ${checkout}::date
+      and departure > ${checkin}::date
+  `;
+
+  if (!availability.length && !rates.length) return null;
+
+  const availabilityMap = new Map<string, any>();
+  for (const row of availability as any[]) {
+    availabilityMap.set(`${row.room_id}:${row.unit_id}:${row.date}`, row);
+  }
+
+  const rateMap = new Map<string, number>();
+  for (const row of rates as any[]) {
+    const price = asMoney(row.price);
+    if (price !== null) rateMap.set(`${row.room_id}:${row.date}`, price);
+  }
+
+  const days: string[] = [];
+  const cursor = new Date(`${checkin}T12:00:00Z`);
+  const end = new Date(`${checkout}T12:00:00Z`);
+  while (cursor < end) {
+    days.push(cursor.toISOString().slice(0, 10));
+    cursor.setUTCDate(cursor.getUTCDate() + 1);
+  }
+
+  const availableRooms: RoomRecord[] = [];
+  const unavailableRooms: RoomRecord[] = [];
+
+  for (const unit of units as any[]) {
+    const roomId = String(unit.room_id);
+    const unitId = String(unit.unit_id);
+    const base: RoomRecord = {
+      roomId,
+      unitId,
+      roomNumber: ROOM_NUMBER_BY_KEY[`${roomId}:${unitId}`],
+      name: unit.display_name,
+      category: unit.category,
+      floor: unit.floor,
+      maxGuests: Number(unit.max_guests || 0),
+      nights,
+    };
+
+    if (!roomAllowedForGuests(base, guests)) continue;
+
+    const overlappingBooking = (bookings as any[]).some((booking) => {
+      const status = String(booking.status || "").toLowerCase();
+      if (status.includes("cancel") || status.includes("deleted")) return false;
+      return String(booking.room_id) === roomId && String(booking.unit_id) === unitId;
+    });
+
+    let totalPrice = 0;
+    let complete = true;
+    let blockedReason = overlappingBooking ? "BOOKED" : "";
+    const nightlyPrices: Array<{ date: string; price: number }> = [];
+
+    for (const day of days) {
+      const row = availabilityMap.get(`${roomId}:${unitId}:${day}`);
+      const fallbackPrice = rateMap.get(`${roomId}:${day}`);
+      const price = asMoney(row?.price) ?? fallbackPrice ?? null;
+
+      if (row && row.available === false) {
+        complete = false;
+        blockedReason = String(row.reason || "UNAVAILABLE");
+        break;
+      }
+      if (price === null || price <= 0) {
+        complete = false;
+        blockedReason = "NO_PRICE";
+        break;
+      }
+
+      totalPrice += price;
+      nightlyPrices.push({ date: day, price });
+    }
+
+    if (overlappingBooking) complete = false;
+
+    if (complete && nightlyPrices.length === nights) {
+      const roundedTotal = Math.round(totalPrice * 100) / 100;
+      availableRooms.push({
+        ...base,
+        price: roundedTotal,
+        totalPrice: roundedTotal,
+        roomTotal: roundedTotal,
+        nightlyPrices,
+        available: true,
+      });
+    } else {
+      unavailableRooms.push({
+        ...base,
+        available: false,
+        reason: blockedReason || "UNAVAILABLE",
+      });
+    }
+  }
+
+  return {
+    success: true,
+    checkin,
+    checkout,
+    guests,
+    nights,
+    rooms: {
+      available: availableRooms,
+      unavailable: unavailableRooms,
+    },
+    summary: {
+      availableRooms: availableRooms.length,
+      unavailableRooms: unavailableRooms.length,
+    },
+  };
+}
+
 function isAuthorizedRefresh(request: NextRequest) {
   const secret = process.env.CRON_SECRET;
   if (!secret) return false;
@@ -150,6 +333,24 @@ export async function GET(request: NextRequest) {
 
     const forceRefresh = searchParams.get("refresh") === "1" && isAuthorizedRefresh(request);
     const cached = forceRefresh ? null : await readBookingSearchCache(checkin, checkout, guests).catch(() => null);
+
+    try {
+      const neonData = await fetchNeonSearch(checkin, checkout, guests);
+      if (neonData) {
+        await writeBookingSearchCache(checkin, checkout, guests, neonData).catch(() => false);
+        return NextResponse.json({
+          ...neonData,
+          _booking_engine: {
+            cached: false,
+            stale: false,
+            generatedAt: new Date().toISOString(),
+            source: "neon_staff_calendar",
+          },
+        }, { status: 200, headers: { "Cache-Control": "no-store" } });
+      }
+    } catch (neonError) {
+      console.error("Neon booking search failed", neonError);
+    }
 
     if (cached?.fresh) {
       return NextResponse.json({
@@ -174,7 +375,7 @@ export async function GET(request: NextRequest) {
           cached: false,
           stale: false,
           generatedAt: new Date().toISOString(),
-          source: forceRefresh ? "cron_live_refresh" : "apps_script_live",
+          source: forceRefresh ? "cron_live_refresh" : "apps_script_fallback",
         },
       }, { status: 200, headers: { "Cache-Control": "no-store" } });
     } catch (liveError) {
