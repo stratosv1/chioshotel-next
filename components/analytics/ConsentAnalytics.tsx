@@ -9,6 +9,7 @@ type ConsentValue = "accepted" | "rejected";
 
 const CONSENT_KEY = "vh_cookie_consent_v1";
 const GA_ID = "G-844GGQ1TC7";
+const EVENT_DEDUP_WINDOW_MS = 1000;
 
 declare global {
   interface Window {
@@ -97,6 +98,8 @@ function fallbackEventName(anchor: HTMLAnchorElement) {
 
 function fallbackButtonEvent(button: HTMLButtonElement) {
   if (!button.closest("header")) return null;
+  if (!button.querySelector(".sr-only")) return null;
+
   const expanded = button.getAttribute("aria-expanded");
   if (expanded === "false") return "mobile_menu_open";
   if (expanded === "true") return "mobile_menu_close";
@@ -129,6 +132,20 @@ export function ConsentAnalytics({ language }: { language: LanguageCode }) {
   useEffect(() => {
     if (!accepted) return;
 
+    const recentEvents = new Map<string, number>();
+
+    function shouldTrack(signature: string) {
+      const now = Date.now();
+      const previous = recentEvents.get(signature) || 0;
+      if (now - previous < EVENT_DEDUP_WINDOW_MS) return false;
+
+      recentEvents.set(signature, now);
+      window.setTimeout(() => {
+        if (recentEvents.get(signature) === now) recentEvents.delete(signature);
+      }, EVENT_DEDUP_WINDOW_MS);
+      return true;
+    }
+
     function handleClick(event: MouseEvent) {
       const target = event.target as HTMLElement | null;
       const element = target?.closest("[data-analytics-event]") as HTMLElement | null;
@@ -138,18 +155,27 @@ export function ConsentAnalytics({ language }: { language: LanguageCode }) {
       const name = element?.dataset.analyticsEvent || (anchor ? fallbackEventName(anchor) : button ? fallbackButtonEvent(button) : null);
       if (!baseElement || !name) return;
 
+      const href = anchor ? normalizeUrl(anchor.href) : "";
+      const label = getLabel(baseElement, anchor);
+      const signature = [name, window.location.pathname, href, label].join("|");
+      if (!shouldTrack(signature)) return;
+
       track(name, {
         language,
         page_type: pageType(window.location.pathname),
         pathname: window.location.pathname,
-        href: anchor ? normalizeUrl(anchor.href) : "",
-        link_text: getLabel(baseElement, anchor),
+        href,
+        link_text: label,
         cta_location: getLocation(baseElement),
         device_area: detectDeviceArea(),
       });
     }
 
-    function handleSubmit() {
+    function handleSubmit(event: SubmitEvent) {
+      const form = event.target as HTMLFormElement | null;
+      const signature = ["contact_form_submit", window.location.pathname, form?.id || form?.name || "form"].join("|");
+      if (!shouldTrack(signature)) return;
+
       track("contact_form_submit", {
         language,
         page_type: pageType(window.location.pathname),
@@ -164,6 +190,7 @@ export function ConsentAnalytics({ language }: { language: LanguageCode }) {
     return () => {
       document.removeEventListener("click", handleClick);
       document.removeEventListener("submit", handleSubmit);
+      recentEvents.clear();
     };
   }, [accepted, language]);
 
