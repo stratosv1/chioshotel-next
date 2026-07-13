@@ -1,11 +1,32 @@
 const fs = require('fs');
 const path = require('path');
+
 const file = path.join(process.cwd(), 'app/api/ai-assistant/request/route.ts');
+
+if (!fs.existsSync(file)) {
+  console.log('patch-ai-request-live-verification: target missing, skipping');
+  process.exit(0);
+}
+
 let source = fs.readFileSync(file, 'utf8');
 
+const hasNewVerificationArchitecture =
+  source.includes('async function verifyStandardOffer(') &&
+  source.includes('async function verifySplitOffer(');
+
+if (hasNewVerificationArchitecture) {
+  console.log('patch-ai-request-live-verification: standard and split verification already enabled');
+  process.exit(0);
+}
+
 const start = source.indexOf('async function verifyLiveOffer(');
-const end = source.indexOf('\nasync function createReceptionSummary', start);
-if (start === -1 || end === -1) throw new Error('verifyLiveOffer function not found');
+const end = start === -1 ? -1 : source.indexOf('\nasync function createReceptionSummary', start);
+
+// Legacy patch must never block production after the request flow is refactored.
+if (start === -1 || end === -1) {
+  console.log('patch-ai-request-live-verification: legacy verifyLiveOffer block not found, skipping');
+  process.exit(0);
+}
 
 const replacement = `async function verifyLiveOffer(request: NextRequest, input: {
   checkin: string;
@@ -64,4 +85,4 @@ const replacement = `async function verifyLiveOffer(request: NextRequest, input:
 
 source = source.slice(0, start) + replacement + source.slice(end);
 fs.writeFileSync(file, source);
-console.log('AI request live verification patched');
+console.log('patch-ai-request-live-verification: applied');
