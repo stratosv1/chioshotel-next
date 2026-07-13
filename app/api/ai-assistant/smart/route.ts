@@ -26,16 +26,37 @@ function safeInterestMessage(language?: string) {
   return "Δεν έχει πραγματοποιηθεί κράτηση. Ανοίξτε την κάρτα του δωματίου και πατήστε «Ενδιαφέρομαι» για να σταλεί αίτημα στη reception.";
 }
 
+function noAvailabilityMessage(language?: string) {
+  if (language === "en") return "Based on the most recent availability data, no confirmed option is currently showing for these details. Reception can check this immediately and reply directly. Would you like me to send them a message now?";
+  return "Με βάση τα πιο πρόσφατα στοιχεία, δεν προκύπτει αυτή τη στιγμή επιβεβαιωμένη διαθεσιμότητα για τα συγκεκριμένα δεδομένα. Η reception μπορεί να το ελέγξει άμεσα και να σας απαντήσει απευθείας. Θέλετε να της στείλω μήνυμα τώρα;";
+}
+
 /**
- * Compatibility endpoint used by the existing chat frontend.
+ * Compatibility endpoint used by the existing room-finder frontend.
  * Every message is handled by the central AI orchestrator in ../route.ts.
- * This layer also blocks any false claim that a booking was completed.
  */
 export async function POST(request: NextRequest) {
   const response = await handleAssistantPost(request);
   const payload = await response.clone().json().catch(() => null);
 
   if (!payload || typeof payload !== "object") return response;
+
+  const offers = Array.isArray(payload.offers) ? payload.offers : [];
+  const isCompletedSearch = payload.action === "search_rooms" && payload.search?.checkin && payload.search?.checkout && payload.search?.guests;
+
+  if (isCompletedSearch && offers.length === 0 && response.ok) {
+    return NextResponse.json(
+      {
+        ...payload,
+        answer: noAvailabilityMessage(payload.language),
+        offers: [],
+        noAvailability: true,
+        receptionHandoffOffered: true,
+        bookingConfirmed: false,
+      },
+      { status: response.status },
+    );
+  }
 
   const answer = typeof payload.answer === "string" ? payload.answer : "";
   if (!FALSE_BOOKING_CLAIMS.some((pattern) => pattern.test(answer))) return response;
@@ -44,7 +65,7 @@ export async function POST(request: NextRequest) {
     {
       ...payload,
       answer: safeInterestMessage(payload.language),
-      offers: Array.isArray(payload.offers) ? payload.offers : [],
+      offers,
       bookingConfirmed: false,
     },
     { status: response.status },
