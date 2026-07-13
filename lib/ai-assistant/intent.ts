@@ -206,8 +206,13 @@ export async function interpretAssistantMessage(
   const deterministicDateContinuation = dateContinuationCommand(message, context);
   if (deterministicDateContinuation) return deterministicDateContinuation;
 
+  const deterministic = fallbackCommand(message, context);
+  if (deterministic.actions.some((action) => action.type === "search_availability")) {
+    return deterministic;
+  }
+
   const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) return fallbackCommand(message, context);
+  if (!apiKey) return deterministic;
 
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 12000);
@@ -221,15 +226,9 @@ export async function interpretAssistantMessage(
       },
       signal: controller.signal,
       body: JSON.stringify({
-        model: process.env.OPENAI_INTENT_MODEL || "gpt-5-mini",
+        model: process.env.OPENAI_CONCIERGE_MODEL || "gpt-5-mini",
         instructions: SYSTEM_PROMPT,
-        input: JSON.stringify({
-          message,
-          context: {
-            ...context,
-            recentMessages: context.recentMessages?.slice(-10),
-          },
-        }),
+        input: JSON.stringify({ message, context }),
         text: {
           format: {
             type: "json_schema",
@@ -242,17 +241,13 @@ export async function interpretAssistantMessage(
     });
 
     const payload = await response.json().catch(() => null);
-    if (!response.ok) throw new Error(payload?.error?.message || "Intent interpretation failed");
-
-    const text = getOutputText(payload);
-    if (!text) throw new Error("Intent model returned an empty response");
-
-    const command = JSON.parse(text) as AssistantCommand;
-    if (!Array.isArray(command.actions) || !command.actions.length) throw new Error("Intent model returned no actions");
-    return command;
+    if (!response.ok) throw new Error(payload?.error?.message || "Intent routing failed");
+    const output = getOutputText(payload);
+    if (!output) throw new Error("Intent router returned an empty response");
+    return JSON.parse(output) as AssistantCommand;
   } catch (error) {
-    console.error("Intent routing fallback used", error);
-    return fallbackCommand(message, context);
+    console.error("AI intent routing fallback used", error);
+    return deterministic;
   } finally {
     clearTimeout(timeout);
   }
