@@ -163,7 +163,7 @@ export async function POST(request: NextRequest) {
       ? await verifySplitOffer(request, { checkin, checkout, guests, roomId, originalTotal, directTotal, roomName })
       : await verifyStandardOffer(request, { checkin, checkout, guests, roomId, unitId, originalTotal, directTotal });
 
-    if (!verification.ok) {
+    if (verification.ok === false) {
       return NextResponse.json({ ok: false, error: verification.reason, refreshRequired: true }, { status: 409 });
     }
 
