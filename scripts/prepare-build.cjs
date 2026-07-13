@@ -19,6 +19,8 @@ const PATCHES = [
   "patch-ai-fast-availability-response.cjs",
 ];
 
+const SLOW_PATCH_MS = 500;
+
 function runPatch(filename) {
   const startedAt = performance.now();
   const result = spawnSync(process.execPath, [require.resolve(`./${filename}`)], {
@@ -27,9 +29,7 @@ function runPatch(filename) {
     stdio: "inherit",
   });
 
-  if (result.error) {
-    throw result.error;
-  }
+  if (result.error) throw result.error;
 
   if (result.status !== 0) {
     throw new Error(`${filename} failed with exit code ${result.status ?? "unknown"}`);
@@ -37,17 +37,28 @@ function runPatch(filename) {
 
   const duration = Math.round(performance.now() - startedAt);
   console.log(`✓ ${filename} (${duration}ms)`);
+  return { filename, duration };
 }
 
-console.log(`Preparing production build with ${PATCHES.length} verified patches…`);
+console.log(`Preparing production build with ${PATCHES.length} legacy patches…`);
 const startedAt = performance.now();
 
 try {
-  for (const patch of PATCHES) {
-    runPatch(patch);
+  const timings = PATCHES.map(runPatch);
+  const totalDuration = Math.round(performance.now() - startedAt);
+  const slowest = [...timings].sort((a, b) => b.duration - a.duration).slice(0, 5);
+  const slowPatches = timings.filter((item) => item.duration >= SLOW_PATCH_MS);
+
+  console.log("\nPatch timing summary:");
+  for (const item of slowest) {
+    console.log(`  ${String(item.duration).padStart(5, " ")}ms  ${item.filename}`);
   }
 
-  console.log(`Build preparation completed in ${Math.round(performance.now() - startedAt)}ms.`);
+  if (slowPatches.length) {
+    console.warn(`\n${slowPatches.length} patch(es) exceeded ${SLOW_PATCH_MS}ms and should be migrated first.`);
+  }
+
+  console.log(`\nBuild preparation completed in ${totalDuration}ms.`);
 } catch (error) {
   console.error("Build preparation failed:", error instanceof Error ? error.message : error);
   process.exit(1);
