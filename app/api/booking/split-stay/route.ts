@@ -61,6 +61,12 @@ function makeDays(checkin: string, checkout: string) {
   return days;
 }
 
+function addDay(date: string) {
+  const value = new Date(`${date}T12:00:00Z`);
+  value.setUTCDate(value.getUTCDate() + 1);
+  return value.toISOString().slice(0, 10);
+}
+
 function roomAllowed(number: number, guests: number) {
   if (guests <= 2) return number >= 1 && number <= 10;
   if (guests === 3) return [1, 3, 4, 5, 7, 8, 9, 10].includes(number);
@@ -180,12 +186,7 @@ export async function GET(request: NextRequest) {
 
         for (const secondUnit of units) {
           const secondKey = `${secondUnit.room_id}:${secondUnit.unit_id}`;
-
-          // Beds24 can only move a booking between units of the same room category.
-          // room_id identifies the category; unit_id identifies the physical room.
-          if (secondUnit.room_id !== firstUnit.room_id) continue;
-          if (secondUnit.unit_id === firstUnit.unit_id) continue;
-
+          if (secondKey === firstKey) continue;
           const secondNights = matrix.get(secondKey) || [];
           if (!secondDays.every((day) => secondNights.some((night) => night.date === day))) continue;
 
@@ -221,7 +222,7 @@ export async function GET(request: NextRequest) {
       guests,
       nights: days.length,
       splitStays: options.slice(0, 3),
-      summary: { count: options.length, sameCategoryOnly: true },
+      summary: { count: options.length },
       generatedAt: new Date().toISOString(),
     }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
