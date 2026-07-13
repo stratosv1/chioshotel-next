@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import { readBookingSearchCache, writeBookingSearchCache } from "@/lib/booking-search-cache";
 
 export const runtime = "nodejs";
-export const revalidate = 840;
+export const dynamic = "force-dynamic";
 
 const DEFAULT_BOOKING_WEBAPP_URL =
   "https://script.google.com/macros/s/AKfycbwZ8qG1eE1YXr-Ag2LXNHrgFIkf7kCvDiTMF38NfPNC9ZGAquGMIXvn3QWPfpiKpTaa/exec";
@@ -85,7 +86,8 @@ function roomAllowedForGuests(room: RoomRecord, guests: number) {
   return false;
 }
 
-function applyRoomRules(data: BookingSearchPayload, guests: number) {
+function applyRoomRules(input: BookingSearchPayload, guests: number) {
+  const data = structuredClone(input);
   if (Array.isArray(data.rooms?.available)) {
     data.rooms.available = data.rooms.available.filter((room) => roomAllowedForGuests(room, guests));
   }
@@ -108,6 +110,32 @@ async function readJsonResponse(response: Response) {
   }
 }
 
+async function fetchLiveSearch(checkin: string, checkout: string, guests: number) {
+  const url = new URL(getBookingWebAppUrl());
+  url.searchParams.set("action", "search_range");
+  url.searchParams.set("checkin", checkin);
+  url.searchParams.set("checkout", checkout);
+  url.searchParams.set("guests", String(guests));
+
+  const response = await fetch(url.toString(), {
+    method: "GET",
+    headers: { Accept: "application/json", "User-Agent": "VoulamandisHouseNext/1.0" },
+    cache: "no-store",
+  });
+
+  const parsed = await readJsonResponse(response);
+  if (!response.ok || !parsed.json || typeof parsed.json !== "object") {
+    throw new Error(`Invalid response from availability service (${response.status}): ${parsed.text.slice(0, 180)}`);
+  }
+  return applyRoomRules(parsed.json, guests);
+}
+
+function isAuthorizedRefresh(request: NextRequest) {
+  const secret = process.env.CRON_SECRET;
+  if (!secret) return false;
+  return request.headers.get("authorization") === `Bearer ${secret}`;
+}
+
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
@@ -120,48 +148,57 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ success: false, message: validationError }, { status: 400 });
     }
 
-    const url = new URL(getBookingWebAppUrl());
-    url.searchParams.set("action", "search_range");
-    url.searchParams.set("checkin", checkin);
-    url.searchParams.set("checkout", checkout);
-    url.searchParams.set("guests", String(guests));
+    const forceRefresh = searchParams.get("refresh") === "1" && isAuthorizedRefresh(request);
+    const cached = forceRefresh ? null : await readBookingSearchCache(checkin, checkout, guests).catch(() => null);
 
-    const response = await fetch(url.toString(), {
-      method: "GET",
-      headers: { Accept: "application/json", "User-Agent": "VoulamandisHouseNext/1.0" },
-      next: { revalidate: 840 },
-    });
-
-    const parsed = await readJsonResponse(response);
-    if (!response.ok || !parsed.json || typeof parsed.json !== "object") {
+    if (cached?.fresh) {
       return NextResponse.json({
-        success: false,
-        message: "Invalid response from availability service",
-        statusCode: response.status,
-        debug: { bodyPreview: parsed.text.slice(0, 500) },
-        _booking_engine: { cached: false, source: "next_proxy" },
-      }, { status: 502 });
+        ...cached.payload,
+        _booking_engine: {
+          cached: true,
+          stale: false,
+          ageSeconds: cached.ageSeconds,
+          updatedAt: cached.updatedAt,
+          source: "neon_search_cache",
+        },
+      }, { status: 200, headers: { "Cache-Control": "no-store" } });
     }
 
-    const data = applyRoomRules(parsed.json, guests);
-    return NextResponse.json({
-      ...data,
-      _booking_engine: {
-        cached: false,
-        ttlMinutes: 14,
-        generatedAt: new Date().toISOString(),
-        source: "next_proxy_apps_script",
-      },
-    }, {
-      status: 200,
-      headers: { "Cache-Control": "s-maxage=840, stale-while-revalidate=3600" },
-    });
+    try {
+      const data = await fetchLiveSearch(checkin, checkout, guests);
+      await writeBookingSearchCache(checkin, checkout, guests, data).catch(() => false);
+
+      return NextResponse.json({
+        ...data,
+        _booking_engine: {
+          cached: false,
+          stale: false,
+          generatedAt: new Date().toISOString(),
+          source: forceRefresh ? "cron_live_refresh" : "apps_script_live",
+        },
+      }, { status: 200, headers: { "Cache-Control": "no-store" } });
+    } catch (liveError) {
+      if (cached?.payload) {
+        return NextResponse.json({
+          ...cached.payload,
+          _booking_engine: {
+            cached: true,
+            stale: true,
+            ageSeconds: cached.ageSeconds,
+            updatedAt: cached.updatedAt,
+            source: "neon_stale_fallback",
+            warning: liveError instanceof Error ? liveError.message : "Live refresh failed",
+          },
+        }, { status: 200, headers: { "Cache-Control": "no-store" } });
+      }
+      throw liveError;
+    }
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown booking search error";
     return NextResponse.json({
       success: false,
       message,
-      _booking_engine: { cached: false, source: "next_proxy_exception" },
-    }, { status: 500 });
+      _booking_engine: { cached: false, source: "booking_search_exception" },
+    }, { status: 502 });
   }
 }
