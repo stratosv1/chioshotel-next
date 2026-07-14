@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { track } from "@vercel/analytics";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 type LanguageCode = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
 type ConsentValue = "accepted" | "rejected";
@@ -21,10 +22,10 @@ declare global {
 const text: Record<LanguageCode, { title: string; body: string; accept: string; reject: string; privacy: string; cookies: string }> = {
   en: { title: "Cookie preferences", body: "We use necessary technologies for the site and optional analytics to improve direct bookings. We do not send names, emails or phone numbers to analytics.", accept: "Accept analytics", reject: "Reject", privacy: "Privacy policy", cookies: "Cookie policy" },
   el: { title: "Προτιμήσεις cookies", body: "Χρησιμοποιούμε απαραίτητες τεχνολογίες για το site και προαιρετικά analytics για βελτίωση των απευθείας κρατήσεων. Δεν στέλνουμε ονόματα, email ή τηλέφωνα στα analytics.", accept: "Αποδοχή analytics", reject: "Απόρριψη", privacy: "Πολιτική απορρήτου", cookies: "Πολιτική cookies" },
-  fr: { title: "Préférences de cookies", body: "Nous utilisons des technologies nécessaires et des analytics optionnels pour améliorer les réservations directes. Nous n’envoyons pas de noms, emails ou téléphones aux analytics.", accept: "Accepter analytics", reject: "Refuser", privacy: "Politique de confidentialité", cookies: "Politique de cookies" },
+  fr: { title: "Préférences cookie", body: "Nous utilisons des technologies nécessaires et des analytics optionnels pour améliorer les réservations directes. Nous n’envoyons pas de noms, emails ou téléphones aux analytics.", accept: "Accepter analytics", reject: "Refuser", privacy: "Politique de confidentialité", cookies: "Politique de cookies" },
   de: { title: "Cookie-Einstellungen", body: "Wir nutzen notwendige Technologien und optionale Analytics zur Verbesserung von Direktbuchungen. Namen, E-Mails oder Telefonnummern senden wir nicht an Analytics.", accept: "Analytics akzeptieren", reject: "Ablehnen", privacy: "Datenschutzerklärung", cookies: "Cookie-Richtlinie" },
   it: { title: "Preferenze cookie", body: "Usiamo tecnologie necessarie e analytics opzionali per migliorare le prenotazioni dirette. Non inviamo nomi, email o telefoni agli analytics.", accept: "Accetta analytics", reject: "Rifiuta", privacy: "Privacy policy", cookies: "Cookie policy" },
-  es: { title: "Preferencias de cookies", body: "Usamos tecnologías necesarias y analytics opcionales para mejorar las reservas directas. No enviamos nombres, emails ni teléfonos a analytics.", accept: "Aceptar analytics", reject: "Rechazar", privacy: "Política de privacidad", cookies: "Política de cookies" },
+  es: { title: "Preferencias cookie", body: "Usamos tecnologías necesarias y analytics opcionales para mejorar las reservas directas. No enviamos nombres, emails ni teléfonos a analytics.", accept: "Aceptar analytics", reject: "Rechazar", privacy: "Política de privacidad", cookies: "Política de cookies" },
   tr: { title: "Çerez tercihleri", body: "Gerekli site teknolojilerini ve doğrudan rezervasyonları geliştirmek için isteğe bağlı analytics kullanıyoruz. Analytics’e isim, e-posta veya telefon göndermeyiz.", accept: "Analytics kabul et", reject: "Reddet", privacy: "Gizlilik politikası", cookies: "Çerez politikası" },
 };
 
@@ -201,6 +202,7 @@ export function ConsentAnalytics({ language }: { language: LanguageCode }) {
 
   return (
     <>
+      <SpeedInsights />
       {accepted ? <Analytics /> : null}
       {consent === null ? (
         <div className="vh-consent" role="dialog" aria-live="polite" aria-label={copy.title}>
