@@ -205,17 +205,6 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/" }: H
       <div className={`fixed inset-0 top-[72px] z-50 bg-stone-950/15 backdrop-blur-[1px] transition lg:hidden ${isOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}>
         <button type="button" aria-label={copy.close} onClick={closeMenu} className="absolute inset-0 h-full w-full" />
         <div className={`absolute right-0 top-0 w-[min(92vw,420px)] rounded-l-[1.5rem] bg-[#fffaf3] p-3 pb-5 shadow-2xl shadow-stone-950/18 transition duration-300 ${isOpen ? "translate-x-0" : "translate-x-full"}`}>
-          <div className="mb-2 flex items-center justify-between gap-3 rounded-[1.15rem] border border-amber-900/10 bg-white p-3 shadow-sm shadow-stone-900/5">
-            <div className="min-w-0">
-              <div className="flex min-w-0 items-center gap-2">
-                <h2 className="truncate text-[1.25rem] font-black leading-none tracking-[-0.045em] text-stone-900">Voulamandis House</h2>
-                <span className="shrink-0 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-emerald-700 ring-1 ring-emerald-700/10">{statusLabel}<span className="ml-1.5 text-emerald-700/70">{reception.dateLabel}</span></span>
-              </div>
-              <p className="mt-1 truncate text-[10px] font-black uppercase tracking-[0.1em] text-stone-500">Kampos, Chios · {copy.directLine} · {reception.dateLabel}</p>
-            </div>
-            <button type="button" onClick={closeMenu} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#fff4df] text-xl font-black text-stone-900 ring-1 ring-amber-800/15">×</button>
-          </div>
-
           <div className="mb-2"><LanguagePills currentLanguage={language} pathname={pathname} onNavigate={closeMenu} /></div>
           <a href={pathFor(routeIds.rates, language)} onClick={closeMenu} className="mb-2 flex min-h-[44px] items-center justify-center rounded-full bg-gradient-to-br from-[#b8873f] to-[#8e6607] px-5 text-sm font-black uppercase tracking-[0.1em] !text-white shadow-lg shadow-amber-900/12">{copy.bookNow}</a>
           <section className="rounded-[1.15rem] border border-stone-900/10 bg-white p-2.5 shadow-sm shadow-stone-900/5">
