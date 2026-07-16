@@ -11,6 +11,8 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
+  issues: write
 
 jobs:
   preview-build:
@@ -24,9 +26,25 @@ jobs:
           node-version: 22
           cache: npm
       - name: Install dependencies
-        run: npm ci
-      - name: Build preview
-        run: npm run build
+        run: npm ci --silent
+      - name: Build preview and report errors
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if npm run build > build.log 2>&1; then
+            echo "Build succeeded."
+          else
+            {
+              echo '### Preview build error'
+              echo
+              echo '```text'
+              tail -n 120 build.log
+              echo '```'
+            } > build-comment.md
+            gh pr comment "${{ github.event.pull_request.number }}" --body-file build-comment.md
+            tail -n 120 build.log
+            exit 1
+          fi
 
   fix-fields:
     if: github.actor != 'github-actions[bot]' && github.head_ref != 'preview/ai-room-card-redesign'
