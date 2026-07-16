@@ -6,12 +6,17 @@ import { useEffect, useRef, useState } from "react";
 type RoomCarouselProps = {
   images: string[];
   roomName: string;
+  compact?: boolean;
+  showThumbnails?: boolean;
 };
 
-export function RoomCarousel({ images, roomName }: RoomCarouselProps) {
-  const isApartment = /^apartment\s+/i.test(roomName.trim());
-  const filteredImages = images.filter(Boolean);
-  const safeImages = isApartment ? filteredImages.slice(0, 1) : filteredImages;
+export function RoomCarousel({
+  images,
+  roomName,
+  compact = false,
+  showThumbnails = true,
+}: RoomCarouselProps) {
+  const safeImages = Array.from(new Set(images.filter(Boolean)));
   const [index, setIndex] = useState(0);
   const touchStartX = useRef<number | null>(null);
 
@@ -25,7 +30,9 @@ export function RoomCarousel({ images, roomName }: RoomCarouselProps) {
   return (
     <div className="bg-white">
       <div
-        className="relative aspect-[16/10] overflow-hidden bg-stone-100 sm:aspect-[16/8]"
+        className={compact
+          ? "relative h-[clamp(260px,38dvh,430px)] overflow-hidden bg-stone-100 sm:h-[400px]"
+          : "relative aspect-[16/10] overflow-hidden bg-stone-100 sm:aspect-[16/8]"}
         onTouchStart={(event) => { touchStartX.current = event.touches[0]?.clientX ?? null; }}
         onTouchEnd={(event) => {
           if (touchStartX.current === null) return;
@@ -41,7 +48,7 @@ export function RoomCarousel({ images, roomName }: RoomCarouselProps) {
           alt={`${roomName}, φωτογραφία ${index + 1}`}
           fill
           sizes="(max-width: 768px) 100vw, 768px"
-          className="object-cover"
+          className="object-cover object-center"
           priority
         />
 
@@ -49,12 +56,12 @@ export function RoomCarousel({ images, roomName }: RoomCarouselProps) {
           <>
             <button type="button" onClick={previous} className="absolute left-3 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white/95 text-2xl shadow-md transition hover:scale-105" aria-label="Προηγούμενη φωτογραφία">‹</button>
             <button type="button" onClick={next} className="absolute right-3 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white/95 text-2xl shadow-md transition hover:scale-105" aria-label="Επόμενη φωτογραφία">›</button>
-            <span className="absolute bottom-3 right-4 rounded-full bg-stone-950/75 px-3 py-1 text-xs font-semibold text-white">{index + 1} / {safeImages.length}</span>
+            <span className="absolute bottom-3 right-4 rounded-full bg-[#43551b]/90 px-3 py-1 text-xs font-semibold text-white">{index + 1} / {safeImages.length}</span>
           </>
         ) : null}
       </div>
 
-      {safeImages.length > 1 ? (
+      {showThumbnails && safeImages.length > 1 ? (
         <div className="flex gap-2 overflow-x-auto px-4 py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" aria-label="Μικρογραφίες δωματίου">
           {safeImages.map((src, imageIndex) => (
             <button
