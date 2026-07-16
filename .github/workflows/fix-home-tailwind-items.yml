@@ -21,6 +21,27 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: preview/ai-room-card-redesign
+          fetch-depth: 0
+      - name: Fix modal pill typing
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('components/ai/RoomOfferModal.tsx')
+          text = path.read_text(encoding='utf-8')
+          old = '  ].filter((item): item is { label: string; icon: ReactNode } => Boolean(item?.label));'
+          new = '  ].filter(Boolean) as Array<{ label: string; icon: ReactNode }>;'
+          if old in text:
+              path.write_text(text.replace(old, new), encoding='utf-8')
+          PY
+          if ! git diff --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add components/ai/RoomOfferModal.tsx
+            git commit -m "Fix room modal pill typing"
+            git push origin HEAD:preview/ai-room-card-redesign
+          fi
       - uses: actions/setup-node@v4
         with:
           node-version: 22
