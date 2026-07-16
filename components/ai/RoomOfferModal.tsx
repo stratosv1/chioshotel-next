@@ -273,7 +273,7 @@ export function RoomOfferModal({ offer, images, language, search, whatsappHref, 
     floorFeature ? { label: localizeFeature(floorFeature, language), icon: <HomeIcon /> } : null,
     secondaryFeature ? { label: localizeFeature(secondaryFeature, language), icon: featureIcon(secondaryFeature) } : null,
     { label: `${t.upTo} ${offer.maxGuests} ${t.guests}`, icon: <UsersIcon /> },
-  ].filter((item): item is { label: string; icon: ReactNode } => Boolean(item?.label));
+  ].filter(Boolean) as Array<{ label: string; icon: ReactNode }>;
 
   return (
     <div className="fixed inset-0 z-40 flex items-end justify-center bg-stone-950/60 sm:items-center sm:p-4" role="dialog" aria-modal="true" aria-label={displayName}>
