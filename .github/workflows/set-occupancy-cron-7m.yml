@@ -1,4 +1,4 @@
-name: Set occupancy cron to 7 minutes
+name: Normalize occupancy cron route
 
 on:
   push:
@@ -16,7 +16,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Change occupancy cron from 5 to 7 minutes
+      - name: Set 7-minute cron with trailing slash
         id: patch
         shell: bash
         run: |
@@ -25,27 +25,27 @@ jobs:
 
           path = Path('vercel.json')
           content = path.read_text(encoding='utf-8')
-          old = '"path":"/api/staff/calendar/occupancy-sync","schedule":"*/5 * * * *"'
-          new = '"path":"/api/staff/calendar/occupancy-sync","schedule":"*/7 * * * *"'
+          old = '"path":"/api/staff/calendar/occupancy-sync","schedule":"*/7 * * * *"'
+          new = '"path":"/api/staff/calendar/occupancy-sync/","schedule":"*/7 * * * *"'
 
           if new in content:
-              print('Cron is already set to 7 minutes.')
+              print('Cron route already includes the trailing slash.')
               Path('/tmp/cron_changed').write_text('no')
           elif old in content:
               path.write_text(content.replace(old, new, 1), encoding='utf-8')
-              print('Updated cron to every 7 minutes.')
+              print('Added trailing slash to the occupancy cron route.')
               Path('/tmp/cron_changed').write_text('yes')
           else:
-              raise SystemExit('Expected occupancy cron entry was not found; no file was changed.')
+              raise SystemExit('Expected 7-minute occupancy cron entry was not found; no file was changed.')
           PY
           echo "changed=$(cat /tmp/cron_changed)" >> "$GITHUB_OUTPUT"
 
-      - name: Commit cron change to main
+      - name: Commit route normalization to main
         if: steps.patch.outputs.changed == 'yes'
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add vercel.json
-          git commit -m "Run occupancy sync every 7 minutes"
+          git commit -m "Use trailing slash for occupancy cron route"
           git push origin HEAD:main
