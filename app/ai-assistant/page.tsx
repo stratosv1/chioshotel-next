@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AiRoomDetailsEnhancer } from "@/components/ai/AiRoomDetailsEnhancer";
+import { AiSummaryActions } from "@/components/ai/AiSummaryActions";
 import { AiSummaryEmailBridge } from "@/components/ai/AiSummaryEmailBridge";
 import { ConversationalRoomSalesEnhanced } from "@/components/ai/ConversationalRoomSalesEnhanced";
 
@@ -18,6 +19,7 @@ export default function AiAssistantPage() {
     <>
       <ConversationalRoomSalesEnhanced />
       <AiRoomDetailsEnhancer />
+      <AiSummaryActions />
       <AiSummaryEmailBridge />
     </>
   );
