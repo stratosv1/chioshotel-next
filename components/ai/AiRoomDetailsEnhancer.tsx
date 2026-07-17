@@ -1,6 +1,18 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
+
+type RoomDetails = {
+  name: string;
+  category: string;
+  badges: string[];
+  originalPrice: string;
+  directPrice: string;
+  saving: string;
+  images: string[];
+  selectButton: HTMLButtonElement | null;
+};
 
 const DETAILS_LABELS = new Set([
   "Προβολή λεπτομερειών",
@@ -12,185 +24,256 @@ const DETAILS_LABELS = new Set([
   "Detayları gör",
 ]);
 
-function waitFrame() {
-  return new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+const ROOM_GALLERIES: Record<number, string[]> = {
+  1: [
+    "/images/rooms/DSC07776-2-e1675109942622.webp",
+    "/images/rooms/DSC07769-1.webp",
+  ],
+  2: [
+    "/images/rooms/DSC07803-1.webp",
+    "/images/rooms/DSC07839.webp",
+  ],
+  3: [
+    "/images/rooms/DSC07867-1.webp",
+    "/images/rooms/DSC07860-1.webp",
+  ],
+  4: [
+    "/images/rooms/received_1748354861920234.webp",
+    "/images/rooms/received_1748358935253160.webp",
+  ],
+  5: [
+    "/images/rooms/voulamandis-house-rooms.webp",
+    "/images/rooms/double-triple-room.jpg",
+  ],
+  6: [
+    "/images/rooms/received_1753964631359257.webp",
+    "/images/rooms/received_1753964581359262.webp",
+  ],
+  7: [
+    "/images/rooms/double-triple-room.jpg",
+    "/images/rooms/voulamandis-house-rooms.webp",
+  ],
+  8: [
+    "/images/rooms/chios-apartments-voulamandis.webp",
+    "/images/rooms/DSC07899.webp",
+  ],
+  9: [
+    "/images/rooms/chios-apartments-voulamandis.webp",
+    "/images/rooms/DSC07899.webp",
+  ],
+  10: [
+    "/images/rooms/DSC07899.webp",
+    "/images/rooms/chios-apartments-voulamandis.webp",
+  ],
+};
+
+function unique(values: string[]) {
+  return Array.from(new Set(values.filter(Boolean)));
 }
 
-function getModal() {
-  return Array.from(document.querySelectorAll<HTMLElement>("div.fixed.inset-0.z-50")).find((node) =>
-    Boolean(node.querySelector("button")),
-  );
+function roomNumber(value: string) {
+  return Number(value.match(/(?:Room|Δωμάτιο|Zimmer|Chambre|Camera|Habitación|Oda|Apartment)\s*(10|[1-9])/i)?.[1] || 0);
 }
 
-function getGalleryParts(modal: HTMLElement) {
-  const panel = modal.firstElementChild as HTMLElement | null;
-  const imageArea = panel?.firstElementChild as HTMLElement | null;
-  const image = imageArea?.querySelector<HTMLImageElement>("img");
-  const buttons = imageArea ? Array.from(imageArea.querySelectorAll<HTMLButtonElement>("button")) : [];
-  const previous = buttons.find((button) => (button.textContent || "").trim() === "‹");
-  const next = buttons.find((button) => (button.textContent || "").trim() === "›");
-  const counter = Array.from(imageArea?.querySelectorAll<HTMLElement>("div") || []).find((node) => /^\d+\/\d+$/.test((node.textContent || "").trim()));
-  return { panel, imageArea, image, previous, next, counter };
-}
+function readRoomCard(button: HTMLButtonElement): RoomDetails | null {
+  const article = button.closest("article");
+  if (!article) return null;
 
-function currentPosition(counter?: HTMLElement) {
-  const match = (counter?.textContent || "1/1").trim().match(/^(\d+)\/(\d+)$/);
-  return { current: Number(match?.[1] || 1), total: Number(match?.[2] || 1) };
+  const name = article.querySelector("h2")?.textContent?.trim() || "Room";
+  const paragraphs = Array.from(article.querySelectorAll("p"));
+  const category = paragraphs.find((node) => !node.classList.contains("line-through"))?.textContent?.trim() || "";
+  const originalPrice = paragraphs.find((node) => node.classList.contains("line-through"))?.textContent?.trim() || "";
+  const directPrice = Array.from(article.querySelectorAll<HTMLElement>("p, strong"))
+    .map((node) => node.textContent?.trim() || "")
+    .find((text) => /€/.test(text) && text !== originalPrice) || "";
+  const badges = unique(Array.from(article.querySelectorAll("span")).map((node) => node.textContent?.trim() || ""));
+  const mainImage = article.querySelector<HTMLImageElement>("img")?.currentSrc || article.querySelector<HTMLImageElement>("img")?.src || "";
+  const number = roomNumber(name);
+  const images = unique([mainImage, ...(ROOM_GALLERIES[number] || [])]);
+  const buttons = Array.from(article.querySelectorAll<HTMLButtonElement>("button"));
+  const selectButton = buttons.find((item) => !DETAILS_LABELS.has((item.textContent || "").trim())) || null;
+  const savingValue = originalPrice && directPrice
+    ? (() => {
+        const original = Number(originalPrice.replace(/[^0-9,.]/g, "").replace(",", "."));
+        const direct = Number(directPrice.replace(/[^0-9,.]/g, "").replace(",", "."));
+        return Number.isFinite(original) && Number.isFinite(direct) && original > direct ? `${Math.round(original - direct)} €` : "";
+      })()
+    : "";
+
+  return { name, category, badges, originalPrice, directPrice, saving: savingValue, images, selectButton };
 }
 
 export function AiRoomDetailsEnhancer() {
+  const [room, setRoom] = useState<RoomDetails | null>(null);
+  const [photo, setPhoto] = useState(0);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
+
   useEffect(() => {
-    let lockedScrollY = 0;
-    let activeModal: HTMLElement | null = null;
-    let cancelled = false;
-
-    const lockBackground = (modal: HTMLElement) => {
-      if (activeModal === modal) return;
-      activeModal = modal;
-      lockedScrollY = window.scrollY;
-      document.body.style.position = "fixed";
-      document.body.style.top = `-${lockedScrollY}px`;
-      document.body.style.left = "0";
-      document.body.style.right = "0";
-      document.body.style.width = "100%";
-      document.documentElement.style.overflow = "hidden";
-      modal.style.overscrollBehavior = "contain";
-      const panel = modal.firstElementChild as HTMLElement | null;
-      if (panel) {
-        panel.style.overscrollBehavior = "contain";
-        panel.style.touchAction = "pan-y";
-      }
-    };
-
-    const unlockBackground = () => {
-      if (!activeModal) return;
-      activeModal = null;
-      document.body.style.position = "";
-      document.body.style.top = "";
-      document.body.style.left = "";
-      document.body.style.right = "";
-      document.body.style.width = "";
-      document.documentElement.style.overflow = "";
-      window.scrollTo(0, lockedScrollY);
-    };
-
-    const collectImages = async (modal: HTMLElement) => {
-      const { imageArea, image, previous, next, counter } = getGalleryParts(modal);
-      if (!imageArea || !image || !counter || !next || !previous) return;
-      if (imageArea.querySelector("[data-ai-thumbnails]")) return;
-
-      const { current, total } = currentPosition(counter);
-      if (total <= 1) return;
-
-      const originalOpacity = imageArea.style.opacity;
-      imageArea.style.opacity = "0.98";
-      const sources: string[] = [];
-
-      for (let index = 0; index < total; index += 1) {
-        if (cancelled || !document.body.contains(modal)) return;
-        const src = image.currentSrc || image.src;
-        if (src && !sources.includes(src)) sources.push(src);
-        if (index < total - 1) {
-          next.click();
-          await waitFrame();
-        }
-      }
-
-      for (let index = 1; index < current; index += 1) {
-        previous.click();
-        await waitFrame();
-      }
-
-      imageArea.style.opacity = originalOpacity;
-      if (!sources.length || imageArea.querySelector("[data-ai-thumbnails]")) return;
-
-      const strip = document.createElement("div");
-      strip.dataset.aiThumbnails = "true";
-      strip.className = "absolute inset-x-3 bottom-3 z-20 flex gap-2 overflow-x-auto rounded-2xl bg-black/35 p-2 backdrop-blur-sm [scrollbar-width:none]";
-      strip.addEventListener("wheel", (event) => {
-        event.preventDefault();
-        strip.scrollLeft += event.deltaY;
-      }, { passive: false });
-
-      sources.forEach((src, index) => {
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = "relative h-12 w-16 shrink-0 overflow-hidden rounded-xl border-2 border-white/80 bg-white shadow-sm";
-        button.setAttribute("aria-label", `Photo ${index + 1}`);
-        const thumbnail = document.createElement("img");
-        thumbnail.src = src;
-        thumbnail.alt = `Room photo ${index + 1}`;
-        thumbnail.loading = "lazy";
-        thumbnail.className = "h-full w-full object-cover";
-        button.appendChild(thumbnail);
-        button.addEventListener("click", async () => {
-          const parts = getGalleryParts(modal);
-          const position = currentPosition(parts.counter);
-          const target = index + 1;
-          const forward = (target - position.current + position.total) % position.total;
-          const backward = (position.current - target + position.total) % position.total;
-          const control = forward <= backward ? parts.next : parts.previous;
-          const steps = Math.min(forward, backward);
-          for (let step = 0; step < steps; step += 1) {
-            control?.click();
-            await waitFrame();
-          }
-        });
-        strip.appendChild(button);
-      });
-
-      counter.style.bottom = "72px";
-      imageArea.appendChild(strip);
-    };
-
-    const enhanceOpenModal = async () => {
-      for (let attempt = 0; attempt < 12; attempt += 1) {
-        if (cancelled) return;
-        const modal = getModal();
-        if (modal) {
-          lockBackground(modal);
-          const panel = modal.firstElementChild as HTMLElement | null;
-          if (panel) {
-            panel.style.maxHeight = "94dvh";
-            panel.style.overflowY = "auto";
-            panel.style.overscrollBehavior = "contain";
-            panel.addEventListener("touchmove", (event) => event.stopPropagation(), { passive: true });
-            panel.addEventListener("wheel", (event) => event.stopPropagation(), { passive: true });
-          }
-          await collectImages(modal);
-          return;
-        }
-        await new Promise((resolve) => setTimeout(resolve, 50));
-      }
-    };
-
     const handleClick = (event: MouseEvent) => {
       const target = event.target as HTMLElement | null;
       const button = target?.closest<HTMLButtonElement>("button");
-      const label = (button?.textContent || "").trim();
-      if (button && DETAILS_LABELS.has(label)) {
-        window.setTimeout(() => void enhanceOpenModal(), 0);
-        return;
-      }
+      if (!button || !DETAILS_LABELS.has((button.textContent || "").trim())) return;
 
-      const modal = getModal();
-      if (!modal) {
-        window.setTimeout(unlockBackground, 0);
-        return;
-      }
+      const details = readRoomCard(button);
+      if (!details) return;
 
-      if (button && (label === "×" || label === "✕")) {
-        window.setTimeout(unlockBackground, 0);
-      }
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      setPhoto(0);
+      setRoom(details);
     };
 
     document.addEventListener("click", handleClick, true);
-    return () => {
-      cancelled = true;
-      document.removeEventListener("click", handleClick, true);
-      unlockBackground();
-    };
+    return () => document.removeEventListener("click", handleClick, true);
   }, []);
 
-  return null;
+  useEffect(() => {
+    if (!room) return;
+    const scrollY = window.scrollY;
+    const previous = {
+      position: document.body.style.position,
+      top: document.body.style.top,
+      left: document.body.style.left,
+      right: document.body.style.right,
+      width: document.body.style.width,
+      overflow: document.documentElement.style.overflow,
+    };
+
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+    document.body.style.width = "100%";
+    document.documentElement.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.position = previous.position;
+      document.body.style.top = previous.top;
+      document.body.style.left = previous.left;
+      document.body.style.right = previous.right;
+      document.body.style.width = previous.width;
+      document.documentElement.style.overflow = previous.overflow;
+      window.scrollTo(0, scrollY);
+    };
+  }, [room]);
+
+  const selectedImage = useMemo(() => room?.images[photo] || room?.images[0] || "", [room, photo]);
+
+  if (!mounted || !room) return null;
+
+  return createPortal(
+    <div
+      className="fixed inset-0 z-[100] flex items-end justify-center bg-black/60 sm:items-center sm:p-5"
+      onMouseDown={(event) => {
+        if (event.currentTarget === event.target) setRoom(null);
+      }}
+      role="dialog"
+      aria-modal="true"
+      aria-label={room.name}
+    >
+      <section
+        className="flex max-h-[94dvh] w-full max-w-2xl flex-col overflow-hidden rounded-t-[28px] bg-white shadow-2xl sm:rounded-[28px]"
+        style={{ overscrollBehavior: "contain" }}
+        onWheel={(event) => event.stopPropagation()}
+        onTouchMove={(event) => event.stopPropagation()}
+      >
+        <div className="relative shrink-0 bg-stone-100">
+          <div className="relative h-[34dvh] min-h-[230px] max-h-[320px] w-full">
+            <img src={selectedImage} alt={`${room.name} photo ${photo + 1}`} className="h-full w-full object-cover" />
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setRoom(null)}
+            className="absolute right-3 top-3 flex h-11 w-11 items-center justify-center rounded-full bg-white text-2xl shadow-lg"
+            aria-label="Close"
+          >
+            ×
+          </button>
+
+          {room.images.length > 1 ? (
+            <>
+              <button
+                type="button"
+                onClick={() => setPhoto((value) => (value - 1 + room.images.length) % room.images.length)}
+                className="absolute left-3 top-[42%] flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-2xl shadow-lg"
+                aria-label="Previous photo"
+              >
+                ‹
+              </button>
+              <button
+                type="button"
+                onClick={() => setPhoto((value) => (value + 1) % room.images.length)}
+                className="absolute right-3 top-[42%] flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-2xl shadow-lg"
+                aria-label="Next photo"
+              >
+                ›
+              </button>
+            </>
+          ) : null}
+
+          <div className="absolute bottom-[76px] right-3 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold shadow">
+            {photo + 1}/{room.images.length}
+          </div>
+
+          <div className="flex gap-2 overflow-x-auto border-t border-white/30 bg-black/35 p-2.5 backdrop-blur-sm [scrollbar-width:none]">
+            {room.images.map((image, index) => (
+              <button
+                key={image}
+                type="button"
+                onClick={() => setPhoto(index)}
+                className={`relative h-14 w-20 shrink-0 overflow-hidden rounded-xl border-2 bg-white shadow-sm ${index === photo ? "border-white ring-2 ring-[#ff385c]" : "border-white/70"}`}
+                aria-label={`Photo ${index + 1}`}
+              >
+                <img src={image} alt="" className="h-full w-full object-cover" loading="lazy" />
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 sm:p-5">
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <h2 className="text-2xl font-black text-stone-950">{room.name}</h2>
+              <p className="mt-1 text-sm text-stone-500">{room.category}</p>
+            </div>
+            <div className="shrink-0 text-right">
+              {room.originalPrice ? <p className="text-xs text-stone-400 line-through">{room.originalPrice}</p> : null}
+              <p className="text-2xl font-black text-[#43551b]">{room.directPrice}</p>
+            </div>
+          </div>
+
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {room.badges.slice(0, 5).map((badge) => (
+              <span key={badge} className="rounded-full bg-stone-100 px-2.5 py-1 text-[11px] font-semibold text-stone-700">
+                {badge}
+              </span>
+            ))}
+          </div>
+
+          {room.saving ? (
+            <div className="mt-4 flex items-center justify-between rounded-2xl bg-[#f3f6e8] px-4 py-3 text-sm text-[#63752d]">
+              <span>Εξοικονόμηση</span>
+              <strong>{room.saving}</strong>
+            </div>
+          ) : null}
+
+          <button
+            type="button"
+            onClick={() => {
+              room.selectButton?.click();
+              setRoom(null);
+            }}
+            className="mt-4 w-full rounded-2xl bg-[#ff385c] px-5 py-3.5 text-base font-bold text-white shadow-sm"
+          >
+            Επιλογή
+          </button>
+        </div>
+      </section>
+    </div>,
+    document.body,
+  );
 }
