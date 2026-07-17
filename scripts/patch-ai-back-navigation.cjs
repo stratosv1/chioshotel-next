@@ -8,7 +8,7 @@ const marker = 'const BREAKFAST_IMAGE = "/images/welcome/voulamandis-breakfast.j
 const labels = `const BACK_LABELS: Record<Language, string> = {
  el: "Επιστροφή στο site", en: "Back to site", de: "Zurück zur Website", fr: "Retour au site", it: "Torna al sito", es: "Volver al sitio", tr: "Siteye dön",
 };
-function homeHref(language: Language) { return language === "en" ? "/" : \`/${language}/\`; }
+function homeHref(language: Language) { return language === "en" ? "/" : \`/\${language}/\`; }
 `;
 
 if (!source.includes("const BACK_LABELS:")) {
