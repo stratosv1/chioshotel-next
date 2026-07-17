@@ -4,8 +4,6 @@ import nodemailer from "nodemailer";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const RECEPTION_EMAIL = "chioshotel@gmail.com";
-
 type SummaryEmailBody = {
   subject?: string;
   message?: string;
@@ -39,8 +37,9 @@ export async function POST(request: Request) {
     const smtpUser = process.env.SMTP_USER;
     const smtpPass = process.env.SMTP_PASS;
     const smtpFrom = process.env.SMTP_FROM || smtpUser;
+    const receptionEmail = process.env.CONTACT_TO || "chioshotel@gmail.com";
 
-    if (!smtpUser || !smtpPass || !smtpFrom) {
+    if (!smtpUser || !smtpPass || !smtpFrom || !receptionEmail) {
       return NextResponse.json(
         { ok: false, error: "Email service is not configured." },
         { status: 500 },
@@ -54,11 +53,13 @@ export async function POST(request: Request) {
       auth: { user: smtpUser, pass: smtpPass },
     });
 
-    const safeMessage = escapeHtml(message).replaceAll("\n", "<br />");
+    await transporter.verify();
 
-    await transporter.sendMail({
+    const safeMessage = escapeHtml(message).replaceAll("\n", "<br />");
+    const info = await transporter.sendMail({
       from: `"Voulamandis House Website" <${smtpFrom}>`,
-      to: RECEPTION_EMAIL,
+      to: receptionEmail,
+      replyTo: smtpUser,
       subject,
       text: message,
       html: `
@@ -71,7 +72,30 @@ export async function POST(request: Request) {
       `,
     });
 
-    return NextResponse.json({ ok: true, emailSent: true });
+    const accepted = (info.accepted || []).map(String);
+    const rejected = (info.rejected || []).map(String);
+    const deliveredToReception = accepted.some(
+      (address) => address.toLowerCase() === receptionEmail.toLowerCase(),
+    );
+
+    if (!deliveredToReception) {
+      console.error("AI summary email was not accepted by SMTP server", {
+        accepted,
+        rejected,
+        response: info.response,
+        messageId: info.messageId,
+      });
+      return NextResponse.json(
+        { ok: false, error: "The email server did not accept the reception address." },
+        { status: 502 },
+      );
+    }
+
+    return NextResponse.json({
+      ok: true,
+      emailSent: true,
+      messageId: info.messageId,
+    });
   } catch (error) {
     console.error("AI summary email error:", error);
     return NextResponse.json(
