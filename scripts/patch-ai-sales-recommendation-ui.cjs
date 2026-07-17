@@ -12,16 +12,20 @@ if (!source.includes("recommendationRole?:")) {
 }
 
 source = source.replace(
-  "${offerIndex === 0 ? t.best : t.live}",
-  "${offer.recommendationTitle || (offerIndex === 0 ? t.best : t.live)}",
+  "{offerIndex === 0 ? t.best : t.live}",
+  "{offer.recommendationTitle || (offerIndex === 0 ? t.best : t.live)}",
 );
 
-const marker = '<div className="mt-3 flex flex-wrap gap-1.5"><span className="rounded-md border border-[#ead6b5] bg-[#fff5df] px-2 py-1 text-[10px] font-bold text-[#8a5a19]">{t.live}</span>';
-if (source.includes(marker) && !source.includes("offer.recommendationReason ?")) {
+const cardBodyMarker = '<div className="mt-3 flex flex-wrap gap-1.5"><span className="rounded-md border border-[#ead6b5] bg-[#fff5df] px-2 py-1 text-[10px] font-bold text-[#8a5a19]">{t.live}</span>';
+if (source.includes(cardBodyMarker) && !source.includes("offer.recommendationReason ?")) {
   source = source.replace(
-    marker,
+    cardBodyMarker,
     '{offer.recommendationReason ? <p className="mt-3 line-clamp-3 text-[12px] font-medium leading-5 text-stone-700">{offer.recommendationReason}</p> : null}<div className="mt-3 flex flex-wrap gap-1.5"><span className="rounded-md border border-[#ead6b5] bg-[#fff5df] px-2 py-1 text-[10px] font-bold text-[#8a5a19]">{t.live}</span>',
   );
+}
+
+if (!source.includes("offer.recommendationTitle ||")) {
+  throw new Error("Recommendation title UI patch was not applied");
 }
 
 fs.writeFileSync(file, source);
