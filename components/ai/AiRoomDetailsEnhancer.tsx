@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 
+type Language = "el" | "en" | "de" | "fr" | "it" | "es" | "tr";
+
 type RoomDetails = {
   name: string;
   category: string;
@@ -11,18 +13,37 @@ type RoomDetails = {
   directPrice: string;
   saving: string;
   images: string[];
+  roomNumber: number;
+  language: Language;
   selectButton: HTMLButtonElement | null;
 };
 
-const DETAILS_LABELS = new Set([
-  "Προβολή λεπτομερειών",
-  "View details",
-  "Details ansehen",
-  "Voir les détails",
-  "Vedi dettagli",
-  "Ver detalles",
-  "Detayları gör",
-]);
+const DETAILS_LANGUAGE: Record<string, Language> = {
+  "Προβολή λεπτομερειών": "el",
+  "View details": "en",
+  "Details ansehen": "de",
+  "Voir les détails": "fr",
+  "Vedi dettagli": "it",
+  "Ver detalles": "es",
+  "Detayları gör": "tr",
+};
+
+const COPY: Record<Language, {
+  saving: string;
+  select: string;
+  close: string;
+  previous: string;
+  next: string;
+  photo: string;
+}> = {
+  el: { saving: "Εξοικονόμηση", select: "Επιλογή", close: "Κλείσιμο", previous: "Προηγούμενη φωτογραφία", next: "Επόμενη φωτογραφία", photo: "Φωτογραφία" },
+  en: { saving: "You save", select: "Select", close: "Close", previous: "Previous photo", next: "Next photo", photo: "Photo" },
+  de: { saving: "Ersparnis", select: "Auswählen", close: "Schließen", previous: "Vorheriges Foto", next: "Nächstes Foto", photo: "Foto" },
+  fr: { saving: "Économie", select: "Sélectionner", close: "Fermer", previous: "Photo précédente", next: "Photo suivante", photo: "Photo" },
+  it: { saving: "Risparmio", select: "Seleziona", close: "Chiudi", previous: "Foto precedente", next: "Foto successiva", photo: "Foto" },
+  es: { saving: "Ahorro", select: "Seleccionar", close: "Cerrar", previous: "Foto anterior", next: "Foto siguiente", photo: "Foto" },
+  tr: { saving: "Tasarruf", select: "Seç", close: "Kapat", previous: "Önceki fotoğraf", next: "Sonraki fotoğraf", photo: "Fotoğraf" },
+};
 
 const ROOM_GALLERIES: Record<number, string[]> = {
   1: [
@@ -87,15 +108,36 @@ const ROOM_GALLERIES: Record<number, string[]> = {
   ],
 };
 
+const GROUND_TERMS = [
+  "ground floor", "ισόγειο", "erdgeschoss", "rez-de-chaussée", "piano terra", "planta baja", "zemin kat",
+];
+const FIRST_TERMS = [
+  "first floor", "πρώτος όροφος", "erster stock", "premier étage", "primo piano", "primera planta", "birinci kat",
+];
+
 function unique(values: string[]) {
-  return Array.from(new Set(values.filter(Boolean)));
+  return Array.from(new Set(values.map((value) => value.trim()).filter(Boolean)));
 }
 
 function roomNumber(value: string) {
-  return Number(value.match(/(?:Room|Δωμάτιο|Zimmer|Chambre|Camera|Habitación|Oda|Apartment)\s*(10|[1-9])/i)?.[1] || 0);
+  return Number(value.match(/(?:Room|Δωμάτιο|Zimmer|Chambre|Camera|Habitación|Oda|Apartment|Διαμέρισμα)\s*(10|[1-9])/i)?.[1] || 0);
 }
 
-function readRoomCard(button: HTMLButtonElement): RoomDetails | null {
+function includesAny(value: string, terms: string[]) {
+  const normalized = value.toLocaleLowerCase();
+  return terms.some((term) => normalized.includes(term));
+}
+
+function cleanBadges(badges: string[], number: number) {
+  const floor = number >= 1 && number <= 4 ? "first" : number >= 5 && number <= 7 ? "ground" : "other";
+  return unique(badges).filter((badge) => {
+    if (floor === "first" && includesAny(badge, GROUND_TERMS)) return false;
+    if (floor === "ground" && includesAny(badge, FIRST_TERMS)) return false;
+    return true;
+  });
+}
+
+function readRoomCard(button: HTMLButtonElement, language: Language): RoomDetails | null {
   const article = button.closest("article");
   if (!article) return null;
 
@@ -106,11 +148,11 @@ function readRoomCard(button: HTMLButtonElement): RoomDetails | null {
   const directPrice = Array.from(article.querySelectorAll<HTMLElement>("p, strong"))
     .map((node) => node.textContent?.trim() || "")
     .find((text) => /€/.test(text) && text !== originalPrice) || "";
-  const badges = unique(Array.from(article.querySelectorAll("span")).map((node) => node.textContent?.trim() || ""));
   const number = roomNumber(name);
+  const badges = cleanBadges(Array.from(article.querySelectorAll("span")).map((node) => node.textContent?.trim() || ""), number);
   const images = ROOM_GALLERIES[number] || [];
   const buttons = Array.from(article.querySelectorAll<HTMLButtonElement>("button"));
-  const selectButton = buttons.find((item) => !DETAILS_LABELS.has((item.textContent || "").trim())) || null;
+  const selectButton = buttons.find((item) => !Object.prototype.hasOwnProperty.call(DETAILS_LANGUAGE, (item.textContent || "").trim())) || null;
   const savingValue = originalPrice && directPrice
     ? (() => {
         const original = Number(originalPrice.replace(/[^0-9,.]/g, "").replace(",", "."));
@@ -119,7 +161,7 @@ function readRoomCard(button: HTMLButtonElement): RoomDetails | null {
       })()
     : "";
 
-  return { name, category, badges, originalPrice, directPrice, saving: savingValue, images, selectButton };
+  return { name, category, badges, originalPrice, directPrice, saving: savingValue, images, roomNumber: number, language, selectButton };
 }
 
 export function AiRoomDetailsEnhancer() {
@@ -133,9 +175,11 @@ export function AiRoomDetailsEnhancer() {
     const handleClick = (event: MouseEvent) => {
       const target = event.target as HTMLElement | null;
       const button = target?.closest<HTMLButtonElement>("button");
-      if (!button || !DETAILS_LABELS.has((button.textContent || "").trim())) return;
+      const label = (button?.textContent || "").trim();
+      const language = DETAILS_LANGUAGE[label];
+      if (!button || !language) return;
 
-      const details = readRoomCard(button);
+      const details = readRoomCard(button, language);
       if (!details) return;
 
       event.preventDefault();
@@ -182,6 +226,7 @@ export function AiRoomDetailsEnhancer() {
   const selectedImage = useMemo(() => room?.images[photo] || room?.images[0] || "", [room, photo]);
 
   if (!mounted || !room) return null;
+  const t = COPY[room.language];
 
   return createPortal(
     <div
@@ -203,55 +248,26 @@ export function AiRoomDetailsEnhancer() {
           <div className="relative w-full overflow-hidden bg-stone-950" style={{ height: "min(42dvh, 360px)" }}>
             <img
               src={selectedImage}
-              alt={`${room.name} photo ${photo + 1}`}
+              alt={`${room.name} ${t.photo.toLocaleLowerCase()} ${photo + 1}`}
               className="absolute inset-0 h-full w-full object-contain"
               draggable={false}
             />
           </div>
 
-          <button
-            type="button"
-            onClick={() => setRoom(null)}
-            className="absolute right-3 top-3 flex h-11 w-11 items-center justify-center rounded-full bg-white text-2xl shadow-lg"
-            aria-label="Close"
-          >
-            ×
-          </button>
+          <button type="button" onClick={() => setRoom(null)} className="absolute right-3 top-3 flex h-11 w-11 items-center justify-center rounded-full bg-white text-2xl shadow-lg" aria-label={t.close}>×</button>
 
           {room.images.length > 1 ? (
             <>
-              <button
-                type="button"
-                onClick={() => setPhoto((value) => (value - 1 + room.images.length) % room.images.length)}
-                className="absolute left-3 top-[34%] flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-2xl shadow-lg"
-                aria-label="Previous photo"
-              >
-                ‹
-              </button>
-              <button
-                type="button"
-                onClick={() => setPhoto((value) => (value + 1) % room.images.length)}
-                className="absolute right-3 top-[34%] flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-2xl shadow-lg"
-                aria-label="Next photo"
-              >
-                ›
-              </button>
+              <button type="button" onClick={() => setPhoto((value) => (value - 1 + room.images.length) % room.images.length)} className="absolute left-3 top-[34%] flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-2xl shadow-lg" aria-label={t.previous}>‹</button>
+              <button type="button" onClick={() => setPhoto((value) => (value + 1) % room.images.length)} className="absolute right-3 top-[34%] flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-2xl shadow-lg" aria-label={t.next}>›</button>
             </>
           ) : null}
 
-          <div className="absolute right-3 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold shadow" style={{ bottom: "76px" }}>
-            {photo + 1}/{room.images.length}
-          </div>
+          <div className="absolute right-3 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold shadow" style={{ bottom: "76px" }}>{photo + 1}/{room.images.length}</div>
 
           <div className="flex gap-2 overflow-x-auto border-t border-white/10 bg-stone-900 p-2.5 [scrollbar-width:none]">
             {room.images.map((image, index) => (
-              <button
-                key={image}
-                type="button"
-                onClick={() => setPhoto(index)}
-                className={`relative h-14 w-20 shrink-0 overflow-hidden rounded-xl border-2 bg-white shadow-sm ${index === photo ? "border-white ring-2 ring-[#ff385c]" : "border-white/70"}`}
-                aria-label={`Photo ${index + 1}`}
-              >
+              <button key={image} type="button" onClick={() => setPhoto(index)} className={`relative h-14 w-20 shrink-0 overflow-hidden rounded-xl border-2 bg-white shadow-sm ${index === photo ? "border-white ring-2 ring-[#ff385c]" : "border-white/70"}`} aria-label={`${t.photo} ${index + 1}`}>
                 <img src={image} alt="" className="h-full w-full object-cover" loading="lazy" draggable={false} />
               </button>
             ))}
@@ -271,30 +287,12 @@ export function AiRoomDetailsEnhancer() {
           </div>
 
           <div className="mt-3 flex flex-wrap gap-1.5">
-            {room.badges.slice(0, 5).map((badge) => (
-              <span key={badge} className="rounded-full bg-stone-100 px-2.5 py-1 text-[11px] font-semibold text-stone-700">
-                {badge}
-              </span>
-            ))}
+            {room.badges.slice(0, 5).map((badge) => <span key={badge} className="rounded-full bg-stone-100 px-2.5 py-1 text-[11px] font-semibold text-stone-700">{badge}</span>)}
           </div>
 
-          {room.saving ? (
-            <div className="mt-4 flex items-center justify-between rounded-2xl bg-[#f3f6e8] px-4 py-3 text-sm text-[#63752d]">
-              <span>Εξοικονόμηση</span>
-              <strong>{room.saving}</strong>
-            </div>
-          ) : null}
+          {room.saving ? <div className="mt-4 flex items-center justify-between rounded-2xl bg-[#f3f6e8] px-4 py-3 text-sm text-[#63752d]"><span>{t.saving}</span><strong>{room.saving}</strong></div> : null}
 
-          <button
-            type="button"
-            onClick={() => {
-              room.selectButton?.click();
-              setRoom(null);
-            }}
-            className="mt-4 w-full rounded-2xl bg-[#ff385c] px-5 py-3.5 text-base font-bold text-white shadow-sm"
-          >
-            Επιλογή
-          </button>
+          <button type="button" onClick={() => { room.selectButton?.click(); setRoom(null); }} className="mt-4 w-full rounded-2xl bg-[#ff385c] px-5 py-3.5 text-base font-bold text-white shadow-sm">{t.select}</button>
         </div>
       </section>
     </div>,
