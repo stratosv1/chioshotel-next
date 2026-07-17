@@ -1,0 +1,56 @@
+name: Add AI assistant back navigation
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add localized back-to-site navigation
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('components/ai/ConversationalRoomSalesEnhanced.tsx')
+          text = path.read_text(encoding='utf-8')
+
+          marker = '''const LANGUAGE_PROMPTS: Record<Language, string> = {\n el: "Σε ποια γλώσσα μπορούμε να σας εξυπηρετήσουμε;",\n en: "Which language would you prefer?",\n de: "In welcher Sprache dürfen wir Sie unterstützen?",\n fr: "Dans quelle langue souhaitez-vous être accompagné(e) ?",\n it: "In quale lingua preferisci ricevere assistenza?",\n es: "¿En qué idioma prefieres que te atendamos?",\n tr: "Size hangi dilde yardımcı olmamızı istersiniz?",\n};\n'''
+          addition = marker + '''const BACK_TO_SITE: Record<Language, string> = {\n el: "Επιστροφή στο site",\n en: "Back to site",\n de: "Zurück zur Website",\n fr: "Retour au site",\n it: "Torna al sito",\n es: "Volver al sitio",\n tr: "Siteye dön",\n};\n'''
+          if 'const BACK_TO_SITE:' not in text:
+              if marker not in text:
+                  raise SystemExit('Language prompt marker not found')
+              text = text.replace(marker, addition, 1)
+
+          old = '''   <header className="sticky top-0 z-30 border-b border-stone-200 bg-white/95 backdrop-blur">\n    <div className="mx-auto flex max-w-3xl items-center gap-3 px-4 py-3.5">\n     <div className="relative h-11 w-11 overflow-hidden rounded-full ring-1 ring-stone-200"><Image src="/images/welcome/voulamandis-welcome-hero.webp" alt="Voulamandis House" fill sizes="44px" className="object-cover"/></div>\n     <div className="min-w-0 flex-1"><h1 className="truncate text-[17px] font-semibold">Voulamandis House</h1><div className="mt-0.5 flex items-center gap-1.5 text-xs text-stone-500"><span className="h-2 w-2 rounded-full bg-emerald-500"/>AI Room Finder · Live availability</div></div>\n     {step!=="language"?<button onClick={reset} className="rounded-full border border-stone-300 bg-white px-3 py-2 text-xs font-semibold shadow-sm">↻</button>:null}\n    </div>\n   </header>'''
+
+          new = '''   <header className="sticky top-0 z-30 border-b border-stone-200 bg-white/95 backdrop-blur">\n    <div className="mx-auto flex max-w-3xl items-center gap-2 px-3 py-3 sm:gap-3 sm:px-4 sm:py-3.5">\n     <a href={language === "en" ? "/" : `/${language}/`} aria-label={BACK_TO_SITE[language]} className="inline-flex h-10 shrink-0 items-center gap-2 rounded-full border border-stone-300 bg-white px-3 text-sm font-semibold text-stone-700 shadow-sm transition hover:bg-stone-50">\n      <span aria-hidden="true">←</span><span className="hidden sm:inline">{BACK_TO_SITE[language]}</span>\n     </a>\n     <a href={language === "en" ? "/" : `/${language}/`} className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full ring-1 ring-stone-200" aria-label="Voulamandis House"><Image src="/images/welcome/voulamandis-welcome-hero.webp" alt="Voulamandis House" fill sizes="44px" className="object-cover"/></a>\n     <div className="min-w-0 flex-1"><h1 className="truncate text-[17px] font-semibold">Voulamandis House</h1><div className="mt-0.5 flex items-center gap-1.5 truncate text-xs text-stone-500"><span className="h-2 w-2 shrink-0 rounded-full bg-emerald-500"/>AI Room Finder · Live availability</div></div>\n     {step!=="language"?<button onClick={reset} aria-label="Start a new search" className="rounded-full border border-stone-300 bg-white px-3 py-2 text-xs font-semibold shadow-sm">↻</button>:null}\n    </div>\n   </header>'''
+
+          if new not in text:
+              if old not in text:
+                  raise SystemExit('Header marker not found')
+              text = text.replace(old, new, 1)
+
+          path.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Commit changes
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "No changes needed"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add components/ai/ConversationalRoomSalesEnhanced.tsx
+          git commit -m "Add localized back navigation to AI assistant"
+          git push origin HEAD:main
