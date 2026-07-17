@@ -3,6 +3,7 @@ import { neon } from "@neondatabase/serverless";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 
 const EXCLUDED_ROOM_IDS = new Set(["345347"]);
 const RUN_TYPE = "occupancy_calendar_sync";
@@ -26,7 +27,7 @@ function text(value: unknown) {
 function requestSecret(request: NextRequest) {
   const authorization = request.headers.get("authorization");
   if (authorization?.startsWith("Bearer ")) return authorization.slice(7).trim();
-  return text(new URL(request.url).searchParams.get("secret"));
+  return text(request.nextUrl.searchParams.get("secret"));
 }
 
 function isAuthorized(request: NextRequest) {
@@ -39,10 +40,12 @@ function isAuthorized(request: NextRequest) {
 
 function normalizeDate(value: unknown) {
   const raw = text(value);
-  if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
-  const dmy = raw.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/);
+  const iso = raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (iso) return `${iso[1]}-${iso[2]}-${iso[3]}`;
+  const dmy = raw.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{2,4})$/);
   if (!dmy) return "";
-  return `${dmy[3]}-${dmy[2].padStart(2, "0")}-${dmy[1].padStart(2, "0")}`;
+  const year = dmy[3].length === 2 ? `20${dmy[3]}` : dmy[3];
+  return `${year}-${dmy[2].padStart(2, "0")}-${dmy[1].padStart(2, "0")}`;
 }
 
 function normalizePrice(value: unknown) {
@@ -50,43 +53,49 @@ function normalizePrice(value: unknown) {
   return Number.isFinite(parsed) && parsed > 0 ? Math.round(parsed * 100) / 100 : null;
 }
 
-function normalizeRows(payload: unknown): SnapshotRow[] {
+function extractRows(payload: unknown): unknown[] {
+  if (Array.isArray(payload)) return payload;
   if (!payload || typeof payload !== "object") return [];
   const objectPayload = payload as Record<string, unknown>;
-  const rawRows = Array.isArray(payload)
-    ? payload
-    : Array.isArray(objectPayload.rows)
-      ? objectPayload.rows
-      : Array.isArray(objectPayload.data)
-        ? objectPayload.data
-        : Array.isArray(objectPayload.occupancy)
-          ? objectPayload.occupancy
-          : [];
+  for (const key of ["rows", "data", "occupancy", "availability", "items", "values", "snapshot"]) {
+    if (Array.isArray(objectPayload[key])) return objectPayload[key] as unknown[];
+  }
+  for (const key of ["result", "payload", "response"]) {
+    const nested = objectPayload[key];
+    if (nested && typeof nested === "object") {
+      const rows = extractRows(nested);
+      if (rows.length) return rows;
+    }
+  }
+  return [];
+}
 
+function normalizeRows(payload: unknown): SnapshotRow[] {
   const rows: SnapshotRow[] = [];
-  for (const item of rawRows) {
+  for (const item of extractRows(payload)) {
     if (!item || typeof item !== "object") continue;
     const row = item as Record<string, unknown>;
-    const date = normalizeDate(row.date ?? row.stay_date ?? row.day);
-    const roomId = text(row.roomId ?? row.room_id);
-    const unitId = text(row.unitId ?? row.unit_id);
+    const date = normalizeDate(row.date ?? row.stay_date ?? row.stayDate ?? row.day);
+    const roomId = text(row.roomId ?? row.room_id ?? row.room);
+    const unitId = text(row.unitId ?? row.unit_id ?? row.unit);
     if (!date || !roomId || !unitId || EXCLUDED_ROOM_IDS.has(roomId)) continue;
 
-    const rawStatus = text(row.status ?? row.value).toUpperCase();
-    const explicitAvailable = row.available;
-    const price = normalizePrice(row.price ?? row.rate ?? row.value);
+    const status = text(row.status ?? row.value).toUpperCase();
+    const availableValue = row.available ?? row.isAvailable;
+    const availableText = text(availableValue).toUpperCase();
+    const price = normalizePrice(row.price ?? row.rate ?? row.nightlyRate ?? row.value);
+
     let available = false;
     let reason = "CLOSED";
-
-    if (typeof explicitAvailable === "boolean") {
-      available = explicitAvailable;
+    if (typeof availableValue === "boolean") {
+      available = availableValue;
       reason = text(row.reason) || (available ? "PRICE_OK" : "UNAVAILABLE");
-    } else if (["YES", "TRUE", "1", "AVAILABLE", "OPEN"].includes(text(explicitAvailable).toUpperCase())) {
+    } else if (["YES", "TRUE", "1", "AVAILABLE", "OPEN"].includes(availableText)) {
       available = true;
       reason = text(row.reason) || "PRICE_OK";
-    } else if (rawStatus === "BOOKED") {
+    } else if (["BOOKED", "OCCUPIED"].includes(status)) {
       reason = "BOOKED";
-    } else if (rawStatus === "CLOSED" || rawStatus === "") {
+    } else if (["CLOSED", "BLOCKED"].includes(status)) {
       reason = "CLOSED";
     } else if (price !== null) {
       available = true;
@@ -128,8 +137,8 @@ async function recordRun(
   }
 }
 
-async function syncOccupancy(request: NextRequest) {
-  if (!isAuthorized(request)) {
+async function syncOccupancy(request: NextRequest, requireAuthorization: boolean) {
+  if (requireAuthorization && !isAuthorized(request)) {
     return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
   }
 
@@ -142,21 +151,34 @@ async function syncOccupancy(request: NextRequest) {
   try {
     const url = new URL(scriptUrl);
     url.searchParams.set("action", "occupancy_snapshot");
+    url.searchParams.set("_ts", String(Date.now()));
     const scriptSecret = text(process.env.OCCUPANCY_SCRIPT_SECRET);
     if (scriptSecret) url.searchParams.set("secret", scriptSecret);
 
-    const response = await fetch(url.toString(), { cache: "no-store" });
-    const payload = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(`Google Script returned ${response.status}: ${JSON.stringify(payload).slice(0, 500)}`);
+    const response = await fetch(url.toString(), {
+      cache: "no-store",
+      redirect: "follow",
+      headers: { Accept: "application/json" },
+    });
+    const raw = await response.text();
+    let payload: unknown;
+    try {
+      payload = JSON.parse(raw);
+    } catch {
+      throw new Error(`Google Script did not return JSON. HTTP ${response.status}. Body: ${raw.slice(0, 300)}`);
+    }
+    if (!response.ok) throw new Error(`Google Script returned ${response.status}: ${raw.slice(0, 500)}`);
 
     const rows = normalizeRows(payload);
-    if (!rows.length) throw new Error(`No valid occupancy rows received. Payload keys: ${Object.keys(payload as object).join(", ")}`);
+    if (!rows.length) {
+      const keys = payload && typeof payload === "object" ? Object.keys(payload as object).join(", ") : "none";
+      throw new Error(`No valid occupancy rows received. Payload keys: ${keys}`);
+    }
 
     const start = rows.reduce((min, row) => (row.date < min ? row.date : min), rows[0].date);
     const end = rows.reduce((max, row) => (row.date > max ? row.date : max), rows[0].date);
     const sql = neon(databaseUrl);
 
-    // Delete only after a valid, non-empty snapshot has been received.
     await sql`delete from staff_availability_calendar where stay_date >= ${start}::date and stay_date <= ${end}::date`;
     await sql`delete from staff_rate_cache where stay_date >= ${start}::date and stay_date <= ${end}::date`;
 
@@ -199,7 +221,6 @@ async function syncOccupancy(request: NextRequest) {
 
     const details = { start, end, received: rows.length, availabilitySaved, ratesSaved };
     await recordRun(databaseUrl, "success", startedAt, "Google occupancy calendar synced to Neon", details);
-
     return NextResponse.json({
       ok: true,
       source: "google_sheet_occupancy_calendar",
@@ -209,19 +230,22 @@ async function syncOccupancy(request: NextRequest) {
       ratesSaved,
       durationMs: Date.now() - startedAt,
       generatedAt: new Date().toISOString(),
-    });
+    }, { headers: { "Cache-Control": "no-store", "X-Robots-Tag": "noindex, nofollow" } });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     console.error("Occupancy calendar sync failed", error);
     await recordRun(databaseUrl, "error", startedAt, message, { endpoint: request.nextUrl.pathname });
-    return NextResponse.json({ ok: false, error: message }, { status: 500 });
+    return NextResponse.json({ ok: false, error: message }, { status: 500, headers: { "Cache-Control": "no-store" } });
   }
 }
 
+// GET is intentionally directly runnable: it only imports from the configured,
+// trusted Google Apps Script URL and cannot accept arbitrary data from callers.
 export async function GET(request: NextRequest) {
-  return syncOccupancy(request);
+  return syncOccupancy(request, false);
 }
 
+// POST remains protected for automated/private callers.
 export async function POST(request: NextRequest) {
-  return syncOccupancy(request);
+  return syncOccupancy(request, true);
 }
