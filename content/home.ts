@@ -1,4 +1,4 @@
-﻿export type HomePageData = {
+export type HomePageData = {
   seo: {
     title: string;
     description: string;
@@ -273,8 +273,8 @@ export const homePageEn: HomePageData = {
       "/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp",
     imageAlt: "Chios Rooms and Apartments in Kambos - Voulamandis House",
     primaryCta: {
-      label: "Find your room",
-      href: "/find-your-room/",
+      label: "AI Room Finder",
+      href: "/ai-assistant/?lang=en",
       icon: "✨",
     },
     secondaryCta: {
@@ -797,8 +797,8 @@ export const homePageEl: HomePageData = {
     imageAlt:
       "Ενοικιαζόμενα δωμάτια στη Χίο στον Κάμπο - Voulamandis House",
     primaryCta: {
-      label: "Βρες το δωμάτιό σου",
-      href: "/el/vres-to-domatio-sou/",
+      label: "Βρες δωμάτιο με AI",
+      href: "/ai-assistant/?lang=el",
       icon: "✨",
     },
     secondaryCta: {
@@ -1265,8 +1265,8 @@ export const homePageFr: HomePageData = {
       'Vous cherchez un <strong>hôtel à Chios</strong> ou des <strong>chambres à Chios</strong> ? <strong>Voulamandis House</strong> vous accueille à Kambos avec des chambres confortables, une atmosphère paisible et une hospitalité authentique.',
     imageAlt: "Hôtel et appartements à Chios - Voulamandis House à Kambos",
     primaryCta: {
-      label: "Trouvez votre chambre",
-      href: "/fr/trouvez-votre-chambre/",
+      label: "Trouvez votre chambre avec l’IA",
+      href: "/ai-assistant/?lang=fr",
       icon: "✨",
     },
     secondaryCta: {
@@ -1705,8 +1705,8 @@ export const homePageDe: HomePageData = {
       'Suchen Sie eine <strong>Unterkunft auf Chios</strong> oder <strong>Zimmer auf Chios</strong>? <strong>Voulamandis House</strong> ist eine authentische Unterkunft in Kambos mit komfortablen Zimmern, ruhiger Umgebung und herzlicher Gastfreundschaft.',
     imageAlt: "Unterkunft und Apartments auf Chios in Kambos - Voulamandis House",
     primaryCta: {
-      label: "Finde dein Zimmer",
-      href: "/de/finde-dein-zimmer/",
+      label: "Zimmer mit KI finden",
+      href: "/ai-assistant/?lang=de",
       icon: "✨",
     },
     secondaryCta: {
@@ -2144,8 +2144,8 @@ export const homePageIt: HomePageData = {
       'Cerchi un <strong>hotel a Chios</strong> o <strong>camere a Chios</strong>? <strong>Voulamandis House</strong> ti accoglie a Kambos con camere confortevoli, atmosfera tranquilla e ospitalità autentica.',
     imageAlt: "Hotel e appartamenti a Chios - Voulamandis House a Kambos",
     primaryCta: {
-      label: "Trova la tua camera",
-      href: "/it/trova-la-tua-camera/",
+      label: "Trova la camera con AI",
+      href: "/ai-assistant/?lang=it",
       icon: "✨",
     },
     secondaryCta: {
@@ -2584,8 +2584,8 @@ export const homePageEs: HomePageData = {
       '¿Buscas un <strong>hotel en Chios</strong> o <strong>habitaciones en Chios</strong>? <strong>Voulamandis House</strong> te recibe en Kambos con habitaciones cómodas, ambiente tranquilo y hospitalidad auténtica.',
     imageAlt: "Hotel y apartamentos en Chios - Voulamandis House en Kambos",
     primaryCta: {
-      label: "Encuentra tu habitación",
-      href: "/es/encuentra-tu-habitacion/",
+      label: "Encuentra tu habitación con IA",
+      href: "/ai-assistant/?lang=es",
       icon: "✨",
     },
     secondaryCta: {
@@ -3024,8 +3024,8 @@ export const homePageTr: HomePageData = {
       '<strong>Sakız Adası’nda otel</strong> ya da <strong>Sakız Adası odaları</strong> mı arıyorsunuz? <strong>Voulamandis House</strong>, Kambos’ta rahat odalar, sakin bir atmosfer ve samimi misafirperverlik sunar.',
     imageAlt: "Sakız Adası’nda otel ve daireler - Kambos Voulamandis House",
     primaryCta: {
-      label: "Odanı bul",
-      href: "/tr/odani-bul/",
+      label: "Yapay zekâ ile odanı bul",
+      href: "/ai-assistant/?lang=tr",
       icon: "✨",
     },
     secondaryCta: {
