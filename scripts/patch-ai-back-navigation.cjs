@@ -16,12 +16,6 @@ if (!source.includes("const BACK_LABELS:")) {
   source = source.replace(marker, `${labels}\n${marker}`);
 }
 
-const oldHeader = `    <div className="mx-auto flex max-w-3xl items-center gap-3 px-4 py-3.5">
-     <div className="relative h-11 w-11 overflow-hidden rounded-full ring-1 ring-stone-200"><Image src="/images/welcome/voulamandis-welcome-hero.webp" alt="Voulamandis House" fill sizes="44px" className="object-cover"/></div>
-     <div className="min-w-0 flex-1"><h1 className="truncate text-[17px] font-semibold">Voulamandis House</h1><div className="mt-0.5 flex items-center gap-1.5 text-xs text-stone-500"><span className="h-2 w-2 rounded-full bg-emerald-500"/>AI Room Finder · Live availability</div></div>
-     {step!=="language"?<button onClick={reset} className="rounded-full border border-stone-300 bg-white px-3 py-2 text-xs font-semibold shadow-sm">↻</button>:null}
-    </div>`;
-
 const newHeader = `    <div className="mx-auto flex max-w-3xl items-center gap-2 px-3 py-3 sm:gap-3 sm:px-4 sm:py-3.5">
      <a href={homeHref(language)} aria-label={BACK_LABELS[language]} title={BACK_LABELS[language]} className="inline-flex h-10 shrink-0 items-center gap-2 rounded-full border border-stone-300 bg-white px-3 text-sm font-semibold text-stone-700 shadow-sm transition hover:bg-stone-50 active:scale-[.98] sm:h-11 sm:px-4"><span aria-hidden="true" className="text-lg leading-none">←</span><span className="hidden sm:inline">{BACK_LABELS[language]}</span></a>
      <a href={homeHref(language)} aria-label="Voulamandis House" className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full ring-1 ring-stone-200 sm:h-11 sm:w-11"><Image src="/images/welcome/voulamandis-welcome-hero.webp" alt="Voulamandis House" fill sizes="44px" className="object-cover"/></a>
@@ -30,8 +24,16 @@ const newHeader = `    <div className="mx-auto flex max-w-3xl items-center gap-2
     </div>`;
 
 if (!source.includes(newHeader)) {
-  if (!source.includes(oldHeader)) throw new Error("AI assistant header pattern not found");
-  source = source.replace(oldHeader, newHeader);
+  const startMarker = '    <div className="mx-auto flex max-w-3xl items-center gap-3 px-4 py-3.5">';
+  const endMarker = '    </div>\n   </header>';
+  const start = source.indexOf(startMarker);
+  const end = start === -1 ? -1 : source.indexOf(endMarker, start);
+
+  if (start === -1 || end === -1) {
+    throw new Error("AI assistant header block not found");
+  }
+
+  source = `${source.slice(0, start)}${newHeader}${source.slice(end + '    </div>'.length)}`;
 }
 
 fs.writeFileSync(target, source, "utf8");
