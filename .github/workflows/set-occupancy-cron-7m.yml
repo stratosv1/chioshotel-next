@@ -1,0 +1,51 @@
+name: Set occupancy cron to 7 minutes
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-cron:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Change occupancy cron from 5 to 7 minutes
+        id: patch
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('vercel.json')
+          content = path.read_text(encoding='utf-8')
+          old = '"path":"/api/staff/calendar/occupancy-sync","schedule":"*/5 * * * *"'
+          new = '"path":"/api/staff/calendar/occupancy-sync","schedule":"*/7 * * * *"'
+
+          if new in content:
+              print('Cron is already set to 7 minutes.')
+              Path('/tmp/cron_changed').write_text('no')
+          elif old in content:
+              path.write_text(content.replace(old, new, 1), encoding='utf-8')
+              print('Updated cron to every 7 minutes.')
+              Path('/tmp/cron_changed').write_text('yes')
+          else:
+              raise SystemExit('Expected occupancy cron entry was not found; no file was changed.')
+          PY
+          echo "changed=$(cat /tmp/cron_changed)" >> "$GITHUB_OUTPUT"
+
+      - name: Commit cron change to main
+        if: steps.patch.outputs.changed == 'yes'
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add vercel.json
+          git commit -m "Run occupancy sync every 7 minutes"
+          git push origin HEAD:main
