@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AiSummaryEmailBridge } from "@/components/ai/AiSummaryEmailBridge";
 import { ConversationalRoomSalesV3 } from "@/components/ai/ConversationalRoomSalesV3";
 
 export const metadata: Metadata = {
@@ -12,5 +13,10 @@ export const metadata: Metadata = {
 };
 
 export default function AiAssistantPage() {
-  return <ConversationalRoomSalesV3 />;
+  return (
+    <>
+      <ConversationalRoomSalesV3 />
+      <AiSummaryEmailBridge />
+    </>
+  );
 }
