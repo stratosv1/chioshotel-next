@@ -24,7 +24,6 @@ const DETAILS_LABELS = new Set([
   "Detayları gör",
 ]);
 
-// Exact photo sets copied from content/room-details.ts.
 const ROOM_GALLERIES: Record<number, string[]> = {
   1: [
     "/images/rooms/DSC07776-2-e1675109942622.webp",
@@ -200,9 +199,14 @@ export function AiRoomDetailsEnhancer() {
         onWheel={(event) => event.stopPropagation()}
         onTouchMove={(event) => event.stopPropagation()}
       >
-        <div className="relative shrink-0 bg-stone-100">
-          <div className="relative h-[34dvh] min-h-[230px] max-h-[320px] w-full">
-            <img src={selectedImage} alt={`${room.name} photo ${photo + 1}`} className="h-full w-full object-cover" />
+        <div className="relative shrink-0 bg-stone-950">
+          <div className="relative w-full overflow-hidden bg-stone-950" style={{ height: "min(42dvh, 360px)" }}>
+            <img
+              src={selectedImage}
+              alt={`${room.name} photo ${photo + 1}`}
+              className="absolute inset-0 h-full w-full object-contain"
+              draggable={false}
+            />
           </div>
 
           <button
@@ -219,7 +223,7 @@ export function AiRoomDetailsEnhancer() {
               <button
                 type="button"
                 onClick={() => setPhoto((value) => (value - 1 + room.images.length) % room.images.length)}
-                className="absolute left-3 top-[42%] flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-2xl shadow-lg"
+                className="absolute left-3 top-[34%] flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-2xl shadow-lg"
                 aria-label="Previous photo"
               >
                 ‹
@@ -227,7 +231,7 @@ export function AiRoomDetailsEnhancer() {
               <button
                 type="button"
                 onClick={() => setPhoto((value) => (value + 1) % room.images.length)}
-                className="absolute right-3 top-[42%] flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-2xl shadow-lg"
+                className="absolute right-3 top-[34%] flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-2xl shadow-lg"
                 aria-label="Next photo"
               >
                 ›
@@ -235,11 +239,11 @@ export function AiRoomDetailsEnhancer() {
             </>
           ) : null}
 
-          <div className="absolute bottom-[76px] right-3 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold shadow">
+          <div className="absolute right-3 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold shadow" style={{ bottom: "76px" }}>
             {photo + 1}/{room.images.length}
           </div>
 
-          <div className="flex gap-2 overflow-x-auto border-t border-white/30 bg-black/35 p-2.5 backdrop-blur-sm [scrollbar-width:none]">
+          <div className="flex gap-2 overflow-x-auto border-t border-white/10 bg-stone-900 p-2.5 [scrollbar-width:none]">
             {room.images.map((image, index) => (
               <button
                 key={image}
@@ -248,7 +252,7 @@ export function AiRoomDetailsEnhancer() {
                 className={`relative h-14 w-20 shrink-0 overflow-hidden rounded-xl border-2 bg-white shadow-sm ${index === photo ? "border-white ring-2 ring-[#ff385c]" : "border-white/70"}`}
                 aria-label={`Photo ${index + 1}`}
               >
-                <img src={image} alt="" className="h-full w-full object-cover" loading="lazy" />
+                <img src={image} alt="" className="h-full w-full object-cover" loading="lazy" draggable={false} />
               </button>
             ))}
           </div>
