@@ -1,0 +1,65 @@
+name: Localize hero AI Room Finder CTA
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-hero-cta:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Update hero CTA in all seven languages
+        id: patch
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path('content/home.ts')
+          content = path.read_text(encoding='utf-8-sig')
+
+          labels = {
+              'En': ('AI Room Finder', 'en'),
+              'El': ('Βρες δωμάτιο με AI', 'el'),
+              'Fr': ('Trouvez votre chambre avec l’IA', 'fr'),
+              'De': ('Zimmer mit KI finden', 'de'),
+              'It': ('Trova la camera con AI', 'it'),
+              'Es': ('Encuentra tu habitación con IA', 'es'),
+              'Tr': ('Yapay zekâ ile odanı bul', 'tr'),
+          }
+
+          changed = False
+          for suffix, (label, lang) in labels.items():
+              pattern = re.compile(
+                  rf'(export const homePage{suffix}: HomePageData = \{{.*?\n\s*hero:\s*\{{.*?\n\s*primaryCta:\s*\{{\s*\n\s*label:\s*)"[^"]*"(,\s*\n\s*href:\s*)"[^"]*"(,\s*\n\s*icon:\s*"✨")',
+                  re.S,
+              )
+              replacement = rf'\1"{label}"\2"/ai-assistant/?lang={lang}"\3'
+              content, count = pattern.subn(replacement, content, count=1)
+              if count != 1:
+                  raise SystemExit(f'Could not uniquely update hero CTA for {suffix}; matches={count}')
+              changed = True
+
+          path.write_text(content, encoding='utf-8')
+          Path('/tmp/hero_cta_changed').write_text('yes' if changed else 'no')
+          PY
+          echo "changed=$(cat /tmp/hero_cta_changed)" >> "$GITHUB_OUTPUT"
+
+      - name: Commit localized CTA to main
+        if: steps.patch.outputs.changed == 'yes'
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content/home.ts
+          git commit -m "Open localized AI Room Finder from hero"
+          git push origin HEAD:main
