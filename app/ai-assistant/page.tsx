@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { AiSummaryEmailBridge } from "@/components/ai/AiSummaryEmailBridge";
-import { ConversationalRoomSalesCarousel } from "@/components/ai/ConversationalRoomSalesCarousel";
+import { ConversationalRoomSalesEnhanced } from "@/components/ai/ConversationalRoomSalesEnhanced";
 
 export const metadata: Metadata = {
   title: "AI Room Finder | Voulamandis House",
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 export default function AiAssistantPage() {
   return (
     <>
-      <ConversationalRoomSalesCarousel />
+      <ConversationalRoomSalesEnhanced />
       <AiSummaryEmailBridge />
     </>
   );
