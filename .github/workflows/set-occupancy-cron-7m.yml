@@ -1,4 +1,4 @@
-name: Normalize occupancy cron route
+name: Configure occupancy cron
 
 on:
   push:
@@ -16,36 +16,52 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Set 7-minute cron with trailing slash
-        id: patch
+      - name: Configure 7-minute cron and middleware exemption
         shell: bash
         run: |
           python - <<'PY'
           from pathlib import Path
 
-          path = Path('vercel.json')
-          content = path.read_text(encoding='utf-8')
-          old = '"path":"/api/staff/calendar/occupancy-sync","schedule":"*/7 * * * *"'
-          new = '"path":"/api/staff/calendar/occupancy-sync/","schedule":"*/7 * * * *"'
+          vercel = Path('vercel.json')
+          vercel_content = vercel.read_text(encoding='utf-8')
+          vercel_content = vercel_content.replace(
+              '"path":"/api/staff/calendar/occupancy-sync","schedule":"*/7 * * * *"',
+              '"path":"/api/staff/calendar/occupancy-sync/","schedule":"*/7 * * * *"',
+              1,
+          )
+          vercel.write_text(vercel_content, encoding='utf-8')
 
-          if new in content:
-              print('Cron route already includes the trailing slash.')
-              Path('/tmp/cron_changed').write_text('no')
-          elif old in content:
-              path.write_text(content.replace(old, new, 1), encoding='utf-8')
-              print('Added trailing slash to the occupancy cron route.')
-              Path('/tmp/cron_changed').write_text('yes')
-          else:
-              raise SystemExit('Expected 7-minute occupancy cron entry was not found; no file was changed.')
+          proxy = Path('proxy.ts')
+          proxy_content = proxy.read_text(encoding='utf-8-sig')
+          old = '  if (isStaffPath(pathname) && !isAuthorizedStaffRequest(request)) {\n    return unauthorizedStaffResponse();\n  }'
+          new = '''  const isOccupancyCronPath =
+            pathname === "/api/staff/calendar/occupancy-sync" ||
+            pathname === "/api/staff/calendar/occupancy-sync/";
+
+          if (
+            isStaffPath(pathname) &&
+            !isOccupancyCronPath &&
+            !isAuthorizedStaffRequest(request)
+          ) {
+            return unauthorizedStaffResponse();
+          }'''
+
+          if new not in proxy_content:
+              if old not in proxy_content:
+                  raise SystemExit('Staff authorization block not found; proxy.ts was not changed.')
+              proxy_content = proxy_content.replace(old, new, 1)
+              proxy.write_text(proxy_content, encoding='utf-8')
           PY
-          echo "changed=$(cat /tmp/cron_changed)" >> "$GITHUB_OUTPUT"
 
-      - name: Commit route normalization to main
-        if: steps.patch.outputs.changed == 'yes'
+      - name: Commit configuration changes
         shell: bash
         run: |
+          if git diff --quiet; then
+            echo "No changes required."
+            exit 0
+          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add vercel.json
-          git commit -m "Use trailing slash for occupancy cron route"
+          git add vercel.json proxy.ts
+          git commit -m "Allow occupancy cron through staff authentication"
           git push origin HEAD:main
