@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { ConsentAnalytics } from "@/components/analytics/ConsentAnalytics";
+import { ExploreVoulamandisJourney } from "@/components/seo/ExploreVoulamandisJourney";
 import { VoulamandisFooterTailwind } from "@/components/VoulamandisFooterTailwind";
 import { VoulamandisHeaderTailwind } from "@/components/VoulamandisHeaderTailwind";
 import { siteName, siteUrl } from "@/lib/seo";
@@ -75,6 +76,9 @@ export default async function RootLayout({
           <VoulamandisHeaderTailwind language={htmlLanguage} pathname={pathname} />
         ) : null}
         {children}
+        {!hideHeader ? (
+          <ExploreVoulamandisJourney language={htmlLanguage} pathname={pathname} />
+        ) : null}
         {!hideHeader ? <VoulamandisFooterTailwind language={htmlLanguage} /> : null}
         <ConsentAnalytics language={htmlLanguage} />
       </body>
