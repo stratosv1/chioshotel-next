@@ -7,10 +7,13 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 
 type LanguageCode = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
 type ConsentValue = "accepted" | "rejected";
+type AnalyticsValue = string | number | boolean | null | undefined;
+type AnalyticsProperties = Record<string, AnalyticsValue>;
 
 const CONSENT_KEY = "vh_cookie_consent_v1";
 const GA_ID = "G-844GGQ1TC7";
-const EVENT_DEDUP_WINDOW_MS = 1000;
+const EVENT_DEDUP_WINDOW_MS = 1200;
+const AI_OPEN_SESSION_KEY = "vh_ai_assistant_open_tracked";
 
 declare global {
   interface Window {
@@ -51,7 +54,17 @@ function loadGoogleAnalytics() {
   window.gtag("config", GA_ID, { anonymize_ip: true });
 }
 
+function emitAnalyticsEvent(name: string, properties: AnalyticsProperties) {
+  const cleanProperties = Object.fromEntries(
+    Object.entries(properties).filter(([, value]) => value !== undefined),
+  ) as Record<string, string | number | boolean | null>;
+
+  track(name, cleanProperties);
+  window.gtag?.("event", name, cleanProperties);
+}
+
 function pageType(pathname: string) {
+  if (pathname.includes("ai-assistant")) return "ai_room_finder";
   if (pathname.includes("find-your-room") || pathname.includes("vres-to-domatio")) return "room_wizard";
   if (pathname.includes("chios-rooms") || pathname.includes("domatia-xios")) return "rooms";
   if (pathname.includes("contact") || pathname.includes("epikoinonia")) return "contact";
@@ -81,15 +94,18 @@ function getLocation(element: HTMLElement) {
   if (explicit) return explicit;
   if (element.closest("header")) return "header";
   if (element.closest("footer")) return "footer";
+  if (window.location.pathname.includes("ai-assistant")) return "ai_assistant";
   return "content";
 }
 
 function fallbackEventName(anchor: HTMLAnchorElement) {
   const href = anchor.href.toLowerCase();
   const label = (anchor.textContent || "").toLowerCase();
-  if (href.includes("wa.me") || href.includes("whatsapp")) return "whatsapp_click";
+  const isAiAssistant = window.location.pathname.includes("ai-assistant");
+  if (href.includes("wa.me") || href.includes("whatsapp")) return isAiAssistant ? "ai_whatsapp_click" : "whatsapp_click";
+  if (href.startsWith("mailto:")) return isAiAssistant ? "ai_email_click" : "email_click";
   if (href.startsWith("tel:")) return "call_click";
-  if (href.includes("find-your-room")) return "find_room_click";
+  if (href.includes("ai-assistant") || href.includes("find-your-room")) return "ai_assistant_open_click";
   if (href.includes("rates") || label.includes("availability")) return "availability_click";
   if (label.includes("book") || label.includes("κρατ") || label.includes("prenota")) return "book_now_click";
   if (anchor.closest("header")) return "header_link_click";
@@ -98,6 +114,13 @@ function fallbackEventName(anchor: HTMLAnchorElement) {
 }
 
 function fallbackButtonEvent(button: HTMLButtonElement) {
+  if (window.location.pathname.includes("ai-assistant")) {
+    const label = (button.textContent || "").trim().replace(/\s+/g, " ").toLowerCase();
+    if (button.querySelector("img") && button.querySelector("h2")) return "ai_room_card_click";
+    if (label.includes("interested") || label.includes("ενδιαφέρομαι")) return "ai_room_selected";
+    if (label === "✕" || button.getAttribute("aria-label")?.toLowerCase().includes("close") || button.getAttribute("aria-label")?.toLowerCase().includes("κλεί")) return "ai_room_modal_close";
+  }
+
   if (!button.closest("header")) return null;
   if (!button.querySelector(".sr-only")) return null;
 
@@ -113,6 +136,20 @@ function getLabel(element: HTMLElement, anchor: HTMLAnchorElement | null) {
     anchor?.dataset.analyticsLabel ||
     (anchor?.textContent || element.textContent || "").trim().replace(/\s+/g, " ").slice(0, 80)
   );
+}
+
+function getRequestUrl(input: RequestInfo | URL) {
+  if (typeof input === "string") return input;
+  if (input instanceof URL) return input.toString();
+  return input.url;
+}
+
+function differenceInNights(checkin?: string, checkout?: string) {
+  if (!checkin || !checkout) return undefined;
+  const start = Date.parse(`${checkin}T12:00:00Z`);
+  const end = Date.parse(`${checkout}T12:00:00Z`);
+  if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start) return undefined;
+  return Math.round((end - start) / 86_400_000);
 }
 
 export function ConsentAnalytics({ language }: { language: LanguageCode }) {
@@ -147,6 +184,15 @@ export function ConsentAnalytics({ language }: { language: LanguageCode }) {
       return true;
     }
 
+    function commonProperties(): AnalyticsProperties {
+      return {
+        language,
+        page_type: pageType(window.location.pathname),
+        pathname: window.location.pathname,
+        device_area: detectDeviceArea(),
+      };
+    }
+
     function handleClick(event: MouseEvent) {
       const target = event.target as HTMLElement | null;
       const element = target?.closest("[data-analytics-event]") as HTMLElement | null;
@@ -161,36 +207,101 @@ export function ConsentAnalytics({ language }: { language: LanguageCode }) {
       const signature = [name, window.location.pathname, href, label].join("|");
       if (!shouldTrack(signature)) return;
 
-      track(name, {
-        language,
-        page_type: pageType(window.location.pathname),
-        pathname: window.location.pathname,
+      emitAnalyticsEvent(name, {
+        ...commonProperties(),
         href,
         link_text: label,
         cta_location: getLocation(baseElement),
-        device_area: detectDeviceArea(),
       });
     }
 
-    function handleSubmit(event: SubmitEvent) {
-      const form = event.target as HTMLFormElement | null;
-      const signature = ["contact_form_submit", window.location.pathname, form?.id || form?.name || "form"].join("|");
-      if (!shouldTrack(signature)) return;
-
-      track("contact_form_submit", {
-        language,
-        page_type: pageType(window.location.pathname),
-        pathname: window.location.pathname,
-        cta_location: "contact_form",
-        device_area: detectDeviceArea(),
+    if (window.location.pathname.includes("ai-assistant") && !window.sessionStorage.getItem(AI_OPEN_SESSION_KEY)) {
+      window.sessionStorage.setItem(AI_OPEN_SESSION_KEY, "1");
+      emitAnalyticsEvent("ai_assistant_open", {
+        ...commonProperties(),
+        source_page: document.referrer ? normalizeUrl(document.referrer) : "direct",
       });
     }
+
+    const originalFetch = window.fetch.bind(window);
+    window.fetch = async (...args) => {
+      const response = await originalFetch(...args);
+      const requestUrl = getRequestUrl(args[0]);
+      const pathname = (() => {
+        try {
+          return new URL(requestUrl, window.location.origin).pathname;
+        } catch {
+          return requestUrl;
+        }
+      })();
+
+      if (!response.ok) return response;
+
+      if (pathname === "/api/ai-assistant/smart") {
+        void response.clone().json().then((data: {
+          search?: { checkin?: string; checkout?: string; guests?: number };
+          offers?: unknown[];
+          noAvailability?: boolean;
+        }) => {
+          const checkin = data.search?.checkin;
+          const checkout = data.search?.checkout;
+          const guests = data.search?.guests;
+          if (!checkin || !checkout || !guests) return;
+
+          const searchSignature = `${checkin}|${checkout}|${guests}`;
+          const searchKey = `vh_ai_search_started:${searchSignature}`;
+          if (!window.sessionStorage.getItem(searchKey)) {
+            window.sessionStorage.setItem(searchKey, "1");
+            emitAnalyticsEvent("ai_search_started", {
+              ...commonProperties(),
+              check_in: checkin,
+              check_out: checkout,
+              nights: differenceInNights(checkin, checkout),
+              guests,
+            });
+          }
+
+          const offersCount = Array.isArray(data.offers) ? data.offers.length : 0;
+          const resultName = data.noAvailability ? "ai_no_availability" : offersCount > 0 ? "ai_search_results" : null;
+          if (!resultName) return;
+
+          const resultKey = `vh_${resultName}:${searchSignature}`;
+          if (window.sessionStorage.getItem(resultKey)) return;
+          window.sessionStorage.setItem(resultKey, "1");
+          emitAnalyticsEvent(resultName, {
+            ...commonProperties(),
+            check_in: checkin,
+            check_out: checkout,
+            nights: differenceInNights(checkin, checkout),
+            guests,
+            available_rooms_count: offersCount,
+          });
+        }).catch(() => undefined);
+      }
+
+      if (pathname === "/api/ai-assistant/request-email") {
+        emitAnalyticsEvent("ai_lead_submit", {
+          ...commonProperties(),
+          lead_type: "room_offer_email",
+          conversion: true,
+        });
+      }
+
+      if (pathname === "/api/ai-assistant/no-availability-request") {
+        emitAnalyticsEvent("ai_manual_lead_submit", {
+          ...commonProperties(),
+          lead_type: "no_availability_request",
+          conversion: true,
+        });
+      }
+
+      return response;
+    };
 
     document.addEventListener("click", handleClick);
-    document.addEventListener("submit", handleSubmit);
     return () => {
       document.removeEventListener("click", handleClick);
-      document.removeEventListener("submit", handleSubmit);
+      window.fetch = originalFetch;
       recentEvents.clear();
     };
   }, [accepted, language]);
