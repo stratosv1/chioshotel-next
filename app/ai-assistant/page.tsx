@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { AiAssistantUiPatch } from "@/components/ai/AiAssistantUiPatch";
 import { AiSummaryEmailBridge } from "@/components/ai/AiSummaryEmailBridge";
 import { ConversationalRoomSalesEnhanced } from "@/components/ai/ConversationalRoomSalesEnhanced";
 
@@ -17,7 +16,6 @@ export default function AiAssistantPage() {
   return (
     <>
       <ConversationalRoomSalesEnhanced />
-      <AiAssistantUiPatch />
       <AiSummaryEmailBridge />
     </>
   );
