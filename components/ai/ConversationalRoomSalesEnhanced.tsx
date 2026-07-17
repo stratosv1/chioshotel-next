@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 
 type Language = "el" | "en" | "de" | "fr" | "it" | "es" | "tr";
 type Step = "language" | "checkin" | "checkout" | "rooms" | "guests" | "preferences" | "searching" | "selecting" | "breakfast" | "complete";
@@ -11,7 +11,27 @@ type Choice = { group:number; guests:number; offer:Offer };
 type Msg = { role:"assistant" | "user"; content:string };
 
 const LANGS:[Language,string][] = [["el","Ελληνικά"],["en","English"],["de","Deutsch"],["fr","Français"],["it","Italiano"],["es","Español"],["tr","Türkçe"]];
-const PROMPT = "Σε ποια γλώσσα μπορούμε να σας εξυπηρετήσουμε; · Which language would you prefer?";
+const LANGUAGE_PROMPTS: Record<Language, string> = {
+ el: "Σε ποια γλώσσα μπορούμε να σας εξυπηρετήσουμε;",
+ en: "Which language would you prefer?",
+ de: "In welcher Sprache dürfen wir Sie unterstützen?",
+ fr: "Dans quelle langue souhaitez-vous être accompagné(e) ?",
+ it: "In quale lingua preferisci ricevere assistenza?",
+ es: "¿En qué idioma prefieres que te atendamos?",
+ tr: "Size hangi dilde yardımcı olmamızı istersiniz?",
+};
+
+function detectEntryLanguage(): Language {
+ if (typeof window === "undefined") return "en";
+ const supported: Language[] = ["el", "en", "de", "fr", "it", "es", "tr"];
+ const queryLanguage = new URLSearchParams(window.location.search).get("lang")?.toLowerCase().split("-")[0];
+ const pathLanguage = window.location.pathname.split("/").filter(Boolean)[0]?.toLowerCase();
+ const documentLanguage = document.documentElement.lang?.toLowerCase().split("-")[0];
+ let referrerLanguage = "";
+ try { referrerLanguage = document.referrer ? new URL(document.referrer).pathname.split("/").filter(Boolean)[0]?.toLowerCase() || "" : ""; } catch {}
+ const detected = [queryLanguage, pathLanguage, documentLanguage, referrerLanguage].find(value => supported.includes(value as Language));
+ return (detected as Language) || "en";
+}
 const BREAKFAST_IMAGE = "/images/welcome/voulamandis-breakfast.jpg";
 
 const T:Record<Language,any> = {
@@ -30,14 +50,15 @@ const money=(n:number,l:Language)=>new Intl.NumberFormat({el:"el-GR",en:"en-GB",
 function score(o:Offer,filters:Filter[]){const text=`${o.name} ${o.category} ${o.floor} ${(o.features||[]).join(" ")}`.toLowerCase();return filters.reduce((s,f)=>s+({economy:/econom|οικονομ|économ|preisgünst|ekonom/.test(text),noStairs:/χωρίς σκάλ|no stairs|keine treppen|sans escaliers|senza scale|sin escaleras|merdivensiz/.test(text),ground:/ισόγει|ground floor|erdgeschoss|rez-de-chaussée|piano terra|planta baja|zemin kat/.test(text),first:/πρώτ|first floor|erster stock|premier étage|primo piano|primera planta|birinci kat/.test(text),kitchen:/kitchen|κουζ|küche|cuisine|cucina|mutfak/.test(text),garden:/garden|κήπ|αυλ|garten|jardin|giardino|patio|bahçe|avlu/.test(text),balcony:/balcon|μπαλκόν|balkon/.test(text),family:/family|οικογεν|familien|familial|familiare|familiar|aile/.test(text)}[f]?10:0),0)}
 
 export function ConversationalRoomSalesEnhanced(){
- const [language,setLanguage]=useState<Language>("el"),t=T[language];const [step,setStep]=useState<Step>("language");const [messages,setMessages]=useState<Msg[]>([{role:"assistant",content:PROMPT}]);const [input,setInput]=useState("");const [checkin,setCheckin]=useState(""),[checkout,setCheckout]=useState("");const [roomCount,setRoomCount]=useState(1),[groups,setGroups]=useState<number[]>([]),[guestIndex,setGuestIndex]=useState(0);const [filters,setFilters]=useState<Filter[]>([]),[offers,setOffers]=useState<Offer[][]>([]),[activeGroup,setActiveGroup]=useState(0),[index,setIndex]=useState(0),[choices,setChoices]=useState<Choice[]>([]);const [detail,setDetail]=useState<Offer|null>(null),[photo,setPhoto]=useState(0),[breakfast,setBreakfast]=useState<boolean|null>(null),[error,setError]=useState("");
+ const [language,setLanguage]=useState<Language>("en"),t=T[language];const [step,setStep]=useState<Step>("language");const [messages,setMessages]=useState<Msg[]>([{role:"assistant",content:LANGUAGE_PROMPTS.en}]);const [input,setInput]=useState("");const [checkin,setCheckin]=useState(""),[checkout,setCheckout]=useState("");const [roomCount,setRoomCount]=useState(1),[groups,setGroups]=useState<number[]>([]),[guestIndex,setGuestIndex]=useState(0);const [filters,setFilters]=useState<Filter[]>([]),[offers,setOffers]=useState<Offer[][]>([]),[activeGroup,setActiveGroup]=useState(0),[index,setIndex]=useState(0),[choices,setChoices]=useState<Choice[]>([]);const [detail,setDetail]=useState<Offer|null>(null),[photo,setPhoto]=useState(0),[breakfast,setBreakfast]=useState<boolean|null>(null),[error,setError]=useState("");
+ useEffect(()=>{const detected=detectEntryLanguage();setLanguage(detected);setMessages([{role:"assistant",content:LANGUAGE_PROMPTS[detected]}])},[]);
  const nights=checkin&&checkout?nightsBetween(checkin,checkout):0;const visible=useMemo(()=>[...(offers[activeGroup]||[])].filter(o=>!choices.some(c=>c.offer.roomId===o.roomId&&c.offer.unitId===o.unitId)).sort((a,b)=>score(b,filters)-score(a,filters)||a.directTotal-b.directTotal),[offers,activeGroup,choices,filters]);const current=visible[index]||visible[0];
  const addA=(c:string)=>setMessages(m=>[...m,{role:"assistant",content:c}]);const addU=(c:string)=>setMessages(m=>[...m,{role:"user",content:c}]);
  function chooseLanguage(l:Language){setLanguage(l);setStep("checkin");setMessages([{role:"user",content:LANGS.find(x=>x[0]===l)?.[1]||l},{role:"assistant",content:T[l].welcome}])}
  function submit(e:FormEvent){e.preventDefault();const v=input.trim();if(!v)return;setError("");addU(v);setInput("");if(step==="checkin"){const p=parseDate(v);if(!p)return setError(t.invalidDate);setCheckin(p);setStep("checkout");addA(t.checkout)}else if(step==="checkout"){const p=parseDate(v);if(!p)return setError(t.invalidDate);if(nightsBetween(checkin,p)<1)return setError(t.invalidCheckout);setCheckout(p);setStep("rooms");addA(t.rooms)}else if(step==="rooms"){const n=Number(v.match(/\d+/)?.[0]);if(!Number.isInteger(n)||n<1||n>3)return setError(t.invalidRooms);setRoomCount(n);setGroups([]);setGuestIndex(0);setStep("guests");addA(t.guests(1))}else if(step==="guests"){const n=Number(v.match(/\d+/)?.[0]);if(!Number.isInteger(n)||n<1||n>5)return setError(t.invalidGuests);const next=[...groups,n];setGroups(next);if(guestIndex+1<roomCount){setGuestIndex(i=>i+1);addA(t.guests(guestIndex+2))}else{setStep("preferences");addA(t.prefs)}}}
  async function search(){setStep("searching");addA(t.searching);try{const all:Offer[][]=[];for(const guests of groups){const r=await fetch("/api/ai-assistant/smart",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:[{role:"user",content:`Check live availability from ${checkin} to ${checkout} for ${guests} guests.`}],search:{checkin,checkout,guests},language})});const p=await r.json();all.push(Array.isArray(p?.offers)?p.offers:[])}setOffers(all);setActiveGroup(0);setIndex(0);setStep("selecting");addA(t.choose(1,groups[0]))}catch{setError("Live availability error");setStep("preferences")}}
  function select(o:Offer){const next=[...choices,{group:activeGroup+1,guests:groups[activeGroup],offer:o}];setChoices(next);setDetail(null);if(activeGroup+1<roomCount){setActiveGroup(g=>g+1);setIndex(0);addA(t.choose(activeGroup+2,groups[activeGroup+1]))}else{setStep("breakfast");addA(t.breakfast)}}
- function reset(){setStep("language");setMessages([{role:"assistant",content:PROMPT}]);setInput("");setCheckin("");setCheckout("");setRoomCount(1);setGroups([]);setGuestIndex(0);setFilters([]);setOffers([]);setChoices([]);setBreakfast(null)}
+ function reset(){setStep("language");setMessages([{role:"assistant",content:LANGUAGE_PROMPTS[language]}]);setInput("");setCheckin("");setCheckout("");setRoomCount(1);setGroups([]);setGuestIndex(0);setFilters([]);setOffers([]);setChoices([]);setBreakfast(null)}
  const roomTotal=choices.reduce((s,c)=>s+c.offer.directTotal,0),breakfastTotal=breakfast?groups.reduce((s,n)=>s+n,0)*nights*12:0;
 
  return <main className="min-h-[100dvh] bg-[#f7f7f7] text-[#222222]">
