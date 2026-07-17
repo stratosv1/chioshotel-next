@@ -1,0 +1,38 @@
+name: Fix occupancy cron
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-occupancy-cron.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch-vercel-cron:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Update Vercel cron route
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('vercel.json')
+          data = json.loads(p.read_text())
+          data['crons'] = [{
+              'path': '/api/staff/calendar/occupancy-sync',
+              'schedule': '*/5 * * * *'
+          }]
+          p.write_text(json.dumps(data, ensure_ascii=False, separators=(',', ':')) + '\n')
+          PY
+      - name: Commit cron fix
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add vercel.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Point Vercel cron to occupancy sync"
+          git push origin main
