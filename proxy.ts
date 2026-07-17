@@ -1,4 +1,4 @@
-﻿import type { NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 const wordpressGonePrefixes = [
@@ -509,9 +509,17 @@ export function proxy(request: NextRequest) {
     });
   }
 
-  if (isStaffPath(pathname) && !isAuthorizedStaffRequest(request)) {
-    return unauthorizedStaffResponse();
-  }
+  const isOccupancyCronPath =
+  pathname === "/api/staff/calendar/occupancy-sync" ||
+  pathname === "/api/staff/calendar/occupancy-sync/";
+
+if (
+  isStaffPath(pathname) &&
+  !isOccupancyCronPath &&
+  !isAuthorizedStaffRequest(request)
+) {
+  return unauthorizedStaffResponse();
+}
 
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-current-pathname", pathname);
