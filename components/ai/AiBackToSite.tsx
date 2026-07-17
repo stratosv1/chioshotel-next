@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 const labels: Record<string, string> = {
@@ -21,7 +20,7 @@ export function AiBackToSite() {
   const label = labels[language];
 
   return (
-    <Link
+    <a
       href={href}
       aria-label={label}
       title={label}
@@ -29,6 +28,6 @@ export function AiBackToSite() {
     >
       <span aria-hidden="true" className="text-lg leading-none">←</span>
       <span className="hidden sm:inline">{label}</span>
-    </Link>
+    </a>
   );
 }
