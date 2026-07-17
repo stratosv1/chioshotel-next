@@ -1,0 +1,66 @@
+name: Localize AI language prompt
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Localize first AI prompt
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('components/ai/ConversationalRoomSalesEnhanced.tsx')
+          text = path.read_text(encoding='utf-8')
+
+          replacements = [
+            (
+              'import { FormEvent, useMemo, useState } from "react";',
+              'import { FormEvent, useEffect, useMemo, useState } from "react";'
+            ),
+            (
+              'const PROMPT = "Σε ποια γλώσσα μπορούμε να σας εξυπηρετήσουμε; · Which language would you prefer?";',
+              '''const LANGUAGE_PROMPTS: Record<Language, string> = {\n el: "Σε ποια γλώσσα μπορούμε να σας εξυπηρετήσουμε;",\n en: "Which language would you prefer?",\n de: "In welcher Sprache dürfen wir Sie unterstützen?",\n fr: "Dans quelle langue souhaitez-vous être accompagné(e) ?",\n it: "In quale lingua preferisci ricevere assistenza?",\n es: "¿En qué idioma prefieres que te atendamos?",\n tr: "Size hangi dilde yardımcı olmamızı istersiniz?",\n};\n\nfunction detectEntryLanguage(): Language {\n if (typeof window === "undefined") return "en";\n const supported: Language[] = ["el", "en", "de", "fr", "it", "es", "tr"];\n const queryLanguage = new URLSearchParams(window.location.search).get("lang")?.toLowerCase().split("-")[0];\n const pathLanguage = window.location.pathname.split("/").filter(Boolean)[0]?.toLowerCase();\n const documentLanguage = document.documentElement.lang?.toLowerCase().split("-")[0];\n let referrerLanguage = "";\n try { referrerLanguage = document.referrer ? new URL(document.referrer).pathname.split("/").filter(Boolean)[0]?.toLowerCase() || "" : ""; } catch {}\n const detected = [queryLanguage, pathLanguage, documentLanguage, referrerLanguage].find(value => supported.includes(value as Language));\n return (detected as Language) || "en";\n}'''
+            ),
+            (
+              'export function ConversationalRoomSalesEnhanced(){\n const [language,setLanguage]=useState<Language>("el"),t=T[language];const [step,setStep]=useState<Step>("language");const [messages,setMessages]=useState<Msg[]>([{role:"assistant",content:PROMPT}]);',
+              'export function ConversationalRoomSalesEnhanced(){\n const [language,setLanguage]=useState<Language>("en"),t=T[language];const [step,setStep]=useState<Step>("language");const [messages,setMessages]=useState<Msg[]>([{role:"assistant",content:LANGUAGE_PROMPTS.en}]);'
+            ),
+            (
+              ' const nights=checkin&&checkout?nightsBetween(checkin,checkout):0;',
+              ' useEffect(()=>{const detected=detectEntryLanguage();setLanguage(detected);setMessages([{role:"assistant",content:LANGUAGE_PROMPTS[detected]}])},[]);\n const nights=checkin&&checkout?nightsBetween(checkin,checkout):0;'
+            ),
+            (
+              'function reset(){setStep("language");setMessages([{role:"assistant",content:PROMPT}]);',
+              'function reset(){setStep("language");setMessages([{role:"assistant",content:LANGUAGE_PROMPTS[language]}]);'
+            ),
+          ]
+
+          for old, new in replacements:
+            if old not in text:
+              raise SystemExit(f'Expected snippet not found: {old[:100]}')
+            text = text.replace(old, new, 1)
+
+          path.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Commit localized prompt and remove workflow
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add components/ai/ConversationalRoomSalesEnhanced.tsx
+          git rm .github/workflows/localize-ai-language-prompt.yml
+          git commit -m "Localize initial AI language prompt"
+          git push origin HEAD:main
