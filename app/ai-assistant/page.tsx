@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { AIRoomFinder } from "@/components/ai/AIRoomFinder";
+import { AIRoomFinderSummary } from "@/components/ai/AIRoomFinderSummary";
 
 export const metadata: Metadata = {
   title: "AI Room Finder | Voulamandis House",
@@ -12,5 +12,5 @@ export const metadata: Metadata = {
 };
 
 export default function AiAssistantPage() {
-  return <AIRoomFinder />;
+  return <AIRoomFinderSummary />;
 }
