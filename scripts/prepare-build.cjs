@@ -20,6 +20,7 @@ const PATCHES = [
   "patch-ai-sales-recommendation-ui.cjs",
   "patch-ai-human-conversation.cjs",
   "patch-ai-compact-recommendation.cjs",
+  "patch-ai-special-price-request.cjs",
 ];
 
 const SLOW_PATCH_MS = 500;
