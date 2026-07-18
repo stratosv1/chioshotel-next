@@ -19,10 +19,7 @@ const PATCHES = [
   "patch-ai-fast-availability-response.cjs",
   "patch-ai-human-conversation.cjs",
   "patch-ai-personalized-recommendations.cjs",
-  "patch-ai-room-gallery-fit.cjs",
-  "patch-ai-visible-recommendation-cards.cjs",
   "patch-ai-url-language-and-recommendation-labels.cjs",
-  "patch-ai-preview-proof-banner.cjs",
 ];
 
 const SLOW_PATCH_MS = 500;
