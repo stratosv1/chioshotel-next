@@ -21,6 +21,7 @@ const PATCHES = [
   "patch-ai-personalized-recommendations.cjs",
   "patch-ai-room-gallery-fit.cjs",
   "patch-ai-visible-recommendation-cards.cjs",
+  "patch-ai-preview-proof-banner.cjs",
 ];
 
 const SLOW_PATCH_MS = 500;
@@ -34,7 +35,6 @@ function runPatch(filename) {
   });
 
   if (result.error) throw result.error;
-
   if (result.status !== 0) {
     throw new Error(`${filename} failed with exit code ${result.status ?? "unknown"}`);
   }
