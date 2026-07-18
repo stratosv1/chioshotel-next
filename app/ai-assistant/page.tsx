@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { AiBackToSite } from "@/components/ai/AiBackToSite";
 import { AiRoomDetailsEnhancer } from "@/components/ai/AiRoomDetailsEnhancer";
+import { AiRoomModalPolish } from "@/components/ai/AiRoomModalPolish";
 import { AiSplitStayPresentation } from "@/components/ai/AiSplitStayPresentation";
 import { AiSummaryActions } from "@/components/ai/AiSummaryActions";
 import { AiSummaryEmailBridge } from "@/components/ai/AiSummaryEmailBridge";
@@ -22,6 +23,7 @@ export default function AiAssistantPage() {
       <AiBackToSite />
       <ConversationalRoomSalesEnhanced />
       <AiRoomDetailsEnhancer />
+      <AiRoomModalPolish />
       <AiSplitStayPresentation />
       <AiSummaryActions />
       <AiSummaryEmailBridge />
