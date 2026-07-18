@@ -8,6 +8,7 @@ type RoomCarouselProps = {
   roomName: string;
   compact?: boolean;
   showThumbnails?: boolean;
+  imageFit?: "cover" | "contain";
 };
 
 export function RoomCarousel({
