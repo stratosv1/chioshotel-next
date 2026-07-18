@@ -8,6 +8,7 @@ type RoomCarouselProps = {
   roomName: string;
   compact?: boolean;
   showThumbnails?: boolean;
+  imageFit?: "cover" | "contain";
 };
 
 export function RoomCarousel({
@@ -15,6 +16,7 @@ export function RoomCarousel({
   roomName,
   compact = false,
   showThumbnails = true,
+  imageFit = "cover",
 }: RoomCarouselProps) {
   const safeImages = Array.from(new Set(images.filter(Boolean)));
   const [index, setIndex] = useState(0);
@@ -31,8 +33,8 @@ export function RoomCarousel({
     <div className="bg-white">
       <div
         className={compact
-          ? "relative h-[clamp(260px,38dvh,430px)] overflow-hidden bg-stone-100 sm:h-[400px]"
-          : "relative aspect-[16/10] overflow-hidden bg-stone-100 sm:aspect-[16/8]"}
+          ? "relative h-[clamp(260px,38dvh,430px)] overflow-hidden bg-white sm:h-[400px]"
+          : "relative aspect-[16/10] overflow-hidden bg-white sm:aspect-[16/8]"}
         onTouchStart={(event) => { touchStartX.current = event.touches[0]?.clientX ?? null; }}
         onTouchEnd={(event) => {
           if (touchStartX.current === null) return;
@@ -48,7 +50,7 @@ export function RoomCarousel({
           alt={`${roomName}, φωτογραφία ${index + 1}`}
           fill
           sizes="(max-width: 768px) 100vw, 768px"
-          className="object-cover object-center"
+          className={imageFit === "contain" ? "object-contain object-center" : "object-cover object-center"}
           priority
         />
 
@@ -62,13 +64,13 @@ export function RoomCarousel({
       </div>
 
       {showThumbnails && safeImages.length > 1 ? (
-        <div className="flex gap-2 overflow-x-auto px-4 py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" aria-label="Μικρογραφίες δωματίου">
+        <div className="flex gap-2 overflow-x-auto border-t border-stone-200 bg-white px-4 py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" aria-label="Μικρογραφίες δωματίου">
           {safeImages.map((src, imageIndex) => (
             <button
               key={`${src}-${imageIndex}`}
               type="button"
               onClick={() => setIndex(imageIndex)}
-              className={`relative h-16 w-24 shrink-0 overflow-hidden rounded-xl border-2 transition ${imageIndex === index ? "border-emerald-600 ring-2 ring-emerald-100" : "border-transparent opacity-75 hover:opacity-100"}`}
+              className={`relative h-16 w-24 shrink-0 overflow-hidden rounded-xl border-2 bg-white transition ${imageIndex === index ? "border-emerald-600 ring-2 ring-emerald-100" : "border-stone-200 opacity-75 hover:opacity-100"}`}
               aria-label={`Προβολή φωτογραφίας ${imageIndex + 1}`}
               aria-current={imageIndex === index ? "true" : undefined}
             >
