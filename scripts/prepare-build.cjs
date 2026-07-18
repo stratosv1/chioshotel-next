@@ -21,6 +21,7 @@ const PATCHES = [
   "patch-ai-personalized-recommendations.cjs",
   "patch-ai-url-language-and-recommendation-labels.cjs",
   "patch-active-ai-assistant-logic.cjs",
+  "patch-ai-natural-sales-tone.cjs",
   "patch-ai-room-detail-thumbnail-row.cjs",
 ];
 
