@@ -24,6 +24,7 @@ const PATCHES = [
   "patch-ai-seven-language-localization.cjs",
   "patch-ai-mobile-carousel-direct.cjs",
   "patch-ai-remove-duplicate-email-cta.cjs",
+  "patch-ai-compact-modal-no-scroll.cjs",
 ];
 
 const SLOW_PATCH_MS = 500;
