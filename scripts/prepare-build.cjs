@@ -17,6 +17,7 @@ const PATCHES = [
   "patch-ai-date-order-validation.cjs",
   "patch-ai-language-and-desktop-carousel.cjs",
   "patch-ai-fast-availability-response.cjs",
+  "patch-ai-human-conversation.cjs",
 ];
 
 const SLOW_PATCH_MS = 500;
