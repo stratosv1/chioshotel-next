@@ -1,0 +1,36 @@
+name: Materialize active AI logic
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/materialize-active-ai.yml'
+      - 'scripts/patch-active-ai-assistant-logic.cjs'
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Apply active AI logic directly to source
+        run: node scripts/patch-active-ai-assistant-logic.cjs
+      - name: Commit materialized source
+        run: |
+          if git diff --quiet -- components/ai/ConversationalRoomSalesEnhanced.tsx; then
+            echo "No source changes to commit"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add components/ai/ConversationalRoomSalesEnhanced.tsx
+          git commit -m "Materialize active AI assistant logic in source"
+          git push origin HEAD:main
