@@ -20,6 +20,7 @@ const PATCHES = [
   "patch-ai-human-conversation.cjs",
   "patch-ai-personalized-recommendations.cjs",
   "patch-ai-url-language-and-recommendation-labels.cjs",
+  "patch-active-ai-assistant-logic.cjs",
 ];
 
 const SLOW_PATCH_MS = 500;
