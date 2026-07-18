@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import { AiBackToSite } from "@/components/ai/AiBackToSite";
-import { AiRoomDetailsEnhancer } from "@/components/ai/AiRoomDetailsEnhancer";
-import { AiSummaryActions } from "@/components/ai/AiSummaryActions";
-import { AiSummaryEmailBridge } from "@/components/ai/AiSummaryEmailBridge";
-import { ConversationalRoomSalesEnhanced } from "@/components/ai/ConversationalRoomSalesEnhanced";
+import { AIRoomFinder } from "@/components/ai/AIRoomFinder";
 
 export const metadata: Metadata = {
   title: "AI Room Finder | Voulamandis House",
@@ -19,10 +16,7 @@ export default function AiAssistantPage() {
   return (
     <>
       <AiBackToSite />
-      <ConversationalRoomSalesEnhanced />
-      <AiRoomDetailsEnhancer />
-      <AiSummaryActions />
-      <AiSummaryEmailBridge />
+      <AIRoomFinder />
     </>
   );
 }
