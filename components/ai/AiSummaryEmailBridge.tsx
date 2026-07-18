@@ -1,51 +1,134 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 
-type Status = "idle" | "sending" | "sent" | "error";
 type Locale = "el" | "en" | "de" | "fr" | "it" | "es" | "tr";
-type GuestDetails = { firstName:string; lastName:string; email:string; phone:string };
-type StayContext = { checkin:string; checkout:string; preferences:string[] };
+type Status = "idle" | "sending" | "sent" | "error";
 
-const WHATSAPP_NUMBER = "306944474226";
-const EMPTY_DETAILS: GuestDetails = { firstName:"", lastName:"", email:"", phone:"" };
-const EMPTY_CONTEXT: StayContext = { checkin:"", checkout:"", preferences:[] };
-const LANG_LABELS = new Set(["Ελληνικά","English","Deutsch","Français","Italiano","Español","Türkçe"]);
-const NO_PREF = new Set(["Χωρίς προτίμηση","No preference","Keine Präferenz","Sans préférence","Nessuna preferenza","Sin preferencia","Tercihim yok"]);
-const CONTINUE = new Set(["Προβολή προτάσεων","Show recommendations","Empfehlungen anzeigen","Voir les recommandations","Mostra le proposte","Ver recomendaciones","Önerileri göster"]);
-const NEW_SEARCH = new Set(["Νέα αναζήτηση","New search","Neue Suche","Nouvelle recherche","Nuova ricerca","Nueva búsqueda","Yeni arama"]);
-
-const COPY: Record<Locale, any> = {
-  el:{summaryTitle:"Αναλυτική σύνοψη",actionTitle:"Στείλτε το αίτημα στη reception",detailsTitle:"Στοιχεία επικοινωνίας",detailsHelp:"Συμπληρώστε όλα τα στοιχεία σας για να ενεργοποιηθούν το Email και το WhatsApp.",firstName:"Όνομα",lastName:"Επώνυμο",guestEmail:"Email",phone:"Τηλέφωνο",required:"Συμπληρώστε όλα τα πεδία.",invalidEmail:"Γράψτε ένα έγκυρο email.",invalidPhone:"Γράψτε ένα έγκυρο τηλέφωνο.",email:"Email",sendingButton:"Αποστολή…",sending:"Το μήνυμα αποστέλλεται…",sent:"Το μήνυμα εστάλη. Σύντομα η reception θα επικοινωνήσει μαζί σας.",error:"Δεν ήταν δυνατή η αποστολή. Δοκιμάστε ξανά σε λίγο.",close:"Κλείσιμο μηνύματος",subject:"Αίτημα διαμονής από AI Room Finder",whatsappIntro:"Γεια σας! Ενδιαφέρομαι για την παρακάτω διαμονή:",customerLabel:"Στοιχεία πελάτη",checkin:"Check-in",checkout:"Check-out",preferences:"Προτιμήσεις δωματίου",none:"Χωρίς προτίμηση"},
-  en:{summaryTitle:"Detailed summary",actionTitle:"Send your request to reception",detailsTitle:"Contact details",detailsHelp:"Complete all your details to activate Email and WhatsApp.",firstName:"First name",lastName:"Last name",guestEmail:"Email",phone:"Phone",required:"Please complete all fields.",invalidEmail:"Enter a valid email address.",invalidPhone:"Enter a valid phone number.",email:"Email",sendingButton:"Sending…",sending:"Your message is being sent…",sent:"Your message was sent. Reception will contact you shortly.",error:"The message could not be sent. Please try again shortly.",close:"Close message",subject:"Stay request from AI Room Finder",whatsappIntro:"Hello! I am interested in the following stay:",customerLabel:"Guest details",checkin:"Check-in",checkout:"Check-out",preferences:"Room preferences",none:"No preference"},
-  de:{summaryTitle:"Detaillierte Übersicht",actionTitle:"Anfrage an die Rezeption senden",detailsTitle:"Kontaktdaten",detailsHelp:"Füllen Sie alle Angaben aus, um E-Mail und WhatsApp zu aktivieren.",firstName:"Vorname",lastName:"Nachname",guestEmail:"E-Mail",phone:"Telefon",required:"Bitte füllen Sie alle Felder aus.",invalidEmail:"Geben Sie eine gültige E-Mail-Adresse ein.",invalidPhone:"Geben Sie eine gültige Telefonnummer ein.",email:"E-Mail",sendingButton:"Wird gesendet…",sending:"Ihre Nachricht wird gesendet…",sent:"Ihre Nachricht wurde gesendet. Die Rezeption wird Sie in Kürze kontaktieren.",error:"Die Nachricht konnte nicht gesendet werden. Bitte versuchen Sie es später erneut.",close:"Nachricht schließen",subject:"Aufenthaltsanfrage vom AI Room Finder",whatsappIntro:"Hallo! Ich interessiere mich für folgenden Aufenthalt:",customerLabel:"Gastdaten",checkin:"Check-in",checkout:"Check-out",preferences:"Zimmerpräferenzen",none:"Keine Präferenz"},
-  fr:{summaryTitle:"Récapitulatif détaillé",actionTitle:"Envoyer la demande à la réception",detailsTitle:"Coordonnées",detailsHelp:"Complétez toutes vos coordonnées pour activer l’e-mail et WhatsApp.",firstName:"Prénom",lastName:"Nom",guestEmail:"E-mail",phone:"Téléphone",required:"Veuillez remplir tous les champs.",invalidEmail:"Saisissez une adresse e-mail valide.",invalidPhone:"Saisissez un numéro de téléphone valide.",email:"E-mail",sendingButton:"Envoi…",sending:"Votre message est en cours d’envoi…",sent:"Votre message a été envoyé. La réception vous contactera bientôt.",error:"Le message n’a pas pu être envoyé. Veuillez réessayer dans un instant.",close:"Fermer le message",subject:"Demande de séjour depuis AI Room Finder",whatsappIntro:"Bonjour ! Je suis intéressé(e) par le séjour suivant :",customerLabel:"Coordonnées du client",checkin:"Arrivée",checkout:"Départ",preferences:"Préférences de chambre",none:"Sans préférence"},
-  it:{summaryTitle:"Riepilogo dettagliato",actionTitle:"Invia la richiesta alla reception",detailsTitle:"Dati di contatto",detailsHelp:"Completa tutti i dati per attivare Email e WhatsApp.",firstName:"Nome",lastName:"Cognome",guestEmail:"Email",phone:"Telefono",required:"Compila tutti i campi.",invalidEmail:"Inserisci un indirizzo email valido.",invalidPhone:"Inserisci un numero di telefono valido.",email:"Email",sendingButton:"Invio…",sending:"Il messaggio è in fase di invio…",sent:"Il messaggio è stato inviato. La reception la contatterà a breve.",error:"Non è stato possibile inviare il messaggio. Riprovi tra poco.",close:"Chiudi messaggio",subject:"Richiesta di soggiorno da AI Room Finder",whatsappIntro:"Salve! Sono interessato/a al seguente soggiorno:",customerLabel:"Dati dell’ospite",checkin:"Check-in",checkout:"Check-out",preferences:"Preferenze camera",none:"Nessuna preferenza"},
-  es:{summaryTitle:"Resumen detallado",actionTitle:"Enviar la solicitud a recepción",detailsTitle:"Datos de contacto",detailsHelp:"Complete todos sus datos para activar Email y WhatsApp.",firstName:"Nombre",lastName:"Apellidos",guestEmail:"Email",phone:"Teléfono",required:"Complete todos los campos.",invalidEmail:"Introduzca un correo electrónico válido.",invalidPhone:"Introduzca un número de teléfono válido.",email:"Email",sendingButton:"Enviando…",sending:"El mensaje se está enviando…",sent:"El mensaje se envió. Recepción se pondrá en contacto con usted pronto.",error:"No se pudo enviar el mensaje. Inténtelo de nuevo en unos instantes.",close:"Cerrar mensaje",subject:"Solicitud de estancia desde AI Room Finder",whatsappIntro:"Hola. Me interesa la siguiente estancia:",customerLabel:"Datos del huésped",checkin:"Entrada",checkout:"Salida",preferences:"Preferencias de habitación",none:"Sin preferencia"},
-  tr:{summaryTitle:"Ayrıntılı özet",actionTitle:"Talebi resepsiyona gönderin",detailsTitle:"İletişim bilgileri",detailsHelp:"E-posta ve WhatsApp seçeneklerini etkinleştirmek için tüm bilgileri doldurun.",firstName:"Ad",lastName:"Soyad",guestEmail:"E-posta",phone:"Telefon",required:"Lütfen tüm alanları doldurun.",invalidEmail:"Geçerli bir e-posta adresi girin.",invalidPhone:"Geçerli bir telefon numarası girin.",email:"E-posta",sendingButton:"Gönderiliyor…",sending:"Mesajınız gönderiliyor…",sent:"Mesajınız gönderildi. Resepsiyon kısa süre içinde sizinle iletişime geçecektir.",error:"Mesaj gönderilemedi. Lütfen kısa süre sonra tekrar deneyin.",close:"Mesajı kapat",subject:"AI Room Finder konaklama talebi",whatsappIntro:"Merhaba! Aşağıdaki konaklamayla ilgileniyorum:",customerLabel:"Misafir bilgileri",checkin:"Giriş",checkout:"Çıkış",preferences:"Oda tercihleri",none:"Tercihim yok"}
+type GuestDetails = {
+  name: string;
+  email: string;
+  phone: string;
 };
 
-function findSummaryContainer(heading: HTMLElement) { let node:HTMLElement|null=heading; for(let d=0;node&&d<8;d+=1,node=node.parentElement){const text=(node.innerText||"").trim();const rounded=Array.from(node.classList).some(n=>n.startsWith("rounded-["));const summary=/Νέα αναζήτηση|New search|Neue Suche|Nouvelle recherche|Nuova ricerca|Nueva búsqueda|Yeni arama/.test(text);if(rounded&&summary)return node;}return heading.parentElement?.parentElement||heading.parentElement; }
-function findSummaryCard(){for(const [locale,copy] of Object.entries(COPY) as [Locale,any][]){const heading=Array.from(document.querySelectorAll<HTMLElement>("h1,h2,h3,[role='heading']")).find(n=>(n.textContent||"").trim()===copy.summaryTitle);if(heading)return{locale,card:findSummaryContainer(heading)}}return{locale:"el" as Locale,card:null}}
-function cleanSummary(card:HTMLElement){return(card.innerText||"").replace(/Νέα αναζήτηση|New search|Neue Suche|Nouvelle recherche|Nuova ricerca|Nueva búsqueda|Yeni arama/g,"").replace(/Στείλτε το αίτημα στη reception|Send your request to reception|Anfrage an die Rezeption senden|Envoyer la demande à la réception|Invia la richiesta alla reception|Enviar la solicitud a recepción|Talebi resepsiyona gönderin/g,"").replace(/Στοιχεία επικοινωνίας|Contact details|Kontaktdaten|Coordonnées|Dati di contatto|Datos de contacto|İletişim bilgileri/g,"").replace(/\n{3,}/g,"\n\n").trim()}
-function validEmail(v:string){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim())} function validPhone(v:string){return v.replace(/\D/g,"").length>=8}
+const WHATSAPP_NUMBER = "306944474226";
 
-export function AiSummaryEmailBridge(){
-  const [status,setStatus]=useState<Status>("idle"),[host,setHost]=useState<HTMLElement|null>(null),[locale,setLocale]=useState<Locale>("el"),[details,setDetails]=useState<GuestDetails>(EMPTY_DETAILS),[validation,setValidation]=useState(""),[context,setContext]=useState<StayContext>(EMPTY_CONTEXT);
-  const phase=useRef(0); const selectedPrefs=useRef(new Set<string>()); const copy=COPY[locale];
-  useEffect(()=>{const locate=()=>{const result=findSummaryCard();setLocale(result.locale);setHost(c=>c===result.card?c:result.card)};locate();const o=new MutationObserver(locate);o.observe(document.body,{childList:true,subtree:true});const timer=window.setInterval(locate,500);return()=>{o.disconnect();window.clearInterval(timer)}},[]);
-  useEffect(()=>{const onClick=(e:MouseEvent)=>{const button=(e.target as HTMLElement|null)?.closest<HTMLButtonElement>("button");if(!button)return;const label=(button.textContent||"").trim();if(LANG_LABELS.has(label)||NEW_SEARCH.has(label)){phase.current=0;selectedPrefs.current.clear();setContext(EMPTY_CONTEXT);return}if(NO_PREF.has(label)){selectedPrefs.current.clear();setContext(c=>({...c,preferences:[]}));return}if(CONTINUE.has(label)){setContext(c=>({...c,preferences:Array.from(selectedPrefs.current)}));return}const parent=button.parentElement?.parentElement;const hasContinue=parent?Array.from(parent.querySelectorAll("button")).some(b=>CONTINUE.has((b.textContent||"").trim())):false;if(hasContinue&&!NO_PREF.has(label)){if(selectedPrefs.current.has(label))selectedPrefs.current.delete(label);else selectedPrefs.current.add(label);setContext(c=>({...c,preferences:Array.from(selectedPrefs.current)}));}};const onSubmit=(e:SubmitEvent)=>{const form=e.target as HTMLFormElement;const input=form.querySelector<HTMLInputElement>("input");const value=input?.value.trim();if(!value)return;if(phase.current===0){setContext(c=>({...c,checkin:value}));phase.current=1}else if(phase.current===1){setContext(c=>({...c,checkout:value}));phase.current=2}};document.addEventListener("click",onClick,true);document.addEventListener("submit",onSubmit,true);return()=>{document.removeEventListener("click",onClick,true);document.removeEventListener("submit",onSubmit,true)}},[]);
-  useEffect(()=>{if(status!=="sent"&&status!=="error")return;const t=window.setTimeout(()=>setStatus("idle"),status==="sent"?4500:6000);return()=>window.clearTimeout(t)},[status]);
-  const summaryText=useMemo(()=>host?cleanSummary(host):"",[host]); const complete=details.firstName.trim()&&details.lastName.trim()&&validEmail(details.email)&&validPhone(details.phone);
-  const customerText=`${copy.customerLabel}:\n${copy.firstName}: ${details.firstName.trim()}\n${copy.lastName}: ${details.lastName.trim()}\n${copy.guestEmail}: ${details.email.trim()}\n${copy.phone}: ${details.phone.trim()}`;
-  const stayText=`${copy.checkin}: ${context.checkin||"—"}\n${copy.checkout}: ${context.checkout||"—"}\n${copy.preferences}: ${context.preferences.length?context.preferences.join(", "):copy.none}`;
-  const fullMessage=`${customerText}\n\n${stayText}\n\n${summaryText}`;
-  function validate(){if(!details.firstName.trim()||!details.lastName.trim()||!details.email.trim()||!details.phone.trim()){setValidation(copy.required);return false}if(!validEmail(details.email)){setValidation(copy.invalidEmail);return false}if(!validPhone(details.phone)){setValidation(copy.invalidPhone);return false}setValidation("");return true}
-  function setField(field:keyof GuestDetails,value:string){setDetails(c=>({...c,[field]:value}));if(validation)setValidation("")}
-  async function sendEmail(){if(!host||status==="sending"||!validate())return;setStatus("sending");try{const r=await fetch("/api/ai-assistant/summary-email",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({subject:`${copy.subject} — ${details.firstName.trim()} ${details.lastName.trim()}`,message:fullMessage,guest:details,stay:context})});const p=await r.json().catch(()=>null);if(!r.ok||!p?.ok)throw new Error(p?.error||"Email send failed");setStatus("sent")}catch(error){console.error("AI summary email send error:",error);setStatus("error")}}
-  function openWhatsApp(){if(!host||!validate())return;window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`${copy.whatsappIntro}\n\n${fullMessage}`)}`,"_blank","noopener,noreferrer")}
-  const actions=host?createPortal(<div className="mt-5 border-t border-stone-200 pt-4" data-ai-summary-actions="true"><p className="text-base font-black text-stone-900">{copy.detailsTitle}</p><p className="mt-1 text-xs leading-5 text-stone-500">{copy.detailsHelp}</p><div className="mt-3 grid gap-3 sm:grid-cols-2"><input value={details.firstName} onChange={e=>setField("firstName",e.target.value)} placeholder={copy.firstName} autoComplete="given-name" className="min-h-11 rounded-xl border border-stone-300 bg-white px-3 text-sm"/><input value={details.lastName} onChange={e=>setField("lastName",e.target.value)} placeholder={copy.lastName} autoComplete="family-name" className="min-h-11 rounded-xl border border-stone-300 bg-white px-3 text-sm"/><input value={details.email} onChange={e=>setField("email",e.target.value)} placeholder={copy.guestEmail} type="email" autoComplete="email" className="min-h-11 rounded-xl border border-stone-300 bg-white px-3 text-sm"/><input value={details.phone} onChange={e=>setField("phone",e.target.value)} placeholder={copy.phone} type="tel" autoComplete="tel" className="min-h-11 rounded-xl border border-stone-300 bg-white px-3 text-sm"/></div>{validation?<p className="mt-2 text-xs font-semibold text-red-700">{validation}</p>:null}<p className="mb-3 mt-4 text-sm font-semibold text-stone-700">{copy.actionTitle}</p><div className="grid grid-cols-2 gap-3"><button type="button" onClick={()=>void sendEmail()} disabled={!complete||status==="sending"} className="min-h-12 rounded-2xl border border-[#435f12] bg-white px-4 py-3.5 text-sm font-bold text-[#435f12] disabled:opacity-40">{status==="sending"?copy.sendingButton:copy.email}</button><button type="button" onClick={openWhatsApp} disabled={!complete} className="min-h-12 rounded-2xl bg-[#1f9d55] px-4 py-3.5 text-sm font-bold text-white disabled:opacity-40">WhatsApp</button></div></div>,host):null;
-  const feedback=status==="idle"?null:status==="sending"?copy.sending:status==="sent"?copy.sent:copy.error;
-  return <>{actions}{feedback?<div role="status" aria-live="polite" className={`fixed inset-x-4 bottom-5 z-[1000] mx-auto max-w-md rounded-2xl border px-12 py-4 text-center text-sm font-semibold shadow-2xl ${status==="sent"?"border-emerald-200 bg-emerald-50 text-emerald-900":status==="error"?"border-red-200 bg-red-50 text-red-800":"border-stone-200 bg-white text-stone-800"}`}>{feedback}{status!=="sending"?<button type="button" onClick={()=>setStatus("idle")} aria-label={copy.close} className="absolute right-3 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full text-xl">×</button>:null}</div>:null}</>;
+const COPY: Record<Locale, {
+  contactTitle:string; help:string; name:string; email:string; phone:string; required:string; invalidEmail:string;
+  emailCta:string; whatsappCta:string; sending:string; sent:string; error:string; disclaimer:string; subject:string; intro:string;
+}> = {
+  el:{contactTitle:"Στείλτε το αίτημά σας στην ομάδα μας",help:"Γράψτε το όνομά σας και τουλάχιστον ένα στοιχείο επικοινωνίας: τηλέφωνο ή email.",name:"Όνομα",email:"Email",phone:"Τηλέφωνο",required:"Συμπληρώστε το όνομά σας και τουλάχιστον τηλέφωνο ή email.",invalidEmail:"Γράψτε ένα έγκυρο email.",emailCta:"Αποστολή αιτήματος",whatsappCta:"WhatsApp",sending:"Το αίτημά σας αποστέλλεται…",sent:"✅ Το αίτημά σας στάλθηκε με επιτυχία! Σας ευχαριστούμε πολύ 😊 Κάποιος από την ομάδα μας θα επικοινωνήσει μαζί σας το συντομότερο δυνατό.",error:"Δεν ήταν δυνατή η αποστολή. Μπορείτε να χρησιμοποιήσετε το WhatsApp ή να δοκιμάσετε ξανά.",disclaimer:"ℹ️ Το αίτημα δεν αποτελεί οριστική κράτηση μέχρι να επιβεβαιωθεί από την ομάδα μας.",subject:"Αίτημα διαμονής από το AI Room Finder",intro:"Γεια σας! Ενδιαφέρομαι για την παρακάτω διαμονή:"},
+  en:{contactTitle:"Send your request to our team",help:"Enter your name and at least one contact method: phone or email.",name:"Name",email:"Email",phone:"Phone",required:"Please enter your name and at least a phone number or email.",invalidEmail:"Please enter a valid email address.",emailCta:"Send request",whatsappCta:"WhatsApp",sending:"Sending your request…",sent:"✅ Your request was sent successfully! Thank you very much 😊 A member of our team will contact you as soon as possible.",error:"The request could not be sent. Please use WhatsApp or try again.",disclaimer:"ℹ️ This request is not a confirmed booking until our team confirms it.",subject:"Stay request from AI Room Finder",intro:"Hello! I am interested in the following stay:"},
+  de:{contactTitle:"Anfrage an unser Team senden",help:"Geben Sie Ihren Namen und mindestens eine Kontaktmöglichkeit an: Telefon oder E-Mail.",name:"Name",email:"E-Mail",phone:"Telefon",required:"Bitte geben Sie Ihren Namen und mindestens Telefon oder E-Mail an.",invalidEmail:"Bitte geben Sie eine gültige E-Mail-Adresse ein.",emailCta:"Anfrage senden",whatsappCta:"WhatsApp",sending:"Ihre Anfrage wird gesendet…",sent:"✅ Ihre Anfrage wurde erfolgreich gesendet! Vielen Dank 😊 Unser Team wird sich so schnell wie möglich bei Ihnen melden.",error:"Die Anfrage konnte nicht gesendet werden. Nutzen Sie WhatsApp oder versuchen Sie es erneut.",disclaimer:"ℹ️ Die Anfrage ist keine bestätigte Buchung, bis unser Team sie bestätigt.",subject:"Aufenthaltsanfrage vom AI Room Finder",intro:"Hallo! Ich interessiere mich für folgenden Aufenthalt:"},
+  fr:{contactTitle:"Envoyer votre demande à notre équipe",help:"Indiquez votre nom et au moins un moyen de contact : téléphone ou e-mail.",name:"Nom",email:"E-mail",phone:"Téléphone",required:"Indiquez votre nom et au moins un téléphone ou un e-mail.",invalidEmail:"Saisissez une adresse e-mail valide.",emailCta:"Envoyer la demande",whatsappCta:"WhatsApp",sending:"Envoi de votre demande…",sent:"✅ Votre demande a bien été envoyée ! Merci beaucoup 😊 Un membre de notre équipe vous contactera dès que possible.",error:"La demande n’a pas pu être envoyée. Utilisez WhatsApp ou réessayez.",disclaimer:"ℹ️ Cette demande ne constitue pas une réservation confirmée avant validation par notre équipe.",subject:"Demande de séjour depuis AI Room Finder",intro:"Bonjour ! Je suis intéressé(e) par le séjour suivant :"},
+  it:{contactTitle:"Invia la richiesta al nostro team",help:"Inserisci il tuo nome e almeno un contatto: telefono o email.",name:"Nome",email:"Email",phone:"Telefono",required:"Inserisci il nome e almeno telefono o email.",invalidEmail:"Inserisci un indirizzo email valido.",emailCta:"Invia richiesta",whatsappCta:"WhatsApp",sending:"Invio della richiesta…",sent:"✅ La tua richiesta è stata inviata con successo! Grazie mille 😊 Un membro del nostro team ti contatterà il prima possibile.",error:"Non è stato possibile inviare la richiesta. Usa WhatsApp o riprova.",disclaimer:"ℹ️ La richiesta non è una prenotazione confermata finché il nostro team non la conferma.",subject:"Richiesta di soggiorno da AI Room Finder",intro:"Salve! Sono interessato/a al seguente soggiorno:"},
+  es:{contactTitle:"Envía tu solicitud a nuestro equipo",help:"Escribe tu nombre y al menos un método de contacto: teléfono o email.",name:"Nombre",email:"Email",phone:"Teléfono",required:"Escribe tu nombre y al menos teléfono o email.",invalidEmail:"Introduce un email válido.",emailCta:"Enviar solicitud",whatsappCta:"WhatsApp",sending:"Enviando tu solicitud…",sent:"✅ ¡Tu solicitud se envió correctamente! Muchas gracias 😊 Un miembro de nuestro equipo se pondrá en contacto contigo lo antes posible.",error:"No se pudo enviar la solicitud. Usa WhatsApp o inténtalo de nuevo.",disclaimer:"ℹ️ La solicitud no es una reserva confirmada hasta que nuestro equipo la confirme.",subject:"Solicitud de estancia desde AI Room Finder",intro:"Hola. Me interesa la siguiente estancia:"},
+  tr:{contactTitle:"Talebinizi ekibimize gönderin",help:"Adınızı ve en az bir iletişim yöntemi girin: telefon veya e-posta.",name:"Ad",email:"E-posta",phone:"Telefon",required:"Adınızı ve en az telefon veya e-posta girin.",invalidEmail:"Geçerli bir e-posta adresi girin.",emailCta:"Talebi gönder",whatsappCta:"WhatsApp",sending:"Talebiniz gönderiliyor…",sent:"✅ Talebiniz başarıyla gönderildi! Çok teşekkür ederiz 😊 Ekibimizden biri en kısa sürede sizinle iletişime geçecektir.",error:"Talep gönderilemedi. WhatsApp kullanın veya tekrar deneyin.",disclaimer:"ℹ️ Talep, ekibimiz tarafından onaylanana kadar kesin rezervasyon değildir.",subject:"AI Room Finder konaklama talebi",intro:"Merhaba! Aşağıdaki konaklamayla ilgileniyorum:"}
+};
+
+function localeFromUrl(): Locale {
+  if (typeof window === "undefined") return "en";
+  const value = new URLSearchParams(window.location.search).get("lang")?.toLowerCase();
+  return (["el","en","de","fr","it","es","tr"] as Locale[]).includes(value as Locale) ? value as Locale : "en";
+}
+
+function findSummaryCard(): HTMLElement | null {
+  const newSearchPattern = /Νέα αναζήτηση|New search|Neue Suche|Nouvelle recherche|Nuova ricerca|Nueva búsqueda|Yeni arama/i;
+  const button = Array.from(document.querySelectorAll<HTMLElement>("button,a")).find(node => newSearchPattern.test((node.textContent || "").trim()));
+  if (!button) return null;
+  let node: HTMLElement | null = button;
+  for (let depth = 0; node && depth < 8; depth += 1, node = node.parentElement) {
+    if (node.querySelector("img") && /σύνολο|total|gesamt|totale|toplam/i.test(node.innerText || "")) return node;
+  }
+  return button.parentElement?.parentElement || null;
+}
+
+function cleanSummary(card: HTMLElement): string {
+  return (card.innerText || "")
+    .replace(/Νέα αναζήτηση|New search|Neue Suche|Nouvelle recherche|Nuova ricerca|Nueva búsqueda|Yeni arama/gi, "")
+    .replace(/Στείλτε το αίτημά σας στην ομάδα μας|Send your request to our team|Anfrage an unser Team senden|Envoyer votre demande à notre équipe|Invia la richiesta al nostro team|Envía tu solicitud a nuestro equipo|Talebinizi ekibimize gönderin/gi, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
+function validEmail(value: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+}
+
+export function AiSummaryEmailBridge() {
+  const [host, setHost] = useState<HTMLElement | null>(null);
+  const [locale, setLocale] = useState<Locale>("en");
+  const [details, setDetails] = useState<GuestDetails>({ name:"", email:"", phone:"" });
+  const [status, setStatus] = useState<Status>("idle");
+  const [validation, setValidation] = useState("");
+  const copy = COPY[locale];
+
+  useEffect(() => {
+    setLocale(localeFromUrl());
+    const locate = () => setHost(current => {
+      const next = findSummaryCard();
+      return current === next ? current : next;
+    });
+    locate();
+    const observer = new MutationObserver(locate);
+    observer.observe(document.body, { childList:true, subtree:true });
+    const timer = window.setInterval(locate, 400);
+    return () => { observer.disconnect(); window.clearInterval(timer); };
+  }, []);
+
+  const summary = useMemo(() => host ? cleanSummary(host) : "", [host]);
+  const canSend = Boolean(details.name.trim() && (details.phone.trim() || details.email.trim()) && (!details.email.trim() || validEmail(details.email)));
+  const fullMessage = `${copy.intro}\n\n${summary}\n\n${copy.name}: ${details.name.trim()}\n${copy.email}: ${details.email.trim() || "—"}\n${copy.phone}: ${details.phone.trim() || "—"}`;
+
+  function validate(): boolean {
+    if (!details.name.trim() || (!details.phone.trim() && !details.email.trim())) { setValidation(copy.required); return false; }
+    if (details.email.trim() && !validEmail(details.email)) { setValidation(copy.invalidEmail); return false; }
+    setValidation("");
+    return true;
+  }
+
+  async function sendEmail() {
+    if (!host || status === "sending" || !validate()) return;
+    setStatus("sending");
+    try {
+      const response = await fetch("/api/ai-assistant/summary-email", {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({ subject:`${copy.subject} — ${details.name.trim()}`, message:fullMessage, guest:details })
+      });
+      if (!response.ok) throw new Error("send failed");
+      setStatus("sent");
+    } catch {
+      setStatus("error");
+    }
+  }
+
+  function openWhatsApp() {
+    if (!validate()) return;
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(fullMessage)}`, "_blank", "noopener,noreferrer");
+  }
+
+  if (!host || !summary) return null;
+
+  const actions = createPortal(
+    <section data-ai-summary-contact className="mt-5 border-t border-stone-200 pt-5">
+      <h3 className="text-lg font-black text-stone-900">{copy.contactTitle}</h3>
+      <p className="mt-1 text-sm leading-6 text-stone-600">{copy.help}</p>
+      <div className="mt-4 grid gap-3 sm:grid-cols-3">
+        <input value={details.name} onChange={e=>setDetails(v=>({...v,name:e.target.value}))} placeholder={copy.name} autoComplete="name" className="min-h-12 rounded-xl border border-stone-300 bg-white px-4 text-sm outline-none focus:border-[#ff385c]" />
+        <input value={details.phone} onChange={e=>setDetails(v=>({...v,phone:e.target.value}))} placeholder={copy.phone} type="tel" autoComplete="tel" className="min-h-12 rounded-xl border border-stone-300 bg-white px-4 text-sm outline-none focus:border-[#ff385c]" />
+        <input value={details.email} onChange={e=>setDetails(v=>({...v,email:e.target.value}))} placeholder={copy.email} type="email" autoComplete="email" className="min-h-12 rounded-xl border border-stone-300 bg-white px-4 text-sm outline-none focus:border-[#ff385c]" />
+      </div>
+      {validation ? <p className="mt-2 text-sm font-semibold text-red-700">{validation}</p> : null}
+      <div className="mt-4 grid grid-cols-2 gap-3">
+        <button type="button" onClick={()=>void sendEmail()} disabled={!canSend || status === "sending"} className="min-h-13 rounded-2xl bg-[#ff385c] px-4 py-3.5 text-sm font-bold text-white shadow-sm disabled:opacity-40">{status === "sending" ? copy.sending : copy.emailCta}</button>
+        <button type="button" onClick={openWhatsApp} disabled={!canSend} className="min-h-13 rounded-2xl bg-[#1f9d55] px-4 py-3.5 text-sm font-bold text-white shadow-sm disabled:opacity-40">{copy.whatsappCta}</button>
+      </div>
+      <p className="mt-4 rounded-xl bg-stone-100 px-4 py-3 text-xs leading-5 text-stone-600">{copy.disclaimer}</p>
+    </section>,
+    host
+  );
+
+  return <>{actions}{status === "sent" || status === "error" ? <div role="status" aria-live="polite" className={`fixed inset-x-4 bottom-5 z-[1000] mx-auto max-w-lg rounded-2xl border px-5 py-4 text-center text-sm font-semibold shadow-2xl ${status === "sent" ? "border-emerald-200 bg-emerald-50 text-emerald-900" : "border-red-200 bg-red-50 text-red-800"}`}>{status === "sent" ? copy.sent : copy.error}<button type="button" onClick={()=>setStatus("idle")} className="absolute right-3 top-2 text-xl" aria-label="Close">×</button></div> : null}</>;
 }
