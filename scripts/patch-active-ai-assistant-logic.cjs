@@ -35,9 +35,19 @@ if (!source.includes('const recommendationAnswers:string[]=[]')) {
   source = source.replace(oldSearch, newSearch);
 }
 
+const oldVisible = 'const nights=checkin&&checkout?nightsBetween(checkin,checkout):0;const visible=useMemo(()=>[...(offers[activeGroup]||[])].filter(o=>!choices.some(c=>c.offer.roomId===o.roomId&&c.offer.unitId===o.unitId)).sort((a,b)=>score(b,filters)-score(a,filters)||a.directTotal-b.directTotal),[offers,activeGroup,choices,filters]);const current=visible[index]||visible[0];';
+const newVisible = 'const nights=checkin&&checkout?nightsBetween(checkin,checkout):0;const recommendationRank:Record<NonNullable<Offer["recommendationRole"]>,number>={recommended:0,budget:1,comfort:2,alternative:3};const visible=useMemo(()=>[...(offers[activeGroup]||[])].filter(o=>!choices.some(c=>c.offer.roomId===o.roomId&&c.offer.unitId===o.unitId)).sort((a,b)=>(recommendationRank[a.recommendationRole||"alternative"]-recommendationRank[b.recommendationRole||"alternative"])||score(b,filters)-score(a,filters)||a.directTotal-b.directTotal),[offers,activeGroup,choices,filters]);const current=visible[index]||visible[0];';
+if (!source.includes('const recommendationRank:Record<NonNullable<Offer["recommendationRole"]>,number>')) {
+  if (!source.includes(oldVisible)) throw new Error("Active assistant offer sorting was not found");
+  source = source.replace(oldVisible, newVisible);
+}
+
 if (!source.includes('current.recommendationTitle || CURRENT_CHOICE_LABEL[language]')) {
   throw new Error("Active assistant recommendation label was not applied");
 }
+if (!source.includes('recommendationRank[a.recommendationRole||"alternative"]')) {
+  throw new Error("Active assistant recommendation ordering was not applied");
+}
 
 fs.writeFileSync(file, source);
-console.log("Applied language and recommendation logic to active AI assistant");
+console.log("Applied language, recommendation and ordering logic to active AI assistant");
