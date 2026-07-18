@@ -57,18 +57,23 @@ function currentLanguage(): Language {
 
 function polishModal() {
   const dialog = document.querySelector<HTMLElement>('[role="dialog"][aria-modal="true"]');
-  if (!dialog) return;
+  if (!dialog || dialog.dataset.aiModalPolished === "true") return;
 
+  dialog.dataset.aiModalPolished = "true";
   const language = currentLanguage();
   const heading = dialog.querySelector<HTMLElement>("h2");
   const category = heading?.nextElementSibling as HTMLElement | null;
   const roomMatch = heading?.textContent?.match(/(?:Room|Zimmer|Chambre|Camera|Habitación|Oda|Δωμάτιο)\s*(\d+)/i);
 
-  if (heading && roomMatch) heading.textContent = `${ROOM_WORD[language]} ${roomMatch[1]}`;
+  if (heading && roomMatch) {
+    const translatedHeading = `${ROOM_WORD[language]} ${roomMatch[1]}`;
+    if (heading.textContent !== translatedHeading) heading.textContent = translatedHeading;
+  }
   if (category) {
     const source = category.dataset.aiOriginalCategory || category.textContent?.trim() || "";
     category.dataset.aiOriginalCategory = source;
-    category.textContent = CATEGORY[language][source] || source;
+    const translatedCategory = CATEGORY[language][source] || source;
+    if (category.textContent !== translatedCategory) category.textContent = translatedCategory;
   }
 
   const hero = dialog.querySelector<HTMLElement>("section > div:first-child");
@@ -94,8 +99,10 @@ function polishModal() {
 export function AiRoomModalPolish() {
   useEffect(() => {
     polishModal();
-    const observer = new MutationObserver(polishModal);
-    observer.observe(document.body, { childList: true, subtree: true, characterData: true });
+    const observer = new MutationObserver((mutations) => {
+      if (mutations.some((mutation) => mutation.addedNodes.length > 0)) polishModal();
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
     window.addEventListener("popstate", polishModal);
     return () => {
       observer.disconnect();
