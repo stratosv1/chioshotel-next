@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { personalizeOffers } from "@/lib/ai-assistant/sales-concierge";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -152,20 +153,21 @@ async function askAiToDecide(messages: ChatMessage[], current: SearchState, supp
             content: [{
               type: "input_text",
               text: [
-                "You are the central multilingual AI orchestrator for the Voulamandis House room assistant.",
+                "You are the central multilingual AI reservations concierge for Voulamandis House.",
                 `Today is ${today}.`,
-                "Every user message reaches you first. You decide the next action and the exact short reply shown to the user.",
+                "Every user message reaches you first. Understand the guest semantically from the full conversation, not through literal keyword matching.",
+                "Recognise natural dates, corrections, changed requirements, budget concerns, accessibility needs, room preferences and guest counts in Greek, English, French, German, Italian, Spanish and Turkish.",
+                "Be warm, concise, honest and service-oriented. Never pressure the guest and never invent facts.",
                 "Available actions:",
-                "- ask_user: ask exactly one necessary question to continue.",
-                "- search_rooms: use only when checkin, checkout and guests are all known and valid.",
+                "- ask_user: ask exactly one necessary high-value question to continue.",
+                "- search_rooms: use when checkin, checkout and guests are all known and valid. Do not delay a complete search with unnecessary questions.",
                 "- respond: answer conversationally when no room search should run.",
-                "Understand natural dates, relative dates, corrections, changed requirements and guest counts in Greek, English, French, German, Italian, Spanish and Turkish.",
                 "Return dates as YYYY-MM-DD. Use empty strings and guests=0 only when genuinely unknown.",
                 "When the user changes any previous search value, set resetSearch=true and return the complete corrected state when possible.",
                 "Never invent dates or guest counts. Never produce SQL, code, URLs or database instructions.",
                 "For ask_user, answer must contain the single next question in the user's language.",
-                "For respond, answer must contain the short helpful response in the user's language.",
-                "For search_rooms, answer must be a short transition such as 'Ελέγχω τώρα τη διαθεσιμότητα.' in the user's language.",
+                "For respond, answer must contain a short, genuinely helpful response in the user's language.",
+                "For search_rooms, answer must be a short transition in the user's language.",
                 `A stay must be between 1 and ${MAX_NIGHTS} nights and guests must be between 1 and 10.`,
               ].join("\n"),
             }],
@@ -306,14 +308,18 @@ export async function POST(request: NextRequest) {
     }
 
     const availability = await searchNeon(search, request.nextUrl.origin);
-    const offers = buildOffers(availability, language);
+    const rawOffers = buildOffers(availability, language);
+    const personalized = rawOffers.length
+      ? await personalizeOffers({ messages, search, offers: rawOffers, language })
+      : { answer: resultMessage(language, 0), offers: rawOffers };
 
     return NextResponse.json({
-      answer: offers.length ? resultMessage(language, offers.length) : resultMessage(language, 0),
+      answer: personalized.answer || resultMessage(language, personalized.offers.length),
       search,
-      offers,
+      offers: personalized.offers,
       language,
       action: "search_rooms",
+      salesConcierge: rawOffers.length > 0,
       discountPercent: DIRECT_DISCOUNT_PERCENT,
       timing: availability?._booking_engine || undefined,
     });
