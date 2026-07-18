@@ -23,6 +23,7 @@ const PATCHES = [
   "patch-ai-special-price-request.cjs",
   "patch-ai-seven-language-localization.cjs",
   "patch-ai-mobile-carousel-direct.cjs",
+  "patch-ai-remove-duplicate-email-cta.cjs",
 ];
 
 const SLOW_PATCH_MS = 500;
