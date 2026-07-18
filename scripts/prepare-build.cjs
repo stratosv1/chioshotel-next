@@ -17,6 +17,9 @@ const PATCHES = [
   "patch-ai-date-order-validation.cjs",
   "patch-ai-language-and-desktop-carousel.cjs",
   "patch-ai-fast-availability-response.cjs",
+  "patch-ai-human-conversation.cjs",
+  "patch-ai-personalized-recommendations.cjs",
+  "patch-ai-url-language-and-recommendation-labels.cjs",
 ];
 
 const SLOW_PATCH_MS = 500;
@@ -30,7 +33,6 @@ function runPatch(filename) {
   });
 
   if (result.error) throw result.error;
-
   if (result.status !== 0) {
     throw new Error(`${filename} failed with exit code ${result.status ?? "unknown"}`);
   }
