@@ -24,10 +24,10 @@ export function AiBackToSite() {
       href={href}
       aria-label={label}
       title={label}
-      className="fixed left-3 top-3 z-50 inline-flex h-10 items-center gap-2 rounded-full border border-stone-300 bg-white/95 px-3 text-sm font-semibold text-stone-700 shadow-md backdrop-blur transition hover:bg-white active:scale-[.98] sm:left-4 sm:top-3 sm:h-11 sm:px-4"
+      className="fixed left-3 top-4 z-[70] grid h-11 w-11 place-items-center rounded-full border border-stone-300 bg-white text-stone-800 shadow-md transition hover:bg-stone-50 active:scale-[.96] sm:left-4 sm:h-12 sm:w-auto sm:grid-flow-col sm:gap-2 sm:px-4"
     >
-      <span aria-hidden="true" className="text-lg leading-none">←</span>
-      <span className="hidden sm:inline">{label}</span>
+      <span aria-hidden="true" className="text-xl leading-none">←</span>
+      <span className="hidden text-sm font-semibold sm:inline">{label}</span>
     </a>
   );
 }
