@@ -28,13 +28,10 @@ source = source.replace(
   'className="mt-5 -mx-1 flex snap-x snap-mandatory gap-4 overflow-x-auto px-1 pb-3 [scrollbar-width:thin]"',
   'className="mt-5 -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-4 pr-14 scroll-px-4 overscroll-x-contain [scrollbar-width:thin] sm:-mx-1 sm:px-1 sm:pr-1"',
 );
-
 source = source.replace(
   'w-[300px] shrink-0 snap-start overflow-hidden rounded-[20px]',
   'w-[calc(100vw-3.25rem)] max-w-[340px] shrink-0 snap-start overflow-hidden rounded-[20px]',
 );
-source = source.replace('sm:w-[310px]', 'sm:w-[310px]');
-
 source = source.replace(
   'className="relative h-[166px] overflow-hidden bg-stone-100"',
   'className="relative aspect-[4/3] w-full overflow-hidden bg-stone-100"',
@@ -42,6 +39,10 @@ source = source.replace(
 source = source.replace(
   'className="object-cover transition duration-300 group-hover:scale-[1.02]"',
   'className="object-cover object-center transition duration-300 group-hover:scale-[1.02]"',
+);
+source = source.replace(
+  'className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4 sm:px-8"',
+  'className="mx-auto flex max-w-5xl items-center justify-between py-4 pl-16 pr-4 sm:pl-40 sm:pr-8"',
 );
 
 const activeAmenitiesMarker = '  const activeAmenities = activeOffer ? [activeOffer.floor, ...activeOffer.features].filter(Boolean).slice(0, 2) : [];\n';
@@ -52,15 +53,10 @@ if (source.includes(activeAmenitiesMarker) && !source.includes('data-ai-accessib
   );
 }
 
-if (!source.includes("offer.recommendationTitle ||")) {
-  throw new Error("Recommendation title UI patch was not applied");
-}
-if (!source.includes("aspect-[4/3]")) {
-  throw new Error("Room image crop patch was not applied");
-}
-if (!source.includes("aiAccessibilityHidden")) {
-  throw new Error("Accessibility widget patch was not applied");
-}
+if (!source.includes("offer.recommendationTitle ||")) throw new Error("Recommendation title UI patch was not applied");
+if (!source.includes("aspect-[4/3]")) throw new Error("Room image crop patch was not applied");
+if (!source.includes("aiAccessibilityHidden")) throw new Error("Accessibility widget patch was not applied");
+if (!source.includes("sm:pl-40")) throw new Error("Back-button header spacing patch was not applied");
 
 fs.writeFileSync(file, source);
-console.log("AI recommendation cards, image crop, carousel and accessibility layout updated");
+console.log("AI recommendation cards, image crop, carousel, accessibility and header layout updated");
