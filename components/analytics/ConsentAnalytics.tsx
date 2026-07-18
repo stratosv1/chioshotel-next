@@ -12,13 +12,14 @@ type AnalyticsProperties = Record<string, AnalyticsValue>;
 
 const CONSENT_KEY = "vh_cookie_consent_v1";
 const GA_ID = "G-844GGQ1TC7";
-const EVENT_DEDUP_WINDOW_MS = 1200;
+const EVENT_DEDUP_WINDOW_MS = 5000;
 const AI_OPEN_SESSION_KEY = "vh_ai_assistant_open_tracked";
 
 declare global {
   interface Window {
     dataLayer?: unknown[];
     gtag?: (...args: unknown[]) => void;
+    __vhConsentAnalyticsInstalled?: boolean;
   }
 }
 
@@ -55,10 +56,7 @@ function loadGoogleAnalytics() {
 }
 
 function emitAnalyticsEvent(name: string, properties: AnalyticsProperties) {
-  const cleanProperties = Object.fromEntries(
-    Object.entries(properties).filter(([, value]) => value !== undefined),
-  ) as Record<string, string | number | boolean | null>;
-
+  const cleanProperties = Object.fromEntries(Object.entries(properties).filter(([, value]) => value !== undefined)) as Record<string, string | number | boolean | null>;
   track(name, cleanProperties);
   window.gtag?.("event", name, cleanProperties);
 }
@@ -74,7 +72,6 @@ function pageType(pathname: string) {
 }
 
 function detectDeviceArea() {
-  if (typeof window === "undefined") return "unknown";
   if (window.matchMedia("(max-width: 767px)").matches) return "mobile";
   if (window.matchMedia("(max-width: 1199px)").matches) return "tablet";
   return "desktop";
@@ -90,8 +87,7 @@ function normalizeUrl(href: string) {
 }
 
 function getLocation(element: HTMLElement) {
-  const explicit = element.dataset.analyticsLocation;
-  if (explicit) return explicit;
+  if (element.dataset.analyticsLocation) return element.dataset.analyticsLocation;
   if (element.closest("header")) return "header";
   if (element.closest("footer")) return "footer";
   if (window.location.pathname.includes("ai-assistant")) return "ai_assistant";
@@ -118,12 +114,13 @@ function fallbackButtonEvent(button: HTMLButtonElement) {
     const label = (button.textContent || "").trim().replace(/\s+/g, " ").toLowerCase();
     if (button.querySelector("img") && button.querySelector("h2")) return "ai_room_card_click";
     if (label.includes("interested") || label.includes("ενδιαφέρομαι")) return "ai_room_selected";
-    if (label === "✕" || button.getAttribute("aria-label")?.toLowerCase().includes("close") || button.getAttribute("aria-label")?.toLowerCase().includes("κλεί")) return "ai_room_modal_close";
+    const dialog = button.closest('[role="dialog"][aria-modal="true"]');
+    const aria = (button.getAttribute("aria-label") || "").trim().toLowerCase();
+    const isExactClose = ["close", "κλείσιμο", "schließen", "fermer", "chiudi", "cerrar", "kapat"].includes(aria);
+    if (dialog && (label === "✕" || label === "×" || isExactClose)) return "ai_room_modal_close";
   }
 
-  if (!button.closest("header")) return null;
-  if (!button.querySelector(".sr-only")) return null;
-
+  if (!button.closest("header") || !button.querySelector(".sr-only")) return null;
   const expanded = button.getAttribute("aria-expanded");
   if (expanded === "false") return "mobile_menu_open";
   if (expanded === "true") return "mobile_menu_close";
@@ -131,11 +128,7 @@ function fallbackButtonEvent(button: HTMLButtonElement) {
 }
 
 function getLabel(element: HTMLElement, anchor: HTMLAnchorElement | null) {
-  return (
-    element.dataset.analyticsLabel ||
-    anchor?.dataset.analyticsLabel ||
-    (anchor?.textContent || element.textContent || "").trim().replace(/\s+/g, " ").slice(0, 80)
-  );
+  return element.dataset.analyticsLabel || anchor?.dataset.analyticsLabel || (anchor?.textContent || element.textContent || "").trim().replace(/\s+/g, " ").slice(0, 80);
 }
 
 function getRequestUrl(input: RequestInfo | URL) {
@@ -168,32 +161,24 @@ export function ConsentAnalytics({ language }: { language: LanguageCode }) {
   }, [accepted]);
 
   useEffect(() => {
-    if (!accepted) return;
+    if (!accepted || window.__vhConsentAnalyticsInstalled) return;
+    window.__vhConsentAnalyticsInstalled = true;
 
     const recentEvents = new Map<string, number>();
-
-    function shouldTrack(signature: string) {
+    const shouldTrack = (signature: string) => {
       const now = Date.now();
       const previous = recentEvents.get(signature) || 0;
       if (now - previous < EVENT_DEDUP_WINDOW_MS) return false;
-
       recentEvents.set(signature, now);
       window.setTimeout(() => {
         if (recentEvents.get(signature) === now) recentEvents.delete(signature);
       }, EVENT_DEDUP_WINDOW_MS);
       return true;
-    }
+    };
 
-    function commonProperties(): AnalyticsProperties {
-      return {
-        language,
-        page_type: pageType(window.location.pathname),
-        pathname: window.location.pathname,
-        device_area: detectDeviceArea(),
-      };
-    }
+    const commonProperties = (): AnalyticsProperties => ({ language, page_type: pageType(window.location.pathname), pathname: window.location.pathname, device_area: detectDeviceArea() });
 
-    function handleClick(event: MouseEvent) {
+    const handleClick = (event: MouseEvent) => {
       const target = event.target as HTMLElement | null;
       const element = target?.closest("[data-analytics-event]") as HTMLElement | null;
       const anchor = (element?.closest("a") || target?.closest("a")) as HTMLAnchorElement | null;
@@ -207,42 +192,25 @@ export function ConsentAnalytics({ language }: { language: LanguageCode }) {
       const signature = [name, window.location.pathname, href, label].join("|");
       if (!shouldTrack(signature)) return;
 
-      emitAnalyticsEvent(name, {
-        ...commonProperties(),
-        href,
-        link_text: label,
-        cta_location: getLocation(baseElement),
-      });
-    }
+      emitAnalyticsEvent(name, { ...commonProperties(), href, link_text: label, cta_location: getLocation(baseElement) });
+    };
 
     if (window.location.pathname.includes("ai-assistant") && !window.sessionStorage.getItem(AI_OPEN_SESSION_KEY)) {
       window.sessionStorage.setItem(AI_OPEN_SESSION_KEY, "1");
-      emitAnalyticsEvent("ai_assistant_open", {
-        ...commonProperties(),
-        source_page: document.referrer ? normalizeUrl(document.referrer) : "direct",
-      });
+      emitAnalyticsEvent("ai_assistant_open", { ...commonProperties(), source_page: document.referrer ? normalizeUrl(document.referrer) : "direct" });
     }
 
     const originalFetch = window.fetch.bind(window);
-    window.fetch = async (...args) => {
+    const analyticsFetch: typeof window.fetch = async (...args) => {
       const response = await originalFetch(...args);
-      const requestUrl = getRequestUrl(args[0]);
-      const pathname = (() => {
-        try {
-          return new URL(requestUrl, window.location.origin).pathname;
-        } catch {
-          return requestUrl;
-        }
-      })();
-
       if (!response.ok) return response;
 
+      const requestUrl = getRequestUrl(args[0]);
+      let pathname = requestUrl;
+      try { pathname = new URL(requestUrl, window.location.origin).pathname; } catch { /* keep original */ }
+
       if (pathname === "/api/ai-assistant/smart") {
-        void response.clone().json().then((data: {
-          search?: { checkin?: string; checkout?: string; guests?: number };
-          offers?: unknown[];
-          noAvailability?: boolean;
-        }) => {
+        void response.clone().json().then((data: { search?: { checkin?: string; checkout?: string; guests?: number }; offers?: unknown[]; noAvailability?: boolean }) => {
           const checkin = data.search?.checkin;
           const checkout = data.search?.checkout;
           const guests = data.search?.guests;
@@ -252,56 +220,45 @@ export function ConsentAnalytics({ language }: { language: LanguageCode }) {
           const searchKey = `vh_ai_search_started:${searchSignature}`;
           if (!window.sessionStorage.getItem(searchKey)) {
             window.sessionStorage.setItem(searchKey, "1");
-            emitAnalyticsEvent("ai_search_started", {
-              ...commonProperties(),
-              check_in: checkin,
-              check_out: checkout,
-              nights: differenceInNights(checkin, checkout),
-              guests,
-            });
+            emitAnalyticsEvent("ai_search_started", { ...commonProperties(), check_in: checkin, check_out: checkout, nights: differenceInNights(checkin, checkout), guests });
           }
 
           const offersCount = Array.isArray(data.offers) ? data.offers.length : 0;
           const resultName = data.noAvailability ? "ai_no_availability" : offersCount > 0 ? "ai_search_results" : null;
           if (!resultName) return;
-
           const resultKey = `vh_${resultName}:${searchSignature}`;
           if (window.sessionStorage.getItem(resultKey)) return;
           window.sessionStorage.setItem(resultKey, "1");
-          emitAnalyticsEvent(resultName, {
-            ...commonProperties(),
-            check_in: checkin,
-            check_out: checkout,
-            nights: differenceInNights(checkin, checkout),
-            guests,
-            available_rooms_count: offersCount,
-          });
+          emitAnalyticsEvent(resultName, { ...commonProperties(), check_in: checkin, check_out: checkout, nights: differenceInNights(checkin, checkout), guests, available_rooms_count: offersCount });
         }).catch(() => undefined);
       }
 
       if (pathname === "/api/ai-assistant/request-email") {
-        emitAnalyticsEvent("ai_lead_submit", {
-          ...commonProperties(),
-          lead_type: "room_offer_email",
-          conversion: true,
-        });
+        const key = "vh_ai_lead_submit_once";
+        if (!window.sessionStorage.getItem(key)) {
+          window.sessionStorage.setItem(key, "1");
+          emitAnalyticsEvent("ai_lead_submit", { ...commonProperties(), lead_type: "room_offer_email", conversion: true });
+        }
       }
 
       if (pathname === "/api/ai-assistant/no-availability-request") {
-        emitAnalyticsEvent("ai_manual_lead_submit", {
-          ...commonProperties(),
-          lead_type: "no_availability_request",
-          conversion: true,
-        });
+        const key = "vh_ai_manual_lead_submit_once";
+        if (!window.sessionStorage.getItem(key)) {
+          window.sessionStorage.setItem(key, "1");
+          emitAnalyticsEvent("ai_manual_lead_submit", { ...commonProperties(), lead_type: "no_availability_request", conversion: true });
+        }
       }
 
       return response;
     };
 
+    window.fetch = analyticsFetch;
     document.addEventListener("click", handleClick);
+
     return () => {
       document.removeEventListener("click", handleClick);
-      window.fetch = originalFetch;
+      if (window.fetch === analyticsFetch) window.fetch = originalFetch;
+      window.__vhConsentAnalyticsInstalled = false;
       recentEvents.clear();
     };
   }, [accepted, language]);
