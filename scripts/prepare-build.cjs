@@ -18,6 +18,7 @@ const PATCHES = [
   "patch-ai-language-and-desktop-carousel.cjs",
   "patch-ai-fast-availability-response.cjs",
   "patch-ai-human-conversation.cjs",
+  "patch-ai-personalized-recommendations.cjs",
 ];
 
 const SLOW_PATCH_MS = 500;
