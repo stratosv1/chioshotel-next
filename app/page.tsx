@@ -5,6 +5,9 @@ import { homePageEn } from "@/content/home";
 import { withUpdatedIntroReasons } from "@/content/homeIntroReasons";
 import { buildHomePageSchema } from "@/content/schema";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 const homePageData = withUpdatedIntroReasons(homePageEn);
 
 export const metadata: Metadata = {
