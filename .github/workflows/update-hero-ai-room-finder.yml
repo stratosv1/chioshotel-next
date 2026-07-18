@@ -1,9 +1,6 @@
 name: Localize hero AI Room Finder CTA
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 permissions:
