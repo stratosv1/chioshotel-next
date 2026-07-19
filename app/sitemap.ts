@@ -15,6 +15,13 @@ import { absoluteUrl } from "@/lib/seo";
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
+  const chiosAccommodationRoute = {
+    url: absoluteUrl("/chios-accommodation/"),
+    lastModified: now,
+    changeFrequency: "weekly" as const,
+    priority: 0.9,
+  };
+
   const routes = routeMap
     .filter((route) => route.action === "KEEP")
     .filter((route) => !isOldBeachDetailRoute(route.path))
@@ -100,6 +107,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   return [
+    chiosAccommodationRoute,
     ...routes,
     ...familyBeachRoutes,
     ...organizedBeachRoutes,
