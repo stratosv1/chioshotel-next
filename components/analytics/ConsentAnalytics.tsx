@@ -7,6 +7,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 type LanguageCode = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
 
 const GA_ID = "G-844GGQ1TC7";
+const LEGACY_CONSENT_KEY = "vh_cookie_consent_v1";
 
 declare global {
   interface Window {
@@ -18,6 +19,15 @@ declare global {
 export function ConsentAnalytics({ language: _language }: { language: LanguageCode }) {
   return (
     <>
+      <Script id="analytics-legacy-consent-bridge" strategy="beforeInteractive">
+        {`
+          try {
+            window.localStorage.setItem('${LEGACY_CONSENT_KEY}', 'accepted');
+          } catch (error) {
+            // Analytics still loads even when localStorage is unavailable.
+          }
+        `}
+      </Script>
       <Script
         id="google-analytics-loader"
         src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
