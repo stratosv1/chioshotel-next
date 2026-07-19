@@ -73,7 +73,7 @@ const COPY: Record<SiteLanguage, {
     kicker: "Sakız Adası konaklamanızın devamını planlayın",
     title: "Ada rehberinden Voulamandis House’taki odanıza",
     text: "Görmeye değer bir yer buldunuz. Şimdi Kambos’taki sakin konaklama noktamızı keşfedin, odaları karşılaştırın ve doğrudan fiyatları inceleyin.",
-    house: "Voulamandis House’u keşfet",
+    house: "Sakız Adası konaklamasını keşfet",
     rooms: "Oda ve daireleri gör",
     rates: "Doğrudan fiyatları gör",
   },
@@ -86,7 +86,7 @@ const ROUTES: Record<SiteLanguage, { home: string; rooms: string; rates: string 
   de: { home: "/de/", rooms: "/de/chios-zimmer/", rates: "/de/chios-zimmer-preise/" },
   it: { home: "/it/", rooms: "/it/camere-a-chios/", rates: "/it/prezzi-camere-chios/" },
   es: { home: "/es/", rooms: "/es/habitaciones-en-chios/", rates: "/es/precios-habitaciones-chios/" },
-  tr: { home: "/tr/", rooms: "/tr/sakiz-adasi-odalari/", rates: "/tr/sakiz-adasi-oda-fiyatlari/" },
+  tr: { home: "/tr/sakiz-adasi-konaklama/", rooms: "/tr/sakiz-adasi-odalari/", rates: "/tr/sakiz-adasi-rezervasyon/" },
 };
 
 const CONTENT_MARKERS = [
