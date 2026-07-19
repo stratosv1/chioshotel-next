@@ -1,0 +1,40 @@
+import type { Metadata } from "next";
+import { AccommodationLandingAnalytics } from "@/components/analytics/AccommodationLandingAnalytics";
+import { ChiosAccommodationPage } from "@/components/landing/ChiosAccommodationPage";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { sakizAdasiKonaklamaPageTr } from "@/content/sakiz-adasi-konaklama";
+import { buildSakizAdasiKonaklamaSchema } from "@/content/sakiz-adasi-konaklama-schema";
+import { absoluteUrl, buildPageMetadata } from "@/lib/seo";
+
+const baseMetadata = buildPageMetadata({
+  path: sakizAdasiKonaklamaPageTr.seo.canonicalPath,
+  title: sakizAdasiKonaklamaPageTr.seo.title,
+  description: sakizAdasiKonaklamaPageTr.seo.description,
+  image: sakizAdasiKonaklamaPageTr.seo.ogImage,
+  imageAlt: sakizAdasiKonaklamaPageTr.seo.ogImageAlt,
+});
+
+export const metadata: Metadata = {
+  ...baseMetadata,
+  alternates: {
+    canonical: absoluteUrl(sakizAdasiKonaklamaPageTr.seo.canonicalPath),
+    languages: {
+      en: absoluteUrl("/chios-accommodation/"),
+      tr: absoluteUrl("/tr/sakiz-adasi-konaklama/"),
+      "x-default": absoluteUrl("/chios-accommodation/"),
+    },
+  },
+};
+
+export default function Page() {
+  return (
+    <>
+      <JsonLd data={buildSakizAdasiKonaklamaSchema(sakizAdasiKonaklamaPageTr)} />
+      <ChiosAccommodationPage data={sakizAdasiKonaklamaPageTr} />
+      <AccommodationLandingAnalytics
+        language="tr"
+        pathname={sakizAdasiKonaklamaPageTr.seo.canonicalPath}
+      />
+    </>
+  );
+}
