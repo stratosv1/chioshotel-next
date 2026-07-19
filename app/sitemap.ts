@@ -21,6 +21,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/fr/hebergement-chios/",
     "/de/chios-unterkunft/",
     "/it/alloggio-chios/",
+    "/es/alojamiento-chios/",
     "/tr/sakiz-adasi-konaklama/",
   ].map((path) => ({
     url: absoluteUrl(path),
