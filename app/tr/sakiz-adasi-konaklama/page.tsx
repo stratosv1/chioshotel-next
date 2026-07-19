@@ -20,6 +20,7 @@ export const metadata: Metadata = {
     canonical: absoluteUrl(sakizAdasiKonaklamaPageTr.seo.canonicalPath),
     languages: {
       en: absoluteUrl("/chios-accommodation/"),
+      el: absoluteUrl("/el/diamoni-sti-xio/"),
       tr: absoluteUrl("/tr/sakiz-adasi-konaklama/"),
       "x-default": absoluteUrl("/chios-accommodation/"),
     },
