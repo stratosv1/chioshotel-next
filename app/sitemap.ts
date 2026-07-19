@@ -16,6 +16,7 @@ type SitemapEntry = MetadataRoute.Sitemap[number];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const accommodationLandingRoutes: SitemapEntry[] = [
+    "/chios-hotels/",
     "/chios-accommodation/",
     "/el/diamoni-sti-xio/",
     "/fr/hebergement-chios/",
