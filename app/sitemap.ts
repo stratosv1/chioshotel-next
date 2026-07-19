@@ -18,6 +18,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const accommodationLandingRoutes = [
     "/chios-accommodation/",
     "/el/diamoni-sti-xio/",
+    "/de/chios-unterkunft/",
     "/tr/sakiz-adasi-konaklama/",
   ].map((path) => ({
     url: absoluteUrl(path),
