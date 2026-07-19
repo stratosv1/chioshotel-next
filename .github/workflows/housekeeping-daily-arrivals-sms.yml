@@ -1,0 +1,24 @@
+name: Housekeeping daily arrivals SMS
+
+on:
+  schedule:
+    # Athens is UTC+2 in winter and UTC+3 in summer.
+    # The endpoint sends only when local Athens time is 07:00.
+    - cron: "0 4,5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  send-arrivals-sms:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Trigger daily arrivals SMS
+        run: |
+          curl --fail-with-body --silent --show-error \
+            --retry 2 \
+            --retry-delay 10 \
+            --max-time 180 \
+            "https://chioshotel.gr/api/staff/housekeeping/daily-arrivals-sms"
