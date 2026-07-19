@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import Script from "next/script";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
@@ -15,31 +15,26 @@ declare global {
   }
 }
 
-function loadGoogleAnalytics() {
-  window.dataLayer = window.dataLayer || [];
-  window.gtag = window.gtag || ((...args: unknown[]) => window.dataLayer?.push(args));
-
-  window.gtag("js", new Date());
-  window.gtag("config", GA_ID, {
-    anonymize_ip: true,
-    send_page_view: true,
-  });
-
-  if (document.querySelector(`script[src*="${GA_ID}"]`)) return;
-
-  const script = document.createElement("script");
-  script.async = true;
-  script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
-  document.head.appendChild(script);
-}
-
 export function ConsentAnalytics({ language: _language }: { language: LanguageCode }) {
-  useEffect(() => {
-    loadGoogleAnalytics();
-  }, []);
-
   return (
     <>
+      <Script
+        id="google-analytics-loader"
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+        strategy="afterInteractive"
+      />
+      <Script id="google-analytics-config" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          window.gtag = gtag;
+          gtag('js', new Date());
+          gtag('config', '${GA_ID}', {
+            anonymize_ip: true,
+            send_page_view: true
+          });
+        `}
+      </Script>
       <Analytics />
       <SpeedInsights />
     </>
