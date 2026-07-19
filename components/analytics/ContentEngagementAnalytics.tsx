@@ -18,7 +18,8 @@ const CONTENT_MARKERS = [
   "village", "villages", "xoria", "chorio", "köy", "koy", "dorf", "villaggio", "pueblo",
   "museum", "museums", "mouseio", "musee", "museo", "muze",
   "activities", "activity", "drastiriotites", "aktivitaeten", "attivita", "actividades", "aktiviteler",
-  "chios-island", "chios-el", "sakiz-adasi", "kambos", "kampos", "orchid", "thermal", "food", "taste",
+  "chios-island", "chios-el", "ti-na-do-sti-xio", "sakiz-adasi", "kambos", "kampos", "orchid", "thermal", "food", "taste",
+  "chios-accommodation", "diamoni-sti-xio", "sakiz-adasi-konaklama",
 ];
 
 function isInformationPage(pathname: string) {
@@ -34,6 +35,7 @@ function deviceArea() {
 
 function contentCategory(pathname: string) {
   const value = pathname.toLowerCase();
+  if (/chios-accommodation|diamoni-sti-xio|sakiz-adasi-konaklama/.test(value)) return "accommodation";
   if (/beach|paralia|paralies|plage|strand|spiaggia|playa|plaj/.test(value)) return "beach";
   if (/village|xoria|chorio|köy|koy|dorf|villaggio|pueblo/.test(value)) return "village";
   if (/museum|mouseio|musee|museo|muze/.test(value)) return "museum";
@@ -46,7 +48,8 @@ function destinationType(pathname: string) {
   const value = pathname.toLowerCase();
   if (value.includes("ai-assistant") || value.includes("find-your-room") || value.includes("vres-to-domatio")) return "ai_room_finder";
   if (value.includes("chios-rooms") || value.includes("domatia-xios") || value.includes("chambres-a-chios") || value.includes("zimmer") || value.includes("camere") || value.includes("habitaciones") || value.includes("odalari")) return "rooms";
-  if (value.includes("rates") || value.includes("times-domation") || value.includes("tarifs") || value.includes("preise") || value.includes("prezzi") || value.includes("precios") || value.includes("fiyatlari") || value.includes("kratis")) return "rates";
+  if (value.includes("rates") || value.includes("times-domation") || value.includes("tarifs") || value.includes("preise") || value.includes("prezzi") || value.includes("precios") || value.includes("fiyatlari") || value.includes("kratis") || value.includes("sakiz-adasi-rezervasyon")) return "rates";
+  if (/chios-accommodation|diamoni-sti-xio|sakiz-adasi-konaklama/.test(value)) return "accommodation_landing";
   if (["/", "/el/", "/fr/", "/de/", "/it/", "/es/", "/tr/"].includes(pathname)) return "homepage";
   if (isInformationPage(pathname)) return "other_information";
   return "other_internal";
@@ -75,6 +78,7 @@ function clickEvent(anchor: HTMLAnchorElement, category: string) {
   if (target === "rooms") return "content_to_rooms";
   if (target === "rates") return "content_to_booking";
   if (target === "ai_room_finder") return "content_to_ai_assistant";
+  if (target === "accommodation_landing") return "content_to_accommodation";
   if (target === "other_information" && category === "beach") return "related_beach_click";
   if (target === "other_information" && category === "village") return "related_village_click";
   return "content_internal_click";
