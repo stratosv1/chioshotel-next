@@ -4,6 +4,7 @@ import { SakizAccommodationPage } from "@/components/landing/SakizAccommodationP
 import { JsonLd } from "@/components/seo/JsonLd";
 import { sakizAdasiKonaklamaPageTr } from "@/content/sakiz-adasi-konaklama";
 import { buildSakizAdasiKonaklamaSchema } from "@/content/sakiz-adasi-konaklama-schema";
+import { accommodationLandingLanguages } from "@/lib/accommodation-landing-i18n";
 import { absoluteUrl, buildPageMetadata } from "@/lib/seo";
 
 const baseMetadata = buildPageMetadata({
@@ -18,16 +19,7 @@ export const metadata: Metadata = {
   ...baseMetadata,
   alternates: {
     canonical: absoluteUrl(sakizAdasiKonaklamaPageTr.seo.canonicalPath),
-    languages: {
-      en: absoluteUrl("/chios-accommodation/"),
-      el: absoluteUrl("/el/diamoni-sti-xio/"),
-      fr: absoluteUrl("/fr/hebergement-chios/"),
-      de: absoluteUrl("/de/chios-unterkunft/"),
-      it: absoluteUrl("/it/alloggio-chios/"),
-      es: absoluteUrl("/es/alojamiento-chios/"),
-      tr: absoluteUrl("/tr/sakiz-adasi-konaklama/"),
-      "x-default": absoluteUrl("/chios-accommodation/"),
-    },
+    languages: accommodationLandingLanguages(),
   },
 };
 
