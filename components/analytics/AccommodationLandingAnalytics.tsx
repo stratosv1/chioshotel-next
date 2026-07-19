@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { track } from "@vercel/analytics";
 
-type LanguageCode = "en" | "el" | "fr" | "de" | "it" | "tr";
+type LanguageCode = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
 type AnalyticsValue = string | number | boolean | null | undefined;
 type AnalyticsProperties = Record<string, AnalyticsValue>;
 
@@ -38,6 +38,7 @@ function destinationAction(url: URL) {
     value.includes("hotelpreise-auf-der-insel-chios") ||
     value.includes("tarifs-des-hotels-a-chios") ||
     value.includes("prezzi-hotel-chios") ||
+    value.includes("los-mejores-precios-de-hotel-en-la-isla-chios") ||
     value.includes("booking") ||
     value.includes("beds24")
   ) {
@@ -52,7 +53,8 @@ function destinationAction(url: URL) {
     value.includes("zimmer-chios") ||
     value.includes("chambres-a-chios") ||
     value.includes("camere-a-chios") ||
-    value.includes("stanze-a-chios")
+    value.includes("stanze-a-chios") ||
+    value.includes("habitaciones-en-chios")
   ) {
     return "rooms";
   }
@@ -62,18 +64,22 @@ function destinationAction(url: URL) {
     value.includes("chios-insel") ||
     value.includes("chios-en-grece") ||
     value.includes("chios-lisola-in-grecia") ||
+    value.includes("chios-en-grecia") ||
     value.includes("ti-na-do-sti-xio") ||
     value.includes("sakiz-adasi/") ||
     value.includes("paralia") ||
     value.includes("paralies") ||
     value.includes("plage") ||
     value.includes("spiagge") ||
+    value.includes("playas-chios") ||
     value.includes("straende") ||
     value.includes("village") ||
     value.includes("villaggi") ||
+    value.includes("pueblos-chios") ||
     value.includes("doerfer") ||
     value.includes("musee") ||
     value.includes("musei") ||
+    value.includes("museos-chios") ||
     value.includes("museen") ||
     value.includes("plaj") ||
     value.includes("xoria") ||
