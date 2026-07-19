@@ -44,9 +44,9 @@ function contentCategory(pathname: string) {
 
 function destinationType(pathname: string) {
   const value = pathname.toLowerCase();
-  if (value.includes("ai-assistant") || value.includes("find-your-room")) return "ai_room_finder";
+  if (value.includes("ai-assistant") || value.includes("find-your-room") || value.includes("vres-to-domatio")) return "ai_room_finder";
   if (value.includes("chios-rooms") || value.includes("domatia-xios") || value.includes("chambres-a-chios") || value.includes("zimmer") || value.includes("camere") || value.includes("habitaciones") || value.includes("odalari")) return "rooms";
-  if (value.includes("rates") || value.includes("times-domation") || value.includes("tarifs") || value.includes("preise") || value.includes("prezzi") || value.includes("precios") || value.includes("fiyatlari")) return "rates";
+  if (value.includes("rates") || value.includes("times-domation") || value.includes("tarifs") || value.includes("preise") || value.includes("prezzi") || value.includes("precios") || value.includes("fiyatlari") || value.includes("kratis")) return "rates";
   if (["/", "/el/", "/fr/", "/de/", "/it/", "/es/", "/tr/"].includes(pathname)) return "homepage";
   if (isInformationPage(pathname)) return "other_information";
   return "other_internal";
@@ -58,6 +58,28 @@ function emit(name: string, properties: AnalyticsProperties) {
   window.gtag?.("event", name, clean);
 }
 
+function contentName() {
+  return document.querySelector("h1")?.textContent?.trim().replace(/\s+/g, " ").slice(0, 120) || document.title.split("|")[0]?.trim();
+}
+
+function clickEvent(anchor: HTMLAnchorElement, category: string) {
+  const href = anchor.href.toLowerCase();
+  const label = (anchor.textContent || anchor.getAttribute("aria-label") || "").trim().replace(/\s+/g, " ").toLowerCase();
+  const image = anchor.querySelector("img");
+
+  if (href.includes("google.com/maps") || href.includes("maps.app.goo.gl") || href.includes("goo.gl/maps")) return "google_maps_click";
+  if (anchor.dataset.language || anchor.closest("[data-language-switcher]") || /english|ελλην|français|deutsch|italiano|español|türkçe/.test(label)) return "language_switch_from_content";
+  if (image || anchor.closest("[role='dialog'],[data-gallery],[class*='gallery'],[class*='carousel']")) return "gallery_open";
+
+  const target = destinationType(new URL(anchor.href, window.location.origin).pathname);
+  if (target === "rooms") return "content_to_rooms";
+  if (target === "rates") return "content_to_booking";
+  if (target === "ai_room_finder") return "content_to_ai_assistant";
+  if (target === "other_information" && category === "beach") return "related_beach_click";
+  if (target === "other_information" && category === "village") return "related_village_click";
+  return "content_internal_click";
+}
+
 export function ContentEngagementAnalytics({ language, pathname }: Props) {
   useEffect(() => {
     if (!isInformationPage(pathname)) return;
@@ -65,6 +87,7 @@ export function ContentEngagementAnalytics({ language, pathname }: Props) {
 
     const startedAt = Date.now();
     const reached = new Set<number>();
+    const recent = new Map<string, number>();
     let maxScroll = 0;
     let internalClicks = 0;
     let summarySent = false;
@@ -73,8 +96,18 @@ export function ContentEngagementAnalytics({ language, pathname }: Props) {
       language,
       pathname,
       content_category: contentCategory(pathname),
+      content_name: contentName(),
       device_area: deviceArea(),
     };
+
+    function shouldSend(signature: string) {
+      const now = Date.now();
+      const previous = recent.get(signature) || 0;
+      if (now - previous < 5000) return false;
+      recent.set(signature, now);
+      window.setTimeout(() => recent.delete(signature), 5000);
+      return true;
+    }
 
     emit("content_page_view", common);
 
@@ -99,7 +132,17 @@ export function ContentEngagementAnalytics({ language, pathname }: Props) {
     function handleClick(event: MouseEvent) {
       const target = event.target as HTMLElement | null;
       const anchor = target?.closest("a") as HTMLAnchorElement | null;
-      if (!anchor || anchor.target === "_blank") return;
+      const button = target?.closest("button") as HTMLButtonElement | null;
+
+      if (button && button.closest("[role='dialog'],[data-gallery],[class*='gallery'],[class*='carousel']")) {
+        const label = (button.textContent || button.getAttribute("aria-label") || "").trim().replace(/\s+/g, " ").slice(0, 80);
+        const eventName = /next|right|επόμε|suivant|weiter|avanti|siguiente|sonraki/i.test(label) ? "gallery_next" : "gallery_open";
+        const signature = `${eventName}|${pathname}|${label}`;
+        if (shouldSend(signature)) emit(eventName, { ...common, control_label: label });
+        return;
+      }
+
+      if (!anchor) return;
       if (anchor.closest("header") || anchor.closest("footer")) return;
 
       let url: URL;
@@ -108,14 +151,18 @@ export function ContentEngagementAnalytics({ language, pathname }: Props) {
       } catch {
         return;
       }
-      if (url.origin !== window.location.origin) return;
 
-      internalClicks += 1;
-      emit("content_internal_click", {
+      const eventName = clickEvent(anchor, common.content_category);
+      const label = (anchor.textContent || anchor.getAttribute("aria-label") || "").trim().replace(/\s+/g, " ").slice(0, 80);
+      const signature = `${eventName}|${pathname}|${url.pathname}|${label}`;
+      if (!shouldSend(signature)) return;
+
+      if (url.origin === window.location.origin) internalClicks += 1;
+      emit(eventName, {
         ...common,
         destination_path: url.pathname,
-        destination_type: destinationType(url.pathname),
-        link_text: (anchor.textContent || "").trim().replace(/\s+/g, " ").slice(0, 80),
+        destination_type: url.origin === window.location.origin ? destinationType(url.pathname) : "external",
+        link_text: label,
         link_position: anchor.closest("main") ? "main_content" : "page_content",
       });
     }
@@ -148,6 +195,7 @@ export function ContentEngagementAnalytics({ language, pathname }: Props) {
       document.removeEventListener("click", handleClick);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       window.removeEventListener("pagehide", sendSummary);
+      recent.clear();
       sendSummary();
     };
   }, [language, pathname]);
