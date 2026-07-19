@@ -20,14 +20,16 @@ const COPY: Record<SiteLanguage, {
   house: string;
   rooms: string;
   rates: string;
+  hotelsGuide?: string;
 }> = {
   en: {
     kicker: "Plan the rest of your Chios stay",
     title: "From island guide to your room at Voulamandis House",
-    text: "You have found a place worth visiting. Now discover our quiet base in Kambos, compare the rooms and continue to current direct rates.",
+    text: "You have found a place worth visiting. Now compare where to stay, discover our quiet base in Kambos, explore the rooms and continue to current direct rates.",
     house: "Explore Chios accommodation",
     rooms: "Explore rooms & apartments",
     rates: "Check direct rates",
+    hotelsGuide: "Compare Chios hotels & areas",
   },
   el: {
     kicker: "Οργανώστε την υπόλοιπη διαμονή σας στη Χίο",
@@ -79,8 +81,8 @@ const COPY: Record<SiteLanguage, {
   },
 };
 
-const ROUTES: Record<SiteLanguage, { home: string; rooms: string; rates: string }> = {
-  en: { home: "/chios-accommodation/", rooms: "/chios-rooms/", rates: "/chios-hotels-rates/" },
+const ROUTES: Record<SiteLanguage, { home: string; rooms: string; rates: string; hotelsGuide?: string }> = {
+  en: { home: "/chios-accommodation/", rooms: "/chios-rooms/", rates: "/chios-hotels-rates/", hotelsGuide: "/chios-hotels/" },
   el: { home: "/el/diamoni-sti-xio/", rooms: "/el/domatia-xios/", rates: "/el/amesi-kratisi-voulamandis-house/" },
   fr: { home: "/fr/hebergement-chios/", rooms: "/fr/chambres-a-chios/", rates: "/fr/tarifs-des-hotels-a-chios/" },
   de: { home: "/de/chios-unterkunft/", rooms: "/de/chios-zimmer/", rates: "/de/hotelpreise-auf-der-insel-chios/" },
@@ -100,6 +102,8 @@ const CONTENT_MARKERS = [
 function shouldShow(pathname: string) {
   const normalized = pathname.toLowerCase();
   if (
+    normalized === "/chios-hotels/" ||
+    normalized === "/chios-hotels" ||
     normalized === "/tr/sakiz-adasi-konaklama/" ||
     normalized === "/tr/sakiz-adasi-konaklama" ||
     normalized === "/el/diamoni-sti-xio/" ||
@@ -120,7 +124,7 @@ function shouldShow(pathname: string) {
   return CONTENT_MARKERS.some((marker) => normalized.includes(marker));
 }
 
-function track(destination: "house" | "rooms" | "rates", pathname: string, language: SiteLanguage) {
+function trackJourney(destination: "house" | "rooms" | "rates" | "hotels_guide", pathname: string, language: SiteLanguage) {
   const browserWindow = window as GtagWindow;
   browserWindow.gtag?.("event", "seo_journey_click", {
     destination,
@@ -136,6 +140,7 @@ export function ExploreVoulamandisJourney({ language, pathname }: Props) {
 
   const copy = COPY[language];
   const routes = ROUTES[language];
+  const hasHotelsGuide = Boolean(copy.hotelsGuide && routes.hotelsGuide);
 
   return (
     <section className="bg-[#f5efe6] px-4 py-12 md:px-6 md:py-20" aria-labelledby="seo-journey-title">
@@ -146,14 +151,19 @@ export function ExploreVoulamandisJourney({ language, pathname }: Props) {
             {copy.title}
           </h2>
           <p className="mt-5 max-w-[720px] text-base leading-8 text-white/80 md:text-lg">{copy.text}</p>
-          <div className="mt-7 grid gap-3 sm:grid-cols-3">
-            <a onClick={() => track("house", pathname, language)} href={routes.home} className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/25 px-5 py-3 text-center text-sm font-black !text-white transition hover:bg-white/10">
+          <div className={`mt-7 grid gap-3 ${hasHotelsGuide ? "sm:grid-cols-2 xl:grid-cols-4" : "sm:grid-cols-3"}`}>
+            {hasHotelsGuide ? (
+              <a onClick={() => trackJourney("hotels_guide", pathname, language)} href={routes.hotelsGuide} className="inline-flex min-h-12 items-center justify-center rounded-full border border-amber-200/35 bg-amber-100/10 px-5 py-3 text-center text-sm font-black !text-amber-100 transition hover:bg-amber-100 hover:!text-[#263127]">
+                {copy.hotelsGuide}
+              </a>
+            ) : null}
+            <a onClick={() => trackJourney("house", pathname, language)} href={routes.home} className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/25 px-5 py-3 text-center text-sm font-black !text-white transition hover:bg-white/10">
               {copy.house}
             </a>
-            <a onClick={() => track("rooms", pathname, language)} href={routes.rooms} className="inline-flex min-h-12 items-center justify-center rounded-full bg-white px-5 py-3 text-center text-sm font-black !text-[#263127] shadow-lg transition hover:-translate-y-0.5">
+            <a onClick={() => trackJourney("rooms", pathname, language)} href={routes.rooms} className="inline-flex min-h-12 items-center justify-center rounded-full bg-white px-5 py-3 text-center text-sm font-black !text-[#263127] shadow-lg transition hover:-translate-y-0.5">
               {copy.rooms}
             </a>
-            <a onClick={() => track("rates", pathname, language)} href={routes.rates} className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#d8b36a] px-5 py-3 text-center text-sm font-black !text-[#201a10] shadow-lg transition hover:-translate-y-0.5">
+            <a onClick={() => trackJourney("rates", pathname, language)} href={routes.rates} className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#d8b36a] px-5 py-3 text-center text-sm font-black !text-[#201a10] shadow-lg transition hover:-translate-y-0.5">
               {copy.rates}
             </a>
           </div>
