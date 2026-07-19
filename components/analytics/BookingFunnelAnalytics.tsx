@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { track } from "@vercel/analytics";
 
 type LanguageCode = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
@@ -65,9 +65,22 @@ function bookingEvent(anchor: HTMLAnchorElement | null, button: HTMLButtonElemen
 }
 
 export function BookingFunnelAnalytics({ language, pathname }: { language: LanguageCode; pathname: string }) {
+  const [accepted, setAccepted] = useState(false);
+
+  useEffect(() => {
+    const refreshConsent = () => setAccepted(window.localStorage.getItem(CONSENT_KEY) === "accepted");
+    refreshConsent();
+    const interval = window.setInterval(refreshConsent, 300);
+    window.addEventListener("storage", refreshConsent);
+    return () => {
+      window.clearInterval(interval);
+      window.removeEventListener("storage", refreshConsent);
+    };
+  }, []);
+
   useEffect(() => {
     if (pathname === "/staff" || pathname.startsWith("/staff/")) return;
-    if (window.localStorage.getItem(CONSENT_KEY) !== "accepted") return;
+    if (!accepted) return;
 
     const recent = new Map<string, number>();
     const common = () => ({ language, pathname: window.location.pathname, device_area: deviceArea() });
@@ -139,7 +152,7 @@ export function BookingFunnelAnalytics({ language, pathname }: { language: Langu
       document.removeEventListener("submit", handleSubmit);
       recent.clear();
     };
-  }, [language, pathname]);
+  }, [accepted, language, pathname]);
 
   return null;
 }
