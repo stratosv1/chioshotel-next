@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { getGroupedLanguagePath } from "@/lib/accommodation-landing-i18n";
 import type { LanguageCode } from "@/lib/languages";
 import { languages, normalizePath } from "@/lib/languages";
 import { getRouteByPath, getRoutesByItemId } from "@/lib/url-map";
@@ -66,6 +67,9 @@ function pathFor(itemId: string, language: LanguageCode) {
 }
 
 function languageHref(pathname: string, language: LanguageCode) {
+  const groupedPath = getGroupedLanguagePath(pathname, language);
+  if (groupedPath) return groupedPath;
+
   const route = getRouteByPath(normalizePath(pathname));
   if (!route) return pathFor(routeIds.home, language);
   return getRoutesByItemId(route.itemId).find((item) => item.language === language && item.action === "KEEP")?.path || pathFor(routeIds.home, language);
