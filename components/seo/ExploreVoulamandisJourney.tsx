@@ -32,8 +32,8 @@ const COPY: Record<SiteLanguage, {
   el: {
     kicker: "Οργανώστε την υπόλοιπη διαμονή σας στη Χίο",
     title: "Από τον οδηγό της Χίου στο δωμάτιό σας στο Voulamandis House",
-    text: "Βρήκατε ένα μέρος που αξίζει να επισκεφθείτε. Γνωρίστε τη βάση μας στον Κάμπο, δείτε τα δωμάτια και συνεχίστε στις τρέχουσες απευθείας τιμές.",
-    house: "Γνωρίστε το Voulamandis House",
+    text: "Βρήκατε ένα μέρος που αξίζει να επισκεφθείτε. Γνωρίστε τη διαμονή στον Κάμπο, συγκρίνετε δωμάτια και συνεχίστε στις τρέχουσες απευθείας τιμές.",
+    house: "Διαμονή στη Χίο",
     rooms: "Δείτε δωμάτια & διαμερίσματα",
     rates: "Δείτε απευθείας τιμές",
   },
@@ -81,7 +81,7 @@ const COPY: Record<SiteLanguage, {
 
 const ROUTES: Record<SiteLanguage, { home: string; rooms: string; rates: string }> = {
   en: { home: "/chios-accommodation/", rooms: "/chios-rooms/", rates: "/chios-hotels-rates/" },
-  el: { home: "/el/", rooms: "/el/domatia-xios/", rates: "/el/times-domation-xios/" },
+  el: { home: "/el/diamoni-sti-xio/", rooms: "/el/domatia-xios/", rates: "/el/amesi-kratisi-voulamandis-house/" },
   fr: { home: "/fr/", rooms: "/fr/chambres-a-chios/", rates: "/fr/tarifs-chambres-chios/" },
   de: { home: "/de/", rooms: "/de/chios-zimmer/", rates: "/de/chios-zimmer-preise/" },
   it: { home: "/it/", rooms: "/it/camere-a-chios/", rates: "/it/prezzi-camere-chios/" },
@@ -94,12 +94,19 @@ const CONTENT_MARKERS = [
   "village", "villages", "xoria", "chorio", "köy", "koy", "dorp", "dorf", "villaggio", "pueblo",
   "museum", "museums", "mouseio", "musee", "museo", "muze",
   "activities", "activity", "drastiriotites", "aktivitaeten", "attivita", "actividades", "aktiviteler",
-  "chios-island", "chios-el", "sakiz-adasi",
+  "chios-island", "chios-el", "ti-na-do-sti-xio", "sakiz-adasi",
 ];
 
 function shouldShow(pathname: string) {
   const normalized = pathname.toLowerCase();
-  if (normalized === "/tr/sakiz-adasi-konaklama/" || normalized === "/tr/sakiz-adasi-konaklama") {
+  if (
+    normalized === "/tr/sakiz-adasi-konaklama/" ||
+    normalized === "/tr/sakiz-adasi-konaklama" ||
+    normalized === "/el/diamoni-sti-xio/" ||
+    normalized === "/el/diamoni-sti-xio" ||
+    normalized === "/chios-accommodation/" ||
+    normalized === "/chios-accommodation"
+  ) {
     return false;
   }
   return CONTENT_MARKERS.some((marker) => normalized.includes(marker));
