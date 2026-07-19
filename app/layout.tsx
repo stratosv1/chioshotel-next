@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
+import { BookingFunnelAnalytics } from "@/components/analytics/BookingFunnelAnalytics";
 import { ConsentAnalytics } from "@/components/analytics/ConsentAnalytics";
 import { ContentEngagementAnalytics } from "@/components/analytics/ContentEngagementAnalytics";
 import { ExploreVoulamandisJourney } from "@/components/seo/ExploreVoulamandisJourney";
@@ -88,6 +89,7 @@ export default async function RootLayout({
         {!hideHeader ? <VoulamandisFooterTailwind language={htmlLanguage} /> : null}
         {!excludeAnalytics ? (
           <>
+            <BookingFunnelAnalytics language={htmlLanguage} pathname={pathname} />
             <ContentEngagementAnalytics language={htmlLanguage} pathname={pathname} />
             <ConsentAnalytics language={htmlLanguage} />
           </>
