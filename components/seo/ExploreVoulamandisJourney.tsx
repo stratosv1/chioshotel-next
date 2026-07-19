@@ -99,6 +99,9 @@ const CONTENT_MARKERS = [
 
 function shouldShow(pathname: string) {
   const normalized = pathname.toLowerCase();
+  if (normalized === "/tr/sakiz-adasi-konaklama/" || normalized === "/tr/sakiz-adasi-konaklama") {
+    return false;
+  }
   return CONTENT_MARKERS.some((marker) => normalized.includes(marker));
 }
 
