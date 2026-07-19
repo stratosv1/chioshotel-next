@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { track } from "@vercel/analytics";
 
-type LanguageCode = "en" | "tr";
+type LanguageCode = "en" | "el" | "tr";
 type AnalyticsValue = string | number | boolean | null | undefined;
 type AnalyticsProperties = Record<string, AnalyticsValue>;
 
@@ -33,6 +33,8 @@ function destinationAction(url: URL) {
   if (
     value.includes("chios-hotels-rates") ||
     value.includes("sakiz-adasi-rezervasyon") ||
+    value.includes("amesi-kratisi") ||
+    value.includes("times-domation") ||
     value.includes("booking") ||
     value.includes("beds24")
   ) {
@@ -41,12 +43,27 @@ function destinationAction(url: URL) {
   if (
     value.includes("chios-rooms") ||
     value.includes("sakiz-adasi-odalari") ||
-    value.includes("chios-odalari")
+    value.includes("chios-odalari") ||
+    value.includes("domatia-xios")
   ) {
     return "rooms";
   }
   if (url.hostname.includes("google.com") && value.includes("maps")) return "maps";
-  if (value.includes("chios-island") || value.includes("sakiz-adasi/") || value.includes("plaj") || value.includes("köy") || value.includes("koy") || value.includes("kambos")) return "island_guide";
+  if (
+    value.includes("chios-island") ||
+    value.includes("ti-na-do-sti-xio") ||
+    value.includes("sakiz-adasi/") ||
+    value.includes("paralia") ||
+    value.includes("paralies") ||
+    value.includes("plaj") ||
+    value.includes("xoria") ||
+    value.includes("köy") ||
+    value.includes("koy") ||
+    value.includes("kambos") ||
+    value.includes("kampos")
+  ) {
+    return "island_guide";
+  }
   return url.origin === window.location.origin ? "internal_other" : "external_other";
 }
 
