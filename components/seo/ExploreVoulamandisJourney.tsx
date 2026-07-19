@@ -62,10 +62,10 @@ const COPY: Record<SiteLanguage, {
     rates: "Vedi tariffe dirette",
   },
   es: {
-    kicker: "Planifica el resto de tu estancia en Chios",
-    title: "De la guía de la isla a tu habitación en Voulamandis House",
-    text: "Has encontrado un lugar que merece una visita. Descubre ahora nuestra tranquila base en Kambos, compara habitaciones y consulta las tarifas directas.",
-    house: "Conoce Voulamandis House",
+    kicker: "Organice el resto de su estancia en Chios",
+    title: "De la guía de la isla a su alojamiento en Voulamandis House",
+    text: "Ha encontrado un lugar que merece una visita. Descubra nuestro alojamiento tranquilo en Kambos, compare habitaciones y apartamentos y consulte las tarifas directas.",
+    house: "Alojamiento en Chios",
     rooms: "Ver habitaciones y apartamentos",
     rates: "Consultar tarifas directas",
   },
@@ -85,7 +85,7 @@ const ROUTES: Record<SiteLanguage, { home: string; rooms: string; rates: string 
   fr: { home: "/fr/hebergement-chios/", rooms: "/fr/chambres-a-chios/", rates: "/fr/tarifs-des-hotels-a-chios/" },
   de: { home: "/de/chios-unterkunft/", rooms: "/de/chios-zimmer/", rates: "/de/hotelpreise-auf-der-insel-chios/" },
   it: { home: "/it/alloggio-chios/", rooms: "/it/camere-a-chios/", rates: "/it/prezzi-hotel-chios/" },
-  es: { home: "/es/", rooms: "/es/habitaciones-en-chios/", rates: "/es/precios-habitaciones-chios/" },
+  es: { home: "/es/alojamiento-chios/", rooms: "/es/habitaciones-en-chios/", rates: "/es/los-mejores-precios-de-hotel-en-la-isla-chios/" },
   tr: { home: "/tr/sakiz-adasi-konaklama/", rooms: "/tr/sakiz-adasi-odalari/", rates: "/tr/sakiz-adasi-rezervasyon/" },
 };
 
@@ -94,7 +94,7 @@ const CONTENT_MARKERS = [
   "village", "villages", "xoria", "chorio", "köy", "koy", "dorp", "dorf", "doerfer", "villaggio", "villaggi", "pueblo",
   "museum", "museums", "mouseio", "musee", "museo", "musei", "museen", "muze",
   "activities", "activity", "drastiriotites", "aktivitaeten", "attivita", "actividades", "aktiviteler",
-  "chios-island", "chios-insel", "chios-en-grece", "chios-lisola-in-grecia", "chios-el", "ti-na-do-sti-xio", "sakiz-adasi",
+  "chios-island", "chios-insel", "chios-en-grece", "chios-lisola-in-grecia", "chios-en-grecia", "chios-el", "ti-na-do-sti-xio", "sakiz-adasi",
 ];
 
 function shouldShow(pathname: string) {
@@ -110,6 +110,8 @@ function shouldShow(pathname: string) {
     normalized === "/de/chios-unterkunft" ||
     normalized === "/it/alloggio-chios/" ||
     normalized === "/it/alloggio-chios" ||
+    normalized === "/es/alojamiento-chios/" ||
+    normalized === "/es/alojamiento-chios" ||
     normalized === "/chios-accommodation/" ||
     normalized === "/chios-accommodation"
   ) {
