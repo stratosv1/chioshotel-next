@@ -12,6 +12,11 @@ function text(value: unknown) {
   return value === null || value === undefined ? "" : String(value).trim();
 }
 
+function positiveNumber(value: unknown) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
+}
+
 function normalizeSmsPhone(value: unknown) {
   let phone = text(value).replace(/[^0-9+]/g, "");
   if (phone.startsWith("+")) phone = phone.slice(1);
@@ -53,6 +58,41 @@ function roomLabel(roomId: unknown, unitId: unknown) {
   } as Record<string, string>)[key] || `Δωμάτιο ${text(unitId) || "-"}`;
 }
 
+function rawObject(value: unknown): Record<string, unknown> {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+  return value as Record<string, unknown>;
+}
+
+function guestCounts(booking: Record<string, unknown>) {
+  const raw = rawObject(booking.raw_booking);
+  const adults = Math.max(
+    positiveNumber(booking.num_adult),
+    positiveNumber(raw.numAdult),
+    positiveNumber(raw.adults),
+    positiveNumber(raw.adult),
+  );
+  const children = Math.max(
+    positiveNumber(booking.num_child),
+    positiveNumber(raw.numChild),
+    positiveNumber(raw.children),
+    positiveNumber(raw.child),
+  );
+  const statedTotal = Math.max(
+    positiveNumber(raw.totalGuests),
+    positiveNumber(raw.numGuests),
+    positiveNumber(raw.guestCount),
+    positiveNumber(raw.numPeople),
+    positiveNumber(raw.people),
+    positiveNumber(raw.occupancy),
+  );
+  const calculated = adults + children;
+  return {
+    adults,
+    children,
+    guests: Math.max(calculated, statedTotal),
+  };
+}
+
 export async function GET(request: NextRequest) {
   const databaseUrl = text(process.env.DATABASE_URL);
   const token = text(process.env.SMSAPI_TOKEN || process.env.VHC_SMSAPI_TOKEN);
@@ -86,7 +126,7 @@ export async function GET(request: NextRequest) {
   }
 
   const arrivals = await sql`
-    select beds24_booking_id, room_id, unit_id, num_adult, num_child, guest_name
+    select beds24_booking_id, room_id, unit_id, num_adult, num_child, guest_name, raw_booking
     from staff_bookings_snapshot
     where arrival = ${athens.date}::date
       and coalesce(lower(status), '') not in ('cancelled', 'canceled', 'deleted')
@@ -96,12 +136,12 @@ export async function GET(request: NextRequest) {
 
   let totalGuests = 0;
   const lines = arrivals.map((booking) => {
-    const adults = Number(booking.num_adult || 0);
-    const children = Number(booking.num_child || 0);
-    const guests = adults + children;
-    totalGuests += guests;
-    const breakdown = children > 0 ? ` (${adults} ενήλ. + ${children} παιδ.)` : "";
-    return `${roomLabel(booking.room_id, booking.unit_id)}: ${guests} άτομα${breakdown}`;
+    const counts = guestCounts(booking as Record<string, unknown>);
+    totalGuests += counts.guests;
+    const breakdown = counts.children > 0
+      ? ` (${counts.adults} ενήλ. + ${counts.children} παιδ.)`
+      : "";
+    return `${roomLabel(booking.room_id, booking.unit_id)}: ${counts.guests} άτομα${breakdown}`;
   });
 
   const message = arrivals.length
