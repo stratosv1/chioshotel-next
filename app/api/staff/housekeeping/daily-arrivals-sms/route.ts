@@ -45,17 +45,17 @@ function athensParts(now = new Date()) {
 function roomLabel(roomId: unknown, unitId: unknown) {
   const key = `${text(roomId)}:${text(unitId)}`;
   return ({
-    "267788:1": "Δωμάτιο 1",
-    "268803:1": "Δωμάτιο 2",
-    "267788:2": "Δωμάτιο 3",
-    "267788:3": "Δωμάτιο 4",
-    "626129:1": "Δωμάτιο 5",
-    "268803:2": "Δωμάτιο 6",
-    "626129:2": "Δωμάτιο 7",
-    "265595:1": "Διαμέρισμα 8",
-    "265595:2": "Διαμέρισμα 9",
-    "265595:3": "Διαμέρισμα 10",
-  } as Record<string, string>)[key] || `Δωμάτιο ${text(unitId) || "-"}`;
+    "267788:1": "Dhoma 1",
+    "268803:1": "Dhoma 2",
+    "267788:2": "Dhoma 3",
+    "267788:3": "Dhoma 4",
+    "626129:1": "Dhoma 5",
+    "268803:2": "Dhoma 6",
+    "626129:2": "Dhoma 7",
+    "265595:1": "Apartamenti 8",
+    "265595:2": "Apartamenti 9",
+    "265595:3": "Apartamenti 10",
+  } as Record<string, string>)[key] || `Dhoma ${text(unitId) || "-"}`;
 }
 
 function rawObject(value: unknown): Record<string, unknown> {
@@ -139,14 +139,14 @@ export async function GET(request: NextRequest) {
     const counts = guestCounts(booking as Record<string, unknown>);
     totalGuests += counts.guests;
     const breakdown = counts.children > 0
-      ? ` (${counts.adults} ενήλ. + ${counts.children} παιδ.)`
+      ? ` (${counts.adults} të rritur + ${counts.children} fëmijë)`
       : "";
-    return `${roomLabel(booking.room_id, booking.unit_id)}: ${counts.guests} άτομα${breakdown}`;
+    return `${roomLabel(booking.room_id, booking.unit_id)}: ${counts.guests} persona${breakdown}`;
   });
 
   const message = arrivals.length
-    ? `Voulamandis House - Αφίξεις ${athens.displayDate}\n${lines.join("\n")}\nΣύνολο: ${arrivals.length} δωμάτια / ${totalGuests} άτομα`
-    : `Voulamandis House - Αφίξεις ${athens.displayDate}\nΔεν υπάρχουν αφίξεις σήμερα.`;
+    ? `Voulamandis House - Mbërritjet ${athens.displayDate}\n${lines.join("\n")}\nGjithsej: ${arrivals.length} dhoma / ${totalGuests} persona`
+    : `Voulamandis House - Mbërritjet ${athens.displayDate}\nSot nuk ka mbërritje.`;
 
   const params = new URLSearchParams({ to: phone, from: sender, message, format: "json" });
   const smsResponse = await fetch("https://api.smsapi.com/sms.do", {
