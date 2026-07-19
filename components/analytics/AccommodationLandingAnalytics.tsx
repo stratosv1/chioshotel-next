@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { track } from "@vercel/analytics";
 
-type LanguageCode = "en" | "el" | "fr" | "de" | "tr";
+type LanguageCode = "en" | "el" | "fr" | "de" | "it" | "tr";
 type AnalyticsValue = string | number | boolean | null | undefined;
 type AnalyticsProperties = Record<string, AnalyticsValue>;
 
@@ -37,6 +37,7 @@ function destinationAction(url: URL) {
     value.includes("times-domation") ||
     value.includes("hotelpreise-auf-der-insel-chios") ||
     value.includes("tarifs-des-hotels-a-chios") ||
+    value.includes("prezzi-hotel-chios") ||
     value.includes("booking") ||
     value.includes("beds24")
   ) {
@@ -49,7 +50,9 @@ function destinationAction(url: URL) {
     value.includes("domatia-xios") ||
     value.includes("chios-zimmer") ||
     value.includes("zimmer-chios") ||
-    value.includes("chambres-a-chios")
+    value.includes("chambres-a-chios") ||
+    value.includes("camere-a-chios") ||
+    value.includes("stanze-a-chios")
   ) {
     return "rooms";
   }
@@ -58,15 +61,19 @@ function destinationAction(url: URL) {
     value.includes("chios-island") ||
     value.includes("chios-insel") ||
     value.includes("chios-en-grece") ||
+    value.includes("chios-lisola-in-grecia") ||
     value.includes("ti-na-do-sti-xio") ||
     value.includes("sakiz-adasi/") ||
     value.includes("paralia") ||
     value.includes("paralies") ||
     value.includes("plage") ||
+    value.includes("spiagge") ||
     value.includes("straende") ||
     value.includes("village") ||
+    value.includes("villaggi") ||
     value.includes("doerfer") ||
     value.includes("musee") ||
+    value.includes("musei") ||
     value.includes("museen") ||
     value.includes("plaj") ||
     value.includes("xoria") ||
