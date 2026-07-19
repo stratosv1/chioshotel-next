@@ -20,6 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/el/diamoni-sti-xio/",
     "/fr/hebergement-chios/",
     "/de/chios-unterkunft/",
+    "/it/alloggio-chios/",
     "/tr/sakiz-adasi-konaklama/",
   ].map((path) => ({
     url: absoluteUrl(path),
