@@ -23,6 +23,7 @@ export const metadata: Metadata = {
       el: absoluteUrl("/el/diamoni-sti-xio/"),
       fr: absoluteUrl("/fr/hebergement-chios/"),
       de: absoluteUrl("/de/chios-unterkunft/"),
+      it: absoluteUrl("/it/alloggio-chios/"),
       tr: absoluteUrl("/tr/sakiz-adasi-konaklama/"),
       "x-default": absoluteUrl("/chios-accommodation/"),
     },
