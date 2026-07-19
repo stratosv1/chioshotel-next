@@ -39,9 +39,9 @@ const COPY: Record<SiteLanguage, {
   },
   fr: {
     kicker: "Organisez la suite de votre séjour à Chios",
-    title: "Du guide de l’île à votre chambre au Voulamandis House",
-    text: "Vous avez trouvé un lieu à visiter. Découvrez maintenant notre adresse paisible à Kambos, comparez les chambres et consultez les tarifs directs.",
-    house: "Découvrir Voulamandis House",
+    title: "Du guide de l’île à votre hébergement au Voulamandis House",
+    text: "Vous avez trouvé un lieu à visiter. Découvrez notre hébergement paisible à Kambos, comparez les chambres et appartements et consultez les tarifs directs.",
+    house: "Hébergement à Chios",
     rooms: "Voir chambres et appartements",
     rates: "Voir les tarifs directs",
   },
@@ -82,7 +82,7 @@ const COPY: Record<SiteLanguage, {
 const ROUTES: Record<SiteLanguage, { home: string; rooms: string; rates: string }> = {
   en: { home: "/chios-accommodation/", rooms: "/chios-rooms/", rates: "/chios-hotels-rates/" },
   el: { home: "/el/diamoni-sti-xio/", rooms: "/el/domatia-xios/", rates: "/el/amesi-kratisi-voulamandis-house/" },
-  fr: { home: "/fr/", rooms: "/fr/chambres-a-chios/", rates: "/fr/tarifs-chambres-chios/" },
+  fr: { home: "/fr/hebergement-chios/", rooms: "/fr/chambres-a-chios/", rates: "/fr/tarifs-des-hotels-a-chios/" },
   de: { home: "/de/chios-unterkunft/", rooms: "/de/chios-zimmer/", rates: "/de/hotelpreise-auf-der-insel-chios/" },
   it: { home: "/it/", rooms: "/it/camere-a-chios/", rates: "/it/prezzi-camere-chios/" },
   es: { home: "/es/", rooms: "/es/habitaciones-en-chios/", rates: "/es/precios-habitaciones-chios/" },
@@ -94,7 +94,7 @@ const CONTENT_MARKERS = [
   "village", "villages", "xoria", "chorio", "köy", "koy", "dorp", "dorf", "doerfer", "villaggio", "pueblo",
   "museum", "museums", "mouseio", "musee", "museo", "museen", "muze",
   "activities", "activity", "drastiriotites", "aktivitaeten", "attivita", "actividades", "aktiviteler",
-  "chios-island", "chios-insel", "chios-el", "ti-na-do-sti-xio", "sakiz-adasi",
+  "chios-island", "chios-insel", "chios-en-grece", "chios-el", "ti-na-do-sti-xio", "sakiz-adasi",
 ];
 
 function shouldShow(pathname: string) {
@@ -104,6 +104,8 @@ function shouldShow(pathname: string) {
     normalized === "/tr/sakiz-adasi-konaklama" ||
     normalized === "/el/diamoni-sti-xio/" ||
     normalized === "/el/diamoni-sti-xio" ||
+    normalized === "/fr/hebergement-chios/" ||
+    normalized === "/fr/hebergement-chios" ||
     normalized === "/de/chios-unterkunft/" ||
     normalized === "/de/chios-unterkunft" ||
     normalized === "/chios-accommodation/" ||
