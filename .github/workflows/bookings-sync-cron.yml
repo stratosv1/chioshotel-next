@@ -1,0 +1,22 @@
+name: Beds24 bookings sync
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sync-bookings:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Trigger protected bookings sync
+        run: |
+          curl --fail-with-body --silent --show-error \
+            --retry 2 \
+            --retry-delay 10 \
+            --max-time 180 \
+            "https://chioshotel.gr/api/staff/calendar/bookings-cron"
