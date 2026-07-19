@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { AccommodationLandingAnalytics } from "@/components/analytics/AccommodationLandingAnalytics";
-import { ChiosAccommodationPage } from "@/components/landing/ChiosAccommodationPage";
+import { SakizAccommodationPage } from "@/components/landing/SakizAccommodationPage";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { sakizAdasiKonaklamaPageTr } from "@/content/sakiz-adasi-konaklama";
 import { buildSakizAdasiKonaklamaSchema } from "@/content/sakiz-adasi-konaklama-schema";
@@ -30,7 +30,7 @@ export default function Page() {
   return (
     <>
       <JsonLd data={buildSakizAdasiKonaklamaSchema(sakizAdasiKonaklamaPageTr)} />
-      <ChiosAccommodationPage data={sakizAdasiKonaklamaPageTr} />
+      <SakizAccommodationPage data={sakizAdasiKonaklamaPageTr} />
       <AccommodationLandingAnalytics
         language="tr"
         pathname={sakizAdasiKonaklamaPageTr.seo.canonicalPath}
