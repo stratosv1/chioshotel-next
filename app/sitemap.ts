@@ -9,6 +9,7 @@ import { sandyBeachPaths } from "@/content/sandy-beaches";
 import { villageCategoryPaths } from "@/content/village-categories";
 import { getVillageSlugs } from "@/content/village-details";
 import { getMuseumSlugs } from "@/content/museum-details";
+import { CHIOS_HOTELS_GUIDE_PATHS } from "@/lib/chios-hotels-guide-i18n";
 import { routeMap } from "@/lib/url-map";
 import { absoluteUrl } from "@/lib/seo";
 
@@ -16,7 +17,7 @@ type SitemapEntry = MetadataRoute.Sitemap[number];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const accommodationLandingRoutes: SitemapEntry[] = [
-    "/chios-hotels/",
+    ...Object.values(CHIOS_HOTELS_GUIDE_PATHS),
     "/chios-accommodation/",
     "/el/diamoni-sti-xio/",
     "/fr/hebergement-chios/",
