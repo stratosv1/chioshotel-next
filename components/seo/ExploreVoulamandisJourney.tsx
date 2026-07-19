@@ -25,7 +25,7 @@ const COPY: Record<SiteLanguage, {
     kicker: "Plan the rest of your Chios stay",
     title: "From island guide to your room at Voulamandis House",
     text: "You have found a place worth visiting. Now discover our quiet base in Kambos, compare the rooms and continue to current direct rates.",
-    house: "Meet Voulamandis House",
+    house: "Explore Chios accommodation",
     rooms: "Explore rooms & apartments",
     rates: "Check direct rates",
   },
@@ -80,7 +80,7 @@ const COPY: Record<SiteLanguage, {
 };
 
 const ROUTES: Record<SiteLanguage, { home: string; rooms: string; rates: string }> = {
-  en: { home: "/", rooms: "/chios-rooms/", rates: "/chios-hotels-rates/" },
+  en: { home: "/chios-accommodation/", rooms: "/chios-rooms/", rates: "/chios-hotels-rates/" },
   el: { home: "/el/", rooms: "/el/domatia-xios/", rates: "/el/times-domation-xios/" },
   fr: { home: "/fr/", rooms: "/fr/chambres-a-chios/", rates: "/fr/tarifs-chambres-chios/" },
   de: { home: "/de/", rooms: "/de/chios-zimmer/", rates: "/de/chios-zimmer-preise/" },
