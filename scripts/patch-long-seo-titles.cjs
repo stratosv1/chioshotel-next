@@ -1,9 +1,9 @@
 const fs = require("fs");
 
-const file = "lib/seo.ts";
+const file = "lib/seo-title-overrides.ts";
 let source = fs.readFileSync(file, "utf8");
 
-const marker = "const preferredMetadataTitles = new Map<string, string>([";
+const marker = "export const preferredMetadataTitles = new Map<string, string>([";
 if (!source.includes(marker)) {
   throw new Error("preferredMetadataTitles marker not found");
 }
