@@ -4,6 +4,7 @@ import { ChiosHotelsGuidePage } from "@/components/landing/ChiosHotelsGuidePage"
 import { JsonLd } from "@/components/seo/JsonLd";
 import { chiosHotelsGuide } from "@/content/chios-hotels-guide";
 import { buildChiosHotelsGuideSchema } from "@/content/chios-hotels-guide-schema";
+import { chiosHotelsGuideLanguages } from "@/lib/chios-hotels-guide-i18n";
 import { absoluteUrl, buildPageMetadata } from "@/lib/seo";
 
 const baseMetadata = buildPageMetadata({
@@ -18,10 +19,7 @@ export const metadata: Metadata = {
   ...baseMetadata,
   alternates: {
     canonical: absoluteUrl(chiosHotelsGuide.seo.canonicalPath),
-    languages: {
-      en: absoluteUrl(chiosHotelsGuide.seo.canonicalPath),
-      "x-default": absoluteUrl(chiosHotelsGuide.seo.canonicalPath),
-    },
+    languages: chiosHotelsGuideLanguages(),
   },
 };
 
