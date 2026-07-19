@@ -60,6 +60,10 @@ function isGuidePath(pathname: string): boolean {
   );
 }
 
+function isStaffPath(pathname: string): boolean {
+  return pathname === "/staff" || pathname.startsWith("/staff/");
+}
+
 export default async function RootLayout({
   children,
 }: {
@@ -69,6 +73,7 @@ export default async function RootLayout({
   const pathname = requestHeaders.get("x-current-pathname") || "/";
   const htmlLanguage = getHtmlLanguage(pathname);
   const hideHeader = isGuidePath(pathname);
+  const excludeAnalytics = isStaffPath(pathname);
 
   return (
     <html lang={htmlLanguage}>
@@ -81,8 +86,12 @@ export default async function RootLayout({
           <ExploreVoulamandisJourney language={htmlLanguage} pathname={pathname} />
         ) : null}
         {!hideHeader ? <VoulamandisFooterTailwind language={htmlLanguage} /> : null}
-        <ContentEngagementAnalytics language={htmlLanguage} pathname={pathname} />
-        <ConsentAnalytics language={htmlLanguage} />
+        {!excludeAnalytics ? (
+          <>
+            <ContentEngagementAnalytics language={htmlLanguage} pathname={pathname} />
+            <ConsentAnalytics language={htmlLanguage} />
+          </>
+        ) : null}
       </body>
     </html>
   );
