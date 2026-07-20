@@ -58,6 +58,54 @@ export const seoSnippetOverrides = new Map<string, SeoSnippetOverride>([
     },
   ],
   [
+    "/chios/kampos-chios/",
+    {
+      title: "Stay in Kambos Chios | Rooms & Family Apartments",
+      description:
+        "Quiet rooms and family apartments in historic Kambos, Chios. Stay among citrus gardens near beaches, the airport and Chios Town.",
+    },
+  ],
+  [
+    "/fr/chios/kampos-chios/",
+    {
+      title: "Séjour à Kambos Chios | Chambres & Appartements",
+      description:
+        "Chambres calmes et appartements familiaux dans le Kambos historique de Chios, près des plages, de l’aéroport et de la ville.",
+    },
+  ],
+  [
+    "/de/chios/kampos-chios/",
+    {
+      title: "Übernachten in Kambos Chios | Zimmer & Apartments",
+      description:
+        "Ruhige Zimmer und Familienapartments im historischen Kambos auf Chios, nahe Stränden, Flughafen und Chios-Stadt.",
+    },
+  ],
+  [
+    "/it/chios/kampos-chios/",
+    {
+      title: "Soggiorno a Kambos Chios | Camere & Appartamenti",
+      description:
+        "Camere tranquille e appartamenti familiari nello storico Kambos di Chios, vicino a spiagge, aeroporto e città.",
+    },
+  ],
+  [
+    "/es/chios/kampos-chios/",
+    {
+      title: "Alojamiento en Kambos Quíos | Habitaciones y Apartamentos",
+      description:
+        "Habitaciones tranquilas y apartamentos familiares en el Kambos histórico de Quíos, cerca de playas, aeropuerto y ciudad.",
+    },
+  ],
+  [
+    "/tr/chios/kampos-chios/",
+    {
+      title: "Sakız Kambos Konaklama | Oda ve Aile Daireleri",
+      description:
+        "Tarihi Kambos’ta sakin odalar ve aile daireleri. Plajlara, havaalanına ve Sakız merkeze yakın narenciye bahçeleri içinde konaklama.",
+    },
+  ],
+  [
     "/el/chios/kampos-chios/",
     {
       title: "Διαμονή στον Κάμπο Χίου | Ενοικιαζόμενα Δωμάτια",
