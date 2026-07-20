@@ -5,6 +5,7 @@ import { getGroupedLanguagePath } from "@/lib/accommodation-landing-i18n";
 import type { LanguageCode } from "@/lib/languages";
 import { languages, normalizePath } from "@/lib/languages";
 import { getRouteByPath, getRoutesByItemId } from "@/lib/url-map";
+import { kamposChiosPaths } from "@/content/kampos-chios";
 
 type HeaderProps = {
   language?: LanguageCode;
@@ -67,10 +68,19 @@ function pathFor(itemId: string, language: LanguageCode) {
 }
 
 function languageHref(pathname: string, language: LanguageCode) {
+  const normalizedPathname = normalizePath(pathname);
+  const isKamposPage = (Object.values(kamposChiosPaths) as string[]).some(
+    (path) => normalizePath(path) === normalizedPathname,
+  );
+
+  if (isKamposPage) {
+    return kamposChiosPaths[language];
+  }
+
   const groupedPath = getGroupedLanguagePath(pathname, language);
   if (groupedPath) return groupedPath;
 
-  const route = getRouteByPath(normalizePath(pathname));
+  const route = getRouteByPath(normalizedPathname);
   if (!route) return pathFor(routeIds.home, language);
   return getRoutesByItemId(route.itemId).find((item) => item.language === language && item.action === "KEEP")?.path || pathFor(routeIds.home, language);
 }
