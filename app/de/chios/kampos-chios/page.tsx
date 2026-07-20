@@ -1,6 +1,8 @@
 ﻿import type { Metadata } from "next";
-import { KamposChiosPage } from "@/components/chios/KamposChiosPage";
+import { LocalizedKamposLandingPage } from "@/components/chios/LocalizedKamposLandingPage";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { kamposChiosPageDe } from "@/content/kampos-chios";
+import { buildLocalizedKamposChiosSchema } from "@/content/kampos-chios-localized-schema";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -8,8 +10,14 @@ export const metadata: Metadata = buildPageMetadata({
   title: kamposChiosPageDe.seo.title,
   description: kamposChiosPageDe.seo.description,
   image: kamposChiosPageDe.seo.ogImage,
+  imageAlt: kamposChiosPageDe.hero.imageAlt,
 });
 
 export default function Page() {
-  return <KamposChiosPage data={kamposChiosPageDe} />;
+  return (
+    <>
+      <JsonLd data={buildLocalizedKamposChiosSchema(kamposChiosPageDe)} />
+      <LocalizedKamposLandingPage data={kamposChiosPageDe} />
+    </>
+  );
 }
