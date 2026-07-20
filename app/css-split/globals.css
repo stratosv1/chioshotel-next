@@ -25,6 +25,3 @@
 /* ---- overrides ---- */
 @import "./overrides/overrides.css";
 @import "./overrides/cta-contrast.css";
-
-/* ---- pages ---- */
-@import "./pages/kampos.css";
