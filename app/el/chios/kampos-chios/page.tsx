@@ -1,5 +1,5 @@
 ﻿import type { Metadata } from "next";
-import { KamposChiosPage } from "@/components/chios/KamposChiosPage";
+import { GreekKamposLandingPage } from "@/components/chios/GreekKamposLandingPage";
 import { kamposChiosPageEl } from "@/content/kampos-chios";
 import { buildPageMetadata } from "@/lib/seo";
 
@@ -11,5 +11,5 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 export default function Page() {
-  return <KamposChiosPage data={kamposChiosPageEl} />;
+  return <GreekKamposLandingPage data={kamposChiosPageEl} />;
 }
