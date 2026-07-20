@@ -52,7 +52,7 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
 const routeIds = {
   home: "home",
   rooms: "rooms-index",
-  rates: "find-your-room",
+  rates: "booking",
   deals: "deals",
   chios: "chios-index",
   beaches: "beaches-index",
