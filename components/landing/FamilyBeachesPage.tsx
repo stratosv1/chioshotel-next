@@ -15,6 +15,16 @@ const whatsappLabels = {
   tr: "WhatsApp",
 };
 
+const familyBeachesUiText = {
+  en: { planning: "Family planning", beaches: "Family beaches" },
+  el: { planning: "Οικογενειακός προγραμματισμός", beaches: "Οικογενειακές παραλίες" },
+  fr: { planning: "Organisation en famille", beaches: "Plages familiales" },
+  de: { planning: "Familienplanung", beaches: "Familienstrände" },
+  it: { planning: "Organizzazione in famiglia", beaches: "Spiagge per famiglie" },
+  es: { planning: "Planificación familiar", beaches: "Playas familiares" },
+  tr: { planning: "Aile planlaması", beaches: "Aile dostu plajlar" },
+} as const;
+
 function getWhatsAppHref(data: FamilyBeachesPageData) {
   const message = `Hello Voulamandis House, I need help choosing a Chios beach. Page: ${data.seo.title}`;
   return `https://wa.me/302271031733?text=${encodeURIComponent(message)}`;
@@ -23,6 +33,7 @@ function getWhatsAppHref(data: FamilyBeachesPageData) {
 export function FamilyBeachesPage({ data }: FamilyBeachesPageProps) {
   const whatsappHref = getWhatsAppHref(data);
   const whatsappLabel = whatsappLabels[data.locale] || "WhatsApp";
+  const uiText = familyBeachesUiText[data.locale];
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#fff8ed] text-slate-950">
@@ -69,7 +80,7 @@ export function FamilyBeachesPage({ data }: FamilyBeachesPageProps) {
         <div className="mx-auto grid max-w-[1180px] gap-5 md:grid-cols-[0.9fr_1.1fr] md:items-start">
           <div className="rounded-[32px] bg-white p-6 shadow-lg ring-1 ring-slate-900/5 md:p-10">
             <p className="text-xs font-black uppercase tracking-[0.18em] text-amber-700">
-              Family planning
+              {uiText.planning}
             </p>
             <h2
               id="family-intro-title"
@@ -95,7 +106,7 @@ export function FamilyBeachesPage({ data }: FamilyBeachesPageProps) {
         <div className="mx-auto max-w-[1180px]">
           <header className="mb-8 max-w-[820px] md:mb-12">
             <p className="text-xs font-black uppercase tracking-[0.18em] text-amber-700">
-              👨‍👩‍👧 Family beaches
+              👨‍👩‍👧 {uiText.beaches}
             </p>
             <h2
               id="family-beaches-title"
