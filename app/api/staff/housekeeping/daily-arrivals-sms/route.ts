@@ -7,6 +7,7 @@ export const dynamic = "force-dynamic";
 const ATHENS_TZ = "Europe/Athens";
 const MESSAGE_TYPE = "housekeeping_daily_arrivals";
 const SOURCE = "housekeeping_daily_cron";
+const ACTIVE_THROUGH_DATE = "2026-09-07";
 
 function text(value: unknown) {
   return value === null || value === undefined ? "" : String(value).trim();
@@ -105,6 +106,17 @@ export async function GET(request: NextRequest) {
   if (!phone) return NextResponse.json({ ok: false, error: "HOUSEKEEPING_SMS_PHONE is missing" }, { status: 500 });
 
   const athens = athensParts();
+
+  if (athens.date > ACTIVE_THROUGH_DATE) {
+    return NextResponse.json({
+      ok: true,
+      skipped: true,
+      reason: "Housekeeping SMS automation expired",
+      activeThrough: ACTIVE_THROUGH_DATE,
+      athens,
+    });
+  }
+
   if (!force && athens.hour !== 7) {
     return NextResponse.json({ ok: true, skipped: true, reason: "Not 07:00 in Athens", athens });
   }
