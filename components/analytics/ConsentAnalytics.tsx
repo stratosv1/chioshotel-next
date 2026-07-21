@@ -41,7 +41,7 @@ export function ConsentAnalytics({ language: _language }: { language: LanguageCo
           gtag('js', new Date());
           gtag('config', '${GA_ID}', {
             anonymize_ip: true,
-            send_page_view: true
+            send_page_view: false
           });
         `}
       </Script>
