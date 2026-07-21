@@ -33,7 +33,13 @@ const localizedLanguages = languages.filter(
 function getLocalizedHomePageData(locale: string): HomePageData {
   switch (locale) {
     case "el":
-      return withUpdatedIntroReasons(homePageEl);
+      return withUpdatedIntroReasons({
+        ...homePageEl,
+        seo: {
+          ...homePageEl.seo,
+          title: "Voulamandis House | Δωμάτια & Διαμερίσματα στη Χίο",
+        },
+      });
     case "fr":
       return withUpdatedIntroReasons(homePageFr);
     case "de":
