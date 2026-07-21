@@ -36,6 +36,14 @@ const frenchSeoCorrections: ReadonlyArray<
     },
   ],
   [
+    "/fr/trouvez-votre-chambre/",
+    {
+      title: "Trouver une chambre à Chios | Disponibilités en direct",
+      description:
+        "Indiquez vos dates et le nombre de voyageurs pour consulter les chambres disponibles, comparer le tarif direct et envoyer votre demande au Voulamandis House.",
+    },
+  ],
+  [
     "/fr/tarifs-des-hotels-a-chios/",
     {
       title: "Réservation directe à Chios | Tarifs Voulamandis House",
@@ -81,6 +89,14 @@ const frenchSeoCorrections: ReadonlyArray<
       title: "Musées de Chios | Histoire, culture et mastic",
       description:
         "Découvrez les principaux musées de Chios consacrés à l’archéologie, l’art byzantin, l’histoire maritime, la littérature, le folklore et le mastic.",
+    },
+  ],
+  [
+    "/fr/musees-de-chios/musee-du-mastic-chios/",
+    {
+      title: "Musée du Mastic de Chios | Guide de visite",
+      description:
+        "Visitez le Musée du Mastic de Chios et découvrez la culture, la récolte, la transformation et l’histoire du produit emblématique du sud de l’île.",
     },
   ],
   [
