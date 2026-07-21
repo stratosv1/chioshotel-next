@@ -1,4 +1,5 @@
 import { applyFrenchSeoCorrections } from "./french-seo-corrections";
+import { applyGermanSeoCorrections } from "./german-seo-corrections";
 
 export const preferredMetadataTitles = new Map<string, string>([
   ["Chios for Beach Lovers", "Chios Beaches for Sea Lovers | Best Coastal Spots"],
@@ -120,3 +121,4 @@ export const preferredMetadataTitles = new Map<string, string>([
 ]);
 
 applyFrenchSeoCorrections();
+applyGermanSeoCorrections();
