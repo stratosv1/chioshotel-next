@@ -1,23 +1,6 @@
 import { localizedBeachDetails, type BeachDetailData } from "../content/beach-details";
-import { chiosBeachesPageIt } from "../content/chios-beaches";
-import { beachLoversPages } from "../content/beach-lovers";
-import { contactPageIt } from "../content/contact";
-import { dealsPageIt } from "../content/deals";
-import { familyBeachesPages } from "../content/family-beaches";
-import { kamposChiosPageIt } from "../content/kampos-chios";
 import { localizedMuseumDetails, type MuseumDetailData } from "../content/museum-details";
-import { chiosMuseumsPageIt } from "../content/chios-museums";
-import { chiosQuizSchemaPages } from "../content/chios-quiz-schema";
-import { ratesPageIt } from "../content/rates";
-import {
-  economyDoubleRoomsIt,
-  familyChiosApartmentsIt,
-  standardDoubleRoomIt,
-  type RoomDetailData,
-} from "../content/room-details";
-import { roomsCategoryIt } from "../content/rooms";
 import { localizedVillageDetails, type VillageDetailData } from "../content/village-details";
-import { chiosVillagesPageIt } from "../content/chios-villages";
 import { seoSnippetOverrides } from "./seo-snippet-overrides";
 
 type SeoCorrection = { title: string; description: string };
@@ -26,16 +9,16 @@ type LocalizedDetail = BeachDetailData | VillageDetailData | MuseumDetailData;
 
 const pageSeo = new Map<string, SeoCorrection>([
   ["/it/", { title: "Camere e appartamenti a Chios | Voulamandis House", description: "Camere tranquille e appartamenti familiari nella storica zona di Kambos a Chios, vicino alla città, all’aeroporto e alle spiagge, con prenotazione diretta." }],
-  [roomsCategoryIt.seo.canonicalPath, { title: "Camere e appartamenti a Chios | Kambos", description: "Confronta camere doppie economy, camere standard e appartamenti familiari con cucina al Voulamandis House, nella tranquilla zona di Kambos." }],
-  [contactPageIt.seo.canonicalPath, { title: "Contatti Voulamandis House | Camere e disponibilità", description: "Contatta Voulamandis House a Kambos via WhatsApp o email per chiedere disponibilità, tariffe e la camera o l’appartamento più adatto al soggiorno." }],
-  [ratesPageIt.seo.canonicalPath, { title: "Prenotazione diretta a Chios | Tariffe e disponibilità", description: "Controlla la disponibilità, scegli una camera o un appartamento e prenota direttamente e in sicurezza il soggiorno al Voulamandis House." }],
-  [dealsPageIt.seo.canonicalPath, { title: "Offerte soggiorno a Chios | Prenotazione diretta", description: "Scopri le offerte disponibili per camere e appartamenti al Voulamandis House, copia il codice promozionale e continua alla prenotazione diretta." }],
+  ["/it/camere-a-chios/", { title: "Camere e appartamenti a Chios | Kambos", description: "Confronta camere doppie economy, camere standard e appartamenti familiari con cucina al Voulamandis House, nella tranquilla zona di Kambos." }],
+  ["/it/contattaci-voulamandis-house/", { title: "Contatti Voulamandis House | Camere e disponibilità", description: "Contatta Voulamandis House a Kambos via WhatsApp o email per chiedere disponibilità, tariffe e la camera o l’appartamento più adatto al soggiorno." }],
+  ["/it/prezzi-hotel-chios/", { title: "Prenotazione diretta a Chios | Tariffe e disponibilità", description: "Controlla la disponibilità, scegli una camera o un appartamento e prenota direttamente e in sicurezza il soggiorno al Voulamandis House." }],
+  ["/it/offerte-di-viaggio-hotels-chios/", { title: "Offerte soggiorno a Chios | Prenotazione diretta", description: "Scopri le offerte disponibili per camere e appartamenti al Voulamandis House, copia il codice promozionale e continua alla prenotazione diretta." }],
   ["/it/trova-la-tua-camera/", { title: "Trova una camera a Chios | Disponibilità in tempo reale", description: "Inserisci date e numero di ospiti, confronta camere e appartamenti disponibili, visualizza il prezzo diretto e invia la richiesta al Voulamandis House." }],
-  [chiosBeachesPageIt.seo.canonicalPath, { title: "Spiagge di Chios | Accesso, caratteristiche e consigli", description: "Confronta Mavra Volia, Komi, Lithi, Agia Dynami, Nagos e altre spiagge di Chios per accesso, fondale, servizi e atmosfera." }],
-  [chiosVillagesPageIt.seo.canonicalPath, { title: "Villaggi di Chios | Borghi medievali, mastice e mare", description: "Scopri Pyrgi, Mesta, Olympoi, Armolia, Vessa, Volissos e Lagada tra vicoli medievali, cultura del mastice, castelli e porticcioli." }],
-  [chiosMuseumsPageIt.seo.canonicalPath, { title: "Musei di Chios | Storia, cultura e mastice", description: "Scopri i musei di Chios dedicati ad archeologia, arte bizantina, navigazione, libri rari, folklore e cultura del mastice." }],
-  [familyBeachesPages.it.seo.canonicalPath, { title: "Spiagge di Chios per bambini | Guida per famiglie", description: "Confronta Komi, Karfas, Lithi e Agia Dynami per accesso semplice, ingresso in acqua, servizi vicini e una giornata al mare con i bambini." }],
-  [beachLoversPages.it.seo.canonicalPath, { title: "Chios per amanti del mare | Itinerario tra le spiagge", description: "Soggiorna a Kambos e organizza un itinerario tra Mavra Volia, Komi, Agia Fotia, Vroulidia, Salagona e Kato Fana." }],
+  ["/it/spiagge-chios/", { title: "Spiagge di Chios | Accesso, caratteristiche e consigli", description: "Confronta Mavra Volia, Komi, Lithi, Agia Dynami, Nagos e altre spiagge di Chios per accesso, fondale, servizi e atmosfera." }],
+  ["/it/villaggi-chios/", { title: "Villaggi di Chios | Borghi medievali, mastice e mare", description: "Scopri Pyrgi, Mesta, Olympoi, Armolia, Vessa, Volissos e Lagada tra vicoli medievali, cultura del mastice, castelli e porticcioli." }],
+  ["/it/musei-chios/", { title: "Musei di Chios | Storia, cultura e mastice", description: "Scopri i musei di Chios dedicati ad archeologia, arte bizantina, navigazione, libri rari, folklore e cultura del mastice." }],
+  ["/it/spiagge-chios-per-bambini/", { title: "Spiagge di Chios per bambini | Guida per famiglie", description: "Confronta Komi, Karfas, Lithi e Agia Dynami per accesso semplice, ingresso in acqua, servizi vicini e una giornata al mare con i bambini." }],
+  ["/it/chios-per-amanti-del-mare/", { title: "Chios per amanti del mare | Itinerario tra le spiagge", description: "Soggiorna a Kambos e organizza un itinerario tra Mavra Volia, Komi, Agia Fotia, Vroulidia, Salagona e Kato Fana." }],
   ["/it/villaggi-del-mastice-chios/", { title: "Villaggi del mastice a Chios | Pyrgi, Mesta e Olympoi", description: "Organizza un itinerario tra Pyrgi, Mesta, Olympoi, Armolia e Vessa, con architettura medievale, xysta, ceramica e cultura del mastice." }],
   ["/it/villaggi-medievali-chios/", { title: "Villaggi medievali di Chios | Mesta, Pyrgi e Volissos", description: "Esplora i vicoli in pietra, le fortificazioni e l’architettura tradizionale di Mesta, Pyrgi, Olympoi, Vessa e Volissos." }],
   ["/it/villaggi-sul-mare-chios/", { title: "Villaggi sul mare a Chios | Lagada e Volissos", description: "Scopri villaggi costieri, piccoli porti, taverne di pesce e percorsi panoramici tra Lagada, Limnia, Volissos e la costa di Chios." }],
@@ -46,16 +29,10 @@ const pageSeo = new Map<string, SeoCorrection>([
   ["/it/terme-di-chios/", { title: "Terme di Chios | Sorgenti naturali di Agiasmata", description: "Visita le sorgenti termali naturali di Agiasmata nel nord di Chios e organizza una giornata di benessere, natura e scoperta dei villaggi vicini." }],
   ["/it/guerra-dei-razzi-chios/", { title: "Guerra dei razzi di Chios | Pasqua a Vrontados", description: "Scopri il Rouketopolemos, la celebre tradizione pasquale di Vrontados, con informazioni sul significato dell’evento e sulla visita in sicurezza." }],
   ["/it/orchidee-di-chios/", { title: "Orchidee di Chios | Specie, stagione e luoghi", description: "Scopri le orchidee selvatiche e i fiori primaverili di Chios, il periodo migliore e le zone botaniche tra Kato Fana, Amani e Mastichochoria." }],
-  [kamposChiosPageIt.seo.canonicalPath, { title: "Kambos di Chios | Dimore storiche e agrumeti", description: "Scopri Kambos, la storica zona di Chios con dimore in pietra, agrumeti e strade tranquille, vicina alla città e all’aeroporto." }],
-  [chiosQuizSchemaPages.it.path, { title: "Quiz vacanze a Chios | Trova l’esperienza ideale", description: "Fai il quiz di viaggio, scopri quali spiagge, villaggi ed esperienze di Chios si adattano al tuo stile e ottieni un codice sconto per il soggiorno." }],
+  ["/it/chios/kampos-chios/", { title: "Kambos di Chios | Dimore storiche e agrumeti", description: "Scopri Kambos, la storica zona di Chios con dimore in pietra, agrumeti e strade tranquille, vicina alla città e all’aeroporto." }],
+  ["/it/quiz-vacanze-a-chios/", { title: "Quiz vacanze a Chios | Trova l’esperienza ideale", description: "Fai il quiz di viaggio, scopri quali spiagge, villaggi ed esperienze di Chios si adattano al tuo stile e ottieni un codice sconto per il soggiorno." }],
   ["/it/esplora-chios/", { title: "Esplora Chios | Spiagge, villaggi e itinerari", description: "Organizza il viaggio a Chios con idee per spiagge, villaggi medievali, musei, gastronomia, natura e itinerari giornalieri da Kambos." }],
   ["/it/alloggio-chios/", { title: "Alloggio a Chios | Camere e appartamenti a Kambos", description: "Scopri camere e appartamenti a gestione familiare nella storica zona di Kambos, una base tranquilla vicino alla città, all’aeroporto e alle spiagge." }],
-]);
-
-const roomCorrections = new Map<string, DetailCorrection>([
-  [economyDoubleRoomsIt.seo.canonicalPath, { title: "Camera doppia economy a Chios | Kambos", description: "Camera doppia economy per due ospiti a Kambos, con aria condizionata, Wi‑Fi, frigorifero e bagno privato per un soggiorno semplice e conveniente.", heroTitle: "Camera doppia economy a Chios", heroDescription: "Una camera semplice, tranquilla e conveniente per due ospiti che desiderano una base pratica a Kambos per esplorare l’isola." }],
-  [standardDoubleRoomIt.seo.canonicalPath, { title: "Camere doppie e triple a Chios | Kambos", description: "Camere standard per 2–4 ospiti a Kambos, al piano terra con accesso al giardino o al primo piano con atmosfera da terrazza.", heroTitle: "Camere doppie e triple a Chios", heroDescription: "Camere confortevoli per coppie, amici e piccole famiglie, con scelta tra facile accesso al giardino e sistemazioni più luminose al primo piano." }],
-  [familyChiosApartmentsIt.seo.canonicalPath, { title: "Appartamenti familiari a Chios | Cucina e spazio", description: "Appartamenti familiari di 40–45 m² a Kambos con cucina completa, camera separata, soggiorno e spazio per un massimo di quattro persone.", heroTitle: "Appartamenti familiari con cucina a Chios", heroDescription: "Appartamenti indipendenti con camera separata, cucina completa e soggiorno, ideali per famiglie e permanenze più lunghe." }],
 ]);
 
 const beachCorrections: ReadonlyArray<readonly [string, DetailCorrection]> = [
@@ -112,39 +89,8 @@ function updateDetail(detail: LocalizedDetail, correction: DetailCorrection): vo
   applySeo(detail.seo.canonicalPath, correction);
 }
 
-function updateRoom(data: RoomDetailData): void {
-  const correction = roomCorrections.get(data.seo.canonicalPath);
-  if (!correction) return;
-  Object.assign(data.seo, { title: correction.title, description: correction.description });
-  Object.assign(data.hero, { title: correction.heroTitle, description: correction.heroDescription });
-  applySeo(data.seo.canonicalPath, correction);
-}
-
-function updatePageSeo(target: { seo: object }, path: string): void {
-  const correction = pageSeo.get(path);
-  if (correction) Object.assign(target.seo, correction);
-}
-
 export function applyItalianSeoCorrections(): void {
   for (const [path, correction] of pageSeo) applySeo(path, correction);
-
-  updatePageSeo(roomsCategoryIt, roomsCategoryIt.seo.canonicalPath);
-  updatePageSeo(contactPageIt, contactPageIt.seo.canonicalPath);
-  updatePageSeo(ratesPageIt, ratesPageIt.seo.canonicalPath);
-  updatePageSeo(dealsPageIt, dealsPageIt.seo.canonicalPath);
-  updatePageSeo(chiosBeachesPageIt, chiosBeachesPageIt.seo.canonicalPath);
-  updatePageSeo(chiosVillagesPageIt, chiosVillagesPageIt.seo.canonicalPath);
-  updatePageSeo(chiosMuseumsPageIt, chiosMuseumsPageIt.seo.canonicalPath);
-  updatePageSeo(familyBeachesPages.it, familyBeachesPages.it.seo.canonicalPath);
-  updatePageSeo(beachLoversPages.it, beachLoversPages.it.seo.canonicalPath);
-  updatePageSeo(kamposChiosPageIt, kamposChiosPageIt.seo.canonicalPath);
-
-  const quizCorrection = pageSeo.get(chiosQuizSchemaPages.it.path);
-  if (quizCorrection) Object.assign(chiosQuizSchemaPages.it, quizCorrection);
-
-  updateRoom(economyDoubleRoomsIt);
-  updateRoom(standardDoubleRoomIt);
-  updateRoom(familyChiosApartmentsIt);
 
   for (const beach of localizedBeachDetails) {
     if (!beach.seo.canonicalPath.startsWith("/it/")) continue;
