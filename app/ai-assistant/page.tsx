@@ -8,7 +8,9 @@ import { AiSummaryEmailBridge } from "@/components/ai/AiSummaryEmailBridge";
 import { ConversationalRoomSalesEnhanced } from "@/components/ai/ConversationalRoomSalesEnhanced";
 
 export const metadata: Metadata = {
-  title: "AI Room Finder | Voulamandis House",
+  title: {
+    absolute: "AI Room Finder | Voulamandis House",
+  },
   description: "Find live room availability and send an enquiry to reception.",
   robots: {
     index: false,
