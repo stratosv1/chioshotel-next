@@ -30,26 +30,48 @@ const localizedLanguages = languages.filter(
   (language) => language.code !== defaultLanguage,
 );
 
+function withSeoTitle(data: HomePageData, title: string): HomePageData {
+  return withUpdatedIntroReasons({
+    ...data,
+    seo: {
+      ...data.seo,
+      title,
+    },
+  });
+}
+
 function getLocalizedHomePageData(locale: string): HomePageData {
   switch (locale) {
     case "el":
-      return withUpdatedIntroReasons({
-        ...homePageEl,
-        seo: {
-          ...homePageEl.seo,
-          title: "Voulamandis House | Δωμάτια & Διαμερίσματα στη Χίο",
-        },
-      });
+      return withSeoTitle(
+        homePageEl,
+        "Voulamandis House | Δωμάτια & Διαμερίσματα στη Χίο",
+      );
     case "fr":
-      return withUpdatedIntroReasons(homePageFr);
+      return withSeoTitle(
+        homePageFr,
+        "Voulamandis House | Chambres & Appartements à Chios",
+      );
     case "de":
-      return withUpdatedIntroReasons(homePageDe);
+      return withSeoTitle(
+        homePageDe,
+        "Voulamandis House | Zimmer & Apartments auf Chios",
+      );
     case "it":
-      return withUpdatedIntroReasons(homePageIt);
+      return withSeoTitle(
+        homePageIt,
+        "Voulamandis House | Camere & Appartamenti a Chios",
+      );
     case "es":
-      return withUpdatedIntroReasons(homePageEs);
+      return withSeoTitle(
+        homePageEs,
+        "Voulamandis House | Habitaciones & Apartamentos en Chios",
+      );
     case "tr":
-      return withUpdatedIntroReasons(homePageTr);
+      return withSeoTitle(
+        homePageTr,
+        "Voulamandis House | Sakız Adası Odaları ve Daireleri",
+      );
     default:
       return withUpdatedIntroReasons(homePageEn);
   }
