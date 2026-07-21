@@ -1,4 +1,5 @@
 import { seoSnippetOverrides } from "./seo-snippet-overrides";
+import { applyTurkishSeoCorrections } from "./turkish-seo-corrections";
 
 const frenchSeoCorrections: ReadonlyArray<
   readonly [string, { title: string; description: string }]
@@ -113,4 +114,7 @@ export function applyFrenchSeoCorrections(): void {
   for (const [path, correction] of frenchSeoCorrections) {
     seoSnippetOverrides.set(path, correction);
   }
+
+  // This module is the localized correction bootstrap used by seo-title-overrides.
+  applyTurkishSeoCorrections();
 }
