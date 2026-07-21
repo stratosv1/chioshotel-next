@@ -4,6 +4,10 @@
     {
       "path": "/api/staff/calendar/occupancy-sync/",
       "schedule": "*/7 * * * *"
+    },
+    {
+      "path": "/api/staff/housekeeping/daily-arrivals-sms/",
+      "schedule": "0 4 * * *"
     }
   ]
 }
