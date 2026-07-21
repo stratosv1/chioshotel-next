@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { headers } from "next/headers";
 import { BookingFunnelAnalytics } from "@/components/analytics/BookingFunnelAnalytics";
 import { ConsentAnalytics } from "@/components/analytics/ConsentAnalytics";
 import { ConsentRealtimeProbe } from "@/components/analytics/ConsentRealtimeProbe";
 import { ContentEngagementAnalytics } from "@/components/analytics/ContentEngagementAnalytics";
+import { RoutePageViewAnalytics } from "@/components/analytics/RoutePageViewAnalytics";
 import { ExploreVoulamandisJourney } from "@/components/seo/ExploreVoulamandisJourney";
 import { VoulamandisFooterTailwind } from "@/components/VoulamandisFooterTailwind";
 import { VoulamandisHeaderTailwind } from "@/components/VoulamandisHeaderTailwind";
@@ -90,6 +92,9 @@ export default async function RootLayout({
         {!hideHeader ? <VoulamandisFooterTailwind language={htmlLanguage} /> : null}
         {!excludeAnalytics ? (
           <>
+            <Suspense fallback={null}>
+              <RoutePageViewAnalytics />
+            </Suspense>
             <BookingFunnelAnalytics language={htmlLanguage} pathname={pathname} />
             <ContentEngagementAnalytics language={htmlLanguage} pathname={pathname} />
             <ConsentRealtimeProbe language={htmlLanguage} pathname={pathname} />
