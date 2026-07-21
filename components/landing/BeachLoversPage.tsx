@@ -6,6 +6,76 @@ type BeachLoversPageProps = {
   data: BeachLoversPageData;
 };
 
+type BeachLoversUiText = {
+  heroNoteTitle: string;
+  heroNoteText: string;
+  introKicker: string;
+  beachesKicker: string;
+  stayKicker: string;
+};
+
+const beachLoversUiText: Record<
+  BeachLoversPageData["locale"],
+  BeachLoversUiText
+> = {
+  en: {
+    heroNoteTitle: "Kambos base + beach days",
+    heroNoteText:
+      "Peaceful mornings, South Chios beaches, garden evenings and direct booking from Voulamandis House.",
+    introKicker: "Beach lover experience",
+    beachesKicker: "Chios beaches",
+    stayKicker: "Stay in Kambos",
+  },
+  el: {
+    heroNoteTitle: "Κάμπος και παραλίες της Χίου",
+    heroNoteText:
+      "Ήρεμα πρωινά, παραλίες της νότιας Χίου, βραδιές στον κήπο και απευθείας κράτηση στο Voulamandis House.",
+    introKicker: "Εμπειρία για λάτρεις της παραλίας",
+    beachesKicker: "Παραλίες της Χίου",
+    stayKicker: "Διαμονή στον Κάμπο",
+  },
+  fr: {
+    heroNoteTitle: "Kambos et journées à la plage",
+    heroNoteText:
+      "Matins paisibles, plages du sud de Chios, soirées dans le jardin et réservation directe au Voulamandis House.",
+    introKicker: "Expérience pour les amoureux de la plage",
+    beachesKicker: "Plages de Chios",
+    stayKicker: "Séjour à Kambos",
+  },
+  de: {
+    heroNoteTitle: "Kambos als Basis für Strandtage",
+    heroNoteText:
+      "Ruhige Morgenstunden, Strände im Süden von Chios, Abende im Garten und Direktbuchung im Voulamandis House.",
+    introKicker: "Erlebnis für Strandliebhaber",
+    beachesKicker: "Strände auf Chios",
+    stayKicker: "Aufenthalt in Kambos",
+  },
+  it: {
+    heroNoteTitle: "Kambos e giornate al mare",
+    heroNoteText:
+      "Mattine tranquille, spiagge del sud di Chios, serate in giardino e prenotazione diretta al Voulamandis House.",
+    introKicker: "Esperienza per amanti del mare",
+    beachesKicker: "Spiagge di Chios",
+    stayKicker: "Soggiorno a Kambos",
+  },
+  es: {
+    heroNoteTitle: "Kambos y días de playa",
+    heroNoteText:
+      "Mañanas tranquilas, playas del sur de Quíos, tardes en el jardín y reserva directa en Voulamandis House.",
+    introKicker: "Experiencia para amantes de la playa",
+    beachesKicker: "Playas de Quíos",
+    stayKicker: "Estancia en Kambos",
+  },
+  tr: {
+    heroNoteTitle: "Kambos'ta konaklama ve plaj günleri",
+    heroNoteText:
+      "Huzurlu sabahlar, Sakız Adası'nın güneyindeki plajlar, bahçede akşamlar ve Voulamandis House'ta doğrudan rezervasyon.",
+    introKicker: "Plaj tutkunları için deneyim",
+    beachesKicker: "Sakız Adası plajları",
+    stayKicker: "Kambos'ta konaklama",
+  },
+};
+
 const beachLoversButtonBase =
   "inline-flex items-center justify-center rounded-full px-6 py-[13px] text-sm font-[850] leading-none no-underline transition duration-200 ease-in-out";
 
@@ -182,6 +252,7 @@ function getRoomsHref(locale: BeachLoversPageData["locale"]) {
 export function BeachLoversPage({ data }: BeachLoversPageProps) {
   const bookingHref = getBookingHref(data.locale);
   const roomsHref = getRoomsHref(data.locale);
+  const uiText = beachLoversUiText[data.locale];
 
   return (
     <main className="bg-[#fffaf2] text-slate-900">
@@ -215,17 +286,14 @@ export function BeachLoversPage({ data }: BeachLoversPageProps) {
 
           <div className={beachLoversNote}>
             <small className={beachLoversNoteLabel}>Voulamandis House</small>
-            <strong className={beachLoversNoteTitle}>Kampos base + beach days</strong>
-            <p className={beachLoversNoteText}>
-              Peaceful mornings, South Chios beaches, garden evenings and direct
-              booking from Voulamandis House.
-            </p>
+            <strong className={beachLoversNoteTitle}>{uiText.heroNoteTitle}</strong>
+            <p className={beachLoversNoteText}>{uiText.heroNoteText}</p>
           </div>
         </div>
       </section>
 
       <section className={`${beachLoversSection} ${beachLoversNarrow}`}>
-        <p className={beachLoversKicker}>Beach lover experience</p>
+        <p className={beachLoversKicker}>{uiText.introKicker}</p>
         <h2 className={beachLoversHeading}>{data.intro.title}</h2>
         <div className={beachLoversCopy}>
           {data.intro.paragraphs.map((paragraph) => (
@@ -239,7 +307,7 @@ export function BeachLoversPage({ data }: BeachLoversPageProps) {
       <section id="beaches" className="bg-white">
         <div className={beachLoversSection}>
           <div className={beachLoversSectionHead}>
-            <p className={beachLoversKicker}>Chios beaches</p>
+            <p className={beachLoversKicker}>{uiText.beachesKicker}</p>
             <h2 className={beachLoversHeading}>{data.beachesTitle}</h2>
             <p className={beachLoversIntro}>{data.beachesIntro}</p>
           </div>
@@ -280,7 +348,7 @@ export function BeachLoversPage({ data }: BeachLoversPageProps) {
         </div>
 
         <div className={beachLoversStayBox}>
-          <p className={beachLoversKickerLight}>Stay in Kampos</p>
+          <p className={beachLoversKickerLight}>{uiText.stayKicker}</p>
           <h2 className={beachLoversHeading}>{data.stay.title}</h2>
           <p className={beachLoversStayText}>{data.stay.text}</p>
           <Link href={roomsHref} className={beachLoversStayButton}>
