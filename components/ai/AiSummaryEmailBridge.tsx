@@ -33,6 +33,21 @@ function localeFromUrl(): Locale {
   return (["el","en","de","fr","it","es","tr"] as Locale[]).includes(value as Locale) ? value as Locale : "en";
 }
 
+function localeFromSummary(card: HTMLElement | null): Locale | null {
+  if (!card) return null;
+  const text = card.innerText || "";
+  const patterns: Array<[Locale, RegExp]> = [
+    ["el", /Νέα αναζήτηση/i],
+    ["en", /New search/i],
+    ["de", /Neue Suche/i],
+    ["fr", /Nouvelle recherche/i],
+    ["it", /Nuova ricerca/i],
+    ["es", /Nueva búsqueda/i],
+    ["tr", /Yeni arama/i],
+  ];
+  return patterns.find(([, pattern]) => pattern.test(text))?.[0] || null;
+}
+
 function findSummaryCard(): HTMLElement | null {
   const newSearchPattern = /Νέα αναζήτηση|New search|Neue Suche|Nouvelle recherche|Nuova ricerca|Nueva búsqueda|Yeni arama/i;
   const button = Array.from(document.querySelectorAll<HTMLElement>("button,a")).find(node => newSearchPattern.test((node.textContent || "").trim()));
@@ -65,11 +80,11 @@ export function AiSummaryEmailBridge() {
   const copy = COPY[locale];
 
   useEffect(() => {
-    setLocale(localeFromUrl());
-    const locate = () => setHost(current => {
+    const locate = () => {
       const next = findSummaryCard();
-      return current === next ? current : next;
-    });
+      setHost(current => current === next ? current : next);
+      setLocale(localeFromSummary(next) || localeFromUrl());
+    };
     locate();
     const observer = new MutationObserver(locate);
     observer.observe(document.body, { childList:true, subtree:true });
