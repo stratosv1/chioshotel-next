@@ -1,3 +1,5 @@
+import { applyFrenchSeoCorrections } from "./french-seo-corrections";
+
 export const preferredMetadataTitles = new Map<string, string>([
   ["Chios for Beach Lovers", "Chios Beaches for Sea Lovers | Best Coastal Spots"],
   ["Economy Double Rooms in Chios", "Economy Double Rooms in Chios | Comfortable Stay"],
@@ -116,3 +118,5 @@ export const preferredMetadataTitles = new Map<string, string>([
   ["Villages médiévaux de Chios", "Villages médiévaux de Chios | Histoire et châteaux"],
   ["Villages du mastic à Chios", "Villages du mastic à Chios | Culture et itinéraires"],
 ]);
+
+applyFrenchSeoCorrections();
