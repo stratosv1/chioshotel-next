@@ -8,7 +8,13 @@ import { buildHomePageSchema } from "@/content/schema";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-const homePageData = withUpdatedIntroReasons(homePageEn);
+const homePageData = withUpdatedIntroReasons({
+  ...homePageEn,
+  seo: {
+    ...homePageEn.seo,
+    title: "Voulamandis House | Rooms & Apartments in Chios",
+  },
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://chioshotel.gr"),
