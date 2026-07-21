@@ -69,6 +69,35 @@ function withFrenchHomepageCopy(data: HomePageData): HomePageData {
   };
 }
 
+function withItalianHomepageCopy(data: HomePageData): HomePageData {
+  return {
+    ...data,
+    hero: {
+      ...data.hero,
+      title: "Camere e appartamenti a Chios, nel cuore di Kambos",
+      descriptionHtml:
+        "Cerchi <strong>camere a Chios</strong> o un <strong>appartamento a Chios</strong>? <strong>Voulamandis House</strong> ti accoglie a Kambos con camere confortevoli, appartamenti familiari e un’atmosfera tranquilla.",
+      imageAlt:
+        "Camere e appartamenti a Chios - Voulamandis House a Kambos",
+    },
+    intro: {
+      ...data.intro,
+      left: {
+        ...data.intro.left,
+        bodyHtml:
+          "Cerchi <strong>camere a Chios</strong> o un <strong>alloggio a Chios</strong> per un soggiorno tranquillo e curato? Voulamandis House ti accoglie nella storica zona di Kambos, tra giardini e agrumeti, con un’ospitalità personale e autentica.",
+      },
+    },
+    roomsPreview: {
+      ...data.roomsPreview,
+      sideCard: {
+        ...data.roomsPreview.sideCard,
+        text: "Per chi cerca un alloggio a Chios con un’ospitalità più personale, Voulamandis House è una scelta autentica e tranquilla a Kambos.",
+      },
+    },
+  };
+}
+
 function getLocalizedHomePageData(locale: string): HomePageData {
   switch (locale) {
     case "el":
@@ -88,7 +117,7 @@ function getLocalizedHomePageData(locale: string): HomePageData {
       );
     case "it":
       return withSeoTitle(
-        homePageIt,
+        withItalianHomepageCopy(homePageIt),
         "Voulamandis House | Camere & Appartamenti a Chios",
       );
     case "es":
