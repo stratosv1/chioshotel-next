@@ -237,7 +237,10 @@ export function AnswerFirstSeoBlock({ kind, language = "en" }: AnswerFirstSeoBlo
   const copy = answerFirstCopy[kind][language] ?? answerFirstCopy[kind].en;
 
   return (
-    <section className="bg-[#f7efe5] px-4 py-8 text-[#2f261f] md:px-6 md:py-10">
+    <section
+      className="bg-[#f7efe5] px-4 py-8 text-[#2f261f] md:px-6 md:py-10"
+      data-nosnippet
+    >
       <div className="mx-auto max-w-[1180px] rounded-[28px] border border-[#8e6607]/20 bg-white p-5 shadow-xl shadow-black/5 md:rounded-[32px] md:p-8">
         <span className="text-[10px] font-black uppercase tracking-[0.16em] text-[#8e6607] md:text-xs">
           {copy.eyebrow}
