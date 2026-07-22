@@ -28,11 +28,30 @@ source = source.replace(
 );
 
 source = source.replace(
+  `return <main className="min-h-[100dvh] bg-[#f7f7f7] text-[#222222]">`,
+  `return <main data-ai-chat-shell="true" className="flex h-[var(--ai-visual-height,100dvh)] min-h-0 flex-col overflow-hidden bg-[#f7f7f7] text-[#222222]">`,
+);
+
+source = source.replace(
   `<div className="mx-auto max-w-3xl px-3 pb-28 pt-5 sm:px-5"><div className="space-y-4">`,
+  `<div data-ai-chat-scroll="true" className="mx-auto min-h-0 w-full max-w-3xl flex-1 overflow-y-auto overscroll-contain px-3 pb-5 pt-5 sm:px-5"><div data-ai-conversation-feed="true" className="space-y-4">`,
+);
+
+source = source.replace(
   `<div className="mx-auto max-w-3xl px-3 pb-28 pt-5 sm:px-5"><div data-ai-conversation-feed="true" className="space-y-4">`,
+  `<div data-ai-chat-scroll="true" className="mx-auto min-h-0 w-full max-w-3xl flex-1 overflow-y-auto overscroll-contain px-3 pb-5 pt-5 sm:px-5"><div data-ai-conversation-feed="true" className="space-y-4">`,
+);
+
+source = source.replace(
+  `className="fixed inset-x-0 bottom-0 z-20 border-t border-stone-200 bg-white/95 p-3 backdrop-blur"`,
+  `className="z-20 shrink-0 border-t border-stone-200 bg-white/95 p-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] backdrop-blur"`,
 );
 
 const required = [
+  `data-ai-chat-shell="true"`,
+  `h-[var(--ai-visual-height,100dvh)]`,
+  `data-ai-chat-scroll="true"`,
+  `min-h-0 w-full max-w-3xl flex-1 overflow-y-auto overscroll-contain`,
   `data-ai-chat-composer="persistent"`,
   `data-ai-conversation-feed="true"`,
   `!['language','preferences','searching','selecting','breakfast','complete'].includes(step)`,
@@ -42,23 +61,29 @@ const required = [
   `onPointerDown={(event)=>event.preventDefault()}`,
   `disabled={step==="interpreting"||!input.trim()}`,
   `aria-label={t.send}`,
+  `pb-[calc(0.75rem+env(safe-area-inset-bottom))]`,
 ];
 
 for (const token of required) {
   if (!source.includes(token)) {
-    throw new Error(`AI mobile composer requirement missing: ${token}`);
+    throw new Error(`AI mobile chat viewport requirement missing: ${token}`);
   }
 }
 
-if (
-  source.includes(
-    `!['language','preferences','interpreting','searching','selecting','breakfast','complete'].includes(step)`,
-  )
-) {
-  throw new Error("AI composer still unmounts while the assistant is interpreting");
+const forbidden = [
+  `min-h-[100dvh] bg-[#f7f7f7]`,
+  `px-3 pb-28 pt-5`,
+  `fixed inset-x-0 bottom-0 z-20`,
+  `!['language','preferences','interpreting','searching','selecting','breakfast','complete'].includes(step)`,
+];
+
+for (const token of forbidden) {
+  if (source.includes(token)) {
+    throw new Error(`AI mobile chat still contains legacy page scrolling: ${token}`);
+  }
 }
 
 fs.writeFileSync(file, source);
 console.log(
-  "AI mobile composer patched: persistent focus, anchored feed, send button does not steal focus",
+  "AI mobile chat patched: visual viewport shell, internal message scroller, persistent keyboard focus",
 );
