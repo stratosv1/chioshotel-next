@@ -23,6 +23,7 @@ const PATCHES = [
   "patch-active-ai-assistant-logic.cjs",
   "patch-ai-natural-sales-tone.cjs",
   "patch-ai-room-detail-thumbnail-row.cjs",
+  "fix-ai-localized-apartment-detail-parser.cjs",
 ];
 
 const SLOW_PATCH_MS = 500;
