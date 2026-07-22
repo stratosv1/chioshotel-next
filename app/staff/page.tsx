@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import styles from "./staff.module.css";
 
 export const metadata: Metadata = {
@@ -6,10 +6,7 @@ export const metadata: Metadata = {
   robots: {
     index: false,
     follow: false,
-    googleBot: {
-      index: false,
-      follow: false,
-    },
+    googleBot: { index: false, follow: false },
   },
 };
 
@@ -20,6 +17,7 @@ const staffLinks = [
     label: "Τιμές & Διαθεσιμότητα",
     subText: "Για τις τηλεφωνικές κλήσεις",
     className: styles.callPrices,
+    external: true,
   },
   {
     href: "/staff/calendar",
@@ -41,12 +39,13 @@ const staffLinks = [
     label: "Υπηρεσίες Housekeeping",
     subText: "Αιτήματα για δωμάτιο & ανέσεις",
     className: styles.housekeeping,
+    external: true,
   },
   {
-    href: "https://chioshotels.elementor.cloud/performance/",
+    href: "/staff/statistics",
     icon: "📈",
-    label: "Στατιστικά Performance",
-    subText: "Προστατευμένη πρόσβαση staff",
+    label: "Στατιστικά Voulamandis House",
+    subText: "Πληρότητα, charges και σύγκριση 2026 με 2025",
     className: styles.performance,
   },
   {
@@ -91,13 +90,10 @@ export default function StaffPage() {
               key={item.href}
               href={item.href}
               className={`${styles.staffCard} ${item.className}`}
-              target="_blank"
-              rel="nofollow noopener noreferrer"
+              target={item.external ? "_blank" : undefined}
+              rel={item.external ? "nofollow noopener noreferrer" : "nofollow"}
             >
-              <span className={styles.cardIcon} aria-hidden="true">
-                {item.icon}
-              </span>
-
+              <span className={styles.cardIcon} aria-hidden="true">{item.icon}</span>
               <span className={styles.cardContent}>
                 <span className={styles.cardLabel}>{item.label}</span>
                 <span className={styles.cardSubText}>{item.subText}</span>
@@ -107,10 +103,7 @@ export default function StaffPage() {
         </section>
 
         <section className={styles.staffNotice}>
-          <strong>Σημείωση ασφαλείας:</strong> Μην αποθηκεύεις προσωπικά
-          στοιχεία πελατών ή ευαίσθητα οικονομικά δεδομένα μέσα σε αυτή τη
-          σελίδα. Η σελίδα λειτουργεί μόνο ως προστατευμένο κέντρο γρήγορης
-          πρόσβασης.
+          <strong>Σημείωση ασφαλείας:</strong> Η περιοχή Staff είναι ιδιωτική και δεν εμφανίζεται στις μηχανές αναζήτησης.
         </section>
       </div>
     </main>
