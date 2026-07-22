@@ -67,31 +67,33 @@ const L = {
   },
 };
 
+// High-confidence evidence only. Shared hospitality words such as reception,
+// WhatsApp, Email and room numbers are intentionally ignored.
 const LANGUAGE_EVIDENCE = {
   el: /[α-ωάέήίόύώϊϋΐΰ]/iu,
-  en: /\b(the|your|you|room|guests?|dates?|available|reception|nearby|would|please)\b/i,
-  de: /\b(der|die|das|ihr|sie|zimmer|gäste|personen|verfügbar|rezeption|möchten|bitte)\b/i,
-  fr: /\b(le|la|les|votre|vous|chambre|personnes|disponible|réception|souhaitez|proche)\b/i,
-  it: /\b(il|la|le|vostro|camera|persone|disponibile|reception|vuoi|desideri|vicina)\b/i,
-  es: /\b(el|la|los|su|usted|habitación|personas|disponible|recepción|quieres|cercana)\b/i,
-  tr: /\b(oda|kişi|kişilik|müsait|resepsiyon|ister|yakın|tarih|konaklama|gönder)\b/i,
+  en: /\b(the|your|you|would|please|when|how many|staying|nearby|suitable|check in|check out)\b/i,
+  de: /\b(der|die|das|für|möchten|zimmer|gäste|personen|verfügbar|anreise|abreise|bitte|ihnen)\b/i,
+  fr: /\b(le|la|les|votre|vous|chambre|personnes|disponible|souhaitez|proche|arrivée|départ)\b/i,
+  it: /\b(il|lo|gli|vostro|camera|persone|disponibile|desidera|vicina|arrivo|partenza|soggiorno)\b/i,
+  es: /\b(el|los|usted|habitación|personas|disponible|quiere|cercana|llegada|salida|estancia)\b/i,
+  tr: /(?:[çğıöşüİ])|\b(merhaba|konakla\w*|hangi|giriş\w*|çıkış\w*|tarih\w*|kişi\w*|oda|müsait|ister\w*|yakın|kal\w*|gönder\w*)\b/iu,
 };
 
 const FOREIGN_MARKERS = {
   el: [
-    /\b(your|room|guests?|available|reception|would you)\b/i,
-    /\b(zimmer|gäste|verfügbar|rezeption)\b/i,
-    /\b(chambre|personnes|disponible|réception)\b/i,
-    /\b(camera|persone|disponibile)\b/i,
-    /\b(habitación|personas|disponible|recepción)\b/i,
-    /\b(oda|kişi|müsait|resepsiyon)\b/i,
+    /\b(would you|how many guests|check in|check out|your booking|your stay)\b/i,
+    /\b(wie viele|möchten sie|anreise|abreise)\b/i,
+    /\b(combien de|souhaitez-vous|arrivée|départ)\b/i,
+    /\b(quante persone|desidera|arrivo|partenza)\b/i,
+    /\b(cuántas personas|quiere|llegada|salida)\b/i,
+    /\b(kaç kişi|ister misiniz|giriş|çıkış)\b/i,
   ],
-  en: [/[α-ωάέήίόύώϊϋΐΰ]/iu, /\b(zimmer|gäste|rezeption)\b/i, /\b(chambre|réception)\b/i, /\b(habitación|recepción)\b/i, /\b(oda|kişi|resepsiyon)\b/i],
-  de: [/[α-ωάέήίόύώϊϋΐΰ]/iu, /\b(your|room|guests?|would you)\b/i, /\b(chambre|réception)\b/i, /\b(habitación|recepción)\b/i, /\b(oda|kişi|resepsiyon)\b/i],
-  fr: [/[α-ωάέήίόύώϊϋΐΰ]/iu, /\b(your|room|guests?|would you)\b/i, /\b(zimmer|gäste|rezeption)\b/i, /\b(habitación|recepción)\b/i, /\b(oda|kişi|resepsiyon)\b/i],
-  it: [/[α-ωάέήίόύώϊϋΐΰ]/iu, /\b(your|room|guests?|would you)\b/i, /\b(zimmer|gäste|rezeption)\b/i, /\b(chambre|réception)\b/i, /\b(habitación|recepción)\b/i, /\b(oda|kişi|resepsiyon)\b/i],
-  es: [/[α-ωάέήίόύώϊϋΐΰ]/iu, /\b(your|room|guests?|would you)\b/i, /\b(zimmer|gäste|rezeption)\b/i, /\b(chambre|réception)\b/i, /\b(oda|kişi|resepsiyon)\b/i],
-  tr: [/[α-ωάέήίόύώϊϋΐΰ]/iu, /\b(your|room|guests?|would you)\b/i, /\b(zimmer|gäste|rezeption)\b/i, /\b(chambre|réception)\b/i, /\b(habitación|recepción)\b/i],
+  en: [/[α-ωάέήίόύώϊϋΐΰ]/iu, /\b(wie viele|möchten sie|anreise|abreise)\b/i, /\b(combien de|souhaitez-vous|arrivée|départ)\b/i, /\b(cuántas personas|llegada|salida)\b/i, /\b(kaç kişi|giriş|çıkış)\b/i],
+  de: [/[α-ωάέήίόύώϊϋΐΰ]/iu, /\b(would you|how many guests|check in|check out)\b/i, /\b(combien de|souhaitez-vous|arrivée|départ)\b/i, /\b(cuántas personas|llegada|salida)\b/i, /\b(kaç kişi|giriş|çıkış)\b/i],
+  fr: [/[α-ωάέήίόύώϊϋΐΰ]/iu, /\b(would you|how many guests|check in|check out)\b/i, /\b(wie viele|möchten sie|anreise|abreise)\b/i, /\b(cuántas personas|llegada|salida)\b/i, /\b(kaç kişi|giriş|çıkış)\b/i],
+  it: [/[α-ωάέήίόύώϊϋΐΰ]/iu, /\b(would you|how many guests|check in|check out)\b/i, /\b(wie viele|möchten sie|anreise|abreise)\b/i, /\b(combien de|souhaitez-vous|arrivée|départ)\b/i, /\b(cuántas personas|llegada|salida)\b/i, /\b(kaç kişi|giriş|çıkış)\b/i],
+  es: [/[α-ωάέήίόύώϊϋΐΰ]/iu, /\b(would you|how many guests|check in|check out)\b/i, /\b(wie viele|möchten sie|anreise|abreise)\b/i, /\b(combien de|souhaitez-vous|arrivée|départ)\b/i, /\b(kaç kişi|giriş|çıkış)\b/i],
+  tr: [/[α-ωάέήίόύώϊϋΐΰ]/iu, /\b(would you|how many guests|check in|check out)\b/i, /\b(wie viele|möchten sie|anreise|abreise)\b/i, /\b(combien de|souhaitez-vous|arrivée|départ)\b/i, /\b(cuántas personas|llegada|salida)\b/i],
 };
 
 function assert(condition, message) {
@@ -100,6 +102,12 @@ function assert(condition, message) {
 
 function normalize(text) {
   return String(text || "").replace(/\s+/g, " ").trim();
+}
+
+function attachDebug(error, details) {
+  const err = error instanceof Error ? error : new Error(String(error));
+  err.qaDetails = details;
+  return err;
 }
 
 async function post(path, body) {
@@ -140,27 +148,45 @@ function fingerprint(text) {
     .slice(0, 240);
 }
 
-function assertNoLoop(assistantAnswers) {
-  const fingerprints = assistantAnswers.map(fingerprint).filter(Boolean);
-  for (let i = 1; i < fingerprints.length; i += 1) {
-    assert(fingerprints[i] !== fingerprints[i - 1], `loop detected: identical consecutive assistant answers at turns ${i} and ${i + 1}`);
+function stateKey(snapshot) {
+  const search = snapshot?.search || {};
+  return JSON.stringify({
+    action: snapshot?.action || null,
+    checkin: search.checkin || null,
+    checkout: search.checkout || null,
+    guests: Number(search.guests) || null,
+    offers: Number(snapshot?.offers) || 0,
+    handoff: snapshot?.receptionHandoffOffered === true,
+    noAvailability: snapshot?.noAvailability === true,
+  });
+}
+
+function questionState(answer) {
+  const a = normalize(answer).toLowerCase();
+  if (/(guest|how many|άτομα|επισκέπτ|person|personen|personnes|persone|personas|kişi)/i.test(a)) return "guests";
+  if (/(check.?out|departure|αναχώρ|abreise|départ|partenza|salida|çıkış)/i.test(a)) return "checkout";
+  if (/(check.?in|arrival|άφιξ|ankunft|arrivée|arrivo|llegada|giriş)/i.test(a)) return "checkin";
+  return null;
+}
+
+function assertNoLoop(snapshots) {
+  const rows = snapshots.map((snapshot) => ({
+    ...snapshot,
+    fp: fingerprint(snapshot.answer),
+    state: stateKey(snapshot),
+    question: questionState(snapshot.answer),
+  }));
+
+  for (let i = 1; i < rows.length; i += 1) {
+    const sameAnswer = rows[i].fp && rows[i].fp === rows[i - 1].fp;
+    const sameState = rows[i].state === rows[i - 1].state;
+    assert(!(sameAnswer && sameState), `loop detected: identical response with unchanged conversation state at turns ${i} and ${i + 1}`);
   }
 
-  const counts = new Map();
-  for (const fp of fingerprints) counts.set(fp, (counts.get(fp) || 0) + 1);
-  const repeated = [...counts.entries()].find(([, count]) => count >= 3);
-  assert(!repeated, "loop detected: the same assistant answer appeared three times");
-
-  const questionStates = assistantAnswers.map((answer) => {
-    const a = normalize(answer).toLowerCase();
-    if (/(check.?in|arrival|άφιξ|ankunft|arrivée|arrivo|llegada|giriş)/i.test(a)) return "checkin";
-    if (/(check.?out|departure|αναχώρ|abreise|départ|partenza|salida|çıkış)/i.test(a)) return "checkout";
-    if (/(guest|άτομα|επισκέπτ|person|personen|persone|personas|kişi)/i.test(a)) return "guests";
-    return null;
-  }).filter(Boolean);
-
-  for (let i = 2; i < questionStates.length; i += 1) {
-    assert(!(questionStates[i] === questionStates[i - 1] && questionStates[i] === questionStates[i - 2]), `loop detected: assistant asked for ${questionStates[i]} three times`);
+  for (let i = 2; i < rows.length; i += 1) {
+    const sameQuestion = rows[i].question && rows[i].question === rows[i - 1].question && rows[i].question === rows[i - 2].question;
+    const unchangedState = rows[i].state === rows[i - 1].state && rows[i].state === rows[i - 2].state;
+    assert(!(sameQuestion && unchangedState), `loop detected: assistant asked for ${rows[i].question} three times without progress`);
   }
 }
 
@@ -175,28 +201,34 @@ function validateOffers(offers, guests) {
   }
 }
 
-function isTerminalAction(payload) {
+function hasVisibleCTA(payload) {
   const answer = normalize(payload?.answer);
   const offers = Array.isArray(payload?.offers) ? payload.offers : [];
   return (
     offers.length > 0 ||
     payload?.receptionHandoffOffered === true ||
-    payload?.noAvailability === true ||
     /\b(whatsapp|email|e-mail|reception|rezeption|réception|recepción|resepsiyon)\b/i.test(answer)
   );
 }
 
+function isTerminalAction(payload) {
+  const completeSearch = payload?.action === "search_rooms" && payload?.search?.checkin && payload?.search?.checkout && Number(payload?.search?.guests);
+  return Boolean(completeSearch && hasVisibleCTA(payload));
+}
+
 function nextHumanReply(language, payload, step) {
-  const answer = normalize(payload?.answer).toLowerCase();
   const copy = L[language];
-
   if (step === 0) return copy.start;
-  if (/(date|dates|check.?in|arrival|άφιξ|ημερομην|ankunft|arrivée|arrivo|llegada|tarih|giriş)/i.test(answer)) return copy.dates;
-  if (/(guest|people|person|άτομα|επισκέπτ|gäste|personen|personnes|persone|personas|kişi)/i.test(answer)) return copy.guests;
 
+  // Behave like a human who remembers what has already been supplied.
+  // State takes priority over keywords in an answer that may repeat dates.
   const search = payload?.search || {};
   if (!search.checkin || !search.checkout) return copy.dates;
   if (!Number(search.guests)) return copy.guests;
+
+  const answer = normalize(payload?.answer).toLowerCase();
+  if (/(guest|how many|άτομα|επισκέπτ|gäste|personen|personnes|persone|personas|kişi)/i.test(answer)) return copy.guests;
+  if (/(date|check.?in|arrival|άφιξ|ημερομην|ankunft|arrivée|arrivo|llegada|tarih|giriş)/i.test(answer)) return copy.dates;
   return copy.contact;
 }
 
@@ -214,107 +246,151 @@ async function callAssistant({ language, messages, search = {}, selectedRoom }) 
   return { payload, durationMs };
 }
 
+function transcriptAssistant(payload) {
+  return {
+    role: "assistant",
+    content: payload.answer,
+    action: payload.action,
+    search: payload.search,
+    offers: Array.isArray(payload.offers) ? payload.offers.length : 0,
+    noAvailability: payload.noAvailability === true,
+    receptionHandoffOffered: payload.receptionHandoffOffered === true,
+  };
+}
+
+function loopSnapshot(payload) {
+  return {
+    answer: payload.answer,
+    action: payload.action,
+    search: payload.search,
+    offers: Array.isArray(payload.offers) ? payload.offers.length : 0,
+    noAvailability: payload.noAvailability === true,
+    receptionHandoffOffered: payload.receptionHandoffOffered === true,
+  };
+}
+
 async function runBookingJourney(language) {
   const messages = [];
-  const assistantAnswers = [];
+  const snapshots = [];
   const transcript = [];
   let search = {};
   let terminalPayload = null;
   let totalDurationMs = 0;
 
-  for (let step = 0; step < MAX_TURNS; step += 1) {
-    const userText = nextHumanReply(language, terminalPayload, step);
-    messages.push({ role: "user", content: userText });
-    transcript.push({ role: "user", content: userText });
+  try {
+    for (let step = 0; step < MAX_TURNS; step += 1) {
+      const userText = nextHumanReply(language, terminalPayload, step);
+      messages.push({ role: "user", content: userText });
+      transcript.push({ role: "user", content: userText });
 
-    const { payload, durationMs } = await callAssistant({ language, messages, search });
-    totalDurationMs += durationMs;
-    search = payload.search || search;
-    terminalPayload = payload;
+      const { payload, durationMs } = await callAssistant({ language, messages, search });
+      totalDurationMs += durationMs;
+      search = payload.search || search;
+      terminalPayload = payload;
 
-    assertLanguage(payload.answer, language, step + 1);
-    assistantAnswers.push(payload.answer);
-    transcript.push({
-      role: "assistant",
-      content: payload.answer,
-      action: payload.action,
-      search: payload.search,
-      offers: Array.isArray(payload.offers) ? payload.offers.length : 0,
-      receptionHandoffOffered: payload.receptionHandoffOffered === true,
-    });
-    messages.push({ role: "assistant", content: payload.answer });
+      assertLanguage(payload.answer, language, step + 1);
+      snapshots.push(loopSnapshot(payload));
+      transcript.push(transcriptAssistant(payload));
+      messages.push({ role: "assistant", content: payload.answer });
 
-    if (payload.action === "search_rooms" && payload.search?.checkin && payload.search?.checkout && Number(payload.search?.guests)) {
-      const offers = Array.isArray(payload.offers) ? payload.offers : [];
-      if (offers.length) validateOffers(offers, Number(payload.search.guests));
       if (isTerminalAction(payload)) break;
     }
+
+    assertNoLoop(snapshots);
+    assert(terminalPayload, "journey produced no assistant response");
+    assert(isTerminalAction(terminalPayload), `journey did not finish with a visible CTA/outcome within ${MAX_TURNS} turns`);
+
+    const offers = Array.isArray(terminalPayload.offers) ? terminalPayload.offers : [];
+    if (offers.length) validateOffers(offers, Number(terminalPayload.search.guests));
+
+    return {
+      totalDurationMs,
+      turns: snapshots.length,
+      finalAction: terminalPayload.action,
+      finalSearch: terminalPayload.search,
+      offers: offers.length,
+      noAvailability: terminalPayload.noAvailability === true,
+      receptionHandoffOffered: terminalPayload.receptionHandoffOffered === true,
+      transcript,
+    };
+  } catch (error) {
+    throw attachDebug(error, {
+      totalDurationMs,
+      turns: snapshots.length,
+      finalAction: terminalPayload?.action,
+      finalSearch: terminalPayload?.search,
+      transcript,
+    });
   }
-
-  assertNoLoop(assistantAnswers);
-  assert(terminalPayload, "journey produced no assistant response");
-  assert(isTerminalAction(terminalPayload), `journey did not finish with an actionable CTA/outcome within ${MAX_TURNS} turns`);
-  assert(
-    terminalPayload.action === "search_rooms" || terminalPayload.receptionHandoffOffered === true,
-    `journey ended with non-terminal action ${terminalPayload.action}`,
-  );
-
-  return {
-    totalDurationMs,
-    turns: assistantAnswers.length,
-    finalAction: terminalPayload.action,
-    finalSearch: terminalPayload.search,
-    offers: Array.isArray(terminalPayload.offers) ? terminalPayload.offers.length : 0,
-    noAvailability: terminalPayload.noAvailability === true,
-    receptionHandoffOffered: terminalPayload.receptionHandoffOffered === true,
-    transcript,
-  };
 }
 
 async function runCorrectionJourney(language) {
   const copy = L[language];
   const messages = [{ role: "user", content: `${copy.dates} ${copy.guests}` }];
   const transcript = [...messages];
+  const snapshots = [];
   let search = {};
+  let totalDurationMs = 0;
 
-  const first = await callAssistant({ language, messages, search });
-  assertLanguage(first.payload.answer, language, 1);
-  messages.push({ role: "assistant", content: first.payload.answer });
-  transcript.push({ role: "assistant", content: first.payload.answer, action: first.payload.action, search: first.payload.search });
-  search = first.payload.search || {};
+  try {
+    const first = await callAssistant({ language, messages, search });
+    totalDurationMs += first.durationMs;
+    assertLanguage(first.payload.answer, language, 1);
+    messages.push({ role: "assistant", content: first.payload.answer });
+    transcript.push(transcriptAssistant(first.payload));
+    snapshots.push(loopSnapshot(first.payload));
+    search = first.payload.search || {};
 
-  messages.push({ role: "user", content: copy.correction });
-  transcript.push({ role: "user", content: copy.correction });
+    messages.push({ role: "user", content: copy.correction });
+    transcript.push({ role: "user", content: copy.correction });
 
-  const second = await callAssistant({ language, messages, search });
-  assertLanguage(second.payload.answer, language, 2);
-  transcript.push({ role: "assistant", content: second.payload.answer, action: second.payload.action, search: second.payload.search });
+    const second = await callAssistant({ language, messages, search });
+    totalDurationMs += second.durationMs;
+    assertLanguage(second.payload.answer, language, 2);
+    transcript.push(transcriptAssistant(second.payload));
+    snapshots.push(loopSnapshot(second.payload));
 
-  assert(second.payload.action === "search_rooms", `correction did not trigger search_rooms (got ${second.payload.action})`);
-  assert(second.payload.search?.checkin === "2026-09-16", `correction checkin not applied: ${second.payload.search?.checkin}`);
-  assert(second.payload.search?.checkout === "2026-09-19", `correction checkout not applied: ${second.payload.search?.checkout}`);
-  assert(Number(second.payload.search?.guests) === 4, `correction guests not applied: ${second.payload.search?.guests}`);
-  assert(isTerminalAction(second.payload), "corrected journey did not end in an actionable outcome");
-  assertNoLoop([first.payload.answer, second.payload.answer]);
+    assert(second.payload.action === "search_rooms", `correction did not trigger search_rooms (got ${second.payload.action})`);
+    assert(second.payload.search?.checkin === "2026-09-16", `correction checkin not applied: ${second.payload.search?.checkin}`);
+    assert(second.payload.search?.checkout === "2026-09-19", `correction checkout not applied: ${second.payload.search?.checkout}`);
+    assert(Number(second.payload.search?.guests) === 4, `correction guests not applied: ${second.payload.search?.guests}`);
+    assert(isTerminalAction(second.payload), "corrected journey did not end in a visible CTA/outcome");
+    assertNoLoop(snapshots);
 
-  const offers = Array.isArray(second.payload.offers) ? second.payload.offers : [];
-  if (offers.length) validateOffers(offers, 4);
+    const offers = Array.isArray(second.payload.offers) ? second.payload.offers : [];
+    if (offers.length) validateOffers(offers, 4);
 
-  return { totalDurationMs: first.durationMs + second.durationMs, transcript };
+    return {
+      totalDurationMs,
+      firstSearch: first.payload.search,
+      correctedSearch: second.payload.search,
+      finalAction: second.payload.action,
+      offers: offers.length,
+      receptionHandoffOffered: second.payload.receptionHandoffOffered === true,
+      transcript,
+    };
+  } catch (error) {
+    throw attachDebug(error, { totalDurationMs, transcript });
+  }
 }
 
 async function runGeneralJourney(language) {
   const messages = [{ role: "user", content: L[language].general }];
-  const { payload, durationMs } = await callAssistant({ language, messages });
-  assertLanguage(payload.answer, language, 1);
-  assert(payload.action === "respond", `general question expected respond, got ${payload.action}`);
-  assert(!payload.bookingConfirmed, "general response falsely confirmed a booking");
-  return {
-    totalDurationMs: durationMs,
-    finalAction: payload.action,
-    answer: payload.answer,
-    transcript: [{ role: "user", content: L[language].general }, { role: "assistant", content: payload.answer, action: payload.action }],
-  };
+  const transcript = [...messages];
+  let durationMs = 0;
+
+  try {
+    const result = await callAssistant({ language, messages });
+    durationMs = result.durationMs;
+    const { payload } = result;
+    transcript.push(transcriptAssistant(payload));
+    assertLanguage(payload.answer, language, 1);
+    assert(payload.action === "respond", `general question expected respond, got ${payload.action}`);
+    assert(!payload.bookingConfirmed, "general response falsely confirmed a booking");
+    return { totalDurationMs: durationMs, finalAction: payload.action, answer: payload.answer, transcript };
+  } catch (error) {
+    throw attachDebug(error, { totalDurationMs: durationMs, transcript });
+  }
 }
 
 async function runUnsafeBookingScenario() {
@@ -355,15 +431,16 @@ async function main() {
   console.log(`Running ${scenarios.length} multi-turn scenarios.`);
 
   const report = {
-    version: 2,
-    purpose: "Human-like multi-turn QA: language consistency, terminal CTA/action, loop detection, corrections and safety",
+    version: 3,
+    purpose: "Human-like multi-turn QA: language consistency, visible CTA/action, progress-aware loop detection, corrections and safety",
     target: BASE_URL,
     startedAt: new Date().toISOString(),
     criteria: {
-      languageConsistency: "Every assistant answer is inspected, not only payload.language",
-      terminalAction: "Booking journeys must finish with room offers or reception handoff",
-      loopDetection: `No repeated answers/questions and completion within ${MAX_TURNS} assistant turns`,
+      languageConsistency: "Every assistant answer is inspected; shared hospitality terms do not create false failures",
+      terminalAction: "Booking journeys must finish with room offers or a visible reception/Email/WhatsApp handoff",
+      loopDetection: `Repeated text is a loop only when conversation state does not progress; completion required within ${MAX_TURNS} turns`,
       correctionHandling: "Changed dates and guests must replace prior values",
+      failureEvidence: "Failed scenarios retain the complete transcript and last parsed state",
     },
     total: scenarios.length,
     passed: 0,
@@ -381,7 +458,15 @@ async function main() {
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       report.failed += 1;
-      report.results.push({ id: scenario.id, type: scenario.type, language: scenario.language, status: "fail", durationMs: Date.now() - started, error: message });
+      report.results.push({
+        id: scenario.id,
+        type: scenario.type,
+        language: scenario.language,
+        status: "fail",
+        durationMs: Date.now() - started,
+        error: message,
+        details: error?.qaDetails || undefined,
+      });
       console.error(`✗ ${scenario.id}: ${message}`);
     }
   }
