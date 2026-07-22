@@ -79,15 +79,19 @@ source = source.replace(
 );
 source = source.replace(
   'className={`mt-2 flex flex-wrap content-start gap-2 pr-1 transition-all ${expanded?"max-h-[220px] overflow-y-auto":"max-h-[128px] overflow-hidden"}`}',
-  'className="mt-1.5 grid grid-cols-2 gap-1.5 sm:grid-cols-4"',
+  'className="mt-1.5 grid grid-cols-4 gap-1.5"',
 );
 source = source.replace(
   'className={`mt-2 grid grid-cols-2 gap-2 pr-1 transition-all ${expanded?"max-h-[260px] overflow-y-auto":"max-h-[150px] overflow-hidden"}`}',
-  'className="mt-1.5 grid grid-cols-2 gap-1.5 sm:grid-cols-4"',
+  'className="mt-1.5 grid grid-cols-4 gap-1.5"',
 );
 source = source.replace(
   'className="mt-2 grid grid-cols-2 gap-2 pr-1 sm:grid-cols-3"',
+  'className="mt-1.5 grid grid-cols-4 gap-1.5"',
+);
+source = source.replace(
   'className="mt-1.5 grid grid-cols-2 gap-1.5 sm:grid-cols-4"',
+  'className="mt-1.5 grid grid-cols-4 gap-1.5"',
 );
 source = source.replace(
   'className="inline-flex items-center gap-1.5 rounded-full border border-stone-200 bg-[#f7f1e8] px-3 py-2 text-[12px] font-semibold text-stone-700"',
@@ -110,7 +114,7 @@ source = source.replace('className="mt-3 w-full rounded-2xl bg-[#ff385c] px-5 py
 if ((source.match(/data-ai-detail-thumbnails="white"/g) || []).length !== 1) throw new Error("AI detail modal must contain exactly one thumbnail row");
 if (!source.includes('flatMap((n)=>ROOM_GALLERIES[n]||[])')) throw new Error("Split-stay gallery merge was not applied");
 if (!source.includes('featureRooms.flatMap')) throw new Error("Split-stay amenities merge was not applied");
-if (!source.includes('grid grid-cols-2 gap-1.5 sm:grid-cols-4')) throw new Error("Four-column desktop amenities grid was not applied");
+if (!source.includes('grid grid-cols-4 gap-1.5')) throw new Error("Four-column amenities grid was not applied");
 if (!source.includes('clamp(210px,34dvh,300px)')) throw new Error("Compact uncropped hero height was not applied");
 if (!source.includes('{t.saving}: {room.saving}')) throw new Error("Savings badge was not moved beside the room title");
 if (source.includes('expanded?t.less:t.more')) throw new Error("Amenities collapse control is still present");
