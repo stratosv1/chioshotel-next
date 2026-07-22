@@ -10,6 +10,8 @@ on:
       - "app/api/ai-assistant/**"
       - "components/ai/**"
       - "lib/ai-assistant/**"
+      - "scripts/prepare-build.cjs"
+      - "scripts/fix-ai-localized-apartment-detail-parser.cjs"
       - "scripts/qa-ai-concierge.mjs"
       - "scripts/qa-ai-room-cards-ui.mjs"
       - ".github/workflows/ai-concierge-qa.yml"
@@ -43,7 +45,7 @@ jobs:
         if: github.event_name == 'push'
         run: sleep 120
 
-      - name: Prepare QA runner v6
+      - name: Prepare QA runner v7
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -102,7 +104,11 @@ jobs:
               raise RuntimeError("Detail image assertion block was not found")
           ui_text = ui_text.replace(old_card_check, new_card_check)
           ui_text = ui_text.replace(old_detail_check, new_detail_check)
-          ui_text = ui_text.replace("version: 1,", "version: 2,")
+          ui_text = ui_text.replace(
+              '''      assert(dialogText.includes(UI[language].amenities), `${language} room ${expected.roomNumber}: localized amenities heading is missing`);''',
+              '''      assert(dialogText.toLocaleLowerCase().includes(UI[language].amenities.toLocaleLowerCase()), `${language} room ${expected.roomNumber}: localized amenities heading is missing`);\n      const amenityBadges = dialog.locator("span.inline-flex");\n      const amenityCount = await amenityBadges.count();\n      assert(amenityCount >= 4, `${language} room ${expected.roomNumber}: detail amenities are empty (${amenityCount})`);\n      const counter = dialog.getByText(/^\\d+\\/\\d+$/).first();\n      await counter.waitFor({ state: "visible", timeout: 10000 });\n      const counterText = (await counter.innerText()).trim();\n      const totalPhotos = Number(counterText.split("/")[1] || 0);\n      assert(totalPhotos >= 1, `${language} room ${expected.roomNumber}: detail gallery contains ${totalPhotos} photos`);''',
+          )
+          ui_text = ui_text.replace("version: 1,", "version: 3,")
           ui_path.write_text(ui_text, encoding="utf-8")
           PY
           node --check scripts/qa-ai-concierge.mjs
