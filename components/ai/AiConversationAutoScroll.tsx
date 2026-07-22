@@ -8,12 +8,16 @@ function hasVisibleDialog() {
   ).some((dialog) => dialog.offsetParent !== null);
 }
 
-function isChatComposerFocused() {
+function focusedChatComposerInput(): HTMLInputElement | null {
   const activeElement = document.activeElement;
-  return (
+  if (
     activeElement instanceof HTMLInputElement &&
-    activeElement.closest('[data-ai-chat-composer="persistent"]') !== null
-  );
+    activeElement.closest('[data-ai-chat-composer="persistent"]')
+  ) {
+    return activeElement;
+  }
+
+  return null;
 }
 
 function scrollConversationToEnd() {
@@ -23,6 +27,20 @@ function scrollConversationToEnd() {
     document.body.scrollHeight,
     document.documentElement.scrollHeight,
   );
+  const focusedComposer = focusedChatComposerInput();
+
+  if (focusedComposer) {
+    const scrollingElement = document.scrollingElement;
+    if (scrollingElement) {
+      scrollingElement.scrollTop = pageHeight;
+    } else {
+      window.scrollTo(0, pageHeight);
+    }
+
+    focusedComposer.focus({ preventScroll: true });
+    return;
+  }
+
   const reducedMotion = window.matchMedia(
     "(prefers-reduced-motion: reduce)",
   ).matches;
@@ -72,7 +90,7 @@ export function AiConversationAutoScroll() {
     };
 
     const handleViewportResize = () => {
-      if (isChatComposerFocused()) scheduleScroll();
+      if (focusedChatComposerInput()) scheduleScroll();
     };
 
     observer.observe(conversation, {
