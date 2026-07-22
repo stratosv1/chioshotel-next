@@ -5,7 +5,13 @@ import { useEffect } from "react";
 type Language = "el" | "en" | "de" | "fr" | "it" | "es" | "tr";
 
 const ROOM_WORD: Record<Language, string> = {
-  el: "Δωμάτιο", en: "Room", de: "Zimmer", fr: "Chambre", it: "Camera", es: "Habitación", tr: "Oda",
+  el: "Δωμάτιο",
+  en: "Room",
+  de: "Zimmer",
+  fr: "Chambre",
+  it: "Camera",
+  es: "Habitación",
+  tr: "Oda",
 };
 
 const CATEGORY: Record<Language, Record<string, string>> = {
@@ -49,8 +55,14 @@ const CATEGORY: Record<Language, Record<string, string>> = {
 };
 
 function currentLanguage(): Language {
-  const requested = new URLSearchParams(window.location.search).get("lang")?.toLowerCase().split("-")[0];
-  return (["el", "en", "de", "fr", "it", "es", "tr"] as Language[]).includes(requested as Language)
+  const requested = new URLSearchParams(window.location.search)
+    .get("lang")
+    ?.toLowerCase()
+    .split("-")[0];
+
+  return (["el", "en", "de", "fr", "it", "es", "tr"] as Language[]).includes(
+    requested as Language,
+  )
     ? (requested as Language)
     : "en";
 }
@@ -59,39 +71,65 @@ function activeRoomModals(): HTMLElement[] {
   const nodes = document.querySelectorAll<HTMLElement>(
     '[role="dialog"][aria-modal="true"], main > div.fixed.inset-0.z-50',
   );
+
   return Array.from(nodes).filter((node) => node.offsetParent !== null);
 }
 
-function forceFullHeroPhoto(modal: HTMLElement) {
+function compactDesktopModal(modal: HTMLElement) {
+  const heading = modal.querySelector<HTMLElement>("h2");
+  if (!heading) return;
+
+  const panel = (modal.querySelector("section") || modal.firstElementChild) as HTMLElement | null;
+  if (!panel) return;
+
+  if (window.matchMedia("(min-width: 640px)").matches) {
+    panel.style.setProperty("height", "auto", "important");
+    panel.style.setProperty("max-height", "720px", "important");
+    panel.style.setProperty("max-width", "36rem", "important");
+  } else {
+    panel.style.removeProperty("height");
+    panel.style.removeProperty("max-height");
+    panel.style.removeProperty("max-width");
+  }
+}
+
+function forceCoveredHeroPhoto(modal: HTMLElement) {
+  const heading = modal.querySelector<HTMLElement>("h2");
   const heroImage = modal.querySelector<HTMLImageElement>("img");
-  if (!heroImage) return;
+  if (!heading || !heroImage) return;
 
   const heroFrame = heroImage.parentElement as HTMLElement | null;
   if (heroFrame) {
-    heroFrame.style.setProperty("background", "#1c1917", "important");
+    heroFrame.style.setProperty("position", "relative", "important");
+    heroFrame.style.setProperty("width", "100%", "important");
     heroFrame.style.setProperty("overflow", "hidden", "important");
-    heroFrame.style.setProperty("display", "flex", "important");
-    heroFrame.style.setProperty("align-items", "center", "important");
-    heroFrame.style.setProperty("justify-content", "center", "important");
+    heroFrame.style.setProperty("background", "#1c1917", "important");
+
+    if (window.matchMedia("(min-width: 640px)").matches) {
+      heroFrame.style.setProperty("height", "300px", "important");
+    } else {
+      heroFrame.style.removeProperty("height");
+    }
   }
 
-  heroImage.classList.remove("object-cover", "absolute", "inset-0", "h-full", "w-full");
-  heroImage.classList.add("object-contain");
-  heroImage.style.setProperty("position", "static", "important");
-  heroImage.style.setProperty("inset", "auto", "important");
-  heroImage.style.setProperty("object-fit", "contain", "important");
+  heroImage.classList.remove("object-contain");
+  heroImage.classList.add("object-cover", "absolute", "inset-0", "h-full", "w-full");
+  heroImage.style.setProperty("position", "absolute", "important");
+  heroImage.style.setProperty("inset", "0", "important");
+  heroImage.style.setProperty("object-fit", "cover", "important");
   heroImage.style.setProperty("object-position", "center center", "important");
-  heroImage.style.setProperty("width", "auto", "important");
-  heroImage.style.setProperty("height", "auto", "important");
-  heroImage.style.setProperty("max-width", "100%", "important");
-  heroImage.style.setProperty("max-height", "100%", "important");
-  heroImage.style.setProperty("flex", "0 0 auto", "important");
+  heroImage.style.setProperty("width", "100%", "important");
+  heroImage.style.setProperty("height", "100%", "important");
+  heroImage.style.setProperty("max-width", "none", "important");
+  heroImage.style.setProperty("max-height", "none", "important");
 }
 
 function forceFourColumnAmenities(modal: HTMLElement) {
-  const headings = Array.from(modal.querySelectorAll<HTMLElement>("p"));
+  const headings = Array.from(modal.querySelectorAll<HTMLElement>("p, h3"));
   const amenitiesHeading = headings.find((node) =>
-    /room amenities|παροχές δωματίου|zimmerausstattung|équipements de la chambre|servizi della camera|servicios de la habitación|oda olanakları/i.test(node.textContent?.trim() || ""),
+    /room amenities|παροχές δωματίου|zimmerausstattung|équipements de la chambre|servizi della camera|servicios de la habitación|oda olanakları/i.test(
+      node.textContent?.trim() || "",
+    ),
   );
   const grid = amenitiesHeading?.nextElementSibling as HTMLElement | null;
   if (!grid) return;
@@ -104,12 +142,15 @@ function polishRoomModal(modal: HTMLElement) {
   const language = currentLanguage();
   const heading = modal.querySelector<HTMLElement>("h2");
   const category = heading?.nextElementSibling as HTMLElement | null;
-  const roomMatch = heading?.textContent?.match(/(?:Room|Zimmer|Chambre|Camera|Habitación|Oda|Δωμάτιο)\s*(\d+)/i);
+  const roomMatch = heading?.textContent?.match(
+    /(?:Room|Zimmer|Chambre|Camera|Habitación|Oda|Δωμάτιο)\s*(\d+)/i,
+  );
 
   if (heading && roomMatch) {
     const translatedHeading = `${ROOM_WORD[language]} ${roomMatch[1]}`;
     if (heading.textContent !== translatedHeading) heading.textContent = translatedHeading;
   }
+
   if (category) {
     const source = category.dataset.aiOriginalCategory || category.textContent?.trim() || "";
     category.dataset.aiOriginalCategory = source;
@@ -117,7 +158,8 @@ function polishRoomModal(modal: HTMLElement) {
     if (category.textContent !== translatedCategory) category.textContent = translatedCategory;
   }
 
-  forceFullHeroPhoto(modal);
+  compactDesktopModal(modal);
+  forceCoveredHeroPhoto(modal);
   forceFourColumnAmenities(modal);
 }
 
@@ -138,8 +180,6 @@ export function AiRoomModalPolish() {
     observer.observe(document.body, {
       childList: true,
       subtree: true,
-      attributes: true,
-      attributeFilter: ["class", "src", "style"],
     });
     window.addEventListener("resize", schedule);
     window.addEventListener("popstate", schedule);
