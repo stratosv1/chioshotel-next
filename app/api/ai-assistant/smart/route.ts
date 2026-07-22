@@ -29,19 +29,73 @@ const FALSE_BOOKING_CLAIMS = [
   /rezervasyon .*onaylandı/i,
 ];
 
+type SupportedLanguage = "el" | "en" | "de" | "fr" | "it" | "es" | "tr";
+
+function normalizeLanguage(language?: string): SupportedLanguage {
+  return (["el", "en", "de", "fr", "it", "es", "tr"] as const).includes(language as SupportedLanguage)
+    ? (language as SupportedLanguage)
+    : "en";
+}
+
+const COPY = {
+  el: {
+    safeInterest: "Δεν έχει πραγματοποιηθεί κράτηση. Ανοίξτε την κάρτα δωματίου και επιλέξτε Email ή WhatsApp για να στείλετε αίτημα στη reception.",
+    noAvailability: "Με βάση τα πιο πρόσφατα στοιχεία, δεν εμφανίζεται αυτή τη στιγμή επιβεβαιωμένη διαθεσιμότητα για τα συγκεκριμένα δεδομένα. Η reception μπορεί να το ελέγξει άμεσα και να σας απαντήσει απευθείας. Θέλετε να της στείλετε μήνυμα τώρα μέσω Email ή WhatsApp;",
+    splitStay: "Βρήκα μια λύση split stay που καλύπτει ολόκληρη τη διαμονή σας με μία μόνο αλλαγή δωματίου. Η τελική τιμή περιλαμβάνει επιπλέον έκπτωση 10% λόγω της αλλαγής.",
+    room: "Δωμάτιο", change: "Αλλαγή", nights: "νύχτες", reward: "Μία αλλαγή δωματίου · επιπλέον έκπτωση 10%", discount: "Επιπλέον έκπτωση split stay 10%",
+  },
+  en: {
+    safeInterest: "No booking has been made. Open the room card and choose Email or WhatsApp to send a request to reception.",
+    noAvailability: "Based on the latest availability data, no confirmed option is currently showing for these details. Reception can check immediately and reply directly. Would you like to message them now by Email or WhatsApp?",
+    splitStay: "I found a split-stay option covering your full stay with only one room change. The final price includes an extra 10% discount because of the change.",
+    room: "Room", change: "Change", nights: "nights", reward: "One room change · extra 10% discount", discount: "Extra split-stay discount 10%",
+  },
+  de: {
+    safeInterest: "Es wurde keine Buchung vorgenommen. Öffnen Sie die Zimmerkarte und wählen Sie E-Mail oder WhatsApp, um eine Anfrage an die Rezeption zu senden.",
+    noAvailability: "Nach den neuesten Verfügbarkeitsdaten wird für diese Angaben derzeit keine bestätigte Option angezeigt. Die Rezeption kann dies sofort prüfen und Ihnen direkt antworten. Möchten Sie ihr jetzt per E-Mail oder WhatsApp schreiben?",
+    splitStay: "Ich habe eine Split-Stay-Option gefunden, die Ihren gesamten Aufenthalt mit nur einem Zimmerwechsel abdeckt. Wegen des Wechsels enthält der Endpreis einen zusätzlichen Rabatt von 10 %.",
+    room: "Zimmer", change: "Wechsel", nights: "Nächte", reward: "Ein Zimmerwechsel · 10 % zusätzlicher Rabatt", discount: "10 % zusätzlicher Split-Stay-Rabatt",
+  },
+  fr: {
+    safeInterest: "Aucune réservation n’a été effectuée. Ouvrez la fiche de la chambre et choisissez E-mail ou WhatsApp pour envoyer une demande à la réception.",
+    noAvailability: "D’après les dernières données de disponibilité, aucune option confirmée n’apparaît actuellement pour ces critères. La réception peut vérifier immédiatement et vous répondre directement. Souhaitez-vous lui écrire maintenant par e-mail ou WhatsApp ?",
+    splitStay: "J’ai trouvé une option de séjour fractionné couvrant tout votre séjour avec un seul changement de chambre. Le prix final comprend une réduction supplémentaire de 10 % en raison du changement.",
+    room: "Chambre", change: "Changement", nights: "nuits", reward: "Un changement de chambre · réduction supplémentaire de 10 %", discount: "Réduction split stay supplémentaire de 10 %",
+  },
+  it: {
+    safeInterest: "Non è stata effettuata alcuna prenotazione. Apri la scheda della camera e scegli Email o WhatsApp per inviare una richiesta alla reception.",
+    noAvailability: "In base agli ultimi dati sulla disponibilità, al momento non risulta alcuna opzione confermata per questi criteri. La reception può verificare subito e risponderti direttamente. Vuoi scrivere ora tramite Email o WhatsApp?",
+    splitStay: "Ho trovato un’opzione split stay che copre l’intero soggiorno con un solo cambio di camera. Il prezzo finale include uno sconto aggiuntivo del 10% per il cambio.",
+    room: "Camera", change: "Cambio", nights: "notti", reward: "Un cambio di camera · sconto aggiuntivo del 10%", discount: "Sconto split stay aggiuntivo del 10%",
+  },
+  es: {
+    safeInterest: "No se ha realizado ninguna reserva. Abre la tarjeta de la habitación y elige Email o WhatsApp para enviar una solicitud a recepción.",
+    noAvailability: "Según los datos de disponibilidad más recientes, ahora mismo no aparece ninguna opción confirmada para estos datos. Recepción puede comprobarlo inmediatamente y responderte directamente. ¿Quieres escribirles ahora por Email o WhatsApp?",
+    splitStay: "He encontrado una opción de estancia dividida que cubre toda tu estancia con un solo cambio de habitación. El precio final incluye un descuento adicional del 10% por el cambio.",
+    room: "Habitación", change: "Cambio", nights: "noches", reward: "Un cambio de habitación · 10% de descuento adicional", discount: "10% de descuento split stay adicional",
+  },
+  tr: {
+    safeInterest: "Herhangi bir rezervasyon yapılmadı. Oda kartını açın ve resepsiyona talep göndermek için E-posta veya WhatsApp seçeneğini kullanın.",
+    noAvailability: "En güncel müsaitlik verilerine göre bu bilgiler için şu anda onaylanmış bir seçenek görünmüyor. Resepsiyon hemen kontrol edip size doğrudan yanıt verebilir. Şimdi E-posta veya WhatsApp üzerinden mesaj göndermek ister misiniz?",
+    splitStay: "Konaklamanızın tamamını yalnızca bir oda değişikliğiyle kapsayan bir split stay seçeneği buldum. Değişiklik nedeniyle son fiyata ek %10 indirim dahildir.",
+    room: "Oda", change: "Değişiklik", nights: "gece", reward: "Bir oda değişikliği · ek %10 indirim", discount: "Ek %10 split stay indirimi",
+  },
+} satisfies Record<SupportedLanguage, Record<string, string>>;
+
+function copy(language?: string) {
+  return COPY[normalizeLanguage(language)];
+}
+
 function safeInterestMessage(language?: string) {
-  if (language === "en") return "No booking has been made. Open the room card and choose Email or WhatsApp to send a request to reception.";
-  return "Δεν έχει πραγματοποιηθεί κράτηση. Ανοίξτε την κάρτα και επιλέξτε Email ή WhatsApp για να σταλεί αίτημα στη reception.";
+  return copy(language).safeInterest;
 }
 
 function noAvailabilityMessage(language?: string) {
-  if (language === "en") return "Based on the most recent availability data, no confirmed option is currently showing for these details. Reception can check this immediately and reply directly. Would you like me to send them a message now?";
-  return "Με βάση τα πιο πρόσφατα στοιχεία, δεν προκύπτει αυτή τη στιγμή επιβεβαιωμένη διαθεσιμότητα για τα συγκεκριμένα δεδομένα. Η reception μπορεί να το ελέγξει άμεσα και να σας απαντήσει απευθείας. Θέλετε να της στείλω μήνυμα τώρα;";
+  return copy(language).noAvailability;
 }
 
 function splitStayMessage(language?: string) {
-  if (language === "en") return "I found a smart split-stay option covering your full stay with only one room change. As a thank-you for the change, the final price includes an extra 10% discount on top of the direct rate.";
-  return "Βρήκα μια έξυπνη λύση split stay που καλύπτει ολόκληρη τη διαμονή σας με μία μόνο αλλαγή δωματίου. Ως επιβράβευση για την αλλαγή, η τελική τιμή περιλαμβάνει επιπλέον έκπτωση 10% πάνω στην απευθείας τιμή.";
+  return copy(language).splitStay;
 }
 
 async function findSplitStays(request: NextRequest, search: any) {
@@ -61,25 +115,23 @@ async function findSplitStays(request: NextRequest, search: any) {
 }
 
 function splitOffers(splitStays: any[], search: any, language?: string) {
+  const text = copy(language);
   return splitStays.map((option, index) => {
     const first = option.first;
     const second = option.second;
-    const label = language === "en" ? "Split Stay" : "Split Stay";
-    const category = language === "en"
-      ? `${first.name}: ${first.checkin} → ${first.checkout} · ${second.name}: ${second.checkin} → ${second.checkout}`
-      : `${first.name}: ${first.checkin} → ${first.checkout} · ${second.name}: ${second.checkin} → ${second.checkout}`;
+    const category = `${first.name}: ${first.checkin} → ${first.checkout} · ${second.name}: ${second.checkin} → ${second.checkout}`;
     return {
       roomId: `split:${first.roomId}:${first.unitId}:${second.roomId}:${second.unitId}`,
       unitId: String(index + 1),
-      name: `${label}: Room ${first.roomNumber} → Room ${second.roomNumber}`,
+      name: `Split Stay: ${text.room} ${first.roomNumber} → ${text.room} ${second.roomNumber}`,
       category,
-      floor: language === "en" ? "One room change · extra 10% reward" : "Μία αλλαγή δωματίου · έξτρα επιβράβευση 10%",
+      floor: text.reward,
       maxGuests: Number(search.guests || 0),
       features: [
-        `${first.nights} ${language === "en" ? "nights" : "νύχτες"} · Room ${first.roomNumber}`,
-        `${second.nights} ${language === "en" ? "nights" : "νύχτες"} · Room ${second.roomNumber}`,
-        `${language === "en" ? "Change" : "Αλλαγή"}: ${option.changeDate}`,
-        language === "en" ? "Extra split-stay discount 10%" : "Επιπλέον έκπτωση split stay 10%",
+        `${first.nights} ${text.nights} · ${text.room} ${first.roomNumber}`,
+        `${second.nights} ${text.nights} · ${text.room} ${second.roomNumber}`,
+        `${text.change}: ${option.changeDate}`,
+        text.discount,
       ],
       image: ROOM_IMAGE[Number(first.roomNumber)] || "/images/rooms/double-triple-room.jpg",
       nights: Number(first.nights || 0) + Number(second.nights || 0),
