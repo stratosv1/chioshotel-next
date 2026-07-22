@@ -4,6 +4,8 @@ import { neon } from "@neondatabase/serverless";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+type AnyRow = Record<string, any>;
+
 function unauthorized() {
   return new NextResponse("Unauthorized", {
     status: 401,
@@ -47,6 +49,12 @@ function parseDate(value: string) {
   return new Date(year, month - 1, day);
 }
 
+function addDays(value: string, amount: number) {
+  const date = parseDate(value);
+  date.setDate(date.getDate() + amount);
+  return isoDateOnly(date);
+}
+
 function makeDays(start: string, end: string) {
   const days: string[] = [];
   const current = parseDate(start);
@@ -60,10 +68,122 @@ function makeDays(start: string, end: string) {
   return days;
 }
 
-function bookingCoversDate(booking: any, date: string) {
-  const status = String(booking.status || "").toLowerCase();
-  if (status.includes("cancel") || status.includes("deleted")) return false;
-  return booking.arrival <= date && booking.departure > date;
+function isCancelledStatus(status: unknown) {
+  const value = String(status || "").toLowerCase();
+  return value.includes("cancel") || value.includes("deleted");
+}
+
+function bookingCoversDate(booking: AnyRow, date: string) {
+  if (isCancelledStatus(booking.status)) return false;
+  return String(booking.arrival) <= date && String(booking.departure) > date;
+}
+
+function isBookedAvailability(row: AnyRow) {
+  const reason = String(row.reason || "").toUpperCase();
+  return row.available === false && (reason.includes("BOOKED") || reason.includes("OCCUPIED") || reason.includes("RESERVED"));
+}
+
+function normalizeBookingUnits(bookings: AnyRow[], units: AnyRow[]) {
+  const exactKeys = new Set(units.map((unit) => `${unit.room_id}:${unit.unit_id}`));
+  const unitsByRoom = new Map<string, AnyRow[]>();
+
+  for (const unit of units) {
+    const roomId = String(unit.room_id);
+    const list = unitsByRoom.get(roomId) || [];
+    list.push(unit);
+    unitsByRoom.set(roomId, list);
+  }
+
+  return bookings.map((booking) => {
+    const roomId = String(booking.room_id || "");
+    const unitId = String(booking.unit_id || "");
+    if (exactKeys.has(`${roomId}:${unitId}`)) return booking;
+
+    const roomUnits = unitsByRoom.get(roomId) || [];
+    if (roomUnits.length === 1) {
+      return { ...booking, unit_id: String(roomUnits[0].unit_id) };
+    }
+
+    return booking;
+  });
+}
+
+function buildAvailabilityFallbackBookings(availability: AnyRow[], bookings: AnyRow[], units: AnyRow[]) {
+  const knownKeys = new Set(units.map((unit) => `${unit.room_id}:${unit.unit_id}`));
+  const uncovered = availability
+    .filter(isBookedAvailability)
+    .map((row) => ({ ...row, room_id: String(row.room_id), unit_id: String(row.unit_id), date: String(row.date) }))
+    .filter((row) => knownKeys.has(`${row.room_id}:${row.unit_id}`))
+    .filter(
+      (row) =>
+        !bookings.some(
+          (booking) =>
+            String(booking.room_id) === row.room_id &&
+            String(booking.unit_id) === row.unit_id &&
+            bookingCoversDate(booking, row.date),
+        ),
+    )
+    .sort((a, b) => `${a.room_id}:${a.unit_id}:${a.date}`.localeCompare(`${b.room_id}:${b.unit_id}:${b.date}`));
+
+  const groups = new Map<string, string[]>();
+  for (const row of uncovered) {
+    const key = `${row.room_id}:${row.unit_id}`;
+    const dates = groups.get(key) || [];
+    dates.push(row.date);
+    groups.set(key, dates);
+  }
+
+  const fallback: AnyRow[] = [];
+  for (const [key, rawDates] of groups) {
+    const [roomId, unitId] = key.split(":");
+    const dates = Array.from(new Set(rawDates)).sort();
+    if (!dates.length) continue;
+
+    let segmentStart = dates[0];
+    let previous = dates[0];
+
+    const pushSegment = (startDate: string, lastNight: string) => {
+      fallback.push({
+        booking_id: `availability-${roomId}-${unitId}-${startDate}`,
+        book_id: null,
+        room_id: roomId,
+        unit_id: unitId,
+        guest_name: "Κατειλημμένο — Beds24",
+        first_name: null,
+        last_name: null,
+        email: null,
+        phone: null,
+        mobile: null,
+        num_adult: null,
+        num_child: null,
+        arrival: startDate,
+        departure: addDays(lastNight, 1),
+        status: "confirmed",
+        referrer: "Beds24",
+        channel: "Beds24",
+        source: "availability-calendar",
+        referrer_label: "Beds24",
+        raw_booking: { fallback: true, reason: "BOOKED availability without matching snapshot row" },
+        price: null,
+        tax_total: null,
+        room_charge_total: null,
+        rate_description: null,
+        charge_lines: [],
+      });
+    };
+
+    for (let index = 1; index < dates.length; index += 1) {
+      if (dates[index] !== addDays(previous, 1)) {
+        pushSegment(segmentStart, previous);
+        segmentStart = dates[index];
+      }
+      previous = dates[index];
+    }
+
+    pushSegment(segmentStart, previous);
+  }
+
+  return fallback;
 }
 
 export async function GET(request: NextRequest) {
@@ -120,7 +240,7 @@ export async function GET(request: NextRequest) {
       order by stay_date asc, room_id::int, unit_id::int
     `;
 
-    const bookings = await sql`
+    const bookingRows = await sql`
       select
         beds24_booking_id::text as booking_id,
         book_id::text as book_id,
@@ -161,9 +281,15 @@ export async function GET(request: NextRequest) {
         coalesce(raw_booking->>'bookingChargeLines', raw_booking->>'charges', '[]')::jsonb as charge_lines
       from staff_bookings_snapshot
       where arrival <= ${end}::date
-        and departure >= ${start}::date
+        and departure > ${start}::date
       order by arrival asc, room_id::int, unit_id::int
     `;
+
+    let bookings = normalizeBookingUnits(bookingRows as AnyRow[], units as AnyRow[]);
+    const fallbackBookings = buildAvailabilityFallbackBookings(availability as AnyRow[], bookings, units as AnyRow[]);
+    bookings = [...bookings, ...fallbackBookings].sort((a, b) =>
+      `${a.arrival}:${a.room_id}:${a.unit_id}`.localeCompare(`${b.arrival}:${b.room_id}:${b.unit_id}`),
+    );
 
     if (availability.length === 0) {
       const rates = await sql`
@@ -178,17 +304,17 @@ export async function GET(request: NextRequest) {
       `;
 
       const rateMap = new Map<string, number>();
-      for (const rate of rates as any[]) {
+      for (const rate of rates as AnyRow[]) {
         rateMap.set(`${rate.room_id}:${rate.date}`, Number(rate.price || 0));
       }
 
       const days = makeDays(start, end);
-      const generatedAvailability: any[] = [];
+      const generatedAvailability: AnyRow[] = [];
 
-      for (const unit of units as any[]) {
+      for (const unit of units as AnyRow[]) {
         for (const day of days) {
           const price = rateMap.get(`${unit.room_id}:${day}`) ?? null;
-          const booked = (bookings as any[]).some(
+          const booked = bookings.some(
             (booking) =>
               String(booking.room_id) === String(unit.room_id) &&
               String(booking.unit_id) === String(unit.unit_id) &&
@@ -209,8 +335,8 @@ export async function GET(request: NextRequest) {
       availability = generatedAvailability as any;
     }
 
-    const occupancySheetBookings = (bookings as any[]).filter((booking) => booking.source === "occupancy-sheet").length;
-    const beds24Bookings = (bookings as any[]).filter((booking) => booking.source === "beds24").length;
+    const occupancySheetBookings = bookings.filter((booking) => booking.source === "occupancy-sheet").length;
+    const beds24Bookings = bookings.filter((booking) => booking.source === "beds24").length;
 
     return NextResponse.json(
       {
@@ -221,9 +347,10 @@ export async function GET(request: NextRequest) {
         bookings,
         sources: {
           neon: {
-            bookings: (bookings as any[]).length,
+            bookings: bookings.length,
             occupancySheetBookings,
             beds24Bookings,
+            availabilityFallbackBookings: fallbackBookings.length,
           },
           occupancySheet: {
             enabled: Boolean(process.env.OCCUPANCY_SCRIPT_URL),
@@ -231,7 +358,7 @@ export async function GET(request: NextRequest) {
             error: null,
           },
           snapshot: {
-            bookings: (bookings as any[]).length,
+            bookings: bookingRows.length,
           },
         },
         generatedAt: new Date().toISOString(),
