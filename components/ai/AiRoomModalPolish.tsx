@@ -55,13 +55,37 @@ function currentLanguage(): Language {
     : "en";
 }
 
-function polishModal() {
-  const dialog = document.querySelector<HTMLElement>('[role="dialog"][aria-modal="true"]');
-  if (!dialog || dialog.dataset.aiModalPolished === "true") return;
+function activeRoomModals(): HTMLElement[] {
+  const nodes = document.querySelectorAll<HTMLElement>(
+    '[role="dialog"][aria-modal="true"], main > div.fixed.inset-0.z-50',
+  );
+  return Array.from(nodes).filter((node) => node.offsetParent !== null);
+}
 
-  dialog.dataset.aiModalPolished = "true";
+function forceFullHeroPhoto(modal: HTMLElement) {
+  const heroImage = modal.querySelector<HTMLImageElement>("img");
+  if (!heroImage) return;
+
+  const heroFrame = heroImage.parentElement as HTMLElement | null;
+  if (heroFrame) {
+    heroFrame.style.setProperty("background", "#e7e5e4", "important");
+    heroFrame.style.setProperty("overflow", "hidden", "important");
+    heroFrame.style.setProperty("display", "flex", "important");
+    heroFrame.style.setProperty("align-items", "center", "important");
+    heroFrame.style.setProperty("justify-content", "center", "important");
+  }
+
+  heroImage.classList.remove("object-cover");
+  heroImage.classList.add("object-contain");
+  heroImage.style.setProperty("object-fit", "contain", "important");
+  heroImage.style.setProperty("object-position", "center center", "important");
+  heroImage.style.setProperty("width", "100%", "important");
+  heroImage.style.setProperty("height", "100%", "important");
+}
+
+function polishRoomModal(modal: HTMLElement) {
   const language = currentLanguage();
-  const heading = dialog.querySelector<HTMLElement>("h2");
+  const heading = modal.querySelector<HTMLElement>("h2");
   const category = heading?.nextElementSibling as HTMLElement | null;
   const roomMatch = heading?.textContent?.match(/(?:Room|Zimmer|Chambre|Camera|Habitación|Oda|Δωμάτιο)\s*(\d+)/i);
 
@@ -76,39 +100,37 @@ function polishModal() {
     if (category.textContent !== translatedCategory) category.textContent = translatedCategory;
   }
 
-  const hero = dialog.querySelector<HTMLElement>("section > div:first-child");
-  const heroFrame = hero?.querySelector<HTMLElement>("div.relative.w-full");
-  const heroImage = heroFrame?.querySelector<HTMLImageElement>("img");
-  if (heroFrame) {
-    heroFrame.style.height = "clamp(250px, 40dvh, 390px)";
-    heroFrame.style.background = "#e7e5e4";
-  }
-  if (heroImage) {
-    heroImage.classList.remove("object-cover");
-    heroImage.classList.add("object-contain");
-    heroImage.style.objectFit = "contain";
-    heroImage.style.objectPosition = "center";
-  }
+  forceFullHeroPhoto(modal);
+}
 
-  const section = dialog.querySelector<HTMLElement>("section");
-  if (section) {
-    section.style.height = "min(94dvh, 840px)";
-    section.style.maxHeight = "calc(100dvh - 12px)";
-    section.style.marginBottom = "env(safe-area-inset-bottom)";
-  }
+function polishAllRoomModals() {
+  for (const modal of activeRoomModals()) polishRoomModal(modal);
 }
 
 export function AiRoomModalPolish() {
   useEffect(() => {
-    polishModal();
-    const observer = new MutationObserver((mutations) => {
-      if (mutations.some((mutation) => mutation.addedNodes.length > 0)) polishModal();
+    let frame = 0;
+    const schedule = () => {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(polishAllRoomModals);
+    };
+
+    schedule();
+    const observer = new MutationObserver(schedule);
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ["class", "src", "style"],
     });
-    observer.observe(document.body, { childList: true, subtree: true });
-    window.addEventListener("popstate", polishModal);
+    window.addEventListener("resize", schedule);
+    window.addEventListener("popstate", schedule);
+
     return () => {
+      window.cancelAnimationFrame(frame);
       observer.disconnect();
-      window.removeEventListener("popstate", polishModal);
+      window.removeEventListener("resize", schedule);
+      window.removeEventListener("popstate", schedule);
     };
   }, []);
 
