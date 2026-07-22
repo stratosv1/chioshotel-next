@@ -24,6 +24,7 @@ const PATCHES = [
   "patch-ai-natural-sales-tone.cjs",
   "patch-ai-room-detail-thumbnail-row.cjs",
   "fix-ai-localized-apartment-detail-parser.cjs",
+  "fix-ai-room-finder-final-presentation.cjs",
 ];
 
 const SLOW_PATCH_MS = 500;
