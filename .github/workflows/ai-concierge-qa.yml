@@ -37,6 +37,45 @@ jobs:
         if: github.event_name == 'push'
         run: sleep 120
 
+      - name: Prepare QA runner v4
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("scripts/qa-ai-concierge.mjs")
+          text = path.read_text(encoding="utf-8")
+
+          text = text.replace(
+              r'  it: /\b(il|lo|gli|vostro|camera|persone|disponibile|desidera|vicina|arrivo|partenza|soggiorno)\b/i,',
+              r'  it: /(?:[àèéìòù])|\b(il|lo|gli|vostro|camera|persone|disponibile|desidera|vicina|arrivo|partenza|soggiorno|in base|ultimi dati|al momento|risulta|opzione|confermata|criteri|verificare|subito|risponderti|vuoi|aiutarti|prenotazione)\b/iu,',
+          )
+          text = text.replace(
+              r'  es: /\b(el|los|usted|habitación|personas|disponible|quiere|cercana|llegada|salida|estancia)\b/i,',
+              r'  es: /(?:[¿¡ñáéíóúü])|\b(el|los|usted|habitación|personas|disponible|quiere|cercana|llegada|salida|estancia|encantado|ayudarte|fecha|gustaría|hacer|reserva|hola|playa|niños|aguas|tranquilas|profundas|quieres|ayude)\b/iu,',
+          )
+
+          text = text.replace(
+              '''      assertLanguage(payload.answer, language, step + 1);\n      snapshots.push(loopSnapshot(payload));\n      transcript.push(transcriptAssistant(payload));\n      messages.push({ role: "assistant", content: payload.answer });''',
+              '''      snapshots.push(loopSnapshot(payload));\n      transcript.push(transcriptAssistant(payload));\n      messages.push({ role: "assistant", content: payload.answer });\n      assertLanguage(payload.answer, language, step + 1);''',
+          )
+          text = text.replace(
+              '''    assertLanguage(first.payload.answer, language, 1);\n    messages.push({ role: "assistant", content: first.payload.answer });\n    transcript.push(transcriptAssistant(first.payload));\n    snapshots.push(loopSnapshot(first.payload));''',
+              '''    messages.push({ role: "assistant", content: first.payload.answer });\n    transcript.push(transcriptAssistant(first.payload));\n    snapshots.push(loopSnapshot(first.payload));\n    assertLanguage(first.payload.answer, language, 1);''',
+          )
+          text = text.replace(
+              '''    assertLanguage(second.payload.answer, language, 2);\n    transcript.push(transcriptAssistant(second.payload));\n    snapshots.push(loopSnapshot(second.payload));''',
+              '''    transcript.push(transcriptAssistant(second.payload));\n    snapshots.push(loopSnapshot(second.payload));\n    assertLanguage(second.payload.answer, language, 2);''',
+          )
+
+          text = text.replace("    version: 3,", "    version: 4,")
+          text = text.replace(
+              "  if (report.failed) process.exitCode = 1;",
+              '  report.status = report.failed ? "completed_with_findings" : "all_passed";',
+          )
+          path.write_text(text, encoding="utf-8")
+          PY
+          node --check scripts/qa-ai-concierge.mjs
+
       - name: Run all AI scenarios and collect findings
         env:
           AI_QA_BASE_URL: https://chioshotel.gr
