@@ -11,6 +11,7 @@ on:
       - "components/ai/**"
       - "lib/ai-assistant/**"
       - "scripts/qa-ai-concierge.mjs"
+      - "scripts/qa-ai-room-cards-ui.mjs"
       - ".github/workflows/ai-concierge-qa.yml"
 
 permissions:
@@ -19,7 +20,7 @@ permissions:
 jobs:
   run-ai-qa:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 35
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -33,11 +34,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install browser QA runtime
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@latest
+          npx playwright install --with-deps chromium
+
       - name: Wait for production deployment
         if: github.event_name == 'push'
         run: sleep 120
 
-      - name: Prepare QA runner v4
+      - name: Prepare QA runner v5
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -67,7 +73,17 @@ jobs:
               '''    transcript.push(transcriptAssistant(second.payload));\n    snapshots.push(loopSnapshot(second.payload));\n    assertLanguage(second.payload.answer, language, 2);''',
           )
 
-          text = text.replace("    version: 3,", "    version: 4,")
+          text = text.replace(
+              '''    const offers = Array.isArray(terminalPayload.offers) ? terminalPayload.offers : [];\n    if (offers.length) validateOffers(offers, Number(terminalPayload.search.guests));''',
+              '''    const offers = Array.isArray(terminalPayload.offers) ? terminalPayload.offers : [];\n    if (offers.length) validateOffers(offers, Number(terminalPayload.search.guests));\n    const dateReplies = transcript.filter((entry) => entry.role === "user" && entry.content === L[language].dates).length;\n    assert(dateReplies === 1, `${language}: the same date range was requested ${dateReplies} times`);''',
+          )
+          text = text.replace(
+              '''    assert(payload.action === "respond", `general question expected respond, got ${payload.action}`);\n    assert(!payload.bookingConfirmed, "general response falsely confirmed a booking");''',
+              '''    assert(payload.action === "respond", `general question expected respond, got ${payload.action}`);\n    assert(payload.outOfScope === true, "out-of-scope question was not explicitly rejected");\n    assert(payload.scopeRestricted === true, "scope restriction flag is missing");\n    assert(!payload.bookingConfirmed, "general response falsely confirmed a booking");''',
+          )
+
+          text = text.replace("    version: 3,", "    version: 5,")
+          text = text.replace("    version: 4,", "    version: 5,")
           text = text.replace(
               "  if (report.failed) process.exitCode = 1;",
               '  report.status = report.failed ? "completed_with_findings" : "all_passed";',
@@ -75,8 +91,9 @@ jobs:
           path.write_text(text, encoding="utf-8")
           PY
           node --check scripts/qa-ai-concierge.mjs
+          node --check scripts/qa-ai-room-cards-ui.mjs
 
-      - name: Run all AI scenarios and collect findings
+      - name: Run conversational AI scenarios
         env:
           AI_QA_BASE_URL: https://chioshotel.gr
           AI_QA_TIMEOUT_MS: 30000
@@ -84,24 +101,48 @@ jobs:
           set +e
           npm run qa:ai
           qa_exit=$?
-          echo "QA completed with script exit code ${qa_exit}. All scenario findings were collected in the JSON report."
+          echo "Conversation QA completed with script exit code ${qa_exit}. All findings were collected."
+          exit 0
+
+      - name: Run all room card and detail modal checks
+        env:
+          AI_QA_BASE_URL: https://chioshotel.gr
+        run: |
+          set +e
+          node scripts/qa-ai-room-cards-ui.mjs
+          ui_exit=$?
+          echo "Room-card UI QA completed with script exit code ${ui_exit}. All findings were collected."
           exit 0
 
       - name: Publish QA summary
         if: always()
         run: |
-          if [ -f qa-results/ai-concierge-report.json ]; then
-            node -e 'const fs=require("fs"); const r=JSON.parse(fs.readFileSync("qa-results/ai-concierge-report.json","utf8")); fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `## AI Concierge QA\n\n- Total scenarios: ${r.total}\n- Passed: ${r.passed}\n- Errors found: ${r.failed}\n- Report: ai-concierge-qa-report artifact\n`);'
-          else
-            echo "## AI Concierge QA" >> "$GITHUB_STEP_SUMMARY"
-            echo "No JSON report was produced." >> "$GITHUB_STEP_SUMMARY"
-          fi
+          node - <<'NODE'
+          const fs = require("fs");
+          const lines = ["## AI Concierge QA", ""];
+          const apiPath = "qa-results/ai-concierge-report.json";
+          const uiPath = "qa-results/ai-room-cards-ui-report.json";
+          if (fs.existsSync(apiPath)) {
+            const r = JSON.parse(fs.readFileSync(apiPath, "utf8"));
+            lines.push(`### Conversation tests`, `- Total scenarios: ${r.total}`, `- Passed: ${r.passed}`, `- Errors found: ${r.failed}`, "");
+          } else {
+            lines.push("### Conversation tests", "- No JSON report was produced.", "");
+          }
+          if (fs.existsSync(uiPath)) {
+            const r = JSON.parse(fs.readFileSync(uiPath, "utf8"));
+            lines.push(`### Room-card browser tests`, `- Cards checked: ${r.totalCardsChecked}/70`, `- Detail modals opened: ${r.totalDetailsOpened}/70`, `- Languages passed: ${r.passedLanguages}/7`, `- Broken detail links: ${r.failedDetailUrls}`, `- Broken images: ${r.failedImages}`, "");
+          } else {
+            lines.push("### Room-card browser tests", "- No JSON report was produced.", "");
+          }
+          lines.push("Reports and failure screenshots are in the ai-concierge-qa-report artifact.");
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${lines.join("\n")}\n`);
+          NODE
 
-      - name: Upload QA report
+      - name: Upload QA reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: ai-concierge-qa-report
-          path: qa-results/ai-concierge-report.json
+          path: qa-results/
           if-no-files-found: warn
           retention-days: 30
