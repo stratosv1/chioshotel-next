@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { AiBackToSite } from "@/components/ai/AiBackToSite";
-import { AiFlowSafetyNet } from "@/components/ai/AiFlowSafetyNet";
 import { AiNoAvailabilityBridge } from "@/components/ai/AiNoAvailabilityBridge";
 import { AiRoomDetailsEnhancer } from "@/components/ai/AiRoomDetailsEnhancer";
 import { AiRoomModalPolish } from "@/components/ai/AiRoomModalPolish";
@@ -25,7 +24,6 @@ export default function AiAssistantPage() {
   return (
     <>
       <AiBackToSite />
-      <AiFlowSafetyNet />
       <AiNoAvailabilityBridge />
       <ConversationalRoomSalesEnhanced />
       <AiRoomDetailsEnhancer />
