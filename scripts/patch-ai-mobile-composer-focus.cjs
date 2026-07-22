@@ -19,7 +19,12 @@ source = source.replace(
 
 source = source.replace(
   `<button className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#ff385c] text-lg font-bold text-white shadow">↑</button>`,
+  `<button type="submit" onPointerDown={(event)=>event.preventDefault()} disabled={step==="interpreting"||!input.trim()} aria-label={t.send} className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#ff385c] text-lg font-bold text-white shadow disabled:cursor-not-allowed disabled:opacity-50">↑</button>`,
+);
+
+source = source.replace(
   `<button type="submit" disabled={step==="interpreting"||!input.trim()} aria-label={t.send} className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#ff385c] text-lg font-bold text-white shadow disabled:cursor-not-allowed disabled:opacity-50">↑</button>`,
+  `<button type="submit" onPointerDown={(event)=>event.preventDefault()} disabled={step==="interpreting"||!input.trim()} aria-label={t.send} className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#ff385c] text-lg font-bold text-white shadow disabled:cursor-not-allowed disabled:opacity-50">↑</button>`,
 );
 
 const required = [
@@ -28,6 +33,7 @@ const required = [
   `onSubmit={step==="interpreting"?(event)=>event.preventDefault():submit}`,
   `enterKeyHint="send"`,
   `aria-busy={step==="interpreting"}`,
+  `onPointerDown={(event)=>event.preventDefault()}`,
   `disabled={step==="interpreting"||!input.trim()}`,
   `aria-label={t.send}`,
 ];
@@ -48,5 +54,5 @@ if (
 
 fs.writeFileSync(file, source);
 console.log(
-  "AI mobile composer patched: persistent focus during replies and guarded submit",
+  "AI mobile composer patched: persistent focus, send button does not steal focus, guarded submit",
 );
