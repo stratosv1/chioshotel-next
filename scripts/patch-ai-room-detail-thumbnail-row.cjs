@@ -4,8 +4,7 @@ const path = require("node:path");
 const file = path.join(process.cwd(), "components/ai/AiRoomDetailsEnhancer.tsx");
 let source = fs.readFileSync(file, "utf8");
 
-// Keep the whole photo visible, but reduce the hero height so the complete card
-// fits inside a normal desktop viewport without requiring modal scrolling.
+// Keep the full intrinsic image visible inside a compact fixed hero frame.
 source = source.replace(
   'style={{height:"min(34dvh,290px)"}}',
   'style={{height:"clamp(210px,34dvh,300px)"}}',
@@ -27,8 +26,20 @@ source = source.replace(
   'style={{bottom:"10px"}}',
 );
 source = source.replace(
+  'className="relative w-full overflow-hidden bg-stone-950" style={{height:"clamp(210px,34dvh,300px)"}}',
+  'className="relative flex w-full items-center justify-center overflow-hidden bg-stone-950" style={{height:"clamp(210px,34dvh,300px)"}}',
+);
+source = source.replace(
+  'className="relative w-full overflow-hidden bg-stone-950" style={{height:"min(42dvh,360px)"}}',
+  'className="relative flex w-full items-center justify-center overflow-hidden bg-stone-950" style={{height:"clamp(210px,34dvh,300px)"}}',
+);
+source = source.replace(
   'className="absolute inset-0 h-full w-full object-contain" draggable={false}',
+  'className="block max-h-full max-w-full object-contain" style={{width:"auto",height:"auto",objectFit:"contain",objectPosition:"center center"}} draggable={false}',
+);
+source = source.replace(
   'className="absolute inset-0 h-full w-full !object-contain" style={{objectFit:"contain",objectPosition:"center center"}} draggable={false}',
+  'className="block max-h-full max-w-full object-contain" style={{width:"auto",height:"auto",objectFit:"contain",objectPosition:"center center"}} draggable={false}',
 );
 
 // Keep a single compact thumbnail row.
@@ -36,7 +47,6 @@ source = source.replace(
   /\{room\.images\.length>1\?<div(?: data-ai-detail-thumbnails="white")? className="[^"]*" aria-label=\{`\$\{t\.photo\} thumbnails`\}>\{room\.images\.map\(\(src,i\)=>[\s\S]*?<\/div>:\s*null\}/g,
   "",
 );
-
 source = source.replace(
   /<div className="flex gap-2 overflow-x-auto border-t border-white\/10 bg-stone-900[^>]*>\{room\.images\.map\(\(src,i\)=>[\s\S]*?<\/div><\/div>/g,
   "</div>",
@@ -85,14 +95,8 @@ source = source.replace(
   'className={`mt-2 grid grid-cols-2 gap-2 pr-1 transition-all ${expanded?"max-h-[260px] overflow-y-auto":"max-h-[150px] overflow-hidden"}`}',
   'className="mt-1.5 grid grid-cols-4 gap-1.5"',
 );
-source = source.replace(
-  'className="mt-2 grid grid-cols-2 gap-2 pr-1 sm:grid-cols-3"',
-  'className="mt-1.5 grid grid-cols-4 gap-1.5"',
-);
-source = source.replace(
-  'className="mt-1.5 grid grid-cols-2 gap-1.5 sm:grid-cols-4"',
-  'className="mt-1.5 grid grid-cols-4 gap-1.5"',
-);
+source = source.replace('className="mt-2 grid grid-cols-2 gap-2 pr-1 sm:grid-cols-3"', 'className="mt-1.5 grid grid-cols-4 gap-1.5"');
+source = source.replace('className="mt-1.5 grid grid-cols-2 gap-1.5 sm:grid-cols-4"', 'className="mt-1.5 grid grid-cols-4 gap-1.5"');
 source = source.replace(
   'className="inline-flex items-center gap-1.5 rounded-full border border-stone-200 bg-[#f7f1e8] px-3 py-2 text-[12px] font-semibold text-stone-700"',
   'className="flex min-h-8 min-w-0 items-center justify-center gap-1 rounded-xl border border-stone-200 bg-[#f7f1e8] px-1.5 py-1.5 text-center text-[10px] font-semibold leading-3 text-stone-700 break-words sm:text-[11px]"',
@@ -101,10 +105,7 @@ source = source.replace(
   'className="flex min-h-10 min-w-0 items-center justify-center gap-1.5 rounded-2xl border border-stone-200 bg-[#f7f1e8] px-2.5 py-2 text-center text-[12px] font-semibold leading-4 text-stone-700 break-words"',
   'className="flex min-h-8 min-w-0 items-center justify-center gap-1 rounded-xl border border-stone-200 bg-[#f7f1e8] px-1.5 py-1.5 text-center text-[10px] font-semibold leading-3 text-stone-700 break-words sm:text-[11px]"',
 );
-source = source.replace(
-  /\{features\.length>7\?<button type="button" onClick=\{\(\)=>setExpanded\(v=>!v\)\} className="mt-2 self-start text-sm font-bold text-\[#435f12\] underline underline-offset-4">\{expanded\?t\.less:t\.more\}<\/button>:null\}/g,
-  "",
-);
+source = source.replace(/\{features\.length>7\?<button type="button" onClick=\{\(\)=>setExpanded\(v=>!v\)\} className="mt-2 self-start text-sm font-bold text-\[#435f12\] underline underline-offset-4">\{expanded\?t\.less:t\.more\}<\/button>:null\}/g, "");
 source = source.replace('className="mt-3 text-xs font-black uppercase tracking-[0.14em] text-stone-500"', 'className="mt-1 text-[11px] font-black uppercase tracking-[0.12em] text-stone-500"');
 source = source.replace('className="mt-auto pt-3"', 'className="mt-auto pt-2"');
 source = source.replace('className="flex items-center justify-between rounded-2xl bg-[#f3f6e8] px-4 py-3 text-sm text-[#63752d]"', 'className="hidden"');
@@ -115,10 +116,10 @@ if ((source.match(/data-ai-detail-thumbnails="white"/g) || []).length !== 1) thr
 if (!source.includes('flatMap((n)=>ROOM_GALLERIES[n]||[])')) throw new Error("Split-stay gallery merge was not applied");
 if (!source.includes('featureRooms.flatMap')) throw new Error("Split-stay amenities merge was not applied");
 if (!source.includes('grid grid-cols-4 gap-1.5')) throw new Error("Four-column amenities grid was not applied");
-if (!source.includes('clamp(210px,34dvh,300px)')) throw new Error("Compact uncropped hero height was not applied");
+if (!source.includes('block max-h-full max-w-full object-contain')) throw new Error("Hero image still uses a fill/crop layout");
 if (!source.includes('{t.saving}: {room.saving}')) throw new Error("Savings badge was not moved beside the room title");
 if (source.includes('expanded?t.less:t.more')) throw new Error("Amenities collapse control is still present");
 if (!source.includes('overflow-y-auto overscroll-contain')) throw new Error("Room detail body fallback scroll is missing");
 
 fs.writeFileSync(file, source);
-console.log("AI room detail modal fixed: savings beside title, uncropped compact hero, four-column amenities");
+console.log("AI room detail modal fixed: intrinsic full hero, savings beside title, four-column amenities");
