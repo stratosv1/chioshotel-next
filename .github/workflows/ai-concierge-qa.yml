@@ -7,13 +7,16 @@ on:
   push:
     branches: [main]
     paths:
+      - "app/ai-assistant/**"
       - "app/api/ai-assistant/**"
       - "components/ai/**"
       - "lib/ai-assistant/**"
       - "scripts/prepare-build.cjs"
       - "scripts/fix-ai-localized-apartment-detail-parser.cjs"
+      - "scripts/fix-ai-room-finder-final-presentation.cjs"
       - "scripts/qa-ai-concierge.mjs"
       - "scripts/qa-ai-room-cards-ui.mjs"
+      - "scripts/qa-ai-presentation-regressions.mjs"
       - ".github/workflows/ai-concierge-qa.yml"
 
 permissions:
@@ -22,7 +25,7 @@ permissions:
 jobs:
   run-ai-qa:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 40
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -45,7 +48,7 @@ jobs:
         if: github.event_name == 'push'
         run: sleep 120
 
-      - name: Prepare QA runner v7
+      - name: Prepare QA runner v8
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -111,8 +114,10 @@ jobs:
           ui_text = ui_text.replace("version: 1,", "version: 3,")
           ui_path.write_text(ui_text, encoding="utf-8")
           PY
+          node scripts/fix-ai-room-finder-final-presentation.cjs
           node --check scripts/qa-ai-concierge.mjs
           node --check scripts/qa-ai-room-cards-ui.mjs
+          node --check scripts/qa-ai-presentation-regressions.mjs
 
       - name: Run conversational AI scenarios
         env:
@@ -135,6 +140,16 @@ jobs:
           echo "Room-card UI QA completed with script exit code ${ui_exit}. All findings were collected."
           exit 0
 
+      - name: Run room presentation regression checks
+        env:
+          AI_QA_BASE_URL: https://chioshotel.gr
+        run: |
+          set +e
+          node scripts/qa-ai-presentation-regressions.mjs
+          presentation_exit=$?
+          echo "Presentation QA completed with script exit code ${presentation_exit}. All findings were collected."
+          exit 0
+
       - name: Publish QA summary
         if: always()
         run: |
@@ -143,6 +158,7 @@ jobs:
           const lines = ["## AI Concierge QA", ""];
           const apiPath = "qa-results/ai-concierge-report.json";
           const uiPath = "qa-results/ai-room-cards-ui-report.json";
+          const presentationPath = "qa-results/ai-presentation-regressions-report.json";
           if (fs.existsSync(apiPath)) {
             const r = JSON.parse(fs.readFileSync(apiPath, "utf8"));
             lines.push(`### Conversation tests`, `- Total scenarios: ${r.total}`, `- Passed: ${r.passed}`, `- Errors found: ${r.failed}`, "");
@@ -154,6 +170,12 @@ jobs:
             lines.push(`### Room-card browser tests`, `- Cards checked: ${r.totalCardsChecked}/70`, `- Detail modals opened: ${r.totalDetailsOpened}/70`, `- Languages passed: ${r.passedLanguages}/7`, `- Broken detail links: ${r.failedDetailUrls}`, `- Broken images: ${r.failedImages}`, "");
           } else {
             lines.push("### Room-card browser tests", "- No JSON report was produced.", "");
+          }
+          if (fs.existsSync(presentationPath)) {
+            const r = JSON.parse(fs.readFileSync(presentationPath, "utf8"));
+            lines.push(`### Presentation regression tests`, `- Languages passed: ${r.passed}/${r.total}`, `- Errors found: ${r.failed}`, `- Checks: full photos, localized totals, no 18-second popup`, "");
+          } else {
+            lines.push("### Presentation regression tests", "- No JSON report was produced.", "");
           }
           lines.push("Reports and failure screenshots are in the ai-concierge-qa-report artifact.");
           fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${lines.join("\n")}\n`);
