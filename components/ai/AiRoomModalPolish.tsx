@@ -80,18 +80,20 @@ function polishModal() {
   const heroFrame = hero?.querySelector<HTMLElement>("div.relative.w-full");
   const heroImage = heroFrame?.querySelector<HTMLImageElement>("img");
   if (heroFrame) {
-    heroFrame.style.height = "clamp(230px, 34dvh, 320px)";
-    heroFrame.style.background = "#111";
+    heroFrame.style.height = "clamp(250px, 40dvh, 390px)";
+    heroFrame.style.background = "#e7e5e4";
   }
   if (heroImage) {
-    heroImage.classList.remove("object-contain");
-    heroImage.classList.add("object-cover");
+    heroImage.classList.remove("object-cover");
+    heroImage.classList.add("object-contain");
+    heroImage.style.objectFit = "contain";
+    heroImage.style.objectPosition = "center";
   }
 
   const section = dialog.querySelector<HTMLElement>("section");
   if (section) {
-    section.style.height = "min(92dvh, 790px)";
-    section.style.maxHeight = "calc(100dvh - 16px)";
+    section.style.height = "min(94dvh, 840px)";
+    section.style.maxHeight = "calc(100dvh - 12px)";
     section.style.marginBottom = "env(safe-area-inset-bottom)";
   }
 }
