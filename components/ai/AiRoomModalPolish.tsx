@@ -68,19 +68,24 @@ function forceFullHeroPhoto(modal: HTMLElement) {
 
   const heroFrame = heroImage.parentElement as HTMLElement | null;
   if (heroFrame) {
-    heroFrame.style.setProperty("background", "#e7e5e4", "important");
+    heroFrame.style.setProperty("background", "#1c1917", "important");
     heroFrame.style.setProperty("overflow", "hidden", "important");
     heroFrame.style.setProperty("display", "flex", "important");
     heroFrame.style.setProperty("align-items", "center", "important");
     heroFrame.style.setProperty("justify-content", "center", "important");
   }
 
-  heroImage.classList.remove("object-cover");
+  heroImage.classList.remove("object-cover", "absolute", "inset-0", "h-full", "w-full");
   heroImage.classList.add("object-contain");
+  heroImage.style.setProperty("position", "static", "important");
+  heroImage.style.setProperty("inset", "auto", "important");
   heroImage.style.setProperty("object-fit", "contain", "important");
   heroImage.style.setProperty("object-position", "center center", "important");
-  heroImage.style.setProperty("width", "100%", "important");
-  heroImage.style.setProperty("height", "100%", "important");
+  heroImage.style.setProperty("width", "auto", "important");
+  heroImage.style.setProperty("height", "auto", "important");
+  heroImage.style.setProperty("max-width", "100%", "important");
+  heroImage.style.setProperty("max-height", "100%", "important");
+  heroImage.style.setProperty("flex", "0 0 auto", "important");
 }
 
 function polishRoomModal(modal: HTMLElement) {
