@@ -8,6 +8,14 @@ function hasVisibleDialog() {
   ).some((dialog) => dialog.offsetParent !== null);
 }
 
+function isChatComposerFocused() {
+  const activeElement = document.activeElement;
+  return (
+    activeElement instanceof HTMLInputElement &&
+    activeElement.closest('[data-ai-chat-composer="persistent"]') !== null
+  );
+}
+
 function scrollConversationToEnd() {
   if (hasVisibleDialog()) return;
 
@@ -53,13 +61,31 @@ export function AiConversationAutoScroll() {
       if (conversationChanged) scheduleScroll();
     });
 
+    const handleComposerFocus = (event: FocusEvent) => {
+      const target = event.target;
+      if (
+        target instanceof HTMLInputElement &&
+        target.closest('[data-ai-chat-composer="persistent"]')
+      ) {
+        scheduleScroll();
+      }
+    };
+
+    const handleViewportResize = () => {
+      if (isChatComposerFocused()) scheduleScroll();
+    };
+
     observer.observe(conversation, {
       childList: true,
       subtree: true,
     });
+    document.addEventListener("focusin", handleComposerFocus);
+    window.visualViewport?.addEventListener("resize", handleViewportResize);
 
     return () => {
       observer.disconnect();
+      document.removeEventListener("focusin", handleComposerFocus);
+      window.visualViewport?.removeEventListener("resize", handleViewportResize);
       window.cancelAnimationFrame(animationFrame);
       window.clearTimeout(settleTimer);
     };
