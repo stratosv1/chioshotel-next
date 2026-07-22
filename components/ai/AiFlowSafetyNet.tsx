@@ -29,18 +29,55 @@ export function AiFlowSafetyNet(){
   useEffect(()=>{
     setLocale(getLocale());
     let timer:number|undefined;
+
+    const clearTimer=()=>{
+      if(timer!==undefined){
+        window.clearTimeout(timer);
+        timer=undefined;
+      }
+    };
+
     const inspect=()=>{
       const text=document.body.innerText||"";
       const searching=/Ελέγχω τώρα τη live διαθεσιμότητα|Checking live availability|Live-Verfügbarkeit und Direktpreise|Je vérifie les disponibilités|Controllo disponibilità live|Compruebo disponibilidad en vivo|Canlı müsaitlik ve en iyi direkt fiyatlar/i.test(text);
       const failed=/Live availability error/i.test(text);
-      if(failed){setVisible(true);return}
-      if(searching&&timer===undefined){timer=window.setTimeout(()=>setVisible(true),18000)}
-      if(!searching&&timer!==undefined){window.clearTimeout(timer);timer=undefined;setVisible(false)}
+      const hasRoomResults=Boolean(document.querySelector("article"));
+      const hasOpenRoomDialog=Boolean(document.querySelector('[role="dialog"]'));
+
+      // The searching sentence remains in the conversation history after results
+      // have loaded. Room cards or an open detail dialog mean the search finished,
+      // so the timeout must never interrupt the guest while reading a room.
+      if(hasRoomResults||hasOpenRoomDialog){
+        clearTimer();
+        setVisible(false);
+        return;
+      }
+
+      if(failed){
+        clearTimer();
+        setVisible(true);
+        return;
+      }
+
+      if(searching&&timer===undefined){
+        timer=window.setTimeout(()=>{
+          timer=undefined;
+          const resultsNow=Boolean(document.querySelector("article"));
+          const dialogNow=Boolean(document.querySelector('[role="dialog"]'));
+          if(!resultsNow&&!dialogNow)setVisible(true);
+        },18000);
+      }
+
+      if(!searching){
+        clearTimer();
+        setVisible(false);
+      }
     };
+
     inspect();
     const observer=new MutationObserver(inspect);
     observer.observe(document.body,{childList:true,subtree:true,characterData:true});
-    return()=>{observer.disconnect();if(timer!==undefined)window.clearTimeout(timer)};
+    return()=>{observer.disconnect();clearTimer()};
   },[]);
 
   if(!visible)return null;
