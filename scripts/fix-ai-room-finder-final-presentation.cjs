@@ -30,7 +30,10 @@ if (!sales.includes('alt={detail.name} fill sizes="(max-width:640px) 100vw, 720p
 if (!polish.includes('heroImage.classList.add("object-contain");')) {
   throw new Error("Enhanced room detail image was not changed to object-contain");
 }
-if (!polish.includes('heroImage.style.objectFit = "contain";')) {
+
+const hasDirectContain = polish.includes('heroImage.style.objectFit = "contain";');
+const hasImportantContain = polish.includes('heroImage.style.setProperty("object-fit", "contain", "important");');
+if (!hasDirectContain && !hasImportantContain) {
   throw new Error("Enhanced room detail inline object-fit is not contain");
 }
 if (page.includes("AiFlowSafetyNet")) {
