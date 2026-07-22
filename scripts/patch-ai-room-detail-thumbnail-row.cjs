@@ -5,23 +5,31 @@ const file = path.join(process.cwd(), "components/ai/AiRoomDetailsEnhancer.tsx")
 let source = fs.readFileSync(file, "utf8");
 
 const compactPanel =
-  'className="flex h-[94dvh] w-full max-w-2xl flex-col overflow-hidden rounded-t-[28px] bg-white shadow-2xl sm:h-auto sm:max-h-[720px] sm:max-w-xl sm:rounded-[28px]"';
+  'className="flex h-[94dvh] w-full max-w-2xl flex-col overflow-hidden rounded-t-[28px] bg-white shadow-2xl sm:h-auto sm:max-h-[90dvh] sm:max-w-xl sm:rounded-[28px]"';
 
 source = source.replace(
   'className="flex h-[94dvh] max-h-[820px] w-full max-w-2xl flex-col overflow-hidden rounded-t-[28px] bg-white shadow-2xl sm:rounded-[28px]"',
   compactPanel,
 );
+source = source.replace(
+  'className="flex h-[94dvh] w-full max-w-2xl flex-col overflow-hidden rounded-t-[28px] bg-white shadow-2xl sm:h-auto sm:max-h-[720px] sm:max-w-xl sm:rounded-[28px]"',
+  compactPanel,
+);
 
-const blurredHero =
-  '<div data-ai-detail-hero="blurred-contain" className="relative h-[38dvh] w-full overflow-hidden bg-stone-900 sm:h-[300px]"><img data-ai-detail-hero-background="true" src={image} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full scale-110 object-cover opacity-70 blur-xl" draggable={false}/><div className="absolute inset-0 bg-black/15"/><img data-ai-detail-hero-image="true" src={image} alt={`${room.name} ${t.photo.toLowerCase()} ${photo+1}`} className="absolute inset-0 z-10 h-full w-full object-contain" style={{objectPosition:"center center"}} draggable={false}/></div>';
+const intrinsicHero =
+  '<div data-ai-detail-hero="intrinsic" className="relative w-full shrink-0 overflow-hidden bg-stone-100"><img data-ai-detail-hero-image="true" src={image} alt={`${room.name} ${t.photo.toLowerCase()} ${photo+1}`} className="block h-auto w-full" draggable={false}/></div>';
 
 source = source.replace(
   '<div className="relative flex w-full items-center justify-center overflow-hidden bg-stone-950" style={{height:"clamp(210px,34dvh,300px)"}}><img src={image} alt={`${room.name} ${t.photo.toLowerCase()} ${photo+1}`} className="block max-h-full max-w-full object-contain" style={{width:"auto",height:"auto",objectFit:"contain",objectPosition:"center center"}} draggable={false}/></div>',
-  blurredHero,
+  intrinsicHero,
 );
 source = source.replace(
   '<div className="relative h-[38dvh] w-full overflow-hidden bg-stone-950 sm:h-[300px]"><img src={image} alt={`${room.name} ${t.photo.toLowerCase()} ${photo+1}`} className="absolute inset-0 h-full w-full object-cover" style={{objectPosition:"center center"}} draggable={false}/></div>',
-  blurredHero,
+  intrinsicHero,
+);
+source = source.replace(
+  '<div data-ai-detail-hero="blurred-contain" className="relative h-[38dvh] w-full overflow-hidden bg-stone-900 sm:h-[300px]"><img data-ai-detail-hero-background="true" src={image} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full scale-110 object-cover opacity-70 blur-xl" draggable={false}/><div className="absolute inset-0 bg-black/15"/><img data-ai-detail-hero-image="true" src={image} alt={`${room.name} ${t.photo.toLowerCase()} ${photo+1}`} className="absolute inset-0 z-10 h-full w-full object-contain" style={{objectPosition:"center center"}} draggable={false}/></div>',
+  intrinsicHero,
 );
 
 source = source.replaceAll(
@@ -57,12 +65,10 @@ const required = [
   "onClick={()=>setAmenitiesOpen(true)}",
   "onClick={()=>setAmenitiesOpen(false)}",
   'role="dialog" aria-modal="true" aria-label={t.amenities}',
-  "sm:h-auto sm:max-h-[720px] sm:max-w-xl",
-  'data-ai-detail-hero="blurred-contain"',
-  'data-ai-detail-hero-background="true"',
-  "object-cover opacity-70 blur-xl",
+  "sm:h-auto sm:max-h-[90dvh] sm:max-w-xl",
+  'data-ai-detail-hero="intrinsic"',
   'data-ai-detail-hero-image="true"',
-  "z-10 h-full w-full object-contain",
+  'className="block h-auto w-full"',
   'data-ai-detail-saving="prominent"',
   "✓ {t.saving}: {room.saving}",
   'data-ai-detail-thumbnails="spread"',
@@ -74,11 +80,17 @@ for (const token of required) {
   if (!source.includes(token)) throw new Error(`AI room detail popup requirement missing: ${token}`);
 }
 
+if (source.includes('data-ai-detail-hero="blurred-contain"')) {
+  throw new Error("Room detail hero still uses the fixed blurred frame");
+}
+if (source.includes('data-ai-detail-hero-background="true"')) {
+  throw new Error("Room detail hero still renders a cropped background layer");
+}
 if (source.includes('data-ai-detail-thumbnails="white"')) {
   throw new Error("Room detail thumbnails still use the old compact row");
 }
 if (source.includes('className="block max-h-full max-w-full object-contain"')) {
-  throw new Error("Room detail hero still uses the old black-bar image layout");
+  throw new Error("Room detail hero still uses the old fixed-height image layout");
 }
 if (source.includes("grid grid-cols-4 gap-1.5")) {
   throw new Error("Amenities are still rendered inline in the room detail card");
@@ -88,4 +100,4 @@ if (source.includes("expanded?t.less:t.more")) {
 }
 
 fs.writeFileSync(file, source);
-console.log("AI room detail patched and validated: full photo over blurred background, prominent savings, spread thumbnails, amenities popup");
+console.log("AI room detail patched and validated: intrinsic uncropped photo, prominent savings, spread thumbnails, amenities popup");
