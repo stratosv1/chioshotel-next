@@ -1,0 +1,53 @@
+name: AI Concierge QA
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "30 4 * * *"
+  push:
+    branches: [main]
+    paths:
+      - "app/api/ai-assistant/**"
+      - "components/ai/**"
+      - "lib/ai-assistant/**"
+      - "scripts/qa-ai-concierge.mjs"
+      - ".github/workflows/ai-concierge-qa.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  run-ai-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Wait for production deployment
+        if: github.event_name == 'push'
+        run: sleep 120
+
+      - name: Run 30 AI scenarios
+        env:
+          AI_QA_BASE_URL: https://chioshotel.gr
+          AI_QA_TIMEOUT_MS: 30000
+        run: npm run qa:ai
+
+      - name: Upload QA report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-concierge-qa-report
+          path: qa-results/ai-concierge-report.json
+          if-no-files-found: warn
+          retention-days: 30
