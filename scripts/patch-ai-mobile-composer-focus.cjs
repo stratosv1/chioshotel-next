@@ -27,8 +27,14 @@ source = source.replace(
   `<button type="submit" onPointerDown={(event)=>event.preventDefault()} disabled={step==="interpreting"||!input.trim()} aria-label={t.send} className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#ff385c] text-lg font-bold text-white shadow disabled:cursor-not-allowed disabled:opacity-50">↑</button>`,
 );
 
+source = source.replace(
+  `<div className="mx-auto max-w-3xl px-3 pb-28 pt-5 sm:px-5"><div className="space-y-4">`,
+  `<div className="mx-auto max-w-3xl px-3 pb-28 pt-5 sm:px-5"><div data-ai-conversation-feed="true" className="space-y-4">`,
+);
+
 const required = [
   `data-ai-chat-composer="persistent"`,
+  `data-ai-conversation-feed="true"`,
   `!['language','preferences','searching','selecting','breakfast','complete'].includes(step)`,
   `onSubmit={step==="interpreting"?(event)=>event.preventDefault():submit}`,
   `enterKeyHint="send"`,
@@ -54,5 +60,5 @@ if (
 
 fs.writeFileSync(file, source);
 console.log(
-  "AI mobile composer patched: persistent focus, send button does not steal focus, guarded submit",
+  "AI mobile composer patched: persistent focus, anchored feed, send button does not steal focus",
 );
