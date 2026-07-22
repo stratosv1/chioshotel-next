@@ -6,7 +6,7 @@
       "schedule": "*/7 * * * *"
     },
     {
-      "path": "/api/staff/housekeeping/daily-arrivals-sms/",
+      "path": "/api/cron/housekeeping-daily-arrivals-sms/",
       "schedule": "0 4 * * *"
     }
   ]
