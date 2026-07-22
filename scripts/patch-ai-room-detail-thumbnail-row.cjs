@@ -5,16 +5,14 @@ const file = path.join(process.cwd(), "components/ai/AiRoomDetailsEnhancer.tsx")
 let source = fs.readFileSync(file, "utf8");
 
 const compactPanel =
-  'className="flex h-[94dvh] w-full max-w-2xl flex-col overflow-hidden rounded-t-[28px] bg-white shadow-2xl sm:h-auto sm:max-h-[90dvh] sm:max-w-xl sm:rounded-[28px]"';
+  'className="flex max-h-[calc(100dvh-0.5rem)] w-full max-w-2xl flex-col overflow-x-hidden overflow-y-auto rounded-t-[28px] bg-white shadow-2xl sm:max-h-[90dvh] sm:max-w-xl sm:rounded-[28px]"';
 
-source = source.replace(
+const panelVariants = [
   'className="flex h-[94dvh] max-h-[820px] w-full max-w-2xl flex-col overflow-hidden rounded-t-[28px] bg-white shadow-2xl sm:rounded-[28px]"',
-  compactPanel,
-);
-source = source.replace(
   'className="flex h-[94dvh] w-full max-w-2xl flex-col overflow-hidden rounded-t-[28px] bg-white shadow-2xl sm:h-auto sm:max-h-[720px] sm:max-w-xl sm:rounded-[28px]"',
-  compactPanel,
-);
+  'className="flex h-[94dvh] w-full max-w-2xl flex-col overflow-hidden rounded-t-[28px] bg-white shadow-2xl sm:h-auto sm:max-h-[90dvh] sm:max-w-xl sm:rounded-[28px]"',
+];
+for (const variant of panelVariants) source = source.replace(variant, compactPanel);
 
 const intrinsicHero =
   '<div data-ai-detail-hero="intrinsic" className="relative w-full shrink-0 overflow-hidden bg-stone-100"><img data-ai-detail-hero-image="true" src={image} alt={`${room.name} ${t.photo.toLowerCase()} ${photo+1}`} className="block h-auto w-full" draggable={false}/></div>';
@@ -59,13 +57,28 @@ source = source.replace(
   '{room.images.length>1?<div data-ai-detail-thumbnails="spread" className="mt-2 mb-2 grid w-full shrink-0 gap-2" style={{gridTemplateColumns:`repeat(${room.images.length}, minmax(0, 1fr))`}} aria-label={`${t.photo} thumbnails`}>{room.images.map((src,i)=><button key={`${src}-${i}`} type="button" onClick={()=>setPhoto(i)} className={`relative h-12 min-w-0 w-full overflow-hidden rounded-lg border-2 bg-white shadow-sm sm:h-14 ${i===photo?"border-[#ff385c] ring-1 ring-[#ffccd6]":"border-stone-200 opacity-90"}`} aria-label={`${t.photo} ${i+1}`}><img src={src} alt="" className="h-full w-full object-cover" loading="lazy" draggable={false}/></button>)}</div>:null}',
 );
 
+source = source.replace(
+  '<div className="flex min-h-0 flex-1 flex-col p-3 sm:p-4">',
+  '<div data-ai-detail-content="natural" className="flex min-h-0 flex-col p-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] sm:p-4">',
+);
+source = source.replace(
+  '<div className="mt-auto pt-2">',
+  '<div data-ai-detail-action="inline" className="pt-3">',
+);
+source = source.replace(
+  'className="mt-2 w-full rounded-xl bg-[#ff385c] px-5 py-2.5 text-base font-bold text-white shadow-sm"',
+  'className="w-full rounded-xl bg-[#ff385c] px-5 py-2.5 text-base font-bold text-white shadow-sm"',
+);
+
 const required = [
   "viewAmenities: string",
   "const [amenitiesOpen,setAmenitiesOpen]=useState(false)",
   "onClick={()=>setAmenitiesOpen(true)}",
   "onClick={()=>setAmenitiesOpen(false)}",
   'role="dialog" aria-modal="true" aria-label={t.amenities}',
-  "sm:h-auto sm:max-h-[90dvh] sm:max-w-xl",
+  "max-h-[calc(100dvh-0.5rem)]",
+  "overflow-y-auto",
+  "sm:max-h-[90dvh] sm:max-w-xl",
   'data-ai-detail-hero="intrinsic"',
   'data-ai-detail-hero-image="true"',
   'className="block h-auto w-full"',
@@ -73,6 +86,10 @@ const required = [
   "✓ {t.saving}: {room.saving}",
   'data-ai-detail-thumbnails="spread"',
   'gridTemplateColumns:`repeat(${room.images.length}, minmax(0, 1fr))`',
+  'data-ai-detail-content="natural"',
+  "pb-[calc(0.75rem+env(safe-area-inset-bottom))]",
+  'data-ai-detail-action="inline"',
+  'className="pt-3"',
   "featureRooms.flatMap",
 ];
 
@@ -80,24 +97,21 @@ for (const token of required) {
   if (!source.includes(token)) throw new Error(`AI room detail popup requirement missing: ${token}`);
 }
 
-if (source.includes('data-ai-detail-hero="blurred-contain"')) {
-  throw new Error("Room detail hero still uses the fixed blurred frame");
-}
-if (source.includes('data-ai-detail-hero-background="true"')) {
-  throw new Error("Room detail hero still renders a cropped background layer");
-}
-if (source.includes('data-ai-detail-thumbnails="white"')) {
-  throw new Error("Room detail thumbnails still use the old compact row");
-}
-if (source.includes('className="block max-h-full max-w-full object-contain"')) {
-  throw new Error("Room detail hero still uses the old fixed-height image layout");
-}
-if (source.includes("grid grid-cols-4 gap-1.5")) {
-  throw new Error("Amenities are still rendered inline in the room detail card");
-}
-if (source.includes("expanded?t.less:t.more")) {
-  throw new Error("Legacy amenities expand/collapse control is still present");
+const forbidden = [
+  'data-ai-detail-hero="blurred-contain"',
+  'data-ai-detail-hero-background="true"',
+  'data-ai-detail-thumbnails="white"',
+  'className="block max-h-full max-w-full object-contain"',
+  'h-[94dvh]',
+  'flex min-h-0 flex-1 flex-col',
+  'className="mt-auto pt-2"',
+  'className="mt-2 w-full rounded-xl bg-[#ff385c]',
+  "grid grid-cols-4 gap-1.5",
+  "expanded?t.less:t.more",
+];
+for (const token of forbidden) {
+  if (source.includes(token)) throw new Error(`AI room detail popup still contains legacy layout: ${token}`);
 }
 
 fs.writeFileSync(file, source);
-console.log("AI room detail patched and validated: intrinsic uncropped photo, prominent savings, spread thumbnails, amenities popup");
+console.log("AI room detail patched and validated: natural mobile height, inline CTA, intrinsic photo, prominent savings and spread thumbnails");
