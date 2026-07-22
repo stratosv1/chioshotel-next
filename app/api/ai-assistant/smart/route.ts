@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { localizeRoomOffer } from "@/lib/ai-assistant/room-card-catalog";
 import { POST as handleAssistantPost } from "../route";
 
 export const runtime = "nodejs";
@@ -47,11 +48,18 @@ const SCOPE_ONLY_COPY: Record<SupportedLanguage, string> = {
   tr: "Yalnızca Voulamandis House odaları hakkında yardımcı olabilirim: oda özellikleri ve olanakları, müsaitlik, fiyatlar ve resepsiyonla iletişim. Tarihlerinizi ve kişi sayısını yazın veya odalar hakkında bir soru sorun.",
 };
 
-const OUT_OF_SCOPE_TERMS = /(παραλί|χωρι|αξιοθέατ|μουσεί|εστιατόρ|φαγητ|καιρ|δρομολόγ|πλοί|λεωφορεί|ενοικίαση αυτοκιν|beach|village|sightseeing|museum|restaurant|food|weather|ferry|bus|car rental|strand|dorf|museum|restaurant|wetter|fähre|plage|village|musée|restaurant|météo|ferry|spiaggia|paese|museo|ristorante|meteo|traghetto|playa|pueblo|museo|restaurante|clima|ferry|plaj|köy|müze|restoran|hava|feribot)/iu;
+// Latin words that can appear inside valid room requests use word boundaries.
+// For example, Spanish “Busco…” must not match the transport word “bus”.
+const OUT_OF_SCOPE_TERMS = /(παραλί|χωρι|αξιοθέατ|μουσεί|εστιατόρ|φαγητ|καιρ|δρομολόγ|πλοί|λεωφορεί|ενοικίαση αυτοκιν|\bbeach\b|\bvillage\b|\bsightseeing\b|\bmuseum\b|\brestaurant\b|\bfood\b|\bweather\b|\bferry\b|\bbus\b|\bcar rental\b|\bstrand\b|\bdorf\b|\bwetter\b|\bfähre\b|\bplage\b|\bmusée\b|\bmétéo\b|\bspiaggia\b|\bpaese\b|\bmuseo\b|\bristorante\b|\bmeteo\b|\btraghetto\b|\bplaya\b|\bpueblo\b|\brestaurante\b|\bclima\b|\bplaj\b|\bköy\b|\bmüze\b|\brestoran\b|\bhava\b|\bferibot\b)/iu;
 
 const ROOM_SCOPE_TERMS = /(δωμάτι|διαμέρισμ|διαμον|διαθεσιμ|διαθέσιμ|τιμ|κόστος|κράτησ|ρεσεψιόν|reception|επικοινων|επισκέπτ|άτομα|άφιξ|αναχώρ|check.?in|check.?out|κρεβάτ|κουζίν|ψυγεί|κλιματισ|μπαλκόν|όροφο|σκάλα|ήσυχ|πρωιν|πάρκιν|wifi|μπάνι|ντους|φόρ|έκπτωσ|κατοικίδ|πισίν|σεσουάρ|πετσέτ|κούνια|room|apartment|stay|accommodation|availability|available|price|rate|cost|booking|reserve|reservation|contact|guest|person|arrival|departure|bed|kitchen|fridge|air condition|balcony|floor|stairs|quiet|breakfast|parking|bathroom|shower|tax|discount|pet|pool|hair.?dryer|towel|cot|crib|zimmer|wohnung|aufenthalt|verfügbar|preis|buchung|reservierung|rezeption|gast|person|ankunft|abreise|bett|küche|kühlschrank|klimaanlage|balkon|etage|treppe|ruhig|frühstück|parkplatz|badezimmer|dusche|rabatt|haustier|föhn|handtuch|chambre|appartement|séjour|disponibil|prix|réservation|réception|personne|arrivée|départ|lit|cuisine|réfrigérateur|climatisation|balcon|étage|escalier|calme|petit.?déjeuner|parking|salle de bain|douche|réduction|animal|sèche.?cheveux|serviette|camera|appartamento|soggiorno|disponibil|prezzo|prenotazione|ospit|arrivo|partenza|letto|cucina|frigorifero|aria condizionata|balcone|piano|scale|tranquill|colazione|parcheggio|bagno|doccia|sconto|animale|asciugacapelli|asciugamano|habitación|apartamento|estancia|disponibil|precio|reserva|recepción|huésped|persona|llegada|salida|cama|cocina|nevera|aire acondicionado|balcón|planta|escalera|tranquil|desayuno|aparcamiento|baño|ducha|descuento|mascota|secador|toalla|oda|daire|konaklama|müsait|fiyat|rezervasyon|resepsiyon|iletişim|kişi|giriş|çıkış|yatak|mutfak|buzdolabı|klima|balkon|kat|merdiven|sakin|kahvaltı|otopark|banyo|duş|indirim|evcil|havuz|saç kurutma|havlu)/iu;
 
 const DATE_OR_GUEST_CONTINUATION = /(\b\d{1,2}\s*(?:[-/–]|to|until|έως|ως|bis|au|al|ile)\s*\d{1,2}\b|january|february|march|april|may|june|july|august|september|october|november|december|ιανου|φεβρου|μαρτ|απριλ|μαι|ιουν|ιουλ|αυγουστ|σεπτεμβ|οκτωβ|νοεμβ|δεκεμβ|januar|februar|märz|mai|juni|juli|oktober|dezember|janvier|février|mars|avril|juin|juillet|août|septembre|octobre|novembre|décembre|gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|dicembre|enero|febrero|abril|mayo|junio|julio|septiembre|octubre|diciembre|ocak|şubat|mart|nisan|mayıs|haziran|temmuz|ağustos|eylül|ekim|kasım|aralık)/iu;
+
+const TURKISH_MONTHS: Record<string, string> = {
+  ocak: "01", şubat: "02", mart: "03", nisan: "04", mayıs: "05", haziran: "06",
+  temmuz: "07", ağustos: "08", eylül: "09", ekim: "10", kasım: "11", aralık: "12",
+};
 
 function latestUserText(messages: unknown): string {
   if (!Array.isArray(messages)) return "";
@@ -78,6 +86,20 @@ function isRoomScopeRequest(body: any, text: string): boolean {
   if (DATE_OR_GUEST_CONTINUATION.test(text)) return true;
   if (Array.isArray(body?.messages) && body.messages.length > 1 && /^\s*\d{1,2}\s*$/.test(text)) return true;
   return false;
+}
+
+function parseTurkishDateRange(text: string) {
+  const match = text.match(/\b(\d{1,2})\s*[-–/]\s*(\d{1,2})\s+(ocak|şubat|mart|nisan|mayıs|haziran|temmuz|ağustos|eylül|ekim|kasım|aralık)\s+(\d{4})\b/iu);
+  if (!match) return null;
+  const [, startDay, endDay, monthName, year] = match;
+  const month = TURKISH_MONTHS[monthName.toLocaleLowerCase("tr-TR")];
+  if (!month) return null;
+  const checkin = `${year}-${month}-${startDay.padStart(2, "0")}`;
+  const checkout = `${year}-${month}-${endDay.padStart(2, "0")}`;
+  const start = new Date(`${checkin}T12:00:00Z`);
+  const end = new Date(`${checkout}T12:00:00Z`);
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime()) || end <= start) return null;
+  return { checkin, checkout };
 }
 
 const COPY = {
@@ -141,6 +163,19 @@ function splitStayMessage(language?: string) {
   return copy(language).splitStay;
 }
 
+function availableRoomsMessage(language: SupportedLanguage, count: number) {
+  const messages: Record<SupportedLanguage, string> = {
+    el: `Βρήκα ${count} ${count === 1 ? "διαθέσιμη επιλογή" : "διαθέσιμες επιλογές"}.`,
+    en: `I found ${count} available ${count === 1 ? "option" : "options"}.`,
+    de: `Ich habe ${count} ${count === 1 ? "verfügbare Option" : "verfügbare Optionen"} gefunden.`,
+    fr: `J’ai trouvé ${count} ${count === 1 ? "option disponible" : "options disponibles"}.`,
+    it: `Ho trovato ${count} ${count === 1 ? "opzione disponibile" : "opzioni disponibili"}.`,
+    es: `He encontrado ${count} ${count === 1 ? "opción disponible" : "opciones disponibles"}.`,
+    tr: `${count} ${count === 1 ? "müsait seçenek" : "müsait seçenek"} buldum.`,
+  };
+  return messages[language];
+}
+
 async function findSplitStays(request: NextRequest, search: any) {
   try {
     const url = new URL("/api/booking/split-stay", request.nextUrl.origin);
@@ -189,15 +224,15 @@ function splitOffers(splitStays: any[], search: any, language?: string) {
 
 export async function POST(request: NextRequest) {
   const body = await request.clone().json().catch(() => null);
-  const language = normalizeLanguage(body?.language);
+  const requestedLanguage = normalizeLanguage(body?.language);
   const userText = latestUserText(body?.messages);
 
   if (!isRoomScopeRequest(body, userText)) {
     return NextResponse.json({
-      answer: SCOPE_ONLY_COPY[language],
+      answer: SCOPE_ONLY_COPY[requestedLanguage],
       search: body?.search && typeof body.search === "object" ? body.search : {},
       offers: [],
-      language,
+      language: requestedLanguage,
       action: "respond",
       outOfScope: true,
       scopeRestricted: true,
@@ -206,11 +241,29 @@ export async function POST(request: NextRequest) {
   }
 
   const response = await handleAssistantPost(request);
-  const payload = await response.clone().json().catch(() => null);
+  const rawPayload = await response.clone().json().catch(() => null);
+  if (!rawPayload || typeof rawPayload !== "object") return response;
 
-  if (!payload || typeof payload !== "object") return response;
+  const language = normalizeLanguage(rawPayload.language || requestedLanguage);
+  const deterministicRange = language === "tr" ? parseTurkishDateRange(userText) : null;
+  const search = {
+    ...(body?.search && typeof body.search === "object" ? body.search : {}),
+    ...(rawPayload.search && typeof rawPayload.search === "object" ? rawPayload.search : {}),
+    ...(deterministicRange || {}),
+  };
+  const offers = Array.isArray(rawPayload.offers)
+    ? rawPayload.offers.map((offer: Record<string, any>) => localizeRoomOffer(offer, language))
+    : [];
+  const payload = {
+    ...rawPayload,
+    language,
+    search,
+    offers,
+    answer: rawPayload.action === "search_rooms" && offers.length
+      ? availableRoomsMessage(language, offers.length)
+      : rawPayload.answer,
+  };
 
-  const offers = Array.isArray(payload.offers) ? payload.offers : [];
   const isCompletedSearch = payload.action === "search_rooms" && payload.search?.checkin && payload.search?.checkout && payload.search?.guests;
 
   if (isCompletedSearch && offers.length === 0 && response.ok) {
@@ -244,7 +297,9 @@ export async function POST(request: NextRequest) {
   }
 
   const answer = typeof payload.answer === "string" ? payload.answer : "";
-  if (!FALSE_BOOKING_CLAIMS.some((pattern) => pattern.test(answer))) return response;
+  if (!FALSE_BOOKING_CLAIMS.some((pattern) => pattern.test(answer))) {
+    return NextResponse.json(payload, { status: response.status });
+  }
 
   return NextResponse.json(
     { ...payload, answer: safeInterestMessage(payload.language), offers, bookingConfirmed: false },
