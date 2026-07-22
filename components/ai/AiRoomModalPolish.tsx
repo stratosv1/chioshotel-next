@@ -88,6 +88,18 @@ function forceFullHeroPhoto(modal: HTMLElement) {
   heroImage.style.setProperty("flex", "0 0 auto", "important");
 }
 
+function forceFourColumnAmenities(modal: HTMLElement) {
+  const headings = Array.from(modal.querySelectorAll<HTMLElement>("p"));
+  const amenitiesHeading = headings.find((node) =>
+    /room amenities|παροχές δωματίου|zimmerausstattung|équipements de la chambre|servizi della camera|servicios de la habitación|oda olanakları/i.test(node.textContent?.trim() || ""),
+  );
+  const grid = amenitiesHeading?.nextElementSibling as HTMLElement | null;
+  if (!grid) return;
+
+  grid.style.setProperty("display", "grid", "important");
+  grid.style.setProperty("grid-template-columns", "repeat(4, minmax(0, 1fr))", "important");
+}
+
 function polishRoomModal(modal: HTMLElement) {
   const language = currentLanguage();
   const heading = modal.querySelector<HTMLElement>("h2");
@@ -106,6 +118,7 @@ function polishRoomModal(modal: HTMLElement) {
   }
 
   forceFullHeroPhoto(modal);
+  forceFourColumnAmenities(modal);
 }
 
 function polishAllRoomModals() {
