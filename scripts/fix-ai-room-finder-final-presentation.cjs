@@ -30,7 +30,9 @@ if (!sales.includes('alt={detail.name} fill sizes="(max-width:640px) 100vw, 720p
 }
 
 const enhancerRequirements = [
-  "sm:h-auto sm:max-h-[90dvh] sm:max-w-xl",
+  "max-h-[calc(100dvh-0.5rem)]",
+  "overflow-y-auto",
+  "sm:max-h-[90dvh] sm:max-w-xl",
   'data-ai-detail-hero="intrinsic"',
   'data-ai-detail-hero-image="true"',
   'className="block h-auto w-full"',
@@ -38,6 +40,10 @@ const enhancerRequirements = [
   "✓ {t.saving}: {room.saving}",
   'data-ai-detail-thumbnails="spread"',
   'gridTemplateColumns:`repeat(${room.images.length}, minmax(0, 1fr))`',
+  'data-ai-detail-content="natural"',
+  "pb-[calc(0.75rem+env(safe-area-inset-bottom))]",
+  'data-ai-detail-action="inline"',
+  'className="pt-3"',
 ];
 
 for (const token of enhancerRequirements) {
@@ -46,17 +52,20 @@ for (const token of enhancerRequirements) {
   }
 }
 
-if (enhancer.includes('data-ai-detail-hero="blurred-contain"')) {
-  throw new Error("Actual room detail component still uses a fixed-height blurred hero");
-}
-if (enhancer.includes('data-ai-detail-hero-background="true"')) {
-  throw new Error("Actual room detail component still renders a cropped background photo");
-}
-if (enhancer.includes('data-ai-detail-thumbnails="white"')) {
-  throw new Error("Actual room detail component still uses the old thumbnail row");
-}
-if (enhancer.includes('className="block max-h-full max-w-full object-contain"')) {
-  throw new Error("Actual room detail component still uses the old fixed-height hero image layout");
+const forbiddenEnhancerTokens = [
+  'data-ai-detail-hero="blurred-contain"',
+  'data-ai-detail-hero-background="true"',
+  'data-ai-detail-thumbnails="white"',
+  'className="block max-h-full max-w-full object-contain"',
+  'h-[94dvh]',
+  'flex min-h-0 flex-1 flex-col',
+  'className="mt-auto pt-2"',
+  'className="mt-2 w-full rounded-xl bg-[#ff385c]',
+];
+for (const token of forbiddenEnhancerTokens) {
+  if (enhancer.includes(token)) {
+    throw new Error(`Actual room detail component still uses legacy mobile spacing: ${token}`);
+  }
 }
 
 if (polish.includes("forceCoveredHeroPhoto(modal);")) {
@@ -72,4 +81,4 @@ if (page.includes("AiFlowSafetyNet")) {
 fs.writeFileSync(salesFile, sales);
 fs.writeFileSync(polishFile, polish);
 fs.writeFileSync(pageFile, page);
-console.log("AI Room Finder presentation fixed: compact modal, intrinsic uncropped photo, prominent savings and full-width thumbnails");
+console.log("AI Room Finder presentation fixed: natural mobile height, inline CTA, intrinsic uncropped photo, prominent savings and full-width thumbnails");
