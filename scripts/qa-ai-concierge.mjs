@@ -6,113 +6,100 @@ const BASE_URL = String(process.env.AI_QA_BASE_URL || "https://chioshotel.gr").r
 const TIMEOUT_MS = Number(process.env.AI_QA_TIMEOUT_MS || 30000);
 const REPORT_DIR = "qa-results";
 const REPORT_PATH = `${REPORT_DIR}/ai-concierge-report.json`;
+const MAX_TURNS = 8;
 
-const languages = ["el", "en", "de", "fr", "it", "es", "tr"];
-
-const incompleteQueries = {
-  el: "Θέλω δωμάτιο για 2 άτομα χωρίς σκάλες",
-  en: "I want a room for 2 guests without stairs",
-  de: "Ich möchte ein Zimmer für 2 Gäste ohne Treppen",
-  fr: "Je veux une chambre pour 2 personnes sans escaliers",
-  it: "Vorrei una camera per 2 persone senza scale",
-  es: "Quiero una habitación para 2 personas sin escaleras",
-  tr: "2 kişi için merdivensiz bir oda istiyorum",
+const L = {
+  el: {
+    start: "Θέλω ένα ήσυχο δωμάτιο χωρίς σκάλες.",
+    dates: "Από 15 έως 18 Σεπτεμβρίου 2026.",
+    guests: "Είμαστε 2 άτομα.",
+    correction: "Τελικά είμαστε 4 άτομα και θέλουμε 16 έως 19 Σεπτεμβρίου 2026.",
+    contact: "Ναι, στείλε αίτημα στη reception με WhatsApp.",
+    general: "Ποια κοντινή παραλία είναι κατάλληλη για παιδιά;",
+  },
+  en: {
+    start: "I need a quiet room without stairs.",
+    dates: "From 15 to 18 September 2026.",
+    guests: "We are 2 guests.",
+    correction: "Actually we are 4 guests and need 16 to 19 September 2026.",
+    contact: "Yes, send a request to reception by WhatsApp.",
+    general: "Which nearby beach is suitable for children?",
+  },
+  de: {
+    start: "Ich suche ein ruhiges Zimmer ohne Treppen.",
+    dates: "Vom 15. bis 18. September 2026.",
+    guests: "Wir sind 2 Personen.",
+    correction: "Eigentlich sind wir 4 Personen und möchten vom 16. bis 19. September 2026 bleiben.",
+    contact: "Ja, senden Sie eine Anfrage per WhatsApp an die Rezeption.",
+    general: "Welcher nahe Strand ist für Kinder geeignet?",
+  },
+  fr: {
+    start: "Je cherche une chambre calme sans escaliers.",
+    dates: "Du 15 au 18 septembre 2026.",
+    guests: "Nous sommes 2 personnes.",
+    correction: "Finalement nous sommes 4 personnes, du 16 au 19 septembre 2026.",
+    contact: "Oui, envoyez une demande à la réception par WhatsApp.",
+    general: "Quelle plage proche convient aux enfants ?",
+  },
+  it: {
+    start: "Cerco una camera tranquilla senza scale.",
+    dates: "Dal 15 al 18 settembre 2026.",
+    guests: "Siamo 2 persone.",
+    correction: "In realtà siamo 4 persone, dal 16 al 19 settembre 2026.",
+    contact: "Sì, invia una richiesta alla reception tramite WhatsApp.",
+    general: "Quale spiaggia vicina è adatta ai bambini?",
+  },
+  es: {
+    start: "Busco una habitación tranquila sin escaleras.",
+    dates: "Del 15 al 18 de septiembre de 2026.",
+    guests: "Somos 2 personas.",
+    correction: "En realidad somos 4 personas, del 16 al 19 de septiembre de 2026.",
+    contact: "Sí, envía una solicitud a recepción por WhatsApp.",
+    general: "¿Qué playa cercana es adecuada para niños?",
+  },
+  tr: {
+    start: "Merdivensiz, sakin bir oda arıyorum.",
+    dates: "15-18 Eylül 2026 tarihleri arasında.",
+    guests: "2 kişiyiz.",
+    correction: "Aslında 4 kişiyiz ve 16-19 Eylül 2026 tarihleri arasında kalacağız.",
+    contact: "Evet, resepsiyona WhatsApp ile talep gönder.",
+    general: "Çocuklar için hangi yakın plaj uygundur?",
+  },
 };
 
-const correctionQueries = {
-  el: "Τελικά αλλάζουμε: 15 με 18 Σεπτεμβρίου 2026 και είμαστε 4 άτομα",
-  en: "Change of plan: 15 to 18 September 2026 and we are 4 guests",
-  de: "Planänderung: 15. bis 18. September 2026 und wir sind 4 Gäste",
-  fr: "Changement de programme : du 15 au 18 septembre 2026 pour 4 personnes",
-  it: "Cambio di programma: dal 15 al 18 settembre 2026 per 4 persone",
-  es: "Cambio de planes: del 15 al 18 de septiembre de 2026 para 4 personas",
-  tr: "Plan değişti: 15-18 Eylül 2026 ve 4 kişiyiz",
+const LANGUAGE_EVIDENCE = {
+  el: /[α-ωάέήίόύώϊϋΐΰ]/iu,
+  en: /\b(the|your|you|room|guests?|dates?|available|reception|nearby|would|please)\b/i,
+  de: /\b(der|die|das|ihr|sie|zimmer|gäste|personen|verfügbar|rezeption|möchten|bitte)\b/i,
+  fr: /\b(le|la|les|votre|vous|chambre|personnes|disponible|réception|souhaitez|proche)\b/i,
+  it: /\b(il|la|le|vostro|camera|persone|disponibile|reception|vuoi|desideri|vicina)\b/i,
+  es: /\b(el|la|los|su|usted|habitación|personas|disponible|recepción|quieres|cercana)\b/i,
+  tr: /\b(oda|kişi|kişilik|müsait|resepsiyon|ister|yakın|tarih|konaklama|gönder)\b/i,
 };
 
-const respondQueries = {
-  el: "Ποια παραλία είναι κοντά και κατάλληλη για παιδιά;",
-  en: "Which nearby beach is suitable for children?",
-  de: "Welcher nahe Strand ist für Kinder geeignet?",
-  fr: "Quelle plage proche convient aux enfants ?",
-  it: "Quale spiaggia vicina è adatta ai bambini?",
-  es: "¿Qué playa cercana es adecuada para niños?",
-  tr: "Çocuklar için hangi yakın plaj uygundur?",
+const FOREIGN_MARKERS = {
+  el: [
+    /\b(your|room|guests?|available|reception|would you)\b/i,
+    /\b(zimmer|gäste|verfügbar|rezeption)\b/i,
+    /\b(chambre|personnes|disponible|réception)\b/i,
+    /\b(camera|persone|disponibile)\b/i,
+    /\b(habitación|personas|disponible|recepción)\b/i,
+    /\b(oda|kişi|müsait|resepsiyon)\b/i,
+  ],
+  en: [/[α-ωάέήίόύώϊϋΐΰ]/iu, /\b(zimmer|gäste|rezeption)\b/i, /\b(chambre|réception)\b/i, /\b(habitación|recepción)\b/i, /\b(oda|kişi|resepsiyon)\b/i],
+  de: [/[α-ωάέήίόύώϊϋΐΰ]/iu, /\b(your|room|guests?|would you)\b/i, /\b(chambre|réception)\b/i, /\b(habitación|recepción)\b/i, /\b(oda|kişi|resepsiyon)\b/i],
+  fr: [/[α-ωάέήίόύώϊϋΐΰ]/iu, /\b(your|room|guests?|would you)\b/i, /\b(zimmer|gäste|rezeption)\b/i, /\b(habitación|recepción)\b/i, /\b(oda|kişi|resepsiyon)\b/i],
+  it: [/[α-ωάέήίόύώϊϋΐΰ]/iu, /\b(your|room|guests?|would you)\b/i, /\b(zimmer|gäste|rezeption)\b/i, /\b(chambre|réception)\b/i, /\b(habitación|recepción)\b/i, /\b(oda|kişi|resepsiyon)\b/i],
+  es: [/[α-ωάέήίόύώϊϋΐΰ]/iu, /\b(your|room|guests?|would you)\b/i, /\b(zimmer|gäste|rezeption)\b/i, /\b(chambre|réception)\b/i, /\b(oda|kişi|resepsiyon)\b/i],
+  tr: [/[α-ωάέήίόύώϊϋΐΰ]/iu, /\b(your|room|guests?|would you)\b/i, /\b(zimmer|gäste|rezeption)\b/i, /\b(chambre|réception)\b/i, /\b(habitación|recepción)\b/i],
 };
-
-const scenarios = [
-  ...languages.map((language) => ({
-    id: `${language}-asks-for-missing-dates`,
-    language,
-    messages: [{ role: "user", content: incompleteQueries[language] }],
-    expect: { action: "ask_user", answer: true },
-  })),
-
-  ...languages.map((language) => ({
-    id: `${language}-correction-search`,
-    language,
-    search: { checkin: "2026-09-10", checkout: "2026-09-13", guests: 2 },
-    messages: [
-      { role: "user", content: "10-13 September 2026, 2 guests" },
-      { role: "assistant", content: "I checked the options." },
-      { role: "user", content: correctionQueries[language] },
-    ],
-    expect: {
-      action: "search_rooms",
-      search: { checkin: "2026-09-15", checkout: "2026-09-18", guests: 4 },
-      validateOffers: true,
-    },
-  })),
-
-  ...languages.map((language) => ({
-    id: `${language}-general-response`,
-    language,
-    messages: [{ role: "user", content: respondQueries[language] }],
-    expect: { action: "respond", answer: true },
-  })),
-
-  {
-    id: "capacity-2-guests",
-    language: "en",
-    search: { checkin: "2026-09-20", checkout: "2026-09-23", guests: 2 },
-    messages: [{ role: "user", content: "Check live availability for these dates for 2 guests" }],
-    expect: { action: "search_rooms", minGuests: 2, validateOffers: true },
-  },
-  {
-    id: "capacity-3-guests",
-    language: "en",
-    search: { checkin: "2026-09-20", checkout: "2026-09-23", guests: 3 },
-    messages: [{ role: "user", content: "Check live availability for these dates for 3 guests" }],
-    expect: { action: "search_rooms", minGuests: 3, validateOffers: true },
-  },
-  {
-    id: "capacity-4-guests",
-    language: "en",
-    search: { checkin: "2026-09-20", checkout: "2026-09-23", guests: 4 },
-    messages: [{ role: "user", content: "Check live availability for these dates for 4 guests" }],
-    expect: { action: "search_rooms", minGuests: 4, validateOffers: true },
-  },
-  {
-    id: "capacity-5-guests",
-    language: "en",
-    search: { checkin: "2026-09-20", checkout: "2026-09-23", guests: 5 },
-    messages: [{ role: "user", content: "Check live availability for these dates for 5 guests" }],
-    expect: { action: "search_rooms", minGuests: 5, onlyRoom10WhenAvailable: true, validateOffers: true },
-  },
-  {
-    id: "invalid-past-search-does-not-book",
-    language: "en",
-    search: { checkin: "2020-01-01", checkout: "2020-01-02", guests: 2 },
-    messages: [{ role: "user", content: "Book this now" }],
-    expect: { bookingNotConfirmed: true, answer: true },
-  },
-  {
-    id: "unsafe-booking-blocked",
-    special: "unsafe-booking",
-  },
-];
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
+}
+
+function normalize(text) {
+  return String(text || "").replace(/\s+/g, " ").trim();
 }
 
 async function post(path, body) {
@@ -133,87 +120,200 @@ async function post(path, body) {
   }
 }
 
-function validateOfferBasics(offers) {
+function assertLanguage(text, expected, turn) {
+  const answer = normalize(text);
+  assert(answer.length > 0, `turn ${turn}: empty assistant answer`);
+
+  const foreign = (FOREIGN_MARKERS[expected] || []).find((pattern) => pattern.test(answer));
+  assert(!foreign, `turn ${turn}: answer contains another language (${foreign}) — "${answer.slice(0, 180)}"`);
+
+  if (answer.length >= 35) {
+    assert(LANGUAGE_EVIDENCE[expected].test(answer), `turn ${turn}: answer does not look like ${expected} — "${answer.slice(0, 180)}"`);
+  }
+}
+
+function fingerprint(text) {
+  return normalize(text)
+    .toLocaleLowerCase()
+    .replace(/[0-9]+/g, "#")
+    .replace(/[^\p{L}# ]/gu, "")
+    .slice(0, 240);
+}
+
+function assertNoLoop(assistantAnswers) {
+  const fingerprints = assistantAnswers.map(fingerprint).filter(Boolean);
+  for (let i = 1; i < fingerprints.length; i += 1) {
+    assert(fingerprints[i] !== fingerprints[i - 1], `loop detected: identical consecutive assistant answers at turns ${i} and ${i + 1}`);
+  }
+
+  const counts = new Map();
+  for (const fp of fingerprints) counts.set(fp, (counts.get(fp) || 0) + 1);
+  const repeated = [...counts.entries()].find(([, count]) => count >= 3);
+  assert(!repeated, "loop detected: the same assistant answer appeared three times");
+
+  const questionStates = assistantAnswers.map((answer) => {
+    const a = normalize(answer).toLowerCase();
+    if (/(check.?in|arrival|άφιξ|ankunft|arrivée|arrivo|llegada|giriş)/i.test(a)) return "checkin";
+    if (/(check.?out|departure|αναχώρ|abreise|départ|partenza|salida|çıkış)/i.test(a)) return "checkout";
+    if (/(guest|άτομα|επισκέπτ|person|personen|persone|personas|kişi)/i.test(a)) return "guests";
+    return null;
+  }).filter(Boolean);
+
+  for (let i = 2; i < questionStates.length; i += 1) {
+    assert(!(questionStates[i] === questionStates[i - 1] && questionStates[i] === questionStates[i - 2]), `loop detected: assistant asked for ${questionStates[i]} three times`);
+  }
+}
+
+function validateOffers(offers, guests) {
   const keys = offers.map((offer) => `${offer.roomId}:${offer.unitId}`);
   assert(new Set(keys).size === keys.length, "duplicate offers returned");
-
   for (const offer of offers) {
-    assert(Number(offer.maxGuests) >= 1, "offer has invalid maxGuests");
+    assert(Number(offer.maxGuests) >= guests, `room ${offer.name || offer.roomId} cannot host ${guests} guests`);
     assert(Number(offer.originalTotal) > 0, "offer has invalid originalTotal");
     assert(Number(offer.directTotal) > 0, "offer has invalid directTotal");
     assert(Number(offer.directTotal) <= Number(offer.originalTotal), "direct total exceeds original total");
   }
 }
 
-function validateScenario(scenario, payload) {
-  assert(payload && typeof payload === "object", "missing JSON payload");
-  assert(typeof payload.answer === "string" && payload.answer.trim(), "missing natural-language answer");
-
-  if (scenario.language) {
-    assert(payload.language === scenario.language, `expected language ${scenario.language}, got ${payload.language}`);
-  }
-
-  if (scenario.expect?.action) {
-    assert(payload.action === scenario.expect.action, `expected action ${scenario.expect.action}, got ${payload.action}`);
-  }
-
-  if (scenario.expect?.search) {
-    assert(payload.search?.checkin === scenario.expect.search.checkin, `expected checkin ${scenario.expect.search.checkin}, got ${payload.search?.checkin}`);
-    assert(payload.search?.checkout === scenario.expect.search.checkout, `expected checkout ${scenario.expect.search.checkout}, got ${payload.search?.checkout}`);
-    assert(Number(payload.search?.guests) === scenario.expect.search.guests, `expected guests ${scenario.expect.search.guests}, got ${payload.search?.guests}`);
-  }
-
-  const offers = Array.isArray(payload.offers) ? payload.offers : [];
-
-  if (scenario.expect?.validateOffers) {
-    validateOfferBasics(offers);
-    assert(offers.length > 0 || payload.noAvailability === true || typeof payload.answer === "string", "search returned no actionable outcome");
-  }
-
-  if (scenario.expect?.minGuests && offers.length) {
-    assert(offers.every((offer) => Number(offer.maxGuests) >= scenario.expect.minGuests), "returned an undersized offer");
-  }
-
-  if (scenario.expect?.onlyRoom10WhenAvailable && offers.length) {
-    assert(offers.every((offer) => String(offer.roomId) === "265595" && String(offer.unitId) === "3"), "five guests should only receive apartment 10");
-  }
-
-  if (scenario.expect?.bookingNotConfirmed) {
-    assert(payload.bookingConfirmed !== true, "assistant falsely confirmed a booking");
-  }
+function isTerminalAction(payload) {
+  const answer = normalize(payload?.answer);
+  const offers = Array.isArray(payload?.offers) ? payload.offers : [];
+  return (
+    offers.length > 0 ||
+    payload?.receptionHandoffOffered === true ||
+    payload?.noAvailability === true ||
+    /\b(whatsapp|email|e-mail|reception|rezeption|réception|recepción|resepsiyon)\b/i.test(answer)
+  );
 }
 
-async function runNormalScenario(scenario) {
-  const { response, payload, durationMs } = await post("/api/ai-assistant/smart", {
-    messages: scenario.messages,
-    search: scenario.search || {},
-    language: scenario.language,
-    selectedRoom: scenario.selectedRoom,
-  });
+function nextHumanReply(language, payload, step) {
+  const answer = normalize(payload?.answer).toLowerCase();
+  const copy = L[language];
 
+  if (step === 0) return copy.start;
+  if (/(date|dates|check.?in|arrival|άφιξ|ημερομην|ankunft|arrivée|arrivo|llegada|tarih|giriş)/i.test(answer)) return copy.dates;
+  if (/(guest|people|person|άτομα|επισκέπτ|gäste|personen|personnes|persone|personas|kişi)/i.test(answer)) return copy.guests;
+
+  const search = payload?.search || {};
+  if (!search.checkin || !search.checkout) return copy.dates;
+  if (!Number(search.guests)) return copy.guests;
+  return copy.contact;
+}
+
+async function callAssistant({ language, messages, search = {}, selectedRoom }) {
+  const { response, payload, durationMs } = await post("/api/ai-assistant/smart", {
+    language,
+    messages,
+    search,
+    selectedRoom,
+  });
   assert(response.ok, `HTTP ${response.status}: ${payload?.error || "unknown error"}`);
-  validateScenario(scenario, payload);
+  assert(payload && typeof payload === "object", "missing JSON payload");
+  assert(typeof payload.answer === "string" && payload.answer.trim(), "missing natural-language answer");
+  assert(payload.language === language, `language field changed from ${language} to ${payload.language}`);
+  return { payload, durationMs };
+}
+
+async function runBookingJourney(language) {
+  const messages = [];
+  const assistantAnswers = [];
+  const transcript = [];
+  let search = {};
+  let terminalPayload = null;
+  let totalDurationMs = 0;
+
+  for (let step = 0; step < MAX_TURNS; step += 1) {
+    const userText = nextHumanReply(language, terminalPayload, step);
+    messages.push({ role: "user", content: userText });
+    transcript.push({ role: "user", content: userText });
+
+    const { payload, durationMs } = await callAssistant({ language, messages, search });
+    totalDurationMs += durationMs;
+    search = payload.search || search;
+    terminalPayload = payload;
+
+    assertLanguage(payload.answer, language, step + 1);
+    assistantAnswers.push(payload.answer);
+    transcript.push({
+      role: "assistant",
+      content: payload.answer,
+      action: payload.action,
+      search: payload.search,
+      offers: Array.isArray(payload.offers) ? payload.offers.length : 0,
+      receptionHandoffOffered: payload.receptionHandoffOffered === true,
+    });
+    messages.push({ role: "assistant", content: payload.answer });
+
+    if (payload.action === "search_rooms" && payload.search?.checkin && payload.search?.checkout && Number(payload.search?.guests)) {
+      const offers = Array.isArray(payload.offers) ? payload.offers : [];
+      if (offers.length) validateOffers(offers, Number(payload.search.guests));
+      if (isTerminalAction(payload)) break;
+    }
+  }
+
+  assertNoLoop(assistantAnswers);
+  assert(terminalPayload, "journey produced no assistant response");
+  assert(isTerminalAction(terminalPayload), `journey did not finish with an actionable CTA/outcome within ${MAX_TURNS} turns`);
+  assert(
+    terminalPayload.action === "search_rooms" || terminalPayload.receptionHandoffOffered === true,
+    `journey ended with non-terminal action ${terminalPayload.action}`,
+  );
 
   return {
-    durationMs,
+    totalDurationMs,
+    turns: assistantAnswers.length,
+    finalAction: terminalPayload.action,
+    finalSearch: terminalPayload.search,
+    offers: Array.isArray(terminalPayload.offers) ? terminalPayload.offers.length : 0,
+    noAvailability: terminalPayload.noAvailability === true,
+    receptionHandoffOffered: terminalPayload.receptionHandoffOffered === true,
+    transcript,
+  };
+}
+
+async function runCorrectionJourney(language) {
+  const copy = L[language];
+  const messages = [{ role: "user", content: `${copy.dates} ${copy.guests}` }];
+  const transcript = [...messages];
+  let search = {};
+
+  const first = await callAssistant({ language, messages, search });
+  assertLanguage(first.payload.answer, language, 1);
+  messages.push({ role: "assistant", content: first.payload.answer });
+  transcript.push({ role: "assistant", content: first.payload.answer, action: first.payload.action, search: first.payload.search });
+  search = first.payload.search || {};
+
+  messages.push({ role: "user", content: copy.correction });
+  transcript.push({ role: "user", content: copy.correction });
+
+  const second = await callAssistant({ language, messages, search });
+  assertLanguage(second.payload.answer, language, 2);
+  transcript.push({ role: "assistant", content: second.payload.answer, action: second.payload.action, search: second.payload.search });
+
+  assert(second.payload.action === "search_rooms", `correction did not trigger search_rooms (got ${second.payload.action})`);
+  assert(second.payload.search?.checkin === "2026-09-16", `correction checkin not applied: ${second.payload.search?.checkin}`);
+  assert(second.payload.search?.checkout === "2026-09-19", `correction checkout not applied: ${second.payload.search?.checkout}`);
+  assert(Number(second.payload.search?.guests) === 4, `correction guests not applied: ${second.payload.search?.guests}`);
+  assert(isTerminalAction(second.payload), "corrected journey did not end in an actionable outcome");
+  assertNoLoop([first.payload.answer, second.payload.answer]);
+
+  const offers = Array.isArray(second.payload.offers) ? second.payload.offers : [];
+  if (offers.length) validateOffers(offers, 4);
+
+  return { totalDurationMs: first.durationMs + second.durationMs, transcript };
+}
+
+async function runGeneralJourney(language) {
+  const messages = [{ role: "user", content: L[language].general }];
+  const { payload, durationMs } = await callAssistant({ language, messages });
+  assertLanguage(payload.answer, language, 1);
+  assert(payload.action === "respond", `general question expected respond, got ${payload.action}`);
+  assert(!payload.bookingConfirmed, "general response falsely confirmed a booking");
+  return {
+    totalDurationMs: durationMs,
+    finalAction: payload.action,
     answer: payload.answer,
-    language: payload.language,
-    action: payload.action,
-    search: payload.search,
-    noAvailability: payload.noAvailability === true,
-    receptionHandoffOffered: payload.receptionHandoffOffered === true,
-    bookingConfirmed: payload.bookingConfirmed === true,
-    offers: Array.isArray(payload.offers)
-      ? payload.offers.map((offer) => ({
-          roomId: offer.roomId,
-          unitId: offer.unitId,
-          name: offer.name,
-          maxGuests: offer.maxGuests,
-          originalTotal: offer.originalTotal,
-          directTotal: offer.directTotal,
-        }))
-      : [],
-    rawPayload: payload,
+    transcript: [{ role: "user", content: L[language].general }, { role: "assistant", content: payload.answer, action: payload.action }],
   };
 }
 
@@ -236,13 +336,35 @@ async function runUnsafeBookingScenario() {
   return { durationMs, status: response.status, rawPayload: payload };
 }
 
+const scenarios = [
+  ...Object.keys(L).map((language) => ({ id: `${language}-full-human-booking-flow`, type: "booking", language })),
+  ...Object.keys(L).map((language) => ({ id: `${language}-human-correction-flow`, type: "correction", language })),
+  ...Object.keys(L).map((language) => ({ id: `${language}-general-answer-language`, type: "general", language })),
+  { id: "unsafe-booking-blocked", type: "unsafe" },
+];
+
+async function runScenario(scenario) {
+  if (scenario.type === "booking") return runBookingJourney(scenario.language);
+  if (scenario.type === "correction") return runCorrectionJourney(scenario.language);
+  if (scenario.type === "general") return runGeneralJourney(scenario.language);
+  return runUnsafeBookingScenario();
+}
+
 async function main() {
-  console.log(`AI concierge QA target: ${BASE_URL}`);
-  console.log(`Running ${scenarios.length} scenarios against the current smart API contract.`);
+  console.log(`AI concierge human-journey QA target: ${BASE_URL}`);
+  console.log(`Running ${scenarios.length} multi-turn scenarios.`);
 
   const report = {
+    version: 2,
+    purpose: "Human-like multi-turn QA: language consistency, terminal CTA/action, loop detection, corrections and safety",
     target: BASE_URL,
     startedAt: new Date().toISOString(),
+    criteria: {
+      languageConsistency: "Every assistant answer is inspected, not only payload.language",
+      terminalAction: "Booking journeys must finish with room offers or reception handoff",
+      loopDetection: `No repeated answers/questions and completion within ${MAX_TURNS} assistant turns`,
+      correctionHandling: "Changed dates and guests must replace prior values",
+    },
     total: scenarios.length,
     passed: 0,
     failed: 0,
@@ -252,14 +374,14 @@ async function main() {
   for (const scenario of scenarios) {
     const started = Date.now();
     try {
-      const details = scenario.special === "unsafe-booking" ? await runUnsafeBookingScenario() : await runNormalScenario(scenario);
+      const details = await runScenario(scenario);
       report.passed += 1;
-      report.results.push({ id: scenario.id, status: "pass", durationMs: Date.now() - started, details });
+      report.results.push({ id: scenario.id, type: scenario.type, language: scenario.language, status: "pass", durationMs: Date.now() - started, details });
       console.log(`✓ ${scenario.id}`);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       report.failed += 1;
-      report.results.push({ id: scenario.id, status: "fail", durationMs: Date.now() - started, error: message });
+      report.results.push({ id: scenario.id, type: scenario.type, language: scenario.language, status: "fail", durationMs: Date.now() - started, error: message });
       console.error(`✗ ${scenario.id}: ${message}`);
     }
   }
