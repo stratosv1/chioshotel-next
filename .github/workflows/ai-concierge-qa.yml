@@ -43,7 +43,7 @@ jobs:
         if: github.event_name == 'push'
         run: sleep 120
 
-      - name: Prepare QA runner v5
+      - name: Prepare QA runner v6
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -89,6 +89,21 @@ jobs:
               '  report.status = report.failed ? "completed_with_findings" : "all_passed";',
           )
           path.write_text(text, encoding="utf-8")
+
+          ui_path = Path("scripts/qa-ai-room-cards-ui.mjs")
+          ui_text = ui_path.read_text(encoding="utf-8")
+          old_card_check = '''      const imageLoaded = await cardImage.evaluate((image) => image.complete && image.naturalWidth > 0);\n      assert(imageLoaded, `${language} room ${expected.roomNumber}: card image did not load`);'''
+          new_card_check = '''      const cardImageSrc = await cardImage.getAttribute("src");\n      assert(cardImageSrc && decodeURIComponent(cardImageSrc).includes(expected.image), `${language} room ${expected.roomNumber}: wrong card image source ${cardImageSrc || "missing"}`);'''
+          old_detail_check = '''      const detailImageLoaded = await detailImage.evaluate((image) => image.complete && image.naturalWidth > 0);\n      assert(detailImageLoaded, `${language} room ${expected.roomNumber}: detail image did not load`);'''
+          new_detail_check = '''      await detailImage.waitFor({ state: "visible", timeout: 10000 });\n      const detailImageSrc = await detailImage.getAttribute("src");\n      assert(detailImageSrc && decodeURIComponent(detailImageSrc).includes(expected.image), `${language} room ${expected.roomNumber}: wrong detail image source ${detailImageSrc || "missing"}`);'''
+          if old_card_check not in ui_text:
+              raise RuntimeError("Card image assertion block was not found")
+          if old_detail_check not in ui_text:
+              raise RuntimeError("Detail image assertion block was not found")
+          ui_text = ui_text.replace(old_card_check, new_card_check)
+          ui_text = ui_text.replace(old_detail_check, new_detail_check)
+          ui_text = ui_text.replace("version: 1,", "version: 2,")
+          ui_path.write_text(ui_text, encoding="utf-8")
           PY
           node --check scripts/qa-ai-concierge.mjs
           node --check scripts/qa-ai-room-cards-ui.mjs
