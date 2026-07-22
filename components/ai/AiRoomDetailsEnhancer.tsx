@@ -27,14 +27,14 @@ const DETAILS_LANGUAGE: Record<string, Language> = {
   "Voir les détails": "fr", "Vedi dettagli": "it", "Ver detalles": "es", "Detayları gör": "tr",
 };
 
-const COPY: Record<Language, { saving: string; select: string; close: string; previous: string; next: string; photo: string; amenities: string; more: string; less: string }> = {
-  el: { saving: "Εξοικονόμηση", select: "Επιλογή", close: "Κλείσιμο", previous: "Προηγούμενη φωτογραφία", next: "Επόμενη φωτογραφία", photo: "Φωτογραφία", amenities: "Παροχές δωματίου", more: "Περισσότερα", less: "Λιγότερα" },
-  en: { saving: "You save", select: "Select", close: "Close", previous: "Previous photo", next: "Next photo", photo: "Photo", amenities: "Room amenities", more: "More", less: "Show less" },
-  de: { saving: "Ersparnis", select: "Auswählen", close: "Schließen", previous: "Vorheriges Foto", next: "Nächstes Foto", photo: "Foto", amenities: "Zimmerausstattung", more: "Mehr", less: "Weniger" },
-  fr: { saving: "Économie", select: "Sélectionner", close: "Fermer", previous: "Photo précédente", next: "Photo suivante", photo: "Photo", amenities: "Équipements de la chambre", more: "Plus", less: "Moins" },
-  it: { saving: "Risparmio", select: "Seleziona", close: "Chiudi", previous: "Foto precedente", next: "Foto successiva", photo: "Foto", amenities: "Servizi della camera", more: "Altro", less: "Mostra meno" },
-  es: { saving: "Ahorro", select: "Seleccionar", close: "Cerrar", previous: "Foto anterior", next: "Foto siguiente", photo: "Foto", amenities: "Servicios de la habitación", more: "Más", less: "Ver menos" },
-  tr: { saving: "Tasarruf", select: "Seç", close: "Kapat", previous: "Önceki fotoğraf", next: "Sonraki fotoğraf", photo: "Fotoğraf", amenities: "Oda olanakları", more: "Daha fazla", less: "Daha az" },
+const COPY: Record<Language, { saving: string; select: string; close: string; previous: string; next: string; photo: string; amenities: string; viewAmenities: string }> = {
+  el: { saving: "Εξοικονόμηση", select: "Επιλογή", close: "Κλείσιμο", previous: "Προηγούμενη φωτογραφία", next: "Επόμενη φωτογραφία", photo: "Φωτογραφία", amenities: "Παροχές δωματίου", viewAmenities: "Δείτε όλες τις παροχές" },
+  en: { saving: "You save", select: "Select", close: "Close", previous: "Previous photo", next: "Next photo", photo: "Photo", amenities: "Room amenities", viewAmenities: "View all amenities" },
+  de: { saving: "Ersparnis", select: "Auswählen", close: "Schließen", previous: "Vorheriges Foto", next: "Nächstes Foto", photo: "Foto", amenities: "Zimmerausstattung", viewAmenities: "Alle Ausstattungen anzeigen" },
+  fr: { saving: "Économie", select: "Sélectionner", close: "Fermer", previous: "Photo précédente", next: "Photo suivante", photo: "Photo", amenities: "Équipements de la chambre", viewAmenities: "Voir tous les équipements" },
+  it: { saving: "Risparmio", select: "Seleziona", close: "Chiudi", previous: "Foto precedente", next: "Foto successiva", photo: "Foto", amenities: "Servizi della camera", viewAmenities: "Vedi tutti i servizi" },
+  es: { saving: "Ahorro", select: "Seleccionar", close: "Cerrar", previous: "Foto anterior", next: "Foto siguiente", photo: "Foto", amenities: "Servicios de la habitación", viewAmenities: "Ver todos los servicios" },
+  tr: { saving: "Tasarruf", select: "Seç", close: "Kapat", previous: "Önceki fotoğraf", next: "Sonraki fotoğraf", photo: "Fotoğraf", amenities: "Oda olanakları", viewAmenities: "Tüm olanakları gör" },
 };
 
 const LABELS: Record<Language, Record<FeatureKey, string>> = {
@@ -96,7 +96,7 @@ function readRoomCard(button:HTMLButtonElement,language:Language):RoomDetails|nu
   const category=paragraphs.find((n)=>!n.classList.contains("line-through"))?.textContent?.trim()||"";
   const originalPrice=paragraphs.find((n)=>n.classList.contains("line-through"))?.textContent?.trim()||"";
   const directPrice=Array.from(article.querySelectorAll<HTMLElement>("p,strong")).map((n)=>n.textContent?.trim()||"").find((t)=>/€/.test(t)&&t!==originalPrice)||"";
-  const number=roomNumber(name); const images=ROOM_GALLERIES[number]||[];
+  const numbers=Array.from(name.matchAll(/(?:Room|Δωμάτιο|Zimmer|Chambre|Camera|Habitación|Oda|Apartment|Διαμέρισμα)\s*(10|[1-9])/gi)).map((m)=>Number(m[1])); const number=numbers[0]||roomNumber(name); const images=Array.from(new Set((numbers.length?numbers:[number]).flatMap((n)=>ROOM_GALLERIES[n]||[])));
   const buttons=Array.from(article.querySelectorAll<HTMLButtonElement>("button"));
   const selectButton=buttons.find((item)=>!Object.prototype.hasOwnProperty.call(DETAILS_LANGUAGE,(item.textContent||"").trim()))||null;
   const original=Number(originalPrice.replace(/[^0-9,.]/g,"").replace(",",".")); const direct=Number(directPrice.replace(/[^0-9,.]/g,"").replace(",","."));
@@ -105,28 +105,35 @@ function readRoomCard(button:HTMLButtonElement,language:Language):RoomDetails|nu
 }
 
 export function AiRoomDetailsEnhancer(){
-  const [room,setRoom]=useState<RoomDetails|null>(null); const [photo,setPhoto]=useState(0); const [mounted,setMounted]=useState(false);
+  const [room,setRoom]=useState<RoomDetails|null>(null); const [photo,setPhoto]=useState(0); const [mounted,setMounted]=useState(false); const [amenitiesOpen,setAmenitiesOpen]=useState(false);
   useEffect(()=>setMounted(true),[]);
-  useEffect(()=>{ const handle=(event:MouseEvent)=>{ const button=(event.target as HTMLElement|null)?.closest<HTMLButtonElement>("button"); const language=DETAILS_LANGUAGE[(button?.textContent||"").trim()]; if(!button||!language)return; const details=readRoomCard(button,language); if(!details)return; event.preventDefault();event.stopPropagation();event.stopImmediatePropagation();setPhoto(0);setRoom(details);}; document.addEventListener("click",handle,true); return()=>document.removeEventListener("click",handle,true);},[]);
+  useEffect(()=>{ const handle=(event:MouseEvent)=>{ const button=(event.target as HTMLElement|null)?.closest<HTMLButtonElement>("button"); const language=DETAILS_LANGUAGE[(button?.textContent||"").trim()]; if(!button||!language)return; const details=readRoomCard(button,language); if(!details)return; event.preventDefault();event.stopPropagation();event.stopImmediatePropagation();setPhoto(0);setAmenitiesOpen(false);setRoom(details);}; document.addEventListener("click",handle,true); return()=>document.removeEventListener("click",handle,true);},[]);
   useEffect(()=>{ if(!room)return; const y=window.scrollY; const prev={position:document.body.style.position,top:document.body.style.top,left:document.body.style.left,right:document.body.style.right,width:document.body.style.width,overflow:document.documentElement.style.overflow}; Object.assign(document.body.style,{position:"fixed",top:`-${y}px`,left:"0",right:"0",width:"100%"});document.documentElement.style.overflow="hidden"; return()=>{Object.assign(document.body.style,{position:prev.position,top:prev.top,left:prev.left,right:prev.right,width:prev.width});document.documentElement.style.overflow=prev.overflow;window.scrollTo(0,y);};},[room]);
-  const image=useMemo(()=>room?.images[photo]||room?.images[0]||"",[room,photo]); if(!mounted||!room)return null; const t=COPY[room.language]; const features=featureList(room.roomNumber,room.language);
+  const image=useMemo(()=>room?.images[photo]||room?.images[0]||"",[room,photo]); if(!mounted||!room)return null; const t=COPY[room.language]; const detailNumbers=Array.from(room.name.matchAll(/(?:Room|Δωμάτιο|Zimmer|Chambre|Camera|Habitación|Oda|Apartment|Διαμέρισμα)\s*(10|[1-9])/gi)).map((m)=>Number(m[1])); const featureRooms=Array.from(new Set(detailNumbers.length?detailNumbers:[room.roomNumber])); const features=featureRooms.flatMap((n)=>featureList(n,room.language)).filter((item,index,list)=>list.findIndex((other)=>other.text===item.text)===index);
   return createPortal(<div className="fixed inset-0 z-[100] flex items-end justify-center bg-black/60 sm:items-center sm:p-5" onMouseDown={(e)=>{if(e.currentTarget===e.target)setRoom(null);}} role="dialog" aria-modal="true" aria-label={room.name}>
     <section className="flex h-[94dvh] max-h-[820px] w-full max-w-2xl flex-col overflow-hidden rounded-t-[28px] bg-white shadow-2xl sm:rounded-[28px]" style={{overscrollBehavior:"contain"}} onWheel={(e)=>e.stopPropagation()} onTouchMove={(e)=>e.stopPropagation()}>
-      <div className="relative shrink-0 bg-stone-950"><div className="relative w-full overflow-hidden bg-stone-950" style={{height:"clamp(210px,34dvh,300px)"}}><img src={image} alt={`${room.name} ${t.photo.toLowerCase()} ${photo+1}`} className="absolute inset-0 h-full w-full !object-contain" style={{objectFit:"contain",objectPosition:"center center"}} draggable={false}/></div>
+      <div className="relative shrink-0 bg-stone-950"><div className="relative flex w-full items-center justify-center overflow-hidden bg-stone-950" style={{height:"clamp(210px,34dvh,300px)"}}><img src={image} alt={`${room.name} ${t.photo.toLowerCase()} ${photo+1}`} className="block max-h-full max-w-full object-contain" style={{width:"auto",height:"auto",objectFit:"contain",objectPosition:"center center"}} draggable={false}/></div>
       <button type="button" onClick={()=>setRoom(null)} className="absolute right-3 top-3 flex h-11 w-11 items-center justify-center rounded-full bg-white text-2xl shadow-lg" aria-label={t.close}>×</button>
       {room.images.length>1?<><button type="button" onClick={()=>setPhoto(v=>(v-1+room.images.length)%room.images.length)} className="absolute left-3 top-[30%] flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-2xl shadow-lg" aria-label={t.previous}>‹</button><button type="button" onClick={()=>setPhoto(v=>(v+1)%room.images.length)} className="absolute right-3 top-[30%] flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-2xl shadow-lg" aria-label={t.next}>›</button></>:null}
-      <div className="absolute right-3 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold shadow" style={{bottom:"12px"}}>{photo+1}/{room.images.length}</div>
+      <div className="absolute right-3 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold shadow" style={{bottom:"10px"}}>{photo+1}/{room.images.length}</div>
       </div>
-      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain p-3 sm:p-4">
+      <div className="flex min-h-0 flex-1 flex-col p-3 sm:p-4">
         <div className="flex items-start justify-between gap-3"><div className="min-w-0"><div className="flex flex-wrap items-center gap-2"><h2 className="text-xl font-black leading-tight text-stone-950 sm:text-2xl">{room.name}</h2>{room.saving?<span className="rounded-full bg-[#f3f6e8] px-2 py-1 text-[11px] font-bold text-[#63752d]">{t.saving}: {room.saving}</span>:null}</div><p className="mt-0.5 text-xs text-stone-500 sm:text-sm">{room.category}</p></div><div className="shrink-0 text-right">{room.originalPrice?<p className="text-[11px] text-stone-400 line-through">{room.originalPrice}</p>:null}<p className="text-xl font-black text-[#43551b] sm:text-2xl">{room.directPrice}</p></div></div>
-        {room.images.length>1?<div className="mt-2 mb-2 flex min-h-[48px] shrink-0 items-start gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" aria-label={`${t.photo} thumbnails`}>{room.images.map((src,i)=><button key={src} type="button" onClick={()=>setPhoto(i)} className={`relative h-11 w-16 shrink-0 overflow-hidden rounded-lg border-2 bg-white shadow-sm ${i===photo?"border-[#ff385c] ring-1 ring-[#ffccd6]":"border-stone-200 opacity-90"}`} aria-label={`${t.photo} ${i+1}`}><img src={src} alt="" className="h-full w-full object-cover" loading="lazy" draggable={false}/></button>)}</div>:null}
-        <p className="mt-1 text-[11px] font-black uppercase tracking-[0.12em] text-stone-500">{t.amenities}</p>
-        <div className="mt-1.5 grid grid-cols-4 gap-1.5">
-          {features.map(({key,text})=><span key={`${key}-${text}`} className="flex min-h-8 min-w-0 items-center justify-center gap-1 rounded-xl border border-stone-200 bg-[#f7f1e8] px-1.5 py-1.5 text-center text-[10px] font-semibold leading-3 text-stone-700 break-words sm:text-[11px]"><span aria-hidden>{ICON[key]}</span>{text}</span>)}
-        </div>
+        {room.images.length>1?<div data-ai-detail-thumbnails="white" className="mt-2 mb-2 flex min-h-[48px] shrink-0 items-start gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" aria-label={`${t.photo} thumbnails`}>{room.images.map((src,i)=><button key={`${src}-${i}`} type="button" onClick={()=>setPhoto(i)} className={`relative h-11 w-16 shrink-0 overflow-hidden rounded-lg border-2 bg-white shadow-sm ${i===photo?"border-[#ff385c] ring-1 ring-[#ffccd6]":"border-stone-200 opacity-90"}`} aria-label={`${t.photo} ${i+1}`}><img src={src} alt="" className="h-full w-full object-cover" loading="lazy" draggable={false}/></button>)}</div>:null}
+        <button type="button" onClick={()=>setAmenitiesOpen(true)} className="mt-1 self-start text-sm font-bold text-[#435f12] underline decoration-2 underline-offset-4">{t.viewAmenities}</button>
         <div className="mt-auto pt-2">
           <button type="button" onClick={()=>{room.selectButton?.click();setRoom(null);}} className="mt-2 w-full rounded-xl bg-[#ff385c] px-5 py-2.5 text-base font-bold text-white shadow-sm">{t.select}</button>
         </div>
+        {amenitiesOpen?<div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 p-4" onMouseDown={(e)=>{if(e.currentTarget===e.target)setAmenitiesOpen(false);}} role="dialog" aria-modal="true" aria-label={t.amenities}>
+          <div className="relative max-h-[80dvh] w-full max-w-xl overflow-y-auto rounded-3xl bg-white p-5 shadow-2xl">
+            <button type="button" onClick={()=>setAmenitiesOpen(false)} className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-stone-100 text-2xl shadow" aria-label={t.close}>×</button>
+            <h3 className="pr-12 text-xl font-black text-stone-950">{t.amenities}</h3>
+            <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
+              {features.map(({key,text})=><span key={`${key}-${text}`} className="flex min-h-11 min-w-0 items-center justify-center gap-1.5 rounded-xl border border-stone-200 bg-[#f7f1e8] px-2 py-2 text-center text-[12px] font-semibold leading-4 text-stone-700"><span aria-hidden>{ICON[key]}</span>{text}</span>)}
+            </div>
+            <button type="button" onClick={()=>setAmenitiesOpen(false)} className="mt-5 w-full rounded-xl bg-stone-900 px-5 py-3 font-bold text-white">{t.close}</button>
+          </div>
+        </div>:null}
       </div>
     </section></div>,document.body);
 }
