@@ -2,8 +2,6 @@
 
 import { useEffect } from "react";
 
-const COMPOSER_GAP_PX = 14;
-
 function hasVisibleDialog() {
   return Array.from(
     document.querySelectorAll<HTMLElement>('[role="dialog"][aria-modal="true"]'),
@@ -22,58 +20,31 @@ function focusedChatComposerInput(): HTMLInputElement | null {
   return null;
 }
 
-function visibleComposer(): HTMLElement | null {
-  const composer = document.querySelector<HTMLElement>(
-    '[data-ai-chat-composer="persistent"]',
+function visibleChatScroller(): HTMLElement | null {
+  const scroller = document.querySelector<HTMLElement>(
+    '[data-ai-chat-scroll="true"]',
   );
-  return composer?.offsetParent !== null ? composer : null;
+  return scroller?.offsetParent !== null ? scroller : null;
 }
 
-function latestVisibleConversationItem(): HTMLElement | null {
-  const feed = document.querySelector<HTMLElement>(
-    '[data-ai-conversation-feed="true"]',
-  );
-  if (!feed) return null;
+function syncVisualViewportHeight() {
+  const viewportHeight =
+    window.visualViewport?.height ?? window.innerHeight;
 
-  const items = Array.from(feed.children).reverse();
-  return (
-    items.find(
-      (item): item is HTMLElement =>
-        item instanceof HTMLElement && item.offsetParent !== null,
-    ) || null
+  document.documentElement.style.setProperty(
+    "--ai-visual-height",
+    `${Math.round(viewportHeight)}px`,
   );
 }
 
-function alignLatestConversationItem() {
+function scrollConversationToEnd() {
   if (hasVisibleDialog()) return;
 
-  const latestItem = latestVisibleConversationItem();
-  if (!latestItem) return;
+  const scroller = visibleChatScroller();
+  if (!scroller) return;
 
-  const focusedComposer = focusedChatComposerInput();
-  const composer = visibleComposer();
-  const visualViewport = window.visualViewport;
-  const viewportTop = visualViewport?.offsetTop ?? 0;
-  const viewportBottom =
-    viewportTop + (visualViewport?.height ?? window.innerHeight);
-  const composerTop = composer?.getBoundingClientRect().top ?? viewportBottom;
-  const desiredBottom = composerTop - COMPOSER_GAP_PX;
-  const availableHeight = Math.max(
-    0,
-    desiredBottom - viewportTop - COMPOSER_GAP_PX,
-  );
-  const itemRect = latestItem.getBoundingClientRect();
-
-  const delta =
-    itemRect.height > availableHeight
-      ? itemRect.top - (viewportTop + COMPOSER_GAP_PX)
-      : itemRect.bottom - desiredBottom;
-
-  if (Math.abs(delta) > 2) {
-    window.scrollBy({ top: delta, left: 0, behavior: "auto" });
-  }
-
-  focusedComposer?.focus({ preventScroll: true });
+  scroller.scrollTop = scroller.scrollHeight;
+  focusedChatComposerInput()?.focus({ preventScroll: true });
 }
 
 export function AiConversationAutoScroll() {
@@ -82,19 +53,30 @@ export function AiConversationAutoScroll() {
     const feed = document.querySelector<HTMLElement>(
       '[data-ai-conversation-feed="true"]',
     );
-    if (!conversation) return;
+    const scroller = visibleChatScroller();
+    if (!conversation || !feed || !scroller) return;
 
     let animationFrame = 0;
     let settleTimer = 0;
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousBodyOverscroll = document.body.style.overscrollBehavior;
 
-    const scheduleAlignment = () => {
+    document.body.style.overflow = "hidden";
+    document.body.style.overscrollBehavior = "none";
+
+    const scheduleScroll = () => {
       window.cancelAnimationFrame(animationFrame);
       window.clearTimeout(settleTimer);
 
       animationFrame = window.requestAnimationFrame(() => {
-        alignLatestConversationItem();
-        settleTimer = window.setTimeout(alignLatestConversationItem, 160);
+        scrollConversationToEnd();
+        settleTimer = window.setTimeout(scrollConversationToEnd, 120);
       });
+    };
+
+    const syncViewportAndScroll = () => {
+      syncVisualViewportHeight();
+      scheduleScroll();
     };
 
     const mutationObserver = new MutationObserver((mutations) => {
@@ -104,12 +86,10 @@ export function AiConversationAutoScroll() {
           (mutation.addedNodes.length > 0 || mutation.removedNodes.length > 0),
       );
 
-      if (conversationChanged) scheduleAlignment();
+      if (conversationChanged) scheduleScroll();
     });
 
-    const resizeObserver = feed
-      ? new ResizeObserver(scheduleAlignment)
-      : null;
+    const resizeObserver = new ResizeObserver(scheduleScroll);
 
     const handleComposerFocus = (event: FocusEvent) => {
       const target = event.target;
@@ -117,33 +97,37 @@ export function AiConversationAutoScroll() {
         target instanceof HTMLInputElement &&
         target.closest('[data-ai-chat-composer="persistent"]')
       ) {
-        scheduleAlignment();
+        syncViewportAndScroll();
       }
     };
 
-    const handleViewportChange = () => {
-      if (focusedChatComposerInput()) scheduleAlignment();
-    };
-
-    mutationObserver.observe(conversation, {
+    mutationObserver.observe(feed, {
       childList: true,
       subtree: true,
     });
-    if (feed && resizeObserver) resizeObserver.observe(feed);
+    resizeObserver.observe(feed);
+    resizeObserver.observe(scroller);
     document.addEventListener("focusin", handleComposerFocus);
-    window.visualViewport?.addEventListener("resize", handleViewportChange);
-    window.visualViewport?.addEventListener("scroll", handleViewportChange);
+    window.addEventListener("resize", syncViewportAndScroll);
+    window.addEventListener("orientationchange", syncViewportAndScroll);
+    window.visualViewport?.addEventListener("resize", syncViewportAndScroll);
+    window.visualViewport?.addEventListener("scroll", syncViewportAndScroll);
 
-    scheduleAlignment();
+    syncViewportAndScroll();
 
     return () => {
       mutationObserver.disconnect();
-      resizeObserver?.disconnect();
+      resizeObserver.disconnect();
       document.removeEventListener("focusin", handleComposerFocus);
-      window.visualViewport?.removeEventListener("resize", handleViewportChange);
-      window.visualViewport?.removeEventListener("scroll", handleViewportChange);
+      window.removeEventListener("resize", syncViewportAndScroll);
+      window.removeEventListener("orientationchange", syncViewportAndScroll);
+      window.visualViewport?.removeEventListener("resize", syncViewportAndScroll);
+      window.visualViewport?.removeEventListener("scroll", syncViewportAndScroll);
       window.cancelAnimationFrame(animationFrame);
       window.clearTimeout(settleTimer);
+      document.body.style.overflow = previousBodyOverflow;
+      document.body.style.overscrollBehavior = previousBodyOverscroll;
+      document.documentElement.style.removeProperty("--ai-visual-height");
     };
   }, []);
 
