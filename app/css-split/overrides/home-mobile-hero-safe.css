@@ -38,6 +38,33 @@
   }
 }
 
+/* Lighthouse accessibility: keep dynamic reception status readable. */
+header span.bg-emerald-50 {
+  background-color: #d1fae5 !important;
+  color: #065f46 !important;
+}
+
+header span.bg-emerald-50 > span {
+  color: #065f46 !important;
+  opacity: 1 !important;
+}
+
+/* Ensure booking and contact CTAs retain WCAG contrast on every locale. */
+a[href="/chios-hotels-rates/"].bg-amber-700,
+a[href$="/chios-hotels-rates/"].bg-amber-700 {
+  background-color: #92400e !important;
+  color: #ffffff !important;
+}
+
+a[href^="https://wa.me/"] {
+  background-color: #116b39 !important;
+  color: #ffffff !important;
+}
+
+a[href^="https://wa.me/"] span {
+  color: #ffffff !important;
+}
+
 @media (max-width: 390px) and (max-height: 740px) {
   .vh-homepage > section:first-child > .relative.z-20 {
     padding-bottom: calc(88px + env(safe-area-inset-bottom)) !important;
