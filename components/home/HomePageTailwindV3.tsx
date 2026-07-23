@@ -26,6 +26,19 @@ export function HomePageTailwindV3({ data }: HomePageTailwindV3Props) {
           color: #fff !important;
         }
 
+        @media (max-width: 767px) {
+          main > section:first-child > div:nth-of-type(3) > div {
+            background-color: rgba(12, 10, 9, 0.76) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+          }
+
+          main > section:first-child a {
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+          }
+        }
+
         @media (min-width: 768px) {
           main > section:first-child > div:nth-of-type(1) {
             background: rgba(0,0,0,0.08) !important;
