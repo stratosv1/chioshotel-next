@@ -19,7 +19,7 @@ declare global {
 export function ConsentAnalytics({ language: _language }: { language: LanguageCode }) {
   return (
     <>
-      <Script id="analytics-legacy-consent-bridge" strategy="beforeInteractive">
+      <Script id="analytics-legacy-consent-bridge" strategy="afterInteractive">
         {`
           try {
             window.localStorage.setItem('${LEGACY_CONSENT_KEY}', 'accepted');
@@ -31,9 +31,9 @@ export function ConsentAnalytics({ language: _language }: { language: LanguageCo
       <Script
         id="google-analytics-loader"
         src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-        strategy="afterInteractive"
+        strategy="lazyOnload"
       />
-      <Script id="google-analytics-config" strategy="afterInteractive">
+      <Script id="google-analytics-config" strategy="lazyOnload">
         {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
@@ -41,7 +41,7 @@ export function ConsentAnalytics({ language: _language }: { language: LanguageCo
           gtag('js', new Date());
           gtag('config', '${GA_ID}', {
             anonymize_ip: true,
-            send_page_view: false
+            send_page_view: true
           });
         `}
       </Script>
