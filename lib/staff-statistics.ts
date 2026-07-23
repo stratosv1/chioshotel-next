@@ -85,10 +85,16 @@ function athensMonthDay() {
   return { month, day };
 }
 
-function remainingSeasonMetrics(year: number, raw: Record<string, unknown>) {
+function dateRangeForYear(year: number) {
   const { month, day } = athensMonthDay();
-  const comparisonStartDate = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-  const seasonEnd = `${year}-11-01`;
+  return {
+    comparisonStartDate: `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`,
+    seasonEnd: `${year}-11-01`,
+  };
+}
+
+function remainingSeasonMetricsFromReport(year: number, raw: Record<string, unknown>) {
+  const { comparisonStartDate, seasonEnd } = dateRangeForYear(year);
   const rows = Array.isArray(raw.normalizedBookings) ? raw.normalizedBookings as NormalizedBooking[] : null;
   if (!rows) return { remainingCharges: null, remainingBookings: null, comparisonStartDate };
   const eligible = rows.filter((booking) => booking.checkIn >= comparisonStartDate && booking.checkIn < seasonEnd);
@@ -97,6 +103,39 @@ function remainingSeasonMetrics(year: number, raw: Record<string, unknown>) {
     remainingBookings: eligible.length,
     comparisonStartDate,
   };
+}
+
+async function remainingSeasonMetricsFromLiveBookings(sql: ReturnType<typeof neon>, year: number) {
+  const { comparisonStartDate, seasonEnd } = dateRangeForYear(year);
+  try {
+    const rows = await sql`
+      select
+        count(*)::int as bookings,
+        coalesce(sum(
+          case
+            when source = 'occupancy-sheet' and coalesce(raw_booking->>'bookingTotal', '') ~ '^-?[0-9]+(\\.[0-9]+)?$'
+              then (raw_booking->>'bookingTotal')::numeric
+            when source = 'beds24' and coalesce(raw_booking->>'price', '') ~ '^-?[0-9]+(\\.[0-9]+)?$'
+              then (raw_booking->>'price')::numeric
+            else 0::numeric
+          end
+        ), 0)::numeric as charges
+      from staff_bookings_snapshot
+      where arrival >= ${comparisonStartDate}::date
+        and arrival < ${seasonEnd}::date
+        and lower(coalesce(status, '')) not like '%cancel%'
+        and lower(coalesce(status, '')) not like '%deleted%'
+    `;
+    const bookings = Number((rows as any[])[0]?.bookings ?? 0);
+    if (bookings === 0) return null;
+    return {
+      remainingCharges: Number(Number((rows as any[])[0]?.charges ?? 0).toFixed(2)),
+      remainingBookings: bookings,
+      comparisonStartDate,
+    };
+  } catch {
+    return null;
+  }
 }
 
 export async function ensureStatisticsSchema() {
@@ -144,18 +183,20 @@ export async function getCurrentSnapshots(): Promise<SeasonSnapshot[]> {
     from staff_statistics_reports where is_current = true order by report_year asc, imported_at desc, id desc`;
   const result: SeasonSnapshot[] = [];
   for (const report of reports as any[]) {
+    const year = Number(report.report_year);
     const monthly = await sql`select month, occupied_nights, capacity_nights, bookings, charges
       from staff_statistics_monthly where report_id = ${report.id} order by month asc`;
     const raw = report.raw_payload && typeof report.raw_payload === "object" ? report.raw_payload as Record<string, unknown> : {};
-    const remaining = remainingSeasonMetrics(Number(report.report_year), raw);
+    const liveRemaining = await remainingSeasonMetricsFromLiveBookings(sql, year);
+    const remaining = liveRemaining ?? remainingSeasonMetricsFromReport(year, raw);
     result.push({
-      year: Number(report.report_year),
+      year,
       label: String(report.report_label),
       sourceFilename: report.source_filename ? String(report.source_filename) : null,
       importedAt: new Date(report.imported_at).toISOString(),
       monthly: (monthly as any[]).map((row) => ({ month: Number(row.month), occupiedNights: Number(row.occupied_nights), capacityNights: Number(row.capacity_nights), bookings: Number(row.bookings), charges: Number(row.charges) })),
-      rooms: Array.isArray(raw.rooms) ? raw.rooms as RoomMetric[] : seedRooms[Number(report.report_year)] ?? [],
-      channels: Array.isArray(raw.channels) ? raw.channels as ChannelMetric[] : seedChannels[Number(report.report_year)] ?? [],
+      rooms: Array.isArray(raw.rooms) ? raw.rooms as RoomMetric[] : seedRooms[year] ?? [],
+      channels: Array.isArray(raw.channels) ? raw.channels as ChannelMetric[] : seedChannels[year] ?? [],
       ...remaining,
     });
   }
