@@ -3,6 +3,7 @@ import { neon } from "@neondatabase/serverless";
 export type MonthlyMetric = { month: number; occupiedNights: number; capacityNights: number; bookings: number; charges: number };
 export type RoomMetric = { room: number; occupiedNights: number; capacityNights: number; bookings: number; charges: number };
 export type ChannelMetric = { channel: string; occupiedNights: number; bookings: number; charges: number };
+type NormalizedBooking = { bookingId: string; unit: number; checkIn: string; checkOut: string; charges: number; channel: string };
 export type SeasonSnapshot = {
   year: number;
   label: string;
@@ -11,6 +12,9 @@ export type SeasonSnapshot = {
   monthly: MonthlyMetric[];
   rooms: RoomMetric[];
   channels: ChannelMetric[];
+  remainingCharges: number | null;
+  remainingBookings: number | null;
+  comparisonStartDate: string;
 };
 
 const MONTHS = [4, 5, 6, 7, 8, 9, 10] as const;
@@ -70,6 +74,31 @@ function sqlClient() {
   return neon(url);
 }
 
+function athensMonthDay() {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/Athens",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date());
+  const month = Number(parts.find((part) => part.type === "month")?.value ?? 1);
+  const day = Number(parts.find((part) => part.type === "day")?.value ?? 1);
+  return { month, day };
+}
+
+function remainingSeasonMetrics(year: number, raw: Record<string, unknown>) {
+  const { month, day } = athensMonthDay();
+  const comparisonStartDate = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+  const seasonEnd = `${year}-11-01`;
+  const rows = Array.isArray(raw.normalizedBookings) ? raw.normalizedBookings as NormalizedBooking[] : null;
+  if (!rows) return { remainingCharges: null, remainingBookings: null, comparisonStartDate };
+  const eligible = rows.filter((booking) => booking.checkIn >= comparisonStartDate && booking.checkIn < seasonEnd);
+  return {
+    remainingCharges: Number(eligible.reduce((sum, booking) => sum + Number(booking.charges || 0), 0).toFixed(2)),
+    remainingBookings: eligible.length,
+    comparisonStartDate,
+  };
+}
+
 export async function ensureStatisticsSchema() {
   const sql = sqlClient();
   await sql`create table if not exists staff_statistics_reports (
@@ -117,15 +146,17 @@ export async function getCurrentSnapshots(): Promise<SeasonSnapshot[]> {
   for (const report of reports as any[]) {
     const monthly = await sql`select month, occupied_nights, capacity_nights, bookings, charges
       from staff_statistics_monthly where report_id = ${report.id} order by month asc`;
-    const raw = report.raw_payload && typeof report.raw_payload === "object" ? report.raw_payload : {};
+    const raw = report.raw_payload && typeof report.raw_payload === "object" ? report.raw_payload as Record<string, unknown> : {};
+    const remaining = remainingSeasonMetrics(Number(report.report_year), raw);
     result.push({
       year: Number(report.report_year),
       label: String(report.report_label),
       sourceFilename: report.source_filename ? String(report.source_filename) : null,
       importedAt: new Date(report.imported_at).toISOString(),
       monthly: (monthly as any[]).map((row) => ({ month: Number(row.month), occupiedNights: Number(row.occupied_nights), capacityNights: Number(row.capacity_nights), bookings: Number(row.bookings), charges: Number(row.charges) })),
-      rooms: Array.isArray(raw.rooms) ? raw.rooms : seedRooms[Number(report.report_year)] ?? [],
-      channels: Array.isArray(raw.channels) ? raw.channels : seedChannels[Number(report.report_year)] ?? [],
+      rooms: Array.isArray(raw.rooms) ? raw.rooms as RoomMetric[] : seedRooms[Number(report.report_year)] ?? [],
+      channels: Array.isArray(raw.channels) ? raw.channels as ChannelMetric[] : seedChannels[Number(report.report_year)] ?? [],
+      ...remaining,
     });
   }
   return result;
