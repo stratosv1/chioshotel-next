@@ -51,6 +51,7 @@ function parseDate(value: string): Date | null {
   const parsed = new Date(value.trim());
   return Number.isNaN(parsed.getTime()) ? null : parsed;
 }
+function isoDate(value: Date) { return value.toISOString().slice(0, 10); }
 function numberValue(value: string) {
   const parsed = Number(String(value || "0").replace(/,/g, ""));
   return Number.isFinite(parsed) ? parsed : 0;
@@ -78,7 +79,7 @@ export async function POST(request: NextRequest) {
     const rows = parseHtmlTable(html);
     if (!rows.length) throw new Error("Το report δεν αναγνωρίστηκε. Χρησιμοποίησε το Beds24 payments .xls export.");
 
-    const bookings = new Map<string, { unit: number; checkIn: Date; checkOut: Date; charges: number; channel: string }>();
+    const bookings = new Map<string, { bookingId: string; unit: number; checkIn: Date; checkOut: Date; charges: number; channel: string }>();
     for (const row of rows) {
       const bookingId = pick(row, ["Booking number", "Booking id", "Booking ID", "bookingNumber", "bookId"]).trim();
       const checkIn = parseDate(pick(row, ["Check in Date", "Check-in", "Arrival", "checkIn"]));
@@ -89,7 +90,7 @@ export async function POST(request: NextRequest) {
       if (!bookingId || !checkIn || !checkOut || !Number.isInteger(unit) || unit < 1 || unit > ROOM_COUNT) continue;
       const existing = bookings.get(bookingId);
       if (existing) existing.charges += amount;
-      else bookings.set(bookingId, { unit, checkIn, checkOut, charges: amount, channel });
+      else bookings.set(bookingId, { bookingId, unit, checkIn, checkOut, charges: amount, channel });
     }
     if (!bookings.size) throw new Error("Δεν βρέθηκαν έγκυρες κρατήσεις στο report.");
 
@@ -139,8 +140,16 @@ export async function POST(request: NextRequest) {
     const monthly: MonthlyMetric[] = MONTHS.map((month) => ({ month, occupiedNights: occupiedByMonth.get(month)?.size ?? 0, capacityNights: DAYS[month] * ROOM_COUNT, bookings: monthBookings.get(month) ?? 0, charges: Number((monthCharges.get(month) ?? 0).toFixed(2)) }));
     const rooms: RoomMetric[] = Array.from({ length: ROOM_COUNT }, (_, index) => ({ room: index + 1, occupiedNights: occupiedByRoom.get(index + 1)?.size ?? 0, capacityNights: SEASON_NIGHTS, bookings: roomBookings.get(index + 1) ?? 0, charges: Number((roomCharges.get(index + 1) ?? 0).toFixed(2)) }));
     const channels = [...channelMap.values()].map((item) => ({ ...item, charges: Number(item.charges.toFixed(2)) })).sort((a, b) => b.charges - a.charges);
+    const normalizedBookings = [...bookings.values()].map((booking) => ({
+      bookingId: booking.bookingId,
+      unit: booking.unit,
+      checkIn: isoDate(booking.checkIn),
+      checkOut: isoDate(booking.checkOut),
+      charges: Number(booking.charges.toFixed(2)),
+      channel: booking.channel,
+    }));
 
-    await saveSnapshot({ year, filename: file.name, monthly, rooms, channels, rawPayload: { rows: rows.length, bookings: bookings.size } });
+    await saveSnapshot({ year, filename: file.name, monthly, rooms, channels, rawPayload: { rows: rows.length, bookings: bookings.size, normalizedBookings } });
     return NextResponse.json({ ok: true, year, filename: file.name, monthly, rooms, channels, bookings: bookings.size });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Αποτυχία εισαγωγής report.";
