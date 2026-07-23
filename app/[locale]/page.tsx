@@ -17,8 +17,7 @@ import { buildHomePageSchema } from "@/content/schema";
 import { buildPageMetadata } from "@/lib/seo";
 import { defaultLanguage, isLanguageCode, languages } from "@/lib/languages";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 3600;
 
 type PageProps = {
   params: Promise<{
