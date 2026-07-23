@@ -43,8 +43,12 @@ function parseHtmlTable(html: string) {
 
 function normalizeKey(value: string) { return value.toLowerCase().replace(/[^a-z0-9]/g, ""); }
 function pick(row: Record<string, string>, aliases: string[]) {
-  const keys = new Set(aliases.map(normalizeKey));
-  for (const [key, value] of Object.entries(row)) if (keys.has(normalizeKey(key)) && String(value).trim() !== "") return value;
+  for (const alias of aliases) {
+    const wanted = normalizeKey(alias);
+    for (const [key, value] of Object.entries(row)) {
+      if (normalizeKey(key) === wanted && String(value).trim() !== "") return value;
+    }
+  }
   return "";
 }
 function parseDate(value: string): Date | null {
@@ -84,7 +88,7 @@ export async function POST(request: NextRequest) {
       const bookingId = pick(row, ["Booking number", "Booking id", "Booking ID", "bookingNumber", "bookId"]).trim();
       const checkIn = parseDate(pick(row, ["Check in Date", "Check-in", "Arrival", "checkIn"]));
       const checkOut = parseDate(pick(row, ["Check out Date", "Check-out", "Departure", "checkOut"]));
-      const unit = Number(pick(row, ["Unit", "Room", "Room number", "unitId"]).match(/\d+/)?.[0]);
+      const unit = Number(pick(row, ["Unit", "Room number", "unitId", "Room"]).match(/\d+/)?.[0]);
       const amount = numberValue(pick(row, ["Amount EUR", "Amount", "Charge", "Price", "Total"]));
       const channel = channelLabel(pick(row, ["Referrer", "Original Referrer", "Channel", "Source"]));
       if (!bookingId || !checkIn || !checkOut || !Number.isInteger(unit) || unit < 1 || unit > ROOM_COUNT) continue;
