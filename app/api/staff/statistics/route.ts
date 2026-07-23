@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { staffStatisticsCheckIns } from "@/data/staff-statistics-checkins";
 import { getCurrentSnapshots } from "@/lib/staff-statistics";
 
 export const runtime = "nodejs";
@@ -30,12 +31,39 @@ function unauthorized() {
   });
 }
 
+function remainingFromUploadedReport(year: number, comparisonStartDate: string) {
+  const seasonEnd = `${year}-11-01`;
+  const daily = staffStatisticsCheckIns[year] ?? {};
+  let remainingCharges = 0;
+  let remainingBookings = 0;
+
+  for (const [checkIn, [charges, bookings]] of Object.entries(daily)) {
+    if (checkIn >= comparisonStartDate && checkIn < seasonEnd) {
+      remainingCharges += charges;
+      remainingBookings += bookings;
+    }
+  }
+
+  return {
+    remainingCharges: Number(remainingCharges.toFixed(2)),
+    remainingBookings,
+  };
+}
+
 export async function GET(request: NextRequest) {
   if (!isAuthorized(request)) return unauthorized();
   try {
     const snapshots = await getCurrentSnapshots();
+    const completedSnapshots = snapshots.map((snapshot) => {
+      if (snapshot.remainingCharges !== null && snapshot.remainingBookings !== null) return snapshot;
+      return {
+        ...snapshot,
+        ...remainingFromUploadedReport(snapshot.year, snapshot.comparisonStartDate),
+      };
+    });
+
     return NextResponse.json(
-      { ok: true, snapshots, generatedAt: new Date().toISOString() },
+      { ok: true, snapshots: completedSnapshots, generatedAt: new Date().toISOString() },
       { headers: { "Cache-Control": "no-store", "X-Robots-Tag": "noindex, nofollow" } },
     );
   } catch (error) {
