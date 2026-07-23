@@ -105,39 +105,6 @@ function remainingSeasonMetricsFromReport(year: number, raw: Record<string, unkn
   };
 }
 
-async function remainingSeasonMetricsFromLiveBookings(sql: ReturnType<typeof neon>, year: number) {
-  const { comparisonStartDate, seasonEnd } = dateRangeForYear(year);
-  try {
-    const rows = await sql`
-      select
-        count(*)::int as bookings,
-        coalesce(sum(
-          case
-            when source = 'occupancy-sheet' and coalesce(raw_booking->>'bookingTotal', '') ~ '^-?[0-9]+(\\.[0-9]+)?$'
-              then (raw_booking->>'bookingTotal')::numeric
-            when source = 'beds24' and coalesce(raw_booking->>'price', '') ~ '^-?[0-9]+(\\.[0-9]+)?$'
-              then (raw_booking->>'price')::numeric
-            else 0::numeric
-          end
-        ), 0)::numeric as charges
-      from staff_bookings_snapshot
-      where arrival >= ${comparisonStartDate}::date
-        and arrival < ${seasonEnd}::date
-        and lower(coalesce(status, '')) not like '%cancel%'
-        and lower(coalesce(status, '')) not like '%deleted%'
-    `;
-    const bookings = Number((rows as any[])[0]?.bookings ?? 0);
-    if (bookings === 0) return null;
-    return {
-      remainingCharges: Number(Number((rows as any[])[0]?.charges ?? 0).toFixed(2)),
-      remainingBookings: bookings,
-      comparisonStartDate,
-    };
-  } catch {
-    return null;
-  }
-}
-
 export async function ensureStatisticsSchema() {
   const sql = sqlClient();
   await sql`create table if not exists staff_statistics_reports (
@@ -187,8 +154,7 @@ export async function getCurrentSnapshots(): Promise<SeasonSnapshot[]> {
     const monthly = await sql`select month, occupied_nights, capacity_nights, bookings, charges
       from staff_statistics_monthly where report_id = ${report.id} order by month asc`;
     const raw = report.raw_payload && typeof report.raw_payload === "object" ? report.raw_payload as Record<string, unknown> : {};
-    const liveRemaining = await remainingSeasonMetricsFromLiveBookings(sql, year);
-    const remaining = liveRemaining ?? remainingSeasonMetricsFromReport(year, raw);
+    const remaining = remainingSeasonMetricsFromReport(year, raw);
     result.push({
       year,
       label: String(report.report_label),
