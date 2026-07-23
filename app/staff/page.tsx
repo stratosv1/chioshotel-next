@@ -45,7 +45,7 @@ const staffLinks = [
     href: "/staff/statistics",
     icon: "📈",
     label: "Στατιστικά Voulamandis House",
-    subText: "Πληρότητα, charges και σύγκριση 2026 με 2025",
+    subText: "Αναμενόμενα έσοδα από επόμενα check-in · 2026 έναντι 2025",
     className: styles.performance,
   },
   {
