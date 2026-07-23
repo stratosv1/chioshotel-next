@@ -5,7 +5,18 @@ import { useEffect, useMemo, useState } from "react";
 type MonthlyMetric = { month: number; occupiedNights: number; capacityNights: number; bookings: number; charges: number };
 type RoomMetric = { room: number; occupiedNights: number; capacityNights: number; bookings: number; charges: number };
 type ChannelMetric = { channel: string; occupiedNights: number; bookings: number; charges: number };
-type Snapshot = { year: number; label: string; importedAt: string; sourceFilename: string | null; monthly: MonthlyMetric[]; rooms: RoomMetric[]; channels: ChannelMetric[] };
+type Snapshot = {
+  year: number;
+  label: string;
+  importedAt: string;
+  sourceFilename: string | null;
+  monthly: MonthlyMetric[];
+  rooms: RoomMetric[];
+  channels: ChannelMetric[];
+  remainingCharges: number | null;
+  remainingBookings: number | null;
+  comparisonStartDate: string;
+};
 
 const MONTH_LABELS: Record<number, string> = { 4: "Απρίλιος", 5: "Μάιος", 6: "Ιούνιος", 7: "Ιούλιος", 8: "Αύγουστος", 9: "Σεπτέμβριος", 10: "Οκτώβριος" };
 const euro = new Intl.NumberFormat("el-GR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
@@ -22,6 +33,10 @@ function totals(snapshot?: Snapshot) {
 
 function pct(value: number) { return `${(value * 100).toFixed(1).replace(".", ",")}%`; }
 function signed(value: number, suffix = "") { return `${value > 0 ? "+" : ""}${value.toFixed(1).replace(".", ",")}${suffix}`; }
+function dateLabel(value?: string) {
+  if (!value) return "σήμερα";
+  return new Date(`${value}T12:00:00`).toLocaleDateString("el-GR", { day: "numeric", month: "long" });
+}
 
 function Carousel({ children, label }: { children: React.ReactNode; label: string }) {
   return (
@@ -61,6 +76,8 @@ export default function StatisticsDashboard() {
   const previousTotals = totals(previous);
   const occupancyDelta = (currentTotals.occupancy - previousTotals.occupancy) * 100;
   const chargeDelta = currentTotals.charges - previousTotals.charges;
+  const remainingReady = current?.remainingCharges !== null && previous?.remainingCharges !== null;
+  const remainingDifference = remainingReady ? (current?.remainingCharges ?? 0) - (previous?.remainingCharges ?? 0) : 0;
 
   async function uploadReport(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -112,6 +129,32 @@ export default function StatisticsDashboard() {
         {error ? <p className="border-b border-red-200 py-4 text-sm text-red-700">{error}</p> : null}
         {loading ? <p className="py-10 text-center text-sm text-[#746d60]">Φόρτωση στατιστικών…</p> : (
           <>
+            <section className="border-b border-[#d8d0c1] py-5">
+              <div className="mb-4">
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#8b806b]">Από {dateLabel(current?.comparisonStartDate)} έως 31 Οκτωβρίου</p>
+                <h2 className="mt-1 text-xl font-semibold">Τι έχω να εισπράξω</h2>
+                <p className="mt-1 text-sm text-[#746d60]">Charges κρατήσεων με check-in από τη σημερινή ημερομηνία και μετά. Η ημερομηνία αλλάζει αυτόματα κάθε μέρα.</p>
+              </div>
+              {remainingReady ? (
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <article className="border-l-4 border-[#707a54] bg-[#707a54] px-5 py-5 text-white">
+                    <p className="text-xs font-bold uppercase tracking-[0.15em] text-white/70">Υπόλοιπο 2026</p>
+                    <p className="mt-2 text-4xl font-semibold">{euro.format(current?.remainingCharges ?? 0)}</p>
+                    <p className="mt-2 text-sm text-white/80">{integer.format(current?.remainingBookings ?? 0)} κρατήσεις</p>
+                  </article>
+                  <article className="border-l-4 border-[#b8aa8d] bg-white/55 px-5 py-5">
+                    <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#8b806b]">Αντίστοιχη περίοδος 2025</p>
+                    <p className="mt-2 text-4xl font-semibold">{euro.format(previous?.remainingCharges ?? 0)}</p>
+                    <p className="mt-2 text-sm text-[#746d60]">{integer.format(previous?.remainingBookings ?? 0)} κρατήσεις · {remainingDifference >= 0 ? "+" : ""}{euro.format(remainingDifference)} φέτος</p>
+                  </article>
+                </div>
+              ) : (
+                <div className="border border-[#d8c9a7] bg-[#fff8e7] px-4 py-4 text-sm leading-6 text-[#6f624b]">
+                  Για να εμφανιστεί ακριβής δυναμική σύγκριση, ανέβασε ξανά ένα Beds24 payments report για το 2026 και ένα για το 2025. Τα παλαιότερα αποθηκευμένα reports δεν περιέχουν τις ημερομηνίες ανά κράτηση.
+                </div>
+              )}
+            </section>
+
             <section className="border-b border-[#d8d0c1] py-5">
               <Carousel label="Βασικά στατιστικά">
                 {kpis.map(([label, value, note]) => (
