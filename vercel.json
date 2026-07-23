@@ -6,7 +6,7 @@
       "schedule": "*/7 * * * *"
     },
     {
-      "path": "/api/staff/calendar/sync/",
+      "path": "/api/cron/beds24-bookings-sync/",
       "schedule": "*/7 * * * *"
     },
     {
