@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { RoomDetailPage } from "@/components/rooms/RoomDetailPage";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { familyChiosApartmentsPl } from "@/content/room-details-pl";
-import { buildRoomDetailSchema } from "@/content/room-detail-schema";
+import { buildPolishRoomDetailSchema } from "@/content/room-detail-schema-pl";
 import { buildPolishPageMetadata } from "@/lib/seo-pl";
 
 const apartmentData = {
@@ -23,7 +23,7 @@ export const metadata: Metadata = buildPolishPageMetadata({
 export default function PolishApartmentsPage() {
   return (
     <>
-      <JsonLd data={buildRoomDetailSchema(apartmentData)} />
+      <JsonLd data={buildPolishRoomDetailSchema(apartmentData)} />
       <RoomDetailPage data={apartmentData} />
     </>
   );
