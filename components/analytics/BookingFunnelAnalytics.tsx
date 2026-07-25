@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { track } from "@vercel/analytics";
 
-type LanguageCode = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
+type LanguageCode = "en" | "el" | "fr" | "de" | "it" | "es" | "tr" | "pl";
 type AnalyticsValue = string | number | boolean | null | undefined;
 type AnalyticsProperties = Record<string, AnalyticsValue>;
 
@@ -55,12 +55,12 @@ function bookingEvent(anchor: HTMLAnchorElement | null, button: HTMLButtonElemen
   if (href.includes("wa.me") || href.includes("whatsapp")) return "whatsapp_lead";
   if (href.startsWith("mailto:")) return "email_lead";
   if (href.startsWith("tel:")) return "phone_lead";
-  if (href.includes("ai-assistant") || href.includes("find-your-room") || href.includes("vres-to-domatio")) return "availability_search";
-  if (href.includes("rates") || href.includes("kratis") || href.includes("booking") || href.includes("beds24")) return "begin_booking";
-  if (/book|reserve|κρατ|réserv|buch|prenot|reservar|rezerv/.test(label)) return "begin_booking";
-  if (/availability|διαθεσιμό|disponibil|verfüg|disponib|müsait/.test(label)) return "availability_search";
-  if (/interested|ενδιαφέρομαι|intéress|interess|interesado|ilgilen/.test(label)) return "generate_lead";
-  if (/choose room|select room|επιλογή δωματίου|διάλεξε|zimmer wählen|choisir/.test(label)) return "select_room";
+  if (href.includes("ai-assistant") || href.includes("find-your-room") || href.includes("vres-to-domatio") || href.includes("room-wizard")) return "availability_search";
+  if (href.includes("rates") || href.includes("kratis") || href.includes("booking") || href.includes("beds24") || href.includes("rezerwacja")) return "begin_booking";
+  if (/book|reserve|κρατ|réserv|buch|prenot|reservar|rezerv|rezerw/.test(label)) return "begin_booking";
+  if (/availability|διαθεσιμό|disponibil|verfüg|disponib|müsait|dostępn/.test(label)) return "availability_search";
+  if (/interested|ενδιαφέρομαι|intéress|interess|interesado|ilgilen|zainteres/.test(label)) return "generate_lead";
+  if (/choose room|select room|επιλογή δωματίου|διάλεξε|zimmer wählen|choisir|wybierz pokój|znajdź pokój|zobacz pokój/.test(label)) return "select_room";
   return null;
 }
 
@@ -94,7 +94,7 @@ export function BookingFunnelAnalytics({ language, pathname }: { language: Langu
       return true;
     }
 
-    const roomPage = /chios-rooms|domatia-xios|chambres-a-chios|zimmer|camere|habitaciones|odalari/.test(window.location.pathname.toLowerCase());
+    const roomPage = /chios-rooms|domatia-xios|chambres-a-chios|zimmer|camere|habitaciones|odalari|pokoje-na-chios|apartamenty-na-chios/.test(window.location.pathname.toLowerCase());
     if (roomPage) {
       const key = `vh_view_room:${window.location.pathname}`;
       if (!window.sessionStorage.getItem(key)) {
