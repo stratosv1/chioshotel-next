@@ -63,6 +63,58 @@ const routeIds = {
   contact: "contact",
 } as const;
 
+const polishEquivalentPaths: Record<string, string> = {
+  "/": "/pl/",
+  "/el/": "/pl/",
+  "/fr/": "/pl/",
+  "/de/": "/pl/",
+  "/it/": "/pl/",
+  "/es/": "/pl/",
+  "/tr/": "/pl/",
+  "/chios-accommodation/": "/pl/noclegi-chios/",
+  "/el/diamoni-sti-xio/": "/pl/noclegi-chios/",
+  "/fr/hebergement-chios/": "/pl/noclegi-chios/",
+  "/de/chios-unterkunft/": "/pl/noclegi-chios/",
+  "/it/alloggio-chios/": "/pl/noclegi-chios/",
+  "/es/alojamiento-chios/": "/pl/noclegi-chios/",
+  "/tr/sakiz-adasi-konaklama/": "/pl/noclegi-chios/",
+  "/chios-hotels/": "/pl/hotele-chios/",
+  "/el/xenodoxeia-xios/": "/pl/hotele-chios/",
+  "/fr/hotels-chios/": "/pl/hotele-chios/",
+  "/de/hotels-auf-chios/": "/pl/hotele-chios/",
+  "/it/hotel-chios/": "/pl/hotele-chios/",
+  "/es/hoteles-chios/": "/pl/hotele-chios/",
+  "/tr/sakiz-adasi-otelleri/": "/pl/hotele-chios/",
+  "/chios-rooms/": "/pl/pokoje-na-chios/",
+  "/el/domatia-xios/": "/pl/pokoje-na-chios/",
+  "/fr/chambres-a-chios/": "/pl/pokoje-na-chios/",
+  "/de/chios-zimmer/": "/pl/pokoje-na-chios/",
+  "/it/camere-a-chios/": "/pl/pokoje-na-chios/",
+  "/es/habitaciones-en-chios/": "/pl/pokoje-na-chios/",
+  "/tr/sakiz-adasi-odalari/": "/pl/pokoje-na-chios/",
+  "/chios-rooms/family-chios-apartments/": "/pl/apartamenty-na-chios/",
+  "/el/domatia-xios/oikogeneiako-diamerisma/": "/pl/apartamenty-na-chios/",
+  "/fr/chambres-a-chios/appartements-familiaux-de-chios/": "/pl/apartamenty-na-chios/",
+  "/de/zimmer-chios/familienapartments-in-chios/": "/pl/apartamenty-na-chios/",
+  "/it/stanze-a-chios/appartamenti-familiari-a-chios/": "/pl/apartamenty-na-chios/",
+  "/es/habitaciones-en-chios/apartamentos-familiares-en-chios/": "/pl/apartamenty-na-chios/",
+  "/tr/chios-odalari/sakiz-adasinda-buyuk-aile-daireleri/": "/pl/apartamenty-na-chios/",
+  "/chios-hotels-rates/": "/pl/rezerwacja/",
+  "/el/amesi-kratisi-voulamandis-house/": "/pl/rezerwacja/",
+  "/fr/tarifs-des-hotels-a-chios/": "/pl/rezerwacja/",
+  "/de/hotelpreise-auf-der-insel-chios/": "/pl/rezerwacja/",
+  "/it/prezzi-hotel-chios/": "/pl/rezerwacja/",
+  "/es/los-mejores-precios-de-hotel-en-la-isla-chios/": "/pl/rezerwacja/",
+  "/tr/sakiz-adasi-rezervasyon/": "/pl/rezerwacja/",
+  "/chios/kampos-chios/": "/pl/kambos-chios/",
+  "/el/chios/kampos-chios/": "/pl/kambos-chios/",
+  "/fr/chios/kampos-chios/": "/pl/kambos-chios/",
+  "/de/chios/kampos-chios/": "/pl/kambos-chios/",
+  "/it/chios/kampos-chios/": "/pl/kambos-chios/",
+  "/es/chios/kampos-chios/": "/pl/kambos-chios/",
+  "/tr/chios/kampos-chios/": "/pl/kambos-chios/",
+};
+
 function pathFor(itemId: string, language: LanguageCode) {
   return getRoutesByItemId(itemId).find((route) => route.language === language && route.action === "KEEP")?.path || "/";
 }
@@ -83,6 +135,10 @@ function languageHref(pathname: string, language: LanguageCode) {
   const route = getRouteByPath(normalizedPathname);
   if (!route) return pathFor(routeIds.home, language);
   return getRoutesByItemId(route.itemId).find((item) => item.language === language && item.action === "KEEP")?.path || pathFor(routeIds.home, language);
+}
+
+function polishLanguageHref(pathname: string) {
+  return polishEquivalentPaths[normalizePath(pathname)] || "/pl/";
 }
 
 function getAthensNow() {
@@ -132,12 +188,22 @@ function LanguagePills({ currentLanguage, pathname, onNavigate }: { currentLangu
             aria-current={active ? "page" : undefined}
             title={item.label}
             onClick={onNavigate}
-            className={`flex h-8 min-w-9 items-center justify-center rounded-full px-2 text-[11px] font-black uppercase tracking-[0.08em] transition ${active ? "bg-[#fff4df] text-amber-900 shadow-sm ring-1 ring-amber-800/20" : "text-stone-700 hover:bg-amber-50 hover:text-amber-900"}`}
+            className={`flex h-8 min-w-9 shrink-0 items-center justify-center rounded-full px-2 text-[11px] font-black uppercase tracking-[0.08em] transition ${active ? "bg-[#fff4df] text-amber-900 shadow-sm ring-1 ring-amber-800/20" : "text-stone-700 hover:bg-amber-50 hover:text-amber-900"}`}
           >
             {item.code.toUpperCase()}
           </a>
         );
       })}
+      <a
+        href={polishLanguageHref(pathname)}
+        hrefLang="pl"
+        lang="pl"
+        title="Polski"
+        onClick={onNavigate}
+        className="flex h-8 min-w-9 shrink-0 items-center justify-center rounded-full px-2 text-[11px] font-black uppercase tracking-[0.08em] text-stone-700 transition hover:bg-amber-50 hover:text-amber-900"
+      >
+        PL
+      </a>
     </nav>
   );
 }
