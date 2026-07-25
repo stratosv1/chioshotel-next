@@ -173,6 +173,57 @@ const elCopy: WizardCopy = {
   ],
 };
 
+const plCopy: WizardCopy = {
+  ...enCopy,
+  title: "Znajdź pokój dopasowany do Twojego pobytu",
+  text: "Odpowiedz na kilka krótkich pytań, a podpowiemy pokój lub apartament najlepiej dopasowany do Twojego pobytu na Chios.",
+  firstName: "Imię",
+  lastName: "Nazwisko",
+  checkin: "Przyjazd",
+  checkout: "Wyjazd",
+  email: "Email",
+  phone: "Telefon",
+  consent: "Wyrażam zgodę na przetwarzanie moich danych w celu przygotowania propozycji zakwaterowania.",
+  start: "Rozpocznij wybór pokoju",
+  back: "Wstecz",
+  step: "Krok",
+  bestMatch: "Najlepsze dopasowanie",
+  alternatives: "Inne pasujące opcje",
+  startOver: "Zacznij od nowa",
+  alert: "Data wyjazdu musi być późniejsza niż data przyjazdu.",
+  perfect: "Ta opcja najlepiej odpowiada wybranym kryteriom pod względem wygody, dostępu i kategorii cenowej.",
+  room: "Pokój",
+  guests: "Goście",
+  beds: "Łóżka",
+  why: "Dlaczego pasuje",
+  same: "Ta sama kategoria cenowa",
+  more: "Wyższa kategoria cenowa",
+  less: "Niższa kategoria cenowa",
+  questions: [
+    { id: "guests", question: "Ilu gości będzie nocować?", options: [
+      { title: "2 osoby", hint: "Para lub dwóch dorosłych", icon: "👥", value: 2 },
+      { title: "3 osoby", hint: "Rodzina lub przyjaciele", icon: "👨‍👩‍👦", value: 3 },
+      { title: "4 osoby", hint: "Więcej przestrzeni dla rodziny", icon: "👨‍👩‍👧‍👦", value: 4 },
+    ]},
+    { id: "budget", question: "Jaką kategorię cenową preferujesz?", options: [
+      { title: "Economy", hint: "Bardziej ekonomiczna opcja", icon: "💶", value: true },
+      { title: "Standard / Premium", hint: "Więcej komfortu i możliwości", icon: "✨", value: false },
+    ]},
+    { id: "noStairs", question: "Dostęp i schody?", options: [
+      { title: "Bez schodów", hint: "Parter lub niezależny apartament", icon: "🧳", value: true },
+      { title: "Schody są w porządku", hint: "Uwzględnia pokoje na piętrze", icon: "🪜", value: false },
+    ]},
+    { id: "upperView", question: "Jakie położenie wolisz?", options: [
+      { title: "Piętro i widok", hint: "Jaśniejsza, bardziej otwarta atmosfera", icon: "👁️", value: true },
+      { title: "Ogród i parter", hint: "Spokojny dostęp do otoczenia", icon: "🌿", value: false },
+    ]},
+    { id: "kitchen", question: "Czy potrzebujesz kuchni?", options: [
+      { title: "Tak", hint: "Pełna kuchnia lub aneks kuchenny", icon: "🍳", value: true },
+      { title: "Nie", hint: "Wystarczy standardowy pokój", icon: "🍽️", value: false },
+    ]},
+  ],
+};
+
 const copyByLanguage: Record<WizardLanguage, WizardCopy> = {
   en: enCopy,
   el: elCopy,
@@ -200,18 +251,26 @@ function scoreRoom(room: RoomWizardRoom, prefs: WizardPrefs) {
   return score;
 }
 
+function isPolishCopy(copy: WizardCopy) {
+  return copy === plCopy;
+}
+
 function getTags(room: RoomWizardRoom, prefs: WizardPrefs, copy: WizardCopy) {
   const tags: Array<{ text: string; good: boolean }> = [];
+  const polish = isPolishCopy(copy);
   if (prefs.guests) tags.push({ text: `${room.maxGuests >= prefs.guests ? "✓" : "✕"} ${prefs.guests} ${copy.guests}`, good: room.maxGuests >= prefs.guests });
   if (prefs.budget !== undefined) tags.push({ text: room.budget ? "Economy" : "Standard", good: room.budget === prefs.budget });
-  if (prefs.noStairs) tags.push({ text: room.stairs ? "Stairs" : "No stairs", good: !room.stairs });
-  if (prefs.upperView !== undefined) tags.push({ text: prefs.upperView ? "Upper view" : "Garden view", good: prefs.upperView ? room.upperView : room.gardenView });
-  if (prefs.kitchen) tags.push({ text: room.fullKitchen ? "Full kitchen" : room.kitchenette ? "Kitchenette" : "No kitchen", good: room.fullKitchen || room.kitchenette });
+  if (prefs.noStairs) tags.push({ text: room.stairs ? (polish ? "Schody" : "Stairs") : (polish ? "Bez schodów" : "No stairs"), good: !room.stairs });
+  if (prefs.upperView !== undefined) tags.push({ text: prefs.upperView ? (polish ? "Piętro / widok" : "Upper view") : (polish ? "Widok na ogród" : "Garden view"), good: prefs.upperView ? room.upperView : room.gardenView });
+  if (prefs.kitchen) tags.push({ text: room.fullKitchen ? (polish ? "Pełna kuchnia" : "Full kitchen") : room.kitchenette ? (polish ? "Aneks kuchenny" : "Kitchenette") : (polish ? "Bez kuchni" : "No kitchen"), good: room.fullKitchen || room.kitchenette });
   return tags;
 }
 
 function getWhatsAppUrl(room: RoomWizardRoom, lead: LeadData, prefs: WizardPrefs, phone: string, copy: WizardCopy) {
-  const text = `Hello! My name is ${lead.firstName} ${lead.lastName} and I would like to ask about:\n\n${copy.room}: ${room.name}\n${copy.checkin}: ${lead.checkin}\n${copy.checkout}: ${lead.checkout}\n${copy.guests}: ${prefs.guests || "-"}\n${copy.email}: ${lead.email}\n${copy.phone}: ${lead.phone}`;
+  const intro = isPolishCopy(copy)
+    ? `Dzień dobry! Nazywam się ${lead.firstName} ${lead.lastName} i chcę zapytać o:`
+    : `Hello! My name is ${lead.firstName} ${lead.lastName} and I would like to ask about:`;
+  const text = `${intro}\n\n${copy.room}: ${room.name}\n${copy.checkin}: ${lead.checkin}\n${copy.checkout}: ${lead.checkout}\n${copy.guests}: ${prefs.guests || "-"}\n${copy.email}: ${lead.email}\n${copy.phone}: ${lead.phone}`;
   return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
 }
 
@@ -235,6 +294,7 @@ function RoomGallery({ room }: { room: RoomWizardRoom }) {
 function RoomCard({ room, bestRoom, lead, prefs, whatsappPhone, copy, label }: { room: RoomWizardRoom; bestRoom: RoomWizardRoom; lead: LeadData; prefs: WizardPrefs; whatsappPhone: string; copy: WizardCopy; label: string }) {
   const tags = getTags(room, prefs, copy);
   const priceText = room.priceLevel > bestRoom.priceLevel ? copy.more : room.priceLevel < bestRoom.priceLevel ? copy.less : copy.same;
+  const polish = isPolishCopy(copy);
   return (
     <article className="w-[86vw] max-w-[430px] flex-none snap-start rounded-[2rem] border border-[#6f7f3f]/20 bg-white p-5 shadow-xl shadow-stone-900/5 md:w-[560px] md:max-w-[560px] md:p-7">
       <span className="inline-flex rounded-full bg-[#3f4f2f] px-3 py-1.5 text-xs font-black uppercase tracking-[0.1em] text-white">{label}</span>
@@ -245,9 +305,9 @@ function RoomCard({ room, bestRoom, lead, prefs, whatsappPhone, copy, label }: {
         {tags.map((tag) => <span className={`inline-flex rounded-full px-3 py-1.5 text-xs font-black ${tag.good ? "bg-[#eef3e5] text-[#3f4f2f]" : "bg-rose-50 text-rose-800"}`} key={tag.text}>{tag.text}</span>)}
       </div>
       <div className="mt-4 flex flex-wrap gap-2" aria-label={copy.beds}>
-        {room.beds.double > 0 && <span className="rounded-full border border-stone-200 bg-white px-3 py-1.5 text-xs font-bold">🛏️ Double x{room.beds.double}</span>}
-        {room.beds.single > 0 && <span className="rounded-full border border-stone-200 bg-white px-3 py-1.5 text-xs font-bold">🛌 Single x{room.beds.single}</span>}
-        {room.beds.sofa > 0 && <span className="rounded-full border border-stone-200 bg-white px-3 py-1.5 text-xs font-bold">🛋️ Sofa x{room.beds.sofa}</span>}
+        {room.beds.double > 0 && <span className="rounded-full border border-stone-200 bg-white px-3 py-1.5 text-xs font-bold">🛏️ {polish ? "Podwójne" : "Double"} x{room.beds.double}</span>}
+        {room.beds.single > 0 && <span className="rounded-full border border-stone-200 bg-white px-3 py-1.5 text-xs font-bold">🛌 {polish ? "Pojedyncze" : "Single"} x{room.beds.single}</span>}
+        {room.beds.sofa > 0 && <span className="rounded-full border border-stone-200 bg-white px-3 py-1.5 text-xs font-bold">🛋️ {polish ? "Sofa" : "Sofa"} x{room.beds.sofa}</span>}
       </div>
       <RoomGallery room={room} />
       <div className="rounded-3xl border border-[#6f7f3f]/20 bg-[#f7f9f1] p-4">
@@ -263,7 +323,8 @@ function RoomCard({ room, bestRoom, lead, prefs, whatsappPhone, copy, label }: {
 }
 
 export function RoomWizardTailwind({ rooms, whatsappPhone, language = "en" }: RoomWizardTailwindProps) {
-  const copy = copyByLanguage[language] ?? copyByLanguage.en;
+  const isPolishRooms = rooms.some((room) => /^Pokój\s+\d+/i.test(room.name) || /^Apartament\s+\d+/i.test(room.name));
+  const copy = isPolishRooms ? plCopy : copyByLanguage[language] ?? copyByLanguage.en;
   const minDate = getTomorrowDate();
   const [lead, setLead] = useState<LeadData>({ firstName: "", lastName: "", checkin: "", checkout: "", email: "", phone: "" });
   const [prefs, setPrefs] = useState<WizardPrefs>({});
@@ -345,7 +406,7 @@ export function RoomWizardTailwind({ rooms, whatsappPhone, language = "en" }: Ro
           <div className="relative -mx-2 md:-mx-4">
             <div className="mb-4 flex items-center justify-between gap-3 px-2 md:px-4">
               <h3 className="text-2xl font-black tracking-[-0.04em] text-[#2f261f]">{copy.bestMatch}</h3>
-              <span className="rounded-full bg-[#eef3e5] px-4 py-2 text-[11px] font-black uppercase tracking-[0.12em] text-[#3f4f2f]">Swipe →</span>
+              <span className="rounded-full bg-[#eef3e5] px-4 py-2 text-[11px] font-black uppercase tracking-[0.12em] text-[#3f4f2f]">{isPolishCopy(copy) ? "Przesuń" : "Swipe"} →</span>
             </div>
 
             <div aria-hidden="true" className="pointer-events-none absolute right-1 top-[46%] z-20 flex h-12 w-12 items-center justify-center rounded-full bg-[#3f4f2f] text-2xl font-black text-white shadow-2xl md:right-3">
