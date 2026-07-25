@@ -99,10 +99,10 @@ export default async function RootLayout({
             <Suspense fallback={null}>
               <RoutePageViewAnalytics />
             </Suspense>
-            <BookingFunnelAnalytics language={sharedLanguage} pathname={pathname} />
-            <ContentEngagementAnalytics language={sharedLanguage} pathname={pathname} />
-            <ConsentRealtimeProbe language={sharedLanguage} pathname={pathname} />
-            <ConsentAnalytics language={sharedLanguage} />
+            <BookingFunnelAnalytics language={htmlLanguage} pathname={pathname} />
+            <ContentEngagementAnalytics language={htmlLanguage} pathname={pathname} />
+            <ConsentRealtimeProbe language={htmlLanguage} pathname={pathname} />
+            <ConsentAnalytics language={htmlLanguage} />
           </>
         ) : null}
       </body>
