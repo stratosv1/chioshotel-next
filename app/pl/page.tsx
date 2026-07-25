@@ -1,4 +1,6 @@
 import { PolishHomePageTailwind } from "@/components/home/PolishHomePageTailwind";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { buildPolishHomeSchema } from "@/content/home-schema-pl";
 import { buildPolishPageMetadata } from "@/lib/seo-pl";
 
 export const metadata = buildPolishPageMetadata({
@@ -10,5 +12,10 @@ export const metadata = buildPolishPageMetadata({
 });
 
 export default function PolishHomePage() {
-  return <PolishHomePageTailwind />;
+  return (
+    <>
+      <JsonLd data={buildPolishHomeSchema()} />
+      <PolishHomePageTailwind />
+    </>
+  );
 }
