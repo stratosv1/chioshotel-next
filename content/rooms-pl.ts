@@ -32,6 +32,7 @@ export const roomsCategoryPl: RoomsCategoryPageData = {
   cards: [
     {
       ...roomsCategoryEn.cards[0],
+      id: "pl-economy-double",
       title: "Ekonomiczny pokój dwuosobowy",
       subtitle: "Korzystna opcja dla 2 osób",
       description:
@@ -44,6 +45,7 @@ export const roomsCategoryPl: RoomsCategoryPageData = {
     },
     {
       ...roomsCategoryEn.cards[1],
+      id: "pl-ground-floor",
       title: "Pokoje na parterze",
       subtitle: "Pokoje dwu- i trzyosobowe",
       description:
@@ -56,6 +58,7 @@ export const roomsCategoryPl: RoomsCategoryPageData = {
     },
     {
       ...roomsCategoryEn.cards[2],
+      id: "pl-first-floor",
       title: "Pokoje na piętrze",
       subtitle: "Pokoje dwu- i trzyosobowe",
       description:
@@ -68,6 +71,7 @@ export const roomsCategoryPl: RoomsCategoryPageData = {
     },
     {
       ...roomsCategoryEn.cards[3],
+      id: "pl-family-apartments",
       title: "Apartamenty rodzinne",
       subtitle: "Kuchnia i część dzienna",
       description:
