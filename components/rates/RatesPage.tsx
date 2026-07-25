@@ -55,6 +55,12 @@ const ratesUiByLocale: Record<string, RatesUiText> = {
     yourDiscountCode: "İndirim kodunuz",
     openBooking: "Rezervasyonu aç",
   },
+  pl: {
+    directBookingCode: "Kod do rezerwacji bezpośredniej",
+    discountCodeAriaLabel: "Kod rabatowy do rezerwacji bezpośredniej",
+    yourDiscountCode: "Twój kod rabatowy",
+    openBooking: "Otwórz rezerwację",
+  },
 };
 
 function getRatesLocale(path: string) {
