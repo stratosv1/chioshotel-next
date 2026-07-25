@@ -76,7 +76,7 @@ export const roomsCategoryPl: RoomsCategoryPageData = {
       subtitle: "Kuchnia i część dzienna",
       description:
         "Przestronne apartamenty o powierzchni około 40–45 m² z kuchnią i częścią dzienną, stworzone dla rodzin, które potrzebują więcej miejsca podczas pobytu na Chios.",
-      href: "/pl/pokoje-na-chios/apartamenty-rodzinne/",
+      href: "/pl/apartamenty-na-chios/",
       imageAlt: "Apartamenty rodzinne na Chios z kuchnią w Voulamandis House",
       badge: "Dla rodzin",
       ctaLabel: "Zobacz apartamenty",
