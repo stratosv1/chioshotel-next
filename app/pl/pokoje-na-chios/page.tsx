@@ -10,7 +10,6 @@ export const metadata: Metadata = buildPolishPageMetadata({
   title: roomsCategoryPl.seo.title,
   description: roomsCategoryPl.seo.description,
   image: roomsCategoryPl.seo.ogImage,
-  alternateKey: "rooms",
 });
 
 export default function PolishRoomsPage() {
