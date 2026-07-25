@@ -54,22 +54,10 @@ const alternatePathGroups: Record<string, AlternatePathGroup> = {
   },
   "/pl/pokoje-na-chios/pokoj-dwuosobowy-economy/": {
     en: "/chios-rooms/economy-double-rooms/",
-    el: "/el/domatia-xios/oikonomiko-diklino-domatio/",
-    fr: "/fr/chambres-a-chios/chambres-doubles-economiques/",
-    de: "/de/zimmer-chios/economy-zimmer-auf-chios/",
-    it: "/it/stanze-a-chios/camera-doppia-economica-chios/",
-    es: "/es/habitaciones-en-chios/economicas-habitaciones-en-chios/",
-    tr: "/tr/chios-odalari/sakiz-adasindaki-ekonomi-cift-kisilik-oda/",
     pl: "/pl/pokoje-na-chios/pokoj-dwuosobowy-economy/",
   },
   "/pl/pokoje-na-chios/pokoje-standardowe/": {
     en: "/chios-rooms/standard-double-room/",
-    el: "/el/domatia-xios/diklina-triklina-domatia/",
-    fr: "/fr/chambres-a-chios/chambres-doubles-standard/",
-    de: "/de/zimmer-chios/standard-doppelzimmer-auf-chios/",
-    it: "/it/stanze-a-chios/camere-doppie-standard-chios/",
-    es: "/es/habitaciones-en-chios/habitaciones-dobles-estandar/",
-    tr: "/tr/chios-odalari/standart-cift-kisilik-odalar/",
     pl: "/pl/pokoje-na-chios/pokoje-standardowe/",
   },
   "/pl/apartamenty-na-chios/": {
@@ -106,16 +94,10 @@ const alternatePathGroups: Record<string, AlternatePathGroup> = {
 
 function buildLanguages(path: string, canonical: string): Record<string, string> {
   const group = alternatePathGroups[path];
-
-  if (!group) {
-    return { pl: canonical };
-  }
+  if (!group) return { pl: canonical };
 
   const languages = Object.fromEntries(
-    Object.entries(group).map(([language, localizedPath]) => [
-      language,
-      absoluteUrl(localizedPath),
-    ]),
+    Object.entries(group).map(([language, localizedPath]) => [language, absoluteUrl(localizedPath)]),
   );
 
   languages["x-default"] = absoluteUrl(group.en || "/");
@@ -131,10 +113,7 @@ export function buildPolishPageMetadata(input: PolishSeoInput): Metadata {
     metadataBase: new URL(siteUrl),
     title: { absolute: input.title },
     description: input.description,
-    alternates: {
-      canonical,
-      languages,
-    },
+    alternates: { canonical, languages },
     robots: {
       index: true,
       follow: true,
@@ -154,14 +133,7 @@ export function buildPolishPageMetadata(input: PolishSeoInput): Metadata {
       description: input.description,
       locale: "pl_PL",
       alternateLocale: ["en_US", "el_GR", "fr_FR", "de_DE", "it_IT", "es_ES", "tr_TR"],
-      images: [
-        {
-          url: image,
-          width: 1200,
-          height: 675,
-          alt: input.imageAlt || input.title,
-        },
-      ],
+      images: [{ url: image, width: 1200, height: 675, alt: input.imageAlt || input.title }],
     },
     twitter: {
       card: "summary_large_image",
