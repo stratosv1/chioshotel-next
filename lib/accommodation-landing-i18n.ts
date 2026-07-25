@@ -21,6 +21,7 @@ export function accommodationLandingLanguages() {
     it: absoluteUrl(ACCOMMODATION_LANDING_PATHS.it),
     es: absoluteUrl(ACCOMMODATION_LANDING_PATHS.es),
     tr: absoluteUrl(ACCOMMODATION_LANDING_PATHS.tr),
+    pl: absoluteUrl("/pl/noclegi-chios/"),
     "x-default": absoluteUrl(ACCOMMODATION_LANDING_PATHS.en),
   };
 }
