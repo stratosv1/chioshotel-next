@@ -40,12 +40,13 @@ export const metadata: Metadata = {
   manifest: "/favicon/site.webmanifest",
 };
 
-type SiteLanguage = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
+type SharedSiteLanguage = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
+type SiteLanguage = SharedSiteLanguage | "pl";
 
 function getHtmlLanguage(pathname: string): SiteLanguage {
   const firstSegment = pathname.split("/").filter(Boolean)[0];
 
-  if (["el", "fr", "de", "it", "es", "tr"].includes(firstSegment)) {
+  if (["el", "fr", "de", "it", "es", "tr", "pl"].includes(firstSegment)) {
     return firstSegment as SiteLanguage;
   }
 
@@ -76,20 +77,23 @@ export default async function RootLayout({
   const requestHeaders = await headers();
   const pathname = requestHeaders.get("x-current-pathname") || "/";
   const htmlLanguage = getHtmlLanguage(pathname);
+  const isPolishPath = htmlLanguage === "pl";
+  const sharedLanguage: SharedSiteLanguage = isPolishPath ? "en" : htmlLanguage;
   const hideHeader = isGuidePath(pathname);
+  const hideGlobalChrome = hideHeader || isPolishPath;
   const excludeAnalytics = isStaffPath(pathname);
 
   return (
     <html lang={htmlLanguage}>
       <body>
-        {!hideHeader ? (
-          <VoulamandisHeaderTailwind language={htmlLanguage} pathname={pathname} />
+        {!hideGlobalChrome ? (
+          <VoulamandisHeaderTailwind language={sharedLanguage} pathname={pathname} />
         ) : null}
         {children}
-        {!hideHeader ? (
-          <ExploreVoulamandisJourney language={htmlLanguage} pathname={pathname} />
+        {!hideGlobalChrome ? (
+          <ExploreVoulamandisJourney language={sharedLanguage} pathname={pathname} />
         ) : null}
-        {!hideHeader ? <VoulamandisFooterTailwind language={htmlLanguage} /> : null}
+        {!hideGlobalChrome ? <VoulamandisFooterTailwind language={sharedLanguage} /> : null}
         {!excludeAnalytics ? (
           <>
             <Suspense fallback={null}>

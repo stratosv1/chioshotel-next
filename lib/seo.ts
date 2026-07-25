@@ -32,6 +32,88 @@ const manualLocalizedPathGroups: ReadonlyArray<
   },
 ];
 
+const polishAlternateGroups: ReadonlyArray<{
+  pl: string;
+  paths: readonly string[];
+}> = [
+  {
+    pl: "/pl/",
+    paths: ["/", "/el/", "/fr/", "/de/", "/it/", "/es/", "/tr/"],
+  },
+  {
+    pl: "/pl/noclegi-chios/",
+    paths: [
+      "/chios-accommodation/",
+      "/el/diamoni-sti-xio/",
+      "/fr/hebergement-chios/",
+      "/de/chios-unterkunft/",
+      "/it/alloggio-chios/",
+      "/es/alojamiento-chios/",
+      "/tr/sakiz-adasi-konaklama/",
+    ],
+  },
+  {
+    pl: "/pl/hotele-chios/",
+    paths: [
+      "/chios-hotels/",
+      "/el/xenodoxeia-xios/",
+      "/fr/hotels-chios/",
+      "/de/hotels-auf-chios/",
+      "/it/hotel-chios/",
+      "/es/hoteles-chios/",
+      "/tr/sakiz-adasi-otelleri/",
+    ],
+  },
+  {
+    pl: "/pl/pokoje-na-chios/",
+    paths: [
+      "/chios-rooms/",
+      "/el/domatia-xios/",
+      "/fr/chambres-a-chios/",
+      "/de/chios-zimmer/",
+      "/it/camere-a-chios/",
+      "/es/habitaciones-en-chios/",
+      "/tr/sakiz-adasi-odalari/",
+    ],
+  },
+  {
+    pl: "/pl/apartamenty-na-chios/",
+    paths: [
+      "/chios-rooms/family-chios-apartments/",
+      "/el/domatia-xios/oikogeneiako-diamerisma/",
+      "/fr/chambres-a-chios/appartements-familiaux-de-chios/",
+      "/de/zimmer-chios/familienapartments-in-chios/",
+      "/it/stanze-a-chios/appartamenti-familiari-a-chios/",
+      "/es/habitaciones-en-chios/apartamentos-familiares-en-chios/",
+      "/tr/chios-odalari/sakiz-adasinda-buyuk-aile-daireleri/",
+    ],
+  },
+  {
+    pl: "/pl/rezerwacja/",
+    paths: [
+      "/chios-hotels-rates/",
+      "/el/amesi-kratisi-voulamandis-house/",
+      "/fr/tarifs-des-hotels-a-chios/",
+      "/de/hotelpreise-auf-der-insel-chios/",
+      "/it/prezzi-hotel-chios/",
+      "/es/los-mejores-precios-de-hotel-en-la-isla-chios/",
+      "/tr/sakiz-adasi-rezervasyon/",
+    ],
+  },
+  {
+    pl: "/pl/kambos-chios/",
+    paths: [
+      "/chios/kampos-chios/",
+      "/el/chios/kampos-chios/",
+      "/fr/chios/kampos-chios/",
+      "/de/chios/kampos-chios/",
+      "/it/chios/kampos-chios/",
+      "/es/chios/kampos-chios/",
+      "/tr/chios/kampos-chios/",
+    ],
+  },
+];
+
 function splitPath(path: string) {
   const hashIndex = path.indexOf("#");
   const queryIndex = path.indexOf("?");
@@ -121,6 +203,28 @@ function isIndexableRoute(route: ReturnType<typeof getLocalizedRoutes>[number]) 
   return route.action === "KEEP";
 }
 
+function getPolishAlternate(path: string): string | undefined {
+  const normalizedPath = normalizePath(path);
+  const group = polishAlternateGroups.find((candidate) =>
+    candidate.paths.some((candidatePath) => normalizePath(candidatePath) === normalizedPath),
+  );
+
+  return group?.pl;
+}
+
+function withPolishAlternate(
+  path: string,
+  alternates: Record<string, string>,
+): Record<string, string> {
+  const polishPath = getPolishAlternate(path);
+
+  if (polishPath) {
+    alternates.pl = absoluteUrl(polishPath);
+  }
+
+  return alternates;
+}
+
 function getManualAlternates(path: string): Record<string, string> {
   const normalizedPath = normalizePath(path);
   const group = manualLocalizedPathGroups.find((candidate) =>
@@ -153,13 +257,13 @@ export function getAlternates(path: string): Record<string, string> {
   const localizedRoutes = getLocalizedRoutes(path);
 
   if (!localizedRoutes.length) {
-    return getManualAlternates(path);
+    return withPolishAlternate(path, getManualAlternates(path));
   }
 
   const publishedRoutes = localizedRoutes.filter(isIndexableRoute);
 
   if (!publishedRoutes.length) {
-    return getManualAlternates(path);
+    return withPolishAlternate(path, getManualAlternates(path));
   }
 
   const alternates: Record<string, string> = {};
@@ -181,7 +285,7 @@ export function getAlternates(path: string): Record<string, string> {
     alternates["x-default"] = absoluteUrl(defaultRoute.path);
   }
 
-  return alternates;
+  return withPolishAlternate(path, alternates);
 }
 
 export function buildAlternates(

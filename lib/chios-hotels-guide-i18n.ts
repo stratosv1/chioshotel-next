@@ -21,6 +21,7 @@ export function chiosHotelsGuideLanguages() {
     it: absoluteUrl(CHIOS_HOTELS_GUIDE_PATHS.it),
     es: absoluteUrl(CHIOS_HOTELS_GUIDE_PATHS.es),
     tr: absoluteUrl(CHIOS_HOTELS_GUIDE_PATHS.tr),
+    pl: absoluteUrl("/pl/hotele-chios/"),
     "x-default": absoluteUrl(CHIOS_HOTELS_GUIDE_PATHS.en),
   };
 }

@@ -31,6 +31,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.9,
   }));
 
+  const polishRoutes: SitemapEntry[] = [
+    "/pl/",
+    "/pl/noclegi-chios/",
+    "/pl/hotele-chios/",
+    "/pl/pokoje-na-chios/",
+    "/pl/pokoje-na-chios/pokoj-dwuosobowy-economy/",
+    "/pl/pokoje-na-chios/pokoje-standardowe/",
+    "/pl/apartamenty-na-chios/",
+    "/pl/kambos-chios/",
+    "/pl/rezerwacja/",
+  ].map((path) => ({
+    url: absoluteUrl(path),
+    changeFrequency: "weekly",
+    priority: path === "/pl/" ? 1 : 0.9,
+  }));
+
   const routes: SitemapEntry[] = routeMap
     .filter((route) => route.action === "KEEP")
     .filter((route) => !isOldBeachDetailRoute(route.path))
@@ -120,6 +136,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return deduplicateByCanonicalUrl([
     ...accommodationLandingRoutes,
+    ...polishRoutes,
     ...routes,
     ...familyBeachRoutes,
     ...organizedBeachRoutes,

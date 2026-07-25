@@ -3,14 +3,26 @@ import { RoomDetailPage } from "@/components/rooms/RoomDetailPage";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { standardDoubleRoom } from "@/content/room-details";
 import { buildRoomDetailSchema } from "@/content/room-detail-schema";
-import { buildPageMetadata } from "@/lib/seo";
+import { absoluteUrl, buildPageMetadata, getAlternates, getCanonicalUrl } from "@/lib/seo";
 
-export const metadata: Metadata = buildPageMetadata({
-  path: standardDoubleRoom.seo.canonicalPath,
+const path = standardDoubleRoom.seo.canonicalPath;
+const baseMetadata = buildPageMetadata({
+  path,
   title: standardDoubleRoom.seo.title,
   description: standardDoubleRoom.seo.description,
   image: standardDoubleRoom.seo.ogImage,
 });
+
+export const metadata: Metadata = {
+  ...baseMetadata,
+  alternates: {
+    canonical: getCanonicalUrl(path),
+    languages: {
+      ...getAlternates(path),
+      pl: absoluteUrl("/pl/pokoje-na-chios/pokoje-standardowe/"),
+    },
+  },
+};
 
 export default function Page() {
   return (

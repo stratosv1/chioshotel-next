@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { track } from "@vercel/analytics";
 
-type LanguageCode = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
+type LanguageCode = "en" | "el" | "fr" | "de" | "it" | "es" | "tr" | "pl";
 type AnalyticsValue = string | number | boolean | null | undefined;
 type AnalyticsProperties = Record<string, AnalyticsValue>;
 
@@ -20,6 +20,7 @@ const CONTENT_MARKERS = [
   "activities", "activity", "drastiriotites", "aktivitaeten", "attivita", "actividades", "aktiviteler",
   "chios-island", "chios-el", "chios-lisola-in-grecia", "chios-en-grecia", "ti-na-do-sti-xio", "sakiz-adasi", "kambos", "kampos", "orchid", "thermal", "food", "taste",
   "chios-hotels", "chios-accommodation", "diamoni-sti-xio", "hebergement-chios", "chios-unterkunft", "alloggio-chios", "alojamiento-chios", "sakiz-adasi-konaklama",
+  "hotele-chios", "noclegi-chios", "pokoje-na-chios", "apartamenty-na-chios", "rezerwacja", "kambos-chios",
 ];
 
 function isInformationPage(pathname: string) {
@@ -35,8 +36,8 @@ function deviceArea() {
 
 function contentCategory(pathname: string) {
   const value = pathname.toLowerCase();
-  if (/^\/chios-hotels\/?$/.test(value)) return "chios_hotels_guide";
-  if (/chios-accommodation|diamoni-sti-xio|hebergement-chios|chios-unterkunft|alloggio-chios|alojamiento-chios|sakiz-adasi-konaklama/.test(value)) return "accommodation";
+  if (/^\/chios-hotels\/?$|^\/pl\/hotele-chios\/?$/.test(value)) return "chios_hotels_guide";
+  if (/chios-accommodation|diamoni-sti-xio|hebergement-chios|chios-unterkunft|alloggio-chios|alojamiento-chios|sakiz-adasi-konaklama|noclegi-chios/.test(value)) return "accommodation";
   if (/beach|paralia|paralies|plage|strand|spiaggia|spiagge|playa|plaj/.test(value)) return "beach";
   if (/village|xoria|chorio|köy|koy|dorf|villaggio|villaggi|pueblo/.test(value)) return "village";
   if (/museum|mouseio|musee|museo|musei|muze/.test(value)) return "museum";
@@ -47,12 +48,12 @@ function contentCategory(pathname: string) {
 
 function destinationType(pathname: string) {
   const value = pathname.toLowerCase();
-  if (/^\/chios-hotels\/?$/.test(value)) return "chios_hotels_guide";
-  if (value.includes("ai-assistant") || value.includes("find-your-room") || value.includes("vres-to-domatio")) return "ai_room_finder";
-  if (value.includes("chios-rooms") || value.includes("domatia-xios") || value.includes("chambres-a-chios") || value.includes("zimmer") || value.includes("camere") || value.includes("stanze") || value.includes("habitaciones") || value.includes("odalari")) return "rooms";
-  if (value.includes("rates") || value.includes("times-domation") || value.includes("tarifs") || value.includes("preise") || value.includes("prezzi") || value.includes("precios") || value.includes("fiyatlari") || value.includes("kratis") || value.includes("sakiz-adasi-rezervasyon")) return "rates";
-  if (/chios-accommodation|diamoni-sti-xio|hebergement-chios|chios-unterkunft|alloggio-chios|alojamiento-chios|sakiz-adasi-konaklama/.test(value)) return "accommodation_landing";
-  if (["/", "/el/", "/fr/", "/de/", "/it/", "/es/", "/tr/"].includes(pathname)) return "homepage";
+  if (/^\/chios-hotels\/?$|^\/pl\/hotele-chios\/?$/.test(value)) return "chios_hotels_guide";
+  if (value.includes("ai-assistant") || value.includes("find-your-room") || value.includes("vres-to-domatio") || value.includes("room-wizard")) return "ai_room_finder";
+  if (value.includes("chios-rooms") || value.includes("domatia-xios") || value.includes("chambres-a-chios") || value.includes("zimmer") || value.includes("camere") || value.includes("stanze") || value.includes("habitaciones") || value.includes("odalari") || value.includes("pokoje-na-chios") || value.includes("apartamenty-na-chios")) return "rooms";
+  if (value.includes("rates") || value.includes("times-domation") || value.includes("tarifs") || value.includes("preise") || value.includes("prezzi") || value.includes("precios") || value.includes("fiyatlari") || value.includes("kratis") || value.includes("sakiz-adasi-rezervasyon") || value.includes("rezerwacja")) return "rates";
+  if (/chios-accommodation|diamoni-sti-xio|hebergement-chios|chios-unterkunft|alloggio-chios|alojamiento-chios|sakiz-adasi-konaklama|noclegi-chios/.test(value)) return "accommodation_landing";
+  if (["/", "/el/", "/fr/", "/de/", "/it/", "/es/", "/tr/", "/pl/"].includes(pathname)) return "homepage";
   if (isInformationPage(pathname)) return "other_information";
   return "other_internal";
 }
@@ -73,7 +74,7 @@ function clickEvent(anchor: HTMLAnchorElement, category: string) {
   const image = anchor.querySelector("img");
 
   if (href.includes("google.com/maps") || href.includes("maps.app.goo.gl") || href.includes("goo.gl/maps")) return "google_maps_click";
-  if (anchor.dataset.language || anchor.closest("[data-language-switcher]") || /english|ελλην|français|deutsch|italiano|español|türkçe/.test(label)) return "language_switch_from_content";
+  if (anchor.dataset.language || anchor.closest("[data-language-switcher]") || /english|ελλην|français|deutsch|italiano|español|türkçe|polski/.test(label)) return "language_switch_from_content";
   if (image || anchor.closest("[role='dialog'],[data-gallery],[class*='gallery'],[class*='carousel']")) return "gallery_open";
 
   const target = destinationType(new URL(anchor.href, window.location.origin).pathname);
@@ -143,7 +144,7 @@ export function ContentEngagementAnalytics({ language, pathname }: Props) {
 
       if (button && button.closest("[role='dialog'],[data-gallery],[class*='gallery'],[class*='carousel']")) {
         const label = (button.textContent || button.getAttribute("aria-label") || "").trim().replace(/\s+/g, " ").slice(0, 80);
-        const eventName = /next|right|επόμε|suivant|weiter|avanti|siguiente|sonraki/i.test(label) ? "gallery_next" : "gallery_open";
+        const eventName = /next|right|επόμε|suivant|weiter|avanti|siguiente|sonraki|następn|prawo/i.test(label) ? "gallery_next" : "gallery_open";
         const signature = `${eventName}|${pathname}|${label}`;
         if (shouldSend(signature)) emit(eventName, { ...common, control_label: label });
         return;

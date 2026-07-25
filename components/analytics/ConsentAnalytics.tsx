@@ -4,7 +4,7 @@ import Script from "next/script";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
-type LanguageCode = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
+type LanguageCode = "en" | "el" | "fr" | "de" | "it" | "es" | "tr" | "pl";
 
 const GA_ID = "G-844GGQ1TC7";
 const LEGACY_CONSENT_KEY = "vh_cookie_consent_v1";
@@ -28,21 +28,14 @@ export function ConsentAnalytics({ language: _language }: { language: LanguageCo
           }
         `}
       </Script>
-      <Script
-        id="google-analytics-loader"
-        src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-        strategy="lazyOnload"
-      />
-      <Script id="google-analytics-config" strategy="lazyOnload">
+      <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
+      <Script id="ga4-init" strategy="afterInteractive">
         {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
-          window.gtag = gtag;
+          window.gtag = window.gtag || gtag;
           gtag('js', new Date());
-          gtag('config', '${GA_ID}', {
-            anonymize_ip: true,
-            send_page_view: true
-          });
+          gtag('config', '${GA_ID}', { send_page_view: false });
         `}
       </Script>
       <Analytics />
