@@ -1,6 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
 
+type ContentSection = {
+  title: string;
+  text: string;
+};
+
+type FaqItem = {
+  question: string;
+  answer: string;
+};
+
 type PolishSeoLandingPageProps = {
   eyebrow: string;
   title: string;
@@ -8,6 +18,8 @@ type PolishSeoLandingPageProps = {
   highlights: string[];
   bodyTitle: string;
   paragraphs: string[];
+  sections?: ContentSection[];
+  faq?: FaqItem[];
   primaryHref: string;
   primaryLabel: string;
   secondaryHref?: string;
@@ -21,6 +33,8 @@ export function PolishSeoLandingPage({
   highlights,
   bodyTitle,
   paragraphs,
+  sections = [],
+  faq = [],
   primaryHref,
   primaryLabel,
   secondaryHref,
@@ -80,7 +94,7 @@ export function PolishSeoLandingPage({
       </section>
 
       <section className="border-y border-stone-200 bg-white">
-        <div className="mx-auto max-w-5xl px-5 py-14 md:px-8 md:py-18">
+        <div className="mx-auto max-w-5xl px-5 py-14 md:px-8 md:py-16">
           <h2 className="text-3xl font-semibold text-stone-900 md:text-4xl">{bodyTitle}</h2>
           <div className="mt-6 space-y-5 text-base leading-8 text-stone-700 md:text-lg">
             {paragraphs.map((paragraph) => (
@@ -89,6 +103,35 @@ export function PolishSeoLandingPage({
           </div>
         </div>
       </section>
+
+      {sections.length ? (
+        <section className="mx-auto max-w-6xl px-5 py-14 md:px-8 md:py-16">
+          <div className="grid gap-5 md:grid-cols-2">
+            {sections.map((section) => (
+              <article key={section.title} className="rounded-[1.75rem] border border-stone-200 bg-white p-6 shadow-sm md:p-7">
+                <h2 className="text-xl font-semibold text-stone-900 md:text-2xl">{section.title}</h2>
+                <p className="mt-3 leading-7 text-stone-700">{section.text}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      {faq.length ? (
+        <section className="border-y border-stone-200 bg-[#f6f1e8]">
+          <div className="mx-auto max-w-5xl px-5 py-14 md:px-8 md:py-16">
+            <h2 className="text-3xl font-semibold text-stone-900">Najczęstsze pytania</h2>
+            <div className="mt-7 grid gap-4">
+              {faq.map((item) => (
+                <details key={item.question} className="rounded-2xl border border-stone-200 bg-white p-5">
+                  <summary className="cursor-pointer font-semibold text-stone-900">{item.question}</summary>
+                  <p className="mt-3 leading-7 text-stone-700">{item.answer}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       <section className="mx-auto max-w-5xl px-5 py-12 md:px-8">
         <div className="rounded-[2rem] border border-stone-200 bg-[#f3ede3] p-7 md:p-10">
@@ -101,6 +144,7 @@ export function PolishSeoLandingPage({
             <Link href="/pl/hotele-chios/" className="underline underline-offset-4">Hotele na Chios</Link>
             <Link href="/pl/pokoje-na-chios/" className="underline underline-offset-4">Pokoje na Chios</Link>
             <Link href="/pl/apartamenty-na-chios/" className="underline underline-offset-4">Apartamenty na Chios</Link>
+            <Link href="/pl/kambos-chios/" className="underline underline-offset-4">Kambos Chios</Link>
           </div>
         </div>
       </section>
