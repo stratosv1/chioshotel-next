@@ -36,6 +36,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/pl/noclegi-chios/",
     "/pl/hotele-chios/",
     "/pl/pokoje-na-chios/",
+    "/pl/pokoje-na-chios/pokoj-dwuosobowy-economy/",
+    "/pl/pokoje-na-chios/pokoje-standardowe/",
     "/pl/apartamenty-na-chios/",
     "/pl/kambos-chios/",
     "/pl/rezerwacja/",
