@@ -1,4 +1,6 @@
 import { PolishChiosHotelsGuidePage } from "@/components/landing/PolishChiosHotelsGuidePage";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { buildPolishChiosHotelsGuideSchema } from "@/content/chios-hotels-guide-schema-pl";
 import { buildPolishPageMetadata } from "@/lib/seo-pl";
 
 export const metadata = buildPolishPageMetadata({
@@ -9,5 +11,10 @@ export const metadata = buildPolishPageMetadata({
 });
 
 export default function PolishHotelsPage() {
-  return <PolishChiosHotelsGuidePage />;
+  return (
+    <>
+      <JsonLd data={buildPolishChiosHotelsGuideSchema()} />
+      <PolishChiosHotelsGuidePage />
+    </>
+  );
 }
