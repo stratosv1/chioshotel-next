@@ -1,4 +1,6 @@
 import { PolishKamposLandingPage } from "@/components/chios/PolishKamposLandingPage";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { buildPolishKambosSchema } from "@/content/kambos-schema-pl";
 import { buildPolishPageMetadata } from "@/lib/seo-pl";
 
 export const metadata = buildPolishPageMetadata({
@@ -9,5 +11,10 @@ export const metadata = buildPolishPageMetadata({
 });
 
 export default function PolishKambosPage() {
-  return <PolishKamposLandingPage />;
+  return (
+    <>
+      <JsonLd data={buildPolishKambosSchema()} />
+      <PolishKamposLandingPage />
+    </>
+  );
 }
