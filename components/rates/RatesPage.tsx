@@ -199,7 +199,7 @@ export function RatesPage({ data }: RatesPageProps) {
               </div>
 
               <a
-                className="hidden min-h-12 shrink-0 items-center justify-center rounded-full border border-stone-200 bg-[#efe6d8] px-5 text-[11px] font-black uppercase tracking-[0.1em] text-[#a15d33] md:inline-flex"
+                className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-full border border-stone-200 bg-[#efe6d8] px-5 text-[11px] font-black uppercase tracking-[0.1em] text-[#a15d33]"
                 href={data.booking.fallbackHref}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -208,24 +208,12 @@ export function RatesPage({ data }: RatesPageProps) {
               </a>
             </header>
 
-            <div className="px-5 pb-8 md:hidden">
-              <a
-                className="flex min-h-14 w-full items-center justify-center rounded-full bg-[#a15d33] px-6 text-sm font-black uppercase tracking-[0.08em] text-white shadow-lg shadow-[#a15d33]/20"
-                href={data.booking.fallbackHref}
-              >
-                {ui.openBooking}
-              </a>
-              <p className="mt-3 text-center text-sm leading-6 text-stone-500">
-                Secure booking opens in this tab for full mobile compatibility.
-              </p>
-            </div>
-
-            <div className="hidden w-full overflow-visible bg-stone-50 md:block md:rounded-[1.5rem] md:border md:border-stone-200">
+            <div className="w-full bg-stone-50 md:rounded-[1.5rem] md:border md:border-stone-200">
               <iframe
                 src={data.booking.iframeSrc}
-                className="block h-[5600px] w-full border-0 xl:h-[5200px]"
-                style={{ minHeight: "5200px", overflow: "auto" }}
-                scrolling="auto"
+                className="block h-[7000px] w-full border-0 md:h-[5600px] xl:h-[5200px]"
+                style={{ minHeight: "5200px" }}
+                scrolling="yes"
                 loading="lazy"
                 title={data.booking.iframeTitle}
               />
