@@ -113,6 +113,34 @@ export default async function SeoAdvisorPage() {
                 </div>
                 <h3 className="mt-3 text-lg font-semibold">{item.title}</h3>
                 <p className="mt-2 text-sm leading-6 text-[#625446]">{item.explanation}</p>
+
+                {item.diagnosis && (
+                  <div className="mt-4 rounded-2xl border border-[#e5d8c6] bg-[#f7f2e9] p-4">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-[#8a755f]">Τι δείχνει πραγματικά το εύρημα</p>
+                    <p className="mt-1 text-sm leading-6">{item.diagnosis}</p>
+                  </div>
+                )}
+
+                {item.queryBreakdown && item.queryBreakdown.length > 0 && (
+                  <div className="mt-4 rounded-2xl border border-[#e8dccb] bg-white p-4">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-[#8a755f]">Queries που εξηγούν την αλλαγή</p>
+                    <p className="mt-1 text-xs leading-5 text-[#8a755f]">Προηγούμενες 28 ημέρες → τελευταίες 28 ημέρες.</p>
+                    <div className="mt-3 space-y-3">
+                      {item.queryBreakdown.slice(0, 5).map((row) => (
+                        <div key={row.query} className="rounded-xl bg-[#faf7f1] p-3">
+                          <p className="break-words text-sm font-semibold">{row.query}</p>
+                          <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1 text-xs text-[#6f6051] sm:grid-cols-4">
+                            <span>Clicks {n(row.previousClicks)} → {n(row.currentClicks)}</span>
+                            <span>Impr. {n(row.previousImpressions)} → {n(row.currentImpressions)}</span>
+                            <span>Θέση {row.previousPosition > 0 ? n(row.previousPosition, 1) : "—"} → {row.currentPosition > 0 ? n(row.currentPosition, 1) : "—"}</span>
+                            <span>CTR {n(row.previousCtr * 100, 2)}% → {n(row.currentCtr * 100, 2)}%</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 <div className="mt-4 rounded-2xl bg-white p-4">
                   <p className="text-xs font-semibold uppercase tracking-wide text-[#8a755f]">Τι κάνουμε</p>
                   <p className="mt-1 text-sm leading-6 font-medium">{item.action}</p>
@@ -127,10 +155,12 @@ export default async function SeoAdvisorPage() {
                   <CopySeoAdviceButton
                     title={item.title}
                     explanation={item.explanation}
+                    diagnosis={item.diagnosis}
                     action={item.action}
                     evidence={item.evidence}
                     page={item.page}
                     query={item.query}
+                    queryBreakdown={item.queryBreakdown}
                   />
                 </div>
               </article>
