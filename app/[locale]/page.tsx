@@ -39,6 +39,45 @@ function withSeoTitle(data: HomePageData, title: string): HomePageData {
   });
 }
 
+function withGreekHomepageCopy(data: HomePageData): HomePageData {
+  return withUpdatedIntroReasons({
+    ...data,
+    seo: {
+      ...data.seo,
+      title: "Voulamandis House | Κάμπος Χίου",
+      description:
+        "Voulamandis House στον ιστορικό Κάμπο Χίου: αυθεντική φιλοξενία, ήσυχος κήπος, δωμάτια και οικογενειακά διαμερίσματα κοντά σε πόλη, αεροδρόμιο και παραλίες.",
+    },
+    hero: {
+      ...data.hero,
+      title: "Voulamandis House στον Κάμπο της Χίου",
+      descriptionHtml:
+        'Αυθεντική φιλοξενία σε ένα ήσυχο κτήμα στον ιστορικό Κάμπο της Χίου, κοντά στην πόλη, το αεροδρόμιο και τις παραλίες. Δείτε όλες τις επιλογές για <a href="/el/domatia-xios/" class="font-semibold text-white underline decoration-amber-300 underline-offset-4 transition-colors hover:text-amber-100">δωμάτια και διαμερίσματα στη Χίο</a> και επιλέξτε την κατηγορία που ταιριάζει στο ταξίδι σας.',
+    },
+    intro: {
+      ...data.intro,
+      left: {
+        ...data.intro.left,
+        title: "Αυθεντική φιλοξενία στο Voulamandis House",
+        bodyHtml:
+          "Στον ιστορικό Κάμπο της Χίου, το Voulamandis House συνδυάζει ήρεμο περιβάλλον, περιβόλια εσπεριδοειδών και προσωπική φιλοξενία. Είναι μια ζεστή βάση για ζευγάρια και οικογένειες που θέλουν να γνωρίσουν τη Χίο και να επιστρέφουν σε ένα ήσυχο μέρος στο τέλος της ημέρας.",
+      },
+    },
+    roomsPreview: {
+      ...data.roomsPreview,
+      kicker: "Δωμάτια & διαμερίσματα Voulamandis House",
+      title: "Επιλέξτε την κατηγορία που ταιριάζει στο ταξίδι σας",
+      text: "Από οικονομικά δίκλινα έως άνετα δωμάτια και οικογενειακά διαμερίσματα, δείτε τις διαθέσιμες κατηγορίες και βρείτε την κατάλληλη επιλογή για τη διαμονή σας.",
+      sideCard: {
+        ...data.roomsPreview.sideCard,
+        kicker: "Όλες οι επιλογές σε μία σελίδα",
+        title: "Συγκρίνετε δωμάτια και διαμερίσματα",
+        text: "Δείτε συγκεντρωμένα τις κατηγορίες, τη χωρητικότητα και τα βασικά χαρακτηριστικά τους πριν επιλέξετε το δωμάτιο που σας ταιριάζει.",
+      },
+    },
+  });
+}
+
 function withFrenchHomepageCopy(data: HomePageData): HomePageData {
   return {
     ...data,
@@ -100,10 +139,7 @@ function withItalianHomepageCopy(data: HomePageData): HomePageData {
 function getLocalizedHomePageData(locale: string): HomePageData {
   switch (locale) {
     case "el":
-      return withSeoTitle(
-        homePageEl,
-        "Voulamandis House | Δωμάτια & Διαμερίσματα στη Χίο",
-      );
+      return withGreekHomepageCopy(homePageEl);
     case "fr":
       return withSeoTitle(
         withFrenchHomepageCopy(homePageFr),
