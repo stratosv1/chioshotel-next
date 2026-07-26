@@ -5,38 +5,90 @@ type HomePageTailwindV3Props = {
   data: HomePageData;
 };
 
+type AccommodationLinkCopy = {
+  href: string;
+  prefix: string;
+  label: string;
+  suffix: string;
+};
+
+const accommodationLinks: Record<string, AccommodationLinkCopy> = {
+  "/": {
+    href: "/chios-accommodation/",
+    prefix: "For more options and practical information before booking, read our guide to ",
+    label: "accommodation in Chios",
+    suffix: ".",
+  },
+  "/el/": {
+    href: "/el/diamoni-sti-xio/",
+    prefix: "Για περισσότερες επιλογές και χρήσιμες πληροφορίες πριν την κράτηση, δείτε τον οδηγό μας για ",
+    label: "Διαμονή στη Χίο",
+    suffix: ".",
+  },
+  "/fr/": {
+    href: "/fr/hebergement-chios/",
+    prefix: "Pour comparer davantage d’options avant de réserver, consultez notre guide de l’",
+    label: "hébergement à Chios",
+    suffix: ".",
+  },
+  "/de/": {
+    href: "/de/chios-unterkunft/",
+    prefix: "Weitere Optionen und praktische Hinweise vor der Buchung finden Sie in unserem Guide zu ",
+    label: "Unterkünften auf Chios",
+    suffix: ".",
+  },
+  "/it/": {
+    href: "/it/alloggio-chios/",
+    prefix: "Per confrontare altre opzioni prima di prenotare, consulta la nostra guida all’",
+    label: "alloggio a Chios",
+    suffix: ".",
+  },
+  "/es/": {
+    href: "/es/alojamiento-chios/",
+    prefix: "Para comparar más opciones antes de reservar, consulta nuestra guía de ",
+    label: "alojamiento en Quíos",
+    suffix: ".",
+  },
+  "/tr/": {
+    href: "/tr/sakiz-adasi-konaklama/",
+    prefix: "Rezervasyon öncesinde daha fazla seçeneği karşılaştırmak için ",
+    label: "Sakız Adası konaklama rehberimize",
+    suffix: " göz atın.",
+  },
+};
+
 export function HomePageTailwindV3({ data }: HomePageTailwindV3Props) {
-  const renderedData: HomePageData =
-    data.seo.canonicalPath === "/el/"
-      ? {
-          ...data,
-          intro: {
-            ...data.intro,
-            left: {
-              ...data.intro.left,
-              bodyHtml: `${data.intro.left.bodyHtml} Για περισσότερες επιλογές και χρήσιμες πληροφορίες πριν την κράτηση, δείτε τον οδηγό μας για <a href="/el/diamoni-sti-xio/" class="font-semibold text-amber-800 underline decoration-amber-300 underline-offset-4 transition-colors hover:text-amber-900">Διαμονή στη Χίο</a>.`,
-            },
+  const accommodationLink = accommodationLinks[data.seo.canonicalPath];
+  const renderedData: HomePageData = accommodationLink
+    ? {
+        ...data,
+        intro: {
+          ...data.intro,
+          left: {
+            ...data.intro.left,
+            bodyHtml: `${data.intro.left.bodyHtml} ${accommodationLink.prefix}<a href="${accommodationLink.href}" class="font-semibold text-amber-800 underline decoration-amber-300 underline-offset-4 transition-colors hover:text-amber-900">${accommodationLink.label}</a>${accommodationLink.suffix}`,
           },
-        }
-      : data;
+        },
+      }
+    : data;
 
   return (
     <>
       <style>{`
         main > section:first-child a[href*="chios-rooms"],
         main > section:first-child a[href*="domatia-xios"],
-        main > section:first-child a[href*="chambres-chios"],
-        main > section:first-child a[href*="zimmer-chios"],
-        main > section:first-child a[href*="camere-chios"],
-        main > section:first-child a[href*="habitaciones-chios"],
-        main > section:first-child a[href*="sakiz-odalari"],
+        main > section:first-child a[href*="chambres-a-chios"],
+        main > section:first-child a[href*="chios-zimmer"],
+        main > section:first-child a[href*="camere-a-chios"],
+        main > section:first-child a[href*="habitaciones-en-chios"],
+        main > section:first-child a[href*="sakiz-adasi-odalari"],
         main > section:first-child a[href*="chios-rooms"] *,
         main > section:first-child a[href*="domatia-xios"] *,
-        main > section:first-child a[href*="chambres-chios"] *,
-        main > section:first-child a[href*="zimmer-chios"] *,
-        main > section:first-child a[href*="camere-chios"] *,
-        main > section:first-child a[href*="habitaciones-chios"] *,
-        main > section:first-child a[href*="sakiz-odalari"] * {
+        main > section:first-child a[href*="chambres-a-chios"] *,
+        main > section:first-child a[href*="chios-zimmer"] *,
+        main > section:first-child a[href*="camere-a-chios"] *,
+        main > section:first-child a[href*="habitaciones-en-chios"] *,
+        main > section:first-child a[href*="sakiz-adasi-odalari"] * {
           color: #fff !important;
         }
 
