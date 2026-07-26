@@ -26,6 +26,8 @@ type Props = {
   page?: string;
   query?: string;
   queryBreakdown?: QueryChange[];
+  queryBreakdownTitle?: string;
+  queryBreakdownNote?: string;
 };
 
 function formatNumber(value: number, digits = 1) {
@@ -37,16 +39,20 @@ function formatPct(value: number) {
   return `${sign}${formatNumber(value, 1)}%`;
 }
 
-function formatQueryBreakdown(rows: QueryChange[]) {
+function formatQueryBreakdown(
+  rows: QueryChange[],
+  title = "Queries που εξηγούν το εύρημα",
+  note?: string,
+) {
   if (!rows.length) return "";
 
-  const lines = rows.slice(0, 8).map((row, index) => {
+  const lines = rows.slice(0, 10).map((row, index) => {
     const currentPosition = row.currentPosition > 0 ? formatNumber(row.currentPosition, 1) : "—";
     const previousPosition = row.previousPosition > 0 ? formatNumber(row.previousPosition, 1) : "—";
     return `${index + 1}. ${row.query}\n   Clicks: ${formatNumber(row.previousClicks, 0)} → ${formatNumber(row.currentClicks, 0)} (${formatPct(row.clickChange)})\n   Impressions: ${formatNumber(row.previousImpressions, 0)} → ${formatNumber(row.currentImpressions, 0)} (${formatPct(row.impressionChange)})\n   Θέση: ${previousPosition} → ${currentPosition}\n   CTR: ${formatNumber(row.previousCtr * 100, 2)}% → ${formatNumber(row.currentCtr * 100, 2)}%`;
   });
 
-  return `Queries που άλλαξαν περισσότερο:\n${lines.join("\n\n")}`;
+  return `${title}:${note ? `\n${note}` : ""}\n${lines.join("\n\n")}`;
 }
 
 export default function CopySeoAdviceButton({
@@ -58,6 +64,8 @@ export default function CopySeoAdviceButton({
   page,
   query,
   queryBreakdown = [],
+  queryBreakdownTitle,
+  queryBreakdownNote,
 }: Props) {
   const [copied, setCopied] = useState(false);
 
@@ -70,7 +78,11 @@ export default function CopySeoAdviceButton({
       `Γιατί το λες: ${evidence}`,
       query ? `Query: ${query}` : "",
       page ? `Σελίδα: ${page}` : "",
-      formatQueryBreakdown(queryBreakdown),
+      formatQueryBreakdown(
+        queryBreakdown,
+        queryBreakdownTitle,
+        queryBreakdownNote,
+      ),
       "Θέλω να αξιολογήσεις τα παραπάνω πριν κάνουμε αλλαγή. Πες μου αν συμφωνείς με τη διάγνωση, ποια είναι η πιθανότερη αιτία και ποια ακριβώς αλλαγή αξίζει να κάνουμε πρώτη.",
     ].filter(Boolean);
 
