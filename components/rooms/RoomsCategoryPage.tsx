@@ -162,6 +162,19 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
           <p className="mt-4 text-pretty text-base leading-8 text-[#574b3f] sm:text-lg">
             {intro.description}
           </p>
+
+          {language === "el" ? (
+            <p className="mt-4 text-sm leading-7 text-[#6a5b4e] sm:text-base">
+              Θέλετε πρώτα να συγκρίνετε περιοχές και διαφορετικούς τύπους καταλύματος; Δείτε τον οδηγό για{" "}
+              <a
+                href="/el/xenodoxeia-xios/"
+                className="font-black text-amber-800 underline decoration-amber-300 underline-offset-4 transition hover:text-amber-900"
+              >
+                ξενοδοχεία στη Χίο
+              </a>
+              .
+            </p>
+          ) : null}
         </header>
 
         <div
