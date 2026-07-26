@@ -211,8 +211,8 @@ export function RatesPage({ data }: RatesPageProps) {
             <div className="overflow-hidden rounded-[1.5rem] border border-stone-200 bg-stone-50">
               <iframe
                 src={data.booking.iframeSrc}
-                className="block h-[980px] w-full border-0 max-md:h-[820px]"
-                style={{ minHeight: "820px" }}
+                className="block h-[3000px] w-full border-0 md:h-[2400px] xl:h-[2200px]"
+                style={{ minHeight: "2200px" }}
                 loading="lazy"
                 title={data.booking.iframeTitle}
               />
