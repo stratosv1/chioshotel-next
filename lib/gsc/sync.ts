@@ -26,15 +26,37 @@ const STANDARD_DATASETS = [
   { grain: "device", dimensions: ["date", "device"] },
 ] as const;
 
-const FEED_DATASETS = [
+const GOOGLE_NEWS_DATASETS = [
   { grain: "daily", dimensions: ["date"] },
   { grain: "page", dimensions: ["date", "page"] },
   { grain: "country", dimensions: ["date", "country"] },
   { grain: "device", dimensions: ["date", "device"] },
 ] as const;
 
+// Discover does not support grouping by device or query.
+const DISCOVER_DATASETS = [
+  { grain: "daily", dimensions: ["date"] },
+  { grain: "page", dimensions: ["date", "page"] },
+  { grain: "country", dimensions: ["date", "country"] },
+] as const;
+
 function datasetsForType(type: GscSearchType) {
-  return type === "discover" || type === "googleNews" ? FEED_DATASETS : STANDARD_DATASETS;
+  if (type === "discover") return DISCOVER_DATASETS;
+  if (type === "googleNews") return GOOGLE_NEWS_DATASETS;
+  return STANDARD_DATASETS;
+}
+
+function isUnsupportedDimensionError(error: unknown) {
+  const message = error instanceof Error ? error.message : String(error);
+  if (!message.includes("Search Console API failed (400)")) return false;
+  const normalized = message.toLowerCase();
+  return (
+    normalized.includes("cannot be grouped") ||
+    normalized.includes("cannot group") ||
+    normalized.includes("cannot be grouped by") ||
+    normalized.includes("not supported") ||
+    normalized.includes("invalid_argument")
+  );
 }
 
 function isoDate(date: Date) {
@@ -182,34 +204,42 @@ export async function syncSearchConsole(request: Request, options: GscSyncOption
       for (const dataset of datasetsForType(searchType)) {
         stage = `search-console:${searchType}:${dataset.grain}`;
         console.info(`[gsc-sync] stage ${stage}`);
-        const result = await queryAllSearchAnalytics(request, {
-          siteUrl,
-          startDate,
-          endDate,
-          dimensions: [...dataset.dimensions],
-          type: searchType,
-          dataState: "all",
-        });
 
-        const normalized = normalizeRows(
-          siteUrl,
-          searchType,
-          dataset.grain,
-          dataset.dimensions,
-          result.rows,
-          "all",
-          result.metadata?.first_incomplete_date,
-        );
+        try {
+          const result = await queryAllSearchAnalytics(request, {
+            siteUrl,
+            startDate,
+            endDate,
+            dimensions: [...dataset.dimensions],
+            type: searchType,
+            dataState: "all",
+          });
 
-        stage = `database:${searchType}:${dataset.grain}`;
-        await replaceGscDataset(siteUrl, searchType, dataset.grain, startDate, endDate, normalized);
-        rowsWritten += normalized.length;
-        datasets += 1;
+          const normalized = normalizeRows(
+            siteUrl,
+            searchType,
+            dataset.grain,
+            dataset.dimensions,
+            result.rows,
+            "all",
+            result.metadata?.first_incomplete_date,
+          );
+
+          stage = `database:${searchType}:${dataset.grain}`;
+          await replaceGscDataset(siteUrl, searchType, dataset.grain, startDate, endDate, normalized);
+          rowsWritten += normalized.length;
+          datasets += 1;
+        } catch (error) {
+          if (!isUnsupportedDimensionError(error) || dataset.grain === "daily") throw error;
+          const detail = error instanceof Error ? error.message : String(error);
+          const warning = `[${searchType}:${dataset.grain}] unsupported by Search Console API; skipped. ${detail}`;
+          warnings.push(warning);
+          console.warn(`[gsc-sync] optional dataset skipped ${warning}`);
+        }
       }
 
-      // Search appearance cannot be requested alongside other dimensions.
-      // Query one day at a time with searchAppearance as the only dimension,
-      // which preserves an accurate daily time series for the whole backfill window.
+      // Search appearance must be queried separately from other dimensions.
+      // Query one day at a time so the stored rows retain their actual date.
       stage = `search-console:${searchType}:search_appearance`;
       console.info(`[gsc-sync] stage ${stage}`);
       try {
