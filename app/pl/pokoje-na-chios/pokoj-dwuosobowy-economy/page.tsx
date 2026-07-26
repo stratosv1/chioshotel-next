@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { RoomDetailPage } from "@/components/rooms/RoomDetailPage";
+import { EconomyRoomDetailPage } from "@/components/rooms/EconomyRoomDetailPage";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { economyDoubleRoomsPl } from "@/content/room-details-pl";
 import { buildPolishRoomDetailSchema } from "@/content/room-detail-schema-pl";
@@ -16,7 +16,7 @@ export default function PolishEconomyRoomPage() {
   return (
     <>
       <JsonLd data={buildPolishRoomDetailSchema(economyDoubleRoomsPl)} />
-      <RoomDetailPage data={economyDoubleRoomsPl} />
+      <EconomyRoomDetailPage data={economyDoubleRoomsPl} />
     </>
   );
 }
