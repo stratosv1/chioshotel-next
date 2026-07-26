@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { DealsPageData } from "@/content/deals";
 
 type DealsPageProps = {
@@ -86,6 +86,25 @@ function Countdown({ data }: { data: DealsPageData }) {
 }
 
 export function DealsPage({ data }: DealsPageProps) {
+  const offersCarouselRef = useRef<HTMLDivElement>(null);
+  const isGreek = data.seo.canonicalPath.startsWith("/el/");
+
+  const introKicker = isGreek ? "Προσφορές διαμονής στη Χίο 2026" : data.intro.kicker;
+
+  function offerTags(tags: string[]) {
+    if (!isGreek) return tags;
+    return tags.filter((tag) => tag !== "Δωμάτια Χίος");
+  }
+
+  function scrollOffers(direction: -1 | 1) {
+    const carousel = offersCarouselRef.current;
+    if (!carousel) return;
+
+    const card = carousel.querySelector<HTMLElement>("[data-offer-card]");
+    const cardWidth = card?.offsetWidth ?? carousel.clientWidth * 0.9;
+    carousel.scrollBy({ left: direction * (cardWidth + 16), behavior: "smooth" });
+  }
+
   return (
     <main className="min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_top_left,rgba(142,102,7,.12),transparent_30rem),linear-gradient(180deg,#fffdfa_0%,#faf9f6_100%)] text-stone-800">
       <div className="relative z-10 border-b border-amber-800/15 bg-white px-4 py-3 text-center">
@@ -118,9 +137,9 @@ export function DealsPage({ data }: DealsPageProps) {
 
       <section className="px-0 py-16 md:py-20" aria-labelledby="deals-intro-title">
         <div className="mx-auto w-[min(1240px,calc(100%-40px))] max-md:w-[calc(100%-24px)]">
-          <header className="mx-auto mb-11 max-w-[840px] text-center">
+          <header className="mx-auto mb-8 max-w-[840px] text-center md:mb-11">
             <span className="inline-flex min-h-8 items-center rounded-full bg-[#f1eadc] px-4 text-[11px] font-black uppercase tracking-[0.12em] text-amber-800">
-              {data.intro.kicker}
+              {introKicker}
             </span>
             <h2 id="deals-intro-title" className="mt-4 text-[clamp(34px,5vw,62px)] font-black leading-none tracking-[-0.055em] text-amber-800">
               {data.intro.title}
@@ -128,9 +147,40 @@ export function DealsPage({ data }: DealsPageProps) {
             <p className="mx-auto mt-5 max-w-[760px] text-base leading-7 text-stone-600">{data.intro.description}</p>
           </header>
 
-          <div className="grid gap-8 lg:grid-cols-2">
+          <div className="mb-4 flex items-center justify-between lg:hidden">
+            <p className="text-[10px] font-black uppercase tracking-[0.14em] text-amber-800">
+              {isGreek ? "Σύρετε για περισσότερες προσφορές" : "Swipe for more offers"}
+            </p>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => scrollOffers(-1)}
+                aria-label={isGreek ? "Προηγούμενη προσφορά" : "Previous offer"}
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-amber-800/15 bg-white text-xl font-black text-amber-900 shadow-sm transition active:scale-95"
+              >
+                ←
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollOffers(1)}
+                aria-label={isGreek ? "Επόμενη προσφορά" : "Next offer"}
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-amber-800 text-xl font-black text-white shadow-md shadow-amber-900/15 transition active:scale-95"
+              >
+                →
+              </button>
+            </div>
+          </div>
+
+          <div
+            ref={offersCarouselRef}
+            className="-mx-3 flex snap-x snap-mandatory gap-4 overflow-x-auto px-3 pb-5 scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:-mx-4 sm:gap-5 sm:px-4 lg:mx-0 lg:grid lg:grid-cols-2 lg:gap-8 lg:overflow-visible lg:px-0 lg:pb-0"
+          >
             {data.offers.map((offer) => (
-              <article className="group overflow-hidden rounded-[2rem] border border-amber-800/15 bg-white shadow-xl shadow-stone-900/5 transition hover:-translate-y-1 hover:shadow-2xl hover:shadow-stone-900/10" key={offer.id}>
+              <article
+                data-offer-card
+                className="group min-w-[calc(100%-24px)] snap-center overflow-hidden rounded-[2rem] border border-amber-800/15 bg-white shadow-xl shadow-stone-900/5 transition hover:-translate-y-1 hover:shadow-2xl hover:shadow-stone-900/10 sm:min-w-[72%] lg:min-w-0"
+                key={offer.id}
+              >
                 <div className="h-[260px] overflow-hidden bg-stone-200 md:h-[360px]">
                   <img className="h-full w-full object-cover transition duration-700 group-hover:scale-105" src={offer.image} alt={offer.imageAlt} loading="lazy" />
                 </div>
@@ -143,7 +193,7 @@ export function DealsPage({ data }: DealsPageProps) {
                   <p className="mt-4 text-[15px] leading-7 text-stone-600">{offer.description}</p>
 
                   <div className="mt-6 flex flex-wrap justify-center gap-2" aria-label={`${offer.title} offer tags`}>
-                    {offer.tags.map((tag) => (
+                    {offerTags(offer.tags).map((tag) => (
                       <span className="inline-flex min-h-7 items-center rounded-full border border-amber-800/20 bg-white px-3 text-[9px] font-black uppercase tracking-[0.1em] text-amber-800" key={tag}>{tag}</span>
                     ))}
                   </div>
