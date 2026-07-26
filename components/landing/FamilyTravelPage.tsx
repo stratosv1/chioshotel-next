@@ -12,6 +12,16 @@ const primaryButton = `${buttonBase} bg-gradient-to-br from-[#a87842] to-[#8e660
 const secondaryButton = `${buttonBase} border border-amber-900/20 bg-white/90 text-amber-900`;
 const darkSecondaryButton = `${buttonBase} border border-white/25 bg-white/10 text-white`;
 
+const experiencesLabel: Record<FamilyTravelPageContent["locale"], string> = {
+  en: "Family experiences",
+  el: "Οικογενειακές εμπειρίες",
+  fr: "Expériences en famille",
+  de: "Familienerlebnisse",
+  it: "Esperienze in famiglia",
+  es: "Experiencias en familia",
+  tr: "Aile deneyimleri",
+};
+
 export default function FamilyTravelPage({ data }: FamilyTravelPageProps) {
   return (
     <main className="min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_top_left,rgba(168,120,66,.14),transparent_34rem),linear-gradient(180deg,#fffaf4_0%,#f4eadf_55%,#fffaf4_100%)] text-stone-800">
@@ -48,7 +58,7 @@ export default function FamilyTravelPage({ data }: FamilyTravelPageProps) {
       <section className="bg-white/70 py-16 md:py-20" aria-labelledby="family-cards-title">
         <div className="mx-auto w-[min(1180px,calc(100%-40px))] max-md:w-[calc(100%-24px)]">
           <header className="mx-auto mb-9 max-w-[820px] text-center">
-            <p className="mb-4 inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.16em] text-amber-900 before:h-px before:w-8 before:bg-current before:opacity-75">Family experiences</p>
+            <p className="mb-4 inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.16em] text-amber-900 before:h-px before:w-8 before:bg-current before:opacity-75">{experiencesLabel[data.locale]}</p>
             <h2 id="family-cards-title" className="m-0 text-[clamp(32px,4.6vw,58px)] font-black leading-none tracking-[-0.055em] text-stone-800">{data.cardsTitle}</h2>
             <p className="mx-auto mt-5 max-w-[760px] text-base leading-8 text-stone-600">{data.cardsIntro}</p>
           </header>
