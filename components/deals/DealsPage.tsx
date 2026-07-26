@@ -178,7 +178,7 @@ export function DealsPage({ data }: DealsPageProps) {
             {data.offers.map((offer) => (
               <article
                 data-offer-card
-                className="group min-w-[calc(100%-24px)] snap-center overflow-hidden rounded-[2rem] border border-amber-800/15 bg-white shadow-xl shadow-stone-900/5 transition hover:-translate-y-1 hover:shadow-2xl hover:shadow-stone-900/10 sm:min-w-[72%] lg:min-w-0"
+                className="group basis-[92%] shrink-0 snap-center overflow-hidden rounded-[2rem] border border-amber-800/15 bg-white shadow-xl shadow-stone-900/5 transition hover:-translate-y-1 hover:shadow-2xl hover:shadow-stone-900/10 sm:basis-[72%] lg:basis-auto lg:shrink"
                 key={offer.id}
               >
                 <div className="h-[260px] overflow-hidden bg-stone-200 md:h-[360px]">
