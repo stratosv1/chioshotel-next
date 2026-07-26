@@ -138,10 +138,19 @@ function getVillageDisplayName(title: string) {
   return title.split(":")[0].trim();
 }
 
+function getHeroDescription(village: VillageDetailData) {
+  if (village.seo.canonicalPath === "/de/doerfer-chios/olympoi-dorf/") {
+    return "Olympoi (auch Olympi oder Olimpi geschrieben) ist ein mittelalterliches Mastixdorf im Süden von Chios, nur wenige Kilometer von Mesta entfernt.";
+  }
+
+  return village.hero.description;
+}
+
 export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
   const language = getVillageLanguage(village);
   const copy = villageUiCopy[language];
   const villageName = getVillageDisplayName(village.hero.title);
+  const heroDescription = getHeroDescription(village);
 
   const relatedVillages = getVillageCollectionForLanguage(language).filter(
     (relatedVillage) => relatedVillage.seo.canonicalPath !== village.seo.canonicalPath,
@@ -174,7 +183,7 @@ export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
               {village.hero.title}
             </h1>
             <p className="mt-6 max-w-[650px] text-base font-semibold leading-8 text-white/90 md:text-lg">
-              {village.hero.description}
+              {heroDescription}
             </p>
             <div className="mt-7 flex flex-wrap gap-2" aria-label={copy.tagsLabel}>
               {village.hero.tags.map((tag) => (
@@ -199,7 +208,7 @@ export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
             {copy.answerTitlePrefix} {villageName}?
           </h2>
           <p className="mt-4 text-sm font-semibold leading-7 text-[#4d4238] md:text-lg md:leading-8">
-            {village.hero.description}
+            {heroDescription}
           </p>
           <ul className="mt-5 grid gap-2 md:grid-cols-2 md:gap-3">
             {village.highlights.items.slice(0, 4).map((item) => (
