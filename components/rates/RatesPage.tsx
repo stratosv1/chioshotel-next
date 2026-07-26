@@ -12,6 +12,20 @@ type RatesUiText = {
   openBooking: string;
 };
 
+type MobileBookingText = {
+  eyebrow: string;
+  title: string;
+  text: string;
+  categoryNote: string;
+  checkin: string;
+  nights: string;
+  adults: string;
+  children: string;
+  submit: string;
+  secureNote: string;
+  categories: Array<[string, string]>;
+};
+
 const ratesUiByLocale: Record<string, RatesUiText> = {
   en: {
     directBookingCode: "Exclusive direct booking code",
@@ -63,6 +77,113 @@ const ratesUiByLocale: Record<string, RatesUiText> = {
   },
 };
 
+const mobileBookingByLocale: Record<string, MobileBookingText> = {
+  en: {
+    eyebrow: "Secure booking by Beds24",
+    title: "Choose your stay details",
+    text: "On the next step you choose a room category, not a fixed room number.",
+    categoryNote: "A specific room can be requested and is subject to availability.",
+    checkin: "Check-in",
+    nights: "Nights",
+    adults: "Adults",
+    children: "Children",
+    submit: "Check availability & book",
+    secureNote: "Continues securely on Beds24 in this tab.",
+    categories: [["Economy", "Rooms 2, 6"], ["Ground Floor", "Rooms 5, 7"], ["First Floor", "Rooms 1, 3, 4"], ["Family Apartments", "8, 9, 10"]],
+  },
+  el: {
+    eyebrow: "Ασφαλής κράτηση μέσω Beds24",
+    title: "Επιλέξτε τα στοιχεία διαμονής",
+    text: "Στο επόμενο βήμα επιλέγετε κατηγορία δωματίου και όχι συγκεκριμένο αριθμό.",
+    categoryNote: "Μπορείτε να ζητήσετε συγκεκριμένο δωμάτιο, ανάλογα με τη διαθεσιμότητα.",
+    checkin: "Άφιξη",
+    nights: "Νύχτες",
+    adults: "Ενήλικες",
+    children: "Παιδιά",
+    submit: "Διαθεσιμότητα & κράτηση",
+    secureNote: "Η ασφαλής κράτηση συνεχίζεται στο Beds24 στο ίδιο tab.",
+    categories: [["Economy", "Δωμάτια 2, 6"], ["Ισόγειο", "Δωμάτια 5, 7"], ["1ος όροφος", "Δωμάτια 1, 3, 4"], ["Οικογενειακά διαμερίσματα", "8, 9, 10"]],
+  },
+  fr: {
+    eyebrow: "Réservation sécurisée via Beds24",
+    title: "Choisissez les détails du séjour",
+    text: "À l’étape suivante, vous choisissez une catégorie et non un numéro de chambre précis.",
+    categoryNote: "Une chambre précise peut être demandée selon disponibilité.",
+    checkin: "Arrivée",
+    nights: "Nuits",
+    adults: "Adultes",
+    children: "Enfants",
+    submit: "Voir les disponibilités",
+    secureNote: "La réservation sécurisée continue sur Beds24 dans le même onglet.",
+    categories: [["Economy", "Chambres 2, 6"], ["Rez-de-chaussée", "Chambres 5, 7"], ["1er étage", "Chambres 1, 3, 4"], ["Appartements familiaux", "8, 9, 10"]],
+  },
+  de: {
+    eyebrow: "Sichere Buchung über Beds24",
+    title: "Aufenthaltsdaten wählen",
+    text: "Im nächsten Schritt buchen Sie eine Zimmerkategorie, keine feste Zimmernummer.",
+    categoryNote: "Ein bestimmtes Zimmer kann je nach Verfügbarkeit angefragt werden.",
+    checkin: "Anreise",
+    nights: "Nächte",
+    adults: "Erwachsene",
+    children: "Kinder",
+    submit: "Verfügbarkeit prüfen",
+    secureNote: "Die sichere Buchung wird im selben Tab bei Beds24 fortgesetzt.",
+    categories: [["Economy", "Zimmer 2, 6"], ["Erdgeschoss", "Zimmer 5, 7"], ["1. Etage", "Zimmer 1, 3, 4"], ["Familienapartments", "8, 9, 10"]],
+  },
+  it: {
+    eyebrow: "Prenotazione sicura con Beds24",
+    title: "Scegli i dettagli del soggiorno",
+    text: "Nel passaggio successivo scegli una categoria, non un numero di camera specifico.",
+    categoryNote: "Puoi richiedere una camera specifica, secondo disponibilità.",
+    checkin: "Arrivo",
+    nights: "Notti",
+    adults: "Adulti",
+    children: "Bambini",
+    submit: "Verifica disponibilità",
+    secureNote: "La prenotazione sicura continua su Beds24 nella stessa scheda.",
+    categories: [["Economy", "Camere 2, 6"], ["Piano terra", "Camere 5, 7"], ["Primo piano", "Camere 1, 3, 4"], ["Appartamenti familiari", "8, 9, 10"]],
+  },
+  es: {
+    eyebrow: "Reserva segura con Beds24",
+    title: "Elige los datos de tu estancia",
+    text: "En el siguiente paso eliges una categoría, no un número de habitación concreto.",
+    categoryNote: "Puedes solicitar una habitación concreta, según disponibilidad.",
+    checkin: "Entrada",
+    nights: "Noches",
+    adults: "Adultos",
+    children: "Niños",
+    submit: "Ver disponibilidad",
+    secureNote: "La reserva segura continúa en Beds24 en la misma pestaña.",
+    categories: [["Economy", "Habitaciones 2, 6"], ["Planta baja", "Habitaciones 5, 7"], ["Primera planta", "Habitaciones 1, 3, 4"], ["Apartamentos familiares", "8, 9, 10"]],
+  },
+  tr: {
+    eyebrow: "Beds24 ile güvenli rezervasyon",
+    title: "Konaklama bilgilerinizi seçin",
+    text: "Sonraki adımda belirli bir oda numarası değil, oda kategorisi seçersiniz.",
+    categoryNote: "Belirli bir oda talep edilebilir; müsaitliğe bağlıdır.",
+    checkin: "Giriş",
+    nights: "Gece",
+    adults: "Yetişkin",
+    children: "Çocuk",
+    submit: "Müsaitliği kontrol et",
+    secureNote: "Güvenli rezervasyon aynı sekmede Beds24 üzerinde devam eder.",
+    categories: [["Economy", "Odalar 2, 6"], ["Zemin kat", "Odalar 5, 7"], ["1. kat", "Odalar 1, 3, 4"], ["Aile daireleri", "8, 9, 10"]],
+  },
+  pl: {
+    eyebrow: "Bezpieczna rezerwacja przez Beds24",
+    title: "Wybierz szczegóły pobytu",
+    text: "W kolejnym kroku wybierasz kategorię, a nie konkretny numer pokoju.",
+    categoryNote: "Możesz poprosić o konkretny pokój, zależnie od dostępności.",
+    checkin: "Przyjazd",
+    nights: "Noce",
+    adults: "Dorośli",
+    children: "Dzieci",
+    submit: "Sprawdź dostępność",
+    secureNote: "Bezpieczna rezerwacja jest kontynuowana w Beds24 w tej samej karcie.",
+    categories: [["Economy", "Pokoje 2, 6"], ["Parter", "Pokoje 5, 7"], ["Piętro", "Pokoje 1, 3, 4"], ["Apartamenty rodzinne", "8, 9, 10"]],
+  },
+};
+
 function getRatesLocale(path: string) {
   const locale = path.split("/").filter(Boolean)[0];
   return locale && ratesUiByLocale[locale] ? locale : "en";
@@ -103,7 +224,12 @@ function renderSeoParagraph(text: string, links: RatesPageData["seoCopy"]["links
 }
 
 export function RatesPage({ data }: RatesPageProps) {
-  const ui = ratesUiByLocale[getRatesLocale(data.seo.canonicalPath)];
+  const locale = getRatesLocale(data.seo.canonicalPath);
+  const ui = ratesUiByLocale[locale];
+  const mobileBooking = mobileBookingByLocale[locale];
+  const beds24Url = new URL(data.booking.iframeSrc);
+  const beds24Action = `${beds24Url.origin}${beds24Url.pathname}`;
+  const beds24PropId = beds24Url.searchParams.get("propid") ?? "";
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-gradient-to-b from-[#fcfaf8] to-[#f5f0ea] text-stone-800">
@@ -202,19 +328,79 @@ export function RatesPage({ data }: RatesPageProps) {
               </div>
 
               <a
-                className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-full border border-stone-200 bg-[#efe6d8] px-5 text-[11px] font-black uppercase tracking-[0.1em] text-[#a15d33]"
+                className="hidden min-h-12 shrink-0 items-center justify-center rounded-full border border-stone-200 bg-[#efe6d8] px-5 text-[11px] font-black uppercase tracking-[0.1em] text-[#a15d33] md:inline-flex"
                 href={data.booking.fallbackHref}
-                target="_blank"
-                rel="noopener noreferrer"
               >
                 {ui.openBooking}
               </a>
             </header>
 
-            <div className="w-full bg-stone-50 md:rounded-[1.5rem] md:border md:border-stone-200">
+            <section className="mx-4 mb-5 rounded-[1.75rem] border border-stone-200 bg-[#fffaf5] p-4 shadow-sm md:hidden" aria-label={mobileBooking.title}>
+              <span className="inline-flex min-h-7 items-center rounded-full bg-[#efe6d8] px-3 text-[10px] font-black uppercase tracking-[0.11em] text-[#a15d33]">
+                {mobileBooking.eyebrow}
+              </span>
+              <h3 className="mt-3 text-xl font-black tracking-[-0.03em] text-stone-900">{mobileBooking.title}</h3>
+              <p className="mt-1 text-sm leading-6 text-stone-600">{mobileBooking.text}</p>
+
+              <div className="-mx-1 mt-3 flex snap-x gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                {mobileBooking.categories.map(([name, rooms]) => (
+                  <div key={name} className="min-w-[57%] snap-start rounded-2xl border border-stone-200 bg-white px-3 py-2.5">
+                    <strong className="block text-sm font-black text-stone-800">{name}</strong>
+                    <span className="mt-0.5 block text-xs font-semibold text-stone-500">{rooms}</span>
+                  </div>
+                ))}
+              </div>
+              <p className="mt-2 text-xs leading-5 text-stone-500">{mobileBooking.categoryNote}</p>
+
+              <form method="get" action={beds24Action} className="mt-4 grid grid-cols-2 gap-3">
+                <input type="hidden" name="propid" value={beds24PropId} />
+                <input type="hidden" name="referer" value="website-mobile" />
+                <input type="hidden" name="mobile" value="1" />
+                <input type="hidden" name="lang" value={locale} />
+
+                <label className="col-span-2 grid gap-1.5 text-xs font-black uppercase tracking-[0.06em] text-stone-600">
+                  {mobileBooking.checkin}
+                  <input
+                    type="date"
+                    name="checkin"
+                    required
+                    className="min-h-12 w-full rounded-xl border border-stone-300 bg-white px-3 text-base font-semibold normal-case tracking-normal text-stone-800 outline-none focus:border-[#a15d33] focus:ring-2 focus:ring-[#a15d33]/15"
+                  />
+                </label>
+
+                <label className="grid gap-1.5 text-xs font-black uppercase tracking-[0.06em] text-stone-600">
+                  {mobileBooking.nights}
+                  <select name="numnight" defaultValue="2" className="min-h-12 rounded-xl border border-stone-300 bg-white px-3 text-base font-semibold normal-case tracking-normal text-stone-800 outline-none focus:border-[#a15d33]">
+                    {Array.from({ length: 14 }, (_, index) => index + 1).map((night) => <option key={night} value={night}>{night}</option>)}
+                  </select>
+                </label>
+
+                <label className="grid gap-1.5 text-xs font-black uppercase tracking-[0.06em] text-stone-600">
+                  {mobileBooking.adults}
+                  <select name="numadult" defaultValue="2" className="min-h-12 rounded-xl border border-stone-300 bg-white px-3 text-base font-semibold normal-case tracking-normal text-stone-800 outline-none focus:border-[#a15d33]">
+                    {[1, 2, 3, 4, 5].map((count) => <option key={count} value={count}>{count}</option>)}
+                  </select>
+                </label>
+
+                <label className="col-span-2 grid gap-1.5 text-xs font-black uppercase tracking-[0.06em] text-stone-600">
+                  {mobileBooking.children}
+                  <select name="numchild" defaultValue="0" className="min-h-12 rounded-xl border border-stone-300 bg-white px-3 text-base font-semibold normal-case tracking-normal text-stone-800 outline-none focus:border-[#a15d33]">
+                    {[0, 1, 2, 3, 4].map((count) => <option key={count} value={count}>{count}</option>)}
+                  </select>
+                </label>
+
+                <button type="submit" className="col-span-2 min-h-14 rounded-2xl bg-[#a15d33] px-5 text-sm font-black uppercase tracking-[0.07em] text-white shadow-lg shadow-[#a15d33]/20 active:scale-[0.99]">
+                  {mobileBooking.submit}
+                </button>
+              </form>
+
+              <p className="mt-2 text-center text-[11px] font-semibold leading-5 text-stone-500">{mobileBooking.secureNote}</p>
+            </section>
+
+            <div className="hidden w-full bg-stone-50 md:block md:rounded-[1.5rem] md:border md:border-stone-200">
               <iframe
                 src={data.booking.iframeSrc}
-                className="block h-[7000px] w-full border-0 md:h-[5600px] xl:h-[5200px]"
+                className="block h-[5600px] w-full border-0 xl:h-[5200px]"
                 style={{ minHeight: "5200px" }}
                 scrolling="yes"
                 loading="lazy"
