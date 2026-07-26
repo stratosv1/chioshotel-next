@@ -1,22 +1,24 @@
 import type { Metadata } from "next";
 import { DealsPage } from "@/components/deals/DealsPage";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { dealsPageEn } from "@/content/deals";
+import { getDealsIntentData } from "@/content/deals-intent";
 import { buildDealsSchema } from "@/content/deals-schema";
 import { buildPageMetadata } from "@/lib/seo";
 
+const data = getDealsIntentData("en");
+
 export const metadata: Metadata = buildPageMetadata({
-  path: dealsPageEn.seo.canonicalPath,
-  title: dealsPageEn.seo.title,
-  description: dealsPageEn.seo.description,
-  image: dealsPageEn.seo.ogImage,
+  path: data.seo.canonicalPath,
+  title: data.seo.title,
+  description: data.seo.description,
+  image: data.seo.ogImage,
 });
 
 export default function Page() {
   return (
     <>
-      <JsonLd data={buildDealsSchema(dealsPageEn)} />
-      <DealsPage data={dealsPageEn} />
+      <JsonLd data={buildDealsSchema(data)} />
+      <DealsPage data={data} />
     </>
   );
 }
