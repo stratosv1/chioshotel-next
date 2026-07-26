@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { RoomDetailPage } from "@/components/rooms/RoomDetailPage";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { familyChiosApartmentsPl, type RoomDetailData } from "@/content/room-details-pl";
+import type { RoomDetailData } from "@/content/room-details";
+import { familyChiosApartmentsPl } from "@/content/room-details-pl";
 import { buildPolishRoomDetailSchema } from "@/content/room-detail-schema-pl";
 import { buildPolishPageMetadata } from "@/lib/seo-pl";
 
