@@ -90,6 +90,7 @@ export type GscSyncOptions = {
 };
 
 export async function syncSearchConsole(request: Request, options: GscSyncOptions = {}) {
+  let stage = "database:init";
   await ensureGscTables();
 
   const siteUrl = options.siteUrl || PRIMARY_SITE;
@@ -98,19 +99,30 @@ export async function syncSearchConsole(request: Request, options: GscSyncOption
   const startDate = options.startDate || isoDate(subtractDays(new Date(`${endDate}T00:00:00Z`), 34));
   const searchTypes = options.searchTypes?.length ? options.searchTypes : [...GSC_SEARCH_TYPES];
 
+  stage = "database:start-run";
   const runId = await startGscSyncRun(siteUrl, startDate, endDate);
   let rowsWritten = 0;
   let datasets = 0;
 
   try {
+    stage = "search-console:list-sites";
+    console.info(`[gsc-sync] stage ${stage}`);
     const sites = await listSearchConsoleSites(request);
+
+    stage = "database:save-properties";
     await savePropertiesSnapshot(sites.siteEntry || []);
 
+    stage = "search-console:list-sitemaps";
+    console.info(`[gsc-sync] stage ${stage}`);
     const sitemaps = await listSearchConsoleSitemaps(request, siteUrl);
+
+    stage = "database:save-sitemaps";
     await saveSitemapsSnapshot(siteUrl, sitemaps.sitemap || []);
 
     for (const searchType of searchTypes) {
       for (const dataset of datasetsForType(searchType)) {
+        stage = `search-console:${searchType}:${dataset.grain}`;
+        console.info(`[gsc-sync] stage ${stage}`);
         const result = await queryAllSearchAnalytics(request, {
           siteUrl,
           startDate,
@@ -130,17 +142,21 @@ export async function syncSearchConsole(request: Request, options: GscSyncOption
           result.metadata?.first_incomplete_date,
         );
 
+        stage = `database:${searchType}:${dataset.grain}`;
         await replaceGscDataset(siteUrl, searchType, dataset.grain, startDate, endDate, normalized);
         rowsWritten += normalized.length;
         datasets += 1;
       }
     }
 
+    stage = "database:finish-run";
     await finishGscSyncRun(runId, "success", rowsWritten, datasets);
     return { ok: true, siteUrl, startDate, endDate, rowsWritten, datasets, searchTypes };
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
+    const rawMessage = error instanceof Error ? error.message : String(error);
+    const message = `[${stage}] ${rawMessage}`;
+    console.error(`[gsc-sync] stage failed ${message}`);
     await finishGscSyncRun(runId, "failed", rowsWritten, datasets, message);
-    throw error;
+    throw new Error(message, { cause: error });
   }
 }
