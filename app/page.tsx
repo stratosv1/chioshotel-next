@@ -2,18 +2,12 @@ import type { Metadata } from "next";
 import { HomePageTailwindV3 } from "@/components/home/HomePageTailwindV3";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { homePageEn } from "@/content/home";
-import { withUpdatedIntroReasons } from "@/content/homeIntroReasons";
 import { buildHomePageSchema } from "@/content/schema";
+import { withHomepageSeoIntent } from "@/lib/homepage-seo-intent";
 
 export const revalidate = 3600;
 
-const homePageData = withUpdatedIntroReasons({
-  ...homePageEn,
-  seo: {
-    ...homePageEn.seo,
-    title: "Voulamandis House | Rooms & Apartments in Chios",
-  },
-});
+const homePageData = withHomepageSeoIntent(homePageEn, "en");
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://chioshotel.gr"),
