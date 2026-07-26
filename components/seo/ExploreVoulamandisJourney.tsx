@@ -38,7 +38,7 @@ const COPY: Record<SiteLanguage, {
     house: "Διαμονή στη Χίο",
     rooms: "Δωμάτια & διαμερίσματα",
     rates: "Απευθείας τιμές",
-    hotelsGuide: "Σύγκριση ξενοδοχείων & περιοχών",
+    hotelsGuide: "Ξενοδοχεία στη Χίο & περιοχές",
   },
   fr: {
     kicker: "Organisez la suite de votre séjour à Chios",
