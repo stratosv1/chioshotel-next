@@ -1,11 +1,11 @@
 ﻿import type { Metadata } from "next";
 import FamilyTravelPage from "@/components/landing/FamilyTravelPage";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { getFamilyTravelPageByLocale } from "@/content/family-travel";
+import { getFamilyTravelIntentData } from "@/content/family-travel-intent";
 import { buildLandingPageSchema } from "@/content/landing-schema";
 import { absoluteUrl, buildPageMetadata } from "@/lib/seo";
 
-const data = getFamilyTravelPageByLocale("en");
+const data = getFamilyTravelIntentData("en");
 
 export const metadata: Metadata = {
   ...buildPageMetadata({
