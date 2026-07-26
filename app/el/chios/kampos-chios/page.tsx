@@ -7,8 +7,9 @@ import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
   path: kamposChiosPageEl.seo.canonicalPath,
-  title: kamposChiosPageEl.seo.title,
-  description: kamposChiosPageEl.seo.description,
+  title: "Διαμονή στον Κάμπο Χίου | Δωμάτια & Διαμερίσματα",
+  description:
+    "Διαμονή στον Κάμπο Χίου στο Voulamandis House. Ήσυχα ενοικιαζόμενα δωμάτια και οικογενειακά διαμερίσματα ανάμεσα σε περιβόλια, κοντά σε πόλη, αεροδρόμιο και παραλίες.",
   image: kamposChiosPageEl.seo.ogImage,
   imageAlt: "Voulamandis House και διαμονή στον Κάμπο της Χίου",
 });
