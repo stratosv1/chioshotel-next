@@ -7,18 +7,32 @@ import { xenodoxeiaXiosGuide } from "@/content/xenodoxeia-xios-guide";
 import { chiosHotelsGuideLanguages } from "@/lib/chios-hotels-guide-i18n";
 import { absoluteUrl, buildPageMetadata } from "@/lib/seo";
 
+const greekHotelGuideData = {
+  ...xenodoxeiaXiosGuide,
+  seo: {
+    ...xenodoxeiaXiosGuide.seo,
+    title: "Ξενοδοχεία στη Χίο | Περιοχές, Τιμές & Πού να Μείνετε",
+    description:
+      "Ψάχνετε ξενοδοχεία στη Χίο; Συγκρίνετε περιοχές, τύπους διαμονής, δωμάτια και διαμερίσματα και δείτε ποια επιλογή ταιριάζει καλύτερα στο ταξίδι σας.",
+  },
+  hero: {
+    ...xenodoxeiaXiosGuide.hero,
+    title: "Ξενοδοχεία στη Χίο: πού να μείνετε, περιοχές και επιλογές διαμονής",
+  },
+};
+
 const baseMetadata = buildPageMetadata({
-  path: xenodoxeiaXiosGuide.seo.canonicalPath,
-  title: xenodoxeiaXiosGuide.seo.title,
-  description: xenodoxeiaXiosGuide.seo.description,
-  image: xenodoxeiaXiosGuide.seo.image,
-  imageAlt: xenodoxeiaXiosGuide.seo.imageAlt,
+  path: greekHotelGuideData.seo.canonicalPath,
+  title: greekHotelGuideData.seo.title,
+  description: greekHotelGuideData.seo.description,
+  image: greekHotelGuideData.seo.image,
+  imageAlt: greekHotelGuideData.seo.imageAlt,
 });
 
 export const metadata: Metadata = {
   ...baseMetadata,
   alternates: {
-    canonical: absoluteUrl(xenodoxeiaXiosGuide.seo.canonicalPath),
+    canonical: absoluteUrl(greekHotelGuideData.seo.canonicalPath),
     languages: chiosHotelsGuideLanguages(),
   },
 };
@@ -26,9 +40,9 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <>
-      <JsonLd data={buildLocalizedChiosHotelsGuideSchema(xenodoxeiaXiosGuide, "el")} />
-      <LocalizedChiosHotelsGuidePage data={xenodoxeiaXiosGuide} locale="el" />
-      <LocalizedChiosHotelsGuideAnalytics locale="el" pathname={xenodoxeiaXiosGuide.seo.canonicalPath} />
+      <JsonLd data={buildLocalizedChiosHotelsGuideSchema(greekHotelGuideData, "el")} />
+      <LocalizedChiosHotelsGuidePage data={greekHotelGuideData} locale="el" />
+      <LocalizedChiosHotelsGuideAnalytics locale="el" pathname={greekHotelGuideData.seo.canonicalPath} />
     </>
   );
 }
