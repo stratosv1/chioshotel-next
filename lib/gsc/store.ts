@@ -116,44 +116,10 @@ export async function finishGscSyncRun(
   `;
 }
 
-export async function replaceGscDataset(
-  siteUrl: string,
-  searchType: string,
-  grain: string,
-  startDate: string,
-  endDate: string,
-  rows: StoredGscRow[],
-) {
+async function insertGscChunk(rows: StoredGscRow[]) {
+  if (!rows.length) return;
   const sql = getSql();
-  const payload = JSON.stringify(rows);
-
   await sql`
-    with removed as (
-      delete from gsc_search_analytics
-      where site_url = ${siteUrl}
-        and search_type = ${searchType}
-        and grain = ${grain}
-        and date between ${startDate}::date and ${endDate}::date
-    ), incoming as (
-      select *
-      from jsonb_to_recordset(${payload}::jsonb) as x(
-        "siteUrl" text,
-        "searchType" text,
-        grain text,
-        date text,
-        query text,
-        page text,
-        country text,
-        device text,
-        "searchAppearance" text,
-        clicks double precision,
-        impressions double precision,
-        ctr double precision,
-        position double precision,
-        "dataState" text,
-        "isIncomplete" boolean
-      )
-    )
     insert into gsc_search_analytics (
       site_url, search_type, grain, date, query, page, country, device, search_appearance,
       clicks, impressions, ctr, position, data_state, is_incomplete, updated_at
@@ -161,7 +127,23 @@ export async function replaceGscDataset(
     select
       "siteUrl", "searchType", grain, date::date, query, page, country, device, "searchAppearance",
       clicks, impressions, ctr, position, "dataState", "isIncomplete", now()
-    from incoming
+    from jsonb_to_recordset(${JSON.stringify(rows)}::jsonb) as x(
+      "siteUrl" text,
+      "searchType" text,
+      grain text,
+      date text,
+      query text,
+      page text,
+      country text,
+      device text,
+      "searchAppearance" text,
+      clicks double precision,
+      impressions double precision,
+      ctr double precision,
+      position double precision,
+      "dataState" text,
+      "isIncomplete" boolean
+    )
     on conflict (site_url, search_type, grain, date, query, page, country, device, search_appearance)
     do update set
       clicks = excluded.clicks,
@@ -172,6 +154,29 @@ export async function replaceGscDataset(
       is_incomplete = excluded.is_incomplete,
       updated_at = now()
   `;
+}
+
+export async function replaceGscDataset(
+  siteUrl: string,
+  searchType: string,
+  grain: string,
+  startDate: string,
+  endDate: string,
+  rows: StoredGscRow[],
+) {
+  const sql = getSql();
+  await sql`
+    delete from gsc_search_analytics
+    where site_url = ${siteUrl}
+      and search_type = ${searchType}
+      and grain = ${grain}
+      and date between ${startDate}::date and ${endDate}::date
+  `;
+
+  const chunkSize = 1_000;
+  for (let index = 0; index < rows.length; index += chunkSize) {
+    await insertGscChunk(rows.slice(index, index + chunkSize));
+  }
 }
 
 export async function savePropertiesSnapshot(entries: Array<{ siteUrl: string; permissionLevel: string }>) {
