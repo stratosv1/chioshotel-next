@@ -17,7 +17,7 @@ import {
 
 const PRIMARY_SITE = "sc-domain:chioshotel.gr";
 
-const DATASETS = [
+const STANDARD_DATASETS = [
   { grain: "daily", dimensions: ["date"] },
   { grain: "query", dimensions: ["date", "query"] },
   { grain: "page", dimensions: ["date", "page"] },
@@ -26,6 +26,18 @@ const DATASETS = [
   { grain: "device", dimensions: ["date", "device"] },
   { grain: "search_appearance", dimensions: ["date", "searchAppearance"] },
 ] as const;
+
+const FEED_DATASETS = [
+  { grain: "daily", dimensions: ["date"] },
+  { grain: "page", dimensions: ["date", "page"] },
+  { grain: "country", dimensions: ["date", "country"] },
+  { grain: "device", dimensions: ["date", "device"] },
+  { grain: "search_appearance", dimensions: ["date", "searchAppearance"] },
+] as const;
+
+function datasetsForType(type: GscSearchType) {
+  return type === "discover" || type === "googleNews" ? FEED_DATASETS : STANDARD_DATASETS;
+}
 
 function isoDate(date: Date) {
   return date.toISOString().slice(0, 10);
@@ -98,7 +110,7 @@ export async function syncSearchConsole(request: Request, options: GscSyncOption
     await saveSitemapsSnapshot(siteUrl, sitemaps.sitemap || []);
 
     for (const searchType of searchTypes) {
-      for (const dataset of DATASETS) {
+      for (const dataset of datasetsForType(searchType)) {
         const result = await queryAllSearchAnalytics(request, {
           siteUrl,
           startDate,
