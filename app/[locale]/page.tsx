@@ -60,7 +60,7 @@ function withGreekHomepageCopy(data: HomePageData): HomePageData {
         ...data.intro.left,
         title: "Αυθεντική φιλοξενία στο Voulamandis House",
         bodyHtml:
-          'Το Voulamandis House συνδυάζει ήρεμο περιβάλλον, περιβόλια εσπεριδοειδών και προσωπική φιλοξενία. Είναι μια ζεστή βάση για ζευγάρια και οικογένειες που θέλουν να γνωρίσουν τη Χίο και να επιστρέφουν σε ένα ήσυχο μέρος στο τέλος της ημέρας. Ανακαλύψτε γιατί η <a href="/el/chios/kampos-chios/" class="font-semibold text-amber-800 underline decoration-amber-300 underline-offset-4 transition-colors hover:text-amber-900">διαμονή στον Κάμπο της Χίου</a> είναι μια ξεχωριστή επιλογή.',
+          'Το Voulamandis House συνδυάζει ήρεμο περιβάλλον, περιβόλια εσπεριδοειδών και προσωπική φιλοξενία. Είναι μια ζεστή βάση για ζευγάρια και οικογένειες που θέλουν να γνωρίσουν τη Χίο και να επιστρέφουν σε ένα ήσυχο μέρος στο τέλος της ημέρας. Ανακαλύψτε γιατί η <a href="/el/chios/kampos-chios/" class="font-semibold text-amber-800 underline decoration-amber-300 underline-offset-4 transition-colors hover:text-amber-900">διαμονή στον Κάμπο της Χίου</a> είναι μια ξεχωριστή επιλογή. Αν συγκρίνετε <a href="/el/xenodoxeia-xios/" class="font-semibold text-amber-800 underline decoration-amber-300 underline-offset-4 transition-colors hover:text-amber-900">ξενοδοχεία στη Χίο</a> και άλλους τύπους διαμονής, δείτε τον αναλυτικό οδηγό μας πριν αποφασίσετε περιοχή και κατάλυμα.',
       },
     },
     roomsPreview: {
