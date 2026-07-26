@@ -6,6 +6,20 @@ type HomePageTailwindV3Props = {
 };
 
 export function HomePageTailwindV3({ data }: HomePageTailwindV3Props) {
+  const renderedData: HomePageData =
+    data.seo.canonicalPath === "/el/"
+      ? {
+          ...data,
+          intro: {
+            ...data.intro,
+            left: {
+              ...data.intro.left,
+              bodyHtml: `${data.intro.left.bodyHtml} Για περισσότερες επιλογές και χρήσιμες πληροφορίες πριν την κράτηση, δείτε τον οδηγό μας για <a href="/el/diamoni-sti-xio/" class="font-semibold text-amber-800 underline decoration-amber-300 underline-offset-4 transition-colors hover:text-amber-900">Διαμονή στη Χίο</a>.`,
+            },
+          },
+        }
+      : data;
+
   return (
     <>
       <style>{`
@@ -66,7 +80,7 @@ export function HomePageTailwindV3({ data }: HomePageTailwindV3Props) {
           }
         }
       `}</style>
-      <HomePageTailwind data={data} />
+      <HomePageTailwind data={renderedData} />
     </>
   );
 }
