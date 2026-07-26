@@ -12,6 +12,10 @@
     {
       "path": "/api/cron/housekeeping-daily-arrivals-sms/",
       "schedule": "0 4 * * *"
+    },
+    {
+      "path": "/api/seo/gsc/sync/",
+      "schedule": "20 5 * * *"
     }
   ]
 }
