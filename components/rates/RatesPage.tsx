@@ -131,7 +131,7 @@ export function RatesPage({ data }: RatesPageProps) {
 
       <section className="py-10 md:py-14">
         <div className="mx-auto grid w-[min(1220px,calc(100%-40px))] gap-7 lg:grid-cols-2">
-          <article className="rounded-[2rem] border border-stone-200 bg-white p-[clamp(26px,4vw,38px)] shadow-xl shadow-stone-900/5">
+          <article className="min-w-0 rounded-[2rem] border border-stone-200 bg-white p-[clamp(26px,4vw,38px)] shadow-xl shadow-stone-900/5">
             <span className="mb-5 inline-flex min-h-8 items-center rounded-full bg-[#efe6d8] px-4 text-[11px] font-black uppercase tracking-[0.12em] text-[#a15d33]">
               {data.benefits.kicker}
             </span>
@@ -140,10 +140,13 @@ export function RatesPage({ data }: RatesPageProps) {
             </h2>
             <p className="mt-4 text-[15.5px] leading-7 text-stone-600">{data.benefits.text}</p>
 
-            <div className="mt-6 grid gap-3">
+            <div className="-mx-3 mt-6 flex snap-x snap-mandatory gap-3 overflow-x-auto px-3 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:grid-cols-2 md:overflow-visible md:px-0 md:pb-0">
               {data.benefits.items.map((item) => (
-                <div className="flex items-start gap-4 rounded-2xl border border-stone-200 bg-[#fcfaf8] p-4" key={item.title}>
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#c47646]/10 text-lg" aria-hidden="true">
+                <div
+                  className="flex min-w-[86%] snap-start items-start gap-4 rounded-2xl border border-stone-200 bg-[#fcfaf8] p-4 shadow-sm md:min-w-0"
+                  key={item.title}
+                >
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#c47646]/10 text-lg" aria-hidden="true">
                     {item.icon}
                   </span>
                   <div>
