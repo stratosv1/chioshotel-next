@@ -12,10 +12,15 @@ import {
   homePageTr,
 } from "@/content/home";
 import type { HomePageData } from "@/content/home";
-import { withUpdatedIntroReasons } from "@/content/homeIntroReasons";
 import { buildHomePageSchema } from "@/content/schema";
 import { buildPageMetadata } from "@/lib/seo";
-import { defaultLanguage, isLanguageCode, languages } from "@/lib/languages";
+import { withHomepageSeoIntent } from "@/lib/homepage-seo-intent";
+import {
+  defaultLanguage,
+  isLanguageCode,
+  languages,
+  type LanguageCode,
+} from "@/lib/languages";
 
 export const revalidate = 3600;
 
@@ -29,145 +34,18 @@ const localizedLanguages = languages.filter(
   (language) => language.code !== defaultLanguage,
 );
 
-function withSeoTitle(data: HomePageData, title: string): HomePageData {
-  return withUpdatedIntroReasons({
-    ...data,
-    seo: {
-      ...data.seo,
-      title,
-    },
-  });
-}
+const homePages: Record<LanguageCode, HomePageData> = {
+  en: homePageEn,
+  el: homePageEl,
+  fr: homePageFr,
+  de: homePageDe,
+  it: homePageIt,
+  es: homePageEs,
+  tr: homePageTr,
+};
 
-function withGreekHomepageCopy(data: HomePageData): HomePageData {
-  return withUpdatedIntroReasons({
-    ...data,
-    seo: {
-      ...data.seo,
-      title: "Voulamandis House | Αυθεντική Φιλοξενία στη Χίο",
-      description:
-        "Επίσημη ιστοσελίδα του Voulamandis House στη Χίο. Αυθεντική φιλοξενία, ήσυχος κήπος, δωμάτια και οικογενειακά διαμερίσματα κοντά σε πόλη, αεροδρόμιο και παραλίες.",
-    },
-    hero: {
-      ...data.hero,
-      title: "Voulamandis House – Αυθεντική φιλοξενία στη Χίο",
-      descriptionHtml:
-        'Ήσυχη και προσωπική φιλοξενία στον ιστορικό Κάμπο της Χίου, κοντά στην πόλη, το αεροδρόμιο και τις παραλίες. Δείτε όλες τις επιλογές για <a href="/el/domatia-xios/" class="font-semibold text-white underline decoration-amber-300 underline-offset-4 transition-colors hover:text-amber-100">δωμάτια και διαμερίσματα στη Χίο</a> και επιλέξτε την κατηγορία που ταιριάζει στο ταξίδι σας.',
-    },
-    intro: {
-      ...data.intro,
-      left: {
-        ...data.intro.left,
-        title: "Αυθεντική φιλοξενία στο Voulamandis House",
-        bodyHtml:
-          'Το Voulamandis House συνδυάζει ήρεμο περιβάλλον, περιβόλια εσπεριδοειδών και προσωπική φιλοξενία. Είναι μια ζεστή βάση για ζευγάρια και οικογένειες που θέλουν να γνωρίσουν τη Χίο και να επιστρέφουν σε ένα ήσυχο μέρος στο τέλος της ημέρας. Ανακαλύψτε γιατί η <a href="/el/chios/kampos-chios/" class="font-semibold text-amber-800 underline decoration-amber-300 underline-offset-4 transition-colors hover:text-amber-900">διαμονή στον Κάμπο της Χίου</a> είναι μια ξεχωριστή επιλογή. Αν συγκρίνετε <a href="/el/xenodoxeia-xios/" class="font-semibold text-amber-800 underline decoration-amber-300 underline-offset-4 transition-colors hover:text-amber-900">ξενοδοχεία στη Χίο</a> και άλλους τύπους διαμονής, δείτε τον αναλυτικό οδηγό μας πριν αποφασίσετε περιοχή και κατάλυμα.',
-      },
-    },
-    roomsPreview: {
-      ...data.roomsPreview,
-      kicker: "Δωμάτια & διαμερίσματα Voulamandis House",
-      title: "Επιλέξτε την κατηγορία που ταιριάζει στο ταξίδι σας",
-      text: "Από οικονομικά δίκλινα έως άνετα δωμάτια και οικογενειακά διαμερίσματα, δείτε τις διαθέσιμες κατηγορίες και βρείτε την κατάλληλη επιλογή για τη διαμονή σας.",
-      sideCard: {
-        ...data.roomsPreview.sideCard,
-        kicker: "Όλες οι επιλογές σε μία σελίδα",
-        title: "Συγκρίνετε δωμάτια και διαμερίσματα",
-        text: "Δείτε συγκεντρωμένα τις κατηγορίες, τη χωρητικότητα και τα βασικά χαρακτηριστικά τους πριν επιλέξετε το δωμάτιο που σας ταιριάζει.",
-      },
-    },
-  });
-}
-
-function withFrenchHomepageCopy(data: HomePageData): HomePageData {
-  return {
-    ...data,
-    hero: {
-      ...data.hero,
-      title: "Chambres et appartements à Chios, au cœur de Kambos",
-      descriptionHtml:
-        "Vous recherchez des <strong>chambres à Chios</strong> ou un <strong>appartement à Chios</strong> ? <strong>Voulamandis House</strong> vous accueille à Kambos avec des chambres confortables, des appartements familiaux et une atmosphère paisible.",
-      imageAlt:
-        "Chambres et appartements à Chios - Voulamandis House à Kambos",
-    },
-    intro: {
-      ...data.intro,
-      left: {
-        ...data.intro.left,
-        bodyHtml:
-          "Vous recherchez des <strong>chambres à Chios</strong> ou un <strong>hébergement à Chios</strong> pour un séjour calme et soigné ? Voulamandis House vous accueille dans le quartier historique de Kambos, dans un cadre verdoyant et authentique, avec une hospitalité personnelle.",
-      },
-    },
-    roomsPreview: {
-      ...data.roomsPreview,
-      sideCard: {
-        ...data.roomsPreview.sideCard,
-        text: "Si vous recherchez un hébergement à Chios avec une hospitalité plus personnelle, Voulamandis House offre une alternative authentique à Kambos.",
-      },
-    },
-  };
-}
-
-function withItalianHomepageCopy(data: HomePageData): HomePageData {
-  return {
-    ...data,
-    hero: {
-      ...data.hero,
-      title: "Camere e appartamenti a Chios, nel cuore di Kambos",
-      descriptionHtml:
-        "Cerchi <strong>camere a Chios</strong> o un <strong>appartamento a Chios</strong>? <strong>Voulamandis House</strong> ti accoglie a Kambos con camere confortevoli, appartamenti familiari e un’atmosfera tranquilla.",
-      imageAlt:
-        "Camere e appartamenti a Chios - Voulamandis House a Kambos",
-    },
-    intro: {
-      ...data.intro,
-      left: {
-        ...data.intro.left,
-        bodyHtml:
-          "Cerchi <strong>camere a Chios</strong> o un <strong>alloggio a Chios</strong> per un soggiorno tranquillo e curato? Voulamandis House ti accoglie nella storica zona di Kambos, tra giardini e agrumeti, con un’ospitalità personale e autentica.",
-      },
-    },
-    roomsPreview: {
-      ...data.roomsPreview,
-      sideCard: {
-        ...data.roomsPreview.sideCard,
-        text: "Per chi cerca un alloggio a Chios con un’ospitalità più personale, Voulamandis House è una scelta autentica e tranquilla a Kambos.",
-      },
-    },
-  };
-}
-
-function getLocalizedHomePageData(locale: string): HomePageData {
-  switch (locale) {
-    case "el":
-      return withGreekHomepageCopy(homePageEl);
-    case "fr":
-      return withSeoTitle(
-        withFrenchHomepageCopy(homePageFr),
-        "Voulamandis House | Chambres & Appartements à Chios",
-      );
-    case "de":
-      return withSeoTitle(
-        homePageDe,
-        "Voulamandis House | Zimmer & Apartments auf Chios",
-      );
-    case "it":
-      return withSeoTitle(
-        withItalianHomepageCopy(homePageIt),
-        "Voulamandis House | Camere & Appartamenti a Chios",
-      );
-    case "es":
-      return withSeoTitle(
-        homePageEs,
-        "Voulamandis House | Habitaciones & Apartamentos en Chios",
-      );
-    case "tr":
-      return withSeoTitle(
-        homePageTr,
-        "Voulamandis House | Sakız Adası Odaları ve Daireleri",
-      );
-    default:
-      return withUpdatedIntroReasons(homePageEn);
-  }
+function getLocalizedHomePageData(locale: LanguageCode): HomePageData {
+  return withHomepageSeoIntent(homePages[locale], locale);
 }
 
 export function generateStaticParams() {
