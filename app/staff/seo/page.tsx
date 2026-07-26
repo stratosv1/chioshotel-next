@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getSeoAdvisorData } from "@/lib/gsc/advisor";
+import CopySeoAdviceButton from "./CopySeoAdviceButton";
 
 export const dynamic = "force-dynamic";
 
@@ -122,6 +123,16 @@ export default async function SeoAdvisorPage() {
                     {item.query ? `Query: ${item.query}` : ""}{item.query && item.page ? " · " : ""}{item.page ? `Σελίδα: ${path(item.page)}` : ""}
                   </p>
                 )}
+                <div className="mt-4 flex justify-end">
+                  <CopySeoAdviceButton
+                    title={item.title}
+                    explanation={item.explanation}
+                    action={item.action}
+                    evidence={item.evidence}
+                    page={item.page}
+                    query={item.query}
+                  />
+                </div>
               </article>
             ))}
           </div>
