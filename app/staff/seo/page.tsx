@@ -123,10 +123,14 @@ export default async function SeoAdvisorPage() {
 
                 {item.queryBreakdown && item.queryBreakdown.length > 0 && (
                   <div className="mt-4 rounded-2xl border border-[#e8dccb] bg-white p-4">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-[#8a755f]">Queries που εξηγούν την αλλαγή</p>
-                    <p className="mt-1 text-xs leading-5 text-[#8a755f]">Προηγούμενες 28 ημέρες → τελευταίες 28 ημέρες.</p>
+                    <p className="text-xs font-semibold uppercase tracking-wide text-[#8a755f]">
+                      {item.queryBreakdownTitle || "Queries που εξηγούν το εύρημα"}
+                    </p>
+                    <p className="mt-1 text-xs leading-5 text-[#8a755f]">
+                      {item.queryBreakdownNote || "Προηγούμενες 28 ημέρες → τελευταίες 28 ημέρες."}
+                    </p>
                     <div className="mt-3 space-y-3">
-                      {item.queryBreakdown.slice(0, 5).map((row) => (
+                      {item.queryBreakdown.slice(0, 8).map((row) => (
                         <div key={row.query} className="rounded-xl bg-[#faf7f1] p-3">
                           <p className="break-words text-sm font-semibold">{row.query}</p>
                           <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1 text-xs text-[#6f6051] sm:grid-cols-4">
@@ -161,6 +165,8 @@ export default async function SeoAdvisorPage() {
                     page={item.page}
                     query={item.query}
                     queryBreakdown={item.queryBreakdown}
+                    queryBreakdownTitle={item.queryBreakdownTitle}
+                    queryBreakdownNote={item.queryBreakdownNote}
                   />
                 </div>
               </article>
