@@ -38,7 +38,7 @@ export default async function SeoDashboardPage() {
   const data = await getGscDashboardData();
   const coverage = data.coverage || {};
   const run = data.latestRun || {};
-  const report = data.report || {};
+  const report = data.report;
   const totals = report.totals || {};
   const warnings = String(run.error_message || "").split("\n").filter(Boolean);
 
