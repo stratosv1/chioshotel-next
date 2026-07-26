@@ -74,6 +74,25 @@ function getCardCtaLabel(cardId: string, language: LanguageCode, fallback: strin
 
 export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
   const language = getWizardLanguage(data.seo.canonicalPath);
+  const hero =
+    language === "el"
+      ? {
+          ...data.hero,
+          kicker: "Δωμάτια & διαμερίσματα • Voulamandis House",
+          title: "Δωμάτια",
+          highlightedTitle: "στη Χίο",
+          description:
+            "Δείτε τα ενοικιαζόμενα δωμάτια στη Χίο και τα οικογενειακά διαμερίσματα του Voulamandis House στον Κάμπο. Συγκρίνετε κατηγορίες, χωρητικότητα και χαρακτηριστικά και επιλέξτε αυτή που ταιριάζει καλύτερα στο ταξίδι σας.",
+        }
+      : data.hero;
+  const intro =
+    language === "el"
+      ? {
+          title: "Ενοικιαζόμενα δωμάτια & διαμερίσματα στη Χίο",
+          description:
+            "Εξερευνήστε τις κατηγορίες δωματίων και διαμερισμάτων μας στον Κάμπο της Χίου: οικονομικά δίκλινα, ισόγεια δωμάτια, δωμάτια ορόφου και οικογενειακά διαμερίσματα. Όλες οι επιλογές συγκεντρωμένες σε μία σελίδα για εύκολη σύγκριση πριν την κράτηση.",
+        }
+      : data.intro;
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#fbf6ef] text-[#2f261f]">
@@ -87,35 +106,35 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
         <div className="mx-auto max-w-6xl">
           <div className="max-w-3xl">
             <span className="inline-flex rounded-full border border-amber-200/30 bg-white/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.28em] text-amber-100">
-              {data.hero.kicker}
+              {hero.kicker}
             </span>
 
             <h1
               id="rooms-hero-title"
               className="mt-6 text-balance text-4xl font-black leading-[0.98] tracking-[-0.04em] text-white sm:text-5xl lg:text-7xl"
             >
-              {data.hero.title}{" "}
-              <span className="text-amber-200">{data.hero.highlightedTitle}</span>
+              {hero.title}{" "}
+              <span className="text-amber-200">{hero.highlightedTitle}</span>
             </h1>
 
             <p className="mt-6 max-w-2xl text-pretty text-base leading-8 text-stone-100/88 sm:text-lg">
-              {data.hero.description}
+              {hero.description}
             </p>
 
             <div className="mt-8 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap">
               <a
                 className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-amber-200 px-4 text-center text-[11px] font-black uppercase tracking-[0.12em] !text-[#2f261f] shadow-[0_18px_40px_rgba(0,0,0,0.22)] transition hover:-translate-y-0.5 hover:bg-white sm:px-6 sm:text-xs"
-                href={data.hero.primaryCta.href}
+                href={hero.primaryCta.href}
                 style={{ color: "#2f261f" }}
               >
-                {data.hero.primaryCta.label}
+                {hero.primaryCta.label}
               </a>
 
               <a
                 className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/30 bg-white/10 px-4 text-center text-[11px] font-black uppercase tracking-[0.12em] text-white backdrop-blur transition hover:-translate-y-0.5 hover:bg-white hover:text-[#2f261f] sm:px-6 sm:text-xs"
-                href={data.hero.secondaryCta.href}
+                href={hero.secondaryCta.href}
               >
-                {data.hero.secondaryCta.label}
+                {hero.secondaryCta.label}
               </a>
             </div>
           </div>
@@ -130,18 +149,18 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
       >
         <header className="mx-auto max-w-3xl text-center">
           <span className="inline-flex rounded-full border border-amber-900/10 bg-white px-4 py-2 text-[11px] font-black uppercase tracking-[0.28em] text-amber-800 shadow-sm">
-            {data.hero.kicker}
+            {hero.kicker}
           </span>
 
           <h2
             id="rooms-category-title"
             className="mt-5 text-balance text-3xl font-black tracking-[-0.035em] text-[#2f261f] sm:text-4xl lg:text-5xl"
           >
-            {data.intro.title}
+            {intro.title}
           </h2>
 
           <p className="mt-4 text-pretty text-base leading-8 text-[#574b3f] sm:text-lg">
-            {data.intro.description}
+            {intro.description}
           </p>
         </header>
 
@@ -219,7 +238,7 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
 
         <div className="mx-auto mt-14 max-w-3xl text-center">
           <span className="inline-flex rounded-full border border-amber-900/10 bg-white px-4 py-2 text-[11px] font-black uppercase tracking-[0.28em] text-amber-800 shadow-sm">
-            {data.hero.kicker}
+            {hero.kicker}
           </span>
           <h2 className="mt-5 text-balance text-3xl font-black tracking-[-0.035em] text-[#2f261f] sm:text-4xl">
             {data.wizardIntro.title}
