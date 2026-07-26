@@ -15,6 +15,100 @@ type CountdownState = {
   expired: boolean;
 };
 
+type DealsUiCopy = {
+  time: [string, string, string, string];
+  swipe: string;
+  previous: string;
+  next: string;
+  tip: string;
+  code: string;
+  bookNow: string;
+  viewRoom: string;
+};
+
+const uiCopy: Record<string, DealsUiCopy> = {
+  en: {
+    time: ["Days", "Hours", "Mins", "Secs"],
+    swipe: "Swipe for more offers",
+    previous: "Previous offer",
+    next: "Next offer",
+    tip: "Tip",
+    code: "Code",
+    bookNow: "Book now",
+    viewRoom: "View room",
+  },
+  el: {
+    time: ["Ημέρες", "Ώρες", "Λεπτά", "Δευτ."],
+    swipe: "Σύρετε για περισσότερες προσφορές",
+    previous: "Προηγούμενη προσφορά",
+    next: "Επόμενη προσφορά",
+    tip: "Συμβουλή",
+    code: "Κωδικός",
+    bookNow: "Κράτηση τώρα",
+    viewRoom: "Δείτε την κατηγορία",
+  },
+  fr: {
+    time: ["Jours", "Heures", "Min", "Sec"],
+    swipe: "Faites glisser pour voir plus d’offres",
+    previous: "Offre précédente",
+    next: "Offre suivante",
+    tip: "Conseil",
+    code: "Code",
+    bookNow: "Réserver",
+    viewRoom: "Voir la catégorie",
+  },
+  de: {
+    time: ["Tage", "Std.", "Min.", "Sek."],
+    swipe: "Wischen für weitere Angebote",
+    previous: "Vorheriges Angebot",
+    next: "Nächstes Angebot",
+    tip: "Tipp",
+    code: "Code",
+    bookNow: "Jetzt buchen",
+    viewRoom: "Kategorie ansehen",
+  },
+  it: {
+    time: ["Giorni", "Ore", "Min", "Sec"],
+    swipe: "Scorri per altre offerte",
+    previous: "Offerta precedente",
+    next: "Offerta successiva",
+    tip: "Consiglio",
+    code: "Codice",
+    bookNow: "Prenota ora",
+    viewRoom: "Vedi categoria",
+  },
+  es: {
+    time: ["Días", "Horas", "Min", "Seg"],
+    swipe: "Desliza para ver más ofertas",
+    previous: "Oferta anterior",
+    next: "Oferta siguiente",
+    tip: "Consejo",
+    code: "Código",
+    bookNow: "Reservar ahora",
+    viewRoom: "Ver categoría",
+  },
+  tr: {
+    time: ["Gün", "Saat", "Dk.", "Sn."],
+    swipe: "Daha fazla fırsat için kaydırın",
+    previous: "Önceki fırsat",
+    next: "Sonraki fırsat",
+    tip: "İpucu",
+    code: "Kod",
+    bookNow: "Şimdi rezervasyon",
+    viewRoom: "Kategoriyi gör",
+  },
+};
+
+function localeFromPath(path: string) {
+  if (path.startsWith("/el/")) return "el";
+  if (path.startsWith("/fr/")) return "fr";
+  if (path.startsWith("/de/")) return "de";
+  if (path.startsWith("/it/")) return "it";
+  if (path.startsWith("/es/")) return "es";
+  if (path.startsWith("/tr/")) return "tr";
+  return "en";
+}
+
 function getCountdown(targetIso: string): CountdownState {
   const targetTime = new Date(targetIso).getTime();
   const now = Date.now();
@@ -44,7 +138,7 @@ function getCountdown(targetIso: string): CountdownState {
   };
 }
 
-function Countdown({ data }: { data: DealsPageData }) {
+function Countdown({ data, labels }: { data: DealsPageData; labels: DealsUiCopy }) {
   const initialCountdown = useMemo(() => getCountdown(data.countdown.targetIso), [data]);
   const [countdown, setCountdown] = useState<CountdownState>(initialCountdown);
 
@@ -70,10 +164,10 @@ function Countdown({ data }: { data: DealsPageData }) {
 
       <div className="grid grid-cols-4 gap-2 md:flex md:gap-4">
         {[
-          [countdown.days, "Days"],
-          [countdown.hours, "Hours"],
-          [countdown.minutes, "Mins"],
-          [countdown.seconds, "Secs"],
+          [countdown.days, labels.time[0]],
+          [countdown.hours, labels.time[1]],
+          [countdown.minutes, labels.time[2]],
+          [countdown.seconds, labels.time[3]],
         ].map(([value, label]) => (
           <div className="min-w-14 rounded-2xl bg-amber-50 px-2 py-2 text-center md:bg-transparent md:p-0" key={label}>
             <strong className="block text-2xl font-black leading-none text-amber-800 md:text-[28px]">{value}</strong>
@@ -87,14 +181,7 @@ function Countdown({ data }: { data: DealsPageData }) {
 
 export function DealsPage({ data }: DealsPageProps) {
   const offersCarouselRef = useRef<HTMLDivElement>(null);
-  const isGreek = data.seo.canonicalPath.startsWith("/el/");
-
-  const introKicker = isGreek ? "Προσφορές διαμονής στη Χίο 2026" : data.intro.kicker;
-
-  function offerTags(tags: string[]) {
-    if (!isGreek) return tags;
-    return tags.filter((tag) => tag !== "Δωμάτια Χίος");
-  }
+  const labels = uiCopy[localeFromPath(data.seo.canonicalPath)];
 
   function scrollOffers(direction: -1 | 1) {
     const carousel = offersCarouselRef.current;
@@ -133,13 +220,13 @@ export function DealsPage({ data }: DealsPageProps) {
         </div>
       </section>
 
-      <Countdown data={data} />
+      <Countdown data={data} labels={labels} />
 
       <section className="px-0 py-16 md:py-20" aria-labelledby="deals-intro-title">
         <div className="mx-auto w-[min(1240px,calc(100%-40px))] max-md:w-[calc(100%-24px)]">
           <header className="mx-auto mb-8 max-w-[840px] text-center md:mb-11">
             <span className="inline-flex min-h-8 items-center rounded-full bg-[#f1eadc] px-4 text-[11px] font-black uppercase tracking-[0.12em] text-amber-800">
-              {introKicker}
+              {data.intro.kicker}
             </span>
             <h2 id="deals-intro-title" className="mt-4 text-[clamp(34px,5vw,62px)] font-black leading-none tracking-[-0.055em] text-amber-800">
               {data.intro.title}
@@ -149,13 +236,13 @@ export function DealsPage({ data }: DealsPageProps) {
 
           <div className="mb-4 flex items-center justify-between lg:hidden">
             <p className="text-[10px] font-black uppercase tracking-[0.14em] text-amber-800">
-              {isGreek ? "Σύρετε για περισσότερες προσφορές" : "Swipe for more offers"}
+              {labels.swipe}
             </p>
             <div className="flex gap-2">
               <button
                 type="button"
                 onClick={() => scrollOffers(-1)}
-                aria-label={isGreek ? "Προηγούμενη προσφορά" : "Previous offer"}
+                aria-label={labels.previous}
                 className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-amber-800/15 bg-white text-xl font-black text-amber-900 shadow-sm transition active:scale-95"
               >
                 ←
@@ -163,7 +250,7 @@ export function DealsPage({ data }: DealsPageProps) {
               <button
                 type="button"
                 onClick={() => scrollOffers(1)}
-                aria-label={isGreek ? "Επόμενη προσφορά" : "Next offer"}
+                aria-label={labels.next}
                 className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-amber-800 text-xl font-black text-white shadow-md shadow-amber-900/15 transition active:scale-95"
               >
                 →
@@ -193,17 +280,17 @@ export function DealsPage({ data }: DealsPageProps) {
                   <p className="mt-4 text-[15px] leading-7 text-stone-600">{offer.description}</p>
 
                   <div className="mt-6 flex flex-wrap justify-center gap-2" aria-label={`${offer.title} offer tags`}>
-                    {offerTags(offer.tags).map((tag) => (
+                    {offer.tags.map((tag) => (
                       <span className="inline-flex min-h-7 items-center rounded-full border border-amber-800/20 bg-white px-3 text-[9px] font-black uppercase tracking-[0.1em] text-amber-800" key={tag}>{tag}</span>
                     ))}
                   </div>
 
                   <div className="mt-5 rounded-[1.125rem] border border-amber-800/15 bg-amber-50 p-4 text-[13px] leading-6 text-stone-800">
-                    <strong className="text-amber-800">Tip:</strong> {offer.tip}
+                    <strong className="text-amber-800">{labels.tip}:</strong> {offer.tip}
                   </div>
 
                   <div className="mt-4 rounded-[1.25rem] border-2 border-dashed border-amber-800 bg-[#f8f7f2] p-4" aria-label={`${offer.title} coupon code`}>
-                    <span className="mb-2 block text-[10px] font-black uppercase tracking-[0.12em] text-stone-600">Code</span>
+                    <span className="mb-2 block text-[10px] font-black uppercase tracking-[0.12em] text-stone-600">{labels.code}</span>
                     <strong className="block font-mono text-3xl font-black leading-none tracking-[0.06em] text-amber-800">{offer.couponCode}</strong>
                   </div>
 
@@ -214,11 +301,11 @@ export function DealsPage({ data }: DealsPageProps) {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      Book now
+                      {labels.bookNow}
                     </a>
 
                     <a className="inline-flex min-h-[50px] items-center justify-center rounded-full border border-amber-800/20 bg-[#fff7ee] px-4 text-[11px] font-black uppercase tracking-[0.1em] text-amber-900" href={offer.roomPageHref}>
-                      View room
+                      {labels.viewRoom}
                     </a>
                   </div>
                 </div>
