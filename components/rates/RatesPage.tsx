@@ -12,54 +12,81 @@ type RatesUiText = {
   openBooking: string;
 };
 
+type CategoryBookingText = {
+  title: string;
+  text: string;
+  note: string;
+  continueLabel: string;
+  categories: Array<[string, string]>;
+};
+
 const ratesUiByLocale: Record<string, RatesUiText> = {
+  en: { directBookingCode: "Exclusive direct booking code", discountCodeAriaLabel: "Direct booking discount code", yourDiscountCode: "Your discount code", openBooking: "Open booking" },
+  el: { directBookingCode: "Αποκλειστικός κωδικός απευθείας κράτησης", discountCodeAriaLabel: "Κωδικός έκπτωσης για απευθείας κράτηση", yourDiscountCode: "Ο κωδικός έκπτωσής σας", openBooking: "Άνοιγμα κράτησης" },
+  fr: { directBookingCode: "Code exclusif pour réservation directe", discountCodeAriaLabel: "Code de réduction pour réservation directe", yourDiscountCode: "Votre code de réduction", openBooking: "Ouvrir la réservation" },
+  de: { directBookingCode: "Exklusiver Code für Direktbuchungen", discountCodeAriaLabel: "Rabattcode für Direktbuchungen", yourDiscountCode: "Ihr Rabattcode", openBooking: "Buchung öffnen" },
+  it: { directBookingCode: "Codice esclusivo per prenotazione diretta", discountCodeAriaLabel: "Codice sconto per prenotazione diretta", yourDiscountCode: "Il tuo codice sconto", openBooking: "Apri prenotazione" },
+  es: { directBookingCode: "Código exclusivo para reserva directa", discountCodeAriaLabel: "Código de descuento para reserva directa", yourDiscountCode: "Tu código de descuento", openBooking: "Abrir reserva" },
+  tr: { directBookingCode: "Doğrudan rezervasyon için özel kod", discountCodeAriaLabel: "Doğrudan rezervasyon indirim kodu", yourDiscountCode: "İndirim kodunuz", openBooking: "Rezervasyonu aç" },
+  pl: { directBookingCode: "Kod do rezerwacji bezpośredniej", discountCodeAriaLabel: "Kod rabatowy do rezerwacji bezpośredniej", yourDiscountCode: "Twój kod rabatowy", openBooking: "Otwórz rezerwację" },
+};
+
+const categoryBookingByLocale: Record<string, CategoryBookingText> = {
   en: {
-    directBookingCode: "Exclusive direct booking code",
-    discountCodeAriaLabel: "Direct booking discount code",
-    yourDiscountCode: "Your discount code",
-    openBooking: "Open booking",
+    title: "You book a room category — not a specific room number",
+    text: "Your room will be assigned from the category you choose, based on availability for your dates.",
+    note: "Have a preferred room? Tell us and we will do our best, subject to availability.",
+    continueLabel: "Continue to secure booking",
+    categories: [["Economy", "Rooms 2, 6"], ["Ground Floor", "Rooms 5, 7"], ["First Floor", "Rooms 1, 3, 4"], ["Family Apartments", "8, 9, 10"]],
   },
   el: {
-    directBookingCode: "Αποκλειστικός κωδικός απευθείας κράτησης",
-    discountCodeAriaLabel: "Κωδικός έκπτωσης για απευθείας κράτηση",
-    yourDiscountCode: "Ο κωδικός έκπτωσής σας",
-    openBooking: "Άνοιγμα κράτησης",
+    title: "Κλείνετε κατηγορία δωματίου — όχι συγκεκριμένο αριθμό",
+    text: "Το δωμάτιο θα οριστεί από την κατηγορία που επιλέγετε, ανάλογα με τη διαθεσιμότητα των ημερομηνιών σας.",
+    note: "Έχετε προτίμηση σε συγκεκριμένο δωμάτιο; Πείτε μας και θα προσπαθήσουμε να την ικανοποιήσουμε, εφόσον υπάρχει διαθεσιμότητα.",
+    continueLabel: "Συνέχεια στην ασφαλή κράτηση",
+    categories: [["Economy", "Δωμάτια 2, 6"], ["Ισόγειο", "Δωμάτια 5, 7"], ["1ος όροφος", "Δωμάτια 1, 3, 4"], ["Οικογενειακά διαμερίσματα", "8, 9, 10"]],
   },
   fr: {
-    directBookingCode: "Code exclusif pour réservation directe",
-    discountCodeAriaLabel: "Code de réduction pour réservation directe",
-    yourDiscountCode: "Votre code de réduction",
-    openBooking: "Ouvrir la réservation",
+    title: "Vous réservez une catégorie — pas un numéro précis",
+    text: "La chambre sera attribuée dans la catégorie choisie selon les disponibilités à vos dates.",
+    note: "Vous préférez une chambre précise ? Dites-le-nous et nous ferons notre possible selon les disponibilités.",
+    continueLabel: "Continuer la réservation sécurisée",
+    categories: [["Economy", "Chambres 2, 6"], ["Rez-de-chaussée", "Chambres 5, 7"], ["1er étage", "Chambres 1, 3, 4"], ["Appartements familiaux", "8, 9, 10"]],
   },
   de: {
-    directBookingCode: "Exklusiver Code für Direktbuchungen",
-    discountCodeAriaLabel: "Rabattcode für Direktbuchungen",
-    yourDiscountCode: "Ihr Rabattcode",
-    openBooking: "Buchung öffnen",
+    title: "Sie buchen eine Zimmerkategorie — keine feste Zimmernummer",
+    text: "Das Zimmer wird je nach Verfügbarkeit aus der gewählten Kategorie zugeteilt.",
+    note: "Sie bevorzugen ein bestimmtes Zimmer? Teilen Sie es uns mit; wir berücksichtigen den Wunsch nach Verfügbarkeit.",
+    continueLabel: "Zur sicheren Buchung",
+    categories: [["Economy", "Zimmer 2, 6"], ["Erdgeschoss", "Zimmer 5, 7"], ["1. Etage", "Zimmer 1, 3, 4"], ["Familienapartments", "8, 9, 10"]],
   },
   it: {
-    directBookingCode: "Codice esclusivo per prenotazione diretta",
-    discountCodeAriaLabel: "Codice sconto per prenotazione diretta",
-    yourDiscountCode: "Il tuo codice sconto",
-    openBooking: "Apri prenotazione",
+    title: "Prenoti una categoria — non un numero di camera specifico",
+    text: "La camera verrà assegnata nella categoria scelta in base alla disponibilità delle date.",
+    note: "Preferisci una camera specifica? Comunicacelo e faremo il possibile, secondo disponibilità.",
+    continueLabel: "Continua alla prenotazione sicura",
+    categories: [["Economy", "Camere 2, 6"], ["Piano terra", "Camere 5, 7"], ["Primo piano", "Camere 1, 3, 4"], ["Appartamenti familiari", "8, 9, 10"]],
   },
   es: {
-    directBookingCode: "Código exclusivo para reserva directa",
-    discountCodeAriaLabel: "Código de descuento para reserva directa",
-    yourDiscountCode: "Tu código de descuento",
-    openBooking: "Abrir reserva",
+    title: "Reservas una categoría — no un número de habitación concreto",
+    text: "La habitación se asignará dentro de la categoría elegida según la disponibilidad de tus fechas.",
+    note: "¿Prefieres una habitación concreta? Dínoslo e intentaremos atender la petición según disponibilidad.",
+    continueLabel: "Continuar a la reserva segura",
+    categories: [["Economy", "Habitaciones 2, 6"], ["Planta baja", "Habitaciones 5, 7"], ["Primera planta", "Habitaciones 1, 3, 4"], ["Apartamentos familiares", "8, 9, 10"]],
   },
   tr: {
-    directBookingCode: "Doğrudan rezervasyon için özel kod",
-    discountCodeAriaLabel: "Doğrudan rezervasyon indirim kodu",
-    yourDiscountCode: "İndirim kodunuz",
-    openBooking: "Rezervasyonu aç",
+    title: "Belirli oda numarası değil, oda kategorisi rezerve edersiniz",
+    text: "Odanız, tarihlerinizdeki müsaitliğe göre seçtiğiniz kategoriden atanır.",
+    note: "Belirli bir oda tercihiniz varsa bize bildirin; müsaitliğe göre elimizden geleni yaparız.",
+    continueLabel: "Güvenli rezervasyona devam et",
+    categories: [["Economy", "Odalar 2, 6"], ["Zemin kat", "Odalar 5, 7"], ["1. kat", "Odalar 1, 3, 4"], ["Aile daireleri", "8, 9, 10"]],
   },
   pl: {
-    directBookingCode: "Kod do rezerwacji bezpośredniej",
-    discountCodeAriaLabel: "Kod rabatowy do rezerwacji bezpośredniej",
-    yourDiscountCode: "Twój kod rabatowy",
-    openBooking: "Otwórz rezerwację",
+    title: "Rezerwujesz kategorię — nie konkretny numer pokoju",
+    text: "Pokój zostanie przydzielony z wybranej kategorii zgodnie z dostępnością w Twoim terminie.",
+    note: "Masz preferowany pokój? Napisz nam; postaramy się uwzględnić prośbę, zależnie od dostępności.",
+    continueLabel: "Przejdź do bezpiecznej rezerwacji",
+    categories: [["Economy", "Pokoje 2, 6"], ["Parter", "Pokoje 5, 7"], ["Piętro", "Pokoje 1, 3, 4"], ["Apartamenty rodzinne", "8, 9, 10"]],
   },
 };
 
@@ -70,61 +97,34 @@ function getRatesLocale(path: string) {
 
 function renderSeoParagraph(text: string, links: RatesPageData["seoCopy"]["links"]): ReactNode[] {
   const parts: ReactNode[] = [text];
-
   links.forEach((link) => {
     for (let index = 0; index < parts.length; index += 1) {
       const part = parts[index];
-
-      if (typeof part !== "string" || !part.includes(link.label)) {
-        continue;
-      }
-
+      if (typeof part !== "string" || !part.includes(link.label)) continue;
       const split = part.split(link.label);
-
-      parts.splice(
-        index,
-        1,
-        split[0],
-        <a
-          className="font-black text-amber-800 underline decoration-amber-800/30 underline-offset-4"
-          href={link.href}
-          key={`${link.href}-${index}`}
-        >
-          {link.label}
-        </a>,
-        split.slice(1).join(link.label),
-      );
-
+      parts.splice(index, 1, split[0], <a className="font-black text-amber-800 underline decoration-amber-800/30 underline-offset-4" href={link.href} key={`${link.href}-${index}`}>{link.label}</a>, split.slice(1).join(link.label));
       break;
     }
   });
-
   return parts;
 }
 
 export function RatesPage({ data }: RatesPageProps) {
-  const ui = ratesUiByLocale[getRatesLocale(data.seo.canonicalPath)];
+  const locale = getRatesLocale(data.seo.canonicalPath);
+  const ui = ratesUiByLocale[locale];
+  const categoryCopy = categoryBookingByLocale[locale];
+  const directBookingHref = data.booking.fallbackHref.replace(/([?&])referer=iframe(&|$)/i, (_match, prefix: string, suffix: string) => suffix ? prefix : "").replace(/[?&]$/, "");
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-gradient-to-b from-[#fcfaf8] to-[#f5f0ea] text-stone-800">
       <section className="relative flex min-h-[460px] items-end overflow-hidden text-white md:min-h-[560px]" aria-labelledby="rates-hero-title">
-        <div className="absolute inset-0 z-0" aria-hidden="true">
-          <img className="h-full w-full object-cover" src={data.hero.image} alt="" loading="eager" />
-        </div>
-
+        <div className="absolute inset-0 z-0" aria-hidden="true"><img className="h-full w-full object-cover" src={data.hero.image} alt="" loading="eager" /></div>
         <div className="absolute inset-0 z-[1] bg-[linear-gradient(135deg,rgba(46,35,27,.86)_0%,rgba(92,65,42,.58)_58%,rgba(46,35,27,.28)_100%),linear-gradient(0deg,rgba(46,35,27,.76)_0%,transparent_60%)]" />
-
         <div className="relative z-[2] mx-auto w-[min(1220px,calc(100%-40px))] py-16 pt-28 md:py-20 md:pt-32">
           <div className="max-w-[820px] rounded-[2rem] border border-white/20 bg-white/10 p-[clamp(30px,5vw,52px)] shadow-[0_34px_90px_rgba(0,0,0,.24)] backdrop-blur-xl max-md:border-0 max-md:bg-transparent max-md:p-0 max-md:shadow-none max-md:backdrop-blur-0">
-            <span className="mb-5 inline-flex min-h-8 items-center rounded-full border border-white/25 bg-white/15 px-4 text-[11px] font-black uppercase tracking-[0.12em] text-white">
-              {data.hero.kicker}
-            </span>
-            <h1 id="rates-hero-title" className="m-0 max-w-[12ch] text-[clamp(42px,7vw,78px)] font-black leading-[0.96] tracking-[-0.055em] text-white drop-shadow-lg">
-              {data.hero.title}
-            </h1>
-            <p className="mt-5 max-w-[720px] text-base leading-7 text-white/95 md:text-lg md:leading-8">
-              {data.hero.description}
-            </p>
+            <span className="mb-5 inline-flex min-h-8 items-center rounded-full border border-white/25 bg-white/15 px-4 text-[11px] font-black uppercase tracking-[0.12em] text-white">{data.hero.kicker}</span>
+            <h1 id="rates-hero-title" className="m-0 max-w-[12ch] text-[clamp(42px,7vw,78px)] font-black leading-[0.96] tracking-[-0.055em] text-white drop-shadow-lg">{data.hero.title}</h1>
+            <p className="mt-5 max-w-[720px] text-base leading-7 text-white/95 md:text-lg md:leading-8">{data.hero.description}</p>
           </div>
         </div>
       </section>
@@ -132,53 +132,18 @@ export function RatesPage({ data }: RatesPageProps) {
       <section className="py-10 md:py-14">
         <div className="mx-auto grid w-[min(1220px,calc(100%-40px))] gap-7 lg:grid-cols-2">
           <article className="rounded-[2rem] border border-stone-200 bg-white p-[clamp(26px,4vw,38px)] shadow-xl shadow-stone-900/5">
-            <span className="mb-5 inline-flex min-h-8 items-center rounded-full bg-[#efe6d8] px-4 text-[11px] font-black uppercase tracking-[0.12em] text-[#a15d33]">
-              {data.benefits.kicker}
-            </span>
-            <h2 className="m-0 text-[clamp(30px,4vw,46px)] font-black leading-none tracking-[-0.05em] text-stone-800">
-              {data.benefits.title}
-            </h2>
+            <span className="mb-5 inline-flex min-h-8 items-center rounded-full bg-[#efe6d8] px-4 text-[11px] font-black uppercase tracking-[0.12em] text-[#a15d33]">{data.benefits.kicker}</span>
+            <h2 className="m-0 text-[clamp(30px,4vw,46px)] font-black leading-none tracking-[-0.05em] text-stone-800">{data.benefits.title}</h2>
             <p className="mt-4 text-[15.5px] leading-7 text-stone-600">{data.benefits.text}</p>
-
-            <div className="mt-6 grid gap-3">
-              {data.benefits.items.map((item) => (
-                <div className="flex items-start gap-4 rounded-2xl border border-stone-200 bg-[#fcfaf8] p-4" key={item.title}>
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#c47646]/10 text-lg" aria-hidden="true">
-                    {item.icon}
-                  </span>
-                  <div>
-                    <strong className="block text-[15px] font-black text-stone-800">{item.title}</strong>
-                    <p className="mt-1 text-[13.5px] leading-6 text-stone-600">{item.text}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <div className="mt-6 grid gap-3">{data.benefits.items.map((item) => <div className="flex items-start gap-4 rounded-2xl border border-stone-200 bg-[#fcfaf8] p-4" key={item.title}><span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#c47646]/10 text-lg" aria-hidden="true">{item.icon}</span><div><strong className="block text-[15px] font-black text-stone-800">{item.title}</strong><p className="mt-1 text-[13.5px] leading-6 text-stone-600">{item.text}</p></div></div>)}</div>
           </article>
 
           <article className="relative overflow-hidden rounded-[2rem] border border-stone-200 bg-[radial-gradient(circle_at_top_right,rgba(196,118,70,.15),transparent_18rem),linear-gradient(180deg,#fff,#f4eadf)] p-[clamp(26px,4vw,38px)] shadow-xl shadow-stone-900/5">
-            <span className="mb-5 inline-flex min-h-8 items-center rounded-full border border-amber-200 bg-amber-50 px-4 text-[11px] font-black uppercase tracking-[0.12em] text-amber-800">
-              ⚡ {data.discount.kicker}
-            </span>
-            <h2 className="m-0 text-[clamp(30px,4vw,46px)] font-black leading-none tracking-[-0.05em] text-stone-800">
-              {data.discount.title}
-            </h2>
+            <span className="mb-5 inline-flex min-h-8 items-center rounded-full border border-amber-200 bg-amber-50 px-4 text-[11px] font-black uppercase tracking-[0.12em] text-amber-800">⚡ {data.discount.kicker}</span>
+            <h2 className="m-0 text-[clamp(30px,4vw,46px)] font-black leading-none tracking-[-0.05em] text-stone-800">{data.discount.title}</h2>
             <p className="mt-4 text-[15.5px] leading-7 text-stone-600">{data.discount.text}</p>
-
-            <div className="mt-6 flex items-center justify-between gap-5 rounded-[1.5rem] bg-gradient-to-br from-[#c47646] to-[#a15d33] p-6 text-white shadow-lg shadow-[#c47646]/25">
-              <div>
-                <strong className="block text-4xl font-black leading-none tracking-[-0.04em]">{data.discount.value}</strong>
-                <span className="mt-2 block text-[11px] font-black uppercase tracking-[0.11em] text-white/95">{ui.directBookingCode}</span>
-              </div>
-              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-2 border-white/30 bg-white/20 text-3xl" aria-hidden="true">
-                🎁
-              </div>
-            </div>
-
-            <div className="mt-5 rounded-2xl border border-dashed border-emerald-700/40 bg-emerald-50 p-5 text-center" aria-label={ui.discountCodeAriaLabel}>
-              <span className="mb-2 block text-[11px] font-black uppercase tracking-[0.12em] text-emerald-800">{ui.yourDiscountCode}</span>
-              <strong className="block font-mono text-3xl font-black leading-none tracking-[0.05em] text-emerald-800 md:text-4xl">{data.discount.code}</strong>
-            </div>
-
+            <div className="mt-6 flex items-center justify-between gap-5 rounded-[1.5rem] bg-gradient-to-br from-[#c47646] to-[#a15d33] p-6 text-white shadow-lg shadow-[#c47646]/25"><div><strong className="block text-4xl font-black leading-none tracking-[-0.04em]">{data.discount.value}</strong><span className="mt-2 block text-[11px] font-black uppercase tracking-[0.11em] text-white/95">{ui.directBookingCode}</span></div><div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-2 border-white/30 bg-white/20 text-3xl" aria-hidden="true">🎁</div></div>
+            <div className="mt-5 rounded-2xl border border-dashed border-emerald-700/40 bg-emerald-50 p-5 text-center" aria-label={ui.discountCodeAriaLabel}><span className="mb-2 block text-[11px] font-black uppercase tracking-[0.12em] text-emerald-800">{ui.yourDiscountCode}</span><strong className="block font-mono text-3xl font-black leading-none tracking-[0.05em] text-emerald-800 md:text-4xl">{data.discount.code}</strong></div>
             <p className="mt-4 text-sm italic leading-6 text-stone-600">{data.discount.note}</p>
           </article>
         </div>
@@ -188,42 +153,25 @@ export function RatesPage({ data }: RatesPageProps) {
         <div className="mx-auto w-full md:w-[min(1220px,calc(100%-40px))]">
           <article className="bg-white md:rounded-[2rem] md:border md:border-stone-200 md:p-4 md:shadow-xl md:shadow-stone-900/5">
             <header className="flex flex-col gap-5 px-5 py-7 md:flex-row md:items-start md:justify-between md:p-6">
-              <div className="max-w-[820px]">
-                <span className="mb-4 inline-flex min-h-8 items-center rounded-full bg-[#efe6d8] px-4 text-[11px] font-black uppercase tracking-[0.12em] text-[#a15d33]">
-                  {data.booking.kicker}
-                </span>
-                <h2 id="rates-booking-title" className="m-0 text-[clamp(30px,4vw,46px)] font-black leading-none tracking-[-0.05em] text-stone-800">
-                  {data.booking.title}
-                </h2>
-                <p className="mt-4 text-[15.5px] leading-7 text-stone-600">{data.booking.text}</p>
-              </div>
-
-              <a
-                className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-full border border-stone-200 bg-[#efe6d8] px-5 text-[11px] font-black uppercase tracking-[0.1em] text-[#a15d33]"
-                href={data.booking.fallbackHref}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {ui.openBooking}
-              </a>
+              <div className="max-w-[820px]"><span className="mb-4 inline-flex min-h-8 items-center rounded-full bg-[#efe6d8] px-4 text-[11px] font-black uppercase tracking-[0.12em] text-[#a15d33]">{data.booking.kicker}</span><h2 id="rates-booking-title" className="m-0 text-[clamp(30px,4vw,46px)] font-black leading-none tracking-[-0.05em] text-stone-800">{data.booking.title}</h2><p className="mt-4 text-[15.5px] leading-7 text-stone-600">{data.booking.text}</p></div>
+              <a className="hidden min-h-12 shrink-0 items-center justify-center rounded-full border border-stone-200 bg-[#efe6d8] px-5 text-[11px] font-black uppercase tracking-[0.1em] text-[#a15d33] md:inline-flex" href={directBookingHref}>{ui.openBooking}</a>
             </header>
 
-            <div className="w-full bg-stone-50 md:rounded-[1.5rem] md:border md:border-stone-200">
-              <iframe
-                src={data.booking.iframeSrc}
-                className="block h-[7000px] w-full border-0 md:h-[5600px] xl:h-[5200px]"
-                style={{ minHeight: "5200px" }}
-                scrolling="yes"
-                loading="lazy"
-                title={data.booking.iframeTitle}
-              />
+            <section className="mx-4 mb-5 rounded-[1.5rem] border border-amber-900/10 bg-[#fffaf3] p-4 shadow-sm md:mx-6 md:p-5" aria-label={categoryCopy.title}>
+              <div className="md:flex md:items-start md:justify-between md:gap-6"><div className="max-w-3xl"><strong className="block text-base font-black leading-6 text-stone-900 md:text-lg">{categoryCopy.title}</strong><p className="mt-1 text-sm leading-6 text-stone-600">{categoryCopy.text}</p></div><p className="mt-3 max-w-sm text-xs font-semibold leading-5 text-amber-900 md:mt-0">{categoryCopy.note}</p></div>
+              <div className="-mx-4 mt-4 flex snap-x gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] md:mx-0 md:grid md:grid-cols-4 md:overflow-visible md:px-0">{categoryCopy.categories.map(([name, rooms]) => <div key={name} className="min-w-[68%] snap-start rounded-2xl border border-stone-200 bg-white px-4 py-3 md:min-w-0"><strong className="block text-sm font-black text-stone-800">{name}</strong><span className="mt-1 block text-xs font-semibold text-stone-500">{rooms}</span></div>)}</div>
+            </section>
+
+            <div className="px-4 pb-6 md:hidden">
+              <a href={directBookingHref} className="flex min-h-14 w-full items-center justify-center rounded-2xl bg-[#a15d33] px-5 text-center text-sm font-black uppercase tracking-[0.07em] !text-white shadow-lg shadow-[#a15d33]/20">{categoryCopy.continueLabel}</a>
+              <p className="mt-2 text-center text-xs leading-5 text-stone-500">Beds24 secure booking · same tab</p>
             </div>
 
-            <article className="mx-auto max-w-[920px] px-5 py-8 text-[15px] leading-7 text-stone-600 md:px-8">
-              {data.seoCopy.paragraphs.map((paragraph) => (
-                <p className="mt-4 first:mt-0" key={paragraph}>{renderSeoParagraph(paragraph, data.seoCopy.links)}</p>
-              ))}
-            </article>
+            <div className="hidden w-full bg-stone-50 md:block md:rounded-[1.5rem] md:border md:border-stone-200">
+              <iframe src={data.booking.iframeSrc} className="block h-[5600px] w-full border-0 xl:h-[5200px]" style={{ minHeight: "5200px" }} scrolling="yes" loading="lazy" title={data.booking.iframeTitle} />
+            </div>
+
+            <article className="mx-auto max-w-[920px] px-5 py-8 text-[15px] leading-7 text-stone-600 md:px-8">{data.seoCopy.paragraphs.map((paragraph) => <p className="mt-4 first:mt-0" key={paragraph}>{renderSeoParagraph(paragraph, data.seoCopy.links)}</p>)}</article>
           </article>
         </div>
       </section>
