@@ -185,9 +185,9 @@ export function RatesPage({ data }: RatesPageProps) {
       </section>
 
       <section className="pb-16 md:pb-20" aria-labelledby="rates-booking-title">
-        <div className="mx-auto w-[min(1220px,calc(100%-40px))]">
-          <article className="rounded-[2rem] border border-stone-200 bg-white p-4 shadow-xl shadow-stone-900/5">
-            <header className="flex flex-col gap-5 p-5 md:flex-row md:items-start md:justify-between md:p-6">
+        <div className="mx-auto w-full md:w-[min(1220px,calc(100%-40px))]">
+          <article className="bg-white md:rounded-[2rem] md:border md:border-stone-200 md:p-4 md:shadow-xl md:shadow-stone-900/5">
+            <header className="flex flex-col gap-5 px-5 py-7 md:flex-row md:items-start md:justify-between md:p-6">
               <div className="max-w-[820px]">
                 <span className="mb-4 inline-flex min-h-8 items-center rounded-full bg-[#efe6d8] px-4 text-[11px] font-black uppercase tracking-[0.12em] text-[#a15d33]">
                   {data.booking.kicker}
@@ -208,7 +208,7 @@ export function RatesPage({ data }: RatesPageProps) {
               </a>
             </header>
 
-            <div className="overflow-hidden rounded-[1.5rem] border border-stone-200 bg-stone-50">
+            <div className="w-full overflow-hidden bg-stone-50 md:rounded-[1.5rem] md:border md:border-stone-200">
               <iframe
                 src={data.booking.iframeSrc}
                 className="block h-[7000px] w-full border-0 md:h-[5600px] xl:h-[5200px]"
