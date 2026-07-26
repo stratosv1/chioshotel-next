@@ -9,8 +9,9 @@ import { absoluteUrl, buildPageMetadata } from "@/lib/seo";
 
 const baseMetadata = buildPageMetadata({
   path: diamoniStiXioPageEl.seo.canonicalPath,
-  title: diamoniStiXioPageEl.seo.title,
-  description: diamoniStiXioPageEl.seo.description,
+  title: "Διαμονή στη Χίο | Voulamandis House",
+  description:
+    "Οργανώστε τη διαμονή σας στη Χίο στο Voulamandis House. Δείτε επιλογές δωματίων και διαμερισμάτων, παροχές, τοποθεσία και άμεση διαθεσιμότητα.",
   image: diamoniStiXioPageEl.seo.ogImage,
   imageAlt: diamoniStiXioPageEl.seo.ogImageAlt,
 });
