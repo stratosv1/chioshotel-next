@@ -9,6 +9,8 @@ type GcpConfig = {
   serviceAccountEmail: string;
 };
 
+const accessTokenByRequest = new WeakMap<Request, Promise<string>>();
+
 function requireEnv(name: string): string {
   const value = process.env[name]?.trim();
   if (!value) throw new Error(`Missing environment variable: ${name}`);
@@ -44,12 +46,7 @@ async function readError(response: Response): Promise<string> {
   }
 }
 
-/**
- * Exchanges the short-lived Vercel OIDC token for a Google federated token,
- * then impersonates the dedicated Search Console service account.
- * No service-account private key is stored in Vercel.
- */
-export async function getSearchConsoleAccessToken(request: Request): Promise<string> {
+async function exchangeSearchConsoleAccessToken(request: Request): Promise<string> {
   const config = getGcpConfig();
   const subjectToken = getVercelOidcToken(request);
   const audience = `//iam.googleapis.com/projects/${config.projectNumber}/locations/global/workloadIdentityPools/${config.poolId}/providers/${config.providerId}`;
@@ -96,4 +93,19 @@ export async function getSearchConsoleAccessToken(request: Request): Promise<str
   const iam = (await iamResponse.json()) as { accessToken?: string };
   if (!iam.accessToken) throw new Error("IAM Credentials response did not contain an access token.");
   return iam.accessToken;
+}
+
+/**
+ * Exchanges the short-lived Vercel OIDC token for a Google federated token,
+ * then impersonates the dedicated Search Console service account.
+ * The resulting Google access token is reused for the lifetime of this request
+ * instead of repeating STS + IAM impersonation for every Search Console call.
+ */
+export function getSearchConsoleAccessToken(request: Request): Promise<string> {
+  const cached = accessTokenByRequest.get(request);
+  if (cached) return cached;
+
+  const pending = exchangeSearchConsoleAccessToken(request);
+  accessTokenByRequest.set(request, pending);
+  return pending;
 }
