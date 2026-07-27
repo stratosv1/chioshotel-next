@@ -6,6 +6,7 @@ import { shelteredBeachPaths } from "@/content/sheltered-beaches";
 import { quietBeachPaths } from "@/content/quiet-beaches";
 import { nearbyBeachPaths } from "@/content/nearby-beaches";
 import { sandyBeachPaths } from "@/content/sandy-beaches";
+import { romanticStayPaths } from "@/content/romantic-stay";
 import { villageCategoryPaths } from "@/content/village-categories";
 import { getVillageSlugs } from "@/content/village-details";
 import { getMuseumSlugs } from "@/content/museum-details";
@@ -30,6 +31,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: "weekly",
     priority: 0.9,
   }));
+
+  const romanticStayRoutes: SitemapEntry[] = Object.values(romanticStayPaths).map(
+    (path) => ({
+      url: absoluteUrl(path),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    }),
+  );
 
   const polishRoutes: SitemapEntry[] = [
     "/pl/",
@@ -136,6 +145,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return deduplicateByCanonicalUrl([
     ...accommodationLandingRoutes,
+    ...romanticStayRoutes,
     ...polishRoutes,
     ...routes,
     ...familyBeachRoutes,
