@@ -1,7 +1,7 @@
 {
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/prepare-build.cjs && next build",
+    "build": "node scripts/prepare-build.cjs && node scripts/qa-seo-intent-architecture.cjs && next build",
     "start": "next start",
     "qa:ai": "node scripts/qa-ai-concierge.mjs",
     "qa:gsc": "node scripts/qa-gsc-index-routing.cjs",
