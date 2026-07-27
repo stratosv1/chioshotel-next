@@ -1,4 +1,5 @@
-import { getSeoAdvisorData, type SeoPriority } from "@/lib/gsc/advisor";
+import { type SeoPriority } from "@/lib/gsc/advisor";
+import { getSeasonAwareSeoAdvisorData } from "@/lib/gsc/advisor-seasonality";
 import {
   getSeoAuditOwnerSummary,
   getSeoIntentMatch,
@@ -75,13 +76,13 @@ function enrichPriority(item: SeoPriority): SeoAdvisorPriority {
 }
 
 export async function getSeoAdvisorWithIntentData() {
-  const data = await getSeoAdvisorData();
+  const data = await getSeasonAwareSeoAdvisorData();
 
   return {
     ...data,
     priorities: data.priorities.map(enrichPriority),
     architecture: getSeoAuditOwnerSummary("el"),
     architectureNote:
-      "Τα #1–#9 είναι το ενεργό commercial intent map για EN / EL / FR / DE / IT / ES / TR. Το #5 έχει δύο transactional owners (direct booking και deals). Το #9 μοιράζεται σκόπιμα τον owner του #1. Νέα landing δημιουργείται μόνο όταν ένα νέο intent δεν καλύπτεται ήδη από αυτόν τον χάρτη και τα GSC δεδομένα το δικαιολογούν.",
+      "Τα #1–#9 είναι το ενεργό commercial intent map για EN / EL / FR / DE / IT / ES / TR. Το #5 έχει δύο transactional owners (direct booking και deals). Το #9 μοιράζεται σκόπιμα τον owner του #1. Ο Advisor συνδυάζει πλέον τις τελευταίες 28 ημέρες, τις προηγούμενες 28 και το ίδιο περσινό διάστημα ώστε να μη βαφτίζει τη φυσική εποχικότητα cannibalisation ή SEO βλάβη. Νέα landing δημιουργείται μόνο όταν ένα νέο intent δεν καλύπτεται ήδη από αυτόν τον χάρτη και τα GSC δεδομένα το δικαιολογούν.",
   };
 }
