@@ -5,6 +5,7 @@
     "start": "next start",
     "qa:ai": "node scripts/qa-ai-concierge.mjs",
     "qa:gsc": "node scripts/qa-gsc-index-routing.cjs",
+    "qa:seo": "node scripts/qa-seo-intent-architecture.cjs",
     "optimize:images": "node scripts/optimize-frog-images.cjs"
   },
   "dependencies": {
