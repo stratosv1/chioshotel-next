@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getSeoAdvisorData } from "@/lib/gsc/advisor";
+import { getSeoAdvisorWithIntentData } from "@/lib/gsc/advisor-intents";
 import CopySeoAdviceButton from "./CopySeoAdviceButton";
 
 export const dynamic = "force-dynamic";
@@ -59,7 +59,7 @@ function severityClasses(severity: "high" | "medium" | "low") {
 }
 
 export default async function SeoAdvisorPage() {
-  const data = await getSeoAdvisorData();
+  const data = await getSeoAdvisorWithIntentData();
   const current = data.current;
   const previous = data.previous;
   const changes = "changes" in data ? data.changes : null;
@@ -74,7 +74,7 @@ export default async function SeoAdvisorPage() {
               <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8a755f]">Voulamandis House · Staff</p>
               <h1 className="mt-2 text-3xl font-semibold tracking-tight">SEO Advisor</h1>
               <p className="mt-2 max-w-3xl text-sm leading-6 text-[#746454]">
-                Δεν είναι αντίγραφο του Google Search Console. Διαβάζει τα δεδομένα και τα μετατρέπει σε αποφάσεις: τι χρειάζεται διόρθωση, τι αξίζει να κάνουμε μετά και ποια είναι η πραγματική εικόνα του site.
+                Διαβάζει τα πραγματικά δεδομένα Google Search Console και τα ελέγχει πλέον απέναντι στο commercial intent map #1–#9, ώστε να ξεχωρίζει πραγματικές ευκαιρίες από cannibalisation ή λάθος owner.
               </p>
             </div>
             <a href="/staff" className="inline-flex w-fit items-center rounded-full border border-[#cdbda7] px-4 py-2 text-sm font-medium hover:bg-[#f4ede3]">← Staff Area</a>
@@ -98,10 +98,40 @@ export default async function SeoAdvisorPage() {
         )}
 
         <section className="mt-5 rounded-3xl border border-[#ddcfba] bg-white p-5 shadow-sm sm:p-7">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8a755f]">2. SEO αρχιτεκτονική</p>
+          <h2 className="mt-2 text-2xl font-semibold">Owners #1–#9 που δεν πρέπει να κανιβαλίζονται</h2>
+          <p className="mt-2 text-sm leading-6 text-[#746454]">{data.architectureNote}</p>
+          <div className="mt-5 grid gap-3 md:grid-cols-2">
+            {data.architecture.map((audit) => (
+              <article key={audit.audit} className="rounded-2xl border border-[#e8dccb] bg-[#fcfaf6] p-4">
+                <div className="flex items-start gap-3">
+                  <span className="inline-flex h-9 min-w-9 items-center justify-center rounded-full bg-[#44372d] px-2 text-sm font-semibold text-white">#{audit.audit}</span>
+                  <div className="min-w-0">
+                    <h3 className="font-semibold">{audit.label}</h3>
+                    <p className="mt-1 text-xs text-[#8a755f]">
+                      {audit.strategy === "split-owner" ? "Δύο ξεχωριστά transactional intents" : audit.strategy === "shared-owner" ? "Μοιράζεται σκόπιμα owner" : "Ένας owner ανά γλώσσα"}
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-3 space-y-2">
+                  {audit.owners.map((owner) => (
+                    <div key={owner.key} className="rounded-xl bg-white p-3">
+                      <p className="text-sm font-semibold">{owner.label}</p>
+                      <p className="mt-1 break-all text-xs text-[#6f6051]">EL owner: {owner.path}</p>
+                      {owner.note && <p className="mt-1 text-xs leading-5 text-[#8a755f]">{owner.note}</p>}
+                    </div>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-5 rounded-3xl border border-[#ddcfba] bg-white p-5 shadow-sm sm:p-7">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8a755f]">2. Τι πρέπει να διορθώσουμε</p>
-            <h2 className="mt-2 text-2xl font-semibold">Προτεραιότητες με εξήγηση</h2>
-            <p className="mt-2 text-sm leading-6 text-[#746454]">Δεν προτείνουμε αλλαγές επειδή ένας αριθμός φαίνεται μικρός. Προτεραιότητα παίρνουν μόνο περιπτώσεις με αρκετά δεδομένα και πρακτική επίδραση.</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8a755f]">3. Τι πρέπει να διορθώσουμε</p>
+            <h2 className="mt-2 text-2xl font-semibold">Προτεραιότητες με owner-aware διάγνωση</h2>
+            <p className="mt-2 text-sm leading-6 text-[#746454]">Δεν προτείνουμε αλλαγές επειδή ένας αριθμός φαίνεται μικρός. Προτεραιότητα παίρνουν μόνο περιπτώσεις με αρκετά δεδομένα, και πριν από κάθε αλλαγή ελέγχουμε ποια σελίδα έχει οριστεί ως owner του intent.</p>
           </div>
 
           <div className="mt-5 space-y-4">
@@ -110,9 +140,23 @@ export default async function SeoAdvisorPage() {
                 <div className="flex flex-wrap items-center gap-2">
                   <span className={`rounded-full border px-2.5 py-1 text-xs font-semibold ${severityClasses(item.severity)}`}>{severityLabel(item.severity)}</span>
                   <span className="text-xs text-[#8a755f]">#{index + 1}</span>
+                  {item.intent && (
+                    <span className={`rounded-full border px-2.5 py-1 text-xs font-semibold ${item.intent.isOwner ? "border-emerald-200 bg-emerald-50 text-emerald-800" : "border-amber-200 bg-amber-50 text-amber-800"}`}>
+                      Audit #{item.intent.audit} · {item.intent.isOwner ? "σωστός owner" : "πιθανό intent drift"}
+                    </span>
+                  )}
                 </div>
                 <h3 className="mt-3 text-lg font-semibold">{item.title}</h3>
                 <p className="mt-2 text-sm leading-6 text-[#625446]">{item.explanation}</p>
+
+                {item.intent && (
+                  <div className="mt-4 rounded-2xl border border-[#d9ccb9] bg-white p-4">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-[#8a755f]">Intent ownership</p>
+                    <p className="mt-1 text-sm font-semibold">#{item.intent.audit} · {item.intent.targetLabel}</p>
+                    <p className="mt-1 break-all text-xs leading-5 text-[#6f6051]">Owner: {item.intent.ownerPath}</p>
+                    {!item.intent.isOwner && <p className="mt-1 break-all text-xs leading-5 text-amber-800">Τώρα εμφανίζεται: {item.intent.pagePath}</p>}
+                  </div>
+                )}
 
                 {item.diagnosis && (
                   <div className="mt-4 rounded-2xl border border-[#e5d8c6] bg-[#f7f2e9] p-4">
@@ -175,12 +219,12 @@ export default async function SeoAdvisorPage() {
         </section>
 
         <section className="mt-5 rounded-3xl border border-[#ddcfba] bg-white p-5 shadow-sm sm:p-7">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8a755f]">3. Τι κάνουμε για να βελτιωθούν οι δείκτες</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8a755f]">4. Τι κάνουμε για να βελτιωθούν οι δείκτες</p>
           <h2 className="mt-2 text-2xl font-semibold">Τρόπος δουλειάς</h2>
           <div className="mt-5 grid gap-3 md:grid-cols-3">
-            <Step number="01" title="Επιλέγουμε μία ευκαιρία" text="Δεν πειράζουμε δεκάδες σελίδες μαζί. Επιλέγουμε εκεί που υπάρχει πραγματική ζήτηση ή πτώση." />
-            <Step number="02" title="Κάνουμε συγκεκριμένη αλλαγή" text="Title, περιεχόμενο, internal links ή δομή — ανάλογα με το πρόβλημα που δείχνουν query, θέση και CTR." />
-            <Step number="03" title="Μετράμε πριν ξαναλλάξουμε" text="Δίνουμε χρόνο στη Google και συγκρίνουμε επόμενη περίοδο. Έτσι ξέρουμε αν η αλλαγή βοήθησε ή όχι." />
+            <Step number="01" title="Βρίσκουμε το intent και τον owner" text="Πριν πειράξουμε σελίδα, ελέγχουμε αν το query ανήκει ήδη σε κάποιο από τα #1–#9 και ποια localized σελίδα είναι ο owner." />
+            <Step number="02" title="Κάνουμε μία συγκεκριμένη αλλαγή" text="Title, περιεχόμενο, internal links ή δομή — στη σωστή owner σελίδα και μόνο όταν τα δεδομένα δείχνουν πραγματικό πρόβλημα ή ευκαιρία." />
+            <Step number="03" title="Μετράμε πριν ξαναλλάξουμε" text="Δίνουμε χρόνο στη Google και συγκρίνουμε την επόμενη περίοδο. Νέα landing δημιουργείται μόνο για νέο, αποδεδειγμένο intent χωρίς υπάρχον owner." />
           </div>
         </section>
 
