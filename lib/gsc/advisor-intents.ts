@@ -29,8 +29,31 @@ function intentContext(match: SeoIntentMatch) {
   } as const;
 }
 
+function resolveIntent(item: SeoPriority) {
+  const direct = getSeoIntentMatch(item.query, item.page);
+  if (!item.query || !item.page) return direct;
+
+  const query = item.query
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLocaleLowerCase("en-US");
+
+  const hasDealsSignal = /(deal|offer|package|προσφορ|πακετ|offre|forfait|angebot|aktion|offert|pacchett|oferta|paquete|firsat|paket)/.test(query);
+  const hasBookingSignal = /(rate|price|book|booking|reservation|κρατη|τιμ|tarif|preis|buch|prezz|prenot|precio|reserva|rezervasyon|fiyat)/.test(query);
+
+  if (hasDealsSignal) {
+    return getSeoIntentMatch("chios accommodation deals", item.page) || direct;
+  }
+
+  if (hasBookingSignal) {
+    return getSeoIntentMatch("chios direct booking", item.page) || direct;
+  }
+
+  return direct;
+}
+
 function enrichPriority(item: SeoPriority): SeoAdvisorPriority {
-  const match = getSeoIntentMatch(item.query, item.page);
+  const match = resolveIntent(item);
   if (!match) return item;
 
   const ownerSentence = match.isOwner
