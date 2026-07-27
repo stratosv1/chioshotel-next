@@ -27,11 +27,11 @@ const copy: Record<LanguageCode, TraditionalIntentCopy> = {
   },
   fr: {
     seoDescription:
-      "Hébergement à Chios au Voulamandis House à Kambos : petite maison d’hôtes familiale au caractère traditionnel, avec chambres, appartements et disponibilités en direct.",
-    introTitle: "Une maison d’hôtes familiale au caractère traditionnel de Chios",
+      "Hébergement à Chios au Voulamandis House à Kambos, pour les voyageurs recherchant l’esprit d’une maison d’hôtes ou d’un séjour traditionnel, avec chambres, appartements et disponibilité en direct.",
+    introTitle: "Une adresse familiale au caractère traditionnel de Chios",
     paragraph:
       "Les voyageurs qui recherchent une maison d’hôtes ou un hébergement traditionnel à Chios souhaitent souvent une adresse plus petite, plus calme et plus personnelle qu’un grand hôtel. Voulamandis House correspond à cet esprit grâce à sa taille familiale, son cadre historique à Kambos, ses agrumes et le contact direct avec les hôtes, tout en restant clairement un hébergement de chambres et d’appartements plutôt qu’un hôtel avec services complets.",
-    fact: "Maison d’hôtes familiale dans le cadre historique et verdoyant de Kambos",
+    fact: "Hébergement familial dans le cadre historique et verdoyant de Kambos",
   },
   de: {
     seoDescription:
