@@ -2,23 +2,26 @@ import type { Metadata } from "next";
 import { AccommodationLandingAnalytics } from "@/components/analytics/AccommodationLandingAnalytics";
 import { GermanAccommodationPage } from "@/components/landing/GermanAccommodationPage";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { withTraditionalAccommodationIntent } from "@/content/accommodation-traditional-intent";
 import { chiosUnterkunftPageDe } from "@/content/chios-unterkunft";
 import { buildChiosUnterkunftSchema } from "@/content/chios-unterkunft-schema";
 import { accommodationLandingLanguages } from "@/lib/accommodation-landing-i18n";
 import { absoluteUrl, buildPageMetadata } from "@/lib/seo";
 
+const pageData = withTraditionalAccommodationIntent(chiosUnterkunftPageDe, "de");
+
 const baseMetadata = buildPageMetadata({
-  path: chiosUnterkunftPageDe.seo.canonicalPath,
-  title: chiosUnterkunftPageDe.seo.title,
-  description: chiosUnterkunftPageDe.seo.description,
-  image: chiosUnterkunftPageDe.seo.ogImage,
-  imageAlt: chiosUnterkunftPageDe.seo.ogImageAlt,
+  path: pageData.seo.canonicalPath,
+  title: pageData.seo.title,
+  description: pageData.seo.description,
+  image: pageData.seo.ogImage,
+  imageAlt: pageData.seo.ogImageAlt,
 });
 
 export const metadata: Metadata = {
   ...baseMetadata,
   alternates: {
-    canonical: absoluteUrl(chiosUnterkunftPageDe.seo.canonicalPath),
+    canonical: absoluteUrl(pageData.seo.canonicalPath),
     languages: accommodationLandingLanguages(),
   },
 };
@@ -26,11 +29,11 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <>
-      <JsonLd data={buildChiosUnterkunftSchema(chiosUnterkunftPageDe)} />
-      <GermanAccommodationPage data={chiosUnterkunftPageDe} />
+      <JsonLd data={buildChiosUnterkunftSchema(pageData)} />
+      <GermanAccommodationPage data={pageData} />
       <AccommodationLandingAnalytics
         language="de"
-        pathname={chiosUnterkunftPageDe.seo.canonicalPath}
+        pathname={pageData.seo.canonicalPath}
       />
     </>
   );
