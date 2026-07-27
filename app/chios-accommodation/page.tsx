@@ -2,23 +2,26 @@ import type { Metadata } from "next";
 import { AccommodationLandingAnalytics } from "@/components/analytics/AccommodationLandingAnalytics";
 import { ChiosAccommodationPage } from "@/components/landing/ChiosAccommodationPage";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { withTraditionalAccommodationIntent } from "@/content/accommodation-traditional-intent";
 import { chiosAccommodationPageEn } from "@/content/chios-accommodation";
 import { buildChiosAccommodationSchema } from "@/content/chios-accommodation-schema";
 import { accommodationLandingLanguages } from "@/lib/accommodation-landing-i18n";
 import { absoluteUrl, buildPageMetadata } from "@/lib/seo";
 
+const pageData = withTraditionalAccommodationIntent(chiosAccommodationPageEn, "en");
+
 const baseMetadata = buildPageMetadata({
-  path: chiosAccommodationPageEn.seo.canonicalPath,
-  title: chiosAccommodationPageEn.seo.title,
-  description: chiosAccommodationPageEn.seo.description,
-  image: chiosAccommodationPageEn.seo.ogImage,
-  imageAlt: chiosAccommodationPageEn.seo.ogImageAlt,
+  path: pageData.seo.canonicalPath,
+  title: pageData.seo.title,
+  description: pageData.seo.description,
+  image: pageData.seo.ogImage,
+  imageAlt: pageData.seo.ogImageAlt,
 });
 
 export const metadata: Metadata = {
   ...baseMetadata,
   alternates: {
-    canonical: absoluteUrl(chiosAccommodationPageEn.seo.canonicalPath),
+    canonical: absoluteUrl(pageData.seo.canonicalPath),
     languages: accommodationLandingLanguages(),
   },
 };
@@ -26,11 +29,11 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <>
-      <JsonLd data={buildChiosAccommodationSchema(chiosAccommodationPageEn)} />
-      <ChiosAccommodationPage data={chiosAccommodationPageEn} />
+      <JsonLd data={buildChiosAccommodationSchema(pageData)} />
+      <ChiosAccommodationPage data={pageData} />
       <AccommodationLandingAnalytics
         language="en"
-        pathname={chiosAccommodationPageEn.seo.canonicalPath}
+        pathname={pageData.seo.canonicalPath}
       />
     </>
   );
