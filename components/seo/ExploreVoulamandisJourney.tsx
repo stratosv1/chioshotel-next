@@ -21,6 +21,7 @@ const COPY: Record<SiteLanguage, {
   rooms: string;
   rates: string;
   hotelsGuide: string;
+  romantic: string;
 }> = {
   en: {
     kicker: "Plan the rest of your Chios stay",
@@ -30,6 +31,7 @@ const COPY: Record<SiteLanguage, {
     rooms: "Explore rooms & apartments",
     rates: "Check direct rates",
     hotelsGuide: "Compare Chios hotels & areas",
+    romantic: "Romantic stay for couples",
   },
   el: {
     kicker: "Οργανώστε την υπόλοιπη διαμονή σας στη Χίο",
@@ -39,6 +41,7 @@ const COPY: Record<SiteLanguage, {
     rooms: "Δωμάτια & διαμερίσματα",
     rates: "Απευθείας τιμές",
     hotelsGuide: "Ξενοδοχεία στη Χίο & περιοχές",
+    romantic: "Ρομαντική διαμονή για δύο",
   },
   fr: {
     kicker: "Organisez la suite de votre séjour à Chios",
@@ -48,6 +51,7 @@ const COPY: Record<SiteLanguage, {
     rooms: "Chambres & appartements",
     rates: "Tarifs directs",
     hotelsGuide: "Comparer hôtels & zones de Chios",
+    romantic: "Séjour romantique à deux",
   },
   de: {
     kicker: "Planen Sie den Rest Ihres Chios-Aufenthalts",
@@ -57,6 +61,7 @@ const COPY: Record<SiteLanguage, {
     rooms: "Zimmer & Apartments",
     rates: "Direktpreise",
     hotelsGuide: "Hotels & Gebiete vergleichen",
+    romantic: "Romantisch zu zweit",
   },
   it: {
     kicker: "Organizza il resto del tuo soggiorno a Chios",
@@ -66,6 +71,7 @@ const COPY: Record<SiteLanguage, {
     rooms: "Camere & appartamenti",
     rates: "Tariffe dirette",
     hotelsGuide: "Confronta hotel & zone di Chios",
+    romantic: "Soggiorno romantico",
   },
   es: {
     kicker: "Organice el resto de su estancia en Chios",
@@ -75,6 +81,7 @@ const COPY: Record<SiteLanguage, {
     rooms: "Habitaciones & apartamentos",
     rates: "Tarifas directas",
     hotelsGuide: "Comparar hoteles & zonas de Chios",
+    romantic: "Estancia romántica",
   },
   tr: {
     kicker: "Sakız Adası konaklamanızın devamını planlayın",
@@ -84,17 +91,18 @@ const COPY: Record<SiteLanguage, {
     rooms: "Oda & daireler",
     rates: "Doğrudan fiyatlar",
     hotelsGuide: "Sakız Adası otelleri & bölgeler",
+    romantic: "Çiftler için romantik konaklama",
   },
 };
 
-const ROUTES: Record<SiteLanguage, { home: string; rooms: string; rates: string; hotelsGuide: string }> = {
-  en: { home: "/chios-accommodation/", rooms: "/chios-rooms/", rates: "/chios-hotels-rates/", hotelsGuide: "/chios-hotels/" },
-  el: { home: "/el/diamoni-sti-xio/", rooms: "/el/domatia-xios/", rates: "/el/amesi-kratisi-voulamandis-house/", hotelsGuide: "/el/xenodoxeia-xios/" },
-  fr: { home: "/fr/hebergement-chios/", rooms: "/fr/chambres-a-chios/", rates: "/fr/tarifs-des-hotels-a-chios/", hotelsGuide: "/fr/hotels-chios/" },
-  de: { home: "/de/chios-unterkunft/", rooms: "/de/chios-zimmer/", rates: "/de/hotelpreise-auf-der-insel-chios/", hotelsGuide: "/de/hotels-auf-chios/" },
-  it: { home: "/it/alloggio-chios/", rooms: "/it/camere-a-chios/", rates: "/it/prezzi-hotel-chios/", hotelsGuide: "/it/hotel-chios/" },
-  es: { home: "/es/alojamiento-chios/", rooms: "/es/habitaciones-en-chios/", rates: "/es/los-mejores-precios-de-hotel-en-la-isla-chios/", hotelsGuide: "/es/hoteles-chios/" },
-  tr: { home: "/tr/sakiz-adasi-konaklama/", rooms: "/tr/sakiz-adasi-odalari/", rates: "/tr/sakiz-adasi-rezervasyon/", hotelsGuide: "/tr/sakiz-adasi-otelleri/" },
+const ROUTES: Record<SiteLanguage, { home: string; rooms: string; rates: string; hotelsGuide: string; romantic: string }> = {
+  en: { home: "/chios-accommodation/", rooms: "/chios-rooms/", rates: "/chios-hotels-rates/", hotelsGuide: "/chios-hotels/", romantic: "/romantic-stay-in-chios/" },
+  el: { home: "/el/diamoni-sti-xio/", rooms: "/el/domatia-xios/", rates: "/el/amesi-kratisi-voulamandis-house/", hotelsGuide: "/el/xenodoxeia-xios/", romantic: "/el/romantiki-diamoni-sti-xio/" },
+  fr: { home: "/fr/hebergement-chios/", rooms: "/fr/chambres-a-chios/", rates: "/fr/tarifs-des-hotels-a-chios/", hotelsGuide: "/fr/hotels-chios/", romantic: "/fr/sejour-romantique-chios/" },
+  de: { home: "/de/chios-unterkunft/", rooms: "/de/chios-zimmer/", rates: "/de/hotelpreise-auf-der-insel-chios/", hotelsGuide: "/de/hotels-auf-chios/", romantic: "/de/romantischer-aufenthalt-auf-chios/" },
+  it: { home: "/it/alloggio-chios/", rooms: "/it/camere-a-chios/", rates: "/it/prezzi-hotel-chios/", hotelsGuide: "/it/hotel-chios/", romantic: "/it/soggiorno-romantico-chios/" },
+  es: { home: "/es/alojamiento-chios/", rooms: "/es/habitaciones-en-chios/", rates: "/es/los-mejores-precios-de-hotel-en-la-isla-chios/", hotelsGuide: "/es/hoteles-chios/", romantic: "/es/estancia-romantica-quios/" },
+  tr: { home: "/tr/sakiz-adasi-konaklama/", rooms: "/tr/sakiz-adasi-odalari/", rates: "/tr/sakiz-adasi-rezervasyon/", hotelsGuide: "/tr/sakiz-adasi-otelleri/", romantic: "/tr/sakiz-adasi-romantik-konaklama/" },
 };
 
 const CONTENT_MARKERS = [
@@ -108,6 +116,7 @@ const CONTENT_MARKERS = [
 const LANDING_PATHS = new Set([
   "/chios-hotels", "/el/xenodoxeia-xios", "/fr/hotels-chios", "/de/hotels-auf-chios", "/it/hotel-chios", "/es/hoteles-chios", "/tr/sakiz-adasi-otelleri",
   "/chios-accommodation", "/el/diamoni-sti-xio", "/fr/hebergement-chios", "/de/chios-unterkunft", "/it/alloggio-chios", "/es/alojamiento-chios", "/tr/sakiz-adasi-konaklama",
+  "/romantic-stay-in-chios", "/el/romantiki-diamoni-sti-xio", "/fr/sejour-romantique-chios", "/de/romantischer-aufenthalt-auf-chios", "/it/soggiorno-romantico-chios", "/es/estancia-romantica-quios", "/tr/sakiz-adasi-romantik-konaklama",
 ]);
 
 function shouldShow(pathname: string) {
@@ -116,7 +125,7 @@ function shouldShow(pathname: string) {
   return CONTENT_MARKERS.some((marker) => normalized.includes(marker));
 }
 
-function trackJourney(destination: "house" | "rooms" | "rates" | "hotels_guide", pathname: string, language: SiteLanguage) {
+function trackJourney(destination: "house" | "rooms" | "rates" | "hotels_guide" | "romantic", pathname: string, language: SiteLanguage) {
   const browserWindow = window as GtagWindow;
   browserWindow.gtag?.("event", "seo_journey_click", {
     destination,
@@ -139,8 +148,9 @@ export function ExploreVoulamandisJourney({ language, pathname }: Props) {
           <span className="text-xs font-black uppercase tracking-[0.16em] text-[#e7c98d]">{copy.kicker}</span>
           <h2 id="seo-journey-title" className="mt-4 max-w-[760px] text-3xl font-black leading-tight tracking-[-0.045em] text-white md:text-5xl">{copy.title}</h2>
           <p className="mt-5 max-w-[720px] text-base leading-8 text-white/80 md:text-lg">{copy.text}</p>
-          <div className="mt-7 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="mt-7 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
             <a onClick={() => trackJourney("hotels_guide", pathname, language)} href={routes.hotelsGuide} className="inline-flex min-h-12 items-center justify-center rounded-full border border-amber-200/35 bg-amber-100/10 px-5 py-3 text-center text-sm font-black !text-amber-100 transition hover:bg-amber-100 hover:!text-[#263127]">{copy.hotelsGuide}</a>
+            <a onClick={() => trackJourney("romantic", pathname, language)} href={routes.romantic} className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#e7c98d]/45 bg-[#e7c98d]/10 px-5 py-3 text-center text-sm font-black !text-[#f5dfb1] transition hover:bg-[#e7c98d] hover:!text-[#263127]">{copy.romantic}</a>
             <a onClick={() => trackJourney("house", pathname, language)} href={routes.home} className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/25 px-5 py-3 text-center text-sm font-black !text-white transition hover:bg-white/10">{copy.house}</a>
             <a onClick={() => trackJourney("rooms", pathname, language)} href={routes.rooms} className="inline-flex min-h-12 items-center justify-center rounded-full bg-white px-5 py-3 text-center text-sm font-black !text-[#263127] shadow-lg transition hover:-translate-y-0.5">{copy.rooms}</a>
             <a onClick={() => trackJourney("rates", pathname, language)} href={routes.rates} className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#d8b36a] px-5 py-3 text-center text-sm font-black !text-[#201a10] shadow-lg transition hover:-translate-y-0.5">{copy.rates}</a>
