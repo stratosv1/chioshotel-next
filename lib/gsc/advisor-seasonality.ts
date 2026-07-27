@@ -38,24 +38,24 @@ function getSeason(latestDate: string) {
 
   if (month >= 9 && month <= 10) {
     return {
-      phase: "cooldown" as const,
-      label: "Φυσική αποκλιμάκωση σεζόν",
-      note: "Σεπτέμβριος–Οκτώβριος: η πτώση έναντι των αμέσως προηγούμενων 28 ημερών μπορεί να είναι εποχική, γι’ αυτό ελέγχουμε πρώτα το ίδιο περσινό διάστημα.",
+      phase: "off-season" as const,
+      label: "Off-season · έναρξη",
+      note: "Σεπτέμβριος–Οκτώβριος: έχει ξεκινήσει η off season. Η πτώση έναντι των αμέσως προηγούμενων 28 ημερών μπορεί να είναι φυσιολογική, γι’ αυτό δίνουμε μεγαλύτερο βάρος στο ίδιο περσινό διάστημα, στη θέση και στο CTR.",
     };
   }
 
-  if (month >= 11 || month <= 3) {
+  if (month >= 4 && month <= 5) {
     return {
       phase: "off-season" as const,
-      label: "Off-season",
-      note: "Νοέμβριος–Μάρτιος: χαμηλότερη ζήτηση είναι αναμενόμενη και δεν τη χαρακτηρίζουμε SEO βλάβη χωρίς επιβεβαίωση από YoY, ranking και CTR.",
+      label: "Off-season · προετοιμασία σεζόν",
+      note: "Απρίλιος–Μάιος παραμένουν off season για το Voulamandis House, παρότι η ζήτηση αρχίζει συνήθως να ενισχύεται. Συγκρίνουμε πάντα με το ίδιο περσινό διάστημα πριν χαρακτηρίσουμε μια μεταβολή SEO πρόβλημα ή επιτυχία.",
     };
   }
 
   return {
-    phase: "ramp-up" as const,
-    label: "Άνοδος σεζόν",
-    note: "Απρίλιος–Μάιος: η ζήτηση ανεβαίνει και συγκρίνουμε ταυτόχρονα το πρόσφατο trend και το ίδιο περσινό διάστημα.",
+    phase: "off-season" as const,
+    label: "Off-season",
+    note: "Σεπτέμβριος–Μάιος: χαμηλότερη ζήτηση από το peak Ιουνίου–Αυγούστου είναι αναμενόμενη και δεν τη χαρακτηρίζουμε SEO βλάβη χωρίς επιβεβαίωση από YoY, ranking και CTR.",
   };
 }
 
@@ -133,8 +133,7 @@ export async function getSeasonAwareSeoAdvisorData(siteUrl = DEFAULT_SITE) {
     const yoyHealthy =
       (yearOverYear.clicks >= -15 || yearOverYear.impressions >= -15) &&
       yearOverYear.position <= 1.5;
-    const seasonalWindow =
-      seasonality.phase === "cooldown" || seasonality.phase === "off-season";
+    const seasonalWindow = seasonality.phase === "off-season";
 
     if (
       base.sync?.status === "success" &&
@@ -157,7 +156,7 @@ export async function getSeasonAwareSeoAdvisorData(siteUrl = DEFAULT_SITE) {
         return {
           ...item,
           severity: "medium" as const,
-          diagnosis: `${item.diagnosis || ""} Το site συνολικά παραμένει κοντά ή καλύτερα από το ίδιο περσινό διάστημα, άρα στην τρέχουσα εποχική φάση δεν θεωρούμε την 28ήμερη πτώση από μόνη της επαρκή απόδειξη SEO βλάβης.`.trim(),
+          diagnosis: `${item.diagnosis || ""} Το site συνολικά παραμένει κοντά ή καλύτερα από το ίδιο περσινό διάστημα, άρα στην off season δεν θεωρούμε την 28ήμερη πτώση από μόνη της επαρκή απόδειξη SEO βλάβης.`.trim(),
           action:
             "Παρακολουθούμε τη σελίδα εβδομαδιαία και ελέγχουμε ranking, CTR και το ίδιο περσινό διάστημα πριν κάνουμε αλλαγή. Επεμβαίνουμε μόνο αν η αδυναμία επιβεβαιώνεται και πέρα από τη φυσική εποχικότητα.",
           evidence: `${item.evidence} · site YoY clicks ${fmtPct(yearOverYear.clicks)} · site YoY impressions ${fmtPct(yearOverYear.impressions)}`,
