@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getSeoAdvisorWithIntentData } from "@/lib/gsc/advisor-intents";
 import CopySeoAdviceButton from "./CopySeoAdviceButton";
+import SeoTailwindCarousel from "./SeoTailwindCarousel";
 
 export const dynamic = "force-dynamic";
 
@@ -89,21 +90,21 @@ export default async function SeoAdvisorPage() {
         </section>
 
         {current && previous && changes && (
-          <section className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <SeoTailwindCarousel label="δείκτες" desktopColumns={4}>
             <Metric label="Clicks" value={n(current.clicks)} change={pct(changes.clicks)} />
             <Metric label="Impressions" value={n(current.impressions)} change={pct(changes.impressions)} />
             <Metric label="CTR" value={`${n(current.ctr * 100, 2)}%`} change={pct(changes.ctr)} />
             <Metric label="Μέση θέση" value={n(current.position, 1)} change={changes.position === 0 ? "σταθερή" : `${changes.position > 0 ? "+" : ""}${n(changes.position, 1)} θέσεις`} inverse />
-          </section>
+          </SeoTailwindCarousel>
         )}
 
         <section className="mt-5 rounded-3xl border border-[#ddcfba] bg-white p-5 shadow-sm sm:p-7">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8a755f]">2. SEO αρχιτεκτονική</p>
           <h2 className="mt-2 text-2xl font-semibold">Owners #1–#9 που δεν πρέπει να κανιβαλίζονται</h2>
           <p className="mt-2 text-sm leading-6 text-[#746454]">{data.architectureNote}</p>
-          <div className="mt-5 grid gap-3 md:grid-cols-2">
+          <SeoTailwindCarousel label="owners" desktopColumns={2}>
             {data.architecture.map((audit) => (
-              <article key={audit.audit} className="rounded-2xl border border-[#e8dccb] bg-[#fcfaf6] p-4">
+              <article key={audit.audit} className="h-full rounded-2xl border border-[#e8dccb] bg-[#fcfaf6] p-4">
                 <div className="flex items-start gap-3">
                   <span className="inline-flex h-9 min-w-9 items-center justify-center rounded-full bg-[#44372d] px-2 text-sm font-semibold text-white">#{audit.audit}</span>
                   <div className="min-w-0">
@@ -124,7 +125,7 @@ export default async function SeoAdvisorPage() {
                 </div>
               </article>
             ))}
-          </div>
+          </SeoTailwindCarousel>
         </section>
 
         <section className="mt-5 rounded-3xl border border-[#ddcfba] bg-white p-5 shadow-sm sm:p-7">
@@ -134,9 +135,9 @@ export default async function SeoAdvisorPage() {
             <p className="mt-2 text-sm leading-6 text-[#746454]">Δεν προτείνουμε αλλαγές επειδή ένας αριθμός φαίνεται μικρός. Προτεραιότητα παίρνουν μόνο περιπτώσεις με αρκετά δεδομένα, και πριν από κάθε αλλαγή ελέγχουμε ποια σελίδα έχει οριστεί ως owner του intent.</p>
           </div>
 
-          <div className="mt-5 space-y-4">
+          <SeoTailwindCarousel label="προτεραιότητες" desktopColumns={1}>
             {data.priorities.map((item, index) => (
-              <article key={`${item.title}-${index}`} className="rounded-2xl border border-[#e8dccb] bg-[#fcfaf6] p-4 sm:p-5">
+              <article key={`${item.title}-${index}`} className="h-full rounded-2xl border border-[#e8dccb] bg-[#fcfaf6] p-4 sm:p-5">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className={`rounded-full border px-2.5 py-1 text-xs font-semibold ${severityClasses(item.severity)}`}>{severityLabel(item.severity)}</span>
                   <span className="text-xs text-[#8a755f]">#{index + 1}</span>
@@ -166,11 +167,11 @@ export default async function SeoAdvisorPage() {
                 )}
 
                 {item.queryBreakdown && item.queryBreakdown.length > 0 && (
-                  <div className="mt-4 rounded-2xl border border-[#e8dccb] bg-white p-4">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-[#8a755f]">
-                      {item.queryBreakdownTitle || "Queries που εξηγούν το εύρημα"}
-                    </p>
-                    <p className="mt-1 text-xs leading-5 text-[#8a755f]">
+                  <details className="mt-4 rounded-2xl border border-[#e8dccb] bg-white p-4">
+                    <summary className="cursor-pointer list-none text-xs font-semibold uppercase tracking-wide text-[#8a755f]">
+                      {item.queryBreakdownTitle || "Queries που εξηγούν το εύρημα"} · πατήστε για λεπτομέρειες
+                    </summary>
+                    <p className="mt-2 text-xs leading-5 text-[#8a755f]">
                       {item.queryBreakdownNote || "Προηγούμενες 28 ημέρες → τελευταίες 28 ημέρες."}
                     </p>
                     <div className="mt-3 space-y-3">
@@ -186,7 +187,7 @@ export default async function SeoAdvisorPage() {
                         </div>
                       ))}
                     </div>
-                  </div>
+                  </details>
                 )}
 
                 <div className="mt-4 rounded-2xl bg-white p-4">
@@ -215,17 +216,17 @@ export default async function SeoAdvisorPage() {
                 </div>
               </article>
             ))}
-          </div>
+          </SeoTailwindCarousel>
         </section>
 
         <section className="mt-5 rounded-3xl border border-[#ddcfba] bg-white p-5 shadow-sm sm:p-7">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8a755f]">4. Τι κάνουμε για να βελτιωθούν οι δείκτες</p>
           <h2 className="mt-2 text-2xl font-semibold">Τρόπος δουλειάς</h2>
-          <div className="mt-5 grid gap-3 md:grid-cols-3">
+          <SeoTailwindCarousel label="βήματα" desktopColumns={3}>
             <Step number="01" title="Βρίσκουμε το intent και τον owner" text="Πριν πειράξουμε σελίδα, ελέγχουμε αν το query ανήκει ήδη σε κάποιο από τα #1–#9 και ποια localized σελίδα είναι ο owner." />
             <Step number="02" title="Κάνουμε μία συγκεκριμένη αλλαγή" text="Title, περιεχόμενο, internal links ή δομή — στη σωστή owner σελίδα και μόνο όταν τα δεδομένα δείχνουν πραγματικό πρόβλημα ή ευκαιρία." />
             <Step number="03" title="Μετράμε πριν ξαναλλάξουμε" text="Δίνουμε χρόνο στη Google και συγκρίνουμε την επόμενη περίοδο. Νέα landing δημιουργείται μόνο για νέο, αποδεδειγμένο intent χωρίς υπάρχον owner." />
-          </div>
+          </SeoTailwindCarousel>
         </section>
 
         <section className="mt-5 rounded-3xl border border-[#ddcfba] bg-white p-5 shadow-sm">
@@ -251,7 +252,7 @@ function Metric({ label, value, change, inverse = false }: { label: string; valu
   const numeric = Number(change.replace("%", "").replace("+", ""));
   const good = Number.isFinite(numeric) ? (inverse ? numeric <= 0 : numeric >= 0) : true;
   return (
-    <div className="rounded-3xl border border-[#ddcfba] bg-white p-4 shadow-sm">
+    <div className="h-full rounded-3xl border border-[#ddcfba] bg-white p-4 shadow-sm">
       <p className="text-xs font-semibold uppercase tracking-wide text-[#8a755f]">{label}</p>
       <p className="mt-2 text-2xl font-semibold">{value}</p>
       <p className={`mt-1 text-sm font-medium ${good ? "text-emerald-700" : "text-red-700"}`}>{change}</p>
@@ -262,7 +263,7 @@ function Metric({ label, value, change, inverse = false }: { label: string; valu
 
 function Step({ number, title, text }: { number: string; title: string; text: string }) {
   return (
-    <div className="rounded-2xl bg-[#faf7f1] p-4">
+    <div className="h-full rounded-2xl bg-[#faf7f1] p-4">
       <p className="text-xs font-semibold tracking-[0.18em] text-[#8a755f]">{number}</p>
       <h3 className="mt-2 font-semibold">{title}</h3>
       <p className="mt-2 text-sm leading-6 text-[#746454]">{text}</p>
