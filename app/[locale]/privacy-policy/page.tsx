@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Privacy Policy | Voulamandis House",
+  description: "Privacy policy for the Voulamandis House website.",
   robots: {
     index: false,
     follow: true,
