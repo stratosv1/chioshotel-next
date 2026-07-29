@@ -58,6 +58,9 @@ const masticMuseumPaths: Record<LanguageCode, string> = { en: "/chios/chios-muse
 export function VoulamandisFooterTailwind({ language = "en" }: FooterProps) {
   const copy = footerCopy[language] || footerCopy.en;
   const year = new Date().getFullYear();
+  const locationLabel = language === "tr" ? "Kambos, Sakız Adası" : language === "el" ? "Κάμπος, Χίος" : "Kampos, Chios";
+  const footerTagline = language === "tr" ? "Sakız Adası odaları & daireleri · Doğrudan konaklama" : language === "el" ? "Δωμάτια & διαμερίσματα στη Χίο · Απευθείας διαμονή" : "Chios rooms & apartments · Direct stay";
+  const footerNavLabel = language === "tr" ? "Alt bilgi menüsü" : language === "el" ? "Πλοήγηση υποσέλιδου" : "Footer navigation";
   const groups = [
     { title: copy.groups.stay, links: [{ label: copy.links.rooms, href: roomsPaths[language] }, { label: copy.links.ratesAvailability, href: ratesPaths[language] }, { label: copy.links.contact, href: contactPaths[language] }] },
     { title: copy.groups.exploreChios, links: [{ label: copy.links.chiosIslandGuide, href: chiosPaths[language] }, { label: copy.links.beaches, href: beachPaths[language] }, { label: copy.links.villages, href: villagePaths[language] }, { label: copy.links.museums, href: museumPaths[language] }, { label: copy.links.holidayQuiz, href: quizPaths[language] }] },
@@ -71,7 +74,7 @@ export function VoulamandisFooterTailwind({ language = "en" }: FooterProps) {
         <section className="rounded-[1.5rem] border border-white/10 bg-white/[0.06] p-4 shadow-xl shadow-black/15 backdrop-blur md:rounded-[2rem] md:p-8 md:shadow-2xl">
           <a href={language === "en" ? "/" : `/${language}/`} className="flex items-center gap-3 md:gap-4">
             <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-sm font-black text-stone-900 shadow-lg shadow-black/20 md:h-14 md:w-14 md:text-lg">VH</span>
-            <span className="min-w-0"><strong className="block truncate text-xl font-black leading-none tracking-[-0.055em] text-white md:text-2xl">Voulamandis House</strong><small className="mt-1 block text-[10px] font-black uppercase tracking-[0.16em] text-white/50 md:mt-2 md:text-xs">Kampos, Chios</small></span>
+            <span className="min-w-0"><strong className="block truncate text-xl font-black leading-none tracking-[-0.055em] text-white md:text-2xl">Voulamandis House</strong><small className="mt-1 block text-[10px] font-black uppercase tracking-[0.16em] text-white/50 md:mt-2 md:text-xs">{locationLabel}</small></span>
           </a>
           <p className="mt-4 text-sm leading-6 text-white/70 md:mt-6 md:max-w-xl md:text-base md:leading-8">{copy.description}</p>
           <div className="mt-4 grid grid-cols-2 gap-2 md:mt-7 md:grid-cols-2 lg:flex lg:flex-wrap">
@@ -81,7 +84,7 @@ export function VoulamandisFooterTailwind({ language = "en" }: FooterProps) {
             <a href="https://www.facebook.com/people/Voulamandis-House/100063584320703/" target="_blank" rel="noopener" aria-label="Facebook" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 text-[11px] font-black uppercase tracking-[0.08em] text-white lg:px-5"><span aria-hidden="true">f</span><span>Facebook</span></a>
           </div>
         </section>
-        <nav aria-label="Footer navigation" className="grid gap-3 md:gap-4 sm:grid-cols-3">
+        <nav aria-label={footerNavLabel} className="grid gap-3 md:gap-4 sm:grid-cols-3">
           {groups.map((group) => (
             <section key={group.title} className="rounded-[1.35rem] border border-white/10 bg-white/[0.045] p-3 backdrop-blur md:rounded-[1.75rem] md:p-5">
               <h2 className="text-[11px] font-black uppercase tracking-[0.16em] text-amber-200 md:text-sm">{group.title}</h2>
@@ -92,7 +95,7 @@ export function VoulamandisFooterTailwind({ language = "en" }: FooterProps) {
           ))}
         </nav>
       </div>
-      <div className="relative border-t border-white/10 px-4 py-4 md:py-5"><div className="mx-auto flex max-w-7xl flex-col gap-2 text-[10px] font-bold uppercase tracking-[0.1em] text-white/42 sm:flex-row sm:items-center sm:justify-between md:text-xs md:tracking-[0.12em]"><p>© {year} Voulamandis House. {copy.allRightsReserved}</p><p>Chios rooms & apartments · Direct stay</p></div></div>
+      <div className="relative border-t border-white/10 px-4 py-4 md:py-5"><div className="mx-auto flex max-w-7xl flex-col gap-2 text-[10px] font-bold uppercase tracking-[0.1em] text-white/42 sm:flex-row sm:items-center sm:justify-between md:text-xs md:tracking-[0.12em]"><p>© {year} Voulamandis House. {copy.allRightsReserved}</p><p>{footerTagline}</p></div></div>
     </footer>
   );
 }
