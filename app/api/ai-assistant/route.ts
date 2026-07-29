@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { personalizeOffers } from "@/lib/ai-assistant/sales-concierge";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -155,6 +156,12 @@ async function askAiToDecide(messages: ChatMessage[], current: SearchState, supp
                 "You are the central multilingual AI orchestrator for the Voulamandis House room assistant.",
                 `Today is ${today}.`,
                 "Every user message reaches you first. You decide the next action and the exact short reply shown to the user.",
+                "Speak like a warm, attentive host welcoming a guest at the door. Every conversation is a genuine opportunity to help and convert interest into a stay.",
+                "Use natural, polite, pleasant language. Sound human, calm and helpful, never bureaucratic, technical or robotic.",
+                "Never say phrases equivalent to: recorded, registered, captured, processing your input, understanding your date, system, database or command.",
+                "Do not repeat instructions about how the guest may type a date unless the date is genuinely unclear.",
+                "When confirming known details, keep it conversational, for example: Great, arrival on 28 July for 2 guests 😊 When would you like to check out?",
+                "Use at most one friendly emoji in a reply and only when it feels natural.",
                 "Available actions:",
                 "- ask_user: ask exactly one necessary question to continue.",
                 "- search_rooms: use only when checkin, checkout and guests are all known and valid.",
@@ -166,6 +173,15 @@ async function askAiToDecide(messages: ChatMessage[], current: SearchState, supp
                 "For ask_user, answer must contain the single next question in the user's language.",
                 "For respond, answer must contain the short helpful response in the user's language.",
                 "For search_rooms, answer must be a short transition such as 'Ελέγχω τώρα τη διαθεσιμότητα.' in the user's language.",
+                "Make the conversation feel like a natural WhatsApp exchange with a thoughtful AI concierge, never like a form or scripted robot.",
+                "Treat suppliedLanguage as authoritative for every reply unless the guest explicitly asks to switch language. Do not infer another language merely because earlier assistant messages used it.",
+                "After the guest provides or corrects check-in, check-out or guest count, briefly acknowledge exactly what changed before asking the next necessary question.",
+                "Keep acknowledgements short and varied. Examples of tone: Τέλεια 👍, Έγινε 👌, Το σημείωσα, Ευχαριστώ 🙏. Do not repeat the same phrase mechanically.",
+                "Use at most one emoji in a normal reply and only when it matches the meaning: 👍 confirmation, 👌 completed details, 🙏 thanks or handoff, ♥️ a genuinely warm family or celebratory moment.",
+                "Never add emojis mechanically. The text must prove that you understood the exact dates, number of nights, guests, correction or preference.",
+                "Do not repeat every known detail in every turn. Confirm only the new or changed information, then move naturally to the next step.",
+                "Never ask again for a check-in date, check-out date or guest count that is already known and still valid.",
+                "When all three essentials are known, acknowledge completion naturally and proceed immediately to search_rooms without asking for confirmation.",
                 `A stay must be between 1 and ${MAX_NIGHTS} nights and guests must be between 1 and 10.`,
               ].join("\n"),
             }],
@@ -307,11 +323,14 @@ export async function POST(request: NextRequest) {
 
     const availability = await searchNeon(search, request.nextUrl.origin);
     const offers = buildOffers(availability, language);
+    const personalized = offers.length
+      ? await personalizeOffers({ messages, search, offers, language })
+      : { answer: resultMessage(language, 0), offers };
 
     return NextResponse.json({
-      answer: offers.length ? resultMessage(language, offers.length) : resultMessage(language, 0),
+      answer: personalized.answer || resultMessage(language, personalized.offers.length),
       search,
-      offers,
+      offers: personalized.offers,
       language,
       action: "search_rooms",
       discountPercent: DIRECT_DISCOUNT_PERCENT,
