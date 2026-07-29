@@ -1,4 +1,4 @@
-name: Diagnose clean Spanish SEO branch
+name: Commit clean Spanish SEO branch
 
 on:
   push:
@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 jobs:
-  diagnose-clean-branch:
+  commit-clean-branch:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout clean Spanish branch
@@ -19,13 +19,10 @@ jobs:
           ref: fix/spanish-seo-language-signals-clean-2
           fetch-depth: 0
 
-      - name: Copy and verify while capturing results
+      - name: Copy only verified Spanish files
         shell: bash
         run: |
-          set +e
-          : > .spanish-clean-status.txt
-          git fetch origin fix/spanish-seo-language-signals >> .spanish-clean-status.txt 2>&1
-          echo "fetch=$?" >> .spanish-clean-status.txt
+          git fetch origin fix/spanish-seo-language-signals
           git checkout 652fa3d225ee1f48650b861da425119a4b290684 -- \
             components/VoulamandisFooterTailwind.tsx \
             components/contact/ContactPage.tsx \
@@ -35,25 +32,38 @@ jobs:
             components/rooms/RoomsCategoryPage.tsx \
             content/family-travel.ts \
             content/home.ts \
-            content/room-detail-schema.ts >> .spanish-clean-status.txt 2>&1
-          echo "copy=$?" >> .spanish-clean-status.txt
-          git diff --check >> .spanish-clean-status.txt 2>&1
-          echo "diffcheck=$?" >> .spanish-clean-status.txt
-          echo "changed files:" >> .spanish-clean-status.txt
-          git diff --name-only >> .spanish-clean-status.txt
-          npm ci >> .spanish-clean-status.txt 2>&1
-          echo "npm_ci=$?" >> .spanish-clean-status.txt
-          npm run qa:gsc >> .spanish-clean-status.txt 2>&1
-          echo "qa_gsc=$?" >> .spanish-clean-status.txt
-          npm run qa:seo >> .spanish-clean-status.txt 2>&1
-          echo "qa_seo=$?" >> .spanish-clean-status.txt
-          npm run build >> .spanish-clean-status.txt 2>&1
-          echo "build=$?" >> .spanish-clean-status.txt
-          git reset --hard HEAD
+            content/room-detail-schema.ts
+          git diff --cached --check
+          printf '%s\n' \
+            components/VoulamandisFooterTailwind.tsx \
+            components/contact/ContactPage.tsx \
+            components/home/LiveDirectRequest.tsx \
+            components/rooms/RoomDetailPage.tsx \
+            components/rooms/RoomWizardTailwind.tsx \
+            components/rooms/RoomsCategoryPage.tsx \
+            content/family-travel.ts \
+            content/home.ts \
+            content/room-detail-schema.ts | sort > /tmp/expected.txt
+          git diff --cached --name-only | sort > /tmp/actual.txt
+          diff -u /tmp/expected.txt /tmp/actual.txt
+
+      - name: Commit verified Spanish changes
+        shell: bash
+        run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .spanish-clean-status.txt
-          git commit -m "chore: record clean Spanish branch verification"
+          git rm -f --ignore-unmatch .spanish-clean-status.txt
+          git add \
+            components/VoulamandisFooterTailwind.tsx \
+            components/contact/ContactPage.tsx \
+            components/home/LiveDirectRequest.tsx \
+            components/rooms/RoomDetailPage.tsx \
+            components/rooms/RoomWizardTailwind.tsx \
+            components/rooms/RoomsCategoryPage.tsx \
+            content/family-travel.ts \
+            content/home.ts \
+            content/room-detail-schema.ts
+          git commit -m "Fix Spanish SEO and language signals"
           git push origin HEAD:fix/spanish-seo-language-signals-clean-2
 
-# diagnostic clean branch trigger 2026-07-29
+# clean commit trigger 2026-07-29
