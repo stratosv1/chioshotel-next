@@ -1260,7 +1260,7 @@ export const homePageFr: HomePageData = {
     ...homePageEn.hero,
     reviews: "143 avis",
     kicker: "KAMPOS CHIOS • VOULAMANDIS HOUSE",
-    title: "Hôtel et appartements à Chios, au cœur de Kambos",
+    title: "Chambres et appartements à Chios, au cœur de Kambos",
     descriptionHtml:
       'Vous cherchez un <strong>hôtel à Chios</strong> ou des <strong>chambres à Chios</strong> ? <strong>Voulamandis House</strong> vous accueille à Kambos avec des chambres confortables, une atmosphère paisible et une hospitalité authentique.',
     imageAlt: "Hôtel et appartements à Chios - Voulamandis House à Kambos",
@@ -1277,7 +1277,7 @@ export const homePageFr: HomePageData = {
     quizCard: {
       href: "/fr/quiz-vacances-a-chios/",
       icon: "🧭",
-      liveLabel: "Code réduction live",
+      liveLabel: "Code de réduction en direct",
       title: "Découvrez Chios",
       text: "Explorez les secrets de l’île et recevez un code pour votre séjour.",
       cta: "Commencer →",
@@ -1319,7 +1319,7 @@ export const homePageFr: HomePageData = {
           text: "Une atmosphère calme, un jardin et l’esprit authentique de Kambos pour se détendre.",
         },
         {
-          title: "🧭 Room Wizard",
+          title: "🧭 Trouver votre chambre",
           text: "Un assistant pratique pour trouver la chambre la plus adaptée à votre voyage.",
         },
         {
@@ -1368,7 +1368,7 @@ export const homePageFr: HomePageData = {
       },
     },
     discount: {
-      badge: "Offre live • Recevez votre code",
+      badge: "Offre en direct • Recevez votre code",
       title: "Réservez directement avec nous",
       text: "Recevez un code de réduction et réservez en direct, sans commissions.",
       benefits: [
@@ -1400,7 +1400,7 @@ export const homePageFr: HomePageData = {
     title: "Chambres à Chios pour couples et familles",
     text: "Nos chambres sont nettoyées chaque jour et pensées pour un séjour confortable, calme et de qualité à Kambos, Chios.",
     primaryCta: {
-      label: "Room Wizard",
+      label: "Trouver votre chambre",
       href: "/fr/chambres-a-chios/",
       icon: "✨",
     },
@@ -1418,6 +1418,7 @@ export const homePageFr: HomePageData = {
       {
         ...homePageEn.roomsPreview.rooms[0],
         title: "Chambre double économique",
+        liveBadge: "EN DIRECT",
         href: "/fr/chambres-a-chios/chambres-doubles-economiques/",
         directBadge: "🎁 -10% Réduction",
         bedBadge: "🛏️ 1 lit double ou 2 lits simples",
@@ -1430,6 +1431,7 @@ export const homePageFr: HomePageData = {
       {
         ...homePageEn.roomsPreview.rooms[1],
         title: "Chambres rez-de-chaussée",
+        liveBadge: "EN DIRECT",
         href: "/fr/chambres-a-chios/chambres-doubles-standard/",
         directBadge: "🎁 -10% Réduction",
         bedBadge: "🛏️ Double + lit supplémentaire",
@@ -1442,6 +1444,7 @@ export const homePageFr: HomePageData = {
       {
         ...homePageEn.roomsPreview.rooms[2],
         title: "Chambres à l’étage",
+        liveBadge: "EN DIRECT",
         href: "/fr/chambres-a-chios/chambres-doubles-standard/",
         directBadge: "🎁 -10% Réduction",
         bedBadge: "🛏️ Double + lit supplémentaire",
@@ -1454,12 +1457,13 @@ export const homePageFr: HomePageData = {
       {
         ...homePageEn.roomsPreview.rooms[3],
         title: "Appartement familial",
+        liveBadge: "EN DIRECT",
         href: "/fr/chambres-a-chios/appartements-familiaux-de-chios/",
         directBadge: "🎁 -10% Réduction",
         bedBadge: "🛏️ Lits famille",
         description:
           "Idéal pour les familles ou petits groupes qui souhaitent plus d’espace.",
-        meta: ["👤 ×4", "Espace", "🏡 Apt"],
+        meta: ["👤 ×4", "Espace", "🏡 Appartement"],
         amenities: ["❄️ A/C", "📶 Wi-Fi", "☕ Café", "🧊 Réfrigérateur"],
         cta: "Voir l’appartement",
       },

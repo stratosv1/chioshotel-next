@@ -94,6 +94,7 @@ const contactUiByLocale: Record<string, ContactUiText> = {
 
 const heroTitleByLocale: Partial<Record<string, string>> = {
   el: "Επικοινωνία με το Voulamandis House στη Χίο",
+  fr: "Contactez Voulamandis House à Chios",
   de: "Kontakt zum Voulamandis House auf Chios",
   tr: "Voulamandis House ile İletişim – Sakız Adası",
 };
