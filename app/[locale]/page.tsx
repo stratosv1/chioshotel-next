@@ -13,7 +13,7 @@ import {
 } from "@/content/home";
 import type { HomePageData } from "@/content/home";
 import { buildHomePageSchema } from "@/content/schema";
-import { buildPageMetadata } from "@/lib/seo";
+import { hardenGreekHomePageData, hardenGreekSchema } from "@/lib/greek-home-seo-hardening";
 import { withHomepageSeoIntent } from "@/lib/homepage-seo-intent";
 import {
   defaultLanguage,
@@ -21,6 +21,7 @@ import {
   languages,
   type LanguageCode,
 } from "@/lib/languages";
+import { buildPageMetadata } from "@/lib/seo";
 
 export const revalidate = 3600;
 
@@ -45,26 +46,7 @@ const homePages: Record<LanguageCode, HomePageData> = {
 };
 
 function getLocalizedHomePageData(locale: LanguageCode): HomePageData {
-  const data = withHomepageSeoIntent(homePages[locale], locale);
-
-  if (locale !== "el") {
-    return data;
-  }
-
-  return {
-    ...data,
-    intro: {
-      ...data.intro,
-      left: {
-        ...data.intro.left,
-        pills: data.intro.left.pills.map((pill) =>
-          pill === "💎 Value for money"
-            ? "💎 Καλή σχέση ποιότητας–τιμής"
-            : pill,
-        ),
-      },
-    },
-  };
+  return hardenGreekHomePageData(withHomepageSeoIntent(homePages[locale], locale));
 }
 
 export function generateStaticParams() {
@@ -99,10 +81,14 @@ export default async function Page({ params }: PageProps) {
   }
 
   const data = getLocalizedHomePageData(locale);
+  const schema = hardenGreekSchema(
+    buildHomePageSchema(data),
+    data.seo.canonicalPath,
+  );
 
   return (
     <>
-      <JsonLd data={buildHomePageSchema(data)} />
+      <JsonLd data={schema} />
       <HomePageTailwindV3 data={data} />
     </>
   );
