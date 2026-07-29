@@ -5,9 +5,10 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { buildLocalizedChiosHotelsGuideSchema } from "@/content/localized-chios-hotels-guide-schema";
 import { xenodoxeiaXiosGuide } from "@/content/xenodoxeia-xios-guide";
 import { chiosHotelsGuideLanguages } from "@/lib/chios-hotels-guide-i18n";
+import { hardenGreekSeoContent } from "@/lib/greek-seo-content-hardening";
 import { absoluteUrl, buildPageMetadata } from "@/lib/seo";
 
-const greekHotelGuideData = {
+const greekHotelGuideData = hardenGreekSeoContent({
   ...xenodoxeiaXiosGuide,
   seo: {
     ...xenodoxeiaXiosGuide.seo,
@@ -19,7 +20,7 @@ const greekHotelGuideData = {
     ...xenodoxeiaXiosGuide.hero,
     title: "Ξενοδοχεία στη Χίο: πού να μείνετε, περιοχές και επιλογές διαμονής",
   },
-};
+});
 
 const baseMetadata = buildPageMetadata({
   path: greekHotelGuideData.seo.canonicalPath,
