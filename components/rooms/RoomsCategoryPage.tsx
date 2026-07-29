@@ -33,7 +33,7 @@ const cardCtaLabels: Record<LanguageCode, Record<string, string>> = {
   el: {
     "first-floor": "Δείτε δωμάτια ορόφου",
     "ground-floor": "Δείτε δωμάτια ισογείου",
-    "economy-double": "Δείτε economy double rooms",
+    "economy-double": "Δείτε οικονομικά δίκλινα δωμάτια",
     "family-apartments": "Δείτε οικογενειακά διαμερίσματα",
   },
   fr: {
@@ -72,6 +72,33 @@ function getCardCtaLabel(cardId: string, language: LanguageCode, fallback: strin
   return cardCtaLabels[language]?.[cardId] ?? cardCtaLabels.en[cardId] ?? fallback;
 }
 
+function getDisplayedCards(data: RoomsCategoryPageData, language: LanguageCode) {
+  if (language !== "el") return data.cards;
+
+  return data.cards.map((card) => {
+    if (card.id === "economy-double") {
+      return {
+        ...card,
+        subtitle: "Οικονομική επιλογή για 2 άτομα",
+        description:
+          "Η πιο οικονομική επιλογή για 2 άτομα. Ανακαινισμένα δωμάτια 16m² με σύγχρονες παροχές και αυθεντική αίσθηση Κάμπου.",
+        badge: "Οικονομική επιλογή",
+        meta: ["2 άτομα", "16m²", "Οικονομικό"],
+      };
+    }
+
+    if (card.id === "first-floor") {
+      return {
+        ...card,
+        description:
+          "Απολαύστε την πανοραμική θέα στο κτήμα και τα εσπεριδοειδή από τη βεράντα σας. Φωτεινά δωμάτια με πιο αναβαθμισμένη αίσθηση.",
+      };
+    }
+
+    return card;
+  });
+}
+
 export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
   const language = getWizardLanguage(data.seo.canonicalPath);
   const hero =
@@ -93,6 +120,16 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
             "Εξερευνήστε τις κατηγορίες δωματίων και διαμερισμάτων μας στον Κάμπο της Χίου: οικονομικά δίκλινα, ισόγεια δωμάτια, δωμάτια ορόφου και οικογενειακά διαμερίσματα. Όλες οι επιλογές συγκεντρωμένες σε μία σελίδα για εύκολη σύγκριση πριν την κράτηση.",
         }
       : data.intro;
+  const cards = getDisplayedCards(data, language);
+  const tip =
+    language === "el"
+      ? {
+          ...data.tip,
+          title: "Συμβουλή για απευθείας κράτηση",
+          textHtml:
+            "Θυμηθείτε: χρησιμοποιήστε τον <strong>κωδικό έκπτωσης</strong> στην απευθείας κράτησή σας για να εξασφαλίσετε την <strong>καλύτερη διαθέσιμη τιμή</strong>.",
+        }
+      : data.tip;
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#fbf6ef] text-[#2f261f]">
@@ -181,7 +218,7 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
           className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
           id="rooms-list"
         >
-          {data.cards.map((card, index) => (
+          {cards.map((card, index) => (
             <a
               href={card.href}
               className="group overflow-hidden rounded-[30px] border border-amber-900/10 bg-white shadow-[0_18px_45px_rgba(47,38,31,0.10)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_30px_80px_rgba(47,38,31,0.16)] focus:outline-none focus:ring-4 focus:ring-amber-700/20"
@@ -236,15 +273,15 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
 
         <div className="mt-8 flex gap-4 rounded-[28px] border border-amber-900/10 bg-[#fffdfa] p-5 shadow-[0_18px_45px_rgba(47,38,31,0.08)] sm:items-start sm:p-6">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-amber-100 text-2xl shadow-inner">
-            {data.tip.icon}
+            {tip.icon}
           </div>
 
           <div>
             <h4 className="text-lg font-black tracking-[-0.02em] text-[#2f261f]">
-              {data.tip.title}
+              {tip.title}
             </h4>
             <p className="mt-2 text-sm leading-7 text-[#574b3f]">
-              <HtmlText html={data.tip.textHtml} />
+              <HtmlText html={tip.textHtml} />
             </p>
           </div>
         </div>
