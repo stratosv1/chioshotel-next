@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { GreekRoomWizardTailwind } from "@/components/rooms/GreekRoomWizardTailwind";
 import { RoomWizardTailwind } from "@/components/rooms/RoomWizardTailwind";
 import { TopicBadges } from "@/components/seo/TopicBadges";
 import type { RoomsCategoryPageData } from "@/content/rooms";
@@ -299,11 +300,18 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
         </div>
 
         <div className="mt-8">
-          <RoomWizardTailwind
-            rooms={data.wizard.rooms}
-            whatsappPhone={data.wizard.whatsappPhone}
-            language={language}
-          />
+          {language === "el" ? (
+            <GreekRoomWizardTailwind
+              rooms={data.wizard.rooms}
+              whatsappPhone={data.wizard.whatsappPhone}
+            />
+          ) : (
+            <RoomWizardTailwind
+              rooms={data.wizard.rooms}
+              whatsappPhone={data.wizard.whatsappPhone}
+              language={language}
+            />
+          )}
         </div>
       </section>
     </main>
