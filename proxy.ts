@@ -56,6 +56,13 @@ const legacyRedirects: Record<string, string> = {
   "/chios-rooms/ground-floor-rooms": "/chios-rooms/standard-double-room/",
   "/chios-rooms/economy-double-room": "/chios-rooms/economy-double-rooms/",
   "/chios-rooms/double-triple-rooms": "/chios-rooms/standard-double-room/",
+  "/de/uncategorized-de/economy-zimmer-auf-chios":
+    "/de/zimmer-chios/economy-zimmer-auf-chios/",
+  "/de/uncategorized-de/standard-doppelzimmer-auf-chios":
+    "/de/zimmer-chios/standard-doppelzimmer-auf-chios/",
+  "/de/uncategorized-de/familienapartments-in-chios":
+    "/de/zimmer-chios/familienapartments-in-chios/",
+  "/de/zimmer-chios": "/de/chios-zimmer/",
   "/domatia-xios/oikogeneiako-diamerisma":
     "/el/domatia-xios/oikogeneiako-diamerisma/",
   "/el/domatia-xios/chios-family-apartments":
@@ -362,8 +369,8 @@ const legacyRedirects: Record<string, string> = {
   "/language/el/Ξ±ΟΟ‡ΞΉΞΊΞ®": "/el/",
 
   // Old static URLs
-  "/de/chios-ist-die-beste-insel-griechenlands": "/de/chios/",
-  "/de/chios.html": "/de/chios/",
+  "/de/chios-ist-die-beste-insel-griechenlands": "/de/chios-insel/",
+  "/de/chios.html": "/de/chios-insel/",
   "/voulamandis-house.html": "/",
 
   // Italian old special route

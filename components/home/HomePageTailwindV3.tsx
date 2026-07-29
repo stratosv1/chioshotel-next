@@ -57,7 +57,43 @@ const accommodationLinks: Record<string, AccommodationLinkCopy> = {
   },
 };
 
-function localizeInheritedTurkishCopy(data: HomePageData): HomePageData {
+function localizeInheritedCopy(data: HomePageData): HomePageData {
+  if (data.seo.canonicalPath === "/de/") {
+    return {
+      ...data,
+      intro: {
+        ...data.intro,
+        right: {
+          ...data.intro.right,
+          cards: data.intro.right.cards.map((card) =>
+            card.title.includes("Room Wizard")
+              ? { ...card, title: "🧭 Zimmerfinder" }
+              : card,
+          ),
+        },
+      },
+      location: {
+        ...data.location,
+        infoCard: {
+          ...data.location.infoCard,
+          emailLabel: "E-Mail:",
+        },
+      },
+      roomsPreview: {
+        ...data.roomsPreview,
+        primaryCta: {
+          ...data.roomsPreview.primaryCta,
+          label: "Zimmerfinder",
+        },
+        rooms: data.roomsPreview.rooms.map((room) => ({
+          ...room,
+          title: room.title === "Economy Doppelzimmer" ? "Economy-Doppelzimmer" : room.title,
+          meta: room.meta.map((item) => item === "🏡 Apt" ? "🏡 Apartment" : item),
+        })),
+      },
+    };
+  }
+
   if (data.seo.canonicalPath !== "/tr/") {
     return data;
   }
@@ -111,7 +147,7 @@ export function HomePageTailwindV3({ data }: HomePageTailwindV3Props) {
         },
       }
     : data;
-  const renderedData = localizeInheritedTurkishCopy(dataWithAccommodationLink);
+  const renderedData = localizeInheritedCopy(dataWithAccommodationLink);
 
   return (
     <>
