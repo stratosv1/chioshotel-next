@@ -1,4 +1,4 @@
-﻿import { type LanguageCode, normalizePath } from "@/lib/languages";
+import { type LanguageCode, normalizePath } from "@/lib/languages";
 
 export type FamilyTravelImage = {
   src: string;
@@ -744,7 +744,7 @@ export const familyTravelPages = {
       title: "Un soggiorno tranquillo per famiglie che cercano più di una camera",
       subtitle:
         "Soggiorna nel tranquillo Kambos, goditi giornate semplici al mare, scopri musei e villaggi e torna ogni sera nel giardino di Voulamandis House.",
-      image: familyTravelImages.hero,
+      image: { ...familyTravelImages.hero, alt: "Vacanze in famiglia a Chios con bambini durante una giornata soleggiata sull’isola" },
       primaryCta: {
         label: "Prenota il soggiorno",
         href: localizedLinks.it.booking,
@@ -767,40 +767,40 @@ export const familyTravelPages = {
         title: "Spiagge sabbiose per famiglie",
         text:
           "Trascorri una giornata rilassata al mare, ad esempio a Komi, con tempo per giocare e riposare.",
-        image: familyTravelImages.sandyBeach,
+        image: { ...familyTravelImages.sandyBeach, alt: "Spiaggia sabbiosa di Komi a Chios, ideale per una giornata al mare in famiglia" },
         href: localizedLinks.it.komi,
       },
       {
         title: "Museo del Mastice",
         text:
           "Fai scoprire ai bambini la storia del mastice di Chios con una visita interessante e accessibile.",
-        image: familyTravelImages.museum,
+        image: { ...familyTravelImages.museum, alt: "Museo del Mastice di Chios, tappa culturale adatta alle famiglie" },
         href: localizedLinks.it.masticMuseum,
       },
       {
         title: "Biblioteca Korais",
         text:
           "Aggiungi una tappa culturale tranquilla ed educativa al tuo itinerario.",
-        image: familyTravelImages.koraisLibrary,
+        image: { ...familyTravelImages.koraisLibrary, alt: "Biblioteca Korais a Chios, visita culturale per famiglie" },
         href: localizedLinks.it.koraisLibrary,
       },
       {
         title: "Parchi giochi e pause semplici",
         text:
           "Organizza piccole pause con parchi giochi, passeggiate e luoghi dove i bambini possono muoversi.",
-        image: familyTravelImages.playground,
+        image: { ...familyTravelImages.playground, alt: "Parco giochi di Daskalopetra a Chios per bambini e famiglie" },
       },
       {
         title: "Attività per bambini più grandi",
         text:
           "Per le famiglie con bambini più grandi, Chios offre anche esperienze più attive.",
-        image: familyTravelImages.paintball,
+        image: { ...familyTravelImages.paintball, alt: "Attività di paintball all’aperto a Chios per ragazzi e famiglie" },
       },
       {
         title: "Soste facili per mangiare",
         text:
           "Mantieni i pasti semplici con indirizzi rilassati, sapori locali e piatti adatti ai bambini.",
-        image: familyTravelImages.pizza,
+        image: { ...familyTravelImages.pizza, alt: "Sosta gastronomica adatta alle famiglie a Chios con pasta e piatti semplici" },
       },
     ],
     familyDay: {
@@ -841,7 +841,7 @@ export const familyTravelPages = {
       title: "Una base tranquilla per famiglie",
       text:
         "Voulamandis House offre tranquillità, un giardino piacevole e facile accesso alla città, alle spiagge, ai villaggi e ai musei.",
-      image: familyTravelImages.garden,
+      image: { ...familyTravelImages.garden, alt: "Il tranquillo giardino del Voulamandis House a Kambos, Chios" },
       primaryCta: {
         label: "Prenota",
         href: localizedLinks.it.booking,

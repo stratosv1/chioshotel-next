@@ -159,7 +159,6 @@ function polishRoomModal(modal: HTMLElement) {
   }
 
   compactDesktopModal(modal);
-  forceCoveredHeroPhoto(modal);
   forceFourColumnAmenities(modal);
 }
 

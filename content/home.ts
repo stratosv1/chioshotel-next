@@ -2143,10 +2143,10 @@ export const homePageIt: HomePageData = {
     ...homePageEn.hero,
     reviews: "143 recensioni",
     kicker: "KAMPOS CHIOS • VOULAMANDIS HOUSE",
-    title: "Hotel e appartamenti a Chios, nel cuore di Kambos",
+    title: "Camere e appartamenti a Chios, nel cuore di Kambos",
     descriptionHtml:
       'Cerchi un <strong>hotel a Chios</strong> o <strong>camere a Chios</strong>? <strong>Voulamandis House</strong> ti accoglie a Kambos con camere confortevoli, atmosfera tranquilla e ospitalità autentica.',
-    imageAlt: "Hotel e appartamenti a Chios - Voulamandis House a Kambos",
+    imageAlt: "Camere e appartamenti a Chios - Voulamandis House a Kambos",
     primaryCta: {
       label: "Trova la camera con AI",
       href: "/ai-assistant/?lang=it",
@@ -2160,7 +2160,7 @@ export const homePageIt: HomePageData = {
     quizCard: {
       href: "/it/quiz-vacanze-a-chios/",
       icon: "🧭",
-      liveLabel: "Codice sconto live",
+      liveLabel: "Codice sconto in diretta",
       title: "Scopri Chios",
       text: "Esplora i segreti dell’isola e ricevi un codice per il tuo soggiorno.",
       cta: "Inizia →",
@@ -2202,7 +2202,7 @@ export const homePageIt: HomePageData = {
           text: "Atmosfera rilassante, giardino e il carattere autentico di Kambos.",
         },
         {
-          title: "🧭 Room Wizard",
+          title: "🧭 Trova la tua camera",
           text: "Un assistente pratico per trovare la camera più adatta al tuo viaggio.",
         },
         {
@@ -2251,7 +2251,7 @@ export const homePageIt: HomePageData = {
       },
     },
     discount: {
-      badge: "Offerta live • Ricevi il codice",
+      badge: "Offerta in diretta • Ricevi il codice",
       title: "Prenota direttamente con noi",
       text: "Ricevi un codice sconto e prenota direttamente, senza commissioni.",
       benefits: [
@@ -2283,7 +2283,7 @@ export const homePageIt: HomePageData = {
     title: "Camere a Chios per coppie e famiglie",
     text: "Le nostre camere vengono pulite ogni giorno e sono pensate per un soggiorno comodo, tranquillo e curato a Kambos, Chios.",
     primaryCta: {
-      label: "Room Wizard",
+      label: "Trova la tua camera",
       href: "/it/camere-a-chios/",
       icon: "✨",
     },
@@ -2303,6 +2303,7 @@ export const homePageIt: HomePageData = {
         title: "Camera doppia economy",
         href: "/it/stanze-a-chios/camera-doppia-economica-chios/",
         directBadge: "🎁 -10% Sconto",
+        liveBadge: "IN DIRETTA",
         bedBadge: "🛏️ 1 letto matrimoniale o 2 letti singoli",
         description:
           "Ideale per due persone che desiderano un soggiorno curato a Kambos.",
@@ -2315,6 +2316,7 @@ export const homePageIt: HomePageData = {
         title: "Camere al piano terra",
         href: "/it/stanze-a-chios/camere-doppie-standard-chios/",
         directBadge: "🎁 -10% Sconto",
+        liveBadge: "IN DIRETTA",
         bedBadge: "🛏️ Matrimoniale + letto extra",
         description:
           "Una scelta comoda per coppie o piccole famiglie, con accesso facile.",
@@ -2327,6 +2329,7 @@ export const homePageIt: HomePageData = {
         title: "Camere al piano superiore",
         href: "/it/stanze-a-chios/camere-doppie-standard-chios/",
         directBadge: "🎁 -10% Sconto",
+        liveBadge: "IN DIRETTA",
         bedBadge: "🛏️ Matrimoniale + letto extra",
         description:
           "Per chi cerca un’atmosfera più tranquilla e classica.",
@@ -2339,10 +2342,11 @@ export const homePageIt: HomePageData = {
         title: "Appartamento familiare",
         href: "/it/stanze-a-chios/appartamenti-familiari-a-chios/",
         directBadge: "🎁 -10% Sconto",
+        liveBadge: "IN DIRETTA",
         bedBadge: "🛏️ Letti famiglia",
         description:
           "Ideale per famiglie o piccoli gruppi che desiderano più spazio.",
-        meta: ["👤 ×4", "Spazio", "🏡 Apt"],
+        meta: ["👤 ×4", "Spazio", "🏡 Appartamento"],
         amenities: ["❄️ A/C", "📶 Wi-Fi", "☕ Caffè", "🧊 Frigo"],
         cta: "Vedi appartamento",
       },
@@ -2543,7 +2547,7 @@ export const homePageIt: HomePageData = {
     title: "Il tuo viaggio a Chios inizia qui",
     text: "Ospitalità calorosa, atmosfera autentica e posizione ideale a Kambos.",
     primaryCta: {
-      label: "Prenota diretto",
+      label: "Prenota direttamente",
       href: "/it/prezzi-hotel-chios/",
       icon: "🛎️",
     },
