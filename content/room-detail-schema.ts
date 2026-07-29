@@ -1,4 +1,4 @@
-﻿import type {
+import type {
   IndividualRoomData,
   RoomDetailData,
 } from "@/content/room-details";
@@ -119,13 +119,15 @@ const roomSchemaLabelsByLanguage: Record<
     highlights: "Öne çıkan özellikler",
     guests: "misafir",
     roomsBreadcrumbName: "Sakız Adası odaları ve daireleri",
-    roomsBreadcrumbPath: "/tr/chios-odalari/",
+    roomsBreadcrumbPath: "/tr/sakiz-adasi-odalari/",
     roomNoun: "Oda",
     apartmentNoun: "Daire",
   },
 };
 
 const roomSchemaTerms: Record<string, RoomSchemaDictionary> = {
+  Room: { el: "Δωμάτιο", fr: "Chambre", de: "Zimmer", it: "Camera", es: "Habitación", tr: "Oda" },
+  Apartment: { el: "Διαμέρισμα", fr: "Appartement", de: "Apartment", it: "Appartamento", es: "Apartamento", tr: "Daire" },
   "Ground floor": { el: "Ισόγειο", fr: "Rez-de-chaussée", de: "Erdgeschoss", it: "Piano terra", es: "Planta baja", tr: "Zemin kat" },
   "First floor": { el: "Πρώτος όροφος", fr: "Premier étage", de: "Obergeschoss", it: "Primo piano", es: "Primera planta", tr: "Üst kat" },
   "Independent unit": { el: "Ανεξάρτητη μονάδα", fr: "Unité indépendante", de: "Eigenständige Einheit", it: "Unità indipendente", es: "Unidad independiente", tr: "Bağımsız birim" },
@@ -137,7 +139,7 @@ const roomSchemaTerms: Record<string, RoomSchemaDictionary> = {
   "Kambos view": { el: "Θέα στον Κάμπο", fr: "Vue sur Kambos", de: "Blick auf Kambos", it: "Vista su Kambos", es: "Vista a Kambos", tr: "Kambos manzarası" },
   "Upper-floor view": { el: "Θέα από τον όροφο", fr: "Vue depuis l’étage", de: "Blick vom Obergeschoss", it: "Vista dal piano superiore", es: "Vista desde la planta superior", tr: "Üst kat manzarası" },
   "Private balcony": { el: "Ιδιωτικό μπαλκόνι", fr: "Balcon privé", de: "Privater Balkon", it: "Balcone privato", es: "Balcón privado", tr: "Özel balkon" },
-  Kitchenette: { el: "Μικρή κουζίνα", fr: "Kitchenette", de: "Kitchenette", it: "Angolo cottura", es: "Kitchenette", tr: "Kitchenette" },
+  Kitchenette: { el: "Μικρή κουζίνα", fr: "Kitchenette", de: "Kitchenette", it: "Angolo cottura", es: "Kitchenette", tr: "Mini mutfak" },
   Kitchen: { el: "Κουζίνα", fr: "Cuisine", de: "Küche", it: "Cucina", es: "Cocina", tr: "Mutfak" },
   "Sofa bed": { el: "Καναπές-κρεβάτι", fr: "Canapé-lit", de: "Schlafsofa", it: "Divano letto", es: "Sofá cama", tr: "Çekyat" },
   "Sofa beds": { el: "Καναπέδες-κρεβάτια", fr: "Canapés-lits", de: "Schlafsofas", it: "Divani letto", es: "Sofás cama", tr: "Çekyatlar" },
@@ -155,6 +157,16 @@ const roomSchemaTerms: Record<string, RoomSchemaDictionary> = {
   "2 single beds": { el: "2 μονά κρεβάτια", fr: "2 lits simples", de: "2 Einzelbetten", it: "2 letti singoli", es: "2 camas individuales", tr: "2 tek kişilik yatak" },
   "1 sofa bed": { el: "1 καναπές-κρεβάτι", fr: "1 canapé-lit", de: "1 Schlafsofa", it: "1 divano letto", es: "1 sofá cama", tr: "1 çekyat" },
   "2 sofa beds": { el: "2 καναπέδες-κρεβάτια", fr: "2 canapés-lits", de: "2 Schlafsofas", it: "2 divani letto", es: "2 sofás cama", tr: "2 çekyat" },
+  "Room 6 is ideal for guests who love nature. Located on the ground floor, it opens directly to the peaceful courtyard and garden.": { tr: "Oda 6 zemin kattadır ve huzurlu avlu ile bahçeye doğrudan açılır." },
+  "Room 2 is located on the first floor and offers access to a shared terrace with views over the estate and the citrus trees of Kambos.": { tr: "Oda 2 üst katta yer alır ve narenciye bahçelerine bakan ortak terasa erişim sunar." },
+  "Room 5 is a ground-floor double / triple room with direct courtyard and garden access. It is ideal for guests who prefer no stairs and an easy outdoor connection.": { tr: "Oda 5, avlu ve bahçeye doğrudan erişimi olan zemin kat çift / üç kişilik odadır." },
+  "Room 7 is a ground-floor double / triple room with garden access and a flexible layout with a sofa bed.": { tr: "Oda 7, bahçe erişimi ve çekyatlı zemin kat çift / üç kişilik odadır." },
+  "Room 1 is a first-floor room for up to 4 guests, with upper-floor view, private balcony feel and two sleeping spaces without a connecting door.": { tr: "Oda 1 üst katta yer alır ve iki uyku alanıyla 4 kişiye kadar konaklama sunar." },
+  "Room 3 is a first-floor double / triple room with kitchenette, upper-floor view and access by stairs.": { tr: "Oda 3, mini mutfak ve merdiven erişimi olan üst kat çift / üç kişilik odadır." },
+  "Room 4 is a first-floor double / triple room with kitchenette, sofa bed and upper-floor view.": { tr: "Oda 4, mini mutfak, çekyat ve üst kat manzarası sunan çift / üç kişilik odadır." },
+  "Apartment 8 is a family apartment with living room and kitchen, separate bedroom and bathroom. It is suitable for up to 4 guests.": { tr: "Daire 8, mutfaklı oturma alanı, ayrı yatak odası ve banyoya sahiptir; 4 kişiye kadar uygundur." },
+  "Apartment 9 offers the same family-friendly layout with kitchen, living area, bedroom and bathroom, suitable for up to 4 guests.": { tr: "Daire 9, mutfak, oturma alanı, yatak odası ve banyodan oluşan aile dostu bir düzene sahiptir; 4 kişiye kadar uygundur." },
+  "Apartment 10 is a family apartment with living room and kitchen, bedroom and flexible sofa-bed layout.": { tr: "Daire 10, mutfaklı oturma alanı, yatak odası ve esnek çekyat düzenine sahip bir aile dairesidir." },
 };
 
 function getRoomSchemaLanguage(path: string): RoomSchemaLanguage {
@@ -208,9 +220,10 @@ function getRoomDetailImages(data: RoomDetailData): string[] {
 }
 
 function getRoomDetailAmenities(data: RoomDetailData) {
+  const language = getRoomSchemaLanguage(data.seo.canonicalPath);
   return data.amenities.items.map((item) => ({
     "@type": "LocationFeatureSpecification",
-    name: item.label,
+    name: localizeRoomSchemaText(item.label, language),
     value: true,
     description: item.text,
   }));
@@ -262,7 +275,7 @@ function buildIndividualRoomSchema(
     name: localizeRoomSchemaName(room.name, language),
     alternateName: localizeRoomSchemaText(room.type, language),
     url: roomUrl,
-    description: room.description,
+    description: localizeRoomSchemaText(room.description, language),
     image: room.images.map((image) => absoluteUrl(image.src)),
     containedInPlace: {
       "@id": schemaId(canonicalPath, "room"),
