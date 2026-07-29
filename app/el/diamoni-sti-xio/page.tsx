@@ -6,24 +6,27 @@ import { withTraditionalAccommodationIntent } from "@/content/accommodation-trad
 import { diamoniStiXioPageEl } from "@/content/diamoni-sti-xio";
 import { buildDiamoniStiXioSchema } from "@/content/diamoni-sti-xio-schema";
 import { accommodationLandingLanguages } from "@/lib/accommodation-landing-i18n";
+import { hardenGreekSeoContent } from "@/lib/greek-seo-content-hardening";
 import { absoluteUrl, buildPageMetadata } from "@/lib/seo";
 
-const pageData = withTraditionalAccommodationIntent(
-  {
-    ...diamoniStiXioPageEl,
-    explore: {
-      ...diamoniStiXioPageEl.explore,
-      links: [
-        ...diamoniStiXioPageEl.explore.links,
-        {
-          title: "Συγκρίνετε ξενοδοχεία και περιοχές στη Χίο",
-          text: "Δείτε τις βασικές περιοχές και τις διαφορές ανάμεσα σε ξενοδοχεία, δωμάτια, οικογενειακά καταλύματα και διαμερίσματα πριν επιλέξετε.",
-          href: "/el/xenodoxeia-xios/",
-        },
-      ],
+const pageData = hardenGreekSeoContent(
+  withTraditionalAccommodationIntent(
+    {
+      ...diamoniStiXioPageEl,
+      explore: {
+        ...diamoniStiXioPageEl.explore,
+        links: [
+          ...diamoniStiXioPageEl.explore.links,
+          {
+            title: "Συγκρίνετε ξενοδοχεία και περιοχές στη Χίο",
+            text: "Δείτε τις βασικές περιοχές και τις διαφορές ανάμεσα σε ξενοδοχεία, δωμάτια, οικογενειακά καταλύματα και διαμερίσματα πριν επιλέξετε.",
+            href: "/el/xenodoxeia-xios/",
+          },
+        ],
+      },
     },
-  },
-  "el",
+    "el",
+  ),
 );
 
 const baseMetadata = buildPageMetadata({
