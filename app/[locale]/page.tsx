@@ -45,7 +45,26 @@ const homePages: Record<LanguageCode, HomePageData> = {
 };
 
 function getLocalizedHomePageData(locale: LanguageCode): HomePageData {
-  return withHomepageSeoIntent(homePages[locale], locale);
+  const data = withHomepageSeoIntent(homePages[locale], locale);
+
+  if (locale !== "el") {
+    return data;
+  }
+
+  return {
+    ...data,
+    intro: {
+      ...data.intro,
+      left: {
+        ...data.intro.left,
+        pills: data.intro.left.pills.map((pill) =>
+          pill === "💎 Value for money"
+            ? "💎 Καλή σχέση ποιότητας–τιμής"
+            : pill,
+        ),
+      },
+    },
+  };
 }
 
 export function generateStaticParams() {
@@ -68,6 +87,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: data.seo.title,
     description: data.seo.description,
     image: data.seo.ogImage,
+    imageAlt: data.seo.ogImageAlt,
   });
 }
 
