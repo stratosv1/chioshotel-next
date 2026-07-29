@@ -804,7 +804,7 @@ export const roomsCategoryIt: RoomsCategoryPageData = {
         "/images/rooms/received_1753964631359257.webp",
       imageAlt:
         "Camera doppia economy a Chios al Voulamandis House",
-      badge: "Miglior valore",
+      badge: "Miglior rapporto qualità-prezzo",
       ctaLabel: "Scopri la camera",
       meta: ["2 ospiti", "16m²", "Economy"],
     },
@@ -865,7 +865,7 @@ export const roomsCategoryIt: RoomsCategoryPageData = {
   wizardIntro: {
     title: "Non sai quale scegliere? 🤔",
     description:
-      "Usa il nostro Room Wizard intelligente e trova la soluzione migliore per il tuo soggiorno in circa 30 secondi.",
+      "Usa il nostro assistente per trovare la camera più adatta al tuo soggiorno in circa 30 secondi.",
   },
 
   wizard: {
