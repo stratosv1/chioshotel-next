@@ -75,7 +75,7 @@ const roomSchemaLabelsByLanguage: Record<
     highlights: "Highlights",
     guests: "Gäste",
     roomsBreadcrumbName: "Zimmer und Apartments auf Chios",
-    roomsBreadcrumbPath: "/de/zimmer-chios/",
+    roomsBreadcrumbPath: "/de/chios-zimmer/",
     roomNoun: "Zimmer",
     apartmentNoun: "Apartment",
   },

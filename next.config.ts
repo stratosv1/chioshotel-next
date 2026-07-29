@@ -1,4 +1,4 @@
-﻿import type { NextConfig } from "next";
+import type { NextConfig } from "next";
 
 const legacyRedirects = [
   {
@@ -731,7 +731,7 @@ const legacyRedirects = [
     },
     {
         "source":  "/de/chios-insel/kambos-auf-chios",
-        "destination":  "/de/chios-insel",
+        "destination":  "/de/chios/kampos-chios/",
         "permanent":  true
     },
     {
