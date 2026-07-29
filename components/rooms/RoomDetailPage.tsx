@@ -78,7 +78,7 @@ const dictionary: Record<string, RoomDictionary> = {
   "Kambos view": { el: "Θέα στον Κάμπο", fr: "Vue sur Kambos", de: "Blick auf Kambos", it: "Vista su Kambos", es: "Vista a Kambos", tr: "Kambos manzarası" },
   "Upper-floor view": { el: "Θέα από τον όροφο", fr: "Vue depuis l’étage", de: "Blick vom Obergeschoss", it: "Vista dal piano superiore", es: "Vista desde la planta superior", tr: "Üst kat manzarası" },
   "Private balcony": { el: "Ιδιωτικό μπαλκόνι", fr: "Balcon privé", de: "Privater Balkon", it: "Balcone privato", es: "Balcón privado", tr: "Özel balkon" },
-  Kitchenette: { el: "Μικρή κουζίνα", fr: "Kitchenette", de: "Kitchenette", it: "Angolo cottura", es: "Kitchenette", tr: "Kitchenette" },
+  Kitchenette: { el: "Μικρή κουζίνα", fr: "Kitchenette", de: "Kitchenette", it: "Angolo cottura", es: "Kitchenette", tr: "Mini mutfak" },
   Kitchen: { el: "Κουζίνα", fr: "Cuisine", de: "Küche", it: "Cucina", es: "Cocina", tr: "Mutfak" },
   "Sofa bed": { el: "Καναπές-κρεβάτι", fr: "Canapé-lit", de: "Schlafsofa", it: "Divano letto", es: "Sofá cama", tr: "Çekyat" },
   "Sofa beds": { el: "Καναπέδες-κρεβάτια", fr: "Canapés-lits", de: "Schlafsofas", it: "Divani letto", es: "Sofás cama", tr: "Çekyatlar" },
@@ -103,13 +103,26 @@ const dictionary: Record<string, RoomDictionary> = {
   "Living Room & Kitchen": { el: "Καθιστικό & κουζίνα", fr: "Salon & cuisine", de: "Wohnbereich & Küche", it: "Soggiorno & cucina", es: "Sala de estar y cocina", tr: "Oturma alanı & mutfak" },
   "Living area": { el: "Καθιστικό", fr: "Salon", de: "Wohnbereich", it: "Soggiorno", es: "Sala de estar", tr: "Oturma alanı" },
   Bathroom: { el: "Μπάνιο", fr: "Salle de bain", de: "Bad", it: "Bagno", es: "Baño", tr: "Banyo" },
+  Layout: { tr: "Yerleşim" },
+  Detail: { tr: "Detay" },
+  Desk: { tr: "Çalışma masası" },
+  "Traditional interior": { tr: "Geleneksel iç mekân" },
+  "Courtyard access": { tr: "Avlu erişimi" },
+  "Room layout": { tr: "Oda düzeni" },
+  "Stone wall interior": { tr: "Taş duvarlı iç mekân" },
+  "Stone bathroom details": { tr: "Taş banyo detayları" },
+  "Spacious layout": { tr: "Geniş yerleşim" },
+  "Traditional details": { tr: "Geleneksel detaylar" },
+  "Bu kategori doğrudan bahçe erişimli zemin kat odalar ve teras hissi veren birinci kat odaları içerir. Bazı birinci kat odalarda kitchenette de bulunur.": { tr: "Bu kategori doğrudan bahçe erişimli zemin kat odalar ve teras hissi veren üst kat odaları içerir. Bazı üst kat odalarda mini mutfak da bulunur." },
+  "Economy kategorisine göre daha fazla konfor isteyen çiftler.": { tr: "Ekonomik kategoriye göre daha fazla konfor isteyen çiftler." },
+  "Bazı birinci kat odalarda kitchenette bulunabilir. Tam mutfağa ihtiyacınız varsa aile apartları genellikle daha iyi seçimdir.": { tr: "Bazı üst kat odalarda mini mutfak bulunabilir. Tam mutfağa ihtiyacınız varsa aile daireleri genellikle daha iyi seçimdir." },
   "Room 6 is ideal for guests who love nature. Located on the ground floor, it opens directly to the peaceful courtyard and garden.": { el: "Το Δωμάτιο 6 βρίσκεται στο ισόγειο και ανοίγει απευθείας στην ήρεμη αυλή και στον κήπο.", fr: "La chambre 6 est au rez-de-chaussée et s’ouvre directement sur la cour paisible et le jardin.", de: "Zimmer 6 liegt im Erdgeschoss und öffnet sich direkt zum ruhigen Hof und Garten.", it: "La camera 6 è al piano terra e si apre direttamente sul cortile tranquillo e sul giardino.", es: "La habitación 6 está en planta baja y se abre directamente al patio tranquilo y al jardín.", tr: "Oda 6 zemin kattadır ve huzurlu avlu ile bahçeye doğrudan açılır." },
   "Room 2 is located on the first floor and offers access to a shared terrace with views over the estate and the citrus trees of Kambos.": { el: "Το Δωμάτιο 2 βρίσκεται στον πρώτο όροφο και έχει πρόσβαση σε κοινόχρηστη βεράντα με θέα στο κτήμα και στον Κάμπο.", fr: "La chambre 2 se trouve au premier étage avec accès à une terrasse partagée donnant sur le domaine.", de: "Zimmer 2 liegt im Obergeschoss und bietet Zugang zu einer gemeinsamen Terrasse mit Blick auf das Anwesen.", it: "La camera 2 si trova al primo piano e offre accesso a una terrazza condivisa con vista sulla tenuta.", es: "La habitación 2 está en la primera planta y ofrece acceso a una terraza compartida con vistas a la finca.", tr: "Oda 2 üst katta yer alır ve tesise bakan ortak terasa erişim sunar." },
   "Room 5 is a ground-floor double / triple room with direct courtyard and garden access. It is ideal for guests who prefer no stairs and an easy outdoor connection.": { el: "Το Δωμάτιο 5 είναι ισόγειο δίκλινο / τρίκλινο με άμεση πρόσβαση στην αυλή και στον κήπο.", fr: "La chambre 5 est une double / triple au rez-de-chaussée avec accès direct à la cour et au jardin.", de: "Zimmer 5 ist ein Doppel- / Dreibettzimmer im Erdgeschoss mit direktem Zugang zum Hof und Garten.", it: "La camera 5 è una doppia / tripla al piano terra con accesso diretto al cortile e al giardino.", es: "La habitación 5 es una doble / triple en planta baja con acceso directo al patio y al jardín.", tr: "Oda 5, avlu ve bahçeye doğrudan erişimi olan zemin kat çift / üç kişilik odadır." },
   "Room 7 is a ground-floor double / triple room with garden access and a flexible layout with a sofa bed.": { el: "Το Δωμάτιο 7 είναι ισόγειο δίκλινο / τρίκλινο με πρόσβαση στον κήπο και καναπέ-κρεβάτι.", fr: "La chambre 7 est une double / triple au rez-de-chaussée avec accès au jardin et canapé-lit.", de: "Zimmer 7 ist ein Doppel- / Dreibettzimmer im Erdgeschoss mit Gartenzugang und Schlafsofa.", it: "La camera 7 è una doppia / tripla al piano terra con accesso al giardino e divano letto.", es: "La habitación 7 es una doble / triple en planta baja con acceso al jardín y sofá cama.", tr: "Oda 7, bahçe erişimi ve çekyatlı zemin kat çift / üç kişilik odadır." },
   "Room 1 is a first-floor room for up to 4 guests, with upper-floor view, private balcony feel and two sleeping spaces without a connecting door.": { el: "Το Δωμάτιο 1 βρίσκεται στον πρώτο όροφο και φιλοξενεί έως 4 άτομα, με θέα από τον όροφο και δύο χώρους ύπνου.", fr: "La chambre 1 est au premier étage pour jusqu’à 4 personnes, avec deux espaces de couchage.", de: "Zimmer 1 liegt im Obergeschoss und bietet Platz für bis zu 4 Gäste mit zwei Schlafbereichen.", it: "La camera 1 si trova al primo piano e ospita fino a 4 persone con due zone notte.", es: "La habitación 1 está en la primera planta y aloja hasta 4 personas con dos zonas de descanso.", tr: "Oda 1 üst katta yer alır ve iki uyku alanıyla 4 kişiye kadar konaklama sunar." },
-  "Room 3 is a first-floor double / triple room with kitchenette, upper-floor view and access by stairs.": { el: "Το Δωμάτιο 3 είναι δίκλινο / τρίκλινο πρώτου ορόφου με μικρή κουζίνα και πρόσβαση με σκάλες.", fr: "La chambre 3 est une double / triple au premier étage avec kitchenette et accès par escalier.", de: "Zimmer 3 ist ein Doppel- / Dreibettzimmer im Obergeschoss mit Kitchenette und Treppenzugang.", it: "La camera 3 è una doppia / tripla al primo piano con angolo cottura e accesso tramite scale.", es: "La habitación 3 es una doble / triple en primera planta con kitchenette y acceso por escaleras.", tr: "Oda 3, kitchenette ve merdiven erişimi olan üst kat çift / üç kişilik odadır." },
-  "Room 4 is a first-floor double / triple room with kitchenette, sofa bed and upper-floor view.": { el: "Το Δωμάτιο 4 είναι δίκλινο / τρίκλινο πρώτου ορόφου με μικρή κουζίνα, καναπέ-κρεβάτι και θέα από τον όροφο.", fr: "La chambre 4 est une double / triple au premier étage avec kitchenette, canapé-lit et vue depuis l’étage.", de: "Zimmer 4 ist ein Doppel- / Dreibettzimmer im Obergeschoss mit Kitchenette, Schlafsofa und Ausblick.", it: "La camera 4 è una doppia / tripla al primo piano con angolo cottura, divano letto e vista dall’alto.", es: "La habitación 4 es una doble / triple en primera planta con kitchenette, sofá cama y vistas.", tr: "Oda 4, kitchenette, çekyat ve üst kat manzarası sunan çift / üç kişilik odadır." },
+  "Room 3 is a first-floor double / triple room with kitchenette, upper-floor view and access by stairs.": { el: "Το Δωμάτιο 3 είναι δίκλινο / τρίκλινο πρώτου ορόφου με μικρή κουζίνα και πρόσβαση με σκάλες.", fr: "La chambre 3 est une double / triple au premier étage avec kitchenette et accès par escalier.", de: "Zimmer 3 ist ein Doppel- / Dreibettzimmer im Obergeschoss mit Kitchenette und Treppenzugang.", it: "La camera 3 è una doppia / tripla al primo piano con angolo cottura e accesso tramite scale.", es: "La habitación 3 es una doble / triple en primera planta con kitchenette y acceso por escaleras.", tr: "Oda 3, mini mutfak ve merdiven erişimi olan üst kat çift / üç kişilik odadır." },
+  "Room 4 is a first-floor double / triple room with kitchenette, sofa bed and upper-floor view.": { el: "Το Δωμάτιο 4 είναι δίκλινο / τρίκλινο πρώτου ορόφου με μικρή κουζίνα, καναπέ-κρεβάτι και θέα από τον όροφο.", fr: "La chambre 4 est une double / triple au premier étage avec kitchenette, canapé-lit et vue depuis l’étage.", de: "Zimmer 4 ist ein Doppel- / Dreibettzimmer im Obergeschoss mit Kitchenette, Schlafsofa und Ausblick.", it: "La camera 4 è una doppia / tripla al primo piano con angolo cottura, divano letto e vista dall’alto.", es: "La habitación 4 es una doble / triple en primera planta con kitchenette, sofá cama y vistas.", tr: "Oda 4, mini mutfak, çekyat ve üst kat manzarası sunan çift / üç kişilik odadır." },
   "Apartment 8 is a family apartment with living room and kitchen, separate bedroom and bathroom. It is suitable for up to 4 guests.": { el: "Το Διαμέρισμα 8 διαθέτει καθιστικό με κουζίνα, ξεχωριστό υπνοδωμάτιο και μπάνιο, για έως 4 άτομα.", fr: "L’appartement 8 dispose d’un salon avec cuisine, d’une chambre séparée et d’une salle de bain, pour jusqu’à 4 personnes.", de: "Apartment 8 bietet Wohnbereich mit Küche, separates Schlafzimmer und Bad, für bis zu 4 Gäste.", it: "L’appartamento 8 dispone di soggiorno con cucina, camera separata e bagno, fino a 4 ospiti.", es: "El apartamento 8 tiene sala de estar con cocina, dormitorio separado y baño, hasta 4 personas.", tr: "Daire 8, mutfaklı oturma alanı, ayrı yatak odası ve banyoya sahiptir; 4 kişiye kadar uygundur." },
   "Apartment 9 offers the same family-friendly layout with kitchen, living area, bedroom and bathroom, suitable for up to 4 guests.": { el: "Το Διαμέρισμα 9 έχει πρακτική οικογενειακή διαρρύθμιση με κουζίνα, καθιστικό, υπνοδωμάτιο και μπάνιο, για έως 4 άτομα.", fr: "L’appartement 9 offre un agencement familial avec cuisine, salon, chambre et salle de bain, pour jusqu’à 4 personnes.", de: "Apartment 9 bietet eine familienfreundliche Aufteilung mit Küche, Wohnbereich, Schlafzimmer und Bad, für bis zu 4 Gäste.", it: "L’appartamento 9 offre una disposizione familiare con cucina, soggiorno, camera e bagno, fino a 4 ospiti.", es: "El apartamento 9 ofrece distribución familiar con cocina, sala de estar, dormitorio y baño, hasta 4 personas.", tr: "Daire 9, mutfak, oturma alanı, yatak odası ve banyodan oluşan aile dostu bir düzene sahiptir." },
   "Apartment 10 is a family apartment with living room and kitchen, bedroom and flexible sofa-bed layout.": { el: "Το Διαμέρισμα 10 διαθέτει καθιστικό με κουζίνα, υπνοδωμάτιο και ευέλικτη διαρρύθμιση με καναπέδες-κρεβάτια.", fr: "L’appartement 10 dispose d’un salon avec cuisine, d’une chambre et d’un agencement flexible avec canapés-lits.", de: "Apartment 10 bietet Wohnbereich mit Küche, Schlafzimmer und flexible Schlafsofas.", it: "L’appartamento 10 dispone di soggiorno con cucina, camera e disposizione flessibile con divani letto.", es: "El apartamento 10 tiene sala de estar con cocina, dormitorio y distribución flexible con sofás cama.", tr: "Daire 10, mutfaklı oturma alanı, yatak odası ve çekyatlı esnek yerleşim sunar." },
@@ -248,7 +261,7 @@ function FloorRoomGroup({ title, text, rooms, language }: { title: string; text:
     <section className="relative" aria-label={title}>
       <header className="mb-5 max-w-[820px]">
         <span className="text-xs font-black uppercase tracking-[0.16em] text-amber-800">{title}</span>
-        <p className="mt-3 max-w-[760px] text-sm leading-7 text-stone-600">{text}</p>
+        <p className="mt-3 max-w-[760px] text-sm leading-7 text-stone-600">{localizeRoomText(text, language)}</p>
         {rooms.length > 1 ? (
           <p className="mt-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-[11px] font-black uppercase tracking-[0.1em] text-amber-900 shadow-sm ring-1 ring-amber-900/10 md:hidden">
             {labels[language].swipe} <span aria-hidden="true">→</span>
@@ -277,6 +290,7 @@ function FloorRoomGroup({ title, text, rooms, language }: { title: string; text:
 function IndividualRoomsSection({ data, language }: { data: RoomDetailData; language: RoomLanguage }) {
   if (!data.individualRooms.rooms.length) return null;
   const localizedSectionLabels = sectionLabels[language];
+  const sectionDescription = localizeRoomText(data.individualRooms.description, language);
 
   if (shouldGroupRoomsByFloor(data)) {
     const groundFloorRooms = data.individualRooms.rooms.filter((room) => getFloorKind(room) === "ground");
@@ -289,12 +303,12 @@ function IndividualRoomsSection({ data, language }: { data: RoomDetailData; lang
           <header className="mb-8 max-w-[820px]">
             <span className="text-xs font-black uppercase tracking-[0.16em] text-amber-800">{data.individualRooms.kicker}</span>
             <h2 id="rd-individual-title" className="mt-4 text-[2rem] font-black leading-[0.98] tracking-[-0.05em] text-[#2f261f] md:text-5xl">{data.individualRooms.title}</h2>
-            <p className="mt-5 max-w-[760px] text-base leading-8 text-stone-600 md:text-lg">{data.individualRooms.description}</p>
+            <p className="mt-5 max-w-[760px] text-base leading-8 text-stone-600 md:text-lg">{sectionDescription}</p>
           </header>
           <div className="space-y-10">
             <FloorRoomGroup title={localizedSectionLabels.groundTitle} text={localizedSectionLabels.groundText} rooms={groundFloorRooms} language={language} />
             <FloorRoomGroup title={localizedSectionLabels.firstTitle} text={localizedSectionLabels.firstText} rooms={firstFloorRooms} language={language} />
-            {otherRooms.length ? <FloorRoomGroup title={data.individualRooms.title} text={data.individualRooms.description} rooms={otherRooms} language={language} /> : null}
+            {otherRooms.length ? <FloorRoomGroup title={data.individualRooms.title} text={sectionDescription} rooms={otherRooms} language={language} /> : null}
           </div>
         </div>
       </section>
@@ -307,7 +321,7 @@ function IndividualRoomsSection({ data, language }: { data: RoomDetailData; lang
         <header className="mb-8 max-w-[820px]">
           <span className="text-xs font-black uppercase tracking-[0.16em] text-amber-800">{data.individualRooms.kicker}</span>
           <h2 id="rd-individual-title" className="mt-4 text-[2rem] font-black leading-[0.98] tracking-[-0.05em] text-[#2f261f] md:text-5xl">{data.individualRooms.title}</h2>
-          <p className="mt-5 max-w-[760px] text-base leading-8 text-stone-600 md:text-lg">{data.individualRooms.description}</p>
+          <p className="mt-5 max-w-[760px] text-base leading-8 text-stone-600 md:text-lg">{sectionDescription}</p>
           <p className="mt-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-[11px] font-black uppercase tracking-[0.1em] text-amber-900 shadow-sm ring-1 ring-amber-900/10 md:hidden">
             {labels[language].swipe} <span aria-hidden="true">→</span>
           </p>
@@ -381,7 +395,7 @@ export function RoomDetailPage({ data }: RoomDetailPageProps) {
           <span className="inline-flex text-[11px] font-black uppercase tracking-[0.28em] text-amber-800">{data.bestFor.kicker}</span>
           <h2 id="rd-best-title" className="mt-4 text-balance text-3xl font-black tracking-[-0.04em] text-[#2f261f] sm:text-4xl">{data.bestFor.title}</h2>
           <div className="mt-7 grid grid-cols-2 gap-3">
-            {data.bestFor.items.map((item) => <div className="rounded-2xl bg-amber-50/50 p-3 text-sm leading-6 text-[#574b3f] ring-1 ring-amber-900/10" key={item}><span className="mr-2 font-black text-emerald-700">✓</span>{item}</div>)}
+            {data.bestFor.items.map((item) => <div className="rounded-2xl bg-amber-50/50 p-3 text-sm leading-6 text-[#574b3f] ring-1 ring-amber-900/10" key={item}><span className="mr-2 font-black text-emerald-700">✓</span>{localizeRoomText(item, language)}</div>)}
           </div>
         </div>
       </section>
@@ -397,7 +411,7 @@ export function RoomDetailPage({ data }: RoomDetailPageProps) {
 
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8" aria-labelledby="rd-faq-title">
         <header className="mx-auto max-w-3xl text-center"><span className="inline-flex text-[11px] font-black uppercase tracking-[0.28em] text-amber-800">{localLabels.faqKicker}</span><h2 id="rd-faq-title" className="mt-4 text-3xl font-black tracking-[-0.04em] text-[#2f261f] sm:text-4xl">{localLabels.faqTitle}</h2></header>
-        <div className="mx-auto mt-8 max-w-3xl space-y-3">{data.faq.map((item) => <details className="rounded-2xl bg-white p-4 shadow-[0_12px_28px_rgba(47,38,31,0.07)]" key={item.question}><summary className="cursor-pointer text-base font-black text-[#2f261f]">{item.question}</summary><p className="mt-3 text-sm leading-7 text-[#574b3f]">{item.answer}</p></details>)}</div>
+        <div className="mx-auto mt-8 max-w-3xl space-y-3">{data.faq.map((item) => <details className="rounded-2xl bg-white p-4 shadow-[0_12px_28px_rgba(47,38,31,0.07)]" key={item.question}><summary className="cursor-pointer text-base font-black text-[#2f261f]">{item.question}</summary><p className="mt-3 text-sm leading-7 text-[#574b3f]">{localizeRoomText(item.answer, language)}</p></details>)}</div>
       </section>
     </main>
   );
