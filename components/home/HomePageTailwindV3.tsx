@@ -57,9 +57,49 @@ const accommodationLinks: Record<string, AccommodationLinkCopy> = {
   },
 };
 
+function localizeInheritedTurkishCopy(data: HomePageData): HomePageData {
+  if (data.seo.canonicalPath !== "/tr/") {
+    return data;
+  }
+
+  return {
+    ...data,
+    intro: {
+      ...data.intro,
+      right: {
+        ...data.intro.right,
+        cards: data.intro.right.cards.map((card) =>
+          card.title.includes("Room Wizard")
+            ? { ...card, title: "🧭 Oda Asistanı" }
+            : card,
+        ),
+      },
+    },
+    location: {
+      ...data.location,
+      infoCard: {
+        ...data.location.infoCard,
+        addressLines: ["Mayor Kalvokoresi 117", "Kambos, Sakız Adası 82100"],
+        emailLabel: "E-posta:",
+      },
+    },
+    roomsPreview: {
+      ...data.roomsPreview,
+      primaryCta: {
+        ...data.roomsPreview.primaryCta,
+        label: "Oda Asistanı",
+      },
+      rooms: data.roomsPreview.rooms.map((room) => ({
+        ...room,
+        liveBadge: "CANLI",
+      })),
+    },
+  };
+}
+
 export function HomePageTailwindV3({ data }: HomePageTailwindV3Props) {
   const accommodationLink = accommodationLinks[data.seo.canonicalPath];
-  const renderedData: HomePageData = accommodationLink
+  const dataWithAccommodationLink: HomePageData = accommodationLink
     ? {
         ...data,
         intro: {
@@ -71,6 +111,7 @@ export function HomePageTailwindV3({ data }: HomePageTailwindV3Props) {
         },
       }
     : data;
+  const renderedData = localizeInheritedTurkishCopy(dataWithAccommodationLink);
 
   return (
     <>
