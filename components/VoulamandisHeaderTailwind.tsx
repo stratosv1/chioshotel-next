@@ -26,7 +26,8 @@ type HeaderCopy = {
   nav: string;
   language: string;
   directLine: string;
-  opensAgain: string;
+  openNow: string;
+  location: string;
   links: {
     rooms: string;
     rates: string;
@@ -38,16 +39,98 @@ type HeaderCopy = {
     activities: string;
     contact: string;
   };
+  explore: {
+    beaches: string;
+    villages: string;
+    museums: string;
+  };
 };
 
 const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
-  en: { bookNow: "Book Now", menu: "Menu", close: "Close", nav: "Main navigation", language: "Language", directLine: "Direct Booking · Best Rates", opensAgain: "Opens again 06:00", links: { rooms: "Rooms", rates: "Rates", deals: "Deals", chios: "Chios Island", beaches: "Beaches", villages: "Villages", museums: "Museums", activities: "Do in Chios", contact: "Contact" } },
-  el: { bookNow: "Κράτηση", menu: "Μενού", close: "Κλείσιμο", nav: "Κύρια πλοήγηση", language: "Γλώσσα", directLine: "Direct Booking · Best Rates", opensAgain: "Opens again 06:00", links: { rooms: "Δωμάτια", rates: "Τιμές", deals: "Προσφορές", chios: "Χίος", beaches: "Παραλίες", villages: "Χωριά", museums: "Μουσεία", activities: "Τι να κάνεις", contact: "Επικοινωνία" } },
-  fr: { bookNow: "Réserver", menu: "Menu", close: "Fermer", nav: "Navigation principale", language: "Langue", directLine: "Direct Booking · Best Rates", opensAgain: "Opens again 06:00", links: { rooms: "Chambres", rates: "Tarifs", deals: "Offres", chios: "Île de Chios", beaches: "Plages", villages: "Villages", museums: "Musées", activities: "À faire", contact: "Contact" } },
-  de: { bookNow: "Buchen", menu: "Menü", close: "Schließen", nav: "Hauptnavigation", language: "Sprache", directLine: "Direct Booking · Best Rates", opensAgain: "Opens again 06:00", links: { rooms: "Zimmer", rates: "Preise", deals: "Angebote", chios: "Insel Chios", beaches: "Strände", villages: "Dörfer", museums: "Museen", activities: "Aktivitäten", contact: "Kontakt" } },
-  it: { bookNow: "Prenota", menu: "Menu", close: "Chiudi", nav: "Navigazione principale", language: "Lingua", directLine: "Direct Booking · Best Rates", opensAgain: "Opens again 06:00", links: { rooms: "Camere", rates: "Prezzi", deals: "Offerte", chios: "Isola di Chios", beaches: "Spiagge", villages: "Villaggi", museums: "Musei", activities: "Cosa fare", contact: "Contatti" } },
-  es: { bookNow: "Reservar", menu: "Menú", close: "Cerrar", nav: "Navegación principal", language: "Idioma", directLine: "Direct Booking · Best Rates", opensAgain: "Opens again 06:00", links: { rooms: "Habitaciones", rates: "Precios", deals: "Ofertas", chios: "Isla de Chios", beaches: "Playas", villages: "Pueblos", museums: "Museos", activities: "Qué hacer", contact: "Contacto" } },
-  tr: { bookNow: "Rezervasyon", menu: "Menü", close: "Kapat", nav: "Ana gezinme", language: "Dil", directLine: "Direct Booking · Best Rates", opensAgain: "Opens again 06:00", links: { rooms: "Odalar", rates: "Fiyatlar", deals: "Fırsatlar", chios: "Sakız Adası", beaches: "Plajlar", villages: "Köyler", museums: "Müzeler", activities: "Ne yapılır", contact: "İletişim" } },
+  en: {
+    bookNow: "Book Now",
+    menu: "Menu",
+    close: "Close",
+    nav: "Main navigation",
+    language: "Language",
+    directLine: "Direct Booking · Best Rates",
+    openNow: "OPEN",
+    location: "Kampos, Chios",
+    links: { rooms: "Rooms", rates: "Rates", deals: "Deals", chios: "Chios Island", beaches: "Beaches", villages: "Villages", museums: "Museums", activities: "Do in Chios", contact: "Contact" },
+    explore: { beaches: "Clear waters", villages: "Mastic villages", museums: "Culture" },
+  },
+  el: {
+    bookNow: "Κράτηση",
+    menu: "Μενού",
+    close: "Κλείσιμο",
+    nav: "Κύρια πλοήγηση",
+    language: "Γλώσσα",
+    directLine: "Απευθείας κράτηση · Καλύτερες τιμές",
+    openNow: "ΑΝΟΙΧΤΑ",
+    location: "Κάμπος, Χίος",
+    links: { rooms: "Δωμάτια", rates: "Τιμές", deals: "Προσφορές", chios: "Χίος", beaches: "Παραλίες", villages: "Χωριά", museums: "Μουσεία", activities: "Τι να κάνεις", contact: "Επικοινωνία" },
+    explore: { beaches: "Καθαρά νερά", villages: "Μαστιχοχώρια", museums: "Πολιτισμός" },
+  },
+  fr: {
+    bookNow: "Réserver",
+    menu: "Menu",
+    close: "Fermer",
+    nav: "Navigation principale",
+    language: "Langue",
+    directLine: "Réservation directe · Meilleurs tarifs",
+    openNow: "OUVERT",
+    location: "Kambos, Chios",
+    links: { rooms: "Chambres", rates: "Tarifs", deals: "Offres", chios: "Île de Chios", beaches: "Plages", villages: "Villages", museums: "Musées", activities: "À faire", contact: "Contact" },
+    explore: { beaches: "Eaux cristallines", villages: "Villages du mastic", museums: "Culture" },
+  },
+  de: {
+    bookNow: "Buchen",
+    menu: "Menü",
+    close: "Schließen",
+    nav: "Hauptnavigation",
+    language: "Sprache",
+    directLine: "Direktbuchung · Beste Preise",
+    openNow: "OFFEN",
+    location: "Kambos, Chios",
+    links: { rooms: "Zimmer", rates: "Preise", deals: "Angebote", chios: "Insel Chios", beaches: "Strände", villages: "Dörfer", museums: "Museen", activities: "Aktivitäten", contact: "Kontakt" },
+    explore: { beaches: "Klares Wasser", villages: "Mastixdörfer", museums: "Kultur" },
+  },
+  it: {
+    bookNow: "Prenota",
+    menu: "Menu",
+    close: "Chiudi",
+    nav: "Navigazione principale",
+    language: "Lingua",
+    directLine: "Prenotazione diretta · Migliori tariffe",
+    openNow: "APERTO",
+    location: "Kambos, Chios",
+    links: { rooms: "Camere", rates: "Prezzi", deals: "Offerte", chios: "Isola di Chios", beaches: "Spiagge", villages: "Villaggi", museums: "Musei", activities: "Cosa fare", contact: "Contatti" },
+    explore: { beaches: "Acque cristalline", villages: "Villaggi del mastice", museums: "Cultura" },
+  },
+  es: {
+    bookNow: "Reservar",
+    menu: "Menú",
+    close: "Cerrar",
+    nav: "Navegación principal",
+    language: "Idioma",
+    directLine: "Reserva directa · Mejores tarifas",
+    openNow: "ABIERTO",
+    location: "Kambos, Quíos",
+    links: { rooms: "Habitaciones", rates: "Precios", deals: "Ofertas", chios: "Isla de Chios", beaches: "Playas", villages: "Pueblos", museums: "Museos", activities: "Qué hacer", contact: "Contacto" },
+    explore: { beaches: "Aguas cristalinas", villages: "Pueblos del mástique", museums: "Cultura" },
+  },
+  tr: {
+    bookNow: "Rezervasyon",
+    menu: "Menü",
+    close: "Kapat",
+    nav: "Ana gezinme",
+    language: "Dil",
+    directLine: "Doğrudan rezervasyon · En iyi fiyatlar",
+    openNow: "AÇIK",
+    location: "Kambos, Sakız Adası",
+    links: { rooms: "Odalar", rates: "Fiyatlar", deals: "Fırsatlar", chios: "Sakız Adası", beaches: "Plajlar", villages: "Köyler", museums: "Müzeler", activities: "Ne yapılır", contact: "İletişim" },
+    explore: { beaches: "Berrak sular", villages: "Mastik köyleri", museums: "Kültür" },
+  },
 };
 
 const routeIds = {
@@ -212,7 +295,7 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/" }: H
   const [isOpen, setIsOpen] = useState(false);
   const copy = copyByLanguage[language] || copyByLanguage.en;
   const reception = useReceptionStatus();
-  const statusLabel = reception.isOpen ? "OPEN" : "06:00";
+  const statusLabel = reception.isOpen ? copy.openNow : "06:00";
 
   const links: HeaderMenuLink[] = [
     { label: copy.links.rooms, href: pathFor(routeIds.rooms, language), icon: "🛏️" },
@@ -222,9 +305,9 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/" }: H
     { label: copy.links.contact, href: pathFor(routeIds.contact, language), icon: "💬" },
   ];
   const exploreLinks: HeaderMenuLink[] = [
-    { label: copy.links.beaches, href: pathFor(routeIds.beaches, language), text: "Clear waters", icon: "🌊" },
-    { label: copy.links.villages, href: pathFor(routeIds.villages, language), text: "Mastic villages", icon: "🏘️" },
-    { label: copy.links.museums, href: pathFor(routeIds.museums, language), text: "Culture", icon: "🏛️" },
+    { label: copy.links.beaches, href: pathFor(routeIds.beaches, language), text: copy.explore.beaches, icon: "🌊" },
+    { label: copy.links.villages, href: pathFor(routeIds.villages, language), text: copy.explore.villages, icon: "🏘️" },
+    { label: copy.links.museums, href: pathFor(routeIds.museums, language), text: copy.explore.museums, icon: "🏛️" },
   ];
   const mobileLinks: HeaderMenuLink[] = [...links, ...exploreLinks];
 
@@ -246,7 +329,7 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/" }: H
               <span className="shrink-0 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-emerald-700 ring-1 ring-emerald-700/10">{statusLabel}<span className="ml-1.5 text-emerald-700/70">{reception.dateLabel}</span></span>
             </span>
             <span className="mt-1 block truncate text-[10px] font-black uppercase tracking-[0.12em] text-stone-500 sm:text-[11px]">
-              <span>Kampos, Chios</span>
+              <span>{copy.location}</span>
               <span className="px-1.5 text-amber-800">·</span>
               <span className="text-amber-800">{copy.directLine}</span>
             </span>
