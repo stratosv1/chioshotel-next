@@ -10,6 +10,18 @@ type RoomLanguage = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
 type FloorKind = "ground" | "first" | "other";
 type RoomDictionary = Partial<Record<RoomLanguage, string>>;
 
+type RoomUiLabels = {
+  upToGuests: (count: number) => string;
+  faqKicker: string;
+  faqTitle: string;
+  nextRoom: string;
+  swipe: string;
+  photos: string;
+  highlights: string;
+  keyDetails: string;
+  propertyLocation: string;
+};
+
 function getRoomLanguage(path: string): RoomLanguage {
   if (path.startsWith("/el/")) return "el";
   if (path.startsWith("/fr/")) return "fr";
@@ -20,14 +32,24 @@ function getRoomLanguage(path: string): RoomLanguage {
   return "en";
 }
 
-const labels: Record<RoomLanguage, { upToGuests: (count: number) => string; faqKicker: string; faqTitle: string; nextRoom: string; swipe: string; photos: string }> = {
-  en: { upToGuests: (count) => `Up to ${count} guests`, faqKicker: "Questions", faqTitle: "Room FAQ", nextRoom: "Next room", swipe: "Swipe to see more rooms", photos: "Photos" },
-  el: { upToGuests: (count) => `Έως ${count} άτομα`, faqKicker: "Ερωτήσεις", faqTitle: "Συχνές ερωτήσεις δωματίου", nextRoom: "Επόμενο δωμάτιο", swipe: "Σύρε για περισσότερα δωμάτια", photos: "Φωτογραφίες" },
-  fr: { upToGuests: (count) => `Jusqu’à ${count} personnes`, faqKicker: "Questions", faqTitle: "FAQ de la chambre", nextRoom: "Chambre suivante", swipe: "Faites glisser pour voir plus", photos: "Photos" },
-  de: { upToGuests: (count) => `Bis zu ${count} Gäste`, faqKicker: "Fragen", faqTitle: "Zimmer-FAQ", nextRoom: "Nächstes Zimmer", swipe: "Wischen für weitere Zimmer", photos: "Fotos" },
-  it: { upToGuests: (count) => `Fino a ${count} ospiti`, faqKicker: "Domande", faqTitle: "FAQ della camera", nextRoom: "Camera successiva", swipe: "Scorri per vedere altre camere", photos: "Foto" },
-  es: { upToGuests: (count) => `Hasta ${count} personas`, faqKicker: "Preguntas", faqTitle: "Preguntas frecuentes", nextRoom: "Habitación siguiente", swipe: "Desliza para ver más habitaciones", photos: "Fotos" },
-  tr: { upToGuests: (count) => `${count} kişiye kadar`, faqKicker: "Sorular", faqTitle: "Oda SSS", nextRoom: "Sonraki oda", swipe: "Daha fazla oda için kaydırın", photos: "Fotoğraflar" },
+const labels: Record<RoomLanguage, RoomUiLabels> = {
+  en: { upToGuests: (count) => `Up to ${count} guests`, faqKicker: "Questions", faqTitle: "Room FAQ", nextRoom: "Next room", swipe: "Swipe to see more rooms", photos: "Photos", highlights: "Room highlights", keyDetails: "Room key details", propertyLocation: "Voulamandis House, Chios" },
+  el: { upToGuests: (count) => `Έως ${count} άτομα`, faqKicker: "Ερωτήσεις", faqTitle: "Συχνές ερωτήσεις δωματίου", nextRoom: "Επόμενο δωμάτιο", swipe: "Σύρε για περισσότερα δωμάτια", photos: "Φωτογραφίες", highlights: "Χαρακτηριστικά δωματίου", keyDetails: "Βασικές πληροφορίες δωματίου", propertyLocation: "Voulamandis House, Χίος" },
+  fr: { upToGuests: (count) => `Jusqu’à ${count} personnes`, faqKicker: "Questions", faqTitle: "FAQ de la chambre", nextRoom: "Chambre suivante", swipe: "Faites glisser pour voir plus", photos: "Photos", highlights: "Points forts de la chambre", keyDetails: "Informations principales", propertyLocation: "Voulamandis House, Chios" },
+  de: { upToGuests: (count) => `Bis zu ${count} Gäste`, faqKicker: "Fragen", faqTitle: "Zimmer-FAQ", nextRoom: "Nächstes Zimmer", swipe: "Wischen für weitere Zimmer", photos: "Fotos", highlights: "Zimmer-Highlights", keyDetails: "Wichtige Zimmerdetails", propertyLocation: "Voulamandis House, Chios" },
+  it: { upToGuests: (count) => `Fino a ${count} ospiti`, faqKicker: "Domande", faqTitle: "FAQ della camera", nextRoom: "Camera successiva", swipe: "Scorri per vedere altre camere", photos: "Foto", highlights: "Caratteristiche della camera", keyDetails: "Dettagli principali", propertyLocation: "Voulamandis House, Chios" },
+  es: { upToGuests: (count) => `Hasta ${count} personas`, faqKicker: "Preguntas", faqTitle: "Preguntas frecuentes", nextRoom: "Habitación siguiente", swipe: "Desliza para ver más habitaciones", photos: "Fotos", highlights: "Características de la habitación", keyDetails: "Datos principales", propertyLocation: "Voulamandis House, Quíos" },
+  tr: { upToGuests: (count) => `${count} kişiye kadar`, faqKicker: "Sorular", faqTitle: "Oda SSS", nextRoom: "Sonraki oda", swipe: "Daha fazla oda için kaydırın", photos: "Fotoğraflar", highlights: "Oda özellikleri", keyDetails: "Temel oda bilgileri", propertyLocation: "Voulamandis House, Sakız Adası" },
+};
+
+const bookingPathByLanguage: Record<RoomLanguage, string> = {
+  en: "/chios-hotels-rates/",
+  el: "/el/amesi-kratisi-voulamandis-house/",
+  fr: "/fr/tarifs-des-hotels-a-chios/",
+  de: "/de/hotelpreise-auf-der-insel-chios/",
+  it: "/it/prezzi-hotel-chios/",
+  es: "/es/los-mejores-precios-de-hotel-en-la-isla-chios/",
+  tr: "/tr/sakiz-adasi-rezervasyon/",
 };
 
 const sectionLabels: Record<RoomLanguage, { groundTitle: string; groundText: string; firstTitle: string; firstText: string }> = {
@@ -41,8 +63,8 @@ const sectionLabels: Record<RoomLanguage, { groundTitle: string; groundText: str
 };
 
 const dictionary: Record<string, RoomDictionary> = {
-  "Room": { el: "Δωμάτιο", fr: "Chambre", de: "Zimmer", it: "Camera", es: "Habitación", tr: "Oda" },
-  "Apartment": { el: "Διαμέρισμα", fr: "Appartement", de: "Apartment", it: "Appartamento", es: "Apartamento", tr: "Daire" },
+  Room: { el: "Δωμάτιο", fr: "Chambre", de: "Zimmer", it: "Camera", es: "Habitación", tr: "Oda" },
+  Apartment: { el: "Διαμέρισμα", fr: "Appartement", de: "Apartment", it: "Appartamento", es: "Apartamento", tr: "Daire" },
   "Ground floor": { el: "Ισόγειο", fr: "Rez-de-chaussée", de: "Erdgeschoss", it: "Piano terra", es: "Planta baja", tr: "Zemin kat" },
   "First floor": { el: "Πρώτος όροφος", fr: "Premier étage", de: "Obergeschoss", it: "Primo piano", es: "Primera planta", tr: "Üst kat" },
   "Independent unit": { el: "Ανεξάρτητη μονάδα", fr: "Unité indépendante", de: "Eigenständige Einheit", it: "Unità indipendente", es: "Unidad independiente", tr: "Bağımsız birim" },
@@ -52,12 +74,12 @@ const dictionary: Record<string, RoomDictionary> = {
   "Budget double room": { el: "Οικονομικό δίκλινο", fr: "Chambre double économique", de: "Economy Doppelzimmer", it: "Camera doppia economy", es: "Habitación doble económica", tr: "Ekonomik çift kişilik oda" },
   "Garden access": { el: "Πρόσβαση στον κήπο", fr: "Accès jardin", de: "Gartenzugang", it: "Accesso al giardino", es: "Acceso al jardín", tr: "Bahçe erişimi" },
   "No stairs": { el: "Χωρίς σκάλες", fr: "Sans escaliers", de: "Keine Treppen", it: "Senza scale", es: "Sin escaleras", tr: "Merdivensiz" },
-  "Economy": { el: "Οικονομικό", fr: "Économique", de: "Economy", it: "Economy", es: "Económico", tr: "Ekonomik" },
+  Economy: { el: "Οικονομικό", fr: "Économique", de: "Economy", it: "Economy", es: "Económico", tr: "Ekonomik" },
   "Kambos view": { el: "Θέα στον Κάμπο", fr: "Vue sur Kambos", de: "Blick auf Kambos", it: "Vista su Kambos", es: "Vista a Kambos", tr: "Kambos manzarası" },
   "Upper-floor view": { el: "Θέα από τον όροφο", fr: "Vue depuis l’étage", de: "Blick vom Obergeschoss", it: "Vista dal piano superiore", es: "Vista desde la planta superior", tr: "Üst kat manzarası" },
   "Private balcony": { el: "Ιδιωτικό μπαλκόνι", fr: "Balcon privé", de: "Privater Balkon", it: "Balcone privato", es: "Balcón privado", tr: "Özel balkon" },
-  "Kitchenette": { el: "Μικρή κουζίνα", fr: "Kitchenette", de: "Kitchenette", it: "Angolo cottura", es: "Kitchenette", tr: "Kitchenette" },
-  "Kitchen": { el: "Κουζίνα", fr: "Cuisine", de: "Küche", it: "Cucina", es: "Cocina", tr: "Mutfak" },
+  Kitchenette: { el: "Μικρή κουζίνα", fr: "Kitchenette", de: "Kitchenette", it: "Angolo cottura", es: "Kitchenette", tr: "Kitchenette" },
+  Kitchen: { el: "Κουζίνα", fr: "Cuisine", de: "Küche", it: "Cucina", es: "Cocina", tr: "Mutfak" },
   "Sofa bed": { el: "Καναπές-κρεβάτι", fr: "Canapé-lit", de: "Schlafsofa", it: "Divano letto", es: "Sofá cama", tr: "Çekyat" },
   "Sofa beds": { el: "Καναπέδες-κρεβάτια", fr: "Canapés-lits", de: "Schlafsofas", it: "Divani letto", es: "Sofás cama", tr: "Çekyatlar" },
   "Full kitchen": { el: "Πλήρης κουζίνα", fr: "Cuisine complète", de: "Voll ausgestattete Küche", it: "Cucina completa", es: "Cocina completa", tr: "Tam mutfak" },
@@ -76,11 +98,11 @@ const dictionary: Record<string, RoomDictionary> = {
   "1 sofa bed": { el: "1 καναπές-κρεβάτι", fr: "1 canapé-lit", de: "1 Schlafsofa", it: "1 divano letto", es: "1 sofá cama", tr: "1 çekyat" },
   "2 sofa beds": { el: "2 καναπέδες-κρεβάτια", fr: "2 canapés-lits", de: "2 Schlafsofas", it: "2 divani letto", es: "2 sofás cama", tr: "2 çekyat" },
   "Room view": { el: "Θέα δωματίου", fr: "Vue de la chambre", de: "Zimmerblick", it: "Vista camera", es: "Vista de la habitación", tr: "Oda manzarası" },
-  "Bedroom": { el: "Υπνοδωμάτιο", fr: "Chambre", de: "Schlafzimmer", it: "Camera da letto", es: "Dormitorio", tr: "Yatak odası" },
+  Bedroom: { el: "Υπνοδωμάτιο", fr: "Chambre", de: "Schlafzimmer", it: "Camera da letto", es: "Dormitorio", tr: "Yatak odası" },
   "Double bed": { el: "Διπλό κρεβάτι", fr: "Lit double", de: "Doppelbett", it: "Letto matrimoniale", es: "Cama doble", tr: "Çift kişilik yatak" },
   "Living Room & Kitchen": { el: "Καθιστικό & κουζίνα", fr: "Salon & cuisine", de: "Wohnbereich & Küche", it: "Soggiorno & cucina", es: "Sala de estar y cocina", tr: "Oturma alanı & mutfak" },
   "Living area": { el: "Καθιστικό", fr: "Salon", de: "Wohnbereich", it: "Soggiorno", es: "Sala de estar", tr: "Oturma alanı" },
-  "Bathroom": { el: "Μπάνιο", fr: "Salle de bain", de: "Bad", it: "Bagno", es: "Baño", tr: "Banyo" },
+  Bathroom: { el: "Μπάνιο", fr: "Salle de bain", de: "Bad", it: "Bagno", es: "Baño", tr: "Banyo" },
   "Room 6 is ideal for guests who love nature. Located on the ground floor, it opens directly to the peaceful courtyard and garden.": { el: "Το Δωμάτιο 6 βρίσκεται στο ισόγειο και ανοίγει απευθείας στην ήρεμη αυλή και στον κήπο.", fr: "La chambre 6 est au rez-de-chaussée et s’ouvre directement sur la cour paisible et le jardin.", de: "Zimmer 6 liegt im Erdgeschoss und öffnet sich direkt zum ruhigen Hof und Garten.", it: "La camera 6 è al piano terra e si apre direttamente sul cortile tranquillo e sul giardino.", es: "La habitación 6 está en planta baja y se abre directamente al patio tranquilo y al jardín.", tr: "Oda 6 zemin kattadır ve huzurlu avlu ile bahçeye doğrudan açılır." },
   "Room 2 is located on the first floor and offers access to a shared terrace with views over the estate and the citrus trees of Kambos.": { el: "Το Δωμάτιο 2 βρίσκεται στον πρώτο όροφο και έχει πρόσβαση σε κοινόχρηστη βεράντα με θέα στο κτήμα και στον Κάμπο.", fr: "La chambre 2 se trouve au premier étage avec accès à une terrasse partagée donnant sur le domaine.", de: "Zimmer 2 liegt im Obergeschoss und bietet Zugang zu einer gemeinsamen Terrasse mit Blick auf das Anwesen.", it: "La camera 2 si trova al primo piano e offre accesso a una terrazza condivisa con vista sulla tenuta.", es: "La habitación 2 está en la primera planta y ofrece acceso a una terraza compartida con vistas a la finca.", tr: "Oda 2 üst katta yer alır ve tesise bakan ortak terasa erişim sunar." },
   "Room 5 is a ground-floor double / triple room with direct courtyard and garden access. It is ideal for guests who prefer no stairs and an easy outdoor connection.": { el: "Το Δωμάτιο 5 είναι ισόγειο δίκλινο / τρίκλινο με άμεση πρόσβαση στην αυλή και στον κήπο.", fr: "La chambre 5 est une double / triple au rez-de-chaussée avec accès direct à la cour et au jardin.", de: "Zimmer 5 ist ein Doppel- / Dreibettzimmer im Erdgeschoss mit direktem Zugang zum Hof und Garten.", it: "La camera 5 è una doppia / tripla al piano terra con accesso diretto al cortile e al giardino.", es: "La habitación 5 es una doble / triple en planta baja con acceso directo al patio y al jardín.", tr: "Oda 5, avlu ve bahçeye doğrudan erişimi olan zemin kat çift / üç kişilik odadır." },
@@ -114,6 +136,13 @@ function localizeRoomText(text: string, language: RoomLanguage) {
   return translate(text, language);
 }
 
+function localizeImageAlt(room: IndividualRoomData, image: IndividualRoomData["images"][number], language: RoomLanguage) {
+  if (language === "en") return image.alt;
+  const roomName = localizeName(room.name, language);
+  const caption = localizeRoomText(image.caption, language);
+  return `${roomName} – ${caption} – ${labels[language].propertyLocation}`;
+}
+
 function shouldGroupRoomsByFloor(data: RoomDetailData) {
   return data.id === "standard-double-room" || data.id === "economy-double-rooms";
 }
@@ -139,7 +168,7 @@ function RoomVisualCard({ room, language, priority = false }: { room: Individual
         {activeImage ? (
           <Image
             src={activeImage.src}
-            alt={activeImage.alt}
+            alt={localizeImageAlt(room, activeImage, language)}
             fill
             priority={priority}
             sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 84vw"
@@ -169,7 +198,7 @@ function RoomVisualCard({ room, language, priority = false }: { room: Individual
             className={`relative aspect-square overflow-hidden rounded-2xl border-2 transition ${activeImage?.src === image.src ? "border-[#2f261f]" : "border-white"}`}
             aria-label={`${labels[language].photos} ${index + 1}`}
           >
-            <Image src={image.src} alt={image.alt} fill sizes="22vw" className="object-cover" />
+            <Image src={image.src} alt={localizeImageAlt(room, image, language)} fill sizes="22vw" className="object-cover" />
           </button>
         ))}
       </div>
@@ -297,6 +326,7 @@ function IndividualRoomsSection({ data, language }: { data: RoomDetailData; lang
 export function RoomDetailPage({ data }: RoomDetailPageProps) {
   const language = getRoomLanguage(data.seo.canonicalPath);
   const localLabels = labels[language];
+  const primaryBookingHref = bookingPathByLanguage[language] || data.hero.primaryCta.href;
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#fbf6ef] text-[#2f261f]">
@@ -309,11 +339,11 @@ export function RoomDetailPage({ data }: RoomDetailPageProps) {
             <h1 id="rd-hero-title" className="mt-5 text-balance text-[2.45rem] font-black leading-[0.98] tracking-[-0.04em] text-white sm:text-5xl lg:text-6xl">{data.hero.title}</h1>
             <p className="mt-5 text-base font-extrabold text-amber-100 sm:text-xl">{data.hero.subtitle}</p>
             <p className="mt-4 max-w-2xl text-pretty text-base leading-8 text-white/88 sm:text-lg">{data.hero.description}</p>
-            <div className="mt-6 flex flex-wrap gap-2" aria-label="Room highlights">
+            <div className="mt-6 flex flex-wrap gap-2" aria-label={localLabels.highlights}>
               {data.hero.badges.map((badge) => <span key={badge} className="rounded-full border border-white/16 bg-white/12 px-3 py-1.5 text-xs font-extrabold text-white backdrop-blur">{localizeRoomText(badge, language)}</span>)}
             </div>
             <div className="mt-7 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap">
-              <a className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-amber-200 px-4 text-center text-[11px] font-black uppercase tracking-[0.12em] !text-[#2f261f] shadow-[0_18px_40px_rgba(0,0,0,0.22)] transition hover:-translate-y-0.5 hover:bg-white sm:px-6 sm:text-xs" href={data.hero.primaryCta.href} style={{ color: "#2f261f" }}>{data.hero.primaryCta.label}</a>
+              <a className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-amber-200 px-4 text-center text-[11px] font-black uppercase tracking-[0.12em] !text-[#2f261f] shadow-[0_18px_40px_rgba(0,0,0,0.22)] transition hover:-translate-y-0.5 hover:bg-white sm:px-6 sm:text-xs" href={primaryBookingHref} style={{ color: "#2f261f" }}>{data.hero.primaryCta.label}</a>
               <a className="inline-flex min-h-[50px] items-center justify-center rounded-full border border-white/30 bg-white/10 px-4 text-center text-[11px] font-black uppercase tracking-[0.12em] text-white backdrop-blur transition hover:-translate-y-0.5 hover:bg-white hover:text-[#2f261f] sm:px-6 sm:text-xs" href={data.hero.secondaryCta.href}>{data.hero.secondaryCta.label}</a>
             </div>
           </div>
@@ -329,7 +359,7 @@ export function RoomDetailPage({ data }: RoomDetailPageProps) {
             <h2 id="rd-overview-title" className="mt-5 text-balance text-3xl font-black tracking-[-0.035em] text-[#2f261f] sm:text-4xl">{data.overview.title}</h2>
             <div className="mt-5 space-y-4 text-base leading-8 text-[#574b3f]">{data.overview.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
           </article>
-          <aside className="rounded-[30px] border border-amber-900/10 bg-[#fffdfa] p-5 shadow-[0_18px_45px_rgba(47,38,31,0.08)] sm:p-6" aria-label="Room key details">
+          <aside className="rounded-[30px] border border-amber-900/10 bg-[#fffdfa] p-5 shadow-[0_18px_45px_rgba(47,38,31,0.08)] sm:p-6" aria-label={localLabels.keyDetails}>
             <div className="grid grid-cols-2 gap-3 lg:grid-cols-1">
               {data.overview.highlights.map((highlight) => <div className="rounded-2xl bg-amber-50/70 p-4 ring-1 ring-amber-900/10" key={highlight.label}><span className="text-[11px] font-black uppercase tracking-[0.18em] text-amber-800">{highlight.label}</span><strong className="mt-1 block text-base font-black text-[#2f261f]">{localizeRoomText(highlight.value, language)}</strong></div>)}
             </div>
