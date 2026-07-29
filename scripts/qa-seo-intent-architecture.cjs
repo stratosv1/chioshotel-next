@@ -17,6 +17,13 @@ function expectAll(file, needles, message) {
   }
 }
 
+function expectNone(file, needles, message) {
+  const text = read(file);
+  for (const needle of needles) {
+    if (text.includes(needle)) failures.push(`${message}: found ${needle} (${file})`);
+  }
+}
+
 expectAll(
   "lib/seo/intent-registry.ts",
   [
@@ -141,6 +148,81 @@ expectAll(
   "Greek homepage hardening must be applied before metadata, schema and rendering",
 );
 
+expectAll(
+  "components/rooms/RoomsCategoryPage.tsx",
+  [
+    "Δωμάτια & διαμερίσματα • Voulamandis House",
+    "Δείτε οικονομικά δίκλινα δωμάτια",
+    "Οικονομική επιλογή για 2 άτομα",
+    "Συμβουλή για απευθείας κράτηση",
+    "GreekRoomWizardTailwind",
+  ],
+  "Greek rooms owner page localization is incomplete",
+);
+
+expectNone(
+  "components/rooms/RoomsCategoryPage.tsx",
+  ["Δείτε economy double rooms"],
+  "Greek rooms owner page must not regress to mixed English CTA copy",
+);
+
+expectAll(
+  "components/rooms/GreekRoomWizardTailwind.tsx",
+  [
+    "Βρείτε το δωμάτιο που σας ταιριάζει",
+    "Οικονομική κατηγορία",
+    "Δίκλινο / τρίκλινο δωμάτιο ορόφου",
+    "Ανεξάρτητο διαμέρισμα",
+    "Δωμάτιο $1",
+    "Διπλό",
+    "Μονό",
+    "Καναπές-κρεβάτι",
+  ],
+  "Greek room wizard localization is incomplete",
+);
+
+expectAll(
+  "content/rooms-schema.ts",
+  [
+    'el: { breadcrumbName: "Δωμάτια και διαμερίσματα στη Χίο" }',
+    "hardenGreekRoomsSchemaData",
+    "Οικονομική επιλογή για 2 άτομα",
+    "Οικονομικό",
+  ],
+  "Greek rooms structured data hardening is incomplete",
+);
+
+expectAll(
+  "lib/greek-seo-content-hardening.ts",
+  [
+    "3 χλμ.",
+    "6 χλμ.",
+    "Ψυγείο & κλιματισμός",
+    "βοηθό εύρεσης δωματίου AI",
+    "πιθανή διαμονή σε δύο δωμάτια",
+    "ενός ξενοδοχείου ή θερέτρου",
+  ],
+  "Greek SEO content hardening is incomplete",
+);
+
+expect(
+  "app/el/diamoni-sti-xio/page.tsx",
+  "hardenGreekSeoContent",
+  "Greek accommodation owner page must harden content before metadata, schema and rendering",
+);
+
+expect(
+  "app/el/xenodoxeia-xios/page.tsx",
+  "hardenGreekSeoContent",
+  "Greek hotels-intent guide must harden content before metadata, schema and rendering",
+);
+
+expectAll(
+  "components/seo/ExploreVoulamandisJourney.tsx",
+  ["IMAGE_ALT", "Αυλή του Voulamandis House στον Κάμπο της Χίου", "alt={IMAGE_ALT[language]}"],
+  "SEO journey image alt text must remain localized",
+);
+
 expect(
   "app/staff/seo/page.tsx",
   "getSeoAdvisorWithIntentData",
@@ -159,4 +241,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log("SEO architecture QA passed: audits #1–#9, owner guardrails, Greek homepage hardening, sitemap and LodgingBusiness schema are in place.");
+console.log("SEO architecture QA passed: audits #1–#9, owner guardrails, Greek homepage/rooms/content hardening, localized SEO alt text, sitemap and LodgingBusiness schema are in place.");

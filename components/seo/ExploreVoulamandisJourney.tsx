@@ -95,6 +95,16 @@ const COPY: Record<SiteLanguage, {
   },
 };
 
+const IMAGE_ALT: Record<SiteLanguage, string> = {
+  en: "Voulamandis House courtyard in Kambos, Chios",
+  el: "Αυλή του Voulamandis House στον Κάμπο της Χίου",
+  fr: "Cour du Voulamandis House à Kambos, Chios",
+  de: "Innenhof des Voulamandis House in Kambos auf Chios",
+  it: "Cortile del Voulamandis House a Kambos, Chios",
+  es: "Patio de Voulamandis House en Kambos, Quíos",
+  tr: "Sakız Adası Kambos'taki Voulamandis House avlusu",
+};
+
 const ROUTES: Record<SiteLanguage, { home: string; rooms: string; rates: string; hotelsGuide: string; romantic: string }> = {
   en: { home: "/chios-accommodation/", rooms: "/chios-rooms/", rates: "/chios-hotels-rates/", hotelsGuide: "/chios-hotels/", romantic: "/romantic-stay-in-chios/" },
   el: { home: "/el/diamoni-sti-xio/", rooms: "/el/domatia-xios/", rates: "/el/amesi-kratisi-voulamandis-house/", hotelsGuide: "/el/xenodoxeia-xios/", romantic: "/el/romantiki-diamoni-sti-xio/" },
@@ -157,7 +167,7 @@ export function ExploreVoulamandisJourney({ language, pathname }: Props) {
           </div>
         </div>
         <div className="relative min-h-[280px] md:min-h-full">
-          <Image src="/images/beaches/voulamandis-house-courtyard-chios.webp" alt="Voulamandis House courtyard in Kambos, Chios" fill sizes="(min-width: 768px) 42vw, 100vw" className="object-cover" />
+          <Image src="/images/beaches/voulamandis-house-courtyard-chios.webp" alt={IMAGE_ALT[language]} fill sizes="(min-width: 768px) 42vw, 100vw" className="object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#263127]/65 via-transparent to-transparent md:bg-gradient-to-r md:from-[#263127]/35 md:via-transparent md:to-transparent" />
         </div>
       </div>
