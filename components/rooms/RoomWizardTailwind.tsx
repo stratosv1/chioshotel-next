@@ -174,6 +174,60 @@ const elCopy: WizardCopy = {
 };
 
 
+const frCopy: WizardCopy = {
+  ...enCopy,
+  title: "Trouvez la chambre qui vous convient",
+  text: "Répondez à quelques questions rapides et nous vous proposerons la chambre ou l’appartement le plus adapté à votre séjour à Chios.",
+  firstName: "Prénom",
+  lastName: "Nom",
+  checkin: "Arrivée",
+  checkout: "Départ",
+  email: "E-mail",
+  phone: "Téléphone",
+  consent: "J’accepte le traitement de mes données personnelles afin de recevoir une proposition d’hébergement adaptée.",
+  start: "Commencer la sélection",
+  back: "Retour",
+  step: "Étape",
+  bestMatch: "Meilleure option",
+  alternatives: "Autres options adaptées",
+  startOver: "Recommencer",
+  whatsapp: "WhatsApp",
+  emailCta: "E-mail",
+  alert: "La date de départ doit être postérieure à la date d’arrivée.",
+  perfect: "Cette option correspond le mieux à vos critères et offre un bon équilibre entre confort, accès et prix.",
+  room: "Chambre",
+  guests: "Personnes",
+  beds: "Lits",
+  why: "Pourquoi elle convient",
+  same: "Même catégorie de prix",
+  more: "Catégorie de prix supérieure",
+  less: "Catégorie de prix inférieure",
+  questions: [
+    { id: "guests", question: "Combien de personnes séjourneront ?", options: [
+      { title: "2 personnes", hint: "Couple ou deux adultes", icon: "👥", value: 2 },
+      { title: "3 personnes", hint: "Famille ou amis", icon: "👨‍👩‍👦", value: 3 },
+      { title: "4 personnes", hint: "Davantage d’espace pour une famille", icon: "👨‍👩‍👧‍👦", value: 4 },
+    ]},
+    { id: "budget", question: "Quelle catégorie de prix préférez-vous ?", options: [
+      { title: "Économique", hint: "Option plus avantageuse", icon: "💶", value: true },
+      { title: "Standard / Premium", hint: "Davantage de confort et de choix", icon: "✨", value: false },
+    ]},
+    { id: "noStairs", question: "Accès et escaliers ?", options: [
+      { title: "Sans escaliers", hint: "Rez-de-chaussée ou appartement indépendant", icon: "🧳", value: true },
+      { title: "Les escaliers conviennent", hint: "Inclut les options à l’étage", icon: "🪜", value: false },
+    ]},
+    { id: "upperView", question: "Quel emplacement préférez-vous ?", options: [
+      { title: "Étage / vue", hint: "Une atmosphère plus lumineuse et ouverte", icon: "👁️", value: true },
+      { title: "Vue jardin", hint: "Une ambiance calme et reposante", icon: "🌿", value: false },
+    ]},
+    { id: "kitchen", question: "Avez-vous besoin d’une cuisine ?", options: [
+      { title: "Oui", hint: "Cuisine complète ou kitchenette", icon: "🍳", value: true },
+      { title: "Non", hint: "Une chambre standard suffit", icon: "🍽️", value: false },
+    ]},
+  ],
+};
+
+
 const deCopy: WizardCopy = {
   ...enCopy,
   title: "Finden Sie das passende Zimmer",
@@ -334,7 +388,7 @@ const plCopy: WizardCopy = {
 const copyByLanguage: Record<WizardLanguage, WizardCopy> = {
   en: enCopy,
   el: elCopy,
-  fr: enCopy,
+  fr: frCopy,
   de: deCopy,
   it: enCopy,
   es: enCopy,
@@ -362,6 +416,10 @@ function isPolishCopy(copy: WizardCopy) {
   return copy === plCopy;
 }
 
+function isFrenchCopy(copy: WizardCopy) {
+  return copy === frCopy;
+}
+
 function isGermanCopy(copy: WizardCopy) {
   return copy === deCopy;
 }
@@ -371,6 +429,9 @@ function isTurkishCopy(copy: WizardCopy) {
 }
 
 function localizeRoomName(name: string, copy: WizardCopy) {
+  if (isFrenchCopy(copy)) {
+    return name.replace(/^Room\s+(\d+)$/i, "Chambre $1").replace(/^Apartment\s+(\d+)$/i, "Appartement $1");
+  }
   if (isGermanCopy(copy)) {
     return name.replace(/^Room\s+(\d+)$/i, "Zimmer $1").replace(/^Apartment\s+(\d+)$/i, "Apartment $1");
   }
@@ -381,6 +442,15 @@ function localizeRoomName(name: string, copy: WizardCopy) {
 }
 
 function localizeRoomType(type: string, copy: WizardCopy) {
+  if (isFrenchCopy(copy)) {
+    const values: Record<string, string> = {
+      "First Floor Double/Triple room": "Chambre double / triple à l’étage",
+      "Ground Floor Double/Triple room": "Chambre double / triple au rez-de-chaussée",
+      "Economy double": "Chambre double économique",
+      Apartment: "Appartement familial",
+    };
+    return values[type] || type;
+  }
   if (isGermanCopy(copy)) {
     const values: Record<string, string> = {
       "First Floor Double/Triple room": "Doppel-/Dreibettzimmer im Obergeschoss",
@@ -401,6 +471,14 @@ function localizeRoomType(type: string, copy: WizardCopy) {
 }
 
 function localizeRoomLocation(location: string, copy: WizardCopy) {
+  if (isFrenchCopy(copy)) {
+    const values: Record<string, string> = {
+      "First Floor": "Étage",
+      "Ground Floor": "Rez-de-chaussée",
+      "Stand Alone": "Unité indépendante",
+    };
+    return values[location] || location;
+  }
   if (isGermanCopy(copy)) {
     const values: Record<string, string> = {
       "First Floor": "Obergeschoss",
@@ -421,24 +499,27 @@ function localizeRoomLocation(location: string, copy: WizardCopy) {
 function getTags(room: RoomWizardRoom, prefs: WizardPrefs, copy: WizardCopy) {
   const tags: Array<{ text: string; good: boolean }> = [];
   const polish = isPolishCopy(copy);
+  const french = isFrenchCopy(copy);
   const german = isGermanCopy(copy);
   const turkish = isTurkishCopy(copy);
   if (prefs.guests) tags.push({ text: `${room.maxGuests >= prefs.guests ? "✓" : "✕"} ${prefs.guests} ${copy.guests}`, good: room.maxGuests >= prefs.guests });
-  if (prefs.budget !== undefined) tags.push({ text: room.budget ? (turkish ? "Ekonomik" : "Economy") : (turkish ? "Standart" : "Standard"), good: room.budget === prefs.budget });
-  if (prefs.noStairs) tags.push({ text: room.stairs ? (polish ? "Schody" : german ? "Treppen" : turkish ? "Merdiven var" : "Stairs") : (polish ? "Bez schodów" : german ? "Ohne Treppen" : turkish ? "Merdivensiz" : "No stairs"), good: !room.stairs });
-  if (prefs.upperView !== undefined) tags.push({ text: prefs.upperView ? (polish ? "Piętro / widok" : german ? "Obergeschoss / Aussicht" : turkish ? "Üst kat / manzara" : "Upper view") : (polish ? "Widok na ogród" : german ? "Gartenblick" : turkish ? "Bahçe manzarası" : "Garden view"), good: prefs.upperView ? room.upperView : room.gardenView });
-  if (prefs.kitchen) tags.push({ text: room.fullKitchen ? (polish ? "Pełna kuchnia" : german ? "Küche" : turkish ? "Tam mutfak" : "Full kitchen") : room.kitchenette ? (polish ? "Aneks kuchenny" : german ? "Kochnische" : turkish ? "Mini mutfak" : "Kitchenette") : (polish ? "Bez kuchni" : german ? "Keine Küche" : turkish ? "Mutfak yok" : "No kitchen"), good: room.fullKitchen || room.kitchenette });
+  if (prefs.budget !== undefined) tags.push({ text: room.budget ? (french ? "Économique" : turkish ? "Ekonomik" : "Economy") : (french ? "Standard" : turkish ? "Standart" : "Standard"), good: room.budget === prefs.budget });
+  if (prefs.noStairs) tags.push({ text: room.stairs ? (polish ? "Schody" : french ? "Escaliers" : german ? "Treppen" : turkish ? "Merdiven var" : "Stairs") : (polish ? "Bez schodów" : french ? "Sans escaliers" : german ? "Ohne Treppen" : turkish ? "Merdivensiz" : "No stairs"), good: !room.stairs });
+  if (prefs.upperView !== undefined) tags.push({ text: prefs.upperView ? (polish ? "Piętro / widok" : french ? "Étage / vue" : german ? "Obergeschoss / Aussicht" : turkish ? "Üst kat / manzara" : "Upper view") : (polish ? "Widok na ogród" : french ? "Vue jardin" : german ? "Gartenblick" : turkish ? "Bahçe manzarası" : "Garden view"), good: prefs.upperView ? room.upperView : room.gardenView });
+  if (prefs.kitchen) tags.push({ text: room.fullKitchen ? (polish ? "Pełna kuchnia" : french ? "Cuisine complète" : german ? "Küche" : turkish ? "Tam mutfak" : "Full kitchen") : room.kitchenette ? (polish ? "Aneks kuchenny" : french ? "Kitchenette" : german ? "Kochnische" : turkish ? "Mini mutfak" : "Kitchenette") : (polish ? "Bez kuchni" : french ? "Sans cuisine" : german ? "Keine Küche" : turkish ? "Mutfak yok" : "No kitchen"), good: room.fullKitchen || room.kitchenette });
   return tags;
 }
 
 function getWhatsAppUrl(room: RoomWizardRoom, lead: LeadData, prefs: WizardPrefs, phone: string, copy: WizardCopy) {
   const intro = isPolishCopy(copy)
     ? `Dzień dobry! Nazywam się ${lead.firstName} ${lead.lastName} i chcę zapytać o:`
-    : isGermanCopy(copy)
-      ? `Guten Tag! Ich bin ${lead.firstName} ${lead.lastName} und möchte mich nach folgender Unterkunft erkundigen:`
-      : isTurkishCopy(copy)
-        ? `Merhaba! Ben ${lead.firstName} ${lead.lastName}. Şu konaklama seçeneği hakkında bilgi almak istiyorum:`
-        : `Hello! My name is ${lead.firstName} ${lead.lastName} and I would like to ask about:`;
+    : isFrenchCopy(copy)
+      ? `Bonjour ! Je m’appelle ${lead.firstName} ${lead.lastName} et je souhaite obtenir des informations sur :`
+      : isGermanCopy(copy)
+        ? `Guten Tag! Ich bin ${lead.firstName} ${lead.lastName} und möchte mich nach folgender Unterkunft erkundigen:`
+        : isTurkishCopy(copy)
+          ? `Merhaba! Ben ${lead.firstName} ${lead.lastName}. Şu konaklama seçeneği hakkında bilgi almak istiyorum:`
+          : `Hello! My name is ${lead.firstName} ${lead.lastName} and I would like to ask about:`;
   const text = `${intro}\n\n${copy.room}: ${localizeRoomName(room.name, copy)}\n${copy.checkin}: ${lead.checkin}\n${copy.checkout}: ${lead.checkout}\n${copy.guests}: ${prefs.guests || "-"}\n${copy.email}: ${lead.email}\n${copy.phone}: ${lead.phone}`;
   return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
 }
@@ -466,12 +547,13 @@ function RoomCard({ room, bestRoom, lead, prefs, whatsappPhone, copy, label }: {
   const tags = getTags(room, prefs, copy);
   const priceText = room.priceLevel > bestRoom.priceLevel ? copy.more : room.priceLevel < bestRoom.priceLevel ? copy.less : copy.same;
   const polish = isPolishCopy(copy);
+  const french = isFrenchCopy(copy);
   const german = isGermanCopy(copy);
   const turkish = isTurkishCopy(copy);
   const roomName = localizeRoomName(room.name, copy);
-  const doubleBed = polish ? "Podwójne" : german ? "Doppelbett" : turkish ? "Çift kişilik" : "Double";
-  const singleBed = polish ? "Pojedyncze" : german ? "Einzelbett" : turkish ? "Tek kişilik" : "Single";
-  const sofaBed = polish ? "Sofa" : german ? "Schlafsofa" : turkish ? "Çekyat" : "Sofa";
+  const doubleBed = polish ? "Podwójne" : french ? "Lit double" : german ? "Doppelbett" : turkish ? "Çift kişilik" : "Double";
+  const singleBed = polish ? "Pojedyncze" : french ? "Lit simple" : german ? "Einzelbett" : turkish ? "Tek kişilik" : "Single";
+  const sofaBed = polish ? "Sofa" : french ? "Canapé-lit" : german ? "Schlafsofa" : turkish ? "Çekyat" : "Sofa";
   return (
     <article className="w-[86vw] max-w-[430px] flex-none snap-start rounded-[2rem] border border-[#6f7f3f]/20 bg-white p-5 shadow-xl shadow-stone-900/5 md:w-[560px] md:max-w-[560px] md:p-7">
       <span className="inline-flex rounded-full bg-[#3f4f2f] px-3 py-1.5 text-xs font-black uppercase tracking-[0.1em] text-white">{label}</span>
@@ -523,7 +605,7 @@ export function RoomWizardTailwind({ rooms, whatsappPhone, language = "en" }: Ro
     setStep(0);
   }
 
-  const swipeLabel = isPolishCopy(copy) ? "Przesuń" : isGermanCopy(copy) ? "Wischen" : isTurkishCopy(copy) ? "Kaydırın" : "Swipe";
+  const swipeLabel = isPolishCopy(copy) ? "Przesuń" : isFrenchCopy(copy) ? "Balayez" : isGermanCopy(copy) ? "Wischen" : isTurkishCopy(copy) ? "Kaydırın" : "Swipe";
 
   return (
     <section className="mx-auto mb-12 w-[min(780px,100%)] scroll-mt-20" id="room-wizard-app" aria-labelledby="rw-main-title">

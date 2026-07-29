@@ -208,6 +208,8 @@ function LocationAndDirect({ data }: { data: HomePageData }) {
 }
 
 function DirectBookingBox({ data }: { data: HomePageData }) {
+  const locale = getLocale(data.seo.canonicalPath);
+
   return (
     <section className="px-4 py-9 md:px-8 md:py-16">
       <article className="relative mx-auto max-w-7xl overflow-hidden rounded-[1.5rem] border border-amber-900/10 bg-[#fff8ea] shadow-lg shadow-amber-900/10 md:rounded-[2rem]">
@@ -229,7 +231,7 @@ function DirectBookingBox({ data }: { data: HomePageData }) {
                 <p className="text-xs font-black uppercase tracking-[0.16em] text-amber-100">{data.location.discount.badge}</p>
                 <p className="mt-3 break-words font-serif text-2xl font-bold leading-tight md:text-3xl">{data.location.discount.title}</p>
                 <p className="mt-3 text-sm leading-7 text-white/80">{data.location.discount.formIntro}</p>
-                <div className="mt-5 rounded-[1.2rem] bg-white p-4 text-stone-900 shadow-xl shadow-black/20"><DiscountReveal submitLabel={data.location.discount.submitLabel} successText={data.location.discount.successText} code={data.location.discount.defaultCode || "WELCOME10"} /></div>
+                <div className="mt-5 rounded-[1.2rem] bg-white p-4 text-stone-900 shadow-xl shadow-black/20"><DiscountReveal submitLabel={data.location.discount.submitLabel} successText={data.location.discount.successText} code={data.location.discount.defaultCode || "WELCOME10"} locale={locale} /></div>
               </div>
             </div>
           </div>
