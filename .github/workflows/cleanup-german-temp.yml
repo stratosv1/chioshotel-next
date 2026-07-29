@@ -1,0 +1,47 @@
+name: Cleanup German audit artifacts
+
+on:
+  push:
+    branches: [fix/german-seo-cleanup]
+    paths:
+      - .cleanup-german-temp-trigger
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/german-seo-cleanup
+          fetch-depth: 0
+      - shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          rm -f \
+            .connector-trigger.txt \
+            .connector-action-triggered \
+            .german-cleanup-trigger \
+            .german-cleanup-run2 \
+            .german-cleanup-status.txt \
+            .german-verify-trigger \
+            .german-verify-status.txt \
+            .german-language-trigger \
+            .german-language-audit.txt \
+            .cleanup-german-temp-trigger \
+            scripts/german-cleanup.py \
+            .github/workflows/apply-german-seo-cleanup.yml \
+            .github/workflows/trigger-german-seo-cleanup.yml \
+            .github/workflows/test-connector-trigger.yml \
+            .github/workflows/german-cleanup-branch.yml \
+            .github/workflows/german-cleanup-runner.yml \
+            .github/workflows/german-verify.yml \
+            .github/workflows/german-language-audit.yml \
+            .github/workflows/cleanup-german-temp.yml
+          git add -A
+          git status --short
+          git commit -m "Clean temporary German audit tooling"
+          git push origin HEAD:fix/german-seo-cleanup
