@@ -7,6 +7,7 @@ type DiscountRevealProps = {
   submitLabel: string;
   successText: string;
   code: string;
+  locale?: Locale;
 };
 
 type Locale = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
@@ -263,34 +264,13 @@ const COPY: Record<
   },
 };
 
-function getLocaleFromPath(): Locale {
-  if (typeof window === "undefined") return "en";
-
-  const path = window.location.pathname.toLowerCase();
-
-  if (path === "/el" || path.startsWith("/el/")) return "el";
-  if (path === "/fr" || path.startsWith("/fr/")) return "fr";
-  if (path === "/de" || path.startsWith("/de/")) return "de";
-  if (path === "/it" || path.startsWith("/it/")) return "it";
-  if (path === "/es" || path.startsWith("/es/")) return "es";
-  if (path === "/tr" || path.startsWith("/tr/")) return "tr";
-
-  return "en";
-}
-
-export function DiscountReveal({ successText, code }: DiscountRevealProps) {
+export function DiscountReveal({ successText, code, locale = "en" }: DiscountRevealProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const cardRef = useRef<HTMLDivElement | null>(null);
   const isDrawingRef = useRef(false);
   const checkCounterRef = useRef(0);
 
   const [isRevealed, setIsRevealed] = useState(false);
-  const [locale, setLocale] = useState<Locale>("en");
-
-  useEffect(() => {
-    setLocale(getLocaleFromPath());
-  }, []);
-
   const text = COPY[locale];
 
   const drawCover = useCallback(() => {

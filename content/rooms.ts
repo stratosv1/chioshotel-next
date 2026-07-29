@@ -1,4 +1,4 @@
-﻿export type RoomCategoryCard = {
+export type RoomCategoryCard = {
   id: string;
   title: string;
   subtitle: string;
@@ -544,7 +544,7 @@ export const roomsCategoryFr: RoomsCategoryPageData = {
       title: "Chambre double économique",
       subtitle: "Meilleur rapport qualité-prix pour 2 personnes",
       description:
-        "Le meilleur choix value pour 2 personnes. Chambres rénovées de 16m² avec les essentiels et une atmosphère paisible à Kambos.",
+        "Le meilleur rapport qualité-prix pour 2 personnes. Chambres rénovées de 16m² avec les essentiels et une atmosphère paisible à Kambos.",
       href: "/fr/chambres-a-chios/chambres-doubles-economiques/",
       image:
         "/images/rooms/received_1753964631359257.webp",

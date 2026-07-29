@@ -425,7 +425,7 @@ export function getVillageCategoryPage(category: VillageCategoryKey, locale: Lan
     .filter((village): village is ChiosVillagesPageData["villages"][number] => Boolean(village))
     .map((village, index) => ({
       ...village,
-      size: index === 0 ? "large" : index === 1 ? "tall" : index === 2 ? "wide" : "normal",
+      size: (index === 0 ? "large" : index === 1 ? "tall" : index === 2 ? "wide" : "normal") as ChiosVillagesPageData["villages"][number]["size"],
     }));
 
   const heroImage = villages[0]?.image || base.hero.image;
