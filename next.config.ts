@@ -1,6 +1,53 @@
 import type { NextConfig } from "next";
 
 const legacyRedirects = [
+  // gsc-2026-07-turkish-legacy-redirects
+  {
+    source: "/tr/chios-odalari/sakiz-adasinin-plajlari",
+    destination: "/tr/sakiz-adasi-plajlari",
+    permanent: true,
+  },
+  {
+    source: "/tr/chios-odalari/pyrgi-sakiz-adasi-koyu",
+    destination: "/tr/sakiz-adasi-koyleri/pyrgi-koyu",
+    permanent: true,
+  },
+  {
+    source: "/tr/chios-odalari/mesta-koyu-chios",
+    destination: "/tr/sakiz-adasi-koyleri/mesta-koyu",
+    permanent: true,
+  },
+  {
+    source: "/tr/chios-odalari/vessa-koyu-chios",
+    destination: "/tr/sakiz-adasi-koyleri/vessa-koyu",
+    permanent: true,
+  },
+  {
+    source: "/tr/chios-odalari/olympoi-koyu-chios",
+    destination: "/tr/sakiz-adasi-koyleri/olympoi-koyu",
+    permanent: true,
+  },
+  {
+    source: "/tr/chios-odalari/volissos-koyu-chios",
+    destination: "/tr/sakiz-adasi-koyleri/volissos-koyu",
+    permanent: true,
+  },
+  {
+    source: "/tr/chios-odalari/armolia-koyu-chios",
+    destination: "/tr/sakiz-adasi-koyleri/armolia-koyu",
+    permanent: true,
+  },
+  {
+    source: "/tr/chios-odalari/lagada-koyu-chios",
+    destination: "/tr/sakiz-adasi-koyleri/lagada-koyu",
+    permanent: true,
+  },
+  {
+    source: "/tr/chios-odalari/kambos-sakiz-adasi",
+    destination: "/tr/sakiz-adasi",
+    permanent: true,
+  },
+
   {
     source: "/el/chios-el/chios-villages-el/chios-armolia-village",
     destination: "/el/xoria-xios/armolia-xios/",

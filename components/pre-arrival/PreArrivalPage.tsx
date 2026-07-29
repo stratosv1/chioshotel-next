@@ -322,13 +322,13 @@ function RouteCard({
   pageCopy: PageCopy;
 }) {
   return (
-    <section className="h-full w-[86vw] shrink-0 snap-start rounded-[24px] bg-white p-5 shadow-sm ring-1 ring-slate-900/10 md:w-auto md:p-6">
+    <section className="h-full w-[82vw] max-w-[360px] shrink-0 snap-start rounded-[22px] bg-white p-4 shadow-sm ring-1 ring-slate-900/10 md:w-auto md:max-w-none md:p-6">
       <div className="grid gap-4 md:grid-cols-[1fr_280px] md:items-start">
         <div>
-          <h2 className="text-2xl font-black leading-tight tracking-[-0.03em] text-slate-950 md:text-3xl">
+          <h2 className="text-xl font-black leading-tight tracking-[-0.03em] text-slate-950 md:text-3xl">
             {route.title}
           </h2>
-          <p className="mt-2 text-base leading-7 text-slate-700">{route.intro}</p>
+          <p className="mt-2 text-[15px] leading-6 text-slate-700 md:text-base md:leading-7">{route.intro}</p>
         </div>
 
         <div className="grid gap-2">
@@ -336,7 +336,7 @@ function RouteCard({
             href={route.routeUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex min-h-[48px] items-center justify-center rounded-full bg-teal-800 px-5 text-center text-sm font-black uppercase tracking-[0.06em] !text-white hover:bg-teal-900"
+            className="inline-flex min-h-[42px] items-center justify-center rounded-full bg-teal-800 px-4 text-center text-xs font-black uppercase tracking-[0.06em] !text-white hover:bg-teal-900 md:min-h-[48px] md:px-5 md:text-sm"
           >
             {route.routeLabel}
           </a>
@@ -346,7 +346,7 @@ function RouteCard({
               href={route.videoUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex min-h-[48px] items-center justify-center rounded-full bg-red-700 px-5 text-center text-sm font-black uppercase tracking-[0.06em] !text-white hover:bg-red-800"
+              className="inline-flex min-h-[42px] items-center justify-center rounded-full bg-red-700 px-4 text-center text-xs font-black uppercase tracking-[0.06em] !text-white hover:bg-red-800 md:min-h-[48px] md:px-5 md:text-sm"
             >
               ▶ {route.videoLabel}
             </a>
@@ -354,21 +354,21 @@ function RouteCard({
         </div>
       </div>
 
-      <div className="mt-4 rounded-[18px] border border-yellow-300 bg-yellow-50 p-4 text-amber-950">
+      <div className="mt-3 rounded-[16px] border border-yellow-300 bg-yellow-50 p-3 text-sm leading-6 text-amber-950 md:mt-4 md:rounded-[18px] md:p-4 md:text-base">
         <h3 className="font-black">{pageCopy.warningTitle}</h3>
-        <p className="mt-2 leading-7">{pageCopy.warningText}</p>
+        <p className="mt-1.5 leading-6 md:mt-2 md:leading-7">{pageCopy.warningText}</p>
       </div>
 
       <ol className="mt-4 grid gap-2.5">
         {route.steps.map((step, index) => (
           <li
             key={step}
-            className="flex gap-4 rounded-[16px] bg-slate-50 p-3.5 ring-1 ring-slate-900/5"
+            className="flex gap-3 rounded-[16px] bg-slate-50 p-3 ring-1 ring-slate-900/5 md:gap-4 md:p-3.5"
           >
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-950 text-sm font-black text-white">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-slate-950 text-xs font-black text-white md:h-9 md:w-9 md:text-sm">
               {index + 1}
             </span>
-            <span className="leading-7 text-slate-700">{step}</span>
+            <span className="text-sm leading-6 text-slate-700 md:text-base md:leading-7">{step}</span>
           </li>
         ))}
       </ol>
@@ -396,7 +396,7 @@ function RoutesCarousel({ routes, pageCopy, locale }: { routes: RouteSection[]; 
   }
 
   return (
-    <div className="relative mt-4 -mx-4 overflow-hidden pl-4 md:mx-0 md:overflow-visible md:pl-0">
+    <div className="relative mt-4 -mx-3 overflow-hidden pl-3 md:mx-0 md:overflow-visible md:pl-0">
       <div className="mb-3 flex items-center justify-between gap-3 md:hidden">
         <p className="rounded-full bg-white/90 px-4 py-2 text-xs font-black uppercase tracking-[0.08em] text-teal-900 shadow-sm ring-1 ring-teal-900/10">
           ↔ {carouselCopy.hint}
@@ -405,7 +405,7 @@ function RoutesCarousel({ routes, pageCopy, locale }: { routes: RouteSection[]; 
 
       <div
         ref={carouselRef}
-        className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pr-12 [scrollbar-width:none] [-webkit-overflow-scrolling:touch] md:grid md:overflow-visible md:pr-0 [&::-webkit-scrollbar]:hidden"
+        className="flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth pr-12 [scrollbar-width:none] [-webkit-overflow-scrolling:touch] md:grid md:gap-4 md:overflow-visible md:pr-0 [&::-webkit-scrollbar]:hidden"
       >
         {routes.map((route) => (
           <RouteCard route={route} pageCopy={pageCopy} key={route.title} />
@@ -437,19 +437,19 @@ export function PreArrivalPage({ data }: PreArrivalPageProps) {
   )}&body=${encodeURIComponent(pageCopy.message)}`;
 
   return (
-    <main className="min-h-screen bg-[#eef7f4] px-4 py-4 text-slate-950 md:px-6 md:py-6">
+    <main className="min-h-screen bg-[#eef7f4] px-3 py-3 text-slate-950 md:px-6 md:py-6">
       <div className="mx-auto max-w-[980px]">
         <nav
           aria-label={pageCopy.languageLabel}
-          className="mb-4 rounded-[24px] bg-white p-3 shadow-sm ring-1 ring-slate-900/10"
+          className="mb-3 rounded-[22px] bg-white p-2.5 shadow-sm ring-1 ring-slate-900/10 md:mb-4 md:rounded-[24px] md:p-3"
         >
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <div className="flex flex-wrap justify-center gap-2 md:justify-start">
+            <div className="grid grid-cols-4 gap-1.5 md:flex md:flex-wrap md:justify-start md:gap-2">
               {languageLinks.map((item) => (
                 <a
                   href={item.href}
                   key={item.locale}
-                  className={`rounded-full px-4 py-2 text-sm font-black transition ${
+                  className={`rounded-full px-2.5 py-2 text-center text-[12px] font-black transition md:px-4 md:text-sm ${
                     item.locale === data.locale
                       ? "bg-teal-800 !text-white"
                       : "bg-slate-100 !text-slate-950 hover:bg-slate-200"
@@ -469,49 +469,49 @@ export function PreArrivalPage({ data }: PreArrivalPageProps) {
           </div>
         </nav>
 
-        <header className="rounded-[24px] bg-white p-5 shadow-sm ring-1 ring-slate-900/10 md:p-7">
+        <header className="rounded-[22px] bg-white p-4 shadow-sm ring-1 ring-slate-900/10 md:rounded-[24px] md:p-7">
           <span className="inline-flex rounded-full bg-teal-50 px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-teal-800">
             {pageCopy.badge}
           </span>
 
-          <h1 className="mt-4 text-3xl font-black leading-tight tracking-[-0.04em] md:text-5xl">
+          <h1 className="mt-4 text-[2rem] font-black leading-tight tracking-[-0.04em] md:text-5xl">
             {pageCopy.title}
           </h1>
 
-          <p className="mt-3 max-w-[780px] text-lg leading-8 text-slate-700">
+          <p className="mt-3 max-w-[780px] text-base leading-7 text-slate-700 md:text-lg md:leading-8">
             {pageCopy.intro}
           </p>
         </header>
 
-        <section className="mt-4 rounded-[24px] bg-slate-950 p-5 text-white shadow-sm md:p-7">
-          <h2 className="text-2xl font-black leading-tight tracking-[-0.03em] md:text-3xl">
+        <section className="mt-4 rounded-[22px] bg-slate-950 p-4 text-white shadow-sm md:rounded-[24px] md:p-7">
+          <h2 className="text-xl font-black leading-tight tracking-[-0.03em] md:text-3xl">
             {pageCopy.arrivalTitle}
           </h2>
 
-          <p className="mt-3 max-w-[820px] text-base leading-7 text-white/75">
+          <p className="mt-2 max-w-[820px] text-[15px] leading-6 text-white/75 md:mt-3 md:text-base md:leading-7">
             {pageCopy.arrivalText}
           </p>
 
-          <div className="mt-5 grid gap-3 md:grid-cols-3">
+          <div className="mt-4 grid grid-cols-3 gap-2 md:mt-5 md:gap-3">
             <a
               href={whatsappHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-white px-5 text-center text-sm font-black uppercase tracking-[0.06em] !text-slate-950"
+              className="inline-flex min-h-[42px] items-center justify-center rounded-full bg-white px-2 text-center text-[11px] font-black uppercase tracking-[0.04em] !text-slate-950 md:min-h-[52px] md:px-5 md:text-sm"
             >
               {pageCopy.whatsapp}
             </a>
 
             <a
               href={smsHref}
-              className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/20 px-5 text-center text-sm font-black uppercase tracking-[0.06em] !text-white"
+              className="inline-flex min-h-[42px] items-center justify-center rounded-full border border-white/20 px-2 text-center text-[11px] font-black uppercase tracking-[0.04em] !text-white md:min-h-[52px] md:px-5 md:text-sm"
             >
               {pageCopy.sms}
             </a>
 
             <a
               href={emailHref}
-              className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/20 px-5 text-center text-sm font-black uppercase tracking-[0.06em] !text-white"
+              className="inline-flex min-h-[42px] items-center justify-center rounded-full border border-white/20 px-2 text-center text-[11px] font-black uppercase tracking-[0.04em] !text-white md:min-h-[52px] md:px-5 md:text-sm"
             >
               {pageCopy.email}
             </a>
@@ -520,13 +520,13 @@ export function PreArrivalPage({ data }: PreArrivalPageProps) {
 
         <RoutesCarousel routes={pageCopy.routes} pageCopy={pageCopy} locale={data.locale} />
 
-        <section className="mt-4 rounded-[24px] bg-white p-5 shadow-sm ring-1 ring-slate-900/10 md:p-6">
+        <section className="mt-4 rounded-[22px] bg-white p-4 shadow-sm ring-1 ring-slate-900/10 md:rounded-[24px] md:p-6">
           <h2 className="text-2xl font-black tracking-[-0.03em]">{pageCopy.helpTitle}</h2>
 
-          <div className="mt-4 grid gap-3 md:grid-cols-4">
+          <div className="mt-4 grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-3">
             <a
               href={preArrivalContact.phoneHref}
-              className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-slate-950 px-4 text-center text-sm font-black uppercase tracking-[0.06em] !text-white"
+              className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-slate-950 px-2 text-center text-[11px] font-black uppercase tracking-[0.04em] !text-white md:min-h-[50px] md:px-4 md:text-sm"
             >
               {pageCopy.call}: {preArrivalContact.phoneDisplay}
             </a>
@@ -535,21 +535,21 @@ export function PreArrivalPage({ data }: PreArrivalPageProps) {
               href={whatsappHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-teal-800 px-4 text-center text-sm font-black uppercase tracking-[0.06em] !text-white"
+              className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-teal-800 px-2 text-center text-[11px] font-black uppercase tracking-[0.04em] !text-white md:min-h-[50px] md:px-4 md:text-sm"
             >
               WhatsApp: {preArrivalContact.whatsappDisplay}
             </a>
 
             <a
               href={emailHref}
-              className="inline-flex min-h-[50px] items-center justify-center rounded-full border border-slate-200 bg-white px-4 text-center text-sm font-black uppercase tracking-[0.06em] !text-slate-950"
+              className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-slate-200 bg-white px-2 text-center text-[11px] font-black uppercase tracking-[0.04em] !text-slate-950 md:min-h-[50px] md:px-4 md:text-sm"
             >
               Email
             </a>
 
             <a
               href={smsHref}
-              className="inline-flex min-h-[50px] items-center justify-center rounded-full border border-slate-200 bg-white px-4 text-center text-sm font-black uppercase tracking-[0.06em] !text-slate-950"
+              className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-slate-200 bg-white px-2 text-center text-[11px] font-black uppercase tracking-[0.04em] !text-slate-950 md:min-h-[50px] md:px-4 md:text-sm"
             >
               SMS: {preArrivalContact.smsDisplay}
             </a>

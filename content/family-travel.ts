@@ -879,7 +879,7 @@ export const familyTravelPages = {
       title: "Una estancia tranquila para familias que buscan algo más que una habitación",
       subtitle:
         "Alójate en el tranquilo Kambos, disfruta de días fáciles junto al mar, descubre museos y pueblos y vuelve cada tarde al jardín de Voulamandis House.",
-      image: familyTravelImages.hero,
+      image: { ...familyTravelImages.hero, alt: "Vacaciones en familia en Quíos con niños durante un día soleado en la isla" },
       primaryCta: {
         label: "Reservar estancia familiar",
         href: localizedLinks.es.booking,
@@ -902,40 +902,40 @@ export const familyTravelPages = {
         title: "Playas de arena para familias",
         text:
           "Disfruta de un día tranquilo junto al mar, por ejemplo en Komi, con tiempo para jugar y descansar.",
-        image: familyTravelImages.sandyBeach,
+        image: { ...familyTravelImages.sandyBeach, alt: "Playa de arena de Komi en Quíos, ideal para un día de mar en familia" },
         href: localizedLinks.es.komi,
       },
       {
         title: "Museo de la Mastiha",
         text:
           "Descubre con los niños la historia de la mastiha de Quíos en una visita interesante y fácil.",
-        image: familyTravelImages.museum,
+        image: { ...familyTravelImages.museum, alt: "Museo de la Mastiha de Quíos, visita cultural para familias" },
         href: localizedLinks.es.masticMuseum,
       },
       {
         title: "Biblioteca Korais",
         text:
           "Añade una parada cultural tranquila y educativa a tu itinerario familiar.",
-        image: familyTravelImages.koraisLibrary,
+        image: { ...familyTravelImages.koraisLibrary, alt: "Biblioteca Korais en Quíos, visita cultural para familias" },
         href: localizedLinks.es.koraisLibrary,
       },
       {
         title: "Parques infantiles y paradas sencillas",
         text:
           "Haz pequeñas pausas con parques infantiles, paseos y lugares donde los niños puedan moverse.",
-        image: familyTravelImages.playground,
+        image: { ...familyTravelImages.playground, alt: "Parque infantil de Daskalopetra en Quíos para niños y familias" },
       },
       {
         title: "Actividades para niños mayores",
         text:
           "Para familias con niños mayores, Quíos también ofrece experiencias más activas.",
-        image: familyTravelImages.paintball,
+        image: { ...familyTravelImages.paintball, alt: "Actividad de paintball al aire libre en Quíos para jóvenes y familias" },
       },
       {
         title: "Comidas fáciles en familia",
         text:
           "Mantén las comidas simples con lugares relajados, sabores locales y platos que los niños disfrutan.",
-        image: familyTravelImages.pizza,
+        image: { ...familyTravelImages.pizza, alt: "Parada gastronómica familiar en Quíos con pasta y platos sencillos" },
       },
     ],
     familyDay: {
@@ -976,7 +976,7 @@ export const familyTravelPages = {
       title: "Una base tranquila para familias",
       text:
         "Voulamandis House ofrece calma, jardín y fácil acceso a la ciudad de Quíos, playas, pueblos y museos.",
-      image: familyTravelImages.garden,
+      image: { ...familyTravelImages.garden, alt: "El tranquilo jardín de Voulamandis House en Kambos, Quíos" },
       primaryCta: {
         label: "Reservar",
         href: localizedLinks.es.booking,

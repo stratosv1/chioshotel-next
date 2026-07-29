@@ -1,2 +1,0 @@
-Spanish SEO/language cleanup patch completed successfully
-exit_code=0

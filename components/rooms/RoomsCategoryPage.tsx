@@ -57,7 +57,7 @@ const cardCtaLabels: Record<LanguageCode, Record<string, string>> = {
   es: {
     "first-floor": "Ver habitaciones en primera planta",
     "ground-floor": "Ver habitaciones en planta baja",
-    "economy-double": "Ver economy double rooms",
+    "economy-double": "Ver habitaciones dobles económicas",
     "family-apartments": "Ver apartamentos familiares",
   },
   tr: {
