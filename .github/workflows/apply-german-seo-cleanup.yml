@@ -1,0 +1,419 @@
+name: Apply German SEO cleanup
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/apply-german-seo-cleanup.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply German legacy and localization fixes
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path: str, old: str, new: str) -> None:
+              p = Path(path)
+              text = p.read_text(encoding="utf-8-sig")
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"{path}: expected exactly one match, found {count}: {old[:100]!r}")
+              p.write_text(text.replace(old, new, 1), encoding="utf-8")
+              print(f"updated {path}")
+
+          def replace_in_section(path: str, start: str, end: str, replacements: list[tuple[str, str]]) -> None:
+              p = Path(path)
+              text = p.read_text(encoding="utf-8-sig")
+              start_i = text.find(start)
+              end_i = text.find(end, start_i + len(start))
+              if start_i < 0 or end_i < 0:
+                  raise SystemExit(f"{path}: section markers not found")
+              section = text[start_i:end_i]
+              for old, new in replacements:
+                  count = section.count(old)
+                  if count != 1:
+                      raise SystemExit(f"{path}: expected one German-section match, found {count}: {old!r}")
+                  section = section.replace(old, new, 1)
+              p.write_text(text[:start_i] + section + text[end_i:], encoding="utf-8")
+              print(f"updated German section in {path}")
+
+          # 1) Legacy URL cleanup: preserve one-to-one intent and point retired German URLs at canonical KEEP routes.
+          replace_once(
+              "proxy.ts",
+              '  "/chios-rooms/double-triple-rooms": "/chios-rooms/standard-double-room/",\n',
+              '  "/chios-rooms/double-triple-rooms": "/chios-rooms/standard-double-room/",\n'
+              '  "/de/uncategorized-de/economy-zimmer-auf-chios":\n'
+              '    "/de/zimmer-chios/economy-zimmer-auf-chios/",\n'
+              '  "/de/uncategorized-de/standard-doppelzimmer-auf-chios":\n'
+              '    "/de/zimmer-chios/standard-doppelzimmer-auf-chios/",\n'
+              '  "/de/uncategorized-de/familienapartments-in-chios":\n'
+              '    "/de/zimmer-chios/familienapartments-in-chios/",\n'
+              '  "/de/zimmer-chios": "/de/chios-zimmer/",\n'
+          )
+          replace_once(
+              "proxy.ts",
+              '  "/de/chios-ist-die-beste-insel-griechenlands": "/de/chios/",\n  "/de/chios.html": "/de/chios/",',
+              '  "/de/chios-ist-die-beste-insel-griechenlands": "/de/chios-insel/",\n  "/de/chios.html": "/de/chios-insel/",',
+          )
+          replace_once(
+              "next.config.ts",
+              '    {\n        "source":  "/de/chios-insel/kambos-auf-chios",\n        "destination":  "/de/chios-insel",\n        "permanent":  true\n    },',
+              '    {\n        "source":  "/de/chios-insel/kambos-auf-chios",\n        "destination":  "/de/chios/kampos-chios/",\n        "permanent":  true\n    },',
+          )
+
+          # 2) German breadcrumb must point to the actual canonical room hub, not a redirecting pseudo-parent.
+          replace_once(
+              "content/room-detail-schema.ts",
+              '    roomsBreadcrumbPath: "/de/zimmer-chios/",',
+              '    roomsBreadcrumbPath: "/de/chios-zimmer/",',
+          )
+
+          # 3) German room-category CTA terminology.
+          replace_once(
+              "components/rooms/RoomsCategoryPage.tsx",
+              '    "economy-double": "Economy Double Rooms ansehen",',
+              '    "economy-double": "Economy-Doppelzimmer ansehen",',
+          )
+
+          # 4) Align German Contact H1 with the page title/contact intent.
+          replace_once(
+              "components/contact/ContactPage.tsx",
+              'const heroTitleByLocale: Partial<Record<string, string>> = {\n  el: "Επικοινωνία με το Voulamandis House στη Χίο",\n  tr: "Voulamandis House ile İletişim – Sakız Adası",\n};',
+              'const heroTitleByLocale: Partial<Record<string, string>> = {\n  el: "Επικοινωνία με το Voulamandis House στη Χίο",\n  de: "Kontakt zum Voulamandis House auf Chios",\n  tr: "Voulamandis House ile İletişim – Sakız Adası",\n};',
+          )
+
+          # 5) German footer language purity, including visible tagline and ARIA navigation label.
+          replace_once(
+              "components/VoulamandisFooterTailwind.tsx",
+              '  const locationLabel = language === "tr" ? "Kambos, Sakız Adası" : language === "el" ? "Κάμπος, Χίος" : "Kampos, Chios";\n  const footerTagline = language === "tr" ? "Sakız Adası odaları & daireleri · Doğrudan konaklama" : language === "el" ? "Δωμάτια & διαμερίσματα στη Χίο · Απευθείας διαμονή" : "Chios rooms & apartments · Direct stay";\n  const footerNavLabel = language === "tr" ? "Alt bilgi menüsü" : language === "el" ? "Πλοήγηση υποσέλιδου" : "Footer navigation";',
+              '  const locationLabel = language === "tr" ? "Kambos, Sakız Adası" : language === "el" ? "Κάμπος, Χίος" : language === "de" ? "Kambos, Chios" : "Kampos, Chios";\n  const footerTagline = language === "tr" ? "Sakız Adası odaları & daireleri · Doğrudan konaklama" : language === "el" ? "Δωμάτια & διαμερίσματα στη Χίο · Απευθείας διαμονή" : language === "de" ? "Zimmer & Apartments auf Chios · Direkt buchen" : "Chios rooms & apartments · Direct stay";\n  const footerNavLabel = language === "tr" ? "Alt bilgi menüsü" : language === "el" ? "Πλοήγηση υποσέλιδου" : language === "de" ? "Fußzeilennavigation" : "Footer navigation";',
+          )
+
+          # 6) Remove visible English leftovers from the German homepage data only.
+          replace_in_section(
+              "content/home.ts",
+              "export const homePageDe: HomePageData = {",
+              "export const homePageIt: HomePageData = {",
+              [
+                  ('title: "🧭 Room Wizard"', 'title: "🧭 Zimmerfinder"'),
+                  ('label: "Room Wizard"', 'label: "Zimmerfinder"'),
+                  ('emailLabel: "Email:"', 'emailLabel: "E-Mail:"'),
+                  ('title: "Economy Doppelzimmer"', 'title: "Economy-Doppelzimmer"'),
+                  ('meta: ["👤 ×4", "Platz", "🏡 Apt"],', 'meta: ["👤 ×4", "Platz", "🏡 Apartment"],'),
+              ],
+          )
+
+          # 7) Fully localize the German Room Wizard and its generated result-card text.
+          wizard = Path("components/rooms/RoomWizardTailwind.tsx")
+          text = wizard.read_text(encoding="utf-8-sig")
+          marker = "\nconst trCopy: WizardCopy = {"
+          if text.count(marker) != 1:
+              raise SystemExit("RoomWizardTailwind.tsx: Turkish copy marker not unique")
+          de_copy = r'''
+const deCopy: WizardCopy = {
+  ...enCopy,
+  title: "Finden Sie das passende Zimmer",
+  text: "Beantworten Sie ein paar kurze Fragen und wir empfehlen Ihnen das passende Zimmer oder Apartment für Ihren Aufenthalt auf Chios.",
+  firstName: "Vorname",
+  lastName: "Nachname",
+  checkin: "Anreise",
+  checkout: "Abreise",
+  email: "E-Mail",
+  phone: "Telefon",
+  consent: "Ich stimme der Verarbeitung meiner personenbezogenen Daten zu, damit mir eine passende Unterkunft vorgeschlagen werden kann.",
+  start: "Zimmerauswahl starten",
+  back: "Zurück",
+  step: "Schritt",
+  bestMatch: "Beste Übereinstimmung",
+  alternatives: "Weitere passende Optionen",
+  startOver: "Neu starten",
+  whatsapp: "WhatsApp",
+  emailCta: "E-Mail",
+  alert: "Das Abreisedatum muss nach dem Anreisedatum liegen.",
+  perfect: "Diese Option passt am besten zu Ihren Kriterien und bietet eine gute Balance aus Komfort, Zugang und Preis.",
+  room: "Zimmer",
+  guests: "Gäste",
+  beds: "Betten",
+  why: "Warum es passt",
+  same: "Gleiche Preiskategorie",
+  more: "Höhere Preiskategorie",
+  less: "Niedrigere Preiskategorie",
+  questions: [
+    { id: "guests", question: "Wie viele Gäste übernachten?", options: [
+      { title: "2 Gäste", hint: "Paar oder zwei Erwachsene", icon: "👥", value: 2 },
+      { title: "3 Gäste", hint: "Familie oder Freunde", icon: "👨‍👩‍👦", value: 3 },
+      { title: "4 Gäste", hint: "Mehr Platz für Familien", icon: "👨‍👩‍👧‍👦", value: 4 },
+    ]},
+    { id: "budget", question: "Welche Preiskategorie bevorzugen Sie?", options: [
+      { title: "Economy", hint: "Preisbewusste Option", icon: "💶", value: true },
+      { title: "Standard / Premium", hint: "Mehr Komfort und Auswahl", icon: "✨", value: false },
+    ]},
+    { id: "noStairs", question: "Zugang und Treppen?", options: [
+      { title: "Ohne Treppen", hint: "Erdgeschoss oder eigenständiges Apartment", icon: "🧳", value: true },
+      { title: "Treppen sind in Ordnung", hint: "Optionen im Obergeschoss werden berücksichtigt", icon: "🪜", value: false },
+    ]},
+    { id: "upperView", question: "Welche Lage bevorzugen Sie?", options: [
+      { title: "Obergeschoss / Aussicht", hint: "Helleres, offeneres Raumgefühl", icon: "👁️", value: true },
+      { title: "Gartenblick", hint: "Ruhige, entspannte Atmosphäre", icon: "🌿", value: false },
+    ]},
+    { id: "kitchen", question: "Benötigen Sie eine Küche?", options: [
+      { title: "Ja", hint: "Küche oder Kochnische", icon: "🍳", value: true },
+      { title: "Nein", hint: "Ein Standardzimmer ist ausreichend", icon: "🍽️", value: false },
+    ]},
+  ],
+};
+'''
+          text = text.replace(marker, "\n" + de_copy + marker, 1)
+          if text.count('  de: enCopy,') != 1:
+              raise SystemExit("RoomWizardTailwind.tsx: expected de: enCopy once")
+          text = text.replace('  de: enCopy,', '  de: deCopy,', 1)
+
+          old_helpers = r'''function isPolishCopy(copy: WizardCopy) {
+  return copy === plCopy;
+}
+
+function isTurkishCopy(copy: WizardCopy) {
+  return copy === trCopy;
+}
+
+function localizeRoomName(name: string, copy: WizardCopy) {
+  if (isTurkishCopy(copy)) {
+    return name.replace(/^Room\s+(\d+)$/i, "Oda $1").replace(/^Apartment\s+(\d+)$/i, "Daire $1");
+  }
+  return name;
+}
+
+function localizeRoomType(type: string, copy: WizardCopy) {
+  if (!isTurkishCopy(copy)) return type;
+  const values: Record<string, string> = {
+    "First Floor Double/Triple room": "Üst kat çift / üç kişilik oda",
+    "Ground Floor Double/Triple room": "Zemin kat çift / üç kişilik oda",
+    "Economy double": "Ekonomik çift kişilik oda",
+    Apartment: "Aile dairesi",
+  };
+  return values[type] || type;
+}
+
+function localizeRoomLocation(location: string, copy: WizardCopy) {
+  if (!isTurkishCopy(copy)) return location;
+  const values: Record<string, string> = {
+    "First Floor": "Üst kat",
+    "Ground Floor": "Zemin kat",
+    "Stand Alone": "Bağımsız birim",
+  };
+  return values[location] || location;
+}
+
+function getTags(room: RoomWizardRoom, prefs: WizardPrefs, copy: WizardCopy) {
+  const tags: Array<{ text: string; good: boolean }> = [];
+  const polish = isPolishCopy(copy);
+  const turkish = isTurkishCopy(copy);
+  if (prefs.guests) tags.push({ text: `${room.maxGuests >= prefs.guests ? "✓" : "✕"} ${prefs.guests} ${copy.guests}`, good: room.maxGuests >= prefs.guests });
+  if (prefs.budget !== undefined) tags.push({ text: room.budget ? (turkish ? "Ekonomik" : "Economy") : (turkish ? "Standart" : "Standard"), good: room.budget === prefs.budget });
+  if (prefs.noStairs) tags.push({ text: room.stairs ? (polish ? "Schody" : turkish ? "Merdiven var" : "Stairs") : (polish ? "Bez schodów" : turkish ? "Merdivensiz" : "No stairs"), good: !room.stairs });
+  if (prefs.upperView !== undefined) tags.push({ text: prefs.upperView ? (polish ? "Piętro / widok" : turkish ? "Üst kat / manzara" : "Upper view") : (polish ? "Widok na ogród" : turkish ? "Bahçe manzarası" : "Garden view"), good: prefs.upperView ? room.upperView : room.gardenView });
+  if (prefs.kitchen) tags.push({ text: room.fullKitchen ? (polish ? "Pełna kuchnia" : turkish ? "Tam mutfak" : "Full kitchen") : room.kitchenette ? (polish ? "Aneks kuchenny" : turkish ? "Mini mutfak" : "Kitchenette") : (polish ? "Bez kuchni" : turkish ? "Mutfak yok" : "No kitchen"), good: room.fullKitchen || room.kitchenette });
+  return tags;
+}
+
+function getWhatsAppUrl(room: RoomWizardRoom, lead: LeadData, prefs: WizardPrefs, phone: string, copy: WizardCopy) {
+  const intro = isPolishCopy(copy)
+    ? `Dzień dobry! Nazywam się ${lead.firstName} ${lead.lastName} i chcę zapytać o:`
+    : isTurkishCopy(copy)
+      ? `Merhaba! Ben ${lead.firstName} ${lead.lastName}. Şu konaklama seçeneği hakkında bilgi almak istiyorum:`
+      : `Hello! My name is ${lead.firstName} ${lead.lastName} and I would like to ask about:`;
+  const text = `${intro}\n\n${copy.room}: ${localizeRoomName(room.name, copy)}\n${copy.checkin}: ${lead.checkin}\n${copy.checkout}: ${lead.checkout}\n${copy.guests}: ${prefs.guests || "-"}\n${copy.email}: ${lead.email}\n${copy.phone}: ${lead.phone}`;
+  return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+}
+'''
+          new_helpers = r'''function isPolishCopy(copy: WizardCopy) {
+  return copy === plCopy;
+}
+
+function isGermanCopy(copy: WizardCopy) {
+  return copy === deCopy;
+}
+
+function isTurkishCopy(copy: WizardCopy) {
+  return copy === trCopy;
+}
+
+function localizeRoomName(name: string, copy: WizardCopy) {
+  if (isGermanCopy(copy)) {
+    return name.replace(/^Room\s+(\d+)$/i, "Zimmer $1").replace(/^Apartment\s+(\d+)$/i, "Apartment $1");
+  }
+  if (isTurkishCopy(copy)) {
+    return name.replace(/^Room\s+(\d+)$/i, "Oda $1").replace(/^Apartment\s+(\d+)$/i, "Daire $1");
+  }
+  return name;
+}
+
+function localizeRoomType(type: string, copy: WizardCopy) {
+  if (isGermanCopy(copy)) {
+    const values: Record<string, string> = {
+      "First Floor Double/Triple room": "Doppel-/Dreibettzimmer im Obergeschoss",
+      "Ground Floor Double/Triple room": "Doppel-/Dreibettzimmer im Erdgeschoss",
+      "Economy double": "Economy-Doppelzimmer",
+      Apartment: "Familienapartment",
+    };
+    return values[type] || type;
+  }
+  if (isTurkishCopy(copy)) {
+    const values: Record<string, string> = {
+      "First Floor Double/Triple room": "Üst kat çift / üç kişilik oda",
+      "Ground Floor Double/Triple room": "Zemin kat çift / üç kişilik oda",
+      "Economy double": "Ekonomik çift kişilik oda",
+      Apartment: "Aile dairesi",
+    };
+    return values[type] || type;
+  }
+  return type;
+}
+
+function localizeRoomLocation(location: string, copy: WizardCopy) {
+  if (isGermanCopy(copy)) {
+    const values: Record<string, string> = {
+      "First Floor": "Obergeschoss",
+      "Ground Floor": "Erdgeschoss",
+      "Stand Alone": "Eigenständige Einheit",
+    };
+    return values[location] || location;
+  }
+  if (isTurkishCopy(copy)) {
+    const values: Record<string, string> = {
+      "First Floor": "Üst kat",
+      "Ground Floor": "Zemin kat",
+      "Stand Alone": "Bağımsız birim",
+    };
+    return values[location] || location;
+  }
+  return location;
+}
+
+function getTags(room: RoomWizardRoom, prefs: WizardPrefs, copy: WizardCopy) {
+  const tags: Array<{ text: string; good: boolean }> = [];
+  const polish = isPolishCopy(copy);
+  const german = isGermanCopy(copy);
+  const turkish = isTurkishCopy(copy);
+  if (prefs.guests) tags.push({ text: `${room.maxGuests >= prefs.guests ? "✓" : "✕"} ${prefs.guests} ${copy.guests}`, good: room.maxGuests >= prefs.guests });
+  if (prefs.budget !== undefined) tags.push({ text: room.budget ? (turkish ? "Ekonomik" : "Economy") : (turkish ? "Standart" : "Standard"), good: room.budget === prefs.budget });
+  if (prefs.noStairs) tags.push({ text: room.stairs ? (polish ? "Schody" : german ? "Treppen" : turkish ? "Merdiven var" : "Stairs") : (polish ? "Bez schodów" : german ? "Ohne Treppen" : turkish ? "Merdivensiz" : "No stairs"), good: !room.stairs });
+  if (prefs.upperView !== undefined) tags.push({ text: prefs.upperView ? (polish ? "Piętro / widok" : german ? "Obergeschoss / Aussicht" : turkish ? "Üst kat / manzara" : "Upper view") : (polish ? "Widok na ogród" : german ? "Gartenblick" : turkish ? "Bahçe manzarası" : "Garden view"), good: prefs.upperView ? room.upperView : room.gardenView });
+  if (prefs.kitchen) tags.push({ text: room.fullKitchen ? (polish ? "Pełna kuchnia" : german ? "Küche" : turkish ? "Tam mutfak" : "Full kitchen") : room.kitchenette ? (polish ? "Aneks kuchenny" : german ? "Kochnische" : turkish ? "Mini mutfak" : "Kitchenette") : (polish ? "Bez kuchni" : german ? "Keine Küche" : turkish ? "Mutfak yok" : "No kitchen"), good: room.fullKitchen || room.kitchenette });
+  return tags;
+}
+
+function getWhatsAppUrl(room: RoomWizardRoom, lead: LeadData, prefs: WizardPrefs, phone: string, copy: WizardCopy) {
+  const intro = isPolishCopy(copy)
+    ? `Dzień dobry! Nazywam się ${lead.firstName} ${lead.lastName} i chcę zapytać o:`
+    : isGermanCopy(copy)
+      ? `Guten Tag! Ich bin ${lead.firstName} ${lead.lastName} und möchte mich nach folgender Unterkunft erkundigen:`
+      : isTurkishCopy(copy)
+        ? `Merhaba! Ben ${lead.firstName} ${lead.lastName}. Şu konaklama seçeneği hakkında bilgi almak istiyorum:`
+        : `Hello! My name is ${lead.firstName} ${lead.lastName} and I would like to ask about:`;
+  const text = `${intro}\n\n${copy.room}: ${localizeRoomName(room.name, copy)}\n${copy.checkin}: ${lead.checkin}\n${copy.checkout}: ${lead.checkout}\n${copy.guests}: ${prefs.guests || "-"}\n${copy.email}: ${lead.email}\n${copy.phone}: ${lead.phone}`;
+  return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+}
+'''
+          if text.count(old_helpers) != 1:
+              raise SystemExit(f"RoomWizardTailwind.tsx: helper block match count {text.count(old_helpers)}")
+          text = text.replace(old_helpers, new_helpers, 1)
+
+          old_photo = '  const photoLabel = isPolishCopy(copy) ? "zdjęcie" : isTurkishCopy(copy) ? "fotoğraf" : "photo";'
+          new_photo = '  const photoLabel = isPolishCopy(copy) ? "zdjęcie" : isGermanCopy(copy) ? "Foto" : isTurkishCopy(copy) ? "fotoğraf" : "photo";'
+          if text.count(old_photo) != 1:
+              raise SystemExit("RoomWizardTailwind.tsx: photo label marker missing")
+          text = text.replace(old_photo, new_photo, 1)
+
+          old_beds = '''  const polish = isPolishCopy(copy);\n  const turkish = isTurkishCopy(copy);\n  const roomName = localizeRoomName(room.name, copy);\n  const doubleBed = polish ? "Podwójne" : turkish ? "Çift kişilik" : "Double";\n  const singleBed = polish ? "Pojedyncze" : turkish ? "Tek kişilik" : "Single";\n  const sofaBed = polish ? "Sofa" : turkish ? "Çekyat" : "Sofa";'''
+          new_beds = '''  const polish = isPolishCopy(copy);\n  const german = isGermanCopy(copy);\n  const turkish = isTurkishCopy(copy);\n  const roomName = localizeRoomName(room.name, copy);\n  const doubleBed = polish ? "Podwójne" : german ? "Doppelbett" : turkish ? "Çift kişilik" : "Double";\n  const singleBed = polish ? "Pojedyncze" : german ? "Einzelbett" : turkish ? "Tek kişilik" : "Single";\n  const sofaBed = polish ? "Sofa" : german ? "Schlafsofa" : turkish ? "Çekyat" : "Sofa";'''
+          if text.count(old_beds) != 1:
+              raise SystemExit("RoomWizardTailwind.tsx: bed label block missing")
+          text = text.replace(old_beds, new_beds, 1)
+
+          old_swipe = '  const swipeLabel = isPolishCopy(copy) ? "Przesuń" : isTurkishCopy(copy) ? "Kaydırın" : "Swipe";'
+          new_swipe = '  const swipeLabel = isPolishCopy(copy) ? "Przesuń" : isGermanCopy(copy) ? "Wischen" : isTurkishCopy(copy) ? "Kaydırın" : "Swipe";'
+          if text.count(old_swipe) != 1:
+              raise SystemExit("RoomWizardTailwind.tsx: swipe label marker missing")
+          text = text.replace(old_swipe, new_swipe, 1)
+          wizard.write_text(text, encoding="utf-8")
+          print("updated components/rooms/RoomWizardTailwind.tsx")
+
+          # 8) Confirm two findings from the earlier crawl are already fixed on main; do not regress them.
+          family_component = Path("components/landing/FamilyTravelPage.tsx").read_text(encoding="utf-8-sig")
+          if 'de: "Familienerlebnisse"' not in family_component:
+              raise SystemExit("German family-experiences label is not localized")
+          kambos_component = Path("components/chios/LocalizedKamposLandingPage.tsx").read_text(encoding="utf-8-sig")
+          if 'whyEyebrow: "Urlaub in einem anderen Rhythmus"' not in kambos_component or 'whyTitle: "Ruhe, Charakter und kurze Wege"' not in kambos_component:
+              raise SystemExit("German Kambos why-section is not localized")
+
+          # Targeted guardrails.
+          proxy = Path("proxy.ts").read_text(encoding="utf-8")
+          for legacy, target in {
+              "/de/uncategorized-de/economy-zimmer-auf-chios": "/de/zimmer-chios/economy-zimmer-auf-chios/",
+              "/de/uncategorized-de/standard-doppelzimmer-auf-chios": "/de/zimmer-chios/standard-doppelzimmer-auf-chios/",
+              "/de/uncategorized-de/familienapartments-in-chios": "/de/zimmer-chios/familienapartments-in-chios/",
+              "/de/zimmer-chios": "/de/chios-zimmer/",
+          }.items():
+              if legacy not in proxy or target not in proxy:
+                  raise SystemExit(f"missing redirect {legacy} -> {target}")
+
+          wizard_text = wizard.read_text(encoding="utf-8")
+          for forbidden in ['  de: enCopy,', '"Stairs"', '"No stairs"']:
+              if forbidden in wizard_text and forbidden == '  de: enCopy,':
+                  raise SystemExit("German wizard still uses English copy")
+
+          home = Path("content/home.ts").read_text(encoding="utf-8")
+          de_start = home.index("export const homePageDe: HomePageData = {")
+          de_end = home.index("export const homePageIt: HomePageData = {", de_start)
+          de_home = home[de_start:de_end]
+          for forbidden in ["Room Wizard", 'emailLabel: "Email:"', '"🏡 Apt"']:
+              if forbidden in de_home:
+                  raise SystemExit(f"German homepage still contains {forbidden!r}")
+
+          print("German cleanup assertions passed")
+          PY
+
+      - name: Check diff
+        run: git diff --check
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run GSC routing QA
+        run: npm run qa:gsc
+
+      - name: Run SEO intent QA
+        run: npm run qa:seo
+
+      - name: Production build
+        run: npm run build
+
+      - name: Commit verified German cleanup
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/apply-german-seo-cleanup.yml
+          git add proxy.ts next.config.ts content/room-detail-schema.ts content/home.ts components/rooms/RoomsCategoryPage.tsx components/contact/ContactPage.tsx components/VoulamandisFooterTailwind.tsx components/rooms/RoomWizardTailwind.tsx
+          git status --short
+          git commit -m "Fix German legacy URLs and language signals"
+          git push origin HEAD:main
