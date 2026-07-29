@@ -63,7 +63,7 @@ const cardCtaLabels: Record<LanguageCode, Record<string, string>> = {
   tr: {
     "first-floor": "Üst kat odalarını görüntüle",
     "ground-floor": "Zemin kat odalarını görüntüle",
-    "economy-double": "Economy double rooms görüntüle",
+    "economy-double": "Ekonomik çift kişilik odaları görüntüle",
     "family-apartments": "Aile apartlarını görüntüle",
   },
 };
