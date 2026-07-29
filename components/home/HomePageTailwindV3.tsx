@@ -58,6 +58,72 @@ const accommodationLinks: Record<string, AccommodationLinkCopy> = {
 };
 
 function localizeInheritedCopy(data: HomePageData): HomePageData {
+  if (data.seo.canonicalPath === "/el/") {
+    return {
+      ...data,
+      intro: {
+        ...data.intro,
+        left: {
+          ...data.intro.left,
+          pills: data.intro.left.pills.map((pill) =>
+            pill === "💎 Value for money" ? "💎 Καλή σχέση ποιότητας-τιμής" : pill,
+          ),
+        },
+        right: {
+          ...data.intro.right,
+          cards: data.intro.right.cards.map((card) =>
+            card.title.includes("Room Wizard")
+              ? { ...card, title: "🧭 Βρες το δωμάτιό σου" }
+              : card,
+          ),
+        },
+      },
+      location: {
+        ...data.location,
+        discount: {
+          ...data.location.discount,
+          badge: "Προσφορά τώρα • Πάρε κωδικό",
+        },
+      },
+      roomsPreview: {
+        ...data.roomsPreview,
+        primaryCta: {
+          ...data.roomsPreview.primaryCta,
+          label: "Βρες το δωμάτιό σου",
+        },
+        rooms: data.roomsPreview.rooms.map((room) => ({
+          ...room,
+          liveBadge: "ΤΩΡΑ",
+          bedBadge:
+            room.bedBadge === "🛏️ Family beds"
+              ? "🛏️ Οικογενειακά κρεβάτια"
+              : room.bedBadge.replace(" + extra", " + επιπλέον κρεβάτι"),
+          meta: room.meta.map((item) =>
+            item === "🏡 Apt" ? "🏡 Διαμέρισμα" : item,
+          ),
+        })),
+      },
+      lastMinute: {
+        ...data.lastMinute,
+        kicker: "Προσφορές τελευταίας στιγμής",
+        widget: {
+          ...data.lastMinute.widget,
+          timerLabel: "Οι τιμές τελευταίας στιγμής ανανεώνονται σε:",
+        },
+      },
+      amenities: {
+        ...data.amenities,
+        items: data.amenities.items.map((item) =>
+          item.label === "Parking" ? { ...item, label: "Στάθμευση" } : item,
+        ),
+      },
+      traveler: {
+        ...data.traveler,
+        kicker: "Ανακάλυψε τη Χίο",
+      },
+    };
+  }
+
   if (data.seo.canonicalPath === "/de/") {
     return {
       ...data,
@@ -88,6 +154,7 @@ function localizeInheritedCopy(data: HomePageData): HomePageData {
         rooms: data.roomsPreview.rooms.map((room) => ({
           ...room,
           title: room.title === "Economy Doppelzimmer" ? "Economy-Doppelzimmer" : room.title,
+          liveBadge: "AKTUELL",
           meta: room.meta.map((item) => item === "🏡 Apt" ? "🏡 Apartment" : item),
         })),
       },
