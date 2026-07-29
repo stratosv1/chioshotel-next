@@ -1,0 +1,118 @@
+name: Apply Turkish Sitelinks Cleanup
+
+on:
+  push:
+    branches:
+      - fix/turkish-sitelinks-signals
+    paths:
+      - .github/workflows/apply-turkish-sitelinks-cleanup.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/turkish-sitelinks-signals
+          fetch-depth: 0
+
+      - name: Apply targeted Turkish localization fixes
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path: str, old: str, new: str) -> None:
+              p = Path(path)
+              text = p.read_text(encoding="utf-8-sig")
+              if old not in text:
+                  raise SystemExit(f"Expected text not found in {path}: {old[:100]!r}")
+              p.write_text(text.replace(old, new, 1), encoding="utf-8")
+
+          # Visible room-detail language signals.
+          detail = "components/rooms/RoomDetailPage.tsx"
+          replace_once(detail,
+              'Kitchenette: { el: "Μικρή κουζίνα", fr: "Kitchenette", de: "Kitchenette", it: "Angolo cottura", es: "Kitchenette", tr: "Kitchenette" },',
+              'Kitchenette: { el: "Μικρή κουζίνα", fr: "Kitchenette", de: "Kitchenette", it: "Angolo cottura", es: "Kitchenette", tr: "Mini mutfak" },')
+          replace_once(detail,
+              'tr: "Oda 3, kitchenette ve merdiven erişimi olan üst kat çift / üç kişilik odadır."',
+              'tr: "Oda 3, mini mutfak ve merdiven erişimi olan üst kat çift / üç kişilik odadır."')
+          replace_once(detail,
+              'tr: "Oda 4, kitchenette, çekyat ve üst kat manzarası sunan çift / üç kişilik odadır."',
+              'tr: "Oda 4, mini mutfak, çekyat ve üst kat manzarası sunan çift / üç kişilik odadır."')
+          caption_anchor = '  Bathroom: { el: "Μπάνιο", fr: "Salle de bain", de: "Bad", it: "Bagno", es: "Baño", tr: "Banyo" },\n'
+          caption_rows = '''  Layout: { tr: "Yerleşim" },
+  Detail: { tr: "Detay" },
+  Desk: { tr: "Çalışma masası" },
+  "Traditional interior": { tr: "Geleneksel iç mekân" },
+  "Courtyard access": { tr: "Avlu erişimi" },
+  "Room layout": { tr: "Oda düzeni" },
+  "Stone wall interior": { tr: "Taş duvarlı iç mekân" },
+  "Stone bathroom details": { tr: "Taş banyo detayları" },
+  "Spacious layout": { tr: "Geniş yerleşim" },
+  "Traditional details": { tr: "Geleneksel detaylar" },
+'''
+          replace_once(detail, caption_anchor, caption_anchor + caption_rows)
+
+          # Turkish room page copy inherited from English.
+          room_details = "content/room-details.ts"
+          replace_once(room_details,
+              '{ icon: "🍽️", label: "Kitchenette", text: "Bazı birinci kat odalarda mevcuttur." },',
+              '{ icon: "🍽️", label: "Mini mutfak", text: "Bazı üst kat odalarda mevcuttur." },')
+          replace_once(room_details,
+              '"Bu kategori doğrudan bahçe erişimli zemin kat odalar ve teras hissi veren birinci kat odaları içerir. Bazı birinci kat odalarda kitchenette de bulunur."',
+              '"Bu kategori doğrudan bahçe erişimli zemin kat odalar ve teras hissi veren üst kat odaları içerir. Bazı üst kat odalarda mini mutfak da bulunur."')
+          replace_once(room_details,
+              '"Economy kategorisine göre daha fazla konfor isteyen çiftler."',
+              '"Ekonomik kategoriye göre daha fazla konfor isteyen çiftler."')
+          replace_once(room_details,
+              '"Bazı birinci kat odalarda kitchenette bulunabilir. Tam mutfağa ihtiyacınız varsa aile apartları genellikle daha iyi seçimdir."',
+              '"Bazı üst kat odalarda mini mutfak bulunabilir. Tam mutfağa ihtiyacınız varsa aile daireleri genellikle daha iyi seçimdir."')
+
+          # Structured data: correct Turkish breadcrumb and localize inherited room descriptions.
+          schema = "content/room-detail-schema.ts"
+          replace_once(schema,
+              'roomsBreadcrumbPath: "/tr/chios-odalari/",',
+              'roomsBreadcrumbPath: "/tr/sakiz-adasi-odalari/",')
+          replace_once(schema,
+              'Kitchenette: { el: "Μικρή κουζίνα", fr: "Kitchenette", de: "Kitchenette", it: "Angolo cottura", es: "Kitchenette", tr: "Kitchenette" },',
+              'Kitchenette: { el: "Μικρή κουζίνα", fr: "Kitchenette", de: "Kitchenette", it: "Angolo cottura", es: "Kitchenette", tr: "Mini mutfak" },')
+          replace_once(schema,
+              '    description: room.description,',
+              '    description: localizeRoomSchemaText(room.description, language),')
+          schema_anchor = '  "2 sofa beds": { el: "2 καναπέδες-κρεβάτια", fr: "2 canapés-lits", de: "2 Schlafsofas", it: "2 divani letto", es: "2 sofás cama", tr: "2 çekyat" },\n'
+          schema_rows = '''  "Room 6 is ideal for guests who love nature. Located on the ground floor, it opens directly to the peaceful courtyard and garden.": { tr: "Oda 6 zemin kattadır ve huzurlu avlu ile bahçeye doğrudan açılır." },
+  "Room 2 is located on the first floor and offers access to a shared terrace with views over the estate and the citrus trees of Kambos.": { tr: "Oda 2 üst katta yer alır ve narenciye bahçelerine bakan ortak terasa erişim sunar." },
+  "Room 5 is a ground-floor double / triple room with direct courtyard and garden access. It is ideal for guests who prefer no stairs and an easy outdoor connection.": { tr: "Oda 5, avlu ve bahçeye doğrudan erişimi olan zemin kat çift / üç kişilik odadır." },
+  "Room 7 is a ground-floor double / triple room with garden access and a flexible layout with a sofa bed.": { tr: "Oda 7, bahçe erişimi ve çekyatlı zemin kat çift / üç kişilik odadır." },
+  "Room 1 is a first-floor room for up to 4 guests, with upper-floor view, private balcony feel and two sleeping spaces without a connecting door.": { tr: "Oda 1 üst katta yer alır ve iki uyku alanıyla 4 kişiye kadar konaklama sunar." },
+  "Room 3 is a first-floor double / triple room with kitchenette, upper-floor view and access by stairs.": { tr: "Oda 3, mini mutfak ve merdiven erişimi olan üst kat çift / üç kişilik odadır." },
+  "Room 4 is a first-floor double / triple room with kitchenette, sofa bed and upper-floor view.": { tr: "Oda 4, mini mutfak, çekyat ve üst kat manzarası sunan çift / üç kişilik odadır." },
+  "Apartment 8 is a family apartment with living room and kitchen, separate bedroom and bathroom. It is suitable for up to 4 guests.": { tr: "Daire 8, mutfaklı oturma alanı, ayrı yatak odası ve banyoya sahiptir; 4 kişiye kadar uygundur." },
+  "Apartment 9 offers the same family-friendly layout with kitchen, living area, bedroom and bathroom, suitable for up to 4 guests.": { tr: "Daire 9, mutfak, oturma alanı, yatak odası ve banyodan oluşan aile dostu bir düzene sahiptir; 4 kişiye kadar uygundur." },
+  "Apartment 10 is a family apartment with living room and kitchen, bedroom and flexible sofa-bed layout.": { tr: "Daire 10, mutfaklı oturma alanı, yatak odası ve esnek çekyat düzenine sahip bir aile dairesidir." },
+'''
+          replace_once(schema, schema_anchor, schema_anchor + schema_rows)
+          PY
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build and run SEO QA
+        run: npm run build
+
+      - name: Commit cleanup
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add components/rooms/RoomDetailPage.tsx content/room-details.ts content/room-detail-schema.ts
+          if git diff --cached --quiet; then
+            echo "No cleanup changes to commit."
+            exit 0
+          fi
+          git commit -m "Complete Turkish sitelink localization"
+          git push origin HEAD:fix/turkish-sitelinks-signals
