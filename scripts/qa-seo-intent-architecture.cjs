@@ -97,6 +97,34 @@ expect(
   "Global lodging schema must use LodgingBusiness",
 );
 
+expectAll(
+  "lib/greek-home-seo-hardening.ts",
+  [
+    "Καλή σχέση ποιότητας–τιμής",
+    "Βρες το δωμάτιό σου",
+    "Προσφορές τελευταίας στιγμής",
+    "Ανακάλυψε τη Χίο",
+    "Στάθμευση",
+    "Οικονομικό",
+    "Καθαρά νερά",
+    "Μαστιχοχώρια",
+    "Πολιτισμός",
+    "Δωρεάν WiFi",
+    "Ασύρματη πρόσβαση στο διαδίκτυο για τους επισκέπτες",
+    "Ιδιωτικό μπάνιο",
+    "Κήπος και βεράντα",
+    "Χώρος στάθμευσης διαθέσιμος για τους επισκέπτες",
+    "Υπηρεσία καθαριότητας κατά τη διάρκεια της διαμονής",
+  ],
+  "Greek homepage SEO hardening is incomplete",
+);
+
+expectAll(
+  "app/[locale]/page.tsx",
+  ["hardenGreekHomePageData", "hardenGreekSchema"],
+  "Greek homepage hardening must be applied before metadata, schema and rendering",
+);
+
 expect(
   "app/staff/seo/page.tsx",
   "getSeoAdvisorWithIntentData",
@@ -115,4 +143,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log("SEO architecture QA passed: audits #1–#9, owner guardrails, sitemap and LodgingBusiness schema are in place.");
+console.log("SEO architecture QA passed: audits #1–#9, owner guardrails, Greek homepage hardening, sitemap and LodgingBusiness schema are in place.");
