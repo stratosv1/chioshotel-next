@@ -173,6 +173,59 @@ const elCopy: WizardCopy = {
   ],
 };
 
+const trCopy: WizardCopy = {
+  ...enCopy,
+  title: "Size uygun odayı bulun",
+  text: "Birkaç kısa soruyu yanıtlayın; Sakız Adası’ndaki konaklamanız için size en uygun oda veya daireyi önerelim.",
+  firstName: "Ad",
+  lastName: "Soyad",
+  checkin: "Giriş",
+  checkout: "Çıkış",
+  email: "E-posta",
+  phone: "Telefon",
+  consent: "Konaklama önerisi sunabilmemiz için kişisel verilerimin işlenmesini kabul ediyorum.",
+  start: "Oda seçimini başlat",
+  back: "Geri",
+  step: "Adım",
+  bestMatch: "En uygun seçenek",
+  alternatives: "Alternatif seçenekler",
+  startOver: "Baştan başla",
+  whatsapp: "WhatsApp",
+  emailCta: "E-posta",
+  alert: "Çıkış tarihi giriş tarihinden sonra olmalıdır.",
+  perfect: "Bu seçenek kriterlerinize en iyi şekilde uyuyor ve konfor, erişim ve fiyat açısından dengeli bir tercih sunuyor.",
+  room: "Oda",
+  guests: "Misafir",
+  beds: "Yataklar",
+  why: "Neden uygun",
+  same: "Aynı fiyat kategorisi",
+  more: "Daha yüksek fiyat kategorisi",
+  less: "Daha düşük fiyat kategorisi",
+  questions: [
+    { id: "guests", question: "Kaç misafir konaklayacak?", options: [
+      { title: "2 misafir", hint: "Çift veya iki yetişkin", icon: "👥", value: 2 },
+      { title: "3 misafir", hint: "Aile veya arkadaşlar", icon: "👨‍👩‍👦", value: 3 },
+      { title: "4 misafir", hint: "Aileler için daha fazla alan", icon: "👨‍👩‍👧‍👦", value: 4 },
+    ]},
+    { id: "budget", question: "Hangi fiyat kategorisini tercih edersiniz?", options: [
+      { title: "Ekonomik", hint: "Daha uygun fiyatlı seçenek", icon: "💶", value: true },
+      { title: "Standart / Premium", hint: "Daha fazla konfor ve seçenek", icon: "✨", value: false },
+    ]},
+    { id: "noStairs", question: "Erişim ve merdiven tercihiniz?", options: [
+      { title: "Merdivensiz", hint: "Zemin kat veya bağımsız daire", icon: "🧳", value: true },
+      { title: "Merdiven uygun", hint: "Üst kat seçenekleri de dahil", icon: "🪜", value: false },
+    ]},
+    { id: "upperView", question: "Hangi konumu tercih edersiniz?", options: [
+      { title: "Üst kat", hint: "Daha aydınlık ve açık bir his", icon: "👁️", value: true },
+      { title: "Bahçe manzarası", hint: "Sakin ve huzurlu atmosfer", icon: "🌿", value: false },
+    ]},
+    { id: "kitchen", question: "Mutfak ihtiyacınız var mı?", options: [
+      { title: "Evet", hint: "Tam mutfak veya mini mutfak", icon: "🍳", value: true },
+      { title: "Hayır", hint: "Standart bir oda yeterli", icon: "🍽️", value: false },
+    ]},
+  ],
+};
+
 const plCopy: WizardCopy = {
   ...enCopy,
   title: "Znajdź pokój dopasowany do Twojego pobytu",
@@ -231,7 +284,7 @@ const copyByLanguage: Record<WizardLanguage, WizardCopy> = {
   de: enCopy,
   it: enCopy,
   es: enCopy,
-  tr: enCopy,
+  tr: trCopy,
 };
 
 function getTomorrowDate() {
@@ -255,35 +308,72 @@ function isPolishCopy(copy: WizardCopy) {
   return copy === plCopy;
 }
 
+function isTurkishCopy(copy: WizardCopy) {
+  return copy === trCopy;
+}
+
+function localizeRoomName(name: string, copy: WizardCopy) {
+  if (isTurkishCopy(copy)) {
+    return name.replace(/^Room\s+(\d+)$/i, "Oda $1").replace(/^Apartment\s+(\d+)$/i, "Daire $1");
+  }
+  return name;
+}
+
+function localizeRoomType(type: string, copy: WizardCopy) {
+  if (!isTurkishCopy(copy)) return type;
+  const values: Record<string, string> = {
+    "First Floor Double/Triple room": "Üst kat çift / üç kişilik oda",
+    "Ground Floor Double/Triple room": "Zemin kat çift / üç kişilik oda",
+    "Economy double": "Ekonomik çift kişilik oda",
+    Apartment: "Aile dairesi",
+  };
+  return values[type] || type;
+}
+
+function localizeRoomLocation(location: string, copy: WizardCopy) {
+  if (!isTurkishCopy(copy)) return location;
+  const values: Record<string, string> = {
+    "First Floor": "Üst kat",
+    "Ground Floor": "Zemin kat",
+    "Stand Alone": "Bağımsız birim",
+  };
+  return values[location] || location;
+}
+
 function getTags(room: RoomWizardRoom, prefs: WizardPrefs, copy: WizardCopy) {
   const tags: Array<{ text: string; good: boolean }> = [];
   const polish = isPolishCopy(copy);
+  const turkish = isTurkishCopy(copy);
   if (prefs.guests) tags.push({ text: `${room.maxGuests >= prefs.guests ? "✓" : "✕"} ${prefs.guests} ${copy.guests}`, good: room.maxGuests >= prefs.guests });
-  if (prefs.budget !== undefined) tags.push({ text: room.budget ? "Economy" : "Standard", good: room.budget === prefs.budget });
-  if (prefs.noStairs) tags.push({ text: room.stairs ? (polish ? "Schody" : "Stairs") : (polish ? "Bez schodów" : "No stairs"), good: !room.stairs });
-  if (prefs.upperView !== undefined) tags.push({ text: prefs.upperView ? (polish ? "Piętro / widok" : "Upper view") : (polish ? "Widok na ogród" : "Garden view"), good: prefs.upperView ? room.upperView : room.gardenView });
-  if (prefs.kitchen) tags.push({ text: room.fullKitchen ? (polish ? "Pełna kuchnia" : "Full kitchen") : room.kitchenette ? (polish ? "Aneks kuchenny" : "Kitchenette") : (polish ? "Bez kuchni" : "No kitchen"), good: room.fullKitchen || room.kitchenette });
+  if (prefs.budget !== undefined) tags.push({ text: room.budget ? (turkish ? "Ekonomik" : "Economy") : (turkish ? "Standart" : "Standard"), good: room.budget === prefs.budget });
+  if (prefs.noStairs) tags.push({ text: room.stairs ? (polish ? "Schody" : turkish ? "Merdiven var" : "Stairs") : (polish ? "Bez schodów" : turkish ? "Merdivensiz" : "No stairs"), good: !room.stairs });
+  if (prefs.upperView !== undefined) tags.push({ text: prefs.upperView ? (polish ? "Piętro / widok" : turkish ? "Üst kat / manzara" : "Upper view") : (polish ? "Widok na ogród" : turkish ? "Bahçe manzarası" : "Garden view"), good: prefs.upperView ? room.upperView : room.gardenView });
+  if (prefs.kitchen) tags.push({ text: room.fullKitchen ? (polish ? "Pełna kuchnia" : turkish ? "Tam mutfak" : "Full kitchen") : room.kitchenette ? (polish ? "Aneks kuchenny" : turkish ? "Mini mutfak" : "Kitchenette") : (polish ? "Bez kuchni" : turkish ? "Mutfak yok" : "No kitchen"), good: room.fullKitchen || room.kitchenette });
   return tags;
 }
 
 function getWhatsAppUrl(room: RoomWizardRoom, lead: LeadData, prefs: WizardPrefs, phone: string, copy: WizardCopy) {
   const intro = isPolishCopy(copy)
     ? `Dzień dobry! Nazywam się ${lead.firstName} ${lead.lastName} i chcę zapytać o:`
-    : `Hello! My name is ${lead.firstName} ${lead.lastName} and I would like to ask about:`;
-  const text = `${intro}\n\n${copy.room}: ${room.name}\n${copy.checkin}: ${lead.checkin}\n${copy.checkout}: ${lead.checkout}\n${copy.guests}: ${prefs.guests || "-"}\n${copy.email}: ${lead.email}\n${copy.phone}: ${lead.phone}`;
+    : isTurkishCopy(copy)
+      ? `Merhaba! Ben ${lead.firstName} ${lead.lastName}. Şu konaklama seçeneği hakkında bilgi almak istiyorum:`
+      : `Hello! My name is ${lead.firstName} ${lead.lastName} and I would like to ask about:`;
+  const text = `${intro}\n\n${copy.room}: ${localizeRoomName(room.name, copy)}\n${copy.checkin}: ${lead.checkin}\n${copy.checkout}: ${lead.checkout}\n${copy.guests}: ${prefs.guests || "-"}\n${copy.email}: ${lead.email}\n${copy.phone}: ${lead.phone}`;
   return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
 }
 
-function RoomGallery({ room }: { room: RoomWizardRoom }) {
+function RoomGallery({ room, copy }: { room: RoomWizardRoom; copy: WizardCopy }) {
   const [activeImage, setActiveImage] = useState(room.images[0] || "");
   if (!room.images.length) return null;
+  const roomName = localizeRoomName(room.name, copy);
+  const photoLabel = isPolishCopy(copy) ? "zdjęcie" : isTurkishCopy(copy) ? "fotoğraf" : "photo";
   return (
     <div className="my-5 overflow-hidden rounded-3xl border border-[#6f7f3f]/20 bg-white">
-      <img className="h-[240px] w-full object-cover md:h-[300px]" src={activeImage} alt={room.name} loading="lazy" />
+      <img className="h-[240px] w-full object-cover md:h-[300px]" src={activeImage} alt={roomName} loading="lazy" />
       <div className="grid grid-cols-4 gap-2 p-2">
         {room.images.slice(0, 4).map((image, index) => (
-          <button type="button" className={`aspect-square overflow-hidden rounded-2xl border-2 ${activeImage === image ? "border-[#3f4f2f]" : "border-transparent"}`} key={image} onClick={() => setActiveImage(image)} aria-label={`${room.name} photo ${index + 1}`}>
-            <img className="h-full w-full object-cover" src={image} alt={`${room.name} ${index + 1}`} loading="lazy" />
+          <button type="button" className={`aspect-square overflow-hidden rounded-2xl border-2 ${activeImage === image ? "border-[#3f4f2f]" : "border-transparent"}`} key={image} onClick={() => setActiveImage(image)} aria-label={`${roomName} ${photoLabel} ${index + 1}`}>
+            <img className="h-full w-full object-cover" src={image} alt={`${roomName} ${index + 1}`} loading="lazy" />
           </button>
         ))}
       </div>
@@ -295,28 +385,33 @@ function RoomCard({ room, bestRoom, lead, prefs, whatsappPhone, copy, label }: {
   const tags = getTags(room, prefs, copy);
   const priceText = room.priceLevel > bestRoom.priceLevel ? copy.more : room.priceLevel < bestRoom.priceLevel ? copy.less : copy.same;
   const polish = isPolishCopy(copy);
+  const turkish = isTurkishCopy(copy);
+  const roomName = localizeRoomName(room.name, copy);
+  const doubleBed = polish ? "Podwójne" : turkish ? "Çift kişilik" : "Double";
+  const singleBed = polish ? "Pojedyncze" : turkish ? "Tek kişilik" : "Single";
+  const sofaBed = polish ? "Sofa" : turkish ? "Çekyat" : "Sofa";
   return (
     <article className="w-[86vw] max-w-[430px] flex-none snap-start rounded-[2rem] border border-[#6f7f3f]/20 bg-white p-5 shadow-xl shadow-stone-900/5 md:w-[560px] md:max-w-[560px] md:p-7">
       <span className="inline-flex rounded-full bg-[#3f4f2f] px-3 py-1.5 text-xs font-black uppercase tracking-[0.1em] text-white">{label}</span>
-      <h3 className="mt-4 text-3xl font-black leading-none tracking-[-0.04em] text-[#2f261f] md:text-4xl">{room.name}</h3>
-      <p className="mt-2 text-sm italic text-stone-600">{room.type} • {room.location}</p>
+      <h3 className="mt-4 text-3xl font-black leading-none tracking-[-0.04em] text-[#2f261f] md:text-4xl">{roomName}</h3>
+      <p className="mt-2 text-sm italic text-stone-600">{localizeRoomType(room.type, copy)} • {localizeRoomLocation(room.location, copy)}</p>
       <div className="mt-4 flex flex-wrap gap-2">
         <span className="inline-flex rounded-full border border-[#6f7f3f]/20 bg-[#eef3e5] px-3 py-1.5 text-xs font-black text-[#3f4f2f]">{priceText}</span>
         {tags.map((tag) => <span className={`inline-flex rounded-full px-3 py-1.5 text-xs font-black ${tag.good ? "bg-[#eef3e5] text-[#3f4f2f]" : "bg-rose-50 text-rose-800"}`} key={tag.text}>{tag.text}</span>)}
       </div>
       <div className="mt-4 flex flex-wrap gap-2" aria-label={copy.beds}>
-        {room.beds.double > 0 && <span className="rounded-full border border-stone-200 bg-white px-3 py-1.5 text-xs font-bold">🛏️ {polish ? "Podwójne" : "Double"} x{room.beds.double}</span>}
-        {room.beds.single > 0 && <span className="rounded-full border border-stone-200 bg-white px-3 py-1.5 text-xs font-bold">🛌 {polish ? "Pojedyncze" : "Single"} x{room.beds.single}</span>}
-        {room.beds.sofa > 0 && <span className="rounded-full border border-stone-200 bg-white px-3 py-1.5 text-xs font-bold">🛋️ {polish ? "Sofa" : "Sofa"} x{room.beds.sofa}</span>}
+        {room.beds.double > 0 && <span className="rounded-full border border-stone-200 bg-white px-3 py-1.5 text-xs font-bold">🛏️ {doubleBed} x{room.beds.double}</span>}
+        {room.beds.single > 0 && <span className="rounded-full border border-stone-200 bg-white px-3 py-1.5 text-xs font-bold">🛌 {singleBed} x{room.beds.single}</span>}
+        {room.beds.sofa > 0 && <span className="rounded-full border border-stone-200 bg-white px-3 py-1.5 text-xs font-bold">🛋️ {sofaBed} x{room.beds.sofa}</span>}
       </div>
-      <RoomGallery room={room} />
+      <RoomGallery room={room} copy={copy} />
       <div className="rounded-3xl border border-[#6f7f3f]/20 bg-[#f7f9f1] p-4">
         <h4 className="text-xs font-black uppercase tracking-[0.12em] text-[#3f4f2f]">{copy.why}</h4>
         <p className="mt-2 text-sm leading-6 text-stone-600">{copy.perfect}</p>
       </div>
       <div className="mt-5 grid gap-3 sm:grid-cols-2">
         <a className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#25d366] px-5 text-xs font-black uppercase tracking-[0.1em] text-white" href={getWhatsAppUrl(room, lead, prefs, whatsappPhone, copy)} target="_blank" rel="noopener noreferrer">{copy.whatsapp}</a>
-        <a className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#6f7f3f]/25 bg-[#efe6d8] px-5 text-xs font-black uppercase tracking-[0.1em] text-[#3f4f2f]" href={`mailto:info@chioshotel.gr?subject=${encodeURIComponent(`${copy.room} - ${lead.firstName} ${lead.lastName} - ${room.name}`)}`}>{copy.emailCta}</a>
+        <a className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#6f7f3f]/25 bg-[#efe6d8] px-5 text-xs font-black uppercase tracking-[0.1em] text-[#3f4f2f]" href={`mailto:info@chioshotel.gr?subject=${encodeURIComponent(`${copy.room} - ${lead.firstName} ${lead.lastName} - ${roomName}`)}`}>{copy.emailCta}</a>
       </div>
     </article>
   );
@@ -345,6 +440,8 @@ export function RoomWizardTailwind({ rooms, whatsappPhone, language = "en" }: Ro
     setHasStarted(true);
     setStep(0);
   }
+
+  const swipeLabel = isPolishCopy(copy) ? "Przesuń" : isTurkishCopy(copy) ? "Kaydırın" : "Swipe";
 
   return (
     <section className="mx-auto mb-12 w-[min(780px,100%)] scroll-mt-20" id="room-wizard-app" aria-labelledby="rw-main-title">
@@ -406,7 +503,7 @@ export function RoomWizardTailwind({ rooms, whatsappPhone, language = "en" }: Ro
           <div className="relative -mx-2 md:-mx-4">
             <div className="mb-4 flex items-center justify-between gap-3 px-2 md:px-4">
               <h3 className="text-2xl font-black tracking-[-0.04em] text-[#2f261f]">{copy.bestMatch}</h3>
-              <span className="rounded-full bg-[#eef3e5] px-4 py-2 text-[11px] font-black uppercase tracking-[0.12em] text-[#3f4f2f]">{isPolishCopy(copy) ? "Przesuń" : "Swipe"} →</span>
+              <span className="rounded-full bg-[#eef3e5] px-4 py-2 text-[11px] font-black uppercase tracking-[0.12em] text-[#3f4f2f]">{swipeLabel} →</span>
             </div>
 
             <div aria-hidden="true" className="pointer-events-none absolute right-1 top-[46%] z-20 flex h-12 w-12 items-center justify-center rounded-full bg-[#3f4f2f] text-2xl font-black text-white shadow-2xl md:right-3">
