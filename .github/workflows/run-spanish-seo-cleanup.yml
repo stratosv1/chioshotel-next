@@ -53,3 +53,5 @@ jobs:
           git status --short
           git commit -m "Fix Spanish SEO and language signals"
           git push origin HEAD:fix/spanish-seo-language-signals
+
+# one-shot trigger 2026-07-29
