@@ -1,4 +1,4 @@
-name: Run Spanish SEO cleanup
+name: Build clean Spanish SEO branch
 
 on:
   push:
@@ -10,40 +10,42 @@ permissions:
   contents: write
 
 jobs:
-  patch-verify-commit:
+  copy-verify-commit:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Spanish cleanup branch
+      - name: Checkout clean Spanish branch
         uses: actions/checkout@v4
         with:
-          ref: fix/spanish-seo-language-signals
+          ref: fix/spanish-seo-language-signals-clean-2
           fetch-depth: 0
 
-      - name: Adjust patcher for current source
+      - name: Copy only audited Spanish files
         shell: bash
         run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          p = Path('scripts/apply-spanish-seo-cleanup.py')
-          s = p.read_text(encoding='utf-8')
-          old = '''def replace_once(text: str, old: str, new: str, label: str) -> str:\n    count = text.count(old)\n    if count != 1:\n        raise RuntimeError(f"{label}: expected exactly 1 occurrence, found {count}")\n    return text.replace(old, new, 1)'''
-          new = '''def replace_once(text: str, old: str, new: str, label: str) -> str:\n    count = text.count(old)\n    if label == "RoomWizard: Spanish tag flag" and count == 2:\n        return text.replace(old, new, 1)\n    if label == "RoomWizard: Spanish swipe" and count == 0:\n        actual_old = 'isPolishCopy(copy) ? "Przesuń" : isItalianCopy(copy) ? "Scorri" : isGermanCopy(copy) ? "Wischen" : isTurkishCopy(copy) ? "Kaydırın" : "Swipe"'\n        actual_new = 'isPolishCopy(copy) ? "Przesuń" : isItalianCopy(copy) ? "Scorri" : isSpanishCopy(copy) ? "Desliza" : isGermanCopy(copy) ? "Wischen" : isTurkishCopy(copy) ? "Kaydırın" : "Swipe"'\n        if text.count(actual_old) != 1:\n            raise RuntimeError(f"{label}: current swipe expression not found")\n        return text.replace(actual_old, actual_new, 1)\n    if count != 1:\n        raise RuntimeError(f"{label}: expected exactly 1 occurrence, found {count}")\n    return text.replace(old, new, 1)'''
-          if old not in s:
-              raise SystemExit('replace_once block not found')
-          s = s.replace(old, new, 1)
-          old_family = '''start = text.index("  es: {")\nend = text.index("  tr: {", start)\nsection = text[start:end]'''
-          new_family = '''anchor = 'path: "/es/vacaciones-en-familia-en-quios/"'\nanchor_pos = text.index(anchor)\nstart = text.rfind("  es: {", 0, anchor_pos)\nend = text.index("  tr: {", anchor_pos)\nsection = text[start:end]'''
-          if old_family not in s:
-              raise SystemExit('family section locator not found')
-          s = s.replace(old_family, new_family, 1)
-          p.write_text(s, encoding='utf-8')
-          PY
-
-      - name: Apply audited Spanish fixes
-        run: python3 scripts/apply-spanish-seo-cleanup.py
-
-      - name: Diff check
-        run: git diff --check
+          git fetch origin fix/spanish-seo-language-signals
+          git checkout 652fa3d225ee1f48650b861da425119a4b290684 -- \
+            components/VoulamandisFooterTailwind.tsx \
+            components/contact/ContactPage.tsx \
+            components/home/LiveDirectRequest.tsx \
+            components/rooms/RoomDetailPage.tsx \
+            components/rooms/RoomWizardTailwind.tsx \
+            components/rooms/RoomsCategoryPage.tsx \
+            content/family-travel.ts \
+            content/home.ts \
+            content/room-detail-schema.ts
+          git diff --check
+          printf '%s\n' \
+            components/VoulamandisFooterTailwind.tsx \
+            components/contact/ContactPage.tsx \
+            components/home/LiveDirectRequest.tsx \
+            components/rooms/RoomDetailPage.tsx \
+            components/rooms/RoomWizardTailwind.tsx \
+            components/rooms/RoomsCategoryPage.tsx \
+            content/family-travel.ts \
+            content/home.ts \
+            content/room-detail-schema.ts | sort > /tmp/expected.txt
+          git diff --name-only | sort > /tmp/actual.txt
+          diff -u /tmp/expected.txt /tmp/actual.txt
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -63,15 +65,22 @@ jobs:
       - name: Production build
         run: npm run build
 
-      - name: Commit verified Spanish changes
+      - name: Commit clean Spanish changes
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          rm -f .es-cleanup-trigger .spanish-cleanup-status.txt scripts/apply-spanish-seo-cleanup.py .github/workflows/apply-spanish-seo-cleanup.yml
-          git add -A
-          git status --short
+          git add \
+            components/VoulamandisFooterTailwind.tsx \
+            components/contact/ContactPage.tsx \
+            components/home/LiveDirectRequest.tsx \
+            components/rooms/RoomDetailPage.tsx \
+            components/rooms/RoomWizardTailwind.tsx \
+            components/rooms/RoomsCategoryPage.tsx \
+            content/family-travel.ts \
+            content/home.ts \
+            content/room-detail-schema.ts
           git commit -m "Fix Spanish SEO and language signals"
-          git push origin HEAD:fix/spanish-seo-language-signals
+          git push origin HEAD:fix/spanish-seo-language-signals-clean-2
 
-# production cleanup trigger 2026-07-29
+# clean branch trigger 2026-07-29
