@@ -1,0 +1,139 @@
+name: Clean French SEO changes
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  copy-test-commit:
+    if: github.event.pull_request.head.ref == 'fix/french-seo-language-signals-clean'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout clean branch
+        uses: actions/checkout@v4
+        with:
+          ref: fix/french-seo-language-signals-clean
+          fetch-depth: 0
+
+      - name: Copy audited French files only
+        shell: bash
+        run: |
+          git fetch origin fix/french-seo-language-signals
+          git checkout origin/fix/french-seo-language-signals -- \
+            components/VoulamandisFooterTailwind.tsx \
+            components/contact/ContactPage.tsx \
+            components/home/DiscountReveal.tsx \
+            components/home/HomePageTailwind.tsx \
+            components/home/LastMinuteDeals.tsx \
+            components/rooms/RoomDetailPage.tsx \
+            components/rooms/RoomWizardTailwind.tsx \
+            components/rooms/RoomsCategoryPage.tsx \
+            content/home.ts \
+            content/room-detail-schema.ts \
+            content/rooms.ts
+
+      - name: Assert French language signals
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          def text(path):
+              return Path(path).read_text(encoding='utf-8-sig')
+
+          wizard = text('components/rooms/RoomWizardTailwind.tsx')
+          assert 'fr: frCopy' in wizard
+          assert 'fr: enCopy' not in wizard
+          assert 'Trouvez la chambre qui vous convient' in wizard
+          assert 'Chambre $1' in wizard and 'Appartement $1' in wizard
+          assert 'Balayez' in wizard
+
+          home = text('content/home.ts')
+          french = home.split('export const homePageFr: HomePageData =', 1)[1].split('export const homePageDe: HomePageData =', 1)[0]
+          assert 'title: "Chambres et appartements à Chios, au cœur de Kambos"' in french
+          assert '🧭 Room Wizard' not in french
+          assert '🏡 Apt' not in french
+          assert 'liveBadge: "EN DIRECT"' in french
+          assert 'Code de réduction en direct' in french
+
+          footer = text('components/VoulamandisFooterTailwind.tsx')
+          assert 'Chambres & appartements à Chios · Réservation directe' in footer
+          assert 'Navigation du pied de page' in footer
+
+          rooms = text('components/rooms/RoomsCategoryPage.tsx')
+          assert 'Voir les chambres doubles économiques' in rooms
+          assert 'Voir les economy double rooms' not in rooms
+          rooms_content = text('content/rooms.ts')
+          assert 'Le meilleur rapport qualité-prix pour 2 personnes' in rooms_content
+
+          contact = text('components/contact/ContactPage.tsx')
+          assert 'fr: "Contactez Voulamandis House à Chios"' in contact
+
+          detail = text('components/rooms/RoomDetailPage.tsx')
+          for value in ['Agencement de la chambre', 'Accès à la cour', 'Intérieur avec mur en pierre', 'Détails en pierre de la salle de bain', 'Accès à la terrasse', 'Vue depuis le balcon']:
+              assert value in detail, value
+
+          schema = text('content/room-detail-schema.ts')
+          assert '"Room 6 is ideal for guests who love nature.' in schema and 'fr: "La chambre 6 est au rez-de-chaussée' in schema
+          assert '"Apartment 10 is a family apartment' in schema and 'fr: "L’appartement 10 est un appartement familial' in schema
+
+          discount = text('components/home/DiscountReveal.tsx')
+          assert 'locale?: Locale' in discount
+          assert 'getLocaleFromPath' not in discount
+          assert 'const text = COPY[locale]' in discount
+          homepage = text('components/home/HomePageTailwind.tsx')
+          assert 'locale={locale}' in homepage
+
+          legacy = text('components/home/LastMinuteDeals.tsx')
+          assert 'displayName: "Chambre 1"' in legacy
+          assert 'displayName: "Appartement 10"' in legacy
+
+          print('French targeted assertions passed')
+          PY
+
+      - name: Diff check
+        run: git diff --check
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: GSC routing QA
+        run: npm run qa:gsc
+
+      - name: SEO intent QA
+        run: npm run qa:seo
+
+      - name: Production build
+        run: npm run build
+
+      - name: Commit verified French files only
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/french-clean-copy.yml
+          git add \
+            components/VoulamandisFooterTailwind.tsx \
+            components/contact/ContactPage.tsx \
+            components/home/DiscountReveal.tsx \
+            components/home/HomePageTailwind.tsx \
+            components/home/LastMinuteDeals.tsx \
+            components/rooms/RoomDetailPage.tsx \
+            components/rooms/RoomWizardTailwind.tsx \
+            components/rooms/RoomsCategoryPage.tsx \
+            content/home.ts \
+            content/room-detail-schema.ts \
+            content/rooms.ts
+          git status --short
+          git commit -m "Fix French SEO and language signals"
+          git push origin HEAD:fix/french-seo-language-signals-clean
