@@ -74,7 +74,7 @@ type RoomsSchemaLanguage = "en" | "el" | "de" | "fr" | "it" | "es" | "tr";
 
 const roomsSchemaLabelsByLanguage: Record<RoomsSchemaLanguage, { breadcrumbName: string }> = {
   en: { breadcrumbName: "Chios rooms and apartments" },
-  el: { breadcrumbName: "ωμάτια και διαμερίσματα στη ίο" },
+  el: { breadcrumbName: "Δωμάτια και διαμερίσματα στη Χίο" },
   de: { breadcrumbName: "Zimmer und Apartments auf Chios" },
   fr: { breadcrumbName: "Chambres et appartements à Chios" },
   it: { breadcrumbName: "Camere e appartamenti a Chios" },
@@ -86,6 +86,37 @@ function getRoomsSchemaLabels(path: string) {
   const language = getLanguageForPath(path) as RoomsSchemaLanguage;
   return roomsSchemaLabelsByLanguage[language] ?? roomsSchemaLabelsByLanguage.en;
 }
+
+function hardenGreekRoomsSchemaData(data: RoomsCategoryPageData): RoomsCategoryPageData {
+  if (data.seo.canonicalPath !== "/el/domatia-xios/") return data;
+
+  return {
+    ...data,
+    cards: data.cards.map((card) => {
+      if (card.id === "economy-double") {
+        return {
+          ...card,
+          subtitle: "Οικονομική επιλογή για 2 άτομα",
+          description:
+            "Η πιο οικονομική επιλογή για 2 άτομα. Ανακαινισμένα δωμάτια 16m² με σύγχρονες παροχές και αυθεντική αίσθηση Κάμπου.",
+          badge: "Οικονομική επιλογή",
+          meta: ["2 άτομα", "16m²", "Οικονομικό"],
+        };
+      }
+
+      if (card.id === "first-floor") {
+        return {
+          ...card,
+          description:
+            "Απολαύστε την πανοραμική θέα στο κτήμα και τα εσπεριδοειδή από τη βεράντα σας. Φωτεινά δωμάτια με πιο αναβαθμισμένη αίσθηση.",
+        };
+      }
+
+      return card;
+    }),
+  };
+}
+
 function buildRoomsCollectionPageSchema(data: RoomsCategoryPageData): SchemaObject {
   const canonicalPath = data.seo.canonicalPath;
   const language = getLanguageForPath(canonicalPath);
@@ -120,7 +151,8 @@ function buildRoomsCollectionPageSchema(data: RoomsCategoryPageData): SchemaObje
 }
 
 export function buildRoomsCategorySchema(data: RoomsCategoryPageData) {
-  const canonicalPath = data.seo.canonicalPath;
+  const safeData = hardenGreekRoomsSchemaData(data);
+  const canonicalPath = safeData.seo.canonicalPath;
   const labels = getRoomsSchemaLabels(canonicalPath);
 
   return buildSchemaGraph([
@@ -129,15 +161,15 @@ export function buildRoomsCategorySchema(data: RoomsCategoryPageData) {
     buildWebsiteSchema(),
     buildImageSchema(
       {
-        url: data.seo.ogImage,
-        alt: data.seo.title,
-        caption: `${data.seo.title} - ${siteName}`,
+        url: safeData.seo.ogImage,
+        alt: safeData.seo.title,
+        caption: `${safeData.seo.title} - ${siteName}`,
       },
       canonicalPath,
     ),
-    buildRoomsCollectionPageSchema(data),
-    buildRoomsItemListSchema(data),
-    ...data.cards.map(buildRoomCardSchema),
+    buildRoomsCollectionPageSchema(safeData),
+    buildRoomsItemListSchema(safeData),
+    ...safeData.cards.map(buildRoomCardSchema),
     buildBreadcrumbSchema(canonicalPath, [
       {
         name: labels.breadcrumbName,
@@ -146,6 +178,3 @@ export function buildRoomsCategorySchema(data: RoomsCategoryPageData) {
     ]),
   ]);
 }
-
-
-
