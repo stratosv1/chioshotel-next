@@ -404,15 +404,19 @@ function buildRequestHref(
   guests: number,
   totals: { original: number; direct: number; nights: number } | null,
 ) {
+  const spanish = copy === LIVE_REQUEST_COPY.es;
+  const roomText = room
+    ? `${spanish ? localizeRoomName(room.displayName, copy) : room.displayName} - ${spanish ? localizeRoomType(room.type, copy) : room.type}`
+    : "-";
   const text = [
     copy.messageTitle,
     "",
-    `Room: ${room ? `${room.displayName} - ${room.type}` : "-"}`,
-    `Guests: ${guests}`,
-    `Dates: ${dates.length ? dates.join(", ") : "-"}`,
-    totals ? `Nights: ${totals.nights}` : null,
-    totals ? `Original price: ${money(totals.original)}` : null,
-    totals ? `Direct offer: ${money(totals.direct)}` : null,
+    `${spanish ? "Habitación" : "Room"}: ${roomText}`,
+    `${spanish ? "Huéspedes" : "Guests"}: ${guests}`,
+    `${spanish ? "Fechas" : "Dates"}: ${dates.length ? dates.join(", ") : "-"}`,
+    totals ? `${spanish ? "Noches" : "Nights"}: ${totals.nights}` : null,
+    totals ? `${spanish ? "Precio inicial" : "Original price"}: ${money(totals.original)}` : null,
+    totals ? `${spanish ? "Oferta directa" : "Direct offer"}: ${money(totals.direct)}` : null,
     "",
     copy.messageConfirm,
   ]

@@ -97,6 +97,7 @@ const heroTitleByLocale: Partial<Record<string, string>> = {
   fr: "Contactez Voulamandis House à Chios",
   de: "Kontakt zum Voulamandis House auf Chios",
   it: "Contatta Voulamandis House a Chios",
+  es: "Contacta con Voulamandis House en Quíos",
   tr: "Voulamandis House ile İletişim – Sakız Adası",
 };
 

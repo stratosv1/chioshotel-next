@@ -2587,10 +2587,10 @@ export const homePageEs: HomePageData = {
     ...homePageEn.hero,
     reviews: "143 reseñas",
     kicker: "KAMPOS CHIOS • VOULAMANDIS HOUSE",
-    title: "Hotel y apartamentos en Chios, en Kambos",
+    title: "Habitaciones y apartamentos en Quíos, en Kambos",
     descriptionHtml:
       '¿Buscas un <strong>hotel en Chios</strong> o <strong>habitaciones en Chios</strong>? <strong>Voulamandis House</strong> te recibe en Kambos con habitaciones cómodas, ambiente tranquilo y hospitalidad auténtica.',
-    imageAlt: "Hotel y apartamentos en Chios - Voulamandis House en Kambos",
+    imageAlt: "Habitaciones y apartamentos en Chios - Voulamandis House en Kambos",
     primaryCta: {
       label: "Encuentra tu habitación con IA",
       href: "/ai-assistant/?lang=es",
@@ -2604,7 +2604,7 @@ export const homePageEs: HomePageData = {
     quizCard: {
       href: "/es/quiz-vacaciones-en-quios/",
       icon: "🧭",
-      liveLabel: "Código descuento live",
+      liveLabel: "Código de descuento en directo",
       title: "Descubre Chios",
       text: "Explora los secretos de la isla y recibe un código para tu estancia.",
       cta: "Empezar →",
@@ -2646,7 +2646,7 @@ export const homePageEs: HomePageData = {
           text: "Ambiente tranquilo, jardín y el carácter auténtico de Kambos.",
         },
         {
-          title: "🧭 Room Wizard",
+          title: "🧭 Encuentra tu habitación",
           text: "Un asistente práctico para encontrar la habitación ideal para tu viaje.",
         },
         {
@@ -2695,7 +2695,7 @@ export const homePageEs: HomePageData = {
       },
     },
     discount: {
-      badge: "Oferta live • Recibe tu código",
+      badge: "Oferta directa • Recibe tu código",
       title: "Reserva directamente con nosotros",
       text: "Recibe un código de descuento y reserva directamente, sin comisiones.",
       benefits: [
@@ -2727,7 +2727,7 @@ export const homePageEs: HomePageData = {
     title: "Habitaciones en Chios para parejas y familias",
     text: "Nuestras habitaciones se limpian cada día y están pensadas para una estancia cómoda, tranquila y cuidada en Kambos, Chios.",
     primaryCta: {
-      label: "Room Wizard",
+      label: "Encuentra tu habitación",
       href: "/es/habitaciones-en-chios/",
       icon: "✨",
     },
@@ -2747,6 +2747,7 @@ export const homePageEs: HomePageData = {
         title: "Habitación doble económica",
         href: "/es/habitaciones-en-chios/economicas-habitaciones-en-chios/",
         directBadge: "🎁 -10% Descuento",
+        liveBadge: "EN DIRECTO",
         bedBadge: "🛏️ 1 cama doble o 2 camas individuales",
         description:
           "Ideal para dos personas que desean una estancia cuidada en Kambos.",
@@ -2759,6 +2760,7 @@ export const homePageEs: HomePageData = {
         title: "Habitaciones en planta baja",
         href: "/es/habitaciones-en-chios/habitaciones-dobles-estandar/",
         directBadge: "🎁 -10% Descuento",
+        liveBadge: "EN DIRECTO",
         bedBadge: "🛏️ Doble + cama extra",
         description:
           "Una opción cómoda para parejas o familias pequeñas, con acceso fácil.",
@@ -2771,6 +2773,7 @@ export const homePageEs: HomePageData = {
         title: "Habitaciones en planta superior",
         href: "/es/habitaciones-en-chios/habitaciones-dobles-estandar/",
         directBadge: "🎁 -10% Descuento",
+        liveBadge: "EN DIRECTO",
         bedBadge: "🛏️ Doble + cama extra",
         description:
           "Para viajeros que buscan un ambiente más tranquilo y clásico.",
@@ -2783,10 +2786,11 @@ export const homePageEs: HomePageData = {
         title: "Apartamento familiar",
         href: "/es/habitaciones-en-chios/apartamentos-familiares-en-chios/",
         directBadge: "🎁 -10% Descuento",
+        liveBadge: "EN DIRECTO",
         bedBadge: "🛏️ Camas familiares",
         description:
           "Ideal para familias o grupos pequeños que desean más espacio.",
-        meta: ["👤 ×4", "Espacio", "🏡 Apt"],
+        meta: ["👤 ×4", "Espacio", "🏡 Apartamento"],
         amenities: ["❄️ A/C", "📶 Wi-Fi", "☕ Café", "🧊 Nevera"],
         cta: "Ver apartamento",
       },
@@ -2805,7 +2809,7 @@ export const homePageEs: HomePageData = {
         "Encuentra habitaciones o apartamentos disponibles con reserva directa, sin comisiones. Elige el número de huéspedes y envía tu solicitud por WhatsApp o Viber.",
       trustLine:
         "🎁 Reserva directa sin comisiones – mejor tarifa disponible",
-      timerLabel: "Los precios last minute se actualizan en:",
+      timerLabel: "Los precios de última hora se actualizan en:",
       guestTitle: "1. Elige el número de huéspedes",
       guestText:
         "Cuando selecciones el número de personas, aparecerán las ofertas disponibles.",
