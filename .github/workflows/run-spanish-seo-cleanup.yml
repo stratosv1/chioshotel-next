@@ -1,0 +1,55 @@
+name: Run Spanish SEO cleanup
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/run-spanish-seo-cleanup.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch-verify-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Spanish cleanup branch
+        uses: actions/checkout@v4
+        with:
+          ref: fix/spanish-seo-language-signals
+          fetch-depth: 0
+
+      - name: Apply audited Spanish fixes
+        run: python3 scripts/apply-spanish-seo-cleanup.py
+
+      - name: Diff check
+        run: git diff --check
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: GSC routing QA
+        run: npm run qa:gsc
+
+      - name: SEO intent QA
+        run: npm run qa:seo
+
+      - name: Production build
+        run: npm run build
+
+      - name: Commit verified Spanish changes
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          rm -f .es-cleanup-trigger scripts/apply-spanish-seo-cleanup.py .github/workflows/apply-spanish-seo-cleanup.yml
+          git add -A
+          git status --short
+          git commit -m "Fix Spanish SEO and language signals"
+          git push origin HEAD:fix/spanish-seo-language-signals
