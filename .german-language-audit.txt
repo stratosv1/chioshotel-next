@@ -1,0 +1,96 @@
+
+ROOM ROUTE PARITY AUDIT
+=======================
+
+rooms-index
+Languages: de, el, en, es, fr, it, tr
+  ✅ en: /chios-rooms/
+  ✅ el: /el/domatia-xios/
+  ✅ fr: /fr/chambres-a-chios/
+  ✅ de: /de/chios-zimmer/
+  ✅ it: /it/camere-a-chios/
+  ✅ es: /es/habitaciones-en-chios/
+  ✅ tr: /tr/sakiz-adasi-odalari/
+
+economy-double
+Languages: de, el, en, es, fr, it, tr
+  ✅ en: /chios-rooms/economy-double-rooms/
+  ✅ el: /el/domatia-xios/oikonomiko-diklino-domatio/
+  ✅ fr: /fr/chambres-a-chios/chambres-doubles-economiques/
+  ✅ de: /de/zimmer-chios/economy-zimmer-auf-chios/
+  ✅ it: /it/stanze-a-chios/camera-doppia-economica-chios/
+  ✅ es: /es/habitaciones-en-chios/economicas-habitaciones-en-chios/
+  ✅ tr: /tr/chios-odalari/sakiz-adasindaki-ekonomi-cift-kisilik-oda/
+
+standard-double
+Languages: de, el, en, es, fr, it, tr
+  ✅ en: /chios-rooms/standard-double-room/
+  ✅ el: /el/domatia-xios/diklina-triklina-domatia/
+  ✅ fr: /fr/chambres-a-chios/chambres-doubles-standard/
+  ✅ de: /de/zimmer-chios/standard-doppelzimmer-auf-chios/
+  ✅ it: /it/stanze-a-chios/camere-doppie-standard-chios/
+  ✅ es: /es/habitaciones-en-chios/habitaciones-dobles-estandar/
+  ✅ tr: /tr/chios-odalari/standart-cift-kisilik-odalar/
+
+family-apartment
+Languages: de, el, en, es, fr, it, tr
+  ✅ en: /chios-rooms/family-chios-apartments/
+  ✅ el: /el/domatia-xios/oikogeneiako-diamerisma/
+  ✅ fr: /fr/chambres-a-chios/appartements-familiaux-de-chios/
+  ✅ de: /de/zimmer-chios/familienapartments-in-chios/
+  ✅ it: /it/stanze-a-chios/appartamenti-familiari-a-chios/
+  ✅ es: /es/habitaciones-en-chios/apartamentos-familiares-en-chios/
+  ✅ tr: /tr/chios-odalari/sakiz-adasinda-buyuk-aile-daireleri/
+
+ENGLISH ROOM DETAIL CSS AUDIT
+=============================
+
+app/chios-rooms/standard-double-room/layout.tsx
+  room-detail.css: ❌
+  room-detail-cards.css: ❌
+  room-detail-floor-groups.css: ❌
+
+app/chios-rooms/economy-double-rooms/layout.tsx
+  room-detail.css: ❌
+  room-detail-cards.css: ❌
+  room-detail-floor-groups.css: ❌
+
+app/chios-rooms/family-chios-apartments/layout.tsx
+  room-detail.css: ❌
+  room-detail-cards.css: ❌
+  room-detail-floor-groups.css: ➖ not needed
+
+ROOM DETAIL EXPORT AUDIT
+========================
+
+standardDouble
+  ✅ standardDoubleRoomEn
+  ✅ standardDoubleRoomEl
+  ✅ standardDoubleRoomFr
+  ✅ standardDoubleRoomDe
+  ✅ standardDoubleRoomIt
+  ✅ standardDoubleRoomEs
+  ✅ standardDoubleRoomTr
+
+economyDouble
+  ✅ economyDoubleRoomsEn
+  ✅ economyDoubleRoomsEl
+  ✅ economyDoubleRoomsFr
+  ✅ economyDoubleRoomsDe
+  ✅ economyDoubleRoomsIt
+  ✅ economyDoubleRoomsEs
+  ✅ economyDoubleRoomsTr
+
+familyApartment
+  ✅ familyChiosApartments
+  ✅ familyChiosApartmentsEl
+  ✅ familyChiosApartmentsFr
+  ✅ familyChiosApartmentsDe
+  ✅ familyChiosApartmentsIt
+  ✅ familyChiosApartmentsEs
+  ✅ familyChiosApartmentsTr
+
+RESULT
+======
+❌ Audit found real mismatches.
+exit_code=1
