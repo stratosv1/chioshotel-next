@@ -1,5 +1,12 @@
-Traceback (most recent call last):
-  File "/home/runner/work/chioshotel-next/chioshotel-next/scripts/apply-italian-seo-cleanup.py", line 280, in <module>
-    raise RuntimeError("RoomWizardTailwind: swipe label missing")
-RuntimeError: RoomWizardTailwind: swipe label missing
-exit_code=1
+updated components/rooms/RoomWizardTailwind.tsx
+updated content/room-detail-schema.ts
+updated content/room-detail-schema.ts descriptions
+updated section in content/home.ts
+updated components/VoulamandisFooterTailwind.tsx
+updated components/rooms/RoomsCategoryPage.tsx
+updated section in content/rooms.ts
+updated components/rooms/RoomDetailPage.tsx
+updated components/contact/ContactPage.tsx
+updated section in content/family-travel.ts
+Italian SEO/language cleanup patch completed successfully
+exit_code=0
