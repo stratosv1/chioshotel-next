@@ -1,11 +1,9 @@
 name: Apply Turkish Sitelinks Cleanup
 
 on:
-  push:
+  pull_request:
     branches:
-      - fix/turkish-sitelinks-signals
-    paths:
-      - .github/workflows/apply-turkish-sitelinks-cleanup.yml
+      - main
 
 permissions:
   contents: write
@@ -32,7 +30,6 @@ jobs:
                   raise SystemExit(f"Expected text not found in {path}: {old[:100]!r}")
               p.write_text(text.replace(old, new, 1), encoding="utf-8")
 
-          # Visible room-detail language signals.
           detail = "components/rooms/RoomDetailPage.tsx"
           replace_once(detail,
               'Kitchenette: { el: "Μικρή κουζίνα", fr: "Kitchenette", de: "Kitchenette", it: "Angolo cottura", es: "Kitchenette", tr: "Kitchenette" },',
@@ -54,25 +51,21 @@ jobs:
   "Stone bathroom details": { tr: "Taş banyo detayları" },
   "Spacious layout": { tr: "Geniş yerleşim" },
   "Traditional details": { tr: "Geleneksel detaylar" },
+  "Bu kategori doğrudan bahçe erişimli zemin kat odalar ve teras hissi veren birinci kat odaları içerir. Bazı birinci kat odalarda kitchenette de bulunur.": { tr: "Bu kategori doğrudan bahçe erişimli zemin kat odalar ve teras hissi veren üst kat odaları içerir. Bazı üst kat odalarda mini mutfak da bulunur." },
+  "Economy kategorisine göre daha fazla konfor isteyen çiftler.": { tr: "Ekonomik kategoriye göre daha fazla konfor isteyen çiftler." },
+  "Bazı birinci kat odalarda kitchenette bulunabilir. Tam mutfağa ihtiyacınız varsa aile apartları genellikle daha iyi seçimdir.": { tr: "Bazı üst kat odalarda mini mutfak bulunabilir. Tam mutfağa ihtiyacınız varsa aile daireleri genellikle daha iyi seçimdir." },
 '''
           replace_once(detail, caption_anchor, caption_anchor + caption_rows)
+          replace_once(detail,
+              '{data.individualRooms.description}',
+              '{localizeRoomText(data.individualRooms.description, language)}')
+          replace_once(detail,
+              '{data.bestFor.items.map((item) => <div className="rounded-2xl bg-amber-50/50 p-3 text-sm leading-6 text-[#574b3f] ring-1 ring-amber-900/10" key={item}><span className="mr-2 font-black text-emerald-700">✓</span>{item}</div>)}',
+              '{data.bestFor.items.map((item) => <div className="rounded-2xl bg-amber-50/50 p-3 text-sm leading-6 text-[#574b3f] ring-1 ring-amber-900/10" key={item}><span className="mr-2 font-black text-emerald-700">✓</span>{localizeRoomText(item, language)}</div>)}')
+          replace_once(detail,
+              '<p className="mt-3 text-sm leading-7 text-[#574b3f]">{item.answer}</p>',
+              '<p className="mt-3 text-sm leading-7 text-[#574b3f]">{localizeRoomText(item.answer, language)}</p>')
 
-          # Turkish room page copy inherited from English.
-          room_details = "content/room-details.ts"
-          replace_once(room_details,
-              '{ icon: "🍽️", label: "Kitchenette", text: "Bazı birinci kat odalarda mevcuttur." },',
-              '{ icon: "🍽️", label: "Mini mutfak", text: "Bazı üst kat odalarda mevcuttur." },')
-          replace_once(room_details,
-              '"Bu kategori doğrudan bahçe erişimli zemin kat odalar ve teras hissi veren birinci kat odaları içerir. Bazı birinci kat odalarda kitchenette de bulunur."',
-              '"Bu kategori doğrudan bahçe erişimli zemin kat odalar ve teras hissi veren üst kat odaları içerir. Bazı üst kat odalarda mini mutfak da bulunur."')
-          replace_once(room_details,
-              '"Economy kategorisine göre daha fazla konfor isteyen çiftler."',
-              '"Ekonomik kategoriye göre daha fazla konfor isteyen çiftler."')
-          replace_once(room_details,
-              '"Bazı birinci kat odalarda kitchenette bulunabilir. Tam mutfağa ihtiyacınız varsa aile apartları genellikle daha iyi seçimdir."',
-              '"Bazı üst kat odalarda mini mutfak bulunabilir. Tam mutfağa ihtiyacınız varsa aile daireleri genellikle daha iyi seçimdir."')
-
-          # Structured data: correct Turkish breadcrumb and localize inherited room descriptions.
           schema = "content/room-detail-schema.ts"
           replace_once(schema,
               'roomsBreadcrumbPath: "/tr/chios-odalari/",',
@@ -109,7 +102,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add components/rooms/RoomDetailPage.tsx content/room-details.ts content/room-detail-schema.ts
+          git add components/rooms/RoomDetailPage.tsx content/room-detail-schema.ts
           if git diff --cached --quiet; then
             echo "No cleanup changes to commit."
             exit 0
