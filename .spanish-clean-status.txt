@@ -1,0 +1,394 @@
+From https://github.com/stratosv1/chioshotel-next
+ * branch            fix/spanish-seo-language-signals -> FETCH_HEAD
+fetch=0
+copy=0
+diffcheck=0
+changed files:
+
+added 71 packages, and audited 72 packages in 10s
+
+15 packages are looking for funding
+  run `npm fund` for details
+
+4 high severity vulnerabilities
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+npm_ci=0
+
+> qa:gsc
+> node scripts/qa-gsc-index-routing.cjs
+
+GSC routing audit passed.
+qa_gsc=0
+
+> qa:seo
+> node scripts/qa-seo-intent-architecture.cjs
+
+SEO architecture QA passed: audits #1–#9, owner guardrails, sitemap and LodgingBusiness schema are in place.
+qa_seo=0
+
+> build
+> node scripts/prepare-build.cjs && node scripts/qa-gsc-index-routing.cjs && node scripts/qa-seo-intent-architecture.cjs && next build
+
+Preparing production build with 24 legacy patches…
+No change needed for LastMinuteDeals.
+No change needed for FindYourRoomEngine.
+Fixed village category card size type.
+Applied mobile-first pre-arrival layout compression.
+Added Search Console Turkish legacy redirects.
+✓ disable-last-minute-room-extras.cjs (31ms)
+Inserted 39 long-title SEO overrides.
+✓ patch-long-seo-titles.cjs (26ms)
+patch-ai-gmail-email: dedicated SMTP email flow detected, no change needed
+✓ patch-ai-gmail-email.cjs (25ms)
+enable-smart-ai-concierge: already enabled
+✓ enable-smart-ai-concierge.cjs (24ms)
+AI availability flow patched
+✓ fix-ai-availability-flow.cjs (25ms)
+AI live offer presentation patched
+✓ patch-ai-live-offer-presentation.cjs (24ms)
+Find Your Room galleries applied to AI offers
+✓ patch-ai-find-your-room-galleries.cjs (26ms)
+AI room UI patched
+✓ patch-ai-room-ui.cjs (27ms)
+patch-ai-request-live-verification: standard and split verification already enabled
+✓ patch-ai-request-live-verification.cjs (24ms)
+AI Gmail fallback patched
+✓ patch-ai-gmail-fallback.cjs (26ms)
+safe fallback backend patched
+✓ patch-ai-safe-fallback-backend.cjs (26ms)
+safe fallback frontend patched
+✓ patch-ai-safe-fallback-frontend.cjs (25ms)
+AI date order validation patched
+✓ patch-ai-date-order-validation.cjs (27ms)
+AI language chooser and Live Deals styled carousel applied
+✓ patch-ai-language-and-desktop-carousel.cjs (25ms)
+AI availability response now bypasses the second OpenAI call
+✓ patch-ai-fast-availability-response.cjs (24ms)
+Applied human AI conversation guidance
+✓ patch-ai-human-conversation.cjs (23ms)
+Enabled personalized AI room recommendations
+✓ patch-ai-personalized-recommendations.cjs (26ms)
+Applied AI recommendation types, URL language and recommendation labels
+✓ patch-ai-url-language-and-recommendation-labels.cjs (27ms)
+Applied language, recommendation and ordering logic to active AI assistant
+✓ patch-active-ai-assistant-logic.cjs (26ms)
+Updated: components/ai/ConversationalRoomSalesEnhanced.tsx
+Updated: app/api/ai-assistant/route.ts
+✓ patch-ai-natural-sales-tone.cjs (27ms)
+AI room detail patched and validated: natural mobile height, inline CTA, intrinsic photo, prominent savings and spread thumbnails
+✓ patch-ai-room-detail-thumbnail-row.cjs (26ms)
+AI room detail parser fixed for localized apartment names (3 parser occurrence(s))
+✓ fix-ai-localized-apartment-detail-parser.cjs (26ms)
+AI Room Finder presentation fixed: natural mobile height, inline CTA, intrinsic uncropped photo, prominent savings and full-width thumbnails
+✓ fix-ai-room-finder-final-presentation.cjs (26ms)
+AI mobile chat patched: visual viewport shell, internal message scroller, persistent keyboard focus
+✓ patch-ai-mobile-composer-focus.cjs (26ms)
+
+Patch timing summary:
+     31ms  disable-last-minute-room-extras.cjs
+     27ms  patch-ai-room-ui.cjs
+     27ms  patch-ai-date-order-validation.cjs
+     27ms  patch-ai-url-language-and-recommendation-labels.cjs
+     27ms  patch-ai-natural-sales-tone.cjs
+
+Build preparation completed in 618ms.
+GSC routing audit passed.
+SEO architecture QA passed: audits #1–#9, owner guardrails, sitemap and LodgingBusiness schema are in place.
+⚠ No build cache found. Please configure build caching for faster rebuilds. Read more: https://nextjs.org/docs/messages/no-cache
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+▲ Next.js 16.2.6 (Turbopack)
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 13.3s
+  Running TypeScript ...
+  Finished TypeScript in 12.1s ...
+  Collecting page data using 3 workers ...
+  Generating static pages using 3 workers (0/515) ...
+  Generating static pages using 3 workers (128/515) 
+  Generating static pages using 3 workers (257/515) 
+  Generating static pages using 3 workers (386/515) 
+✓ Generating static pages using 3 workers (515/515) in 2.8s
+  Finalizing page optimization ...
+
+Route (app)                                                      Revalidate  Expire
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /[locale]
+├ ƒ /[locale]/[...slug]
+├ ƒ /[locale]/comments/feed
+├ ƒ /[locale]/cookie-policy
+├ ƒ /[locale]/feed
+├ ƒ /[locale]/pre-arrival
+├ ƒ /[locale]/privacy-policy
+├ ƒ /[locale]/tag/[[...slug]]
+├ ƒ /[locale]/topics/[[...slug]]
+├ ƒ /[locale]/welcome
+├ ƒ /ai-assistant
+├ ƒ /api/ai-assistant
+├ ƒ /api/ai-assistant/interpret
+├ ƒ /api/ai-assistant/knowledge
+├ ƒ /api/ai-assistant/no-availability-request
+├ ƒ /api/ai-assistant/request
+├ ƒ /api/ai-assistant/request-email
+├ ƒ /api/ai-assistant/room-catalog
+├ ƒ /api/ai-assistant/smart
+├ ƒ /api/ai-assistant/summary-email
+├ ƒ /api/beds24/booking
+├ ƒ /api/booking/search-range
+├ ƒ /api/booking/split-stay
+├ ƒ /api/contact
+├ ƒ /api/cron/booking-cache-refresh
+├ ƒ /api/cron/housekeeping-daily-arrivals-sms
+├ ○ /api/deals                                                          30m      1y
+├ ƒ /api/seo/gsc/report
+├ ƒ /api/seo/gsc/seasonal-sync
+├ ƒ /api/seo/gsc/sync
+├ ƒ /api/staff/booker
+├ ƒ /api/staff/calendar
+├ ƒ /api/staff/calendar/bookings-cron
+├ ƒ /api/staff/calendar/communications
+├ ƒ /api/staff/calendar/occupancy-sync
+├ ƒ /api/staff/calendar/send-sms
+├ ƒ /api/staff/calendar/sheet-sync
+├ ƒ /api/staff/calendar/sync
+├ ƒ /api/staff/expenses
+├ ƒ /api/staff/housekeeping/daily-arrivals-sms
+├ ƒ /api/staff/operations/summary
+├ ƒ /api/staff/payroll
+├ ƒ /api/staff/statistics
+├ ƒ /api/staff/statistics/import
+├ ƒ /beaches-near-voulamandis-house
+├ ƒ /best-beaches-in-chios
+├ ƒ /best-chios-travel-deals-for-chios-hotels
+├ ƒ /book-the-room-you-like
+├ ƒ /cdn-cgi/l/email-protection
+├ ƒ /chios-accommodation
+├ ƒ /chios-activities
+├ ƒ /chios-beach-lovers
+├ ƒ /chios-explorer
+├ ƒ /chios-family-beaches
+├ ƒ /chios-festival-mostra
+├ ƒ /chios-hiking
+├ ƒ /chios-holidays-quiz
+├ ƒ /chios-hotels
+├ ƒ /chios-hotels-rates
+├ ƒ /chios-island
+├ ƒ /chios-mastic-villages
+├ ƒ /chios-medieval-villages
+├ ƒ /chios-orchids
+├ ƒ /chios-organized-beaches
+├ ƒ /chios-quiet-beaches
+├ ƒ /chios-rooms
+├ ƒ /chios-rooms/economy-double-rooms
+├ ƒ /chios-rooms/family-chios-apartments
+├ ƒ /chios-rooms/feed
+├ ƒ /chios-rooms/first-floor-rooms
+├ ƒ /chios-rooms/standard-double-room
+├ ƒ /chios-rooms/voulamandis-house-hios
+├ ƒ /chios-sandy-beaches
+├ ƒ /chios-seaside-villages
+├ ƒ /chios-sheltered-beaches
+├ ƒ /chios-thermal-baths
+├ ƒ /chios/chios-beaches
+├ ƒ /chios/chios-beaches/[slug]
+├ ƒ /chios/chios-kambos
+├ ƒ /chios/chios-mastic
+├ ƒ /chios/chios-museums
+├ ƒ /chios/chios-museums/[slug]
+├ ƒ /chios/chios-villages
+├ ƒ /chios/chios-villages/[slug]
+├ ƒ /chios/kampos-chios
+├ ƒ /cookie-policy
+├ ƒ /de/beste-reiseangebote-fur-chios-hotels-auf-chios
+├ ƒ /de/chios-insel/παραλίες-χίος/agia-dynami-strand
+├ ƒ /de/chios-straende-fuer-kinder
+├ ƒ /de/chios-unterkunft
+├ ƒ /de/chios-urlaubsquiz
+├ ƒ /de/chios/kampos-chios
+├ ƒ /de/familienurlaub-auf-chios
+├ ƒ /de/geschuetzte-straende-chios
+├ ƒ /de/hotels-auf-chios
+├ ƒ /de/kuestendoerfer-chios
+├ ƒ /de/mastixdoerfer-chios
+├ ƒ /de/mittelalterliche-doerfer-chios
+├ ƒ /de/organisierte-straende-chios
+├ ƒ /de/romantischer-aufenthalt-auf-chios
+├ ƒ /de/ruhige-straende-chios
+├ ƒ /de/sandstraende-chios
+├ ƒ /de/straende-nahe-voulamandis-house
+├ ƒ /de/uncategorized-de/economy-zimmer-auf-chios
+├ ƒ /de/uncategorized-de/familienapartments-in-chios
+├ ƒ /de/uncategorized-de/standard-doppelzimmer-auf-chios
+├ ƒ /de/wie-gut-kennst-du-chios-mach-das-insider-quiz
+├ ƒ /de/zimmer-chios/economy-zimmer-auf-chios
+├ ƒ /de/zimmer-chios/familienapartments-in-chios
+├ ƒ /el/apanemes-paralies-xios
+├ ƒ /el/apantemes-paralies-xios
+├ ƒ /el/chios-el/chios-mastic-2
+├ ƒ /el/chios/kampos-chios
+├ ƒ /el/crazy-travel-deals-for-chios-hotels
+├ ƒ /el/diakopes-sti-chio-quiz
+├ ƒ /el/diamoni-sti-xio
+├ ƒ /el/domatia-xios/oikogeneiako-diamerisma
+├ ƒ /el/domatia-xios/oikonomiko-diklino-domatio
+├ ƒ /el/isixes-paralies-xios
+├ ƒ /el/kontines-paralies-voulamandis-house
+├ ƒ /el/mastichochoria-xios
+├ ƒ /el/mesaionika-xoria-xios
+├ ƒ /el/oikogeneiakes-diakopes-sti-xio
+├ ƒ /el/organomenes-paralies-xios
+├ ƒ /el/paralies-me-ammo-xios
+├ ƒ /el/paralies-xios
+├ ƒ /el/paralies-xios-gia-paidia
+├ ƒ /el/parathalassia-xoria-xios
+├ ƒ /el/romantiki-diamoni-sti-xio
+├ ƒ /el/xenodoxeia-xios
+├ ƒ /el/xoria-xios/mesta-xios
+├ ƒ /elementor-landing-page-4251/[[...slug]]
+├ ƒ /erotisis-voulamandis-house-2
+├ ƒ /es/alojamiento-chios
+├ ƒ /es/chios/kampos-chios
+├ ƒ /es/descubre-los-secretos-de-quios
+├ ƒ /es/estancia-romantica-quios
+├ ƒ /es/habitaciones-en-chios/-2
+├ ƒ /es/habitaciones-en-chios/apartamentos-familiares-en-chios
+├ ƒ /es/habitaciones-en-chios/economicas-habitaciones-en-chios
+├ ƒ /es/hoteles-chios
+├ ƒ /es/mejores-ofertas-de-viaje-a-quios-para-hoteles-en-quios
+├ ƒ /es/playas-cerca-voulamandis-house
+├ ƒ /es/playas-de-arena-quios
+├ ƒ /es/playas-de-quios-para-ninos
+├ ƒ /es/playas-organizadas-quios
+├ ƒ /es/playas-resguardadas-quios
+├ ƒ /es/playas-tranquilas-quios
+├ ƒ /es/pueblos-costeros-quios
+├ ƒ /es/pueblos-del-mastiha-quios
+├ ƒ /es/pueblos-medievales-quios
+├ ƒ /es/quiz-vacaciones-en-quios
+├ ƒ /es/vacaciones-en-familia-en-quios
+├ ƒ /family-travel-in-chios
+├ ƒ /find-your-room
+├ ƒ /fr/chambres-a-chios/appartements-familiaux-de-chios
+├ ƒ /fr/chambres-a-chios/chambres-doubles-economiques
+├ ƒ /fr/chios/kampos-chios
+├ ƒ /fr/hebergement-chios
+├ ƒ /fr/hotels-chios
+├ ƒ /fr/offres-de-voyage-pour-les-hotels-a-chios
+├ ƒ /fr/plages-abritees-chios
+├ ƒ /fr/plages-calmes-chios
+├ ƒ /fr/plages-de-chios-pour-enfants
+├ ƒ /fr/plages-de-sable-chios
+├ ƒ /fr/plages-organisees-chios
+├ ƒ /fr/plages-proches-voulamandis-house
+├ ƒ /fr/quiz-vacances-a-chios
+├ ƒ /fr/sejour-romantique-chios
+├ ƒ /fr/sperienza-per-amanti-del-gusto-a-chio
+├ ƒ /fr/vacances-en-famille-a-chios
+├ ƒ /fr/villages-du-mastic-chios
+├ ƒ /fr/villages-en-bord-de-mer-chios
+├ ƒ /fr/villages-medievaux-chios
+├ ƒ /gr
+├ ƒ /greek-language-courses-chios
+├ ƒ /index.aspx
+├ ƒ /it/alloggio-chios
+├ ƒ /it/camere-a-chios/-2
+├ ƒ /it/chios-it/chios-villages-it/lagada-chios
+├ ƒ /it/chios/kampos-chios
+├ ƒ /it/hotel-chios
+├ ƒ /it/offerte-di-viaggio-hotels-chios
+├ ƒ /it/quiz-vacanze-a-chios
+├ ƒ /it/soggiorno-romantico-chios
+├ ƒ /it/spiagge-attrezzate-chios
+├ ƒ /it/spiagge-chios-per-bambini
+├ ƒ /it/spiagge-di-sabbia-chios
+├ ƒ /it/spiagge-riparate-chios
+├ ƒ /it/spiagge-tranquille-chios
+├ ƒ /it/spiagge-vicine-voulamandis-house
+├ ƒ /it/stanze-a-chios/appartamenti-familiari-a-chios
+├ ƒ /it/stanze-a-chios/camera-doppia-economica-chios
+├ ƒ /it/vacanze-in-famiglia-a-chios
+├ ƒ /it/villaggi-del-mastice-chios
+├ ƒ /it/villaggi-medievali-chios
+├ ƒ /it/villaggi-sul-mare-chios
+├ ƒ /language/[[...slug]]
+├ ƒ /language/en/chios/chios-museums/chios-mastic-museum
+├ ƒ /nl
+├ ƒ /pl
+├ ƒ /pl/apartamenty-na-chios
+├ ƒ /pl/hotele-chios
+├ ƒ /pl/kambos-chios
+├ ƒ /pl/noclegi-chios
+├ ƒ /pl/pokoje-na-chios
+├ ƒ /pl/pokoje-na-chios/pokoj-dwuosobowy-economy
+├ ƒ /pl/pokoje-na-chios/pokoje-standardowe
+├ ƒ /pl/rezerwacja
+├ ƒ /pre-arrival
+├ ƒ /privacy-policy
+├ ○ /robots.txt
+├ ƒ /rocket-war-chios
+├ ƒ /romantic-stay-in-chios
+├ ○ /sitemap.xml
+├ ƒ /staff
+├ ƒ /staff/booker
+├ ƒ /staff/calendar
+├ ƒ /staff/expenses
+├ ƒ /staff/operations
+├ ƒ /staff/payroll
+├ ƒ /staff/seo
+├ ƒ /staff/statistics
+├ ƒ /tag/[[...slug]]
+├ ƒ /taste-lover-chios
+├ ƒ /topics/[[...slug]]
+├ ƒ /tr/chios-gastronomi-deneyimi
+├ ƒ /tr/chios-odalari/armolia-koyu-chios
+├ ƒ /tr/chios-odalari/lagada-koyu-chios
+├ ƒ /tr/chios-odalari/mesta-koyu-chios
+├ ƒ /tr/chios-odalari/sakiz-adasinda-buyuk-aile-daireleri
+├ ƒ /tr/chios-odalari/sakiz-adasindaki-ekonomi-cift-kisilik-oda
+├ ƒ /tr/chios-odalari/sakiz-adasinin-plajlari
+├ ƒ /tr/chios-odalari/vessa-koyu-chios
+├ ƒ /tr/chios/kampos-chios
+├ ƒ /tr/cocuklar-icin-sakiz-adasi-plajlari
+├ ƒ /tr/faq-tr-voulamandis
+├ ƒ /tr/pre-arrival-tr
+├ ƒ /tr/sakiz-adasi-aile-tatili
+├ ƒ /tr/sakiz-adasi-duzenli-plajlar
+├ ƒ /tr/sakiz-adasi-en-iyi-plajlar
+├ ƒ /tr/sakiz-adasi-gezi-rehberi
+├ ƒ /tr/sakiz-adasi-konaklama
+├ ƒ /tr/sakiz-adasi-korunakli-plajlar
+├ ƒ /tr/sakiz-adasi-kumlu-plajlar
+├ ƒ /tr/sakiz-adasi-mastik-koyleri
+├ ƒ /tr/sakiz-adasi-orta-cag-koyleri
+├ ƒ /tr/sakiz-adasi-otel-firsatlari
+├ ƒ /tr/sakiz-adasi-otelleri
+├ ƒ /tr/sakiz-adasi-romantik-konaklama
+├ ƒ /tr/sakiz-adasi-sahil-koyleri
+├ ƒ /tr/sakiz-adasi-sakin-plajlar
+├ ƒ /tr/sakiz-adasi-tatil-testi
+├ ƒ /tr/voulamandis-house-yakin-plajlar
+├ ƒ /voulamandis-house-contact-us-form-fill-in-the-form
+├ ƒ /welcome
+├ ƒ /wp-admin/[[...slug]]
+├ ƒ /wp-content/[[...slug]]
+├ ƒ /wp-includes/[[...slug]]
+├ ƒ /wp-json/[[...slug]]
+├ ƒ /wp-login.php
+├ ƒ /wp-sitemap.xml
+└ ƒ /xmlrpc.php
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+build=0
