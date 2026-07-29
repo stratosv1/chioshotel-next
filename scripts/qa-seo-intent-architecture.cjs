@@ -98,6 +98,22 @@ expect(
 );
 
 expectAll(
+  "lib/homepage-seo-intent.ts",
+  [
+    'href="/el/domatia-xios/"',
+    'href="/el/chios/kampos-chios/"',
+    'href="/el/xenodoxeia-xios/"',
+  ],
+  "Greek homepage must keep its intent-owner links",
+);
+
+expect(
+  "components/home/HomePageTailwindV3.tsx",
+  'href: "/el/diamoni-sti-xio/"',
+  "Greek homepage must link to the accommodation intent owner",
+);
+
+expectAll(
   "lib/greek-home-seo-hardening.ts",
   [
     "Καλή σχέση ποιότητας–τιμής",
