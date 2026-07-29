@@ -1,5 +1,2 @@
-Traceback (most recent call last):
-  File "/home/runner/work/chioshotel-next/chioshotel-next/scripts/apply-spanish-seo-cleanup.py", line 294, in <module>
-    raise RuntimeError(f"familyTravel ES: missing {old}")
-RuntimeError: familyTravel ES: missing image: familyTravelImages.hero,
-exit_code=1
+Spanish SEO/language cleanup patch completed successfully
+exit_code=0
