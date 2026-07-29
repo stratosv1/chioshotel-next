@@ -1,0 +1,56 @@
+name: French SEO cleanup
+
+on:
+  push:
+    branches: [fix/french-seo-language-signals]
+    paths:
+      - .french-cleanup-trigger
+
+permissions:
+  contents: write
+
+jobs:
+  patch-test-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: fix/french-seo-language-signals
+          fetch-depth: 0
+
+      - name: Apply French cleanup patch
+        run: python3 scripts/french-cleanup.py
+
+      - name: Diff check
+        run: git diff --check
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: GSC routing QA
+        run: npm run qa:gsc
+
+      - name: SEO intent QA
+        run: npm run qa:seo
+
+      - name: Production build
+        run: npm run build
+
+      - name: Remove temporary tooling and commit verified changes
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          rm -f .french-cleanup-trigger scripts/french-cleanup.py
+          git rm -f .github/workflows/french-cleanup-runner.yml
+          git add -A
+          git status --short
+          git commit -m "Fix French SEO and language signals"
+          git push origin HEAD:fix/french-seo-language-signals
