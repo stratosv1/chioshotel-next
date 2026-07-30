@@ -1,6 +1,10 @@
 import { neon } from "@neondatabase/serverless";
 
 const DEFAULT_SITE = "sc-domain:chioshotel.gr";
+const ANALYSIS_ANCHOR = "2026-07-30";
+const ANALYSIS_INTERVAL_DAYS = 3;
+const ANALYSIS_HOUR_ATHENS = 10;
+const ATHENS_TZ = "Europe/Athens";
 
 export type SeoAdvisorSnapshot = {
   analysisDate: string;
@@ -24,6 +28,33 @@ function getSql() {
   const databaseUrl = process.env.DATABASE_URL;
   if (!databaseUrl) throw new Error("DATABASE_URL is not configured.");
   return neon(databaseUrl);
+}
+
+function athensScheduleState(date: Date) {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: ATHENS_TZ,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(date);
+  const get = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((part) => part.type === type)?.value || "";
+  return {
+    dateKey: `${get("year")}-${get("month")}-${get("day")}`,
+    hour: Number(get("hour") || 0),
+  };
+}
+
+function utcDayNumber(dateKey: string) {
+  const [year, month, day] = dateKey.split("-").map(Number);
+  return Math.floor(Date.UTC(year, month - 1, day) / 86_400_000);
+}
+
+function isScheduledAnalysisDate(dateKey: string) {
+  const delta = utcDayNumber(dateKey) - utcDayNumber(ANALYSIS_ANCHOR);
+  return delta >= 0 && delta % ANALYSIS_INTERVAL_DAYS === 0;
 }
 
 async function ensureSeoAdvisorSnapshotTable() {
@@ -146,6 +177,24 @@ export async function getLatestSeoAdvisorSnapshot(
     limit 1
   `;
   const row = (rows as any[])?.[0];
+
+  const schedule = athensScheduleState(new Date());
+  const missedScheduledRun =
+    schedule.hour >= ANALYSIS_HOUR_ATHENS &&
+    isScheduledAnalysisDate(schedule.dateKey) &&
+    (!row || String(row.analysis_date) !== schedule.dateKey);
+
+  if (missedScheduledRun) {
+    console.info("[gsc-analysis] advisor self-heal", {
+      today: schedule.dateKey,
+      previousAnalysisDate: row?.analysis_date ? String(row.analysis_date) : null,
+    });
+    const { getSeoAdvisorWithIntentData } = await import("./advisor-intents");
+    const payload = await getSeoAdvisorWithIntentData();
+    const saved = await saveSeoAdvisorSnapshot(schedule.dateKey, payload, siteUrl);
+    return { ...saved, payload };
+  }
+
   if (!row) return null;
 
   return {
