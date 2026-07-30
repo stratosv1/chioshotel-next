@@ -57,6 +57,14 @@ function isScheduledAnalysisDate(dateKey: string) {
   return delta >= 0 && delta % ANALYSIS_INTERVAL_DAYS === 0;
 }
 
+function hasInterpretation(payload: any) {
+  return Boolean(
+    payload?.aiInterpretation?.headline &&
+    payload?.aiInterpretation?.executiveSummary &&
+    Array.isArray(payload?.aiInterpretation?.findings),
+  );
+}
+
 async function ensureSeoAdvisorSnapshotTable() {
   const sql = getSql();
   await sql`
@@ -179,18 +187,26 @@ export async function getLatestSeoAdvisorSnapshot(
   const row = (rows as any[])?.[0];
 
   const schedule = athensScheduleState(new Date());
+  const todayRow = Boolean(row && String(row.analysis_date) === schedule.dateKey);
+  const incompleteTodayRow = todayRow && !hasInterpretation(row?.payload);
   const missedScheduledRun =
     schedule.hour >= ANALYSIS_HOUR_ATHENS &&
     isScheduledAnalysisDate(schedule.dateKey) &&
-    (!row || String(row.analysis_date) !== schedule.dateKey);
+    (!todayRow || incompleteTodayRow);
 
   if (missedScheduledRun) {
     console.info("[gsc-analysis] advisor self-heal", {
       today: schedule.dateKey,
       previousAnalysisDate: row?.analysis_date ? String(row.analysis_date) : null,
+      missingInterpretation: incompleteTodayRow,
     });
-    const { getSeoAdvisorWithIntentData } = await import("./advisor-intents");
-    const payload = await getSeoAdvisorWithIntentData();
+    const [{ getSeoAdvisorWithIntentData }, { interpretSeoAdvisorData }] = await Promise.all([
+      import("./advisor-intents"),
+      import("./advisor-interpretation"),
+    ]);
+    const basePayload = await getSeoAdvisorWithIntentData();
+    const interpretation = await interpretSeoAdvisorData(basePayload);
+    const payload = { ...basePayload, aiInterpretation: interpretation };
     const saved = await saveSeoAdvisorSnapshot(schedule.dateKey, payload, siteUrl);
     return { ...saved, payload };
   }
