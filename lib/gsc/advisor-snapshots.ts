@@ -12,6 +12,8 @@ export type SeoAdvisorSnapshot = {
   latestDataDate: string | null;
   priorityCount: number;
   newFindings: number;
+  persistentFindings?: number;
+  resolvedFindings?: number;
   payload?: any;
 };
 
@@ -57,9 +59,11 @@ function isScheduledAnalysisDate(dateKey: string) {
   return delta >= 0 && delta % ANALYSIS_INTERVAL_DAYS === 0;
 }
 
-function hasInterpretation(payload: any) {
+function hasCompleteDecision(payload: any) {
   return Boolean(
+    payload?.analysisContext?.latestCompleteDate &&
     payload?.aiInterpretation?.headline &&
+    Number.isFinite(Number(payload?.aiInterpretation?.healthScore)) &&
     payload?.aiInterpretation?.executiveSummary &&
     Array.isArray(payload?.aiInterpretation?.findings),
   );
@@ -83,7 +87,22 @@ async function ensureSeoAdvisorSnapshotTable() {
   await sql`create index if not exists gsc_advisor_analysis_runs_latest_idx on gsc_advisor_analysis_runs (site_url, analysis_date desc)`;
 }
 
-function priorityKeys(payload: any) {
+function findingKeys(payload: any) {
+  const findings = Array.isArray(payload?.aiInterpretation?.findings)
+    ? payload.aiInterpretation.findings
+    : [];
+  if (findings.length) {
+    return new Set(
+      findings.map((item: any) =>
+        [
+          String(item?.classification || ""),
+          String(item?.scopeLabel || item?.title || ""),
+          String(item?.trackingMetric || ""),
+        ].join("|"),
+      ),
+    );
+  }
+
   const priorities = Array.isArray(payload?.priorities) ? payload.priorities : [];
   return new Set(
     priorities.map((item: any) =>
@@ -116,13 +135,30 @@ export async function saveSeoAdvisorSnapshot(
   `;
 
   const previousPayload = (previousRows as any[])?.[0]?.payload || null;
-  const previousKeys = priorityKeys(previousPayload);
-  const currentKeys = priorityKeys(payload);
+  const previousKeys = findingKeys(previousPayload);
+  const currentKeys = findingKeys(payload);
   const newFindings = previousPayload
     ? [...currentKeys].filter((key) => !previousKeys.has(key)).length
     : currentKeys.size;
+  const persistentFindings = previousPayload
+    ? [...currentKeys].filter((key) => previousKeys.has(key)).length
+    : 0;
+  const resolvedFindings = previousPayload
+    ? [...previousKeys].filter((key) => !currentKeys.has(key)).length
+    : 0;
   const priorityCount = currentKeys.size;
-  const latestDataDate = payload?.latestDate ? String(payload.latestDate) : null;
+  const latestDataDate = payload?.analysisContext?.latestCompleteDate || payload?.latestDate
+    ? String(payload?.analysisContext?.latestCompleteDate || payload?.latestDate)
+    : null;
+  const payloadWithComparison = {
+    ...payload,
+    snapshotComparison: {
+      newFindings,
+      persistentFindings,
+      resolvedFindings,
+      comparedWithPreviousSnapshot: Boolean(previousPayload),
+    },
+  };
 
   const rows = await sql`
     insert into gsc_advisor_analysis_runs (
@@ -140,7 +176,7 @@ export async function saveSeoAdvisorSnapshot(
       ${latestDataDate}::date,
       ${priorityCount},
       ${newFindings},
-      ${JSON.stringify(payload)}::jsonb
+      ${JSON.stringify(payloadWithComparison)}::jsonb
     )
     on conflict (site_url, analysis_date) do update set
       analyzed_at = now(),
@@ -163,6 +199,8 @@ export async function saveSeoAdvisorSnapshot(
     latestDataDate: row.latest_data_date ? String(row.latest_data_date) : null,
     priorityCount: Number(row.priority_count || 0),
     newFindings: Number(row.new_findings || 0),
+    persistentFindings,
+    resolvedFindings,
   };
 }
 
@@ -188,7 +226,7 @@ export async function getLatestSeoAdvisorSnapshot(
 
   const schedule = athensScheduleState(new Date());
   const todayRow = Boolean(row && String(row.analysis_date) === schedule.dateKey);
-  const incompleteTodayRow = todayRow && !hasInterpretation(row?.payload);
+  const incompleteTodayRow = todayRow && !hasCompleteDecision(row?.payload);
   const missedScheduledRun =
     schedule.hour >= ANALYSIS_HOUR_ATHENS &&
     isScheduledAnalysisDate(schedule.dateKey) &&
@@ -198,29 +236,82 @@ export async function getLatestSeoAdvisorSnapshot(
     console.info("[gsc-analysis] advisor self-heal", {
       today: schedule.dateKey,
       previousAnalysisDate: row?.analysis_date ? String(row.analysis_date) : null,
-      missingInterpretation: incompleteTodayRow,
+      incompleteDecision: incompleteTodayRow,
     });
-    const [{ getSeoAdvisorWithIntentData }, { interpretSeoAdvisorData }] = await Promise.all([
+    const [
+      { buildSeoDecisionContext },
+      { getSeoAdvisorWithIntentData },
+      { interpretSeoAdvisorData },
+    ] = await Promise.all([
+      import("./advisor-context"),
       import("./advisor-intents"),
       import("./advisor-interpretation"),
     ]);
-    const basePayload = await getSeoAdvisorWithIntentData();
-    const interpretation = await interpretSeoAdvisorData(basePayload);
-    const payload = { ...basePayload, aiInterpretation: interpretation };
+    const [basePayload, analysisContext] = await Promise.all([
+      getSeoAdvisorWithIntentData(),
+      buildSeoDecisionContext(siteUrl),
+    ]);
+    const interpretation = await interpretSeoAdvisorData(basePayload, analysisContext);
+    const payload = {
+      ...basePayload,
+      latestDate: analysisContext.latestCompleteDate || basePayload.latestDate,
+      analysisContext,
+      aiInterpretation: interpretation,
+    };
     const saved = await saveSeoAdvisorSnapshot(schedule.dateKey, payload, siteUrl);
-    return { ...saved, payload };
+    return {
+      ...saved,
+      payload: {
+        ...payload,
+        snapshotComparison: {
+          newFindings: saved.newFindings,
+          persistentFindings: saved.persistentFindings || 0,
+          resolvedFindings: saved.resolvedFindings || 0,
+          comparedWithPreviousSnapshot: Boolean(row),
+        },
+      },
+    };
   }
 
   if (!row) return null;
-
+  const comparison = row.payload?.snapshotComparison || {};
   return {
     analysisDate: String(row.analysis_date),
     analyzedAt: new Date(row.analyzed_at).toISOString(),
     latestDataDate: row.latest_data_date ? String(row.latest_data_date) : null,
     priorityCount: Number(row.priority_count || 0),
     newFindings: Number(row.new_findings || 0),
+    persistentFindings: Number(comparison.persistentFindings || 0),
+    resolvedFindings: Number(comparison.resolvedFindings || 0),
     payload: row.payload,
   };
+}
+
+export async function getSeoAdvisorSnapshotHistory(
+  limit = 4,
+  siteUrl = DEFAULT_SITE,
+): Promise<SeoAdvisorSnapshot[]> {
+  await ensureSeoAdvisorSnapshotTable();
+  const sql = getSql();
+  const safeLimit = Math.max(1, Math.min(12, Math.floor(limit)));
+  const rows = await sql`
+    select analysis_date::text as analysis_date, analyzed_at,
+      latest_data_date::text as latest_data_date, priority_count, new_findings, payload
+    from gsc_advisor_analysis_runs
+    where site_url = ${siteUrl}
+    order by analysis_date desc
+    limit ${safeLimit}
+  `;
+  return (rows as any[]).map((row) => ({
+    analysisDate: String(row.analysis_date),
+    analyzedAt: new Date(row.analyzed_at).toISOString(),
+    latestDataDate: row.latest_data_date ? String(row.latest_data_date) : null,
+    priorityCount: Number(row.priority_count || 0),
+    newFindings: Number(row.new_findings || 0),
+    persistentFindings: Number(row.payload?.snapshotComparison?.persistentFindings || 0),
+    resolvedFindings: Number(row.payload?.snapshotComparison?.resolvedFindings || 0),
+    payload: row.payload,
+  }));
 }
 
 export async function getLatestGscSyncState(
