@@ -7,7 +7,6 @@ import {
   getSeoAdvisorSnapshotHistory,
 } from "@/lib/gsc/advisor-snapshots";
 import SeoCockpit from "./SeoCockpit";
-import SeoActionTrackerPanel from "./SeoActionTrackerPanel";
 
 export const dynamic = "force-dynamic";
 
@@ -31,18 +30,17 @@ export default async function SeoAdvisorPage() {
   if (snapshot?.analysisDate && Array.isArray(findings)) {
     await syncSeoAdvisorActions(snapshot.analysisDate, findings);
   }
+
   const actions = await getSeoAdvisorActions();
   const fallbackData = snapshot?.payload ? null : await getSeoAdvisorWithIntentData();
 
   return (
-    <>
-      <SeoCockpit
-        snapshot={snapshot}
-        history={history}
-        sync={latestSync}
-        fallbackData={fallbackData}
-      />
-      <SeoActionTrackerPanel actions={actions} />
-    </>
+    <SeoCockpit
+      snapshot={snapshot}
+      history={history}
+      sync={latestSync}
+      fallbackData={fallbackData}
+      actions={actions}
+    />
   );
 }
