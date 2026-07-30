@@ -365,15 +365,9 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/" }: H
         <button type="button" aria-label={copy.close} onClick={closeMenu} className="absolute inset-0 h-full w-full" />
         <div className={`absolute right-0 top-0 w-[min(92vw,420px)] rounded-l-[1.5rem] bg-[#fffaf3] p-3 pb-5 shadow-2xl shadow-stone-950/18 transition duration-300 ${isOpen ? "translate-x-0" : "translate-x-full"}`}>
           <div className="mb-2"><LanguagePills currentLanguage={language} pathname={pathname} onNavigate={closeMenu} /></div>
-          <div className="mb-2 grid grid-cols-2 gap-2">
-            <a href={pathFor(routeIds.rates, language)} onClick={closeMenu} className="flex min-h-[44px] items-center justify-center rounded-full bg-gradient-to-br from-[#b8873f] to-[#8e6607] px-4 text-center text-sm font-black uppercase tracking-[0.08em] !text-white shadow-lg shadow-amber-900/12">
-              {copy.bookNow}
-            </a>
-            <a href={pathFor(routeIds.rates, language)} onClick={closeMenu} className="flex min-h-[44px] items-center justify-center gap-2 rounded-full border border-amber-900/15 bg-white px-4 text-center text-sm font-black uppercase tracking-[0.08em] text-amber-900 shadow-sm shadow-stone-900/5">
-              <span aria-hidden="true">💶</span>
-              {copy.links.rates}
-            </a>
-          </div>
+          <a href={pathFor(routeIds.rates, language)} onClick={closeMenu} className="mb-2 flex min-h-[44px] items-center justify-center rounded-full bg-gradient-to-br from-[#b8873f] to-[#8e6607] px-5 text-sm font-black uppercase tracking-[0.1em] !text-white shadow-lg shadow-amber-900/12">
+            {copy.bookNow}
+          </a>
           <section className="rounded-[1.15rem] border border-stone-900/10 bg-white p-2.5 shadow-sm shadow-stone-900/5">
             <p className="mb-2 px-1 text-[10px] font-black uppercase tracking-[0.16em] text-stone-500">{copy.nav}</p>
             <div className="grid grid-cols-2 gap-2">
