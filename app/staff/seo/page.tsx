@@ -60,6 +60,24 @@ function severityClasses(severity: "high" | "medium" | "low") {
   return "bg-emerald-50 text-emerald-800 border-emerald-200";
 }
 
+function verdictLabel(verdict: "healthy" | "watch" | "action") {
+  if (verdict === "action") return "Χρειάζεται ενέργεια";
+  if (verdict === "watch") return "Παρακολούθηση";
+  return "Υγιής εικόνα";
+}
+
+function verdictClasses(verdict: "healthy" | "watch" | "action") {
+  if (verdict === "action") return "border-red-200 bg-red-50 text-red-800";
+  if (verdict === "watch") return "border-amber-200 bg-amber-50 text-amber-800";
+  return "border-emerald-200 bg-emerald-50 text-emerald-800";
+}
+
+function confidenceLabel(confidence: "high" | "medium" | "low") {
+  if (confidence === "high") return "υψηλή βεβαιότητα";
+  if (confidence === "medium") return "μέτρια βεβαιότητα";
+  return "χαμηλή βεβαιότητα";
+}
+
 export default async function SeoAdvisorPage() {
   const [snapshot, latestSync] = await Promise.all([
     getLatestSeoAdvisorSnapshot(),
@@ -69,6 +87,7 @@ export default async function SeoAdvisorPage() {
   const current = data.current;
   const previous = data.previous;
   const changes = "changes" in data ? data.changes : null;
+  const interpretation = data.aiInterpretation as any;
   const sync = latestSync
     ? {
         started_at: latestSync.startedAt,
@@ -89,7 +108,7 @@ export default async function SeoAdvisorPage() {
               <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8a755f]">Voulamandis House · Staff</p>
               <h1 className="mt-2 text-3xl font-semibold tracking-tight">SEO Advisor</h1>
               <p className="mt-2 max-w-3xl text-sm leading-6 text-[#746454]">
-                Διαβάζει τα πραγματικά δεδομένα Google Search Console και τα ελέγχει πλέον απέναντι στο commercial intent map #1–#9, ώστε να ξεχωρίζει πραγματικές ευκαιρίες από cannibalisation ή λάθος owner.
+                Διαβάζει τα πραγματικά δεδομένα Google Search Console, τα ελέγχει απέναντι στο commercial intent map #1–#9 και κάθε 3 ημέρες δημιουργεί ερμηνεία των ευρημάτων με συγκεκριμένη προτεινόμενη ενέργεια.
               </p>
             </div>
             <a href="/staff" className="inline-flex w-fit items-center rounded-full border border-[#cdbda7] px-4 py-2 text-sm font-medium hover:bg-[#f4ede3]">← Staff Area</a>
@@ -112,8 +131,75 @@ export default async function SeoAdvisorPage() {
           </SeoTailwindCarousel>
         )}
 
+        <section className="mt-5 rounded-3xl border border-[#cdbda7] bg-white p-5 shadow-sm sm:p-7">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div className="max-w-3xl">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8a755f]">2. Ερμηνεία ευρημάτων</p>
+              <h2 className="mt-2 text-2xl font-semibold">{interpretation?.headline || "Δεν έχει παραχθεί ακόμη ερμηνεία για το τρέχον snapshot"}</h2>
+              {interpretation?.executiveSummary && (
+                <p className="mt-3 text-base leading-7 text-[#625446]">{interpretation.executiveSummary}</p>
+              )}
+            </div>
+            {interpretation?.verdict && (
+              <span className={`rounded-full border px-3 py-1.5 text-sm font-semibold ${verdictClasses(interpretation.verdict)}`}>
+                {verdictLabel(interpretation.verdict)}
+              </span>
+            )}
+          </div>
+
+          {interpretation ? (
+            <>
+              <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                <div className="rounded-2xl border border-[#d9ccb9] bg-[#faf7f1] p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-[#8a755f]">Τι κάνουμε τώρα</p>
+                  <p className="mt-2 text-sm font-medium leading-6">{interpretation.primaryAction}</p>
+                </div>
+                <div className="rounded-2xl border border-[#e8dccb] bg-white p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-[#8a755f]">Τι δεν πρέπει να κάνουμε</p>
+                  <p className="mt-2 text-sm leading-6 text-[#625446]">{interpretation.doNotDo}</p>
+                </div>
+              </div>
+
+              {Array.isArray(interpretation.findings) && interpretation.findings.length > 0 && (
+                <div className="mt-5">
+                  <SeoTailwindCarousel label="ερμηνευμένα ευρήματα" desktopColumns={1}>
+                    {interpretation.findings.map((finding: any, index: number) => (
+                      <article key={`${finding.title}-${index}`} className="h-full rounded-2xl border border-[#e8dccb] bg-[#fcfaf6] p-4 sm:p-5">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="rounded-full border border-[#ddcfba] bg-white px-2.5 py-1 text-xs font-semibold text-[#6f6051]">Ερμηνεία #{index + 1}</span>
+                          <span className="text-xs text-[#8a755f]">{confidenceLabel(finding.confidence)}</span>
+                        </div>
+                        <h3 className="mt-3 text-lg font-semibold">{finding.title}</h3>
+                        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                          <div className="rounded-xl bg-white p-3">
+                            <p className="text-xs font-semibold uppercase tracking-wide text-[#8a755f]">Τι σημαίνει</p>
+                            <p className="mt-1 text-sm leading-6">{finding.meaning}</p>
+                          </div>
+                          <div className="rounded-xl bg-white p-3">
+                            <p className="text-xs font-semibold uppercase tracking-wide text-[#8a755f]">Πιθανότερη εξήγηση</p>
+                            <p className="mt-1 text-sm leading-6">{finding.likelyCause}</p>
+                          </div>
+                        </div>
+                        <div className="mt-3 rounded-xl border border-[#d9ccb9] bg-white p-3">
+                          <p className="text-xs font-semibold uppercase tracking-wide text-[#8a755f]">Προτεινόμενη κίνηση</p>
+                          <p className="mt-1 text-sm font-medium leading-6">{finding.action}</p>
+                        </div>
+                        {finding.evidence && <p className="mt-3 text-xs leading-5 text-[#8a755f]">Στοιχεία: {finding.evidence}</p>}
+                      </article>
+                    ))}
+                  </SeoTailwindCarousel>
+                </div>
+              )}
+            </>
+          ) : (
+            <p className="mt-4 rounded-2xl bg-[#faf7f1] p-4 text-sm leading-6 text-[#746454]">
+              Η επόμενη ολοκληρωμένη ανάλυση θα αποθηκεύσει και ερμηνεία των δεδομένων, όχι μόνο τα metrics και τις τεχνικές προτεραιότητες.
+            </p>
+          )}
+        </section>
+
         <section className="mt-5 rounded-3xl border border-[#ddcfba] bg-white p-5 shadow-sm sm:p-7">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8a755f]">2. SEO αρχιτεκτονική</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8a755f]">3. SEO αρχιτεκτονική</p>
           <h2 className="mt-2 text-2xl font-semibold">Owners #1–#9 που δεν πρέπει να κανιβαλίζονται</h2>
           <p className="mt-2 text-sm leading-6 text-[#746454]">{data.architectureNote}</p>
           <SeoTailwindCarousel label="owners" desktopColumns={2}>
@@ -144,9 +230,9 @@ export default async function SeoAdvisorPage() {
 
         <section className="mt-5 rounded-3xl border border-[#ddcfba] bg-white p-5 shadow-sm sm:p-7">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8a755f]">3. Τι πρέπει να διορθώσουμε</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8a755f]">4. Τεχνικά ευρήματα</p>
             <h2 className="mt-2 text-2xl font-semibold">Προτεραιότητες με owner-aware διάγνωση</h2>
-            <p className="mt-2 text-sm leading-6 text-[#746454]">Δεν προτείνουμε αλλαγές επειδή ένας αριθμός φαίνεται μικρός. Προτεραιότητα παίρνουν μόνο περιπτώσεις με αρκετά δεδομένα, και πριν από κάθε αλλαγή ελέγχουμε ποια σελίδα έχει οριστεί ως owner του intent.</p>
+            <p className="mt-2 text-sm leading-6 text-[#746454]">Εδώ παραμένουν τα αναλυτικά δεδομένα πίσω από την ερμηνεία. Δεν προτείνουμε αλλαγές επειδή ένας αριθμός φαίνεται μικρός· προτεραιότητα παίρνουν περιπτώσεις με αρκετά δεδομένα και σωστό intent ownership.</p>
           </div>
 
           <SeoTailwindCarousel label="προτεραιότητες" desktopColumns={1}>
@@ -234,7 +320,7 @@ export default async function SeoAdvisorPage() {
         </section>
 
         <section className="mt-5 rounded-3xl border border-[#ddcfba] bg-white p-5 shadow-sm sm:p-7">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8a755f]">4. Τι κάνουμε για να βελτιωθούν οι δείκτες</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8a755f]">5. Τι κάνουμε για να βελτιωθούν οι δείκτες</p>
           <h2 className="mt-2 text-2xl font-semibold">Τρόπος δουλειάς</h2>
           <SeoTailwindCarousel label="βήματα" desktopColumns={3}>
             <Step number="01" title="Βρίσκουμε το intent και τον owner" text="Πριν πειράξουμε σελίδα, ελέγχουμε αν το query ανήκει ήδη σε κάποιο από τα #1–#9 και ποια localized σελίδα είναι ο owner." />
@@ -256,13 +342,13 @@ export default async function SeoAdvisorPage() {
               <p className="mt-1 text-sm text-[#746454]">
                 {snapshot ? `Ευρήματα ${n(snapshot.priorityCount)} · νέα από την προηγούμενη ανάλυση ${n(snapshot.newFindings)}` : "Πρώτη προγραμματισμένη ανάλυση: 30 Ιουλίου 2026, 10:00"}
               </p>
-              <p className="mt-1 text-xs text-[#8a755f]">Αυτόματη ανάλυση κάθε 3 ημέρες, με αφετηρία 30/07/2026.</p>
+              <p className="mt-1 text-xs text-[#8a755f]">Αυτόματη ερμηνεία κάθε 3 ημέρες, με αφετηρία 30/07/2026.</p>
             </div>
             <div className="flex flex-wrap gap-2">
               <span className={`rounded-full px-3 py-1 text-sm font-semibold ${sync?.status === "success" ? "bg-emerald-50 text-emerald-800" : "bg-red-50 text-red-800"}`}>
                 {sync?.status === "success" ? "Δεδομένα ενημερωμένα" : "Χρειάζεται έλεγχος sync"}
               </span>
-              <span className="rounded-full bg-[#f4ede3] px-3 py-1 text-sm font-semibold text-[#6f6051]">Ανάλυση / 3 ημέρες</span>
+              <span className="rounded-full bg-[#f4ede3] px-3 py-1 text-sm font-semibold text-[#6f6051]">Ερμηνεία / 3 ημέρες</span>
             </div>
           </div>
           {sync?.error_message && <p className="mt-3 text-xs leading-5 text-amber-800">Σημείωση sync: {String(sync.error_message)}</p>}
