@@ -4,6 +4,7 @@ import { RoomWizardTailwind } from "@/components/rooms/RoomWizardTailwind";
 import { TopicBadges } from "@/components/seo/TopicBadges";
 import type { RoomsCategoryPageData } from "@/content/rooms";
 import type { LanguageCode } from "@/lib/languages";
+import { withRoomsOwnerHeroIntent } from "@/lib/rooms-owner-seo-intent";
 
 type RoomsCategoryPageProps = {
   data: RoomsCategoryPageData;
@@ -101,18 +102,17 @@ function getDisplayedCards(data: RoomsCategoryPageData, language: LanguageCode) 
 }
 
 export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
-  const language = getWizardLanguage(data.seo.canonicalPath);
+  const ownerData = withRoomsOwnerHeroIntent(data);
+  const language = getWizardLanguage(ownerData.seo.canonicalPath);
   const hero =
     language === "el"
       ? {
-          ...data.hero,
+          ...ownerData.hero,
           kicker: "Δωμάτια & διαμερίσματα • Voulamandis House",
-          title: "Δωμάτια",
-          highlightedTitle: "στη Χίο",
           description:
             "Δείτε τα ενοικιαζόμενα δωμάτια στη Χίο και τα οικογενειακά διαμερίσματα του Voulamandis House στον Κάμπο. Συγκρίνετε κατηγορίες, χωρητικότητα και χαρακτηριστικά και επιλέξτε αυτή που ταιριάζει καλύτερα στο ταξίδι σας.",
         }
-      : data.hero;
+      : ownerData.hero;
   const intro =
     language === "el"
       ? {
@@ -120,17 +120,17 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
           description:
             "Εξερευνήστε τις κατηγορίες δωματίων και διαμερισμάτων μας στον Κάμπο της Χίου: οικονομικά δίκλινα, ισόγεια δωμάτια, δωμάτια ορόφου και οικογενειακά διαμερίσματα. Όλες οι επιλογές συγκεντρωμένες σε μία σελίδα για εύκολη σύγκριση πριν την κράτηση.",
         }
-      : data.intro;
-  const cards = getDisplayedCards(data, language);
+      : ownerData.intro;
+  const cards = getDisplayedCards(ownerData, language);
   const tip =
     language === "el"
       ? {
-          ...data.tip,
+          ...ownerData.tip,
           title: "Συμβουλή για απευθείας κράτηση",
           textHtml:
             "Θυμηθείτε: χρησιμοποιήστε τον <strong>κωδικό έκπτωσης</strong> στην απευθείας κράτησή σας για να εξασφαλίσετε την <strong>καλύτερη διαθέσιμη τιμή</strong>.",
         }
-      : data.tip;
+      : ownerData.tip;
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#fbf6ef] text-[#2f261f]">
@@ -292,23 +292,23 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
             {hero.kicker}
           </span>
           <h2 className="mt-5 text-balance text-3xl font-black tracking-[-0.035em] text-[#2f261f] sm:text-4xl">
-            {data.wizardIntro.title}
+            {ownerData.wizardIntro.title}
           </h2>
           <p className="mt-4 text-pretty text-base leading-8 text-[#574b3f]">
-            {data.wizardIntro.description}
+            {ownerData.wizardIntro.description}
           </p>
         </div>
 
         <div className="mt-8">
           {language === "el" ? (
             <GreekRoomWizardTailwind
-              rooms={data.wizard.rooms}
-              whatsappPhone={data.wizard.whatsappPhone}
+              rooms={ownerData.wizard.rooms}
+              whatsappPhone={ownerData.wizard.whatsappPhone}
             />
           ) : (
             <RoomWizardTailwind
-              rooms={data.wizard.rooms}
-              whatsappPhone={data.wizard.whatsappPhone}
+              rooms={ownerData.wizard.rooms}
+              whatsappPhone={ownerData.wizard.whatsappPhone}
               language={language}
             />
           )}
