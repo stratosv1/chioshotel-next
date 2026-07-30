@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getSeoAdvisorWithIntentData } from "@/lib/gsc/advisor-intents";
+import { getLatestGscSyncState, getLatestSeoAdvisorSnapshot } from "@/lib/gsc/advisor-snapshots";
 import CopySeoAdviceButton from "./CopySeoAdviceButton";
 import SeoTailwindCarousel from "./SeoTailwindCarousel";
 
@@ -60,11 +61,24 @@ function severityClasses(severity: "high" | "medium" | "low") {
 }
 
 export default async function SeoAdvisorPage() {
-  const data = await getSeoAdvisorWithIntentData();
+  const [snapshot, latestSync] = await Promise.all([
+    getLatestSeoAdvisorSnapshot(),
+    getLatestGscSyncState(),
+  ]);
+  const data = snapshot?.payload || (await getSeoAdvisorWithIntentData());
   const current = data.current;
   const previous = data.previous;
   const changes = "changes" in data ? data.changes : null;
-  const sync = data.sync as any;
+  const sync = latestSync
+    ? {
+        started_at: latestSync.startedAt,
+        completed_at: latestSync.completedAt,
+        status: latestSync.status,
+        rows_written: latestSync.rowsWritten,
+        datasets: latestSync.datasets,
+        error_message: latestSync.errorMessage,
+      }
+    : (data.sync as any);
 
   return (
     <main className="min-h-screen bg-[#f7f2e9] text-[#44372d]">
@@ -103,7 +117,7 @@ export default async function SeoAdvisorPage() {
           <h2 className="mt-2 text-2xl font-semibold">Owners #1–#9 που δεν πρέπει να κανιβαλίζονται</h2>
           <p className="mt-2 text-sm leading-6 text-[#746454]">{data.architectureNote}</p>
           <SeoTailwindCarousel label="owners" desktopColumns={2}>
-            {data.architecture.map((audit) => (
+            {data.architecture.map((audit: any) => (
               <article key={audit.audit} className="h-full rounded-2xl border border-[#e8dccb] bg-[#fcfaf6] p-4">
                 <div className="flex items-start gap-3">
                   <span className="inline-flex h-9 min-w-9 items-center justify-center rounded-full bg-[#44372d] px-2 text-sm font-semibold text-white">#{audit.audit}</span>
@@ -115,7 +129,7 @@ export default async function SeoAdvisorPage() {
                   </div>
                 </div>
                 <div className="mt-3 space-y-2">
-                  {audit.owners.map((owner) => (
+                  {audit.owners.map((owner: any) => (
                     <div key={owner.key} className="rounded-xl bg-white p-3">
                       <p className="text-sm font-semibold">{owner.label}</p>
                       <p className="mt-1 break-all text-xs text-[#6f6051]">EL owner: {owner.path}</p>
@@ -136,7 +150,7 @@ export default async function SeoAdvisorPage() {
           </div>
 
           <SeoTailwindCarousel label="προτεραιότητες" desktopColumns={1}>
-            {data.priorities.map((item, index) => (
+            {data.priorities.map((item: any, index: number) => (
               <article key={`${item.title}-${index}`} className="h-full rounded-2xl border border-[#e8dccb] bg-[#fcfaf6] p-4 sm:p-5">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className={`rounded-full border px-2.5 py-1 text-xs font-semibold ${severityClasses(item.severity)}`}>{severityLabel(item.severity)}</span>
@@ -175,7 +189,7 @@ export default async function SeoAdvisorPage() {
                       {item.queryBreakdownNote || "Προηγούμενες 28 ημέρες → τελευταίες 28 ημέρες."}
                     </p>
                     <div className="mt-3 space-y-3">
-                      {item.queryBreakdown.slice(0, 8).map((row) => (
+                      {item.queryBreakdown.slice(0, 8).map((row: any) => (
                         <div key={row.query} className="rounded-xl bg-[#faf7f1] p-3">
                           <p className="break-words text-sm font-semibold">{row.query}</p>
                           <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1 text-xs text-[#6f6051] sm:grid-cols-4">
@@ -230,16 +244,26 @@ export default async function SeoAdvisorPage() {
         </section>
 
         <section className="mt-5 rounded-3xl border border-[#ddcfba] bg-white p-5 shadow-sm">
-          <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
               <p className="text-sm font-semibold">Αξιοπιστία δεδομένων</p>
               <p className="mt-1 text-sm text-[#746454]">
                 Τελευταίο sync: {dateTime(sync?.completed_at || sync?.started_at)} · {sync?.status || "—"}
               </p>
+              <p className="mt-1 text-sm text-[#746454]">
+                Τελευταία αποθηκευμένη ανάλυση: {snapshot ? dateTime(snapshot.analyzedAt) : "δεν έχει εκτελεστεί ακόμη"}
+              </p>
+              <p className="mt-1 text-sm text-[#746454]">
+                {snapshot ? `Ευρήματα ${n(snapshot.priorityCount)} · νέα από την προηγούμενη ανάλυση ${n(snapshot.newFindings)}` : "Πρώτη προγραμματισμένη ανάλυση: 30 Ιουλίου 2026, 10:00"}
+              </p>
+              <p className="mt-1 text-xs text-[#8a755f]">Αυτόματη ανάλυση κάθε 3 ημέρες, με αφετηρία 30/07/2026.</p>
             </div>
-            <span className={`rounded-full px-3 py-1 text-sm font-semibold ${sync?.status === "success" ? "bg-emerald-50 text-emerald-800" : "bg-red-50 text-red-800"}`}>
-              {sync?.status === "success" ? "Δεδομένα ενημερωμένα" : "Χρειάζεται έλεγχος sync"}
-            </span>
+            <div className="flex flex-wrap gap-2">
+              <span className={`rounded-full px-3 py-1 text-sm font-semibold ${sync?.status === "success" ? "bg-emerald-50 text-emerald-800" : "bg-red-50 text-red-800"}`}>
+                {sync?.status === "success" ? "Δεδομένα ενημερωμένα" : "Χρειάζεται έλεγχος sync"}
+              </span>
+              <span className="rounded-full bg-[#f4ede3] px-3 py-1 text-sm font-semibold text-[#6f6051]">Ανάλυση / 3 ημέρες</span>
+            </div>
           </div>
           {sync?.error_message && <p className="mt-3 text-xs leading-5 text-amber-800">Σημείωση sync: {String(sync.error_message)}</p>}
         </section>
