@@ -8,7 +8,17 @@ export type SeoAdvisorSnapshot = {
   latestDataDate: string | null;
   priorityCount: number;
   newFindings: number;
+  payload?: any;
 };
+
+export type LatestGscSyncState = {
+  startedAt: string | null;
+  completedAt: string | null;
+  status: string | null;
+  rowsWritten: number;
+  datasets: number;
+  errorMessage: string | null;
+} | null;
 
 function getSql() {
   const databaseUrl = process.env.DATABASE_URL;
@@ -128,7 +138,8 @@ export async function getLatestSeoAdvisorSnapshot(
       analyzed_at,
       latest_data_date::text as latest_data_date,
       priority_count,
-      new_findings
+      new_findings,
+      payload
     from gsc_advisor_analysis_runs
     where site_url = ${siteUrl}
     order by analysis_date desc
@@ -143,5 +154,30 @@ export async function getLatestSeoAdvisorSnapshot(
     latestDataDate: row.latest_data_date ? String(row.latest_data_date) : null,
     priorityCount: Number(row.priority_count || 0),
     newFindings: Number(row.new_findings || 0),
+    payload: row.payload,
+  };
+}
+
+export async function getLatestGscSyncState(
+  siteUrl = DEFAULT_SITE,
+): Promise<LatestGscSyncState> {
+  const sql = getSql();
+  const rows = await sql`
+    select started_at, completed_at, status, rows_written, datasets, error_message
+    from gsc_sync_runs
+    where site_url = ${siteUrl}
+    order by started_at desc
+    limit 1
+  `;
+  const row = (rows as any[])?.[0];
+  if (!row) return null;
+
+  return {
+    startedAt: row.started_at ? new Date(row.started_at).toISOString() : null,
+    completedAt: row.completed_at ? new Date(row.completed_at).toISOString() : null,
+    status: row.status ? String(row.status) : null,
+    rowsWritten: Number(row.rows_written || 0),
+    datasets: Number(row.datasets || 0),
+    errorMessage: row.error_message ? String(row.error_message) : null,
   };
 }
