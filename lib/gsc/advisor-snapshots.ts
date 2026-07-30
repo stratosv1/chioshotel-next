@@ -1,0 +1,147 @@
+import { neon } from "@neondatabase/serverless";
+
+const DEFAULT_SITE = "sc-domain:chioshotel.gr";
+
+export type SeoAdvisorSnapshot = {
+  analysisDate: string;
+  analyzedAt: string;
+  latestDataDate: string | null;
+  priorityCount: number;
+  newFindings: number;
+};
+
+function getSql() {
+  const databaseUrl = process.env.DATABASE_URL;
+  if (!databaseUrl) throw new Error("DATABASE_URL is not configured.");
+  return neon(databaseUrl);
+}
+
+async function ensureSeoAdvisorSnapshotTable() {
+  const sql = getSql();
+  await sql`
+    create table if not exists gsc_advisor_analysis_runs (
+      id bigserial primary key,
+      site_url text not null,
+      analysis_date date not null,
+      analyzed_at timestamptz not null default now(),
+      latest_data_date date,
+      priority_count integer not null default 0,
+      new_findings integer not null default 0,
+      payload jsonb not null,
+      unique (site_url, analysis_date)
+    )
+  `;
+  await sql`create index if not exists gsc_advisor_analysis_runs_latest_idx on gsc_advisor_analysis_runs (site_url, analysis_date desc)`;
+}
+
+function priorityKeys(payload: any) {
+  const priorities = Array.isArray(payload?.priorities) ? payload.priorities : [];
+  return new Set(
+    priorities.map((item: any) =>
+      [
+        String(item?.severity || ""),
+        String(item?.title || ""),
+        String(item?.page || ""),
+        String(item?.query || ""),
+        String(item?.intent?.ownerPath || ""),
+      ].join("|"),
+    ),
+  );
+}
+
+export async function saveSeoAdvisorSnapshot(
+  analysisDate: string,
+  payload: any,
+  siteUrl = DEFAULT_SITE,
+): Promise<SeoAdvisorSnapshot> {
+  await ensureSeoAdvisorSnapshotTable();
+  const sql = getSql();
+
+  const previousRows = await sql`
+    select payload
+    from gsc_advisor_analysis_runs
+    where site_url = ${siteUrl}
+      and analysis_date < ${analysisDate}::date
+    order by analysis_date desc
+    limit 1
+  `;
+
+  const previousPayload = (previousRows as any[])?.[0]?.payload || null;
+  const previousKeys = priorityKeys(previousPayload);
+  const currentKeys = priorityKeys(payload);
+  const newFindings = previousPayload
+    ? [...currentKeys].filter((key) => !previousKeys.has(key)).length
+    : currentKeys.size;
+  const priorityCount = currentKeys.size;
+  const latestDataDate = payload?.latestDate ? String(payload.latestDate) : null;
+
+  const rows = await sql`
+    insert into gsc_advisor_analysis_runs (
+      site_url,
+      analysis_date,
+      analyzed_at,
+      latest_data_date,
+      priority_count,
+      new_findings,
+      payload
+    ) values (
+      ${siteUrl},
+      ${analysisDate}::date,
+      now(),
+      ${latestDataDate}::date,
+      ${priorityCount},
+      ${newFindings},
+      ${JSON.stringify(payload)}::jsonb
+    )
+    on conflict (site_url, analysis_date) do update set
+      analyzed_at = now(),
+      latest_data_date = excluded.latest_data_date,
+      priority_count = excluded.priority_count,
+      new_findings = excluded.new_findings,
+      payload = excluded.payload
+    returning
+      analysis_date::text as analysis_date,
+      analyzed_at,
+      latest_data_date::text as latest_data_date,
+      priority_count,
+      new_findings
+  `;
+
+  const row = (rows as any[])?.[0] || {};
+  return {
+    analysisDate: String(row.analysis_date || analysisDate),
+    analyzedAt: new Date(row.analyzed_at || Date.now()).toISOString(),
+    latestDataDate: row.latest_data_date ? String(row.latest_data_date) : null,
+    priorityCount: Number(row.priority_count || 0),
+    newFindings: Number(row.new_findings || 0),
+  };
+}
+
+export async function getLatestSeoAdvisorSnapshot(
+  siteUrl = DEFAULT_SITE,
+): Promise<SeoAdvisorSnapshot | null> {
+  await ensureSeoAdvisorSnapshotTable();
+  const sql = getSql();
+  const rows = await sql`
+    select
+      analysis_date::text as analysis_date,
+      analyzed_at,
+      latest_data_date::text as latest_data_date,
+      priority_count,
+      new_findings
+    from gsc_advisor_analysis_runs
+    where site_url = ${siteUrl}
+    order by analysis_date desc
+    limit 1
+  `;
+  const row = (rows as any[])?.[0];
+  if (!row) return null;
+
+  return {
+    analysisDate: String(row.analysis_date),
+    analyzedAt: new Date(row.analyzed_at).toISOString(),
+    latestDataDate: row.latest_data_date ? String(row.latest_data_date) : null,
+    priorityCount: Number(row.priority_count || 0),
+    newFindings: Number(row.new_findings || 0),
+  };
+}
