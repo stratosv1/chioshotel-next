@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSeoAdvisorWithIntentData } from "@/lib/gsc/advisor-intents";
+import { interpretSeoAdvisorData } from "@/lib/gsc/advisor-interpretation";
 import { saveSeoAdvisorSnapshot } from "@/lib/gsc/advisor-snapshots";
 
 export const runtime = "nodejs";
@@ -73,12 +74,19 @@ export async function GET(request: NextRequest) {
   console.info("[gsc-analysis] start", { today, siteUrl, force });
 
   try {
-    const data = await getSeoAdvisorWithIntentData();
+    const baseData = await getSeoAdvisorWithIntentData();
+    const interpretation = await interpretSeoAdvisorData(baseData);
+    const data = {
+      ...baseData,
+      aiInterpretation: interpretation,
+    };
     const snapshot = await saveSeoAdvisorSnapshot(today, data, siteUrl);
 
     console.info("[gsc-analysis] success", {
       durationMs: Date.now() - startedAt,
       ...snapshot,
+      verdict: interpretation.verdict,
+      interpretedFindings: interpretation.findings.length,
     });
 
     return NextResponse.json({
@@ -91,6 +99,11 @@ export async function GET(request: NextRequest) {
         new Date((utcDayNumber(today) + 1) * 86_400_000).toISOString().slice(0, 10),
       ),
       snapshot,
+      interpretation: {
+        verdict: interpretation.verdict,
+        headline: interpretation.headline,
+        findingCount: interpretation.findings.length,
+      },
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
