@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { buildSeoDecisionContext } from "@/lib/gsc/advisor-context";
 import { getSeoAdvisorWithIntentData } from "@/lib/gsc/advisor-intents";
 import { interpretSeoAdvisorData } from "@/lib/gsc/advisor-interpretation";
 import { saveSeoAdvisorSnapshot } from "@/lib/gsc/advisor-snapshots";
@@ -74,10 +75,15 @@ export async function GET(request: NextRequest) {
   console.info("[gsc-analysis] start", { today, siteUrl, force });
 
   try {
-    const baseData = await getSeoAdvisorWithIntentData();
-    const interpretation = await interpretSeoAdvisorData(baseData);
+    const [baseData, analysisContext] = await Promise.all([
+      getSeoAdvisorWithIntentData(),
+      buildSeoDecisionContext(siteUrl),
+    ]);
+    const interpretation = await interpretSeoAdvisorData(baseData, analysisContext);
     const data = {
       ...baseData,
+      latestDate: analysisContext.latestCompleteDate || baseData.latestDate,
+      analysisContext,
       aiInterpretation: interpretation,
     };
     const snapshot = await saveSeoAdvisorSnapshot(today, data, siteUrl);
@@ -86,7 +92,9 @@ export async function GET(request: NextRequest) {
       durationMs: Date.now() - startedAt,
       ...snapshot,
       verdict: interpretation.verdict,
+      healthScore: interpretation.healthScore,
       interpretedFindings: interpretation.findings.length,
+      contextCoverage: analysisContext.coverage,
     });
 
     return NextResponse.json({
@@ -101,9 +109,11 @@ export async function GET(request: NextRequest) {
       snapshot,
       interpretation: {
         verdict: interpretation.verdict,
+        healthScore: interpretation.healthScore,
         headline: interpretation.headline,
         findingCount: interpretation.findings.length,
       },
+      contextCoverage: analysisContext.coverage,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
