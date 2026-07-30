@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import { headers } from "next/headers";
 import { BookingFunnelAnalytics } from "@/components/analytics/BookingFunnelAnalytics";
@@ -39,6 +39,10 @@ export const metadata: Metadata = {
     ],
   },
   manifest: "/favicon/site.webmanifest",
+};
+
+export const viewport: Viewport = {
+  themeColor: "#a4907c",
 };
 
 type SharedSiteLanguage = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
