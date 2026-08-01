@@ -1,4 +1,4 @@
-﻿import type { DealsPageData } from "@/content/deals";
+import type { DealsPageData } from "@/content/deals";
 import {
   absoluteUrl,
   getCanonicalUrl,
@@ -20,6 +20,82 @@ import {
   websiteId,
   type SchemaObject,
 } from "@/lib/structured-data";
+
+type DealsSchemaLanguage = "en" | "el" | "de" | "fr" | "it" | "es" | "tr";
+
+const dealsLabelsByLanguage: Record<
+  DealsSchemaLanguage,
+  {
+    accommodation: string;
+    directGuests: string;
+    couponCode: string;
+    discountLabel: string;
+    bookingTip: string;
+    offerTags: string;
+  }
+> = {
+  en: {
+    accommodation: "Accommodation",
+    directGuests: "Direct booking guests",
+    couponCode: "Coupon code",
+    discountLabel: "Discount label",
+    bookingTip: "Booking tip",
+    offerTags: "Offer tags",
+  },
+  el: {
+    accommodation: "Διαμονή",
+    directGuests: "Επισκέπτες απευθείας κράτησης",
+    couponCode: "Κωδικός προσφοράς",
+    discountLabel: "Περιγραφή έκπτωσης",
+    bookingTip: "Συμβουλή κράτησης",
+    offerTags: "Χαρακτηριστικά προσφοράς",
+  },
+  de: {
+    accommodation: "Unterkunft",
+    directGuests: "Direktbuchungsgäste",
+    couponCode: "Gutscheincode",
+    discountLabel: "Rabattbeschreibung",
+    bookingTip: "Buchungstipp",
+    offerTags: "Angebotsmerkmale",
+  },
+  fr: {
+    accommodation: "Hébergement",
+    directGuests: "Hôtes réservant en direct",
+    couponCode: "Code promotionnel",
+    discountLabel: "Description de la remise",
+    bookingTip: "Conseil de réservation",
+    offerTags: "Caractéristiques de l’offre",
+  },
+  it: {
+    accommodation: "Alloggio",
+    directGuests: "Ospiti con prenotazione diretta",
+    couponCode: "Codice promozionale",
+    discountLabel: "Descrizione dello sconto",
+    bookingTip: "Consiglio di prenotazione",
+    offerTags: "Caratteristiche dell’offerta",
+  },
+  es: {
+    accommodation: "Alojamiento",
+    directGuests: "Huéspedes con reserva directa",
+    couponCode: "Código promocional",
+    discountLabel: "Descripción del descuento",
+    bookingTip: "Consejo de reserva",
+    offerTags: "Características de la oferta",
+  },
+  tr: {
+    accommodation: "Konaklama",
+    directGuests: "Doğrudan rezervasyon misafirleri",
+    couponCode: "İndirim kodu",
+    discountLabel: "İndirim açıklaması",
+    bookingTip: "Rezervasyon ipucu",
+    offerTags: "Teklif özellikleri",
+  },
+};
+
+function getDealsLabels(path: string) {
+  const language = getLanguageForPath(path) as DealsSchemaLanguage;
+  return dealsLabelsByLanguage[language] ?? dealsLabelsByLanguage.en;
+}
 
 function normalizeTelephone(phoneHref: string): string {
   const rawPhone = phoneHref.replace("tel:", "");
@@ -74,6 +150,8 @@ function buildDealOfferSchema(
   offer: DealsPageData["offers"][number],
 ): SchemaObject {
   const canonicalPath = data.seo.canonicalPath;
+  const language = getLanguageForPath(canonicalPath);
+  const labels = getDealsLabels(canonicalPath);
 
   return {
     "@type": "Offer",
@@ -81,7 +159,8 @@ function buildDealOfferSchema(
     name: offer.title,
     description: offer.description,
     url: absoluteUrl(offer.bookingHref),
-    category: "Accommodation",
+    category: labels.accommodation,
+    inLanguage: language,
     availability: "https://schema.org/InStock",
     priceCurrency: "EUR",
     validThrough: data.countdown.targetIso,
@@ -95,6 +174,7 @@ function buildDealOfferSchema(
       url: absoluteUrl(offer.roomPageHref),
       image: absoluteUrl(offer.image),
       description: offer.description,
+      inLanguage: language,
       containedInPlace: {
         "@id": hotelId(),
       },
@@ -102,11 +182,12 @@ function buildDealOfferSchema(
     image: absoluteUrl(offer.image),
     eligibleCustomerType: {
       "@type": "BusinessEntityType",
-      name: "Direct booking guests",
+      name: labels.directGuests,
     },
     potentialAction: {
       "@type": "ReserveAction",
-      name: `Book ${offer.title}`,
+      name: offer.discountLabel,
+      inLanguage: language,
       target: {
         "@type": "EntryPoint",
         urlTemplate: absoluteUrl(offer.bookingHref),
@@ -117,28 +198,28 @@ function buildDealOfferSchema(
       },
       result: {
         "@type": "LodgingReservation",
-        name: `${offer.title} reservation`,
+        name: offer.title,
       },
     },
     additionalProperty: [
       {
         "@type": "PropertyValue",
-        name: "Coupon code",
+        name: labels.couponCode,
         value: offer.couponCode,
       },
       {
         "@type": "PropertyValue",
-        name: "Discount label",
+        name: labels.discountLabel,
         value: offer.discountLabel,
       },
       {
         "@type": "PropertyValue",
-        name: "Booking tip",
+        name: labels.bookingTip,
         value: offer.tip,
       },
       {
         "@type": "PropertyValue",
-        name: "Offer tags",
+        name: labels.offerTags,
         value: offer.tags.join(", "),
       },
     ],
@@ -154,6 +235,7 @@ function buildOfferCatalogSchema(data: DealsPageData): SchemaObject {
     name: data.intro.title,
     description: data.intro.description,
     url: getCanonicalUrl(canonicalPath),
+    inLanguage: getLanguageForPath(canonicalPath),
     itemListOrder: "https://schema.org/ItemListOrderAscending",
     numberOfItems: data.offers.length,
     itemListElement: data.offers.map((offer, index) => ({
@@ -174,8 +256,9 @@ function buildDealsItemListSchema(data: DealsPageData): SchemaObject {
   return {
     "@type": "ItemList",
     "@id": schemaId(canonicalPath, "offers-list"),
-    name: "Chios accommodation offers at Voulamandis House",
+    name: data.intro.title,
     description: data.intro.description,
+    inLanguage: getLanguageForPath(canonicalPath),
     itemListOrder: "https://schema.org/ItemListOrderAscending",
     numberOfItems: data.offers.length,
     itemListElement: data.offers.map((offer, index) => ({
@@ -205,8 +288,9 @@ function buildDealsReservationActionSchema(data: DealsPageData): SchemaObject {
   return {
     "@type": "ReserveAction",
     "@id": schemaId(canonicalPath, "reserve-action"),
-    name: "Book a Chios accommodation offer",
+    name: data.hero.title,
     description: data.intro.description,
+    inLanguage: getLanguageForPath(canonicalPath),
     target: data.offers.map((offer) => ({
       "@type": "EntryPoint",
       urlTemplate: absoluteUrl(offer.bookingHref),
@@ -220,7 +304,7 @@ function buildDealsReservationActionSchema(data: DealsPageData): SchemaObject {
     },
     result: {
       "@type": "LodgingReservation",
-      name: "Voulamandis House reservation",
+      name: data.seo.title,
     },
   };
 }
@@ -247,7 +331,7 @@ export function buildDealsSchema(data: DealsPageData) {
     buildDealsReservationActionSchema(data),
     buildBreadcrumbSchema(canonicalPath, [
       {
-        name: "Chios Travel Deals",
+        name: data.hero.title,
         path: canonicalPath,
       },
     ]),
