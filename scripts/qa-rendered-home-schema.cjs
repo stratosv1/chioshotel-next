@@ -18,7 +18,10 @@ async function fetchWithRetry(url, attempts = 30) {
 
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
     try {
-      const response = await fetch(url, { redirect: "follow" });
+      const response = await fetch(url, {
+        redirect: "follow",
+        signal: AbortSignal.timeout(5000),
+      });
       if (response.ok) {
         return response.text();
       }
@@ -56,11 +59,45 @@ function typeIncludes(node, type) {
   return Array.isArray(nodeType) ? nodeType.includes(type) : nodeType === type;
 }
 
+function stopServer(server) {
+  if (!server.pid) {
+    return;
+  }
+
+  try {
+    if (process.platform === "win32") {
+      server.kill("SIGTERM");
+    } else {
+      process.kill(-server.pid, "SIGTERM");
+    }
+  } catch {
+    // The server may already have exited.
+  }
+}
+
+function forceStopServer(server) {
+  if (!server.pid) {
+    return;
+  }
+
+  try {
+    if (process.platform === "win32") {
+      server.kill("SIGKILL");
+    } else {
+      process.kill(-server.pid, "SIGKILL");
+    }
+  } catch {
+    // The server may already have exited.
+  }
+}
+
 async function main() {
+  const nextBin = require.resolve("next/dist/bin/next");
   const server = spawn(
-    process.platform === "win32" ? "npm.cmd" : "npm",
-    ["run", "start", "--", "-H", "127.0.0.1", "-p", "3000"],
+    process.execPath,
+    [nextBin, "start", "-H", "127.0.0.1", "-p", "3000"],
     {
+      detached: process.platform !== "win32",
       env: {
         ...process.env,
         NODE_ENV: "production",
@@ -146,11 +183,11 @@ async function main() {
     console.error(serverOutput);
     throw error;
   } finally {
-    server.kill("SIGTERM");
-    await delay(500);
-    if (!server.killed) {
-      server.kill("SIGKILL");
-    }
+    stopServer(server);
+    await delay(750);
+    forceStopServer(server);
+    server.stdout.destroy();
+    server.stderr.destroy();
   }
 }
 
