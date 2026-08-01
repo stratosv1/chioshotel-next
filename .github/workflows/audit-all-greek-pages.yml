@@ -32,7 +32,11 @@ jobs:
         run: npm run build
 
       - name: Audit every Greek sitemap page
+        continue-on-error: true
         run: node scripts/qa-all-greek-pages.cjs
+
+      - name: Refine and validate findings
+        run: node scripts/refine-greek-page-audit.cjs
 
       - name: Upload Greek audit report
         if: always()
