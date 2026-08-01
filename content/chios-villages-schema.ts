@@ -13,6 +13,7 @@ import {
   buildOrganizationSchema,
   buildSchemaGraph,
   buildWebsiteSchema,
+  getLocalizedSchemaAddress,
   hotelId,
   itemListId,
   primaryImageId,
@@ -21,6 +22,28 @@ import {
   websiteId,
   type SchemaObject,
 } from "@/lib/structured-data";
+
+type VillageSchemaLanguage = "en" | "el" | "de" | "fr" | "it" | "es" | "tr";
+
+const propertyLabels: Record<
+  VillageSchemaLanguage,
+  { region: string; mood: string; tags: string }
+> = {
+  en: { region: "Region", mood: "Mood", tags: "Tags" },
+  el: { region: "Περιοχή", mood: "Ατμόσφαιρα", tags: "Χαρακτηριστικά" },
+  de: { region: "Region", mood: "Atmosphäre", tags: "Merkmale" },
+  fr: { region: "Région", mood: "Ambiance", tags: "Caractéristiques" },
+  it: { region: "Regione", mood: "Atmosfera", tags: "Caratteristiche" },
+  es: { region: "Región", mood: "Ambiente", tags: "Características" },
+  tr: { region: "Bölge", mood: "Atmosfer", tags: "Özellikler" },
+};
+
+function getVillageSchemaLanguage(path: string): VillageSchemaLanguage {
+  const language = getLanguageForPath(path);
+  return ["en", "el", "de", "fr", "it", "es", "tr"].includes(language)
+    ? (language as VillageSchemaLanguage)
+    : "en";
+}
 
 function buildChiosVillagesCollectionPageSchema(
   data: ChiosVillagesPageData,
@@ -39,14 +62,9 @@ function buildChiosVillagesCollectionPageSchema(
     isPartOf: {
       "@id": websiteId(),
     },
-    about: [
-      {
-        "@id": schemaId("/chios-island/", "destination"),
-      },
-      {
-        "@id": hotelId(),
-      },
-    ],
+    about: {
+      "@id": hotelId(),
+    },
     mainEntity: {
       "@id": itemListId(canonicalPath),
     },
@@ -64,7 +82,12 @@ function buildChiosVillagesCollectionPageSchema(
 
 function buildVillagePlaceSchema(
   village: ChiosVillagesPageData["villages"][number],
+  collectionPath: string,
 ): SchemaObject {
+  const language = getLanguageForPath(village.href);
+  const labels = propertyLabels[getVillageSchemaLanguage(village.href)];
+  const address = getLocalizedSchemaAddress(village.href);
+
   return {
     "@type": ["Place", "TouristAttraction"],
     "@id": schemaId(village.href, "place"),
@@ -73,15 +96,16 @@ function buildVillagePlaceSchema(
     url: absoluteUrl(village.href),
     description: village.description,
     image: absoluteUrl(village.image),
+    inLanguage: language,
     address: {
       "@type": "PostalAddress",
-      addressLocality: village.region,
-      addressRegion: "Chios",
+      addressLocality: village.region || address.addressLocality,
+      addressRegion: address.addressRegion,
       addressCountry: "GR",
     },
     touristType: village.badges,
     isPartOf: {
-      "@id": schemaId("/chios-island/", "destination"),
+      "@id": webPageId(collectionPath),
     },
     subjectOf: {
       "@id": webPageId(village.href),
@@ -89,17 +113,17 @@ function buildVillagePlaceSchema(
     additionalProperty: [
       {
         "@type": "PropertyValue",
-        name: "Region",
+        name: labels.region,
         value: village.region,
       },
       {
         "@type": "PropertyValue",
-        name: "Mood",
+        name: labels.mood,
         value: village.mood,
       },
       {
         "@type": "PropertyValue",
-        name: "Tags",
+        name: labels.tags,
         value: village.badges.join(", "),
       },
     ],
@@ -112,8 +136,9 @@ function buildVillagesItemListSchema(data: ChiosVillagesPageData): SchemaObject 
   return {
     "@type": "ItemList",
     "@id": itemListId(canonicalPath),
-    name: "Top Chios villages",
+    name: data.hero.title,
     description: data.intro.description,
+    inLanguage: getLanguageForPath(canonicalPath),
     itemListOrder: "https://schema.org/ItemListOrderAscending",
     numberOfItems: data.villages.length,
     itemListElement: data.villages.map((village, index) => ({
@@ -138,6 +163,7 @@ function buildVillagePlanningSchema(data: ChiosVillagesPageData): SchemaObject {
     "@id": schemaId(canonicalPath, "village-planning"),
     name: data.planning.title,
     description: data.planning.description,
+    inLanguage: getLanguageForPath(canonicalPath),
     itemListOrder: "https://schema.org/ItemListOrderAscending",
     numberOfItems: data.planning.items.length,
     itemListElement: data.planning.items.map((item, index) => ({
@@ -158,6 +184,7 @@ function buildVillageGuideTipSchema(data: ChiosVillagesPageData): SchemaObject {
     name: data.intro.tip.title,
     text: data.intro.tip.text,
     url: absoluteUrl(data.intro.tip.href),
+    inLanguage: getLanguageForPath(canonicalPath),
     about: {
       "@id": hotelId(),
     },
@@ -172,6 +199,7 @@ function buildVillageStayActionSchema(data: ChiosVillagesPageData): SchemaObject
     "@id": schemaId(canonicalPath, "reserve-action"),
     name: data.stay.primaryCta.label,
     description: data.stay.text,
+    inLanguage: getLanguageForPath(canonicalPath),
     target: {
       "@type": "EntryPoint",
       urlTemplate: absoluteUrl(data.stay.primaryCta.href),
@@ -185,7 +213,7 @@ function buildVillageStayActionSchema(data: ChiosVillagesPageData): SchemaObject
     },
     result: {
       "@type": "LodgingReservation",
-      name: `${siteName} stay for exploring Chios villages`,
+      name: data.stay.title,
     },
   };
 }
@@ -209,15 +237,13 @@ export function buildChiosVillagesSchema(data: ChiosVillagesPageData) {
     buildVillagesItemListSchema(data),
     buildVillagePlanningSchema(data),
     buildVillageGuideTipSchema(data),
-    ...data.villages.map(buildVillagePlaceSchema),
+    ...data.villages.map((village) =>
+      buildVillagePlaceSchema(village, canonicalPath),
+    ),
     buildVillageStayActionSchema(data),
     buildBreadcrumbSchema(canonicalPath, [
       {
-        name: "Chios Island",
-        path: "/chios-island/",
-      },
-      {
-        name: "Chios Villages",
+        name: data.hero.title,
         path: canonicalPath,
       },
     ]),
