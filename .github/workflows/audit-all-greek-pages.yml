@@ -38,6 +38,9 @@ jobs:
       - name: Audit Greek copy, internal links and redirects
         run: node scripts/qa-greek-links-copy-redirects.cjs
 
+      - name: Validate language cleanup and final redirect targets
+        run: node scripts/finalize-greek-audit.cjs
+
       - name: Refine and validate findings
         run: node scripts/refine-greek-page-audit.cjs
 
