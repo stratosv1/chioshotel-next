@@ -1,0 +1,43 @@
+name: Audit All Greek Pages
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Audit every Greek sitemap page
+        run: node scripts/qa-all-greek-pages.cjs
+
+      - name: Upload Greek audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: greek-pages-seo-audit
+          path: artifacts/greek-pages-audit.*
+          if-no-files-found: warn
