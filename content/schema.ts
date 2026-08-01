@@ -1,21 +1,21 @@
-﻿import {
+import {
   absoluteUrl,
   siteName,
-  siteUrl,
 } from "@/lib/seo";
 import {
   homePageEn,
   type HomePageData,
 } from "@/content/home";
 import {
+  buildAccommodationSchema,
   buildBreadcrumbSchema,
   buildHotelSchema,
   buildImageSchema,
+  buildItemListSchema,
   buildOrganizationSchema,
   buildSchemaGraph,
   buildWebsiteSchema,
   hotelId,
-  itemListId,
   schemaId,
   webPageId,
   websiteId,
@@ -267,36 +267,30 @@ function getHomeRoomSchemaContent(canonicalPath: string): HomeRoomSchemaContent 
 function buildHomeRoomsItemListSchema(canonicalPath: string): SchemaObject {
   const roomContent = getHomeRoomSchemaContent(canonicalPath);
 
-  return {
-    "@type": "ItemList",
-    "@id": itemListId(canonicalPath),
+  return buildItemListSchema({
+    path: canonicalPath,
     name: roomContent.listName,
     description: roomContent.listDescription,
-    itemListOrder: "https://schema.org/ItemListOrderAscending",
-    numberOfItems: roomContent.rooms.length,
-    itemListElement: roomContent.rooms.map((room, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      url: absoluteUrl(room.urlPath),
+    items: roomContent.rooms.map((room) => ({
       name: room.name,
+      url: room.urlPath,
+      description: room.description,
     })),
-  };
+  });
 }
 
 function buildHomeRoomReferencesSchema(canonicalPath: string): SchemaObject[] {
   const roomContent = getHomeRoomSchemaContent(canonicalPath);
 
-  return roomContent.rooms.map((room) => ({
-    "@type": "Accommodation",
-    "@id": schemaId(room.urlPath, "room"),
-    name: room.name,
-    url: absoluteUrl(room.urlPath),
-    description: room.description,
-    containedInPlace: {
-      "@id": hotelId(),
-    },
-  }));
+  return roomContent.rooms.map((room) =>
+    buildAccommodationSchema({
+      path: room.urlPath,
+      name: room.name,
+      description: room.description,
+    }),
+  );
 }
+
 export function buildHomePageSchema(data: HomePageData): SchemaObject {
   const canonicalPath = data.seo.canonicalPath;
 
@@ -320,6 +314,3 @@ export function buildHomePageSchema(data: HomePageData): SchemaObject {
 }
 
 export const homePageSchema = buildHomePageSchema(homePageEn);
-
-
-
