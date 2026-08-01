@@ -44,6 +44,11 @@ patchFile("components/chios/ChiosHolidayQuizPage.tsx", [
   ["\"miniComplete\": \"Το mini quest ολοκληρώθηκε! 🌟\"", "\"miniComplete\": \"Η σύντομη δοκιμασία ολοκληρώθηκε! 🌟\""],
 ]);
 
+patchFile("components/rates/RatesPage.tsx", [
+  ["categories: [[\"Economy\", \"Δωμάτια 2, 6\"]", "categories: [[\"Οικονομικά δίκλινα\", \"Δωμάτια 2, 6\"]"],
+  ["στο ίδιο tab", "στην ίδια καρτέλα"],
+]);
+
 patchFile("content/organized-beaches.ts", [
   ["πιο εύκολη πρόσβαση, beach service, καφέ, ταβέρνες", "πιο εύκολη πρόσβαση, ξαπλώστρες, ομπρέλες, καφέ και ταβέρνες"],
   ["Θέλετε την πιο εύκολη beach day;", "Θέλετε μια εύκολη ημέρα στην παραλία;"],
@@ -54,6 +59,7 @@ patchFile("content/beach-lovers.ts", [
   ["Η τέλεια beach day με το Voulamandis House", "Η τέλεια ημέρα στην παραλία με το Voulamandis House"],
   ["Η σημερινή μέρα έχει τίτλο: Νότια Χίος – Beach Day.", "Η σημερινή μέρα έχει τίτλο: Νότια Χίος – ημέρα στην παραλία."],
   ["Επειδή είσαι beach lover, η μέρα συνεχίζεται", "Επειδή αγαπάς τις παραλίες, η μέρα συνεχίζεται"],
+  ["Γιατί οι beach lovers μένουν στο Voulamandis House", "Γιατί όσοι αγαπούν τις παραλίες μένουν στο Voulamandis House"],
 ]);
 
 patchFile("content/beach-details.ts", [
