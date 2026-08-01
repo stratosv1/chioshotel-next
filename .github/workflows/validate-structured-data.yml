@@ -39,3 +39,6 @@ jobs:
 
       - name: Build application
         run: npm run build
+
+      - name: Validate rendered Greek homepage JSON-LD
+        run: node scripts/qa-rendered-home-schema.cjs
