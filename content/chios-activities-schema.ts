@@ -1,4 +1,7 @@
-﻿import type { ChiosActivitiesPageData } from "@/content/chios-activities";
+import {
+  chiosActivitiesPaths,
+  type ChiosActivitiesPageData,
+} from "@/content/chios-activities";
 import {
   absoluteUrl,
   getCanonicalUrl,
@@ -22,13 +25,28 @@ import {
   type SchemaObject,
 } from "@/lib/structured-data";
 
-function getActivityType(data: ChiosActivitiesPageData): string[] {
-  if (data.key === "hub") {
-    return ["CollectionPage"];
-  }
+const chiosIslandPaths: Record<ChiosActivitiesPageData["locale"], string> = {
+  en: "/chios-island/",
+  el: "/el/ti-na-do-sti-xio/",
+  fr: "/fr/chios-en-grece/",
+  de: "/de/chios-insel/",
+  it: "/it/isola-di-chios/",
+  es: "/es/isla-de-quios/",
+  tr: "/tr/sakiz-adasi/",
+};
 
-  return ["WebPage"];
-}
+const activitiesBreadcrumbNames: Record<
+  ChiosActivitiesPageData["locale"],
+  string
+> = {
+  en: "Chios Activities",
+  el: "Δραστηριότητες στη Χίο",
+  fr: "Activités à Chios",
+  de: "Aktivitäten auf Chios",
+  it: "Attività a Chios",
+  es: "Actividades en Quíos",
+  tr: "Sakız Adası Aktiviteleri",
+};
 
 function buildActivitiesWebPageSchema(data: ChiosActivitiesPageData): SchemaObject {
   const canonicalPath = data.path;
@@ -48,7 +66,7 @@ function buildActivitiesWebPageSchema(data: ChiosActivitiesPageData): SchemaObje
     },
     about: [
       {
-        "@id": schemaId("/chios-island/", "destination"),
+        "@id": schemaId(chiosIslandPaths[data.locale], "destination"),
       },
       {
         "@id": hotelId(),
@@ -73,6 +91,7 @@ function buildActivitiesWebPageSchema(data: ChiosActivitiesPageData): SchemaObje
 
 function buildActivityCardSchema(
   card: NonNullable<ChiosActivitiesPageData["cards"]>[number],
+  collectionPath: string,
 ): SchemaObject {
   return {
     "@type": ["TouristAttraction", "CreativeWork"],
@@ -81,8 +100,9 @@ function buildActivityCardSchema(
     url: absoluteUrl(card.href),
     description: card.description,
     image: absoluteUrl(card.image),
+    inLanguage: getLanguageForPath(card.href),
     isPartOf: {
-      "@id": schemaId("/chios-island/", "destination"),
+      "@id": webPageId(collectionPath),
     },
     subjectOf: {
       "@id": webPageId(card.href),
@@ -90,7 +110,9 @@ function buildActivityCardSchema(
   };
 }
 
-function buildActivitiesItemListSchema(data: ChiosActivitiesPageData): SchemaObject | null {
+function buildActivitiesItemListSchema(
+  data: ChiosActivitiesPageData,
+): SchemaObject | null {
   const canonicalPath = data.path;
 
   if (!data.cards?.length) {
@@ -102,6 +124,7 @@ function buildActivitiesItemListSchema(data: ChiosActivitiesPageData): SchemaObj
     "@id": itemListId(canonicalPath),
     name: data.hero.title,
     description: data.hero.subtitle,
+    inLanguage: getLanguageForPath(canonicalPath),
     itemListOrder: "https://schema.org/ItemListOrderAscending",
     numberOfItems: data.cards.length,
     itemListElement: data.cards.map((card, index) => ({
@@ -118,7 +141,9 @@ function buildActivitiesItemListSchema(data: ChiosActivitiesPageData): SchemaObj
   };
 }
 
-function buildSingleActivitySchema(data: ChiosActivitiesPageData): SchemaObject | null {
+function buildSingleActivitySchema(
+  data: ChiosActivitiesPageData,
+): SchemaObject | null {
   const canonicalPath = data.path;
 
   if (data.key === "hub") {
@@ -128,6 +153,12 @@ function buildSingleActivitySchema(data: ChiosActivitiesPageData): SchemaObject 
   const sectionText = data.sections
     ?.flatMap((section) => section.text)
     .join(" ");
+  const touristType = Array.from(
+    new Set([
+      data.hero.eyebrow,
+      ...(data.sections?.map((section) => section.title) ?? []),
+    ]),
+  );
 
   return {
     "@type": ["TouristAttraction", "CreativeWork"],
@@ -138,8 +169,9 @@ function buildSingleActivitySchema(data: ChiosActivitiesPageData): SchemaObject 
     description: data.hero.subtitle || data.seo.description,
     image: data.hero.image ? absoluteUrl(data.hero.image) : undefined,
     text: sectionText,
+    inLanguage: getLanguageForPath(canonicalPath),
     isPartOf: {
-      "@id": schemaId("/chios-island/", "destination"),
+      "@id": webPageId(chiosActivitiesPaths[data.locale]),
     },
     subjectOf: {
       "@id": webPageId(canonicalPath),
@@ -147,17 +179,13 @@ function buildSingleActivitySchema(data: ChiosActivitiesPageData): SchemaObject 
     provider: {
       "@id": hotelId(),
     },
-    touristType: [
-      "Cultural travelers",
-      "Nature travelers",
-      "Couples",
-      "Families",
-      "Slow travel guests",
-    ],
+    touristType,
   };
 }
 
-function buildGreekCourseSchema(data: ChiosActivitiesPageData): SchemaObject | null {
+function buildGreekCourseSchema(
+  data: ChiosActivitiesPageData,
+): SchemaObject | null {
   const canonicalPath = data.path;
 
   if (data.key !== "greekCourses") {
@@ -186,21 +214,22 @@ function buildGreekCourseSchema(data: ChiosActivitiesPageData): SchemaObject | n
     },
     about: [
       {
-        "@id": schemaId("/chios-island/", "destination"),
+        "@id": schemaId(chiosIslandPaths[data.locale], "destination"),
       },
       {
         "@id": schemaId(canonicalPath, "activity"),
       },
     ],
-    teaches: "Greek language and culture",
-    educationalLevel: "All levels",
-    courseMode: "Onsite",
+    teaches: data.sections?.[0]?.title || data.hero.title,
     subjectOf: {
       "@id": webPageId(canonicalPath),
     },
   };
 }
-function buildActivitySectionsSchema(data: ChiosActivitiesPageData): SchemaObject | null {
+
+function buildActivitySectionsSchema(
+  data: ChiosActivitiesPageData,
+): SchemaObject | null {
   const canonicalPath = data.path;
 
   if (!data.sections?.length) {
@@ -210,8 +239,9 @@ function buildActivitySectionsSchema(data: ChiosActivitiesPageData): SchemaObjec
   return {
     "@type": "ItemList",
     "@id": schemaId(canonicalPath, "activity-sections"),
-    name: `${data.hero.title} guide sections`,
+    name: data.intro?.title || data.hero.title,
     description: data.seo.description,
+    inLanguage: getLanguageForPath(canonicalPath),
     itemListOrder: "https://schema.org/ItemListOrderAscending",
     numberOfItems: data.sections.length,
     itemListElement: data.sections.map((section, index) => ({
@@ -223,22 +253,28 @@ function buildActivitySectionsSchema(data: ChiosActivitiesPageData): SchemaObjec
   };
 }
 
-function buildActivityGallerySchema(data: ChiosActivitiesPageData): SchemaObject | null {
+function buildActivityGallerySchema(
+  data: ChiosActivitiesPageData,
+): SchemaObject | null {
   const canonicalPath = data.path;
 
   if (!data.gallery?.length) {
     return null;
   }
 
+  const language = getLanguageForPath(canonicalPath);
+
   return {
     "@type": "ImageGallery",
     "@id": schemaId(canonicalPath, "gallery"),
-    name: `${data.hero.title} gallery`,
+    name: data.hero.title,
+    inLanguage: language,
     associatedMedia: data.gallery.map((image) => ({
       "@type": "ImageObject",
       url: absoluteUrl(image.src),
       contentUrl: absoluteUrl(image.src),
       caption: image.alt,
+      inLanguage: language,
     })),
     about: {
       "@id": schemaId(canonicalPath, "activity"),
@@ -255,6 +291,7 @@ function buildActivityCtaActionSchema(data: ChiosActivitiesPageData): SchemaObje
     "@id": schemaId(canonicalPath, "cta-action"),
     name: data.cta.primaryLabel,
     description: data.cta.text,
+    inLanguage: getLanguageForPath(canonicalPath),
     target: {
       "@type": "EntryPoint",
       urlTemplate: absoluteUrl(data.cta.primaryHref),
@@ -274,12 +311,14 @@ function buildActivityCtaActionSchema(data: ChiosActivitiesPageData): SchemaObje
       ? undefined
       : {
           "@type": "LodgingReservation",
-          name: `${siteName} stay in Chios`,
+          name: data.cta.title,
         },
   };
 }
 
-function buildActivityStayActionSchema(data: ChiosActivitiesPageData): SchemaObject | null {
+function buildActivityStayActionSchema(
+  data: ChiosActivitiesPageData,
+): SchemaObject | null {
   const canonicalPath = data.path;
 
   if (!data.cta.secondaryHref || !data.cta.secondaryLabel) {
@@ -291,6 +330,7 @@ function buildActivityStayActionSchema(data: ChiosActivitiesPageData): SchemaObj
     "@id": schemaId(canonicalPath, "stay-action"),
     name: data.cta.secondaryLabel,
     description: data.cta.text,
+    inLanguage: getLanguageForPath(canonicalPath),
     target: {
       "@type": "EntryPoint",
       urlTemplate: absoluteUrl(data.cta.secondaryHref),
@@ -304,18 +344,19 @@ function buildActivityStayActionSchema(data: ChiosActivitiesPageData): SchemaObj
     },
     result: {
       "@type": "LodgingReservation",
-      name: `${siteName} direct booking request`,
+      name: data.cta.title,
     },
   };
 }
 
 function buildActivityBreadcrumbs(data: ChiosActivitiesPageData) {
   const canonicalPath = data.path;
+  const activitiesName = activitiesBreadcrumbNames[data.locale];
 
   if (data.key === "hub") {
     return buildBreadcrumbSchema(canonicalPath, [
       {
-        name: "Chios Activities",
+        name: activitiesName,
         path: canonicalPath,
       },
     ]);
@@ -323,12 +364,8 @@ function buildActivityBreadcrumbs(data: ChiosActivitiesPageData) {
 
   return buildBreadcrumbSchema(canonicalPath, [
     {
-      name: "Chios Island",
-      path: "/chios-island/",
-    },
-    {
-      name: "Chios Activities",
-      path: "/chios-activities/",
+      name: activitiesName,
+      path: chiosActivitiesPaths[data.locale],
     },
     {
       name: data.hero.title,
@@ -355,7 +392,9 @@ export function buildChiosActivitiesSchema(data: ChiosActivitiesPageData) {
     ),
     buildActivitiesWebPageSchema(data),
     hubItemList,
-    ...(data.cards?.map(buildActivityCardSchema) || []),
+    ...(data.cards?.map((card) =>
+      buildActivityCardSchema(card, canonicalPath),
+    ) || []),
     buildSingleActivitySchema(data),
     buildGreekCourseSchema(data),
     buildActivitySectionsSchema(data),
@@ -365,5 +404,3 @@ export function buildChiosActivitiesSchema(data: ChiosActivitiesPageData) {
     buildActivityBreadcrumbs(data),
   ]);
 }
-
-
