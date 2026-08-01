@@ -1,5 +1,4 @@
 import type { HomePageData } from "@/content/home";
-import type { SchemaObject } from "@/lib/structured-data";
 
 const greekUiReplacements: ReadonlyArray<readonly [string, string]> = [
   ["💎 Value for money", "💎 Καλή σχέση ποιότητας–τιμής"],
@@ -18,26 +17,6 @@ const greekUiReplacements: ReadonlyArray<readonly [string, string]> = [
   ["last minute", "τελευταίας στιγμής"],
   ["🏡 Apt", "🏡 Διαμέρισμα"],
 ];
-
-const greekSchemaReplacements: Record<string, string> = {
-  "ωρεάν WiFi": "Δωρεάν WiFi",
-  "σύρματη πρόσβαση στο διαδίκτυο για τους επισκέπτες":
-    "Ασύρματη πρόσβαση στο διαδίκτυο για τους επισκέπτες",
-  "λιματισμός": "Κλιματισμός",
-  "λιματισμός στα καταλύματα": "Κλιματισμός στα καταλύματα",
-  "διωτικό μπάνιο": "Ιδιωτικό μπάνιο",
-  "διωτικές εγκαταστάσεις μπάνιου": "Ιδιωτικές εγκαταστάσεις μπάνιου",
-  "ηλεόραση επίπεδης οθόνης": "Τηλεόραση επίπεδης οθόνης",
-  "ηλεόραση στο κατάλυμα": "Τηλεόραση στο κατάλυμα",
-  "ήπος και βεράντα": "Κήπος και βεράντα",
-  "ξωτερικοί χώροι κήπου και βεράντας": "Εξωτερικοί χώροι κήπου και βεράντας",
-  "ιαθέσιμος χώρος στάθμευσης": "Διαθέσιμος χώρος στάθμευσης",
-  "ώρος στάθμευσης διαθέσιμος για τους επισκέπτες":
-    "Χώρος στάθμευσης διαθέσιμος για τους επισκέπτες",
-  "πηρεσία καθαριότητας": "Υπηρεσία καθαριότητας",
-  "πηρεσία καθαριότητας κατά τη διάρκεια της διαμονής":
-    "Υπηρεσία καθαριότητας κατά τη διάρκεια της διαμονής",
-};
 
 function replaceGreekUiString(value: string): string {
   return greekUiReplacements.reduce(
@@ -107,18 +86,4 @@ export function hardenGreekHomePageData(data: HomePageData): HomePageData {
       kicker: "Ανακάλυψε τη Χίο",
     },
   };
-}
-
-export function hardenGreekSchema(
-  data: SchemaObject,
-  canonicalPath: string,
-): SchemaObject {
-  if (canonicalPath !== "/el/") {
-    return data;
-  }
-
-  return deepMapStrings(
-    data,
-    (value) => greekSchemaReplacements[value] ?? value,
-  ) as SchemaObject;
 }

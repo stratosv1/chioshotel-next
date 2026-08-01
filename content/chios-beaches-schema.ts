@@ -1,4 +1,4 @@
-﻿import type { ChiosBeachesPageData } from "@/content/chios-beaches";
+import type { ChiosBeachesPageData } from "@/content/chios-beaches";
 import {
   absoluteUrl,
   getCanonicalUrl,
@@ -28,83 +28,83 @@ const beachSchemaLabelsByLanguage: Record<
   BeachSchemaLanguage,
   {
     chiosIsland: string;
+    chiosIslandPath: string;
     chiosBeaches: string;
     topChiosBeaches: string;
     region: string;
     mood: string;
     tags: string;
-    addressLocality: string;
     addressRegion: string;
   }
 > = {
   en: {
     chiosIsland: "Chios Island",
+    chiosIslandPath: "/chios-island/",
     chiosBeaches: "Chios Beaches",
     topChiosBeaches: "Top Chios beaches",
     region: "Region",
     mood: "Mood",
     tags: "Tags",
-    addressLocality: "Chios",
     addressRegion: "North Aegean",
   },
   el: {
-    chiosIsland: "\u039d\u03b7\u03c3\u03af \u03a7\u03af\u03bf\u03c2",
-    chiosBeaches: "\u03a0\u03b1\u03c1\u03b1\u03bb\u03af\u03b5\u03c2 \u03a7\u03af\u03bf\u03c5",
-    topChiosBeaches: "\u039a\u03bf\u03c1\u03c5\u03c6\u03b1\u03af\u03b5\u03c2 \u03c0\u03b1\u03c1\u03b1\u03bb\u03af\u03b5\u03c2 \u03c4\u03b7\u03c2 \u03a7\u03af\u03bf\u03c5",
-    region: "\u03a0\u03b5\u03c1\u03b9\u03bf\u03c7\u03ae",
-    mood: "\u038e\u03c6\u03bf\u03c2",
-    tags: "\u0395\u03c4\u03b9\u03ba\u03ad\u03c4\u03b5\u03c2",
-    addressLocality: "\u03a7\u03af\u03bf\u03c2",
-    addressRegion: "\u0392\u03cc\u03c1\u03b5\u03b9\u03bf \u0391\u03b9\u03b3\u03b1\u03af\u03bf",
+    chiosIsland: "Νησί Χίος",
+    chiosIslandPath: "/el/ti-na-do-sti-xio/",
+    chiosBeaches: "Παραλίες Χίου",
+    topChiosBeaches: "Κορυφαίες παραλίες της Χίου",
+    region: "Περιοχή",
+    mood: "Ύφος",
+    tags: "Χαρακτηριστικά",
+    addressRegion: "Βόρειο Αιγαίο",
   },
   de: {
     chiosIsland: "Insel Chios",
-    chiosBeaches: "Str\u00e4nde von Chios",
-    topChiosBeaches: "Die sch\u00f6nsten Str\u00e4nde auf Chios",
+    chiosIslandPath: "/de/chios-insel/",
+    chiosBeaches: "Strände von Chios",
+    topChiosBeaches: "Die schönsten Strände auf Chios",
     region: "Region",
-    mood: "Atmosph\u00e4re",
+    mood: "Atmosphäre",
     tags: "Merkmale",
-    addressLocality: "Chios",
-    addressRegion: "N\u00f6rdliche \u00c4g\u00e4is",
+    addressRegion: "Nördliche Ägäis",
   },
   fr: {
-    chiosIsland: "\u00cele de Chios",
+    chiosIsland: "Île de Chios",
+    chiosIslandPath: "/fr/chios-en-grece/",
     chiosBeaches: "Plages de Chios",
     topChiosBeaches: "Les plus belles plages de Chios",
-    region: "R\u00e9gion",
+    region: "Région",
     mood: "Ambiance",
-    tags: "Caract\u00e9ristiques",
-    addressLocality: "Chios",
-    addressRegion: "\u00c9g\u00e9e du Nord",
+    tags: "Caractéristiques",
+    addressRegion: "Égée du Nord",
   },
   it: {
     chiosIsland: "Isola di Chios",
+    chiosIslandPath: "/it/isola-di-chios/",
     chiosBeaches: "Spiagge di Chios",
     topChiosBeaches: "Le migliori spiagge di Chios",
     region: "Regione",
     mood: "Atmosfera",
     tags: "Caratteristiche",
-    addressLocality: "Chios",
     addressRegion: "Egeo Settentrionale",
   },
   es: {
-    chiosIsland: "Isla de Qu\u00edos",
-    chiosBeaches: "Playas de Qu\u00edos",
-    topChiosBeaches: "Las mejores playas de Qu\u00edos",
-    region: "Regi\u00f3n",
+    chiosIsland: "Isla de Quíos",
+    chiosIslandPath: "/es/isla-de-quios/",
+    chiosBeaches: "Playas de Quíos",
+    topChiosBeaches: "Las mejores playas de Quíos",
+    region: "Región",
     mood: "Ambiente",
-    tags: "Caracter\u00edsticas",
-    addressLocality: "Qu\u00edos",
+    tags: "Características",
     addressRegion: "Egeo Septentrional",
   },
   tr: {
-    chiosIsland: "Sak\u0131z Adas\u0131",
-    chiosBeaches: "Sak\u0131z Plajlar\u0131",
-    topChiosBeaches: "Sak\u0131z Adas\u0131\u2019n\u0131n en iyi plajlar\u0131",
-    region: "B\u00f6lge",
+    chiosIsland: "Sakız Adası",
+    chiosIslandPath: "/tr/sakiz-adasi/",
+    chiosBeaches: "Sakız Plajları",
+    topChiosBeaches: "Sakız Adası’nın en iyi plajları",
+    region: "Bölge",
     mood: "Atmosfer",
-    tags: "\u00d6zellikler",
-    addressLocality: "Sak\u0131z",
+    tags: "Özellikler",
     addressRegion: "Kuzey Ege",
   },
 };
@@ -113,7 +113,8 @@ function isBeachSchemaLanguage(language: string): language is BeachSchemaLanguag
   return ["en", "el", "de", "fr", "it", "es", "tr"].includes(language);
 }
 
-function getBeachSchemaLabels(language: string) {
+function getBeachSchemaLabels(path: string) {
+  const language = getLanguageForPath(path);
   return beachSchemaLabelsByLanguage[isBeachSchemaLanguage(language) ? language : "en"];
 }
 
@@ -122,6 +123,7 @@ function buildChiosBeachesCollectionPageSchema(
 ): SchemaObject {
   const canonicalPath = data.seo.canonicalPath;
   const language = getLanguageForPath(canonicalPath);
+  const labels = getBeachSchemaLabels(canonicalPath);
 
   return {
     "@type": "CollectionPage",
@@ -136,7 +138,7 @@ function buildChiosBeachesCollectionPageSchema(
     },
     about: [
       {
-        "@id": schemaId("/chios-island/", "destination"),
+        "@id": schemaId(labels.chiosIslandPath, "destination"),
       },
       {
         "@id": hotelId(),
@@ -159,8 +161,10 @@ function buildChiosBeachesCollectionPageSchema(
 
 function buildBeachPlaceSchema(
   beach: ChiosBeachesPageData["beaches"][number],
+  collectionPath: string,
+  destinationPath: string,
 ): SchemaObject {
-  const labels = getBeachSchemaLabels(getLanguageForPath(beach.href));
+  const labels = getBeachSchemaLabels(beach.href);
 
   return {
     "@type": ["Beach", "TouristAttraction"],
@@ -170,6 +174,7 @@ function buildBeachPlaceSchema(
     url: absoluteUrl(beach.href),
     description: beach.description,
     image: absoluteUrl(beach.image),
+    inLanguage: getLanguageForPath(beach.href),
     address: {
       "@type": "PostalAddress",
       addressLocality: beach.region,
@@ -177,9 +182,14 @@ function buildBeachPlaceSchema(
       addressCountry: "GR",
     },
     touristType: beach.badges,
-    isPartOf: {
-      "@id": schemaId("/chios-island/", "destination"),
-    },
+    isPartOf: [
+      {
+        "@id": schemaId(destinationPath, "destination"),
+      },
+      {
+        "@id": webPageId(collectionPath),
+      },
+    ],
     subjectOf: {
       "@id": webPageId(beach.href),
     },
@@ -205,13 +215,14 @@ function buildBeachPlaceSchema(
 
 function buildBeachesItemListSchema(data: ChiosBeachesPageData): SchemaObject {
   const canonicalPath = data.seo.canonicalPath;
-  const labels = getBeachSchemaLabels(getLanguageForPath(canonicalPath));
+  const labels = getBeachSchemaLabels(canonicalPath);
 
   return {
     "@type": "ItemList",
     "@id": itemListId(canonicalPath),
     name: labels.topChiosBeaches,
     description: data.intro.description,
+    inLanguage: getLanguageForPath(canonicalPath),
     itemListOrder: "https://schema.org/ItemListOrderAscending",
     numberOfItems: data.beaches.length,
     itemListElement: data.beaches.map((beach, index) => ({
@@ -236,6 +247,7 @@ function buildBeachPlanningSchema(data: ChiosBeachesPageData): SchemaObject {
     "@id": schemaId(canonicalPath, "beach-planning"),
     name: data.planning.title,
     description: data.planning.description,
+    inLanguage: getLanguageForPath(canonicalPath),
     itemListOrder: "https://schema.org/ItemListOrderAscending",
     numberOfItems: data.planning.items.length,
     itemListElement: data.planning.items.map((item, index) => ({
@@ -256,6 +268,7 @@ function buildBeachGuideTipSchema(data: ChiosBeachesPageData): SchemaObject {
     name: data.intro.tip.title,
     text: data.intro.tip.text,
     url: absoluteUrl(data.intro.tip.href),
+    inLanguage: getLanguageForPath(canonicalPath),
     about: {
       "@id": hotelId(),
     },
@@ -270,6 +283,7 @@ function buildBeachStayActionSchema(data: ChiosBeachesPageData): SchemaObject {
     "@id": schemaId(canonicalPath, "reserve-action"),
     name: data.stay.primaryCta.label,
     description: data.stay.text,
+    inLanguage: getLanguageForPath(canonicalPath),
     target: {
       "@type": "EntryPoint",
       urlTemplate: absoluteUrl(data.stay.primaryCta.href),
@@ -283,18 +297,18 @@ function buildBeachStayActionSchema(data: ChiosBeachesPageData): SchemaObject {
     },
     result: {
       "@type": "LodgingReservation",
-      name: `${siteName} stay for a Chios beach holiday`,
+      name: data.stay.title,
     },
   };
 }
 
 export function buildChiosBeachesSchema(data: ChiosBeachesPageData) {
   const canonicalPath = data.seo.canonicalPath;
-  const labels = getBeachSchemaLabels(getLanguageForPath(canonicalPath));
+  const labels = getBeachSchemaLabels(canonicalPath);
 
   return buildSchemaGraph([
     buildOrganizationSchema(),
-    buildHotelSchema({ path: data.seo.canonicalPath }),
+    buildHotelSchema({ path: canonicalPath }),
     buildWebsiteSchema(),
     buildImageSchema(
       {
@@ -308,12 +322,14 @@ export function buildChiosBeachesSchema(data: ChiosBeachesPageData) {
     buildBeachesItemListSchema(data),
     buildBeachPlanningSchema(data),
     buildBeachGuideTipSchema(data),
-    ...data.beaches.map((beach) => buildBeachPlaceSchema(beach)),
+    ...data.beaches.map((beach) =>
+      buildBeachPlaceSchema(beach, canonicalPath, labels.chiosIslandPath),
+    ),
     buildBeachStayActionSchema(data),
     buildBreadcrumbSchema(canonicalPath, [
       {
         name: labels.chiosIsland,
-        path: "/chios-island/",
+        path: labels.chiosIslandPath,
       },
       {
         name: labels.chiosBeaches,
@@ -322,6 +338,3 @@ export function buildChiosBeachesSchema(data: ChiosBeachesPageData) {
     ]),
   ]);
 }
-
-
-

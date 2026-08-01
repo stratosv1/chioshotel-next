@@ -12,6 +12,7 @@ import {
   buildOrganizationSchema,
   buildSchemaGraph,
   buildWebsiteSchema,
+  getLocalizedSchemaLabels,
   hotelId,
   primaryImageId,
   schemaId,
@@ -37,6 +38,8 @@ type LandingCard = {
   tag?: string;
 };
 
+type LandingCta = string | { label: string; href: string };
+
 type LandingPageSchemaData = {
   path?: string;
   seo: {
@@ -52,8 +55,8 @@ type LandingPageSchemaData = {
     subtitle?: string;
     description?: string;
     image?: ImageLike;
-    primaryCta?: string | { label: string; href: string };
-    secondaryCta?: string | { label: string; href: string };
+    primaryCta?: LandingCta;
+    secondaryCta?: LandingCta;
   };
   intro?: {
     title?: string;
@@ -95,14 +98,8 @@ type LandingPageSchemaData = {
     title?: string;
     text?: string;
     button?: string;
-    primaryCta?: string | {
-      label: string;
-      href: string;
-    };
-    secondaryCta?: string | {
-      label: string;
-      href: string;
-    };
+    primaryCta?: LandingCta;
+    secondaryCta?: LandingCta;
   };
   links?: {
     booking?: string;
@@ -110,6 +107,16 @@ type LandingPageSchemaData = {
     chiosGuide?: string;
     beaches?: string;
   };
+};
+
+const chiosIslandPathByLanguage: Record<string, string> = {
+  en: "/chios-island/",
+  el: "/el/ti-na-do-sti-xio/",
+  fr: "/fr/chios-en-grece/",
+  de: "/de/chios-insel/",
+  it: "/it/isola-di-chios/",
+  es: "/es/isla-de-quios/",
+  tr: "/tr/sakiz-adasi/",
 };
 
 function getCanonicalPath(data: LandingPageSchemaData): string {
@@ -153,8 +160,16 @@ function textToString(value?: string | string[]): string | undefined {
   return Array.isArray(value) ? value.join(" ") : value;
 }
 
-function getCardTitle(card: LandingCard): string {
-  return card.title || card.name || "Chios experience";
+function getCtaLabel(cta?: LandingCta): string | undefined {
+  if (!cta) {
+    return undefined;
+  }
+
+  return typeof cta === "string" ? cta : cta.label;
+}
+
+function getCardTitle(card: LandingCard, fallback: string): string {
+  return card.title || card.name || fallback;
 }
 
 function getCardDescription(card: LandingCard): string | undefined {
@@ -191,6 +206,11 @@ function getLandingCards(data: LandingPageSchemaData): LandingCard[] {
   return cards;
 }
 
+function getChiosIslandPath(canonicalPath: string): string {
+  const language = getLanguageForPath(canonicalPath);
+  return chiosIslandPathByLanguage[language] || chiosIslandPathByLanguage.en;
+}
+
 function buildLandingWebPageSchema(data: LandingPageSchemaData): SchemaObject {
   const canonicalPath = getCanonicalPath(data);
   const language = getLanguageForPath(canonicalPath);
@@ -211,7 +231,7 @@ function buildLandingWebPageSchema(data: LandingPageSchemaData): SchemaObject {
         "@id": schemaId(canonicalPath, "travel-theme"),
       },
       {
-        "@id": schemaId("/chios-island/", "destination"),
+        "@id": schemaId(getChiosIslandPath(canonicalPath), "destination"),
       },
       {
         "@id": hotelId(),
@@ -235,6 +255,8 @@ function buildLandingWebPageSchema(data: LandingPageSchemaData): SchemaObject {
 function buildTravelThemeSchema(data: LandingPageSchemaData): SchemaObject {
   const canonicalPath = getCanonicalPath(data);
   const image = getPrimaryImage(data);
+  const language = getLanguageForPath(canonicalPath);
+  const labels = getLocalizedSchemaLabels(canonicalPath);
 
   return {
     "@type": ["CreativeWork", "TouristTrip"],
@@ -247,20 +269,14 @@ function buildTravelThemeSchema(data: LandingPageSchemaData): SchemaObject {
       data.hero.description ||
       data.seo.description,
     image: absoluteUrl(image),
+    inLanguage: language,
     about: {
-      "@id": schemaId("/chios-island/", "destination"),
+      "@id": schemaId(getChiosIslandPath(canonicalPath), "destination"),
     },
     provider: {
       "@id": hotelId(),
     },
-    touristType: [
-      "Couples",
-      "Families",
-      "Beach travelers",
-      "Cultural travelers",
-      "Food travelers",
-      "Independent travelers",
-    ],
+    touristType: labels.touristTypes,
     subjectOf: {
       "@id": webPageId(canonicalPath),
     },
@@ -271,6 +287,7 @@ function buildLandingContentItemListSchema(
   data: LandingPageSchemaData,
 ): SchemaObject | null {
   const canonicalPath = getCanonicalPath(data);
+  const language = getLanguageForPath(canonicalPath);
   const cards = getLandingCards(data);
 
   if (!cards.length) {
@@ -285,10 +302,11 @@ function buildLandingContentItemListSchema(
       data.highlights?.subtitle ||
       data.experiences?.subtitle ||
       data.seo.description,
+    inLanguage: language,
     itemListOrder: "https://schema.org/ItemListOrderAscending",
     numberOfItems: cards.length,
     itemListElement: cards.map((card, index) => {
-      const title = getCardTitle(card);
+      const title = getCardTitle(card, data.hero.title);
       const description = getCardDescription(card);
       const image = getCardImage(card);
 
@@ -309,6 +327,9 @@ function buildLandingContentItemListSchema(
           description,
           image: image ? absoluteUrl(image) : undefined,
           url: card.href ? absoluteUrl(card.href) : undefined,
+          inLanguage: card.href
+            ? getLanguageForPath(card.href)
+            : language,
           isPartOf: {
             "@id": schemaId(canonicalPath, "travel-theme"),
           },
@@ -330,6 +351,7 @@ function buildIntroSchema(data: LandingPageSchemaData): SchemaObject | null {
     "@id": schemaId(canonicalPath, "intro"),
     name: data.intro.title || data.hero.title,
     text: textToString(data.intro.text),
+    inLanguage: getLanguageForPath(canonicalPath),
     about: {
       "@id": schemaId(canonicalPath, "travel-theme"),
     },
@@ -351,9 +373,10 @@ function buildStaySchema(data: LandingPageSchemaData): SchemaObject | null {
   return {
     "@type": "CreativeWork",
     "@id": schemaId(canonicalPath, "stay-section"),
-    name: data.stay.title || "Stay at Voulamandis House",
+    name: data.stay.title || data.hero.title,
     text: data.stay.text,
     image: image ? absoluteUrl(image) : undefined,
+    inLanguage: getLanguageForPath(canonicalPath),
     about: {
       "@id": hotelId(),
     },
@@ -377,8 +400,8 @@ function buildBookingActionSchema(
   const bookingLabel =
     data.stay?.primaryCta?.label ||
     data.finalCta?.button ||
-    data.hero.primaryCta ||
-    "Book direct";
+    getCtaLabel(data.hero.primaryCta) ||
+    data.hero.title;
 
   if (!bookingHref) {
     return null;
@@ -392,6 +415,7 @@ function buildBookingActionSchema(
       data.finalCta?.text ||
       data.stay?.text ||
       data.seo.description,
+    inLanguage: getLanguageForPath(canonicalPath),
     target: {
       "@type": "EntryPoint",
       urlTemplate: absoluteUrl(bookingHref),
@@ -405,7 +429,7 @@ function buildBookingActionSchema(
     },
     result: {
       "@type": "LodgingReservation",
-      name: `${siteName} direct booking request`,
+      name: data.finalCta?.title || data.stay?.title || data.hero.title,
     },
   };
 }
@@ -423,8 +447,8 @@ function buildSecondaryViewActionSchema(
 
   const label =
     data.stay?.secondaryCta?.label ||
-    data.hero.secondaryCta ||
-    "Explore Chios";
+    getCtaLabel(data.hero.secondaryCta) ||
+    data.hero.title;
 
   if (!href) {
     return null;
@@ -434,6 +458,7 @@ function buildSecondaryViewActionSchema(
     "@type": "ViewAction",
     "@id": schemaId(canonicalPath, "view-action"),
     name: label,
+    inLanguage: getLanguageForPath(canonicalPath),
     target: {
       "@type": "EntryPoint",
       urlTemplate: absoluteUrl(href),
@@ -479,4 +504,3 @@ export function buildLandingPageSchema(data: LandingPageSchemaData) {
     ]),
   ]);
 }
-

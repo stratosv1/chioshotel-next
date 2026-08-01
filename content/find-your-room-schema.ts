@@ -1,4 +1,4 @@
-﻿import type { FindYourRoomPageData } from "@/content/find-your-room";
+import type { FindYourRoomPageData } from "@/content/find-your-room";
 import {
   absoluteUrl,
   getCanonicalUrl,
@@ -20,6 +20,53 @@ import {
   websiteId,
   type SchemaObject,
 } from "@/lib/structured-data";
+
+type RoomOptionPaths = {
+  economy: string;
+  standard: string;
+  apartments: string;
+};
+
+const roomOptionPathsByLanguage: Record<
+  FindYourRoomPageData["language"],
+  RoomOptionPaths
+> = {
+  en: {
+    economy: "/chios-rooms/economy-double-rooms/",
+    standard: "/chios-rooms/standard-double-room/",
+    apartments: "/chios-rooms/family-chios-apartments/",
+  },
+  el: {
+    economy: "/el/domatia-xios/oikonomiko-diklino-domatio/",
+    standard: "/el/domatia-xios/diklina-triklina-domatia/",
+    apartments: "/el/domatia-xios/oikogeneiako-diamerisma/",
+  },
+  fr: {
+    economy: "/fr/chambres-a-chios/chambres-doubles-economiques/",
+    standard: "/fr/chambres-a-chios/chambres-doubles-standard/",
+    apartments: "/fr/chambres-a-chios/appartements-familiaux-de-chios/",
+  },
+  de: {
+    economy: "/de/zimmer-chios/economy-zimmer-auf-chios/",
+    standard: "/de/zimmer-chios/standard-doppelzimmer-auf-chios/",
+    apartments: "/de/zimmer-chios/familienapartments-in-chios/",
+  },
+  it: {
+    economy: "/it/stanze-a-chios/camera-doppia-economica-chios/",
+    standard: "/it/stanze-a-chios/camere-doppie-standard-chios/",
+    apartments: "/it/stanze-a-chios/appartamenti-familiari-a-chios/",
+  },
+  es: {
+    economy: "/es/habitaciones-en-chios/economicas-habitaciones-en-chios/",
+    standard: "/es/habitaciones-en-chios/habitaciones-dobles-estandar/",
+    apartments: "/es/habitaciones-en-chios/apartamentos-familiares-en-chios/",
+  },
+  tr: {
+    economy: "/tr/chios-odalari/sakiz-adasindaki-ekonomi-cift-kisilik-oda/",
+    standard: "/tr/chios-odalari/standart-cift-kisilik-odalar/",
+    apartments: "/tr/chios-odalari/sakiz-adasinda-buyuk-aile-daireleri/",
+  },
+};
 
 function buildFindYourRoomWebPageSchema(data: FindYourRoomPageData): SchemaObject {
   const canonicalPath = data.seo.canonicalPath;
@@ -62,6 +109,7 @@ function buildRoomFinderActionSchema(data: FindYourRoomPageData): SchemaObject {
     "@id": schemaId(canonicalPath, "room-finder-action"),
     name: data.engine.basics.title,
     description: data.hero.description,
+    inLanguage: getLanguageForPath(canonicalPath),
     target: {
       "@type": "EntryPoint",
       urlTemplate: `${getCanonicalUrl(canonicalPath)}?checkin={checkin}&checkout={checkout}&guests={guests}&rooms={rooms}`,
@@ -87,22 +135,22 @@ function buildRoomFinderActionSchema(data: FindYourRoomPageData): SchemaObject {
 
 function buildRoomOptionsItemListSchema(data: FindYourRoomPageData): SchemaObject {
   const canonicalPath = data.seo.canonicalPath;
+  const language = getLanguageForPath(canonicalPath);
   const labels = data.engine.roomLabels;
+  const paths = roomOptionPathsByLanguage[data.language];
 
   const roomOptions = [
     {
       name: labels.budgetDoubleRoom,
-      description:
-        "Budget-friendly double room option at Voulamandis House for guests looking for direct booking value in Chios.",
-      url: "/chios-rooms/economy-double-rooms/",
+      description: `${labels.budgetDoubleRoom}. ${data.hero.description}`,
+      url: paths.economy,
       roomId: "economy-double-rooms",
       tags: [labels.room, labels.budget, labels.wifi, labels.airConditioning],
     },
     {
       name: labels.firstFloorDoubleTriple,
-      description:
-        "First-floor double or triple room option at Voulamandis House for guests who prefer upper-floor accommodation in Chios.",
-      url: "/chios-rooms/standard-double-room/",
+      description: `${labels.firstFloorDoubleTriple}. ${data.hero.description}`,
+      url: paths.standard,
       roomId: "standard-double-room-first-floor",
       tags: [
         labels.room,
@@ -114,9 +162,8 @@ function buildRoomOptionsItemListSchema(data: FindYourRoomPageData): SchemaObjec
     },
     {
       name: labels.groundFloorDoubleTriple,
-      description:
-        "Ground-floor double or triple room option at Voulamandis House for guests who prefer easier access and no stairs.",
-      url: "/chios-rooms/standard-double-room/",
+      description: `${labels.groundFloorDoubleTriple}. ${data.hero.description}`,
+      url: paths.standard,
       roomId: "standard-double-room-ground-floor",
       tags: [
         labels.room,
@@ -128,9 +175,8 @@ function buildRoomOptionsItemListSchema(data: FindYourRoomPageData): SchemaObjec
     },
     {
       name: labels.apartmentType,
-      description:
-        "Apartment option at Voulamandis House for families or guests who want more space, kitchen facilities and a comfortable stay in Chios.",
-      url: "/chios-rooms/family-chios-apartments/",
+      description: `${labels.apartmentType}. ${data.hero.description}`,
+      url: paths.apartments,
       roomId: "family-chios-apartments",
       tags: [
         labels.apartment,
@@ -147,6 +193,7 @@ function buildRoomOptionsItemListSchema(data: FindYourRoomPageData): SchemaObjec
     "@id": schemaId(canonicalPath, "room-options"),
     name: data.engine.results.title,
     description: data.engine.results.noPerfectMatchText,
+    inLanguage: language,
     itemListOrder: "https://schema.org/ItemListOrderAscending",
     numberOfItems: roomOptions.length,
     itemListElement: roomOptions.map((room, index) => ({
@@ -161,6 +208,7 @@ function buildRoomOptionsItemListSchema(data: FindYourRoomPageData): SchemaObjec
         name: room.name,
         url: absoluteUrl(room.url),
         description: room.description,
+        inLanguage: language,
         containedInPlace: {
           "@id": hotelId(),
         },
@@ -171,7 +219,7 @@ function buildRoomOptionsItemListSchema(data: FindYourRoomPageData): SchemaObjec
         })),
         additionalProperty: {
           "@type": "PropertyValue",
-          name: "Room finder option",
+          name: data.engine.results.room,
           value: room.roomId,
         },
       },
@@ -187,6 +235,7 @@ function buildReserveActionSchema(data: FindYourRoomPageData): SchemaObject {
     "@id": schemaId(canonicalPath, "reserve-action"),
     name: data.engine.contact.whatsapp,
     description: data.engine.contact.subtitle,
+    inLanguage: getLanguageForPath(canonicalPath),
     target: {
       "@type": "EntryPoint",
       urlTemplate: getCanonicalUrl(canonicalPath),
@@ -200,7 +249,7 @@ function buildReserveActionSchema(data: FindYourRoomPageData): SchemaObject {
     },
     result: {
       "@type": "LodgingReservation",
-      name: `${siteName} direct booking request`,
+      name: data.engine.contact.title,
     },
   };
 }
@@ -223,14 +272,15 @@ function buildDirectBookingBenefitsSchema(data: FindYourRoomPageData): SchemaObj
     },
     {
       name: data.engine.topBenefits.commissions,
-      description: "Direct booking request without third-party commission steps.",
+      description: data.engine.contact.subtitle,
     },
   ];
 
   return {
     "@type": "ItemList",
     "@id": schemaId(canonicalPath, "direct-booking-benefits"),
-    name: "Direct booking benefits",
+    name: data.engine.basics.title,
+    inLanguage: getLanguageForPath(canonicalPath),
     itemListOrder: "https://schema.org/ItemListOrderAscending",
     numberOfItems: benefits.length,
     itemListElement: benefits.map((benefit, index) => ({
@@ -270,4 +320,3 @@ export function buildFindYourRoomSchema(data: FindYourRoomPageData) {
     ]),
   ]);
 }
-

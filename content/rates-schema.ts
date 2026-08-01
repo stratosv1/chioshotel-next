@@ -1,6 +1,5 @@
 import type { RatesPageData } from "@/content/rates";
 import {
-  absoluteUrl,
   getCanonicalUrl,
   getLanguageForPath,
   siteName,
@@ -20,6 +19,74 @@ import {
   websiteId,
   type SchemaObject,
 } from "@/lib/structured-data";
+
+type RatesSchemaLanguage = "en" | "el" | "de" | "fr" | "it" | "es" | "tr";
+
+const ratesLabelsByLanguage: Record<
+  RatesSchemaLanguage,
+  {
+    accommodation: string;
+    directGuests: string;
+    discountCode: string;
+    discountValue: string;
+    bookingConditions: string;
+  }
+> = {
+  en: {
+    accommodation: "Accommodation",
+    directGuests: "Direct booking guests",
+    discountCode: "Discount code",
+    discountValue: "Discount value",
+    bookingConditions: "Booking conditions",
+  },
+  el: {
+    accommodation: "Διαμονή",
+    directGuests: "Επισκέπτες απευθείας κράτησης",
+    discountCode: "Κωδικός έκπτωσης",
+    discountValue: "Αξία έκπτωσης",
+    bookingConditions: "Όροι κράτησης",
+  },
+  de: {
+    accommodation: "Unterkunft",
+    directGuests: "Direktbuchungsgäste",
+    discountCode: "Rabattcode",
+    discountValue: "Rabattwert",
+    bookingConditions: "Buchungsbedingungen",
+  },
+  fr: {
+    accommodation: "Hébergement",
+    directGuests: "Hôtes réservant en direct",
+    discountCode: "Code de réduction",
+    discountValue: "Valeur de la réduction",
+    bookingConditions: "Conditions de réservation",
+  },
+  it: {
+    accommodation: "Alloggio",
+    directGuests: "Ospiti con prenotazione diretta",
+    discountCode: "Codice sconto",
+    discountValue: "Valore dello sconto",
+    bookingConditions: "Condizioni di prenotazione",
+  },
+  es: {
+    accommodation: "Alojamiento",
+    directGuests: "Huéspedes con reserva directa",
+    discountCode: "Código de descuento",
+    discountValue: "Valor del descuento",
+    bookingConditions: "Condiciones de reserva",
+  },
+  tr: {
+    accommodation: "Konaklama",
+    directGuests: "Doğrudan rezervasyon misafirleri",
+    discountCode: "İndirim kodu",
+    discountValue: "İndirim değeri",
+    bookingConditions: "Rezervasyon koşulları",
+  },
+};
+
+function getRatesLabels(path: string) {
+  const language = getLanguageForPath(path) as RatesSchemaLanguage;
+  return ratesLabelsByLanguage[language] ?? ratesLabelsByLanguage.en;
+}
 
 function buildRatesWebPageSchema(data: RatesPageData): SchemaObject {
   const canonicalPath = data.seo.canonicalPath;
@@ -56,6 +123,8 @@ function buildRatesWebPageSchema(data: RatesPageData): SchemaObject {
 
 function buildDirectBookingOfferSchema(data: RatesPageData): SchemaObject {
   const canonicalPath = data.seo.canonicalPath;
+  const language = getLanguageForPath(canonicalPath);
+  const labels = getRatesLabels(canonicalPath);
 
   return {
     "@type": "Offer",
@@ -63,12 +132,13 @@ function buildDirectBookingOfferSchema(data: RatesPageData): SchemaObject {
     name: data.discount.title,
     description: `${data.discount.text} ${data.discount.note}`,
     url: getCanonicalUrl(canonicalPath),
-    category: "Accommodation",
+    category: labels.accommodation,
+    inLanguage: language,
     availability: "https://schema.org/InStock",
     priceCurrency: "EUR",
     eligibleCustomerType: {
       "@type": "BusinessEntityType",
-      name: "Direct booking guests",
+      name: labels.directGuests,
     },
     seller: {
       "@id": hotelId(),
@@ -79,6 +149,7 @@ function buildDirectBookingOfferSchema(data: RatesPageData): SchemaObject {
     potentialAction: {
       "@type": "ReserveAction",
       name: data.booking.title,
+      inLanguage: language,
       target: {
         "@type": "EntryPoint",
         urlTemplate: data.booking.fallbackHref,
@@ -95,17 +166,17 @@ function buildDirectBookingOfferSchema(data: RatesPageData): SchemaObject {
     additionalProperty: [
       {
         "@type": "PropertyValue",
-        name: "Discount code",
+        name: labels.discountCode,
         value: data.discount.code,
       },
       {
         "@type": "PropertyValue",
-        name: "Discount value",
+        name: labels.discountValue,
         value: data.discount.value,
       },
       {
         "@type": "PropertyValue",
-        name: "Booking conditions",
+        name: labels.bookingConditions,
         value: data.discount.note,
       },
     ],
@@ -120,6 +191,7 @@ function buildDirectBookingBenefitsSchema(data: RatesPageData): SchemaObject {
     "@id": schemaId(canonicalPath, "direct-booking-benefits"),
     name: data.benefits.title,
     description: data.benefits.text,
+    inLanguage: getLanguageForPath(canonicalPath),
     itemListOrder: "https://schema.org/ItemListOrderAscending",
     numberOfItems: data.benefits.items.length,
     itemListElement: data.benefits.items.map((item, index) => ({
@@ -139,6 +211,7 @@ function buildBookingActionSchema(data: RatesPageData): SchemaObject {
     "@id": schemaId(canonicalPath, "reserve-action"),
     name: data.booking.title,
     description: data.booking.text,
+    inLanguage: getLanguageForPath(canonicalPath),
     target: {
       "@type": "EntryPoint",
       urlTemplate: data.booking.fallbackHref,
@@ -193,7 +266,7 @@ export function buildRatesSchema(data: RatesPageData) {
     buildBookingActionSchema(data),
     buildBreadcrumbSchema(canonicalPath, [
       {
-        name: "Direct Booking",
+        name: data.hero.title,
         path: canonicalPath,
       },
     ]),

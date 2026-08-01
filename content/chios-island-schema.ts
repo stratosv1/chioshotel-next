@@ -1,4 +1,4 @@
-﻿import type { ChiosIslandPageData } from "@/content/chios-island";
+import type { ChiosIslandPageData } from "@/content/chios-island";
 import {
   absoluteUrl,
   getCanonicalUrl,
@@ -13,6 +13,7 @@ import {
   buildOrganizationSchema,
   buildSchemaGraph,
   buildWebsiteSchema,
+  getLocalizedSchemaAddress,
   hotelId,
   itemListId,
   primaryImageId,
@@ -20,7 +21,6 @@ import {
   webPageId,
   websiteId,
   type SchemaObject,
-  getLocalizedSchemaAddress,
 } from "@/lib/structured-data";
 
 function buildChiosIslandWebPageSchema(data: ChiosIslandPageData): SchemaObject {
@@ -63,29 +63,28 @@ function buildChiosIslandWebPageSchema(data: ChiosIslandPageData): SchemaObject 
 
 function buildChiosDestinationSchema(data: ChiosIslandPageData): SchemaObject {
   const canonicalPath = data.seo.canonicalPath;
+  const language = getLanguageForPath(canonicalPath);
+  const address = getLocalizedSchemaAddress(canonicalPath);
+  const touristTypes = Array.from(
+    new Set(data.experiences.items.flatMap((item) => item.tags)),
+  );
 
   return {
     "@type": "TouristDestination",
     "@id": schemaId(canonicalPath, "destination"),
-    name: "Chios Island",
-    alternateName: "Chios",
+    name: address.addressLocality,
+    alternateName: data.hero.title,
     url: getCanonicalUrl(canonicalPath),
     description: data.seo.description,
     image: absoluteUrl(data.seo.ogImage),
+    inLanguage: language,
     address: {
       "@type": "PostalAddress",
-      addressLocality: getLocalizedSchemaAddress(canonicalPath).addressLocality,
-      addressRegion: getLocalizedSchemaAddress(canonicalPath).addressRegion,
+      addressLocality: address.addressLocality,
+      addressRegion: address.addressRegion,
       addressCountry: "GR",
     },
-    touristType: [
-      "Couples",
-      "Families",
-      "Cultural travelers",
-      "Beach travelers",
-      "Nature travelers",
-      "Food travelers",
-    ],
+    touristType: touristTypes,
     includesAttraction: data.experiences.items.map((item) => ({
       "@id": schemaId(item.href, "place"),
     })),
@@ -97,7 +96,11 @@ function buildChiosDestinationSchema(data: ChiosIslandPageData): SchemaObject {
 
 function buildExperiencePlaceSchema(
   item: ChiosIslandPageData["experiences"]["items"][number],
+  parentPath: string,
 ): SchemaObject {
+  const language = getLanguageForPath(item.href);
+  const address = getLocalizedSchemaAddress(item.href);
+
   return {
     "@type": "TouristAttraction",
     "@id": schemaId(item.href, "place"),
@@ -105,15 +108,16 @@ function buildExperiencePlaceSchema(
     url: absoluteUrl(item.href),
     description: item.description,
     image: absoluteUrl(item.image),
+    inLanguage: language,
     address: {
       "@type": "PostalAddress",
-      addressLocality: getLocalizedSchemaAddress(item.href).addressLocality,
-      addressRegion: getLocalizedSchemaAddress(item.href).addressRegion,
+      addressLocality: address.addressLocality,
+      addressRegion: address.addressRegion,
       addressCountry: "GR",
     },
     touristType: item.tags,
     isPartOf: {
-      "@id": schemaId("/chios-island/", "destination"),
+      "@id": schemaId(parentPath, "destination"),
     },
   };
 }
@@ -126,6 +130,7 @@ function buildChiosExperiencesItemListSchema(data: ChiosIslandPageData): SchemaO
     "@id": itemListId(canonicalPath),
     name: data.experiences.title,
     description: data.experiences.description,
+    inLanguage: getLanguageForPath(canonicalPath),
     itemListOrder: "https://schema.org/ItemListOrderAscending",
     numberOfItems: data.experiences.items.length,
     itemListElement: data.experiences.items.map((item, index) => ({
@@ -150,6 +155,7 @@ function buildChiosIslandHighlightsSchema(data: ChiosIslandPageData): SchemaObje
     "@id": schemaId(canonicalPath, "highlights"),
     name: data.intro.title,
     description: data.intro.paragraphs.join(" "),
+    inLanguage: getLanguageForPath(canonicalPath),
     itemListOrder: "https://schema.org/ItemListOrderAscending",
     numberOfItems: data.intro.highlights.length,
     itemListElement: data.intro.highlights.map((highlight, index) => ({
@@ -169,6 +175,7 @@ function buildChiosStayActionSchema(data: ChiosIslandPageData): SchemaObject {
     "@id": schemaId(canonicalPath, "reserve-action"),
     name: data.stay.primaryCta.label,
     description: data.stay.text,
+    inLanguage: getLanguageForPath(canonicalPath),
     target: {
       "@type": "EntryPoint",
       urlTemplate: absoluteUrl(data.stay.primaryCta.href),
@@ -182,13 +189,14 @@ function buildChiosStayActionSchema(data: ChiosIslandPageData): SchemaObject {
     },
     result: {
       "@type": "LodgingReservation",
-      name: `${siteName} stay in Chios`,
+      name: data.stay.title,
     },
   };
 }
 
 export function buildChiosIslandSchema(data: ChiosIslandPageData) {
   const canonicalPath = data.seo.canonicalPath;
+  const address = getLocalizedSchemaAddress(canonicalPath);
 
   return buildSchemaGraph([
     buildOrganizationSchema(),
@@ -206,14 +214,15 @@ export function buildChiosIslandSchema(data: ChiosIslandPageData) {
     buildChiosDestinationSchema(data),
     buildChiosExperiencesItemListSchema(data),
     buildChiosIslandHighlightsSchema(data),
-    ...data.experiences.items.map(buildExperiencePlaceSchema),
+    ...data.experiences.items.map((item) =>
+      buildExperiencePlaceSchema(item, canonicalPath),
+    ),
     buildChiosStayActionSchema(data),
     buildBreadcrumbSchema(canonicalPath, [
       {
-        name: "Chios Island",
+        name: address.addressLocality,
         path: canonicalPath,
       },
     ]),
   ]);
 }
-

@@ -105,6 +105,46 @@ expect(
 );
 
 expectAll(
+  "lib/structured-data.ts",
+  [
+    'homeName: "Αρχική"',
+    'homePath: "/el/"',
+    'name: "Δωρεάν WiFi"',
+    'description: "Ασύρματη πρόσβαση στο διαδίκτυο για τους επισκέπτες"',
+    'name: "Ιδιωτικό μπάνιο"',
+    'name: "Κήπος και βεράντα"',
+    'name: "Διαθέσιμος χώρος στάθμευσης"',
+    'description: "Υπηρεσία καθαριότητας κατά τη διάρκεια της διαμονής"',
+    '"Ταξιδιώτες αναψυχής"',
+    '"Ταξιδιώτες πολιτισμού"',
+    "getLocalizedSchemaLabels",
+    "inLanguage: getLanguageForPath(input.path)",
+  ],
+  "Localized structured data source is incomplete",
+);
+
+expectNone(
+  "lib/structured-data.ts",
+  [
+    'name: "ωρεάν WiFi"',
+    'description: "σύρματη πρόσβαση στο διαδίκτυο για τους επισκέπτες"',
+    'name: "λιματισμός"',
+    'name: "διωτικό μπάνιο"',
+    'name: "ηλεόραση επίπεδης οθόνης"',
+    'name: "ήπος και βεράντα"',
+    'name: "ιαθέσιμος χώρος στάθμευσης"',
+    'name: "πηρεσία καθαριότητας"',
+  ],
+  "Malformed Greek structured data must not remain in the source",
+);
+
+expectNone(
+  "components/seo/JsonLd.tsx",
+  ["schemaStringCorrections", "greekSchemaReplacements"],
+  "JSON-LD rendering must not patch content strings",
+);
+
+expectAll(
   "lib/homepage-seo-intent.ts",
   [
     'href="/el/domatia-xios/"',
@@ -132,20 +172,20 @@ expectAll(
     "Καθαρά νερά",
     "Μαστιχοχώρια",
     "Πολιτισμός",
-    "Δωρεάν WiFi",
-    "Ασύρματη πρόσβαση στο διαδίκτυο για τους επισκέπτες",
-    "Ιδιωτικό μπάνιο",
-    "Κήπος και βεράντα",
-    "Χώρος στάθμευσης διαθέσιμος για τους επισκέπτες",
-    "Υπηρεσία καθαριότητας κατά τη διάρκεια της διαμονής",
   ],
-  "Greek homepage SEO hardening is incomplete",
+  "Greek homepage UI hardening is incomplete",
 );
 
-expectAll(
+expect(
   "app/[locale]/page.tsx",
-  ["hardenGreekHomePageData", "hardenGreekSchema"],
-  "Greek homepage hardening must be applied before metadata, schema and rendering",
+  "hardenGreekHomePageData",
+  "Greek homepage content hardening must be applied before metadata, schema and rendering",
+);
+
+expectNone(
+  "app/[locale]/page.tsx",
+  ["hardenGreekSchema"],
+  "Greek homepage schema must be built directly from corrected source data",
 );
 
 expectAll(
@@ -241,4 +281,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log("SEO architecture QA passed: audits #1–#9, owner guardrails, Greek homepage/rooms/content hardening, localized SEO alt text, sitemap and LodgingBusiness schema are in place.");
+console.log("SEO architecture QA passed: audits #1–#9, owner guardrails, source-level structured-data localization, Greek homepage/rooms/content hardening, localized SEO alt text, sitemap and LodgingBusiness schema are in place.");

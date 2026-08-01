@@ -21,6 +21,54 @@ import {
   type SchemaObject,
 } from "@/lib/structured-data";
 
+type ContactSchemaLanguage = "en" | "el" | "de" | "fr" | "it" | "es" | "tr";
+
+const contactLabelsByLanguage: Record<
+  ContactSchemaLanguage,
+  { customerService: string; whatsappReservations: string; reservations: string }
+> = {
+  en: {
+    customerService: "Customer service",
+    whatsappReservations: "WhatsApp reservations",
+    reservations: "Reservations",
+  },
+  el: {
+    customerService: "Εξυπηρέτηση επισκεπτών",
+    whatsappReservations: "Κρατήσεις μέσω WhatsApp",
+    reservations: "Κρατήσεις",
+  },
+  de: {
+    customerService: "Gästeservice",
+    whatsappReservations: "Reservierungen über WhatsApp",
+    reservations: "Reservierungen",
+  },
+  fr: {
+    customerService: "Service clients",
+    whatsappReservations: "Réservations via WhatsApp",
+    reservations: "Réservations",
+  },
+  it: {
+    customerService: "Assistenza ospiti",
+    whatsappReservations: "Prenotazioni tramite WhatsApp",
+    reservations: "Prenotazioni",
+  },
+  es: {
+    customerService: "Atención al huésped",
+    whatsappReservations: "Reservas por WhatsApp",
+    reservations: "Reservas",
+  },
+  tr: {
+    customerService: "Misafir hizmetleri",
+    whatsappReservations: "WhatsApp üzerinden rezervasyon",
+    reservations: "Rezervasyonlar",
+  },
+};
+
+function getContactLabels(path: string) {
+  const language = getLanguageForPath(path) as ContactSchemaLanguage;
+  return contactLabelsByLanguage[language] ?? contactLabelsByLanguage.en;
+}
+
 function normalizeTelephone(phone: string): string {
   const cleaned = phone.replace(/[^\d+]/g, "");
 
@@ -69,6 +117,10 @@ function buildContactPageSchema(data: ContactPageData): SchemaObject {
 }
 
 function buildContactPointSchema(data: ContactPageData): SchemaObject[] {
+  const canonicalPath = data.seo.canonicalPath;
+  const language = getLanguageForPath(canonicalPath);
+  const labels = getContactLabels(canonicalPath);
+  const availableLanguage = Array.from(new Set(["en", language]));
   const phoneItems = data.contactInfo.items.filter((item) =>
     item.href.startsWith("tel:"),
   );
@@ -78,9 +130,9 @@ function buildContactPointSchema(data: ContactPageData): SchemaObject[] {
   const phoneContactPoints = phoneItems.map((item) => ({
     "@type": "ContactPoint",
     telephone: normalizeTelephone(item.href.replace("tel:", "")),
-    contactType: "customer service",
+    contactType: labels.customerService,
     areaServed: "GR",
-    availableLanguage: ["English", "Greek"],
+    availableLanguage,
   }));
 
   return [
@@ -88,16 +140,16 @@ function buildContactPointSchema(data: ContactPageData): SchemaObject[] {
     {
       "@type": "ContactPoint",
       telephone: whatsappPhone,
-      contactType: "WhatsApp reservations",
+      contactType: labels.whatsappReservations,
       areaServed: "GR",
-      availableLanguage: ["English", "Greek"],
+      availableLanguage,
     },
     {
       "@type": "ContactPoint",
       email: data.form.email,
-      contactType: "reservations",
+      contactType: labels.reservations,
       areaServed: "GR",
-      availableLanguage: ["English", "Greek"],
+      availableLanguage,
     },
   ];
 }
@@ -118,6 +170,7 @@ function buildContactActionSchema(data: ContactPageData): SchemaObject {
     "@id": schemaId(canonicalPath, "contact-action"),
     name: data.form.title,
     description: data.form.subtitle,
+    inLanguage: getLanguageForPath(canonicalPath),
     target: [
       {
         "@type": "EntryPoint",
@@ -169,7 +222,7 @@ export function buildContactSchema(data: ContactPageData) {
     buildContactActionSchema(data),
     buildBreadcrumbSchema(canonicalPath, [
       {
-        name: "Contact",
+        name: data.hero.title,
         path: canonicalPath,
       },
     ]),

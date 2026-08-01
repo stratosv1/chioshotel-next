@@ -13,6 +13,7 @@ import {
   buildOrganizationSchema,
   buildSchemaGraph,
   buildWebsiteSchema,
+  getLocalizedSchemaAddress,
   hotelId,
   itemListId,
   primaryImageId,
@@ -21,6 +22,28 @@ import {
   websiteId,
   type SchemaObject,
 } from "@/lib/structured-data";
+
+type MuseumSchemaLanguage = "en" | "el" | "de" | "fr" | "it" | "es" | "tr";
+
+const propertyLabels: Record<
+  MuseumSchemaLanguage,
+  { region: string; theme: string; tags: string }
+> = {
+  en: { region: "Region", theme: "Theme", tags: "Tags" },
+  el: { region: "Περιοχή", theme: "Θεματική", tags: "Χαρακτηριστικά" },
+  de: { region: "Region", theme: "Thema", tags: "Merkmale" },
+  fr: { region: "Région", theme: "Thème", tags: "Caractéristiques" },
+  it: { region: "Regione", theme: "Tema", tags: "Caratteristiche" },
+  es: { region: "Región", theme: "Tema", tags: "Características" },
+  tr: { region: "Bölge", theme: "Tema", tags: "Özellikler" },
+};
+
+function getMuseumSchemaLanguage(path: string): MuseumSchemaLanguage {
+  const language = getLanguageForPath(path);
+  return ["en", "el", "de", "fr", "it", "es", "tr"].includes(language)
+    ? (language as MuseumSchemaLanguage)
+    : "en";
+}
 
 function buildChiosMuseumsCollectionPageSchema(
   data: ChiosMuseumsPageData,
@@ -39,14 +62,9 @@ function buildChiosMuseumsCollectionPageSchema(
     isPartOf: {
       "@id": websiteId(),
     },
-    about: [
-      {
-        "@id": schemaId("/chios-island/", "destination"),
-      },
-      {
-        "@id": hotelId(),
-      },
-    ],
+    about: {
+      "@id": hotelId(),
+    },
     mainEntity: {
       "@id": itemListId(canonicalPath),
     },
@@ -64,7 +82,12 @@ function buildChiosMuseumsCollectionPageSchema(
 
 function buildMuseumPlaceSchema(
   museum: ChiosMuseumsPageData["museums"][number],
+  collectionPath: string,
 ): SchemaObject {
+  const language = getLanguageForPath(museum.href);
+  const labels = propertyLabels[getMuseumSchemaLanguage(museum.href)];
+  const address = getLocalizedSchemaAddress(museum.href);
+
   return {
     "@type": ["Museum", "TouristAttraction"],
     "@id": schemaId(museum.href, "museum"),
@@ -73,15 +96,16 @@ function buildMuseumPlaceSchema(
     url: absoluteUrl(museum.href),
     description: museum.description,
     image: absoluteUrl(museum.image),
+    inLanguage: language,
     address: {
       "@type": "PostalAddress",
-      addressLocality: museum.region,
-      addressRegion: "Chios",
+      addressLocality: museum.region || address.addressLocality,
+      addressRegion: address.addressRegion,
       addressCountry: "GR",
     },
     touristType: museum.badges,
     isPartOf: {
-      "@id": schemaId("/chios-island/", "destination"),
+      "@id": webPageId(collectionPath),
     },
     subjectOf: {
       "@id": webPageId(museum.href),
@@ -89,17 +113,17 @@ function buildMuseumPlaceSchema(
     additionalProperty: [
       {
         "@type": "PropertyValue",
-        name: "Region",
+        name: labels.region,
         value: museum.region,
       },
       {
         "@type": "PropertyValue",
-        name: "Theme",
+        name: labels.theme,
         value: museum.mood,
       },
       {
         "@type": "PropertyValue",
-        name: "Tags",
+        name: labels.tags,
         value: museum.badges.join(", "),
       },
     ],
@@ -112,8 +136,9 @@ function buildMuseumsItemListSchema(data: ChiosMuseumsPageData): SchemaObject {
   return {
     "@type": "ItemList",
     "@id": itemListId(canonicalPath),
-    name: "Top Chios museums",
+    name: data.hero.title,
     description: data.intro.description,
+    inLanguage: getLanguageForPath(canonicalPath),
     itemListOrder: "https://schema.org/ItemListOrderAscending",
     numberOfItems: data.museums.length,
     itemListElement: data.museums.map((museum, index) => ({
@@ -138,6 +163,7 @@ function buildMuseumPlanningSchema(data: ChiosMuseumsPageData): SchemaObject {
     "@id": schemaId(canonicalPath, "museum-planning"),
     name: data.planning.title,
     description: data.planning.description,
+    inLanguage: getLanguageForPath(canonicalPath),
     itemListOrder: "https://schema.org/ItemListOrderAscending",
     numberOfItems: data.planning.items.length,
     itemListElement: data.planning.items.map((item, index) => ({
@@ -158,6 +184,7 @@ function buildMuseumGuideTipSchema(data: ChiosMuseumsPageData): SchemaObject {
     name: data.intro.tip.title,
     text: data.intro.tip.text,
     url: absoluteUrl(data.intro.tip.href),
+    inLanguage: getLanguageForPath(canonicalPath),
     about: [
       {
         "@id": itemListId(canonicalPath),
@@ -177,6 +204,7 @@ function buildMuseumStayActionSchema(data: ChiosMuseumsPageData): SchemaObject {
     "@id": schemaId(canonicalPath, "reserve-action"),
     name: data.stay.primaryCta.label,
     description: data.stay.text,
+    inLanguage: getLanguageForPath(canonicalPath),
     target: {
       "@type": "EntryPoint",
       urlTemplate: absoluteUrl(data.stay.primaryCta.href),
@@ -190,7 +218,7 @@ function buildMuseumStayActionSchema(data: ChiosMuseumsPageData): SchemaObject {
     },
     result: {
       "@type": "LodgingReservation",
-      name: `${siteName} stay for exploring Chios museums`,
+      name: data.stay.title,
     },
   };
 }
@@ -214,15 +242,13 @@ export function buildChiosMuseumsSchema(data: ChiosMuseumsPageData) {
     buildMuseumsItemListSchema(data),
     buildMuseumPlanningSchema(data),
     buildMuseumGuideTipSchema(data),
-    ...data.museums.map(buildMuseumPlaceSchema),
+    ...data.museums.map((museum) =>
+      buildMuseumPlaceSchema(museum, canonicalPath),
+    ),
     buildMuseumStayActionSchema(data),
     buildBreadcrumbSchema(canonicalPath, [
       {
-        name: "Chios Island",
-        path: "/chios-island/",
-      },
-      {
-        name: "Chios Museums",
+        name: data.hero.title,
         path: canonicalPath,
       },
     ]),

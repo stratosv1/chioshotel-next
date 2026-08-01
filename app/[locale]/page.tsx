@@ -13,7 +13,7 @@ import {
 } from "@/content/home";
 import type { HomePageData } from "@/content/home";
 import { buildHomePageSchema } from "@/content/schema";
-import { hardenGreekHomePageData, hardenGreekSchema } from "@/lib/greek-home-seo-hardening";
+import { hardenGreekHomePageData } from "@/lib/greek-home-seo-hardening";
 import { withHomepageSeoIntent } from "@/lib/homepage-seo-intent";
 import {
   defaultLanguage,
@@ -81,14 +81,10 @@ export default async function Page({ params }: PageProps) {
   }
 
   const data = getLocalizedHomePageData(locale);
-  const schema = hardenGreekSchema(
-    buildHomePageSchema(data),
-    data.seo.canonicalPath,
-  );
 
   return (
     <>
-      <JsonLd data={schema} />
+      <JsonLd data={buildHomePageSchema(data)} />
       <HomePageTailwindV3 data={data} />
     </>
   );

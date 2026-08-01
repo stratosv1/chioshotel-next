@@ -1,4 +1,4 @@
-﻿import type { RoomCategoryCard, RoomsCategoryPageData } from "@/content/rooms";
+import type { RoomCategoryCard, RoomsCategoryPageData } from "@/content/rooms";
 import {
   absoluteUrl,
   getCanonicalUrl,
@@ -31,6 +31,7 @@ function buildRoomCardSchema(card: RoomCategoryCard): SchemaObject {
     url: absoluteUrl(card.href),
     description: card.description,
     image: absoluteUrl(card.image),
+    inLanguage: getLanguageForPath(card.href),
     containedInPlace: {
       "@id": hotelId(),
     },
@@ -54,6 +55,7 @@ function buildRoomsItemListSchema(data: RoomsCategoryPageData): SchemaObject {
     name: data.seo.title,
     description: data.seo.description,
     url: getCanonicalUrl(canonicalPath),
+    inLanguage: getLanguageForPath(canonicalPath),
     itemListOrder: "https://schema.org/ItemListOrderAscending",
     numberOfItems: data.cards.length,
     itemListElement: data.cards.map((card, index) => ({

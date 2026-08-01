@@ -1,4 +1,4 @@
-﻿import {
+import {
   absoluteUrl,
   getCanonicalUrl,
   getLanguageForPath,
@@ -206,58 +206,118 @@ export function buildOrganizationSchema(): SchemaObject {
   };
 }
 
-
 type GlobalSchemaLanguage = "en" | "el" | "de" | "fr" | "it" | "es" | "tr";
 
-const lodgingBusinessLabelsByLanguage: Record<
+type LocalizedSchemaLabels = {
+  description: string;
+  addressLocality: string;
+  addressRegion: string;
+  homeName: string;
+  homePath: string;
+  touristTypes: string[];
+};
+
+const schemaLabelsByLanguage: Record<
   GlobalSchemaLanguage,
-  {
-    description: string;
-    addressLocality: string;
-    addressRegion: string;
-  }
+  LocalizedSchemaLabels
 > = {
   en: {
     description:
       "Voulamandis House is a family-run accommodation in Kambos, Chios, offering rooms and apartments close to Chios Town, the airport and the beaches of southern Chios.",
     addressLocality: "Chios",
     addressRegion: "North Aegean",
+    homeName: "Home",
+    homePath: "/",
+    touristTypes: [
+      "Leisure travelers",
+      "Couples",
+      "Families",
+      "Cultural travelers",
+    ],
   },
   el: {
     description:
-      "\u03a4\u03bf Voulamandis House \u03b5\u03af\u03bd\u03b1\u03b9 \u03bf\u03b9\u03ba\u03bf\u03b3\u03b5\u03bd\u03b5\u03b9\u03b1\u03ba\u03cc \u03ba\u03b1\u03c4\u03ac\u03bb\u03c5\u03bc\u03b1 \u03c3\u03c4\u03bf\u03bd \u039a\u03ac\u03bc\u03c0\u03bf \u03c4\u03b7\u03c2 \u03a7\u03af\u03bf\u03c5, \u03bc\u03b5 \u03b4\u03c9\u03bc\u03ac\u03c4\u03b9\u03b1 \u03ba\u03b1\u03b9 \u03b4\u03b9\u03b1\u03bc\u03b5\u03c1\u03af\u03c3\u03bc\u03b1\u03c4\u03b1 \u03ba\u03bf\u03bd\u03c4\u03ac \u03c3\u03c4\u03b7\u03bd \u03c0\u03cc\u03bb\u03b7 \u03c4\u03b7\u03c2 \u03a7\u03af\u03bf\u03c5, \u03c4\u03bf \u03b1\u03b5\u03c1\u03bf\u03b4\u03c1\u03cc\u03bc\u03b9\u03bf \u03ba\u03b1\u03b9 \u03c4\u03b9\u03c2 \u03c0\u03b1\u03c1\u03b1\u03bb\u03af\u03b5\u03c2 \u03c4\u03b7\u03c2 \u03bd\u03cc\u03c4\u03b9\u03b1\u03c2 \u03a7\u03af\u03bf\u03c5.",
-    addressLocality: "\u03a7\u03af\u03bf\u03c2",
-    addressRegion: "\u0392\u03cc\u03c1\u03b5\u03b9\u03bf \u0391\u03b9\u03b3\u03b1\u03af\u03bf",
+      "Το Voulamandis House είναι οικογενειακό κατάλυμα στον Κάμπο της Χίου, με δωμάτια και διαμερίσματα κοντά στην πόλη της Χίου, το αεροδρόμιο και τις παραλίες της νότιας Χίου.",
+    addressLocality: "Χίος",
+    addressRegion: "Βόρειο Αιγαίο",
+    homeName: "Αρχική",
+    homePath: "/el/",
+    touristTypes: [
+      "Ταξιδιώτες αναψυχής",
+      "Ζευγάρια",
+      "Οικογένειες",
+      "Ταξιδιώτες πολιτισμού",
+    ],
   },
   de: {
     description:
-      "Voulamandis House ist eine familiengef\u00fchrte Unterkunft in Kambos auf Chios mit Zimmern und Apartments nahe der Stadt Chios, dem Flughafen und den Str\u00e4nden im S\u00fcden der Insel.",
+      "Voulamandis House ist eine familiengeführte Unterkunft in Kambos auf Chios mit Zimmern und Apartments nahe der Stadt Chios, dem Flughafen und den Stränden im Süden der Insel.",
     addressLocality: "Chios",
-    addressRegion: "N\u00f6rdliche \u00c4g\u00e4is",
+    addressRegion: "Nördliche Ägäis",
+    homeName: "Startseite",
+    homePath: "/de/",
+    touristTypes: [
+      "Freizeitreisende",
+      "Paare",
+      "Familien",
+      "Kulturreisende",
+    ],
   },
   fr: {
     description:
-      "Voulamandis House est un h\u00e9bergement familial situ\u00e9 \u00e0 Kambos, \u00e0 Chios, avec des chambres et des appartements proches de la ville de Chios, de l\u2019a\u00e9roport et des plages du sud de l\u2019\u00eele.",
+      "Voulamandis House est un hébergement familial situé à Kambos, à Chios, avec des chambres et des appartements proches de la ville de Chios, de l’aéroport et des plages du sud de l’île.",
     addressLocality: "Chios",
-    addressRegion: "\u00c9g\u00e9e du Nord",
+    addressRegion: "Égée du Nord",
+    homeName: "Accueil",
+    homePath: "/fr/",
+    touristTypes: [
+      "Voyageurs de loisirs",
+      "Couples",
+      "Familles",
+      "Voyageurs culturels",
+    ],
   },
   it: {
     description:
-      "Voulamandis House \u00e8 una struttura ricettiva a conduzione familiare a Kambos, Chios, con camere e appartamenti vicino alla citt\u00e0 di Chios, all\u2019aeroporto e alle spiagge del sud dell\u2019isola.",
+      "Voulamandis House è una struttura ricettiva a conduzione familiare a Kambos, Chios, con camere e appartamenti vicino alla città di Chios, all’aeroporto e alle spiagge del sud dell’isola.",
     addressLocality: "Chios",
     addressRegion: "Egeo Settentrionale",
+    homeName: "Home",
+    homePath: "/it/",
+    touristTypes: [
+      "Viaggiatori per svago",
+      "Coppie",
+      "Famiglie",
+      "Viaggiatori culturali",
+    ],
   },
   es: {
     description:
-      "Voulamandis House es un alojamiento familiar en Kambos, Qu\u00edos, con habitaciones y apartamentos cerca de la ciudad de Qu\u00edos, del aeropuerto y de las playas del sur de la isla.",
-    addressLocality: "Qu\u00edos",
+      "Voulamandis House es un alojamiento familiar en Kambos, Quíos, con habitaciones y apartamentos cerca de la ciudad de Quíos, del aeropuerto y de las playas del sur de la isla.",
+    addressLocality: "Quíos",
     addressRegion: "Egeo Septentrional",
+    homeName: "Inicio",
+    homePath: "/es/",
+    touristTypes: [
+      "Viajeros de ocio",
+      "Parejas",
+      "Familias",
+      "Viajeros culturales",
+    ],
   },
   tr: {
     description:
-      "Voulamandis House, Sak\u0131z Adas\u0131 Kambos b\u00f6lgesinde yer alan, Sak\u0131z \u015fehrine, havaalan\u0131na ve adan\u0131n g\u00fcney plajlar\u0131na yak\u0131n oda ve daireler sunan aile i\u015fletmesi bir konaklama tesisidir.",
-    addressLocality: "Sak\u0131z",
+      "Voulamandis House, Sakız Adası Kambos bölgesinde yer alan, Sakız şehrine, havaalanına ve adanın güney plajlarına yakın oda ve daireler sunan aile işletmesi bir konaklama tesisidir.",
+    addressLocality: "Sakız",
     addressRegion: "Kuzey Ege",
+    homeName: "Ana sayfa",
+    homePath: "/tr/",
+    touristTypes: [
+      "Tatil amaçlı gezginler",
+      "Çiftler",
+      "Aileler",
+      "Kültür gezginleri",
+    ],
   },
 };
 
@@ -268,7 +328,16 @@ function getGlobalSchemaLanguage(path?: string): GlobalSchemaLanguage {
     : "en";
 }
 
-const lodgingBusinessAmenitiesByLanguage: Record<GlobalSchemaLanguage, AmenityInput[]> = {
+export function getLocalizedSchemaLabels(
+  path?: string,
+): LocalizedSchemaLabels {
+  return schemaLabelsByLanguage[getGlobalSchemaLanguage(path)];
+}
+
+const lodgingBusinessAmenitiesByLanguage: Record<
+  GlobalSchemaLanguage,
+  AmenityInput[]
+> = {
   en: [
     { name: "Free WiFi", description: "Wireless internet access for guests" },
     { name: "Air conditioning", description: "Air conditioning in the accommodation" },
@@ -279,13 +348,34 @@ const lodgingBusinessAmenitiesByLanguage: Record<GlobalSchemaLanguage, AmenityIn
     { name: "Cleaning service", description: "Cleaning service during the stay" },
   ],
   el: [
-    { name: "ωρεάν WiFi", description: "σύρματη πρόσβαση στο διαδίκτυο για τους επισκέπτες" },
-    { name: "λιματισμός", description: "λιματισμός στα καταλύματα" },
-    { name: "διωτικό μπάνιο", description: "διωτικές εγκαταστάσεις μπάνιου" },
-    { name: "ηλεόραση επίπεδης οθόνης", description: "ηλεόραση στο κατάλυμα" },
-    { name: "ήπος και βεράντα", description: "ξωτερικοί χώροι κήπου και βεράντας" },
-    { name: "ιαθέσιμος χώρος στάθμευσης", description: "ώρος στάθμευσης διαθέσιμος για τους επισκέπτες" },
-    { name: "πηρεσία καθαριότητας", description: "πηρεσία καθαριότητας κατά τη διάρκεια της διαμονής" },
+    {
+      name: "Δωρεάν WiFi",
+      description: "Ασύρματη πρόσβαση στο διαδίκτυο για τους επισκέπτες",
+    },
+    {
+      name: "Κλιματισμός",
+      description: "Κλιματισμός στα καταλύματα",
+    },
+    {
+      name: "Ιδιωτικό μπάνιο",
+      description: "Ιδιωτικές εγκαταστάσεις μπάνιου",
+    },
+    {
+      name: "Τηλεόραση επίπεδης οθόνης",
+      description: "Τηλεόραση στο κατάλυμα",
+    },
+    {
+      name: "Κήπος και βεράντα",
+      description: "Εξωτερικοί χώροι κήπου και βεράντας",
+    },
+    {
+      name: "Διαθέσιμος χώρος στάθμευσης",
+      description: "Χώρος στάθμευσης διαθέσιμος για τους επισκέπτες",
+    },
+    {
+      name: "Υπηρεσία καθαριότητας",
+      description: "Υπηρεσία καθαριότητας κατά τη διάρκεια της διαμονής",
+    },
   ],
   de: [
     { name: "Kostenloses WLAN", description: "Drahtloser Internetzugang für Gäste" },
@@ -338,12 +428,8 @@ function getLodgingBusinessAmenities(path?: string) {
   return lodgingBusinessAmenitiesByLanguage[getGlobalSchemaLanguage(path)];
 }
 
-function getLodgingBusinessLabels(path?: string) {
-  return lodgingBusinessLabelsByLanguage[getGlobalSchemaLanguage(path)];
-}
-
 export function getLocalizedSchemaAddress(path?: string) {
-  const labels = getLodgingBusinessLabels(path);
+  const labels = getLocalizedSchemaLabels(path);
 
   return {
     addressLocality: labels.addressLocality,
@@ -354,7 +440,8 @@ export function getLocalizedSchemaAddress(path?: string) {
 export function buildHotelSchema(
   options: { description?: string; path?: string } = {},
 ): SchemaObject {
-  const labels = getLodgingBusinessLabels(options.path);
+  const language = getGlobalSchemaLanguage(options.path);
+  const labels = getLocalizedSchemaLabels(options.path);
 
   return {
     "@type": "LodgingBusiness",
@@ -363,6 +450,7 @@ export function buildHotelSchema(
     url: businessData.url,
     image: businessData.images,
     description: options.description ?? labels.description,
+    inLanguage: language,
     telephone: businessData.telephone,
     email: businessData.email,
     priceRange: businessData.priceRange,
@@ -413,6 +501,7 @@ export function buildImageSchema(
     width: input.width || 1200,
     height: input.height || 675,
     caption: input.caption || input.alt,
+    inLanguage: getLanguageForPath(pagePath),
   };
 }
 
@@ -420,10 +509,11 @@ export function buildBreadcrumbSchema(
   path: string,
   items: BreadcrumbItemInput[],
 ): SchemaObject {
+  const labels = getLocalizedSchemaLabels(path);
   const normalizedItems: BreadcrumbItemInput[] = [
     {
-      name: "Home",
-      path: "/",
+      name: labels.homeName,
+      path: labels.homePath,
     },
     ...items,
   ];
@@ -431,6 +521,7 @@ export function buildBreadcrumbSchema(
   return {
     "@type": "BreadcrumbList",
     "@id": breadcrumbId(path),
+    inLanguage: getLanguageForPath(path),
     itemListElement: normalizedItems.map((item, index) => ({
       "@type": "ListItem",
       position: index + 1,
@@ -477,6 +568,7 @@ export function buildItemListSchema(input: ItemListInput): SchemaObject {
     "@id": itemListId(input.path),
     name: input.name,
     description: input.description,
+    inLanguage: getLanguageForPath(input.path),
     itemListOrder: "https://schema.org/ItemListOrderAscending",
     numberOfItems: input.items.length,
     itemListElement: input.items.map((item, index) => ({
@@ -502,6 +594,7 @@ export function buildFaqSchema(input: FaqInput): SchemaObject | null {
   return {
     "@type": "FAQPage",
     "@id": faqId(input.path),
+    inLanguage: getLanguageForPath(input.path),
     mainEntity: validQuestions.map((item) => ({
       "@type": "Question",
       name: item.question,
@@ -541,6 +634,7 @@ export function buildAccommodationSchema(
     url: getCanonicalUrl(input.path),
     description: input.description,
     image: input.image ? absoluteUrl(input.image) : undefined,
+    inLanguage: getLanguageForPath(input.path),
     containedInPlace: {
       "@id": hotelId(),
     },
@@ -563,6 +657,8 @@ export function buildAccommodationSchema(
 export function buildTouristPlaceSchema(
   input: TouristPlaceInput,
 ): SchemaObject {
+  const labels = getLocalizedSchemaLabels(input.path);
+
   return {
     "@type": "TouristAttraction",
     "@id": schemaId(input.path, "place"),
@@ -570,10 +666,11 @@ export function buildTouristPlaceSchema(
     url: getCanonicalUrl(input.path),
     description: input.description,
     image: input.image ? absoluteUrl(input.image) : undefined,
+    inLanguage: getLanguageForPath(input.path),
     address: {
       "@type": "PostalAddress",
-      addressLocality: input.addressLocality || "Chios",
-      addressRegion: input.addressRegion || "North Aegean",
+      addressLocality: input.addressLocality || labels.addressLocality,
+      addressRegion: input.addressRegion || labels.addressRegion,
       addressCountry: input.addressCountry || "GR",
     },
     geo:
@@ -584,12 +681,7 @@ export function buildTouristPlaceSchema(
             longitude: input.longitude,
           }
         : undefined,
-    touristType: [
-      "Leisure travelers",
-      "Couples",
-      "Families",
-      "Cultural travelers",
-    ],
+    touristType: labels.touristTypes,
   };
 }
 
@@ -620,5 +712,3 @@ export function buildBasePageSchema(input: WebPageSchemaInput): SchemaObject {
     buildWebPageSchema(input),
   ]);
 }
-
-

@@ -1,0 +1,44 @@
+name: Validate Structured Data
+
+on:
+  push:
+    branches:
+      - agent/fix-greek-structured-data-source
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run SEO architecture QA
+        run: npm run qa:seo
+
+      - name: Run homepage structured-data regression QA
+        run: node scripts/qa-home-structured-data.cjs
+
+      - name: Build application
+        run: npm run build
+
+      - name: Validate rendered Greek homepage JSON-LD
+        run: node scripts/qa-rendered-home-schema.cjs
