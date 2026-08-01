@@ -1,4 +1,4 @@
-﻿import type { MuseumDetailData } from "@/content/museum-details";
+import type { MuseumDetailData } from "@/content/museum-details";
 import {
   absoluteUrl,
   getCanonicalUrl,
@@ -13,14 +13,42 @@ import {
   buildOrganizationSchema,
   buildSchemaGraph,
   buildWebsiteSchema,
+  getLocalizedSchemaAddress,
   hotelId,
   primaryImageId,
   schemaId,
   webPageId,
   websiteId,
   type SchemaObject,
-  getLocalizedSchemaAddress,
 } from "@/lib/structured-data";
+
+type MuseumDetailSchemaLanguage = "en" | "el" | "de" | "fr" | "it" | "es" | "tr";
+
+const labelsByLanguage: Record<
+  MuseumDetailSchemaLanguage,
+  { category: string; tags: string; details: string }
+> = {
+  en: { category: "Chios Museums", tags: "Museum characteristics", details: "details" },
+  el: { category: "Μουσεία της Χίου", tags: "Χαρακτηριστικά μουσείου", details: "πληροφορίες" },
+  de: { category: "Museen auf Chios", tags: "Museumsmerkmale", details: "Informationen" },
+  fr: { category: "Musées de Chios", tags: "Caractéristiques du musée", details: "informations" },
+  it: { category: "Musei di Chios", tags: "Caratteristiche del museo", details: "informazioni" },
+  es: { category: "Museos de Quíos", tags: "Características del museo", details: "información" },
+  tr: { category: "Sakız Adası Müzeleri", tags: "Müze özellikleri", details: "bilgileri" },
+};
+
+function getSchemaLanguage(path: string): MuseumDetailSchemaLanguage {
+  const language = getLanguageForPath(path);
+  return ["en", "el", "de", "fr", "it", "es", "tr"].includes(language)
+    ? (language as MuseumDetailSchemaLanguage)
+    : "en";
+}
+
+function getParentPath(path: string): string {
+  const segments = path.split("/").filter(Boolean);
+  segments.pop();
+  return `/${segments.join("/")}/`;
+}
 
 function buildMuseumWebPageSchema(museum: MuseumDetailData): SchemaObject {
   const canonicalPath = museum.seo.canonicalPath;
@@ -40,9 +68,6 @@ function buildMuseumWebPageSchema(museum: MuseumDetailData): SchemaObject {
     about: [
       {
         "@id": schemaId(canonicalPath, "museum"),
-      },
-      {
-        "@id": schemaId("/chios-island/", "destination"),
       },
       {
         "@id": hotelId(),
@@ -65,6 +90,9 @@ function buildMuseumWebPageSchema(museum: MuseumDetailData): SchemaObject {
 
 function buildMuseumPlaceSchema(museum: MuseumDetailData): SchemaObject {
   const canonicalPath = museum.seo.canonicalPath;
+  const parentPath = getParentPath(canonicalPath);
+  const labels = labelsByLanguage[getSchemaLanguage(canonicalPath)];
+  const address = getLocalizedSchemaAddress(canonicalPath);
 
   return {
     "@type": ["Museum", "TouristAttraction"],
@@ -77,16 +105,17 @@ function buildMuseumPlaceSchema(museum: MuseumDetailData): SchemaObject {
     url: getCanonicalUrl(canonicalPath),
     description: museum.hero.description || museum.seo.description,
     image: absoluteUrl(museum.hero.image || museum.seo.ogImage),
+    inLanguage: getLanguageForPath(canonicalPath),
     address: {
       "@type": "PostalAddress",
-      addressLocality: getLocalizedSchemaAddress(canonicalPath).addressLocality,
-      addressRegion: getLocalizedSchemaAddress(canonicalPath).addressRegion,
+      addressLocality: address.addressLocality,
+      addressRegion: address.addressRegion,
       addressCountry: "GR",
     },
     touristType: museum.hero.tags,
     isAccessibleForFree: false,
     isPartOf: {
-      "@id": schemaId("/chios-island/", "destination"),
+      "@id": webPageId(parentPath),
     },
     subjectOf: {
       "@id": webPageId(canonicalPath),
@@ -99,7 +128,7 @@ function buildMuseumPlaceSchema(museum: MuseumDetailData): SchemaObject {
       })),
       {
         "@type": "PropertyValue",
-        name: "Museum tags",
+        name: labels.tags,
         value: museum.hero.tags.join(", "),
       },
     ],
@@ -110,12 +139,14 @@ function buildMuseumDetailsItemListSchema(
   museum: MuseumDetailData,
 ): SchemaObject {
   const canonicalPath = museum.seo.canonicalPath;
+  const labels = labelsByLanguage[getSchemaLanguage(canonicalPath)];
 
   return {
     "@type": "ItemList",
     "@id": schemaId(canonicalPath, "museum-details"),
-    name: `${museum.hero.title} details`,
+    name: `${museum.hero.title} — ${labels.details}`,
     description: museum.hero.description,
+    inLanguage: getLanguageForPath(canonicalPath),
     itemListOrder: "https://schema.org/ItemListOrderAscending",
     numberOfItems: museum.details.length,
     itemListElement: museum.details.map((detail, index) => ({
@@ -135,6 +166,7 @@ function buildMuseumHighlightsSchema(museum: MuseumDetailData): SchemaObject {
     "@id": schemaId(canonicalPath, "highlights"),
     name: museum.highlights.title,
     description: museum.highlights.items.join(" "),
+    inLanguage: getLanguageForPath(canonicalPath),
     itemListOrder: "https://schema.org/ItemListOrderAscending",
     numberOfItems: museum.highlights.items.length,
     itemListElement: museum.highlights.items.map((item, index) => ({
@@ -153,6 +185,7 @@ function buildMuseumExperienceSchema(museum: MuseumDetailData): SchemaObject {
     "@id": schemaId(canonicalPath, "experience"),
     name: museum.experience.title,
     text: museum.experience.paragraphs.join(" "),
+    inLanguage: getLanguageForPath(canonicalPath),
     about: {
       "@id": schemaId(canonicalPath, "museum"),
     },
@@ -170,6 +203,7 @@ function buildMuseumRouteIdeasSchema(museum: MuseumDetailData): SchemaObject {
     "@id": schemaId(canonicalPath, "route-ideas"),
     name: museum.routeIdeas.title,
     description: museum.routeIdeas.items.map((item) => item.text).join(" "),
+    inLanguage: getLanguageForPath(canonicalPath),
     itemListOrder: "https://schema.org/ItemListOrderAscending",
     numberOfItems: museum.routeIdeas.items.length,
     itemListElement: museum.routeIdeas.items.map((item, index) => ({
@@ -190,6 +224,7 @@ function buildMuseumLocalTipSchema(museum: MuseumDetailData): SchemaObject {
     name: museum.baseTip.title,
     text: museum.baseTip.text,
     url: absoluteUrl(museum.baseTip.href),
+    inLanguage: getLanguageForPath(canonicalPath),
     about: [
       {
         "@id": schemaId(canonicalPath, "museum"),
@@ -209,6 +244,7 @@ function buildMuseumStayActionSchema(museum: MuseumDetailData): SchemaObject {
     "@id": schemaId(canonicalPath, "reserve-action"),
     name: museum.baseTip.linkLabel,
     description: museum.baseTip.text,
+    inLanguage: getLanguageForPath(canonicalPath),
     target: {
       "@type": "EntryPoint",
       urlTemplate: absoluteUrl(museum.baseTip.href),
@@ -222,13 +258,15 @@ function buildMuseumStayActionSchema(museum: MuseumDetailData): SchemaObject {
     },
     result: {
       "@type": "LodgingReservation",
-      name: `${siteName} stay for exploring Chios museums`,
+      name: museum.baseTip.title,
     },
   };
 }
 
 export function buildMuseumDetailSchema(museum: MuseumDetailData) {
   const canonicalPath = museum.seo.canonicalPath;
+  const parentPath = getParentPath(canonicalPath);
+  const labels = labelsByLanguage[getSchemaLanguage(canonicalPath)];
 
   return buildSchemaGraph([
     buildOrganizationSchema(),
@@ -238,7 +276,7 @@ export function buildMuseumDetailSchema(museum: MuseumDetailData) {
       {
         url: museum.seo.ogImage || museum.hero.image,
         alt: museum.hero.title,
-        caption: `${museum.hero.title} - Chios museum guide by ${siteName}`,
+        caption: `${museum.hero.title} - ${labels.category} - ${siteName}`,
       },
       canonicalPath,
     ),
@@ -252,12 +290,8 @@ export function buildMuseumDetailSchema(museum: MuseumDetailData) {
     buildMuseumStayActionSchema(museum),
     buildBreadcrumbSchema(canonicalPath, [
       {
-        name: "Chios Island",
-        path: "/chios-island/",
-      },
-      {
-        name: "Chios Museums",
-        path: "/chios/chios-museums/",
+        name: labels.category,
+        path: parentPath,
       },
       {
         name: museum.hero.title,
