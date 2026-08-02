@@ -27,28 +27,28 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
+          import subprocess
 
           old = "info@" + "chioshotel.gr"
           new = "chioshotel@gmail.com"
 
-          email_files = [
-              Path("app/pl/layout.tsx"),
-              Path("content/home.ts"),
-              Path("content/contact.ts"),
-              Path("content/welcome.ts"),
-              Path("lib/structured-data.ts"),
-              Path("components/rooms/RoomWizard.tsx"),
-              Path("components/rooms/RoomWizardTailwind.tsx"),
-              Path("components/rooms/GreekRoomWizardTailwind.tsx"),
-          ]
-
-          for path in email_files:
-              text = path.read_text(encoding="utf-8-sig")
-              if old not in text:
-                  raise SystemExit(f"Expected old email not found in {path}")
-              path.write_text(text.replace(old, new), encoding="utf-8")
+          result = subprocess.run(
+              ["git", "grep", "-Il", old, "--", "."],
+              check=False,
+              capture_output=True,
+              text=True,
+          )
+          matches = [Path(line) for line in result.stdout.splitlines() if line.strip()]
+          if not matches:
+              raise SystemExit("No old contact-email references were found")
 
           obsolete_hydrator = Path("components/contact/ContactEmailHydrator.tsx")
+          for path in matches:
+              if path == obsolete_hydrator:
+                  continue
+              text = path.read_text(encoding="utf-8-sig")
+              path.write_text(text.replace(old, new), encoding="utf-8")
+
           if obsolete_hydrator.exists():
               obsolete_hydrator.unlink()
 
@@ -92,7 +92,7 @@ jobs:
               workflow.unlink()
           PY
 
-          if git grep -n 'info@chioshotel\.gr' -- . ':!package-lock.json'; then
+          if git grep -n 'info@chioshotel\.gr' -- .; then
             echo 'Old contact email still exists in tracked files.'
             exit 1
           fi
