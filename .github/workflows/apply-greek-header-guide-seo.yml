@@ -1,0 +1,70 @@
+name: Apply Greek header and guide SEO copy
+
+on:
+  push:
+    branches:
+      - agent/greek-header-guide-seo
+
+permissions:
+  contents: write
+
+jobs:
+  patch-copy:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/greek-header-guide-seo
+          fetch-depth: 0
+
+      - name: Update Greek navigation and guide copy
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          header_path = Path('components/VoulamandisHeaderTailwind.tsx')
+          header = header_path.read_text(encoding='utf-8')
+          old_header = 'links: { rooms: "Δωμάτια", rates: "Τιμές", deals: "Προσφορές", chios: "Χίος", beaches: "Παραλίες", villages: "Χωριά", museums: "Μουσεία", activities: "Τι να κάνεις", contact: "Επικοινωνία" }'
+          new_header = 'links: { rooms: "Δωμάτια", rates: "Τιμές", deals: "Προσφορές", chios: "Τι να δω", beaches: "Παραλίες", villages: "Χωριά", museums: "Μουσεία", activities: "Δραστηριότητες", contact: "Επικοινωνία" }'
+          if old_header not in header:
+              raise SystemExit('Expected Greek header copy was not found')
+          header_path.write_text(header.replace(old_header, new_header, 1), encoding='utf-8')
+
+          content_path = Path('content/chios-island.ts')
+          content = content_path.read_text(encoding='utf-8')
+          replacements = [
+              (
+                  'title: "Οδηγός Χίου | Παραλίες, Χωριά & Πολιτισμός της Μαστίχας",',
+                  'title: "Τι να δω στη Χίο | Παραλίες, Χωριά & Αξιοθέατα",',
+              ),
+              (
+                  '"Ανακαλύψτε τη Χίο μέσα από τις παραλίες, τα μεσαιωνικά χωριά, τη μαστίχα και αυθεντικές τοπικές εμπειρίες, με βάση το Voulamandis House στον Κάμπο."',
+                  '"Τι να δείτε στη Χίο: Μαστιχοχώρια, Κάμπος, παραλίες, μουσεία και σημαντικά αξιοθέατα, με πρακτικές προτάσεις από το Voulamandis House."',
+              ),
+              (
+                  'kicker: "Ανακαλύψτε τη Χίο",\n    title: "Εξερευνήστε τη Χίο",\n    description:\n      "Γνωρίστε τα μεσαιωνικά χωριά, τις καθαρές παραλίες και τη μοναδική κουλτούρα της μαστίχας που κάνουν τη Χίο ξεχωριστή."',
+                  'kicker: "Οδηγός Χίου",\n    title: "Τι να δω στη Χίο;",\n    description:\n      "Ξεκινήστε από τα Μαστιχοχώρια, τον Κάμπο, τις παραλίες, τα μουσεία και τη Νέα Μονή — τα βασικά μέρη που αξίζει να δείτε στη Χίο."',
+              ),
+              (
+                  'title: "Ένα ελληνικό νησί με αυθεντικό χαρακτήρα",\n    paragraphs: [\n      "Η Χίος είναι ένας ξεχωριστός προορισμός στο βορειοανατολικό Αιγαίο, γνωστός για τα καστροχώρια, τις όμορφες ακτές και την παγκοσμίως γνωστή μαστίχα που καλλιεργείται μόνο εδώ."',
+                  'title: "Ποια είναι τα σημαντικότερα αξιοθέατα της Χίου;",\n    paragraphs: [\n      "Τα σημαντικότερα αξιοθέατα της Χίου είναι τα Μαστιχοχώρια, ο Κάμπος, η Νέα Μονή, οι παραλίες Μαύρα Βόλια και Αγία Δύναμη, καθώς και τα μουσεία της πόλης της Χίου."',
+              ),
+          ]
+          for old, new in replacements:
+              if old not in content:
+                  raise SystemExit(f'Expected content block was not found: {old[:80]}')
+              content = content.replace(old, new, 1)
+          content_path.write_text(content, encoding='utf-8')
+          PY
+
+      - name: Remove temporary workflow
+        run: rm .github/workflows/apply-greek-header-guide-seo.yml
+
+      - name: Commit generated changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add components/VoulamandisHeaderTailwind.tsx content/chios-island.ts .github/workflows/apply-greek-header-guide-seo.yml
+          git commit -m "Align Greek header links and guide SEO copy"
+          git push origin HEAD:agent/greek-header-guide-seo
