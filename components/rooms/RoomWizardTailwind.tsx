@@ -738,7 +738,7 @@ function RoomCard({ room, bestRoom, lead, prefs, whatsappPhone, copy, label }: {
       </div>
       <div className="mt-5 grid gap-3 sm:grid-cols-2">
         <a className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#25d366] px-5 text-xs font-black uppercase tracking-[0.1em] text-white" href={getWhatsAppUrl(room, lead, prefs, whatsappPhone, copy)} target="_blank" rel="noopener noreferrer">{copy.whatsapp}</a>
-        <a className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#6f7f3f]/25 bg-[#efe6d8] px-5 text-xs font-black uppercase tracking-[0.1em] text-[#3f4f2f]" href={`mailto:info@chioshotel.gr?subject=${encodeURIComponent(`${copy.room} - ${lead.firstName} ${lead.lastName} - ${roomName}`)}`}>{copy.emailCta}</a>
+        <a className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#6f7f3f]/25 bg-[#efe6d8] px-5 text-xs font-black uppercase tracking-[0.1em] text-[#3f4f2f]" href={`mailto:chioshotel@gmail.com?subject=${encodeURIComponent(`${copy.room} - ${lead.firstName} ${lead.lastName} - ${roomName}`)}`}>{copy.emailCta}</a>
       </div>
     </article>
   );

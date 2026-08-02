@@ -1,4 +1,4 @@
-﻿
+
   components\VoulamandisFooter.tsx:55:};
   components\VoulamandisFooter.tsx:56:
 > components\VoulamandisFooter.tsx:57:const holidayQuizPaths: Record<LanguageCode, string> = {
@@ -3005,7 +3005,7 @@ yerel karakterini keşfedin.",
 > content\contact.ts:47:  "/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp";
   content\contact.ts:48:
   content\contact.ts:49:const whatsappPhone = "306944474226";
-  content\contact.ts:50:const contactEmail = "info@chioshotel.gr";
+  content\contact.ts:50:const contactEmail = "chioshotel@gmail.com";
   content\contact.ts:51:
   content\contact.ts:56:    description:
   content\contact.ts:57:      "Contact Voulamandis House in Kampos, Chios. Send a room inquiry by WhatsApp or email for availability, rates and direct 

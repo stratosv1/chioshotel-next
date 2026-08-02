@@ -53,7 +53,7 @@ export async function POST(request: Request) {
     const smtpUser = process.env.SMTP_USER;
     const smtpPass = process.env.SMTP_PASS;
     const smtpFrom = process.env.SMTP_FROM || smtpUser;
-    const contactTo = process.env.CONTACT_TO || process.env.RECEPTION_EMAIL || smtpUser;
+    const contactTo = process.env.CONTACT_TO || process.env.RECEPTION_EMAIL || "chioshotel@gmail.com";
 
     if (!smtpUser || !smtpPass || !smtpFrom || !contactTo) {
       return NextResponse.json({ ok: false, error: "Email service is not configured." }, { status: 500 });

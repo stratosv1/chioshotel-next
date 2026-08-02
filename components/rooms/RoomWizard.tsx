@@ -1056,7 +1056,7 @@ function AlternativeRoom({
 
           <a
             className="rw-action-btn btn-email"
-            href={`mailto:info@chioshotel.gr?subject=${encodeURIComponent(
+            href={`mailto:chioshotel@gmail.com?subject=${encodeURIComponent(
               `${labels.emailSubject} - ${lead.firstName} ${lead.lastName} - ${room.name}`,
             )}`}
           >
@@ -1501,7 +1501,7 @@ export function RoomWizard({ rooms, whatsappPhone, language = "en" }: RoomWizard
 
                 <a
                   className="rw-action-btn btn-email"
-                  href={`mailto:info@chioshotel.gr?subject=${encodeURIComponent(
+                  href={`mailto:chioshotel@gmail.com?subject=${encodeURIComponent(
                     `${labels.emailSubject} - ${lead.firstName} ${lead.lastName} - ${bestRoom.name}`,
                   )}`}
                 >

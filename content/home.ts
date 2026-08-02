@@ -380,8 +380,8 @@ export const homePageEn: HomePageData = {
       phone: "+30 22710 31733",
       phoneHref: "tel:+302271031733",
       emailLabel: "Email:",
-      email: "info@chioshotel.gr",
-      emailHref: "mailto:info@chioshotel.gr",
+      email: "chioshotel@gmail.com",
+      emailHref: "mailto:chioshotel@gmail.com",
       text: "The property is located in a spot that combines peace, easy access and short distances to the main points of Chios.",
       cta: {
         label: "Availability",
@@ -903,8 +903,8 @@ export const homePageEl: HomePageData = {
       phone: "+30 22710 31733",
       phoneHref: "tel:+302271031733",
       emailLabel: "Email:",
-      email: "info@chioshotel.gr",
-      emailHref: "mailto:info@chioshotel.gr",
+      email: "chioshotel@gmail.com",
+      emailHref: "mailto:chioshotel@gmail.com",
       text: "Το κατάλυμα βρίσκεται σε σημείο που συνδυάζει ηρεμία, εύκολη πρόσβαση και κοντινές αποστάσεις προς τα βασικά σημεία της Χίου.",
       cta: {
         label: "Διαθεσιμότητα",

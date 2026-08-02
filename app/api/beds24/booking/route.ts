@@ -1,4 +1,4 @@
-﻿import { neon } from "@neondatabase/serverless";
+import { neon } from "@neondatabase/serverless";
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
@@ -134,7 +134,7 @@ async function sendBookingEmail(body: Beds24BookingPayload) {
   const smtpUser = getRequiredEnv("SMTP_USER");
   const smtpPass = getRequiredEnv("SMTP_PASS");
   const smtpFrom = process.env.SMTP_FROM || smtpUser;
-  const contactTo = process.env.BEDS24_NOTIFY_TO || process.env.CONTACT_TO || smtpUser;
+  const contactTo = process.env.BEDS24_NOTIFY_TO || process.env.CONTACT_TO || "chioshotel@gmail.com";
 
   const bookingId = clean(body.booking_id);
   const status = clean(body.status);

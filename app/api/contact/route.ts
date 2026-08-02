@@ -203,7 +203,7 @@ export async function POST(request: Request) {
     const smtpUser = process.env.SMTP_USER;
     const smtpPass = process.env.SMTP_PASS;
     const smtpFrom = process.env.SMTP_FROM || smtpUser;
-    const contactTo = process.env.CONTACT_TO || smtpUser;
+    const contactTo = process.env.CONTACT_TO || "chioshotel@gmail.com";
 
     if (!smtpHost || !smtpUser || !smtpPass || !smtpFrom || !contactTo) {
       const missing = [

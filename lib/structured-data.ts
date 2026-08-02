@@ -21,7 +21,7 @@ export const businessData = {
   name: "Voulamandis House",
   url: siteUrl,
   telephone: "+302271031733",
-  email: "info@chioshotel.gr",
+  email: "chioshotel@gmail.com",
   priceRange: "€70-€90",
   address: {
     streetAddress: "Dimarchou Kalvokoressi 117",
