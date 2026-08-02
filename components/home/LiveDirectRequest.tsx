@@ -762,7 +762,7 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
 
           <div className="mt-5">
             {loading ? <div className="rounded-3xl bg-white p-6 text-sm font-bold text-stone-600 ring-1 ring-amber-900/10">{data.widget.loadingText}</div> : null}
-            {error ? <div className="rounded-3xl bg-white p-6 text-sm font-bold text-stone-600 ring-1 ring-amber-900/10">{error}</div> : null}
+            {error ? <div className="rounded-3xl bg-white p-6 text-sm font-bold text-stone-600 ring-1 ring-amber-900/10">{copy.dateLocale === "el-GR" ? "Η ζωντανή διαθεσιμότητα είναι προσωρινά μη διαθέσιμη." : error}</div> : null}
             {!loading && !error && !rooms.length ? <div className="rounded-3xl bg-white p-6 text-sm font-bold text-stone-600 ring-1 ring-amber-900/10">{copy.empty}</div> : null}
             {!loading && !error && rooms.length ? (
               <div className="relative -mx-4 md:mx-0 lg:-mx-2">

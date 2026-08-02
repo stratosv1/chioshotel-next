@@ -55,6 +55,10 @@ export function hardenGreekHomePageData(data: HomePageData): HomePageData {
 
   return {
     ...localized,
+    hero: {
+      ...localized.hero,
+      reviews: "Google κριτικές",
+    },
     location: {
       ...localized.location,
       discount: {
