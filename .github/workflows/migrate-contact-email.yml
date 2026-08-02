@@ -4,18 +4,23 @@ on:
   push:
     branches:
       - agent/replace-contact-email-gmail
+  pull_request:
+    branches:
+      - main
+    types: [opened, reopened, synchronize]
 
 permissions:
   contents: write
 
 jobs:
   migrate:
-    if: github.actor != 'github-actions[bot]'
+    if: github.actor != 'github-actions[bot]' && (github.head_ref == 'agent/replace-contact-email-gmail' || github.ref_name == 'agent/replace-contact-email-gmail')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout branch
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.head_ref || github.ref_name }}
           fetch-depth: 0
 
       - name: Replace public and fallback contact email
