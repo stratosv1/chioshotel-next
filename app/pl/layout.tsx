@@ -12,7 +12,7 @@ const polishLodgingSchema = {
   url: "https://chioshotel.gr/",
   image: "https://chioshotel.gr/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp",
   telephone: "+302271031733",
-  email: "info@chioshotel.gr",
+  email: "chioshotel@gmail.com",
   address: {
     "@type": "PostalAddress",
     streetAddress: "Dimarchou Kalvokoressi 117",

@@ -43,8 +43,8 @@ export const welcomeContact = {
   phoneHref: "tel:+306944474226",
   whatsappDisplay: "+30 694 447 4226",
   whatsappBase: "https://wa.me/306944474226",
-  email: "info@chioshotel.gr",
-  emailHref: "mailto:info@chioshotel.gr",
+  email: "chioshotel@gmail.com",
+  emailHref: "mailto:chioshotel@gmail.com",
 };
 
 type TextSet = {

@@ -242,7 +242,7 @@ export function GreekRoomWizardTailwind({ rooms, whatsappPhone }: Props) {
                     <p className="mt-4 text-sm leading-6 text-stone-600">Η επιλογή αυτή ταιριάζει στα κριτήριά σας με βάση χωρητικότητα, πρόσβαση, θέση, κουζίνα και κατηγορία τιμής.</p>
                     <div className="mt-5 grid gap-3 sm:grid-cols-2">
                       <a className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#25d366] px-5 text-xs font-black uppercase tracking-[0.1em] text-white" href={getWhatsAppUrl(room, lead, prefs, whatsappPhone)} target="_blank" rel="noopener noreferrer">WhatsApp</a>
-                      <a className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#6f7f3f]/25 bg-[#efe6d8] px-5 text-xs font-black uppercase tracking-[0.1em] text-[#3f4f2f]" href={`mailto:info@chioshotel.gr?subject=${encodeURIComponent(`Δωμάτιο - ${lead.firstName} ${lead.lastName} - ${roomName(room.name)}`)}`}>Email</a>
+                      <a className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#6f7f3f]/25 bg-[#efe6d8] px-5 text-xs font-black uppercase tracking-[0.1em] text-[#3f4f2f]" href={`mailto:chioshotel@gmail.com?subject=${encodeURIComponent(`Δωμάτιο - ${lead.firstName} ${lead.lastName} - ${roomName(room.name)}`)}`}>Email</a>
                     </div>
                   </article>
                 );

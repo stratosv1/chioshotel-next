@@ -47,7 +47,7 @@ const contactHeroImage =
   "/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp";
 
 const whatsappPhone = "306944474226";
-const contactEmail = "info@chioshotel.gr";
+const contactEmail = "chioshotel@gmail.com";
 
 export const contactPageEn: ContactPageData = {
   seo: {
