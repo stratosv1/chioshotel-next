@@ -8,6 +8,9 @@ export default function robots(): MetadataRoute.Robots {
       disallow: ["/api/", "/private/", "/admin/", "/wp-admin/"],
     },
     host: "https://chioshotel.gr",
-    sitemap: "https://chioshotel.gr/sitemap.xml",
+    sitemap: [
+      "https://chioshotel.gr/sitemap.xml",
+      "https://chioshotel.gr/image-sitemap.xml",
+    ],
   };
 }
