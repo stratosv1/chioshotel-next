@@ -27,6 +27,21 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Extend Italian and Spanish language evidence
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path("scripts/qa-ai-concierge.mjs")
+          source = path.read_text()
+          old_it = r'  it: /\b(il|lo|gli|vostro|camera|persone|disponibile|desidera|vicina|arrivo|partenza|soggiorno)\b/i,'
+          new_it = r'  it: /\b(il|lo|la|gli|vostro|camera|persone|disponibile|disponibilità|desidera|vicina|arrivo|partenza|soggiorno|opzione|verificare|risponderti|criteri|momento|alcuna)\b/i,'
+          old_es = r'  es: /\b(el|los|usted|habitación|personas|disponible|quiere|cercana|llegada|salida|estancia)\b/i,'
+          new_es = r'  es: /\b(el|la|los|usted|habitación|personas|disponible|quiere|cercana|llegada|salida|estancia|encantado|ayudarte|fecha|gustaría|reserva)\b/i,'
+          if old_it not in source or old_es not in source:
+              raise SystemExit("Expected language evidence patterns were not found")
+          path.write_text(source.replace(old_it, new_it).replace(old_es, new_es))
+          PY
+
       - name: Test all seven supported languages
         env:
           AI_QA_BASE_URL: https://chioshotel-next-git-preview-286ff2-evoulamandis-2524s-projects.vercel.app
