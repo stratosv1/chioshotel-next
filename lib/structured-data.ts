@@ -440,7 +440,6 @@ export function getLocalizedSchemaAddress(path?: string) {
 export function buildHotelSchema(
   options: { description?: string; path?: string } = {},
 ): SchemaObject {
-  const language = getGlobalSchemaLanguage(options.path);
   const labels = getLocalizedSchemaLabels(options.path);
 
   return {
@@ -450,7 +449,6 @@ export function buildHotelSchema(
     url: businessData.url,
     image: businessData.images,
     description: options.description ?? labels.description,
-    inLanguage: language,
     telephone: businessData.telephone,
     email: businessData.email,
     priceRange: businessData.priceRange,
