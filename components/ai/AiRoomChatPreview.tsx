@@ -586,10 +586,9 @@ function businessPreferenceScore(offer: Offer, filters: Filter[]) {
 
 function categoryWithFloor(offer: Offer) {
   const room = offerRoomNumber(offer);
-  if (room >= 8 && room <= 10) return offer.category;
+  if (room >= 5) return offer.category;
   const floor = offer.floor.split(" · ")[0]?.trim();
-  if (!floor || offer.category.toLocaleLowerCase().includes(floor.toLocaleLowerCase())) return offer.category;
-  return `${offer.category} · ${floor}`;
+  return floor ? offer.category + " · " + floor : offer.category;
 }
 
 function accessLabel(offer: Offer) {
