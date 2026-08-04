@@ -1,0 +1,56 @@
+name: Patch SEO Image Schema Phase 2
+
+on:
+  pull_request:
+    types: [synchronize, reopened]
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  patch-and-validate:
+    if: github.event.pull_request.number == 52
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout SEO branch
+        uses: actions/checkout@v4
+        with:
+          ref: seo/el-rich-snippets-images
+          fetch-depth: 0
+
+      - name: Apply schema patch
+        run: node scripts/patch-seo-image-schema-phase2.cjs
+
+      - name: Validate source
+        run: |
+          git diff --check
+          grep -q 'buildSeoImageObjectSchemas' content/rooms-schema.ts
+          grep -q 'getSeoImageReferences' content/rooms-schema.ts
+          grep -q 'getSeoImageUrls' content/room-detail-schema.ts
+          grep -q 'search-image-' lib/seo-image-schema.ts
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Commit validated schema changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content/rooms-schema.ts content/room-detail-schema.ts
+          git rm scripts/patch-seo-image-schema-phase2.cjs .github/workflows/patch-seo-image-schema-phase2.yml
+          git commit -m "Add multiple image objects to room schemas"
+          git restore .
+          git clean -fd
+          git fetch origin seo/el-rich-snippets-images
+          git rebase origin/seo/el-rich-snippets-images
+          git push origin HEAD:seo/el-rich-snippets-images
