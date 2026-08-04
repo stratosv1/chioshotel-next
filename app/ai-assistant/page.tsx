@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AiRoomChatFlowGuard } from "@/components/ai/AiRoomChatFlowGuard";
 import { AiRoomChatPreview } from "@/components/ai/AiRoomChatPreview";
 
 export const metadata: Metadata = {
@@ -14,5 +15,10 @@ export const metadata: Metadata = {
 };
 
 export default function AiAssistantPage() {
-  return <AiRoomChatPreview />;
+  return (
+    <>
+      <AiRoomChatFlowGuard />
+      <AiRoomChatPreview />
+    </>
+  );
 }
