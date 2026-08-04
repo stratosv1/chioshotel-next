@@ -6,6 +6,7 @@ on:
       - preview/ai-room-finder-chat-ui
     paths:
       - scripts/apply-ai-room-chat-locales.cjs
+      - scripts/apply-ai-room-chat-locales.trigger
 
 permissions:
   contents: write
