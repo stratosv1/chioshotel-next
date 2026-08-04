@@ -58,7 +58,7 @@ const images = {
   garden: "/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp",
   room: "/images/rooms/double-triple-room.jpg",
   terrace: "/images/rooms/DSC07776-2-e1675109942622.webp",
-  kambos: "/images/activities/kampos-chios.webp",
+  kambos: "/images/kampos/kambos-chios.jpg",
 };
 
 export const romanticStayPaths: Record<RomanticLocale, string> = {
