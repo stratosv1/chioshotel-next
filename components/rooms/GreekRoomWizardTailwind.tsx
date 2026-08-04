@@ -25,6 +25,8 @@ type WizardPrefs = {
   kitchen?: boolean;
 };
 
+type EmailSendStatus = "idle" | "sending" | "sent" | "error";
+
 type Question = {
   id: keyof WizardPrefs;
   question: string;
@@ -144,6 +146,7 @@ export function GreekRoomWizardTailwind({ rooms, whatsappPhone }: Props) {
   const [prefs, setPrefs] = useState<WizardPrefs>({});
   const [hasStarted, setHasStarted] = useState(false);
   const [step, setStep] = useState(0);
+  const [emailStatus, setEmailStatus] = useState<Record<string, EmailSendStatus>>({});
   const resultsCarouselRef = useRef<HTMLDivElement>(null);
 
   const currentQuestion = questions[step];
@@ -165,6 +168,49 @@ export function GreekRoomWizardTailwind({ rooms, whatsappPhone }: Props) {
     const card = carousel.querySelector<HTMLElement>("[data-room-result-card]");
     const distance = (card?.offsetWidth || carousel.clientWidth * 0.8) + 16;
     carousel.scrollBy({ left: direction * distance, behavior: "smooth" });
+  }
+
+  async function sendRoomEmail(room: RoomWizardRoom) {
+    const key = String(room.id);
+    const currentStatus = emailStatus[key] || "idle";
+    if (currentStatus === "sending" || currentStatus === "sent") return;
+
+    setEmailStatus((current) => ({ ...current, [key]: "sending" }));
+    const guestName = [lead.firstName, lead.lastName].filter(Boolean).join(" ").trim();
+    const preferenceSummary = roomTags(room, prefs).join(", ") || "Δεν δηλώθηκαν";
+    const message = [
+      "Νέο αίτημα ενδιαφέροντος από το Room Wizard",
+      "",
+      `Δωμάτιο: ${roomName(room.name)}`,
+      `Κατηγορία: ${roomType(room.type)}`,
+      `Τοποθεσία: ${roomLocation(room.location)}`,
+      `Άφιξη: ${lead.checkin}`,
+      `Αναχώρηση: ${lead.checkout}`,
+      `Άτομα: ${prefs.guests || "—"}`,
+      `Προτιμήσεις: ${preferenceSummary}`,
+      "",
+      `Όνομα: ${guestName}`,
+      `Email: ${lead.email}`,
+      `Τηλέφωνο: ${lead.phone}`,
+    ].join("\n");
+
+    try {
+      const response = await fetch("/api/ai-assistant/summary-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          subject: `Room Wizard — ${guestName} — ${roomName(room.name)}`,
+          message,
+          source: "room-wizard",
+          guest: { email: lead.email },
+        }),
+      });
+      const payload = await response.json().catch(() => null);
+      if (!response.ok || !payload?.ok) throw new Error("Email send failed");
+      setEmailStatus((current) => ({ ...current, [key]: "sent" }));
+    } catch {
+      setEmailStatus((current) => ({ ...current, [key]: "error" }));
+    }
   }
 
   function handleLeadSubmit(event: FormEvent<HTMLFormElement>) {
@@ -246,6 +292,7 @@ export function GreekRoomWizardTailwind({ rooms, whatsappPhone }: Props) {
               {visibleResults.map((room, index) => {
                 const tags = roomTags(room, prefs);
                 const label = index === 0 ? "Καλύτερη επιλογή" : "Εναλλακτική επιλογή";
+                const roomEmailStatus = emailStatus[String(room.id)] || "idle";
                 return (
                   <article data-room-result-card="true" className="w-[86vw] max-w-[430px] flex-none snap-start rounded-[2rem] border border-[#6f7f3f]/20 bg-white p-5 shadow-xl shadow-stone-900/5 md:w-[68%] md:max-w-[640px] md:p-7 lg:w-[calc(50%-0.5rem)] lg:max-w-none" key={room.id}>
                     <span className="inline-flex rounded-full bg-[#3f4f2f] px-3 py-1.5 text-xs font-black uppercase tracking-[0.1em] text-white">{label}</span>
@@ -261,7 +308,18 @@ export function GreekRoomWizardTailwind({ rooms, whatsappPhone }: Props) {
                     <p className="mt-4 text-sm leading-6 text-stone-600">Η επιλογή αυτή ταιριάζει στα κριτήριά σας με βάση χωρητικότητα, πρόσβαση, θέση, κουζίνα και κατηγορία τιμής.</p>
                     <div className="mt-5 grid gap-3 sm:grid-cols-2">
                       <a className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#25d366] px-5 text-xs font-black uppercase tracking-[0.1em] text-white" href={getWhatsAppUrl(room, lead, prefs, whatsappPhone)} target="_blank" rel="noopener noreferrer">WhatsApp</a>
-                      <a className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#6f7f3f]/25 bg-[#efe6d8] px-5 text-xs font-black uppercase tracking-[0.1em] text-[#3f4f2f]" href={`mailto:chioshotel@gmail.com?subject=${encodeURIComponent(`Δωμάτιο - ${lead.firstName} ${lead.lastName} - ${roomName(room.name)}`)}`}>Email</a>
+                      <button
+                        type="button"
+                        onClick={() => void sendRoomEmail(room)}
+                        disabled={roomEmailStatus === "sending" || roomEmailStatus === "sent"}
+                        className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#6f7f3f]/25 bg-[#efe6d8] px-5 text-xs font-black uppercase tracking-[0.1em] text-[#3f4f2f] transition hover:bg-[#e7dbc9] disabled:cursor-not-allowed disabled:opacity-70"
+                      >
+                        {roomEmailStatus === "sending" ? "Αποστολή…" : roomEmailStatus === "sent" ? "Στάλθηκε ✓" : roomEmailStatus === "error" ? "Προσπαθήστε ξανά" : "Email"}
+                      </button>
+                    </div>
+                    <div className="mt-3 min-h-5 text-center text-xs font-bold" aria-live="polite">
+                      {roomEmailStatus === "sent" ? <span className="text-[#3f6d2f]">Το αίτημα στάλθηκε στην υποδοχή.</span> : null}
+                      {roomEmailStatus === "error" ? <span className="text-red-700">Η αποστολή απέτυχε. Πατήστε ξανά.</span> : null}
                     </div>
                   </article>
                 );
@@ -270,7 +328,7 @@ export function GreekRoomWizardTailwind({ rooms, whatsappPhone }: Props) {
               <button type="button" aria-label="Προηγούμενη πρόταση" title="Προηγούμενη πρόταση" onClick={() => scrollResults(-1)} className="absolute left-0 top-1/2 z-10 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-[#6f7f3f]/25 bg-white/95 text-3xl font-light text-[#3f4f2f] shadow-xl backdrop-blur transition hover:scale-105 hover:bg-white active:scale-95 md:flex">‹</button>
               <button type="button" aria-label="Επόμενη πρόταση" title="Επόμενη πρόταση" onClick={() => scrollResults(1)} className="absolute right-0 top-1/2 z-10 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-[#6f7f3f]/25 bg-white/95 text-3xl font-light text-[#3f4f2f] shadow-xl backdrop-blur transition hover:scale-105 hover:bg-white active:scale-95 md:flex">›</button>
             </div>
-            <button type="button" className="mt-2 w-full rounded-full border border-[#6f7f3f]/20 bg-[#eef3e5] px-6 py-4 text-sm font-black uppercase tracking-[0.12em] text-[#3f4f2f]" onClick={() => { setHasStarted(false); setStep(0); setPrefs({}); }}>Ξεκινήστε ξανά</button>
+            <button type="button" className="mt-2 w-full rounded-full border border-[#6f7f3f]/20 bg-[#eef3e5] px-6 py-4 text-sm font-black uppercase tracking-[0.12em] text-[#3f4f2f]" onClick={() => { setHasStarted(false); setStep(0); setPrefs({}); setEmailStatus({}); }}>Ξεκινήστε ξανά</button>
           </div>
         ) : null}
       </div>
