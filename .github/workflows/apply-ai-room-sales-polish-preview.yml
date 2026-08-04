@@ -1,17 +1,19 @@
 name: Apply AI Room Sales Polish Preview
 
 on:
-  push:
+  pull_request:
     branches:
-      - preview/ai-room-finder-chat-ui
+      - main
     paths:
       - scripts/apply-ai-room-sales-polish-preview.cjs
+      - .github/workflows/apply-ai-room-sales-polish-preview.yml
 
 permissions:
   contents: write
 
 jobs:
   apply:
+    if: github.head_ref == 'preview/ai-room-finder-chat-ui'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout preview branch
