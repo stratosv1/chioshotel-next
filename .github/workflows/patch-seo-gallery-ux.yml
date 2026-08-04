@@ -1,3 +1,4 @@
+# second push activates this one-time workflow
 name: Patch SEO gallery UX
 
 on:
@@ -99,8 +100,8 @@ export function SearchImageGallery({ path, className = "" }: SearchImageGalleryP
 
   return (
     <section
-      className={\`border-y border-amber-900/10 bg-[#fffaf2] \${className}\`.trim()}
-      aria-labelledby={\`search-images-\${path.replace(/[^a-z0-9]+/gi, "-")}\`}
+      className={`border-y border-amber-900/10 bg-[#fffaf2] ${className}`.trim()}
+      aria-labelledby={`search-images-${path.replace(/[^a-z0-9]+/gi, "-")}`}
     >
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
         <header className="max-w-3xl">
@@ -108,7 +109,7 @@ export function SearchImageGallery({ path, className = "" }: SearchImageGalleryP
             Φωτογραφίες & επιλογές
           </span>
           <h2
-            id={\`search-images-\${path.replace(/[^a-z0-9]+/gi, "-")}\`}
+            id={`search-images-${path.replace(/[^a-z0-9]+/gi, "-")}`}
             className="mt-4 text-balance text-2xl font-black tracking-[-0.03em] text-[#2f261f] sm:text-3xl"
           >
             {set.heading}
@@ -131,9 +132,9 @@ export function SearchImageGallery({ path, className = "" }: SearchImageGalleryP
             const content = (
               <>
                 <div
-                  className={\`relative overflow-hidden bg-stone-200 \${
+                  className={`relative overflow-hidden bg-stone-200 ${
                     isPrimary ? "aspect-[4/3] lg:h-full lg:min-h-[430px]" : "aspect-[4/3]"
-                  }\`}
+                  }`}
                 >
                   <Image
                     src={image.src}
@@ -167,7 +168,7 @@ export function SearchImageGallery({ path, className = "" }: SearchImageGalleryP
             return (
               <figure
                 key={image.src}
-                className={\`group overflow-hidden rounded-[1.6rem] border border-amber-900/10 bg-white shadow-[0_14px_35px_rgba(47,38,31,0.09)] \${desktopSpan}\`}
+                className={`group overflow-hidden rounded-[1.6rem] border border-amber-900/10 bg-white shadow-[0_14px_35px_rgba(47,38,31,0.09)] ${desktopSpan}`}
               >
                 {link ? (
                   <a
