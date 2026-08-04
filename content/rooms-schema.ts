@@ -1,4 +1,8 @@
-import type { RoomCategoryCard, RoomsCategoryPageData } from "@/content/rooms";
+import {
+  roomsCategoryEl,
+  type RoomCategoryCard,
+  type RoomsCategoryPageData,
+} from "@/content/rooms";
 import {
   absoluteUrl,
   getCanonicalUrl,
@@ -24,6 +28,14 @@ import {
   websiteId,
   type SchemaObject,
 } from "@/lib/structured-data";
+
+const GREEK_ROOMS_PRIMARY_IMAGE =
+  "/images/rooms/received_1753964631359257.webp";
+
+// The catch-all page imports this schema module before generateMetadata runs.
+// Keep the shared Greek data source aligned so OG/Twitter and JSON-LD use the
+// same image that visitors can see in the first clickable room card.
+roomsCategoryEl.seo.ogImage = GREEK_ROOMS_PRIMARY_IMAGE;
 
 function getRoomCardSchemaId(card: RoomCategoryCard): string {
   return schemaId(card.href, card.id);
@@ -99,8 +111,6 @@ function getRoomsSchemaLabels(path: string) {
 function resolveRoomsSchemaSeo(data: RoomsCategoryPageData): RoomsCategoryPageData {
   const canonicalPath = data.seo.canonicalPath;
   const override = seoSnippetOverrides.get(canonicalPath);
-  const firstVisibleCardImage =
-    canonicalPath === "/el/domatia-xios/" ? data.cards[0]?.image : undefined;
 
   return {
     ...data,
@@ -111,7 +121,10 @@ function resolveRoomsSchemaSeo(data: RoomsCategoryPageData): RoomsCategoryPageDa
         override?.description ?? data.seo.description,
         canonicalPath,
       ),
-      ogImage: firstVisibleCardImage ?? data.seo.ogImage,
+      ogImage:
+        canonicalPath === "/el/domatia-xios/"
+          ? GREEK_ROOMS_PRIMARY_IMAGE
+          : data.seo.ogImage,
     },
   };
 }
