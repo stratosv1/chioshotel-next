@@ -10,6 +10,7 @@ type Message = { id: string; role: "assistant" | "user"; content: string };
 type Offer = {
   roomId: string;
   unitId: string;
+  roomNumber?: number;
   name: string;
   category: string;
   floor: string;
@@ -451,7 +452,18 @@ const COPY = {
 const WHATSAPP_NUMBER = "306944474226";
 const BREAKFAST_IMAGE = "/images/welcome/voulamandis-breakfast.jpg";
 const FILTER_KEYS: Filter[] = ["economy", "noStairs", "ground", "first", "kitchen", "garden", "balcony", "family"];
-const RANK: Record<NonNullable<Offer["recommendationRole"]>, number> = { recommended: 0, budget: 1, comfort: 2, alternative: 3 };
+type BadgeKey = "bestForTwo" | "lowestPrice" | "directDiscount" | "noStairs" | "fullKitchen" | "moreSpace" | "family" | "balcony" | "matchesPreferences";
+
+const SHORT_SELECT: Record<Language, string> = { el: "Επιλογή", en: "Select", de: "Wählen", fr: "Choisir", it: "Scegli", es: "Elegir", tr: "Seç" };
+const BADGE_COPY: Record<Language, Record<BadgeKey, string>> = {
+  el: { bestForTwo: "Καλύτερη επιλογή για 2 άτομα", lowestPrice: "Χαμηλότερη τιμή", directDiscount: "10% έκπτωση απευθείας", noStairs: "Χωρίς σκάλες", fullKitchen: "Πλήρης κουζίνα", moreSpace: "Περισσότερος χώρος", family: "Ιδανικό για οικογένειες", balcony: "Ιδιωτικό μπαλκόνι", matchesPreferences: "Ταιριάζει στις προτιμήσεις σας" },
+  en: { bestForTwo: "Best choice for 2 guests", lowestPrice: "Lowest price", directDiscount: "10% direct discount", noStairs: "No stairs", fullKitchen: "Full kitchen", moreSpace: "More space", family: "Ideal for families", balcony: "Private balcony", matchesPreferences: "Matches your preferences" },
+  de: { bestForTwo: "Beste Wahl für 2 Gäste", lowestPrice: "Niedrigster Preis", directDiscount: "10 % Direktrabatt", noStairs: "Keine Treppen", fullKitchen: "Voll ausgestattete Küche", moreSpace: "Mehr Platz", family: "Ideal für Familien", balcony: "Privater Balkon", matchesPreferences: "Passt zu Ihren Wünschen" },
+  fr: { bestForTwo: "Meilleur choix pour 2 personnes", lowestPrice: "Prix le plus bas", directDiscount: "10 % de remise directe", noStairs: "Sans escaliers", fullKitchen: "Cuisine complète", moreSpace: "Plus d’espace", family: "Idéal pour les familles", balcony: "Balcon privé", matchesPreferences: "Correspond à vos préférences" },
+  it: { bestForTwo: "Scelta migliore per 2 ospiti", lowestPrice: "Prezzo più basso", directDiscount: "10% di sconto diretto", noStairs: "Senza scale", fullKitchen: "Cucina completa", moreSpace: "Più spazio", family: "Ideale per famiglie", balcony: "Balcone privato", matchesPreferences: "Corrisponde alle preferenze" },
+  es: { bestForTwo: "Mejor opción para 2 personas", lowestPrice: "Precio más bajo", directDiscount: "10% de descuento directo", noStairs: "Sin escaleras", fullKitchen: "Cocina completa", moreSpace: "Más espacio", family: "Ideal para familias", balcony: "Balcón privado", matchesPreferences: "Coincide con tus preferencias" },
+  tr: { bestForTwo: "2 kişi için en iyi seçenek", lowestPrice: "En düşük fiyat", directDiscount: "%10 doğrudan indirim", noStairs: "Merdivensiz", fullKitchen: "Tam donanımlı mutfak", moreSpace: "Daha geniş alan", family: "Aileler için ideal", balcony: "Özel balkon", matchesPreferences: "Tercihlerinize uygun" },
+};
 
 function detectLanguage(): Language {
   if (typeof window === "undefined") return "en";
@@ -534,6 +546,78 @@ function preferenceScore(offer: Offer, filters: Filter[]) {
   return filters.reduce((total, filter) => total + (tests[filter].test(text) ? 10 : 0), 0);
 }
 
+function offerRoomNumber(offer: Offer) {
+  const direct = Number(offer.roomNumber);
+  if (Number.isInteger(direct) && direct > 0) return direct;
+  const match = offer.name.match(/(\d{1,2})/);
+  return match ? Number(match[1]) : 99;
+}
+
+function roomTier(offer: Offer) {
+  const room = offerRoomNumber(offer);
+  if (room === 2 || room === 6) return 0;
+  if (room === 5 || room === 7) return 1;
+  if (room === 1 || room === 3 || room === 4) return 2;
+  if (room >= 8 && room <= 10) return 3;
+  return 4;
+}
+
+function roomSequence(offer: Offer) {
+  const order = [2, 6, 5, 7, 1, 3, 4, 8, 9, 10];
+  const index = order.indexOf(offerRoomNumber(offer));
+  return index >= 0 ? index : 99;
+}
+
+function businessPreferenceScore(offer: Offer, filters: Filter[]) {
+  const room = offerRoomNumber(offer);
+  let score = preferenceScore(offer, filters);
+  for (const filter of filters) {
+    if (filter === "economy" && (room === 2 || room === 6)) score += 40;
+    if ((filter === "noStairs" || filter === "ground") && [5, 6, 7].includes(room)) score += 40;
+    if (filter === "first" && [1, 2, 3, 4].includes(room)) score += 40;
+    if (filter === "kitchen" && room >= 8 && room <= 10) score += 45;
+    if (filter === "kitchen" && (room === 3 || room === 4)) score += 18;
+    if (filter === "family" && room >= 8 && room <= 10) score += 45;
+    if (filter === "balcony" && (room === 1 || room === 4)) score += 40;
+    if (filter === "garden" && (room === 5 || room === 7)) score += 40;
+  }
+  return score;
+}
+
+function categoryWithFloor(offer: Offer) {
+  const room = offerRoomNumber(offer);
+  if (room >= 8 && room <= 10) return offer.category;
+  const floor = offer.floor.split(" · ")[0]?.trim();
+  if (!floor || offer.category.toLocaleLowerCase().includes(floor.toLocaleLowerCase())) return offer.category;
+  return `${offer.category} · ${floor}`;
+}
+
+function accessLabel(offer: Offer) {
+  const parts = offer.floor.split(" · ").map(part => part.trim()).filter(Boolean);
+  return parts.length > 1 ? parts.slice(1).join(" · ") : offer.floor;
+}
+
+function sellingBadges(offer: Offer, allOffers: Offer[], filters: Filter[], guests: number, language: Language) {
+  const copy = BADGE_COPY[language];
+  const room = offerRoomNumber(offer);
+  const eligible = allOffers.filter(item => !item.maxGuests || item.maxGuests >= guests);
+  const lowestPrice = eligible.length ? Math.min(...eligible.map(item => item.directTotal)) : offer.directTotal;
+  const economyForTwo = eligible
+    .filter(item => [2, 6].includes(offerRoomNumber(item)))
+    .sort((a, b) => a.directTotal - b.directTotal || roomSequence(a) - roomSequence(b));
+  const badges: string[] = [];
+
+  if (guests === 2 && economyForTwo[0] && offerRoomNumber(economyForTwo[0]) === room) badges.push(copy.bestForTwo);
+  if (Math.abs(offer.directTotal - lowestPrice) < 0.01) badges.push(copy.lowestPrice);
+  if (filters.length > 0 && businessPreferenceScore(offer, filters) > 0) badges.push(copy.matchesPreferences);
+  if ([5, 6, 7].includes(room)) badges.push(copy.noStairs);
+  if (room >= 8 && room <= 10) badges.push(copy.fullKitchen, guests >= 3 ? copy.family : copy.moreSpace);
+  if (room === 1 || room === 4) badges.push(copy.balcony);
+  badges.push(copy.directDiscount);
+
+  return [...new Set(badges)].slice(0, 2);
+}
+
 export function AiRoomChatPreview() {
   const [language, setLanguage] = useState<Language>("en");
   const copy = COPY[language];
@@ -563,12 +647,20 @@ export function AiRoomChatPreview() {
 
   const nights = checkin && checkout ? Math.max(0, nightsBetween(checkin, checkout)) : 0;
   const chosenKeys = useMemo(() => new Set(choices.map(choice => `${choice.offer.roomId}:${choice.offer.unitId}`)), [choices]);
+  const activeGuests = groups[activeGroup] || 0;
   const visibleOffers = useMemo(() => [...(offers[activeGroup] || [])]
     .filter(offer => !chosenKeys.has(`${offer.roomId}:${offer.unitId}`))
-    .sort((a, b) => (RANK[a.recommendationRole || "alternative"] - RANK[b.recommendationRole || "alternative"])
-      || preferenceScore(b, filters) - preferenceScore(a, filters)
-      || a.directTotal - b.directTotal),
-  [offers, activeGroup, chosenKeys, filters]);
+    .filter(offer => !offer.maxGuests || offer.maxGuests >= activeGuests)
+    .sort((a, b) => {
+      const preferenceDifference = businessPreferenceScore(b, filters) - businessPreferenceScore(a, filters);
+      if (preferenceDifference) return preferenceDifference;
+      const tierDifference = roomTier(a) - roomTier(b);
+      if (tierDifference) return tierDifference;
+      const priceDifference = a.directTotal - b.directTotal;
+      if (priceDifference) return priceDifference;
+      return roomSequence(a) - roomSequence(b);
+    }),
+  [offers, activeGroup, activeGuests, chosenKeys, filters]);
   const roomTotal = choices.reduce((total, choice) => total + choice.offer.directTotal, 0);
   const guestTotal = groups.reduce((total, guests) => total + guests, 0);
   const breakfastTotal = breakfast ? guestTotal * nights * 12 : 0;
@@ -584,6 +676,16 @@ export function AiRoomChatPreview() {
   useEffect(() => {
     document.documentElement.lang = language;
   }, [language]);
+
+  useEffect(() => {
+    document.body.dataset.aiRoomStep = step;
+    return () => { delete document.body.dataset.aiRoomStep; };
+  }, [step]);
+
+  useEffect(() => {
+    setCardIndex(0);
+    carouselRef.current?.scrollTo({ left: 0, behavior: "auto" });
+  }, [activeGroup, filters, offers]);
 
   useEffect(() => {
     const viewport = window.visualViewport;
@@ -837,7 +939,7 @@ export function AiRoomChatPreview() {
   const homeHref = language === "en" ? "/" : "/" + language + "/";
 
   return (
-    <main data-ai-room-chat="true" className="flex h-[var(--ai-chat-height,100dvh)] flex-col overflow-hidden bg-[#f6f2eb] text-[#29251f]">
+    <main data-ai-room-chat="true" data-ai-step={step} className="flex h-[var(--ai-chat-height,100dvh)] flex-col overflow-hidden bg-[#f6f2eb] text-[#29251f]">
       <style jsx global>{`
         @keyframes ai-message-in { from { opacity: 0; transform: translateY(10px) scale(.985); } to { opacity: 1; transform: none; } }
         @keyframes ai-sheet-in { from { transform: translateY(100%); } to { transform: translateY(0); } }
@@ -848,6 +950,7 @@ export function AiRoomChatPreview() {
         .ai-hide-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
         .ai-hide-scrollbar::-webkit-scrollbar { display: none; }
         #INDmenu-btn { top: auto !important; right: 8px !important; bottom: 88px !important; transform: scale(.82) !important; transform-origin: bottom right !important; }
+        body[data-ai-room-step="selecting"] #INDmenu-btn { display: none !important; }
         @media (max-width: 560px) {
           .ai-chat-header { gap: .45rem; padding-left: .45rem; padding-right: .45rem; }
           .ai-chat-avatar { width: 2.5rem !important; height: 2.5rem !important; }
@@ -932,7 +1035,7 @@ export function AiRoomChatPreview() {
 
             {step === "selecting" && visibleOffers.length > 0 && (
               <section className="ai-message-in -mx-3 sm:mx-0 sm:ml-10">
-                <div className="mb-2 flex items-center justify-between px-4 text-xs font-bold text-[#6f665b] sm:px-1"><span>{copy.choose(activeGroup + 1, groups[activeGroup])}</span><span>{cardIndex + 1}/{visibleOffers.length}</span></div>
+                <div className="mb-2 px-4 text-xs font-bold text-[#6f665b] sm:px-1">{copy.choose(activeGroup + 1, groups[activeGroup])}</div>
                 <div
                   ref={carouselRef}
                   data-ai-room-carousel="true"
@@ -947,10 +1050,10 @@ export function AiRoomChatPreview() {
                     });
                     if (nearest !== cardIndex) setCardIndex(nearest);
                   }}
-                  className="ai-hide-scrollbar flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain scroll-smooth px-3 pb-2 sm:px-0"
+                  className="ai-hide-scrollbar flex items-start snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain scroll-smooth px-3 pb-2 sm:px-0"
                 >
                   {visibleOffers.map((offer, index) => (
-                    <article key={offer.roomId + ":" + offer.unitId} className="min-w-[88%] snap-center overflow-hidden rounded-[24px] border border-[#dcd2c5] bg-white shadow-[0_14px_38px_rgba(70,55,35,.10)] sm:min-w-[68%]">
+                    <article key={offer.roomId + ":" + offer.unitId} className="min-w-[88%] self-start snap-center overflow-hidden rounded-[24px] border border-[#dcd2c5] bg-white shadow-[0_14px_38px_rgba(70,55,35,.10)] sm:min-w-[68%]">
                       <div className="relative h-44 sm:h-56">
                         <Image src={offer.image} alt={offer.name} fill sizes="(max-width:640px) 88vw, 520px" className="object-cover" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
@@ -958,15 +1061,15 @@ export function AiRoomChatPreview() {
                       </div>
                       <div className="p-3.5 sm:p-5">
                         <div className="flex items-start justify-between gap-3">
-                          <div className="min-w-0"><h2 className="truncate text-[1.35rem] font-bold">{offer.name}</h2><p className="mt-0.5 text-sm text-[#746b60]">{offer.category}</p></div>
+                          <div className="min-w-0"><h2 className="truncate text-[1.35rem] font-bold">{offer.name}</h2><p className="mt-0.5 text-sm text-[#746b60]">{categoryWithFloor(offer)}</p></div>
                           <div className="shrink-0 text-right"><p className="text-xs text-[#b05252] line-through">{money(offer.originalTotal, language)}</p><p className="text-xl font-black text-[#5f7448]">{money(offer.directTotal, language)}</p></div>
                         </div>
-                        {offer.recommendationReason && <p className="mt-2 rounded-xl bg-[#f2f4ea] px-3 py-2 text-sm font-semibold leading-5 text-[#56643f]">✨ {offer.recommendationReason}</p>}
-                        <div className="mt-2 flex flex-wrap gap-1.5">{[offer.floor, ...(offer.features || []).slice(0, 3)].filter(Boolean).map(item => <span key={item} className="rounded-full bg-[#f1ede7] px-2.5 py-1 text-[11px] font-semibold text-[#665e55]">{item}</span>)}</div>
+                        {sellingBadges(offer, visibleOffers, filters, activeGuests, language).length > 0 && <div className="mt-2 flex flex-wrap gap-1.5">{sellingBadges(offer, visibleOffers, filters, activeGuests, language).map((badge, badgeIndex) => <span key={badge} className={badgeIndex === 0 ? "rounded-md bg-[#53643f] px-2.5 py-1 text-[11px] font-bold text-white" : "rounded-md bg-[#edf2e6] px-2.5 py-1 text-[11px] font-bold text-[#53643f]"}>{badgeIndex === 0 ? "✓ " : ""}{badge}</span>)}</div>}
+                        <div className="mt-2 flex flex-wrap gap-1.5">{[accessLabel(offer), ...(offer.features || []).slice(0, 3)].filter(Boolean).map(item => <span key={item} className="rounded-full bg-[#f1ede7] px-2.5 py-1 text-[11px] font-semibold text-[#665e55]">{item}</span>)}</div>
                         {offer.saving > 0 && <p className="mt-2 text-sm font-bold text-[#5f7448]">{copy.saving}: {money(offer.saving, language)}</p>}
                         <div className="mt-3 grid grid-cols-2 gap-2">
                           <button type="button" onClick={() => { setDetail(offer); setPhoto(0); }} className="min-h-11 rounded-2xl border border-[#d8cec1] bg-white px-3 text-sm font-bold transition active:scale-[.98]">{copy.details}</button>
-                          <button type="button" onClick={() => selectOffer(offer)} className="min-h-11 rounded-2xl bg-[#66714f] px-3 text-sm font-bold text-white shadow-sm transition hover:bg-[#596244] active:scale-[.98]">{copy.select}</button>
+                          <button type="button" onClick={() => selectOffer(offer)} className="min-h-11 rounded-2xl bg-[#66714f] px-3 text-sm font-bold text-white shadow-sm transition hover:bg-[#596244] active:scale-[.98]"><span className="sm:hidden">{SHORT_SELECT[language]}</span><span className="hidden sm:inline">{copy.select}</span></button>
                         </div>
                       </div>
                     </article>
