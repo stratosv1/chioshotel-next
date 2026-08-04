@@ -133,3 +133,5 @@ jobs:
           git add content/rooms.ts content/rooms-schema.ts lib/seo-image-registry.ts .github/workflows/patch-rooms-schema-alignment.yml
           git commit -m "Finish rooms schema and image alignment"
           git push origin HEAD:fix/rooms-schema-alignment
+
+# trigger: 2026-08-04
