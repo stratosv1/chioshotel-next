@@ -1,13 +1,5 @@
 import type { Metadata } from "next";
-import { AiBackToSite } from "@/components/ai/AiBackToSite";
-import { AiConversationAutoScroll } from "@/components/ai/AiConversationAutoScroll";
-import { AiNoAvailabilityBridge } from "@/components/ai/AiNoAvailabilityBridge";
-import { AiRoomDetailsEnhancer } from "@/components/ai/AiRoomDetailsEnhancer";
-import { AiRoomModalPolish } from "@/components/ai/AiRoomModalPolish";
-import { AiSplitStayPresentation } from "@/components/ai/AiSplitStayPresentation";
-import { AiSummaryActions } from "@/components/ai/AiSummaryActions";
-import { AiSummaryEmailBridge } from "@/components/ai/AiSummaryEmailBridge";
-import { ConversationalRoomSalesEnhanced } from "@/components/ai/ConversationalRoomSalesEnhanced";
+import { AiRoomChatPreview } from "@/components/ai/AiRoomChatPreview";
 
 export const metadata: Metadata = {
   title: {
@@ -22,17 +14,5 @@ export const metadata: Metadata = {
 };
 
 export default function AiAssistantPage() {
-  return (
-    <>
-      <AiBackToSite />
-      <AiNoAvailabilityBridge />
-      <ConversationalRoomSalesEnhanced />
-      <AiConversationAutoScroll />
-      <AiRoomDetailsEnhancer />
-      <AiRoomModalPolish />
-      <AiSplitStayPresentation />
-      <AiSummaryActions />
-      <AiSummaryEmailBridge />
-    </>
-  );
+  return <AiRoomChatPreview />;
 }
