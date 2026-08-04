@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type FormEvent } from "react";
+import { useMemo, useRef, useState, type FormEvent } from "react";
 import type { RoomWizardRoom } from "@/content/rooms";
 
 type Props = {
@@ -144,6 +144,7 @@ export function GreekRoomWizardTailwind({ rooms, whatsappPhone }: Props) {
   const [prefs, setPrefs] = useState<WizardPrefs>({});
   const [hasStarted, setHasStarted] = useState(false);
   const [step, setStep] = useState(0);
+  const resultsCarouselRef = useRef<HTMLDivElement>(null);
 
   const currentQuestion = questions[step];
   const isFinished = hasStarted && step >= questions.length;
@@ -158,6 +159,14 @@ export function GreekRoomWizardTailwind({ rooms, whatsappPhone }: Props) {
   );
   const visibleResults = results.slice(0, 3);
 
+  function scrollResults(direction: -1 | 1) {
+    const carousel = resultsCarouselRef.current;
+    if (!carousel) return;
+    const card = carousel.querySelector<HTMLElement>("[data-room-result-card]");
+    const distance = (card?.offsetWidth || carousel.clientWidth * 0.8) + 16;
+    carousel.scrollBy({ left: direction * distance, behavior: "smooth" });
+  }
+
   function handleLeadSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!lead.checkin || !lead.checkout || lead.checkout <= lead.checkin) {
@@ -169,7 +178,7 @@ export function GreekRoomWizardTailwind({ rooms, whatsappPhone }: Props) {
   }
 
   return (
-    <section className="mx-auto mb-12 w-[min(780px,100%)] scroll-mt-20" id="room-wizard-app" aria-labelledby="greek-room-wizard-title">
+    <section className="mx-auto mb-12 w-[min(1180px,100%)] scroll-mt-20" id="room-wizard-app" aria-labelledby="greek-room-wizard-title">
       <div className="overflow-hidden rounded-[2rem] border border-[#6f7f3f]/20 bg-[radial-gradient(circle_at_top_left,rgba(111,127,63,.16),transparent_22rem),linear-gradient(180deg,#fffdfa,#f7f9f1)] p-[clamp(24px,5vw,46px)] shadow-2xl shadow-stone-900/10">
         {!hasStarted ? (
           <>
@@ -221,14 +230,24 @@ export function GreekRoomWizardTailwind({ rooms, whatsappPhone }: Props) {
           <div>
             <div className="mb-5 flex items-center justify-between gap-3">
               <h3 className="text-2xl font-black tracking-[-0.04em] text-[#2f261f]">Οι καλύτερες επιλογές για εσάς</h3>
-              <span className="rounded-full bg-[#eef3e5] px-4 py-2 text-[11px] font-black uppercase tracking-[0.12em] text-[#3f4f2f]">Σύρετε →</span>
+              <span className="rounded-full bg-[#eef3e5] px-4 py-2 text-[11px] font-black uppercase tracking-[0.12em] text-[#3f4f2f]"><span className="md:hidden">Σύρετε →</span><span className="hidden md:inline">Χρησιμοποιήστε τα βέλη</span></span>
             </div>
-            <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="relative">
+              <div
+                ref={resultsCarouselRef}
+                tabIndex={0}
+                aria-label="Προτεινόμενα δωμάτια"
+                onKeyDown={(event) => {
+                  if (event.key === "ArrowLeft") { event.preventDefault(); scrollResults(-1); }
+                  if (event.key === "ArrowRight") { event.preventDefault(); scrollResults(1); }
+                }}
+                className="flex snap-x snap-mandatory gap-4 overflow-x-auto px-1 pb-5 scroll-smooth focus:outline-none focus-visible:ring-2 focus-visible:ring-[#6f7f3f]/50 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:px-14"
+              >
               {visibleResults.map((room, index) => {
                 const tags = roomTags(room, prefs);
                 const label = index === 0 ? "Καλύτερη επιλογή" : "Εναλλακτική επιλογή";
                 return (
-                  <article className="w-[86vw] max-w-[430px] flex-none snap-start rounded-[2rem] border border-[#6f7f3f]/20 bg-white p-5 shadow-xl shadow-stone-900/5 md:w-[560px] md:max-w-[560px] md:p-7" key={room.id}>
+                  <article data-room-result-card="true" className="w-[86vw] max-w-[430px] flex-none snap-start rounded-[2rem] border border-[#6f7f3f]/20 bg-white p-5 shadow-xl shadow-stone-900/5 md:w-[68%] md:max-w-[640px] md:p-7 lg:w-[calc(50%-0.5rem)] lg:max-w-none" key={room.id}>
                     <span className="inline-flex rounded-full bg-[#3f4f2f] px-3 py-1.5 text-xs font-black uppercase tracking-[0.1em] text-white">{label}</span>
                     <h4 className="mt-4 text-3xl font-black leading-none tracking-[-0.04em] text-[#2f261f]">{roomName(room.name)}</h4>
                     <p className="mt-2 text-sm italic text-stone-600">{roomType(room.type)} • {roomLocation(room.location)}</p>
@@ -247,6 +266,9 @@ export function GreekRoomWizardTailwind({ rooms, whatsappPhone }: Props) {
                   </article>
                 );
               })}
+              </div>
+              <button type="button" aria-label="Προηγούμενη πρόταση" title="Προηγούμενη πρόταση" onClick={() => scrollResults(-1)} className="absolute left-0 top-1/2 z-10 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-[#6f7f3f]/25 bg-white/95 text-3xl font-light text-[#3f4f2f] shadow-xl backdrop-blur transition hover:scale-105 hover:bg-white active:scale-95 md:flex">‹</button>
+              <button type="button" aria-label="Επόμενη πρόταση" title="Επόμενη πρόταση" onClick={() => scrollResults(1)} className="absolute right-0 top-1/2 z-10 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-[#6f7f3f]/25 bg-white/95 text-3xl font-light text-[#3f4f2f] shadow-xl backdrop-blur transition hover:scale-105 hover:bg-white active:scale-95 md:flex">›</button>
             </div>
             <button type="button" className="mt-2 w-full rounded-full border border-[#6f7f3f]/20 bg-[#eef3e5] px-6 py-4 text-sm font-black uppercase tracking-[0.12em] text-[#3f4f2f]" onClick={() => { setHasStarted(false); setStep(0); setPrefs({}); }}>Ξεκινήστε ξανά</button>
           </div>
