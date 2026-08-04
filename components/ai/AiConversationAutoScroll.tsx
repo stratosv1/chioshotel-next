@@ -10,9 +10,11 @@ function hasVisibleDialog() {
 
 function focusedChatComposerInput(): HTMLInputElement | null {
   const activeElement = document.activeElement;
+  if (!(activeElement instanceof HTMLInputElement)) return null;
+
   if (
-    activeElement instanceof HTMLInputElement &&
-    activeElement.closest('[data-ai-chat-composer="persistent"]')
+    activeElement.closest('[data-ai-chat-composer="persistent"]') ||
+    activeElement.closest("form.fixed")
   ) {
     return activeElement;
   }
@@ -20,16 +22,22 @@ function focusedChatComposerInput(): HTMLInputElement | null {
   return null;
 }
 
-function visibleChatScroller(): HTMLElement | null {
+function visibleDedicatedScroller(): HTMLElement | null {
   const scroller = document.querySelector<HTMLElement>(
     '[data-ai-chat-scroll="true"]',
   );
   return scroller?.offsetParent !== null ? scroller : null;
 }
 
+function conversationFeed(): HTMLElement | null {
+  return (
+    document.querySelector<HTMLElement>('[data-ai-conversation-feed="true"]') ||
+    document.querySelector<HTMLElement>("main")
+  );
+}
+
 function syncVisualViewportHeight() {
-  const viewportHeight =
-    window.visualViewport?.height ?? window.innerHeight;
+  const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
 
   document.documentElement.style.setProperty(
     "--ai-visual-height",
@@ -40,29 +48,35 @@ function syncVisualViewportHeight() {
 function scrollConversationToEnd() {
   if (hasVisibleDialog()) return;
 
-  const scroller = visibleChatScroller();
-  if (!scroller) return;
+  const scroller = visibleDedicatedScroller();
+  if (scroller) {
+    scroller.scrollTop = scroller.scrollHeight;
+  } else {
+    const bottom = Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight,
+    );
+    window.scrollTo(0, bottom);
+  }
 
-  scroller.scrollTop = scroller.scrollHeight;
   focusedChatComposerInput()?.focus({ preventScroll: true });
 }
 
 export function AiConversationAutoScroll() {
   useEffect(() => {
-    const conversation = document.querySelector<HTMLElement>("main");
-    const feed = document.querySelector<HTMLElement>(
-      '[data-ai-conversation-feed="true"]',
-    );
-    const scroller = visibleChatScroller();
-    if (!conversation || !feed || !scroller) return;
+    const feed = conversationFeed();
+    if (!feed) return;
 
     let animationFrame = 0;
     let settleTimer = 0;
+    const scroller = visibleDedicatedScroller();
     const previousBodyOverflow = document.body.style.overflow;
     const previousBodyOverscroll = document.body.style.overscrollBehavior;
 
-    document.body.style.overflow = "hidden";
-    document.body.style.overscrollBehavior = "none";
+    if (scroller) {
+      document.body.style.overflow = "hidden";
+      document.body.style.overscrollBehavior = "none";
+    }
 
     const scheduleScroll = () => {
       window.cancelAnimationFrame(animationFrame);
@@ -95,7 +109,8 @@ export function AiConversationAutoScroll() {
       const target = event.target;
       if (
         target instanceof HTMLInputElement &&
-        target.closest('[data-ai-chat-composer="persistent"]')
+        (target.closest('[data-ai-chat-composer="persistent"]') ||
+          target.closest("form.fixed"))
       ) {
         syncViewportAndScroll();
       }
@@ -106,7 +121,7 @@ export function AiConversationAutoScroll() {
       subtree: true,
     });
     resizeObserver.observe(feed);
-    resizeObserver.observe(scroller);
+    if (scroller) resizeObserver.observe(scroller);
     document.addEventListener("focusin", handleComposerFocus);
     window.addEventListener("resize", syncViewportAndScroll);
     window.addEventListener("orientationchange", syncViewportAndScroll);
@@ -125,8 +140,10 @@ export function AiConversationAutoScroll() {
       window.visualViewport?.removeEventListener("scroll", syncViewportAndScroll);
       window.cancelAnimationFrame(animationFrame);
       window.clearTimeout(settleTimer);
-      document.body.style.overflow = previousBodyOverflow;
-      document.body.style.overscrollBehavior = previousBodyOverscroll;
+      if (scroller) {
+        document.body.style.overflow = previousBodyOverflow;
+        document.body.style.overscrollBehavior = previousBodyOverscroll;
+      }
       document.documentElement.style.removeProperty("--ai-visual-height");
     };
   }, []);
