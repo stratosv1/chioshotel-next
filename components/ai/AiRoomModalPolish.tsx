@@ -54,6 +54,16 @@ const CATEGORY: Record<Language, Record<string, string>> = {
   },
 };
 
+const ROOM_TEN_CAPACITY: Record<Language, Array<[RegExp, string]>> = {
+  el: [[/Έως\s*4\s*άτομα/i, "Έως 5 άτομα"]],
+  en: [[/Up to\s*4\s*guests/i, "Up to 5 guests"]],
+  de: [[/Bis zu\s*4\s*Gäste/i, "Bis zu 5 Gäste"]],
+  fr: [[/Jusqu[’']à\s*4\s*personnes/i, "Jusqu’à 5 personnes"]],
+  it: [[/Fino a\s*4\s*ospiti/i, "Fino a 5 ospiti"]],
+  es: [[/Hasta\s*4\s*huéspedes/i, "Hasta 5 huéspedes"]],
+  tr: [[/En fazla\s*4\s*misafir/i, "En fazla 5 misafir"]],
+};
+
 function currentLanguage(): Language {
   const requested = new URLSearchParams(window.location.search)
     .get("lang")
@@ -124,7 +134,7 @@ function forceCoveredHeroPhoto(modal: HTMLElement) {
   heroImage.style.setProperty("max-height", "none", "important");
 }
 
-function forceFourColumnAmenities(modal: HTMLElement) {
+function forceResponsiveAmenities(modal: HTMLElement) {
   const headings = Array.from(modal.querySelectorAll<HTMLElement>("p, h3"));
   const amenitiesHeading = headings.find((node) =>
     /room amenities|παροχές δωματίου|zimmerausstattung|équipements de la chambre|servizi della camera|servicios de la habitación|oda olanakları/i.test(
@@ -134,8 +144,36 @@ function forceFourColumnAmenities(modal: HTMLElement) {
   const grid = amenitiesHeading?.nextElementSibling as HTMLElement | null;
   if (!grid) return;
 
+  const desktop = window.matchMedia("(min-width: 640px)").matches;
   grid.style.setProperty("display", "grid", "important");
-  grid.style.setProperty("grid-template-columns", "repeat(4, minmax(0, 1fr))", "important");
+  grid.style.setProperty(
+    "grid-template-columns",
+    desktop ? "repeat(4, minmax(0, 1fr))" : "repeat(2, minmax(0, 1fr))",
+    "important",
+  );
+  grid.style.setProperty("gap", desktop ? "8px" : "6px", "important");
+  grid.style.setProperty("max-height", "none", "important");
+
+  for (const badge of Array.from(grid.children) as HTMLElement[]) {
+    badge.style.setProperty("min-width", "0", "important");
+    badge.style.setProperty("white-space", "normal", "important");
+    badge.style.setProperty("text-align", "center", "important");
+    badge.style.setProperty("line-height", "1.2", "important");
+  }
+}
+
+function fixRoomTenCapacity(modal: HTMLElement, language: Language, roomNumber: number) {
+  if (roomNumber !== 10) return;
+
+  for (const node of Array.from(modal.querySelectorAll<HTMLElement>("span, p, div"))) {
+    if (node.children.length > 0) continue;
+    const value = node.textContent?.trim() || "";
+    for (const [pattern, replacement] of ROOM_TEN_CAPACITY[language]) {
+      if (!pattern.test(value)) continue;
+      node.textContent = value.replace(pattern, replacement);
+      break;
+    }
+  }
 }
 
 function polishRoomModal(modal: HTMLElement) {
@@ -145,6 +183,7 @@ function polishRoomModal(modal: HTMLElement) {
   const roomMatch = heading?.textContent?.match(
     /(?:Room|Zimmer|Chambre|Camera|Habitación|Oda|Δωμάτιο)\s*(\d+)/i,
   );
+  const roomNumber = Number(roomMatch?.[1] || 0);
 
   if (heading && roomMatch) {
     const translatedHeading = `${ROOM_WORD[language]} ${roomMatch[1]}`;
@@ -160,7 +199,8 @@ function polishRoomModal(modal: HTMLElement) {
 
   compactDesktopModal(modal);
   forceCoveredHeroPhoto(modal);
-  forceFourColumnAmenities(modal);
+  forceResponsiveAmenities(modal);
+  fixRoomTenCapacity(modal, language, roomNumber);
 }
 
 function polishAllRoomModals() {
