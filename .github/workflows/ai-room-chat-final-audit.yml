@@ -1,0 +1,90 @@
+name: AI Room Finder Final Audit
+
+on:
+  push:
+    branches:
+      - preview/ai-room-finder-chat-ui
+    paths:
+      - scripts/final-ai-room-chat-audit-patch.cjs
+      - scripts/qa-ai-room-chat-final.mjs
+      - .github/workflows/ai-room-chat-final-audit.yml
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Checkout preview branch
+        uses: actions/checkout@v4
+        with:
+          ref: preview/ai-room-finder-chat-ui
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Apply audit fixes
+        run: node scripts/final-ai-room-chat-audit-patch.cjs
+
+      - name: Validate source diff
+        run: |
+          git diff --check
+          grep -q 'invalidPastDate' components/ai/AiRoomChatPreview.tsx
+          grep -q 'referenceMonth - month >= 6' components/ai/AiRoomChatPreview.tsx
+          grep -q 'item.maxGuests >= groups\[nextGroup\]' components/ai/AiRoomChatPreview.tsx
+          grep -q 'changeLanguage' components/ai/AiRoomChatPreview.tsx
+          grep -q 'aria-live="polite"' components/ai/AiRoomChatPreview.tsx
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          npm install --no-save --package-lock=false @playwright/test@latest
+          npx playwright install --with-deps chromium
+
+      - name: Build application
+        run: npm run build
+
+      - name: Start production server
+        run: |
+          npm run start -- -p 3000 > /tmp/ai-room-chat.log 2>&1 &
+          echo $! > /tmp/ai-room-chat.pid
+          for i in {1..60}; do
+            if curl -fsS http://127.0.0.1:3000/ai-assistant/?lang=el > /dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          cat /tmp/ai-room-chat.log
+          exit 1
+
+      - name: Run final browser QA
+        env:
+          AI_QA_BASE_URL: http://127.0.0.1:3000
+        run: node scripts/qa-ai-room-chat-final.mjs
+
+      - name: Upload final QA report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-room-chat-final-audit
+          path: qa-results/
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Commit validated frontend fixes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add components/ai/AiRoomChatPreview.tsx
+          git commit -m "Fix final AI Room Finder edge cases"
+          git restore .
+          git clean -fd
+          git fetch origin preview/ai-room-finder-chat-ui
+          git rebase origin/preview/ai-room-finder-chat-ui
+          git push origin HEAD:preview/ai-room-finder-chat-ui
