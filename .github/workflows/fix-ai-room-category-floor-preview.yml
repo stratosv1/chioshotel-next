@@ -1,0 +1,34 @@
+name: Fix AI Room Category Floor Preview
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - scripts/fix-ai-room-category-floor-preview.cjs
+      - .github/workflows/fix-ai-room-category-floor-preview.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.head_ref == 'preview/ai-room-finder-chat-ui'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: preview/ai-room-finder-chat-ui
+          fetch-depth: 0
+      - run: node scripts/fix-ai-room-category-floor-preview.cjs
+      - run: |
+          git diff --check
+          grep -q 'if (room >= 5) return offer.category' components/ai/AiRoomChatPreview.tsx
+      - run: npm ci
+      - run: npm run build
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add components/ai/AiRoomChatPreview.tsx
+          git commit -m "Avoid duplicate floor labels in room cards"
+          git push origin HEAD:preview/ai-room-finder-chat-ui
