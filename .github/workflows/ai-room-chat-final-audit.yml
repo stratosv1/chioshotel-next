@@ -1,9 +1,9 @@
 name: AI Room Finder Final Audit
 
 on:
-  push:
+  pull_request:
     branches:
-      - preview/ai-room-finder-chat-ui
+      - main
     paths:
       - scripts/final-ai-room-chat-audit-patch.cjs
       - scripts/qa-ai-room-chat-final.mjs
@@ -14,6 +14,7 @@ permissions:
 
 jobs:
   audit:
+    if: github.event.pull_request.number == 48 && github.head_ref == 'preview/ai-room-finder-chat-ui'
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:
