@@ -10,6 +10,11 @@ import {
   siteUrl,
 } from "@/lib/seo";
 import {
+  buildSeoImageObjectSchemas,
+  getSeoImageReferences,
+  getSeoImageUrls,
+} from "@/lib/seo-image-schema";
+import {
   buildBreadcrumbSchema,
   buildFaqSchema,
   buildHotelSchema,
@@ -323,7 +328,10 @@ function buildRoomSchema(data: RoomDetailData): SchemaObject {
   const canonicalPath = data.seo.canonicalPath;
   const labels = getRoomSchemaLabels(canonicalPath);
   const maxGuests = getMaxGuests(data);
-  const allImages = getRoomDetailImages(data);
+  const allImages = uniqueItems([
+    ...getRoomDetailImages(data),
+    ...getSeoImageUrls(canonicalPath),
+  ]);
 
   return {
     "@type": "Accommodation",
@@ -359,6 +367,7 @@ function buildRoomSchema(data: RoomDetailData): SchemaObject {
 function buildRoomWebPageSchema(data: RoomDetailData): SchemaObject {
   const canonicalPath = data.seo.canonicalPath;
   const language = getLanguageForPath(canonicalPath);
+  const galleryImages = getSeoImageReferences(canonicalPath);
 
   return {
     "@type": "WebPage",
@@ -367,6 +376,7 @@ function buildRoomWebPageSchema(data: RoomDetailData): SchemaObject {
     name: data.seo.title,
     headline: data.hero.title,
     description: data.seo.description,
+    image: galleryImages.length ? galleryImages : undefined,
     inLanguage: language,
     isPartOf: {
       "@id": websiteId(),
@@ -404,6 +414,7 @@ export function buildRoomDetailSchema(data: RoomDetailData) {
       },
       canonicalPath,
     ),
+    ...buildSeoImageObjectSchemas(canonicalPath),
     buildRoomWebPageSchema(data),
     buildRoomSchema(data),
     ...data.individualRooms.rooms.map((room) =>
