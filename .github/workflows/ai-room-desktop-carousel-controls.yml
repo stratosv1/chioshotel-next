@@ -55,6 +55,6 @@ jobs:
           git add components/ai/AiRoomChatPreview.tsx
           git rm scripts/add-ai-room-desktop-carousel-controls.cjs .github/workflows/ai-room-desktop-carousel-controls.yml
           git commit -m "Improve desktop AI room carousel navigation"
-          git fetch origin fix/ai-room-desktop-carousel-controls
-          git rebase origin/fix/ai-room-desktop-carousel-controls
+          git restore .
+          git clean -fd
           git push origin HEAD:fix/ai-room-desktop-carousel-controls
