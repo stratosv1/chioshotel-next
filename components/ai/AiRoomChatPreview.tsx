@@ -464,6 +464,8 @@ const FILTER_KEYS: Filter[] = ["economy", "noStairs", "ground", "first", "kitche
 type BadgeKey = "bestForTwo" | "lowestPrice" | "directDiscount" | "noStairs" | "fullKitchen" | "moreSpace" | "family" | "balcony" | "matchesPreferences";
 
 const SHORT_SELECT: Record<Language, string> = { el: "Επιλογή", en: "Select", de: "Wählen", fr: "Choisir", it: "Scegli", es: "Elegir", tr: "Seç" };
+const CAROUSEL_PREVIOUS: Record<Language, string> = { el: "Προηγούμενο δωμάτιο", en: "Previous room", de: "Vorheriges Zimmer", fr: "Chambre précédente", it: "Camera precedente", es: "Habitación anterior", tr: "Önceki oda" };
+const CAROUSEL_NEXT: Record<Language, string> = { el: "Επόμενο δωμάτιο", en: "Next room", de: "Nächstes Zimmer", fr: "Chambre suivante", it: "Camera successiva", es: "Habitación siguiente", tr: "Sonraki oda" };
 const SPLIT_STAY_TITLE: Record<Language, string> = { el: "Συνδυαστική διαμονή", en: "Split stay", de: "Geteilter Aufenthalt", fr: "Séjour partagé", it: "Soggiorno diviso", es: "Estancia dividida", tr: "Bölünmüş konaklama" };
 const SPLIT_STAY_BADGE: Record<Language, string> = { el: "1 αλλαγή δωματίου", en: "1 room change", de: "1 Zimmerwechsel", fr: "1 changement de chambre", it: "1 cambio camera", es: "1 cambio de habitación", tr: "1 oda değişikliği" };
 const BADGE_COPY: Record<Language, Record<BadgeKey, string>> = {
@@ -1072,12 +1074,25 @@ export function AiRoomChatPreview() {
             )}
 
             {step === "selecting" && visibleOffers.length > 0 && (
-              <section className="ai-message-in -mx-3 sm:mx-0 sm:ml-10">
+              <section className="ai-message-in relative -mx-3 sm:mx-0 sm:ml-10">
                 <div className="mb-2 px-4 text-xs font-bold text-[#6f665b] sm:px-1">{copy.choose(activeGroup + 1, groups[activeGroup])}</div>
-                <div
-                  ref={carouselRef}
-                  data-ai-room-carousel="true"
-                  onScroll={event => {
+                <div className="relative">
+                  <div
+                    ref={carouselRef}
+                    id="ai-room-carousel-track"
+                    data-ai-room-carousel="true"
+                    tabIndex={0}
+                    aria-label={copy.choose(activeGroup + 1, groups[activeGroup])}
+                    onKeyDown={event => {
+                      if (event.key === "ArrowLeft") {
+                        event.preventDefault();
+                        scrollToCard(cardIndex - 1);
+                      } else if (event.key === "ArrowRight") {
+                        event.preventDefault();
+                        scrollToCard(cardIndex + 1);
+                      }
+                    }}
+                    onScroll={event => {
                     const container = event.currentTarget;
                     const cards = Array.from(container.children) as HTMLElement[];
                     let nearest = 0;
@@ -1088,7 +1103,7 @@ export function AiRoomChatPreview() {
                     });
                     if (nearest !== cardIndex) setCardIndex(nearest);
                   }}
-                  className="ai-hide-scrollbar flex items-start snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain scroll-smooth px-3 pb-2 sm:px-0"
+                    className="ai-hide-scrollbar flex items-start snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain scroll-smooth px-3 pb-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#78845f]/60 sm:px-10 lg:px-12"
                 >
                   {visibleOffers.map((offer, index) => (
                     <article key={offer.roomId + ":" + offer.unitId} className="min-w-[88%] self-start snap-center overflow-hidden rounded-[24px] border border-[#dcd2c5] bg-white shadow-[0_14px_38px_rgba(70,55,35,.10)] sm:min-w-[68%]">
@@ -1112,6 +1127,33 @@ export function AiRoomChatPreview() {
                       </div>
                     </article>
                   ))}
+                  </div>
+                  {visibleOffers.length > 1 && (
+                    <>
+                      <button
+                        type="button"
+                        aria-label={CAROUSEL_PREVIOUS[language]}
+                        title={CAROUSEL_PREVIOUS[language]}
+                        aria-controls="ai-room-carousel-track"
+                        disabled={cardIndex <= 0}
+                        onClick={() => scrollToCard(cardIndex - 1)}
+                        className="absolute left-1 top-1/2 z-10 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-[#ddd3c6] bg-white/95 text-3xl font-light text-[#4f493f] shadow-[0_8px_24px_rgba(55,45,30,.18)] backdrop-blur transition hover:scale-105 hover:bg-white active:scale-95 disabled:pointer-events-none disabled:opacity-0 sm:flex"
+                      >
+                        ‹
+                      </button>
+                      <button
+                        type="button"
+                        aria-label={CAROUSEL_NEXT[language]}
+                        title={CAROUSEL_NEXT[language]}
+                        aria-controls="ai-room-carousel-track"
+                        disabled={cardIndex >= visibleOffers.length - 1}
+                        onClick={() => scrollToCard(cardIndex + 1)}
+                        className="absolute right-1 top-1/2 z-10 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-[#ddd3c6] bg-white/95 text-3xl font-light text-[#4f493f] shadow-[0_8px_24px_rgba(55,45,30,.18)] backdrop-blur transition hover:scale-105 hover:bg-white active:scale-95 disabled:pointer-events-none disabled:opacity-0 sm:flex"
+                      >
+                        ›
+                      </button>
+                    </>
+                  )}
                 </div>
                 {visibleOffers.length > 1 && <div className="mt-1 flex justify-center gap-1.5">{visibleOffers.map((_, index) => <button type="button" aria-label={copy.roomAria(index + 1)} key={index} onClick={() => scrollToCard(index)} className={"h-1.5 rounded-full transition-all " + (index === cardIndex ? "w-6 bg-[#66714f]" : "w-1.5 bg-[#cfc5b8]")} />)}</div>}
               </section>
