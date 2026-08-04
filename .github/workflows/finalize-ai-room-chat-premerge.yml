@@ -1,0 +1,53 @@
+name: Finalize AI Room Finder Premerge
+
+on:
+  push:
+    branches:
+      - preview/ai-room-finder-chat-ui
+    paths:
+      - scripts/finalize-ai-room-chat-premerge.cjs
+      - .github/workflows/finalize-ai-room-chat-premerge.yml
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout preview branch
+        uses: actions/checkout@v4
+        with:
+          ref: preview/ai-room-finder-chat-ui
+          fetch-depth: 0
+
+      - name: Apply final premerge fixes
+        run: node scripts/finalize-ai-room-chat-premerge.cjs
+
+      - name: Validate source
+        run: |
+          git diff --check
+          grep -q 'splitStay?: boolean' components/ai/AiRoomChatPreview.tsx
+          grep -q 'SPLIT_STAY_TITLE' components/ai/AiRoomChatPreview.tsx
+          grep -q 'offerDisplayName' components/ai/AiRoomChatPreview.tsx
+          grep -q 'guests === 1 ? "άτομο" : "άτομα"' components/ai/AiRoomChatPreview.tsx
+          grep -q 'AI Room Finder | Voulamandis House' app/ai-assistant/page.tsx
+          ! grep -q 'Chat Preview | Voulamandis House' app/ai-assistant/page.tsx
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Commit final frontend fixes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add components/ai/AiRoomChatPreview.tsx
+          git commit -m "Finalize AI Room Finder production frontend"
+          git restore .
+          git clean -fd
+          git fetch origin preview/ai-room-finder-chat-ui
+          git rebase origin/preview/ai-room-finder-chat-ui
+          git push origin HEAD:preview/ai-room-finder-chat-ui
