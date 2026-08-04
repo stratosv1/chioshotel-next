@@ -45,6 +45,7 @@ type Copy = {
   placeholder: string;
   chooseAbove: string;
   invalidDate: string;
+  invalidPastDate: string;
   invalidCheckout: string;
   invalidRooms: string;
   invalidGuests: string;
@@ -108,6 +109,7 @@ const COPY = {
     placeholder: "Type a date or answer…",
     chooseAbove: "Choose one of the options above",
     invalidDate: "I couldn’t understand that date. Try “20 July” or “20/07”.",
+    invalidPastDate: "Check-in cannot be in the past.",
     invalidCheckout: "Check-out must be after check-in.",
     invalidRooms: "Choose 1, 2 or 3 rooms.",
     invalidGuests: "Choose between 1 and 5 guests.",
@@ -159,6 +161,7 @@ const COPY = {
     placeholder: "Γράψτε ημερομηνία ή απάντηση…",
     chooseAbove: "Επιλέξτε μία επιλογή",
     invalidDate: "Δεν κατάλαβα την ημερομηνία. Δοκιμάστε «20 Ιουλίου» ή «20/07».",
+    invalidPastDate: "Το check-in δεν μπορεί να είναι σε παρελθοντική ημερομηνία.",
     invalidCheckout: "Το check-out πρέπει να είναι μετά το check-in.",
     invalidRooms: "Επιλέξτε 1, 2 ή 3 δωμάτια.",
     invalidGuests: "Επιλέξτε από 1 έως 5 άτομα.",
@@ -210,6 +213,7 @@ const COPY = {
     placeholder: "Datum oder Antwort eingeben…",
     chooseAbove: "Wählen Sie eine Option oben",
     invalidDate: "Ich konnte dieses Datum nicht verstehen. Versuchen Sie „20. Juli“ oder „20/07“.",
+    invalidPastDate: "Das Anreisedatum darf nicht in der Vergangenheit liegen.",
     invalidCheckout: "Das Abreisedatum muss nach dem Anreisedatum liegen.",
     invalidRooms: "Wählen Sie 1, 2 oder 3 Zimmer.",
     invalidGuests: "Wählen Sie zwischen 1 und 5 Gästen.",
@@ -261,6 +265,7 @@ const COPY = {
     placeholder: "Écrivez une date ou une réponse…",
     chooseAbove: "Choisissez une option ci-dessus",
     invalidDate: "Je n’ai pas compris cette date. Essayez « 20 juillet » ou « 20/07 ».",
+    invalidPastDate: "La date d’arrivée ne peut pas être dans le passé.",
     invalidCheckout: "La date de départ doit être postérieure à la date d’arrivée.",
     invalidRooms: "Choisissez 1, 2 ou 3 chambres.",
     invalidGuests: "Choisissez entre 1 et 5 personnes.",
@@ -312,6 +317,7 @@ const COPY = {
     placeholder: "Scrivi una data o una risposta…",
     chooseAbove: "Scegli un’opzione qui sopra",
     invalidDate: "Non ho capito la data. Prova «20 luglio» o «20/07».",
+    invalidPastDate: "La data di check-in non può essere nel passato.",
     invalidCheckout: "La data di check-out deve essere successiva al check-in.",
     invalidRooms: "Scegli 1, 2 o 3 camere.",
     invalidGuests: "Scegli da 1 a 5 persone.",
@@ -363,6 +369,7 @@ const COPY = {
     placeholder: "Escribe una fecha o una respuesta…",
     chooseAbove: "Elige una opción arriba",
     invalidDate: "No entendí la fecha. Prueba «20 de julio» o «20/07».",
+    invalidPastDate: "La fecha de llegada no puede estar en el pasado.",
     invalidCheckout: "La fecha de salida debe ser posterior a la fecha de llegada.",
     invalidRooms: "Elige 1, 2 o 3 habitaciones.",
     invalidGuests: "Elige entre 1 y 5 personas.",
@@ -414,6 +421,7 @@ const COPY = {
     placeholder: "Tarih veya cevap yazın…",
     chooseAbove: "Yukarıdaki seçeneklerden birini seçin",
     invalidDate: "Tarihi anlayamadım. «20 Temmuz» veya «20/07» şeklinde tekrar deneyin.",
+    invalidPastDate: "Giriş tarihi geçmişte olamaz.",
     invalidCheckout: "Çıkış tarihi giriş tarihinden sonra olmalıdır.",
     invalidRooms: "1, 2 veya 3 oda seçin.",
     invalidGuests: "1 ile 5 arasında kişi seçin.",
@@ -508,7 +516,7 @@ function parseNumericDates(value: string, checkin?: string): { checkin?: string;
       if (reference) {
         year = Number(reference.slice(0, 4));
         const referenceMonth = Number(reference.slice(5, 7));
-        if (referenceMonth >= 10 && month <= 2) year += 1;
+        if (month < referenceMonth && referenceMonth - month >= 6) year += 1;
       } else {
         year = today.getFullYear();
         const candidate = isoDate(year, month, day);
@@ -742,6 +750,13 @@ export function AiRoomChatPreview() {
     setSendStatus("idle");
   }
 
+  function changeLanguage(nextLanguage: Language) {
+    const url = new URL(window.location.href);
+    url.searchParams.set("lang", nextLanguage);
+    window.history.replaceState(window.history.state, "", url);
+    restart(nextLanguage);
+  }
+
   async function interpretDate(value: string, currentStep: "checkin" | "checkout") {
     const numeric = parseNumericDates(value, currentStep === "checkout" ? checkin : undefined);
     if (numeric) return numeric;
@@ -778,6 +793,16 @@ export function AiRoomChatPreview() {
 
         if (previous === "checkin" && !nextCheckin) throw new Error("missing checkin");
         if (previous === "checkout" && !nextCheckout) throw new Error("missing checkout");
+
+        const today = new Date();
+        const minimumCheckin = isoDate(today.getFullYear(), today.getMonth() + 1, today.getDate()) || "";
+        if (nextCheckin && minimumCheckin && nextCheckin < minimumCheckin) {
+          setCheckin("");
+          setCheckout("");
+          setStep("checkin");
+          setError(copy.invalidPastDate);
+          return;
+        }
 
         if (nextCheckin) setCheckin(nextCheckin);
         if (nextCheckout) setCheckout(nextCheckout);
@@ -890,7 +915,9 @@ export function AiRoomChatPreview() {
     if (activeGroup + 1 < roomCount) {
       const nextGroup = activeGroup + 1;
       const nextKeys = new Set(nextChoices.map(choice => `${choice.offer.roomId}:${choice.offer.unitId}`));
-      const available = (offers[nextGroup] || []).filter(item => !nextKeys.has(`${item.roomId}:${item.unitId}`));
+      const available = (offers[nextGroup] || [])
+        .filter(item => !nextKeys.has(`${item.roomId}:${item.unitId}`))
+        .filter(item => !item.maxGuests || item.maxGuests >= groups[nextGroup]);
       if (!available.length) {
         setStep("unavailable");
         addMessage("assistant", copy.unavailable);
@@ -982,7 +1009,7 @@ export function AiRoomChatPreview() {
             <h1 className="ai-chat-title truncate text-[16px] font-bold">Voulamandis House</h1>
             <div className="ai-chat-status mt-0.5 flex items-center gap-1.5 text-xs text-[#746b60]"><span className="inline-block h-2 w-2 shrink-0 rounded-full bg-[#718b52]" /><span>{copy.online}</span><span className="ai-status-live"> · {copy.live}</span></div>
           </div>
-          <select value={language} onChange={event => restart(event.target.value as Language)} aria-label={copy.languageLabel} className="ai-language-select h-9 rounded-full border border-[#d8cec1] bg-white px-2 text-xs font-bold outline-none transition focus:border-[#697451]">
+          <select value={language} onChange={event => changeLanguage(event.target.value as Language)} aria-label={copy.languageLabel} className="ai-language-select h-9 rounded-full border border-[#d8cec1] bg-white px-2 text-xs font-bold outline-none transition focus:border-[#697451]">
             {LANGUAGES.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
           </select>
           <button type="button" onClick={() => restart()} aria-label={copy.newSearch} title={copy.newSearch} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-lg transition hover:bg-[#eee7dc] active:scale-95">↻</button>
@@ -999,8 +1026,8 @@ export function AiRoomChatPreview() {
         </div>
       )}
 
-      <div ref={feedRef} data-ai-chat-scroll="true" className="ai-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain scroll-smooth">
-        <div data-ai-conversation-feed="true" className="mx-auto flex min-h-full max-w-3xl flex-col px-3 pb-7 pt-5 sm:px-5">
+      <div ref={feedRef} data-ai-chat-scroll="true" aria-busy={typing} className="ai-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain scroll-smooth">
+        <div data-ai-conversation-feed="true" aria-live="polite" aria-relevant="additions text" className="mx-auto flex min-h-full max-w-3xl flex-col px-3 pb-7 pt-5 sm:px-5">
           <div className="space-y-3.5">
             {messages.map(message => (
               <div key={message.id} className={`ai-message-in flex items-end gap-2 ${message.role === "user" ? "justify-end" : "justify-start"}`}>
