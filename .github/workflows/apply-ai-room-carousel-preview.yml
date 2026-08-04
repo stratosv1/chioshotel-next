@@ -1,0 +1,40 @@
+name: Apply AI Room Carousel Preview
+
+on:
+  push:
+    branches:
+      - preview/ai-room-finder-chat-ui
+    paths:
+      - scripts/apply-ai-room-carousel-preview.cjs
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout preview branch
+        uses: actions/checkout@v4
+        with:
+          ref: preview/ai-room-finder-chat-ui
+          fetch-depth: 0
+
+      - name: Apply carousel and mobile polish
+        run: node scripts/apply-ai-room-carousel-preview.cjs
+
+      - name: Validate patch
+        run: |
+          git diff --check
+          grep -q 'data-ai-room-carousel' components/ai/AiRoomChatPreview.tsx
+          grep -q 'snap-x snap-mandatory' components/ai/AiRoomChatPreview.tsx
+          grep -q 'ai-hide-scrollbar' components/ai/AiRoomChatPreview.tsx
+          ! grep -q 'currentOffer && (' components/ai/AiRoomChatPreview.tsx
+
+      - name: Commit frontend polish
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add components/ai/AiRoomChatPreview.tsx
+          git commit -m "Add swipe room carousel and mobile polish"
+          git push origin HEAD:preview/ai-room-finder-chat-ui
