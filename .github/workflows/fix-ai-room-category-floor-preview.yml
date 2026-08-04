@@ -31,4 +31,8 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add components/ai/AiRoomChatPreview.tsx
           git commit -m "Avoid duplicate floor labels in room cards"
+          git restore .
+          git clean -fd
+          git fetch origin preview/ai-room-finder-chat-ui
+          git rebase origin/preview/ai-room-finder-chat-ui
           git push origin HEAD:preview/ai-room-finder-chat-ui
