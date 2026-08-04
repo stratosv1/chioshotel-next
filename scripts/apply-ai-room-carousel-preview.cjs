@@ -3,6 +3,11 @@ const fs = require("node:fs");
 const file = "components/ai/AiRoomChatPreview.tsx";
 let source = fs.readFileSync(file, "utf8");
 
+if (source.includes('data-ai-room-carousel="true"')) {
+  console.log("AI room carousel is already applied.");
+  process.exit(0);
+}
+
 function replaceOnce(search, replacement, label) {
   const next = source.replace(search, replacement);
   if (next === source) throw new Error(`Could not apply replacement: ${label}`);
@@ -19,9 +24,16 @@ replaceOnce(
   '    availabilityError: "Δεν μπόρεσα να ελέγξω τώρα τη διαθεσιμότητα. Δοκιμάστε ξανά ή επικοινωνήστε μαζί μας μέσω WhatsApp.",',
   "Greek availability error",
 );
-replaceOnce('    online: "Online τώρα",\n    live: "Live διαθεσιμότητα",', '    online: "Διαθέσιμοι τώρα",\n    live: "Άμεση διαθεσιμότητα",', "Greek header status");
-replaceOnce('    chooseAbove: "Επιλέξτε μία από τις παραπάνω επιλογές",', '    chooseAbove: "Επιλέξτε μία επιλογή",', "Greek compact placeholder");
-
+replaceOnce(
+  '    online: "Online τώρα",\n    live: "Live διαθεσιμότητα",',
+  '    online: "Διαθέσιμοι τώρα",\n    live: "Άμεση διαθεσιμότητα",',
+  "Greek header status",
+);
+replaceOnce(
+  '    chooseAbove: "Επιλέξτε μία από τις παραπάνω επιλογές",',
+  '    chooseAbove: "Επιλέξτε μία επιλογή",',
+  "Greek compact placeholder",
+);
 replaceOnce(
   '  const feedRef = useRef<HTMLDivElement>(null);\n  const initialized = useRef(false);',
   '  const feedRef = useRef<HTMLDivElement>(null);\n  const carouselRef = useRef<HTMLDivElement>(null);\n  const initialized = useRef(false);',
@@ -35,7 +47,18 @@ replaceOnce(
 );
 replaceOnce(
   '  const inputEnabled = ["checkin", "checkout", "rooms", "guests"].includes(step) && !typing;\n  const homeHref = language === "en" ? "/" : `/${language}/`;',
-  `  function scrollToCard(index: number) {\n    const normalized = Math.max(0, Math.min(index, visibleOffers.length - 1));\n    setCardIndex(normalized);\n    const card = carouselRef.current?.children.item(normalized) as HTMLElement | null;\n    if (card && carouselRef.current) carouselRef.current.scrollTo({ left: card.offsetLeft, behavior: "smooth" });\n  }\n\n  const inputEnabled = ["checkin", "checkout", "rooms", "guests"].includes(step) && !typing;\n  const disabledPlaceholder = step === "selecting" ? copy.select : copy.chooseAbove;\n  const homeHref = language === "en" ? "/" : \`/\${language}/\`;`,
+  [
+    '  function scrollToCard(index: number) {',
+    '    const normalized = Math.max(0, Math.min(index, visibleOffers.length - 1));',
+    '    setCardIndex(normalized);',
+    '    const card = carouselRef.current?.children.item(normalized) as HTMLElement | null;',
+    '    if (card && carouselRef.current) carouselRef.current.scrollTo({ left: card.offsetLeft, behavior: "smooth" });',
+    '  }',
+    '',
+    '  const inputEnabled = ["checkin", "checkout", "rooms", "guests"].includes(step) && !typing;',
+    '  const disabledPlaceholder = step === "selecting" ? copy.select : copy.chooseAbove;',
+    '  const homeHref = language === "en" ? "/" : "/" + language + "/";',
+  ].join("\n"),
   "carousel scroll helper",
 );
 replaceOnce(
@@ -45,7 +68,12 @@ replaceOnce(
 );
 replaceOnce(
   '        .ai-scroll { scrollbar-width: thin; scrollbar-color: #d4c9ba transparent; }',
-  `        .ai-scroll { scrollbar-width: thin; scrollbar-color: #d4c9ba transparent; }\n        .ai-hide-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }\n        .ai-hide-scrollbar::-webkit-scrollbar { display: none; }\n        #INDmenu-btn { top: auto !important; right: 8px !important; bottom: 88px !important; transform: scale(.82) !important; transform-origin: bottom right !important; }`,
+  [
+    '        .ai-scroll { scrollbar-width: thin; scrollbar-color: #d4c9ba transparent; }',
+    '        .ai-hide-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }',
+    '        .ai-hide-scrollbar::-webkit-scrollbar { display: none; }',
+    '        #INDmenu-btn { top: auto !important; right: 8px !important; bottom: 88px !important; transform: scale(.82) !important; transform-origin: bottom right !important; }',
+  ].join("\n"),
   "scrollbar and accessibility widget polish",
 );
 replaceOnce(
@@ -65,9 +93,56 @@ replaceOnce(
 );
 
 const selectingPattern = /            \{step === "selecting" && currentOffer && \([\s\S]*?\n            \)\}\n\n            \{step === "breakfast"/;
-const selectingReplacement = `            {step === "selecting" && visibleOffers.length > 0 && (\n              <section className="ai-message-in -mx-3 sm:mx-0 sm:ml-10">\n                <div className="mb-2 flex items-center justify-between px-4 text-xs font-bold text-[#6f665b] sm:px-1"><span>{copy.choose(activeGroup + 1, groups[activeGroup])}</span><span>{cardIndex + 1}/{visibleOffers.length}</span></div>\n                <div\n                  ref={carouselRef}\n                  data-ai-room-carousel="true"\n                  onScroll={event => {\n                    const container = event.currentTarget;\n                    const cards = Array.from(container.children) as HTMLElement[];\n                    let nearest = 0;\n                    let distance = Number.POSITIVE_INFINITY;\n                    cards.forEach((card, index) => {\n                      const nextDistance = Math.abs(card.offsetLeft - container.scrollLeft);\n                      if (nextDistance < distance) { distance = nextDistance; nearest = index; }\n                    });\n                    if (nearest !== cardIndex) setCardIndex(nearest);\n                  }}\n                  className="ai-hide-scrollbar flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain scroll-smooth px-3 pb-2 sm:px-0"\n                >\n                  {visibleOffers.map((offer, index) => (\n                    <article key={\\`\${offer.roomId}:\${offer.unitId}\\`} className="min-w-[88%] snap-center overflow-hidden rounded-[24px] border border-[#dcd2c5] bg-white shadow-[0_14px_38px_rgba(70,55,35,.10)] sm:min-w-[68%]">\n                      <div className="relative h-44 sm:h-56">\n                        <Image src={offer.image} alt={offer.name} fill sizes="(max-width:640px) 88vw, 520px" className="object-cover" />\n                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />\n                        <span className="absolute right-3 top-3 rounded-full bg-white/92 px-2.5 py-1 text-xs font-bold shadow-sm backdrop-blur">{index + 1}/{visibleOffers.length}</span>\n                      </div>\n                      <div className="p-3.5 sm:p-5">\n                        <div className="flex items-start justify-between gap-3">\n                          <div className="min-w-0"><h2 className="truncate text-[1.35rem] font-bold">{offer.name}</h2><p className="mt-0.5 text-sm text-[#746b60]">{offer.category}</p></div>\n                          <div className="shrink-0 text-right"><p className="text-xs text-[#b05252] line-through">{money(offer.originalTotal, language)}</p><p className="text-xl font-black text-[#5f7448]">{money(offer.directTotal, language)}</p></div>\n                        </div>\n                        {offer.recommendationReason && <p className="mt-2 rounded-xl bg-[#f2f4ea] px-3 py-2 text-sm font-semibold leading-5 text-[#56643f]">✨ {offer.recommendationReason}</p>}\n                        <div className="mt-2 flex flex-wrap gap-1.5">{[offer.floor, ...(offer.features || []).slice(0, 3)].filter(Boolean).map(item => <span key={item} className="rounded-full bg-[#f1ede7] px-2.5 py-1 text-[11px] font-semibold text-[#665e55]">{item}</span>)}</div>\n                        {offer.saving > 0 && <p className="mt-2 text-sm font-bold text-[#5f7448]">{copy.saving}: {money(offer.saving, language)}</p>}\n                        <div className="mt-3 grid grid-cols-2 gap-2">\n                          <button type="button" onClick={() => { setDetail(offer); setPhoto(0); }} className="min-h-11 rounded-2xl border border-[#d8cec1] bg-white px-3 text-sm font-bold transition active:scale-[.98]">{copy.details}</button>\n                          <button type="button" onClick={() => selectOffer(offer)} className="min-h-11 rounded-2xl bg-[#66714f] px-3 text-sm font-bold text-white shadow-sm transition hover:bg-[#596244] active:scale-[.98]">{copy.select}</button>\n                        </div>\n                      </div>\n                    </article>\n                  ))}\n                </div>\n                {visibleOffers.length > 1 && <div className="mt-1 flex justify-center gap-1.5">{visibleOffers.map((_, index) => <button type="button" aria-label={copy.roomAria(index + 1)} key={index} onClick={() => scrollToCard(index)} className={\\`h-1.5 rounded-full transition-all \${index === cardIndex ? "w-6 bg-[#66714f]" : "w-1.5 bg-[#cfc5b8]"}\\`} />)}</div>}\n              </section>\n            )}\n\n            {step === "breakfast"`;
+const selectingReplacement = [
+  '            {step === "selecting" && visibleOffers.length > 0 && (',
+  '              <section className="ai-message-in -mx-3 sm:mx-0 sm:ml-10">',
+  '                <div className="mb-2 flex items-center justify-between px-4 text-xs font-bold text-[#6f665b] sm:px-1"><span>{copy.choose(activeGroup + 1, groups[activeGroup])}</span><span>{cardIndex + 1}/{visibleOffers.length}</span></div>',
+  '                <div',
+  '                  ref={carouselRef}',
+  '                  data-ai-room-carousel="true"',
+  '                  onScroll={event => {',
+  '                    const container = event.currentTarget;',
+  '                    const cards = Array.from(container.children) as HTMLElement[];',
+  '                    let nearest = 0;',
+  '                    let distance = Number.POSITIVE_INFINITY;',
+  '                    cards.forEach((card, index) => {',
+  '                      const nextDistance = Math.abs(card.offsetLeft - container.scrollLeft);',
+  '                      if (nextDistance < distance) { distance = nextDistance; nearest = index; }',
+  '                    });',
+  '                    if (nearest !== cardIndex) setCardIndex(nearest);',
+  '                  }}',
+  '                  className="ai-hide-scrollbar flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain scroll-smooth px-3 pb-2 sm:px-0"',
+  '                >',
+  '                  {visibleOffers.map((offer, index) => (',
+  '                    <article key={offer.roomId + ":" + offer.unitId} className="min-w-[88%] snap-center overflow-hidden rounded-[24px] border border-[#dcd2c5] bg-white shadow-[0_14px_38px_rgba(70,55,35,.10)] sm:min-w-[68%]">',
+  '                      <div className="relative h-44 sm:h-56">',
+  '                        <Image src={offer.image} alt={offer.name} fill sizes="(max-width:640px) 88vw, 520px" className="object-cover" />',
+  '                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />',
+  '                        <span className="absolute right-3 top-3 rounded-full bg-white/92 px-2.5 py-1 text-xs font-bold shadow-sm backdrop-blur">{index + 1}/{visibleOffers.length}</span>',
+  '                      </div>',
+  '                      <div className="p-3.5 sm:p-5">',
+  '                        <div className="flex items-start justify-between gap-3">',
+  '                          <div className="min-w-0"><h2 className="truncate text-[1.35rem] font-bold">{offer.name}</h2><p className="mt-0.5 text-sm text-[#746b60]">{offer.category}</p></div>',
+  '                          <div className="shrink-0 text-right"><p className="text-xs text-[#b05252] line-through">{money(offer.originalTotal, language)}</p><p className="text-xl font-black text-[#5f7448]">{money(offer.directTotal, language)}</p></div>',
+  '                        </div>',
+  '                        {offer.recommendationReason && <p className="mt-2 rounded-xl bg-[#f2f4ea] px-3 py-2 text-sm font-semibold leading-5 text-[#56643f]">✨ {offer.recommendationReason}</p>}',
+  '                        <div className="mt-2 flex flex-wrap gap-1.5">{[offer.floor, ...(offer.features || []).slice(0, 3)].filter(Boolean).map(item => <span key={item} className="rounded-full bg-[#f1ede7] px-2.5 py-1 text-[11px] font-semibold text-[#665e55]">{item}</span>)}</div>',
+  '                        {offer.saving > 0 && <p className="mt-2 text-sm font-bold text-[#5f7448]">{copy.saving}: {money(offer.saving, language)}</p>}',
+  '                        <div className="mt-3 grid grid-cols-2 gap-2">',
+  '                          <button type="button" onClick={() => { setDetail(offer); setPhoto(0); }} className="min-h-11 rounded-2xl border border-[#d8cec1] bg-white px-3 text-sm font-bold transition active:scale-[.98]">{copy.details}</button>',
+  '                          <button type="button" onClick={() => selectOffer(offer)} className="min-h-11 rounded-2xl bg-[#66714f] px-3 text-sm font-bold text-white shadow-sm transition hover:bg-[#596244] active:scale-[.98]">{copy.select}</button>',
+  '                        </div>',
+  '                      </div>',
+  '                    </article>',
+  '                  ))}',
+  '                </div>',
+  '                {visibleOffers.length > 1 && <div className="mt-1 flex justify-center gap-1.5">{visibleOffers.map((_, index) => <button type="button" aria-label={copy.roomAria(index + 1)} key={index} onClick={() => scrollToCard(index)} className={"h-1.5 rounded-full transition-all " + (index === cardIndex ? "w-6 bg-[#66714f]" : "w-1.5 bg-[#cfc5b8]")} />)}</div>}',
+  '              </section>',
+  '            )}',
+  '',
+  '            {step === "breakfast"',
+].join("\n");
 replaceOnce(selectingPattern, selectingReplacement, "real swipe room carousel");
-
 replaceOnce(
   'placeholder={inputEnabled ? copy.placeholder : copy.chooseAbove} aria-label={inputEnabled ? copy.placeholder : copy.chooseAbove}',
   'placeholder={inputEnabled ? copy.placeholder : disabledPlaceholder} aria-label={inputEnabled ? copy.placeholder : disabledPlaceholder}',
