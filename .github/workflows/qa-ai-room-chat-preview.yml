@@ -1,0 +1,34 @@
+name: QA AI Room Chat Preview
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - components/ai/AiRoomChatPreview.tsx
+      - scripts/qa-ai-room-chat-preview.trigger
+
+permissions:
+  contents: read
+
+jobs:
+  multilingual-ai-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout preview branch
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Test all seven supported languages
+        env:
+          AI_QA_BASE_URL: https://chioshotel-next-git-preview-286ff2-evoulamandis-2524s-projects.vercel.app
+          AI_QA_TIMEOUT_MS: 45000
+        run: npm run qa:ai
