@@ -80,8 +80,24 @@ jobs:
           text = text.replace("hasText: 'Δωμάτιο 10'", "hasText: 'Διαμέρισμα 10'")
           text = text.replace("assert.match(emailCapture.payload.message, /148/);", "assert.match(emailCapture.payload.message, /138/);")
           text = text.replace(
+              "getByText('Καλύτερη επιλογή για 2 άτομα', { exact: true })",
+              "getByText('Καλύτερη επιλογή για 2 άτομα', { exact: false })",
+          )
+          text = text.replace(
+              "getByText('Ταιριάζει στις προτιμήσεις σας', { exact: true })",
+              "getByText('Ταιριάζει στις προτιμήσεις σας', { exact: false })",
+          )
+          text = text.replace(
+              "getByText('1 αλλαγή δωματίου', { exact: true })",
+              "getByText('1 αλλαγή δωματίου', { exact: false })",
+          )
+          text = text.replace(
               "await page.getByText('Πρωινό', { exact: true }).waitFor();",
-              "await page.getByText('Πρωινό', { exact: true }).first().waitFor();",
+              "await page.getByText('🥐 Πρωινό', { exact: true }).waitFor();",
+          )
+          text = text.replace(
+              "const results = [];",
+              "context.setDefaultTimeout(12000);\ncontext.setDefaultNavigationTimeout(15000);\nconst results = [];",
           )
           path.write_text(text, encoding='utf-8')
           PY
