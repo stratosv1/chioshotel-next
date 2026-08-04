@@ -1,17 +1,24 @@
 import { absoluteUrl, getLanguageForPath } from "./seo";
-import { getSeoImageSet } from "./seo-image-registry";
+import { getSeoImageSet, type SeoImageAsset } from "./seo-image-registry";
 import { schemaId, type SchemaObject } from "./structured-data";
 
+const VISIBLE_IMAGE_LIMITS = new Map<string, number>([
+  ["/el/domatia-xios/", 4],
+]);
+
+export function getSeoImagesForPath(path: string): readonly SeoImageAsset[] {
+  const images = getSeoImageSet(path)?.images ?? [];
+  const limit = VISIBLE_IMAGE_LIMITS.get(path);
+
+  return typeof limit === "number" ? images.slice(0, limit) : images;
+}
+
 export function getSeoImageUrls(path: string): string[] {
-  const set = getSeoImageSet(path);
-  return set?.images.map((image) => absoluteUrl(image.src)) || [];
+  return getSeoImagesForPath(path).map((image) => absoluteUrl(image.src));
 }
 
 export function buildSeoImageObjectSchemas(path: string): SchemaObject[] {
-  const set = getSeoImageSet(path);
-  if (!set) return [];
-
-  return set.images.map((image, index) => ({
+  return getSeoImagesForPath(path).map((image, index) => ({
     "@type": "ImageObject",
     "@id": schemaId(path, `search-image-${index + 1}`),
     url: absoluteUrl(image.src),
@@ -24,10 +31,7 @@ export function buildSeoImageObjectSchemas(path: string): SchemaObject[] {
 }
 
 export function getSeoImageReferences(path: string): SchemaObject[] {
-  const set = getSeoImageSet(path);
-  if (!set) return [];
-
-  return set.images.map((_, index) => ({
+  return getSeoImagesForPath(path).map((_, index) => ({
     "@id": schemaId(path, `search-image-${index + 1}`),
   }));
 }

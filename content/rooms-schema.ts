@@ -1,4 +1,8 @@
-import type { RoomCategoryCard, RoomsCategoryPageData } from "@/content/rooms";
+import {
+  roomsCategoryEl,
+  type RoomCategoryCard,
+  type RoomsCategoryPageData,
+} from "@/content/rooms";
 import {
   absoluteUrl,
   getCanonicalUrl,
@@ -6,6 +10,8 @@ import {
   siteName,
   siteUrl,
 } from "@/lib/seo";
+import { resolveSeoDynamicTokens } from "@/lib/seo-dynamic-tokens";
+import { seoSnippetOverrides } from "@/lib/seo-snippet-overrides";
 import { buildSeoImageObjectSchemas, getSeoImageReferences } from "@/lib/seo-image-schema";
 import {
   buildBreadcrumbSchema,
@@ -23,10 +29,22 @@ import {
   type SchemaObject,
 } from "@/lib/structured-data";
 
+const GREEK_ROOMS_PRIMARY_IMAGE =
+  "/images/rooms/received_1753964631359257.webp";
+
+// The catch-all page imports this schema module before generateMetadata runs.
+// Keep the shared Greek data source aligned so OG/Twitter and JSON-LD use the
+// same image that visitors can see in the first clickable room card.
+roomsCategoryEl.seo.ogImage = GREEK_ROOMS_PRIMARY_IMAGE;
+
+function getRoomCardSchemaId(card: RoomCategoryCard): string {
+  return schemaId(card.href, card.id);
+}
+
 function buildRoomCardSchema(card: RoomCategoryCard): SchemaObject {
   return {
     "@type": "Accommodation",
-    "@id": schemaId(card.href, "room"),
+    "@id": getRoomCardSchemaId(card),
     name: card.title,
     alternateName: card.subtitle,
     url: absoluteUrl(card.href),
@@ -67,7 +85,7 @@ function buildRoomsItemListSchema(data: RoomsCategoryPageData): SchemaObject {
       description: card.description,
       image: absoluteUrl(card.image),
       item: {
-        "@id": schemaId(card.href, "room"),
+        "@id": getRoomCardSchemaId(card),
       },
     })),
   };
@@ -88,6 +106,27 @@ const roomsSchemaLabelsByLanguage: Record<RoomsSchemaLanguage, { breadcrumbName:
 function getRoomsSchemaLabels(path: string) {
   const language = getLanguageForPath(path) as RoomsSchemaLanguage;
   return roomsSchemaLabelsByLanguage[language] ?? roomsSchemaLabelsByLanguage.en;
+}
+
+function resolveRoomsSchemaSeo(data: RoomsCategoryPageData): RoomsCategoryPageData {
+  const canonicalPath = data.seo.canonicalPath;
+  const override = seoSnippetOverrides.get(canonicalPath);
+
+  return {
+    ...data,
+    seo: {
+      ...data.seo,
+      title: resolveSeoDynamicTokens(override?.title ?? data.seo.title, canonicalPath),
+      description: resolveSeoDynamicTokens(
+        override?.description ?? data.seo.description,
+        canonicalPath,
+      ),
+      ogImage:
+        canonicalPath === "/el/domatia-xios/"
+          ? GREEK_ROOMS_PRIMARY_IMAGE
+          : data.seo.ogImage,
+    },
+  };
 }
 
 function hardenGreekRoomsSchemaData(data: RoomsCategoryPageData): RoomsCategoryPageData {
@@ -155,8 +194,18 @@ function buildRoomsCollectionPageSchema(data: RoomsCategoryPageData): SchemaObje
   };
 }
 
+function getPrimaryImageCaption(data: RoomsCategoryPageData): string {
+  if (data.seo.canonicalPath === "/el/domatia-xios/") {
+    return "Δωμάτια και διαμερίσματα στο Voulamandis House";
+  }
+
+  return data.seo.title.includes(siteName)
+    ? data.seo.title
+    : `${data.seo.title} - ${siteName}`;
+}
+
 export function buildRoomsCategorySchema(data: RoomsCategoryPageData) {
-  const safeData = hardenGreekRoomsSchemaData(data);
+  const safeData = resolveRoomsSchemaSeo(hardenGreekRoomsSchemaData(data));
   const canonicalPath = safeData.seo.canonicalPath;
   const labels = getRoomsSchemaLabels(canonicalPath);
 
@@ -168,7 +217,7 @@ export function buildRoomsCategorySchema(data: RoomsCategoryPageData) {
       {
         url: safeData.seo.ogImage,
         alt: safeData.seo.title,
-        caption: `${safeData.seo.title} - ${siteName}`,
+        caption: getPrimaryImageCaption(safeData),
       },
       canonicalPath,
     ),
