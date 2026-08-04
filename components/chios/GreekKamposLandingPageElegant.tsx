@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { SearchImageGallery } from "@/components/seo/SearchImageGallery";
 import type { ReactNode } from "react";
 import type { KamposChiosPageData } from "@/content/kampos-chios";
 
@@ -193,6 +194,8 @@ export function GreekKamposLandingPageElegant({ data }: Props) {
           </div>
         </div>
       </section>
+
+      <SearchImageGallery path={data.seo.canonicalPath} />
 
       <section className={`${shell} py-9 sm:py-16`} aria-labelledby="why-kampos">
         <div className="grid gap-5 lg:grid-cols-[0.8fr_1.2fr] lg:gap-14">

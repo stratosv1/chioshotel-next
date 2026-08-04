@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { languages, normalizePath, type LanguageCode } from "./languages";
 import { seoSnippetOverrides } from "./seo-snippet-overrides";
 import { preferredMetadataTitles } from "./seo-title-overrides";
+import { resolveSeoDynamicTokens } from "./seo-dynamic-tokens";
 import { getLocalizedRoutes, getRouteByPath } from "./url-map";
 
 export const siteUrl = "https://chioshotel.gr";
@@ -142,7 +143,7 @@ function normalizeMetadataTitle(path: string, title: string): string {
   const pathOverride = seoSnippetOverrides.get(normalizePath(path));
 
   if (pathOverride) {
-    return pathOverride.title;
+    return resolveSeoDynamicTokens(pathOverride.title, path);
   }
 
   const duplicateBrandSuffix = ` | ${siteName}`;
@@ -151,12 +152,16 @@ function normalizeMetadataTitle(path: string, title: string): string {
     ? trimmedTitle.slice(0, -duplicateBrandSuffix.length).trim()
     : trimmedTitle;
 
-  return preferredMetadataTitles.get(unbrandedTitle) || unbrandedTitle;
+  return resolveSeoDynamicTokens(
+    preferredMetadataTitles.get(unbrandedTitle) || unbrandedTitle,
+    path,
+  );
 }
 
 function normalizeMetadataDescription(path: string, description: string): string {
-  return (
-    seoSnippetOverrides.get(normalizePath(path))?.description || description.trim()
+  return resolveSeoDynamicTokens(
+    seoSnippetOverrides.get(normalizePath(path))?.description || description.trim(),
+    path,
   );
 }
 

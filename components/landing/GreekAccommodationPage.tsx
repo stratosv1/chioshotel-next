@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { SearchImageGallery } from "@/components/seo/SearchImageGallery";
 import type { ChiosAccommodationPageData } from "@/content/chios-accommodation";
 
 type Props = {
@@ -131,6 +132,8 @@ export function GreekAccommodationPage({ data }: Props) {
           ))}
         </div>
       </section>
+
+      <SearchImageGallery path={data.seo.canonicalPath} />
 
       <section
         className="px-4 py-11 sm:px-6 sm:py-14 lg:px-8 lg:py-24"

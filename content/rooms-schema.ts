@@ -6,6 +6,7 @@ import {
   siteName,
   siteUrl,
 } from "@/lib/seo";
+import { buildSeoImageObjectSchemas, getSeoImageReferences } from "@/lib/seo-image-schema";
 import {
   buildBreadcrumbSchema,
   buildHotelSchema,
@@ -122,6 +123,7 @@ function hardenGreekRoomsSchemaData(data: RoomsCategoryPageData): RoomsCategoryP
 function buildRoomsCollectionPageSchema(data: RoomsCategoryPageData): SchemaObject {
   const canonicalPath = data.seo.canonicalPath;
   const language = getLanguageForPath(canonicalPath);
+  const galleryImages = getSeoImageReferences(canonicalPath);
 
   return {
     "@type": "CollectionPage",
@@ -130,6 +132,7 @@ function buildRoomsCollectionPageSchema(data: RoomsCategoryPageData): SchemaObje
     name: data.seo.title,
     headline: data.seo.title,
     description: data.seo.description,
+    image: galleryImages.length ? galleryImages : undefined,
     inLanguage: language,
     isPartOf: {
       "@id": websiteId(),
@@ -169,6 +172,7 @@ export function buildRoomsCategorySchema(data: RoomsCategoryPageData) {
       },
       canonicalPath,
     ),
+    ...buildSeoImageObjectSchemas(canonicalPath),
     buildRoomsCollectionPageSchema(safeData),
     buildRoomsItemListSchema(safeData),
     ...safeData.cards.map(buildRoomCardSchema),

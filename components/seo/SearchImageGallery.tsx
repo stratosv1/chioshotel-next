@@ -1,0 +1,153 @@
+import Image from "next/image";
+import { getSeoImageSet } from "@/lib/seo-image-registry";
+
+type SearchImageGalleryProps = {
+  path: string;
+  className?: string;
+};
+
+type ImageLink = {
+  href: string;
+  label: string;
+};
+
+const imageLinksByPath: Record<string, readonly ImageLink[]> = {
+  "/el/diamoni-sti-xio/": [
+    { href: "/el/chios/kampos-chios/", label: "Δείτε τη διαμονή στον Κάμπο" },
+    {
+      href: "/el/domatia-xios/oikonomiko-diklino-domatio/",
+      label: "Δείτε τα οικονομικά δίκλινα",
+    },
+    {
+      href: "/el/domatia-xios/diklina-triklina-domatia/",
+      label: "Δείτε τα ισόγεια δωμάτια",
+    },
+    {
+      href: "/el/domatia-xios/diklina-triklina-domatia/",
+      label: "Δείτε τα δωμάτια ορόφου",
+    },
+    {
+      href: "/el/domatia-xios/oikogeneiako-diamerisma/",
+      label: "Δείτε τα οικογενειακά διαμερίσματα",
+    },
+  ],
+  "/el/chios/kampos-chios/": [
+    { href: "#why-kampos", label: "Γιατί να μείνετε στον Κάμπο" },
+    { href: "#domatia-kampos", label: "Δείτε τα δωμάτια στον Κάμπο" },
+    {
+      href: "/el/domatia-xios/diklina-triklina-domatia/",
+      label: "Δείτε τα ισόγεια δωμάτια",
+    },
+    {
+      href: "/el/domatia-xios/diklina-triklina-domatia/",
+      label: "Δείτε τα δωμάτια ορόφου",
+    },
+    {
+      href: "/el/domatia-xios/oikogeneiako-diamerisma/",
+      label: "Δείτε τα οικογενειακά διαμερίσματα",
+    },
+  ],
+};
+
+function getImageLink(path: string, index: number): ImageLink | undefined {
+  return imageLinksByPath[path]?.[index];
+}
+
+export function SearchImageGallery({ path, className = "" }: SearchImageGalleryProps) {
+  const set = getSeoImageSet(path);
+
+  if (!set?.images.length) {
+    return null;
+  }
+
+  return (
+    <section
+      className={`border-y border-amber-900/10 bg-[#fffaf2] ${className}`.trim()}
+      aria-labelledby={`search-images-${path.replace(/[^a-z0-9]+/gi, "-")}`}
+    >
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+        <header className="max-w-3xl">
+          <span className="inline-flex rounded-full border border-amber-900/10 bg-white px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-amber-800 shadow-sm">
+            Φωτογραφίες & επιλογές
+          </span>
+          <h2
+            id={`search-images-${path.replace(/[^a-z0-9]+/gi, "-")}`}
+            className="mt-4 text-balance text-2xl font-black tracking-[-0.03em] text-[#2f261f] sm:text-3xl"
+          >
+            {set.heading}
+          </h2>
+          <p className="mt-3 max-w-2xl text-sm leading-7 text-[#67594c] sm:text-base">
+            {set.intro}
+          </p>
+        </header>
+
+        <div className="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-12">
+          {set.images.map((image, index) => {
+            const isPrimary = index === 0;
+            const link = getImageLink(path, index);
+            const desktopSpan = isPrimary
+              ? "lg:col-span-6 lg:row-span-2"
+              : set.images.length <= 4
+                ? "lg:col-span-6"
+                : "lg:col-span-3";
+
+            const content = (
+              <>
+                <div
+                  className={`relative overflow-hidden bg-stone-200 ${
+                    isPrimary ? "aspect-[4/3] lg:h-full lg:min-h-[430px]" : "aspect-[4/3]"
+                  }`}
+                >
+                  <Image
+                    src={image.src}
+                    alt={image.alt}
+                    fill
+                    priority={isPrimary}
+                    sizes={
+                      isPrimary
+                        ? "(min-width: 1024px) 50vw, 100vw"
+                        : "(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                    }
+                    className="object-cover transition duration-500 group-hover:scale-[1.025]"
+                  />
+                  {link ? (
+                    <span className="absolute bottom-3 right-3 rounded-full bg-[#2f261f]/88 px-3 py-2 text-[10px] font-black uppercase tracking-[0.08em] text-white shadow-lg backdrop-blur-sm">
+                      Άνοιγμα →
+                    </span>
+                  ) : null}
+                </div>
+                <figcaption className="px-4 py-3 text-sm font-bold leading-6 text-[#4d4035]">
+                  <span className="block">{image.caption}</span>
+                  {link ? (
+                    <span className="mt-1 block text-xs font-black text-amber-800">
+                      {link.label} →
+                    </span>
+                  ) : null}
+                </figcaption>
+              </>
+            );
+
+            return (
+              <figure
+                key={image.src}
+                className={`group overflow-hidden rounded-[1.6rem] border border-amber-900/10 bg-white shadow-[0_14px_35px_rgba(47,38,31,0.09)] ${desktopSpan}`}
+              >
+                {link ? (
+                  <a
+                    href={link.href}
+                    aria-label={link.label}
+                    className="block h-full focus:outline-none focus:ring-4 focus:ring-amber-700/25"
+                  >
+                    {content}
+                  </a>
+                ) : (
+                  content
+                )}
+              </figure>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
