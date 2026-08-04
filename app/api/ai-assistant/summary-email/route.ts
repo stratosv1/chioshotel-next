@@ -7,10 +7,16 @@ export const dynamic = "force-dynamic";
 type SummaryEmailBody = {
   subject?: string;
   message?: string;
+  source?: string;
+  guest?: { email?: string };
 };
 
 function clean(value: unknown, max: number) {
   return String(value ?? "").trim().slice(0, max);
+}
+
+function isLikelyEmail(value: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
 function escapeHtml(value: string) {
@@ -27,6 +33,11 @@ export async function POST(request: Request) {
     const body = (await request.json()) as SummaryEmailBody;
     const subject = clean(body.subject, 180) || "Αίτημα διαμονής από AI Room Finder";
     const message = clean(body.message, 6000);
+    const source = clean(body.source, 40);
+    const heading = source === "room-wizard"
+      ? "Νέο αίτημα διαμονής από το Room Wizard"
+      : "Νέο αίτημα διαμονής από το AI Room Finder";
+    const guestEmail = clean(body.guest?.email, 254);
 
     if (!message) {
       return NextResponse.json({ ok: false, error: "Missing enquiry summary." }, { status: 400 });
@@ -59,12 +70,12 @@ export async function POST(request: Request) {
     const info = await transporter.sendMail({
       from: `"Voulamandis House Website" <${smtpFrom}>`,
       to: receptionEmail,
-      replyTo: smtpUser,
+      replyTo: isLikelyEmail(guestEmail) ? guestEmail : smtpUser,
       subject,
       text: message,
       html: `
         <div style="font-family:Arial,sans-serif;line-height:1.65;color:#222">
-          <h2>Νέο αίτημα διαμονής από το AI Room Finder</h2>
+          <h2>${escapeHtml(heading)}</h2>
           <p><strong>Προσοχή:</strong> Πρόκειται για αίτημα ενδιαφέροντος και όχι για επιβεβαιωμένη κράτηση.</p>
           <hr />
           <p>${safeMessage}</p>
