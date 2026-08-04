@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AiBreakfastPhoto } from "@/components/ai/AiBreakfastPhoto";
 import { AiRoomChatFlowGuard } from "@/components/ai/AiRoomChatFlowGuard";
 import { AiRoomChatPreview } from "@/components/ai/AiRoomChatPreview";
 
@@ -52,6 +53,7 @@ export default function AiAssistantPage() {
       `}</style>
       <AiRoomChatFlowGuard />
       <AiRoomChatPreview />
+      <AiBreakfastPhoto />
     </>
   );
 }
