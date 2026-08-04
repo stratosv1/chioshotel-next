@@ -1,4 +1,5 @@
 import type { KamposChiosPageData } from "@/content/kampos-chios";
+import { buildSeoImageObjectSchemas, getSeoImageReferences } from "@/lib/seo-image-schema";
 import {
   buildBreadcrumbSchema,
   buildFaqSchema,
@@ -44,6 +45,24 @@ const faqItems = [
       "Δεν είναι απαραίτητο για να απολαύσετε το κατάλυμα, αλλά διευκολύνει τις διαδρομές προς παραλίες, χωριά και αξιοθέατα. Διατίθεται δωρεάν στάθμευση.",
   },
 ];
+
+function buildKamposWebPageSchema(data: KamposChiosPageData): SchemaObject {
+  const path = data.seo.canonicalPath;
+  const galleryImages = getSeoImageReferences(path);
+  return {
+    ...buildWebPageSchema({
+      path,
+      title: pageTitle,
+      description: pageDescription,
+      image: data.seo.ogImage,
+      breadcrumbs: [
+        { name: "Χίος", path: "/el/chios/" },
+        { name: "Διαμονή στον Κάμπο της Χίου", path },
+      ],
+    }),
+    image: galleryImages.length ? galleryImages : undefined,
+  };
+}
 
 const roomItems = [
   {
@@ -92,16 +111,8 @@ export function buildKamposChiosSchema(data: KamposChiosPageData): SchemaObject 
       },
       path,
     ),
-    buildWebPageSchema({
-      path,
-      title: pageTitle,
-      description: pageDescription,
-      image: data.seo.ogImage,
-      breadcrumbs: [
-        { name: "Χίος", path: "/el/chios/" },
-        { name: "Διαμονή στον Κάμπο της Χίου", path },
-      ],
-    }),
+    ...buildSeoImageObjectSchemas(path),
+    buildKamposWebPageSchema(data),
     buildTouristPlaceSchema({
       path,
       name: "Κάμπος της Χίου",

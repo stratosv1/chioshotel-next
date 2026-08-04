@@ -1,5 +1,6 @@
 import type { ChiosAccommodationPageData } from "@/content/chios-accommodation";
 import { absoluteUrl, getCanonicalUrl, siteUrl } from "@/lib/seo";
+import { buildSeoImageObjectSchemas, getSeoImageReferences } from "@/lib/seo-image-schema";
 import {
   buildBreadcrumbSchema,
   buildFaqSchema,
@@ -23,6 +24,7 @@ function accommodationId(path: string, cardId: string) {
 
 function buildCollectionPage(data: ChiosAccommodationPageData): SchemaObject {
   const path = data.seo.canonicalPath;
+  const galleryImages = getSeoImageReferences(path);
 
   return {
     "@type": "CollectionPage",
@@ -31,6 +33,7 @@ function buildCollectionPage(data: ChiosAccommodationPageData): SchemaObject {
     name: data.seo.title,
     headline: data.hero.title,
     description: data.seo.description,
+    image: galleryImages.length ? galleryImages : undefined,
     inLanguage: "el",
     isPartOf: { "@id": websiteId() },
     about: { "@id": hotelId() },
@@ -109,6 +112,7 @@ export function buildDiamoniStiXioSchema(data: ChiosAccommodationPageData) {
       },
       path,
     ),
+    ...buildSeoImageObjectSchemas(path),
     buildCollectionPage(data),
     buildItemList(data),
     ...buildAccommodationNodes(data),
