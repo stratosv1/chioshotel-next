@@ -90,3 +90,5 @@ jobs:
           git add lib/structured-data.ts .github/workflows/fix-lodgingbusiness-inlanguage.yml
           git commit -m "Remove unsupported LodgingBusiness inLanguage"
           git push origin HEAD:fix/lodgingbusiness-inlanguage-warning
+
+# Trigger the one-time cleanup after the workflow file exists on the branch.
