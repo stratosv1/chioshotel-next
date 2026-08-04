@@ -42,14 +42,16 @@ jobs:
           grep -q 'changeLanguage' components/ai/AiRoomChatPreview.tsx
           grep -q 'aria-live="polite"' components/ai/AiRoomChatPreview.tsx
 
-      - name: Install dependencies
-        run: |
-          npm ci
-          npm install --no-save --package-lock=false @playwright/test@latest
-          npx playwright install --with-deps chromium
+      - name: Install application dependencies
+        run: npm ci
 
       - name: Build application
         run: npm run build
+
+      - name: Install browser QA runtime
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@latest
+          npx playwright install --with-deps chromium
 
       - name: Start production server
         run: |
