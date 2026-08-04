@@ -3,6 +3,7 @@ import { AiBackToSite } from "@/components/ai/AiBackToSite";
 import { AiConversationAutoScroll } from "@/components/ai/AiConversationAutoScroll";
 import { AiNoAvailabilityBridge } from "@/components/ai/AiNoAvailabilityBridge";
 import { AiRoomDetailsEnhancer } from "@/components/ai/AiRoomDetailsEnhancer";
+import { AiRoomFinderReliability } from "@/components/ai/AiRoomFinderReliability";
 import { AiRoomModalPolish } from "@/components/ai/AiRoomModalPolish";
 import { AiSplitStayPresentation } from "@/components/ai/AiSplitStayPresentation";
 import { AiSummaryActions } from "@/components/ai/AiSummaryActions";
@@ -27,6 +28,7 @@ export default function AiAssistantPage() {
       <AiBackToSite />
       <AiNoAvailabilityBridge />
       <ConversationalRoomSalesEnhanced />
+      <AiRoomFinderReliability />
       <AiConversationAutoScroll />
       <AiRoomDetailsEnhancer />
       <AiRoomModalPolish />
