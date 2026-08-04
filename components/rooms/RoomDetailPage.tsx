@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useRef, useState } from "react";
 import { TopicBadges } from "@/components/seo/TopicBadges";
+import { SearchImageGallery } from "@/components/seo/SearchImageGallery";
 import type { IndividualRoomData, RoomDetailData } from "@/content/room-details";
 
 type RoomDetailPageProps = { data: RoomDetailData };
@@ -369,6 +370,7 @@ export function RoomDetailPage({ data }: RoomDetailPageProps) {
       </section>
 
       <TopicBadges locale={language} context="room-detail" className="border-b border-amber-900/10" />
+      <SearchImageGallery path={data.seo.canonicalPath} />
 
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16" aria-labelledby="rd-overview-title">
         <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">

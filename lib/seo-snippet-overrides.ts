@@ -172,7 +172,7 @@ export const seoSnippetOverrides = new Map<string, SeoSnippetOverride>([
   [
     "/el/crazy-travel-deals-for-chios-hotels/",
     {
-      title: "Προσφορές διαμονής στη Χίο | Κωδικοί άμεσης κράτησης",
+      title: "Προσφορές διαμονής στη Χίο {{currentYear}} | Άμεση κράτηση",
       description:
         "Δείτε διαθέσιμες προσφορές για δωμάτια και διαμερίσματα στη Χίο, εκπτωτικούς κωδικούς και επιλογές απευθείας κράτησης.",
     },

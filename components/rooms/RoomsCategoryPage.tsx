@@ -2,6 +2,7 @@ import Image from "next/image";
 import { GreekRoomWizardTailwind } from "@/components/rooms/GreekRoomWizardTailwind";
 import { RoomWizardTailwind } from "@/components/rooms/RoomWizardTailwind";
 import { TopicBadges } from "@/components/seo/TopicBadges";
+import { SearchImageGallery } from "@/components/seo/SearchImageGallery";
 import type { RoomsCategoryPageData } from "@/content/rooms";
 import type { LanguageCode } from "@/lib/languages";
 import { withRoomsOwnerHeroIntent } from "@/lib/rooms-owner-seo-intent";
@@ -180,6 +181,7 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
       </section>
 
       <TopicBadges locale={language} context="rooms-category" className="border-b border-amber-900/10" />
+      <SearchImageGallery path={ownerData.seo.canonicalPath} />
 
       <section
         className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16"
