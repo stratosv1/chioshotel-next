@@ -22,6 +22,7 @@ type Offer = {
   originalTotal: number;
   directTotal: number;
   saving: number;
+  splitStay?: boolean;
   recommendationRole?: "recommended" | "budget" | "comfort" | "alternative";
   recommendationTitle?: string;
   recommendationReason?: string;
@@ -97,7 +98,7 @@ const COPY = {
     guests: room => `How many guests will stay in room ${room}?`,
     preferences: "Anything important for your stay? Choose as many preferences as you like.",
     searching: "Checking live availability and the best direct prices…",
-    choose: (group, guests) => `I found these options for group ${group} · ${guests} guests.`,
+    choose: (group, guests) => `I found these options for group ${group} · ${guests} ${guests === 1 ? "guest" : "guests"}.`,
     breakfast: "Would you like to add homemade breakfast for €12 per guest, per day?",
     breakfastAlt: "Homemade breakfast at Voulamandis House",
     breakfastLabel: "Breakfast",
@@ -148,7 +149,7 @@ const COPY = {
     guests: room => `Πόσα άτομα θα μείνουν στο δωμάτιο ${room};`,
     preferences: "Υπάρχει κάτι σημαντικό για τη διαμονή σας; Επιλέξτε όσες προτιμήσεις θέλετε.",
     searching: "Ελέγχω τη διαθεσιμότητα και τις καλύτερες απευθείας τιμές…",
-    choose: (group, guests) => `Βρήκα αυτές τις επιλογές για την ομάδα ${group} · ${guests} άτομα.`,
+    choose: (group, guests) => `Βρήκα αυτές τις επιλογές για την ομάδα ${group} · ${guests} ${guests === 1 ? "άτομο" : "άτομα"}.`,
     breakfast: "Θέλετε να προσθέσετε σπιτικό πρωινό με 12€ ανά άτομο, ανά ημέρα;",
     breakfastAlt: "Σπιτικό πρωινό στο Voulamandis House",
     breakfastLabel: "Πρωινό",
@@ -199,7 +200,7 @@ const COPY = {
     guests: room => `Wie viele Gäste übernachten in Zimmer ${room}?`,
     preferences: "Was ist für Ihren Aufenthalt wichtig? Wählen Sie beliebig viele Wünsche aus.",
     searching: "Live-Verfügbarkeit und Direktpreise werden geprüft…",
-    choose: (group, guests) => `Diese Optionen passen zu Gruppe ${group} · ${guests} Gäste.`,
+    choose: (group, guests) => `Diese Optionen passen zu Gruppe ${group} · ${guests} ${guests === 1 ? "Gast" : "Gäste"}.`,
     breakfast: "Möchten Sie hausgemachtes Frühstück für 12 € pro Person und Tag hinzufügen?",
     breakfastAlt: "Hausgemachtes Frühstück im Voulamandis House",
     breakfastLabel: "Frühstück",
@@ -250,7 +251,7 @@ const COPY = {
     guests: room => `Combien de personnes séjourneront dans la chambre ${room} ?`,
     preferences: "Qu’est-ce qui est important pour votre séjour ? Choisissez autant de préférences que vous le souhaitez.",
     searching: "Vérification des disponibilités et des tarifs directs…",
-    choose: (group, guests) => `Voici les options pour le groupe ${group} · ${guests} personnes.`,
+    choose: (group, guests) => `Voici les options pour le groupe ${group} · ${guests} ${guests === 1 ? "personne" : "personnes"}.`,
     breakfast: "Souhaitez-vous ajouter le petit-déjeuner maison à 12 € par personne et par jour ?",
     breakfastAlt: "Petit-déjeuner maison au Voulamandis House",
     breakfastLabel: "Petit-déjeuner",
@@ -301,7 +302,7 @@ const COPY = {
     guests: room => `Quante persone soggiorneranno nella camera ${room}?`,
     preferences: "Cosa è importante per il soggiorno? Scegli tutte le preferenze che desideri.",
     searching: "Controllo disponibilità live e prezzi diretti…",
-    choose: (group, guests) => `Ecco le opzioni per il gruppo ${group} · ${guests} persone.`,
+    choose: (group, guests) => `Ecco le opzioni per il gruppo ${group} · ${guests} ${guests === 1 ? "persona" : "persone"}.`,
     breakfast: "Vuoi aggiungere la colazione fatta in casa a 12 € a persona al giorno?",
     breakfastAlt: "Colazione fatta in casa al Voulamandis House",
     breakfastLabel: "Colazione",
@@ -352,7 +353,7 @@ const COPY = {
     guests: room => `¿Cuántas personas se alojarán en la habitación ${room}?`,
     preferences: "¿Qué es importante para tu estancia? Elige todas las preferencias que quieras.",
     searching: "Comprobando disponibilidad y precios directos…",
-    choose: (group, guests) => `Estas son las opciones para el grupo ${group} · ${guests} personas.`,
+    choose: (group, guests) => `Estas son las opciones para el grupo ${group} · ${guests} ${guests === 1 ? "persona" : "personas"}.`,
     breakfast: "¿Quieres añadir desayuno casero por 12 € por persona y día?",
     breakfastAlt: "Desayuno casero en Voulamandis House",
     breakfastLabel: "Desayuno",
@@ -455,6 +456,8 @@ const FILTER_KEYS: Filter[] = ["economy", "noStairs", "ground", "first", "kitche
 type BadgeKey = "bestForTwo" | "lowestPrice" | "directDiscount" | "noStairs" | "fullKitchen" | "moreSpace" | "family" | "balcony" | "matchesPreferences";
 
 const SHORT_SELECT: Record<Language, string> = { el: "Επιλογή", en: "Select", de: "Wählen", fr: "Choisir", it: "Scegli", es: "Elegir", tr: "Seç" };
+const SPLIT_STAY_TITLE: Record<Language, string> = { el: "Συνδυαστική διαμονή", en: "Split stay", de: "Geteilter Aufenthalt", fr: "Séjour partagé", it: "Soggiorno diviso", es: "Estancia dividida", tr: "Bölünmüş konaklama" };
+const SPLIT_STAY_BADGE: Record<Language, string> = { el: "1 αλλαγή δωματίου", en: "1 room change", de: "1 Zimmerwechsel", fr: "1 changement de chambre", it: "1 cambio camera", es: "1 cambio de habitación", tr: "1 oda değişikliği" };
 const BADGE_COPY: Record<Language, Record<BadgeKey, string>> = {
   el: { bestForTwo: "Καλύτερη επιλογή για 2 άτομα", lowestPrice: "Χαμηλότερη τιμή", directDiscount: "10% έκπτωση απευθείας", noStairs: "Χωρίς σκάλες", fullKitchen: "Πλήρης κουζίνα", moreSpace: "Περισσότερος χώρος", family: "Ιδανικό για οικογένειες", balcony: "Ιδιωτικό μπαλκόνι", matchesPreferences: "Ταιριάζει στις προτιμήσεις σας" },
   en: { bestForTwo: "Best choice for 2 guests", lowestPrice: "Lowest price", directDiscount: "10% direct discount", noStairs: "No stairs", fullKitchen: "Full kitchen", moreSpace: "More space", family: "Ideal for families", balcony: "Private balcony", matchesPreferences: "Matches your preferences" },
@@ -554,6 +557,7 @@ function offerRoomNumber(offer: Offer) {
 }
 
 function roomTier(offer: Offer) {
+  if (offer.splitStay) return 4;
   const room = offerRoomNumber(offer);
   if (room === 2 || room === 6) return 0;
   if (room === 5 || room === 7) return 1;
@@ -585,6 +589,7 @@ function businessPreferenceScore(offer: Offer, filters: Filter[]) {
 }
 
 function categoryWithFloor(offer: Offer) {
+  if (offer.splitStay) return offer.category;
   const room = offerRoomNumber(offer);
   if (room >= 5) return offer.category;
   const floor = offer.floor.split(" · ")[0]?.trim();
@@ -592,11 +597,18 @@ function categoryWithFloor(offer: Offer) {
 }
 
 function accessLabel(offer: Offer) {
+  if (offer.splitStay) return offer.floor;
   const parts = offer.floor.split(" · ").map(part => part.trim()).filter(Boolean);
   return parts.length > 1 ? parts.slice(1).join(" · ") : offer.floor;
 }
 
+function offerDisplayName(offer: Offer, language: Language) {
+  if (!offer.splitStay) return offer.name;
+  return offer.name.replace(/^Split Stay/i, SPLIT_STAY_TITLE[language]);
+}
+
 function sellingBadges(offer: Offer, allOffers: Offer[], filters: Filter[], guests: number, language: Language) {
+  if (offer.splitStay) return [SPLIT_STAY_BADGE[language]];
   const copy = BADGE_COPY[language];
   const room = offerRoomNumber(offer);
   const eligible = allOffers.filter(item => !item.maxGuests || item.maxGuests >= guests);
@@ -873,7 +885,7 @@ export function AiRoomChatPreview() {
     const nextChoices = [...choices, { group: activeGroup + 1, guests: groups[activeGroup], offer }];
     setChoices(nextChoices);
     setDetail(null);
-    addMessage("user", `${copy.selected}: ${offer.name}`);
+    addMessage("user", `${copy.selected}: ${offerDisplayName(offer, language)}`);
 
     if (activeGroup + 1 < roomCount) {
       const nextGroup = activeGroup + 1;
@@ -903,7 +915,7 @@ export function AiRoomChatPreview() {
   const contactSummary = [
     `${checkin} → ${checkout}`,
     copy.guestLabel(guestTotal),
-    ...choices.map(choice => `${choice.offer.name}: ${money(choice.offer.directTotal, language)}`),
+    ...choices.map(choice => `${offerDisplayName(choice.offer, language)}: ${money(choice.offer.directTotal, language)}`),
     ...(breakfast ? [`${copy.breakfastLabel}: ${money(breakfastTotal, language)}`] : []),
     `${copy.total}: ${money(roomTotal + breakfastTotal, language)}`,
   ].join("\n");
@@ -1054,13 +1066,13 @@ export function AiRoomChatPreview() {
                   {visibleOffers.map((offer, index) => (
                     <article key={offer.roomId + ":" + offer.unitId} className="min-w-[88%] self-start snap-center overflow-hidden rounded-[24px] border border-[#dcd2c5] bg-white shadow-[0_14px_38px_rgba(70,55,35,.10)] sm:min-w-[68%]">
                       <div className="relative h-44 sm:h-56">
-                        <Image src={offer.image} alt={offer.name} fill sizes="(max-width:640px) 88vw, 520px" className="object-cover" />
+                        <Image src={offer.image} alt={offerDisplayName(offer, language)} fill sizes="(max-width:640px) 88vw, 520px" className="object-cover" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
                         <span className="absolute right-3 top-3 rounded-full bg-white/92 px-2.5 py-1 text-xs font-bold shadow-sm backdrop-blur">{index + 1}/{visibleOffers.length}</span>
                       </div>
                       <div className="p-3.5 sm:p-5">
                         <div className="flex items-start justify-between gap-3">
-                          <div className="min-w-0"><h2 className="truncate text-[1.35rem] font-bold">{offer.name}</h2><p className="mt-0.5 text-sm text-[#746b60]">{categoryWithFloor(offer)}</p></div>
+                          <div className="min-w-0"><h2 className="truncate text-[1.35rem] font-bold">{offerDisplayName(offer, language)}</h2><p className="mt-0.5 text-sm text-[#746b60]">{categoryWithFloor(offer)}</p></div>
                           <div className="shrink-0 text-right"><p className="text-xs text-[#b05252] line-through">{money(offer.originalTotal, language)}</p><p className="text-xl font-black text-[#5f7448]">{money(offer.directTotal, language)}</p></div>
                         </div>
                         {sellingBadges(offer, visibleOffers, filters, activeGuests, language).length > 0 && <div className="mt-2 flex flex-wrap gap-1.5">{sellingBadges(offer, visibleOffers, filters, activeGuests, language).map((badge, badgeIndex) => <span key={badge} className={badgeIndex === 0 ? "rounded-md bg-[#53643f] px-2.5 py-1 text-[11px] font-bold text-white" : "rounded-md bg-[#edf2e6] px-2.5 py-1 text-[11px] font-bold text-[#53643f]"}>{badgeIndex === 0 ? "✓ " : ""}{badge}</span>)}</div>}
@@ -1106,8 +1118,8 @@ export function AiRoomChatPreview() {
                 <div className="p-4">
                   {choices.map(choice => (
                     <div key={choice.group} className="flex items-center gap-3 border-b border-[#eee7de] py-3 first:pt-0">
-                      <div className="relative h-14 w-[72px] shrink-0 overflow-hidden rounded-xl"><Image src={choice.offer.image} alt={choice.offer.name} fill sizes="72px" className="object-cover" /></div>
-                      <div className="min-w-0 flex-1"><p className="truncate font-bold">{choice.offer.name}</p><p className="text-xs text-[#746b60]">{copy.guestLabel(choice.guests)}</p></div>
+                      <div className="relative h-14 w-[72px] shrink-0 overflow-hidden rounded-xl"><Image src={choice.offer.image} alt={offerDisplayName(choice.offer, language)} fill sizes="72px" className="object-cover" /></div>
+                      <div className="min-w-0 flex-1"><p className="truncate font-bold">{offerDisplayName(choice.offer, language)}</p><p className="text-xs text-[#746b60]">{copy.guestLabel(choice.guests)}</p></div>
                       <strong className="text-[#5f7448]">{money(choice.offer.directTotal, language)}</strong>
                     </div>
                   ))}
@@ -1149,7 +1161,7 @@ export function AiRoomChatPreview() {
           <section className="ai-sheet-in flex max-h-[92dvh] w-full max-w-2xl flex-col overflow-hidden rounded-t-[30px] bg-white shadow-2xl sm:rounded-[30px]" onClick={event => event.stopPropagation()}>
             <div className="flex justify-center py-2 sm:hidden"><span className="h-1.5 w-12 rounded-full bg-[#d4cabe]" /></div>
             <div className="relative h-64 shrink-0 sm:h-72">
-              <Image src={(detail.gallery?.length ? detail.gallery : [detail.image])[photo] || detail.image} alt={detail.name} fill sizes="(max-width:640px) 100vw, 720px" className="object-cover" />
+              <Image src={(detail.gallery?.length ? detail.gallery : [detail.image])[photo] || detail.image} alt={offerDisplayName(detail, language)} fill sizes="(max-width:640px) 100vw, 720px" className="object-cover" />
               <button type="button" onClick={() => setDetail(null)} className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-xl shadow-lg">×</button>
               {(detail.gallery?.length || 0) > 1 && (
                 <>
@@ -1159,7 +1171,7 @@ export function AiRoomChatPreview() {
               )}
             </div>
             <div className="min-h-0 overflow-y-auto p-5">
-              <h2 className="text-2xl font-black">{detail.name}</h2>
+              <h2 className="text-2xl font-black">{offerDisplayName(detail, language)}</h2>
               <p className="mt-1 text-sm text-[#746b60]">{detail.category}</p>
               <div className="mt-3 flex flex-wrap gap-2">{[detail.floor, ...(detail.features || [])].filter(Boolean).map(item => <span key={item} className="rounded-full bg-[#f1ede7] px-3 py-1.5 text-xs font-semibold">{item}</span>)}</div>
               <div className="mt-5 rounded-2xl bg-[#f6f2eb] p-4">
