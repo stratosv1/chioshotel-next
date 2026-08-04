@@ -34,7 +34,7 @@ replaceOnce(
 );
 
 const preferenceFunction = `function preferenceScore(offer: Offer, filters: Filter[]) {
-  const text = \`${offer.name} ${offer.category} ${offer.floor} ${(offer.features || []).join(" ")}\`.toLowerCase();
+  const text = \`${'${offer.name} ${offer.category} ${offer.floor} ${(offer.features || []).join(" ")}'}\`.toLowerCase();
   const tests: Record<Filter, RegExp> = {
     economy: /econom|οικονομ|économ|preisgünst|ekonom/,
     noStairs: /χωρίς σκάλ|no stairs|keine treppen|sans escaliers|senza scale|sin escaleras|merdivensiz/,
@@ -93,7 +93,7 @@ function categoryWithFloor(offer: Offer) {
   if (room >= 8 && room <= 10) return offer.category;
   const floor = offer.floor.split(" · ")[0]?.trim();
   if (!floor || offer.category.toLocaleLowerCase().includes(floor.toLocaleLowerCase())) return offer.category;
-  return `${offer.category} · ${floor}`;
+  return \`${'${offer.category} · ${floor}'}\`;
 }
 
 function accessLabel(offer: Offer) {
@@ -126,14 +126,14 @@ replaceOnce(preferenceFunction, preferenceReplacement, 'business ordering helper
 
 replaceOnce(
   `  const visibleOffers = useMemo(() => [...(offers[activeGroup] || [])]
-    .filter(offer => !chosenKeys.has(`${offer.roomId}:${offer.unitId}`))
+    .filter(offer => !chosenKeys.has(\`${'${offer.roomId}:${offer.unitId}'}\`))
     .sort((a, b) => (RANK[a.recommendationRole || "alternative"] - RANK[b.recommendationRole || "alternative"])
       || preferenceScore(b, filters) - preferenceScore(a, filters)
       || a.directTotal - b.directTotal),
   [offers, activeGroup, chosenKeys, filters]);`,
   `  const activeGuests = groups[activeGroup] || 0;
   const visibleOffers = useMemo(() => [...(offers[activeGroup] || [])]
-    .filter(offer => !chosenKeys.has(`${offer.roomId}:${offer.unitId}`))
+    .filter(offer => !chosenKeys.has(\`${'${offer.roomId}:${offer.unitId}'}\`))
     .filter(offer => !offer.maxGuests || offer.maxGuests >= activeGuests)
     .sort((a, b) => {
       const preferenceDifference = businessPreferenceScore(b, filters) - businessPreferenceScore(a, filters);
