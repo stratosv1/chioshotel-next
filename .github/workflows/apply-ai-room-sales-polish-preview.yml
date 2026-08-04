@@ -1,0 +1,47 @@
+name: Apply AI Room Sales Polish Preview
+
+on:
+  push:
+    branches:
+      - preview/ai-room-finder-chat-ui
+    paths:
+      - scripts/apply-ai-room-sales-polish-preview.cjs
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout preview branch
+        uses: actions/checkout@v4
+        with:
+          ref: preview/ai-room-finder-chat-ui
+          fetch-depth: 0
+
+      - name: Apply room ordering and selling badges
+        run: node scripts/apply-ai-room-sales-polish-preview.cjs
+
+      - name: Validate source patch
+        run: |
+          git diff --check
+          grep -q 'function sellingBadges' components/ai/AiRoomChatPreview.tsx
+          grep -q 'function roomTier' components/ai/AiRoomChatPreview.tsx
+          grep -q 'SHORT_SELECT' components/ai/AiRoomChatPreview.tsx
+          grep -q 'body\[data-ai-room-step="selecting"\]' components/ai/AiRoomChatPreview.tsx
+          ! grep -q 'RANK\[a.recommendationRole' components/ai/AiRoomChatPreview.tsx
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Commit frontend changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add components/ai/AiRoomChatPreview.tsx
+          git commit -m "Refine room ordering and selling badges"
+          git push origin HEAD:preview/ai-room-finder-chat-ui
