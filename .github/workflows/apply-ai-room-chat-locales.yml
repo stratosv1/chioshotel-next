@@ -1,0 +1,41 @@
+name: Apply AI Room Chat Locales
+
+on:
+  push:
+    branches:
+      - preview/ai-room-finder-chat-ui
+    paths:
+      - scripts/apply-ai-room-chat-locales.cjs
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.event.head_commit.message == 'Add AI room chat locale migration'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout preview branch
+        uses: actions/checkout@v4
+        with:
+          ref: preview/ai-room-finder-chat-ui
+          fetch-depth: 0
+
+      - name: Apply locale migration
+        run: node scripts/apply-ai-room-chat-locales.cjs
+
+      - name: Validate patch
+        run: |
+          git diff --check
+          grep -q 'roomLabel:' components/ai/AiRoomChatPreview.tsx
+          grep -q 'nightLabel:' components/ai/AiRoomChatPreview.tsx
+          ! grep -q 'value > 1 ? "s"' components/ai/AiRoomChatPreview.tsx
+          ! grep -q '{nights} nights' components/ai/AiRoomChatPreview.tsx
+
+      - name: Commit locale fixes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add components/ai/AiRoomChatPreview.tsx
+          git commit -m "Localize AI Room Finder chat across seven languages"
+          git push origin HEAD:preview/ai-room-finder-chat-ui
