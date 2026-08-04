@@ -1,5 +1,6 @@
 import { absoluteUrl } from "@/lib/seo";
 import { getAllSeoImageSets } from "@/lib/seo-image-registry";
+import { getSeoImagesForPath } from "@/lib/seo-image-schema";
 
 export const dynamic = "force-static";
 
@@ -15,7 +16,7 @@ function escapeXml(value: string) {
 export function GET() {
   const urls = getAllSeoImageSets()
     .map((set) => {
-      const images = set.images
+      const images = getSeoImagesForPath(set.path)
         .map(
           (image) => `
     <image:image>
