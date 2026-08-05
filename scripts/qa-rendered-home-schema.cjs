@@ -132,7 +132,7 @@ async function main() {
     );
 
     assert(lodging, "Rendered schema is missing LodgingBusiness.");
-    assert(lodging.inLanguage === "el", "LodgingBusiness must have inLanguage=el.");
+    assert(!("inLanguage" in lodging), "LodgingBusiness must not declare inLanguage.");
 
     assert(breadcrumb, "Rendered schema is missing BreadcrumbList.");
     assert(breadcrumb.inLanguage === "el", "BreadcrumbList must have inLanguage=el.");
