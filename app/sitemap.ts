@@ -131,6 +131,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
+  const karfasBeachRoute: SitemapEntry = {
+    url: absoluteUrl("/el/paralies-xios/paralia-karfas/"),
+    changeFrequency: "monthly",
+    priority: 0.8,
+  };
+
   const villageDetailRoutes: SitemapEntry[] = getVillageSlugs().map((slug) => ({
     url: absoluteUrl(`/chios/chios-villages/${slug}/`),
     changeFrequency: "monthly",
@@ -156,6 +162,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...sandyBeachRoutes,
     ...villageCategoryRoutes,
     ...beachDetailRoutes,
+    karfasBeachRoute,
     ...villageDetailRoutes,
     ...museumDetailRoutes,
   ]);
