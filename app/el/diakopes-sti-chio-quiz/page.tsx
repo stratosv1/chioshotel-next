@@ -9,10 +9,14 @@ import { buildPageMetadata } from "@/lib/seo";
 
 const page = getChiosQuizSchemaPage("el");
 
+const title = "Quiz διακοπών στη Χίο | Ποια εμπειρία σας ταιριάζει;";
+const description =
+  "Απαντήστε σε λίγες ερωτήσεις και ανακαλύψτε ποιες παραλίες, χωριά και εμπειρίες της Χίου ταιριάζουν στο δικό σας στιλ διακοπών.";
+
 export const metadata: Metadata = buildPageMetadata({
   path: page.path,
-  title: page.title,
-  description: page.description,
+  title,
+  description,
   image: "/images/voulamandis-house-og.jpg",
 });
 
