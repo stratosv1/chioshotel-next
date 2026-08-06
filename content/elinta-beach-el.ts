@@ -39,11 +39,13 @@ export const elintaBeachEl: BeachDetailData = {
   ],
   media: {
     video: {
-      title: "Η Ελίντα από ψηλά",
-      embedUrl: "https://www.youtube.com/embed/33224Rv5TPU",
-      creditText: "Ενδεικτικό βίντεο φυσικού τοπίου της Χίου. Τα διαθέσιμα αποτελέσματα μπορεί να διαφέρουν.",
+      title: "Βίντεο από την Ελίντα",
+      embedUrl:
+        "https://www.youtube.com/embed?listType=search&list=%CE%95%CE%BB%CE%AF%CE%BD%CF%84%CE%B1%20%CE%A7%CE%AF%CE%BF%CF%82",
+      creditText: "Αποτελέσματα βίντεο για την παραλία Ελίντα στη Χίο.",
       creditLabel: "YouTube",
-      creditHref: "https://www.youtube.com/",
+      creditHref:
+        "https://www.youtube.com/results?search_query=%CE%95%CE%BB%CE%AF%CE%BD%CF%84%CE%B1+%CE%A7%CE%AF%CE%BF%CF%82",
     },
     map: {
       title: "Διαδρομή από το Voulamandis House",
