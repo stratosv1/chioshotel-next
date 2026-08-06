@@ -9,14 +9,14 @@ import { RoutePageViewAnalytics } from "@/components/analytics/RoutePageViewAnal
 import { ExploreVoulamandisJourney } from "@/components/seo/ExploreVoulamandisJourney";
 import { VoulamandisFooterTailwind } from "@/components/VoulamandisFooterTailwind";
 import { VoulamandisHeaderTailwind } from "@/components/VoulamandisHeaderTailwind";
-import { ensureKarfasBeachCard } from "@/content/karfas-beach-card";
+import { ensureKarfasElintaBeachCards } from "@/content/karfas-beach-card";
 import { siteName, siteUrl } from "@/lib/seo";
 import "./css-split/core.css";
 import "./css-split/overrides/home-mobile-hero-safe.css";
 import "./css-split/overrides/home-compact-mobile-fixes.css";
 import "./css-split/components/consent.css";
 
-ensureKarfasBeachCard();
+ensureKarfasElintaBeachCards();
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
