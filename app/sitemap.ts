@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getBeachSlugs } from "@/content/beach-details";
 import { familyBeachPaths } from "@/content/family-beaches";
+import { elintaBeachPaths, karfasBeachPaths } from "@/content/karfas-elinta-paths";
 import { organizedBeachPaths } from "@/content/organized-beaches";
 import { shelteredBeachPaths } from "@/content/sheltered-beaches";
 import { quietBeachPaths } from "@/content/quiet-beaches";
@@ -131,11 +132,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  const karfasBeachRoute: SitemapEntry = {
-    url: absoluteUrl("/el/paralies-xios/paralia-karfas/"),
+  const karfasElintaBeachRoutes: SitemapEntry[] = [
+    ...Object.values(karfasBeachPaths),
+    ...Object.values(elintaBeachPaths),
+  ].map((path) => ({
+    url: absoluteUrl(path),
     changeFrequency: "monthly",
     priority: 0.8,
-  };
+  }));
 
   const villageDetailRoutes: SitemapEntry[] = getVillageSlugs().map((slug) => ({
     url: absoluteUrl(`/chios/chios-villages/${slug}/`),
@@ -162,7 +166,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...sandyBeachRoutes,
     ...villageCategoryRoutes,
     ...beachDetailRoutes,
-    karfasBeachRoute,
+    ...karfasElintaBeachRoutes,
     ...villageDetailRoutes,
     ...museumDetailRoutes,
   ]);

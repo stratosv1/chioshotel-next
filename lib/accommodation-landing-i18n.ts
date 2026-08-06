@@ -1,3 +1,4 @@
+import { karfasBeachPaths, elintaBeachPaths } from "@/content/karfas-elinta-paths";
 import { type LanguageCode, normalizePath } from "./languages";
 import { CHIOS_HOTELS_GUIDE_PATHS } from "./chios-hotels-guide-i18n";
 import { absoluteUrl } from "./seo";
@@ -29,6 +30,8 @@ export function accommodationLandingLanguages() {
 const PAGE_LANGUAGE_GROUPS: readonly Record<LanguageCode, string>[] = [
   ACCOMMODATION_LANDING_PATHS,
   CHIOS_HOTELS_GUIDE_PATHS,
+  karfasBeachPaths,
+  elintaBeachPaths,
 ];
 
 export function getGroupedLanguagePath(
