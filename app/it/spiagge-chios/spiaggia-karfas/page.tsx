@@ -3,7 +3,7 @@ import { karfasBeachByLanguage } from "@/content/karfas-elinta-data";
 import { karfasBeachPaths } from "@/content/karfas-elinta-paths";
 import { buildLocalizedBeachMetadata } from "@/content/karfas-elinta-seo";
 
-const beach = karfasBeachByLanguage.el;
+const beach = karfasBeachByLanguage.it;
 
 export const metadata = buildLocalizedBeachMetadata(beach, karfasBeachPaths);
 
