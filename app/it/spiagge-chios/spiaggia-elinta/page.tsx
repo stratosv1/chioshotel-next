@@ -1,11 +1,11 @@
 import { LocalizedBeachDetailPage } from "@/components/chios/LocalizedBeachDetailPage";
-import { karfasBeachByLanguage } from "@/content/karfas-elinta-data";
-import { karfasBeachPaths } from "@/content/karfas-elinta-paths";
+import { elintaBeachByLanguage } from "@/content/karfas-elinta-data";
+import { elintaBeachPaths } from "@/content/karfas-elinta-paths";
 import { buildLocalizedBeachMetadata } from "@/content/karfas-elinta-seo";
 
-const beach = karfasBeachByLanguage.el;
+const beach = elintaBeachByLanguage.it;
 
-export const metadata = buildLocalizedBeachMetadata(beach, karfasBeachPaths);
+export const metadata = buildLocalizedBeachMetadata(beach, elintaBeachPaths);
 
 export default function Page() {
   return <LocalizedBeachDetailPage beach={beach} />;
