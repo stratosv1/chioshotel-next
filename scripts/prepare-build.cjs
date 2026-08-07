@@ -2,6 +2,7 @@ const { spawnSync } = require("node:child_process");
 const { performance } = require("node:perf_hooks");
 
 const PATCHES = [
+  "fix-greek-audit-findings.cjs",
   "disable-last-minute-room-extras.cjs",
   "patch-long-seo-titles.cjs",
   "patch-ai-gmail-email.cjs",
