@@ -68,7 +68,7 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     directLine: "Απευθείας κράτηση · Καλύτερες τιμές",
     openNow: "ΑΝΟΙΧΤΑ",
     location: "Κάμπος, Χίος",
-    links: { rooms: "Δωμάτια", rates: "Τιμές", deals: "Προσφορές", chios: "Χίος", beaches: "Παραλίες", villages: "Χωριά", museums: "Μουσεία", activities: "Τι να κάνεις", contact: "Επικοινωνία" },
+    links: { rooms: "Δωμάτια", rates: "Τιμές", deals: "Προσφορές", chios: "Τι να δω", beaches: "Παραλίες", villages: "Χωριά", museums: "Μουσεία", activities: "Δραστηριότητες", contact: "Επικοινωνία" },
     explore: { beaches: "Καθαρά νερά", villages: "Μαστιχοχώρια", museums: "Πολιτισμός" },
   },
   fr: {
