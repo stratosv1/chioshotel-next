@@ -30,7 +30,6 @@ type PlannerItem = {
 };
 
 type FilterId = "all" | "beaches" | "villages" | "family" | "nearby";
-
 type DayPlans = [string[], string[], string[]];
 
 const FILTERS: { id: FilterId; label: string; icon: string }[] = [
@@ -50,7 +49,10 @@ function mapsUrl(items: PlannerItem[]) {
   if (points.length === 0) return null;
 
   const destination = points[points.length - 1].coordinate!;
-  const waypoints = points.slice(0, -1).map((item) => `${item.coordinate!.lat},${item.coordinate!.lng}`).join("|");
+  const waypoints = points
+    .slice(0, -1)
+    .map((item) => `${item.coordinate!.lat},${item.coordinate!.lng}`)
+    .join("|");
   const params = new URLSearchParams({
     api: "1",
     origin: `${ORIGIN.lat},${ORIGIN.lng}`,
@@ -220,18 +222,20 @@ function GreekTripPlanner({ beaches, villages }: Pick<Props, "beaches" | "villag
             ))}
           </div>
 
+          <p className="mt-2 text-center text-xs font-medium text-[#8b7968]">Οι νέες στάσεις θα προστεθούν στην <strong className="text-[#6f5438]">{DAY_LABELS[activeDay]}</strong>.</p>
+
           <div className="mt-3 grid grid-cols-2 rounded-2xl border border-[#e2d6c7] bg-white p-1">
             <button type="button" onClick={() => setMobileView("suggestions")} className={`rounded-xl px-3 py-2.5 text-sm font-semibold ${mobileView === "suggestions" ? "bg-[#f0e4d4] text-[#6a5035]" : "text-[#796c5f]"}`}>Προτάσεις</button>
             <button type="button" onClick={() => setMobileView("plan")} className={`rounded-xl px-3 py-2.5 text-sm font-semibold ${mobileView === "plan" ? "bg-[#f0e4d4] text-[#6a5035]" : "text-[#796c5f]"}`}>Πρόγραμμα ({days[activeDay].length})</button>
           </div>
         </div>
 
-        <div className="mt-5 grid gap-6 lg:mt-0 lg:grid-cols-[360px_minmax(0,1fr)] xl:grid-cols-[390px_minmax(0,1fr)]">
+        <div className="mt-5 grid gap-6 lg:mt-0 lg:grid-cols-[420px_minmax(0,1fr)] xl:grid-cols-[450px_minmax(0,1fr)]">
           <section className={`${mobileView === "plan" ? "hidden lg:block" : "block"}`}>
             <div className="rounded-3xl border border-[#e3d8ca] bg-white p-4 shadow-[0_10px_30px_rgba(88,65,42,0.06)] sm:p-5">
               <div className="mb-4">
                 <h2 className="font-serif text-2xl text-[#342a22]">Προτεινόμενες επιλογές</h2>
-                <p className="mt-1 text-sm text-[#8a7d70] lg:hidden">Tap σε μια στάση για να προστεθεί στην {DAY_LABELS[activeDay]}.</p>
+                <p className="mt-1 text-sm text-[#8a7d70] lg:hidden">Πάτησε «Προσθήκη» και η στάση θα μπει στην {DAY_LABELS[activeDay]}.</p>
                 <p className="mt-1 hidden text-sm text-[#8a7d70] lg:block">Σύρε μια στάση σε μία ημέρα ή πάτησε Προσθήκη.</p>
               </div>
 
@@ -239,33 +243,34 @@ function GreekTripPlanner({ beaches, villages }: Pick<Props, "beaches" | "villag
                 {filteredItems.map((item) => {
                   const selected = selectedKeys.has(item.key);
                   return (
-                    <button
+                    <div
                       key={item.key}
-                      type="button"
                       draggable={!selected}
                       onDragStart={(event) => {
                         event.dataTransfer.setData("text/plain", item.key);
                         event.dataTransfer.effectAllowed = "move";
                       }}
-                      onClick={() => {
-                        if (!selected) addToDay(item.key, activeDay);
-                      }}
-                      className={`group flex w-full items-center gap-3 rounded-2xl border p-2.5 text-left transition ${selected ? "border-[#dfd7cc] bg-[#f7f4ef] opacity-70" : "border-[#eadfD2] bg-white hover:-translate-y-0.5 hover:border-[#cdb596] hover:shadow-md active:scale-[0.99]"}`}
+                      className={`group flex w-full items-center gap-3 rounded-2xl border p-3 text-left transition ${selected ? "border-[#dfd7cc] bg-[#f7f4ef] opacity-70" : "border-[#eadfd2] bg-white hover:-translate-y-0.5 hover:border-[#cdb596] hover:shadow-md"}`}
                     >
-                      <div className="hidden text-lg text-[#b9aa98] lg:block">⋮⋮</div>
-                      <StopThumb item={item} />
+                      <div className="hidden shrink-0 cursor-grab text-lg text-[#b9aa98] lg:block">⋮⋮</div>
+                      <StopThumb item={item} compact={false} />
                       <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-2">
-                          <p className="truncate font-semibold text-[#3f342b]">{item.name}</p>
-                          <span className="text-xs">{item.kind === "beach" ? "🏖️" : "🏡"}</span>
+                        <div className="flex items-start gap-2">
+                          <p className="font-semibold leading-5 text-[#3f342b]">{item.name}</p>
+                          <span className="mt-0.5 shrink-0 text-xs">{item.kind === "beach" ? "🏖️" : "🏡"}</span>
                         </div>
                         <p className="mt-1 text-xs text-[#8b7b6d]">📍 {item.distanceKm || "–"} km · ◷ {item.driveMin || "–"}′</p>
-                        {item.duration && <p className="mt-1 truncate text-[11px] text-[#a09082]">{item.duration}</p>}
+                        {item.duration && <p className="mt-1 text-[11px] leading-4 text-[#a09082]">{item.duration}</p>}
                       </div>
-                      <span className={`shrink-0 rounded-xl px-3 py-2 text-xs font-semibold ${selected ? "bg-[#ece7e0] text-[#897b6e]" : "border border-[#dcc7ad] bg-[#fbf6ee] text-[#8a6034] group-hover:bg-[#b88b52] group-hover:text-white"}`}>
-                        {selected ? "✓ Στο πρόγραμμα" : "Προσθήκη +"}
-                      </span>
-                    </button>
+                      <button
+                        type="button"
+                        disabled={selected}
+                        onClick={() => addToDay(item.key, activeDay)}
+                        className={`shrink-0 rounded-xl px-3 py-2 text-xs font-semibold transition ${selected ? "cursor-default bg-[#ece7e0] text-[#897b6e]" : "border border-[#dcc7ad] bg-[#fbf6ee] text-[#8a6034] hover:bg-[#b88b52] hover:text-white active:scale-[0.98]"}`}
+                      >
+                        {selected ? "✓ Στο πρόγραμμα" : <><span className="lg:hidden">+ {DAY_LABELS[activeDay]}</span><span className="hidden lg:inline">Προσθήκη +</span></>}
+                      </button>
+                    </div>
                   );
                 })}
               </div>
@@ -280,7 +285,7 @@ function GreekTripPlanner({ beaches, villages }: Pick<Props, "beaches" | "villag
                   <p className="mt-1 text-sm text-[#8a7d70]">Στο mobile προσθέτεις με tap. Στο desktop μπορείς και να σύρεις τις στάσεις.</p>
                 </div>
                 {activeMapsUrl && (
-                  <a href={activeMapsUrl} target="_blank" rel="noreferrer" className="hidden rounded-xl border border-[#d6c2a6] px-4 py-2.5 text-sm font-semibold text-[#765533] hover:bg-[#fbf5ec] lg:inline-flex">📍 Άνοιγμα ενεργής ημέρας στο Google Maps</a>
+                  <a href={activeMapsUrl} target="_blank" rel="noreferrer" className="hidden rounded-xl border border-[#d6c2a6] px-4 py-2.5 text-sm font-semibold text-[#765533] hover:bg-[#fbf5ec] lg:inline-flex">📍 Άνοιγμα {DAY_LABELS[activeDay]} στο Google Maps</a>
                 )}
               </div>
 
@@ -304,7 +309,6 @@ function GreekTripPlanner({ beaches, villages }: Pick<Props, "beaches" | "villag
               <div className="lg:hidden">
                 <MobileDayPlan
                   label={DAY_LABELS[activeDay]}
-                  dayIndex={activeDay}
                   keys={days[activeDay]}
                   itemByKey={itemByKey}
                   onRemove={(key) => removeFromDay(key, activeDay)}
@@ -346,7 +350,7 @@ function GreekTripPlanner({ beaches, villages }: Pick<Props, "beaches" | "villag
           className="fixed inset-x-4 bottom-4 z-40 flex min-h-14 items-center justify-between rounded-2xl bg-[#6f5438] px-5 text-sm font-semibold text-white shadow-2xl lg:hidden"
         >
           <span>Δες το πρόγραμμα</span>
-          <span>{totalStops} στάσεις →</span>
+          <span>{DAY_LABELS[activeDay]} · {days[activeDay].length} στάσεις →</span>
         </button>
       )}
     </main>
@@ -362,9 +366,10 @@ function SummaryStat({ icon, value, label }: { icon: string; value: string; labe
   );
 }
 
-function StopThumb({ item }: { item: PlannerItem }) {
+function StopThumb({ item, compact = true }: { item: PlannerItem; compact?: boolean }) {
+  const size = compact ? "h-12 w-16" : "h-16 w-24 sm:h-[68px] sm:w-[104px]";
   return (
-    <div className="h-16 w-20 shrink-0 overflow-hidden rounded-xl bg-gradient-to-br from-[#d8c6ae] via-[#b7c1b4] to-[#829a96]">
+    <div className={`${size} shrink-0 overflow-hidden rounded-xl bg-gradient-to-br from-[#d8c6ae] via-[#b7c1b4] to-[#829a96]`}>
       {item.image ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={item.image} alt="" className="h-full w-full object-cover" />
@@ -377,7 +382,6 @@ function StopThumb({ item }: { item: PlannerItem }) {
 
 function DayColumn({
   label,
-  dayIndex,
   keys,
   itemByKey,
   onDropKey,
@@ -410,10 +414,13 @@ function DayColumn({
         if (key) onDropKey(key);
       }}
       onClick={onActivate}
-      className={`min-h-[430px] rounded-2xl border p-3 transition ${active ? "border-[#c8a67d] bg-[#fcf7f0]" : "border-[#eadfce] bg-[#faf8f4]"}`}
+      className={`rounded-2xl border p-3 transition ${active ? "border-[#b88b52] bg-[#fcf5ea] shadow-[0_0_0_2px_rgba(184,139,82,0.10)]" : "border-[#eadfce] bg-[#faf8f4] hover:border-[#d7c2a8]"}`}
     >
-      <div className="flex items-center justify-between px-1 pb-3">
-        <h3 className="font-serif text-xl text-[#44372c]">{label}</h3>
+      <div className="flex min-h-10 items-center justify-between gap-2 px-1 pb-3">
+        <div className="flex items-center gap-2">
+          <h3 className="font-serif text-xl text-[#44372c]">{label}</h3>
+          {active && <span className="rounded-full bg-[#b88b52] px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-white">Ενεργή</span>}
+        </div>
         <span className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-[#8a735a]">{items.length}</span>
       </div>
 
@@ -433,20 +440,14 @@ function DayColumn({
               const key = event.dataTransfer.getData("text/plain");
               if (key) onMoveToIndex(key, index);
             }}
-            className="group flex items-center gap-2 rounded-xl border border-[#e8ddd0] bg-white p-2 shadow-sm"
+            className="group flex cursor-grab items-center gap-2 rounded-xl border border-[#e8ddd0] bg-white p-2.5 shadow-sm active:cursor-grabbing"
           >
             <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#a77b46] text-xs font-bold text-white">{index + 1}</span>
-            <div className="h-11 w-14 shrink-0 overflow-hidden rounded-lg bg-[#e6ded3]">
-              {item.image ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={item.image} alt="" className="h-full w-full object-cover" />
-              ) : (
-                <div className="flex h-full items-center justify-center">{item.kind === "beach" ? "🏖️" : "🏡"}</div>
-              )}
-            </div>
+            <StopThumb item={item} compact />
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-semibold text-[#44382e]">{item.name}</p>
-              <p className="mt-0.5 truncate text-[11px] text-[#907f70]">📍 {item.distanceKm} km · ◷ {item.driveMin}′</p>
+              <p className="text-sm font-semibold leading-4 text-[#44382e]">{item.name}</p>
+              <p className="mt-1 text-[11px] text-[#907f70]">📍 {item.distanceKm} km · ◷ {item.driveMin}′</p>
+              <p className="mt-0.5 text-[10px] font-medium text-[#a1876b]">{item.kind === "beach" ? "Παραλία" : "Χωριό"}</p>
             </div>
             <button type="button" onClick={(event) => { event.stopPropagation(); onRemove(item.key); }} className="rounded-lg px-2 py-1 text-xs text-[#a08369] opacity-70 hover:bg-[#f5eee6] hover:opacity-100">×</button>
           </div>
@@ -454,10 +455,10 @@ function DayColumn({
       </div>
 
       {items.length === 0 && (
-        <div className="mt-2 flex min-h-[310px] items-center justify-center rounded-xl border border-dashed border-[#dac8b2] bg-white/40 px-6 text-center text-sm leading-6 text-[#988775]">Σύρε εδώ στάσεις<br />για να δημιουργήσεις την ημέρα σου</div>
+        <div className="mt-1 flex min-h-[170px] items-center justify-center rounded-xl border border-dashed border-[#dac8b2] bg-white/50 px-5 text-center text-sm leading-6 text-[#988775]">Σύρε εδώ μια στάση<br />ή επίλεξε αυτή την ημέρα και πάτησε «Προσθήκη».</div>
       )}
 
-      <div className="mt-3 rounded-xl border border-dashed border-[#d7c4aa] px-3 py-2.5 text-center text-xs font-semibold text-[#8b6b49]">+ Πρόσθεσε από τις προτάσεις</div>
+      <div className={`mt-3 rounded-xl border border-dashed px-3 py-2.5 text-center text-xs font-semibold ${active ? "border-[#cba878] bg-[#fffaf3] text-[#7c5a35]" : "border-[#d7c4aa] text-[#8b6b49]"}`}>{active ? "✓ Οι νέες στάσεις μπαίνουν εδώ" : "+ Επίλεξε αυτή την ημέρα"}</div>
     </div>
   );
 }
@@ -470,7 +471,6 @@ function MobileDayPlan({
   onMove,
 }: {
   label: string;
-  dayIndex: number;
   keys: string[];
   itemByKey: Map<string, PlannerItem>;
   onRemove: (key: string) => void;
@@ -482,24 +482,25 @@ function MobileDayPlan({
     <div>
       <div className="mb-3 flex items-center justify-between">
         <h3 className="font-serif text-xl text-[#44372c]">{label}</h3>
-        <span className="text-xs font-semibold text-[#8a735a]">{items.length} στάσεις</span>
+        <span className="rounded-full bg-[#f2e7d9] px-2.5 py-1 text-xs font-semibold text-[#7c603f]">{items.length} στάσεις</span>
       </div>
 
       {items.length === 0 ? (
-        <div className="flex min-h-52 items-center justify-center rounded-2xl border border-dashed border-[#d9c7b1] bg-[#fcfaf6] px-8 text-center text-sm leading-6 text-[#92816f]">Πάτησε «Προσθήκη» σε μία πρόταση για να μπει απευθείας σε αυτή την ημέρα.</div>
+        <div className="flex min-h-48 items-center justify-center rounded-2xl border border-dashed border-[#d9c7b1] bg-[#fcfaf6] px-8 text-center text-sm leading-6 text-[#92816f]">Πήγαινε στις «Προτάσεις» και πάτησε «+ {label}» για να προσθέσεις την πρώτη στάση.</div>
       ) : (
         <div className="space-y-3">
           {items.map((item, index) => (
             <div key={item.key} className="flex items-center gap-3 rounded-2xl border border-[#e6dacd] bg-white p-3 shadow-sm">
               <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#a77b46] text-xs font-bold text-white">{index + 1}</span>
-              <StopThumb item={item} />
+              <StopThumb item={item} compact={false} />
               <div className="min-w-0 flex-1">
-                <p className="truncate font-semibold text-[#40352c]">{item.name}</p>
+                <p className="font-semibold leading-5 text-[#40352c]">{item.name}</p>
                 <p className="mt-1 text-xs text-[#8c7c6d]">📍 {item.distanceKm} km · ◷ {item.driveMin}′</p>
+                <p className="mt-1 text-[11px] font-medium text-[#a1876b]">{item.kind === "beach" ? "Παραλία" : "Χωριό"}</p>
                 <div className="mt-2 flex gap-1.5">
-                  <button type="button" disabled={index === 0} onClick={() => onMove(item.key, "up")} className="rounded-lg border border-[#e4d8ca] px-2 py-1 text-xs disabled:opacity-30">↑</button>
-                  <button type="button" disabled={index === items.length - 1} onClick={() => onMove(item.key, "down")} className="rounded-lg border border-[#e4d8ca] px-2 py-1 text-xs disabled:opacity-30">↓</button>
-                  <button type="button" onClick={() => onRemove(item.key)} className="rounded-lg border border-[#eadfd3] px-2 py-1 text-xs text-[#976f56]">Αφαίρεση</button>
+                  <button type="button" disabled={index === 0} onClick={() => onMove(item.key, "up")} className="rounded-lg border border-[#e4d8ca] px-2.5 py-1.5 text-xs disabled:opacity-30">↑</button>
+                  <button type="button" disabled={index === items.length - 1} onClick={() => onMove(item.key, "down")} className="rounded-lg border border-[#e4d8ca] px-2.5 py-1.5 text-xs disabled:opacity-30">↓</button>
+                  <button type="button" onClick={() => onRemove(item.key)} className="rounded-lg border border-[#eadfd3] px-2.5 py-1.5 text-xs text-[#976f56]">Αφαίρεση</button>
                 </div>
               </div>
             </div>
