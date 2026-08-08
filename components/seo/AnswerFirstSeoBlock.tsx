@@ -264,6 +264,16 @@ export function AnswerFirstSeoBlock({ kind, language = "en" }: AnswerFirstSeoBlo
         <p className="mt-5 rounded-2xl bg-[#2f261f] px-4 py-3 text-sm font-bold leading-6 text-white md:py-4 md:text-base">
           {copy.note}
         </p>
+        {language === "el" && (
+          <a
+            href="/el/trip-planner/"
+            className="mt-4 inline-flex min-h-11 items-center justify-center rounded-full border border-[#8e6607]/25 bg-[#fff7e8] px-5 py-2.5 text-sm font-black text-[#6f5215] transition hover:bg-[#f9edcf]"
+          >
+            {kind === "beaches"
+              ? "Οργάνωσε παραλίες & χωριά στο Chios Trip Planner →"
+              : "Βάλε τα χωριά στο δικό σου Chios Trip Planner →"}
+          </a>
+        )}
       </div>
     </section>
   );
