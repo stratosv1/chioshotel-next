@@ -73,38 +73,66 @@ function normalizeDays(days: unknown): PlannerStop[][] {
   if (!Array.isArray(days)) return [[], [], []];
   return days.slice(0, 3).map((day) => {
     if (!Array.isArray(day)) return [];
-    return day.slice(0, 12).map((stop) => {
-      const raw = (stop && typeof stop === "object" ? stop : {}) as Record<string, unknown>;
-      return {
-        name: clean(raw.name).slice(0, 100),
-        kind: clean(raw.kind).slice(0, 30),
-        distanceKm: Number(raw.distanceKm) || 0,
-        driveMin: Number(raw.driveMin) || 0,
-        duration: clean(raw.duration).slice(0, 120),
-      };
-    }).filter((stop) => stop.name);
+    return day
+      .slice(0, 12)
+      .map((stop) => {
+        const raw = (stop && typeof stop === "object" ? stop : {}) as Record<string, unknown>;
+        return {
+          name: clean(raw.name).slice(0, 100),
+          kind: clean(raw.kind).slice(0, 30),
+          distanceKm: Number(raw.distanceKm) || 0,
+          driveMin: Number(raw.driveMin) || 0,
+          duration: clean(raw.duration).slice(0, 120),
+        };
+      })
+      .filter((stop) => stop.name);
   });
+}
+
+function stopKindLabel(kind?: string) {
+  if (kind === "beach") return "Παραλία";
+  if (kind === "village") return "Χωριό";
+  return kind || "Στάση";
 }
 
 function dayHtml(day: PlannerStop[], index: number): string {
   const stops = day.length
-    ? day.map((stop, stopIndex) => `
-      <div style="padding:12px 0;border-bottom:1px solid #eee4d8;">
-        <div style="font-weight:700;color:#3f342b;">${stopIndex + 1}. ${escapeHtml(stop.name || "")}</div>
-        <div style="margin-top:4px;color:#817466;font-size:13px;">
-          ${escapeHtml(stop.kind === "beach" ? "Παραλία" : stop.kind === "village" ? "Χωριό" : stop.kind || "Στάση")}
-          ${stop.distanceKm ? ` · ${stop.distanceKm} km` : ""}
-          ${stop.driveMin ? ` · ~${stop.driveMin}′` : ""}
-        </div>
-        ${stop.duration ? `<div style="margin-top:4px;color:#9a8877;font-size:12px;">${escapeHtml(stop.duration)}</div>` : ""}
-      </div>`).join("")
-    : `<div style="padding:12px 0;color:#9a8877;font-size:13px;">Δεν έχουν προστεθεί στάσεις.</div>`;
+    ? day
+        .map(
+          (stop, stopIndex) => `
+            <tr>
+              <td style="padding:0 0 10px 0;">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border:1px solid #eadfd2;border-radius:14px;background:#ffffff;">
+                  <tr>
+                    <td width="44" valign="top" style="padding:14px 0 14px 14px;">
+                      <div style="width:30px;height:30px;line-height:30px;text-align:center;border-radius:50%;background:#96704a;color:#ffffff;font-weight:700;font-size:12px;">${stopIndex + 1}</div>
+                    </td>
+                    <td style="padding:13px 14px 13px 10px;">
+                      <div style="font-size:16px;line-height:21px;font-weight:700;color:#3f342b;">${escapeHtml(stop.name || "")}</div>
+                      <div style="margin-top:5px;font-size:12px;line-height:18px;color:#8b7968;">
+                        ${escapeHtml(stopKindLabel(stop.kind))}
+                        ${stop.distanceKm ? ` &nbsp;•&nbsp; ${stop.distanceKm} km` : ""}
+                        ${stop.driveMin ? ` &nbsp;•&nbsp; ~${stop.driveMin}′` : ""}
+                      </div>
+                      ${stop.duration ? `<div style="margin-top:4px;font-size:12px;line-height:18px;color:#a08d7b;">${escapeHtml(stop.duration)}</div>` : ""}
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>`,
+        )
+        .join("")
+    : `<tr><td style="padding:6px 0 4px;font-size:13px;line-height:20px;color:#9a8877;">Δεν έχουν προστεθεί στάσεις σε αυτή την ημέρα.</td></tr>`;
 
   return `
-    <section style="margin:18px 0;padding:18px;border:1px solid #e6d9c8;border-radius:14px;background:#fffdf9;">
-      <h2 style="margin:0 0 6px;color:#4b3a2b;font-size:18px;">Ημέρα ${index + 1}</h2>
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:0 0 22px 0;">
+      <tr>
+        <td style="padding:0 0 10px 0;">
+          <span style="display:inline-block;padding:6px 10px;border-radius:999px;background:#f1e7da;color:#76583b;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;">Ημέρα ${index + 1}</span>
+        </td>
+      </tr>
       ${stops}
-    </section>`;
+    </table>`;
 }
 
 export async function POST(request: Request) {
@@ -148,36 +176,152 @@ export async function POST(request: Request) {
 
     const totalDriveMin = Math.max(0, Math.round(Number(body.totalDriveMin) || 0));
     const itineraryHtml = days.map(dayHtml).join("");
+    const aiRoomFinderUrl = "https://chioshotel.gr/ai-assistant/?lang=el";
     const bookingUrl = "https://chioshotel.gr/el/amesi-kratisi-voulamandis-house/";
     const roomsUrl = "https://chioshotel.gr/el/domatia-xios/";
+    const heroImage = "https://chioshotel.gr/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp";
 
     await transporter.sendMail({
-      from: smtpFrom,
+      from: `Voulamandis House <${smtpFrom}>`,
       to: email,
-      subject: "Το προσωπικό σου Chios Trip Planner",
+      replyTo: contactTo,
+      subject: "Το προσωπικό σου πρόγραμμα για τη Χίο · Voulamandis House",
+      text: [
+        "Voulamandis House · Chios Trip Planner",
+        "",
+        `Το προσωπικό σου πρόγραμμα είναι έτοιμο: ${totalStops} στάσεις σε 3 ημέρες.`,
+        `Εκτιμώμενη συνολική οδήγηση: περίπου ${totalDriveMin} λεπτά.`,
+        "",
+        ...days.flatMap((day, index) => [
+          `Ημέρα ${index + 1}`,
+          ...(day.length
+            ? day.map((stop, stopIndex) => `${stopIndex + 1}. ${stop.name} · ${stopKindLabel(stop.kind)}${stop.driveMin ? ` · ~${stop.driveMin}′` : ""}`)
+            : ["Δεν έχουν προστεθεί στάσεις."]),
+          "",
+        ]),
+        "Βρες το δωμάτιο που ταιριάζει στο ταξίδι σου με το AI Room Finder:",
+        aiRoomFinderUrl,
+        "",
+        "Voulamandis House · Κάμπος Χίου",
+        "Mayor Kalvokoresi 117 · Kambos, Chios 82100",
+        "+30 22710 31733 · chioshotel@gmail.com",
+      ].join("\n"),
       html: `
-        <div style="font-family:Arial,sans-serif;background:#f7f2ea;padding:28px;color:#44382e;">
-          <div style="max-width:680px;margin:0 auto;background:white;border-radius:20px;padding:28px;border:1px solid #e8ddcf;">
-            <div style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#9a7956;font-weight:700;">Voulamandis House · Chios Trip Planner</div>
-            <h1 style="font-family:Georgia,serif;font-size:30px;margin:10px 0 8px;color:#34281f;">Το πρόγραμμά σου για τη Χίο</h1>
-            <p style="line-height:1.6;color:#75685c;">Κράτησε αυτό το email ως οδηγό για τις στάσεις που επέλεξες. Οι χρόνοι οδήγησης είναι εκτιμήσεις σχεδιασμού και όχι live navigation.</p>
-            <div style="margin:14px 0;padding:12px 14px;background:#faf5ee;border-radius:12px;color:#6d5944;font-size:14px;"><strong>${totalStops}</strong> στάσεις · περίπου <strong>${totalDriveMin}′</strong> συνολικές εκτιμήσεις οδήγησης</div>
-            ${itineraryHtml}
-            <div style="margin-top:24px;padding:20px;border-radius:14px;background:#f5eadc;">
-              <h2 style="font-family:Georgia,serif;margin:0 0 8px;color:#463426;">Κάνε το Voulamandis House βάση για το ταξίδι σου</h2>
-              <p style="margin:0 0 14px;line-height:1.55;color:#735f4d;">Αν δεν έχεις ακόμη κλείσει διαμονή, μπορείς να δεις τα δωμάτιά μας στον Κάμπο και τις διαθέσιμες τιμές απευθείας.</p>
-              <a href="${bookingUrl}" style="display:inline-block;background:#8f6f4f;color:white;text-decoration:none;padding:11px 16px;border-radius:10px;font-weight:700;margin-right:8px;">Έλεγχος διαθεσιμότητας</a>
-              <a href="${roomsUrl}" style="display:inline-block;color:#765737;text-decoration:none;padding:11px 4px;font-weight:700;">Δες τα δωμάτια</a>
-            </div>
-            <p style="margin-top:22px;font-size:12px;line-height:1.5;color:#9a8b7d;">Σύντομα θα μπορείς να λαμβάνεις το ίδιο πρόγραμμα και ως PDF attachment. Το email αυτό περιέχει ήδη όλες τις επιλογές σου.</p>
-          </div>
-        </div>`,
+        <!doctype html>
+        <html lang="el">
+          <body style="margin:0;padding:0;background:#f3eee7;font-family:Arial,Helvetica,sans-serif;color:#41362d;">
+            <div style="display:none;max-height:0;overflow:hidden;opacity:0;">Το προσωπικό σου πρόγραμμα για τη Χίο είναι έτοιμο. Δες τις στάσεις σου και βρες το δωμάτιο που ταιριάζει στο ταξίδι σου.</div>
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#f3eee7;">
+              <tr>
+                <td align="center" style="padding:28px 12px;">
+                  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:700px;background:#fffdf9;border:1px solid #e6d9ca;border-radius:24px;overflow:hidden;box-shadow:0 12px 34px rgba(74,54,35,.08);">
+                    <tr>
+                      <td style="padding:22px 26px 16px;background:#fffdf9;border-bottom:1px solid #eee3d6;">
+                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                          <tr>
+                            <td>
+                              <div style="font-family:Georgia,'Times New Roman',serif;font-size:22px;line-height:26px;color:#34281f;">Voulamandis House</div>
+                              <div style="margin-top:4px;font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:#9a7956;font-weight:700;">Κάμπος Χίου · Chios Trip Planner</div>
+                            </td>
+                            <td align="right" style="font-size:12px;color:#8e7d6c;">Το ταξίδι σου, οργανωμένο.</td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td style="padding:30px 26px 20px;">
+                        <div style="font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:#9a7956;font-weight:700;">Το προσωπικό σου itinerary</div>
+                        <h1 style="font-family:Georgia,'Times New Roman',serif;font-size:34px;line-height:40px;margin:8px 0 10px;color:#30251d;font-weight:400;">Η Χίος σου, μέρα με τη μέρα</h1>
+                        <p style="margin:0;max-width:590px;font-size:15px;line-height:24px;color:#75685c;">Οι στάσεις που επέλεξες είναι έτοιμες σε ένα καθαρό πρόγραμμα. Κράτησε αυτό το email μαζί σου όσο εξερευνάς το νησί.</p>
+
+                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top:20px;background:#f8f2e9;border-radius:16px;">
+                          <tr>
+                            <td align="center" width="50%" style="padding:15px;border-right:1px solid #e5d8c8;">
+                              <div style="font-size:22px;font-weight:700;color:#503f31;">${totalStops}</div>
+                              <div style="margin-top:3px;font-size:11px;color:#8d7b6a;">επιλεγμένες στάσεις</div>
+                            </td>
+                            <td align="center" width="50%" style="padding:15px;">
+                              <div style="font-size:22px;font-weight:700;color:#503f31;">~${totalDriveMin}′</div>
+                              <div style="margin-top:3px;font-size:11px;color:#8d7b6a;">εκτίμηση οδήγησης*</div>
+                            </td>
+                          </tr>
+                        </table>
+
+                        <div style="margin-top:26px;">${itineraryHtml}</div>
+                        <p style="margin:0 0 6px;font-size:11px;line-height:18px;color:#a08f80;">* Οι χρόνοι είναι εκτιμήσεις σχεδιασμού από το Voulamandis House και όχι live navigation.</p>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td style="padding:0 18px 18px;">
+                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#3f3025;border-radius:20px;overflow:hidden;">
+                          <tr>
+                            <td style="padding:0;">
+                              <img src="${heroImage}" alt="Voulamandis House στον Κάμπο της Χίου" width="664" style="display:block;width:100%;max-width:664px;height:auto;border:0;">
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="padding:26px 24px 24px;color:#fffaf4;">
+                              <div style="font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:#d7ba94;font-weight:700;">Η βάση σου για να γνωρίσεις τη Χίο</div>
+                              <h2 style="font-family:Georgia,'Times New Roman',serif;font-size:29px;line-height:35px;margin:8px 0 10px;font-weight:400;color:#ffffff;">Μείνε στο Voulamandis House στον Κάμπο</h2>
+                              <p style="margin:0;font-size:14px;line-height:23px;color:#eadfd3;">Έφτιαξες ήδη το πρόγραμμά σου. Τώρα βρες τη διαμονή που ταιριάζει στις ημέρες, την παρέα και τον τρόπο που θέλεις να ταξιδέψεις.</p>
+
+                              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top:18px;">
+                                <tr>
+                                  <td style="padding:5px 0;font-size:13px;line-height:20px;color:#f2e8de;">✓ Ήσυχο οικογενειακό κατάλυμα στον ιστορικό Κάμπο</td>
+                                </tr>
+                                <tr>
+                                  <td style="padding:5px 0;font-size:13px;line-height:20px;color:#f2e8de;">✓ Κοντά σε Χώρα, αεροδρόμιο και παραλίες</td>
+                                </tr>
+                                <tr>
+                                  <td style="padding:5px 0;font-size:13px;line-height:20px;color:#f2e8de;">✓ Κήπος, περιβόλια και πρωινό κατόπιν αιτήματος</td>
+                                </tr>
+                                <tr>
+                                  <td style="padding:5px 0;font-size:13px;line-height:20px;color:#f2e8de;">✓ Απευθείας κράτηση με προσωπική επικοινωνία</td>
+                                </tr>
+                              </table>
+
+                              <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top:20px;">
+                                <tr>
+                                  <td style="border-radius:12px;background:#c69a63;">
+                                    <a href="${aiRoomFinderUrl}" style="display:inline-block;padding:14px 18px;color:#241b15;text-decoration:none;font-size:14px;font-weight:700;">✨ Βρες το δωμάτιό σου με AI</a>
+                                  </td>
+                                  <td width="10"></td>
+                                  <td style="border-radius:12px;border:1px solid #806b58;">
+                                    <a href="${roomsUrl}" style="display:inline-block;padding:13px 16px;color:#fff8f0;text-decoration:none;font-size:13px;font-weight:700;">Δες τα δωμάτια</a>
+                                  </td>
+                                </tr>
+                              </table>
+
+                              <div style="margin-top:16px;padding-top:15px;border-top:1px solid #655244;font-size:12px;line-height:19px;color:#d8cabc;">Το AI Room Finder σε βοηθά να ελέγξεις ποια δωμάτια ταιριάζουν στις ημερομηνίες και στον αριθμό των επισκεπτών σου. Για απευθείας κράτηση μπορείς επίσης να <a href="${bookingUrl}" style="color:#e4c69f;font-weight:700;text-decoration:underline;">δεις διαθεσιμότητα εδώ</a>.</div>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td style="padding:22px 26px 26px;text-align:center;border-top:1px solid #eee3d6;">
+                        <div style="font-family:Georgia,'Times New Roman',serif;font-size:18px;color:#3c3027;">Voulamandis House</div>
+                        <div style="margin-top:6px;font-size:12px;line-height:20px;color:#8f7f70;">Mayor Kalvokoresi 117 · Κάμπος, Χίος 82100<br>+30 22710 31733 · chioshotel@gmail.com</div>
+                        <div style="margin-top:10px;font-size:11px;line-height:18px;color:#aa9a8b;">Έλαβες αυτό το email επειδή ζήτησες να σου σταλεί το προσωπικό σου Chios Trip Planner.</div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </body>
+        </html>`,
     });
 
     if (body.wantsStayOffer && contactTo) {
-      const leadText = days.map((day, index) => `Ημέρα ${index + 1}: ${day.map((stop) => stop.name).join(", ") || "-"}`).join("\n");
+      const leadText = days
+        .map((day, index) => `Ημέρα ${index + 1}: ${day.map((stop) => stop.name).join(", ") || "-"}`)
+        .join("\n");
       await transporter.sendMail({
-        from: smtpFrom,
+        from: `Voulamandis House <${smtpFrom}>`,
         to: contactTo,
         replyTo: email,
         subject: `Trip Planner lead · ενδιαφέρον για διαμονή · ${email}`,
