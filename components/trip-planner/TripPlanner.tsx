@@ -6,6 +6,10 @@ import type { VillageMaster } from "@/content/trip-planner/villages";
 import { beachRoutingById } from "@/content/trip-planner/beach-routing";
 import { villageRoutingById } from "@/content/trip-planner/village-routing";
 import { BeachTripPlanner } from "./BeachTripPlanner";
+import {
+  TripPlannerFinishModal,
+  type TripPlannerEmailStop,
+} from "./TripPlannerFinishModal";
 
 type Props = {
   beaches: BeachMaster[];
@@ -29,13 +33,21 @@ type PlannerItem = {
   coordinate: { lat: number; lng: number } | null;
 };
 
-type FilterId = "all" | "beaches" | "villages" | "family" | "nearby";
+type FilterId = "all" | "beaches" | "villages" | "foodDrink" | "family" | "nearby";
 type DayPlans = [string[], string[], string[]];
 
-const FILTERS: { id: FilterId; label: string; icon: string }[] = [
+type Filter = {
+  id: FilterId;
+  label: string;
+  icon: string;
+  disabled?: boolean;
+};
+
+const FILTERS: Filter[] = [
   { id: "all", label: "Όλα", icon: "✦" },
   { id: "beaches", label: "Παραλίες", icon: "🏖️" },
   { id: "villages", label: "Χωριά", icon: "🏡" },
+  { id: "foodDrink", label: "Φαγητό & Ποτό", icon: "🍽️", disabled: true },
   { id: "family", label: "Οικογένεια", icon: "👨‍👩‍👧" },
   { id: "nearby", label: "Χωρίς πολλή οδήγηση", icon: "🚗" },
 ];
@@ -47,7 +59,6 @@ function mapsUrl(items: PlannerItem[]) {
   if (items.length === 0) return null;
   const points = items.filter((item) => item.coordinate);
   if (points.length === 0) return null;
-
   const destination = points[points.length - 1].coordinate!;
   const waypoints = points
     .slice(0, -1)
@@ -64,12 +75,9 @@ function mapsUrl(items: PlannerItem[]) {
 }
 
 export function TripPlanner({ beaches, villages, locale }: Props) {
-  const isEl = locale === "el";
-
-  if (!isEl) {
+  if (locale !== "el") {
     return <BeachTripPlanner beaches={beaches} locale={locale} />;
   }
-
   return <GreekTripPlanner beaches={beaches} villages={villages} />;
 }
 
@@ -78,6 +86,7 @@ function GreekTripPlanner({ beaches, villages }: Pick<Props, "beaches" | "villag
   const [activeDay, setActiveDay] = useState(0);
   const [mobileView, setMobileView] = useState<"suggestions" | "plan">("suggestions");
   const [days, setDays] = useState<DayPlans>([[], [], []]);
+  const [finishOpen, setFinishOpen] = useState(false);
 
   const items = useMemo<PlannerItem[]>(() => {
     const beachItems = beaches.map((beach) => {
@@ -138,6 +147,21 @@ function GreekTripPlanner({ beaches, villages }: Pick<Props, "beaches" | "villag
     0,
   );
 
+  const emailDays = useMemo<TripPlannerEmailStop[][]>(() => {
+    return days.map((day) =>
+      day
+        .map((key) => itemByKey.get(key))
+        .filter(Boolean)
+        .map((item) => ({
+          name: item!.name,
+          kind: item!.kind,
+          distanceKm: item!.distanceKm,
+          driveMin: item!.driveMin,
+          duration: item!.duration,
+        })),
+    );
+  }, [days, itemByKey]);
+
   const addToDay = (key: string, dayIndex: number) => {
     setDays((current) => {
       const next: DayPlans = [
@@ -171,7 +195,9 @@ function GreekTripPlanner({ beaches, villages }: Pick<Props, "beaches" | "villag
     });
   };
 
-  const activeItems = days[activeDay].map((key) => itemByKey.get(key)).filter(Boolean) as PlannerItem[];
+  const activeItems = days[activeDay]
+    .map((key) => itemByKey.get(key))
+    .filter(Boolean) as PlannerItem[];
   const activeMapsUrl = mapsUrl(activeItems);
 
   return (
@@ -197,17 +223,26 @@ function GreekTripPlanner({ beaches, villages }: Pick<Props, "beaches" | "villag
               <button
                 key={item.id}
                 type="button"
-                onClick={() => setFilter(item.id)}
-                className={`shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition ${filter === item.id ? "border-[#9f7d59] bg-[#8f6f4f] text-white shadow-sm" : "border-[#e2d6c7] bg-white/90 text-[#574b40] hover:border-[#c9ae8d] hover:bg-white"}`}
+                disabled={item.disabled}
+                onClick={() => !item.disabled && setFilter(item.id)}
+                title={item.disabled ? "Θα προστεθεί μόλις ολοκληρωθούν τα δεδομένα φαγητού και ποτού" : undefined}
+                className={`shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition ${
+                  item.disabled
+                    ? "cursor-not-allowed border-[#e7dfd5] bg-[#f5f1eb] text-[#a6998c]"
+                    : filter === item.id
+                      ? "border-[#9f7d59] bg-[#8f6f4f] text-white shadow-sm"
+                      : "border-[#e2d6c7] bg-white/90 text-[#574b40] hover:border-[#c9ae8d] hover:bg-white"
+                }`}
               >
                 <span className="mr-1.5">{item.icon}</span>{item.label}
+                {item.disabled && <span className="ml-1.5 text-[10px] uppercase tracking-wide">σύντομα</span>}
               </button>
             ))}
           </div>
         </div>
       </section>
 
-      <div className="mx-auto max-w-[1580px] px-4 pb-24 pt-5 sm:px-6 lg:px-8 lg:pb-10 lg:pt-6">
+      <div className="mx-auto max-w-[1580px] px-4 pb-28 pt-5 sm:px-6 lg:px-8 lg:pb-10 lg:pt-6">
         <div className="lg:hidden">
           <div className="grid grid-cols-3 overflow-hidden rounded-2xl border border-[#e2d6c7] bg-white shadow-sm">
             {DAY_LABELS.map((label, index) => (
@@ -296,6 +331,14 @@ function GreekTripPlanner({ beaches, villages }: Pick<Props, "beaches" | "villag
                   {activeMapsUrl && (
                     <a href={activeMapsUrl} target="_blank" rel="noreferrer" className="inline-flex rounded-xl border border-[#d8c5ab] bg-white px-3.5 py-2 text-xs font-semibold text-[#765533] shadow-sm transition hover:bg-[#fffaf3]">📍 Google Maps · {DAY_LABELS[activeDay]}</a>
                   )}
+                  <button
+                    type="button"
+                    disabled={totalStops === 0}
+                    onClick={() => setFinishOpen(true)}
+                    className="inline-flex rounded-xl bg-[#8f6f4f] px-4 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-[#76583c] disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    ✓ Ολοκλήρωση
+                  </button>
                 </div>
               </div>
 
@@ -332,11 +375,19 @@ function GreekTripPlanner({ beaches, villages }: Pick<Props, "beaches" | "villag
                 <div className="mt-4 grid grid-cols-2 gap-2">
                   <button type="button" onClick={() => setMobileView("suggestions")} className="min-h-12 rounded-xl border border-[#dac9b5] bg-white px-4 text-sm font-semibold text-[#6e5944]">+ Προσθήκη στάσης</button>
                   {activeMapsUrl ? (
-                    <a href={activeMapsUrl} target="_blank" rel="noreferrer" className="flex min-h-12 items-center justify-center rounded-xl bg-[#8f6f4f] px-4 text-center text-sm font-semibold text-white">🗺️ Χάρτης</a>
+                    <a href={activeMapsUrl} target="_blank" rel="noreferrer" className="flex min-h-12 items-center justify-center rounded-xl border border-[#d2b897] bg-white px-4 text-center text-sm font-semibold text-[#765533]">🗺️ Χάρτης</a>
                   ) : (
                     <span className="flex min-h-12 items-center justify-center rounded-xl bg-[#eee8df] px-4 text-sm font-semibold text-[#9a8b7c]">🗺️ Χάρτης</span>
                   )}
                 </div>
+                <button
+                  type="button"
+                  disabled={totalStops === 0}
+                  onClick={() => setFinishOpen(true)}
+                  className="mt-2 flex min-h-12 w-full items-center justify-center rounded-xl bg-[#8f6f4f] px-4 text-sm font-bold text-white disabled:opacity-40"
+                >
+                  ✓ Ολοκλήρωση & αποστολή στο email
+                </button>
               </div>
 
               <div className="mt-3 rounded-2xl border border-[#e5d8c8] bg-white/80 px-4 py-3">
@@ -360,6 +411,13 @@ function GreekTripPlanner({ beaches, villages }: Pick<Props, "beaches" | "villag
           <span>{DAY_LABELS[activeDay]} · {days[activeDay].length} στάσεις →</span>
         </button>
       )}
+
+      <TripPlannerFinishModal
+        open={finishOpen}
+        onClose={() => setFinishOpen(false)}
+        days={emailDays}
+        totalDriveMin={totalDrive}
+      />
     </main>
   );
 }
