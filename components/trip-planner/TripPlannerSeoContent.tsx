@@ -83,6 +83,9 @@ export function TripPlannerSeoContent() {
         <p className="mt-6 text-xs leading-6 text-[#8b7d70]">
           * Οι αποστάσεις και οι χρόνοι οδήγησης του Trip Planner είναι ενδεικτικές εκτιμήσεις σχεδιασμού και δεν αντικαθιστούν live πλοήγηση ή ενημέρωση για την κυκλοφορία.
         </p>
+        <p className="mt-2 text-[11px] leading-5 text-[#9a8d81]">
+          Φωτογραφικές πιστώσεις χωριών: Βέσσα — Kostisl, Public Domain · Ανάβατος και Αυγώνυμα — Vgargan, CC BY-SA 4.0 · Καλαμωτή — Ailinaleixo, CC BY-SA 3.0. Πηγές: Wikimedia Commons.
+        </p>
       </div>
     </section>
   );
