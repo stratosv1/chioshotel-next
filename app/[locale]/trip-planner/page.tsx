@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { BeachTripPlanner } from "@/components/trip-planner/BeachTripPlanner";
+import { TripPlanner } from "@/components/trip-planner/TripPlanner";
 import { beaches } from "@/content/trip-planner/beaches";
+import { villages } from "@/content/trip-planner/villages";
 import { defaultLanguage, isLanguageCode, languages } from "@/lib/languages";
 
 type PageProps = {
@@ -19,10 +20,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const isEl = locale === "el";
 
   return {
-    title: isEl ? "Trip Planner Παραλιών Χίου" : "Chios Beach Trip Planner",
+    title: isEl ? "Trip Planner Χίου | Παραλίες & Χωριά" : "Chios Trip Planner | Beaches & Villages",
     description: isEl
-      ? "Διάλεξε παραλίες της Χίου και δες ποιες συνδυάζονται καλύτερα στην ίδια ημερήσια διαδρομή."
-      : "Choose Chios beaches and see which ones combine best in the same day route.",
+      ? "Διάλεξε παραλίες και χωριά της Χίου και δες ποιες στάσεις συνδυάζονται καλύτερα στην ίδια ημερήσια διαδρομή."
+      : "Choose Chios beaches and villages and see which stops combine best in the same day route.",
     robots: {
       index: false,
       follow: false,
@@ -37,5 +38,5 @@ export default async function Page({ params }: PageProps) {
     notFound();
   }
 
-  return <BeachTripPlanner beaches={beaches} locale={locale} />;
+  return <TripPlanner beaches={beaches} villages={villages} locale={locale} />;
 }
