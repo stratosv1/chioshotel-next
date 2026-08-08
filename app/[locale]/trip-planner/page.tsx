@@ -4,6 +4,7 @@ import { TripPlanner } from "@/components/trip-planner/TripPlanner";
 import { TripPlannerSeoContent } from "@/components/trip-planner/TripPlannerSeoContent";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { beaches } from "@/content/trip-planner/beaches";
+import { applyTripPlannerMedia } from "@/content/trip-planner/media";
 import { villages } from "@/content/trip-planner/villages";
 import { defaultLanguage, isLanguageCode, languages } from "@/lib/languages";
 import { absoluteUrl, buildPageMetadata } from "@/lib/seo";
@@ -106,11 +107,12 @@ export default async function Page({ params }: PageProps) {
   }
 
   const isEl = locale === "el";
+  const plannerMedia = applyTripPlannerMedia(beaches, villages);
 
   return (
     <>
       {isEl && <JsonLd data={buildTripPlannerSchema()} />}
-      <TripPlanner beaches={beaches} villages={villages} locale={locale} />
+      <TripPlanner beaches={plannerMedia.beaches} villages={plannerMedia.villages} locale={locale} />
       {isEl && <TripPlannerSeoContent />}
     </>
   );
