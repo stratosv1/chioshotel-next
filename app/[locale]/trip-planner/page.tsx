@@ -20,10 +20,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const isEl = locale === "el";
 
   return {
-    title: isEl ? "Trip Planner Χίου | Παραλίες & Χωριά" : "Chios Trip Planner | Beaches & Villages",
+    title: isEl ? "Trip Planner Χίου | Παραλίες & Χωριά" : "Chios Beach Trip Planner",
     description: isEl
       ? "Διάλεξε παραλίες και χωριά της Χίου και δες ποιες στάσεις συνδυάζονται καλύτερα στην ίδια ημερήσια διαδρομή."
-      : "Choose Chios beaches and villages and see which stops combine best in the same day route.",
+      : "Choose Chios beaches and see which ones combine best in the same day route.",
     robots: {
       index: false,
       follow: false,
