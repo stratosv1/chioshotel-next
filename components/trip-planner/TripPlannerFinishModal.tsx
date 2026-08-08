@@ -26,24 +26,28 @@ const GALLERY_ITEMS = [
     title: "Voulamandis House",
     meta: "Κάμπος Χίου",
     image: "/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp",
+    objectPosition: "50% 52%",
   },
   {
     id: "room-1",
     title: "Room 1",
     meta: "έως 4 άτομα",
     image: "/images/rooms/DSC07776-2-e1675109942622.webp",
+    objectPosition: "50% 62%",
   },
   {
     id: "room-3",
     title: "Room 3",
     meta: "έως 3 άτομα",
     image: "/images/rooms/DSC07867-1.webp",
+    objectPosition: "50% 60%",
   },
   {
     id: "room-7",
     title: "Room 7",
     meta: "ισόγειο · έως 3",
     image: "/images/rooms/double-triple-room.jpg",
+    objectPosition: "50% 72%",
   },
 ] as const;
 
@@ -63,6 +67,7 @@ function GalleryPanel({
         <img
           src={active.image}
           alt={active.title}
+          style={{ objectPosition: active.objectPosition }}
           className="h-full w-full object-cover transition duration-300"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#23170f]/65 via-transparent to-transparent" />
