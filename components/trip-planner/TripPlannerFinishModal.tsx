@@ -207,7 +207,7 @@ export function TripPlannerFinishModal({ open, onClose, days, totalDriveMin }: P
 
               <a
                 href={AI_ROOM_FINDER_HREF}
-                className="mt-3 flex min-h-12 items-center justify-center rounded-xl bg-[#7f5d3c] px-4 py-3 text-center text-sm font-bold text-white shadow-[0_10px_22px_rgba(83,57,34,.22)] transition hover:bg-[#68492f] sm:mt-4 sm:px-5"
+                className="mt-3 flex min-h-12 items-center justify-center rounded-xl border border-[#c7a57f] bg-[#d8b98f] px-4 py-3 text-center text-sm font-bold text-[#3f3024] shadow-[0_7px_16px_rgba(116,83,49,.14)] transition hover:bg-[#cfab7d] sm:mt-4 sm:px-5"
               >
                 ✨ Βρες το δωμάτιό σου με το AI Room Finder
               </a>
@@ -315,7 +315,7 @@ export function TripPlannerFinishModal({ open, onClose, days, totalDriveMin }: P
               <button
                 type="submit"
                 disabled={status === "sending" || totalStops === 0}
-                className="mt-2.5 flex min-h-12 w-full items-center justify-center rounded-xl bg-[#7f5d3c] px-4 py-3 text-sm font-bold text-white shadow-[0_10px_22px_rgba(83,57,34,.2)] transition hover:bg-[#68492f] disabled:cursor-not-allowed disabled:opacity-50 sm:mt-3 sm:px-5"
+                className="mt-2.5 flex min-h-12 w-full items-center justify-center rounded-xl border border-[#c7a57f] bg-[#d8b98f] px-4 py-3 text-sm font-bold text-[#3f3024] shadow-[0_7px_16px_rgba(116,83,49,.14)] transition hover:bg-[#cfab7d] disabled:cursor-not-allowed disabled:opacity-50 sm:mt-3 sm:px-5"
               >
                 {status === "sending" ? "Αποστολή…" : "Στείλε το πρόγραμμά μου & συνέχισε →"}
               </button>
