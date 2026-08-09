@@ -6,50 +6,48 @@
 }
 
 @media (max-width: 767px) {
-  /* Compact card shell so the CTA remains visible on common mobile heights. */
-  .tripPlannerUi button[aria-pressed] {
+  /* Only cards inside the horizontal place carousel. Do not touch the main category menu. */
+  .tripPlannerUi div[class*="snap-x"] > button[aria-pressed] {
     width: 82vw !important;
     max-width: 340px !important;
   }
 
-  .tripPlannerUi button[aria-pressed] > div:first-child {
+  .tripPlannerUi div[class*="snap-x"] > button[aria-pressed] > div:first-child {
     height: 158px !important;
   }
 
-  /* Keep the complete beach photo visible; the blurred back layer still fills the frame. */
-  .tripPlannerUi button[aria-pressed] > div:first-child img:last-of-type {
+  .tripPlannerUi div[class*="snap-x"] > button[aria-pressed] > div:first-child img:last-of-type {
     object-fit: contain !important;
   }
 
-  .tripPlannerUi button[aria-pressed] > div:last-child {
+  .tripPlannerUi div[class*="snap-x"] > button[aria-pressed] > div:last-child {
     padding: 12px 14px 10px !important;
   }
 
-  .tripPlannerUi button[aria-pressed] > div:last-child > div:first-child {
+  .tripPlannerUi div[class*="snap-x"] > button[aria-pressed] > div:last-child > div:first-child {
     font-size: 25px !important;
     line-height: 1.08 !important;
   }
 
-  /* Secondary label (e.g. "μικρή") */
-  .tripPlannerUi button[aria-pressed] > div:last-child > div:nth-child(2) {
+  .tripPlannerUi div[class*="snap-x"] > button[aria-pressed] > div:last-child > div:nth-child(2) {
     margin-top: 3px !important;
     font-size: 13px !important;
     line-height: 1.35 !important;
     color: #76685d !important;
   }
 
-  /* Weather / recommendation panel: keep the readable type, remove excess height. */
-  .tripPlannerUi div:has(> details) {
+  /* Weather/recommendation panel only inside place cards. */
+  .tripPlannerUi div[class*="snap-x"] > button[aria-pressed] div:has(> details) {
     margin-top: 10px !important;
     padding: 11px 12px !important;
   }
 
-  .tripPlannerUi div:has(> details) > div:first-child span {
+  .tripPlannerUi div[class*="snap-x"] > button[aria-pressed] div:has(> details) > div:first-child span {
     font-size: 12px !important;
     line-height: 1.2 !important;
   }
 
-  .tripPlannerUi div:has(> details) > div:nth-child(2) {
+  .tripPlannerUi div[class*="snap-x"] > button[aria-pressed] div:has(> details) > div:nth-child(2) {
     margin-top: 8px !important;
     column-gap: 14px !important;
     row-gap: 5px !important;
@@ -58,7 +56,7 @@
     color: #65594f !important;
   }
 
-  .tripPlannerUi div:has(> details) > p {
+  .tripPlannerUi div[class*="snap-x"] > button[aria-pressed] div:has(> details) > p {
     margin-top: 7px !important;
     padding-top: 0 !important;
     padding-bottom: 0 !important;
@@ -66,14 +64,13 @@
     line-height: 1.4 !important;
   }
 
-  /* Both accordion rows: readable, but shorter when closed. */
-  .tripPlannerUi details {
+  .tripPlannerUi div[class*="snap-x"] > button[aria-pressed] details {
     font-size: var(--planner-small) !important;
     line-height: 1.5 !important;
     color: var(--planner-muted) !important;
   }
 
-  .tripPlannerUi details summary {
+  .tripPlannerUi div[class*="snap-x"] > button[aria-pressed] details summary {
     min-height: 40px !important;
     display: flex;
     align-items: center;
@@ -86,52 +83,51 @@
     letter-spacing: 0 !important;
   }
 
-  .tripPlannerUi details[open] summary {
+  .tripPlannerUi div[class*="snap-x"] > button[aria-pressed] details[open] summary {
     margin-bottom: 6px;
   }
 
-  .tripPlannerUi details div {
+  .tripPlannerUi div[class*="snap-x"] > button[aria-pressed] details div {
     gap: 7px 14px !important;
     font-size: 13px !important;
     line-height: 1.45 !important;
   }
 
-  .tripPlannerUi details div span {
+  .tripPlannerUi div[class*="snap-x"] > button[aria-pressed] details div span {
     font-size: 13px !important;
     line-height: 1.45 !important;
   }
 
-  .tripPlannerUi details p {
+  .tripPlannerUi div[class*="snap-x"] > button[aria-pressed] details p {
     font-size: 12px !important;
     line-height: 1.5 !important;
     color: #7c6e62 !important;
   }
 
-  /* Curated beach-details accordion outside the weather box. */
-  .tripPlannerUi button[aria-pressed] > div:last-child > details {
+  .tripPlannerUi div[class*="snap-x"] > button[aria-pressed] > div:last-child > details {
     margin-top: 7px !important;
     padding-top: 0 !important;
     border-top-color: #ddd4c8 !important;
   }
 
-  .tripPlannerUi button[aria-pressed] > div:last-child > details summary {
+  .tripPlannerUi div[class*="snap-x"] > button[aria-pressed] > div:last-child > details summary {
     padding-top: 5px !important;
     padding-bottom: 5px !important;
     font-size: 14px !important;
   }
 
-  .tripPlannerUi button[aria-pressed] > div:last-child > details p,
-  .tripPlannerUi button[aria-pressed] > div:last-child > details div {
+  .tripPlannerUi div[class*="snap-x"] > button[aria-pressed] > div:last-child > details p,
+  .tripPlannerUi div[class*="snap-x"] > button[aria-pressed] > div:last-child > details div {
     font-size: 13px !important;
     line-height: 1.55 !important;
     color: #675b51 !important;
   }
 
-  .tripPlannerUi button[aria-pressed] > div:last-child > details[open] {
+  .tripPlannerUi div[class*="snap-x"] > button[aria-pressed] > div:last-child > details[open] {
     padding-bottom: 3px;
   }
 
-  /* Bottom selection CTA: darker olive and stronger contrast. */
+  /* Bottom selection CTA remains darker olive. */
   .tripPlannerUi div[class*="sticky"][class*="bottom-3"] > button {
     background: #737d58 !important;
     color: #fff !important;
