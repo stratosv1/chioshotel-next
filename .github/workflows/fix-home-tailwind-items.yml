@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - integrate-localized-css-main
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
 
 permissions:
@@ -23,13 +20,28 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
 
+      - name: Check legacy homepage target
+        id: target
+        run: |
+          if [ -f components/home/HomePageTailwindV2.tsx ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "Legacy HomePageTailwindV2.tsx no longer exists; nothing to fix."
+          fi
+
       - name: Fix homepage data references
+        if: steps.target.outputs.exists == 'true'
         run: |
           python - <<'PY'
           from pathlib import Path
 
           path = Path('components/home/HomePageTailwindV2.tsx')
           text = path.read_text(encoding='utf-8')
+
+          if 'function GuideSection' not in text or 'function FinalCta' not in text:
+              print('Legacy guide section is no longer present; nothing to fix.')
+              raise SystemExit(0)
 
           start = text.index('function GuideSection')
           end = text.index('function FinalCta')
@@ -87,6 +99,7 @@ jobs:
           PY
 
       - name: Commit correction
+        if: steps.target.outputs.exists == 'true'
         run: |
           if git diff --quiet; then
             echo "No homepage changes needed."
