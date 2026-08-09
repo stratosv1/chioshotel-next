@@ -1,6 +1,10 @@
 import { beaches, type BeachRegion } from "./beaches";
 import { beachRoutingById } from "./beach-routing";
 import {
+  beachMarineExposureById,
+  type MarineExposureConfidence,
+} from "./marine-exposure";
+import {
   rankBeachMarineWindows,
   type MarineForecastSample,
   type MarineWindowScore,
@@ -50,6 +54,8 @@ type BeachForecastLocation = {
   requestedCoordinates: Coordinates;
 };
 
+export type SpatialConfidence = "high" | "medium" | "low";
+
 export type RankedBeachMarineDiagnostic = MarineWindowScore & {
   name: string;
   region: BeachRegion;
@@ -58,6 +64,8 @@ export type RankedBeachMarineDiagnostic = MarineWindowScore & {
   weatherGridCoordinates: Coordinates | null;
   marineGridDistanceKm: number | null;
   weatherGridDistanceKm: number | null;
+  spatialConfidence: SpatialConfidence;
+  exposureConfidence: MarineExposureConfidence | null;
 };
 
 export type MarineForecastRankingResult = {
@@ -136,6 +144,32 @@ const roundedDistance = (
   grid: Coordinates | null,
 ): number | null =>
   grid === null ? null : Math.round(haversineKm(requested, grid) * 10) / 10;
+
+/**
+ * Spatial confidence describes how representative the forecast grid points are for
+ * the requested beach coordinates. It is diagnostic metadata only and deliberately
+ * does not alter the comfort score yet.
+ */
+const spatialConfidenceFor = (
+  marineGridDistanceKm: number | null,
+  weatherGridDistanceKm: number | null,
+): SpatialConfidence => {
+  if (marineGridDistanceKm === null) return "low";
+  if (
+    marineGridDistanceKm <= 4 &&
+    weatherGridDistanceKm !== null &&
+    weatherGridDistanceKm <= 4
+  ) {
+    return "high";
+  }
+  if (
+    marineGridDistanceKm <= 10 &&
+    (weatherGridDistanceKm === null || weatherGridDistanceKm <= 6)
+  ) {
+    return "medium";
+  }
+  return "low";
+};
 
 const addCommonParameters = (
   url: URL,
@@ -292,10 +326,7 @@ export async function fetchAndRankBeachMarineComfort(
   const forecastsByBeach = new Map<string, MarineForecastSample[]>();
   const diagnosticsByBeach = new Map<
     string,
-    Omit<
-      RankedBeachMarineDiagnostic,
-      keyof MarineWindowScore
-    >
+    Omit<RankedBeachMarineDiagnostic, keyof MarineWindowScore>
   >();
 
   locations.forEach((location, index) => {
@@ -303,6 +334,14 @@ export async function fetchAndRankBeachMarineComfort(
     const weatherRow = weatherRows[index] ?? {};
     const marineGridCoordinates = coordinatesFromResponse(marineRow);
     const weatherGridCoordinates = coordinatesFromResponse(weatherRow);
+    const marineGridDistanceKm = roundedDistance(
+      location.requestedCoordinates,
+      marineGridCoordinates,
+    );
+    const weatherGridDistanceKm = roundedDistance(
+      location.requestedCoordinates,
+      weatherGridCoordinates,
+    );
 
     forecastsByBeach.set(location.beachId, buildSamples(marineRow, weatherRow));
     diagnosticsByBeach.set(location.beachId, {
@@ -311,14 +350,14 @@ export async function fetchAndRankBeachMarineComfort(
       requestedCoordinates: location.requestedCoordinates,
       marineGridCoordinates,
       weatherGridCoordinates,
-      marineGridDistanceKm: roundedDistance(
-        location.requestedCoordinates,
-        marineGridCoordinates,
+      marineGridDistanceKm,
+      weatherGridDistanceKm,
+      spatialConfidence: spatialConfidenceFor(
+        marineGridDistanceKm,
+        weatherGridDistanceKm,
       ),
-      weatherGridDistanceKm: roundedDistance(
-        location.requestedCoordinates,
-        weatherGridCoordinates,
-      ),
+      exposureConfidence:
+        beachMarineExposureById[location.beachId]?.confidence ?? null,
     });
   });
 

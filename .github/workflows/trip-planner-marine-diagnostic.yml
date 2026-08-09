@@ -46,16 +46,16 @@ jobs:
 
       - name: Run 12:00-15:00 Chios marine diagnostic
         run: |
-          curl -sS -D marine-diagnostic.headers "http://127.0.0.1:3000/api/trip-planner/marine/?date=2026-08-09&start=12&end=15" -o marine-diagnostic.json
-          echo "--- response headers ---"
-          cat marine-diagnostic.headers
-          echo "--- raw response ---"
-          cat marine-diagnostic.json
-          echo
-          echo "--- Next.js log ---"
-          cat /tmp/trip-planner-next.log
-          echo "--- parsed diagnostic ---"
-          jq '{generatedAt, requestedWindow, endpoints, missingRoutingBeachIds, unscoredBeachIds, ranked: [.ranked[] | {beachId, name, score, rating, dataQuality, reasonCodes, marineGridDistanceKm, weatherGridDistanceKm}]}' marine-diagnostic.json
+          DIAGNOSTIC_DATE="$(TZ=Europe/Athens date +%F)"
+          echo "Diagnostic date: ${DIAGNOSTIC_DATE}"
+          curl -fsS -D marine-diagnostic.headers \
+            "http://127.0.0.1:3000/api/trip-planner/marine/?date=${DIAGNOSTIC_DATE}&start=12&end=15" \
+            -o marine-diagnostic.json
+
+          jq -e '.ok == true and (.missingRoutingBeachIds | length == 0) and (.unscoredBeachIds | length == 0) and (.ranked | length == 26)' marine-diagnostic.json >/dev/null
+
+          echo "--- diagnostic summary ---"
+          jq '{generatedAt, requestedWindow, endpoints, missingRoutingBeachIds, unscoredBeachIds, ranked: [.ranked[] | {beachId, name, score, rating, dataQuality, spatialConfidence, exposureConfidence, reasonCodes, marineGridDistanceKm, weatherGridDistanceKm}]}' marine-diagnostic.json
 
       - name: Upload diagnostic files
         if: always()

@@ -52,6 +52,8 @@ export type MarineComfortBreakdown = {
   windExposure: number | null;
   waveImpact: number | null;
   windWaveImpact: number | null;
+  windImpactKmh: number | null;
+  gustImpactKmh: number | null;
   marineRisk: number | null;
   windRisk: number | null;
   gustRisk: number | null;
@@ -273,14 +275,21 @@ export function scoreBeachMarineComfort(
   const windExposure = hasWind
     ? exposureFor(meta, forecast.windDirectionDeg)
     : null;
-  const windImpact = hasWind && windExposure !== null
-    ? forecast.windSpeedKmh * (0.35 + 0.65 * windExposure)
+  // Even a very sheltered beach retains 35% of background wind impact. This keeps
+  // the model conservative without pretending that raw island-level wind is felt
+  // equally at every cove.
+  const windExposureFactor =
+    windExposure === null ? 1 : 0.35 + 0.65 * windExposure;
+  const windImpactKmh = hasWind
+    ? forecast.windSpeedKmh * windExposureFactor
     : null;
-  const windRisk = windImpact === null ? null : windImpactRisk(windImpact);
+  const windRisk = windImpactKmh === null ? null : windImpactRisk(windImpactKmh);
 
-  const gustExposureFactor = windExposure === null ? 1 : 0.35 + 0.65 * windExposure;
-  const gustImpact = hasGusts ? forecast.windGustsKmh * gustExposureFactor : null;
-  const gustRisk = gustImpact === null ? null : gustImpactRisk(gustImpact);
+  const gustExposureFactor = windExposureFactor;
+  const gustImpactKmh = hasGusts
+    ? forecast.windGustsKmh * gustExposureFactor
+    : null;
+  const gustRisk = gustImpactKmh === null ? null : gustImpactRisk(gustImpactKmh);
 
   const risk = weightedRisk([
     { risk: marineRisk, weight: 0.72 },
@@ -293,12 +302,26 @@ export function scoreBeachMarineComfort(
   // Conservative caps for conditions where near-shore model uncertainty matters most.
   if (waveImpact !== null && waveImpact >= 1) score = Math.min(score, 35);
   if (hasWaveHeight && forecast.waveHeightM >= 2) score = Math.min(score, 65);
+
+  // Severe-wind caps must use the beach-adjusted impact, not the raw island-level
+  // forecast. This avoids forcing a sheltered cove to 50 simply because the wider
+  // area is windy.
   if (
-    (hasWind && forecast.windSpeedKmh >= 45) ||
-    (hasGusts && forecast.windGustsKmh >= 60)
+    (windImpactKmh !== null && windImpactKmh >= 42) ||
+    (gustImpactKmh !== null && gustImpactKmh >= 60)
   ) {
     score = Math.min(score, 50);
   }
+
+  // Keep one backstop for genuinely extreme background conditions, even when the
+  // mapped exposure is low. This is deliberately much higher than normal meltemi days.
+  if (
+    (hasWind && forecast.windSpeedKmh >= 70) ||
+    (hasGusts && forecast.windGustsKmh >= 90)
+  ) {
+    score = Math.min(score, 55);
+  }
+
   if (!hasWaveHeight) score = Math.min(score, 70);
 
   const coreMarineComplete = hasWaveHeight && hasWaveDirection;
@@ -322,8 +345,12 @@ export function scoreBeachMarineComfort(
     if (waveExposure <= 0.25) reasonCodes.add("directionally-sheltered");
     if (waveExposure >= 0.7) reasonCodes.add("directionally-exposed");
   }
-  if (hasWind && forecast.windSpeedKmh >= 30) reasonCodes.add("strong-wind");
-  if (hasGusts && forecast.windGustsKmh >= 45) reasonCodes.add("strong-gusts");
+  if (windImpactKmh !== null && windImpactKmh >= 26) {
+    reasonCodes.add("strong-wind");
+  }
+  if (gustImpactKmh !== null && gustImpactKmh >= 40) {
+    reasonCodes.add("strong-gusts");
+  }
   if (hasWaveHeight && forecast.waveHeightM >= 1.5) {
     reasonCodes.add("large-offshore-waves");
   }
@@ -342,6 +369,8 @@ export function scoreBeachMarineComfort(
       windExposure,
       waveImpact,
       windWaveImpact,
+      windImpactKmh,
+      gustImpactKmh,
       marineRisk,
       windRisk,
       gustRisk,

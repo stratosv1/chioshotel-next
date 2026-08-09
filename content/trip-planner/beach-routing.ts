@@ -28,7 +28,7 @@ export type BeachRoutingMeta = {
  */
 export const beachRoutingById: Record<string, BeachRoutingMeta> = {
   "agia-dynami": {
-    coordinates: { lat: 38.21471, lng: 25.91358 },
+    coordinates: { lat: 38.212538, lng: 25.912779 },
     coordinateAccuracy: "verified",
     distanceFromVoulamandisKm: 32,
     driveTimeFromVoulamandisMin: 45,
@@ -84,7 +84,7 @@ export const beachRoutingById: Record<string, BeachRoutingMeta> = {
     routeCluster: "south-pyrgi-emporios",
   },
   "mavra-volia": {
-    coordinates: { lat: 38.18496, lng: 26.02907 },
+    coordinates: { lat: 38.184994, lng: 26.029997 },
     coordinateAccuracy: "verified",
     distanceFromVoulamandisKm: 25,
     driveTimeFromVoulamandisMin: 35,
@@ -182,7 +182,7 @@ export const beachRoutingById: Record<string, BeachRoutingMeta> = {
     routeCluster: "northeast-kardamyla",
   },
   karfas: {
-    coordinates: { lat: 38.31941, lng: 26.15379 },
+    coordinates: { lat: 38.320614, lng: 26.15377 },
     coordinateAccuracy: "verified",
     distanceFromVoulamandisKm: 2,
     driveTimeFromVoulamandisMin: 5,
