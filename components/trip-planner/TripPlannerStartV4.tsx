@@ -54,60 +54,60 @@ function AccommodationModal({ onClose }: { onClose: () => void }) {
         if (event.target === event.currentTarget) onClose();
       }}
     >
-      <div className="relative max-h-[92svh] w-full max-w-[720px] overflow-y-auto rounded-[26px] border border-white/20 bg-[#fffdf9] shadow-[0_30px_90px_rgba(31,22,16,.35)]">
-        <div className="relative h-[230px] overflow-hidden bg-[#554334] sm:h-[275px]">
+      <div className="relative max-h-[92svh] w-full max-w-[660px] overflow-y-auto rounded-[24px] border border-white/20 bg-[#fffdf9] shadow-[0_30px_90px_rgba(31,22,16,.35)]">
+        <div className="relative h-[215px] overflow-hidden bg-[#554334] sm:h-[250px]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/images/rooms/DSC07867-1-v2.webp"
             alt="Voulamandis House στον Κάμπο της Χίου"
             className="h-full w-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#38291f]/90 via-[#38291f]/10 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#2f2118]/95 via-[#38291f]/25 to-black/5" />
 
           <button
             type="button"
             onClick={onClose}
             aria-label="Κλείσιμο"
-            className="absolute right-4 top-4 flex h-12 w-12 items-center justify-center rounded-full border border-white/60 bg-[#fffdf9]/95 text-[28px] font-light leading-none text-[#59483b] shadow-lg backdrop-blur transition hover:bg-white"
+            className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full border border-white/70 bg-[#fffdf9]/95 text-[26px] font-light leading-none text-[#59483b] shadow-lg backdrop-blur transition hover:bg-white"
           >
             ×
           </button>
 
-          <div className="absolute bottom-5 left-5 right-5 text-white sm:bottom-6 sm:left-7 sm:right-7">
-            <p className="text-[11px] font-extrabold uppercase tracking-[0.2em] text-white/80 sm:text-[12px]">
+          <div className="absolute bottom-5 left-5 right-5 text-white sm:bottom-6 sm:left-6 sm:right-6">
+            <p className="text-[11px] font-black uppercase tracking-[0.19em] text-white sm:text-[12px]">
               Voulamandis House · Κάμπος Χίου
             </p>
-            <h2 id="trip-planner-stay-title" className="mt-1.5 max-w-[590px] font-serif text-[32px] font-bold leading-[1.04] sm:text-[42px]">
+            <h2 id="trip-planner-stay-title" className="mt-1.5 max-w-[540px] font-serif text-[31px] font-bold leading-[1.03] text-white drop-shadow-sm sm:text-[39px]">
               Η ήρεμη βάση για το ταξίδι σου στη Χίο
             </h2>
           </div>
         </div>
 
-        <div className="bg-[#544233] px-5 py-4 text-white sm:px-7">
-          <div className="flex flex-wrap gap-2 text-[13px] font-extrabold sm:text-[14px]">
-            <span className="rounded-full bg-white/10 px-3 py-1.5">🌿 Ήρεμος Κάμπος</span>
-            <span className="rounded-full bg-white/10 px-3 py-1.5">🍊 Πρωινό στον κήπο</span>
-            <span className="rounded-full bg-white/10 px-3 py-1.5">🎁 -10% direct</span>
+        <div className="bg-[#544233] px-5 py-3.5 text-white sm:px-6">
+          <div className="grid grid-cols-3 gap-2 text-center text-[12px] font-extrabold sm:text-[13px]">
+            <span className="rounded-full bg-white/10 px-2.5 py-1.5">🌿 Ήρεμος Κάμπος</span>
+            <span className="rounded-full bg-white/10 px-2.5 py-1.5">🍊 Πρωινό στον κήπο</span>
+            <span className="rounded-full bg-white/10 px-2.5 py-1.5">🎁 -10% direct</span>
           </div>
         </div>
 
-        <div className="px-5 py-6 sm:px-7 sm:py-7">
-          <div className="rounded-[20px] border border-[#cbd5b8] bg-[#eef3e7] p-4 text-center">
-            <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-[#74805a] text-[21px] font-black text-white">✓</div>
-            <p className="mt-2 text-[16px] font-extrabold text-[#4f5d40]">Το προσωπικό σου Trip Plan στάλθηκε</p>
+        <div className="px-5 py-5 sm:px-6 sm:py-6">
+          <div className="rounded-[18px] border border-[#cbd5b8] bg-[#eef3e7] px-4 py-3 text-center">
+            <div className="mx-auto flex h-9 w-9 items-center justify-center rounded-full bg-[#74805a] text-[19px] font-black text-white">✓</div>
+            <p className="mt-1.5 text-[15px] font-extrabold text-[#4f5d40]">Το προσωπικό σου Trip Plan στάλθηκε</p>
           </div>
 
-          <h3 className="mt-5 font-serif text-[29px] font-bold leading-[1.08] text-[#302720] sm:text-[34px]">
+          <h3 className="mt-4 font-serif text-[28px] font-bold leading-[1.08] text-[#302720] sm:text-[32px]">
             Συνέχισε με τη διαμονή σου
           </h3>
           <p className="mt-2 text-[15px] font-bold leading-6 text-[#6c6057] sm:text-[16px] sm:leading-7">
             Δες άμεσα ποιο δωμάτιο είναι διαθέσιμο και ταιριάζει στο ταξίδι σου ή μίλησε απευθείας μαζί μας.
           </p>
 
-          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
             <a
               href="/ai-assistant/?lang=el"
-              className="flex min-h-[60px] items-center justify-center rounded-2xl bg-[#687451] px-5 text-center text-[16px] font-extrabold text-white shadow-[0_10px_24px_rgba(88,101,65,.22)] transition hover:bg-[#596544]"
+              className="flex min-h-[60px] items-center justify-center rounded-2xl bg-[#5f6b47] px-5 text-center text-[16px] font-extrabold text-white shadow-[0_10px_24px_rgba(77,91,57,.28)] transition hover:bg-[#505d3b]"
             >
               Δες διαθεσιμότητα · AI Room Finder
             </a>
@@ -115,7 +115,7 @@ function AccommodationModal({ onClose }: { onClose: () => void }) {
               href="https://wa.me/306944474226"
               target="_blank"
               rel="noreferrer"
-              className="flex min-h-[60px] items-center justify-center rounded-2xl border-2 border-[#76977c] bg-[#f5faf3] px-5 text-center text-[16px] font-extrabold text-[#45604b] transition hover:bg-[#eaf4e7]"
+              className="flex min-h-[60px] items-center justify-center rounded-2xl border-2 border-[#94aa91] bg-[#f8fbf5] px-5 text-center text-[16px] font-extrabold text-[#4c654d] transition hover:bg-[#edf5e9]"
             >
               WhatsApp με τη reception
             </a>
@@ -124,7 +124,7 @@ function AccommodationModal({ onClose }: { onClose: () => void }) {
           <button
             type="button"
             onClick={onClose}
-            className="mt-4 w-full rounded-xl py-2.5 text-[14px] font-extrabold text-[#7c6d61] transition hover:bg-[#f4efe8]"
+            className="mt-3 flex min-h-[46px] w-full items-center justify-center rounded-xl px-4 text-[14px] font-extrabold text-[#74665b] transition hover:bg-[#f4efe8]"
           >
             Όχι τώρα — συνέχισε στο Trip Plan
           </button>
