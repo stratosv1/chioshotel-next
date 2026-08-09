@@ -77,6 +77,11 @@ function isStaffPath(pathname: string): boolean {
   return pathname === "/staff" || pathname.startsWith("/staff/");
 }
 
+function isTripPlannerPath(pathname: string): boolean {
+  const normalizedPathname = pathname.endsWith("/") ? pathname : pathname + "/";
+  return normalizedPathname === "/trip-planner/";
+}
+
 export default async function RootLayout({
   children,
 }: {
@@ -89,6 +94,7 @@ export default async function RootLayout({
   const sharedLanguage: SharedSiteLanguage = isPolishPath ? "en" : htmlLanguage;
   const hideHeader = isGuidePath(pathname);
   const hideGlobalChrome = hideHeader || isPolishPath;
+  const hidePostContentChrome = isTripPlannerPath(pathname);
   const excludeAnalytics = isStaffPath(pathname);
 
   return (
@@ -98,10 +104,12 @@ export default async function RootLayout({
           <VoulamandisHeaderTailwind language={sharedLanguage} pathname={pathname} />
         ) : null}
         {children}
-        {!hideGlobalChrome ? (
+        {!hideGlobalChrome && !hidePostContentChrome ? (
           <ExploreVoulamandisJourney language={sharedLanguage} pathname={pathname} />
         ) : null}
-        {!hideGlobalChrome ? <VoulamandisFooterTailwind language={sharedLanguage} /> : null}
+        {!hideGlobalChrome && !hidePostContentChrome ? (
+          <VoulamandisFooterTailwind language={sharedLanguage} />
+        ) : null}
         {!excludeAnalytics ? (
           <>
             <Suspense fallback={null}>

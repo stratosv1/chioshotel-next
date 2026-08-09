@@ -1,0 +1,62 @@
+name: Trip Planner Marine Diagnostic
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/trip-planner-marine-diagnostic.yml"
+      - "content/trip-planner/**"
+      - "app/api/trip-planner/marine/**"
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Start Next.js dev server
+        run: |
+          npm run dev > /tmp/trip-planner-next.log 2>&1 &
+          echo $! > /tmp/trip-planner-next.pid
+          for i in {1..60}; do
+            if curl -fsS http://127.0.0.1:3000 >/dev/null 2>&1; then
+              exit 0
+            fi
+            sleep 2
+          done
+          cat /tmp/trip-planner-next.log
+          exit 1
+
+      - name: Validate 12:00-15:00 Chios marine ranking
+        run: |
+          DIAGNOSTIC_DATE="$(TZ=Europe/Athens date +%F)"
+          echo "Diagnostic date: ${DIAGNOSTIC_DATE}"
+          curl -fsS -D marine-diagnostic.headers \
+            "http://127.0.0.1:3000/api/trip-planner/marine/?date=${DIAGNOSTIC_DATE}&start=12&end=15" \
+            -o marine-diagnostic.json
+
+          jq -e '.ok == true and (.missingRoutingBeachIds | length == 0) and (.unscoredBeachIds | length == 0) and (.ranked | length == 26)' marine-diagnostic.json >/dev/null
+
+          echo "--- diagnostic summary ---"
+          jq '{generatedAt, requestedWindow, endpoints, missingRoutingBeachIds, unscoredBeachIds, ranked: [.ranked[] | {beachId, name, score, rating, dataQuality, spatialConfidence, exposureConfidence, reasonCodes, marineGridDistanceKm, weatherGridDistanceKm}]}' marine-diagnostic.json
+
+      - name: Upload diagnostic files
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trip-planner-marine-diagnostic
+          path: |
+            marine-diagnostic.json
+            marine-diagnostic.headers
+            /tmp/trip-planner-next.log
