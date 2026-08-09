@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import TripPlannerStart from "@/components/trip-planner/TripPlannerStartV2";
+import TripPlannerStart from "@/components/trip-planner/TripPlannerEnhanced";
 
 export const metadata: Metadata = {
   title: "Chios Trip Planner | Οργάνωσε τη μέρα σου στη Χίο",
