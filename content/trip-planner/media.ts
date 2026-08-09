@@ -5,6 +5,11 @@ import type { VillageMaster } from "./villages";
  * Trip Planner media. Existing site assets stay in their original folders;
  * user-approved missing place photos live under /images/trip-planner/.
  * Only exact, verified place-to-image matches belong here.
+ *
+ * For a handful of north-west beach cards we temporarily use the original
+ * high-resolution Chios.gr image instead of the tiny imported thumbnail.
+ * This avoids visibly blurred planner cards until those originals are stored
+ * locally in the project.
  */
 export const tripPlannerBeachImages: Readonly<Record<string, string>> = {
   "agia-dynami": "/images/beaches/agia-dynami-beach-chios.webp",
@@ -25,17 +30,17 @@ export const tripPlannerBeachImages: Readonly<Record<string, string>> = {
   glaroi: "/images/beaches/paralia-glaron-beach-chios.webp",
   "ormos-lo": "/images/trip-planner/beaches/ormos-lo.webp",
   mersinidi: "/images/trip-planner/beaches/mersinidi.webp",
-  "agia-markella": "/images/trip-planner/beaches/agia-markella.webp",
+  "agia-markella": "https://www.chios.gr/images/beaches-pages/agia-markella/agia-markella-1.jpg",
   agiasmata: "/images/trip-planner/beaches/agiasmata.webp",
-  managros: "/images/trip-planner/beaches/managros.webp",
-  "limnos-volissos": "/images/trip-planner/beaches/limnos-volissos.webp",
+  managros: "https://www.chios.gr/images/beaches-pages/managros/managros-1.jpg",
+  "limnos-volissos": "https://www.chios.gr/images/beaches-pages/limnos/limnos-1.jpg",
   lefkathia: "/images/beaches/lefkathia-2.jpg",
   giosonas: "/images/trip-planner/beaches/giosonas.webp",
   nagos: "/images/beaches/nagos-beach-chios.webp",
   lithi: "/images/beaches/lithi-beach-chios.webp",
-  elinta: "/images/trip-planner/beaches/elinta.webp",
-  "trachili-west": "/images/trip-planner/beaches/trachili-west.webp",
-  tigani: "/images/trip-planner/beaches/tigani.webp",
+  elinta: "/images/beaches/elinta-beach-chios.jpg",
+  "trachili-west": "https://www.chios.gr/images/beaches-pages/traxili/traxili-1.jpg",
+  tigani: "https://www.chios.gr/images/beaches-pages/thgani/tigani-1.jpg",
 };
 
 export const tripPlannerVillageImages: Readonly<Record<string, string>> = {
