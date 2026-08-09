@@ -261,7 +261,7 @@ function SelectionStrip({
 
   return (
     <div className="sticky top-0 z-30 border-b border-[#e8dfd4] bg-[#fffdf9]/95 backdrop-blur">
-      <div className="mx-auto flex w-[min(1260px,calc(100%-24px))] items-center gap-2 py-2 md:w-[min(1260px,calc(100%-48px))]">
+      <div className="mx-auto flex w-[min(1260px,calc(100%_-_24px))] items-center gap-2 py-2 md:w-[min(1260px,calc(100%_-_48px))]">
         <span className="shrink-0 text-[9px] font-bold uppercase tracking-[0.16em] text-[#aa8660] md:text-[10px]">Η εκδρομή σου</span>
         <div className="flex min-w-0 flex-1 gap-1.5 overflow-x-auto py-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:flex-wrap md:overflow-visible">
           {chips.map((chip) => (
@@ -317,8 +317,8 @@ export default function TripPlannerStart() {
   const marineById = useMemo(() => new Map(marineRanking.map((item) => [item.beachId, item])), [marineRanking]);
 
   useEffect(() => {
-    if (step !== "region" && currentCategory !== "beach") return;
-    if (marineStatus === "loading" || marineStatus === "ready") return;
+    const needsMarine = step === "region" || currentCategory === "beach";
+    if (!needsMarine || marineRanking.length > 0) return;
 
     const controller = new AbortController();
     setMarineStatus("loading");
@@ -335,7 +335,7 @@ export default function TripPlannerStart() {
       });
 
     return () => controller.abort();
-  }, [step, currentCategory, marineStatus]);
+  }, [step, currentCategory, marineRanking.length]);
 
   const regionRankings = useMemo(() => {
     return REGION_IDS.map((id) => {
@@ -454,9 +454,9 @@ export default function TripPlannerStart() {
   const currentCategoryInfo = currentCategory ? categoryById[currentCategory] : null;
 
   return (
-    <main className="min-h-[100svh] bg-[#f8f4ee] text-[#2f2722]">
+    <main className="min-h-[100svh] overflow-x-clip bg-[#f8f4ee] text-[#2f2722]">
       <header className="border-b border-[#e8dfd4] bg-[#fffdf9]/95">
-        <div className="mx-auto flex h-[58px] w-[min(1260px,calc(100%-28px))] items-center justify-between md:h-[68px] md:w-[min(1260px,calc(100%-48px))]">
+        <div className="mx-auto flex h-[58px] w-[min(1260px,calc(100%_-_28px))] items-center justify-between md:h-[68px] md:w-[min(1260px,calc(100%_-_48px))]">
           <BrandMark />
           <p className="hidden text-[12px] font-medium text-[#655a52] md:block">Ανακάλυψε τη Χίο με τον δικό σου τρόπο <span className="ml-2 text-[18px]">♡</span></p>
         </div>
@@ -466,7 +466,7 @@ export default function TripPlannerStart() {
 
       {step === "activities" ? (
         <section className="relative overflow-hidden">
-          <div className="mx-auto flex w-[min(1260px,calc(100%-24px))] flex-col py-4 pb-5 md:min-h-[calc(100svh-68px)] md:w-[min(1260px,calc(100%-48px))] md:items-center md:justify-center md:py-8">
+          <div className="mx-auto flex w-[min(1260px,calc(100%_-_24px))] flex-col py-4 pb-5 md:min-h-[calc(100svh-68px)] md:w-[min(1260px,calc(100%_-_48px))] md:items-center md:justify-center md:py-8">
             <div className="mx-auto text-center">
               <h1 className="font-serif text-[30px] font-semibold leading-[1.02] tracking-[-0.035em] text-[#2e241f] sm:text-[36px] md:text-[54px] lg:text-[60px]">Τι θέλεις να κάνεις σήμερα;</h1>
               <p className="mt-2 text-[13px] font-semibold text-[#b1763f] md:mt-3 md:text-[17px]">Διάλεξε όσα θέλεις</p>
@@ -482,7 +482,7 @@ export default function TripPlannerStart() {
       ) : null}
 
       {step === "region" ? (
-        <section className="mx-auto flex w-[min(820px,calc(100%-28px))] flex-col items-center py-5 text-center md:min-h-[calc(100svh-112px)] md:justify-center md:py-8">
+        <section className="mx-auto flex w-[min(820px,calc(100%_-_28px))] flex-col items-center py-5 text-center md:min-h-[calc(100svh-112px)] md:justify-center md:py-8">
           <button type="button" onClick={() => setStep("activities")} className="mb-3 self-start rounded-full border border-[#ded5ca] bg-white/75 px-3.5 py-1.5 text-[12px] font-medium text-[#6b6159] shadow-sm">← Πίσω</button>
           <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#b1763f] md:text-[11px]">Βήμα 2</p>
           <h2 className="mt-2 max-w-[620px] font-serif text-[31px] font-semibold leading-[1.05] tracking-[-0.03em] md:text-[46px]">Προς τα πού θέλεις να κινηθείς;</h2>
@@ -520,7 +520,7 @@ export default function TripPlannerStart() {
       ) : null}
 
       {step === "places" && currentCategory && currentCategoryInfo ? (
-        <section className="mx-auto w-[min(1060px,calc(100%-24px))] py-4 pb-24 md:py-7 md:pb-10">
+        <section className="mx-auto w-[min(1060px,calc(100%_-_24px))] py-4 pb-24 md:py-7 md:pb-10">
           <button type="button" onClick={goBackFromPlaces} className="mb-3 rounded-full border border-[#ded5ca] bg-white/75 px-3.5 py-1.5 text-[12px] font-medium text-[#6b6159] shadow-sm">← Πίσω</button>
           <div className="text-center">
             <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#b1763f]">Βήμα {3 + placeCategoryIndex}</p>
@@ -537,8 +537,8 @@ export default function TripPlannerStart() {
               const isSelected = chosenPlaces[currentCategory].includes(item.id);
               return (
                 <button key={item.id} type="button" aria-pressed={isSelected} onClick={() => togglePlace(item.id)} className={`overflow-hidden rounded-[16px] border bg-white text-left shadow-[0_7px_20px_rgba(65,48,36,.06)] transition hover:-translate-y-0.5 ${isSelected ? "border-[#aeb39a] bg-[#fdfdf9] ring-2 ring-[#aeb39a]/30" : "border-[#e3dacf] hover:border-[#c9b9a7]"}`}>
-                  <div className="relative h-[132px] bg-[#e9e1d7] md:h-[150px]">
-                    {item.image ? <img src={item.image} alt="" className="h-full w-full object-cover" /> : <GenericPlaceVisual category={currentCategory} />}
+                  <div className="relative h-[132px] overflow-hidden bg-[#e9e1d7] md:h-[150px]">
+                    {item.image ? <img src={item.image} alt="" className="block h-full w-full object-cover" /> : <GenericPlaceVisual category={currentCategory} />}
                     {isSelected ? <span className="absolute right-2.5 top-2.5 flex h-8 w-8 items-center justify-center rounded-full bg-[#9ca484] text-sm font-bold text-white shadow-md">✓</span> : null}
                     {item.weather ? <span className={`absolute bottom-2 left-2 rounded-full border px-2.5 py-1 text-[10px] font-bold shadow-sm ${ratingClasses(item.weather.rating)}`}>{item.weather.score}/100 · {ratingLabel(item.weather.rating)}</span> : null}
                   </div>
@@ -565,7 +565,7 @@ export default function TripPlannerStart() {
       ) : null}
 
       {step === "summary" ? (
-        <section className="mx-auto flex min-h-[calc(100svh-112px)] w-[min(820px,calc(100%-28px))] flex-col items-center justify-center py-7 text-center">
+        <section className="mx-auto flex min-h-[calc(100svh-112px)] w-[min(820px,calc(100%_-_28px))] flex-col items-center justify-center py-7 text-center">
           <button type="button" onClick={() => { setStep(placeCategories.length ? "places" : "region"); setPlaceCategoryIndex(Math.max(placeCategories.length - 1, 0)); }} className="mb-4 self-start rounded-full border border-[#ded5ca] bg-white/75 px-3.5 py-1.5 text-[12px] font-medium text-[#6b6159] shadow-sm">← Πίσω</button>
           <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#b1763f]">Το πλάνο σου</p>
           <h2 className="mt-2 font-serif text-[34px] font-semibold leading-tight tracking-[-0.03em] md:text-[50px]">Ωραία, έχουμε τις επιλογές της εκδρομής σου.</h2>
