@@ -1,6 +1,6 @@
 export type MarineDirection = "N" | "NE" | "E" | "SE" | "S" | "SW" | "W" | "NW";
 
-export type MarineExposureConfidence = "medium" | "medium-high";
+export type MarineExposureConfidence = "medium" | "medium-high" | "high";
 
 export type BeachMarineExposureMeta = {
   /** Approximate direction the beach/its bay opens toward, in degrees (0=N, 90=E). */
@@ -16,7 +16,7 @@ export type BeachMarineExposureMeta = {
 };
 
 /**
- * Static marine-exposure metadata for Trip Planner beaches.
+ * Static marine-exposure metadata for active Trip Planner beaches.
  *
  * Values were estimated manually from north-up coastline/map screenshots supplied
  * during Trip Planner design. They are intended to be combined with marine forecast
@@ -123,6 +123,60 @@ export const beachMarineExposureById: Record<string, BeachMarineExposureMeta> = 
   "agia-markella": {
     facingDeg: 233,
     exposure: { N: 0.3, NE: 0.05, E: 0.05, SE: 0.1, S: 0.45, SW: 1, W: 0.9, NW: 0.55 },
+    confidence: "medium-high",
+    source: "manual-map-estimate",
+  },
+  glaroi: {
+    facingDeg: 100,
+    exposure: { N: 0.2, NE: 0.65, E: 1, SE: 0.65, S: 0.2, SW: 0.05, W: 0.05, NW: 0.1 },
+    confidence: "medium-high",
+    source: "manual-map-estimate",
+  },
+  daskalopetra: {
+    facingDeg: 90,
+    exposure: { N: 0.25, NE: 0.75, E: 1, SE: 0.5, S: 0.15, SW: 0.05, W: 0.05, NW: 0.1 },
+    confidence: "medium-high",
+    source: "manual-map-estimate",
+  },
+  "agia-dynami": {
+    facingDeg: 292,
+    exposure: { N: 0.35, NE: 0.1, E: 0.05, SE: 0.05, S: 0.2, SW: 0.5, W: 1, NW: 0.9 },
+    confidence: "medium-high",
+    source: "manual-map-estimate",
+  },
+  vroulidia: {
+    facingDeg: 180,
+    exposure: { N: 0.05, NE: 0.05, E: 0.25, SE: 0.75, S: 1, SW: 0.8, W: 0.3, NW: 0.05 },
+    confidence: "high",
+    source: "manual-map-estimate",
+  },
+  "kato-fana": {
+    facingDeg: 232,
+    exposure: { N: 0.1, NE: 0.05, E: 0.05, SE: 0.15, S: 0.45, SW: 1, W: 0.75, NW: 0.3 },
+    confidence: "medium-high",
+    source: "manual-map-estimate",
+  },
+  avlonia: {
+    facingDeg: 240,
+    exposure: { N: 0.1, NE: 0.05, E: 0.05, SE: 0.15, S: 0.55, SW: 1, W: 0.85, NW: 0.35 },
+    confidence: "medium-high",
+    source: "manual-map-estimate",
+  },
+  salagona: {
+    facingDeg: 228,
+    exposure: { N: 0.1, NE: 0.05, E: 0.05, SE: 0.2, S: 0.65, SW: 1, W: 0.8, NW: 0.3 },
+    confidence: "medium-high",
+    source: "manual-map-estimate",
+  },
+  lefkathia: {
+    facingDeg: 220,
+    exposure: { N: 0.1, NE: 0.05, E: 0.05, SE: 0.2, S: 0.7, SW: 1, W: 0.75, NW: 0.25 },
+    confidence: "medium-high",
+    source: "manual-map-estimate",
+  },
+  lithi: {
+    facingDeg: 342,
+    exposure: { N: 0.9, NE: 0.35, E: 0.05, SE: 0.05, S: 0.05, SW: 0.15, W: 0.5, NW: 1 },
     confidence: "medium-high",
     source: "manual-map-estimate",
   },

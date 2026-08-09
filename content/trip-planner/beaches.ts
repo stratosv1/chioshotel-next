@@ -8,16 +8,32 @@ import {
 export type { BeachRegion, FamilyFit, BeachMaster } from "./beaches-source";
 
 /**
- * Places intentionally not treated as beaches by the Trip Planner.
- * Afanis Naftis is kept only as a historical/raw source record, not as an active beach.
+ * Places intentionally not treated as active beaches by the Trip Planner.
+ * Raw/source records are preserved so historical/editorial data is not lost.
  */
 export const excludedTripPlannerBeaches = [
   ...sourceExcludedTripPlannerBeaches,
   "Afanis Naftis",
+  "Agiasmata",
+  "Trachilia (alias of Avlonia)",
 ] as const;
 
+/**
+ * Known duplicate naming in the source data.
+ * Trachilia South refers to the same beach/location as Avlonia for planner purposes.
+ */
+export const tripPlannerBeachAliases = {
+  "trachilia-south": "avlonia",
+} as const;
+
+const inactiveBeachIds = new Set([
+  "afanis-naftis",
+  "agiasmata",
+  "trachilia-south",
+]);
+
 export const beaches: BeachMaster[] = sourceBeaches.filter(
-  (beach) => beach.id !== "afanis-naftis",
+  (beach) => !inactiveBeachIds.has(beach.id),
 );
 
 export const beachesById = Object.fromEntries(
