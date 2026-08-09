@@ -39,11 +39,23 @@ jobs:
 
       - name: Run 12:00-15:00 Chios marine diagnostic
         run: |
-          curl -fsS "http://127.0.0.1:3000/api/trip-planner/marine?date=2026-08-09&start=12&end=15" -o marine-diagnostic.json
+          curl -sS -D marine-diagnostic.headers "http://127.0.0.1:3000/api/trip-planner/marine?date=2026-08-09&start=12&end=15" -o marine-diagnostic.json
+          echo "--- response headers ---"
+          cat marine-diagnostic.headers
+          echo "--- raw response ---"
+          cat marine-diagnostic.json
+          echo
+          echo "--- Next.js log ---"
+          cat /tmp/trip-planner-next.log
+          echo "--- parsed diagnostic ---"
           jq '{generatedAt, requestedWindow, endpoints, missingRoutingBeachIds, unscoredBeachIds, ranked: [.ranked[] | {beachId, name, score, rating, dataQuality, reasonCodes, marineGridDistanceKm, weatherGridDistanceKm}]}' marine-diagnostic.json
 
-      - name: Upload diagnostic JSON
+      - name: Upload diagnostic files
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: trip-planner-marine-diagnostic
-          path: marine-diagnostic.json
+          path: |
+            marine-diagnostic.json
+            marine-diagnostic.headers
+            /tmp/trip-planner-next.log
