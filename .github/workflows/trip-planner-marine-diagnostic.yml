@@ -1,13 +1,7 @@
 name: Trip Planner Marine Diagnostic
 
 on:
-  push:
-    branches:
-      - agent/beach-master-dataset
-    paths:
-      - ".github/workflows/trip-planner-marine-diagnostic.yml"
-      - "content/trip-planner/**"
-      - "app/api/trip-planner/marine/**"
+  workflow_dispatch:
   pull_request:
     branches:
       - main
@@ -44,7 +38,7 @@ jobs:
           cat /tmp/trip-planner-next.log
           exit 1
 
-      - name: Run 12:00-15:00 Chios marine diagnostic
+      - name: Validate 12:00-15:00 Chios marine ranking
         run: |
           DIAGNOSTIC_DATE="$(TZ=Europe/Athens date +%F)"
           echo "Diagnostic date: ${DIAGNOSTIC_DATE}"
