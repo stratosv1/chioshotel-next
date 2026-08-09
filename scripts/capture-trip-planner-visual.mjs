@@ -36,6 +36,22 @@ async function logViewport(page, deviceName, state) {
   console.log(`[${deviceName}] ${state}:`, JSON.stringify(metrics));
 }
 
+async function captureNorthwestBeachImages(page, deviceName) {
+  await page.goto(`${baseUrl}/trip-planner/`, {
+    waitUntil: "domcontentloaded",
+    timeout: 60_000,
+  });
+  await page.getByRole("heading", { name: "Τι θέλεις να κάνεις σήμερα;" }).waitFor();
+  await page.getByRole("button", { name: /Συνέχεια/ }).click();
+  await page.getByRole("heading", { name: "Προς τα πού θέλεις να κινηθείς;" }).waitFor();
+  await page.getByText("Tip βάσει σημερινής πρόγνωσης", { exact: false }).waitFor({ timeout: 20_000 });
+  await page.getByRole("button", { name: /^ΒΔ/ }).click();
+  await page.getByRole("heading", { name: /Διάλεξε παραλίες/ }).waitFor();
+  await page.getByText(/Εξαιρετική σήμερα|Καλή σήμερα|Μέτρια σήμερα|Δύσκολη σήμερα|Όχι ιδανική σήμερα/).first().waitFor({ timeout: 10_000 });
+  await logViewport(page, deviceName, "northwest-beaches");
+  await screenshot(page, deviceName, "07-northwest-beach-images.png");
+}
+
 async function captureDevice(device) {
   const context = await browser.newContext({
     viewport: device.viewport,
@@ -93,6 +109,7 @@ async function captureDevice(device) {
     await screenshot(page, device.name, "06-villages-selection-strip.png");
   }
 
+  await captureNorthwestBeachImages(page, device.name);
   await context.close();
 }
 
