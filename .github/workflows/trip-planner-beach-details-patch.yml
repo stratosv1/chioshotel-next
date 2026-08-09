@@ -41,36 +41,38 @@ jobs:
               text = text.replace(weather_details_old, weather_details_new, 1)
 
           helper_anchor = 'function GenericPlaceVisual({ category }: { category: CategoryId }) {'
-          helper = '''function BeachDetailsCard({ beachId }: { beachId: string }) {
-  const beach = beachItems.find((item) => item.id === beachId);
-  const description = tripPlannerBeachDescriptions[beachId];
-
-  if (!beach || !description) return null;
-
-  return (
-    <details
-      onClick={(event) => event.stopPropagation()}
-      className="mt-2 border-t border-[#e7dfd5] pt-2 text-[10px] text-[#817367]"
-    >
-      <summary className="cursor-pointer select-none font-semibold text-[#776859]">
-        Λεπτομέρειες παραλίας
-      </summary>
-      <div className="mt-2 space-y-2 leading-4 text-[#75685d]">
-        <p>{description}</p>
-        {beach.tip ? (
-          <p className="rounded-lg bg-[#f6f1e9] px-2.5 py-2 text-[#6c5c4e]">
-            <span className="font-bold text-[#8a694b]">Tip:</span> {beach.tip}
-          </p>
-        ) : null}
-        {beach.familyNote ? <p><span className="font-semibold">Για οικογένειες:</span> {beach.familyNote}</p> : null}
-        {beach.organization ? <p><span className="font-semibold">Οργάνωση:</span> {beach.organization}.</p> : null}
-        {beach.access?.length ? <p><span className="font-semibold">Πρόσβαση:</span> {beach.access.join(" · ")}.</p> : null}
-      </div>
-    </details>
-  );
-}
-
-'''
+          helper = "\n".join([
+              'function BeachDetailsCard({ beachId }: { beachId: string }) {',
+              '  const beach = beachItems.find((item) => item.id === beachId);',
+              '  const description = tripPlannerBeachDescriptions[beachId];',
+              '',
+              '  if (!beach || !description) return null;',
+              '',
+              '  return (',
+              '    <details',
+              '      onClick={(event) => event.stopPropagation()}',
+              '      className="mt-2 border-t border-[#e7dfd5] pt-2 text-[10px] text-[#817367]"',
+              '    >',
+              '      <summary className="cursor-pointer select-none font-semibold text-[#776859]">',
+              '        Λεπτομέρειες παραλίας',
+              '      </summary>',
+              '      <div className="mt-2 space-y-2 leading-4 text-[#75685d]">',
+              '        <p>{description}</p>',
+              '        {beach.tip ? (',
+              '          <p className="rounded-lg bg-[#f6f1e9] px-2.5 py-2 text-[#6c5c4e]">',
+              '            <span className="font-bold text-[#8a694b]">Tip:</span> {beach.tip}',
+              '          </p>',
+              '        ) : null}',
+              '        {beach.familyNote ? <p><span className="font-semibold">Για οικογένειες:</span> {beach.familyNote}</p> : null}',
+              '        {beach.organization ? <p><span className="font-semibold">Οργάνωση:</span> {beach.organization}.</p> : null}',
+              '        {beach.access?.length ? <p><span className="font-semibold">Πρόσβαση:</span> {beach.access.join(" · ")}.</p> : null}',
+              '      </div>',
+              '    </details>',
+              '  );',
+              '}',
+              '',
+              '',
+          ])
           if 'function BeachDetailsCard' not in text:
               if helper_anchor not in text:
                   raise SystemExit("generic visual anchor not found")
