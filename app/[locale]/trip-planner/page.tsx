@@ -5,9 +5,8 @@ type PageProps = {
 };
 
 /**
- * Temporary compatibility alias for the original Greek Trip Planner URL.
- * The active planner currently lives at /trip-planner/ while localization is
- * being rebuilt on top of the current mobile-first flow.
+ * Compatibility alias for the original Greek Trip Planner URL.
+ * Keep this lightweight until the current planner flow is localized.
  */
 export default async function Page({ params }: PageProps) {
   const { locale } = await params;
