@@ -57,14 +57,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: path === "/pl/" ? 1 : 0.9,
   }));
 
-  const tripPlannerRoutes: SitemapEntry[] = [
-    {
-      url: absoluteUrl("/el/trip-planner/"),
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-  ];
-
   const routes: SitemapEntry[] = routeMap
     .filter((route) => route.action === "KEEP")
     .filter((route) => !isOldBeachDetailRoute(route.path))
@@ -165,7 +157,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...accommodationLandingRoutes,
     ...romanticStayRoutes,
     ...polishRoutes,
-    ...tripPlannerRoutes,
     ...routes,
     ...familyBeachRoutes,
     ...organizedBeachRoutes,
