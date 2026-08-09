@@ -75,7 +75,7 @@ async function captureDevice(device) {
   const recommendButton = page.getByRole("button", { name: /Πρότεινέ μου/ });
   await recommendButton.click();
   await page.getByRole("heading", { name: /Διάλεξε παραλίες/ }).waitFor();
-  await page.getByText("Εκτίμηση θάλασσας", { exact: false }).first().waitFor({ timeout: 10_000 });
+  await page.getByText(/Εξαιρετική σήμερα|Καλή σήμερα|Μέτρια σήμερα|Δύσκολη σήμερα|Όχι ιδανική σήμερα/).first().waitFor({ timeout: 10_000 });
   await logViewport(page, device.name, "beaches-ready");
   await screenshot(page, device.name, "04-beaches-weather.png");
 
