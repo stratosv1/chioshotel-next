@@ -58,11 +58,13 @@ export function applyTripPlannerMedia(
   return {
     beaches: beachItems.map((beach) => ({
       ...beach,
-      image: beach.image ?? tripPlannerBeachImages[beach.id] ?? null,
+      // A curated Trip Planner override is intentional and should win over a
+      // legacy/source thumbnail when both are present.
+      image: tripPlannerBeachImages[beach.id] ?? beach.image ?? null,
     })),
     villages: villageItems.map((village) => ({
       ...village,
-      image: village.image ?? tripPlannerVillageImages[village.id] ?? null,
+      image: tripPlannerVillageImages[village.id] ?? village.image ?? null,
     })),
   };
 }
