@@ -8,6 +8,13 @@ on:
       - ".github/workflows/trip-planner-marine-diagnostic.yml"
       - "content/trip-planner/**"
       - "app/api/trip-planner/marine/**"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/trip-planner-marine-diagnostic.yml"
+      - "content/trip-planner/**"
+      - "app/api/trip-planner/marine/**"
 
 jobs:
   diagnostic:
