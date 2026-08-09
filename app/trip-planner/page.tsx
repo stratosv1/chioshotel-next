@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-// Keep the planner on the curated-media UI so mobile cards remain stable and readable.
+// Keep the planner on the curated-media UI; mobile cards use normalized local place imagery.
 export default function TripPlannerPage() {
   return <TripPlannerStart />;
 }
