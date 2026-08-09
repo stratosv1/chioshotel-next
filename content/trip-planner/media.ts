@@ -2,14 +2,12 @@ import type { BeachMaster } from "./beaches";
 import type { VillageMaster } from "./villages";
 
 /**
- * Trip Planner media. Existing site assets stay in their original folders;
- * user-approved missing place photos live under /images/trip-planner/.
- * Only exact, verified place-to-image matches belong here.
+ * Curated Trip Planner media overrides.
  *
- * For a handful of north-west beach cards we temporarily use the original
- * high-resolution Chios.gr image instead of the tiny imported thumbnail.
- * This avoids visibly blurred planner cards until those originals are stored
- * locally in the project.
+ * Prefer existing site assets when they are already suitable. Place-specific
+ * Trip Planner assets are kept under /images/trip-planner/ only when a better
+ * existing site image is not available. Every mapping must be an exact,
+ * verified place-to-image match.
  */
 export const tripPlannerBeachImages: Readonly<Record<string, string>> = {
   "agia-dynami": "/images/beaches/agia-dynami-beach-chios.webp",
@@ -22,16 +20,13 @@ export const tripPlannerBeachImages: Readonly<Record<string, string>> = {
   lilikas: "/images/trip-planner/beaches/lilikas.webp",
   "mavra-volia": "/images/beaches/mavra-volia-beach-chios.webp",
   salagona: "/images/beaches/salagona-beach-chios.webp",
-  "trachilia-south": "/images/trip-planner/beaches/trachilia-south.webp",
   karfas: "/images/beaches/karfas-beach-chios.jpg",
   "megas-limnionas": "/images/trip-planner/beaches/megas-limnionas.webp",
   daskalopetra: "/images/beaches/daskalopetra-beach-chios.webp",
-  "afanis-naftis": "/images/trip-planner/beaches/afanis-naftis.webp",
   glaroi: "/images/beaches/paralia-glaron-beach-chios.webp",
   "ormos-lo": "/images/trip-planner/beaches/ormos-lo.webp",
   mersinidi: "/images/trip-planner/beaches/mersinidi.webp",
   "agia-markella": "/images/beaches/agia-markella-beach-chios.jpg",
-  agiasmata: "/images/trip-planner/beaches/agiasmata.webp",
   managros: "/images/beaches/managros-beach-chios.jpg",
   "limnos-volissos": "/images/beaches/limnos-volissos-beach-chios.jpg",
   lefkathia: "/images/beaches/lefkathia-2.jpg",
@@ -58,8 +53,6 @@ export function applyTripPlannerMedia(
   return {
     beaches: beachItems.map((beach) => ({
       ...beach,
-      // A curated Trip Planner override is intentional and should win over a
-      // legacy/source thumbnail when both are present.
       image: tripPlannerBeachImages[beach.id] ?? beach.image ?? null,
     })),
     villages: villageItems.map((village) => ({
