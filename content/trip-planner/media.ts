@@ -30,17 +30,17 @@ export const tripPlannerBeachImages: Readonly<Record<string, string>> = {
   glaroi: "/images/beaches/paralia-glaron-beach-chios.webp",
   "ormos-lo": "/images/trip-planner/beaches/ormos-lo.webp",
   mersinidi: "/images/trip-planner/beaches/mersinidi.webp",
-  "agia-markella": "https://www.chios.gr/images/beaches-pages/agia-markella/agia-markella-1.jpg",
+  "agia-markella": "/images/beaches/agia-markella-beach-chios.jpg",
   agiasmata: "/images/trip-planner/beaches/agiasmata.webp",
-  managros: "https://www.chios.gr/images/beaches-pages/managros/managros-1.jpg",
-  "limnos-volissos": "https://www.chios.gr/images/beaches-pages/limnos/limnos-1.jpg",
+  managros: "/images/beaches/managros-beach-chios.jpg",
+  "limnos-volissos": "/images/beaches/limnos-volissos-beach-chios.jpg",
   lefkathia: "/images/beaches/lefkathia-2.jpg",
   giosonas: "/images/trip-planner/beaches/giosonas.webp",
   nagos: "/images/beaches/nagos-beach-chios.webp",
   lithi: "/images/beaches/lithi-beach-chios.webp",
   elinta: "/images/beaches/elinta-beach-chios.jpg",
-  "trachili-west": "https://www.chios.gr/images/beaches-pages/traxili/traxili-1.jpg",
-  tigani: "https://www.chios.gr/images/beaches-pages/thgani/tigani-1.jpg",
+  "trachili-west": "/images/beaches/trachili-west-beach-chios.jpg",
+  tigani: "/images/beaches/tigani-beach-chios.jpg",
 };
 
 export const tripPlannerVillageImages: Readonly<Record<string, string>> = {
