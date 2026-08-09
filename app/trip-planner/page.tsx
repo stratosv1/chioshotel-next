@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import TripPlannerStart from "@/components/trip-planner/TripPlannerStartV3";
+import styles from "./trip-planner.module.css";
 
 export const metadata: Metadata = {
   title: "Chios Trip Planner | Οργάνωσε τη μέρα σου στη Χίο",
@@ -10,5 +11,9 @@ export const metadata: Metadata = {
 
 // Keep the planner on the curated-media UI with enhanced beach details and sharp beach imagery.
 export default function TripPlannerPage() {
-  return <TripPlannerStart />;
+  return (
+    <div className={styles.tripPlannerUi}>
+      <TripPlannerStart />
+    </div>
+  );
 }
