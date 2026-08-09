@@ -107,7 +107,7 @@ function AccommodationModal({ onClose }: { onClose: () => void }) {
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             <a
               href="/ai-assistant/?lang=el"
-              className="flex min-h-[60px] items-center justify-center rounded-2xl bg-[#5f6b47] px-5 text-center text-[16px] font-extrabold text-white shadow-[0_10px_24px_rgba(77,91,57,.28)] transition hover:bg-[#505d3b]"
+              className="flex min-h-[60px] items-center justify-center rounded-2xl bg-[#596544] px-5 text-center text-[16px] font-extrabold text-white shadow-[0_10px_24px_rgba(77,91,57,.28)] transition hover:bg-[#4c5838]"
             >
               Δες διαθεσιμότητα · AI Room Finder
             </a>
@@ -115,7 +115,7 @@ function AccommodationModal({ onClose }: { onClose: () => void }) {
               href="https://wa.me/306944474226"
               target="_blank"
               rel="noreferrer"
-              className="flex min-h-[60px] items-center justify-center rounded-2xl border-2 border-[#94aa91] bg-[#f8fbf5] px-5 text-center text-[16px] font-extrabold text-[#4c654d] transition hover:bg-[#edf5e9]"
+              className="flex min-h-[60px] items-center justify-center rounded-2xl bg-[#167a45] px-5 text-center text-[16px] font-extrabold text-white shadow-[0_10px_24px_rgba(22,122,69,.2)] transition hover:bg-[#126a3b]"
             >
               WhatsApp με τη reception
             </a>
