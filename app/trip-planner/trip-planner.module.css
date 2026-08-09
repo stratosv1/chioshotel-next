@@ -1,0 +1,102 @@
+.tripPlannerUi {
+  --planner-body: 14px;
+  --planner-small: 13px;
+  --planner-muted: #6f6258;
+  --planner-strong: #4f443b;
+}
+
+@media (max-width: 767px) {
+  /* Beach card secondary label (e.g. "μικρή") */
+  .tripPlannerUi button[aria-pressed] > div:last-child > div:nth-child(2) {
+    font-size: 13px !important;
+    line-height: 1.45 !important;
+    color: #76685d !important;
+  }
+
+  /* Weather / recommendation panel */
+  .tripPlannerUi div:has(> details) {
+    padding: 14px !important;
+  }
+
+  .tripPlannerUi div:has(> details) > div:first-child span {
+    font-size: 12px !important;
+    line-height: 1.25 !important;
+  }
+
+  .tripPlannerUi div:has(> details) > div:nth-child(2) {
+    column-gap: 18px !important;
+    row-gap: 8px !important;
+    font-size: 14px !important;
+    line-height: 1.35 !important;
+    color: #65594f !important;
+  }
+
+  .tripPlannerUi div:has(> details) > p {
+    margin-top: 10px !important;
+    font-size: 13px !important;
+    line-height: 1.55 !important;
+  }
+
+  /* Both accordion rows: easier to scan and much larger tap/read target */
+  .tripPlannerUi details {
+    font-size: var(--planner-small) !important;
+    line-height: 1.55 !important;
+    color: var(--planner-muted) !important;
+  }
+
+  .tripPlannerUi details summary {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    font-size: 14px !important;
+    line-height: 1.35 !important;
+    font-weight: 700 !important;
+    color: var(--planner-strong) !important;
+    letter-spacing: 0 !important;
+  }
+
+  .tripPlannerUi details[open] summary {
+    margin-bottom: 8px;
+  }
+
+  .tripPlannerUi details div {
+    gap: 8px 16px !important;
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+  }
+
+  .tripPlannerUi details div span {
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+  }
+
+  .tripPlannerUi details p {
+    font-size: 12px !important;
+    line-height: 1.55 !important;
+    color: #7c6e62 !important;
+  }
+
+  /* Curated beach-details accordion (the one outside the weather box) */
+  .tripPlannerUi button[aria-pressed] > div:last-child > details {
+    margin-top: 14px !important;
+    padding-top: 0 !important;
+    border-top-color: #ddd4c8 !important;
+  }
+
+  .tripPlannerUi button[aria-pressed] > div:last-child > details summary {
+    padding-top: 8px;
+    font-size: 14px !important;
+  }
+
+  .tripPlannerUi button[aria-pressed] > div:last-child > details p,
+  .tripPlannerUi button[aria-pressed] > div:last-child > details div {
+    font-size: 13px !important;
+    line-height: 1.6 !important;
+    color: #675b51 !important;
+  }
+
+  /* Give opened content breathing room without making the closed card taller. */
+  .tripPlannerUi button[aria-pressed] > div:last-child > details[open] {
+    padding-bottom: 4px;
+  }
+}
