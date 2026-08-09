@@ -1,0 +1,88 @@
+name: Vendor Five Trip Planner Beach Photos
+
+on:
+  push:
+    branches:
+      - agent/beach-details-sharp-images
+    paths:
+      - ".github/workflows/vendor-five-trip-planner-beach-photos.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  vendor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/beach-details-sharp-images
+          fetch-depth: 0
+
+      - name: Download verified full-resolution Chios.gr photos
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p public/images/beaches
+
+          download_image() {
+            local url="$1"
+            local output="$2"
+            echo "Downloading ${url} -> ${output}"
+            curl --fail --location --retry 3 --retry-delay 2 \
+              --user-agent "Mozilla/5.0 (compatible; ChiosTripPlanner/1.0)" \
+              "$url" -o "$output"
+            file "$output"
+            bytes=$(wc -c < "$output")
+            if [ "$bytes" -lt 20000 ]; then
+              echo "Image is unexpectedly small: ${bytes} bytes (${output})"
+              exit 1
+            fi
+          }
+
+          download_image "https://www.chios.gr/images/beaches-pages/apothika/apothika-1.jpg" "public/images/beaches/apothika-beach-chios.jpg"
+          download_image "https://www.chios.gr/images/beaches-pages/megas-limnionas/megas-limnionas-1.jpg" "public/images/beaches/megas-limnionas-beach-chios.jpg"
+          download_image "https://www.chios.gr/images/beaches-pages/ormos-lo/ormos-lo.jpg" "public/images/beaches/ormos-lo-beach-chios.jpg"
+          download_image "https://www.chios.gr/images/beaches-pages/mersinidi/mersinidi-1.jpg" "public/images/beaches/mersinidi-beach-chios.jpg"
+          download_image "https://www.chios.gr/images/beaches-pages/giosonas/giosonas-1.jpg" "public/images/beaches/giosonas-beach-chios.jpg"
+
+      - name: Point planner at local full-resolution photos
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          media = Path("content/trip-planner/media.ts")
+          text = media.read_text(encoding="utf-8")
+          replacements = {
+              '"https://www.chios.gr/images/beaches-pages/apothika/apothika-1.jpg"': '"/images/beaches/apothika-beach-chios.jpg"',
+              '"https://www.chios.gr/images/beaches-pages/megas-limnionas/megas-limnionas-1.jpg"': '"/images/beaches/megas-limnionas-beach-chios.jpg"',
+              '"https://www.chios.gr/images/beaches-pages/ormos-lo/ormos-lo.jpg"': '"/images/beaches/ormos-lo-beach-chios.jpg"',
+              '"https://www.chios.gr/images/beaches-pages/mersinidi/mersinidi-1.jpg"': '"/images/beaches/mersinidi-beach-chios.jpg"',
+              '"https://www.chios.gr/images/beaches-pages/giosonas/giosonas-1.jpg"': '"/images/beaches/giosonas-beach-chios.jpg"',
+          }
+          for old, new in replacements.items():
+              if old not in text:
+                  raise SystemExit(f"Missing expected media mapping: {old}")
+              text = text.replace(old, new)
+          media.write_text(text, encoding="utf-8")
+
+          descriptions = Path("content/trip-planner/beach-descriptions.ts")
+          text = descriptions.read_text(encoding="utf-8")
+          old = '"Ο Γιόσωνας είναι μεγάλη βοτσαλωτή παραλία της βορειοανατολικής Χίου, ανοιχτή προς το Αιγαίο και με βαθιά νερά. Έχει άγριο φυσικό τοπίο και αρκετό χώρο, ενώ οι οργανωμένες παροχές είναι πιο περιορισμένες από τις κοντινές τουριστικές παραλίες.",'
+          new = '"Ο Γιόσωνας είναι μεγάλη βοτσαλωτή παραλία της βορειοανατολικής Χίου, ανοιχτή προς το Αιγαίο και με βαθιά νερά. Έχει άγριο φυσικό τοπίο και αρκετό χώρο, ενώ λειτουργούν beach bar, ομπρέλες και ξαπλώστρες.",'
+          if old not in text:
+              raise SystemExit("Missing expected Giosonas description")
+          descriptions.write_text(text.replace(old, new, 1), encoding="utf-8")
+          PY
+
+      - name: Commit photos and remove temporary workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/vendor-five-trip-planner-beach-photos.yml
+          git add public/images/beaches content/trip-planner/media.ts content/trip-planner/beach-descriptions.ts
+          git commit -m "vendor sharp beach photos for trip planner"
+          git push origin HEAD:agent/beach-details-sharp-images
