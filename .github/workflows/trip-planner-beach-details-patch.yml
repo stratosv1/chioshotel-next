@@ -1,0 +1,98 @@
+name: Apply Trip Planner Beach Details Patch
+
+on:
+  push:
+    branches:
+      - agent/beach-details-sharp-images
+    paths:
+      - ".github/workflows/trip-planner-beach-details-patch.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/beach-details-sharp-images
+          fetch-depth: 0
+
+      - name: Add beach prose details to cards
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("components/trip-planner/TripPlannerStartV2.tsx")
+          text = path.read_text(encoding="utf-8")
+
+          import_anchor = 'import { applyTripPlannerMedia } from "@/content/trip-planner/media";\n'
+          import_insert = import_anchor + 'import { tripPlannerBeachDescriptions } from "@/content/trip-planner/beach-descriptions";\n'
+          if 'tripPlannerBeachDescriptions' not in text:
+              if import_anchor not in text:
+                  raise SystemExit("media import anchor not found")
+              text = text.replace(import_anchor, import_insert, 1)
+
+          weather_details_old = '<details className="mt-2 border-t border-[#e7dfd5] pt-2 text-[10px] text-[#817367]">\n        <summary className="cursor-pointer select-none font-semibold text-[#776859]">Γιατί αυτή η πρόταση;</summary>'
+          weather_details_new = '<details onClick={(event) => event.stopPropagation()} className="mt-2 border-t border-[#e7dfd5] pt-2 text-[10px] text-[#817367]">\n        <summary className="cursor-pointer select-none font-semibold text-[#776859]">Γιατί αυτή η πρόταση;</summary>'
+          if weather_details_old in text:
+              text = text.replace(weather_details_old, weather_details_new, 1)
+
+          helper_anchor = 'function GenericPlaceVisual({ category }: { category: CategoryId }) {'
+          helper = '''function BeachDetailsCard({ beachId }: { beachId: string }) {
+  const beach = beachItems.find((item) => item.id === beachId);
+  const description = tripPlannerBeachDescriptions[beachId];
+
+  if (!beach || !description) return null;
+
+  return (
+    <details
+      onClick={(event) => event.stopPropagation()}
+      className="mt-2 border-t border-[#e7dfd5] pt-2 text-[10px] text-[#817367]"
+    >
+      <summary className="cursor-pointer select-none font-semibold text-[#776859]">
+        Λεπτομέρειες παραλίας
+      </summary>
+      <div className="mt-2 space-y-2 leading-4 text-[#75685d]">
+        <p>{description}</p>
+        {beach.tip ? (
+          <p className="rounded-lg bg-[#f6f1e9] px-2.5 py-2 text-[#6c5c4e]">
+            <span className="font-bold text-[#8a694b]">Tip:</span> {beach.tip}
+          </p>
+        ) : null}
+        {beach.familyNote ? <p><span className="font-semibold">Για οικογένειες:</span> {beach.familyNote}</p> : null}
+        {beach.organization ? <p><span className="font-semibold">Οργάνωση:</span> {beach.organization}.</p> : null}
+        {beach.access?.length ? <p><span className="font-semibold">Πρόσβαση:</span> {beach.access.join(" · ")}.</p> : null}
+      </div>
+    </details>
+  );
+}
+
+'''
+          if 'function BeachDetailsCard' not in text:
+              if helper_anchor not in text:
+                  raise SystemExit("generic visual anchor not found")
+              text = text.replace(helper_anchor, helper + helper_anchor, 1)
+
+          render_anchor = '{item.weather ? <BeachWeatherCard weather={item.weather} /> : null}'
+          render_insert = render_anchor + '\n                    {currentCategory === "beach" ? <BeachDetailsCard beachId={item.id} /> : null}'
+          if '<BeachDetailsCard beachId={item.id}' not in text:
+              if render_anchor not in text:
+                  raise SystemExit("weather card render anchor not found")
+              text = text.replace(render_anchor, render_insert, 1)
+
+          path.write_text(text, encoding="utf-8")
+          PY
+
+      - name: Remove temporary patch workflow and commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/trip-planner-beach-details-patch.yml
+          git add components/trip-planner/TripPlannerStartV2.tsx
+          git commit -m "add beach descriptions to trip planner cards"
+          git push origin HEAD:agent/beach-details-sharp-images
