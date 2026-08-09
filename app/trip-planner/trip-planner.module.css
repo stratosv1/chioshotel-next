@@ -5,6 +5,24 @@
   --planner-strong: #4f443b;
 }
 
+/* Main category menu: keep Village and Sights fully visible instead of cropping them. */
+.tripPlannerUi div[class*="md:grid-cols-5"] > button:nth-child(2) > div:first-child,
+.tripPlannerUi div[class*="md:grid-cols-5"] > button:nth-child(5) > div:first-child {
+  background: #e9e1d7 !important;
+}
+
+.tripPlannerUi div[class*="md:grid-cols-5"] > button:nth-child(2) > div:first-child img,
+.tripPlannerUi div[class*="md:grid-cols-5"] > button:nth-child(5) > div:first-child img {
+  object-fit: contain !important;
+  object-position: center center !important;
+  transform: none !important;
+}
+
+.tripPlannerUi div[class*="md:grid-cols-5"] > button:nth-child(2):hover > div:first-child img,
+.tripPlannerUi div[class*="md:grid-cols-5"] > button:nth-child(5):hover > div:first-child img {
+  transform: none !important;
+}
+
 @media (max-width: 767px) {
   /* Only cards inside the horizontal place carousel. Do not touch the main category menu. */
   .tripPlannerUi div[class*="snap-x"] > button[aria-pressed] {
