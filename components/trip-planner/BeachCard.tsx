@@ -34,18 +34,18 @@ type BeachCardProps = {
 };
 
 const ratingToneClasses: Record<NonNullable<BeachCardWeather["ratingTone"]>, string> = {
-  excellent: "border-[#b9d7b6] bg-[#eaf5e8] text-[#3f623d]",
-  good: "border-[#d0d9bb] bg-[#f0f4e7] text-[#5d6848]",
-  fair: "border-[#ead4aa] bg-[#fff5df] text-[#846235]",
-  poor: "border-[#e7c5bc] bg-[#faeae6] text-[#8b5247]",
+  excellent: "border-[#b9d7b6] bg-[#eaf5e8] text-[#355a35]",
+  good: "border-[#d0d9bb] bg-[#f0f4e7] text-[#536341]",
+  fair: "border-[#ead4aa] bg-[#fff5df] text-[#795a31]",
+  poor: "border-[#e7c5bc] bg-[#faeae6] text-[#7f493f]",
 };
 
 function Disclosure({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <details className="group border-t border-[#e9e1d7]">
-      <summary className="flex min-h-[48px] cursor-pointer list-none items-center justify-between gap-3 py-3 text-[14px] font-semibold text-[#51463d] outline-none transition-colors hover:text-[#2e251f] [&::-webkit-details-marker]:hidden">
+      <summary className="flex min-h-[52px] cursor-pointer list-none items-center justify-between gap-3 py-3.5 text-[15px] font-bold text-[#433a33] outline-none transition-colors hover:text-[#231c18] [&::-webkit-details-marker]:hidden">
         <span>{title}</span>
-        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[#ddd3c7] bg-[#fffdfa] text-[17px] font-medium leading-none text-[#8b735d] transition duration-200 group-open:rotate-45">
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#d8cec2] bg-[#fffdfa] text-[19px] font-bold leading-none text-[#7f6854] transition duration-200 group-open:rotate-45">
           +
         </span>
       </summary>
@@ -99,7 +99,7 @@ export default function BeachCard({
 
         {weather ? (
           <span
-            className={`absolute bottom-3 left-3 z-10 rounded-full border px-3 py-1.5 text-[11px] font-bold shadow-md backdrop-blur-sm ${ratingToneClasses[tone]}`}
+            className={`absolute bottom-3 left-3 z-10 rounded-full border px-3.5 py-2 text-[12px] font-extrabold shadow-md backdrop-blur-sm ${ratingToneClasses[tone]}`}
           >
             {weather.ratingLabel}
           </span>
@@ -107,42 +107,42 @@ export default function BeachCard({
       </div>
 
       <div className="px-4 pb-3 pt-4 md:px-5 md:pt-5">
-        <div className="font-serif text-[25px] font-semibold leading-[1.08] tracking-[-0.025em] text-[#2e251f] md:text-[24px]">
+        <div className="font-serif text-[27px] font-bold leading-[1.08] tracking-[-0.025em] text-[#241d19] md:text-[26px]">
           {name}
         </div>
-        <p className="mt-1.5 text-[13px] font-medium leading-5 text-[#7a6d63]">{meta}</p>
+        <p className="mt-1.5 text-[15px] font-semibold leading-6 text-[#665a51]">{meta}</p>
 
         {weather ? (
-          <div className="mt-4 rounded-2xl border border-[#ece5db] bg-[#fbfaf7] p-3.5">
+          <div className="mt-4 rounded-2xl border border-[#e6ddd2] bg-[#fbfaf7] p-4">
             <div className="flex flex-wrap items-center gap-2.5">
               {weather.timeWindow ? (
-                <span className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-[#846d58]">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#9b8168]" />
+                <span className="inline-flex items-center gap-1.5 text-[14px] font-bold text-[#725d4c]">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#8e745d]" />
                   Καλύτερα {weather.timeWindow}
                 </span>
               ) : null}
             </div>
 
-            <div className="mt-3 grid grid-cols-3 gap-2 text-[12px] font-semibold text-[#574c43]">
-              <div className="rounded-xl bg-white px-2.5 py-2 text-center shadow-[inset_0_0_0_1px_rgba(226,218,208,.85)]">
-                <div className="text-[16px]">🌡</div>
-                <div className="mt-0.5">{weather.temperatureC != null ? `${Math.round(weather.temperatureC)}°C` : "–"}</div>
+            <div className="mt-3 grid grid-cols-3 gap-2.5 text-[14px] font-bold text-[#453c35]">
+              <div className="rounded-xl bg-white px-2.5 py-2.5 text-center shadow-[inset_0_0_0_1px_rgba(226,218,208,.95)]">
+                <div className="text-[18px]">🌡</div>
+                <div className="mt-1">{weather.temperatureC != null ? `${Math.round(weather.temperatureC)}°C` : "–"}</div>
               </div>
-              <div className="rounded-xl bg-white px-2.5 py-2 text-center shadow-[inset_0_0_0_1px_rgba(226,218,208,.85)]">
-                <div className="text-[16px]">🌤</div>
-                <div className="mt-0.5 truncate">{weather.weatherLabel ?? "–"}</div>
+              <div className="rounded-xl bg-white px-2.5 py-2.5 text-center shadow-[inset_0_0_0_1px_rgba(226,218,208,.95)]">
+                <div className="text-[18px]">🌤</div>
+                <div className="mt-1 truncate">{weather.weatherLabel ?? "–"}</div>
               </div>
-              <div className="rounded-xl bg-white px-2.5 py-2 text-center shadow-[inset_0_0_0_1px_rgba(226,218,208,.85)]">
-                <div className="text-[16px]">💨</div>
-                <div className="mt-0.5">{weather.windSpeedKmh != null ? `${Math.round(weather.windSpeedKmh)} km/h` : "–"}</div>
-                {weather.windDirection ? <div className="mt-0.5 text-[10px] font-medium text-[#8d8177]">{weather.windDirection}</div> : null}
+              <div className="rounded-xl bg-white px-2.5 py-2.5 text-center shadow-[inset_0_0_0_1px_rgba(226,218,208,.95)]">
+                <div className="text-[18px]">💨</div>
+                <div className="mt-1">{weather.windSpeedKmh != null ? `${Math.round(weather.windSpeedKmh)} km/h` : "–"}</div>
+                {weather.windDirection ? <div className="mt-0.5 text-[12px] font-bold text-[#766a61]">{weather.windDirection}</div> : null}
               </div>
             </div>
 
             {weather.sheltered || weather.exposed ? (
               <div
-                className={`mt-3 rounded-xl px-3 py-2.5 text-[12px] font-semibold leading-[1.45] ${
-                  weather.sheltered ? "bg-[#eef5ec] text-[#4e6848]" : "bg-[#fdf1ed] text-[#865241]"
+                className={`mt-3 rounded-xl px-3 py-3 text-[14px] font-bold leading-[1.5] ${
+                  weather.sheltered ? "bg-[#eef5ec] text-[#405d3c]" : "bg-[#fdf1ed] text-[#7a4638]"
                 }`}
               >
                 {weather.sheltered
@@ -153,24 +153,24 @@ export default function BeachCard({
 
             <div className="mt-2">
               <Disclosure title="Γιατί αυτή η πρόταση;">
-                <div className="grid grid-cols-2 gap-2.5 rounded-xl bg-[#f5f2ec] p-3">
+                <div className="grid grid-cols-2 gap-3 rounded-xl bg-[#f5f2ec] p-3.5">
                   <div>
-                    <div className="text-[10px] font-bold uppercase tracking-[0.08em] text-[#9a8d82]">Score</div>
-                    <div className="mt-0.5 text-[13px] font-bold text-[#493f37]">{weather.score ?? "–"}/100</div>
+                    <div className="text-[11px] font-extrabold uppercase tracking-[0.07em] text-[#7f746a]">Score</div>
+                    <div className="mt-1 text-[15px] font-extrabold text-[#382f29]">{weather.score ?? "–"}/100</div>
                   </div>
                   <div>
-                    <div className="text-[10px] font-bold uppercase tracking-[0.08em] text-[#9a8d82]">Ριπές</div>
-                    <div className="mt-0.5 text-[13px] font-bold text-[#493f37]">{weather.gustsKmh != null ? `${Math.round(weather.gustsKmh)} km/h` : "–"}</div>
+                    <div className="text-[11px] font-extrabold uppercase tracking-[0.07em] text-[#7f746a]">Ριπές</div>
+                    <div className="mt-1 text-[15px] font-extrabold text-[#382f29]">{weather.gustsKmh != null ? `${Math.round(weather.gustsKmh)} km/h` : "–"}</div>
                   </div>
                   <div>
-                    <div className="text-[10px] font-bold uppercase tracking-[0.08em] text-[#9a8d82]">Κύμα</div>
-                    <div className="mt-0.5 text-[13px] font-bold text-[#493f37]">
+                    <div className="text-[11px] font-extrabold uppercase tracking-[0.07em] text-[#7f746a]">Κύμα</div>
+                    <div className="mt-1 text-[15px] font-extrabold text-[#382f29]">
                       {weather.waveHeightM != null ? `${weather.waveHeightM.toFixed(1)} m${weather.waveDirection ? ` · ${weather.waveDirection}` : ""}` : "–"}
                     </div>
                   </div>
                   <div>
-                    <div className="text-[10px] font-bold uppercase tracking-[0.08em] text-[#9a8d82]">Περίοδος</div>
-                    <div className="mt-0.5 text-[13px] font-bold text-[#493f37]">{weather.wavePeriodS != null ? `${weather.wavePeriodS.toFixed(1)}s` : "–"}</div>
+                    <div className="text-[11px] font-extrabold uppercase tracking-[0.07em] text-[#7f746a]">Περίοδος</div>
+                    <div className="mt-1 text-[15px] font-extrabold text-[#382f29]">{weather.wavePeriodS != null ? `${weather.wavePeriodS.toFixed(1)}s` : "–"}</div>
                   </div>
                 </div>
               </Disclosure>
@@ -180,10 +180,10 @@ export default function BeachCard({
 
         {details.length ? (
           <Disclosure title="Λεπτομέρειες παραλίας">
-            <div className="space-y-2.5 rounded-xl bg-[#faf8f4] p-3.5 text-[13px] leading-5 text-[#665b52]">
+            <div className="space-y-3 rounded-xl bg-[#faf8f4] p-4 text-[15px] font-medium leading-6 text-[#544a42]">
               {details.map((detail) => (
                 <p key={`${detail.label}-${detail.value}`} className="m-0">
-                  <strong className="font-bold text-[#4d433b]">{detail.label}: </strong>
+                  <strong className="font-extrabold text-[#352d28]">{detail.label}: </strong>
                   {detail.value}
                 </p>
               ))}
