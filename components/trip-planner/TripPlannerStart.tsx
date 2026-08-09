@@ -141,6 +141,14 @@ const regionName = (region: RegionChoice | null) => {
   return regionOptions.find((item) => item.id === region)?.title ?? "";
 };
 
+const forecastTimeWindow = (summary: ForecastSummary) => {
+  const start = summary.startTime?.slice(11, 16) ?? null;
+  const end = summary.endTime?.slice(11, 16) ?? null;
+  if (start && end) return `${start}–${end}`;
+  if (start) return `από ${start}`;
+  return null;
+};
+
 function BrandMark() {
   return (
     <div className="flex items-center gap-2.5 text-[#8b5e34] md:gap-3">
@@ -277,22 +285,24 @@ function BeachWeatherCard({ weather }: { weather: MarineRankedBeach }) {
   const summary = weather.forecastSummary;
   const sheltered = weather.reasonCodes.includes("directionally-sheltered");
   const exposed = weather.reasonCodes.includes("directionally-exposed");
+  const timeWindow = forecastTimeWindow(summary);
   return (
     <div className="mt-3 rounded-xl border border-[#e6dfd3] bg-[#faf8f3] p-2.5">
       <div className="flex items-center justify-between gap-2">
-        <span className={`rounded-full border px-2 py-1 text-[10px] font-bold ${ratingClasses(weather.rating)}`}>Εκτίμηση θάλασσας {weather.score}/100 · {ratingLabel(weather.rating)}</span>
-        {summary.temperatureC !== null ? <span className="text-[11px] font-semibold text-[#66584b]">🌡 {Math.round(summary.temperatureC)}°C</span> : null}
+        <span className={`rounded-full border px-2 py-1 text-[10px] font-bold ${ratingClasses(weather.rating)}`}>Εκτίμηση θάλασσας · {ratingLabel(weather.rating)}</span>
+        {summary.temperatureC !== null ? <span className="shrink-0 text-[11px] font-semibold text-[#66584b]">🌡 {Math.round(summary.temperatureC)}°C</span> : null}
       </div>
+      {timeWindow ? <p className="mt-1.5 text-[9px] font-semibold uppercase tracking-[0.08em] text-[#a08266]">Πρόγνωση {timeWindow}</p> : null}
       <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1.5 text-[10px] leading-4 text-[#74675b] md:text-[11px]">
         <span>🌤 {weatherLabel(summary.weatherCode)}</span>
         <span>💨 {summary.windSpeedKmhAvg !== null ? `${Math.round(summary.windSpeedKmhAvg)} km/h ${directionLabel(summary.windDirectionDeg)}` : "–"}</span>
-        <span>🌊 {summary.waveHeightMAvg !== null ? `${summary.waveHeightMAvg.toFixed(1)} m · ${directionLabel(summary.waveDirectionDeg)}` : "–"}{summary.wavePeriodSAvg !== null ? ` · ${summary.wavePeriodSAvg.toFixed(1)}s` : ""}</span>
+        <span>🌊 Κύμα μοντέλου {summary.waveHeightMAvg !== null ? `${summary.waveHeightMAvg.toFixed(1)} m · ${directionLabel(summary.waveDirectionDeg)}` : "–"}{summary.wavePeriodSAvg !== null ? ` · ${summary.wavePeriodSAvg.toFixed(1)}s` : ""}</span>
         <span>⚡ Ριπές {summary.windGustsKmhMax !== null ? `${Math.round(summary.windGustsKmhMax)} km/h` : "–"}</span>
         <span>≈ Ανεμοκύμα {summary.windWaveHeightMAvg !== null ? `${summary.windWaveHeightMAvg.toFixed(1)} m` : "–"}</span>
-        <span>↗ Μέγ. κύμα πρόγν. {summary.waveHeightMMax !== null ? `${summary.waveHeightMMax.toFixed(1)} m` : "–"}</span>
+        <span>↗ Μέγ. κύμα μοντέλου {summary.waveHeightMMax !== null ? `${summary.waveHeightMMax.toFixed(1)} m` : "–"}</span>
       </div>
       {(sheltered || exposed) ? <p className={`mt-2 text-[10px] font-semibold ${sheltered ? "text-[#5f7657]" : "text-[#94624f]"}`}>{sheltered ? "✓ Η ακτή είναι σχετικά προστατευμένη από τη σημερινή διεύθυνση κύματος." : "△ Η ακτή είναι πιο εκτεθειμένη στη σημερινή διεύθυνση κύματος."}</p> : null}
-      <p className="mt-1 text-[9px] leading-3.5 text-[#9a8c7e]">Βεβαιότητα grid: {confidenceLabel(weather.spatialConfidence)} · εκτίμηση από πρόγνωση + έκθεση ακτής, όχι live μέτρηση.</p>
+      <p className="mt-1 text-[9px] leading-3.5 text-[#9a8c7e]">Βεβαιότητα πρόγνωσης ακτής: {confidenceLabel(weather.spatialConfidence)} · πρόγνωση + έκθεση ακτής, όχι live μέτρηση.</p>
     </div>
   );
 }
@@ -343,11 +353,16 @@ export default function TripPlannerStart() {
       const top = candidates.slice(0, 3);
       const score = top.length ? Math.round(top.reduce((sum, item) => sum + item.score, 0) / top.length) : null;
       return { id, score, topBeach: candidates[0] ?? null };
-    }).sort((a, b) => (b.score ?? -1) - (a.score ?? -1));
+    }).sort((a, b) => {
+      const averageDifference = (b.score ?? -1) - (a.score ?? -1);
+      if (averageDifference !== 0) return averageDifference;
+      return (b.topBeach?.score ?? -1) - (a.topBeach?.score ?? -1);
+    });
   }, [marineRanking]);
 
   const recommendedRegion = regionRankings[0]?.score !== null ? regionRankings[0]?.id ?? null : null;
   const recommendedRegionInfo = regionRankings.find((item) => item.id === recommendedRegion) ?? null;
+  const recommendedWindow = recommendedRegionInfo?.topBeach ? forecastTimeWindow(recommendedRegionInfo.topBeach.forecastSummary) : null;
 
   const placeOptions = useMemo<PlaceOption[]>(() => {
     if (!currentCategory) return [];
@@ -488,14 +503,14 @@ export default function TripPlannerStart() {
           <h2 className="mt-2 max-w-[620px] font-serif text-[31px] font-semibold leading-[1.05] tracking-[-0.03em] md:text-[46px]">Προς τα πού θέλεις να κινηθείς;</h2>
           <p className="mt-2 max-w-[540px] text-[12px] leading-5 text-[#766c64] md:mt-3 md:text-[13px]">Επέλεξες {selectedLabels.join(", ")}. Οι σημερινές συνθήκες θάλασσας και ανέμου σε βοηθούν να διαλέξεις πλευρά.</p>
 
-          <div className="mt-4 w-full max-w-[560px] rounded-2xl border border-[#d7dcc7] bg-[#f0f2e8] p-3 text-left shadow-[0_8px_20px_rgba(86,93,64,.08)] md:p-4">
+          <div aria-live="polite" className="mt-4 w-full max-w-[560px] rounded-2xl border border-[#d7dcc7] bg-[#f0f2e8] p-3 text-left shadow-[0_8px_20px_rgba(86,93,64,.08)] md:p-4">
             {marineStatus === "loading" || marineStatus === "idle" ? (
               <div className="flex items-center gap-3 text-[12px] text-[#667050]"><span className="h-2.5 w-2.5 animate-pulse rounded-full bg-[#9da584]" /> Ελέγχουμε θάλασσα, άνεμο και ριπές για τις επόμενες ώρες…</div>
             ) : marineStatus === "error" ? (
               <p className="text-[12px] leading-5 text-[#7b6d5e]">Δεν ήταν δυνατή η live ενημέρωση τώρα. Μπορείς να επιλέξεις κατεύθυνση κανονικά.</p>
             ) : recommendedRegionInfo?.topBeach ? (
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#7d8764]">✦ Tip βάσει σημερινής πρόγνωσης</p>
+                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#7d8764]">✦ Tip βάσει σημερινής πρόγνωσης{recommendedWindow ? ` · ${recommendedWindow}` : ""}</p>
                 <p className="mt-1 text-[14px] font-bold text-[#4f5d40] md:text-[15px]">Καλύτερη κατεύθυνση τώρα: {regionName(recommendedRegion)} · {recommendedRegionInfo.score}/100</p>
                 <p className="mt-1 text-[11px] leading-4 text-[#6c745c]">Κορυφαία παραλία στην πλευρά: {recommendedRegionInfo.topBeach.name} ({recommendedRegionInfo.topBeach.score}/100). Η πρόταση βασίζεται σε marine forecast + έκθεση ακτής.</p>
               </div>
