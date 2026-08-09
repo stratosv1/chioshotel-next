@@ -18,7 +18,7 @@ export default function BeachCardPreviewPage() {
         <div className="mx-auto flex max-w-[380px] justify-center">
           <BeachCard
             name="Βρουλίδια"
-            image="/images/beaches/vroulidia-beach-chios.webp"
+            image="/images/beaches/elinta-beach-chios.jpg"
             meta="ήσυχη · φυσική · καθαρά νερά"
             defaultSelected={false}
             weather={{
