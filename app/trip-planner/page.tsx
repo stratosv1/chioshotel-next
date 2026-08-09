@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import TripPlannerStart from "@/components/trip-planner/TripPlannerStartV4";
+import TripPlannerStart from "@/components/trip-planner/TripPlannerStartV5";
 import styles from "./trip-planner.module.css";
 
 export const metadata: Metadata = {
