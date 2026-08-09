@@ -6,8 +6,8 @@ const baseUrl = process.env.TRIP_PLANNER_BASE_URL || "http://localhost:3000";
 const outputRoot = process.env.TRIP_PLANNER_VISUAL_OUTPUT || "artifacts/trip-planner-visual";
 
 const devices = [
-  { name: "mobile", viewport: { width: 390, height: 844 }, isMobile: true },
-  { name: "desktop", viewport: { width: 1440, height: 1000 }, isMobile: false },
+  { name: "mobile", viewport: { width: 390, height: 844 }, hasTouch: true },
+  { name: "desktop", viewport: { width: 1440, height: 1000 }, hasTouch: false },
 ];
 
 const browser = await chromium.launch({ headless: true });
@@ -27,12 +27,20 @@ async function clickCategory(page, label) {
   if (await button.count()) await button.click();
 }
 
+async function logViewport(page, deviceName, state) {
+  const metrics = await page.evaluate(() => ({
+    innerWidth: window.innerWidth,
+    clientWidth: document.documentElement.clientWidth,
+    scrollWidth: document.documentElement.scrollWidth,
+  }));
+  console.log(`[${deviceName}] ${state}:`, JSON.stringify(metrics));
+}
+
 async function captureDevice(device) {
   const context = await browser.newContext({
     viewport: device.viewport,
     deviceScaleFactor: 1,
-    isMobile: device.isMobile,
-    hasTouch: device.isMobile,
+    hasTouch: device.hasTouch,
     locale: "el-GR",
     timezoneId: "Europe/Athens",
   });
@@ -49,7 +57,8 @@ async function captureDevice(device) {
     timeout: 60_000,
   });
   await page.getByRole("heading", { name: "Τι θέλεις να κάνεις σήμερα;" }).waitFor();
-  await page.waitForTimeout(800);
+  await page.waitForTimeout(500);
+  await logViewport(page, device.name, "activities");
   await screenshot(page, device.name, "01-activities.png");
 
   // Beach starts selected. Add Village + Food to exercise the intended flow.
@@ -59,15 +68,15 @@ async function captureDevice(device) {
 
   await page.getByRole("button", { name: /Συνέχεια/ }).click();
   await page.getByRole("heading", { name: "Προς τα πού θέλεις να κινηθείς;" }).waitFor();
-
-  // Give the Open-Meteo request enough time to populate the recommendation card.
-  await page.waitForTimeout(5_000);
+  await page.getByText("Tip βάσει σημερινής πρόγνωσης", { exact: false }).waitFor({ timeout: 20_000 });
+  await logViewport(page, device.name, "region-ready");
   await screenshot(page, device.name, "03-region-weather-tip.png");
 
   const recommendButton = page.getByRole("button", { name: /Πρότεινέ μου/ });
   await recommendButton.click();
   await page.getByRole("heading", { name: /Διάλεξε παραλίες/ }).waitFor();
-  await page.waitForTimeout(1_500);
+  await page.getByText("Εκτίμηση θάλασσας", { exact: false }).first().waitFor({ timeout: 10_000 });
+  await logViewport(page, device.name, "beaches-ready");
   await screenshot(page, device.name, "04-beaches-weather.png");
 
   const placeCards = page.locator('button[aria-pressed="false"]');
@@ -80,6 +89,7 @@ async function captureDevice(device) {
   if (await continuePlaces.count()) {
     await continuePlaces.last().click();
     await page.getByRole("heading", { name: /Διάλεξε χωριά/ }).waitFor();
+    await logViewport(page, device.name, "villages");
     await screenshot(page, device.name, "06-villages-selection-strip.png");
   }
 
