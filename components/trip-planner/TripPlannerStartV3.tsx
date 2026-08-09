@@ -59,6 +59,18 @@ function findBeachCard(button: HTMLButtonElement) {
   return { beach, heading };
 }
 
+function improveWeatherDisclosure(button: HTMLButtonElement) {
+  const summaries = Array.from(button.querySelectorAll("summary"));
+  const weatherSummary = summaries.find((summary) => summary.textContent?.trim() === "Γιατί αυτή η πρόταση;");
+  if (!(weatherSummary instanceof HTMLElement)) return;
+
+  const details = weatherSummary.parentElement;
+  if (!(details instanceof HTMLDetailsElement)) return;
+
+  details.dataset.tripPlannerWeatherDetails = "true";
+  weatherSummary.dataset.tripPlannerDisclosureSummary = "true";
+}
+
 function addBeachDetails(button: HTMLButtonElement, beach: BeachMaster) {
   if (button.dataset.beachDetailsReady === "true") return;
 
@@ -71,21 +83,21 @@ function addBeachDetails(button: HTMLButtonElement, beach: BeachMaster) {
   if (!rows.length) return;
 
   const details = document.createElement("details");
-  details.className = "mt-3 border-t border-[#e7dfd5] pt-2 text-[10px] text-[#817367]";
+  details.className = "trip-planner-beach-details";
   details.dataset.tripPlannerBeachDetails = "true";
 
   const summary = document.createElement("summary");
-  summary.className = "cursor-pointer select-none font-semibold text-[#776859]";
+  summary.dataset.tripPlannerDisclosureSummary = "true";
   summary.textContent = "Λεπτομέρειες παραλίας";
   details.appendChild(summary);
 
   const body = document.createElement("div");
-  body.className = "mt-2 space-y-1.5 leading-4";
+  body.className = "trip-planner-beach-details-body";
 
   rows.forEach(({ label, value }) => {
     const row = document.createElement("p");
+    row.className = "trip-planner-beach-detail-row";
     const strong = document.createElement("strong");
-    strong.className = "font-semibold text-[#65584c]";
     strong.textContent = `${label}: `;
     row.appendChild(strong);
     row.appendChild(document.createTextNode(value));
@@ -106,8 +118,7 @@ function replaceBlurryImage(button: HTMLButtonElement, beachName: string) {
   const imageArea = button.firstElementChild;
   if (!(imageArea instanceof HTMLDivElement)) return;
 
-  const images = imageArea.querySelectorAll("img");
-  images.forEach((image) => {
+  imageArea.querySelectorAll("img").forEach((image) => {
     image.src = sharpImage;
     image.removeAttribute("srcset");
   });
@@ -120,6 +131,8 @@ function enhanceBeachCards() {
     const match = findBeachCard(button);
     if (!match) return;
 
+    button.dataset.tripPlannerBeachCard = "true";
+    improveWeatherDisclosure(button);
     addBeachDetails(button, match.beach);
     replaceBlurryImage(button, match.beach.name);
   });
@@ -141,5 +154,148 @@ export default function TripPlannerStartV3() {
     };
   }, []);
 
-  return <TripPlannerStartV2 />;
+  return (
+    <>
+      <TripPlannerStartV2 />
+      <style jsx global>{`
+        [data-trip-planner-beach-card="true"] [data-trip-planner-disclosure-summary="true"] {
+          list-style: none;
+          position: relative;
+          display: flex;
+          min-height: 44px;
+          align-items: center;
+          padding: 10px 34px 10px 0;
+          color: #4f443a;
+          font-size: 14px;
+          font-weight: 700;
+          line-height: 1.35;
+          cursor: pointer;
+        }
+
+        [data-trip-planner-beach-card="true"] [data-trip-planner-disclosure-summary="true"]::-webkit-details-marker {
+          display: none;
+        }
+
+        [data-trip-planner-beach-card="true"] [data-trip-planner-disclosure-summary="true"]::after {
+          content: "+";
+          position: absolute;
+          right: 2px;
+          top: 50%;
+          width: 26px;
+          height: 26px;
+          transform: translateY(-50%);
+          border: 1px solid #ddd4c8;
+          border-radius: 999px;
+          background: #fffdf9;
+          color: #8d765f;
+          font-size: 18px;
+          font-weight: 500;
+          line-height: 23px;
+          text-align: center;
+        }
+
+        [data-trip-planner-beach-card="true"] details[open] > [data-trip-planner-disclosure-summary="true"]::after {
+          content: "−";
+        }
+
+        [data-trip-planner-weather-details="true"] {
+          margin-top: 8px !important;
+          padding-top: 6px !important;
+          border-top-color: #e3dbd0 !important;
+          color: #64594f !important;
+          font-size: 13px !important;
+          line-height: 1.55 !important;
+        }
+
+        [data-trip-planner-weather-details="true"] > div {
+          margin-top: 8px !important;
+          gap: 6px 14px !important;
+          line-height: 1.45 !important;
+        }
+
+        [data-trip-planner-weather-details="true"] > p {
+          margin-top: 9px !important;
+          color: #7f7469 !important;
+          font-size: 11px !important;
+          line-height: 1.45 !important;
+        }
+
+        .trip-planner-beach-details {
+          margin-top: 10px;
+          padding-top: 7px;
+          border-top: 1px solid #e3dbd0;
+          color: #655b52;
+        }
+
+        .trip-planner-beach-details-body {
+          display: grid;
+          gap: 8px;
+          padding: 4px 0 5px;
+          font-size: 13px;
+          line-height: 1.5;
+        }
+
+        .trip-planner-beach-detail-row {
+          margin: 0;
+        }
+
+        .trip-planner-beach-detail-row strong {
+          color: #4f453c;
+          font-weight: 700;
+        }
+
+        @media (max-width: 767px) {
+          [data-trip-planner-beach-card="true"] {
+            width: 82vw !important;
+            max-width: 340px !important;
+          }
+
+          [data-trip-planner-beach-card="true"] > div:first-child {
+            height: 196px !important;
+          }
+
+          [data-trip-planner-beach-card="true"] > div:nth-child(2) {
+            padding: 14px 14px 13px !important;
+          }
+
+          [data-trip-planner-beach-card="true"] > div:nth-child(2) > div:first-child {
+            font-size: 22px !important;
+            line-height: 1.2 !important;
+          }
+
+          [data-trip-planner-beach-card="true"] > div:nth-child(2) > div:nth-child(2) {
+            margin-top: 4px !important;
+            color: #756b63 !important;
+            font-size: 13px !important;
+            line-height: 1.4 !important;
+          }
+
+          [data-trip-planner-beach-card="true"] > div:nth-child(2) > div:nth-child(3) {
+            margin-top: 12px !important;
+            padding: 13px 13px 11px !important;
+            border-radius: 14px !important;
+          }
+
+          [data-trip-planner-beach-card="true"] > div:nth-child(2) > div:nth-child(3) > div:first-child span {
+            font-size: 12px !important;
+          }
+
+          [data-trip-planner-beach-card="true"] > div:nth-child(2) > div:nth-child(3) > div:nth-child(2) {
+            margin-top: 10px !important;
+            column-gap: 16px !important;
+            row-gap: 8px !important;
+            color: #5f564e !important;
+            font-size: 13px !important;
+          }
+
+          [data-trip-planner-beach-card="true"] > div:nth-child(2) > div:nth-child(3) > p {
+            margin-top: 9px !important;
+            color: #57704f !important;
+            font-size: 12px !important;
+            line-height: 1.45 !important;
+          }
+        }
+      `}</style>
+    </>
+  );
 }
