@@ -46,7 +46,7 @@ jobs:
 
       - name: Run 12:00-15:00 Chios marine diagnostic
         run: |
-          curl -sS -D marine-diagnostic.headers "http://127.0.0.1:3000/api/trip-planner/marine?date=2026-08-09&start=12&end=15" -o marine-diagnostic.json
+          curl -sS -D marine-diagnostic.headers "http://127.0.0.1:3000/api/trip-planner/marine/?date=2026-08-09&start=12&end=15" -o marine-diagnostic.json
           echo "--- response headers ---"
           cat marine-diagnostic.headers
           echo "--- raw response ---"
