@@ -40,7 +40,10 @@ jobs:
             fi
           }
 
-          download_image "https://www.chios.gr/images/beaches-pages/elinta/elinta-1.jpg" "public/images/beaches/elinta-beach-chios.jpg"
+          # Keep the already verified local Elinta photo; the upstream JPG
+          # downloaded in the first vendor pass did not decode reliably in Chromium.
+          git checkout 19457165291678c8e3009a492079bc66eaaba982 -- public/images/beaches/elinta-beach-chios.jpg
+
           download_image "https://www.chios.gr/images/beaches-pages/thgani/tigani-1.jpg" "public/images/beaches/tigani-beach-chios.jpg"
           download_image "https://www.chios.gr/images/beaches-pages/managros/managros-1.jpg" "public/images/beaches/managros-beach-chios.jpg"
           download_image "https://www.chios.gr/images/beaches-pages/limnos/limnos-1.jpg" "public/images/beaches/limnos-volissos-beach-chios.jpg"
