@@ -19,31 +19,40 @@ jobs:
           ref: agent/beach-master-dataset
           fetch-depth: 0
 
-      - name: Download verified high-resolution Chios.gr beach photos
+      - name: Download and normalize verified high-resolution Chios.gr beach photos
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p public/images/beaches
 
+          if ! command -v convert >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y imagemagick
+          fi
+
           download_image() {
             local url="$1"
             local output="$2"
+            local temp="${output%.jpg}.source.jpg"
             echo "Downloading $url -> $output"
             curl --fail --location --retry 3 --retry-delay 2 \
               --user-agent "Mozilla/5.0 (compatible; ChiosTripPlanner/1.0)" \
-              "$url" -o "$output"
-            file "$output"
-            bytes=$(wc -c < "$output")
+              "$url" -o "$temp"
+            file "$temp"
+            bytes=$(wc -c < "$temp")
             if [ "$bytes" -lt 20000 ]; then
-              echo "Downloaded image is unexpectedly small: $bytes bytes ($output)"
+              echo "Downloaded image is unexpectedly small: $bytes bytes ($temp)"
               exit 1
             fi
+
+            # Normalize odd/progressive source JPEGs into browser-safe sRGB JPEGs.
+            convert "$temp" -auto-orient -strip -colorspace sRGB \
+              -sampling-factor 4:2:0 -quality 90 "$output"
+            rm -f "$temp"
+            file "$output"
           }
 
-          # Keep the already verified local Elinta photo; the upstream JPG
-          # downloaded in the first vendor pass did not decode reliably in Chromium.
-          git checkout 19457165291678c8e3009a492079bc66eaaba982 -- public/images/beaches/elinta-beach-chios.jpg
-
+          download_image "https://www.chios.gr/images/beaches-pages/elinta/elinta-1.jpg" "public/images/beaches/elinta-beach-chios.jpg"
           download_image "https://www.chios.gr/images/beaches-pages/thgani/tigani-1.jpg" "public/images/beaches/tigani-beach-chios.jpg"
           download_image "https://www.chios.gr/images/beaches-pages/managros/managros-1.jpg" "public/images/beaches/managros-beach-chios.jpg"
           download_image "https://www.chios.gr/images/beaches-pages/limnos/limnos-1.jpg" "public/images/beaches/limnos-volissos-beach-chios.jpg"
@@ -81,5 +90,5 @@ jobs:
             echo "No image changes to commit."
             exit 0
           fi
-          git commit -m "vendor high resolution trip planner beach photos"
+          git commit -m "normalize high resolution trip planner beach photos"
           git push origin HEAD:agent/beach-master-dataset
