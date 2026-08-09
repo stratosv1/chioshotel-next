@@ -12,6 +12,8 @@ const placeNames = new Set([
   ...plannerExtraPlaces.map((item) => item.name),
 ]);
 
+const categoryLabels = new Set(["Παραλία", "Χωριό", "Φαγητό", "Ποτό", "Αξιοθέατα"]);
+
 function markPlaceCards() {
   document.querySelectorAll<HTMLButtonElement>('button[aria-pressed]').forEach((button) => {
     const title = Array.from(button.querySelectorAll("div")).find((node) => {
@@ -21,6 +23,18 @@ function markPlaceCards() {
 
     if (!title) return;
     button.dataset.tripPlannerPlaceCard = "true";
+  });
+}
+
+function markCategoryCards() {
+  document.querySelectorAll<HTMLButtonElement>('button[aria-pressed]').forEach((button) => {
+    const label = Array.from(button.querySelectorAll("span")).find((node) => {
+      const text = node.textContent?.trim();
+      return text ? categoryLabels.has(text) : false;
+    });
+
+    if (!label || !button.querySelector("img")) return;
+    button.dataset.tripPlannerCategoryCard = "true";
   });
 }
 
@@ -141,6 +155,7 @@ export default function TripPlannerStartV4() {
   useEffect(() => {
     const scan = () => {
       markPlaceCards();
+      markCategoryCards();
 
       if (!modalShownRef.current && detectSuccessfulEmail()) {
         modalShownRef.current = true;
@@ -187,6 +202,20 @@ export default function TripPlannerStartV4() {
       <style jsx global>{`
         [data-trip-planner-inline-accommodation="true"] {
           display: none !important;
+        }
+
+        [data-trip-planner-category-card="true"] > div:first-child {
+          background: #e9e1d7 !important;
+        }
+
+        [data-trip-planner-category-card="true"] > div:first-child img {
+          object-fit: contain !important;
+          object-position: center center !important;
+          transform: none !important;
+        }
+
+        [data-trip-planner-category-card="true"]:hover > div:first-child img {
+          transform: none !important;
         }
 
         [data-trip-planner-place-card="true"] {
