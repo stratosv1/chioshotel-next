@@ -8,6 +8,7 @@ import {
   villageRoutingById,
 } from "@/content/trip-planner";
 import { applyTripPlannerMedia } from "@/content/trip-planner/media";
+import { tripPlannerBeachDescriptions } from "@/content/trip-planner/beach-descriptions";
 import {
   plannerExtraPlaces,
   type PlannerExtraPlace,
@@ -295,7 +296,7 @@ function BeachWeatherCard({ weather }: { weather: MarineRankedBeach }) {
         </p>
       ) : null}
 
-      <details className="mt-2 border-t border-[#e7dfd5] pt-2 text-[10px] text-[#817367]">
+      <details onClick={(event) => event.stopPropagation()} className="mt-2 border-t border-[#e7dfd5] pt-2 text-[10px] text-[#817367]">
         <summary className="cursor-pointer select-none font-semibold text-[#776859]">Γιατί αυτή η πρόταση;</summary>
         <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1.5 leading-4">
           <span>Score μοντέλου {weather.score}/100</span>
@@ -308,6 +309,35 @@ function BeachWeatherCard({ weather }: { weather: MarineRankedBeach }) {
         <p className="mt-2 text-[9px] leading-3.5 text-[#9a8c7e]">Βεβαιότητα πρόγνωσης ακτής: {confidenceLabel(weather.spatialConfidence)} · πρόγνωση + έκθεση ακτής, όχι live μέτρηση.</p>
       </details>
     </div>
+  );
+}
+
+function BeachDetailsCard({ beachId }: { beachId: string }) {
+  const beach = beachItems.find((item) => item.id === beachId);
+  const description = tripPlannerBeachDescriptions[beachId];
+
+  if (!beach || !description) return null;
+
+  return (
+    <details
+      onClick={(event) => event.stopPropagation()}
+      className="mt-2 border-t border-[#e7dfd5] pt-2 text-[10px] text-[#817367]"
+    >
+      <summary className="cursor-pointer select-none font-semibold text-[#776859]">
+        Λεπτομέρειες παραλίας
+      </summary>
+      <div className="mt-2 space-y-2 leading-4 text-[#75685d]">
+        <p>{description}</p>
+        {beach.tip ? (
+          <p className="rounded-lg bg-[#f6f1e9] px-2.5 py-2 text-[#6c5c4e]">
+            <span className="font-bold text-[#8a694b]">Tip:</span> {beach.tip}
+          </p>
+        ) : null}
+        {beach.familyNote ? <p><span className="font-semibold">Για οικογένειες:</span> {beach.familyNote}</p> : null}
+        {beach.organization ? <p><span className="font-semibold">Οργάνωση:</span> {beach.organization}.</p> : null}
+        {beach.access?.length ? <p><span className="font-semibold">Πρόσβαση:</span> {beach.access.join(" · ")}.</p> : null}
+      </div>
+    </details>
   );
 }
 
@@ -551,6 +581,7 @@ export default function TripPlannerStartV2() {
                     <div className="font-serif text-[21px] font-semibold text-[#332923] md:text-[21px]">{item.name}</div>
                     <div className="mt-1 text-[11px] leading-4 text-[#82766c] md:text-[12px]">{item.meta}</div>
                     {item.weather ? <BeachWeatherCard weather={item.weather} /> : null}
+                    {currentCategory === "beach" ? <BeachDetailsCard beachId={item.id} /> : null}
                   </div>
                 </button>
               );
