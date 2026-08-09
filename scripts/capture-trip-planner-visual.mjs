@@ -2,7 +2,7 @@ import { chromium } from "@playwright/test";
 import { mkdir } from "node:fs/promises";
 import path from "node:path";
 
-const baseUrl = process.env.TRIP_PLANNER_BASE_URL || "http://127.0.0.1:3000";
+const baseUrl = process.env.TRIP_PLANNER_BASE_URL || "http://localhost:3000";
 const outputRoot = process.env.TRIP_PLANNER_VISUAL_OUTPUT || "artifacts/trip-planner-visual";
 
 const devices = [
@@ -49,6 +49,7 @@ async function captureDevice(device) {
     timeout: 60_000,
   });
   await page.getByRole("heading", { name: "Τι θέλεις να κάνεις σήμερα;" }).waitFor();
+  await page.waitForTimeout(800);
   await screenshot(page, device.name, "01-activities.png");
 
   // Beach starts selected. Add Village + Food to exercise the intended flow.
