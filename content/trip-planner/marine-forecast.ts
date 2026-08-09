@@ -28,6 +28,8 @@ const MARINE_VARIABLES = [
 ] as const;
 
 const WEATHER_VARIABLES = [
+  "temperature_2m",
+  "weather_code",
   "wind_speed_10m",
   "wind_direction_10m",
   "wind_gusts_10m",
@@ -54,6 +56,27 @@ type BeachForecastLocation = {
   requestedCoordinates: Coordinates;
 };
 
+type ExtendedMarineForecastSample = MarineForecastSample & {
+  temperatureC: number | null;
+  weatherCode: number | null;
+};
+
+export type BeachForecastSummary = {
+  startTime: string | null;
+  endTime: string | null;
+  temperatureC: number | null;
+  weatherCode: number | null;
+  waveHeightMAvg: number | null;
+  waveHeightMMax: number | null;
+  waveDirectionDeg: number | null;
+  wavePeriodSAvg: number | null;
+  windWaveHeightMAvg: number | null;
+  windSpeedKmhAvg: number | null;
+  windSpeedKmhMax: number | null;
+  windDirectionDeg: number | null;
+  windGustsKmhMax: number | null;
+};
+
 export type SpatialConfidence = "high" | "medium" | "low";
 
 export type RankedBeachMarineDiagnostic = MarineWindowScore & {
@@ -66,6 +89,7 @@ export type RankedBeachMarineDiagnostic = MarineWindowScore & {
   weatherGridDistanceKm: number | null;
   spatialConfidence: SpatialConfidence;
   exposureConfidence: MarineExposureConfidence | null;
+  forecastSummary: BeachForecastSummary;
 };
 
 export type MarineForecastRankingResult = {
@@ -145,11 +169,6 @@ const roundedDistance = (
 ): number | null =>
   grid === null ? null : Math.round(haversineKm(requested, grid) * 10) / 10;
 
-/**
- * Spatial confidence describes how representative the forecast grid points are for
- * the requested beach coordinates. It is diagnostic metadata only and deliberately
- * does not alter the comfort score yet.
- */
 const spatialConfidenceFor = (
   marineGridDistanceKm: number | null,
   weatherGridDistanceKm: number | null,
@@ -237,7 +256,7 @@ const fetchJson = async (url: URL, source: "marine" | "weather") => {
 const buildSamples = (
   marine: OpenMeteoLocationResponse,
   weather: OpenMeteoLocationResponse,
-): MarineForecastSample[] => {
+): ExtendedMarineForecastSample[] => {
   const marineTimes = Array.isArray(marine.hourly?.time)
     ? marine.hourly?.time ?? []
     : [];
@@ -262,6 +281,14 @@ const buildSamples = (
         marineIndex,
       ),
       windWavePeriodS: valueAt(marine.hourly, "wind_wave_period", marineIndex),
+      temperatureC:
+        weatherIndex === undefined
+          ? null
+          : valueAt(weather.hourly, "temperature_2m", weatherIndex),
+      weatherCode:
+        weatherIndex === undefined
+          ? null
+          : valueAt(weather.hourly, "weather_code", weatherIndex),
       windSpeedKmh:
         weatherIndex === undefined
           ? null
@@ -276,6 +303,57 @@ const buildSamples = (
           : valueAt(weather.hourly, "wind_gusts_10m", weatherIndex),
     };
   });
+};
+
+const finiteValues = (values: Array<number | null | undefined>) =>
+  values.filter((value): value is number =>
+    typeof value === "number" && Number.isFinite(value),
+  );
+
+const average = (values: Array<number | null | undefined>) => {
+  const finite = finiteValues(values);
+  if (!finite.length) return null;
+  return Math.round((finite.reduce((sum, value) => sum + value, 0) / finite.length) * 10) / 10;
+};
+
+const maximum = (values: Array<number | null | undefined>) => {
+  const finite = finiteValues(values);
+  return finite.length ? Math.round(Math.max(...finite) * 10) / 10 : null;
+};
+
+const circularAverageDegrees = (values: Array<number | null | undefined>) => {
+  const finite = finiteValues(values);
+  if (!finite.length) return null;
+  const radians = finite.map((value) => (value * Math.PI) / 180);
+  const x = radians.reduce((sum, value) => sum + Math.cos(value), 0) / radians.length;
+  const y = radians.reduce((sum, value) => sum + Math.sin(value), 0) / radians.length;
+  const degrees = (Math.atan2(y, x) * 180) / Math.PI;
+  return Math.round(((degrees + 360) % 360) * 10) / 10;
+};
+
+const summarizeForecast = (
+  samples: ExtendedMarineForecastSample[],
+): BeachForecastSummary => {
+  const representative = samples[Math.floor(samples.length / 2)] ?? null;
+  return {
+    startTime: samples[0]?.time ?? null,
+    endTime: samples[samples.length - 1]?.time ?? null,
+    temperatureC: average(samples.map((sample) => sample.temperatureC)),
+    weatherCode: representative?.weatherCode ?? null,
+    waveHeightMAvg: average(samples.map((sample) => sample.waveHeightM)),
+    waveHeightMMax: maximum(samples.map((sample) => sample.waveHeightM)),
+    waveDirectionDeg: circularAverageDegrees(
+      samples.map((sample) => sample.waveDirectionDeg),
+    ),
+    wavePeriodSAvg: average(samples.map((sample) => sample.wavePeriodS)),
+    windWaveHeightMAvg: average(samples.map((sample) => sample.windWaveHeightM)),
+    windSpeedKmhAvg: average(samples.map((sample) => sample.windSpeedKmh)),
+    windSpeedKmhMax: maximum(samples.map((sample) => sample.windSpeedKmh)),
+    windDirectionDeg: circularAverageDegrees(
+      samples.map((sample) => sample.windDirectionDeg),
+    ),
+    windGustsKmhMax: maximum(samples.map((sample) => sample.windGustsKmh)),
+  };
 };
 
 export async function fetchAndRankBeachMarineComfort(
@@ -323,7 +401,7 @@ export async function fetchAndRankBeachMarineComfort(
   const marineRows = normalizeApiPayload(marinePayload, locations.length);
   const weatherRows = normalizeApiPayload(weatherPayload, locations.length);
 
-  const forecastsByBeach = new Map<string, MarineForecastSample[]>();
+  const forecastsByBeach = new Map<string, ExtendedMarineForecastSample[]>();
   const diagnosticsByBeach = new Map<
     string,
     Omit<RankedBeachMarineDiagnostic, keyof MarineWindowScore>
@@ -342,8 +420,9 @@ export async function fetchAndRankBeachMarineComfort(
       location.requestedCoordinates,
       weatherGridCoordinates,
     );
+    const samples = buildSamples(marineRow, weatherRow);
 
-    forecastsByBeach.set(location.beachId, buildSamples(marineRow, weatherRow));
+    forecastsByBeach.set(location.beachId, samples);
     diagnosticsByBeach.set(location.beachId, {
       name: location.name,
       region: location.region,
@@ -358,6 +437,7 @@ export async function fetchAndRankBeachMarineComfort(
       ),
       exposureConfidence:
         beachMarineExposureById[location.beachId]?.confidence ?? null,
+      forecastSummary: summarizeForecast(samples),
     });
   });
 
