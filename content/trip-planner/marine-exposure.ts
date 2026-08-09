@@ -60,6 +60,12 @@ export const beachMarineExposureById: Record<string, BeachMarineExposureMeta> = 
     confidence: "medium-high",
     source: "manual-map-estimate",
   },
+  "ormos-lo": {
+    facingDeg: 80,
+    exposure: { N: 0.15, NE: 0.55, E: 0.75, SE: 0.35, S: 0.1, SW: 0.05, W: 0.05, NW: 0.1 },
+    confidence: "medium-high",
+    source: "manual-map-estimate",
+  },
   mersinidi: {
     facingDeg: 105,
     exposure: { N: 0.15, NE: 0.55, E: 1, SE: 0.75, S: 0.3, SW: 0.1, W: 0.05, NW: 0.1 },
