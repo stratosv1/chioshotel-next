@@ -1,0 +1,49 @@
+name: Trip Planner Marine Diagnostic
+
+on:
+  push:
+    branches:
+      - agent/beach-master-dataset
+    paths:
+      - ".github/workflows/trip-planner-marine-diagnostic.yml"
+      - "content/trip-planner/**"
+      - "app/api/trip-planner/marine/**"
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Start Next.js dev server
+        run: |
+          npm run dev > /tmp/trip-planner-next.log 2>&1 &
+          echo $! > /tmp/trip-planner-next.pid
+          for i in {1..60}; do
+            if curl -fsS http://127.0.0.1:3000 >/dev/null 2>&1; then
+              exit 0
+            fi
+            sleep 2
+          done
+          cat /tmp/trip-planner-next.log
+          exit 1
+
+      - name: Run 12:00-15:00 Chios marine diagnostic
+        run: |
+          curl -fsS "http://127.0.0.1:3000/api/trip-planner/marine?date=2026-08-09&start=12&end=15" -o marine-diagnostic.json
+          jq '{generatedAt, requestedWindow, endpoints, missingRoutingBeachIds, unscoredBeachIds, ranked: [.ranked[] | {beachId, name, score, rating, dataQuality, reasonCodes, marineGridDistanceKm, weatherGridDistanceKm}]}' marine-diagnostic.json
+
+      - name: Upload diagnostic JSON
+        uses: actions/upload-artifact@v4
+        with:
+          name: trip-planner-marine-diagnostic
+          path: marine-diagnostic.json
