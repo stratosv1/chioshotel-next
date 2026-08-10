@@ -13,6 +13,11 @@ const RATING_LABELS: Record<string, string> = {
   "Όχι ιδανική σήμερα": "Προτίμησε άλλη παραλία",
 };
 
+const ALL_RATING_LABELS = new Set([
+  ...Object.keys(RATING_LABELS),
+  ...Object.values(RATING_LABELS),
+]);
+
 type WaveBadge = {
   label: string;
   classes: string;
@@ -85,7 +90,7 @@ function waveBadgeForImpact(impact: number): WaveBadge {
 }
 
 function renameConditionLabels() {
-  document.querySelectorAll<HTMLElement>('[data-trip-planner-beach-card="true"] span').forEach((span) => {
+  document.querySelectorAll<HTMLElement>('button[aria-pressed] span').forEach((span) => {
     const text = span.textContent?.trim() ?? "";
     const replacement = RATING_LABELS[text];
     if (replacement) span.textContent = replacement;
@@ -95,7 +100,7 @@ function renameConditionLabels() {
 function addWaveBadges(waveByBeach: Map<string, WaveBadge>) {
   if (!waveByBeach.size) return;
 
-  document.querySelectorAll<HTMLButtonElement>('[data-trip-planner-beach-card="true"]').forEach((button) => {
+  document.querySelectorAll<HTMLButtonElement>('button[aria-pressed]').forEach((button) => {
     if (button.querySelector('[data-trip-planner-wave-badge="true"]')) return;
 
     const beachName = Array.from(button.querySelectorAll("div"))
@@ -108,7 +113,7 @@ function addWaveBadges(waveByBeach: Map<string, WaveBadge>) {
 
     const ratingSpan = Array.from(button.querySelectorAll("span")).find((span) => {
       const text = span.textContent?.trim() ?? "";
-      return Object.values(RATING_LABELS).includes(text);
+      return ALL_RATING_LABELS.has(text);
     });
     if (!(ratingSpan instanceof HTMLElement) || !(ratingSpan.parentElement instanceof HTMLElement)) return;
 
