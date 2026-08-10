@@ -111,17 +111,27 @@ function addWaveBadges(waveByBeach: Map<string, WaveBadge>) {
     const badgeInfo = waveByBeach.get(beachName);
     if (!badgeInfo) return;
 
-    const ratingSpan = Array.from(button.querySelectorAll("span")).find((span) => {
+    const weatherSummary = Array.from(button.querySelectorAll("summary")).find(
+      (summary) => summary.textContent?.trim() === "Γιατί αυτή η πρόταση;",
+    );
+    const weatherDetails = weatherSummary?.parentElement;
+    const weatherBox = weatherDetails?.parentElement;
+    if (!(weatherBox instanceof HTMLElement)) return;
+
+    const ratingRow = weatherBox.firstElementChild;
+    if (!(ratingRow instanceof HTMLElement)) return;
+
+    const ratingSpan = Array.from(ratingRow.querySelectorAll("span")).find((span) => {
       const text = span.textContent?.trim() ?? "";
       return ALL_RATING_LABELS.has(text);
     });
-    if (!(ratingSpan instanceof HTMLElement) || !(ratingSpan.parentElement instanceof HTMLElement)) return;
+    if (!(ratingSpan instanceof HTMLElement)) return;
 
     const badge = document.createElement("span");
     badge.dataset.tripPlannerWaveBadge = "true";
     badge.className = `rounded-full border px-2.5 py-1 text-[10px] font-bold ${badgeInfo.classes}`;
     badge.textContent = badgeInfo.label;
-    ratingSpan.parentElement.insertBefore(badge, ratingSpan.nextSibling);
+    ratingRow.insertBefore(badge, ratingSpan.nextSibling);
   });
 }
 
