@@ -48,6 +48,16 @@ const familyDetails: Record<AssistantLanguage, string> = {
   tr: "/tr/chios-odalari/sakiz-adasinda-buyuk-aile-daireleri/",
 };
 
+const guestNoteCopy: Record<AssistantLanguage, string> = {
+  el: "Για 5 άτομα προστίθεται επιπλέον κρεβάτι και ο χώρος θα είναι λίγο πιο περιορισμένος.",
+  en: "For 5 guests, an extra bed is added and the space will feel a little tighter.",
+  de: "Für 5 Gäste wird ein Zustellbett hinzugefügt und der Platz ist etwas begrenzter.",
+  fr: "Pour 5 personnes, un lit d’appoint est ajouté et l’espace sera un peu plus restreint.",
+  it: "Per 5 ospiti viene aggiunto un letto extra e lo spazio risulterà un po’ più ridotto.",
+  es: "Para 5 huéspedes se añade una cama extra y el espacio será un poco más reducido.",
+  tr: "5 kişi için ilave yatak eklenir ve alan biraz daha sıkışık olacaktır.",
+};
+
 export const ROOM_CARD_CATALOG: RoomCardCatalogEntry[] = [
   {
     roomId: "267788", unitId: "1", roomNumber: 1, maxGuests: 4,
@@ -207,17 +217,19 @@ export function localizeRoomOffer<T extends Record<string, any>>(offer: T, langu
   const room = ROOM_BY_KEY.get(`${String(offer.roomId || "")}:${String(offer.unitId || "")}`);
   if (!room) return offer;
   const copy = room.copy[language] || room.copy.en;
+  const localizedGuestNote = offer.guestNote ? guestNoteCopy[language] || guestNoteCopy.en : null;
   return {
     ...offer,
     roomNumber: room.roomNumber,
     name: copy.name,
     category: copy.category,
     floor: copy.floor,
-    features: copy.features,
+    features: localizedGuestNote ? [...copy.features, localizedGuestNote] : copy.features,
     image: room.image,
     gallery: room.gallery,
     detailsUrl: room.detailsUrl[language] || room.detailsUrl.en,
     maxGuests: Number(offer.maxGuests || room.maxGuests),
+    guestNote: localizedGuestNote,
   };
 }
 
