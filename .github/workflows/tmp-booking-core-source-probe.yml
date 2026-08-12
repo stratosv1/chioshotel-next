@@ -1,0 +1,34 @@
+name: Temporary Booking Core Source Probe
+
+on:
+  push:
+    branches: [booking-core-central-source]
+    paths: [.github/workflows/tmp-booking-core-source-probe.yml]
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fetch canonical 04 Sep snapshot
+        shell: bash
+        run: |
+          node <<'NODE'
+          const BASE='https://script.google.com/macros/s/AKfycbzSK2Y12vl4RZJvbbcxIkzAl4un93fQManKZ96BGyLsp-vv6j9NQboYnwnc6GtUvOBj/exec';
+          const TARGET='2026-09-04';
+          const allowed=new Set(['267788:1','268803:1','267788:2','267788:3','626129:1','268803:2','626129:2','265595:1','265595:2','265595:3']);
+          async function get(action){const u=new URL(BASE);u.searchParams.set('action',action);u.searchParams.set('_ts',Date.now());const r=await fetch(u,{redirect:'follow',headers:{accept:'application/json'}});const t=await r.text();if(!r.ok)throw new Error(`${action} HTTP ${r.status}`);const p=JSON.parse(t);if(p?.success===false||p?.ok===false)throw new Error(`${action} failed`);return p}
+          const rows=p=>Array.isArray(p)?p:(['rows','data','items','values','snapshot','availability'].map(k=>p?.[k]).find(Array.isArray)||[]);
+          const price=v=>{const n=Number(String(v??'').replace(',','.'));return Number.isFinite(n)&&n>0?Math.round(n*100)/100:null};
+          const [snap,book]=await Promise.all([get('occupancy_snapshot'),get('bookings')]);
+          const bp=new Map();for(const r of rows(book)){if(String(r.reason||'').toUpperCase()==='BOOKED'&&price(r.price)!==null)bp.set(`${r.date}:${r.roomId}:${r.unitId}`,price(r.price));}
+          const out=rows(snap).filter(r=>String(r.date||'').slice(0,10)===TARGET&&allowed.has(`${r.roomId}:${r.unitId}`)).map(r=>{const reason=String(r.reason||r.status||'').toUpperCase();const key=`${TARGET}:${r.roomId}:${r.unitId}`;return {date:TARGET,roomId:String(r.roomId),unitId:String(r.unitId),roomName:String(r.roomName||''),unitName:String(r.unitName||''),label:String(r.label||''),price:reason==='BOOKED'?(price(r.price)??bp.get(key)??null):price(r.price),available:Boolean(r.available),status:String(r.status||r.value||''),reason:reason||(r.available?'PRICE_OK':'CLOSED')}}).sort((a,b)=>`${a.roomId}:${a.unitId}`.localeCompare(`${b.roomId}:${b.unitId}`));
+          if(out.length!==10)throw new Error(`Expected 10 rows, got ${out.length}`);
+          for(const r of out){if((r.available||r.reason==='BOOKED')&&r.price===null)throw new Error(`Missing price ${r.roomId}:${r.unitId}`)}
+          console.log(`SOURCE_GENERATED_AT=${snap.generatedAt||''}`);
+          console.log(`CANONICAL_ROWS=${JSON.stringify(out)}`);
+          console.log(`AVAILABLE_COUNT=${out.filter(r=>r.available).length}`);
+          NODE
