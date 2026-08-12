@@ -35,7 +35,10 @@ export async function GET() {
     const firstDate = addDays(today, 1);
     const lastDate = addDays(today, 7);
 
-    const [roomRows, quoteRows] = await Promise.all([
+    const [inventoryRows, roomRows, quoteRows] = await Promise.all([
+      sql`
+        select * from booking_core.inventory_status(${firstDate}::date, ${addDays(lastDate, 1)}::date)
+      `,
       sql`
         select room_number, room_id::text as room_id, unit_id::text as unit_id,
                display_name, room_type, floor, max_guests
@@ -57,6 +60,11 @@ export async function GET() {
         order by d.stay_date, g.guests, q.room_number
       `,
     ]);
+
+    const inventory = (inventoryRows as any[])?.[0];
+    if (!inventory || String(inventory.status) !== "READY") {
+      throw new Error(`Booking inventory is not ready: ${String(inventory?.status || "DATA_UNAVAILABLE")}`);
+    }
 
     const rooms = (roomRows as any[]).map((row) => ({
       id: Number(row.room_number),

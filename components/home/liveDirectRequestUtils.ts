@@ -93,16 +93,18 @@ export function getNightInfo(deals: DealsResponse | null, room: RoomMeta, date: 
   const raw = quoteSet?.byGuests?.[String(guests)];
   if (!raw?.available) return null;
 
-  const original = Number(raw.originalTotal || 0);
-  const direct = Number(raw.directTotal || 0);
-  if (!Number.isFinite(original) || original <= 0 || !Number.isFinite(direct) || direct <= 0) return null;
+  const original = Number(raw.originalTotal);
+  const direct = Number(raw.directTotal);
+  const saving = Number(raw.saving);
+  const discountPercent = Number(raw.directDiscountPercent);
+  if (!Number.isFinite(original) || original <= 0 || !Number.isFinite(direct) || direct <= 0 || !Number.isFinite(saving) || saving < 0 || !Number.isFinite(discountPercent) || discountPercent < 0) return null;
 
   return {
     original: Math.round(original * 100) / 100,
     direct: Math.round(direct * 100) / 100,
     price: Math.round(direct * 100) / 100,
-    saving: Number(raw.saving || original - direct),
-    discountPercent: Number(raw.directDiscountPercent || 0),
+    saving: Math.round(saving * 100) / 100,
+    discountPercent,
     guestNote: raw.guestNote || null,
   };
 }
