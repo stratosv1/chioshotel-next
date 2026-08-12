@@ -8,6 +8,18 @@ function isIsoDate(value: string) {
   return /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(new Date(`${value}T12:00:00Z`).getTime());
 }
 
+function toIsoDate(value: unknown) {
+  if (value instanceof Date) return value.toISOString().slice(0, 10);
+
+  const raw = String(value ?? "").trim();
+  const isoPrefix = raw.match(/^\d{4}-\d{2}-\d{2}/)?.[0];
+  if (isoPrefix) return isoPrefix;
+
+  const parsed = new Date(raw);
+  if (Number.isNaN(parsed.getTime())) throw new Error("Invalid split-stay change date");
+  return parsed.toISOString().slice(0, 10);
+}
+
 function number(value: unknown) {
   const parsed = Number(value);
   return Number.isFinite(parsed) ? Math.round(parsed * 100) / 100 : 0;
@@ -72,7 +84,7 @@ export async function GET(request: NextRequest) {
     `;
 
     const splitStays = (rows as any[]).map((row) => {
-      const changeDate = String(row.change_date).slice(0, 10);
+      const changeDate = toIsoDate(row.change_date);
       return {
         first: {
           roomId: String(row.first_room_id),
