@@ -26,6 +26,7 @@ const PATCHES = [
   "fix-ai-localized-apartment-detail-parser.cjs",
   "fix-ai-room-finder-final-presentation.cjs",
   "patch-ai-mobile-composer-focus.cjs",
+  "patch-ai-room-finder-semantic-date-input.cjs",
 ];
 
 const SLOW_PATCH_MS = 500;
