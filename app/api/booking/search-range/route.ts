@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     const checkout = request.nextUrl.searchParams.get("checkout") || "";
     const guests = Number.parseInt(request.nextUrl.searchParams.get("guests") || "2", 10);
 
-    if (!isIsoDate(checkin) || !isIsoDate(checkout) || checkout <= checkin || !Number.isInteger(guests) || guests < 1) {
+    if (!isIsoDate(checkin) || !isIsoDate(checkout) || checkout <= checkin || !Number.isInteger(guests) || guests < 1 || guests > 5) {
       return NextResponse.json({ success: false, message: "Invalid availability search." }, { status: 400 });
     }
 
@@ -28,6 +28,32 @@ export async function GET(request: NextRequest) {
     if (!databaseUrl) throw new Error("DATABASE_URL is missing");
     const sql = neon(databaseUrl);
     const queryStarted = performance.now();
+
+    const statusRows = await sql`
+      select *
+      from booking_core.inventory_status(${checkin}::date, ${checkout}::date)
+    `;
+    const inventoryStatus = statusRows[0] as any;
+    const status = String(inventoryStatus?.status || "DATA_UNAVAILABLE");
+
+    if (status !== "READY") {
+      const queryMs = Math.round(performance.now() - queryStarted);
+      const totalMs = Math.round(performance.now() - started);
+      return NextResponse.json({
+        success: false,
+        code: status,
+        message: "Booking inventory is temporarily unavailable for this date range.",
+        _booking_engine: {
+          source: "neon_booking_core",
+          inventoryStatus: status,
+          expectedRows: Number(inventoryStatus?.expected_rows || 0),
+          actualRows: Number(inventoryStatus?.actual_rows || 0),
+          freshRows: Number(inventoryStatus?.fresh_rows || 0),
+          queryMs,
+          totalMs,
+        },
+      }, { status: 503, headers: { "Cache-Control": "no-store" } });
+    }
 
     const [quoteRows, eligibleRows] = await Promise.all([
       sql`
@@ -102,6 +128,7 @@ export async function GET(request: NextRequest) {
       summary: { availableRooms: available.length, unavailableRooms: unavailable.length },
       _booking_engine: {
         source: "neon_booking_core",
+        inventoryStatus: "READY",
         generatedAt: available[0]?.sourceGeneratedAt || null,
         queryMs,
         totalMs,
