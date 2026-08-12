@@ -132,8 +132,8 @@ function isAuthorized(request: NextRequest) {
   return Boolean(supplied && allowed.includes(supplied));
 }
 
-async function syncBookingCore(request: NextRequest, requireAuthorization: boolean) {
-  if (requireAuthorization && !isAuthorized(request)) {
+async function syncBookingCore(request: NextRequest) {
+  if (!isAuthorized(request)) {
     return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
   }
 
@@ -202,9 +202,9 @@ async function syncBookingCore(request: NextRequest, requireAuthorization: boole
 }
 
 export async function GET(request: NextRequest) {
-  return syncBookingCore(request, false);
+  return syncBookingCore(request);
 }
 
 export async function POST(request: NextRequest) {
-  return syncBookingCore(request, true);
+  return syncBookingCore(request);
 }
