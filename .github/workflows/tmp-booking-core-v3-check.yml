@@ -13,38 +13,31 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 3
     steps:
-      - name: Check deployed booking_core_snapshot v3
+      - name: Fetch and validate deployed booking_core_snapshot v3
         shell: bash
         run: |
-          # Retry after source refresh had been busy.
           node <<'NODE'
+          const fs = require('fs');
           const url = new URL('https://script.google.com/macros/s/AKfycbzSK2Y12vl4RZJvbbcxIkzAl4un93fQManKZ96BGyLsp-vv6j9NQboYnwnc6GtUvOBj/exec');
           url.searchParams.set('action', 'booking_core_snapshot');
           url.searchParams.set('_ts', String(Date.now()));
           const response = await fetch(url, { redirect: 'follow', headers: { accept: 'application/json' } });
           const text = await response.text();
-          console.log('HTTP_STATUS=' + response.status);
-          console.log('BODY_PREFIX=' + text.slice(0, 2000));
           if (!response.ok) process.exit(2);
           let payload;
           try { payload = JSON.parse(text); } catch { process.exit(3); }
           const ok = payload?.success === true && payload?.ok === true && payload?.type === 'booking_core_snapshot' && Number(payload?.schemaVersion) === 1;
-          if (!ok) process.exit(4);
-          const rows = Array.isArray(payload?.rows) ? payload.rows : [];
+          if (!ok) { console.log(text.slice(0,2000)); process.exit(4); }
           const active = new Set(['267788:1','268803:1','267788:2','267788:3','626129:1','268803:2','626129:2','265595:1','265595:2','265595:3']);
-          const recognized = rows.filter(r => active.has(`${r.roomId}:${r.unitId}`));
-          const badAvailable = recognized.filter(r => r.available === true && !(Number(r.price) > 0));
-          const bookedNullPrice = recognized.filter(r => String(r.reason||'').toUpperCase()==='BOOKED' && !(Number(r.price)>0));
-          const dates = recognized.map(r => String(r.date||'')).filter(Boolean).sort();
-          console.log('CONTRACT_OK=true');
-          console.log('REFRESH_STATE=' + String(payload?.refreshState || ''));
-          console.log('DATA_UPDATED_AT=' + String(payload?.dataUpdatedAt || ''));
-          console.log('GENERATED_AT=' + String(payload?.generatedAt || ''));
-          console.log('COUNT=' + String(payload?.count || 0));
-          console.log('RECOGNIZED_ROWS=' + recognized.length);
-          console.log('BAD_AVAILABLE_WITHOUT_PRICE=' + badAvailable.length);
-          console.log('BOOKED_WITH_NULL_PRICE=' + bookedNullPrice.length);
-          console.log('MIN_DATE=' + (dates[0] || ''));
-          console.log('MAX_DATE=' + (dates.at(-1) || ''));
-          if (String(payload?.refreshState||'').toUpperCase() !== 'READY' || !payload?.dataUpdatedAt || recognized.length === 0 || badAvailable.length) process.exit(5);
+          const rows = (Array.isArray(payload.rows) ? payload.rows : []).filter(r => active.has(`${r.roomId}:${r.unitId}`));
+          const badAvailable = rows.filter(r => r.available === true && !(Number(r.price) > 0));
+          if (String(payload?.refreshState||'').toUpperCase() !== 'READY' || !payload?.dataUpdatedAt || rows.length === 0 || badAvailable.length) process.exit(5);
+          fs.writeFileSync('booking-core-snapshot.json', JSON.stringify({dataUpdatedAt: payload.dataUpdatedAt, generatedAt: payload.generatedAt, rows}));
+          console.log(`SNAPSHOT_OK rows=${rows.length} dataUpdatedAt=${payload.dataUpdatedAt}`);
           NODE
+      - name: Upload canonical snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: booking-core-snapshot
+          path: booking-core-snapshot.json
+          retention-days: 1
