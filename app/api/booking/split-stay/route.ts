@@ -87,6 +87,7 @@ export async function GET(request: NextRequest) {
         splitRewardPercent: number(row.split_extra_discount_percent),
         splitTotal: number(row.split_total),
         saving: number(row.savings),
+        breakfastTotalIfAdded: number(row.breakfast_total_if_added),
       };
     });
 
