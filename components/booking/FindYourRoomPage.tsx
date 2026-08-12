@@ -1,5 +1,5 @@
 ﻿import type { FindYourRoomPageData } from "@/content/find-your-room";
-import { FindYourRoomEngine } from "@/components/booking/FindYourRoomEngine";
+import { CentralFindYourRoomEngine } from "@/components/booking/CentralFindYourRoomEngine";
 import "@/components/booking/FindYourRoomEngine.css";
 
 type FindYourRoomPageProps = {
@@ -23,7 +23,7 @@ export default function FindYourRoomPage({ data }: FindYourRoomPageProps) {
 
       <section className="find-room-engine-section">
         <div className="find-room-engine-section__inner">
-          <FindYourRoomEngine data={data} />
+          <CentralFindYourRoomEngine data={data} />
         </div>
       </section>
     </main>
