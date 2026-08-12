@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const DIRECT_DISCOUNT_PERCENT = 10;
 const MAX_NIGHTS = 30;
 const AI_TIMEOUT_MS = 8_000;
 const SEARCH_TIMEOUT_MS = 8_000;
@@ -38,6 +37,8 @@ type Offer = {
   originalTotal: number;
   directTotal: number;
   saving: number;
+  directDiscountPercent: number;
+  guestNote: string | null;
 };
 
 type RoomMeta = {
@@ -249,10 +250,11 @@ function buildOffers(payload: any, language: Language): Offer[] {
       const roomId = String(room.roomId || "");
       const unitId = String(room.unitId || "");
       const meta = ROOM_META[`${roomId}:${unitId}`];
-      const originalTotal = Number(room.totalPrice ?? room.price ?? room.roomTotal ?? 0);
-      if (!meta || !Number.isFinite(originalTotal) || originalTotal <= 0) return null;
-      const roundedOriginal = Math.round(originalTotal * 100) / 100;
-      const directTotal = Math.round(roundedOriginal * (1 - DIRECT_DISCOUNT_PERCENT / 100) * 100) / 100;
+      const originalTotal = Number(room.originalTotal ?? room.totalPrice ?? room.price ?? room.roomTotal ?? 0);
+      const directTotal = Number(room.directTotal ?? 0);
+      const saving = Number(room.saving ?? (originalTotal - directTotal));
+      const directDiscountPercent = Number(room.directDiscountPercent ?? 0);
+      if (!meta || !Number.isFinite(originalTotal) || originalTotal <= 0 || !Number.isFinite(directTotal) || directTotal <= 0) return null;
       return {
         roomId,
         unitId,
@@ -265,9 +267,11 @@ function buildOffers(payload: any, language: Language): Offer[] {
         detailsUrl: meta.details[language] || meta.details.en,
         bookingUrl: "/book-now",
         nights: Number(payload.nights || 0),
-        originalTotal: roundedOriginal,
-        directTotal,
-        saving: Math.round((roundedOriginal - directTotal) * 100) / 100,
+        originalTotal: Math.round(originalTotal * 100) / 100,
+        directTotal: Math.round(directTotal * 100) / 100,
+        saving: Math.round(saving * 100) / 100,
+        directDiscountPercent: Number.isFinite(directDiscountPercent) ? directDiscountPercent : 0,
+        guestNote: room.guestNote ? String(room.guestNote) : null,
       };
     })
     .filter((offer: Offer | null): offer is Offer => Boolean(offer))
@@ -314,7 +318,8 @@ export async function POST(request: NextRequest) {
       offers,
       language,
       action: "search_rooms",
-      discountPercent: DIRECT_DISCOUNT_PERCENT,
+      discountPercent: offers[0]?.directDiscountPercent ?? null,
+      pricingSource: "neon_booking_core",
       timing: availability?._booking_engine || undefined,
     });
   } catch (error) {
