@@ -23,13 +23,42 @@ function write(file, source) {
     if (!source.includes(anchor)) throw new Error("Semantic intent prompt anchor not found");
     const guidance = [
       '                "Generic correction messages must be resolved from conversational context, not from a hard-coded phrase list.",',
-      '                "If the user says they made a mistake, were wrong, want to redo the previous answer, or otherwise signals a correction without naming a field, infer the field they mean from the immediately preceding booking exchange.",',
+      '                "roomFinderContext, when supplied, describes the active UI turn. Use currentStep and lastAcceptedField as authoritative conversational state for resolving what a generic correction refers to.",',
+      '                "If the latest message semantically expresses that the previous answer was mistaken, should be undone, or should be re-entered, and roomFinderContext.lastAcceptedField is present, intent MUST be edit_search and clearFields MUST contain that lastAcceptedField unless a replacement value for that same field is explicitly supplied in the latest message.",',
+      '                "If the user signals a correction without naming a field, infer the field they mean from roomFinderContext first and otherwise from the immediately preceding booking exchange.",',
       '                "If check-in was just accepted and the assistant is now asking for check-out, a generic correction with no replacement value means the user wants to re-enter that just-provided check-in: use edit_search, put checkin in clearFields, and do not treat the message as an invalid check-out date.",',
       '                "More generally, a generic correction should target the most recently supplied booking field when the conversation makes that reference unambiguous.",',
     ].join("\n");
     source = source.replace(anchor, `${anchor}\n${guidance}`);
   }
   if (!source.includes(marker)) throw new Error("Semantic correction guidance was not applied");
+
+  if (!source.includes("roomFinderContext?: unknown")) {
+    const signature = "async function askAiToDecide(messages: ChatMessage[], current: SearchState, suppliedLanguage?: string): Promise<AiDecision> {";
+    if (!source.includes(signature)) throw new Error("askAiToDecide signature anchor not found");
+    source = source.replace(
+      signature,
+      "async function askAiToDecide(messages: ChatMessage[], current: SearchState, suppliedLanguage?: string, roomFinderContext?: unknown): Promise<AiDecision> {",
+    );
+  }
+
+  if (!source.includes("roomFinderContext, conversation: messages")) {
+    const inputAnchor = '              text: JSON.stringify({ suppliedLanguage: suppliedLanguage || "", currentSearch: current, conversation: messages }),';
+    if (!source.includes(inputAnchor)) throw new Error("AI structured input anchor not found");
+    source = source.replace(
+      inputAnchor,
+      '              text: JSON.stringify({ suppliedLanguage: suppliedLanguage || "", currentSearch: current, roomFinderContext, conversation: messages }),',
+    );
+  }
+
+  if (!source.includes("body?.roomFinderContext")) {
+    const callAnchor = "    const decision = await askAiToDecide(messages, current, body?.language);";
+    if (!source.includes(callAnchor)) throw new Error("askAiToDecide call anchor not found");
+    source = source.replace(
+      callAnchor,
+      "    const decision = await askAiToDecide(messages, current, body?.language, body?.roomFinderContext);",
+    );
+  }
 
   // A structured clear is authoritative. If the model also repeats an old value from context,
   // never re-apply that old value after clearing the field.
@@ -58,6 +87,10 @@ function write(file, source) {
 
 function isBookingIntent`;
     source = source.replace(applyPattern, applyReplacement);
+  }
+
+  if (!source.includes("roomFinderContext?: unknown") || !source.includes("body?.roomFinderContext")) {
+    throw new Error("Explicit Room Finder turn context was not wired into AI interpretation");
   }
   if (!source.includes("const clearedFields = new Set<SearchField>")) {
     throw new Error("Authoritative semantic clear handling was not applied");
@@ -98,6 +131,10 @@ function isBookingIntent`;
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         mode: "room_finder",
+        roomFinderContext: {
+          currentStep: step,
+          lastAcceptedField: step === "checkout" && checkin ? "checkin" : null,
+        },
         messages: [...messages, { role: "user", content: value }],
         search: { checkin: checkin || null, checkout: checkout || null },
         language,
@@ -198,6 +235,9 @@ function isBookingIntent`;
   }
 
   if (!source.includes(marker)) throw new Error("Semantic Room Finder date mode was not applied");
+  if (!source.includes("lastAcceptedField: step === \"checkout\" && checkin ? \"checkin\" : null")) {
+    throw new Error("Room Finder turn context was not added to the active UI");
+  }
   if (source.includes("const numeric = parseNumericDates(value")) {
     throw new Error("Step-bound numeric date bypass is still active");
   }
@@ -207,4 +247,4 @@ function isBookingIntent`;
   write(chatFile, source);
 }
 
-console.log("AI Room Finder now routes all free-text date/correction input through semantic AI interpretation");
+console.log("AI Room Finder now routes all free-text date/correction input through semantic AI interpretation with explicit turn context");
