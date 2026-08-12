@@ -16,6 +16,7 @@ jobs:
       - name: Check deployed booking_core_snapshot v3
         shell: bash
         run: |
+          # Retry after source refresh had been busy.
           node <<'NODE'
           const url = new URL('https://script.google.com/macros/s/AKfycbzSK2Y12vl4RZJvbbcxIkzAl4un93fQManKZ96BGyLsp-vv6j9NQboYnwnc6GtUvOBj/exec');
           url.searchParams.set('action', 'booking_core_snapshot');
