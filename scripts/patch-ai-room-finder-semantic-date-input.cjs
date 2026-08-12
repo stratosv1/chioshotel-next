@@ -30,6 +30,38 @@ function write(file, source) {
     source = source.replace(anchor, `${anchor}\n${guidance}`);
   }
   if (!source.includes(marker)) throw new Error("Semantic correction guidance was not applied");
+
+  // A structured clear is authoritative. If the model also repeats an old value from context,
+  // never re-apply that old value after clearing the field.
+  if (!source.includes("const clearedFields = new Set<SearchField>")) {
+    const applyPattern = /function applyDecision\(current: SearchState, decision: AiDecision\): SearchState \{[\s\S]*?\n\}\n\nfunction isBookingIntent/;
+    if (!applyPattern.test(source)) throw new Error("applyDecision block not found");
+    const applyReplacement = `function applyDecision(current: SearchState, decision: AiDecision): SearchState {
+  const restarting = decision.intent === "restart_search";
+  const next: SearchState = restarting
+    ? { checkin: null, checkout: null, guests: null }
+    : { ...current };
+  const clearedFields = new Set<SearchField>(decision.clearFields || []);
+
+  for (const field of clearedFields) {
+    if (field === "checkin") next.checkin = null;
+    if (field === "checkout") next.checkout = null;
+    if (field === "guests") next.guests = null;
+  }
+
+  if (!restarting && !clearedFields.has("checkin") && isIsoDate(decision.checkin)) next.checkin = decision.checkin;
+  if (!restarting && !clearedFields.has("checkout") && isIsoDate(decision.checkout)) next.checkout = decision.checkout;
+  if (!restarting && !clearedFields.has("guests") && decision.guests >= 1 && decision.guests <= 5) next.guests = decision.guests;
+
+  return next;
+}
+
+function isBookingIntent`;
+    source = source.replace(applyPattern, applyReplacement);
+  }
+  if (!source.includes("const clearedFields = new Set<SearchField>")) {
+    throw new Error("Authoritative semantic clear handling was not applied");
+  }
   write(routeFile, source);
 }
 
