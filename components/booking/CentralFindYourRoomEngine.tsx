@@ -164,15 +164,16 @@ export function CentralFindYourRoomEngine({ data }: Props) {
       {error && <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">{error}</div>}
 
       {results.map((group, groupIndex) => {
-        const current = selected[groupIndex];
-        const available = group.filter((room) => !selectedKeys.has(key(room)) || key(current as Quote) === key(room));
+        const current = selected[groupIndex] ?? null;
+        const currentKey = current ? key(current) : null;
+        const available = group.filter((room) => !selectedKeys.has(key(room)) || currentKey === key(room));
         return (
           <section key={groupIndex} className="space-y-3 border-t border-stone-200 pt-5">
             <h2 className="text-lg font-bold text-stone-900">{t.results.title} · {t.basics.room} {groupIndex + 1}</h2>
             {available.length === 0 ? <p className="rounded-2xl bg-stone-50 p-4 text-stone-700">{t.results.noAvailabilityText}</p> : null}
             <div className="grid gap-3 md:grid-cols-2">
               {available.map((room) => {
-                const chosen = current ? key(current) === key(room) : false;
+                const chosen = currentKey === key(room);
                 return (
                   <article key={key(room)} className={`rounded-2xl border p-4 ${chosen ? "border-stone-800 bg-stone-50" : "border-stone-200"}`}>
                     <div className="flex items-start justify-between gap-4">
