@@ -77,8 +77,8 @@ function parseCanonicalRow(value: unknown, index: number): CanonicalRow {
   if (!available && reason === "PRICE_OK") {
     throw new Error(`Source row ${index} is unavailable but reason is PRICE_OK`);
   }
-  if ((available || reason === "BOOKED") && price === null) {
-    throw new Error(`Source row ${index} is missing the required reference price`);
+  if (available && price === null) {
+    throw new Error(`Source row ${index} is sellable but missing the required reference price`);
   }
 
   return {
