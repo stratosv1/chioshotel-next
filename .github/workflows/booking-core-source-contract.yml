@@ -28,11 +28,14 @@ jobs:
           ]);
 
           async function fetchAction(action) {
+            const started = Date.now();
             const url = new URL(BASE);
             url.searchParams.set('action', action);
             url.searchParams.set('_ts', String(Date.now()));
             const response = await fetch(url, { redirect: 'follow', headers: { accept: 'application/json' } });
             const text = await response.text();
+            const durationMs = Date.now() - started;
+            console.log(`ACTION_DURATION_${action.toUpperCase()}_MS=${durationMs}`);
             if (!response.ok) throw new Error(`${action} HTTP ${response.status}: ${text.slice(0, 200)}`);
             const payload = JSON.parse(text);
             if (payload?.success === false || payload?.ok === false) throw new Error(`${action} source reported failure`);
@@ -52,10 +55,12 @@ jobs:
             return Number.isFinite(n) && n > 0 ? Math.round(n * 100) / 100 : null;
           }
 
+          const totalStarted = Date.now();
           const [snapshot, booked] = await Promise.all([
             fetchAction('occupancy_snapshot'),
             fetchAction('bookings')
           ]);
+          console.log(`TOTAL_SOURCE_DURATION_MS=${Date.now() - totalStarted}`);
 
           const bookedPrices = new Map();
           for (const row of rows(booked)) {
@@ -95,6 +100,7 @@ jobs:
             if (row.available && row.price === null) throw new Error(`AVAILABLE row without price: ${row.roomId}:${row.unitId}`);
           }
 
+          console.log(`SOURCE_INTERNAL_DURATION_MS=${snapshot.durationMs ?? ''}`);
           console.log(`SOURCE_GENERATED_AT=${snapshot.generatedAt || ''}`);
           console.log(`CANONICAL_ROWS=${JSON.stringify(sourceRows)}`);
           console.log(`AVAILABLE_COUNT=${sourceRows.filter((row) => row.available).length}`);
