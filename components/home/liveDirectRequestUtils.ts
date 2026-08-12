@@ -9,7 +9,7 @@ export type DealRoom = {
   images?: string[];
 };
 
-type DealQuote = {
+type GuestQuote = {
   available?: boolean;
   originalTotal?: number | string;
   directTotal?: number | string;
@@ -18,9 +18,13 @@ type DealQuote = {
   guestNote?: string | null;
 };
 
+type DealQuoteSet = {
+  byGuests?: Record<string, GuestQuote>;
+};
+
 export type DealDay = {
   checkin: string;
-  results?: Record<string, DealQuote>;
+  results?: Record<string, DealQuoteSet>;
 };
 
 export type DealsResponse = {
@@ -83,9 +87,10 @@ function findVisualRoom(room: DealRoom) {
   return ROOM_VISUALS.find((item) => item.id === id) || null;
 }
 
-export function getNightInfo(deals: DealsResponse | null, room: RoomMeta, date: string | null, _guests = 2) {
+export function getNightInfo(deals: DealsResponse | null, room: RoomMeta, date: string | null, guests = 2) {
   if (!deals || !date) return null;
-  const raw = deals.days?.find((day) => day.checkin === date)?.results?.[roomKey(room)];
+  const quoteSet = deals.days?.find((day) => day.checkin === date)?.results?.[roomKey(room)];
+  const raw = quoteSet?.byGuests?.[String(guests)];
   if (!raw?.available) return null;
 
   const original = Number(raw.originalTotal || 0);
