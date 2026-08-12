@@ -24,6 +24,7 @@ export async function GET(request: NextRequest) {
 
   const first = await callSmart(request.nextUrl.origin, {
     mode: "room_finder",
+    roomFinderContext: { currentStep: "checkin", lastAcceptedField: null },
     language,
     messages,
     search: {},
@@ -34,6 +35,7 @@ export async function GET(request: NextRequest) {
 
   const correction = await callSmart(request.nextUrl.origin, {
     mode: "room_finder",
+    roomFinderContext: { currentStep: "checkout", lastAcceptedField: "checkin" },
     language,
     messages,
     search: first.payload?.search || {},
@@ -49,7 +51,19 @@ export async function GET(request: NextRequest) {
   return NextResponse.json({
     ok: Object.values(checks).every(Boolean),
     checks,
-    first: { status: first.status, action: first.payload?.action, answer: first.payload?.answer, search: first.payload?.search },
-    correction: { status: correction.status, action: correction.payload?.action, answer: correction.payload?.answer, search: correction.payload?.search },
+    first: {
+      status: first.status,
+      action: first.payload?.action,
+      intent: first.payload?.intent,
+      answer: first.payload?.answer,
+      search: first.payload?.search,
+    },
+    correction: {
+      status: correction.status,
+      action: correction.payload?.action,
+      intent: correction.payload?.intent,
+      answer: correction.payload?.answer,
+      search: correction.payload?.search,
+    },
   });
 }
