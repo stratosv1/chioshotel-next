@@ -1,0 +1,101 @@
+name: Booking Core Source Contract
+
+on:
+  push:
+    branches:
+      - booking-core-central-source
+    paths:
+      - .github/workflows/booking-core-source-contract.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fetch and validate 29 Aug source snapshot
+        shell: bash
+        run: |
+          node <<'NODE'
+          const BASE = 'https://script.google.com/macros/s/AKfycbzSK2Y12vl4RZJvbbcxIkzAl4un93fQManKZ96BGyLsp-vv6j9NQboYnwnc6GtUvOBj/exec';
+          const TARGET = '2026-08-29';
+          const allowed = new Set([
+            '267788:1','268803:1','267788:2','267788:3','626129:1',
+            '268803:2','626129:2','265595:1','265595:2','265595:3'
+          ]);
+
+          async function fetchAction(action) {
+            const url = new URL(BASE);
+            url.searchParams.set('action', action);
+            url.searchParams.set('_ts', String(Date.now()));
+            const response = await fetch(url, { redirect: 'follow', headers: { accept: 'application/json' } });
+            const text = await response.text();
+            if (!response.ok) throw new Error(`${action} HTTP ${response.status}: ${text.slice(0, 200)}`);
+            const payload = JSON.parse(text);
+            if (payload?.success === false || payload?.ok === false) throw new Error(`${action} source reported failure`);
+            return payload;
+          }
+
+          function rows(payload) {
+            if (Array.isArray(payload)) return payload;
+            for (const key of ['rows','data','items','values','snapshot','availability']) {
+              if (Array.isArray(payload?.[key])) return payload[key];
+            }
+            return [];
+          }
+
+          function price(v) {
+            const n = Number(String(v ?? '').replace(',', '.'));
+            return Number.isFinite(n) && n > 0 ? Math.round(n * 100) / 100 : null;
+          }
+
+          const [snapshot, booked] = await Promise.all([
+            fetchAction('occupancy_snapshot'),
+            fetchAction('bookings')
+          ]);
+
+          const bookedPrices = new Map();
+          for (const row of rows(booked)) {
+            const key = `${row.date}:${row.roomId}:${row.unitId}`;
+            if (String(row.reason || '').toUpperCase() === 'BOOKED' && price(row.price) !== null) {
+              bookedPrices.set(key, price(row.price));
+            }
+          }
+
+          const sourceRows = rows(snapshot)
+            .filter((row) => String(row.date || '').slice(0, 10) === TARGET)
+            .filter((row) => allowed.has(`${row.roomId}:${row.unitId}`))
+            .map((row) => {
+              const reason = String(row.reason || row.status || '').toUpperCase();
+              const key = `${TARGET}:${row.roomId}:${row.unitId}`;
+              const mergedPrice = reason === 'BOOKED' ? (price(row.price) ?? bookedPrices.get(key) ?? null) : price(row.price);
+              return {
+                date: TARGET,
+                roomId: String(row.roomId),
+                unitId: String(row.unitId),
+                roomName: String(row.roomName || ''),
+                unitName: String(row.unitName || ''),
+                label: String(row.label || ''),
+                price: mergedPrice,
+                available: Boolean(row.available),
+                status: String(row.status || row.value || ''),
+                reason: reason || (row.available ? 'PRICE_OK' : 'CLOSED')
+              };
+            })
+            .sort((a, b) => `${a.roomId}:${a.unitId}`.localeCompare(`${b.roomId}:${b.unitId}`));
+
+          if (sourceRows.length !== 10) throw new Error(`Expected 10 canonical rows for ${TARGET}, got ${sourceRows.length}`);
+          const keys = new Set(sourceRows.map((row) => `${row.roomId}:${row.unitId}`));
+          for (const key of allowed) if (!keys.has(key)) throw new Error(`Missing canonical unit ${key}`);
+          for (const row of sourceRows) {
+            if (row.reason === 'BOOKED' && row.price === null) throw new Error(`BOOKED row without reference price: ${row.roomId}:${row.unitId}`);
+            if (row.available && row.price === null) throw new Error(`AVAILABLE row without price: ${row.roomId}:${row.unitId}`);
+          }
+
+          console.log(`SOURCE_GENERATED_AT=${snapshot.generatedAt || ''}`);
+          console.log(`CANONICAL_ROWS=${JSON.stringify(sourceRows)}`);
+          console.log(`AVAILABLE_COUNT=${sourceRows.filter((row) => row.available).length}`);
+          NODE
