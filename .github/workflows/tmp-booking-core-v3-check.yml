@@ -17,7 +17,7 @@ jobs:
         shell: bash
         run: |
           node <<'NODE'
-          const fs = require('fs');
+          const fs = await import('node:fs');
           const url = new URL('https://script.google.com/macros/s/AKfycbzSK2Y12vl4RZJvbbcxIkzAl4un93fQManKZ96BGyLsp-vv6j9NQboYnwnc6GtUvOBj/exec');
           url.searchParams.set('action', 'booking_core_snapshot');
           url.searchParams.set('_ts', String(Date.now()));
