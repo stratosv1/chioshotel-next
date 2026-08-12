@@ -14,10 +14,10 @@ if (!source.includes("function semanticLastAcceptedField")) {
   return field === "checkin" || field === "checkout" || field === "guests" ? field : null;
 }
 
-function decisionHasReplacement(decision: AiDecision, field: SearchField) {
-  if (field === "checkin") return isIsoDate(decision.checkin);
-  if (field === "checkout") return isIsoDate(decision.checkout);
-  return decision.guests >= 1 && decision.guests <= 5;
+function decisionHasReplacement(decision: AiDecision, field: SearchField, current: SearchState) {
+  if (field === "checkin") return isIsoDate(decision.checkin) && decision.checkin !== current.checkin;
+  if (field === "checkout") return isIsoDate(decision.checkout) && decision.checkout !== current.checkout;
+  return decision.guests >= 1 && decision.guests <= 5 && decision.guests !== current.guests;
 }
 
 `;
@@ -33,11 +33,17 @@ function decisionHasReplacement(decision: AiDecision, field: SearchField) {
     clearAnchor,
     `${clearAnchor}
 
+  // A new structured value wins over a simultaneous clear for the same field. This handles
+  // natural replacements without depending on how the user phrased them.
+  for (const field of ["checkin", "checkout", "guests"] as SearchField[]) {
+    if (decisionHasReplacement(decision, field, current)) clearedFields.delete(field);
+  }
+
   // The model owns semantic intent. The state machine owns how that intent mutates booking state.
-  // If AI says this turn is an edit but omits an explicit replacement value, undo the
+  // If AI says this turn is an edit but omits a genuine replacement value, undo the
   // last accepted booking field from structured conversation context. No user phrase matching.
   const lastAcceptedField = semanticLastAcceptedField(roomFinderContext);
-  if (!restarting && decision.intent === "edit_search" && lastAcceptedField && !decisionHasReplacement(decision, lastAcceptedField)) {
+  if (!restarting && decision.intent === "edit_search" && lastAcceptedField && !decisionHasReplacement(decision, lastAcceptedField, current)) {
     clearedFields.add(lastAcceptedField);
     if (lastAcceptedField === "checkin") clearedFields.add("checkout");
   }`,
@@ -51,9 +57,9 @@ function decisionHasReplacement(decision: AiDecision, field: SearchField) {
   );
 }
 
-if (!source.includes('decision.intent === "edit_search" && lastAcceptedField') || !source.includes('body?.roomFinderContext')) {
+if (!source.includes('decisionHasReplacement(decision, field, current)') || !source.includes('body?.roomFinderContext')) {
   throw new Error("Semantic application patch did not apply");
 }
 
 fs.writeFileSync(file, source);
-console.log("AI edit intent is now applied deterministically from structured Room Finder context");
+console.log("AI edit intent now applies structured replacements and corrections deterministically");
