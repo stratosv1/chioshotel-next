@@ -4,6 +4,16 @@ const path = require("node:path");
 const file = path.join(process.cwd(), "app/api/ai-assistant/route.ts");
 let source = fs.readFileSync(file, "utf8");
 
+// The room finder now uses an intent-first architecture: AI interprets free text,
+// while the server owns booking state, validation and the next booking question.
+// The old patch below targeted the previous AI-orchestrated prompt and must not
+// try to rewrite the new route at build time.
+const modernIntentFirstMarker = "You are the natural-language interpreter for the Voulamandis House room finder.";
+if (source.includes(modernIntentFirstMarker)) {
+  console.log("Skipped legacy human conversation patch: intent-first room finder is already active");
+  process.exit(0);
+}
+
 const marker = "Make the conversation feel like a natural WhatsApp exchange";
 const anchor = '                "For search_rooms, answer must be a short transition such as \'Ελέγχω τώρα τη διαθεσιμότητα.\' in the user\'s language.",';
 const guidance = [

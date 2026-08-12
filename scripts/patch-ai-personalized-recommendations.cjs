@@ -11,15 +11,22 @@ if (!source.includes('import { personalizeOffers } from "@/lib/ai-assistant/sale
   );
 }
 
-const oldBlock = `    const availability = await searchNeon(search, request.nextUrl.origin);\n    const offers = buildOffers(availability, language);\n\n    return NextResponse.json({\n      answer: offers.length ? resultMessage(language, offers.length) : resultMessage(language, 0),\n      search,\n      offers,`;
+const legacyBlock = `    const availability = await searchNeon(search, request.nextUrl.origin);\n    const offers = buildOffers(availability, language);\n\n    return NextResponse.json({\n      answer: offers.length ? resultMessage(language, offers.length) : resultMessage(language, 0),\n      search,\n      offers,`;
 
-const newBlock = `    const availability = await searchNeon(search, request.nextUrl.origin);\n    const offers = buildOffers(availability, language);\n    const personalized = offers.length\n      ? await personalizeOffers({ messages, search, offers, language })\n      : { answer: resultMessage(language, 0), offers };\n\n    return NextResponse.json({\n      answer: personalized.answer || resultMessage(language, personalized.offers.length),\n      search,\n      offers: personalized.offers,`;
+const legacyReplacement = `    const availability = await searchNeon(search, request.nextUrl.origin);\n    const offers = buildOffers(availability, language);\n    const personalized = offers.length\n      ? await personalizeOffers({ messages, search, offers, language })\n      : { answer: resultMessage(language, 0), offers };\n\n    return NextResponse.json({\n      answer: personalized.answer || resultMessage(language, personalized.offers.length),\n      search,\n      offers: personalized.offers,`;
 
-if (!source.includes("await personalizeOffers({ messages, search, offers, language })")) {
-  if (!source.includes(oldBlock)) {
+const intentFirstBlock = `    const availability = await searchNeon(next.search, request.nextUrl.origin);\n    const offers = buildOffers(availability, language);\n\n    return NextResponse.json({\n      answer: offers.length ? resultMessage(language, offers.length) : resultMessage(language, 0),\n      search: next.search,\n      offers,`;
+
+const intentFirstReplacement = `    const availability = await searchNeon(next.search, request.nextUrl.origin);\n    const offers = buildOffers(availability, language);\n    const personalized = offers.length\n      ? await personalizeOffers({ messages, search: next.search, offers, language })\n      : { answer: resultMessage(language, 0), offers };\n\n    return NextResponse.json({\n      answer: personalized.answer || resultMessage(language, personalized.offers.length),\n      search: next.search,\n      offers: personalized.offers,`;
+
+if (!source.includes("await personalizeOffers({ messages")) {
+  if (source.includes(intentFirstBlock)) {
+    source = source.replace(intentFirstBlock, intentFirstReplacement);
+  } else if (source.includes(legacyBlock)) {
+    source = source.replace(legacyBlock, legacyReplacement);
+  } else {
     throw new Error("AI offer response block not found");
   }
-  source = source.replace(oldBlock, newBlock);
 }
 
 if (!source.includes('import { personalizeOffers } from "@/lib/ai-assistant/sales-concierge";')) {
