@@ -9,9 +9,22 @@ export type DealRoom = {
   images?: string[];
 };
 
+type GuestQuote = {
+  available?: boolean;
+  originalTotal?: number | string;
+  directTotal?: number | string;
+  directDiscountPercent?: number | string;
+  saving?: number | string;
+  guestNote?: string | null;
+};
+
+type DealQuoteSet = {
+  byGuests?: Record<string, GuestQuote>;
+};
+
 export type DealDay = {
   checkin: string;
-  results?: Record<string, { available?: boolean; totalPrice?: number | string }>;
+  results?: Record<string, DealQuoteSet>;
 };
 
 export type DealsResponse = {
@@ -26,144 +39,29 @@ export type RoomMeta = Required<Pick<DealRoom, "id" | "roomId" | "unitId" | "dis
   featureBadges: string[];
 };
 
-type VerifiedRoom = {
+type VisualRoom = {
   id: number;
   roomId: number;
   unitId: number;
   displayName: string;
   type: string;
   location: string;
-  maxGuests: number;
   image: string;
   primaryBadge: string;
   featureBadges: string[];
 };
 
-const DIRECT_DISCOUNT_PERCENT = 15;
-const CLIMATE_FEE_PER_NIGHT = 2;
-const ALLOWED_ROOM_IDS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
-const ROOM_BASE: VerifiedRoom[] = [
-  {
-    id: 1,
-    roomId: 267788,
-    unitId: 1,
-    displayName: "Room 1",
-    type: "Upper Floor Double / Triple",
-    location: "First floor",
-    maxGuests: 4,
-    image: "/images/rooms/DSC07776-2-e1675109942622.webp",
-    primaryBadge: "First floor",
-    featureBadges: ["👤×4", "First floor", "No kitchenette", "Stairs"],
-  },
-  {
-    id: 2,
-    roomId: 268803,
-    unitId: 1,
-    displayName: "Room 2",
-    type: "Economy Double",
-    location: "First floor",
-    maxGuests: 2,
-    image: "/images/rooms/DSC07803-1.webp",
-    primaryBadge: "Economy",
-    featureBadges: ["👤×2", "First floor", "No kitchenette", "Stairs"],
-  },
-  {
-    id: 3,
-    roomId: 267788,
-    unitId: 2,
-    displayName: "Room 3",
-    type: "Upper Floor Double / Triple",
-    location: "First floor",
-    maxGuests: 3,
-    image: "/images/rooms/DSC07867-1.webp",
-    primaryBadge: "Kitchenette",
-    featureBadges: ["👤×3", "First floor", "Kitchenette", "Stairs"],
-  },
-  {
-    id: 4,
-    roomId: 267788,
-    unitId: 3,
-    displayName: "Room 4",
-    type: "Upper Floor Double / Triple",
-    location: "First floor",
-    maxGuests: 3,
-    image: "/images/rooms/received_1748354861920234.webp",
-    primaryBadge: "Kitchenette",
-    featureBadges: ["👤×3", "First floor", "Kitchenette", "Stairs"],
-  },
-  {
-    id: 5,
-    roomId: 626129,
-    unitId: 1,
-    displayName: "Room 5",
-    type: "Ground Floor Double / Triple",
-    location: "Ground floor",
-    maxGuests: 3,
-    image: "/images/rooms/voulamandis-house-rooms.webp",
-    primaryBadge: "Ground floor",
-    featureBadges: ["👤×3", "Ground floor", "No kitchenette", "No stairs"],
-  },
-  {
-    id: 6,
-    roomId: 268803,
-    unitId: 2,
-    displayName: "Room 6",
-    type: "Economy Double",
-    location: "Ground floor",
-    maxGuests: 2,
-    image: "/images/rooms/received_1753964631359257.webp",
-    primaryBadge: "Economy",
-    featureBadges: ["👤×2", "Ground floor", "No kitchenette", "No stairs"],
-  },
-  {
-    id: 7,
-    roomId: 626129,
-    unitId: 2,
-    displayName: "Room 7",
-    type: "Ground Floor Double / Triple",
-    location: "Ground floor",
-    maxGuests: 3,
-    image: "/images/rooms/double-triple-room.jpg",
-    primaryBadge: "Ground floor",
-    featureBadges: ["👤×3", "Ground floor", "No kitchenette", "No stairs"],
-  },
-  {
-    id: 8,
-    roomId: 265595,
-    unitId: 1,
-    displayName: "Apartment 8",
-    type: "Family Apartment",
-    location: "Ground floor",
-    maxGuests: 4,
-    image: "/images/rooms/chios-apartments-voulamandis.webp",
-    primaryBadge: "Kitchen",
-    featureBadges: ["👤×4", "Ground floor", "Kitchen", "No stairs"],
-  },
-  {
-    id: 9,
-    roomId: 265595,
-    unitId: 2,
-    displayName: "Apartment 9",
-    type: "Family Apartment",
-    location: "Ground floor",
-    maxGuests: 4,
-    image: "/images/rooms/chios-apartments-voulamandis.webp",
-    primaryBadge: "Kitchen",
-    featureBadges: ["👤×4", "Ground floor", "Kitchen", "No stairs"],
-  },
-  {
-    id: 10,
-    roomId: 265595,
-    unitId: 3,
-    displayName: "Apartment 10",
-    type: "Family Apartment",
-    location: "Ground floor",
-    maxGuests: 4,
-    image: "/images/rooms/DSC07899.webp",
-    primaryBadge: "Kitchen",
-    featureBadges: ["👤×4", "Ground floor", "Kitchen", "No stairs"],
-  },
+const ROOM_VISUALS: VisualRoom[] = [
+  { id: 1, roomId: 267788, unitId: 1, displayName: "Room 1", type: "Upper Floor Double / Triple", location: "First floor", image: "/images/rooms/DSC07776-2-e1675109942622.webp", primaryBadge: "First floor", featureBadges: ["First floor", "No kitchenette", "Stairs"] },
+  { id: 2, roomId: 268803, unitId: 1, displayName: "Room 2", type: "Economy Double", location: "First floor", image: "/images/rooms/DSC07803-1.webp", primaryBadge: "Economy", featureBadges: ["First floor", "No kitchenette", "Stairs"] },
+  { id: 3, roomId: 267788, unitId: 2, displayName: "Room 3", type: "Upper Floor Double / Triple", location: "First floor", image: "/images/rooms/DSC07867-1.webp", primaryBadge: "Kitchenette", featureBadges: ["First floor", "Kitchenette", "Stairs"] },
+  { id: 4, roomId: 267788, unitId: 3, displayName: "Room 4", type: "Upper Floor Double / Triple", location: "First floor", image: "/images/rooms/received_1748354861920234.webp", primaryBadge: "Kitchenette", featureBadges: ["First floor", "Kitchenette", "Stairs"] },
+  { id: 5, roomId: 626129, unitId: 1, displayName: "Room 5", type: "Ground Floor Double / Triple", location: "Ground floor", image: "/images/rooms/voulamandis-house-rooms.webp", primaryBadge: "Ground floor", featureBadges: ["Ground floor", "No kitchenette", "No stairs"] },
+  { id: 6, roomId: 268803, unitId: 2, displayName: "Room 6", type: "Economy Double", location: "Ground floor", image: "/images/rooms/received_1753964631359257.webp", primaryBadge: "Economy", featureBadges: ["Ground floor", "No kitchenette", "No stairs"] },
+  { id: 7, roomId: 626129, unitId: 2, displayName: "Room 7", type: "Ground Floor Double / Triple", location: "Ground floor", image: "/images/rooms/double-triple-room.jpg", primaryBadge: "Ground floor", featureBadges: ["Ground floor", "No kitchenette", "No stairs"] },
+  { id: 8, roomId: 265595, unitId: 1, displayName: "Apartment 8", type: "Family Apartment", location: "Ground floor", image: "/images/rooms/chios-apartments-voulamandis.webp", primaryBadge: "Kitchen", featureBadges: ["Ground floor", "Kitchen", "No stairs"] },
+  { id: 9, roomId: 265595, unitId: 2, displayName: "Apartment 9", type: "Family Apartment", location: "Ground floor", image: "/images/rooms/chios-apartments-voulamandis.webp", primaryBadge: "Kitchen", featureBadges: ["Ground floor", "Kitchen", "No stairs"] },
+  { id: 10, roomId: 265595, unitId: 3, displayName: "Apartment 10", type: "Family Apartment", location: "Ground floor", image: "/images/rooms/DSC07899.webp", primaryBadge: "Kitchen", featureBadges: ["Ground floor", "Kitchen", "No stairs"] },
 ];
 
 export function roomKey(room: Pick<DealRoom, "roomId" | "unitId">) {
@@ -182,60 +80,33 @@ export function formatDate(value: string | null, locale = "en-GB") {
     : date.toLocaleDateString(locale, { weekday: "short", day: "numeric", month: "short" });
 }
 
-function roomIdFromName(value?: string) {
-  const match = String(value || "").match(/(?:room|apartment)\s*(\d+)/i);
-  return match ? Number(match[1]) : 0;
-}
-
-function isAllowedRoomId(id: number) {
-  return ALLOWED_ROOM_IDS.includes(id);
-}
-
-function findBaseRoom(room: DealRoom) {
-  const displayedId = roomIdFromName(room.displayName);
-
-  if (displayedId && !isAllowedRoomId(displayedId)) return null;
-
-  const byName = ROOM_BASE.find((item) => item.id === displayedId);
-  if (byName) return byName;
-
-  const numericId = Number(room.id || 0);
-  if (numericId && !isAllowedRoomId(numericId)) return null;
-
-  const byId = ROOM_BASE.find((item) => item.id === numericId);
-  if (byId) return byId;
-
-  const byLiveKey = ROOM_BASE.find((item) => item.roomId === room.roomId && item.unitId === room.unitId);
-  if (byLiveKey) return byLiveKey;
-
-  return null;
-}
-
-function apiBaseGuests(room: RoomMeta) {
-  return [8, 9, 10].includes(Number(room.id)) ? 4 : 2;
-}
-
-function extraGuestChargePerNight(room: RoomMeta, guests: number) {
-  const base = apiBaseGuests(room);
-
-  if (base >= 4) return 0;
-  if (guests === 3) return 20;
-  if (guests >= 4) return 30;
-
-  return 0;
+function findVisualRoom(room: DealRoom) {
+  const byKey = ROOM_VISUALS.find((item) => item.roomId === Number(room.roomId) && item.unitId === Number(room.unitId));
+  if (byKey) return byKey;
+  const id = Number(room.id || 0);
+  return ROOM_VISUALS.find((item) => item.id === id) || null;
 }
 
 export function getNightInfo(deals: DealsResponse | null, room: RoomMeta, date: string | null, guests = 2) {
   if (!deals || !date) return null;
-  const raw = deals.days?.find((day) => day.checkin === date)?.results?.[roomKey(room)];
+  const quoteSet = deals.days?.find((day) => day.checkin === date)?.results?.[roomKey(room)];
+  const raw = quoteSet?.byGuests?.[String(guests)];
   if (!raw?.available) return null;
 
-  const base = Number(raw.totalPrice || 0);
-  const discountableNight = base + extraGuestChargePerNight(room, guests);
-  const original = Math.round(discountableNight + CLIMATE_FEE_PER_NIGHT);
-  const direct = Math.round(discountableNight * (1 - DIRECT_DISCOUNT_PERCENT / 100) + CLIMATE_FEE_PER_NIGHT);
+  const original = Number(raw.originalTotal);
+  const direct = Number(raw.directTotal);
+  const saving = Number(raw.saving);
+  const discountPercent = Number(raw.directDiscountPercent);
+  if (!Number.isFinite(original) || original <= 0 || !Number.isFinite(direct) || direct <= 0 || !Number.isFinite(saving) || saving < 0 || !Number.isFinite(discountPercent) || discountPercent < 0) return null;
 
-  return { original, direct, price: direct };
+  return {
+    original: Math.round(original * 100) / 100,
+    direct: Math.round(direct * 100) / 100,
+    price: Math.round(direct * 100) / 100,
+    saving: Math.round(saving * 100) / 100,
+    discountPercent,
+    guestNote: raw.guestNote || null,
+  };
 }
 
 export function firstAvailableDate(deals: DealsResponse | null, room: RoomMeta, guests = 2) {
@@ -252,14 +123,13 @@ export function minDirectPrice(deals: DealsResponse | null, room: RoomMeta, gues
 
 export function selectionTotals(deals: DealsResponse | null, room: RoomMeta | null, dates: string[], guests = 2) {
   if (!room || !dates.length) return null;
-
   const nights = dates.map((date) => getNightInfo(deals, room, date, guests));
   if (nights.some((night) => !night)) return null;
 
   return nights.reduce(
     (total, night) => ({
-      original: total.original + Number(night?.original || 0),
-      direct: total.direct + Number(night?.direct || 0),
+      original: Math.round((total.original + Number(night?.original || 0)) * 100) / 100,
+      direct: Math.round((total.direct + Number(night?.direct || 0)) * 100) / 100,
       nights: total.nights + 1,
     }),
     { original: 0, direct: 0, nights: 0 },
@@ -269,20 +139,21 @@ export function selectionTotals(deals: DealsResponse | null, room: RoomMeta | nu
 export function mergeDealRooms(deals: DealsResponse | null): RoomMeta[] {
   return (deals?.rooms || [])
     .map((room) => {
-      const base = findBaseRoom(room);
-      if (!base) return null;
+      const visual = findVisualRoom(room);
+      const maxGuests = Number(room.maxGuests || 0);
+      if (!visual || !Number.isInteger(maxGuests) || maxGuests < 1) return null;
 
       return {
-        id: base.id,
-        roomId: room.roomId,
-        unitId: room.unitId,
-        displayName: base.displayName,
-        type: base.type,
-        location: base.location,
-        maxGuests: base.maxGuests,
-        images: [base.image],
-        primaryBadge: base.primaryBadge,
-        featureBadges: base.featureBadges.slice(0, 4),
+        id: visual.id,
+        roomId: Number(room.roomId),
+        unitId: Number(room.unitId),
+        displayName: room.displayName || visual.displayName,
+        type: room.type || visual.type,
+        location: room.location || visual.location,
+        maxGuests,
+        images: [visual.image],
+        primaryBadge: visual.primaryBadge,
+        featureBadges: [`👤×${maxGuests}`, ...visual.featureBadges].slice(0, 4),
       };
     })
     .filter((room): room is RoomMeta => Boolean(room));

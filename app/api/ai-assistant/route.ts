@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const DIRECT_DISCOUNT_PERCENT = 10;
 const MAX_NIGHTS = 30;
 const AI_TIMEOUT_MS = 8_000;
 const SEARCH_TIMEOUT_MS = 8_000;
@@ -38,6 +37,8 @@ type Offer = {
   originalTotal: number;
   directTotal: number;
   saving: number;
+  directDiscountPercent: number;
+  guestNote: string | null;
 };
 
 type RoomMeta = {
@@ -166,7 +167,7 @@ async function askAiToDecide(messages: ChatMessage[], current: SearchState, supp
                 "For ask_user, answer must contain the single next question in the user's language.",
                 "For respond, answer must contain the short helpful response in the user's language.",
                 "For search_rooms, answer must be a short transition such as 'Ελέγχω τώρα τη διαθεσιμότητα.' in the user's language.",
-                `A stay must be between 1 and ${MAX_NIGHTS} nights and guests must be between 1 and 10.`,
+                `A stay must be between 1 and ${MAX_NIGHTS} nights and guests must be between 1 and 5.`,
               ].join("\n"),
             }],
           },
@@ -191,7 +192,7 @@ async function askAiToDecide(messages: ChatMessage[], current: SearchState, supp
                 language: { type: "string", enum: ["en", "el", "fr", "de", "it", "es", "tr"] },
                 checkin: { type: "string" },
                 checkout: { type: "string" },
-                guests: { type: "integer", minimum: 0, maximum: 10 },
+                guests: { type: "integer", minimum: 0, maximum: 5 },
                 resetSearch: { type: "boolean" },
                 answer: { type: "string" },
               },
@@ -216,14 +217,14 @@ function mergeSearch(current: SearchState, decision: AiDecision): SearchState {
   const next: SearchState = decision.resetSearch ? {} : { ...current };
   if (isIsoDate(decision.checkin)) next.checkin = decision.checkin;
   if (isIsoDate(decision.checkout)) next.checkout = decision.checkout;
-  if (decision.guests >= 1 && decision.guests <= 10) next.guests = decision.guests;
+  if (decision.guests >= 1 && decision.guests <= 5) next.guests = decision.guests;
   return next;
 }
 
 function validateSearch(search: SearchState): search is Required<SearchState> {
   if (!isIsoDate(search.checkin) || !isIsoDate(search.checkout) || !search.guests) return false;
   const nights = nightsBetween(search.checkin, search.checkout);
-  return nights >= 1 && nights <= MAX_NIGHTS && search.guests >= 1 && search.guests <= 10;
+  return nights >= 1 && nights <= MAX_NIGHTS && search.guests >= 1 && search.guests <= 5;
 }
 
 async function searchNeon(search: Required<SearchState>, origin: string) {
@@ -249,10 +250,11 @@ function buildOffers(payload: any, language: Language): Offer[] {
       const roomId = String(room.roomId || "");
       const unitId = String(room.unitId || "");
       const meta = ROOM_META[`${roomId}:${unitId}`];
-      const originalTotal = Number(room.totalPrice ?? room.price ?? room.roomTotal ?? 0);
-      if (!meta || !Number.isFinite(originalTotal) || originalTotal <= 0) return null;
-      const roundedOriginal = Math.round(originalTotal * 100) / 100;
-      const directTotal = Math.round(roundedOriginal * (1 - DIRECT_DISCOUNT_PERCENT / 100) * 100) / 100;
+      const originalTotal = Number(room.originalTotal);
+      const directTotal = Number(room.directTotal);
+      const saving = Number(room.saving);
+      const directDiscountPercent = Number(room.directDiscountPercent);
+      if (!meta || !Number.isFinite(originalTotal) || originalTotal <= 0 || !Number.isFinite(directTotal) || directTotal <= 0 || !Number.isFinite(saving) || saving < 0 || !Number.isFinite(directDiscountPercent) || directDiscountPercent < 0) return null;
       return {
         roomId,
         unitId,
@@ -265,9 +267,11 @@ function buildOffers(payload: any, language: Language): Offer[] {
         detailsUrl: meta.details[language] || meta.details.en,
         bookingUrl: "/book-now",
         nights: Number(payload.nights || 0),
-        originalTotal: roundedOriginal,
-        directTotal,
-        saving: Math.round((roundedOriginal - directTotal) * 100) / 100,
+        originalTotal: Math.round(originalTotal * 100) / 100,
+        directTotal: Math.round(directTotal * 100) / 100,
+        saving: Math.round(saving * 100) / 100,
+        directDiscountPercent: Number.isFinite(directDiscountPercent) ? directDiscountPercent : 0,
+        guestNote: room.guestNote ? String(room.guestNote) : null,
       };
     })
     .filter((offer: Offer | null): offer is Offer => Boolean(offer))
@@ -314,7 +318,8 @@ export async function POST(request: NextRequest) {
       offers,
       language,
       action: "search_rooms",
-      discountPercent: DIRECT_DISCOUNT_PERCENT,
+      discountPercent: offers[0]?.directDiscountPercent ?? null,
+      pricingSource: "neon_booking_core",
       timing: availability?._booking_engine || undefined,
     });
   } catch (error) {
