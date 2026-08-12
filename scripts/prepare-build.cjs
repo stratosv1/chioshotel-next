@@ -27,6 +27,8 @@ const PATCHES = [
   "fix-ai-room-finder-final-presentation.cjs",
   "patch-ai-mobile-composer-focus.cjs",
   "patch-ai-room-finder-semantic-date-input.cjs",
+  "patch-ai-room-finder-intent-engine-v2.cjs",
+  "patch-ai-room-finder-semantic-application.cjs",
 ];
 
 const SLOW_PATCH_MS = 500;
