@@ -125,13 +125,13 @@ function rowsHtml(rows: DetailRow[]) {
   if (!rows.length) return "";
 
   return `
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:14px;border-collapse:separate;border-spacing:0 7px">
+    <div style="margin-top:14px">
       ${rows.map((row) => `
-        <tr>
-          <td style="width:118px;padding:0 12px 0 0;vertical-align:top;color:#9a7653;font-size:12px;line-height:1.5;font-weight:800;text-transform:uppercase;letter-spacing:.04em">${esc(row.label)}</td>
-          <td style="padding:0;vertical-align:top;color:#5e554d;font-size:14px;line-height:1.55;font-weight:600">${esc(row.value)}</td>
-        </tr>`).join("")}
-    </table>`;
+        <div style="margin-top:10px">
+          <div style="color:#9a7653;font-size:11px;line-height:1.4;font-weight:800;text-transform:uppercase;letter-spacing:.05em">${esc(row.label)}</div>
+          <div style="margin-top:2px;color:#5e554d;font-size:14px;line-height:1.55;font-weight:600">${esc(row.value)}</div>
+        </div>`).join("")}
+    </div>`;
 }
 
 export async function POST(request: Request) {
@@ -166,18 +166,18 @@ export async function POST(request: Request) {
       const emoji = categoryEmoji[stop.category] || "📍";
       return `
         <tr>
-          <td style="padding:0 0 16px">
-            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e7ded3;border-radius:18px;background:#fffdfa;border-collapse:separate;overflow:hidden">
+          <td style="padding:20px 0;border-bottom:1px solid #e7ded3">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse">
               <tr>
-                <td style="width:84px;padding:20px 10px 20px 18px;vertical-align:top">
-                  <div style="display:inline-block;border-radius:999px;background:#edf0e5;color:#5f694b;padding:7px 10px;font-size:13px;line-height:1;font-weight:800">${suggestedTime(index)}</div>
+                <td width="72" style="width:72px;padding:1px 10px 0 0;vertical-align:top">
+                  <div style="display:inline-block;border-radius:999px;background:#edf0e5;color:#5f694b;padding:7px 10px;font-size:13px;line-height:1;font-weight:800;white-space:nowrap">${suggestedTime(index)}</div>
                 </td>
-                <td style="padding:18px 20px 20px 4px;vertical-align:top">
+                <td style="padding:0;vertical-align:top">
                   <div style="font-size:11px;line-height:1.4;letter-spacing:.11em;text-transform:uppercase;color:#9a7653;font-weight:800">${emoji} ${esc(stop.category)}</div>
-                  <div style="font-family:Georgia,'Times New Roman',serif;font-size:26px;line-height:1.16;color:#30261f;font-weight:700;margin-top:5px">${esc(stop.title)}</div>
-                  <div style="font-size:14px;line-height:1.6;color:#75695f;font-weight:700;margin-top:6px">${esc(stop.summary)}</div>
+                  <div style="font-family:Georgia,'Times New Roman',serif;font-size:26px;line-height:1.14;color:#30261f;font-weight:700;margin-top:4px">${esc(stop.title)}</div>
+                  <div style="font-size:14px;line-height:1.6;color:#75695f;font-weight:600;margin-top:7px">${esc(stop.summary)}</div>
                   ${rowsHtml(stop.rows)}
-                  ${stop.tip ? `<div style="margin-top:14px;border-left:3px solid #c29b72;background:#f8f1e7;border-radius:0 10px 10px 0;padding:10px 12px;color:#62564d;font-size:13px;line-height:1.55"><strong style="color:#4d4138">Local tip:</strong> ${esc(stop.tip)}</div>` : ""}
+                  ${stop.tip ? `<div style="margin-top:14px;border-left:3px solid #c29b72;padding:8px 0 8px 12px;color:#62564d;font-size:13px;line-height:1.55"><strong style="color:#4d4138">Local tip:</strong> ${esc(stop.tip)}</div>` : ""}
                 </td>
               </tr>
             </table>
@@ -190,70 +190,58 @@ export async function POST(request: Request) {
   <body style="margin:0;padding:0;background:#f3eee6;font-family:Arial,Helvetica,sans-serif;color:#302820">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;background:#f3eee6;margin:0;padding:0">
       <tr>
-        <td align="center" style="padding:28px 12px">
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;max-width:700px;background:#ffffff;border-radius:24px;border-collapse:separate;overflow:hidden;box-shadow:0 16px 44px rgba(72,55,42,.10)">
+        <td align="center" style="padding:18px 8px">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;max-width:700px;background:#ffffff;border-collapse:separate">
             <tr>
-              <td style="background:#4c3b30;padding:32px 30px 30px;color:#ffffff">
+              <td style="background:#4c3b30;padding:30px 22px 28px;color:#ffffff">
                 <div style="font-size:11px;line-height:1.4;letter-spacing:.20em;text-transform:uppercase;color:#eadfce;font-weight:800">VOULAMANDIS HOUSE · CHIOS TRIP PLANNER</div>
-                <div style="font-family:Georgia,'Times New Roman',serif;font-size:36px;line-height:1.08;font-weight:700;margin-top:11px">Το προσωπικό σου πρόγραμμα για τη Χίο</div>
-                <div style="margin-top:14px;font-size:14px;line-height:1.6;color:#f1e9df;font-weight:600">${esc(region)} · ${stops.length} ${stops.length === 1 ? "στάση" : "στάσεις"}</div>
+                <div style="font-family:Georgia,'Times New Roman',serif;font-size:34px;line-height:1.08;font-weight:700;margin-top:10px">Το προσωπικό σου πρόγραμμα για τη Χίο</div>
+                <div style="margin-top:13px;font-size:14px;line-height:1.6;color:#f1e9df;font-weight:600">${esc(region)} · ${stops.length} ${stops.length === 1 ? "στάση" : "στάσεις"}</div>
               </td>
             </tr>
 
             <tr>
-              <td style="padding:26px 28px 8px">
-                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:separate">
-                  <tr>
-                    <td style="padding:0">
-                      <div style="font-family:Georgia,'Times New Roman',serif;font-size:24px;line-height:1.2;color:#342a23;font-weight:700">Η διαδρομή σου, οργανωμένη</div>
-                      <div style="margin-top:8px;font-size:15px;line-height:1.7;color:#665b53;font-weight:600">Έβαλα τις επιλογές σου σε μια πρακτική σειρά για να έχεις ένα εύκολο σημείο εκκίνησης. Οι ώρες είναι ενδεικτικές — κράτα χρόνο για μπάνιο, φαγητό, φωτογραφίες και αυθόρμητες στάσεις.</div>
-                    </td>
-                  </tr>
-                </table>
+              <td style="padding:24px 20px 6px">
+                <div style="font-family:Georgia,'Times New Roman',serif;font-size:24px;line-height:1.2;color:#342a23;font-weight:700">Η διαδρομή σου, οργανωμένη</div>
+                <div style="margin-top:8px;font-size:15px;line-height:1.65;color:#665b53;font-weight:600">Έβαλα τις επιλογές σου σε μια πρακτική σειρά για να έχεις ένα εύκολο σημείο εκκίνησης. Οι ώρες είναι ενδεικτικές — κράτα χρόνο για μπάνιο, φαγητό, φωτογραφίες και αυθόρμητες στάσεις.</div>
               </td>
             </tr>
 
             <tr>
-              <td style="padding:12px 28px 6px">
-                <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${stopHtml}</table>
+              <td style="padding:4px 20px 8px">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse">${stopHtml}</table>
               </td>
             </tr>
 
             <tr>
-              <td style="padding:8px 28px 24px">
-                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-radius:16px;background:#eef2e7">
-                  <tr>
-                    <td style="padding:17px 18px;color:#536044;font-size:14px;line-height:1.65;font-weight:600">
-                      <strong style="color:#455036">✓ Πριν ξεκινήσεις:</strong> έλεγξε ωράρια για μουσεία και αξιοθέατα και χρησιμοποίησε Google Maps για live χρόνους οδήγησης. Για τις παραλίες, οι συνθήκες μπορεί να αλλάξουν μέσα στην ημέρα.
-                    </td>
-                  </tr>
-                </table>
+              <td style="padding:18px 20px 24px;color:#536044;font-size:14px;line-height:1.65;font-weight:600;background:#eef2e7">
+                <strong style="color:#455036">✓ Πριν ξεκινήσεις:</strong> έλεγξε ωράρια για μουσεία και αξιοθέατα και χρησιμοποίησε Google Maps για live χρόνους οδήγησης. Για τις παραλίες, οι συνθήκες μπορεί να αλλάξουν μέσα στην ημέρα.
               </td>
             </tr>
 
             <tr>
-              <td style="border-top:1px solid #ece4da;background:#fbf8f4;padding:26px 28px 30px">
+              <td style="border-top:1px solid #ece4da;background:#fbf8f4;padding:24px 20px 28px">
                 <div style="font-size:11px;line-height:1.4;letter-spacing:.14em;text-transform:uppercase;color:#9a7653;font-weight:800">VOULAMANDIS HOUSE · ΚΑΜΠΟΣ ΧΙΟΥ</div>
                 <div style="font-family:Georgia,'Times New Roman',serif;font-size:27px;line-height:1.15;font-weight:700;color:#332820;margin-top:7px">Δεν έχεις κλείσει ακόμη διαμονή;</div>
                 <div style="font-size:14px;line-height:1.65;color:#6e6259;margin-top:9px;font-weight:600">Μείνε στον ήρεμο Κάμπο της Χίου και δες άμεσα ποιο δωμάτιο ταιριάζει στις ημερομηνίες σου ή μίλησε απευθείας μαζί μας.</div>
 
-                <table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:18px">
+                <table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:17px">
                   <tr>
                     <td style="padding:0 8px 8px 0">
-                      <a href="https://chioshotel.gr/ai-assistant/?lang=el" style="display:inline-block;background:#737d58;color:#ffffff;text-decoration:none;padding:14px 19px;border-radius:12px;font-size:14px;font-weight:800">Δες διαθεσιμότητα</a>
+                      <a href="https://chioshotel.gr/ai-assistant/?lang=el" style="display:inline-block;background:#737d58;color:#ffffff;text-decoration:none;padding:14px 18px;border-radius:12px;font-size:14px;font-weight:800">Δες διαθεσιμότητα</a>
                     </td>
                     <td style="padding:0 0 8px 0">
-                      <a href="https://wa.me/306944474226" style="display:inline-block;background:#eef4ea;color:#4e654f;text-decoration:none;padding:13px 18px;border-radius:12px;border:1px solid #b9c8b4;font-size:14px;font-weight:800">WhatsApp</a>
+                      <a href="https://wa.me/306944474226" style="display:inline-block;background:#eef4ea;color:#4e654f;text-decoration:none;padding:13px 17px;border-radius:12px;border:1px solid #b9c8b4;font-size:14px;font-weight:800">WhatsApp</a>
                     </td>
                   </tr>
                 </table>
 
-                <div style="margin-top:13px;font-size:12px;line-height:1.55;color:#94877b">Το Voulamandis House είναι στον Κάμπο της Χίου. Κράτηση απευθείας, χωρίς μεσάζοντα.</div>
+                <div style="margin-top:12px;font-size:12px;line-height:1.55;color:#94877b">Το Voulamandis House είναι στον Κάμπο της Χίου. Κράτηση απευθείας, χωρίς μεσάζοντα.</div>
               </td>
             </tr>
 
             <tr>
-              <td align="center" style="padding:18px 24px 22px;background:#ffffff;color:#a09285;font-size:11px;line-height:1.55">
+              <td align="center" style="padding:18px 20px 22px;background:#ffffff;color:#a09285;font-size:11px;line-height:1.55">
                 Το πρόγραμμα δημιουργήθηκε από το Chios Trip Planner του chioshotel.gr<br />Καλή εξερεύνηση της Χίου 🌿
               </td>
             </tr>
