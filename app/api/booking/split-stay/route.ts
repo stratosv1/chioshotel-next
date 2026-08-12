@@ -19,13 +19,35 @@ export async function GET(request: NextRequest) {
     const checkout = request.nextUrl.searchParams.get("checkout") || "";
     const guests = Number.parseInt(request.nextUrl.searchParams.get("guests") || "2", 10);
 
-    if (!isIsoDate(checkin) || !isIsoDate(checkout) || checkout <= checkin || !Number.isInteger(guests) || guests < 1) {
+    if (!isIsoDate(checkin) || !isIsoDate(checkout) || checkout <= checkin || !Number.isInteger(guests) || guests < 1 || guests > 5) {
       return NextResponse.json({ success: false, message: "Invalid split-stay search." }, { status: 400 });
     }
 
     const databaseUrl = process.env.DATABASE_URL;
     if (!databaseUrl) throw new Error("DATABASE_URL is missing");
     const sql = neon(databaseUrl);
+
+    const statusRows = await sql`
+      select *
+      from booking_core.inventory_status(${checkin}::date, ${checkout}::date)
+    `;
+    const inventoryStatus = statusRows[0] as any;
+    const status = String(inventoryStatus?.status || "DATA_UNAVAILABLE");
+
+    if (status !== "READY") {
+      return NextResponse.json({
+        success: false,
+        code: status,
+        message: "Booking inventory is temporarily unavailable for this date range.",
+        _booking_engine: {
+          source: "neon_booking_core",
+          inventoryStatus: status,
+          expectedRows: Number(inventoryStatus?.expected_rows || 0),
+          actualRows: Number(inventoryStatus?.actual_rows || 0),
+          freshRows: Number(inventoryStatus?.fresh_rows || 0),
+        },
+      }, { status: 503, headers: { "Cache-Control": "no-store" } });
+    }
 
     const rows = await sql`
       select
@@ -100,7 +122,7 @@ export async function GET(request: NextRequest) {
       nights,
       splitStays,
       summary: { count: splitStays.length },
-      _booking_engine: { source: "neon_booking_core" },
+      _booking_engine: { source: "neon_booking_core", inventoryStatus: "READY" },
     }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     console.error("booking_core split-stay search failed", error);
