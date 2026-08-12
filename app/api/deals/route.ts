@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { neon } from "@neondatabase/serverless";
 
 export const runtime = "nodejs";
@@ -26,41 +26,35 @@ function money(value: unknown) {
   return Number.isFinite(parsed) ? Math.round(parsed * 100) / 100 : 0;
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const guests = Number.parseInt(request.nextUrl.searchParams.get("guests") || "2", 10);
-    if (!Number.isInteger(guests) || guests < 1 || guests > 5) {
-      return NextResponse.json({ ok: false, error: "Invalid guest count" }, { status: 400 });
-    }
-
     const databaseUrl = process.env.DATABASE_URL;
     if (!databaseUrl) throw new Error("DATABASE_URL is missing");
     const sql = neon(databaseUrl);
     const today = athensToday();
     const firstDate = addDays(today, 1);
-    const lastCheckout = addDays(today, 8);
+    const lastDate = addDays(today, 7);
 
     const [roomRows, quoteRows] = await Promise.all([
       sql`
-        select r.room_number, r.room_id::text as room_id, r.unit_id::text as unit_id,
-               r.display_name, r.room_type, r.floor, r.max_guests
-        from booking_core.rooms r
-        join booking_core.guest_pricing gp
-          on gp.room_number = r.room_number
-         and gp.guest_count = ${guests}
-         and gp.allowed = true
-        where r.is_active = true
-        order by r.room_number
+        select room_number, room_id::text as room_id, unit_id::text as unit_id,
+               display_name, room_type, floor, max_guests
+        from booking_core.rooms
+        where is_active = true
+        order by room_number
       `,
       sql`
         with dates as (
           select gs::date as stay_date
-          from generate_series(${firstDate}::date, (${lastCheckout}::date - 1), interval '1 day') gs
+          from generate_series(${firstDate}::date, ${lastDate}::date, interval '1 day') gs
+        ), guest_counts as (
+          select generate_series(1, 5)::integer as guests
         )
-        select d.stay_date::text as checkin, q.*
+        select d.stay_date::text as checkin, g.guests, q.*
         from dates d
-        cross join lateral booking_core.search_availability(d.stay_date, d.stay_date + 1, ${guests}) q
-        order by d.stay_date, q.room_number
+        cross join guest_counts g
+        cross join lateral booking_core.search_availability(d.stay_date, d.stay_date + 1, g.guests) q
+        order by d.stay_date, g.guests, q.room_number
       `,
     ]);
 
@@ -76,28 +70,31 @@ export async function GET(request: NextRequest) {
 
     const quoteMap = new Map<string, any>();
     for (const row of quoteRows as any[]) {
-      quoteMap.set(`${String(row.checkin).slice(0, 10)}:${row.room_id}:${row.unit_id}`, row);
+      quoteMap.set(`${String(row.checkin).slice(0, 10)}:${row.room_id}:${row.unit_id}:${row.guests}`, row);
     }
 
     const days = Array.from({ length: 7 }, (_, index) => {
       const checkin = addDays(today, index + 1);
       const results: Record<string, unknown> = {};
       for (const room of rooms) {
-        const row = quoteMap.get(`${checkin}:${room.roomId}:${room.unitId}`);
-        const key = `${room.roomId}_${room.unitId}`;
-        results[key] = row ? {
-          available: true,
-          originalTotal: money(row.original_total),
-          directTotal: money(row.direct_total),
-          directDiscountPercent: money(row.direct_discount_percent),
-          saving: money(row.savings),
-          baseTotal: money(row.base_total),
-          guestSupplementTotal: money(row.guest_supplement_total),
-          kitchenAdjustmentTotal: money(row.kitchen_adjustment_total),
-          guestNote: row.guest_note ? String(row.guest_note) : null,
-          sourceGeneratedAt: row.source_generated_at,
-          syncedAt: row.synced_at,
-        } : { available: false };
+        const byGuests: Record<string, unknown> = {};
+        for (let guests = 1; guests <= 5; guests += 1) {
+          const row = quoteMap.get(`${checkin}:${room.roomId}:${room.unitId}:${guests}`);
+          byGuests[String(guests)] = row ? {
+            available: true,
+            originalTotal: money(row.original_total),
+            directTotal: money(row.direct_total),
+            directDiscountPercent: money(row.direct_discount_percent),
+            saving: money(row.savings),
+            baseTotal: money(row.base_total),
+            guestSupplementTotal: money(row.guest_supplement_total),
+            kitchenAdjustmentTotal: money(row.kitchen_adjustment_total),
+            guestNote: row.guest_note ? String(row.guest_note) : null,
+            sourceGeneratedAt: row.source_generated_at,
+            syncedAt: row.synced_at,
+          } : { available: false };
+        }
+        results[`${room.roomId}_${room.unitId}`] = { byGuests };
       }
       return { checkin, results };
     });
@@ -111,7 +108,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       ok: true,
       source: "neon_booking_core",
-      guests,
       rooms,
       days,
       updatedAt: freshness,
