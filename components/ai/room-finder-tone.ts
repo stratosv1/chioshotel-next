@@ -1,0 +1,165 @@
+import type { RoomFinderLanguage } from "./room-finder-copy";
+
+export type RoomFinderTone = {
+  checkout: string;
+  rooms: string;
+  guests: (room: number) => string;
+  preferences: string;
+  searching: string;
+  results: (group: number, guests: number) => string;
+  selected: (room: string) => string;
+  breakfast: string;
+  finalizing: string;
+  invalidDate: string;
+  invalidCheckout: string;
+  unavailable: string;
+  feedbackYesReply: string;
+  changePrompt: string;
+  refineType: string;
+  refineFloor: string;
+  refineGroup: string;
+  refined: string;
+};
+
+export const ROOM_FINDER_TONE: Record<RoomFinderLanguage, RoomFinderTone> = {
+  el: {
+    checkout: "Τέλεια, σας ευχαριστώ! 😊 📅 Ποια ημερομηνία θα θέλατε να κάνετε check-out;",
+    rooms: "Τέλεια! Ευχαριστώ πολύ 😊 🛏️ Πόσα δωμάτια θα χρειαστείτε;",
+    guests: n => `Βεβαίως 😊 👥 Πόσα άτομα θα μείνουν στο δωμάτιο ${n};`,
+    preferences: "Ωραία, σας ευχαριστώ πολύ 🙏 Υπάρχει κάτι σημαντικό για τη διαμονή σας; Επιλέξτε ό,τι σας ταιριάζει ✨",
+    searching: "Τέλεια, σας ευχαριστώ πολύ! 😊 Περιμένετε παρακαλώ μια στιγμή — 🔎 ψάχνω αμέσως τις καλύτερες διαθέσιμες επιλογές για εσάς.",
+    results: (g,n) => `Έτοιμο! 😊 🛏️ Βρήκα αυτές τις διαθέσιμες επιλογές για την ομάδα ${g} · ${n} ${n===1?"άτομο":"άτομα"}.`,
+    selected: room => `Εξαιρετική επιλογή! ❤️ Σας ευχαριστώ. Σημείωσα το ${room} ως την επιλογή σας.`,
+    breakfast: "Μια τελευταία μικρή ερώτηση 😊 ☕🥐 Θα θέλατε να προσθέσετε σπιτικό πρωινό με 12€ ανά άτομο, ανά ημέρα;",
+    finalizing: "Τέλεια, σας ευχαριστώ πολύ! 🙏 Ετοιμάζω αμέσως τη σύνοψη της αίτησής σας ✅",
+    invalidDate: "Βεβαίως 😊 Δεν είμαι ακόμη απόλυτα σίγουρος ότι κατάλαβα την ημερομηνία. Μπορείτε να μου την πείτε λίγο πιο συγκεκριμένα; 📅",
+    invalidCheckout: "Σας ευχαριστώ 😊 Το check-out χρειάζεται να είναι μετά το check-in. Ποια ημερομηνία θα θέλατε για αναχώρηση; 📅",
+    unavailable: "Σας ευχαριστώ για την υπομονή σας 🙏 Δεν βρήκα διαθέσιμη επιλογή για αυτά τα στοιχεία. Μπορούμε να το ελέγξουμε μαζί μέσω WhatsApp 💬",
+    feedbackYesReply: "Τέλεια! 😊 Χαίρομαι πολύ. Επιλέξτε το δωμάτιο που σας αρέσει περισσότερο ❤️",
+    changePrompt: "Φυσικά, με χαρά 😊 Πείτε μου τι θα θέλατε να αλλάξουμε στις προτάσεις μας.",
+    refineType: "Βεβαίως 😊 🛏️ Τι είδος δωματίου θα προτιμούσατε;",
+    refineFloor: "Φυσικά 😊 📍 Τι θα σας εξυπηρετούσε περισσότερο ως προς τον όροφο ή τις σκάλες;",
+    refineGroup: "Βεβαίως 😊 👨‍👩‍👧 Θα δώσω αμέσως προτεραιότητα στις επιλογές που ταιριάζουν καλύτερα στην παρέα σας.",
+    refined: "Τέλεια, ευχαριστώ! 😊 🔎 Προσαρμόζω αμέσως τις προτάσεις για εσάς.",
+  },
+  en: {
+    checkout: "Perfect, thank you! 😊 📅 What date would you like to check out?",
+    rooms: "Perfect! Thank you 😊 🛏️ How many rooms will you need?",
+    guests: n => `Of course 😊 👥 How many guests will stay in room ${n}?`,
+    preferences: "Great, thank you very much 🙏 Is anything especially important for your stay? Choose anything that suits you ✨",
+    searching: "Perfect, thank you very much! 😊 Please give me a moment — 🔎 I’m checking the best available options for you right now.",
+    results: (g,n) => `All set! 😊 🛏️ I found these available options for group ${g} · ${n} ${n===1?"guest":"guests"}.`,
+    selected: room => `Excellent choice! ❤️ Thank you. I’ve saved ${room} as your selection.`,
+    breakfast: "Just one last little question 😊 ☕🥐 Would you like to add homemade breakfast for €12 per guest, per day?",
+    finalizing: "Perfect, thank you very much! 🙏 I’m preparing your request summary now ✅",
+    invalidDate: "Of course 😊 I’m not completely sure I understood the date yet. Could you make it a little more specific? 📅",
+    invalidCheckout: "Thank you 😊 Check-out needs to be after check-in. What departure date would you prefer? 📅",
+    unavailable: "Thank you for your patience 🙏 I couldn’t find an available option for those details. We can check it together on WhatsApp 💬",
+    feedbackYesReply: "Wonderful! 😊 I’m very glad. Choose the room you like best ❤️",
+    changePrompt: "Of course, gladly 😊 Tell me what you would like us to change in the suggestions.",
+    refineType: "Of course 😊 🛏️ What type of room would you prefer?",
+    refineFloor: "Certainly 😊 📍 What would suit you better regarding floor or stairs?",
+    refineGroup: "Of course 😊 👨‍👩‍👧 I’ll immediately prioritize the options that best fit your group.",
+    refined: "Perfect, thank you! 😊 🔎 I’m adjusting the suggestions for you now.",
+  },
+  de: {
+    checkout: "Perfekt, vielen Dank! 😊 📅 An welchem Datum möchten Sie auschecken?",
+    rooms: "Perfekt! Vielen Dank 😊 🛏️ Wie viele Zimmer benötigen Sie?",
+    guests: n => `Sehr gern 😊 👥 Wie viele Gäste übernachten in Zimmer ${n}?`,
+    preferences: "Sehr gut, vielen Dank 🙏 Ist Ihnen für Ihren Aufenthalt etwas besonders wichtig? Wählen Sie gern alles Passende aus ✨",
+    searching: "Perfekt, vielen Dank! 😊 Einen kleinen Moment bitte — 🔎 ich suche sofort die besten verfügbaren Optionen für Sie.",
+    results: (g,n) => `Fertig! 😊 🛏️ Ich habe diese verfügbaren Optionen für Gruppe ${g} · ${n} ${n===1?"Gast":"Gäste"} gefunden.`,
+    selected: room => `Ausgezeichnete Wahl! ❤️ Vielen Dank. Ich habe ${room} als Ihre Auswahl gespeichert.`,
+    breakfast: "Nur noch eine kleine Frage 😊 ☕🥐 Möchten Sie hausgemachtes Frühstück für 12 € pro Person und Tag hinzufügen?",
+    finalizing: "Perfekt, vielen Dank! 🙏 Ich bereite Ihre Anfrageübersicht sofort vor ✅",
+    invalidDate: "Sehr gern 😊 Ich bin noch nicht ganz sicher, ob ich das Datum richtig verstanden habe. Können Sie es etwas genauer angeben? 📅",
+    invalidCheckout: "Vielen Dank 😊 Der Check-out muss nach dem Check-in liegen. Welches Abreisedatum wünschen Sie? 📅",
+    unavailable: "Vielen Dank für Ihre Geduld 🙏 Für diese Angaben habe ich keine verfügbare Option gefunden. Wir können es gemeinsam über WhatsApp prüfen 💬",
+    feedbackYesReply: "Wunderbar! 😊 Das freut mich sehr. Wählen Sie das Zimmer, das Ihnen am besten gefällt ❤️",
+    changePrompt: "Natürlich, sehr gern 😊 Sagen Sie mir, was wir an den Vorschlägen ändern dürfen.",
+    refineType: "Sehr gern 😊 🛏️ Welche Zimmerart würden Sie bevorzugen?",
+    refineFloor: "Natürlich 😊 📍 Was wäre für Sie hinsichtlich Etage oder Treppen angenehmer?",
+    refineGroup: "Sehr gern 😊 👨‍👩‍👧 Ich priorisiere sofort die Optionen, die am besten zu Ihrer Gruppe passen.",
+    refined: "Perfekt, danke! 😊 🔎 Ich passe die Vorschläge sofort für Sie an.",
+  },
+  fr: {
+    checkout: "Parfait, merci beaucoup ! 😊 📅 Quelle date souhaitez-vous pour le check-out ?",
+    rooms: "Parfait ! Merci 😊 🛏️ De combien de chambres aurez-vous besoin ?",
+    guests: n => `Bien sûr 😊 👥 Combien de personnes séjourneront dans la chambre ${n} ?`,
+    preferences: "Très bien, merci beaucoup 🙏 Y a-t-il quelque chose d’important pour votre séjour ? Choisissez tout ce qui vous convient ✨",
+    searching: "Parfait, merci beaucoup ! 😊 Un petit instant s’il vous plaît — 🔎 je recherche immédiatement les meilleures options disponibles pour vous.",
+    results: (g,n) => `C’est prêt ! 😊 🛏️ J’ai trouvé ces options disponibles pour le groupe ${g} · ${n} ${n===1?"personne":"personnes"}.`,
+    selected: room => `Excellent choix ! ❤️ Merci. J’ai enregistré ${room} comme votre choix.`,
+    breakfast: "Une toute dernière petite question 😊 ☕🥐 Souhaitez-vous ajouter un petit-déjeuner maison à 12 € par personne et par jour ?",
+    finalizing: "Parfait, merci beaucoup ! 🙏 Je prépare immédiatement le récapitulatif de votre demande ✅",
+    invalidDate: "Bien sûr 😊 Je ne suis pas encore totalement certain d’avoir compris la date. Pouvez-vous être un peu plus précis ? 📅",
+    invalidCheckout: "Merci 😊 Le check-out doit être après le check-in. Quelle date de départ souhaitez-vous ? 📅",
+    unavailable: "Merci pour votre patience 🙏 Je n’ai pas trouvé d’option disponible avec ces critères. Nous pouvons vérifier ensemble sur WhatsApp 💬",
+    feedbackYesReply: "Parfait ! 😊 J’en suis ravi. Choisissez la chambre qui vous plaît le plus ❤️",
+    changePrompt: "Bien sûr, avec plaisir 😊 Dites-moi ce que vous aimeriez modifier dans nos propositions.",
+    refineType: "Bien sûr 😊 🛏️ Quel type de chambre préféreriez-vous ?",
+    refineFloor: "Avec plaisir 😊 📍 Qu’est-ce qui vous conviendrait le mieux concernant l’étage ou les escaliers ?",
+    refineGroup: "Bien sûr 😊 👨‍👩‍👧 Je vais immédiatement privilégier les options les mieux adaptées à votre groupe.",
+    refined: "Parfait, merci ! 😊 🔎 J’adapte immédiatement les propositions pour vous.",
+  },
+  it: {
+    checkout: "Perfetto, grazie mille! 😊 📅 Quale data desiderate per il check-out?",
+    rooms: "Perfetto! Grazie 😊 🛏️ Di quante camere avrete bisogno?",
+    guests: n => `Certamente 😊 👥 Quante persone soggiorneranno nella camera ${n}?`,
+    preferences: "Benissimo, grazie mille 🙏 C’è qualcosa di particolarmente importante per il vostro soggiorno? Scegliete tutto ciò che preferite ✨",
+    searching: "Perfetto, grazie mille! 😊 Un momento per favore — 🔎 sto cercando subito le migliori opzioni disponibili per voi.",
+    results: (g,n) => `Fatto! 😊 🛏️ Ho trovato queste opzioni disponibili per il gruppo ${g} · ${n} ${n===1?"persona":"persone"}.`,
+    selected: room => `Ottima scelta! ❤️ Grazie. Ho salvato ${room} come vostra scelta.`,
+    breakfast: "Un’ultima piccola domanda 😊 ☕🥐 Desiderate aggiungere la colazione fatta in casa a 12 € per persona al giorno?",
+    finalizing: "Perfetto, grazie mille! 🙏 Preparo subito il riepilogo della vostra richiesta ✅",
+    invalidDate: "Certamente 😊 Non sono ancora del tutto sicuro di aver capito la data. Potete indicarla un po’ più precisamente? 📅",
+    invalidCheckout: "Grazie 😊 Il check-out deve essere successivo al check-in. Quale data di partenza preferite? 📅",
+    unavailable: "Grazie per la pazienza 🙏 Non ho trovato un’opzione disponibile con questi dati. Possiamo verificarlo insieme su WhatsApp 💬",
+    feedbackYesReply: "Perfetto! 😊 Ne sono molto felice. Scegliete la camera che vi piace di più ❤️",
+    changePrompt: "Certamente, con piacere 😊 Ditemi cosa vorreste modificare nelle nostre proposte.",
+    refineType: "Certamente 😊 🛏️ Che tipo di camera preferireste?",
+    refineFloor: "Con piacere 😊 📍 Cosa vi sarebbe più comodo riguardo al piano o alle scale?",
+    refineGroup: "Certamente 😊 👨‍👩‍👧 Darò subito priorità alle opzioni più adatte al vostro gruppo.",
+    refined: "Perfetto, grazie! 😊 🔎 Adatto subito le proposte per voi.",
+  },
+  es: {
+    checkout: "¡Perfecto, muchas gracias! 😊 📅 ¿Qué fecha desean para el check-out?",
+    rooms: "¡Perfecto! Gracias 😊 🛏️ ¿Cuántas habitaciones necesitarán?",
+    guests: n => `Por supuesto 😊 👥 ¿Cuántas personas se alojarán en la habitación ${n}?`,
+    preferences: "Muy bien, muchas gracias 🙏 ¿Hay algo especialmente importante para su estancia? Elijan todo lo que les convenga ✨",
+    searching: "¡Perfecto, muchas gracias! 😊 Un momento por favor — 🔎 estoy buscando ahora mismo las mejores opciones disponibles para ustedes.",
+    results: (g,n) => `¡Listo! 😊 🛏️ He encontrado estas opciones disponibles para el grupo ${g} · ${n} ${n===1?"persona":"personas"}.`,
+    selected: room => `¡Excelente elección! ❤️ Gracias. He guardado ${room} como su elección.`,
+    breakfast: "Una última pregunta 😊 ☕🥐 ¿Desean añadir desayuno casero por 12 € por persona y día?",
+    finalizing: "¡Perfecto, muchas gracias! 🙏 Estoy preparando ahora mismo el resumen de su solicitud ✅",
+    invalidDate: "Por supuesto 😊 Aún no estoy completamente seguro de haber entendido la fecha. ¿Pueden indicarla un poco más exactamente? 📅",
+    invalidCheckout: "Gracias 😊 El check-out debe ser posterior al check-in. ¿Qué fecha de salida prefieren? 📅",
+    unavailable: "Gracias por su paciencia 🙏 No he encontrado una opción disponible con esos datos. Podemos comprobarlo juntos por WhatsApp 💬",
+    feedbackYesReply: "¡Perfecto! 😊 Me alegra mucho. Elijan la habitación que más les guste ❤️",
+    changePrompt: "Por supuesto, con mucho gusto 😊 Díganme qué les gustaría cambiar en nuestras propuestas.",
+    refineType: "Por supuesto 😊 🛏️ ¿Qué tipo de habitación preferirían?",
+    refineFloor: "Con mucho gusto 😊 📍 ¿Qué les resultaría más cómodo respecto a la planta o las escaleras?",
+    refineGroup: "Por supuesto 😊 👨‍👩‍👧 Daré prioridad inmediatamente a las opciones que mejor encajen con su grupo.",
+    refined: "¡Perfecto, gracias! 😊 🔎 Estoy ajustando ahora mismo las propuestas para ustedes.",
+  },
+  tr: {
+    checkout: "Harika, çok teşekkür ederim! 😊 📅 Hangi tarihte çıkış yapmak istersiniz?",
+    rooms: "Harika! Teşekkür ederim 😊 🛏️ Kaç odaya ihtiyacınız olacak?",
+    guests: n => `Elbette 😊 👥 ${n}. odada kaç kişi kalacak?`,
+    preferences: "Çok güzel, teşekkür ederim 🙏 Konaklamanız için özellikle önemli olan bir şey var mı? Size uyan tüm tercihleri seçebilirsiniz ✨",
+    searching: "Harika, çok teşekkür ederim! 😊 Lütfen bir an bekleyin — 🔎 sizin için en iyi müsait seçenekleri hemen kontrol ediyorum.",
+    results: (g,n) => `Hazır! 😊 🛏️ ${g}. grup · ${n} kişi için bu müsait seçenekleri buldum.`,
+    selected: room => `Harika seçim! ❤️ Teşekkür ederim. ${room} seçiminiz olarak kaydedildi.`,
+    breakfast: "Son küçük bir soru 😊 ☕🥐 Kişi başı günlük 12 € karşılığında ev yapımı kahvaltı eklemek ister misiniz?",
+    finalizing: "Harika, çok teşekkür ederim! 🙏 Talebinizin özetini hemen hazırlıyorum ✅",
+    invalidDate: "Elbette 😊 Tarihi henüz tam olarak anladığımdan emin değilim. Biraz daha net yazabilir misiniz? 📅",
+    invalidCheckout: "Teşekkür ederim 😊 Çıkış tarihi giriş tarihinden sonra olmalı. Hangi ayrılış tarihini tercih edersiniz? 📅",
+    unavailable: "Sabrınız için teşekkür ederim 🙏 Bu bilgilerle müsait bir seçenek bulamadım. WhatsApp üzerinden birlikte kontrol edebiliriz 💬",
+    feedbackYesReply: "Harika! 😊 Çok sevindim. En beğendiğiniz odayı seçebilirsiniz ❤️",
+    changePrompt: "Elbette, memnuniyetle 😊 Önerilerimizde neyi değiştirmemizi istediğinizi söyleyin.",
+    refineType: "Elbette 😊 🛏️ Hangi oda tipini tercih edersiniz?",
+    refineFloor: "Memnuniyetle 😊 📍 Kat veya merdiven konusunda sizin için hangisi daha uygun olur?",
+    refineGroup: "Elbette 😊 👨‍👩‍👧 Grubunuza en uygun seçeneklere hemen öncelik vereceğim.",
+    refined: "Harika, teşekkür ederim! 😊 🔎 Önerileri sizin için hemen düzenliyorum.",
+  },
+};
