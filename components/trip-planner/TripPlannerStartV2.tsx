@@ -79,6 +79,7 @@ const villageItems = plannerMedia.villages;
 const PLACE_ORDER: CategoryId[] = ["beach", "village", "sights", "food", "drink"];
 const MULTI_SELECT = new Set<CategoryId>(["beach", "village", "sights"]);
 const REGION_IDS: RegionId[] = ["NW", "NE", "SW", "SE"];
+const REGION_SCORE_TOLERANCE = 5;
 
 const emptyChosenPlaces = (): ChosenPlaces => ({
   beach: [],
@@ -142,6 +143,9 @@ const regionName = (region: RegionChoice | null) => {
   if (region === "auto") return "Αυτόματη πρόταση";
   return regionOptions.find((item) => item.id === region)?.title ?? "";
 };
+
+const regionLabel = (region: RegionId) =>
+  regionOptions.find((item) => item.id === region)?.label ?? region;
 
 const forecastTimeWindow = (summary: ForecastSummary) => {
   const start = summary.startTime?.slice(11, 16) ?? null;
@@ -363,26 +367,44 @@ export default function TripPlannerStartV2() {
 
   const regionRankings = useMemo(() => {
     return REGION_IDS.map((id) => {
-      const candidates = marineRanking.filter((item) => beachRegion(item.beachId) === id).sort((a, b) => b.score - a.score);
-      const top = candidates.slice(0, 3);
-      const score = top.length ? Math.round(top.reduce((sum, item) => sum + item.score, 0) / top.length) : null;
-      return { id, score, topBeach: candidates[0] ?? null };
-    }).sort((a, b) => {
-      const averageDifference = (b.score ?? -1) - (a.score ?? -1);
-      if (averageDifference !== 0) return averageDifference;
-      return (b.topBeach?.score ?? -1) - (a.topBeach?.score ?? -1);
-    });
+      const candidates = marineRanking
+        .filter((item) => beachRegion(item.beachId) === id)
+        .sort((a, b) => b.score - a.score);
+      return { id, score: candidates[0]?.score ?? null, topBeach: candidates[0] ?? null };
+    }).sort((a, b) => (b.score ?? -1) - (a.score ?? -1));
   }, [marineRanking]);
 
-  const recommendedRegion = regionRankings[0]?.score !== null ? regionRankings[0]?.id ?? null : null;
-  const recommendedRegionInfo = regionRankings.find((item) => item.id === recommendedRegion) ?? null;
+  const bestRegionScore = regionRankings.find((item) => item.score !== null)?.score ?? null;
+  const recommendedRegionIds = useMemo<RegionId[]>(() => {
+    if (bestRegionScore === null) return [];
+    return regionRankings
+      .filter((item) => item.score !== null && bestRegionScore - item.score <= REGION_SCORE_TOLERANCE)
+      .map((item) => item.id);
+  }, [bestRegionScore, regionRankings]);
+
+  const recommendedRegionInfo = regionRankings[0] ?? null;
   const recommendedWindow = recommendedRegionInfo?.topBeach ? forecastTimeWindow(recommendedRegionInfo.topBeach.forecastSummary) : null;
+  const allRegionsRecommended = recommendedRegionIds.length === REGION_IDS.length;
+  const recommendationTitle = allRegionsRecommended
+    ? "Καλές συνθήκες σε όλη τη Χίο σήμερα"
+    : recommendedRegionIds.length > 1
+      ? `Προτεινόμενες κατευθύνσεις τώρα: ${recommendedRegionIds.map(regionLabel).join(" · ")}`
+      : recommendedRegionIds.length === 1
+        ? `Προτεινόμενη κατεύθυνση τώρα: ${regionName(recommendedRegionIds[0])}`
+        : "Δεν ξεχωρίζει καθαρά κάποια κατεύθυνση τώρα";
+
+  const autoRegionAllows = (candidateRegion: RegionId | null) =>
+    recommendedRegionIds.length === 0 || (candidateRegion !== null && recommendedRegionIds.includes(candidateRegion));
 
   const placeOptions = useMemo<PlaceOption[]>(() => {
     if (!currentCategory) return [];
     if (currentCategory === "beach") {
       return beachItems
-        .filter((item) => region === "auto" || !region || beachRegion(item.id) === region)
+        .filter((item) => {
+          const itemRegion = beachRegion(item.id);
+          if (region === "auto") return autoRegionAllows(itemRegion);
+          return !region || itemRegion === region;
+        })
         .map((item) => ({
           id: item.id,
           name: item.name,
@@ -395,14 +417,18 @@ export default function TripPlannerStartV2() {
     }
     if (currentCategory === "village") {
       return villageItems
-        .filter((item) => region === "auto" || !region || villageRegion(item.id) === region)
+        .filter((item) => {
+          const itemRegion = villageRegion(item.id);
+          if (region === "auto") return autoRegionAllows(itemRegion);
+          return !region || itemRegion === region;
+        })
         .map((item) => ({ id: item.id, name: item.name, image: item.image, meta: `${item.bestTime} · ${item.recommendedDuration}`, category: "village" as const }));
     }
     return plannerExtraPlaces
       .filter((item) => item.category === currentCategory)
-      .filter((item) => region === "auto" || !region || item.region === region)
+      .filter((item) => region === "auto" ? autoRegionAllows(item.region) : !region || item.region === region)
       .map((item: PlannerExtraPlace) => ({ id: item.id, name: item.name, image: item.image, meta: item.meta, category: item.category }));
-  }, [currentCategory, region, marineById]);
+  }, [currentCategory, region, marineById, recommendedRegionIds]);
 
   const toggleCategory = (id: CategoryId) => {
     setSelected((current) => current.includes(id) ? current.filter((item) => item !== id) : [...current, id]);
@@ -410,9 +436,8 @@ export default function TripPlannerStartV2() {
   };
 
   const chooseRegion = (nextRegion: RegionChoice) => {
-    const resolved: RegionChoice = nextRegion === "auto" && recommendedRegion ? recommendedRegion : nextRegion;
-    if (region !== resolved) setChosenPlaces(emptyChosenPlaces());
-    setRegion(resolved);
+    if (region !== nextRegion) setChosenPlaces(emptyChosenPlaces());
+    setRegion(nextRegion);
     setPlaceCategoryIndex(0);
     setStep(placeCategories.length > 0 ? "places" : "summary");
   };
@@ -495,8 +520,8 @@ export default function TripPlannerStartV2() {
             {marineStatus === "ready" && recommendedRegionInfo?.topBeach ? (
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#7d8764]">✦ Tip βάσει σημερινής πρόγνωσης{recommendedWindow ? ` · ${recommendedWindow}` : ""}</p>
-                <p className="mt-1 text-[14px] font-bold text-[#4f5d40] md:text-[15px]">Καλύτερη κατεύθυνση τώρα: {regionName(recommendedRegion)}</p>
-                <p className="mt-1 text-[11px] leading-4 text-[#6c745c]">Η καλύτερη εικόνα αυτή τη στιγμή ξεκινά από την {recommendedRegionInfo.topBeach.name}. Η πρόταση συνδυάζει θαλάσσια πρόγνωση και έκθεση ακτής.</p>
+                <p className="mt-1 text-[14px] font-bold text-[#4f5d40] md:text-[15px]">{recommendationTitle}</p>
+                <p className="mt-1 text-[11px] leading-4 text-[#6c745c]">Η καλύτερη μεμονωμένη εικόνα αυτή τη στιγμή ξεκινά από την {recommendedRegionInfo.topBeach.name}. Περιοχές με αντίστοιχα υψηλή βαθμολογία προτείνονται μαζί.</p>
               </div>
             ) : null}
           </div>
@@ -504,17 +529,17 @@ export default function TripPlannerStartV2() {
           <div className="mt-4 grid grid-cols-[112px_46px_112px] grid-rows-[72px_40px_72px] items-center justify-items-center gap-x-2 gap-y-1 md:mt-6 md:grid-cols-[150px_58px_150px] md:grid-rows-[82px_44px_82px] md:gap-x-3 md:gap-y-2">
             {regionOptions.map((item) => {
               const info = regionRankings.find((row) => row.id === item.id);
-              const best = recommendedRegion === item.id && marineStatus === "ready";
+              const best = recommendedRegionIds.includes(item.id) && marineStatus === "ready";
               return (
                 <button key={item.id} type="button" onClick={() => chooseRegion(item.id)} className={`${item.position} h-full w-full rounded-[18px] border px-2 text-center shadow-[0_7px_18px_rgba(65,48,36,.055)] transition md:rounded-[20px] ${best ? "border-[#aeb39a] bg-[#eef0e6] text-[#5f684d] ring-2 ring-[#aeb39a]/20" : "border-[#e5ddd3] bg-white text-[#4f463f] hover:border-[#aeb39a] hover:bg-[#f6f7f1]"}`}>
                   <span className="block text-[16px] font-bold md:text-[17px]">{item.label}</span>
-                  <span className="mt-0.5 block text-[9px] font-semibold opacity-75 md:text-[10px]">{best ? "★ Καλύτερα σήμερα" : info?.score !== null && info?.score !== undefined ? ratingLabel(info.topBeach?.rating ?? "fair") : item.title}</span>
+                  <span className="mt-0.5 block text-[9px] font-semibold opacity-75 md:text-[10px]">{best ? "★ Προτείνεται σήμερα" : info?.score !== null && info?.score !== undefined ? ratingLabel(info.topBeach?.rating ?? "fair") : item.title}</span>
                 </button>
               );
             })}
             <div className="col-start-2 row-start-2 flex h-9 w-9 items-center justify-center rounded-full border border-[#dbcbbb] bg-[#fffdf9] text-[18px] text-[#ad7744] shadow-sm" aria-hidden="true">🧭</div>
           </div>
-          <button type="button" onClick={() => chooseRegion("auto")} className="mt-4 flex min-h-[48px] w-[225px] items-center justify-center gap-2 rounded-full border border-[#cfd5bd] bg-[#f7f8f2] px-5 text-[14px] font-semibold text-[#687154] shadow-[0_7px_18px_rgba(65,48,36,.055)] transition hover:bg-[#eef0e6] md:mt-5 md:w-[245px] md:text-[15px]"><span className="text-[#bd8149]">✦</span><span>{recommendedRegion ? `Πρότεινέ μου ${regionOptions.find((item) => item.id === recommendedRegion)?.label}` : "Πρότεινέ μου"}</span></button>
+          <button type="button" onClick={() => chooseRegion("auto")} className="mt-4 flex min-h-[48px] w-[260px] items-center justify-center gap-2 rounded-full border border-[#cfd5bd] bg-[#f7f8f2] px-5 text-[14px] font-semibold text-[#687154] shadow-[0_7px_18px_rgba(65,48,36,.055)] transition hover:bg-[#eef0e6] md:mt-5 md:w-[300px] md:text-[15px]"><span className="text-[#bd8149]">✦</span><span>{allRegionsRecommended ? "Πρότεινέ μου όλη τη Χίο" : recommendedRegionIds.length ? `Πρότεινέ μου ${recommendedRegionIds.map(regionLabel).join(" · ")}` : "Πρότεινέ μου"}</span></button>
         </section>
       ) : null}
 
@@ -524,7 +549,7 @@ export default function TripPlannerStartV2() {
           <div className="text-center">
             <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#b1763f]">Βήμα {3 + placeCategoryIndex}</p>
             <h2 className="mt-1.5 font-serif text-[31px] font-semibold leading-tight tracking-[-0.03em] md:text-[46px]">Διάλεξε {MULTI_SELECT.has(currentCategory) ? currentCategoryInfo.plural : currentCategoryInfo.singular}</h2>
-            <p className="mx-auto mt-2 max-w-[620px] text-[11px] leading-5 text-[#766c64] md:text-[13px]">{MULTI_SELECT.has(currentCategory) ? "Μπορείς να επιλέξεις περισσότερα από ένα." : "Επίλεξε μία επιλογή."} {region === "auto" ? "Βλέπεις επιλογές από όλη τη Χίο." : `Πλευρά: ${regionName(region)}.`}</p>
+            <p className="mx-auto mt-2 max-w-[620px] text-[11px] leading-5 text-[#766c64] md:text-[13px]">{MULTI_SELECT.has(currentCategory) ? "Μπορείς να επιλέξεις περισσότερα από ένα." : "Επίλεξε μία επιλογή."} {region === "auto" ? (allRegionsRecommended ? "Βλέπεις επιλογές από όλη τη Χίο." : `Βλέπεις επιλογές από τις προτεινόμενες περιοχές: ${recommendedRegionIds.map(regionLabel).join(" · ")}.`) : `Πλευρά: ${regionName(region)}.`}</p>
             {currentCategory === "beach" ? <p className="mx-auto mt-1 max-w-[680px] text-[10px] leading-4 text-[#9a8877]">Οι παραλίες είναι ήδη ταξινομημένες από καλύτερη προς δυσκολότερη για τις σημερινές συνθήκες.</p> : null}
           </div>
 
