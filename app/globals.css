@@ -85,6 +85,58 @@ input{
   overflow:hidden!important;
 }
 
+/* Messenger-style typing indicator for the active AI Room Finder bubble. */
+@keyframes room-finder-typing-dots{
+  0%,100%{
+    background-position:0 9px,12px 9px,24px 9px;
+  }
+  16%{
+    background-position:0 3px,12px 9px,24px 9px;
+  }
+  32%{
+    background-position:0 9px,12px 3px,24px 9px;
+  }
+  48%{
+    background-position:0 9px,12px 9px,24px 3px;
+  }
+  64%,84%{
+    background-position:0 9px,12px 9px,24px 9px;
+  }
+}
+
+main .msg.ml-10.w-fit{
+  width:58px!important;
+  height:42px!important;
+  padding:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  color:transparent!important;
+  font-size:0!important;
+  line-height:0!important;
+}
+
+main .msg.ml-10.w-fit::before{
+  content:"";
+  display:block;
+  width:31px;
+  height:18px;
+  background-image:
+    radial-gradient(circle,#746b60 0 3.5px,transparent 3.7px),
+    radial-gradient(circle,#746b60 0 3.5px,transparent 3.7px),
+    radial-gradient(circle,#746b60 0 3.5px,transparent 3.7px);
+  background-repeat:no-repeat;
+  background-position:0 9px,12px 9px,24px 9px;
+  animation:room-finder-typing-dots 1.15s cubic-bezier(.45,.05,.55,.95) infinite;
+  will-change:background-position;
+}
+
+@media (prefers-reduced-motion:reduce){
+  main .msg.ml-10.w-fit::before{
+    animation-duration:1.8s;
+  }
+}
+
 @media (max-width: 767px){
   main:has(a[href="#wifi"]):has(a[href="#breakfast"]):has(a[href="#delivery"]) > div > header + section > div:last-child > div.mt-5.grid{
     grid-template-columns:repeat(3,minmax(0,1fr))!important;
