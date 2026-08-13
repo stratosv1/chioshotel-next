@@ -1,4 +1,4 @@
-import type { AssistantCommand, AssistantLanguage, ConversationContext } from "./types";
+import type { AssistantCommand, AssistantLanguage, ConversationContext, RoomFinderStep } from "./types";
 
 const COMMAND_SCHEMA = {
   type: "object",
@@ -20,14 +20,17 @@ const COMMAND_SCHEMA = {
           type: {
             type: "string",
             enum: [
-              "search_availability", "recommend_rooms", "show_room", "show_gallery",
-              "compare_rooms", "answer_room_question", "search_content", "recommend_beaches",
-              "recommend_villages", "recommend_museums", "recommend_activities", "build_itinerary",
-              "answer_property_question", "show_directions", "start_booking_request", "ask_clarification"
+              "search_availability", "set_room_count", "set_guest_count", "restart_search",
+              "recommend_rooms", "show_room", "show_gallery", "compare_rooms",
+              "answer_room_question", "search_content", "recommend_beaches",
+              "recommend_villages", "recommend_museums", "recommend_activities",
+              "build_itinerary", "answer_property_question", "show_directions",
+              "start_booking_request", "ask_clarification"
             ]
           },
           roomNumber: { type: "integer", minimum: 1, maximum: 10 },
           roomNumbers: { type: "array", items: { type: "integer", minimum: 1, maximum: 10 }, maxItems: 10 },
+          roomCount: { type: "integer", minimum: 1, maximum: 3 },
           checkin: { type: "string" },
           checkout: { type: "string" },
           nights: { type: "integer", minimum: 1, maximum: 60 },
@@ -60,20 +63,50 @@ const COMMAND_SCHEMA = {
   }
 } as const;
 
-const SYSTEM_PROMPT = `You are the intent router for the Voulamandis House digital concierge in Chios.
-Convert every user message, in any supported language, into safe structured actions.
-Do not answer the user directly and do not invent facts, prices, availability, room details, distances or opening hours.
-Use the recent conversation and selected-room context for references such as “it”, “that room”, “the second option”, “show me photos”, or their equivalents.
-When the user corrects dates, guest count or preferences, replace the old value instead of preserving the earlier one.
-Dates are required only for live availability and prices, never for browsing rooms, galleries, beaches, villages, museums or activities.
-A message can require multiple actions. Example: a family asking for a room and child-friendly beaches should create recommend_rooms and recommend_beaches.
-Understand natural guest counts, e.g. “me and my wife” = 2, “two adults and two children” = 4.
-Interpret “I do not want stairs” as noStairs=true and floor=ground.
-For room photos use show_gallery. For general room browsing use recommend_rooms or show_room.
-For information contained in the Chios website use search_content or the specific recommendation action.
-Ask clarification only when a required field for the requested action is genuinely missing.
-IMPORTANT: A short numeric reply such as 10/10, 10-10, 10.10 or 10 October, when the previous assistant message asked for arrival or departure, is a date continuation. It must never be interpreted as room 10 or as a general content search.
-Return only JSON matching the provided schema.`;
+function todayIso() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+const SYSTEM_PROMPT = `You are the single Conversation Interpreter for the Voulamandis House AI Room Finder in Chios.
+
+Interpret the user's latest message semantically using the current flow step, current booking state and recent conversation. The application must not need keyword lists or regular expressions to understand human phrasing.
+
+Your role is interpretation only. Never decide live availability, prices, discounts, room eligibility or database results. Those are deterministic server responsibilities.
+
+CORE RULES
+- Never invent missing booking values.
+- Never choose an arbitrary value from a range, approximation or broad period.
+- Return only values explicitly supplied or unambiguously implied by the latest user message. Do not copy old context values into new action fields merely because they already exist.
+- Use context to understand references, corrections and short replies.
+- The user's semantic intent overrides the previous question. If the assistant asks for check-out but the user clearly changes check-in, interpret the check-in change.
+- If the user wants to restart, return restart_search.
+
+DATES
+- A check-in or check-out may execute only when exactly one calendar date is identified with high confidence.
+- Expressions that identify a broad period, date range, approximation or vague time window require ask_clarification. Examples include meanings such as late in a month, early next month, sometime next week, around a date, or between two dates.
+- Relative dates may be resolved only when they map unambiguously to exactly one calendar date using today's date and conversation context.
+- Never select one endpoint of a range unless the user explicitly identifies it as arrival or departure.
+- If one message clearly supplies both exact arrival and exact departure dates, search_availability may contain both.
+- Dates must be YYYY-MM-DD.
+
+ROOM COUNT AND GUESTS
+- When currentStep is rooms, an exact requested number of rooms from 1 to 3 becomes set_room_count with roomCount.
+- When currentStep is guests, an exact number of guests for the current room from 1 to 5 becomes set_guest_count with guests.
+- If the count is vague or ambiguous, use ask_clarification instead of guessing.
+
+ROOM FINDER CONVERSATION
+- Questions about a specific room may use show_room, show_gallery or answer_room_question.
+- General room preferences may use recommend_rooms with structured preferences.
+- If a required value is missing or ambiguous, use ask_clarification with missingFields and a concise natural-language question in query.
+- replyMode=clarify whenever ask_clarification is the primary action.
+- replyMode=execute for state-changing actions.
+- replyMode=answer for informational actions.
+
+LANGUAGE
+- Reply in the user's language among Greek, English, German, French, Italian, Spanish and Turkish.
+- The language field must reflect the language you use for clarification text.
+
+Return only JSON matching the schema.`;
 
 function getOutputText(payload: any): string {
   if (typeof payload?.output_text === "string") return payload.output_text;
@@ -86,136 +119,111 @@ function getOutputText(payload: any): string {
   return "";
 }
 
-function detectFallbackLanguage(message: string, supplied?: AssistantLanguage): AssistantLanguage {
-  if (supplied) return supplied;
-  if (/[Α-Ωα-ωΆ-ώ]/.test(message)) return "el";
-  if (/[ğüşöçıİĞÜŞÖÇ]/i.test(message)) return "tr";
-  if (/[äöüß]/i.test(message)) return "de";
-  if (/[éèêëàâçîïôùûüÿœ]/i.test(message)) return "fr";
-  if (/\b(habitación|playa|pueblo|museo|niños)\b/i.test(message)) return "es";
-  if (/\b(camera|spiaggia|villaggio|museo|bambini)\b/i.test(message)) return "it";
-  return "en";
-}
-
-function normalizeText(value: string) {
-  return value.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, " ").trim();
-}
-
-function isoDateFromShortReply(message: string) {
-  const match = message.trim().match(/^(\d{1,2})\s*[\/.\-]\s*(\d{1,2})(?:\s*[\/.\-]\s*(\d{2}|\d{4}))?$/);
-  if (!match) return undefined;
-  const day = Number(match[1]);
-  const month = Number(match[2]);
-  if (day < 1 || day > 31 || month < 1 || month > 12) return undefined;
-
-  const now = new Date();
-  let year = match[3] ? Number(match[3]) : now.getUTCFullYear();
-  if (year < 100) year += 2000;
-  let candidate = new Date(Date.UTC(year, month - 1, day, 12));
-  if (candidate.getUTCDate() !== day || candidate.getUTCMonth() !== month - 1) return undefined;
-
-  const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 12));
-  if (!match[3] && candidate < today) candidate = new Date(Date.UTC(year + 1, month - 1, day, 12));
-  return candidate.toISOString().slice(0, 10);
-}
-
-function dateContinuationCommand(message: string, context: ConversationContext): AssistantCommand | undefined {
-  const date = isoDateFromShortReply(message);
-  if (!date) return undefined;
-
-  const recent = context.recentMessages || [];
-  const previousAssistant = [...recent].reverse().find((item) => item.role === "assistant")?.content || "";
-  const previous = normalizeText(previousAssistant);
-  const language = detectFallbackLanguage(message, context.language);
-
-  const askedArrival = /arrival|check.?in|arrivee|ankunft|arrivo|llegada|varis|αφιξ|ημερομηνια σκεφτεστε για αφιξ/i.test(previous);
-  const askedDeparture = /departure|check.?out|depart|abreise|partenza|salida|ayrilis|αναχωρ/i.test(previous);
-  const availabilityConversation = recent.some((item) => /availability|διαθεσιμ|verfugbar|disponibil|musait|τιμ|price|rate|preis|prix|prezzo|precio|fiyat/i.test(normalizeText(item.content)));
-
-  if (!askedArrival && !askedDeparture && !availabilityConversation && !context.checkin) return undefined;
-
-  if (askedDeparture || context.checkin) {
-    return {
-      language,
-      replyMode: "execute",
-      selectedRoom: context.selectedRoom,
-      actions: [{
-        type: "search_availability",
-        checkin: context.checkin,
-        checkout: date,
-        guests: context.guests,
-      }],
-    };
+const CLARIFY_COPY: Record<AssistantLanguage, Record<RoomFinderStep, string>> = {
+  el: {
+    checkin: "Ποια ακριβώς ημερομηνία θα θέλατε να κάνετε check-in; 😊",
+    checkout: "Ποια ακριβώς ημερομηνία θα θέλατε να κάνετε check-out; 😊",
+    rooms: "Πόσα ακριβώς δωμάτια χρειάζεστε;",
+    guests: "Πόσα ακριβώς άτομα θα μείνουν σε αυτό το δωμάτιο;",
+    preferences: "Πείτε μου λίγο πιο συγκεκριμένα τι προτιμάτε για τη διαμονή σας.",
+    selecting: "Πείτε μου τι θα θέλατε να αλλάξουμε στις προτάσεις μας.",
+    breakfast: "Θα θέλατε να προσθέσετε πρωινό;",
+    complete: "Πώς μπορώ να σας βοηθήσω ακόμη με τη διαμονή σας;"
+  },
+  en: {
+    checkin: "What exact date would you like to check in? 😊",
+    checkout: "What exact date would you like to check out? 😊",
+    rooms: "Exactly how many rooms do you need?",
+    guests: "Exactly how many guests will stay in this room?",
+    preferences: "Please tell me a little more specifically what you prefer for your stay.",
+    selecting: "Tell me what you would like us to change about the suggestions.",
+    breakfast: "Would you like to add breakfast?",
+    complete: "How else can I help with your stay?"
+  },
+  de: {
+    checkin: "An welchem genauen Datum möchten Sie einchecken? 😊",
+    checkout: "An welchem genauen Datum möchten Sie auschecken? 😊",
+    rooms: "Wie viele Zimmer benötigen Sie genau?",
+    guests: "Wie viele Gäste übernachten genau in diesem Zimmer?",
+    preferences: "Sagen Sie mir bitte etwas genauer, was Ihnen für Ihren Aufenthalt wichtig ist.",
+    selecting: "Sagen Sie mir, was wir an den Vorschlägen ändern sollen.",
+    breakfast: "Möchten Sie Frühstück hinzufügen?",
+    complete: "Wie kann ich Ihnen sonst noch bei Ihrem Aufenthalt helfen?"
+  },
+  fr: {
+    checkin: "Quelle date exacte souhaitez-vous pour le check-in ? 😊",
+    checkout: "Quelle date exacte souhaitez-vous pour le check-out ? 😊",
+    rooms: "De combien de chambres avez-vous exactement besoin ?",
+    guests: "Combien de personnes séjourneront exactement dans cette chambre ?",
+    preferences: "Précisez-moi un peu mieux vos préférences pour le séjour.",
+    selecting: "Dites-moi ce que vous souhaitez modifier dans nos propositions.",
+    breakfast: "Souhaitez-vous ajouter le petit-déjeuner ?",
+    complete: "Comment puis-je encore vous aider pour votre séjour ?"
+  },
+  it: {
+    checkin: "Quale data esatta desiderate per il check-in? 😊",
+    checkout: "Quale data esatta desiderate per il check-out? 😊",
+    rooms: "Di quante camere avete esattamente bisogno?",
+    guests: "Quante persone soggiorneranno esattamente in questa camera?",
+    preferences: "Indicami un po' più precisamente le vostre preferenze per il soggiorno.",
+    selecting: "Ditemi cosa vorreste cambiare nelle nostre proposte.",
+    breakfast: "Desiderate aggiungere la colazione?",
+    complete: "Come posso aiutarvi ancora per il soggiorno?"
+  },
+  es: {
+    checkin: "¿Qué fecha exacta desean para el check-in? 😊",
+    checkout: "¿Qué fecha exacta desean para el check-out? 😊",
+    rooms: "¿Cuántas habitaciones necesitan exactamente?",
+    guests: "¿Cuántas personas se alojarán exactamente en esta habitación?",
+    preferences: "Cuéntenme un poco más específicamente qué prefieren para su estancia.",
+    selecting: "Díganme qué les gustaría cambiar de nuestras propuestas.",
+    breakfast: "¿Desean añadir desayuno?",
+    complete: "¿Cómo puedo ayudarles aún más con su estancia?"
+  },
+  tr: {
+    checkin: "Tam olarak hangi tarihte giriş yapmak istersiniz? 😊",
+    checkout: "Tam olarak hangi tarihte çıkış yapmak istersiniz? 😊",
+    rooms: "Tam olarak kaç oda ihtiyacınız var?",
+    guests: "Bu odada tam olarak kaç kişi kalacak?",
+    preferences: "Konaklamanız için tercihlerinizi biraz daha ayrıntılı anlatır mısınız?",
+    selecting: "Önerilerimizde neyi değiştirmemizi istediğinizi söyleyin.",
+    breakfast: "Kahvaltı eklemek ister misiniz?",
+    complete: "Konaklamanızla ilgili başka nasıl yardımcı olabilirim?"
   }
+};
 
+function safeLanguage(value?: AssistantLanguage): AssistantLanguage {
+  return value || "en";
+}
+
+function safeStep(value?: RoomFinderStep): RoomFinderStep {
+  return value || "checkin";
+}
+
+function clarificationFallback(context: ConversationContext): AssistantCommand {
+  const language = safeLanguage(context.language);
+  const step = safeStep(context.currentStep);
   return {
     language,
-    replyMode: "execute",
+    replyMode: "clarify",
     selectedRoom: context.selectedRoom,
     actions: [{
-      type: "search_availability",
-      checkin: date,
-      checkout: context.checkout,
-      guests: context.guests,
+      type: "ask_clarification",
+      query: CLARIFY_COPY[language][step],
+      missingFields: [step],
     }],
   };
-}
-
-function fallbackCommand(message: string, context: ConversationContext): AssistantCommand {
-  const dateContinuation = dateContinuationCommand(message, context);
-  if (dateContinuation) return dateContinuation;
-
-  const language = detectFallbackLanguage(message, context.language);
-  const text = message.toLowerCase();
-  const roomMatch = text.match(/(?:room|δωμάτιο|δωματιο|zimmer|chambre|camera|habitación|oda|apartment|διαμέρισμα|διαμερισμα)\s*(10|[1-9])\b/i);
-  const roomNumber = roomMatch ? Number(roomMatch[1]) : context.selectedRoom;
-  const preferences = {
-    noStairs: /χωρίς\s+σκάλα|χωρις\s+σκαλα|no\s+stairs|without\s+stairs|ohne\s+treppe|sans\s+escalier|senza\s+scale|sin\s+escaleras|merdivensiz/i.test(text) || undefined,
-    floor: /χωρίς\s+σκάλα|χωρις\s+σκαλα|ground\s*floor|ισόγει|isogei|erdgeschoss|rez.de.chaussée|piano\s+terra|planta\s+baja|zemin\s+kat/i.test(text) ? "ground" as const : undefined,
-    fullKitchen: /full\s+kitchen|πλήρη\s+κουζίνα|πληρη\s+κουζινα|voll.*küche|cuisine\s+complète|cucina\s+completa|cocina\s+completa|tam\s+mutfak/i.test(text) || undefined,
-    familyFriendly: /family|οικογέν|παιδι|children|kids|familie|enfant|bambin|niñ|çocuk/i.test(text) || undefined,
-    nearby: /near|nearby|κοντά|κοντιν|proche|nahe|vicin|cerca|yakın/i.test(text) || undefined,
-    quiet: /quiet|ήσυχ|ησυχ|ruhig|calme|tranquill|tranquil|sakin/i.test(text) || undefined,
-  };
-
-  if (/availability|διαθεσιμό|διαθεσιμο|price|τιμ|rate|preis|prix|prezzo|precio|fiyat|book|κράτηση|κρατηση/i.test(text)) {
-    return { language, replyMode: "execute", selectedRoom: roomNumber, actions: [{ type: "search_availability", guests: context.guests, checkin: context.checkin, checkout: context.checkout, preferences }] };
-  }
-  if (/photo|gallery|φωτογραφ|bilder|photos|foto|fotos|resim/i.test(text)) {
-    return { language, replyMode: "execute", selectedRoom: roomNumber, actions: [{ type: "show_gallery", roomNumber, preferences }] };
-  }
-  if (/beach|παραλί|παραλι|strand|plage|spiaggia|playa|plaj/i.test(text)) {
-    return { language, replyMode: "answer", selectedRoom: roomNumber, actions: [{ type: "recommend_beaches", query: message, preferences }] };
-  }
-  if (/village|χωρι|dorf|village|villaggio|pueblo|köy/i.test(text)) {
-    return { language, replyMode: "answer", selectedRoom: roomNumber, actions: [{ type: "recommend_villages", query: message, preferences }] };
-  }
-  if (/museum|μουσεί|μουσει|musee|museo|müze/i.test(text)) {
-    return { language, replyMode: "answer", selectedRoom: roomNumber, actions: [{ type: "recommend_museums", query: message, preferences }] };
-  }
-  if (/room|δωμάτι|δωματι|zimmer|chambre|camera|habitación|oda|apartment|διαμέρισμα|διαμερισμα/i.test(text)) {
-    return { language, replyMode: "execute", selectedRoom: roomNumber, actions: [{ type: roomNumber ? "show_room" : "recommend_rooms", roomNumber, guests: context.guests, preferences }] };
-  }
-  return { language, replyMode: "answer", selectedRoom: roomNumber, actions: [{ type: "search_content", topic: "general", query: message, preferences }] };
 }
 
 export async function interpretAssistantMessage(
   message: string,
   context: ConversationContext = {},
 ): Promise<AssistantCommand> {
-  const deterministicDateContinuation = dateContinuationCommand(message, context);
-  if (deterministicDateContinuation) return deterministicDateContinuation;
-
-  const deterministic = fallbackCommand(message, context);
-  if (deterministic.actions.some((action) => action.type === "search_availability")) {
-    return deterministic;
-  }
-
   const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) return deterministic;
+  if (!apiKey) return clarificationFallback(context);
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 12000);
+  const timeout = setTimeout(() => controller.abort(), 12_000);
 
   try {
     const response = await fetch("https://api.openai.com/v1/responses", {
@@ -226,8 +234,8 @@ export async function interpretAssistantMessage(
       },
       signal: controller.signal,
       body: JSON.stringify({
-        model: process.env.OPENAI_CONCIERGE_MODEL || "gpt-5-mini",
-        instructions: SYSTEM_PROMPT,
+        model: process.env.OPENAI_CONCIERGE_MODEL || process.env.OPENAI_ASSISTANT_MODEL || "gpt-5-mini",
+        instructions: `${SYSTEM_PROMPT}\nToday is ${todayIso()}.`,
         input: JSON.stringify({ message, context }),
         text: {
           format: {
@@ -246,8 +254,8 @@ export async function interpretAssistantMessage(
     if (!output) throw new Error("Intent router returned an empty response");
     return JSON.parse(output) as AssistantCommand;
   } catch (error) {
-    console.error("AI intent routing fallback used", error);
-    return deterministic;
+    console.error("AI conversation interpreter fallback used", error);
+    return clarificationFallback(context);
   } finally {
     clearTimeout(timeout);
   }
