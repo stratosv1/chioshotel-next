@@ -1,7 +1,20 @@
 export type AssistantLanguage = "el" | "en" | "fr" | "de" | "it" | "es" | "tr";
 
+export type RoomFinderStep =
+  | "checkin"
+  | "checkout"
+  | "rooms"
+  | "guests"
+  | "preferences"
+  | "selecting"
+  | "breakfast"
+  | "complete";
+
 export type AssistantActionType =
   | "search_availability"
+  | "set_room_count"
+  | "set_guest_count"
+  | "restart_search"
   | "recommend_rooms"
   | "show_room"
   | "show_gallery"
@@ -37,6 +50,7 @@ export type AssistantAction = {
   type: AssistantActionType;
   roomNumber?: number;
   roomNumbers?: number[];
+  roomCount?: number;
   checkin?: string;
   checkout?: string;
   nights?: number;
@@ -65,6 +79,10 @@ export type ConversationContext = {
   checkin?: string;
   checkout?: string;
   guests?: number;
+  roomCount?: number;
+  guestGroups?: number[];
+  currentRoom?: number;
+  currentStep?: RoomFinderStep;
   language?: AssistantLanguage;
   recentMessages?: ConversationMessage[];
 };
