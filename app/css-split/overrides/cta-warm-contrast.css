@@ -132,6 +132,18 @@ a[class~="bg-[#efe6d8]"][class~="text-[#a15d33]"]:hover {
   background-color: var(--vh-cta-warm-hover) !important;
 }
 
+/* Landing-page light primary CTAs: keep the requested white + bold label rule. */
+:is(a, button)[class~="min-h-[52px]"][class~="bg-white"][class~="text-stone-900"] {
+  background-color: var(--vh-cta-warm) !important;
+  color: var(--vh-cta-label) !important;
+  font-weight: 900 !important;
+}
+
+:is(a, button)[class~="min-h-[52px]"][class~="bg-white"][class~="text-stone-900"]:hover {
+  background-color: var(--vh-cta-warm-hover) !important;
+  color: var(--vh-cta-label) !important;
+}
+
 /* Cookie consent primary action should match the site's warm CTA language. */
 .vh-consent__actions button:first-child {
   border-color: rgba(120, 98, 77, 0.36) !important;
