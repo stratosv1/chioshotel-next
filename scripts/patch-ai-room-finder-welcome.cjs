@@ -16,11 +16,23 @@ const welcomeByLanguage = {
 
 for (const [language, welcome] of Object.entries(welcomeByLanguage)) {
   const pattern = new RegExp(`(\\n  ${language}: \\{\\n    welcome: )\"(?:[^\"\\\\]|\\\\.)*\"`);
-  if (!pattern.test(source)) {
-    throw new Error(`AI room finder welcome anchor not found for ${language}`);
-  }
+  if (!pattern.test(source)) throw new Error(`AI room finder welcome anchor not found for ${language}`);
   source = source.replace(pattern, `$1${JSON.stringify(welcome)}`);
 }
 
+if (!source.includes('data-ai-user-reaction="true"')) {
+  const oldBubble = `                <div className={\`max-w-[84%] whitespace-pre-line px-4 py-3 text-[15px] leading-6 shadow-sm sm:max-w-[72%] \${message.role === "user" ? "rounded-[20px] rounded-br-[6px] bg-[#6b604f] text-white" : "rounded-[20px] rounded-bl-[6px] border border-[#dfd6ca] bg-white text-[#302b25]"}\`}>
+                  {message.content}
+                </div>`;
+  const newBubble = `                <div className={\`relative max-w-[84%] sm:max-w-[72%] \${message.role === "user" ? "pb-2" : ""}\`}>
+                  <div className={\`whitespace-pre-line px-4 py-3 text-[15px] leading-6 shadow-sm \${message.role === "user" ? "rounded-[20px] rounded-br-[6px] bg-[#6b604f] text-white" : "rounded-[20px] rounded-bl-[6px] border border-[#dfd6ca] bg-white text-[#302b25]"}\`}>
+                    {message.content}
+                  </div>
+                  {message.role === "user" && <span data-ai-user-reaction="true" aria-hidden="true" className="absolute -bottom-1 right-1 flex h-7 min-w-7 items-center justify-center rounded-full border border-[#ddd4c8] bg-white px-1.5 text-sm shadow-sm">👍</span>}
+                </div>`;
+  if (!source.includes(oldBubble)) throw new Error("AI room finder user bubble anchor not found");
+  source = source.replace(oldBubble, newBubble);
+}
+
 fs.writeFileSync(target, source);
-console.log("Updated AI Room Finder welcome copy for 7 languages.");
+console.log("Updated AI Room Finder welcome copy and user reaction badge.");
