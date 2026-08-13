@@ -1,0 +1,136 @@
+/*
+ * Warm CTA contrast layer
+ *
+ * Keeps CTA labels white + bold while replacing only the known low-contrast
+ * CTA backgrounds. The palette stays warm/taupe and avoids terracotta/orange.
+ * Normal text contrast targets WCAG AA (>= 4.5:1).
+ */
+
+:root {
+  --vh-cta-warm: #78624d;          /* 5.75:1 on white */
+  --vh-cta-warm-hover: #6b5847;    /* 6.75:1 on white */
+  --vh-cta-warm-alt: #735f45;      /* 6.08:1 on white */
+  --vh-cta-warm-olive: #6f664b;    /* 5.71:1 on white */
+  --vh-whatsapp: #287d4f;          /* 5.08:1 on white */
+  --vh-whatsapp-hover: #166534;    /* 7.13:1 on white */
+  --vh-cta-label: #ffffff;
+}
+
+/* Shared gold gradients used by Header and several Chios landing-page CTAs. */
+:is(a, button)[class~="from-[#a87842]"],
+:is(a, button)[class~="from-[#b8873f]"] {
+  background-color: var(--vh-cta-warm) !important;
+  background-image: linear-gradient(135deg, var(--vh-cta-warm), var(--vh-cta-warm-alt)) !important;
+  color: var(--vh-cta-label) !important;
+  font-weight: 900 !important;
+}
+
+:is(a, button)[class~="from-[#a87842]"]:hover,
+:is(a, button)[class~="from-[#b8873f]"]:hover {
+  background-color: var(--vh-cta-warm-hover) !important;
+  background-image: linear-gradient(135deg, var(--vh-cta-warm-hover), #5f4e3f) !important;
+  color: var(--vh-cta-label) !important;
+}
+
+/* Homepage orange hero CTA -> warm taupe. */
+:is(a, button)[class~="bg-[#e67e22]"],
+:is(a, button)[class~="bg-[#d35400]"] {
+  border-color: var(--vh-cta-warm) !important;
+  background-color: var(--vh-cta-warm) !important;
+  color: var(--vh-cta-label) !important;
+  font-weight: 900 !important;
+}
+
+:is(a, button)[class~="bg-[#e67e22]"]:hover,
+:is(a, button)[class~="bg-[#d35400]"]:hover {
+  border-color: var(--vh-cta-warm-hover) !important;
+  background-color: var(--vh-cta-warm-hover) !important;
+}
+
+/* Official-bright WhatsApp green is too light for white normal-size labels. */
+:is(a, button)[class~="bg-[#25D366]"],
+:is(a, button)[class~="bg-[#25d366]"] {
+  background-color: var(--vh-whatsapp) !important;
+  color: var(--vh-cta-label) !important;
+  font-weight: 900 !important;
+}
+
+:is(a, button)[class~="bg-[#25D366]"]:hover,
+:is(a, button)[class~="bg-[#25d366]"]:hover {
+  background-color: var(--vh-whatsapp-hover) !important;
+}
+
+/* Existing terracotta CTA backgrounds -> warm neutral taupe. */
+:is(a, button)[class~="bg-[#a15d33]"] {
+  background-color: var(--vh-cta-warm) !important;
+  color: var(--vh-cta-label) !important;
+  font-weight: 900 !important;
+}
+
+:is(a, button)[class~="bg-[#a15d33]"]:hover {
+  background-color: var(--vh-cta-warm-hover) !important;
+}
+
+/* Rates desktop fallback CTA: previously brown text on a pale beige fill. */
+a[class~="bg-[#efe6d8]"][class~="text-[#a15d33]"] {
+  border-color: var(--vh-cta-warm) !important;
+  background-color: var(--vh-cta-warm) !important;
+  color: var(--vh-cta-label) !important;
+  font-weight: 900 !important;
+}
+
+a[class~="bg-[#efe6d8]"][class~="text-[#a15d33]"]:hover {
+  border-color: var(--vh-cta-warm-hover) !important;
+  background-color: var(--vh-cta-warm-hover) !important;
+}
+
+/* Find Your Room primary action. */
+.find-room-primary {
+  border-color: transparent !important;
+  background: linear-gradient(135deg, var(--vh-cta-warm), var(--vh-cta-warm-alt)) !important;
+  color: var(--vh-cta-label) !important;
+  font-weight: 900 !important;
+  box-shadow: 0 14px 28px rgba(120, 98, 77, 0.22) !important;
+}
+
+.find-room-primary:hover {
+  background: linear-gradient(135deg, var(--vh-cta-warm-hover), #5f4e3f) !important;
+  color: var(--vh-cta-label) !important;
+}
+
+/* Trip Planner start action: pale olive was too light behind white text. */
+:is(a, button)[class~="bg-[#aeb39a]"],
+:is(a, button)[class~="bg-[#9ca484]"] {
+  background-color: var(--vh-cta-warm) !important;
+  color: var(--vh-cta-label) !important;
+  font-weight: 900 !important;
+}
+
+:is(a, button)[class~="bg-[#aeb39a]"]:hover,
+:is(a, button)[class~="bg-[#9ca484]"]:hover {
+  background-color: var(--vh-cta-warm-hover) !important;
+}
+
+/* Trip Planner places CTA: #737d58 was just below AA with white text. */
+[data-trip-planner-places-cta="true"]:not(:disabled) {
+  background-color: var(--vh-cta-warm-olive) !important;
+  color: var(--vh-cta-label) !important;
+  font-weight: 900 !important;
+}
+
+[data-trip-planner-places-cta="true"]:not(:disabled):hover {
+  background-color: var(--vh-cta-warm-hover) !important;
+}
+
+/* Cookie consent primary action should match the site's warm CTA language. */
+.vh-consent__actions button:first-child {
+  border-color: rgba(120, 98, 77, 0.36) !important;
+  background: linear-gradient(135deg, var(--vh-cta-warm), var(--vh-cta-warm-alt)) !important;
+  color: var(--vh-cta-label) !important;
+  font-weight: 950 !important;
+  box-shadow: 0 12px 26px rgba(120, 98, 77, 0.24) !important;
+}
+
+.vh-consent__actions button:first-child:hover {
+  background: linear-gradient(135deg, var(--vh-cta-warm-hover), #5f4e3f) !important;
+}
