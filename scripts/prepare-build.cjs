@@ -29,6 +29,7 @@ const PATCHES = [
   "patch-ai-room-finder-semantic-date-input.cjs",
   "patch-ai-room-finder-intent-engine-v2.cjs",
   "patch-ai-room-finder-semantic-application.cjs",
+  "patch-ai-room-finder-context-contract.cjs",
 ];
 
 const SLOW_PATCH_MS = 500;
