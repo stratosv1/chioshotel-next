@@ -63,7 +63,7 @@ if (!source.includes('data-ai-selected-stay-card="true"')) {
                   ))}
                 </div>
               </section>
-            ))}
+            )}
 
 `;
   if (!source.includes(selectedStayAnchor)) throw new Error("AI selected stay card anchor not found");
