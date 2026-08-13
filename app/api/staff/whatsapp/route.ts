@@ -4,8 +4,14 @@ import {
   D360ApiError,
   D360TemplateComponent,
   listWhatsAppTemplates,
+  normalizeWhatsAppRecipient,
   sendWhatsAppTemplateMessage,
 } from "@/lib/whatsapp/360dialog";
+import {
+  getProviderMessage,
+  isMarketingOptedOut,
+  logWhatsAppTemplateSend,
+} from "@/lib/whatsapp/tracking";
 
 export const runtime = "nodejs";
 
@@ -152,6 +158,24 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    normalizeWhatsAppRecipient(to);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Invalid WhatsApp recipient.";
+    return jsonResponse({ ok: false, message }, 400);
+  }
+
+  try {
+    if (await isMarketingOptedOut(to)) {
+      return jsonResponse(
+        {
+          ok: false,
+          message: "Recipient has opted out of WhatsApp marketing messages.",
+          code: "MARKETING_OPTED_OUT",
+        },
+        409,
+      );
+    }
+
     const result = await sendWhatsAppTemplateMessage({
       to,
       templateName,
@@ -159,10 +183,32 @@ export async function POST(request: NextRequest) {
       components: components as D360TemplateComponent[] | undefined,
     });
 
+    const providerMessage = getProviderMessage(result);
+    let trackingRecord: unknown = null;
+    let trackingLogged = false;
+
+    try {
+      trackingRecord = await logWhatsAppTemplateSend({
+        to,
+        templateName,
+        languageCode,
+        result,
+      });
+      trackingLogged = true;
+    } catch (trackingError) {
+      console.error("WhatsApp send succeeded but tracking insert failed", trackingError);
+    }
+
     return jsonResponse({
       ok: true,
       provider: "360dialog",
       result,
+      tracking: {
+        providerMessageId: providerMessage.id,
+        status: providerMessage.status,
+        logged: trackingLogged,
+        record: trackingRecord,
+      },
     });
   } catch (error) {
     return providerError(error);
