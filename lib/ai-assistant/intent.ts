@@ -1,13 +1,69 @@
-import type { AssistantCommand, AssistantLanguage, ConversationContext, RoomFinderStep } from "./types";
+import type {
+  AssistantAction,
+  AssistantCommand,
+  AssistantLanguage,
+  AssistantPreferences,
+  ConversationContext,
+  RoomFinderStep,
+} from "./types";
+
+const ACTION_TYPES = [
+  "search_availability",
+  "set_room_count",
+  "set_guest_count",
+  "restart_search",
+  "recommend_rooms",
+  "show_room",
+  "show_gallery",
+  "compare_rooms",
+  "answer_room_question",
+  "search_content",
+  "recommend_beaches",
+  "recommend_villages",
+  "recommend_museums",
+  "recommend_activities",
+  "build_itinerary",
+  "answer_property_question",
+  "show_directions",
+  "start_booking_request",
+  "ask_clarification",
+] as const;
+
+const TOPICS = [
+  "rooms",
+  "beaches",
+  "villages",
+  "museums",
+  "activities",
+  "family",
+  "property",
+  "transport",
+  "general",
+] as const;
+
+const PREFERENCE_KEYS = [
+  "floor",
+  "noStairs",
+  "kitchenette",
+  "fullKitchen",
+  "budget",
+  "quiet",
+  "familyFriendly",
+  "suitableForChildren",
+  "organized",
+  "sandy",
+  "sheltered",
+  "nearby",
+] as const;
 
 const COMMAND_SCHEMA = {
   type: "object",
   additionalProperties: false,
-  required: ["language", "replyMode", "actions"],
+  required: ["language", "replyMode", "selectedRoom", "actions"],
   properties: {
     language: { type: "string", enum: ["el", "en", "fr", "de", "it", "es", "tr"] },
     replyMode: { type: "string", enum: ["answer", "execute", "clarify"] },
-    selectedRoom: { type: "integer", minimum: 1, maximum: 10 },
+    selectedRoom: { type: ["integer", "null"], minimum: 1, maximum: 10 },
     actions: {
       type: "array",
       minItems: 1,
@@ -15,52 +71,65 @@ const COMMAND_SCHEMA = {
       items: {
         type: "object",
         additionalProperties: false,
-        required: ["type"],
+        required: [
+          "type",
+          "roomNumber",
+          "roomNumbers",
+          "roomCount",
+          "checkin",
+          "checkout",
+          "nights",
+          "guests",
+          "days",
+          "topic",
+          "query",
+          "missingFields",
+          "preferences",
+        ],
         properties: {
-          type: {
-            type: "string",
-            enum: [
-              "search_availability", "set_room_count", "set_guest_count", "restart_search",
-              "recommend_rooms", "show_room", "show_gallery", "compare_rooms",
-              "answer_room_question", "search_content", "recommend_beaches",
-              "recommend_villages", "recommend_museums", "recommend_activities",
-              "build_itinerary", "answer_property_question", "show_directions",
-              "start_booking_request", "ask_clarification"
-            ]
+          type: { type: "string", enum: ACTION_TYPES },
+          roomNumber: { type: ["integer", "null"], minimum: 1, maximum: 10 },
+          roomNumbers: {
+            type: "array",
+            items: { type: "integer", minimum: 1, maximum: 10 },
+            maxItems: 10,
           },
-          roomNumber: { type: "integer", minimum: 1, maximum: 10 },
-          roomNumbers: { type: "array", items: { type: "integer", minimum: 1, maximum: 10 }, maxItems: 10 },
-          roomCount: { type: "integer", minimum: 1, maximum: 3 },
-          checkin: { type: "string" },
-          checkout: { type: "string" },
-          nights: { type: "integer", minimum: 1, maximum: 60 },
-          guests: { type: "integer", minimum: 1, maximum: 10 },
-          days: { type: "integer", minimum: 1, maximum: 30 },
-          topic: { type: "string", enum: ["rooms", "beaches", "villages", "museums", "activities", "family", "property", "transport", "general"] },
+          roomCount: { type: ["integer", "null"], minimum: 1, maximum: 3 },
+          checkin: { type: ["string", "null"] },
+          checkout: { type: ["string", "null"] },
+          nights: { type: ["integer", "null"], minimum: 1, maximum: 60 },
+          guests: { type: ["integer", "null"], minimum: 1, maximum: 10 },
+          days: { type: ["integer", "null"], minimum: 1, maximum: 30 },
+          topic: { enum: [...TOPICS, null] },
           query: { type: "string" },
-          missingFields: { type: "array", items: { type: "string" }, maxItems: 6 },
+          missingFields: {
+            type: "array",
+            items: { type: "string" },
+            maxItems: 6,
+          },
           preferences: {
-            type: "object",
+            type: ["object", "null"],
             additionalProperties: false,
+            required: [...PREFERENCE_KEYS],
             properties: {
-              floor: { type: "string", enum: ["ground", "first", "any"] },
-              noStairs: { type: "boolean" },
-              kitchenette: { type: "boolean" },
-              fullKitchen: { type: "boolean" },
-              budget: { type: "string", enum: ["lowest", "standard", "family", "any"] },
-              quiet: { type: "boolean" },
-              familyFriendly: { type: "boolean" },
-              suitableForChildren: { type: "boolean" },
-              organized: { type: "boolean" },
-              sandy: { type: "boolean" },
-              sheltered: { type: "boolean" },
-              nearby: { type: "boolean" }
-            }
-          }
-        }
-      }
-    }
-  }
+              floor: { enum: ["ground", "first", "any", null] },
+              noStairs: { type: ["boolean", "null"] },
+              kitchenette: { type: ["boolean", "null"] },
+              fullKitchen: { type: ["boolean", "null"] },
+              budget: { enum: ["lowest", "standard", "family", "any", null] },
+              quiet: { type: ["boolean", "null"] },
+              familyFriendly: { type: ["boolean", "null"] },
+              suitableForChildren: { type: ["boolean", "null"] },
+              organized: { type: ["boolean", "null"] },
+              sandy: { type: ["boolean", "null"] },
+              sheltered: { type: ["boolean", "null"] },
+              nearby: { type: ["boolean", "null"] },
+            },
+          },
+        },
+      },
+    },
+  },
 } as const;
 
 function todayIso() {
@@ -80,6 +149,7 @@ CORE RULES
 - Use context to understand references, corrections and short replies.
 - The user's semantic intent overrides the previous question. If the assistant asks for check-out but the user clearly changes check-in, interpret the check-in change.
 - If the user wants to restart, return restart_search.
+- For every action field that is not relevant, return null, an empty string, or an empty array as required by the schema. Never invent a value just to fill the schema.
 
 DATES
 - A check-in or check-out may execute only when exactly one calendar date is identified with high confidence.
@@ -101,6 +171,7 @@ ROOM FINDER CONVERSATION
 - replyMode=clarify whenever ask_clarification is the primary action.
 - replyMode=execute for state-changing actions.
 - replyMode=answer for informational actions.
+- A single user message may legitimately contain more than one independent instruction. Return multiple actions in the order they should be applied.
 
 LANGUAGE
 - Reply in the user's language among Greek, English, German, French, Italian, Spanish and Turkish.
@@ -128,7 +199,7 @@ const CLARIFY_COPY: Record<AssistantLanguage, Record<RoomFinderStep, string>> = 
     preferences: "Πείτε μου λίγο πιο συγκεκριμένα τι προτιμάτε για τη διαμονή σας.",
     selecting: "Πείτε μου τι θα θέλατε να αλλάξουμε στις προτάσεις μας.",
     breakfast: "Θα θέλατε να προσθέσετε πρωινό;",
-    complete: "Πώς μπορώ να σας βοηθήσω ακόμη με τη διαμονή σας;"
+    complete: "Πώς μπορώ να σας βοηθήσω ακόμη με τη διαμονή σας;",
   },
   en: {
     checkin: "What exact date would you like to check in? 😊",
@@ -138,7 +209,7 @@ const CLARIFY_COPY: Record<AssistantLanguage, Record<RoomFinderStep, string>> = 
     preferences: "Please tell me a little more specifically what you prefer for your stay.",
     selecting: "Tell me what you would like us to change about the suggestions.",
     breakfast: "Would you like to add breakfast?",
-    complete: "How else can I help with your stay?"
+    complete: "How else can I help with your stay?",
   },
   de: {
     checkin: "An welchem genauen Datum möchten Sie einchecken? 😊",
@@ -148,7 +219,7 @@ const CLARIFY_COPY: Record<AssistantLanguage, Record<RoomFinderStep, string>> = 
     preferences: "Sagen Sie mir bitte etwas genauer, was Ihnen für Ihren Aufenthalt wichtig ist.",
     selecting: "Sagen Sie mir, was wir an den Vorschlägen ändern sollen.",
     breakfast: "Möchten Sie Frühstück hinzufügen?",
-    complete: "Wie kann ich Ihnen sonst noch bei Ihrem Aufenthalt helfen?"
+    complete: "Wie kann ich Ihnen sonst noch bei Ihrem Aufenthalt helfen?",
   },
   fr: {
     checkin: "Quelle date exacte souhaitez-vous pour le check-in ? 😊",
@@ -158,7 +229,7 @@ const CLARIFY_COPY: Record<AssistantLanguage, Record<RoomFinderStep, string>> = 
     preferences: "Précisez-moi un peu mieux vos préférences pour le séjour.",
     selecting: "Dites-moi ce que vous souhaitez modifier dans nos propositions.",
     breakfast: "Souhaitez-vous ajouter le petit-déjeuner ?",
-    complete: "Comment puis-je encore vous aider pour votre séjour ?"
+    complete: "Comment puis-je encore vous aider pour votre séjour ?",
   },
   it: {
     checkin: "Quale data esatta desiderate per il check-in? 😊",
@@ -168,7 +239,7 @@ const CLARIFY_COPY: Record<AssistantLanguage, Record<RoomFinderStep, string>> = 
     preferences: "Indicami un po' più precisamente le vostre preferenze per il soggiorno.",
     selecting: "Ditemi cosa vorreste cambiare nelle nostre proposte.",
     breakfast: "Desiderate aggiungere la colazione?",
-    complete: "Come posso aiutarvi ancora per il soggiorno?"
+    complete: "Come posso aiutarvi ancora per il soggiorno?",
   },
   es: {
     checkin: "¿Qué fecha exacta desean para el check-in? 😊",
@@ -178,7 +249,7 @@ const CLARIFY_COPY: Record<AssistantLanguage, Record<RoomFinderStep, string>> = 
     preferences: "Cuéntenme un poco más específicamente qué prefieren para su estancia.",
     selecting: "Díganme qué les gustaría cambiar de nuestras propuestas.",
     breakfast: "¿Desean añadir desayuno?",
-    complete: "¿Cómo puedo ayudarles aún más con su estancia?"
+    complete: "¿Cómo puedo ayudarles aún más con su estancia?",
   },
   tr: {
     checkin: "Tam olarak hangi tarihte giriş yapmak istersiniz? 😊",
@@ -188,8 +259,8 @@ const CLARIFY_COPY: Record<AssistantLanguage, Record<RoomFinderStep, string>> = 
     preferences: "Konaklamanız için tercihlerinizi biraz daha ayrıntılı anlatır mısınız?",
     selecting: "Önerilerimizde neyi değiştirmemizi istediğinizi söyleyin.",
     breakfast: "Kahvaltı eklemek ister misiniz?",
-    complete: "Konaklamanızla ilgili başka nasıl yardımcı olabilirim?"
-  }
+    complete: "Konaklamanızla ilgili başka nasıl yardımcı olabilirim?",
+  },
 };
 
 function safeLanguage(value?: AssistantLanguage): AssistantLanguage {
@@ -212,6 +283,43 @@ function clarificationFallback(context: ConversationContext): AssistantCommand {
       query: CLARIFY_COPY[language][step],
       missingFields: [step],
     }],
+  };
+}
+
+function cleanPreferences(raw: any): AssistantPreferences | undefined {
+  if (!raw || typeof raw !== "object") return undefined;
+  const clean: Record<string, unknown> = {};
+  for (const key of PREFERENCE_KEYS) {
+    const value = raw[key];
+    if (value !== null && value !== undefined) clean[key] = value;
+  }
+  return Object.keys(clean).length ? clean as AssistantPreferences : undefined;
+}
+
+function cleanAction(raw: any): AssistantAction {
+  const action: AssistantAction = { type: raw.type };
+  if (raw.roomNumber != null) action.roomNumber = raw.roomNumber;
+  if (Array.isArray(raw.roomNumbers) && raw.roomNumbers.length) action.roomNumbers = raw.roomNumbers;
+  if (raw.roomCount != null) action.roomCount = raw.roomCount;
+  if (raw.checkin) action.checkin = raw.checkin;
+  if (raw.checkout) action.checkout = raw.checkout;
+  if (raw.nights != null) action.nights = raw.nights;
+  if (raw.guests != null) action.guests = raw.guests;
+  if (raw.days != null) action.days = raw.days;
+  if (raw.topic) action.topic = raw.topic;
+  if (raw.query) action.query = raw.query;
+  if (Array.isArray(raw.missingFields) && raw.missingFields.length) action.missingFields = raw.missingFields;
+  const preferences = cleanPreferences(raw.preferences);
+  if (preferences) action.preferences = preferences;
+  return action;
+}
+
+function cleanCommand(raw: any): AssistantCommand {
+  return {
+    language: raw.language,
+    replyMode: raw.replyMode,
+    ...(raw.selectedRoom != null ? { selectedRoom: raw.selectedRoom } : {}),
+    actions: Array.isArray(raw.actions) ? raw.actions.map(cleanAction) : [],
   };
 }
 
@@ -252,7 +360,7 @@ export async function interpretAssistantMessage(
     if (!response.ok) throw new Error(payload?.error?.message || "Intent routing failed");
     const output = getOutputText(payload);
     if (!output) throw new Error("Intent router returned an empty response");
-    return JSON.parse(output) as AssistantCommand;
+    return cleanCommand(JSON.parse(output));
   } catch (error) {
     console.error("AI conversation interpreter fallback used", error);
     return clarificationFallback(context);
