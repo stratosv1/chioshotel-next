@@ -73,6 +73,7 @@ export async function GET(request: NextRequest) {
     firstCheckinAccepted: first.status === 200 && first.payload?.search?.checkin === "2026-09-29",
     invalidCheckoutKeepsCheckin: invalidCheckout.status === 200 && invalidCheckout.payload?.search?.checkin === "2026-09-29",
     invalidCheckoutNotPromotedToCheckinEdit: invalidCheckout.payload?.search?.checkout == null,
+    invalidCheckoutClearsDerivedNights: invalidCheckout.payload?.search?.nights == null,
     invalidCheckoutStaysOnCheckout: invalidCheckout.payload?.action === "ask_user" && /check-out/i.test(String(invalidCheckout.payload?.answer || "")),
     invalidCheckoutLanguageStable: invalidCheckout.payload?.language === "en",
     explicitCheckinEditStillWorks: explicitEdit.status === 200 && explicitEdit.payload?.search?.checkin === "2026-08-31",
