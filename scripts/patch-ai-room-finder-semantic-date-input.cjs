@@ -114,9 +114,9 @@ function isBookingIntent`;
   write(smartFile, source);
 }
 
-// 3) The live /ai-assistant UI used to run a second step-bound date parser after the backend.
-// Replace that date branch so every free-text check-in/check-out message is interpreted by AI first,
-// then the deterministic client state follows the structured search state returned by the server.
+// 3) The live /ai-assistant UI routes free-form date/correction messages through semantic AI.
+// A complete explicit numeric range is deterministic and should be accepted as one turn before
+// the AI fallback, so messages such as “Check in 30/08 check out 31/08” never lose checkout.
 {
   let source = read(chatFile);
   const marker = 'mode: "room_finder"';
@@ -126,6 +126,17 @@ function isBookingIntent`;
     if (!blockPattern.test(source)) throw new Error("Active Room Finder date-flow block not found");
 
     const replacement = `  async function interpretDate(value: string) {
+    const explicitRange = parseNumericDates(value);
+    if (explicitRange?.checkin && explicitRange.checkout) {
+      return {
+        search: {
+          checkin: explicitRange.checkin,
+          checkout: explicitRange.checkout,
+          nights: nightsBetween(explicitRange.checkin, explicitRange.checkout),
+        },
+      };
+    }
+
     const response = await fetch("/api/ai-assistant/smart", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -143,7 +154,7 @@ function isBookingIntent`;
     const payload = await response.json().catch(() => null);
     if (!response.ok || !payload) throw new Error("date interpretation failed");
     return payload as {
-      search?: { checkin?: string | null; checkout?: string | null };
+      search?: { checkin?: string | null; checkout?: string | null; nights?: number | null };
       action?: string;
       answer?: string;
       error?: string;
@@ -238,8 +249,8 @@ function isBookingIntent`;
   if (!source.includes("lastAcceptedField: step === \"checkout\" && checkin ? \"checkin\" : null")) {
     throw new Error("Room Finder turn context was not added to the active UI");
   }
-  if (source.includes("const numeric = parseNumericDates(value")) {
-    throw new Error("Step-bound numeric date bypass is still active");
+  if (!source.includes("const explicitRange = parseNumericDates(value);")) {
+    throw new Error("Complete explicit date-range handling was not applied");
   }
   if (!source.includes("Apply the server state exactly")) {
     throw new Error("Semantic date state application was not applied");
@@ -247,4 +258,4 @@ function isBookingIntent`;
   write(chatFile, source);
 }
 
-console.log("AI Room Finder now routes all free-text date/correction input through semantic AI interpretation with explicit turn context");
+console.log("AI Room Finder now accepts complete explicit date ranges in one turn and routes corrections through semantic AI interpretation");
