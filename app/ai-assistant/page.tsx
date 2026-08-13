@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { AiRoomChatPreview } from "@/components/ai/AiRoomChatPreview";
+import { AiRoomFinderFlow } from "@/components/ai/AiRoomFinderFlow";
 
 export const metadata: Metadata = {
   title: {
@@ -14,5 +14,5 @@ export const metadata: Metadata = {
 };
 
 export default function AiAssistantPage() {
-  return <AiRoomChatPreview />;
+  return <AiRoomFinderFlow />;
 }
