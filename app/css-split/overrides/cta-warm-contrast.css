@@ -111,7 +111,17 @@ a[class~="bg-[#efe6d8]"][class~="text-[#a15d33]"]:hover {
   background-color: var(--vh-cta-warm-hover) !important;
 }
 
-/* Trip Planner places CTA: #737d58 was just below AA with white text. */
+/* Trip Planner actions that used the just-under-AA #737d58 olive. */
+:is(a, button)[class~="bg-[#737d58]"] {
+  background-color: var(--vh-cta-warm-olive) !important;
+  color: var(--vh-cta-label) !important;
+  font-weight: 900 !important;
+}
+
+:is(a, button)[class~="bg-[#737d58]"]:hover {
+  background-color: var(--vh-cta-warm-hover) !important;
+}
+
 [data-trip-planner-places-cta="true"]:not(:disabled) {
   background-color: var(--vh-cta-warm-olive) !important;
   color: var(--vh-cta-label) !important;
