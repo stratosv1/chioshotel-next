@@ -81,7 +81,27 @@ replaceOnce(
   'normalize structured decision',
 );
 
-if (!source.includes('targetField: { type: "string"') || !source.includes('normalizeDecisionForRoomFinderContext(rawDecision')) {
+// Date validation owns chronology. When it rejects a date, remove any duration calculated
+// from that rejected pair so later turns never inherit stale or negative nights.
+replaceOnce(
+  '  if (!isIsoDate(next.checkin) || next.checkin < todayIso()) {\n    next.checkin = null;\n    return { action: "ask_user", answer: copy.invalidCheckin, search: next };\n  }',
+  '  if (!isIsoDate(next.checkin) || next.checkin < todayIso()) {\n    next.checkin = null;\n    next.checkout = null;\n    next.nights = null;\n    return { action: "ask_user", answer: copy.invalidCheckin, search: next };\n  }',
+  'invalid checkin state cleanup',
+);
+
+replaceOnce(
+  '  if (!isIsoDate(next.checkout) || next.checkout <= next.checkin) {\n    next.checkout = null;\n    return { action: "ask_user", answer: copy.invalidCheckout, search: next };\n  }',
+  '  if (!isIsoDate(next.checkout) || next.checkout <= next.checkin) {\n    next.checkout = null;\n    next.nights = null;\n    return { action: "ask_user", answer: copy.invalidCheckout, search: next };\n  }',
+  'invalid checkout state cleanup',
+);
+
+replaceOnce(
+  '  if (nights > MAX_NIGHTS) {\n    next.checkout = null;\n    return { action: "ask_user", answer: copy.stayTooLong, search: next };\n  }',
+  '  if (nights > MAX_NIGHTS) {\n    next.checkout = null;\n    next.nights = null;\n    return { action: "ask_user", answer: copy.stayTooLong, search: next };\n  }',
+  'long stay state cleanup',
+);
+
+if (!source.includes('targetField: { type: "string"') || !source.includes('normalizeDecisionForRoomFinderContext(rawDecision') || !source.includes('next.nights = null;')) {
   throw new Error("Room Finder contextual semantic contract did not apply");
 }
 
