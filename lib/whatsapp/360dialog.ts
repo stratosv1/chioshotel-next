@@ -14,6 +14,11 @@ type SendTemplateMessageInput = {
   components?: D360TemplateComponent[];
 };
 
+type WebhookConfigInput = {
+  url: string;
+  headers?: Record<string, string>;
+};
+
 export class D360ApiError extends Error {
   status: number;
   details: unknown;
@@ -78,6 +83,17 @@ export function normalizeWhatsAppRecipient(value: string) {
 
 export async function listWhatsAppTemplates() {
   return d360Request("/v1/configs/templates", "GET");
+}
+
+export async function getWhatsAppWebhookConfig() {
+  return d360Request("/v1/configs/webhook", "GET");
+}
+
+export async function setWhatsAppWebhookConfig({ url, headers }: WebhookConfigInput) {
+  return d360Request("/v1/configs/webhook", "POST", {
+    url,
+    ...(headers && Object.keys(headers).length ? { headers } : {}),
+  });
 }
 
 export async function sendWhatsAppTemplateMessage({
