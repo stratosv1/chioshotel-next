@@ -41,5 +41,34 @@ if (!source.includes('data-ai-user-reaction="true"')) {
   source = source.replace(oldBubble, newBubble);
 }
 
+if (!source.includes('data-ai-selected-stay-card="true"')) {
+  const selectedStayAnchor = `            {typing && (`;
+  const selectedStayCard = `            {choices.length > 0 && (step === "breakfast" || step === "complete") && (
+              <section data-ai-selected-stay-card="true" className="ai-message-in ml-10 rounded-[20px] border border-[#d9cfc2] bg-[#fffdfa] p-3.5 shadow-sm">
+                <div className="mb-2 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2 text-sm font-black text-[#5f7448]"><span aria-hidden="true">♥</span><span>{copy.selected}</span></div>
+                  <div className="text-sm font-black text-[#5f7448]">{money(choices.reduce((sum, choice) => sum + choice.offer.directTotal, 0), language)}</div>
+                </div>
+                <div className="space-y-2">
+                  {choices.map(choice => (
+                    <div key={choice.group} className="rounded-2xl bg-[#f5f1eb] px-3 py-2.5">
+                      <div className="font-bold">{offerDisplayName(choice.offer, language)}</div>
+                      <div className="mt-0.5 text-xs text-[#746b60]">{categoryWithFloor(choice.offer)}</div>
+                      <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-1 text-xs font-semibold text-[#625b52]">
+                        <span>📅 {checkin} → {checkout}</span>
+                        <span>👥 {copy.guestLabel(choice.guests)}</span>
+                        <span>{money(choice.offer.directTotal, language)}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            ))}
+
+`;
+  if (!source.includes(selectedStayAnchor)) throw new Error("AI selected stay card anchor not found");
+  source = source.replace(selectedStayAnchor, selectedStayCard + selectedStayAnchor);
+}
+
 fs.writeFileSync(target, source);
-console.log("Updated AI Room Finder welcome copy and delayed user reaction badge.");
+console.log("Updated AI Room Finder welcome, delayed reaction badge and favourite selected-room card.");
