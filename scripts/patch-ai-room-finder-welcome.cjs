@@ -20,6 +20,57 @@ for (const [language, welcome] of Object.entries(welcomeByLanguage)) {
   source = source.replace(pattern, `$1${JSON.stringify(welcome)}`);
 }
 
+if (!source.includes("const SEARCHING_FRIENDLY:")) {
+  const anchor = 'const SHORT_SELECT: Record<Language, string> =';
+  const insertion = `const SEARCHING_FRIENDLY: Record<Language, string> = {\n  el: "Τέλεια! 😊 Σας ευχαριστούμε πολύ. Ψάχνω αμέσως τις καλύτερες διαθέσιμες επιλογές για εσάς 🔎✨",\n  en: "Perfect! 😊 Thank you very much. I’ll immediately look for the best available options for you 🔎✨",\n  de: "Perfekt! 😊 Vielen Dank. Ich suche sofort die besten verfügbaren Optionen für Sie 🔎✨",\n  fr: "Parfait ! 😊 Merci beaucoup. Je recherche immédiatement les meilleures options disponibles pour vous 🔎✨",\n  it: "Perfetto! 😊 Grazie mille. Cerco subito le migliori opzioni disponibili per voi 🔎✨",\n  es: "¡Perfecto! 😊 Muchas gracias. Buscaré enseguida las mejores opciones disponibles para ustedes 🔎✨",\n  tr: "Harika! 😊 Çok teşekkür ederiz. Sizin için en uygun müsait seçenekleri hemen arıyorum 🔎✨",\n};\n\nconst PROPOSAL_FEEDBACK: Record<Language, { question: string; yes: string; different: string; yesReply: string; changePrompt: string; roomType: string; floor: string; group: string; info: string; other: string; roomTypeReply: string; floorReply: string; groupReply: string; infoWhatsapp: string; otherWhatsapp: string }> = {\n  el: { question: "Σας αρέσουν οι προτάσεις μας; 😊", yes: "👍 Ναι, μου αρέσουν", different: "🤔 Θα ήθελα κάτι διαφορετικό", yesReply: "Τέλεια! 😊 Χαιρόμαστε πολύ. Επιλέξτε το δωμάτιο που προτιμάτε ♥️", changePrompt: "Φυσικά 😊 Πείτε μου τι θα θέλατε να αλλάξουμε στις προτάσεις μας.", roomType: "🛏️ Άλλο είδος δωματίου", floor: "📍 Διαφορετικός όροφος / χωρίς σκάλες", group: "👨‍👩‍👧 Κάτι πιο κατάλληλο για την παρέα σας", info: "ℹ️ Θέλω περισσότερες πληροφορίες", other: "💬 Κάτι άλλο", roomTypeReply: "Βεβαίως 😊 Πείτε μου τι είναι σημαντικό για εσάς και θα ψάξω ξανά.", floorReply: "Φυσικά 😊 Μπορούμε να δώσουμε προτεραιότητα σε ισόγειο, πρώτο όροφο ή επιλογές χωρίς σκάλες.", groupReply: "Με χαρά 😊 Ας βρούμε κάτι που ταιριάζει καλύτερα στην παρέα ή την οικογένειά σας.", infoWhatsapp: "Γεια σας, θα ήθελα περισσότερες πληροφορίες για μία από τις προτάσεις του AI Room Finder.", otherWhatsapp: "Γεια σας, χρησιμοποιώ το AI Room Finder και θα ήθελα βοήθεια με τη διαμονή μου." },\n  en: { question: "Are you happy with our suggestions? 😊", yes: "👍 Yes, I like them", different: "🤔 I’d like something different", yesReply: "Wonderful! 😊 We’re glad to hear that. Choose the room you prefer ♥️", changePrompt: "Of course 😊 Tell me what you would like us to change in the suggestions.", roomType: "🛏️ A different room type", floor: "📍 Different floor / no stairs", group: "👨‍👩‍👧 Something better for our group", info: "ℹ️ I’d like more information", other: "💬 Something else", roomTypeReply: "Of course 😊 Tell me what matters most to you and I’ll search again.", floorReply: "Absolutely 😊 We can prioritise ground floor, first floor or no-stairs options.", groupReply: "With pleasure 😊 Let’s find something that suits your group or family better.", infoWhatsapp: "Hello, I would like more information about one of the AI Room Finder suggestions.", otherWhatsapp: "Hello, I am using the AI Room Finder and would like some help with my stay." },\n  de: { question: "Gefallen Ihnen unsere Vorschläge? 😊", yes: "👍 Ja, sie gefallen mir", different: "🤔 Ich wünsche etwas anderes", yesReply: "Wunderbar! 😊 Das freut uns sehr. Wählen Sie Ihr bevorzugtes Zimmer ♥️", changePrompt: "Natürlich 😊 Sagen Sie mir, was wir an den Vorschlägen ändern sollen.", roomType: "🛏️ Anderer Zimmertyp", floor: "📍 Andere Etage / keine Treppen", group: "👨‍👩‍👧 Besser für unsere Gruppe", info: "ℹ️ Mehr Informationen", other: "💬 Etwas anderes", roomTypeReply: "Natürlich 😊 Sagen Sie mir, was Ihnen wichtig ist, und ich suche erneut.", floorReply: "Sehr gern 😊 Wir können Erdgeschoss, ersten Stock oder Optionen ohne Treppen priorisieren.", groupReply: "Sehr gern 😊 Finden wir etwas Passenderes für Ihre Gruppe oder Familie.", infoWhatsapp: "Hallo, ich hätte gern weitere Informationen zu einem Vorschlag des AI Room Finder.", otherWhatsapp: "Hallo, ich nutze den AI Room Finder und benötige Hilfe für meinen Aufenthalt." },\n  fr: { question: "Nos propositions vous plaisent-elles ? 😊", yes: "👍 Oui, elles me plaisent", different: "🤔 Je voudrais autre chose", yesReply: "Parfait ! 😊 Nous en sommes ravis. Choisissez la chambre que vous préférez ♥️", changePrompt: "Bien sûr 😊 Dites-moi ce que vous souhaitez changer dans nos propositions.", roomType: "🛏️ Un autre type de chambre", floor: "📍 Un autre étage / sans escaliers", group: "👨‍👩‍👧 Plus adapté à notre groupe", info: "ℹ️ Plus d’informations", other: "💬 Autre chose", roomTypeReply: "Bien sûr 😊 Dites-moi ce qui compte pour vous et je relance la recherche.", floorReply: "Avec plaisir 😊 Nous pouvons privilégier le rez-de-chaussée, le premier étage ou les options sans escaliers.", groupReply: "Avec plaisir 😊 Trouvons une option mieux adaptée à votre groupe ou famille.", infoWhatsapp: "Bonjour, je souhaiterais plus d’informations sur une proposition du AI Room Finder.", otherWhatsapp: "Bonjour, j’utilise le AI Room Finder et j’aurais besoin d’aide pour mon séjour." },\n  it: { question: "Vi piacciono le nostre proposte? 😊", yes: "👍 Sì, mi piacciono", different: "🤔 Vorrei qualcosa di diverso", yesReply: "Perfetto! 😊 Ne siamo felici. Scegliete la camera che preferite ♥️", changePrompt: "Certamente 😊 Ditemi cosa vorreste cambiare nelle nostre proposte.", roomType: "🛏️ Un altro tipo di camera", floor: "📍 Altro piano / senza scale", group: "👨‍👩‍👧 Più adatto al nostro gruppo", info: "ℹ️ Vorrei più informazioni", other: "💬 Altro", roomTypeReply: "Certamente 😊 Ditemi cosa è importante per voi e cercherò di nuovo.", floorReply: "Con piacere 😊 Possiamo dare priorità a piano terra, primo piano o opzioni senza scale.", groupReply: "Con piacere 😊 Troviamo qualcosa di più adatto al vostro gruppo o famiglia.", infoWhatsapp: "Salve, vorrei maggiori informazioni su una proposta dell’AI Room Finder.", otherWhatsapp: "Salve, sto usando l’AI Room Finder e vorrei aiuto per il mio soggiorno." },\n  es: { question: "¿Les gustan nuestras propuestas? 😊", yes: "👍 Sí, me gustan", different: "🤔 Quisiera algo diferente", yesReply: "¡Perfecto! 😊 Nos alegra mucho. Elijan la habitación que prefieran ♥️", changePrompt: "Por supuesto 😊 Díganme qué les gustaría cambiar de nuestras propuestas.", roomType: "🛏️ Otro tipo de habitación", floor: "📍 Otra planta / sin escaleras", group: "👨‍👩‍👧 Algo mejor para nuestro grupo", info: "ℹ️ Quiero más información", other: "💬 Otra cosa", roomTypeReply: "Por supuesto 😊 Díganme qué es importante para ustedes y buscaré de nuevo.", floorReply: "Con mucho gusto 😊 Podemos priorizar planta baja, primera planta u opciones sin escaleras.", groupReply: "Con mucho gusto 😊 Busquemos algo más adecuado para su grupo o familia.", infoWhatsapp: "Hola, quisiera más información sobre una propuesta del AI Room Finder.", otherWhatsapp: "Hola, estoy usando el AI Room Finder y quisiera ayuda con mi estancia." },\n  tr: { question: "Önerilerimizi beğendiniz mi? 😊", yes: "👍 Evet, beğendim", different: "🤔 Farklı bir şey istiyorum", yesReply: "Harika! 😊 Çok sevindik. Beğendiğiniz odayı seçebilirsiniz ♥️", changePrompt: "Elbette 😊 Önerilerimizde neyi değiştirmemizi istediğinizi söyleyin.", roomType: "🛏️ Farklı oda tipi", floor: "📍 Farklı kat / merdivensiz", group: "👨‍👩‍👧 Grubumuza daha uygun", info: "ℹ️ Daha fazla bilgi istiyorum", other: "💬 Başka bir şey", roomTypeReply: "Elbette 😊 Sizin için neyin önemli olduğunu söyleyin, tekrar arayayım.", floorReply: "Memnuniyetle 😊 Zemin kat, birinci kat veya merdivensiz seçeneklere öncelik verebiliriz.", groupReply: "Memnuniyetle 😊 Grubunuza veya ailenize daha uygun bir seçenek bulalım.", infoWhatsapp: "Merhaba, AI Room Finder önerilerinden biri hakkında daha fazla bilgi almak istiyorum.", otherWhatsapp: "Merhaba, AI Room Finder kullanıyorum ve konaklamamla ilgili yardım istiyorum." },\n};\n\n`;
+  if (!source.includes(anchor)) throw new Error("AI hospitality constants anchor not found");
+  source = source.replace(anchor, insertion + anchor);
+}
+
+if (!source.includes('const [proposalFeedback, setProposalFeedback]')) {
+  const stateAnchor = '  const [sendStatus, setSendStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");';
+  if (!source.includes(stateAnchor)) throw new Error("AI proposal feedback state anchor not found");
+  source = source.replace(stateAnchor, stateAnchor + '\n  const [proposalFeedback, setProposalFeedback] = useState<"idle" | "happy" | "more">("idle");');
+}
+
+if (!source.includes('setProposalFeedback("idle");\n    setError')) {
+  const restartAnchor = '    setBreakfast(false);\n    setError("");';
+  if (!source.includes(restartAnchor)) throw new Error("AI proposal feedback restart anchor not found");
+  source = source.replace(restartAnchor, '    setBreakfast(false);\n    setProposalFeedback("idle");\n    setError("");');
+}
+
+if (!source.includes('addMessage("assistant", SEARCHING_FRIENDLY[language])')) {
+  const searchAnchor = '  async function searchRooms() {\n    setStep("searching");\n    setTyping(true);';
+  const searchReplacement = '  async function searchRooms() {\n    setProposalFeedback("idle");\n    addMessage("assistant", SEARCHING_FRIENDLY[language]);\n    setStep("searching");\n    setTyping(true);';
+  if (!source.includes(searchAnchor)) throw new Error("AI friendly search anchor not found");
+  source = source.replace(searchAnchor, searchReplacement);
+}
+
+if (!source.includes('function selectOffer(offer: Offer) {\n    setProposalFeedback("idle");')) {
+  const selectAnchor = '  function selectOffer(offer: Offer) {\n    const nextChoices';
+  if (!source.includes(selectAnchor)) throw new Error("AI select offer feedback anchor not found");
+  source = source.replace(selectAnchor, '  function selectOffer(offer: Offer) {\n    setProposalFeedback("idle");\n    const nextChoices');
+}
+
+if (source.includes('      setStep("breakfast");\n      addMessage("assistant", copy.breakfast);')) {
+  source = source.replace('      setStep("breakfast");\n      addMessage("assistant", copy.breakfast);', '      setStep("breakfast");');
+}
+
+if (!source.includes('kind="room"')) {
+  const roomReply = '{step === "rooms" && <QuickReplies values={[1, 2, 3]} onSelect={chooseRoomCount} label={copy.roomLabel} />}';
+  const guestReply = '{step === "guests" && <QuickReplies values={[1, 2, 3, 4, 5]} onSelect={chooseGuestCount} label={copy.guestLabel} />}';
+  if (!source.includes(roomReply) || !source.includes(guestReply)) throw new Error("AI quick reply call anchors not found");
+  source = source.replace(roomReply, '{step === "rooms" && <QuickReplies values={[1, 2, 3]} onSelect={chooseRoomCount} label={copy.roomLabel} kind="room" />}');
+  source = source.replace(guestReply, '{step === "guests" && <QuickReplies values={[1, 2, 3, 4, 5]} onSelect={chooseGuestCount} label={copy.guestLabel} kind="guest" />}');
+}
+
+if (!source.includes('data-ai-quick-replies="icons"')) {
+  const quickPattern = /function QuickReplies\([\s\S]*?\n\}/;
+  const quickReplacement = `function QuickReplies({ values, onSelect, label, kind }: { values: number[]; onSelect: (value: number) => void; label: (value: number) => string; kind?: "room" | "guest" }) {\n  const columns = values.length === 5 ? "grid-cols-5" : "grid-cols-3";\n  return (\n    <div data-ai-quick-replies="icons" className={\`ai-message-in ml-10 grid gap-1.5 \${columns}\`}>\n      {values.map(value => (\n        <button type="button" key={value} onClick={() => onSelect(value)} aria-label={label(value)} title={label(value)} className="flex min-h-12 items-center justify-center gap-1 rounded-2xl border border-[#d8cec1] bg-white px-1.5 py-2 text-[#514a42] shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-[#8b806f] active:scale-95">\n          <span aria-hidden="true" className="text-lg">{kind === "room" ? "🛏️" : "👤"}</span>\n          {value > 1 && <span className="text-[11px] font-black">×{value}</span>}\n        </button>\n      ))}\n    </div>\n  );\n}`;
+  if (!quickPattern.test(source)) throw new Error("AI quick replies component anchor not found");
+  source = source.replace(quickPattern, quickReplacement);
+}
+
 if (!source.includes("@keyframes ai-reaction-in")) {
   const keyframeAnchor = "        @keyframes ai-dot { 0%, 60%, 100% { transform: translateY(0); opacity: .35; } 30% { transform: translateY(-4px); opacity: 1; } }";
   const keyframeReplacement = `${keyframeAnchor}\n        @keyframes ai-reaction-in { from { opacity: 0; transform: translateY(3px) scale(.82); } to { opacity: 1; transform: translateY(0) scale(1); } }`;
@@ -28,47 +79,32 @@ if (!source.includes("@keyframes ai-reaction-in")) {
 }
 
 if (!source.includes('data-ai-user-reaction="true"')) {
-  const oldBubble = `                <div className={\`max-w-[84%] whitespace-pre-line px-4 py-3 text-[15px] leading-6 shadow-sm sm:max-w-[72%] \${message.role === "user" ? "rounded-[20px] rounded-br-[6px] bg-[#6b604f] text-white" : "rounded-[20px] rounded-bl-[6px] border border-[#dfd6ca] bg-white text-[#302b25]"}\`}>
-                  {message.content}
-                </div>`;
-  const newBubble = `                <div className={\`relative max-w-[84%] sm:max-w-[72%] \${message.role === "user" ? "pb-2" : ""}\`}>
-                  <div className={\`whitespace-pre-line px-4 py-3 text-[15px] leading-6 shadow-sm \${message.role === "user" ? "rounded-[20px] rounded-br-[6px] bg-[#6b604f] text-white" : "rounded-[20px] rounded-bl-[6px] border border-[#dfd6ca] bg-white text-[#302b25]"}\`}>
-                    {message.content}
-                  </div>
-                  {message.role === "user" && <span data-ai-user-reaction="true" aria-hidden="true" className="absolute -bottom-1 right-1 flex h-7 min-w-7 items-center justify-center rounded-full border border-[#ddd4c8] bg-white px-1.5 text-sm opacity-0 shadow-sm [animation:ai-reaction-in_.22s_ease-out_1.5s_forwards]">👍</span>}
-                </div>`;
+  const oldBubble = `                <div className={\`max-w-[84%] whitespace-pre-line px-4 py-3 text-[15px] leading-6 shadow-sm sm:max-w-[72%] \${message.role === "user" ? "rounded-[20px] rounded-br-[6px] bg-[#6b604f] text-white" : "rounded-[20px] rounded-bl-[6px] border border-[#dfd6ca] bg-white text-[#302b25]"}\`}>\n                  {message.content}\n                </div>`;
+  const newBubble = `                <div className={\`relative max-w-[84%] sm:max-w-[72%] \${message.role === "user" ? "pb-2" : ""}\`}>\n                  <div className={\`whitespace-pre-line px-4 py-3 text-[15px] leading-6 shadow-sm \${message.role === "user" ? "rounded-[20px] rounded-br-[6px] bg-[#6b604f] text-white" : "rounded-[20px] rounded-bl-[6px] border border-[#dfd6ca] bg-white text-[#302b25]"}\`}>\n                    {message.content}\n                  </div>\n                  {message.role === "user" && <span data-ai-user-reaction="true" aria-hidden="true" className="absolute -bottom-1 right-1 flex h-7 min-w-7 items-center justify-center rounded-full border border-[#ddd4c8] bg-white px-1.5 text-sm opacity-0 shadow-sm [animation:ai-reaction-in_.22s_ease-out_1.5s_forwards]">👍</span>}\n                </div>`;
   if (!source.includes(oldBubble)) throw new Error("AI room finder user bubble anchor not found");
   source = source.replace(oldBubble, newBubble);
 }
 
 if (!source.includes('data-ai-selected-stay-card="true"')) {
   const selectedStayAnchor = `            {typing && (`;
-  const selectedStayCard = `            {choices.length > 0 && (step === "breakfast" || step === "complete") && (
-              <section data-ai-selected-stay-card="true" className="ai-message-in ml-10 rounded-[20px] border border-[#d9cfc2] bg-[#fffdfa] p-3.5 shadow-sm">
-                <div className="mb-2 flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-2 text-sm font-black text-[#5f7448]"><span aria-hidden="true">♥</span><span>{copy.selected}</span></div>
-                  <div className="text-sm font-black text-[#5f7448]">{money(choices.reduce((sum, choice) => sum + choice.offer.directTotal, 0), language)}</div>
-                </div>
-                <div className="space-y-2">
-                  {choices.map(choice => (
-                    <div key={choice.group} className="rounded-2xl bg-[#f5f1eb] px-3 py-2.5">
-                      <div className="font-bold">{offerDisplayName(choice.offer, language)}</div>
-                      <div className="mt-0.5 text-xs text-[#746b60]">{categoryWithFloor(choice.offer)}</div>
-                      <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-1 text-xs font-semibold text-[#625b52]">
-                        <span>📅 {checkin} → {checkout}</span>
-                        <span>👥 {copy.guestLabel(choice.guests)}</span>
-                        <span>{money(choice.offer.directTotal, language)}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
-
-`;
+  const selectedStayCard = `            {choices.length > 0 && (step === "breakfast" || step === "complete") && (\n              <section data-ai-selected-stay-card="true" className="ai-message-in ml-10 rounded-[20px] border border-[#d9cfc2] bg-[#fffdfa] p-3.5 shadow-sm">\n                <div className="mb-2 flex items-center justify-between gap-3">\n                  <div className="flex items-center gap-2 text-sm font-black text-[#5f7448]"><span aria-hidden="true" className="text-lg">♥</span><span>{copy.selected}</span></div>\n                  <div className="text-sm font-black text-[#5f7448]">{money(choices.reduce((sum, choice) => sum + choice.offer.directTotal, 0), language)}</div>\n                </div>\n                <div className="space-y-2">\n                  {choices.map(choice => (\n                    <div key={choice.group} className="flex items-center gap-3 rounded-2xl bg-[#f5f1eb] p-2.5">\n                      <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl"><Image src={choice.offer.image} alt="" fill sizes="64px" className="object-cover" /></div>\n                      <div className="min-w-0 flex-1">\n                        <div className="truncate font-bold">{offerDisplayName(choice.offer, language)}</div>\n                        <div className="mt-0.5 truncate text-xs text-[#746b60]">{categoryWithFloor(choice.offer)}</div>\n                        <div className="mt-1 flex flex-wrap gap-x-2 gap-y-1 text-[11px] font-semibold text-[#625b52]"><span>📅 {checkin} → {checkout}</span><span>👤 ×{choice.guests}</span></div>\n                      </div>\n                      <div className="shrink-0 text-sm font-black text-[#5f7448]">{money(choice.offer.directTotal, language)}</div>\n                    </div>\n                  ))}\n                </div>\n              </section>\n            )}\n\n`;
   if (!source.includes(selectedStayAnchor)) throw new Error("AI selected stay card anchor not found");
   source = source.replace(selectedStayAnchor, selectedStayCard + selectedStayAnchor);
 }
 
+if (!source.includes('data-ai-proposal-feedback="true"')) {
+  const feedbackAnchor = `            {step === "breakfast" && (`;
+  const feedbackBlock = `            {step === "selecting" && visibleOffers.length > 0 && (\n              <section data-ai-proposal-feedback="true" className="ai-message-in ml-10 rounded-[20px] border border-[#dfd6ca] bg-white p-3.5 shadow-sm">\n                <p className="text-sm font-bold text-[#443e37]">{PROPOSAL_FEEDBACK[language].question}</p>\n                {proposalFeedback === "idle" && (\n                  <div className="mt-3 grid grid-cols-2 gap-2">\n                    <button type="button" onClick={() => { setProposalFeedback("happy"); addMessage("user", PROPOSAL_FEEDBACK[language].yes); addMessage("assistant", PROPOSAL_FEEDBACK[language].yesReply); }} className="min-h-11 rounded-2xl bg-[#66714f] px-3 text-xs font-bold text-white shadow-sm transition active:scale-[.98]">{PROPOSAL_FEEDBACK[language].yes}</button>\n                    <button type="button" onClick={() => { setProposalFeedback("more"); addMessage("user", PROPOSAL_FEEDBACK[language].different); addMessage("assistant", PROPOSAL_FEEDBACK[language].changePrompt); }} className="min-h-11 rounded-2xl border border-[#d8cec1] bg-[#fbf9f6] px-3 text-xs font-bold text-[#514a42] transition active:scale-[.98]">{PROPOSAL_FEEDBACK[language].different}</button>\n                  </div>\n                )}\n                {proposalFeedback === "more" && (\n                  <div className="mt-3 grid gap-2 sm:grid-cols-2">\n                    <button type="button" onClick={() => { setProposalFeedback("happy"); setFilters([]); setStep("preferences"); addMessage("user", PROPOSAL_FEEDBACK[language].roomType); addMessage("assistant", PROPOSAL_FEEDBACK[language].roomTypeReply); }} className="rounded-2xl border border-[#d8cec1] bg-[#fbf9f6] px-3 py-2.5 text-left text-xs font-bold">{PROPOSAL_FEEDBACK[language].roomType}</button>\n                    <button type="button" onClick={() => { setProposalFeedback("happy"); setFilters(["noStairs"]); setStep("preferences"); addMessage("user", PROPOSAL_FEEDBACK[language].floor); addMessage("assistant", PROPOSAL_FEEDBACK[language].floorReply); }} className="rounded-2xl border border-[#d8cec1] bg-[#fbf9f6] px-3 py-2.5 text-left text-xs font-bold">{PROPOSAL_FEEDBACK[language].floor}</button>\n                    <button type="button" onClick={() => { setProposalFeedback("happy"); setFilters(["family"]); setStep("preferences"); addMessage("user", PROPOSAL_FEEDBACK[language].group); addMessage("assistant", PROPOSAL_FEEDBACK[language].groupReply); }} className="rounded-2xl border border-[#d8cec1] bg-[#fbf9f6] px-3 py-2.5 text-left text-xs font-bold">{PROPOSAL_FEEDBACK[language].group}</button>\n                    <button type="button" onClick={() => { const offer = visibleOffers[cardIndex] || visibleOffers[0]; const text = [PROPOSAL_FEEDBACK[language].infoWhatsapp, checkin + " → " + checkout, copy.guestLabel(activeGuests), offer ? offerDisplayName(offer, language) : ""].filter(Boolean).join("\\n"); window.open("https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(text), "_blank", "noopener,noreferrer"); }} className="rounded-2xl bg-[#287d4f] px-3 py-2.5 text-left text-xs font-bold text-white">{PROPOSAL_FEEDBACK[language].info}</button>\n                    <button type="button" onClick={() => { const text = [PROPOSAL_FEEDBACK[language].otherWhatsapp, checkin + " → " + checkout, copy.guestLabel(activeGuests)].filter(Boolean).join("\\n"); window.open("https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(text), "_blank", "noopener,noreferrer"); }} className="rounded-2xl border border-[#d8cec1] bg-white px-3 py-2.5 text-left text-xs font-bold sm:col-span-2">{PROPOSAL_FEEDBACK[language].other}</button>\n                  </div>\n                )}\n              </section>\n            )}\n\n`;
+  if (!source.includes(feedbackAnchor)) throw new Error("AI proposal feedback render anchor not found");
+  source = source.replace(feedbackAnchor, feedbackBlock + feedbackAnchor);
+}
+
+if (!source.includes('data-ai-breakfast-question="true"')) {
+  const breakfastSectionAnchor = '<section className="ai-message-in ml-10 overflow-hidden rounded-[22px] border border-[#dcd2c5] bg-white shadow-[0_12px_32px_rgba(70,55,35,.10)]">\n                <div className="relative h-36 w-full sm:h-44">';
+  const breakfastSectionReplacement = '<section className="ai-message-in ml-10 overflow-hidden rounded-[22px] border border-[#dcd2c5] bg-white shadow-[0_12px_32px_rgba(70,55,35,.10)]">\n                <div data-ai-breakfast-question="true" className="px-4 pb-3 pt-4 text-sm font-bold leading-6 text-[#3f3932]">{copy.breakfast}</div>\n                <div className="relative h-36 w-full sm:h-44">';
+  if (!source.includes(breakfastSectionAnchor)) throw new Error("AI breakfast question anchor not found");
+  source = source.replace(breakfastSectionAnchor, breakfastSectionReplacement);
+}
+
 fs.writeFileSync(target, source);
-console.log("Updated AI Room Finder welcome, delayed reaction badge and favourite selected-room card.");
+console.log("Updated AI Room Finder hospitality UX, icon replies, proposal feedback, WhatsApp handoff and selected-room card.");
