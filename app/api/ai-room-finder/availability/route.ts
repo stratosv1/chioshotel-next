@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { neon } from "@neondatabase/serverless";
-import { localizeRoomOffer } from "@/lib/ai-assistant/room-catalog";
+import { localizeRoomOffer } from "@/lib/ai-assistant/room-card-catalog";
 import type { AssistantLanguage } from "@/lib/ai-assistant/types";
 
 export const runtime = "nodejs";
