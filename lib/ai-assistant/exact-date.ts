@@ -1,6 +1,7 @@
 import type { AssistantCommand, ConversationContext } from "./types";
 
 const NUMERIC_DATE = /(^|\D)(\d{1,2})[/.\-](\d{1,2})(?:[/.\-](\d{2}|\d{4}))?(?=\D|$)/;
+const ONLY_NUMERIC_DATE = /^\s*(\d{1,2})[/.\-](\d{1,2})(?:[/.\-](\d{2}|\d{4}))?\s*$/;
 
 function validIso(year: number, month: number, day: number): string | null {
   if (month < 1 || month > 12 || day < 1 || day > 31) return null;
@@ -25,14 +26,41 @@ function resolveYear(day: number, month: number, rawYear?: string): number {
   return thisYear >= today ? now.getUTCFullYear() : now.getUTCFullYear() + 1;
 }
 
+function resolveMatch(dayRaw: string, monthRaw: string, yearRaw?: string): string | null {
+  const day = Number(dayRaw);
+  const month = Number(monthRaw);
+  const year = resolveYear(day, month, yearRaw);
+  return validIso(year, month, day);
+}
+
 export function extractExactNumericDate(message: string): string | null {
   const match = message.match(NUMERIC_DATE);
   if (!match) return null;
+  return resolveMatch(match[2], match[3], match[4]);
+}
 
-  const day = Number(match[2]);
-  const month = Number(match[3]);
-  const year = resolveYear(day, month, match[4]);
-  return validIso(year, month, day);
+export function extractStandaloneNumericDate(message: string): string | null {
+  const match = message.match(ONLY_NUMERIC_DATE);
+  if (!match) return null;
+  return resolveMatch(match[1], match[2], match[3]);
+}
+
+export function buildStandaloneDateCommand(
+  message: string,
+  context: ConversationContext,
+): AssistantCommand | null {
+  const step = context.currentStep;
+  if (step !== "checkin" && step !== "checkout") return null;
+
+  const exactDate = extractStandaloneNumericDate(message);
+  if (!exactDate) return null;
+
+  return {
+    language: context.language || "en",
+    replyMode: "execute",
+    selectedRoom: context.selectedRoom,
+    actions: [{ type: "search_availability", [step]: exactDate }],
+  };
 }
 
 function actionHasField(command: AssistantCommand, field: "checkin" | "checkout") {
