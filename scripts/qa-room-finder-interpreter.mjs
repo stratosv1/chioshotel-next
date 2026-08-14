@@ -3,6 +3,16 @@
 const BASE_URL = String(process.env.AI_QA_BASE_URL || "https://chioshotel.gr").replace(/\/$/, "");
 const TIMEOUT_MS = Number(process.env.AI_QA_TIMEOUT_MS || 30000);
 
+const TEXT_DATE = {
+  el: "10 Οκτωβρίου",
+  en: "10 October",
+  de: "10 Oktober",
+  fr: "10 octobre",
+  it: "10 ottobre",
+  es: "10 octubre",
+  tr: "10 Ekim",
+};
+
 function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
@@ -43,6 +53,9 @@ async function exactDateJourney(language) {
   const arrival = await interpret("10/10", { language, currentStep: "checkin" });
   assert(fact(arrival.command.actions, "checkin") === "2026-10-10", `${language}: 10/10 was not resolved as check-in`);
 
+  const namedArrival = await interpret(TEXT_DATE[language], { language, currentStep: "checkin" });
+  assert(fact(namedArrival.command.actions, "checkin") === "2026-10-10", `${language}: named-month date was not resolved as check-in`);
+
   const departure = await interpret("12/10", {
     language,
     currentStep: "checkout",
@@ -50,11 +63,12 @@ async function exactDateJourney(language) {
   });
   assert(fact(departure.command.actions, "checkout") === "2026-10-12", `${language}: 12/10 was not resolved as check-out`);
 
-  // Standalone numeric dates must use the deterministic fast path, not wait on AI.
+  // Exact dates must use the deterministic fast path, not wait on AI.
   assert(arrival.durationMs < 3000, `${language}: numeric check-in fast path took ${arrival.durationMs}ms`);
+  assert(namedArrival.durationMs < 3000, `${language}: named check-in fast path took ${namedArrival.durationMs}ms`);
   assert(departure.durationMs < 3000, `${language}: numeric check-out fast path took ${departure.durationMs}ms`);
 
-  return { arrivalMs: arrival.durationMs, departureMs: departure.durationMs };
+  return { arrivalMs: arrival.durationMs, namedArrivalMs: namedArrival.durationMs, departureMs: departure.durationMs };
 }
 
 async function greekKitchenRegression() {
@@ -103,7 +117,7 @@ async function main() {
 
   for (const language of languages) {
     const timing = await exactDateJourney(language);
-    console.log(`✓ ${language} exact dates (${timing.arrivalMs}ms / ${timing.departureMs}ms)`);
+    console.log(`✓ ${language} exact dates (${timing.arrivalMs}ms / ${timing.namedArrivalMs}ms / ${timing.departureMs}ms)`);
   }
 
   const kitchen = await greekKitchenRegression();
