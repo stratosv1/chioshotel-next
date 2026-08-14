@@ -8,6 +8,7 @@ const ATHENS_TZ = "Europe/Athens";
 const MESSAGE_TYPE = "housekeeping_daily_arrivals";
 const SOURCE = "housekeeping_daily_cron";
 const ACTIVE_THROUGH_DATE = "2026-09-07";
+const HOUSEKEEPING_SMS_PHONE = "6945336345";
 
 function text(value: unknown) {
   return value === null || value === undefined ? "" : String(value).trim();
@@ -46,17 +47,17 @@ function athensParts(now = new Date()) {
 function roomLabel(roomId: unknown, unitId: unknown) {
   const key = `${text(roomId)}:${text(unitId)}`;
   return ({
-    "267788:1": "Dhoma 1",
-    "268803:1": "Dhoma 2",
-    "267788:2": "Dhoma 3",
-    "267788:3": "Dhoma 4",
-    "626129:1": "Dhoma 5",
-    "268803:2": "Dhoma 6",
-    "626129:2": "Dhoma 7",
-    "265595:1": "Apartamenti 8",
-    "265595:2": "Apartamenti 9",
-    "265595:3": "Apartamenti 10",
-  } as Record<string, string>)[key] || `Dhoma ${text(unitId) || "-"}`;
+    "267788:1": "Δωμάτιο 1",
+    "268803:1": "Δωμάτιο 2",
+    "267788:2": "Δωμάτιο 3",
+    "267788:3": "Δωμάτιο 4",
+    "626129:1": "Δωμάτιο 5",
+    "268803:2": "Δωμάτιο 6",
+    "626129:2": "Δωμάτιο 7",
+    "265595:1": "Διαμέρισμα 8",
+    "265595:2": "Διαμέρισμα 9",
+    "265595:3": "Διαμέρισμα 10",
+  } as Record<string, string>)[key] || `Δωμάτιο ${text(unitId) || "-"}`;
 }
 
 function rawObject(value: unknown): Record<string, unknown> {
@@ -94,16 +95,31 @@ function guestCounts(booking: Record<string, unknown>) {
   };
 }
 
+function peopleLabel(count: number) {
+  return count === 1 ? "άτομο" : "άτομα";
+}
+
+function adultsLabel(count: number) {
+  return count === 1 ? "ενήλικας" : "ενήλικες";
+}
+
+function childrenLabel(count: number) {
+  return count === 1 ? "παιδί" : "παιδιά";
+}
+
+function roomsLabel(count: number) {
+  return count === 1 ? "δωμάτιο" : "δωμάτια";
+}
+
 export async function GET(request: NextRequest) {
   const databaseUrl = text(process.env.DATABASE_URL);
   const token = text(process.env.SMSAPI_TOKEN || process.env.VHC_SMSAPI_TOKEN);
   const sender = text(process.env.SMSAPI_FROM || process.env.VHC_SMSAPI_FROM || "Voulamandis");
-  const phone = normalizeSmsPhone(process.env.HOUSEKEEPING_SMS_PHONE);
+  const phone = normalizeSmsPhone(HOUSEKEEPING_SMS_PHONE);
   const force = request.nextUrl.searchParams.get("force") === "1";
 
   if (!databaseUrl) return NextResponse.json({ ok: false, error: "DATABASE_URL is missing" }, { status: 500 });
   if (!token) return NextResponse.json({ ok: false, error: "SMSAPI_TOKEN is missing" }, { status: 500 });
-  if (!phone) return NextResponse.json({ ok: false, error: "HOUSEKEEPING_SMS_PHONE is missing" }, { status: 500 });
 
   const athens = athensParts();
 
@@ -151,14 +167,14 @@ export async function GET(request: NextRequest) {
     const counts = guestCounts(booking as Record<string, unknown>);
     totalGuests += counts.guests;
     const breakdown = counts.children > 0
-      ? ` (${counts.adults} të rritur + ${counts.children} fëmijë)`
+      ? ` (${counts.adults} ${adultsLabel(counts.adults)} + ${counts.children} ${childrenLabel(counts.children)})`
       : "";
-    return `${roomLabel(booking.room_id, booking.unit_id)}: ${counts.guests} persona${breakdown}`;
+    return `${roomLabel(booking.room_id, booking.unit_id)}: ${counts.guests} ${peopleLabel(counts.guests)}${breakdown}`;
   });
 
   const message = arrivals.length
-    ? `Voulamandis House - Mbërritjet ${athens.displayDate}\n${lines.join("\n")}\nGjithsej: ${arrivals.length} dhoma / ${totalGuests} persona`
-    : `Voulamandis House - Mbërritjet ${athens.displayDate}\nSot nuk ka mbërritje.`;
+    ? `Voulamandis House - Αφίξεις ${athens.displayDate}\n${lines.join("\n")}\nΣύνολο: ${arrivals.length} ${roomsLabel(arrivals.length)} / ${totalGuests} ${peopleLabel(totalGuests)}`
+    : `Voulamandis House - Αφίξεις ${athens.displayDate}\nΣήμερα δεν υπάρχουν αφίξεις.`;
 
   const params = new URLSearchParams({ to: phone, from: sender, message, format: "json" });
   const smsResponse = await fetch("https://api.smsapi.com/sms.do", {
