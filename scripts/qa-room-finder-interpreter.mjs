@@ -28,7 +28,15 @@ async function interpret(message, context) {
 }
 
 function fact(actions, key) {
-  return actions.find((action) => action?.[key] != null)?.[key];
+  return [...actions].reverse().find((action) => action?.[key] != null)?.[key];
+}
+
+function hasPreference(actions, key, value) {
+  return actions.some((action) => action?.preferences?.[key] === value);
+}
+
+function assertNoClarification(actions, label) {
+  assert(!actions.some((action) => action?.type === "ask_clarification"), `${label}: executable facts were mixed with clarification`);
 }
 
 async function exactDateJourney(language) {
@@ -49,15 +57,43 @@ async function exactDateJourney(language) {
   return { arrivalMs: arrival.durationMs, departureMs: departure.durationMs };
 }
 
-async function greekFactPersistenceInput() {
+async function greekKitchenRegression() {
+  const result = await interpret("Θέλω ένα δωμάτιο ,2ατομα , με κουζίνα", {
+    language: "el",
+    currentStep: "checkin",
+  });
+  const actions = result.command.actions;
+  assert(Number(fact(actions, "roomCount")) === 1, "Greek kitchen input did not extract roomCount=1");
+  assert(Number(fact(actions, "guests")) === 2, "Greek kitchen input did not extract guests=2 from 2ατομα");
+  assert(hasPreference(actions, "kitchenette", true), "Greek kitchen input did not extract kitchenette=true");
+  assertNoClarification(actions, "Greek kitchen input");
+  return { durationMs: result.durationMs };
+}
+
+async function greekFloorRegression() {
   const result = await interpret("Θέλω ένα δωμάτιο για 2 άτομα στον όροφο", {
     language: "el",
     currentStep: "checkin",
   });
   const actions = result.command.actions;
-  assert(Number(fact(actions, "roomCount")) === 1, "Greek combined input did not extract roomCount=1");
-  assert(Number(fact(actions, "guests")) === 2, "Greek combined input did not extract guests=2");
-  assert(actions.some((action) => action?.preferences?.floor === "first"), "Greek combined input did not extract floor=first");
+  assert(Number(fact(actions, "roomCount")) === 1, "Greek floor input did not extract roomCount=1");
+  assert(Number(fact(actions, "guests")) === 2, "Greek floor input did not extract guests=2");
+  assert(hasPreference(actions, "floor", "first"), "Greek floor input did not extract floor=first");
+  assertNoClarification(actions, "Greek floor input");
+  return { durationMs: result.durationMs };
+}
+
+async function greekCombinedBookingFacts() {
+  const result = await interpret("10/10 για 2 βράδια, 1 δωμάτιο για 2 άτομα", {
+    language: "el",
+    currentStep: "checkin",
+  });
+  const actions = result.command.actions;
+  assert(fact(actions, "checkin") === "2026-10-10", "Combined Greek input did not preserve check-in");
+  assert(Number(fact(actions, "nights")) === 2, "Combined Greek input did not extract nights=2");
+  assert(Number(fact(actions, "roomCount")) === 1, "Combined Greek input did not extract roomCount=1");
+  assert(Number(fact(actions, "guests")) === 2, "Combined Greek input did not extract guests=2");
+  assertNoClarification(actions, "Combined Greek input");
   return { durationMs: result.durationMs };
 }
 
@@ -70,8 +106,14 @@ async function main() {
     console.log(`✓ ${language} exact dates (${timing.arrivalMs}ms / ${timing.departureMs}ms)`);
   }
 
-  const combined = await greekFactPersistenceInput();
-  console.log(`✓ el combined room/guest/floor facts (${combined.durationMs}ms)`);
+  const kitchen = await greekKitchenRegression();
+  console.log(`✓ el real kitchen regression (${kitchen.durationMs}ms)`);
+
+  const floor = await greekFloorRegression();
+  console.log(`✓ el real floor regression (${floor.durationMs}ms)`);
+
+  const combined = await greekCombinedBookingFacts();
+  console.log(`✓ el combined booking facts (${combined.durationMs}ms)`);
 }
 
 main().catch((error) => {
