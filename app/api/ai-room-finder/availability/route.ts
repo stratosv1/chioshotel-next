@@ -127,7 +127,7 @@ export async function GET(request: NextRequest) {
           directTotal: rounded(row.first_total),
           saving: 0,
           guestNote: row.first_guest_note ? String(row.first_guest_note) : null,
-        }, language);
+        }, language) as any;
         const second = localizeRoomOffer({
           roomId: String(row.second_room_id),
           unitId: String(row.second_unit_id),
@@ -141,7 +141,7 @@ export async function GET(request: NextRequest) {
           directTotal: rounded(row.second_total),
           saving: 0,
           guestNote: row.second_guest_note ? String(row.second_guest_note) : null,
-        }, language);
+        }, language) as any;
         const split = SPLIT_COPY[language];
         const splitOffer = {
           roomId: `split:${first.roomId}:${second.roomId}`,
