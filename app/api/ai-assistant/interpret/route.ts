@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { applyExactDateFact } from "@/lib/ai-assistant/exact-date";
 import { interpretAssistantMessage } from "@/lib/ai-assistant/intent";
 import type { ConversationContext } from "@/lib/ai-assistant/types";
 
@@ -15,7 +16,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Message is required." }, { status: 400 });
     }
 
-    const command = await interpretAssistantMessage(message, context);
+    const interpreted = await interpretAssistantMessage(message, context);
+    const command = applyExactDateFact(interpreted, message, context);
     return NextResponse.json({ ok: true, command });
   } catch (error) {
     console.error("AI assistant intent endpoint error", error);
