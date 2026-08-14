@@ -10,5 +10,22 @@ function humanDate(value:string,language:RoomFinderLanguage){const date=new Date
 
 export function SelectedRoomCard({choices,copy,language,checkin,checkout,money}:{choices:RoomChoice[];copy:RoomFinderCopy;language:RoomFinderLanguage;checkin:string;checkout:string;money:(v:number,l:RoomFinderLanguage)=>string}){
  const stay=`${humanDate(checkin,language)} → ${humanDate(checkout,language)}`;
- return <section className="msg ml-10 rounded-[22px] border border-[#d9cfc2] bg-[#fffdfa] p-3.5 shadow-sm"><div className="mb-3 flex items-center justify-between"><div className="font-black text-[#5f7448]"><span aria-hidden="true">❤️</span> {copy.selected}</div><strong className="text-[#5f7448]">{money(choices.reduce((s,c)=>s+c.offer.directTotal,0),language)}</strong></div><div className="space-y-2">{choices.map(c=><div key={c.group} className="flex items-center gap-3 rounded-2xl bg-[#f5f1eb] p-2.5"><div className="relative h-16 w-20 shrink-0 overflow-hidden rounded-xl"><Image src={c.offer.image} alt={c.offer.name} fill sizes="80px" className="object-cover"/></div><div className="min-w-0 flex-1"><div className="truncate font-bold">{c.offer.name}</div><div className="text-xs text-[#746b60]">{c.offer.category} · {c.offer.floor}</div><div className="mt-1 text-xs font-semibold text-[#625b52]">{stay} · 👥 {copy.guestLabel(c.guests)}</div></div><strong className="text-sm text-[#5f7448]">{money(c.offer.directTotal,language)}</strong></div>)}</div></section>;
+ const total=choices.reduce((s,c)=>s+c.offer.directTotal,0);
+ return <section className="msg ml-10 overflow-hidden rounded-[22px] border border-[#d9cfc2] bg-white shadow-sm">
+   <div className="flex items-center justify-between border-b border-[#eee6dc] px-4 py-3.5">
+     <div className="font-black text-[#5f7448]"><span aria-hidden="true">❤️</span> {copy.selected}</div>
+     <strong className="text-lg text-[#5f7448]">{money(total,language)}</strong>
+   </div>
+   <div className="divide-y divide-[#eee6dc]">
+     {choices.map(c=><div key={c.group} className="flex gap-3 px-4 py-4">
+       <div className="relative h-24 w-28 shrink-0 overflow-hidden rounded-2xl"><Image src={c.offer.image} alt={c.offer.name} fill sizes="112px" className="object-cover"/></div>
+       <div className="min-w-0 flex-1 py-0.5">
+         <div className="flex items-start justify-between gap-2"><div className="text-[17px] font-black leading-5">{c.offer.name}</div>{choices.length>1&&<strong className="shrink-0 text-sm text-[#5f7448]">{money(c.offer.directTotal,language)}</strong>}</div>
+         <div className="mt-1.5 text-[13px] leading-5 text-[#746b60]">{c.offer.category} · {c.offer.floor}</div>
+         <div className="mt-2 text-[13px] font-semibold leading-5 text-[#625b52]">{stay}</div>
+         <div className="mt-0.5 text-[13px] font-semibold text-[#625b52]">👥 {copy.guestLabel(c.guests)}</div>
+       </div>
+     </div>)}
+   </div>
+ </section>;
 }
