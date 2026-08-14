@@ -3,7 +3,7 @@
     "dev": "next dev",
     "build": "node scripts/prepare-build-clean.cjs && node scripts/qa-gsc-index-routing.cjs && node scripts/qa-seo-intent-architecture.cjs && next build",
     "start": "next start",
-    "qa:ai": "node scripts/qa-ai-concierge.mjs",
+    "qa:ai": "node scripts/qa-ai-concierge.mjs && node scripts/qa-room-finder-interpreter.mjs",
     "qa:gsc": "node scripts/qa-gsc-index-routing.cjs",
     "qa:seo": "node scripts/qa-seo-intent-architecture.cjs",
     "optimize:images": "node scripts/optimize-frog-images.cjs"
