@@ -61,7 +61,7 @@ const offerKey = (offer: RoomOffer) => `${offer.roomId}:${offer.unitId}`;
 const INVENTORY_UNAVAILABLE: Record<RoomFinderLanguage, string> = {
   el: "Σας ευχαριστώ για την υπομονή σας 🙏 Η live διαθεσιμότητα δεν μπορεί να επιβεβαιωθεί αυτή τη στιγμή και δεν θέλω να σας δείξω παλιά στοιχεία. Δοκιμάστε ξανά σε λίγα λεπτά ή μπορούμε να το ελέγξουμε μαζί μέσω WhatsApp 💬",
   en: "Thank you for your patience 🙏 Live availability cannot be confirmed right now, and I don’t want to show you outdated information. Please try again in a few minutes, or we can check it together on WhatsApp 💬",
-  de: "Vielen Dank für Ihre Geduld 🙏 Die Live-Verfügbarkeit kann momentan nicht zuverlässig bestätigt werden, und ich möchte Ihnen keine veralteten Angaben zeigen. Versuchen Sie es bitte in wenigen Minuten erneut oder wir prüfen es gemeinsam über WhatsApp 💬",
+  de: "Vielen Dank für Ihre Geduld 🙏 Die Live-Verfügbarkeit kann momentan zuverlässig bestätigt werden, und ich möchte Ihnen keine veralteten Angaben zeigen. Versuchen Sie es bitte in wenigen Minuten erneut oder wir prüfen es gemeinsam über WhatsApp 💬",
   fr: "Merci pour votre patience 🙏 La disponibilité en direct ne peut pas être confirmée pour le moment et je préfère ne pas vous montrer d’informations anciennes. Réessayez dans quelques minutes ou vérifions-la ensemble sur WhatsApp 💬",
   it: "Grazie per la pazienza 🙏 Al momento non posso confermare in modo affidabile la disponibilità live e non voglio mostrarvi dati non aggiornati. Riprovate tra qualche minuto oppure possiamo verificarla insieme su WhatsApp 💬",
   es: "Gracias por su paciencia 🙏 En este momento no puedo confirmar de forma fiable la disponibilidad en directo y no quiero mostrarles información desactualizada. Inténtenlo de nuevo en unos minutos o podemos comprobarlo juntos por WhatsApp 💬",
@@ -203,30 +203,29 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       clarifications.find(a => Array.isArray(a.missingFields) && a.missingFields.includes(field))?.query || "";
 
     for (const a of command.actions) {
-      if (a.type === "search_availability") {
-        if (a.checkin && isIso(a.checkin)) {
-          ci = a.checkin;
+      if (a.checkin && isIso(a.checkin)) {
+        ci = a.checkin;
+        changed = true;
+      }
+
+      if (a.checkout && isIso(a.checkout)) {
+        co = a.checkout;
+        changed = true;
+      } else if (a.nights && Number.isInteger(a.nights) && a.nights >= 1 && a.nights <= 60) {
+        const derived = addDays(ci, a.nights);
+        if (derived) {
+          co = derived;
           changed = true;
-        }
-        if (a.checkout && isIso(a.checkout)) {
-          co = a.checkout;
-          changed = true;
-        } else if (a.nights && Number.isInteger(a.nights) && a.nights >= 1 && a.nights <= 60) {
-          const derived = addDays(ci, a.nights);
-          if (derived) {
-            co = derived;
-            changed = true;
-          }
         }
       }
 
-      if (a.type === "set_room_count" && a.roomCount && a.roomCount >= 1 && a.roomCount <= 3) {
+      if (a.roomCount && a.roomCount >= 1 && a.roomCount <= 3) {
         rooms = a.roomCount;
         g = g.slice(0, a.roomCount);
         changed = true;
       }
 
-      if (a.type === "set_guest_count" && a.guests && a.guests >= 1 && a.guests <= 5) {
+      if (a.guests && a.guests >= 1 && a.guests <= 5) {
         if (step === "guests" && rooms) {
           const index = Math.min(g.length, Math.max(0, rooms - 1));
           g[index] = a.guests;
