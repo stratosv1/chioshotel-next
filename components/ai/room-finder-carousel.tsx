@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { RoomFinderCopy, RoomFinderLanguage } from "./room-finder-copy";
 
-export type RoomOffer = { roomId:string; unitId:string; roomNumber:number; name:string; category:string; floor:string; maxGuests:number; features:string[]; image:string; gallery?:string[]; detailsUrl?:string; nights:number; originalTotal:number; directTotal:number; saving:number };
+export type RoomOffer = { roomId:string; unitId:string; roomNumber:number; name:string; category:string; floor:string; maxGuests:number; features:string[]; image:string; gallery?:string[]; detailsUrl?:string; nights:number; originalTotal:number; directTotal:number; saving:number; breakfastTotalIfAdded?:number };
 
 const SELECTING_LABEL: Record<RoomFinderLanguage,string> = {
   el:"Επιλέγεται…",
