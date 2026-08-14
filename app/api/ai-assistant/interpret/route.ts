@@ -16,8 +16,8 @@ const CLARIFY_PREFIX: Record<string, string> = {
 };
 
 const STEP_ICON: Record<string, string> = {
-  checkin: "📅",
-  checkout: "📅",
+  checkin: "",
+  checkout: "",
   rooms: "🛏️",
   guests: "👥",
   preferences: "✨",
@@ -40,6 +40,29 @@ function addHospitalityTone(command: any, context: ConversationContext) {
   };
 }
 
+function needsVerification(command: any) {
+  if (!command || !Array.isArray(command.actions)) return true;
+  return command.replyMode === "clarify" || command.actions.some((action: any) => action?.type === "ask_clarification");
+}
+
+async function interpretWithClarificationGuard(message: string, context: ConversationContext) {
+  const first = await interpretAssistantMessage(message, context);
+  if (!needsVerification(first)) return first;
+
+  const verificationMessage = [
+    "SECOND-PASS SEMANTIC VERIFICATION.",
+    "Re-interpret the original user's message below using the supplied conversation context and all existing interpretation rules.",
+    "Do not ask for a value that is already explicitly present or can be uniquely inferred from the message, current flow step, current booking state, recent conversation, and today's date.",
+    "Normal human date formats and natural counts must be treated as valid when they resolve uniquely.",
+    "Return executable structured actions if the meaning is sufficient. Ask clarification only when a genuine ambiguity still remains.",
+    "ORIGINAL USER MESSAGE:",
+    message,
+  ].join("\n");
+
+  const verified = await interpretAssistantMessage(verificationMessage, context);
+  return needsVerification(verified) ? first : verified;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -50,7 +73,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Message is required." }, { status: 400 });
     }
 
-    const command = addHospitalityTone(await interpretAssistantMessage(message, context), context);
+    const command = addHospitalityTone(await interpretWithClarificationGuard(message, context), context);
     return NextResponse.json({ ok: true, command });
   } catch (error) {
     console.error("AI assistant intent endpoint error", error);
