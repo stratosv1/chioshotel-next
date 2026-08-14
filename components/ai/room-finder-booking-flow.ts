@@ -1,4 +1,4 @@
-import type { AssistantCommand } from "@/lib/ai-assistant/types";
+import type { RoomFinderCommand } from "@/lib/ai-assistant/room-finder-types";
 
 export type FinderStep =
   | "checkin"
@@ -15,8 +15,8 @@ export type BookingDraft = {
   checkin: string;
   checkout: string;
   roomCount: number | null;
+  totalGuests: number | null;
   groups: number[];
-  pendingGuestTotal: number | null;
 };
 
 export type BookingFlowState = {
@@ -45,6 +45,10 @@ export type BookingFlowAction =
   | { type: "choose_rooms"; roomCount: number }
   | { type: "choose_guests"; guests: number };
 
+const MAX_ROOMS = 3;
+const MAX_GUESTS_PER_ROOM = 5;
+const MAX_TOTAL_GUESTS = MAX_ROOMS * MAX_GUESTS_PER_ROOM;
+
 export function createInitialBookingFlowState(): BookingFlowState {
   return {
     step: "checkin",
@@ -52,55 +56,120 @@ export function createInitialBookingFlowState(): BookingFlowState {
       checkin: "",
       checkout: "",
       roomCount: null,
+      totalGuests: null,
       groups: [],
-      pendingGuestTotal: null,
     },
   };
 }
 
+function validRoomCount(value: number) {
+  return Number.isInteger(value) && value >= 1 && value <= MAX_ROOMS;
+}
+
+function validRoomGuests(value: number) {
+  return Number.isInteger(value) && value >= 1 && value <= MAX_GUESTS_PER_ROOM;
+}
+
+function validTotalGuests(value: number) {
+  return Number.isInteger(value) && value >= 1 && value <= MAX_TOTAL_GUESTS;
+}
+
+function assignedGuestTotal(groups: number[]) {
+  return groups.reduce((sum, guests) => sum + (validRoomGuests(guests) ? guests : 0), 0);
+}
+
+export function nextMissingGuestRoom(draft: BookingDraft) {
+  if (!draft.roomCount) return 1;
+  for (let index = 0; index < draft.roomCount; index += 1) {
+    if (!validRoomGuests(draft.groups[index] || 0)) return index + 1;
+  }
+  return null;
+}
+
+function guestAllocationComplete(draft: BookingDraft) {
+  return Boolean(draft.roomCount && nextMissingGuestRoom(draft) === null);
+}
+
+function normalizeGuestAllocation(draft: BookingDraft) {
+  if (!draft.roomCount) {
+    draft.groups = [];
+    return draft;
+  }
+
+  draft.groups = draft.groups.slice(0, draft.roomCount);
+
+  if (draft.roomCount === 1 && draft.totalGuests && validRoomGuests(draft.totalGuests)) {
+    draft.groups = [draft.totalGuests];
+  }
+
+  const missingRoom = nextMissingGuestRoom(draft);
+  if (draft.totalGuests && missingRoom && draft.roomCount > 1) {
+    let missingCount = 0;
+    for (let index = 0; index < draft.roomCount; index += 1) {
+      if (!validRoomGuests(draft.groups[index] || 0)) missingCount += 1;
+    }
+
+    if (missingCount === 1) {
+      const remaining = draft.totalGuests - assignedGuestTotal(draft.groups);
+      if (validRoomGuests(remaining)) {
+        while (draft.groups.length < missingRoom) draft.groups.push(0);
+        draft.groups[missingRoom - 1] = remaining;
+      }
+    }
+  }
+
+  if (guestAllocationComplete(draft)) {
+    draft.totalGuests = assignedGuestTotal(draft.groups.slice(0, draft.roomCount));
+  }
+
+  return draft;
+}
+
 function bookingCoreIsComplete(draft: BookingDraft) {
-  return Boolean(
-    draft.checkin &&
-    draft.checkout &&
-    draft.roomCount &&
-    draft.groups.length >= draft.roomCount &&
-    draft.groups.every(Boolean),
-  );
+  return Boolean(draft.checkin && draft.checkout && draft.roomCount && guestAllocationComplete(draft));
 }
 
 export function bookingFlowReducer(state: BookingFlowState, action: BookingFlowAction): BookingFlowState {
   switch (action.type) {
     case "reset":
       return createInitialBookingFlowState();
+
     case "commit_turn":
       return action.state;
+
     case "set_step":
       return { ...state, step: action.step };
+
     case "choose_rooms": {
-      const pendingGuests = state.draft.pendingGuestTotal;
-      const draft: BookingDraft = {
+      const roomCountChanged = state.draft.roomCount !== action.roomCount;
+      const draft = normalizeGuestAllocation({
         ...state.draft,
         roomCount: action.roomCount,
-        groups: action.roomCount === 1 && pendingGuests ? [pendingGuests] : [],
-        pendingGuestTotal: null,
-      };
+        groups: roomCountChanged ? [] : [...state.draft.groups],
+      });
       return {
         step: bookingCoreIsComplete(draft) ? "searching" : "guests",
         draft,
       };
     }
+
     case "choose_guests": {
       const draft: BookingDraft = {
         ...state.draft,
-        groups: [...state.draft.groups, action.guests],
-        pendingGuestTotal: null,
+        groups: [...state.draft.groups],
       };
-      const needsAnotherRoom = Boolean(draft.roomCount && draft.groups.length < draft.roomCount);
+      const room = nextMissingGuestRoom(draft);
+      if (room && validRoomGuests(action.guests)) {
+        while (draft.groups.length < room) draft.groups.push(0);
+        draft.groups[room - 1] = action.guests;
+      }
+      normalizeGuestAllocation(draft);
       return {
-        step: needsAnotherRoom ? "guests" : bookingCoreIsComplete(draft) ? "searching" : state.step,
+        step: bookingCoreIsComplete(draft) ? "searching" : "guests",
         draft,
       };
     }
+
     default:
       return state;
   }
@@ -125,7 +194,8 @@ function addDays(iso: string, days: number) {
 
 function normalizeClarificationStep(field: string): ClarificationStep | null {
   if (field === "roomCount") return "rooms";
-  if (field === "checkin" || field === "checkout" || field === "rooms" || field === "guests") return field;
+  if (field === "totalGuests" || field === "guests" || field === "guestRoom" || field === "guestGroups") return "guests";
+  if (field === "checkin" || field === "checkout" || field === "rooms") return field;
   return null;
 }
 
@@ -138,11 +208,11 @@ function isResolvedField(field: ClarificationStep, draft: BookingDraft) {
     case "rooms":
       return Boolean(draft.roomCount);
     case "guests":
-      return Boolean(draft.roomCount && draft.groups.length >= draft.roomCount && draft.groups.every(Boolean));
+      return guestAllocationComplete(draft);
   }
 }
 
-function unresolvedClarification(command: AssistantCommand, draft: BookingDraft, fallbackStep: FinderStep) {
+function unresolvedClarification(command: RoomFinderCommand, draft: BookingDraft, fallbackStep: FinderStep) {
   for (const action of command.actions) {
     if (action.type !== "ask_clarification" || !action.query) continue;
     const fields = Array.isArray(action.missingFields) ? action.missingFields : [];
@@ -161,9 +231,8 @@ function nextOutcome(draft: BookingDraft): BookingTurnOutcome {
   if (!draft.checkin) return { kind: "prompt", field: "checkin" };
   if (!draft.checkout) return { kind: "prompt", field: "checkout" };
   if (!draft.roomCount) return { kind: "prompt", field: "rooms" };
-  if (draft.groups.length < draft.roomCount || draft.groups.some(group => !group)) {
-    return { kind: "prompt", field: "guests", guestRoom: draft.groups.length + 1 };
-  }
+  const guestRoom = nextMissingGuestRoom(draft);
+  if (guestRoom) return { kind: "prompt", field: "guests", guestRoom };
   return { kind: "ready" };
 }
 
@@ -175,7 +244,7 @@ function stepForOutcome(outcome: BookingTurnOutcome, fallback: FinderStep): Find
   return fallback;
 }
 
-export function resolveAssistantTurn(current: BookingFlowState, command: AssistantCommand): BookingTurnResolution {
+export function resolveAssistantTurn(current: BookingFlowState, command: RoomFinderCommand): BookingTurnResolution {
   if (command.actions.some(action => action.type === "restart_search")) {
     return { state: createInitialBookingFlowState(), outcome: { kind: "restart" } };
   }
@@ -194,30 +263,42 @@ export function resolveAssistantTurn(current: BookingFlowState, command: Assista
       const derivedCheckout = addDays(draft.checkin, action.nights);
       if (derivedCheckout) draft.checkout = derivedCheckout;
     }
+  }
 
-    if (action.roomCount && action.roomCount >= 1 && action.roomCount <= 3) {
-      draft.roomCount = action.roomCount;
-      draft.groups = draft.groups.slice(0, action.roomCount);
+  const incomingRoomCount = [...command.actions]
+    .reverse()
+    .find(action => action.roomCount != null)?.roomCount;
+  if (incomingRoomCount && validRoomCount(incomingRoomCount)) {
+    if (draft.roomCount !== incomingRoomCount) draft.groups = [];
+    draft.roomCount = incomingRoomCount;
+  }
+
+  const incomingTotalGuests = [...command.actions]
+    .reverse()
+    .find(action => action.totalGuests != null)?.totalGuests;
+  if (incomingTotalGuests && validTotalGuests(incomingTotalGuests)) {
+    if (draft.totalGuests !== incomingTotalGuests && assignedGuestTotal(draft.groups) !== incomingTotalGuests) {
+      draft.groups = [];
+    }
+    draft.totalGuests = incomingTotalGuests;
+  }
+
+  for (const action of command.actions) {
+    if (!action.guests || !validRoomGuests(action.guests)) continue;
+
+    if (action.guestRoom && validRoomCount(action.guestRoom)) {
+      while (draft.groups.length < action.guestRoom) draft.groups.push(0);
+      draft.groups[action.guestRoom - 1] = action.guests;
+      continue;
     }
 
-    if (action.guests && action.guests >= 1 && action.guests <= 5) {
-      if (current.step === "guests" && draft.roomCount) {
-        const index = Math.min(draft.groups.length, Math.max(0, draft.roomCount - 1));
-        draft.groups[index] = action.guests;
-        draft.pendingGuestTotal = null;
-      } else if (draft.roomCount === 1) {
-        draft.groups = [action.guests];
-        draft.pendingGuestTotal = null;
-      } else {
-        draft.pendingGuestTotal = action.guests;
-      }
+    if (draft.roomCount === 1) {
+      draft.totalGuests = action.guests;
+      draft.groups = [action.guests];
     }
   }
 
-  if (draft.roomCount === 1 && draft.pendingGuestTotal && draft.groups.length === 0) {
-    draft.groups = [draft.pendingGuestTotal];
-    draft.pendingGuestTotal = null;
-  }
+  normalizeGuestAllocation(draft);
 
   if (draft.checkin && draft.checkout && nightsBetween(draft.checkin, draft.checkout) < 1) {
     draft.checkout = "";
@@ -227,7 +308,11 @@ export function resolveAssistantTurn(current: BookingFlowState, command: Assista
 
   const clarification = unresolvedClarification(command, draft, current.step);
   if (clarification) {
-    const outcome: BookingTurnOutcome = { kind: "clarification", query: clarification.query, step: clarification.step };
+    const outcome: BookingTurnOutcome = {
+      kind: "clarification",
+      query: clarification.query,
+      step: clarification.step,
+    };
     return { state: { step: stepForOutcome(outcome, current.step), draft }, outcome };
   }
 

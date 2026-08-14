@@ -2,6 +2,14 @@
 
 const BASE_URL = String(process.env.AI_QA_BASE_URL || "https://chioshotel.gr").replace(/\/$/, "");
 const TIMEOUT_MS = Number(process.env.AI_QA_TIMEOUT_MS || 30000);
+const ALLOWED_ACTIONS = new Set([
+  "set_stay_dates",
+  "set_room_count",
+  "set_guest_count",
+  "restart_search",
+  "ask_clarification",
+  "no_change",
+]);
 
 const TEXT_DATE = {
   el: "10 Οκτωβρίου",
@@ -31,6 +39,14 @@ async function interpret(message, context) {
     const payload = await response.json().catch(() => null);
     assert(response.ok, `HTTP ${response.status}: ${payload?.error || "unknown error"}`);
     assert(payload?.command?.actions?.length, "missing interpreter actions");
+    assert(
+      payload.command.actions.every((action) => ALLOWED_ACTIONS.has(action?.type)),
+      `unsupported action returned: ${payload.command.actions.map((action) => action?.type).join(", ")}`,
+    );
+    assert(
+      payload.command.actions.every((action) => !("preferences" in action)),
+      "Room Finder action unexpectedly contains preferences",
+    );
     return { command: payload.command, durationMs: Date.now() - started };
   } finally {
     clearTimeout(timer);
@@ -41,8 +57,10 @@ function fact(actions, key) {
   return [...actions].reverse().find((action) => action?.[key] != null)?.[key];
 }
 
-function hasPreference(actions, key, value) {
-  return actions.some((action) => action?.preferences?.[key] === value);
+function roomGuest(actions, room) {
+  return [...actions]
+    .reverse()
+    .find((action) => action?.type === "set_guest_count" && Number(action?.guestRoom) === room)?.guests;
 }
 
 function clarifications(actions) {
@@ -73,16 +91,15 @@ async function exactDateJourney(language) {
   return { arrivalMs: arrival.durationMs, namedArrivalMs: namedArrival.durationMs, departureMs: departure.durationMs };
 }
 
-async function greekKitchenRegression() {
+async function greekPreferenceRemovalRegression() {
   const result = await interpret("Θέλω ένα δωμάτιο ,2ατομα , με κουζίνα", {
     language: "el",
     currentStep: "checkin",
   });
   const actions = result.command.actions;
-  assert(Number(fact(actions, "roomCount")) === 1, "Greek kitchen input did not extract roomCount=1");
-  assert(Number(fact(actions, "guests")) === 2, "Greek kitchen input did not extract guests=2 from 2ατομα");
-  assert(hasPreference(actions, "kitchenette", true) || hasPreference(actions, "fullKitchen", true), "Greek kitchen input did not extract a kitchen preference");
-  assertNoClarification(actions, "Greek kitchen input");
+  assert(Number(fact(actions, "roomCount")) === 1, "Greek input did not extract roomCount=1");
+  assert(Number(fact(actions, "totalGuests")) === 2, "Greek input did not extract totalGuests=2 from 2ατομα");
+  assertNoClarification(actions, "Greek input with removed preference");
   return { durationMs: result.durationMs };
 }
 
@@ -95,8 +112,7 @@ async function greekFullSentenceRegression() {
   assert(fact(actions, "checkin") === "2026-10-10", "Full Greek input did not extract check-in");
   assert(fact(actions, "checkout") === "2026-10-12", "Full Greek input did not extract check-out");
   assert(Number(fact(actions, "roomCount")) === 1, "Full Greek input did not extract roomCount=1");
-  assert(Number(fact(actions, "guests")) === 2, "Full Greek input did not extract guests=2");
-  assert(hasPreference(actions, "floor", "first"), "Full Greek input did not extract floor=first");
+  assert(Number(fact(actions, "totalGuests")) === 2, "Full Greek input did not extract totalGuests=2");
   assertNoClarification(actions, "Full Greek input");
   return { durationMs: result.durationMs };
 }
@@ -109,8 +125,52 @@ async function greekShortFollowupRegression() {
   });
   const actions = result.command.actions;
   assert(Number(fact(actions, "nights")) === 2, "Greek follow-up did not extract nights=2");
-  assert(Number(fact(actions, "guests")) === 3, "Greek follow-up did not extract guests=3");
+  assert(Number(fact(actions, "totalGuests")) === 3, "Greek follow-up did not extract totalGuests=3");
   assertNoClarification(actions, "Greek nights/guests follow-up");
+  return { durationMs: result.durationMs };
+}
+
+async function multiRoomTotalRegression() {
+  const result = await interpret("Θέλω 2 δωμάτια για 4 άτομα", {
+    language: "el",
+    currentStep: "rooms",
+  });
+  const actions = result.command.actions;
+  assert(Number(fact(actions, "roomCount")) === 2, "Multi-room total did not extract roomCount=2");
+  assert(Number(fact(actions, "totalGuests")) === 4, "Multi-room total did not extract totalGuests=4");
+  assert(roomGuest(actions, 1) == null && roomGuest(actions, 2) == null, "Multi-room total invented a room allocation");
+  assertNoClarification(actions, "Multi-room total");
+  return { durationMs: result.durationMs };
+}
+
+async function explicitRoomAllocationRegression() {
+  const result = await interpret("2 άτομα στο κάθε δωμάτιο", {
+    language: "el",
+    currentStep: "guests",
+    roomCount: 2,
+    totalGuests: 4,
+    guestGroups: [],
+    currentRoom: 1,
+  });
+  const actions = result.command.actions;
+  assert(Number(roomGuest(actions, 1)) === 2, "Explicit allocation did not set room 1 to 2 guests");
+  assert(Number(roomGuest(actions, 2)) === 2, "Explicit allocation did not set room 2 to 2 guests");
+  assertNoClarification(actions, "Explicit two-room allocation");
+  return { durationMs: result.durationMs };
+}
+
+async function specificRoomFollowupRegression() {
+  const result = await interpret("2", {
+    language: "el",
+    currentStep: "guests",
+    roomCount: 2,
+    totalGuests: 4,
+    guestGroups: [2],
+    currentRoom: 2,
+  });
+  const actions = result.command.actions;
+  assert(Number(roomGuest(actions, 2)) === 2, "Standalone guest count was not tied to currentRoom=2");
+  assertNoClarification(actions, "Specific-room guest follow-up");
   return { durationMs: result.durationMs };
 }
 
@@ -131,27 +191,36 @@ async function greekSpecificClarificationRegression() {
 
 async function main() {
   const languages = ["el", "en", "de", "fr", "it", "es", "tr"];
-  console.log(`Room Finder AI-first interpreter QA target: ${BASE_URL}`);
+  console.log(`Room Finder AI contract QA target: ${BASE_URL}`);
 
   for (const language of languages) {
     const timing = await exactDateJourney(language);
     console.log(`✓ ${language} AI date understanding (${timing.arrivalMs}ms / ${timing.namedArrivalMs}ms / ${timing.departureMs}ms)`);
   }
 
-  const kitchen = await greekKitchenRegression();
-  console.log(`✓ el kitchen facts (${kitchen.durationMs}ms)`);
+  const preferenceRemoval = await greekPreferenceRemovalRegression();
+  console.log(`✓ removed preferences do not enter booking contract (${preferenceRemoval.durationMs}ms)`);
 
   const full = await greekFullSentenceRegression();
   console.log(`✓ el full one-turn booking sentence (${full.durationMs}ms)`);
 
   const followup = await greekShortFollowupRegression();
-  console.log(`✓ el nights + guests follow-up (${followup.durationMs}ms)`);
+  console.log(`✓ el nights + total-guests follow-up (${followup.durationMs}ms)`);
+
+  const multiRoom = await multiRoomTotalRegression();
+  console.log(`✓ multi-room total guests stay distinct from allocation (${multiRoom.durationMs}ms)`);
+
+  const allocation = await explicitRoomAllocationRegression();
+  console.log(`✓ explicit guest allocation per room (${allocation.durationMs}ms)`);
+
+  const roomFollowup = await specificRoomFollowupRegression();
+  console.log(`✓ current-room guest follow-up (${roomFollowup.durationMs}ms)`);
 
   const clarification = await greekSpecificClarificationRegression();
   console.log(`✓ el specific ambiguity clarification (${clarification.durationMs}ms): ${clarification.query}`);
 }
 
 main().catch((error) => {
-  console.error(`✗ Room Finder AI-first interpreter QA: ${error instanceof Error ? error.message : String(error)}`);
+  console.error(`✗ Room Finder AI contract QA: ${error instanceof Error ? error.message : String(error)}`);
   process.exitCode = 1;
 });

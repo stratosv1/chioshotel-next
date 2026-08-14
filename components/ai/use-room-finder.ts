@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useMemo, useReducer, useRef, useState } from "react";
-import type { AssistantCommand } from "@/lib/ai-assistant/types";
+import type { RoomFinderCommand } from "@/lib/ai-assistant/room-finder-types";
 import type { RoomFinderLanguage } from "./room-finder-copy";
 import { ROOM_FINDER_COPY } from "./room-finder-copy";
 import { ROOM_FINDER_TONE } from "./room-finder-tone";
@@ -9,6 +9,7 @@ import { TURN_TIMING } from "./room-finder-flow-helpers";
 import {
   bookingFlowReducer,
   createInitialBookingFlowState,
+  nextMissingGuestRoom,
   nightsBetween,
   resolveAssistantTurn,
   type BookingDraft,
@@ -74,8 +75,8 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   const turnLocked = useRef(false);
 
   const { step, draft } = flow;
-  const { checkin, checkout, roomCount, groups, pendingGuestTotal } = draft;
-  const guestTotal = groups.reduce((a, b) => a + b, 0);
+  const { checkin, checkout, roomCount, totalGuests, groups } = draft;
+  const guestTotal = totalGuests || groups.reduce((a, b) => a + b, 0);
   const nights = checkin && checkout ? Math.max(0, nightsBetween(checkin, checkout)) : 0;
   const selected = useMemo(() => new Set(choices.map(c => offerKey(c.offer))), [choices]);
   const visibleOffers = useMemo(() => {
@@ -119,7 +120,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     setSelectingOfferKey(null);
   }
 
-  async function interpret(value: string, current: FinderStep): Promise<AssistantCommand> {
+  async function interpret(value: string, current: FinderStep): Promise<RoomFinderCommand> {
     const recentMessages = messages.slice(-8).map(({ role, content }) => ({ role, content }));
     const controller = new AbortController();
     const timeout = window.setTimeout(() => controller.abort(), 15_000);
@@ -135,17 +136,17 @@ export function useRoomFinder(language: RoomFinderLanguage) {
             currentStep: current,
             checkin: checkin || undefined,
             checkout: checkout || undefined,
-            guests: pendingGuestTotal || undefined,
+            totalGuests: totalGuests || undefined,
             roomCount: roomCount || undefined,
             guestGroups: groups,
-            currentRoom: current === "guests" ? groups.length + 1 : undefined,
+            currentRoom: current === "guests" ? nextMissingGuestRoom(draft) || undefined : undefined,
             recentMessages,
           },
         }),
       });
       const data = await response.json().catch(() => null);
       if (!response.ok || !data?.command) throw new Error(String(data?.code || "AI_UNAVAILABLE"));
-      return data.command as AssistantCommand;
+      return data.command as RoomFinderCommand;
     } finally {
       window.clearTimeout(timeout);
     }
@@ -193,7 +194,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     }
   }
 
-  async function applyCommand(command: AssistantCommand) {
+  async function applyCommand(command: RoomFinderCommand) {
     const resolution = resolveAssistantTurn(flow, command);
 
     if (resolution.outcome.kind === "restart") {
@@ -268,7 +269,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       if (nextFlow.step === "searching") {
         await runAvailabilitySearch(nextFlow.draft);
       } else {
-        add("assistant", tone.guests(1));
+        add("assistant", tone.guests(nextMissingGuestRoom(nextFlow.draft) || 1));
       }
     } finally {
       endUserTurn();
@@ -285,7 +286,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       if (nextFlow.step === "searching") {
         await runAvailabilitySearch(nextFlow.draft);
       } else {
-        add("assistant", tone.guests(nextFlow.draft.groups.length + 1));
+        add("assistant", tone.guests(nextMissingGuestRoom(nextFlow.draft) || 1));
       }
     } finally {
       endUserTurn();
