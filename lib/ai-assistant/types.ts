@@ -81,6 +81,7 @@ export type ConversationContext = {
   guests?: number;
   roomCount?: number;
   guestGroups?: number[];
+  preferences?: AssistantPreferences;
   currentRoom?: number;
   currentStep?: RoomFinderStep;
   language?: AssistantLanguage;
