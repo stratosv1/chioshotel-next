@@ -63,46 +63,56 @@ const COMMAND_SCHEMA = {
 
 function todayIso() { return new Date().toISOString().slice(0, 10); }
 
-const SYSTEM_PROMPT = `You are the single Conversation Interpreter for the Voulamandis House AI Room Finder in Chios.
+const SYSTEM_PROMPT = `You are the Conversation Interpreter for the Voulamandis House AI Room Finder in Chios.
 
-Interpret the latest user message semantically from the current flow step, booking state and recent conversation. Human phrasing must be understood by the model; the application must not need keyword lists or regular expressions.
+Your only job is to extract structured meaning from the user's latest message. The application state machine decides which booking field is still missing and which question comes next.
 
-ROLE
-- Interpretation only. Never decide live availability, prices, discounts, room eligibility or database results.
-- Return structured meaning. The application state machine and Neon booking engine perform validation and execution.
-- Never invent a genuinely missing value. If more than one reasonable interpretation remains, ask a concise clarification.
-- Use recent conversation to resolve references, corrections and answers that provide only the missing part requested by the previous assistant message.
-- A user's correction overrides an earlier value even if the assistant was asking about a different field.
-- A single message may contain several independent booking facts; return multiple actions in the order they should be applied.
+CORE RULES
+- Extract every booking fact explicitly stated or uniquely implied by the latest message and recent conversation, regardless of the current UI step.
+- Do not reject useful facts because the user answered a different field than the one currently requested.
+- A single message can contain several facts. Return all executable actions needed to preserve them.
+- Never invent a value that is genuinely absent.
+- Missing booking fields are NOT an interpretation error. Do not ask clarification merely because check-in, check-out, rooms, or guests are still missing; the state machine handles that.
+- Use ask_clarification only when a value the user actually attempted to provide is itself genuinely ambiguous or contradictory and cannot be resolved from context.
+- If at least one booking fact is understood, return the executable fact actions. Do not add ask_clarification just for unrelated missing fields.
+- Never decide availability, price, discount, room eligibility, or database results.
 
-DATE UNDERSTANDING
-- Users are NEVER required to type YYYY-MM-DD. Understand normal human date expressions in all supported languages and normalize an exact resolved date to YYYY-MM-DD.
-- For this European accommodation flow, a two-part numeric date such as 10/10 or 28/8 means day/month unless the user explicitly states another convention.
-- A day + month is a complete exact booking date even when the year is omitted. Infer the nearest occurrence that is today or in the future: use the current year when that calendar date has not passed; otherwise use the next year. Do not ask for the year merely because it was omitted.
-- Examples of exact dates that should normally resolve: 10/10, 10 October, 10 Οκτωβρίου, 30 Αυγούστου, tomorrow, this Friday when exactly one date follows from today's date and context.
-- A month without a day, a broad period, approximation, or range without explicit arrival/departure roles is NOT one exact date. Examples: October, late August, early September, sometime next week, around the 10th. Ask for the missing precision.
-- If the previous user message supplied an exact day/month and the assistant asked only for a missing component, a short follow-up such as a year must be combined with that immediately preceding date context rather than treated as a new standalone date.
-- If one message clearly supplies exact arrival and departure dates, return them together in search_availability.
-- Never choose an arbitrary endpoint of a range.
-- check-out must be interpreted as departure and check-in as arrival based on currentStep and conversation context.
+DATE EXTRACTION
+- Users never need to type YYYY-MM-DD. Normalize any exact resolved date to YYYY-MM-DD.
+- In this European accommodation flow, two-part numeric dates are day/month unless the user explicitly states another convention. Example: 10/10 = 10 October; 28/8 = 28 August.
+- A day plus month is a complete exact date even without a year. Infer the nearest occurrence that is today or in the future: current year if it has not passed, otherwise next year.
+- Exact forms such as 10/10, 10 October, 10 Οκτωβρίου, 28 Αυγούστου, tomorrow, or an unambiguous weekday must be returned as a date action, not clarification.
+- When currentStep is checkin, a standalone exact date is check-in unless the user explicitly says otherwise.
+- When currentStep is checkout, a standalone exact date is check-out unless the user explicitly says otherwise.
+- If a message provides both arrival and departure dates, return both in search_availability.
+- If a message provides check-in plus a number of nights, return checkin and nights in search_availability. The application calculates check-out deterministically.
+- If check-in already exists in context and the user says only a number of nights, return nights in search_availability.
+- Broad periods such as early October, sometime next week, or around the 10th are genuinely ambiguous and may use ask_clarification.
+- Never choose an arbitrary endpoint of an ambiguous range.
 
 ROOMS AND GUESTS
-- In the rooms step, an exact request for 1–3 rooms becomes set_room_count.
-- In the guests step, an exact number of 1–5 guests for the current room becomes set_guest_count.
-- Understand natural counts semantically (for example, two adults and one child = 3) without keyword matching in application code.
-- If a count is genuinely ambiguous, ask clarification.
+- Extract an exact requested room count from 1 to 3 with set_room_count, even if the current UI step is asking for a date.
+- Extract an exact guest count with set_guest_count, even if the current UI step is asking for another field.
+- Natural counts must be understood semantically; for example, two adults and one child = 3 guests.
+- Phrases such as a double room / one room for two people normally imply roomCount=1 and guests=2 when that meaning is clear.
+- Do not ask for a date merely because a room or guest fact was supplied first. Return the facts you understood and let the application ask the next missing field.
 
 CONVERSATION
-- If a required value is missing or ambiguous, return ask_clarification with missingFields and a short natural question in query.
-- replyMode=clarify when clarification is the primary result, execute for state changes, answer for informational actions.
-- Questions about rooms may use show_room, show_gallery, answer_room_question or recommend_rooms.
+- Use recent conversation and current booking state to resolve short follow-ups, corrections, and references.
+- A user's correction overrides an earlier value.
 - If the user wants to restart, return restart_search.
+- Room information questions may use show_room, show_gallery, answer_room_question, or recommend_rooms.
 
 LANGUAGE
-- Use the user's current language among Greek, English, German, French, Italian, Spanish and Turkish for clarification text.
+- Preserve the user's current supported language: Greek, English, German, French, Italian, Spanish, or Turkish.
+- Clarification text, when genuinely necessary, must use that language.
 
 SCHEMA
-- For irrelevant nullable fields return null; for roomNumbers/missingFields return []; for query return an empty string when not needed; for preferences return null when not needed.
+- For irrelevant nullable fields return null.
+- For roomNumbers and missingFields return [] when not used.
+- For query return an empty string when not used.
+- For preferences return null when not used.
+- replyMode=execute when returning booking facts; clarify only for genuine ambiguity; answer for informational actions.
 - Return JSON only, exactly matching the schema.`;
 
 function getOutputText(payload: any): string {
@@ -116,13 +126,13 @@ function getOutputText(payload: any): string {
 }
 
 const CLARIFY_COPY: Record<AssistantLanguage, Record<RoomFinderStep, string>> = {
-  el: { checkin:"Ποια ακριβώς ημερομηνία θα θέλατε να κάνετε check-in; 😊", checkout:"Ποια ακριβώς ημερομηνία θα θέλατε να κάνετε check-out; 😊", rooms:"Πόσα ακριβώς δωμάτια χρειάζεστε;", guests:"Πόσα ακριβώς άτομα θα μείνουν σε αυτό το δωμάτιο;", preferences:"Πείτε μου λίγο πιο συγκεκριμένα τι προτιμάτε για τη διαμονή σας.", selecting:"Πείτε μου τι θα θέλατε να αλλάξουμε στις προτάσεις μας.", breakfast:"Θα θέλατε να προσθέσετε πρωινό;", complete:"Πώς μπορώ να σας βοηθήσω ακόμη με τη διαμονή σας;" },
-  en: { checkin:"What exact date would you like to check in? 😊", checkout:"What exact date would you like to check out? 😊", rooms:"Exactly how many rooms do you need?", guests:"Exactly how many guests will stay in this room?", preferences:"Please tell me a little more specifically what you prefer for your stay.", selecting:"Tell me what you would like us to change about the suggestions.", breakfast:"Would you like to add breakfast?", complete:"How else can I help with your stay?" },
-  de: { checkin:"An welchem genauen Datum möchten Sie einchecken? 😊", checkout:"An welchem genauen Datum möchten Sie auschecken? 😊", rooms:"Wie viele Zimmer benötigen Sie genau?", guests:"Wie viele Gäste übernachten genau in diesem Zimmer?", preferences:"Sagen Sie mir bitte etwas genauer, was Ihnen wichtig ist.", selecting:"Sagen Sie mir, was wir an den Vorschlägen ändern sollen.", breakfast:"Möchten Sie Frühstück hinzufügen?", complete:"Wie kann ich Ihnen sonst noch helfen?" },
-  fr: { checkin:"Quelle date exacte souhaitez-vous pour le check-in ? 😊", checkout:"Quelle date exacte souhaitez-vous pour le check-out ? 😊", rooms:"De combien de chambres avez-vous exactement besoin ?", guests:"Combien de personnes séjourneront exactement dans cette chambre ?", preferences:"Précisez-moi un peu mieux vos préférences.", selecting:"Dites-moi ce que vous souhaitez modifier.", breakfast:"Souhaitez-vous ajouter le petit-déjeuner ?", complete:"Comment puis-je encore vous aider ?" },
-  it: { checkin:"Quale data esatta desiderate per il check-in? 😊", checkout:"Quale data esatta desiderate per il check-out? 😊", rooms:"Di quante camere avete esattamente bisogno?", guests:"Quante persone soggiorneranno esattamente in questa camera?", preferences:"Indicate un po' più precisamente le vostre preferenze.", selecting:"Ditemi cosa vorreste cambiare.", breakfast:"Desiderate aggiungere la colazione?", complete:"Come posso aiutarvi ancora?" },
-  es: { checkin:"¿Qué fecha exacta desean para el check-in? 😊", checkout:"¿Qué fecha exacta desean para el check-out? 😊", rooms:"¿Cuántas habitaciones necesitan exactamente?", guests:"¿Cuántas personas se alojarán exactamente en esta habitación?", preferences:"Cuéntenme un poco más específicamente qué prefieren.", selecting:"Díganme qué les gustaría cambiar.", breakfast:"¿Desean añadir desayuno?", complete:"¿Cómo puedo ayudarles aún más?" },
-  tr: { checkin:"Tam olarak hangi tarihte giriş yapmak istersiniz? 😊", checkout:"Tam olarak hangi tarihte çıkış yapmak istersiniz? 😊", rooms:"Tam olarak kaç oda ihtiyacınız var?", guests:"Bu odada tam olarak kaç kişi kalacak?", preferences:"Tercihlerinizi biraz daha ayrıntılı anlatır mısınız?", selecting:"Önerilerimizde neyi değiştirmemizi istediğinizi söyleyin.", breakfast:"Kahvaltı eklemek ister misiniz?", complete:"Başka nasıl yardımcı olabilirim?" },
+  el: { checkin:"Πότε θα θέλατε να κάνετε check-in; 😊", checkout:"Πότε θα θέλατε να κάνετε check-out; 😊", rooms:"Πόσα δωμάτια χρειάζεστε;", guests:"Πόσα άτομα θα μείνουν σε αυτό το δωμάτιο;", preferences:"Πείτε μου λίγο πιο συγκεκριμένα τι προτιμάτε για τη διαμονή σας.", selecting:"Πείτε μου τι θα θέλατε να αλλάξουμε στις προτάσεις μας.", breakfast:"Θα θέλατε να προσθέσετε πρωινό;", complete:"Πώς μπορώ να σας βοηθήσω ακόμη με τη διαμονή σας;" },
+  en: { checkin:"When would you like to check in? 😊", checkout:"When would you like to check out? 😊", rooms:"How many rooms do you need?", guests:"How many guests will stay in this room?", preferences:"Please tell me a little more specifically what you prefer for your stay.", selecting:"Tell me what you would like us to change about the suggestions.", breakfast:"Would you like to add breakfast?", complete:"How else can I help with your stay?" },
+  de: { checkin:"Wann möchten Sie einchecken? 😊", checkout:"Wann möchten Sie auschecken? 😊", rooms:"Wie viele Zimmer benötigen Sie?", guests:"Wie viele Gäste übernachten in diesem Zimmer?", preferences:"Sagen Sie mir bitte etwas genauer, was Ihnen wichtig ist.", selecting:"Sagen Sie mir, was wir an den Vorschlägen ändern sollen.", breakfast:"Möchten Sie Frühstück hinzufügen?", complete:"Wie kann ich Ihnen sonst noch helfen?" },
+  fr: { checkin:"Quand souhaitez-vous faire le check-in ? 😊", checkout:"Quand souhaitez-vous faire le check-out ? 😊", rooms:"De combien de chambres avez-vous besoin ?", guests:"Combien de personnes séjourneront dans cette chambre ?", preferences:"Précisez-moi un peu mieux vos préférences.", selecting:"Dites-moi ce que vous souhaitez modifier.", breakfast:"Souhaitez-vous ajouter le petit-déjeuner ?", complete:"Comment puis-je encore vous aider ?" },
+  it: { checkin:"Quando desiderate fare il check-in? 😊", checkout:"Quando desiderate fare il check-out? 😊", rooms:"Di quante camere avete bisogno?", guests:"Quante persone soggiorneranno in questa camera?", preferences:"Indicate un po' più precisamente le vostre preferenze.", selecting:"Ditemi cosa vorreste cambiare.", breakfast:"Desiderate aggiungere la colazione?", complete:"Come posso aiutarvi ancora?" },
+  es: { checkin:"¿Cuándo desean hacer el check-in? 😊", checkout:"¿Cuándo desean hacer el check-out? 😊", rooms:"¿Cuántas habitaciones necesitan?", guests:"¿Cuántas personas se alojarán en esta habitación?", preferences:"Cuéntenme un poco más específicamente qué prefieren.", selecting:"Díganme qué les gustaría cambiar.", breakfast:"¿Desean añadir desayuno?", complete:"¿Cómo puedo ayudarles aún más?" },
+  tr: { checkin:"Ne zaman giriş yapmak istersiniz? 😊", checkout:"Ne zaman çıkış yapmak istersiniz? 😊", rooms:"Kaç odaya ihtiyacınız var?", guests:"Bu odada kaç kişi kalacak?", preferences:"Tercihlerinizi biraz daha ayrıntılı anlatır mısınız?", selecting:"Önerilerimizde neyi değiştirmemizi istediğinizi söyleyin.", breakfast:"Kahvaltı eklemek ister misiniz?", complete:"Başka nasıl yardımcı olabilirim?" },
 };
 
 function safeLanguage(value?: AssistantLanguage): AssistantLanguage { return value || "en"; }
