@@ -12,6 +12,15 @@ import type { RoomChoice } from "./room-finder-selected-card";
 export type FinderStep = "checkin" | "checkout" | "rooms" | "guests" | "preferences" | "searching" | "selecting" | "breakfast" | "complete" | "unavailable";
 export type FeedbackMode = "idle" | "happy" | "different" | "type" | "floor";
 
+type ActionPreferences = {
+  floor?: "ground" | "first" | "any";
+  noStairs?: boolean;
+  kitchenette?: boolean;
+  fullKitchen?: boolean;
+  budget?: "lowest" | "standard" | "family" | "any";
+  familyFriendly?: boolean;
+};
+
 type Action = {
   type: string;
   roomCount?: number;
@@ -21,6 +30,7 @@ type Action = {
   nights?: number;
   query?: string;
   missingFields?: string[];
+  preferences?: ActionPreferences;
 };
 
 type Command = {
@@ -57,6 +67,44 @@ const matches = (room: RoomOffer, f: RoomFinderFilter) => {
   return [5, 6, 7, 8, 9, 10].includes(n);
 };
 const offerKey = (offer: RoomOffer) => `${offer.roomId}:${offer.unitId}`;
+
+const mergePreferenceFilters = (current: RoomFinderFilter[], preferences?: ActionPreferences) => {
+  if (!preferences) return current;
+  const next = new Set(current);
+
+  if (preferences.floor === "first") {
+    next.delete("ground");
+    next.delete("noStairs");
+    next.add("first");
+  } else if (preferences.floor === "ground") {
+    next.delete("first");
+    next.add("ground");
+  } else if (preferences.floor === "any") {
+    next.delete("first");
+    next.delete("ground");
+  }
+
+  if (preferences.noStairs === true) {
+    next.delete("first");
+    next.add("noStairs");
+  } else if (preferences.noStairs === false) {
+    next.delete("noStairs");
+  }
+
+  if (preferences.kitchenette === true || preferences.fullKitchen === true) next.add("kitchen");
+  if (preferences.budget === "lowest") next.add("economy");
+  if (preferences.budget === "family" || preferences.familyFriendly === true) next.add("family");
+
+  return Array.from(next);
+};
+
+const preferenceContext = (current: RoomFinderFilter[]) => ({
+  floor: current.includes("first") ? "first" : current.includes("ground") ? "ground" : undefined,
+  noStairs: current.includes("noStairs") || undefined,
+  kitchenette: current.includes("kitchen") || undefined,
+  budget: current.includes("economy") ? "lowest" : current.includes("family") ? "family" : undefined,
+  familyFriendly: current.includes("family") || undefined,
+});
 
 const INVENTORY_UNAVAILABLE: Record<RoomFinderLanguage, string> = {
   el: "Σας ευχαριστώ για την υπομονή σας 🙏 Η live διαθεσιμότητα δεν μπορεί να επιβεβαιωθεί αυτή τη στιγμή και δεν θέλω να σας δείξω παλιά στοιχεία. Δοκιμάστε ξανά σε λίγα λεπτά ή μπορούμε να το ελέγξουμε μαζί μέσω WhatsApp 💬",
@@ -173,6 +221,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
             guests: pendingGuestTotal || undefined,
             roomCount: roomCount || undefined,
             guestGroups: groups,
+            preferences: preferenceContext(filters),
             currentRoom: current === "guests" ? groups.length + 1 : undefined,
             recentMessages,
           },
@@ -197,6 +246,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     let rooms = roomCount;
     let g = [...groups];
     let pendingGuests = pendingGuestTotal;
+    let nextFilters = [...filters];
     let changed = false;
     const clarifications = command.actions.filter(a => a.type === "ask_clarification" && a.query);
     const clarificationFor = (field: string) =>
@@ -238,6 +288,12 @@ export function useRoomFinder(language: RoomFinderLanguage) {
         }
         changed = true;
       }
+
+      if (a.preferences) {
+        const merged = mergePreferenceFilters(nextFilters, a.preferences);
+        if (merged.join("|") !== nextFilters.join("|")) changed = true;
+        nextFilters = merged;
+      }
     }
 
     if (rooms === 1 && pendingGuests && g.length === 0) {
@@ -250,6 +306,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       setCheckin(ci);
       setCheckout("");
       setPendingGuestTotal(pendingGuests);
+      setFilters(nextFilters);
       setStep("checkout");
       add("assistant", tone.invalidCheckout);
       return;
@@ -260,6 +317,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     setRoomCount(rooms);
     setGroups(g);
     setPendingGuestTotal(pendingGuests);
+    setFilters(nextFilters);
 
     if (!ci) {
       setStep("checkin");
