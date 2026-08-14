@@ -1,56 +1,30 @@
 "use client";
 
-import { FormEvent, useMemo, useRef, useState } from "react";
+import { FormEvent, useMemo, useReducer, useRef, useState } from "react";
+import type { AssistantCommand } from "@/lib/ai-assistant/types";
 import type { RoomFinderFilter, RoomFinderLanguage } from "./room-finder-copy";
 import { ROOM_FINDER_COPY } from "./room-finder-copy";
 import { ROOM_FINDER_TONE } from "./room-finder-tone";
 import { TURN_TIMING } from "./room-finder-flow-helpers";
+import {
+  bookingFlowReducer,
+  createInitialBookingFlowState,
+  nightsBetween,
+  preferenceContext,
+  resolveAssistantTurn,
+  type FinderStep,
+} from "./room-finder-booking-flow";
 import type { ChatItem, MessageKind, Reaction } from "./room-finder-chat-ui";
 import type { RoomOffer } from "./room-finder-carousel";
 import type { RoomChoice } from "./room-finder-selected-card";
 
-export type FinderStep = "checkin" | "checkout" | "rooms" | "guests" | "preferences" | "searching" | "selecting" | "breakfast" | "complete" | "unavailable";
+export type { FinderStep } from "./room-finder-booking-flow";
 export type FeedbackMode = "idle" | "happy" | "different" | "type" | "floor";
-
-type ActionPreferences = {
-  floor?: "ground" | "first" | "any";
-  noStairs?: boolean;
-  kitchenette?: boolean;
-  fullKitchen?: boolean;
-  budget?: "lowest" | "standard" | "family" | "any";
-  familyFriendly?: boolean;
-};
-
-type Action = {
-  type: string;
-  roomCount?: number;
-  guests?: number;
-  checkin?: string;
-  checkout?: string;
-  nights?: number;
-  query?: string;
-  missingFields?: string[];
-  preferences?: ActionPreferences;
-};
-
-type Command = {
-  language: RoomFinderLanguage;
-  replyMode: "answer" | "execute" | "clarify";
-  actions: Action[];
-};
-
 type TurnPace = "normal" | "quick";
+type FilterUpdate = RoomFinderFilter[] | ((current: RoomFinderFilter[]) => RoomFinderFilter[]);
 
 const wait = (ms: number) => new Promise<void>(resolve => window.setTimeout(resolve, ms));
 const rid = () => `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-const nightsBetween = (a: string, b: string) => Math.round((Date.parse(`${b}T12:00:00Z`) - Date.parse(`${a}T12:00:00Z`)) / 86400000);
-const isIso = (v: string) => /^\d{4}-\d{2}-\d{2}$/.test(v) && !Number.isNaN(Date.parse(`${v}T12:00:00Z`));
-const addDays = (iso: string, days: number) => {
-  if (!isIso(iso) || !Number.isInteger(days) || days < 1 || days > 60) return "";
-  const date = new Date(`${iso}T12:00:00Z`);
-  date.setUTCDate(date.getUTCDate() + days);
-  return date.toISOString().slice(0, 10);
-};
 const rank = (room: RoomOffer) => {
   const order = [2, 6, 5, 7, 1, 3, 4, 8, 9, 10];
   const i = order.indexOf(Number(room.roomNumber));
@@ -67,44 +41,6 @@ const matches = (room: RoomOffer, f: RoomFinderFilter) => {
   return [5, 6, 7, 8, 9, 10].includes(n);
 };
 const offerKey = (offer: RoomOffer) => `${offer.roomId}:${offer.unitId}`;
-
-const mergePreferenceFilters = (current: RoomFinderFilter[], preferences?: ActionPreferences) => {
-  if (!preferences) return current;
-  const next = new Set(current);
-
-  if (preferences.floor === "first") {
-    next.delete("ground");
-    next.delete("noStairs");
-    next.add("first");
-  } else if (preferences.floor === "ground") {
-    next.delete("first");
-    next.add("ground");
-  } else if (preferences.floor === "any") {
-    next.delete("first");
-    next.delete("ground");
-  }
-
-  if (preferences.noStairs === true) {
-    next.delete("first");
-    next.add("noStairs");
-  } else if (preferences.noStairs === false) {
-    next.delete("noStairs");
-  }
-
-  if (preferences.kitchenette === true || preferences.fullKitchen === true) next.add("kitchen");
-  if (preferences.budget === "lowest") next.add("economy");
-  if (preferences.budget === "family" || preferences.familyFriendly === true) next.add("family");
-
-  return Array.from(next);
-};
-
-const preferenceContext = (current: RoomFinderFilter[]) => ({
-  floor: current.includes("first") ? "first" : current.includes("ground") ? "ground" : undefined,
-  noStairs: current.includes("noStairs") || undefined,
-  kitchenette: current.includes("kitchen") || undefined,
-  budget: current.includes("economy") ? "lowest" : current.includes("family") ? "family" : undefined,
-  familyFriendly: current.includes("family") || undefined,
-});
 
 const INVENTORY_UNAVAILABLE: Record<RoomFinderLanguage, string> = {
   el: "Σας ευχαριστώ για την υπομονή σας 🙏 Η live διαθεσιμότητα δεν μπορεί να επιβεβαιωθεί αυτή τη στιγμή και δεν θέλω να σας δείξω παλιά στοιχεία. Δοκιμάστε ξανά σε λίγα λεπτά ή μπορούμε να το ελέγξουμε μαζί μέσω WhatsApp 💬",
@@ -136,15 +72,9 @@ class AvailabilityError extends Error {
 export function useRoomFinder(language: RoomFinderLanguage) {
   const copy = ROOM_FINDER_COPY[language];
   const tone = ROOM_FINDER_TONE[language];
-  const [step, setStep] = useState<FinderStep>("checkin");
+  const [flow, dispatchFlow] = useReducer(bookingFlowReducer, undefined, createInitialBookingFlowState);
   const [messages, setMessages] = useState<ChatItem[]>([{ id: rid(), role: "assistant", content: copy.welcome }]);
   const [input, setInput] = useState("");
-  const [checkin, setCheckin] = useState("");
-  const [checkout, setCheckout] = useState("");
-  const [roomCount, setRoomCount] = useState<number | null>(null);
-  const [groups, setGroups] = useState<number[]>([]);
-  const [pendingGuestTotal, setPendingGuestTotal] = useState<number | null>(null);
-  const [filters, setFilters] = useState<RoomFinderFilter[]>([]);
   const [preferFit, setPreferFit] = useState(false);
   const [offers, setOffers] = useState<RoomOffer[][]>([]);
   const [activeGroup, setActiveGroup] = useState(0);
@@ -155,6 +85,8 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   const [selectingOfferKey, setSelectingOfferKey] = useState<string | null>(null);
   const turnLocked = useRef(false);
 
+  const { step, draft } = flow;
+  const { checkin, checkout, roomCount, groups, pendingGuestTotal, filters } = draft;
   const guestTotal = groups.reduce((a, b) => a + b, 0);
   const nights = checkin && checkout ? Math.max(0, nightsBetween(checkin, checkout)) : 0;
   const selected = useMemo(() => new Set(choices.map(c => offerKey(c.offer))), [choices]);
@@ -175,6 +107,11 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   const add = (role: ChatItem["role"], content: string, kind: MessageKind = "normal") =>
     setMessages(v => [...v, { id: rid(), role, content, kind }]);
 
+  function setFilters(update: FilterUpdate) {
+    const next = typeof update === "function" ? update(filters) : update;
+    dispatchFlow({ type: "set_filters", filters: next });
+  }
+
   async function beginUserTurn(content: string, kind: MessageKind = "normal", reaction: Reaction = "👍", pace: TurnPace = "normal") {
     if (turnLocked.current) return false;
     turnLocked.current = true;
@@ -193,15 +130,9 @@ export function useRoomFinder(language: RoomFinderLanguage) {
 
   function reset() {
     turnLocked.current = false;
-    setStep("checkin");
+    dispatchFlow({ type: "reset" });
     setMessages([{ id: rid(), role: "assistant", content: copy.welcome }]);
     setInput("");
-    setCheckin("");
-    setCheckout("");
-    setRoomCount(null);
-    setGroups([]);
-    setPendingGuestTotal(null);
-    setFilters([]);
     setPreferFit(false);
     setOffers([]);
     setActiveGroup(0);
@@ -212,7 +143,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     setSelectingOfferKey(null);
   }
 
-  async function interpret(value: string, current: FinderStep): Promise<Command> {
+  async function interpret(value: string, current: FinderStep): Promise<AssistantCommand> {
     const recentMessages = messages.slice(-8).map(({ role, content }) => ({ role, content }));
     const controller = new AbortController();
     const timeout = window.setTimeout(() => controller.abort(), 15_000);
@@ -239,127 +170,48 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       });
       const data = await response.json().catch(() => null);
       if (!response.ok || !data?.command) throw new Error(String(data?.code || "AI_UNAVAILABLE"));
-      return data.command;
+      return data.command as AssistantCommand;
     } finally {
       window.clearTimeout(timeout);
     }
   }
 
-  async function applyCommand(command: Command) {
-    if (command.actions.some(a => a.type === "restart_search")) {
+  function applyCommand(command: AssistantCommand) {
+    const resolution = resolveAssistantTurn(flow, command);
+
+    if (resolution.outcome.kind === "restart") {
       reset();
       return;
     }
 
-    let ci = checkin;
-    let co = checkout;
-    let rooms = roomCount;
-    let g = [...groups];
-    let pendingGuests = pendingGuestTotal;
-    let nextFilters = [...filters];
-    let changed = false;
-    const clarifications = command.actions.filter(a => a.type === "ask_clarification" && a.query);
-    const clarificationFor = (field: string) =>
-      clarifications.find(a => Array.isArray(a.missingFields) && a.missingFields.includes(field))?.query || "";
+    dispatchFlow({ type: "commit_turn", state: resolution.state });
 
-    for (const a of command.actions) {
-      if (a.checkin && isIso(a.checkin)) {
-        ci = a.checkin;
-        changed = true;
-      }
-
-      if (a.checkout && isIso(a.checkout)) {
-        co = a.checkout;
-        changed = true;
-      } else if (a.nights && Number.isInteger(a.nights) && a.nights >= 1 && a.nights <= 60) {
-        const derived = addDays(ci, a.nights);
-        if (derived) {
-          co = derived;
-          changed = true;
-        }
-      }
-
-      if (a.roomCount && a.roomCount >= 1 && a.roomCount <= 3) {
-        rooms = a.roomCount;
-        g = g.slice(0, a.roomCount);
-        changed = true;
-      }
-
-      if (a.guests && a.guests >= 1 && a.guests <= 5) {
-        if (step === "guests" && rooms) {
-          const index = Math.min(g.length, Math.max(0, rooms - 1));
-          g[index] = a.guests;
-          pendingGuests = null;
-        } else if (rooms === 1) {
-          g = [a.guests];
-          pendingGuests = null;
-        } else {
-          pendingGuests = a.guests;
-        }
-        changed = true;
-      }
-
-      if (a.preferences) {
-        const merged = mergePreferenceFilters(nextFilters, a.preferences);
-        if (merged.join("|") !== nextFilters.join("|")) changed = true;
-        nextFilters = merged;
-      }
-    }
-
-    if (rooms === 1 && pendingGuests && g.length === 0) {
-      g = [pendingGuests];
-      pendingGuests = null;
-      changed = true;
-    }
-
-    if (ci && co && nightsBetween(ci, co) < 1) {
-      setCheckin(ci);
-      setCheckout("");
-      setPendingGuestTotal(pendingGuests);
-      setFilters(nextFilters);
-      setStep("checkout");
+    if (resolution.outcome.kind === "invalid_checkout") {
       add("assistant", tone.invalidCheckout);
       return;
     }
 
-    setCheckin(ci);
-    setCheckout(co);
-    setRoomCount(rooms);
-    setGroups(g);
-    setPendingGuestTotal(pendingGuests);
-    setFilters(nextFilters);
-
-    if (!ci) {
-      setStep("checkin");
-      add("assistant", clarificationFor("checkin") || tone.invalidDate);
+    if (resolution.outcome.kind === "clarification") {
+      add("assistant", resolution.outcome.query);
       return;
     }
 
-    if (!co) {
-      setStep("checkout");
-      add("assistant", clarificationFor("checkout") || tone.checkout);
-      return;
+    switch (resolution.outcome.field) {
+      case "checkin":
+        add("assistant", tone.invalidDate);
+        return;
+      case "checkout":
+        add("assistant", tone.checkout);
+        return;
+      case "rooms":
+        add("assistant", tone.rooms);
+        return;
+      case "guests":
+        add("assistant", tone.guests(resolution.outcome.guestRoom || 1));
+        return;
+      case "preferences":
+        add("assistant", tone.preferences);
     }
-
-    if (!rooms) {
-      setStep("rooms");
-      add("assistant", clarificationFor("rooms") || tone.rooms);
-      return;
-    }
-
-    if (g.length < rooms || g.some(x => !x)) {
-      setStep("guests");
-      add("assistant", clarificationFor("guests") || tone.guests(g.length + 1));
-      return;
-    }
-
-    if (!changed && clarifications[0]?.query) {
-      add("assistant", clarifications[0].query);
-      return;
-    }
-
-    setStep("preferences");
-    add("assistant", tone.preferences);
   }
 
   async function submit(e: FormEvent) {
@@ -377,7 +229,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     try {
       const command = await promise;
       setTyping(false);
-      await applyCommand(command);
+      applyCommand(command);
     } catch (error) {
       console.error("Room Finder interpreter request failed", error);
       setTyping(false);
@@ -389,36 +241,24 @@ export function useRoomFinder(language: RoomFinderLanguage) {
 
   async function chooseRooms(n: number) {
     if (!await beginUserTurn(copy.roomLabel(n), "room", "❤️")) return;
-    setRoomCount(n);
-    if (n === 1 && pendingGuestTotal) {
-      setGroups([pendingGuestTotal]);
-      setPendingGuestTotal(null);
-      setStep("preferences");
-      add("assistant", tone.preferences);
-    } else {
-      setGroups([]);
-      if (n > 1) setPendingGuestTotal(null);
-      setStep("guests");
-      add("assistant", tone.guests(1));
-    }
+    const hasPendingGuests = n === 1 && Boolean(pendingGuestTotal);
+    dispatchFlow({ type: "choose_rooms", roomCount: n });
+    add("assistant", hasPendingGuests ? tone.preferences : tone.guests(1));
     endUserTurn();
   }
 
   async function chooseGuests(n: number) {
     if (!await beginUserTurn(copy.guestLabel(n), "guest", "👍")) return;
-    const next = [...groups, n];
-    setGroups(next);
-    if (roomCount && next.length < roomCount) add("assistant", tone.guests(next.length + 1));
-    else {
-      setStep("preferences");
-      add("assistant", tone.preferences);
-    }
+    const nextGroups = [...groups, n];
+    const needsAnotherRoom = Boolean(roomCount && nextGroups.length < roomCount);
+    dispatchFlow({ type: "choose_guests", guests: n });
+    add("assistant", needsAnotherRoom ? tone.guests(nextGroups.length + 1) : tone.preferences);
     endUserTurn();
   }
 
   async function searchRooms(label: string) {
     if (!await beginUserTurn(label, "normal", "❤️")) return;
-    setStep("searching");
+    dispatchFlow({ type: "set_step", step: "searching" });
     setFeedback("idle");
     add("assistant", tone.searching);
     setTyping(true);
@@ -433,14 +273,14 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       setOffers(result);
       setActiveGroup(0);
       if (!(result[0] || []).length) {
-        setStep("unavailable");
+        dispatchFlow({ type: "set_step", step: "unavailable" });
         add("assistant", tone.unavailable);
       } else {
-        setStep("selecting");
+        dispatchFlow({ type: "set_step", step: "selecting" });
         add("assistant", tone.results(1, groups[0]));
       }
     } catch (error) {
-      setStep("unavailable");
+      dispatchFlow({ type: "set_step", step: "unavailable" });
       const stale = error instanceof AvailabilityError && (error.code === "STALE_DATA" || error.code === "DATA_UNAVAILABLE");
       add("assistant", stale ? INVENTORY_UNAVAILABLE[language] : tone.unavailable);
     } finally {
@@ -464,7 +304,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
         setFeedback("idle");
         add("assistant", tone.results(group + 1, groups[group]));
       } else {
-        setStep("breakfast");
+        dispatchFlow({ type: "set_step", step: "breakfast" });
         setFeedback("idle");
       }
     } finally {
@@ -480,13 +320,13 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     setActiveGroup(Math.max(0, lastChoice.group - 1));
     setBreakfast(false);
     setFeedback("idle");
-    setStep("selecting");
+    dispatchFlow({ type: "set_step", step: "selecting" });
   }
 
   async function chooseBreakfast(value: boolean) {
     if (!await beginUserTurn(value ? copy.yesBreakfast : copy.noBreakfast, "normal", value ? "❤️" : "👍")) return;
     setBreakfast(value);
-    setStep("complete");
+    dispatchFlow({ type: "set_step", step: "complete" });
     add("assistant", tone.finalizing);
     endUserTurn();
   }
@@ -515,7 +355,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
 
   async function refine(filter: RoomFinderFilter) {
     if (!await beginUserTurn(copy.filters[filter], "normal", "👍")) return;
-    setFilters(v => v.includes(filter) ? v : [...v, filter]);
+    setFilters(current => current.includes(filter) ? current : [...current, filter]);
     setFeedback("idle");
     add("assistant", tone.refined);
     endUserTurn();
