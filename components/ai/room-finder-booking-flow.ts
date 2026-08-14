@@ -1,12 +1,10 @@
-import type { AssistantCommand, AssistantPreferences } from "@/lib/ai-assistant/types";
-import type { RoomFinderFilter } from "./room-finder-copy";
+import type { AssistantCommand } from "@/lib/ai-assistant/types";
 
 export type FinderStep =
   | "checkin"
   | "checkout"
   | "rooms"
   | "guests"
-  | "preferences"
   | "searching"
   | "selecting"
   | "breakfast"
@@ -19,7 +17,6 @@ export type BookingDraft = {
   roomCount: number | null;
   groups: number[];
   pendingGuestTotal: number | null;
-  filters: RoomFinderFilter[];
 };
 
 export type BookingFlowState = {
@@ -27,13 +24,14 @@ export type BookingFlowState = {
   draft: BookingDraft;
 };
 
-type ClarificationStep = "checkin" | "checkout" | "rooms" | "guests" | "preferences";
+type ClarificationStep = "checkin" | "checkout" | "rooms" | "guests";
 
 export type BookingTurnOutcome =
   | { kind: "restart" }
   | { kind: "invalid_checkout" }
   | { kind: "clarification"; query: string; step: FinderStep }
-  | { kind: "prompt"; field: ClarificationStep; guestRoom?: number };
+  | { kind: "prompt"; field: ClarificationStep; guestRoom?: number }
+  | { kind: "ready" };
 
 export type BookingTurnResolution = {
   state: BookingFlowState;
@@ -44,7 +42,6 @@ export type BookingFlowAction =
   | { type: "reset" }
   | { type: "commit_turn"; state: BookingFlowState }
   | { type: "set_step"; step: FinderStep }
-  | { type: "set_filters"; filters: RoomFinderFilter[] }
   | { type: "choose_rooms"; roomCount: number }
   | { type: "choose_guests"; guests: number };
 
@@ -57,9 +54,18 @@ export function createInitialBookingFlowState(): BookingFlowState {
       roomCount: null,
       groups: [],
       pendingGuestTotal: null,
-      filters: [],
     },
   };
+}
+
+function bookingCoreIsComplete(draft: BookingDraft) {
+  return Boolean(
+    draft.checkin &&
+    draft.checkout &&
+    draft.roomCount &&
+    draft.groups.length >= draft.roomCount &&
+    draft.groups.every(Boolean),
+  );
 }
 
 export function bookingFlowReducer(state: BookingFlowState, action: BookingFlowAction): BookingFlowState {
@@ -70,37 +76,29 @@ export function bookingFlowReducer(state: BookingFlowState, action: BookingFlowA
       return action.state;
     case "set_step":
       return { ...state, step: action.step };
-    case "set_filters":
-      return { ...state, draft: { ...state.draft, filters: action.filters } };
     case "choose_rooms": {
       const pendingGuests = state.draft.pendingGuestTotal;
-      if (action.roomCount === 1 && pendingGuests) {
-        return {
-          step: "preferences",
-          draft: {
-            ...state.draft,
-            roomCount: 1,
-            groups: [pendingGuests],
-            pendingGuestTotal: null,
-          },
-        };
-      }
+      const draft: BookingDraft = {
+        ...state.draft,
+        roomCount: action.roomCount,
+        groups: action.roomCount === 1 && pendingGuests ? [pendingGuests] : [],
+        pendingGuestTotal: null,
+      };
       return {
-        step: "guests",
-        draft: {
-          ...state.draft,
-          roomCount: action.roomCount,
-          groups: [],
-          pendingGuestTotal: action.roomCount > 1 ? null : state.draft.pendingGuestTotal,
-        },
+        step: bookingCoreIsComplete(draft) ? "searching" : "guests",
+        draft,
       };
     }
     case "choose_guests": {
-      const groups = [...state.draft.groups, action.guests];
-      const needsAnotherRoom = Boolean(state.draft.roomCount && groups.length < state.draft.roomCount);
+      const draft: BookingDraft = {
+        ...state.draft,
+        groups: [...state.draft.groups, action.guests],
+        pendingGuestTotal: null,
+      };
+      const needsAnotherRoom = Boolean(draft.roomCount && draft.groups.length < draft.roomCount);
       return {
-        step: needsAnotherRoom ? "guests" : "preferences",
-        draft: { ...state.draft, groups, pendingGuestTotal: null },
+        step: needsAnotherRoom ? "guests" : bookingCoreIsComplete(draft) ? "searching" : state.step,
+        draft,
       };
     }
     default:
@@ -125,51 +123,9 @@ function addDays(iso: string, days: number) {
   return date.toISOString().slice(0, 10);
 }
 
-export function mergePreferenceFilters(current: RoomFinderFilter[], preferences?: AssistantPreferences) {
-  if (!preferences) return current;
-  const next = new Set(current);
-
-  if (preferences.floor === "first") {
-    next.delete("ground");
-    next.delete("noStairs");
-    next.add("first");
-  } else if (preferences.floor === "ground") {
-    next.delete("first");
-    next.add("ground");
-  } else if (preferences.floor === "any") {
-    next.delete("first");
-    next.delete("ground");
-  }
-
-  if (preferences.noStairs === true) {
-    next.delete("first");
-    next.add("noStairs");
-  } else if (preferences.noStairs === false) {
-    next.delete("noStairs");
-  }
-
-  if (preferences.kitchenette === true || preferences.fullKitchen === true) next.add("kitchen");
-  if (preferences.budget === "lowest") next.add("economy");
-  if (preferences.budget === "family" || preferences.familyFriendly === true) next.add("family");
-
-  return Array.from(next);
-}
-
-export function preferenceContext(filters: RoomFinderFilter[]): AssistantPreferences {
-  return {
-    floor: filters.includes("first") ? "first" : filters.includes("ground") ? "ground" : undefined,
-    noStairs: filters.includes("noStairs") || undefined,
-    kitchenette: filters.includes("kitchen") || undefined,
-    budget: filters.includes("economy") ? "lowest" : filters.includes("family") ? "family" : undefined,
-    familyFriendly: filters.includes("family") || undefined,
-  };
-}
-
 function normalizeClarificationStep(field: string): ClarificationStep | null {
   if (field === "roomCount") return "rooms";
-  if (field === "checkin" || field === "checkout" || field === "rooms" || field === "guests" || field === "preferences") {
-    return field;
-  }
+  if (field === "checkin" || field === "checkout" || field === "rooms" || field === "guests") return field;
   return null;
 }
 
@@ -183,8 +139,6 @@ function isResolvedField(field: ClarificationStep, draft: BookingDraft) {
       return Boolean(draft.roomCount);
     case "guests":
       return Boolean(draft.roomCount && draft.groups.length >= draft.roomCount && draft.groups.every(Boolean));
-    case "preferences":
-      return false;
   }
 }
 
@@ -203,20 +157,21 @@ function unresolvedClarification(command: AssistantCommand, draft: BookingDraft,
   return null;
 }
 
-function nextMissingPrompt(draft: BookingDraft): BookingTurnOutcome {
+function nextOutcome(draft: BookingDraft): BookingTurnOutcome {
   if (!draft.checkin) return { kind: "prompt", field: "checkin" };
   if (!draft.checkout) return { kind: "prompt", field: "checkout" };
   if (!draft.roomCount) return { kind: "prompt", field: "rooms" };
   if (draft.groups.length < draft.roomCount || draft.groups.some(group => !group)) {
     return { kind: "prompt", field: "guests", guestRoom: draft.groups.length + 1 };
   }
-  return { kind: "prompt", field: "preferences" };
+  return { kind: "ready" };
 }
 
 function stepForOutcome(outcome: BookingTurnOutcome, fallback: FinderStep): FinderStep {
   if (outcome.kind === "invalid_checkout") return "checkout";
   if (outcome.kind === "clarification") return outcome.step;
   if (outcome.kind === "prompt") return outcome.field;
+  if (outcome.kind === "ready") return "searching";
   return fallback;
 }
 
@@ -225,10 +180,9 @@ export function resolveAssistantTurn(current: BookingFlowState, command: Assista
     return { state: createInitialBookingFlowState(), outcome: { kind: "restart" } };
   }
 
-  let draft: BookingDraft = {
+  const draft: BookingDraft = {
     ...current.draft,
     groups: [...current.draft.groups],
-    filters: [...current.draft.filters],
   };
 
   for (const action of command.actions) {
@@ -258,10 +212,6 @@ export function resolveAssistantTurn(current: BookingFlowState, command: Assista
         draft.pendingGuestTotal = action.guests;
       }
     }
-
-    if (action.preferences) {
-      draft.filters = mergePreferenceFilters(draft.filters, action.preferences);
-    }
   }
 
   if (draft.roomCount === 1 && draft.pendingGuestTotal && draft.groups.length === 0) {
@@ -281,6 +231,6 @@ export function resolveAssistantTurn(current: BookingFlowState, command: Assista
     return { state: { step: stepForOutcome(outcome, current.step), draft }, outcome };
   }
 
-  const outcome = nextMissingPrompt(draft);
+  const outcome = nextOutcome(draft);
   return { state: { step: stepForOutcome(outcome, current.step), draft }, outcome };
 }
