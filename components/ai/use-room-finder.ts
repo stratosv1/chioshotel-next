@@ -5,7 +5,7 @@ import type { RoomFinderCommand } from "@/lib/ai-assistant/room-finder-types";
 import type { RoomFinderLanguage } from "./room-finder-copy";
 import { ROOM_FINDER_COPY } from "./room-finder-copy";
 import { ROOM_FINDER_TONE } from "./room-finder-tone";
-import { TURN_TIMING } from "./room-finder-flow-helpers";
+import { TURN_TIMING, type TurnPace } from "./room-finder-flow-helpers";
 import {
   bookingFlowReducer,
   createInitialBookingFlowState,
@@ -15,31 +15,33 @@ import {
   type BookingDraft,
   type FinderStep,
 } from "./room-finder-booking-flow";
+import {
+  feasibleOffersForGroup,
+  hasDistinctOfferPlan,
+  roomOfferKey,
+} from "./room-finder-offer-plan";
 import type { ChatItem, MessageKind, Reaction } from "./room-finder-chat-ui";
 import type { RoomOffer } from "./room-finder-carousel";
 import type { RoomChoice } from "./room-finder-selected-card";
 
 export type { FinderStep } from "./room-finder-booking-flow";
-export type FeedbackMode = "idle" | "happy" | "different";
-type TurnPace = "normal" | "quick";
 
 const wait = (ms: number) => new Promise<void>(resolve => window.setTimeout(resolve, ms));
 const rid = () => `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 const rank = (room: RoomOffer) => {
   const order = [2, 6, 5, 7, 1, 3, 4, 8, 9, 10];
-  const i = order.indexOf(Number(room.roomNumber));
-  return i < 0 ? 99 : i;
+  const index = order.indexOf(Number(room.roomNumber));
+  return index < 0 ? 99 : index;
 };
-const offerKey = (offer: RoomOffer) => `${offer.roomId}:${offer.unitId}`;
 
 const INVENTORY_UNAVAILABLE: Record<RoomFinderLanguage, string> = {
-  el: "Σας ευχαριστώ για την υπομονή σας 🙏 Η live διαθεσιμότητα δεν μπορεί να επιβεβαιωθεί αυτή τη στιγμή και δεν θέλω να σας δείξω παλιά στοιχεία. Δοκιμάστε ξανά σε λίγα λεπτά ή μπορούμε να το ελέγξουμε μαζί μέσω WhatsApp 💬",
-  en: "Thank you for your patience 🙏 Live availability cannot be confirmed right now, and I don’t want to show you outdated information. Please try again in a few minutes, or we can check it together on WhatsApp 💬",
-  de: "Vielen Dank für Ihre Geduld 🙏 Die Live-Verfügbarkeit kann momentan nicht zuverlässig bestätigt werden, und ich möchte Ihnen keine veralteten Angaben zeigen. Versuchen Sie es bitte in wenigen Minuten erneut oder wir prüfen es gemeinsam über WhatsApp 💬",
-  fr: "Merci pour votre patience 🙏 La disponibilité en direct ne peut pas être confirmée pour le moment et je préfère ne pas vous montrer d’informations anciennes. Réessayez dans quelques minutes ou vérifions-la ensemble sur WhatsApp 💬",
-  it: "Grazie per la pazienza 🙏 Al momento non posso confermare in modo affidabile la disponibilità live e non voglio mostrarvi dati non aggiornati. Riprovate tra qualche minuto oppure possiamo verificarla insieme su WhatsApp 💬",
-  es: "Gracias por su paciencia 🙏 En este momento no puedo confirmar de forma fiable la disponibilidad en directo y no quiero mostrarles información desactualizada. Inténtenlo de nuevo en unos minutos o podemos comprobarlo juntos por WhatsApp 💬",
-  tr: "Sabrınız için teşekkür ederim 🙏 Canlı müsaitlik şu anda güvenilir şekilde doğrulanamıyor ve size eski bilgi göstermek istemiyorum. Lütfen birkaç dakika sonra tekrar deneyin veya WhatsApp üzerinden birlikte kontrol edelim 💬",
+  el: "Η live διαθεσιμότητα δεν μπορεί να επιβεβαιωθεί αυτή τη στιγμή. Δοκιμάστε ξανά σε λίγα λεπτά ή επικοινωνήστε μαζί μας μέσω WhatsApp.",
+  en: "Live availability cannot be confirmed right now. Please try again in a few minutes or contact us on WhatsApp.",
+  de: "Die Live-Verfügbarkeit kann momentan nicht bestätigt werden. Versuchen Sie es in wenigen Minuten erneut oder kontaktieren Sie uns über WhatsApp.",
+  fr: "La disponibilité en direct ne peut pas être confirmée pour le moment. Réessayez dans quelques minutes ou contactez-nous sur WhatsApp.",
+  it: "Al momento non posso confermare la disponibilità in tempo reale. Riprovate tra qualche minuto o contattateci su WhatsApp.",
+  es: "Ahora mismo no puedo confirmar la disponibilidad en tiempo real. Inténtenlo de nuevo en unos minutos o contáctennos por WhatsApp.",
+  tr: "Canlı müsaitlik şu anda doğrulanamıyor. Lütfen birkaç dakika sonra tekrar deneyin veya WhatsApp üzerinden bize ulaşın.",
 };
 
 const INTERPRETER_UNAVAILABLE: Record<RoomFinderLanguage, string> = {
@@ -73,12 +75,13 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   const copy = ROOM_FINDER_COPY[language];
   const tone = ROOM_FINDER_TONE[language];
   const [flow, dispatchFlow] = useReducer(bookingFlowReducer, undefined, createInitialBookingFlowState);
-  const [messages, setMessages] = useState<ChatItem[]>([{ id: rid(), role: "assistant", content: copy.welcome }]);
+  const [messages, setMessages] = useState<ChatItem[]>([
+    { id: rid(), role: "assistant", content: copy.welcome },
+  ]);
   const [input, setInput] = useState("");
   const [offers, setOffers] = useState<RoomOffer[][]>([]);
   const [activeGroup, setActiveGroup] = useState(0);
   const [choices, setChoices] = useState<RoomChoice[]>([]);
-  const [feedback, setFeedback] = useState<FeedbackMode>("idle");
   const [breakfast, setBreakfast] = useState(false);
   const [typing, setTyping] = useState(false);
   const [selectingOfferKey, setSelectingOfferKey] = useState<string | null>(null);
@@ -86,37 +89,51 @@ export function useRoomFinder(language: RoomFinderLanguage) {
 
   const { step, draft } = flow;
   const { checkin, checkout, roomCount, totalGuests, groups } = draft;
-  const guestTotal = totalGuests || groups.reduce((a, b) => a + b, 0);
+  const guestTotal = totalGuests || groups.reduce((sum, guests) => sum + guests, 0);
   const nights = checkin && checkout ? Math.max(0, nightsBetween(checkin, checkout)) : 0;
-  const selected = useMemo(() => new Set(choices.map(c => offerKey(c.offer))), [choices]);
-  const visibleOffers = useMemo(() => {
-    const guests = groups[activeGroup] || 0;
-    return [...(offers[activeGroup] || [])]
-      .filter(o => !selected.has(offerKey(o)))
-      .filter(o => !o.maxGuests || o.maxGuests >= guests)
-      .sort((a, b) => a.directTotal - b.directTotal || rank(a) - rank(b));
-  }, [offers, activeGroup, groups, selected]);
+  const selectedKeys = useMemo(
+    () => new Set(choices.map(choice => roomOfferKey(choice.offer))),
+    [choices],
+  );
+  const capacityEligibleOffers = useMemo(
+    () => offers.map((groupOffers, groupIndex) => {
+      const guests = groups[groupIndex] || 0;
+      return groupOffers.filter(offer => !offer.maxGuests || offer.maxGuests >= guests);
+    }),
+    [offers, groups],
+  );
+  const visibleOffers = useMemo(
+    () => feasibleOffersForGroup(capacityEligibleOffers, activeGroup, selectedKeys)
+      .sort((left, right) => left.directTotal - right.directTotal || rank(left) - rank(right)),
+    [capacityEligibleOffers, activeGroup, selectedKeys],
+  );
 
   const add = (role: ChatItem["role"], content: string, kind: MessageKind = "normal") =>
-    setMessages(v => [...v, { id: rid(), role, content, kind }]);
+    setMessages(current => [...current, { id: rid(), role, content, kind }]);
 
   function clearSearchSelectionState() {
     setOffers([]);
     setActiveGroup(0);
     setChoices([]);
-    setFeedback("idle");
     setBreakfast(false);
     setSelectingOfferKey(null);
   }
 
-  async function beginUserTurn(content: string, kind: MessageKind = "normal", reaction: Reaction = "👍", pace: TurnPace = "normal") {
+  async function beginUserTurn(
+    content: string,
+    kind: MessageKind = "normal",
+    reaction: Reaction = "👍",
+    pace: TurnPace = "normal",
+  ) {
     if (turnLocked.current) return false;
     turnLocked.current = true;
     const timing = TURN_TIMING[pace];
     const id = rid();
-    setMessages(v => [...v, { id, role: "user", content, kind }]);
+    setMessages(current => [...current, { id, role: "user", content, kind }]);
     await wait(timing.reaction);
-    setMessages(v => v.map(m => (m.id === id ? { ...m, reaction } : m)));
+    setMessages(current => current.map(message => (
+      message.id === id ? { ...message, reaction } : message
+    )));
     await wait(timing.after);
     return true;
   }
@@ -138,6 +155,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     const recentMessages = messages.slice(-8).map(({ role, content }) => ({ role, content }));
     const controller = new AbortController();
     const timeout = window.setTimeout(() => controller.abort(), 15_000);
+
     try {
       const response = await fetch("/api/ai-assistant/interpret", {
         method: "POST",
@@ -159,7 +177,9 @@ export function useRoomFinder(language: RoomFinderLanguage) {
         }),
       });
       const data = await response.json().catch(() => null);
-      if (!response.ok || !data?.command) throw new Error(String(data?.code || "AI_UNAVAILABLE"));
+      if (!response.ok || !data?.command) {
+        throw new Error(String(data?.code || "AI_UNAVAILABLE"));
+      }
       return data.command as RoomFinderCommand;
     } finally {
       window.clearTimeout(timeout);
@@ -168,40 +188,49 @@ export function useRoomFinder(language: RoomFinderLanguage) {
 
   async function runAvailabilitySearch(searchDraft: BookingDraft) {
     dispatchFlow({ type: "set_step", step: "searching" });
-    setFeedback("idle");
     add("assistant", tone.searching);
     setTyping(true);
 
     try {
       const result = await Promise.all(searchDraft.groups.map(async guests => {
-        const q = new URLSearchParams({
+        const query = new URLSearchParams({
           checkin: searchDraft.checkin,
           checkout: searchDraft.checkout,
           guests: String(guests),
           lang: language,
         });
-        const response = await fetch(`/api/ai-room-finder/availability?${q}`, { cache: "no-store" });
+        const response = await fetch(`/api/ai-room-finder/availability?${query}`, { cache: "no-store" });
         const payload = await response.json();
         if (!response.ok || !payload?.success) {
           throw new AvailabilityError(String(payload?.code || "REQUEST_FAILED"));
         }
-        return Array.isArray(payload.offers) ? payload.offers : [];
+        return (Array.isArray(payload.offers) ? payload.offers : []) as RoomOffer[];
       }));
 
-      setOffers(result);
-      setActiveGroup(0);
+      const eligible = result.map((groupOffers, groupIndex) => {
+        const guests = searchDraft.groups[groupIndex] || 0;
+        return groupOffers.filter(offer => !offer.maxGuests || offer.maxGuests >= guests);
+      });
 
-      if (!(result[0] || []).length) {
+      if (!hasDistinctOfferPlan(eligible)) {
+        setOffers([]);
+        setActiveGroup(0);
         dispatchFlow({ type: "set_step", step: "unavailable" });
         add("assistant", tone.unavailable);
         return;
       }
 
+      setOffers(eligible);
+      setActiveGroup(0);
       dispatchFlow({ type: "set_step", step: "selecting" });
       add("assistant", tone.results(1, searchDraft.groups[0]));
     } catch (error) {
+      setOffers([]);
+      setActiveGroup(0);
       dispatchFlow({ type: "set_step", step: "unavailable" });
-      const stale = error instanceof AvailabilityError && (error.code === "STALE_DATA" || error.code === "DATA_UNAVAILABLE");
+      const stale = error instanceof AvailabilityError && (
+        error.code === "STALE_DATA" || error.code === "DATA_UNAVAILABLE"
+      );
       add("assistant", stale ? INVENTORY_UNAVAILABLE[language] : tone.unavailable);
     } finally {
       setTyping(false);
@@ -254,22 +283,22 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     }
   }
 
-  async function submit(e: FormEvent) {
-    e.preventDefault();
+  async function submit(event: FormEvent) {
+    event.preventDefault();
     const value = input.trim();
     if (!value || turnLocked.current || step === "searching") return;
 
     const current = step;
     setInput("");
     const promise = interpret(value, current);
-    const kind: MessageKind =
-      current === "checkin" || current === "checkout"
-        ? "date"
-        : current === "rooms"
-          ? "room"
-          : current === "guests"
-            ? "guest"
-            : "normal";
+    const kind: MessageKind = current === "checkin" || current === "checkout"
+      ? "date"
+      : current === "rooms"
+        ? "room"
+        : current === "guests"
+          ? "guest"
+          : "normal";
+
     if (!await beginUserTurn(value, kind, current === "rooms" ? "❤️" : "👍")) return;
 
     setTyping(true);
@@ -286,11 +315,14 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     }
   }
 
-  async function chooseRooms(n: number) {
-    if (!await beginUserTurn(copy.roomLabel(n), "room", "❤️")) return;
+  async function chooseRooms(roomCountValue: number) {
+    if (!await beginUserTurn(copy.roomLabel(roomCountValue), "room", "❤️")) return;
 
     try {
-      const nextFlow = bookingFlowReducer(flow, { type: "choose_rooms", roomCount: n });
+      const nextFlow = bookingFlowReducer(flow, {
+        type: "choose_rooms",
+        roomCount: roomCountValue,
+      });
       dispatchFlow({ type: "commit_turn", state: nextFlow });
 
       if (nextFlow.step === "searching") {
@@ -303,11 +335,11 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     }
   }
 
-  async function chooseGuests(n: number) {
-    if (!await beginUserTurn(copy.guestLabel(n), "guest", "👍")) return;
+  async function chooseGuests(guests: number) {
+    if (!await beginUserTurn(copy.guestLabel(guests), "guest", "👍")) return;
 
     try {
-      const nextFlow = bookingFlowReducer(flow, { type: "choose_guests", guests: n });
+      const nextFlow = bookingFlowReducer(flow, { type: "choose_guests", guests });
       dispatchFlow({ type: "commit_turn", state: nextFlow });
 
       if (nextFlow.step === "searching") {
@@ -322,21 +354,26 @@ export function useRoomFinder(language: RoomFinderLanguage) {
 
   async function selectOffer(offer: RoomOffer) {
     if (turnLocked.current) return;
-    const key = offerKey(offer);
+    const key = roomOfferKey(offer);
+    if (!visibleOffers.some(candidate => roomOfferKey(candidate) === key)) return;
+
     setSelectingOfferKey(key);
     try {
       if (!await beginUserTurn(`${copy.select}: ${offer.name}`, "room", "❤️", "quick")) return;
-      const next = [...choices, { group: activeGroup + 1, guests: groups[activeGroup], offer }];
-      setChoices(next);
+
+      const nextChoices = [
+        ...choices,
+        { group: activeGroup + 1, guests: groups[activeGroup], offer },
+      ];
+      setChoices(nextChoices);
       add("assistant", tone.selected(offer.name));
+
       if (roomCount && activeGroup + 1 < roomCount) {
-        const group = activeGroup + 1;
-        setActiveGroup(group);
-        setFeedback("idle");
-        add("assistant", tone.results(group + 1, groups[group]));
+        const nextGroup = activeGroup + 1;
+        setActiveGroup(nextGroup);
+        add("assistant", tone.results(nextGroup + 1, groups[nextGroup]));
       } else {
         dispatchFlow({ type: "set_step", step: "breakfast" });
-        setFeedback("idle");
       }
     } finally {
       setSelectingOfferKey(null);
@@ -350,29 +387,19 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     setChoices(current => current.slice(0, -1));
     setActiveGroup(Math.max(0, lastChoice.group - 1));
     setBreakfast(false);
-    setFeedback("idle");
     dispatchFlow({ type: "set_step", step: "selecting" });
   }
 
   async function chooseBreakfast(value: boolean) {
-    if (!await beginUserTurn(value ? copy.yesBreakfast : copy.noBreakfast, "normal", value ? "❤️" : "👍")) return;
+    if (!await beginUserTurn(
+      value ? copy.yesBreakfast : copy.noBreakfast,
+      "normal",
+      value ? "❤️" : "👍",
+    )) return;
+
     setBreakfast(value);
     dispatchFlow({ type: "set_step", step: "complete" });
     add("assistant", tone.finalizing);
-    endUserTurn();
-  }
-
-  async function happy() {
-    if (!await beginUserTurn(copy.feedbackYes, "normal", "❤️")) return;
-    setFeedback("happy");
-    add("assistant", tone.feedbackYesReply);
-    endUserTurn();
-  }
-
-  async function different() {
-    if (!await beginUserTurn(copy.feedbackDifferent, "normal", "👍")) return;
-    setFeedback("different");
-    add("assistant", tone.changePrompt);
     endUserTurn();
   }
 
@@ -389,15 +416,12 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     offers,
     activeGroup,
     choices,
-    feedback,
     breakfast,
     typing,
     selectingOfferKey,
     guestTotal,
     nights,
     visibleOffers,
-    beginUserTurn,
-    endUserTurn,
     reset,
     submit,
     chooseRooms,
@@ -405,7 +429,5 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     selectOffer,
     backToRooms,
     chooseBreakfast,
-    happy,
-    different,
   };
 }

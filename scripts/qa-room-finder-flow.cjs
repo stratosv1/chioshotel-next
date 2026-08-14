@@ -43,12 +43,18 @@ function executeCommonJs(outputText, localRequire = require) {
 const root = process.cwd();
 const datePath = path.join(root, "lib/ai-assistant/room-finder-date.ts");
 const flowPath = path.join(root, "components/ai/room-finder-booking-flow.ts");
+const offerPlanPath = path.join(root, "components/ai/room-finder-offer-plan.ts");
+const productionPath = path.join(root, "components/ai/RoomFinderProduction.tsx");
+const copyPath = path.join(root, "components/ai/room-finder-copy.ts");
+const flowHelpersPath = path.join(root, "components/ai/room-finder-flow-helpers.ts");
+const legacyFlowPath = path.join(root, "components/ai/AiRoomFinderFlow.tsx");
 
 const dateUtils = executeCommonJs(transpile(datePath));
 const flow = executeCommonJs(transpile(flowPath), id => {
   if (id === "@/lib/ai-assistant/room-finder-date") return dateUtils;
   return require(id);
 });
+const offerPlan = executeCommonJs(transpile(offerPlanPath));
 
 const {
   bookingFlowReducer,
@@ -56,6 +62,7 @@ const {
   nextMissingGuestRoom,
   resolveAssistantTurn,
 } = flow;
+const { feasibleOffersForGroup, hasDistinctOfferPlan, roomOfferKey } = offerPlan;
 
 function command(actions, replyMode = "execute") {
   return { language: "el", replyMode, actions };
@@ -70,6 +77,10 @@ function fullDraft(overrides = {}) {
     groups: [2],
     ...overrides,
   };
+}
+
+function offer(id) {
+  return { roomId: `room-${id}`, unitId: `unit-${id}` };
 }
 
 function testStrictDates() {
@@ -218,6 +229,52 @@ function testButtonAllocationPath() {
   assert(state.draft.totalGuests === 4, "button allocation did not derive total guests");
 }
 
+function testMultiRoomOfferFeasibility() {
+  const a = offer("a");
+  const b = offer("b");
+  const c = offer("c");
+
+  assert(
+    !hasDistinctOfferPlan([[a], [a]]),
+    "two groups incorrectly accepted the same physical room as a complete plan",
+  );
+  assert(
+    hasDistinctOfferPlan([[a], [a, b]]),
+    "valid two-room combination was rejected",
+  );
+  assert(
+    hasDistinctOfferPlan([[a, b], [a], [b, c]]),
+    "valid three-room combination was rejected",
+  );
+
+  const safeFirstChoices = feasibleOffersForGroup([[a, b], [a]], 0, new Set());
+  assert(
+    safeFirstChoices.length === 1 && roomOfferKey(safeFirstChoices[0]) === roomOfferKey(b),
+    "first-group options include a choice that would dead-end the second group",
+  );
+
+  const reserved = new Set([roomOfferKey(a)]);
+  const secondChoices = feasibleOffersForGroup([[a, b], [a, b, c]], 1, reserved);
+  assert(
+    secondChoices.every(candidate => roomOfferKey(candidate) !== roomOfferKey(a)),
+    "already selected room remained available to a later group",
+  );
+}
+
+function testResultsUxCleanup() {
+  const production = fs.readFileSync(productionPath, "utf8");
+  const copy = fs.readFileSync(copyPath, "utf8");
+  const helpers = fs.readFileSync(flowHelpersPath, "utf8");
+
+  assert(!production.includes("FeedbackArea"), "results feedback flow was reintroduced");
+  assert(!production.includes("whatsappTurn"), "WhatsApp still uses a synthetic chat turn");
+  assert(!production.includes("handoff"), "WhatsApp handoff bubble was reintroduced");
+  assert(!copy.includes("RoomFinderFilter"), "removed room filters remain in Room Finder copy contract");
+  assert(!copy.includes("feedbackQ"), "removed feedback copy remains in Room Finder copy contract");
+  assert(!helpers.includes("matchesRoomFilter"), "removed filter-matching logic remains in flow helpers");
+  assert(!fs.existsSync(legacyFlowPath), "unused legacy Room Finder implementation still exists");
+}
+
 function main() {
   testStrictDates();
   testFullOneTurnBooking();
@@ -227,6 +284,8 @@ function main() {
   testDownstreamDateClarification();
   testInvalidDatesAndCheckoutOrder();
   testButtonAllocationPath();
+  testMultiRoomOfferFeasibility();
+  testResultsUxCleanup();
   console.log("Room Finder deterministic flow QA passed.");
 }
 
