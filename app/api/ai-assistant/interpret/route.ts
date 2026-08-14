@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { applyExactDateFact } from "@/lib/ai-assistant/exact-date";
+import { applyExactDateFact, buildStandaloneDateCommand } from "@/lib/ai-assistant/exact-date";
 import { interpretAssistantMessage } from "@/lib/ai-assistant/intent";
 import type { ConversationContext } from "@/lib/ai-assistant/types";
 
@@ -14,6 +14,13 @@ export async function POST(request: NextRequest) {
 
     if (!message) {
       return NextResponse.json({ error: "Message is required." }, { status: 400 });
+    }
+
+    // Standalone numeric dates are deterministic booking facts. Resolve them
+    // immediately so a clear date can never be lost to model/network latency.
+    const standaloneDate = buildStandaloneDateCommand(message, context);
+    if (standaloneDate) {
+      return NextResponse.json({ ok: true, command: standaloneDate });
     }
 
     const interpreted = await interpretAssistantMessage(message, context);
