@@ -6,6 +6,10 @@
       "schedule": "*/7 * * * *"
     },
     {
+      "path": "/api/booking-core/sync-health/",
+      "schedule": "*/7 * * * *"
+    },
+    {
       "path": "/api/staff/calendar/occupancy-sync/",
       "schedule": "*/7 * * * *"
     },
