@@ -176,6 +176,30 @@ function isAuthorized(request: NextRequest) {
   return Boolean(supplied && allowed.includes(supplied));
 }
 
+async function recordFailure(databaseUrl: string, startedAt: number, message: string) {
+  if (!databaseUrl) return;
+  try {
+    const sql = neon(databaseUrl);
+    await sql`
+      insert into booking_core.sync_runs (
+        started_at,
+        completed_at,
+        status,
+        source,
+        error_message
+      ) values (
+        ${new Date(startedAt).toISOString()}::timestamptz,
+        now(),
+        ${"error"},
+        ${"script_url_booking_core_snapshot_v1"},
+        ${message.slice(0, 4000)}
+      )
+    `;
+  } catch (loggingError) {
+    console.error("booking_core could not record failed sync run", loggingError);
+  }
+}
+
 async function syncBookingCore(request: NextRequest) {
   if (!isAuthorized(request)) {
     return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
@@ -215,6 +239,7 @@ async function syncBookingCore(request: NextRequest) {
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     console.error("booking_core sync failed", error);
+    await recordFailure(databaseUrl, startedAt, message);
     return NextResponse.json({ ok: false, error: message, durationMs: Date.now() - startedAt }, {
       status: 503,
       headers: { "Cache-Control": "no-store", "X-Robots-Tag": "noindex, nofollow" },
