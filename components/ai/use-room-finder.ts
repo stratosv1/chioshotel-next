@@ -198,6 +198,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
           checkout: searchDraft.checkout,
           guests: String(guests),
           lang: language,
+          allowSplit: searchDraft.roomCount === 1 ? "1" : "0",
         });
         const response = await fetch(`/api/ai-room-finder/availability?${query}`, { cache: "no-store" });
         const payload = await response.json();
