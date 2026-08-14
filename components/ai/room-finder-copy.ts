@@ -46,7 +46,7 @@ export const ROOM_FINDER_LANGUAGES: Array<[RoomFinderLanguage, string]> = [
 export const ROOM_FINDER_COPY: Record<RoomFinderLanguage, RoomFinderCopy> = {
   el: {
     welcome: "Καλώς ήρθατε στο Voulamandis House 👋 Πότε θα θέλατε να κάνετε check-in;",
-    breakfast: "Θα θέλατε να προσθέσετε σπιτικό πρωινό με 12€ ανά άτομο, ανά ημέρα; ☕🥐",
+    breakfast: "Θα θέλατε να προσθέσετε σπιτικό πρωινό στη διαμονή σας; ☕🥐",
     summary: "Η αίτηση διαμονής σας",
     online: "Διαθέσιμοι τώρα",
     details: "Λεπτομέρειες",
@@ -78,7 +78,7 @@ export const ROOM_FINDER_COPY: Record<RoomFinderLanguage, RoomFinderCopy> = {
   },
   en: {
     welcome: "Welcome to Voulamandis House 👋 When would you like to check in?",
-    breakfast: "Would you like to add homemade breakfast for €12 per guest, per day? ☕🥐",
+    breakfast: "Would you like to add homemade breakfast to your stay? ☕🥐",
     summary: "Your stay request",
     online: "Online now",
     details: "Details",
@@ -110,7 +110,7 @@ export const ROOM_FINDER_COPY: Record<RoomFinderLanguage, RoomFinderCopy> = {
   },
   de: {
     welcome: "Willkommen im Voulamandis House 👋 Wann möchten Sie einchecken?",
-    breakfast: "Möchten Sie ein hausgemachtes Frühstück für 12 € pro Person und Tag hinzufügen? ☕🥐",
+    breakfast: "Möchten Sie hausgemachtes Frühstück zu Ihrem Aufenthalt hinzufügen? ☕🥐",
     summary: "Ihre Aufenthaltsanfrage",
     online: "Jetzt erreichbar",
     details: "Details",
@@ -142,7 +142,7 @@ export const ROOM_FINDER_COPY: Record<RoomFinderLanguage, RoomFinderCopy> = {
   },
   fr: {
     welcome: "Bienvenue à Voulamandis House 👋 Quand souhaitez-vous faire le check-in ?",
-    breakfast: "Souhaitez-vous ajouter un petit-déjeuner maison à 12 € par personne et par jour ? ☕🥐",
+    breakfast: "Souhaitez-vous ajouter un petit-déjeuner maison à votre séjour ? ☕🥐",
     summary: "Votre demande de séjour",
     online: "Disponible maintenant",
     details: "Détails",
@@ -174,7 +174,7 @@ export const ROOM_FINDER_COPY: Record<RoomFinderLanguage, RoomFinderCopy> = {
   },
   it: {
     welcome: "Benvenuti a Voulamandis House 👋 Quando desiderate effettuare il check-in?",
-    breakfast: "Desiderate aggiungere la colazione fatta in casa a 12 € per persona al giorno? ☕🥐",
+    breakfast: "Desiderate aggiungere la colazione fatta in casa al vostro soggiorno? ☕🥐",
     summary: "La vostra richiesta di soggiorno",
     online: "Disponibili ora",
     details: "Dettagli",
@@ -206,7 +206,7 @@ export const ROOM_FINDER_COPY: Record<RoomFinderLanguage, RoomFinderCopy> = {
   },
   es: {
     welcome: "Bienvenidos a Voulamandis House 👋 ¿Cuándo les gustaría hacer el check-in?",
-    breakfast: "¿Quieren añadir desayuno casero por 12 € por persona y día? ☕🥐",
+    breakfast: "¿Quieren añadir desayuno casero a su estancia? ☕🥐",
     summary: "Su solicitud de estancia",
     online: "Disponibles ahora",
     details: "Detalles",
@@ -238,7 +238,7 @@ export const ROOM_FINDER_COPY: Record<RoomFinderLanguage, RoomFinderCopy> = {
   },
   tr: {
     welcome: "Voulamandis House’a hoş geldiniz 👋 Ne zaman giriş yapmak istersiniz?",
-    breakfast: "Kişi başı günlük 12 € karşılığında ev yapımı kahvaltı eklemek ister misiniz? ☕🥐",
+    breakfast: "Konaklamanıza ev yapımı kahvaltı eklemek ister misiniz? ☕🥐",
     summary: "Konaklama talebiniz",
     online: "Şimdi çevrimiçi",
     details: "Detaylar",
