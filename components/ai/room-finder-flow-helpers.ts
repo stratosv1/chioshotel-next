@@ -3,8 +3,8 @@ import type { RoomOffer } from "./room-finder-carousel";
 
 export type TurnPace = "normal" | "quick";
 export const TURN_TIMING: Record<TurnPace,{reaction:number;after:number}> = {
-  normal:{reaction:650,after:320},
-  quick:{reaction:380,after:180},
+  normal:{reaction:900,after:320},
+  quick:{reaction:550,after:180},
 };
 
 export const wait = (ms:number) => new Promise<void>(resolve=>window.setTimeout(resolve,ms));
