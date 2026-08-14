@@ -3,13 +3,13 @@ import type { RoomOffer } from "./room-finder-carousel";
 
 export type TurnPace = "normal" | "quick";
 export const TURN_TIMING: Record<TurnPace,{reaction:number;after:number}> = {
-  normal:{reaction:900,after:320},
-  quick:{reaction:550,after:180},
+  normal:{reaction:1500,after:320},
+  quick:{reaction:900,after:180},
 };
 
 export const wait = (ms:number) => new Promise<void>(resolve=>window.setTimeout(resolve,ms));
 export const rid = () => `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-export const nightsBetween = (a:string,b:string) => Math.round((Date.parse(`${b}T12:00:00Z`)-Date.parse(`${a}T12:00:00Z`))/86400000);
+export const nightsBetween = (a:string,b:string) => Math.round((Date.parse(`${b}T12:00:00Z`)-Date.parse(`${a}T12:00:00Z`)) / 86400000);
 export const isIso = (v:string) => /^\d{4}-\d{2}-\d{2}$/.test(v)&&!Number.isNaN(Date.parse(`${v}T12:00:00Z`));
 export const roomKey = (room:RoomOffer) => `${room.roomId}:${room.unitId}`;
 export const rankRoom = (room:RoomOffer) => {
