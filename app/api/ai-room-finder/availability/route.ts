@@ -1,16 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { neon } from "@neondatabase/serverless";
 import { localizeRoomOffer } from "@/lib/ai-assistant/room-card-catalog";
+import { isStrictIsoDate } from "@/lib/ai-assistant/room-finder-date";
 import type { AssistantLanguage } from "@/lib/ai-assistant/types";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const supported = new Set<AssistantLanguage>(["el", "en", "de", "fr", "it", "es", "tr"]);
-
-function validIsoDate(value: string) {
-  return /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(`${value}T12:00:00Z`));
-}
 
 function rounded(value: unknown) {
   const parsed = Number(value);
@@ -25,7 +22,7 @@ export async function GET(request: NextRequest) {
     const requestedLanguage = request.nextUrl.searchParams.get("lang") as AssistantLanguage | null;
     const language: AssistantLanguage = requestedLanguage && supported.has(requestedLanguage) ? requestedLanguage : "en";
 
-    if (!validIsoDate(checkin) || !validIsoDate(checkout) || checkout <= checkin || !Number.isInteger(guests) || guests < 1 || guests > 5) {
+    if (!isStrictIsoDate(checkin) || !isStrictIsoDate(checkout) || checkout <= checkin || !Number.isInteger(guests) || guests < 1 || guests > 5) {
       return NextResponse.json({ success: false, message: "Invalid availability request." }, { status: 400 });
     }
 

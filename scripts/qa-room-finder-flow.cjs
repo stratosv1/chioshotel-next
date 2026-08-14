@@ -1,0 +1,238 @@
+#!/usr/bin/env node
+
+const fs = require("node:fs");
+const path = require("node:path");
+const ts = require("typescript");
+
+function assert(condition, message) {
+  if (!condition) throw new Error(message);
+}
+
+function transpile(filePath) {
+  const source = fs.readFileSync(filePath, "utf8");
+  const result = ts.transpileModule(source, {
+    fileName: filePath,
+    reportDiagnostics: true,
+    compilerOptions: {
+      target: ts.ScriptTarget.ES2022,
+      module: ts.ModuleKind.CommonJS,
+      esModuleInterop: true,
+    },
+  });
+
+  const errors = (result.diagnostics || []).filter(
+    diagnostic => diagnostic.category === ts.DiagnosticCategory.Error,
+  );
+  if (errors.length) {
+    const text = errors
+      .map(diagnostic => ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n"))
+      .join("\n");
+    throw new Error(`TypeScript transpile error in ${path.basename(filePath)}:\n${text}`);
+  }
+
+  return result.outputText;
+}
+
+function executeCommonJs(outputText, localRequire = require) {
+  const module = { exports: {} };
+  const fn = new Function("exports", "module", "require", outputText);
+  fn(module.exports, module, localRequire);
+  return module.exports;
+}
+
+const root = process.cwd();
+const datePath = path.join(root, "lib/ai-assistant/room-finder-date.ts");
+const flowPath = path.join(root, "components/ai/room-finder-booking-flow.ts");
+
+const dateUtils = executeCommonJs(transpile(datePath));
+const flow = executeCommonJs(transpile(flowPath), id => {
+  if (id === "@/lib/ai-assistant/room-finder-date") return dateUtils;
+  return require(id);
+});
+
+const {
+  bookingFlowReducer,
+  createInitialBookingFlowState,
+  nextMissingGuestRoom,
+  resolveAssistantTurn,
+} = flow;
+
+function command(actions, replyMode = "execute") {
+  return { language: "el", replyMode, actions };
+}
+
+function fullDraft(overrides = {}) {
+  return {
+    checkin: "2026-10-10",
+    checkout: "2026-10-12",
+    roomCount: 1,
+    totalGuests: 2,
+    groups: [2],
+    ...overrides,
+  };
+}
+
+function testStrictDates() {
+  assert(dateUtils.isStrictIsoDate("2026-10-10"), "valid ISO date rejected");
+  assert(!dateUtils.isStrictIsoDate("2026-02-31"), "impossible February date accepted");
+  assert(!dateUtils.isStrictIsoDate("2026-02-29"), "non-leap-year February 29 accepted");
+  assert(dateUtils.isStrictIsoDate("2028-02-29"), "valid leap-day rejected");
+  assert(
+    dateUtils.todayInAthensIso(new Date("2026-08-13T21:30:00Z")) === "2026-08-14",
+    "Europe/Athens local date is not used across UTC midnight",
+  );
+}
+
+function testFullOneTurnBooking() {
+  const result = resolveAssistantTurn(
+    createInitialBookingFlowState(),
+    command([
+      { type: "set_stay_dates", checkin: "2026-10-10", checkout: "2026-10-12" },
+      { type: "set_room_count", roomCount: 1 },
+      { type: "set_guest_count", totalGuests: 2 },
+    ]),
+  );
+
+  assert(result.outcome.kind === "ready", "full one-turn booking did not become ready");
+  assert(result.state.step === "searching", "ready booking did not move to searching");
+  assert(result.state.draft.groups.length === 1 && result.state.draft.groups[0] === 2, "one-room total guests were not allocated");
+  assert(result.state.draft.totalGuests === 2, "one-room total guest count was lost");
+  assert(result.changed === true, "full booking was not marked changed");
+}
+
+function testMultiRoomTotalIsNotGuessed() {
+  const result = resolveAssistantTurn(
+    createInitialBookingFlowState(),
+    command([
+      { type: "set_stay_dates", checkin: "2026-10-10", checkout: "2026-10-12" },
+      { type: "set_room_count", roomCount: 2 },
+      { type: "set_guest_count", totalGuests: 4 },
+    ]),
+  );
+
+  assert(result.outcome.kind === "prompt" && result.outcome.field === "guests", "multi-room total did not request room allocation");
+  assert(result.outcome.guestRoom === 1, "multi-room allocation did not start at room 1");
+  assert(result.state.draft.groups.length === 0, "multi-room total invented a room split");
+  assert(result.state.draft.totalGuests === 4, "multi-room totalGuests was not preserved");
+
+  const allocated = resolveAssistantTurn(
+    result.state,
+    command([{ type: "set_guest_count", guestRoom: 1, guests: 3 }]),
+  );
+  assert(allocated.outcome.kind === "ready", "known total did not infer the last remaining room allocation");
+  assert(allocated.state.draft.groups[0] === 3 && allocated.state.draft.groups[1] === 1, "remaining guest allocation was inferred incorrectly");
+}
+
+function testClarificationKeepsClearFacts() {
+  const result = resolveAssistantTurn(
+    createInitialBookingFlowState(),
+    command([
+      { type: "set_room_count", roomCount: 1 },
+      { type: "set_guest_count", totalGuests: 2 },
+      {
+        type: "ask_clarification",
+        query: "Ποια ακριβώς ημερομηνία θέλετε για check-in; π.χ. 10/10.",
+        missingFields: ["checkin"],
+      },
+    ], "clarify"),
+  );
+
+  assert(result.outcome.kind === "clarification", "real ambiguity was not preserved");
+  assert(result.state.step === "checkin", "clarification was not bound to check-in");
+  assert(result.state.draft.roomCount === 1, "clear room count was lost during clarification");
+  assert(result.state.draft.totalGuests === 2 && result.state.draft.groups[0] === 2, "clear guest facts were lost during clarification");
+}
+
+function testDownstreamCorrectionAndNoChange() {
+  const selecting = { step: "selecting", draft: fullDraft() };
+  const corrected = resolveAssistantTurn(
+    selecting,
+    command([{ type: "set_guest_count", totalGuests: 3 }]),
+  );
+
+  assert(corrected.changed === true, "downstream guest correction was not marked changed");
+  assert(corrected.outcome.kind === "ready", "complete corrected booking did not request a fresh search");
+  assert(corrected.state.draft.groups[0] === 3, "downstream guest correction did not update allocation");
+
+  const unchanged = resolveAssistantTurn(selecting, command([{ type: "no_change" }]));
+  assert(unchanged.changed === false, "no_change mutated the booking draft");
+  assert(unchanged.outcome.kind === "unchanged", "downstream no_change would trigger a new search");
+  assert(unchanged.state.step === "selecting", "downstream no_change changed the active step");
+}
+
+function testDownstreamDateClarification() {
+  const selecting = { step: "selecting", draft: fullDraft() };
+  const result = resolveAssistantTurn(
+    selecting,
+    command([{
+      type: "ask_clarification",
+      query: "Το 11/10 είναι το νέο check-in ή το νέο check-out;",
+      missingFields: ["checkin", "checkout"],
+    }], "clarify"),
+  );
+
+  assert(result.outcome.kind === "clarification", "downstream date ambiguity was ignored because old dates existed");
+  assert(result.changed === false, "clarification without new facts mutated the draft");
+}
+
+function testInvalidDatesAndCheckoutOrder() {
+  const impossible = resolveAssistantTurn(
+    createInitialBookingFlowState(),
+    command([{ type: "set_stay_dates", checkin: "2026-02-31" }]),
+  );
+  assert(impossible.state.draft.checkin === "", "impossible calendar date entered booking state");
+  assert(impossible.outcome.kind === "prompt" && impossible.outcome.field === "checkin", "impossible date did not keep check-in unresolved");
+
+  const backwards = resolveAssistantTurn(
+    createInitialBookingFlowState(),
+    command([{
+      type: "set_stay_dates",
+      checkin: "2026-10-12",
+      checkout: "2026-10-10",
+    }]),
+  );
+  assert(backwards.outcome.kind === "invalid_checkout", "checkout before check-in was not rejected");
+  assert(backwards.state.draft.checkout === "", "invalid checkout was not cleared");
+}
+
+function testButtonAllocationPath() {
+  let state = {
+    step: "rooms",
+    draft: {
+      checkin: "2026-10-10",
+      checkout: "2026-10-12",
+      roomCount: null,
+      totalGuests: null,
+      groups: [],
+    },
+  };
+
+  state = bookingFlowReducer(state, { type: "choose_rooms", roomCount: 2 });
+  assert(state.step === "guests" && nextMissingGuestRoom(state.draft) === 1, "room buttons did not enter guest allocation");
+
+  state = bookingFlowReducer(state, { type: "choose_guests", guests: 3 });
+  assert(state.step === "guests" && nextMissingGuestRoom(state.draft) === 2, "first room guest choice skipped room 2");
+
+  state = bookingFlowReducer(state, { type: "choose_guests", guests: 1 });
+  assert(state.step === "searching", "completed button allocation did not start search");
+  assert(state.draft.totalGuests === 4, "button allocation did not derive total guests");
+}
+
+function main() {
+  testStrictDates();
+  testFullOneTurnBooking();
+  testMultiRoomTotalIsNotGuessed();
+  testClarificationKeepsClearFacts();
+  testDownstreamCorrectionAndNoChange();
+  testDownstreamDateClarification();
+  testInvalidDatesAndCheckoutOrder();
+  testButtonAllocationPath();
+  console.log("Room Finder deterministic flow QA passed.");
+}
+
+try {
+  main();
+} catch (error) {
+  console.error(`Room Finder deterministic flow QA failed: ${error instanceof Error ? error.message : String(error)}`);
+  process.exit(1);
+}

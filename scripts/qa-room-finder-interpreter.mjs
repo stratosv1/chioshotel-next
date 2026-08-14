@@ -174,6 +174,40 @@ async function specificRoomFollowupRegression() {
   return { durationMs: result.durationMs };
 }
 
+async function downstreamCorrectionRegression() {
+  const result = await interpret("τελικά 3 άτομα", {
+    language: "el",
+    currentStep: "selecting",
+    checkin: "2026-10-10",
+    checkout: "2026-10-12",
+    roomCount: 1,
+    totalGuests: 2,
+    guestGroups: [2],
+  });
+  const actions = result.command.actions;
+  assert(Number(fact(actions, "totalGuests")) === 3, "Downstream correction did not extract totalGuests=3");
+  assertNoClarification(actions, "Downstream guest correction");
+  return { durationMs: result.durationMs };
+}
+
+async function downstreamBareDateClarificationRegression() {
+  const result = await interpret("11/10", {
+    language: "el",
+    currentStep: "selecting",
+    checkin: "2026-10-10",
+    checkout: "2026-10-12",
+    roomCount: 1,
+    totalGuests: 2,
+    guestGroups: [2],
+  });
+  const actions = result.command.actions;
+  const asks = clarifications(actions);
+  assert(asks.length === 1, "Bare downstream date did not request exactly one clarification");
+  assert(fact(actions, "checkin") == null && fact(actions, "checkout") == null, "Bare downstream date overwrote an existing date before clarification");
+  assert(asks[0]?.missingFields?.includes("checkin") && asks[0]?.missingFields?.includes("checkout"), "Bare downstream date clarification is not tied to both possible date fields");
+  return { durationMs: result.durationMs, query: String(asks[0]?.query || "") };
+}
+
 async function greekSpecificClarificationRegression() {
   const result = await interpret("Αρχές Οκτωβρίου", {
     language: "el",
@@ -215,6 +249,12 @@ async function main() {
 
   const roomFollowup = await specificRoomFollowupRegression();
   console.log(`✓ current-room guest follow-up (${roomFollowup.durationMs}ms)`);
+
+  const downstream = await downstreamCorrectionRegression();
+  console.log(`✓ downstream booking correction (${downstream.durationMs}ms)`);
+
+  const downstreamDate = await downstreamBareDateClarificationRegression();
+  console.log(`✓ downstream bare-date clarification (${downstreamDate.durationMs}ms): ${downstreamDate.query}`);
 
   const clarification = await greekSpecificClarificationRegression();
   console.log(`✓ el specific ambiguity clarification (${clarification.durationMs}ms): ${clarification.query}`);

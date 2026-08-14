@@ -1,3 +1,4 @@
+import { todayInAthensIso } from "./room-finder-date";
 import type {
   RoomFinderAction,
   RoomFinderAssistantLanguage,
@@ -57,13 +58,9 @@ const COMMAND_SCHEMA = {
   },
 } as const;
 
-function todayIso() {
-  return new Date().toISOString().slice(0, 10);
-}
-
 const SYSTEM_PROMPT = `You are the single semantic interpreter for the Voulamandis House AI Room Finder in Chios.
 
-EVERY customer text message reaches you. Your only job is to translate natural language into the small booking contract consumed by the Room Finder state machine. You do not search availability and you do not choose, rank or filter rooms.
+EVERY customer text message reaches you, including corrections after room results have already been shown. Your only job is to translate natural language into the small booking contract consumed by the Room Finder state machine. You do not search availability and you do not choose, rank or filter rooms.
 
 SUPPORTED CONTRACT
 You may return only these actions:
@@ -77,7 +74,7 @@ You may return only these actions:
 CORE RULES
 - Read the latest message together with booking context and recent conversation.
 - Extract EVERY supported booking fact from the latest message, even if it answers a different question from currentStep.
-- Corrections in the latest message override earlier context.
+- Corrections in the latest message override earlier context, including during selecting, breakfast, complete or unavailable states.
 - Never discard a clear fact because another fact is missing.
 - Never invent dates, rooms or guests.
 - Missing information is NOT ambiguity. Do not ask a clarification merely because another booking field is absent; return the facts you understood and let the application ask the next missing field.
@@ -88,13 +85,15 @@ CORE RULES
 DATES
 - Normalize each exact resolved date to YYYY-MM-DD.
 - This is a European accommodation flow: 10/10 means 10 October; 28/8 means 28 August unless the customer explicitly indicates another convention.
-- If year is omitted, use the nearest occurrence that is today or in the future.
+- If year is omitted, use the nearest occurrence that is today or in the future. “Today” is supplied by the application in Europe/Athens local date.
 - Exact forms such as 10/10, 10 October, 10 Οκτωβρίου, tomorrow, and an unambiguous weekday are not ambiguous.
 - When currentStep=checkin, a standalone exact date is check-in unless explicitly labelled departure/check-out.
 - When currentStep=checkout, a standalone exact date is check-out unless explicitly labelled arrival/check-in.
+- When currentStep is selecting, breakfast, complete or unavailable AND both checkin and checkout already exist, a bare new date such as “11/10” is an ambiguous correction because it is unclear which date the customer wants to replace. Ask specifically whether they mean check-in or check-out. Do not overwrite either date.
+- An explicitly labelled correction such as “τελικά άφιξη 11/10”, “check-in 11/10”, “αναχώρηση 13/10” or “check-out 13/10” is clear in every step and must be extracted directly.
 - If both arrival and departure are supplied, use one set_stay_dates action containing both.
 - If check-in plus nights are supplied, set checkin and nights. If check-in is already in context and the customer only supplies nights, set nights.
-- If departure is before arrival, preserve the exact stated dates; deterministic code validates the relationship.
+- If departure is before arrival, preserve the exact stated dates; deterministic code validates their relationship.
 - Approximate phrases such as “early October”, “around the 10th”, or “sometime next week” are ambiguous. Ask for the exact date and provide an example.
 
 ROOMS AND GUESTS
@@ -107,6 +106,7 @@ ROOMS AND GUESTS
 - If the customer says “3 in the first room and 1 in the second”, return the two explicit per-room assignments.
 - When currentStep=guests and context.currentRoom is present, a standalone count such as “2” or “2 people” refers to that room: return guestRoom=context.currentRoom and guests=2.
 - When not answering a specific room-allocation question, phrases such as “3 people”, “two adults and one child”, or “2ατομα” mean totalGuests.
+- A downstream correction such as “τελικά 3 άτομα” means totalGuests=3 unless the customer explicitly names a particular room.
 - For one room, totalGuests still means the booking total; deterministic code maps it to that room.
 - Each room allocation supports 1-5 guests. Total guests across up to 3 rooms may be 1-15.
 
@@ -137,6 +137,12 @@ REFERENCE EXAMPLES
 
 6) “Αρχές Οκτωβρίου”.
 => ask_clarification tied to checkin, with a concrete question such as “Ποια ακριβώς ημερομηνία του Οκτωβρίου θέλετε για check-in; π.χ. 3/10.”
+
+7) Context is selecting with checkin=2026-10-10 and checkout=2026-10-12. Customer: “τελικά 3 άτομα”.
+=> set_guest_count(totalGuests=3). No clarification.
+
+8) Same selecting context. Customer: “11/10”.
+=> ask_clarification asking whether 11/10 is the new check-in or new check-out; missingFields should contain checkin and checkout. Do not emit a new date fact.
 
 SCHEMA RULES
 - For irrelevant nullable fields return null.
@@ -207,7 +213,7 @@ export async function interpretRoomFinderMessage(
       signal: controller.signal,
       body: JSON.stringify({
         model: process.env.OPENAI_CONCIERGE_MODEL || process.env.OPENAI_ASSISTANT_MODEL || "gpt-5-mini",
-        instructions: `${SYSTEM_PROMPT}\nToday is ${todayIso()}.\nSelected UI language is ${safeLanguage(context.language)}.`,
+        instructions: `${SYSTEM_PROMPT}\nToday in Europe/Athens is ${todayInAthensIso()}.\nSelected UI language is ${safeLanguage(context.language)}.`,
         input: JSON.stringify({ message, context }),
         text: {
           format: {

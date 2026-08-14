@@ -52,6 +52,16 @@ const INTERPRETER_UNAVAILABLE: Record<RoomFinderLanguage, string> = {
   tr: "Asistanla bağlantıda geçici bir sorun oluştu. Lütfen son yanıtınızı birkaç saniye sonra tekrar deneyin 🙏",
 };
 
+const NO_BOOKING_CHANGE: Record<RoomFinderLanguage, string> = {
+  el: "Μπορώ να αλλάξω ημερομηνίες, αριθμό δωματίων ή άτομα. Γράψτε μου π.χ. «τελικά 3 άτομα» ή «αναχώρηση 13/10».",
+  en: "I can change your dates, number of rooms or guests. For example: “actually 3 guests” or “check-out 13/10”.",
+  de: "Ich kann Ihre Daten, die Zimmeranzahl oder die Gästezahl ändern. Zum Beispiel: „doch 3 Gäste“ oder „Check-out 13/10“.",
+  fr: "Je peux modifier vos dates, le nombre de chambres ou de personnes. Par exemple : « finalement 3 personnes » ou « check-out 13/10 ».",
+  it: "Posso modificare le date, il numero di camere o degli ospiti. Per esempio: « in realtà 3 ospiti » oppure « check-out 13/10 ».",
+  es: "Puedo cambiar las fechas, el número de habitaciones o de huéspedes. Por ejemplo: « al final 3 personas » o « check-out 13/10 ».",
+  tr: "Tarihleri, oda sayısını veya kişi sayısını değiştirebilirim. Örneğin: “aslında 3 kişi” veya “çıkış 13/10”.",
+};
+
 class AvailabilityError extends Error {
   constructor(readonly code: string) {
     super(code);
@@ -90,6 +100,15 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   const add = (role: ChatItem["role"], content: string, kind: MessageKind = "normal") =>
     setMessages(v => [...v, { id: rid(), role, content, kind }]);
 
+  function clearSearchSelectionState() {
+    setOffers([]);
+    setActiveGroup(0);
+    setChoices([]);
+    setFeedback("idle");
+    setBreakfast(false);
+    setSelectingOfferKey(null);
+  }
+
   async function beginUserTurn(content: string, kind: MessageKind = "normal", reaction: Reaction = "👍", pace: TurnPace = "normal") {
     if (turnLocked.current) return false;
     turnLocked.current = true;
@@ -111,13 +130,8 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     dispatchFlow({ type: "reset" });
     setMessages([{ id: rid(), role: "assistant", content: copy.welcome }]);
     setInput("");
-    setOffers([]);
-    setActiveGroup(0);
-    setChoices([]);
-    setFeedback("idle");
-    setBreakfast(false);
+    clearSearchSelectionState();
     setTyping(false);
-    setSelectingOfferKey(null);
   }
 
   async function interpret(value: string, current: FinderStep): Promise<RoomFinderCommand> {
@@ -202,6 +216,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       return;
     }
 
+    if (resolution.changed) clearSearchSelectionState();
     dispatchFlow({ type: "commit_turn", state: resolution.state });
 
     if (resolution.outcome.kind === "invalid_checkout") {
@@ -211,6 +226,11 @@ export function useRoomFinder(language: RoomFinderLanguage) {
 
     if (resolution.outcome.kind === "clarification") {
       add("assistant", resolution.outcome.query);
+      return;
+    }
+
+    if (resolution.outcome.kind === "unchanged") {
+      add("assistant", NO_BOOKING_CHANGE[language]);
       return;
     }
 
@@ -237,12 +257,19 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   async function submit(e: FormEvent) {
     e.preventDefault();
     const value = input.trim();
-    if (!value || turnLocked.current || !["checkin", "checkout", "rooms", "guests"].includes(step)) return;
+    if (!value || turnLocked.current || step === "searching") return;
 
     const current = step;
     setInput("");
     const promise = interpret(value, current);
-    const kind: MessageKind = current === "checkin" || current === "checkout" ? "date" : current === "rooms" ? "room" : "guest";
+    const kind: MessageKind =
+      current === "checkin" || current === "checkout"
+        ? "date"
+        : current === "rooms"
+          ? "room"
+          : current === "guests"
+            ? "guest"
+            : "normal";
     if (!await beginUserTurn(value, kind, current === "rooms" ? "❤️" : "👍")) return;
 
     setTyping(true);

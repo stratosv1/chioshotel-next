@@ -1,4 +1,9 @@
 import type { RoomFinderCommand } from "@/lib/ai-assistant/room-finder-types";
+import {
+  addDaysToIsoDate,
+  daysBetweenIsoDates,
+  isStrictIsoDate,
+} from "@/lib/ai-assistant/room-finder-date";
 
 export type FinderStep =
   | "checkin"
@@ -31,11 +36,13 @@ export type BookingTurnOutcome =
   | { kind: "invalid_checkout" }
   | { kind: "clarification"; query: string; step: FinderStep }
   | { kind: "prompt"; field: ClarificationStep; guestRoom?: number }
-  | { kind: "ready" };
+  | { kind: "ready" }
+  | { kind: "unchanged" };
 
 export type BookingTurnResolution = {
   state: BookingFlowState;
   outcome: BookingTurnOutcome;
+  changed: boolean;
 };
 
 export type BookingFlowAction =
@@ -48,6 +55,7 @@ export type BookingFlowAction =
 const MAX_ROOMS = 3;
 const MAX_GUESTS_PER_ROOM = 5;
 const MAX_TOTAL_GUESTS = MAX_ROOMS * MAX_GUESTS_PER_ROOM;
+const CORE_INPUT_STEPS = new Set<FinderStep>(["checkin", "checkout", "rooms", "guests"]);
 
 export function createInitialBookingFlowState(): BookingFlowState {
   return {
@@ -129,6 +137,17 @@ function bookingCoreIsComplete(draft: BookingDraft) {
   return Boolean(draft.checkin && draft.checkout && draft.roomCount && guestAllocationComplete(draft));
 }
 
+function draftsEqual(left: BookingDraft, right: BookingDraft) {
+  return (
+    left.checkin === right.checkin &&
+    left.checkout === right.checkout &&
+    left.roomCount === right.roomCount &&
+    left.totalGuests === right.totalGuests &&
+    left.groups.length === right.groups.length &&
+    left.groups.every((value, index) => value === right.groups[index])
+  );
+}
+
 export function bookingFlowReducer(state: BookingFlowState, action: BookingFlowAction): BookingFlowState {
   switch (action.type) {
     case "reset":
@@ -176,20 +195,7 @@ export function bookingFlowReducer(state: BookingFlowState, action: BookingFlowA
 }
 
 export function nightsBetween(checkin: string, checkout: string) {
-  return Math.round(
-    (Date.parse(`${checkout}T12:00:00Z`) - Date.parse(`${checkin}T12:00:00Z`)) / 86_400_000,
-  );
-}
-
-function isIsoDate(value: string) {
-  return /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(`${value}T12:00:00Z`));
-}
-
-function addDays(iso: string, days: number) {
-  if (!isIsoDate(iso) || !Number.isInteger(days) || days < 1 || days > 60) return "";
-  const date = new Date(`${iso}T12:00:00Z`);
-  date.setUTCDate(date.getUTCDate() + days);
-  return date.toISOString().slice(0, 10);
+  return daysBetweenIsoDates(checkin, checkout);
 }
 
 function normalizeClarificationStep(field: string): ClarificationStep | null {
@@ -199,30 +205,41 @@ function normalizeClarificationStep(field: string): ClarificationStep | null {
   return null;
 }
 
-function isResolvedField(field: ClarificationStep, draft: BookingDraft) {
+function commandSuppliesField(command: RoomFinderCommand, field: ClarificationStep) {
   switch (field) {
     case "checkin":
-      return Boolean(draft.checkin);
+      return command.actions.some(action => Boolean(action.checkin && isStrictIsoDate(action.checkin)));
     case "checkout":
-      return Boolean(draft.checkout);
+      return command.actions.some(action =>
+        Boolean(action.checkout && isStrictIsoDate(action.checkout)) ||
+        Boolean(action.nights && Number.isInteger(action.nights)),
+      );
     case "rooms":
-      return Boolean(draft.roomCount);
+      return command.actions.some(action => Boolean(action.roomCount && validRoomCount(action.roomCount)));
     case "guests":
-      return guestAllocationComplete(draft);
+      return command.actions.some(action =>
+        Boolean(action.totalGuests && validTotalGuests(action.totalGuests)) ||
+        Boolean(action.guests && validRoomGuests(action.guests)),
+      );
   }
 }
 
-function unresolvedClarification(command: RoomFinderCommand, draft: BookingDraft, fallbackStep: FinderStep) {
+function unresolvedClarification(command: RoomFinderCommand, fallbackStep: FinderStep) {
   for (const action of command.actions) {
     if (action.type !== "ask_clarification" || !action.query) continue;
     const fields = Array.isArray(action.missingFields) ? action.missingFields : [];
 
     if (fields.length === 0) return { query: action.query, step: fallbackStep };
 
+    let recognizedField = false;
     for (const rawField of fields) {
       const field = normalizeClarificationStep(rawField);
-      if (field && !isResolvedField(field, draft)) return { query: action.query, step: field };
+      if (!field) continue;
+      recognizedField = true;
+      if (!commandSuppliesField(command, field)) return { query: action.query, step: field };
     }
+
+    if (!recognizedField) return { query: action.query, step: fallbackStep };
   }
   return null;
 }
@@ -246,7 +263,11 @@ function stepForOutcome(outcome: BookingTurnOutcome, fallback: FinderStep): Find
 
 export function resolveAssistantTurn(current: BookingFlowState, command: RoomFinderCommand): BookingTurnResolution {
   if (command.actions.some(action => action.type === "restart_search")) {
-    return { state: createInitialBookingFlowState(), outcome: { kind: "restart" } };
+    return {
+      state: createInitialBookingFlowState(),
+      outcome: { kind: "restart" },
+      changed: true,
+    };
   }
 
   const draft: BookingDraft = {
@@ -255,12 +276,12 @@ export function resolveAssistantTurn(current: BookingFlowState, command: RoomFin
   };
 
   for (const action of command.actions) {
-    if (action.checkin && isIsoDate(action.checkin)) draft.checkin = action.checkin;
+    if (action.checkin && isStrictIsoDate(action.checkin)) draft.checkin = action.checkin;
 
-    if (action.checkout && isIsoDate(action.checkout)) {
+    if (action.checkout && isStrictIsoDate(action.checkout)) {
       draft.checkout = action.checkout;
     } else if (action.nights && Number.isInteger(action.nights) && action.nights >= 1 && action.nights <= 60) {
-      const derivedCheckout = addDays(draft.checkin, action.nights);
+      const derivedCheckout = addDaysToIsoDate(draft.checkin, action.nights);
       if (derivedCheckout) draft.checkout = derivedCheckout;
     }
   }
@@ -299,23 +320,46 @@ export function resolveAssistantTurn(current: BookingFlowState, command: RoomFin
   }
 
   normalizeGuestAllocation(draft);
+  const changed = !draftsEqual(current.draft, draft);
 
   if (draft.checkin && draft.checkout && nightsBetween(draft.checkin, draft.checkout) < 1) {
     draft.checkout = "";
+    const invalidChanged = !draftsEqual(current.draft, draft);
     const outcome: BookingTurnOutcome = { kind: "invalid_checkout" };
-    return { state: { step: stepForOutcome(outcome, current.step), draft }, outcome };
+    return {
+      state: { step: stepForOutcome(outcome, current.step), draft },
+      outcome,
+      changed: invalidChanged,
+    };
   }
 
-  const clarification = unresolvedClarification(command, draft, current.step);
+  const clarification = unresolvedClarification(command, current.step);
   if (clarification) {
     const outcome: BookingTurnOutcome = {
       kind: "clarification",
       query: clarification.query,
       step: clarification.step,
     };
-    return { state: { step: stepForOutcome(outcome, current.step), draft }, outcome };
+    return {
+      state: { step: stepForOutcome(outcome, current.step), draft },
+      outcome,
+      changed,
+    };
+  }
+
+  if (!changed && !CORE_INPUT_STEPS.has(current.step)) {
+    const outcome: BookingTurnOutcome = { kind: "unchanged" };
+    return {
+      state: { step: current.step, draft },
+      outcome,
+      changed: false,
+    };
   }
 
   const outcome = nextOutcome(draft);
-  return { state: { step: stepForOutcome(outcome, current.step), draft }, outcome };
+  return {
+    state: { step: stepForOutcome(outcome, current.step), draft },
+    outcome,
+    changed,
+  };
 }
