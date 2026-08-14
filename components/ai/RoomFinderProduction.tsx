@@ -58,7 +58,8 @@ function money(value: number, language: RoomFinderLanguage) {
   return new Intl.NumberFormat(locale[language], {
     style: "currency",
     currency: "EUR",
-    maximumFractionDigits: 0,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   }).format(value);
 }
 
@@ -134,7 +135,9 @@ export function RoomFinderProduction({
     if (!contact.name.trim() || (!contact.phone.trim() && !contact.email.trim())) return;
 
     setSendStatus("sending");
-    const breakfastTotal = finder.breakfast ? finder.guestTotal * finder.nights * 12 : 0;
+    const breakfastTotal = finder.breakfast
+      ? finder.choices.reduce((sum, choice) => sum + Number(choice.offer.breakfastTotalIfAdded || 0), 0)
+      : 0;
     const roomTotal = finder.choices.reduce((sum, choice) => sum + choice.offer.directTotal, 0);
     const summary = [
       stayRange(finder.checkin, finder.checkout, language),
@@ -168,7 +171,11 @@ export function RoomFinderProduction({
     : CORE_INPUT_STEPS.has(finder.step)
       ? copy.placeholder
       : copy.changePlaceholder;
-  const breakfastTotal = finder.breakfast ? finder.guestTotal * finder.nights * 12 : 0;
+  const breakfastOfferTotal = finder.choices.reduce(
+    (sum, choice) => sum + Number(choice.offer.breakfastTotalIfAdded || 0),
+    0,
+  );
+  const breakfastTotal = finder.breakfast ? breakfastOfferTotal : 0;
   const roomTotal = finder.choices.reduce((sum, choice) => sum + choice.offer.directTotal, 0);
   const stay = stayRange(finder.checkin, finder.checkout, language);
   const bookingSummary = [
@@ -303,7 +310,10 @@ export function RoomFinderProduction({
                   </button>
                 </div>
                 <div className="msg ml-10 rounded-[20px] rounded-bl-[6px] border border-[#dfd6ca] bg-white px-4 py-3 text-[15px] shadow-sm">
-                  {copy.breakfast}
+                  <p>{copy.breakfast}</p>
+                  {breakfastOfferTotal > 0 && (
+                    <p className="mt-2 font-black text-[#5f7448]">{copy.breakfastLabel}: {money(breakfastOfferTotal, language)}</p>
+                  )}
                 </div>
                 <section className="msg ml-10 overflow-hidden rounded-[22px] border border-[#dcd2c5] bg-white shadow-sm">
                   <div className="relative h-36">
