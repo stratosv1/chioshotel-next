@@ -86,21 +86,22 @@ input{
 }
 
 /* Messenger-style typing indicator for the active AI Room Finder bubble. */
-@keyframes room-finder-typing-dots{
-  0%,100%{
-    background-position:0 9px,12px 9px,24px 9px;
+@keyframes room-finder-typing-bounce{
+  0%,12%,72%,100%{
+    transform:translateY(0);
+    box-shadow:12px 0 #746b60,24px 0 #746b60;
   }
-  16%{
-    background-position:0 3px,12px 9px,24px 9px;
+  20%{
+    transform:translateY(-5px);
+    box-shadow:12px 5px #746b60,24px 5px #746b60;
   }
-  32%{
-    background-position:0 9px,12px 3px,24px 9px;
+  38%{
+    transform:translateY(0);
+    box-shadow:12px -5px #746b60,24px 0 #746b60;
   }
-  48%{
-    background-position:0 9px,12px 9px,24px 3px;
-  }
-  64%,84%{
-    background-position:0 9px,12px 9px,24px 9px;
+  56%{
+    transform:translateY(0);
+    box-shadow:12px 0 #746b60,24px -5px #746b60;
   }
 }
 
@@ -119,21 +120,20 @@ main .msg.ml-10.w-fit{
 main .msg.ml-10.w-fit::before{
   content:"";
   display:block;
-  width:31px;
-  height:18px;
-  background-image:
-    radial-gradient(circle,#746b60 0 3.5px,transparent 3.7px),
-    radial-gradient(circle,#746b60 0 3.5px,transparent 3.7px),
-    radial-gradient(circle,#746b60 0 3.5px,transparent 3.7px);
-  background-repeat:no-repeat;
-  background-position:0 9px,12px 9px,24px 9px;
-  animation:room-finder-typing-dots 1.15s cubic-bezier(.45,.05,.55,.95) infinite;
-  will-change:background-position;
+  width:7px;
+  height:7px;
+  border-radius:999px;
+  background:#746b60;
+  box-shadow:12px 0 #746b60,24px 0 #746b60;
+  transform:translateY(0);
+  margin-left:-24px;
+  animation:room-finder-typing-bounce 1.05s ease-in-out infinite;
+  will-change:transform,box-shadow;
 }
 
 @media (prefers-reduced-motion:reduce){
   main .msg.ml-10.w-fit::before{
-    animation-duration:1.8s;
+    animation-duration:1.65s;
   }
 }
 
