@@ -27,11 +27,13 @@ export type BookingFlowState = {
   draft: BookingDraft;
 };
 
+type ClarificationStep = "checkin" | "checkout" | "rooms" | "guests" | "preferences";
+
 export type BookingTurnOutcome =
   | { kind: "restart" }
   | { kind: "invalid_checkout" }
-  | { kind: "clarification"; query: string }
-  | { kind: "prompt"; field: "checkin" | "checkout" | "rooms" | "guests" | "preferences"; guestRoom?: number };
+  | { kind: "clarification"; query: string; step: FinderStep }
+  | { kind: "prompt"; field: ClarificationStep; guestRoom?: number };
 
 export type BookingTurnResolution = {
   state: BookingFlowState;
@@ -163,29 +165,42 @@ export function preferenceContext(filters: RoomFinderFilter[]): AssistantPrefere
   };
 }
 
-function isResolvedField(field: string, draft: BookingDraft) {
+function normalizeClarificationStep(field: string): ClarificationStep | null {
+  if (field === "roomCount") return "rooms";
+  if (field === "checkin" || field === "checkout" || field === "rooms" || field === "guests" || field === "preferences") {
+    return field;
+  }
+  return null;
+}
+
+function isResolvedField(field: ClarificationStep, draft: BookingDraft) {
   switch (field) {
     case "checkin":
       return Boolean(draft.checkin);
     case "checkout":
       return Boolean(draft.checkout);
     case "rooms":
-    case "roomCount":
       return Boolean(draft.roomCount);
     case "guests":
       return Boolean(draft.roomCount && draft.groups.length >= draft.roomCount && draft.groups.every(Boolean));
-    default:
+    case "preferences":
       return false;
   }
 }
 
-function unresolvedClarification(command: AssistantCommand, draft: BookingDraft) {
+function unresolvedClarification(command: AssistantCommand, draft: BookingDraft, fallbackStep: FinderStep) {
   for (const action of command.actions) {
     if (action.type !== "ask_clarification" || !action.query) continue;
     const fields = Array.isArray(action.missingFields) ? action.missingFields : [];
-    if (fields.length === 0 || fields.some(field => !isResolvedField(field, draft))) return action.query;
+
+    if (fields.length === 0) return { query: action.query, step: fallbackStep };
+
+    for (const rawField of fields) {
+      const field = normalizeClarificationStep(rawField);
+      if (field && !isResolvedField(field, draft)) return { query: action.query, step: field };
+    }
   }
-  return "";
+  return null;
 }
 
 function nextMissingPrompt(draft: BookingDraft): BookingTurnOutcome {
@@ -200,9 +215,9 @@ function nextMissingPrompt(draft: BookingDraft): BookingTurnOutcome {
 
 function stepForOutcome(outcome: BookingTurnOutcome, fallback: FinderStep): FinderStep {
   if (outcome.kind === "invalid_checkout") return "checkout";
-  if (outcome.kind === "clarification") return fallback;
+  if (outcome.kind === "clarification") return outcome.step;
   if (outcome.kind === "prompt") return outcome.field;
-  return "checkin";
+  return fallback;
 }
 
 export function resolveAssistantTurn(current: BookingFlowState, command: AssistantCommand): BookingTurnResolution {
@@ -260,10 +275,10 @@ export function resolveAssistantTurn(current: BookingFlowState, command: Assista
     return { state: { step: stepForOutcome(outcome, current.step), draft }, outcome };
   }
 
-  const clarification = unresolvedClarification(command, draft);
+  const clarification = unresolvedClarification(command, draft, current.step);
   if (clarification) {
-    const outcome: BookingTurnOutcome = { kind: "clarification", query: clarification };
-    return { state: { step: current.step, draft }, outcome };
+    const outcome: BookingTurnOutcome = { kind: "clarification", query: clarification.query, step: clarification.step };
+    return { state: { step: stepForOutcome(outcome, current.step), draft }, outcome };
   }
 
   const outcome = nextMissingPrompt(draft);
