@@ -20,5 +20,9 @@ export default async function AiAssistantPage({ searchParams }: AiAssistantPageP
   const normalized = rawLanguage?.toLowerCase().split("-")[0] as RoomFinderLanguage | undefined;
   const initialLanguage: RoomFinderLanguage = normalized && SUPPORTED_LANGUAGES.has(normalized) ? normalized : "en";
 
-  return <RoomFinderProduction initialLanguage={initialLanguage} />;
+  return (
+    <div lang={initialLanguage} className="contents">
+      <RoomFinderProduction initialLanguage={initialLanguage} />
+    </div>
+  );
 }
