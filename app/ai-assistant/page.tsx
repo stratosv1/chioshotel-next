@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { RoomFinderProduction } from "@/components/ai/RoomFinderProduction";
+import type { RoomFinderLanguage } from "@/components/ai/room-finder-copy";
 
 export const metadata: Metadata = {
   title: { absolute: "AI Room Finder | Voulamandis House" },
@@ -7,6 +8,17 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false, nocache: true },
 };
 
-export default function AiAssistantPage() {
-  return <RoomFinderProduction />;
+const SUPPORTED_LANGUAGES = new Set<RoomFinderLanguage>(["el", "en", "de", "fr", "it", "es", "tr"]);
+
+type AiAssistantPageProps = {
+  searchParams: Promise<{ lang?: string | string[] }>;
+};
+
+export default async function AiAssistantPage({ searchParams }: AiAssistantPageProps) {
+  const params = await searchParams;
+  const rawLanguage = Array.isArray(params.lang) ? params.lang[0] : params.lang;
+  const normalized = rawLanguage?.toLowerCase().split("-")[0] as RoomFinderLanguage | undefined;
+  const initialLanguage: RoomFinderLanguage = normalized && SUPPORTED_LANGUAGES.has(normalized) ? normalized : "en";
+
+  return <RoomFinderProduction initialLanguage={initialLanguage} />;
 }
