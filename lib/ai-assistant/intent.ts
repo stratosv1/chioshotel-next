@@ -198,7 +198,7 @@ export async function interpretAssistantMessage(message: string, context: Conver
   if (!apiKey) throw new Error("OPENAI_API_KEY is not configured");
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 20_000);
+  const timeout = setTimeout(() => controller.abort(), 12_000);
 
   try {
     const response = await fetch("https://api.openai.com/v1/responses", {
