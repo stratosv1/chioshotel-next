@@ -407,6 +407,16 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     }
   }
 
+  function backToRooms() {
+    if (turnLocked.current || choices.length === 0) return;
+    const lastChoice = choices[choices.length - 1];
+    setChoices(current => current.slice(0, -1));
+    setActiveGroup(Math.max(0, lastChoice.group - 1));
+    setBreakfast(false);
+    setFeedback("idle");
+    setStep("selecting");
+  }
+
   async function chooseBreakfast(value: boolean) {
     if (!await beginUserTurn(value ? copy.yesBreakfast : copy.noBreakfast, "normal", value ? "❤️" : "👍")) return;
     setBreakfast(value);
@@ -483,6 +493,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     chooseGuests,
     searchRooms,
     selectOffer,
+    backToRooms,
     chooseBreakfast,
     happy,
     different,
