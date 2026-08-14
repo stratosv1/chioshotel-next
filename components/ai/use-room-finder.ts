@@ -116,6 +116,16 @@ const INVENTORY_UNAVAILABLE: Record<RoomFinderLanguage, string> = {
   tr: "Sabrınız için teşekkür ederim 🙏 Canlı müsaitlik şu anda güvenilir şekilde doğrulanamıyor ve size eski bilgi göstermek istemiyorum. Lütfen birkaç dakika sonra tekrar deneyin veya WhatsApp üzerinden birlikte kontrol edelim 💬",
 };
 
+const INTERPRETER_UNAVAILABLE: Record<RoomFinderLanguage, string> = {
+  el: "Υπήρξε προσωρινό πρόβλημα σύνδεσης με τον βοηθό. Δοκιμάστε ξανά την τελευταία απάντησή σας σε λίγα δευτερόλεπτα 🙏",
+  en: "There was a temporary connection problem with the assistant. Please try your last answer again in a few seconds 🙏",
+  de: "Es gab vorübergehend ein Verbindungsproblem mit dem Assistenten. Bitte versuchen Sie Ihre letzte Antwort in einigen Sekunden erneut 🙏",
+  fr: "Un problème de connexion temporaire avec l’assistant est survenu. Réessayez votre dernière réponse dans quelques secondes 🙏",
+  it: "Si è verificato un problema temporaneo di connessione con l’assistente. Riprovate l’ultima risposta tra qualche secondo 🙏",
+  es: "Ha habido un problema temporal de conexión con el asistente. Vuelvan a intentar su última respuesta en unos segundos 🙏",
+  tr: "Asistanla bağlantıda geçici bir sorun oluştu. Lütfen son yanıtınızı birkaç saniye sonra tekrar deneyin 🙏",
+};
+
 class AvailabilityError extends Error {
   constructor(readonly code: string) {
     super(code);
@@ -205,7 +215,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   async function interpret(value: string, current: FinderStep): Promise<Command> {
     const recentMessages = messages.slice(-8).map(({ role, content }) => ({ role, content }));
     const controller = new AbortController();
-    const timeout = window.setTimeout(() => controller.abort(), 14_000);
+    const timeout = window.setTimeout(() => controller.abort(), 15_000);
     try {
       const response = await fetch("/api/ai-assistant/interpret", {
         method: "POST",
@@ -227,8 +237,8 @@ export function useRoomFinder(language: RoomFinderLanguage) {
           },
         }),
       });
-      const data = await response.json();
-      if (!response.ok || !data?.command) throw new Error("Room Finder interpretation failed");
+      const data = await response.json().catch(() => null);
+      if (!response.ok || !data?.command) throw new Error(String(data?.code || "AI_UNAVAILABLE"));
       return data.command;
     } finally {
       window.clearTimeout(timeout);
@@ -368,12 +378,10 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       const command = await promise;
       setTyping(false);
       await applyCommand(command);
-    } catch {
+    } catch (error) {
+      console.error("Room Finder interpreter request failed", error);
       setTyping(false);
-      if (current === "checkout") add("assistant", tone.checkout);
-      else if (current === "rooms") add("assistant", tone.rooms);
-      else if (current === "guests") add("assistant", tone.guests(groups.length + 1));
-      else add("assistant", tone.invalidDate);
+      add("assistant", INTERPRETER_UNAVAILABLE[language]);
     } finally {
       endUserTurn();
     }
