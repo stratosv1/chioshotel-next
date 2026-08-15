@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { RoomFinderProduction } from "@/components/ai/RoomFinderProduction";
+import { RoomFinderAutoFocus } from "@/components/ai/RoomFinderAutoFocus";
 import type { RoomFinderLanguage } from "@/components/ai/room-finder-copy";
 
 export const metadata: Metadata = {
@@ -22,6 +23,7 @@ export default async function AiAssistantPage({ searchParams }: AiAssistantPageP
 
   return (
     <div lang={initialLanguage} className="contents">
+      <RoomFinderAutoFocus />
       <RoomFinderProduction initialLanguage={initialLanguage} />
     </div>
   );
