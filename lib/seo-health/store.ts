@@ -210,12 +210,55 @@ export async function bulkUpsertSeoUrls(rows: Array<{
   expectedKind: SeoExpectedKind;
   priority: number;
 }>) {
-  for (const row of rows) {
+  if (!rows.length) return;
+  const sql = getSql();
+  const normalized = rows.flatMap((row) => {
     try {
-      await upsertSeoUrlInventory(row);
-    } catch (error) {
-      console.warn(`[seo-health] inventory skip ${row.url}: ${error instanceof Error ? error.message : String(error)}`);
+      const parsed = new URL(row.url);
+      return [{
+        url: row.url,
+        path: normalizeSeoPath(parsed.pathname),
+        source: row.source,
+        expectedKind: row.expectedKind,
+        priority: row.priority,
+      }];
+    } catch {
+      console.warn(`[seo-health] inventory skip malformed URL ${row.url}`);
+      return [];
     }
+  });
+
+  const chunkSize = 1000;
+  for (let index = 0; index < normalized.length; index += chunkSize) {
+    const chunk = normalized.slice(index, index + chunkSize);
+    await sql`
+      insert into seo_url_inventory (
+        url, path, source, expected_kind, priority, first_seen_at, last_seen_at, active
+      )
+      select url, path, source, "expectedKind", priority, now(), now(), true
+      from jsonb_to_recordset(${JSON.stringify(chunk)}::jsonb) as x(
+        url text,
+        path text,
+        source text,
+        "expectedKind" text,
+        priority integer
+      )
+      on conflict (url) do update set
+        path = excluded.path,
+        source = case
+          when seo_url_inventory.source = 'canonical' then seo_url_inventory.source
+          when excluded.source = 'canonical' then excluded.source
+          else seo_url_inventory.source
+        end,
+        expected_kind = case
+          when seo_url_inventory.expected_kind = 'canonical' then seo_url_inventory.expected_kind
+          when excluded.expected_kind = 'canonical' then excluded.expected_kind
+          else seo_url_inventory.expected_kind
+        end,
+        priority = greatest(seo_url_inventory.priority, excluded.priority),
+        last_seen_at = now(),
+        active = true
+    `;
   }
 }
 
