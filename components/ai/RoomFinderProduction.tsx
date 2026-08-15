@@ -236,6 +236,9 @@ export function RoomFinderProduction({
   const guestSummary = finder.guestTotal ? copy.guestLabel(finder.guestTotal) : "";
   const roomSummary = finder.roomCount ? copy.roomLabel(finder.roomCount) : "";
   const bookingSummary = [stay, guestSummary, roomSummary].filter(Boolean).join(", ");
+  const lastAssistantMessageId = [...finder.messages]
+    .reverse()
+    .find(message => message.role === "assistant")?.id;
 
   return (
     <main className="flex h-[100dvh] flex-col overflow-hidden bg-[#f6f2eb] text-[#29251f]">
@@ -253,7 +256,11 @@ export function RoomFinderProduction({
 
       <header className="shrink-0 border-b border-[#ddd4c8] bg-[#fbf8f3]/95">
         <div className="mx-auto flex h-[64px] max-w-3xl items-center gap-1.5 px-2.5">
-          <a href={homeHref} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-lg" aria-label="Back">
+          <a
+            href={homeHref}
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-[26px] font-semibold leading-none text-[#625b52] transition hover:bg-white/70 active:scale-[.96]"
+            aria-label="Back"
+          >
             ←
           </a>
           <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full ring-2 ring-white">
@@ -292,7 +299,7 @@ export function RoomFinderProduction({
             aria-label={copy.newSearch}
             title={copy.newSearch}
             onClick={() => finder.reset()}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-base text-[#746b60]"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-[24px] font-semibold leading-none text-[#746b60] transition hover:bg-white/70 active:scale-[.96]"
           >
             ↻
           </button>
@@ -301,18 +308,7 @@ export function RoomFinderProduction({
 
       {bookingSummary && (
         <div className="shrink-0 border-b border-[#e5ddd2] bg-[#f9f5ef] px-3 py-2">
-          <div className="mx-auto flex max-w-3xl items-center gap-2">
-            {finder.canGoBack && (
-              <button
-                type="button"
-                onClick={() => finder.goBack()}
-                aria-label={copy.backLabel}
-                title={copy.backLabel}
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#ddd3c6] bg-white text-sm font-black text-[#625b52] shadow-sm transition hover:bg-[#f7f3ed] active:scale-[.96]"
-              >
-                ←
-              </button>
-            )}
+          <div className="mx-auto flex max-w-3xl items-center">
             <div
               aria-label={bookingSummary}
               className="relative flex h-8 min-w-0 flex-1 items-center rounded-full border border-dashed border-[#d8cec1] bg-white pl-5 pr-3 text-xs font-semibold text-[#625b52] shadow-[0_6px_16px_rgba(70,55,35,.06)]"
@@ -354,7 +350,28 @@ export function RoomFinderProduction({
       >
         <div className="mx-auto flex min-h-full max-w-3xl flex-col px-3 pb-7 pt-5">
           <div className="space-y-3.5">
-            {finder.messages.map(message => <ChatMessage key={message.id} message={message} />)}
+            {finder.messages.map(message => (
+              <div key={message.id}>
+                <ChatMessage message={message} />
+                {finder.canGoBack
+                  && !finder.typing
+                  && message.role === "assistant"
+                  && message.id === lastAssistantMessageId && (
+                    <div className="ml-10 mt-1.5">
+                      <button
+                        type="button"
+                        onClick={() => finder.goBack()}
+                        aria-label={copy.backLabel}
+                        title={copy.backLabel}
+                        className="inline-flex h-8 items-center gap-1 rounded-full border border-[#ddd3c6] bg-[#fbf8f3] px-3 text-xs font-bold text-[#625b52] shadow-sm transition hover:bg-white active:scale-[.97]"
+                      >
+                        <span aria-hidden="true">←</span>
+                        {copy.backLabel}
+                      </button>
+                    </div>
+                  )}
+              </div>
+            ))}
             {finder.typing && <TypingIndicator />}
 
             {finder.step === "rooms" && (
