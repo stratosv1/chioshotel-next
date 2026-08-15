@@ -51,15 +51,18 @@ export default function GscPagesCsvUpload() {
 
       const imported = Number(payload?.importedUrls || 0);
       const skipped = Number(payload?.skippedRows || 0);
+      const detectedIssue = String(payload?.detectedIssue || "");
+      const formatLabel = payload?.importFormat === "zip" ? "Google ZIP" : "CSV";
       setMessage(
-        `Εισήχθησαν ${imported.toLocaleString("el-GR")} URLs στο SEO Autopilot${skipped ? ` · ${skipped.toLocaleString("el-GR")} γραμμές αγνοήθηκαν` : ""}. Τώρα πάτησε Run Full Technical SEO Audit.`,
+        `${formatLabel}: εισήχθησαν ${imported.toLocaleString("el-GR")} URLs${detectedIssue ? ` · κατηγορία: ${detectedIssue}` : ""}${skipped ? ` · ${skipped.toLocaleString("el-GR")} γραμμές αγνοήθηκαν` : ""}. Τώρα πάτησε Run Full Technical SEO Audit.`,
       );
       setFile(null);
-      const input = document.getElementById("gsc-pages-csv-file") as HTMLInputElement | null;
+      setFallbackIssue("");
+      const input = document.getElementById("gsc-pages-export-file") as HTMLInputElement | null;
       if (input) input.value = "";
       router.refresh();
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "Το CSV upload απέτυχε.");
+      setError(cause instanceof Error ? cause.message : "Το GSC Pages upload απέτυχε.");
     } finally {
       setUploading(false);
     }
@@ -68,37 +71,37 @@ export default function GscPagesCsvUpload() {
   return (
     <div className="w-full rounded-2xl border border-[#d8cec2] bg-white/55 p-4 shadow-sm">
       <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8a7768]">GSC Pages import</div>
-      <h2 className="mt-1 text-lg font-semibold text-[#342c26]">Upload Google Pages CSV</h2>
+      <h2 className="mt-1 text-lg font-semibold text-[#342c26]">Upload Google Pages ZIP</h2>
       <p className="mt-1 text-xs leading-5 text-[#77695e]">
-        Δέχεται CSV με στήλες <strong>URL</strong>, <strong>Issue</strong> και προαιρετικά <strong>Last crawled</strong>.
-        Αν το export έχει μόνο URL/Last crawled, διάλεξε παρακάτω την κατηγορία του Search Console.
+        Ανέβασε <strong>αυτούσιο το ZIP</strong> που κατεβάζει το Google Search Console από το Pages report.
+        Το σύστημα διαβάζει αυτόματα το <strong>Metadata.csv</strong> για την κατηγορία και το <strong>Table.csv</strong> για τα URLs. Δέχεται και απλό CSV για συμβατότητα.
       </p>
 
-      <label className="mt-4 block text-xs font-semibold text-[#51463e]" htmlFor="gsc-pages-csv-file">
-        CSV αρχείο
+      <label className="mt-4 block text-xs font-semibold text-[#51463e]" htmlFor="gsc-pages-export-file">
+        Google Search Console export
       </label>
       <input
-        id="gsc-pages-csv-file"
+        id="gsc-pages-export-file"
         type="file"
-        accept=".csv,text/csv"
+        accept=".zip,.csv,application/zip,text/csv"
         onChange={(event) => setFile(event.target.files?.[0] || null)}
         className="mt-1 block w-full rounded-xl border border-[#d8cec2] bg-white px-3 py-2 text-sm text-[#342c26] file:mr-3 file:rounded-lg file:border-0 file:bg-[#eee9e1] file:px-3 file:py-2 file:text-xs file:font-semibold file:text-[#51463e]"
       />
 
-      <label className="mt-3 block text-xs font-semibold text-[#51463e]" htmlFor="gsc-pages-fallback-issue">
-        Κατηγορία, μόνο αν λείπει η στήλη Issue
-      </label>
-      <select
-        id="gsc-pages-fallback-issue"
-        value={fallbackIssue}
-        onChange={(event) => setFallbackIssue(event.target.value)}
-        className="mt-1 min-h-11 w-full rounded-xl border border-[#d8cec2] bg-white px-3 text-sm text-[#342c26]"
-      >
-        <option value="">Αυτόματα από τη στήλη Issue/Reason</option>
-        {FALLBACK_ISSUES.map((issue) => (
-          <option key={issue} value={issue}>{issue}</option>
-        ))}
-      </select>
+      <details className="mt-3 rounded-xl border border-[#ded5ca] bg-white/60 px-3 py-2">
+        <summary className="cursor-pointer text-xs font-semibold text-[#51463e]">Χειροκίνητη κατηγορία μόνο αν λείπει το Metadata.csv</summary>
+        <select
+          id="gsc-pages-fallback-issue"
+          value={fallbackIssue}
+          onChange={(event) => setFallbackIssue(event.target.value)}
+          className="mt-3 min-h-11 w-full rounded-xl border border-[#d8cec2] bg-white px-3 text-sm text-[#342c26]"
+        >
+          <option value="">Αυτόματα από το Google export</option>
+          {FALLBACK_ISSUES.map((issue) => (
+            <option key={issue} value={issue}>{issue}</option>
+          ))}
+        </select>
+      </details>
 
       <button
         type="button"
@@ -106,7 +109,7 @@ export default function GscPagesCsvUpload() {
         disabled={!file || uploading}
         className="mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-[#342c26] bg-transparent px-4 text-sm font-semibold text-[#342c26] transition hover:bg-[#eee9e1] disabled:cursor-not-allowed disabled:opacity-50"
       >
-        {uploading ? "Ανεβαίνει το CSV…" : "Upload CSV to SEO Autopilot"}
+        {uploading ? "Ανεβαίνει το GSC export…" : "Upload GSC Pages Export"}
       </button>
 
       {message ? <p className="mt-3 text-xs font-semibold leading-5 text-emerald-800">{message}</p> : null}

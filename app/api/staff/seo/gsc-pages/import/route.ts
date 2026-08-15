@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as XLSX from "xlsx";
 import { importGscPagesRows, type GscPagesImportRow } from "@/lib/seo-health/gsc-pages-import";
+import { readGscPagesZip } from "@/lib/seo-health/gsc-pages-zip";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
-const MAX_FILE_BYTES = 5 * 1024 * 1024;
+const MAX_CSV_BYTES = 5 * 1024 * 1024;
+const MAX_ZIP_BYTES = 15 * 1024 * 1024;
 const MAX_ROWS = 10_000;
 
 function isAuthorized(request: NextRequest) {
@@ -68,6 +70,33 @@ function pickCell(row: Record<string, unknown>, aliases: string[]) {
   return "";
 }
 
+function readCsvRows(buffer: Buffer) {
+  const workbook = XLSX.read(buffer, { type: "buffer", raw: false });
+  const sheetName = workbook.SheetNames[0];
+  if (!sheetName) return [];
+  const sheet = workbook.Sheets[sheetName];
+  return XLSX.utils.sheet_to_json<Record<string, unknown>>(sheet, {
+    defval: "",
+    raw: false,
+  });
+}
+
+function readIssueFromMetadata(buffer: Buffer | null) {
+  if (!buffer) return "";
+  const rows = readCsvRows(buffer);
+
+  for (const row of rows) {
+    const property = pickCell(row, ["Property", "Key", "Name"]);
+    const value = pickCell(row, ["Value", "Issue", "Reason", "Category"]);
+    if (normalizeHeader(property) === "issue" && value) return value;
+
+    const directIssue = pickCell(row, ["Issue", "Reason", "Category", "Page indexing issue"]);
+    if (directIssue) return directIssue;
+  }
+
+  return "";
+}
+
 function parseRows(data: Record<string, unknown>[], fallbackIssue: string) {
   const parsed: GscPagesImportRow[] = [];
   let missingIssueRows = 0;
@@ -126,41 +155,53 @@ export async function POST(request: NextRequest) {
   try {
     const form = await request.formData();
     const fileValue = form.get("file");
-    const fallbackIssue = String(form.get("fallbackIssue") || "").trim();
+    const manualFallbackIssue = String(form.get("fallbackIssue") || "").trim();
 
     if (!fileValue || typeof fileValue === "string" || typeof fileValue.arrayBuffer !== "function") {
-      return json({ ok: false, error: "Επίλεξε ένα CSV αρχείο." }, 400);
+      return json({ ok: false, error: "Επίλεξε το ZIP export του Google Search Console ή ένα CSV." }, 400);
     }
 
     const file = fileValue as File;
-    if (!file.name.toLowerCase().endsWith(".csv")) {
-      return json({ ok: false, error: "Υποστηρίζεται μόνο αρχείο CSV." }, 400);
+    const lowerName = file.name.toLowerCase();
+    const isZip = lowerName.endsWith(".zip");
+    const isCsv = lowerName.endsWith(".csv");
+
+    if (!isZip && !isCsv) {
+      return json({ ok: false, error: "Υποστηρίζεται το ZIP export του Google Search Console ή αρχείο CSV." }, 400);
     }
-    if (file.size <= 0 || file.size > MAX_FILE_BYTES) {
-      return json({ ok: false, error: "Το CSV πρέπει να είναι έως 5 MB." }, 400);
+
+    const maxBytes = isZip ? MAX_ZIP_BYTES : MAX_CSV_BYTES;
+    if (file.size <= 0 || file.size > maxBytes) {
+      return json({ ok: false, error: `Το αρχείο πρέπει να είναι έως ${isZip ? "15" : "5"} MB.` }, 400);
     }
 
-    const buffer = Buffer.from(await file.arrayBuffer());
-    const workbook = XLSX.read(buffer, { type: "buffer", raw: false });
-    const sheetName = workbook.SheetNames[0];
-    if (!sheetName) return json({ ok: false, error: "Το CSV δεν περιέχει δεδομένα." }, 400);
+    const uploadedBuffer: Buffer = Buffer.from(await file.arrayBuffer());
+    let tableBuffer: Buffer = uploadedBuffer;
+    let detectedIssue = "";
+    let importFormat: "zip" | "csv" = "csv";
 
-    const sheet = workbook.Sheets[sheetName];
-    const data = XLSX.utils.sheet_to_json<Record<string, unknown>>(sheet, {
-      defval: "",
-      raw: false,
-    });
+    if (isZip) {
+      importFormat = "zip";
+      const contents = readGscPagesZip(uploadedBuffer);
+      tableBuffer = contents.tableCsv;
+      detectedIssue = readIssueFromMetadata(contents.metadataCsv);
+    }
 
-    if (!data.length) return json({ ok: false, error: "Το CSV δεν περιέχει γραμμές δεδομένων." }, 400);
+    const data = readCsvRows(tableBuffer);
+    if (!data.length) {
+      return json({ ok: false, error: isZip ? "Το Table.csv μέσα στο ZIP δεν περιέχει γραμμές δεδομένων." : "Το CSV δεν περιέχει γραμμές δεδομένων." }, 400);
+    }
     if (data.length > MAX_ROWS) {
-      return json({ ok: false, error: `Το CSV έχει πάνω από ${MAX_ROWS.toLocaleString("el-GR")} γραμμές.` }, 400);
+      return json({ ok: false, error: `Το export έχει πάνω από ${MAX_ROWS.toLocaleString("el-GR")} γραμμές.` }, 400);
     }
 
-    const { parsed, missingIssueRows } = parseRows(data, fallbackIssue);
+    const effectiveIssue = detectedIssue || manualFallbackIssue;
+    const { parsed, missingIssueRows } = parseRows(data, effectiveIssue);
+
     if (!parsed.length) {
       const detail = missingIssueRows
-        ? " Βάλε στήλη Issue/Reason ή επίλεξε κατηγορία από το dropdown πριν το upload."
-        : " Χρειάζεται στήλη URL με URLs του chioshotel.gr.";
+        ? " Δεν βρέθηκε κατηγορία Issue στο Metadata.csv/CSV. Επίλεξε κατηγορία από το dropdown και ξαναδοκίμασε."
+        : " Χρειάζεται Table.csv/CSV με στήλη URL και URLs του chioshotel.gr.";
       return json({ ok: false, error: `Δεν βρέθηκαν έγκυρα URLs για εισαγωγή.${detail}` }, 400);
     }
 
@@ -173,11 +214,13 @@ export async function POST(request: NextRequest) {
     return json({
       ok: true,
       ...result,
+      importFormat,
+      detectedIssue: detectedIssue || null,
       skippedRows: Math.max(0, data.length - parsed.length),
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    console.error("[seo-health] GSC Pages CSV import failed", error);
+    console.error("[seo-health] GSC Pages import failed", error);
     return json({ ok: false, error: message }, 500);
   }
 }
