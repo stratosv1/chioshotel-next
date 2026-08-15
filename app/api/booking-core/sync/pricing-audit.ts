@@ -223,7 +223,7 @@ async function loadPricingIssues(databaseUrl: string): Promise<PricingIssue[]> {
       where q.available = true
     ),
     room1 as (
-      select stay_date, available, base_price
+      select stay_date, base_price
       from booking_core.inventory
       where room_number = 1
     ),
@@ -233,7 +233,6 @@ async function loadPricingIssues(databaseUrl: string): Promise<PricingIssue[]> {
         case
           when q.room_number in (8,9,10)
             and q.guests = 4
-            and r1.available = true
             and r1.base_price is not null
             and (r1.base_price + 30) >= q.base_price
           then r1.base_price + 30 + cfg.apartment_premium
@@ -317,7 +316,7 @@ function buildAlertBody(priceChanges: PriceChange[], issues: PricingIssue[], aud
   if (issues.length > 50) lines.push(`- ...and ${issues.length - 50} more pricing problems`);
 
   lines.push("");
-  lines.push("Booked and closed rooms are intentionally excluded from this audit.");
+  lines.push("Booked and closed rooms are intentionally excluded from audit results.");
   lines.push("No email is sent when the audit is clean.");
   return lines.join("\n");
 }
