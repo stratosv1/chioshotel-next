@@ -181,7 +181,9 @@ export function RoomFinderProduction({
   const [sendStatus, setSendStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [hiddenQuickReplyPromptId, setHiddenQuickReplyPromptId] = useState<string | null>(null);
   const [breakfastChoicePending, setBreakfastChoicePending] = useState<boolean | null>(null);
+  const shellRef = useRef<HTMLElement>(null);
   const feedRef = useRef<HTMLDivElement>(null);
+  const composerInputRef = useRef<HTMLInputElement>(null);
   const detailDialogRef = useRef<HTMLElement>(null);
   const detailCloseRef = useRef<HTMLButtonElement>(null);
   const detailTriggerRef = useRef<HTMLElement | null>(null);
@@ -216,6 +218,52 @@ export function RoomFinderProduction({
     });
     return () => cancelAnimationFrame(frame);
   }, [finder.messages, finder.step, finder.typing, finder.choices, sendStatus]);
+
+  useEffect(() => {
+    const shell = shellRef.current;
+    if (!shell) return;
+
+    const visualViewport = window.visualViewport;
+    let viewportFrame: number | null = null;
+
+    const syncViewport = () => {
+      viewportFrame = null;
+      const viewport = window.visualViewport;
+      const visibleHeight = Math.max(320, Math.round(viewport?.height ?? window.innerHeight));
+      const offsetTop = Math.max(0, Math.round(viewport?.offsetTop ?? 0));
+      const layoutHeight = Math.max(window.innerHeight, document.documentElement.clientHeight);
+      const keyboardOpen = Boolean(viewport && layoutHeight - viewport.height > 120);
+
+      shell.style.setProperty("--rf-visual-height", `${visibleHeight}px`);
+      shell.style.setProperty("--rf-visual-offset-top", `${offsetTop}px`);
+      shell.dataset.keyboardOpen = keyboardOpen ? "true" : "false";
+
+      if (document.activeElement === composerInputRef.current) {
+        requestAnimationFrame(() => {
+          feedRef.current?.scrollTo({ top: feedRef.current.scrollHeight, behavior: "auto" });
+        });
+      }
+    };
+
+    const scheduleViewportSync = () => {
+      if (viewportFrame !== null) cancelAnimationFrame(viewportFrame);
+      viewportFrame = requestAnimationFrame(syncViewport);
+    };
+
+    syncViewport();
+    visualViewport?.addEventListener("resize", scheduleViewportSync);
+    visualViewport?.addEventListener("scroll", scheduleViewportSync);
+    window.addEventListener("resize", scheduleViewportSync);
+    window.addEventListener("orientationchange", scheduleViewportSync);
+
+    return () => {
+      if (viewportFrame !== null) cancelAnimationFrame(viewportFrame);
+      visualViewport?.removeEventListener("resize", scheduleViewportSync);
+      visualViewport?.removeEventListener("scroll", scheduleViewportSync);
+      window.removeEventListener("resize", scheduleViewportSync);
+      window.removeEventListener("orientationchange", scheduleViewportSync);
+    };
+  }, []);
 
   useEffect(() => {
     if (!detail) return;
@@ -273,6 +321,7 @@ export function RoomFinderProduction({
     detailTriggerRef.current = document.activeElement instanceof HTMLElement
       ? document.activeElement
       : null;
+    composerInputRef.current?.blur();
     setDetail(offer);
   }
 
@@ -381,7 +430,16 @@ export function RoomFinderProduction({
     || (!!lastAssistantMessageId && hiddenQuickReplyPromptId === lastAssistantMessageId);
 
   return (
-    <main className="flex h-[100dvh] flex-col overflow-hidden bg-[#f6f2eb] text-[#29251f]">
+    <main
+      ref={shellRef}
+      data-room-finder-shell="true"
+      data-keyboard-open="false"
+      className="fixed inset-x-0 top-0 flex min-h-0 w-full flex-col overflow-hidden bg-[#f6f2eb] text-[#29251f]"
+      style={{
+        height: "var(--rf-visual-height, 100dvh)",
+        top: "var(--rf-visual-offset-top, 0px)",
+      }}
+    >
       <style jsx global>{`
         :root { --mandarin: #c66a34; }
         @keyframes msg { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
@@ -392,9 +450,17 @@ export function RoomFinderProduction({
         .typing-dot { display: block; width: 6px; height: 6px; border-radius: 9999px; background: #746b60; animation: typingDot 1.05s ease-in-out infinite; }
         .typing-dot:nth-child(2) { animation-delay: .14s; }
         .typing-dot:nth-child(3) { animation-delay: .28s; }
+        [data-room-finder-shell="true"] { overscroll-behavior: none; }
+        .room-finder-composer {
+          padding: .75rem;
+          padding-bottom: max(.75rem, env(safe-area-inset-bottom));
+        }
+        [data-room-finder-shell="true"][data-keyboard-open="true"] .room-finder-composer {
+          padding-bottom: .75rem;
+        }
       `}</style>
 
-      <header className="shrink-0 border-b border-[#ddd4c8] bg-[#fbf8f3]/95">
+      <header className="shrink-0 border-b border-[#ddd4c8] bg-[#fbf8f3]/95 pt-[env(safe-area-inset-top)]">
         <div className="mx-auto flex h-[64px] max-w-3xl items-center gap-1.5 px-2.5">
           <a
             href={homeHref}
@@ -419,7 +485,7 @@ export function RoomFinderProduction({
               {copy.online}
             </div>
           </div>
-          <div className="relative h-9 w-[54px] shrink-0">
+          <div className="relative h-11 w-[58px] shrink-0">
             <div className="pointer-events-none flex h-full items-center justify-center gap-1 rounded-full border border-[#d8cec1] bg-white text-xs font-bold">
               {language.toUpperCase()} <span aria-hidden="true">⌄</span>
             </div>
@@ -486,7 +552,7 @@ export function RoomFinderProduction({
         aria-relevant="additions text"
         aria-atomic="false"
         aria-busy={finder.typing}
-        className="min-h-0 flex-1 overflow-y-auto"
+        className="min-h-0 flex-1 overflow-y-auto overscroll-contain"
       >
         <div className="mx-auto flex min-h-full max-w-3xl flex-col px-3 pb-7 pt-5">
           <div className="space-y-3.5">
@@ -504,7 +570,7 @@ export function RoomFinderProduction({
                         onClick={() => finder.goBack()}
                         aria-label={copy.backLabel}
                         title={copy.backLabel}
-                        className="inline-flex h-8 items-center gap-1 rounded-full border border-[#ddd3c6] bg-[#fbf8f3] px-3 text-xs font-bold text-[#625b52] shadow-sm transition hover:bg-white active:scale-[.97]"
+                        className="inline-flex min-h-11 items-center gap-1 rounded-full border border-[#ddd3c6] bg-[#fbf8f3] px-3 text-xs font-bold text-[#625b52] shadow-sm transition hover:bg-white active:scale-[.97]"
                       >
                         <span aria-hidden="true">←</span>
                         {copy.backLabel}
@@ -554,7 +620,7 @@ export function RoomFinderProduction({
                   <button
                     type="button"
                     onClick={() => openWhatsApp(whatsappContext(copy.whatsappHelp))}
-                    className="shrink-0 rounded-full bg-[#287d4f] px-4 py-2.5 text-sm font-bold text-white"
+                    className="min-h-11 shrink-0 rounded-full bg-[#287d4f] px-4 py-2.5 text-sm font-bold text-white"
                   >
                     💬 {copy.whatsapp}
                   </button>
@@ -588,14 +654,14 @@ export function RoomFinderProduction({
                         <button
                           type="button"
                           onClick={() => chooseBreakfast(true)}
-                          className="rounded-full bg-[#66714f] px-4 py-2.5 text-sm font-bold text-white transition active:scale-[.97]"
+                          className="min-h-11 rounded-full bg-[#66714f] px-4 py-2.5 text-sm font-bold text-white transition active:scale-[.97]"
                         >
                           {copy.yesBreakfast}
                         </button>
                         <button
                           type="button"
                           onClick={() => chooseBreakfast(false)}
-                          className="rounded-full border border-[#d8cec1] px-4 py-2.5 text-sm font-bold transition active:scale-[.97]"
+                          className="min-h-11 rounded-full border border-[#d8cec1] px-4 py-2.5 text-sm font-bold transition active:scale-[.97]"
                         >
                           {copy.noBreakfast}
                         </button>
@@ -648,7 +714,7 @@ export function RoomFinderProduction({
                 <div className="rounded-t-[26px] bg-[#faf7f2] p-4 pr-[82px]">
                   <div className="flex justify-between gap-3">
                     <h2 className="text-lg font-black">{copy.summary}</h2>
-                    <button type="button" onClick={() => finder.reset()} className="text-xs font-bold underline">
+                    <button type="button" onClick={() => finder.reset()} className="min-h-11 text-xs font-bold underline">
                       {copy.newSearch}
                     </button>
                   </div>
@@ -713,7 +779,7 @@ export function RoomFinderProduction({
                             value={contact.firstName}
                             onChange={event => setContact({ ...contact, firstName: event.target.value })}
                             placeholder={`${contactCopy.firstName} *`}
-                            className="h-12 w-full rounded-2xl border border-[#d8cec1] px-4"
+                            className="h-12 w-full rounded-2xl border border-[#d8cec1] px-4 text-[16px]"
                           />
                         </div>
                         <div>
@@ -726,7 +792,7 @@ export function RoomFinderProduction({
                             value={contact.lastName}
                             onChange={event => setContact({ ...contact, lastName: event.target.value })}
                             placeholder={`${contactCopy.lastName} *`}
-                            className="h-12 w-full rounded-2xl border border-[#d8cec1] px-4"
+                            className="h-12 w-full rounded-2xl border border-[#d8cec1] px-4 text-[16px]"
                           />
                         </div>
                       </div>
@@ -742,7 +808,7 @@ export function RoomFinderProduction({
                           value={contact.phone}
                           onChange={event => setContact({ ...contact, phone: event.target.value })}
                           placeholder={`${copy.phone} *`}
-                          className="h-12 w-full rounded-2xl border border-[#d8cec1] px-4"
+                          className="h-12 w-full rounded-2xl border border-[#d8cec1] px-4 text-[16px]"
                         />
                       </div>
                       <div>
@@ -756,7 +822,7 @@ export function RoomFinderProduction({
                           value={contact.email}
                           onChange={event => setContact({ ...contact, email: event.target.value })}
                           placeholder={copy.email}
-                          className="h-12 w-full rounded-2xl border border-[#d8cec1] px-4"
+                          className="h-12 w-full rounded-2xl border border-[#d8cec1] px-4 text-[16px]"
                         />
                       </div>
                       <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-[#e1d8cd] bg-[#faf7f2] p-3 text-xs leading-5 text-[#625b52]">
@@ -765,7 +831,7 @@ export function RoomFinderProduction({
                           required
                           checked={privacyAccepted}
                           onChange={event => setPrivacyAccepted(event.target.checked)}
-                          className="mt-0.5 h-4 w-4 shrink-0 accent-[#66714f]"
+                          className="mt-0.5 h-5 w-5 shrink-0 accent-[#66714f]"
                         />
                         <span>{contactCopy.privacyNotice}</span>
                       </label>
@@ -801,25 +867,40 @@ export function RoomFinderProduction({
         </div>
       </div>
 
-      <form onSubmit={finder.submit} className="shrink-0 border-t border-[#e2d9cd] bg-[#fbf8f3]/95 p-3">
+      <form onSubmit={finder.submit} className="room-finder-composer shrink-0 border-t border-[#e2d9cd] bg-[#fbf8f3]/95">
         <div className="mx-auto flex max-w-3xl items-center gap-2 rounded-[24px] border border-[#d8cec1] bg-white p-2 shadow-sm">
           <label htmlFor="room-finder-message" className="sr-only">{inputPlaceholder}</label>
           <input
+            ref={composerInputRef}
             id="room-finder-message"
             name="room-finder-message"
             autoComplete="off"
+            enterKeyHint="send"
             aria-label={inputPlaceholder}
+            aria-disabled={!inputEnabled}
+            aria-busy={!inputEnabled}
             value={finder.input}
-            onChange={event => finder.setInput(event.target.value)}
-            disabled={!inputEnabled}
+            onBeforeInput={event => {
+              if (!inputEnabled) event.preventDefault();
+            }}
+            onPaste={event => {
+              if (!inputEnabled) event.preventDefault();
+            }}
+            onDrop={event => {
+              if (!inputEnabled) event.preventDefault();
+            }}
+            onChange={event => {
+              if (inputEnabled) finder.setInput(event.target.value);
+            }}
             placeholder={inputPlaceholder}
-            className="min-w-0 flex-1 bg-transparent px-3 py-2 text-[15px] outline-none disabled:text-[#a9a197]"
+            className="min-w-0 flex-1 bg-transparent px-3 py-2 text-[16px] outline-none"
           />
           <button
             type="submit"
             aria-label={copy.send}
+            onPointerDown={event => event.preventDefault()}
             disabled={!inputEnabled || !finder.input.trim()}
-            className="flex h-11 w-11 items-center justify-center rounded-full bg-[#6b604f] text-white disabled:bg-[#d7d0c6]"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#6b604f] text-white disabled:bg-[#d7d0c6]"
           >
             ↑
           </button>
@@ -851,7 +932,7 @@ export function RoomFinderProduction({
                 ref={detailCloseRef}
                 type="button"
                 onClick={() => setDetail(null)}
-                className="absolute right-3 top-3 h-10 w-10 rounded-full bg-white/90 text-xl shadow-sm"
+                className="absolute right-3 top-3 h-11 w-11 rounded-full bg-white/90 text-xl shadow-sm"
                 aria-label={CLOSE_DETAILS[language]}
               >
                 ×
@@ -868,7 +949,7 @@ export function RoomFinderProduction({
                 ))}
               </div>
             </div>
-            <div className="shrink-0 border-t border-[#e5ddd2] bg-white p-4">
+            <div className="shrink-0 border-t border-[#e5ddd2] bg-white p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
               <button
                 type="button"
                 onClick={() => {
@@ -876,7 +957,7 @@ export function RoomFinderProduction({
                   setDetail(null);
                   void finder.selectOffer(selected);
                 }}
-                className="w-full rounded-2xl bg-[#66714f] p-3.5 font-black text-white"
+                className="min-h-12 w-full rounded-2xl bg-[#66714f] p-3.5 font-black text-white"
               >
                 {copy.select}
               </button>

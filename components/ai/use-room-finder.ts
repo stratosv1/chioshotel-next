@@ -128,6 +128,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   ) {
     if (turnLocked.current) return false;
     turnLocked.current = true;
+    setTyping(true);
     const timing = TURN_TIMING[pace];
     const id = rid();
     setMessages(current => [...current, { id, role: "user", content, kind }]);
@@ -141,6 +142,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
 
   const endUserTurn = () => {
     turnLocked.current = false;
+    setTyping(false);
   };
 
   function reset() {
@@ -378,14 +380,11 @@ export function useRoomFinder(language: RoomFinderLanguage) {
 
     if (!await beginUserTurn(value, kind, current === "rooms" ? "❤️" : "👍")) return;
 
-    setTyping(true);
     try {
       const command = await promise;
-      setTyping(false);
       await applyCommand(command);
     } catch (error) {
       console.error("Room Finder interpreter request failed", error);
-      setTyping(false);
       add("assistant", INTERPRETER_UNAVAILABLE[language]);
     } finally {
       endUserTurn();

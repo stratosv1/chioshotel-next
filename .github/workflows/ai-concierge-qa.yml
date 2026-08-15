@@ -13,6 +13,23 @@ on:
       - 'components/ai/use-room-finder.ts'
       - 'lib/ai-assistant/room-finder-*.ts'
       - 'scripts/qa-room-finder-flow.cjs'
+      - 'scripts/qa-room-finder-mobile-chat.cjs'
+      - 'scripts/qa-room-finder-interpreter.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/ai-concierge-qa.yml'
+  pull_request:
+    paths:
+      - 'app/ai-assistant/**'
+      - 'app/api/ai-assistant/interpret/**'
+      - 'app/api/ai-room-finder/**'
+      - 'components/ai/RoomFinderProduction.tsx'
+      - 'components/ai/room-finder-*.ts'
+      - 'components/ai/room-finder-*.tsx'
+      - 'components/ai/use-room-finder.ts'
+      - 'lib/ai-assistant/room-finder-*.ts'
+      - 'scripts/qa-room-finder-flow.cjs'
+      - 'scripts/qa-room-finder-mobile-chat.cjs'
       - 'scripts/qa-room-finder-interpreter.mjs'
       - 'package.json'
       - 'package-lock.json'
@@ -46,6 +63,8 @@ jobs:
         run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Deterministic Room Finder flow QA
         run: npm run qa:room-finder-flow
+      - name: Android and iOS chat runtime QA
+        run: npm run qa:room-finder-mobile
       - name: Verify the production entry point stays canonical
         run: |
           grep -q 'RoomFinderProduction' app/ai-assistant/page.tsx
