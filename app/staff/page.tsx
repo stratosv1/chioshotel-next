@@ -27,6 +27,13 @@ const staffLinks = [
     className: styles.directBooking,
   },
   {
+    href: "/staff/ai-room-finder",
+    icon: "💬",
+    label: "AI Room Finder Inbox",
+    subText: "Live συνομιλίες πελατών · μη αναγνωσμένα · αιτήματα ενδιαφέροντος",
+    className: styles.performance,
+  },
+  {
     href: "/staff/booker",
     icon: "📅",
     label: "Εδώ καταχωρείται απευθείας κράτηση",
