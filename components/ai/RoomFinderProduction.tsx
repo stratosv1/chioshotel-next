@@ -239,6 +239,7 @@ export function RoomFinderProduction({
   const lastAssistantMessageId = [...finder.messages]
     .reverse()
     .find(message => message.role === "assistant")?.id;
+  const awaitingStepTransition = finder.messages[finder.messages.length - 1]?.role === "user";
 
   return (
     <main className="flex h-[100dvh] flex-col overflow-hidden bg-[#f6f2eb] text-[#29251f]">
@@ -355,6 +356,7 @@ export function RoomFinderProduction({
                 <ChatMessage message={message} />
                 {finder.canGoBack
                   && !finder.typing
+                  && !awaitingStepTransition
                   && message.role === "assistant"
                   && message.id === lastAssistantMessageId && (
                     <div className="ml-10 mt-1.5">
@@ -374,10 +376,10 @@ export function RoomFinderProduction({
             ))}
             {finder.typing && <TypingIndicator />}
 
-            {finder.step === "rooms" && (
+            {finder.step === "rooms" && !awaitingStepTransition && (
               <IconReplies values={[1, 2, 3]} icon="🛏️" label={copy.roomLabel} onSelect={value => void finder.chooseRooms(value)} />
             )}
-            {finder.step === "guests" && (
+            {finder.step === "guests" && !awaitingStepTransition && (
               <IconReplies values={[1, 2, 3, 4, 5]} icon="👤" label={copy.guestLabel} onSelect={value => void finder.chooseGuests(value)} />
             )}
 
