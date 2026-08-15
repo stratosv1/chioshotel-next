@@ -77,6 +77,7 @@ export function RoomFinderProduction({
   const feedRef = useRef<HTMLDivElement>(null);
   const detailDialogRef = useRef<HTMLElement>(null);
   const detailCloseRef = useRef<HTMLButtonElement>(null);
+  const detailTriggerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const detected = detectLanguage();
@@ -105,9 +106,6 @@ export function RoomFinderProduction({
   useEffect(() => {
     if (!detail) return;
 
-    const previousFocus = document.activeElement instanceof HTMLElement
-      ? document.activeElement
-      : null;
     const frame = requestAnimationFrame(() => detailCloseRef.current?.focus());
 
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -145,7 +143,8 @@ export function RoomFinderProduction({
     return () => {
       cancelAnimationFrame(frame);
       document.removeEventListener("keydown", handleKeyDown);
-      requestAnimationFrame(() => previousFocus?.focus());
+      const trigger = detailTriggerRef.current;
+      requestAnimationFrame(() => trigger?.focus());
     };
   }, [detail]);
 
@@ -154,6 +153,13 @@ export function RoomFinderProduction({
     url.searchParams.set("lang", next);
     history.replaceState(history.state, "", url);
     setLanguage(next);
+  }
+
+  function openRoomDetail(offer: RoomOffer) {
+    detailTriggerRef.current = document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null;
+    setDetail(offer);
   }
 
   function openWhatsApp(text: string) {
@@ -309,7 +315,7 @@ export function RoomFinderProduction({
             )}
             <div
               aria-label={bookingSummary}
-              className="relative flex h-8 min-w-0 flex-1 items-center rounded-full border border-dashed border-[#d8cec1] bg-white pl-4 pr-3 text-xs font-semibold text-[#625b52]"
+              className="relative flex h-8 min-w-0 flex-1 items-center rounded-full border border-dashed border-[#d8cec1] bg-white pl-5 pr-3 text-xs font-semibold text-[#625b52] shadow-[0_6px_16px_rgba(70,55,35,.06)]"
             >
               <span
                 aria-hidden="true"
@@ -366,7 +372,7 @@ export function RoomFinderProduction({
                   language={language}
                   money={money}
                   selectingOfferKey={finder.selectingOfferKey}
-                  onDetails={setDetail}
+                  onDetails={openRoomDetail}
                   onSelect={offer => void finder.selectOffer(offer)}
                 />
                 <section className="msg flex items-center gap-3 rounded-[20px] border border-[#dfd6ca] bg-white px-4 py-3 shadow-sm sm:ml-10">
@@ -395,7 +401,7 @@ export function RoomFinderProduction({
                 <div className="msg ml-10 rounded-[20px] rounded-bl-[6px] border border-[#dfd6ca] bg-white px-4 py-3 text-[15px] shadow-sm">
                   <p>{copy.breakfast}</p>
                   {breakfastOfferTotal > 0 && (
-                    <p className="mt-2 font-black text-[#5f7448]">{copy.breakfastLabel}: {money(breakfastOfferTotal, language)}</p>
+                    <p className="mt-2 font-black text-[#5f7448] [font-variant-numeric:tabular-nums]">{copy.breakfastLabel}: {money(breakfastOfferTotal, language)}</p>
                   )}
                 </div>
                 <section className="msg ml-10 overflow-hidden rounded-[22px] border border-[#dcd2c5] bg-white shadow-sm">
@@ -445,15 +451,14 @@ export function RoomFinderProduction({
               <section className="msg relative rounded-[26px] border border-[#dcd2c5] bg-white shadow-[0_16px_45px_rgba(70,55,35,.10)] sm:ml-10">
                 <div
                   aria-hidden="true"
-                  className="pointer-events-none absolute -right-2 -top-3 z-10 flex h-[58px] w-[58px] -rotate-[9deg] items-center justify-center rounded-full border-2 opacity-55 [border-color:var(--mandarin)] [color:var(--mandarin)]"
+                  className="pointer-events-none absolute right-[14px] -top-[14px] z-10 flex h-[58px] w-[58px] -rotate-[9deg] items-center justify-center rounded-full border-2 bg-white text-center opacity-[.92] [border-color:var(--mandarin)] [border-style:double] [color:var(--mandarin)]"
                 >
-                  <span className="absolute inset-[4px] rounded-full border [border-color:var(--mandarin)]" />
-                  <span className="relative text-center text-[7px] font-black uppercase leading-[9px] tracking-[0.12em]">
-                    VH<br />KAMBOS<br />CHIOS
+                  <span className="text-[7.2px] font-extrabold uppercase leading-[9px] tracking-[0.05em]">
+                    VH ·<br />KAMBOS ·<br />CHIOS
                   </span>
                 </div>
 
-                <div className="rounded-t-[26px] bg-[#faf7f2] p-4 pr-16">
+                <div className="rounded-t-[26px] bg-[#faf7f2] p-4 pr-[82px]">
                   <div className="flex justify-between gap-3">
                     <h2 className="text-lg font-black">{copy.summary}</h2>
                     <button type="button" onClick={() => finder.reset()} className="text-xs font-bold underline">
@@ -463,9 +468,9 @@ export function RoomFinderProduction({
                   <p className="mt-2 text-sm text-[#746b60] [font-variant-numeric:tabular-nums]">{stay} · {copy.nightLabel(finder.nights)}</p>
                 </div>
 
-                <div className="relative border-t border-dashed border-[#d8cec1]">
-                  <span aria-hidden="true" className="absolute -left-[8px] top-1/2 h-4 w-4 -translate-y-1/2 rounded-full bg-[#f6f2eb]" />
-                  <span aria-hidden="true" className="absolute -right-[8px] top-1/2 h-4 w-4 -translate-y-1/2 rounded-full bg-[#f6f2eb]" />
+                <div className="relative h-0 border-t-2 border-dashed border-[#d8cec1]">
+                  <span aria-hidden="true" className="absolute -left-[11px] -top-[10px] h-5 w-5 rounded-full border border-[#d8cec1] bg-[#f6f2eb]" />
+                  <span aria-hidden="true" className="absolute -right-[11px] -top-[10px] h-5 w-5 rounded-full border border-[#d8cec1] bg-[#f6f2eb]" />
                 </div>
 
                 <div className="p-4">
@@ -595,7 +600,7 @@ export function RoomFinderProduction({
       {detail && (
         <div
           className="fixed inset-0 z-50 flex items-end bg-black/35 p-3 sm:items-center sm:justify-center"
-          onMouseDown={event => {
+          onClick={event => {
             if (event.target === event.currentTarget) setDetail(null);
           }}
         >
