@@ -35,7 +35,7 @@
     },
     {
       "path": "/api/seo/health/weekly/",
-      "schedule": "30 7 * * 0"
+      "schedule": "30 7 * * *"
     }
   ]
 }
