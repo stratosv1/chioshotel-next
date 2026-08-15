@@ -71,7 +71,10 @@ export async function POST(request: NextRequest) {
       return json({ ok: true, done: true, sessionId: session.id, session });
     }
 
-    if (session.batchesTarget === 0) {
+    // If all batches were already persisted but a previous request failed during
+    // aggregation/finalization, resume at finalization instead of running an
+    // unnecessary extra batch and double-counting results.
+    if (session.batchesTarget === 0 || session.batchesCompleted >= session.batchesTarget) {
       const finalized = await finalizeFullAuditSession(session.id);
       return json({ ok: true, done: true, sessionId: session.id, session: finalized });
     }
