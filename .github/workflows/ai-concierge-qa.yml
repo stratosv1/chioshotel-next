@@ -41,7 +41,8 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - run: npm ci
+      - name: Install current application dependencies
+        run: npm install --package-lock=false --ignore-scripts --no-audit --no-fund
       - name: Deterministic Room Finder flow QA
         run: npm run qa:room-finder-flow
       - name: Verify the production entry point stays canonical
@@ -61,7 +62,8 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - run: npm ci
+      - name: Install current application dependencies
+        run: npm install --package-lock=false --ignore-scripts --no-audit --no-fund
       - name: Live semantic interpreter regression QA
         env:
           AI_QA_BASE_URL: https://chioshotel.gr
