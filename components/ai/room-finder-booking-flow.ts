@@ -59,6 +59,16 @@ const MAX_GUESTS_PER_ROOM = 5;
 const MAX_TOTAL_GUESTS = MAX_ROOMS * MAX_GUESTS_PER_ROOM;
 const CORE_INPUT_STEPS = new Set<FinderStep>(["checkin", "checkout", "rooms", "guests"]);
 
+const ROOM_LIMIT_MESSAGE: Record<RoomFinderCommand["language"], string> = {
+  el: "Μέσω του αυτόματου συστήματος αναζήτησης μπορείτε να αναζητήσετε έως 3 δωμάτια. Για περισσότερα δωμάτια, επικοινωνήστε απευθείας με το front desk του Voulamandis House μέσω WhatsApp.",
+  en: "The automated search supports up to 3 rooms. For more rooms, please contact the Voulamandis House front desk directly via WhatsApp.",
+  de: "Die automatische Suche unterstützt bis zu 3 Zimmer. Für mehr Zimmer kontaktieren Sie bitte die Rezeption des Voulamandis House direkt über WhatsApp.",
+  fr: "La recherche automatique permet de rechercher jusqu’à 3 chambres. Pour davantage de chambres, contactez directement la réception de Voulamandis House via WhatsApp.",
+  it: "La ricerca automatica consente di cercare fino a 3 camere. Per più camere, contattate direttamente la reception di Voulamandis House tramite WhatsApp.",
+  es: "La búsqueda automática permite buscar hasta 3 habitaciones. Para más habitaciones, contacte directamente con la recepción de Voulamandis House por WhatsApp.",
+  tr: "Otomatik arama sistemi en fazla 3 oda için arama yapabilir. Daha fazla oda için lütfen Voulamandis House resepsiyonuyla WhatsApp üzerinden doğrudan iletişime geçin.",
+};
+
 export function createInitialBookingFlowState(): BookingFlowState {
   return {
     step: "checkin",
@@ -349,6 +359,27 @@ export function resolveAssistantTurn(current: BookingFlowState, command: RoomFin
   const incomingRoomCount = [...command.actions]
     .reverse()
     .find(action => action.roomCount != null)?.roomCount;
+
+  if (
+    incomingRoomCount != null &&
+    Number.isInteger(incomingRoomCount) &&
+    incomingRoomCount > MAX_ROOMS
+  ) {
+    draft.roomCount = null;
+    draft.totalGuests = null;
+    draft.groups = [];
+    const outcome: BookingTurnOutcome = {
+      kind: "clarification",
+      query: ROOM_LIMIT_MESSAGE[command.language] || ROOM_LIMIT_MESSAGE.en,
+      step: "unavailable",
+    };
+    return {
+      state: { step: "unavailable", draft },
+      outcome,
+      changed: true,
+    };
+  }
+
   if (incomingRoomCount && validRoomCount(incomingRoomCount)) {
     if (draft.roomCount !== incomingRoomCount) draft.groups = [];
     draft.roomCount = incomingRoomCount;
