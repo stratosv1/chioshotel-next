@@ -253,7 +253,15 @@ export function RoomFinderProduction({
         </div>
       )}
 
-      <div ref={feedRef} className="min-h-0 flex-1 overflow-y-auto">
+      <div
+        ref={feedRef}
+        role="log"
+        aria-live="polite"
+        aria-relevant="additions text"
+        aria-atomic="false"
+        aria-busy={finder.typing}
+        className="min-h-0 flex-1 overflow-y-auto"
+      >
         <div className="mx-auto flex min-h-full max-w-3xl flex-col px-3 pb-7 pt-5">
           <div className="space-y-3.5">
             {finder.messages.map(message => <ChatMessage key={message.id} message={message} />)}
@@ -396,24 +404,46 @@ export function RoomFinderProduction({
                     <h3 className="text-lg font-black">{copy.contactTitle}</h3>
                     <p className="mt-1 text-sm text-[#746b60]">{copy.contactHelp}</p>
                     <div className="mt-3 space-y-2">
-                      <input
-                        value={contact.name}
-                        onChange={event => setContact({ ...contact, name: event.target.value })}
-                        placeholder={copy.name}
-                        className="h-12 w-full rounded-2xl border border-[#d8cec1] px-4"
-                      />
-                      <input
-                        value={contact.phone}
-                        onChange={event => setContact({ ...contact, phone: event.target.value })}
-                        placeholder={copy.phone}
-                        className="h-12 w-full rounded-2xl border border-[#d8cec1] px-4"
-                      />
-                      <input
-                        value={contact.email}
-                        onChange={event => setContact({ ...contact, email: event.target.value })}
-                        placeholder={copy.email}
-                        className="h-12 w-full rounded-2xl border border-[#d8cec1] px-4"
-                      />
+                      <div>
+                        <label htmlFor="room-finder-name" className="sr-only">{copy.name}</label>
+                        <input
+                          id="room-finder-name"
+                          name="name"
+                          autoComplete="name"
+                          value={contact.name}
+                          onChange={event => setContact({ ...contact, name: event.target.value })}
+                          placeholder={copy.name}
+                          className="h-12 w-full rounded-2xl border border-[#d8cec1] px-4"
+                        />
+                      </div>
+                      <div>
+                        <label htmlFor="room-finder-phone" className="sr-only">{copy.phone}</label>
+                        <input
+                          id="room-finder-phone"
+                          name="tel"
+                          type="tel"
+                          inputMode="tel"
+                          autoComplete="tel"
+                          value={contact.phone}
+                          onChange={event => setContact({ ...contact, phone: event.target.value })}
+                          placeholder={copy.phone}
+                          className="h-12 w-full rounded-2xl border border-[#d8cec1] px-4"
+                        />
+                      </div>
+                      <div>
+                        <label htmlFor="room-finder-email" className="sr-only">{copy.email}</label>
+                        <input
+                          id="room-finder-email"
+                          name="email"
+                          type="email"
+                          inputMode="email"
+                          autoComplete="email"
+                          value={contact.email}
+                          onChange={event => setContact({ ...contact, email: event.target.value })}
+                          placeholder={copy.email}
+                          className="h-12 w-full rounded-2xl border border-[#d8cec1] px-4"
+                        />
+                      </div>
                     </div>
                     <div className="mt-3 grid grid-cols-2 gap-2">
                       <button
@@ -448,7 +478,12 @@ export function RoomFinderProduction({
 
       <form onSubmit={finder.submit} className="shrink-0 border-t border-[#e2d9cd] bg-[#fbf8f3]/95 p-3">
         <div className="mx-auto flex max-w-3xl items-center gap-2 rounded-[24px] border border-[#d8cec1] bg-white p-2 shadow-sm">
+          <label htmlFor="room-finder-message" className="sr-only">{inputPlaceholder}</label>
           <input
+            id="room-finder-message"
+            name="room-finder-message"
+            autoComplete="off"
+            aria-label={inputPlaceholder}
             value={finder.input}
             onChange={event => finder.setInput(event.target.value)}
             disabled={!inputEnabled}
@@ -456,6 +491,8 @@ export function RoomFinderProduction({
             className="min-w-0 flex-1 bg-transparent px-3 py-2 text-[15px] outline-none disabled:text-[#a9a197]"
           />
           <button
+            type="submit"
+            aria-label={copy.send}
             disabled={!inputEnabled || !finder.input.trim()}
             className="flex h-11 w-11 items-center justify-center rounded-full bg-[#6b604f] text-white disabled:bg-[#d7d0c6]"
           >
