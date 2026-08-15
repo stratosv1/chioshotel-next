@@ -1,191 +1,69 @@
-name: AI Concierge QA
+name: AI Room Finder QA
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: "30 4 * * *"
   push:
     branches: [main]
     paths:
-      - "app/ai-assistant/**"
-      - "app/api/ai-assistant/**"
-      - "components/ai/**"
-      - "lib/ai-assistant/**"
-      - "scripts/prepare-build.cjs"
-      - "scripts/fix-ai-localized-apartment-detail-parser.cjs"
-      - "scripts/fix-ai-room-finder-final-presentation.cjs"
-      - "scripts/qa-ai-concierge.mjs"
-      - "scripts/qa-ai-room-cards-ui.mjs"
-      - "scripts/qa-ai-presentation-regressions.mjs"
-      - ".github/workflows/ai-concierge-qa.yml"
+      - 'app/ai-assistant/**'
+      - 'app/api/ai-assistant/interpret/**'
+      - 'app/api/ai-room-finder/**'
+      - 'components/ai/RoomFinderProduction.tsx'
+      - 'components/ai/room-finder-*.ts'
+      - 'components/ai/room-finder-*.tsx'
+      - 'components/ai/use-room-finder.ts'
+      - 'lib/ai-assistant/room-finder-*.ts'
+      - 'scripts/qa-room-finder-flow.cjs'
+      - 'scripts/qa-room-finder-interpreter.mjs'
+      - 'package.json'
+      - '.github/workflows/ai-concierge-qa.yml'
+  workflow_dispatch:
+    inputs:
+      run_live_ai:
+        description: 'Run live OpenAI interpreter regression suite'
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
 
-jobs:
-  run-ai-qa:
-    runs-on: ubuntu-latest
-    timeout-minutes: 40
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+concurrency:
+  group: ai-room-finder-qa-${{ github.ref }}
+  cancel-in-progress: true
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+jobs:
+  deterministic-room-finder:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install browser QA runtime
+      - run: npm ci
+      - name: Deterministic Room Finder flow QA
+        run: npm run qa:room-finder-flow
+      - name: Verify the production entry point stays canonical
         run: |
-          npm install --no-save --package-lock=false @playwright/test@latest
-          npx playwright install --with-deps chromium
+          grep -q 'RoomFinderProduction' app/ai-assistant/page.tsx
+          test -f components/ai/RoomFinderProduction.tsx
+          test ! -f components/ai/ConversationalRoomSalesEnhanced.tsx
 
-      - name: Wait for production deployment
-        if: github.event_name == 'push'
-        run: sleep 120
-
-      - name: Prepare QA runner v8
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-
-          path = Path("scripts/qa-ai-concierge.mjs")
-          text = path.read_text(encoding="utf-8")
-
-          text = text.replace(
-              r'  it: /\b(il|lo|gli|vostro|camera|persone|disponibile|desidera|vicina|arrivo|partenza|soggiorno)\b/i,',
-              r'  it: /(?:[àèéìòù])|\b(il|lo|gli|vostro|camera|persone|disponibile|desidera|vicina|arrivo|partenza|soggiorno|in base|ultimi dati|al momento|risulta|opzione|confermata|criteri|verificare|subito|risponderti|vuoi|aiutarti|prenotazione)\b/iu,',
-          )
-          text = text.replace(
-              r'  es: /\b(el|los|usted|habitación|personas|disponible|quiere|cercana|llegada|salida|estancia)\b/i,',
-              r'  es: /(?:[¿¡ñáéíóúü])|\b(el|los|usted|habitación|personas|disponible|quiere|cercana|llegada|salida|estancia|encantado|ayudarte|fecha|gustaría|hacer|reserva|hola|playa|niños|aguas|tranquilas|profundas|quieres|ayude)\b/iu,',
-          )
-
-          text = text.replace(
-              '''      assertLanguage(payload.answer, language, step + 1);\n      snapshots.push(loopSnapshot(payload));\n      transcript.push(transcriptAssistant(payload));\n      messages.push({ role: "assistant", content: payload.answer });''',
-              '''      snapshots.push(loopSnapshot(payload));\n      transcript.push(transcriptAssistant(payload));\n      messages.push({ role: "assistant", content: payload.answer });\n      assertLanguage(payload.answer, language, step + 1);''',
-          )
-          text = text.replace(
-              '''    assertLanguage(first.payload.answer, language, 1);\n    messages.push({ role: "assistant", content: first.payload.answer });\n    transcript.push(transcriptAssistant(first.payload));\n    snapshots.push(loopSnapshot(first.payload));''',
-              '''    messages.push({ role: "assistant", content: first.payload.answer });\n    transcript.push(transcriptAssistant(first.payload));\n    snapshots.push(loopSnapshot(first.payload));\n    assertLanguage(first.payload.answer, language, 1);''',
-          )
-          text = text.replace(
-              '''    assertLanguage(second.payload.answer, language, 2);\n    transcript.push(transcriptAssistant(second.payload));\n    snapshots.push(loopSnapshot(second.payload));''',
-              '''    transcript.push(transcriptAssistant(second.payload));\n    snapshots.push(loopSnapshot(second.payload));\n    assertLanguage(second.payload.answer, language, 2);''',
-          )
-
-          text = text.replace(
-              '''    const offers = Array.isArray(terminalPayload.offers) ? terminalPayload.offers : [];\n    if (offers.length) validateOffers(offers, Number(terminalPayload.search.guests));''',
-              '''    const offers = Array.isArray(terminalPayload.offers) ? terminalPayload.offers : [];\n    if (offers.length) validateOffers(offers, Number(terminalPayload.search.guests));\n    const dateReplies = transcript.filter((entry) => entry.role === "user" && entry.content === L[language].dates).length;\n    assert(dateReplies === 1, `${language}: the same date range was requested ${dateReplies} times`);''',
-          )
-          text = text.replace(
-              '''    assert(payload.action === "respond", `general question expected respond, got ${payload.action}`);\n    assert(!payload.bookingConfirmed, "general response falsely confirmed a booking");''',
-              '''    assert(payload.action === "respond", `general question expected respond, got ${payload.action}`);\n    assert(payload.outOfScope === true, "out-of-scope question was not explicitly rejected");\n    assert(payload.scopeRestricted === true, "scope restriction flag is missing");\n    assert(!payload.bookingConfirmed, "general response falsely confirmed a booking");''',
-          )
-
-          text = text.replace("    version: 3,", "    version: 5,")
-          text = text.replace("    version: 4,", "    version: 5,")
-          text = text.replace(
-              "  if (report.failed) process.exitCode = 1;",
-              '  report.status = report.failed ? "completed_with_findings" : "all_passed";',
-          )
-          path.write_text(text, encoding="utf-8")
-
-          ui_path = Path("scripts/qa-ai-room-cards-ui.mjs")
-          ui_text = ui_path.read_text(encoding="utf-8")
-          old_card_check = '''      const imageLoaded = await cardImage.evaluate((image) => image.complete && image.naturalWidth > 0);\n      assert(imageLoaded, `${language} room ${expected.roomNumber}: card image did not load`);'''
-          new_card_check = '''      const cardImageSrc = await cardImage.getAttribute("src");\n      assert(cardImageSrc && decodeURIComponent(cardImageSrc).includes(expected.image), `${language} room ${expected.roomNumber}: wrong card image source ${cardImageSrc || "missing"}`);'''
-          old_detail_check = '''      const detailImageLoaded = await detailImage.evaluate((image) => image.complete && image.naturalWidth > 0);\n      assert(detailImageLoaded, `${language} room ${expected.roomNumber}: detail image did not load`);'''
-          new_detail_check = '''      await detailImage.waitFor({ state: "visible", timeout: 10000 });\n      const detailImageSrc = await detailImage.getAttribute("src");\n      assert(detailImageSrc && decodeURIComponent(detailImageSrc).includes(expected.image), `${language} room ${expected.roomNumber}: wrong detail image source ${detailImageSrc || "missing"}`);'''
-          if old_card_check not in ui_text:
-              raise RuntimeError("Card image assertion block was not found")
-          if old_detail_check not in ui_text:
-              raise RuntimeError("Detail image assertion block was not found")
-          ui_text = ui_text.replace(old_card_check, new_card_check)
-          ui_text = ui_text.replace(old_detail_check, new_detail_check)
-          ui_text = ui_text.replace(
-              '''      assert(dialogText.includes(UI[language].amenities), `${language} room ${expected.roomNumber}: localized amenities heading is missing`);''',
-              '''      assert(dialogText.toLocaleLowerCase().includes(UI[language].amenities.toLocaleLowerCase()), `${language} room ${expected.roomNumber}: localized amenities heading is missing`);\n      const amenityBadges = dialog.locator("span.inline-flex");\n      const amenityCount = await amenityBadges.count();\n      assert(amenityCount >= 4, `${language} room ${expected.roomNumber}: detail amenities are empty (${amenityCount})`);\n      const counter = dialog.getByText(/^\\d+\\/\\d+$/).first();\n      await counter.waitFor({ state: "visible", timeout: 10000 });\n      const counterText = (await counter.innerText()).trim();\n      const totalPhotos = Number(counterText.split("/")[1] || 0);\n      assert(totalPhotos >= 1, `${language} room ${expected.roomNumber}: detail gallery contains ${totalPhotos} photos`);''',
-          )
-          ui_text = ui_text.replace("version: 1,", "version: 3,")
-          ui_path.write_text(ui_text, encoding="utf-8")
-          PY
-          node scripts/fix-ai-room-finder-final-presentation.cjs
-          node --check scripts/qa-ai-concierge.mjs
-          node --check scripts/qa-ai-room-cards-ui.mjs
-          node --check scripts/qa-ai-presentation-regressions.mjs
-
-      - name: Run conversational AI scenarios
+  live-interpreter:
+    if: github.event_name == 'workflow_dispatch' && inputs.run_live_ai == true
+    needs: deterministic-room-finder
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Live semantic interpreter regression QA
         env:
           AI_QA_BASE_URL: https://chioshotel.gr
           AI_QA_TIMEOUT_MS: 30000
-        run: |
-          set +e
-          npm run qa:ai
-          qa_exit=$?
-          echo "Conversation QA completed with script exit code ${qa_exit}. All findings were collected."
-          exit 0
-
-      - name: Run all room card and detail modal checks
-        env:
-          AI_QA_BASE_URL: https://chioshotel.gr
-        run: |
-          set +e
-          node scripts/qa-ai-room-cards-ui.mjs
-          ui_exit=$?
-          echo "Room-card UI QA completed with script exit code ${ui_exit}. All findings were collected."
-          exit 0
-
-      - name: Run room presentation regression checks
-        env:
-          AI_QA_BASE_URL: https://chioshotel.gr
-        run: |
-          set +e
-          node scripts/qa-ai-presentation-regressions.mjs
-          presentation_exit=$?
-          echo "Presentation QA completed with script exit code ${presentation_exit}. All findings were collected."
-          exit 0
-
-      - name: Publish QA summary
-        if: always()
-        run: |
-          node - <<'NODE'
-          const fs = require("fs");
-          const lines = ["## AI Concierge QA", ""];
-          const apiPath = "qa-results/ai-concierge-report.json";
-          const uiPath = "qa-results/ai-room-cards-ui-report.json";
-          const presentationPath = "qa-results/ai-presentation-regressions-report.json";
-          if (fs.existsSync(apiPath)) {
-            const r = JSON.parse(fs.readFileSync(apiPath, "utf8"));
-            lines.push(`### Conversation tests`, `- Total scenarios: ${r.total}`, `- Passed: ${r.passed}`, `- Errors found: ${r.failed}`, "");
-          } else {
-            lines.push("### Conversation tests", "- No JSON report was produced.", "");
-          }
-          if (fs.existsSync(uiPath)) {
-            const r = JSON.parse(fs.readFileSync(uiPath, "utf8"));
-            lines.push(`### Room-card browser tests`, `- Cards checked: ${r.totalCardsChecked}/70`, `- Detail modals opened: ${r.totalDetailsOpened}/70`, `- Languages passed: ${r.passedLanguages}/7`, `- Broken detail links: ${r.failedDetailUrls}`, `- Broken images: ${r.failedImages}`, "");
-          } else {
-            lines.push("### Room-card browser tests", "- No JSON report was produced.", "");
-          }
-          if (fs.existsSync(presentationPath)) {
-            const r = JSON.parse(fs.readFileSync(presentationPath, "utf8"));
-            lines.push(`### Presentation regression tests`, `- Languages passed: ${r.passed}/${r.total}`, `- Errors found: ${r.failed}`, `- Checks: full photos, localized totals, no 18-second popup`, "");
-          } else {
-            lines.push("### Presentation regression tests", "- No JSON report was produced.", "");
-          }
-          lines.push("Reports and failure screenshots are in the ai-concierge-qa-report artifact.");
-          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${lines.join("\n")}\n`);
-          NODE
-
-      - name: Upload QA reports
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: ai-concierge-qa-report
-          path: qa-results/
-          if-no-files-found: warn
-          retention-days: 30
+        run: npm run qa:room-finder-interpreter
