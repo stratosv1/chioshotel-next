@@ -104,7 +104,7 @@ async function ensureFullAuditTable() {
       completed_at timestamptz,
       status text not null default 'running',
       total_urls integer not null default 0,
-      batch_size integer not null default ${FULL_AUDIT_BATCH_SIZE},
+      batch_size integer not null default 120,
       batches_target integer not null default 0,
       batches_completed integer not null default 0,
       inspected_count integer not null default 0,
