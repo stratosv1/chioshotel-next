@@ -91,6 +91,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   const { checkin, checkout, roomCount, totalGuests, groups } = draft;
   const guestTotal = totalGuests || groups.reduce((sum, guests) => sum + guests, 0);
   const nights = checkin && checkout ? Math.max(0, nightsBetween(checkin, checkout)) : 0;
+  const canGoBack = step !== "checkin" && step !== "searching" && step !== "unavailable";
   const selectedKeys = useMemo(
     () => new Set(choices.map(choice => roomOfferKey(choice.offer))),
     [choices],
@@ -149,6 +150,61 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     setInput("");
     clearSearchSelectionState();
     setTyping(false);
+  }
+
+  function goBack() {
+    if (turnLocked.current || !canGoBack) return;
+
+    const previousStep = step;
+    const nextFlow = bookingFlowReducer(flow, { type: "go_back" });
+    if (nextFlow === flow) return;
+
+    if (previousStep === "breakfast") {
+      const lastChoice = choices[choices.length - 1];
+      if (!lastChoice) return;
+      setChoices(current => current.slice(0, -1));
+      setActiveGroup(Math.max(0, lastChoice.group - 1));
+      setBreakfast(false);
+      setSelectingOfferKey(null);
+      dispatchFlow({ type: "commit_turn", state: nextFlow });
+      add("assistant", tone.results(lastChoice.group, lastChoice.guests));
+      return;
+    }
+
+    if (previousStep === "complete") {
+      setBreakfast(false);
+      setSelectingOfferKey(null);
+      dispatchFlow({ type: "commit_turn", state: nextFlow });
+      return;
+    }
+
+    clearSearchSelectionState();
+    dispatchFlow({ type: "commit_turn", state: nextFlow });
+
+    switch (nextFlow.step) {
+      case "checkin":
+        add("assistant", tone.invalidDate);
+        return;
+      case "checkout":
+        add("assistant", tone.checkout);
+        return;
+      case "rooms":
+        add("assistant", tone.rooms);
+        return;
+      case "guests":
+        add("assistant", tone.guests(nextMissingGuestRoom(nextFlow.draft) || 1));
+        return;
+      default:
+        return;
+    }
+  }
+
+  function editDates() {
+    if (turnLocked.current || step === "searching") return;
+    const nextFlow = bookingFlowReducer(flow, { type: "edit_dates" });
+    clearSearchSelectionState();
+    dispatchFlow({ type: "commit_turn", state: nextFlow });
+    add("assistant", tone.invalidDate);
   }
 
   async function interpret(value: string, current: FinderStep): Promise<RoomFinderCommand> {
@@ -402,15 +458,6 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     }
   }
 
-  function backToRooms() {
-    if (turnLocked.current || choices.length === 0) return;
-    const lastChoice = choices[choices.length - 1];
-    setChoices(current => current.slice(0, -1));
-    setActiveGroup(Math.max(0, lastChoice.group - 1));
-    setBreakfast(false);
-    dispatchFlow({ type: "set_step", step: "selecting" });
-  }
-
   async function chooseBreakfast(value: boolean) {
     if (!await beginUserTurn(
       value ? copy.yesBreakfast : copy.noBreakfast,
@@ -443,12 +490,14 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     guestTotal,
     nights,
     visibleOffers,
+    canGoBack,
     reset,
+    goBack,
+    editDates,
     submit,
     chooseRooms,
     chooseGuests,
     selectOffer,
-    backToRooms,
     chooseBreakfast,
   };
 }
