@@ -20,6 +20,7 @@ import {
   hasDistinctOfferPlan,
   roomOfferKey,
 } from "./room-finder-offer-plan";
+import { rewindToAssistantPrompt } from "./room-finder-conversation-history";
 import type { ChatItem, MessageKind, Reaction } from "./room-finder-chat-ui";
 import type { RoomOffer } from "./room-finder-carousel";
 import type { RoomChoice } from "./room-finder-selected-card";
@@ -112,6 +113,9 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   const add = (role: ChatItem["role"], content: string, kind: MessageKind = "normal") =>
     setMessages(current => [...current, { id: rid(), role, content, kind }]);
 
+  const rewindConversation = (...promptContents: string[]) =>
+    setMessages(current => rewindToAssistantPrompt(current, promptContents));
+
   function clearSearchSelectionState() {
     setOffers([]);
     setActiveGroup(0);
@@ -169,14 +173,16 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       setBreakfast(false);
       setSelectingOfferKey(null);
       dispatchFlow({ type: "commit_turn", state: nextFlow });
-      add("assistant", tone.results(lastChoice.group, lastChoice.guests));
+      rewindConversation(tone.results(lastChoice.group, lastChoice.guests));
       return;
     }
 
     if (previousStep === "complete") {
+      const lastChoice = choices[choices.length - 1];
       setBreakfast(false);
       setSelectingOfferKey(null);
       dispatchFlow({ type: "commit_turn", state: nextFlow });
+      if (lastChoice) rewindConversation(tone.selected(lastChoice.offer.name));
       return;
     }
 
@@ -185,16 +191,16 @@ export function useRoomFinder(language: RoomFinderLanguage) {
 
     switch (nextFlow.step) {
       case "checkin":
-        add("assistant", tone.invalidDate);
+        rewindConversation(tone.invalidDate, copy.welcome);
         return;
       case "checkout":
-        add("assistant", tone.checkout);
+        rewindConversation(tone.checkout);
         return;
       case "rooms":
-        add("assistant", tone.rooms);
+        rewindConversation(tone.rooms);
         return;
       case "guests":
-        add("assistant", tone.guests(nextMissingGuestRoom(nextFlow.draft) || 1));
+        rewindConversation(tone.guests(nextMissingGuestRoom(nextFlow.draft) || 1));
         return;
       default:
         return;
