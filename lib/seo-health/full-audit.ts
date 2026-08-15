@@ -251,7 +251,7 @@ export async function recordFullAuditBatch(
         auto_fixed_count = auto_fixed_count + ${result.autoFixed},
         review_count = review_count + ${result.review},
         critical_count = critical_count + ${result.critical},
-        run_ids = run_ids || jsonb_build_array(${result.runId})
+        run_ids = run_ids || jsonb_build_array(${result.runId}::text)
     where id = ${sessionId}::uuid
       and status = 'running'
   `;
