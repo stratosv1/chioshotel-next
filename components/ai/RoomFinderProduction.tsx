@@ -18,26 +18,6 @@ const WHATSAPP_NUMBER = "306944474226";
 const BREAKFAST_IMAGE = "/images/welcome/voulamandis-breakfast.jpg";
 const CORE_INPUT_STEPS = new Set(["checkin", "checkout", "rooms", "guests"]);
 
-const PREVIOUS_STEP: Record<RoomFinderLanguage, string> = {
-  el: "Προηγούμενο βήμα",
-  en: "Previous step",
-  de: "Vorheriger Schritt",
-  fr: "Étape précédente",
-  it: "Passaggio precedente",
-  es: "Paso anterior",
-  tr: "Önceki adım",
-};
-
-const EDIT_DATES: Record<RoomFinderLanguage, string> = {
-  el: "Αλλαγή ημερομηνιών",
-  en: "Edit dates",
-  de: "Daten ändern",
-  fr: "Modifier les dates",
-  it: "Modifica date",
-  es: "Editar fechas",
-  tr: "Tarihleri değiştir",
-};
-
 const CLOSE_DETAILS: Record<RoomFinderLanguage, string> = {
   el: "Κλείσιμο λεπτομερειών δωματίου",
   en: "Close room details",
@@ -97,6 +77,7 @@ export function RoomFinderProduction({
   const feedRef = useRef<HTMLDivElement>(null);
   const detailDialogRef = useRef<HTMLElement>(null);
   const detailCloseRef = useRef<HTMLButtonElement>(null);
+  const detailTriggerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const detected = detectLanguage();
@@ -125,9 +106,6 @@ export function RoomFinderProduction({
   useEffect(() => {
     if (!detail) return;
 
-    const previousFocus = document.activeElement instanceof HTMLElement
-      ? document.activeElement
-      : null;
     const frame = requestAnimationFrame(() => detailCloseRef.current?.focus());
 
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -165,7 +143,7 @@ export function RoomFinderProduction({
     return () => {
       cancelAnimationFrame(frame);
       document.removeEventListener("keydown", handleKeyDown);
-      requestAnimationFrame(() => previousFocus?.focus());
+      requestAnimationFrame(() => detailTriggerRef.current?.focus());
     };
   }, [detail]);
 
@@ -174,6 +152,13 @@ export function RoomFinderProduction({
     url.searchParams.set("lang", next);
     history.replaceState(history.state, "", url);
     setLanguage(next);
+  }
+
+  function openRoomDetail(offer: RoomOffer) {
+    detailTriggerRef.current = document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null;
+    setDetail(offer);
   }
 
   function openWhatsApp(text: string) {
@@ -247,15 +232,15 @@ export function RoomFinderProduction({
   const breakfastTotal = finder.breakfast ? breakfastOfferTotal : 0;
   const roomTotal = finder.choices.reduce((sum, choice) => sum + choice.offer.directTotal, 0);
   const stay = stayRange(finder.checkin, finder.checkout, language);
-  const bookingSummary = [
-    stay,
-    finder.guestTotal ? copy.guestLabel(finder.guestTotal) : "",
-    finder.roomCount ? copy.roomLabel(finder.roomCount) : "",
-  ].filter(Boolean).join(" · ");
+  const bookingSegments: Array<{ key: string; value: string; tabular?: boolean }> = [];
+  if (stay) bookingSegments.push({ key: "dates", value: stay, tabular: true });
+  if (finder.guestTotal) bookingSegments.push({ key: "guests", value: copy.guestLabel(finder.guestTotal) });
+  if (finder.roomCount) bookingSegments.push({ key: "rooms", value: copy.roomLabel(finder.roomCount) });
 
   return (
-    <main className="flex h-[100dvh] flex-col overflow-hidden bg-[#f6f2eb] text-[#29251f]">
+    <main className="room-finder-shell flex h-[100dvh] flex-col overflow-hidden bg-[#f6f2eb] text-[#29251f]">
       <style jsx global>{`
+        .room-finder-shell { --mandarin: #c96f3f; }
         @keyframes msg { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
         @keyframes react { from { opacity: 0; transform: translateY(2px) scale(.82); } to { opacity: 1; transform: none; } }
         @keyframes typingDot { 0%,60%,100% { opacity: .35; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-4px); } }
@@ -264,6 +249,80 @@ export function RoomFinderProduction({
         .typing-dot { display: block; width: 6px; height: 6px; border-radius: 9999px; background: #746b60; animation: typingDot 1.05s ease-in-out infinite; }
         .typing-dot:nth-child(2) { animation-delay: .14s; }
         .typing-dot:nth-child(3) { animation-delay: .28s; }
+        .stay-ticket-tag {
+          position: relative;
+          display: flex;
+          min-width: 0;
+          align-items: center;
+          background: #fff;
+          border: 1px dashed #ddd3c6;
+          border-radius: 999px;
+          padding: 7px 12px 7px 20px;
+          font-size: 11.5px;
+          font-weight: 700;
+          box-shadow: 0 6px 16px rgba(70,55,35,.06);
+        }
+        .stay-ticket-hole {
+          position: absolute;
+          left: -6px;
+          top: 50%;
+          width: 12px;
+          height: 12px;
+          transform: translateY(-50%);
+          border-radius: 999px;
+          background: #f6f2eb;
+          border: 1.5px solid var(--mandarin);
+        }
+        .stay-ticket-divider {
+          width: 1px;
+          height: 12px;
+          flex: 0 0 1px;
+          margin: 0 9px;
+          background: repeating-linear-gradient(to bottom, #ddd3c6 0 3px, transparent 3px 6px);
+        }
+        .stay-ticket-tear {
+          position: relative;
+          height: 0;
+          border-top: 2px dashed #ddd3c6;
+        }
+        .stay-ticket-tear::before,
+        .stay-ticket-tear::after {
+          content: "";
+          position: absolute;
+          top: -10px;
+          width: 20px;
+          height: 20px;
+          border-radius: 999px;
+          background: #f6f2eb;
+          border: 1px solid #d8cec1;
+          z-index: 2;
+        }
+        .stay-ticket-tear::before { left: -11px; }
+        .stay-ticket-tear::after { right: -11px; }
+        .stay-ticket-stamp {
+          position: absolute;
+          right: 14px;
+          top: -14px;
+          z-index: 3;
+          width: 58px;
+          height: 58px;
+          border-radius: 999px;
+          border: 3px double var(--mandarin);
+          color: var(--mandarin);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          font-size: 7.2px;
+          font-weight: 800;
+          line-height: 1.15;
+          letter-spacing: .05em;
+          text-transform: uppercase;
+          background: #fff;
+          transform: rotate(-9deg);
+          opacity: .86;
+          pointer-events: none;
+        }
       `}</style>
 
       <header className="shrink-0 border-b border-[#ddd4c8] bg-[#fbf8f3]/95">
@@ -314,22 +373,34 @@ export function RoomFinderProduction({
         </div>
       </header>
 
-      {bookingSummary && (
+      {bookingSegments.length > 0 && (
         <div className="shrink-0 border-b border-[#e5ddd2] bg-[#f9f5ef] px-3 py-2">
           <div className="mx-auto flex max-w-3xl items-center gap-2">
             {finder.canGoBack && (
               <button
                 type="button"
                 onClick={() => finder.goBack()}
-                aria-label={PREVIOUS_STEP[language]}
-                title={PREVIOUS_STEP[language]}
+                aria-label={copy.previousStep}
+                title={copy.previousStep}
                 className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#ddd3c6] bg-white text-sm font-black text-[#625b52] shadow-sm transition hover:bg-[#f7f3ed] active:scale-[.96]"
               >
                 ←
               </button>
             )}
-            <div className="min-w-0 flex-1 overflow-hidden rounded-full border border-[#ddd3c6] bg-white px-3 py-1.5 text-center text-xs font-semibold text-[#625b52]">
-              <div className="truncate">{bookingSummary}</div>
+            <div className="stay-ticket-tag min-w-0 flex-1 text-[#625b52]">
+              <span className="stay-ticket-hole" aria-hidden="true" />
+              <div className="flex min-w-0 flex-1 items-center overflow-hidden">
+                {bookingSegments.map((segment, index) => (
+                  <span key={segment.key} className="flex min-w-0 items-center">
+                    {index > 0 && <span className="stay-ticket-divider" aria-hidden="true" />}
+                    <span
+                      className={`truncate whitespace-nowrap ${segment.tabular ? "[font-variant-numeric:tabular-nums]" : ""}`}
+                    >
+                      {segment.value}
+                    </span>
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -364,7 +435,7 @@ export function RoomFinderProduction({
                   language={language}
                   money={money}
                   selectingOfferKey={finder.selectingOfferKey}
-                  onDetails={setDetail}
+                  onDetails={openRoomDetail}
                   onSelect={offer => void finder.selectOffer(offer)}
                 />
                 <section className="msg flex items-center gap-3 rounded-[20px] border border-[#dfd6ca] bg-white px-4 py-3 shadow-sm sm:ml-10">
@@ -393,7 +464,7 @@ export function RoomFinderProduction({
                 <div className="msg ml-10 rounded-[20px] rounded-bl-[6px] border border-[#dfd6ca] bg-white px-4 py-3 text-[15px] shadow-sm">
                   <p>{copy.breakfast}</p>
                   {breakfastOfferTotal > 0 && (
-                    <p className="mt-2 font-black text-[#5f7448]">{copy.breakfastLabel}: {money(breakfastOfferTotal, language)}</p>
+                    <p className="mt-2 font-black text-[#5f7448] [font-variant-numeric:tabular-nums]">{copy.breakfastLabel}: {money(breakfastOfferTotal, language)}</p>
                   )}
                 </div>
                 <section className="msg ml-10 overflow-hidden rounded-[22px] border border-[#dcd2c5] bg-white shadow-sm">
@@ -427,7 +498,7 @@ export function RoomFinderProduction({
                   onClick={() => finder.editDates()}
                   className="min-h-12 rounded-2xl border font-bold"
                 >
-                  {EDIT_DATES[language]}
+                  {copy.editDates}
                 </button>
                 <button
                   type="button"
@@ -440,17 +511,19 @@ export function RoomFinderProduction({
             )}
 
             {finder.step === "complete" && (
-              <section className="msg overflow-hidden rounded-[26px] border border-[#dcd2c5] bg-white shadow-[0_16px_45px_rgba(70,55,35,.10)] sm:ml-10">
-                <div className="border-b bg-[#faf7f2] p-4">
+              <section className="msg relative rounded-[26px] border border-[#dcd2c5] bg-white shadow-[0_16px_45px_rgba(70,55,35,.10)] sm:ml-10">
+                <div className="stay-ticket-stamp" aria-hidden="true">VH · KAMBOS · CHIOS</div>
+                <div className="rounded-t-[25px] bg-[#faf7f2] p-4 pr-[82px]">
                   <div className="flex justify-between gap-3">
                     <h2 className="text-lg font-black">{copy.summary}</h2>
                     <button type="button" onClick={() => finder.reset()} className="text-xs font-bold underline">
                       {copy.newSearch}
                     </button>
                   </div>
-                  <p className="mt-2 text-sm text-[#746b60]">{stay} · {copy.nightLabel(finder.nights)}</p>
+                  <p className="mt-2 text-sm text-[#746b60] [font-variant-numeric:tabular-nums]">{stay} · {copy.nightLabel(finder.nights)}</p>
                 </div>
-                <div className="p-4">
+                <div className="stay-ticket-tear" aria-hidden="true" />
+                <div className="rounded-b-[25px] p-4">
                   {finder.choices.map(choice => (
                     <div key={choice.group} className="flex items-center gap-3 border-b py-3">
                       <div className="relative h-14 w-[72px] overflow-hidden rounded-xl">
@@ -460,18 +533,18 @@ export function RoomFinderProduction({
                         <p className="font-bold">{choice.offer.name}</p>
                         <p className="text-xs text-[#746b60]">{copy.guestLabel(choice.guests)}</p>
                       </div>
-                      <strong className="text-[#5f7448]">{money(choice.offer.directTotal, language)}</strong>
+                      <strong className="text-[#5f7448] [font-variant-numeric:tabular-nums]">{money(choice.offer.directTotal, language)}</strong>
                     </div>
                   ))}
                   {finder.breakfast && (
                     <div className="flex justify-between border-b py-3">
                       <span>🥐 {copy.breakfastLabel}</span>
-                      <strong>{money(breakfastTotal, language)}</strong>
+                      <strong className="[font-variant-numeric:tabular-nums]">{money(breakfastTotal, language)}</strong>
                     </div>
                   )}
                   <div className="mt-4 flex justify-between rounded-2xl bg-[#f1ede7] p-4 text-lg">
                     <b>{copy.total}</b>
-                    <strong className="text-xl text-[#5f7448]">{money(roomTotal + breakfastTotal, language)}</strong>
+                    <strong className="text-xl text-[#5f7448] [font-variant-numeric:tabular-nums]">{money(roomTotal + breakfastTotal, language)}</strong>
                   </div>
                   <div className="mt-5">
                     <h3 className="text-lg font-black">{copy.contactTitle}</h3>
@@ -577,7 +650,7 @@ export function RoomFinderProduction({
       {detail && (
         <div
           className="fixed inset-0 z-50 flex items-end bg-black/35 p-3 sm:items-center sm:justify-center"
-          onMouseDown={event => {
+          onClick={event => {
             if (event.target === event.currentTarget) setDetail(null);
           }}
         >
