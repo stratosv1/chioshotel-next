@@ -37,7 +37,12 @@ async function checkDistributedRateLimit(ip: string) {
   const sql = neon(process.env.DATABASE_URL);
   const key = clientKey(ip);
   const rows = await sql`
-    with hits as (
+    with cleanup as (
+      delete from ai_security.rate_limit_windows
+      where window_start < date_trunc('hour', now()) - interval '2 hours'
+      returning 1
+    ),
+    hits as (
       insert into ai_security.rate_limit_windows (
         client_key,
         window_kind,
