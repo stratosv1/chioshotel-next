@@ -127,4 +127,45 @@ for (const root of sourceRoots) {
   }
 }
 
+// The rooms-category pages must use the AI enquiry journey, not the retired questionnaire form.
+const roomFinderSection = read("components/rooms/RoomWizardTailwind.tsx");
+const greekRoomFinderSection = read("components/rooms/GreekRoomWizardTailwind.tsx");
+const roomsOwnerIntent = read("lib/rooms-owner-seo-intent.ts");
+
+assert(!roomFinderSection.includes("<form"), "Legacy Room Wizard form must not return to room-category pages");
+assert(!roomFinderSection.includes('type="date"'), "Legacy Room Wizard date fields must not return");
+assert(!roomFinderSection.includes("consent:"), "Legacy Room Wizard lead form copy must not return");
+assert(roomFinderSection.includes("roomFinderHrefForLanguage"), "Room pages must use the central AI Room Finder destination helper");
+assert(roomFinderSection.includes('data-booking-cta="true"'), "Beds24 CTA must be explicitly protected from AI routing");
+assert(greekRoomFinderSection.includes('language="el"'), "Greek rooms page must render the Greek AI Room Finder CTA section");
+assert(!roomsOwnerIntent.includes("Room Wizard suggests"), "Retired Room Wizard messaging remains in English rooms intent");
+assert(!roomsOwnerIntent.includes("Το Room Wizard"), "Retired Room Wizard messaging remains in Greek rooms intent");
+
+const roomPageAiLabels = [
+  "Find your room with AI",
+  "Βρείτε το δωμάτιό σας με AI",
+  "Trouver votre chambre avec l’IA",
+  "Zimmer mit AI finden",
+  "Trova la tua camera con l’AI",
+  "Encuentra tu habitación con IA",
+  "AI ile odanızı bulun",
+];
+for (const label of roomPageAiLabels) {
+  assert(roomFinderSection.includes(label), `Missing localized room-page AI CTA: ${label}`);
+  assert(roomsOwnerIntent.includes(label), `Missing localized hero AI CTA: ${label}`);
+}
+
+const localizedBookingRoutes = [
+  "/chios-hotels-rates/",
+  "/el/amesi-kratisi-voulamandis-house/",
+  "/fr/tarifs-des-hotels-a-chios/",
+  "/de/hotelpreise-auf-der-insel-chios/",
+  "/it/prezzi-hotel-chios/",
+  "/es/los-mejores-precios-de-hotel-en-la-isla-chios/",
+  "/tr/sakiz-adasi-rezervasyon/",
+];
+for (const route of localizedBookingRoutes) {
+  assert(roomFinderSection.includes(route), `Missing localized Beds24 booking route: ${route}`);
+}
+
 console.log("Room Finder CTA routing QA passed: discovery → AI, booking → Beds24 semantics preserved.");
