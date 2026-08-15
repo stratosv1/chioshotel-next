@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import { markRoomFinderEnquirySent } from "@/lib/ai-assistant/conversation-store";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -8,7 +9,15 @@ type SummaryEmailBody = {
   subject?: string;
   message?: string;
   source?: string;
-  guest?: { email?: string };
+  guest?: {
+    firstName?: string;
+    lastName?: string;
+    name?: string;
+    phone?: string;
+    email?: string;
+    privacyAccepted?: boolean;
+    privacyAcceptedAt?: string;
+  };
 };
 
 function clean(value: unknown, max: number) {
@@ -26,6 +35,21 @@ function escapeHtml(value: string) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+}
+
+function readCookie(request: Request, name: string) {
+  const cookieHeader = request.headers.get("cookie") || "";
+  for (const part of cookieHeader.split(";")) {
+    const [rawKey, ...rawValue] = part.trim().split("=");
+    if (rawKey === name) {
+      try {
+        return decodeURIComponent(rawValue.join("="));
+      } catch {
+        return rawValue.join("=");
+      }
+    }
+  }
+  return "";
 }
 
 export async function POST(request: Request) {
@@ -100,6 +124,17 @@ export async function POST(request: Request) {
         { ok: false, error: "The email server did not accept the reception address." },
         { status: 502 },
       );
+    }
+
+    if (source === "ai-room-finder") {
+      const roomFinderSessionId = readCookie(request, "ai_rf_session");
+      if (roomFinderSessionId && body.guest) {
+        try {
+          await markRoomFinderEnquirySent(roomFinderSessionId, body.guest);
+        } catch (error) {
+          console.error("Could not link AI Room Finder enquiry to staff inbox", error);
+        }
+      }
     }
 
     return NextResponse.json({
