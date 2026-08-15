@@ -229,6 +229,61 @@ function testButtonAllocationPath() {
   assert(state.draft.totalGuests === 4, "button allocation did not derive total guests");
 }
 
+function testDeterministicBackNavigation() {
+  const checkoutBack = bookingFlowReducer({
+    step: "checkout",
+    draft: { checkin: "2026-10-10", checkout: "", roomCount: null, totalGuests: null, groups: [] },
+  }, { type: "go_back" });
+  assert(checkoutBack.step === "checkin", "checkout back did not target check-in");
+  assert(checkoutBack.draft.checkin === "" && checkoutBack.draft.checkout === "", "checkout back did not clear the date dependency");
+
+  const roomsBack = bookingFlowReducer({
+    step: "rooms",
+    draft: { checkin: "2026-10-10", checkout: "2026-10-12", roomCount: null, totalGuests: null, groups: [] },
+  }, { type: "go_back" });
+  assert(roomsBack.step === "checkout" && roomsBack.draft.checkout === "", "rooms back did not reopen checkout");
+  assert(roomsBack.draft.checkin === "2026-10-10", "rooms back unnecessarily cleared check-in");
+
+  const secondRoomGuestsBack = bookingFlowReducer({
+    step: "guests",
+    draft: { checkin: "2026-10-10", checkout: "2026-10-12", roomCount: 2, totalGuests: null, groups: [3] },
+  }, { type: "go_back" });
+  assert(secondRoomGuestsBack.step === "guests", "multi-room guest back left guest allocation");
+  assert(nextMissingGuestRoom(secondRoomGuestsBack.draft) === 1, "multi-room guest back did not reopen the previous room");
+
+  const firstRoomGuestsBack = bookingFlowReducer({
+    step: "guests",
+    draft: { checkin: "2026-10-10", checkout: "2026-10-12", roomCount: 2, totalGuests: 4, groups: [] },
+  }, { type: "go_back" });
+  assert(firstRoomGuestsBack.step === "rooms", "first guest step did not go back to rooms");
+  assert(firstRoomGuestsBack.draft.roomCount === null && firstRoomGuestsBack.draft.groups.length === 0, "rooms back kept incompatible allocation state");
+
+  const selectingBack = bookingFlowReducer({
+    step: "selecting",
+    draft: { checkin: "2026-10-10", checkout: "2026-10-12", roomCount: 2, totalGuests: 4, groups: [2, 2] },
+  }, { type: "go_back" });
+  assert(selectingBack.step === "guests", "selecting back did not return to guests");
+  assert(nextMissingGuestRoom(selectingBack.draft) === 2, "selecting back did not reopen the last room guest allocation");
+  assert(selectingBack.draft.totalGuests === null, "selecting back kept a derived total that could constrain correction");
+
+  const breakfastBack = bookingFlowReducer({ step: "breakfast", draft: fullDraft() }, { type: "go_back" });
+  assert(breakfastBack.step === "selecting", "breakfast back did not return to room selection");
+
+  const completeBack = bookingFlowReducer({ step: "complete", draft: fullDraft() }, { type: "go_back" });
+  assert(completeBack.step === "breakfast", "complete back did not return to breakfast");
+
+  const unavailable = { step: "unavailable", draft: fullDraft() };
+  assert(bookingFlowReducer(unavailable, { type: "go_back" }) === unavailable, "unavailable received an ambiguous generic back transition");
+
+  const searching = { step: "searching", draft: fullDraft() };
+  assert(bookingFlowReducer(searching, { type: "go_back" }) === searching, "searching allowed a race-prone back transition");
+
+  const editDates = bookingFlowReducer({ step: "unavailable", draft: fullDraft() }, { type: "edit_dates" });
+  assert(editDates.step === "checkin", "edit dates did not reopen check-in");
+  assert(editDates.draft.checkin === "" && editDates.draft.checkout === "", "edit dates did not clear both dates");
+  assert(editDates.draft.roomCount === 1 && editDates.draft.totalGuests === 2 && editDates.draft.groups[0] === 2, "edit dates lost unrelated booking facts");
+}
+
 function testMultiRoomOfferFeasibility() {
   const a = offer("a");
   const b = offer("b");
@@ -273,6 +328,10 @@ function testResultsUxCleanup() {
   assert(!copy.includes("feedbackQ"), "removed feedback copy remains in Room Finder copy contract");
   assert(!helpers.includes("matchesRoomFilter"), "removed filter-matching logic remains in flow helpers");
   assert(!fs.existsSync(legacyFlowPath), "unused legacy Room Finder implementation still exists");
+  assert(production.includes("finder.canGoBack"), "stable booking-summary back control is missing");
+  assert(production.includes("finder.editDates"), "unavailable flow is missing explicit date editing");
+  assert(production.includes('role="dialog"') && production.includes('aria-modal="true"'), "room details accessibility dialog semantics are missing");
+  assert(production.includes('event.key === "Escape"'), "room details dialog cannot be dismissed with Escape");
 }
 
 function main() {
@@ -284,6 +343,7 @@ function main() {
   testDownstreamDateClarification();
   testInvalidDatesAndCheckoutOrder();
   testButtonAllocationPath();
+  testDeterministicBackNavigation();
   testMultiRoomOfferFeasibility();
   testResultsUxCleanup();
   console.log("Room Finder deterministic flow QA passed.");
