@@ -74,6 +74,7 @@ export function RoomFinderProduction({
   const [detail, setDetail] = useState<RoomOffer | null>(null);
   const [contact, setContact] = useState({ name: "", phone: "", email: "" });
   const [sendStatus, setSendStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [hiddenQuickReplyPromptId, setHiddenQuickReplyPromptId] = useState<string | null>(null);
   const feedRef = useRef<HTMLDivElement>(null);
   const detailDialogRef = useRef<HTMLElement>(null);
   const detailCloseRef = useRef<HTMLButtonElement>(null);
@@ -90,6 +91,7 @@ export function RoomFinderProduction({
     setDetail(null);
     setContact({ name: "", phone: "", email: "" });
     setSendStatus("idle");
+    setHiddenQuickReplyPromptId(null);
   }, [language]);
 
   useEffect(() => {
@@ -240,6 +242,8 @@ export function RoomFinderProduction({
     .reverse()
     .find(message => message.role === "assistant")?.id;
   const awaitingStepTransition = finder.messages[finder.messages.length - 1]?.role === "user";
+  const quickRepliesHidden = awaitingStepTransition
+    || (!!lastAssistantMessageId && hiddenQuickReplyPromptId === lastAssistantMessageId);
 
   return (
     <main className="flex h-[100dvh] flex-col overflow-hidden bg-[#f6f2eb] text-[#29251f]">
@@ -356,7 +360,7 @@ export function RoomFinderProduction({
                 <ChatMessage message={message} />
                 {finder.canGoBack
                   && !finder.typing
-                  && !awaitingStepTransition
+                  && !quickRepliesHidden
                   && message.role === "assistant"
                   && message.id === lastAssistantMessageId && (
                     <div className="ml-10 mt-1.5">
@@ -376,11 +380,27 @@ export function RoomFinderProduction({
             ))}
             {finder.typing && <TypingIndicator />}
 
-            {finder.step === "rooms" && !awaitingStepTransition && (
-              <IconReplies values={[1, 2, 3]} icon="🛏️" label={copy.roomLabel} onSelect={value => void finder.chooseRooms(value)} />
+            {finder.step === "rooms" && !quickRepliesHidden && (
+              <IconReplies
+                values={[1, 2, 3]}
+                icon="🛏️"
+                label={copy.roomLabel}
+                onSelect={value => {
+                  if (lastAssistantMessageId) setHiddenQuickReplyPromptId(lastAssistantMessageId);
+                  void finder.chooseRooms(value);
+                }}
+              />
             )}
-            {finder.step === "guests" && !awaitingStepTransition && (
-              <IconReplies values={[1, 2, 3, 4, 5]} icon="👤" label={copy.guestLabel} onSelect={value => void finder.chooseGuests(value)} />
+            {finder.step === "guests" && !quickRepliesHidden && (
+              <IconReplies
+                values={[1, 2, 3, 4, 5]}
+                icon="👤"
+                label={copy.guestLabel}
+                onSelect={value => {
+                  if (lastAssistantMessageId) setHiddenQuickReplyPromptId(lastAssistantMessageId);
+                  void finder.chooseGuests(value);
+                }}
+              />
             )}
 
             {finder.step === "selecting" && finder.visibleOffers.length > 0 && (
