@@ -208,17 +208,26 @@ expectNone(
 
 expectAll(
   "components/rooms/GreekRoomWizardTailwind.tsx",
+  ["RoomWizardTailwind", 'language="el"'],
+  "Greek rooms AI Room Finder wrapper is incomplete",
+);
+
+expectAll(
+  "components/rooms/RoomWizardTailwind.tsx",
   [
-    "Βρείτε το δωμάτιο που σας ταιριάζει",
-    "Οικονομική κατηγορία",
-    "Δίκλινο / τρίκλινο δωμάτιο ορόφου",
-    "Ανεξάρτητο διαμέρισμα",
-    "Δωμάτιο $1",
-    "Διπλό",
-    "Μονό",
-    "Καναπές-κρεβάτι",
+    "Βρείτε το συγκεκριμένο δωμάτιο που σας ταιριάζει",
+    "Βρείτε το δωμάτιό σας με AI",
+    "Online κράτηση",
+    "Κράτηση τώρα",
+    'data-booking-cta="true"',
   ],
-  "Greek room wizard localization is incomplete",
+  "Greek rooms AI Room Finder CTA localization is incomplete",
+);
+
+expectNone(
+  "components/rooms/RoomWizardTailwind.tsx",
+  ["<form", 'type="date"', "Οικονομική κατηγορία", "Καναπές-κρεβάτι"],
+  "Retired Room Wizard questionnaire must not return to room-category pages",
 );
 
 expectAll(
