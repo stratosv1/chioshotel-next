@@ -30,6 +30,17 @@ function getSql() {
   return neon(databaseUrl);
 }
 
+function toIsoTimestamp(value: unknown) {
+  if (value instanceof Date) return value.toISOString();
+  const raw = String(value || "").trim();
+  if (!raw) throw new Error("Full SEO Audit timestamp is empty.");
+  const parsed = new Date(raw);
+  if (Number.isNaN(parsed.getTime())) {
+    throw new Error(`Invalid Full SEO Audit timestamp: ${raw}`);
+  }
+  return parsed.toISOString();
+}
+
 function decodeXml(value: string) {
   return value
     .replace(/&amp;/g, "&")
@@ -124,12 +135,14 @@ async function ensureFullAuditTable() {
 }
 
 function mapSession(row: any): FullAuditSession {
+  const startedAtValue = row.startedAt || row.started_at;
+  const completedAtValue = row.completedAt || row.completed_at;
   return {
     id: String(row.id || ""),
     siteUrl: String(row.siteUrl || row.site_url || ""),
     status: String(row.status || "running") as FullAuditSession["status"],
-    startedAt: String(row.startedAt || row.started_at || ""),
-    completedAt: row.completedAt || row.completed_at ? String(row.completedAt || row.completed_at) : null,
+    startedAt: startedAtValue ? toIsoTimestamp(startedAtValue) : "",
+    completedAt: completedAtValue ? toIsoTimestamp(completedAtValue) : null,
     totalUrls: Number(row.totalUrls ?? row.total_urls ?? 0),
     batchSize: Number(row.batchSize ?? row.batch_size ?? FULL_AUDIT_BATCH_SIZE),
     batchesTarget: Number(row.batchesTarget ?? row.batches_target ?? 0),
@@ -273,21 +286,31 @@ export async function finalizeFullAuditSession(sessionId: string) {
   if (row.status === "success") return selectSession(sessionId);
 
   const runIds = Array.isArray(row.runIds) ? row.runIds.map(String).filter(Boolean) : [];
+  const startedAt = toIsoTimestamp(row.started_at);
+  let aggregateRunId = row.aggregate_run_id ? String(row.aggregate_run_id) : "";
 
-  const aggregateRows = await sql`
-    insert into seo_health_runs (
-      site_url, started_at, completed_at, status,
-      inspected_count, healthy_count, auto_fixed_count, review_count, critical_count
-    ) values (
-      ${String(row.site_url)}, ${String(row.started_at)}::timestamptz, now(), 'success',
-      ${Number(row.inspected_count || 0)}, ${Number(row.healthy_count || 0)},
-      ${Number(row.auto_fixed_count || 0)}, ${Number(row.review_count || 0)},
-      ${Number(row.critical_count || 0)}
-    )
-    returning id::text
-  `;
-  const aggregateRunId = String((aggregateRows[0] as any)?.id || "");
-  if (!aggregateRunId) throw new Error("Failed to create aggregate Full SEO Audit run.");
+  if (!aggregateRunId) {
+    const aggregateRows = await sql`
+      insert into seo_health_runs (
+        site_url, started_at, completed_at, status,
+        inspected_count, healthy_count, auto_fixed_count, review_count, critical_count
+      ) values (
+        ${String(row.site_url)}, ${startedAt}::timestamptz, now(), 'success',
+        ${Number(row.inspected_count || 0)}, ${Number(row.healthy_count || 0)},
+        ${Number(row.auto_fixed_count || 0)}, ${Number(row.review_count || 0)},
+        ${Number(row.critical_count || 0)}
+      )
+      returning id::text
+    `;
+    aggregateRunId = String((aggregateRows[0] as any)?.id || "");
+    if (!aggregateRunId) throw new Error("Failed to create aggregate Full SEO Audit run.");
+
+    await sql`
+      update seo_full_audit_sessions
+      set aggregate_run_id = ${aggregateRunId}::bigint
+      where id = ${sessionId}::uuid
+    `;
+  }
 
   if (runIds.length) {
     const runIdsJson = JSON.stringify(runIds);
