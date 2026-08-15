@@ -1,11 +1,12 @@
 {
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/prepare-build-clean.cjs && node scripts/qa-gsc-index-routing.cjs && node scripts/qa-seo-intent-architecture.cjs && node scripts/qa-room-finder-flow.cjs && node scripts/qa-room-finder-mobile-chat.cjs && next build",
+    "build": "node scripts/prepare-build-clean.cjs && node scripts/qa-gsc-index-routing.cjs && node scripts/qa-seo-intent-architecture.cjs && node scripts/qa-room-finder-flow.cjs && node scripts/qa-room-finder-mobile-chat.cjs && node scripts/qa-room-finder-back-history.cjs && next build",
     "start": "next start",
-    "qa:ai": "node scripts/qa-room-finder-flow.cjs && node scripts/qa-room-finder-mobile-chat.cjs && node scripts/qa-room-finder-interpreter.mjs",
+    "qa:ai": "node scripts/qa-room-finder-flow.cjs && node scripts/qa-room-finder-mobile-chat.cjs && node scripts/qa-room-finder-back-history.cjs && node scripts/qa-room-finder-interpreter.mjs",
     "qa:room-finder-flow": "node scripts/qa-room-finder-flow.cjs",
     "qa:room-finder-mobile": "node scripts/qa-room-finder-mobile-chat.cjs",
+    "qa:room-finder-back-history": "node scripts/qa-room-finder-back-history.cjs",
     "qa:room-finder-interpreter": "node scripts/qa-room-finder-interpreter.mjs",
     "qa:gsc": "node scripts/qa-gsc-index-routing.cjs",
     "qa:seo": "node scripts/qa-seo-intent-architecture.cjs",
