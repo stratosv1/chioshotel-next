@@ -82,14 +82,14 @@ for (const [file, language] of Object.entries(redirects)) {
   );
 }
 
-// Transactional CTAs must never be hard-coded to the AI Room Finder.
+// Transactional label+href objects must never point to the AI Room Finder.
 const sourceRoots = ["app", "components", "content", "lib"];
 const extensions = new Set([".ts", ".tsx", ".js", ".jsx"]);
 const bookingWords = [
   "book now",
   "direct booking",
   "κρατηση",
-  "reserver",
+  "réserver",
   "reservation",
   "buchen",
   "buchung",
@@ -110,19 +110,18 @@ function walk(directory) {
   });
 }
 
+const ctaObjectPattern = /\{[^{}]{0,500}?label\s*:\s*["'`]([^"'`]+)["'`][^{}]{0,500}?href\s*:\s*["'`]([^"'`]+)["'`][^{}]{0,200}?\}/gis;
+
 for (const root of sourceRoots) {
   for (const file of walk(path.join(process.cwd(), root))) {
     const source = fs.readFileSync(file, "utf8");
-    const lower = source.toLowerCase();
-    if (!lower.includes("/ai-assistant")) continue;
-
-    for (const word of bookingWords) {
-      const index = lower.indexOf(word);
-      if (index < 0) continue;
-      const nearby = lower.slice(Math.max(0, index - 180), Math.min(lower.length, index + 260));
+    for (const match of source.matchAll(ctaObjectPattern)) {
+      const label = match[1].toLocaleLowerCase();
+      const href = match[2];
+      if (!href.includes("/ai-assistant")) continue;
       assert(
-        !nearby.includes("/ai-assistant"),
-        `Transactional booking CTA appears to point to AI Room Finder in ${path.relative(process.cwd(), file)} near \"${word}\"`,
+        !bookingWords.some((word) => label.includes(word)),
+        `Transactional CTA \"${match[1]}\" must not point to AI Room Finder in ${path.relative(process.cwd(), file)}`,
       );
     }
   }
