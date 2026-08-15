@@ -9,6 +9,7 @@ import {
 import { getSeoHealthDashboard } from "@/lib/seo-health/store";
 import SeoCockpit from "./SeoCockpit";
 import SeoHealthPanel from "./SeoHealthPanel";
+import RunSeoAuditButton from "./RunSeoAuditButton";
 
 export const dynamic = "force-dynamic";
 
@@ -39,6 +40,11 @@ export default async function SeoAdvisorPage() {
 
   return (
     <>
+      <section className="bg-[#eee9e1] px-4 pt-5 sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-7xl justify-end">
+          <RunSeoAuditButton />
+        </div>
+      </section>
       <SeoHealthPanel health={health} />
       <SeoCockpit
         snapshot={snapshot}
