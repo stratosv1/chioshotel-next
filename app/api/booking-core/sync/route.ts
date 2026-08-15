@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { neon } from "@neondatabase/serverless";
+import {
+  detectPriceChanges,
+  retryPendingPricingAlert,
+  runPricingAuditAfterPriceChange,
+} from "./pricing-audit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -213,7 +218,10 @@ async function syncBookingCore(request: NextRequest) {
 
   const startedAt = Date.now();
   try {
+    await retryPendingPricingAlert(databaseUrl);
+
     const snapshot = await fetchCanonicalSnapshot(scriptUrl, scriptSecret);
+    const priceChanges = await detectPriceChanges(databaseUrl, snapshot.rows);
     const sql = neon(databaseUrl);
     const result = await sql`
       select *
@@ -225,6 +233,12 @@ async function syncBookingCore(request: NextRequest) {
     `;
 
     const saved = (result as any[])?.[0] || {};
+    const pricingAudit = await runPricingAuditAfterPriceChange(
+      databaseUrl,
+      snapshot.dataUpdatedAt,
+      priceChanges,
+    );
+
     return NextResponse.json({
       ok: true,
       source: "script_url_booking_core_snapshot_v1",
@@ -234,6 +248,7 @@ async function syncBookingCore(request: NextRequest) {
       range: { min: saved.min_date || null, max: saved.max_date || null },
       sourceDataUpdatedAt: snapshot.dataUpdatedAt,
       sourceResponseGeneratedAt: snapshot.generatedAt,
+      pricingAudit,
       durationMs: Date.now() - startedAt,
     }, { headers: { "Cache-Control": "no-store", "X-Robots-Tag": "noindex, nofollow" } });
   } catch (error) {
