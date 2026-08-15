@@ -31,6 +31,9 @@ concurrency:
   group: ai-room-finder-qa-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  ROOM_FINDER_TYPESCRIPT_VERSION: '6.0.3'
+
 jobs:
   deterministic-room-finder:
     runs-on: ubuntu-latest
@@ -42,7 +45,9 @@ jobs:
           node-version: 22
           cache: npm
       - name: Install current application dependencies
-        run: npm install --package-lock=false --ignore-scripts --no-audit --no-fund
+        run: |
+          npm install --package-lock=false --ignore-scripts --no-audit --no-fund
+          npm install --package-lock=false --ignore-scripts --no-save --no-audit --no-fund typescript@${ROOM_FINDER_TYPESCRIPT_VERSION}
       - name: Deterministic Room Finder flow QA
         run: npm run qa:room-finder-flow
       - name: Verify the production entry point stays canonical
@@ -63,7 +68,9 @@ jobs:
           node-version: 22
           cache: npm
       - name: Install current application dependencies
-        run: npm install --package-lock=false --ignore-scripts --no-audit --no-fund
+        run: |
+          npm install --package-lock=false --ignore-scripts --no-audit --no-fund
+          npm install --package-lock=false --ignore-scripts --no-save --no-audit --no-fund typescript@${ROOM_FINDER_TYPESCRIPT_VERSION}
       - name: Live semantic interpreter regression QA
         env:
           AI_QA_BASE_URL: https://chioshotel.gr
