@@ -1,4 +1,5 @@
 import type { RoomWizardRoom } from "@/content/rooms";
+import { roomFinderHrefForLanguage } from "@/lib/room-finder-cta-routing";
 
 type WizardLanguage = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
 
@@ -13,7 +14,6 @@ type RoomFinderCtaCopy = {
   aiTitle: string;
   aiText: string;
   aiCta: string;
-  aiHref: string;
   bookingEyebrow: string;
   bookingTitle: string;
   bookingText: string;
@@ -28,7 +28,6 @@ const copyByLanguage: Record<WizardLanguage, RoomFinderCtaCopy> = {
     aiText:
       "Tell us your dates and number of guests. The AI Room Finder checks individual rooms that may suit you, shows the options and lets you send an availability enquiry to Voulamandis House. No booking or card payment is completed here.",
     aiCta: "Find your room with AI",
-    aiHref: "/ai-assistant/?lang=en",
     bookingEyebrow: "Online booking",
     bookingTitle: "Ready to book a room category?",
     bookingText:
@@ -42,7 +41,6 @@ const copyByLanguage: Record<WizardLanguage, RoomFinderCtaCopy> = {
     aiText:
       "Πείτε μας τις ημερομηνίες και τον αριθμό επισκεπτών. Το AI Room Finder ελέγχει ποια συγκεκριμένα δωμάτια μπορεί να σας ταιριάζουν, σας δείχνει τις επιλογές και σας επιτρέπει να στείλετε αίτημα διαθεσιμότητας στο Voulamandis House. Εδώ δεν ολοκληρώνεται κράτηση ούτε πληρωμή με κάρτα.",
     aiCta: "Βρείτε το δωμάτιό σας με AI",
-    aiHref: "/ai-assistant/?lang=el",
     bookingEyebrow: "Online κράτηση",
     bookingTitle: "Θέλετε να κάνετε άμεση online κράτηση;",
     bookingText:
@@ -56,7 +54,6 @@ const copyByLanguage: Record<WizardLanguage, RoomFinderCtaCopy> = {
     aiText:
       "Indiquez vos dates et le nombre de personnes. L’AI Room Finder vérifie quelles chambres précises peuvent vous convenir, affiche les options et vous permet d’envoyer une demande de disponibilité au Voulamandis House. Aucune réservation ni aucun paiement par carte n’est finalisé ici.",
     aiCta: "Trouver votre chambre avec l’IA",
-    aiHref: "/ai-assistant/?lang=fr",
     bookingEyebrow: "Réservation en ligne",
     bookingTitle: "Prêt à réserver une catégorie de chambre ?",
     bookingText:
@@ -70,7 +67,6 @@ const copyByLanguage: Record<WizardLanguage, RoomFinderCtaCopy> = {
     aiText:
       "Geben Sie Ihre Reisedaten und die Gästezahl an. Der AI Room Finder prüft, welche konkreten Zimmer zu Ihnen passen könnten, zeigt die Optionen und ermöglicht eine Verfügbarkeitsanfrage an Voulamandis House. Hier wird keine Buchung oder Kartenzahlung abgeschlossen.",
     aiCta: "Zimmer mit AI finden",
-    aiHref: "/ai-assistant/?lang=de",
     bookingEyebrow: "Online-Buchung",
     bookingTitle: "Möchten Sie eine Zimmerkategorie direkt buchen?",
     bookingText:
@@ -84,7 +80,6 @@ const copyByLanguage: Record<WizardLanguage, RoomFinderCtaCopy> = {
     aiText:
       "Indica le date e il numero di ospiti. L’AI Room Finder verifica quali camere specifiche potrebbero essere adatte, mostra le opzioni e ti permette di inviare una richiesta di disponibilità a Voulamandis House. Qui non viene completata alcuna prenotazione né alcun pagamento con carta.",
     aiCta: "Trova la tua camera con l’AI",
-    aiHref: "/ai-assistant/?lang=it",
     bookingEyebrow: "Prenotazione online",
     bookingTitle: "Vuoi prenotare subito una categoria di camera?",
     bookingText:
@@ -98,7 +93,6 @@ const copyByLanguage: Record<WizardLanguage, RoomFinderCtaCopy> = {
     aiText:
       "Indica las fechas y el número de huéspedes. AI Room Finder comprueba qué habitaciones concretas pueden encajar mejor, muestra las opciones y te permite enviar una consulta de disponibilidad a Voulamandis House. Aquí no se completa ninguna reserva ni ningún pago con tarjeta.",
     aiCta: "Encuentra tu habitación con IA",
-    aiHref: "/ai-assistant/?lang=es",
     bookingEyebrow: "Reserva online",
     bookingTitle: "¿Quieres reservar ahora una categoría de habitación?",
     bookingText:
@@ -112,7 +106,6 @@ const copyByLanguage: Record<WizardLanguage, RoomFinderCtaCopy> = {
     aiText:
       "Tarihlerinizi ve misafir sayısını belirtin. AI Room Finder size uygun olabilecek belirli odaları kontrol eder, seçenekleri gösterir ve Voulamandis House’a müsaitlik talebi göndermenizi sağlar. Burada rezervasyon veya kartla ödeme tamamlanmaz.",
     aiCta: "AI ile odanızı bulun",
-    aiHref: "/ai-assistant/?lang=tr",
     bookingEyebrow: "Online rezervasyon",
     bookingTitle: "Bir oda kategorisini hemen rezerve etmek ister misiniz?",
     bookingText:
@@ -124,6 +117,7 @@ const copyByLanguage: Record<WizardLanguage, RoomFinderCtaCopy> = {
 
 export function RoomWizardTailwind({ language = "en" }: RoomWizardTailwindProps) {
   const copy = copyByLanguage[language] ?? copyByLanguage.en;
+  const aiHref = roomFinderHrefForLanguage(language);
 
   return (
     <div
@@ -141,7 +135,7 @@ export function RoomWizardTailwind({ language = "en" }: RoomWizardTailwindProps)
           {copy.aiText}
         </p>
         <a
-          href={copy.aiHref}
+          href={aiHref}
           className="mt-6 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-[#2f261f] px-5 text-center text-xs font-black uppercase tracking-[0.1em] !text-white shadow-lg shadow-stone-900/15 transition hover:-translate-y-0.5 hover:bg-amber-800 sm:w-auto"
         >
           {copy.aiCta} <span className="ml-2" aria-hidden="true">→</span>
