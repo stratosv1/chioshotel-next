@@ -18,14 +18,34 @@ const WHATSAPP_NUMBER = "306944474226";
 const BREAKFAST_IMAGE = "/images/welcome/voulamandis-breakfast.jpg";
 const CORE_INPUT_STEPS = new Set(["checkin", "checkout", "rooms", "guests"]);
 
-const BACK_TO_ROOMS: Record<RoomFinderLanguage, string> = {
-  el: "Πίσω στα δωμάτια",
-  en: "Back to rooms",
-  de: "Zurück zu den Zimmern",
-  fr: "Retour aux chambres",
-  it: "Torna alle camere",
-  es: "Volver a las habitaciones",
-  tr: "Odalara dön",
+const PREVIOUS_STEP: Record<RoomFinderLanguage, string> = {
+  el: "Προηγούμενο βήμα",
+  en: "Previous step",
+  de: "Vorheriger Schritt",
+  fr: "Étape précédente",
+  it: "Passaggio precedente",
+  es: "Paso anterior",
+  tr: "Önceki adım",
+};
+
+const EDIT_DATES: Record<RoomFinderLanguage, string> = {
+  el: "Αλλαγή ημερομηνιών",
+  en: "Edit dates",
+  de: "Daten ändern",
+  fr: "Modifier les dates",
+  it: "Modifica date",
+  es: "Editar fechas",
+  tr: "Tarihleri değiştir",
+};
+
+const CLOSE_DETAILS: Record<RoomFinderLanguage, string> = {
+  el: "Κλείσιμο λεπτομερειών δωματίου",
+  en: "Close room details",
+  de: "Zimmerdetails schließen",
+  fr: "Fermer les détails de la chambre",
+  it: "Chiudi i dettagli della camera",
+  es: "Cerrar detalles de la habitación",
+  tr: "Oda ayrıntılarını kapat",
 };
 
 function detectLanguage(): RoomFinderLanguage {
@@ -75,6 +95,8 @@ export function RoomFinderProduction({
   const [contact, setContact] = useState({ name: "", phone: "", email: "" });
   const [sendStatus, setSendStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const feedRef = useRef<HTMLDivElement>(null);
+  const detailDialogRef = useRef<HTMLElement>(null);
+  const detailCloseRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const detected = detectLanguage();
@@ -99,6 +121,53 @@ export function RoomFinderProduction({
     });
     return () => cancelAnimationFrame(frame);
   }, [finder.messages, finder.step, finder.typing, finder.choices, sendStatus]);
+
+  useEffect(() => {
+    if (!detail) return;
+
+    const previousFocus = document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null;
+    const frame = requestAnimationFrame(() => detailCloseRef.current?.focus());
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setDetail(null);
+        return;
+      }
+      if (event.key !== "Tab") return;
+
+      const dialog = detailDialogRef.current;
+      if (!dialog) return;
+      const focusable = Array.from(dialog.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      )).filter(element => !element.hasAttribute("hidden"));
+
+      if (focusable.length === 0) {
+        event.preventDefault();
+        dialog.focus();
+        return;
+      }
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      cancelAnimationFrame(frame);
+      document.removeEventListener("keydown", handleKeyDown);
+      requestAnimationFrame(() => previousFocus?.focus());
+    };
+  }, [detail]);
 
   function changeLanguage(next: RoomFinderLanguage) {
     const url = new URL(window.location.href);
@@ -247,8 +316,21 @@ export function RoomFinderProduction({
 
       {bookingSummary && (
         <div className="shrink-0 border-b border-[#e5ddd2] bg-[#f9f5ef] px-3 py-2">
-          <div className="mx-auto max-w-3xl overflow-hidden rounded-full border border-[#ddd3c6] bg-white px-3 py-1.5 text-center text-xs font-semibold text-[#625b52]">
-            <div className="truncate">{bookingSummary}</div>
+          <div className="mx-auto flex max-w-3xl items-center gap-2">
+            {finder.canGoBack && (
+              <button
+                type="button"
+                onClick={() => finder.goBack()}
+                aria-label={PREVIOUS_STEP[language]}
+                title={PREVIOUS_STEP[language]}
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#ddd3c6] bg-white text-sm font-black text-[#625b52] shadow-sm transition hover:bg-[#f7f3ed] active:scale-[.96]"
+              >
+                ←
+              </button>
+            )}
+            <div className="min-w-0 flex-1 overflow-hidden rounded-full border border-[#ddd3c6] bg-white px-3 py-1.5 text-center text-xs font-semibold text-[#625b52]">
+              <div className="truncate">{bookingSummary}</div>
+            </div>
           </div>
         </div>
       )}
@@ -308,15 +390,6 @@ export function RoomFinderProduction({
                   checkout={finder.checkout}
                   money={money}
                 />
-                <div className="msg ml-10 flex">
-                  <button
-                    type="button"
-                    onClick={() => finder.backToRooms()}
-                    className="inline-flex items-center gap-2 rounded-full border border-[#d8cec1] bg-white px-3.5 py-2 text-sm font-bold text-[#625b52] shadow-sm transition hover:bg-[#f7f3ed] active:scale-[.98]"
-                  >
-                    <span aria-hidden="true">←</span>{BACK_TO_ROOMS[language]}
-                  </button>
-                </div>
                 <div className="msg ml-10 rounded-[20px] rounded-bl-[6px] border border-[#dfd6ca] bg-white px-4 py-3 text-[15px] shadow-sm">
                   <p>{copy.breakfast}</p>
                   {breakfastOfferTotal > 0 && (
@@ -351,10 +424,10 @@ export function RoomFinderProduction({
               <section className="ml-10 grid grid-cols-2 gap-2 rounded-[22px] border border-[#dfd6ca] bg-white p-4">
                 <button
                   type="button"
-                  onClick={() => finder.reset()}
+                  onClick={() => finder.editDates()}
                   className="min-h-12 rounded-2xl border font-bold"
                 >
-                  {copy.newSearch}
+                  {EDIT_DATES[language]}
                 </button>
                 <button
                   type="button"
@@ -502,22 +575,39 @@ export function RoomFinderProduction({
       </form>
 
       {detail && (
-        <div className="fixed inset-0 z-50 flex items-end bg-black/35 p-3 sm:items-center sm:justify-center">
-          <section className="max-h-[88dvh] w-full overflow-hidden rounded-[26px] bg-white sm:max-w-xl">
-            <div className="relative h-60">
+        <div
+          className="fixed inset-0 z-50 flex items-end bg-black/35 p-3 sm:items-center sm:justify-center"
+          onMouseDown={event => {
+            if (event.target === event.currentTarget) setDetail(null);
+          }}
+        >
+          <section
+            ref={detailDialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="room-detail-title"
+            aria-describedby="room-detail-meta"
+            tabIndex={-1}
+            className="flex max-h-[88dvh] w-full flex-col overflow-hidden rounded-t-[26px] bg-white sm:max-w-xl sm:rounded-[26px]"
+          >
+            <div className="flex shrink-0 justify-center py-2 sm:hidden" aria-hidden="true">
+              <span className="h-1 w-10 rounded-full bg-[#d8cec1]" />
+            </div>
+            <div className="relative h-60 shrink-0">
               <Image src={detail.image} alt={detail.name} fill sizes="600px" className="object-cover" />
               <button
+                ref={detailCloseRef}
                 type="button"
                 onClick={() => setDetail(null)}
-                className="absolute right-3 top-3 h-10 w-10 rounded-full bg-white/90 text-xl"
-                aria-label="Close"
+                className="absolute right-3 top-3 h-10 w-10 rounded-full bg-white/90 text-xl shadow-sm"
+                aria-label={CLOSE_DETAILS[language]}
               >
                 ×
               </button>
             </div>
-            <div className="p-5">
-              <h2 className="text-2xl font-black">{detail.name}</h2>
-              <p className="mt-1 text-sm text-[#746b60]">{detail.category} · {detail.floor}</p>
+            <div className="min-h-0 flex-1 overflow-y-auto p-5">
+              <h2 id="room-detail-title" className="text-2xl font-black">{detail.name}</h2>
+              <p id="room-detail-meta" className="mt-1 text-sm text-[#746b60]">{detail.category} · {detail.floor}</p>
               <div className="mt-3 flex flex-wrap gap-2">
                 {(detail.features || []).map(feature => (
                   <span key={feature} className="rounded-full bg-[#f1ede7] px-3 py-1.5 text-xs font-semibold">
@@ -525,13 +615,16 @@ export function RoomFinderProduction({
                   </span>
                 ))}
               </div>
+            </div>
+            <div className="shrink-0 border-t border-[#e5ddd2] bg-white p-4">
               <button
                 type="button"
                 onClick={() => {
+                  const selected = detail;
                   setDetail(null);
-                  void finder.selectOffer(detail);
+                  void finder.selectOffer(selected);
                 }}
-                className="mt-5 w-full rounded-2xl bg-[#66714f] p-3.5 font-black text-white"
+                className="w-full rounded-2xl bg-[#66714f] p-3.5 font-black text-white"
               >
                 {copy.select}
               </button>
