@@ -6,7 +6,9 @@ import {
   getLatestSeoAdvisorSnapshot,
   getSeoAdvisorSnapshotHistory,
 } from "@/lib/gsc/advisor-snapshots";
+import { getSeoHealthDashboard } from "@/lib/seo-health/store";
 import SeoCockpit from "./SeoCockpit";
+import SeoHealthPanel from "./SeoHealthPanel";
 
 export const dynamic = "force-dynamic";
 
@@ -20,10 +22,11 @@ export const metadata: Metadata = {
 };
 
 export default async function SeoAdvisorPage() {
-  const [snapshot, latestSync, history] = await Promise.all([
+  const [snapshot, latestSync, history, health] = await Promise.all([
     getLatestSeoAdvisorSnapshot(),
     getLatestGscSyncState(),
     getSeoAdvisorSnapshotHistory(4),
+    getSeoHealthDashboard(),
   ]);
 
   const findings = snapshot?.payload?.aiInterpretation?.findings;
@@ -35,12 +38,15 @@ export default async function SeoAdvisorPage() {
   const fallbackData = snapshot?.payload ? null : await getSeoAdvisorWithIntentData();
 
   return (
-    <SeoCockpit
-      snapshot={snapshot}
-      history={history}
-      sync={latestSync}
-      fallbackData={fallbackData}
-      actions={actions}
-    />
+    <>
+      <SeoHealthPanel health={health} />
+      <SeoCockpit
+        snapshot={snapshot}
+        history={history}
+        sync={latestSync}
+        fallbackData={fallbackData}
+        actions={actions}
+      />
+    </>
   );
 }
