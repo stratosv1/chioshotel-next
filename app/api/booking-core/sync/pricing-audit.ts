@@ -19,7 +19,7 @@ export type PriceChange = {
 };
 
 type PricingIssue = {
-  issue_type: "PRICE_MISMATCH" | "MISSING_ROOM1_REFERENCE";
+  issue_type: "PRICE_MISMATCH";
   stay_date: string;
   guests: number;
   room_number: number;
@@ -153,7 +153,8 @@ export async function detectPriceChanges(databaseUrl: string, rows: PricingSourc
       source_unit_id,
       base_price
     from booking_core.inventory
-    where base_price is not null
+    where available = true
+      and base_price is not null
   `;
 
   const currentPrices = new Map<string, number>();
@@ -165,11 +166,14 @@ export async function detectPriceChanges(databaseUrl: string, rows: PricingSourc
 
   const changes: PriceChange[] = [];
   for (const row of rows) {
+    if (!row.available) continue;
     if (row.price === null || !Number.isFinite(row.price)) continue;
+
     const key = `${row.date}|${row.roomId}|${row.unitId}`;
     const before = currentPrices.get(key);
     if (before === undefined) continue;
     if (Math.abs(before - row.price) < 0.005) continue;
+
     changes.push({
       date: row.date,
       label: row.label || `${row.roomId}/${row.unitId}`,
@@ -216,6 +220,7 @@ async function loadPricingIssues(databaseUrl: string): Promise<PricingIssue[]> {
         d.stay_date + 1,
         g.guests
       ) q
+      where q.available = true
     ),
     room1 as (
       select stay_date, base_price
@@ -245,56 +250,27 @@ async function loadPricingIssues(databaseUrl: string): Promise<PricingIssue[]> {
       from all_quotes q
       cross join cfg
       left join room1 r1 on r1.stay_date = q.stay_date
-    ),
-    mismatches as (
-      select
-        'PRICE_MISMATCH'::text as issue_type,
-        stay_date,
-        guests,
-        room_number,
-        display_name,
-        base_price,
-        guest_supplement,
-        kitchen_adjustment,
-        effective_price,
-        expected_price,
-        effective_price - expected_price as difference
-      from expected
-      where effective_price is distinct from expected_price
-    ),
-    missing_room1_reference as (
-      select
-        'MISSING_ROOM1_REFERENCE'::text as issue_type,
-        a.stay_date,
-        4 as guests,
-        a.room_number,
-        r.display_name,
-        a.base_price,
-        0::numeric as guest_supplement,
-        0::numeric as kitchen_adjustment,
-        a.base_price as effective_price,
-        null::numeric as expected_price,
-        null::numeric as difference
-      from booking_core.inventory a
-      join booking_core.rooms r on r.room_number = a.room_number
-      left join booking_core.inventory r1
-        on r1.stay_date = a.stay_date
-       and r1.room_number = 1
-      where a.stay_date >= current_date
-        and a.room_number in (8,9,10)
-        and a.available = true
-        and a.base_price is not null
-        and r1.base_price is null
     )
-    select * from mismatches
-    union all
-    select * from missing_room1_reference
+    select
+      'PRICE_MISMATCH'::text as issue_type,
+      stay_date,
+      guests,
+      room_number,
+      display_name,
+      base_price,
+      guest_supplement,
+      kitchen_adjustment,
+      effective_price,
+      expected_price,
+      effective_price - expected_price as difference
+    from expected
+    where effective_price is distinct from expected_price
     order by stay_date, guests, room_number
     limit 100
   `;
 
   return (rows as any[]).map(row => ({
-    issue_type: row.issue_type as PricingIssue["issue_type"],
+    issue_type: "PRICE_MISMATCH",
     stay_date: text(row.stay_date).slice(0, 10),
     guests: Number(row.guests),
     room_number: Number(row.room_number),
@@ -310,9 +286,9 @@ async function loadPricingIssues(databaseUrl: string): Promise<PricingIssue[]> {
 
 function buildAlertBody(priceChanges: PriceChange[], issues: PricingIssue[], auditError?: string) {
   const lines = [
-    "Booking Core pricing audit detected a problem after a real price change in Neon.",
+    "Booking Core pricing audit detected a problem after a real price change in available Neon inventory.",
     "",
-    `Price changes detected: ${priceChanges.length}`,
+    `Available price changes detected: ${priceChanges.length}`,
   ];
 
   for (const change of priceChanges.slice(0, 25)) {
@@ -325,19 +301,12 @@ function buildAlertBody(priceChanges: PriceChange[], issues: PricingIssue[], aud
     lines.push("AUDIT EXECUTION ERROR:");
     lines.push(auditError);
     lines.push("");
-    lines.push("The new inventory was saved, but the pricing validation could not complete.");
+    lines.push("The new inventory was saved, but the available-room pricing validation could not complete.");
     return lines.join("\n");
   }
 
   lines.push(`Pricing problems found: ${issues.length}`);
   for (const issue of issues.slice(0, 50)) {
-    if (issue.issue_type === "MISSING_ROOM1_REFERENCE") {
-      lines.push(
-        `- ${issue.stay_date} | ${issue.guests} guests | ${issue.display_name} (Room ${issue.room_number}) | ` +
-        `MISSING ROOM 1 REFERENCE PRICE. Apartment base is ${money(issue.base_price)} and the 4-guest comparison cannot be validated because Room 1 base_price is NULL.`
-      );
-      continue;
-    }
     lines.push(
       `- ${issue.stay_date} | ${issue.guests} guests | ${issue.display_name} (Room ${issue.room_number}) | ` +
       `base ${money(issue.base_price)}, guest extra ${money(issue.guest_supplement)}, apartment adjustment ${money(issue.kitchen_adjustment)}, ` +
@@ -347,6 +316,7 @@ function buildAlertBody(priceChanges: PriceChange[], issues: PricingIssue[], aud
   if (issues.length > 50) lines.push(`- ...and ${issues.length - 50} more pricing problems`);
 
   lines.push("");
+  lines.push("Booked and closed rooms are intentionally excluded from audit results.");
   lines.push("No email is sent when the audit is clean.");
   return lines.join("\n");
 }
