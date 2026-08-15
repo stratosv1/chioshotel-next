@@ -4,6 +4,7 @@ const { performance } = require("node:perf_hooks");
 // The AI Room Finder is fully materialized in source code.
 // Production builds must not mutate AI components or AI API routes.
 const PATCHES = [
+  "normalize-legacy-redirect-destinations.cjs",
   "disable-last-minute-room-extras.cjs",
   "patch-long-seo-titles.cjs",
 ];
