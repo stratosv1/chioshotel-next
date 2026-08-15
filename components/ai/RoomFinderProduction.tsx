@@ -18,6 +18,66 @@ const WHATSAPP_NUMBER = "306944474226";
 const BREAKFAST_IMAGE = "/images/welcome/voulamandis-breakfast.jpg";
 const CORE_INPUT_STEPS = new Set(["checkin", "checkout", "rooms", "guests"]);
 
+type ContactPrivacyCopy = {
+  firstName: string;
+  lastName: string;
+  contactHelp: string;
+  privacyNotice: string;
+  privacyAccepted: string;
+};
+
+const CONTACT_PRIVACY_COPY: Record<RoomFinderLanguage, ContactPrivacyCopy> = {
+  el: {
+    firstName: "Όνομα",
+    lastName: "Επώνυμο",
+    contactHelp: "Συμπληρώστε όνομα, επώνυμο και τηλέφωνο. Το email είναι προαιρετικό.",
+    privacyNotice: "Έχω ενημερωθεί ότι το Voulamandis House θα χρησιμοποιήσει τα στοιχεία μου (όνομα, επώνυμο, τηλέφωνο και email) αποκλειστικά για τη διαχείριση και απάντηση στο αίτημα διαμονής μου. Δεν θα χρησιμοποιηθούν για marketing χωρίς ξεχωριστή συγκατάθεση.",
+    privacyAccepted: "Αποδοχή ενημέρωσης προσωπικών δεδομένων",
+  },
+  en: {
+    firstName: "First name",
+    lastName: "Last name",
+    contactHelp: "Enter your first name, last name and phone number. Email is optional.",
+    privacyNotice: "I understand that Voulamandis House will use my personal details (first name, last name, phone number and email) solely to manage and respond to my accommodation request. They will not be used for marketing without separate consent.",
+    privacyAccepted: "Privacy notice accepted",
+  },
+  de: {
+    firstName: "Vorname",
+    lastName: "Nachname",
+    contactHelp: "Geben Sie Vorname, Nachname und Telefonnummer ein. Die E-Mail-Adresse ist optional.",
+    privacyNotice: "Ich bin darüber informiert, dass Voulamandis House meine Daten (Vorname, Nachname, Telefonnummer und E-Mail-Adresse) ausschließlich zur Bearbeitung und Beantwortung meiner Unterkunftsanfrage verwendet. Sie werden ohne gesonderte Einwilligung nicht für Marketingzwecke verwendet.",
+    privacyAccepted: "Datenschutzhinweis akzeptiert",
+  },
+  fr: {
+    firstName: "Prénom",
+    lastName: "Nom",
+    contactHelp: "Indiquez votre prénom, nom et numéro de téléphone. L’e-mail est facultatif.",
+    privacyNotice: "Je suis informé(e) que Voulamandis House utilisera mes données (prénom, nom, téléphone et e-mail) uniquement pour traiter et répondre à ma demande de séjour. Elles ne seront pas utilisées à des fins de marketing sans consentement séparé.",
+    privacyAccepted: "Information sur la confidentialité acceptée",
+  },
+  it: {
+    firstName: "Nome",
+    lastName: "Cognome",
+    contactHelp: "Inserite nome, cognome e numero di telefono. L’email è facoltativa.",
+    privacyNotice: "Sono informato/a che Voulamandis House utilizzerà i miei dati (nome, cognome, telefono ed email) esclusivamente per gestire e rispondere alla mia richiesta di soggiorno. Non saranno utilizzati per finalità di marketing senza un consenso separato.",
+    privacyAccepted: "Informativa privacy accettata",
+  },
+  es: {
+    firstName: "Nombre",
+    lastName: "Apellidos",
+    contactHelp: "Indiquen nombre, apellidos y teléfono. El email es opcional.",
+    privacyNotice: "He sido informado/a de que Voulamandis House utilizará mis datos (nombre, apellidos, teléfono y email) únicamente para gestionar y responder a mi solicitud de estancia. No se utilizarán con fines de marketing sin un consentimiento por separado.",
+    privacyAccepted: "Aviso de privacidad aceptado",
+  },
+  tr: {
+    firstName: "Ad",
+    lastName: "Soyad",
+    contactHelp: "Adınızı, soyadınızı ve telefon numaranızı girin. E-posta isteğe bağlıdır.",
+    privacyNotice: "Voulamandis House’un kişisel bilgilerimi (ad, soyad, telefon ve e-posta) yalnızca konaklama talebimi yönetmek ve yanıtlamak amacıyla kullanacağı konusunda bilgilendirildim. Ayrı bir onayım olmadan pazarlama amacıyla kullanılmayacaktır.",
+    privacyAccepted: "Gizlilik bildirimi kabul edildi",
+  },
+};
+
 const CLOSE_DETAILS: Record<RoomFinderLanguage, string> = {
   el: "Κλείσιμο λεπτομερειών δωματίου",
   en: "Close room details",
@@ -114,8 +174,10 @@ export function RoomFinderProduction({
   const finder = useRoomFinder(language);
   const copy = ROOM_FINDER_COPY[language];
   const breakdownCopy = COST_BREAKDOWN_COPY[language];
+  const contactCopy = CONTACT_PRIVACY_COPY[language];
   const [detail, setDetail] = useState<RoomOffer | null>(null);
-  const [contact, setContact] = useState({ name: "", phone: "", email: "" });
+  const [contact, setContact] = useState({ firstName: "", lastName: "", phone: "", email: "" });
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [sendStatus, setSendStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [hiddenQuickReplyPromptId, setHiddenQuickReplyPromptId] = useState<string | null>(null);
   const [breakfastChoicePending, setBreakfastChoicePending] = useState<boolean | null>(null);
@@ -133,7 +195,8 @@ export function RoomFinderProduction({
     document.documentElement.lang = language;
     finder.reset();
     setDetail(null);
-    setContact({ name: "", phone: "", email: "" });
+    setContact({ firstName: "", lastName: "", phone: "", email: "" });
+    setPrivacyAccepted(false);
     setSendStatus("idle");
     setHiddenQuickReplyPromptId(null);
     setBreakfastChoicePending(null);
@@ -244,7 +307,7 @@ export function RoomFinderProduction({
   }
 
   async function sendRequest() {
-    if (!contact.name.trim() || (!contact.phone.trim() && !contact.email.trim())) return;
+    if (!contact.firstName.trim() || !contact.lastName.trim() || !contact.phone.trim() || !privacyAccepted) return;
 
     setSendStatus("sending");
     const breakfastTotal = finder.breakfast
@@ -258,15 +321,23 @@ export function RoomFinderProduction({
       ...(finder.breakfast ? [`${copy.breakfastLabel}: ${money(breakfastTotal, language)}`] : []),
       `${copy.total}: ${money(roomTotal + breakfastTotal, language)}`,
     ].join("\n");
+    const fullName = `${contact.firstName.trim()} ${contact.lastName.trim()}`;
+    const privacyAcceptedAt = new Date().toISOString();
 
     try {
       const response = await fetch("/api/ai-assistant/summary-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          subject: `AI Room Finder — ${contact.name}`,
-          message: `${copy.contactTitle}\n\n${summary}\n\n${copy.name}: ${contact.name}\n${copy.phone}: ${contact.phone || "—"}\n${copy.email}: ${contact.email || "—"}`,
-          guest: contact,
+          source: "ai-room-finder",
+          subject: `AI Room Finder — ${fullName}`,
+          message: `${copy.contactTitle}\n\n${summary}\n\n${contactCopy.firstName}: ${contact.firstName.trim()}\n${contactCopy.lastName}: ${contact.lastName.trim()}\n${copy.phone}: ${contact.phone.trim()}\n${copy.email}: ${contact.email.trim() || "—"}\n${contactCopy.privacyAccepted}: ${privacyAcceptedAt}`,
+          guest: {
+            ...contact,
+            name: fullName,
+            privacyAccepted: true,
+            privacyAcceptedAt,
+          },
         }),
       });
       if (!response.ok) throw new Error("Request send failed");
@@ -296,6 +367,12 @@ export function RoomFinderProduction({
   const guestSummary = finder.guestTotal ? copy.guestLabel(finder.guestTotal) : "";
   const roomSummary = finder.roomCount ? copy.roomLabel(finder.roomCount) : "";
   const bookingSummary = [stay, guestSummary, roomSummary].filter(Boolean).join(", ");
+  const canSendRequest = Boolean(
+    contact.firstName.trim()
+      && contact.lastName.trim()
+      && contact.phone.trim()
+      && privacyAccepted,
+  );
   const lastAssistantMessageId = [...finder.messages]
     .reverse()
     .find(message => message.role === "assistant")?.id;
@@ -623,19 +700,35 @@ export function RoomFinderProduction({
                   </div>
                   <div className="mt-5">
                     <h3 className="text-lg font-black">{copy.contactTitle}</h3>
-                    <p className="mt-1 text-sm text-[#746b60]">{copy.contactHelp}</p>
+                    <p className="mt-1 text-sm text-[#746b60]">{contactCopy.contactHelp}</p>
                     <div className="mt-3 space-y-2">
-                      <div>
-                        <label htmlFor="room-finder-name" className="sr-only">{copy.name}</label>
-                        <input
-                          id="room-finder-name"
-                          name="name"
-                          autoComplete="name"
-                          value={contact.name}
-                          onChange={event => setContact({ ...contact, name: event.target.value })}
-                          placeholder={copy.name}
-                          className="h-12 w-full rounded-2xl border border-[#d8cec1] px-4"
-                        />
+                      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                        <div>
+                          <label htmlFor="room-finder-first-name" className="sr-only">{contactCopy.firstName}</label>
+                          <input
+                            id="room-finder-first-name"
+                            name="given-name"
+                            autoComplete="given-name"
+                            required
+                            value={contact.firstName}
+                            onChange={event => setContact({ ...contact, firstName: event.target.value })}
+                            placeholder={`${contactCopy.firstName} *`}
+                            className="h-12 w-full rounded-2xl border border-[#d8cec1] px-4"
+                          />
+                        </div>
+                        <div>
+                          <label htmlFor="room-finder-last-name" className="sr-only">{contactCopy.lastName}</label>
+                          <input
+                            id="room-finder-last-name"
+                            name="family-name"
+                            autoComplete="family-name"
+                            required
+                            value={contact.lastName}
+                            onChange={event => setContact({ ...contact, lastName: event.target.value })}
+                            placeholder={`${contactCopy.lastName} *`}
+                            className="h-12 w-full rounded-2xl border border-[#d8cec1] px-4"
+                          />
+                        </div>
                       </div>
                       <div>
                         <label htmlFor="room-finder-phone" className="sr-only">{copy.phone}</label>
@@ -645,9 +738,10 @@ export function RoomFinderProduction({
                           type="tel"
                           inputMode="tel"
                           autoComplete="tel"
+                          required
                           value={contact.phone}
                           onChange={event => setContact({ ...contact, phone: event.target.value })}
-                          placeholder={copy.phone}
+                          placeholder={`${copy.phone} *`}
                           className="h-12 w-full rounded-2xl border border-[#d8cec1] px-4"
                         />
                       </div>
@@ -665,13 +759,23 @@ export function RoomFinderProduction({
                           className="h-12 w-full rounded-2xl border border-[#d8cec1] px-4"
                         />
                       </div>
+                      <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-[#e1d8cd] bg-[#faf7f2] p-3 text-xs leading-5 text-[#625b52]">
+                        <input
+                          type="checkbox"
+                          required
+                          checked={privacyAccepted}
+                          onChange={event => setPrivacyAccepted(event.target.checked)}
+                          className="mt-0.5 h-4 w-4 shrink-0 accent-[#66714f]"
+                        />
+                        <span>{contactCopy.privacyNotice}</span>
+                      </label>
                     </div>
                     <div className="mt-3 grid grid-cols-2 gap-2">
                       <button
                         type="button"
-                        disabled={sendStatus === "sending"}
+                        disabled={sendStatus === "sending" || !canSendRequest}
                         onClick={() => void sendRequest()}
-                        className="min-h-12 rounded-2xl bg-[#66714f] font-bold text-white disabled:opacity-40"
+                        className="min-h-12 rounded-2xl bg-[#66714f] font-bold text-white disabled:cursor-not-allowed disabled:opacity-40"
                       >
                         {copy.send}
                       </button>
