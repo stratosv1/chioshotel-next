@@ -75,6 +75,7 @@ export function RoomFinderProduction({
   const [contact, setContact] = useState({ name: "", phone: "", email: "" });
   const [sendStatus, setSendStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [hiddenQuickReplyPromptId, setHiddenQuickReplyPromptId] = useState<string | null>(null);
+  const [breakfastChoicePending, setBreakfastChoicePending] = useState<boolean | null>(null);
   const feedRef = useRef<HTMLDivElement>(null);
   const detailDialogRef = useRef<HTMLElement>(null);
   const detailCloseRef = useRef<HTMLButtonElement>(null);
@@ -92,11 +93,16 @@ export function RoomFinderProduction({
     setContact({ name: "", phone: "", email: "" });
     setSendStatus("idle");
     setHiddenQuickReplyPromptId(null);
+    setBreakfastChoicePending(null);
   }, [language]);
 
   useEffect(() => {
     setSendStatus("idle");
   }, [finder.checkin, finder.checkout, finder.guestTotal, finder.roomCount]);
+
+  useEffect(() => {
+    if (finder.step !== "breakfast") setBreakfastChoicePending(null);
+  }, [finder.step]);
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => {
@@ -186,6 +192,12 @@ export function RoomFinderProduction({
     ]
       .filter(Boolean)
       .join("\n");
+  }
+
+  function chooseBreakfast(value: boolean) {
+    if (breakfastChoicePending !== null) return;
+    setBreakfastChoicePending(value);
+    void finder.chooseBreakfast(value);
   }
 
   async function sendRequest() {
@@ -304,7 +316,7 @@ export function RoomFinderProduction({
             aria-label={copy.newSearch}
             title={copy.newSearch}
             onClick={() => finder.reset()}
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-[24px] font-semibold leading-none text-[#746b60] transition hover:bg-white/70 active:scale-[.96]"
+            className="flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-full border border-[#d8cec1] bg-white text-[30px] font-black leading-none text-[#5f574d] shadow-sm transition hover:bg-[#fffdf9] active:scale-[.96]"
           >
             ↻
           </button>
@@ -447,21 +459,34 @@ export function RoomFinderProduction({
                   <div className="relative h-36">
                     <Image src={BREAKFAST_IMAGE} alt={copy.breakfastLabel} fill sizes="600px" className="object-cover" />
                   </div>
-                  <div className="flex gap-2 p-3">
-                    <button
-                      type="button"
-                      onClick={() => void finder.chooseBreakfast(true)}
-                      className="rounded-full bg-[#66714f] px-4 py-2.5 text-sm font-bold text-white"
-                    >
-                      {copy.yesBreakfast}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => void finder.chooseBreakfast(false)}
-                      className="rounded-full border border-[#d8cec1] px-4 py-2.5 text-sm font-bold"
-                    >
-                      {copy.noBreakfast}
-                    </button>
+                  <div className="p-3">
+                    {breakfastChoicePending === null ? (
+                      <div className="flex gap-2">
+                        <button
+                          type="button"
+                          onClick={() => chooseBreakfast(true)}
+                          className="rounded-full bg-[#66714f] px-4 py-2.5 text-sm font-bold text-white transition active:scale-[.97]"
+                        >
+                          {copy.yesBreakfast}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => chooseBreakfast(false)}
+                          className="rounded-full border border-[#d8cec1] px-4 py-2.5 text-sm font-bold transition active:scale-[.97]"
+                        >
+                          {copy.noBreakfast}
+                        </button>
+                      </div>
+                    ) : (
+                      <div
+                        role="status"
+                        aria-live="polite"
+                        className="inline-flex min-h-11 items-center gap-2 rounded-full border border-[#b9c6aa] bg-[#eef4e7] px-4 text-sm font-black text-[#4f6539] shadow-sm"
+                      >
+                        <span aria-hidden="true" className="flex h-5 w-5 items-center justify-center rounded-full bg-[#66714f] text-xs text-white">✓</span>
+                        {breakfastChoicePending ? copy.yesBreakfast : copy.noBreakfast}
+                      </div>
+                    )}
                   </div>
                 </section>
               </>
