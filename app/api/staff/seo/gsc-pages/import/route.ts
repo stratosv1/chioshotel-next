@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as XLSX from "xlsx";
 import { importGscPagesRows, type GscPagesImportRow } from "@/lib/seo-health/gsc-pages-import";
+import { importGscPagesOverview, type GscPagesOverviewIssue } from "@/lib/seo-health/gsc-pages-overview";
 import { readGscPagesZip } from "@/lib/seo-health/gsc-pages-zip";
 
 export const runtime = "nodejs";
@@ -97,6 +98,30 @@ function readIssueFromMetadata(buffer: Buffer | null) {
   return "";
 }
 
+function readMetadataValue(buffer: Buffer | null, wanted: string) {
+  if (!buffer) return "";
+  const rows = readCsvRows(buffer);
+  for (const row of rows) {
+    const property = pickCell(row, ["Property", "Key", "Name"]);
+    const value = pickCell(row, ["Value"]);
+    if (normalizeHeader(property) === normalizeHeader(wanted)) return value;
+  }
+  return "";
+}
+
+function parseOverviewIssues(buffer: Buffer | null, severity: GscPagesOverviewIssue["severity"]) {
+  if (!buffer) return [];
+  return readCsvRows(buffer)
+    .map((row) => ({
+      reason: pickCell(row, ["Reason", "Issue", "Category"]),
+      source: pickCell(row, ["Source"]),
+      validation: pickCell(row, ["Validation", "Status"]),
+      pages: Number(pickCell(row, ["Pages", "URLs", "Count"]).replace(/[^0-9.-]/g, "")) || 0,
+      severity,
+    }))
+    .filter((row) => row.reason);
+}
+
 function parseRows(data: Record<string, unknown>[], fallbackIssue: string) {
   const parsed: GscPagesImportRow[] = [];
   let missingIssueRows = 0;
@@ -176,48 +201,77 @@ export async function POST(request: NextRequest) {
     }
 
     const uploadedBuffer: Buffer = Buffer.from(await file.arrayBuffer());
-    let tableBuffer: Buffer = uploadedBuffer;
-    let detectedIssue = "";
-    let importFormat: "zip" | "csv" = "csv";
 
     if (isZip) {
-      importFormat = "zip";
       const contents = readGscPagesZip(uploadedBuffer);
-      tableBuffer = contents.tableCsv;
-      detectedIssue = readIssueFromMetadata(contents.metadataCsv);
+
+      if (contents.kind === "overview") {
+        const issues = [
+          ...parseOverviewIssues(contents.criticalIssuesCsv, "critical"),
+          ...parseOverviewIssues(contents.nonCriticalIssuesCsv, "non-critical"),
+        ];
+        if (!issues.length) {
+          return json({ ok: false, error: "Το Pages overview ZIP δεν περιέχει αναγνώσιμες κατηγορίες προβλημάτων." }, 400);
+        }
+        const overview = await importGscPagesOverview({
+          fileName: file.name,
+          sitemapScope: readMetadataValue(contents.metadataCsv, "Sitemap"),
+          issues,
+        });
+        return json({
+          ok: true,
+          importFormat: "zip-overview",
+          importedUrls: 0,
+          ...overview,
+          note: "Αποθηκεύτηκε το συνολικό Pages snapshot. Αυτό το export δεν περιέχει συγκεκριμένα URLs ανά κατηγορία.",
+        });
+      }
+
+      const tableBuffer = contents.tableCsv;
+      if (!tableBuffer) {
+        return json({ ok: false, error: "Το drill-down ZIP δεν περιέχει Table.csv." }, 400);
+      }
+      const data = readCsvRows(tableBuffer);
+      if (!data.length) return json({ ok: false, error: "Το Table.csv μέσα στο ZIP δεν περιέχει γραμμές δεδομένων." }, 400);
+      if (data.length > MAX_ROWS) {
+        return json({ ok: false, error: `Το export έχει πάνω από ${MAX_ROWS.toLocaleString("el-GR")} γραμμές.` }, 400);
+      }
+
+      const detectedIssue = readIssueFromMetadata(contents.metadataCsv);
+      const { parsed, missingIssueRows } = parseRows(data, detectedIssue || manualFallbackIssue);
+      if (!parsed.length) {
+        const detail = missingIssueRows
+          ? " Δεν βρέθηκε κατηγορία Issue στο Metadata.csv. Επίλεξε κατηγορία από το dropdown και ξαναδοκίμασε."
+          : " Χρειάζεται Table.csv με στήλη URL και URLs του chioshotel.gr.";
+        return json({ ok: false, error: `Δεν βρέθηκαν έγκυρα URLs για εισαγωγή.${detail}` }, 400);
+      }
+
+      const result = await importGscPagesRows({ fileName: file.name, rows: parsed, originalRowCount: data.length });
+      return json({
+        ok: true,
+        ...result,
+        importFormat: "zip-drilldown",
+        detectedIssue: detectedIssue || null,
+        skippedRows: Math.max(0, data.length - parsed.length),
+      });
     }
 
-    const data = readCsvRows(tableBuffer);
-    if (!data.length) {
-      return json({ ok: false, error: isZip ? "Το Table.csv μέσα στο ZIP δεν περιέχει γραμμές δεδομένων." : "Το CSV δεν περιέχει γραμμές δεδομένων." }, 400);
-    }
+    const data = readCsvRows(uploadedBuffer);
+    if (!data.length) return json({ ok: false, error: "Το CSV δεν περιέχει γραμμές δεδομένων." }, 400);
     if (data.length > MAX_ROWS) {
       return json({ ok: false, error: `Το export έχει πάνω από ${MAX_ROWS.toLocaleString("el-GR")} γραμμές.` }, 400);
     }
 
-    const effectiveIssue = detectedIssue || manualFallbackIssue;
-    const { parsed, missingIssueRows } = parseRows(data, effectiveIssue);
-
+    const { parsed, missingIssueRows } = parseRows(data, manualFallbackIssue);
     if (!parsed.length) {
       const detail = missingIssueRows
-        ? " Δεν βρέθηκε κατηγορία Issue στο Metadata.csv/CSV. Επίλεξε κατηγορία από το dropdown και ξαναδοκίμασε."
-        : " Χρειάζεται Table.csv/CSV με στήλη URL και URLs του chioshotel.gr.";
+        ? " Επίλεξε κατηγορία από το dropdown και ξαναδοκίμασε."
+        : " Χρειάζεται CSV με στήλη URL και URLs του chioshotel.gr.";
       return json({ ok: false, error: `Δεν βρέθηκαν έγκυρα URLs για εισαγωγή.${detail}` }, 400);
     }
 
-    const result = await importGscPagesRows({
-      fileName: file.name,
-      rows: parsed,
-      originalRowCount: data.length,
-    });
-
-    return json({
-      ok: true,
-      ...result,
-      importFormat,
-      detectedIssue: detectedIssue || null,
-      skippedRows: Math.max(0, data.length - parsed.length),
-    });
+    const result = await importGscPagesRows({ fileName: file.name, rows: parsed, originalRowCount: data.length });
+    return json({ ok: true, ...result, importFormat: "csv", skippedRows: Math.max(0, data.length - parsed.length) });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     console.error("[seo-health] GSC Pages import failed", error);
