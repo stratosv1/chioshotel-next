@@ -4,6 +4,7 @@ import {
   FULL_AUDIT_BATCH_SIZE,
   finalizeFullAuditSession,
   getOrCreateFullAuditSession,
+  prioritizeUnprocessedFullAuditUrls,
   recordFullAuditBatch,
   seedSeoUrlsFromLiveSitemap,
 } from "@/lib/seo-health/full-audit";
@@ -71,18 +72,32 @@ export async function POST(request: NextRequest) {
       return json({ ok: true, done: true, sessionId: session.id, session });
     }
 
-    if (session.batchesTarget === 0) {
+    // Full Audit completion is based on unique URLs inspected, not on the raw
+    // number of HTTP batches. This makes retries safe and prevents duplicate
+    // batches from prematurely completing an audit.
+    if (session.batchesTarget === 0 || session.inspected >= session.totalUrls) {
+      const finalized = await finalizeFullAuditSession(session.id);
+      return json({ ok: true, done: true, sessionId: session.id, session: finalized });
+    }
+
+    // Make the URLs that this session has not inspected yet the oldest/due
+    // candidates. runWeeklySeoHealth can then keep its existing safe engine,
+    // while the Full Audit guarantees unique coverage across successive calls.
+    await prioritizeUnprocessedFullAuditUrls(session.id);
+
+    const remaining = Math.max(0, session.totalUrls - session.inspected);
+    if (remaining === 0) {
       const finalized = await finalizeFullAuditSession(session.id);
       return json({ ok: true, done: true, sessionId: session.id, session: finalized });
     }
 
     const result = await runWeeklySeoHealth(request, {
       siteUrl: SITE_URL,
-      limit: FULL_AUDIT_BATCH_SIZE,
+      limit: Math.min(FULL_AUDIT_BATCH_SIZE, remaining),
     });
 
     session = await recordFullAuditBatch(session.id, result);
-    const done = session.batchesCompleted >= session.batchesTarget;
+    const done = session.inspected >= session.totalUrls;
 
     if (done) {
       const finalized = await finalizeFullAuditSession(session.id);
