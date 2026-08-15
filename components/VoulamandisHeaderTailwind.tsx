@@ -325,7 +325,7 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/" }: H
           </span>
           <span className="min-w-0 flex-1">
             <span className="flex min-w-0 items-center gap-2">
-              <strong className="block min-w-0 truncate text-[1.18rem] font-black leading-none tracking-[-0.035em] text-stone-900 sm:text-[1.34rem] lg:text-[1.46rem]">Voulamandis House</strong>
+              <strong className="block min-w-0 truncate text-[21px] font-black leading-none tracking-[-0.035em] text-stone-900 sm:text-[1.34rem] lg:text-[1.46rem]">Voulamandis House</strong>
               <span className="hidden shrink-0 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-emerald-700 ring-1 ring-emerald-700/10">{statusLabel}<span className="ml-1.5 text-emerald-700/70">{reception.dateLabel}</span></span>
             </span>
             <span className="mt-1 block truncate text-[10px] font-black uppercase tracking-[0.12em] text-stone-500 sm:text-[11px]">
