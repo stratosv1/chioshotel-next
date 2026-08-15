@@ -13,6 +13,8 @@ export type RoomFinderCopy = {
   yesBreakfast: string;
   noBreakfast: string;
   newSearch: string;
+  previousStep: string;
+  editDates: string;
   placeholder: string;
   changePlaceholder: string;
   waitingPlaceholder: string;
@@ -57,6 +59,8 @@ export const ROOM_FINDER_COPY: Record<RoomFinderLanguage, RoomFinderCopy> = {
     yesBreakfast: "Ναι, προσθήκη",
     noBreakfast: "Όχι, ευχαριστώ",
     newSearch: "Νέα αναζήτηση",
+    previousStep: "Προηγούμενο βήμα",
+    editDates: "Αλλαγή ημερομηνιών",
     placeholder: "Γράψτε ημερομηνία ή απάντηση…",
     changePlaceholder: "Γράψτε κάποια αλλαγή…",
     waitingPlaceholder: "Έλεγχος διαθεσιμότητας…",
@@ -89,6 +93,8 @@ export const ROOM_FINDER_COPY: Record<RoomFinderLanguage, RoomFinderCopy> = {
     yesBreakfast: "Yes, add breakfast",
     noBreakfast: "No, thank you",
     newSearch: "New search",
+    previousStep: "Previous step",
+    editDates: "Edit dates",
     placeholder: "Type a date or answer…",
     changePlaceholder: "Type a change…",
     waitingPlaceholder: "Checking availability…",
@@ -121,6 +127,8 @@ export const ROOM_FINDER_COPY: Record<RoomFinderLanguage, RoomFinderCopy> = {
     yesBreakfast: "Ja, hinzufügen",
     noBreakfast: "Nein, danke",
     newSearch: "Neue Suche",
+    previousStep: "Vorheriger Schritt",
+    editDates: "Daten ändern",
     placeholder: "Datum oder Antwort eingeben…",
     changePlaceholder: "Änderung eingeben…",
     waitingPlaceholder: "Verfügbarkeit wird geprüft…",
@@ -153,6 +161,8 @@ export const ROOM_FINDER_COPY: Record<RoomFinderLanguage, RoomFinderCopy> = {
     yesBreakfast: "Oui, ajouter",
     noBreakfast: "Non, merci",
     newSearch: "Nouvelle recherche",
+    previousStep: "Étape précédente",
+    editDates: "Modifier les dates",
     placeholder: "Saisissez une date ou une réponse…",
     changePlaceholder: "Saisissez une modification…",
     waitingPlaceholder: "Vérification des disponibilités…",
@@ -185,6 +195,8 @@ export const ROOM_FINDER_COPY: Record<RoomFinderLanguage, RoomFinderCopy> = {
     yesBreakfast: "Sì, aggiungi",
     noBreakfast: "No, grazie",
     newSearch: "Nuova ricerca",
+    previousStep: "Passaggio precedente",
+    editDates: "Modifica date",
     placeholder: "Scrivete una data o una risposta…",
     changePlaceholder: "Scrivete una modifica…",
     waitingPlaceholder: "Verifica disponibilità…",
@@ -217,6 +229,8 @@ export const ROOM_FINDER_COPY: Record<RoomFinderLanguage, RoomFinderCopy> = {
     yesBreakfast: "Sí, añadir",
     noBreakfast: "No, gracias",
     newSearch: "Nueva búsqueda",
+    previousStep: "Paso anterior",
+    editDates: "Editar fechas",
     placeholder: "Escriban una fecha o respuesta…",
     changePlaceholder: "Escriban un cambio…",
     waitingPlaceholder: "Comprobando disponibilidad…",
@@ -249,6 +263,8 @@ export const ROOM_FINDER_COPY: Record<RoomFinderLanguage, RoomFinderCopy> = {
     yesBreakfast: "Evet, ekle",
     noBreakfast: "Hayır, teşekkürler",
     newSearch: "Yeni arama",
+    previousStep: "Önceki adım",
+    editDates: "Tarihleri değiştir",
     placeholder: "Tarih veya yanıt yazın…",
     changePlaceholder: "Bir değişiklik yazın…",
     waitingPlaceholder: "Müsaitlik kontrol ediliyor…",
