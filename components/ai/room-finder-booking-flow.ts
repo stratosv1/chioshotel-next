@@ -50,7 +50,9 @@ export type BookingFlowAction =
   | { type: "commit_turn"; state: BookingFlowState }
   | { type: "set_step"; step: FinderStep }
   | { type: "choose_rooms"; roomCount: number }
-  | { type: "choose_guests"; guests: number };
+  | { type: "choose_guests"; guests: number }
+  | { type: "go_back" }
+  | { type: "edit_dates" };
 
 const MAX_ROOMS = 3;
 const MAX_GUESTS_PER_ROOM = 5;
@@ -148,6 +150,54 @@ function draftsEqual(left: BookingDraft, right: BookingDraft) {
   );
 }
 
+function cloneDraft(draft: BookingDraft): BookingDraft {
+  return { ...draft, groups: [...draft.groups] };
+}
+
+function goBackState(state: BookingFlowState): BookingFlowState {
+  const draft = cloneDraft(state.draft);
+
+  switch (state.step) {
+    case "checkout":
+      draft.checkin = "";
+      draft.checkout = "";
+      return { step: "checkin", draft };
+
+    case "rooms":
+      draft.checkout = "";
+      return { step: "checkout", draft };
+
+    case "guests": {
+      const missingRoom = nextMissingGuestRoom(draft);
+      if (!draft.roomCount || missingRoom === 1) {
+        draft.roomCount = null;
+        draft.totalGuests = null;
+        draft.groups = [];
+        return { step: "rooms", draft };
+      }
+
+      const previousRoom = Math.max(1, (missingRoom || draft.roomCount) - 1);
+      draft.groups = draft.groups.slice(0, previousRoom - 1);
+      return { step: "guests", draft };
+    }
+
+    case "selecting":
+      if (!draft.roomCount) return state;
+      draft.groups = draft.groups.slice(0, Math.max(0, draft.roomCount - 1));
+      draft.totalGuests = null;
+      return { step: "guests", draft };
+
+    case "breakfast":
+      return { step: "selecting", draft };
+
+    case "complete":
+      return { step: "breakfast", draft };
+
+    default:
+      return state;
+  }
+}
+
 export function bookingFlowReducer(state: BookingFlowState, action: BookingFlowAction): BookingFlowState {
   switch (action.type) {
     case "reset":
@@ -158,6 +208,16 @@ export function bookingFlowReducer(state: BookingFlowState, action: BookingFlowA
 
     case "set_step":
       return { ...state, step: action.step };
+
+    case "go_back":
+      return goBackState(state);
+
+    case "edit_dates": {
+      const draft = cloneDraft(state.draft);
+      draft.checkin = "";
+      draft.checkout = "";
+      return { step: "checkin", draft };
+    }
 
     case "choose_rooms": {
       const roomCountChanged = state.draft.roomCount !== action.roomCount;
