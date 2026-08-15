@@ -18,26 +18,6 @@ const WHATSAPP_NUMBER = "306944474226";
 const BREAKFAST_IMAGE = "/images/welcome/voulamandis-breakfast.jpg";
 const CORE_INPUT_STEPS = new Set(["checkin", "checkout", "rooms", "guests"]);
 
-const PREVIOUS_STEP: Record<RoomFinderLanguage, string> = {
-  el: "Προηγούμενο βήμα",
-  en: "Previous step",
-  de: "Vorheriger Schritt",
-  fr: "Étape précédente",
-  it: "Passaggio precedente",
-  es: "Paso anterior",
-  tr: "Önceki adım",
-};
-
-const EDIT_DATES: Record<RoomFinderLanguage, string> = {
-  el: "Αλλαγή ημερομηνιών",
-  en: "Edit dates",
-  de: "Daten ändern",
-  fr: "Modifier les dates",
-  it: "Modifica date",
-  es: "Editar fechas",
-  tr: "Tarihleri değiştir",
-};
-
 const CLOSE_DETAILS: Record<RoomFinderLanguage, string> = {
   el: "Κλείσιμο λεπτομερειών δωματίου",
   en: "Close room details",
@@ -247,15 +227,14 @@ export function RoomFinderProduction({
   const breakfastTotal = finder.breakfast ? breakfastOfferTotal : 0;
   const roomTotal = finder.choices.reduce((sum, choice) => sum + choice.offer.directTotal, 0);
   const stay = stayRange(finder.checkin, finder.checkout, language);
-  const bookingSummary = [
-    stay,
-    finder.guestTotal ? copy.guestLabel(finder.guestTotal) : "",
-    finder.roomCount ? copy.roomLabel(finder.roomCount) : "",
-  ].filter(Boolean).join(" · ");
+  const guestSummary = finder.guestTotal ? copy.guestLabel(finder.guestTotal) : "";
+  const roomSummary = finder.roomCount ? copy.roomLabel(finder.roomCount) : "";
+  const bookingSummary = [stay, guestSummary, roomSummary].filter(Boolean).join(", ");
 
   return (
     <main className="flex h-[100dvh] flex-col overflow-hidden bg-[#f6f2eb] text-[#29251f]">
       <style jsx global>{`
+        :root { --mandarin: #c66a34; }
         @keyframes msg { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
         @keyframes react { from { opacity: 0; transform: translateY(2px) scale(.82); } to { opacity: 1; transform: none; } }
         @keyframes typingDot { 0%,60%,100% { opacity: .35; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-4px); } }
@@ -321,15 +300,38 @@ export function RoomFinderProduction({
               <button
                 type="button"
                 onClick={() => finder.goBack()}
-                aria-label={PREVIOUS_STEP[language]}
-                title={PREVIOUS_STEP[language]}
+                aria-label={copy.backLabel}
+                title={copy.backLabel}
                 className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#ddd3c6] bg-white text-sm font-black text-[#625b52] shadow-sm transition hover:bg-[#f7f3ed] active:scale-[.96]"
               >
                 ←
               </button>
             )}
-            <div className="min-w-0 flex-1 overflow-hidden rounded-full border border-[#ddd3c6] bg-white px-3 py-1.5 text-center text-xs font-semibold text-[#625b52]">
-              <div className="truncate">{bookingSummary}</div>
+            <div
+              aria-label={bookingSummary}
+              className="relative flex h-8 min-w-0 flex-1 items-center rounded-full border border-dashed border-[#d8cec1] bg-white pl-4 pr-3 text-xs font-semibold text-[#625b52]"
+            >
+              <span
+                aria-hidden="true"
+                className="absolute -left-[6px] top-1/2 h-3 w-3 -translate-y-1/2 rounded-full border-[1.5px] bg-[#f6f2eb] [border-color:var(--mandarin)]"
+              />
+              <div className="flex min-w-0 flex-1 items-center justify-center overflow-hidden">
+                {stay && (
+                  <span className="min-w-0 truncate [font-variant-numeric:tabular-nums]">{stay}</span>
+                )}
+                {stay && guestSummary && (
+                  <span aria-hidden="true" className="mx-2 h-3 shrink-0 border-l border-dashed border-[#d8cec1]" />
+                )}
+                {guestSummary && (
+                  <span className="min-w-0 truncate">{guestSummary}</span>
+                )}
+                {(stay || guestSummary) && roomSummary && (
+                  <span aria-hidden="true" className="mx-2 h-3 shrink-0 border-l border-dashed border-[#d8cec1]" />
+                )}
+                {roomSummary && (
+                  <span className="min-w-0 truncate">{roomSummary}</span>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -427,7 +429,7 @@ export function RoomFinderProduction({
                   onClick={() => finder.editDates()}
                   className="min-h-12 rounded-2xl border font-bold"
                 >
-                  {EDIT_DATES[language]}
+                  {copy.editDates}
                 </button>
                 <button
                   type="button"
@@ -440,16 +442,32 @@ export function RoomFinderProduction({
             )}
 
             {finder.step === "complete" && (
-              <section className="msg overflow-hidden rounded-[26px] border border-[#dcd2c5] bg-white shadow-[0_16px_45px_rgba(70,55,35,.10)] sm:ml-10">
-                <div className="border-b bg-[#faf7f2] p-4">
+              <section className="msg relative rounded-[26px] border border-[#dcd2c5] bg-white shadow-[0_16px_45px_rgba(70,55,35,.10)] sm:ml-10">
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -right-2 -top-3 z-10 flex h-[58px] w-[58px] -rotate-[9deg] items-center justify-center rounded-full border-2 opacity-55 [border-color:var(--mandarin)] [color:var(--mandarin)]"
+                >
+                  <span className="absolute inset-[4px] rounded-full border [border-color:var(--mandarin)]" />
+                  <span className="relative text-center text-[7px] font-black uppercase leading-[9px] tracking-[0.12em]">
+                    VH<br />KAMBOS<br />CHIOS
+                  </span>
+                </div>
+
+                <div className="rounded-t-[26px] bg-[#faf7f2] p-4 pr-16">
                   <div className="flex justify-between gap-3">
                     <h2 className="text-lg font-black">{copy.summary}</h2>
                     <button type="button" onClick={() => finder.reset()} className="text-xs font-bold underline">
                       {copy.newSearch}
                     </button>
                   </div>
-                  <p className="mt-2 text-sm text-[#746b60]">{stay} · {copy.nightLabel(finder.nights)}</p>
+                  <p className="mt-2 text-sm text-[#746b60] [font-variant-numeric:tabular-nums]">{stay} · {copy.nightLabel(finder.nights)}</p>
                 </div>
+
+                <div className="relative border-t border-dashed border-[#d8cec1]">
+                  <span aria-hidden="true" className="absolute -left-[8px] top-1/2 h-4 w-4 -translate-y-1/2 rounded-full bg-[#f6f2eb]" />
+                  <span aria-hidden="true" className="absolute -right-[8px] top-1/2 h-4 w-4 -translate-y-1/2 rounded-full bg-[#f6f2eb]" />
+                </div>
+
                 <div className="p-4">
                   {finder.choices.map(choice => (
                     <div key={choice.group} className="flex items-center gap-3 border-b py-3">
@@ -460,18 +478,18 @@ export function RoomFinderProduction({
                         <p className="font-bold">{choice.offer.name}</p>
                         <p className="text-xs text-[#746b60]">{copy.guestLabel(choice.guests)}</p>
                       </div>
-                      <strong className="text-[#5f7448]">{money(choice.offer.directTotal, language)}</strong>
+                      <strong className="text-[#5f7448] [font-variant-numeric:tabular-nums]">{money(choice.offer.directTotal, language)}</strong>
                     </div>
                   ))}
                   {finder.breakfast && (
                     <div className="flex justify-between border-b py-3">
                       <span>🥐 {copy.breakfastLabel}</span>
-                      <strong>{money(breakfastTotal, language)}</strong>
+                      <strong className="[font-variant-numeric:tabular-nums]">{money(breakfastTotal, language)}</strong>
                     </div>
                   )}
                   <div className="mt-4 flex justify-between rounded-2xl bg-[#f1ede7] p-4 text-lg">
                     <b>{copy.total}</b>
-                    <strong className="text-xl text-[#5f7448]">{money(roomTotal + breakfastTotal, language)}</strong>
+                    <strong className="text-xl text-[#5f7448] [font-variant-numeric:tabular-nums]">{money(roomTotal + breakfastTotal, language)}</strong>
                   </div>
                   <div className="mt-5">
                     <h3 className="text-lg font-black">{copy.contactTitle}</h3>
