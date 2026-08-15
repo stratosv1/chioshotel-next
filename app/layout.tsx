@@ -6,6 +6,7 @@ import { ConsentAnalytics } from "@/components/analytics/ConsentAnalytics";
 import { ConsentRealtimeProbe } from "@/components/analytics/ConsentRealtimeProbe";
 import { ContentEngagementAnalytics } from "@/components/analytics/ContentEngagementAnalytics";
 import { RoutePageViewAnalytics } from "@/components/analytics/RoutePageViewAnalytics";
+import { RoomFinderCtaRouter } from "@/components/navigation/RoomFinderCtaRouter";
 import { ExploreVoulamandisJourney } from "@/components/seo/ExploreVoulamandisJourney";
 import { VoulamandisFooterTailwind } from "@/components/VoulamandisFooterTailwind";
 import { VoulamandisHeaderTailwind } from "@/components/VoulamandisHeaderTailwind";
@@ -101,6 +102,7 @@ export default async function RootLayout({
   return (
     <html lang={htmlLanguage}>
       <body>
+        {!isPolishPath && !excludeAnalytics ? <RoomFinderCtaRouter /> : null}
         {!hideGlobalChrome ? (
           <VoulamandisHeaderTailwind language={sharedLanguage} pathname={pathname} />
         ) : null}
