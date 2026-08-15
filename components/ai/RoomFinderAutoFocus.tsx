@@ -24,6 +24,14 @@ export function RoomFinderAutoFocus() {
         focusFrame = null;
         if (input.disabled || document.visibilityState !== "visible") return;
 
+        const virtualKeyboard = (navigator as NavigatorWithVirtualKeyboard).virtualKeyboard;
+        const canRequestVirtualKeyboard = typeof virtualKeyboard?.show === "function";
+        const previousKeyboardPolicy = input.getAttribute("virtualkeyboardpolicy");
+
+        if (canRequestVirtualKeyboard) {
+          input.setAttribute("virtualkeyboardpolicy", "manual");
+        }
+
         input.focus({ preventScroll: true });
         const caret = input.value.length;
         try {
@@ -32,10 +40,20 @@ export function RoomFinderAutoFocus() {
           // Some input modes do not support selection ranges.
         }
 
-        try {
-          (navigator as NavigatorWithVirtualKeyboard).virtualKeyboard?.show?.();
-        } catch {
-          // Mobile browsers may decide not to open the software keyboard automatically.
+        if (canRequestVirtualKeyboard) {
+          try {
+            virtualKeyboard?.show?.();
+          } catch {
+            // The browser remains free to reject an automatic software-keyboard request.
+          } finally {
+            requestAnimationFrame(() => {
+              if (previousKeyboardPolicy === null) {
+                input.removeAttribute("virtualkeyboardpolicy");
+              } else {
+                input.setAttribute("virtualkeyboardpolicy", previousKeyboardPolicy);
+              }
+            });
+          }
         }
       });
     };
