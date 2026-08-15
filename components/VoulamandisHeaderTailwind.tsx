@@ -53,7 +53,7 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     close: "Close",
     nav: "Main navigation",
     language: "Language",
-    directLine: "Direct Booking · Best Rates",
+    directLine: "Direct Booking",
     openNow: "OPEN",
     location: "Kampos, Chios",
     links: { rooms: "Rooms", rates: "Rates", deals: "Deals", chios: "Chios Island", beaches: "Beaches", villages: "Villages", museums: "Museums", activities: "Do in Chios", contact: "Contact" },
@@ -65,7 +65,7 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     close: "Κλείσιμο",
     nav: "Κύρια πλοήγηση",
     language: "Γλώσσα",
-    directLine: "Απευθείας κράτηση · Καλύτερες τιμές",
+    directLine: "Απευθείας κράτηση",
     openNow: "ΑΝΟΙΧΤΑ",
     location: "Κάμπος, Χίος",
     links: { rooms: "Δωμάτια", rates: "Τιμές", deals: "Προσφορές", chios: "Χίος", beaches: "Παραλίες", villages: "Χωριά", museums: "Μουσεία", activities: "Τι να κάνεις", contact: "Επικοινωνία" },
@@ -77,7 +77,7 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     close: "Fermer",
     nav: "Navigation principale",
     language: "Langue",
-    directLine: "Réservation directe · Meilleurs tarifs",
+    directLine: "Réservation directe",
     openNow: "OUVERT",
     location: "Kambos, Chios",
     links: { rooms: "Chambres", rates: "Tarifs", deals: "Offres", chios: "Île de Chios", beaches: "Plages", villages: "Villages", museums: "Musées", activities: "À faire", contact: "Contact" },
@@ -89,7 +89,7 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     close: "Schließen",
     nav: "Hauptnavigation",
     language: "Sprache",
-    directLine: "Direktbuchung · Beste Preise",
+    directLine: "Direktbuchung",
     openNow: "OFFEN",
     location: "Kambos, Chios",
     links: { rooms: "Zimmer", rates: "Preise", deals: "Angebote", chios: "Insel Chios", beaches: "Strände", villages: "Dörfer", museums: "Museen", activities: "Aktivitäten", contact: "Kontakt" },
@@ -101,7 +101,7 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     close: "Chiudi",
     nav: "Navigazione principale",
     language: "Lingua",
-    directLine: "Prenotazione diretta · Migliori tariffe",
+    directLine: "Prenotazione diretta",
     openNow: "APERTO",
     location: "Kambos, Chios",
     links: { rooms: "Camere", rates: "Prezzi", deals: "Offerte", chios: "Isola di Chios", beaches: "Spiagge", villages: "Villaggi", museums: "Musei", activities: "Cosa fare", contact: "Contatti" },
@@ -113,7 +113,7 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     close: "Cerrar",
     nav: "Navegación principal",
     language: "Idioma",
-    directLine: "Reserva directa · Mejores tarifas",
+    directLine: "Reserva directa",
     openNow: "ABIERTO",
     location: "Kambos, Quíos",
     links: { rooms: "Habitaciones", rates: "Precios", deals: "Ofertas", chios: "Isla de Chios", beaches: "Playas", villages: "Pueblos", museums: "Museos", activities: "Qué hacer", contact: "Contacto" },
@@ -125,7 +125,7 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     close: "Kapat",
     nav: "Ana gezinme",
     language: "Dil",
-    directLine: "Doğrudan rezervasyon · En iyi fiyatlar",
+    directLine: "Doğrudan rezervasyon",
     openNow: "AÇIK",
     location: "Kambos, Sakız Adası",
     links: { rooms: "Odalar", rates: "Fiyatlar", deals: "Fırsatlar", chios: "Sakız Adası", beaches: "Plajlar", villages: "Köyler", museums: "Müzeler", activities: "Ne yapılır", contact: "İletişim" },
@@ -325,8 +325,8 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/" }: H
           </span>
           <span className="min-w-0 flex-1">
             <span className="flex min-w-0 items-center gap-2">
-              <strong className="block min-w-0 truncate text-[1.08rem] font-black leading-none tracking-[-0.055em] text-stone-900 sm:text-[1.28rem] lg:text-[1.42rem]">Voulamandis House</strong>
-              <span className="shrink-0 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-emerald-700 ring-1 ring-emerald-700/10">{statusLabel}<span className="ml-1.5 text-emerald-700/70">{reception.dateLabel}</span></span>
+              <strong className="block min-w-0 truncate text-[1.18rem] font-black leading-none tracking-[-0.035em] text-stone-900 sm:text-[1.34rem] lg:text-[1.46rem]">Voulamandis House</strong>
+              <span className="hidden shrink-0 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-emerald-700 ring-1 ring-emerald-700/10">{statusLabel}<span className="ml-1.5 text-emerald-700/70">{reception.dateLabel}</span></span>
             </span>
             <span className="mt-1 block truncate text-[10px] font-black uppercase tracking-[0.12em] text-stone-500 sm:text-[11px]">
               <span>{copy.location}</span>
