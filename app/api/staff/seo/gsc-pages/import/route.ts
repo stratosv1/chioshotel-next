@@ -175,8 +175,8 @@ export async function POST(request: NextRequest) {
       return json({ ok: false, error: `Το αρχείο πρέπει να είναι έως ${isZip ? "15" : "5"} MB.` }, 400);
     }
 
-    const uploadedBuffer = Buffer.from(await file.arrayBuffer());
-    let tableBuffer = uploadedBuffer;
+    const uploadedBuffer: Buffer = Buffer.from(await file.arrayBuffer());
+    let tableBuffer: Buffer = uploadedBuffer;
     let detectedIssue = "";
     let importFormat: "zip" | "csv" = "csv";
 
