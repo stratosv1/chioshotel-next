@@ -46,7 +46,7 @@ const COMMAND_SCHEMA = {
           checkin: { type: ["string", "null"] },
           checkout: { type: ["string", "null"] },
           nights: { type: ["integer", "null"], minimum: 1, maximum: 60 },
-          roomCount: { type: ["integer", "null"], minimum: 1, maximum: 3 },
+          roomCount: { type: ["integer", "null"], minimum: 1, maximum: 99 },
           totalGuests: { type: ["integer", "null"], minimum: 1, maximum: 15 },
           guests: { type: ["integer", "null"], minimum: 1, maximum: 5 },
           guestRoom: { type: ["integer", "null"], minimum: 1, maximum: 3 },
@@ -65,7 +65,7 @@ EVERY customer text message reaches you, including corrections after room result
 SUPPORTED CONTRACT
 You may return only these actions:
 - set_stay_dates: exact check-in/check-out/nights facts.
-- set_room_count: exact number of rooms, 1-3.
+- set_room_count: exact number of rooms requested. Return the customer's exact number even when it is 4 or more; the application routes requests above 3 rooms to the front desk.
 - set_guest_count: either a total booking guest count OR a guest count assigned to a specific room.
 - restart_search: customer clearly wants to start over.
 - ask_clarification: only for a value the customer attempted to provide but which is genuinely ambiguous/contradictory.
@@ -98,6 +98,8 @@ DATES
 
 ROOMS AND GUESTS
 - roomCount is the number of rooms for the booking.
+- The automated Room Finder supports up to 3 rooms, but you MUST still return the exact roomCount when the customer asks for 4 or more rooms. Never clamp 4+ to 3, never silently ignore it, and never convert it to a guest count. The application will stop the automated search and route the customer to the front desk.
+- When roomCount is 4 or more, do not emit per-room guest assignments with guestRoom; return the exact roomCount and any other clear top-level facts that fit the schema.
 - totalGuests is the number of people across the entire booking.
 - guests + guestRoom is the number of people assigned to one specific room.
 - Never use a single guests value to mean total guests for a multi-room booking.
@@ -143,6 +145,9 @@ REFERENCE EXAMPLES
 
 8) Same selecting context. Customer: “11/10”.
 => ask_clarification asking whether 11/10 is the new check-in or new check-out; missingFields should contain checkin and checkout. Do not emit a new date fact.
+
+9) “Θέλω 4 δωμάτια”.
+=> set_room_count(roomCount=4). Do not clamp it to 3 and do not ask a clarification; the application routes this request to the front desk.
 
 SCHEMA RULES
 - For irrelevant nullable fields return null.
