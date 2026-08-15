@@ -8,8 +8,12 @@ const MAX_ENTRY_BYTES = 12 * 1024 * 1024;
 const MAX_TOTAL_UNCOMPRESSED = 24 * 1024 * 1024;
 
 export type GscPagesZipContents = {
-  tableCsv: Buffer;
+  tableCsv: Buffer | null;
   metadataCsv: Buffer | null;
+  criticalIssuesCsv: Buffer | null;
+  nonCriticalIssuesCsv: Buffer | null;
+  chartCsv: Buffer | null;
+  kind: "drilldown" | "overview";
 };
 
 function assertRange(buffer: Buffer, offset: number, length: number, label: string) {
@@ -33,6 +37,39 @@ function decodeName(buffer: Buffer, utf8: boolean) {
 function basename(value: string) {
   const parts = value.split("/").filter(Boolean);
   return String(parts[parts.length - 1] || "").toLowerCase();
+}
+
+function readEntry(buffer: Buffer, input: {
+  name: string;
+  method: number;
+  compressedSize: number;
+  uncompressedSize: number;
+  localOffset: number;
+}) {
+  assertRange(buffer, input.localOffset, 30, "ZIP local header");
+  if (buffer.readUInt32LE(input.localOffset) !== LOCAL_SIGNATURE) {
+    throw new Error(`Το ${input.name} έχει μη έγκυρο ZIP header.`);
+  }
+
+  const localNameLength = buffer.readUInt16LE(input.localOffset + 26);
+  const localExtraLength = buffer.readUInt16LE(input.localOffset + 28);
+  const dataOffset = input.localOffset + 30 + localNameLength + localExtraLength;
+  assertRange(buffer, dataOffset, input.compressedSize, input.name);
+  const compressed = buffer.subarray(dataOffset, dataOffset + input.compressedSize);
+
+  let output: Buffer;
+  if (input.method === 0) {
+    output = Buffer.from(compressed);
+  } else if (input.method === 8) {
+    output = inflateRawSync(compressed, { maxOutputLength: MAX_ENTRY_BYTES });
+  } else {
+    throw new Error(`Το ${input.name} χρησιμοποιεί μη υποστηριζόμενη ZIP συμπίεση (${input.method}).`);
+  }
+
+  if (input.uncompressedSize && output.length !== input.uncompressedSize) {
+    throw new Error(`Το ${input.name} δεν αποσυμπιέστηκε στο αναμενόμενο μέγεθος.`);
+  }
+  return output;
 }
 
 export function readGscPagesZip(buffer: Buffer): GscPagesZipContents {
@@ -59,6 +96,9 @@ export function readGscPagesZip(buffer: Buffer): GscPagesZipContents {
   let totalUncompressed = 0;
   let tableCsv: Buffer | null = null;
   let metadataCsv: Buffer | null = null;
+  let criticalIssuesCsv: Buffer | null = null;
+  let nonCriticalIssuesCsv: Buffer | null = null;
+  let chartCsv: Buffer | null = null;
 
   for (let index = 0; index < entryCount; index += 1) {
     assertRange(buffer, cursor, 46, "ZIP central entry");
@@ -88,41 +128,31 @@ export function readGscPagesZip(buffer: Buffer): GscPagesZipContents {
       throw new Error("Το ZIP είναι υπερβολικά μεγάλο μετά την αποσυμπίεση.");
     }
 
-    if (fileBase === "table.csv" || fileBase === "metadata.csv") {
-      assertRange(buffer, localOffset, 30, "ZIP local header");
-      if (buffer.readUInt32LE(localOffset) !== LOCAL_SIGNATURE) {
-        throw new Error(`Το ${name} έχει μη έγκυρο ZIP header.`);
-      }
-
-      const localNameLength = buffer.readUInt16LE(localOffset + 26);
-      const localExtraLength = buffer.readUInt16LE(localOffset + 28);
-      const dataOffset = localOffset + 30 + localNameLength + localExtraLength;
-      assertRange(buffer, dataOffset, compressedSize, name);
-      const compressed = buffer.subarray(dataOffset, dataOffset + compressedSize);
-
-      let output: Buffer;
-      if (method === 0) {
-        output = Buffer.from(compressed);
-      } else if (method === 8) {
-        output = inflateRawSync(compressed, { maxOutputLength: MAX_ENTRY_BYTES });
-      } else {
-        throw new Error(`Το ${name} χρησιμοποιεί μη υποστηριζόμενη ZIP συμπίεση (${method}).`);
-      }
-
-      if (uncompressedSize && output.length !== uncompressedSize) {
-        throw new Error(`Το ${name} δεν αποσυμπιέστηκε στο αναμενόμενο μέγεθος.`);
-      }
-
+    const wanted = new Set([
+      "table.csv",
+      "metadata.csv",
+      "critical issues.csv",
+      "non-critical issues.csv",
+      "chart.csv",
+    ]);
+    if (wanted.has(fileBase)) {
+      const output = readEntry(buffer, { name, method, compressedSize, uncompressedSize, localOffset });
       if (fileBase === "table.csv") tableCsv = output;
       if (fileBase === "metadata.csv") metadataCsv = output;
+      if (fileBase === "critical issues.csv") criticalIssuesCsv = output;
+      if (fileBase === "non-critical issues.csv") nonCriticalIssuesCsv = output;
+      if (fileBase === "chart.csv") chartCsv = output;
     }
 
     cursor += 46 + fileNameLength + extraLength + commentLength;
   }
 
-  if (!tableCsv) {
-    throw new Error("Το Google ZIP δεν περιέχει Table.csv.");
+  if (tableCsv) {
+    return { tableCsv, metadataCsv, criticalIssuesCsv, nonCriticalIssuesCsv, chartCsv, kind: "drilldown" };
+  }
+  if (criticalIssuesCsv || nonCriticalIssuesCsv) {
+    return { tableCsv, metadataCsv, criticalIssuesCsv, nonCriticalIssuesCsv, chartCsv, kind: "overview" };
   }
 
-  return { tableCsv, metadataCsv };
+  throw new Error("Το Google ZIP δεν περιέχει αναγνωρίσιμο Pages export (Table.csv ή Critical issues.csv).");
 }

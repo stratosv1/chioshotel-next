@@ -44,18 +44,20 @@ export default function GscPagesCsvUpload() {
         cache: "no-store",
       });
       const payload = await response.json().catch(() => null);
+      if (!response.ok || payload?.ok === false) throw new Error(payload?.error || `Upload failed with HTTP ${response.status}`);
 
-      if (!response.ok || payload?.ok === false) {
-        throw new Error(payload?.error || `Upload failed with HTTP ${response.status}`);
+      const format = String(payload?.importFormat || "");
+      if (format === "zip-overview") {
+        const issueCount = Number(payload?.issueCount || 0);
+        setMessage(`Google Pages overview: αποθηκεύτηκαν ${issueCount.toLocaleString("el-GR")} κατηγορίες προβλημάτων ως εβδομαδιαίο snapshot. Το συγκεκριμένο ZIP δεν περιέχει URLs ανά κατηγορία· για ακριβή URL remediation ανέβασε και το drill-down ZIP της κατηγορίας.`);
+      } else {
+        const imported = Number(payload?.importedUrls || 0);
+        const skipped = Number(payload?.skippedRows || 0);
+        const detectedIssue = String(payload?.detectedIssue || "");
+        const formatLabel = format === "zip-drilldown" ? "Google drill-down ZIP" : "CSV";
+        setMessage(`${formatLabel}: εισήχθησαν ${imported.toLocaleString("el-GR")} URLs${detectedIssue ? ` · κατηγορία: ${detectedIssue}` : ""}${skipped ? ` · ${skipped.toLocaleString("el-GR")} γραμμές αγνοήθηκαν` : ""}. Τώρα πάτησε Run Full Technical SEO Audit.`);
       }
 
-      const imported = Number(payload?.importedUrls || 0);
-      const skipped = Number(payload?.skippedRows || 0);
-      const detectedIssue = String(payload?.detectedIssue || "");
-      const formatLabel = payload?.importFormat === "zip" ? "Google ZIP" : "CSV";
-      setMessage(
-        `${formatLabel}: εισήχθησαν ${imported.toLocaleString("el-GR")} URLs${detectedIssue ? ` · κατηγορία: ${detectedIssue}` : ""}${skipped ? ` · ${skipped.toLocaleString("el-GR")} γραμμές αγνοήθηκαν` : ""}. Τώρα πάτησε Run Full Technical SEO Audit.`,
-      );
       setFile(null);
       setFallbackIssue("");
       const input = document.getElementById("gsc-pages-export-file") as HTMLInputElement | null;
@@ -73,13 +75,10 @@ export default function GscPagesCsvUpload() {
       <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8a7768]">GSC Pages import</div>
       <h2 className="mt-1 text-lg font-semibold text-[#342c26]">Upload Google Pages ZIP</h2>
       <p className="mt-1 text-xs leading-5 text-[#77695e]">
-        Ανέβασε <strong>αυτούσιο το ZIP</strong> που κατεβάζει το Google Search Console από το Pages report.
-        Το σύστημα διαβάζει αυτόματα το <strong>Metadata.csv</strong> για την κατηγορία και το <strong>Table.csv</strong> για τα URLs. Δέχεται και απλό CSV για συμβατότητα.
+        Ανέβασε <strong>αυτούσιο το ZIP</strong> που κατεβάζει το Google Search Console από το Pages report. Δέχεται το γενικό Pages ZIP με <strong>Critical issues.csv</strong> και το drill-down ZIP με <strong>Table.csv</strong>. Δεν χρειάζεται αποσυμπίεση ή μετατροπή.
       </p>
 
-      <label className="mt-4 block text-xs font-semibold text-[#51463e]" htmlFor="gsc-pages-export-file">
-        Google Search Console export
-      </label>
+      <label className="mt-4 block text-xs font-semibold text-[#51463e]" htmlFor="gsc-pages-export-file">Google Search Console export</label>
       <input
         id="gsc-pages-export-file"
         type="file"
@@ -89,7 +88,7 @@ export default function GscPagesCsvUpload() {
       />
 
       <details className="mt-3 rounded-xl border border-[#ded5ca] bg-white/60 px-3 py-2">
-        <summary className="cursor-pointer text-xs font-semibold text-[#51463e]">Χειροκίνητη κατηγορία μόνο αν λείπει το Metadata.csv</summary>
+        <summary className="cursor-pointer text-xs font-semibold text-[#51463e]">Χειροκίνητη κατηγορία μόνο για μη τυπικό CSV/drill-down</summary>
         <select
           id="gsc-pages-fallback-issue"
           value={fallbackIssue}
@@ -97,9 +96,7 @@ export default function GscPagesCsvUpload() {
           className="mt-3 min-h-11 w-full rounded-xl border border-[#d8cec2] bg-white px-3 text-sm text-[#342c26]"
         >
           <option value="">Αυτόματα από το Google export</option>
-          {FALLBACK_ISSUES.map((issue) => (
-            <option key={issue} value={issue}>{issue}</option>
-          ))}
+          {FALLBACK_ISSUES.map((issue) => <option key={issue} value={issue}>{issue}</option>)}
         </select>
       </details>
 
