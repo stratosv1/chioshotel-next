@@ -10,6 +10,7 @@ function assert(condition, message) {
 const root = process.cwd();
 const production = fs.readFileSync(path.join(root, "components/ai/RoomFinderProduction.tsx"), "utf8");
 const page = fs.readFileSync(path.join(root, "app/ai-assistant/page.tsx"), "utf8");
+const hook = fs.readFileSync(path.join(root, "components/ai/use-room-finder.ts"), "utf8");
 
 assert(production.includes("window.visualViewport"), "Room Finder is missing VisualViewport keyboard handling");
 assert(production.includes('data-room-finder-shell="true"'), "Room Finder mobile shell marker is missing");
@@ -26,6 +27,9 @@ assert(production.includes("text-[16px]"), "Composer is below the iOS-safe 16px 
 assert(production.includes("overscroll-contain"), "Conversation scroller is missing overscroll containment");
 assert(production.includes("fixed inset-x-0 top-0"), "Room Finder is no longer pinned to the visible viewport");
 assert(!production.includes("disabled={!inputEnabled}\n            placeholder"), "Composer input is still disabled during AI turns and can dismiss the mobile keyboard");
+
+assert(hook.includes("turnLocked.current = true;\n    setTyping(true);"), "Composer is not locked immediately when a user turn starts");
+assert(hook.includes("turnLocked.current = false;\n    setTyping(false);"), "Composer is not unlocked when the assistant turn ends");
 
 assert(page.includes('interactiveWidget: "resizes-content"'), "AI Room Finder viewport does not request keyboard content resizing");
 assert(page.includes('viewportFit: "cover"'), "AI Room Finder viewport is missing safe-area cover support");
