@@ -121,6 +121,30 @@ export async function importGscPagesRows(input: {
     `;
   }
 
+  const urlsJson = JSON.stringify(Array.from(new Set(rows.map((row) => row.url))));
+  await sql`
+    update seo_url_inventory
+    set last_inspected_at = null,
+        last_seen_at = now()
+    where url in (
+      select value
+      from jsonb_array_elements_text(${urlsJson}::jsonb)
+    )
+  `;
+
+  try {
+    await sql`
+      update seo_full_audit_sessions
+      set status = 'failed',
+          completed_at = coalesce(completed_at, now()),
+          error_message = 'Superseded by a newer GSC Pages CSV import'
+      where status = 'running'
+    `;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    if (!/seo_full_audit_sessions|does not exist/i.test(message)) throw error;
+  }
+
   return {
     importId,
     fileName: input.fileName,
