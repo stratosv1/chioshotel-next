@@ -10,6 +10,7 @@ import { getSeoHealthDashboard } from "@/lib/seo-health/store";
 import SeoCockpit from "./SeoCockpit";
 import SeoHealthPanel from "./SeoHealthPanel";
 import RunSeoAuditButton from "./RunSeoAuditButton";
+import GscPagesCsvUpload from "./GscPagesCsvUpload";
 
 export const dynamic = "force-dynamic";
 
@@ -41,7 +42,8 @@ export default async function SeoAdvisorPage() {
   return (
     <>
       <section className="bg-[#eee9e1] px-4 pt-5 sm:px-6 lg:px-8">
-        <div className="mx-auto flex max-w-7xl justify-end">
+        <div className="mx-auto grid max-w-7xl gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(300px,0.7fr)] lg:items-start">
+          <GscPagesCsvUpload />
           <RunSeoAuditButton />
         </div>
       </section>
