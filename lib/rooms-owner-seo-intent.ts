@@ -13,91 +13,91 @@ const roomsOwnerExperienceByPath: Readonly<Record<string, RoomsOwnerExperience>>
     title: "Rooms & Apartments",
     highlightedTitle: "in Chios",
     primaryCta: {
-      label: "Check live availability",
+      label: "Find your room with AI",
       href: "/ai-assistant/?lang=en",
     },
     wizardIntro: {
-      title: "Prefer a guided room match?",
+      title: "Not sure which room fits you?",
       description:
-        "The Room Wizard suggests a room type based on your preferences. It is a room-matching guide, not a live availability or live-pricing search.",
+        "Tell us your dates and number of guests. The AI Room Finder checks specific rooms and lets you send an availability enquiry. It does not complete an online booking.",
     },
   },
   "/el/domatia-xios/": {
     title: "Δωμάτια & διαμερίσματα",
     highlightedTitle: "στη Χίο",
     primaryCta: {
-      label: "Live διαθεσιμότητα & τιμές",
+      label: "Βρείτε το δωμάτιό σας με AI",
       href: "/ai-assistant/?lang=el",
     },
     wizardIntro: {
-      title: "Θέλετε βοήθεια να διαλέξετε τύπο δωματίου;",
+      title: "Δεν είστε σίγουροι ποιο δωμάτιο σας ταιριάζει;",
       description:
-        "Το Room Wizard προτείνει τύπο δωματίου με βάση τις προτιμήσεις σας. Είναι οδηγός επιλογής και δεν ελέγχει live διαθεσιμότητα ή live τιμές.",
+        "Πείτε μας ημερομηνίες και αριθμό επισκεπτών. Το AI Room Finder ελέγχει συγκεκριμένα δωμάτια και σας επιτρέπει να στείλετε αίτημα διαθεσιμότητας. Δεν ολοκληρώνει online κράτηση.",
     },
   },
   "/fr/chambres-a-chios/": {
     title: "Chambres et appartements",
     highlightedTitle: "à Chios",
     primaryCta: {
-      label: "Disponibilités & tarifs en direct",
+      label: "Trouver votre chambre avec l’IA",
       href: "/ai-assistant/?lang=fr",
     },
     wizardIntro: {
-      title: "Vous préférez être guidé dans votre choix ?",
+      title: "Vous ne savez pas quelle chambre vous convient ?",
       description:
-        "Le Room Wizard suggère un type de chambre selon vos préférences. Il s’agit d’un guide de choix, pas d’une recherche de disponibilité ou de tarifs en direct.",
+        "Indiquez vos dates et le nombre de personnes. L’AI Room Finder vérifie des chambres précises et vous permet d’envoyer une demande de disponibilité. Il ne finalise pas de réservation en ligne.",
     },
   },
   "/de/chios-zimmer/": {
     title: "Zimmer & Apartments",
     highlightedTitle: "auf Chios",
     primaryCta: {
-      label: "Live-Verfügbarkeit & Preise",
+      label: "Zimmer mit AI finden",
       href: "/ai-assistant/?lang=de",
     },
     wizardIntro: {
-      title: "Möchten Sie Hilfe bei der Zimmerwahl?",
+      title: "Nicht sicher, welches Zimmer zu Ihnen passt?",
       description:
-        "Der Room Wizard empfiehlt anhand Ihrer Wünsche einen Zimmertyp. Er ist eine Auswahlhilfe und prüft keine Live-Verfügbarkeit oder Live-Preise.",
+        "Geben Sie Ihre Reisedaten und die Gästezahl an. Der AI Room Finder prüft konkrete Zimmer und ermöglicht eine Verfügbarkeitsanfrage. Eine Online-Buchung wird hier nicht abgeschlossen.",
     },
   },
   "/it/camere-a-chios/": {
     title: "Camere e appartamenti",
     highlightedTitle: "a Chios",
     primaryCta: {
-      label: "Disponibilità e prezzi live",
+      label: "Trova la tua camera con l’AI",
       href: "/ai-assistant/?lang=it",
     },
     wizardIntro: {
-      title: "Preferisci una guida nella scelta della camera?",
+      title: "Non sai quale camera fa per te?",
       description:
-        "Il Room Wizard suggerisce un tipo di camera in base alle tue preferenze. È una guida alla scelta e non controlla disponibilità o prezzi in tempo reale.",
+        "Indica le date e il numero di ospiti. L’AI Room Finder verifica camere specifiche e ti permette di inviare una richiesta di disponibilità. Qui non viene completata una prenotazione online.",
     },
   },
   "/es/habitaciones-en-chios/": {
     title: "Habitaciones y apartamentos",
     highlightedTitle: "en Chios",
     primaryCta: {
-      label: "Disponibilidad y precios en vivo",
+      label: "Encuentra tu habitación con IA",
       href: "/ai-assistant/?lang=es",
     },
     wizardIntro: {
-      title: "¿Prefieres una ayuda para elegir habitación?",
+      title: "¿No sabes qué habitación es la adecuada para ti?",
       description:
-        "El Room Wizard recomienda un tipo de habitación según tus preferencias. Es una guía de elección y no consulta disponibilidad ni precios en tiempo real.",
+        "Indica las fechas y el número de huéspedes. AI Room Finder comprueba habitaciones concretas y te permite enviar una consulta de disponibilidad. Aquí no se completa una reserva online.",
     },
   },
   "/tr/sakiz-adasi-odalari/": {
     title: "Sakız Adası odaları",
     highlightedTitle: "ve daireleri",
     primaryCta: {
-      label: "Canlı müsaitlik ve fiyatlar",
+      label: "AI ile odanızı bulun",
       href: "/ai-assistant/?lang=tr",
     },
     wizardIntro: {
-      title: "Oda seçimi için rehber ister misiniz?",
+      title: "Hangi odanın size uygun olduğundan emin değil misiniz?",
       description:
-        "Room Wizard tercihlerinize göre bir oda türü önerir. Bu bir seçim rehberidir; canlı müsaitlik veya canlı fiyat kontrolü yapmaz.",
+        "Tarihlerinizi ve misafir sayısını belirtin. AI Room Finder belirli odaları kontrol eder ve müsaitlik talebi göndermenizi sağlar. Burada online rezervasyon tamamlanmaz.",
     },
   },
   "/pl/pokoje-na-chios/": {
