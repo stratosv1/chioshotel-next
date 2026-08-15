@@ -28,6 +28,8 @@ export type RoomFinderCopy = {
   whatsappHelp: string;
   breakfastLabel: string;
   languageLabel: string;
+  backLabel: string;
+  editDates: string;
   roomLabel: (n: number) => string;
   guestLabel: (n: number) => string;
   nightLabel: (n: number) => string;
@@ -72,6 +74,8 @@ export const ROOM_FINDER_COPY: Record<RoomFinderLanguage, RoomFinderCopy> = {
     whatsappHelp: "Χρειάζεστε κάποια επιπλέον πληροφορία;",
     breakfastLabel: "Πρωινό",
     languageLabel: "Γλώσσα",
+    backLabel: "Προηγούμενο βήμα",
+    editDates: "Αλλαγή ημερομηνιών",
     roomLabel: n => `${n} ${n === 1 ? "δωμάτιο" : "δωμάτια"}`,
     guestLabel: n => `${n} ${n === 1 ? "άτομο" : "άτομα"}`,
     nightLabel: n => `${n} ${n === 1 ? "βραδιά" : "βραδιές"}`,
@@ -104,6 +108,8 @@ export const ROOM_FINDER_COPY: Record<RoomFinderLanguage, RoomFinderCopy> = {
     whatsappHelp: "Need any additional information?",
     breakfastLabel: "Breakfast",
     languageLabel: "Language",
+    backLabel: "Previous step",
+    editDates: "Edit dates",
     roomLabel: n => `${n} ${n === 1 ? "room" : "rooms"}`,
     guestLabel: n => `${n} ${n === 1 ? "guest" : "guests"}`,
     nightLabel: n => `${n} ${n === 1 ? "night" : "nights"}`,
@@ -136,6 +142,8 @@ export const ROOM_FINDER_COPY: Record<RoomFinderLanguage, RoomFinderCopy> = {
     whatsappHelp: "Benötigen Sie weitere Informationen?",
     breakfastLabel: "Frühstück",
     languageLabel: "Sprache",
+    backLabel: "Vorheriger Schritt",
+    editDates: "Daten ändern",
     roomLabel: n => `${n} ${n === 1 ? "Zimmer" : "Zimmer"}`,
     guestLabel: n => `${n} ${n === 1 ? "Gast" : "Gäste"}`,
     nightLabel: n => `${n} ${n === 1 ? "Nacht" : "Nächte"}`,
@@ -168,6 +176,8 @@ export const ROOM_FINDER_COPY: Record<RoomFinderLanguage, RoomFinderCopy> = {
     whatsappHelp: "Besoin d’informations supplémentaires ?",
     breakfastLabel: "Petit-déjeuner",
     languageLabel: "Langue",
+    backLabel: "Étape précédente",
+    editDates: "Modifier les dates",
     roomLabel: n => `${n} ${n === 1 ? "chambre" : "chambres"}`,
     guestLabel: n => `${n} ${n === 1 ? "personne" : "personnes"}`,
     nightLabel: n => `${n} ${n === 1 ? "nuit" : "nuits"}`,
@@ -200,6 +210,8 @@ export const ROOM_FINDER_COPY: Record<RoomFinderLanguage, RoomFinderCopy> = {
     whatsappHelp: "Avete bisogno di altre informazioni?",
     breakfastLabel: "Colazione",
     languageLabel: "Lingua",
+    backLabel: "Passaggio precedente",
+    editDates: "Modifica date",
     roomLabel: n => `${n} ${n === 1 ? "camera" : "camere"}`,
     guestLabel: n => `${n} ${n === 1 ? "persona" : "persone"}`,
     nightLabel: n => `${n} ${n === 1 ? "notte" : "notti"}`,
@@ -232,6 +244,8 @@ export const ROOM_FINDER_COPY: Record<RoomFinderLanguage, RoomFinderCopy> = {
     whatsappHelp: "¿Necesitan información adicional?",
     breakfastLabel: "Desayuno",
     languageLabel: "Idioma",
+    backLabel: "Paso anterior",
+    editDates: "Editar fechas",
     roomLabel: n => `${n} ${n === 1 ? "habitación" : "habitaciones"}`,
     guestLabel: n => `${n} ${n === 1 ? "persona" : "personas"}`,
     nightLabel: n => `${n} ${n === 1 ? "noche" : "noches"}`,
@@ -264,6 +278,8 @@ export const ROOM_FINDER_COPY: Record<RoomFinderLanguage, RoomFinderCopy> = {
     whatsappHelp: "Ek bilgiye ihtiyacınız var mı?",
     breakfastLabel: "Kahvaltı",
     languageLabel: "Dil",
+    backLabel: "Önceki adım",
+    editDates: "Tarihleri değiştir",
     roomLabel: n => `${n} oda`,
     guestLabel: n => `${n} kişi`,
     nightLabel: n => `${n} gece`,
