@@ -28,6 +28,48 @@ const CLOSE_DETAILS: Record<RoomFinderLanguage, string> = {
   tr: "Oda ayrıntılarını kapat",
 };
 
+const COST_BREAKDOWN_COPY: Record<RoomFinderLanguage, {
+  dayLabel: (count: number) => string;
+  perNight: string;
+  perPerson: string;
+}> = {
+  el: {
+    dayLabel: count => count === 1 ? "μέρα" : "μέρες",
+    perNight: "/διανυκτέρευση",
+    perPerson: "/άτομο",
+  },
+  en: {
+    dayLabel: count => count === 1 ? "day" : "days",
+    perNight: "/night",
+    perPerson: "/person",
+  },
+  de: {
+    dayLabel: count => count === 1 ? "Tag" : "Tage",
+    perNight: "/Nacht",
+    perPerson: "/Person",
+  },
+  fr: {
+    dayLabel: count => count === 1 ? "jour" : "jours",
+    perNight: "/nuit",
+    perPerson: "/personne",
+  },
+  it: {
+    dayLabel: count => count === 1 ? "giorno" : "giorni",
+    perNight: "/notte",
+    perPerson: "/persona",
+  },
+  es: {
+    dayLabel: count => count === 1 ? "día" : "días",
+    perNight: "/noche",
+    perPerson: "/persona",
+  },
+  tr: {
+    dayLabel: () => "gün",
+    perNight: "/gece",
+    perPerson: "/kişi",
+  },
+};
+
 function detectLanguage(): RoomFinderLanguage {
   if (typeof window === "undefined") return "en";
   const supported = ROOM_FINDER_LANGUAGES.map(([value]) => value);
@@ -71,6 +113,7 @@ export function RoomFinderProduction({
   const [language, setLanguage] = useState<RoomFinderLanguage>(initialLanguage);
   const finder = useRoomFinder(language);
   const copy = ROOM_FINDER_COPY[language];
+  const breakdownCopy = COST_BREAKDOWN_COPY[language];
   const [detail, setDetail] = useState<RoomOffer | null>(null);
   const [contact, setContact] = useState({ name: "", phone: "", email: "" });
   const [sendStatus, setSendStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
@@ -245,6 +288,9 @@ export function RoomFinderProduction({
     0,
   );
   const breakfastTotal = finder.breakfast ? breakfastOfferTotal : 0;
+  const breakfastUnitPrice = finder.guestTotal > 0 && finder.nights > 0
+    ? breakfastOfferTotal / (finder.guestTotal * finder.nights)
+    : 0;
   const roomTotal = finder.choices.reduce((sum, choice) => sum + choice.offer.directTotal, 0);
   const stay = stayRange(finder.checkin, finder.checkout, language);
   const guestSummary = finder.guestTotal ? copy.guestLabel(finder.guestTotal) : "";
@@ -538,22 +584,37 @@ export function RoomFinderProduction({
                 </div>
 
                 <div className="p-4">
-                  {finder.choices.map(choice => (
-                    <div key={choice.group} className="flex items-center gap-3 border-b py-3">
-                      <div className="relative h-14 w-[72px] overflow-hidden rounded-xl">
-                        <Image src={choice.offer.image} alt={choice.offer.name} fill sizes="72px" className="object-cover" />
+                  {finder.choices.map(choice => {
+                    const choiceNights = Math.max(1, Number(choice.offer.nights || finder.nights || 1));
+                    const nightlyRate = choice.offer.directTotal / choiceNights;
+                    return (
+                      <div key={choice.group} className="flex items-center gap-3 border-b py-3">
+                        <div className="relative h-14 w-[72px] shrink-0 overflow-hidden rounded-xl">
+                          <Image src={choice.offer.image} alt={choice.offer.name} fill sizes="72px" className="object-cover" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="font-bold">{choice.offer.name}</p>
+                          <p className="text-xs text-[#746b60]">{copy.guestLabel(choice.guests)}</p>
+                          <p className="mt-1 text-xs font-semibold leading-5 text-[#625b52] [font-variant-numeric:tabular-nums]">
+                            {choiceNights} {breakdownCopy.dayLabel(choiceNights)} × {money(nightlyRate, language)}{breakdownCopy.perNight} = {money(choice.offer.directTotal, language)}
+                          </p>
+                        </div>
+                        <strong className="shrink-0 text-[#5f7448] [font-variant-numeric:tabular-nums]">{money(choice.offer.directTotal, language)}</strong>
                       </div>
-                      <div className="flex-1">
-                        <p className="font-bold">{choice.offer.name}</p>
-                        <p className="text-xs text-[#746b60]">{copy.guestLabel(choice.guests)}</p>
-                      </div>
-                      <strong className="text-[#5f7448] [font-variant-numeric:tabular-nums]">{money(choice.offer.directTotal, language)}</strong>
-                    </div>
-                  ))}
+                    );
+                  })}
                   {finder.breakfast && (
-                    <div className="flex justify-between border-b py-3">
-                      <span>🥐 {copy.breakfastLabel}</span>
-                      <strong className="[font-variant-numeric:tabular-nums]">{money(breakfastTotal, language)}</strong>
+                    <div className="flex items-center gap-3 border-b py-3">
+                      <div className="relative h-14 w-[72px] shrink-0 overflow-hidden rounded-xl">
+                        <Image src={BREAKFAST_IMAGE} alt={copy.breakfastLabel} fill sizes="72px" className="object-cover" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="font-bold">{copy.breakfastLabel}</p>
+                        <p className="mt-1 text-xs font-semibold leading-5 text-[#625b52] [font-variant-numeric:tabular-nums]">
+                          {copy.guestLabel(finder.guestTotal)} × {money(breakfastUnitPrice, language)}{breakdownCopy.perPerson} × {finder.nights} {breakdownCopy.dayLabel(finder.nights)} = {money(breakfastTotal, language)}
+                        </p>
+                      </div>
+                      <strong className="shrink-0 [font-variant-numeric:tabular-nums]">{money(breakfastTotal, language)}</strong>
                     </div>
                   )}
                   <div className="mt-4 flex justify-between rounded-2xl bg-[#f1ede7] p-4 text-lg">
