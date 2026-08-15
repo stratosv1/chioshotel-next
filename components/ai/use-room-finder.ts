@@ -153,37 +153,57 @@ export function useRoomFinder(language: RoomFinderLanguage) {
 
   async function interpret(value: string, current: FinderStep): Promise<RoomFinderCommand> {
     const recentMessages = messages.slice(-8).map(({ role, content }) => ({ role, content }));
-    const controller = new AbortController();
-    const timeout = window.setTimeout(() => controller.abort(), 15_000);
+    const requestBody = JSON.stringify({
+      message: value,
+      context: {
+        language,
+        currentStep: current,
+        checkin: checkin || undefined,
+        checkout: checkout || undefined,
+        totalGuests: totalGuests || undefined,
+        roomCount: roomCount || undefined,
+        guestGroups: groups,
+        currentRoom: current === "guests" ? nextMissingGuestRoom(draft) || undefined : undefined,
+        recentMessages,
+      },
+    });
 
-    try {
-      const response = await fetch("/api/ai-assistant/interpret", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        signal: controller.signal,
-        body: JSON.stringify({
-          message: value,
-          context: {
-            language,
-            currentStep: current,
-            checkin: checkin || undefined,
-            checkout: checkout || undefined,
-            totalGuests: totalGuests || undefined,
-            roomCount: roomCount || undefined,
-            guestGroups: groups,
-            currentRoom: current === "guests" ? nextMissingGuestRoom(draft) || undefined : undefined,
-            recentMessages,
-          },
-        }),
-      });
-      const data = await response.json().catch(() => null);
-      if (!response.ok || !data?.command) {
-        throw new Error(String(data?.code || "AI_UNAVAILABLE"));
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      const controller = new AbortController();
+      const timeout = window.setTimeout(() => controller.abort(), 15_000);
+
+      try {
+        const response = await fetch("/api/ai-assistant/interpret", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          signal: controller.signal,
+          body: requestBody,
+        });
+        const data = await response.json().catch(() => null);
+        if (response.ok && data?.command) return data.command as RoomFinderCommand;
+
+        const code = String(data?.code || "AI_UNAVAILABLE");
+        const transient = response.status === 502
+          || response.status === 504
+          || code === "AI_TIMEOUT"
+          || code === "AI_UNAVAILABLE";
+        if (attempt === 0 && transient) {
+          await wait(250);
+          continue;
+        }
+        throw new Error(code);
+      } catch (error) {
+        if (attempt === 0 && error instanceof TypeError) {
+          await wait(250);
+          continue;
+        }
+        throw error;
+      } finally {
+        window.clearTimeout(timeout);
       }
-      return data.command as RoomFinderCommand;
-    } finally {
-      window.clearTimeout(timeout);
     }
+
+    throw new Error("AI_UNAVAILABLE");
   }
 
   async function runAvailabilitySearch(searchDraft: BookingDraft) {
