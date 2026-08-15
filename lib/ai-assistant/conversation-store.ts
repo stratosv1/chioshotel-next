@@ -390,12 +390,13 @@ export async function getRoomFinderInbox(selectedSessionId?: string | null): Pro
 
   const statsRows = await sql`
     select
-      count(*) filter (where created_at >= date_trunc('day', now()))::int as today,
-      count(*) filter (where created_at >= now() - interval '7 days')::int as last_7_days,
-      count(*) filter (where last_activity_at >= now() - interval '5 minutes')::int as active,
-      count(*) filter (where staff_read_at is null or staff_read_at < last_activity_at)::int as unread,
-      count(*) filter (where enquiry_sent_at is not null and created_at >= now() - interval '30 days')::int as enquiries
+      (count(*) filter (where created_at >= date_trunc('day', now())))::int as today,
+      (count(*) filter (where created_at >= now() - interval '7 days'))::int as last_7_days,
+      (count(*) filter (where last_activity_at >= now() - interval '5 minutes'))::int as active,
+      (count(*) filter (where staff_read_at is null or staff_read_at < last_activity_at))::int as unread,
+      (count(*) filter (where enquiry_sent_at is not null and created_at >= now() - interval '30 days'))::int as enquiries
     from ai_room_finder_conversations
+    where first_user_message_at is not null
   `;
 
   const rows = await sql`
@@ -421,6 +422,7 @@ export async function getRoomFinderInbox(selectedSessionId?: string | null): Pro
       order by mu.id desc
       limit 1
     ) lu on true
+    where c.first_user_message_at is not null
     order by c.last_activity_at desc
     limit 100
   `;
