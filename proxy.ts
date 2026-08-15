@@ -1,5 +1,7 @@
-import type { NextRequest } from "next/server";
+import type { NextFetchEvent, NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { getRouteByPath } from "@/lib/url-map";
+import { getRuntimeSeoRule, observeGooglebotSeoUrl } from "@/lib/seo-health/runtime";
 
 const wordpressGonePrefixes = [
   "/wp-admin",
@@ -483,7 +485,33 @@ function isAuthorizedStaffRequest(request: NextRequest) {
   }
 }
 
-export function proxy(request: NextRequest) {
+const seoRuntimeExemptPrefixes = [
+  "/welcome",
+  "/pre-arrival",
+  "/trip-planner",
+  "/ai-assistant",
+  "/ai-room-finder",
+];
+
+function isGoogleCrawler(request: NextRequest) {
+  return /Googlebot|Google-InspectionTool/i.test(request.headers.get("user-agent") || "");
+}
+
+function shouldCheckSeoRuntimeRule(pathname: string) {
+  const normalized = normalizeLegacyPathname(pathname);
+  if (normalized === "/") return false;
+  if (isStaffPath(normalized) || normalized.startsWith("/api/")) return false;
+  if (seoRuntimeExemptPrefixes.some((prefix) => normalized === prefix || normalized.startsWith(`${prefix}/`))) return false;
+  if (/\.[a-z0-9]{2,8}$/i.test(normalized)) return false;
+
+  const directRoute = getRouteByPath(normalized);
+  const slashRoute = getRouteByPath(normalized.endsWith("/") ? normalized : `${normalized}/`);
+  if (directRoute?.action === "KEEP" || slashRoute?.action === "KEEP") return false;
+
+  return true;
+}
+
+export async function proxy(request: NextRequest, event: NextFetchEvent) {
   const host = request.headers.get("host");
 
   if (host === "www.chioshotel.gr") {
@@ -516,17 +544,41 @@ export function proxy(request: NextRequest) {
     });
   }
 
+  const shouldCheckRuntime = shouldCheckSeoRuntimeRule(pathname);
+  if (shouldCheckRuntime && isGoogleCrawler(request)) {
+    event.waitUntil(observeGooglebotSeoUrl(request.url));
+  }
+
+  if (shouldCheckRuntime) {
+    const runtimeRule = await getRuntimeSeoRule(pathname);
+    if (runtimeRule?.ruleType === "redirect" && runtimeRule.destination) {
+      const url = new URL(runtimeRule.destination, request.url);
+      url.search = "";
+      return NextResponse.redirect(url, runtimeRule.statusCode === 308 ? 308 : 301);
+    }
+    if (runtimeRule?.ruleType === "gone") {
+      return new NextResponse("Gone", {
+        status: 410,
+        headers: {
+          "content-type": "text/plain; charset=utf-8",
+          "x-robots-tag": "noindex, nofollow",
+          "x-seo-remediation": "runtime-410",
+        },
+      });
+    }
+  }
+
   const isOccupancyCronPath =
   pathname === "/api/staff/calendar/occupancy-sync" ||
   pathname === "/api/staff/calendar/occupancy-sync/";
 
-if (
-  isStaffPath(pathname) &&
-  !isOccupancyCronPath &&
-  !isAuthorizedStaffRequest(request)
-) {
-  return unauthorizedStaffResponse();
-}
+  if (
+    isStaffPath(pathname) &&
+    !isOccupancyCronPath &&
+    !isAuthorizedStaffRequest(request)
+  ) {
+    return unauthorizedStaffResponse();
+  }
 
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-current-pathname", pathname);
