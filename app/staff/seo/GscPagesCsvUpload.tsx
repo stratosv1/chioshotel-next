@@ -49,13 +49,22 @@ export default function GscPagesCsvUpload() {
         throw new Error(payload?.error || `Upload failed with HTTP ${response.status}`);
       }
 
-      const imported = Number(payload?.importedUrls || 0);
-      const skipped = Number(payload?.skippedRows || 0);
-      const detectedIssue = String(payload?.detectedIssue || "");
-      const formatLabel = payload?.importFormat === "zip" ? "Google ZIP" : "CSV";
-      setMessage(
-        `${formatLabel}: εισήχθησαν ${imported.toLocaleString("el-GR")} URLs${detectedIssue ? ` · κατηγορία: ${detectedIssue}` : ""}${skipped ? ` · ${skipped.toLocaleString("el-GR")} γραμμές αγνοήθηκαν` : ""}. Τώρα πάτησε Run Full Technical SEO Audit.`,
-      );
+      const format = String(payload?.importFormat || "");
+      if (format === "zip-overview") {
+        const issueCount = Number(payload?.issueCount || 0);
+        setMessage(
+          `Google Pages overview: αποθηκεύτηκαν ${issueCount.toLocaleString("el-GR")} κατηγορίες προβλημάτων ως εβδομαδιαίο snapshot. Το συγκεκριμένο ZIP δεν περιέχει URLs ανά κατηγορία· για ακριβή URL remediation μπορείς να ανεβάσεις και το drill-down ZIP μιας κατηγορίας.`,
+        );
+      } else {
+        const imported = Number(payload?.importedUrls || 0);
+        const skipped = Number(payload?.skippedRows || 0);
+        const detectedIssue = String(payload?.detectedIssue || "");
+        const formatLabel = format === "zip-drilldown" ? "Google drill-down ZIP" : "CSV";
+        setMessage(
+          `${formatLabel}: εισήχθησαν ${imported.toLocaleString("el-GR")} URLs${detectedIssue ? ` · κατηγορία: ${detectedIssue}` : ""}${skipped ? ` · ${skipped.toLocaleString("el-GR")} γραμμές αγνοήθηκαν` : ""}. Τώρα πάτησε Run Full Technical SEO Audit.`,
+        );
+      }
+
       setFile(null);
       setFallbackIssue("");
       const input = document.getElementById("gsc-pages-export-file") as HTMLInputElement | null;
@@ -74,7 +83,7 @@ export default function GscPagesCsvUpload() {
       <h2 className="mt-1 text-lg font-semibold text-[#342c26]">Upload Google Pages ZIP</h2>
       <p className="mt-1 text-xs leading-5 text-[#77695e]">
         Ανέβασε <strong>αυτούσιο το ZIP</strong> που κατεβάζει το Google Search Console από το Pages report.
-        Το σύστημα διαβάζει αυτόματα το <strong>Metadata.csv</strong> για την κατηγορία και το <strong>Table.csv</strong> για τα URLs. Δέχεται και απλό CSV για συμβατότητα.
+        Δέχεται τόσο το γενικό Pages ZIP με <strong>Critical issues.csv</strong> όσο και drill-down ZIP με <strong>Table.csv</strong>. Δεν χρειάζεται αποσυμπίεση ή μετατροπή.
       </p>
 
       <label className="mt-4 block text-xs font-semibold text-[#51463e]" htmlFor="gsc-pages-export-file">
@@ -89,7 +98,7 @@ export default function GscPagesCsvUpload() {
       />
 
       <details className="mt-3 rounded-xl border border-[#ded5ca] bg-white/60 px-3 py-2">
-        <summary className="cursor-pointer text-xs font-semibold text-[#51463e]">Χειροκίνητη κατηγορία μόνο αν λείπει το Metadata.csv</summary>
+        <summary className="cursor-pointer text-xs font-semibold text-[#51463e]">Χειροκίνητη κατηγορία μόνο για μη τυπικό CSV/drill-down</summary>
         <select
           id="gsc-pages-fallback-issue"
           value={fallbackIssue}
