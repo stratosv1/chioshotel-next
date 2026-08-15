@@ -1,12 +1,19 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { RoomFinderProduction } from "@/components/ai/RoomFinderProduction";
-import { RoomFinderAutoFocus } from "@/components/ai/RoomFinderAutoFocus";
 import type { RoomFinderLanguage } from "@/components/ai/room-finder-copy";
 
 export const metadata: Metadata = {
   title: { absolute: "AI Room Finder | Voulamandis House" },
   description: "Find live room availability and send an enquiry to reception.",
   robots: { index: false, follow: false, nocache: true },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  interactiveWidget: "resizes-content",
+  themeColor: "#a4907c",
 };
 
 const SUPPORTED_LANGUAGES = new Set<RoomFinderLanguage>(["el", "en", "de", "fr", "it", "es", "tr"]);
@@ -23,7 +30,6 @@ export default async function AiAssistantPage({ searchParams }: AiAssistantPageP
 
   return (
     <div lang={initialLanguage} className="contents">
-      <RoomFinderAutoFocus />
       <RoomFinderProduction initialLanguage={initialLanguage} />
     </div>
   );
