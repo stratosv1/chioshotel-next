@@ -6,6 +6,7 @@ const { performance } = require("node:perf_hooks");
 const PATCHES = [
   "normalize-legacy-redirect-destinations.cjs",
   "patch-seo-redirect-chains.cjs",
+  "patch-gsc-not-found-remediation.cjs",
   "patch-seo-inventory-alignment.cjs",
   "disable-last-minute-room-extras.cjs",
   "patch-long-seo-titles.cjs",
