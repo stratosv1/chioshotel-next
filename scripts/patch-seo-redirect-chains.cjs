@@ -71,6 +71,7 @@ function patchProxy() {
   }
 
   if (
+    normalizedPathname === "/book the room you like" ||
     normalizedPathname === "/best-room-selection-wizard" ||
     normalizedPathname === "/reservations"
   ) {
