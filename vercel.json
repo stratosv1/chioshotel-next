@@ -37,5 +37,16 @@
       "path": "/api/seo/health/weekly/",
       "schedule": "30 7 * * *"
     }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Link",
+          "value": "</llms.txt>; rel=\"describedby\""
+        }
+      ]
+    }
   ]
 }
