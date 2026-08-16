@@ -82,6 +82,18 @@ function patchProxy() {
     return NextResponse.redirect(url, 301);
   }
 
+  // This encoded historical GSC URL used to traverse /find-your-room/ first.
+  // Keep the downstream patch anchor above stable, but flatten this source
+  // directly to the final AI Room Finder destination.
+  if (normalizedPathname === "/book the room you like") {
+    const url = request.nextUrl.clone();
+    url.protocol = "https:";
+    url.hostname = "chioshotel.gr";
+    url.pathname = "/ai-assistant/";
+    url.search = "?lang=en";
+    return NextResponse.redirect(url, 301);
+  }
+
   const legacyRedirectTarget = getLegacyRedirectTarget(pathname);
 
   if (legacyRedirectTarget) {
