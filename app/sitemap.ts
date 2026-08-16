@@ -184,8 +184,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return deduplicateByCanonicalUrl([
     ...accommodationLandingRoutes,
     ...romanticStayRoutes,
-    ...faqRoutes,
     ...polishRoutes,
+    ...faqRoutes,
     ...routes,
     ...familyBeachRoutes,
     ...organizedBeachRoutes,
