@@ -99,9 +99,19 @@ export function VoulamandisFooterTailwind({ language = "en" }: FooterProps) {
               <p>© {year} Voulamandis House. {copy.allRightsReserved}</p>
               <p className="mt-0.5 text-white/36">{footerTagline}</p>
             </div>
-            <div className="flex shrink-0 items-center gap-1.5">
-              <a href="https://www.instagram.com/chioshotels/" target="_blank" rel="noopener" aria-label="Instagram" className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/12 bg-white/[0.06] text-xs font-black text-white/70 transition hover:bg-white/12 hover:text-white">◎</a>
-              <a href="https://www.facebook.com/people/Voulamandis-House/100063584320703/" target="_blank" rel="noopener" aria-label="Facebook" className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/12 bg-white/[0.06] text-xs font-black text-white/70 transition hover:bg-white/12 hover:text-white">f</a>
+            <div className="flex shrink-0 items-center gap-2.5">
+              <a href="https://www.instagram.com/chioshotels/" target="_blank" rel="noopener" aria-label="Instagram" className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/[0.08] text-white/85 shadow-sm shadow-black/20 transition hover:bg-white/15 hover:text-white sm:h-12 sm:w-12">
+                <svg viewBox="0 0 24 24" aria-hidden="true" className="h-[22px] w-[22px] sm:h-6 sm:w-6" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3.5" y="3.5" width="17" height="17" rx="5" />
+                  <circle cx="12" cy="12" r="4.1" />
+                  <circle cx="17.4" cy="6.7" r="1" fill="currentColor" stroke="none" />
+                </svg>
+              </a>
+              <a href="https://www.facebook.com/people/Voulamandis-House/100063584320703/" target="_blank" rel="noopener" aria-label="Facebook" className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/[0.08] text-white/85 shadow-sm shadow-black/20 transition hover:bg-white/15 hover:text-white sm:h-12 sm:w-12">
+                <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6 sm:h-[26px] sm:w-[26px]" fill="currentColor">
+                  <path d="M13.7 21v-8h2.8l.4-3.1h-3.2V8c0-.9.3-1.5 1.6-1.5H17V3.8c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.4-4 4.1v2.1H8V13h2.6v8h3.1Z" />
+                </svg>
+              </a>
             </div>
           </div>
         </div>
