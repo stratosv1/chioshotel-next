@@ -30,6 +30,10 @@
       "schedule": "20 5 * * *"
     },
     {
+      "path": "/api/seo/ga4/sync/",
+      "schedule": "40 5 * * *"
+    },
+    {
       "path": "/api/seo/gsc/analyze/",
       "schedule": "0 7 * * *"
     },
