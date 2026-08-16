@@ -39,7 +39,7 @@ const footerCopy: Record<LanguageCode, FooterCopy> = {
   fr: { description: "Chambres et appartements calmes dans le quartier historique de Kampos à Chios, avec un accès facile à la ville, à l’aéroport, aux plages, aux villages et aux sites culturels.", bookStay: "Réserver", whatsapp: "WhatsApp", allRightsReserved: "Tous droits réservés.", groups: { stay: "Séjour", exploreChios: "Explorer Chios", popularGuides: "Guides populaires" }, links: { rooms: "Chambres", ratesAvailability: "Tarifs & Disponibilité", contact: "Contact", faq: "Questions fréquentes", chiosIslandGuide: "Guide de Chios", beaches: "Plages de Chios", villages: "Villages de Chios", museums: "Musées de Chios", holidayQuiz: "Quiz vacances à Chios", agiaDynami: "Plage d’Agia Dynami", mavraVolia: "Plage de Mavra Volia", pyrgi: "Village de Pyrgi", mesta: "Village de Mesta", masticMuseum: "Musée du Mastic de Chios" } },
   de: { description: "Ruhige Zimmer und Apartments im historischen Kampos-Gebiet von Chios, mit einfachem Zugang zur Stadt, zum Flughafen, zu Stränden, Dörfern und Sehenswürdigkeiten.", bookStay: "Buchen", whatsapp: "WhatsApp", allRightsReserved: "Alle Rechte vorbehalten.", groups: { stay: "Aufenthalt", exploreChios: "Chios entdecken", popularGuides: "Beliebte Reiseführer" }, links: { rooms: "Zimmer", ratesAvailability: "Preise & Verfügbarkeit", contact: "Kontakt", faq: "Häufige Fragen", chiosIslandGuide: "Chios Reiseführer", beaches: "Strände auf Chios", villages: "Dörfer auf Chios", museums: "Museen auf Chios", holidayQuiz: "Chios Urlaubsquiz", agiaDynami: "Agia Dynami Strand", mavraVolia: "Mavra Volia Strand", pyrgi: "Pyrgi Dorf", mesta: "Mesta Dorf", masticMuseum: "Chios Mastix Museum" } },
   it: { description: "Camere e appartamenti tranquilli nella storica zona di Kampos a Chios, con facile accesso alla città, all’aeroporto, alle spiagge, ai villaggi e ai luoghi culturali.", bookStay: "Prenota", whatsapp: "WhatsApp", allRightsReserved: "Tutti i diritti riservati.", groups: { stay: "Soggiorno", exploreChios: "Esplora Chios", popularGuides: "Guide popolari" }, links: { rooms: "Camere", ratesAvailability: "Prezzi & Disponibilità", contact: "Contatti", faq: "Domande frequenti", chiosIslandGuide: "Guida di Chios", beaches: "Spiagge di Chios", villages: "Villaggi di Chios", museums: "Musei di Chios", holidayQuiz: "Quiz vacanze a Chios", agiaDynami: "Spiaggia di Agia Dynami", mavraVolia: "Spiaggia di Mavra Volia", pyrgi: "Villaggio di Pyrgi", mesta: "Villaggio di Mesta", masticMuseum: "Museo del Mastice di Chios" } },
-  es: { description: "Habitaciones y apartamentos tranquilos en la histórica zona de Kampos en Chios, con fácil acceso a la ciudad, al aeropuerto, a playas, pueblos y lugares culturales.", bookStay: "Reserva", whatsapp: "WhatsApp", allRightsReserved: "Todos los derechos reservados.", groups: { stay: "Estancia", exploreChios: "Explorar Chios", popularGuides: "Guías populares" }, links: { rooms: "Habitaciones", ratesAvailability: "Precios & Disponibilidad", contact: "Contacto", faq: "Preguntas frecuentes", chiosIslandGuide: "Guía de Chios", beaches: "Playas de Chios", villages: "Pueblos de Chios", museums: "Museos de Chios", holidayQuiz: "Quiz de vacaciones en Chios", agiaDynami: "Playa Agia Dynami", mavraVolia: "Playa Mavra Volia", pyrgi: "Pueblo de Pyrgi", mesta: "Pueblo de Mesta", masticMuseum: "Museo del Mastiha de Chios" } },
+  es: { description: "Habitaciones y apartamentos tranquilos en la histórica zona de Kampos en Chios, con fácil acceso a la ciudad, al aeropuerto, a playas, pueblos y lugares culturales.", bookStay: "Reserva", whatsapp: "WhatsApp", allRightsReserved: "Todos los derechos reservados.", groups: { stay: "Estancia", exploreChios: "Explorar Chios", popularGuides: "Guías populares" }, links: { rooms: "Habitaciones", ratesAvailability: "Precios & Disponibilidad", contact: "Contacto", faq: "Preguntas frecuentes", chiosIslandGuide: "Guía de Chios", beaches: "Playas de Chios", villages: "Pueblos de Chios", museums: "Museos de Chios", holidayQuiz: "Quiz de vacaciones en Chios", agiaDynami: "Playa Agia Dynami", mavraVolia: "Playa Mavra Volia", pyrgi: "Pueblo Pyrgi", mesta: "Pueblo Mesta", masticMuseum: "Museo del Mastiha de Chios" } },
   tr: { description: "Sakız Adası’nın tarihi Kampos bölgesinde, şehir merkezine, havaalanına, plajlara, köylere ve kültürel noktalara kolay erişimli sakin odalar ve daireler.", bookStay: "Rezervasyon", whatsapp: "WhatsApp", allRightsReserved: "Tüm hakları saklıdır.", groups: { stay: "Konaklama", exploreChios: "Sakız Adası’nı keşfedin", popularGuides: "Popüler rehberler" }, links: { rooms: "Odalar", ratesAvailability: "Fiyatlar & Müsaitlik", contact: "İletişim", faq: "Sık Sorulan Sorular", chiosIslandGuide: "Sakız Adası Rehberi", beaches: "Sakız Adası Plajları", villages: "Sakız Adası Köyleri", museums: "Sakız Adası Müzeleri", holidayQuiz: "Sakız Adası Tatil Testi", agiaDynami: "Agia Dynami Plajı", mavraVolia: "Mavra Volia Plajı", pyrgi: "Pyrgi Köyü", mesta: "Mesta Köyü", masticMuseum: "Sakız Adası Mastik Müzesi" } },
 };
 
@@ -72,32 +72,49 @@ export function VoulamandisFooterTailwind({ language = "en" }: FooterProps) {
   return (
     <footer className="relative overflow-hidden bg-stone-950 pb-24 text-white md:pb-0">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(168,120,66,.2),transparent_28rem),radial-gradient(circle_at_85%_30%,rgba(255,255,255,.08),transparent_24rem)]" />
-      <div className="relative mx-auto grid max-w-7xl gap-4 px-4 py-7 sm:px-6 md:gap-10 md:py-14 lg:grid-cols-[0.92fr_1.65fr] lg:px-8 lg:py-20">
-        <section className="rounded-[1.5rem] border border-white/10 bg-white/[0.06] p-4 shadow-xl shadow-black/15 backdrop-blur md:rounded-[2rem] md:p-8 md:shadow-2xl">
-          <a href={language === "en" ? "/" : `/${language}/`} className="flex items-center gap-3 md:gap-4">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-sm font-black text-stone-900 shadow-lg shadow-black/20 md:h-14 md:w-14 md:text-lg">VH</span>
-            <span className="min-w-0"><strong className="block truncate text-xl font-black leading-none tracking-[-0.055em] text-white md:text-2xl">Voulamandis House</strong><small className="mt-1 block text-[10px] font-black uppercase tracking-[0.16em] text-white/50 md:mt-2 md:text-xs">{locationLabel}</small></span>
-          </a>
-          <p className="mt-4 text-sm leading-6 text-white/70 md:mt-6 md:max-w-xl md:text-base md:leading-8">{copy.description}</p>
-          <div className="mt-4 grid grid-cols-2 gap-2 md:mt-7 md:grid-cols-2 lg:flex lg:flex-wrap">
-            <a href={ratesPaths[language]} aria-label={copy.bookStay} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-white px-3 text-[11px] font-black uppercase tracking-[0.08em] text-stone-900 shadow-lg shadow-black/10 lg:px-5"><span aria-hidden="true">📅</span><span>{copy.bookStay}</span></a>
-            <a href="https://wa.me/306944474226" target="_blank" rel="noopener" aria-label={copy.whatsapp} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#25D366] px-3 text-[11px] font-black uppercase tracking-[0.08em] text-white shadow-lg shadow-[#25D366]/25 transition hover:bg-[#1ebe5d] lg:px-5"><span aria-hidden="true">💬</span><span>{copy.whatsapp}</span></a>
-            <a href="https://www.instagram.com/chioshotels/" target="_blank" rel="noopener" aria-label="Instagram" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 text-[11px] font-black uppercase tracking-[0.08em] text-white lg:px-5"><span aria-hidden="true">◎</span><span>Instagram</span></a>
-            <a href="https://www.facebook.com/people/Voulamandis-House/100063584320703/" target="_blank" rel="noopener" aria-label="Facebook" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 text-[11px] font-black uppercase tracking-[0.08em] text-white lg:px-5"><span aria-hidden="true">f</span><span>Facebook</span></a>
+      <div className="relative mx-auto max-w-7xl px-3 py-4 sm:px-6 sm:py-6 lg:px-8 lg:py-10">
+        <div className="overflow-hidden rounded-[1.4rem] border border-white/10 bg-white/[0.045] shadow-xl shadow-black/15 backdrop-blur md:rounded-[1.75rem]">
+          <section className="flex items-center justify-between gap-3 border-b border-white/10 px-3 py-3 sm:px-5 sm:py-4 md:px-6 md:py-5">
+            <a href={language === "en" ? "/" : `/${language}/`} className="flex min-w-0 items-center gap-2.5 sm:gap-3">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-[11px] font-black text-stone-900 shadow-md shadow-black/15 sm:h-11 sm:w-11 sm:rounded-2xl sm:text-sm">VH</span>
+              <span className="min-w-0">
+                <strong className="block truncate text-[15px] font-black leading-none tracking-[-0.04em] text-white sm:text-lg md:text-xl">Voulamandis House</strong>
+                <small className="mt-1 block truncate text-[8px] font-black uppercase tracking-[0.12em] text-white/50 sm:text-[10px]">{locationLabel}</small>
+              </span>
+            </a>
+            <p className="hidden max-w-xl text-right text-sm leading-6 text-white/60 md:block">{copy.description}</p>
+          </section>
+
+          <nav aria-label={footerNavLabel} className="grid grid-cols-3 divide-x divide-white/10">
+            {groups.map((group) => (
+              <section key={group.title} className="min-w-0 px-2 py-3 sm:px-4 sm:py-5 md:px-6 md:py-6">
+                <h2 className="min-h-[2.2rem] break-words text-[8px] font-black uppercase leading-[1.25] tracking-[0.08em] text-amber-200 sm:min-h-0 sm:text-[11px] sm:tracking-[0.12em] md:text-sm">{group.title}</h2>
+                <ul className="mt-1.5 grid gap-0.5 sm:mt-4 sm:gap-1.5 md:gap-2">
+                  {group.links.map((link) => (
+                    <li key={`${group.title}-${link.href}`} className="min-w-0">
+                      <a href={link.href} className="group flex min-h-9 min-w-0 items-center justify-between gap-1 rounded-xl px-1 py-1.5 text-[9.5px] font-bold leading-[1.2] text-white/72 transition hover:bg-white/[0.07] hover:text-white sm:px-2 sm:text-xs md:min-h-10 md:text-sm">
+                        <span className="min-w-0 break-words [overflow-wrap:anywhere]">{link.label}</span>
+                        <span aria-hidden="true" className="hidden shrink-0 text-white/35 transition group-hover:translate-x-0.5 group-hover:text-amber-200 sm:inline">→</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ))}
+          </nav>
+
+          <div className="flex items-end justify-between gap-3 border-t border-white/10 px-3 py-3 sm:items-center sm:px-5 sm:py-4 md:px-6">
+            <div className="min-w-0 text-[8px] font-bold uppercase leading-4 tracking-[0.08em] text-white/38 sm:text-[10px] sm:tracking-[0.1em] md:text-xs">
+              <p>© {year} Voulamandis House. {copy.allRightsReserved}</p>
+              <p className="mt-0.5 text-white/28">{footerTagline}</p>
+            </div>
+            <div className="flex shrink-0 items-center gap-1.5">
+              <a href="https://www.instagram.com/chioshotels/" target="_blank" rel="noopener" aria-label="Instagram" className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/12 bg-white/[0.06] text-xs font-black text-white/70 transition hover:bg-white/12 hover:text-white">◎</a>
+              <a href="https://www.facebook.com/people/Voulamandis-House/100063584320703/" target="_blank" rel="noopener" aria-label="Facebook" className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/12 bg-white/[0.06] text-xs font-black text-white/70 transition hover:bg-white/12 hover:text-white">f</a>
+            </div>
           </div>
-        </section>
-        <nav aria-label={footerNavLabel} className="grid gap-3 md:gap-4 sm:grid-cols-3">
-          {groups.map((group) => (
-            <section key={group.title} className="rounded-[1.35rem] border border-white/10 bg-white/[0.045] p-3 backdrop-blur md:rounded-[1.75rem] md:p-5">
-              <h2 className="text-[11px] font-black uppercase tracking-[0.16em] text-amber-200 md:text-sm">{group.title}</h2>
-              <ul className="mt-3 grid grid-cols-1 gap-1.5 md:mt-5 md:gap-3">
-                {group.links.map((link) => <li key={`${group.title}-${link.href}`}><a href={link.href} className="group flex min-h-9 items-center justify-between rounded-2xl bg-white/[0.04] px-3 py-2 text-[12px] font-bold text-white/75 ring-1 ring-white/5 transition hover:bg-white/10 hover:text-white md:bg-transparent md:text-sm md:ring-0"><span className="truncate">{link.label}</span><span className="hidden opacity-0 transition group-hover:translate-x-1 group-hover:opacity-100 md:inline">→</span></a></li>)}
-              </ul>
-            </section>
-          ))}
-        </nav>
+        </div>
       </div>
-      <div className="relative border-t border-white/10 px-4 py-4 md:py-5"><div className="mx-auto flex max-w-7xl flex-col gap-2 text-[10px] font-bold uppercase tracking-[0.1em] text-white/42 sm:flex-row sm:items-center sm:justify-between md:text-xs md:tracking-[0.12em]"><p>© {year} Voulamandis House. {copy.allRightsReserved}</p><p>{footerTagline}</p></div></div>
     </footer>
   );
 }
