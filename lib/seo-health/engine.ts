@@ -18,6 +18,7 @@ const SITE_ORIGIN = "https://chioshotel.gr";
 const PRIMARY_SITE = "sc-domain:chioshotel.gr";
 const INSPECTION_BATCH_SIZE = 8;
 const BATCH_PAUSE_MS = 1100;
+const NON_INDEXABLE_REDIRECT_ITEM_IDS = new Set(["find-your-room"]);
 
 const GONE_PREFIXES = [
   "/wp-admin",
@@ -77,15 +78,27 @@ function sameSite(value: string) {
   }
 }
 
-function isCurrentCanonicalUrl(value: string) {
+function routeForUrl(value: string) {
   try {
     const url = new URL(value);
-    if (!sameSite(value)) return false;
-    const route = getRouteByPath(normalizeSeoPath(url.pathname));
-    return route?.action === "KEEP";
+    if (!sameSite(value)) return undefined;
+    return getRouteByPath(normalizeSeoPath(url.pathname));
   } catch {
-    return false;
+    return undefined;
   }
+}
+
+function isIntentionalNonIndexableRedirect(value: string) {
+  const route = routeForUrl(value);
+  return Boolean(route && NON_INDEXABLE_REDIRECT_ITEM_IDS.has(route.itemId));
+}
+
+function isCurrentCanonicalUrl(value: string) {
+  const route = routeForUrl(value);
+  return Boolean(
+    route?.action === "KEEP" &&
+      !NON_INDEXABLE_REDIRECT_ITEM_IDS.has(route.itemId),
+  );
 }
 
 function isTechnicalGonePath(pathname: string) {
@@ -96,6 +109,10 @@ function isTechnicalGonePath(pathname: string) {
 
 function coverageIncludes(index: GscIndexStatus, needle: string) {
   return String(index.coverageState || "").toLowerCase().includes(needle.toLowerCase());
+}
+
+function isGscQuotaError(message: string) {
+  return /\b429\b|quota exceeded|RESOURCE_EXHAUSTED/i.test(message);
 }
 
 type Decision = {
@@ -110,6 +127,10 @@ type Decision = {
     statusCode: number;
     reason: string;
   };
+};
+
+type InspectionContext = {
+  gscQuotaExhausted: boolean;
 };
 
 async function safeRedirectDecision(
@@ -144,7 +165,10 @@ async function decide(
   live: LiveSeoCheck,
   index: GscIndexStatus,
 ): Promise<Decision> {
-  const expectedCanonical = candidate.expectedKind === "canonical" || isCurrentCanonicalUrl(candidate.url);
+  const intentionalRedirect = isIntentionalNonIndexableRedirect(candidate.url);
+  const expectedCanonical =
+    !intentionalRedirect &&
+    (candidate.expectedKind === "canonical" || isCurrentCanonicalUrl(candidate.url));
   const fetchState = String(index.pageFetchState || "");
   const robotsState = String(index.robotsTxtState || "");
   const indexingState = String(index.indexingState || "");
@@ -201,7 +225,7 @@ async function decide(
       };
     }
 
-    if (live.status >= 300 && live.status < 400) {
+    if (live.redirectChain.length === 1 || (live.status >= 300 && live.status < 400)) {
       return {
         category: "unexpected_redirect",
         severity: "warning",
@@ -300,11 +324,13 @@ async function decide(
     };
   }
 
-  if (live.status >= 300 && live.status < 400) {
+  if (live.redirectChain.length === 1 || (live.status >= 300 && live.status < 400)) {
     return {
       category: "page_with_redirect",
       severity: "healthy",
-      decision: "Legacy/unknown URL already redirects in one hop.",
+      decision: intentionalRedirect
+        ? "Intentional Room Finder alias redirects directly to the noindex AI application."
+        : "Legacy/unknown URL already redirects in one hop.",
       action: "No change unless the final destination is later found invalid.",
       autoExecuted: false,
     };
@@ -380,20 +406,31 @@ async function decide(
   };
 }
 
-async function inspectCandidate(request: Request, runId: string, siteUrl: string, candidate: SeoUrlCandidate) {
+async function inspectCandidate(
+  request: Request,
+  runId: string,
+  siteUrl: string,
+  candidate: SeoUrlCandidate,
+  context: InspectionContext,
+) {
   const live = await inspectLiveSeoUrl(candidate.url);
   let index: GscIndexStatus = {};
   let gscError = "";
 
-  try {
-    const result = await inspectGoogleIndexUrl(request, {
-      siteUrl,
-      inspectionUrl: candidate.url,
-      languageCode: "en-US",
-    });
-    index = result.inspectionResult?.indexStatusResult || {};
-  } catch (error) {
-    gscError = error instanceof Error ? error.message : String(error);
+  if (context.gscQuotaExhausted) {
+    gscError = "URL Inspection skipped because Search Console quota was already exhausted earlier in this run.";
+  } else {
+    try {
+      const result = await inspectGoogleIndexUrl(request, {
+        siteUrl,
+        inspectionUrl: candidate.url,
+        languageCode: "en-US",
+      });
+      index = result.inspectionResult?.indexStatusResult || {};
+    } catch (error) {
+      gscError = error instanceof Error ? error.message : String(error);
+      if (isGscQuotaError(gscError)) context.gscQuotaExhausted = true;
+    }
   }
 
   const decision = await decide(candidate, live, index);
@@ -438,6 +475,7 @@ async function inspectCandidate(request: Request, runId: string, siteUrl: string
       liveError: live.error,
       redirectChain: live.redirectChain,
       gscError,
+      gscQuotaExhausted: context.gscQuotaExhausted,
       crawledAs: index.crawledAs || "",
       sitemaps: index.sitemap || [],
       referringUrls: index.referringUrls || [],
@@ -457,7 +495,11 @@ export async function runWeeklySeoHealth(
   await ensureSeoHealthTables();
 
   const canonicalRows = routeMap
-    .filter((route) => route.action === "KEEP")
+    .filter(
+      (route) =>
+        route.action === "KEEP" &&
+        !NON_INDEXABLE_REDIRECT_ITEM_IDS.has(route.itemId),
+    )
     .map((route) => ({
       url: new URL(route.path, SITE_ORIGIN).toString(),
       source: "canonical" as const,
@@ -469,6 +511,7 @@ export async function runWeeklySeoHealth(
   const gscSeeded = await seedSeoUrlsFromStoredGsc(siteUrl);
   const candidates = await getSeoInspectionCandidates(limit);
   const runId = await startSeoHealthRun(siteUrl);
+  const inspectionContext: InspectionContext = { gscQuotaExhausted: false };
 
   const summary = {
     inspected: 0,
@@ -484,7 +527,13 @@ export async function runWeeklySeoHealth(
       const results = await Promise.all(
         batch.map(async (candidate) => {
           try {
-            return await inspectCandidate(request, runId, siteUrl, candidate);
+            return await inspectCandidate(
+              request,
+              runId,
+              siteUrl,
+              candidate,
+              inspectionContext,
+            );
           } catch (error) {
             console.error(`[seo-health] candidate failed ${candidate.url}`, error);
             return null;
@@ -514,6 +563,7 @@ export async function runWeeklySeoHealth(
       canonicalSeeded: canonicalRows.length,
       gscSeeded,
       candidateCount: candidates.length,
+      gscQuotaExhausted: inspectionContext.gscQuotaExhausted,
       ...summary,
     };
   } catch (error) {
