@@ -53,6 +53,33 @@ const GSC_VALIDATION_REDIRECTS = [
     "/tr/sakiz-adasi-koyleri/pyrgi-koyu/",
   ],
 
+  // Search Console: Page with redirect entries that still passed through an
+  // intermediate legacy alias. Keep the historical source but send it directly
+  // to the final destination Google should see.
+  ["/de/zimmer-suchassistent/", "/ai-assistant/?lang=de"],
+  ["/el/voulamandis-room-finder-gr/", "/ai-assistant/?lang=el"],
+  ["/es/mike/", "/ai-assistant/?lang=es"],
+  ["/it/trova-la-stanza-che-fa-per-te/", "/ai-assistant/?lang=it"],
+  ["/mike-2/", "/ai-assistant/?lang=en"],
+  ["/tr/en-uygun-oda/", "/ai-assistant/?lang=tr"],
+  [
+    "/tr/chios-odalari/sakiz-adasinin-plajlari/",
+    "/tr/sakiz-adasi-plajlari/",
+  ],
+
+  // Search Console: legacy URLs in the redirect report that currently end on a
+  // truthful 404 but have a proven, same-intent modern replacement.
+  [
+    "/de/uncategorized-de/gunstige-economy-zimmer-auf-chios/",
+    "/de/zimmer-chios/economy-zimmer-auf-chios/",
+  ],
+  ["/en/direct-booking-voulamandis-house/", "/chios-hotels-rates/"],
+  ["/fr/ile-de-chios/", "/fr/chios-en-grece/"],
+  [
+    "/it/stanze-a-chios/italiaagia-fotia-beachthe-captivating-beach-of-chios/",
+    "/it/spiagge-chios/spiaggia-agia-fotia/",
+  ],
+
   // Retired Room Finder aliases. The AI application itself intentionally stays
   // noindex, but these historical aliases should redirect instead of returning 404.
   ["/room-finder/", "/ai-assistant/?lang=en"],
