@@ -37,6 +37,22 @@ const GSC_VALIDATION_REDIRECTS = [
     "/tr/sakiz-adasi-koyleri/vessa-koyu/",
   ],
 
+  // Search Console: legacy Turkish URLs still passing through two redirects in
+  // the Crawled - currently not indexed export. Flatten each source directly to
+  // its final canonical destination.
+  [
+    "/tr/chios-odalari/kambos-sakiz-adasi/",
+    "/tr/sakiz-adasi/",
+  ],
+  [
+    "/tr/chios-odalari/olympoi-koyu-chios/",
+    "/tr/sakiz-adasi-koyleri/olympoi-koyu/",
+  ],
+  [
+    "/tr/chios-odalari/pyrgi-sakiz-adasi-koyu/",
+    "/tr/sakiz-adasi-koyleri/pyrgi-koyu/",
+  ],
+
   // Retired Room Finder aliases. The AI application itself intentionally stays
   // noindex, but these historical aliases should redirect instead of returning 404.
   ["/room-finder/", "/ai-assistant/?lang=en"],
