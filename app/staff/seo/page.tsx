@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+import { DEFAULT_GA4_PROPERTY_ID } from "@/lib/ga4/client";
+import { getGa4SeoContext } from "@/lib/ga4/context";
+import { getLatestGa4SyncState } from "@/lib/ga4/store";
 import { getSeoAdvisorWithIntentData } from "@/lib/gsc/advisor-intents";
 import { getSeoAdvisorActions, syncSeoAdvisorActions } from "@/lib/gsc/advisor-actions";
 import {
@@ -13,6 +16,7 @@ import SeoHealthPanel from "./SeoHealthPanel";
 import SeoManagerMonitor from "./SeoManagerMonitor";
 import RunSeoAuditButton from "./RunSeoAuditButton";
 import GscPagesCsvUpload from "./GscPagesCsvUpload";
+import Ga4SeoPanel from "./Ga4SeoPanel";
 
 export const dynamic = "force-dynamic";
 
@@ -26,12 +30,15 @@ export const metadata: Metadata = {
 };
 
 export default async function SeoAdvisorPage() {
-  const [snapshot, latestSync, history, health, managerMonitor] = await Promise.all([
+  const ga4PropertyId = process.env.GA4_PROPERTY_ID?.trim() || DEFAULT_GA4_PROPERTY_ID;
+  const [snapshot, latestSync, history, health, managerMonitor, analytics, ga4Sync] = await Promise.all([
     getLatestSeoAdvisorSnapshot(),
     getLatestGscSyncState(),
     getSeoAdvisorSnapshotHistory(4),
     getSeoHealthDashboard(),
     getSeoManagerMonitor(),
+    getGa4SeoContext(),
+    getLatestGa4SyncState(ga4PropertyId),
   ]);
 
   const findings = snapshot?.payload?.aiInterpretation?.findings;
@@ -52,6 +59,7 @@ export default async function SeoAdvisorPage() {
       </section>
       <SeoManagerMonitor monitor={managerMonitor} />
       <SeoHealthPanel health={health} />
+      <Ga4SeoPanel analytics={analytics} sync={ga4Sync} />
       <SeoCockpit
         snapshot={snapshot}
         history={history}
