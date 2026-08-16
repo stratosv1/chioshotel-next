@@ -81,8 +81,8 @@ export function VoulamandisFooterTailwind({ language = "en" }: FooterProps) {
               <section key={group.title} className="min-w-0 px-1 py-2.5 sm:px-4 sm:py-5 md:px-6 md:py-6">
                 <h2 className="min-h-[2rem] break-words text-[12px] font-black uppercase leading-[1.2] tracking-[0.035em] text-amber-200 sm:min-h-0 sm:text-[12px] sm:tracking-[0.1em] md:text-sm">{group.title}</h2>
                 <ul className="mt-1 grid gap-0 sm:mt-4 sm:gap-1.5 md:gap-2">
-                  {group.links.map((link) => (
-                    <li key={`${group.title}-${link.href}`} className="min-w-0">
+                  {group.links.map((link, linkIndex) => (
+                    <li key={`${group.title}-${linkIndex}`} className="min-w-0">
                       <a href={link.href} className="group flex min-h-8 min-w-0 items-center justify-between gap-1 rounded-lg px-1 py-1 text-[14px] font-bold leading-[1.25] text-white/82 transition hover:bg-white/[0.07] hover:text-white sm:rounded-xl sm:px-2 sm:text-sm md:min-h-10 md:text-sm">
                         <span className="min-w-0 break-words [overflow-wrap:anywhere]">{link.label}</span>
                         <span aria-hidden="true" className="hidden shrink-0 text-white/35 transition group-hover:translate-x-0.5 group-hover:text-amber-200 sm:inline">→</span>
