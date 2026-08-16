@@ -45,6 +45,10 @@ assert(
   proxySource.includes("legacyRedirectTarget"),
   "proxy.ts must check relevant one-to-one legacy redirects before returning 410.",
 );
+assert(
+  proxySource.includes('normalizedPathname === "/book the room you like"'),
+  "The historical 'book the room you like' GSC URL must bypass the old Find Your Room alias and redirect directly to the AI Room Finder.",
+);
 
 const requiredGoneRoutes = [
   "app/elementor-landing-page-4251/[[...slug]]/route.ts",
