@@ -72,14 +72,14 @@ export function VoulamandisFooterTailwind({ language = "en" }: FooterProps) {
   return (
     <footer className="relative overflow-hidden bg-stone-950 pb-24 text-white md:pb-0">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(168,120,66,.2),transparent_28rem),radial-gradient(circle_at_85%_30%,rgba(255,255,255,.08),transparent_24rem)]" />
-      <div className="relative mx-auto max-w-7xl px-3 py-4 sm:px-6 sm:py-6 lg:px-8 lg:py-10">
+      <div className="relative mx-auto max-w-7xl px-3 py-3 sm:px-6 sm:py-6 lg:px-8 lg:py-10">
         <div className="overflow-hidden rounded-[1.4rem] border border-white/10 bg-white/[0.045] shadow-xl shadow-black/15 backdrop-blur md:rounded-[1.75rem]">
-          <section className="flex items-center justify-between gap-3 border-b border-white/10 px-3 py-3 sm:px-5 sm:py-4 md:px-6 md:py-5">
+          <section className="flex items-center justify-between gap-3 border-b border-white/10 px-3 py-2.5 sm:px-5 sm:py-4 md:px-6 md:py-5">
             <a href={language === "en" ? "/" : `/${language}/`} className="flex min-w-0 items-center gap-2.5 sm:gap-3">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-[11px] font-black text-stone-900 shadow-md shadow-black/15 sm:h-11 sm:w-11 sm:rounded-2xl sm:text-sm">VH</span>
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-xs font-black text-stone-900 shadow-md shadow-black/15 sm:h-11 sm:w-11 sm:rounded-2xl sm:text-sm">VH</span>
               <span className="min-w-0">
-                <strong className="block truncate text-[15px] font-black leading-none tracking-[-0.04em] text-white sm:text-lg md:text-xl">Voulamandis House</strong>
-                <small className="mt-1 block truncate text-[8px] font-black uppercase tracking-[0.12em] text-white/50 sm:text-[10px]">{locationLabel}</small>
+                <strong className="block truncate text-[17px] font-black leading-none tracking-[-0.04em] text-white sm:text-lg md:text-xl">Voulamandis House</strong>
+                <small className="mt-1 block truncate text-[10px] font-black uppercase tracking-[0.1em] text-white/55 sm:text-[10px]">{locationLabel}</small>
               </span>
             </a>
             <p className="hidden max-w-xl text-right text-sm leading-6 text-white/60 md:block">{copy.description}</p>
@@ -87,12 +87,12 @@ export function VoulamandisFooterTailwind({ language = "en" }: FooterProps) {
 
           <nav aria-label={footerNavLabel} className="grid grid-cols-3 divide-x divide-white/10">
             {groups.map((group) => (
-              <section key={group.title} className="min-w-0 px-2 py-3 sm:px-4 sm:py-5 md:px-6 md:py-6">
-                <h2 className="min-h-[2.2rem] break-words text-[8px] font-black uppercase leading-[1.25] tracking-[0.08em] text-amber-200 sm:min-h-0 sm:text-[11px] sm:tracking-[0.12em] md:text-sm">{group.title}</h2>
-                <ul className="mt-1.5 grid gap-0.5 sm:mt-4 sm:gap-1.5 md:gap-2">
+              <section key={group.title} className="min-w-0 px-1.5 py-2.5 sm:px-4 sm:py-5 md:px-6 md:py-6">
+                <h2 className="min-h-[2rem] break-words text-[10px] font-black uppercase leading-[1.2] tracking-[0.05em] text-amber-200 sm:min-h-0 sm:text-[11px] sm:tracking-[0.12em] md:text-sm">{group.title}</h2>
+                <ul className="mt-1 grid gap-0 sm:mt-4 sm:gap-1.5 md:gap-2">
                   {group.links.map((link) => (
                     <li key={`${group.title}-${link.href}`} className="min-w-0">
-                      <a href={link.href} className="group flex min-h-9 min-w-0 items-center justify-between gap-1 rounded-xl px-1 py-1.5 text-[9.5px] font-bold leading-[1.2] text-white/72 transition hover:bg-white/[0.07] hover:text-white sm:px-2 sm:text-xs md:min-h-10 md:text-sm">
+                      <a href={link.href} className="group flex min-h-8 min-w-0 items-center justify-between gap-1 rounded-lg px-1 py-1 text-[12px] font-bold leading-[1.25] text-white/78 transition hover:bg-white/[0.07] hover:text-white sm:rounded-xl sm:px-2 sm:text-xs md:min-h-10 md:text-sm">
                         <span className="min-w-0 break-words [overflow-wrap:anywhere]">{link.label}</span>
                         <span aria-hidden="true" className="hidden shrink-0 text-white/35 transition group-hover:translate-x-0.5 group-hover:text-amber-200 sm:inline">→</span>
                       </a>
@@ -103,10 +103,10 @@ export function VoulamandisFooterTailwind({ language = "en" }: FooterProps) {
             ))}
           </nav>
 
-          <div className="flex items-end justify-between gap-3 border-t border-white/10 px-3 py-3 sm:items-center sm:px-5 sm:py-4 md:px-6">
-            <div className="min-w-0 text-[8px] font-bold uppercase leading-4 tracking-[0.08em] text-white/38 sm:text-[10px] sm:tracking-[0.1em] md:text-xs">
+          <div className="flex items-end justify-between gap-3 border-t border-white/10 px-3 py-2.5 sm:items-center sm:px-5 sm:py-4 md:px-6">
+            <div className="min-w-0 text-[10px] font-bold uppercase leading-[1.45] tracking-[0.05em] text-white/45 sm:text-[10px] sm:tracking-[0.1em] md:text-xs">
               <p>© {year} Voulamandis House. {copy.allRightsReserved}</p>
-              <p className="mt-0.5 text-white/28">{footerTagline}</p>
+              <p className="mt-0.5 text-white/32">{footerTagline}</p>
             </div>
             <div className="flex shrink-0 items-center gap-1.5">
               <a href="https://www.instagram.com/chioshotels/" target="_blank" rel="noopener" aria-label="Instagram" className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/12 bg-white/[0.06] text-xs font-black text-white/70 transition hover:bg-white/12 hover:text-white">◎</a>
