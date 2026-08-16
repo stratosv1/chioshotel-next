@@ -11,6 +11,7 @@ import { romanticStayPaths } from "@/content/romantic-stay";
 import { villageCategoryPaths } from "@/content/village-categories";
 import { getVillageSlugs } from "@/content/village-details";
 import { getMuseumSlugs } from "@/content/museum-details";
+import { propertyFaqPaths } from "@/content/property-faq";
 import { CHIOS_HOTELS_GUIDE_PATHS } from "@/lib/chios-hotels-guide-i18n";
 import { routeMap } from "@/lib/url-map";
 import { absoluteUrl } from "@/lib/seo";
@@ -55,6 +56,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     }),
   );
+
+  const faqRoutes: SitemapEntry[] = Object.values(propertyFaqPaths).map((path) => ({
+    url: absoluteUrl(path),
+    changeFrequency: "monthly",
+    priority: 0.8,
+  }));
 
   const polishRoutes: SitemapEntry[] = [
     "/pl/",
@@ -178,6 +185,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...accommodationLandingRoutes,
     ...romanticStayRoutes,
     ...polishRoutes,
+    ...faqRoutes,
     ...routes,
     ...familyBeachRoutes,
     ...organizedBeachRoutes,

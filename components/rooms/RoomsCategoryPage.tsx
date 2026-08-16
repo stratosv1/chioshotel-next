@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { PropertyFaqSection } from "@/components/faq/PropertyFaqSection";
 import { GreekRoomWizardTailwind } from "@/components/rooms/GreekRoomWizardTailwind";
 import { RoomWizardTailwind } from "@/components/rooms/RoomWizardTailwind";
 import { TopicBadges } from "@/components/seo/TopicBadges";
@@ -314,6 +315,8 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
           )}
         </div>
       </section>
+
+      <PropertyFaqSection language={language} context="rooms" />
     </main>
   );
 }

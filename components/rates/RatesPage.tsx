@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
+import { PropertyFaqSection } from "@/components/faq/PropertyFaqSection";
 import type { RatesPageData } from "@/content/rates";
+import { isLanguageCode } from "@/lib/languages";
 
 type RatesPageProps = {
   data: RatesPageData;
@@ -230,6 +232,7 @@ export function RatesPage({ data }: RatesPageProps) {
   const beds24Url = new URL(data.booking.iframeSrc);
   const beds24Action = `${beds24Url.origin}${beds24Url.pathname}`;
   const beds24PropId = beds24Url.searchParams.get("propid") ?? "";
+  const faqLanguage = isLanguageCode(locale) ? locale : null;
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-gradient-to-b from-[#fcfaf8] to-[#f5f0ea] text-stone-800">
@@ -416,6 +419,8 @@ export function RatesPage({ data }: RatesPageProps) {
           </article>
         </div>
       </section>
+
+      {faqLanguage ? <PropertyFaqSection language={faqLanguage} context="rates" /> : null}
     </main>
   );
 }
