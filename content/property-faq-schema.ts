@@ -8,17 +8,12 @@ import {
   buildSchemaGraph,
   buildWebPageSchema,
   buildWebsiteSchema,
-  getLocalizedSchemaLabels,
   type SchemaObject,
 } from "@/lib/structured-data";
 
 export function buildPropertyFaqSchema(data: PropertyFaqPageData): SchemaObject {
   const path = data.seo.canonicalPath;
-  const labels = getLocalizedSchemaLabels(path);
-  const breadcrumbs = [
-    { name: labels.homeName, path: labels.homePath },
-    { name: data.hero.title, path },
-  ];
+  const breadcrumbs = [{ name: data.hero.title, path }];
   const questions = data.categories.flatMap((category) =>
     category.items.map((item) => ({
       question: item.question,
