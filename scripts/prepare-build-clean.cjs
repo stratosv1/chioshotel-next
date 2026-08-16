@@ -5,6 +5,7 @@ const { performance } = require("node:perf_hooks");
 // Production builds must not mutate AI components or AI API routes.
 const PATCHES = [
   "normalize-legacy-redirect-destinations.cjs",
+  "patch-gsc-validation-routing.cjs",
   "patch-seo-redirect-chains.cjs",
   "patch-gsc-not-found-remediation.cjs",
   "patch-seo-inventory-alignment.cjs",
