@@ -7,9 +7,7 @@ const enginePath = path.join(root, "lib", "seo-health", "engine.ts");
 
 function replaceRequired(source, before, after, label) {
   if (source.includes(after)) return { source, changed: false };
-  if (!source.includes(before)) {
-    throw new Error(`SEO redirect-chain patch anchor not found: ${label}`);
-  }
+  if (!source.includes(before)) throw new Error(`SEO redirect-chain patch anchor not found: ${label}`);
   return { source: source.replace(before, after), changed: true };
 }
 
@@ -166,18 +164,61 @@ function sameRequestExceptTrailingSlash(sourceUrl: string, destinationUrl: strin
   }
 }
 
+function sameRequestExceptWww(sourceUrl: string, destinationUrl: string) {
+  try {
+    const source = new URL(sourceUrl);
+    const destination = new URL(destinationUrl);
+    return (
+      source.protocol === destination.protocol &&
+      source.hostname.toLowerCase() === "www.chioshotel.gr" &&
+      destination.hostname.toLowerCase() === "chioshotel.gr" &&
+      source.port === destination.port &&
+      source.pathname === destination.pathname &&
+      source.search === destination.search
+    );
+  } catch {
+    return false;
+  }
+}
+
+function getSingleHopCanonicalNormalization(candidateUrl: string, live: LiveSeoCheck) {
+  if (live.redirectChain.length !== 1) return null;
+  const hop = live.redirectChain[0];
+  if (!hop?.location || hop.status !== 308) return null;
+
+  if (sameRequestExceptHttps(candidateUrl, hop.location)) {
+    return {
+      category: "platform_https_normalization",
+      decision: "Vercel normalized HTTP to the canonical HTTPS request.",
+      action: "No change. Keep internal links, sitemap and canonicals on HTTPS.",
+    };
+  }
+
+  if (sameRequestExceptTrailingSlash(candidateUrl, hop.location)) {
+    return {
+      category: "trailing_slash_normalization",
+      decision: "Next.js normalized the request to the configured trailing-slash canonical form.",
+      action: "No change. Keep internal links and sitemap URLs on the trailing-slash form.",
+    };
+  }
+
+  if (sameRequestExceptWww(candidateUrl, hop.location)) {
+    return {
+      category: "canonical_host_normalization",
+      decision: "The request normalized from www to the canonical non-www host.",
+      action: "No change. Keep canonical/internal URLs on chioshotel.gr.",
+    };
+  }
+
+  return null;
+}
+
 function getNonActionableRedirectNormalization(candidateUrl: string, live: LiveSeoCheck) {
-  // Vercel's CDN always performs HTTP -> HTTPS before the Next.js application.
-  // A two-hop chain made of that mandatory 308 plus one application redirect
-  // cannot be flattened by Next.js itself and should not be raised as a warning.
   if (live.redirectChain.length !== 2) return null;
   const firstHop = live.redirectChain[0];
   if (!firstHop?.location) return null;
 
-  if (
-    firstHop.status === 308 &&
-    sameRequestExceptHttps(candidateUrl, firstHop.location)
-  ) {
+  if (firstHop.status === 308 && sameRequestExceptHttps(candidateUrl, firstHop.location)) {
     return {
       category: "platform_https_normalization",
       decision: "Vercel performed its mandatory HTTP-to-HTTPS 308 before one final application redirect.",
@@ -185,14 +226,19 @@ function getNonActionableRedirectNormalization(candidateUrl: string, live: LiveS
     };
   }
 
-  if (
-    firstHop.status === 308 &&
-    sameRequestExceptTrailingSlash(candidateUrl, firstHop.location)
-  ) {
+  if (firstHop.status === 308 && sameRequestExceptTrailingSlash(candidateUrl, firstHop.location)) {
     return {
       category: "trailing_slash_normalization",
       decision: "Next.js normalized the historical URL to the configured trailing-slash form before its final legacy redirect.",
       action: "No routing change required. Keep current internal links and sitemap URLs canonical.",
+    };
+  }
+
+  if (firstHop.status === 308 && sameRequestExceptWww(candidateUrl, firstHop.location)) {
+    return {
+      category: "canonical_host_normalization",
+      decision: "The request normalized from www to the canonical non-www host before one final application redirect.",
+      action: "No application change. Keep current canonical host and final redirect destination.",
     };
   }
 
@@ -220,7 +266,7 @@ function getNonActionableRedirectNormalization(candidateUrl: string, live: LiveS
       if (normalization) {
         return {
           category: normalization.category,
-          severity: "info",
+          severity: "healthy",
           decision: normalization.decision,
           action: normalization.action,
           autoExecuted: false,
@@ -241,6 +287,43 @@ function getNonActionableRedirectNormalization(candidateUrl: string, live: LiveS
   source = result.source;
   changed ||= result.changed;
 
+  const canonicalSingleBefore = `    if (live.redirectChain.length === 1 || (live.status >= 300 && live.status < 400)) {
+      return {
+        category: "unexpected_redirect",
+        severity: "warning",
+        decision: "A route marked KEEP is redirecting instead of serving its canonical page.",
+        action: "Verify url-map and routing ownership; either serve 200 here or change the canonical route definition.",
+        autoExecuted: false,
+      };
+    }
+`;
+
+  const canonicalSingleAfter = `    if (live.redirectChain.length === 1 || (live.status >= 300 && live.status < 400)) {
+      const normalization = getSingleHopCanonicalNormalization(candidate.url, live);
+      if (normalization) {
+        return {
+          category: normalization.category,
+          severity: "healthy",
+          decision: normalization.decision,
+          action: normalization.action,
+          autoExecuted: false,
+        };
+      }
+
+      return {
+        category: "unexpected_redirect",
+        severity: "warning",
+        decision: "A route marked KEEP is redirecting instead of serving its canonical page.",
+        action: "Verify url-map and routing ownership; either serve 200 here or change the canonical route definition.",
+        autoExecuted: false,
+      };
+    }
+`;
+
+  result = replaceRequired(source, canonicalSingleBefore, canonicalSingleAfter, "canonical single-hop normalization");
+  source = result.source;
+  changed ||= result.changed;
+
   const legacyBefore = `  if (live.redirectChain.length > 1) {
     return {
       category: "redirect_chain",
@@ -257,7 +340,7 @@ function getNonActionableRedirectNormalization(candidateUrl: string, live: LiveS
     if (normalization) {
       return {
         category: normalization.category,
-        severity: "info",
+        severity: "healthy",
         decision: normalization.decision,
         action: normalization.action,
         autoExecuted: false,
@@ -284,6 +367,4 @@ function getNonActionableRedirectNormalization(candidateUrl: string, live: LiveS
 
 const proxyChanged = patchProxy();
 const engineChanged = patchEngine();
-console.log(
-  `SEO redirect-chain hardening: proxy=${proxyChanged ? "patched" : "already"}, engine=${engineChanged ? "patched" : "already"}`,
-);
+console.log(`SEO redirect-chain hardening: proxy=${proxyChanged ? "patched" : "already"}, engine=${engineChanged ? "patched" : "already"}`);
