@@ -7,8 +7,10 @@ import {
   getSeoAdvisorSnapshotHistory,
 } from "@/lib/gsc/advisor-snapshots";
 import { getSeoHealthDashboard } from "@/lib/seo-health/store";
+import { getSeoManagerMonitor } from "@/lib/seo-manager/monitor";
 import SeoCockpit from "./SeoCockpit";
 import SeoHealthPanel from "./SeoHealthPanel";
+import SeoManagerMonitor from "./SeoManagerMonitor";
 import RunSeoAuditButton from "./RunSeoAuditButton";
 import GscPagesCsvUpload from "./GscPagesCsvUpload";
 
@@ -24,11 +26,12 @@ export const metadata: Metadata = {
 };
 
 export default async function SeoAdvisorPage() {
-  const [snapshot, latestSync, history, health] = await Promise.all([
+  const [snapshot, latestSync, history, health, managerMonitor] = await Promise.all([
     getLatestSeoAdvisorSnapshot(),
     getLatestGscSyncState(),
     getSeoAdvisorSnapshotHistory(4),
     getSeoHealthDashboard(),
+    getSeoManagerMonitor(),
   ]);
 
   const findings = snapshot?.payload?.aiInterpretation?.findings;
@@ -47,6 +50,7 @@ export default async function SeoAdvisorPage() {
           <RunSeoAuditButton />
         </div>
       </section>
+      <SeoManagerMonitor monitor={managerMonitor} />
       <SeoHealthPanel health={health} />
       <SeoCockpit
         snapshot={snapshot}
