@@ -59,6 +59,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const routes: SitemapEntry[] = routeMap
     .filter((route) => route.action === "KEEP")
+    // These seven localized Find Your Room aliases are permanent redirects to
+    // the noindex AI Room Finder application. Redirect/noindex URLs must not be
+    // submitted as canonical sitemap entries.
+    .filter((route) => route.itemId !== "find-your-room")
     .filter((route) => !isOldBeachDetailRoute(route.path))
     .filter((route) => !isOldVillageDetailRoute(route.path))
     .filter((route) => !isOldMuseumDetailRoute(route.path))
