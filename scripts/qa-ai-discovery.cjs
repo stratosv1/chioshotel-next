@@ -64,7 +64,7 @@ function checkCanonicalSourceOfTruth() {
   );
 }
 
-function checkCrawlerAccess() {
+function checkCrawlerAndAgentDiscovery() {
   const robots = read("app/robots.ts");
   const expectedAgents = [
     "OAI-SearchBot",
@@ -87,12 +87,27 @@ function checkCrawlerAccess() {
     robots.includes('allow: "/"'),
     "robots.ts must keep public crawling allowed",
   );
+
+  const vercelConfig = JSON.parse(read("vercel.json"));
+  const hasLlmsDescribedBy = (vercelConfig.headers ?? []).some((rule) =>
+    (rule.headers ?? []).some(
+      (header) =>
+        String(header.key).toLowerCase() === "link" &&
+        String(header.value).includes("</llms.txt>") &&
+        String(header.value).includes('rel="describedby"'),
+    ),
+  );
+
+  assert(
+    hasLlmsDescribedBy,
+    "vercel.json must advertise /llms.txt with a Link rel=describedby response header",
+  );
 }
 
 checkStaticDelivery();
 checkCanonicalSourceOfTruth();
-checkCrawlerAccess();
+checkCrawlerAndAgentDiscovery();
 
 console.log(
-  "AI discovery QA passed (3/3): static delivery, canonical source of truth, crawler access.",
+  "AI discovery QA passed (3/3): static delivery, canonical source of truth, crawler + agent discovery.",
 );
