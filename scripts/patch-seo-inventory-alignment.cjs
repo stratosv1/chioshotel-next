@@ -105,4 +105,6 @@ function patchSitemap() {
 
 const engineChanged = patchEngine();
 const sitemapChanged = patchSitemap();
-console.log(\n  `SEO inventory alignment: engine=${engineChanged ? "patched" : "already"}, sitemap=${sitemapChanged ? "patched" : "already"}`,\n);
+console.log(
+  `SEO inventory alignment: engine=${engineChanged ? "patched" : "already"}, sitemap=${sitemapChanged ? "patched" : "already"}`,
+);
