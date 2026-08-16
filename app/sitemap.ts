@@ -17,6 +17,17 @@ import { absoluteUrl } from "@/lib/seo";
 
 type SitemapEntry = MetadataRoute.Sitemap[number];
 
+// These timestamps come from the latest significant source/component changes
+// for the corresponding canonical route groups. Keep them truthful: do not
+// replace them with the build/deploy date unless the page content actually
+// changed.
+const VERIFIED_LAST_MODIFIED = {
+  villageCategories: "2026-07-10T12:17:11Z",
+  sandyBeaches: "2026-07-10T14:21:54Z",
+  spanishAccommodation: "2026-07-27T05:02:55Z",
+  romanticStay: "2026-08-04T17:43:25Z",
+} as const;
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const accommodationLandingRoutes: SitemapEntry[] = [
     ...Object.values(CHIOS_HOTELS_GUIDE_PATHS),
@@ -29,6 +40,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/tr/sakiz-adasi-konaklama/",
   ].map((path) => ({
     url: absoluteUrl(path),
+    ...(path === "/es/alojamiento-chios/"
+      ? { lastModified: VERIFIED_LAST_MODIFIED.spanishAccommodation }
+      : {}),
     changeFrequency: "weekly",
     priority: 0.9,
   }));
@@ -36,6 +50,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const romanticStayRoutes: SitemapEntry[] = Object.values(romanticStayPaths).map(
     (path) => ({
       url: absoluteUrl(path),
+      lastModified: VERIFIED_LAST_MODIFIED.romanticStay,
       changeFrequency: "monthly",
       priority: 0.8,
     }),
@@ -115,6 +130,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const sandyBeachRoutes: SitemapEntry[] = Object.values(sandyBeachPaths).map(
     (path) => ({
       url: absoluteUrl(path),
+      lastModified: VERIFIED_LAST_MODIFIED.sandyBeaches,
       changeFrequency: "monthly",
       priority: 0.8,
     }),
@@ -126,6 +142,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     .flatMap((paths) => Object.values(paths))
     .map((path) => ({
       url: absoluteUrl(path),
+      lastModified: VERIFIED_LAST_MODIFIED.villageCategories,
       changeFrequency: "monthly",
       priority: 0.8,
     }));
