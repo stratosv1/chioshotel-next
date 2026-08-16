@@ -12,7 +12,7 @@ const MAX_MESSAGE_CHARS = 500;
 const MAX_CONTEXT_CHARS = 8_000;
 const MAX_RECENT_MESSAGES = 12;
 const MAX_RECENT_MESSAGE_CHARS = 500;
-const BURST_MAX_REQUESTS = 8;
+const BURST_MAX_REQUESTS = 20;
 const HOUR_MAX_REQUESTS = 60;
 
 function isAbortError(error: unknown) {
