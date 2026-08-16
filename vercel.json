@@ -1,5 +1,62 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    {
+      "source": "/faq",
+      "destination": "/frequently-asked-questions/",
+      "permanent": true
+    },
+    {
+      "source": "/erotisis-voulamandis-house-2",
+      "destination": "/frequently-asked-questions/",
+      "permanent": true
+    },
+    {
+      "source": "/en/erotisis-voulamandis-house-2",
+      "destination": "/frequently-asked-questions/",
+      "permanent": true
+    },
+    {
+      "source": "/el/erotisis-voulamandis-house",
+      "destination": "/el/syxnes-erotiseis/",
+      "permanent": true
+    },
+    {
+      "source": "/el/faq-2",
+      "destination": "/el/syxnes-erotiseis/",
+      "permanent": true
+    },
+    {
+      "source": "/el/faq-apories-voulamandis-house",
+      "destination": "/el/syxnes-erotiseis/",
+      "permanent": true
+    },
+    {
+      "source": "/fr/faq-fr-voulamandis",
+      "destination": "/fr/questions-frequentes/",
+      "permanent": true
+    },
+    {
+      "source": "/de/faq-de-voulamandis",
+      "destination": "/de/haeufige-fragen/",
+      "permanent": true
+    },
+    {
+      "source": "/domande-frequenti-voulamandis-house",
+      "destination": "/it/domande-frequenti/",
+      "permanent": true
+    },
+    {
+      "source": "/es/voulamandis-house-faq-es",
+      "destination": "/es/preguntas-frecuentes/",
+      "permanent": true
+    },
+    {
+      "source": "/tr/faq-tr-voulamandis",
+      "destination": "/tr/sik-sorulan-sorular/",
+      "permanent": true
+    }
+  ],
   "crons": [
     {
       "path": "/api/booking-core/sync/",
