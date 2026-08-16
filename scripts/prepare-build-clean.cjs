@@ -8,6 +8,7 @@ const PATCHES = [
   "patch-seo-redirect-chains.cjs",
   "patch-gsc-not-found-remediation.cjs",
   "patch-seo-inventory-alignment.cjs",
+  "patch-seo-runtime-rule-revalidation.cjs",
   "disable-last-minute-room-extras.cjs",
   "patch-long-seo-titles.cjs",
 ];
