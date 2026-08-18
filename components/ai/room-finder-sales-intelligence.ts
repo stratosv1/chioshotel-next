@@ -12,7 +12,7 @@ const ROOM_TRAITS: Record<number, readonly RoomFinderPreference[]> = {
   3: ["kitchen"],
   4: ["kitchen", "balcony"],
   5: ["ground_floor", "no_stairs", "garden"],
-  6: ["ground_floor", "no_stairs", "budget"],
+  6: ["ground_floor", "no_stairs", "garden", "budget"],
   7: ["ground_floor", "no_stairs", "garden"],
   8: ["kitchen", "family"],
   9: ["kitchen", "family"],
@@ -107,7 +107,15 @@ export function answerRoomQuestion(
   language: RoomFinderLanguage,
   offers: readonly SalesAwareOffer[],
 ) {
-  if (!offers.length || !QUESTION_WORDS.test(message)) return null;
+  if (!QUESTION_WORDS.test(message)) return null;
+
+  const uniqueOffers = Array.from(new Map(
+    offers
+      .filter(offer => Number(offer.roomNumber) > 0)
+      .map(offer => [Number(offer.roomNumber), offer] as const),
+  ).values());
+  if (!uniqueOffers.length) return null;
+
   const trait = TRAIT_PATTERNS.find(([, pattern]) => pattern.test(message))?.[0];
   if (!trait) return null;
 
@@ -117,14 +125,14 @@ export function answerRoomQuestion(
 
   if (roomMatch) {
     const roomNumber = Number(roomMatch[1]);
-    const offer = offers.find(item => Number(item.roomNumber) === roomNumber);
+    const offer = uniqueOffers.find(item => Number(item.roomNumber) === roomNumber);
     if (!offer) return null;
     return roomTraits(roomNumber).includes(trait)
       ? copy.yes(offer.name, label)
       : copy.no(offer.name, label);
   }
 
-  const matching = offers.filter(offer => roomTraits(Number(offer.roomNumber)).includes(trait));
+  const matching = uniqueOffers.filter(offer => roomTraits(Number(offer.roomNumber)).includes(trait));
   return matching.length
     ? copy.list(label, matching.map(offer => offer.name).join(", "))
     : copy.none(label);
