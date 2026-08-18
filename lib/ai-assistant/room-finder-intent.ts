@@ -4,15 +4,27 @@ import type {
   RoomFinderAssistantLanguage,
   RoomFinderCommand,
   RoomFinderConversationContext,
+  RoomFinderPreference,
 } from "./room-finder-types";
 
 const ACTION_TYPES = [
   "set_stay_dates",
   "set_room_count",
   "set_guest_count",
+  "set_preferences",
   "restart_search",
   "ask_clarification",
   "no_change",
+] as const;
+
+const PREFERENCES = [
+  "ground_floor",
+  "no_stairs",
+  "kitchen",
+  "balcony",
+  "garden",
+  "budget",
+  "family",
 ] as const;
 
 const COMMAND_SCHEMA = {
@@ -38,6 +50,7 @@ const COMMAND_SCHEMA = {
           "totalGuests",
           "guests",
           "guestRoom",
+          "preferences",
           "query",
           "missingFields",
         ],
@@ -50,6 +63,11 @@ const COMMAND_SCHEMA = {
           totalGuests: { type: ["integer", "null"], minimum: 1, maximum: 15 },
           guests: { type: ["integer", "null"], minimum: 1, maximum: 5 },
           guestRoom: { type: ["integer", "null"], minimum: 1, maximum: 3 },
+          preferences: {
+            type: "array",
+            items: { type: "string", enum: PREFERENCES },
+            maxItems: 7,
+          },
           query: { type: "string" },
           missingFields: { type: "array", items: { type: "string" }, maxItems: 6 },
         },
@@ -60,16 +78,17 @@ const COMMAND_SCHEMA = {
 
 const SYSTEM_PROMPT = `You are the single semantic interpreter for the Voulamandis House AI Room Finder in Chios.
 
-EVERY customer text message reaches you, including corrections after room results have already been shown. Your only job is to translate natural language into the small booking contract consumed by the Room Finder state machine. You do not search availability and you do not choose, rank or filter rooms.
+EVERY customer text message reaches you, including corrections after room results have already been shown. Your only job is to translate natural language into the small booking contract consumed by the Room Finder state machine. You do not search availability, calculate prices or invent room facts.
 
 SUPPORTED CONTRACT
 You may return only these actions:
 - set_stay_dates: exact check-in/check-out/nights facts.
 - set_room_count: exact number of rooms requested. Return the customer's exact number even when it is 4 or more; the application routes requests above 3 rooms to the front desk.
 - set_guest_count: either a total booking guest count OR a guest count assigned to a specific room.
+- set_preferences: SOFT room preferences used only to rank already-available rooms. Supported values: ground_floor, no_stairs, kitchen, balcony, garden, budget, family.
 - restart_search: customer clearly wants to start over.
 - ask_clarification: only for a value the customer attempted to provide but which is genuinely ambiguous/contradictory.
-- no_change: no supported booking fact was supplied in the latest message.
+- no_change: no supported booking fact or supported room preference was supplied in the latest message.
 
 CORE RULES
 - Read the latest message together with booking context and recent conversation.
@@ -113,20 +132,29 @@ ROOMS AND GUESTS
 - Each room allocation supports 1-5 guests. Total guests across up to 3 rooms may be 1-15.
 
 ROOM PREFERENCES
-- Room filters/preferences have been removed from this Room Finder flow.
-- Do not emit floor, kitchen, stairs, budget, family, balcony, garden or other room-preference data.
-- If a sentence contains supported booking facts plus a preference, extract the supported facts and ignore the preference for filtering purposes.
-- If the latest message contains only a preference and no supported booking fact, return no_change. Do not pretend the preference became a filter.
+- Preferences are SOFT ranking signals. They must never alter availability, price, capacity or hide an otherwise valid room.
+- Supported meanings:
+  ground_floor = customer wants/is interested in a ground-floor room.
+  no_stairs = customer wants to avoid stairs or has mobility concerns.
+  kitchen = kitchen, kitchenette or cooking facilities requested.
+  balcony = private balcony requested.
+  garden = garden/courtyard access requested.
+  budget = economy, cheapest, lower-price or value-first preference.
+  family = family-oriented room/apartment preference.
+- When the latest message adds preferences, return one set_preferences action containing the FULL desired preference set after applying the latest message to context.preferences.
+- If the customer explicitly removes a preference, return the remaining full set. An empty preferences array clears preferences.
+- Do not convert unsupported subjective requests into invented room traits. For example “romantic”, “best view” or “quietest room” are not supported ranking facts unless another supported preference is also explicit.
+- A preference-only message is valid and should return set_preferences, not no_change.
 
 LANGUAGE
 - Preserve the selected UI language from context for command.language and clarification text.
 
 REFERENCE EXAMPLES
-1) “Θέλω ένα δωμάτιο για 2ατομα στον όροφο, άφιξη 10/10 αναχώρηση 12/10”
-=> set_stay_dates(checkin, checkout), set_room_count(roomCount=1), set_guest_count(totalGuests=2). Ignore “στον όροφο”. No clarification.
+1) “Θέλω ένα δωμάτιο για 2 άτομα χωρίς σκάλες, άφιξη 10/10 αναχώρηση 12/10”
+=> set_stay_dates(checkin, checkout), set_room_count(roomCount=1), set_guest_count(totalGuests=2), set_preferences(preferences=[no_stairs]). No clarification.
 
 2) “Θέλω ένα δωμάτιο για 2 άτομα με κουζίνα”
-=> set_room_count(roomCount=1), set_guest_count(totalGuests=2). Ignore “με κουζίνα”. Missing date is not a clarification.
+=> set_room_count(roomCount=1), set_guest_count(totalGuests=2), set_preferences(preferences=[kitchen]). Missing date is not a clarification.
 
 3) Context has check-in and customer says “2 βράδια 3 άτομα”.
 => set_stay_dates(nights=2), set_guest_count(totalGuests=3).
@@ -149,8 +177,12 @@ REFERENCE EXAMPLES
 9) “Θέλω 4 δωμάτια”.
 => set_room_count(roomCount=4). Do not clamp it to 3 and do not ask a clarification; the application routes this request to the front desk.
 
+10) Context preferences=[budget]. Customer: “τελικά θέλω ισόγειο χωρίς σκάλες, η τιμή δεν με νοιάζει”.
+=> set_preferences(preferences=[ground_floor,no_stairs]).
+
 SCHEMA RULES
 - For irrelevant nullable fields return null.
+- preferences is [] when unused.
 - query is an empty string when unused.
 - missingFields is [] when unused.
 - Use missingFields values from: checkin, checkout, roomCount, totalGuests, guests, guestRoom.
@@ -171,6 +203,13 @@ function safeLanguage(value?: RoomFinderAssistantLanguage): RoomFinderAssistantL
   return value || "en";
 }
 
+function cleanPreferences(value: unknown): RoomFinderPreference[] {
+  if (!Array.isArray(value)) return [];
+  return Array.from(new Set(value.filter((item): item is RoomFinderPreference =>
+    PREFERENCES.includes(item as RoomFinderPreference),
+  )));
+}
+
 function cleanAction(raw: any): RoomFinderAction {
   const type = ACTION_TYPES.includes(raw?.type) ? raw.type : "no_change";
   const action: RoomFinderAction = { type };
@@ -182,6 +221,7 @@ function cleanAction(raw: any): RoomFinderAction {
   if (raw?.totalGuests != null) action.totalGuests = Number(raw.totalGuests);
   if (raw?.guests != null) action.guests = Number(raw.guests);
   if (raw?.guestRoom != null) action.guestRoom = Number(raw.guestRoom);
+  if (type === "set_preferences") action.preferences = cleanPreferences(raw?.preferences);
   if (raw?.query) action.query = String(raw.query);
   if (Array.isArray(raw?.missingFields) && raw.missingFields.length) {
     action.missingFields = raw.missingFields.map(String);

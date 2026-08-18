@@ -1,7 +1,8 @@
 "use client";
 
 import { FormEvent, useMemo, useReducer, useRef, useState } from "react";
-import type { RoomFinderCommand } from "@/lib/ai-assistant/room-finder-types";
+import { localizeRoomOffer } from "@/lib/ai-assistant/room-card-catalog";
+import type { RoomFinderCommand, RoomFinderPreference } from "@/lib/ai-assistant/room-finder-types";
 import type { RoomFinderLanguage } from "./room-finder-copy";
 import { ROOM_FINDER_COPY } from "./room-finder-copy";
 import { ROOM_FINDER_TONE } from "./room-finder-tone";
@@ -21,6 +22,7 @@ import {
   roomOfferKey,
 } from "./room-finder-offer-plan";
 import { rewindToAssistantPrompt } from "./room-finder-conversation-history";
+import { answerRoomQuestion, roomPreferenceScore } from "./room-finder-sales-intelligence";
 import type { ChatItem, MessageKind, Reaction } from "./room-finder-chat-ui";
 import type { RoomOffer } from "./room-finder-carousel";
 import type { RoomChoice } from "./room-finder-selected-card";
@@ -36,23 +38,23 @@ const rank = (room: RoomOffer) => {
 };
 
 const INVENTORY_UNAVAILABLE: Record<RoomFinderLanguage, string> = {
-  el: "Η live διαθεσιμότητα δεν μπορεί να επιβεβαιωθεί αυτή τη στιγμή. Δοκιμάστε ξανά σε λίγα λεπτά ή επικοινωνήστε μαζί μας μέσω WhatsApp.",
-  en: "Live availability cannot be confirmed right now. Please try again in a few minutes or contact us on WhatsApp.",
-  de: "Die Live-Verfügbarkeit kann momentan nicht bestätigt werden. Versuchen Sie es in wenigen Minuten erneut oder kontaktieren Sie uns über WhatsApp.",
-  fr: "La disponibilité en direct ne peut pas être confirmée pour le moment. Réessayez dans quelques minutes ou contactez-nous sur WhatsApp.",
-  it: "Al momento non posso confermare la disponibilità in tempo reale. Riprovate tra qualche minuto o contattateci su WhatsApp.",
-  es: "Ahora mismo no puedo confirmar la disponibilidad en tiempo real. Inténtenlo de nuevo en unos minutos o contáctennos por WhatsApp.",
-  tr: "Canlı müsaitlik şu anda doğrulanamıyor. Lütfen birkaç dakika sonra tekrar deneyin veya WhatsApp üzerinden bize ulaşın.",
+  el: "Η live διαθεσιμότητα δεν μπορεί να επιβεβαιωθεί αυτή τη στιγμή. Τα στοιχεία που μου δώσατε παραμένουν αποθηκευμένα στη ροή. Δοκιμάστε ξανά ή επικοινωνήστε μαζί μας μέσω WhatsApp.",
+  en: "Live availability cannot be confirmed right now. The details you already entered are still kept in this flow. Please try again or contact us on WhatsApp.",
+  de: "Die Live-Verfügbarkeit kann momentan nicht bestätigt werden. Ihre bereits eingegebenen Angaben bleiben in dieser Suche erhalten. Versuchen Sie es erneut oder kontaktieren Sie uns über WhatsApp.",
+  fr: "La disponibilité en direct ne peut pas être confirmée pour le moment. Les informations déjà saisies restent conservées dans cette recherche. Réessayez ou contactez-nous via WhatsApp.",
+  it: "Al momento non posso confermare la disponibilità in tempo reale. I dati già inseriti restano conservati in questa ricerca. Riprovate oppure contattateci su WhatsApp.",
+  es: "Ahora mismo no puedo confirmar la disponibilidad en tiempo real. Los datos que ya introdujeron se mantienen en esta búsqueda. Inténtenlo de nuevo o contáctennos por WhatsApp.",
+  tr: "Canlı müsaitlik şu anda doğrulanamıyor. Daha önce girdiğiniz bilgiler bu aramada korunuyor. Tekrar deneyin veya WhatsApp üzerinden bize ulaşın.",
 };
 
 const INTERPRETER_UNAVAILABLE: Record<RoomFinderLanguage, string> = {
-  el: "Υπήρξε προσωρινό πρόβλημα σύνδεσης με τον βοηθό. Δοκιμάστε ξανά την τελευταία απάντησή σας σε λίγα δευτερόλεπτα 🙏",
-  en: "There was a temporary connection problem with the assistant. Please try your last answer again in a few seconds 🙏",
-  de: "Es gab vorübergehend ein Verbindungsproblem mit dem Assistenten. Bitte versuchen Sie Ihre letzte Antwort in einigen Sekunden erneut 🙏",
-  fr: "Un problème de connexion temporaire avec l’assistant est survenu. Réessayez votre dernière réponse dans quelques secondes 🙏",
-  it: "Si è verificato un problema temporaneo di connessione con l’assistente. Riprovate l’ultima risposta tra qualche secondo 🙏",
-  es: "Ha habido un problema temporal de conexión con el asistente. Vuelvan a intentar su última respuesta en unos segundos 🙏",
-  tr: "Asistanla bağlantıda geçici bir sorun oluştu. Lütfen son yanıtınızı birkaç saniye sonra tekrar deneyin 🙏",
+  el: "Δεν μπόρεσα να ερμηνεύσω αυτή την απάντηση αυτή τη στιγμή. Δεν έχασα τα προηγούμενα στοιχεία σας· μπορείτε να δοκιμάσετε ξανά ή να γράψετε την πληροφορία πιο απλά.",
+  en: "I could not interpret that answer right now. Your previous details have not been lost; please try again or write the information more simply.",
+  de: "Ich konnte diese Antwort gerade nicht auswerten. Ihre bisherigen Angaben sind nicht verloren; versuchen Sie es erneut oder formulieren Sie die Information einfacher.",
+  fr: "Je n’ai pas pu interpréter cette réponse pour le moment. Vos informations précédentes ne sont pas perdues ; réessayez ou formulez l’information plus simplement.",
+  it: "Non sono riuscito a interpretare questa risposta in questo momento. I dati precedenti non sono andati persi; riprovate o scrivete l’informazione in modo più semplice.",
+  es: "No he podido interpretar esa respuesta en este momento. Sus datos anteriores no se han perdido; inténtenlo de nuevo o escriban la información de forma más sencilla.",
+  tr: "Bu yanıtı şu anda yorumlayamadım. Önceki bilgileriniz kaybolmadı; tekrar deneyin veya bilgiyi daha basit yazın.",
 };
 
 const NO_BOOKING_CHANGE: Record<RoomFinderLanguage, string> = {
@@ -63,6 +65,26 @@ const NO_BOOKING_CHANGE: Record<RoomFinderLanguage, string> = {
   it: "Posso modificare le date, il numero di camere o degli ospiti. Per esempio: « in realtà 3 ospiti » oppure « check-out 13/10 ».",
   es: "Puedo cambiar las fechas, el número de habitaciones o de huéspedes. Por ejemplo: « al final 3 personas » o « check-out 13/10 ».",
   tr: "Tarihleri, oda sayısını veya kişi sayısını değiştirebilirim. Örneğin: “aslında 3 kişi” veya “çıkış 13/10”.",
+};
+
+const PREFERENCE_APPLIED: Record<RoomFinderLanguage, string> = {
+  el: "Το σημείωσα. Θα βάλω πρώτα τις διαθέσιμες επιλογές που ταιριάζουν περισσότερο σε αυτό που ζητάτε, χωρίς να κρύψω τις υπόλοιπες.",
+  en: "Noted. I’ll place the available options that best match your preference first, without hiding the other rooms.",
+  de: "Vermerkt. Ich zeige zuerst die verfügbaren Optionen, die am besten zu Ihrem Wunsch passen, ohne andere Zimmer auszublenden.",
+  fr: "C’est noté. Je placerai d’abord les options disponibles qui correspondent le mieux à votre préférence, sans masquer les autres chambres.",
+  it: "Annotato. Mostrerò prima le opzioni disponibili più adatte alla vostra preferenza, senza nascondere le altre camere.",
+  es: "Anotado. Mostraré primero las opciones disponibles que mejor encajan con su preferencia, sin ocultar las demás habitaciones.",
+  tr: "Not ettim. Diğer odaları gizlemeden, tercihinize en çok uyan müsait seçenekleri önce göstereceğim.",
+};
+
+const NEARBY_ALTERNATIVES: Record<RoomFinderLanguage, string> = {
+  el: "Για τις ακριβείς ημερομηνίες δεν βρήκα διαθέσιμο δωμάτιο, αλλά βρήκα live διαθεσιμότητα πολύ κοντά στις ημερομηνίες σας. Οι κάρτες παρακάτω γράφουν καθαρά τη νέα περίοδο και οι ημερομηνίες αλλάζουν μόνο αν επιλέξετε μία από αυτές.",
+  en: "I could not find a room for the exact dates, but I found live availability very close to them. Each card clearly shows the alternative period, and your dates change only if you select one.",
+  de: "Für die exakten Daten habe ich kein Zimmer gefunden, aber sehr nahe daran gibt es Live-Verfügbarkeit. Jede Karte zeigt den alternativen Zeitraum deutlich; Ihre Daten ändern sich erst, wenn Sie eine Option auswählen.",
+  fr: "Je n’ai pas trouvé de chambre pour les dates exactes, mais j’ai trouvé des disponibilités en direct très proches. Chaque carte indique clairement la période alternative et vos dates ne changent que si vous choisissez une option.",
+  it: "Non ho trovato una camera per le date esatte, ma c’è disponibilità live molto vicina. Ogni scheda mostra chiaramente il periodo alternativo e le date cambiano solo se scegliete un’opzione.",
+  es: "No encontré habitación para las fechas exactas, pero sí disponibilidad en vivo muy cerca de ellas. Cada tarjeta muestra claramente el periodo alternativo y sus fechas solo cambian si eligen una opción.",
+  tr: "Tam tarihleriniz için oda bulamadım, ancak çok yakın tarihlerde canlı müsaitlik buldum. Her kart alternatif dönemi açıkça gösterir ve tarihleriniz yalnızca bir seçeneği seçerseniz değişir.",
 };
 
 class AvailabilityError extends Error {
@@ -83,10 +105,12 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   const [offers, setOffers] = useState<RoomOffer[][]>([]);
   const [activeGroup, setActiveGroup] = useState(0);
   const [choices, setChoices] = useState<RoomChoice[]>([]);
+  const [preferences, setPreferences] = useState<RoomFinderPreference[]>([]);
   const [breakfast, setBreakfast] = useState(false);
   const [typing, setTyping] = useState(false);
   const [selectingOfferKey, setSelectingOfferKey] = useState<string | null>(null);
   const turnLocked = useRef(false);
+  const languageRef = useRef(language);
 
   const { step, draft } = flow;
   const { checkin, checkout, roomCount, totalGuests, groups } = draft;
@@ -104,11 +128,19 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     }),
     [offers, groups],
   );
-  const visibleOffers = useMemo(
-    () => feasibleOffersForGroup(capacityEligibleOffers, activeGroup, selectedKeys)
-      .sort((left, right) => left.directTotal - right.directTotal || rank(left) - rank(right)),
-    [capacityEligibleOffers, activeGroup, selectedKeys],
-  );
+  const visibleOffers = useMemo(() => {
+    const feasible = feasibleOffersForGroup(capacityEligibleOffers, activeGroup, selectedKeys);
+    const sorted = [...feasible].sort((left, right) => {
+      const preferenceDifference = roomPreferenceScore(Number(right.roomNumber), preferences)
+        - roomPreferenceScore(Number(left.roomNumber), preferences);
+      return preferenceDifference || left.directTotal - right.directTotal || rank(left) - rank(right);
+    });
+    const bestScore = sorted.length ? roomPreferenceScore(Number(sorted[0].roomNumber), preferences) : 0;
+    return sorted.map((offer, index) => ({
+      ...offer,
+      recommended: preferences.length > 0 && bestScore > 0 && index === 0,
+    }));
+  }, [capacityEligibleOffers, activeGroup, selectedKeys, preferences]);
 
   const add = (role: ChatItem["role"], content: string, kind: MessageKind = "normal") =>
     setMessages(current => [...current, { id: rid(), role, content, kind }]);
@@ -150,10 +182,22 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   };
 
   function reset() {
+    if (languageRef.current !== language) {
+      languageRef.current = language;
+      setOffers(current => current.map(group => group.map(offer => localizeRoomOffer(offer, language)) as RoomOffer[]));
+      setChoices(current => current.map(choice => ({
+        ...choice,
+        offer: localizeRoomOffer(choice.offer, language) as RoomOffer,
+      })));
+      setTyping(false);
+      return;
+    }
+
     turnLocked.current = false;
     dispatchFlow({ type: "reset" });
     setMessages([{ id: rid(), role: "assistant", content: copy.welcome }]);
     setInput("");
+    setPreferences([]);
     clearSearchSelectionState();
     setTyping(false);
   }
@@ -228,6 +272,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
         roomCount: roomCount || undefined,
         guestGroups: groups,
         currentRoom: current === "guests" ? nextMissingGuestRoom(draft) || undefined : undefined,
+        preferences,
         recentMessages,
       },
     });
@@ -270,6 +315,34 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     throw new Error("AI_UNAVAILABLE");
   }
 
+  async function findNearbyOffers(searchDraft: BookingDraft) {
+    if (searchDraft.roomCount !== 1 || searchDraft.groups.length !== 1) return [] as RoomOffer[];
+
+    const query = new URLSearchParams({
+      checkin: searchDraft.checkin,
+      checkout: searchDraft.checkout,
+      guests: String(searchDraft.groups[0]),
+      lang: language,
+    });
+
+    try {
+      const response = await fetch(`/api/ai-room-finder/alternatives?${query}`, { cache: "no-store" });
+      const payload = await response.json().catch(() => null);
+      if (!response.ok || !payload?.success || !Array.isArray(payload.alternatives)) return [];
+
+      return payload.alternatives.flatMap((alternative: any) =>
+        (Array.isArray(alternative?.offers) ? alternative.offers : []).map((offer: RoomOffer) => ({
+          ...offer,
+          alternativeCheckin: String(alternative.checkin || ""),
+          alternativeCheckout: String(alternative.checkout || ""),
+          alternativeShiftDays: Number(alternative.shiftDays || 0),
+        })),
+      ) as RoomOffer[];
+    } catch {
+      return [];
+    }
+  }
+
   async function runAvailabilitySearch(searchDraft: BookingDraft) {
     dispatchFlow({ type: "set_step", step: "searching" });
     add("assistant", tone.searching);
@@ -298,6 +371,15 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       });
 
       if (!hasDistinctOfferPlan(eligible)) {
+        const nearby = await findNearbyOffers(searchDraft);
+        if (nearby.length) {
+          setOffers([nearby]);
+          setActiveGroup(0);
+          dispatchFlow({ type: "set_step", step: "selecting" });
+          add("assistant", NEARBY_ALTERNATIVES[language]);
+          return;
+        }
+
         setOffers([]);
         setActiveGroup(0);
         dispatchFlow({ type: "set_step", step: "unavailable" });
@@ -310,19 +392,22 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       dispatchFlow({ type: "set_step", step: "selecting" });
       add("assistant", tone.results(1, searchDraft.groups[0]));
     } catch (error) {
+      console.error("Room Finder availability request failed", error);
       setOffers([]);
       setActiveGroup(0);
       dispatchFlow({ type: "set_step", step: "unavailable" });
-      const stale = error instanceof AvailabilityError && (
-        error.code === "STALE_DATA" || error.code === "DATA_UNAVAILABLE"
-      );
-      add("assistant", stale ? INVENTORY_UNAVAILABLE[language] : tone.unavailable);
+      add("assistant", INVENTORY_UNAVAILABLE[language]);
     } finally {
       setTyping(false);
     }
   }
 
   async function applyCommand(command: RoomFinderCommand) {
+    const preferenceAction = [...command.actions]
+      .reverse()
+      .find(action => action.type === "set_preferences");
+    if (preferenceAction) setPreferences(preferenceAction.preferences || []);
+
     const resolution = resolveAssistantTurn(flow, command);
 
     if (resolution.outcome.kind === "restart") {
@@ -344,7 +429,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     }
 
     if (resolution.outcome.kind === "unchanged") {
-      add("assistant", NO_BOOKING_CHANGE[language]);
+      add("assistant", preferenceAction ? PREFERENCE_APPLIED[language] : NO_BOOKING_CHANGE[language]);
       return;
     }
 
@@ -375,6 +460,21 @@ export function useRoomFinder(language: RoomFinderLanguage) {
 
     const current = step;
     setInput("");
+
+    const questionAnswer = ["selecting", "breakfast", "complete"].includes(current)
+      ? answerRoomQuestion(value, language, [
+          ...offers.flat(),
+          ...choices.map(choice => choice.offer),
+        ])
+      : null;
+
+    if (questionAnswer) {
+      if (!await beginUserTurn(value, "normal", "👍")) return;
+      add("assistant", questionAnswer);
+      endUserTurn();
+      return;
+    }
+
     const promise = interpret(value, current);
     const kind: MessageKind = current === "checkin" || current === "checkout"
       ? "date"
@@ -443,6 +543,20 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     try {
       if (!await beginUserTurn(`${copy.select}: ${offer.name}`, "room", "❤️", "quick")) return;
 
+      if (offer.alternativeCheckin && offer.alternativeCheckout) {
+        dispatchFlow({
+          type: "commit_turn",
+          state: {
+            step: "selecting",
+            draft: {
+              ...draft,
+              checkin: offer.alternativeCheckin,
+              checkout: offer.alternativeCheckout,
+            },
+          },
+        });
+      }
+
       const nextChoices = [
         ...choices,
         { group: activeGroup + 1, guests: groups[activeGroup], offer },
@@ -489,6 +603,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     offers,
     activeGroup,
     choices,
+    preferences,
     breakfast,
     typing,
     selectingOfferKey,
