@@ -14,8 +14,14 @@ const NUMERIC_DATE_HINT = new RegExp(NUMERIC_DATE_SOURCE, "u");
 
 const ROOM_WORDS = /(δωμάτι(?:ο|α)|rooms?|zimmer|chambres?|camere?|habitaciones?|odas?)/iu;
 const GUEST_WORDS = /(άτομα|ατομα|επισκέπτες|επισκεπτες|guests?|people|persons?|gäste|personen|personnes?|persone|personas?|kişi)/iu;
+const ADULT_WORDS = /(ενήλικ(?:ας|ες|ων)?|adult(?:s)?|erwachsene[nr]?|adultes?|adulti|adultos?|yetişkin(?:ler)?)/iu;
+const CHILD_WORDS = /(παιδ(?:ί|ι|ιά|ια)|children|child|kinder|kind|enfants?|enfant|bambini?|bambino|niñ(?:o|os|a|as)|çocuk(?:lar)?)/iu;
+const NIGHT_WORDS = /(βραδι(?:ά|ες)|διανυκτερ(?:εύσεις|ευσεις|εύση|ευση)|nights?|nächte|nachte|nuits?|notti|noches|gece)/iu;
 const ROOM_WORD_SOURCE = "(?:δωματι(?:ο|α)|rooms?|zimmer|chambres?|camer(?:a|e)|habitacion(?:es)?|oda(?:lar)?)";
 const GUEST_WORD_SOURCE = "(?:ατομα|επισκεπτες|guests?|people|persons?|gaste|personen|personnes?|persone|personas?|kisi)";
+const ADULT_WORD_SOURCE = "(?:ενηλικ(?:ας|ες|ων)?|adults?|erwachsene[nr]?|adultes?|adulti|adultos?|yetiskin(?:ler)?)";
+const CHILD_WORD_SOURCE = "(?:παιδ(?:ι|ια)|children|child|kinder|kind|enfants?|enfant|bambini?|bambino|nin(?:o|os|a|as)|cocuk(?:lar)?)";
+const NIGHT_WORD_SOURCE = "(?:βραδι(?:α|ες)|διανυκτερ(?:ευσεις|ευση)|nights?|nachte|nuits?|notti|noches|gece)";
 const COMPLEX_GUEST_HINT = /(adult|child|children|ενήλικ|ενηλικ|παιδ|kinder|erwachsene|adulte|enfant|adulti|bambin|adultos|niñ|nino|çocuk|cocuk|yetişkin|yetiskin)/iu;
 const RESTART_WORDS = /(από την αρχή|απο την αρχη|νέα αναζήτηση|νεα αναζητηση|start over|new search|restart|neu beginnen|nouvelle recherche|ricomincia|nueva búsqueda|yeniden başla|yeni arama)/iu;
 const CHECKIN_WORDS = /(check\s*-?\s*in|άφιξ|αφιξ|arrival|ankunft|arrivée|arrivo|llegada|giriş)/iu;
@@ -119,15 +125,7 @@ function extractDates(text: string, today: string) {
   const seenValues = new Set<string>();
 
   for (const match of normalized.matchAll(new RegExp(NUMERIC_DATE_SOURCE, "gu"))) {
-    pushUniqueDate(
-      values,
-      seenValues,
-      Number(match[1]),
-      Number(match[2]),
-      match[3],
-      today,
-      match.index ?? 0,
-    );
+    pushUniqueDate(values, seenValues, Number(match[1]), Number(match[2]), match[3], today, match.index ?? 0);
   }
 
   const condensedRange = new RegExp(
@@ -137,8 +135,18 @@ function extractDates(text: string, today: string) {
   for (const match of normalized.matchAll(condensedRange)) {
     const month = MONTH_LOOKUP.get(match[3]) || 0;
     const index = match.index ?? 0;
-    pushUniqueDate(values, seenValues, Number(match[1]), month, match[4], today, index);
-    pushUniqueDate(values, seenValues, Number(match[2]), month, match[4], today, index + 1);
+    const firstYear = normalizeYear(match[4], Number(match[1]), month, today);
+    const secondYear = match[4] ? firstYear : firstYear;
+    const first = isoFromParts(Number(match[1]), month, firstYear);
+    const second = isoFromParts(Number(match[2]), month, secondYear);
+    if (first && !seenValues.has(first)) {
+      seenValues.add(first);
+      values.push({ value: first, index });
+    }
+    if (second && !seenValues.has(second)) {
+      seenValues.add(second);
+      values.push({ value: second, index: index + 1 });
+    }
   }
 
   const monthFirstRange = new RegExp(
@@ -148,8 +156,17 @@ function extractDates(text: string, today: string) {
   for (const match of normalized.matchAll(monthFirstRange)) {
     const month = MONTH_LOOKUP.get(match[1]) || 0;
     const index = match.index ?? 0;
-    pushUniqueDate(values, seenValues, Number(match[2]), month, match[4], today, index);
-    pushUniqueDate(values, seenValues, Number(match[3]), month, match[4], today, index + 1);
+    const year = normalizeYear(match[4], Number(match[2]), month, today);
+    const first = isoFromParts(Number(match[2]), month, year);
+    const second = isoFromParts(Number(match[3]), month, year);
+    if (first && !seenValues.has(first)) {
+      seenValues.add(first);
+      values.push({ value: first, index });
+    }
+    if (second && !seenValues.has(second)) {
+      seenValues.add(second);
+      values.push({ value: second, index: index + 1 });
+    }
   }
 
   const namedDayFirst = new RegExp(
@@ -157,15 +174,7 @@ function extractDates(text: string, today: string) {
     "giu",
   );
   for (const match of normalized.matchAll(namedDayFirst)) {
-    pushUniqueDate(
-      values,
-      seenValues,
-      Number(match[1]),
-      MONTH_LOOKUP.get(match[2]) || 0,
-      match[3],
-      today,
-      match.index ?? 0,
-    );
+    pushUniqueDate(values, seenValues, Number(match[1]), MONTH_LOOKUP.get(match[2]) || 0, match[3], today, match.index ?? 0);
   }
 
   const namedMonthFirst = new RegExp(
@@ -173,15 +182,7 @@ function extractDates(text: string, today: string) {
     "giu",
   );
   for (const match of normalized.matchAll(namedMonthFirst)) {
-    pushUniqueDate(
-      values,
-      seenValues,
-      Number(match[2]),
-      MONTH_LOOKUP.get(match[1]) || 0,
-      match[3],
-      today,
-      match.index ?? 0,
-    );
+    pushUniqueDate(values, seenValues, Number(match[2]), MONTH_LOOKUP.get(match[1]) || 0, match[3], today, match.index ?? 0);
   }
 
   return values.sort((left, right) => left.index - right.index);
@@ -227,10 +228,7 @@ function preferenceUpdateFromText(
 
   if (removal) {
     if (matches.length === 1) {
-      return {
-        recognized: true,
-        preferences: current.filter(preference => preference !== matches[0]),
-      };
+      return { recognized: true, preferences: current.filter(preference => preference !== matches[0]) };
     }
     return { recognized: false, preferences: [...current] };
   }
@@ -240,10 +238,7 @@ function preferenceUpdateFromText(
   }
 
   if (!matches.length) return { recognized: false, preferences: [...current] };
-  return {
-    recognized: true,
-    preferences: Array.from(new Set([...current, ...matches])),
-  };
+  return { recognized: true, preferences: Array.from(new Set([...current, ...matches])) };
 }
 
 function uniqueActions(actions: RoomFinderAction[]) {
@@ -266,8 +261,7 @@ export function hasCoreBookingActions(command: RoomFinderCommand | null | undefi
 }
 
 function hasNamedMonth(text: string) {
-  const normalized = normalizeSearchText(text);
-  return new RegExp(`${TOKEN_START}(?:${MONTH_PATTERN})${TOKEN_END}`, "iu").test(normalized);
+  return new RegExp(`${TOKEN_START}(?:${MONTH_PATTERN})${TOKEN_END}`, "iu").test(normalizeSearchText(text));
 }
 
 export function canUseDeterministicCommandDirectly(
@@ -281,6 +275,7 @@ export function canUseDeterministicCommandDirectly(
   const hasDateAction = command.actions.some(action =>
     action.type === "set_stay_dates" && Boolean(action.checkin || action.checkout || action.nights),
   );
+  const hasNightAction = command.actions.some(action => action.type === "set_stay_dates" && Boolean(action.nights));
   const hasRoomAction = command.actions.some(action => action.type === "set_room_count" && action.roomCount != null);
   const hasGuestAction = command.actions.some(action => action.type === "set_guest_count" && (action.totalGuests != null || action.guests != null));
   const hasPreferenceAction = command.actions.some(action => action.type === "set_preferences");
@@ -289,10 +284,12 @@ export function canUseDeterministicCommandDirectly(
     || hasNamedMonth(message)
     || CHECKIN_WORDS.test(message)
     || CHECKOUT_WORDS.test(message);
+  const mentionsNights = NIGHT_WORDS.test(message);
   const mentionsRoom = ROOM_WORDS.test(message);
   const mentionsGuests = GUEST_WORDS.test(message) || COMPLEX_GUEST_HINT.test(message);
 
   if (mentionsDate && !hasDateAction) return false;
+  if (mentionsNights && !hasNightAction && !command.actions.some(action => action.checkout)) return false;
   if (mentionsRoom && !hasRoomAction) return false;
   if (mentionsGuests && !hasGuestAction) return false;
 
@@ -324,7 +321,7 @@ export function fallbackRoomFinderCommand(
   const dates = parsedDates.some(date => date.value < today) ? [] : parsedDates;
   const actions: RoomFinderAction[] = [];
 
-  if (dates.length >= 2) {
+  if (dates.length >= 2 && dates[1].value > dates[0].value) {
     actions.push({ type: "set_stay_dates", checkin: dates[0].value, checkout: dates[1].value });
   } else if (dates.length === 1) {
     const value = dates[0].value;
@@ -333,6 +330,12 @@ export function fallbackRoomFinderCommand(
     } else if (CHECKIN_WORDS.test(text) || context.currentStep === "checkin") {
       actions.push({ type: "set_stay_dates", checkin: value });
     }
+  }
+
+  const hasExplicitCheckout = actions.some(action => Boolean(action.checkout));
+  const nights = numberBeforeWords(text, NIGHT_WORDS, NIGHT_WORD_SOURCE, 60);
+  if (nights && !hasExplicitCheckout) {
+    actions.push({ type: "set_stay_dates", nights });
   }
 
   const roomCount = numberBeforeWords(text, ROOM_WORDS, ROOM_WORD_SOURCE, 99);
@@ -349,6 +352,12 @@ export function fallbackRoomFinderCommand(
       actions.push({ type: "set_guest_count", guestRoom: context.currentRoom, guests: explicitGuests });
     } else {
       actions.push({ type: "set_guest_count", totalGuests: explicitGuests });
+    }
+  } else if (COMPLEX_GUEST_HINT.test(text)) {
+    const adults = numberBeforeWords(text, ADULT_WORDS, ADULT_WORD_SOURCE, 15);
+    const children = numberBeforeWords(text, CHILD_WORDS, CHILD_WORD_SOURCE, 15);
+    if (adults != null && children != null && adults + children >= 1 && adults + children <= 15) {
+      actions.push({ type: "set_guest_count", totalGuests: adults + children });
     }
   } else if (context.currentStep === "guests" && /^\s*[1-5]\s*$/.test(text)) {
     const guests = Number(text);
