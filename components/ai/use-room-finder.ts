@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useMemo, useReducer, useRef, useState } from "react";
+import { FormEvent, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { localizeRoomOffer } from "@/lib/ai-assistant/room-card-catalog";
 import { fallbackRoomFinderCommand } from "@/lib/ai-assistant/room-finder-fallback";
 import type {
@@ -29,7 +29,13 @@ import {
 import { rewindToAssistantPrompt } from "./room-finder-conversation-history";
 import { classifyNearbyPayload } from "./room-finder-nearby";
 import { answerRoomQuestion, roomPreferenceScore } from "./room-finder-sales-intelligence";
-import type { ChatItem, MessageKind, Reaction } from "./room-finder-chat-ui";
+import {
+  resetRoomFinderTrackingSession,
+  trackRoomFinderSnapshot,
+  type ChatItem,
+  type MessageKind,
+  type Reaction,
+} from "./room-finder-chat-ui";
 import type { RoomOffer } from "./room-finder-carousel";
 import type { RoomChoice } from "./room-finder-selected-card";
 
@@ -153,6 +159,26 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     }));
   }, [capacityEligibleOffers, activeGroup, selectedKeys, preferences]);
 
+  useEffect(() => {
+    trackRoomFinderSnapshot({
+      language,
+      step,
+      checkin,
+      checkout,
+      roomCount,
+      guestTotal: guestTotal || null,
+      groups: [...groups],
+      selectedRooms: choices.map(choice => ({
+        group: choice.group,
+        guests: choice.guests,
+        roomNumber: choice.offer.roomNumber,
+        name: choice.offer.name,
+        directTotal: choice.offer.directTotal,
+      })),
+      breakfast,
+    });
+  }, [language, step, checkin, checkout, roomCount, guestTotal, groups, choices, breakfast]);
+
   const add = (role: ChatItem["role"], content: string, kind: MessageKind = "normal") =>
     setMessages(current => [...current, { id: rid(), role, content, kind }]);
 
@@ -204,6 +230,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       return;
     }
 
+    resetRoomFinderTrackingSession();
     turnLocked.current = false;
     dispatchFlow({ type: "reset" });
     setMessages([{ id: rid(), role: "assistant", content: copy.welcome }]);
