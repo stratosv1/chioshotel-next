@@ -11,6 +11,7 @@ const PATCHES = [
   "patch-gsc-not-found-remediation.cjs",
   "patch-ga4-404-remediation.cjs",
   "patch-pre-arrival-redirect.cjs",
+  "patch-pyrgi-image.cjs",
   "patch-seo-inventory-alignment.cjs",
   "patch-seo-runtime-rule-revalidation.cjs",
   "disable-last-minute-room-extras.cjs",
