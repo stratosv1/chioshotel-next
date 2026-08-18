@@ -245,6 +245,7 @@ export async function interpretRoomFinderMessage(
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) throw new Error("OPENAI_API_KEY is not configured");
 
+  const model = process.env.OPENAI_CONCIERGE_MODEL || process.env.OPENAI_ASSISTANT_MODEL || "gpt-5-mini";
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 12_000);
 
@@ -257,7 +258,8 @@ export async function interpretRoomFinderMessage(
       },
       signal: controller.signal,
       body: JSON.stringify({
-        model: process.env.OPENAI_CONCIERGE_MODEL || process.env.OPENAI_ASSISTANT_MODEL || "gpt-5-mini",
+        model,
+        ...(model.startsWith("gpt-5") ? { reasoning: { effort: "minimal" } } : {}),
         instructions: `${SYSTEM_PROMPT}\nToday in Europe/Athens is ${todayInAthensIso()}.\nSelected UI language is ${safeLanguage(context.language)}.`,
         input: JSON.stringify({ message, context }),
         text: {
