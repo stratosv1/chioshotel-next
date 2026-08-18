@@ -9,7 +9,8 @@ import type {
   RoomFinderPreference,
 } from "./room-finder-types";
 
-const NUMERIC_DATE_TOKEN = /\b(\d{1,2})[\/.\-](\d{1,2})(?:[\/.\-](\d{2,4}))?\b/g;
+const NUMERIC_DATE_SOURCE = String.raw`\b(\d{1,2})[\/.\-](\d{1,2})(?:[\/.\-](\d{2,4}))?\b`;
+const NUMERIC_DATE_HINT = new RegExp(NUMERIC_DATE_SOURCE, "u");
 
 const ROOM_WORDS = /(δωμάτι(?:ο|α)|rooms?|zimmer|chambres?|camere?|habitaciones?|odas?)/iu;
 const GUEST_WORDS = /(άτομα|ατομα|επισκέπτες|επισκεπτες|guests?|people|persons?|gäste|personen|personnes?|persone|personas?|kişi)/iu;
@@ -39,14 +40,14 @@ const MONTH_ALIASES: Array<[number, string[]]> = [
   [2, ["φεβρουαριου", "φεβρουαριο", "february", "feb", "februar", "fevrier", "febbraio", "febrero", "subat"]],
   [3, ["μαρτιου", "μαρτιο", "march", "mar", "marz", "mars", "marzo", "mart"]],
   [4, ["απριλιου", "απριλιο", "april", "apr", "avril", "aprile", "abril", "nisan"]],
-  [5, ["μαιου", "μαιο", "may", "mai", "maggio", "mayo", "mayis"]],
+  [5, ["μαιου", "μαιο", "may", "mai", "maggio", "mayo", "mayis", "mayıs"]],
   [6, ["ιουνιου", "ιουνιο", "june", "jun", "juni", "juin", "giugno", "junio", "haziran"]],
   [7, ["ιουλιου", "ιουλιο", "july", "jul", "juli", "juillet", "luglio", "julio", "temmuz"]],
-  [8, ["αυγουστου", "αυγουστο", "august", "aug", "aout", "agosto", "agustus"]],
+  [8, ["αυγουστου", "αυγουστο", "august", "aug", "aout", "agosto", "agustos"]],
   [9, ["σεπτεμβριου", "σεπτεμβριο", "september", "sep", "sept", "septembre", "settembre", "septiembre", "setiembre", "eylul"]],
   [10, ["οκτωβριου", "οκτωβριο", "october", "oct", "oktober", "octobre", "ottobre", "octubre", "ekim"]],
-  [11, ["νοεμβριου", "νοεμβριο", "november", "nov", "novembre", "noviembre", "kasim"]],
-  [12, ["δεκεμβριου", "δεκεμβριο", "december", "dec", "dezember", "decembre", "dicembre", "diciembre", "aralik"]],
+  [11, ["νοεμβριου", "νοεμβριο", "november", "nov", "novembre", "noviembre", "kasim", "kasım"]],
+  [12, ["δεκεμβριου", "δεκεμβριο", "december", "dec", "dezember", "decembre", "dicembre", "diciembre", "aralik", "aralık"]],
 ];
 
 const NUMBER_WORDS: Array<[number, string[]]> = [
@@ -77,6 +78,8 @@ const MONTH_PATTERN = [...MONTH_LOOKUP.keys()]
   .map(escapeRegExp)
   .join("|");
 const RANGE_SEPARATOR = "(?:-|–|—|εως|ως|με|to|until|bis|au|al|hasta|ile)";
+const TOKEN_START = String.raw`(?<![\p{L}\p{N}])`;
+const TOKEN_END = String.raw`(?![\p{L}\p{N}])`;
 
 function isoFromParts(day: number, month: number, year: number) {
   if (!Number.isInteger(day) || !Number.isInteger(month) || !Number.isInteger(year)) return "";
@@ -94,9 +97,9 @@ function normalizeYear(rawYear: string | undefined, day: number, month: number, 
   return thisYear && thisYear >= today ? currentYear : currentYear + 1;
 }
 
-function pushDate(
+function pushUniqueDate(
   values: Array<{ value: string; index: number }>,
-  seen: Set<string>,
+  seenValues: Set<string>,
   day: number,
   month: number,
   rawYear: string | undefined,
@@ -105,10 +108,8 @@ function pushDate(
 ) {
   const year = normalizeYear(rawYear, day, month, today);
   const value = isoFromParts(day, month, year);
-  if (!value) return;
-  const key = `${value}:${index}`;
-  if (seen.has(key)) return;
-  seen.add(key);
+  if (!value || seenValues.has(value)) return;
+  seenValues.add(value);
   values.push({ value, index });
 }
 
@@ -117,75 +118,70 @@ function extractDates(text: string, today: string) {
   const values: Array<{ value: string; index: number }> = [];
   const seenValues = new Set<string>();
 
-  for (const match of normalized.matchAll(NUMERIC_DATE_TOKEN)) {
-    const day = Number(match[1]);
-    const month = Number(match[2]);
-    const year = normalizeYear(match[3], day, month, today);
-    const value = isoFromParts(day, month, year);
-    if (value && !seenValues.has(value)) {
-      seenValues.add(value);
-      values.push({ value, index: match.index ?? 0 });
-    }
+  for (const match of normalized.matchAll(new RegExp(NUMERIC_DATE_SOURCE, "gu"))) {
+    pushUniqueDate(
+      values,
+      seenValues,
+      Number(match[1]),
+      Number(match[2]),
+      match[3],
+      today,
+      match.index ?? 0,
+    );
   }
 
-  const condensedRange = new RegExp(`\\b(\\d{1,2})\\s*${RANGE_SEPARATOR}\\s*(\\d{1,2})\\s+(?:του\\s+)?(${MONTH_PATTERN})(?:\\s+(\\d{2,4}))?\\b`, "giu");
+  const condensedRange = new RegExp(
+    `${TOKEN_START}(\\d{1,2})\\s*${RANGE_SEPARATOR}\\s*(\\d{1,2})\\s+(?:του\\s+)?(${MONTH_PATTERN})(?:\\s+(\\d{2,4}))?${TOKEN_END}`,
+    "giu",
+  );
   for (const match of normalized.matchAll(condensedRange)) {
     const month = MONTH_LOOKUP.get(match[3]) || 0;
-    const startIndex = match.index ?? 0;
-    const firstDay = Number(match[1]);
-    const secondDay = Number(match[2]);
-    const rawYear = match[4];
-    const firstYear = normalizeYear(rawYear, firstDay, month, today);
-    const secondYear = normalizeYear(rawYear, secondDay, month, today);
-    const first = isoFromParts(firstDay, month, firstYear);
-    const second = isoFromParts(secondDay, month, secondYear);
-    if (first && !seenValues.has(first)) {
-      seenValues.add(first);
-      values.push({ value: first, index: startIndex });
-    }
-    if (second && !seenValues.has(second)) {
-      seenValues.add(second);
-      values.push({ value: second, index: startIndex + 1 });
-    }
+    const index = match.index ?? 0;
+    pushUniqueDate(values, seenValues, Number(match[1]), month, match[4], today, index);
+    pushUniqueDate(values, seenValues, Number(match[2]), month, match[4], today, index + 1);
   }
 
-  const monthFirstRange = new RegExp(`\\b(${MONTH_PATTERN})\\s+(\\d{1,2})\\s*${RANGE_SEPARATOR}\\s*(\\d{1,2})(?:,?\\s+(\\d{2,4}))?\\b`, "giu");
+  const monthFirstRange = new RegExp(
+    `${TOKEN_START}(${MONTH_PATTERN})\\s+(\\d{1,2})\\s*${RANGE_SEPARATOR}\\s*(\\d{1,2})(?:,?\\s+(\\d{2,4}))?${TOKEN_END}`,
+    "giu",
+  );
   for (const match of normalized.matchAll(monthFirstRange)) {
     const month = MONTH_LOOKUP.get(match[1]) || 0;
-    const startIndex = match.index ?? 0;
-    for (const [offset, rawDay] of [[0, match[2]], [1, match[3]]] as const) {
-      const day = Number(rawDay);
-      const year = normalizeYear(match[4], day, month, today);
-      const value = isoFromParts(day, month, year);
-      if (value && !seenValues.has(value)) {
-        seenValues.add(value);
-        values.push({ value, index: startIndex + offset });
-      }
-    }
+    const index = match.index ?? 0;
+    pushUniqueDate(values, seenValues, Number(match[2]), month, match[4], today, index);
+    pushUniqueDate(values, seenValues, Number(match[3]), month, match[4], today, index + 1);
   }
 
-  const namedDayFirst = new RegExp(`\\b(\\d{1,2})\\.?\\s+(?:του\\s+)?(${MONTH_PATTERN})(?:\\s+(\\d{2,4}))?\\b`, "giu");
+  const namedDayFirst = new RegExp(
+    `${TOKEN_START}(\\d{1,2})\\.?\\s+(?:του\\s+)?(${MONTH_PATTERN})(?:\\s+(\\d{2,4}))?${TOKEN_END}`,
+    "giu",
+  );
   for (const match of normalized.matchAll(namedDayFirst)) {
-    const month = MONTH_LOOKUP.get(match[2]) || 0;
-    const day = Number(match[1]);
-    const year = normalizeYear(match[3], day, month, today);
-    const value = isoFromParts(day, month, year);
-    if (value && !seenValues.has(value)) {
-      seenValues.add(value);
-      values.push({ value, index: match.index ?? 0 });
-    }
+    pushUniqueDate(
+      values,
+      seenValues,
+      Number(match[1]),
+      MONTH_LOOKUP.get(match[2]) || 0,
+      match[3],
+      today,
+      match.index ?? 0,
+    );
   }
 
-  const namedMonthFirst = new RegExp(`\\b(${MONTH_PATTERN})\\s+(\\d{1,2})(?:,?\\s+(\\d{2,4}))?\\b`, "giu");
+  const namedMonthFirst = new RegExp(
+    `${TOKEN_START}(${MONTH_PATTERN})\\s+(\\d{1,2})(?:,?\\s+(\\d{2,4}))?${TOKEN_END}`,
+    "giu",
+  );
   for (const match of normalized.matchAll(namedMonthFirst)) {
-    const month = MONTH_LOOKUP.get(match[1]) || 0;
-    const day = Number(match[2]);
-    const year = normalizeYear(match[3], day, month, today);
-    const value = isoFromParts(day, month, year);
-    if (value && !seenValues.has(value)) {
-      seenValues.add(value);
-      values.push({ value, index: match.index ?? 0 });
-    }
+    pushUniqueDate(
+      values,
+      seenValues,
+      Number(match[2]),
+      MONTH_LOOKUP.get(match[1]) || 0,
+      match[3],
+      today,
+      match.index ?? 0,
+    );
   }
 
   return values.sort((left, right) => left.index - right.index);
@@ -202,7 +198,10 @@ function numberBeforeWords(text: string, words: RegExp, normalizedWordSource: st
   for (const [value, aliases] of NUMBER_WORDS) {
     if (value > max) continue;
     for (const alias of aliases) {
-      const pattern = new RegExp(`\\b${escapeRegExp(alias)}\\s*(?:${normalizedWordSource})\\b`, "iu");
+      const pattern = new RegExp(
+        `${TOKEN_START}${escapeRegExp(normalizeSearchText(alias))}\\s*(?:${normalizedWordSource})${TOKEN_END}`,
+        "iu",
+      );
       if (pattern.test(normalized)) return value;
     }
   }
@@ -268,7 +267,7 @@ export function hasCoreBookingActions(command: RoomFinderCommand | null | undefi
 
 function hasNamedMonth(text: string) {
   const normalized = normalizeSearchText(text);
-  return new RegExp(`\\b(?:${MONTH_PATTERN})\\b`, "iu").test(normalized);
+  return new RegExp(`${TOKEN_START}(?:${MONTH_PATTERN})${TOKEN_END}`, "iu").test(normalized);
 }
 
 export function canUseDeterministicCommandDirectly(
@@ -286,12 +285,10 @@ export function canUseDeterministicCommandDirectly(
   const hasGuestAction = command.actions.some(action => action.type === "set_guest_count" && (action.totalGuests != null || action.guests != null));
   const hasPreferenceAction = command.actions.some(action => action.type === "set_preferences");
 
-  const normalized = normalizeSearchText(message);
-  const mentionsDate = NUMERIC_DATE_TOKEN.test(normalized)
+  const mentionsDate = NUMERIC_DATE_HINT.test(normalizeSearchText(message))
     || hasNamedMonth(message)
     || CHECKIN_WORDS.test(message)
     || CHECKOUT_WORDS.test(message);
-  NUMERIC_DATE_TOKEN.lastIndex = 0;
   const mentionsRoom = ROOM_WORDS.test(message);
   const mentionsGuests = GUEST_WORDS.test(message) || COMPLEX_GUEST_HINT.test(message);
 
