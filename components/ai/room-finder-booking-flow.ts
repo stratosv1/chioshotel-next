@@ -60,13 +60,33 @@ const MAX_TOTAL_GUESTS = MAX_ROOMS * MAX_GUESTS_PER_ROOM;
 const CORE_INPUT_STEPS = new Set<FinderStep>(["checkin", "checkout", "rooms", "guests"]);
 
 const ROOM_LIMIT_MESSAGE: Record<RoomFinderCommand["language"], string> = {
-  el: "Μέσω του αυτόματου συστήματος αναζήτησης μπορείτε να αναζητήσετε έως 3 δωμάτια. Για περισσότερα δωμάτια, επικοινωνήστε απευθείας με το front desk του Voulamandis House μέσω WhatsApp.",
-  en: "The automated search supports up to 3 rooms. For more rooms, please contact the Voulamandis House front desk directly via WhatsApp.",
+  el: "Μέσω του αυτόματου συστήματος αναζήτησης μπορείτε να αναζητήσετε έως 3 δωμάτια. Για περισσότερα δωμάτια, επικοινωνήστε απευθείας με τη reception του Voulamandis House μέσω WhatsApp.",
+  en: "The automated search supports up to 3 rooms. For more rooms, please contact Voulamandis House reception directly via WhatsApp.",
   de: "Die automatische Suche unterstützt bis zu 3 Zimmer. Für mehr Zimmer kontaktieren Sie bitte die Rezeption des Voulamandis House direkt über WhatsApp.",
   fr: "La recherche automatique permet de rechercher jusqu’à 3 chambres. Pour davantage de chambres, contactez directement la réception de Voulamandis House via WhatsApp.",
   it: "La ricerca automatica consente di cercare fino a 3 camere. Per più camere, contattate direttamente la reception di Voulamandis House tramite WhatsApp.",
   es: "La búsqueda automática permite buscar hasta 3 habitaciones. Para más habitaciones, contacte directamente con la recepción de Voulamandis House por WhatsApp.",
   tr: "Otomatik arama sistemi en fazla 3 oda için arama yapabilir. Daha fazla oda için lütfen Voulamandis House resepsiyonuyla WhatsApp üzerinden doğrudan iletişime geçin.",
+};
+
+const TOTAL_GUEST_LIMIT_MESSAGE: Record<RoomFinderCommand["language"], string> = {
+  el: "Η αυτόματη αναζήτηση υποστηρίζει έως 15 άτομα σε έως 3 δωμάτια. Για μεγαλύτερη παρέα, επικοινωνήστε με τη reception μέσω WhatsApp ώστε να ελέγξουμε τον καλύτερο συνδυασμό.",
+  en: "The automated search supports up to 15 guests across up to 3 rooms. For a larger group, contact reception on WhatsApp so we can check the best combination.",
+  de: "Die automatische Suche unterstützt bis zu 15 Gäste in bis zu 3 Zimmern. Für größere Gruppen kontaktieren Sie bitte die Rezeption über WhatsApp.",
+  fr: "La recherche automatique prend en charge jusqu’à 15 personnes dans 3 chambres maximum. Pour un groupe plus important, contactez la réception via WhatsApp.",
+  it: "La ricerca automatica supporta fino a 15 ospiti in un massimo di 3 camere. Per gruppi più numerosi, contattate la reception via WhatsApp.",
+  es: "La búsqueda automática admite hasta 15 huéspedes en un máximo de 3 habitaciones. Para grupos más grandes, contacte con recepción por WhatsApp.",
+  tr: "Otomatik arama en fazla 3 odada toplam 15 kişiyi destekler. Daha büyük gruplar için WhatsApp üzerinden resepsiyonla iletişime geçin.",
+};
+
+const PARTY_ROOM_CONFLICT_MESSAGE: Record<RoomFinderCommand["language"], (guests: number, rooms: number) => string> = {
+  el: (guests, rooms) => `${guests} άτομα δεν μπορούν να κατανεμηθούν έγκυρα σε ${rooms} ${rooms === 1 ? "δωμάτιο" : "δωμάτια"} στο αυτόματο σύστημα (1–5 άτομα ανά δωμάτιο). Αλλάξτε τον αριθμό δωματίων ή των ατόμων.`,
+  en: (guests, rooms) => `${guests} guests cannot be allocated validly across ${rooms} ${rooms === 1 ? "room" : "rooms"} in the automated search (1–5 guests per room). Please change the room or guest count.`,
+  de: (guests, rooms) => `${guests} Gäste können in der automatischen Suche nicht gültig auf ${rooms} Zimmer verteilt werden (1–5 Gäste pro Zimmer). Bitte ändern Sie die Zimmer- oder Gästezahl.`,
+  fr: (guests, rooms) => `${guests} personnes ne peuvent pas être réparties correctement dans ${rooms} chambre(s) par la recherche automatique (1 à 5 personnes par chambre). Modifiez le nombre de chambres ou de personnes.`,
+  it: (guests, rooms) => `${guests} ospiti non possono essere distribuiti correttamente in ${rooms} camera/e nella ricerca automatica (1–5 ospiti per camera). Modificate il numero di camere o di ospiti.`,
+  es: (guests, rooms) => `${guests} huéspedes no pueden distribuirse correctamente en ${rooms} habitación(es) en la búsqueda automática (1–5 huéspedes por habitación). Cambie el número de habitaciones o de huéspedes.`,
+  tr: (guests, rooms) => `${guests} kişi otomatik aramada ${rooms} odaya geçerli biçimde dağıtılamaz (oda başına 1–5 kişi). Oda veya kişi sayısını değiştirin.`,
 };
 
 export function createInitialBookingFlowState(): BookingFlowState {
@@ -212,23 +232,18 @@ export function bookingFlowReducer(state: BookingFlowState, action: BookingFlowA
   switch (action.type) {
     case "reset":
       return createInitialBookingFlowState();
-
     case "commit_turn":
       return action.state;
-
     case "set_step":
       return { ...state, step: action.step };
-
     case "go_back":
       return goBackState(state);
-
     case "edit_dates": {
       const draft = cloneDraft(state.draft);
       draft.checkin = "";
       draft.checkout = "";
       return { step: "checkin", draft };
     }
-
     case "choose_rooms": {
       const roomCountChanged = state.draft.roomCount !== action.roomCount;
       const draft = normalizeGuestAllocation({
@@ -236,29 +251,18 @@ export function bookingFlowReducer(state: BookingFlowState, action: BookingFlowA
         roomCount: action.roomCount,
         groups: roomCountChanged ? [] : [...state.draft.groups],
       });
-      return {
-        step: bookingCoreIsComplete(draft) ? "searching" : "guests",
-        draft,
-      };
+      return { step: bookingCoreIsComplete(draft) ? "searching" : "guests", draft };
     }
-
     case "choose_guests": {
-      const draft: BookingDraft = {
-        ...state.draft,
-        groups: [...state.draft.groups],
-      };
+      const draft: BookingDraft = { ...state.draft, groups: [...state.draft.groups] };
       const room = nextMissingGuestRoom(draft);
       if (room && validRoomGuests(action.guests)) {
         while (draft.groups.length < room) draft.groups.push(0);
         draft.groups[room - 1] = action.guests;
       }
       normalizeGuestAllocation(draft);
-      return {
-        step: bookingCoreIsComplete(draft) ? "searching" : "guests",
-        draft,
-      };
+      return { step: bookingCoreIsComplete(draft) ? "searching" : "guests", draft };
     }
-
     default:
       return state;
   }
@@ -280,17 +284,11 @@ function commandSuppliesField(command: RoomFinderCommand, field: ClarificationSt
     case "checkin":
       return command.actions.some(action => Boolean(action.checkin && isStrictIsoDate(action.checkin)));
     case "checkout":
-      return command.actions.some(action =>
-        Boolean(action.checkout && isStrictIsoDate(action.checkout)) ||
-        Boolean(action.nights && Number.isInteger(action.nights)),
-      );
+      return command.actions.some(action => Boolean(action.checkout && isStrictIsoDate(action.checkout)) || Boolean(action.nights && Number.isInteger(action.nights)));
     case "rooms":
       return command.actions.some(action => Boolean(action.roomCount && validRoomCount(action.roomCount)));
     case "guests":
-      return command.actions.some(action =>
-        Boolean(action.totalGuests && validTotalGuests(action.totalGuests)) ||
-        Boolean(action.guests && validRoomGuests(action.guests)),
-      );
+      return command.actions.some(action => Boolean(action.totalGuests && validTotalGuests(action.totalGuests)) || Boolean(action.guests && validRoomGuests(action.guests)));
   }
 }
 
@@ -298,7 +296,6 @@ function unresolvedClarification(command: RoomFinderCommand, fallbackStep: Finde
   for (const action of command.actions) {
     if (action.type !== "ask_clarification" || !action.query) continue;
     const fields = Array.isArray(action.missingFields) ? action.missingFields : [];
-
     if (fields.length === 0) return { query: action.query, step: fallbackStep };
 
     let recognizedField = false;
@@ -308,7 +305,6 @@ function unresolvedClarification(command: RoomFinderCommand, fallbackStep: Finde
       recognizedField = true;
       if (!commandSuppliesField(command, field)) return { query: action.query, step: field };
     }
-
     if (!recognizedField) return { query: action.query, step: fallbackStep };
   }
   return null;
@@ -333,21 +329,13 @@ function stepForOutcome(outcome: BookingTurnOutcome, fallback: FinderStep): Find
 
 export function resolveAssistantTurn(current: BookingFlowState, command: RoomFinderCommand): BookingTurnResolution {
   if (command.actions.some(action => action.type === "restart_search")) {
-    return {
-      state: createInitialBookingFlowState(),
-      outcome: { kind: "restart" },
-      changed: true,
-    };
+    return { state: createInitialBookingFlowState(), outcome: { kind: "restart" }, changed: true };
   }
 
-  const draft: BookingDraft = {
-    ...current.draft,
-    groups: [...current.draft.groups],
-  };
+  const draft: BookingDraft = { ...current.draft, groups: [...current.draft.groups] };
 
   for (const action of command.actions) {
     if (action.checkin && isStrictIsoDate(action.checkin)) draft.checkin = action.checkin;
-
     if (action.checkout && isStrictIsoDate(action.checkout)) {
       draft.checkout = action.checkout;
     } else if (action.nights && Number.isInteger(action.nights) && action.nights >= 1 && action.nights <= 60) {
@@ -356,54 +344,38 @@ export function resolveAssistantTurn(current: BookingFlowState, command: RoomFin
     }
   }
 
-  const incomingRoomCount = [...command.actions]
-    .reverse()
-    .find(action => action.roomCount != null)?.roomCount;
-
-  if (
-    incomingRoomCount != null &&
-    Number.isInteger(incomingRoomCount) &&
-    incomingRoomCount > MAX_ROOMS
-  ) {
+  const incomingRoomCount = [...command.actions].reverse().find(action => action.roomCount != null)?.roomCount;
+  if (incomingRoomCount != null && Number.isInteger(incomingRoomCount) && incomingRoomCount > MAX_ROOMS) {
     draft.roomCount = null;
     draft.totalGuests = null;
     draft.groups = [];
-    const outcome: BookingTurnOutcome = {
-      kind: "clarification",
-      query: ROOM_LIMIT_MESSAGE[command.language] || ROOM_LIMIT_MESSAGE.en,
-      step: "unavailable",
-    };
-    return {
-      state: { step: "unavailable", draft },
-      outcome,
-      changed: true,
-    };
+    const outcome: BookingTurnOutcome = { kind: "clarification", query: ROOM_LIMIT_MESSAGE[command.language] || ROOM_LIMIT_MESSAGE.en, step: "unavailable" };
+    return { state: { step: "unavailable", draft }, outcome, changed: true };
   }
-
   if (incomingRoomCount && validRoomCount(incomingRoomCount)) {
     if (draft.roomCount !== incomingRoomCount) draft.groups = [];
     draft.roomCount = incomingRoomCount;
   }
 
-  const incomingTotalGuests = [...command.actions]
-    .reverse()
-    .find(action => action.totalGuests != null)?.totalGuests;
+  const incomingTotalGuests = [...command.actions].reverse().find(action => action.totalGuests != null)?.totalGuests;
+  if (incomingTotalGuests != null && Number.isInteger(incomingTotalGuests) && incomingTotalGuests > MAX_TOTAL_GUESTS) {
+    draft.totalGuests = null;
+    draft.groups = [];
+    const outcome: BookingTurnOutcome = { kind: "clarification", query: TOTAL_GUEST_LIMIT_MESSAGE[command.language] || TOTAL_GUEST_LIMIT_MESSAGE.en, step: "unavailable" };
+    return { state: { step: "unavailable", draft }, outcome, changed: true };
+  }
   if (incomingTotalGuests && validTotalGuests(incomingTotalGuests)) {
-    if (draft.totalGuests !== incomingTotalGuests && assignedGuestTotal(draft.groups) !== incomingTotalGuests) {
-      draft.groups = [];
-    }
+    if (draft.totalGuests !== incomingTotalGuests && assignedGuestTotal(draft.groups) !== incomingTotalGuests) draft.groups = [];
     draft.totalGuests = incomingTotalGuests;
   }
 
   for (const action of command.actions) {
     if (!action.guests || !validRoomGuests(action.guests)) continue;
-
     if (action.guestRoom && validRoomCount(action.guestRoom)) {
       while (draft.groups.length < action.guestRoom) draft.groups.push(0);
       draft.groups[action.guestRoom - 1] = action.guests;
       continue;
     }
-
     if (draft.roomCount === 1) {
       draft.totalGuests = action.guests;
       draft.groups = [action.guests];
@@ -413,44 +385,38 @@ export function resolveAssistantTurn(current: BookingFlowState, command: RoomFin
   normalizeGuestAllocation(draft);
   const changed = !draftsEqual(current.draft, draft);
 
+  if (
+    draft.roomCount &&
+    draft.totalGuests &&
+    (draft.totalGuests < draft.roomCount || draft.totalGuests > draft.roomCount * MAX_GUESTS_PER_ROOM)
+  ) {
+    draft.groups = [];
+    const outcome: BookingTurnOutcome = {
+      kind: "clarification",
+      query: (PARTY_ROOM_CONFLICT_MESSAGE[command.language] || PARTY_ROOM_CONFLICT_MESSAGE.en)(draft.totalGuests, draft.roomCount),
+      step: "rooms",
+    };
+    return { state: { step: "rooms", draft }, outcome, changed };
+  }
+
   if (draft.checkin && draft.checkout && nightsBetween(draft.checkin, draft.checkout) < 1) {
     draft.checkout = "";
     const invalidChanged = !draftsEqual(current.draft, draft);
     const outcome: BookingTurnOutcome = { kind: "invalid_checkout" };
-    return {
-      state: { step: stepForOutcome(outcome, current.step), draft },
-      outcome,
-      changed: invalidChanged,
-    };
+    return { state: { step: stepForOutcome(outcome, current.step), draft }, outcome, changed: invalidChanged };
   }
 
   const clarification = unresolvedClarification(command, current.step);
   if (clarification) {
-    const outcome: BookingTurnOutcome = {
-      kind: "clarification",
-      query: clarification.query,
-      step: clarification.step,
-    };
-    return {
-      state: { step: stepForOutcome(outcome, current.step), draft },
-      outcome,
-      changed,
-    };
+    const outcome: BookingTurnOutcome = { kind: "clarification", query: clarification.query, step: clarification.step };
+    return { state: { step: stepForOutcome(outcome, current.step), draft }, outcome, changed };
   }
 
   if (!changed && !CORE_INPUT_STEPS.has(current.step)) {
     const outcome: BookingTurnOutcome = { kind: "unchanged" };
-    return {
-      state: { step: current.step, draft },
-      outcome,
-      changed: false,
-    };
+    return { state: { step: current.step, draft }, outcome, changed: false };
   }
 
   const outcome = nextOutcome(draft);
-  return {
-    state: { step: stepForOutcome(outcome, current.step), draft },
-    outcome,
-    changed,
-  };
+  return { state: { step: stepForOutcome(outcome, current.step), draft }, outcome, changed };
 }
