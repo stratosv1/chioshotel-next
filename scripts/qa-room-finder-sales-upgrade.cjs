@@ -43,6 +43,7 @@ const fallbackPath = path.join(root, "lib/ai-assistant/room-finder-fallback.ts")
 const salesPath = path.join(root, "components/ai/room-finder-sales-intelligence.ts");
 const offerPlanPath = path.join(root, "components/ai/room-finder-offer-plan.ts");
 const hookPath = path.join(root, "components/ai/use-room-finder.ts");
+const productionPath = path.join(root, "components/ai/RoomFinderProduction.tsx");
 const carouselPath = path.join(root, "components/ai/room-finder-carousel.tsx");
 const intentPath = path.join(root, "lib/ai-assistant/room-finder-intent.ts");
 const alternativesPath = path.join(root, "app/api/ai-room-finder/alternatives/route.ts");
@@ -116,6 +117,10 @@ assert(hookSource.includes("languageRef.current !== language"), "language-change
 assert(hookSource.includes("INVENTORY_UNAVAILABLE[language]"), "technical inventory failure is not separated from no-availability copy");
 assert(hookSource.includes("answerRoomQuestion"), "room-feature Q&A is not wired into production hook");
 
+const productionSource = fs.readFileSync(productionPath, "utf8");
+assert(productionSource.includes('if (finder.typing || finder.step === "searching") return;'), "language changes are not guarded while an active Room Finder turn is running");
+assert(productionSource.includes('disabled={finder.typing || finder.step === "searching"}'), "language selector is not disabled during active Room Finder turns");
+
 const carouselSource = fs.readFileSync(carouselPath, "utf8");
 assert(carouselSource.includes("Recommended for you"), "recommended-room sales badge is missing");
 assert(carouselSource.includes("Nearby available dates"), "nearby-date card label is missing");
@@ -136,4 +141,4 @@ assert(!toneSource.includes("ούτε κοντινή αυτόματη εναλλ
 const catalogSource = fs.readFileSync(catalogPath, "utf8");
 assert(catalogSource.includes('roomNumber: 6') && catalogSource.includes('Garden access'), "canonical room catalog no longer supports the room 6 garden trait QA assumption");
 
-console.log("Room Finder sales upgrade QA passed: rescue safety, factual no-availability, preserved state, soft recommendations, room Q&A and nearby-date fallback are wired safely.");
+console.log("Room Finder sales upgrade QA passed: rescue safety, factual no-availability, preserved state, guarded language changes, soft recommendations, room Q&A and nearby-date fallback are wired safely.");
