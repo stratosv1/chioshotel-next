@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
     }
 
     const nights = daysBetweenIsoDates(checkin, checkout);
-    if (!Number.isInteger(nights) || nights < 1 || nights > 30) {
+    if (!Number.isInteger(nights) || nights < 1 || nights > 60) {
       return NextResponse.json(
         { success: false, code: "INVALID_STAY", message: "Unsupported stay length." },
         { status: 400, headers: { "Cache-Control": "no-store" } },
@@ -66,10 +66,23 @@ export async function GET(request: NextRequest) {
       }))
       .filter(candidate => candidate.checkin && candidate.checkout && candidate.checkin >= today);
 
-    const checked = await Promise.all(candidates.map(async candidate => {
+    const alternatives: Array<{
+      checkin: string;
+      checkout: string;
+      shiftDays: number;
+      offers: any[];
+    }> = [];
+    let unverifiedWindows = 0;
+
+    // Check nearest windows first and stop once enough useful periods are found.
+    // This avoids the previous 6-way parallel fan-out against Neon on every fallback request.
+    for (const candidate of candidates) {
       const statusRows = await sql`select * from booking_core.inventory_status(${candidate.checkin}::date, ${candidate.checkout}::date)`;
       const status = String((statusRows[0] as any)?.status || "DATA_UNAVAILABLE");
-      if (status !== "READY") return { ...candidate, status, offers: [] as any[] };
+      if (status !== "READY") {
+        unverifiedWindows += 1;
+        continue;
+      }
 
       const rows = await sql`select * from booking_core.search_availability(${candidate.checkin}::date, ${candidate.checkout}::date, ${guests})`;
       const offers = (rows as any[])
@@ -93,19 +106,28 @@ export async function GET(request: NextRequest) {
         .sort((left: any, right: any) => Number(left.directTotal) - Number(right.directTotal))
         .slice(0, MAX_OFFERS_PER_WINDOW);
 
-      return { ...candidate, status, offers };
-    }));
+      if (offers.length > 0) {
+        alternatives.push({
+          checkin: candidate.checkin,
+          checkout: candidate.checkout,
+          shiftDays: candidate.shift,
+          offers,
+        });
+      }
 
-    const alternatives = checked
-      .filter(candidate => candidate.status === "READY" && candidate.offers.length > 0)
-      .sort((left, right) => Math.abs(left.shift) - Math.abs(right.shift) || left.shift - right.shift)
-      .slice(0, MAX_WINDOWS)
-      .map(candidate => ({
-        checkin: candidate.checkin,
-        checkout: candidate.checkout,
-        shiftDays: candidate.shift,
-        offers: candidate.offers,
-      }));
+      if (alternatives.length >= MAX_WINDOWS) break;
+    }
+
+    if (alternatives.length === 0 && unverifiedWindows > 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          code: "ALTERNATIVES_DATA_UNAVAILABLE",
+          message: "Nearby dates could not all be verified from live inventory.",
+        },
+        { status: 503, headers: { "Cache-Control": "no-store" } },
+      );
+    }
 
     return NextResponse.json(
       { success: true, requested: { checkin, checkout, guests }, language, alternatives },
