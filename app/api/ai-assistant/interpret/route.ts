@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { neon } from "@neondatabase/serverless";
 import { NextRequest, NextResponse } from "next/server";
+import { fallbackRoomFinderCommand } from "@/lib/ai-assistant/room-finder-fallback";
 import { interpretRoomFinderMessage } from "@/lib/ai-assistant/room-finder-intent";
 import type { RoomFinderConversationContext } from "@/lib/ai-assistant/room-finder-types";
 
@@ -114,6 +115,18 @@ function sanitizeContext(value: unknown): RoomFinderConversationContext {
         }))
     : undefined;
 
+  const preferences = Array.isArray(raw.preferences)
+    ? raw.preferences.filter(value => [
+        "ground_floor",
+        "no_stairs",
+        "kitchen",
+        "balcony",
+        "garden",
+        "budget",
+        "family",
+      ].includes(String(value)))
+    : undefined;
+
   return {
     checkin: raw.checkin,
     checkout: raw.checkout,
@@ -123,6 +136,7 @@ function sanitizeContext(value: unknown): RoomFinderConversationContext {
     currentRoom: raw.currentRoom,
     currentStep: raw.currentStep,
     language: raw.language,
+    preferences,
     recentMessages,
   };
 }
@@ -134,6 +148,10 @@ function noStoreJson(body: unknown, init?: ResponseInit) {
 }
 
 export async function POST(request: NextRequest) {
+  let message = "";
+  let context: RoomFinderConversationContext = {};
+  let interpreterStarted = false;
+
   try {
     if (!isAllowedBrowserOrigin(request)) {
       return noStoreJson({ error: "Forbidden origin.", code: "FORBIDDEN_ORIGIN" }, { status: 403 });
@@ -145,8 +163,8 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const message = typeof body?.message === "string" ? body.message.trim() : "";
-    const context = sanitizeContext(body?.context);
+    message = typeof body?.message === "string" ? body.message.trim() : "";
+    context = sanitizeContext(body?.context);
 
     if (!message) {
       return noStoreJson({ error: "Message is required.", code: "MESSAGE_REQUIRED" }, { status: 400 });
@@ -166,10 +184,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    interpreterStarted = true;
     const command = await interpretRoomFinderMessage(message, context);
-    return noStoreJson({ ok: true, command });
+    return noStoreJson({ ok: true, command, fallback: false });
   } catch (error) {
     console.error("AI Room Finder intent endpoint error", error);
+
+    if (interpreterStarted) {
+      const command = fallbackRoomFinderCommand(message, context);
+      if (command) {
+        console.warn("AI Room Finder deterministic interpreter rescue used");
+        return noStoreJson({ ok: true, command, fallback: true });
+      }
+    }
+
     const timeout = isAbortError(error);
     return noStoreJson(
       {
