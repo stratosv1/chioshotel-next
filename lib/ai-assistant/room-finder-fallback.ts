@@ -16,6 +16,7 @@ const GUEST_WORDS = /(άτομα|ατομα|επισκέπτες|επισκεπ�
 const RESTART_WORDS = /(από την αρχή|απο την αρχη|νέα αναζήτηση|νεα αναζητηση|start over|new search|restart|neu beginnen|nouvelle recherche|ricomincia|nueva búsqueda|yeniden başla|yeni arama)/iu;
 const CHECKIN_WORDS = /(check\s*-?\s*in|άφιξ|αφιξ|arrival|ankunft|arrivée|arrivo|llegada|giriş)/iu;
 const CHECKOUT_WORDS = /(check\s*-?\s*out|αναχώρ|αναχωρ|departure|abreise|départ|partenza|salida|çıkış)/iu;
+const PREFERENCE_REMOVAL_WORDS = /(δεν\s+(?:με\s+)?νοιάζ|δεν\s+θέλω\s+πια|όχι\s+πια|χωρίς\s+προτίμηση|don['’]?t\s+care|do\s+not\s+care|no\s+longer|don['’]?t\s+want|do\s+not\s+want|nicht\s+mehr|nicht\s+wichtig|peu\s+importe|ne\s+veux\s+plus|non\s+importa|non\s+voglio\s+più|ya\s+no|no\s+me\s+importa|no\s+quiero|artık\s+önemli\s+değil|istemiyorum)/iu;
 
 const PREFERENCE_PATTERNS: Array<[RoomFinderPreference, RegExp]> = [
   ["no_stairs", /(χωρίς σκάλ|χωρις σκαλ|no stairs|without stairs|keine treppen|sans escalier|senza scale|sin escaleras|merdivensiz)/iu],
@@ -64,6 +65,7 @@ function numberBeforeWords(text: string, words: RegExp, max: number) {
 }
 
 function preferencesFromText(text: string) {
+  if (PREFERENCE_REMOVAL_WORDS.test(text)) return [];
   return PREFERENCE_PATTERNS
     .filter(([, pattern]) => pattern.test(text))
     .map(([preference]) => preference);
@@ -92,7 +94,9 @@ export function fallbackRoomFinderCommand(
   }
 
   const today = todayInAthensIso();
-  const dates = extractDates(text, today);
+  const parsedDates = extractDates(text, today);
+  // A rescue parser must never reinterpret a partly past range as a different future stay.
+  const dates = parsedDates.some(date => date.value < today) ? [] : parsedDates;
   const actions: RoomFinderAction[] = [];
 
   if (dates.length >= 2) {
