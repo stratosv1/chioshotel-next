@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect } from "react";
 import { ROOM_FINDER_COPY, type RoomFinderLanguage } from "./room-finder-copy";
+import { relocalizeRoomFinderMessageToLanguage } from "./room-finder-message-localization";
 
 export type Reaction = "👍" | "❤️";
 export type MessageKind = "date" | "room" | "guest" | "normal";
@@ -54,13 +55,17 @@ export function resetRoomFinderTrackingSession() {
 }
 
 function roomFinderLanguage(): RoomFinderLanguage {
-  if (typeof document === "undefined") return "en";
+  if (typeof window === "undefined") return "en";
+  const supported: RoomFinderLanguage[] = ["el", "en", "de", "fr", "it", "es", "tr"];
+  const queryLanguage = new URLSearchParams(window.location.search)
+    .get("lang")
+    ?.toLowerCase()
+    .split("-")[0];
   const documentLanguage = document.documentElement.lang?.toLowerCase().split("-")[0];
   const pathLanguage = window.location.pathname.split("/").filter(Boolean)[0]?.toLowerCase();
-  const supported: RoomFinderLanguage[] = ["el", "en", "de", "fr", "it", "es", "tr"];
-  if (supported.includes(documentLanguage as RoomFinderLanguage)) return documentLanguage as RoomFinderLanguage;
-  if (supported.includes(pathLanguage as RoomFinderLanguage)) return pathLanguage as RoomFinderLanguage;
-  return "en";
+  const candidate = [queryLanguage, documentLanguage, pathLanguage]
+    .find(value => supported.includes(value as RoomFinderLanguage));
+  return candidate as RoomFinderLanguage || "en";
 }
 
 function welcomeLanguage(content: string): RoomFinderLanguage | null {
@@ -127,16 +132,18 @@ export function ChatMessage({ message }:{ message:ChatItem }) {
     trackRoomFinderMessage(message);
   }, [message.id, message.reaction]);
 
-  const icon = message.kind === "room" ? "🛏️ " : message.kind === "guest" ? "👤 " : "";
-  const content = message.content.replaceAll("📅", "").trim();
-  const welcomeLang = welcomeLanguage(message.content);
+  const displayLanguage = roomFinderLanguage();
+  const displayMessage = relocalizeRoomFinderMessageToLanguage(message, displayLanguage);
+  const icon = displayMessage.kind === "room" ? "🛏️ " : displayMessage.kind === "guest" ? "👤 " : "";
+  const content = displayMessage.content.replaceAll("📅", "").trim();
+  const welcomeLang = welcomeLanguage(displayMessage.content);
 
-  return <div className={`msg flex items-end gap-2 ${message.role === "user" ? "justify-end" : "justify-start"}`}>
-    {message.role === "assistant" && <div className="relative mb-1 h-8 w-8 shrink-0 overflow-hidden rounded-full ring-1 ring-[#d7cdc0]"><Image src="/images/welcome/voulamandis-welcome-hero.webp" alt="" fill sizes="32px" className="object-cover"/></div>}
-    <div className={`relative max-w-[84%] ${message.role === "user" ? "pb-2" : ""}`}>
-      <div className={`whitespace-pre-line px-4 py-3 text-[15px] leading-6 shadow-sm ${message.role === "user" ? "rounded-[20px] rounded-br-[6px] bg-[#6b604f] text-white" : "rounded-[20px] rounded-bl-[6px] border border-[#dfd6ca] bg-white"}`}>{message.role === "user" ? icon : ""}{content}</div>
+  return <div className={`msg flex items-end gap-2 ${displayMessage.role === "user" ? "justify-end" : "justify-start"}`}>
+    {displayMessage.role === "assistant" && <div className="relative mb-1 h-8 w-8 shrink-0 overflow-hidden rounded-full ring-1 ring-[#d7cdc0]"><Image src="/images/welcome/voulamandis-welcome-hero.webp" alt="" fill sizes="32px" className="object-cover"/></div>}
+    <div className={`relative max-w-[84%] ${displayMessage.role === "user" ? "pb-2" : ""}`}>
+      <div className={`whitespace-pre-line px-4 py-3 text-[15px] leading-6 shadow-sm ${displayMessage.role === "user" ? "rounded-[20px] rounded-br-[6px] bg-[#6b604f] text-white" : "rounded-[20px] rounded-bl-[6px] border border-[#dfd6ca] bg-white"}`}>{displayMessage.role === "user" ? icon : ""}{content}</div>
       {welcomeLang && <p className="mt-2 px-1 text-[11px] leading-4 text-[#746b60]">{CHAT_STORAGE_NOTICE[welcomeLang]}</p>}
-      {message.role === "user" && message.reaction && <span className="reaction absolute -bottom-1 right-1 flex h-7 min-w-7 items-center justify-center rounded-full border border-[#ddd4c8] bg-white px-1.5 text-sm shadow-sm">{message.reaction}</span>}
+      {displayMessage.role === "user" && displayMessage.reaction && <span className="reaction absolute -bottom-1 right-1 flex h-7 min-w-7 items-center justify-center rounded-full border border-[#ddd4c8] bg-white px-1.5 text-sm shadow-sm">{displayMessage.reaction}</span>}
     </div>
   </div>;
 }
