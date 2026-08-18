@@ -8,6 +8,24 @@ export type Reaction = "👍" | "❤️";
 export type MessageKind = "date" | "room" | "guest" | "normal";
 export type ChatItem = { id:string; role:"assistant"|"user"; content:string; kind?:MessageKind; reaction?:Reaction };
 
+export type RoomFinderClientSnapshot = {
+  language: RoomFinderLanguage;
+  step: string;
+  checkin: string;
+  checkout: string;
+  roomCount: number | null;
+  guestTotal: number | null;
+  groups: number[];
+  selectedRooms: Array<{
+    group: number;
+    guests: number;
+    roomNumber: number | string;
+    name: string;
+    directTotal: number;
+  }>;
+  breakfast: boolean;
+};
+
 const CHAT_STORAGE_NOTICE: Record<RoomFinderLanguage, string> = {
   el: "Η συνομιλία αποθηκεύεται και μπορεί να τη δει το προσωπικό του Voulamandis House για τη διαχείριση και απάντηση στο αίτημά σας.",
   en: "This conversation is stored and may be viewed by Voulamandis House staff to manage and respond to your request.",
@@ -30,6 +48,11 @@ function getRoomFinderSessionId() {
   return roomFinderSessionId;
 }
 
+export function resetRoomFinderTrackingSession() {
+  roomFinderSessionId = "";
+  roomFinderHasUserMessage = false;
+}
+
 function roomFinderLanguage(): RoomFinderLanguage {
   if (typeof document === "undefined") return "en";
   const documentLanguage = document.documentElement.lang?.toLowerCase().split("-")[0];
@@ -45,16 +68,35 @@ function welcomeLanguage(content: string): RoomFinderLanguage | null {
   return match ? match[0] as RoomFinderLanguage : null;
 }
 
+function postRoomFinderTracking(payload: Record<string, unknown>) {
+  if (typeof window === "undefined") return;
+  const body = JSON.stringify({
+    sessionId: getRoomFinderSessionId(),
+    sourcePath: window.location.pathname,
+    ...payload,
+  });
+
+  const send = () => fetch("/api/ai-assistant/conversation", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body,
+    credentials: "same-origin",
+    keepalive: true,
+  });
+
+  void send().catch(() => {
+    window.setTimeout(() => void send().catch(() => undefined), 1200);
+  });
+}
+
 function trackRoomFinderMessage(message: ChatItem) {
   if (typeof window === "undefined") return;
 
   if (message.role === "user") roomFinderHasUserMessage = true;
   if (message.role === "assistant" && !roomFinderHasUserMessage) return;
 
-  const payload = JSON.stringify({
-    sessionId: getRoomFinderSessionId(),
+  postRoomFinderTracking({
     language: roomFinderLanguage(),
-    sourcePath: window.location.pathname,
     messages: [{
       id: message.id,
       role: message.role,
@@ -63,16 +105,20 @@ function trackRoomFinderMessage(message: ChatItem) {
       reaction: message.reaction,
     }],
   });
+}
 
-  const send = () => fetch("/api/ai-assistant/conversation", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: payload,
-    keepalive: true,
-  });
-
-  void send().catch(() => {
-    window.setTimeout(() => void send().catch(() => undefined), 1200);
+export function trackRoomFinderSnapshot(snapshot: RoomFinderClientSnapshot) {
+  if (typeof window === "undefined" || !roomFinderHasUserMessage) return;
+  postRoomFinderTracking({
+    language: snapshot.language,
+    step: snapshot.step,
+    checkin: snapshot.checkin,
+    checkout: snapshot.checkout,
+    roomCount: snapshot.roomCount,
+    guestTotal: snapshot.guestTotal,
+    groups: snapshot.groups,
+    selectedRooms: snapshot.selectedRooms,
+    breakfast: snapshot.breakfast,
   });
 }
 
