@@ -1,9 +1,17 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import { markRoomFinderEnquirySent } from "@/lib/ai-assistant/conversation-store";
+import {
+  checkPublicAiRateLimit,
+  clientIp,
+  isAllowedAiBrowserOrigin,
+  requestBodyTooLarge,
+} from "@/lib/ai-assistant/public-api-guard";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+
+const MAX_BODY_BYTES = 24_000;
 
 type SummaryEmailBody = {
   subject?: string;
@@ -52,9 +60,38 @@ function readCookie(request: Request, name: string) {
   return "";
 }
 
-export async function POST(request: Request) {
+function noStoreJson(body: unknown, init?: ResponseInit) {
+  const headers = new Headers(init?.headers);
+  headers.set("Cache-Control", "no-store");
+  headers.set("X-Robots-Tag", "noindex, nofollow");
+  return NextResponse.json(body, { ...init, headers });
+}
+
+export async function POST(request: NextRequest) {
   try {
+    if (!isAllowedAiBrowserOrigin(request)) {
+      return noStoreJson({ ok: false, code: "FORBIDDEN_ORIGIN" }, { status: 403 });
+    }
+    if (requestBodyTooLarge(request, MAX_BODY_BYTES)) {
+      return noStoreJson({ ok: false, code: "REQUEST_TOO_LARGE" }, { status: 413 });
+    }
+
+    const rate = await checkPublicAiRateLimit("room-finder-summary-email", clientIp(request), {
+      minute: 5,
+      hour: 20,
+    });
+    if (rate.limited) {
+      return noStoreJson(
+        { ok: false, code: "RATE_LIMITED" },
+        { status: 429, headers: { "Retry-After": String(rate.retryAfterSeconds) } },
+      );
+    }
+
     const body = (await request.json()) as SummaryEmailBody;
+    if (Buffer.byteLength(JSON.stringify(body), "utf8") > MAX_BODY_BYTES) {
+      return noStoreJson({ ok: false, code: "REQUEST_TOO_LARGE" }, { status: 413 });
+    }
+
     const subject = clean(body.subject, 180) || "Αίτημα διαμονής από AI Room Finder";
     const message = clean(body.message, 6000);
     const source = clean(body.source, 40);
@@ -64,7 +101,7 @@ export async function POST(request: Request) {
     const guestEmail = clean(body.guest?.email, 254);
 
     if (!message) {
-      return NextResponse.json({ ok: false, error: "Missing enquiry summary." }, { status: 400 });
+      return noStoreJson({ ok: false, error: "Missing enquiry summary." }, { status: 400 });
     }
 
     const smtpHost = process.env.SMTP_HOST || "smtp.gmail.com";
@@ -75,7 +112,7 @@ export async function POST(request: Request) {
     const receptionEmail = process.env.CONTACT_TO || "chioshotel@gmail.com";
 
     if (!smtpUser || !smtpPass || !smtpFrom || !receptionEmail) {
-      return NextResponse.json(
+      return noStoreJson(
         { ok: false, error: "Email service is not configured." },
         { status: 500 },
       );
@@ -120,7 +157,7 @@ export async function POST(request: Request) {
         response: info.response,
         messageId: info.messageId,
       });
-      return NextResponse.json(
+      return noStoreJson(
         { ok: false, error: "The email server did not accept the reception address." },
         { status: 502 },
       );
@@ -137,14 +174,14 @@ export async function POST(request: Request) {
       }
     }
 
-    return NextResponse.json({
+    return noStoreJson({
       ok: true,
       emailSent: true,
       messageId: info.messageId,
     });
   } catch (error) {
     console.error("AI summary email error:", error);
-    return NextResponse.json(
+    return noStoreJson(
       { ok: false, error: "Could not send enquiry email." },
       { status: 500 },
     );
