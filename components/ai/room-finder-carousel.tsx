@@ -4,7 +4,28 @@ import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { RoomFinderCopy, RoomFinderLanguage } from "./room-finder-copy";
 
-export type RoomOffer = { roomId:string; unitId:string; roomNumber:number; name:string; category:string; floor:string; maxGuests:number; features:string[]; image:string; gallery?:string[]; detailsUrl?:string; nights:number; originalTotal:number; directTotal:number; saving:number; breakfastTotalIfAdded?:number };
+export type RoomOffer = {
+  roomId:string;
+  unitId:string;
+  roomNumber:number;
+  name:string;
+  category:string;
+  floor:string;
+  maxGuests:number;
+  features:string[];
+  image:string;
+  gallery?:string[];
+  detailsUrl?:string;
+  nights:number;
+  originalTotal:number;
+  directTotal:number;
+  saving:number;
+  breakfastTotalIfAdded?:number;
+  recommended?:boolean;
+  alternativeCheckin?:string;
+  alternativeCheckout?:string;
+  alternativeShiftDays?:number;
+};
 
 const SELECTING_LABEL: Record<RoomFinderLanguage,string> = {
   el:"Επιλέγεται…",
@@ -35,6 +56,34 @@ const NEXT_LABEL: Record<RoomFinderLanguage,string> = {
   es:"Habitación siguiente",
   tr:"Sonraki oda",
 };
+
+const RECOMMENDED_LABEL: Record<RoomFinderLanguage,string> = {
+  el:"Προτεινόμενο για εσάς",
+  en:"Recommended for you",
+  de:"Für Sie empfohlen",
+  fr:"Recommandé pour vous",
+  it:"Consigliato per voi",
+  es:"Recomendado para ustedes",
+  tr:"Size önerilen",
+};
+
+const ALTERNATIVE_LABEL: Record<RoomFinderLanguage,string> = {
+  el:"Κοντινές διαθέσιμες ημερομηνίες",
+  en:"Nearby available dates",
+  de:"Nahe verfügbare Reisedaten",
+  fr:"Dates disponibles proches",
+  it:"Date disponibili vicine",
+  es:"Fechas disponibles cercanas",
+  tr:"Yakın müsait tarihler",
+};
+
+function shortDate(value:string,language:RoomFinderLanguage) {
+  const locale = { el:"el-GR", en:"en-GB", de:"de-DE", fr:"fr-FR", it:"it-IT", es:"es-ES", tr:"tr-TR" }[language];
+  const [year,month,day] = value.split("-").map(Number);
+  if (!year || !month || !day) return value;
+  return new Intl.DateTimeFormat(locale,{ day:"2-digit", month:"short", timeZone:"UTC" })
+    .format(new Date(Date.UTC(year,month-1,day)));
+}
 
 export function RoomCarousel({ offers, copy, language, money, onDetails, onSelect, selectingOfferKey }:{ offers:RoomOffer[]; copy:RoomFinderCopy; language:RoomFinderLanguage; money:(v:number,l:RoomFinderLanguage)=>string; onDetails:(offer:RoomOffer)=>void; onSelect:(offer:RoomOffer)=>void; selectingOfferKey?:string|null }) {
   const scrollerRef = useRef<HTMLDivElement>(null);
@@ -72,14 +121,18 @@ export function RoomCarousel({ offers, copy, language, money, onDetails, onSelec
   return <section className="msg relative -mx-3 sm:mx-0 sm:ml-10">
     <div ref={scrollerRef} className="hide-scroll flex snap-x snap-mandatory gap-3 overflow-x-auto px-3 pb-2 sm:px-10">
       {offers.map((offer,index) => {
-        const key=`${offer.roomId}:${offer.unitId}`;
+        const key=`${offer.roomId}:${offer.unitId}:${offer.alternativeCheckin||""}`;
         const pending=selectingOfferKey===key;
         return <article data-room-card key={key} className="min-w-[88%] snap-center overflow-hidden rounded-[24px] border border-[#dcd2c5] bg-white shadow-[0_14px_38px_rgba(70,55,35,.10)] sm:min-w-[68%]">
           <div className="relative h-44 sm:h-56">
             <Image src={offer.image} alt={offer.name} fill sizes="88vw" className="object-cover"/>
+            {offer.recommended && <span className="absolute left-3 top-3 rounded-full bg-[#66714f]/95 px-3 py-1.5 text-[11px] font-black text-white shadow-sm">★ {RECOMMENDED_LABEL[language]}</span>}
             <span className="absolute right-3 top-3 rounded-full bg-white/90 px-2.5 py-1 text-xs font-bold">{index+1}/{offers.length}</span>
           </div>
           <div className="p-3.5">
+            {offer.alternativeCheckin && offer.alternativeCheckout && <div className="mb-3 rounded-2xl border border-[#e1d3bd] bg-[#fbf4e8] px-3 py-2 text-xs font-bold text-[#765d3b]">
+              {ALTERNATIVE_LABEL[language]} · {shortDate(offer.alternativeCheckin,language)}–{shortDate(offer.alternativeCheckout,language)}
+            </div>}
             <div className="flex justify-between gap-3">
               <div><h2 className="text-[1.35rem] font-bold">{offer.name}</h2><p className="text-sm text-[#746b60]">{offer.category} · {offer.floor}</p></div>
               <div className="text-right">{offer.originalTotal > offer.directTotal && <p className="text-xs text-[#b05252] line-through">{money(offer.originalTotal,language)}</p>}<p className="text-xl font-black text-[#5f7448]">{money(offer.directTotal,language)}</p></div>
