@@ -120,6 +120,7 @@ function sessionId(value: unknown) {
 }
 
 function safeNumber(value: unknown) {
+  if (value === null || value === undefined || value === "") return null;
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : null;
 }
@@ -132,6 +133,27 @@ function toIso(value: unknown) {
 
 function safeJsonArray<T>(value: unknown): T[] {
   return Array.isArray(value) ? (value as T[]) : [];
+}
+
+function hasOwn(input: object, key: string) {
+  return Object.prototype.hasOwnProperty.call(input, key);
+}
+
+function safeSelectedRooms(value: unknown) {
+  return safeJsonArray<Record<string, unknown>>(value)
+    .slice(0, 3)
+    .map((room) => {
+      const group = safeNumber(room.group);
+      const guests = safeNumber(room.guests);
+      const directTotal = safeNumber(room.directTotal);
+      return {
+        group: group && Number.isInteger(group) && group >= 1 && group <= 3 ? group : undefined,
+        guests: guests && Number.isInteger(guests) && guests >= 1 && guests <= 5 ? guests : undefined,
+        roomNumber: text(room.roomNumber, 40),
+        name: text(room.name, 180),
+        directTotal: directTotal != null ? Math.round(directTotal * 100) / 100 : undefined,
+      };
+    });
 }
 
 function mapConversation(row: Record<string, unknown>): RoomFinderInboxConversation {
@@ -212,6 +234,16 @@ export async function recordRoomFinderConversation(input: RoomFinderTrackingSnap
   const sid = sessionId(input.sessionId);
   const language = text(input.language, 10).toLowerCase() || "en";
   const sourcePath = text(input.sourcePath, 300);
+
+  const hasStep = hasOwn(input, "step");
+  const hasCheckin = hasOwn(input, "checkin");
+  const hasCheckout = hasOwn(input, "checkout");
+  const hasRoomCount = hasOwn(input, "roomCount");
+  const hasGuestTotal = hasOwn(input, "guestTotal");
+  const hasGroups = Array.isArray(input.groups);
+  const hasSelectedRooms = Array.isArray(input.selectedRooms);
+  const hasBreakfast = typeof input.breakfast === "boolean";
+
   const step = text(input.step, 60);
   const checkin = nullableDate(input.checkin);
   const checkout = nullableDate(input.checkout);
@@ -219,10 +251,10 @@ export async function recordRoomFinderConversation(input: RoomFinderTrackingSnap
   const guestTotal = safeNumber(input.guestTotal);
   const groups = safeJsonArray<number>(input.groups)
     .map((value) => Number(value))
-    .filter((value) => Number.isInteger(value) && value > 0 && value <= 20)
-    .slice(0, 10);
-  const selectedRooms = safeJsonArray<Record<string, unknown>>(input.selectedRooms).slice(0, 10);
-  const breakfast = Boolean(input.breakfast);
+    .filter((value) => Number.isInteger(value) && value >= 1 && value <= 5)
+    .slice(0, 3);
+  const selectedRooms = safeSelectedRooms(input.selectedRooms);
+  const breakfast = hasBreakfast ? Boolean(input.breakfast) : false;
   const messages = safeJsonArray<RoomFinderTrackedMessage>(input.messages)
     .filter((message) => message && (message.role === "assistant" || message.role === "user"))
     .map((message) => ({
@@ -274,14 +306,14 @@ export async function recordRoomFinderConversation(input: RoomFinderTrackingSnap
     on conflict (session_id) do update set
       language = excluded.language,
       source_path = coalesce(excluded.source_path, ai_room_finder_conversations.source_path),
-      current_step = coalesce(excluded.current_step, ai_room_finder_conversations.current_step),
-      checkin = coalesce(excluded.checkin, ai_room_finder_conversations.checkin),
-      checkout = coalesce(excluded.checkout, ai_room_finder_conversations.checkout),
-      room_count = coalesce(excluded.room_count, ai_room_finder_conversations.room_count),
-      guest_total = coalesce(excluded.guest_total, ai_room_finder_conversations.guest_total),
-      guest_groups = case when jsonb_array_length(excluded.guest_groups) > 0 then excluded.guest_groups else ai_room_finder_conversations.guest_groups end,
-      selected_rooms = case when jsonb_array_length(excluded.selected_rooms) > 0 then excluded.selected_rooms else ai_room_finder_conversations.selected_rooms end,
-      breakfast = excluded.breakfast,
+      current_step = case when ${hasStep} then excluded.current_step else ai_room_finder_conversations.current_step end,
+      checkin = case when ${hasCheckin} then excluded.checkin else ai_room_finder_conversations.checkin end,
+      checkout = case when ${hasCheckout} then excluded.checkout else ai_room_finder_conversations.checkout end,
+      room_count = case when ${hasRoomCount} then excluded.room_count else ai_room_finder_conversations.room_count end,
+      guest_total = case when ${hasGuestTotal} then excluded.guest_total else ai_room_finder_conversations.guest_total end,
+      guest_groups = case when ${hasGroups} then excluded.guest_groups else ai_room_finder_conversations.guest_groups end,
+      selected_rooms = case when ${hasSelectedRooms} then excluded.selected_rooms else ai_room_finder_conversations.selected_rooms end,
+      breakfast = case when ${hasBreakfast} then excluded.breakfast else ai_room_finder_conversations.breakfast end,
       first_user_message_at = case
         when ${userMessages.length > 0} then coalesce(ai_room_finder_conversations.first_user_message_at, now())
         else ai_room_finder_conversations.first_user_message_at
