@@ -24,7 +24,7 @@ export const ROOM_FINDER_TONE: Record<RoomFinderLanguage, RoomFinderTone> = {
     finalizing: "Ετοιμάζω τη σύνοψη της αίτησής σας.",
     invalidDate: "Πότε θα θέλατε να κάνετε check-in;",
     invalidCheckout: "Το check-out πρέπει να είναι μετά το check-in. Ποια ημερομηνία θέλετε για αναχώρηση;",
-    unavailable: "Έλεγξα τη live διαθεσιμότητα και δεν βρήκα διαθέσιμο δωμάτιο για αυτά τα στοιχεία, ούτε κοντινή αυτόματη εναλλακτική. Η Reception μπορεί να ελέγξει επιπλέον λύσεις μέσω WhatsApp.",
+    unavailable: "Έλεγξα τη live διαθεσιμότητα και δεν βρήκα διαθέσιμη λύση για τα ακριβή στοιχεία της αναζήτησής σας. Η Reception μπορεί να ελέγξει επιπλέον επιλογές μέσω WhatsApp.",
   },
   en: {
     checkout: "What date would you like to check out?",
@@ -36,7 +36,7 @@ export const ROOM_FINDER_TONE: Record<RoomFinderLanguage, RoomFinderTone> = {
     finalizing: "I’m preparing your request summary.",
     invalidDate: "When would you like to check in?",
     invalidCheckout: "Check-out must be after check-in. What departure date would you like?",
-    unavailable: "I checked live availability and found no room for these details, and no nearby automatic alternative. Reception can check additional options with you on WhatsApp.",
+    unavailable: "I checked live availability and found no available solution for the exact details of your search. Reception can check additional options with you on WhatsApp.",
   },
   de: {
     checkout: "An welchem Datum möchten Sie auschecken?",
@@ -48,7 +48,7 @@ export const ROOM_FINDER_TONE: Record<RoomFinderLanguage, RoomFinderTone> = {
     finalizing: "Ich bereite Ihre Anfrageübersicht vor.",
     invalidDate: "Wann möchten Sie einchecken?",
     invalidCheckout: "Der Check-out muss nach dem Check-in liegen. Welches Abreisedatum wünschen Sie?",
-    unavailable: "Ich habe die Live-Verfügbarkeit geprüft und für diese Angaben kein Zimmer sowie keine nahe automatische Alternative gefunden. Die Rezeption kann über WhatsApp weitere Möglichkeiten prüfen.",
+    unavailable: "Ich habe die Live-Verfügbarkeit geprüft und für die exakten Angaben Ihrer Suche keine verfügbare Lösung gefunden. Die Rezeption kann über WhatsApp weitere Möglichkeiten prüfen.",
   },
   fr: {
     checkout: "Quelle date souhaitez-vous pour le check-out ?",
@@ -60,7 +60,7 @@ export const ROOM_FINDER_TONE: Record<RoomFinderLanguage, RoomFinderTone> = {
     finalizing: "Je prépare le récapitulatif de votre demande.",
     invalidDate: "Quand souhaitez-vous faire le check-in ?",
     invalidCheckout: "Le check-out doit être après le check-in. Quelle date de départ souhaitez-vous ?",
-    unavailable: "J’ai vérifié les disponibilités en direct et n’ai trouvé aucune chambre pour ces critères, ni d’alternative automatique proche. La réception peut vérifier d’autres possibilités via WhatsApp.",
+    unavailable: "J’ai vérifié les disponibilités en direct et n’ai trouvé aucune solution disponible pour les critères exacts de votre recherche. La réception peut vérifier d’autres possibilités via WhatsApp.",
   },
   it: {
     checkout: "Quale data desiderate per il check-out?",
@@ -72,7 +72,7 @@ export const ROOM_FINDER_TONE: Record<RoomFinderLanguage, RoomFinderTone> = {
     finalizing: "Sto preparando il riepilogo della vostra richiesta.",
     invalidDate: "Quando desiderate effettuare il check-in?",
     invalidCheckout: "Il check-out deve essere successivo al check-in. Quale data di partenza desiderate?",
-    unavailable: "Ho verificato la disponibilità live e non ho trovato camere per questi dati né un’alternativa automatica vicina. La Reception può verificare altre possibilità tramite WhatsApp.",
+    unavailable: "Ho verificato la disponibilità live e non ho trovato una soluzione disponibile per i dati esatti della ricerca. La Reception può verificare altre possibilità tramite WhatsApp.",
   },
   es: {
     checkout: "¿Qué fecha desean para el check-out?",
@@ -84,7 +84,7 @@ export const ROOM_FINDER_TONE: Record<RoomFinderLanguage, RoomFinderTone> = {
     finalizing: "Estoy preparando el resumen de su solicitud.",
     invalidDate: "¿Cuándo desean hacer el check-in?",
     invalidCheckout: "El check-out debe ser posterior al check-in. ¿Qué fecha de salida desean?",
-    unavailable: "He comprobado la disponibilidad en vivo y no encontré habitación para estos datos ni una alternativa automática cercana. Recepción puede revisar otras opciones por WhatsApp.",
+    unavailable: "He comprobado la disponibilidad en vivo y no encontré una solución disponible para los datos exactos de la búsqueda. Recepción puede revisar otras opciones por WhatsApp.",
   },
   tr: {
     checkout: "Hangi tarihte çıkış yapmak istersiniz?",
@@ -96,6 +96,6 @@ export const ROOM_FINDER_TONE: Record<RoomFinderLanguage, RoomFinderTone> = {
     finalizing: "Talep özetinizi hazırlıyorum.",
     invalidDate: "Ne zaman giriş yapmak istersiniz?",
     invalidCheckout: "Çıkış tarihi giriş tarihinden sonra olmalıdır. Hangi tarihte ayrılmak istersiniz?",
-    unavailable: "Canlı müsaitliği kontrol ettim; bu bilgiler için oda veya yakın otomatik alternatif bulamadım. Resepsiyon WhatsApp üzerinden ek seçenekleri kontrol edebilir.",
+    unavailable: "Canlı müsaitliği kontrol ettim ve aramanızın tam bilgileri için müsait bir çözüm bulamadım. Resepsiyon WhatsApp üzerinden ek seçenekleri kontrol edebilir.",
   },
 };
