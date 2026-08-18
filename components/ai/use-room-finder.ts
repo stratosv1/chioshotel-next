@@ -2,7 +2,12 @@
 
 import { FormEvent, useMemo, useReducer, useRef, useState } from "react";
 import { localizeRoomOffer } from "@/lib/ai-assistant/room-card-catalog";
-import type { RoomFinderCommand, RoomFinderPreference } from "@/lib/ai-assistant/room-finder-types";
+import { fallbackRoomFinderCommand } from "@/lib/ai-assistant/room-finder-fallback";
+import type {
+  RoomFinderCommand,
+  RoomFinderConversationContext,
+  RoomFinderPreference,
+} from "@/lib/ai-assistant/room-finder-types";
 import type { RoomFinderLanguage } from "./room-finder-copy";
 import { ROOM_FINDER_COPY } from "./room-finder-copy";
 import { ROOM_FINDER_TONE } from "./room-finder-tone";
@@ -22,6 +27,7 @@ import {
   roomOfferKey,
 } from "./room-finder-offer-plan";
 import { rewindToAssistantPrompt } from "./room-finder-conversation-history";
+import { classifyNearbyPayload } from "./room-finder-nearby";
 import { answerRoomQuestion, roomPreferenceScore } from "./room-finder-sales-intelligence";
 import type { ChatItem, MessageKind, Reaction } from "./room-finder-chat-ui";
 import type { RoomOffer } from "./room-finder-carousel";
@@ -93,6 +99,11 @@ class AvailabilityError extends Error {
     this.name = "AvailabilityError";
   }
 }
+
+type NearbySearchResult =
+  | { status: "skipped"; offers: RoomOffer[] }
+  | { status: "ok"; offers: RoomOffer[] }
+  | { status: "unavailable"; offers: RoomOffer[]; code: string };
 
 export function useRoomFinder(language: RoomFinderLanguage) {
   const copy = ROOM_FINDER_COPY[language];
@@ -259,64 +270,45 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     add("assistant", tone.invalidDate);
   }
 
-  async function interpret(value: string, current: FinderStep): Promise<RoomFinderCommand> {
+  function conversationContext(current: FinderStep): RoomFinderConversationContext {
     const recentMessages = messages.slice(-8).map(({ role, content }) => ({ role, content }));
-    const requestBody = JSON.stringify({
-      message: value,
-      context: {
-        language,
-        currentStep: current,
-        checkin: checkin || undefined,
-        checkout: checkout || undefined,
-        totalGuests: totalGuests || undefined,
-        roomCount: roomCount || undefined,
-        guestGroups: groups,
-        currentRoom: current === "guests" ? nextMissingGuestRoom(draft) || undefined : undefined,
-        preferences,
-        recentMessages,
-      },
-    });
-
-    for (let attempt = 0; attempt < 2; attempt += 1) {
-      const controller = new AbortController();
-      const timeout = window.setTimeout(() => controller.abort(), 15_000);
-
-      try {
-        const response = await fetch("/api/ai-assistant/interpret", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          signal: controller.signal,
-          body: requestBody,
-        });
-        const data = await response.json().catch(() => null);
-        if (response.ok && data?.command) return data.command as RoomFinderCommand;
-
-        const code = String(data?.code || "AI_UNAVAILABLE");
-        const transient = response.status === 502
-          || response.status === 504
-          || code === "AI_TIMEOUT"
-          || code === "AI_UNAVAILABLE";
-        if (attempt === 0 && transient) {
-          await wait(250);
-          continue;
-        }
-        throw new Error(code);
-      } catch (error) {
-        if (attempt === 0 && error instanceof TypeError) {
-          await wait(250);
-          continue;
-        }
-        throw error;
-      } finally {
-        window.clearTimeout(timeout);
-      }
-    }
-
-    throw new Error("AI_UNAVAILABLE");
+    return {
+      language,
+      currentStep: current,
+      checkin: checkin || undefined,
+      checkout: checkout || undefined,
+      totalGuests: totalGuests || undefined,
+      roomCount: roomCount || undefined,
+      guestGroups: groups,
+      currentRoom: current === "guests" ? nextMissingGuestRoom(draft) || undefined : undefined,
+      preferences,
+      recentMessages,
+    };
   }
 
-  async function findNearbyOffers(searchDraft: BookingDraft) {
-    if (searchDraft.roomCount !== 1 || searchDraft.groups.length !== 1) return [] as RoomOffer[];
+  async function interpret(value: string, current: FinderStep): Promise<RoomFinderCommand> {
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 15_000);
+
+    try {
+      const response = await fetch("/api/ai-assistant/interpret", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        signal: controller.signal,
+        body: JSON.stringify({ message: value, context: conversationContext(current) }),
+      });
+      const data = await response.json().catch(() => null);
+      if (response.ok && data?.command) return data.command as RoomFinderCommand;
+      throw new Error(String(data?.code || "AI_UNAVAILABLE"));
+    } finally {
+      window.clearTimeout(timeout);
+    }
+  }
+
+  async function findNearbyOffers(searchDraft: BookingDraft): Promise<NearbySearchResult> {
+    if (searchDraft.roomCount !== 1 || searchDraft.groups.length !== 1) {
+      return { status: "skipped", offers: [] };
+    }
 
     const query = new URLSearchParams({
       checkin: searchDraft.checkin,
@@ -328,18 +320,24 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     try {
       const response = await fetch(`/api/ai-room-finder/alternatives?${query}`, { cache: "no-store" });
       const payload = await response.json().catch(() => null);
-      if (!response.ok || !payload?.success || !Array.isArray(payload.alternatives)) return [];
+      const classified = classifyNearbyPayload(response.ok, payload);
+      if (classified.status === "unavailable") {
+        return { status: "unavailable", offers: [], code: classified.code };
+      }
 
-      return payload.alternatives.flatMap((alternative: any) =>
-        (Array.isArray(alternative?.offers) ? alternative.offers : []).map((offer: RoomOffer) => ({
+      const nearbyOffers = classified.alternatives.flatMap(alternative =>
+        (Array.isArray(alternative?.offers) ? alternative.offers : []).map((offer: any) => ({
           ...offer,
           alternativeCheckin: String(alternative.checkin || ""),
           alternativeCheckout: String(alternative.checkout || ""),
           alternativeShiftDays: Number(alternative.shiftDays || 0),
         })),
       ) as RoomOffer[];
-    } catch {
-      return [];
+
+      return { status: "ok", offers: nearbyOffers };
+    } catch (error) {
+      console.error("Room Finder nearby-date request failed", error);
+      return { status: "unavailable", offers: [], code: "ALTERNATIVES_NETWORK_ERROR" };
     }
   }
 
@@ -372,8 +370,18 @@ export function useRoomFinder(language: RoomFinderLanguage) {
 
       if (!hasDistinctOfferPlan(eligible)) {
         const nearby = await findNearbyOffers(searchDraft);
-        if (nearby.length) {
-          setOffers([nearby]);
+
+        if (nearby.status === "unavailable") {
+          console.error(`Room Finder nearby-date inventory unavailable: ${nearby.code}`);
+          setOffers([]);
+          setActiveGroup(0);
+          dispatchFlow({ type: "set_step", step: "unavailable" });
+          add("assistant", INVENTORY_UNAVAILABLE[language]);
+          return;
+        }
+
+        if (nearby.status === "ok" && nearby.offers.length) {
+          setOffers([nearby.offers]);
           setActiveGroup(0);
           dispatchFlow({ type: "set_step", step: "selecting" });
           add("assistant", NEARBY_ALTERNATIVES[language]);
@@ -461,7 +469,12 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     const current = step;
     setInput("");
 
-    const questionAnswer = ["selecting", "breakfast", "complete"].includes(current)
+    const deterministicProbe = fallbackRoomFinderCommand(value, conversationContext(current));
+    const hasDeterministicMutation = Boolean(
+      deterministicProbe?.actions.some(action => action.type !== "no_change"),
+    );
+    const questionAnswer = !hasDeterministicMutation
+      && ["selecting", "breakfast", "complete"].includes(current)
       ? answerRoomQuestion(value, language, [
           ...offers.flat(),
           ...choices.map(choice => choice.offer),
