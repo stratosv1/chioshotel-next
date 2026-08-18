@@ -1,10 +1,11 @@
 export type OfferIdentity = {
   roomId: string;
   unitId: string;
+  alternativeCheckin?: string;
 };
 
 export function roomOfferKey(offer: OfferIdentity) {
-  return `${offer.roomId}:${offer.unitId}`;
+  return `${offer.roomId}:${offer.unitId}:${offer.alternativeCheckin || ""}`;
 }
 
 function distinctKeys(group: readonly OfferIdentity[], reserved: ReadonlySet<string>) {
