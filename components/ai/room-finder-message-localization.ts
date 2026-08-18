@@ -1,4 +1,8 @@
-import { ROOM_FINDER_COPY, type RoomFinderLanguage } from "./room-finder-copy";
+import {
+  ROOM_FINDER_COPY,
+  ROOM_FINDER_LANGUAGES,
+  type RoomFinderLanguage,
+} from "./room-finder-copy";
 import { ROOM_FINDER_TONE } from "./room-finder-tone";
 
 export type RelocalizableRoomFinderMessage = {
@@ -48,4 +52,16 @@ export function relocalizeRoomFinderMessages<T extends RelocalizableRoomFinderMe
     const translated = translations.get(message.content);
     return translated ? { ...message, content: translated } : message;
   });
+}
+
+export function relocalizeRoomFinderMessageToLanguage<T extends RelocalizableRoomFinderMessage>(
+  message: T,
+  to: RoomFinderLanguage,
+): T {
+  if (message.role !== "assistant") return message;
+  for (const [from] of ROOM_FINDER_LANGUAGES) {
+    const translated = promptTranslations(from, to).get(message.content);
+    if (translated) return translated === message.content ? message : { ...message, content: translated };
+  }
+  return message;
 }
