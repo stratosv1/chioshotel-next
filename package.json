@@ -1,14 +1,14 @@
 {
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/prepare-build-clean.cjs && node scripts/qa-seo-gsc-snapshot-lifecycle.cjs && node scripts/qa-gsc-index-routing.cjs && node scripts/qa-seo-intent-architecture.cjs && node scripts/qa-room-finder-flow.cjs && node scripts/qa-room-finder-mobile-chat.cjs && node scripts/qa-room-finder-back-history.cjs && node scripts/qa-room-finder-cta-routing.cjs && node scripts/qa-room-finder-sales-upgrade.cjs && node scripts/qa-room-finder-master-integrity.cjs && next build",
+    "build": "node scripts/prepare-build-clean.cjs && node scripts/qa-seo-gsc-snapshot-lifecycle.cjs && node scripts/qa-gsc-index-routing.cjs && node scripts/qa-seo-intent-architecture.cjs && node scripts/qa-room-finder-flow.cjs && node scripts/qa-room-finder-mobile-chat.cjs && node scripts/qa-room-finder-back-history.cjs && node scripts/qa-room-finder-cta-routing.cjs && node scripts/qa-room-finder-sales-upgrade.cjs && node scripts/qa-room-finder-master-integrity.cjs && node scripts/qa-room-finder-language-switch.cjs && next build",
     "start": "next start",
-    "qa:ai": "node scripts/qa-room-finder-flow.cjs && node scripts/qa-room-finder-mobile-chat.cjs && node scripts/qa-room-finder-back-history.cjs && node scripts/qa-room-finder-cta-routing.cjs && node scripts/qa-room-finder-sales-upgrade.cjs && node scripts/qa-room-finder-master-integrity.cjs && node scripts/qa-room-finder-interpreter.mjs",
+    "qa:ai": "node scripts/qa-room-finder-flow.cjs && node scripts/qa-room-finder-mobile-chat.cjs && node scripts/qa-room-finder-back-history.cjs && node scripts/qa-room-finder-cta-routing.cjs && node scripts/qa-room-finder-sales-upgrade.cjs && node scripts/qa-room-finder-master-integrity.cjs && node scripts/qa-room-finder-language-switch.cjs && node scripts/qa-room-finder-interpreter.mjs",
     "qa:room-finder-flow": "node scripts/qa-room-finder-flow.cjs",
     "qa:room-finder-mobile": "node scripts/qa-room-finder-mobile-chat.cjs",
     "qa:room-finder-back-history": "node scripts/qa-room-finder-back-history.cjs",
     "qa:room-finder-cta-routing": "node scripts/qa-room-finder-cta-routing.cjs",
-    "qa:room-finder-sales": "node scripts/qa-room-finder-sales-upgrade.cjs && node scripts/qa-room-finder-master-integrity.cjs",
+    "qa:room-finder-sales": "node scripts/qa-room-finder-sales-upgrade.cjs && node scripts/qa-room-finder-master-integrity.cjs && node scripts/qa-room-finder-language-switch.cjs",
     "qa:room-finder-interpreter": "node scripts/qa-room-finder-interpreter.mjs",
     "qa:gsc": "node scripts/qa-gsc-index-routing.cjs",
     "qa:seo": "node scripts/qa-seo-intent-architecture.cjs",
