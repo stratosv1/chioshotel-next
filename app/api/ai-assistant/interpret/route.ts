@@ -1,9 +1,15 @@
 import { createHash } from "node:crypto";
 import { neon } from "@neondatabase/serverless";
 import { NextRequest, NextResponse } from "next/server";
-import { fallbackRoomFinderCommand } from "@/lib/ai-assistant/room-finder-fallback";
+import {
+  canUseDeterministicCommandDirectly,
+  fallbackRoomFinderCommand,
+} from "@/lib/ai-assistant/room-finder-fallback";
 import { interpretRoomFinderMessage } from "@/lib/ai-assistant/room-finder-intent";
-import type { RoomFinderConversationContext } from "@/lib/ai-assistant/room-finder-types";
+import type {
+  RoomFinderCommand,
+  RoomFinderConversationContext,
+} from "@/lib/ai-assistant/room-finder-types";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -127,15 +133,33 @@ function sanitizeContext(value: unknown): RoomFinderConversationContext {
       ].includes(String(value)))
     : undefined;
 
+  const currentStep = [
+    "checkin",
+    "checkout",
+    "rooms",
+    "guests",
+    "searching",
+    "selecting",
+    "breakfast",
+    "complete",
+    "unavailable",
+  ].includes(String(raw.currentStep || ""))
+    ? raw.currentStep
+    : undefined;
+
   return {
-    checkin: raw.checkin,
-    checkout: raw.checkout,
-    roomCount: raw.roomCount,
-    totalGuests: raw.totalGuests,
-    guestGroups: Array.isArray(raw.guestGroups) ? raw.guestGroups.slice(0, 3) : undefined,
-    currentRoom: raw.currentRoom,
-    currentStep: raw.currentStep,
-    language: raw.language,
+    checkin: typeof raw.checkin === "string" ? raw.checkin : undefined,
+    checkout: typeof raw.checkout === "string" ? raw.checkout : undefined,
+    roomCount: Number.isInteger(raw.roomCount) ? raw.roomCount : undefined,
+    totalGuests: Number.isInteger(raw.totalGuests) ? raw.totalGuests : undefined,
+    guestGroups: Array.isArray(raw.guestGroups)
+      ? raw.guestGroups.slice(0, 3).filter(value => Number.isInteger(value)).map(Number)
+      : undefined,
+    currentRoom: Number.isInteger(raw.currentRoom) ? raw.currentRoom : undefined,
+    currentStep,
+    language: ["el", "en", "fr", "de", "it", "es", "tr"].includes(String(raw.language || ""))
+      ? raw.language
+      : undefined,
     preferences,
     recentMessages,
   };
@@ -147,9 +171,14 @@ function noStoreJson(body: unknown, init?: ResponseInit) {
   return NextResponse.json(body, { ...init, headers });
 }
 
+function commandActionSummary(command: RoomFinderCommand | null) {
+  return command?.actions.map(action => action.type).join(",") || "none";
+}
+
 export async function POST(request: NextRequest) {
   let message = "";
   let context: RoomFinderConversationContext = {};
+  let deterministicCommand: RoomFinderCommand | null = null;
   let interpreterStarted = false;
 
   try {
@@ -184,18 +213,31 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    deterministicCommand = fallbackRoomFinderCommand(message, context);
+    if (canUseDeterministicCommandDirectly(message, context, deterministicCommand)) {
+      console.info(`AI Room Finder deterministic fast path used: ${commandActionSummary(deterministicCommand)}`);
+      return noStoreJson({
+        ok: true,
+        command: deterministicCommand,
+        fallback: false,
+        source: "deterministic",
+      });
+    }
+
     interpreterStarted = true;
     const command = await interpretRoomFinderMessage(message, context);
-    return noStoreJson({ ok: true, command, fallback: false });
+    return noStoreJson({ ok: true, command, fallback: false, source: "ai" });
   } catch (error) {
     console.error("AI Room Finder intent endpoint error", error);
 
-    if (interpreterStarted) {
-      const command = fallbackRoomFinderCommand(message, context);
-      if (command) {
-        console.warn("AI Room Finder deterministic interpreter rescue used");
-        return noStoreJson({ ok: true, command, fallback: true });
-      }
+    if (interpreterStarted && deterministicCommand) {
+      console.warn(`AI Room Finder deterministic interpreter rescue used: ${commandActionSummary(deterministicCommand)}`);
+      return noStoreJson({
+        ok: true,
+        command: deterministicCommand,
+        fallback: true,
+        source: "deterministic-rescue",
+      });
     }
 
     const timeout = isAbortError(error);
