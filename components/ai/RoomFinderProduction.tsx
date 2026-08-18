@@ -311,6 +311,7 @@ export function RoomFinderProduction({
   }, [detail]);
 
   function changeLanguage(next: RoomFinderLanguage) {
+    if (finder.typing || finder.step === "searching") return;
     const url = new URL(window.location.href);
     url.searchParams.set("lang", next);
     history.replaceState(history.state, "", url);
@@ -492,8 +493,9 @@ export function RoomFinderProduction({
             <select
               aria-label={copy.languageLabel}
               value={language}
+              disabled={finder.typing || finder.step === "searching"}
               onChange={event => changeLanguage(event.target.value as RoomFinderLanguage)}
-              className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+              className="absolute inset-0 h-full w-full cursor-pointer opacity-0 disabled:cursor-wait"
             >
               {ROOM_FINDER_LANGUAGES.map(([value, label]) => (
                 <option key={value} value={value}>{label}</option>
