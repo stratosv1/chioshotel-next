@@ -197,9 +197,6 @@ export function RoomFinderProduction({
     document.documentElement.lang = language;
     finder.reset();
     setDetail(null);
-    setContact({ firstName: "", lastName: "", phone: "", email: "" });
-    setPrivacyAccepted(false);
-    setSendStatus("idle");
     setHiddenQuickReplyPromptId(null);
     setBreakfastChoicePending(null);
   }, [language]);
@@ -316,6 +313,17 @@ export function RoomFinderProduction({
     url.searchParams.set("lang", next);
     history.replaceState(history.state, "", url);
     setLanguage(next);
+  }
+
+  function startNewSearch() {
+    if (finder.typing || finder.step === "searching") return;
+    finder.reset();
+    setDetail(null);
+    setContact({ firstName: "", lastName: "", phone: "", email: "" });
+    setPrivacyAccepted(false);
+    setSendStatus("idle");
+    setHiddenQuickReplyPromptId(null);
+    setBreakfastChoicePending(null);
   }
 
   function openRoomDetail(offer: RoomOffer) {
@@ -506,7 +514,7 @@ export function RoomFinderProduction({
             type="button"
             aria-label={copy.newSearch}
             title={copy.newSearch}
-            onClick={() => finder.reset()}
+            onClick={startNewSearch}
             className="flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-full border border-[#d8cec1] bg-white text-[30px] font-black leading-none text-[#5f574d] shadow-sm transition hover:bg-[#fffdf9] active:scale-[.96]"
           >
             ↻
@@ -716,7 +724,7 @@ export function RoomFinderProduction({
                 <div className="rounded-t-[26px] bg-[#faf7f2] p-4 pr-[82px]">
                   <div className="flex justify-between gap-3">
                     <h2 className="text-lg font-black">{copy.summary}</h2>
-                    <button type="button" onClick={() => finder.reset()} className="min-h-11 text-xs font-bold underline">
+                    <button type="button" onClick={startNewSearch} className="min-h-11 text-xs font-bold underline">
                       {copy.newSearch}
                     </button>
                   </div>
