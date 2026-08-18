@@ -79,6 +79,7 @@ function commandFor(message, context) {
 const checkin = commandFor("10/10", { language: "el", currentStep: "checkin" });
 assert(checkin.actions.some(action => action.checkin?.endsWith("-10-10")), "simple European check-in date failed");
 
+// Exact production failure reported from mobile on 2026-08-19.
 const screenshotMessage = "Θέλω 10–13 Σεπτεμβρίου για 2 άτομα, ένα δωμάτιο, κατά προτίμηση ισόγειο χωρίς σκάλες";
 const screenshotContext = { language: "el", currentStep: "checkin", preferences: [] };
 const screenshotCommand = commandFor(screenshotMessage, screenshotContext);
@@ -88,15 +89,9 @@ assert(Number(fact(screenshotCommand.actions, "roomCount")) === 1, "screenshot r
 assert(Number(fact(screenshotCommand.actions, "totalGuests")) === 2, "screenshot regression lost guest count");
 const screenshotPreferences = [...screenshotCommand.actions].reverse().find(action => action.type === "set_preferences")?.preferences || [];
 assert(screenshotPreferences.includes("ground_floor") && screenshotPreferences.includes("no_stairs"), "screenshot regression lost ground-floor/no-stairs preferences");
-assert(
-  fallback.canUseDeterministicCommandDirectly(screenshotMessage, screenshotContext, screenshotCommand),
-  "screenshot regression would still wait for the AI interpreter instead of using the safe fast path",
-);
+assert(fallback.canUseDeterministicCommandDirectly(screenshotMessage, screenshotContext, screenshotCommand), "screenshot regression would still wait for the AI interpreter instead of using the safe fast path");
 
-const screenshotResolution = flow.resolveAssistantTurn(
-  flow.createInitialBookingFlowState(),
-  screenshotCommand,
-);
+const screenshotResolution = flow.resolveAssistantTurn(flow.createInitialBookingFlowState(), screenshotCommand);
 assert(screenshotResolution.outcome.kind === "ready", "screenshot regression did not become a ready booking search");
 assert(screenshotResolution.state.step === "searching", "screenshot regression did not move directly to searching");
 assert(screenshotResolution.state.draft.groups[0] === 2, "screenshot regression did not allocate 2 guests to the one room");
@@ -121,62 +116,87 @@ for (const [language, message] of namedRangeCases) {
   assert(fallback.canUseDeterministicCommandDirectly(message, context, command), `${language}: safe deterministic fast path was rejected`);
 }
 
-const pastDate = fallback.fallbackRoomFinderCommand("10/08/2020", {
-  language: "el",
-  currentStep: "checkin",
-});
+// Common family syntax should not need AI just to add adults + children.
+const familyCases = [
+  ["el", "10-13 Σεπτεμβρίου, 1 δωμάτιο, 2 ενήλικες και 1 παιδί", 3],
+  ["en", "September 10-13, one room, 2 adults and 1 child", 3],
+  ["de", "10-13 September, ein Zimmer, 2 Erwachsene und 1 Kind", 3],
+  ["fr", "10 au 13 septembre, une chambre, 2 adultes et 1 enfant", 3],
+  ["it", "10 al 13 settembre, una camera, 2 adulti e 1 bambino", 3],
+  ["es", "10 al 13 septiembre, una habitación, 2 adultos y 1 niño", 3],
+  ["tr", "10-13 Eylül, bir oda, 2 yetişkin ve 1 çocuk", 3],
+];
+for (const [language, message, guests] of familyCases) {
+  const context = { language, currentStep: "checkin" };
+  const command = commandFor(message, context);
+  assert(Number(fact(command.actions, "totalGuests")) === guests, `${language}: adult + child total failed`);
+  assert(fallback.canUseDeterministicCommandDirectly(message, context, command), `${language}: family syntax did not qualify for safe deterministic path`);
+}
+
+const nightsMessage = "10 Σεπτεμβρίου, ένα δωμάτιο, δύο άτομα, για 3 νύχτες";
+const nightsCommand = commandFor(nightsMessage, { language: "el", currentStep: "checkin" });
+assert(String(fact(nightsCommand.actions, "checkin")).endsWith("-09-10"), "named check-in + nights lost check-in");
+assert(Number(fact(nightsCommand.actions, "nights")) === 3, "named check-in + nights did not parse nights");
+assert(fallback.canUseDeterministicCommandDirectly(nightsMessage, { language: "el", currentStep: "checkin" }, nightsCommand), "named check-in + nights did not use deterministic fast path");
+const nightsResolution = flow.resolveAssistantTurn(flow.createInitialBookingFlowState(), nightsCommand);
+assert(nightsResolution.outcome.kind === "ready" && nightsResolution.state.draft.checkout, "nights were not converted into a valid checkout by the state machine");
+
+const pastDate = fallback.fallbackRoomFinderCommand("10/08/2020", { language: "el", currentStep: "checkin" });
 assert(!pastDate?.actions?.some(action => action.checkin), "deterministic parser accepted a past check-in date");
 
-const preferenceRemoval = commandFor("δεν με νοιάζει πια το οικονομικό", {
-  language: "el",
-  currentStep: "selecting",
-  preferences: ["budget"],
-});
+const backwardsRange = fallback.fallbackRoomFinderCommand("13/10/2026-10/10/2026, 1 δωμάτιο, 2 άτομα", { language: "el", currentStep: "checkin" });
+assert(!backwardsRange?.actions?.some(action => action.checkin || action.checkout), "backwards explicit date range was converted into booking dates");
+assert(!fallback.canUseDeterministicCommandDirectly("13/10/2026-10/10/2026, 1 δωμάτιο, 2 άτομα", { language: "el", currentStep: "checkin" }, backwardsRange), "backwards date range bypassed AI/clarification safety");
+
+const preferenceRemoval = commandFor("δεν με νοιάζει πια το οικονομικό", { language: "el", currentStep: "selecting", preferences: ["budget"] });
 const removalAction = preferenceRemoval.actions.find(action => action.type === "set_preferences");
 assert(removalAction && Array.isArray(removalAction.preferences) && removalAction.preferences.length === 0, "preference removal did not clear the existing budget preference");
 
-const ambiguousPreferenceRemoval = fallback.fallbackRoomFinderCommand(
-  "θέλω ισόγειο χωρίς σκάλες, η τιμή δεν με νοιάζει",
-  { language: "el", currentStep: "selecting", preferences: ["budget"] },
-);
-assert(
-  !ambiguousPreferenceRemoval?.actions?.some(action => action.type === "set_preferences"),
-  "conservative fallback guessed a mixed preference-removal instruction instead of deferring to AI",
-);
+const ambiguousPreferenceRemoval = fallback.fallbackRoomFinderCommand("θέλω ισόγειο χωρίς σκάλες, η τιμή δεν με νοιάζει", { language: "el", currentStep: "selecting", preferences: ["budget"] });
+assert(!ambiguousPreferenceRemoval?.actions?.some(action => action.type === "set_preferences"), "conservative fallback guessed a mixed preference-removal instruction instead of deferring to AI");
 
-const pureRoomQuestion = fallback.fallbackRoomFinderCommand("Ποιο έχει κήπο;", {
-  language: "el",
-  currentStep: "selecting",
-  preferences: [],
-});
+const pureRoomQuestion = fallback.fallbackRoomFinderCommand("Ποιο έχει κήπο;", { language: "el", currentStep: "selecting", preferences: [] });
 assert(!pureRoomQuestion, "pure room-feature question was incorrectly converted into a preference mutation");
 
-const correctionPlusQuestion = commandFor("τελικά 3 άτομα, ποιο έχει κήπο;", {
-  language: "el",
-  currentStep: "selecting",
-  roomCount: 1,
-  totalGuests: 2,
-  guestGroups: [2],
-});
+const correctionPlusQuestion = commandFor("τελικά 3 άτομα, ποιο έχει κήπο;", { language: "el", currentStep: "selecting", roomCount: 1, totalGuests: 2, guestGroups: [2] });
 assert(Number(fact(correctionPlusQuestion.actions, "totalGuests")) === 3, "combined correction + room question lost the booking correction");
 
-const ambiguousDownstreamDate = fallback.fallbackRoomFinderCommand("11/10", {
-  language: "el",
-  currentStep: "selecting",
-  checkin: "2026-10-10",
-  checkout: "2026-10-12",
-});
+const ambiguousDownstreamDate = fallback.fallbackRoomFinderCommand("11/10", { language: "el", currentStep: "selecting", checkin: "2026-10-10", checkout: "2026-10-12" });
 assert(!ambiguousDownstreamDate?.actions?.some(action => action.checkin || action.checkout), "bare downstream date was deterministically assigned instead of being left for AI clarification");
 
-const ambiguousNamedDate = commandFor("Αρχές Οκτωβρίου, 2 άτομα", {
-  language: "el",
-  currentStep: "checkin",
-});
+const ambiguousNamedDate = commandFor("Αρχές Οκτωβρίου, 2 άτομα", { language: "el", currentStep: "checkin" });
 assert(Number(fact(ambiguousNamedDate.actions, "totalGuests")) === 2, "clear guest fact was lost beside an ambiguous named date");
-assert(
-  !fallback.canUseDeterministicCommandDirectly("Αρχές Οκτωβρίου, 2 άτομα", { language: "el", currentStep: "checkin" }, ambiguousNamedDate),
-  "ambiguous named date incorrectly bypasses the AI clarification path",
-);
+assert(!fallback.canUseDeterministicCommandDirectly("Αρχές Οκτωβρίου, 2 άτομα", { language: "el", currentStep: "checkin" }, ambiguousNamedDate), "ambiguous named date incorrectly bypasses the AI clarification path");
+
+// Party/room contradictions must be explained instead of silently returning to guest prompts.
+const oneRoomSixGuests = flow.resolveAssistantTurn(flow.createInitialBookingFlowState(), {
+  language: "el",
+  replyMode: "execute",
+  actions: [
+    { type: "set_stay_dates", checkin: "2026-10-10", checkout: "2026-10-12" },
+    { type: "set_room_count", roomCount: 1 },
+    { type: "set_guest_count", totalGuests: 6 },
+  ],
+});
+assert(oneRoomSixGuests.outcome.kind === "clarification" && oneRoomSixGuests.state.step === "rooms", "1 room + 6 guests did not produce an explicit room-count clarification");
+
+const threeRoomsTwoGuests = flow.resolveAssistantTurn(flow.createInitialBookingFlowState(), {
+  language: "en",
+  replyMode: "execute",
+  actions: [
+    { type: "set_stay_dates", checkin: "2026-10-10", checkout: "2026-10-12" },
+    { type: "set_room_count", roomCount: 3 },
+    { type: "set_guest_count", totalGuests: 2 },
+  ],
+});
+assert(threeRoomsTwoGuests.outcome.kind === "clarification" && threeRoomsTwoGuests.state.step === "rooms", "3 rooms + 2 guests did not produce an explicit contradiction clarification");
+
+const oversizedGroup = flow.resolveAssistantTurn(flow.createInitialBookingFlowState(), {
+  language: "en",
+  replyMode: "execute",
+  actions: [{ type: "set_guest_count", totalGuests: 16 }],
+});
+assert(oversizedGroup.outcome.kind === "clarification" && oversizedGroup.state.step === "unavailable", "group over 15 guests did not hand off from automated search");
 
 const roomFiveScore = sales.roomPreferenceScore(5, ["no_stairs", "ground_floor"]);
 const roomOneScore = sales.roomPreferenceScore(1, ["no_stairs", "ground_floor"]);
@@ -245,4 +265,4 @@ assert(!toneSource.includes("ούτε κοντινή αυτόματη εναλλ
 const catalogSource = fs.readFileSync(catalogPath, "utf8");
 assert(catalogSource.includes('roomNumber: 6') && catalogSource.includes('Garden access'), "canonical room catalog no longer supports the room 6 garden trait QA assumption");
 
-console.log("Room Finder master sales QA passed: screenshot regression, multilingual deterministic parsing, parser→state integration, preference safety, Q&A priority and nearby technical-state separation are verified.");
+console.log("Room Finder master sales QA passed: production screenshot, 7-language ranges, family parties, nights, party/room conflicts, parser→state integration, preference safety, Q&A priority and nearby technical-state separation are verified.");
