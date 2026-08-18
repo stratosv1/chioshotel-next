@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { getRoomFinderInbox } from "@/lib/ai-assistant/conversation-store";
-import RoomFinderInboxClient from "./RoomFinderInboxClient";
+import RoomFinderInboxLoader from "./RoomFinderInboxLoader";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -14,12 +13,6 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function AiRoomFinderStaffPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ session?: string }>;
-}) {
-  const params = await searchParams;
-  const initialData = await getRoomFinderInbox(params.session || null);
-  return <RoomFinderInboxClient initialData={initialData} />;
+export default function AiRoomFinderStaffPage() {
+  return <RoomFinderInboxLoader />;
 }
