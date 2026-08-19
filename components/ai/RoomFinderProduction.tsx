@@ -183,6 +183,7 @@ export function RoomFinderProduction({
   const [breakfastChoicePending, setBreakfastChoicePending] = useState<boolean | null>(null);
   const shellRef = useRef<HTMLElement>(null);
   const feedRef = useRef<HTMLDivElement>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
   const composerInputRef = useRef<HTMLInputElement>(null);
   const detailDialogRef = useRef<HTMLElement>(null);
   const detailCloseRef = useRef<HTMLButtonElement>(null);
@@ -213,11 +214,38 @@ export function RoomFinderProduction({
   }, [finder.step]);
 
   useEffect(() => {
+    if (finder.step === "searching" || (finder.step === "selecting" && finder.visibleOffers.length > 0)) {
+      return;
+    }
+
     const frame = requestAnimationFrame(() => {
       feedRef.current?.scrollTo({ top: feedRef.current.scrollHeight, behavior: "smooth" });
     });
     return () => cancelAnimationFrame(frame);
-  }, [finder.messages, finder.step, finder.typing, finder.choices, sendStatus]);
+  }, [finder.messages, finder.step, finder.typing, finder.choices, finder.visibleOffers.length, sendStatus]);
+
+  useEffect(() => {
+    if (finder.step !== "searching") return;
+    composerInputRef.current?.blur();
+  }, [finder.step]);
+
+  useEffect(() => {
+    if (finder.step !== "selecting" || finder.visibleOffers.length === 0) return;
+
+    composerInputRef.current?.blur();
+
+    const scrollToResults = (behavior: ScrollBehavior) => {
+      resultsRef.current?.scrollIntoView({ block: "start", behavior });
+    };
+
+    const frame = requestAnimationFrame(() => scrollToResults("smooth"));
+    const settleTimer = window.setTimeout(() => scrollToResults("auto"), 300);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      window.clearTimeout(settleTimer);
+    };
+  }, [finder.step, finder.visibleOffers.length]);
 
   useEffect(() => {
     const shell = shellRef.current;
@@ -607,7 +635,7 @@ export function RoomFinderProduction({
             )}
 
             {finder.step === "selecting" && finder.visibleOffers.length > 0 && (
-              <>
+              <div ref={resultsRef} data-room-results-start="true" className="space-y-3.5 scroll-mt-2">
                 <RoomCarousel
                   offers={finder.visibleOffers}
                   copy={copy}
@@ -627,7 +655,7 @@ export function RoomFinderProduction({
                     💬 {copy.whatsapp}
                   </button>
                 </section>
-              </>
+              </div>
             )}
 
             {finder.step === "breakfast" && (
