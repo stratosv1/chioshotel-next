@@ -49,29 +49,9 @@ export async function getRuntimeSeoRule(pathname: string): Promise<RuntimeSeoRul
   }
 }
 
-export async function observeGooglebotSeoUrl(urlValue: string) {
-  const sql = getSql();
-  if (!sql) return;
-
-  try {
-    const url = new URL(urlValue);
-    if (url.hostname.toLowerCase().replace(/^www\./, "") !== "chioshotel.gr") return;
-    const path = normalizeRuntimeSeoPath(url.pathname);
-    const canonicalUrl = `https://chioshotel.gr${path === "/" ? "/" : `${path}/`}`;
-
-    await sql`
-      insert into seo_url_inventory (
-        url, path, source, expected_kind, priority, first_seen_at, last_seen_at, last_googlebot_seen_at, active
-      ) values (
-        ${canonicalUrl}, ${path}, 'googlebot', 'unknown', 85, now(), now(), now(), true
-      )
-      on conflict (url) do update set
-        last_seen_at = now(),
-        last_googlebot_seen_at = now(),
-        priority = greatest(seo_url_inventory.priority, 85),
-        active = true
-    `;
-  } catch {
-    // Observability must never affect the public request path.
-  }
+// Kept as a no-op so proxy behavior stays unchanged while avoiding a Neon write
+// for every Google crawler request. Runtime redirects/410 rules are still served
+// from seo_runtime_rules exactly as before.
+export async function observeGooglebotSeoUrl(_urlValue: string) {
+  return;
 }
