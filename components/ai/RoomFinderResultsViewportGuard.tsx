@@ -2,9 +2,9 @@
 
 import { useEffect } from "react";
 
-const RESULT_SETTLE_DELAYS = [0, 80, 160, 280, 450, 650, 900, 1200];
-const COMPOSER_HIDE_MS = 560;
-const RESULTS_LOCK_MS = 1250;
+const RESULT_SETTLE_DELAYS = [0, 80, 160, 280, 450, 700, 1000, 1400];
+const INITIAL_COMPOSER_HIDE_MS = 900;
+const INITIAL_RESULTS_LOCK_MS = 1700;
 
 type NavigatorWithVirtualKeyboard = Navigator & {
   virtualKeyboard?: {
@@ -33,7 +33,7 @@ function hideVirtualKeyboard() {
   try {
     navigatorWithKeyboard.virtualKeyboard?.hide?.();
   } catch {
-    // The API is optional. DOM focus handling below remains the fallback.
+    // Optional browser API. Focus transfer below is the primary mechanism.
   }
 }
 
@@ -54,17 +54,34 @@ function alignResultsToFeedTop() {
   });
 }
 
+function moveFocusToResults() {
+  const results = getResultsStart();
+  if (!results) return;
+
+  if (!results.hasAttribute("tabindex")) {
+    results.setAttribute("tabindex", "-1");
+    results.dataset.resultsFocusTarget = "true";
+  }
+
+  try {
+    results.focus({ preventScroll: true });
+  } catch {
+    results.focus();
+  }
+}
+
 export function RoomFinderResultsViewportGuard() {
   useEffect(() => {
     let activeResults: HTMLElement | null = null;
+    let composerActivatedByUser = false;
     let lockedUntil = 0;
     let timers: number[] = [];
-    let restoreTimer: number | null = null;
+    let revealTimer: number | null = null;
     let lockedFeed: HTMLElement | null = null;
     let feedScrollFrame: number | null = null;
 
-    let hiddenForm: HTMLFormElement | null = null;
-    let hiddenInput: HTMLInputElement | null = null;
+    let guardedForm: HTMLFormElement | null = null;
+    let guardedInput: HTMLInputElement | null = null;
     let previousDisplay = "";
     let previousDisabled = false;
     let previousReadOnly = false;
@@ -73,79 +90,132 @@ export function RoomFinderResultsViewportGuard() {
     const clearTimers = () => {
       timers.forEach(timer => window.clearTimeout(timer));
       timers = [];
-      if (restoreTimer !== null) {
-        window.clearTimeout(restoreTimer);
-        restoreTimer = null;
+
+      if (revealTimer !== null) {
+        window.clearTimeout(revealTimer);
+        revealTimer = null;
       }
+
       if (feedScrollFrame !== null) {
         cancelAnimationFrame(feedScrollFrame);
         feedScrollFrame = null;
       }
     };
 
-    const restoreComposer = () => {
-      if (hiddenForm?.isConnected) {
-        hiddenForm.style.display = previousDisplay;
-        delete hiddenForm.dataset.resultsImeHidden;
-      }
-
-      if (hiddenInput?.isConnected) {
-        hiddenInput.disabled = previousDisabled;
-        hiddenInput.readOnly = previousReadOnly;
-        hiddenInput.tabIndex = previousTabIndex;
-      }
-
-      hiddenForm = null;
-      hiddenInput = null;
-      restoreTimer = null;
-
-      requestAnimationFrame(() => {
-        hideVirtualKeyboard();
-        alignResultsToFeedTop();
-      });
+    const removeComposerActivationListener = () => {
+      guardedForm?.removeEventListener("pointerdown", activateComposerFromUserGesture, true);
+      guardedForm?.removeEventListener("touchstart", activateComposerFromUserGesture, true);
     };
 
-    const hideComposerForKeyboardDismissal = () => {
+    const restoreComposerFully = () => {
+      removeComposerActivationListener();
+
+      if (guardedForm?.isConnected) {
+        guardedForm.style.display = previousDisplay;
+        delete guardedForm.dataset.resultsImeMode;
+      }
+
+      if (guardedInput?.isConnected) {
+        guardedInput.disabled = previousDisabled;
+        guardedInput.readOnly = previousReadOnly;
+        guardedInput.tabIndex = previousTabIndex;
+      }
+
+      guardedForm = null;
+      guardedInput = null;
+      revealTimer = null;
+      composerActivatedByUser = false;
+    };
+
+    const showComposerAsSafeLauncher = () => {
+      if (!guardedForm?.isConnected || !guardedInput?.isConnected) return;
+
+      guardedForm.style.display = previousDisplay;
+      guardedInput.disabled = previousDisabled;
+      guardedInput.readOnly = true;
+      guardedInput.tabIndex = -1;
+      guardedForm.dataset.resultsImeMode = "safe-launcher";
+      revealTimer = null;
+
+      moveFocusToResults();
+      hideVirtualKeyboard();
+      alignResultsToFeedTop();
+    };
+
+    function activateComposerFromUserGesture(event: Event) {
+      if (!activeResults || !guardedInput?.isConnected || !guardedForm?.isConnected) return;
+
+      composerActivatedByUser = true;
+      lockedUntil = 0;
+      timers.forEach(timer => window.clearTimeout(timer));
+      timers = [];
+
+      guardedInput.disabled = previousDisabled;
+      guardedInput.readOnly = previousReadOnly;
+      guardedInput.tabIndex = previousTabIndex;
+      guardedForm.dataset.resultsImeMode = "editing";
+
+      // Let the original React handlers receive the user gesture, then focus the
+      // real input explicitly. The keyboard is only allowed to reopen after a tap.
+      requestAnimationFrame(() => {
+        try {
+          guardedInput?.focus({ preventScroll: false });
+        } catch {
+          guardedInput?.focus();
+        }
+      });
+
+      // Do not preventDefault: the form/input keeps its normal click behavior.
+      void event;
+    }
+
+    const guardComposerForResults = () => {
       const input = getComposerInput();
       const form = getComposerForm();
 
       if (!input || !form) {
         hideVirtualKeyboard();
+        moveFocusToResults();
         return;
       }
 
-      input.blur();
-      hideVirtualKeyboard();
+      if (guardedForm !== form || guardedInput !== input) {
+        restoreComposerFully();
 
-      if (!hiddenForm) {
-        hiddenForm = form;
-        hiddenInput = input;
+        guardedForm = form;
+        guardedInput = input;
         previousDisplay = form.style.display;
         previousDisabled = input.disabled;
         previousReadOnly = input.readOnly;
         previousTabIndex = input.tabIndex;
 
-        // Android Chrome can keep the IME attached to a blurred input while
-        // VisualViewport is resizing. Temporarily taking the composer out of
-        // the render tree reliably releases the IME without changing finder state.
-        form.dataset.resultsImeHidden = "true";
-        form.style.display = "none";
-        input.readOnly = true;
-        input.disabled = true;
-        input.tabIndex = -1;
+        form.addEventListener("pointerdown", activateComposerFromUserGesture, true);
+        form.addEventListener("touchstart", activateComposerFromUserGesture, true);
       }
 
-      if (restoreTimer !== null) window.clearTimeout(restoreTimer);
-      restoreTimer = window.setTimeout(restoreComposer, COMPOSER_HIDE_MS);
+      composerActivatedByUser = false;
+
+      input.blur();
+      input.readOnly = true;
+      input.disabled = true;
+      input.tabIndex = -1;
+      form.dataset.resultsImeMode = "closing-keyboard";
+      form.style.display = "none";
+
+      moveFocusToResults();
+      hideVirtualKeyboard();
+
+      if (revealTimer !== null) window.clearTimeout(revealTimer);
+      revealTimer = window.setTimeout(showComposerAsSafeLauncher, INITIAL_COMPOSER_HIDE_MS);
     };
 
     const onFeedScroll = () => {
-      if (!activeResults || performance.now() >= lockedUntil) return;
+      if (!activeResults || composerActivatedByUser || performance.now() >= lockedUntil) return;
       if (feedScrollFrame !== null) return;
 
       feedScrollFrame = requestAnimationFrame(() => {
         feedScrollFrame = null;
-        if (!activeResults || performance.now() >= lockedUntil) return;
+        if (!activeResults || composerActivatedByUser || performance.now() >= lockedUntil) return;
         alignResultsToFeedTop();
       });
     };
@@ -166,28 +236,31 @@ export function RoomFinderResultsViewportGuard() {
         activeResults = null;
         lockedUntil = 0;
         clearTimers();
-        restoreComposer();
+        restoreComposerFully();
         return;
       }
 
       if (results === activeResults) return;
 
       activeResults = results;
-      lockedUntil = performance.now() + RESULTS_LOCK_MS;
+      composerActivatedByUser = false;
+      lockedUntil = performance.now() + INITIAL_RESULTS_LOCK_MS;
       clearTimers();
       attachFeedLock();
-      hideComposerForKeyboardDismissal();
+      guardComposerForResults();
 
       timers = RESULT_SETTLE_DELAYS.map(delay => window.setTimeout(() => {
-        if (!activeResults) return;
+        if (!activeResults || composerActivatedByUser) return;
+        moveFocusToResults();
         hideVirtualKeyboard();
         alignResultsToFeedTop();
       }, delay));
     };
 
     const onViewportChange = () => {
-      if (!activeResults || performance.now() >= lockedUntil) return;
+      if (!activeResults || composerActivatedByUser || performance.now() >= lockedUntil) return;
       requestAnimationFrame(() => {
+        moveFocusToResults();
         hideVirtualKeyboard();
         alignResultsToFeedTop();
       });
@@ -209,7 +282,7 @@ export function RoomFinderResultsViewportGuard() {
       window.removeEventListener("resize", onViewportChange);
       lockedFeed?.removeEventListener("scroll", onFeedScroll);
       clearTimers();
-      restoreComposer();
+      restoreComposerFully();
     };
   }, []);
 
