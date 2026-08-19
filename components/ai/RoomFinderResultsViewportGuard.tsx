@@ -5,6 +5,7 @@ import { useEffect } from "react";
 const RESULT_SETTLE_DELAYS = [0, 80, 160, 280, 450, 700, 1000, 1400];
 const INITIAL_COMPOSER_HIDE_MS = 900;
 const INITIAL_RESULTS_LOCK_MS = 1700;
+const FOCUS_SINK_ID = "room-finder-ime-focus-sink";
 
 type NavigatorWithVirtualKeyboard = Navigator & {
   virtualKeyboard?: {
@@ -54,20 +55,53 @@ function alignResultsToFeedTop() {
   });
 }
 
-function moveFocusToResults() {
+function cleanupLegacyResultsFocusTarget() {
   const results = getResultsStart();
-  if (!results) return;
+  if (!results || results.dataset.resultsFocusTarget !== "true") return;
 
-  if (!results.hasAttribute("tabindex")) {
-    results.setAttribute("tabindex", "-1");
-    results.dataset.resultsFocusTarget = "true";
-  }
+  if (document.activeElement === results) results.blur();
+  results.removeAttribute("tabindex");
+  delete results.dataset.resultsFocusTarget;
+}
+
+function getFocusSink() {
+  let sink = document.getElementById(FOCUS_SINK_ID) as HTMLDivElement | null;
+  if (sink) return sink;
+
+  sink = document.createElement("div");
+  sink.id = FOCUS_SINK_ID;
+  sink.tabIndex = -1;
+  sink.setAttribute("aria-hidden", "true");
+  sink.setAttribute("role", "presentation");
+  sink.style.position = "fixed";
+  sink.style.left = "-10000px";
+  sink.style.top = "0";
+  sink.style.width = "1px";
+  sink.style.height = "1px";
+  sink.style.opacity = "0";
+  sink.style.pointerEvents = "none";
+  sink.style.outline = "none";
+  sink.style.border = "0";
+  sink.style.padding = "0";
+  document.body.appendChild(sink);
+  return sink;
+}
+
+function moveFocusAwayFromComposer() {
+  cleanupLegacyResultsFocusTarget();
+  const sink = getFocusSink();
 
   try {
-    results.focus({ preventScroll: true });
+    sink.focus({ preventScroll: true });
   } catch {
-    results.focus();
+    sink.focus();
   }
+}
+
+function removeFocusSink() {
+  const sink = document.getElementById(FOCUS_SINK_ID);
+  if (document.activeElement === sink && sink instanceof HTMLElement) sink.blur();
+  sink?.remove();
 }
 
 export function RoomFinderResultsViewportGuard() {
@@ -137,7 +171,7 @@ export function RoomFinderResultsViewportGuard() {
       guardedForm.dataset.resultsImeMode = "safe-launcher";
       revealTimer = null;
 
-      moveFocusToResults();
+      moveFocusAwayFromComposer();
       hideVirtualKeyboard();
       alignResultsToFeedTop();
     };
@@ -155,8 +189,6 @@ export function RoomFinderResultsViewportGuard() {
       guardedInput.tabIndex = previousTabIndex;
       guardedForm.dataset.resultsImeMode = "editing";
 
-      // Let the original React handlers receive the user gesture, then focus the
-      // real input explicitly. The keyboard is only allowed to reopen after a tap.
       requestAnimationFrame(() => {
         try {
           guardedInput?.focus({ preventScroll: false });
@@ -165,7 +197,6 @@ export function RoomFinderResultsViewportGuard() {
         }
       });
 
-      // Do not preventDefault: the form/input keeps its normal click behavior.
       void event;
     }
 
@@ -175,7 +206,7 @@ export function RoomFinderResultsViewportGuard() {
 
       if (!input || !form) {
         hideVirtualKeyboard();
-        moveFocusToResults();
+        moveFocusAwayFromComposer();
         return;
       }
 
@@ -202,7 +233,7 @@ export function RoomFinderResultsViewportGuard() {
       form.dataset.resultsImeMode = "closing-keyboard";
       form.style.display = "none";
 
-      moveFocusToResults();
+      moveFocusAwayFromComposer();
       hideVirtualKeyboard();
 
       if (revealTimer !== null) window.clearTimeout(revealTimer);
@@ -237,6 +268,7 @@ export function RoomFinderResultsViewportGuard() {
         lockedUntil = 0;
         clearTimers();
         restoreComposerFully();
+        cleanupLegacyResultsFocusTarget();
         return;
       }
 
@@ -251,7 +283,7 @@ export function RoomFinderResultsViewportGuard() {
 
       timers = RESULT_SETTLE_DELAYS.map(delay => window.setTimeout(() => {
         if (!activeResults || composerActivatedByUser) return;
-        moveFocusToResults();
+        moveFocusAwayFromComposer();
         hideVirtualKeyboard();
         alignResultsToFeedTop();
       }, delay));
@@ -260,11 +292,13 @@ export function RoomFinderResultsViewportGuard() {
     const onViewportChange = () => {
       if (!activeResults || composerActivatedByUser || performance.now() >= lockedUntil) return;
       requestAnimationFrame(() => {
-        moveFocusToResults();
+        moveFocusAwayFromComposer();
         hideVirtualKeyboard();
         alignResultsToFeedTop();
       });
     };
+
+    cleanupLegacyResultsFocusTarget();
 
     const observer = new MutationObserver(settleResults);
     observer.observe(document.body, { childList: true, subtree: true });
@@ -283,6 +317,8 @@ export function RoomFinderResultsViewportGuard() {
       lockedFeed?.removeEventListener("scroll", onFeedScroll);
       clearTimers();
       restoreComposerFully();
+      cleanupLegacyResultsFocusTarget();
+      removeFocusSink();
     };
   }, []);
 
