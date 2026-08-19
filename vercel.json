@@ -10,14 +10,6 @@
       "schedule": "*/7 * * * *"
     },
     {
-      "path": "/api/staff/calendar/occupancy-sync/",
-      "schedule": "*/7 * * * *"
-    },
-    {
-      "path": "/api/staff/calendar/sync/",
-      "schedule": "*/7 * * * *"
-    },
-    {
       "path": "/api/seo/gsc/seasonal-sync/",
       "schedule": "0 5 * * 0"
     },

@@ -568,15 +568,7 @@ export async function proxy(request: NextRequest, event: NextFetchEvent) {
     }
   }
 
-  const isOccupancyCronPath =
-  pathname === "/api/staff/calendar/occupancy-sync" ||
-  pathname === "/api/staff/calendar/occupancy-sync/";
-
-  if (
-    isStaffPath(pathname) &&
-    !isOccupancyCronPath &&
-    !isAuthorizedStaffRequest(request)
-  ) {
+  if (isStaffPath(pathname) && !isAuthorizedStaffRequest(request)) {
     return unauthorizedStaffResponse();
   }
 
