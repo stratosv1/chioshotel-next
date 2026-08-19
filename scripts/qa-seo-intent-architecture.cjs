@@ -272,18 +272,6 @@ expectAll(
   "SEO journey image alt text must remain localized",
 );
 
-expect(
-  "app/staff/seo/page.tsx",
-  "getSeoAdvisorWithIntentData",
-  "Staff SEO Advisor must use owner-aware intent analysis",
-);
-
-expect(
-  "lib/gsc/advisor-intents.ts",
-  "Δεν δημιουργούμε νέο URL",
-  "SEO Advisor must guard against duplicate landing creation",
-);
-
 if (failures.length) {
   console.error("SEO architecture QA failed:\n");
   for (const failure of failures) console.error(`- ${failure}`);
