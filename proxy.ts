@@ -185,8 +185,7 @@ const legacyRedirects: Record<string, string> = {
     "/el/xoria-xios/lagada-xios/",
   "/el/chios-el/lagada-chios": "/el/xoria-xios/lagada-xios/",
   "/de/chios-insel/lagada-chios-3": "/de/doerfer-chios/lagada-dorf/",
-  "/fr/ile-de-chios/lagada-chios-2":
-    "/fr/villages-de-chios/village-lagada/",
+  "/fr/ile-de-chios/pyrgi-chios": "/fr/villages-de-chios/village-pyrgi/",
 
   // Museums hubs
   "/fr/chios/musees-de-chios": "/fr/musees-de-chios/",
@@ -568,15 +567,7 @@ export async function proxy(request: NextRequest, event: NextFetchEvent) {
     }
   }
 
-  const isOccupancyCronPath =
-  pathname === "/api/staff/calendar/occupancy-sync" ||
-  pathname === "/api/staff/calendar/occupancy-sync/";
-
-  if (
-    isStaffPath(pathname) &&
-    !isOccupancyCronPath &&
-    !isAuthorizedStaffRequest(request)
-  ) {
+  if (isStaffPath(pathname) && !isAuthorizedStaffRequest(request)) {
     return unauthorizedStaffResponse();
   }
 

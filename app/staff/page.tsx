@@ -20,13 +20,6 @@ const staffLinks = [
     external: true,
   },
   {
-    href: "/staff/calendar",
-    icon: "🏨",
-    label: "Hotel Calendar",
-    subText: "Μοντέρνο PMS ημερολόγιο κρατήσεων",
-    className: styles.directBooking,
-  },
-  {
     href: "/staff/ai-room-finder",
     icon: "💬",
     label: "AI Room Finder Inbox",
@@ -80,7 +73,7 @@ const staffLinks = [
     href: "/staff/operations",
     icon: "🗄️",
     label: "Operations Database",
-    subText: "Νέα Neon βάση για calendar, τιμές & bookings",
+    subText: "Neon βάση για εσωτερικά δεδομένα & refresh status",
     className: styles.performance,
   },
 ];
