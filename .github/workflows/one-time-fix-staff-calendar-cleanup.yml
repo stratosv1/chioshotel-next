@@ -1,0 +1,41 @@
+name: One-time staff calendar cleanup correction
+
+on:
+  push:
+    branches:
+      - agent/remove-staff-calendar
+
+permissions:
+  contents: write
+
+jobs:
+  correct-proxy-diff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/remove-staff-calendar
+          fetch-depth: 0
+
+      - name: Restore unrelated redirect and remove this workflow
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          proxy = Path('proxy.ts')
+          text = proxy.read_text(encoding='utf-8')
+          old = '  "/fr/ile-de-chios/pyrgi-chios": "/fr/villages-de-chios/village-pyrgi/",\n\n  // Museums hubs'
+          new = '  "/fr/ile-de-chios/lagada-chios-2":\n    "/fr/villages-de-chios/village-lagada/",\n\n  // Museums hubs'
+          if text.count(old) != 1:
+              raise SystemExit(f'Expected exactly one cleanup-only redirect hunk, found {text.count(old)}')
+          proxy.write_text(text.replace(old, new, 1), encoding='utf-8')
+          Path('.github/workflows/one-time-fix-staff-calendar-cleanup.yml').unlink()
+          PY
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add proxy.ts .github/workflows/one-time-fix-staff-calendar-cleanup.yml
+          git diff --cached --quiet && exit 0
+          git commit -m "Correct cleanup-only proxy diff"
+          git push origin HEAD:agent/remove-staff-calendar
