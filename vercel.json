@@ -8,26 +8,6 @@
     {
       "path": "/api/booking-core/sync-health/",
       "schedule": "*/7 * * * *"
-    },
-    {
-      "path": "/api/seo/gsc/seasonal-sync/",
-      "schedule": "0 5 * * 0"
-    },
-    {
-      "path": "/api/seo/gsc/sync/",
-      "schedule": "20 5 * * *"
-    },
-    {
-      "path": "/api/seo/ga4/sync/",
-      "schedule": "40 5 * * *"
-    },
-    {
-      "path": "/api/seo/gsc/analyze/",
-      "schedule": "0 7 * * *"
-    },
-    {
-      "path": "/api/seo/health/weekly/",
-      "schedule": "30 7 * * *"
     }
   ]
 }
