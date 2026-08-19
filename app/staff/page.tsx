@@ -49,13 +49,6 @@ const staffLinks = [
     className: styles.performance,
   },
   {
-    href: "/staff/seo",
-    icon: "🔎",
-    label: "SEO Control Center",
-    subText: "Google Search Console · queries · pages · χώρες · συσκευές · ευκαιρίες",
-    className: styles.performance,
-  },
-  {
     href: "/staff/expenses",
     icon: "🧾",
     label: "Έξοδα Ξενοδοχείου",
