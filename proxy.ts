@@ -185,7 +185,8 @@ const legacyRedirects: Record<string, string> = {
     "/el/xoria-xios/lagada-xios/",
   "/el/chios-el/lagada-chios": "/el/xoria-xios/lagada-xios/",
   "/de/chios-insel/lagada-chios-3": "/de/doerfer-chios/lagada-dorf/",
-  "/fr/ile-de-chios/pyrgi-chios": "/fr/villages-de-chios/village-pyrgi/",
+  "/fr/ile-de-chios/lagada-chios-2":
+    "/fr/villages-de-chios/village-lagada/",
 
   // Museums hubs
   "/fr/chios/musees-de-chios": "/fr/musees-de-chios/",
