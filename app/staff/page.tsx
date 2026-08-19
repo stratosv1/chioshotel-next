@@ -62,13 +62,6 @@ const staffLinks = [
     subText: "Στοιχεία προσωπικού",
     className: styles.payroll,
   },
-  {
-    href: "/staff/operations",
-    icon: "🗄️",
-    label: "Operations Database",
-    subText: "Neon βάση για εσωτερικά δεδομένα & refresh status",
-    className: styles.performance,
-  },
 ];
 
 export default function StaffPage() {
