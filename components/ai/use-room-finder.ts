@@ -23,6 +23,7 @@ import {
 } from "./room-finder-offer-plan";
 import { rewindToAssistantPrompt } from "./room-finder-conversation-history";
 import { answerRoomQuestion, roomPreferenceScore } from "./room-finder-sales-intelligence";
+import { fetchLongStayDiscount, longStayDiscountMessage } from "./room-finder-long-stay";
 import type { ChatItem, MessageKind, Reaction } from "./room-finder-chat-ui";
 import type { RoomOffer } from "./room-finder-carousel";
 import type { RoomChoice } from "./room-finder-selected-card";
@@ -111,6 +112,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   const [selectingOfferKey, setSelectingOfferKey] = useState<string | null>(null);
   const turnLocked = useRef(false);
   const languageRef = useRef(language);
+  const announcedLongStayKey = useRef<string | null>(null);
 
   const { step, draft } = flow;
   const { checkin, checkout, roomCount, totalGuests, groups } = draft;
@@ -181,6 +183,27 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     setTyping(false);
   };
 
+  async function maybeAnnounceLongStay(nextDraft: BookingDraft) {
+    if (!nextDraft.checkin || !nextDraft.checkout) return false;
+
+    const key = `${nextDraft.checkin}:${nextDraft.checkout}`;
+    if (announcedLongStayKey.current === key) return false;
+
+    try {
+      const info = await fetchLongStayDiscount(nextDraft.checkin, nextDraft.checkout);
+      if (!info) return false;
+
+      announcedLongStayKey.current = key;
+      if (!info.eligible) return false;
+
+      add("assistant", longStayDiscountMessage(language, info));
+      return true;
+    } catch (error) {
+      console.error("Room Finder long-stay notice failed", error);
+      return false;
+    }
+  }
+
   function reset() {
     if (languageRef.current !== language) {
       languageRef.current = language;
@@ -194,6 +217,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     }
 
     turnLocked.current = false;
+    announcedLongStayKey.current = null;
     dispatchFlow({ type: "reset" });
     setMessages([{ id: rid(), role: "assistant", content: copy.welcome }]);
     setInput("");
@@ -231,6 +255,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     }
 
     clearSearchSelectionState();
+    if (!nextFlow.draft.checkout) announcedLongStayKey.current = null;
     dispatchFlow({ type: "commit_turn", state: nextFlow });
 
     switch (nextFlow.step) {
@@ -255,6 +280,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     if (turnLocked.current || step === "searching") return;
     const nextFlow = bookingFlowReducer(flow, { type: "edit_dates" });
     clearSearchSelectionState();
+    announcedLongStayKey.current = null;
     dispatchFlow({ type: "commit_turn", state: nextFlow });
     add("assistant", tone.invalidDate);
   }
@@ -433,6 +459,13 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       return;
     }
 
+    const shouldCheckLongStay = resolution.outcome.kind === "ready"
+      || (resolution.outcome.kind === "prompt" && ["rooms", "guests"].includes(resolution.outcome.field));
+    if (shouldCheckLongStay) {
+      const announced = await maybeAnnounceLongStay(resolution.state.draft);
+      if (announced) await wait(220);
+    }
+
     if (resolution.outcome.kind === "ready") {
       await runAvailabilitySearch(resolution.state.draft);
       return;
@@ -507,6 +540,9 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       });
       dispatchFlow({ type: "commit_turn", state: nextFlow });
 
+      const announced = await maybeAnnounceLongStay(nextFlow.draft);
+      if (announced) await wait(220);
+
       if (nextFlow.step === "searching") {
         await runAvailabilitySearch(nextFlow.draft);
       } else {
@@ -523,6 +559,9 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     try {
       const nextFlow = bookingFlowReducer(flow, { type: "choose_guests", guests });
       dispatchFlow({ type: "commit_turn", state: nextFlow });
+
+      const announced = await maybeAnnounceLongStay(nextFlow.draft);
+      if (announced) await wait(220);
 
       if (nextFlow.step === "searching") {
         await runAvailabilitySearch(nextFlow.draft);
