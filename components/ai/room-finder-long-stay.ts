@@ -29,16 +29,15 @@ function percent(value: number) {
 
 export function longStayDiscountMessage(language: RoomFinderLanguage, info: LongStayDiscountInfo) {
   const total = percent(info.totalDiscountPercent);
-  const standard = percent(info.standardDirectDiscountPercent);
 
   const messages: Record<RoomFinderLanguage, string> = {
-    el: `✨ Ωραία! Επειδή θα μείνετε ${info.nights} νύχτες, έχετε αυτόματα καλύτερη τιμή για απευθείας κράτηση.\n🏷️ ${total}% συνολική έκπτωση αντί για το συνηθισμένο ${standard}%.\n✅ Δεν χρειάζεται κωδικός — θα τη δείτε ήδη υπολογισμένη στην τελική τιμή.`,
-    en: `✨ Nice! Because you are staying ${info.nights} nights, your direct-booking rate automatically gets better.\n🏷️ ${total}% total discount instead of the usual ${standard}%.\n✅ No code is needed — it will already be included in the final price.`,
-    de: `✨ Schön! Weil Sie ${info.nights} Nächte bleiben, erhalten Sie automatisch einen besseren Direktbuchungspreis.\n🏷️ ${total}% Gesamtrabatt statt der üblichen ${standard}%.\n✅ Kein Code nötig — der Rabatt ist bereits im Endpreis berücksichtigt.`,
-    fr: `✨ Bonne nouvelle ! Comme vous restez ${info.nights} nuits, votre tarif en réservation directe s’améliore automatiquement.\n🏷️ ${total}% de remise totale au lieu des ${standard}% habituels.\n✅ Aucun code n’est nécessaire — la remise sera déjà incluse dans le prix final.`,
-    it: `✨ Ottimo! Poiché soggiornerete ${info.nights} notti, la tariffa per la prenotazione diretta migliora automaticamente.\n🏷️ ${total}% di sconto totale invece del consueto ${standard}%.\n✅ Non serve alcun codice — lo sconto sarà già incluso nel prezzo finale.`,
-    es: `✨ ¡Bien! Como se alojarán ${info.nights} noches, la tarifa de reserva directa mejora automáticamente.\n🏷️ ${total}% de descuento total en lugar del ${standard}% habitual.\n✅ No necesitan ningún código — el descuento ya aparecerá incluido en el precio final.`,
-    tr: `✨ Güzel! ${info.nights} gece kalacağınız için doğrudan rezervasyon fiyatınız otomatik olarak daha avantajlı oluyor.\n🏷️ Standart ${standard}% yerine toplam ${total}% indirim.\n✅ Kod gerekmez — indirim son fiyata otomatik olarak yansıtılır.`,
+    el: `✨ Για διαμονή ${info.nights} διανυκτερεύσεων, το Voulamandis House σας προσφέρει επιπλέον έκπτωση.\n🏷️ Στις διαθέσιμες επιλογές δωματίων που ακολουθούν, η τιμή θα υπολογιστεί αυτόματα με ${total}% έκπτωση.`,
+    en: `✨ For a stay of ${info.nights} nights, Voulamandis House offers you an additional discount.\n🏷️ In the available room options below, the price will be calculated automatically with a ${total}% discount.`,
+    de: `✨ Für einen Aufenthalt von ${info.nights} Nächten bietet Ihnen das Voulamandis House einen zusätzlichen Rabatt.\n🏷️ Bei den folgenden verfügbaren Zimmeroptionen wird der Preis automatisch mit ${total}% Rabatt berechnet.`,
+    fr: `✨ Pour un séjour de ${info.nights} nuits, Voulamandis House vous offre une réduction supplémentaire.\n🏷️ Dans les options de chambres disponibles ci-dessous, le prix sera automatiquement calculé avec une réduction de ${total}%.`,
+    it: `✨ Per un soggiorno di ${info.nights} notti, Voulamandis House vi offre uno sconto aggiuntivo.\n🏷️ Nelle opzioni di camere disponibili qui sotto, il prezzo sarà calcolato automaticamente con uno sconto del ${total}%.`,
+    es: `✨ Para una estancia de ${info.nights} noches, Voulamandis House les ofrece un descuento adicional.\n🏷️ En las opciones de habitaciones disponibles que aparecen a continuación, el precio se calculará automáticamente con un ${total}% de descuento.`,
+    tr: `✨ ${info.nights} gecelik konaklamanız için Voulamandis House size ek indirim sunuyor.\n🏷️ Aşağıdaki müsait oda seçeneklerinde fiyat otomatik olarak %${total} indirimli şekilde hesaplanacaktır.`,
   };
 
   return messages[language];
