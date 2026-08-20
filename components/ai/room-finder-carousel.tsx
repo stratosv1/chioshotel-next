@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { RoomFinderCopy, RoomFinderLanguage } from "./room-finder-copy";
+import { splitStayNarrative } from "./room-finder-split-narrative";
 
 export type RoomOffer = {
   roomId:string;
@@ -174,6 +175,7 @@ export function RoomCarousel({ offers, copy, language, money, onDetails, onSelec
         const pending=selectingOfferKey===key;
         const splitVisuals=splitRoomVisuals(offer);
         const isSplit=splitVisuals.length>1;
+        const narrative=isSplit?splitStayNarrative(offer,language):null;
         return <article data-room-card key={key} className="min-w-[92%] snap-center overflow-hidden rounded-[24px] border border-[#dcd2c5] bg-white shadow-[0_14px_38px_rgba(70,55,35,.10)] sm:min-w-[68%]">
           <div className="relative h-44 sm:h-56">
             {isSplit ? <div className="grid h-full w-full" style={{gridTemplateColumns:`repeat(${Math.min(splitVisuals.length,3)},minmax(0,1fr))`}}>
@@ -195,7 +197,7 @@ export function RoomCarousel({ offers, copy, language, money, onDetails, onSelec
               <div className="min-w-0 flex-1">
                 <h2 className="text-[1.35rem] font-bold">{isSplit?SPLIT_SOLUTION_LABEL[language]:offer.name}</h2>
                 {isSplit && <p className="mt-1 text-sm font-semibold leading-5 text-[#514a42]">{splitVisuals.map(room => room.name).join(" + ")}</p>}
-                <p className="mt-1 text-sm text-[#746b60]">{offer.category} · {offer.floor}</p>
+                {isSplit ? narrative && <p className="mt-2 text-sm leading-5 text-[#746b60]">{narrative}</p> : <p className="mt-1 text-sm text-[#746b60]">{offer.category} · {offer.floor}</p>}
               </div>
               <div className="shrink-0 text-right">{offer.originalTotal > offer.directTotal && <p className="text-xs text-[#b05252] line-through">{money(offer.originalTotal,language)}</p>}<p className="text-xl font-black text-[#5f7448]">{money(offer.directTotal,language)}</p></div>
             </div>
