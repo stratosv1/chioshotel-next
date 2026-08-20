@@ -71,8 +71,7 @@ function isGuidePath(pathname: string): boolean {
     normalizedPathname.endsWith("/pre-arrival/") ||
     normalizedPathname === "/welcome/" ||
     normalizedPathname.endsWith("/welcome/") ||
-    normalizedPathname === "/ai-assistant/" ||
-    normalizedPathname === "/agents/rooms/"
+    normalizedPathname === "/ai-assistant/"
   );
 }
 
@@ -80,8 +79,12 @@ function isStaffPath(pathname: string): boolean {
   return pathname === "/staff" || pathname.startsWith("/staff/");
 }
 
-function isAgentPath(pathname: string): boolean {
-  return pathname === "/agents" || pathname.startsWith("/agents/");
+function isAgentRoomPath(pathname: string): boolean {
+  const normalizedPathname = pathname.endsWith("/") ? pathname : pathname + "/";
+  return (
+    normalizedPathname === "/agents/rooms/" ||
+    /^\/(el|fr|de|it|es|tr)\/agents\/rooms\/$/.test(normalizedPathname)
+  );
 }
 
 function isTripPlannerPath(pathname: string): boolean {
@@ -101,8 +104,9 @@ export default async function RootLayout({
   const sharedLanguage: SharedSiteLanguage = isPolishPath ? "en" : htmlLanguage;
   const hideHeader = isGuidePath(pathname);
   const hideGlobalChrome = hideHeader || isPolishPath;
-  const hidePostContentChrome = isTripPlannerPath(pathname);
-  const excludeAnalytics = isStaffPath(pathname) || isAgentPath(pathname);
+  const hideJourney = isTripPlannerPath(pathname) || isAgentRoomPath(pathname);
+  const hideFooter = isTripPlannerPath(pathname);
+  const excludeAnalytics = isStaffPath(pathname);
 
   return (
     <html lang={htmlLanguage}>
@@ -112,10 +116,10 @@ export default async function RootLayout({
           <VoulamandisHeaderTailwind language={sharedLanguage} pathname={pathname} />
         ) : null}
         {children}
-        {!hideGlobalChrome && !hidePostContentChrome ? (
+        {!hideGlobalChrome && !hideJourney ? (
           <ExploreVoulamandisJourney language={sharedLanguage} pathname={pathname} />
         ) : null}
-        {!hideGlobalChrome && !hidePostContentChrome ? (
+        {!hideGlobalChrome && !hideFooter ? (
           <VoulamandisFooterTailwind language={sharedLanguage} />
         ) : null}
         {!excludeAnalytics ? (

@@ -2,6 +2,12 @@
 
 import Image from "next/image";
 import { useMemo, useRef, useState } from "react";
+import type { LanguageCode } from "@/lib/languages";
+import {
+  agentLanguageNames,
+  agentRoomGuidePaths,
+  type AgentRoomGuideCopy,
+} from "@/content/agent-room-guide";
 
 export type AgentRoom = {
   roomNumber: number;
@@ -30,9 +36,15 @@ type CommonAmenity = {
 };
 
 type Props = {
+  language: LanguageCode;
+  copy: AgentRoomGuideCopy;
   rooms: AgentRoom[];
   commonAmenities: CommonAmenity[];
 };
+
+const CONTACT_EMAIL = "chioshotel@gmail.com";
+const WHATSAPP_PHONE = "306944474226";
+const LANGUAGES: LanguageCode[] = ["en", "el", "fr", "de", "it", "es", "tr"];
 
 function Glyph({ type, className = "h-4 w-4" }: { type: string; className?: string }) {
   const base = {
@@ -46,100 +58,92 @@ function Glyph({ type, className = "h-4 w-4" }: { type: string; className?: stri
     "aria-hidden": true,
   };
 
-  if (type === "bed") {
-    return <svg {...base}><path d="M3 18v-7h18v7"/><path d="M5 11V7h6a3 3 0 0 1 3 3v1"/><path d="M3 15h18M5 18v2M19 18v2"/></svg>;
-  }
-  if (type === "users") {
-    return <svg {...base}><path d="M16 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M21 20v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>;
-  }
-  if (type === "stairs") {
-    return <svg {...base}><path d="M3 18h5v-4h4v-4h4V6h5"/></svg>;
-  }
-  if (type === "size") {
-    return <svg {...base}><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>;
-  }
-  if (type === "kitchen") {
-    return <svg {...base}><path d="M5 3v18M19 3v18M5 8h14M8 5h3M8 12h2M14 12h2"/></svg>;
-  }
-  if (type === "balcony") {
-    return <svg {...base}><path d="M4 21V9h16v12M8 9V4h8v5M4 15h16M8 15v6M12 15v6M16 15v6"/></svg>;
-  }
-  if (type === "view") {
-    return <svg {...base}><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="2.5"/></svg>;
-  }
-  if (type === "mini_fridge") {
-    return <svg {...base}><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M7 10h10M10 6h1M10 13h1"/></svg>;
-  }
-  if (type === "kettle") {
-    return <svg {...base}><path d="M7 8h8l1 11H6L7 8Z"/><path d="M9 8V5h4v3M16 10h2a3 3 0 0 1 0 6h-1.5"/></svg>;
-  }
-  if (type === "coffee" || type === "tea") {
-    return <svg {...base}><path d="M5 8h11v7a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V8Z"/><path d="M16 10h2a2 2 0 0 1 0 4h-2M8 3v2M12 3v2"/></svg>;
-  }
-  if (type === "air_condition") {
-    return <svg {...base}><rect x="3" y="4" width="18" height="7" rx="2"/><path d="M7 14c0 2 2 2 2 4M12 14c0 2 2 2 2 4M17 14c0 2 2 2 2 4"/></svg>;
-  }
-  if (type === "free_wifi") {
-    return <svg {...base}><path d="M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0M12 20h.01"/></svg>;
-  }
-  if (type === "flat_screen_tv") {
-    return <svg {...base}><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4"/></svg>;
-  }
-  if (type === "private_bathroom") {
-    return <svg {...base}><path d="M4 13h16v2a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5v-2Z"/><path d="M7 13V6a3 3 0 0 1 6 0M5 20v1M19 20v1"/></svg>;
-  }
-  if (type === "non_smoking") {
-    return <svg {...base}><path d="M4 15h12M18 15h2M6 9c2 0 2 2 4 2s2-2 4-2M4 4l16 16"/></svg>;
-  }
+  if (type === "bed") return <svg {...base}><path d="M3 18v-7h18v7"/><path d="M5 11V7h6a3 3 0 0 1 3 3v1"/><path d="M3 15h18M5 18v2M19 18v2"/></svg>;
+  if (type === "users") return <svg {...base}><path d="M16 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M21 20v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>;
+  if (type === "stairs") return <svg {...base}><path d="M3 18h5v-4h4v-4h4V6h5"/></svg>;
+  if (type === "floor") return <svg {...base}><path d="M4 21h16M6 21V8h12v13M9 8V4h6v4M9 12h2M13 12h2M9 16h2M13 16h2"/></svg>;
+  if (type === "size") return <svg {...base}><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>;
+  if (type === "kitchen") return <svg {...base}><path d="M5 3v18M19 3v18M5 8h14M8 5h3M8 12h2M14 12h2"/></svg>;
+  if (type === "balcony") return <svg {...base}><path d="M4 21V9h16v12M8 9V4h8v5M4 15h16M8 15v6M12 15v6M16 15v6"/></svg>;
+  if (type === "view") return <svg {...base}><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="2.5"/></svg>;
+  if (type === "mini_fridge") return <svg {...base}><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M7 10h10M10 6h1M10 13h1"/></svg>;
+  if (type === "kettle") return <svg {...base}><path d="M7 8h8l1 11H6L7 8Z"/><path d="M9 8V5h4v3M16 10h2a3 3 0 0 1 0 6h-1.5"/></svg>;
+  if (type === "coffee" || type === "tea") return <svg {...base}><path d="M5 8h11v7a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V8Z"/><path d="M16 10h2a2 2 0 0 1 0 4h-2M8 3v2M12 3v2"/></svg>;
+  if (type === "air_condition") return <svg {...base}><rect x="3" y="4" width="18" height="7" rx="2"/><path d="M7 14c0 2 2 2 2 4M12 14c0 2 2 2 2 4M17 14c0 2 2 2 2 4"/></svg>;
+  if (type === "free_wifi") return <svg {...base}><path d="M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0M12 20h.01"/></svg>;
+  if (type === "flat_screen_tv") return <svg {...base}><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4"/></svg>;
+  if (type === "private_bathroom") return <svg {...base}><path d="M4 13h16v2a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5v-2Z"/><path d="M7 13V6a3 3 0 0 1 6 0M5 20v1M19 20v1"/></svg>;
+  if (type === "non_smoking") return <svg {...base}><path d="M4 15h12M18 15h2M6 9c2 0 2 2 4 2s2-2 4-2M4 4l16 16"/></svg>;
+  if (type === "mail") return <svg {...base}><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>;
+  if (type === "message") return <svg {...base}><path d="M20 15a4 4 0 0 1-4 4H8l-5 2 1.5-4A7.5 7.5 0 1 1 20 15Z"/><path d="M8 11h8M8 14h5"/></svg>;
+  if (type === "copy") return <svg {...base}><rect x="8" y="8" width="11" height="11" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>;
   return <svg {...base}><circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.2 2.2 4.8-5"/></svg>;
 }
 
-function roomCategory(room: AgentRoom) {
-  if (room.roomNumber === 10) return "Large family apartment";
-  if (room.roomType === "apartment") return "Family apartment";
-  if (room.isEconomy) return "Economy double room";
-  if (room.maxGuests === 4) return "Quadruple room";
-  if (room.maxGuests === 3 && room.noStairs) return "Ground-floor triple room";
-  if (room.maxGuests === 3) return "First-floor triple room";
-  return "Guest room";
+function format(template: string, values: Record<string, string | number>) {
+  return Object.entries(values).reduce(
+    (result, [key, value]) => result.replaceAll(`{${key}}`, String(value)),
+    template,
+  );
 }
 
-function bedLabel(key: string, count: number) {
-  const labels: Record<string, [string, string]> = {
-    double_bed: ["double bed", "double beds"],
-    single_bed: ["single bed", "single beds"],
-    sofa_bed: ["sofa bed", "sofa beds"],
-    single_sofa_bed: ["single sofa bed", "single sofa beds"],
-  };
-  const label = labels[key] || [key.replaceAll("_", " "), key.replaceAll("_", " ")];
-  return `${count} ${count === 1 ? label[0] : label[1]}`;
+function roomName(room: AgentRoom, copy: AgentRoomGuideCopy) {
+  return `${room.roomType === "apartment" ? copy.labels.apartment : copy.labels.room} ${room.roomNumber}`;
 }
 
-function bedsText(room: AgentRoom) {
+function roomCategory(room: AgentRoom, copy: AgentRoomGuideCopy) {
+  if (room.roomNumber === 10) return copy.categories.largeFamilyApartment;
+  if (room.roomType === "apartment") return copy.categories.familyApartment;
+  if (room.isEconomy) return copy.categories.economyDouble;
+  if (room.maxGuests === 4) return copy.categories.quadruple;
+  if (room.maxGuests === 3 && room.noStairs) return copy.categories.groundTriple;
+  if (room.maxGuests === 3) return copy.categories.firstTriple;
+  return copy.categories.guestRoom;
+}
+
+function floorText(room: AgentRoom, copy: AgentRoomGuideCopy) {
+  if (room.roomType === "apartment") return copy.labels.groundIndependent;
+  if (room.noStairs) return copy.labels.groundFloor;
+  return copy.labels.firstFloor;
+}
+
+function bedLabel(key: string, count: number, copy: AgentRoomGuideCopy) {
+  const labels = copy.beds[key] || [key.replaceAll("_", " "), key.replaceAll("_", " ")];
+  return `${count} ${count === 1 ? labels[0] : labels[1]}`;
+}
+
+function bedsText(room: AgentRoom, copy: AgentRoomGuideCopy) {
   return Object.entries(room.bedSetup)
-    .map(([key, count]) => bedLabel(key, count))
+    .map(([key, count]) => bedLabel(key, count, copy))
     .join(" + ");
 }
 
-function spacesText(layout: string) {
-  if (layout === "two_spaces_without_connecting_door") return "2 sleeping areas · open connection";
-  if (layout === "two_spaces") return "2 separate living/sleeping areas";
-  return "1 room / sleeping area";
+function spacesText(layout: string, copy: AgentRoomGuideCopy) {
+  if (layout === "two_spaces_without_connecting_door") return copy.spaces.twoOpen;
+  if (layout === "two_spaces") return copy.spaces.twoSeparate;
+  return copy.spaces.one;
 }
 
-function PhotoGallery({ room, activeIndex, onSelect }: {
+function PhotoGallery({
+  room,
+  copy,
+  activeIndex,
+  onSelect,
+}: {
   room: AgentRoom;
+  copy: AgentRoomGuideCopy;
   activeIndex: number;
   onSelect: (index: number) => void;
 }) {
   const current = room.gallery[activeIndex] || room.gallery[0];
+  if (!current) return null;
 
   return (
     <div className="p-3 sm:p-4">
       <div className="relative aspect-[4/3] overflow-hidden rounded-[18px] bg-[#ece6de]">
         <Image
           src={current}
-          alt={`${room.displayName} photo ${activeIndex + 1}`}
+          alt={`${roomName(room, copy)} ${copy.labels.photo} ${activeIndex + 1}`}
           fill
           sizes="(max-width: 767px) 88vw, 36vw"
           className="object-cover"
@@ -156,7 +160,7 @@ function PhotoGallery({ room, activeIndex, onSelect }: {
             key={`${room.roomNumber}-${photo}`}
             onClick={() => onSelect(index)}
             className={`relative aspect-[4/3] overflow-hidden rounded-xl border transition ${index === activeIndex ? "border-[#756553] ring-1 ring-[#756553]" : "border-[#ddd3c7] hover:border-[#a79682]"}`}
-            aria-label={`Show photo ${index + 1} of ${room.displayName}`}
+            aria-label={`${roomName(room, copy)} ${copy.labels.photo} ${index + 1}`}
           >
             <Image src={photo} alt="" fill sizes="100px" className="object-cover" />
           </button>
@@ -166,7 +170,7 @@ function PhotoGallery({ room, activeIndex, onSelect }: {
   );
 }
 
-export function AgentRoomsGuide({ rooms, commonAmenities }: Props) {
+export function AgentRoomsGuide({ language, copy, rooms, commonAmenities }: Props) {
   const carouselRef = useRef<HTMLDivElement>(null);
   const [selectedRooms, setSelectedRooms] = useState<number[]>([]);
   const [guestCounts, setGuestCounts] = useState<Record<number, string>>({});
@@ -174,7 +178,7 @@ export function AgentRoomsGuide({ rooms, commonAmenities }: Props) {
   const [copied, setCopied] = useState(false);
 
   const selected = useMemo(
-    () => rooms.filter(room => selectedRooms.includes(room.roomNumber)),
+    () => rooms.filter((room) => selectedRooms.includes(room.roomNumber)),
     [rooms, selectedRooms],
   );
 
@@ -183,30 +187,44 @@ export function AgentRoomsGuide({ rooms, commonAmenities }: Props) {
     return sum + (Number.isFinite(value) ? value : 0);
   }, 0);
 
+  const allocationText = useMemo(() => {
+    if (!selected.length) return "";
+    return [
+      copy.message.title,
+      "",
+      ...selected.map(
+        (room) => `${roomName(room, copy)}: ${guestCounts[room.roomNumber] || "—"} ${copy.labels.totalGuests}`,
+      ),
+      "",
+      `${copy.message.totalGuests}: ${totalGuests}`,
+      copy.message.footer,
+    ].join("\n");
+  }, [copy, guestCounts, selected, totalGuests]);
+
   function toggleRoom(room: AgentRoom) {
-    setSelectedRooms(current => {
+    setSelectedRooms((current) => {
       if (current.includes(room.roomNumber)) {
-        setGuestCounts(counts => {
+        setGuestCounts((counts) => {
           const next = { ...counts };
           delete next[room.roomNumber];
           return next;
         });
-        return current.filter(number => number !== room.roomNumber);
+        return current.filter((number) => number !== room.roomNumber);
       }
-      setGuestCounts(counts => ({ ...counts, [room.roomNumber]: "1" }));
+      setGuestCounts((counts) => ({ ...counts, [room.roomNumber]: "1" }));
       return [...current, room.roomNumber].sort((a, b) => a - b);
     });
   }
 
   function updateGuests(room: AgentRoom, raw: string) {
     if (raw === "") {
-      setGuestCounts(current => ({ ...current, [room.roomNumber]: "" }));
+      setGuestCounts((current) => ({ ...current, [room.roomNumber]: "" }));
       return;
     }
     const parsed = Number(raw);
     if (!Number.isFinite(parsed)) return;
     const clamped = Math.min(room.maxGuests, Math.max(1, Math.trunc(parsed)));
-    setGuestCounts(current => ({ ...current, [room.roomNumber]: String(clamped) }));
+    setGuestCounts((current) => ({ ...current, [room.roomNumber]: String(clamped) }));
   }
 
   function scrollMobile(direction: -1 | 1) {
@@ -216,19 +234,24 @@ export function AgentRoomsGuide({ rooms, commonAmenities }: Props) {
   }
 
   async function copyAllocation() {
-    if (!selected.length) return;
-    const lines = [
-      "Voulamandis House — room allocation",
-      ...selected.map(room => `${room.displayName}: ${guestCounts[room.roomNumber] || "—"} guest(s)`),
-      `Total guests: ${totalGuests}`,
-    ];
+    if (!allocationText) return;
     try {
-      await navigator.clipboard.writeText(lines.join("\n"));
+      await navigator.clipboard.writeText(allocationText);
       setCopied(true);
       window.setTimeout(() => setCopied(false), 1600);
     } catch {
       setCopied(false);
     }
+  }
+
+  function sendEmail() {
+    if (!allocationText) return;
+    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(copy.message.emailSubject)}&body=${encodeURIComponent(allocationText)}`;
+  }
+
+  function sendWhatsApp() {
+    if (!allocationText) return;
+    window.open(`https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(allocationText)}`, "_blank", "noopener,noreferrer");
   }
 
   return (
@@ -237,33 +260,59 @@ export function AgentRoomsGuide({ rooms, commonAmenities }: Props) {
         <div className="mx-auto max-w-[1500px] px-4 py-7 sm:px-6 md:py-9 lg:px-8">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#796b5b]">Voulamandis House · Agent guide</p>
-              <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[#332d27] md:text-4xl">Room allocation guide</h1>
-              <p className="mt-3 max-w-2xl text-sm leading-6 text-[#665d53] md:text-base">
-                Compare every room, bed configuration and amenity, then select the rooms you want and enter how many guests will stay in each one.
-              </p>
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#796b5b]">{copy.hero.kicker}</p>
+              <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[#332d27] md:text-4xl">{copy.hero.title}</h1>
+              <p className="mt-3 max-w-3xl text-sm leading-6 text-[#665d53] md:text-base">{copy.hero.description}</p>
             </div>
-            <div className="inline-flex w-fit items-center gap-2 rounded-full border border-[#d3c7b8] bg-white/75 px-3 py-1.5 text-xs font-semibold text-[#65594c]">
-              <Glyph type="users" className="h-3.5 w-3.5" />
-              No prices shown
+            <div className="flex flex-col items-start gap-3 lg:items-end">
+              <div className="inline-flex w-fit items-center gap-2 rounded-full border border-[#d3c7b8] bg-white/75 px-3 py-1.5 text-xs font-semibold text-[#65594c]">
+                <Glyph type="users" className="h-3.5 w-3.5" />
+                {copy.hero.noPrices}
+              </div>
+              <div className="flex flex-wrap items-center gap-1.5" aria-label={copy.labels.language}>
+                {LANGUAGES.map((code) => (
+                  <a
+                    key={code}
+                    href={agentRoomGuidePaths[code]}
+                    hrefLang={code}
+                    className={`rounded-full border px-2.5 py-1.5 text-[11px] font-bold transition ${code === language ? "border-[#6e5f50] bg-[#6e5f50] text-white" : "border-[#cfc3b5] bg-white/75 text-[#65594c] hover:border-[#9c8974]"}`}
+                  >
+                    {agentLanguageNames[code]}
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
 
-          <div className="mt-6 rounded-[20px] border border-[#d8cec1] bg-white/70 p-4 shadow-sm">
-            <div className="mb-3 flex items-center gap-2">
-              <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#eee7de] text-[#6b5e50]"><Glyph type="kettle" /></span>
-              <div>
-                <p className="text-sm font-bold text-[#40372f]">Included in every room</p>
-                <p className="text-xs text-[#756b61]">These amenities apply to rooms 1–10.</p>
+          <div className="mt-6 grid gap-3 lg:grid-cols-[1.35fr_.85fr]">
+            <div className="rounded-[20px] border border-[#d8cec1] bg-white/70 p-4 shadow-sm">
+              <div className="mb-3 flex items-center gap-2">
+                <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#eee7de] text-[#6b5e50]"><Glyph type="kettle" /></span>
+                <div>
+                  <p className="text-sm font-bold text-[#40372f]">{copy.labels.includedEveryRoom}</p>
+                  <p className="text-xs text-[#756b61]">{copy.labels.includedEveryRoomText}</p>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {commonAmenities.map((amenity) => (
+                  <span key={amenity.key} className="inline-flex items-center gap-1.5 rounded-full border border-[#e0d7cc] bg-[#faf8f5] px-2.5 py-1.5 text-xs font-medium text-[#5d5348]">
+                    <Glyph type={amenity.key} className="h-3.5 w-3.5" />
+                    {copy.amenities[amenity.key] || amenity.label}
+                  </span>
+                ))}
               </div>
             </div>
-            <div className="flex flex-wrap gap-2">
-              {commonAmenities.map(amenity => (
-                <span key={amenity.key} className="inline-flex items-center gap-1.5 rounded-full border border-[#e0d7cc] bg-[#faf8f5] px-2.5 py-1.5 text-xs font-medium text-[#5d5348]">
-                  <Glyph type={amenity.key} className="h-3.5 w-3.5" />
-                  {amenity.label}
-                </span>
-              ))}
+
+            <div className="rounded-[20px] border border-[#d8cec1] bg-[#faf7f2] p-4 shadow-sm">
+              <p className="text-sm font-bold text-[#40372f]">{copy.how.title}</p>
+              <ol className="mt-3 grid gap-2.5">
+                {copy.how.steps.map((step, index) => (
+                  <li key={step} className="flex items-start gap-2.5 text-xs leading-5 text-[#665d53]">
+                    <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#6e5f50] text-[11px] font-bold text-white">{index + 1}</span>
+                    <span className="pt-0.5">{step}</span>
+                  </li>
+                ))}
+              </ol>
             </div>
           </div>
         </div>
@@ -272,12 +321,12 @@ export function AgentRoomsGuide({ rooms, commonAmenities }: Props) {
       <section className="mx-auto max-w-[1500px] py-6 md:px-6 md:py-8 lg:px-8">
         <div className="mb-4 flex items-center justify-between px-4 md:px-0">
           <div>
-            <h2 className="text-lg font-bold text-[#3d352e]">Rooms 1–10</h2>
-            <p className="mt-0.5 text-xs text-[#7a7066] md:hidden">Swipe to compare rooms</p>
+            <h2 className="text-lg font-bold text-[#3d352e]">{copy.labels.roomsTitle}</h2>
+            <p className="mt-0.5 text-xs text-[#7a7066] md:hidden">{copy.labels.swipe}</p>
           </div>
           <div className="flex gap-2 md:hidden">
-            <button type="button" onClick={() => scrollMobile(-1)} className="flex h-10 w-10 items-center justify-center rounded-full border border-[#d5cabd] bg-white text-xl text-[#5d5144] shadow-sm" aria-label="Previous room">‹</button>
-            <button type="button" onClick={() => scrollMobile(1)} className="flex h-10 w-10 items-center justify-center rounded-full border border-[#d5cabd] bg-white text-xl text-[#5d5144] shadow-sm" aria-label="Next room">›</button>
+            <button type="button" onClick={() => scrollMobile(-1)} className="flex h-10 w-10 items-center justify-center rounded-full border border-[#d5cabd] bg-white text-xl text-[#5d5144] shadow-sm" aria-label={copy.labels.previousRoom}>‹</button>
+            <button type="button" onClick={() => scrollMobile(1)} className="flex h-10 w-10 items-center justify-center rounded-full border border-[#d5cabd] bg-white text-xl text-[#5d5144] shadow-sm" aria-label={copy.labels.nextRoom}>›</button>
           </div>
         </div>
 
@@ -285,24 +334,28 @@ export function AgentRoomsGuide({ rooms, commonAmenities }: Props) {
           ref={carouselRef}
           className="flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:block md:space-y-6 md:overflow-visible md:px-0"
         >
-          {rooms.map(room => {
+          {rooms.map((room) => {
             const isSelected = selectedRooms.includes(room.roomNumber);
             const assigned = Number(guestCounts[room.roomNumber] || 0);
             const needsExtraBed = room.extraBedAvailable && assigned > room.standardCapacity;
+            const capacityText = room.standardCapacity < room.maxGuests
+              ? format(copy.labels.standardMax, { standard: room.standardCapacity, max: room.maxGuests })
+              : format(copy.labels.upToGuests, { count: room.maxGuests });
             const details = [
-              { icon: "users", label: room.standardCapacity < room.maxGuests ? `${room.standardCapacity} standard · max ${room.maxGuests}` : `Up to ${room.maxGuests} guests` },
-              { icon: "stairs", label: room.noStairs ? "No stairs" : "Stairs required" },
+              { icon: "users", label: capacityText },
+              { icon: "floor", label: floorText(room, copy) },
+              { icon: "stairs", label: room.noStairs ? copy.labels.noStairs : copy.labels.stairsRequired },
               { icon: "size", label: `${room.sizeM2} m²` },
-              { icon: "bed", label: spacesText(room.spaceLayout) },
+              { icon: "bed", label: spacesText(room.spaceLayout, copy) },
             ];
 
             const roomAmenities = [
-              room.hasFullKitchen ? { icon: "kitchen", label: "Full kitchen" } : null,
-              room.hasKitchenette ? { icon: "kitchen", label: "Kitchenette" } : null,
-              room.hasBalcony ? { icon: "balcony", label: "Private balcony" } : null,
-              room.hasUpperFloorView ? { icon: "view", label: "Upper-floor view" } : null,
-              room.hasGardenView ? { icon: "view", label: "Garden view / access" } : null,
-              room.extraBedAvailable ? { icon: "bed", label: "Extra bed available for 5th guest" } : null,
+              room.hasFullKitchen ? { icon: "kitchen", label: copy.labels.fullKitchen } : null,
+              room.hasKitchenette ? { icon: "kitchen", label: copy.labels.kitchenette } : null,
+              room.hasBalcony ? { icon: "balcony", label: copy.labels.privateBalcony } : null,
+              room.hasUpperFloorView ? { icon: "view", label: copy.labels.upperFloorView } : null,
+              room.hasGardenView ? { icon: "view", label: copy.labels.gardenView } : null,
+              room.extraBedAvailable ? { icon: "bed", label: copy.labels.extraBedAvailable } : null,
             ].filter(Boolean) as { icon: string; label: string }[];
 
             return (
@@ -312,25 +365,24 @@ export function AgentRoomsGuide({ rooms, commonAmenities }: Props) {
               >
                 <PhotoGallery
                   room={room}
+                  copy={copy}
                   activeIndex={activePhotos[room.roomNumber] || 0}
-                  onSelect={index => setActivePhotos(current => ({ ...current, [room.roomNumber]: index }))}
+                  onSelect={(index) => setActivePhotos((current) => ({ ...current, [room.roomNumber]: index }))}
                 />
 
                 <div className="border-t border-[#eee8e0] px-4 py-5 sm:px-5 md:border-l md:border-t-0 md:px-6 md:py-6">
-                  <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div>
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className="rounded-full bg-[#ece4da] px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-[#68594a]">Room {room.roomNumber}</span>
-                        {room.isEconomy ? <span className="rounded-full border border-[#ddd2c4] px-2.5 py-1 text-[11px] font-semibold text-[#756858]">Economy</span> : null}
-                      </div>
-                      <h3 className="mt-2 text-2xl font-semibold tracking-tight text-[#342d27]">{room.displayName}</h3>
-                      <p className="mt-1 text-sm font-medium text-[#756858]">{roomCategory(room)}</p>
+                  <div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="rounded-full bg-[#ece4da] px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-[#68594a]">{copy.labels.room} {room.roomNumber}</span>
+                      {room.isEconomy ? <span className="rounded-full border border-[#ddd2c4] px-2.5 py-1 text-[11px] font-semibold text-[#756858]">{copy.labels.economy}</span> : null}
                     </div>
+                    <h3 className="mt-2 text-2xl font-semibold tracking-tight text-[#342d27]">{roomName(room, copy)}</h3>
+                    <p className="mt-1 text-sm font-medium text-[#756858]">{roomCategory(room, copy)}</p>
                   </div>
 
-                  <div className="mt-5 grid grid-cols-2 gap-2.5">
-                    {details.map(detail => (
-                      <div key={detail.label} className="flex min-h-[52px] items-center gap-2.5 rounded-2xl bg-[#f7f3ee] px-3 py-2.5 text-xs font-semibold leading-4 text-[#5c5146]">
+                  <div className="mt-5 grid grid-cols-2 gap-2.5 xl:grid-cols-3">
+                    {details.map((detail) => (
+                      <div key={`${detail.icon}-${detail.label}`} className="flex min-h-[52px] items-center gap-2.5 rounded-2xl bg-[#f7f3ee] px-3 py-2.5 text-xs font-semibold leading-4 text-[#5c5146]">
                         <span className="text-[#766553]"><Glyph type={detail.icon} /></span>
                         {detail.label}
                       </div>
@@ -338,30 +390,30 @@ export function AgentRoomsGuide({ rooms, commonAmenities }: Props) {
                   </div>
 
                   <div className="mt-5 border-t border-[#eee7df] pt-4">
-                    <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.11em] text-[#7a6c5d]"><Glyph type="bed" className="h-4 w-4" /> Beds</p>
-                    <p className="mt-1.5 text-[15px] font-semibold leading-6 text-[#3f3730]">{bedsText(room)}</p>
-                    {room.roomNumber === 1 ? <p className="mt-1 text-xs leading-5 text-[#766b60]">Two single sofa beds are used for the 3rd and 4th guests.</p> : null}
-                    {room.roomNumber === 10 ? <p className="mt-1 text-xs leading-5 text-[#766b60]">Standard setup is for 4 guests. For 5 guests, an extra bed is added and the space is tighter.</p> : null}
+                    <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.11em] text-[#7a6c5d]"><Glyph type="bed" className="h-4 w-4" /> {copy.labels.beds}</p>
+                    <p className="mt-1.5 text-[15px] font-semibold leading-6 text-[#3f3730]">{bedsText(room, copy)}</p>
+                    {room.roomNumber === 1 ? <p className="mt-1 text-xs leading-5 text-[#766b60]">{copy.labels.roomOneNote}</p> : null}
+                    {room.roomNumber === 10 ? <p className="mt-1 text-xs leading-5 text-[#766b60]">{copy.labels.roomTenNote}</p> : null}
                   </div>
 
                   <div className="mt-4">
-                    <p className="text-xs font-bold uppercase tracking-[0.11em] text-[#7a6c5d]">Room-specific features</p>
+                    <p className="text-xs font-bold uppercase tracking-[0.11em] text-[#7a6c5d]">{copy.labels.specificFeatures}</p>
                     <div className="mt-2 flex flex-wrap gap-2">
-                      {roomAmenities.length ? roomAmenities.map(item => (
+                      {roomAmenities.length ? roomAmenities.map((item) => (
                         <span key={item.label} className="inline-flex items-center gap-1.5 rounded-full border border-[#dfd6ca] bg-white px-2.5 py-1.5 text-xs font-medium text-[#5f5448]">
                           <Glyph type={item.icon} className="h-3.5 w-3.5" />{item.label}
                         </span>
-                      )) : <span className="text-xs text-[#7a7066]">Standard room amenities only</span>}
+                      )) : <span className="text-xs text-[#7a7066]">{copy.labels.standardOnly}</span>}
                     </div>
                   </div>
 
                   <div className="mt-4">
-                    <p className="text-xs font-bold uppercase tracking-[0.11em] text-[#7a6c5d]">Standard amenities in this room</p>
+                    <p className="text-xs font-bold uppercase tracking-[0.11em] text-[#7a6c5d]">{copy.labels.standardAmenities}</p>
                     <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-2 sm:grid-cols-3">
-                      {commonAmenities.map(amenity => (
+                      {commonAmenities.map((amenity) => (
                         <div key={`${room.roomNumber}-${amenity.key}`} className="flex items-center gap-1.5 text-[11px] font-medium text-[#6a6056]">
                           <span className="text-[#847563]"><Glyph type={amenity.key} className="h-3.5 w-3.5" /></span>
-                          {amenity.label}
+                          {copy.amenities[amenity.key] || amenity.label}
                         </div>
                       ))}
                     </div>
@@ -369,8 +421,8 @@ export function AgentRoomsGuide({ rooms, commonAmenities }: Props) {
                 </div>
 
                 <aside className={`border-t border-[#e8e0d7] p-4 md:border-l md:border-t-0 md:p-5 ${isSelected ? "bg-[#f1ebe3]" : "bg-[#faf8f5]"}`}>
-                  <div className="md:sticky md:top-5">
-                    <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#746657]">Allocation</p>
+                  <div className="md:sticky md:top-24">
+                    <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#746657]">{copy.labels.allocation}</p>
                     <button
                       type="button"
                       onClick={() => toggleRoom(room)}
@@ -379,11 +431,11 @@ export function AgentRoomsGuide({ rooms, commonAmenities }: Props) {
                       <span className={`flex h-5 w-5 items-center justify-center rounded-md border ${isSelected ? "border-white/70 bg-white/10" : "border-[#b8aa9a]"}`}>
                         {isSelected ? "✓" : ""}
                       </span>
-                      {isSelected ? "Room selected" : "Select room"}
+                      {isSelected ? copy.labels.roomSelected : copy.labels.selectRoom}
                     </button>
 
                     <label className="mt-4 block">
-                      <span className="mb-1.5 block text-xs font-semibold text-[#6c6054]">Guests staying in this room</span>
+                      <span className="mb-1.5 block text-xs font-semibold text-[#6c6054]">{copy.labels.guestsStaying}</span>
                       <div className="flex items-center gap-2">
                         <input
                           type="number"
@@ -392,16 +444,16 @@ export function AgentRoomsGuide({ rooms, commonAmenities }: Props) {
                           max={room.maxGuests}
                           disabled={!isSelected}
                           value={isSelected ? guestCounts[room.roomNumber] ?? "" : ""}
-                          onChange={event => updateGuests(room, event.target.value)}
+                          onChange={(event) => updateGuests(room, event.target.value)}
                           placeholder="—"
                           className="h-12 w-20 rounded-xl border border-[#cfc4b7] bg-white px-3 text-center text-lg font-bold text-[#40362e] outline-none transition focus:border-[#796754] focus:ring-2 focus:ring-[#796754]/15 disabled:cursor-not-allowed disabled:bg-[#f1ede8] disabled:text-[#aaa096]"
                         />
-                        <span className="text-xs leading-5 text-[#756a5f]">Max<br/><strong className="text-[#4d4339]">{room.maxGuests}</strong></span>
+                        <span className="text-xs leading-5 text-[#756a5f]">{copy.labels.max}<br/><strong className="text-[#4d4339]">{room.maxGuests}</strong></span>
                       </div>
                     </label>
 
                     {needsExtraBed ? (
-                      <div className="mt-3 rounded-xl border border-[#d8c7ad] bg-[#fff9ed] px-3 py-2 text-xs font-semibold leading-5 text-[#69563d]">Extra bed required for the 5th guest.</div>
+                      <div className="mt-3 rounded-xl border border-[#d8c7ad] bg-[#fff9ed] px-3 py-2 text-xs font-semibold leading-5 text-[#69563d]">{copy.labels.extraBedRequired}</div>
                     ) : null}
                   </div>
                 </aside>
@@ -411,15 +463,23 @@ export function AgentRoomsGuide({ rooms, commonAmenities }: Props) {
         </div>
       </section>
 
-      <div className={`sticky bottom-0 z-20 border-t border-[#d7ccbf] bg-[#f7f2ec]/95 shadow-[0_-8px_26px_rgba(67,54,42,0.08)] backdrop-blur transition ${selected.length ? "translate-y-0" : "translate-y-full"}`}>
-        <div className="mx-auto flex max-w-[1500px] flex-col gap-3 px-4 py-3 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
-          <div>
-            <p className="text-sm font-bold text-[#433930]">{selected.length} room{selected.length === 1 ? "" : "s"} selected · {totalGuests} guest{totalGuests === 1 ? "" : "s"}</p>
-            <p className="mt-0.5 truncate text-xs text-[#766b60]">{selected.map(room => `${room.displayName}: ${guestCounts[room.roomNumber] || "—"}`).join(" · ")}</p>
+      <div className={`sticky bottom-0 z-30 border-t border-[#d7ccbf] bg-[#f7f2ec]/97 shadow-[0_-8px_26px_rgba(67,54,42,0.11)] backdrop-blur transition ${selected.length ? "translate-y-0" : "translate-y-full"}`}>
+        <div className="mx-auto flex max-w-[1500px] flex-col gap-3 px-4 py-3 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+          <div className="min-w-0">
+            <p className="text-sm font-bold text-[#433930]">{selected.length} {copy.labels.selectedRooms} · {totalGuests} {copy.labels.totalGuests}</p>
+            <p className="mt-0.5 truncate text-xs text-[#766b60]">{selected.map((room) => `${roomName(room, copy)}: ${guestCounts[room.roomNumber] || "—"}`).join(" · ")}</p>
           </div>
-          <button type="button" onClick={copyAllocation} className="shrink-0 rounded-xl bg-[#665849] px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-[#574a3d]">
-            {copied ? "Copied" : "Copy allocation"}
-          </button>
+          <div className="grid shrink-0 grid-cols-3 gap-2">
+            <button type="button" onClick={sendEmail} className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-[#c7b9aa] bg-white px-3 text-xs font-bold text-[#51463b] shadow-sm transition hover:border-[#8d7965]">
+              <Glyph type="mail" className="h-4 w-4" /> {copy.labels.sendEmail}
+            </button>
+            <button type="button" onClick={sendWhatsApp} className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl bg-[#665849] px-3 text-xs font-bold text-white shadow-sm transition hover:bg-[#574a3d]">
+              <Glyph type="message" className="h-4 w-4" /> {copy.labels.sendWhatsApp}
+            </button>
+            <button type="button" onClick={copyAllocation} className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-[#c7b9aa] bg-white px-3 text-xs font-bold text-[#51463b] shadow-sm transition hover:border-[#8d7965]">
+              <Glyph type="copy" className="h-4 w-4" /> {copied ? copy.labels.copied : copy.labels.copyAllocation}
+            </button>
+          </div>
         </div>
       </div>
     </main>

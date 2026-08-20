@@ -12,21 +12,19 @@ import { villageCategoryPaths } from "@/content/village-categories";
 import { getVillageSlugs } from "@/content/village-details";
 import { getMuseumSlugs } from "@/content/museum-details";
 import { propertyFaqPaths } from "@/content/property-faq";
+import { agentRoomGuidePaths } from "@/content/agent-room-guide";
 import { CHIOS_HOTELS_GUIDE_PATHS } from "@/lib/chios-hotels-guide-i18n";
 import { routeMap } from "@/lib/url-map";
 import { absoluteUrl } from "@/lib/seo";
 
 type SitemapEntry = MetadataRoute.Sitemap[number];
 
-// These timestamps come from the latest significant source/component changes
-// for the corresponding canonical route groups. Keep them truthful: do not
-// replace them with the build/deploy date unless the page content actually
-// changed.
 const VERIFIED_LAST_MODIFIED = {
   villageCategories: "2026-07-10T12:17:11Z",
   sandyBeaches: "2026-07-10T14:21:54Z",
   spanishAccommodation: "2026-07-27T05:02:55Z",
   romanticStay: "2026-08-04T17:43:25Z",
+  agentRoomGuide: "2026-08-20T18:40:00Z",
 } as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -63,6 +61,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
+  const agentRoomRoutes: SitemapEntry[] = Object.values(agentRoomGuidePaths).map(
+    (path) => ({
+      url: absoluteUrl(path),
+      lastModified: VERIFIED_LAST_MODIFIED.agentRoomGuide,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    }),
+  );
+
   const polishRoutes: SitemapEntry[] = [
     "/pl/",
     "/pl/noclegi-chios/",
@@ -81,9 +88,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const routes: SitemapEntry[] = routeMap
     .filter((route) => route.action === "KEEP")
-    // These seven localized Find Your Room aliases are permanent redirects to
-    // the noindex AI Room Finder application. Redirect/noindex URLs must not be
-    // submitted as canonical sitemap entries.
     .filter((route) => route.itemId !== "find-your-room")
     .filter((route) => !isOldBeachDetailRoute(route.path))
     .filter((route) => !isOldVillageDetailRoute(route.path))
@@ -186,6 +190,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...romanticStayRoutes,
     ...polishRoutes,
     ...faqRoutes,
+    ...agentRoomRoutes,
     ...routes,
     ...familyBeachRoutes,
     ...organizedBeachRoutes,
