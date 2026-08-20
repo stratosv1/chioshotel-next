@@ -71,12 +71,17 @@ function isGuidePath(pathname: string): boolean {
     normalizedPathname.endsWith("/pre-arrival/") ||
     normalizedPathname === "/welcome/" ||
     normalizedPathname.endsWith("/welcome/") ||
-    normalizedPathname === "/ai-assistant/"
+    normalizedPathname === "/ai-assistant/" ||
+    normalizedPathname === "/agents/rooms/"
   );
 }
 
 function isStaffPath(pathname: string): boolean {
   return pathname === "/staff" || pathname.startsWith("/staff/");
+}
+
+function isAgentPath(pathname: string): boolean {
+  return pathname === "/agents" || pathname.startsWith("/agents/");
 }
 
 function isTripPlannerPath(pathname: string): boolean {
@@ -97,7 +102,7 @@ export default async function RootLayout({
   const hideHeader = isGuidePath(pathname);
   const hideGlobalChrome = hideHeader || isPolishPath;
   const hidePostContentChrome = isTripPlannerPath(pathname);
-  const excludeAnalytics = isStaffPath(pathname);
+  const excludeAnalytics = isStaffPath(pathname) || isAgentPath(pathname);
 
   return (
     <html lang={htmlLanguage}>
