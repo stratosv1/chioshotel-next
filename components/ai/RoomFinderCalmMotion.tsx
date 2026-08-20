@@ -175,9 +175,16 @@ export function RoomFinderCalmMotion() {
         30% { opacity: .95; transform: translateY(-2px); }
       }
 
-      [data-room-finder-shell="true"] .msg {
+      [data-room-finder-shell="true"] .msg,
+      [data-room-finder-shell="true"] [role="log"] section:not(.msg),
+      [data-room-finder-shell="true"] [role="dialog"],
+      [data-room-finder-shell="true"] [role="log"] [role="status"]:not(.msg) {
         animation: rfCalmEnter 340ms cubic-bezier(.16, 1, .3, 1) both !important;
         transform-origin: center bottom;
+      }
+
+      [data-room-finder-shell="true"] > header + div:not([role="log"]) {
+        animation: rfCalmEnter 300ms cubic-bezier(.16, 1, .3, 1) both;
       }
 
       [data-room-finder-shell="true"] .reaction {
@@ -225,6 +232,10 @@ export function RoomFinderCalmMotion() {
 
       @media (prefers-reduced-motion: reduce) {
         [data-room-finder-shell="true"] .msg,
+        [data-room-finder-shell="true"] [role="log"] section:not(.msg),
+        [data-room-finder-shell="true"] [role="dialog"],
+        [data-room-finder-shell="true"] [role="log"] [role="status"]:not(.msg),
+        [data-room-finder-shell="true"] > header + div:not([role="log"]),
         [data-room-finder-shell="true"] .reaction,
         [data-room-finder-shell="true"] .typing-dot,
         [data-room-finder-shell="true"] [aria-label="Typing"] > span,
