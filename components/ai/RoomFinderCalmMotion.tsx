@@ -6,6 +6,9 @@ const CALM_SCROLL_MS = 320;
 const MIN_SCROLL_DISTANCE = 28;
 const SCROLL_COALESCE_MS = 70;
 const STICKY_THRESHOLD = 120;
+const BOTTOM_EPSILON = 24;
+
+type ScrollToOptionsWithForce = ScrollToOptions & { force?: boolean };
 
 function easeOutCubic(value: number) {
   return 1 - Math.pow(1 - value, 3);
@@ -23,14 +26,17 @@ export function RoomFinderCalmMotion() {
     const nativeScrollTo = HTMLElement.prototype.scrollTo.bind(feed);
     const feedScrollDescriptor = Object.getOwnPropertyDescriptor(feed, "scrollTo");
     const patchedResults = new Map<HTMLElement, PropertyDescriptor | undefined>();
+
     let animationFrame: number | null = null;
     let queuedScrollTimer: number | null = null;
     let queuedTargetTop: number | null = null;
     let queuedDuration = CALM_SCROLL_MS;
+    let queuedForce = false;
     let programmaticScroll = false;
     let stickToBottom = true;
 
-    const distanceFromBottom = () => Math.max(0, feed.scrollHeight - feed.clientHeight - feed.scrollTop);
+    const distanceFromBottom = () =>
+      Math.max(0, feed.scrollHeight - feed.clientHeight - feed.scrollTop);
 
     const stopAnimation = () => {
       if (animationFrame !== null) {
@@ -46,20 +52,29 @@ export function RoomFinderCalmMotion() {
         queuedScrollTimer = null;
       }
       queuedTargetTop = null;
+      queuedForce = false;
     };
 
-    const performScroll = (targetTop: number, duration = CALM_SCROLL_MS) => {
+    const performScroll = (
+      targetTop: number,
+      duration = CALM_SCROLL_MS,
+      force = false,
+    ) => {
       const maxTop = Math.max(0, feed.scrollHeight - feed.clientHeight);
       const clampedTarget = Math.max(0, Math.min(targetTop, maxTop));
       const startTop = feed.scrollTop;
       const distance = clampedTarget - startTop;
-      const isBottomRequest = Math.abs(clampedTarget - maxTop) <= 24;
+      const isBottomRequest = Math.abs(clampedTarget - maxTop) <= BOTTOM_EPSILON;
 
       stopAnimation();
 
-      if (isBottomRequest && !stickToBottom) return;
+      if (isBottomRequest && !stickToBottom && !force) return;
 
-      if (reduceMotion.matches || Math.abs(distance) < MIN_SCROLL_DISTANCE || duration <= 0) {
+      if (
+        reduceMotion.matches ||
+        Math.abs(distance) < MIN_SCROLL_DISTANCE ||
+        duration <= 0
+      ) {
         programmaticScroll = true;
         nativeScrollTo({ top: clampedTarget, behavior: "auto" });
         programmaticScroll = false;
@@ -69,10 +84,15 @@ export function RoomFinderCalmMotion() {
 
       const startedAt = performance.now();
       programmaticScroll = true;
+
       const tick = (now: number) => {
         const progress = Math.min(1, (now - startedAt) / duration);
         const eased = easeOutCubic(progress);
-        nativeScrollTo({ top: startTop + distance * eased, behavior: "auto" });
+
+        nativeScrollTo({
+          top: startTop + distance * eased,
+          behavior: "auto",
+        });
 
         if (progress < 1) {
           animationFrame = window.requestAnimationFrame(tick);
@@ -86,36 +106,60 @@ export function RoomFinderCalmMotion() {
       animationFrame = window.requestAnimationFrame(tick);
     };
 
-    const queueScroll = (targetTop: number, duration = CALM_SCROLL_MS) => {
+    const queueScroll = (
+      targetTop: number,
+      duration = CALM_SCROLL_MS,
+      force = false,
+    ) => {
       queuedTargetTop = targetTop;
       queuedDuration = duration;
-      if (queuedScrollTimer !== null) window.clearTimeout(queuedScrollTimer);
+      queuedForce = force;
+
+      if (queuedScrollTimer !== null) {
+        window.clearTimeout(queuedScrollTimer);
+      }
 
       queuedScrollTimer = window.setTimeout(() => {
         queuedScrollTimer = null;
         const target = queuedTargetTop;
+        const wasForced = queuedForce;
         queuedTargetTop = null;
-        if (target !== null) performScroll(target, queuedDuration);
+        queuedForce = false;
+
+        if (target !== null) {
+          performScroll(target, queuedDuration, wasForced);
+        }
       }, SCROLL_COALESCE_MS);
     };
 
-    const calmScrollTo = ((first?: number | ScrollToOptions, second?: number) => {
+    const calmScrollTo = ((
+      first?: number | ScrollToOptionsWithForce,
+      second?: number,
+    ) => {
       if (typeof first === "number") {
         queueScroll(typeof second === "number" ? second : feed.scrollTop);
         return;
       }
 
-      const options = first || {};
+      const options: ScrollToOptionsWithForce = first || {};
       const targetTop = typeof options.top === "number" ? options.top : feed.scrollTop;
+
       if (options.behavior === "smooth") {
-        queueScroll(targetTop);
+        queueScroll(targetTop, CALM_SCROLL_MS, options.force === true);
         return;
       }
 
       clearQueuedScroll();
       stopAnimation();
       programmaticScroll = true;
-      nativeScrollTo({ ...options, top: targetTop, behavior: "auto" });
+
+      const nativeOptions: ScrollToOptions = {
+        left: options.left,
+        top: targetTop,
+        behavior: "auto",
+      };
+      nativeScrollTo(nativeOptions);
+
       programmaticScroll = false;
       stickToBottom = distanceFromBottom() <= STICKY_THRESHOLD;
     }) as HTMLElement["scrollTo"];
@@ -128,7 +172,11 @@ export function RoomFinderCalmMotion() {
     const patchResultsScroll = (results: HTMLElement) => {
       if (patchedResults.has(results)) return;
 
-      patchedResults.set(results, Object.getOwnPropertyDescriptor(results, "scrollIntoView"));
+      patchedResults.set(
+        results,
+        Object.getOwnPropertyDescriptor(results, "scrollIntoView"),
+      );
+
       const calmScrollIntoView = ((options?: boolean | ScrollIntoViewOptions) => {
         const feedRect = feed.getBoundingClientRect();
         const resultRect = results.getBoundingClientRect();
@@ -150,16 +198,56 @@ export function RoomFinderCalmMotion() {
       });
     };
 
+    const unpatchResultsScroll = (results: HTMLElement) => {
+      if (!patchedResults.has(results)) return;
+
+      const descriptor = patchedResults.get(results);
+      if (descriptor) {
+        Object.defineProperty(results, "scrollIntoView", descriptor);
+      } else {
+        delete (results as HTMLElement & { scrollIntoView?: HTMLElement["scrollIntoView"] })
+          .scrollIntoView;
+      }
+
+      patchedResults.delete(results);
+    };
+
     const patchExistingResults = () => {
-      shell.querySelectorAll<HTMLElement>('[data-room-results-start="true"]')
+      shell
+        .querySelectorAll<HTMLElement>('[data-room-results-start="true"]')
         .forEach(patchResultsScroll);
     };
 
     patchExistingResults();
 
-    const observer = new MutationObserver(() => {
-      patchExistingResults();
+    const observer = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        mutation.addedNodes.forEach((node) => {
+          if (!(node instanceof HTMLElement)) return;
+
+          if (node.matches('[data-room-results-start="true"]')) {
+            patchResultsScroll(node);
+          }
+
+          node
+            .querySelectorAll<HTMLElement>('[data-room-results-start="true"]')
+            .forEach(patchResultsScroll);
+        });
+
+        mutation.removedNodes.forEach((node) => {
+          if (!(node instanceof HTMLElement)) return;
+
+          if (node.matches('[data-room-results-start="true"]')) {
+            unpatchResultsScroll(node);
+          }
+
+          node
+            .querySelectorAll<HTMLElement>('[data-room-results-start="true"]')
+            .forEach(unpatchResultsScroll);
+        });
+      }
     });
+
     observer.observe(feed, { childList: true, subtree: true });
 
     const handleFeedScroll = () => {
@@ -182,6 +270,7 @@ export function RoomFinderCalmMotion() {
       observer.disconnect();
       clearQueuedScroll();
       stopAnimation();
+
       feed.removeEventListener("scroll", handleFeedScroll);
       feed.removeEventListener("pointerdown", cancelOnUserInput);
       feed.removeEventListener("touchstart", cancelOnUserInput);
@@ -197,9 +286,12 @@ export function RoomFinderCalmMotion() {
         if (descriptor) {
           Object.defineProperty(results, "scrollIntoView", descriptor);
         } else {
-          delete (results as HTMLElement & { scrollIntoView?: HTMLElement["scrollIntoView"] }).scrollIntoView;
+          delete (results as HTMLElement & { scrollIntoView?: HTMLElement["scrollIntoView"] })
+            .scrollIntoView;
         }
       });
+
+      patchedResults.clear();
     };
   }, []);
 
