@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ROOM_FINDER_COPY, type RoomFinderLanguage } from "./room-finder-copy";
 
 export type Reaction = "👍" | "❤️";
@@ -51,6 +51,81 @@ const WELCOME_FLOW: Record<RoomFinderLanguage, { greeting: string; directBenefit
 
 let roomFinderSessionId = "";
 let roomFinderHasUserMessage = false;
+let assistantRevealAvailableAt = 0;
+
+function revealDurationFor(content: string) {
+  return Math.max(320, Math.min(760, content.length * 7.5));
+}
+
+function ProgressiveText({
+  content,
+  onComplete,
+}: {
+  content: string;
+  onComplete?: () => void;
+}) {
+  const characters = useMemo(() => Array.from(content), [content]);
+  const [visibleCount, setVisibleCount] = useState(0);
+  const frameRef = useRef<number | null>(null);
+  const timerRef = useRef<number | null>(null);
+  const onCompleteRef = useRef(onComplete);
+  onCompleteRef.current = onComplete;
+
+  useEffect(() => {
+    if (frameRef.current !== null) window.cancelAnimationFrame(frameRef.current);
+    if (timerRef.current !== null) window.clearTimeout(timerRef.current);
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion || characters.length === 0) {
+      setVisibleCount(characters.length);
+      onCompleteRef.current?.();
+      return;
+    }
+
+    setVisibleCount(0);
+    const now = performance.now();
+    const duration = revealDurationFor(content);
+    const startAt = Math.max(now + 90, assistantRevealAvailableAt);
+    assistantRevealAvailableAt = startAt + duration + 120;
+    const startDelay = Math.max(0, startAt - now);
+
+    timerRef.current = window.setTimeout(() => {
+      const startedAt = performance.now();
+      const tick = (timestamp: number) => {
+        const progress = Math.min(1, (timestamp - startedAt) / duration);
+        const nextCount = Math.min(characters.length, Math.max(1, Math.ceil(characters.length * progress)));
+        setVisibleCount(nextCount);
+
+        if (progress < 1) {
+          frameRef.current = window.requestAnimationFrame(tick);
+        } else {
+          frameRef.current = null;
+          onCompleteRef.current?.();
+        }
+      };
+
+      frameRef.current = window.requestAnimationFrame(tick);
+    }, startDelay);
+
+    return () => {
+      if (frameRef.current !== null) window.cancelAnimationFrame(frameRef.current);
+      if (timerRef.current !== null) window.clearTimeout(timerRef.current);
+    };
+  }, [characters, content]);
+
+  const complete = visibleCount >= characters.length;
+  const visibleText = characters.slice(0, visibleCount).join("");
+
+  return (
+    <>
+      <span aria-hidden="true">
+        {visibleText}
+        {!complete && <span className="rf-stream-caret" />}
+      </span>
+      <span className="sr-only">{content}</span>
+    </>
+  );
+}
 
 function getRoomFinderSessionId() {
   if (roomFinderSessionId) return roomFinderSessionId;
@@ -110,6 +185,7 @@ function trackRoomFinderMessage(message: ChatItem) {
 export function ChatMessage({ message }:{ message:ChatItem }) {
   const welcomeLang = welcomeLanguage(message.content);
   const [showWelcomeFollowup, setShowWelcomeFollowup] = useState(!welcomeLang);
+  const [welcomeFollowupComplete, setWelcomeFollowupComplete] = useState(false);
 
   useEffect(() => {
     trackRoomFinderMessage(message);
@@ -122,7 +198,8 @@ export function ChatMessage({ message }:{ message:ChatItem }) {
     }
 
     setShowWelcomeFollowup(false);
-    const timer = window.setTimeout(() => setShowWelcomeFollowup(true), 850);
+    setWelcomeFollowupComplete(false);
+    const timer = window.setTimeout(() => setShowWelcomeFollowup(true), 1200);
     return () => window.clearTimeout(timer);
   }, [message.id, welcomeLang]);
 
@@ -134,9 +211,13 @@ export function ChatMessage({ message }:{ message:ChatItem }) {
     return <div className="msg flex items-end gap-2 justify-start">
       <div className="relative mb-1 h-8 w-8 shrink-0 overflow-hidden rounded-full ring-1 ring-[#d7cdc0]"><Image src="/images/welcome/voulamandis-welcome-hero.webp" alt="" fill sizes="32px" className="object-cover"/></div>
       <div className="relative max-w-[84%] space-y-2">
-        <div className="whitespace-pre-line rounded-[20px] rounded-bl-[6px] border border-[#dfd6ca] bg-white px-4 py-3 text-[15px] leading-6 shadow-sm">{welcome.greeting}</div>
+        <div className="whitespace-pre-line rounded-[20px] rounded-bl-[6px] border border-[#dfd6ca] bg-white px-4 py-3 text-[15px] leading-6 shadow-sm">
+          <ProgressiveText content={welcome.greeting} />
+        </div>
         {showWelcomeFollowup ? (
-          <div className="whitespace-pre-line rounded-[20px] rounded-bl-[6px] border border-[#dfd6ca] bg-white px-4 py-3 text-[15px] leading-6 shadow-sm">{welcome.directBenefit}</div>
+          <div className="rf-followup-bubble whitespace-pre-line rounded-[20px] rounded-bl-[6px] border border-[#dfd6ca] bg-white px-4 py-3 text-[15px] leading-6 shadow-sm">
+            <ProgressiveText content={welcome.directBenefit} onComplete={() => setWelcomeFollowupComplete(true)} />
+          </div>
         ) : (
           <div className="inline-flex h-10 items-center gap-1 rounded-[18px] rounded-bl-[6px] border border-[#dfd6ca] bg-white px-4 shadow-sm" aria-label="Typing">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#9a8f82]" />
@@ -144,7 +225,7 @@ export function ChatMessage({ message }:{ message:ChatItem }) {
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#9a8f82] [animation-delay:300ms]" />
           </div>
         )}
-        {showWelcomeFollowup && <p className="px-1 text-[11px] leading-4 text-[#746b60]">{CHAT_STORAGE_NOTICE[welcomeLang]}</p>}
+        {welcomeFollowupComplete && <p className="rf-followup-meta px-1 text-[11px] leading-4 text-[#746b60]">{CHAT_STORAGE_NOTICE[welcomeLang]}</p>}
       </div>
     </div>;
   }
@@ -152,7 +233,9 @@ export function ChatMessage({ message }:{ message:ChatItem }) {
   return <div className={`msg flex items-end gap-2 ${message.role === "user" ? "justify-end" : "justify-start"}`}>
     {message.role === "assistant" && <div className="relative mb-1 h-8 w-8 shrink-0 overflow-hidden rounded-full ring-1 ring-[#d7cdc0]"><Image src="/images/welcome/voulamandis-welcome-hero.webp" alt="" fill sizes="32px" className="object-cover"/></div>}
     <div className={`relative max-w-[84%] ${message.role === "user" ? "pb-2" : ""}`}>
-      <div className={`whitespace-pre-line px-4 py-3 text-[15px] leading-6 shadow-sm ${message.role === "user" ? "rounded-[20px] rounded-br-[6px] bg-[#6b604f] text-white" : "rounded-[20px] rounded-bl-[6px] border border-[#dfd6ca] bg-white"}`}>{message.role === "user" ? icon : ""}{content}</div>
+      <div className={`whitespace-pre-line px-4 py-3 text-[15px] leading-6 shadow-sm ${message.role === "user" ? "rounded-[20px] rounded-br-[6px] bg-[#6b604f] text-white" : "rounded-[20px] rounded-bl-[6px] border border-[#dfd6ca] bg-white"}`}>
+        {message.role === "user" ? <>{icon}{content}</> : <ProgressiveText content={content} />}
+      </div>
       {message.role === "user" && message.reaction && <span className="reaction absolute -bottom-1 right-1 flex h-7 min-w-7 items-center justify-center rounded-full border border-[#ddd4c8] bg-white px-1.5 text-sm shadow-sm">{message.reaction}</span>}
     </div>
   </div>;
