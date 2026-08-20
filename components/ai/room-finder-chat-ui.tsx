@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { ROOM_FINDER_COPY, type RoomFinderLanguage } from "./room-finder-copy";
 
 export type Reaction = "👍" | "❤️";
@@ -48,6 +48,22 @@ const WELCOME_FLOW: Record<RoomFinderLanguage, { greeting: string; directBenefit
     directBenefit: "Başlamadan önce küçük bir bilgi: Voulamandis House ile doğrudan rezervasyon yaptığınızda, üçüncü taraf komisyonları olmadığı için online rezervasyon platformlarına kıyasla %10 daha düşük fiyattan yararlanırsınız.\n\nNe zaman giriş yapmak istersiniz?",
   },
 };
+
+function MiniIcon({ children }:{ children:ReactNode }) {
+  return <span className="mt-0.5 inline-flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full bg-[#f3eee7] text-[#7a6d5d]" aria-hidden>{children}</span>;
+}
+
+function SparkleIcon() {
+  return <MiniIcon><svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3l1.2 3.6L17 8l-3.8 1.4L12 13l-1.2-3.6L7 8l3.8-1.4L12 3Z"/><path d="M18.5 14.5l.7 2.1 2.1.7-2.1.7-.7 2.1-.7-2.1-2.1-.7 2.1-.7.7-2.1Z"/></svg></MiniIcon>;
+}
+
+function DiscountIcon() {
+  return <MiniIcon><svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M19 13.5 13.5 19a2 2 0 0 1-2.8 0L5 13.3V5h8.3L19 10.7a2 2 0 0 1 0 2.8Z"/><circle cx="9" cy="9" r="1"/><path d="m9.5 15 5-5"/></svg></MiniIcon>;
+}
+
+function CalendarIcon() {
+  return <MiniIcon><svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg></MiniIcon>;
+}
 
 let roomFinderSessionId = "";
 let roomFinderHasUserMessage = false;
@@ -131,13 +147,20 @@ export function ChatMessage({ message }:{ message:ChatItem }) {
 
   if (welcomeLang) {
     const welcome = WELCOME_FLOW[welcomeLang];
+    const [directBenefit, checkInQuestion] = welcome.directBenefit.split("\n\n");
+
     return <div className="msg flex items-end gap-2 justify-start">
       <div className="relative mb-1 h-8 w-8 shrink-0 overflow-hidden rounded-full ring-1 ring-[#d7cdc0]"><Image src="/images/welcome/voulamandis-welcome-hero.webp" alt="" fill sizes="32px" className="object-cover"/></div>
       <div className="relative max-w-[84%] space-y-2">
-        <div className="whitespace-pre-line rounded-[20px] rounded-bl-[6px] border border-[#dfd6ca] bg-white px-4 py-3 text-[15px] leading-6 shadow-sm">{welcome.greeting}</div>
+        <div className="rounded-[20px] rounded-bl-[6px] border border-[#dfd6ca] bg-white px-4 py-3 text-[15px] leading-6 shadow-sm">
+          <div className="flex items-start gap-2"><SparkleIcon/><span>{welcome.greeting}</span></div>
+        </div>
         {showWelcomeFollowup ? (
           <>
-            <div className="rf-followup-bubble whitespace-pre-line rounded-[20px] rounded-bl-[6px] border border-[#dfd6ca] bg-white px-4 py-3 text-[15px] leading-6 shadow-sm">{welcome.directBenefit}</div>
+            <div className="rf-followup-bubble rounded-[20px] rounded-bl-[6px] border border-[#dfd6ca] bg-white px-4 py-3 text-[15px] leading-6 shadow-sm">
+              <div className="flex items-start gap-2"><DiscountIcon/><span>{directBenefit}</span></div>
+              {checkInQuestion && <div className="mt-3 flex items-start gap-2 border-t border-[#eee7de] pt-3"><CalendarIcon/><span className="font-medium text-[#51483d]">{checkInQuestion}</span></div>}
+            </div>
             <p className="rf-followup-meta px-1 text-[11px] leading-4 text-[#746b60]">{CHAT_STORAGE_NOTICE[welcomeLang]}</p>
           </>
         ) : (
