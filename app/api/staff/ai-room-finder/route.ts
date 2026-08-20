@@ -1,3 +1,4 @@
+import { neon } from "@neondatabase/serverless";
 import { NextRequest, NextResponse } from "next/server";
 import {
   getRoomFinderInbox,
@@ -43,6 +44,17 @@ function unauthorized() {
   });
 }
 
+function validSessionId(value: unknown) {
+  const cleaned = String(value ?? "").trim().slice(0, 128);
+  return /^[A-Za-z0-9._:-]{8,128}$/.test(cleaned) ? cleaned : "";
+}
+
+function getSql() {
+  const databaseUrl = process.env.DATABASE_URL?.trim();
+  if (!databaseUrl) throw new Error("DATABASE_URL is not configured.");
+  return neon(databaseUrl);
+}
+
 export async function GET(request: NextRequest) {
   if (!isAuthorized(request)) return unauthorized();
 
@@ -78,6 +90,43 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json(
       { ok: false, error: "Could not mark conversation as read." },
       { status: 400, headers: privateHeaders },
+    );
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  if (!isAuthorized(request)) return unauthorized();
+
+  try {
+    const body = (await request.json()) as { sessionId?: string; all?: boolean };
+    const sql = getSql();
+
+    if (body.all === true) {
+      await sql`delete from ai_room_finder_conversations`;
+      const data = await getRoomFinderInbox(null);
+      return NextResponse.json(data, { headers: privateHeaders });
+    }
+
+    const sessionId = validSessionId(body.sessionId);
+    if (!sessionId) {
+      return NextResponse.json(
+        { error: "Missing or invalid session id." },
+        { status: 400, headers: privateHeaders },
+      );
+    }
+
+    await sql`
+      delete from ai_room_finder_conversations
+      where session_id = ${sessionId}
+    `;
+
+    const data = await getRoomFinderInbox(null);
+    return NextResponse.json(data, { headers: privateHeaders });
+  } catch (error) {
+    console.error("Staff AI Room Finder delete error", error);
+    return NextResponse.json(
+      { error: "Could not delete AI Room Finder conversation." },
+      { status: 500, headers: privateHeaders },
     );
   }
 }
