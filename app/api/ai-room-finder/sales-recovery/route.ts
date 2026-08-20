@@ -114,6 +114,11 @@ type QuoteRow = {
   guest_note?: string | null;
 };
 
+type SettingRow = {
+  setting_key: string;
+  numeric_value: unknown;
+};
+
 type SegmentChoice = {
   guests: number;
   room: QuoteRow;
@@ -247,6 +252,11 @@ function uniqueRoomNames(assignments: SegmentChoice[], language: AssistantLangua
   });
 }
 
+function settingValue(settings: Map<string, number>, key: string, fallback: number) {
+  const value = settings.get(key);
+  return typeof value === "number" && Number.isFinite(value) ? value : fallback;
+}
+
 export async function GET(request: NextRequest) {
   try {
     const checkin = request.nextUrl.searchParams.get("checkin") || "";
@@ -323,42 +333,34 @@ export async function GET(request: NextRequest) {
         });
       }
 
-      consolidatedOffers.sort((left, right) =>
-        Number(left.directTotal) - Number(right.directTotal)
-        || roomRank(Number(String(left.unitId).split(":").at(-2) || 0)) - roomRank(Number(String(right.unitId).split(":").at(-2) || 0))
-      );
+      consolidatedOffers.sort((left, right) => Number(left.directTotal) - Number(right.directTotal));
     }
 
     const splitOffers: any[] = [];
 
     if (nights >= 2) {
-      const [quoteRows, settingRows] = await Promise.all([
-        sql`
-          select g.requested_guests, q.*
-          from generate_series(1, 5) as g(requested_guests)
-          cross join lateral booking_core.nightly_quotes(${checkin}::date, ${checkout}::date, g.requested_guests) q
-        ` as Promise<QuoteRow[]>,
-        sql`
-          select setting_key, numeric_value
-          from booking_core.settings
-          where setting_key in (
-            'direct_discount_percent',
-            'split_stay_extra_discount_percent',
-            'breakfast_per_person_per_night'
-          )
-        ` as Promise<Array<{ setting_key: string; numeric_value: unknown }>>,
-      ]);
+      const quotePromise = sql`
+        select g.requested_guests, q.*
+        from generate_series(1, 5) as g(requested_guests)
+        cross join lateral booking_core.nightly_quotes(${checkin}::date, ${checkout}::date, g.requested_guests) q
+      `;
+      const settingsPromise = sql`
+        select setting_key, numeric_value
+        from booking_core.settings
+        where setting_key in (
+          'direct_discount_percent',
+          'split_stay_extra_discount_percent',
+          'breakfast_per_person_per_night'
+        )
+      `;
+      const [quoteRaw, settingRaw] = await Promise.all([quotePromise, settingsPromise]);
+      const quoteRows = quoteRaw as unknown as QuoteRow[];
+      const settingRows = settingRaw as unknown as SettingRow[];
 
       const settings = new Map(settingRows.map(row => [row.setting_key, Number(row.numeric_value)]));
-      const directDiscount = Number.isFinite(settings.get("direct_discount_percent"))
-        ? Number(settings.get("direct_discount_percent"))
-        : 10;
-      const splitDiscount = Number.isFinite(settings.get("split_stay_extra_discount_percent"))
-        ? Number(settings.get("split_stay_extra_discount_percent"))
-        : 10;
-      const breakfastPrice = Number.isFinite(settings.get("breakfast_per_person_per_night"))
-        ? Number(settings.get("breakfast_per_person_per_night"))
-        : 12;
+      const directDiscount = settingValue(settings, "direct_discount_percent", 10);
+      const splitDiscount = settingValue(settings, "split_stay_extra_discount_percent", 10);
+      const breakfastPrice = settingValue(settings, "breakfast_per_person_per_night", 12);
 
       const rowsByGuestRoom = new Map<string, QuoteRow[]>();
       for (const row of quoteRows) {
@@ -514,7 +516,8 @@ export async function GET(request: NextRequest) {
       selected.push(...consolidatedOffers.slice(0, 2));
       if (splitOffers.length > 0 && selected.length < MAX_RECOVERY_OFFERS) selected.push(splitOffers[0]);
       if (selected.length < MAX_RECOVERY_OFFERS) {
-        selected.push(...consolidatedOffers.slice(2, MAX_RECOVERY_OFFERS - selected.length + 2));
+        const remaining = MAX_RECOVERY_OFFERS - selected.length;
+        selected.push(...consolidatedOffers.slice(2, 2 + remaining));
       }
     } else {
       selected.push(...splitOffers.slice(0, MAX_RECOVERY_OFFERS));
