@@ -15,6 +15,9 @@ const MAX_RECENT_MESSAGES = 12;
 const MAX_RECENT_MESSAGE_CHARS = 500;
 const BURST_MAX_REQUESTS = 20;
 const HOUR_MAX_REQUESTS = 60;
+const SIMPLE_DATE_INPUT = /^\d{1,2}[\/.\-]\d{1,2}(?:[\/.\-]\d{2,4})?$/;
+const SIMPLE_NUMBER_INPUT = /^\d{1,2}$/;
+const SIMPLE_GUEST_INPUT = /^[1-5]$/;
 
 function isAbortError(error: unknown) {
   return error instanceof Error && error.name === "AbortError";
@@ -141,6 +144,23 @@ function sanitizeContext(value: unknown): RoomFinderConversationContext {
   };
 }
 
+function deterministicFastPath(
+  message: string,
+  context: RoomFinderConversationContext,
+) {
+  const step = context.currentStep;
+  const safeInput = (step === "checkin" || step === "checkout")
+    ? SIMPLE_DATE_INPUT.test(message)
+    : step === "rooms"
+      ? SIMPLE_NUMBER_INPUT.test(message)
+      : step === "guests"
+        ? SIMPLE_GUEST_INPUT.test(message)
+        : false;
+
+  if (!safeInput) return null;
+  return fallbackRoomFinderCommand(message, context);
+}
+
 function noStoreJson(body: unknown, init?: ResponseInit) {
   const headers = new Headers(init?.headers);
   headers.set("Cache-Control", "no-store");
@@ -174,6 +194,16 @@ export async function POST(request: NextRequest) {
     }
     if (JSON.stringify(context).length > MAX_CONTEXT_CHARS) {
       return noStoreJson({ error: "Conversation context is too large.", code: "CONTEXT_TOO_LARGE" }, { status: 400 });
+    }
+
+    const deterministicCommand = deterministicFastPath(message, context);
+    if (deterministicCommand) {
+      return noStoreJson({
+        ok: true,
+        command: deterministicCommand,
+        fallback: false,
+        deterministic: true,
+      });
     }
 
     const rate = await checkDistributedRateLimit(getClientIp(request));
