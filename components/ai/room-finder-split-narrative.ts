@@ -8,6 +8,16 @@ export type SplitNarrativeOffer = {
 type Assignment = { room: string; guests: number };
 type Segment = { start: string; assignments: Assignment[] };
 
+const LOCALE: Record<RoomFinderLanguage, string> = {
+  el: "el-GR",
+  en: "en-GB",
+  de: "de-DE",
+  fr: "fr-FR",
+  it: "it-IT",
+  es: "es-ES",
+  tr: "tr-TR",
+};
+
 function parseSegment(value: string | undefined): Segment | null {
   if (!value) return null;
   const separator = value.indexOf(":");
@@ -30,23 +40,63 @@ function parseSegment(value: string | undefined): Segment | null {
   return assignments.length ? { start, assignments } : null;
 }
 
+function normalizeMonth(value: string, locale: string) {
+  return value
+    .trim()
+    .replace(/[.,]/g, "")
+    .replace(/\s+/g, " ")
+    .toLocaleLowerCase(locale);
+}
+
+function numericDate(value: string, language: RoomFinderLanguage) {
+  const direct = value.trim().match(/^(\d{1,2})[/.\-](\d{1,2})(?:[/.\-]\d{2,4})?$/);
+  if (direct) {
+    return `${direct[1].padStart(2, "0")}/${direct[2].padStart(2, "0")}`;
+  }
+
+  const match = value.trim().match(/^(\d{1,2})\D+(.+)$/u);
+  if (!match) return value;
+
+  const day = Number(match[1]);
+  const locale = LOCALE[language];
+  const monthText = normalizeMonth(match[2], locale);
+  if (!Number.isInteger(day) || day < 1 || day > 31 || !monthText) return value;
+
+  for (let month = 1; month <= 12; month += 1) {
+    const candidate = new Intl.DateTimeFormat(locale, { month: "short", timeZone: "UTC" })
+      .format(new Date(Date.UTC(2026, month - 1, 1)));
+    const normalizedCandidate = normalizeMonth(candidate, locale);
+    if (
+      monthText === normalizedCandidate
+      || monthText.startsWith(normalizedCandidate)
+      || normalizedCandidate.startsWith(monthText)
+    ) {
+      return `${String(day).padStart(2, "0")}/${String(month).padStart(2, "0")}`;
+    }
+  }
+
+  return value;
+}
+
 function roomAllocation(assignments: Assignment[], language: RoomFinderLanguage) {
   const joiner = language === "el" ? " και " : language === "tr" ? " ve " : " + ";
   return assignments.map(item => `${item.room} (${item.guests})`).join(joiner);
 }
 
 function genericNarrative(first: Segment, second: Segment, language: RoomFinderLanguage) {
+  const firstDate = numericDate(first.start, language);
+  const secondDate = numericDate(second.start, language);
   const firstAllocation = roomAllocation(first.assignments, language);
   const secondAllocation = roomAllocation(second.assignments, language);
 
   switch (language) {
-    case "el": return `Στις ${first.start}, η διαμονή ξεκινά με ${firstAllocation}. Στις ${second.start}, η κατανομή αλλάζει σε ${secondAllocation}.`;
-    case "de": return `Am ${first.start} beginnt der Aufenthalt mit ${firstAllocation}. Am ${second.start} ändert sich die Aufteilung zu ${secondAllocation}.`;
-    case "fr": return `Le ${first.start}, le séjour commence avec ${firstAllocation}. Le ${second.start}, la répartition devient ${secondAllocation}.`;
-    case "it": return `Il ${first.start}, il soggiorno inizia con ${firstAllocation}. Il ${second.start}, la sistemazione cambia in ${secondAllocation}.`;
-    case "es": return `El ${first.start}, la estancia comienza con ${firstAllocation}. El ${second.start}, la distribución cambia a ${secondAllocation}.`;
-    case "tr": return `${first.start} tarihinde konaklama ${firstAllocation} ile başlar. ${second.start} tarihinde dağılım ${secondAllocation} olarak değişir.`;
-    default: return `On ${first.start}, the stay starts with ${firstAllocation}. On ${second.start}, the room allocation changes to ${secondAllocation}.`;
+    case "el": return `${firstDate}: διαμονή σε ${firstAllocation}. ${secondDate}: η κατανομή αλλάζει σε ${secondAllocation}.`;
+    case "de": return `${firstDate}: Aufenthalt in ${firstAllocation}. ${secondDate}: Aufteilung in ${secondAllocation}.`;
+    case "fr": return `${firstDate} : séjour dans ${firstAllocation}. ${secondDate} : nouvelle répartition dans ${secondAllocation}.`;
+    case "it": return `${firstDate}: soggiorno in ${firstAllocation}. ${secondDate}: nuova sistemazione in ${secondAllocation}.`;
+    case "es": return `${firstDate}: estancia en ${firstAllocation}. ${secondDate}: nueva distribución en ${secondAllocation}.`;
+    case "tr": return `${firstDate}: ${firstAllocation}. ${secondDate}: yeni dağılım ${secondAllocation}.`;
+    default: return `${firstDate}: stay in ${firstAllocation}. ${secondDate}: room allocation changes to ${secondAllocation}.`;
   }
 }
 
@@ -56,6 +106,9 @@ export function splitStayNarrative(offer: SplitNarrativeOffer, language: RoomFin
   const first = parseSegment(offer.features?.[0]);
   const second = parseSegment(offer.features?.[1]);
   if (!first || !second) return null;
+
+  const firstDate = numericDate(first.start, language);
+  const secondDate = numericDate(second.start, language);
 
   if (first.assignments.length === 1) {
     const original = first.assignments[0];
@@ -70,19 +123,19 @@ export function splitStayNarrative(offer: SplitNarrativeOffer, language: RoomFin
 
       switch (language) {
         case "el":
-          return `Στις ${first.start}, και οι ${totalGuests} επισκέπτες θα μείνουν στο ${original.room}. Στις ${second.start}, ${movedGuests} ${movedGuests === 1 ? "επισκέπτης θα μεταφερθεί" : "επισκέπτες θα μεταφερθούν"} στο ${destinations}, ενώ ${remainingGuests} ${remainingGuests === 1 ? "επισκέπτης θα παραμείνει" : "επισκέπτες θα παραμείνουν"} στο ${original.room}.`;
+          return `${firstDate}: και οι ${totalGuests} επισκέπτες θα μείνουν στο ${original.room}. ${secondDate}: ${movedGuests} ${movedGuests === 1 ? "επισκέπτης θα μεταφερθεί" : "επισκέπτες θα μεταφερθούν"} στο ${destinations}, ενώ ${remainingGuests === totalGuests - movedGuests ? "οι άλλοι " : ""}${remainingGuests} ${remainingGuests === 1 ? "θα παραμείνει" : "θα παραμείνουν"} στο ${original.room}.`;
         case "de":
-          return `Am ${first.start} wohnen alle ${totalGuests} Gäste im ${original.room}. Am ${second.start} ${movedGuests === 1 ? "zieht 1 Gast" : `ziehen ${movedGuests} Gäste`} in ${destinations} um, während ${remainingGuests === 1 ? "1 Gast" : `${remainingGuests} Gäste`} im ${original.room} ${remainingGuests === 1 ? "bleibt" : "bleiben"}.`;
+          return `${firstDate}: alle ${totalGuests} Gäste wohnen im ${original.room}. ${secondDate}: ${movedGuests === 1 ? "1 Gast zieht" : `${movedGuests} Gäste ziehen`} in ${destinations} um, die übrigen ${remainingGuests} ${remainingGuests === 1 ? "bleibt" : "bleiben"} im ${original.room}.`;
         case "fr":
-          return `Le ${first.start}, les ${totalGuests} personnes séjourneront ensemble dans ${original.room}. Le ${second.start}, ${movedGuests} ${movedGuests === 1 ? "personne sera transférée" : "personnes seront transférées"} vers ${destinations}, tandis que ${remainingGuests} ${remainingGuests === 1 ? "personne restera" : "personnes resteront"} dans ${original.room}.`;
+          return `${firstDate} : les ${totalGuests} personnes séjourneront dans ${original.room}. ${secondDate} : ${movedGuests} ${movedGuests === 1 ? "personne sera transférée" : "personnes seront transférées"} vers ${destinations}, les ${remainingGuests} autres resteront dans ${original.room}.`;
         case "it":
-          return `Il ${first.start}, tutti e ${totalGuests} gli ospiti soggiorneranno in ${original.room}. Il ${second.start}, ${movedGuests} ${movedGuests === 1 ? "ospite si sposterà" : "ospiti si sposteranno"} in ${destinations}, mentre ${remainingGuests} ${remainingGuests === 1 ? "ospite rimarrà" : "ospiti rimarranno"} in ${original.room}.`;
+          return `${firstDate}: tutti e ${totalGuests} gli ospiti soggiorneranno in ${original.room}. ${secondDate}: ${movedGuests} ${movedGuests === 1 ? "ospite si sposterà" : "ospiti si sposteranno"} in ${destinations}, gli altri ${remainingGuests} rimarranno in ${original.room}.`;
         case "es":
-          return `El ${first.start}, los ${totalGuests} huéspedes se alojarán juntos en ${original.room}. El ${second.start}, ${movedGuests} ${movedGuests === 1 ? "huésped se trasladará" : "huéspedes se trasladarán"} a ${destinations}, mientras ${remainingGuests} ${remainingGuests === 1 ? "huésped permanecerá" : "huéspedes permanecerán"} en ${original.room}.`;
+          return `${firstDate}: los ${totalGuests} huéspedes se alojarán en ${original.room}. ${secondDate}: ${movedGuests} ${movedGuests === 1 ? "huésped se trasladará" : "huéspedes se trasladarán"} a ${destinations}, los otros ${remainingGuests} permanecerán en ${original.room}.`;
         case "tr":
-          return `${first.start} tarihinde ${totalGuests} misafirin tamamı ${original.room} odasında kalacak. ${second.start} tarihinde ${movedGuests} misafir ${destinations} odasına geçecek, ${remainingGuests} misafir ise ${original.room} odasında kalacak.`;
+          return `${firstDate}: ${totalGuests} misafirin tamamı ${original.room} odasında kalacak. ${secondDate}: ${movedGuests} misafir ${destinations} odasına geçecek, diğer ${remainingGuests} misafir ${original.room} odasında kalacak.`;
         default:
-          return `On ${first.start}, all ${totalGuests} guests will stay in ${original.room}. On ${second.start}, ${movedGuests} ${movedGuests === 1 ? "guest will move" : "guests will move"} to ${destinations}, while ${remainingGuests} ${remainingGuests === 1 ? "guest remains" : "guests remain"} in ${original.room}.`;
+          return `${firstDate}: all ${totalGuests} guests will stay in ${original.room}. ${secondDate}: ${movedGuests} ${movedGuests === 1 ? "guest will move" : "guests will move"} to ${destinations}, while the other ${remainingGuests} ${remainingGuests === 1 ? "guest remains" : "guests remain"} in ${original.room}.`;
       }
     }
   }
