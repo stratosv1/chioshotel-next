@@ -54,7 +54,7 @@ const INTERPRETER_UNAVAILABLE: Record<RoomFinderLanguage, string> = {
   de: "Ich konnte diese Antwort gerade nicht auswerten. Ihre bisherigen Angaben sind nicht verloren; versuchen Sie es erneut oder formulieren Sie die Information einfacher.",
   fr: "Je n’ai pas pu interpréter cette réponse pour le moment. Vos informations précédentes ne sont pas perdues ; réessayez ou formulez l’information plus simplement.",
   it: "Non sono riuscito a interpretare questa risposta in questo momento. I dati precedenti non sono andati persi; riprovate o scrivete l’informazione in modo più semplice.",
-  es: "No he podido interpretar esa respuesta en este momento. Sus datos anteriores no se han perdido; inténtenlo de nuevo o escriban la información de forma más sencilla.",
+  es: "No he podido interpretar esa respuesta en este momento. Sus datos anteriores no se han perdido; inténtenlo de nuevo o escriban la información de forma sencilla.",
   tr: "Bu yanıtı şu anda yorumlayamadım. Önceki bilgileriniz kaybolmadı; tekrar deneyin veya bilgiyi daha basit yazın.",
 };
 
@@ -86,6 +86,16 @@ const NEARBY_ALTERNATIVES: Record<RoomFinderLanguage, string> = {
   it: "Non ho trovato una camera per le date esatte, ma c’è disponibilità live molto vicina. Ogni scheda mostra chiaramente il periodo alternativo e le date cambiano solo se scegliete un’opzione.",
   es: "No encontré habitación para las fechas exactas, pero sí disponibilidad en vivo muy cerca de ellas. Cada tarjeta muestra claramente el periodo alternativo y sus fechas solo cambian si eligen una opción.",
   tr: "Tam tarihleriniz için oda bulamadım, ancak çok yakın tarihlerde canlı müsaitlik buldum. Her kart alternatif dönemi açıkça gösterir ve tarihleriniz yalnızca bir seçeneği seçerseniz değişir.",
+};
+
+const SALES_RECOVERY: Record<RoomFinderLanguage, string> = {
+  el: "Δεν βρήκα ακριβώς την κατανομή δωματίων που ζητήσατε για όλη τη διαμονή. Πριν σας στείλω στη reception, έλεγξα ξανά τη live διαθεσιμότητα και βρήκα τις παρακάτω λύσεις για τις ίδιες ημερομηνίες, με όσο το δυνατόν λιγότερες αλλαγές.",
+  en: "I could not match the exact room allocation for the whole stay. Before sending you to reception, I checked live availability again and found these options for the same dates, with as little room changing as possible.",
+  de: "Die gewünschte Zimmeraufteilung ist nicht für den gesamten Aufenthalt verfügbar. Bevor ich Sie an die Rezeption verweise, habe ich die Live-Verfügbarkeit erneut geprüft und diese Lösungen für dieselben Daten mit möglichst wenigen Zimmerwechseln gefunden.",
+  fr: "La répartition exacte des chambres n’est pas disponible pour tout le séjour. Avant de vous orienter vers la réception, j’ai revérifié les disponibilités en direct et trouvé ces solutions aux mêmes dates, avec le moins de changements possible.",
+  it: "La distribuzione esatta delle camere non è disponibile per tutto il soggiorno. Prima di indirizzarvi alla reception, ho ricontrollato la disponibilità live e trovato queste soluzioni per le stesse date, con il minor numero possibile di cambi.",
+  es: "La distribución exacta de habitaciones no está disponible durante toda la estancia. Antes de enviarles a recepción, he vuelto a comprobar la disponibilidad en vivo y encontré estas soluciones para las mismas fechas, con el menor número posible de cambios.",
+  tr: "İstediğiniz oda dağılımı tüm konaklama boyunca müsait değil. Sizi resepsiyona yönlendirmeden önce canlı müsaitliği tekrar kontrol ettim ve aynı tarihler için mümkün olan en az oda değişikliğiyle bu çözümleri buldum.",
 };
 
 class AvailabilityError extends Error {
@@ -241,7 +251,11 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       setBreakfast(false);
       setSelectingOfferKey(null);
       dispatchFlow({ type: "commit_turn", state: nextFlow });
-      rewindConversation(tone.results(lastChoice.group, lastChoice.guests));
+      rewindConversation(
+        String((lastChoice.offer as any).recoveryType || "")
+          ? SALES_RECOVERY[language]
+          : tone.results(lastChoice.group, lastChoice.guests),
+      );
       return;
     }
 
@@ -369,6 +383,29 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     }
   }
 
+  async function findSalesRecoveryOffers(searchDraft: BookingDraft) {
+    if (!searchDraft.roomCount || searchDraft.roomCount <= 1 || searchDraft.groups.length <= 1) {
+      return [] as RoomOffer[];
+    }
+
+    const query = new URLSearchParams({
+      checkin: searchDraft.checkin,
+      checkout: searchDraft.checkout,
+      groups: searchDraft.groups.join(","),
+      lang: language,
+    });
+
+    try {
+      const response = await fetch(`/api/ai-room-finder/sales-recovery?${query}`, { cache: "no-store" });
+      const payload = await response.json().catch(() => null);
+      if (!response.ok || !payload?.success || !Array.isArray(payload.offers)) return [];
+      return payload.offers as RoomOffer[];
+    } catch (error) {
+      console.error("Room Finder sales recovery request failed", error);
+      return [];
+    }
+  }
+
   async function runAvailabilitySearch(searchDraft: BookingDraft) {
     dispatchFlow({ type: "set_step", step: "searching" });
     add("assistant", tone.searching);
@@ -397,6 +434,15 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       });
 
       if (!hasDistinctOfferPlan(eligible)) {
+        const recovery = await findSalesRecoveryOffers(searchDraft);
+        if (recovery.length) {
+          setOffers([recovery]);
+          setActiveGroup(0);
+          dispatchFlow({ type: "set_step", step: "selecting" });
+          add("assistant", SALES_RECOVERY[language]);
+          return;
+        }
+
         const nearby = await findNearbyOffers(searchDraft);
         if (nearby.length) {
           setOffers([nearby]);
@@ -594,6 +640,31 @@ export function useRoomFinder(language: RoomFinderLanguage) {
             },
           },
         });
+      }
+
+      const recoveryType = String((offer as any).recoveryType || "");
+      if (recoveryType) {
+        const recoveryGuests = guestTotal || groups.reduce((sum, value) => sum + value, 0);
+        setChoices([{ group: 1, guests: recoveryGuests, offer }]);
+        add("assistant", tone.selected(offer.name));
+
+        if (recoveryType === "consolidated") {
+          dispatchFlow({
+            type: "commit_turn",
+            state: {
+              step: "breakfast",
+              draft: {
+                ...draft,
+                roomCount: 1,
+                totalGuests: recoveryGuests,
+                groups: [recoveryGuests],
+              },
+            },
+          });
+        } else {
+          dispatchFlow({ type: "set_step", step: "breakfast" });
+        }
+        return;
       }
 
       const nextChoices = [
