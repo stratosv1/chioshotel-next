@@ -206,22 +206,22 @@ export function RoomFinderCalmMotion() {
   return (
     <style jsx global>{`
       @keyframes rfCalmEnter {
-        from { opacity: 0; transform: translate3d(0, 4px, 0) scale(.998); }
-        to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+        from { opacity: 0; transform: translate3d(0, 2px, 0); }
+        to { opacity: 1; transform: translate3d(0, 0, 0); }
       }
 
       @keyframes rfCalmReaction {
-        from { opacity: 0; transform: translate3d(0, 1px, 0) scale(.92); }
+        from { opacity: 0; transform: translate3d(0, 1px, 0) scale(.94); }
         to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
       }
 
       @keyframes rfCalmChoice {
-        from { opacity: 0; transform: translate3d(0, 4px, 0); }
+        from { opacity: 0; transform: translate3d(0, 2px, 0); }
         to { opacity: 1; transform: translate3d(0, 0, 0); }
       }
 
       @keyframes rfCalmCard {
-        from { opacity: 0; transform: translate3d(0, 3px, 0); }
+        from { opacity: 0; transform: translate3d(0, 2px, 0); }
         to { opacity: 1; transform: translate3d(0, 0, 0); }
       }
 
@@ -230,25 +230,19 @@ export function RoomFinderCalmMotion() {
         30% { opacity: .95; transform: translateY(-2px); }
       }
 
-      @keyframes rfCaret {
-        0%, 45% { opacity: .18; }
-        55%, 100% { opacity: .72; }
-      }
-
       [data-room-finder-shell="true"] .msg,
       [data-room-finder-shell="true"] [role="log"] section:not(.msg),
       [data-room-finder-shell="true"] [role="dialog"],
       [data-room-finder-shell="true"] [role="log"] [role="status"]:not(.msg) {
-        animation: rfCalmEnter 380ms cubic-bezier(.16, 1, .3, 1) both !important;
-        transform-origin: center bottom;
+        animation: rfCalmEnter 320ms cubic-bezier(.16, 1, .3, 1) both !important;
       }
 
       [data-room-finder-shell="true"] > header + div:not([role="log"]) {
-        animation: rfCalmEnter 320ms cubic-bezier(.16, 1, .3, 1) both;
+        animation: rfCalmEnter 300ms cubic-bezier(.16, 1, .3, 1) both;
       }
 
       [data-room-finder-shell="true"] .reaction {
-        animation: rfCalmReaction 280ms cubic-bezier(.16, 1, .3, 1) both !important;
+        animation: rfCalmReaction 240ms cubic-bezier(.16, 1, .3, 1) both !important;
       }
 
       [data-room-finder-shell="true"] .typing-dot,
@@ -266,58 +260,47 @@ export function RoomFinderCalmMotion() {
         animation-delay: .34s !important;
       }
 
-      [data-room-finder-shell="true"] .rf-stream-caret {
-        display: inline-block;
-        width: 2px;
-        height: .95em;
-        margin-left: 2px;
-        border-radius: 999px;
-        background: currentColor;
-        vertical-align: -0.08em;
-        animation: rfCaret .8s ease-in-out infinite;
-      }
-
       [data-room-finder-shell="true"] .rf-followup-bubble {
-        animation: rfCalmEnter 420ms cubic-bezier(.16, 1, .3, 1) both;
+        animation: rfCalmEnter 320ms cubic-bezier(.16, 1, .3, 1) both;
       }
 
       [data-room-finder-shell="true"] .rf-followup-meta {
-        animation: rfCalmEnter 300ms ease-out both;
+        animation: rfCalmEnter 260ms ease-out 90ms both;
       }
 
       [data-room-finder-shell="true"] .hide-scroll.msg {
-        animation-delay: 140ms !important;
+        animation-delay: 90ms !important;
       }
 
       [data-room-finder-shell="true"] .hide-scroll.msg > button {
-        animation: rfCalmChoice 320ms cubic-bezier(.16, 1, .3, 1) both;
+        animation: rfCalmChoice 280ms cubic-bezier(.16, 1, .3, 1) both;
       }
 
-      [data-room-finder-shell="true"] .hide-scroll.msg > button:nth-child(1) { animation-delay: 180ms; }
-      [data-room-finder-shell="true"] .hide-scroll.msg > button:nth-child(2) { animation-delay: 230ms; }
-      [data-room-finder-shell="true"] .hide-scroll.msg > button:nth-child(3) { animation-delay: 280ms; }
-      [data-room-finder-shell="true"] .hide-scroll.msg > button:nth-child(4) { animation-delay: 330ms; }
-      [data-room-finder-shell="true"] .hide-scroll.msg > button:nth-child(5) { animation-delay: 380ms; }
+      [data-room-finder-shell="true"] .hide-scroll.msg > button:nth-child(1) { animation-delay: 120ms; }
+      [data-room-finder-shell="true"] .hide-scroll.msg > button:nth-child(2) { animation-delay: 165ms; }
+      [data-room-finder-shell="true"] .hide-scroll.msg > button:nth-child(3) { animation-delay: 210ms; }
+      [data-room-finder-shell="true"] .hide-scroll.msg > button:nth-child(4) { animation-delay: 255ms; }
+      [data-room-finder-shell="true"] .hide-scroll.msg > button:nth-child(5) { animation-delay: 300ms; }
 
       [data-room-finder-shell="true"] [data-room-results-start="true"] {
-        animation-delay: 180ms;
+        animation-delay: 130ms;
       }
 
       [data-room-finder-shell="true"] [data-room-card] {
-        animation: rfCalmCard 460ms cubic-bezier(.16, 1, .3, 1) both;
-        animation-delay: 220ms;
+        animation: rfCalmCard 360ms cubic-bezier(.16, 1, .3, 1) both;
+        animation-delay: 170ms;
       }
 
-      [data-room-finder-shell="true"] [data-room-card]:nth-child(2) { animation-delay: 290ms; }
-      [data-room-finder-shell="true"] [data-room-card]:nth-child(3) { animation-delay: 360ms; }
-      [data-room-finder-shell="true"] [data-room-card]:nth-child(4) { animation-delay: 430ms; }
+      [data-room-finder-shell="true"] [data-room-card]:nth-child(2) { animation-delay: 225ms; }
+      [data-room-finder-shell="true"] [data-room-card]:nth-child(3) { animation-delay: 280ms; }
+      [data-room-finder-shell="true"] [data-room-card]:nth-child(4) { animation-delay: 335ms; }
 
       [data-room-finder-shell="true"] [role="log"] > div > div > .msg + .msg {
-        animation-delay: 100ms !important;
+        animation-delay: 80ms !important;
       }
 
       [data-room-finder-shell="true"] [role="log"] > div > div > .msg + .msg + .msg {
-        animation-delay: 180ms !important;
+        animation-delay: 140ms !important;
       }
 
       [data-room-finder-shell="true"] button,
@@ -339,15 +322,10 @@ export function RoomFinderCalmMotion() {
         [data-room-finder-shell="true"] .hide-scroll.msg > button,
         [data-room-finder-shell="true"] [data-room-card],
         [data-room-finder-shell="true"] .rf-followup-bubble,
-        [data-room-finder-shell="true"] .rf-followup-meta,
-        [data-room-finder-shell="true"] .rf-stream-caret {
+        [data-room-finder-shell="true"] .rf-followup-meta {
           animation: none !important;
           transform: none !important;
           opacity: 1 !important;
-        }
-
-        [data-room-finder-shell="true"] .rf-stream-caret {
-          display: none !important;
         }
 
         [data-room-finder-shell="true"] *,
