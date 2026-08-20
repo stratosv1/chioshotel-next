@@ -2,8 +2,10 @@
 
 import { useEffect } from "react";
 
-const CALM_SCROLL_MS = 280;
-const MIN_SCROLL_DISTANCE = 18;
+const CALM_SCROLL_MS = 320;
+const MIN_SCROLL_DISTANCE = 28;
+const SCROLL_COALESCE_MS = 70;
+const STICKY_THRESHOLD = 120;
 
 function easeOutCubic(value: number) {
   return 1 - Math.pow(1 - value, 3);
@@ -22,28 +24,51 @@ export function RoomFinderCalmMotion() {
     const feedScrollDescriptor = Object.getOwnPropertyDescriptor(feed, "scrollTo");
     const patchedResults = new Map<HTMLElement, PropertyDescriptor | undefined>();
     let animationFrame: number | null = null;
+    let queuedScrollTimer: number | null = null;
+    let queuedTargetTop: number | null = null;
+    let queuedDuration = CALM_SCROLL_MS;
+    let programmaticScroll = false;
+    let stickToBottom = true;
+
+    const distanceFromBottom = () => Math.max(0, feed.scrollHeight - feed.clientHeight - feed.scrollTop);
 
     const stopAnimation = () => {
       if (animationFrame !== null) {
         window.cancelAnimationFrame(animationFrame);
         animationFrame = null;
       }
+      programmaticScroll = false;
     };
 
-    const scrollToCalmly = (targetTop: number, duration = CALM_SCROLL_MS) => {
+    const clearQueuedScroll = () => {
+      if (queuedScrollTimer !== null) {
+        window.clearTimeout(queuedScrollTimer);
+        queuedScrollTimer = null;
+      }
+      queuedTargetTop = null;
+    };
+
+    const performScroll = (targetTop: number, duration = CALM_SCROLL_MS) => {
       const maxTop = Math.max(0, feed.scrollHeight - feed.clientHeight);
       const clampedTarget = Math.max(0, Math.min(targetTop, maxTop));
       const startTop = feed.scrollTop;
       const distance = clampedTarget - startTop;
+      const isBottomRequest = Math.abs(clampedTarget - maxTop) <= 24;
 
       stopAnimation();
 
+      if (isBottomRequest && !stickToBottom) return;
+
       if (reduceMotion.matches || Math.abs(distance) < MIN_SCROLL_DISTANCE || duration <= 0) {
+        programmaticScroll = true;
         nativeScrollTo({ top: clampedTarget, behavior: "auto" });
+        programmaticScroll = false;
+        stickToBottom = distanceFromBottom() <= STICKY_THRESHOLD;
         return;
       }
 
       const startedAt = performance.now();
+      programmaticScroll = true;
       const tick = (now: number) => {
         const progress = Math.min(1, (now - startedAt) / duration);
         const eased = easeOutCubic(progress);
@@ -53,27 +78,46 @@ export function RoomFinderCalmMotion() {
           animationFrame = window.requestAnimationFrame(tick);
         } else {
           animationFrame = null;
+          programmaticScroll = false;
+          stickToBottom = distanceFromBottom() <= STICKY_THRESHOLD;
         }
       };
 
       animationFrame = window.requestAnimationFrame(tick);
     };
 
+    const queueScroll = (targetTop: number, duration = CALM_SCROLL_MS) => {
+      queuedTargetTop = targetTop;
+      queuedDuration = duration;
+      if (queuedScrollTimer !== null) window.clearTimeout(queuedScrollTimer);
+
+      queuedScrollTimer = window.setTimeout(() => {
+        queuedScrollTimer = null;
+        const target = queuedTargetTop;
+        queuedTargetTop = null;
+        if (target !== null) performScroll(target, queuedDuration);
+      }, SCROLL_COALESCE_MS);
+    };
+
     const calmScrollTo = ((first?: number | ScrollToOptions, second?: number) => {
       if (typeof first === "number") {
-        scrollToCalmly(typeof second === "number" ? second : feed.scrollTop);
+        queueScroll(typeof second === "number" ? second : feed.scrollTop);
         return;
       }
 
       const options = first || {};
       const targetTop = typeof options.top === "number" ? options.top : feed.scrollTop;
       if (options.behavior === "smooth") {
-        scrollToCalmly(targetTop);
+        queueScroll(targetTop);
         return;
       }
 
+      clearQueuedScroll();
       stopAnimation();
+      programmaticScroll = true;
       nativeScrollTo({ ...options, top: targetTop, behavior: "auto" });
+      programmaticScroll = false;
+      stickToBottom = distanceFromBottom() <= STICKY_THRESHOLD;
     }) as HTMLElement["scrollTo"];
 
     Object.defineProperty(feed, "scrollTo", {
@@ -93,13 +137,11 @@ export function RoomFinderCalmMotion() {
         const delta = Math.abs(targetTop - feed.scrollTop);
 
         if (requestedBehavior === "smooth") {
-          scrollToCalmly(targetTop, 320);
+          queueScroll(targetTop, 360);
           return;
         }
 
-        if (delta > 24) {
-          scrollToCalmly(targetTop, 180);
-        }
+        if (delta > 30) queueScroll(targetTop, 220);
       }) as HTMLElement["scrollIntoView"];
 
       Object.defineProperty(results, "scrollIntoView", {
@@ -120,14 +162,27 @@ export function RoomFinderCalmMotion() {
     });
     observer.observe(feed, { childList: true, subtree: true });
 
-    const cancelOnUserInput = () => stopAnimation();
+    const handleFeedScroll = () => {
+      if (programmaticScroll || animationFrame !== null) return;
+      stickToBottom = distanceFromBottom() <= STICKY_THRESHOLD;
+    };
+
+    const cancelOnUserInput = () => {
+      clearQueuedScroll();
+      stopAnimation();
+      stickToBottom = distanceFromBottom() <= STICKY_THRESHOLD;
+    };
+
+    feed.addEventListener("scroll", handleFeedScroll, { passive: true });
     feed.addEventListener("pointerdown", cancelOnUserInput, { passive: true });
     feed.addEventListener("touchstart", cancelOnUserInput, { passive: true });
     feed.addEventListener("wheel", cancelOnUserInput, { passive: true });
 
     return () => {
       observer.disconnect();
+      clearQueuedScroll();
       stopAnimation();
+      feed.removeEventListener("scroll", handleFeedScroll);
       feed.removeEventListener("pointerdown", cancelOnUserInput);
       feed.removeEventListener("touchstart", cancelOnUserInput);
       feed.removeEventListener("wheel", cancelOnUserInput);
@@ -161,13 +216,13 @@ export function RoomFinderCalmMotion() {
       }
 
       @keyframes rfCalmChoice {
-        from { opacity: 0; transform: translate3d(0, 3px, 0); }
+        from { opacity: 0; transform: translate3d(0, 4px, 0); }
         to { opacity: 1; transform: translate3d(0, 0, 0); }
       }
 
       @keyframes rfCalmCard {
-        from { opacity: 0; }
-        to { opacity: 1; }
+        from { opacity: 0; transform: translate3d(0, 3px, 0); }
+        to { opacity: 1; transform: translate3d(0, 0, 0); }
       }
 
       @keyframes rfCalmTypingDot {
@@ -175,53 +230,95 @@ export function RoomFinderCalmMotion() {
         30% { opacity: .95; transform: translateY(-2px); }
       }
 
+      @keyframes rfCaret {
+        0%, 45% { opacity: .18; }
+        55%, 100% { opacity: .72; }
+      }
+
       [data-room-finder-shell="true"] .msg,
       [data-room-finder-shell="true"] [role="log"] section:not(.msg),
       [data-room-finder-shell="true"] [role="dialog"],
       [data-room-finder-shell="true"] [role="log"] [role="status"]:not(.msg) {
-        animation: rfCalmEnter 340ms cubic-bezier(.16, 1, .3, 1) both !important;
+        animation: rfCalmEnter 380ms cubic-bezier(.16, 1, .3, 1) both !important;
         transform-origin: center bottom;
       }
 
       [data-room-finder-shell="true"] > header + div:not([role="log"]) {
-        animation: rfCalmEnter 300ms cubic-bezier(.16, 1, .3, 1) both;
+        animation: rfCalmEnter 320ms cubic-bezier(.16, 1, .3, 1) both;
       }
 
       [data-room-finder-shell="true"] .reaction {
-        animation: rfCalmReaction 260ms cubic-bezier(.16, 1, .3, 1) both !important;
+        animation: rfCalmReaction 280ms cubic-bezier(.16, 1, .3, 1) both !important;
       }
 
       [data-room-finder-shell="true"] .typing-dot,
       [data-room-finder-shell="true"] [aria-label="Typing"] > span {
-        animation: rfCalmTypingDot 1.28s ease-in-out infinite !important;
+        animation: rfCalmTypingDot 1.34s ease-in-out infinite !important;
       }
 
       [data-room-finder-shell="true"] .typing-dot:nth-child(2),
       [data-room-finder-shell="true"] [aria-label="Typing"] > span:nth-child(2) {
-        animation-delay: .16s !important;
+        animation-delay: .17s !important;
       }
 
       [data-room-finder-shell="true"] .typing-dot:nth-child(3),
       [data-room-finder-shell="true"] [aria-label="Typing"] > span:nth-child(3) {
-        animation-delay: .32s !important;
+        animation-delay: .34s !important;
+      }
+
+      [data-room-finder-shell="true"] .rf-stream-caret {
+        display: inline-block;
+        width: 2px;
+        height: .95em;
+        margin-left: 2px;
+        border-radius: 999px;
+        background: currentColor;
+        vertical-align: -0.08em;
+        animation: rfCaret .8s ease-in-out infinite;
+      }
+
+      [data-room-finder-shell="true"] .rf-followup-bubble {
+        animation: rfCalmEnter 420ms cubic-bezier(.16, 1, .3, 1) both;
+      }
+
+      [data-room-finder-shell="true"] .rf-followup-meta {
+        animation: rfCalmEnter 300ms ease-out both;
+      }
+
+      [data-room-finder-shell="true"] .hide-scroll.msg {
+        animation-delay: 140ms !important;
       }
 
       [data-room-finder-shell="true"] .hide-scroll.msg > button {
-        animation: rfCalmChoice 300ms cubic-bezier(.16, 1, .3, 1) both;
+        animation: rfCalmChoice 320ms cubic-bezier(.16, 1, .3, 1) both;
       }
 
-      [data-room-finder-shell="true"] .hide-scroll.msg > button:nth-child(2) { animation-delay: 45ms; }
-      [data-room-finder-shell="true"] .hide-scroll.msg > button:nth-child(3) { animation-delay: 90ms; }
-      [data-room-finder-shell="true"] .hide-scroll.msg > button:nth-child(4) { animation-delay: 135ms; }
-      [data-room-finder-shell="true"] .hide-scroll.msg > button:nth-child(5) { animation-delay: 180ms; }
+      [data-room-finder-shell="true"] .hide-scroll.msg > button:nth-child(1) { animation-delay: 180ms; }
+      [data-room-finder-shell="true"] .hide-scroll.msg > button:nth-child(2) { animation-delay: 230ms; }
+      [data-room-finder-shell="true"] .hide-scroll.msg > button:nth-child(3) { animation-delay: 280ms; }
+      [data-room-finder-shell="true"] .hide-scroll.msg > button:nth-child(4) { animation-delay: 330ms; }
+      [data-room-finder-shell="true"] .hide-scroll.msg > button:nth-child(5) { animation-delay: 380ms; }
+
+      [data-room-finder-shell="true"] [data-room-results-start="true"] {
+        animation-delay: 180ms;
+      }
 
       [data-room-finder-shell="true"] [data-room-card] {
-        animation: rfCalmCard 420ms ease-out both;
+        animation: rfCalmCard 460ms cubic-bezier(.16, 1, .3, 1) both;
+        animation-delay: 220ms;
       }
 
-      [data-room-finder-shell="true"] [data-room-card]:nth-child(2) { animation-delay: 55ms; }
-      [data-room-finder-shell="true"] [data-room-card]:nth-child(3) { animation-delay: 110ms; }
-      [data-room-finder-shell="true"] [data-room-card]:nth-child(4) { animation-delay: 165ms; }
+      [data-room-finder-shell="true"] [data-room-card]:nth-child(2) { animation-delay: 290ms; }
+      [data-room-finder-shell="true"] [data-room-card]:nth-child(3) { animation-delay: 360ms; }
+      [data-room-finder-shell="true"] [data-room-card]:nth-child(4) { animation-delay: 430ms; }
+
+      [data-room-finder-shell="true"] [role="log"] > div > div > .msg + .msg {
+        animation-delay: 100ms !important;
+      }
+
+      [data-room-finder-shell="true"] [role="log"] > div > div > .msg + .msg + .msg {
+        animation-delay: 180ms !important;
+      }
 
       [data-room-finder-shell="true"] button,
       [data-room-finder-shell="true"] input,
@@ -240,10 +337,17 @@ export function RoomFinderCalmMotion() {
         [data-room-finder-shell="true"] .typing-dot,
         [data-room-finder-shell="true"] [aria-label="Typing"] > span,
         [data-room-finder-shell="true"] .hide-scroll.msg > button,
-        [data-room-finder-shell="true"] [data-room-card] {
+        [data-room-finder-shell="true"] [data-room-card],
+        [data-room-finder-shell="true"] .rf-followup-bubble,
+        [data-room-finder-shell="true"] .rf-followup-meta,
+        [data-room-finder-shell="true"] .rf-stream-caret {
           animation: none !important;
           transform: none !important;
           opacity: 1 !important;
+        }
+
+        [data-room-finder-shell="true"] .rf-stream-caret {
+          display: none !important;
         }
 
         [data-room-finder-shell="true"] *,
