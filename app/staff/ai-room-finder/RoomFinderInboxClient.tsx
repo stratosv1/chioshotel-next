@@ -51,11 +51,24 @@ export default function RoomFinderInboxClient({ initialData }: { initialData: Ro
   const [data, setData] = useState(initialData);
   const [selectedSessionId, setSelectedSessionId] = useState(initialData.selected.conversation?.sessionId || "");
   const [refreshing, setRefreshing] = useState(false);
+  const [deleting, setDeleting] = useState<string | null>(null);
   const [lastRefresh, setLastRefresh] = useState(new Date());
   const markedRead = useRef(new Set<string>());
 
   const selected = data.selected.conversation;
   const messages = data.selected.messages;
+
+  function syncInbox(next: RoomFinderInboxData) {
+    const nextSessionId = next.selected.conversation?.sessionId || "";
+    setData(next);
+    setSelectedSessionId(nextSessionId);
+    setLastRefresh(new Date());
+
+    const url = new URL(window.location.href);
+    if (nextSessionId) url.searchParams.set("session", nextSessionId);
+    else url.searchParams.delete("session");
+    history.replaceState(history.state, "", url);
+  }
 
   async function load(sessionId = selectedSessionId) {
     setRefreshing(true);
@@ -65,9 +78,8 @@ export default function RoomFinderInboxClient({ initialData }: { initialData: Ro
       if (!response.ok) throw new Error("Inbox refresh failed");
       const next = await response.json() as RoomFinderInboxData;
       setData(next);
-      if (!selectedSessionId && next.selected.conversation?.sessionId) {
-        setSelectedSessionId(next.selected.conversation.sessionId);
-      }
+      const nextSelected = next.selected.conversation?.sessionId || "";
+      if (!sessionId || nextSelected !== sessionId) setSelectedSessionId(nextSelected);
       setLastRefresh(new Date());
     } catch (error) {
       console.error(error);
@@ -111,6 +123,57 @@ export default function RoomFinderInboxClient({ initialData }: { initialData: Ro
     await markRead(sessionId);
   }
 
+  async function deleteConversation(conversation: RoomFinderInboxConversation) {
+    const name = fullName(conversation) || "αυτή τη συνομιλία";
+    const liveWarning = conversation.active
+      ? "\n\nΗ συνομιλία είναι ακόμη LIVE. Αν ο επισκέπτης συνεχίσει να γράφει, μπορεί να εμφανιστεί ξανά."
+      : "";
+    if (!window.confirm(`Να διαγραφεί οριστικά ${name}; Τα μηνύματα της συνομιλίας θα διαγραφούν επίσης.${liveWarning}`)) return;
+
+    setDeleting(conversation.sessionId);
+    try {
+      const response = await fetch("/api/staff/ai-room-finder", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId: conversation.sessionId }),
+      });
+      if (!response.ok) throw new Error("Conversation delete failed");
+      markedRead.current.delete(conversation.sessionId);
+      syncInbox(await response.json() as RoomFinderInboxData);
+    } catch (error) {
+      console.error(error);
+      window.alert("Η συνομιλία δεν διαγράφηκε. Δοκίμασε ξανά.");
+    } finally {
+      setDeleting(null);
+    }
+  }
+
+  async function deleteAllConversations() {
+    if (!data.conversations.length) return;
+    const liveCount = data.conversations.filter((conversation) => conversation.active).length;
+    const liveWarning = liveCount
+      ? `\n\n${liveCount} συνομιλία${liveCount === 1 ? " είναι" : "ες είναι"} ακόμη LIVE και μπορεί να εμφανιστεί ξανά αν συνεχιστεί.`
+      : "";
+    if (!window.confirm(`Να διαγραφούν ΟΛΕΣ οι αποθηκευμένες συνομιλίες του AI Room Finder και όλα τα μηνύματά τους; Η ενέργεια δεν αναιρείται.${liveWarning}`)) return;
+
+    setDeleting("all");
+    try {
+      const response = await fetch("/api/staff/ai-room-finder", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ all: true }),
+      });
+      if (!response.ok) throw new Error("Inbox clear failed");
+      markedRead.current.clear();
+      syncInbox(await response.json() as RoomFinderInboxData);
+    } catch (error) {
+      console.error(error);
+      window.alert("Οι συνομιλίες δεν διαγράφηκαν. Δοκίμασε ξανά.");
+    } finally {
+      setDeleting(null);
+    }
+  }
+
   useEffect(() => {
     if (selectedSessionId && selected?.unread) void markRead(selectedSessionId);
   }, []);
@@ -144,7 +207,7 @@ export default function RoomFinderInboxClient({ initialData }: { initialData: Ro
             <button
               type="button"
               onClick={() => void load()}
-              disabled={refreshing}
+              disabled={refreshing || Boolean(deleting)}
               className="rounded-xl border border-stone-300 bg-white px-3 py-2 font-bold text-stone-700 disabled:opacity-50"
             >
               {refreshing ? "Ανανέωση…" : "Ανανέωση"}
@@ -169,9 +232,19 @@ export default function RoomFinderInboxClient({ initialData }: { initialData: Ro
 
         <div className="mt-5 grid gap-4 lg:grid-cols-[360px_minmax(0,1fr)]">
           <section className="overflow-hidden rounded-3xl border border-stone-200 bg-white">
-            <div className="flex items-center justify-between border-b border-stone-200 px-4 py-3">
-              <h2 className="font-black">Συνομιλίες</h2>
-              <span className="text-xs text-stone-500">{data.conversations.length} πρόσφατες</span>
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-stone-200 px-4 py-3">
+              <div>
+                <h2 className="font-black">Συνομιλίες</h2>
+                <span className="text-xs text-stone-500">{data.conversations.length} πρόσφατες</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => void deleteAllConversations()}
+                disabled={!data.conversations.length || Boolean(deleting)}
+                className="rounded-xl border border-red-200 bg-red-50 px-2.5 py-1.5 text-[11px] font-black text-red-700 transition hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                {deleting === "all" ? "Διαγραφή…" : "Καθαρισμός όλων"}
+              </button>
             </div>
             <div className="max-h-[70vh] overflow-y-auto">
               {data.conversations.length ? data.conversations.map((conversation) => {
@@ -183,7 +256,8 @@ export default function RoomFinderInboxClient({ initialData }: { initialData: Ro
                     type="button"
                     key={conversation.sessionId}
                     onClick={() => void openConversation(conversation.sessionId)}
-                    className={`block w-full border-b border-stone-100 px-4 py-4 text-left transition last:border-0 ${active ? "bg-[#f4eee4]" : "hover:bg-stone-50"}`}
+                    disabled={Boolean(deleting)}
+                    className={`block w-full border-b border-stone-100 px-4 py-4 text-left transition last:border-0 disabled:opacity-60 ${active ? "bg-[#f4eee4]" : "hover:bg-stone-50"}`}
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
@@ -221,7 +295,17 @@ export default function RoomFinderInboxClient({ initialData }: { initialData: Ro
                       </div>
                       <p className="mt-1 text-xs text-stone-500">Ξεκίνησε {dateTime(selected.createdAt)} · τελευταία δραστηριότητα {dateTime(selected.lastActivityAt)}</p>
                     </div>
-                    {selectedStatus && <span className={`rounded-full px-3 py-1.5 text-xs font-black ${selectedStatus.className}`}>{selectedStatus.label}</span>}
+                    <div className="flex flex-wrap items-center gap-2">
+                      {selectedStatus && <span className={`rounded-full px-3 py-1.5 text-xs font-black ${selectedStatus.className}`}>{selectedStatus.label}</span>}
+                      <button
+                        type="button"
+                        onClick={() => void deleteConversation(selected)}
+                        disabled={Boolean(deleting)}
+                        className="rounded-full border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-black text-red-700 transition hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        {deleting === selected.sessionId ? "Διαγραφή…" : "Διαγραφή"}
+                      </button>
+                    </div>
                   </div>
 
                   <div className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
@@ -274,7 +358,7 @@ export default function RoomFinderInboxClient({ initialData }: { initialData: Ro
                 </div>
               </>
             ) : (
-              <div className="p-12 text-center text-stone-500">Επίλεξε μια συνομιλία.</div>
+              <div className="p-12 text-center text-stone-500">Δεν υπάρχουν αποθηκευμένες συνομιλίες.</div>
             )}
           </section>
         </div>
