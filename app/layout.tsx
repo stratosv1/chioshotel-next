@@ -30,10 +30,9 @@ export const metadata: Metadata = {
     "Quiet rooms and apartments in Kampos, Chios. Stay at Voulamandis House near Chios Town, the airport, beaches, villages and local attractions.",
   icons: {
     icon: [
-      { url: "/favicon/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon/vh-heart-48x48.png", sizes: "48x48", type: "image/png" },
+      { url: "/favicon/vh-heart-192x192.png", sizes: "192x192", type: "image/png" },
       { url: "/favicon/favicon.ico" },
-      { url: "/favicon/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      { url: "/favicon/favicon-16x16.png", sizes: "16x16", type: "image/png" },
     ],
     apple: [
       {
