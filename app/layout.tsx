@@ -53,6 +53,10 @@ type SharedSiteLanguage = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
 type SiteLanguage = SharedSiteLanguage | "pl";
 
 function getHtmlLanguage(pathname: string): SiteLanguage {
+  if (pathname === "/mixalis" || pathname.startsWith("/mixalis/")) {
+    return "el";
+  }
+
   const firstSegment = pathname.split("/").filter(Boolean)[0];
 
   if (["el", "fr", "de", "it", "es", "tr", "pl"].includes(firstSegment)) {
@@ -76,6 +80,10 @@ function isGuidePath(pathname: string): boolean {
 
 function isStaffPath(pathname: string): boolean {
   return pathname === "/staff" || pathname.startsWith("/staff/");
+}
+
+function isMixalisPath(pathname: string): boolean {
+  return pathname === "/mixalis" || pathname.startsWith("/mixalis/");
 }
 
 function isAgentRoomPath(pathname: string): boolean {
@@ -102,10 +110,11 @@ export default async function RootLayout({
   const isPolishPath = htmlLanguage === "pl";
   const sharedLanguage: SharedSiteLanguage = isPolishPath ? "en" : htmlLanguage;
   const hideHeader = isGuidePath(pathname);
-  const hideGlobalChrome = hideHeader || isPolishPath;
-  const hideJourney = isTripPlannerPath(pathname) || isAgentRoomPath(pathname);
-  const hideFooter = isTripPlannerPath(pathname);
-  const excludeAnalytics = isStaffPath(pathname);
+  const privatePhysicsPath = isMixalisPath(pathname);
+  const hideGlobalChrome = hideHeader || isPolishPath || privatePhysicsPath;
+  const hideJourney = isTripPlannerPath(pathname) || isAgentRoomPath(pathname) || privatePhysicsPath;
+  const hideFooter = isTripPlannerPath(pathname) || privatePhysicsPath;
+  const excludeAnalytics = isStaffPath(pathname) || privatePhysicsPath;
 
   return (
     <html lang={htmlLanguage}>
