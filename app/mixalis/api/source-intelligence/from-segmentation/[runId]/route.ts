@@ -5,8 +5,20 @@ import { createAnalysesFromConfirmedSegmentation } from "@/lib/mixalis/source-in
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
+const DEFAULT_PHYSICS_ANALYSIS_MODEL = "gpt-5.6";
+
 function redirectTo(request: NextRequest, path: string) {
   return NextResponse.redirect(new URL(path, request.url), 303);
+}
+
+function ensurePhysicsAnalysisModel() {
+  const configured =
+    process.env.PHYSICS_ANALYSIS_MODEL?.trim() ||
+    process.env.OPENAI_ASSISTANT_MODEL?.trim();
+
+  if (!configured) {
+    process.env.PHYSICS_ANALYSIS_MODEL = DEFAULT_PHYSICS_ANALYSIS_MODEL;
+  }
 }
 
 export async function POST(
@@ -19,6 +31,7 @@ export async function POST(
   const { runId } = await params;
 
   try {
+    ensurePhysicsAnalysisModel();
     const analyses = await createAnalysesFromConfirmedSegmentation(runId);
     if (analyses.length === 0) {
       throw new Error("No subchapter analyses were created.");
