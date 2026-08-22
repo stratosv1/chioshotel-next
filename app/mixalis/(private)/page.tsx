@@ -1,27 +1,25 @@
 import Link from "next/link";
+import { listPhysicsCourses } from "@/lib/mixalis/db";
 
-const cards = [
-  {
-    title: "Κεφάλαια",
-    description: "Δημιούργησε και οργάνωσε τα κεφάλαια που θα εξελίσσονται μάθημα-μάθημα.",
-    href: "/mixalis/chapters/new",
-    action: "+ Νέο κεφάλαιο",
-  },
-  {
-    title: "Τεστ κατανόησης",
-    description: "Τα tests θα δημιουργούνται από τη θεωρία και θα προσαρμόζονται στην πρόοδό σου.",
-    href: null,
-    action: "Phase 5",
-  },
-  {
-    title: "Ρώτα τον καθηγητή",
-    description: "Ο AI καθηγητής θα γνωρίζει το τρέχον κεφάλαιο, τις πηγές και τα σημεία που χρειάζονται ενίσχυση.",
-    href: null,
-    action: "Phase 6",
-  },
-];
+const courseDescriptions: Record<string, string> = {
+  general_education:
+    "Ηλεκτρισμός, φως και ατομικά φαινόμενα οργανωμένα σύμφωνα με το επίσημο σχολικό βιβλίο.",
+  orientation:
+    "Καμπυλόγραμμες κινήσεις, ορμή, αέρια, θερμοδυναμική και ηλεκτρικό πεδίο.",
+};
 
-export default function MixalisDashboardPage() {
+export default async function MixalisDashboardPage() {
+  const courses = await listPhysicsCourses();
+  const chapterCount = courses.reduce((total, course) => total + course.chapterCount, 0);
+  const subchapterCount = courses.reduce(
+    (total, course) => total + course.subchapterCount,
+    0,
+  );
+  const materialBatchCount = courses.reduce(
+    (total, course) => total + course.materialBatchCount,
+    0,
+  );
+
   return (
     <main className="min-h-screen bg-[#f3efe8] px-4 py-5 text-[#2c2825] sm:px-8 sm:py-8">
       <div className="mx-auto max-w-6xl">
@@ -31,71 +29,88 @@ export default function MixalisDashboardPage() {
               Physics Workspace
             </p>
             <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
-              Καλημέρα, Μιχάλη
+              Φυσική Β΄ Λυκείου
             </h1>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-[#6b625b] sm:text-base">
-              Εδώ θα χτίζονται τα κεφάλαια της Φυσικής σταδιακά, μαζί με το υλικό, τις ασκήσεις και τα tests κατανόησης.
+              Δύο ξεχωριστά μαθήματα, με τη δική τους ύλη, κεφάλαια, υποκεφάλαια και πηγές. Διάλεξε πρώτα ποια Φυσική θέλεις να ανοίξεις.
             </p>
           </div>
 
-          <form action="/mixalis/auth/logout" method="post">
-            <button
-              type="submit"
-              className="rounded-xl border border-black/15 bg-white px-4 py-2.5 text-sm font-medium transition hover:bg-[#f7f4ef]"
+          <div className="flex flex-wrap gap-3">
+            <Link
+              href="/mixalis/sources"
+              className="rounded-xl bg-[#e9e0d5] px-4 py-2.5 text-sm font-semibold text-[#4d4138] transition hover:bg-[#ddd1c3]"
             >
-              Αποσύνδεση
-            </button>
-          </form>
+              Βιβλιοθήκη πηγών
+            </Link>
+            <form action="/mixalis/auth/logout" method="post">
+              <button
+                type="submit"
+                className="rounded-xl border border-black/15 bg-white px-4 py-2.5 text-sm font-medium transition hover:bg-[#f7f4ef]"
+              >
+                Αποσύνδεση
+              </button>
+            </form>
+          </div>
         </header>
 
         <section className="mb-8 grid gap-4 sm:grid-cols-3">
           <div className="rounded-2xl border border-black/10 bg-[#ded4c7] p-5">
-            <p className="text-sm text-[#64584e]">Κεφάλαια</p>
-            <p className="mt-2 text-3xl font-semibold">0</p>
+            <p className="text-sm text-[#64584e]">Μαθήματα Φυσικής</p>
+            <p className="mt-2 text-3xl font-semibold">{courses.length}</p>
           </div>
           <div className="rounded-2xl border border-black/10 bg-white p-5">
-            <p className="text-sm text-[#736a63]">Υλικό</p>
-            <p className="mt-2 text-3xl font-semibold">0</p>
+            <p className="text-sm text-[#736a63]">Κεφάλαια / Υποκεφάλαια</p>
+            <p className="mt-2 text-3xl font-semibold">
+              {chapterCount} / {subchapterCount}
+            </p>
           </div>
           <div className="rounded-2xl border border-black/10 bg-white p-5">
-            <p className="text-sm text-[#736a63]">Τελευταία ενημέρωση</p>
-            <p className="mt-2 text-lg font-semibold">Δεν υπάρχει ακόμη</p>
+            <p className="text-sm text-[#736a63]">Προσθήκες υλικού</p>
+            <p className="mt-2 text-3xl font-semibold">{materialBatchCount}</p>
           </div>
         </section>
 
         <section>
-          <div className="mb-4 flex items-end justify-between gap-4">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.15em] text-[#857261]">
-                Ο χώρος σου
-              </p>
-              <h2 className="mt-1 text-2xl font-semibold">Ξεκίνα από ένα κεφάλαιο</h2>
-            </div>
+          <div className="mb-4">
+            <p className="text-sm font-semibold uppercase tracking-[0.15em] text-[#857261]">
+              Μαθήματα
+            </p>
+            <h2 className="mt-1 text-2xl font-semibold">Διάλεξε Φυσική</h2>
           </div>
 
-          <div className="grid gap-4 lg:grid-cols-3">
-            {cards.map((card) => (
-              <article
-                key={card.title}
-                className="flex min-h-56 flex-col rounded-3xl border border-black/10 bg-white p-6 shadow-sm"
+          <div className="grid gap-5 md:grid-cols-2">
+            {courses.map((course) => (
+              <Link
+                key={course.id}
+                href={`/mixalis/courses/${course.code}`}
+                className="group flex min-h-72 flex-col rounded-3xl border border-black/10 bg-white p-7 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md sm:p-8"
               >
-                <h3 className="text-xl font-semibold">{card.title}</h3>
-                <p className="mt-3 flex-1 text-sm leading-6 text-[#6f665f]">
-                  {card.description}
-                </p>
-                {card.href ? (
-                  <Link
-                    href={card.href}
-                    className="mt-6 inline-flex w-fit rounded-xl bg-[#403630] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#2f2824]"
-                  >
-                    {card.action}
-                  </Link>
-                ) : (
-                  <span className="mt-6 inline-flex w-fit rounded-xl bg-[#f1ede7] px-4 py-2.5 text-sm font-medium text-[#8a817a]">
-                    {card.action}
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <span className="rounded-full bg-[#f1ede7] px-3 py-1 text-xs font-semibold text-[#74665b]">
+                    {course.chapterCount} κεφάλαια
                   </span>
-                )}
-              </article>
+                  <span className="text-xs font-medium text-[#8a817a]">
+                    {course.subchapterCount} υποκεφάλαια
+                  </span>
+                </div>
+
+                <h3 className="mt-7 text-2xl font-semibold tracking-tight transition group-hover:text-[#6d5848] sm:text-3xl">
+                  {course.title}
+                </h3>
+                <p className="mt-4 flex-1 text-sm leading-6 text-[#6f665f] sm:text-base">
+                  {courseDescriptions[course.code]}
+                </p>
+
+                <div className="mt-7 flex items-center justify-between border-t border-black/10 pt-5">
+                  <span className="text-sm text-[#7d7269]">
+                    {course.materialBatchCount} προσθήκες υλικού
+                  </span>
+                  <span className="text-sm font-semibold text-[#5f5045]">
+                    Άνοιγμα →
+                  </span>
+                </div>
+              </Link>
             ))}
           </div>
         </section>
