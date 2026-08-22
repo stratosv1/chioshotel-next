@@ -75,51 +75,18 @@ export default async function MixalisSourceIntelligencePage({
           </div>
         </header>
 
-        <section className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-2xl border border-black/10 bg-white p-5 shadow-sm">
-            <p className="text-xs uppercase tracking-[0.14em] text-[#847466]">Κατάσταση</p>
-            <p className="mt-2 text-xl font-semibold">
-              {context.status === "ready"
-                ? "Ολοκληρωμένη"
-                : context.status === "processing"
-                  ? "Σε ανάλυση"
-                  : context.status === "error"
-                    ? "Χρειάζεται συνέχιση"
-                    : "Έτοιμη να ξεκινήσει"}
-            </p>
-          </div>
-          <div className="rounded-2xl border border-black/10 bg-white p-5 shadow-sm">
-            <p className="text-xs uppercase tracking-[0.14em] text-[#847466]">Πρόοδος</p>
-            <p className="mt-2 text-xl font-semibold">
-              {context.processedUnits}/{context.totalUnits}
-            </p>
-          </div>
-          <div className="rounded-2xl border border-black/10 bg-white p-5 shadow-sm">
-            <p className="text-xs uppercase tracking-[0.14em] text-[#847466]">Structured findings</p>
-            <p className="mt-2 text-xl font-semibold">{view.items.length}</p>
-          </div>
-          <div className="rounded-2xl border border-black/10 bg-white p-5 shadow-sm">
-            <p className="text-xs uppercase tracking-[0.14em] text-[#847466]">Σχολικό βιβλίο 1.1</p>
-            <p className="mt-2 text-xl font-semibold">
-              {view.schoolBookMapped ? "Συνδεδεμένο" : "Εκκρεμεί"}
-            </p>
-          </div>
-        </section>
+        <SourceIntelligenceRunner
+          analysisId={context.id}
+          initialStatus={context.status}
+          initialProcessedUnits={context.processedUnits}
+          totalUnits={context.totalUnits}
+          initialFindingsCount={view.items.length}
+          schoolBookMapped={view.schoolBookMapped}
+        />
 
         {!view.schoolBookMapped ? (
           <section className="mt-6 rounded-3xl border border-[#ddc8aa] bg-[#fbf5e9] p-5 text-sm leading-6 text-[#6e5a3d]">
             <strong>Σημαντικό:</strong> η ανάλυση του Σαββάλα μπορεί να ολοκληρωθεί τώρα, αλλά δεν θα δημιουργηθεί ακόμη canonical Subchapter Intelligence ούτε μάθημα. Πρώτα πρέπει να χαρτογραφηθεί το αντίστοιχο range του επίσημου σχολικού βιβλίου, επειδή μόνο αυτό καθορίζει την επίσημη ύλη.
-          </section>
-        ) : null}
-
-        {context.status !== "ready" ? (
-          <section className="mt-6">
-            <SourceIntelligenceRunner
-              analysisId={context.id}
-              initialStatus={context.status}
-              initialProcessedUnits={context.processedUnits}
-              totalUnits={context.totalUnits}
-            />
           </section>
         ) : null}
 
