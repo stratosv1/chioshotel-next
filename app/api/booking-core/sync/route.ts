@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { scryptSync, timingSafeEqual } from "node:crypto";
 import { neon } from "@neondatabase/serverless";
 import {
   detectPriceChanges,
@@ -16,6 +17,27 @@ const SOURCE_TIMEOUT_MS = 45_000;
 const VALID_REASONS = new Set(["PRICE_OK", "BOOKED", "CLOSED"]);
 const PULL_SOURCE = "script_url_booking_core_snapshot_v1";
 const PUSH_SOURCE = "script_push_booking_core_snapshot_v1";
+
+// Fallback verifier for the Apps Script push token. The raw token is never
+// stored in the repository; only a memory-hard scrypt verifier is kept here.
+// Environment-variable secrets remain the preferred authorization path.
+const PUSH_FALLBACK_SALT = Buffer.from("9f2fb5c0804e2f893d409f13eb97fc7a", "hex");
+const PUSH_FALLBACK_HASH = Buffer.from("1e6de08c6d0a798f04bbd17fc011d53914d49e32f5bef9c2da5c792124d70b77", "hex");
+
+function matchesFallbackPushSecret(supplied: string) {
+  if (!supplied) return false;
+  try {
+    const derived = scryptSync(supplied, PUSH_FALLBACK_SALT, PUSH_FALLBACK_HASH.length, {
+      N: 16_384,
+      r: 8,
+      p: 1,
+      maxmem: 64 * 1024 * 1024,
+    });
+    return derived.length === PUSH_FALLBACK_HASH.length && timingSafeEqual(derived, PUSH_FALLBACK_HASH);
+  } catch {
+    return false;
+  }
+}
 
 type CanonicalRow = {
   date: string;
@@ -197,7 +219,7 @@ function isAuthorized(request: NextRequest) {
     process.env.OCCUPANCY_SCRIPT_SECRET,
     process.env.BOOKING_CORE_PUSH_SECRET,
   ].map(text).filter(Boolean);
-  return Boolean(supplied && allowed.includes(supplied));
+  return Boolean(supplied && (allowed.includes(supplied) || matchesFallbackPushSecret(supplied)));
 }
 
 async function recordFailure(databaseUrl: string, startedAt: number, message: string, source: string) {
