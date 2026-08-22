@@ -53,6 +53,10 @@ type SharedSiteLanguage = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
 type SiteLanguage = SharedSiteLanguage | "pl";
 
 function getHtmlLanguage(pathname: string): SiteLanguage {
+  if (pathname === "/mixalis" || pathname.startsWith("/mixalis/")) {
+    return "el";
+  }
+
   const firstSegment = pathname.split("/").filter(Boolean)[0];
 
   if (["el", "fr", "de", "it", "es", "tr", "pl"].includes(firstSegment)) {
