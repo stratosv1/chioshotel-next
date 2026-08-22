@@ -129,12 +129,8 @@ function getSql() {
 export function getConfiguredPhysicsAnalysisModel() {
   const model =
     process.env.PHYSICS_ANALYSIS_MODEL?.trim() ||
-    process.env.OPENAI_ASSISTANT_MODEL?.trim();
-  if (!model) {
-    throw new Error(
-      "PHYSICS_ANALYSIS_MODEL (or OPENAI_ASSISTANT_MODEL fallback) is not configured.",
-    );
-  }
+    process.env.OPENAI_ASSISTANT_MODEL?.trim() ||
+    "gpt-5.6";
   return model;
 }
 
@@ -677,6 +673,19 @@ export async function replaceSourceAnalysisItems(input: {
       `;
     }
   }
+}
+
+export async function markSourceAnalysisProcessing(analysisId: string) {
+  const sql = getSql();
+  await sql`
+    UPDATE physics.source_analyses
+    SET
+      status = 'processing',
+      error_message = NULL,
+      updated_at = NOW()
+    WHERE id::text = ${analysisId}
+      AND status <> 'ready'
+  `;
 }
 
 export async function markSourceAnalysisReady(analysisId: string) {
