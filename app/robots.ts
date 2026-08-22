@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/api/", "/private/", "/admin/", "/wp-admin/"],
+      disallow: ["/api/", "/private/", "/admin/", "/mixalis/", "/wp-admin/"],
     },
     host: "https://chioshotel.gr",
     sitemap: [
