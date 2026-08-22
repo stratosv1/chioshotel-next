@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -10,6 +11,10 @@ type Props = {
   versionNumber: number;
   sourceCount: number;
   findingCount: number;
+  currentLesson?: {
+    revisionId: string;
+    revisionNumber: number;
+  } | null;
 };
 
 type StatusPayload = {
@@ -28,6 +33,7 @@ export default function SubchapterIntelligenceRunner({
   versionNumber,
   sourceCount,
   findingCount,
+  currentLesson = null,
 }: Props) {
   const router = useRouter();
   const [status, setStatus] = useState(initialStatus);
@@ -109,7 +115,8 @@ export default function SubchapterIntelligenceRunner({
         {completed ? "Η canonical γνώση του υποκεφαλαίου είναι έτοιμη" : "Σύνθεση των πηγών"}
       </h2>
       <p className="mt-3 max-w-3xl text-sm leading-6 text-[#6e655e] sm:text-base">
-        Το σύστημα συνθέτει {findingCount} structured findings από {sourceCount} πηγές. Δεν ξαναδιαβάζει τις φωτογραφίες ή το PDF και δεν δημιουργεί ακόμη μάθημα.
+        Το σύστημα συνθέτει {findingCount} structured findings από {sourceCount} πηγές. Δεν ξαναδιαβάζει τις φωτογραφίες ή το PDF.
+        {currentLesson ? ` Το Lesson Revision ${currentLesson.revisionNumber} έχει ήδη δημιουργηθεί από αυτή τη γνώση.` : " Το μάθημα δημιουργείται μόνο στο επόμενο χειροκίνητο στάδιο START."}
       </p>
 
       <div className="mt-5 flex flex-wrap gap-2 text-xs text-[#6f655d]">
@@ -135,6 +142,19 @@ export default function SubchapterIntelligenceRunner({
         >
           {running ? "Συντίθεται το Subchapter Intelligence…" : `Δημιουργία Subchapter Intelligence v${versionNumber}`}
         </button>
+      ) : currentLesson ? (
+        <div className="mt-6 rounded-2xl border border-[#b7ccb5] bg-[#eef5ed] p-5 text-[#4f684a]">
+          <p className="text-sm font-semibold">Lesson Revision {currentLesson.revisionNumber} · έτοιμο</p>
+          <p className="mt-2 text-sm leading-6">
+            Το current μάθημα έχει ήδη αποθηκευτεί στη Neon και παραμένει συνδεδεμένο με αυτή την canonical version.
+          </p>
+          <Link
+            href={`/mixalis/lessons/${currentLesson.revisionId}`}
+            className="mt-4 inline-flex w-full justify-center rounded-2xl bg-[#52674d] px-5 py-4 text-base font-semibold text-white transition hover:bg-[#465a42]"
+          >
+            Άνοιγμα μαθήματος
+          </Link>
+        </div>
       ) : (
         <div className="mt-6 rounded-2xl border border-[#b7ccb5] bg-[#eef5ed] p-5 text-[#4f684a]">
           <p className="text-sm leading-6">
