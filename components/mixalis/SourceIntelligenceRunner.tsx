@@ -1,7 +1,27 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+type StatusPayload = {
+  status?: string;
+  error?: string;
+  message?: string;
+  step?: string;
+  view?: {
+    context?: {
+      status?: string;
+      processedUnits?: number;
+    };
+    chunks?: {
+      processing?: number;
+    };
+  };
+};
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 export default function SourceIntelligenceRunner({
   analysisId,
@@ -20,59 +40,171 @@ export default function SourceIntelligenceRunner({
   const [processedUnits, setProcessedUnits] = useState(initialProcessedUnits);
   const [message, setMessage] = useState<string | null>(null);
 
+  const endpoint = `/mixalis/api/source-intelligence/analyses/${analysisId}/next`;
+
+  function applyPayload(payload: StatusPayload) {
+    const nextStatus = String(payload?.view?.context?.status ?? payload?.status ?? "processing");
+    const nextProcessed = Number(payload?.view?.context?.processedUnits ?? 0);
+    setStatus(nextStatus);
+    if (Number.isFinite(nextProcessed)) {
+      setProcessedUnits(nextProcessed);
+    }
+    return { nextStatus, nextProcessed };
+  }
+
+  async function readStatus() {
+    const response = await fetch(endpoint, {
+      method: "GET",
+      cache: "no-store",
+    });
+    const payload = (await response.json().catch(() => null)) as StatusPayload | null;
+    if (!response.ok || !payload) {
+      throw new Error(payload?.error || "Δεν μπόρεσε να διαβαστεί η πρόοδος της ανάλυσης.");
+    }
+    return payload;
+  }
+
+  useEffect(() => {
+    let cancelled = false;
+
+    readStatus()
+      .then((payload) => {
+        if (!cancelled) applyPayload(payload);
+      })
+      .catch(() => {
+        // The server-rendered progress remains a safe fallback.
+      });
+
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [analysisId]);
+
   async function run() {
     if (running || status === "ready") return;
+
     setRunning(true);
-    setMessage(null);
+    setMessage("Η ανάλυση ξεκίνησε. Θα συνεχίσει αυτόματα μέχρι να ολοκληρωθεί.");
+
+    let knownProcessed = processedUnits;
 
     try {
-      for (let step = 0; step < 80; step += 1) {
-        const response = await fetch(
-          `/mixalis/api/source-intelligence/analyses/${analysisId}/next`,
-          { method: "POST" },
-        );
-        const payload = await response.json().catch(() => null);
-        if (!response.ok) {
-          throw new Error(payload?.error || "Η ανάλυση Source Intelligence απέτυχε.");
-        }
+      for (let cycle = 0; cycle < 40; cycle += 1) {
+        const before = await readStatus();
+        const beforeState = applyPayload(before);
+        knownProcessed = Math.max(knownProcessed, beforeState.nextProcessed);
 
-        const nextStatus = String(payload?.status || "processing");
-        const nextProcessed = Number(
-          payload?.view?.context?.processedUnits ?? processedUnits,
-        );
-        setStatus(nextStatus);
-        setProcessedUnits(nextProcessed);
-
-        if (nextStatus === "ready") {
+        if (beforeState.nextStatus === "ready") {
           setMessage("Η Source Intelligence ολοκληρώθηκε.");
           router.refresh();
           return;
         }
 
-        if (nextStatus === "error") {
-          throw new Error(payload?.message || "Ένα βήμα της ανάλυσης απέτυχε.");
+        if (knownProcessed >= totalUnits) {
+          setMessage("Οι φωτογραφίες αναλύθηκαν. Γίνεται η τελική σύνθεση των findings…");
+        } else {
+          setMessage(
+            `Αναλύεται η επόμενη ομάδα φωτογραφιών… ${knownProcessed}/${totalUnits}. Δεν χρειάζεται άλλο πάτημα.`,
+          );
         }
 
-        if (payload?.step === "busy") {
-          await new Promise((resolve) => setTimeout(resolve, 1800));
-        } else {
-          await new Promise((resolve) => setTimeout(resolve, 450));
+        let triggerSettled = false;
+        let triggerPayload: StatusPayload | null = null;
+        let triggerError: Error | null = null;
+
+        void fetch(endpoint, { method: "POST" })
+          .then(async (response) => {
+            const payload = (await response.json().catch(() => null)) as StatusPayload | null;
+            if (!response.ok || !payload) {
+              throw new Error(payload?.error || "Ένα βήμα της ανάλυσης απέτυχε.");
+            }
+            triggerPayload = payload;
+          })
+          .catch((error) => {
+            triggerError = error instanceof Error ? error : new Error("Το mobile request διακόπηκε.");
+          })
+          .finally(() => {
+            triggerSettled = true;
+          });
+
+        let advanced = false;
+
+        for (let poll = 0; poll < 100; poll += 1) {
+          await sleep(poll === 0 ? 1000 : 2000);
+
+          let snapshot: StatusPayload;
+          try {
+            snapshot = await readStatus();
+          } catch {
+            // A transient mobile/network miss should not stop a server-side chunk.
+            continue;
+          }
+
+          const current = applyPayload(snapshot);
+          const processingChunks = Number(snapshot?.view?.chunks?.processing ?? 0);
+
+          if (current.nextStatus === "ready") {
+            setMessage("Η Source Intelligence ολοκληρώθηκε.");
+            router.refresh();
+            return;
+          }
+
+          if (current.nextProcessed > knownProcessed) {
+            knownProcessed = current.nextProcessed;
+            advanced = true;
+            setMessage(
+              knownProcessed >= totalUnits
+                ? "Οι φωτογραφίες αναλύθηκαν. Προχωρά αυτόματα στην τελική σύνθεση…"
+                : `Ολοκληρώθηκαν ${knownProcessed}/${totalUnits}. Συνεχίζει αυτόματα στην επόμενη ομάδα…`,
+            );
+            break;
+          }
+
+          if (triggerSettled && triggerPayload?.status === "error") {
+            throw new Error(triggerPayload?.error || triggerPayload?.message || "Ένα βήμα της ανάλυσης απέτυχε.");
+          }
+
+          if (triggerSettled && triggerError && processingChunks === 0 && poll >= 2) {
+            // The mobile request may have been dropped before reaching the server.
+            // Retry the next cycle without losing any persisted progress.
+            break;
+          }
+
+          if (
+            triggerSettled &&
+            triggerPayload?.step === "busy" &&
+            processingChunks === 0 &&
+            poll >= 2
+          ) {
+            break;
+          }
+
+          if (knownProcessed >= totalUnits) {
+            setMessage("Γίνεται η τελική σύνθεση των structured findings…");
+          }
+        }
+
+        if (!advanced && knownProcessed < totalUnits) {
+          setMessage(
+            `Η πρόοδος έχει αποθηκευτεί (${knownProcessed}/${totalUnits}). Γίνεται αυτόματη επανασύνδεση…`,
+          );
+          await sleep(1500);
         }
       }
 
       setMessage(
-        "Η ανάλυση έχει αποθηκεύσει την πρόοδό της. Πάτησε «Συνέχιση» για τα επόμενα βήματα.",
+        "Η πρόοδος έχει αποθηκευτεί. Αν η σύνδεση διακόπηκε για πολλή ώρα, μπορείς να πατήσεις «Συνέχιση» ως fallback.",
       );
     } catch (error) {
       setStatus("error");
       setMessage(
         error instanceof Error
-          ? error.message
-          : "Η ανάλυση σταμάτησε. Η πρόοδος που ολοκληρώθηκε έχει αποθηκευτεί.",
+          ? `${error.message} Η ολοκληρωμένη πρόοδος έχει αποθηκευτεί.`
+          : "Η ανάλυση σταμάτησε. Η ολοκληρωμένη πρόοδος έχει αποθηκευτεί.",
       );
     } finally {
       setRunning(false);
-      router.refresh();
     }
   }
 
@@ -94,7 +226,7 @@ export default function SourceIntelligenceRunner({
         <div>
           <h2 className="font-semibold">Ανάλυση πηγής</h2>
           <p className="mt-1 text-sm leading-6 text-[#6f665f]">
-            Οι φωτογραφίες αναλύονται σε μικρά resumable βήματα. Αν κλείσεις τη σελίδα, η ολοκληρωμένη πρόοδος δεν χάνεται.
+            Πάτησε μία φορά. Οι φωτογραφίες αναλύονται σε ασφαλή resumable βήματα και το σύστημα συνεχίζει αυτόματα μέχρι το τέλος.
           </p>
         </div>
         <span className="shrink-0 rounded-full bg-white px-3 py-1 text-xs text-[#756b63]">
@@ -123,7 +255,7 @@ export default function SourceIntelligenceRunner({
         className="mt-4 w-full rounded-xl bg-[#493d35] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#342c27] disabled:cursor-not-allowed disabled:opacity-60"
       >
         {running
-          ? `Αναλύεται… ${processedUnits}/${totalUnits}`
+          ? `Αναλύεται αυτόματα… ${processedUnits}/${totalUnits}`
           : processedUnits > 0
             ? "Συνέχιση Source Intelligence"
             : "Έναρξη Source Intelligence"}
