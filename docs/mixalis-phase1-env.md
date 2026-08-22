@@ -10,7 +10,7 @@ Do not commit real values to GitHub.
 
 ## Current setup status
 
-Preview environment variables were configured externally in Vercel on 2026-08-22. No secret values are stored in this repository.
+Production and Preview environment scopes were configured externally in Vercel on 2026-08-22. The session secret was rotated before validation. No secret values are stored in this repository.
 
 ## Generate a password hash locally
 
