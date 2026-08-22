@@ -7,6 +7,7 @@ import {
   listPhysicsSubchapters,
   type MaterialSourceType,
 } from "@/lib/mixalis/db";
+import { listCurrentLessonsByChapter } from "@/lib/mixalis/lesson-navigation";
 
 const sourceLabels: Record<MaterialSourceType, string> = {
   school_theory: "Σχολικό βιβλίο — Θεωρία",
@@ -34,13 +35,18 @@ export default async function MixalisChapterPage({
 }) {
   const { id } = await params;
   const query = await searchParams;
-  const [chapter, batches, subchapters] = await Promise.all([
+  const [chapter, batches, subchapters, currentLessons] = await Promise.all([
     getPhysicsChapter(id),
     listMaterialBatches(id),
     listPhysicsSubchapters(id),
+    listCurrentLessonsByChapter(id),
   ]);
 
   if (!chapter) notFound();
+
+  const currentLessonBySubchapter = new Map(
+    currentLessons.map((lesson) => [lesson.subchapterId, lesson]),
+  );
 
   const backHref = chapter.courseCode
     ? `/mixalis/courses/${chapter.courseCode}`
@@ -94,24 +100,49 @@ export default async function MixalisChapterPage({
             </p>
             <h2 className="mt-1 text-2xl font-semibold">Υποκεφάλαια</h2>
             <div className="mt-5 grid gap-3 md:grid-cols-2">
-              {subchapters.map((subchapter) => (
-                <div
-                  key={subchapter.id}
-                  className="flex items-start gap-4 rounded-2xl border border-black/10 bg-[#fbfaf8] p-4"
-                >
-                  <span className="inline-flex min-w-14 justify-center rounded-xl bg-[#e8dfd3] px-3 py-2 text-sm font-semibold text-[#5c5047]">
-                    {subchapter.numberLabel}
-                  </span>
-                  <div>
-                    <h3 className="font-semibold">{subchapter.title}</h3>
-                    {subchapter.note ? (
-                      <p className="mt-1 text-sm leading-5 text-[#756c65]">
-                        {subchapter.note}
-                      </p>
+              {subchapters.map((subchapter) => {
+                const currentLesson = currentLessonBySubchapter.get(subchapter.id);
+
+                return (
+                  <div
+                    key={subchapter.id}
+                    className="rounded-2xl border border-black/10 bg-[#fbfaf8] p-4"
+                  >
+                    <div className="flex items-start gap-4">
+                      <span className="inline-flex min-w-14 justify-center rounded-xl bg-[#e8dfd3] px-3 py-2 text-sm font-semibold text-[#5c5047]">
+                        {subchapter.numberLabel}
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <h3 className="font-semibold">{subchapter.title}</h3>
+                        {subchapter.note ? (
+                          <p className="mt-1 text-sm leading-5 text-[#756c65]">
+                            {subchapter.note}
+                          </p>
+                        ) : null}
+                      </div>
+                    </div>
+
+                    {currentLesson ? (
+                      <div className="mt-4 rounded-2xl border border-[#b8cab5] bg-[#eef5ed] p-4">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <span className="text-xs font-semibold uppercase tracking-[0.12em] text-[#587153]">
+                            Μάθημα έτοιμο
+                          </span>
+                          <span className="rounded-full bg-white px-2.5 py-1 text-xs text-[#5f6f5b]">
+                            Revision {currentLesson.revisionNumber}
+                          </span>
+                        </div>
+                        <Link
+                          href={`/mixalis/lessons/${currentLesson.revisionId}`}
+                          className="mt-3 inline-flex w-full items-center justify-center rounded-xl bg-[#52674d] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#465a42]"
+                        >
+                          Άνοιγμα μαθήματος
+                        </Link>
+                      </div>
                     ) : null}
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </section>
         ) : null}
