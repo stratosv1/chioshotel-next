@@ -8,6 +8,10 @@ The private Physics workspace requires these production/preview environment vari
 
 Do not commit real values to GitHub.
 
+## Current setup status
+
+Preview environment variables were configured externally in Vercel on 2026-08-22. No secret values are stored in this repository.
+
 ## Generate a password hash locally
 
 Use Node.js built-in crypto (no extra dependency):
