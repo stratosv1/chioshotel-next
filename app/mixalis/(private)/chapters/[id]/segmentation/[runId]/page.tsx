@@ -58,6 +58,30 @@ export default async function MixalisSegmentationReviewPage({
         </header>
 
         <SourceSegmentationReview review={review} subchapters={subchapters} />
+
+        {review.run.status === "confirmed" ? (
+          <section className="mt-6 rounded-3xl border border-[#cfc1b2] bg-white p-6 shadow-sm sm:p-8">
+            <p className="text-sm font-semibold uppercase tracking-[0.15em] text-[#857261]">
+              Επόμενο στάδιο · Source Intelligence
+            </p>
+            <h2 className="mt-1 text-2xl font-semibold">Μετατροπή της πηγής σε δομημένη γνώση</h2>
+            <p className="mt-3 max-w-4xl text-sm leading-6 text-[#6e655e]">
+              Ο διαχωρισμός έχει κλειδώσει. Το επόμενο στάδιο δεν γράφει μάθημα. Αναλύει μόνο το επιβεβαιωμένο υλικό και εξάγει απαιτήσεις συλλογισμού, σχέσεις μεγεθών, παγίδες, παρανοήσεις, δύσκολες περιπτώσεις και διδακτικές ανάγκες. Το START θα χρησιμοποιηθεί αργότερα, μετά τη σύνθεση με το επίσημο σχολικό βιβλίο.
+            </p>
+            <form
+              action={`/mixalis/api/source-intelligence/from-segmentation/${runId}`}
+              method="post"
+              className="mt-5"
+            >
+              <button
+                type="submit"
+                className="w-full rounded-xl bg-[#493d35] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#342c27] sm:w-auto"
+              >
+                Άνοιγμα Source Intelligence
+              </button>
+            </form>
+          </section>
+        ) : null}
       </div>
     </main>
   );
