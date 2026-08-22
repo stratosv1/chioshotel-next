@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import BatchPhotoUploader from "@/components/mixalis/BatchPhotoUploader";
 import {
   getPhysicsChapter,
   listMaterialBatches,
@@ -123,8 +124,10 @@ export default async function MixalisChapterPage({
                     <div className="mt-4 flex items-center gap-3 text-xs text-[#8a817a]">
                       <span>{batch.sourceFileCount} αρχεία</span>
                       <span>•</span>
-                      <span>Αναμονή για upload</span>
+                      <span>{batch.sourceFileCount > 0 ? "Αποθηκευμένα ιδιωτικά" : "Χωρίς φωτογραφίες ακόμη"}</span>
                     </div>
+
+                    <BatchPhotoUploader chapterId={chapter.id} batchId={batch.id} />
                   </article>
                 ))}
               </div>
@@ -132,7 +135,7 @@ export default async function MixalisChapterPage({
               <div className="mt-6 rounded-2xl border border-dashed border-black/15 bg-[#fbfaf8] p-7 text-center">
                 <h3 className="font-semibold">Δεν έχει προστεθεί υλικό ακόμη</h3>
                 <p className="mt-2 text-sm leading-6 text-[#756c65]">
-                  Δημιούργησε την πρώτη προσθήκη και μετά θα συνδέσουμε τις φωτογραφίες που θα ανεβαίνουν από το κινητό.
+                  Δημιούργησε την πρώτη προσθήκη και μετά ανέβασε τις φωτογραφίες που ανήκουν σε αυτή.
                 </p>
               </div>
             )}
@@ -144,7 +147,7 @@ export default async function MixalisChapterPage({
             </p>
             <h2 className="mt-1 text-2xl font-semibold">Προσθήκη μαθήματος</h2>
             <p className="mt-2 text-sm leading-6 text-[#6f665f]">
-              Κάθε ομάδα φωτογραφιών θα ανήκει σε μία τέτοια προσθήκη.
+              Κάθε ομάδα φωτογραφιών ανήκει σε μία τέτοια προσθήκη.
             </p>
 
             {query.error ? (
@@ -214,7 +217,7 @@ export default async function MixalisChapterPage({
             </form>
 
             <div className="mt-5 rounded-2xl bg-[#f5f1eb] p-4 text-xs leading-5 text-[#756a61]">
-              Επόμενο βήμα: μέσα σε κάθε προσθήκη θα ενεργοποιηθεί πολλαπλό upload φωτογραφιών με private storage.
+              Μετά τη δημιουργία, μπορείς να επιλέξεις πολλές φωτογραφίες από το κινητό και να τις αποθηκεύσεις ιδιωτικά στην ίδια προσθήκη.
             </div>
           </aside>
         </div>
