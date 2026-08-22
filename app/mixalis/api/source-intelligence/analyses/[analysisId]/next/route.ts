@@ -4,7 +4,7 @@ import { runNextSourceIntelligenceStep } from "@/lib/mixalis/source-intelligence
 import { getSourceAnalysisView } from "@/lib/mixalis/source-intelligence";
 
 export const runtime = "nodejs";
-export const maxDuration = 120;
+export const maxDuration = 300;
 
 export async function GET(
   _request: Request,
