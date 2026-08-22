@@ -1,5 +1,36 @@
 import { neon } from "@neondatabase/serverless";
 
+export type PhysicsCourse = {
+  id: string;
+  code: "general_education" | "orientation";
+  title: string;
+  sortOrder: number;
+  chapterCount: number;
+  subchapterCount: number;
+  materialBatchCount: number;
+};
+
+export type PhysicsCourseChapter = {
+  id: string;
+  numberLabel: string | null;
+  title: string;
+  note: string | null;
+  sortOrder: number;
+  subchapterCount: number;
+  materialBatchCount: number;
+  sourceFileCount: number;
+  updatedAt: string;
+};
+
+export type PhysicsSubchapter = {
+  id: string;
+  chapterId: string;
+  numberLabel: string;
+  title: string;
+  note: string | null;
+  sortOrder: number;
+};
+
 export type PhysicsChapter = {
   id: string;
   title: string;
@@ -30,6 +61,37 @@ export type PhysicsMaterialBatch = {
   createdAt: string;
   updatedAt: string;
   sourceFileCount: number;
+};
+
+type CourseRow = {
+  id: string;
+  code: PhysicsCourse["code"];
+  title: string;
+  sort_order: string | number;
+  chapter_count: string | number;
+  subchapter_count: string | number;
+  material_batch_count: string | number;
+};
+
+type CourseChapterRow = {
+  id: string;
+  number_label: string | null;
+  title: string;
+  note: string | null;
+  sort_order: string | number;
+  subchapter_count: string | number;
+  material_batch_count: string | number;
+  source_file_count: string | number;
+  updated_at: string;
+};
+
+type SubchapterRow = {
+  id: string;
+  chapter_id: string;
+  number_label: string;
+  title: string;
+  note: string | null;
+  sort_order: string | number;
 };
 
 type ChapterRow = {
@@ -66,6 +128,43 @@ function getSql() {
   return neon(databaseUrl);
 }
 
+function mapCourse(row: CourseRow): PhysicsCourse {
+  return {
+    id: row.id,
+    code: row.code,
+    title: row.title,
+    sortOrder: Number(row.sort_order ?? 0),
+    chapterCount: Number(row.chapter_count ?? 0),
+    subchapterCount: Number(row.subchapter_count ?? 0),
+    materialBatchCount: Number(row.material_batch_count ?? 0),
+  };
+}
+
+function mapCourseChapter(row: CourseChapterRow): PhysicsCourseChapter {
+  return {
+    id: row.id,
+    numberLabel: row.number_label,
+    title: row.title,
+    note: row.note,
+    sortOrder: Number(row.sort_order ?? 0),
+    subchapterCount: Number(row.subchapter_count ?? 0),
+    materialBatchCount: Number(row.material_batch_count ?? 0),
+    sourceFileCount: Number(row.source_file_count ?? 0),
+    updatedAt: row.updated_at,
+  };
+}
+
+function mapSubchapter(row: SubchapterRow): PhysicsSubchapter {
+  return {
+    id: row.id,
+    chapterId: row.chapter_id,
+    numberLabel: row.number_label,
+    title: row.title,
+    note: row.note,
+    sortOrder: Number(row.sort_order ?? 0),
+  };
+}
+
 function mapChapter(row: ChapterRow): PhysicsChapter {
   return {
     id: row.id,
@@ -92,6 +191,90 @@ function mapMaterialBatch(row: MaterialBatchRow): PhysicsMaterialBatch {
     updatedAt: row.updated_at,
     sourceFileCount: Number(row.source_file_count ?? 0),
   };
+}
+
+export async function listPhysicsCourses(): Promise<PhysicsCourse[]> {
+  const sql = getSql();
+  const rows = await sql`
+    SELECT
+      co.id::text,
+      co.code,
+      co.title,
+      co.sort_order,
+      COUNT(DISTINCT c.id)::text AS chapter_count,
+      COUNT(DISTINCT sc.id)::text AS subchapter_count,
+      COUNT(DISTINCT mb.id)::text AS material_batch_count
+    FROM physics.courses co
+    LEFT JOIN physics.chapters c
+      ON c.course_id = co.id AND c.status = 'active'
+    LEFT JOIN physics.subchapters sc
+      ON sc.chapter_id = c.id AND sc.status = 'active'
+    LEFT JOIN physics.material_batches mb ON mb.chapter_id = c.id
+    WHERE co.status = 'active'
+    GROUP BY co.id
+    ORDER BY co.sort_order ASC, co.title ASC
+  `;
+
+  return (rows as CourseRow[]).map(mapCourse);
+}
+
+export async function getPhysicsCourse(
+  code: string,
+): Promise<PhysicsCourse | null> {
+  const courses = await listPhysicsCourses();
+  return courses.find((course) => course.code === code) ?? null;
+}
+
+export async function listPhysicsChaptersByCourse(
+  courseCode: string,
+): Promise<PhysicsCourseChapter[]> {
+  const sql = getSql();
+  const rows = await sql`
+    SELECT
+      c.id::text,
+      c.number_label,
+      c.title,
+      c.note,
+      c.sort_order,
+      c.updated_at::text,
+      COUNT(DISTINCT sc.id)::text AS subchapter_count,
+      COUNT(DISTINCT mb.id)::text AS material_batch_count,
+      COUNT(DISTINCT sf.id)::text AS source_file_count
+    FROM physics.chapters c
+    JOIN physics.courses co ON co.id = c.course_id
+    LEFT JOIN physics.subchapters sc
+      ON sc.chapter_id = c.id AND sc.status = 'active'
+    LEFT JOIN physics.material_batches mb ON mb.chapter_id = c.id
+    LEFT JOIN physics.source_files sf ON sf.batch_id = mb.id
+    WHERE co.code = ${courseCode}
+      AND co.status = 'active'
+      AND c.status = 'active'
+    GROUP BY c.id
+    ORDER BY c.sort_order ASC, c.number_label ASC, c.created_at ASC
+  `;
+
+  return (rows as CourseChapterRow[]).map(mapCourseChapter);
+}
+
+export async function listPhysicsSubchapters(
+  chapterId: string,
+): Promise<PhysicsSubchapter[]> {
+  const sql = getSql();
+  const rows = await sql`
+    SELECT
+      sc.id::text,
+      sc.chapter_id::text,
+      sc.number_label,
+      sc.title,
+      sc.note,
+      sc.sort_order
+    FROM physics.subchapters sc
+    WHERE sc.chapter_id::text = ${chapterId}
+      AND sc.status = 'active'
+    ORDER BY sc.sort_order ASC, sc.number_label ASC
+  `;
+
+  return (rows as SubchapterRow[]).map(mapSubchapter);
 }
 
 export async function listPhysicsChapters(): Promise<PhysicsChapter[]> {
