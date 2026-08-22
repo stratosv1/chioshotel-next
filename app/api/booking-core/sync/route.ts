@@ -14,6 +14,8 @@ const SOURCE_ACTION = "booking_core_snapshot";
 const SOURCE_SCHEMA_VERSION = 1;
 const SOURCE_TIMEOUT_MS = 45_000;
 const VALID_REASONS = new Set(["PRICE_OK", "BOOKED", "CLOSED"]);
+const PULL_SOURCE = "script_url_booking_core_snapshot_v1";
+const PUSH_SOURCE = "script_push_booking_core_snapshot_v1";
 
 type CanonicalRow = {
   date: string;
@@ -31,6 +33,7 @@ type CanonicalRow = {
 type CanonicalSnapshot = {
   generatedAt: string;
   dataUpdatedAt: string;
+  sourceRefreshedAt?: string;
   rows: CanonicalRow[];
 };
 
@@ -76,15 +79,9 @@ function parseCanonicalRow(value: unknown, index: number): CanonicalRow {
     price = Math.round(parsed * 100) / 100;
   }
 
-  if (available && reason !== "PRICE_OK") {
-    throw new Error(`Source row ${index} is available but reason is ${reason}`);
-  }
-  if (!available && reason === "PRICE_OK") {
-    throw new Error(`Source row ${index} is unavailable but reason is PRICE_OK`);
-  }
-  if (available && price === null) {
-    throw new Error(`Source row ${index} is sellable but missing the required reference price`);
-  }
+  if (available && reason !== "PRICE_OK") throw new Error(`Source row ${index} is available but reason is ${reason}`);
+  if (!available && reason === "PRICE_OK") throw new Error(`Source row ${index} is unavailable but reason is PRICE_OK`);
+  if (available && price === null) throw new Error(`Source row ${index} is sellable but missing the required reference price`);
 
   return {
     date,
@@ -123,6 +120,9 @@ function parseCanonicalSnapshot(payload: unknown): CanonicalSnapshot {
   }
   if (!validIsoTimestamp(source.generatedAt)) throw new Error("Source generatedAt is invalid");
   if (!validIsoTimestamp(source.dataUpdatedAt)) throw new Error("Source dataUpdatedAt is invalid");
+  if (source.sourceRefreshedAt !== undefined && source.sourceRefreshedAt !== null && !validIsoTimestamp(source.sourceRefreshedAt)) {
+    throw new Error("Source sourceRefreshedAt is invalid");
+  }
   if (!Array.isArray(source.rows) || source.rows.length === 0) throw new Error("Source returned no booking rows");
   if (Number(source.count) !== source.rows.length) throw new Error("Source count does not match rows length");
 
@@ -130,6 +130,7 @@ function parseCanonicalSnapshot(payload: unknown): CanonicalSnapshot {
   return {
     generatedAt: source.generatedAt,
     dataUpdatedAt: source.dataUpdatedAt,
+    sourceRefreshedAt: text(source.sourceRefreshedAt) || undefined,
     rows,
   };
 }
@@ -169,6 +170,20 @@ async function fetchCanonicalSnapshot(baseUrl: string, secret: string) {
   }
 }
 
+async function readPushedSnapshot(request: NextRequest) {
+  if (request.method !== "POST") return null;
+  const raw = await request.text();
+  if (!raw.trim()) return null;
+
+  let payload: unknown;
+  try {
+    payload = JSON.parse(raw);
+  } catch {
+    throw new Error("Push body is not valid JSON");
+  }
+  return parseCanonicalSnapshot(payload);
+}
+
 function requestSecret(request: NextRequest) {
   const authorization = request.headers.get("authorization");
   if (authorization?.startsWith("Bearer ")) return authorization.slice(7).trim();
@@ -181,7 +196,7 @@ function isAuthorized(request: NextRequest) {
   return Boolean(supplied && allowed.includes(supplied));
 }
 
-async function recordFailure(databaseUrl: string, startedAt: number, message: string) {
+async function recordFailure(databaseUrl: string, startedAt: number, message: string, source: string) {
   if (!databaseUrl) return;
   try {
     const sql = neon(databaseUrl);
@@ -196,7 +211,7 @@ async function recordFailure(databaseUrl: string, startedAt: number, message: st
         ${new Date(startedAt).toISOString()}::timestamptz,
         now(),
         ${"error"},
-        ${"script_url_booking_core_snapshot_v1"},
+        ${source},
         ${message.slice(0, 4000)}
       )
     `;
@@ -214,21 +229,48 @@ async function syncBookingCore(request: NextRequest) {
   const scriptUrl = text(process.env.OCCUPANCY_SCRIPT_URL);
   const scriptSecret = text(process.env.OCCUPANCY_SCRIPT_SECRET);
   if (!databaseUrl) return NextResponse.json({ ok: false, error: "DATABASE_URL is missing" }, { status: 500 });
-  if (!scriptUrl) return NextResponse.json({ ok: false, error: "OCCUPANCY_SCRIPT_URL is missing" }, { status: 500 });
 
   const startedAt = Date.now();
+  let source = request.method === "POST" ? PUSH_SOURCE : PULL_SOURCE;
   try {
-    await retryPendingPricingAlert(databaseUrl);
+    let snapshot = await readPushedSnapshot(request);
+    if (!snapshot) {
+      source = PULL_SOURCE;
+      if (!scriptUrl) return NextResponse.json({ ok: false, error: "OCCUPANCY_SCRIPT_URL is missing" }, { status: 500 });
+      snapshot = await fetchCanonicalSnapshot(scriptUrl, scriptSecret);
+    }
 
-    const snapshot = await fetchCanonicalSnapshot(scriptUrl, scriptSecret);
-    const priceChanges = await detectPriceChanges(databaseUrl, snapshot.rows);
     const sql = neon(databaseUrl);
+    const duplicateRows = await sql`
+      select 1
+      from booking_core.sync_runs
+      where status = 'ok'
+        and source_generated_at = ${snapshot.dataUpdatedAt}::timestamptz
+      limit 1
+    `;
+
+    if ((duplicateRows as any[]).length > 0) {
+      return NextResponse.json({
+        ok: true,
+        alreadyApplied: true,
+        source,
+        schemaVersion: SOURCE_SCHEMA_VERSION,
+        rowsReceived: snapshot.rows.length,
+        rowsWritten: 0,
+        sourceDataUpdatedAt: snapshot.dataUpdatedAt,
+        sourceResponseGeneratedAt: snapshot.generatedAt,
+        durationMs: Date.now() - startedAt,
+      }, { headers: { "Cache-Control": "no-store", "X-Robots-Tag": "noindex, nofollow" } });
+    }
+
+    await retryPendingPricingAlert(databaseUrl);
+    const priceChanges = await detectPriceChanges(databaseUrl, snapshot.rows);
     const result = await sql`
       select *
       from booking_core.replace_inventory_snapshot(
         ${snapshot.dataUpdatedAt}::timestamptz,
         ${JSON.stringify(snapshot.rows)}::jsonb,
-        ${"script_url_booking_core_snapshot_v1"}
+        ${source}
       )
     `;
 
@@ -241,7 +283,7 @@ async function syncBookingCore(request: NextRequest) {
 
     return NextResponse.json({
       ok: true,
-      source: "script_url_booking_core_snapshot_v1",
+      source,
       schemaVersion: SOURCE_SCHEMA_VERSION,
       rowsReceived: Number(saved.rows_received || snapshot.rows.length),
       rowsWritten: Number(saved.rows_written || 0),
@@ -254,7 +296,7 @@ async function syncBookingCore(request: NextRequest) {
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     console.error("booking_core sync failed", error);
-    await recordFailure(databaseUrl, startedAt, message);
+    await recordFailure(databaseUrl, startedAt, message, source);
     return NextResponse.json({ ok: false, error: message, durationMs: Date.now() - startedAt }, {
       status: 503,
       headers: { "Cache-Control": "no-store", "X-Robots-Tag": "noindex, nofollow" },
