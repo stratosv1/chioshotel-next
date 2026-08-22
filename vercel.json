@@ -2,12 +2,8 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "crons": [
     {
-      "path": "/api/booking-core/sync/",
-      "schedule": "*/7 * * * *"
-    },
-    {
       "path": "/api/booking-core/sync-health/",
-      "schedule": "*/15 * * * *"
+      "schedule": "*/30 * * * *"
     }
   ]
 }
