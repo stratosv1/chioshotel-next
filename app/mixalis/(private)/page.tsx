@@ -36,14 +36,22 @@ export default async function MixalisDashboardPage() {
             </p>
           </div>
 
-          <form action="/mixalis/auth/logout" method="post">
-            <button
-              type="submit"
-              className="rounded-xl border border-black/15 bg-white px-4 py-2.5 text-sm font-medium transition hover:bg-[#f7f4ef]"
+          <div className="flex flex-wrap gap-3">
+            <Link
+              href="/mixalis/sources"
+              className="rounded-xl bg-[#e9e0d5] px-4 py-2.5 text-sm font-semibold text-[#4d4138] transition hover:bg-[#ddd1c3]"
             >
-              Αποσύνδεση
-            </button>
-          </form>
+              Βιβλιοθήκη πηγών
+            </Link>
+            <form action="/mixalis/auth/logout" method="post">
+              <button
+                type="submit"
+                className="rounded-xl border border-black/15 bg-white px-4 py-2.5 text-sm font-medium transition hover:bg-[#f7f4ef]"
+              >
+                Αποσύνδεση
+              </button>
+            </form>
+          </div>
         </header>
 
         <section className="mb-8 grid gap-4 sm:grid-cols-3">
