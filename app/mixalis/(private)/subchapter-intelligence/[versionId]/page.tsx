@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import SubchapterIntelligenceRunner from "@/components/mixalis/SubchapterIntelligenceRunner";
+import { getCurrentLessonBySubchapter } from "@/lib/mixalis/lesson-navigation";
 import {
   getSubchapterIntelligenceView,
   type SubchapterIntelligenceContent,
@@ -52,6 +53,7 @@ export default async function MixalisSubchapterIntelligencePage({
   const view = await getSubchapterIntelligenceView(versionId);
   if (!view) notFound();
 
+  const currentLesson = await getCurrentLessonBySubchapter(view.subchapterId);
   const findingCount = view.sources.reduce((sum, source) => sum + source.itemCount, 0);
   const ready = view.status === "current" || view.status === "superseded";
   const content = ready ? (view.content as SubchapterIntelligenceContent) : null;
@@ -74,7 +76,8 @@ export default async function MixalisSubchapterIntelligencePage({
             {view.subchapterNumberLabel} · {view.subchapterTitle}
           </h1>
           <p className="mt-3 max-w-4xl text-sm leading-6 text-[#6b625b] sm:text-base">
-            Εδώ ενώνονται η επίσημη ύλη του σχολικού βιβλίου και το απαιτούμενο βάθος των ασκήσεων. Αυτό είναι το ενιαίο knowledge brief που θα καταναλώσει το START. Δεν είναι ακόμη μάθημα.
+            Εδώ ενώνονται η επίσημη ύλη του σχολικού βιβλίου και το απαιτούμενο βάθος των ασκήσεων. Αυτό είναι το ενιαίο knowledge brief που καταναλώνει το START.
+            {currentLesson ? ` Το Lesson Revision ${currentLesson.revisionNumber} έχει ήδη δημιουργηθεί και είναι το current μάθημα.` : " Δεν έχει δημιουργηθεί ακόμη μάθημα."}
           </p>
 
           <div className="mt-5 flex flex-wrap gap-2 text-xs text-[#746a62]">
@@ -83,6 +86,11 @@ export default async function MixalisSubchapterIntelligencePage({
             <span className="rounded-full bg-[#f1ede7] px-3 py-1.5">
               {ready ? "Current" : "Draft"}
             </span>
+            {currentLesson ? (
+              <span className="rounded-full bg-[#eaf2e7] px-3 py-1.5 text-[#53694e]">
+                Lesson Revision {currentLesson.revisionNumber} · current
+              </span>
+            ) : null}
           </div>
         </header>
 
@@ -123,6 +131,10 @@ export default async function MixalisSubchapterIntelligencePage({
           versionNumber={view.versionNumber}
           sourceCount={view.sources.length}
           findingCount={findingCount}
+          currentLesson={currentLesson ? {
+            revisionId: currentLesson.revisionId,
+            revisionNumber: currentLesson.revisionNumber,
+          } : null}
         />
 
         {content ? (
@@ -198,9 +210,13 @@ export default async function MixalisSubchapterIntelligencePage({
 
             <section className="rounded-3xl border border-[#b8cab5] bg-[#eef5ed] p-6 sm:p-8">
               <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#587153]">START Brief</p>
-              <h2 className="mt-2 text-2xl font-semibold">Έτοιμο για Lesson Revision</h2>
+              <h2 className="mt-2 text-2xl font-semibold">
+                {currentLesson ? `Χρησιμοποιήθηκε στο Lesson Revision ${currentLesson.revisionNumber}` : "Έτοιμο για Lesson Revision"}
+              </h2>
               <p className="mt-3 text-sm leading-6 text-[#5d6c59]">
-                Αυτό είναι το τελικό structured brief που θα δοθεί στο START. Η δημιουργία ή ενημέρωση μαθήματος θα γίνει σε ξεχωριστό, χειροκίνητο στάδιο.
+                {currentLesson
+                  ? "Αυτό το structured brief έχει ήδη χρησιμοποιηθεί από το START για το current μάθημα. Παραμένει αποθηκευμένο ως η γνωστική βάση της συγκεκριμένης revision."
+                  : "Αυτό είναι το τελικό structured brief που θα δοθεί στο START. Η δημιουργία ή ενημέρωση μαθήματος γίνεται σε ξεχωριστό, χειροκίνητο στάδιο."}
               </p>
               <div className="mt-6 grid gap-5 lg:grid-cols-2">
                 <div>
