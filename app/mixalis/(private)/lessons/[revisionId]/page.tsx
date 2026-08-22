@@ -7,7 +7,7 @@ import {
   type StartLessonContent,
 } from "@/lib/mixalis/start-lesson";
 
-const bodyText = "whitespace-pre-line text-[17px] leading-8 text-slate-700 sm:text-[18px] sm:leading-9";
+const bodyText = "whitespace-pre-line text-[19px] leading-9 text-slate-700 sm:text-[21px] sm:leading-10";
 
 function TextBlocks({ items }: { items: LessonTextBlock[] }) {
   return (
@@ -17,7 +17,7 @@ function TextBlocks({ items }: { items: LessonTextBlock[] }) {
           key={`${item.title}-${index}`}
           className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-[0_8px_30px_rgba(15,23,42,0.05)] sm:p-6"
         >
-          <h3 className="text-xl font-bold tracking-tight text-slate-950 sm:text-2xl">{item.title}</h3>
+          <h3 className="text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">{item.title}</h3>
           <p className={`mt-3 ${bodyText}`}>{item.body}</p>
         </article>
       ))}
@@ -28,7 +28,7 @@ function TextBlocks({ items }: { items: LessonTextBlock[] }) {
 function SingleBlock({ block }: { block: LessonTextBlock }) {
   return (
     <article className="rounded-3xl border border-white/70 bg-white/90 p-5 shadow-[0_8px_30px_rgba(15,23,42,0.06)] backdrop-blur sm:p-6">
-      <h3 className="text-xl font-bold tracking-tight text-slate-950 sm:text-2xl">{block.title}</h3>
+      <h3 className="text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">{block.title}</h3>
       <p className={`mt-3 ${bodyText}`}>{block.body}</p>
     </article>
   );
@@ -47,11 +47,11 @@ function SectionLabel({ number, children, tone = "blue" }: { number?: string; ch
   return (
     <div className="flex items-center gap-3">
       {number ? (
-        <span className={`inline-flex h-9 min-w-9 items-center justify-center rounded-2xl px-2 text-sm font-black ${tones[tone]}`}>
+        <span className={`inline-flex h-10 min-w-10 items-center justify-center rounded-2xl px-2 text-base font-black ${tones[tone]}`}>
           {number}
         </span>
       ) : null}
-      <p className="text-sm font-extrabold uppercase tracking-[0.12em] text-slate-600 sm:text-base">{children}</p>
+      <p className="text-base font-extrabold uppercase tracking-[0.10em] text-slate-600 sm:text-lg">{children}</p>
     </div>
   );
 }
@@ -87,7 +87,7 @@ export default async function MixalisLessonRevisionPage({
       <div className="mx-auto max-w-5xl">
         <Link
           href={`/mixalis/subchapter-intelligence/${view.intelligenceVersionId}`}
-          className="mb-5 inline-flex min-h-11 items-center rounded-2xl bg-white px-4 text-base font-bold text-slate-700 shadow-sm ring-1 ring-slate-200 transition hover:bg-slate-50"
+          className="mb-5 inline-flex min-h-11 items-center rounded-2xl bg-white px-4 text-lg font-bold text-slate-700 shadow-sm ring-1 ring-slate-200 transition hover:bg-slate-50"
         >
           ← Πίσω στο Subchapter Intelligence
         </Link>
@@ -96,9 +96,9 @@ export default async function MixalisLessonRevisionPage({
           <div className="h-2 bg-gradient-to-r from-blue-500 via-violet-500 to-cyan-400" />
           <div className="p-6 sm:p-9">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="rounded-full bg-blue-100 px-3 py-1.5 text-sm font-extrabold text-blue-800">START</span>
-              <span className="rounded-full bg-violet-100 px-3 py-1.5 text-sm font-bold text-violet-800">Revision {view.revisionNumber}</span>
-              <span className="rounded-full bg-emerald-100 px-3 py-1.5 text-sm font-bold text-emerald-800">
+              <span className="rounded-full bg-blue-100 px-3 py-1.5 text-base font-extrabold text-blue-800">START</span>
+              <span className="rounded-full bg-violet-100 px-3 py-1.5 text-base font-bold text-violet-800">Revision {view.revisionNumber}</span>
+              <span className="rounded-full bg-emerald-100 px-3 py-1.5 text-base font-bold text-emerald-800">
                 {ready ? "Έτοιμο μάθημα" : view.status === "processing" ? "Δημιουργείται" : "Πρόχειρο"}
               </span>
             </div>
@@ -106,11 +106,11 @@ export default async function MixalisLessonRevisionPage({
             <h1 className="mt-5 text-4xl font-black tracking-[-0.035em] text-slate-950 sm:text-6xl">
               {view.subchapterNumberLabel} · {view.subchapterTitle}
             </h1>
-            <p className="mt-4 max-w-3xl text-lg font-medium leading-8 text-slate-600 sm:text-xl sm:leading-9">
+            <p className="mt-4 max-w-3xl text-xl font-medium leading-9 text-slate-600 sm:text-2xl sm:leading-10">
               Μάθημα Φυσικής σχεδιασμένο ώστε πρώτα να καταλαβαίνεις την ιδέα και μετά να περνάς στους τύπους.
             </p>
 
-            <div className="mt-6 flex flex-wrap gap-2 text-sm font-semibold text-slate-700">
+            <div className="mt-6 flex flex-wrap gap-2 text-base font-semibold text-slate-700">
               <span className="rounded-full bg-slate-100 px-3 py-2">{view.courseTitle}</span>
               <span className="rounded-full bg-slate-100 px-3 py-2">Intelligence v{view.intelligenceVersionNumber}</span>
               <span className="rounded-full bg-slate-100 px-3 py-2">START {view.promptVersion}</span>
@@ -129,9 +129,9 @@ export default async function MixalisLessonRevisionPage({
         {lesson ? (
           <div className="mt-7 space-y-7 sm:space-y-9">
             <section className="rounded-[2rem] bg-gradient-to-br from-slate-950 to-blue-950 p-6 text-white shadow-xl sm:p-9">
-              <p className="text-sm font-extrabold uppercase tracking-[0.14em] text-blue-200">Η κεντρική ιδέα</p>
-              <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-5xl">{lesson.title}</h2>
-              <p className="mt-4 max-w-3xl text-lg font-medium leading-8 text-blue-50 sm:text-xl sm:leading-9">{lesson.subtitle}</p>
+              <p className="text-base font-extrabold uppercase tracking-[0.14em] text-blue-200">Η κεντρική ιδέα</p>
+              <h2 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">{lesson.title}</h2>
+              <p className="mt-4 max-w-3xl text-xl font-medium leading-9 text-blue-50 sm:text-2xl sm:leading-10">{lesson.subtitle}</p>
             </section>
 
             <section className="rounded-[2rem] border border-blue-200 bg-gradient-to-br from-blue-50 to-cyan-50 p-5 sm:p-8">
@@ -161,13 +161,13 @@ export default async function MixalisLessonRevisionPage({
                   <article key={`${quantity.symbol}-${index}`} className="rounded-3xl border border-cyan-100 bg-cyan-50/70 p-5 sm:p-6">
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <h3 className="text-3xl font-black tracking-tight text-cyan-950">{quantity.symbol}</h3>
-                        <p className="mt-1 text-lg font-bold text-slate-950">{quantity.name}</p>
+                        <h3 className="text-4xl font-black tracking-tight text-cyan-950">{quantity.symbol}</h3>
+                        <p className="mt-1 text-xl font-bold text-slate-950 sm:text-2xl">{quantity.name}</p>
                       </div>
-                      <span className="rounded-xl bg-white px-3 py-2 text-sm font-bold text-slate-600 shadow-sm">{quantity.unit}</span>
+                      <span className="rounded-xl bg-white px-3 py-2 text-base font-bold text-slate-600 shadow-sm">{quantity.unit}</span>
                     </div>
                     <p className={`mt-4 ${bodyText}`}>{quantity.meaning}</p>
-                    <div className="mt-4 rounded-2xl bg-white p-4 text-[16px] leading-7 text-slate-700">
+                    <div className="mt-4 rounded-2xl bg-white p-4 text-[18px] leading-8 text-slate-700 sm:text-[19px] sm:leading-9">
                       <strong className="text-slate-950">Γιατί έχει σημασία:</strong> {quantity.whyItMatters}
                     </div>
                   </article>
@@ -192,12 +192,12 @@ export default async function MixalisLessonRevisionPage({
               <div className="mt-6 space-y-4">
                 {lesson.formulas.map((formula, index) => (
                   <article key={`${formula.expression}-${index}`} className="rounded-3xl border border-amber-100 bg-white p-5 shadow-sm sm:p-6">
-                    <div className="overflow-x-auto rounded-2xl bg-slate-950 px-4 py-5 text-center text-2xl font-black text-white sm:text-3xl">
+                    <div className="overflow-x-auto rounded-2xl bg-slate-950 px-4 py-5 text-center text-3xl font-black text-white sm:text-4xl">
                       {formula.expression}
                     </div>
                     <p className={`mt-4 ${bodyText}`}><strong className="text-slate-950">Διαβάζεται:</strong> {formula.readAs}</p>
                     <p className={`mt-3 ${bodyText}`}>{formula.physicalMeaning}</p>
-                    <div className="mt-4 rounded-2xl bg-amber-50 p-4 text-[16px] leading-7 text-amber-950">
+                    <div className="mt-4 rounded-2xl bg-amber-50 p-4 text-[18px] leading-8 text-amber-950 sm:text-[19px] sm:leading-9">
                       <strong>Ισχύει όταν:</strong> {formula.conditions}
                     </div>
                   </article>
@@ -231,21 +231,21 @@ export default async function MixalisLessonRevisionPage({
                 {lesson.comprehensionChecks.map((check, index) => (
                   <article key={`${check.level}-${index}`} className="rounded-3xl border border-slate-200 bg-slate-50 p-5 sm:p-6">
                     <div className="flex flex-wrap items-center gap-3">
-                      <span className={`rounded-full px-3 py-1.5 text-sm font-extrabold ${checkTone(check.level)}`}>{checkLabel(check.level)}</span>
-                      <span className="text-sm font-bold text-slate-400">Ερώτηση {index + 1}</span>
+                      <span className={`rounded-full px-3 py-1.5 text-base font-extrabold ${checkTone(check.level)}`}>{checkLabel(check.level)}</span>
+                      <span className="text-base font-bold text-slate-400">Ερώτηση {index + 1}</span>
                     </div>
-                    <p className="mt-4 text-xl font-bold leading-8 text-slate-950 sm:text-2xl sm:leading-9">{check.question}</p>
-                    <details className="mt-5 rounded-2xl border border-slate-200 bg-white p-4 text-base">
-                      <summary className="cursor-pointer text-lg font-bold text-blue-800">1η βοήθεια</summary>
-                      <p className="mt-3 text-[16px] leading-7 text-slate-700">{check.hint1}</p>
+                    <p className="mt-4 text-2xl font-bold leading-9 text-slate-950 sm:text-3xl sm:leading-10">{check.question}</p>
+                    <details className="mt-5 rounded-2xl border border-slate-200 bg-white p-4 text-lg">
+                      <summary className="cursor-pointer text-xl font-bold text-blue-800">1η βοήθεια</summary>
+                      <p className="mt-3 text-[18px] leading-8 text-slate-700 sm:text-[19px] sm:leading-9">{check.hint1}</p>
                     </details>
-                    <details className="mt-3 rounded-2xl border border-slate-200 bg-white p-4 text-base">
-                      <summary className="cursor-pointer text-lg font-bold text-violet-800">2η βοήθεια</summary>
-                      <p className="mt-3 text-[16px] leading-7 text-slate-700">{check.hint2}</p>
+                    <details className="mt-3 rounded-2xl border border-slate-200 bg-white p-4 text-lg">
+                      <summary className="cursor-pointer text-xl font-bold text-violet-800">2η βοήθεια</summary>
+                      <p className="mt-3 text-[18px] leading-8 text-slate-700 sm:text-[19px] sm:leading-9">{check.hint2}</p>
                     </details>
-                    <details className="mt-3 rounded-2xl border border-emerald-200 bg-emerald-50/60 p-4 text-base">
-                      <summary className="cursor-pointer text-lg font-bold text-emerald-800">Έλεγχος απάντησης</summary>
-                      <p className="mt-3 text-[16px] leading-7 text-slate-700">{check.teacherAnswer}</p>
+                    <details className="mt-3 rounded-2xl border border-emerald-200 bg-emerald-50/60 p-4 text-lg">
+                      <summary className="cursor-pointer text-xl font-bold text-emerald-800">Έλεγχος απάντησης</summary>
+                      <p className="mt-3 text-[18px] leading-8 text-slate-700 sm:text-[19px] sm:leading-9">{check.teacherAnswer}</p>
                     </details>
                   </article>
                 ))}
