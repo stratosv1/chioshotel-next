@@ -6,7 +6,7 @@ import {
 } from "@/lib/mixalis/subchapter-intelligence";
 
 export const START_PROMPT_REFERENCE = "START";
-export const START_PROMPT_VERSION = "PHYS-B2-2026-002";
+export const START_PROMPT_VERSION = "PHYS-B2-2026-003";
 
 type LessonOrigin = "intelligence" | "start_enrichment";
 
@@ -334,10 +334,13 @@ START — NON-NEGOTIABLE TEACHING CONTRACT:
 15. Be scientifically exact, clear, vivid and age-appropriate. Avoid decorative jargon, unnecessary abstraction, long academic sentences and textbook-like padding.
 16. Protect cognitive load. Prefer a smaller number of strong ideas that connect clearly over a larger number of correct but weakly connected facts. If a detail does not help the central idea, a misconception, an official requirement or a useful transfer, omit it.
 17. Use readable student-facing Greek. Define every new technical term when it first appears. Prefer familiar verbs and concrete nouns. Do not sound childish, but do not sound like a university textbook.
-18. The official curriculum and scope guardrails in the intelligence are HARD boundaries. Do not promote out-of-scope depth material into required theory.
-19. You may create familiar real-world examples as START enrichment, but they must illustrate only Physics already supported by the intelligence. Mark those blocks origin=start_enrichment and use an empty sourceItemIds array.
-20. For statements derived from the intelligence, mark origin=intelligence and cite only exact sourceItemIds already present in the input. Never invent IDs.
-21. Output student-facing Greek. Do not mention Source Intelligence, Savvalas, prompts, databases or provenance in the teaching prose.
+18. CLARITY GATE: before finalizing every student-facing paragraph, ask whether a bright 16-year-old who does not yet know the formal terminology can understand it in one reading. If a sentence is scientifically correct but compressed or abstract, rewrite it so the concrete meaning comes first. Do not leave phrases such as "στον ίδιο λόγο", "ανάλογο", "ανεξάρτητα", "συνιστώσα" or "επαλληλία" to carry the explanation by themselves.
+19. When a dependency or comparison would otherwise remain abstract, give one concrete case before the formal statement: for example "αν το Α γίνει 4 φορές μεγαλύτερο, το Β γίνεται 2 φορές μεγαλύτερο". Use numbers only when that scaling is actually supported by the supplied intelligence and Physics; never invent a convenient numerical rule.
+20. A formal term must not be the student's first explanation of an unfamiliar idea. First say what physically happens in plain language; then introduce the precise Physics term with wording such as "Στη Φυσική αυτό λέγεται…" when useful. A formal heading may appear only if the nearby text immediately makes its everyday meaning explicit.
+21. The official curriculum and scope guardrails in the intelligence are HARD boundaries. Do not promote out-of-scope depth material into required theory.
+22. You may create familiar real-world examples as START enrichment, but they must illustrate only Physics already supported by the intelligence. Mark those blocks origin=start_enrichment and use an empty sourceItemIds array.
+23. For statements derived from the intelligence, mark origin=intelligence and cite only exact sourceItemIds already present in the input. Never invent IDs.
+24. Output student-facing Greek. Do not mention Source Intelligence, Savvalas, prompts, databases or provenance in the teaching prose.
 
 QUALITY BAR BEFORE YOU FINALIZE:
 - Can a 16-year-old explain the central idea in their own words after reading the lesson?
@@ -346,6 +349,8 @@ QUALITY BAR BEFORE YOU FINALIZE:
 - Does terminology arrive after understanding?
 - Do formulas feel like a summary of ideas already understood?
 - Do examples feel real and memorable rather than generic textbook decoration?
+- Can every non-trivial paragraph be understood on first reading without silently requiring knowledge of a formal term that has not yet been explained?
+- Where a relation is abstract, did you first make it visible with a concrete comparison, everyday picture or supported numerical case?
 - Is every paragraph earning its place?
 - Is the Physics exact?
 If any answer is no, revise before returning the JSON.

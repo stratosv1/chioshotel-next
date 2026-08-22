@@ -141,7 +141,9 @@ export default async function MixalisSubchapterIntelligencePage({
           <div className="mt-6 space-y-6">
             <section className="rounded-3xl border border-black/10 bg-white p-6 shadow-sm sm:p-8">
               <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#857261]">Canonical Summary</p>
-              <h2 className="mt-2 text-2xl font-semibold">Τι πρέπει να γνωρίζει το σύστημα για το 1.1</h2>
+              <h2 className="mt-2 text-2xl font-semibold">
+                Τι πρέπει να γνωρίζει το σύστημα για το {view.subchapterNumberLabel}
+              </h2>
               <p className="mt-4 text-sm leading-7 text-[#625a54] sm:text-base">{content.summary}</p>
             </section>
 

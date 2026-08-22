@@ -192,6 +192,7 @@ export async function createAnalysesFromConfirmedSegmentation(runId: string) {
      AND sc.chapter_id = r.chapter_id
     WHERE r.id::text = ${runId}
       AND r.status = 'confirmed'
+      AND l.status = 'confirmed'
     GROUP BY
       r.id,
       mb.id,
@@ -399,6 +400,7 @@ export async function listSourceFilesForAnalysis(
     WHERE a.id::text = ${analysisId}
       AND a.source_kind = 'material_batch'
       AND r.status = 'confirmed'
+      AND l.status = 'confirmed'
     ORDER BY sf.sort_order ASC, sf.created_at ASC
   `;
 

@@ -7,32 +7,24 @@ type ClarificationResponse = {
   error?: string;
 };
 
-function nearestHeading(paragraph: HTMLElement) {
-  const article = paragraph.closest("article");
-  const articleHeading = article?.querySelector("h2, h3");
-  if (articleHeading?.textContent?.trim()) return articleHeading.textContent.trim();
-
-  const section = paragraph.closest("section");
-  const sectionHeading = section?.querySelector("h2, h3");
-  return sectionHeading?.textContent?.trim() ?? "";
-}
-
 export default function LessonClarificationEnhancer({ revisionId }: { revisionId: string }) {
   useEffect(() => {
     const root = document.querySelector<HTMLElement>(`[data-lesson-clarification-root="${revisionId}"]`);
     if (!root) return;
 
-    const paragraphs = Array.from(root.querySelectorAll<HTMLElement>("article p"));
+    const targets = Array.from(
+      root.querySelectorAll<HTMLElement>("[data-clarifiable][data-clarification-key]"),
+    );
     const cleanups: Array<() => void> = [];
 
-    for (const paragraph of paragraphs) {
-      if (paragraph.closest("details")) continue;
-      if (paragraph.dataset.clarificationReady === "true") continue;
+    for (const target of targets) {
+      if (target.closest("details")) continue;
+      if (target.dataset.clarificationReady === "true") continue;
 
-      const paragraphText = paragraph.textContent?.trim() ?? "";
-      if (paragraphText.length < 24) continue;
+      const blockKey = target.dataset.clarificationKey?.trim() ?? "";
+      if (!blockKey) continue;
 
-      paragraph.dataset.clarificationReady = "true";
+      target.dataset.clarificationReady = "true";
 
       const controls = document.createElement("div");
       controls.className = "mt-3";
@@ -73,10 +65,7 @@ export default function LessonClarificationEnhancer({ revisionId }: { revisionId
           const response = await fetch(`/mixalis/api/lesson-revisions/${revisionId}/clarify`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              text: paragraphText,
-              heading: nearestHeading(paragraph),
-            }),
+            body: JSON.stringify({ blockKey }),
           });
 
           const payload = (await response.json()) as ClarificationResponse;
@@ -112,12 +101,12 @@ export default function LessonClarificationEnhancer({ revisionId }: { revisionId
 
       button.addEventListener("click", onClick);
       controls.append(button, panel);
-      paragraph.insertAdjacentElement("afterend", controls);
+      target.insertAdjacentElement("afterend", controls);
 
       cleanups.push(() => {
         button.removeEventListener("click", onClick);
         controls.remove();
-        delete paragraph.dataset.clarificationReady;
+        delete target.dataset.clarificationReady;
       });
     }
 

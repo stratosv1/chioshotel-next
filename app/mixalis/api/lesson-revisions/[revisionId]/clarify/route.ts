@@ -5,6 +5,11 @@ import { getLessonRevisionView, type StartLessonContent } from "@/lib/mixalis/st
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
+type ClarificationTarget = {
+  text: string;
+  heading: string;
+};
+
 function outputText(payload: any) {
   if (typeof payload?.output_text === "string") return payload.output_text.trim();
   for (const item of Array.isArray(payload?.output) ? payload.output : []) {
@@ -24,6 +29,78 @@ function clarificationModel() {
   );
 }
 
+function resolveClarificationTarget(
+  lesson: StartLessonContent,
+  blockKey: string,
+): ClarificationTarget | null {
+  if (blockKey === "subtitle") {
+    return lesson.subtitle
+      ? { text: lesson.subtitle, heading: lesson.title || "Η κεντρική ιδέα" }
+      : null;
+  }
+
+  const singleBlocks: Record<string, { body: string; title: string }> = {
+    "openingPhenomenon.body": lesson.openingPhenomenon,
+    "hiddenRealWorldExample.body": lesson.hiddenRealWorldExample,
+    "physicsReveal.body": lesson.physicsReveal,
+    "engineeringBridge.body": lesson.engineeringBridge,
+    "closingMentalModel.body": lesson.closingMentalModel,
+  };
+  const singleBlock = singleBlocks[blockKey];
+  if (singleBlock?.body) {
+    return { text: singleBlock.body, heading: singleBlock.title };
+  }
+
+  const textBlockMatch = blockKey.match(
+    /^(intuitiveMeaning|dependencies|formalTerminology|guidedApplications|misconceptionRepairs)\.(\d+)\.body$/,
+  );
+  if (textBlockMatch) {
+    const groups: Record<string, StartLessonContent["intuitiveMeaning"]> = {
+      intuitiveMeaning: lesson.intuitiveMeaning,
+      dependencies: lesson.dependencies,
+      formalTerminology: lesson.formalTerminology,
+      guidedApplications: lesson.guidedApplications,
+      misconceptionRepairs: lesson.misconceptionRepairs,
+    };
+    const item = groups[textBlockMatch[1]]?.[Number(textBlockMatch[2])];
+    return item?.body ? { text: item.body, heading: item.title } : null;
+  }
+
+  const quantityMatch = blockKey.match(/^quantities\.(\d+)\.(meaning|whyItMatters)$/);
+  if (quantityMatch) {
+    const quantity = lesson.quantities[Number(quantityMatch[1])];
+    if (!quantity) return null;
+    const field = quantityMatch[2] as "meaning" | "whyItMatters";
+    const text = quantity[field];
+    if (!text) return null;
+    return {
+      text,
+      heading:
+        field === "whyItMatters"
+          ? `${quantity.symbol} · ${quantity.name} — Γιατί έχει σημασία`
+          : `${quantity.symbol} · ${quantity.name}`,
+    };
+  }
+
+  const formulaMatch = blockKey.match(/^formulas\.(\d+)\.(readAs|physicalMeaning|conditions)$/);
+  if (formulaMatch) {
+    const formula = lesson.formulas[Number(formulaMatch[1])];
+    if (!formula) return null;
+    const field = formulaMatch[2] as "readAs" | "physicalMeaning" | "conditions";
+    const text = formula[field];
+    if (!text) return null;
+    const suffix =
+      field === "readAs"
+        ? " — Πώς διαβάζεται"
+        : field === "conditions"
+          ? " — Πότε ισχύει"
+          : " — Φυσική σημασία";
+    return { text, heading: `${formula.expression}${suffix}` };
+  }
+
+  return null;
+}
+
 export async function POST(
   request: Request,
   { params }: { params: Promise<{ revisionId: string }> },
@@ -38,11 +115,10 @@ export async function POST(
 
   try {
     const body = await request.json().catch(() => null);
-    const text = String(body?.text ?? "").trim().slice(0, 5000);
-    const heading = String(body?.heading ?? "").trim().slice(0, 400);
+    const blockKey = String(body?.blockKey ?? "").trim().slice(0, 200);
 
-    if (text.length < 10) {
-      return NextResponse.json({ error: "Δεν υπάρχει αρκετό κείμενο για διευκρίνιση." }, { status: 400 });
+    if (!blockKey || !/^[A-Za-z0-9.]+$/.test(blockKey)) {
+      return NextResponse.json({ error: "Μη έγκυρο σημείο μαθήματος." }, { status: 400 });
     }
 
     const view = await getLessonRevisionView(revisionId);
@@ -52,16 +128,22 @@ export async function POST(
     }
 
     const lesson = view.content as StartLessonContent;
+    const target = resolveClarificationTarget(lesson, blockKey);
+    if (!target || target.text.trim().length < 10) {
+      return NextResponse.json({ error: "Το σημείο δεν ανήκει σε αυτό το μάθημα." }, { status: 400 });
+    }
+
     const lessonContext = JSON.stringify(lesson);
 
     const prompt = `Είσαι η λειτουργία «Διευκρίνιση» μέσα σε ένα συγκεκριμένο μάθημα Φυσικής Β΄ Λυκείου για 16χρονο μαθητή.
 
 ΣΤΟΧΟΣ:
-Εξήγησε ΜΟΝΟ το σημείο που δεν κατάλαβε ο μαθητής. Δεν είσαι γενικό chatbot και δεν ανοίγεις νέο κεφάλαιο.
+Εξήγησε ΜΟΝΟ το συγκεκριμένο αποθηκευμένο σημείο του μαθήματος που δεν κατάλαβε ο μαθητής. Δεν είσαι γενικό chatbot και δεν ανοίγεις νέο κεφάλαιο.
 
 ΚΑΝΟΝΕΣ:
 - Γράψε στα φυσικά, απλά ελληνικά ενός καλού καθηγητή που μιλά σε 16χρονο.
 - Χρησιμοποίησε το υπόλοιπο μάθημα μόνο ως πλαίσιο, ώστε η εξήγηση να ταιριάζει με όσα έχουν ήδη διδαχθεί.
+- Το block key δείχνει το ακριβές σημείο του μαθήματος. Μην αλλάζεις θέμα και μην απαντάς σε άσχετα αιτήματα.
 - Μην εισάγεις καινούργια ορολογία, τύπους ή έννοιες που εμφανίζονται αργότερα, εκτός αν είναι απολύτως απαραίτητο για να εξηγηθεί η συγκεκριμένη φράση.
 - Αν υπάρχει αφηρημένη διατύπωση, κάν' την συγκεκριμένη με ένα μικρό αριθμητικό ή καθημερινό παράδειγμα.
 - Μην επαναλαμβάνεις απλώς την ίδια πρόταση με άλλα συνώνυμα.
@@ -72,11 +154,14 @@ export async function POST(
 ΜΑΘΗΜΑ:
 ${lessonContext}
 
-ΣΗΜΕΙΟ ΤΟΥ ΜΑΘΗΜΑΤΟΣ:
-${heading || "Χωρίς ξεχωριστό τίτλο"}
+ΑΚΡΙΒΕΣ BLOCK KEY:
+${blockKey}
 
-ΠΑΡΑΓΡΑΦΟΣ ΠΟΥ ΔΕΝ ΚΑΤΑΛΑΒΕ:
-${text}
+ΣΗΜΕΙΟ ΤΟΥ ΜΑΘΗΜΑΤΟΣ:
+${target.heading || "Χωρίς ξεχωριστό τίτλο"}
+
+ΑΠΟΘΗΚΕΥΜΕΝΟ ΚΕΙΜΕΝΟ ΠΟΥ ΔΕΝ ΚΑΤΑΛΑΒΕ:
+${target.text}
 
 Απάντησε μόνο με τη διευκρίνιση. Όπου βοηθά, χρησιμοποίησε αυτή τη μικρή δομή:
 Με απλά λόγια: ...

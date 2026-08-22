@@ -10,7 +10,7 @@ import {
 
 const bodyText = "whitespace-pre-line text-[19px] leading-9 text-slate-700 sm:text-[21px] sm:leading-10";
 
-function TextBlocks({ items }: { items: LessonTextBlock[] }) {
+function TextBlocks({ items, blockPrefix }: { items: LessonTextBlock[]; blockPrefix: string }) {
   return (
     <div className="space-y-4">
       {items.map((item, index) => (
@@ -19,18 +19,30 @@ function TextBlocks({ items }: { items: LessonTextBlock[] }) {
           className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-[0_8px_30px_rgba(15,23,42,0.05)] sm:p-6"
         >
           <h3 className="text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">{item.title}</h3>
-          <p className={`mt-3 ${bodyText}`}>{item.body}</p>
+          <p
+            className={`mt-3 ${bodyText}`}
+            data-clarifiable="true"
+            data-clarification-key={`${blockPrefix}.${index}.body`}
+          >
+            {item.body}
+          </p>
         </article>
       ))}
     </div>
   );
 }
 
-function SingleBlock({ block }: { block: LessonTextBlock }) {
+function SingleBlock({ block, blockKey }: { block: LessonTextBlock; blockKey: string }) {
   return (
     <article className="rounded-3xl border border-white/70 bg-white/90 p-5 shadow-[0_8px_30px_rgba(15,23,42,0.06)] backdrop-blur sm:p-6">
       <h3 className="text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">{block.title}</h3>
-      <p className={`mt-3 ${bodyText}`}>{block.body}</p>
+      <p
+        className={`mt-3 ${bodyText}`}
+        data-clarifiable="true"
+        data-clarification-key={blockKey}
+      >
+        {block.body}
+      </p>
     </article>
   );
 }
@@ -137,25 +149,35 @@ export default async function MixalisLessonRevisionPage({
             <section className="rounded-[2rem] bg-gradient-to-br from-slate-950 to-blue-950 p-6 text-white shadow-xl sm:p-9">
               <p className="text-base font-extrabold uppercase tracking-[0.14em] text-blue-200">Η κεντρική ιδέα</p>
               <h2 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">{lesson.title}</h2>
-              <p className="mt-4 max-w-3xl text-xl font-medium leading-9 text-blue-50 sm:text-2xl sm:leading-10">{lesson.subtitle}</p>
+              <p
+                className="mt-4 max-w-3xl text-xl font-medium leading-9 text-blue-50 sm:text-2xl sm:leading-10"
+                data-clarifiable="true"
+                data-clarification-key="subtitle"
+              >
+                {lesson.subtitle}
+              </p>
             </section>
 
             <section className="rounded-[2rem] border border-blue-200 bg-gradient-to-br from-blue-50 to-cyan-50 p-5 sm:p-8">
               <SectionLabel number="01" tone="blue">Πρώτα το φαινόμενο</SectionLabel>
-              <div className="mt-5"><SingleBlock block={lesson.openingPhenomenon} /></div>
+              <div className="mt-5">
+                <SingleBlock block={lesson.openingPhenomenon} blockKey="openingPhenomenon.body" />
+              </div>
             </section>
 
             <section className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
               <SectionLabel number="02" tone="violet">Τι συμβαίνει πραγματικά</SectionLabel>
               <h2 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl">Κατανόηση πριν από τους τύπους</h2>
-              <div className="mt-6"><TextBlocks items={lesson.intuitiveMeaning} /></div>
+              <div className="mt-6">
+                <TextBlocks items={lesson.intuitiveMeaning} blockPrefix="intuitiveMeaning" />
+              </div>
             </section>
 
             <section className="rounded-[2rem] border border-emerald-200 bg-gradient-to-br from-emerald-50 to-teal-50 p-5 sm:p-8">
               <SectionLabel number="03" tone="green">Κρυμμένο παράδειγμα</SectionLabel>
               <div className="mt-5 grid gap-4 lg:grid-cols-2">
-                <SingleBlock block={lesson.hiddenRealWorldExample} />
-                <SingleBlock block={lesson.physicsReveal} />
+                <SingleBlock block={lesson.hiddenRealWorldExample} blockKey="hiddenRealWorldExample.body" />
+                <SingleBlock block={lesson.physicsReveal} blockKey="physicsReveal.body" />
               </div>
             </section>
 
@@ -172,8 +194,18 @@ export default async function MixalisLessonRevisionPage({
                       </div>
                       <span className="rounded-xl bg-white px-3 py-2 text-base font-bold text-slate-600 shadow-sm">{quantity.unit}</span>
                     </div>
-                    <p className={`mt-4 ${bodyText}`}>{quantity.meaning}</p>
-                    <div className="mt-4 rounded-2xl bg-white p-4 text-[18px] leading-8 text-slate-700 sm:text-[19px] sm:leading-9">
+                    <p
+                      className={`mt-4 ${bodyText}`}
+                      data-clarifiable="true"
+                      data-clarification-key={`quantities.${index}.meaning`}
+                    >
+                      {quantity.meaning}
+                    </p>
+                    <div
+                      className="mt-4 rounded-2xl bg-white p-4 text-[18px] leading-8 text-slate-700 sm:text-[19px] sm:leading-9"
+                      data-clarifiable="true"
+                      data-clarification-key={`quantities.${index}.whyItMatters`}
+                    >
                       <strong className="text-slate-950">Γιατί έχει σημασία:</strong> {quantity.whyItMatters}
                     </div>
                   </article>
@@ -184,13 +216,17 @@ export default async function MixalisLessonRevisionPage({
             <section className="rounded-[2rem] border border-violet-200 bg-gradient-to-br from-violet-50 to-fuchsia-50 p-5 sm:p-8">
               <SectionLabel number="05" tone="violet">Σχέσεις και εξαρτήσεις</SectionLabel>
               <h2 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl">Αν αλλάξει κάτι, τι περιμένουμε να συμβεί;</h2>
-              <div className="mt-6"><TextBlocks items={lesson.dependencies} /></div>
+              <div className="mt-6">
+                <TextBlocks items={lesson.dependencies} blockPrefix="dependencies" />
+              </div>
             </section>
 
             <section className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
               <SectionLabel number="06" tone="blue">Η γλώσσα της Φυσικής</SectionLabel>
               <h2 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl">Τώρα δίνουμε ακριβή ονόματα σε όσα ήδη κατάλαβες</h2>
-              <div className="mt-6"><TextBlocks items={lesson.formalTerminology} /></div>
+              <div className="mt-6">
+                <TextBlocks items={lesson.formalTerminology} blockPrefix="formalTerminology" />
+              </div>
             </section>
 
             <section className="rounded-[2rem] border border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50 p-5 sm:p-8">
@@ -201,9 +237,25 @@ export default async function MixalisLessonRevisionPage({
                     <div className="overflow-x-auto rounded-2xl bg-slate-950 px-4 py-5 text-center text-3xl font-black text-white sm:text-4xl">
                       {formula.expression}
                     </div>
-                    <p className={`mt-4 ${bodyText}`}><strong className="text-slate-950">Διαβάζεται:</strong> {formula.readAs}</p>
-                    <p className={`mt-3 ${bodyText}`}>{formula.physicalMeaning}</p>
-                    <div className="mt-4 rounded-2xl bg-amber-50 p-4 text-[18px] leading-8 text-amber-950 sm:text-[19px] sm:leading-9">
+                    <p
+                      className={`mt-4 ${bodyText}`}
+                      data-clarifiable="true"
+                      data-clarification-key={`formulas.${index}.readAs`}
+                    >
+                      <strong className="text-slate-950">Διαβάζεται:</strong> {formula.readAs}
+                    </p>
+                    <p
+                      className={`mt-3 ${bodyText}`}
+                      data-clarifiable="true"
+                      data-clarification-key={`formulas.${index}.physicalMeaning`}
+                    >
+                      {formula.physicalMeaning}
+                    </p>
+                    <div
+                      className="mt-4 rounded-2xl bg-amber-50 p-4 text-[18px] leading-8 text-amber-950 sm:text-[19px] sm:leading-9"
+                      data-clarifiable="true"
+                      data-clarification-key={`formulas.${index}.conditions`}
+                    >
                       <strong>Ισχύει όταν:</strong> {formula.conditions}
                     </div>
                   </article>
@@ -214,19 +266,25 @@ export default async function MixalisLessonRevisionPage({
             <section className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
               <SectionLabel number="08" tone="green">Εφαρμογές</SectionLabel>
               <h2 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl">Πρώτα προβλέπουμε, μετά υπολογίζουμε</h2>
-              <div className="mt-6"><TextBlocks items={lesson.guidedApplications} /></div>
+              <div className="mt-6">
+                <TextBlocks items={lesson.guidedApplications} blockPrefix="guidedApplications" />
+              </div>
             </section>
 
             <section className="rounded-[2rem] border border-rose-200 bg-gradient-to-br from-rose-50 to-red-50 p-5 sm:p-8">
               <SectionLabel number="09" tone="rose">Συνηθισμένες παγίδες</SectionLabel>
               <h2 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl">Εκεί που συνήθως γίνεται το λάθος</h2>
-              <div className="mt-6"><TextBlocks items={lesson.misconceptionRepairs} /></div>
+              <div className="mt-6">
+                <TextBlocks items={lesson.misconceptionRepairs} blockPrefix="misconceptionRepairs" />
+              </div>
             </section>
 
             {lesson.engineeringBridge.body ? (
               <section className="rounded-[2rem] border border-cyan-200 bg-gradient-to-br from-cyan-50 to-blue-50 p-5 sm:p-8">
                 <SectionLabel number="10" tone="cyan">Engineering bridge</SectionLabel>
-                <div className="mt-5"><SingleBlock block={lesson.engineeringBridge} /></div>
+                <div className="mt-5">
+                  <SingleBlock block={lesson.engineeringBridge} blockKey="engineeringBridge.body" />
+                </div>
               </section>
             ) : null}
 
@@ -260,7 +318,9 @@ export default async function MixalisLessonRevisionPage({
 
             <section className="rounded-[2rem] border border-emerald-300 bg-gradient-to-br from-emerald-100 via-green-50 to-cyan-50 p-5 shadow-sm sm:p-8">
               <SectionLabel tone="green">Κράτα αυτό στο μυαλό σου</SectionLabel>
-              <div className="mt-5"><SingleBlock block={lesson.closingMentalModel} /></div>
+              <div className="mt-5">
+                <SingleBlock block={lesson.closingMentalModel} blockKey="closingMentalModel.body" />
+              </div>
             </section>
           </div>
         ) : null}
