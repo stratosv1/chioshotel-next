@@ -4,6 +4,7 @@ import {
   getOfficialAnalysisView,
   runOfficialSourceIntelligence,
 } from "@/lib/mixalis/official-source-intelligence";
+import { recoverStaleOfficialSourceAnalysis } from "@/lib/mixalis/official-source-recovery";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -17,6 +18,7 @@ export async function GET(
 
   const { analysisId } = await params;
   try {
+    await recoverStaleOfficialSourceAnalysis(analysisId);
     const view = await getOfficialAnalysisView(analysisId);
     if (!view) {
       return NextResponse.json({ error: "Official source analysis not found." }, { status: 404 });
@@ -40,6 +42,7 @@ export async function POST(
 
   const { analysisId } = await params;
   try {
+    await recoverStaleOfficialSourceAnalysis(analysisId);
     const view = await runOfficialSourceIntelligence(analysisId);
     if (!view) {
       return NextResponse.json({ error: "Official source analysis not found." }, { status: 404 });
