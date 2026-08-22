@@ -457,8 +457,8 @@ function cleanEntry(raw: any, allowedIds: Set<string>): CanonicalEntry | null {
   const title = String(raw?.title ?? "").trim();
   const content = String(raw?.content ?? "").trim();
   const importance = String(raw?.importance ?? "");
-  const sourceItemIds = Array.from(
-    new Set(
+  const sourceItemIds: string[] = Array.from(
+    new Set<string>(
       (Array.isArray(raw?.sourceItemIds) ? raw.sourceItemIds : [])
         .map((value: unknown) => String(value))
         .filter((id: string) => allowedIds.has(id)),
