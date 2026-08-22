@@ -8,6 +8,7 @@ import {
   listSourceFilesForAnalysis,
   markAnalysisChunkError,
   markSourceAnalysisError,
+  markSourceAnalysisProcessing,
   markSourceAnalysisReady,
   replaceSourceAnalysisItems,
   saveAnalysisChunkResult,
@@ -264,12 +265,13 @@ async function callOpenAI(input: {
   model: string;
   content: any[];
   schemaName: string;
+  timeoutMs?: number;
 }) {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) throw new Error("OPENAI_API_KEY is not configured.");
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 90_000);
+  const timeout = setTimeout(() => controller.abort(), input.timeoutMs ?? 90_000);
   try {
     const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
@@ -379,6 +381,7 @@ ${JSON.stringify(compact)}`;
     model: context.model,
     content: [{ type: "input_text", text: prompt }],
     schemaName: "physics_source_intelligence_consolidated",
+    timeoutMs: 240_000,
   });
   return cleanItems(parsed.items, allowedFileIds);
 }
@@ -449,6 +452,7 @@ export async function runNextSourceIntelligenceStep(analysisId: string) {
   }
 
   try {
+    await markSourceAnalysisProcessing(analysisId);
     const chunkResults = await getReadyAnalysisChunkResults(analysisId);
     const consolidated = await synthesizeSourceAnalysis(
       context,
