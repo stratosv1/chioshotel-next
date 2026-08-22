@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import StartLessonRunner from "@/components/mixalis/StartLessonRunner";
+import LessonClarificationEnhancer from "@/components/mixalis/LessonClarificationEnhancer";
 import {
   getLessonRevisionView,
   type LessonTextBlock,
@@ -127,7 +128,12 @@ export default async function MixalisLessonRevisionPage({
         />
 
         {lesson ? (
-          <div className="mt-7 space-y-7 sm:space-y-9">
+          <div
+            className="mt-7 space-y-7 sm:space-y-9"
+            data-lesson-clarification-root={view.id}
+          >
+            <LessonClarificationEnhancer revisionId={view.id} />
+
             <section className="rounded-[2rem] bg-gradient-to-br from-slate-950 to-blue-950 p-6 text-white shadow-xl sm:p-9">
               <p className="text-base font-extrabold uppercase tracking-[0.14em] text-blue-200">Η κεντρική ιδέα</p>
               <h2 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">{lesson.title}</h2>
