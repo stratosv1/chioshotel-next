@@ -392,7 +392,8 @@ export async function listSourceFilesForAnalysis(
       sf.original_name,
       sf.storage_key,
       sf.content_type,
-      sf.sort_order
+      sf.sort_order,
+      sf.created_at
     FROM physics.source_analyses a
     JOIN physics.source_file_subchapter_links l
       ON l.run_id = a.segmentation_run_id
