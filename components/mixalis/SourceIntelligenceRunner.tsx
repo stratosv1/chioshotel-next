@@ -54,6 +54,7 @@ export default function SourceIntelligenceRunner({
   const [findingsCount, setFindingsCount] = useState(initialFindingsCount);
   const [message, setMessage] = useState<string | null>(null);
   const readyRefreshDone = useRef(false);
+  const autoFinalizeAttempted = useRef(false);
 
   const endpoint = `/mixalis/api/source-intelligence/analyses/${analysisId}/next`;
 
@@ -99,6 +100,16 @@ export default function SourceIntelligenceRunner({
           setMessage("Η Source Intelligence ολοκληρώθηκε.");
           router.refresh();
           return;
+        }
+
+        if (
+          current.nextProcessed >= totalUnits &&
+          current.nextStatus === "error" &&
+          !autoFinalizeAttempted.current
+        ) {
+          autoFinalizeAttempted.current = true;
+          setMessage("Οι 31 φωτογραφίες έχουν ολοκληρωθεί. Επαναλαμβάνεται αυτόματα μόνο η τελική σύνθεση…");
+          void run();
         }
       } catch {
         // Keep showing the last persisted snapshot; retry automatically.
