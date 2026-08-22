@@ -94,21 +94,6 @@ function mapMaterialBatch(row: MaterialBatchRow): PhysicsMaterialBatch {
   };
 }
 
-const chapterSelect = `
-  SELECT
-    c.id::text,
-    c.title,
-    c.note,
-    c.status,
-    c.created_at::text,
-    c.updated_at::text,
-    COUNT(DISTINCT mb.id)::text AS material_batch_count,
-    COUNT(DISTINCT sf.id)::text AS source_file_count
-  FROM physics.chapters c
-  LEFT JOIN physics.material_batches mb ON mb.chapter_id = c.id
-  LEFT JOIN physics.source_files sf ON sf.batch_id = mb.id
-`;
-
 export async function listPhysicsChapters(): Promise<PhysicsChapter[]> {
   const sql = getSql();
   const rows = await sql`
