@@ -3,7 +3,7 @@ import { getMixalisSession } from "@/lib/mixalis/auth";
 import { getLessonRevisionView, runLessonRevision } from "@/lib/mixalis/start-lesson";
 
 export const runtime = "nodejs";
-export const maxDuration = 300;
+export const maxDuration = 420;
 
 export async function GET(
   _request: Request,
