@@ -25,6 +25,7 @@
     "lucide-react": "latest",
     "next": "latest",
     "nodemailer": "^8.0.10",
+    "pdf-lib": "^1.17.1",
     "pg": "^8.22.0",
     "postcss": "^8.5.15",
     "react": "latest",
