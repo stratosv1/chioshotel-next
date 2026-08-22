@@ -40,9 +40,7 @@ export default async function MixalisChapterPage({
     listPhysicsSubchapters(id),
   ]);
 
-  if (!chapter) {
-    notFound();
-  }
+  if (!chapter) notFound();
 
   const backHref = chapter.courseCode
     ? `/mixalis/courses/${chapter.courseCode}`
@@ -124,12 +122,18 @@ export default async function MixalisChapterPage({
               <p className="text-sm font-semibold uppercase tracking-[0.15em] text-[#857261]">
                 Υλικό κεφαλαίου
               </p>
-              <h2 className="mt-1 text-2xl font-semibold">Προσθήκες ανά μάθημα</h2>
+              <h2 className="mt-1 text-2xl font-semibold">Προσθήκες υλικού</h2>
             </div>
 
             {query.created === "batch" ? (
               <div className="mt-5 rounded-2xl border border-[#b8ccb7] bg-[#f0f6ef] px-4 py-3 text-sm text-[#496047]">
-                Η νέα προσθήκη υλικού δημιουργήθηκε.
+                Η νέα προσθήκη υλικού δημιουργήθηκε. Αν αφορά ολόκληρο το κεφάλαιο, ανέβασε όλες τις φωτογραφίες με τη σωστή σειρά και μετά ξεκίνησε τον αυτόματο διαχωρισμό.
+              </div>
+            ) : null}
+
+            {query.error === "segmentation" ? (
+              <div className="mt-5 rounded-2xl border border-[#d9b4a6] bg-[#fbf1ed] px-4 py-3 text-sm text-[#7a4938]">
+                Δεν μπόρεσε να ξεκινήσει ο αυτόματος διαχωρισμός. Έλεγξε ότι έχουν ανέβει οι φωτογραφίες του κεφαλαίου και δοκίμασε ξανά.
               </div>
             ) : null}
 
@@ -145,9 +149,7 @@ export default async function MixalisChapterPage({
                         <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8a7665]">
                           Προσθήκη #{batches.length - index}
                         </p>
-                        <h3 className="mt-1 font-semibold">
-                          {sourceLabels[batch.sourceType]}
-                        </h3>
+                        <h3 className="mt-1 font-semibold">{sourceLabels[batch.sourceType]}</h3>
                       </div>
                       <span className="rounded-full bg-white px-3 py-1 text-xs text-[#786e66]">
                         {batch.lessonDate
@@ -162,7 +164,7 @@ export default async function MixalisChapterPage({
                       </div>
                     ) : (
                       <div className="mt-3 inline-flex rounded-full bg-[#f1ede7] px-3 py-1.5 text-xs text-[#786e66]">
-                        Αφορά όλο το κεφάλαιο
+                        Όλο το κεφάλαιο — αυτόματος διαχωρισμός
                       </div>
                     )}
 
@@ -182,7 +184,12 @@ export default async function MixalisChapterPage({
                       </span>
                     </div>
 
-                    <BatchPhotoUploader chapterId={chapter.id} batchId={batch.id} />
+                    <BatchPhotoUploader
+                      chapterId={chapter.id}
+                      batchId={batch.id}
+                      existingFileCount={batch.sourceFileCount}
+                      enableAutoSegmentation={!batch.subchapterId && subchapters.length > 0}
+                    />
                   </article>
                 ))}
               </div>
@@ -190,7 +197,7 @@ export default async function MixalisChapterPage({
               <div className="mt-6 rounded-2xl border border-dashed border-black/15 bg-[#fbfaf8] p-7 text-center">
                 <h3 className="font-semibold">Δεν έχει προστεθεί υλικό ακόμη</h3>
                 <p className="mt-2 text-sm leading-6 text-[#756c65]">
-                  Δημιούργησε την πρώτη προσθήκη και σύνδεσέ την με το υποκεφάλαιο που διδάχθηκε.
+                  Για ένα φωτογραφημένο βοήθημα ή σετ φωτοτυπιών, δημιούργησε μία προσθήκη για όλο το κεφάλαιο. Η AI θα προτείνει αργότερα τον διαχωρισμό στα επίσημα υποκεφάλαια.
                 </p>
               </div>
             )}
@@ -200,12 +207,12 @@ export default async function MixalisChapterPage({
             <p className="text-sm font-semibold uppercase tracking-[0.15em] text-[#857261]">
               + Νέο υλικό
             </p>
-            <h2 className="mt-1 text-2xl font-semibold">Προσθήκη μαθήματος</h2>
+            <h2 className="mt-1 text-2xl font-semibold">Προσθήκη υλικού</h2>
             <p className="mt-2 text-sm leading-6 text-[#6f665f]">
-              Σύνδεσε κάθε νέο υλικό με το υποκεφάλαιο που αφορά. Αν είναι επανάληψη, άφησέ το σε όλο το κεφάλαιο.
+              Για φωτογραφημένο βοήθημα ή φωτοτυπίες προτίμησε «Όλο το κεφάλαιο». Μετά το upload η AI θα προτείνει τον διαχωρισμό στα επίσημα υποκεφάλαια. Επίλεξε συγκεκριμένο υποκεφάλαιο μόνο όταν το υλικό αφορά πράγματι αποκλειστικά εκείνο.
             </p>
 
-            {query.error ? (
+            {query.error && query.error !== "segmentation" ? (
               <div className="mt-4 rounded-2xl border border-[#d9b4a6] bg-[#fbf1ed] px-4 py-3 text-sm text-[#7a4938]">
                 Έλεγξε τα στοιχεία της προσθήκης και δοκίμασε ξανά.
               </div>
@@ -218,13 +225,13 @@ export default async function MixalisChapterPage({
             >
               {subchapters.length > 0 ? (
                 <label className="block">
-                  <span className="mb-2 block text-sm font-medium">Υποκεφάλαιο</span>
+                  <span className="mb-2 block text-sm font-medium">Περιοχή ύλης</span>
                   <select
                     name="subchapterId"
                     defaultValue=""
                     className="w-full rounded-2xl border border-black/15 bg-[#fbfaf8] px-4 py-3 text-sm outline-none"
                   >
-                    <option value="">Όλο το κεφάλαιο / επανάληψη</option>
+                    <option value="">Όλο το κεφάλαιο — αυτόματος διαχωρισμός (προτείνεται)</option>
                     {subchapters.map((subchapter) => (
                       <option key={subchapter.id} value={subchapter.id}>
                         {subchapter.numberLabel} — {subchapter.title}
@@ -265,7 +272,7 @@ export default async function MixalisChapterPage({
                   name="label"
                   type="text"
                   maxLength={160}
-                  placeholder="π.χ. Μάθημα 2 — εφαρμογές Coulomb"
+                  placeholder="π.χ. Σαββάλας — Κεφάλαιο 1"
                   className="w-full rounded-2xl border border-black/15 bg-[#fbfaf8] px-4 py-3 text-sm outline-none"
                 />
               </label>
@@ -276,7 +283,7 @@ export default async function MixalisChapterPage({
                   name="notes"
                   rows={3}
                   maxLength={1000}
-                  placeholder="π.χ. Νέες ασκήσεις που έδωσε ο καθηγητής"
+                  placeholder="π.χ. Θεωρία και ασκήσεις του κεφαλαίου"
                   className="w-full resize-none rounded-2xl border border-black/15 bg-[#fbfaf8] px-4 py-3 text-sm outline-none"
                 />
               </label>
@@ -290,7 +297,7 @@ export default async function MixalisChapterPage({
             </form>
 
             <div className="mt-5 rounded-2xl bg-[#f5f1eb] p-4 text-xs leading-5 text-[#756a61]">
-              Μετά τη δημιουργία, μπορείς να ανεβάσεις φωτογραφίες ή φωτοτυπίες στην ίδια προσθήκη. Τα επίσημα βιβλία PDF θα συνδεθούν χωριστά ως μόνιμες πηγές.
+              Για πηγές ολόκληρου κεφαλαίου, ανέβασε όλες τις φωτογραφίες με τη σωστή σειρά και μετά πάτησε «Έναρξη αυτόματου διαχωρισμού». Τα επίσημα βιβλία PDF παραμένουν χωριστά στη Source Library.
             </div>
           </aside>
         </div>

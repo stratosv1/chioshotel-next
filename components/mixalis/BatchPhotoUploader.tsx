@@ -36,9 +36,13 @@ function safeFileName(value: string) {
 export default function BatchPhotoUploader({
   chapterId,
   batchId,
+  existingFileCount = 0,
+  enableAutoSegmentation = false,
 }: {
   chapterId: string;
   batchId: string;
+  existingFileCount?: number;
+  enableAutoSegmentation?: boolean;
 }) {
   const router = useRouter();
   const [files, setFiles] = useState<File[]>([]);
@@ -98,6 +102,8 @@ export default function BatchPhotoUploader({
 
     for (let index = 0; index < files.length; index += 1) {
       const file = files[index];
+      const absoluteIndex = existingFileCount + index;
+
       setItems((current) =>
         current.map((item, itemIndex) =>
           itemIndex === index
@@ -107,7 +113,7 @@ export default function BatchPhotoUploader({
       );
 
       try {
-        const pathname = `mixalis/chapters/${chapterId}/batches/${batchId}/${String(index + 1).padStart(3, "0")}-${safeFileName(file.name)}`;
+        const pathname = `mixalis/chapters/${chapterId}/batches/${batchId}/${String(absoluteIndex + 1).padStart(3, "0")}-${safeFileName(file.name)}`;
 
         await upload(pathname, file, {
           access: "private",
@@ -116,7 +122,7 @@ export default function BatchPhotoUploader({
             chapterId,
             batchId,
             originalName: file.name,
-            sortOrder: index,
+            sortOrder: absoluteIndex,
             sizeBytes: file.size,
           }),
           onUploadProgress: ({ percentage }) => {
@@ -168,78 +174,107 @@ export default function BatchPhotoUploader({
   }
 
   return (
-    <div className="mt-4 rounded-2xl border border-dashed border-black/15 bg-white p-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <p className="text-sm font-semibold">Φωτογραφίες αυτής της προσθήκης</p>
-          <p className="mt-1 text-xs leading-5 text-[#7d736b]">
-            Έως 30 εικόνες κάθε φορά · έως 20 MB η καθεμία.
-          </p>
+    <div className="mt-4 space-y-3">
+      <div className="rounded-2xl border border-dashed border-black/15 bg-white p-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-sm font-semibold">Φωτογραφίες αυτής της προσθήκης</p>
+            <p className="mt-1 text-xs leading-5 text-[#7d736b]">
+              Έως 30 εικόνες κάθε φορά · έως 20 MB η καθεμία.
+              {existingFileCount > 0 ? ` Έχουν ήδη αποθηκευτεί ${existingFileCount}.` : ""}
+            </p>
+            {enableAutoSegmentation ? (
+              <p className="mt-1 text-xs leading-5 text-[#7d736b]">
+                Αν το κεφάλαιο έχει πάνω από 30 φωτογραφίες, ανέβασε και δεύτερη ομάδα. Η σειρά συνεχίζεται αυτόματα.
+              </p>
+            ) : null}
+          </div>
+          <label className="inline-flex cursor-pointer items-center justify-center rounded-xl border border-black/15 bg-[#f7f3ed] px-4 py-2.5 text-sm font-semibold transition hover:bg-[#eee7de]">
+            Επιλογή φωτογραφιών
+            <input
+              type="file"
+              multiple
+              accept="image/jpeg,image/png,image/webp,image/heic,image/heif,.heic,.heif"
+              className="sr-only"
+              disabled={busy}
+              onChange={(event) =>
+                chooseFiles(Array.from(event.currentTarget.files || []))
+              }
+            />
+          </label>
         </div>
-        <label className="inline-flex cursor-pointer items-center justify-center rounded-xl border border-black/15 bg-[#f7f3ed] px-4 py-2.5 text-sm font-semibold transition hover:bg-[#eee7de]">
-          Επιλογή φωτογραφιών
-          <input
-            type="file"
-            multiple
-            accept="image/jpeg,image/png,image/webp,image/heic,image/heif,.heic,.heif"
-            className="sr-only"
-            disabled={busy}
-            onChange={(event) =>
-              chooseFiles(Array.from(event.currentTarget.files || []))
-            }
-          />
-        </label>
+
+        {error ? (
+          <div className="mt-3 rounded-xl bg-[#fbf1ed] px-3 py-2 text-xs text-[#7a4938]">
+            {error}
+          </div>
+        ) : null}
+
+        {files.length > 0 ? (
+          <div className="mt-4">
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-2 text-xs text-[#746a62]">
+              <span>{files.length} φωτογραφίες επιλεγμένες</span>
+              <span>{(totalSize / 1024 / 1024).toFixed(1)} MB συνολικά</span>
+            </div>
+
+            <div className="max-h-52 space-y-2 overflow-y-auto pr-1">
+              {items.map((item, index) => (
+                <div key={`${item.name}-${index}`} className="rounded-xl bg-[#f7f4ef] px-3 py-2">
+                  <div className="flex items-center justify-between gap-3 text-xs">
+                    <span className="min-w-0 truncate">
+                      {existingFileCount + index + 1}. {item.name}
+                    </span>
+                    <span className="shrink-0 text-[#7d736b]">
+                      {item.status === "waiting" ? "αναμονή" : null}
+                      {item.status === "uploading" ? `${item.progress}%` : null}
+                      {item.status === "done" ? "ανέβηκε" : null}
+                      {item.status === "error" ? "σφάλμα" : null}
+                    </span>
+                  </div>
+                  {item.status === "uploading" ? (
+                    <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-black/10">
+                      <div
+                        className="h-full rounded-full bg-[#5c4b3f] transition-[width]"
+                        style={{ width: `${item.progress}%` }}
+                      />
+                    </div>
+                  ) : null}
+                  {item.message ? (
+                    <p className="mt-1 text-xs text-[#8b4f3b]">{item.message}</p>
+                  ) : null}
+                </div>
+              ))}
+            </div>
+
+            <button
+              type="button"
+              disabled={busy}
+              onClick={startUpload}
+              className="mt-4 w-full rounded-xl bg-[#403630] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#2f2824] disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {busy ? "Ανεβαίνουν οι φωτογραφίες…" : `Ανέβασμα ${files.length} φωτογραφιών`}
+            </button>
+          </div>
+        ) : null}
       </div>
 
-      {error ? (
-        <div className="mt-3 rounded-xl bg-[#fbf1ed] px-3 py-2 text-xs text-[#7a4938]">
-          {error}
-        </div>
-      ) : null}
-
-      {files.length > 0 ? (
-        <div className="mt-4">
-          <div className="mb-3 flex flex-wrap items-center justify-between gap-2 text-xs text-[#746a62]">
-            <span>{files.length} φωτογραφίες επιλεγμένες</span>
-            <span>{(totalSize / 1024 / 1024).toFixed(1)} MB συνολικά</span>
-          </div>
-
-          <div className="max-h-52 space-y-2 overflow-y-auto pr-1">
-            {items.map((item, index) => (
-              <div key={`${item.name}-${index}`} className="rounded-xl bg-[#f7f4ef] px-3 py-2">
-                <div className="flex items-center justify-between gap-3 text-xs">
-                  <span className="min-w-0 truncate">{index + 1}. {item.name}</span>
-                  <span className="shrink-0 text-[#7d736b]">
-                    {item.status === "waiting" ? "αναμονή" : null}
-                    {item.status === "uploading" ? `${item.progress}%` : null}
-                    {item.status === "done" ? "ανέβηκε" : null}
-                    {item.status === "error" ? "σφάλμα" : null}
-                  </span>
-                </div>
-                {item.status === "uploading" ? (
-                  <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-black/10">
-                    <div
-                      className="h-full rounded-full bg-[#5c4b3f] transition-[width]"
-                      style={{ width: `${item.progress}%` }}
-                    />
-                  </div>
-                ) : null}
-                {item.message ? (
-                  <p className="mt-1 text-xs text-[#8b4f3b]">{item.message}</p>
-                ) : null}
-              </div>
-            ))}
-          </div>
-
+      {enableAutoSegmentation && existingFileCount > 0 && !busy && files.length === 0 ? (
+        <form
+          action={`/mixalis/api/chapters/${chapterId}/batches/${batchId}/segment`}
+          method="post"
+          className="rounded-2xl border border-[#cfc1b2] bg-[#f6f1ea] p-4"
+        >
+          <p className="text-sm font-semibold">Έτοιμο για αυτόματο διαχωρισμό</p>
+          <p className="mt-1 text-xs leading-5 text-[#746a62]">
+            Ξεκίνα μόνο όταν έχεις ανεβάσει όλο το κεφάλαιο με τη σωστή σειρά. Η AI θα προτείνει την αντιστοίχιση στα επίσημα υποκεφάλαια και θα την ελέγξεις πριν επιβεβαιωθεί.
+          </p>
           <button
-            type="button"
-            disabled={busy}
-            onClick={startUpload}
-            className="mt-4 w-full rounded-xl bg-[#403630] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#2f2824] disabled:cursor-not-allowed disabled:opacity-50"
+            type="submit"
+            className="mt-3 w-full rounded-xl bg-[#5a493e] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#45382f]"
           >
-            {busy ? "Ανεβαίνουν οι φωτογραφίες…" : `Ανέβασμα ${files.length} φωτογραφιών`}
+            Έναρξη αυτόματου διαχωρισμού
           </button>
-        </div>
+        </form>
       ) : null}
     </div>
   );
