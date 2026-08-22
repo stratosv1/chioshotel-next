@@ -62,7 +62,7 @@ export default async function MixalisOfficialSourceIntelligencePage({
         </header>
 
         <section className="mt-6 rounded-3xl border border-[#bfcab8] bg-[#f2f6ef] p-5 text-sm leading-6 text-[#53604d]">
-          <strong>Κανόνας START:</strong> το σχολικό βιβλίο καθορίζει την επίσημη ύλη. Τα 40 findings του Σαββάλα παραμένουν ξεχωριστό depth intelligence και θα ενωθούν αργότερα στο Subchapter Intelligence.
+          <strong>Κανόνας START:</strong> το σχολικό βιβλίο καθορίζει την επίσημη ύλη. Τα findings του Σαββάλα παραμένουν ξεχωριστό depth intelligence και ενώνονται μόνο στο canonical Subchapter Intelligence.
         </section>
 
         <section className="mt-6 grid gap-4 sm:grid-cols-3">
@@ -140,12 +140,24 @@ export default async function MixalisOfficialSourceIntelligencePage({
         {view.status === "ready" ? (
           <section className="mt-6 rounded-3xl border border-[#d8cbbb] bg-[#faf6f0] p-6">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#857261]">
-              Επόμενο στάδιο
+              Επόμενο στάδιο · START / PHASE3
             </p>
             <h2 className="mt-2 text-xl font-semibold">Subchapter Intelligence v1</h2>
             <p className="mt-2 text-sm leading-6 text-[#6e655e]">
-              Όταν ολοκληρωθεί αυτό το official layer, το επόμενο build θα συνθέσει το School Book Intelligence με το ήδη ολοκληρωμένο Savvalas Intelligence. Μόνο μετά θα μπει το START για Lesson Revision 1.
+              Το επίσημο curriculum layer και το ήδη ολοκληρωμένο depth intelligence είναι πλέον διαθέσιμα. Η επόμενη σύνθεση χρησιμοποιεί μόνο τα structured findings και δημιουργεί την canonical γνώση που θα καταναλώσει αργότερα το START.
             </p>
+            <form
+              action={`/mixalis/api/subchapter-intelligence/from-subchapter/${range.subchapterId}`}
+              method="post"
+              className="mt-5"
+            >
+              <button
+                type="submit"
+                className="w-full rounded-2xl bg-[#665748] px-5 py-4 text-base font-semibold text-white transition hover:bg-[#584b3f]"
+              >
+                Άνοιγμα Subchapter Intelligence v1
+              </button>
+            </form>
           </section>
         ) : null}
       </div>
