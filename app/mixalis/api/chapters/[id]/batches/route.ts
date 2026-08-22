@@ -4,6 +4,7 @@ import {
   createMaterialBatch,
   getPhysicsChapter,
   isMaterialSourceType,
+  isPhysicsSubchapterInChapter,
 } from "@/lib/mixalis/db";
 
 export const runtime = "nodejs";
@@ -29,6 +30,7 @@ export async function POST(
 
   const formData = await request.formData();
   const sourceType = String(formData.get("sourceType") ?? "");
+  const subchapterId = String(formData.get("subchapterId") ?? "").trim();
   const label = String(formData.get("label") ?? "").trim();
   const lessonDate = String(formData.get("lessonDate") ?? "").trim();
   const notes = String(formData.get("notes") ?? "").trim();
@@ -45,8 +47,25 @@ export async function POST(
     return redirectTo(request, `/mixalis/chapters/${id}?error=date`);
   }
 
+  if (subchapterId) {
+    const validUuid =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+        subchapterId,
+      );
+
+    if (!validUuid) {
+      return redirectTo(request, `/mixalis/chapters/${id}?error=subchapter`);
+    }
+
+    const belongsToChapter = await isPhysicsSubchapterInChapter(id, subchapterId);
+    if (!belongsToChapter) {
+      return redirectTo(request, `/mixalis/chapters/${id}?error=subchapter`);
+    }
+  }
+
   await createMaterialBatch({
     chapterId: id,
+    subchapterId: subchapterId || null,
     sourceType,
     label,
     lessonDate,
