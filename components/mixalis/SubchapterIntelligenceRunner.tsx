@@ -26,6 +26,12 @@ type StatusPayload = {
   error?: string;
 };
 
+const primaryCtaClass =
+  "inline-flex min-h-14 w-full items-center justify-center rounded-2xl bg-[#304b35] px-5 py-4 text-center text-base font-bold !text-white shadow-sm transition hover:bg-[#263d2b] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#9fb49d] disabled:cursor-wait disabled:opacity-60";
+
+const secondaryCtaClass =
+  "inline-flex min-h-14 w-full items-center justify-center rounded-2xl border-2 border-[#304b35] bg-white px-5 py-4 text-center text-base font-bold !text-[#304b35] shadow-sm transition hover:bg-[#f6faf5] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#c4d3c2]";
+
 export default function SubchapterIntelligenceRunner({
   versionId,
   initialStatus,
@@ -108,21 +114,21 @@ export default function SubchapterIntelligenceRunner({
 
   return (
     <section className="mt-6 rounded-3xl border border-[#d6cabb] bg-[#faf7f2] p-6 shadow-sm sm:p-8">
-      <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#857261]">
+      <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#6c5b4d]">
         Subchapter Intelligence v{versionNumber}
       </p>
       <h2 className="mt-2 text-2xl font-semibold">
         {completed ? "Η canonical γνώση του υποκεφαλαίου είναι έτοιμη" : "Σύνθεση των πηγών"}
       </h2>
-      <p className="mt-3 max-w-3xl text-sm leading-6 text-[#6e655e] sm:text-base">
+      <p className="mt-3 max-w-3xl text-sm leading-6 text-[#5d554f] sm:text-base">
         Το σύστημα συνθέτει {findingCount} structured findings από {sourceCount} πηγές. Δεν ξαναδιαβάζει τις φωτογραφίες ή το PDF.
         {currentLesson ? ` Το Lesson Revision ${currentLesson.revisionNumber} έχει ήδη δημιουργηθεί από αυτή τη γνώση.` : " Το μάθημα δημιουργείται μόνο στο επόμενο χειροκίνητο στάδιο START."}
       </p>
 
-      <div className="mt-5 flex flex-wrap gap-2 text-xs text-[#6f655d]">
-        <span className="rounded-full bg-white px-3 py-1.5">{sourceCount} πηγές</span>
-        <span className="rounded-full bg-white px-3 py-1.5">{findingCount} findings</span>
-        <span className="rounded-full bg-white px-3 py-1.5">
+      <div className="mt-5 flex flex-wrap gap-2 text-sm font-medium text-[#514a44]">
+        <span className="rounded-full border border-black/10 bg-white px-3 py-1.5">{sourceCount} πηγές</span>
+        <span className="rounded-full border border-black/10 bg-white px-3 py-1.5">{findingCount} findings</span>
+        <span className="rounded-full border border-black/10 bg-white px-3 py-1.5">
           {completed ? "Canonical · ready" : running ? "Συντίθεται…" : "Έτοιμο για σύνθεση"}
         </span>
       </div>
@@ -134,37 +140,39 @@ export default function SubchapterIntelligenceRunner({
       ) : null}
 
       {!completed ? (
-        <button
-          type="button"
-          onClick={run}
-          disabled={running}
-          className="mt-6 w-full rounded-2xl bg-[#665748] px-5 py-4 text-base font-semibold text-white transition hover:bg-[#584b3f] disabled:cursor-wait disabled:opacity-60"
-        >
+        <button type="button" onClick={run} disabled={running} className={`mt-6 ${primaryCtaClass}`}>
           {running ? "Συντίθεται το Subchapter Intelligence…" : `Δημιουργία Subchapter Intelligence v${versionNumber}`}
         </button>
       ) : currentLesson ? (
-        <div className="mt-6 rounded-2xl border border-[#b7ccb5] bg-[#eef5ed] p-5 text-[#4f684a]">
-          <p className="text-sm font-semibold">Lesson Revision {currentLesson.revisionNumber} · έτοιμο</p>
-          <p className="mt-2 text-sm leading-6">
-            Το current μάθημα έχει ήδη αποθηκευτεί στη Neon και παραμένει συνδεδεμένο με αυτή την canonical version.
+        <div className="mt-6 rounded-2xl border border-[#a9c1a5] bg-[#eef5ed] p-5 text-[#33492f]">
+          <p className="text-base font-bold">Lesson Revision {currentLesson.revisionNumber} · current</p>
+          <p className="mt-2 text-sm leading-6 text-[#40563c]">
+            Το τρέχον μάθημα παραμένει ασφαλές. Μπορείς να το ανοίξεις ή να δημιουργήσεις νέο revision με το τρέχον START. Το παλιό revision δεν αντικαθίσταται μέχρι να ολοκληρωθεί επιτυχώς το νέο.
           </p>
-          <Link
-            href={`/mixalis/lessons/${currentLesson.revisionId}`}
-            className="mt-4 inline-flex w-full justify-center rounded-2xl bg-[#52674d] px-5 py-4 text-base font-semibold text-white transition hover:bg-[#465a42]"
-          >
-            Άνοιγμα μαθήματος
-          </Link>
+
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            <Link href={`/mixalis/lessons/${currentLesson.revisionId}`} className={secondaryCtaClass}>
+              Άνοιγμα current μαθήματος
+            </Link>
+
+            <form action={`/mixalis/api/lesson-revisions/from-intelligence/${versionId}`} method="post">
+              <button type="submit" className={primaryCtaClass}>
+                Δημιουργία νέου Lesson Revision
+              </button>
+            </form>
+          </div>
+
+          <p className="mt-3 text-xs font-semibold leading-5 text-[#52644e]">
+            Το νέο revision θα χρησιμοποιήσει το τρέχον START και τις τρέχουσες ρυθμίσεις generation.
+          </p>
         </div>
       ) : (
-        <div className="mt-6 rounded-2xl border border-[#b7ccb5] bg-[#eef5ed] p-5 text-[#4f684a]">
-          <p className="text-sm leading-6">
+        <div className="mt-6 rounded-2xl border border-[#a9c1a5] bg-[#eef5ed] p-5 text-[#33492f]">
+          <p className="text-sm leading-6 text-[#40563c]">
             Η τρέχουσα canonical version έχει αποθηκευτεί. Το START μπορεί τώρα να τη μετατρέψει σε πραγματικό μάθημα χωρίς να ξαναδιαβάσει τις αρχικές πηγές.
           </p>
           <form action={`/mixalis/api/lesson-revisions/from-intelligence/${versionId}`} method="post" className="mt-4">
-            <button
-              type="submit"
-              className="w-full rounded-2xl bg-[#52674d] px-5 py-4 text-base font-semibold text-white transition hover:bg-[#465a42]"
-            >
+            <button type="submit" className={primaryCtaClass}>
               Δημιουργία μαθήματος με START
             </button>
           </form>
