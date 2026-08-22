@@ -159,7 +159,11 @@ export default function BatchPhotoUploader({
     setBusy(false);
 
     if (!hadError) {
-      setTimeout(() => router.refresh(), 1200);
+      setTimeout(() => {
+        setFiles([]);
+        setItems([]);
+        router.refresh();
+      }, 1200);
     }
   }
 
