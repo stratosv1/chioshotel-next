@@ -6,7 +6,7 @@ import {
 } from "@/lib/mixalis/subchapter-intelligence";
 
 export const START_PROMPT_REFERENCE = "START";
-export const START_PROMPT_VERSION = "PHYS-B2-2026-001";
+export const START_PROMPT_VERSION = "PHYS-B2-2026-002";
 
 type LessonOrigin = "intelligence" | "start_enrichment";
 
@@ -200,8 +200,8 @@ function hash(value: string) {
 function getOutputText(payload: any): string {
   if (typeof payload?.output_text === "string") return payload.output_text;
   for (const item of Array.isArray(payload?.output) ? payload.output : []) {
-    for (const content of Array.isArray(item?.content) ? item.content : []) {
-      if (typeof content?.text === "string") return content.text;
+    for (const outputContent of Array.isArray(item?.content) ? item.content : []) {
+      if (typeof outputContent?.text === "string") return outputContent.text;
     }
   }
   return "";
@@ -307,35 +307,53 @@ function startPrompt(input: {
   return `You are executing START (${START_PROMPT_VERSION}), the teaching layer for a private Greek B' Lykeiou Physics learning system.
 
 STUDENT CONTEXT:
-- Student: Μιχάλης, B' General Lyceum.
+- Student: Μιχάλης, B' General Lyceum, age 16.
 - Long-term direction: 2nd scientific field and Naval Architecture; engineering/naval bridges are useful only when they arise naturally.
 - The priority is genuine physical understanding before symbolic manipulation.
+- The lesson will be read directly by a 16-year-old student. Write for a bright teenager, not for a university student and not for a teacher.
 
 COURSE: ${input.courseTitle}
 CHAPTER: ${input.chapterLabel} ${input.chapterTitle}
 SUBCHAPTER: ${input.subchapterLabel} ${input.subchapterTitle}
 
 START — NON-NEGOTIABLE TEACHING CONTRACT:
-1. Begin from a familiar real phenomenon the student can visualize.
-2. Explain the physical idea intuitively before introducing formal terminology or formulas.
-3. Include a clever/hidden real-world occurrence where the same Physics is present but not obvious, then explicitly reveal the connection.
-4. Introduce physical quantities only after the phenomenon is understood: what each quantity means, why it matters and how changing it changes the phenomenon.
-5. Make qualitative dependencies explicit before compacting them into formulas.
-6. Then introduce formal Physics terminology and formulas as concise expressions of already-understood relationships.
-7. Exercises are not a separate appendix. The exercise-derived depth, traps and misconceptions in the intelligence MUST strengthen the theory explanation itself.
-8. Do not use pseudo-Socratic guessing of concepts the student has not yet been taught. Teach first; check understanding after.
-9. Use natural applications and transfer to unfamiliar contexts. Do not force analogies or engineering connections.
-10. End with comprehension checks at four levels: easy, advanced, hidden-context transfer and trap. Provide graduated hints; the full teacher answer is stored but will be hidden in the UI until requested.
-11. Be scientifically exact, clear, vivid and age-appropriate. Avoid decorative jargon and unnecessary abstraction.
-12. The official curriculum and scope guardrails in the intelligence are HARD boundaries. Do not promote out-of-scope depth material into required theory.
-13. You may create familiar real-world examples as START enrichment, but they must illustrate only Physics already supported by the intelligence. Mark those blocks origin=start_enrichment and use an empty sourceItemIds array.
-14. For statements derived from the intelligence, mark origin=intelligence and cite only exact sourceItemIds already present in the input. Never invent IDs.
-15. Output student-facing Greek. Do not mention Source Intelligence, Savvalas, prompts, databases or provenance in the teaching prose.
+1. Begin from a familiar real phenomenon the student can visualize immediately.
+2. Build the lesson around ONE dominant physical idea. State it internally to yourself before writing and make every major section reinforce it. Do not turn the lesson into an encyclopedia of all related facts.
+3. Explain the physical idea intuitively before introducing formal terminology or formulas. The first explanation must use plain, natural Greek and short, concrete sentences.
+4. Include a clever/hidden real-world occurrence where the same Physics is present but not obvious, then explicitly reveal the common physical structure. Prefer examples that make the student think "I have seen this, but I did not know this was Physics."
+5. Use prediction before explanation when it helps understanding: briefly ask the student what they expect to happen, then reveal and explain. Never ask them to guess terminology or concepts they have not yet been taught.
+6. Introduce physical quantities only when there is a clear need to measure or distinguish something in the phenomenon. Explain what each quantity answers in everyday terms, why it matters, and how changing it changes the phenomenon. Avoid presenting a dense symbol glossary before the student needs it.
+7. Make qualitative dependencies explicit before compacting them into formulas. Prefer "if this doubles, what changes?" reasoning before algebra.
+8. Then introduce formal Physics terminology as the precise name for an idea the student already understands. Formal language must feel like naming something familiar, not replacing the intuitive explanation.
+9. Present formulas as compressed statements of already-understood relationships. Group related formulas conceptually when useful and always explain what stays constant, what changes, and under which assumptions the formula is valid.
+10. Numerical applications must begin from a concrete situation whenever possible. Before calculating, include a short qualitative prediction so the student learns to think physically before substituting numbers.
+11. Exercises are not a separate appendix. The exercise-derived depth, traps and misconceptions in the intelligence MUST strengthen the theory explanation itself.
+12. Do not use pseudo-Socratic guessing of concepts the student has not yet been taught. Teach first; check understanding after.
+13. Use natural applications and transfer to unfamiliar contexts. Do not force analogies or engineering connections.
+14. End with comprehension checks at four levels: easy, advanced, hidden-context transfer and trap. At least one check should require prediction or comparison without calculation. Provide graduated hints; the full teacher answer is stored but will be hidden in the UI until requested.
+15. Be scientifically exact, clear, vivid and age-appropriate. Avoid decorative jargon, unnecessary abstraction, long academic sentences and textbook-like padding.
+16. Protect cognitive load. Prefer a smaller number of strong ideas that connect clearly over a larger number of correct but weakly connected facts. If a detail does not help the central idea, a misconception, an official requirement or a useful transfer, omit it.
+17. Use readable student-facing Greek. Define every new technical term when it first appears. Prefer familiar verbs and concrete nouns. Do not sound childish, but do not sound like a university textbook.
+18. The official curriculum and scope guardrails in the intelligence are HARD boundaries. Do not promote out-of-scope depth material into required theory.
+19. You may create familiar real-world examples as START enrichment, but they must illustrate only Physics already supported by the intelligence. Mark those blocks origin=start_enrichment and use an empty sourceItemIds array.
+20. For statements derived from the intelligence, mark origin=intelligence and cite only exact sourceItemIds already present in the input. Never invent IDs.
+21. Output student-facing Greek. Do not mention Source Intelligence, Savvalas, prompts, databases or provenance in the teaching prose.
+
+QUALITY BAR BEFORE YOU FINALIZE:
+- Can a 16-year-old explain the central idea in their own words after reading the lesson?
+- Does the lesson make the student predict and reason, not only read explanations?
+- Are quantities introduced because they are needed, rather than dumped as symbols?
+- Does terminology arrive after understanding?
+- Do formulas feel like a summary of ideas already understood?
+- Do examples feel real and memorable rather than generic textbook decoration?
+- Is every paragraph earning its place?
+- Is the Physics exact?
+If any answer is no, revise before returning the JSON.
 
 STRUCTURED CURRENT SUBCHAPTER INTELLIGENCE:
 ${JSON.stringify(input.intelligence)}
 
-Create one coherent Lesson Revision. It must follow the START sequence rather than becoming a textbook summary or an exercise solution sheet.`;
+Create one coherent Lesson Revision. Follow the START sequence and the quality bar above. The result must feel like an excellent private lesson for a 16-year-old, not a textbook summary, not lecture notes for a teacher, and not an exercise solution sheet.`;
 }
 
 async function callOpenAI(model: string, prompt: string) {
@@ -354,6 +372,9 @@ async function callOpenAI(model: string, prompt: string) {
       signal: controller.signal,
       body: JSON.stringify({
         model,
+        reasoning: {
+          effort: "high",
+        },
         input: [{ role: "user", content: [{ type: "input_text", text: prompt }] }],
         text: {
           format: {
