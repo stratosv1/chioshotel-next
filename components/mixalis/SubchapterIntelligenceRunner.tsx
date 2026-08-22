@@ -136,8 +136,18 @@ export default function SubchapterIntelligenceRunner({
           {running ? "Συντίθεται το Subchapter Intelligence…" : `Δημιουργία Subchapter Intelligence v${versionNumber}`}
         </button>
       ) : (
-        <div className="mt-6 rounded-2xl border border-[#b7ccb5] bg-[#eef5ed] p-4 text-sm leading-6 text-[#4f684a]">
-          Η τρέχουσα canonical version έχει αποθηκευτεί. Το επόμενο στάδιο είναι το START → Lesson Revision.
+        <div className="mt-6 rounded-2xl border border-[#b7ccb5] bg-[#eef5ed] p-5 text-[#4f684a]">
+          <p className="text-sm leading-6">
+            Η τρέχουσα canonical version έχει αποθηκευτεί. Το START μπορεί τώρα να τη μετατρέψει σε πραγματικό μάθημα χωρίς να ξαναδιαβάσει τις αρχικές πηγές.
+          </p>
+          <form action={`/mixalis/api/lesson-revisions/from-intelligence/${versionId}`} method="post" className="mt-4">
+            <button
+              type="submit"
+              className="w-full rounded-2xl bg-[#52674d] px-5 py-4 text-base font-semibold text-white transition hover:bg-[#465a42]"
+            >
+              Δημιουργία μαθήματος με START
+            </button>
+          </form>
         </div>
       )}
     </section>
