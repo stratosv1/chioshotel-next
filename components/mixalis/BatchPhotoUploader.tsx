@@ -49,6 +49,7 @@ export default function BatchPhotoUploader({
   const [items, setItems] = useState<UploadItem[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [segmentBusy, setSegmentBusy] = useState(false);
 
   const totalSize = useMemo(
     () => files.reduce((sum, file) => sum + file.size, 0),
@@ -94,7 +95,7 @@ export default function BatchPhotoUploader({
   }
 
   async function startUpload() {
-    if (files.length === 0 || busy) return;
+    if (files.length === 0 || busy || segmentBusy) return;
     setBusy(true);
     setError(null);
 
@@ -173,6 +174,38 @@ export default function BatchPhotoUploader({
     }
   }
 
+  async function startSegmentation() {
+    if (segmentBusy || busy || files.length > 0) return;
+    setSegmentBusy(true);
+    setError(null);
+
+    try {
+      const response = await fetch(
+        `/mixalis/api/chapters/${chapterId}/batches/${batchId}/segment`,
+        { method: "POST", redirect: "follow" },
+      );
+
+      if (!response.ok) {
+        throw new Error("Ο αυτόματος διαχωρισμός δεν ολοκληρώθηκε.");
+      }
+
+      const target = new URL(response.url);
+      if (target.origin === window.location.origin) {
+        router.push(`${target.pathname}${target.search}`);
+        router.refresh();
+      } else {
+        window.location.assign(response.url);
+      }
+    } catch (segmentationError) {
+      setError(
+        segmentationError instanceof Error
+          ? segmentationError.message
+          : "Ο αυτόματος διαχωρισμός δεν ολοκληρώθηκε.",
+      );
+      setSegmentBusy(false);
+    }
+  }
+
   return (
     <div className="mt-4 space-y-3">
       <div className="rounded-2xl border border-dashed border-black/15 bg-white p-4">
@@ -196,7 +229,7 @@ export default function BatchPhotoUploader({
               multiple
               accept="image/jpeg,image/png,image/webp,image/heic,image/heif,.heic,.heif"
               className="sr-only"
-              disabled={busy}
+              disabled={busy || segmentBusy}
               onChange={(event) =>
                 chooseFiles(Array.from(event.currentTarget.files || []))
               }
@@ -248,7 +281,7 @@ export default function BatchPhotoUploader({
 
             <button
               type="button"
-              disabled={busy}
+              disabled={busy || segmentBusy}
               onClick={startUpload}
               className="mt-4 w-full rounded-xl bg-[#403630] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#2f2824] disabled:cursor-not-allowed disabled:opacity-50"
             >
@@ -259,22 +292,27 @@ export default function BatchPhotoUploader({
       </div>
 
       {enableAutoSegmentation && existingFileCount > 0 && !busy && files.length === 0 ? (
-        <form
-          action={`/mixalis/api/chapters/${chapterId}/batches/${batchId}/segment`}
-          method="post"
-          className="rounded-2xl border border-[#cfc1b2] bg-[#f6f1ea] p-4"
-        >
+        <div className="rounded-2xl border border-[#cfc1b2] bg-[#f6f1ea] p-4">
           <p className="text-sm font-semibold">Έτοιμο για αυτόματο διαχωρισμό</p>
           <p className="mt-1 text-xs leading-5 text-[#746a62]">
             Ξεκίνα μόνο όταν έχεις ανεβάσει όλο το κεφάλαιο με τη σωστή σειρά. Η AI θα προτείνει την αντιστοίχιση στα επίσημα υποκεφάλαια και θα την ελέγξεις πριν επιβεβαιωθεί.
           </p>
           <button
-            type="submit"
-            className="mt-3 w-full rounded-xl bg-[#5a493e] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#45382f]"
+            type="button"
+            disabled={segmentBusy}
+            onClick={startSegmentation}
+            className="mt-3 w-full rounded-xl bg-[#5a493e] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#45382f] disabled:cursor-wait disabled:opacity-60"
           >
-            Έναρξη αυτόματου διαχωρισμού
+            {segmentBusy
+              ? `Αναλύονται ${existingFileCount} φωτογραφίες…`
+              : "Έναρξη αυτόματου διαχωρισμού"}
           </button>
-        </form>
+          {segmentBusy ? (
+            <div className="mt-3 rounded-xl bg-white/70 px-3 py-3 text-xs leading-5 text-[#665b53]">
+              Η ανάλυση έχει ξεκινήσει. Για ολόκληρο κεφάλαιο μπορεί να χρειαστούν περίπου 2–4 λεπτά. Μην πατήσεις ξανά το κουμπί και μην κλείσεις αυτή τη σελίδα· μόλις ολοκληρωθεί θα ανοίξει αυτόματα ο έλεγχος του διαχωρισμού.
+            </div>
+          ) : null}
+        </div>
       ) : null}
     </div>
   );
