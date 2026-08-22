@@ -10,7 +10,7 @@ Do not commit real values to GitHub.
 
 ## Current setup status
 
-Production and Preview environment scopes were configured externally in Vercel on 2026-08-22. The session secret was rotated before validation. `MIXALIS_PASSWORD_HASH` was also added to both Production and Preview before the final authentication redeploy. No secret values are stored in this repository.
+Production and Preview environment scopes were configured externally in Vercel on 2026-08-22. The session secret was rotated before validation. `MIXALIS_PASSWORD_HASH` is configured for both Production and Preview, and its value was rotated again on 2026-08-22 before the final login validation. No secret values are stored in this repository.
 
 ## Generate a password hash locally
 
