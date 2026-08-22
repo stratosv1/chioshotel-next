@@ -192,7 +192,11 @@ function requestSecret(request: NextRequest) {
 
 function isAuthorized(request: NextRequest) {
   const supplied = requestSecret(request);
-  const allowed = [process.env.CRON_SECRET, process.env.OCCUPANCY_SCRIPT_SECRET].map(text).filter(Boolean);
+  const allowed = [
+    process.env.CRON_SECRET,
+    process.env.OCCUPANCY_SCRIPT_SECRET,
+    process.env.BOOKING_CORE_PUSH_SECRET,
+  ].map(text).filter(Boolean);
   return Boolean(supplied && allowed.includes(supplied));
 }
 
