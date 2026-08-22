@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Physics Workspace",
+  title: {
+    absolute: "Physics Workspace",
+  },
+  description: "Ιδιωτικός χώρος μελέτης Φυσικής.",
   robots: {
     index: false,
     follow: false,
