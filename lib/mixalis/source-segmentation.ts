@@ -207,7 +207,9 @@ export async function saveSegmentationFileResult(input: {
   const sql = getSql();
 
   const validRows = await sql`
-    SELECT 1
+    SELECT
+      r.batch_id::text AS batch_id,
+      r.chapter_id::text AS chapter_id
     FROM physics.source_segmentation_runs r
     JOIN physics.source_files sf ON sf.batch_id = r.batch_id
     WHERE r.id::text = ${input.runId}
@@ -219,6 +221,9 @@ export async function saveSegmentationFileResult(input: {
     throw new Error("Invalid source file for segmentation run.");
   }
 
+  const batchId = String(validRows[0].batch_id);
+  const chapterId = String(validRows[0].chapter_id);
+
   await sql`
     DELETE FROM physics.source_file_subchapter_links
     WHERE run_id::text = ${input.runId}
@@ -229,6 +234,8 @@ export async function saveSegmentationFileResult(input: {
     await sql`
       INSERT INTO physics.source_file_subchapter_links (
         run_id,
+        batch_id,
+        chapter_id,
         source_file_id,
         subchapter_id,
         relation,
@@ -239,6 +246,8 @@ export async function saveSegmentationFileResult(input: {
       )
       VALUES (
         ${input.runId}::uuid,
+        ${batchId}::uuid,
+        ${chapterId}::uuid,
         ${input.sourceFileId}::uuid,
         ${mapping.subchapterId}::uuid,
         ${mapping.relation},
@@ -425,7 +434,10 @@ export async function replaceSegmentationMappings(input: {
 }) {
   const sql = getSql();
   const runRows = await sql`
-    SELECT r.chapter_id::text, r.status
+    SELECT
+      r.batch_id::text AS batch_id,
+      r.chapter_id::text AS chapter_id,
+      r.status
     FROM physics.source_segmentation_runs r
     JOIN physics.source_files sf ON sf.batch_id = r.batch_id
     WHERE r.id::text = ${input.runId}
@@ -437,6 +449,7 @@ export async function replaceSegmentationMappings(input: {
     throw new Error("Confirmed segmentation cannot be edited.");
   }
 
+  const batchId = String(runRows[0].batch_id);
   const chapterId = String(runRows[0].chapter_id);
   const uniqueMappings = Array.from(
     new Map(
@@ -481,6 +494,8 @@ export async function replaceSegmentationMappings(input: {
     await sql`
       INSERT INTO physics.source_file_subchapter_links (
         run_id,
+        batch_id,
+        chapter_id,
         source_file_id,
         subchapter_id,
         relation,
@@ -491,6 +506,8 @@ export async function replaceSegmentationMappings(input: {
       )
       VALUES (
         ${input.runId}::uuid,
+        ${batchId}::uuid,
+        ${chapterId}::uuid,
         ${input.sourceFileId}::uuid,
         ${mapping.subchapterId}::uuid,
         ${mapping.relation},
