@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import SourceIntelligenceRunner from "@/components/mixalis/SourceIntelligenceRunner";
+import { getOfficialRangeForSubchapter } from "@/lib/mixalis/official-source-intelligence";
 import { getSourceAnalysisView } from "@/lib/mixalis/source-intelligence";
 
 const itemTypeLabels: Record<string, string> = {
@@ -35,6 +36,9 @@ export default async function MixalisSourceIntelligencePage({
   if (!view) notFound();
 
   const { context } = view;
+  const officialRangeId = view.schoolBookMapped
+    ? await getOfficialRangeForSubchapter(context.subchapterId)
+    : null;
   const understanding = view.items.filter((item) => item.layer === "understanding");
   const teaching = view.items.filter((item) => item.layer === "teaching");
 
@@ -87,6 +91,24 @@ export default async function MixalisSourceIntelligencePage({
         {!view.schoolBookMapped ? (
           <section className="mt-6 rounded-3xl border border-[#ddc8aa] bg-[#fbf5e9] p-5 text-sm leading-6 text-[#6e5a3d]">
             <strong>Σημαντικό:</strong> η ανάλυση του Σαββάλα μπορεί να ολοκληρωθεί τώρα, αλλά δεν θα δημιουργηθεί ακόμη canonical Subchapter Intelligence ούτε μάθημα. Πρώτα πρέπει να χαρτογραφηθεί το αντίστοιχο range του επίσημου σχολικού βιβλίου, επειδή μόνο αυτό καθορίζει την επίσημη ύλη.
+          </section>
+        ) : null}
+
+        {context.status === "ready" && officialRangeId ? (
+          <section className="mt-6 rounded-3xl border border-[#bfcab8] bg-[#f2f6ef] p-5 sm:p-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#66735f]">
+              Επόμενο στάδιο · START / PHASE3
+            </p>
+            <h2 className="mt-2 text-xl font-semibold">Το σχολικό range είναι πλέον χαρτογραφημένο</h2>
+            <p className="mt-2 text-sm leading-6 text-[#596553]">
+              Ο Σαββάλας έχει δώσει το depth intelligence. Τώρα αναλύουμε μόνο τις επίσημες σελίδες του σχολικού βιβλίου για έννοιες, ορισμούς, φυσικά μεγέθη, αρχές, σχέσεις και όρια της ύλης. Δεν δημιουργείται ακόμη μάθημα.
+            </p>
+            <Link
+              href={`/mixalis/api/source-intelligence/from-source-range/${officialRangeId}`}
+              className="mt-4 inline-flex w-full items-center justify-center rounded-2xl bg-[#493d35] px-4 py-3.5 text-sm font-semibold text-white sm:w-auto"
+            >
+              Άνοιγμα Official School Book Intelligence
+            </Link>
           </section>
         ) : null}
 
