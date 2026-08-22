@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type StatusPayload = {
   status?: string;
@@ -16,6 +16,8 @@ type StatusPayload = {
     chunks?: {
       processing?: number;
     };
+    items?: unknown[];
+    schoolBookMapped?: boolean;
   };
 };
 
@@ -23,33 +25,50 @@ function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function statusLabel(value: string) {
+  if (value === "ready") return "Ολοκληρωμένη";
+  if (value === "processing") return "Σε ανάλυση";
+  if (value === "error") return "Χρειάζεται συνέχιση";
+  return "Έτοιμη να ξεκινήσει";
+}
+
 export default function SourceIntelligenceRunner({
   analysisId,
   initialStatus,
   initialProcessedUnits,
   totalUnits,
+  initialFindingsCount,
+  schoolBookMapped,
 }: {
   analysisId: string;
   initialStatus: string;
   initialProcessedUnits: number;
   totalUnits: number;
+  initialFindingsCount: number;
+  schoolBookMapped: boolean;
 }) {
   const router = useRouter();
   const [running, setRunning] = useState(false);
   const [status, setStatus] = useState(initialStatus);
   const [processedUnits, setProcessedUnits] = useState(initialProcessedUnits);
+  const [findingsCount, setFindingsCount] = useState(initialFindingsCount);
   const [message, setMessage] = useState<string | null>(null);
+  const readyRefreshDone = useRef(false);
 
   const endpoint = `/mixalis/api/source-intelligence/analyses/${analysisId}/next`;
 
   function applyPayload(payload: StatusPayload) {
     const nextStatus = String(payload?.view?.context?.status ?? payload?.status ?? "processing");
-    const nextProcessed = Number(payload?.view?.context?.processedUnits ?? 0);
+    const nextProcessed = Number(payload?.view?.context?.processedUnits ?? processedUnits);
+    const nextFindings = Array.isArray(payload?.view?.items)
+      ? payload.view.items.length
+      : findingsCount;
+
     setStatus(nextStatus);
-    if (Number.isFinite(nextProcessed)) {
-      setProcessedUnits(nextProcessed);
-    }
-    return { nextStatus, nextProcessed };
+    if (Number.isFinite(nextProcessed)) setProcessedUnits(nextProcessed);
+    if (Number.isFinite(nextFindings)) setFindingsCount(nextFindings);
+
+    return { nextStatus, nextProcessed, nextFindings };
   }
 
   async function readStatus() {
@@ -66,17 +85,35 @@ export default function SourceIntelligenceRunner({
 
   useEffect(() => {
     let cancelled = false;
+    let timer: ReturnType<typeof setTimeout> | null = null;
 
-    readStatus()
-      .then((payload) => {
-        if (!cancelled) applyPayload(payload);
-      })
-      .catch(() => {
-        // The server-rendered progress remains a safe fallback.
-      });
+    async function syncLiveProgress() {
+      if (cancelled) return;
+      try {
+        const payload = await readStatus();
+        if (cancelled) return;
+        const current = applyPayload(payload);
+
+        if (current.nextStatus === "ready" && !readyRefreshDone.current) {
+          readyRefreshDone.current = true;
+          setMessage("Η Source Intelligence ολοκληρώθηκε.");
+          router.refresh();
+          return;
+        }
+      } catch {
+        // Keep showing the last persisted snapshot; retry automatically.
+      }
+
+      if (!cancelled) {
+        timer = setTimeout(syncLiveProgress, 2000);
+      }
+    }
+
+    void syncLiveProgress();
 
     return () => {
       cancelled = true;
+      if (timer) clearTimeout(timer);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [analysisId]);
@@ -137,7 +174,6 @@ export default function SourceIntelligenceRunner({
           try {
             snapshot = await readStatus();
           } catch {
-            // A transient mobile/network miss should not stop a server-side chunk.
             continue;
           }
 
@@ -166,8 +202,6 @@ export default function SourceIntelligenceRunner({
           }
 
           if (triggerSettled && triggerError && processingChunks === 0 && poll >= 2) {
-            // The mobile request may have been dropped before reaching the server.
-            // Retry the next cycle without losing any persisted progress.
             break;
           }
 
@@ -212,54 +246,73 @@ export default function SourceIntelligenceRunner({
     ? Math.min(100, Math.round((processedUnits / totalUnits) * 100))
     : 0;
 
-  if (status === "ready") {
-    return (
-      <div className="rounded-2xl border border-[#b8ccb7] bg-[#f0f6ef] p-4 text-sm text-[#496047]">
-        Η source-level ανάλυση έχει ολοκληρωθεί και έχει αποθηκευτεί ως structured intelligence.
-      </div>
-    );
-  }
-
   return (
-    <div className="rounded-3xl border border-[#d5c8ba] bg-[#faf7f2] p-5">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h2 className="font-semibold">Ανάλυση πηγής</h2>
-          <p className="mt-1 text-sm leading-6 text-[#6f665f]">
-            Πάτησε μία φορά. Οι φωτογραφίες αναλύονται σε ασφαλή resumable βήματα και το σύστημα συνεχίζει αυτόματα μέχρι το τέλος.
-          </p>
+    <>
+      <section className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="rounded-2xl border border-black/10 bg-white p-5 shadow-sm">
+          <p className="text-xs uppercase tracking-[0.14em] text-[#847466]">Κατάσταση</p>
+          <p className="mt-2 text-xl font-semibold">{statusLabel(status)}</p>
         </div>
-        <span className="shrink-0 rounded-full bg-white px-3 py-1 text-xs text-[#756b63]">
-          {processedUnits}/{totalUnits}
-        </span>
-      </div>
-
-      <div className="mt-4 h-2 overflow-hidden rounded-full bg-black/10">
-        <div
-          className="h-full rounded-full bg-[#5b4a3e] transition-[width] duration-300"
-          style={{ width: `${percent}%` }}
-        />
-      </div>
-      <p className="mt-2 text-xs text-[#7b7169]">{percent}% των φωτογραφιών έχει εξαχθεί σε structured findings.</p>
-
-      {message ? (
-        <div className="mt-4 rounded-xl bg-white px-3 py-2 text-xs leading-5 text-[#6d625a]">
-          {message}
+        <div className="rounded-2xl border border-black/10 bg-white p-5 shadow-sm">
+          <p className="text-xs uppercase tracking-[0.14em] text-[#847466]">Πρόοδος</p>
+          <p className="mt-2 text-xl font-semibold">{processedUnits}/{totalUnits}</p>
         </div>
-      ) : null}
+        <div className="rounded-2xl border border-black/10 bg-white p-5 shadow-sm">
+          <p className="text-xs uppercase tracking-[0.14em] text-[#847466]">Structured findings</p>
+          <p className="mt-2 text-xl font-semibold">{findingsCount}</p>
+        </div>
+        <div className="rounded-2xl border border-black/10 bg-white p-5 shadow-sm">
+          <p className="text-xs uppercase tracking-[0.14em] text-[#847466]">Σχολικό βιβλίο 1.1</p>
+          <p className="mt-2 text-xl font-semibold">{schoolBookMapped ? "Συνδεδεμένο" : "Εκκρεμεί"}</p>
+        </div>
+      </section>
 
-      <button
-        type="button"
-        disabled={running}
-        onClick={run}
-        className="mt-4 w-full rounded-xl bg-[#493d35] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#342c27] disabled:cursor-not-allowed disabled:opacity-60"
-      >
-        {running
-          ? `Αναλύεται αυτόματα… ${processedUnits}/${totalUnits}`
-          : processedUnits > 0
-            ? "Συνέχιση Source Intelligence"
-            : "Έναρξη Source Intelligence"}
-      </button>
-    </div>
+      {status === "ready" ? (
+        <section className="mt-6 rounded-2xl border border-[#b8ccb7] bg-[#f0f6ef] p-4 text-sm text-[#496047]">
+          Η source-level ανάλυση έχει ολοκληρωθεί και έχει αποθηκευτεί ως structured intelligence.
+        </section>
+      ) : (
+        <section className="mt-6 rounded-3xl border border-[#d5c8ba] bg-[#faf7f2] p-5">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h2 className="font-semibold">Ανάλυση πηγής</h2>
+              <p className="mt-1 text-sm leading-6 text-[#6f665f]">
+                Πάτησε μία φορά. Η πρόοδος ενημερώνεται αυτόματα από τη βάση περίπου κάθε 2 δευτερόλεπτα και το σύστημα συνεχίζει μέχρι το τέλος.
+              </p>
+            </div>
+            <span className="shrink-0 rounded-full bg-white px-3 py-1 text-xs text-[#756b63]">
+              {processedUnits}/{totalUnits}
+            </span>
+          </div>
+
+          <div className="mt-4 h-2 overflow-hidden rounded-full bg-black/10">
+            <div
+              className="h-full rounded-full bg-[#5b4a3e] transition-[width] duration-300"
+              style={{ width: `${percent}%` }}
+            />
+          </div>
+          <p className="mt-2 text-xs text-[#7b7169]">{percent}% των φωτογραφιών έχει εξαχθεί σε structured findings.</p>
+
+          {message ? (
+            <div className="mt-4 rounded-xl bg-white px-3 py-2 text-xs leading-5 text-[#6d625a]">
+              {message}
+            </div>
+          ) : null}
+
+          <button
+            type="button"
+            disabled={running}
+            onClick={run}
+            className="mt-4 w-full rounded-xl bg-[#493d35] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#342c27] disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {running
+              ? `Αναλύεται αυτόματα… ${processedUnits}/${totalUnits}`
+              : processedUnits > 0
+                ? "Συνέχιση Source Intelligence"
+                : "Έναρξη Source Intelligence"}
+          </button>
+        </section>
+      )}
+    </>
   );
 }
