@@ -36,15 +36,15 @@ export async function POST(
   const notes = String(formData.get("notes") ?? "").trim();
 
   if (!isMaterialSourceType(sourceType)) {
-    return redirectTo(request, `/mixalis/chapters/${id}?error=source`);
+    return redirectTo(request, `/mixalis/chapters/${id}?error=source#chapter-material`);
   }
 
   if (label.length > 160 || notes.length > 1000) {
-    return redirectTo(request, `/mixalis/chapters/${id}?error=length`);
+    return redirectTo(request, `/mixalis/chapters/${id}?error=length#chapter-material`);
   }
 
   if (lessonDate && !/^\d{4}-\d{2}-\d{2}$/.test(lessonDate)) {
-    return redirectTo(request, `/mixalis/chapters/${id}?error=date`);
+    return redirectTo(request, `/mixalis/chapters/${id}?error=date#chapter-material`);
   }
 
   if (subchapterId) {
@@ -54,16 +54,16 @@ export async function POST(
       );
 
     if (!validUuid) {
-      return redirectTo(request, `/mixalis/chapters/${id}?error=subchapter`);
+      return redirectTo(request, `/mixalis/chapters/${id}?error=subchapter#chapter-material`);
     }
 
     const belongsToChapter = await isPhysicsSubchapterInChapter(id, subchapterId);
     if (!belongsToChapter) {
-      return redirectTo(request, `/mixalis/chapters/${id}?error=subchapter`);
+      return redirectTo(request, `/mixalis/chapters/${id}?error=subchapter#chapter-material`);
     }
   }
 
-  await createMaterialBatch({
+  const batch = await createMaterialBatch({
     chapterId: id,
     subchapterId: subchapterId || null,
     sourceType,
@@ -72,5 +72,8 @@ export async function POST(
     notes,
   });
 
-  return redirectTo(request, `/mixalis/chapters/${id}?created=batch`);
+  return redirectTo(
+    request,
+    `/mixalis/chapters/${id}?created=batch&batchId=${batch.id}#chapter-material`,
+  );
 }
