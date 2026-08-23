@@ -50,21 +50,39 @@ function number(value: number, digits = 2) {
   return new Intl.NumberFormat("el-GR", { maximumFractionDigits: digits }).format(value);
 }
 
+function displayUnit(quantity: SmartLabQuantity | undefined) {
+  if (!quantity) return "";
+  if (quantity.physicsRole === "velocity_angle") return "°";
+  return quantity.unit;
+}
+
 function quantityDisplay(quantity: SmartLabQuantity | undefined, fallbackSymbol: string, fallbackName: string) {
   return {
     symbol: quantity?.symbol || fallbackSymbol,
     name: quantity?.name || fallbackName,
-    unit: quantity?.unit || "",
+    unit: displayUnit(quantity),
   };
 }
 
+function studentText(widget: Widget, text: string | null | undefined) {
+  let output = String(text || "");
+  const replacements = quantitiesOf(widget)
+    .filter((quantity) => quantity.id)
+    .sort((a, b) => b.id.length - a.id.length);
+  for (const quantity of replacements) {
+    output = output.split(quantity.id).join(quantity.symbol || quantity.name);
+  }
+  return output;
+}
+
 function Metric({ quantity, value }: { quantity: SmartLabQuantity; value: number }) {
+  const unit = displayUnit(quantity);
   return (
     <div className="min-w-0 border-l border-stone-200 pl-3 first:border-l-0 first:pl-0 sm:first:border-l">
       <div className="flex items-baseline gap-1.5">
         <span className="text-base font-semibold text-stone-950">{quantity.symbol}</span>
         <span className="text-sm font-semibold text-stone-900">{number(value)}</span>
-        <span className="text-[11px] text-stone-500">{quantity.unit}</span>
+        <span className="text-[11px] text-stone-500">{unit}</span>
       </div>
       <p className="mt-0.5 line-clamp-2 text-[11px] leading-4 text-stone-500">{quantity.name}</p>
     </div>
@@ -177,6 +195,10 @@ function HorizontalProjectile({ widget, values, time }: { widget: Widget; values
   const angleEndX = px + Math.cos(angleRad) * angleR;
   const angleEndY = py + Math.sin(angleRad) * angleR;
 
+  const gravityX = Math.min(560, Math.max(116, px + 54));
+  const gravityStartY = Math.max(34, Math.min(groundY - 58, py - 52));
+  const gravityEndY = Math.min(groundY - 8, gravityStartY + 42);
+
   return (
     <div className="min-w-0">
       <svg viewBox="0 0 620 322" className="w-full" role="img" aria-label="Διαδραστικό σχεδιάγραμμα οριζόντιας βολής">
@@ -213,34 +235,34 @@ function HorizontalProjectile({ widget, values, time }: { widget: Widget; values
 
         <g className="text-emerald-700">
           <line x1={px} y1={py} x2={px + vx * vectorScale} y2={py} stroke="currentColor" strokeWidth="3" markerEnd={`url(#${arrow})`} />
-          <text x={px + Math.max(14, vx * vectorScale * 0.45)} y={py - 10} fontSize="12" fill="currentColor">{vxD.symbol}</text>
+          <text x={px + Math.max(16, vx * vectorScale * 0.55)} y={py - 11} fontSize="12" fill="currentColor">{vxD.symbol}</text>
         </g>
 
         {vy > 0.001 ? (
           <g className="text-amber-700">
             <line x1={px} y1={py} x2={px} y2={py + vy * vectorScale} stroke="currentColor" strokeWidth="3" markerEnd={`url(#${arrow})`} />
-            <text x={px - 27} y={py + Math.max(22, vy * vectorScale * 0.58)} fontSize="12" fill="currentColor">{vyD.symbol}</text>
+            <text x={px - 29} y={py + Math.max(24, vy * vectorScale * 0.62)} fontSize="12" fill="currentColor">{vyD.symbol}</text>
           </g>
         ) : null}
 
         {speed > 0.001 ? (
           <g className="text-violet-700">
             <line x1={px} y1={py} x2={px + vx * vectorScale} y2={py + vy * vectorScale} stroke="currentColor" strokeWidth="2.5" markerEnd={`url(#${arrow})`} />
-            <text x={px + vx * vectorScale + 8} y={py + vy * vectorScale + 2} fontSize="12" fill="currentColor">{speedD.symbol}</text>
+            <text x={px + vx * vectorScale + 10} y={Math.min(groundY - 5, py + vy * vectorScale - 4)} fontSize="12" fill="currentColor">{speedD.symbol}</text>
           </g>
         ) : null}
 
         {thetaQ && speed > 0.001 ? (
           <g className="text-fuchsia-700">
             <path d={`M ${px + angleR} ${py} A ${angleR} ${angleR} 0 0 1 ${angleEndX} ${angleEndY}`} fill="none" stroke="currentColor" strokeWidth="2" />
-            <text x={px + 30} y={py + 24} fontSize="12" fill="currentColor">{thetaD.symbol}={number(theta, 1)}°</text>
+            <text x={px + 31} y={Math.min(groundY - 8, py + 27)} fontSize="12" fill="currentColor">{thetaD.symbol}={number(theta, 1)}°</text>
           </g>
         ) : null}
 
         {gravityQ ? (
           <g className="text-rose-700">
-            <line x1="552" y1="42" x2="552" y2="86" stroke="currentColor" strokeWidth="3" markerEnd={`url(#${arrow})`} />
-            <text x="562" y="69" fontSize="12" fill="currentColor">{gravityD.symbol}</text>
+            <line x1={gravityX} y1={gravityStartY} x2={gravityX} y2={gravityEndY} stroke="currentColor" strokeWidth="3" markerEnd={`url(#${arrow})`} />
+            <text x={gravityX + 10} y={(gravityStartY + gravityEndY) / 2 + 4} fontSize="12" fill="currentColor">{gravityD.symbol}</text>
           </g>
         ) : null}
 
@@ -290,6 +312,18 @@ function circularState(widget: Widget, values: Values, angle: number) {
   return { radius, omega, speed, frequency, period, acceleration, mass, force, angle, arcLength, revolutions };
 }
 
+function circularArcPath(cx: number, cy: number, radius: number, angle: number) {
+  const clamped = Math.max(0, Math.min(2 * Math.PI, angle));
+  if (clamped < 0.001) return "";
+  if (clamped >= 2 * Math.PI - 0.001) {
+    return `M ${cx + radius} ${cy} A ${radius} ${radius} 0 1 0 ${cx - radius} ${cy} A ${radius} ${radius} 0 1 0 ${cx + radius} ${cy}`;
+  }
+  const endX = cx + radius * Math.cos(clamped);
+  const endY = cy - radius * Math.sin(clamped);
+  const largeArc = clamped > Math.PI ? 1 : 0;
+  return `M ${cx + radius} ${cy} A ${radius} ${radius} 0 ${largeArc} 0 ${endX} ${endY}`;
+}
+
 function CircularMotion({ widget, values, angle, forceMode = false }: { widget: Widget; values: Values; angle: number; forceMode?: boolean }) {
   const state = circularState(widget, values, angle);
   const { radius, omega, speed, frequency, period, acceleration, mass, force, arcLength, revolutions } = state;
@@ -299,6 +333,7 @@ function CircularMotion({ widget, values, angle, forceMode = false }: { widget: 
   const angularControl = controlsOf(widget).find((control) => control.role === "angular_speed");
   const frequencyControl = controlsOf(widget).find((control) => control.role === "frequency");
   const linearControl = controlsOf(widget).find((control) => control.role === "linear_speed");
+
   let maxSpeed = speed;
   let maxAcceleration = acceleration;
   if (angularControl) {
@@ -312,24 +347,27 @@ function CircularMotion({ widget, values, angle, forceMode = false }: { widget: 
     maxSpeed = Math.max(maxSpeed, linearControl.max);
     maxAcceleration = Math.max(maxAcceleration, linearControl.max * linearControl.max / minR);
   }
+
   const maxMass = Math.max(roleMax(widget, "mass", mass), mass);
   const maxForce = Math.max(0.001, maxMass * maxAcceleration);
-
-  const rPx = Math.max(30, 108 * radius / maxR);
+  const rPx = Math.max(34, 108 * radius / maxR);
   const cx = 300;
   const cy = 150;
+
+  // Positive angular displacement is shown in the conventional counter-clockwise direction.
   const px = cx + rPx * Math.cos(angle);
-  const py = cy + rPx * Math.sin(angle);
+  const py = cy - rPx * Math.sin(angle);
   const tangentX = -Math.sin(angle);
-  const tangentY = Math.cos(angle);
+  const tangentY = -Math.cos(angle);
   const radialX = -Math.cos(angle);
-  const radialY = -Math.sin(angle);
-  const vLen = 72 * speed / Math.max(maxSpeed, 0.001);
+  const radialY = Math.sin(angle);
+  const outwardX = Math.cos(angle);
+  const outwardY = -Math.sin(angle);
+
+  const vLen = Math.max(18, 72 * speed / Math.max(maxSpeed, 0.001));
   const radialMagnitude = forceMode ? force : acceleration;
   const radialMax = forceMode ? maxForce : Math.max(maxAcceleration, 0.001);
-  const radialLen = 66 * radialMagnitude / radialMax;
-  const circumferencePx = 2 * Math.PI * rPx;
-  const progress = Math.min(1, Math.max(0, angle / (2 * Math.PI)));
+  const radialLen = Math.max(18, 66 * radialMagnitude / radialMax);
 
   const numeric: NumericState = {
     radius,
@@ -344,6 +382,7 @@ function CircularMotion({ widget, values, angle, forceMode = false }: { widget: 
     mass,
     centripetal_force: force,
   };
+
   const liveIds = new Set(widget.liveMeasurements || []);
   const measurements = quantitiesOf(widget).filter((quantity) => liveIds.has(quantity.id));
 
@@ -358,34 +397,38 @@ function CircularMotion({ widget, values, angle, forceMode = false }: { widget: 
   const speedD = quantityDisplay(speedQ, "υ", "γραμμική ταχύτητα");
   const radialD = quantityDisplay(radialQ, forceMode ? "Fκ" : "ακ", forceMode ? "κεντρομόλος δύναμη" : "κεντρομόλος επιτάχυνση");
 
+  const radiusLabelX = (cx + px) / 2 - tangentX * 18;
+  const radiusLabelY = (cy + py) / 2 - tangentY * 18;
+  const velocityEndX = px + tangentX * vLen;
+  const velocityEndY = py + tangentY * vLen;
+  const velocityLabelX = velocityEndX + outwardX * 16 + 4;
+  const velocityLabelY = velocityEndY + outwardY * 16 + 4;
+  const radialEndX = px + radialX * radialLen;
+  const radialEndY = py + radialY * radialLen;
+  const radialLabelX = px + radialX * radialLen * 0.55 + tangentX * 20;
+  const radialLabelY = py + radialY * radialLen * 0.55 + tangentY * 20;
+  const arcPath = circularArcPath(cx, cy, rPx, angle);
+
   return (
     <div className="min-w-0">
       <svg viewBox="0 0 620 320" className="w-full" role="img" aria-label="Διαδραστικό σχεδιάγραμμα ομαλής κυκλικής κίνησης">
         <ArrowDefs id={arrow} />
         <circle cx={cx} cy={cy} r={rPx} fill="none" stroke="currentColor" className="text-stone-300" strokeWidth="2" />
-        <circle
-          cx={cx}
-          cy={cy}
-          r={rPx}
-          fill="none"
-          stroke="currentColor"
-          className="text-cyan-600"
-          strokeWidth="4"
-          strokeLinecap="round"
-          strokeDasharray={`${progress * circumferencePx} ${circumferencePx}`}
-        />
+        {arcPath ? <path d={arcPath} fill="none" stroke="currentColor" className="text-cyan-600" strokeWidth="4" strokeLinecap="round" /> : null}
+
         <line x1={cx} y1={cy} x2={px} y2={py} stroke="currentColor" className="text-sky-700" strokeWidth="2" />
-        <text x={(cx + px) / 2 + 8} y={(cy + py) / 2 - 6} fontSize="12" className="fill-sky-700">{radiusD.symbol}={number(radius)} {radiusD.unit}</text>
+        <text x={radiusLabelX} y={radiusLabelY} fontSize="12" textAnchor="middle" className="fill-sky-700">{radiusD.symbol}={number(radius)} {radiusD.unit}</text>
         <circle cx={cx} cy={cy} r="5" className="fill-stone-500" />
         <circle cx={px} cy={py} r="9" className="fill-stone-950" />
 
         <g className="text-emerald-700">
-          <line x1={px} y1={py} x2={px + tangentX * vLen} y2={py + tangentY * vLen} stroke="currentColor" strokeWidth="3" markerEnd={`url(#${arrow})`} />
-          <text x={px + tangentX * (vLen + 16)} y={py + tangentY * (vLen + 16)} fontSize="13" fill="currentColor">{speedD.symbol}</text>
+          <line x1={px} y1={py} x2={velocityEndX} y2={velocityEndY} stroke="currentColor" strokeWidth="3" markerEnd={`url(#${arrow})`} />
+          <text x={velocityLabelX} y={velocityLabelY} fontSize="13" textAnchor="middle" fill="currentColor">{speedD.symbol}</text>
         </g>
+
         <g className={forceMode ? "text-rose-700" : "text-amber-700"}>
-          <line x1={px} y1={py} x2={px + radialX * radialLen} y2={py + radialY * radialLen} stroke="currentColor" strokeWidth="3" markerEnd={`url(#${arrow})`} />
-          <text x={px + radialX * (radialLen + 18)} y={py + radialY * (radialLen + 18)} fontSize="13" fill="currentColor">{radialD.symbol}</text>
+          <line x1={px} y1={py} x2={radialEndX} y2={radialEndY} stroke="currentColor" strokeWidth="3" markerEnd={`url(#${arrow})`} />
+          <text x={radialLabelX} y={radialLabelY} fontSize="13" textAnchor="middle" fill="currentColor">{radialD.symbol}</text>
         </g>
 
         {angleQ ? <text x="30" y="28" fontSize="12" className="fill-stone-600">{angleD.symbol}={number(angle)} {angleD.unit}</text> : null}
@@ -403,7 +446,7 @@ function CircularMotion({ widget, values, angle, forceMode = false }: { widget: 
   );
 }
 
-function UnsupportedDiagram({ widget }: { widget: Widget }) {
+function UnsupportedDiagram() {
   return (
     <div className="flex min-h-64 items-center justify-center border-y border-stone-200 px-6 py-10 text-center">
       <div className="max-w-lg">
@@ -427,7 +470,7 @@ function ControlPanel({ widget, values, onChange }: {
         const quantity = quantities.find((item) => item.id === control.quantityId);
         const label = quantity?.name || control.label;
         const symbol = quantity?.symbol || control.symbol;
-        const unit = quantity?.unit || control.unit;
+        const unit = quantity ? displayUnit(quantity) : control.unit;
 
         if (control.type === "toggle") {
           const checked = value > (control.min + control.max) / 2;
@@ -478,8 +521,8 @@ function ImpactPanel({ widget, quantityId }: { widget: Widget; quantityId: strin
 
   const names = (ids: string[]) => ids.map((id) => {
     const quantity = quantities.find((item) => item.id === id);
-    return quantity ? `${quantity.symbol ? `${quantity.symbol} — ` : ""}${quantity.name}` : id;
-  });
+    return quantity ? `${quantity.symbol ? `${quantity.symbol} — ` : ""}${quantity.name}` : "";
+  }).filter(Boolean);
 
   return (
     <div className="border-t border-stone-200 pt-5">
@@ -487,7 +530,7 @@ function ImpactPanel({ widget, quantityId }: { widget: Widget; quantityId: strin
       <p className="mt-2 text-sm font-semibold text-stone-900">Άλλαξες: {changed.symbol ? `${changed.symbol} — ` : ""}{changed.name}</p>
       {impact.changes.length ? <p className="mt-2 text-xs leading-5 text-stone-600"><strong className="text-stone-800">Επηρεάστηκαν:</strong> {names(impact.changes).join(" · ")}</p> : null}
       {impact.unchanged.length ? <p className="mt-1 text-xs leading-5 text-stone-600"><strong className="text-stone-800">Παρέμειναν ίδια:</strong> {names(impact.unchanged).join(" · ")}</p> : null}
-      {impact.explanation ? <p className="mt-2 text-xs leading-5 text-stone-500">{impact.explanation}</p> : null}
+      {impact.explanation ? <p className="mt-2 text-xs leading-5 text-stone-500">{studentText(widget, impact.explanation)}</p> : null}
     </div>
   );
 }
@@ -530,7 +573,7 @@ export function SmartLabWidget({ widget }: { widget: Widget }) {
     if (widget.physicsPreset === "horizontal_projectile") return <HorizontalProjectile widget={widget} values={values} time={stateValue} />;
     if (widget.physicsPreset === "uniform_circular_motion") return <CircularMotion widget={widget} values={values} angle={stateValue} />;
     if (widget.physicsPreset === "centripetal_force") return <CircularMotion widget={widget} values={values} angle={stateValue} forceMode />;
-    return <UnsupportedDiagram widget={widget} />;
+    return <UnsupportedDiagram />;
   }, [stateValue, values, widget]);
 
   function reset() {
@@ -540,6 +583,8 @@ export function SmartLabWidget({ widget }: { widget: Widget }) {
     setLastChangedQuantityId(null);
   }
 
+  const stateUnit = stateQuantity ? displayUnit(stateQuantity) : "";
+
   return (
     <Card className="overflow-hidden rounded-3xl border-stone-200 bg-white shadow-sm">
       <CardHeader className="space-y-2 border-b border-stone-100 px-4 py-5 sm:px-6">
@@ -548,8 +593,8 @@ export function SmartLabWidget({ widget }: { widget: Widget }) {
           <span className="text-xs text-stone-500">Άλλαξε μία παράμετρο και δες τη Φυσική να αλλάζει.</span>
         </div>
         <div>
-          <CardTitle className="text-xl font-semibold tracking-tight text-stone-950 sm:text-2xl">{widget.title}</CardTitle>
-          {widget.scene?.description ? <p className="mt-1 max-w-3xl text-sm leading-6 text-stone-600">{widget.scene.description}</p> : null}
+          <CardTitle className="text-xl font-semibold tracking-tight text-stone-950 sm:text-2xl">{studentText(widget, widget.title)}</CardTitle>
+          {widget.scene?.description ? <p className="mt-1 max-w-3xl text-sm leading-6 text-stone-600">{studentText(widget, widget.scene.description)}</p> : null}
         </div>
       </CardHeader>
 
@@ -565,7 +610,7 @@ export function SmartLabWidget({ widget }: { widget: Widget }) {
                     <p className="text-sm font-semibold text-stone-900">{stateQuantity.name}</p>
                     <p className="text-xs text-stone-500">{stateQuantity.symbol}</p>
                   </div>
-                  <Badge variant="outline" className="bg-white font-mono text-stone-700">{number(stateValue)} {stateQuantity.unit}</Badge>
+                  <Badge variant="outline" className="bg-white font-mono text-stone-700">{number(stateValue)} {stateUnit}</Badge>
                 </div>
                 <input
                   type="range"
@@ -580,7 +625,7 @@ export function SmartLabWidget({ widget }: { widget: Widget }) {
                   }}
                   className="h-2 w-full cursor-pointer appearance-none rounded-full bg-stone-200 accent-[#334f39]"
                 />
-                <div className="mt-1.5 flex justify-between text-[11px] text-stone-400"><span>0 {stateQuantity.unit}</span><span>{number(stateMax)} {stateQuantity.unit}</span></div>
+                <div className="mt-1.5 flex justify-between text-[11px] text-stone-400"><span>0 {stateUnit}</span><span>{number(stateMax)} {stateUnit}</span></div>
               </div>
             ) : null}
 
