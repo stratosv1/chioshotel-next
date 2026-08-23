@@ -24,7 +24,8 @@ function checkpointMark(state: Checkpoint["state"]) {
 function buildCheckpoints(pipeline: PhysicsPipelineNavigation): Checkpoint[] {
   const savvalasReady = pipeline.savvalas.status === "ready";
   const officialReady = pipeline.official.status === "ready";
-  const intelligenceReady = pipeline.intelligence.status === "current";
+  const intelligenceCurrent = pipeline.intelligence.status === "current";
+  const intelligenceReady = pipeline.intelligence.upToDate;
   const lessonReady = pipeline.lesson.upToDate;
 
   return [
@@ -64,14 +65,18 @@ function buildCheckpoints(pipeline: PhysicsPipelineNavigation): Checkpoint[] {
       label: "SMART",
       state: intelligenceReady
         ? "ready"
-        : officialReady
-          ? "active"
-          : "waiting",
+        : intelligenceCurrent
+          ? "stale"
+          : officialReady
+            ? "active"
+            : "waiting",
       detail: intelligenceReady
         ? `Current v${pipeline.intelligence.versionNumber ?? ""}`.trim()
-        : pipeline.intelligence.status === "draft"
-          ? "Χρειάζεται σύνθεση"
-          : "Αναμένει τις πηγές",
+        : intelligenceCurrent
+          ? "Χρειάζεται SMART v2"
+          : pipeline.intelligence.status === "draft"
+            ? "Χρειάζεται σύνθεση"
+            : "Αναμένει τις πηγές",
     },
     {
       label: "Μάθημα",
@@ -86,11 +91,13 @@ function buildCheckpoints(pipeline: PhysicsPipelineNavigation): Checkpoint[] {
         ? `Revision ${pipeline.lesson.revisionNumber ?? ""} · current`.trim()
         : intelligenceReady && pipeline.lesson.status === "current"
           ? "Χρειάζεται νέα revision"
-          : pipeline.lesson.status === "processing"
-            ? "Δημιουργείται"
-            : pipeline.lesson.status === "error"
-              ? "Χρειάζεται επανάληψη"
-              : "Δεν έχει δημιουργηθεί",
+          : intelligenceCurrent && !intelligenceReady
+            ? "Περιμένει νέο SMART"
+            : pipeline.lesson.status === "processing"
+              ? "Δημιουργείται"
+              : pipeline.lesson.status === "error"
+                ? "Χρειάζεται επανάληψη"
+                : "Δεν έχει δημιουργηθεί",
     },
   ];
 }
