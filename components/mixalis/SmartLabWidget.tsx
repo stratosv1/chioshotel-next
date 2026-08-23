@@ -75,6 +75,16 @@ function studentText(widget: Widget, text: string | null | undefined) {
   return output;
 }
 
+function svgTextHalo() {
+  return {
+    paintOrder: "stroke" as const,
+    stroke: "white",
+    strokeWidth: 5,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+  };
+}
+
 function Metric({ quantity, value }: { quantity: SmartLabQuantity; value: number }) {
   const unit = displayUnit(quantity);
   return (
@@ -145,7 +155,7 @@ function HorizontalProjectile({ widget, values, time }: { widget: Widget; values
   const launchY = groundY - h * yScale;
   const px = launchX + x * xScale;
   const py = launchY + y * yScale;
-  const vectorScale = 64 / maxSpeed;
+  const vectorScale = 72 / maxSpeed;
 
   const trajectory = Array.from({ length: 64 }, (_, index) => {
     const q = index / 63;
@@ -190,14 +200,21 @@ function HorizontalProjectile({ widget, values, time }: { widget: Widget; values
   const liveIds = new Set(widget.liveMeasurements || []);
   const measurementQuantities = quantitiesOf(widget).filter((quantity) => liveIds.has(quantity.id));
 
-  const angleR = 24;
+  const vxEndX = px + vx * vectorScale;
+  const vyEndY = py + vy * vectorScale;
+  const speedEndX = px + vx * vectorScale;
+  const speedEndY = py + vy * vectorScale;
+
+  const angleR = 26;
   const angleRad = theta * Math.PI / 180;
   const angleEndX = px + Math.cos(angleRad) * angleR;
   const angleEndY = py + Math.sin(angleRad) * angleR;
+  const thetaLabelX = px + 34;
+  const thetaLabelY = Math.min(groundY - 8, py + 25);
 
-  const gravityX = Math.min(560, Math.max(116, px + 54));
-  const gravityStartY = Math.max(34, Math.min(groundY - 58, py - 52));
-  const gravityEndY = Math.min(groundY - 8, gravityStartY + 42);
+  const gravityX = Math.min(560, Math.max(145, px + 88));
+  const gravityStartY = Math.max(32, Math.min(groundY - 62, py - 54));
+  const gravityEndY = Math.min(groundY - 10, gravityStartY + 44);
 
   return (
     <div className="min-w-0">
@@ -210,7 +227,7 @@ function HorizontalProjectile({ widget, values, time }: { widget: Widget; values
           <line x1="40" y1={launchY} x2="40" y2={groundY} stroke="currentColor" strokeWidth="2" />
           <line x1="34" y1={launchY} x2="46" y2={launchY} stroke="currentColor" strokeWidth="2" />
           <line x1="34" y1={groundY} x2="46" y2={groundY} stroke="currentColor" strokeWidth="2" />
-          <text x="10" y={(launchY + groundY) / 2} fontSize="12" fill="currentColor">{hD.symbol}={number(h)} {hD.unit}</text>
+          <text x="10" y={(launchY + groundY) / 2} fontSize="12" fill="currentColor" style={svgTextHalo()}>{hD.symbol}={number(h)} {hD.unit}</text>
         </g>
 
         <polyline points={trajectory} fill="none" stroke="currentColor" className="text-stone-400" strokeWidth="2.5" />
@@ -219,54 +236,59 @@ function HorizontalProjectile({ widget, values, time }: { widget: Widget; values
           <line x1={launchX} y1="274" x2={px} y2="274" stroke="currentColor" strokeWidth="2" />
           <line x1={launchX} y1="269" x2={launchX} y2="279" stroke="currentColor" strokeWidth="2" />
           <line x1={px} y1="269" x2={px} y2="279" stroke="currentColor" strokeWidth="2" />
-          <text x={(launchX + px) / 2 - 16} y="294" fontSize="12" fill="currentColor">{xD.symbol}={number(x)} {xD.unit}</text>
+          <text x={(launchX + px) / 2} y="296" textAnchor="middle" fontSize="12" fill="currentColor" style={svgTextHalo()}>{xD.symbol}={number(x)} {xD.unit}</text>
         </g>
 
         <g className="text-blue-700">
-          <line x1={Math.max(52, px - 21)} y1={launchY} x2={Math.max(52, px - 21)} y2={py} stroke="currentColor" strokeWidth="2" />
-          <text x={Math.max(56, px - 16)} y={(launchY + py) / 2} fontSize="12" fill="currentColor">{yD.symbol}={number(y)} {yD.unit}</text>
+          <line x1={Math.max(52, px - 24)} y1={launchY} x2={Math.max(52, px - 24)} y2={py} stroke="currentColor" strokeWidth="2" />
+          <text x={Math.max(57, px - 18)} y={(launchY + py) / 2} fontSize="12" fill="currentColor" style={svgTextHalo()}>{yD.symbol}={number(y)} {yD.unit}</text>
         </g>
 
-        {rangeQ ? (
-          <text x="450" y="300" fontSize="11" className="fill-stone-500">{rangeQ.symbol}={number(range)} {rangeQ.unit}</text>
-        ) : null}
+        {rangeQ ? <text x="450" y="300" fontSize="11" className="fill-stone-500" style={svgTextHalo()}>{rangeQ.symbol}={number(range)} {rangeQ.unit}</text> : null}
 
         <circle cx={px} cy={py} r="8" className="fill-stone-950" />
 
         <g className="text-emerald-700">
-          <line x1={px} y1={py} x2={px + vx * vectorScale} y2={py} stroke="currentColor" strokeWidth="3" markerEnd={`url(#${arrow})`} />
-          <text x={px + Math.max(16, vx * vectorScale * 0.55)} y={py - 11} fontSize="12" fill="currentColor">{vxD.symbol}</text>
+          <line x1={px} y1={py} x2={vxEndX} y2={py} stroke="currentColor" strokeWidth="3" markerEnd={`url(#${arrow})`} />
+          <text x={px + Math.max(22, (vxEndX - px) * 0.62)} y={py - 14} textAnchor="middle" fontSize="12" fill="currentColor" style={svgTextHalo()}>{vxD.symbol}</text>
         </g>
 
         {vy > 0.001 ? (
           <g className="text-amber-700">
-            <line x1={px} y1={py} x2={px} y2={py + vy * vectorScale} stroke="currentColor" strokeWidth="3" markerEnd={`url(#${arrow})`} />
-            <text x={px - 29} y={py + Math.max(24, vy * vectorScale * 0.62)} fontSize="12" fill="currentColor">{vyD.symbol}</text>
+            <line x1={px} y1={py} x2={px} y2={vyEndY} stroke="currentColor" strokeWidth="3" markerEnd={`url(#${arrow})`} />
+            <text x={px - 24} y={py + Math.max(25, (vyEndY - py) * 0.58)} textAnchor="middle" fontSize="12" fill="currentColor" style={svgTextHalo()}>{vyD.symbol}</text>
           </g>
         ) : null}
 
         {speed > 0.001 ? (
           <g className="text-violet-700">
-            <line x1={px} y1={py} x2={px + vx * vectorScale} y2={py + vy * vectorScale} stroke="currentColor" strokeWidth="2.5" markerEnd={`url(#${arrow})`} />
-            <text x={px + vx * vectorScale + 10} y={Math.min(groundY - 5, py + vy * vectorScale - 4)} fontSize="12" fill="currentColor">{speedD.symbol}</text>
+            <line x1={px} y1={py} x2={speedEndX} y2={speedEndY} stroke="currentColor" strokeWidth="2.5" markerEnd={`url(#${arrow})`} />
+            <text
+              x={speedEndX + 15}
+              y={Math.min(groundY - 7, speedEndY + 3)}
+              textAnchor="middle"
+              fontSize="12"
+              fill="currentColor"
+              style={svgTextHalo()}
+            >{speedD.symbol}</text>
           </g>
         ) : null}
 
         {thetaQ && speed > 0.001 ? (
           <g className="text-fuchsia-700">
             <path d={`M ${px + angleR} ${py} A ${angleR} ${angleR} 0 0 1 ${angleEndX} ${angleEndY}`} fill="none" stroke="currentColor" strokeWidth="2" />
-            <text x={px + 31} y={Math.min(groundY - 8, py + 27)} fontSize="12" fill="currentColor">{thetaD.symbol}={number(theta, 1)}°</text>
+            <text x={thetaLabelX} y={thetaLabelY} fontSize="12" fill="currentColor" style={svgTextHalo()}>{thetaD.symbol}</text>
           </g>
         ) : null}
 
         {gravityQ ? (
           <g className="text-rose-700">
             <line x1={gravityX} y1={gravityStartY} x2={gravityX} y2={gravityEndY} stroke="currentColor" strokeWidth="3" markerEnd={`url(#${arrow})`} />
-            <text x={gravityX + 10} y={(gravityStartY + gravityEndY) / 2 + 4} fontSize="12" fill="currentColor">{gravityD.symbol}</text>
+            <text x={gravityX + 11} y={(gravityStartY + gravityEndY) / 2 + 4} fontSize="12" fill="currentColor" style={svgTextHalo()}>{gravityD.symbol}</text>
           </g>
         ) : null}
 
-        {timeQ ? <text x="488" y="24" fontSize="12" className="fill-stone-600">{timeQ.symbol}={number(t)} {timeQ.unit}</text> : null}
+        {timeQ ? <text x="488" y="24" fontSize="12" className="fill-stone-600" style={svgTextHalo()}>{timeQ.symbol}={number(t)} {timeQ.unit}</text> : null}
       </svg>
 
       <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-stone-200 pt-4 sm:grid-cols-3 xl:grid-cols-4">
@@ -350,9 +372,10 @@ function CircularMotion({ widget, values, angle, forceMode = false }: { widget: 
 
   const maxMass = Math.max(roleMax(widget, "mass", mass), mass);
   const maxForce = Math.max(0.001, maxMass * maxAcceleration);
-  const rPx = Math.max(34, 108 * radius / maxR);
-  const cx = 300;
-  const cy = 150;
+  const radiusRatio = maxR > minR ? Math.min(1, Math.max(0, (radius - minR) / (maxR - minR))) : 0.5;
+  const rPx = 86 + 54 * radiusRatio;
+  const cx = 310;
+  const cy = 156;
 
   // Positive angular displacement is shown in the conventional counter-clockwise direction.
   const px = cx + rPx * Math.cos(angle);
@@ -364,10 +387,12 @@ function CircularMotion({ widget, values, angle, forceMode = false }: { widget: 
   const outwardX = Math.cos(angle);
   const outwardY = -Math.sin(angle);
 
-  const vLen = Math.max(18, 72 * speed / Math.max(maxSpeed, 0.001));
+  const speedRatio = Math.min(1, speed / Math.max(maxSpeed, 0.001));
   const radialMagnitude = forceMode ? force : acceleration;
   const radialMax = forceMode ? maxForce : Math.max(maxAcceleration, 0.001);
-  const radialLen = Math.max(18, 66 * radialMagnitude / radialMax);
+  const radialRatio = Math.min(1, radialMagnitude / radialMax);
+  const vLen = 44 + 42 * speedRatio;
+  const radialLen = 40 + 40 * radialRatio;
 
   const numeric: NumericState = {
     radius,
@@ -397,46 +422,58 @@ function CircularMotion({ widget, values, angle, forceMode = false }: { widget: 
   const speedD = quantityDisplay(speedQ, "υ", "γραμμική ταχύτητα");
   const radialD = quantityDisplay(radialQ, forceMode ? "Fκ" : "ακ", forceMode ? "κεντρομόλος δύναμη" : "κεντρομόλος επιτάχυνση");
 
-  const radiusLabelX = (cx + px) / 2 - tangentX * 18;
-  const radiusLabelY = (cy + py) / 2 - tangentY * 18;
+  const radiusLabelX = (cx + px) / 2 - tangentX * 24;
+  const radiusLabelY = (cy + py) / 2 - tangentY * 24;
   const velocityEndX = px + tangentX * vLen;
   const velocityEndY = py + tangentY * vLen;
-  const velocityLabelX = velocityEndX + outwardX * 16 + 4;
-  const velocityLabelY = velocityEndY + outwardY * 16 + 4;
+  const velocityLabelX = velocityEndX + outwardX * 20;
+  const velocityLabelY = velocityEndY + outwardY * 20;
   const radialEndX = px + radialX * radialLen;
   const radialEndY = py + radialY * radialLen;
-  const radialLabelX = px + radialX * radialLen * 0.55 + tangentX * 20;
-  const radialLabelY = py + radialY * radialLen * 0.55 + tangentY * 20;
+  const radialLabelX = px + radialX * radialLen * 0.55 - tangentX * 25;
+  const radialLabelY = py + radialY * radialLen * 0.55 - tangentY * 25;
   const arcPath = circularArcPath(cx, cy, rPx, angle);
+
+  const smallAngleR = 34;
+  const smallAngleX = cx + smallAngleR * Math.cos(Math.min(angle, Math.PI * 1.8));
+  const smallAngleY = cy - smallAngleR * Math.sin(Math.min(angle, Math.PI * 1.8));
+  const smallAngleLarge = Math.min(angle, Math.PI * 1.8) > Math.PI ? 1 : 0;
+  const smallAnglePath = angle > 0.03
+    ? `M ${cx + smallAngleR} ${cy} A ${smallAngleR} ${smallAngleR} 0 ${smallAngleLarge} 0 ${smallAngleX} ${smallAngleY}`
+    : "";
 
   return (
     <div className="min-w-0">
-      <svg viewBox="0 0 620 320" className="w-full" role="img" aria-label="Διαδραστικό σχεδιάγραμμα ομαλής κυκλικής κίνησης">
+      <svg viewBox="0 0 620 338" className="w-full" role="img" aria-label="Διαδραστικό σχεδιάγραμμα ομαλής κυκλικής κίνησης">
         <ArrowDefs id={arrow} />
-        <circle cx={cx} cy={cy} r={rPx} fill="none" stroke="currentColor" className="text-stone-300" strokeWidth="2" />
-        {arcPath ? <path d={arcPath} fill="none" stroke="currentColor" className="text-cyan-600" strokeWidth="4" strokeLinecap="round" /> : null}
 
-        <line x1={cx} y1={cy} x2={px} y2={py} stroke="currentColor" className="text-sky-700" strokeWidth="2" />
-        <text x={radiusLabelX} y={radiusLabelY} fontSize="12" textAnchor="middle" className="fill-sky-700">{radiusD.symbol}={number(radius)} {radiusD.unit}</text>
+        <line x1={cx} y1={cy} x2={cx + rPx} y2={cy} stroke="currentColor" className="text-stone-200" strokeWidth="1.5" strokeDasharray="5 5" />
+        <circle cx={cx} cy={cy} r={rPx} fill="none" stroke="currentColor" className="text-stone-300" strokeWidth="2" />
+        {arcPath ? <path d={arcPath} fill="none" stroke="currentColor" className="text-cyan-600" strokeWidth="5" strokeLinecap="round" /> : null}
+        {smallAnglePath ? <path d={smallAnglePath} fill="none" stroke="currentColor" className="text-fuchsia-500" strokeWidth="2" /> : null}
+
+        <line x1={cx} y1={cy} x2={px} y2={py} stroke="currentColor" className="text-sky-700" strokeWidth="2.5" />
+        <text x={radiusLabelX} y={radiusLabelY} fontSize="13" textAnchor="middle" className="fill-sky-700" style={svgTextHalo()}>{radiusD.symbol}={number(radius)} {radiusD.unit}</text>
         <circle cx={cx} cy={cy} r="5" className="fill-stone-500" />
+        <text x={cx - 14} y={cy + 18} fontSize="11" className="fill-stone-500" style={svgTextHalo()}>O</text>
         <circle cx={px} cy={py} r="9" className="fill-stone-950" />
 
         <g className="text-emerald-700">
           <line x1={px} y1={py} x2={velocityEndX} y2={velocityEndY} stroke="currentColor" strokeWidth="3" markerEnd={`url(#${arrow})`} />
-          <text x={velocityLabelX} y={velocityLabelY} fontSize="13" textAnchor="middle" fill="currentColor">{speedD.symbol}</text>
+          <text x={velocityLabelX} y={velocityLabelY} fontSize="14" textAnchor="middle" fill="currentColor" style={svgTextHalo()}>{speedD.symbol}</text>
         </g>
 
         <g className={forceMode ? "text-rose-700" : "text-amber-700"}>
           <line x1={px} y1={py} x2={radialEndX} y2={radialEndY} stroke="currentColor" strokeWidth="3" markerEnd={`url(#${arrow})`} />
-          <text x={radialLabelX} y={radialLabelY} fontSize="13" textAnchor="middle" fill="currentColor">{radialD.symbol}</text>
+          <text x={radialLabelX} y={radialLabelY} fontSize="14" textAnchor="middle" fill="currentColor" style={svgTextHalo()}>{radialD.symbol}</text>
         </g>
 
-        {angleQ ? <text x="30" y="28" fontSize="12" className="fill-stone-600">{angleD.symbol}={number(angle)} {angleD.unit}</text> : null}
-        {arcQ ? <text x="30" y="48" fontSize="12" className="fill-cyan-700">{arcD.symbol}={number(arcLength)} {arcD.unit}</text> : null}
-        <text x="26" y="300" fontSize="12" className="fill-stone-500">Η {speedD.symbol} είναι εφαπτομενική · η {radialD.symbol} δείχνει προς το κέντρο.</text>
+        {angleQ ? <text x="28" y="30" fontSize="13" className="fill-stone-600" style={svgTextHalo()}>{angleD.symbol}={number(angle)} {angleD.unit}</text> : null}
+        {arcQ ? <text x="28" y="53" fontSize="13" className="fill-cyan-700" style={svgTextHalo()}>{arcD.symbol}={number(arcLength)} {arcD.unit}</text> : null}
+        <text x="28" y="318" fontSize="12" className="fill-stone-500">Η {speedD.symbol} είναι εφαπτομενική · η {radialD.symbol} δείχνει προς το κέντρο.</text>
       </svg>
 
-      <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-stone-200 pt-4 sm:grid-cols-3 xl:grid-cols-4">
+      <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-stone-200 pt-4 sm:grid-cols-3 xl:grid-cols-4">
         {measurements.map((quantity) => {
           const value = numeric[quantity.physicsRole];
           return typeof value === "number" ? <Metric key={quantity.id} quantity={quantity} value={value} /> : null;
@@ -519,18 +556,20 @@ function ImpactPanel({ widget, quantityId }: { widget: Widget; quantityId: strin
   const changed = quantities.find((item) => item.id === quantityId);
   if (!impact || !changed) return null;
 
-  const names = (ids: string[]) => ids.map((id) => {
+  const symbols = (ids: string[]) => ids.map((id) => {
     const quantity = quantities.find((item) => item.id === id);
-    return quantity ? `${quantity.symbol ? `${quantity.symbol} — ` : ""}${quantity.name}` : "";
+    return quantity?.symbol || quantity?.name || "";
   }).filter(Boolean);
 
   return (
-    <div className="border-t border-stone-200 pt-5">
-      <p className="text-xs font-semibold uppercase tracking-[0.13em] text-stone-500">Τι άλλαξε</p>
-      <p className="mt-2 text-sm font-semibold text-stone-900">Άλλαξες: {changed.symbol ? `${changed.symbol} — ` : ""}{changed.name}</p>
-      {impact.changes.length ? <p className="mt-2 text-xs leading-5 text-stone-600"><strong className="text-stone-800">Επηρεάστηκαν:</strong> {names(impact.changes).join(" · ")}</p> : null}
-      {impact.unchanged.length ? <p className="mt-1 text-xs leading-5 text-stone-600"><strong className="text-stone-800">Παρέμειναν ίδια:</strong> {names(impact.unchanged).join(" · ")}</p> : null}
-      {impact.explanation ? <p className="mt-2 text-xs leading-5 text-stone-500">{studentText(widget, impact.explanation)}</p> : null}
+    <div className="mt-6 border-t border-stone-200 pt-5">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-stone-500">Τι άλλαξε</p>
+      <div className="mt-3 space-y-1.5 text-xs leading-5">
+        <p className="text-stone-700"><strong className="font-semibold text-stone-900">Αλλάζεις:</strong> {changed.symbol || changed.name}</p>
+        {impact.changes.length ? <p className="text-stone-600"><strong className="font-semibold text-stone-800">Αλλάζουν:</strong> {symbols(impact.changes).join(", ")}</p> : null}
+        {impact.unchanged.length ? <p className="text-stone-600"><strong className="font-semibold text-stone-800">Μένουν ίδια:</strong> {symbols(impact.unchanged).join(", ")}</p> : null}
+      </div>
+      {impact.explanation ? <p className="mt-2 line-clamp-3 text-[11px] leading-4 text-stone-500">{studentText(widget, impact.explanation)}</p> : null}
     </div>
   );
 }
