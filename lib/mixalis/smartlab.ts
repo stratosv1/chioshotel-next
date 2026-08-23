@@ -26,7 +26,7 @@ import type {
 export { SMARTLAB_PROMPT_REFERENCE, SMARTLAB_PROMPT_VERSION } from "@/lib/mixalis/smartlab-prompt";
 export type { SmartLabContent, SmartLabRevisionView, SmartLabWidget } from "@/lib/mixalis/smartlab-types";
 
-const SMARTLAB_RUNTIME_SCHEMA_VERSION = "quantity-impact-audit-v1";
+const SMARTLAB_RUNTIME_SCHEMA_VERSION = "finalver1-one-lab-per-subchapter-v2";
 
 type SmartRow = {
   subchapterId: string;
@@ -202,6 +202,7 @@ const RESULT_SCHEMA = {
     summary: { type: "string" },
     subchapters: {
       type: "array",
+      minItems: 1,
       items: {
         type: "object",
         additionalProperties: false,
@@ -211,7 +212,7 @@ const RESULT_SCHEMA = {
           subchapterLabel: { type: "string" },
           subchapterTitle: { type: "string" },
           intelligenceVersionId: { type: "string" },
-          widgets: { type: "array", items: WIDGET_SCHEMA },
+          widgets: { type: "array", items: WIDGET_SCHEMA, minItems: 1, maxItems: 1 },
         },
       },
     },
@@ -579,6 +580,24 @@ function cleanContent(raw: any, smart: SmartRow[], entries: EntryCatalogItem[]):
     })
     .filter((section: SmartLabContent["subchapters"][number] | null): section is SmartLabContent["subchapters"][number] => Boolean(section));
 
+  const returnedIds = subchapters.map((section) => section.subchapterId);
+  const duplicateIds = returnedIds.filter((id, index) => returnedIds.indexOf(id) !== index);
+  if (duplicateIds.length) {
+    throw new Error(`SMARTLAB returned duplicate subchapter sections: ${Array.from(new Set(duplicateIds)).join(", ")}`);
+  }
+  const missing = smart.filter((item) => !returnedIds.includes(item.subchapterId));
+  if (missing.length) {
+    throw new Error(`SMARTLAB omitted required subchapter Labs: ${missing.map((item) => `${item.subchapterLabel} ${item.subchapterTitle}`).join(" · ")}`);
+  }
+  const invalidWidgetCounts = subchapters.filter((section) => section.widgets.length !== 1);
+  if (invalidWidgetCounts.length) {
+    throw new Error(`SMARTLAB must return exactly one usable widget per subchapter: ${invalidWidgetCounts.map((section) => `${section.subchapterLabel} ${section.subchapterTitle} (${section.widgets.length})`).join(" · ")}`);
+  }
+  const genericLabs = subchapters.filter((section) => section.widgets[0]?.physicsPreset === "generic_relation");
+  if (genericLabs.length) {
+    throw new Error(`SMARTLAB cannot use generic_relation as the main student Lab: ${genericLabs.map((section) => `${section.subchapterLabel} ${section.subchapterTitle}`).join(" · ")}`);
+  }
+
   const chapterSynthesisWidgets: SmartLabWidget[] = (Array.isArray(raw?.chapterSynthesisWidgets) ? raw.chapterSynthesisWidgets : [])
     .map((widget: any) => cleanWidget(widget, catalog, allowedSubchapters))
     .filter((widget: SmartLabWidget | null): widget is SmartLabWidget => Boolean(widget))
@@ -701,7 +720,7 @@ export async function runSmartLabRevision(revisionId: string) {
   if (snapshotHash(context.smart) !== view.inputSnapshotHash) throw new Error("SMART or SMARTLAB runtime changed after this LAB revision was created. Create a new SMARTLAB revision.");
 
   const entries = context.smart.flatMap((item) => catalogEntries(item.subchapterId, item.intelligence));
-  const runtimeContract = `\n\nRUNTIME CONTRACT — STRICT AND REQUIRED:\nThe JSON schema is executable pedagogy, not descriptive prose. Every quantity needs id, physicsRole, meaning, whyItMatters, role, dependencies, consequences and visualRepresentation.\nControls may target ONLY quantities whose role is controllable or model_assumption. Never create a control for a derived or time_state quantity.\nEvery control requires an impactModel entry and a parameterAudit entry. parameterAudit.testedValues MUST contain the exact control minimum, default and maximum plus at least one intermediate value. verifies must state at least three concrete checks of geometry/vectors/numbers/invariants. result must be passed only after reasoning through those states.\nFor horizontal_projectile include quantities with physicsRole: initial_speed, height, time, horizontal_position, vertical_displacement, horizontal_velocity, vertical_velocity, speed, range. Expose initial_speed and height as controls. Gravity may be fixed/model_assumption or controllable if SMART supports exploring it. Do NOT emit time as a control: the frontend supplies one authoritative synchronized time scrubber.\nFor uniform_circular_motion include radius, linear_speed, angular_speed, frequency, period, centripetal_acceleration. Expose radius plus EXACTLY ONE speed driver among angular_speed, linear_speed, frequency. The other speed quantities are derived.\nFor centripetal_force include the circular quantities plus mass and centripetal_force. Expose radius, mass and EXACTLY ONE speed driver.\nThe diagram.representedQuantityIds and liveMeasurements arrays contain quantity IDs, never symbols or prose. impactModel changes/unchanged and control invariants/affects also contain quantity IDs.\nChoose physicsPreset only from: horizontal_projectile, uniform_circular_motion, centripetal_force, generic_relation. Use generic_relation only when no safe preset represents the SMART dependency; never invent an executable formula.\nControls use semantic roles only from: initial_speed, height, gravity, radius, angular_speed, linear_speed, mass, frequency, generic.\nBefore returning each widget, perform the strict parameter-impact audit demanded by the prompt: low/default/intermediate/high values, correct geometry, vector direction and magnitude, trajectory, live numbers, equation consistency, invariants and boundary/zero behavior. If any state would teach false Physics, redesign the widget before returning it.\nSMART ENTRY CATALOG WITH VALID smartEntryIds:\n${JSON.stringify(entries)}`;
+  const runtimeContract = `\n\nRUNTIME CONTRACT — STRICT AND REQUIRED:\nReturn one section for EVERY current subchapter supplied to you, in the same chapter. Every returned section MUST contain EXACTLY ONE main widget. Never omit a whole subchapter because some advanced/core extension needs a renderer that is not available. Put only that unsupported extension in nonInteractiveCore and still create the main Lab for the supported central concept.\nFor Οριζόντια βολή use horizontal_projectile. For Ομαλή κυκλική κίνηση use uniform_circular_motion. For Κεντρομόλος δύναμη use centripetal_force when that is the central concept. generic_relation is NOT allowed as the main student-facing Lab.\nThe JSON schema is executable pedagogy, not descriptive prose. Every quantity needs id, physicsRole, meaning, whyItMatters, role, dependencies, consequences and visualRepresentation.\nControls may target ONLY quantities whose role is controllable or model_assumption. Never create a control for a derived or time_state quantity.\nEvery control requires an impactModel entry and a parameterAudit entry. parameterAudit.testedValues MUST contain the exact control minimum, default and maximum plus at least one intermediate value. verifies must state at least three concrete checks of geometry/vectors/numbers/invariants. result must be passed only after reasoning through those states.\nFor horizontal_projectile include quantities with physicsRole: initial_speed, height, time, horizontal_position, vertical_displacement, horizontal_velocity, vertical_velocity, speed, range. Expose initial_speed and height as controls. Gravity may be fixed/model_assumption or controllable if the supplied material supports exploring it. Do NOT emit time as a control: the frontend supplies one authoritative synchronized time scrubber.\nFor uniform_circular_motion include radius, linear_speed, angular_speed, frequency, period, centripetal_acceleration. Expose radius plus EXACTLY ONE speed driver among angular_speed, linear_speed, frequency. The other speed quantities are derived.\nFor centripetal_force include the circular quantities plus mass and centripetal_force. Expose radius, mass and EXACTLY ONE speed driver.\nThe diagram.representedQuantityIds and liveMeasurements arrays contain quantity IDs, never symbols or prose. impactModel changes/unchanged and control invariants/affects also contain quantity IDs.\nChoose physicsPreset only from: horizontal_projectile, uniform_circular_motion, centripetal_force, generic_relation. generic_relation may describe unsupported material internally but MUST NOT be the single main widget of a subchapter.\nControls use semantic roles only from: initial_speed, height, gravity, radius, angular_speed, linear_speed, mass, frequency, generic.\nBefore returning each widget, perform the strict parameter-impact audit demanded by the prompt: low/default/intermediate/high values, correct geometry, vector direction and magnitude, trajectory, live numbers, equation consistency, invariants and boundary/zero behavior. If any state would teach false Physics, redesign the widget before returning it.\nCURRENT SUBCHAPTERS THAT MUST EACH RECEIVE EXACTLY ONE MAIN WIDGET:\n${JSON.stringify(context.smart.map((item) => ({ subchapterId: item.subchapterId, label: item.subchapterLabel, title: item.subchapterTitle, intelligenceVersionId: item.intelligenceVersionId })))}\nSMART ENTRY CATALOG WITH VALID smartEntryIds:\n${JSON.stringify(entries)}`;
   const prompt = buildSmartLabPrompt({
     courseTitle: context.courseTitle,
     chapterId: context.chapterId,
@@ -721,7 +740,7 @@ export async function runSmartLabRevision(revisionId: string) {
     const raw = await callTeacherJsonStream({
       model: view.model,
       prompt,
-      schemaName: "physics_smartlab_chapter_v2",
+      schemaName: "physics_smartlab_chapter_v3",
       schema: RESULT_SCHEMA,
       reasoningEffort: "high",
     });
