@@ -73,6 +73,16 @@ function validIsoDate(value: unknown): value is string {
   return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
 }
 
+function snapshotDateRange(rows: CanonicalRow[]) {
+  let minDate = rows[0]?.date || "";
+  let maxDate = minDate;
+  for (const row of rows) {
+    if (!minDate || row.date < minDate) minDate = row.date;
+    if (!maxDate || row.date > maxDate) maxDate = row.date;
+  }
+  return { minDate, maxDate };
+}
+
 function parseCanonicalRow(value: unknown, index: number): CanonicalRow {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     throw new Error(`Source row ${index} is not an object`);
@@ -278,6 +288,31 @@ async function syncBookingCore(request: NextRequest) {
     `;
 
     if ((duplicateRows as any[]).length > 0) {
+      const { minDate, maxDate } = snapshotDateRange(snapshot.rows);
+      await sql`
+        insert into booking_core.sync_runs (
+          started_at,
+          completed_at,
+          status,
+          source,
+          rows_received,
+          rows_written,
+          source_generated_at,
+          min_date,
+          max_date
+        ) values (
+          ${new Date(startedAt).toISOString()}::timestamptz,
+          now(),
+          ${"ok"},
+          ${source},
+          ${snapshot.rows.length},
+          0,
+          ${snapshot.dataUpdatedAt}::timestamptz,
+          ${minDate}::date,
+          ${maxDate}::date
+        )
+      `;
+
       return NextResponse.json({
         ok: true,
         alreadyApplied: true,
@@ -285,6 +320,7 @@ async function syncBookingCore(request: NextRequest) {
         schemaVersion: SOURCE_SCHEMA_VERSION,
         rowsReceived: snapshot.rows.length,
         rowsWritten: 0,
+        range: { min: minDate, max: maxDate },
         sourceDataUpdatedAt: snapshot.dataUpdatedAt,
         sourceResponseGeneratedAt: snapshot.generatedAt,
         durationMs: Date.now() - startedAt,
