@@ -71,36 +71,62 @@ function HorizontalProjectile({ widget, values, progress }: { widget: Widget; va
   const maxH = Math.max(roleMax(widget, "height", h), h);
   const minG = Math.max(widget.controls.find((item) => item.role === "gravity")?.min ?? g, 0.1);
   const maxRange = Math.max(maxV * Math.sqrt((2 * maxH) / minG), range, 1);
-  const xScale = 400 / maxRange;
-  const yScale = 190 / maxH;
-  const px = 60 + x * xScale;
-  const py = 45 + y * yScale;
+  const groundY = 235;
+  const launchX = 72;
+  const heightRatio = Math.min(1, h / maxH);
+  const visualHeight = 90 + heightRatio * 95;
+  const launchY = groundY - visualHeight;
+  const xScale = 390 / maxRange;
+  const yScale = visualHeight / h;
+  const px = launchX + x * xScale;
+  const py = launchY + y * yScale;
   const points = Array.from({ length: 45 }, (_, index) => {
     const q = index / 44;
     const qt = q * tFall;
     const qx = v0 * qt;
     const qy = 0.5 * g * qt * qt;
-    return `${60 + qx * xScale},${45 + qy * yScale}`;
+    return `${launchX + qx * xScale},${launchY + qy * yScale}`;
   }).join(" ");
+  const labelT = 0.56 * tFall;
+  const trajectoryLabelX = launchX + v0 * labelT * xScale;
+  const trajectoryLabelY = launchY + 0.5 * g * labelT * labelT * yScale;
   const vectorScale = 2.2;
+  const currentY = Math.min(py, groundY);
+  const showVerticalVelocity = vy > 0.2;
 
   return (
     <div>
       <svg viewBox="0 0 520 285" className="w-full" role="img" aria-label="Προσομοίωση οριζόντιας βολής">
         <ArrowDefs />
-        <line x1="35" y1="235" x2="500" y2="235" stroke="currentColor" className="text-stone-300" strokeWidth="2" />
-        <rect x="35" y="38" width="28" height="197" rx="4" className="fill-stone-200" />
-        <polyline points={points} fill="none" stroke="currentColor" className="text-stone-500" strokeWidth="2.5" strokeDasharray="5 5" />
-        <circle cx={px} cy={Math.min(py, 235)} r="8" className="fill-stone-900" />
+        <line x1="20" y1={groundY} x2="500" y2={groundY} stroke="currentColor" className="text-stone-300" strokeWidth="2" />
+        <rect x="43" y={launchY - 8} width="28" height={groundY - launchY + 8} rx="4" className="fill-stone-200" />
+
+        <g className="text-sky-700">
+          <line x1="29" y1={launchY} x2="29" y2={groundY} stroke="currentColor" strokeWidth="2" />
+          <line x1="23" y1={launchY} x2="35" y2={launchY} stroke="currentColor" strokeWidth="2" />
+          <line x1="23" y1={groundY} x2="35" y2={groundY} stroke="currentColor" strokeWidth="2" />
+          <text x="36" y={(launchY + groundY) / 2 - 4} fontSize="12" fill="currentColor">h = {number(h, 0)} m</text>
+        </g>
+
+        <polyline points={points} fill="none" stroke="currentColor" className="text-stone-400" strokeWidth="2.5" />
+        <text x={trajectoryLabelX + 8} y={trajectoryLabelY - 8} fontSize="12" className="fill-stone-500">τροχιά</text>
+        <circle cx={px} cy={currentY} r="8" className="fill-stone-900" />
+
         <g className="text-emerald-700">
-          <line x1={px} y1={Math.min(py, 235)} x2={px + v0 * vectorScale} y2={Math.min(py, 235)} stroke="currentColor" strokeWidth="3" markerEnd="url(#lab-arrow)" />
-          <text x={px + 8} y={Math.min(py, 235) - 9} fontSize="12" fill="currentColor">υx</text>
+          <line x1={px} y1={currentY} x2={px + v0 * vectorScale} y2={currentY} stroke="currentColor" strokeWidth="3" markerEnd="url(#lab-arrow)" />
+          <text x={px + 8} y={currentY - 9} fontSize="12" fill="currentColor">υx</text>
         </g>
-        <g className="text-amber-700">
-          <line x1={px} y1={Math.min(py, 235)} x2={px} y2={Math.min(235, py + vy * vectorScale)} stroke="currentColor" strokeWidth="3" markerEnd="url(#lab-arrow)" />
-          <text x={px + 8} y={Math.min(228, py + 24)} fontSize="12" fill="currentColor">υy</text>
-        </g>
-        <text x="40" y="260" fontSize="12" className="fill-stone-500">τροχιά και συνιστώσες ταχύτητας</text>
+
+        {showVerticalVelocity ? (
+          <g className="text-amber-700">
+            <line x1={px} y1={currentY} x2={px} y2={Math.min(groundY, currentY + vy * vectorScale)} stroke="currentColor" strokeWidth="3" markerEnd="url(#lab-arrow)" />
+            <text x={px + 8} y={Math.min(228, currentY + 24)} fontSize="12" fill="currentColor">υy</text>
+          </g>
+        ) : (
+          <text x={px + 8} y={currentY + 21} fontSize="12" className="fill-amber-700">υy = 0</text>
+        )}
+
+        <text x="40" y="260" fontSize="12" className="fill-stone-500">h: κατακόρυφο ύψος · τροχιά: καμπύλη κίνησης</text>
       </svg>
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
         <Metric label="χρόνος πτώσης" value={number(tFall)} unit="s" />
