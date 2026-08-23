@@ -26,6 +26,7 @@ export default async function MixalisChapterLabPage({
 
   const requestedRevision = query.revision ? await getSmartLabRevisionView(query.revision) : null;
   const activeRevision = requestedRevision?.chapterId === id ? requestedRevision : state.current;
+  const inputsReady = state.lessonVersions.length > 0 && state.missingLessons.length === 0;
 
   return (
     <main className="min-h-screen bg-[#f3efe8] px-4 py-5 text-[#2c2825] sm:px-8 sm:py-8">
@@ -47,32 +48,41 @@ export default async function MixalisChapterLabPage({
                 {state.chapter.label ? `${state.chapter.label} · ` : ""}{state.chapter.title}
               </h1>
               <p className="mt-4 max-w-3xl text-sm leading-6 text-[#6c635c] sm:text-base">
-                Εδώ το SMARTLAB μετατρέπει τις έννοιες του SMART σε πραγματικά interactive πειράματα. Πρώτα προβλέπεις, μετά αλλάζεις τις φυσικές μεταβλητές και βλέπεις άμεσα τι αλλάζει στο φαινόμενο.
+                Το SMARTLAB παίρνει μόνο τα φυσικά μεγέθη του current μαθήματος και τα μετατρέπει σε ένα διαδραστικό σχεδιάγραμμα για κάθε φυσική έννοια.
               </p>
             </div>
             <div className="border-t border-black/10 bg-[#eef2e9] p-6 lg:border-l lg:border-t-0 sm:p-8">
-              <div className="flex items-center gap-2 text-sm font-semibold text-[#4d644f]"><BrainCircuit className="h-4 w-4" /> Current SMART inputs</div>
+              <div className="flex items-center gap-2 text-sm font-semibold text-[#4d644f]"><BrainCircuit className="h-4 w-4" /> Current lesson inputs</div>
               <div className="mt-4 space-y-2">
-                {state.smartVersions.map((smart) => (
-                  <div key={smart.subchapterId} className="rounded-xl bg-white/80 px-3 py-2 text-xs leading-5 text-[#556356]">
-                    <strong>{smart.subchapterLabel}</strong> · {smart.subchapterTitle}
-                    <span className="ml-2 text-[#7a887b]">SMART v{smart.versionNumber}</span>
+                {state.lessonVersions.map((lesson) => (
+                  <div key={lesson.subchapterId} className="rounded-xl bg-white/80 px-3 py-2 text-xs leading-5 text-[#556356]">
+                    <strong>{lesson.subchapterLabel}</strong> · {lesson.subchapterTitle}
+                    <span className="ml-2 text-[#7a887b]">Lesson r{lesson.revisionNumber} · {lesson.quantityCount} μεγέθη</span>
                   </div>
                 ))}
-                {state.smartVersions.length === 0 ? <p className="text-sm text-[#657365]">Δεν υπάρχει ακόμη current SMART σε αυτό το κεφάλαιο.</p> : null}
+                {state.lessonVersions.length === 0 ? <p className="text-sm text-[#657365]">Δεν υπάρχει ακόμη current μάθημα με φυσικά μεγέθη.</p> : null}
               </div>
             </div>
           </div>
         </header>
 
         <section className="mt-6">
-          {activeRevision ? (
+          {state.missingLessons.length > 0 ? (
+            <Card className="rounded-3xl border-[#dfbcb0] bg-[#fbf1ed]">
+              <CardHeader><CardTitle>Λείπει current μάθημα</CardTitle></CardHeader>
+              <CardContent>
+                <p className="text-sm leading-6 text-[#80584b]">
+                  Το SMARTLAB χρειάζεται μόνο τα φυσικά μεγέθη του current START lesson για κάθε υποκεφάλαιο. Λείπουν: {state.missingLessons.map((item) => `${item.subchapterLabel} ${item.subchapterTitle}`).join(", ")}.
+                </p>
+              </CardContent>
+            </Card>
+          ) : activeRevision ? (
             <>
               {!state.upToDate && activeRevision.status === "current" ? (
                 <Card className="mb-5 rounded-2xl border-[#d8c8ad] bg-[#fffaf1]">
                   <CardHeader className="pb-3"><CardTitle className="text-lg">Το LAB χρειάζεται ανανέωση</CardTitle></CardHeader>
                   <CardContent>
-                    <p className="text-sm leading-6 text-[#766753]">Έχει αλλάξει κάποιο current SMART ή η έκδοση του SMARTLAB. Δημιούργησε νέο Lab Revision χωρίς να χαθεί το υπάρχον.</p>
+                    <p className="text-sm leading-6 text-[#766753]">Έχουν αλλάξει τα φυσικά μεγέθη κάποιου current μαθήματος ή η έκδοση του SMARTLAB. Δημιούργησε νέο Lab Revision χωρίς να χαθεί το υπάρχον.</p>
                     <form action={`/mixalis/api/smartlab/chapters/${id}`} method="post">
                       <button className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-md bg-[#334f39] px-4 py-2 text-sm font-semibold text-white hover:bg-[#29412f]" type="submit">
                         <RefreshCw className="h-4 w-4" /> Νέο SMARTLAB
@@ -83,14 +93,12 @@ export default async function MixalisChapterLabPage({
               ) : null}
               <SmartLabRunner initialView={activeRevision} />
             </>
-          ) : state.smartVersions.length > 0 ? (
+          ) : inputsReady ? (
             <Card className="rounded-3xl border-stone-200">
-              <CardHeader>
-                <CardTitle>Δημιούργησε το LAB του κεφαλαίου</CardTitle>
-              </CardHeader>
+              <CardHeader><CardTitle>Δημιούργησε το LAB του κεφαλαίου</CardTitle></CardHeader>
               <CardContent>
                 <p className="max-w-2xl text-sm leading-6 text-stone-600">
-                  Το SMARTLAB θα χρησιμοποιήσει μόνο τα current SMART που φαίνονται επάνω και θα δημιουργήσει ξεχωριστό, versioned Lab. Δεν αλλάζει τα μαθήματα START.
+                  Κάθε υποκεφάλαιο στέλνεται ξεχωριστά στον καθηγητή AI. Η είσοδος περιέχει μόνο την έννοια και τα φυσικά μεγέθη του current μαθήματος.
                 </p>
                 <form action={`/mixalis/api/smartlab/chapters/${id}`} method="post">
                   <button className="mt-5 inline-flex min-h-12 items-center gap-2 rounded-md bg-[#334f39] px-5 py-3 text-sm font-bold text-white hover:bg-[#29412f]" type="submit">
@@ -102,8 +110,8 @@ export default async function MixalisChapterLabPage({
           ) : (
             <Card className="rounded-3xl border-stone-200">
               <CardContent className="p-6 sm:p-8">
-                <h2 className="text-xl font-semibold">Πρώτα χρειάζεται SMART</h2>
-                <p className="mt-2 text-sm leading-6 text-stone-600">Μόλις ένα υποκεφάλαιο αποκτήσει current SMART, θα μπορεί να συμμετέχει στο LAB του κεφαλαίου.</p>
+                <h2 className="text-xl font-semibold">Πρώτα χρειάζεται current μάθημα</h2>
+                <p className="mt-2 text-sm leading-6 text-stone-600">Μόλις το μάθημα έχει την ενότητα «Τι μετράμε και γιατί μας νοιάζει», μπορεί να δημιουργηθεί το SMARTLAB.</p>
               </CardContent>
             </Card>
           )}
