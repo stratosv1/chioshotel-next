@@ -12,20 +12,19 @@ const bodyText = "whitespace-pre-line text-[19px] leading-9 text-slate-700 sm:te
 
 function TextBlocks({ items, blockPrefix }: { items: LessonTextBlock[]; blockPrefix: string }) {
   return (
-    <div className="space-y-4">
+    <div className="divide-y divide-slate-200">
       {items.map((item, index) => (
-        <article
-          key={`${item.title}-${index}`}
-          className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-[0_8px_30px_rgba(15,23,42,0.05)] sm:p-6"
-        >
-          <h3 className="text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">{item.title}</h3>
-          <p
-            className={`mt-3 ${bodyText}`}
-            data-clarifiable="true"
-            data-clarification-key={`${blockPrefix}.${index}.body`}
-          >
-            {item.body}
-          </p>
+        <article key={`${item.title}-${index}`} className="py-6 first:pt-0 last:pb-0 sm:py-8">
+          <div className="border-l-4 border-slate-200 pl-4 sm:pl-6">
+            <h3 className="text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">{item.title}</h3>
+            <p
+              className={`mt-3 ${bodyText}`}
+              data-clarifiable="true"
+              data-clarification-key={`${blockPrefix}.${index}.body`}
+            >
+              {item.body}
+            </p>
+          </div>
         </article>
       ))}
     </div>
@@ -34,7 +33,7 @@ function TextBlocks({ items, blockPrefix }: { items: LessonTextBlock[]; blockPre
 
 function SingleBlock({ block, blockKey }: { block: LessonTextBlock; blockKey: string }) {
   return (
-    <article className="rounded-3xl border border-white/70 bg-white/90 p-5 shadow-[0_8px_30px_rgba(15,23,42,0.06)] backdrop-blur sm:p-6">
+    <article className="border-l-4 border-slate-200 pl-4 sm:pl-6">
       <h3 className="text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">{block.title}</h3>
       <p
         className={`mt-3 ${bodyText}`}
@@ -47,26 +46,40 @@ function SingleBlock({ block, blockKey }: { block: LessonTextBlock; blockKey: st
   );
 }
 
-function SectionLabel({ number, children, tone = "blue" }: { number?: string; children: React.ReactNode; tone?: "blue" | "violet" | "green" | "amber" | "rose" | "cyan" }) {
+function SectionLabel({
+  number,
+  children,
+  tone = "blue",
+}: {
+  number?: string;
+  children: React.ReactNode;
+  tone?: "blue" | "violet" | "green" | "amber" | "rose" | "cyan";
+}) {
   const tones = {
-    blue: "bg-blue-100 text-blue-800",
-    violet: "bg-violet-100 text-violet-800",
-    green: "bg-emerald-100 text-emerald-800",
-    amber: "bg-amber-100 text-amber-900",
-    rose: "bg-rose-100 text-rose-800",
-    cyan: "bg-cyan-100 text-cyan-800",
+    blue: "text-blue-700 border-blue-500",
+    violet: "text-violet-700 border-violet-500",
+    green: "text-emerald-700 border-emerald-500",
+    amber: "text-amber-800 border-amber-500",
+    rose: "text-rose-700 border-rose-500",
+    cyan: "text-cyan-700 border-cyan-500",
   };
 
   return (
-    <div className="flex items-center gap-3">
-      {number ? (
-        <span className={`inline-flex h-10 min-w-10 items-center justify-center rounded-2xl px-2 text-base font-black ${tones[tone]}`}>
-          {number}
-        </span>
-      ) : null}
-      <p className="text-base font-extrabold uppercase tracking-[0.10em] text-slate-600 sm:text-lg">{children}</p>
+    <div className={`flex items-center gap-3 border-l-4 pl-3 ${tones[tone]}`}>
+      {number ? <span className="text-sm font-black tracking-[0.12em] sm:text-base">{number}</span> : null}
+      <p className="text-sm font-extrabold uppercase tracking-[0.12em] sm:text-base">{children}</p>
     </div>
   );
+}
+
+function LessonSection({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return <section className={`border-t border-slate-200 py-10 sm:py-14 ${className}`}>{children}</section>;
 }
 
 function checkLabel(level: string) {
@@ -96,38 +109,37 @@ export default async function MixalisLessonRevisionPage({
   const lesson = ready ? (view.content as StartLessonContent) : null;
 
   return (
-    <main className="min-h-screen bg-[linear-gradient(180deg,#eef6ff_0%,#f8fafc_22%,#ffffff_55%,#f8fafc_100%)] px-4 py-5 text-slate-950 sm:px-8 sm:py-8">
-      <div className="mx-auto max-w-5xl">
+    <main className="min-h-screen bg-white text-slate-950">
+      <div className="mx-auto w-full max-w-6xl px-5 py-6 sm:px-10 sm:py-10 lg:px-14">
         <Link
           href={`/mixalis/subchapter-intelligence/${view.intelligenceVersionId}`}
-          className="mb-5 inline-flex min-h-11 items-center rounded-2xl bg-white px-4 text-lg font-bold text-slate-700 shadow-sm ring-1 ring-slate-200 transition hover:bg-slate-50"
+          className="mb-8 inline-flex min-h-11 items-center text-lg font-bold text-slate-600 transition hover:text-slate-950"
         >
           ← Πίσω στο Subchapter Intelligence
         </Link>
 
-        <header className="overflow-hidden rounded-[2rem] border border-blue-100 bg-white shadow-[0_18px_60px_rgba(37,99,235,0.10)]">
-          <div className="h-2 bg-gradient-to-r from-blue-500 via-violet-500 to-cyan-400" />
-          <div className="p-6 sm:p-9">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="rounded-full bg-blue-100 px-3 py-1.5 text-base font-extrabold text-blue-800">START</span>
-              <span className="rounded-full bg-violet-100 px-3 py-1.5 text-base font-bold text-violet-800">Revision {view.revisionNumber}</span>
-              <span className="rounded-full bg-emerald-100 px-3 py-1.5 text-base font-bold text-emerald-800">
-                {ready ? "Έτοιμο μάθημα" : view.status === "processing" ? "Δημιουργείται" : "Πρόχειρο"}
-              </span>
-            </div>
+        <header className="border-t-4 border-blue-500 py-8 sm:py-12">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm font-bold sm:text-base">
+            <span className="text-blue-700">START</span>
+            <span className="text-slate-400">/</span>
+            <span className="text-violet-700">Revision {view.revisionNumber}</span>
+            <span className="text-slate-400">/</span>
+            <span className="text-emerald-700">
+              {ready ? "Έτοιμο μάθημα" : view.status === "processing" ? "Δημιουργείται" : "Πρόχειρο"}
+            </span>
+          </div>
 
-            <h1 className="mt-5 text-4xl font-black tracking-[-0.035em] text-slate-950 sm:text-6xl">
-              {view.subchapterNumberLabel} · {view.subchapterTitle}
-            </h1>
-            <p className="mt-4 max-w-3xl text-xl font-medium leading-9 text-slate-600 sm:text-2xl sm:leading-10">
-              Μάθημα Φυσικής σχεδιασμένο ώστε πρώτα να καταλαβαίνεις την ιδέα και μετά να περνάς στους τύπους.
-            </p>
+          <h1 className="mt-5 max-w-5xl text-4xl font-black tracking-[-0.035em] text-slate-950 sm:text-6xl">
+            {view.subchapterNumberLabel} · {view.subchapterTitle}
+          </h1>
+          <p className="mt-4 max-w-3xl text-xl font-medium leading-9 text-slate-600 sm:text-2xl sm:leading-10">
+            Μάθημα Φυσικής σχεδιασμένο ώστε πρώτα να καταλαβαίνεις την ιδέα και μετά να περνάς στους τύπους.
+          </p>
 
-            <div className="mt-6 flex flex-wrap gap-2 text-base font-semibold text-slate-700">
-              <span className="rounded-full bg-slate-100 px-3 py-2">{view.courseTitle}</span>
-              <span className="rounded-full bg-slate-100 px-3 py-2">Intelligence v{view.intelligenceVersionNumber}</span>
-              <span className="rounded-full bg-slate-100 px-3 py-2">START {view.promptVersion}</span>
-            </div>
+          <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold text-slate-500 sm:text-base">
+            <span>{view.courseTitle}</span>
+            <span>Intelligence v{view.intelligenceVersionNumber}</span>
+            <span>START {view.promptVersion}</span>
           </div>
         </header>
 
@@ -140,59 +152,58 @@ export default async function MixalisLessonRevisionPage({
         />
 
         {lesson ? (
-          <div
-            className="mt-7 space-y-7 sm:space-y-9"
-            data-lesson-clarification-root={view.id}
-          >
+          <div className="mt-4" data-lesson-clarification-root={view.id}>
             <LessonClarificationEnhancer revisionId={view.id} />
 
-            <section className="rounded-[2rem] bg-gradient-to-br from-slate-950 to-blue-950 p-6 text-white shadow-xl sm:p-9">
-              <p className="text-base font-extrabold uppercase tracking-[0.14em] text-blue-200">Η κεντρική ιδέα</p>
-              <h2 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">{lesson.title}</h2>
-              <p
-                className="mt-4 max-w-3xl text-xl font-medium leading-9 text-blue-50 sm:text-2xl sm:leading-10"
-                data-clarifiable="true"
-                data-clarification-key="subtitle"
-              >
-                {lesson.subtitle}
-              </p>
+            <section className="border-y border-slate-900 bg-slate-950 py-10 text-white sm:py-14">
+              <div className="px-5 sm:px-8">
+                <p className="text-sm font-extrabold uppercase tracking-[0.14em] text-blue-300 sm:text-base">Η κεντρική ιδέα</p>
+                <h2 className="mt-3 max-w-5xl text-4xl font-black tracking-tight sm:text-5xl">{lesson.title}</h2>
+                <p
+                  className="mt-4 max-w-4xl text-xl font-medium leading-9 text-slate-200 sm:text-2xl sm:leading-10"
+                  data-clarifiable="true"
+                  data-clarification-key="subtitle"
+                >
+                  {lesson.subtitle}
+                </p>
+              </div>
             </section>
 
-            <section className="rounded-[2rem] border border-blue-200 bg-gradient-to-br from-blue-50 to-cyan-50 p-5 sm:p-8">
+            <LessonSection>
               <SectionLabel number="01" tone="blue">Πρώτα το φαινόμενο</SectionLabel>
-              <div className="mt-5">
+              <div className="mt-7 max-w-4xl">
                 <SingleBlock block={lesson.openingPhenomenon} blockKey="openingPhenomenon.body" />
               </div>
-            </section>
+            </LessonSection>
 
-            <section className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
+            <LessonSection>
               <SectionLabel number="02" tone="violet">Τι συμβαίνει πραγματικά</SectionLabel>
-              <h2 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl">Κατανόηση πριν από τους τύπους</h2>
-              <div className="mt-6">
+              <h2 className="mt-4 max-w-4xl text-3xl font-black tracking-tight sm:text-4xl">Κατανόηση πριν από τους τύπους</h2>
+              <div className="mt-7 max-w-4xl">
                 <TextBlocks items={lesson.intuitiveMeaning} blockPrefix="intuitiveMeaning" />
               </div>
-            </section>
+            </LessonSection>
 
-            <section className="rounded-[2rem] border border-emerald-200 bg-gradient-to-br from-emerald-50 to-teal-50 p-5 sm:p-8">
+            <LessonSection>
               <SectionLabel number="03" tone="green">Κρυμμένο παράδειγμα</SectionLabel>
-              <div className="mt-5 grid gap-4 lg:grid-cols-2">
+              <div className="mt-7 grid max-w-5xl gap-8 lg:grid-cols-2 lg:gap-12">
                 <SingleBlock block={lesson.hiddenRealWorldExample} blockKey="hiddenRealWorldExample.body" />
                 <SingleBlock block={lesson.physicsReveal} blockKey="physicsReveal.body" />
               </div>
-            </section>
+            </LessonSection>
 
-            <section className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
+            <LessonSection>
               <SectionLabel number="04" tone="cyan">Φυσικά μεγέθη</SectionLabel>
-              <h2 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl">Τι μετράμε και γιατί μας νοιάζει</h2>
-              <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              <h2 className="mt-4 max-w-4xl text-3xl font-black tracking-tight sm:text-4xl">Τι μετράμε και γιατί μας νοιάζει</h2>
+              <div className="mt-8 grid gap-x-12 gap-y-10 sm:grid-cols-2">
                 {lesson.quantities.map((quantity, index) => (
-                  <article key={`${quantity.symbol}-${index}`} className="rounded-3xl border border-cyan-100 bg-cyan-50/70 p-5 sm:p-6">
+                  <article key={`${quantity.symbol}-${index}`} className="border-t-2 border-cyan-300 pt-5">
                     <div className="flex items-start justify-between gap-4">
                       <div>
                         <h3 className="text-4xl font-black tracking-tight text-cyan-950">{quantity.symbol}</h3>
                         <p className="mt-1 text-xl font-bold text-slate-950 sm:text-2xl">{quantity.name}</p>
                       </div>
-                      <span className="rounded-xl bg-white px-3 py-2 text-base font-bold text-slate-600 shadow-sm">{quantity.unit}</span>
+                      <span className="text-base font-bold text-slate-500">{quantity.unit}</span>
                     </div>
                     <p
                       className={`mt-4 ${bodyText}`}
@@ -201,44 +212,44 @@ export default async function MixalisLessonRevisionPage({
                     >
                       {quantity.meaning}
                     </p>
-                    <div
-                      className="mt-4 rounded-2xl bg-white p-4 text-[18px] leading-8 text-slate-700 sm:text-[19px] sm:leading-9"
+                    <p
+                      className="mt-4 border-l-4 border-cyan-200 pl-4 text-[18px] leading-8 text-slate-700 sm:text-[19px] sm:leading-9"
                       data-clarifiable="true"
                       data-clarification-key={`quantities.${index}.whyItMatters`}
                     >
                       <strong className="text-slate-950">Γιατί έχει σημασία:</strong> {quantity.whyItMatters}
-                    </div>
+                    </p>
                   </article>
                 ))}
               </div>
-            </section>
+            </LessonSection>
 
-            <section className="rounded-[2rem] border border-violet-200 bg-gradient-to-br from-violet-50 to-fuchsia-50 p-5 sm:p-8">
+            <LessonSection>
               <SectionLabel number="05" tone="violet">Σχέσεις και εξαρτήσεις</SectionLabel>
-              <h2 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl">Αν αλλάξει κάτι, τι περιμένουμε να συμβεί;</h2>
-              <div className="mt-6">
+              <h2 className="mt-4 max-w-4xl text-3xl font-black tracking-tight sm:text-4xl">Αν αλλάξει κάτι, τι περιμένουμε να συμβεί;</h2>
+              <div className="mt-7 max-w-4xl">
                 <TextBlocks items={lesson.dependencies} blockPrefix="dependencies" />
               </div>
-            </section>
+            </LessonSection>
 
-            <section className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
+            <LessonSection>
               <SectionLabel number="06" tone="blue">Η γλώσσα της Φυσικής</SectionLabel>
-              <h2 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl">Τώρα δίνουμε ακριβή ονόματα σε όσα ήδη κατάλαβες</h2>
-              <div className="mt-6">
+              <h2 className="mt-4 max-w-4xl text-3xl font-black tracking-tight sm:text-4xl">Τώρα δίνουμε ακριβή ονόματα σε όσα ήδη κατάλαβες</h2>
+              <div className="mt-7 max-w-4xl">
                 <TextBlocks items={lesson.formalTerminology} blockPrefix="formalTerminology" />
               </div>
-            </section>
+            </LessonSection>
 
-            <section className="rounded-[2rem] border border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50 p-5 sm:p-8">
+            <LessonSection>
               <SectionLabel number="07" tone="amber">Οι τύποι ως συμπύκνωση της ιδέας</SectionLabel>
-              <div className="mt-6 space-y-4">
+              <div className="mt-8 max-w-5xl divide-y divide-amber-200 border-b border-amber-200">
                 {lesson.formulas.map((formula, index) => (
-                  <article key={`${formula.expression}-${index}`} className="rounded-3xl border border-amber-100 bg-white p-5 shadow-sm sm:p-6">
-                    <div className="overflow-x-auto rounded-2xl bg-slate-950 px-4 py-5 text-center text-3xl font-black text-white sm:text-4xl">
+                  <article key={`${formula.expression}-${index}`} className="py-8 first:pt-0 sm:py-10">
+                    <div className="overflow-x-auto border-y border-slate-800 bg-slate-950 px-5 py-5 text-center text-3xl font-black text-white sm:px-8 sm:text-4xl">
                       {formula.expression}
                     </div>
                     <p
-                      className={`mt-4 ${bodyText}`}
+                      className={`mt-5 ${bodyText}`}
                       data-clarifiable="true"
                       data-clarification-key={`formulas.${index}.readAs`}
                     >
@@ -251,75 +262,80 @@ export default async function MixalisLessonRevisionPage({
                     >
                       {formula.physicalMeaning}
                     </p>
-                    <div
-                      className="mt-4 rounded-2xl bg-amber-50 p-4 text-[18px] leading-8 text-amber-950 sm:text-[19px] sm:leading-9"
+                    <p
+                      className="mt-5 border-l-4 border-amber-300 pl-4 text-[18px] leading-8 text-amber-950 sm:text-[19px] sm:leading-9"
                       data-clarifiable="true"
                       data-clarification-key={`formulas.${index}.conditions`}
                     >
                       <strong>Ισχύει όταν:</strong> {formula.conditions}
-                    </div>
+                    </p>
                   </article>
                 ))}
               </div>
-            </section>
+            </LessonSection>
 
-            <section className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
+            <LessonSection>
               <SectionLabel number="08" tone="green">Εφαρμογές</SectionLabel>
-              <h2 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl">Πρώτα προβλέπουμε, μετά υπολογίζουμε</h2>
-              <div className="mt-6">
+              <h2 className="mt-4 max-w-4xl text-3xl font-black tracking-tight sm:text-4xl">Πρώτα προβλέπουμε, μετά υπολογίζουμε</h2>
+              <div className="mt-7 max-w-4xl">
                 <TextBlocks items={lesson.guidedApplications} blockPrefix="guidedApplications" />
               </div>
-            </section>
+            </LessonSection>
 
-            <section className="rounded-[2rem] border border-rose-200 bg-gradient-to-br from-rose-50 to-red-50 p-5 sm:p-8">
+            <LessonSection>
               <SectionLabel number="09" tone="rose">Συνηθισμένες παγίδες</SectionLabel>
-              <h2 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl">Εκεί που συνήθως γίνεται το λάθος</h2>
-              <div className="mt-6">
+              <h2 className="mt-4 max-w-4xl text-3xl font-black tracking-tight sm:text-4xl">Εκεί που συνήθως γίνεται το λάθος</h2>
+              <div className="mt-7 max-w-4xl">
                 <TextBlocks items={lesson.misconceptionRepairs} blockPrefix="misconceptionRepairs" />
               </div>
-            </section>
+            </LessonSection>
 
             {lesson.engineeringBridge.body ? (
-              <section className="rounded-[2rem] border border-cyan-200 bg-gradient-to-br from-cyan-50 to-blue-50 p-5 sm:p-8">
+              <LessonSection>
                 <SectionLabel number="10" tone="cyan">Engineering bridge</SectionLabel>
-                <div className="mt-5">
+                <div className="mt-7 max-w-4xl">
                   <SingleBlock block={lesson.engineeringBridge} blockKey="engineeringBridge.body" />
                 </div>
-              </section>
+              </LessonSection>
             ) : null}
 
-            <section className="rounded-[2rem] border border-blue-200 bg-white p-5 shadow-[0_18px_60px_rgba(37,99,235,0.08)] sm:p-8">
+            <LessonSection>
               <SectionLabel tone="blue">Έλεγχος κατανόησης</SectionLabel>
-              <h2 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl">Μπορείς να χρησιμοποιήσεις την ιδέα χωρίς να κοιτάξεις τον τύπο;</h2>
-              <div className="mt-6 space-y-5">
+              <h2 className="mt-4 max-w-5xl text-3xl font-black tracking-tight sm:text-4xl">Μπορείς να χρησιμοποιήσεις την ιδέα χωρίς να κοιτάξεις τον τύπο;</h2>
+              <div className="mt-8 max-w-5xl divide-y divide-slate-200 border-y border-slate-200">
                 {lesson.comprehensionChecks.map((check, index) => (
-                  <article key={`${check.level}-${index}`} className="rounded-3xl border border-slate-200 bg-slate-50 p-5 sm:p-6">
+                  <article key={`${check.level}-${index}`} className="py-8 sm:py-10">
                     <div className="flex flex-wrap items-center gap-3">
                       <span className={`rounded-full px-3 py-1.5 text-base font-extrabold ${checkTone(check.level)}`}>{checkLabel(check.level)}</span>
                       <span className="text-base font-bold text-slate-400">Ερώτηση {index + 1}</span>
                     </div>
-                    <p className="mt-4 text-2xl font-bold leading-9 text-slate-950 sm:text-3xl sm:leading-10">{check.question}</p>
-                    <details className="mt-5 rounded-2xl border border-slate-200 bg-white p-4 text-lg">
-                      <summary className="cursor-pointer text-xl font-bold text-blue-800">1η βοήθεια</summary>
-                      <p className="mt-3 text-[18px] leading-8 text-slate-700 sm:text-[19px] sm:leading-9">{check.hint1}</p>
-                    </details>
-                    <details className="mt-3 rounded-2xl border border-slate-200 bg-white p-4 text-lg">
-                      <summary className="cursor-pointer text-xl font-bold text-violet-800">2η βοήθεια</summary>
-                      <p className="mt-3 text-[18px] leading-8 text-slate-700 sm:text-[19px] sm:leading-9">{check.hint2}</p>
-                    </details>
-                    <details className="mt-3 rounded-2xl border border-emerald-200 bg-emerald-50/60 p-4 text-lg">
-                      <summary className="cursor-pointer text-xl font-bold text-emerald-800">Έλεγχος απάντησης</summary>
-                      <p className="mt-3 text-[18px] leading-8 text-slate-700 sm:text-[19px] sm:leading-9">{check.teacherAnswer}</p>
-                    </details>
+                    <p className="mt-4 max-w-4xl text-2xl font-bold leading-9 text-slate-950 sm:text-3xl sm:leading-10">{check.question}</p>
+
+                    <div className="mt-6 max-w-4xl border-t border-slate-200">
+                      <details className="border-b border-slate-200 py-4 text-lg">
+                        <summary className="cursor-pointer text-xl font-bold text-blue-800">1η βοήθεια</summary>
+                        <p className="mt-3 text-[18px] leading-8 text-slate-700 sm:text-[19px] sm:leading-9">{check.hint1}</p>
+                      </details>
+                      <details className="border-b border-slate-200 py-4 text-lg">
+                        <summary className="cursor-pointer text-xl font-bold text-violet-800">2η βοήθεια</summary>
+                        <p className="mt-3 text-[18px] leading-8 text-slate-700 sm:text-[19px] sm:leading-9">{check.hint2}</p>
+                      </details>
+                      <details className="border-b border-emerald-200 py-4 text-lg">
+                        <summary className="cursor-pointer text-xl font-bold text-emerald-800">Έλεγχος απάντησης</summary>
+                        <p className="mt-3 text-[18px] leading-8 text-slate-700 sm:text-[19px] sm:leading-9">{check.teacherAnswer}</p>
+                      </details>
+                    </div>
                   </article>
                 ))}
               </div>
-            </section>
+            </LessonSection>
 
-            <section className="rounded-[2rem] border border-emerald-300 bg-gradient-to-br from-emerald-100 via-green-50 to-cyan-50 p-5 shadow-sm sm:p-8">
-              <SectionLabel tone="green">Κράτα αυτό στο μυαλό σου</SectionLabel>
-              <div className="mt-5">
-                <SingleBlock block={lesson.closingMentalModel} blockKey="closingMentalModel.body" />
+            <section className="border-y border-emerald-300 bg-emerald-50/70 py-10 sm:py-14">
+              <div className="px-1 sm:px-4">
+                <SectionLabel tone="green">Κράτα αυτό στο μυαλό σου</SectionLabel>
+                <div className="mt-7 max-w-4xl">
+                  <SingleBlock block={lesson.closingMentalModel} blockKey="closingMentalModel.body" />
+                </div>
               </div>
             </section>
           </div>
