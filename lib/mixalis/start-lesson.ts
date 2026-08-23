@@ -304,17 +304,19 @@ async function callOpenAI(model: string, prompt: string) {
   if (!apiKey) throw new Error("TEACHER is not configured for the Physics pipeline.");
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 410_000);
+  const timeout = setTimeout(() => controller.abort(), 890_000);
   try {
     const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
+        Accept: "text/event-stream",
       },
       signal: controller.signal,
       body: JSON.stringify({
         model,
+        stream: true,
         reasoning: {
           effort: "high",
         },
@@ -329,12 +331,76 @@ async function callOpenAI(model: string, prompt: string) {
         },
       }),
     });
-    const payload = await response.json().catch(() => null);
+
     if (!response.ok) {
+      const payload = await response.json().catch(() => null);
       throw new Error(payload?.error?.message || `START generation failed with HTTP ${response.status}`);
     }
-    const output = getOutputText(payload);
-    if (!output) throw new Error("START generation returned an empty response.");
+    if (!response.body) throw new Error("START generation returned no response stream.");
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    let streamedText = "";
+    let completedText = "";
+    let streamError = "";
+
+    const consumeEventBlock = (block: string) => {
+      const data = block
+        .split("\n")
+        .filter((line) => line.startsWith("data:"))
+        .map((line) => line.slice(5).trimStart())
+        .join("\n")
+        .trim();
+      if (!data || data === "[DONE]") return;
+
+      let event: any;
+      try {
+        event = JSON.parse(data);
+      } catch {
+        return;
+      }
+
+      if (event?.type === "response.output_text.delta" && typeof event?.delta === "string") {
+        streamedText += event.delta;
+        return;
+      }
+      if (event?.type === "response.output_text.done" && typeof event?.text === "string") {
+        completedText = event.text;
+        return;
+      }
+      if (event?.type === "response.completed") {
+        const finalText = getOutputText(event?.response);
+        if (finalText) completedText = finalText;
+        return;
+      }
+      if (event?.type === "response.failed") {
+        streamError = event?.response?.error?.message || "START generation failed while streaming.";
+        return;
+      }
+      if (event?.type === "error") {
+        streamError = event?.error?.message || event?.message || "START generation stream returned an error.";
+      }
+    };
+
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      buffer = buffer.replace(/\r\n/g, "\n");
+      const blocks = buffer.split("\n\n");
+      buffer = blocks.pop() ?? "";
+      for (const block of blocks) consumeEventBlock(block);
+      if (streamError) throw new Error(streamError);
+    }
+
+    buffer += decoder.decode();
+    buffer = buffer.replace(/\r\n/g, "\n");
+    if (buffer.trim()) consumeEventBlock(buffer);
+    if (streamError) throw new Error(streamError);
+
+    const output = streamedText || completedText;
+    if (!output) throw new Error("START generation returned an empty streamed response.");
     return JSON.parse(output);
   } finally {
     clearTimeout(timeout);
