@@ -1,9 +1,16 @@
 import { createHash } from "node:crypto";
 import { neon } from "@neondatabase/serverless";
 
-export const SUBCHAPTER_INTELLIGENCE_PROMPT_VERSION = "subchapter-intelligence-v1";
+export const SUBCHAPTER_INTELLIGENCE_PROMPT_VERSION = "subchapter-intelligence-v2";
 
 type Importance = "core" | "supporting" | "advanced";
+
+export type ScopeRelation =
+  | "official_core"
+  | "within_official_scope"
+  | "exercise_extension"
+  | "boundary_only"
+  | "unclassified_depth";
 
 type SourceFinding = {
   id: string;
@@ -22,6 +29,7 @@ type CanonicalEntry = {
   title: string;
   content: string;
   importance: Importance;
+  scopeRelation: ScopeRelation;
   sourceItemIds: string[];
 };
 
@@ -78,14 +86,32 @@ export type SubchapterIntelligenceView = {
   }>;
 };
 
+const SCOPE_RELATIONS: ScopeRelation[] = [
+  "official_core",
+  "within_official_scope",
+  "exercise_extension",
+  "boundary_only",
+  "unclassified_depth",
+];
+
 const ENTRY_SCHEMA = {
   type: "object",
   additionalProperties: false,
-  required: ["title", "content", "importance", "sourceItemIds"],
+  required: ["title", "content", "importance", "scopeRelation", "sourceItemIds"],
   properties: {
     title: { type: "string" },
     content: { type: "string" },
     importance: { type: "string", enum: ["core", "supporting", "advanced"] },
+    scopeRelation: {
+      type: "string",
+      enum: [
+        "official_core",
+        "within_official_scope",
+        "exercise_extension",
+        "boundary_only",
+        "unclassified_depth",
+      ],
+    },
     sourceItemIds: {
       type: "array",
       minItems: 1,
@@ -169,10 +195,7 @@ function getSql() {
 }
 
 function configuredModel() {
-  return (
-    process.env.PHYSICS_ANALYSIS_MODEL?.trim() ||
-    "gpt-5.6"
-  );
+  return process.env.PHYSICS_ANALYSIS_MODEL?.trim() || "gpt-5.6";
 }
 
 function hash(value: string) {
@@ -239,6 +262,7 @@ async function listReadySourceFindings(subchapterId: string): Promise<SourceFind
         WHEN 'assessment' THEN 4
         ELSE 5
       END,
+      CASE ii.importance WHEN 'core' THEN 1 WHEN 'supporting' THEN 2 ELSE 3 END,
       CASE ii.layer WHEN 'curriculum' THEN 1 WHEN 'understanding' THEN 2 ELSE 3 END,
       ii.created_at ASC
   `;
@@ -257,17 +281,20 @@ async function listReadySourceFindings(subchapterId: string): Promise<SourceFind
 }
 
 function sourceSnapshot(findings: SourceFinding[]) {
-  const canonical = findings.map((item) => ({
-    id: item.id,
-    analysisId: item.analysisId,
-    role: item.sourceRole,
-    layer: item.layer,
-    type: item.itemType,
-    title: item.title,
-    content: item.content,
-    importance: item.importance,
-    confidence: item.confidence,
-  }));
+  const canonical = {
+    promptVersion: SUBCHAPTER_INTELLIGENCE_PROMPT_VERSION,
+    findings: findings.map((item) => ({
+      id: item.id,
+      analysisId: item.analysisId,
+      role: item.sourceRole,
+      layer: item.layer,
+      type: item.itemType,
+      title: item.title,
+      content: item.content,
+      importance: item.importance,
+      confidence: item.confidence,
+    })),
+  };
   return hash(JSON.stringify(canonical));
 }
 
@@ -385,6 +412,7 @@ async function listVersionFindings(versionId: string): Promise<SourceFinding[]> 
       AND a.status = 'ready'
     ORDER BY
       CASE a.source_role WHEN 'official' THEN 1 WHEN 'depth' THEN 2 WHEN 'teacher' THEN 3 ELSE 4 END,
+      CASE ii.importance WHEN 'core' THEN 1 WHEN 'supporting' THEN 2 ELSE 3 END,
       CASE ii.layer WHEN 'curriculum' THEN 1 WHEN 'understanding' THEN 2 ELSE 3 END,
       ii.created_at ASC
   `;
@@ -431,21 +459,33 @@ SUBCHAPTER: ${input.subchapterLabel} ${input.subchapterTitle}
 NON-NEGOTIABLE START / PHASE3 ARCHITECTURE:
 - The official school book (sourceRole=official, layer=curriculum) alone defines formal curriculum and scope.
 - Depth sources (e.g. Savvalas) reveal required depth, dependencies, reasoning, traps, misconceptions, combined concepts, difficult cases, strategies and teaching needs.
+- IMPORTANCE and CURRICULUM STATUS are independent dimensions. importance=core means pedagogically mandatory knowledge for genuine understanding or future exercise solving. It does NOT mean official curriculum, and it MUST NOT be downgraded merely because it is an exercise-derived extension.
+- Every sourceRole=depth finding with importance=core MUST survive the synthesis. It must be represented in the Depth or Teaching sections and MUST also appear in the START Brief so START is explicitly instructed to teach it.
+- A core depth finding that goes beyond the formal school-book scope is still teaching material. Preserve and teach the useful Physics deeply enough for the student to understand the distinction and handle or recognize the corresponding exercise. Do not reduce it to a one-line exclusion merely because it is not official core theory.
 - Depth sources MUST enrich how official theory will be taught, but MUST NOT create new formal curriculum outside what official findings support.
-- If a depth finding goes beyond official scope, preserve the useful guardrail/teaching signal without promoting the extra content to official curriculum.
+- scopeRelation is framing, never a filter and never a reason to discard knowledge.
+- Assign scopeRelation using the official findings as the authority:
+  * official_core = formal knowledge directly supported by official curriculum findings,
+  * within_official_scope = depth that deepens or operationalizes official knowledge without extending formal curriculum,
+  * exercise_extension = additional case, connection, strategy or deeper relation demanded by exercises and useful to teach, although not formal official core,
+  * boundary_only = a distinction mainly needed to recognize where the current model stops or avoid mechanical misuse,
+  * unclassified_depth = safety fallback only when the relation cannot be established confidently from the supplied findings.
+- For importance=core, scopeRelation=exercise_extension or boundary_only does NOT make the finding optional. It still must be taught with enough physical WHY, contrast, recognition cue or example to make it useful.
+- A core depth finding must not live only in scopeGuardrails. It must also be present in Depth/Teaching and in START Brief.
 - Do NOT write a lesson. Do NOT produce student-facing prose. Do NOT solve exercises.
 - This output is the structured brief that START will later consume to generate a lesson revision.
 - Do not use external knowledge. Synthesize only the supplied structured findings.
 - Every synthesized entry must cite sourceItemIds from the supplied findings. Never invent IDs.
-- Avoid duplicates. Merge overlapping findings while retaining the strongest pedagogical meaning.
+- Avoid duplicates. Merge overlapping findings while retaining the strongest pedagogical meaning and ALL relevant sourceItemIds.
 
 OUTPUT PURPOSE:
 1. organize official curriculum cleanly,
-2. map the depth required to truly understand it,
-3. capture misconceptions/traps and transfer reasoning,
-4. identify what theory must explain more deeply,
-5. create explicit guardrails so START does not drift outside scope,
-6. produce a concise START brief for lesson generation.
+2. map the complete depth required to truly understand and solve unfamiliar exercises,
+3. preserve every pedagogically core depth finding even when it is an exercise extension,
+4. capture misconceptions/traps and transfer reasoning,
+5. identify what theory must explain more deeply,
+6. create explicit scope framing without using scope as a deletion filter,
+7. produce a START brief that explicitly carries every core depth sourceItemId forward to lesson generation.
 
 SUPPLIED STRUCTURED FINDINGS:
 ${JSON.stringify(serialized)}
@@ -456,6 +496,10 @@ function cleanEntry(raw: any, allowedIds: Set<string>): CanonicalEntry | null {
   const title = String(raw?.title ?? "").trim();
   const content = String(raw?.content ?? "").trim();
   const importance = String(raw?.importance ?? "");
+  const rawScopeRelation = String(raw?.scopeRelation ?? "");
+  const scopeRelation = SCOPE_RELATIONS.includes(rawScopeRelation as ScopeRelation)
+    ? (rawScopeRelation as ScopeRelation)
+    : "unclassified_depth";
   const sourceItemIds: string[] = Array.from(
     new Set<string>(
       (Array.isArray(raw?.sourceItemIds) ? raw.sourceItemIds : [])
@@ -469,6 +513,7 @@ function cleanEntry(raw: any, allowedIds: Set<string>): CanonicalEntry | null {
     title: title.slice(0, 260),
     content: content.slice(0, 5000),
     importance: importance as Importance,
+    scopeRelation,
     sourceItemIds,
   };
 }
@@ -524,6 +569,113 @@ function cleanContent(raw: any, allowedIds: Set<string>): SubchapterIntelligence
       mustPrevent: cleanEntries(raw?.startBrief?.mustPrevent, allowedIds),
       mustTestForTransfer: cleanEntries(raw?.startBrief?.mustTestForTransfer, allowedIds),
     },
+  };
+}
+
+function depthAndTeachingEntries(content: SubchapterIntelligenceContent) {
+  return [
+    ...content.depth.dependenciesAndReasoning,
+    ...content.depth.misconceptionsAndTraps,
+    ...content.depth.combinationsContextsAndStrategies,
+    ...content.teaching.sequenceRequirements,
+    ...content.teaching.explanationRequirements,
+    ...content.teaching.transferAndAssessmentRequirements,
+  ];
+}
+
+function startBriefEntries(content: SubchapterIntelligenceContent) {
+  return [
+    ...content.startBrief.mustEstablishBeforeFormulas,
+    ...content.startBrief.mustExplainDeeply,
+    ...content.startBrief.mustPrevent,
+    ...content.startBrief.mustTestForTransfer,
+  ];
+}
+
+function findEntryForSourceId(entries: CanonicalEntry[], sourceItemId: string) {
+  return entries.find((entry) => entry.sourceItemIds.includes(sourceItemId)) || null;
+}
+
+function fallbackCoreDepthEntry(finding: SourceFinding): CanonicalEntry {
+  return {
+    title: finding.title.slice(0, 260),
+    content: finding.content.slice(0, 5000),
+    importance: "core",
+    scopeRelation: "unclassified_depth",
+    sourceItemIds: [finding.id],
+  };
+}
+
+function addCoreDepthToTeaching(
+  content: SubchapterIntelligenceContent,
+  finding: SourceFinding,
+  entry: CanonicalEntry,
+) {
+  if (finding.itemType === "misconception" || finding.itemType === "trap") {
+    content.depth.misconceptionsAndTraps.push(entry);
+    return;
+  }
+  if (
+    finding.itemType === "combined_concepts" ||
+    finding.itemType === "unusual_context" ||
+    finding.itemType === "difficult_case" ||
+    finding.itemType === "solution_strategy"
+  ) {
+    content.depth.combinationsContextsAndStrategies.push(entry);
+    return;
+  }
+  if (finding.itemType === "teaching_implication" || finding.itemType === "teacher_emphasis") {
+    content.teaching.explanationRequirements.push(entry);
+    return;
+  }
+  content.depth.dependenciesAndReasoning.push(entry);
+}
+
+function ensureCoreDepthCoverage(
+  content: SubchapterIntelligenceContent,
+  findings: SourceFinding[],
+) {
+  const coreDepthFindings = findings.filter(
+    (finding) => finding.sourceRole === "depth" && finding.importance === "core",
+  );
+
+  for (const finding of coreDepthFindings) {
+    let teachingEntry = findEntryForSourceId(depthAndTeachingEntries(content), finding.id);
+    if (!teachingEntry) {
+      teachingEntry = fallbackCoreDepthEntry(finding);
+      addCoreDepthToTeaching(content, finding, teachingEntry);
+    }
+
+    const startEntry = findEntryForSourceId(startBriefEntries(content), finding.id);
+    if (!startEntry) {
+      const briefEntry: CanonicalEntry = {
+        ...teachingEntry,
+        sourceItemIds: Array.from(new Set([...teachingEntry.sourceItemIds, finding.id])),
+      };
+      if (finding.itemType === "misconception" || finding.itemType === "trap") {
+        content.startBrief.mustPrevent.push(briefEntry);
+      } else {
+        content.startBrief.mustExplainDeeply.push(briefEntry);
+      }
+    }
+  }
+
+  return content;
+}
+
+function countCoreDepthStartCoverage(
+  content: SubchapterIntelligenceContent,
+  findings: SourceFinding[],
+) {
+  const coveredIds = new Set(
+    startBriefEntries(content).flatMap((entry) => entry.sourceItemIds),
+  );
+  const coreDepth = findings.filter(
+    (finding) => finding.sourceRole === "depth" && finding.importance === "core",
+  );
+  return {
+    coreDepthFindingCount: coreDepth.length,
+    coreDepthStartBriefCoverage: coreDepth.filter((finding) => coveredIds.has(finding.id)).length,
   };
 }
 
@@ -591,12 +743,14 @@ export async function runSubchapterIntelligence(versionId: string) {
 
   try {
     const raw = await callOpenAI(prompt);
-    const content = cleanContent(raw, allowedIds);
+    const content = ensureCoreDepthCoverage(cleanContent(raw, allowedIds), findings);
+    const coverage = countCoreDepthStartCoverage(content, findings);
     const payload = JSON.stringify(content);
     const diffSummary = JSON.stringify({
       kind: view.versionNumber === 1 ? "initial" : "revision",
       sourceCount: view.sources.length,
       findingCount: findings.length,
+      ...coverage,
     });
 
     await sql`
