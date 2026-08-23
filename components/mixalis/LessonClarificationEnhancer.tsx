@@ -7,10 +7,37 @@ type ClarificationResponse = {
   error?: string;
 };
 
+const COMBINING_VECTOR_ARROW = "\u20d7";
+
+function normalizePhysicsNotation(value: string) {
+  return value
+    .replace(/([\p{L}])\u20d7/gu, "→$1")
+    .replaceAll(COMBINING_VECTOR_ARROW, "→");
+}
+
+function normalizeVectorMarks(root: HTMLElement) {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const nodes: Text[] = [];
+
+  while (walker.nextNode()) {
+    nodes.push(walker.currentNode as Text);
+  }
+
+  for (const node of nodes) {
+    const value = node.nodeValue;
+    if (!value?.includes(COMBINING_VECTOR_ARROW)) continue;
+    node.nodeValue = normalizePhysicsNotation(value);
+  }
+}
+
 export default function LessonClarificationEnhancer({ revisionId }: { revisionId: string }) {
   useEffect(() => {
     const root = document.querySelector<HTMLElement>(`[data-lesson-clarification-root="${revisionId}"]`);
     if (!root) return;
+
+    // Some browsers/fonts render U+20D7 (combining vector arrow) as a tofu square.
+    // Convert it to a portable prefix arrow without changing the stored lesson data.
+    normalizeVectorMarks(root);
 
     const targets = Array.from(
       root.querySelectorAll<HTMLElement>("[data-clarifiable][data-clarification-key]"),
@@ -81,7 +108,7 @@ export default function LessonClarificationEnhancer({ revisionId }: { revisionId
 
           const answer = document.createElement("p");
           answer.className = "mt-2 whitespace-pre-line text-[18px] leading-8 text-slate-800 sm:text-[20px] sm:leading-9";
-          answer.textContent = payload.clarification;
+          answer.textContent = normalizePhysicsNotation(payload.clarification);
 
           panel.append(title, answer);
           loaded = true;
