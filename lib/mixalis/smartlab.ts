@@ -24,7 +24,7 @@ import type {
 export { SMARTLAB_PROMPT_REFERENCE, SMARTLAB_PROMPT_VERSION } from "@/lib/mixalis/smartlab-prompt";
 export type { SmartLabContent, SmartLabRevisionView, SmartLabWidget } from "@/lib/mixalis/smartlab-types";
 
-const SMARTLAB_RUNTIME_SCHEMA_VERSION = "finalver1-lesson-quantities-per-subchapter-v1";
+const SMARTLAB_RUNTIME_SCHEMA_VERSION = "finalver1-lesson-quantities-per-subchapter-v2";
 
 type LessonRow = {
   subchapterId: string;
@@ -463,9 +463,6 @@ async function generateWidget(context: NonNullable<Awaited<ReturnType<typeof cha
 export async function createSmartLabRevision(chapterId: string) {
   const context = await chapterContext(chapterId);
   if (!context) throw new Error("Physics chapter not found.");
-  if (context.missingLessons.length) {
-    throw new Error(`SMARTLAB needs a current START lesson with physical quantities for: ${context.missingLessons.map((item) => `${item.subchapterLabel} ${item.subchapterTitle}`).join(", ")}`);
-  }
   if (!context.lessons.length) throw new Error("SMARTLAB needs at least one current START lesson with physical quantities.");
 
   const sql = sqlClient();
@@ -576,7 +573,6 @@ export async function runSmartLabRevision(revisionId: string) {
 
   const context = await chapterContext(view.chapterId);
   if (!context) throw new Error("Linked Physics chapter not found.");
-  if (context.missingLessons.length) throw new Error("A current START lesson or its physical quantities are missing. Create/update the lesson before SMARTLAB.");
   if (snapshotHash(context.lessons) !== view.inputSnapshotHash) {
     throw new Error("The lesson physical quantities changed after this SMARTLAB revision was created. Create a new SMARTLAB revision.");
   }
@@ -628,7 +624,7 @@ export async function getSmartLabChapterState(chapterId: string) {
   const context = await chapterContext(chapterId);
   if (!context) return null;
   const current = await getCurrentSmartLabForChapter(chapterId);
-  const currentSnapshot = context.lessons.length && !context.missingLessons.length ? snapshotHash(context.lessons) : null;
+  const currentSnapshot = context.lessons.length ? snapshotHash(context.lessons) : null;
   return {
     chapter: {
       id: context.chapterId,
