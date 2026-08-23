@@ -8,14 +8,7 @@ import {
   buildStartPrompt,
   START_PROMPT_REFERENCE,
   START_PROMPT_VERSION,
-  type StartPromptInput,
 } from "@/lib/mixalis/start-prompt";
-import {
-  buildPlatformStartRuntimeInput,
-  getConfiguredPlatformStartPrompt,
-  getPlatformStartPromptFromProvenance,
-  type PlatformStartPromptConfig,
-} from "@/lib/mixalis/start-platform-prompt";
 
 export { START_PROMPT_REFERENCE, START_PROMPT_VERSION } from "@/lib/mixalis/start-prompt";
 
@@ -306,53 +299,9 @@ function cleanLesson(raw: any, allowed: Set<string>): StartLessonContent {
   };
 }
 
-async function callOpenAI(
-  model: string,
-  input: StartPromptInput,
-  platformPrompt: PlatformStartPromptConfig | null,
-) {
+async function callOpenAI(model: string, prompt: string) {
   const apiKey = process.env.TEACHER;
   if (!apiKey) throw new Error("TEACHER is not configured for the Physics pipeline.");
-
-  const requestBody: Record<string, unknown> = {
-    model,
-    reasoning: {
-      effort: "high",
-    },
-    text: {
-      format: {
-        type: "json_schema",
-        name: "physics_start_lesson_revision",
-        strict: true,
-        schema: LESSON_SCHEMA,
-      },
-    },
-  };
-
-  if (platformPrompt) {
-    requestBody.prompt = {
-      id: platformPrompt.id,
-      version: platformPrompt.version,
-    };
-    requestBody.input = [
-      {
-        role: "user",
-        content: [
-          {
-            type: "input_text",
-            text: buildPlatformStartRuntimeInput(input),
-          },
-        ],
-      },
-    ];
-  } else {
-    requestBody.input = [
-      {
-        role: "user",
-        content: [{ type: "input_text", text: buildStartPrompt(input) }],
-      },
-    ];
-  }
 
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 410_000);
@@ -364,7 +313,21 @@ async function callOpenAI(
         "Content-Type": "application/json",
       },
       signal: controller.signal,
-      body: JSON.stringify(requestBody),
+      body: JSON.stringify({
+        model,
+        reasoning: {
+          effort: "high",
+        },
+        input: [{ role: "user", content: [{ type: "input_text", text: prompt }] }],
+        text: {
+          format: {
+            type: "json_schema",
+            name: "physics_start_lesson_revision",
+            strict: true,
+            schema: LESSON_SCHEMA,
+          },
+        },
+      }),
     });
     const payload = await response.json().catch(() => null);
     if (!response.ok) {
@@ -386,30 +349,15 @@ export async function createLessonRevisionFromIntelligence(intelligenceVersionId
   }
 
   const sql = getSql();
-  const platformPrompt = getConfiguredPlatformStartPrompt();
-  const existing = platformPrompt
-    ? await sql`
-        SELECT id::text, revision_number, status
-        FROM physics.lesson_revisions
-        WHERE intelligence_version_id::text = ${intelligenceVersionId}
-          AND prompt_reference = ${START_PROMPT_REFERENCE}
-          AND prompt_version = ${START_PROMPT_VERSION}
-          AND provenance->>'promptTransport' = 'openai_platform'
-          AND provenance->>'platformPromptId' = ${platformPrompt.id}
-          AND provenance->>'platformPromptVersion' = ${platformPrompt.version}
-        ORDER BY revision_number DESC
-        LIMIT 1
-      `
-    : await sql`
-        SELECT id::text, revision_number, status
-        FROM physics.lesson_revisions
-        WHERE intelligence_version_id::text = ${intelligenceVersionId}
-          AND prompt_reference = ${START_PROMPT_REFERENCE}
-          AND prompt_version = ${START_PROMPT_VERSION}
-          AND COALESCE(provenance->>'promptTransport', 'local') = 'local'
-        ORDER BY revision_number DESC
-        LIMIT 1
-      `;
+  const existing = await sql`
+    SELECT id::text, revision_number, status
+    FROM physics.lesson_revisions
+    WHERE intelligence_version_id::text = ${intelligenceVersionId}
+      AND prompt_reference = ${START_PROMPT_REFERENCE}
+      AND prompt_version = ${START_PROMPT_VERSION}
+    ORDER BY revision_number DESC
+    LIMIT 1
+  `;
   if (existing.length > 0) {
     return {
       id: String(existing[0].id),
@@ -428,11 +376,8 @@ export async function createLessonRevisionFromIntelligence(intelligenceVersionId
   const revisionNumber = Number(prior[0]?.max_revision ?? 0) + 1;
   const generationMode = Number(prior[0]?.current_count ?? 0) > 0 ? "update" : "initial";
   const model = configuredGenerationModel();
-  const promptIdentity = platformPrompt
-    ? `openai_platform|${platformPrompt.id}|${platformPrompt.version}`
-    : "local";
   const inputSnapshotHash = hash(
-    `${intelligenceView.sourceSnapshotHash}|${START_PROMPT_REFERENCE}|${START_PROMPT_VERSION}|${promptIdentity}`,
+    `${intelligenceView.sourceSnapshotHash}|${START_PROMPT_REFERENCE}|${START_PROMPT_VERSION}`,
   );
   const placeholder = JSON.stringify({ state: "pending" });
   const provenance = JSON.stringify({
@@ -442,9 +387,6 @@ export async function createLessonRevisionFromIntelligence(intelligenceVersionId
     sourceAnalysisIds: intelligenceView.sources.map((source) => source.analysisId),
     promptReference: START_PROMPT_REFERENCE,
     promptVersion: START_PROMPT_VERSION,
-    promptTransport: platformPrompt ? "openai_platform" : "local",
-    platformPromptId: platformPrompt?.id ?? null,
-    platformPromptVersion: platformPrompt?.version ?? null,
     startEnrichmentAllowed: true,
   });
 
@@ -558,16 +500,17 @@ export async function runLessonRevision(revisionId: string) {
   `;
 
   try {
-    const startInput: StartPromptInput = {
-      courseTitle: currentView.courseTitle,
-      chapterLabel: currentView.chapterNumberLabel || "",
-      chapterTitle: currentView.chapterTitle,
-      subchapterLabel: currentView.subchapterNumberLabel,
-      subchapterTitle: currentView.subchapterTitle,
-      intelligence,
-    };
-    const platformPrompt = getPlatformStartPromptFromProvenance(currentView.provenance);
-    const raw = await callOpenAI(currentView.model, startInput, platformPrompt);
+    const raw = await callOpenAI(
+      currentView.model,
+      buildStartPrompt({
+        courseTitle: currentView.courseTitle,
+        chapterLabel: currentView.chapterNumberLabel || "",
+        chapterTitle: currentView.chapterTitle,
+        subchapterLabel: currentView.subchapterNumberLabel,
+        subchapterTitle: currentView.subchapterTitle,
+        intelligence,
+      }),
+    );
     const lesson = cleanLesson(raw, allowedIds);
     if (!lesson.title || !lesson.openingPhenomenon.body || lesson.comprehensionChecks.length < 4) {
       throw new Error("START returned an incomplete lesson structure.");
