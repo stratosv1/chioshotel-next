@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getMixalisSession } from "@/lib/mixalis/auth";
+import { claimSubchapterIntelligenceRun } from "@/lib/mixalis/subchapter-intelligence-run-lock";
 import {
   getSubchapterIntelligenceView,
   runSubchapterIntelligence,
@@ -40,6 +41,16 @@ export async function POST(
 
   const { versionId } = await params;
   try {
+    const claimed = await claimSubchapterIntelligenceRun(versionId);
+
+    if (!claimed) {
+      const existing = await getSubchapterIntelligenceView(versionId);
+      if (!existing) {
+        return NextResponse.json({ error: "Subchapter Intelligence version not found." }, { status: 404 });
+      }
+      return NextResponse.json({ status: existing.status, view: existing });
+    }
+
     const view = await runSubchapterIntelligence(versionId);
     if (!view) {
       return NextResponse.json({ error: "Subchapter Intelligence version not found." }, { status: 404 });
