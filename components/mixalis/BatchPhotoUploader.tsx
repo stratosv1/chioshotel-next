@@ -276,7 +276,7 @@ export default function BatchPhotoUploader({
     }
   }
 
-  async function openSourceIntelligence() {
+  async function openSegmentedSourceIntelligence() {
     if (!segmentationRun || segmentationRun.status !== "confirmed" || sourceBusy) return;
     setSourceBusy(true);
     setError(null);
@@ -284,6 +284,32 @@ export default function BatchPhotoUploader({
     try {
       const response = await fetch(
         `/mixalis/api/source-intelligence/from-segmentation/${segmentationRun.id}`,
+        { method: "POST", redirect: "follow" },
+      );
+
+      if (!response.ok) {
+        throw new Error("Δεν μπόρεσε να ανοίξει το Source Intelligence.");
+      }
+
+      await followRedirect(response);
+    } catch (sourceError) {
+      setError(
+        sourceError instanceof Error
+          ? sourceError.message
+          : "Δεν μπόρεσε να ανοίξει το Source Intelligence.",
+      );
+      setSourceBusy(false);
+    }
+  }
+
+  async function openDirectSourceIntelligence() {
+    if (enableAutoSegmentation || existingFileCount <= 0 || sourceBusy) return;
+    setSourceBusy(true);
+    setError(null);
+
+    try {
+      const response = await fetch(
+        `/mixalis/api/source-intelligence/from-batch/${batchId}`,
         { method: "POST", redirect: "follow" },
       );
 
@@ -329,7 +355,7 @@ export default function BatchPhotoUploader({
             <button
               type="button"
               disabled={sourceBusy}
-              onClick={openSourceIntelligence}
+              onClick={openSegmentedSourceIntelligence}
               className="rounded-xl bg-[#493d35] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#342c27] disabled:cursor-wait disabled:opacity-60"
             >
               {sourceBusy ? "Άνοιγμα…" : "Άνοιγμα Source Intelligence"}
@@ -513,6 +539,23 @@ export default function BatchPhotoUploader({
               Η ανάλυση έχει ξεκινήσει. Για ολόκληρο κεφάλαιο μπορεί να χρειαστούν περίπου 2–4 λεπτά. Μην πατήσεις ξανά το κουμπί και μην κλείσεις αυτή τη σελίδα· μόλις ολοκληρωθεί θα ανοίξει αυτόματα ο έλεγχος του διαχωρισμού.
             </div>
           ) : null}
+        </div>
+      ) : null}
+
+      {!enableAutoSegmentation && existingFileCount > 0 && !busy && files.length === 0 ? (
+        <div className="rounded-2xl border border-[#b8ccb7] bg-[#f0f6ef] p-4">
+          <p className="text-sm font-semibold text-[#3f573f]">Έτοιμο για Source Intelligence</p>
+          <p className="mt-1 text-xs leading-5 text-[#5d715d]">
+            Οι {existingFileCount} φωτογραφίες έχουν ανέβει απευθείας σε συγκεκριμένο υποκεφάλαιο. Δεν χρειάζεται αυτόματος διαχωρισμός· η αντιστοίχιση είναι ήδη γνωστή.
+          </p>
+          <button
+            type="button"
+            disabled={sourceBusy}
+            onClick={openDirectSourceIntelligence}
+            className="mt-3 w-full rounded-xl bg-[#493d35] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#342c27] disabled:cursor-wait disabled:opacity-60"
+          >
+            {sourceBusy ? "Άνοιγμα…" : "Άνοιγμα Source Intelligence"}
+          </button>
         </div>
       ) : null}
     </div>
