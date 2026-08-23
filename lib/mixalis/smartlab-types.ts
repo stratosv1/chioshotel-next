@@ -24,8 +24,68 @@ export type SmartLabControlRole =
   | "frequency"
   | "generic";
 
+export type SmartLabQuantityRole =
+  | "controllable"
+  | "time_state"
+  | "derived"
+  | "fixed"
+  | "model_assumption";
+
+export type SmartLabQuantityPhysicsRole =
+  | "initial_speed"
+  | "height"
+  | "gravity"
+  | "time"
+  | "horizontal_position"
+  | "vertical_displacement"
+  | "horizontal_velocity"
+  | "vertical_velocity"
+  | "speed"
+  | "range"
+  | "radius"
+  | "angular_speed"
+  | "linear_speed"
+  | "frequency"
+  | "period"
+  | "centripetal_acceleration"
+  | "centripetal_force"
+  | "mass"
+  | "generic";
+
+export type SmartLabVisualRepresentation =
+  | "vertical_distance"
+  | "horizontal_distance"
+  | "displacement_vector"
+  | "velocity_vector"
+  | "vector_component"
+  | "acceleration_vector"
+  | "force_vector"
+  | "radius"
+  | "angle"
+  | "trajectory"
+  | "position"
+  | "scalar_measurement"
+  | "time_state"
+  | "graph_value"
+  | "none";
+
+export type SmartLabQuantity = {
+  id: string;
+  physicsRole: SmartLabQuantityPhysicsRole;
+  name: string;
+  symbol: string;
+  unit: string;
+  meaning: string;
+  whyItMatters: string;
+  role: SmartLabQuantityRole;
+  dependsOn: string[];
+  affects: string[];
+  visualRepresentation: SmartLabVisualRepresentation;
+};
+
 export type SmartLabControl = {
   id: string;
+  quantityId: string;
   role: SmartLabControlRole;
   type: "slider" | "toggle";
   label: string;
@@ -35,6 +95,22 @@ export type SmartLabControl = {
   defaultValue: number;
   step: number;
   unit: string;
+  invariants: string[];
+  affects: string[];
+};
+
+export type SmartLabImpactRule = {
+  controlQuantityId: string;
+  changes: string[];
+  unchanged: string[];
+  explanation: string;
+};
+
+export type SmartLabParameterAudit = {
+  controlQuantityId: string;
+  testedValues: number[];
+  verifies: string[];
+  result: "passed";
 };
 
 export type SmartLabWidget = {
@@ -50,10 +126,21 @@ export type SmartLabWidget = {
   scene: {
     dimension: "2d" | "3d";
     description: string;
+    fixedConditions: string[];
+    variableConditions: string[];
   };
   question: string;
   prediction: string;
+  quantities: SmartLabQuantity[];
   controls: SmartLabControl[];
+  diagram: {
+    description: string;
+    representedQuantityIds: string[];
+    notes: string[];
+  };
+  liveMeasurements: string[];
+  impactModel: SmartLabImpactRule[];
+  parameterAudit: SmartLabParameterAudit[];
   liveFeedback: string;
   discovery: string;
   equation: string;
