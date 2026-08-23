@@ -71,9 +71,9 @@ export default function SmartLabRunner({ initialView }: { initialView: SmartLabR
   return (
     <div className="rounded-3xl border border-stone-200 bg-white p-7 text-center shadow-sm sm:p-10">
       <LoaderCircle className="mx-auto h-9 w-9 animate-spin text-[#526b55]" />
-      <h2 className="mt-4 text-xl font-semibold">Το SMARTLAB σχεδιάζει τα εργαστήρια</h2>
+      <h2 className="mt-4 text-xl font-semibold">Το SMARTLAB σχεδιάζει τα διαδραστικά πειράματα</h2>
       <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-stone-600">
-        Ο δημιουργικός καθηγητής διαβάζει τα current SMART του κεφαλαίου και σχεδιάζει τι πρέπει να δει, να αλλάξει, να προβλέψει και να ανακαλύψει ο μαθητής.
+        Ο καθηγητής AI παίρνει ξεχωριστά κάθε φυσική έννοια μαζί με τα φυσικά μεγέθη του current μαθήματος και σχεδιάζει ένα ενιαίο widget.
       </p>
       <p className="mt-3 text-xs text-stone-400">Μπορείς να κλείσεις τη σελίδα. Η δημιουργία συνεχίζεται στον server.</p>
     </div>
