@@ -1,5 +1,6 @@
 import { neon } from "@neondatabase/serverless";
 import { START_PROMPT_VERSION } from "@/lib/mixalis/start-prompt";
+import { SUBCHAPTER_INTELLIGENCE_PROMPT_VERSION } from "@/lib/mixalis/subchapter-intelligence";
 
 export type CurrentLessonNavigation = {
   subchapterId: string;
@@ -23,6 +24,8 @@ export type PhysicsPipelineNavigation = {
     status: string;
     versionId: string | null;
     versionNumber: number | null;
+    promptVersion: string | null;
+    upToDate: boolean;
   };
   lesson: {
     status: string;
@@ -109,6 +112,7 @@ function buildNextStep(input: {
   officialAnalysisId: string | null;
   intelligenceStatus: string;
   intelligenceVersionId: string | null;
+  intelligenceUpToDate: boolean;
   lessonStatus: string;
   lessonRevisionId: string | null;
   lessonUpToDate: boolean;
@@ -188,6 +192,15 @@ function buildNextStep(input: {
     };
   }
 
+  if (!input.intelligenceUpToDate) {
+    return {
+      label: "Συνέχεια",
+      detail: "Επόμενο: νέο SMART με πλήρη διατήρηση των core findings του Σαββάλα",
+      href: `/mixalis/api/subchapter-intelligence/from-subchapter/${input.subchapterId}`,
+      method: "post",
+    };
+  }
+
   if (!input.lessonUpToDate) {
     return {
       label: "Συνέχεια",
@@ -195,7 +208,7 @@ function buildNextStep(input: {
         input.lessonStatus === "processing" || input.lessonStatus === "error"
           ? "Επόμενο: ολοκλήρωση Lesson Revision"
           : input.lessonRevisionId
-            ? "Επόμενο: νέο Lesson Revision με το current START"
+            ? "Επόμενο: νέο Lesson Revision με το current Intelligence"
             : "Επόμενο: δημιουργία μαθήματος με START",
       href:
         (input.lessonStatus === "processing" || input.lessonStatus === "error") &&
@@ -233,6 +246,7 @@ export async function listPhysicsPipelineByChapter(
       siv.id::text AS intelligence_version_id,
       siv.version_number AS intelligence_version_number,
       siv.status AS intelligence_status,
+      siv.prompt_version AS intelligence_prompt_version,
       lr.id::text AS lesson_revision_id,
       lr.revision_number AS lesson_revision_number,
       lr.status AS lesson_status,
@@ -269,7 +283,7 @@ export async function listPhysicsPipelineByChapter(
       LIMIT 1
     ) offa ON true
     LEFT JOIN LATERAL (
-      SELECT v.id, v.version_number, v.status
+      SELECT v.id, v.version_number, v.status, v.prompt_version
       FROM physics.subchapter_intelligence_versions v
       WHERE v.subchapter_id = sc.id
       ORDER BY
@@ -304,6 +318,12 @@ export async function listPhysicsPipelineByChapter(
     const intelligenceVersionId = row.intelligence_version_id
       ? String(row.intelligence_version_id)
       : null;
+    const intelligencePromptVersion = row.intelligence_prompt_version
+      ? String(row.intelligence_prompt_version)
+      : null;
+    const intelligenceUpToDate =
+      intelligenceStatus === "current" &&
+      intelligencePromptVersion === SUBCHAPTER_INTELLIGENCE_PROMPT_VERSION;
     const lessonRevisionId = row.lesson_revision_id
       ? String(row.lesson_revision_id)
       : null;
@@ -314,6 +334,7 @@ export async function listPhysicsPipelineByChapter(
       ? String(row.lesson_prompt_version)
       : null;
     const lessonUpToDate =
+      intelligenceUpToDate &&
       lessonStatus === "current" &&
       Boolean(intelligenceVersionId) &&
       lessonIntelligenceVersionId === intelligenceVersionId &&
@@ -333,6 +354,7 @@ export async function listPhysicsPipelineByChapter(
         : null,
       intelligenceStatus,
       intelligenceVersionId,
+      intelligenceUpToDate,
       lessonStatus,
       lessonRevisionId,
       lessonUpToDate,
@@ -356,6 +378,8 @@ export async function listPhysicsPipelineByChapter(
           row.intelligence_version_number == null
             ? null
             : Number(row.intelligence_version_number),
+        promptVersion: intelligencePromptVersion,
+        upToDate: intelligenceUpToDate,
       },
       lesson: {
         status: lessonStatus,
