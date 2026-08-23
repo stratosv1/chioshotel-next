@@ -1,13 +1,17 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import BatchPhotoUploader from "@/components/mixalis/BatchPhotoUploader";
+import PhysicsPipeline from "@/components/mixalis/PhysicsPipeline";
 import {
   getPhysicsChapter,
   listMaterialBatches,
   listPhysicsSubchapters,
   type MaterialSourceType,
 } from "@/lib/mixalis/db";
-import { listCurrentLessonsByChapter } from "@/lib/mixalis/lesson-navigation";
+import {
+  listCurrentLessonsByChapter,
+  listPhysicsPipelineByChapter,
+} from "@/lib/mixalis/lesson-navigation";
 
 const sourceLabels: Record<MaterialSourceType, string> = {
   school_theory: "Σχολικό βιβλίο — Θεωρία",
@@ -35,11 +39,12 @@ export default async function MixalisChapterPage({
 }) {
   const { id } = await params;
   const query = await searchParams;
-  const [chapter, batches, subchapters, currentLessons] = await Promise.all([
+  const [chapter, batches, subchapters, currentLessons, pipelines] = await Promise.all([
     getPhysicsChapter(id),
     listMaterialBatches(id),
     listPhysicsSubchapters(id),
     listCurrentLessonsByChapter(id),
+    listPhysicsPipelineByChapter(id),
   ]);
 
   if (!chapter) notFound();
@@ -92,6 +97,10 @@ export default async function MixalisChapterPage({
             </div>
           </div>
         </header>
+
+        {subchapters.length > 0 ? (
+          <PhysicsPipeline subchapters={subchapters} pipelines={pipelines} />
+        ) : null}
 
         {subchapters.length > 0 ? (
           <section className="mt-6 rounded-3xl border border-black/10 bg-white p-6 shadow-sm sm:p-8">
@@ -147,7 +156,7 @@ export default async function MixalisChapterPage({
           </section>
         ) : null}
 
-        <div className="mt-6 grid gap-6 lg:grid-cols-[1.25fr_0.75fr]">
+        <div id="chapter-material" className="mt-6 grid scroll-mt-6 gap-6 lg:grid-cols-[1.25fr_0.75fr]">
           <section className="rounded-3xl border border-black/10 bg-white p-6 shadow-sm sm:p-8">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.15em] text-[#857261]">
