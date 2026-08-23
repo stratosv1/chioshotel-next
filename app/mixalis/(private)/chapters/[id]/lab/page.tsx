@@ -26,7 +26,7 @@ export default async function MixalisChapterLabPage({
 
   const requestedRevision = query.revision ? await getSmartLabRevisionView(query.revision) : null;
   const activeRevision = requestedRevision?.chapterId === id ? requestedRevision : state.current;
-  const inputsReady = state.lessonVersions.length > 0 && state.missingLessons.length === 0;
+  const inputsReady = state.lessonVersions.length > 0;
 
   return (
     <main className="min-h-screen bg-[#f3efe8] px-4 py-5 text-[#2c2825] sm:px-8 sm:py-8">
@@ -61,22 +61,18 @@ export default async function MixalisChapterLabPage({
                   </div>
                 ))}
                 {state.lessonVersions.length === 0 ? <p className="text-sm text-[#657365]">Δεν υπάρχει ακόμη current μάθημα με φυσικά μεγέθη.</p> : null}
+                {state.missingLessons.length > 0 ? (
+                  <p className="pt-1 text-xs leading-5 text-[#7a887b]">
+                    Δεν συμμετέχουν ακόμη: {state.missingLessons.map((item) => `${item.subchapterLabel} ${item.subchapterTitle}`).join(", ")}.
+                  </p>
+                ) : null}
               </div>
             </div>
           </div>
         </header>
 
         <section className="mt-6">
-          {state.missingLessons.length > 0 ? (
-            <Card className="rounded-3xl border-[#dfbcb0] bg-[#fbf1ed]">
-              <CardHeader><CardTitle>Λείπει current μάθημα</CardTitle></CardHeader>
-              <CardContent>
-                <p className="text-sm leading-6 text-[#80584b]">
-                  Το SMARTLAB χρειάζεται μόνο τα φυσικά μεγέθη του current START lesson για κάθε υποκεφάλαιο. Λείπουν: {state.missingLessons.map((item) => `${item.subchapterLabel} ${item.subchapterTitle}`).join(", ")}.
-                </p>
-              </CardContent>
-            </Card>
-          ) : activeRevision ? (
+          {activeRevision ? (
             <>
               {!state.upToDate && activeRevision.status === "current" ? (
                 <Card className="mb-5 rounded-2xl border-[#d8c8ad] bg-[#fffaf1]">
@@ -98,7 +94,7 @@ export default async function MixalisChapterLabPage({
               <CardHeader><CardTitle>Δημιούργησε το LAB του κεφαλαίου</CardTitle></CardHeader>
               <CardContent>
                 <p className="max-w-2xl text-sm leading-6 text-stone-600">
-                  Κάθε υποκεφάλαιο στέλνεται ξεχωριστά στον καθηγητή AI. Η είσοδος περιέχει μόνο την έννοια και τα φυσικά μεγέθη του current μαθήματος.
+                  Κάθε current μάθημα στέλνεται ξεχωριστά στον καθηγητή AI. Η είσοδος περιέχει μόνο την έννοια και τα φυσικά μεγέθη του μαθήματος.
                 </p>
                 <form action={`/mixalis/api/smartlab/chapters/${id}`} method="post">
                   <button className="mt-5 inline-flex min-h-12 items-center gap-2 rounded-md bg-[#334f39] px-5 py-3 text-sm font-bold text-white hover:bg-[#29412f]" type="submit">
@@ -111,7 +107,7 @@ export default async function MixalisChapterLabPage({
             <Card className="rounded-3xl border-stone-200">
               <CardContent className="p-6 sm:p-8">
                 <h2 className="text-xl font-semibold">Πρώτα χρειάζεται current μάθημα</h2>
-                <p className="mt-2 text-sm leading-6 text-stone-600">Μόλις το μάθημα έχει την ενότητα «Τι μετράμε και γιατί μας νοιάζει», μπορεί να δημιουργηθεί το SMARTLAB.</p>
+                <p className="mt-2 text-sm leading-6 text-stone-600">Μόλις ένα μάθημα έχει την ενότητα «Τι μετράμε και γιατί μας νοιάζει», μπορεί να δημιουργηθεί το SMARTLAB για αυτό.</p>
               </CardContent>
             </Card>
           )}
