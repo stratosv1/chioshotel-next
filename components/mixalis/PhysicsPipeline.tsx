@@ -95,11 +95,23 @@ function buildCheckpoints(pipeline: PhysicsPipelineNavigation): Checkpoint[] {
   ];
 }
 
-function PipelineCta({ pipeline }: { pipeline: PhysicsPipelineNavigation }) {
+function PipelineCta({
+  pipeline,
+  chapterId,
+}: {
+  pipeline: PhysicsPipelineNavigation;
+  chapterId: string;
+}) {
   const className =
     "inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-[#304b35] px-5 py-3 text-center text-sm font-bold !text-white transition hover:bg-[#263d2b] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#b7c8b4]";
 
-  if (pipeline.next.method === "post") {
+  const needsSavvalasUpload =
+    pipeline.savvalas.status !== "ready" && !pipeline.savvalas.analysisId;
+  const href = needsSavvalasUpload
+    ? `/mixalis/chapters/${chapterId}?source=savvalas&subchapterId=${pipeline.subchapterId}#chapter-material`
+    : pipeline.next.href;
+
+  if (pipeline.next.method === "post" && !needsSavvalasUpload) {
     return (
       <form action={pipeline.next.href} method="post" className="w-full">
         <button type="submit" className={className}>
@@ -110,16 +122,18 @@ function PipelineCta({ pipeline }: { pipeline: PhysicsPipelineNavigation }) {
   }
 
   return (
-    <Link href={pipeline.next.href} className={className}>
+    <Link href={href} className={className}>
       {pipeline.next.label}
     </Link>
   );
 }
 
 export default function PhysicsPipeline({
+  chapterId,
   subchapters,
   pipelines,
 }: {
+  chapterId: string;
   subchapters: PhysicsSubchapter[];
   pipelines: PhysicsPipelineNavigation[];
 }) {
@@ -181,7 +195,7 @@ export default function PhysicsPipeline({
                 </div>
 
                 <div className="w-full shrink-0 lg:w-44">
-                  <PipelineCta pipeline={pipeline} />
+                  <PipelineCta pipeline={pipeline} chapterId={chapterId} />
                 </div>
               </div>
             </article>
