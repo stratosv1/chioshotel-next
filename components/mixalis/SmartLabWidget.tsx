@@ -32,6 +32,20 @@ function quantityForRole(widget: Widget, role: SmartLabQuantityPhysicsRole) {
   return quantitiesOf(widget).find((quantity) => quantity.physicsRole === role);
 }
 
+function currentTimeQuantity(widget: Widget) {
+  return quantitiesOf(widget).find((quantity) => quantity.physicsRole === "time" && quantity.role === "time_state")
+    || quantitiesOf(widget).find((quantity) => quantity.physicsRole === "time" && quantity.name.toLocaleLowerCase("el-GR").includes("χρόνος από"))
+    || quantityForRole(widget, "time");
+}
+
+function fallTimeQuantity(widget: Widget) {
+  return quantitiesOf(widget).find((quantity) => {
+    if (quantity.physicsRole !== "time" || quantity.role !== "derived") return false;
+    const name = quantity.name.toLocaleLowerCase("el-GR");
+    return name.includes("χρόνος πτώσης") || quantity.symbol.includes("πτ");
+  });
+}
+
 function angleQuantity(widget: Widget) {
   return quantitiesOf(widget).find((quantity) =>
     quantity.visualRepresentation === "angle" ||
@@ -139,6 +153,7 @@ function HorizontalProjectile({ widget, values, time }: { widget: Widget; values
   const py = launchY + y * yScale;
   const landingX = launchX + range * xScale;
   const vectorScale = 70 / maxSpeed;
+  const gravityVectorLength = 28 + 26 * (g / maxG);
 
   const trajectory = Array.from({ length: 64 }, (_, index) => {
     const q = index / 63;
@@ -155,10 +170,11 @@ function HorizontalProjectile({ widget, values, time }: { widget: Widget; values
   const xQ = quantityForRole(widget, "horizontal_position");
   const yQ = quantityForRole(widget, "vertical_displacement");
   const vxQ = quantityForRole(widget, "horizontal_velocity");
-  const vyQ = quantityForRole(widget, "vertical_velocity");
+  const vyQ = quantitiesOf(widget).find((quantity) => quantity.physicsRole === "vertical_velocity" && quantity.role === "derived") || quantityForRole(widget, "vertical_velocity");
   const speedQ = quantityForRole(widget, "speed");
   const rangeQ = quantityForRole(widget, "range");
-  const timeQ = quantityForRole(widget, "time");
+  const timeQ = currentTimeQuantity(widget);
+  const fallTimeQ = fallTimeQuantity(widget);
   const initialQ = quantityForRole(widget, "initial_speed");
   const gravityQ = quantityForRole(widget, "gravity");
   const thetaQ = angleQuantity(widget);
@@ -170,6 +186,7 @@ function HorizontalProjectile({ widget, values, time }: { widget: Widget; values
   const vyD = quantityDisplay(vyQ, "υy", "κατακόρυφη συνιστώσα της ταχύτητας");
   const speedD = quantityDisplay(speedQ, "υ", "μέτρο της συνολικής ταχύτητας");
   const rangeD = quantityDisplay(rangeQ, "R", "βεληνεκές");
+  const gravityD = quantityDisplay(gravityQ, "g", "επιτάχυνση της βαρύτητας");
   const thetaD = quantityDisplay(thetaQ, "θ", "γωνία της ταχύτητας από την οριζόντια");
 
   const numeric: NumericState = {
@@ -190,6 +207,8 @@ function HorizontalProjectile({ widget, values, time }: { widget: Widget; values
   const measurementQuantities = quantitiesOf(widget).filter((quantity) => liveIds.has(quantity.id));
   const measurementValue = (quantity: SmartLabQuantity) => {
     if (quantity === thetaQ) return numeric.velocityAngle;
+    if (quantity === fallTimeQ) return tFall;
+    if (quantity === timeQ) return t;
     return numeric[quantity.physicsRole];
   };
 
@@ -233,28 +252,34 @@ function HorizontalProjectile({ widget, values, time }: { widget: Widget; values
           <title>{rangeD.name}</title>
         </g>
 
+        <g className="text-rose-700">
+          <line x1="552" y1="48" x2="552" y2={48 + gravityVectorLength} stroke="currentColor" strokeWidth="2.5" markerEnd="url(#smartlab-arrow)" />
+          <text x="562" y={58 + gravityVectorLength / 2} fontSize="12" fill="currentColor">{gravityD.symbol}</text>
+          <title>{gravityD.name}</title>
+        </g>
+
         <circle cx={px} cy={py} r="8" className="fill-stone-950" />
 
         <g className="text-emerald-700">
           <line x1={px} y1={py} x2={px + vx * vectorScale} y2={py} stroke="currentColor" strokeWidth="3" markerEnd="url(#smartlab-arrow)" />
-          <text x={px + 8} y={py - 10} fontSize="12" fill="currentColor">{vxD.symbol}</text>
+          <text x={px + Math.max(12, vx * vectorScale * 0.55)} y={py - 11} fontSize="12" fill="currentColor">{vxD.symbol}</text>
           <title>{vxD.name}</title>
         </g>
 
         {vy > 0.001 ? (
           <g className="text-amber-700">
             <line x1={px} y1={py} x2={px} y2={py + vy * vectorScale} stroke="currentColor" strokeWidth="3" markerEnd="url(#smartlab-arrow)" />
-            <text x={px + 8} y={py + Math.min(26, vy * vectorScale)} fontSize="12" fill="currentColor">{vyD.symbol}</text>
+            <text x={px - 30} y={py + Math.max(18, Math.min(34, vy * vectorScale * 0.58))} fontSize="12" fill="currentColor">{vyD.symbol}</text>
             <title>{vyD.name}</title>
           </g>
         ) : (
-          <text x={px + 8} y={py + 21} fontSize="12" className="fill-amber-700">{vyD.symbol}=0</text>
+          <text x={px - 34} y={py + 22} fontSize="12" className="fill-amber-700">{vyD.symbol}=0</text>
         )}
 
         {speed > 0.001 ? (
           <g className="text-violet-700">
             <line x1={px} y1={py} x2={px + vx * vectorScale} y2={py + vy * vectorScale} stroke="currentColor" strokeWidth="2.5" markerEnd="url(#smartlab-arrow)" />
-            <text x={px + vx * vectorScale + 5} y={py + vy * vectorScale} fontSize="12" fill="currentColor">{speedD.symbol}</text>
+            <text x={px + vx * vectorScale + 7} y={py + vy * vectorScale + 11} fontSize="12" fill="currentColor">{speedD.symbol}</text>
             <title>{speedD.name}</title>
           </g>
         ) : null}
@@ -262,7 +287,7 @@ function HorizontalProjectile({ widget, values, time }: { widget: Widget; values
         {speed > 0.001 ? (
           <g className="text-fuchsia-700">
             <path d={`M ${px + angleR} ${py} A ${angleR} ${angleR} 0 0 1 ${angleEndX} ${angleEndY}`} fill="none" stroke="currentColor" strokeWidth="2" />
-            <text x={px + 29} y={py + 18} fontSize="12" fill="currentColor">{thetaD.symbol}={number(theta, 1)}°</text>
+            <text x={px + 31} y={py + 18} fontSize="12" fill="currentColor">{thetaD.symbol}={number(theta, 1)}°</text>
             <title>{thetaD.name}</title>
           </g>
         ) : null}
@@ -284,13 +309,14 @@ function HorizontalProjectile({ widget, values, time }: { widget: Widget; values
             <Metric quantity={vyQ} fallbackSymbol="υy" fallbackName="κατακόρυφη συνιστώσα της ταχύτητας" value={vy} unit="m/s" />
             <Metric quantity={speedQ} fallbackSymbol="υ" fallbackName="μέτρο της συνολικής ταχύτητας" value={speed} unit="m/s" />
             <Metric quantity={thetaQ} fallbackSymbol="θ" fallbackName="γωνία της ταχύτητας από την οριζόντια" value={theta} unit="°" />
+            {fallTimeQ ? <Metric quantity={fallTimeQ} fallbackSymbol="tπτ" fallbackName="χρόνος πτώσης" value={tFall} unit="s" /> : null}
             <Metric quantity={rangeQ} fallbackSymbol="R" fallbackName="βεληνεκές" value={range} unit="m" />
           </>
         )}
       </div>
 
       <div className="sr-only">
-        {initialQ?.name} {number(v0)} {initialQ?.unit}. {gravityQ?.name} {number(g)} {gravityQ?.unit}. Χρόνος πτώσης {number(tFall)} s.
+        {initialQ?.name} {number(v0)} {initialQ?.unit}. {gravityQ?.name} {number(g)} {gravityQ?.unit}. {fallTimeQ?.name || "Χρόνος πτώσης"} {number(tFall)} s.
       </div>
     </div>
   );
@@ -519,7 +545,7 @@ export function SmartLabWidget({ widget }: { widget: Widget }) {
 
   const isHorizontal = widget.physicsPreset === "horizontal_projectile";
   const tFall = isHorizontal ? horizontalFallTime(widget, values) : 0;
-  const timeQuantity = quantityForRole(widget, "time");
+  const timeQuantity = currentTimeQuantity(widget);
   const timeName = timeQuantity?.name || "χρόνος";
   const timeSymbol = timeQuantity?.symbol || "t";
 
@@ -623,13 +649,6 @@ export function SmartLabWidget({ widget }: { widget: Widget }) {
             }} />
 
             <ImpactPanel widget={widget} quantityId={lastChangedQuantityId} />
-
-            {widget.liveFeedback ? (
-              <div className="mt-5 border-t border-stone-200 pt-5">
-                <p className="text-xs font-semibold uppercase tracking-[0.13em] text-stone-500">Παρατήρησε</p>
-                <p className="mt-2 text-sm leading-6 text-stone-700">{widget.liveFeedback}</p>
-              </div>
-            ) : null}
           </aside>
         </div>
 
