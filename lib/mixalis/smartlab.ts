@@ -12,14 +12,21 @@ import type {
   SmartLabControl,
   SmartLabControlRole,
   SmartLabImportance,
+  SmartLabParameterAudit,
   SmartLabPhysicsPreset,
+  SmartLabQuantity,
+  SmartLabQuantityPhysicsRole,
+  SmartLabQuantityRole,
   SmartLabRevisionView,
   SmartLabScopeRelation,
+  SmartLabVisualRepresentation,
   SmartLabWidget,
 } from "@/lib/mixalis/smartlab-types";
 
 export { SMARTLAB_PROMPT_REFERENCE, SMARTLAB_PROMPT_VERSION } from "@/lib/mixalis/smartlab-prompt";
 export type { SmartLabContent, SmartLabRevisionView, SmartLabWidget } from "@/lib/mixalis/smartlab-types";
+
+const SMARTLAB_RUNTIME_SCHEMA_VERSION = "quantity-impact-audit-v1";
 
 type SmartRow = {
   subchapterId: string;
@@ -45,13 +52,44 @@ const IMPORTANCE = ["core", "supporting", "advanced"] as const;
 const SCOPE = ["official_core", "within_official_scope", "exercise_extension", "boundary_only", "unclassified_depth"] as const;
 const PRESETS = ["horizontal_projectile", "uniform_circular_motion", "centripetal_force", "generic_relation"] as const;
 const CONTROL_ROLES = ["initial_speed", "height", "gravity", "radius", "angular_speed", "linear_speed", "mass", "frequency", "generic"] as const;
+const QUANTITY_ROLES = ["controllable", "time_state", "derived", "fixed", "model_assumption"] as const;
+const PHYSICS_ROLES = [
+  "initial_speed", "height", "gravity", "time", "horizontal_position", "vertical_displacement",
+  "horizontal_velocity", "vertical_velocity", "speed", "range", "radius", "angular_speed",
+  "linear_speed", "frequency", "period", "centripetal_acceleration", "centripetal_force", "mass", "generic",
+] as const;
+const VISUAL_REPRESENTATIONS = [
+  "vertical_distance", "horizontal_distance", "displacement_vector", "velocity_vector", "vector_component",
+  "acceleration_vector", "force_vector", "radius", "angle", "trajectory", "position", "scalar_measurement",
+  "time_state", "graph_value", "none",
+] as const;
+
+const QUANTITY_SCHEMA = {
+  type: "object",
+  additionalProperties: false,
+  required: ["id", "physicsRole", "name", "symbol", "unit", "meaning", "whyItMatters", "role", "dependsOn", "affects", "visualRepresentation"],
+  properties: {
+    id: { type: "string" },
+    physicsRole: { type: "string", enum: PHYSICS_ROLES },
+    name: { type: "string" },
+    symbol: { type: "string" },
+    unit: { type: "string" },
+    meaning: { type: "string" },
+    whyItMatters: { type: "string" },
+    role: { type: "string", enum: QUANTITY_ROLES },
+    dependsOn: { type: "array", items: { type: "string" } },
+    affects: { type: "array", items: { type: "string" } },
+    visualRepresentation: { type: "string", enum: VISUAL_REPRESENTATIONS },
+  },
+} as const;
 
 const CONTROL_SCHEMA = {
   type: "object",
   additionalProperties: false,
-  required: ["id", "role", "type", "label", "symbol", "min", "max", "defaultValue", "step", "unit"],
+  required: ["id", "quantityId", "role", "type", "label", "symbol", "min", "max", "defaultValue", "step", "unit", "invariants", "affects"],
   properties: {
     id: { type: "string" },
+    quantityId: { type: "string" },
     role: { type: "string", enum: CONTROL_ROLES },
     type: { type: "string", enum: ["slider", "toggle"] },
     label: { type: "string" },
@@ -61,6 +99,32 @@ const CONTROL_SCHEMA = {
     defaultValue: { type: "number" },
     step: { type: "number" },
     unit: { type: "string" },
+    invariants: { type: "array", items: { type: "string" } },
+    affects: { type: "array", items: { type: "string" } },
+  },
+} as const;
+
+const IMPACT_SCHEMA = {
+  type: "object",
+  additionalProperties: false,
+  required: ["controlQuantityId", "changes", "unchanged", "explanation"],
+  properties: {
+    controlQuantityId: { type: "string" },
+    changes: { type: "array", items: { type: "string" } },
+    unchanged: { type: "array", items: { type: "string" } },
+    explanation: { type: "string" },
+  },
+} as const;
+
+const PARAMETER_AUDIT_SCHEMA = {
+  type: "object",
+  additionalProperties: false,
+  required: ["controlQuantityId", "testedValues", "verifies", "result"],
+  properties: {
+    controlQuantityId: { type: "string" },
+    testedValues: { type: "array", items: { type: "number" }, minItems: 4 },
+    verifies: { type: "array", items: { type: "string" }, minItems: 3 },
+    result: { type: "string", enum: ["passed"] },
   },
 } as const;
 
@@ -68,9 +132,10 @@ const WIDGET_SCHEMA = {
   type: "object",
   additionalProperties: false,
   required: [
-    "id", "subchapterId", "title", "concept", "importance", "scopeRelation", "smartEntryIds",
-    "sourceItemIds", "physicsPreset", "scene", "question", "prediction", "controls", "liveFeedback",
-    "discovery", "equation", "challenge", "transferCheck", "targetInsight", "implementationNotes",
+    "id", "subchapterId", "title", "concept", "importance", "scopeRelation", "smartEntryIds", "sourceItemIds",
+    "physicsPreset", "scene", "question", "prediction", "quantities", "controls", "diagram", "liveMeasurements",
+    "impactModel", "parameterAudit", "liveFeedback", "discovery", "equation", "challenge", "transferCheck",
+    "targetInsight", "implementationNotes",
   ],
   properties: {
     id: { type: "string" },
@@ -85,15 +150,31 @@ const WIDGET_SCHEMA = {
     scene: {
       type: "object",
       additionalProperties: false,
-      required: ["dimension", "description"],
+      required: ["dimension", "description", "fixedConditions", "variableConditions"],
       properties: {
         dimension: { type: "string", enum: ["2d", "3d"] },
         description: { type: "string" },
+        fixedConditions: { type: "array", items: { type: "string" } },
+        variableConditions: { type: "array", items: { type: "string" } },
       },
     },
     question: { type: "string" },
     prediction: { type: "string" },
+    quantities: { type: "array", items: QUANTITY_SCHEMA, minItems: 2, maxItems: 16 },
     controls: { type: "array", items: CONTROL_SCHEMA, minItems: 1, maxItems: 4 },
+    diagram: {
+      type: "object",
+      additionalProperties: false,
+      required: ["description", "representedQuantityIds", "notes"],
+      properties: {
+        description: { type: "string" },
+        representedQuantityIds: { type: "array", items: { type: "string" } },
+        notes: { type: "array", items: { type: "string" } },
+      },
+    },
+    liveMeasurements: { type: "array", items: { type: "string" } },
+    impactModel: { type: "array", items: IMPACT_SCHEMA, minItems: 1 },
+    parameterAudit: { type: "array", items: PARAMETER_AUDIT_SCHEMA, minItems: 1 },
     liveFeedback: { type: "string" },
     discovery: { type: "string" },
     equation: { type: "string" },
@@ -181,10 +262,8 @@ function catalogEntries(subchapterId: string, intelligence: SubchapterIntelligen
     if (!value || typeof value !== "object") return;
     const object = value as Record<string, unknown>;
     if (
-      typeof object.title === "string" &&
-      typeof object.content === "string" &&
-      typeof object.importance === "string" &&
-      typeof object.scopeRelation === "string" &&
+      typeof object.title === "string" && typeof object.content === "string" &&
+      typeof object.importance === "string" && typeof object.scopeRelation === "string" &&
       Array.isArray(object.sourceItemIds)
     ) {
       output.push({
@@ -249,6 +328,7 @@ async function chapterContext(chapterId: string) {
 function snapshotHash(smart: SmartRow[]) {
   return hash(JSON.stringify({
     promptVersion: SMARTLAB_PROMPT_VERSION,
+    runtimeSchemaVersion: SMARTLAB_RUNTIME_SCHEMA_VERSION,
     versions: smart.map((item) => ({
       subchapterId: item.subchapterId,
       intelligenceVersionId: item.intelligenceVersionId,
@@ -258,35 +338,72 @@ function snapshotHash(smart: SmartRow[]) {
   }));
 }
 
+function stringList(value: unknown, limit = 20) {
+  return (Array.isArray(value) ? value : []).map((item) => String(item).trim()).filter(Boolean).slice(0, limit);
+}
+
+function cleanQuantity(raw: any): SmartLabQuantity {
+  const roleRaw = String(raw?.role || "derived");
+  const role: SmartLabQuantityRole = QUANTITY_ROLES.includes(roleRaw as SmartLabQuantityRole) ? roleRaw as SmartLabQuantityRole : "derived";
+  const physicsRoleRaw = String(raw?.physicsRole || "generic");
+  const physicsRole: SmartLabQuantityPhysicsRole = PHYSICS_ROLES.includes(physicsRoleRaw as SmartLabQuantityPhysicsRole)
+    ? physicsRoleRaw as SmartLabQuantityPhysicsRole : "generic";
+  const visualRaw = String(raw?.visualRepresentation || "scalar_measurement");
+  const visualRepresentation: SmartLabVisualRepresentation = VISUAL_REPRESENTATIONS.includes(visualRaw as SmartLabVisualRepresentation)
+    ? visualRaw as SmartLabVisualRepresentation : "scalar_measurement";
+  return {
+    id: String(raw?.id || physicsRole).trim().slice(0, 80),
+    physicsRole,
+    name: String(raw?.name || physicsRole).trim().slice(0, 160),
+    symbol: String(raw?.symbol || "").trim().slice(0, 40),
+    unit: String(raw?.unit || "").trim().slice(0, 40),
+    meaning: String(raw?.meaning || "").trim().slice(0, 1200),
+    whyItMatters: String(raw?.whyItMatters || "").trim().slice(0, 1200),
+    role,
+    dependsOn: stringList(raw?.dependsOn),
+    affects: stringList(raw?.affects),
+    visualRepresentation,
+  };
+}
+
 function cleanControl(raw: any): SmartLabControl {
   const roleRaw = String(raw?.role || "generic");
-  const role: SmartLabControlRole = CONTROL_ROLES.includes(roleRaw as SmartLabControlRole)
-    ? roleRaw as SmartLabControlRole
-    : "generic";
+  const role: SmartLabControlRole = CONTROL_ROLES.includes(roleRaw as SmartLabControlRole) ? roleRaw as SmartLabControlRole : "generic";
   const min = Number.isFinite(Number(raw?.min)) ? Number(raw.min) : 0;
   const proposedMax = Number.isFinite(Number(raw?.max)) ? Number(raw.max) : min + 10;
   const max = proposedMax > min ? proposedMax : min + 10;
   const proposedDefault = Number.isFinite(Number(raw?.defaultValue)) ? Number(raw.defaultValue) : (min + max) / 2;
   const step = Number.isFinite(Number(raw?.step)) && Number(raw.step) > 0 ? Number(raw.step) : Math.max((max - min) / 100, 0.01);
   return {
-    id: String(raw?.id || role).slice(0, 80),
+    id: String(raw?.id || role).trim().slice(0, 80),
+    quantityId: String(raw?.quantityId || "").trim().slice(0, 80),
     role,
     type: raw?.type === "toggle" ? "toggle" : "slider",
-    label: String(raw?.label || role).slice(0, 160),
-    symbol: String(raw?.symbol || "").slice(0, 40),
+    label: String(raw?.label || role).trim().slice(0, 160),
+    symbol: String(raw?.symbol || "").trim().slice(0, 40),
     min,
     max,
     defaultValue: Math.min(max, Math.max(min, proposedDefault)),
     step,
-    unit: String(raw?.unit || "").slice(0, 40),
+    unit: String(raw?.unit || "").trim().slice(0, 40),
+    invariants: stringList(raw?.invariants),
+    affects: stringList(raw?.affects),
+  };
+}
+
+function cleanAudit(raw: any): SmartLabParameterAudit {
+  return {
+    controlQuantityId: String(raw?.controlQuantityId || "").trim().slice(0, 80),
+    testedValues: (Array.isArray(raw?.testedValues) ? raw.testedValues : []).map(Number).filter(Number.isFinite).slice(0, 8),
+    verifies: stringList(raw?.verifies, 12),
+    result: "passed",
   };
 }
 
 function cleanWidget(raw: any, catalog: Map<string, EntryCatalogItem>, subchapters: Set<string>): SmartLabWidget | null {
   const smartEntryIds: string[] = Array.from(new Set<string>(
     (Array.isArray(raw?.smartEntryIds) ? raw.smartEntryIds : [])
-      .map((id: unknown) => String(id))
-      .filter((id: string) => catalog.has(id)),
+      .map((id: unknown) => String(id)).filter((id: string) => catalog.has(id)),
   ));
   if (!smartEntryIds.length) return null;
   const subchapterId = String(raw?.subchapterId || "");
@@ -313,10 +430,26 @@ function cleanWidget(raw: any, catalog: Map<string, EntryCatalogItem>, subchapte
     scene: {
       dimension: raw?.scene?.dimension === "3d" ? "3d" : "2d",
       description: String(raw?.scene?.description || "").trim().slice(0, 2500),
+      fixedConditions: stringList(raw?.scene?.fixedConditions),
+      variableConditions: stringList(raw?.scene?.variableConditions),
     },
     question: String(raw?.question || "").trim().slice(0, 1200),
     prediction: String(raw?.prediction || "").trim().slice(0, 1200),
+    quantities: (Array.isArray(raw?.quantities) ? raw.quantities : []).slice(0, 16).map(cleanQuantity),
     controls: (Array.isArray(raw?.controls) ? raw.controls : []).slice(0, 4).map(cleanControl),
+    diagram: {
+      description: String(raw?.diagram?.description || "").trim().slice(0, 2500),
+      representedQuantityIds: stringList(raw?.diagram?.representedQuantityIds),
+      notes: stringList(raw?.diagram?.notes),
+    },
+    liveMeasurements: stringList(raw?.liveMeasurements),
+    impactModel: (Array.isArray(raw?.impactModel) ? raw.impactModel : []).slice(0, 8).map((item: any) => ({
+      controlQuantityId: String(item?.controlQuantityId || "").trim().slice(0, 80),
+      changes: stringList(item?.changes),
+      unchanged: stringList(item?.unchanged),
+      explanation: String(item?.explanation || "").trim().slice(0, 1600),
+    })),
+    parameterAudit: (Array.isArray(raw?.parameterAudit) ? raw.parameterAudit : []).slice(0, 8).map(cleanAudit),
     liveFeedback: String(raw?.liveFeedback || "").trim().slice(0, 2500),
     discovery: String(raw?.discovery || "").trim().slice(0, 2500),
     equation: String(raw?.equation || "").trim().slice(0, 500),
@@ -326,9 +459,101 @@ function cleanWidget(raw: any, catalog: Map<string, EntryCatalogItem>, subchapte
     },
     transferCheck: String(raw?.transferCheck || "").trim().slice(0, 1500),
     targetInsight: String(raw?.targetInsight || "").trim().slice(0, 1800),
-    implementationNotes: (Array.isArray(raw?.implementationNotes) ? raw.implementationNotes : [])
-      .map((note: unknown) => String(note).trim().slice(0, 700)).filter(Boolean).slice(0, 10),
+    implementationNotes: stringList(raw?.implementationNotes, 12).map((note) => note.slice(0, 900)),
   };
+}
+
+function hasPhysicsRole(widget: SmartLabWidget, role: SmartLabQuantityPhysicsRole) {
+  return widget.quantities.some((quantity) => quantity.physicsRole === role);
+}
+
+function controlRoles(widget: SmartLabWidget) {
+  return new Set(widget.controls.map((control) => control.role));
+}
+
+function nearlyIncludes(values: number[], target: number, step: number) {
+  const tolerance = Math.max(Math.abs(step) * 0.51, 1e-6);
+  return values.some((value) => Math.abs(value - target) <= tolerance);
+}
+
+function assertWidgetPhysics(widget: SmartLabWidget) {
+  const errors: string[] = [];
+  const quantityIds = new Set<string>();
+  for (const quantity of widget.quantities) {
+    if (!quantity.id || quantityIds.has(quantity.id)) errors.push(`duplicate/empty quantity id '${quantity.id}'`);
+    quantityIds.add(quantity.id);
+  }
+  const byId = new Map(widget.quantities.map((quantity) => [quantity.id, quantity]));
+
+  for (const quantity of widget.quantities) {
+    for (const dependency of quantity.dependsOn) if (!byId.has(dependency)) errors.push(`${quantity.id} dependsOn unknown '${dependency}'`);
+    for (const affected of quantity.affects) if (!byId.has(affected)) errors.push(`${quantity.id} affects unknown '${affected}'`);
+    if (quantity.role === "derived" && quantity.dependsOn.length === 0) errors.push(`derived quantity '${quantity.id}' has no dependencies`);
+  }
+
+  const controlQuantityIds = new Set<string>();
+  for (const control of widget.controls) {
+    if (controlQuantityIds.has(control.quantityId)) errors.push(`quantity '${control.quantityId}' has more than one control`);
+    controlQuantityIds.add(control.quantityId);
+    const quantity = byId.get(control.quantityId);
+    if (!quantity) {
+      errors.push(`control '${control.id}' references unknown quantity '${control.quantityId}'`);
+      continue;
+    }
+    if (quantity.role !== "controllable" && quantity.role !== "model_assumption") {
+      errors.push(`control '${control.id}' tries to control ${quantity.role} quantity '${quantity.id}'`);
+    }
+    if (control.role !== "generic" && quantity.physicsRole !== control.role) {
+      errors.push(`control '${control.id}' role '${control.role}' does not match quantity physicsRole '${quantity.physicsRole}'`);
+    }
+    for (const invariant of control.invariants) if (!byId.has(invariant)) errors.push(`control '${control.id}' invariant unknown '${invariant}'`);
+    for (const affected of control.affects) if (!byId.has(affected)) errors.push(`control '${control.id}' affects unknown '${affected}'`);
+
+    const impact = widget.impactModel.find((item) => item.controlQuantityId === control.quantityId);
+    if (!impact) errors.push(`missing impactModel for control quantity '${control.quantityId}'`);
+    else {
+      for (const id of [...impact.changes, ...impact.unchanged]) if (!byId.has(id)) errors.push(`impactModel for '${control.quantityId}' references unknown '${id}'`);
+      for (const id of control.affects) if (!impact.changes.includes(id)) errors.push(`impactModel for '${control.quantityId}' omits declared affected quantity '${id}'`);
+    }
+
+    const audit = widget.parameterAudit.find((item) => item.controlQuantityId === control.quantityId);
+    if (!audit) errors.push(`missing parameterAudit for control quantity '${control.quantityId}'`);
+    else {
+      if (audit.result !== "passed") errors.push(`parameterAudit for '${control.quantityId}' did not pass`);
+      if (audit.testedValues.length < 4) errors.push(`parameterAudit for '${control.quantityId}' needs low/default/intermediate/high tests`);
+      if (!nearlyIncludes(audit.testedValues, control.min, control.step)) errors.push(`parameterAudit for '${control.quantityId}' did not test minimum`);
+      if (!nearlyIncludes(audit.testedValues, control.defaultValue, control.step)) errors.push(`parameterAudit for '${control.quantityId}' did not test default`);
+      if (!nearlyIncludes(audit.testedValues, control.max, control.step)) errors.push(`parameterAudit for '${control.quantityId}' did not test maximum`);
+      if (audit.verifies.length < 3) errors.push(`parameterAudit for '${control.quantityId}' needs at least 3 verification statements`);
+    }
+  }
+
+  for (const id of widget.diagram.representedQuantityIds) if (!byId.has(id)) errors.push(`diagram references unknown quantity '${id}'`);
+  for (const id of widget.liveMeasurements) if (!byId.has(id)) errors.push(`liveMeasurements references unknown quantity '${id}'`);
+
+  const roles = controlRoles(widget);
+  if (widget.physicsPreset === "horizontal_projectile") {
+    const required: SmartLabQuantityPhysicsRole[] = [
+      "initial_speed", "height", "time", "horizontal_position", "vertical_displacement",
+      "horizontal_velocity", "vertical_velocity", "speed", "range",
+    ];
+    required.forEach((role) => { if (!hasPhysicsRole(widget, role)) errors.push(`horizontal_projectile missing quantity physicsRole '${role}'`); });
+    if (!roles.has("initial_speed")) errors.push("horizontal_projectile must let the student vary initial_speed");
+    if (!roles.has("height")) errors.push("horizontal_projectile must let the student vary height");
+    if ([...roles].some((role) => !["initial_speed", "height", "gravity"].includes(role))) errors.push("horizontal_projectile contains an unsupported independent control");
+  }
+
+  if (widget.physicsPreset === "uniform_circular_motion" || widget.physicsPreset === "centripetal_force") {
+    const required: SmartLabQuantityPhysicsRole[] = ["radius", "linear_speed", "angular_speed", "frequency", "period", "centripetal_acceleration"];
+    if (widget.physicsPreset === "centripetal_force") required.push("mass", "centripetal_force");
+    required.forEach((role) => { if (!hasPhysicsRole(widget, role)) errors.push(`${widget.physicsPreset} missing quantity physicsRole '${role}'`); });
+    if (!roles.has("radius")) errors.push(`${widget.physicsPreset} must let the student vary radius`);
+    const speedDrivers = ["angular_speed", "linear_speed", "frequency"].filter((role) => roles.has(role as SmartLabControlRole));
+    if (speedDrivers.length !== 1) errors.push(`${widget.physicsPreset} must expose exactly one independent speed driver: angular_speed OR linear_speed OR frequency`);
+    if (widget.physicsPreset === "centripetal_force" && !roles.has("mass")) errors.push("centripetal_force must let the student vary mass");
+  }
+
+  if (errors.length) throw new Error(`SMARTLAB physics audit failed for '${widget.title}': ${errors.join("; ")}`);
 }
 
 function cleanContent(raw: any, smart: SmartRow[], entries: EntryCatalogItem[]): SmartLabContent {
@@ -343,6 +568,7 @@ function cleanContent(raw: any, smart: SmartRow[], entries: EntryCatalogItem[]):
       const widgets = (Array.isArray(section?.widgets) ? section.widgets : [])
         .map((widget: any) => cleanWidget(widget, catalog, allowedSubchapters))
         .filter((widget: SmartLabWidget | null): widget is SmartLabWidget => Boolean(widget));
+      widgets.forEach(assertWidgetPhysics);
       return {
         subchapterId: source.subchapterId,
         subchapterLabel: source.subchapterLabel,
@@ -357,6 +583,7 @@ function cleanContent(raw: any, smart: SmartRow[], entries: EntryCatalogItem[]):
     .map((widget: any) => cleanWidget(widget, catalog, allowedSubchapters))
     .filter((widget: SmartLabWidget | null): widget is SmartLabWidget => Boolean(widget))
     .slice(0, 1);
+  chapterSynthesisWidgets.forEach(assertWidgetPhysics);
 
   const nonInteractiveCore = (Array.isArray(raw?.nonInteractiveCore) ? raw.nonInteractiveCore : [])
     .map((item: any) => ({ smartEntryId: String(item?.smartEntryId || ""), reason: String(item?.reason || "").trim().slice(0, 1200) }))
@@ -435,22 +662,12 @@ export async function getSmartLabRevisionView(revisionId: string): Promise<Smart
   if (!rows.length) return null;
   const row = rows[0] as any;
   return {
-    id: String(row.id),
-    courseId: String(row.course_id),
-    courseTitle: String(row.course_title),
-    chapterId: String(row.chapter_id),
-    chapterNumberLabel: row.chapter_number_label ? String(row.chapter_number_label) : null,
-    chapterTitle: String(row.chapter_title),
-    revisionNumber: Number(row.revision_number),
-    status: String(row.status) as SmartLabRevisionView["status"],
-    model: String(row.model),
-    promptReference: String(row.prompt_reference),
-    promptVersion: String(row.prompt_version),
-    inputSnapshotHash: String(row.input_snapshot_hash),
-    smartVersions: Array.isArray(row.smart_versions) ? row.smart_versions : [],
-    content: row.content as SmartLabRevisionView["content"],
-    errorMessage: row.error_message ? String(row.error_message) : null,
-    updatedAt: new Date(row.updated_at).toISOString(),
+    id: String(row.id), courseId: String(row.course_id), courseTitle: String(row.course_title), chapterId: String(row.chapter_id),
+    chapterNumberLabel: row.chapter_number_label ? String(row.chapter_number_label) : null, chapterTitle: String(row.chapter_title),
+    revisionNumber: Number(row.revision_number), status: String(row.status) as SmartLabRevisionView["status"], model: String(row.model),
+    promptReference: String(row.prompt_reference), promptVersion: String(row.prompt_version), inputSnapshotHash: String(row.input_snapshot_hash),
+    smartVersions: Array.isArray(row.smart_versions) ? row.smart_versions : [], content: row.content as SmartLabRevisionView["content"],
+    errorMessage: row.error_message ? String(row.error_message) : null, updatedAt: new Date(row.updated_at).toISOString(),
     completedAt: row.completed_at ? new Date(row.completed_at).toISOString() : null,
   };
 }
@@ -481,10 +698,10 @@ export async function runSmartLabRevision(revisionId: string) {
 
   const context = await chapterContext(view.chapterId);
   if (!context) throw new Error("Linked Physics chapter not found.");
-  if (snapshotHash(context.smart) !== view.inputSnapshotHash) throw new Error("SMART changed after this LAB revision was created. Create a new SMARTLAB revision.");
+  if (snapshotHash(context.smart) !== view.inputSnapshotHash) throw new Error("SMART or SMARTLAB runtime changed after this LAB revision was created. Create a new SMARTLAB revision.");
 
   const entries = context.smart.flatMap((item) => catalogEntries(item.subchapterId, item.intelligence));
-  const runtimeContract = `\n\nRUNTIME CONTRACT — REQUIRED:\nChoose physicsPreset only from: horizontal_projectile, uniform_circular_motion, centripetal_force, generic_relation.\nUse horizontal_projectile for ideal horizontal launch relationships; uniform_circular_motion for period/frequency/angular-linear speed/centripetal-acceleration exploration; centripetal_force when mass and radial force are central; generic_relation otherwise.\nControls MUST use semantic roles from: initial_speed, height, gravity, radius, angular_speed, linear_speed, mass, frequency, generic.\nThe frontend executes only these safe presets. Never generate executable code or arbitrary formulas for runtime evaluation.\nSMART ENTRY CATALOG WITH VALID smartEntryIds:\n${JSON.stringify(entries)}`;
+  const runtimeContract = `\n\nRUNTIME CONTRACT — STRICT AND REQUIRED:\nThe JSON schema is executable pedagogy, not descriptive prose. Every quantity needs id, physicsRole, meaning, whyItMatters, role, dependencies, consequences and visualRepresentation.\nControls may target ONLY quantities whose role is controllable or model_assumption. Never create a control for a derived or time_state quantity.\nEvery control requires an impactModel entry and a parameterAudit entry. parameterAudit.testedValues MUST contain the exact control minimum, default and maximum plus at least one intermediate value. verifies must state at least three concrete checks of geometry/vectors/numbers/invariants. result must be passed only after reasoning through those states.\nFor horizontal_projectile include quantities with physicsRole: initial_speed, height, time, horizontal_position, vertical_displacement, horizontal_velocity, vertical_velocity, speed, range. Expose initial_speed and height as controls. Gravity may be fixed/model_assumption or controllable if SMART supports exploring it. Do NOT emit time as a control: the frontend supplies one authoritative synchronized time scrubber.\nFor uniform_circular_motion include radius, linear_speed, angular_speed, frequency, period, centripetal_acceleration. Expose radius plus EXACTLY ONE speed driver among angular_speed, linear_speed, frequency. The other speed quantities are derived.\nFor centripetal_force include the circular quantities plus mass and centripetal_force. Expose radius, mass and EXACTLY ONE speed driver.\nThe diagram.representedQuantityIds and liveMeasurements arrays contain quantity IDs, never symbols or prose. impactModel changes/unchanged and control invariants/affects also contain quantity IDs.\nChoose physicsPreset only from: horizontal_projectile, uniform_circular_motion, centripetal_force, generic_relation. Use generic_relation only when no safe preset represents the SMART dependency; never invent an executable formula.\nControls use semantic roles only from: initial_speed, height, gravity, radius, angular_speed, linear_speed, mass, frequency, generic.\nBefore returning each widget, perform the strict parameter-impact audit demanded by the prompt: low/default/intermediate/high values, correct geometry, vector direction and magnitude, trajectory, live numbers, equation consistency, invariants and boundary/zero behavior. If any state would teach false Physics, redesign the widget before returning it.\nSMART ENTRY CATALOG WITH VALID smartEntryIds:\n${JSON.stringify(entries)}`;
   const prompt = buildSmartLabPrompt({
     courseTitle: context.courseTitle,
     chapterId: context.chapterId,
@@ -504,7 +721,7 @@ export async function runSmartLabRevision(revisionId: string) {
     const raw = await callTeacherJsonStream({
       model: view.model,
       prompt,
-      schemaName: "physics_smartlab_chapter",
+      schemaName: "physics_smartlab_chapter_v2",
       schema: RESULT_SCHEMA,
       reasoningEffort: "high",
     });
