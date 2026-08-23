@@ -27,10 +27,13 @@ type StatusPayload = {
     errorMessage?: string | null;
     content?: {
       state?: string;
+      startedAt?: string;
     };
   };
   error?: string;
 };
+
+const STALE_RUN_MS = 8 * 60_000;
 
 const primaryCtaClass =
   "inline-flex min-h-14 w-full items-center justify-center rounded-2xl bg-[#304b35] px-5 py-4 text-center text-base font-bold !text-white shadow-sm transition hover:bg-[#263d2b] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#9fb49d] disabled:cursor-wait disabled:opacity-60";
@@ -50,11 +53,19 @@ function friendlyError(value: string | null) {
   return value;
 }
 
+function isStaleRunningPayload(payload: StatusPayload | null) {
+  if (String(payload?.view?.content?.state || "") !== "running") return false;
+  const startedAt = payload?.view?.content?.startedAt;
+  if (!startedAt) return false;
+  const startedMs = Date.parse(startedAt);
+  return Number.isFinite(startedMs) && Date.now() - startedMs > STALE_RUN_MS;
+}
+
 function deriveRunState(payload: StatusPayload | null): RunState {
   const nextStatus = payload?.view?.status || payload?.status;
   if (nextStatus === "current" || nextStatus === "superseded") return "ready";
   const state = String(payload?.view?.content?.state || "");
-  if (state === "running") return "running";
+  if (state === "running") return isStaleRunningPayload(payload) ? "error" : "running";
   if (state === "error") return "error";
   return "idle";
 }
@@ -92,7 +103,10 @@ export default function SubchapterIntelligenceRunner({
   const applyPayload = useCallback((payload: StatusPayload | null) => {
     const nextStatus = payload?.view?.status || payload?.status;
     const nextRunState = deriveRunState(payload);
-    const nextError = friendlyError(payload?.view?.errorMessage || null);
+    const stale = isStaleRunningPayload(payload);
+    const nextError = stale
+      ? "Η προηγούμενη server-side σύνθεση δεν ολοκληρώθηκε μέσα στο ασφαλές χρονικό όριο. Μπορείς να την επαναλάβεις χωρίς να χαθούν ή να ξαναδιαβαστούν οι πηγές."
+      : friendlyError(payload?.view?.errorMessage || null);
 
     if (!activeRef.current) return { status: nextStatus, runState: nextRunState, errorMessage: nextError };
     if (nextStatus) setStatus(nextStatus);
