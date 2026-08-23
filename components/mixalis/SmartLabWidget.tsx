@@ -1,18 +1,20 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { CheckCircle2, FlaskConical, Lightbulb, Pause, Play, RotateCcw, Target } from "lucide-react";
+import { FlaskConical, Lightbulb, Pause, Play, RotateCcw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type {
   SmartLabContent,
   SmartLabControl,
   SmartLabQuantity,
+  SmartLabQuantityPhysicsRole,
   SmartLabWidget as Widget,
 } from "@/lib/mixalis/smartlab-types";
 
 type Values = Record<string, number>;
+type NumericState = Partial<Record<SmartLabQuantityPhysicsRole, number>> & { velocityAngle?: number };
 
 function controlsOf(widget: Widget) {
   return Array.isArray(widget.controls) ? widget.controls : [];
@@ -24,6 +26,18 @@ function quantitiesOf(widget: Widget): SmartLabQuantity[] {
 
 function initialValues(widget: Widget): Values {
   return Object.fromEntries(controlsOf(widget).map((control) => [control.id, control.defaultValue]));
+}
+
+function quantityForRole(widget: Widget, role: SmartLabQuantityPhysicsRole) {
+  return quantitiesOf(widget).find((quantity) => quantity.physicsRole === role);
+}
+
+function angleQuantity(widget: Widget) {
+  return quantitiesOf(widget).find((quantity) =>
+    quantity.visualRepresentation === "angle" ||
+    quantity.symbol.trim() === "θ" ||
+    quantity.name.toLocaleLowerCase("el-GR").includes("γωνία της ταχύτητας"),
+  );
 }
 
 function roleValue(widget: Widget, values: Values, role: SmartLabControl["role"], fallback: number) {
@@ -44,29 +58,30 @@ function number(value: number, digits = 2) {
   return new Intl.NumberFormat("el-GR", { maximumFractionDigits: digits }).format(value);
 }
 
-function scopeLabel(scope: Widget["scopeRelation"]) {
-  if (scope === "official_core") return "Σχολικός πυρήνας";
-  if (scope === "within_official_scope") return "Εμβάθυνση";
-  if (scope === "exercise_extension") return "Επέκταση ασκήσεων";
-  if (scope === "boundary_only") return "Όριο μοντέλου";
-  return "Βάθος SMART";
+function quantityDisplay(quantity: SmartLabQuantity | undefined, fallbackSymbol: string, fallbackName: string) {
+  return {
+    symbol: quantity?.symbol || fallbackSymbol,
+    name: quantity?.name || fallbackName,
+    unit: quantity?.unit || "",
+  };
 }
 
-function quantityRoleLabel(role: SmartLabQuantity["role"]) {
-  if (role === "controllable") return "Το μεταβάλλεις";
-  if (role === "time_state") return "Χρονική κατάσταση";
-  if (role === "fixed") return "Μένει σταθερό";
-  if (role === "model_assumption") return "Υπόθεση μοντέλου";
-  return "Προκύπτει από τη Φυσική";
-}
-
-function Metric({ label, value, unit }: { label: string; value: string; unit?: string }) {
+function Metric({ quantity, fallbackSymbol, fallbackName, value, unit }: {
+  quantity?: SmartLabQuantity;
+  fallbackSymbol: string;
+  fallbackName: string;
+  value: number;
+  unit?: string;
+}) {
+  const display = quantityDisplay(quantity, fallbackSymbol, fallbackName);
   return (
-    <div className="rounded-xl border border-stone-200 bg-white px-3 py-2 shadow-sm">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-stone-500">{label}</p>
-      <p className="mt-0.5 text-lg font-semibold text-stone-900">
-        {value} {unit ? <span className="text-xs font-medium text-stone-500">{unit}</span> : null}
-      </p>
+    <div className="min-w-0 border-l border-stone-200 pl-3 first:border-l-0 first:pl-0 sm:first:border-l">
+      <div className="flex items-baseline gap-1.5">
+        <span className="text-base font-semibold text-stone-950">{display.symbol}</span>
+        <span className="text-sm font-semibold text-stone-900">{number(value)}</span>
+        <span className="text-[11px] text-stone-500">{unit || display.unit}</span>
+      </div>
+      <p className="mt-0.5 line-clamp-2 text-[11px] leading-4 text-stone-500">{display.name}</p>
     </div>
   );
 }
@@ -87,7 +102,7 @@ function horizontalFallTime(widget: Widget, values: Values) {
   return Math.sqrt((2 * h) / g);
 }
 
-function HorizontalProjectile({ widget, values, time }: { widget: Widget; values: Values; time: number }) {
+function horizontalState(widget: Widget, values: Values, time: number) {
   const v0 = Math.max(0, roleValue(widget, values, "initial_speed", 12));
   const h = Math.max(0.001, roleValue(widget, values, "height", 20));
   const g = Math.max(0.001, roleValue(widget, values, "gravity", 9.81));
@@ -99,6 +114,13 @@ function HorizontalProjectile({ widget, values, time }: { widget: Widget; values
   const vx = v0;
   const vy = g * t;
   const speed = Math.hypot(vx, vy);
+  const theta = Math.atan2(vy, vx) * 180 / Math.PI;
+  return { v0, h, g, tFall, t, range, x, y, vx, vy, speed, theta };
+}
+
+function HorizontalProjectile({ widget, values, time }: { widget: Widget; values: Values; time: number }) {
+  const state = horizontalState(widget, values, time);
+  const { v0, h, g, tFall, t, range, x, y, vx, vy, speed, theta } = state;
 
   const maxV = Math.max(roleMax(widget, "initial_speed", v0), v0, 0.001);
   const maxH = Math.max(roleMax(widget, "height", h), h, 0.001);
@@ -108,91 +130,167 @@ function HorizontalProjectile({ widget, values, time }: { widget: Widget; values
   const maxVerticalSpeed = Math.sqrt(2 * maxG * maxH);
   const maxSpeed = Math.max(Math.hypot(maxV, maxVerticalSpeed), 1);
 
-  const groundY = 245;
-  const launchX = 90;
-  const yScale = 180 / maxH;
-  const xScale = 400 / maxRange;
+  const groundY = 246;
+  const launchX = 88;
+  const yScale = 176 / maxH;
+  const xScale = 398 / maxRange;
   const launchY = groundY - h * yScale;
   const px = launchX + x * xScale;
   const py = launchY + y * yScale;
   const landingX = launchX + range * xScale;
-  const vectorScale = 72 / maxSpeed;
+  const vectorScale = 70 / maxSpeed;
 
-  const points = Array.from({ length: 60 }, (_, index) => {
-    const q = index / 59;
+  const trajectory = Array.from({ length: 64 }, (_, index) => {
+    const q = index / 63;
     const qt = q * tFall;
-    const qx = v0 * qt;
-    const qy = 0.5 * g * qt * qt;
-    return `${launchX + qx * xScale},${launchY + qy * yScale}`;
+    return `${launchX + v0 * qt * xScale},${launchY + 0.5 * g * qt * qt * yScale}`;
   }).join(" ");
 
+  const angleR = 23;
+  const angleRad = theta * Math.PI / 180;
+  const angleEndX = px + Math.cos(angleRad) * angleR;
+  const angleEndY = py + Math.sin(angleRad) * angleR;
+
+  const hQ = quantityForRole(widget, "height");
+  const xQ = quantityForRole(widget, "horizontal_position");
+  const yQ = quantityForRole(widget, "vertical_displacement");
+  const vxQ = quantityForRole(widget, "horizontal_velocity");
+  const vyQ = quantityForRole(widget, "vertical_velocity");
+  const speedQ = quantityForRole(widget, "speed");
+  const rangeQ = quantityForRole(widget, "range");
+  const timeQ = quantityForRole(widget, "time");
+  const initialQ = quantityForRole(widget, "initial_speed");
+  const gravityQ = quantityForRole(widget, "gravity");
+  const thetaQ = angleQuantity(widget);
+
+  const hD = quantityDisplay(hQ, "h", "ύψος βολής");
+  const xD = quantityDisplay(xQ, "x", "οριζόντια μετατόπιση");
+  const yD = quantityDisplay(yQ, "y", "κατακόρυφη κάθοδος");
+  const vxD = quantityDisplay(vxQ, "υx", "οριζόντια συνιστώσα της ταχύτητας");
+  const vyD = quantityDisplay(vyQ, "υy", "κατακόρυφη συνιστώσα της ταχύτητας");
+  const speedD = quantityDisplay(speedQ, "υ", "μέτρο της συνολικής ταχύτητας");
+  const rangeD = quantityDisplay(rangeQ, "R", "βεληνεκές");
+  const thetaD = quantityDisplay(thetaQ, "θ", "γωνία της ταχύτητας από την οριζόντια");
+
+  const numeric: NumericState = {
+    initial_speed: v0,
+    height: h,
+    gravity: g,
+    time: t,
+    horizontal_position: x,
+    vertical_displacement: y,
+    horizontal_velocity: vx,
+    vertical_velocity: vy,
+    speed,
+    range,
+    velocityAngle: theta,
+  };
+
+  const liveIds = new Set(widget.liveMeasurements || []);
+  const measurementQuantities = quantitiesOf(widget).filter((quantity) => liveIds.has(quantity.id));
+  const measurementValue = (quantity: SmartLabQuantity) => {
+    if (quantity === thetaQ) return numeric.velocityAngle;
+    return numeric[quantity.physicsRole];
+  };
+
   return (
-    <div>
-      <svg viewBox="0 0 620 335" className="w-full" role="img" aria-label="Διάγραμμα οριζόντιας βολής με ύψος, μετατοπίσεις και διανύσματα ταχύτητας">
+    <div className="min-w-0">
+      <svg viewBox="0 0 620 338" className="w-full" role="img" aria-label="Διαδραστικό σχεδιάγραμμα οριζόντιας βολής">
         <ArrowDefs />
-        <line x1="24" y1={groundY} x2="590" y2={groundY} stroke="currentColor" className="text-stone-300" strokeWidth="2" />
-        <rect x="60" y={launchY - 8} width="30" height={groundY - launchY + 8} rx="4" className="fill-stone-200" />
+        <line x1="22" y1={groundY} x2="592" y2={groundY} stroke="currentColor" className="text-stone-300" strokeWidth="2" />
+        <rect x="58" y={launchY - 8} width="30" height={groundY - launchY + 8} rx="5" className="fill-stone-200" />
 
         <g className="text-sky-700">
-          <line x1="42" y1={launchY} x2="42" y2={groundY} stroke="currentColor" strokeWidth="2" />
-          <line x1="36" y1={launchY} x2="48" y2={launchY} stroke="currentColor" strokeWidth="2" />
-          <line x1="36" y1={groundY} x2="48" y2={groundY} stroke="currentColor" strokeWidth="2" />
-          <text x="18" y={(launchY + groundY) / 2} fontSize="12" fill="currentColor">h={number(h)} m</text>
+          <line x1="40" y1={launchY} x2="40" y2={groundY} stroke="currentColor" strokeWidth="2" />
+          <line x1="34" y1={launchY} x2="46" y2={launchY} stroke="currentColor" strokeWidth="2" />
+          <line x1="34" y1={groundY} x2="46" y2={groundY} stroke="currentColor" strokeWidth="2" />
+          <text x="12" y={(launchY + groundY) / 2} fontSize="12" fill="currentColor">{hD.symbol}={number(h)} {hD.unit || "m"}</text>
+          <title>{hD.name}</title>
         </g>
 
-        <polyline points={points} fill="none" stroke="currentColor" className="text-stone-500" strokeWidth="2.5" />
-        <text x={Math.min(landingX - 40, launchX + (landingX - launchX) * 0.55)} y={launchY + (groundY - launchY) * 0.35} fontSize="12" className="fill-stone-500">τροχιά</text>
+        <polyline points={trajectory} fill="none" stroke="currentColor" className="text-stone-400" strokeWidth="2.5" />
+        <text x={Math.min(landingX - 42, launchX + Math.max(24, (landingX - launchX) * 0.55))} y={launchY + Math.max(28, (groundY - launchY) * 0.34)} fontSize="12" className="fill-stone-500">τροχιά</text>
 
         <g className="text-cyan-700">
-          <line x1={launchX} y1="274" x2={px} y2="274" stroke="currentColor" strokeWidth="2" />
-          <line x1={launchX} y1="268" x2={launchX} y2="280" stroke="currentColor" strokeWidth="2" />
-          <line x1={px} y1="268" x2={px} y2="280" stroke="currentColor" strokeWidth="2" />
-          <text x={(launchX + px) / 2 - 10} y="292" fontSize="12" fill="currentColor">x={number(x)} m</text>
+          <line x1={launchX} y1="275" x2={px} y2="275" stroke="currentColor" strokeWidth="2" />
+          <line x1={launchX} y1="269" x2={launchX} y2="281" stroke="currentColor" strokeWidth="2" />
+          <line x1={px} y1="269" x2={px} y2="281" stroke="currentColor" strokeWidth="2" />
+          <text x={(launchX + px) / 2 - 14} y="294" fontSize="12" fill="currentColor">{xD.symbol}={number(x)} {xD.unit || "m"}</text>
+          <title>{xD.name}</title>
         </g>
 
         <g className="text-blue-700">
-          <line x1={Math.max(54, px - 18)} y1={launchY} x2={Math.max(54, px - 18)} y2={py} stroke="currentColor" strokeWidth="2" />
-          <text x={Math.max(58, px - 13)} y={(launchY + py) / 2} fontSize="12" fill="currentColor">y={number(y)} m</text>
+          <line x1={Math.max(52, px - 18)} y1={launchY} x2={Math.max(52, px - 18)} y2={py} stroke="currentColor" strokeWidth="2" />
+          <text x={Math.max(56, px - 13)} y={(launchY + py) / 2} fontSize="12" fill="currentColor">{yD.symbol}={number(y)} {yD.unit || "m"}</text>
+          <title>{yD.name}</title>
         </g>
 
         <g className="text-violet-700">
-          <line x1={launchX} y1="310" x2={landingX} y2="310" stroke="currentColor" strokeWidth="2" />
-          <line x1={launchX} y1="304" x2={launchX} y2="316" stroke="currentColor" strokeWidth="2" />
-          <line x1={landingX} y1="304" x2={landingX} y2="316" stroke="currentColor" strokeWidth="2" />
-          <text x={(launchX + landingX) / 2 - 22} y="328" fontSize="12" fill="currentColor">R={number(range)} m</text>
+          <line x1={launchX} y1="313" x2={landingX} y2="313" stroke="currentColor" strokeWidth="2" />
+          <line x1={launchX} y1="307" x2={launchX} y2="319" stroke="currentColor" strokeWidth="2" />
+          <line x1={landingX} y1="307" x2={landingX} y2="319" stroke="currentColor" strokeWidth="2" />
+          <text x={(launchX + landingX) / 2 - 22} y="332" fontSize="12" fill="currentColor">{rangeD.symbol}={number(range)} {rangeD.unit || "m"}</text>
+          <title>{rangeD.name}</title>
         </g>
 
-        <circle cx={px} cy={py} r="8" className="fill-stone-900" />
+        <circle cx={px} cy={py} r="8" className="fill-stone-950" />
 
         <g className="text-emerald-700">
           <line x1={px} y1={py} x2={px + vx * vectorScale} y2={py} stroke="currentColor" strokeWidth="3" markerEnd="url(#smartlab-arrow)" />
-          <text x={px + 8} y={py - 9} fontSize="12" fill="currentColor">υx</text>
+          <text x={px + 8} y={py - 10} fontSize="12" fill="currentColor">{vxD.symbol}</text>
+          <title>{vxD.name}</title>
         </g>
 
         {vy > 0.001 ? (
           <g className="text-amber-700">
             <line x1={px} y1={py} x2={px} y2={py + vy * vectorScale} stroke="currentColor" strokeWidth="3" markerEnd="url(#smartlab-arrow)" />
-            <text x={px + 8} y={py + Math.min(25, vy * vectorScale)} fontSize="12" fill="currentColor">υy</text>
+            <text x={px + 8} y={py + Math.min(26, vy * vectorScale)} fontSize="12" fill="currentColor">{vyD.symbol}</text>
+            <title>{vyD.name}</title>
           </g>
-        ) : <text x={px + 8} y={py + 21} fontSize="12" className="fill-amber-700">υy=0</text>}
+        ) : (
+          <text x={px + 8} y={py + 21} fontSize="12" className="fill-amber-700">{vyD.symbol}=0</text>
+        )}
 
-        <g className="text-violet-700">
-          <line x1={px} y1={py} x2={px + vx * vectorScale} y2={py + vy * vectorScale} stroke="currentColor" strokeWidth="2.5" markerEnd="url(#smartlab-arrow)" />
-          <text x={px + vx * vectorScale + 5} y={py + vy * vectorScale} fontSize="12" fill="currentColor">υ</text>
-        </g>
+        {speed > 0.001 ? (
+          <g className="text-violet-700">
+            <line x1={px} y1={py} x2={px + vx * vectorScale} y2={py + vy * vectorScale} stroke="currentColor" strokeWidth="2.5" markerEnd="url(#smartlab-arrow)" />
+            <text x={px + vx * vectorScale + 5} y={py + vy * vectorScale} fontSize="12" fill="currentColor">{speedD.symbol}</text>
+            <title>{speedD.name}</title>
+          </g>
+        ) : null}
 
-        <text x="500" y="28" fontSize="13" className="fill-stone-700">t={number(t)} s</text>
+        {speed > 0.001 ? (
+          <g className="text-fuchsia-700">
+            <path d={`M ${px + angleR} ${py} A ${angleR} ${angleR} 0 0 1 ${angleEndX} ${angleEndY}`} fill="none" stroke="currentColor" strokeWidth="2" />
+            <text x={px + 29} y={py + 18} fontSize="12" fill="currentColor">{thetaD.symbol}={number(theta, 1)}°</text>
+            <title>{thetaD.name}</title>
+          </g>
+        ) : null}
+
+        <text x="492" y="26" fontSize="12" className="fill-stone-600">{quantityDisplay(timeQ, "t", "χρόνος").symbol}={number(t)} s</text>
       </svg>
 
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-        <Metric label="t τώρα" value={number(t)} unit="s" />
-        <Metric label="x τώρα" value={number(x)} unit="m" />
-        <Metric label="y τώρα" value={number(y)} unit="m" />
-        <Metric label="υx" value={number(vx)} unit="m/s" />
-        <Metric label="υy" value={number(vy)} unit="m/s" />
-        <Metric label="|υ| τώρα" value={number(speed)} unit="m/s" />
-        <Metric label="χρόνος πτώσης" value={number(tFall)} unit="s" />
-        <Metric label="εμβέλεια R" value={number(range)} unit="m" />
+      <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-stone-200 pt-4 sm:grid-cols-3 xl:grid-cols-4">
+        {measurementQuantities.length ? measurementQuantities.map((quantity) => {
+          const value = measurementValue(quantity);
+          if (typeof value !== "number") return null;
+          return <Metric key={quantity.id} quantity={quantity} fallbackSymbol={quantity.symbol} fallbackName={quantity.name} value={value} />;
+        }) : (
+          <>
+            <Metric quantity={timeQ} fallbackSymbol="t" fallbackName="χρόνος από την εκτόξευση" value={t} unit="s" />
+            <Metric quantity={xQ} fallbackSymbol="x" fallbackName="οριζόντια μετατόπιση" value={x} unit="m" />
+            <Metric quantity={yQ} fallbackSymbol="y" fallbackName="κατακόρυφη κάθοδος" value={y} unit="m" />
+            <Metric quantity={vxQ} fallbackSymbol="υx" fallbackName="οριζόντια συνιστώσα της ταχύτητας" value={vx} unit="m/s" />
+            <Metric quantity={vyQ} fallbackSymbol="υy" fallbackName="κατακόρυφη συνιστώσα της ταχύτητας" value={vy} unit="m/s" />
+            <Metric quantity={speedQ} fallbackSymbol="υ" fallbackName="μέτρο της συνολικής ταχύτητας" value={speed} unit="m/s" />
+            <Metric quantity={thetaQ} fallbackSymbol="θ" fallbackName="γωνία της ταχύτητας από την οριζόντια" value={theta} unit="°" />
+            <Metric quantity={rangeQ} fallbackSymbol="R" fallbackName="βεληνεκές" value={range} unit="m" />
+          </>
+        )}
+      </div>
+
+      <div className="sr-only">
+        {initialQ?.name} {number(v0)} {initialQ?.unit}. {gravityQ?.name} {number(g)} {gravityQ?.unit}. Χρόνος πτώσης {number(tFall)} s.
       </div>
     </div>
   );
@@ -253,7 +351,7 @@ function CircularMotion({ widget, values, time, forceMode = false }: { widget: W
   const maxMass = Math.max(roleMax(widget, "mass", mass), mass);
   const maxForce = Math.max(0.001, maxMass * maxAcceleration);
 
-  const rPx = Math.max(18, 105 * radius / maxR);
+  const rPx = Math.max(24, 106 * radius / maxR);
   const cx = 300;
   const cy = 150;
   const angle = omega * time;
@@ -263,124 +361,123 @@ function CircularMotion({ widget, values, time, forceMode = false }: { widget: W
   const tangentY = Math.cos(angle);
   const radialX = -Math.cos(angle);
   const radialY = -Math.sin(angle);
-  const vLen = 75 * speed / Math.max(maxSpeed, 0.001);
+  const vLen = 74 * speed / Math.max(maxSpeed, 0.001);
   const radialMagnitude = forceMode ? force : acceleration;
   const radialMax = forceMode ? maxForce : Math.max(maxAcceleration, 0.001);
   const radialLen = 68 * radialMagnitude / radialMax;
 
+  const numeric: NumericState = {
+    radius,
+    angular_speed: omega,
+    linear_speed: speed,
+    frequency,
+    period,
+    centripetal_acceleration: acceleration,
+    mass,
+    centripetal_force: force,
+  };
+  const liveIds = new Set(widget.liveMeasurements || []);
+  const measurements = quantitiesOf(widget).filter((quantity) => liveIds.has(quantity.id));
+
+  const radiusQ = quantityForRole(widget, "radius");
+  const speedQ = quantityForRole(widget, "linear_speed");
+  const radialQ = quantityForRole(widget, forceMode ? "centripetal_force" : "centripetal_acceleration");
+  const radiusD = quantityDisplay(radiusQ, "r", "ακτίνα");
+  const speedD = quantityDisplay(speedQ, "υ", "γραμμική ταχύτητα");
+  const radialD = quantityDisplay(radialQ, forceMode ? "Fκ" : "aκ", forceMode ? "κεντρομόλος δύναμη" : "κεντρομόλος επιτάχυνση");
+
   return (
-    <div>
-      <svg viewBox="0 0 620 330" className="w-full" role="img" aria-label="Διάγραμμα ομαλής κυκλικής κίνησης με ακτίνα και διανύσματα">
+    <div className="min-w-0">
+      <svg viewBox="0 0 620 320" className="w-full" role="img" aria-label="Διαδραστικό σχεδιάγραμμα κυκλικής κίνησης">
         <ArrowDefs />
         <circle cx={cx} cy={cy} r={rPx} fill="none" stroke="currentColor" className="text-stone-300" strokeWidth="2" />
         <line x1={cx} y1={cy} x2={px} y2={py} stroke="currentColor" className="text-sky-700" strokeWidth="2" />
-        <text x={(cx + px) / 2 + 7} y={(cy + py) / 2 - 5} fontSize="12" className="fill-sky-700">r={number(radius)} m</text>
+        <text x={(cx + px) / 2 + 7} y={(cy + py) / 2 - 5} fontSize="12" className="fill-sky-700">{radiusD.symbol}={number(radius)} {radiusD.unit || "m"}</text>
         <circle cx={cx} cy={cy} r="5" className="fill-stone-500" />
-        <circle cx={px} cy={py} r="9" className="fill-stone-900" />
+        <circle cx={px} cy={py} r="9" className="fill-stone-950" />
 
         <g className="text-emerald-700">
           <line x1={px} y1={py} x2={px + tangentX * vLen} y2={py + tangentY * vLen} stroke="currentColor" strokeWidth="3" markerEnd="url(#smartlab-arrow)" />
-          <text x={px + tangentX * (vLen + 12)} y={py + tangentY * (vLen + 12)} fontSize="13" fill="currentColor">υ</text>
+          <text x={px + tangentX * (vLen + 12)} y={py + tangentY * (vLen + 12)} fontSize="13" fill="currentColor">{speedD.symbol}</text>
+          <title>{speedD.name}</title>
         </g>
         <g className={forceMode ? "text-rose-700" : "text-amber-700"}>
           <line x1={px} y1={py} x2={px + radialX * radialLen} y2={py + radialY * radialLen} stroke="currentColor" strokeWidth="3" markerEnd="url(#smartlab-arrow)" />
-          <text x={px + radialX * (radialLen + 14)} y={py + radialY * (radialLen + 14)} fontSize="13" fill="currentColor">{forceMode ? "Fκ" : "aκ"}</text>
+          <text x={px + radialX * (radialLen + 14)} y={py + radialY * (radialLen + 14)} fontSize="13" fill="currentColor">{radialD.symbol}</text>
+          <title>{radialD.name}</title>
         </g>
-        <text x="26" y="302" fontSize="12" className="fill-stone-500">Η υ είναι εφαπτομενική · η {forceMode ? "Fκ" : "aκ"} κατευθύνεται πάντα προς το κέντρο.</text>
+        <text x="26" y="300" fontSize="12" className="fill-stone-500">Η {speedD.symbol} είναι εφαπτομενική · η {radialD.symbol} κατευθύνεται προς το κέντρο.</text>
       </svg>
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-        <Metric label="r" value={number(radius)} unit="m" />
-        <Metric label="υ" value={number(speed)} unit="m/s" />
-        <Metric label="ω" value={number(omega)} unit="rad/s" />
-        <Metric label="f" value={number(frequency)} unit="Hz" />
-        <Metric label="T" value={number(period)} unit="s" />
-        <Metric label="aκ" value={number(acceleration)} unit="m/s²" />
-        {forceMode ? <Metric label="m" value={number(mass)} unit="kg" /> : null}
-        {forceMode ? <Metric label="Fκ" value={number(force)} unit="N" /> : null}
+
+      <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-stone-200 pt-4 sm:grid-cols-3 xl:grid-cols-4">
+        {(measurements.length ? measurements : quantitiesOf(widget).filter((quantity) => typeof numeric[quantity.physicsRole] === "number")).map((quantity) => {
+          const value = numeric[quantity.physicsRole];
+          if (typeof value !== "number") return null;
+          return <Metric key={quantity.id} quantity={quantity} fallbackSymbol={quantity.symbol} fallbackName={quantity.name} value={value} />;
+        })}
       </div>
     </div>
   );
 }
 
-function GenericRelation({ widget }: { widget: Widget }) {
-  const quantities = quantitiesOf(widget);
+function UnsupportedDiagram({ widget }: { widget: Widget }) {
   return (
-    <div className="rounded-2xl border border-stone-200 bg-stone-50 p-4">
-      <p className="text-xs font-bold uppercase tracking-[0.14em] text-stone-500">Χάρτης φυσικών εξαρτήσεων</p>
-      <div className="mt-3 grid gap-2 sm:grid-cols-2">
-        {quantities.map((quantity) => (
-          <div key={quantity.id} className="rounded-xl border border-stone-200 bg-white p-3">
-            <div className="flex items-baseline justify-between gap-3">
-              <strong className="text-stone-900">{quantity.symbol || quantity.name}</strong>
-              <span className="text-[11px] text-stone-500">{quantityRoleLabel(quantity.role)}</span>
-            </div>
-            {quantity.dependsOn.length ? <p className="mt-2 text-xs leading-5 text-stone-600">Εξαρτάται από: {quantity.dependsOn.map((id) => quantities.find((item) => item.id === id)?.symbol || id).join(", ")}</p> : null}
-          </div>
-        ))}
+    <div className="flex min-h-64 items-center justify-center border-y border-stone-200 px-6 py-10 text-center">
+      <div className="max-w-lg">
+        <p className="text-sm font-semibold text-stone-900">Το φυσικό σχεδιάγραμμα δεν υποστηρίζεται ακόμη από τον renderer.</p>
+        <p className="mt-2 text-sm leading-6 text-stone-500">Δεν εμφανίζεται generic διάγραμμα ώστε να μη δημιουργηθεί λανθασμένη φυσική εντύπωση. {widget.diagram?.description}</p>
       </div>
-      <p className="mt-3 text-xs leading-5 text-stone-500">Δεν σχεδιάζεται αυθαίρετη αριθμητική καμπύλη όταν δεν υπάρχει ασφαλές physics preset. Οι εξαρτήσεις παραμένουν αυτές που όρισε το SMARTLAB.</p>
     </div>
   );
 }
 
-function QuantityGuide({ widget }: { widget: Widget }) {
+function ControlPanel({ widget, values, onChange }: {
+  widget: Widget;
+  values: Values;
+  onChange: (control: SmartLabControl, value: number) => void;
+}) {
   const quantities = quantitiesOf(widget);
-  if (!quantities.length) return null;
   return (
-    <section className="mt-5">
-      <div className="mb-3">
-        <p className="text-xs font-bold uppercase tracking-[0.15em] text-cyan-800">Τι μετράμε και γιατί μας νοιάζει</p>
-        <p className="mt-1 text-sm leading-6 text-stone-600">Κάθε μέγεθος έχει συγκεκριμένο ρόλο. Άλλα τα μεταβάλλεις και άλλα προκύπτουν υποχρεωτικά από τη Φυσική.</p>
-      </div>
-      <div className="grid gap-3 md:grid-cols-2">
-        {quantities.map((quantity) => (
-          <article key={quantity.id} className="rounded-2xl border border-cyan-100 bg-cyan-50/40 p-4">
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <p className="text-2xl font-black text-cyan-950">{quantity.symbol || quantity.name}</p>
-                <p className="text-sm font-semibold text-stone-900">{quantity.name}</p>
-              </div>
-              <div className="text-right">
-                <span className="text-xs font-semibold text-stone-500">{quantity.unit}</span>
-                <p className="mt-1 text-[11px] font-semibold text-cyan-800">{quantityRoleLabel(quantity.role)}</p>
-              </div>
-            </div>
-            <p className="mt-3 text-sm leading-6 text-stone-700"><strong className="text-stone-900">Τι μετρά:</strong> {quantity.meaning}</p>
-            <p className="mt-2 text-sm leading-6 text-stone-700"><strong className="text-stone-900">Γιατί μας νοιάζει:</strong> {quantity.whyItMatters}</p>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function ControlPanel({ widget, values, onChange }: { widget: Widget; values: Values; onChange: (control: SmartLabControl, value: number) => void }) {
-  return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       {controlsOf(widget).map((control) => {
         const value = Number(values[control.id] ?? control.defaultValue);
+        const quantity = quantities.find((item) => item.id === control.quantityId);
+        const label = quantity?.name || control.label;
+        const symbol = quantity?.symbol || control.symbol;
+        const unit = quantity?.unit || control.unit;
+
         if (control.type === "toggle") {
           const checked = value > (control.min + control.max) / 2;
           return (
-            <label key={control.id} className="flex min-h-11 items-center justify-between gap-4 rounded-xl border border-stone-200 bg-white px-3 py-2">
-              <span className="text-sm font-semibold text-stone-800">{control.label}</span>
-              <input type="checkbox" checked={checked} onChange={(event) => onChange(control, event.target.checked ? control.max : control.min)} className="h-5 w-5 accent-stone-800" />
+            <label key={control.id} className="flex min-h-12 items-center justify-between gap-4 border-b border-stone-200 pb-5">
+              <span className="text-sm font-semibold text-stone-900">{symbol ? `${symbol} — ` : ""}{label}</span>
+              <input type="checkbox" checked={checked} onChange={(event) => onChange(control, event.target.checked ? control.max : control.min)} className="h-5 w-5 accent-stone-900" />
             </label>
           );
         }
+
         return (
           <label key={control.id} className="block">
-            <div className="mb-2 flex items-center justify-between gap-3">
-              <span className="text-sm font-semibold text-stone-800">{control.label} {control.symbol ? `(${control.symbol})` : ""}</span>
-              <Badge variant="outline" className="bg-white font-mono text-stone-700">{number(value)} {control.unit}</Badge>
+            <div className="mb-2.5 flex items-start justify-between gap-3">
+              <div>
+                <p className="text-sm font-semibold leading-5 text-stone-900">{label}</p>
+                {symbol ? <p className="mt-0.5 text-xs text-stone-500">{symbol}</p> : null}
+              </div>
+              <Badge variant="outline" className="shrink-0 bg-white font-mono text-stone-700">{number(value)} {unit}</Badge>
             </div>
             <input
-              type="range" min={control.min} max={control.max} step={control.step} value={value}
+              type="range"
+              min={control.min}
+              max={control.max}
+              step={control.step}
+              value={value}
+              aria-label={label}
               onChange={(event) => onChange(control, Number(event.target.value))}
-              className="h-2 w-full cursor-pointer appearance-none rounded-full bg-stone-200 accent-stone-800"
+              className="h-2 w-full cursor-pointer appearance-none rounded-full bg-stone-200 accent-[#334f39]"
             />
-            <div className="mt-1 flex justify-between text-[11px] text-stone-400">
-              <span>{control.min} {control.unit}</span><span>{control.max} {control.unit}</span>
+            <div className="mt-1.5 flex justify-between text-[11px] text-stone-400">
+              <span>{number(control.min)} {unit}</span>
+              <span>{number(control.max)} {unit}</span>
             </div>
           </label>
         );
@@ -390,19 +487,25 @@ function ControlPanel({ widget, values, onChange }: { widget: Widget; values: Va
 }
 
 function ImpactPanel({ widget, quantityId }: { widget: Widget; quantityId: string | null }) {
+  if (!quantityId) return null;
   const quantities = quantitiesOf(widget);
-  const impact = (Array.isArray(widget.impactModel) ? widget.impactModel : []).find((item) => item.controlQuantityId === quantityId);
-  if (!impact) return null;
+  const impact = (widget.impactModel || []).find((item) => item.controlQuantityId === quantityId);
+  const changed = quantities.find((item) => item.id === quantityId);
+  if (!impact || !changed) return null;
+
   const names = (ids: string[]) => ids.map((id) => {
     const quantity = quantities.find((item) => item.id === id);
-    return quantity?.symbol || quantity?.name || id;
-  }).join(", ");
+    if (!quantity) return id;
+    return `${quantity.symbol ? `${quantity.symbol} — ` : ""}${quantity.name}`;
+  });
+
   return (
-    <div className="mt-5 rounded-xl border border-blue-100 bg-blue-50/60 p-3">
-      <p className="text-xs font-bold uppercase tracking-[0.12em] text-blue-800">Impact της μεταβολής</p>
-      {impact.changes.length ? <p className="mt-2 text-xs leading-5 text-stone-700"><strong>Αλλάζουν:</strong> {names(impact.changes)}</p> : null}
-      {impact.unchanged.length ? <p className="mt-1 text-xs leading-5 text-stone-700"><strong>Μένουν σταθερά:</strong> {names(impact.unchanged)}</p> : null}
-      <p className="mt-2 text-xs leading-5 text-stone-600">{impact.explanation}</p>
+    <div className="border-t border-stone-200 pt-5">
+      <p className="text-xs font-semibold uppercase tracking-[0.13em] text-stone-500">Τι προκάλεσε η αλλαγή</p>
+      <p className="mt-2 text-sm font-semibold text-stone-900">Άλλαξες: {changed.symbol ? `${changed.symbol} — ` : ""}{changed.name}</p>
+      {impact.changes.length ? <p className="mt-2 text-xs leading-5 text-stone-600"><strong className="text-stone-800">Επηρεάστηκαν:</strong> {names(impact.changes).join(" · ")}</p> : null}
+      {impact.unchanged.length ? <p className="mt-1 text-xs leading-5 text-stone-600"><strong className="text-stone-800">Παρέμειναν ίδια:</strong> {names(impact.unchanged).join(" · ")}</p> : null}
+      {impact.explanation ? <p className="mt-2 text-xs leading-5 text-stone-500">{impact.explanation}</p> : null}
     </div>
   );
 }
@@ -412,20 +515,24 @@ export function SmartLabWidget({ widget }: { widget: Widget }) {
   const [playing, setPlaying] = useState(false);
   const [time, setTime] = useState(0);
   const [reveal, setReveal] = useState(false);
-  const [lastChangedQuantityId, setLastChangedQuantityId] = useState<string | null>(() => controlsOf(widget)[0]?.quantityId || null);
+  const [lastChangedQuantityId, setLastChangedQuantityId] = useState<string | null>(null);
 
-  const tFall = widget.physicsPreset === "horizontal_projectile" ? horizontalFallTime(widget, values) : 0;
+  const isHorizontal = widget.physicsPreset === "horizontal_projectile";
+  const tFall = isHorizontal ? horizontalFallTime(widget, values) : 0;
+  const timeQuantity = quantityForRole(widget, "time");
+  const timeName = timeQuantity?.name || "χρόνος";
+  const timeSymbol = timeQuantity?.symbol || "t";
 
   useEffect(() => {
-    if (widget.physicsPreset !== "horizontal_projectile") return;
+    if (!isHorizontal) return;
     setTime((current) => Math.min(current, horizontalFallTime(widget, values)));
-  }, [values, widget]);
+  }, [isHorizontal, values, widget]);
 
   useEffect(() => {
     if (!playing) return;
     const timer = window.setInterval(() => {
       setTime((current) => {
-        if (widget.physicsPreset === "horizontal_projectile") {
+        if (isHorizontal) {
           const end = horizontalFallTime(widget, values);
           return current >= end - 0.001 ? 0 : Math.min(end, current + 0.035);
         }
@@ -433,13 +540,13 @@ export function SmartLabWidget({ widget }: { widget: Widget }) {
       });
     }, 35);
     return () => window.clearInterval(timer);
-  }, [playing, values, widget]);
+  }, [isHorizontal, playing, values, widget]);
 
   const visual = useMemo(() => {
     if (widget.physicsPreset === "horizontal_projectile") return <HorizontalProjectile widget={widget} values={values} time={time} />;
     if (widget.physicsPreset === "uniform_circular_motion") return <CircularMotion widget={widget} values={values} time={time} />;
     if (widget.physicsPreset === "centripetal_force") return <CircularMotion widget={widget} values={values} time={time} forceMode />;
-    return <GenericRelation widget={widget} />;
+    return <UnsupportedDiagram widget={widget} />;
   }, [time, values, widget]);
 
   function reset() {
@@ -447,86 +554,103 @@ export function SmartLabWidget({ widget }: { widget: Widget }) {
     setTime(0);
     setPlaying(false);
     setReveal(false);
-    setLastChangedQuantityId(controlsOf(widget)[0]?.quantityId || null);
+    setLastChangedQuantityId(null);
   }
 
-  const auditCount = Array.isArray(widget.parameterAudit) ? widget.parameterAudit.length : 0;
-
   return (
-    <Card className="overflow-hidden rounded-3xl border-stone-200 shadow-sm">
-      <CardHeader className="border-b border-stone-100 bg-[#fbfaf8]">
-        <div className="flex flex-wrap items-center gap-2">
-          <Badge className="gap-1.5 bg-[#334f39] text-white hover:bg-[#334f39]"><FlaskConical className="h-3.5 w-3.5" /> Εικονικό Εργαστήριο</Badge>
-          <Badge variant="outline">{scopeLabel(widget.scopeRelation)}</Badge>
-          {widget.importance === "core" ? <Badge variant="secondary">Core</Badge> : null}
-          {auditCount > 0 ? <Badge variant="outline" className="gap-1 border-emerald-200 bg-emerald-50 text-emerald-800"><CheckCircle2 className="h-3.5 w-3.5" /> Physics audit passed</Badge> : null}
+    <Card className="overflow-hidden rounded-3xl border-stone-200 bg-white shadow-sm">
+      <CardHeader className="space-y-3 border-b border-stone-100 px-4 py-5 sm:px-6">
+        <div className="flex items-center gap-2">
+          <Badge className="gap-1.5 bg-[#334f39] text-white hover:bg-[#334f39]"><FlaskConical className="h-3.5 w-3.5" /> SMARTLAB</Badge>
+          <span className="text-xs text-stone-500">Πείραξε τις παραμέτρους και δες τι αλλάζει.</span>
         </div>
-        <CardTitle className="pt-2 text-xl sm:text-2xl">{widget.title}</CardTitle>
-        <CardDescription className="max-w-3xl text-sm leading-6">{widget.scene?.description || widget.concept}</CardDescription>
+        <div>
+          <CardTitle className="text-xl font-semibold tracking-tight text-stone-950 sm:text-2xl">{widget.title}</CardTitle>
+          <p className="mt-1 max-w-3xl text-sm leading-6 text-stone-600">{widget.scene?.description || widget.concept}</p>
+        </div>
+        {widget.question ? <p className="text-sm font-medium leading-6 text-stone-800"><span className="text-stone-500">Σκέψου:</span> {widget.question}</p> : null}
       </CardHeader>
-      <CardContent className="p-4 sm:p-6">
-        <div className="rounded-2xl border border-[#ded8cf] bg-[#f6f3ee] p-4">
-          <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#766a5e]">Η ερώτηση</p>
-          <p className="mt-1 text-base font-semibold leading-6 text-stone-900">{widget.question}</p>
-          <div className="mt-3 rounded-xl bg-white px-4 py-3 text-sm leading-6 text-stone-700">
-            <span className="font-semibold">Πριν αγγίξεις τα χειριστήρια:</span> {widget.prediction}
-          </div>
-        </div>
 
-        <QuantityGuide widget={widget} />
-
-        <div className="mt-5 grid gap-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(300px,.6fr)]">
-          <div className="rounded-2xl border border-stone-200 bg-white p-3 sm:p-4">
+      <CardContent className="p-0">
+        <div className="grid lg:grid-cols-[minmax(0,1.65fr)_minmax(290px,.7fr)]">
+          <div className="min-w-0 px-3 py-4 sm:px-5 sm:py-5 lg:px-6">
             {visual}
-            {widget.physicsPreset === "horizontal_projectile" ? (
-              <div className="mt-4 rounded-xl border border-stone-200 bg-stone-50 p-3">
+
+            {isHorizontal ? (
+              <div className="mt-5 border-t border-stone-200 pt-4">
                 <div className="mb-2 flex items-center justify-between gap-3">
-                  <span className="text-sm font-semibold text-stone-800">Χρονική στιγμή (t)</span>
-                  <Badge variant="outline" className="bg-white font-mono">{number(Math.min(time, tFall))} s</Badge>
+                  <div>
+                    <p className="text-sm font-semibold text-stone-900">{timeName}</p>
+                    <p className="text-xs text-stone-500">{timeSymbol}</p>
+                  </div>
+                  <Badge variant="outline" className="bg-white font-mono text-stone-700">{number(Math.min(time, tFall))} s</Badge>
                 </div>
-                <input type="range" min={0} max={Math.max(tFall, 0.001)} step={Math.max(tFall / 200, 0.005)} value={Math.min(time, tFall)} onChange={(event) => { setPlaying(false); setTime(Number(event.target.value)); }} className="h-2 w-full cursor-pointer appearance-none rounded-full bg-stone-200 accent-stone-800" />
-                <div className="mt-1 flex justify-between text-[11px] text-stone-400"><span>0 s</span><span>{number(tFall)} s</span></div>
+                <input
+                  type="range"
+                  min={0}
+                  max={Math.max(tFall, 0.001)}
+                  step={Math.max(tFall / 200, 0.005)}
+                  value={Math.min(time, tFall)}
+                  aria-label={timeName}
+                  onChange={(event) => {
+                    setPlaying(false);
+                    setTime(Number(event.target.value));
+                    setLastChangedQuantityId(timeQuantity?.id || null);
+                  }}
+                  className="h-2 w-full cursor-pointer appearance-none rounded-full bg-stone-200 accent-[#334f39]"
+                />
+                <div className="mt-1.5 flex justify-between text-[11px] text-stone-400"><span>0 s</span><span>{number(tFall)} s</span></div>
               </div>
             ) : null}
+
             <div className="mt-4 flex flex-wrap gap-2">
-              <Button type="button" onClick={() => setPlaying((value) => !value)} className="bg-[#334f39] hover:bg-[#29412f]">
+              <Button type="button" onClick={() => setPlaying((value) => !value)} className="min-h-10 bg-[#334f39] hover:bg-[#29412f]">
                 {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />} {playing ? "Παύση" : "Έναρξη"}
               </Button>
-              <Button type="button" variant="outline" onClick={reset}><RotateCcw className="h-4 w-4" /> Reset</Button>
+              <Button type="button" variant="outline" onClick={reset} className="min-h-10"><RotateCcw className="h-4 w-4" /> Επαναφορά</Button>
             </div>
           </div>
 
-          <div className="rounded-2xl border border-stone-200 bg-[#fcfbf9] p-4 sm:p-5">
-            <p className="mb-4 text-xs font-bold uppercase tracking-[0.15em] text-stone-500">Τα ανεξάρτητα χειριστήρια</p>
+          <aside className="border-t border-stone-200 bg-[#fcfbf9] px-4 py-5 sm:px-6 lg:border-l lg:border-t-0">
+            <div className="mb-5">
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-stone-500">Τι μπορείς να αλλάξεις</p>
+              <p className="mt-1 text-xs leading-5 text-stone-500">Άλλαξε πρώτα μία παράμετρο κάθε φορά. Μετά συνδύασέ τες.</p>
+            </div>
+
             <ControlPanel widget={widget} values={values} onChange={(control, value) => {
               setValues((current) => ({ ...current, [control.id]: value }));
               setLastChangedQuantityId(control.quantityId || null);
             }} />
+
             <ImpactPanel widget={widget} quantityId={lastChangedQuantityId} />
-            <div className="mt-5 border-t border-stone-200 pt-4">
-              <p className="text-xs font-bold uppercase tracking-[0.13em] text-stone-500">Τι βλέπεις</p>
-              <p className="mt-2 text-sm leading-6 text-stone-700">{widget.liveFeedback}</p>
-            </div>
-          </div>
+
+            {widget.liveFeedback ? (
+              <div className="mt-5 border-t border-stone-200 pt-5">
+                <p className="text-xs font-semibold uppercase tracking-[0.13em] text-stone-500">Παρατήρησε</p>
+                <p className="mt-2 text-sm leading-6 text-stone-700">{widget.liveFeedback}</p>
+              </div>
+            ) : null}
+          </aside>
         </div>
 
-        <div className="mt-5 grid gap-3 md:grid-cols-2">
-          <div className="rounded-2xl border border-[#d9cfbf] bg-[#faf5e9] p-4">
-            <div className="flex items-center gap-2 text-sm font-bold text-[#66543e]"><Target className="h-4 w-4" /> Η Πρόκληση</div>
-            <p className="mt-2 text-sm leading-6 text-[#665c50]">{widget.challenge.instruction}</p>
-            {widget.challenge.successHint ? <p className="mt-2 text-xs text-[#857767]">Στόχος: {widget.challenge.successHint}</p> : null}
-          </div>
-          <div className="rounded-2xl border border-[#cad7c7] bg-[#f0f6ef] p-4">
-            <div className="flex items-center gap-2 text-sm font-bold text-[#425d46]"><Lightbulb className="h-4 w-4" /> Η Ανακάλυψη</div>
-            {reveal ? (
-              <div className="mt-2 space-y-2 text-sm leading-6 text-[#526653]">
-                <p>{widget.discovery}</p>
-                {widget.equation ? <p className="rounded-lg bg-white/75 px-3 py-2 font-mono font-semibold text-stone-800">{widget.equation}</p> : null}
-                {widget.transferCheck ? <p><strong>Δοκίμασε τώρα:</strong> {widget.transferCheck}</p> : null}
+        {(widget.discovery || widget.equation || widget.challenge?.instruction) ? (
+          <div className="border-t border-stone-200 px-4 py-4 sm:px-6">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="min-w-0">
+                {widget.challenge?.instruction ? <p className="text-sm text-stone-700"><strong className="text-stone-900">Δοκίμασε:</strong> {widget.challenge.instruction}</p> : null}
               </div>
-            ) : <Button type="button" variant="outline" className="mt-3 bg-white" onClick={() => setReveal(true)}>Δείξε μου τι ανακάλυψα</Button>}
+              {!reveal && widget.discovery ? (
+                <Button type="button" variant="outline" onClick={() => setReveal(true)} className="shrink-0"><Lightbulb className="h-4 w-4" /> Τι ανακάλυψα;</Button>
+              ) : null}
+            </div>
+            {reveal ? (
+              <div className="mt-3 max-w-4xl text-sm leading-6 text-stone-700">
+                <p>{widget.discovery}</p>
+                {widget.equation ? <p className="mt-2 font-mono font-semibold text-stone-900">{widget.equation}</p> : null}
+              </div>
+            ) : null}
           </div>
-        </div>
+        ) : null}
       </CardContent>
     </Card>
   );
@@ -534,25 +658,16 @@ export function SmartLabWidget({ widget }: { widget: Widget }) {
 
 export function SmartLabExperience({ content }: { content: SmartLabContent }) {
   return (
-    <div className="space-y-10">
+    <div className="space-y-8">
       {content.subchapters.map((section) => section.widgets.length ? (
-        <section key={section.subchapterId} className="space-y-4">
+        <section key={section.subchapterId} className="space-y-3">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#817263]">{section.subchapterLabel}</p>
-            <h2 className="mt-1 text-2xl font-semibold text-stone-900">{section.subchapterTitle}</h2>
+            <p className="text-xs font-semibold uppercase tracking-[0.15em] text-stone-500">{section.subchapterLabel}</p>
+            <h2 className="mt-1 text-xl font-semibold text-stone-950 sm:text-2xl">{section.subchapterTitle}</h2>
           </div>
-          {section.widgets.map((widget) => <SmartLabWidget key={widget.id} widget={widget} />)}
+          {section.widgets.slice(0, 1).map((widget) => <SmartLabWidget key={widget.id} widget={widget} />)}
         </section>
       ) : null)}
-      {content.chapterSynthesisWidgets.length ? (
-        <section className="space-y-4 border-t border-stone-200 pt-8">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#817263]">Σύνθεση κεφαλαίου</p>
-            <h2 className="mt-1 text-2xl font-semibold">Όλα μαζί</h2>
-          </div>
-          {content.chapterSynthesisWidgets.map((widget) => <SmartLabWidget key={widget.id} widget={widget} />)}
-        </section>
-      ) : null}
     </div>
   );
 }
