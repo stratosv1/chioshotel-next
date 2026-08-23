@@ -6,8 +6,10 @@ import type { AssistantLanguage } from "@/lib/ai-assistant/types";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 
 const supported = new Set<AssistantLanguage>(["el", "en", "de", "fr", "it", "es", "tr"]);
+const ON_DEMAND_SYNC_TIMEOUT_MS = 55_000;
 
 const SPLIT_COPY: Record<AssistantLanguage, { category: string; change: string; discount: string }> = {
   el: { category: "Λύση split stay επειδή δεν υπάρχει ένα δωμάτιο για όλες τις νύχτες", change: "1 αλλαγή δωματίου", discount: "Περιλαμβάνεται επιπλέον έκπτωση split stay" },
@@ -48,6 +50,50 @@ function shortDate(value: string, language: AssistantLanguage) {
     .format(new Date(Date.UTC(year, month - 1, day)));
 }
 
+async function refreshBookingCoreOnDemand(request: NextRequest) {
+  const secret = String(process.env.CRON_SECRET || "").trim();
+  if (!secret) {
+    console.error("AI Room Finder cannot refresh stale booking inventory because CRON_SECRET is missing");
+    return false;
+  }
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), ON_DEMAND_SYNC_TIMEOUT_MS);
+
+  try {
+    const syncUrl = new URL("/api/booking-core/sync/", request.nextUrl.origin);
+    const response = await fetch(syncUrl, {
+      method: "GET",
+      cache: "no-store",
+      redirect: "follow",
+      signal: controller.signal,
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${secret}`,
+      },
+    });
+
+    const raw = await response.text();
+    if (!response.ok) {
+      console.error("AI Room Finder on-demand Booking Core sync failed", response.status, raw.slice(0, 500));
+      return false;
+    }
+
+    try {
+      const payload = JSON.parse(raw) as { ok?: boolean };
+      return payload.ok === true;
+    } catch {
+      console.error("AI Room Finder on-demand Booking Core sync returned invalid JSON");
+      return false;
+    }
+  } catch (error) {
+    console.error("AI Room Finder on-demand Booking Core sync failed", error);
+    return false;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 export async function GET(request: NextRequest) {
   try {
     const checkin = request.nextUrl.searchParams.get("checkin") || "";
@@ -63,8 +109,20 @@ export async function GET(request: NextRequest) {
 
     if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL is missing");
     const sql = neon(process.env.DATABASE_URL);
-    const statusRows = await sql`select * from booking_core.inventory_status(${checkin}::date, ${checkout}::date)`;
-    const status = String((statusRows[0] as any)?.status || "DATA_UNAVAILABLE");
+    let statusRows = await sql`select * from booking_core.inventory_status(${checkin}::date, ${checkout}::date)`;
+    let status = String((statusRows[0] as any)?.status || "DATA_UNAVAILABLE");
+
+    // Idle-cost optimization: there is no scheduled Neon heartbeat anymore.
+    // When inventory freshness has naturally expired, refresh it only because a
+    // real guest is asking for availability, then re-check the database status.
+    if (status === "STALE_DATA") {
+      const refreshed = await refreshBookingCoreOnDemand(request);
+      if (refreshed) {
+        statusRows = await sql`select * from booking_core.inventory_status(${checkin}::date, ${checkout}::date)`;
+        status = String((statusRows[0] as any)?.status || "DATA_UNAVAILABLE");
+      }
+    }
+
     if (status !== "READY") {
       return NextResponse.json({ success: false, code: status, message: "Booking inventory is temporarily unavailable." }, { status: 503, headers: { "Cache-Control": "no-store" } });
     }
