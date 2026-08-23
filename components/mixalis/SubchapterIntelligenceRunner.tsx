@@ -35,7 +35,7 @@ const secondaryCtaClass =
 function friendlyError(value: string | null) {
   if (!value) return null;
   if (value.toLowerCase().includes("aborted")) {
-    return "Η προηγούμενη σύνθεση ξεπέρασε το χρονικό όριο. Τα 67 source findings παραμένουν αποθηκευμένα και μπορείς να επαναλάβεις μόνο τη σύνθεση.";
+    return "Η προηγούμενη σύνθεση ξεπέρασε το χρονικό όριο. Τα source findings παραμένουν αποθηκευμένα και μπορείς να επαναλάβεις μόνο τη σύνθεση.";
   }
   return value;
 }
@@ -72,9 +72,9 @@ export default function SubchapterIntelligenceRunner({
     const nextStatus = payload?.view?.status || payload?.status;
     const nextError = friendlyError(payload?.view?.errorMessage || null);
     if (nextStatus && activeRef.current) setStatus(nextStatus);
-    if (activeRef.current) setError(nextError);
+    if (activeRef.current && !running) setError(nextError);
     return { status: nextStatus, errorMessage: nextError };
-  }, [versionId]);
+  }, [running, versionId]);
 
   useEffect(() => {
     if (status !== "draft") return;
@@ -85,10 +85,6 @@ export default function SubchapterIntelligenceRunner({
             window.clearInterval(timer);
             setRunning(false);
             router.refresh();
-            return;
-          }
-          if (next.errorMessage) {
-            setRunning(false);
           }
         })
         .catch(() => undefined);
@@ -111,13 +107,14 @@ export default function SubchapterIntelligenceRunner({
         const nextError = friendlyError(payload?.view?.errorMessage || null);
         if (!activeRef.current) return;
         if (nextStatus) setStatus(nextStatus);
-        setError(nextError);
         if (nextStatus === "current" || nextStatus === "superseded") {
+          setError(null);
           setRunning(false);
           router.refresh();
           return;
         }
         if (nextError) {
+          setError(nextError);
           setRunning(false);
         }
       })
