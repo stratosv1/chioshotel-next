@@ -219,8 +219,8 @@ async function classifyChunk(
   images: PreparedImage[],
   model: string,
 ): Promise<Map<string, SegmentationMappingInput[]>> {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) throw new Error("OPENAI_API_KEY is not configured.");
+  const apiKey = process.env.TEACHER;
+  if (!apiKey) throw new Error("TEACHER is not configured for the Physics pipeline.");
 
   const content: any[] = [
     {
@@ -316,7 +316,6 @@ export async function runSourceSegmentation(input: {
 
   const model =
     process.env.PHYSICS_ANALYSIS_MODEL?.trim() ||
-    process.env.OPENAI_ASSISTANT_MODEL?.trim() ||
     "gpt-5-mini";
   const runId = await createSegmentationRun({
     batchId: input.batchId,

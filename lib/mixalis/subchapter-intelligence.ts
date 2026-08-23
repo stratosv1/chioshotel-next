@@ -171,7 +171,6 @@ function getSql() {
 function configuredModel() {
   return (
     process.env.PHYSICS_ANALYSIS_MODEL?.trim() ||
-    process.env.OPENAI_ASSISTANT_MODEL?.trim() ||
     "gpt-5.6"
   );
 }
@@ -529,8 +528,8 @@ function cleanContent(raw: any, allowedIds: Set<string>): SubchapterIntelligence
 }
 
 async function callOpenAI(prompt: string) {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) throw new Error("OPENAI_API_KEY is not configured.");
+  const apiKey = process.env.TEACHER;
+  if (!apiKey) throw new Error("TEACHER is not configured for the Physics pipeline.");
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 410_000);
   try {

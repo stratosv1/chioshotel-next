@@ -23,7 +23,6 @@ function outputText(payload: any) {
 function clarificationModel() {
   return (
     process.env.PHYSICS_CLARIFICATION_MODEL?.trim() ||
-    process.env.OPENAI_ASSISTANT_MODEL?.trim() ||
     process.env.PHYSICS_GENERATION_MODEL?.trim() ||
     "gpt-5.6"
   );
@@ -108,8 +107,8 @@ export async function POST(
   const session = await getMixalisSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) return NextResponse.json({ error: "OPENAI_API_KEY is missing." }, { status: 500 });
+  const apiKey = process.env.TEACHER;
+  if (!apiKey) return NextResponse.json({ error: "TEACHER is missing for the Physics pipeline." }, { status: 500 });
 
   const { revisionId } = await params;
 
