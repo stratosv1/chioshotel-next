@@ -56,7 +56,7 @@ type CanonicalRow = {
 type CanonicalSnapshot = {
   generatedAt: string;
   dataUpdatedAt: string;
-  sourceRefreshedAt?: string;
+  sourceRefreshedAt: string;
   rows: CanonicalRow[];
 };
 
@@ -153,9 +153,7 @@ function parseCanonicalSnapshot(payload: unknown): CanonicalSnapshot {
   }
   if (!validIsoTimestamp(source.generatedAt)) throw new Error("Source generatedAt is invalid");
   if (!validIsoTimestamp(source.dataUpdatedAt)) throw new Error("Source dataUpdatedAt is invalid");
-  if (source.sourceRefreshedAt !== undefined && source.sourceRefreshedAt !== null && !validIsoTimestamp(source.sourceRefreshedAt)) {
-    throw new Error("Source sourceRefreshedAt is invalid");
-  }
+  if (!validIsoTimestamp(source.sourceRefreshedAt)) throw new Error("Source sourceRefreshedAt is invalid");
   if (!Array.isArray(source.rows) || source.rows.length === 0) throw new Error("Source returned no booking rows");
   if (Number(source.count) !== source.rows.length) throw new Error("Source count does not match rows length");
 
@@ -163,7 +161,7 @@ function parseCanonicalSnapshot(payload: unknown): CanonicalSnapshot {
   return {
     generatedAt: source.generatedAt,
     dataUpdatedAt: source.dataUpdatedAt,
-    sourceRefreshedAt: text(source.sourceRefreshedAt) || undefined,
+    sourceRefreshedAt: source.sourceRefreshedAt,
     rows,
   };
 }
@@ -308,7 +306,7 @@ async function syncBookingCore(request: NextRequest) {
           ${source},
           ${snapshot.rows.length},
           0,
-          ${snapshot.generatedAt}::timestamptz,
+          ${snapshot.sourceRefreshedAt}::timestamptz,
           ${minDate}::date,
           ${maxDate}::date
         )
@@ -323,6 +321,7 @@ async function syncBookingCore(request: NextRequest) {
         rowsWritten: 0,
         range: { min: minDate, max: maxDate },
         sourceDataUpdatedAt: snapshot.dataUpdatedAt,
+        sourceRefreshedAt: snapshot.sourceRefreshedAt,
         sourceResponseGeneratedAt: snapshot.generatedAt,
         durationMs: Date.now() - startedAt,
       }, { headers: { "Cache-Control": "no-store", "X-Robots-Tag": "noindex, nofollow" } });
@@ -332,7 +331,7 @@ async function syncBookingCore(request: NextRequest) {
     const result = await sql`
       select *
       from booking_core.replace_inventory_snapshot(
-        ${snapshot.generatedAt}::timestamptz,
+        ${snapshot.sourceRefreshedAt}::timestamptz,
         ${JSON.stringify(snapshot.rows)}::jsonb,
         ${source}
       )
@@ -370,6 +369,7 @@ async function syncBookingCore(request: NextRequest) {
       rowsWritten: Number(saved.rows_written || 0),
       range: { min: saved.min_date || null, max: saved.max_date || null },
       sourceDataUpdatedAt: snapshot.dataUpdatedAt,
+      sourceRefreshedAt: snapshot.sourceRefreshedAt,
       sourceResponseGeneratedAt: snapshot.generatedAt,
       pricingAudit,
       durationMs: Date.now() - startedAt,
