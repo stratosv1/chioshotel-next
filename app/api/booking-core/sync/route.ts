@@ -17,6 +17,7 @@ const SOURCE_TIMEOUT_MS = 45_000;
 const VALID_REASONS = new Set(["PRICE_OK", "BOOKED", "CLOSED"]);
 const PULL_SOURCE = "script_url_booking_core_snapshot_v1";
 const PUSH_SOURCE = "script_push_booking_core_snapshot_v1";
+const DATA_UPDATED_AT_SETTING = "booking_core_last_source_data_updated_at";
 
 // Fallback verifier for the Apps Script push token. The raw token is never
 // stored in the repository; only a memory-hard scrypt verifier is kept here.
@@ -279,15 +280,15 @@ async function syncBookingCore(request: NextRequest) {
     await retryPendingPricingAlert(databaseUrl);
 
     const sql = neon(databaseUrl);
-    const duplicateRows = await sql`
-      select 1
-      from booking_core.sync_runs
-      where status = 'ok'
-        and source_generated_at = ${snapshot.dataUpdatedAt}::timestamptz
+    const markerRows = await sql`
+      select text_value
+      from booking_core.settings
+      where setting_key = ${DATA_UPDATED_AT_SETTING}
       limit 1
     `;
+    const alreadyApplied = text((markerRows as any[])[0]?.text_value) === snapshot.dataUpdatedAt;
 
-    if ((duplicateRows as any[]).length > 0) {
+    if (alreadyApplied) {
       const { minDate, maxDate } = snapshotDateRange(snapshot.rows);
       await sql`
         insert into booking_core.sync_runs (
@@ -307,7 +308,7 @@ async function syncBookingCore(request: NextRequest) {
           ${source},
           ${snapshot.rows.length},
           0,
-          ${snapshot.dataUpdatedAt}::timestamptz,
+          ${snapshot.generatedAt}::timestamptz,
           ${minDate}::date,
           ${maxDate}::date
         )
@@ -331,7 +332,7 @@ async function syncBookingCore(request: NextRequest) {
     const result = await sql`
       select *
       from booking_core.replace_inventory_snapshot(
-        ${snapshot.dataUpdatedAt}::timestamptz,
+        ${snapshot.generatedAt}::timestamptz,
         ${JSON.stringify(snapshot.rows)}::jsonb,
         ${source}
       )
@@ -343,6 +344,23 @@ async function syncBookingCore(request: NextRequest) {
       snapshot.dataUpdatedAt,
       priceChanges,
     );
+
+    await sql`
+      insert into booking_core.settings (
+        setting_key,
+        numeric_value,
+        text_value,
+        description
+      ) values (
+        ${DATA_UPDATED_AT_SETTING},
+        null,
+        ${snapshot.dataUpdatedAt},
+        ${"Last source dataUpdatedAt successfully applied to Booking Core"}
+      )
+      on conflict (setting_key) do update
+      set text_value = excluded.text_value,
+          description = excluded.description
+    `;
 
     return NextResponse.json({
       ok: true,
