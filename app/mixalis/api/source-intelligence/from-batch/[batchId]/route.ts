@@ -20,11 +20,7 @@ function redirectTo(request: NextRequest, path: string) {
 }
 
 function ensurePhysicsAnalysisModel() {
-  const configured =
-    process.env.PHYSICS_ANALYSIS_MODEL?.trim() ||
-    process.env.OPENAI_ASSISTANT_MODEL?.trim();
-
-  if (!configured) {
+  if (!process.env.PHYSICS_ANALYSIS_MODEL?.trim()) {
     process.env.PHYSICS_ANALYSIS_MODEL = DEFAULT_PHYSICS_ANALYSIS_MODEL;
   }
 }
