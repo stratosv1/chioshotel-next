@@ -39,6 +39,7 @@ export default function SourceIntelligenceRunner({
   totalUnits,
   initialFindingsCount,
   schoolBookMapped,
+  subchapterNumberLabel,
 }: {
   analysisId: string;
   initialStatus: string;
@@ -46,6 +47,7 @@ export default function SourceIntelligenceRunner({
   totalUnits: number;
   initialFindingsCount: number;
   schoolBookMapped: boolean;
+  subchapterNumberLabel: string;
 }) {
   const router = useRouter();
   const [running, setRunning] = useState(false);
@@ -108,7 +110,7 @@ export default function SourceIntelligenceRunner({
           !autoFinalizeAttempted.current
         ) {
           autoFinalizeAttempted.current = true;
-          setMessage("Οι 31 φωτογραφίες έχουν ολοκληρωθεί. Επαναλαμβάνεται αυτόματα μόνο η τελική σύνθεση…");
+          setMessage(`${totalUnits} φωτογραφίες έχουν ολοκληρωθεί. Επαναλαμβάνεται αυτόματα μόνο η τελική σύνθεση…`);
           void run();
         }
       } catch {
@@ -273,7 +275,7 @@ export default function SourceIntelligenceRunner({
           <p className="mt-2 text-xl font-semibold">{findingsCount}</p>
         </div>
         <div className="rounded-2xl border border-black/10 bg-white p-5 shadow-sm">
-          <p className="text-xs uppercase tracking-[0.14em] text-[#847466]">Σχολικό βιβλίο 1.1</p>
+          <p className="text-xs uppercase tracking-[0.14em] text-[#847466]">Σχολικό βιβλίο {subchapterNumberLabel}</p>
           <p className="mt-2 text-xl font-semibold">{schoolBookMapped ? "Συνδεδεμένο" : "Εκκρεμεί"}</p>
         </div>
       </section>
