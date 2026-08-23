@@ -148,7 +148,7 @@ export default function PhysicsPipeline({
 
   return (
     <section className="mt-6 rounded-3xl border border-black/10 bg-white p-6 shadow-sm sm:p-8">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.15em] text-[#857261]">
             Physics Pipeline
@@ -158,6 +158,12 @@ export default function PhysicsPipeline({
             Κάθε υποκεφάλαιο περνά με τη σειρά από Σαββάλα, επίσημο σχολικό βιβλίο, SMART και START. Το κουμπί «Συνέχεια» ανοίγει πάντα το σωστό επόμενο στάδιο.
           </p>
         </div>
+        <Link
+          href={`/mixalis/chapters/${chapterId}/lab`}
+          className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-xl border border-[#9eb09a] bg-[#eef5ed] px-5 py-2.5 text-sm font-bold text-[#3f5a43] transition hover:bg-[#e4eee2]"
+        >
+          LAB · Εικονικά Εργαστήρια
+        </Link>
       </div>
 
       <div className="mt-6 space-y-4">
