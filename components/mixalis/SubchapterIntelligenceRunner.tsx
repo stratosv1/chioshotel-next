@@ -17,11 +17,17 @@ type Props = {
   } | null;
 };
 
+type RunState = "idle" | "running" | "error" | "ready";
+
 type StatusPayload = {
+  accepted?: boolean;
   status?: "draft" | "current" | "superseded";
   view?: {
     status?: "draft" | "current" | "superseded";
     errorMessage?: string | null;
+    content?: {
+      state?: string;
+    };
   };
   error?: string;
 };
@@ -34,10 +40,23 @@ const secondaryCtaClass =
 
 function friendlyError(value: string | null) {
   if (!value) return null;
-  if (value.toLowerCase().includes("aborted")) {
-    return "Η προηγούμενη σύνθεση ξεπέρασε το χρονικό όριο. Τα source findings παραμένουν αποθηκευμένα και μπορείς να επαναλάβεις μόνο τη σύνθεση.";
+  const normalized = value.toLowerCase();
+  if (normalized.includes("fetch failed") || normalized.includes("network")) {
+    return "Η σύνθεση δεν μπόρεσε να επικοινωνήσει με το OpenAI μετά τις αυτόματες επαναλήψεις. Τα source findings παραμένουν αποθηκευμένα και μπορείς να επαναλάβεις μόνο τη σύνθεση.";
+  }
+  if (normalized.includes("aborted") || normalized.includes("timeout") || normalized.includes("timed out")) {
+    return "Η σύνθεση ξεπέρασε το χρονικό όριο μετά τις αυτόματες επαναλήψεις. Τα source findings παραμένουν αποθηκευμένα και μπορείς να επαναλάβεις μόνο τη σύνθεση.";
   }
   return value;
+}
+
+function deriveRunState(payload: StatusPayload | null): RunState {
+  const nextStatus = payload?.view?.status || payload?.status;
+  if (nextStatus === "current" || nextStatus === "superseded") return "ready";
+  const state = String(payload?.view?.content?.state || "");
+  if (state === "running") return "running";
+  if (state === "error") return "error";
+  return "idle";
 }
 
 export default function SubchapterIntelligenceRunner({
@@ -51,15 +70,35 @@ export default function SubchapterIntelligenceRunner({
 }: Props) {
   const router = useRouter();
   const [status, setStatus] = useState(initialStatus);
-  const [running, setRunning] = useState(false);
+  const [runState, setRunState] = useState<RunState>(
+    initialStatus === "current" || initialStatus === "superseded"
+      ? "ready"
+      : initialErrorMessage
+        ? "error"
+        : "idle",
+  );
+  const [requesting, setRequesting] = useState(false);
   const [error, setError] = useState<string | null>(friendlyError(initialErrorMessage ?? null));
   const activeRef = useRef(true);
+  const running = runState === "running";
 
   useEffect(() => {
     activeRef.current = true;
     return () => {
       activeRef.current = false;
     };
+  }, []);
+
+  const applyPayload = useCallback((payload: StatusPayload | null) => {
+    const nextStatus = payload?.view?.status || payload?.status;
+    const nextRunState = deriveRunState(payload);
+    const nextError = friendlyError(payload?.view?.errorMessage || null);
+
+    if (!activeRef.current) return { status: nextStatus, runState: nextRunState, errorMessage: nextError };
+    if (nextStatus) setStatus(nextStatus);
+    setRunState(nextRunState);
+    setError(nextRunState === "error" ? nextError : null);
+    return { status: nextStatus, runState: nextRunState, errorMessage: nextError };
   }, []);
 
   const readStatus = useCallback(async () => {
@@ -69,63 +108,63 @@ export default function SubchapterIntelligenceRunner({
     });
     const payload = (await response.json().catch(() => null)) as StatusPayload | null;
     if (!response.ok) throw new Error(payload?.error || "Δεν ήταν δυνατός ο έλεγχος προόδου.");
-    const nextStatus = payload?.view?.status || payload?.status;
-    const nextError = friendlyError(payload?.view?.errorMessage || null);
-    if (nextStatus && activeRef.current) setStatus(nextStatus);
-    if (activeRef.current && !running) setError(nextError);
-    return { status: nextStatus, errorMessage: nextError };
-  }, [running, versionId]);
+    return applyPayload(payload);
+  }, [applyPayload, versionId]);
 
   useEffect(() => {
     if (status !== "draft") return;
+    void readStatus().catch(() => undefined);
+  }, [readStatus, status]);
+
+  useEffect(() => {
+    if (status !== "draft" || runState !== "running") return;
     const timer = window.setInterval(() => {
       void readStatus()
         .then((next) => {
           if (next.status === "current" || next.status === "superseded") {
             window.clearInterval(timer);
-            setRunning(false);
             router.refresh();
           }
         })
         .catch(() => undefined);
-    }, 2000);
+    }, 2500);
     return () => window.clearInterval(timer);
-  }, [readStatus, router, status]);
+  }, [readStatus, router, runState, status]);
 
   const run = useCallback(async () => {
-    if (running || status !== "draft") return;
-    setRunning(true);
+    if (requesting || running || status !== "draft") return;
+    setRequesting(true);
     setError(null);
 
-    void fetch(`/mixalis/api/subchapter-intelligence/${versionId}`, {
-      method: "POST",
-    })
-      .then(async (response) => {
-        const payload = (await response.json().catch(() => null)) as StatusPayload | null;
-        if (!response.ok) throw new Error(payload?.error || "Η σύνθεση απέτυχε.");
-        const nextStatus = payload?.view?.status || payload?.status;
-        const nextError = friendlyError(payload?.view?.errorMessage || null);
-        if (!activeRef.current) return;
-        if (nextStatus) setStatus(nextStatus);
-        if (nextStatus === "current" || nextStatus === "superseded") {
-          setError(null);
-          setRunning(false);
-          router.refresh();
-          return;
-        }
-        if (nextError) {
-          setError(nextError);
-          setRunning(false);
-        }
-      })
-      .catch((reason) => {
-        if (!activeRef.current) return;
-        setError(
-          friendlyError(reason instanceof Error ? reason.message : "Η σύνθεση διακόπηκε."),
-        );
-        setRunning(false);
+    try {
+      const response = await fetch(`/mixalis/api/subchapter-intelligence/${versionId}`, {
+        method: "POST",
       });
-  }, [router, running, status, versionId]);
+      const payload = (await response.json().catch(() => null)) as StatusPayload | null;
+      if (!response.ok) throw new Error(payload?.error || "Η σύνθεση απέτυχε να ξεκινήσει.");
+
+      const next = applyPayload(payload);
+      if (next.status === "current" || next.status === "superseded") {
+        router.refresh();
+        return;
+      }
+
+      if (next.runState !== "running") {
+        const refreshed = await readStatus();
+        if (refreshed.status === "current" || refreshed.status === "superseded") {
+          router.refresh();
+        }
+      }
+    } catch (reason) {
+      if (!activeRef.current) return;
+      setRunState("error");
+      setError(
+        friendlyError(reason instanceof Error ? reason.message : "Η σύνθεση δεν ξεκίνησε."),
+      );
+    } finally {
+      if (activeRef.current) setRequesting(false);
+    }
+  }, [applyPayload, readStatus, requesting, router, running, status, versionId]);
 
   const completed = status === "current" || status === "superseded";
 
@@ -148,11 +187,13 @@ export default function SubchapterIntelligenceRunner({
         <span className="rounded-full border border-black/10 bg-white px-3 py-1.5">
           {completed
             ? "Canonical · ready"
-            : running
-              ? "Συντίθεται…"
-              : error
-                ? "Χρειάζεται επανάληψη"
-                : "Έτοιμο για σύνθεση"}
+            : requesting
+              ? "Εκκινείται…"
+              : running
+                ? "Συντίθεται…"
+                : runState === "error"
+                  ? "Χρειάζεται επανάληψη"
+                  : "Έτοιμο για σύνθεση"}
         </span>
       </div>
 
@@ -163,12 +204,19 @@ export default function SubchapterIntelligenceRunner({
       ) : null}
 
       {!completed ? (
-        <button type="button" onClick={run} disabled={running} className={`mt-6 ${primaryCtaClass}`}>
-          {running
-            ? "Συντίθεται το Subchapter Intelligence…"
-            : error
-              ? `Επανάληψη σύνθεσης Subchapter Intelligence v${versionNumber}`
-              : `Δημιουργία Subchapter Intelligence v${versionNumber}`}
+        <button
+          type="button"
+          onClick={run}
+          disabled={requesting || running}
+          className={`mt-6 ${primaryCtaClass}`}
+        >
+          {requesting
+            ? "Εκκίνηση σύνθεσης…"
+            : running
+              ? "Συντίθεται το Subchapter Intelligence…"
+              : runState === "error"
+                ? `Επανάληψη σύνθεσης Subchapter Intelligence v${versionNumber}`
+                : `Δημιουργία Subchapter Intelligence v${versionNumber}`}
         </button>
       ) : currentLesson ? (
         <div className="mt-6 rounded-2xl border border-[#a9c1a5] bg-[#eef5ed] p-5 text-[#33492f]">
