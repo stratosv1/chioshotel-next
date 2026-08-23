@@ -32,6 +32,14 @@ const primaryCtaClass =
 const secondaryCtaClass =
   "inline-flex min-h-14 w-full items-center justify-center rounded-2xl border-2 border-[#304b35] bg-white px-5 py-4 text-center text-base font-bold !text-[#304b35] shadow-sm transition hover:bg-[#f6faf5] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#c4d3c2]";
 
+function friendlyError(value: string | null) {
+  if (!value) return null;
+  if (value.toLowerCase().includes("aborted")) {
+    return "Η προηγούμενη σύνθεση ξεπέρασε το χρονικό όριο. Τα 67 source findings παραμένουν αποθηκευμένα και μπορείς να επαναλάβεις μόνο τη σύνθεση.";
+  }
+  return value;
+}
+
 export default function SubchapterIntelligenceRunner({
   versionId,
   initialStatus,
@@ -44,7 +52,7 @@ export default function SubchapterIntelligenceRunner({
   const router = useRouter();
   const [status, setStatus] = useState(initialStatus);
   const [running, setRunning] = useState(false);
-  const [error, setError] = useState<string | null>(initialErrorMessage ?? null);
+  const [error, setError] = useState<string | null>(friendlyError(initialErrorMessage ?? null));
   const activeRef = useRef(true);
 
   useEffect(() => {
@@ -62,9 +70,10 @@ export default function SubchapterIntelligenceRunner({
     const payload = (await response.json().catch(() => null)) as StatusPayload | null;
     if (!response.ok) throw new Error(payload?.error || "Δεν ήταν δυνατός ο έλεγχος προόδου.");
     const nextStatus = payload?.view?.status || payload?.status;
+    const nextError = friendlyError(payload?.view?.errorMessage || null);
     if (nextStatus && activeRef.current) setStatus(nextStatus);
-    if (activeRef.current) setError(payload?.view?.errorMessage || null);
-    return { status: nextStatus, errorMessage: payload?.view?.errorMessage || null };
+    if (activeRef.current) setError(nextError);
+    return { status: nextStatus, errorMessage: nextError };
   }, [versionId]);
 
   useEffect(() => {
@@ -76,6 +85,10 @@ export default function SubchapterIntelligenceRunner({
             window.clearInterval(timer);
             setRunning(false);
             router.refresh();
+            return;
+          }
+          if (next.errorMessage) {
+            setRunning(false);
           }
         })
         .catch(() => undefined);
@@ -95,17 +108,24 @@ export default function SubchapterIntelligenceRunner({
         const payload = (await response.json().catch(() => null)) as StatusPayload | null;
         if (!response.ok) throw new Error(payload?.error || "Η σύνθεση απέτυχε.");
         const nextStatus = payload?.view?.status || payload?.status;
+        const nextError = friendlyError(payload?.view?.errorMessage || null);
         if (!activeRef.current) return;
         if (nextStatus) setStatus(nextStatus);
-        setError(payload?.view?.errorMessage || null);
+        setError(nextError);
         if (nextStatus === "current" || nextStatus === "superseded") {
           setRunning(false);
           router.refresh();
+          return;
+        }
+        if (nextError) {
+          setRunning(false);
         }
       })
       .catch((reason) => {
         if (!activeRef.current) return;
-        setError(reason instanceof Error ? reason.message : "Η σύνθεση διακόπηκε.");
+        setError(
+          friendlyError(reason instanceof Error ? reason.message : "Η σύνθεση διακόπηκε."),
+        );
         setRunning(false);
       });
   }, [router, running, status, versionId]);
@@ -129,7 +149,13 @@ export default function SubchapterIntelligenceRunner({
         <span className="rounded-full border border-black/10 bg-white px-3 py-1.5">{sourceCount} πηγές</span>
         <span className="rounded-full border border-black/10 bg-white px-3 py-1.5">{findingCount} findings</span>
         <span className="rounded-full border border-black/10 bg-white px-3 py-1.5">
-          {completed ? "Canonical · ready" : running ? "Συντίθεται…" : "Έτοιμο για σύνθεση"}
+          {completed
+            ? "Canonical · ready"
+            : running
+              ? "Συντίθεται…"
+              : error
+                ? "Χρειάζεται επανάληψη"
+                : "Έτοιμο για σύνθεση"}
         </span>
       </div>
 
@@ -141,7 +167,11 @@ export default function SubchapterIntelligenceRunner({
 
       {!completed ? (
         <button type="button" onClick={run} disabled={running} className={`mt-6 ${primaryCtaClass}`}>
-          {running ? "Συντίθεται το Subchapter Intelligence…" : `Δημιουργία Subchapter Intelligence v${versionNumber}`}
+          {running
+            ? "Συντίθεται το Subchapter Intelligence…"
+            : error
+              ? `Επανάληψη σύνθεσης Subchapter Intelligence v${versionNumber}`
+              : `Δημιουργία Subchapter Intelligence v${versionNumber}`}
         </button>
       ) : currentLesson ? (
         <div className="mt-6 rounded-2xl border border-[#a9c1a5] bg-[#eef5ed] p-5 text-[#33492f]">
