@@ -1,7 +1,7 @@
 import type { SubchapterIntelligenceContent } from "@/lib/mixalis/subchapter-intelligence";
 
 export const START_PROMPT_REFERENCE = "START";
-export const START_PROMPT_VERSION = "PHYS-B2-2026-004";
+export const START_PROMPT_VERSION = "PHYS-B2-2026-005";
 
 export type StartPromptInput = {
   courseTitle: string;
@@ -125,6 +125,15 @@ Explain the Physics behind the boundary.
 If a guardrail concerns adjacent/out-of-core theory, teach enough for the student to recognize the difference and avoid mechanical misuse, while preserving epistemic status: do not falsely present adjacent material as an official core law of the current subchapter.
 Curriculum status determines what is official core theory; it does NOT determine whether boundary knowledge is pedagogically useful.
 
+CRITICAL SCOPE-GUARDRAIL DEPTH RULE
+A high-value Scope Guardrail or exercise-derived boundary that could plausibly appear in an exercise MUST NOT be compressed into a final list of "out of scope", "different model", or "requires additional theory" statements.
+For each such guardrail, teach enough Physics for the student to understand WHY the situation is different and HOW to recognize that difference inside a future exercise.
+At minimum, convert it into one useful student-facing teaching move: a short physical explanation, a direct contrast between two similar-looking situations, a mini-example, a prediction, a misconception repair, or an exercise-recognition warning.
+Prefer a concrete contrast such as "fixed-axis rotating wheel versus a wheel rolling on the road" over a bare statement that rolling is outside the current model.
+The student does not need the full adjacent theory unless it belongs to the current curriculum, but they MUST understand the boundary well enough not to apply the current model mechanically.
+Do not group several important guardrails into one compressed paragraph when each hides a different physical distinction. Give separate explanation where separate recognition is needed.
+Treat these guardrails as preparation for future exercises, not as administrative exclusions.
+
 START TEACHING SEQUENCE
 Prefer this natural sequence when it fits the Physics:
 real phenomenon -> observation -> curiosity/prediction -> intuitive physical explanation -> WHY -> connection with prior knowledge -> precise Physics term -> physical quantity -> qualitative relationship -> formula -> application -> exercise-derived insight/trap -> transfer.
@@ -217,6 +226,8 @@ Before finishing each major concept, inspect the exercise-derived Intelligence. 
 
 29. SCOPE-GUARDRAIL GATE
 Before finishing the lesson inspect every relevant Scope Guardrail. If it helps the student recognize a trap, a different physical model, or a limit of the current formulas, teach the useful distinction. Do not silently discard it.
+For every high-value guardrail that could plausibly appear in an exercise, verify that the lesson contains a physical WHY plus a recognition cue, contrast, or mini-example. A bare "outside the model" statement does not satisfy this gate.
+If several guardrails represent different physical reasons, do not collapse them into one compressed exclusion paragraph.
 
 30. PROVENANCE
 For knowledge derived from the supplied Intelligence use origin="intelligence" and only exact sourceItemIds already present in the supplied input. Never invent IDs. When one teaching block synthesizes several findings, include all relevant supported IDs.
@@ -255,7 +266,7 @@ Before finalizing, audit the complete Intelligence:
 - Exercise-derived depth: did useful exercise findings strengthen the lesson?
 - Misconceptions: are likely mistakes proactively addressed?
 - Strategies: is the student taught how to recognize and navigate relationships?
-- Scope Guardrails: are useful boundaries, contrasts, and future-exercise distinctions taught?
+- Scope Guardrails: are useful boundaries, contrasts, and future-exercise distinctions taught with enough physical explanation to recognize them later?
 - Transfer Tests: is the student prepared to recognize the Physics in unfamiliar contexts?
 - START Brief: are the identified teaching priorities respected?
 If an important pedagogical finding disappeared, revise the lesson.
@@ -269,6 +280,8 @@ Before returning the JSON ask:
 - Were related findings synthesized naturally?
 - Was exercise-derived depth used rather than discarded?
 - Were relevant Scope Guardrails actively used?
+- Did high-value Scope Guardrails become actual teaching rather than a compressed exclusion list?
+- Can the student explain why each important boundary case differs and recognize the cue that signals it in an exercise?
 - Were likely confusion points anticipated?
 - Do quantities have physical meaning before symbols?
 - Do qualitative relationships precede formulas?
