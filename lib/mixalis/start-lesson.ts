@@ -304,7 +304,7 @@ async function callOpenAI(model: string, prompt: string) {
   if (!apiKey) throw new Error("TEACHER is not configured for the Physics pipeline.");
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 410_000);
+  const timeout = setTimeout(() => controller.abort(), 900_000);
   try {
     const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
