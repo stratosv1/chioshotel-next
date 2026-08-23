@@ -6,7 +6,7 @@ import {
 } from "@/lib/mixalis/subchapter-intelligence";
 
 export const runtime = "nodejs";
-export const maxDuration = 300;
+export const maxDuration = 420;
 
 export async function GET(
   _request: Request,
