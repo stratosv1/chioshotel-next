@@ -1,12 +1,3 @@
-export type SmartLabImportance = "core" | "supporting" | "advanced";
-
-export type SmartLabScopeRelation =
-  | "official_core"
-  | "within_official_scope"
-  | "exercise_extension"
-  | "boundary_only"
-  | "unclassified_depth";
-
 export type SmartLabPhysicsPreset =
   | "horizontal_projectile"
   | "uniform_circular_motion"
@@ -41,8 +32,12 @@ export type SmartLabQuantityPhysicsRole =
   | "horizontal_velocity"
   | "vertical_velocity"
   | "speed"
+  | "velocity_angle"
   | "range"
   | "radius"
+  | "arc_length"
+  | "angular_displacement"
+  | "revolution_count"
   | "angular_speed"
   | "linear_speed"
   | "frequency"
@@ -62,11 +57,11 @@ export type SmartLabVisualRepresentation =
   | "force_vector"
   | "radius"
   | "angle"
+  | "arc"
   | "trajectory"
   | "position"
   | "scalar_measurement"
   | "time_state"
-  | "graph_value"
   | "none";
 
 export type SmartLabQuantity = {
@@ -81,6 +76,7 @@ export type SmartLabQuantity = {
   dependsOn: string[];
   affects: string[];
   visualRepresentation: SmartLabVisualRepresentation;
+  sourceItemIds: string[];
 };
 
 export type SmartLabControl = {
@@ -106,75 +102,76 @@ export type SmartLabImpactRule = {
   explanation: string;
 };
 
-export type SmartLabParameterAudit = {
-  controlQuantityId: string;
-  testedValues: number[];
-  verifies: string[];
-  result: "passed";
-};
-
 export type SmartLabWidget = {
   id: string;
   subchapterId: string;
   title: string;
   concept: string;
-  importance: SmartLabImportance;
-  scopeRelation: SmartLabScopeRelation;
-  smartEntryIds: string[];
-  sourceItemIds: string[];
   physicsPreset: SmartLabPhysicsPreset;
   scene: {
-    dimension: "2d" | "3d";
     description: string;
-    fixedConditions: string[];
-    variableConditions: string[];
   };
-  question: string;
-  prediction: string;
   quantities: SmartLabQuantity[];
   controls: SmartLabControl[];
   diagram: {
     description: string;
     representedQuantityIds: string[];
-    notes: string[];
   };
   liveMeasurements: string[];
   impactModel: SmartLabImpactRule[];
-  parameterAudit: SmartLabParameterAudit[];
-  liveFeedback: string;
-  discovery: string;
-  equation: string;
-  challenge: {
-    instruction: string;
-    successHint: string;
-  };
-  transferCheck: string;
-  targetInsight: string;
-  implementationNotes: string[];
+
+  // Legacy fields remain optional so older saved revisions can still be read safely.
+  importance?: "core" | "supporting" | "advanced";
+  scopeRelation?: "official_core" | "within_official_scope" | "exercise_extension" | "boundary_only" | "unclassified_depth";
+  smartEntryIds?: string[];
+  sourceItemIds?: string[];
+  question?: string;
+  prediction?: string;
+  parameterAudit?: Array<{
+    controlQuantityId: string;
+    testedValues: number[];
+    verifies: string[];
+    result: "passed";
+  }>;
+  liveFeedback?: string;
+  discovery?: string;
+  equation?: string;
+  challenge?: { instruction: string; successHint: string };
+  transferCheck?: string;
+  targetInsight?: string;
+  implementationNotes?: string[];
 };
 
 export type SmartLabSubchapter = {
   subchapterId: string;
   subchapterLabel: string;
   subchapterTitle: string;
-  intelligenceVersionId: string;
+  lessonRevisionId: string;
+  lessonRevisionNumber: number;
   widgets: SmartLabWidget[];
+  intelligenceVersionId?: string;
 };
 
 export type SmartLabContent = {
   title: string;
   summary: string;
   subchapters: SmartLabSubchapter[];
-  chapterSynthesisWidgets: SmartLabWidget[];
-  nonInteractiveCore: Array<{
-    smartEntryId: string;
-    reason: string;
-  }>;
   coverage: {
-    totalCoreEntries: number;
-    interactiveCoreEntries: number;
-    nonInteractiveCoreEntries: number;
+    totalQuantities: number;
+    representedQuantities: number;
+    controllableQuantities: number;
   };
+  chapterSynthesisWidgets?: SmartLabWidget[];
+  nonInteractiveCore?: Array<{ smartEntryId: string; reason: string }>;
+};
+
+export type SmartLabLessonVersion = {
+  subchapterId: string;
+  subchapterLabel: string;
+  subchapterTitle: string;
+  lessonRevisionId: string;
+  revisionNumber: number;
+  quantityCount: number;
 };
 
 export type SmartLabRevisionView = {
@@ -190,11 +187,7 @@ export type SmartLabRevisionView = {
   promptReference: string;
   promptVersion: string;
   inputSnapshotHash: string;
-  smartVersions: Array<{
-    subchapterId: string;
-    intelligenceVersionId: string;
-    versionNumber: number;
-  }>;
+  lessonVersions: SmartLabLessonVersion[];
   content: SmartLabContent | { state?: string };
   errorMessage: string | null;
   updatedAt: string;
