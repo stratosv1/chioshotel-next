@@ -267,8 +267,8 @@ async function callOpenAI(input: {
   schemaName: string;
   timeoutMs?: number;
 }) {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) throw new Error("OPENAI_API_KEY is not configured.");
+  const apiKey = process.env.TEACHER;
+  if (!apiKey) throw new Error("TEACHER is not configured for the Physics pipeline.");
 
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), input.timeoutMs ?? 90_000);
