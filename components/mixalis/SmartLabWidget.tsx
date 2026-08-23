@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { FlaskConical, Lightbulb, Pause, Play, RotateCcw } from "lucide-react";
+import { FlaskConical, Pause, Play, RotateCcw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,13 +14,13 @@ import type {
 } from "@/lib/mixalis/smartlab-types";
 
 type Values = Record<string, number>;
-type NumericState = Partial<Record<SmartLabQuantityPhysicsRole, number>> & { velocityAngle?: number };
+type NumericState = Partial<Record<SmartLabQuantityPhysicsRole, number>>;
 
 function controlsOf(widget: Widget) {
   return Array.isArray(widget.controls) ? widget.controls : [];
 }
 
-function quantitiesOf(widget: Widget): SmartLabQuantity[] {
+function quantitiesOf(widget: Widget) {
   return Array.isArray(widget.quantities) ? widget.quantities : [];
 }
 
@@ -30,28 +30,6 @@ function initialValues(widget: Widget): Values {
 
 function quantityForRole(widget: Widget, role: SmartLabQuantityPhysicsRole) {
   return quantitiesOf(widget).find((quantity) => quantity.physicsRole === role);
-}
-
-function currentTimeQuantity(widget: Widget) {
-  return quantitiesOf(widget).find((quantity) => quantity.physicsRole === "time" && quantity.role === "time_state")
-    || quantitiesOf(widget).find((quantity) => quantity.physicsRole === "time" && quantity.name.toLocaleLowerCase("el-GR").includes("χρόνος από"))
-    || quantityForRole(widget, "time");
-}
-
-function fallTimeQuantity(widget: Widget) {
-  return quantitiesOf(widget).find((quantity) => {
-    if (quantity.physicsRole !== "time" || quantity.role !== "derived") return false;
-    const name = quantity.name.toLocaleLowerCase("el-GR");
-    return name.includes("χρόνος πτώσης") || quantity.symbol.includes("πτ");
-  });
-}
-
-function angleQuantity(widget: Widget) {
-  return quantitiesOf(widget).find((quantity) =>
-    quantity.visualRepresentation === "angle" ||
-    quantity.symbol.trim() === "θ" ||
-    quantity.name.toLocaleLowerCase("el-GR").includes("γωνία της ταχύτητας"),
-  );
 }
 
 function roleValue(widget: Widget, values: Values, role: SmartLabControl["role"], fallback: number) {
@@ -80,31 +58,28 @@ function quantityDisplay(quantity: SmartLabQuantity | undefined, fallbackSymbol:
   };
 }
 
-function Metric({ quantity, fallbackSymbol, fallbackName, value, unit }: {
-  quantity?: SmartLabQuantity;
-  fallbackSymbol: string;
-  fallbackName: string;
-  value: number;
-  unit?: string;
-}) {
-  const display = quantityDisplay(quantity, fallbackSymbol, fallbackName);
+function Metric({ quantity, value }: { quantity: SmartLabQuantity; value: number }) {
   return (
     <div className="min-w-0 border-l border-stone-200 pl-3 first:border-l-0 first:pl-0 sm:first:border-l">
       <div className="flex items-baseline gap-1.5">
-        <span className="text-base font-semibold text-stone-950">{display.symbol}</span>
+        <span className="text-base font-semibold text-stone-950">{quantity.symbol}</span>
         <span className="text-sm font-semibold text-stone-900">{number(value)}</span>
-        <span className="text-[11px] text-stone-500">{unit || display.unit}</span>
+        <span className="text-[11px] text-stone-500">{quantity.unit}</span>
       </div>
-      <p className="mt-0.5 line-clamp-2 text-[11px] leading-4 text-stone-500">{display.name}</p>
+      <p className="mt-0.5 line-clamp-2 text-[11px] leading-4 text-stone-500">{quantity.name}</p>
     </div>
   );
 }
 
-function ArrowDefs() {
+function markerId(widget: Widget) {
+  return `smartlab-arrow-${widget.id.replace(/[^a-zA-Z0-9_-]/g, "-")}`;
+}
+
+function ArrowDefs({ id }: { id: string }) {
   return (
     <defs>
-      <marker id="smartlab-arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
-        <path d="M0,0 L0,6 L7,3 z" fill="currentColor" />
+      <marker id={id} markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+        <path d="M0,0 L0,6 L7,3 z" fill="context-stroke" />
       </marker>
     </defs>
   );
@@ -135,6 +110,7 @@ function horizontalState(widget: Widget, values: Values, time: number) {
 function HorizontalProjectile({ widget, values, time }: { widget: Widget; values: Values; time: number }) {
   const state = horizontalState(widget, values, time);
   const { v0, h, g, tFall, t, range, x, y, vx, vy, speed, theta } = state;
+  const arrow = markerId(widget);
 
   const maxV = Math.max(roleMax(widget, "initial_speed", v0), v0, 0.001);
   const maxH = Math.max(roleMax(widget, "height", h), h, 0.001);
@@ -151,9 +127,7 @@ function HorizontalProjectile({ widget, values, time }: { widget: Widget; values
   const launchY = groundY - h * yScale;
   const px = launchX + x * xScale;
   const py = launchY + y * yScale;
-  const landingX = launchX + range * xScale;
-  const vectorScale = 70 / maxSpeed;
-  const gravityVectorLength = 28 + 26 * (g / maxG);
+  const vectorScale = 64 / maxSpeed;
 
   const trajectory = Array.from({ length: 64 }, (_, index) => {
     const q = index / 63;
@@ -161,31 +135,23 @@ function HorizontalProjectile({ widget, values, time }: { widget: Widget; values
     return `${launchX + v0 * qt * xScale},${launchY + 0.5 * g * qt * qt * yScale}`;
   }).join(" ");
 
-  const angleR = 23;
-  const angleRad = theta * Math.PI / 180;
-  const angleEndX = px + Math.cos(angleRad) * angleR;
-  const angleEndY = py + Math.sin(angleRad) * angleR;
-
   const hQ = quantityForRole(widget, "height");
   const xQ = quantityForRole(widget, "horizontal_position");
   const yQ = quantityForRole(widget, "vertical_displacement");
   const vxQ = quantityForRole(widget, "horizontal_velocity");
-  const vyQ = quantitiesOf(widget).find((quantity) => quantity.physicsRole === "vertical_velocity" && quantity.role === "derived") || quantityForRole(widget, "vertical_velocity");
+  const vyQ = quantityForRole(widget, "vertical_velocity");
   const speedQ = quantityForRole(widget, "speed");
-  const rangeQ = quantityForRole(widget, "range");
-  const timeQ = currentTimeQuantity(widget);
-  const fallTimeQ = fallTimeQuantity(widget);
-  const initialQ = quantityForRole(widget, "initial_speed");
+  const timeQ = quantityForRole(widget, "time");
   const gravityQ = quantityForRole(widget, "gravity");
-  const thetaQ = angleQuantity(widget);
+  const thetaQ = quantityForRole(widget, "velocity_angle");
+  const rangeQ = quantityForRole(widget, "range");
 
-  const hD = quantityDisplay(hQ, "h", "ύψος βολής");
+  const hD = quantityDisplay(hQ, "h", "ύψος");
   const xD = quantityDisplay(xQ, "x", "οριζόντια μετατόπιση");
   const yD = quantityDisplay(yQ, "y", "κατακόρυφη κάθοδος");
   const vxD = quantityDisplay(vxQ, "υx", "οριζόντια συνιστώσα της ταχύτητας");
   const vyD = quantityDisplay(vyQ, "υy", "κατακόρυφη συνιστώσα της ταχύτητας");
   const speedD = quantityDisplay(speedQ, "υ", "μέτρο της συνολικής ταχύτητας");
-  const rangeD = quantityDisplay(rangeQ, "R", "βεληνεκές");
   const gravityD = quantityDisplay(gravityQ, "g", "επιτάχυνση της βαρύτητας");
   const thetaD = quantityDisplay(thetaQ, "θ", "γωνία της ταχύτητας από την οριζόντια");
 
@@ -199,23 +165,22 @@ function HorizontalProjectile({ widget, values, time }: { widget: Widget; values
     horizontal_velocity: vx,
     vertical_velocity: vy,
     speed,
+    velocity_angle: theta,
     range,
-    velocityAngle: theta,
   };
 
   const liveIds = new Set(widget.liveMeasurements || []);
   const measurementQuantities = quantitiesOf(widget).filter((quantity) => liveIds.has(quantity.id));
-  const measurementValue = (quantity: SmartLabQuantity) => {
-    if (quantity === thetaQ) return numeric.velocityAngle;
-    if (quantity === fallTimeQ) return tFall;
-    if (quantity === timeQ) return t;
-    return numeric[quantity.physicsRole];
-  };
+
+  const angleR = 24;
+  const angleRad = theta * Math.PI / 180;
+  const angleEndX = px + Math.cos(angleRad) * angleR;
+  const angleEndY = py + Math.sin(angleRad) * angleR;
 
   return (
     <div className="min-w-0">
-      <svg viewBox="0 0 620 338" className="w-full" role="img" aria-label="Διαδραστικό σχεδιάγραμμα οριζόντιας βολής">
-        <ArrowDefs />
+      <svg viewBox="0 0 620 322" className="w-full" role="img" aria-label="Διαδραστικό σχεδιάγραμμα οριζόντιας βολής">
+        <ArrowDefs id={arrow} />
         <line x1="22" y1={groundY} x2="592" y2={groundY} stroke="currentColor" className="text-stone-300" strokeWidth="2" />
         <rect x="58" y={launchY - 8} width="30" height={groundY - launchY + 8} rx="5" className="fill-stone-200" />
 
@@ -223,107 +188,77 @@ function HorizontalProjectile({ widget, values, time }: { widget: Widget; values
           <line x1="40" y1={launchY} x2="40" y2={groundY} stroke="currentColor" strokeWidth="2" />
           <line x1="34" y1={launchY} x2="46" y2={launchY} stroke="currentColor" strokeWidth="2" />
           <line x1="34" y1={groundY} x2="46" y2={groundY} stroke="currentColor" strokeWidth="2" />
-          <text x="12" y={(launchY + groundY) / 2} fontSize="12" fill="currentColor">{hD.symbol}={number(h)} {hD.unit || "m"}</text>
-          <title>{hD.name}</title>
+          <text x="10" y={(launchY + groundY) / 2} fontSize="12" fill="currentColor">{hD.symbol}={number(h)} {hD.unit}</text>
         </g>
 
         <polyline points={trajectory} fill="none" stroke="currentColor" className="text-stone-400" strokeWidth="2.5" />
-        <text x={Math.min(landingX - 42, launchX + Math.max(24, (landingX - launchX) * 0.55))} y={launchY + Math.max(28, (groundY - launchY) * 0.34)} fontSize="12" className="fill-stone-500">τροχιά</text>
 
         <g className="text-cyan-700">
-          <line x1={launchX} y1="275" x2={px} y2="275" stroke="currentColor" strokeWidth="2" />
-          <line x1={launchX} y1="269" x2={launchX} y2="281" stroke="currentColor" strokeWidth="2" />
-          <line x1={px} y1="269" x2={px} y2="281" stroke="currentColor" strokeWidth="2" />
-          <text x={(launchX + px) / 2 - 14} y="294" fontSize="12" fill="currentColor">{xD.symbol}={number(x)} {xD.unit || "m"}</text>
-          <title>{xD.name}</title>
+          <line x1={launchX} y1="274" x2={px} y2="274" stroke="currentColor" strokeWidth="2" />
+          <line x1={launchX} y1="269" x2={launchX} y2="279" stroke="currentColor" strokeWidth="2" />
+          <line x1={px} y1="269" x2={px} y2="279" stroke="currentColor" strokeWidth="2" />
+          <text x={(launchX + px) / 2 - 16} y="294" fontSize="12" fill="currentColor">{xD.symbol}={number(x)} {xD.unit}</text>
         </g>
 
         <g className="text-blue-700">
-          <line x1={Math.max(52, px - 18)} y1={launchY} x2={Math.max(52, px - 18)} y2={py} stroke="currentColor" strokeWidth="2" />
-          <text x={Math.max(56, px - 13)} y={(launchY + py) / 2} fontSize="12" fill="currentColor">{yD.symbol}={number(y)} {yD.unit || "m"}</text>
-          <title>{yD.name}</title>
+          <line x1={Math.max(52, px - 21)} y1={launchY} x2={Math.max(52, px - 21)} y2={py} stroke="currentColor" strokeWidth="2" />
+          <text x={Math.max(56, px - 16)} y={(launchY + py) / 2} fontSize="12" fill="currentColor">{yD.symbol}={number(y)} {yD.unit}</text>
         </g>
 
-        <g className="text-violet-700">
-          <line x1={launchX} y1="313" x2={landingX} y2="313" stroke="currentColor" strokeWidth="2" />
-          <line x1={launchX} y1="307" x2={launchX} y2="319" stroke="currentColor" strokeWidth="2" />
-          <line x1={landingX} y1="307" x2={landingX} y2="319" stroke="currentColor" strokeWidth="2" />
-          <text x={(launchX + landingX) / 2 - 22} y="332" fontSize="12" fill="currentColor">{rangeD.symbol}={number(range)} {rangeD.unit || "m"}</text>
-          <title>{rangeD.name}</title>
-        </g>
-
-        <g className="text-rose-700">
-          <line x1="552" y1="48" x2="552" y2={48 + gravityVectorLength} stroke="currentColor" strokeWidth="2.5" markerEnd="url(#smartlab-arrow)" />
-          <text x="562" y={58 + gravityVectorLength / 2} fontSize="12" fill="currentColor">{gravityD.symbol}</text>
-          <title>{gravityD.name}</title>
-        </g>
+        {rangeQ ? (
+          <text x="450" y="300" fontSize="11" className="fill-stone-500">{rangeQ.symbol}={number(range)} {rangeQ.unit}</text>
+        ) : null}
 
         <circle cx={px} cy={py} r="8" className="fill-stone-950" />
 
         <g className="text-emerald-700">
-          <line x1={px} y1={py} x2={px + vx * vectorScale} y2={py} stroke="currentColor" strokeWidth="3" markerEnd="url(#smartlab-arrow)" />
-          <text x={px + Math.max(12, vx * vectorScale * 0.55)} y={py - 11} fontSize="12" fill="currentColor">{vxD.symbol}</text>
-          <title>{vxD.name}</title>
+          <line x1={px} y1={py} x2={px + vx * vectorScale} y2={py} stroke="currentColor" strokeWidth="3" markerEnd={`url(#${arrow})`} />
+          <text x={px + Math.max(14, vx * vectorScale * 0.45)} y={py - 10} fontSize="12" fill="currentColor">{vxD.symbol}</text>
         </g>
 
         {vy > 0.001 ? (
           <g className="text-amber-700">
-            <line x1={px} y1={py} x2={px} y2={py + vy * vectorScale} stroke="currentColor" strokeWidth="3" markerEnd="url(#smartlab-arrow)" />
-            <text x={px - 30} y={py + Math.max(18, Math.min(34, vy * vectorScale * 0.58))} fontSize="12" fill="currentColor">{vyD.symbol}</text>
-            <title>{vyD.name}</title>
+            <line x1={px} y1={py} x2={px} y2={py + vy * vectorScale} stroke="currentColor" strokeWidth="3" markerEnd={`url(#${arrow})`} />
+            <text x={px - 27} y={py + Math.max(22, vy * vectorScale * 0.58)} fontSize="12" fill="currentColor">{vyD.symbol}</text>
           </g>
-        ) : (
-          <text x={px - 34} y={py + 22} fontSize="12" className="fill-amber-700">{vyD.symbol}=0</text>
-        )}
+        ) : null}
 
         {speed > 0.001 ? (
           <g className="text-violet-700">
-            <line x1={px} y1={py} x2={px + vx * vectorScale} y2={py + vy * vectorScale} stroke="currentColor" strokeWidth="2.5" markerEnd="url(#smartlab-arrow)" />
-            <text x={px + vx * vectorScale + 7} y={py + vy * vectorScale + 11} fontSize="12" fill="currentColor">{speedD.symbol}</text>
-            <title>{speedD.name}</title>
+            <line x1={px} y1={py} x2={px + vx * vectorScale} y2={py + vy * vectorScale} stroke="currentColor" strokeWidth="2.5" markerEnd={`url(#${arrow})`} />
+            <text x={px + vx * vectorScale + 8} y={py + vy * vectorScale + 2} fontSize="12" fill="currentColor">{speedD.symbol}</text>
           </g>
         ) : null}
 
-        {speed > 0.001 ? (
+        {thetaQ && speed > 0.001 ? (
           <g className="text-fuchsia-700">
             <path d={`M ${px + angleR} ${py} A ${angleR} ${angleR} 0 0 1 ${angleEndX} ${angleEndY}`} fill="none" stroke="currentColor" strokeWidth="2" />
-            <text x={px + 31} y={py + 18} fontSize="12" fill="currentColor">{thetaD.symbol}={number(theta, 1)}°</text>
-            <title>{thetaD.name}</title>
+            <text x={px + 30} y={py + 24} fontSize="12" fill="currentColor">{thetaD.symbol}={number(theta, 1)}°</text>
           </g>
         ) : null}
 
-        <text x="492" y="26" fontSize="12" className="fill-stone-600">{quantityDisplay(timeQ, "t", "χρόνος").symbol}={number(t)} s</text>
+        {gravityQ ? (
+          <g className="text-rose-700">
+            <line x1="552" y1="42" x2="552" y2="86" stroke="currentColor" strokeWidth="3" markerEnd={`url(#${arrow})`} />
+            <text x="562" y="69" fontSize="12" fill="currentColor">{gravityD.symbol}</text>
+          </g>
+        ) : null}
+
+        {timeQ ? <text x="488" y="24" fontSize="12" className="fill-stone-600">{timeQ.symbol}={number(t)} {timeQ.unit}</text> : null}
       </svg>
 
-      <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-stone-200 pt-4 sm:grid-cols-3 xl:grid-cols-4">
-        {measurementQuantities.length ? measurementQuantities.map((quantity) => {
-          const value = measurementValue(quantity);
-          if (typeof value !== "number") return null;
-          return <Metric key={quantity.id} quantity={quantity} fallbackSymbol={quantity.symbol} fallbackName={quantity.name} value={value} />;
-        }) : (
-          <>
-            <Metric quantity={timeQ} fallbackSymbol="t" fallbackName="χρόνος από την εκτόξευση" value={t} unit="s" />
-            <Metric quantity={xQ} fallbackSymbol="x" fallbackName="οριζόντια μετατόπιση" value={x} unit="m" />
-            <Metric quantity={yQ} fallbackSymbol="y" fallbackName="κατακόρυφη κάθοδος" value={y} unit="m" />
-            <Metric quantity={vxQ} fallbackSymbol="υx" fallbackName="οριζόντια συνιστώσα της ταχύτητας" value={vx} unit="m/s" />
-            <Metric quantity={vyQ} fallbackSymbol="υy" fallbackName="κατακόρυφη συνιστώσα της ταχύτητας" value={vy} unit="m/s" />
-            <Metric quantity={speedQ} fallbackSymbol="υ" fallbackName="μέτρο της συνολικής ταχύτητας" value={speed} unit="m/s" />
-            <Metric quantity={thetaQ} fallbackSymbol="θ" fallbackName="γωνία της ταχύτητας από την οριζόντια" value={theta} unit="°" />
-            {fallTimeQ ? <Metric quantity={fallTimeQ} fallbackSymbol="tπτ" fallbackName="χρόνος πτώσης" value={tFall} unit="s" /> : null}
-            <Metric quantity={rangeQ} fallbackSymbol="R" fallbackName="βεληνεκές" value={range} unit="m" />
-          </>
-        )}
-      </div>
-
-      <div className="sr-only">
-        {initialQ?.name} {number(v0)} {initialQ?.unit}. {gravityQ?.name} {number(g)} {gravityQ?.unit}. {fallTimeQ?.name || "Χρόνος πτώσης"} {number(tFall)} s.
+      <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-stone-200 pt-4 sm:grid-cols-3 xl:grid-cols-4">
+        {measurementQuantities.map((quantity) => {
+          const value = numeric[quantity.physicsRole];
+          return typeof value === "number" ? <Metric key={quantity.id} quantity={quantity} value={value} /> : null;
+        })}
       </div>
     </div>
   );
 }
 
-function circularState(widget: Widget, values: Values) {
-  const radius = Math.max(0.001, roleValue(widget, values, "radius", 1));
+function circularState(widget: Widget, values: Values, angle: number) {
+  const radius = Math.max(0.001, roleValue(widget, values, "radius", 2));
   const angularControl = controlsOf(widget).find((control) => control.role === "angular_speed");
   const frequencyControl = controlsOf(widget).find((control) => control.role === "frequency");
   const linearControl = controlsOf(widget).find((control) => control.role === "linear_speed");
@@ -350,12 +285,15 @@ function circularState(widget: Widget, values: Values) {
   const acceleration = speed * speed / radius;
   const mass = Math.max(0.001, roleValue(widget, values, "mass", 1));
   const force = mass * acceleration;
-  return { radius, omega, speed, frequency, period, acceleration, mass, force };
+  const arcLength = radius * angle;
+  const revolutions = angle / (2 * Math.PI);
+  return { radius, omega, speed, frequency, period, acceleration, mass, force, angle, arcLength, revolutions };
 }
 
-function CircularMotion({ widget, values, time, forceMode = false }: { widget: Widget; values: Values; time: number; forceMode?: boolean }) {
-  const state = circularState(widget, values);
-  const { radius, omega, speed, frequency, period, acceleration, mass, force } = state;
+function CircularMotion({ widget, values, angle, forceMode = false }: { widget: Widget; values: Values; angle: number; forceMode?: boolean }) {
+  const state = circularState(widget, values, angle);
+  const { radius, omega, speed, frequency, period, acceleration, mass, force, arcLength, revolutions } = state;
+  const arrow = markerId(widget);
   const maxR = Math.max(roleMax(widget, "radius", radius), radius, 0.001);
   const minR = Math.max(roleMin(widget, "radius", radius), 0.001);
   const angularControl = controlsOf(widget).find((control) => control.role === "angular_speed");
@@ -377,23 +315,27 @@ function CircularMotion({ widget, values, time, forceMode = false }: { widget: W
   const maxMass = Math.max(roleMax(widget, "mass", mass), mass);
   const maxForce = Math.max(0.001, maxMass * maxAcceleration);
 
-  const rPx = Math.max(24, 106 * radius / maxR);
+  const rPx = Math.max(30, 108 * radius / maxR);
   const cx = 300;
   const cy = 150;
-  const angle = omega * time;
   const px = cx + rPx * Math.cos(angle);
   const py = cy + rPx * Math.sin(angle);
   const tangentX = -Math.sin(angle);
   const tangentY = Math.cos(angle);
   const radialX = -Math.cos(angle);
   const radialY = -Math.sin(angle);
-  const vLen = 74 * speed / Math.max(maxSpeed, 0.001);
+  const vLen = 72 * speed / Math.max(maxSpeed, 0.001);
   const radialMagnitude = forceMode ? force : acceleration;
   const radialMax = forceMode ? maxForce : Math.max(maxAcceleration, 0.001);
-  const radialLen = 68 * radialMagnitude / radialMax;
+  const radialLen = 66 * radialMagnitude / radialMax;
+  const circumferencePx = 2 * Math.PI * rPx;
+  const progress = Math.min(1, Math.max(0, angle / (2 * Math.PI)));
 
   const numeric: NumericState = {
     radius,
+    arc_length: arcLength,
+    angular_displacement: angle,
+    revolution_count: revolutions,
     angular_speed: omega,
     linear_speed: speed,
     frequency,
@@ -406,40 +348,55 @@ function CircularMotion({ widget, values, time, forceMode = false }: { widget: W
   const measurements = quantitiesOf(widget).filter((quantity) => liveIds.has(quantity.id));
 
   const radiusQ = quantityForRole(widget, "radius");
+  const angleQ = quantityForRole(widget, "angular_displacement");
+  const arcQ = quantityForRole(widget, "arc_length");
   const speedQ = quantityForRole(widget, "linear_speed");
   const radialQ = quantityForRole(widget, forceMode ? "centripetal_force" : "centripetal_acceleration");
   const radiusD = quantityDisplay(radiusQ, "r", "ακτίνα");
+  const angleD = quantityDisplay(angleQ, "φ", "γωνιακή μετατόπιση");
+  const arcD = quantityDisplay(arcQ, "s", "μήκος τόξου");
   const speedD = quantityDisplay(speedQ, "υ", "γραμμική ταχύτητα");
-  const radialD = quantityDisplay(radialQ, forceMode ? "Fκ" : "aκ", forceMode ? "κεντρομόλος δύναμη" : "κεντρομόλος επιτάχυνση");
+  const radialD = quantityDisplay(radialQ, forceMode ? "Fκ" : "ακ", forceMode ? "κεντρομόλος δύναμη" : "κεντρομόλος επιτάχυνση");
 
   return (
     <div className="min-w-0">
-      <svg viewBox="0 0 620 320" className="w-full" role="img" aria-label="Διαδραστικό σχεδιάγραμμα κυκλικής κίνησης">
-        <ArrowDefs />
+      <svg viewBox="0 0 620 320" className="w-full" role="img" aria-label="Διαδραστικό σχεδιάγραμμα ομαλής κυκλικής κίνησης">
+        <ArrowDefs id={arrow} />
         <circle cx={cx} cy={cy} r={rPx} fill="none" stroke="currentColor" className="text-stone-300" strokeWidth="2" />
+        <circle
+          cx={cx}
+          cy={cy}
+          r={rPx}
+          fill="none"
+          stroke="currentColor"
+          className="text-cyan-600"
+          strokeWidth="4"
+          strokeLinecap="round"
+          strokeDasharray={`${progress * circumferencePx} ${circumferencePx}`}
+        />
         <line x1={cx} y1={cy} x2={px} y2={py} stroke="currentColor" className="text-sky-700" strokeWidth="2" />
-        <text x={(cx + px) / 2 + 7} y={(cy + py) / 2 - 5} fontSize="12" className="fill-sky-700">{radiusD.symbol}={number(radius)} {radiusD.unit || "m"}</text>
+        <text x={(cx + px) / 2 + 8} y={(cy + py) / 2 - 6} fontSize="12" className="fill-sky-700">{radiusD.symbol}={number(radius)} {radiusD.unit}</text>
         <circle cx={cx} cy={cy} r="5" className="fill-stone-500" />
         <circle cx={px} cy={py} r="9" className="fill-stone-950" />
 
         <g className="text-emerald-700">
-          <line x1={px} y1={py} x2={px + tangentX * vLen} y2={py + tangentY * vLen} stroke="currentColor" strokeWidth="3" markerEnd="url(#smartlab-arrow)" />
-          <text x={px + tangentX * (vLen + 12)} y={py + tangentY * (vLen + 12)} fontSize="13" fill="currentColor">{speedD.symbol}</text>
-          <title>{speedD.name}</title>
+          <line x1={px} y1={py} x2={px + tangentX * vLen} y2={py + tangentY * vLen} stroke="currentColor" strokeWidth="3" markerEnd={`url(#${arrow})`} />
+          <text x={px + tangentX * (vLen + 16)} y={py + tangentY * (vLen + 16)} fontSize="13" fill="currentColor">{speedD.symbol}</text>
         </g>
         <g className={forceMode ? "text-rose-700" : "text-amber-700"}>
-          <line x1={px} y1={py} x2={px + radialX * radialLen} y2={py + radialY * radialLen} stroke="currentColor" strokeWidth="3" markerEnd="url(#smartlab-arrow)" />
-          <text x={px + radialX * (radialLen + 14)} y={py + radialY * (radialLen + 14)} fontSize="13" fill="currentColor">{radialD.symbol}</text>
-          <title>{radialD.name}</title>
+          <line x1={px} y1={py} x2={px + radialX * radialLen} y2={py + radialY * radialLen} stroke="currentColor" strokeWidth="3" markerEnd={`url(#${arrow})`} />
+          <text x={px + radialX * (radialLen + 18)} y={py + radialY * (radialLen + 18)} fontSize="13" fill="currentColor">{radialD.symbol}</text>
         </g>
-        <text x="26" y="300" fontSize="12" className="fill-stone-500">Η {speedD.symbol} είναι εφαπτομενική · η {radialD.symbol} κατευθύνεται προς το κέντρο.</text>
+
+        {angleQ ? <text x="30" y="28" fontSize="12" className="fill-stone-600">{angleD.symbol}={number(angle)} {angleD.unit}</text> : null}
+        {arcQ ? <text x="30" y="48" fontSize="12" className="fill-cyan-700">{arcD.symbol}={number(arcLength)} {arcD.unit}</text> : null}
+        <text x="26" y="300" fontSize="12" className="fill-stone-500">Η {speedD.symbol} είναι εφαπτομενική · η {radialD.symbol} δείχνει προς το κέντρο.</text>
       </svg>
 
-      <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-stone-200 pt-4 sm:grid-cols-3 xl:grid-cols-4">
-        {(measurements.length ? measurements : quantitiesOf(widget).filter((quantity) => typeof numeric[quantity.physicsRole] === "number")).map((quantity) => {
+      <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-stone-200 pt-4 sm:grid-cols-3 xl:grid-cols-4">
+        {measurements.map((quantity) => {
           const value = numeric[quantity.physicsRole];
-          if (typeof value !== "number") return null;
-          return <Metric key={quantity.id} quantity={quantity} fallbackSymbol={quantity.symbol} fallbackName={quantity.name} value={value} />;
+          return typeof value === "number" ? <Metric key={quantity.id} quantity={quantity} value={value} /> : null;
         })}
       </div>
     </div>
@@ -451,7 +408,7 @@ function UnsupportedDiagram({ widget }: { widget: Widget }) {
     <div className="flex min-h-64 items-center justify-center border-y border-stone-200 px-6 py-10 text-center">
       <div className="max-w-lg">
         <p className="text-sm font-semibold text-stone-900">Το φυσικό σχεδιάγραμμα δεν υποστηρίζεται ακόμη από τον renderer.</p>
-        <p className="mt-2 text-sm leading-6 text-stone-500">Δεν εμφανίζεται generic διάγραμμα ώστε να μη δημιουργηθεί λανθασμένη φυσική εντύπωση. {widget.diagram?.description}</p>
+        <p className="mt-2 text-sm leading-6 text-stone-500">Δεν εμφανίζεται generic διάγραμμα ώστε να μη δημιουργηθεί λανθασμένη φυσική εντύπωση.</p>
       </div>
     </div>
   );
@@ -521,13 +478,12 @@ function ImpactPanel({ widget, quantityId }: { widget: Widget; quantityId: strin
 
   const names = (ids: string[]) => ids.map((id) => {
     const quantity = quantities.find((item) => item.id === id);
-    if (!quantity) return id;
-    return `${quantity.symbol ? `${quantity.symbol} — ` : ""}${quantity.name}`;
+    return quantity ? `${quantity.symbol ? `${quantity.symbol} — ` : ""}${quantity.name}` : id;
   });
 
   return (
     <div className="border-t border-stone-200 pt-5">
-      <p className="text-xs font-semibold uppercase tracking-[0.13em] text-stone-500">Τι προκάλεσε η αλλαγή</p>
+      <p className="text-xs font-semibold uppercase tracking-[0.13em] text-stone-500">Τι άλλαξε</p>
       <p className="mt-2 text-sm font-semibold text-stone-900">Άλλαξες: {changed.symbol ? `${changed.symbol} — ` : ""}{changed.name}</p>
       {impact.changes.length ? <p className="mt-2 text-xs leading-5 text-stone-600"><strong className="text-stone-800">Επηρεάστηκαν:</strong> {names(impact.changes).join(" · ")}</p> : null}
       {impact.unchanged.length ? <p className="mt-1 text-xs leading-5 text-stone-600"><strong className="text-stone-800">Παρέμειναν ίδια:</strong> {names(impact.unchanged).join(" · ")}</p> : null}
@@ -539,137 +495,117 @@ function ImpactPanel({ widget, quantityId }: { widget: Widget; quantityId: strin
 export function SmartLabWidget({ widget }: { widget: Widget }) {
   const [values, setValues] = useState<Values>(() => initialValues(widget));
   const [playing, setPlaying] = useState(false);
-  const [time, setTime] = useState(0);
-  const [reveal, setReveal] = useState(false);
+  const [stateValue, setStateValue] = useState(0);
   const [lastChangedQuantityId, setLastChangedQuantityId] = useState<string | null>(null);
 
   const isHorizontal = widget.physicsPreset === "horizontal_projectile";
+  const isCircular = widget.physicsPreset === "uniform_circular_motion" || widget.physicsPreset === "centripetal_force";
   const tFall = isHorizontal ? horizontalFallTime(widget, values) : 0;
-  const timeQuantity = currentTimeQuantity(widget);
-  const timeName = timeQuantity?.name || "χρόνος";
-  const timeSymbol = timeQuantity?.symbol || "t";
+  const stateQuantity = isHorizontal
+    ? quantityForRole(widget, "time")
+    : isCircular ? quantityForRole(widget, "angular_displacement") : undefined;
+  const stateMax = isHorizontal ? Math.max(tFall, 0.001) : isCircular ? 2 * Math.PI : 1;
 
   useEffect(() => {
-    if (!isHorizontal) return;
-    setTime((current) => Math.min(current, horizontalFallTime(widget, values)));
-  }, [isHorizontal, values, widget]);
+    setStateValue((current) => Math.min(current, stateMax));
+  }, [stateMax]);
 
   useEffect(() => {
     if (!playing) return;
     const timer = window.setInterval(() => {
-      setTime((current) => {
-        if (isHorizontal) {
-          const end = horizontalFallTime(widget, values);
-          return current >= end - 0.001 ? 0 : Math.min(end, current + 0.035);
+      setStateValue((current) => {
+        if (isHorizontal) return current >= stateMax - 0.001 ? 0 : Math.min(stateMax, current + 0.035);
+        if (isCircular) {
+          const omega = circularState(widget, values, current).omega;
+          const next = current + omega * 0.035;
+          return next >= stateMax ? 0 : next;
         }
-        return current + 0.035;
+        return current;
       });
     }, 35);
     return () => window.clearInterval(timer);
-  }, [isHorizontal, playing, values, widget]);
+  }, [isCircular, isHorizontal, playing, stateMax, values, widget]);
 
   const visual = useMemo(() => {
-    if (widget.physicsPreset === "horizontal_projectile") return <HorizontalProjectile widget={widget} values={values} time={time} />;
-    if (widget.physicsPreset === "uniform_circular_motion") return <CircularMotion widget={widget} values={values} time={time} />;
-    if (widget.physicsPreset === "centripetal_force") return <CircularMotion widget={widget} values={values} time={time} forceMode />;
+    if (widget.physicsPreset === "horizontal_projectile") return <HorizontalProjectile widget={widget} values={values} time={stateValue} />;
+    if (widget.physicsPreset === "uniform_circular_motion") return <CircularMotion widget={widget} values={values} angle={stateValue} />;
+    if (widget.physicsPreset === "centripetal_force") return <CircularMotion widget={widget} values={values} angle={stateValue} forceMode />;
     return <UnsupportedDiagram widget={widget} />;
-  }, [time, values, widget]);
+  }, [stateValue, values, widget]);
 
   function reset() {
     setValues(initialValues(widget));
-    setTime(0);
+    setStateValue(0);
     setPlaying(false);
-    setReveal(false);
     setLastChangedQuantityId(null);
   }
 
   return (
     <Card className="overflow-hidden rounded-3xl border-stone-200 bg-white shadow-sm">
-      <CardHeader className="space-y-3 border-b border-stone-100 px-4 py-5 sm:px-6">
+      <CardHeader className="space-y-2 border-b border-stone-100 px-4 py-5 sm:px-6">
         <div className="flex items-center gap-2">
           <Badge className="gap-1.5 bg-[#334f39] text-white hover:bg-[#334f39]"><FlaskConical className="h-3.5 w-3.5" /> SMARTLAB</Badge>
-          <span className="text-xs text-stone-500">Πείραξε τις παραμέτρους και δες τι αλλάζει.</span>
+          <span className="text-xs text-stone-500">Άλλαξε μία παράμετρο και δες τη Φυσική να αλλάζει.</span>
         </div>
         <div>
           <CardTitle className="text-xl font-semibold tracking-tight text-stone-950 sm:text-2xl">{widget.title}</CardTitle>
-          <p className="mt-1 max-w-3xl text-sm leading-6 text-stone-600">{widget.scene?.description || widget.concept}</p>
+          {widget.scene?.description ? <p className="mt-1 max-w-3xl text-sm leading-6 text-stone-600">{widget.scene.description}</p> : null}
         </div>
-        {widget.question ? <p className="text-sm font-medium leading-6 text-stone-800"><span className="text-stone-500">Σκέψου:</span> {widget.question}</p> : null}
       </CardHeader>
 
       <CardContent className="p-0">
-        <div className="grid lg:grid-cols-[minmax(0,1.65fr)_minmax(290px,.7fr)]">
+        <div className="grid lg:grid-cols-[minmax(0,1.7fr)_minmax(290px,.7fr)]">
           <div className="min-w-0 px-3 py-4 sm:px-5 sm:py-5 lg:px-6">
             {visual}
 
-            {isHorizontal ? (
+            {stateQuantity && (isHorizontal || isCircular) ? (
               <div className="mt-5 border-t border-stone-200 pt-4">
                 <div className="mb-2 flex items-center justify-between gap-3">
                   <div>
-                    <p className="text-sm font-semibold text-stone-900">{timeName}</p>
-                    <p className="text-xs text-stone-500">{timeSymbol}</p>
+                    <p className="text-sm font-semibold text-stone-900">{stateQuantity.name}</p>
+                    <p className="text-xs text-stone-500">{stateQuantity.symbol}</p>
                   </div>
-                  <Badge variant="outline" className="bg-white font-mono text-stone-700">{number(Math.min(time, tFall))} s</Badge>
+                  <Badge variant="outline" className="bg-white font-mono text-stone-700">{number(stateValue)} {stateQuantity.unit}</Badge>
                 </div>
                 <input
                   type="range"
                   min={0}
-                  max={Math.max(tFall, 0.001)}
-                  step={Math.max(tFall / 200, 0.005)}
-                  value={Math.min(time, tFall)}
-                  aria-label={timeName}
+                  max={stateMax}
+                  step={isHorizontal ? Math.max(stateMax / 200, 0.005) : 0.01}
+                  value={Math.min(stateValue, stateMax)}
+                  aria-label={stateQuantity.name}
                   onChange={(event) => {
                     setPlaying(false);
-                    setTime(Number(event.target.value));
-                    setLastChangedQuantityId(timeQuantity?.id || null);
+                    setStateValue(Number(event.target.value));
                   }}
                   className="h-2 w-full cursor-pointer appearance-none rounded-full bg-stone-200 accent-[#334f39]"
                 />
-                <div className="mt-1.5 flex justify-between text-[11px] text-stone-400"><span>0 s</span><span>{number(tFall)} s</span></div>
+                <div className="mt-1.5 flex justify-between text-[11px] text-stone-400"><span>0 {stateQuantity.unit}</span><span>{number(stateMax)} {stateQuantity.unit}</span></div>
               </div>
             ) : null}
 
-            <div className="mt-4 flex flex-wrap gap-2">
-              <Button type="button" onClick={() => setPlaying((value) => !value)} className="min-h-10 bg-[#334f39] hover:bg-[#29412f]">
-                {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />} {playing ? "Παύση" : "Έναρξη"}
-              </Button>
-              <Button type="button" variant="outline" onClick={reset} className="min-h-10"><RotateCcw className="h-4 w-4" /> Επαναφορά</Button>
-            </div>
+            {(isHorizontal || isCircular) ? (
+              <div className="mt-4 flex flex-wrap gap-2">
+                <Button type="button" onClick={() => setPlaying((value) => !value)} className="min-h-10 bg-[#334f39] hover:bg-[#29412f]">
+                  {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />} {playing ? "Παύση" : "Έναρξη"}
+                </Button>
+                <Button type="button" variant="outline" onClick={reset} className="min-h-10"><RotateCcw className="h-4 w-4" /> Επαναφορά</Button>
+              </div>
+            ) : null}
           </div>
 
           <aside className="border-t border-stone-200 bg-[#fcfbf9] px-4 py-5 sm:px-6 lg:border-l lg:border-t-0">
             <div className="mb-5">
               <p className="text-xs font-semibold uppercase tracking-[0.14em] text-stone-500">Τι μπορείς να αλλάξεις</p>
-              <p className="mt-1 text-xs leading-5 text-stone-500">Άλλαξε πρώτα μία παράμετρο κάθε φορά. Μετά συνδύασέ τες.</p>
+              <p className="mt-1 text-xs leading-5 text-stone-500">Πείραξε πρώτα μία παράμετρο. Μετά συνδύασέ τες.</p>
             </div>
-
             <ControlPanel widget={widget} values={values} onChange={(control, value) => {
               setValues((current) => ({ ...current, [control.id]: value }));
-              setLastChangedQuantityId(control.quantityId || null);
+              setLastChangedQuantityId(control.quantityId);
             }} />
-
             <ImpactPanel widget={widget} quantityId={lastChangedQuantityId} />
           </aside>
         </div>
-
-        {(widget.discovery || widget.equation || widget.challenge?.instruction) ? (
-          <div className="border-t border-stone-200 px-4 py-4 sm:px-6">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div className="min-w-0">
-                {widget.challenge?.instruction ? <p className="text-sm text-stone-700"><strong className="text-stone-900">Δοκίμασε:</strong> {widget.challenge.instruction}</p> : null}
-              </div>
-              {!reveal && widget.discovery ? (
-                <Button type="button" variant="outline" onClick={() => setReveal(true)} className="shrink-0"><Lightbulb className="h-4 w-4" /> Τι ανακάλυψα;</Button>
-              ) : null}
-            </div>
-            {reveal ? (
-              <div className="mt-3 max-w-4xl text-sm leading-6 text-stone-700">
-                <p>{widget.discovery}</p>
-                {widget.equation ? <p className="mt-2 font-mono font-semibold text-stone-900">{widget.equation}</p> : null}
-              </div>
-            ) : null}
-          </div>
-        ) : null}
       </CardContent>
     </Card>
   );
@@ -684,7 +620,7 @@ export function SmartLabExperience({ content }: { content: SmartLabContent }) {
             <p className="text-xs font-semibold uppercase tracking-[0.15em] text-stone-500">{section.subchapterLabel}</p>
             <h2 className="mt-1 text-xl font-semibold text-stone-950 sm:text-2xl">{section.subchapterTitle}</h2>
           </div>
-          {section.widgets.slice(0, 1).map((widget) => <SmartLabWidget key={widget.id} widget={widget} />)}
+          <SmartLabWidget widget={section.widgets[0]} />
         </section>
       ) : null)}
     </div>
