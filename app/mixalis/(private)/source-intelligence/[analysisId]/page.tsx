@@ -86,6 +86,7 @@ export default async function MixalisSourceIntelligencePage({
           totalUnits={context.totalUnits}
           initialFindingsCount={view.items.length}
           schoolBookMapped={view.schoolBookMapped}
+          subchapterNumberLabel={context.subchapterNumberLabel}
         />
 
         {!view.schoolBookMapped ? (
