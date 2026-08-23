@@ -209,10 +209,17 @@ function HorizontalProjectile({ widget, values, time }: { widget: Widget; values
   const angleRad = theta * Math.PI / 180;
   const angleEndX = px + Math.cos(angleRad) * angleR;
   const angleEndY = py + Math.sin(angleRad) * angleR;
-  const thetaLabelX = px + 34;
-  const thetaLabelY = Math.min(groundY - 8, py + 25);
 
-  const gravityX = Math.min(560, Math.max(145, px + 88));
+  const vxLabelX = Math.min(570, px + 62);
+  const vxLabelY = Math.max(24, py - 35);
+  const vyLabelX = Math.max(30, px - 52);
+  const vyLabelY = Math.min(groundY - 10, py + 45);
+  const speedLabelX = Math.min(575, Math.max(px + 65, speedEndX + 28));
+  const speedLabelY = Math.max(26, Math.min(groundY - 12, speedEndY - 20));
+  const thetaLabelX = Math.min(570, px + 42);
+  const thetaLabelY = Math.min(groundY - 12, py + 34);
+
+  const gravityX = Math.min(560, Math.max(145, px + 98));
   const gravityStartY = Math.max(32, Math.min(groundY - 62, py - 54));
   const gravityEndY = Math.min(groundY - 10, gravityStartY + 44);
 
@@ -250,33 +257,30 @@ function HorizontalProjectile({ widget, values, time }: { widget: Widget; values
 
         <g className="text-emerald-700">
           <line x1={px} y1={py} x2={vxEndX} y2={py} stroke="currentColor" strokeWidth="3" markerEnd={`url(#${arrow})`} />
-          <text x={px + Math.max(22, (vxEndX - px) * 0.62)} y={py - 14} textAnchor="middle" fontSize="12" fill="currentColor" style={svgTextHalo()}>{vxD.symbol}</text>
+          <line x1={px + Math.max(18, (vxEndX - px) * 0.55)} y1={py - 2} x2={vxLabelX - 7} y2={vxLabelY + 5} stroke="currentColor" strokeWidth="1.2" opacity="0.45" />
+          <text x={vxLabelX} y={vxLabelY} textAnchor="middle" fontSize="12" fill="currentColor" style={svgTextHalo()}>{vxD.symbol}</text>
         </g>
 
         {vy > 0.001 ? (
           <g className="text-amber-700">
             <line x1={px} y1={py} x2={px} y2={vyEndY} stroke="currentColor" strokeWidth="3" markerEnd={`url(#${arrow})`} />
-            <text x={px - 24} y={py + Math.max(25, (vyEndY - py) * 0.58)} textAnchor="middle" fontSize="12" fill="currentColor" style={svgTextHalo()}>{vyD.symbol}</text>
+            <line x1={px - 2} y1={py + Math.max(18, (vyEndY - py) * 0.52)} x2={vyLabelX + 8} y2={vyLabelY - 5} stroke="currentColor" strokeWidth="1.2" opacity="0.45" />
+            <text x={vyLabelX} y={vyLabelY} textAnchor="middle" fontSize="12" fill="currentColor" style={svgTextHalo()}>{vyD.symbol}</text>
           </g>
         ) : null}
 
         {speed > 0.001 ? (
           <g className="text-violet-700">
             <line x1={px} y1={py} x2={speedEndX} y2={speedEndY} stroke="currentColor" strokeWidth="2.5" markerEnd={`url(#${arrow})`} />
-            <text
-              x={speedEndX + 15}
-              y={Math.min(groundY - 7, speedEndY + 3)}
-              textAnchor="middle"
-              fontSize="12"
-              fill="currentColor"
-              style={svgTextHalo()}
-            >{speedD.symbol}</text>
+            <line x1={speedEndX} y1={speedEndY} x2={speedLabelX - 8} y2={speedLabelY + 5} stroke="currentColor" strokeWidth="1.2" opacity="0.45" />
+            <text x={speedLabelX} y={speedLabelY} textAnchor="middle" fontSize="12" fill="currentColor" style={svgTextHalo()}>{speedD.symbol}</text>
           </g>
         ) : null}
 
         {thetaQ && speed > 0.001 ? (
           <g className="text-fuchsia-700">
             <path d={`M ${px + angleR} ${py} A ${angleR} ${angleR} 0 0 1 ${angleEndX} ${angleEndY}`} fill="none" stroke="currentColor" strokeWidth="2" />
+            <line x1={angleEndX} y1={angleEndY} x2={thetaLabelX - 7} y2={thetaLabelY - 4} stroke="currentColor" strokeWidth="1.1" opacity="0.4" />
             <text x={thetaLabelX} y={thetaLabelY} fontSize="12" fill="currentColor" style={svgTextHalo()}>{thetaD.symbol}</text>
           </g>
         ) : null}
@@ -377,7 +381,6 @@ function CircularMotion({ widget, values, angle, forceMode = false }: { widget: 
   const cx = 310;
   const cy = 156;
 
-  // Positive angular displacement is shown in the conventional counter-clockwise direction.
   const px = cx + rPx * Math.cos(angle);
   const py = cy - rPx * Math.sin(angle);
   const tangentX = -Math.sin(angle);
@@ -422,16 +425,16 @@ function CircularMotion({ widget, values, angle, forceMode = false }: { widget: 
   const speedD = quantityDisplay(speedQ, "υ", "γραμμική ταχύτητα");
   const radialD = quantityDisplay(radialQ, forceMode ? "Fκ" : "ακ", forceMode ? "κεντρομόλος δύναμη" : "κεντρομόλος επιτάχυνση");
 
-  const radiusLabelX = (cx + px) / 2 - tangentX * 24;
-  const radiusLabelY = (cy + py) / 2 - tangentY * 24;
+  const radiusLabelX = (cx + px) / 2 - tangentX * 32;
+  const radiusLabelY = (cy + py) / 2 - tangentY * 32;
   const velocityEndX = px + tangentX * vLen;
   const velocityEndY = py + tangentY * vLen;
-  const velocityLabelX = velocityEndX + outwardX * 20;
-  const velocityLabelY = velocityEndY + outwardY * 20;
+  const velocityLabelX = velocityEndX + outwardX * 34 + tangentX * 7;
+  const velocityLabelY = velocityEndY + outwardY * 34 + tangentY * 7;
   const radialEndX = px + radialX * radialLen;
   const radialEndY = py + radialY * radialLen;
-  const radialLabelX = px + radialX * radialLen * 0.55 - tangentX * 25;
-  const radialLabelY = py + radialY * radialLen * 0.55 - tangentY * 25;
+  const radialLabelX = px + radialX * radialLen * 0.52 - tangentX * 36;
+  const radialLabelY = py + radialY * radialLen * 0.52 - tangentY * 36;
   const arcPath = circularArcPath(cx, cy, rPx, angle);
 
   const smallAngleR = 34;
@@ -453,6 +456,7 @@ function CircularMotion({ widget, values, angle, forceMode = false }: { widget: 
         {smallAnglePath ? <path d={smallAnglePath} fill="none" stroke="currentColor" className="text-fuchsia-500" strokeWidth="2" /> : null}
 
         <line x1={cx} y1={cy} x2={px} y2={py} stroke="currentColor" className="text-sky-700" strokeWidth="2.5" />
+        <line x1={(cx + px) / 2} y1={(cy + py) / 2} x2={radiusLabelX} y2={radiusLabelY + 5} stroke="currentColor" className="text-sky-700" strokeWidth="1.1" opacity="0.4" />
         <text x={radiusLabelX} y={radiusLabelY} fontSize="13" textAnchor="middle" className="fill-sky-700" style={svgTextHalo()}>{radiusD.symbol}={number(radius)} {radiusD.unit}</text>
         <circle cx={cx} cy={cy} r="5" className="fill-stone-500" />
         <text x={cx - 14} y={cy + 18} fontSize="11" className="fill-stone-500" style={svgTextHalo()}>O</text>
@@ -460,11 +464,13 @@ function CircularMotion({ widget, values, angle, forceMode = false }: { widget: 
 
         <g className="text-emerald-700">
           <line x1={px} y1={py} x2={velocityEndX} y2={velocityEndY} stroke="currentColor" strokeWidth="3" markerEnd={`url(#${arrow})`} />
+          <line x1={velocityEndX} y1={velocityEndY} x2={velocityLabelX} y2={velocityLabelY + 5} stroke="currentColor" strokeWidth="1.2" opacity="0.45" />
           <text x={velocityLabelX} y={velocityLabelY} fontSize="14" textAnchor="middle" fill="currentColor" style={svgTextHalo()}>{speedD.symbol}</text>
         </g>
 
         <g className={forceMode ? "text-rose-700" : "text-amber-700"}>
           <line x1={px} y1={py} x2={radialEndX} y2={radialEndY} stroke="currentColor" strokeWidth="3" markerEnd={`url(#${arrow})`} />
+          <line x1={px + radialX * radialLen * 0.55} y1={py + radialY * radialLen * 0.55} x2={radialLabelX} y2={radialLabelY + 5} stroke="currentColor" strokeWidth="1.2" opacity="0.45" />
           <text x={radialLabelX} y={radialLabelY} fontSize="14" textAnchor="middle" fill="currentColor" style={svgTextHalo()}>{radialD.symbol}</text>
         </g>
 
@@ -569,7 +575,6 @@ function ImpactPanel({ widget, quantityId }: { widget: Widget; quantityId: strin
         {impact.changes.length ? <p className="text-stone-600"><strong className="font-semibold text-stone-800">Αλλάζουν:</strong> {symbols(impact.changes).join(", ")}</p> : null}
         {impact.unchanged.length ? <p className="text-stone-600"><strong className="font-semibold text-stone-800">Μένουν ίδια:</strong> {symbols(impact.unchanged).join(", ")}</p> : null}
       </div>
-      {impact.explanation ? <p className="mt-2 line-clamp-3 text-[11px] leading-4 text-stone-500">{studentText(widget, impact.explanation)}</p> : null}
     </div>
   );
 }
