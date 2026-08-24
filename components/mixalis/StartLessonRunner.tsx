@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 
 type Status = "draft" | "processing" | "current" | "superseded" | "error";
 
+const STATUS_POLL_MS = 5_000;
+
 export default function StartLessonRunner({
   revisionId,
   revisionNumber,
@@ -61,10 +63,25 @@ export default function StartLessonRunner({
 
   useEffect(() => {
     if (status !== "processing") return;
-    const timer = window.setInterval(() => {
-      void readStatus();
-    }, 2000);
-    return () => window.clearInterval(timer);
+
+    let cancelled = false;
+    let timer: number | null = null;
+
+    const schedule = () => {
+      if (cancelled) return;
+      timer = window.setTimeout(async () => {
+        if (document.visibilityState === "visible") {
+          await readStatus().catch(() => undefined);
+        }
+        schedule();
+      }, STATUS_POLL_MS);
+    };
+
+    schedule();
+    return () => {
+      cancelled = true;
+      if (timer) window.clearTimeout(timer);
+    };
   }, [readStatus, status]);
 
   useEffect(() => {
@@ -99,7 +116,7 @@ export default function StartLessonRunner({
           <div className="h-2 overflow-hidden rounded-full bg-[#e3ddd5]">
             <div className="h-full w-2/3 animate-pulse rounded-full bg-[#8e8176]" />
           </div>
-          <p className="mt-3 text-sm text-[#746a62]">Η κατάσταση ελέγχεται αυτόματα κάθε 2 δευτερόλεπτα. Δεν χρειάζεται refresh.</p>
+          <p className="mt-3 text-sm text-[#746a62]">Η κατάσταση ελέγχεται αυτόματα ανά λίγα δευτερόλεπτα μόνο όσο η σελίδα είναι ενεργή. Δεν χρειάζεται refresh.</p>
         </div>
       ) : null}
 

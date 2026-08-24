@@ -129,7 +129,7 @@ function PipelineCta({
   }
 
   return (
-    <Link href={href} className={className}>
+    <Link href={href} prefetch={false} className={className}>
       {pipeline.next.label}
     </Link>
   );
@@ -160,6 +160,7 @@ export default function PhysicsPipeline({
         </div>
         <Link
           href={`/mixalis/chapters/${chapterId}/lab`}
+          prefetch={false}
           className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-xl border border-[#9eb09a] bg-[#eef5ed] px-5 py-2.5 text-sm font-bold text-[#3f5a43] transition hover:bg-[#e4eee2]"
         >
           LAB · Εικονικά Εργαστήρια

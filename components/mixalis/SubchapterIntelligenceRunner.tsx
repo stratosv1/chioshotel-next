@@ -34,6 +34,7 @@ type StatusPayload = {
 };
 
 const STALE_RUN_MS = 8 * 60_000;
+const STATUS_POLL_MS = 5_000;
 
 const primaryCtaClass =
   "inline-flex min-h-14 w-full items-center justify-center rounded-2xl bg-[#304b35] px-5 py-4 text-center text-base font-bold !text-white shadow-sm transition hover:bg-[#263d2b] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#9fb49d] disabled:cursor-wait disabled:opacity-60";
@@ -132,17 +133,29 @@ export default function SubchapterIntelligenceRunner({
 
   useEffect(() => {
     if (status !== "draft" || runState !== "running") return;
-    const timer = window.setInterval(() => {
-      void readStatus()
-        .then((next) => {
-          if (next.status === "current" || next.status === "superseded") {
-            window.clearInterval(timer);
+
+    let cancelled = false;
+    let timer: number | null = null;
+
+    const schedule = () => {
+      if (cancelled) return;
+      timer = window.setTimeout(async () => {
+        if (document.visibilityState === "visible") {
+          const next = await readStatus().catch(() => null);
+          if (next?.status === "current" || next?.status === "superseded") {
             router.refresh();
+            return;
           }
-        })
-        .catch(() => undefined);
-    }, 2500);
-    return () => window.clearInterval(timer);
+        }
+        schedule();
+      }, STATUS_POLL_MS);
+    };
+
+    schedule();
+    return () => {
+      cancelled = true;
+      if (timer) window.clearTimeout(timer);
+    };
   }, [readStatus, router, runState, status]);
 
   const run = useCallback(async () => {
@@ -240,7 +253,7 @@ export default function SubchapterIntelligenceRunner({
           </p>
 
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
-            <Link href={`/mixalis/lessons/${currentLesson.revisionId}`} className={secondaryCtaClass}>
+            <Link href={`/mixalis/lessons/${currentLesson.revisionId}`} prefetch={false} className={secondaryCtaClass}>
               Άνοιγμα current μαθήματος
             </Link>
 

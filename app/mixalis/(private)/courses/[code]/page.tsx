@@ -25,6 +25,7 @@ export default async function MixalisCoursePage({
       <div className="mx-auto max-w-6xl">
         <Link
           href="/mixalis"
+          prefetch={false}
           className="mb-5 inline-flex text-sm font-medium text-[#6e5d50] hover:underline"
         >
           ← Οι δύο Φυσικές
@@ -63,6 +64,7 @@ export default async function MixalisCoursePage({
               <Link
                 key={chapter.id}
                 href={`/mixalis/chapters/${chapter.id}`}
+                prefetch={false}
                 className="group grid gap-4 rounded-3xl border border-black/10 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md sm:grid-cols-[auto_1fr_auto] sm:items-center"
               >
                 <div className="flex h-12 min-w-12 items-center justify-center rounded-2xl bg-[#ded4c7] px-4 text-lg font-semibold text-[#554940]">

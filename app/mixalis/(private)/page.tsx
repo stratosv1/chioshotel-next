@@ -39,6 +39,7 @@ export default async function MixalisDashboardPage() {
           <div className="flex flex-wrap gap-3">
             <Link
               href="/mixalis/sources"
+              prefetch={false}
               className="rounded-xl bg-[#e9e0d5] px-4 py-2.5 text-sm font-semibold text-[#4d4138] transition hover:bg-[#ddd1c3]"
             >
               Βιβλιοθήκη πηγών
@@ -84,6 +85,7 @@ export default async function MixalisDashboardPage() {
               <Link
                 key={course.id}
                 href={`/mixalis/courses/${course.code}`}
+                prefetch={false}
                 className="group flex min-h-72 flex-col rounded-3xl border border-black/10 bg-white p-7 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md sm:p-8"
               >
                 <div className="flex flex-wrap items-center justify-between gap-3">

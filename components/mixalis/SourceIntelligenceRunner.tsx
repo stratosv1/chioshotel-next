@@ -21,6 +21,10 @@ type StatusPayload = {
   };
 };
 
+const LIVE_STATUS_POLL_MS = 5_000;
+const RUN_STATUS_POLL_MS = 5_000;
+const HIDDEN_TAB_RECHECK_MS = 15_000;
+
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -87,6 +91,9 @@ export default function SourceIntelligenceRunner({
   }
 
   useEffect(() => {
+    if (running || status === "ready") return;
+    if (status !== "processing" && !(status === "error" && processedUnits >= totalUnits)) return;
+
     let cancelled = false;
     let timer: ReturnType<typeof setTimeout> | null = null;
 
@@ -112,24 +119,33 @@ export default function SourceIntelligenceRunner({
           autoFinalizeAttempted.current = true;
           setMessage(`${totalUnits} φωτογραφίες έχουν ολοκληρωθεί. Επαναλαμβάνεται αυτόματα μόνο η τελική σύνθεση…`);
           void run();
+          return;
         }
       } catch {
-        // Keep showing the last persisted snapshot; retry automatically.
+        // Keep showing the last persisted snapshot; retry automatically only while work is active.
       }
 
       if (!cancelled) {
-        timer = setTimeout(syncLiveProgress, 2000);
+        timer = setTimeout(syncLiveProgress, LIVE_STATUS_POLL_MS);
       }
     }
 
-    void syncLiveProgress();
+    const scheduleInitialCheck = () => {
+      if (document.visibilityState === "visible") {
+        void syncLiveProgress();
+        return;
+      }
+      timer = setTimeout(scheduleInitialCheck, HIDDEN_TAB_RECHECK_MS);
+    };
+
+    scheduleInitialCheck();
 
     return () => {
       cancelled = true;
       if (timer) clearTimeout(timer);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [analysisId]);
+  }, [analysisId, processedUnits, running, status, totalUnits]);
 
   async function run() {
     if (running || status === "ready") return;
@@ -181,7 +197,15 @@ export default function SourceIntelligenceRunner({
         let advanced = false;
 
         for (let poll = 0; poll < 100; poll += 1) {
-          await sleep(poll === 0 ? 1000 : 2000);
+          await sleep(
+            document.visibilityState === "visible"
+              ? poll === 0
+                ? 1_500
+                : RUN_STATUS_POLL_MS
+              : HIDDEN_TAB_RECHECK_MS,
+          );
+
+          if (document.visibilityState !== "visible") continue;
 
           let snapshot: StatusPayload;
           try {
@@ -290,7 +314,7 @@ export default function SourceIntelligenceRunner({
             <div>
               <h2 className="font-semibold">Ανάλυση πηγής</h2>
               <p className="mt-1 text-sm leading-6 text-[#6f665f]">
-                Πάτησε μία φορά. Η πρόοδος ενημερώνεται αυτόματα από τη βάση περίπου κάθε 2 δευτερόλεπτα και το σύστημα συνεχίζει μέχρι το τέλος.
+                Πάτησε μία φορά. Η πρόοδος ενημερώνεται αυτόματα ανά λίγα δευτερόλεπτα μόνο όσο υπάρχει ενεργή εργασία και η καρτέλα είναι ορατή.
               </p>
             </div>
             <span className="shrink-0 rounded-full bg-white px-3 py-1 text-xs text-[#756b63]">
