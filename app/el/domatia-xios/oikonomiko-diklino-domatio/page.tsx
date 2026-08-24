@@ -8,6 +8,7 @@ import { absoluteUrl, buildPageMetadata, getAlternates, getCanonicalUrl } from "
 
 const data = withEconomyRoomIntent(economyDoubleRoomsEl, "el");
 const path = data.seo.canonicalPath;
+const metadataTitle = "Οικονομικά Δωμάτια στη Χίο | Οικονομικό Δίκλινο";
 const baseMetadata = buildPageMetadata({
   path,
   title: data.seo.title,
@@ -17,6 +18,18 @@ const baseMetadata = buildPageMetadata({
 
 export const metadata: Metadata = {
   ...baseMetadata,
+  title: { absolute: metadataTitle },
+  description: data.seo.description,
+  openGraph: {
+    ...baseMetadata.openGraph,
+    title: metadataTitle,
+    description: data.seo.description,
+  },
+  twitter: {
+    ...baseMetadata.twitter,
+    title: metadataTitle,
+    description: data.seo.description,
+  },
   alternates: {
     canonical: getCanonicalUrl(path),
     languages: {
