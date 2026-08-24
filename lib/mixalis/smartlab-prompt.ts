@@ -64,6 +64,7 @@ export function buildSmartLabPrompt(input: SmartLabPromptInput) {
 9. Δημιούργησε μόνο ένα widget. Όχι δεύτερο μάθημα, όχι περιττή θεωρία, όχι πολλά panels.
 10. UI: super clean, minimal, premium, responsive, shadcn/ui. Το διάγραμμα είναι ο πρωταγωνιστής. Χωρίς nested containers και χωρίς περιττό κείμενο.
 11. Πριν παραδώσεις, έλεγξε ότι οι σχέσεις, οι αριθμοί, τα διανύσματα, οι αποστάσεις, οι γωνίες και η κίνηση είναι φυσικά σωστά.
+12. Για horizontal_projectile χρησιμοποίησε διευρυμένα διδακτικά ranges: το control initial_speed πρέπει να φτάνει έως 60 m/s και το control height έως 100 m. Οι υπολογισμοί πρέπει να παραμένουν ακριβείς σε όλο το range.
 
 ΔΙΑΘΕΣΙΜΟΙ RENDERERS
 - horizontal_projectile
