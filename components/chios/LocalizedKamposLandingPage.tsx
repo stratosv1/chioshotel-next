@@ -243,7 +243,7 @@ export function LocalizedKamposLandingPage({ data }: Props) {
   const eyebrow = "text-[0.68rem] font-extrabold uppercase tracking-[0.22em] text-[#9a7a62] sm:text-xs";
   const heading = "text-balance font-serif text-[2rem] font-semibold leading-[1.02] tracking-[-0.04em] text-[#493a31] sm:text-4xl lg:text-5xl";
   const body = "text-[0.96rem] leading-7 text-[#75665b] sm:text-lg sm:leading-8";
-  const facts = [["1.5 km", t.beach], ["3 km", t.airport], ["6 km", t.town], ["Free", t.parking]];
+  const facts = [["1.5 km", t.beach], ["3 km", t.airport], ["8 km", t.town], ["Free", t.parking]];
 
   return (
     <main className="overflow-hidden bg-[#f8f4ee] text-[#493a31]">
