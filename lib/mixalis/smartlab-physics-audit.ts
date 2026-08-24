@@ -56,7 +56,7 @@ export function assertLessonFormulaContract(subchapterTitle: string, formulas: L
     requireFormula(text, ["f=1/t", "f=1/T"], "f=1/T", errors);
     requireFormula(text, ["φ=ωt"], "φ=ωt", errors);
     requireFormula(text, ["υ=ωr"], "υ=ωr", errors);
-    requireFormula(text, ["ω=2πf"], "ω=2πf", errors);
+    requireFormula(text, ["ω=2πf", "2πf"], "ω=2πf", errors);
     requireFormula(text, ["αₖ=υ²/r", "ακ=υ²/r"], "αₖ=υ²/r", errors);
     requireFormula(text, ["αₖ=ω²r", "ακ=ω²r"], "αₖ=ω²r", errors);
   }
