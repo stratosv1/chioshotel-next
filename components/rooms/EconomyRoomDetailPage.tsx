@@ -6,12 +6,5 @@ type EconomyRoomDetailPageProps = {
 };
 
 export function EconomyRoomDetailPage({ data }: EconomyRoomDetailPageProps) {
-  return (
-    <RoomDetailPage
-      data={{
-        ...data,
-        id: "economy-double-carousel",
-      }}
-    />
-  );
+  return <RoomDetailPage data={{ ...data, id: "economy-double-carousel" }} />;
 }

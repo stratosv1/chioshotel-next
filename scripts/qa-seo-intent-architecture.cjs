@@ -76,10 +76,58 @@ expectAll(
   "content/family-travel-intent.ts",
   [
     "Family holidays in Chios with kids",
+    "family accommodation in Kambos",
     "Οικογενειακές διακοπές στη Χίο με παιδιά",
+    "οικογενειακή διαμονή στη Χίο",
     "Çocuklarla Sakız Adası aile tatili",
   ],
   "Family-travel intent is incomplete",
+);
+
+expectAll(
+  "content/economy-room-intent.ts",
+  [
+    "Budget Rooms in Chios",
+    "Οικονομικά Δωμάτια στη Χίο",
+    "Günstige Zimmer auf Chios",
+    "Camere economiche a Chios",
+    "Habitaciones económicas en Quíos",
+    "Sakız Adası Ekonomik Odalar",
+  ],
+  "Economy-room commercial intent is incomplete",
+);
+
+const economyOwnerPages = [
+  "app/chios-rooms/economy-double-rooms/page.tsx",
+  "app/el/domatia-xios/oikonomiko-diklino-domatio/page.tsx",
+  "app/fr/chambres-a-chios/chambres-doubles-economiques/page.tsx",
+  "app/de/zimmer-chios/economy-zimmer-auf-chios/page.tsx",
+  "app/it/stanze-a-chios/camera-doppia-economica-chios/page.tsx",
+  "app/es/habitaciones-en-chios/economicas-habitaciones-en-chios/page.tsx",
+  "app/tr/chios-odalari/sakiz-adasindaki-ekonomi-cift-kisilik-oda/page.tsx",
+];
+
+for (const file of economyOwnerPages) {
+  expectAll(
+    file,
+    ["withEconomyRoomIntent", "buildRoomDetailSchema(data)", "data.seo.title", "data.seo.description"],
+    "Economy owner metadata/schema must use the centralized intent data",
+  );
+}
+
+expectAll(
+  "content/accommodation-traditional-intent.ts",
+  [
+    "accommodation near Chios Airport",
+    "διαμονή ή δωμάτια κοντά στο αεροδρόμιο Χίου",
+    "hébergement près de l’aéroport de Chios",
+    "Unterkunft nahe dem Flughafen Chios",
+    "alloggio vicino all’aeroporto di Chios",
+    "alojamiento cerca del aeropuerto de Quíos",
+    "Sakız Havalimanı’na yakın konaklama",
+    "8 χλμ.",
+  ],
+  "Airport-proximity accommodation intent is incomplete",
 );
 
 expectAll(
@@ -245,13 +293,25 @@ expectAll(
   "lib/greek-seo-content-hardening.ts",
   [
     "3 χλμ.",
-    "6 χλμ.",
+    "8 χλμ.",
     "Ψυγείο & κλιματισμός",
     "βοηθό εύρεσης δωματίου AI",
     "πιθανή διαμονή σε δύο δωμάτια",
     "ενός ξενοδοχείου ή θερέτρου",
   ],
   "Greek SEO content hardening is incomplete",
+);
+
+expectAll(
+  "components/chios/LocalizedKamposLandingPage.tsx",
+  ['["8 km", t.town]'],
+  "Localized Kambos distance must use 8 km",
+);
+
+expectAll(
+  "components/chios/GreekKamposLandingPageElegant.tsx",
+  ['["8 χλμ.", "πόλη & λιμάνι"]'],
+  "Greek Kambos distance must use 8 km",
 );
 
 expect(
@@ -278,4 +338,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log("SEO architecture QA passed: audits #1–#9, owner guardrails, source-level structured-data localization, Greek homepage/rooms/content hardening, localized SEO alt text, sitemap and LodgingBusiness schema are in place.");
+console.log("SEO architecture QA passed: audits #1–#9, owner guardrails, economy, airport and family intent refinements, 8 km Kambos distance, localized SEO content, sitemap and LodgingBusiness schema are in place.");

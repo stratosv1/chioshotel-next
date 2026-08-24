@@ -29,9 +29,10 @@ const pageData = hardenGreekSeoContent(
   ),
 );
 
+const metadataTitle = "Διαμονή στη Χίο | Κάμπος, κοντά στο αεροδρόμιο";
 const baseMetadata = buildPageMetadata({
   path: pageData.seo.canonicalPath,
-  title: "Διαμονή στη Χίο | Voulamandis House",
+  title: metadataTitle,
   description: pageData.seo.description,
   image: pageData.seo.ogImage,
   imageAlt: pageData.seo.ogImageAlt,
@@ -39,6 +40,18 @@ const baseMetadata = buildPageMetadata({
 
 export const metadata: Metadata = {
   ...baseMetadata,
+  title: { absolute: metadataTitle },
+  description: pageData.seo.description,
+  openGraph: {
+    ...baseMetadata.openGraph,
+    title: metadataTitle,
+    description: pageData.seo.description,
+  },
+  twitter: {
+    ...baseMetadata.twitter,
+    title: metadataTitle,
+    description: pageData.seo.description,
+  },
   alternates: {
     canonical: absoluteUrl(pageData.seo.canonicalPath),
     languages: accommodationLandingLanguages(),

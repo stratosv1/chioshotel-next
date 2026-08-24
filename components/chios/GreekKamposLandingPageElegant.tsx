@@ -43,7 +43,7 @@ function Cta({ href, children, variant = "primary", external = false }: CtaProps
 const facts = [
   ["1,5 χλμ.", "παραλία"],
   ["3 χλμ.", "αεροδρόμιο"],
-  ["6 χλμ.", "πόλη & λιμάνι"],
+  ["8 χλμ.", "πόλη & λιμάνι"],
   ["Δωρεάν", "στάθμευση"],
 ] as const;
 
