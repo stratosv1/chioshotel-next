@@ -85,7 +85,7 @@ expectAll(
 );
 
 expectAll(
-  "components/rooms/EconomyRoomDetailPage.tsx",
+  "content/economy-room-intent.ts",
   [
     "Budget Rooms in Chios",
     "Οικονομικά Δωμάτια στη Χίο",
@@ -96,6 +96,24 @@ expectAll(
   ],
   "Economy-room commercial intent is incomplete",
 );
+
+const economyOwnerPages = [
+  "app/chios-rooms/economy-double-rooms/page.tsx",
+  "app/el/domatia-xios/oikonomiko-diklino-domatio/page.tsx",
+  "app/fr/chambres-a-chios/chambres-doubles-economiques/page.tsx",
+  "app/de/zimmer-chios/economy-zimmer-auf-chios/page.tsx",
+  "app/it/stanze-a-chios/camera-doppia-economica-chios/page.tsx",
+  "app/es/habitaciones-en-chios/economicas-habitaciones-en-chios/page.tsx",
+  "app/tr/chios-odalari/sakiz-adasindaki-ekonomi-cift-kisilik-oda/page.tsx",
+];
+
+for (const file of economyOwnerPages) {
+  expectAll(
+    file,
+    ["withEconomyRoomIntent", "buildRoomDetailSchema(data)", "data.seo.title", "data.seo.description"],
+    "Economy owner metadata/schema must use the centralized intent data",
+  );
+}
 
 expectAll(
   "content/accommodation-traditional-intent.ts",
