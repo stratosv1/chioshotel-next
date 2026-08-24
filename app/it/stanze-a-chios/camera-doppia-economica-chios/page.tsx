@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import { EconomyRoomDetailPage } from "@/components/rooms/EconomyRoomDetailPage";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { economyDoubleRoomsIt } from "@/content/room-details";
+import { withEconomyRoomIntent } from "@/content/economy-room-intent";
 import { buildRoomDetailSchema } from "@/content/room-detail-schema";
+import { economyDoubleRoomsIt } from "@/content/room-details";
 import { absoluteUrl, buildPageMetadata, getAlternates, getCanonicalUrl } from "@/lib/seo";
 
-const path = economyDoubleRoomsIt.seo.canonicalPath;
-const baseMetadata = buildPageMetadata({ path, title: economyDoubleRoomsIt.seo.title, description: economyDoubleRoomsIt.seo.description, image: economyDoubleRoomsIt.seo.ogImage });
+const data = withEconomyRoomIntent(economyDoubleRoomsIt, "it");
+const path = data.seo.canonicalPath;
+const baseMetadata = buildPageMetadata({ path, title: data.seo.title, description: data.seo.description, image: data.seo.ogImage });
 
 export const metadata: Metadata = {
   ...baseMetadata,
@@ -14,5 +16,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <><JsonLd data={buildRoomDetailSchema(economyDoubleRoomsIt)} /><EconomyRoomDetailPage data={economyDoubleRoomsIt} /></>;
+  return <><JsonLd data={buildRoomDetailSchema(data)} /><EconomyRoomDetailPage data={data} /></>;
 }
