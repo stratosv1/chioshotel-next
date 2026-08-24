@@ -106,8 +106,15 @@ function markerId(widget: Widget) {
 function ArrowDefs({ id }: { id: string }) {
   return (
     <defs>
-      <marker id={id} markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
-        <path d="M0,0 L0,6 L7,3 z" fill="context-stroke" />
+      <marker id={id} markerWidth="5" markerHeight="5" refX="4.4" refY="2.5" orient="auto" markerUnits="strokeWidth">
+        <path
+          d="M0.5,0.5 L4.5,2.5 L0.5,4.5"
+          fill="none"
+          stroke="context-stroke"
+          strokeWidth="1.05"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
       </marker>
     </defs>
   );
@@ -155,7 +162,7 @@ function HorizontalProjectile({ widget, values, time }: { widget: Widget; values
   const launchY = groundY - h * yScale;
   const px = launchX + x * xScale;
   const py = launchY + y * yScale;
-  const vectorScale = 72 / maxSpeed;
+  const vectorScale = 58 / maxSpeed;
 
   const trajectory = Array.from({ length: 64 }, (_, index) => {
     const q = index / 63;
@@ -204,24 +211,27 @@ function HorizontalProjectile({ widget, values, time }: { widget: Widget; values
   const vyEndY = py + vy * vectorScale;
   const speedEndX = px + vx * vectorScale;
   const speedEndY = py + vy * vectorScale;
+  const verticalVectorLength = Math.abs(vy * vectorScale);
+  const velocitiesNearlyCollinear = verticalVectorLength < 7;
+  const showVerticalVector = verticalVectorLength >= 6;
 
-  const angleR = 26;
+  const angleR = 24;
   const angleRad = theta * Math.PI / 180;
   const angleEndX = px + Math.cos(angleRad) * angleR;
   const angleEndY = py + Math.sin(angleRad) * angleR;
 
-  const vxLabelX = Math.min(570, px + 62);
-  const vxLabelY = Math.max(24, py - 35);
-  const vyLabelX = Math.max(30, px - 52);
-  const vyLabelY = Math.min(groundY - 10, py + 45);
-  const speedLabelX = Math.min(575, Math.max(px + 65, speedEndX + 28));
-  const speedLabelY = Math.max(26, Math.min(groundY - 12, speedEndY - 20));
-  const thetaLabelX = Math.min(570, px + 42);
-  const thetaLabelY = Math.min(groundY - 12, py + 34);
+  const vxLabelX = Math.min(570, px + 58);
+  const vxLabelY = Math.max(24, py - 32);
+  const vyLabelX = Math.max(30, px - 48);
+  const vyLabelY = Math.min(groundY - 10, py + 42);
+  const speedLabelX = Math.min(575, Math.max(px + 58, speedEndX + 22));
+  const speedLabelY = Math.max(26, Math.min(groundY - 12, speedEndY - 18));
+  const thetaLabelX = Math.min(570, px + 38);
+  const thetaLabelY = Math.min(groundY - 12, py + 31);
 
-  const gravityX = Math.min(560, Math.max(145, px + 98));
-  const gravityStartY = Math.max(32, Math.min(groundY - 62, py - 54));
-  const gravityEndY = Math.min(groundY - 10, gravityStartY + 44);
+  const gravityX = Math.min(560, Math.max(145, px + 92));
+  const gravityStartY = Math.max(32, Math.min(groundY - 58, py - 50));
+  const gravityEndY = Math.min(groundY - 10, gravityStartY + 36);
 
   return (
     <div className="min-w-0">
@@ -253,42 +263,44 @@ function HorizontalProjectile({ widget, values, time }: { widget: Widget; values
 
         {rangeQ ? <text x="450" y="300" fontSize="11" className="fill-stone-500" style={svgTextHalo()}>{rangeQ.symbol}={number(range)} {rangeQ.unit}</text> : null}
 
-        <circle cx={px} cy={py} r="8" className="fill-stone-950" />
+        <circle cx={px} cy={py} r="7" className="fill-stone-950" />
 
         <g className="text-emerald-700">
-          <line x1={px} y1={py} x2={vxEndX} y2={py} stroke="currentColor" strokeWidth="3" markerEnd={`url(#${arrow})`} />
-          <line x1={px + Math.max(18, (vxEndX - px) * 0.55)} y1={py - 2} x2={vxLabelX - 7} y2={vxLabelY + 5} stroke="currentColor" strokeWidth="1.2" opacity="0.45" />
-          <text x={vxLabelX} y={vxLabelY} textAnchor="middle" fontSize="12" fill="currentColor" style={svgTextHalo()}>{vxD.symbol}</text>
+          <line x1={px} y1={py} x2={vxEndX} y2={py} stroke="currentColor" strokeWidth="2.1" markerEnd={`url(#${arrow})`} />
+          <line x1={px + Math.max(16, (vxEndX - px) * 0.55)} y1={py - 2} x2={vxLabelX - 7} y2={vxLabelY + 5} stroke="currentColor" strokeWidth="1" opacity="0.4" />
+          <text x={vxLabelX} y={vxLabelY} textAnchor="middle" fontSize="12" fill="currentColor" style={svgTextHalo()}>
+            {velocitiesNearlyCollinear ? `${vxD.symbol} ≈ ${speedD.symbol}` : vxD.symbol}
+          </text>
         </g>
 
-        {vy > 0.001 ? (
+        {showVerticalVector ? (
           <g className="text-amber-700">
-            <line x1={px} y1={py} x2={px} y2={vyEndY} stroke="currentColor" strokeWidth="3" markerEnd={`url(#${arrow})`} />
-            <line x1={px - 2} y1={py + Math.max(18, (vyEndY - py) * 0.52)} x2={vyLabelX + 8} y2={vyLabelY - 5} stroke="currentColor" strokeWidth="1.2" opacity="0.45" />
+            <line x1={px} y1={py} x2={px} y2={vyEndY} stroke="currentColor" strokeWidth="2.1" markerEnd={`url(#${arrow})`} />
+            <line x1={px - 2} y1={py + Math.max(14, (vyEndY - py) * 0.52)} x2={vyLabelX + 8} y2={vyLabelY - 5} stroke="currentColor" strokeWidth="1" opacity="0.4" />
             <text x={vyLabelX} y={vyLabelY} textAnchor="middle" fontSize="12" fill="currentColor" style={svgTextHalo()}>{vyD.symbol}</text>
           </g>
         ) : null}
 
-        {speed > 0.001 ? (
+        {!velocitiesNearlyCollinear && speed > 0.001 ? (
           <g className="text-violet-700">
-            <line x1={px} y1={py} x2={speedEndX} y2={speedEndY} stroke="currentColor" strokeWidth="2.5" markerEnd={`url(#${arrow})`} />
-            <line x1={speedEndX} y1={speedEndY} x2={speedLabelX - 8} y2={speedLabelY + 5} stroke="currentColor" strokeWidth="1.2" opacity="0.45" />
+            <line x1={px} y1={py} x2={speedEndX} y2={speedEndY} stroke="currentColor" strokeWidth="2" markerEnd={`url(#${arrow})`} />
+            <line x1={speedEndX} y1={speedEndY} x2={speedLabelX - 8} y2={speedLabelY + 5} stroke="currentColor" strokeWidth="1" opacity="0.4" />
             <text x={speedLabelX} y={speedLabelY} textAnchor="middle" fontSize="12" fill="currentColor" style={svgTextHalo()}>{speedD.symbol}</text>
           </g>
         ) : null}
 
-        {thetaQ && speed > 0.001 ? (
+        {thetaQ && !velocitiesNearlyCollinear && speed > 0.001 ? (
           <g className="text-fuchsia-700">
-            <path d={`M ${px + angleR} ${py} A ${angleR} ${angleR} 0 0 1 ${angleEndX} ${angleEndY}`} fill="none" stroke="currentColor" strokeWidth="2" />
-            <line x1={angleEndX} y1={angleEndY} x2={thetaLabelX - 7} y2={thetaLabelY - 4} stroke="currentColor" strokeWidth="1.1" opacity="0.4" />
+            <path d={`M ${px + angleR} ${py} A ${angleR} ${angleR} 0 0 1 ${angleEndX} ${angleEndY}`} fill="none" stroke="currentColor" strokeWidth="1.6" />
+            <line x1={angleEndX} y1={angleEndY} x2={thetaLabelX - 7} y2={thetaLabelY - 4} stroke="currentColor" strokeWidth="0.9" opacity="0.35" />
             <text x={thetaLabelX} y={thetaLabelY} fontSize="12" fill="currentColor" style={svgTextHalo()}>{thetaD.symbol}</text>
           </g>
         ) : null}
 
         {gravityQ ? (
           <g className="text-rose-700">
-            <line x1={gravityX} y1={gravityStartY} x2={gravityX} y2={gravityEndY} stroke="currentColor" strokeWidth="3" markerEnd={`url(#${arrow})`} />
-            <text x={gravityX + 11} y={(gravityStartY + gravityEndY) / 2 + 4} fontSize="12" fill="currentColor" style={svgTextHalo()}>{gravityD.symbol}</text>
+            <line x1={gravityX} y1={gravityStartY} x2={gravityX} y2={gravityEndY} stroke="currentColor" strokeWidth="2.2" markerEnd={`url(#${arrow})`} />
+            <text x={gravityX + 10} y={(gravityStartY + gravityEndY) / 2 + 4} fontSize="12" fill="currentColor" style={svgTextHalo()}>{gravityD.symbol}</text>
           </g>
         ) : null}
 
@@ -394,8 +406,8 @@ function CircularMotion({ widget, values, angle, forceMode = false }: { widget: 
   const radialMagnitude = forceMode ? force : acceleration;
   const radialMax = forceMode ? maxForce : Math.max(maxAcceleration, 0.001);
   const radialRatio = Math.min(1, radialMagnitude / radialMax);
-  const vLen = 44 + 42 * speedRatio;
-  const radialLen = 40 + 40 * radialRatio;
+  const vLen = 42 + 36 * speedRatio;
+  const radialLen = 38 + 34 * radialRatio;
 
   const numeric: NumericState = {
     radius,
@@ -460,17 +472,17 @@ function CircularMotion({ widget, values, angle, forceMode = false }: { widget: 
         <text x={radiusLabelX} y={radiusLabelY} fontSize="13" textAnchor="middle" className="fill-sky-700" style={svgTextHalo()}>{radiusD.symbol}={number(radius)} {radiusD.unit}</text>
         <circle cx={cx} cy={cy} r="5" className="fill-stone-500" />
         <text x={cx - 14} y={cy + 18} fontSize="11" className="fill-stone-500" style={svgTextHalo()}>O</text>
-        <circle cx={px} cy={py} r="9" className="fill-stone-950" />
+        <circle cx={px} cy={py} r="8" className="fill-stone-950" />
 
         <g className="text-emerald-700">
-          <line x1={px} y1={py} x2={velocityEndX} y2={velocityEndY} stroke="currentColor" strokeWidth="3" markerEnd={`url(#${arrow})`} />
-          <line x1={velocityEndX} y1={velocityEndY} x2={velocityLabelX} y2={velocityLabelY + 5} stroke="currentColor" strokeWidth="1.2" opacity="0.45" />
+          <line x1={px} y1={py} x2={velocityEndX} y2={velocityEndY} stroke="currentColor" strokeWidth="2.2" markerEnd={`url(#${arrow})`} />
+          <line x1={velocityEndX} y1={velocityEndY} x2={velocityLabelX} y2={velocityLabelY + 5} stroke="currentColor" strokeWidth="1" opacity="0.4" />
           <text x={velocityLabelX} y={velocityLabelY} fontSize="14" textAnchor="middle" fill="currentColor" style={svgTextHalo()}>{speedD.symbol}</text>
         </g>
 
         <g className={forceMode ? "text-rose-700" : "text-amber-700"}>
-          <line x1={px} y1={py} x2={radialEndX} y2={radialEndY} stroke="currentColor" strokeWidth="3" markerEnd={`url(#${arrow})`} />
-          <line x1={px + radialX * radialLen * 0.55} y1={py + radialY * radialLen * 0.55} x2={radialLabelX} y2={radialLabelY + 5} stroke="currentColor" strokeWidth="1.2" opacity="0.45" />
+          <line x1={px} y1={py} x2={radialEndX} y2={radialEndY} stroke="currentColor" strokeWidth="2.2" markerEnd={`url(#${arrow})`} />
+          <line x1={px + radialX * radialLen * 0.55} y1={py + radialY * radialLen * 0.55} x2={radialLabelX} y2={radialLabelY + 5} stroke="currentColor" strokeWidth="1" opacity="0.4" />
           <text x={radialLabelX} y={radialLabelY} fontSize="14" textAnchor="middle" fill="currentColor" style={svgTextHalo()}>{radialD.symbol}</text>
         </g>
 
