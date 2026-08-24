@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getMixalisSession } from "@/lib/mixalis/auth";
-import { createSmartLabRevision } from "@/lib/mixalis/smartlab";
+import { createSmartLabRevision } from "@/lib/mixalis/smartlab-verified";
 
 export const runtime = "nodejs";
 
