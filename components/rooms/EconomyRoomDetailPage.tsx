@@ -88,18 +88,25 @@ const economyIntentCopy: Record<EconomyLocale, EconomyIntentCopy> = {
   },
 };
 
-function getEconomyLocale(canonicalPath: string): EconomyLocale {
+function getEconomyLocale(canonicalPath: string): EconomyLocale | null {
   if (canonicalPath.startsWith("/el/")) return "el";
   if (canonicalPath.startsWith("/fr/")) return "fr";
   if (canonicalPath.startsWith("/de/")) return "de";
   if (canonicalPath.startsWith("/it/")) return "it";
   if (canonicalPath.startsWith("/es/")) return "es";
   if (canonicalPath.startsWith("/tr/")) return "tr";
+  if (!canonicalPath.startsWith("/")) return null;
+  if (/^\/(?:pl)(?:\/|$)/.test(canonicalPath)) return null;
   return "en";
 }
 
 export function EconomyRoomDetailPage({ data }: EconomyRoomDetailPageProps) {
   const locale = getEconomyLocale(data.seo.canonicalPath);
+
+  if (!locale) {
+    return <RoomDetailPage data={{ ...data, id: "economy-double-carousel" }} />;
+  }
+
   const intent = economyIntentCopy[locale];
 
   return (
