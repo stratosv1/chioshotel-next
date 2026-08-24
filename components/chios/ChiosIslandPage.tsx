@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { ChiosIslandPageData } from "@/content/chios-island";
 
 type ChiosIslandPageProps = {
@@ -83,8 +84,17 @@ export function ChiosIslandPage({ data }: ChiosIslandPageProps) {
   return (
     <main className="min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_top_left,rgba(168,120,66,.18),transparent_34rem),linear-gradient(180deg,#fbf6ef_0%,#f4eadf_52%,#fbf6ef_100%)] pb-20 text-stone-800 md:pb-0">
       <section className="relative flex min-h-[640px] items-end overflow-hidden text-white max-md:min-h-[76svh]" aria-labelledby="ci-hero-title">
-        <div className="absolute inset-0 z-0" aria-hidden="true">
-          <img className="h-full w-full object-cover" src={data.hero.image} alt="" loading="eager" />
+        <div className="absolute inset-0 z-0">
+          <Image
+            className="h-full w-full object-cover"
+            src={data.hero.image}
+            alt={data.hero.title}
+            width={1600}
+            height={900}
+            sizes="100vw"
+            quality={62}
+            priority
+          />
         </div>
 
         <div className="absolute inset-0 z-[1] bg-[linear-gradient(90deg,rgba(32,24,18,.84)_0%,rgba(32,24,18,.54)_42%,rgba(32,24,18,.18)_100%),linear-gradient(0deg,rgba(32,24,18,.72)_0%,transparent_58%)]" />

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { VillageDetailData } from "@/content/village-details";
 import { localizedVillageDetails, villageDetails } from "@/content/village-details";
 
@@ -162,10 +163,12 @@ export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
         className="relative flex min-h-[68svh] items-end overflow-hidden text-white md:min-h-[640px]"
         aria-labelledby="village-hero-title"
       >
-        <img
+        <Image
           src={village.hero.image}
-          alt=""
-          loading="eager"
+          alt={village.hero.title}
+          fill
+          priority
+          sizes="100vw"
           className="absolute inset-0 h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/45 to-black/10" aria-hidden="true" />

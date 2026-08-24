@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { ChiosVillagesPageData } from "@/content/chios-villages";
 import { AnswerFirstSeoBlock } from "@/components/seo/AnswerFirstSeoBlock";
 
@@ -256,10 +257,12 @@ export function ChiosVillagesPageTailwind({ data }: ChiosVillagesPageProps) {
         className="relative flex min-h-[68svh] items-end overflow-hidden text-white md:min-h-[620px]"
         aria-labelledby="villages-hero-title"
       >
-        <img
+        <Image
           src={data.hero.image}
-          alt=""
-          loading="eager"
+          alt={data.hero.title}
+          fill
+          priority
+          sizes="100vw"
           className="absolute inset-0 h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-black/50" aria-hidden="true" />

@@ -194,7 +194,7 @@ export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
       >
         <Image
           src={data.hero.image}
-          alt=""
+          alt={data.hero.title}
           fill
           priority
           sizes="100vw"

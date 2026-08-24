@@ -236,7 +236,7 @@ export function BeachDetailPageTailwind({ beach }: BeachDetailPageProps) {
       >
         <Image
           src={beach.hero.image}
-          alt=""
+          alt={beach.hero.title}
           fill
           priority
           sizes="100vw"
