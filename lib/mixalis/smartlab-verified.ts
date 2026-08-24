@@ -3,8 +3,8 @@ import type { LessonFormula, StartLessonContent } from "@/lib/mixalis/start-less
 import {
   assertLessonFormulaContract,
   assertRuntimePhysicsFormulas,
-  deriveVerifiedImpactModel,
 } from "@/lib/mixalis/smartlab-physics-audit";
+import { derivePhysicsImpactModel } from "@/lib/mixalis/smartlab-impact";
 import {
   claimSmartLabRun,
   createSmartLabRevision as createBaseSmartLabRevision,
@@ -86,7 +86,7 @@ function verifiedContent(view: SmartLabRevisionView): SmartLabContent {
         assertRuntimePhysicsFormulas(widget);
         return {
           ...widget,
-          impactModel: deriveVerifiedImpactModel(widget),
+          impactModel: derivePhysicsImpactModel(widget),
         };
       }),
     })),
@@ -128,7 +128,7 @@ async function failVerificationAndRestore(view: SmartLabRevisionView, error: unk
 }
 
 export async function createSmartLabRevision(chapterId: string) {
-  // Formulas are used only for verification. They are never sent to the SMARTLAB AI prompt.
+  // Formulas are verification input only and are never sent to the SMARTLAB AI prompt.
   await assertCurrentLessonFormulaContracts(chapterId);
   return createBaseSmartLabRevision(chapterId);
 }
@@ -137,14 +137,15 @@ export async function runSmartLabRevision(revisionId: string) {
   const before = await getSmartLabRevisionView(revisionId);
   if (!before) throw new Error("SMARTLAB revision not found.");
 
-  // Always verify the current START lesson formulas before generation/reuse.
+  // Always verify the current START lesson formulas before generation or reuse.
   await assertCurrentLessonFormulaContracts(before.chapterId);
 
   const view = await runBaseSmartLabRevision(revisionId);
   if (view.status !== "current" && view.status !== "superseded") return view;
 
   try {
-    // Every generated/reused widget must pass deterministic numerical identities.
+    // Every generated or reused widget must pass deterministic numerical identities.
+    // The impact list is then recalculated from real before/after physics states, never trusted from AI.
     const content = verifiedContent(view);
     await persistVerifiedContent(view, content);
     return (await getSmartLabRevisionView(revisionId)) || view;
