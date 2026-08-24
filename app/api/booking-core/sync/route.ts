@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { scryptSync, timingSafeEqual } from "node:crypto";
 import { neon } from "@neondatabase/serverless";
+import { BOOKING_CORE_DEALS_CACHE_TAG } from "@/lib/booking-core/cache-tags";
 import {
   detectPriceChanges,
   retryPendingPricingAlert,
@@ -338,6 +340,7 @@ async function syncBookingCore(request: NextRequest) {
     `;
 
     const saved = (result as any[])?.[0] || {};
+    const rowsWritten = Number(saved.rows_written || 0);
     const pricingAudit = await runPricingAuditAfterPriceChange(
       databaseUrl,
       snapshot.dataUpdatedAt,
@@ -361,12 +364,20 @@ async function syncBookingCore(request: NextRequest) {
           description = excluded.description
     `;
 
+    if (rowsWritten > 0) {
+      try {
+        revalidateTag(BOOKING_CORE_DEALS_CACHE_TAG, { expire: 0 });
+      } catch (cacheError) {
+        console.error("booking_core could not invalidate deals cache", cacheError);
+      }
+    }
+
     return NextResponse.json({
       ok: true,
       source,
       schemaVersion: SOURCE_SCHEMA_VERSION,
       rowsReceived: Number(saved.rows_received || snapshot.rows.length),
-      rowsWritten: Number(saved.rows_written || 0),
+      rowsWritten,
       range: { min: saved.min_date || null, max: saved.max_date || null },
       sourceDataUpdatedAt: snapshot.dataUpdatedAt,
       sourceRefreshedAt: snapshot.sourceRefreshedAt,
