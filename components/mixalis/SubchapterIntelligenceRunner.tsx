@@ -135,7 +135,7 @@ export default function SubchapterIntelligenceRunner({
     if (status !== "draft" || runState !== "running") return;
 
     let cancelled = false;
-    let timer: ReturnType<typeof setTimeout> | null = null;
+    let timer: number | null = null;
 
     const schedule = () => {
       if (cancelled) return;
