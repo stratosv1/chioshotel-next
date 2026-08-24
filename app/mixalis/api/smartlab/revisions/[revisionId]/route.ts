@@ -4,7 +4,7 @@ import {
   claimSmartLabRun,
   getSmartLabRevisionView,
   runSmartLabRevision,
-} from "@/lib/mixalis/smartlab";
+} from "@/lib/mixalis/smartlab-verified";
 
 export const runtime = "nodejs";
 export const maxDuration = 900;
