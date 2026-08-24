@@ -14,9 +14,7 @@ type ViewPayload = {
   };
 };
 
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+const STATUS_POLL_MS = 5_000;
 
 function statusLabel(status: string) {
   if (status === "ready") return "Ολοκληρωμένη";
@@ -69,34 +67,40 @@ export default function OfficialSourceIntelligenceRunner({
   }
 
   useEffect(() => {
+    if (status !== "processing") return;
+
     let cancelled = false;
     let timer: ReturnType<typeof setTimeout> | null = null;
 
-    async function poll() {
+    const schedule = () => {
       if (cancelled) return;
-      try {
-        const payload = await readStatus();
-        if (cancelled) return;
-        const nextStatus = apply(payload);
-        if (nextStatus === "ready" && !refreshed.current) {
-          refreshed.current = true;
-          setMessage("Το Official School Book Intelligence ολοκληρώθηκε.");
-          router.refresh();
-          return;
+      timer = window.setTimeout(async () => {
+        if (document.visibilityState === "visible") {
+          try {
+            const payload = await readStatus();
+            if (cancelled) return;
+            const nextStatus = apply(payload);
+            if (nextStatus === "ready" && !refreshed.current) {
+              refreshed.current = true;
+              setMessage("Το Official School Book Intelligence ολοκληρώθηκε.");
+              router.refresh();
+              return;
+            }
+          } catch {
+            // Keep the last persisted state and retry while processing.
+          }
         }
-      } catch {
-        // Keep the last persisted state and retry.
-      }
-      if (!cancelled) timer = setTimeout(poll, 2000);
-    }
+        schedule();
+      }, STATUS_POLL_MS);
+    };
 
-    void poll();
+    schedule();
     return () => {
       cancelled = true;
-      if (timer) clearTimeout(timer);
+      if (timer) window.clearTimeout(timer);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [analysisId]);
+  }, [analysisId, status]);
 
   async function run() {
     if (running || status === "ready") return;
