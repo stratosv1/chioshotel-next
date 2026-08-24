@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import type { SmartLabContent, SmartLabRevisionView } from "@/lib/mixalis/smartlab-types";
 import { SmartLabExperience } from "@/components/mixalis/SmartLabWidget";
 
+const STATUS_POLL_MS = 5_000;
+
 export default function SmartLabRunner({ initialView }: { initialView: SmartLabRevisionView }) {
   const [view, setView] = useState(initialView);
   const [requesting, setRequesting] = useState(false);
@@ -46,8 +48,25 @@ export default function SmartLabRunner({ initialView }: { initialView: SmartLabR
 
   useEffect(() => {
     if (view.status !== "processing") return;
-    const timer = window.setInterval(() => void refresh(), 3000);
-    return () => window.clearInterval(timer);
+
+    let cancelled = false;
+    let timer: ReturnType<typeof setTimeout> | null = null;
+
+    const schedule = () => {
+      if (cancelled) return;
+      timer = window.setTimeout(async () => {
+        if (document.visibilityState === "visible") {
+          await refresh().catch(() => undefined);
+        }
+        schedule();
+      }, STATUS_POLL_MS);
+    };
+
+    schedule();
+    return () => {
+      cancelled = true;
+      if (timer) window.clearTimeout(timer);
+    };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [view.id, view.status]);
 
