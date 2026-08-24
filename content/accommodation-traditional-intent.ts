@@ -94,6 +94,10 @@ function normalizeDistance(value: string): string {
   return value === "6 km" ? "8 km" : value;
 }
 
+function normalizeChiosPortDistanceText(value: string): string {
+  return value.replace(/\b6 km\b/g, "8 km");
+}
+
 export function withTraditionalAccommodationIntent(
   data: ChiosAccommodationPageData,
   locale: LanguageCode,
@@ -118,9 +122,24 @@ export function withTraditionalAccommodationIntent(
     },
     location: {
       ...data.location,
+      paragraphs: data.location.paragraphs.map(normalizeChiosPortDistanceText),
       distances: data.location.distances.map((item) => ({
         ...item,
         value: normalizeDistance(item.value),
+      })),
+    },
+    travelerTypes: {
+      ...data.travelerTypes,
+      items: data.travelerTypes.items.map((item) => ({
+        ...item,
+        text: normalizeChiosPortDistanceText(item.text),
+      })),
+    },
+    faq: {
+      ...data.faq,
+      items: data.faq.items.map((item) => ({
+        ...item,
+        answer: normalizeChiosPortDistanceText(item.answer),
       })),
     },
   };
