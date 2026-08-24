@@ -76,10 +76,40 @@ expectAll(
   "content/family-travel-intent.ts",
   [
     "Family holidays in Chios with kids",
+    "family accommodation in Kambos",
     "Οικογενειακές διακοπές στη Χίο με παιδιά",
+    "οικογενειακή διαμονή στη Χίο",
     "Çocuklarla Sakız Adası aile tatili",
   ],
   "Family-travel intent is incomplete",
+);
+
+expectAll(
+  "components/rooms/EconomyRoomDetailPage.tsx",
+  [
+    "Budget Rooms in Chios",
+    "Οικονομικά Δωμάτια στη Χίο",
+    "Günstige Zimmer auf Chios",
+    "Camere economiche a Chios",
+    "Habitaciones económicas en Quíos",
+    "Sakız Adası Ekonomik Odalar",
+  ],
+  "Economy-room commercial intent is incomplete",
+);
+
+expectAll(
+  "content/accommodation-traditional-intent.ts",
+  [
+    "accommodation near Chios Airport",
+    "διαμονή ή δωμάτια κοντά στο αεροδρόμιο Χίου",
+    "hébergement près de l’aéroport de Chios",
+    "Unterkunft nahe dem Flughafen Chios",
+    "alloggio vicino all’aeroporto di Chios",
+    "alojamiento cerca del aeropuerto de Quíos",
+    "Sakız Havalimanı’na yakın konaklama",
+    "8 χλμ.",
+  ],
+  "Airport-proximity accommodation intent is incomplete",
 );
 
 expectAll(
@@ -245,13 +275,25 @@ expectAll(
   "lib/greek-seo-content-hardening.ts",
   [
     "3 χλμ.",
-    "6 χλμ.",
+    "8 χλμ.",
     "Ψυγείο & κλιματισμός",
     "βοηθό εύρεσης δωματίου AI",
     "πιθανή διαμονή σε δύο δωμάτια",
     "ενός ξενοδοχείου ή θερέτρου",
   ],
   "Greek SEO content hardening is incomplete",
+);
+
+expectAll(
+  "components/chios/LocalizedKamposLandingPage.tsx",
+  ['["8 km", t.town]'],
+  "Localized Kambos distance must use 8 km",
+);
+
+expectAll(
+  "components/chios/GreekKamposLandingPageElegant.tsx",
+  ['["8 χλμ.", "πόλη & λιμάνι"]'],
+  "Greek Kambos distance must use 8 km",
 );
 
 expect(
@@ -278,4 +320,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log("SEO architecture QA passed: audits #1–#9, owner guardrails, source-level structured-data localization, Greek homepage/rooms/content hardening, localized SEO alt text, sitemap and LodgingBusiness schema are in place.");
+console.log("SEO architecture QA passed: audits #1–#9, owner guardrails, economy, airport and family intent refinements, 8 km Kambos distance, localized SEO content, sitemap and LodgingBusiness schema are in place.");
