@@ -29,7 +29,7 @@ const pageData = hardenGreekSeoContent(
   ),
 );
 
-const metadataTitle = "Διαμονή στη Χίο | Δωμάτια κοντά στο αεροδρόμιο";
+const metadataTitle = "Διαμονή στη Χίο | Κάμπος, κοντά στο αεροδρόμιο";
 const baseMetadata = buildPageMetadata({
   path: pageData.seo.canonicalPath,
   title: metadataTitle,
