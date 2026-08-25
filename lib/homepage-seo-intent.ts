@@ -41,9 +41,9 @@ const copy: Record<LanguageCode, HomepageIntentCopy> = {
       "See categories, capacity and key features together before choosing the room or apartment that suits you.",
   },
   el: {
-    seoTitle: "Voulamandis House | Αυθεντική Φιλοξενία στη Χίο",
+    seoTitle: "Voulamandis House Χίος | Διαμονή στον Κάμπο",
     seoDescription:
-      "Επίσημη ιστοσελίδα του Voulamandis House στη Χίο. Αυθεντική φιλοξενία, ήσυχος κήπος, δωμάτια και οικογενειακά διαμερίσματα κοντά σε πόλη, αεροδρόμιο και παραλίες.",
+      "Μείνετε στον ιστορικό Κάμπο της Χίου, 3 χλμ. από το αεροδρόμιο. Δείτε δωμάτια, διαμερίσματα, τιμές και κάντε απευθείας κράτηση.",
     heroTitle: "Voulamandis House – Αυθεντική φιλοξενία στη Χίο",
     heroDescriptionHtml: `Ήσυχη και προσωπική φιλοξενία στον ιστορικό Κάμπο της Χίου, κοντά στην πόλη, το αεροδρόμιο και τις παραλίες. Δείτε όλες τις επιλογές για <a href="/el/domatia-xios/" class="${heroLinkClass}">δωμάτια και διαμερίσματα στη Χίο</a> και επιλέξτε την κατηγορία που ταιριάζει στο ταξίδι σας.`,
     introTitle: "Αυθεντική φιλοξενία στο Voulamandis House",
