@@ -91,23 +91,16 @@ function extractBookingId(result: any): string | number | null {
   return candidates.find((value) => value !== null && typeof value !== "undefined" && value !== "") ?? null;
 }
 
-async function getBeds24Token() {
-  let refreshToken = (process.env.BEDS24_REFRESH_TOKEN || process.env.BEDS24_LONG_LIFE_TOKEN)?.trim();
+function hasRefreshWriteCredential() {
+  return Boolean((process.env.BEDS24_REFRESH_TOKEN || process.env.BEDS24_LONG_LIFE_TOKEN)?.trim());
+}
 
-  if (!refreshToken) {
-    const inviteCode = process.env.BEDS24_INVITE_CODE?.trim();
-    if (inviteCode) {
-      const setup = await fetch(`${beds24BaseUrl}/authentication/setup`, {
-        headers: { accept: "application/json", code: inviteCode },
-        cache: "no-store",
-      });
-      const setupData = await setup.json().catch(() => null);
-      if (!setup.ok || !setupData?.refreshToken) {
-        throw new Error(`Beds24 invite-code exchange failed (${setup.status}).`);
-      }
-      refreshToken = String(setupData.refreshToken);
-    }
-  }
+function hasDirectWriteCredential() {
+  return Boolean(process.env.BEDS24_WRITE_API_TOKEN?.trim());
+}
+
+async function getBeds24Token() {
+  const refreshToken = (process.env.BEDS24_REFRESH_TOKEN || process.env.BEDS24_LONG_LIFE_TOKEN)?.trim();
 
   if (refreshToken) {
     const tokenResponse = await fetch(`${beds24BaseUrl}/authentication/token`, {
@@ -116,15 +109,15 @@ async function getBeds24Token() {
     });
     const tokenData = await tokenResponse.json().catch(() => null);
     if (!tokenResponse.ok || !tokenData?.token) {
-      throw new Error(`Beds24 token request failed (${tokenResponse.status}).`);
+      throw new Error(`Beds24 write-token refresh failed (${tokenResponse.status}).`);
     }
     return tokenData.token as string;
   }
 
-  const direct = process.env.BEDS24_API_TOKEN?.trim();
-  if (direct) return direct;
+  const directWriteToken = process.env.BEDS24_WRITE_API_TOKEN?.trim();
+  if (directWriteToken) return directWriteToken;
 
-  throw new Error("No Beds24 API credential is configured for staff booking creation.");
+  throw new Error("No valid Beds24 write credential is configured. Add BEDS24_REFRESH_TOKEN, BEDS24_LONG_LIFE_TOKEN or BEDS24_WRITE_API_TOKEN with booking-write permission.");
 }
 
 async function verifyAvailability(params: { arrival: string; departure: string; guests: number; roomId: number; unitId: number }) {
@@ -154,19 +147,14 @@ async function verifyAvailability(params: { arrival: string; departure: string; 
 
 export async function GET(request: NextRequest) {
   if (!isAuthorized(request)) return unauthorized();
+  const refreshReady = hasRefreshWriteCredential();
+  const directWriteReady = hasDirectWriteCredential();
   return json({
-    apiReady: Boolean(
-      process.env.BEDS24_REFRESH_TOKEN ||
-      process.env.BEDS24_LONG_LIFE_TOKEN ||
-      process.env.BEDS24_INVITE_CODE ||
-      process.env.BEDS24_API_TOKEN
-    ),
+    apiReady: refreshReady || directWriteReady,
     propertyReady: Boolean(beds24PropertyId),
-    writeCredentialPreferred: Boolean(
-      process.env.BEDS24_REFRESH_TOKEN ||
-      process.env.BEDS24_LONG_LIFE_TOKEN ||
-      process.env.BEDS24_INVITE_CODE
-    ),
+    writeCredentialMode: refreshReady ? "refresh" : directWriteReady ? "direct-write" : "missing",
+    legacyInviteCodeIgnored: Boolean(process.env.BEDS24_INVITE_CODE?.trim()),
+    readTokenPresent: Boolean(process.env.BEDS24_API_TOKEN?.trim()),
   });
 }
 
@@ -195,6 +183,9 @@ export async function POST(request: NextRequest) {
     const notes = cleanString(body.notes);
 
     if (!propertyId) return json({ message: "Missing Beds24 property id." }, 503);
+    if (!hasRefreshWriteCredential() && !hasDirectWriteCredential()) {
+      return json({ message: "Η σύνδεση write με Beds24 δεν είναι ρυθμισμένη ακόμη. Χρειάζεται ξεχωριστό write credential για δημιουργία κράτησης." }, 503);
+    }
     if (!room) return json({ message: "Invalid room/unit mapping." }, 400);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(arrival) || !/^\d{4}-\d{2}-\d{2}$/.test(departure)) return json({ message: "Invalid dates." }, 400);
     if (!firstName || !lastName) return json({ message: "First name and last name are required." }, 400);
