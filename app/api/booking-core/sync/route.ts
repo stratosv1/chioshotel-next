@@ -265,7 +265,7 @@ async function syncInventoryBookingIds(
   sql: ReturnType<typeof neon>,
   rows: CanonicalRow[],
 ) {
-  await sql`
+  const result = await sql`
     with incoming as (
       select
         nullif(item->>'date', '')::date as stay_date,
@@ -277,15 +277,20 @@ async function syncInventoryBookingIds(
           else null
         end as booking_id
       from jsonb_array_elements(${JSON.stringify(rows)}::jsonb) as item
+    ), updated as (
+      update booking_core.inventory as inventory
+      set booking_id = incoming.booking_id
+      from incoming
+      where inventory.stay_date = incoming.stay_date
+        and inventory.source_room_id::text = incoming.room_id
+        and inventory.source_unit_id::text = incoming.unit_id
+        and inventory.booking_id is distinct from incoming.booking_id
+      returning 1
     )
-    update booking_core.inventory as inventory
-    set booking_id = incoming.booking_id
-    from incoming
-    where inventory.stay_date = incoming.stay_date
-      and inventory.source_room_id::text = incoming.room_id
-      and inventory.source_unit_id::text = incoming.unit_id
-      and inventory.booking_id is distinct from incoming.booking_id
+    select count(*)::int as count
+    from updated
   `;
+  return Number((result as any[])[0]?.count || 0);
 }
 
 async function syncBookingCore(request: NextRequest) {
@@ -321,6 +326,7 @@ async function syncBookingCore(request: NextRequest) {
 
     if (alreadyApplied) {
       const { minDate, maxDate } = snapshotDateRange(snapshot.rows);
+      const bookingIdsWritten = await syncInventoryBookingIds(sql, snapshot.rows);
       await sql`
         insert into booking_core.sync_runs (
           started_at,
@@ -352,6 +358,7 @@ async function syncBookingCore(request: NextRequest) {
         schemaVersion: SOURCE_SCHEMA_VERSION,
         rowsReceived: snapshot.rows.length,
         rowsWritten: 0,
+        bookingIdsWritten,
         range: { min: minDate, max: maxDate },
         sourceDataUpdatedAt: snapshot.dataUpdatedAt,
         sourceRefreshedAt: snapshot.sourceRefreshedAt,
@@ -370,7 +377,7 @@ async function syncBookingCore(request: NextRequest) {
       )
     `;
 
-    await syncInventoryBookingIds(sql, snapshot.rows);
+    const bookingIdsWritten = await syncInventoryBookingIds(sql, snapshot.rows);
 
     const saved = (result as any[])?.[0] || {};
     const rowsWritten = Number(saved.rows_written || 0);
@@ -411,6 +418,7 @@ async function syncBookingCore(request: NextRequest) {
       schemaVersion: SOURCE_SCHEMA_VERSION,
       rowsReceived: Number(saved.rows_received || snapshot.rows.length),
       rowsWritten,
+      bookingIdsWritten,
       range: { min: saved.min_date || null, max: saved.max_date || null },
       sourceDataUpdatedAt: snapshot.dataUpdatedAt,
       sourceRefreshedAt: snapshot.sourceRefreshedAt,
