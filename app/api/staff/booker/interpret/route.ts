@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { todayInAthensIso } from "@/lib/ai-assistant/room-finder-date";
 
 export const runtime = "nodejs";
+export const maxDuration = 60;
 
 const LANGUAGES = ["el", "en", "de", "fr", "it", "es", "tr"] as const;
 const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
@@ -313,7 +314,7 @@ export async function POST(request: NextRequest) {
     }
 
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 20_000);
+    const timeout = setTimeout(() => controller.abort(), 45_000);
 
     try {
       const response = await fetch("https://api.openai.com/v1/responses", {
@@ -369,6 +370,12 @@ export async function POST(request: NextRequest) {
       clearTimeout(timeout);
     }
   } catch (error) {
+    if (error instanceof Error && error.name === "AbortError") {
+      return NextResponse.json(
+        { message: "Η ανάλυση από OpenAI άργησε περισσότερο από το επιτρεπόμενο. Δοκίμασε ξανά την ίδια εισαγωγή." },
+        { status: 504, headers: noStoreHeaders() },
+      );
+    }
     const message = error instanceof Error ? error.message : "Staff booking intake failed.";
     return NextResponse.json({ message }, { status: 500, headers: noStoreHeaders() });
   }
