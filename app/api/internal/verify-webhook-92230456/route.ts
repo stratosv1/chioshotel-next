@@ -1,13 +1,26 @@
 import { NextResponse } from "next/server";
+import { neon } from "@neondatabase/serverless";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
+  const databaseUrl = process.env.DATABASE_URL?.trim();
+  if (!databaseUrl) {
+    return NextResponse.json({ ok: false, error: "DATABASE_URL missing" }, { status: 500 });
+  }
+
+  const sql = neon(databaseUrl);
+  const rows = await sql`
+    select booking_id, firstname, lastname, email, status
+    from public.beds24_bookings
+    where booking_id = ${"92237756"}::text
+    limit 1
+  `;
+
   return NextResponse.json(
-    { ok: false, error: "Temporary verification endpoint disabled" },
+    { ok: true, booking: (rows as any[])[0] ?? null },
     {
-      status: 410,
       headers: {
         "Cache-Control": "no-store",
         "X-Robots-Tag": "noindex, nofollow",
