@@ -20,6 +20,12 @@ import "./css-split/overrides/cta-warm-contrast.css";
 
 ensureKarfasElintaBeachCards();
 
+// WebMCP Origin Trial token for https://chioshotel.gr:443.
+// Origin Trial tokens are public browser metadata, not authentication secrets.
+// This token expires on 2026-11-17 and includes subdomain matching.
+const WEBMCP_CHIOS_ORIGIN_TRIAL_TOKEN =
+  "Am/x+gUigH/qHVqQ0v/ZoQIFsHuRpukzvgMl3RwC534HRIX3uUrWZxU9a2IE19GJhFD0EXC4o4Zgz1EYIC3a8wcAAABgeyJvcmlnaW4iOiJodHRwczovL2NoaW9zaG90ZWwuZ3I6NDQzIiwiZmVhdHVyZSI6IldlYk1DUCIsImV4cGlyeSI6MTc5NDg3MzYwMCwiaXNTdWJkb21haW4iOnRydWV9";
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
@@ -104,6 +110,11 @@ function isAiAssistantPath(pathname: string): boolean {
   return normalizedPathname === "/ai-assistant/";
 }
 
+function isChiosHotelHost(host: string): boolean {
+  const hostname = host.split(":")[0]?.toLowerCase() || "";
+  return hostname === "chioshotel.gr" || hostname.endsWith(".chioshotel.gr");
+}
+
 export default async function RootLayout({
   children,
 }: {
@@ -111,6 +122,7 @@ export default async function RootLayout({
 }) {
   const requestHeaders = await headers();
   const pathname = requestHeaders.get("x-current-pathname") || "/";
+  const requestHost = requestHeaders.get("host") || "";
   const htmlLanguage = getHtmlLanguage(pathname);
   const isPolishPath = htmlLanguage === "pl";
   const sharedLanguage: SharedSiteLanguage = isPolishPath ? "en" : htmlLanguage;
@@ -126,9 +138,10 @@ export default async function RootLayout({
     : sharedLanguage === "en"
       ? "/llms.txt"
       : `/${sharedLanguage}/llms.txt`;
-  const webMcpOriginTrialToken = isAiAssistantPath(pathname)
-    ? process.env.WEBMCP_ORIGIN_TRIAL_TOKEN?.trim() || null
-    : null;
+  const webMcpOriginTrialToken =
+    isAiAssistantPath(pathname) && isChiosHotelHost(requestHost)
+      ? process.env.WEBMCP_ORIGIN_TRIAL_TOKEN?.trim() || WEBMCP_CHIOS_ORIGIN_TRIAL_TOKEN
+      : null;
 
   return (
     <html lang={htmlLanguage}>
