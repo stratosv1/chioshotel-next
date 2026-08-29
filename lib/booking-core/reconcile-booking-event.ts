@@ -286,7 +286,7 @@ export async function reconcileBookingCoreBookingEvent(
           'available', false,
           'status', 'BOOKED',
           'reason', 'BOOKED',
-          'bookingId', ${bookingId},
+          'bookingId', ${bookingId}::text,
           'eventReconciledAt', now()
         )
       from guard, target_room
