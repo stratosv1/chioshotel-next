@@ -171,8 +171,11 @@ expectAll(
     'type="text/markdown"',
     '"/llms.txt"',
     '`/${sharedLanguage}/llms.txt`',
+    "WEBMCP_ORIGIN_TRIAL_TOKEN",
+    'httpEquiv="origin-trial"',
+    "isAiAssistantPath(pathname)",
   ],
-  "public pages must advertise the most relevant llms.txt guide through the v2 describedby relation",
+  "public pages must advertise localized llms guides and support scoped WebMCP origin-trial activation",
 );
 
 expectAll(
@@ -181,16 +184,31 @@ expectAll(
     "check_voulamandis_room_availability",
     "/api/ai-room-finder/availability",
     "readOnlyHint: true",
-    "controller.signal",
+    "untrustedContentHint: false",
+    "execute: async (input) =>",
+    "registrationController.signal",
+    "requestController.signal",
     "bookingCreated: false",
   ],
-  "WebMCP availability tool must remain read-only and use the existing room finder endpoint",
+  "WebMCP availability tool must match the current one-argument execute contract and stay read-only",
+);
+
+expectNone(
+  "components/ai/webmcp/RoomFinderWebMCP.tsx",
+  ["execute: async (input, { signal })", "execute: (input: AvailabilityInput, context:"],
+  "WebMCP execute must not rely on the removed second callback argument",
 );
 
 expect(
   "app/ai-assistant/page.tsx",
   "<RoomFinderWebMCP />",
   "AI room finder page must register the WebMCP availability tool",
+);
+
+expect(
+  "app/find-your-room/page.tsx",
+  'permanentRedirect("/ai-assistant/?lang=en")',
+  "public English room-finder discovery URL must resolve to the WebMCP-enabled assistant",
 );
 
 expect(
