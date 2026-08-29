@@ -12,12 +12,11 @@ export const metadata: Metadata = {
 
 const staffLinks = [
   {
-    href: "https://chioshotels.elementor.cloud/new1/",
+    href: "/staff/booker",
     icon: "📞",
-    label: "Τιμές & Διαθεσιμότητα",
-    subText: "Για τις τηλεφωνικές κλήσεις",
+    label: "Τιμές, Διαθεσιμότητα & Κράτηση",
+    subText: "Staff Room Finder · έλεγχος διαθεσιμότητας · απευθείας καταχώρηση στο Beds24",
     className: styles.callPrices,
-    external: true,
   },
   {
     href: "/staff/ai-room-finder",
@@ -25,13 +24,6 @@ const staffLinks = [
     label: "AI Room Finder Inbox",
     subText: "Live συνομιλίες πελατών · μη αναγνωσμένα · αιτήματα ενδιαφέροντος",
     className: styles.performance,
-  },
-  {
-    href: "/staff/booker",
-    icon: "📅",
-    label: "Εδώ καταχωρείται απευθείας κράτηση",
-    subText: "Online Σύστημα",
-    className: styles.directBooking,
   },
   {
     href: "https://chioshotels.elementor.cloud/housekeeping/",
