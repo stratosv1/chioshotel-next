@@ -7,6 +7,7 @@ const AVAILABILITY_TOOL = "check_voulamandis_room_availability";
 const ROOMS_TOOL = "get_voulamandis_rooms";
 const OFFERS_TOOL = "get_voulamandis_offers";
 const PROPERTY_TOOL = "get_voulamandis_property_info";
+const KNOWLEDGE_TOOL = "search_chioshotel_information";
 const AVAILABILITY_TIMEOUT_MS = 12_000;
 const PUBLIC_DATA_TIMEOUT_MS = 8_000;
 const SUPPORTED_LANGUAGES = new Set<RoomFinderLanguage>([
@@ -94,7 +95,7 @@ function compactOffer(offer: unknown) {
 }
 
 async function fetchPublicResource(
-  resource: "rooms" | "offers" | "property",
+  resource: "rooms" | "offers" | "property" | "knowledge",
   input: WebMcpInput,
   client: WebMcpExecutionClient,
 ) {
@@ -110,6 +111,11 @@ async function fetchPublicResource(
     if (Number.isInteger(guests) && guests >= 1 && guests <= 5) {
       query.set("guests", String(guests));
     }
+  }
+
+  if (resource === "knowledge") {
+    if (typeof input.query === "string") query.set("q", input.query.trim());
+    if (typeof input.kind === "string") query.set("kind", input.kind);
   }
 
   const requestController = new AbortController();
@@ -136,11 +142,13 @@ async function fetchPublicResource(
     const payload = await response.json().catch(() => null);
 
     if (!response.ok || !payload || typeof payload !== "object") {
-      return {
-        success: false,
-        code: "PUBLIC_DATA_UNAVAILABLE",
-        message: "Public Voulamandis House information could not be loaded right now.",
-      };
+      return payload && typeof payload === "object"
+        ? payload
+        : {
+            success: false,
+            code: "PUBLIC_DATA_UNAVAILABLE",
+            message: "Public Voulamandis House information could not be loaded right now.",
+          };
     }
 
     return payload;
@@ -382,6 +390,47 @@ function propertyTool(): WebMcpTool {
   };
 }
 
+function knowledgeTool(): WebMcpTool {
+  return {
+    name: KNOWLEDGE_TOOL,
+    title: "Search Voulamandis House and Chios information",
+    description:
+      "Search the existing curated information published by the chioshotel.gr experience about Voulamandis House, Kambos, breakfast, arrival and transport, beaches, villages, museums, activities, family travel, rooms, booking and pricing guidance. Use the dedicated availability tool for live prices and dates.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        query: {
+          type: "string",
+          minLength: 2,
+          maxLength: 160,
+          description: "What public property or Chios information to find.",
+        },
+        kind: {
+          type: "string",
+          enum: [
+            "property",
+            "room",
+            "pricing",
+            "booking",
+            "beach",
+            "village",
+            "museum",
+            "activity",
+            "family",
+            "transport",
+          ],
+          description: "Optional information category to narrow the search.",
+        },
+        language: LANGUAGE_SCHEMA,
+      },
+      required: ["query"],
+      additionalProperties: false,
+    },
+    annotations: READ_ONLY_ANNOTATIONS,
+    execute: (input, client = {}) => fetchPublicResource("knowledge", input, client),
+  };
+}
+
 export function RoomFinderWebMCP() {
   useEffect(() => {
     const modelContext = (document as WebMcpDocument).modelContext;
@@ -393,6 +442,7 @@ export function RoomFinderWebMCP() {
       roomsTool(),
       offersTool(),
       propertyTool(),
+      knowledgeTool(),
     ];
 
     for (const tool of tools) {
