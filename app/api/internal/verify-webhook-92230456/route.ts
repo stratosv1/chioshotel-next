@@ -11,7 +11,7 @@ export async function GET() {
   }
 
   const sql = neon(databaseUrl);
-  const bookingId = "92232472";
+  const bookingId = "92233162";
 
   const rows = await sql`
     select
@@ -31,7 +31,16 @@ export async function GET() {
   `;
 
   const inventoryRows = await sql`
-    select stay_date, room_number, available, reason, booking_id
+    select
+      stay_date,
+      room_number,
+      source_room_id,
+      source_unit_id,
+      available,
+      reason,
+      booking_id,
+      synced_at,
+      raw_source ->> 'eventReconciledAt' as event_reconciled_at
     from booking_core.inventory
     where booking_id = ${bookingId}::text
     order by stay_date, room_number
