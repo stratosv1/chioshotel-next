@@ -524,11 +524,9 @@ export default function BookerApp() {
   function chooseOffer(offer: RoomOffer) {
     setSelectedOffer(offer);
     setOffers([]);
-    const nextDraft = draft.totalPrice === null ? { ...draft, totalPrice: offer.directTotal } : draft;
-    setDraft(nextDraft);
     push(user(`${offer.name} · ${money(offer.directTotal)}`));
 
-    const missing = nextMissing(nextDraft, true, emailSkipped, phoneSkipped);
+    const missing = nextMissing(draft, true, emailSkipped, phoneSkipped);
     if (missing) {
       setAwaiting(missing);
       setMode("collecting");
