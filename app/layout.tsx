@@ -6,6 +6,7 @@ import { ConsentAnalytics } from "@/components/analytics/ConsentAnalytics";
 import { ConsentRealtimeProbe } from "@/components/analytics/ConsentRealtimeProbe";
 import { ContentEngagementAnalytics } from "@/components/analytics/ContentEngagementAnalytics";
 import { RoutePageViewAnalytics } from "@/components/analytics/RoutePageViewAnalytics";
+import { RoomFinderWebMCP } from "@/components/ai/webmcp/RoomFinderWebMCP";
 import { RoomFinderCtaRouter } from "@/components/navigation/RoomFinderCtaRouter";
 import { ExploreVoulamandisJourney } from "@/components/seo/ExploreVoulamandisJourney";
 import { VoulamandisFooterTailwind } from "@/components/VoulamandisFooterTailwind";
@@ -105,11 +106,6 @@ function isTripPlannerPath(pathname: string): boolean {
   return normalizedPathname === "/trip-planner/";
 }
 
-function isAiAssistantPath(pathname: string): boolean {
-  const normalizedPathname = pathname.endsWith("/") ? pathname : pathname + "/";
-  return normalizedPathname === "/ai-assistant/";
-}
-
 function isChiosHotelHost(host: string): boolean {
   const hostname = host.split(":")[0]?.toLowerCase() || "";
   return hostname === "chioshotel.gr" || hostname.endsWith(".chioshotel.gr");
@@ -133,13 +129,14 @@ export default async function RootLayout({
   const hideJourney = isTripPlannerPath(pathname) || isAgentRoomPath(pathname) || privatePhysicsPath;
   const hideFooter = isTripPlannerPath(pathname) || privatePhysicsPath;
   const excludeAnalytics = staffPath || privatePhysicsPath;
-  const aiGuideHref = privatePhysicsPath || staffPath || isPolishPath
-    ? null
-    : sharedLanguage === "en"
+  const publicWebMcpPath = !privatePhysicsPath && !staffPath && !isPolishPath;
+  const aiGuideHref = publicWebMcpPath
+    ? sharedLanguage === "en"
       ? "/llms.txt"
-      : `/${sharedLanguage}/llms.txt`;
+      : `/${sharedLanguage}/llms.txt`
+    : null;
   const webMcpOriginTrialToken =
-    isAiAssistantPath(pathname) && isChiosHotelHost(requestHost)
+    publicWebMcpPath && isChiosHotelHost(requestHost)
       ? process.env.WEBMCP_ORIGIN_TRIAL_TOKEN?.trim() || WEBMCP_CHIOS_ORIGIN_TRIAL_TOKEN
       : null;
 
@@ -156,6 +153,7 @@ export default async function RootLayout({
         </head>
       ) : null}
       <body>
+        {publicWebMcpPath ? <RoomFinderWebMCP /> : null}
         {!isPolishPath && !excludeAnalytics ? <RoomFinderCtaRouter /> : null}
         {!hideGlobalChrome ? (
           <VoulamandisHeaderTailwind language={sharedLanguage} pathname={pathname} />
