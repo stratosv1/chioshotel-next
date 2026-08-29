@@ -1,10 +1,13 @@
 import { neon } from "@neondatabase/serverless";
+import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import { BOOKING_CORE_DEALS_CACHE_TAG } from "@/lib/booking-core/cache-tags";
+import { reconcileBookingCoreBookingEvent } from "@/lib/booking-core/reconcile-booking-event";
 
 export const runtime = "nodejs";
 
-type Beds24BookingPayload = {
+export type Beds24BookingPayload = {
   booking_id?: string;
   status?: string;
   checkin?: string;
@@ -14,6 +17,8 @@ type Beds24BookingPayload = {
   email?: string;
   property?: string;
   room?: string;
+  room_id?: string;
+  unit_id?: string;
   guest_language?: string;
   price?: string;
 };
@@ -33,11 +38,7 @@ function escapeHtml(value: string): string {
 
 function getRequiredEnv(name: string): string {
   const value = process.env[name];
-
-  if (!value) {
-    throw new Error(`Missing environment variable: ${name}`);
-  }
-
+  if (!value) throw new Error(`Missing environment variable: ${name}`);
   return value;
 }
 
@@ -48,26 +49,6 @@ function nullable(value: string): string | null {
 async function saveBookingToDatabase(body: Beds24BookingPayload) {
   const databaseUrl = getRequiredEnv("DATABASE_URL");
   const sql = neon(databaseUrl);
-
-  await sql`
-    CREATE TABLE IF NOT EXISTS beds24_bookings (
-      id BIGSERIAL PRIMARY KEY,
-      booking_id TEXT UNIQUE NOT NULL,
-      status TEXT,
-      checkin DATE,
-      checkout DATE,
-      firstname TEXT,
-      lastname TEXT,
-      email TEXT,
-      property TEXT,
-      room TEXT,
-      guest_language TEXT,
-      price TEXT,
-      raw_json JSONB NOT NULL,
-      received_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    )
-  `;
 
   const bookingId = clean(body.booking_id);
   const status = clean(body.status);
@@ -82,8 +63,8 @@ async function saveBookingToDatabase(body: Beds24BookingPayload) {
   const price = clean(body.price);
   const rawJson = JSON.stringify(body);
 
-  await sql`
-    INSERT INTO beds24_bookings (
+  const rows = await sql`
+    INSERT INTO public.beds24_bookings (
       booking_id,
       status,
       checkin,
@@ -113,19 +94,47 @@ async function saveBookingToDatabase(body: Beds24BookingPayload) {
     )
     ON CONFLICT (booking_id)
     DO UPDATE SET
-      status = EXCLUDED.status,
-      checkin = EXCLUDED.checkin,
-      checkout = EXCLUDED.checkout,
-      firstname = EXCLUDED.firstname,
-      lastname = EXCLUDED.lastname,
-      email = EXCLUDED.email,
-      property = EXCLUDED.property,
-      room = EXCLUDED.room,
-      guest_language = EXCLUDED.guest_language,
-      price = EXCLUDED.price,
+      status = COALESCE(EXCLUDED.status, public.beds24_bookings.status),
+      checkin = COALESCE(EXCLUDED.checkin, public.beds24_bookings.checkin),
+      checkout = COALESCE(EXCLUDED.checkout, public.beds24_bookings.checkout),
+      firstname = COALESCE(EXCLUDED.firstname, public.beds24_bookings.firstname),
+      lastname = COALESCE(EXCLUDED.lastname, public.beds24_bookings.lastname),
+      email = COALESCE(EXCLUDED.email, public.beds24_bookings.email),
+      property = COALESCE(EXCLUDED.property, public.beds24_bookings.property),
+      room = COALESCE(EXCLUDED.room, public.beds24_bookings.room),
+      guest_language = COALESCE(EXCLUDED.guest_language, public.beds24_bookings.guest_language),
+      price = COALESCE(EXCLUDED.price, public.beds24_bookings.price),
       raw_json = EXCLUDED.raw_json,
       updated_at = NOW()
+    WHERE ROW(
+      public.beds24_bookings.status,
+      public.beds24_bookings.checkin,
+      public.beds24_bookings.checkout,
+      public.beds24_bookings.firstname,
+      public.beds24_bookings.lastname,
+      public.beds24_bookings.email,
+      public.beds24_bookings.property,
+      public.beds24_bookings.room,
+      public.beds24_bookings.guest_language,
+      public.beds24_bookings.price,
+      public.beds24_bookings.raw_json
+    ) IS DISTINCT FROM ROW(
+      COALESCE(EXCLUDED.status, public.beds24_bookings.status),
+      COALESCE(EXCLUDED.checkin, public.beds24_bookings.checkin),
+      COALESCE(EXCLUDED.checkout, public.beds24_bookings.checkout),
+      COALESCE(EXCLUDED.firstname, public.beds24_bookings.firstname),
+      COALESCE(EXCLUDED.lastname, public.beds24_bookings.lastname),
+      COALESCE(EXCLUDED.email, public.beds24_bookings.email),
+      COALESCE(EXCLUDED.property, public.beds24_bookings.property),
+      COALESCE(EXCLUDED.room, public.beds24_bookings.room),
+      COALESCE(EXCLUDED.guest_language, public.beds24_bookings.guest_language),
+      COALESCE(EXCLUDED.price, public.beds24_bookings.price),
+      EXCLUDED.raw_json
+    )
+    RETURNING booking_id
   `;
+
+  return { changed: (rows as any[]).length > 0 };
 }
 
 async function sendBookingEmail(body: Beds24BookingPayload) {
@@ -145,6 +154,8 @@ async function sendBookingEmail(body: Beds24BookingPayload) {
   const guestEmail = clean(body.email);
   const property = clean(body.property);
   const room = clean(body.room);
+  const roomId = clean(body.room_id);
+  const unitId = clean(body.unit_id);
   const guestLanguage = clean(body.guest_language);
   const price = clean(body.price);
 
@@ -154,14 +165,11 @@ async function sendBookingEmail(body: Beds24BookingPayload) {
     host: smtpHost,
     port: smtpPort,
     secure: smtpPort === 465,
-    auth: {
-      user: smtpUser,
-      pass: smtpPass,
-    },
+    auth: { user: smtpUser, pass: smtpPass },
   });
 
   const textLines = [
-    "New Beds24 booking notification",
+    "Beds24 booking notification",
     "",
     `Booking ID: ${bookingId}`,
     `Status: ${status || "-"}`,
@@ -171,6 +179,8 @@ async function sendBookingEmail(body: Beds24BookingPayload) {
     `Check-out: ${checkout || "-"}`,
     `Property: ${property || "-"}`,
     `Room: ${room || "-"}`,
+    `Room ID: ${roomId || "-"}`,
+    `Unit ID: ${unitId || "-"}`,
     `Guest language: ${guestLanguage || "-"}`,
     `Price: ${price || "-"}`,
     "",
@@ -187,6 +197,8 @@ async function sendBookingEmail(body: Beds24BookingPayload) {
     checkout: escapeHtml(checkout || "-"),
     property: escapeHtml(property || "-"),
     room: escapeHtml(room || "-"),
+    roomId: escapeHtml(roomId || "-"),
+    unitId: escapeHtml(unitId || "-"),
     guestLanguage: escapeHtml(guestLanguage || "-"),
     price: escapeHtml(price || "-"),
     rawJson: escapeHtml(JSON.stringify(body, null, 2)),
@@ -209,6 +221,8 @@ async function sendBookingEmail(body: Beds24BookingPayload) {
         <p><strong>Check-out:</strong> ${safe.checkout}</p>
         <p><strong>Property:</strong> ${safe.property}</p>
         <p><strong>Room:</strong> ${safe.room}</p>
+        <p><strong>Room ID:</strong> ${safe.roomId}</p>
+        <p><strong>Unit ID:</strong> ${safe.unitId}</p>
         <p><strong>Guest language:</strong> ${safe.guestLanguage}</p>
         <p><strong>Price:</strong> ${safe.price}</p>
         <hr />
@@ -225,41 +239,48 @@ export async function POST(request: Request) {
     const receivedSecret = request.headers.get("x-webhook-secret") || "";
 
     if (receivedSecret !== expectedSecret) {
-      return NextResponse.json(
-        { ok: false, error: "Unauthorized webhook." },
-        { status: 401 }
-      );
+      return NextResponse.json({ ok: false, error: "Unauthorized webhook." }, { status: 401 });
     }
 
     const body = (await request.json()) as Beds24BookingPayload;
     const bookingId = clean(body.booking_id);
 
     if (!bookingId) {
-      return NextResponse.json(
-        { ok: false, error: "Missing booking_id." },
-        { status: 400 }
-      );
+      return NextResponse.json({ ok: false, error: "Missing booking_id." }, { status: 400 });
     }
 
-    await saveBookingToDatabase(body);
+    const stored = await saveBookingToDatabase(body);
+    const bookingCore = await reconcileBookingCoreBookingEvent({
+      bookingId,
+      status: clean(body.status),
+      checkin: clean(body.checkin),
+      checkout: clean(body.checkout),
+      roomId: clean(body.room_id),
+      unitId: clean(body.unit_id),
+    });
+
+    if (bookingCore.rowsReleased > 0 || bookingCore.rowsBooked > 0) {
+      try {
+        revalidateTag(BOOKING_CORE_DEALS_CACHE_TAG, { expire: 0 });
+      } catch (cacheError) {
+        console.error("Beds24 webhook could not invalidate Booking Core deals cache", cacheError);
+      }
+    }
+
     await sendBookingEmail(body);
 
     return NextResponse.json({
       ok: true,
       received: true,
       stored: true,
+      bookingChanged: stored.changed,
       emailed: true,
       booking_id: bookingId,
+      bookingCore,
     });
   } catch (error) {
     console.error("Beds24 webhook error:", error);
-
-    const message =
-      error instanceof Error ? error.message : "Unknown Beds24 webhook error";
-
-    return NextResponse.json(
-      { ok: false, error: message },
-      { status: 500 }
-    );
+    const message = error instanceof Error ? error.message : "Unknown Beds24 webhook error";
+    return NextResponse.json({ ok: false, error: message }, { status: 500 });
   }
 }
