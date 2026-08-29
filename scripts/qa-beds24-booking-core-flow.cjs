@@ -34,6 +34,7 @@ requireText(reconcile, 'inventory.booking_id = ${bookingId}', 'Room/date changes
 requireText(reconcile, 'booking_id <> ${bookingId}', 'Target rows owned by another booking must be treated as conflicts.');
 requireText(reconcile, "upper(coalesce(reason, '')) = 'BOOKED'", 'Ambiguous BOOKED rows without booking_id must be blocked.');
 requireText(reconcile, 'coverageRows === expectedNights', 'Target date range must be complete before applying an event.');
+requireText(reconcile, "'bookingId', ${bookingId}::text", 'JSONB bookingId parameter must be explicitly typed for PostgreSQL polymorphic functions.');
 forbidText(reconcile, 'insert into booking_core.inventory', 'Incremental booking events must never create inventory rows outside the canonical snapshot.');
 
 console.log('Beds24 → Booking Core incremental flow QA passed.');
