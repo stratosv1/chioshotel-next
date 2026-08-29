@@ -226,8 +226,13 @@ expectAll(
     '"X-Robots-Tag": "noindex"',
     "discountPercent: 10",
     "stackable: false",
+    "room.isEconomy",
+    "room.hasFullKitchen",
+    'resolveDiscoveryUrl("economy-double", language)',
+    'resolveDiscoveryUrl("family-apartment", language)',
+    'detailsUrl: detailsUrlForRoom(room, language)',
   ],
-  "Agentic public data API must reuse Booking Core, existing site knowledge and canonical discovery routes",
+  "Agentic public data API must reuse Booking Core, existing site knowledge and canonical room mappings",
 );
 
 expectNone(
