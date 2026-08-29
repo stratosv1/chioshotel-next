@@ -174,6 +174,61 @@ function safeContext(value: FormDataEntryValue | null): DraftContext {
   }
 }
 
+function finiteInteger(value: unknown): number | null {
+  const number = Number(value);
+  if (!Number.isFinite(number) || !Number.isInteger(number)) return null;
+  return number;
+}
+
+function normalizeGuestComposition(parsed: any, latestText: string) {
+  if (!parsed || typeof parsed !== "object" || !parsed.fields || typeof parsed.fields !== "object") return parsed;
+
+  const fields = parsed.fields as Record<string, unknown>;
+  let totalGuests = finiteInteger(fields.totalGuests);
+  let adults = finiteInteger(fields.adults);
+  let children = finiteInteger(fields.children);
+
+  const guestEvidence = `${latestText} ${typeof parsed.sourceSummary === "string" ? parsed.sourceSummary : ""} ${typeof parsed.clarification === "string" ? parsed.clarification : ""}`;
+  const mentionsChildren = /(παιδ|μωρ|child|kid|baby|infant|çocuk|bebek|enfant|bébé|kind|baby|bambin|niñ)/i.test(guestEvidence);
+
+  if (totalGuests !== null && adults === null && children === null && !mentionsChildren) {
+    adults = totalGuests;
+    children = 0;
+  } else if (adults !== null && children === null && totalGuests === null && !mentionsChildren) {
+    children = 0;
+    totalGuests = adults;
+  }
+
+  if (totalGuests !== null && adults !== null && children === null) {
+    const derivedChildren = totalGuests - adults;
+    if (derivedChildren >= 0) children = derivedChildren;
+  }
+
+  if (totalGuests !== null && children !== null && adults === null) {
+    const derivedAdults = totalGuests - children;
+    if (derivedAdults >= 1) adults = derivedAdults;
+  }
+
+  if (adults !== null && children !== null) {
+    totalGuests = adults + children;
+  }
+
+  fields.totalGuests = totalGuests;
+  fields.adults = adults;
+  fields.children = children;
+
+  if (
+    adults !== null
+    && children !== null
+    && typeof parsed.clarification === "string"
+    && /(ενήλικ|παιδ|adult|child|guest|άτομ|person)/i.test(parsed.clarification)
+  ) {
+    parsed.clarification = null;
+  }
+
+  return parsed;
+}
+
 export async function POST(request: NextRequest) {
   if (!isAuthorized(request)) return unauthorized();
 
@@ -262,7 +317,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ message: "OpenAI returned no structured intake." }, { status: 502, headers: noStoreHeaders() });
       }
 
-      const parsed = JSON.parse(output);
+      const parsed = normalizeGuestComposition(JSON.parse(output), message);
       return NextResponse.json(parsed, { headers: noStoreHeaders() });
     } finally {
       clearTimeout(timeout);
