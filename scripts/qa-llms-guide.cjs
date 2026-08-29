@@ -185,6 +185,7 @@ expectAll(
     "get_voulamandis_rooms",
     "get_voulamandis_offers",
     "get_voulamandis_property_info",
+    "search_chioshotel_information",
     "/api/ai-room-finder/availability",
     "/api/agentic/voulamandis",
     "readOnlyHint: true",
@@ -199,7 +200,7 @@ expectAll(
     "bookingCreated: false",
     "for (const tool of tools)",
   ],
-  "WebMCP commercial tools must stay read-only, cancellable and connected to approved public APIs",
+  "WebMCP commercial and site-information tools must stay read-only, cancellable and connected to approved public APIs",
 );
 
 expectNone(
@@ -212,18 +213,21 @@ expectAll(
   "app/api/agentic/voulamandis/route.ts",
   [
     'import { getAgentRoomGuideData } from "@/lib/agent-room-guide-data"',
-    'import { SALES_KNOWLEDGE } from "@/lib/ai-assistant/knowledge"',
+    "searchSalesKnowledge",
+    'import { searchExtraKnowledge } from "@/lib/ai-assistant/knowledge-extra"',
     'import { AI_DISCOVERY_COPY } from "@/lib/ai-discovery/config"',
     "resolveDiscoveryUrl",
     'resource === "rooms"',
     'resource === "property"',
     'resource === "offers"',
+    'resource === "knowledge"',
     'source: "booking_core.rooms + booking_core.room_features"',
+    'source: "existing curated site knowledge"',
     '"X-Robots-Tag": "noindex"',
     "discountPercent: 10",
     "stackable: false",
   ],
-  "Agentic public data API must reuse Booking Core, existing sales knowledge and canonical discovery routes",
+  "Agentic public data API must reuse Booking Core, existing site knowledge and canonical discovery routes",
 );
 
 expectNone(
@@ -235,7 +239,7 @@ expectNone(
 expect(
   "app/ai-assistant/page.tsx",
   "<RoomFinderWebMCP />",
-  "AI room finder page must register the WebMCP availability tool",
+  "AI room finder page must register the WebMCP tools",
 );
 
 expect(
