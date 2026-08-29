@@ -111,10 +111,11 @@ export default async function RootLayout({
   const sharedLanguage: SharedSiteLanguage = isPolishPath ? "en" : htmlLanguage;
   const hideHeader = isGuidePath(pathname);
   const privatePhysicsPath = isMixalisPath(pathname);
-  const hideGlobalChrome = hideHeader || isPolishPath || privatePhysicsPath;
+  const staffPath = isStaffPath(pathname);
+  const hideGlobalChrome = hideHeader || isPolishPath || privatePhysicsPath || staffPath;
   const hideJourney = isTripPlannerPath(pathname) || isAgentRoomPath(pathname) || privatePhysicsPath;
   const hideFooter = isTripPlannerPath(pathname) || privatePhysicsPath;
-  const excludeAnalytics = isStaffPath(pathname) || privatePhysicsPath;
+  const excludeAnalytics = staffPath || privatePhysicsPath;
 
   return (
     <html lang={htmlLanguage}>
