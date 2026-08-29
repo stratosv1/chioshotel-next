@@ -92,7 +92,7 @@ function extractBookingId(result: any): string | number | null {
 }
 
 function hasRefreshWriteCredential() {
-  return Boolean((process.env.BEDS24_REFRESH_TOKEN || process.env.BEDS24_LONG_LIFE_TOKEN)?.trim());
+  return Boolean(process.env.BEDS24_REFRESH_TOKEN?.trim());
 }
 
 function hasDirectWriteCredential() {
@@ -100,7 +100,7 @@ function hasDirectWriteCredential() {
 }
 
 async function getBeds24Token() {
-  const refreshToken = (process.env.BEDS24_REFRESH_TOKEN || process.env.BEDS24_LONG_LIFE_TOKEN)?.trim();
+  const refreshToken = process.env.BEDS24_REFRESH_TOKEN?.trim();
 
   if (refreshToken) {
     const tokenResponse = await fetch(`${beds24BaseUrl}/authentication/token`, {
@@ -117,7 +117,7 @@ async function getBeds24Token() {
   const directWriteToken = process.env.BEDS24_WRITE_API_TOKEN?.trim();
   if (directWriteToken) return directWriteToken;
 
-  throw new Error("No valid Beds24 write credential is configured. Add BEDS24_REFRESH_TOKEN, BEDS24_LONG_LIFE_TOKEN or BEDS24_WRITE_API_TOKEN with booking-write permission.");
+  throw new Error("No valid Beds24 write credential is configured. Add BEDS24_REFRESH_TOKEN or BEDS24_WRITE_API_TOKEN with booking-write permission.");
 }
 
 async function verifyAvailability(params: { arrival: string; departure: string; guests: number; roomId: number; unitId: number }) {
