@@ -17,6 +17,7 @@ function must(condition, message) {
 const layout = read("app/layout.tsx");
 const profiler = read("components/performance/JsSelfProfilingMarkers.tsx");
 const route = read("app/api/performance/js-profile/route.ts");
+const analytics = read("components/analytics/ConsentAnalytics.tsx");
 const nextConfig = read("next.config.ts");
 const vercelConfig = JSON.parse(read("vercel.json"));
 const packageJson = JSON.parse(read("package.json"));
@@ -53,6 +54,22 @@ must(
 );
 
 must(
+  profiler.includes('const ANALYTICS_CONSENT_KEY = "vh_cookie_consent_v1"') &&
+    analytics.includes('const LEGACY_CONSENT_KEY = "vh_cookie_consent_v1"') &&
+    profiler.includes('window.localStorage.getItem(ANALYTICS_CONSENT_KEY) === "accepted"') &&
+    profiler.includes("if (cancelled || !hasAnalyticsConsent()) return;") &&
+    profiler.includes("if (!hasAnalyticsConsent() || profileAlreadyDecided()) return;"),
+  "profiling must fail closed unless the existing analytics consent state is accepted",
+);
+
+must(
+  profiler.includes("PROFILE_SESSION_DECIDED_VALUE") &&
+    profiler.includes("if (!markProfileDecided()) return;") &&
+    profiler.includes("if (Math.random() >= PROFILE_SAMPLE_RATE) return;"),
+  "profiling must make at most one bounded sampling decision per browser session",
+);
+
+must(
   profiler.includes("/api/performance/js-profile") &&
     profiler.includes("countMarkers(samples)") &&
     !profiler.includes("trace.frames") &&
@@ -74,4 +91,4 @@ must(
   "performance observability QA must run in production builds and be directly invokable",
 );
 
-console.log("Performance observability QA passed: lazy sampled JS Self-Profiling markers are wired without cross-origin isolation.");
+console.log("Performance observability QA passed: consent-gated lazy sampled JS Self-Profiling markers are wired without cross-origin isolation.");
