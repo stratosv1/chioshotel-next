@@ -79,17 +79,17 @@ async function saveBookingToDatabase(body: Beds24BookingPayload) {
       raw_json
     )
     VALUES (
-      ${bookingId},
-      ${nullable(status)},
-      ${nullable(checkin)},
-      ${nullable(checkout)},
-      ${nullable(firstname)},
-      ${nullable(lastname)},
-      ${nullable(email)},
-      ${nullable(property)},
-      ${nullable(room)},
-      ${nullable(guestLanguage)},
-      ${nullable(price)},
+      ${bookingId}::text,
+      ${nullable(status)}::text,
+      ${nullable(checkin)}::date,
+      ${nullable(checkout)}::date,
+      ${nullable(firstname)}::text,
+      ${nullable(lastname)}::text,
+      ${nullable(email)}::text,
+      ${nullable(property)}::text,
+      ${nullable(room)}::text,
+      ${nullable(guestLanguage)}::text,
+      ${nullable(price)}::text,
       ${rawJson}::jsonb
     )
     ON CONFLICT (booking_id)
