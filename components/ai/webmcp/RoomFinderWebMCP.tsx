@@ -23,6 +23,10 @@ type AvailabilityInput = {
   allowSplit?: unknown;
 };
 
+type WebMcpExecutionClient = {
+  signal?: AbortSignal;
+};
+
 type WebMcpTool = {
   name: string;
   title?: string;
@@ -32,7 +36,10 @@ type WebMcpTool = {
     readOnlyHint?: boolean;
     untrustedContentHint?: boolean;
   };
-  execute: (input: AvailabilityInput) => Promise<unknown>;
+  execute: (
+    input: AvailabilityInput,
+    client?: WebMcpExecutionClient,
+  ) => Promise<unknown>;
 };
 
 type WebMcpModelContext = {
@@ -119,7 +126,7 @@ export function RoomFinderWebMCP() {
         readOnlyHint: true,
         untrustedContentHint: false,
       },
-      execute: async (input) => {
+      execute: async (input, client = {}) => {
         const checkin = typeof input.checkin === "string" ? input.checkin : "";
         const checkout = typeof input.checkout === "string" ? input.checkout : "";
         const guests = Number(input.guests);
@@ -156,6 +163,14 @@ export function RoomFinderWebMCP() {
           allowSplit: allowSplit ? "1" : "0",
         });
         const requestController = new AbortController();
+        const handleClientAbort = () => requestController.abort();
+
+        if (client.signal?.aborted) {
+          requestController.abort();
+        } else {
+          client.signal?.addEventListener("abort", handleClientAbort, { once: true });
+        }
+
         const timeoutId = window.setTimeout(
           () => requestController.abort(),
           AVAILABILITY_TIMEOUT_MS,
@@ -201,6 +216,14 @@ export function RoomFinderWebMCP() {
           };
         } catch (error) {
           if (requestController.signal.aborted) {
+            if (client.signal?.aborted) {
+              return {
+                success: false,
+                code: "CANCELLED",
+                message: "Room availability search was cancelled.",
+              };
+            }
+
             return {
               success: false,
               code: "TIMEOUT",
@@ -216,6 +239,7 @@ export function RoomFinderWebMCP() {
           };
         } finally {
           window.clearTimeout(timeoutId);
+          client.signal?.removeEventListener("abort", handleClientAbort);
         }
       },
     };
