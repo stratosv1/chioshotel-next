@@ -4,6 +4,7 @@ import { neon } from "@neondatabase/serverless";
 export const runtime = "nodejs";
 
 const beds24BaseUrl = "https://beds24.com/api/v2";
+const beds24PropertyId = Number(process.env.BEDS24_PROPERTY_ID || "117813");
 
 const roomMappings = [
   { roomId: 267788, unitId: 1, label: "Room 1", categoryLabel: "First Floor" },
@@ -151,7 +152,7 @@ export async function GET(request: NextRequest) {
       process.env.BEDS24_LONG_LIFE_TOKEN ||
       process.env.BEDS24_INVITE_CODE
     ),
-    propertyReady: Boolean(process.env.BEDS24_PROPERTY_ID),
+    propertyReady: Boolean(beds24PropertyId),
   });
 }
 
@@ -160,7 +161,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const propertyId = Number(process.env.BEDS24_PROPERTY_ID || 0);
+    const propertyId = beds24PropertyId;
     const roomId = cleanNumber(body.roomId, 0);
     const unitId = cleanNumber(body.unitId, 0);
     const room = roomMappings.find((item) => item.roomId === roomId && item.unitId === unitId);
@@ -179,7 +180,7 @@ export async function POST(request: NextRequest) {
     const comments = cleanString(body.comments);
     const notes = cleanString(body.notes);
 
-    if (!propertyId) return json({ message: "Missing BEDS24_PROPERTY_ID." }, 503);
+    if (!propertyId) return json({ message: "Missing Beds24 property id." }, 503);
     if (!room) return json({ message: "Invalid room/unit mapping." }, 400);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(arrival) || !/^\d{4}-\d{2}-\d{2}$/.test(departure)) return json({ message: "Invalid dates." }, 400);
     if (!firstName || !lastName) return json({ message: "First name and last name are required." }, 400);
