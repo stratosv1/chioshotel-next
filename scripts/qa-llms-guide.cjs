@@ -159,9 +159,20 @@ expectAll(
     "localizedLlmsUrl",
     "buildRootLlmsGuide",
     "buildLocalizedLlmsGuide",
-    "Complete AI-readable site index",
+    "FULL_INDEX_HEADINGS",
   ],
   "AI discovery guides must be generated from shared multilingual config and canonical routes",
+);
+
+expectAll(
+  "app/layout.tsx",
+  [
+    'rel="describedby"',
+    'type="text/markdown"',
+    '"/llms.txt"',
+    '`/${sharedLanguage}/llms.txt`',
+  ],
+  "public pages must advertise the most relevant llms.txt guide through the v2 describedby relation",
 );
 
 expectAll(
