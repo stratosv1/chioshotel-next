@@ -116,9 +116,19 @@ export default async function RootLayout({
   const hideJourney = isTripPlannerPath(pathname) || isAgentRoomPath(pathname) || privatePhysicsPath;
   const hideFooter = isTripPlannerPath(pathname) || privatePhysicsPath;
   const excludeAnalytics = staffPath || privatePhysicsPath;
+  const aiGuideHref = privatePhysicsPath || staffPath || isPolishPath
+    ? null
+    : sharedLanguage === "en"
+      ? "/llms.txt"
+      : `/${sharedLanguage}/llms.txt`;
 
   return (
     <html lang={htmlLanguage}>
+      {aiGuideHref ? (
+        <head>
+          <link rel="describedby" href={aiGuideHref} type="text/markdown" />
+        </head>
+      ) : null}
       <body>
         {!isPolishPath && !excludeAnalytics ? <RoomFinderCtaRouter /> : null}
         {!hideGlobalChrome ? (
