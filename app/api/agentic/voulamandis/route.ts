@@ -1,11 +1,28 @@
 import { getAgentRoomGuideData } from "@/lib/agent-room-guide-data";
-import { SALES_KNOWLEDGE } from "@/lib/ai-assistant/knowledge";
+import {
+  SALES_KNOWLEDGE,
+  searchSalesKnowledge,
+  type KnowledgeKind,
+} from "@/lib/ai-assistant/knowledge";
+import { searchExtraKnowledge } from "@/lib/ai-assistant/knowledge-extra";
 import { AI_DISCOVERY_COPY } from "@/lib/ai-discovery/config";
 import { resolveDiscoveryUrl } from "@/lib/ai-discovery/route-resolver";
 import { isLanguageCode, type LanguageCode } from "@/lib/languages";
 
 const PUBLIC_CACHE =
   "public, max-age=300, s-maxage=3600, stale-while-revalidate=86400";
+const KNOWLEDGE_KINDS = new Set<KnowledgeKind>([
+  "property",
+  "room",
+  "pricing",
+  "booking",
+  "beach",
+  "village",
+  "museum",
+  "activity",
+  "family",
+  "transport",
+]);
 
 function json(body: unknown, status = 200) {
   return Response.json(body, {
@@ -134,6 +151,64 @@ function offersPayload(language: LanguageCode) {
   };
 }
 
+function knowledgePayload(url: URL, language: LanguageCode) {
+  const query = (url.searchParams.get("q") || "").trim();
+  const requestedKind = url.searchParams.get("kind") || "";
+  const kind = KNOWLEDGE_KINDS.has(requestedKind as KnowledgeKind)
+    ? (requestedKind as KnowledgeKind)
+    : undefined;
+
+  if (query.length < 2) {
+    return {
+      success: false,
+      code: "INVALID_QUERY",
+      message: "Provide a public information search query with at least 2 characters.",
+    };
+  }
+
+  const input = {
+    query,
+    language,
+    kinds: kind ? [kind] : undefined,
+    limit: 8,
+  };
+  const combined = [
+    ...searchSalesKnowledge(input),
+    ...searchExtraKnowledge(input),
+  ];
+  const deduped = new Map<string, (typeof combined)[number]>();
+
+  for (const item of combined) {
+    const existing = deduped.get(item.id);
+    if (!existing || item.score > existing.score) deduped.set(item.id, item);
+  }
+
+  const results = [...deduped.values()]
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 8)
+    .map((item) => ({
+      id: item.id,
+      kind: item.kind,
+      title: item.title,
+      summary: item.summary,
+      facts: item.facts,
+      attributes: item.attributes,
+      url: item.url,
+    }));
+
+  return {
+    success: true,
+    property: "Voulamandis House",
+    language,
+    query,
+    kind: kind || null,
+    source: "existing curated site knowledge",
+    results,
+    note:
+      "For live room prices and availability, use the dedicated availability tool rather than static knowledge results.",
+  };
+}
+
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const resource = url.searchParams.get("resource");
@@ -149,12 +224,17 @@ export async function GET(request: Request) {
     if (resource === "offers") {
       return json(offersPayload(language));
     }
+    if (resource === "knowledge") {
+      const payload = knowledgePayload(url, language);
+      return json(payload, payload.success ? 200 : 400);
+    }
 
     return json(
       {
         success: false,
         code: "INVALID_RESOURCE",
-        message: "Use resource=rooms, resource=property, or resource=offers.",
+        message:
+          "Use resource=rooms, resource=property, resource=offers, or resource=knowledge.",
       },
       400,
     );
