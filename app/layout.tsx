@@ -8,6 +8,7 @@ import { ContentEngagementAnalytics } from "@/components/analytics/ContentEngage
 import { RoutePageViewAnalytics } from "@/components/analytics/RoutePageViewAnalytics";
 import { RoomFinderWebMCP } from "@/components/ai/webmcp/RoomFinderWebMCP";
 import { RoomFinderCtaRouter } from "@/components/navigation/RoomFinderCtaRouter";
+import { JsSelfProfilingMarkers } from "@/components/performance/JsSelfProfilingMarkers";
 import { ExploreVoulamandisJourney } from "@/components/seo/ExploreVoulamandisJourney";
 import { VoulamandisFooterTailwind } from "@/components/VoulamandisFooterTailwind";
 import { VoulamandisHeaderTailwind } from "@/components/VoulamandisHeaderTailwind";
@@ -26,6 +27,13 @@ ensureKarfasElintaBeachCards();
 // This token expires on 2026-11-17 and includes subdomain matching.
 const WEBMCP_CHIOS_ORIGIN_TRIAL_TOKEN =
   "Am/x+gUigH/qHVqQ0v/ZoQIFsHuRpukzvgMl3RwC534HRIX3uUrWZxU9a2IE19GJhFD0EXC4o4Zgz1EYIC3a8wcAAABgeyJvcmlnaW4iOiJodHRwczovL2NoaW9zaG90ZWwuZ3I6NDQzIiwiZmVhdHVyZSI6IldlYk1DUCIsImV4cGlyeSI6MTc5NDg3MzYwMCwiaXNTdWJkb21haW4iOnRydWV9";
+
+// JS Self-Profiling Markers Origin Trial token for https://chioshotel.gr:443.
+// The trial runs in Chrome 153-161; this token expires on 2027-02-16 and
+// includes subdomain matching. We intentionally do not add COOP/COEP: style
+// and layout markers remain available without risking third-party integrations.
+const JS_SELF_PROFILING_CHIOS_ORIGIN_TRIAL_TOKEN =
+  "AvwxnZ6bxox/nvqf1KMAo4ltPheOJxy3TZZwilZ+xOEKvmhz9j7himy6+5wmr9xgvNvcPNRyCTdKYxcQPRSNMAsAAABweyJvcmlnaW4iOiJodHRwczovL2NoaW9zaG90ZWwuZ3I6NDQzIiwiZmVhdHVyZSI6IkpTU2VsZlByb2ZpbGluZ01hcmtlcnMiLCJleHBpcnkiOjE4MDI3MzYwMDAsImlzU3ViZG9tYWluIjp0cnVlfQ==";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -139,13 +147,20 @@ export default async function RootLayout({
     publicWebMcpPath && isChiosHotelHost(requestHost)
       ? process.env.WEBMCP_ORIGIN_TRIAL_TOKEN?.trim() || WEBMCP_CHIOS_ORIGIN_TRIAL_TOKEN
       : null;
+  const jsSelfProfilingOriginTrialToken =
+    publicWebMcpPath && isChiosHotelHost(requestHost)
+      ? JS_SELF_PROFILING_CHIOS_ORIGIN_TRIAL_TOKEN
+      : null;
 
   return (
     <html lang={htmlLanguage}>
-      {aiGuideHref || webMcpOriginTrialToken ? (
+      {aiGuideHref || webMcpOriginTrialToken || jsSelfProfilingOriginTrialToken ? (
         <head>
           {webMcpOriginTrialToken ? (
             <meta httpEquiv="origin-trial" content={webMcpOriginTrialToken} />
+          ) : null}
+          {jsSelfProfilingOriginTrialToken ? (
+            <meta httpEquiv="origin-trial" content={jsSelfProfilingOriginTrialToken} />
           ) : null}
           {aiGuideHref ? (
             <link rel="describedby" href={aiGuideHref} type="text/markdown" />
@@ -154,6 +169,7 @@ export default async function RootLayout({
       ) : null}
       <body>
         {publicWebMcpPath ? <RoomFinderWebMCP /> : null}
+        {publicWebMcpPath ? <JsSelfProfilingMarkers /> : null}
         {!isPolishPath && !excludeAnalytics ? <RoomFinderCtaRouter /> : null}
         {!hideGlobalChrome ? (
           <VoulamandisHeaderTailwind language={sharedLanguage} pathname={pathname} />
