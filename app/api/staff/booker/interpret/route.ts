@@ -8,12 +8,49 @@ const LANGUAGES = ["el", "en", "de", "fr", "it", "es", "tr"] as const;
 const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
 const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 const STAFF_ROOM_COOKIE = "staff_requested_room";
+const BEDS24_PROPERTY_ID = "117813";
+
+const ROOM_BY_SOURCE = new Map([
+  ["267788:1", 1],
+  ["268803:1", 2],
+  ["267788:2", 3],
+  ["267788:3", 4],
+  ["626129:1", 5],
+  ["268803:2", 6],
+  ["626129:2", 7],
+  ["265595:1", 8],
+  ["265595:2", 9],
+  ["265595:3", 10],
+]);
+
+const API_SOURCE_LABELS: Record<number, string> = {
+  0: "Direct",
+  1: "Booking Page",
+  10: "Airbnb iCal",
+  14: "Expedia",
+  17: "Agoda",
+  19: "Booking.com",
+  20: "Tripadvisor",
+  30: "Vrbo",
+  40: "HomeAway iCal",
+  42: "OTA",
+  46: "Airbnb",
+  51: "Ostrovok",
+  53: "Trip.com",
+  55: "Tripadvisor Rentals",
+  56: "Traveloka",
+  58: "Google",
+  78: "HomeToGo",
+  999: "Agent",
+};
 
 const BOOKING_SCHEMA = {
   type: "object",
   additionalProperties: false,
-  required: ["fields", "clearFields", "sourceSummary", "clarification"],
+  required: ["intent", "arrivalQueryDate", "fields", "clearFields", "sourceSummary", "clarification"],
   properties: {
+    intent: { type: "string", enum: ["booking_intake", "arrivals_query"] },
+    arrivalQueryDate: { type: ["string", "null"] },
     fields: {
       type: "object",
       additionalProperties: false,
@@ -65,9 +102,19 @@ const BOOKING_SCHEMA = {
   },
 } as const;
 
-const SYSTEM_PROMPT = `You are the semantic intake parser for the private Voulamandis House Staff Booking Assistant.
+const SYSTEM_PROMPT = `You are the semantic interpreter for the private Voulamandis House Staff Booking Assistant.
 
-Your job is ONLY to extract booking facts from the staff member's latest text or uploaded screenshot and return them in the strict JSON schema. You never search availability, never calculate a price, and never create a booking.
+You have two intents:
+1. booking_intake: the staff member is creating or correcting a booking.
+2. arrivals_query: the staff member asks which guests/check-ins/arrivals exist on a specific date.
+
+INTENT RULES
+- Use arrivals_query for requests such as "ποιες αφίξεις έχω 31/8", "ποιοι έρχονται αύριο", "arrivals on 10 September", "check-ins σήμερα".
+- For arrivals_query, normalize the requested date to YYYY-MM-DD in arrivalQueryDate. Resolve today/tomorrow using the supplied Europe/Athens date. If no date is supplied or the date is genuinely ambiguous, set arrivalQueryDate=null and put one concise Greek question in clarification.
+- For arrivals_query, do not invent arrival data. The application will fetch the actual bookings after your intent/date extraction.
+- For booking_intake set arrivalQueryDate=null.
+
+For booking_intake your job is ONLY to extract booking facts from the staff member's latest text or uploaded screenshot and return them in the strict JSON schema. You never search availability, never calculate a price, and never create a booking.
 
 IMPORTANT BEHAVIOR
 - Read the latest input together with the current draft supplied by the application.
@@ -75,7 +122,7 @@ IMPORTANT BEHAVIOR
 - Extract every booking fact present in one pass. A pasted email may contain almost the entire booking.
 - A screenshot can contain an email, message, booking request or handwritten/typed information. Read the visible booking facts carefully.
 - Never invent missing facts. Return null for facts not supported by the latest input.
-- If a fact in the latest input is genuinely ambiguous, set clarification to one concise Greek question naming exactly what is ambiguous. Missing information alone is not ambiguity.
+- If a booking fact in the latest input is genuinely ambiguous, set clarification to one concise Greek question naming exactly what is ambiguous. Missing information alone is not ambiguity.
 - sourceSummary is a concise Greek summary of what you successfully extracted from THIS latest input. Do not include facts that only came from currentDraft.
 
 DATES
@@ -138,10 +185,8 @@ function isAuthorized(request: NextRequest) {
   const username = process.env.STAFF_USERNAME;
   const password = process.env.STAFF_PASSWORD;
   if (!username || !password) return false;
-
   const header = request.headers.get("authorization");
   if (!header?.startsWith("Basic ")) return false;
-
   try {
     const decoded = Buffer.from(header.slice(6), "base64").toString("utf8");
     const separator = decoded.indexOf(":");
@@ -191,14 +236,14 @@ function finiteInteger(value: unknown): number | null {
 
 function normalizeGuestComposition(parsed: any, latestText: string) {
   if (!parsed || typeof parsed !== "object" || !parsed.fields || typeof parsed.fields !== "object") return parsed;
+  if (parsed.intent === "arrivals_query") return parsed;
 
   const fields = parsed.fields as Record<string, unknown>;
   let totalGuests = finiteInteger(fields.totalGuests);
   let adults = finiteInteger(fields.adults);
   let children = finiteInteger(fields.children);
-
   const guestEvidence = `${latestText} ${typeof parsed.sourceSummary === "string" ? parsed.sourceSummary : ""} ${typeof parsed.clarification === "string" ? parsed.clarification : ""}`;
-  const mentionsChildren = /(παιδ|μωρ|child|kid|baby|infant|çocuk|bebek|enfant|bébé|kind|baby|bambin|niñ)/i.test(guestEvidence);
+  const mentionsChildren = /(παιδ|μωρ|child|kid|baby|infant|çocuk|bebek|enfant|bébé|kind|bambin|niñ)/i.test(guestEvidence);
 
   if (totalGuests !== null && adults === null && children === null && !mentionsChildren) {
     adults = totalGuests;
@@ -207,17 +252,14 @@ function normalizeGuestComposition(parsed: any, latestText: string) {
     children = 0;
     totalGuests = adults;
   }
-
   if (totalGuests !== null && adults !== null && children === null) {
     const derivedChildren = totalGuests - adults;
     if (derivedChildren >= 0) children = derivedChildren;
   }
-
   if (totalGuests !== null && children !== null && adults === null) {
     const derivedAdults = totalGuests - children;
     if (derivedAdults >= 1) adults = derivedAdults;
   }
-
   if (adults !== null && children !== null) totalGuests = adults + children;
 
   fields.totalGuests = totalGuests;
@@ -229,9 +271,7 @@ function normalizeGuestComposition(parsed: any, latestText: string) {
     && children !== null
     && typeof parsed.clarification === "string"
     && /(ενήλικ|παιδ|adult|child|guest|άτομ|person)/i.test(parsed.clarification)
-  ) {
-    parsed.clarification = null;
-  }
+  ) parsed.clarification = null;
 
   return parsed;
 }
@@ -254,15 +294,142 @@ function stripRoomAssignmentComment(value: unknown, room: number | null) {
 
 function normalizeRoomRequest(parsed: any, latestText: string) {
   if (!parsed || typeof parsed !== "object" || !parsed.fields || typeof parsed.fields !== "object") return parsed;
+  if (parsed.intent === "arrivals_query") return parsed;
   const fields = parsed.fields as Record<string, unknown>;
   let requestedRoomNumber = finiteInteger(fields.requestedRoomNumber);
   if (requestedRoomNumber === null) requestedRoomNumber = roomFromText(latestText);
   if (requestedRoomNumber !== null && (requestedRoomNumber < 1 || requestedRoomNumber > 10)) requestedRoomNumber = null;
-
   fields.requestedRoomNumber = requestedRoomNumber;
   fields.comments = stripRoomAssignmentComment(fields.comments, requestedRoomNumber);
   fields.notes = stripRoomAssignmentComment(fields.notes, requestedRoomNumber);
   return parsed;
+}
+
+function dateOnly(value: unknown) {
+  return String(value ?? "").match(/^\d{4}-\d{2}-\d{2}/)?.[0] || "";
+}
+
+function nightsBetween(arrival: string, departure: string) {
+  const start = new Date(`${arrival}T00:00:00Z`).getTime();
+  const end = new Date(`${departure}T00:00:00Z`).getTime();
+  if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start) return 0;
+  return Math.round((end - start) / 86400000);
+}
+
+function prettyDate(date: string) {
+  const [year, month, day] = date.split("-").map(Number);
+  if (!year || !month || !day) return date;
+  return new Intl.DateTimeFormat("el-GR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(Date.UTC(year, month - 1, day)));
+}
+
+function getBookingArray(payload: unknown): any[] {
+  if (Array.isArray(payload)) return payload;
+  if (!payload || typeof payload !== "object") return [];
+  const record = payload as Record<string, unknown>;
+  if (Array.isArray(record.data)) return record.data as any[];
+  if (Array.isArray(record.bookings)) return record.bookings as any[];
+  return [];
+}
+
+function sourceLabel(booking: any) {
+  const sourceId = Number(booking?.apiSourceId);
+  if (Number.isInteger(sourceId) && API_SOURCE_LABELS[sourceId]) return API_SOURCE_LABELS[sourceId];
+  const source = String(booking?.apiSource || booking?.referer || "").trim();
+  return source || (Number.isInteger(sourceId) ? `Source ${sourceId}` : "Άγνωστη πηγή");
+}
+
+function guestCount(value: unknown) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed >= 0 ? Math.trunc(parsed) : 0;
+}
+
+async function buildArrivalsAnswer(date: string) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return "Για ποια ημερομηνία θέλεις να δω τις αφίξεις;";
+  const token = process.env.BEDS24_API_TOKEN?.trim();
+  if (!token) return "Δεν μπορώ να διαβάσω αυτή τη στιγμή τις αφίξεις από το Beds24, γιατί λείπει το read token.";
+
+  const url = new URL("https://api.beds24.com/v2/bookings");
+  url.searchParams.set("propertyId", BEDS24_PROPERTY_ID);
+  url.searchParams.set("arrivalFrom", date);
+  url.searchParams.set("arrivalTo", date);
+
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: { accept: "application/json", token },
+      cache: "no-store",
+      signal: AbortSignal.timeout(12_000),
+    });
+    if (!response.ok) return `Δεν μπόρεσα να διαβάσω τις αφίξεις από το Beds24 (HTTP ${response.status}).`;
+
+    const payload = await response.json().catch(() => null);
+    const bookings = getBookingArray(payload)
+      .filter((booking) => dateOnly(booking?.arrival || booking?.checkIn) === date)
+      .filter((booking) => !/(cancel|canceled|cancelled)/i.test(String(booking?.status || "")))
+      .map((booking) => {
+        const roomId = String(booking?.roomId ?? "").trim();
+        const unitId = String(booking?.unitId ?? "").trim();
+        const roomNumber = ROOM_BY_SOURCE.get(`${roomId}:${unitId}`) ?? null;
+        const arrival = dateOnly(booking?.arrival || booking?.checkIn);
+        const departure = dateOnly(booking?.departure || booking?.checkOut);
+        const nights = nightsBetween(arrival, departure);
+        const adults = guestCount(booking?.numAdult);
+        const children = guestCount(booking?.numChild);
+        const firstName = String(booking?.firstName || "").trim();
+        const lastName = String(booking?.lastName || "").trim();
+        const name = `${firstName} ${lastName}`.trim() || "Χωρίς όνομα";
+        return {
+          source: sourceLabel(booking),
+          roomNumber,
+          roomName: String(booking?.roomName || "").trim(),
+          name,
+          nights,
+          adults,
+          children,
+        };
+      })
+      .sort((a, b) => (a.roomNumber ?? 99) - (b.roomNumber ?? 99) || a.name.localeCompare(b.name, "el"));
+
+    if (!bookings.length) return `Δεν υπάρχουν αφίξεις στις ${prettyDate(date)}.`;
+
+    const lines = bookings.map((booking, index) => {
+      const room = booking.roomNumber ? `Δωμάτιο ${booking.roomNumber}` : (booking.roomName || "Δωμάτιο -");
+      const nightsText = booking.nights === 1 ? "1 νύχτα" : `${booking.nights} νύχτες`;
+      const adultsText = booking.adults === 1 ? "1 ενήλικας" : `${booking.adults} ενήλικες`;
+      const childrenText = booking.children === 1 ? "1 παιδί" : `${booking.children} παιδιά`;
+      return `${index + 1}. ${booking.source} · ${room}\n${booking.name} · ${nightsText}\n${adultsText} · ${childrenText}`;
+    });
+
+    return `Αφίξεις ${prettyDate(date)} · ${bookings.length}\n\n${lines.join("\n\n")}`;
+  } catch (error) {
+    console.error("Staff arrivals lookup failed", error);
+    return "Δεν μπόρεσα να διαβάσω αυτή τη στιγμή τις αφίξεις από το Beds24. Δοκίμασε ξανά.";
+  }
+}
+
+function emptyBookingFields() {
+  return {
+    checkin: null,
+    checkout: null,
+    nights: null,
+    totalGuests: null,
+    adults: null,
+    children: null,
+    requestedRoomNumber: null,
+    firstName: null,
+    lastName: null,
+    email: null,
+    phone: null,
+    language: null,
+    totalPrice: null,
+    comments: null,
+    notes: null,
+  };
 }
 
 export async function POST(request: NextRequest) {
@@ -354,6 +521,25 @@ export async function POST(request: NextRequest) {
       }
 
       const parsed = normalizeRoomRequest(normalizeGuestComposition(JSON.parse(output), message), message);
+
+      if (parsed?.intent === "arrivals_query") {
+        const queryDate = dateOnly(parsed?.arrivalQueryDate);
+        const answer = queryDate
+          ? await buildArrivalsAnswer(queryDate)
+          : (typeof parsed?.clarification === "string" && parsed.clarification.trim()
+            ? parsed.clarification.trim()
+            : "Για ποια ημερομηνία θέλεις να δω τις αφίξεις;");
+
+        return NextResponse.json({
+          ...parsed,
+          arrivalQueryDate: queryDate || null,
+          fields: emptyBookingFields(),
+          clearFields: [],
+          sourceSummary: "",
+          clarification: answer,
+        }, { headers: noStoreHeaders() });
+      }
+
       const result = NextResponse.json(parsed, { headers: noStoreHeaders() });
       const requestedRoomNumber = finiteInteger(parsed?.fields?.requestedRoomNumber);
       if (requestedRoomNumber !== null && requestedRoomNumber >= 1 && requestedRoomNumber <= 10) {
