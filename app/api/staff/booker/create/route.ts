@@ -92,30 +92,39 @@ function extractBookingId(result: any): string | number | null {
 }
 
 async function getBeds24Token() {
+  let refreshToken = (process.env.BEDS24_REFRESH_TOKEN || process.env.BEDS24_LONG_LIFE_TOKEN)?.trim();
+
+  if (!refreshToken) {
+    const inviteCode = process.env.BEDS24_INVITE_CODE?.trim();
+    if (inviteCode) {
+      const setup = await fetch(`${beds24BaseUrl}/authentication/setup`, {
+        headers: { accept: "application/json", code: inviteCode },
+        cache: "no-store",
+      });
+      const setupData = await setup.json().catch(() => null);
+      if (!setup.ok || !setupData?.refreshToken) {
+        throw new Error(`Beds24 invite-code exchange failed (${setup.status}).`);
+      }
+      refreshToken = String(setupData.refreshToken);
+    }
+  }
+
+  if (refreshToken) {
+    const tokenResponse = await fetch(`${beds24BaseUrl}/authentication/token`, {
+      headers: { accept: "application/json", refreshToken },
+      cache: "no-store",
+    });
+    const tokenData = await tokenResponse.json().catch(() => null);
+    if (!tokenResponse.ok || !tokenData?.token) {
+      throw new Error(`Beds24 token request failed (${tokenResponse.status}).`);
+    }
+    return tokenData.token as string;
+  }
+
   const direct = process.env.BEDS24_API_TOKEN?.trim();
   if (direct) return direct;
 
-  let refreshToken = process.env.BEDS24_REFRESH_TOKEN || process.env.BEDS24_LONG_LIFE_TOKEN;
-  if (!refreshToken) {
-    const inviteCode = process.env.BEDS24_INVITE_CODE;
-    if (!inviteCode) throw new Error("No Beds24 API token is configured for staff booking creation.");
-
-    const setup = await fetch(`${beds24BaseUrl}/authentication/setup`, {
-      headers: { accept: "application/json", code: inviteCode },
-      cache: "no-store",
-    });
-    const setupData = await setup.json().catch(() => null);
-    if (!setup.ok || !setupData?.refreshToken) throw new Error(`Beds24 invite-code exchange failed (${setup.status}).`);
-    refreshToken = setupData.refreshToken;
-  }
-
-  const tokenResponse = await fetch(`${beds24BaseUrl}/authentication/token`, {
-    headers: { accept: "application/json", refreshToken },
-    cache: "no-store",
-  });
-  const tokenData = await tokenResponse.json().catch(() => null);
-  if (!tokenResponse.ok || !tokenData?.token) throw new Error(`Beds24 token request failed (${tokenResponse.status}).`);
-  return tokenData.token as string;
+  throw new Error("No Beds24 API credential is configured for staff booking creation.");
 }
 
 async function verifyAvailability(params: { arrival: string; departure: string; guests: number; roomId: number; unitId: number }) {
@@ -147,12 +156,17 @@ export async function GET(request: NextRequest) {
   if (!isAuthorized(request)) return unauthorized();
   return json({
     apiReady: Boolean(
-      process.env.BEDS24_API_TOKEN ||
+      process.env.BEDS24_REFRESH_TOKEN ||
+      process.env.BEDS24_LONG_LIFE_TOKEN ||
+      process.env.BEDS24_INVITE_CODE ||
+      process.env.BEDS24_API_TOKEN
+    ),
+    propertyReady: Boolean(beds24PropertyId),
+    writeCredentialPreferred: Boolean(
       process.env.BEDS24_REFRESH_TOKEN ||
       process.env.BEDS24_LONG_LIFE_TOKEN ||
       process.env.BEDS24_INVITE_CODE
     ),
-    propertyReady: Boolean(beds24PropertyId),
   });
 }
 
