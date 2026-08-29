@@ -185,18 +185,22 @@ expectAll(
     "/api/ai-room-finder/availability",
     "readOnlyHint: true",
     "untrustedContentHint: false",
-    "execute: async (input) =>",
+    "execute: async (input, client = {}) =>",
+    "client.signal",
+    'addEventListener("abort", handleClientAbort',
+    'removeEventListener("abort", handleClientAbort)',
     "registrationController.signal",
     "requestController.signal",
+    'code: "CANCELLED"',
     "bookingCreated: false",
   ],
-  "WebMCP availability tool must match the current one-argument execute contract and stay read-only",
+  "WebMCP availability tool must honor browser cancellation, keep its timeout, and remain read-only",
 );
 
 expectNone(
   "components/ai/webmcp/RoomFinderWebMCP.tsx",
-  ["execute: async (input, { signal })", "execute: (input: AvailabilityInput, context:"],
-  "WebMCP execute must not rely on the removed second callback argument",
+  ["execute: async (input) =>"],
+  "WebMCP execute must accept the current cancellation client argument",
 );
 
 expect(
