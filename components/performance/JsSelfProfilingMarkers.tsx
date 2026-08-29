@@ -33,6 +33,8 @@ const PROFILE_DURATION_MS = 4_000;
 const PROFILE_SAMPLE_INTERVAL_MS = 10;
 const PROFILE_MAX_SAMPLES = 500;
 const PROFILE_SESSION_KEY = "vh_js_profile_markers_v1";
+const PROFILE_SESSION_DECIDED_VALUE = "decided";
+const ANALYTICS_CONSENT_KEY = "vh_cookie_consent_v1";
 const MIN_CHROME_MAJOR = 153;
 
 const KNOWN_MARKERS = new Set<MarkerName>([
@@ -49,6 +51,32 @@ function chromeMajorVersion(): number | null {
   if (!match) return null;
   const value = Number(match[1]);
   return Number.isFinite(value) ? value : null;
+}
+
+function hasAnalyticsConsent(): boolean {
+  try {
+    return window.localStorage.getItem(ANALYTICS_CONSENT_KEY) === "accepted";
+  } catch {
+    return false;
+  }
+}
+
+function profileAlreadyDecided(): boolean {
+  try {
+    return window.sessionStorage.getItem(PROFILE_SESSION_KEY) === PROFILE_SESSION_DECIDED_VALUE;
+  } catch {
+    // If storage is unavailable, avoid profiling rather than repeatedly sampling.
+    return true;
+  }
+}
+
+function markProfileDecided(): boolean {
+  try {
+    window.sessionStorage.setItem(PROFILE_SESSION_KEY, PROFILE_SESSION_DECIDED_VALUE);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function countMarkers(samples: ProfilerSample[]): Record<MarkerName, number> {
@@ -91,20 +119,6 @@ export function JsSelfProfilingMarkers() {
     const chromeMajor = chromeMajorVersion();
     if (!chromeMajor || chromeMajor < MIN_CHROME_MAJOR) return;
 
-    try {
-      if (window.sessionStorage.getItem(PROFILE_SESSION_KEY) === "sampled") return;
-    } catch {
-      // Session storage is an optimization only.
-    }
-
-    if (Math.random() >= PROFILE_SAMPLE_RATE) return;
-
-    try {
-      window.sessionStorage.setItem(PROFILE_SESSION_KEY, "sampled");
-    } catch {
-      // Continue without session deduplication when storage is unavailable.
-    }
-
     let cancelled = false;
     let startTimer: number | null = null;
     let stopTimer: number | null = null;
@@ -117,7 +131,7 @@ export function JsSelfProfilingMarkers() {
 
       try {
         const trace = await profiler.stop();
-        if (cancelled) return;
+        if (cancelled || !hasAnalyticsConsent()) return;
 
         const samples = Array.isArray(trace.samples) ? trace.samples : [];
         const navigation = performance.getEntriesByType("navigation")[0] as
@@ -142,9 +156,15 @@ export function JsSelfProfilingMarkers() {
 
     const startProfiler = () => {
       if (cancelled || document.visibilityState !== "visible") return;
+      if (!hasAnalyticsConsent() || profileAlreadyDecided()) return;
 
       const ProfilerCtor = (window as ProfilingWindow).Profiler;
       if (!ProfilerCtor) return;
+
+      // One sampling decision per browser session. If sessionStorage cannot record
+      // that decision, fail closed and do not profile.
+      if (!markProfileDecided()) return;
+      if (Math.random() >= PROFILE_SAMPLE_RATE) return;
 
       try {
         activeProfiler = new ProfilerCtor({
