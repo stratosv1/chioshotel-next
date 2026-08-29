@@ -1,74 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
-
-type RoomMapping = {
-  roomId: number;
-  unitId: number;
-  label: string;
-  categoryLabel: string;
-};
-
-type BookerConfig = {
-  rooms: RoomMapping[];
-  hasPropertyId: boolean;
-  hasRefreshToken: boolean;
-  hasInviteCode: boolean;
-  viberLink: string;
-};
-
-type BookingResult = {
-  message?: string;
-  bookingId?: string | number;
-  reference?: string | null;
-  roomLabel?: string;
-  categoryLabel?: string;
-  whatsappUrl?: string;
-  viberMessage?: string;
-  viberLink?: string;
-  customerPhone?: string;
-};
-
-type StaffOffer = {
-  roomId: string;
-  unitId: string;
-  roomNumber: number;
-  name: string;
-  category: string;
-  floor: string;
-  maxGuests: number;
-  nights: number;
-  originalTotal: number;
-  directTotal: number;
-  saving: number;
-  image?: string;
-  features?: string[];
-};
-
-type AvailabilityResponse = {
-  success: boolean;
-  message?: string;
-  code?: string;
-  offers?: StaffOffer[];
-};
-
-type Step =
-  | "checkin"
-  | "checkout"
-  | "adults"
-  | "children"
-  | "rooms"
-  | "firstName"
-  | "lastName"
-  | "email"
-  | "phone"
-  | "language"
-  | "price"
-  | "comments"
-  | "notes"
-  | "review"
-  | "done";
+import { RoomFinderCalmMotion } from "@/components/ai/RoomFinderCalmMotion";
+import { RoomCarousel, type RoomOffer } from "@/components/ai/room-finder-carousel";
+import { ROOM_FINDER_COPY } from "@/components/ai/room-finder-copy";
+import { TypingIndicator } from "@/components/ai/room-finder-typing-indicator";
 
 type ChatMessage = {
   id: string;
@@ -76,31 +14,106 @@ type ChatMessage = {
   text: string;
 };
 
-const languageOptions = [
-  ["en", "English"],
-  ["el", "Ελληνικά"],
-  ["de", "Deutsch"],
-  ["fr", "Français"],
-  ["it", "Italiano"],
-  ["es", "Español"],
-  ["tr", "Türkçe"],
-] as const;
+type Draft = {
+  checkin: string;
+  checkout: string;
+  nights: number | null;
+  totalGuests: number | null;
+  adults: number | null;
+  children: number | null;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  language: string;
+  totalPrice: number | null;
+  comments: string;
+  notes: string;
+};
+
+type IntakeFields = {
+  checkin: string | null;
+  checkout: string | null;
+  nights: number | null;
+  totalGuests: number | null;
+  adults: number | null;
+  children: number | null;
+  firstName: string | null;
+  lastName: string | null;
+  email: string | null;
+  phone: string | null;
+  language: string | null;
+  totalPrice: number | null;
+  comments: string | null;
+  notes: string | null;
+};
+
+type IntakeResult = {
+  fields: IntakeFields;
+  clearFields: Array<"email" | "phone" | "comments" | "notes">;
+  sourceSummary: string;
+  clarification: string | null;
+  message?: string;
+};
+
+type BookingResult = {
+  message?: string;
+  bookingId?: string | number;
+  roomLabel?: string;
+  categoryLabel?: string;
+  whatsappUrl?: string;
+};
+
+type Capability = {
+  apiReady: boolean;
+  propertyReady: boolean;
+};
+
+type AwaitingField = "checkin" | "checkout" | "adults" | "children" | "firstName" | "lastName" | "email" | "phone" | "language" | "price" | null;
+type Mode = "collecting" | "rooms" | "review" | "done";
+
+const copy = ROOM_FINDER_COPY.el;
+const EMPTY_DRAFT: Draft = {
+  checkin: "",
+  checkout: "",
+  nights: null,
+  totalGuests: null,
+  adults: null,
+  children: null,
+  firstName: "",
+  lastName: "",
+  email: "",
+  phone: "",
+  language: "",
+  totalPrice: null,
+  comments: "",
+  notes: "",
+};
 
 function makeId() {
   return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 }
 
-function nightsBetween(arrival: string, departure: string) {
-  const start = new Date(`${arrival}T00:00:00Z`).getTime();
-  const end = new Date(`${departure}T00:00:00Z`).getTime();
-  if (!Number.isFinite(start) || !Number.isFinite(end)) return 0;
-  return Math.round((end - start) / 86400000);
+function assistant(text: string): ChatMessage {
+  return { id: makeId(), role: "assistant", text };
+}
+
+function user(text: string): ChatMessage {
+  return { id: makeId(), role: "user", text };
+}
+
+function initialMessages(): ChatMessage[] {
+  return [
+    assistant("Staff Booking Assistant. Γράψε μου τα στοιχεία όπως σε βολεύει: μία απάντηση τη φορά, ολόκληρο copy-paste από email/μήνυμα ή ανέβασε screenshot. Το OpenAI θα εξάγει όσα στοιχεία βρίσκει και θα σε ρωτάω μόνο όσα λείπουν."),
+    assistant("Δεν δημιουργείται καμία κράτηση αυτόματα. Πρώτα θα δεις διαθέσιμα δωμάτια, θα επιλέξεις εσύ και στο τέλος θα πατήσεις «Καταχώρηση στο Beds24». Πες μου τι κράτηση θέλεις να περάσουμε."),
+  ];
 }
 
 function money(value: number) {
   return new Intl.NumberFormat("el-GR", {
     style: "currency",
     currency: "EUR",
+    minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(value);
 }
@@ -116,110 +129,265 @@ function prettyDate(value: string) {
   }).format(new Date(Date.UTC(year, month - 1, day)));
 }
 
-function isEmail(value: string) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+function nightsBetween(checkin: string, checkout: string) {
+  const start = new Date(`${checkin}T00:00:00Z`).getTime();
+  const end = new Date(`${checkout}T00:00:00Z`).getTime();
+  if (!Number.isFinite(start) || !Number.isFinite(end)) return 0;
+  return Math.round((end - start) / 86400000);
 }
 
-function assistant(text: string): ChatMessage {
-  return { id: makeId(), role: "assistant", text };
+function addDays(date: string, days: number) {
+  const [year, month, day] = date.split("-").map(Number);
+  if (!year || !month || !day || !Number.isFinite(days)) return "";
+  const value = new Date(Date.UTC(year, month - 1, day + days));
+  return value.toISOString().slice(0, 10);
 }
 
-function user(text: string): ChatMessage {
-  return { id: makeId(), role: "user", text };
+function normalizeDraft(value: Draft): Draft {
+  const next = { ...value };
+
+  if (next.checkin && next.checkout) {
+    const calculatedNights = nightsBetween(next.checkin, next.checkout);
+    if (calculatedNights > 0) next.nights = calculatedNights;
+  } else if (next.checkin && next.nights && next.nights > 0) {
+    next.checkout = addDays(next.checkin, next.nights);
+  }
+
+  if (next.adults !== null && next.children !== null) {
+    next.totalGuests = next.adults + next.children;
+  } else if (next.totalGuests !== null && next.adults !== null && next.children === null) {
+    const children = next.totalGuests - next.adults;
+    if (children >= 0) next.children = children;
+  } else if (next.totalGuests !== null && next.children !== null && next.adults === null) {
+    const adults = next.totalGuests - next.children;
+    if (adults >= 1) next.adults = adults;
+  }
+
+  return next;
 }
 
-const initialMessages = () => [
-  assistant("Πάμε να καταχωρήσουμε νέα κράτηση στο Beds24. Θα σε ρωτήσω ένα-ένα τα στοιχεία και πριν την τελική καταχώρηση θα σου δείξω πλήρη σύνοψη."),
-  assistant("Ποια είναι η ημερομηνία check-in;"),
-];
+function mergeIntake(current: Draft, result: IntakeResult) {
+  const next = { ...current };
+  const fields = result.fields || ({} as IntakeFields);
+  const assignString = (key: keyof Pick<Draft, "checkin" | "checkout" | "firstName" | "lastName" | "email" | "phone" | "language" | "comments" | "notes">, value: string | null) => {
+    if (value !== null && typeof value !== "undefined") next[key] = String(value).trim();
+  };
+  const assignNumber = (key: keyof Pick<Draft, "nights" | "totalGuests" | "adults" | "children" | "totalPrice">, value: number | null) => {
+    if (value !== null && typeof value !== "undefined" && Number.isFinite(Number(value))) next[key] = Number(value);
+  };
+
+  assignString("checkin", fields.checkin);
+  assignString("checkout", fields.checkout);
+  assignNumber("nights", fields.nights);
+  assignNumber("totalGuests", fields.totalGuests);
+  assignNumber("adults", fields.adults);
+  assignNumber("children", fields.children);
+  assignString("firstName", fields.firstName);
+  assignString("lastName", fields.lastName);
+  assignString("email", fields.email);
+  assignString("phone", fields.phone);
+  assignString("language", fields.language);
+  assignNumber("totalPrice", fields.totalPrice);
+  assignString("comments", fields.comments);
+  assignString("notes", fields.notes);
+
+  for (const field of result.clearFields || []) {
+    if (field === "email" || field === "phone" || field === "comments" || field === "notes") next[field] = "";
+  }
+
+  return normalizeDraft(next);
+}
+
+function coreChanged(before: Draft, after: Draft) {
+  return before.checkin !== after.checkin
+    || before.checkout !== after.checkout
+    || before.adults !== after.adults
+    || before.children !== after.children;
+}
+
+function nextMissing(draft: Draft, hasRoom: boolean, emailSkipped: boolean, phoneSkipped: boolean): AwaitingField {
+  if (!draft.checkin) return "checkin";
+  if (!draft.checkout) return "checkout";
+  if (draft.adults === null) return "adults";
+  if (draft.children === null) return "children";
+  if (!hasRoom) return null;
+  if (!draft.firstName) return "firstName";
+  if (!draft.lastName) return "lastName";
+  if (!draft.email && !emailSkipped) return "email";
+  if (!draft.phone && !phoneSkipped) return "phone";
+  if (!draft.language) return "language";
+  if (draft.totalPrice === null) return "price";
+  return null;
+}
+
+function questionFor(field: AwaitingField) {
+  const questions: Record<Exclude<AwaitingField, null>, string> = {
+    checkin: "Ποια είναι η ημερομηνία check-in;",
+    checkout: "Ποια είναι η ημερομηνία check-out;",
+    adults: "Πόσοι ενήλικες είναι στην κράτηση;",
+    children: "Πόσα παιδιά είναι στην κράτηση; Αν δεν υπάρχουν, γράψε 0.",
+    firstName: "Ποιο είναι το όνομα του πελάτη;",
+    lastName: "Ποιο είναι το επώνυμο του πελάτη;",
+    email: "Ποιο είναι το email του πελάτη; Αν δεν υπάρχει, πάτησε Παράλειψη.",
+    phone: "Ποιο είναι το τηλέφωνο/κινητό του πελάτη; Αν δεν υπάρχει, πάτησε Παράλειψη.",
+    language: "Σε ποια γλώσσα είναι ο πελάτης; Μπορείς να γράψεις π.χ. English, Ελληνικά ή Türkçe.",
+    price: "Ποια συνολική τιμή θέλεις να καταχωρηθεί στο Beds24;",
+  };
+  return field ? questions[field] : "";
+}
+
+function displayUserText(value: string) {
+  const trimmed = value.trim();
+  if (trimmed.length <= 1800) return trimmed;
+  return `${trimmed.slice(0, 1800)}\n… [το υπόλοιπο κείμενο αναλύθηκε κανονικά]`;
+}
+
+function StaffMessage({ message }: { message: ChatMessage }) {
+  return (
+    <div className={`msg flex items-end gap-2 ${message.role === "user" ? "justify-end" : "justify-start"}`}>
+      {message.role === "assistant" && (
+        <div className="relative mb-1 h-8 w-8 shrink-0 overflow-hidden rounded-full ring-1 ring-[#d7cdc0]">
+          <Image src="/images/welcome/voulamandis-welcome-hero.webp" alt="" fill sizes="32px" className="object-cover" />
+        </div>
+      )}
+      <div className="max-w-[84%]">
+        <div className={`whitespace-pre-line px-4 py-3 text-[15px] leading-6 shadow-sm ${message.role === "user"
+          ? "rounded-[20px] rounded-br-[6px] bg-[#6b604f] text-white"
+          : "rounded-[20px] rounded-bl-[6px] border border-[#dfd6ca] bg-white"
+        }`}>
+          {message.text}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function BookerApp() {
-  const [config, setConfig] = useState<BookerConfig | null>(null);
-  const [loadingConfig, setLoadingConfig] = useState(true);
+  const [draft, setDraft] = useState<Draft>(EMPTY_DRAFT);
+  const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
+  const [mode, setMode] = useState<Mode>("collecting");
+  const [awaiting, setAwaiting] = useState<AwaitingField>(null);
+  const [offers, setOffers] = useState<RoomOffer[]>([]);
+  const [selectedOffer, setSelectedOffer] = useState<RoomOffer | null>(null);
+  const [detail, setDetail] = useState<RoomOffer | null>(null);
+  const [composer, setComposer] = useState("");
+  const [interpreting, setInterpreting] = useState(false);
   const [searching, setSearching] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [step, setStep] = useState<Step>("checkin");
-  const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
-  const [composer, setComposer] = useState("");
-  const [offers, setOffers] = useState<StaffOffer[]>([]);
-  const [selectedOffer, setSelectedOffer] = useState<StaffOffer | null>(null);
+  const [emailSkipped, setEmailSkipped] = useState(false);
+  const [phoneSkipped, setPhoneSkipped] = useState(false);
+  const [capability, setCapability] = useState<Capability | null>(null);
   const [result, setResult] = useState<BookingResult | null>(null);
+  const shellRef = useRef<HTMLElement>(null);
+  const feedRef = useRef<HTMLDivElement>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const composerRef = useRef<HTMLTextAreaElement>(null);
 
-  const [arrival, setArrival] = useState("");
-  const [departure, setDeparture] = useState("");
-  const [adults, setAdults] = useState(2);
-  const [children, setChildren] = useState(0);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [mobile, setMobile] = useState("");
-  const [language, setLanguage] = useState("en");
-  const [price, setPrice] = useState(0);
-  const [comments, setComments] = useState("");
-  const [notes, setNotes] = useState("");
-  const endRef = useRef<HTMLDivElement | null>(null);
-
-  const nights = useMemo(() => nightsBetween(arrival, departure), [arrival, departure]);
-  const totalGuests = adults + children;
-  const apiReady = Boolean(config?.hasPropertyId && (config?.hasRefreshToken || config?.hasInviteCode));
-
-  useEffect(() => {
-    async function loadConfig() {
-      setLoadingConfig(true);
-      const response = await fetch("/api/staff/booker/", {
-        cache: "no-store",
-        credentials: "same-origin",
-      });
-
-      if (response.ok) {
-        setConfig((await response.json()) as BookerConfig);
-      } else {
-        setMessages((current) => [...current, assistant("Δεν μπόρεσα να φορτώσω τη σύνδεση με το Beds24. Κάνε refresh πριν προχωρήσεις σε πραγματική κράτηση.")]);
-      }
-      setLoadingConfig(false);
-    }
-
-    void loadConfig();
-  }, []);
-
-  useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-  }, [messages, step, offers, saving, searching]);
+  const nights = useMemo(() => draft.checkin && draft.checkout ? nightsBetween(draft.checkin, draft.checkout) : 0, [draft.checkin, draft.checkout]);
+  const totalGuests = (draft.adults ?? 0) + (draft.children ?? 0);
+  const bookingReady = Boolean(
+    selectedOffer
+      && draft.checkin
+      && draft.checkout
+      && draft.adults !== null
+      && draft.children !== null
+      && draft.firstName
+      && draft.lastName
+      && (draft.email || emailSkipped)
+      && (draft.phone || phoneSkipped)
+      && draft.language
+      && draft.totalPrice !== null
+      && capability?.apiReady
+      && capability?.propertyReady,
+  );
 
   function push(...items: ChatMessage[]) {
     setMessages((current) => [...current, ...items]);
   }
 
+  useEffect(() => {
+    void fetch("/api/staff/booker/create/", { cache: "no-store", credentials: "same-origin" })
+      .then(async (response) => {
+        if (!response.ok) throw new Error("capability");
+        return response.json() as Promise<Capability>;
+      })
+      .then(setCapability)
+      .catch(() => setCapability({ apiReady: false, propertyReady: false }));
+  }, []);
+
+  useEffect(() => {
+    const shell = shellRef.current;
+    if (!shell) return;
+    const visualViewport = window.visualViewport;
+    let frame: number | null = null;
+    const sync = () => {
+      frame = null;
+      const viewport = window.visualViewport;
+      const visibleHeight = Math.max(320, Math.round(viewport?.height ?? window.innerHeight));
+      const offsetTop = Math.max(0, Math.round(viewport?.offsetTop ?? 0));
+      const layoutHeight = Math.max(window.innerHeight, document.documentElement.clientHeight);
+      shell.style.setProperty("--rf-visual-height", `${visibleHeight}px`);
+      shell.style.setProperty("--rf-visual-offset-top", `${offsetTop}px`);
+      shell.dataset.keyboardOpen = viewport && layoutHeight - viewport.height > 120 ? "true" : "false";
+    };
+    const schedule = () => {
+      if (frame !== null) cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(sync);
+    };
+    sync();
+    visualViewport?.addEventListener("resize", schedule);
+    visualViewport?.addEventListener("scroll", schedule);
+    window.addEventListener("resize", schedule);
+    return () => {
+      if (frame !== null) cancelAnimationFrame(frame);
+      visualViewport?.removeEventListener("resize", schedule);
+      visualViewport?.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (mode === "rooms" && offers.length) {
+      const frame = requestAnimationFrame(() => resultsRef.current?.scrollIntoView({ block: "start", behavior: "smooth" }));
+      return () => cancelAnimationFrame(frame);
+    }
+    const frame = requestAnimationFrame(() => feedRef.current?.scrollTo({ top: feedRef.current.scrollHeight, behavior: "smooth" }));
+    return () => cancelAnimationFrame(frame);
+  }, [messages, mode, offers.length, interpreting, searching, saving]);
+
   function resetChat() {
-    setStep("checkin");
+    setDraft(EMPTY_DRAFT);
     setMessages(initialMessages());
-    setComposer("");
+    setMode("collecting");
+    setAwaiting(null);
     setOffers([]);
     setSelectedOffer(null);
+    setDetail(null);
+    setComposer("");
+    setEmailSkipped(false);
+    setPhoneSkipped(false);
     setResult(null);
-    setArrival("");
-    setDeparture("");
-    setAdults(2);
-    setChildren(0);
-    setFirstName("");
-    setLastName("");
-    setEmail("");
-    setMobile("");
-    setLanguage("en");
-    setPrice(0);
-    setComments("");
-    setNotes("");
   }
 
-  async function findRooms(nextAdults: number, nextChildren: number) {
-    const guests = nextAdults + nextChildren;
+  async function findRooms(nextDraft: Draft) {
+    if (!nextDraft.checkin || !nextDraft.checkout || nextDraft.adults === null || nextDraft.children === null) return;
+    const guests = nextDraft.adults + nextDraft.children;
+    if (guests < 1 || guests > 5) {
+      push(assistant("Η συγκεκριμένη καταχώρηση υποστηρίζει ένα δωμάτιο με έως 5 άτομα. Διόρθωσε τον αριθμό ενηλίκων/παιδιών μέσα στο chat."));
+      setMode("collecting");
+      return;
+    }
+
     setSearching(true);
+    setMode("collecting");
     setOffers([]);
-    push(assistant("Ελέγχω τώρα τη διαθεσιμότητα και τις τιμές στο Booking Core…"));
+    setSelectedOffer(null);
+    push(assistant("Ελέγχω τώρα τη live διαθεσιμότητα και τις τιμές στο Booking Core…"));
 
     const query = new URLSearchParams({
-      checkin: arrival,
-      checkout: departure,
+      checkin: nextDraft.checkin,
+      checkout: nextDraft.checkout,
       guests: String(guests),
       lang: "el",
       allowSplit: "0",
@@ -229,444 +397,424 @@ export default function BookerApp() {
       cache: "no-store",
       credentials: "same-origin",
     });
-    const data = (await response.json().catch(() => null)) as AvailabilityResponse | null;
+    const data = await response.json().catch(() => null);
     setSearching(false);
 
     if (!response.ok || !data?.success) {
-      push(assistant(data?.message || "Δεν μπόρεσα να ελέγξω τη διαθεσιμότητα. Ξεκίνα ξανά και δοκίμασε σε λίγο."));
-      setStep("done");
+      push(assistant(data?.message || "Δεν μπόρεσα να ελέγξω τη διαθεσιμότητα."));
       return;
     }
 
-    const nextOffers = data.offers || [];
+    const nextOffers = (data.offers || []) as RoomOffer[];
+    if (!nextOffers.length) {
+      push(assistant("Δεν βρήκα διαθέσιμο δωμάτιο για όλη τη διαμονή. Γράψε άλλες ημερομηνίες και θα ξαναελέγξω."));
+      setOffers([]);
+      setMode("collecting");
+      return;
+    }
+
     setOffers(nextOffers);
+    setMode("rooms");
+    setAwaiting(null);
+    push(assistant(`Βρήκα ${nextOffers.length} διαθέσιμες επιλογές. Επίλεξε εσύ το δωμάτιο που θέλεις να καταχωρήσουμε.`));
+  }
 
-    if (nextOffers.length === 0) {
-      push(assistant("Δεν υπάρχει ένα διαθέσιμο δωμάτιο για όλη τη διαμονή. Δεν θα δημιουργήσω κράτηση."));
-      setStep("done");
+  async function advance(nextDraft: Draft, changedCore: boolean, nextEmailSkipped: boolean, nextPhoneSkipped: boolean) {
+    if (nextDraft.checkin && nextDraft.checkout && nextDraft.checkout <= nextDraft.checkin) {
+      setAwaiting("checkout");
+      setMode("collecting");
+      push(assistant("Το check-out πρέπει να είναι μετά το check-in. Ποια είναι η σωστή ημερομηνία check-out;"));
       return;
     }
 
-    push(assistant(`Βρήκα ${nextOffers.length} διαθέσιμες επιλογές. Επίλεξε το δωμάτιο που θέλεις να καταχωρήσουμε.`));
-    setStep("rooms");
+    const missingCore = nextMissing(nextDraft, false, nextEmailSkipped, nextPhoneSkipped);
+    if (missingCore && ["checkin", "checkout", "adults", "children"].includes(missingCore)) {
+      setAwaiting(missingCore);
+      setMode("collecting");
+      push(assistant(questionFor(missingCore)));
+      return;
+    }
+
+    if (changedCore) {
+      setSelectedOffer(null);
+      setOffers([]);
+      await findRooms(nextDraft);
+      return;
+    }
+
+    if (!selectedOffer) {
+      if (offers.length) {
+        setMode("rooms");
+        push(assistant("Τα διαθέσιμα δωμάτια είναι παραπάνω. Επίλεξε ποιο θέλεις να κρατήσουμε."));
+        return;
+      }
+      await findRooms(nextDraft);
+      return;
+    }
+
+    const missing = nextMissing(nextDraft, true, nextEmailSkipped, nextPhoneSkipped);
+    if (missing) {
+      setAwaiting(missing);
+      setMode("collecting");
+      push(assistant(questionFor(missing)));
+      return;
+    }
+
+    setAwaiting(null);
+    setMode("review");
+    push(assistant("Έχω όλα τα στοιχεία. Έλεγξε την τελική σύνοψη. Αν θέλεις αλλαγή, γράψ' την κανονικά στο chat. Αν είναι σωστά, πάτησε «Καταχώρηση στο Beds24»."));
   }
 
-  function chooseOffer(offer: StaffOffer) {
-    setSelectedOffer(offer);
-    setPrice(offer.directTotal);
-    push(
-      user(`${offer.name} · ${money(offer.directTotal)}`),
-      assistant("Ποιο είναι το όνομα του πελάτη;"),
-    );
-    setStep("firstName");
+  async function submitIntake(message: string, image?: File) {
+    if (interpreting || searching || saving) return;
+    const text = message.trim();
+    if (!text && !image) return;
+
+    if (image) {
+      push(user(`📎 Screenshot: ${image.name}`));
+    } else {
+      push(user(displayUserText(text)));
+    }
+
     setComposer("");
+    setInterpreting(true);
+    const form = new FormData();
+    form.set("message", text);
+    form.set("context", JSON.stringify({
+      ...draft,
+      currentQuestion: awaiting,
+      selectedRoomNumber: selectedOffer?.roomNumber ?? null,
+      emailSkipped,
+      phoneSkipped,
+    }));
+    if (image) form.set("image", image);
+
+    const response = await fetch("/api/staff/booker/interpret/", {
+      method: "POST",
+      credentials: "same-origin",
+      body: form,
+    });
+    const data = (await response.json().catch(() => null)) as IntakeResult | null;
+    setInterpreting(false);
+
+    if (!response.ok || !data?.fields) {
+      push(assistant(data?.message || "Δεν μπόρεσα να αναλύσω αυτό το μήνυμα. Δοκίμασε ξανά."));
+      return;
+    }
+
+    const nextDraft = mergeIntake(draft, data);
+    const changed = coreChanged(draft, nextDraft);
+    const nextEmailSkipped = data.clearFields?.includes("email") ? true : (nextDraft.email ? false : emailSkipped);
+    const nextPhoneSkipped = data.clearFields?.includes("phone") ? true : (nextDraft.phone ? false : phoneSkipped);
+
+    setDraft(nextDraft);
+    setEmailSkipped(nextEmailSkipped);
+    setPhoneSkipped(nextPhoneSkipped);
+    setResult(null);
+
+    if (data.sourceSummary?.trim()) push(assistant(`Κατάλαβα: ${data.sourceSummary.trim()}`));
+    if (data.clarification) {
+      push(assistant(data.clarification));
+      return;
+    }
+
+    await advance(nextDraft, changed, nextEmailSkipped, nextPhoneSkipped);
   }
 
-  function chooseLanguage(value: string, label: string) {
-    setLanguage(value);
-    push(
-      user(label),
-      assistant(`Η προτεινόμενη συνολική τιμή από το Room Finder είναι ${money(selectedOffer?.directTotal || 0)}. Ποια τελική συνολική τιμή θέλεις να περάσω στο Beds24;`),
-    );
-    setStep("price");
-    setComposer(selectedOffer ? String(selectedOffer.directTotal) : "");
+  function chooseOffer(offer: RoomOffer) {
+    setSelectedOffer(offer);
+    setOffers([]);
+    const nextDraft = draft.totalPrice === null ? { ...draft, totalPrice: offer.directTotal } : draft;
+    setDraft(nextDraft);
+    push(user(`${offer.name} · ${money(offer.directTotal)}`));
+
+    const missing = nextMissing(nextDraft, true, emailSkipped, phoneSkipped);
+    if (missing) {
+      setAwaiting(missing);
+      setMode("collecting");
+      push(assistant(questionFor(missing)));
+    } else {
+      setAwaiting(null);
+      setMode("review");
+      push(assistant("Η κράτηση είναι συμπληρωμένη. Έλεγξε τη σύνοψη και πάτησε «Καταχώρηση στο Beds24». Μπορείς ακόμη να γράψεις οποιαδήποτε διόρθωση στο chat."));
+    }
+  }
+
+  function skipOptional(field: "email" | "phone") {
+    if (field === "email") {
+      setEmailSkipped(true);
+      push(user("Παράλειψη email"));
+      const missing = nextMissing(draft, Boolean(selectedOffer), true, phoneSkipped);
+      if (missing) {
+        setAwaiting(missing);
+        push(assistant(questionFor(missing)));
+      } else {
+        setAwaiting(null);
+        setMode("review");
+        push(assistant("Έχω όλα τα στοιχεία. Έλεγξε τη σύνοψη πριν την καταχώρηση."));
+      }
+      return;
+    }
+
+    setPhoneSkipped(true);
+    push(user("Παράλειψη τηλεφώνου"));
+    const missing = nextMissing(draft, Boolean(selectedOffer), emailSkipped, true);
+    if (missing) {
+      setAwaiting(missing);
+      push(assistant(questionFor(missing)));
+    } else {
+      setAwaiting(null);
+      setMode("review");
+      push(assistant("Έχω όλα τα στοιχεία. Έλεγξε τη σύνοψη πριν την καταχώρηση."));
+    }
   }
 
   function useSuggestedPrice() {
     if (!selectedOffer) return;
-    setPrice(selectedOffer.directTotal);
-    push(
-      user(money(selectedOffer.directTotal)),
-      assistant("Υπάρχει κάποιο μήνυμα/σχόλιο του πελάτη; Αν όχι, πάτησε Παράλειψη."),
-    );
-    setStep("comments");
-    setComposer("");
-  }
-
-  function skipOptional() {
-    if (step === "email") {
-      setEmail("");
-      push(user("Χωρίς email"), assistant("Ποιο είναι το κινητό/τηλέφωνο του πελάτη; Αν δεν υπάρχει, πάτησε Παράλειψη."));
-      setStep("phone");
-    } else if (step === "phone") {
-      setMobile("");
-      push(user("Χωρίς τηλέφωνο"), assistant("Σε ποια γλώσσα θέλεις να αποθηκευτεί η κράτηση;"));
-      setStep("language");
-    } else if (step === "comments") {
-      setComments("");
-      push(user("Χωρίς σχόλιο πελάτη"), assistant("Θέλεις κάποια εσωτερική σημείωση για το staff; Αν όχι, πάτησε Παράλειψη."));
-      setStep("notes");
-    } else if (step === "notes") {
-      setNotes("");
-      push(user("Χωρίς εσωτερική σημείωση"), assistant("Έχω όλα τα στοιχεία. Έλεγξε τη σύνοψη και μόνο αν είναι σωστά πάτησε «Καταχώρηση στο Beds24»."));
-      setStep("review");
-    }
-    setComposer("");
-  }
-
-  function composerType() {
-    if (step === "checkin" || step === "checkout") return "date";
-    if (step === "adults" || step === "children" || step === "price") return "number";
-    if (step === "email") return "email";
-    if (step === "phone") return "tel";
-    return "text";
-  }
-
-  function placeholder() {
-    const values: Partial<Record<Step, string>> = {
-      checkin: "Check-in",
-      checkout: "Check-out",
-      adults: "Αριθμός ενηλίκων",
-      children: "Αριθμός παιδιών",
-      firstName: "Όνομα",
-      lastName: "Επώνυμο",
-      email: "Email πελάτη",
-      phone: "Τηλέφωνο / κινητό",
-      price: "Συνολική τιμή €",
-      comments: "Μήνυμα πελάτη",
-      notes: "Εσωτερική σημείωση",
-    };
-    return values[step] || "Απάντηση";
-  }
-
-  async function handleComposerSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const value = composer.trim();
-
-    if (step === "checkin") {
-      if (!value) return;
-      setArrival(value);
-      push(user(prettyDate(value)), assistant("Ποια είναι η ημερομηνία check-out;"));
-      setStep("checkout");
-      setComposer("");
-      return;
-    }
-
-    if (step === "checkout") {
-      if (!value || value <= arrival) {
-        push(assistant("Το check-out πρέπει να είναι μετά το check-in. Δώσε ξανά ημερομηνία."));
-        return;
-      }
-      setDeparture(value);
-      push(user(prettyDate(value)), assistant("Πόσοι ενήλικες θα μείνουν;"));
-      setStep("adults");
-      setComposer("2");
-      return;
-    }
-
-    if (step === "adults") {
-      const parsed = Number.parseInt(value, 10);
-      if (!Number.isInteger(parsed) || parsed < 1 || parsed > 5) {
-        push(assistant("Βάλε αριθμό ενηλίκων από 1 έως 5."));
-        return;
-      }
-      setAdults(parsed);
-      push(user(`${parsed} ${parsed === 1 ? "ενήλικας" : "ενήλικες"}`), assistant("Πόσα παιδιά; Αν δεν υπάρχουν, γράψε 0."));
-      setStep("children");
-      setComposer("0");
-      return;
-    }
-
-    if (step === "children") {
-      const parsed = Number.parseInt(value, 10);
-      if (!Number.isInteger(parsed) || parsed < 0 || parsed > 4 || adults + parsed > 5) {
-        push(assistant("Ο συνολικός αριθμός επισκεπτών πρέπει να είναι έως 5. Δώσε ξανά τον αριθμό παιδιών."));
-        return;
-      }
-      setChildren(parsed);
-      push(user(`${parsed} ${parsed === 1 ? "παιδί" : "παιδιά"}`));
-      setComposer("");
-      await findRooms(adults, parsed);
-      return;
-    }
-
-    if (step === "firstName") {
-      if (!value) return;
-      setFirstName(value);
-      push(user(value), assistant("Ποιο είναι το επώνυμο του πελάτη;"));
-      setStep("lastName");
-      setComposer("");
-      return;
-    }
-
-    if (step === "lastName") {
-      if (!value) return;
-      setLastName(value);
-      push(user(value), assistant("Ποιο είναι το email του πελάτη; Αν δεν υπάρχει, πάτησε Παράλειψη."));
-      setStep("email");
-      setComposer("");
-      return;
-    }
-
-    if (step === "email") {
-      if (!isEmail(value)) {
-        push(assistant("Το email δεν φαίνεται έγκυρο. Δώσε ξανά email ή πάτησε Παράλειψη."));
-        return;
-      }
-      setEmail(value);
-      push(user(value), assistant("Ποιο είναι το κινητό/τηλέφωνο του πελάτη; Αν δεν υπάρχει, πάτησε Παράλειψη."));
-      setStep("phone");
-      setComposer("");
-      return;
-    }
-
-    if (step === "phone") {
-      if (!value) return;
-      setMobile(value);
-      push(user(value), assistant("Σε ποια γλώσσα θέλεις να αποθηκευτεί η κράτηση;"));
-      setStep("language");
-      setComposer("");
-      return;
-    }
-
-    if (step === "price") {
-      const parsed = Number(value.replace(",", "."));
-      if (!Number.isFinite(parsed) || parsed < 0) {
-        push(assistant("Δώσε έγκυρη συνολική τιμή."));
-        return;
-      }
-      setPrice(parsed);
-      push(user(money(parsed)), assistant("Υπάρχει κάποιο μήνυμα/σχόλιο του πελάτη; Αν όχι, πάτησε Παράλειψη."));
-      setStep("comments");
-      setComposer("");
-      return;
-    }
-
-    if (step === "comments") {
-      if (!value) return;
-      setComments(value);
-      push(user(value), assistant("Θέλεις κάποια εσωτερική σημείωση για το staff; Αν όχι, πάτησε Παράλειψη."));
-      setStep("notes");
-      setComposer("");
-      return;
-    }
-
-    if (step === "notes") {
-      if (!value) return;
-      setNotes(value);
-      push(user(value), assistant("Έχω όλα τα στοιχεία. Έλεγξε τη σύνοψη και μόνο αν είναι σωστά πάτησε «Καταχώρηση στο Beds24»."));
-      setStep("review");
-      setComposer("");
-    }
+    const nextDraft = { ...draft, totalPrice: selectedOffer.directTotal };
+    setDraft(nextDraft);
+    push(user(money(selectedOffer.directTotal)));
+    setAwaiting(null);
+    setMode("review");
+    push(assistant("Χρησιμοποίησα την προτεινόμενη συνολική τιμή. Έλεγξε τη σύνοψη πριν την καταχώρηση."));
   }
 
   async function createBooking() {
-    if (!selectedOffer || saving || !apiReady) return;
-
+    if (!bookingReady || !selectedOffer || saving) return;
     setSaving(true);
-    push(user("Καταχώρηση στο Beds24"), assistant("Κάνω έναν τελευταίο server-side έλεγχο διαθεσιμότητας και δημιουργώ την κράτηση…"));
+    push(assistant("Κάνω έναν τελευταίο server-side έλεγχο διαθεσιμότητας και καταχωρώ την κράτηση στο Beds24…"));
 
-    const response = await fetch("/api/staff/booker/", {
+    const response = await fetch("/api/staff/booker/create/", {
       method: "POST",
       credentials: "same-origin",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         roomId: Number(selectedOffer.roomId),
         unitId: Number(selectedOffer.unitId),
-        arrival,
-        departure,
-        title: "Mr",
-        firstName,
-        lastName,
-        email,
-        mobile,
-        phone: "",
-        language,
-        adults,
-        children,
-        price,
-        comments,
-        notes,
-        referrer: "Staff Direct",
+        arrival: draft.checkin,
+        departure: draft.checkout,
+        firstName: draft.firstName,
+        lastName: draft.lastName,
+        email: draft.email,
+        phone: draft.phone,
+        language: draft.language,
+        adults: draft.adults,
+        children: draft.children,
+        price: draft.totalPrice,
+        comments: draft.comments,
+        notes: draft.notes,
       }),
     });
-
     const data = (await response.json().catch(() => null)) as BookingResult | null;
     setSaving(false);
 
     if (!response.ok || !data?.bookingId) {
-      push(assistant(data?.message || "Η κράτηση δεν δημιουργήθηκε. Δεν έγινε επιτυχής καταχώρηση στο Beds24."));
-      setStep("done");
+      push(assistant(data?.message || "Η κράτηση δεν δημιουργήθηκε. Δεν έγινε καμία δεύτερη προσπάθεια αυτόματα."));
       return;
     }
 
     setResult(data);
-    push(assistant(`Η κράτηση δημιουργήθηκε επιτυχώς στο Beds24. Booking ID: ${data.bookingId}`));
-    setStep("done");
+    setMode("done");
+    push(assistant(`✓ Η κράτηση δημιουργήθηκε στο Beds24. Booking ID: ${data.bookingId}.`));
   }
 
-  const canCompose = !searching && !saving && !["rooms", "language", "review", "done"].includes(step);
-  const optionalStep = ["email", "phone", "comments", "notes"].includes(step);
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    void submitIntake(composer);
+  }
+
+  function handleImage(file?: File | null) {
+    if (!file) return;
+    void submitIntake("", file);
+    if (fileRef.current) fileRef.current.value = "";
+  }
+
+  const summary = [
+    draft.checkin && draft.checkout ? `${prettyDate(draft.checkin)} → ${prettyDate(draft.checkout)}` : "",
+    draft.adults !== null && draft.children !== null ? `${draft.adults + draft.children} άτομα` : "",
+    selectedOffer?.name || "",
+  ].filter(Boolean).join(" · ");
+
+  const busy = interpreting || searching || saving;
+  const placeholder = mode === "review"
+    ? "Γράψε οποιαδήποτε διόρθωση…"
+    : awaiting
+      ? questionFor(awaiting)
+      : "Γράψε ή κάνε paste στοιχεία κράτησης…";
 
   return (
-    <main className="min-h-screen bg-[#f3eee7] px-3 py-4 text-[#352f29] md:px-6 md:py-6">
-      <div className="mx-auto max-w-4xl">
-        <header className="mb-4 flex items-center justify-between gap-3 rounded-[22px] border border-[#ded5ca] bg-white px-4 py-3 shadow-sm md:px-5">
-          <div className="min-w-0">
-            <Link href="/staff" className="text-xs font-bold text-[#7c6a56] hover:underline">← Staff Area</Link>
-            <h1 className="mt-1 truncate text-xl font-black md:text-2xl">Staff Booking Assistant</h1>
-            <p className="text-xs text-[#746b60]">Booking Core → επιλογή δωματίου → Beds24</p>
+    <main
+      ref={shellRef}
+      data-room-finder-shell="true"
+      data-keyboard-open="false"
+      className="fixed inset-x-0 top-0 flex min-h-0 w-full flex-col overflow-hidden bg-[#f6f2eb] text-[#29251f]"
+      style={{ height: "var(--rf-visual-height, 100dvh)", top: "var(--rf-visual-offset-top, 0px)" }}
+    >
+      <RoomFinderCalmMotion />
+      <style jsx global>{`
+        :root { --mandarin: #c66a34; }
+        .typing-dot { display:block; width:6px; height:6px; border-radius:9999px; background:#746b60; }
+        [data-room-finder-shell="true"] { overscroll-behavior:none; }
+        .room-finder-composer { padding:.75rem; padding-bottom:max(.75rem, env(safe-area-inset-bottom)); }
+        [data-room-finder-shell="true"][data-keyboard-open="true"] .room-finder-composer { padding-bottom:.75rem; }
+        .hide-scroll { scrollbar-width:none; }
+        .hide-scroll::-webkit-scrollbar { display:none; }
+      `}</style>
+
+      <header className="shrink-0 border-b border-[#ddd4c8] bg-[#fbf8f3]/95 pt-[env(safe-area-inset-top)]">
+        <div className="mx-auto flex h-[64px] max-w-3xl items-center gap-1.5 px-2.5">
+          <Link href="/staff" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-[26px] font-semibold text-[#625b52] hover:bg-white/70" aria-label="Staff Area">←</Link>
+          <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full ring-2 ring-white">
+            <Image src="/images/welcome/voulamandis-welcome-hero.webp" alt="Voulamandis House" fill sizes="40px" className="object-cover" />
           </div>
-          <div className="flex shrink-0 items-center gap-2">
-            <span className={`hidden rounded-full px-3 py-1.5 text-[11px] font-black sm:inline-flex ${apiReady ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200" : "bg-red-50 text-red-700 ring-1 ring-red-200"}`}>
-              {loadingConfig ? "Έλεγχος API…" : apiReady ? "Beds24 ready" : "Beds24 unavailable"}
-            </span>
-            <button type="button" onClick={resetChat} className="rounded-xl border border-[#ded5ca] bg-[#faf7f2] px-3 py-2 text-xs font-black text-[#5f5347] hover:bg-[#f3ede5]">
-              Νέα κράτηση
-            </button>
+          <div className="min-w-0 flex-1 pl-1">
+            <h1 className="truncate text-[15px] font-bold leading-tight">Staff Booking Assistant</h1>
+            <div className="mt-0.5 flex items-center gap-1.5 text-[11px] text-[#746b60]">
+              <span className={`h-2 w-2 rounded-full ${capability?.apiReady && capability?.propertyReady ? "bg-[#718b52]" : "bg-amber-500"}`} />
+              OpenAI · Booking Core · Beds24
+            </div>
           </div>
-        </header>
+          <button type="button" onClick={resetChat} disabled={busy} aria-label="Νέα κράτηση" className="flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-full border border-[#d8cec1] bg-white text-[30px] font-black leading-none text-[#5f574d] shadow-sm disabled:opacity-50">↻</button>
+        </div>
+      </header>
 
-        <section className="flex min-h-[76vh] flex-col overflow-hidden rounded-[26px] border border-[#d9d0c4] bg-[#faf8f4] shadow-[0_18px_50px_rgba(71,59,45,0.10)]">
-          <div className="border-b border-[#e4ddd4] bg-white px-4 py-3 text-xs font-semibold text-[#70665c] md:px-5">
-            Η κράτηση γράφεται στο Beds24 μόνο μετά την τελική επιβεβαίωση.
+      {summary && (
+        <div className="shrink-0 border-b border-[#e5ddd2] bg-[#f9f5ef] px-3 py-2">
+          <div className="mx-auto max-w-3xl">
+            <div className="relative flex h-8 min-w-0 items-center rounded-full border border-dashed border-[#d8cec1] bg-white px-4 text-xs font-semibold text-[#625b52] shadow-[0_6px_16px_rgba(70,55,35,.06)]">
+              <span className="truncate">{summary}</span>
+            </div>
           </div>
+        </div>
+      )}
 
-          <div className="flex-1 space-y-4 overflow-y-auto px-3 py-5 md:px-5">
-            {messages.map((message) => (
-              <div key={message.id} className={`flex items-end gap-2 ${message.role === "user" ? "justify-end" : "justify-start"}`}>
-                {message.role === "assistant" ? (
-                  <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-[#d7cdc0] bg-[#efe7dc] text-[11px] font-black text-[#6b5c4d]">VH</div>
-                ) : null}
-                <div className={`max-w-[84%] whitespace-pre-line px-4 py-3 text-[15px] leading-6 shadow-sm ${message.role === "user" ? "rounded-[20px] rounded-br-[6px] bg-[#6b604f] text-white" : "rounded-[20px] rounded-bl-[6px] border border-[#dfd6ca] bg-white"}`}>
-                  {message.text}
-                </div>
-              </div>
-            ))}
+      <div ref={feedRef} role="log" aria-live="polite" aria-busy={busy} className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
+        <div className="mx-auto flex min-h-full max-w-3xl flex-col px-3 pb-7 pt-5">
+          <div className="space-y-3.5">
+            {messages.map((message) => <StaffMessage key={message.id} message={message} />)}
+            {(interpreting || searching || saving) && <TypingIndicator />}
 
-            {searching ? (
-              <div className="ml-10 inline-flex h-10 items-center gap-1 rounded-[18px] rounded-bl-[6px] border border-[#dfd6ca] bg-white px-4 shadow-sm" aria-label="Searching">
-                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#9a8f82]" />
-                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#9a8f82] [animation-delay:150ms]" />
-                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#9a8f82] [animation-delay:300ms]" />
-              </div>
-            ) : null}
-
-            {step === "rooms" && offers.length > 0 ? (
-              <div className="ml-0 grid gap-3 md:ml-10 md:grid-cols-2">
-                {offers.map((offer) => (
-                  <button
-                    type="button"
-                    key={`${offer.roomId}:${offer.unitId}`}
-                    onClick={() => chooseOffer(offer)}
-                    className="overflow-hidden rounded-[20px] border border-[#ded5ca] bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:border-[#bca98f] hover:shadow-md"
-                  >
-                    {offer.image ? (
-                      <div className="h-28 overflow-hidden bg-[#eee7de]">
-                        <img src={offer.image} alt="" className="h-full w-full object-cover" />
-                      </div>
-                    ) : null}
-                    <div className="p-4">
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <p className="font-black text-[#3f382f]">{offer.name}</p>
-                          <p className="mt-1 text-xs font-semibold text-[#817568]">{offer.category} · {offer.floor}</p>
-                        </div>
-                        <span className="rounded-full bg-[#f2eadf] px-2.5 py-1 text-xs font-black text-[#6a5c4c]">έως {offer.maxGuests}</span>
-                      </div>
-                      <div className="mt-4 flex items-end justify-between gap-3">
-                        <div>
-                          {offer.originalTotal > offer.directTotal ? <p className="text-xs text-[#998d80] line-through">{money(offer.originalTotal)}</p> : null}
-                          <p className="text-xl font-black text-[#4f453a]">{money(offer.directTotal)}</p>
-                          <p className="text-[11px] font-semibold text-[#8c8074]">σύνολο · {offer.nights} νύχτες</p>
-                        </div>
-                        <span className="rounded-xl bg-[#6b604f] px-3 py-2 text-xs font-black text-white">Επιλογή</span>
-                      </div>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            ) : null}
-
-            {step === "language" ? (
-              <div className="ml-0 flex flex-wrap gap-2 md:ml-10">
-                {languageOptions.map(([value, label]) => (
-                  <button key={value} type="button" onClick={() => chooseLanguage(value, label)} className="rounded-full border border-[#d7cdc0] bg-white px-4 py-2.5 text-sm font-black text-[#5f5347] shadow-sm hover:bg-[#f3ede5]">
-                    {label}
-                  </button>
-                ))}
-              </div>
-            ) : null}
-
-            {step === "price" && selectedOffer ? (
-              <div className="ml-0 md:ml-10">
-                <button type="button" onClick={useSuggestedPrice} className="rounded-full border border-[#d7cdc0] bg-white px-4 py-2.5 text-sm font-black text-[#5f5347] shadow-sm hover:bg-[#f3ede5]">
-                  Χρήση προτεινόμενης τιμής {money(selectedOffer.directTotal)}
-                </button>
-              </div>
-            ) : null}
-
-            {step === "review" && selectedOffer ? (
-              <div className="ml-0 rounded-[22px] border border-[#d9d0c4] bg-white p-4 shadow-sm md:ml-10 md:p-5">
-                <p className="text-xs font-black uppercase tracking-[0.18em] text-[#8a755e]">Τελικός έλεγχος</p>
-                <div className="mt-4 grid gap-2 text-sm sm:grid-cols-2">
-                  <div className="rounded-xl bg-[#faf7f2] p-3"><span className="text-[#897e72]">Διαμονή</span><strong className="mt-1 block">{prettyDate(arrival)} → {prettyDate(departure)} · {nights} νύχτες</strong></div>
-                  <div className="rounded-xl bg-[#faf7f2] p-3"><span className="text-[#897e72]">Επισκέπτες</span><strong className="mt-1 block">{adults} ενήλικες · {children} παιδιά</strong></div>
-                  <div className="rounded-xl bg-[#faf7f2] p-3"><span className="text-[#897e72]">Δωμάτιο</span><strong className="mt-1 block">{selectedOffer.name}</strong></div>
-                  <div className="rounded-xl bg-[#faf7f2] p-3"><span className="text-[#897e72]">Τιμή</span><strong className="mt-1 block text-lg">{money(price)}</strong></div>
-                  <div className="rounded-xl bg-[#faf7f2] p-3"><span className="text-[#897e72]">Πελάτης</span><strong className="mt-1 block">{firstName} {lastName}</strong></div>
-                  <div className="rounded-xl bg-[#faf7f2] p-3"><span className="text-[#897e72]">Επικοινωνία</span><strong className="mt-1 block break-all">{email || "—"}<br />{mobile || "—"}</strong></div>
-                </div>
-                {comments || notes ? (
-                  <div className="mt-2 rounded-xl bg-[#faf7f2] p-3 text-sm">
-                    {comments ? <p><span className="text-[#897e72]">Guest:</span> <strong>{comments}</strong></p> : null}
-                    {notes ? <p className="mt-1"><span className="text-[#897e72]">Staff note:</span> <strong>{notes}</strong></p> : null}
-                  </div>
-                ) : null}
-                <div className="mt-4 flex flex-col gap-2 sm:flex-row">
-                  <button type="button" onClick={() => void createBooking()} disabled={saving || !apiReady} className="rounded-xl bg-[#5f5548] px-5 py-3 text-sm font-black text-white hover:bg-[#50473d] disabled:cursor-not-allowed disabled:opacity-50">
-                    {saving ? "Καταχώρηση…" : "Καταχώρηση στο Beds24"}
-                  </button>
-                  <button type="button" onClick={resetChat} className="rounded-xl border border-[#d7cdc0] bg-white px-5 py-3 text-sm font-black text-[#665a4d] hover:bg-[#f8f4ee]">
-                    Ακύρωση / νέα κράτηση
-                  </button>
-                </div>
-              </div>
-            ) : null}
-
-            {step === "done" ? (
-              <div className="ml-0 flex flex-wrap gap-2 md:ml-10">
-                {result?.whatsappUrl ? (
-                  <a href={result.whatsappUrl} target="_blank" rel="noreferrer" className="rounded-full bg-emerald-600 px-4 py-2.5 text-sm font-black text-white">WhatsApp πελάτη</a>
-                ) : null}
-                <button type="button" onClick={resetChat} className="rounded-full border border-[#d7cdc0] bg-white px-4 py-2.5 text-sm font-black text-[#5f5347]">Νέα κράτηση</button>
-              </div>
-            ) : null}
-
-            <div ref={endRef} />
-          </div>
-
-          <div className="border-t border-[#e0d8ce] bg-white p-3 md:p-4">
-            {canCompose ? (
-              <form onSubmit={handleComposerSubmit} className="flex items-end gap-2">
-                <div className="flex-1">
-                  <input
-                    autoFocus
-                    type={composerType()}
-                    min={step === "adults" ? 1 : step === "children" || step === "price" ? 0 : undefined}
-                    max={step === "adults" ? 5 : step === "children" ? 4 : undefined}
-                    step={step === "price" ? "0.01" : undefined}
-                    value={composer}
-                    onChange={(event) => setComposer(event.target.value)}
-                    placeholder={placeholder()}
-                    className="w-full rounded-[18px] border border-[#d8cfc3] bg-[#faf8f4] px-4 py-3.5 text-[15px] font-semibold text-[#3f382f] outline-none transition focus:border-[#a9957b] focus:bg-white focus:ring-4 focus:ring-[#eee7dd]"
-                  />
-                  {optionalStep ? (
-                    <button type="button" onClick={skipOptional} className="mt-2 px-1 text-xs font-black text-[#857565] hover:underline">Παράλειψη</button>
-                  ) : null}
-                </div>
-                <button type="submit" className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#6b604f] text-xl font-black text-white shadow-sm hover:bg-[#5c5245]" aria-label="Αποστολή">
-                  ↑
-                </button>
-              </form>
-            ) : (
-              <div className="py-1 text-center text-xs font-semibold text-[#8a8076]">
-                {searching ? "Έλεγχος διαθεσιμότητας…" : saving ? "Δημιουργία κράτησης…" : step === "rooms" ? "Επίλεξε ένα δωμάτιο από τις επιλογές παραπάνω." : step === "language" ? "Επίλεξε γλώσσα." : step === "review" ? "Έλεγξε τη σύνοψη πριν την καταχώρηση." : ""}
+            {mode === "rooms" && offers.length > 0 && (
+              <div ref={resultsRef} data-room-results-start="true" className="space-y-3.5 scroll-mt-2">
+                <RoomCarousel
+                  offers={offers}
+                  copy={copy}
+                  language="el"
+                  money={(value) => money(value)}
+                  onDetails={setDetail}
+                  onSelect={chooseOffer}
+                />
               </div>
             )}
+
+            {awaiting === "email" && !busy && (
+              <div className="hide-scroll msg ml-10 flex gap-2 overflow-x-auto pb-1">
+                <button type="button" onClick={() => skipOptional("email")} className="min-h-11 shrink-0 rounded-full border border-[#ddd3c6] bg-white px-4 text-sm font-bold">Παράλειψη email</button>
+              </div>
+            )}
+
+            {awaiting === "phone" && !busy && (
+              <div className="hide-scroll msg ml-10 flex gap-2 overflow-x-auto pb-1">
+                <button type="button" onClick={() => skipOptional("phone")} className="min-h-11 shrink-0 rounded-full border border-[#ddd3c6] bg-white px-4 text-sm font-bold">Παράλειψη τηλεφώνου</button>
+              </div>
+            )}
+
+            {awaiting === "price" && selectedOffer && !busy && (
+              <div className="hide-scroll msg ml-10 flex gap-2 overflow-x-auto pb-1">
+                <button type="button" onClick={useSuggestedPrice} className="min-h-11 shrink-0 rounded-full border border-[#b9c6aa] bg-[#eef4e7] px-4 text-sm font-black text-[#4f6539]">Προτεινόμενη {money(selectedOffer.directTotal)}</button>
+              </div>
+            )}
+
+            {mode === "review" && selectedOffer && (
+              <section className="msg relative rounded-[26px] border border-[#dcd2c5] bg-white shadow-[0_16px_45px_rgba(70,55,35,.10)] sm:ml-10">
+                <div className="rounded-t-[26px] bg-[#faf7f2] p-4">
+                  <p className="text-[11px] font-black uppercase tracking-[.18em] text-[#8a6f50]">Τελικός έλεγχος</p>
+                  <h2 className="mt-1 text-lg font-black">Έτοιμη κράτηση για Beds24</h2>
+                  <p className="mt-1 text-xs text-[#746b60]">Μπορείς να γράψεις οποιαδήποτε διόρθωση στο chat πριν πατήσεις καταχώρηση.</p>
+                </div>
+                <div className="grid gap-2 p-4 sm:grid-cols-2">
+                  <div className="rounded-2xl bg-[#f8f5f0] p-3"><span className="text-xs text-[#8a7f72]">Διαμονή</span><strong className="mt-1 block text-sm">{prettyDate(draft.checkin)} → {prettyDate(draft.checkout)} · {nights} νύχτες</strong></div>
+                  <div className="rounded-2xl bg-[#f8f5f0] p-3"><span className="text-xs text-[#8a7f72]">Επισκέπτες</span><strong className="mt-1 block text-sm">{draft.adults} ενήλικες · {draft.children} παιδιά</strong></div>
+                  <div className="rounded-2xl bg-[#f8f5f0] p-3"><span className="text-xs text-[#8a7f72]">Δωμάτιο</span><strong className="mt-1 block text-sm">{selectedOffer.name}</strong></div>
+                  <div className="rounded-2xl bg-[#f8f5f0] p-3"><span className="text-xs text-[#8a7f72]">Συνολική τιμή</span><strong className="mt-1 block text-lg text-[#5f7448]">{money(draft.totalPrice || 0)}</strong></div>
+                  <div className="rounded-2xl bg-[#f8f5f0] p-3"><span className="text-xs text-[#8a7f72]">Πελάτης</span><strong className="mt-1 block text-sm">{draft.firstName} {draft.lastName}</strong><span className="mt-1 block text-xs text-[#746b60]">Γλώσσα: {draft.language.toUpperCase()}</span></div>
+                  <div className="rounded-2xl bg-[#f8f5f0] p-3"><span className="text-xs text-[#8a7f72]">Επικοινωνία</span><strong className="mt-1 block break-all text-sm">{draft.email || "Χωρίς email"}</strong><span className="mt-1 block text-sm">{draft.phone || "Χωρίς τηλέφωνο"}</span></div>
+                  {(draft.comments || draft.notes) && <div className="rounded-2xl bg-[#f8f5f0] p-3 sm:col-span-2"><span className="text-xs text-[#8a7f72]">Σημειώσεις</span>{draft.comments && <p className="mt-1 text-sm"><b>Guest:</b> {draft.comments}</p>}{draft.notes && <p className="mt-1 text-sm"><b>Staff:</b> {draft.notes}</p>}</div>}
+                </div>
+                <div className="border-t border-[#eee7dd] p-4">
+                  <button type="button" onClick={() => void createBooking()} disabled={!bookingReady || saving} className="min-h-12 w-full rounded-2xl bg-[#66714f] px-5 font-black text-white shadow-sm disabled:cursor-not-allowed disabled:bg-[#b8b2a9]">
+                    {saving ? "Καταχώρηση…" : "Καταχώρηση στο Beds24"}
+                  </button>
+                  {!capability?.apiReady || !capability?.propertyReady ? <p className="mt-2 text-center text-xs font-semibold text-amber-700">Η σύνδεση δημιουργίας κράτησης με Beds24 δεν είναι έτοιμη. Το κουμπί θα ενεργοποιηθεί μόνο όταν το backend επιβεβαιώσει token + property.</p> : null}
+                </div>
+              </section>
+            )}
+
+            {mode === "done" && result?.bookingId && (
+              <section className="msg rounded-[24px] border border-[#b9c6aa] bg-[#eef4e7] p-4 sm:ml-10">
+                <p className="text-lg font-black text-[#4f6539]">✓ Booking #{result.bookingId}</p>
+                <p className="mt-1 text-sm text-[#56644a]">Η κράτηση δημιουργήθηκε επιτυχώς στο Beds24.</p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {result.whatsappUrl && <a href={result.whatsappUrl} target="_blank" rel="noreferrer" className="rounded-full bg-[#287d4f] px-4 py-2.5 text-sm font-bold text-white">WhatsApp πελάτη</a>}
+                  <button type="button" onClick={resetChat} className="rounded-full border border-[#aebc9e] bg-white px-4 py-2.5 text-sm font-bold">Νέα κράτηση</button>
+                </div>
+              </section>
+            )}
           </div>
-        </section>
+        </div>
       </div>
+
+      <form onSubmit={handleSubmit} className="room-finder-composer shrink-0 border-t border-[#e2d9cd] bg-[#fbf8f3]/95">
+        <div className="mx-auto flex max-w-3xl items-end gap-2 rounded-[24px] border border-[#d8cec1] bg-white p-2 shadow-sm">
+          <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={(event) => handleImage(event.target.files?.[0])} />
+          <button type="button" onClick={() => fileRef.current?.click()} disabled={busy || mode === "done"} aria-label="Ανέβασε screenshot" title="Ανέβασε screenshot" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#ddd3c6] bg-[#faf7f2] text-xl font-bold disabled:opacity-40">＋</button>
+          <label htmlFor="staff-booking-message" className="sr-only">{placeholder}</label>
+          <textarea
+            ref={composerRef}
+            id="staff-booking-message"
+            rows={1}
+            value={composer}
+            disabled={busy || mode === "done"}
+            onChange={(event) => setComposer(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                if (composer.trim() && !busy) event.currentTarget.form?.requestSubmit();
+              }
+            }}
+            onPaste={(event) => {
+              const image = Array.from(event.clipboardData.files).find((file) => file.type.startsWith("image/"));
+              if (image) {
+                event.preventDefault();
+                handleImage(image);
+              }
+            }}
+            placeholder={busy ? "Αναλύω…" : placeholder}
+            className="max-h-28 min-h-11 min-w-0 flex-1 resize-none bg-transparent px-2 py-2.5 text-[16px] leading-6 outline-none disabled:opacity-50"
+          />
+          <button type="submit" disabled={busy || mode === "done" || !composer.trim()} aria-label="Αποστολή" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#6b604f] text-white disabled:bg-[#d7d0c6]">↑</button>
+        </div>
+        <p className="mx-auto mt-1.5 max-w-3xl px-2 text-center text-[10px] leading-4 text-[#8a8176]">Κείμενο και screenshots αναλύονται από OpenAI για εξαγωγή στοιχείων. Η πραγματική κράτηση δημιουργείται μόνο με το τελικό κουμπί.</p>
+      </form>
+
+      {detail && (
+        <div className="fixed inset-0 z-50 flex items-end bg-black/35 p-3 sm:items-center sm:justify-center" onClick={(event) => { if (event.target === event.currentTarget) setDetail(null); }}>
+          <section role="dialog" aria-modal="true" className="flex max-h-[88dvh] w-full flex-col overflow-hidden rounded-t-[26px] bg-white sm:max-w-xl sm:rounded-[26px]">
+            <div className="relative h-60 shrink-0">
+              <Image src={detail.image} alt={detail.name} fill sizes="600px" className="object-cover" />
+              <button type="button" onClick={() => setDetail(null)} className="absolute right-3 top-3 h-11 w-11 rounded-full bg-white/90 text-xl shadow-sm" aria-label="Κλείσιμο">×</button>
+            </div>
+            <div className="min-h-0 flex-1 overflow-y-auto p-5">
+              <h2 className="text-2xl font-black">{detail.name}</h2>
+              <p className="mt-1 text-sm text-[#746b60]">{detail.category} · {detail.floor}</p>
+              <div className="mt-3 flex flex-wrap gap-2">{(detail.features || []).map((feature) => <span key={feature} className="rounded-full bg-[#f1ede7] px-3 py-1.5 text-xs font-semibold">{feature}</span>)}</div>
+            </div>
+            <div className="shrink-0 border-t border-[#e5ddd2] bg-white p-4">
+              <button type="button" onClick={() => { const offer = detail; setDetail(null); chooseOffer(offer); }} className="min-h-12 w-full rounded-2xl bg-[#66714f] p-3.5 font-black text-white">Επιλογή</button>
+            </div>
+          </section>
+        </div>
+      )}
     </main>
   );
 }
