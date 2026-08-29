@@ -137,8 +137,10 @@ export function splitRoomVisuals(offer:RoomOffer) {
 
 export function RoomCarousel({ offers, copy, language, money, onDetails, onSelect, selectingOfferKey }:{ offers:RoomOffer[]; copy:RoomFinderCopy; language:RoomFinderLanguage; money:(v:number,l:RoomFinderLanguage)=>string; onDetails:(offer:RoomOffer)=>void; onSelect:(offer:RoomOffer)=>void; selectingOfferKey?:string|null }) {
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const autoSelectedOfferRef = useRef<string|null>(null);
   const [canScrollLeft,setCanScrollLeft] = useState(false);
   const [canScrollRight,setCanScrollRight] = useState(offers.length > 1);
+  const [staffRequestedUnavailable,setStaffRequestedUnavailable] = useState<number|null>(null);
 
   const updateNavigation = useCallback(() => {
     const scroller = scrollerRef.current;
@@ -160,6 +162,27 @@ export function RoomCarousel({ offers, copy, language, money, onDetails, onSelec
     };
   },[offers.length,updateNavigation]);
 
+  useEffect(() => {
+    if (typeof document === "undefined" || offers.length === 0) return;
+    const match = document.cookie.match(/(?:^|;\s*)staff_requested_room=(10|[1-9])(?:;|$)/);
+    if (!match) return;
+
+    const requestedRoom = Number(match[1]);
+    const signature = `${requestedRoom}:${offers.map((offer) => `${offer.roomId}:${offer.unitId}:${offer.roomNumber}`).join("|")}`;
+    if (autoSelectedOfferRef.current === signature) return;
+    autoSelectedOfferRef.current = signature;
+
+    document.cookie = "staff_requested_room=; Max-Age=0; Path=/staff; SameSite=Strict";
+    const requestedOffer = offers.find((offer) => offer.roomNumber === requestedRoom && offer.recoveryType !== "split");
+    if (!requestedOffer) {
+      setStaffRequestedUnavailable(requestedRoom);
+      return;
+    }
+
+    setStaffRequestedUnavailable(null);
+    onSelect(requestedOffer);
+  },[offers,onSelect]);
+
   const move = (direction:-1|1) => {
     const scroller = scrollerRef.current;
     if (!scroller) return;
@@ -169,6 +192,7 @@ export function RoomCarousel({ offers, copy, language, money, onDetails, onSelec
   };
 
   return <section className="msg relative -mx-3 sm:mx-0 sm:ml-10">
+    {staffRequestedUnavailable && <div className="mx-3 mb-3 rounded-2xl border border-[#e3cda9] bg-[#fff8ea] px-4 py-3 text-sm font-semibold text-[#765d3b] sm:mx-10">Το Δωμάτιο {staffRequestedUnavailable} που ζήτησες δεν είναι διαθέσιμο για όλη τη διαμονή. Παρακάτω είναι οι διαθέσιμες επιλογές.</div>}
     <div ref={scrollerRef} className="hide-scroll flex snap-x snap-mandatory gap-3 overflow-x-auto px-3 pb-2 sm:px-10">
       {offers.map((offer,index) => {
         const key=`${offer.roomId}:${offer.unitId}:${offer.alternativeCheckin||""}`;
