@@ -48,6 +48,31 @@ async function main() {
       where booking_id is not null;
     `);
 
+    await client.query(`
+      create or replace view booking_core.booked_stay_details as
+      select
+        inventory.stay_date,
+        inventory.room_number,
+        inventory.source_room_id,
+        inventory.source_unit_id,
+        inventory.booking_id,
+        bookings.status as booking_status,
+        bookings.checkin,
+        bookings.checkout,
+        bookings.firstname,
+        bookings.lastname,
+        bookings.email,
+        bookings.property,
+        bookings.room as beds24_room,
+        bookings.guest_language,
+        bookings.price,
+        bookings.updated_at as booking_updated_at
+      from booking_core.inventory as inventory
+      left join public.beds24_bookings as bookings
+        on bookings.booking_id = inventory.booking_id
+      where inventory.booking_id is not null;
+    `);
+
     await client.query("commit");
 
     const check = await client.query(`
@@ -60,10 +85,12 @@ async function main() {
             and column_name = 'booking_id'
         ) as booking_id_column_exists,
         to_regclass('booking_core.booking_core_inventory_booking_id_idx') is not null
-          as booking_id_index_exists;
+          as booking_id_index_exists,
+        to_regclass('booking_core.booked_stay_details') is not null
+          as booked_stay_details_view_exists;
     `);
 
-    console.log("Booking Core booking_id migration check:");
+    console.log("Booking Core booking detail migration check:");
     console.table(check.rows);
   } catch (error) {
     await client.query("rollback");
