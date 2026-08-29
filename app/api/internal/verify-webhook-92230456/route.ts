@@ -11,7 +11,7 @@ export async function GET() {
   }
 
   const sql = neon(databaseUrl);
-  const bookingId = "92233162";
+  const bookingId = "92234730";
 
   const rows = await sql`
     select
