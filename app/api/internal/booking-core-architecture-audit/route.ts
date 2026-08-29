@@ -28,43 +28,54 @@ export async function GET() {
     from booking_core.inventory
   `;
   const candidateRows = await sql`
-    select
-      booking_id,
-      source_room_id,
-      source_unit_id,
-      min(stay_date)::text as checkin,
-      (max(stay_date) + 1)::text as checkout
-    from booking_core.inventory
-    where booking_id is not null
-      and stay_date >= current_date
-    group by booking_id, source_room_id, source_unit_id
-    order by min(stay_date), min(room_number)
+    select distinct on (inventory.booking_id)
+      inventory.booking_id,
+      inventory.source_room_id,
+      inventory.source_unit_id,
+      bookings.checkin::text as checkin,
+      bookings.checkout::text as checkout
+    from booking_core.inventory as inventory
+    join public.beds24_bookings as bookings
+      on bookings.booking_id = inventory.booking_id
+    where inventory.booking_id is not null
+      and inventory.stay_date >= current_date
+      and bookings.checkin is not null
+      and bookings.checkout is not null
+      and bookings.checkout > bookings.checkin
+    order by inventory.booking_id, inventory.stay_date
     limit 1
   `;
 
   const candidate = (candidateRows as any[])[0] || null;
   let activeDryRun = null;
   let cancellationDryRun = null;
+  let conflictDryRun = null;
+  let missingIdsDryRun = null;
   let candidateSummary = null;
 
   if (candidate?.booking_id) {
-    activeDryRun = await reconcileBookingCoreBookingEvent({
+    const event = {
       bookingId: String(candidate.booking_id),
       status: "Confirmed",
       checkin: String(candidate.checkin),
       checkout: String(candidate.checkout),
       roomId: String(candidate.source_room_id),
       unitId: String(candidate.source_unit_id),
-    }, { dryRun: true });
+    };
 
-    cancellationDryRun = await reconcileBookingCoreBookingEvent({
-      bookingId: String(candidate.booking_id),
-      status: "Cancelled",
-      checkin: String(candidate.checkin),
-      checkout: String(candidate.checkout),
-      roomId: String(candidate.source_room_id),
-      unitId: String(candidate.source_unit_id),
-    }, { dryRun: true });
+    activeDryRun = await reconcileBookingCoreBookingEvent(event, { dryRun: true });
+    cancellationDryRun = await reconcileBookingCoreBookingEvent(
+      { ...event, status: "Cancelled" },
+      { dryRun: true },
+    );
+    conflictDryRun = await reconcileBookingCoreBookingEvent(
+      { ...event, bookingId: "__booking_core_dry_run_conflict__" },
+      { dryRun: true },
+    );
+    missingIdsDryRun = await reconcileBookingCoreBookingEvent(
+      { ...event, roomId: "", unitId: "" },
+      { dryRun: true },
+    );
 
     const rawId = String(candidate.booking_id);
     candidateSummary = {
@@ -76,8 +87,37 @@ export async function GET() {
     };
   }
 
+  const qa = {
+    activeExistingBookingSafe:
+      activeDryRun?.applied === true &&
+      activeDryRun.conflictRows === 0 &&
+      activeDryRun.rowsReleased === 0 &&
+      activeDryRun.rowsBooked === 0,
+    cancellationTargetsOnlyBooking:
+      cancellationDryRun?.applied === true &&
+      Number(cancellationDryRun.rowsReleased || 0) > 0,
+    conflictingBookingBlocked:
+      conflictDryRun?.applied === false &&
+      conflictDryRun.reason === "target_inventory_conflict" &&
+      Number(conflictDryRun.conflictRows || 0) > 0,
+    missingExactIdsBlocked:
+      missingIdsDryRun?.applied === false &&
+      missingIdsDryRun.reason === "missing_exact_room_or_unit_id",
+  };
+
   return NextResponse.json(
-    { ok: true, columns, rooms, inventoryStats, candidateSummary, activeDryRun, cancellationDryRun },
+    {
+      ok: Object.values(qa).every(Boolean),
+      qa,
+      columns,
+      rooms,
+      inventoryStats,
+      candidateSummary,
+      activeDryRun,
+      cancellationDryRun,
+      conflictDryRun,
+      missingIdsDryRun,
+    },
     { headers: { "Cache-Control": "no-store", "X-Robots-Tag": "noindex, nofollow" } },
   );
 }
