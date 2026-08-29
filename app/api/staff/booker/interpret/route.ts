@@ -6,6 +6,7 @@ export const runtime = "nodejs";
 const LANGUAGES = ["el", "en", "de", "fr", "it", "es", "tr"] as const;
 const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
 const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
+const STAFF_ROOM_COOKIE = "staff_requested_room";
 
 const BOOKING_SCHEMA = {
   type: "object",
@@ -22,6 +23,7 @@ const BOOKING_SCHEMA = {
         "totalGuests",
         "adults",
         "children",
+        "requestedRoomNumber",
         "firstName",
         "lastName",
         "email",
@@ -38,6 +40,7 @@ const BOOKING_SCHEMA = {
         totalGuests: { type: ["integer", "null"], minimum: 1, maximum: 10 },
         adults: { type: ["integer", "null"], minimum: 1, maximum: 10 },
         children: { type: ["integer", "null"], minimum: 0, maximum: 9 },
+        requestedRoomNumber: { type: ["integer", "null"], minimum: 1, maximum: 10 },
         firstName: { type: ["string", "null"] },
         lastName: { type: ["string", "null"] },
         email: { type: ["string", "null"] },
@@ -63,7 +66,7 @@ const BOOKING_SCHEMA = {
 
 const SYSTEM_PROMPT = `You are the semantic intake parser for the private Voulamandis House Staff Booking Assistant.
 
-Your job is ONLY to extract booking facts from the staff member's latest text or uploaded screenshot and return them in the strict JSON schema. You never search availability, never choose a room, never calculate a price, and never create a booking.
+Your job is ONLY to extract booking facts from the staff member's latest text or uploaded screenshot and return them in the strict JSON schema. You never search availability, never calculate a price, and never create a booking.
 
 IMPORTANT BEHAVIOR
 - Read the latest input together with the current draft supplied by the application.
@@ -89,6 +92,13 @@ GUESTS
 - If the source mentions a child/children/kid/baby/family composition but does not provide enough numbers to determine adults and children, do not guess; keep the unknown component null so the application can ask for clarification.
 - "2 adults" means adults=2 and children=0 only when the wording clearly indicates there are no children or the source presents the guest composition as complete. Otherwise children remains null.
 
+ROOM REQUEST
+- If the staff explicitly requests a physical room number from 1 to 10, extract it as requestedRoomNumber.
+- Examples: "δωμάτιο 5", "στο 5", "room 5", "Room No 5" when the context clearly means a room assignment.
+- requestedRoomNumber is a staff selection request, NOT a guest comment and NOT a staff note.
+- Do not put the requested room into comments or notes.
+- The application will still perform live availability before honoring this request. You do not decide whether the room is available.
+
 CONTACT / NAME
 - Split first and last name only when reasonably clear. Preserve accents and original spelling.
 - Email and phone should be copied exactly enough to use operationally; remove surrounding labels/punctuation.
@@ -106,13 +116,11 @@ PRICE
 COMMENTS / NOTES
 - comments are guest-facing requests or information that belongs with the reservation: arrival time, breakfast request, cot, accessibility request, transport, special request, etc.
 - notes are only internal staff notes explicitly identified as internal/staff notes. Do not turn ordinary prose into staff notes.
+- A requested physical room number is never a comment or note; use requestedRoomNumber only.
 
 CLEARING OPTIONAL FIELDS
 - If the staff explicitly says there is no email / no phone / no guest comment / no staff note, include that field name in clearFields.
 - Otherwise do not clear existing data.
-
-ROOMS
-- Do not choose or assign a room even if a room number appears. Room choice is always handled by the staff UI after live availability.
 
 Return JSON only.`;
 
@@ -209,9 +217,7 @@ function normalizeGuestComposition(parsed: any, latestText: string) {
     if (derivedAdults >= 1) adults = derivedAdults;
   }
 
-  if (adults !== null && children !== null) {
-    totalGuests = adults + children;
-  }
+  if (adults !== null && children !== null) totalGuests = adults + children;
 
   fields.totalGuests = totalGuests;
   fields.adults = adults;
@@ -226,6 +232,35 @@ function normalizeGuestComposition(parsed: any, latestText: string) {
     parsed.clarification = null;
   }
 
+  return parsed;
+}
+
+function roomFromText(value: string) {
+  const match = value.match(/(?:δωμάτι(?:ο|ου)|room|zimmer|chambre|camera|habitación|oda)\s*(?:no\.?\s*)?(10|[1-9])\b/i);
+  if (!match) return null;
+  const room = Number(match[1]);
+  return room >= 1 && room <= 10 ? room : null;
+}
+
+function stripRoomAssignmentComment(value: unknown, room: number | null) {
+  if (typeof value !== "string" || !value.trim() || room === null) return value;
+  const stripped = value
+    .replace(new RegExp(`(?:αίτημα[:：]?\\s*)?(?:για\\s+)?(?:το\\s+)?(?:δωμάτι(?:ο|ου)|room)\\s*(?:no\\.?\\s*)?${room}\\b`, "ig"), "")
+    .replace(/^[\s,.;:–—-]+|[\s,.;:–—-]+$/g, "")
+    .trim();
+  return stripped || null;
+}
+
+function normalizeRoomRequest(parsed: any, latestText: string) {
+  if (!parsed || typeof parsed !== "object" || !parsed.fields || typeof parsed.fields !== "object") return parsed;
+  const fields = parsed.fields as Record<string, unknown>;
+  let requestedRoomNumber = finiteInteger(fields.requestedRoomNumber);
+  if (requestedRoomNumber === null) requestedRoomNumber = roomFromText(latestText);
+  if (requestedRoomNumber !== null && (requestedRoomNumber < 1 || requestedRoomNumber > 10)) requestedRoomNumber = null;
+
+  fields.requestedRoomNumber = requestedRoomNumber;
+  fields.comments = stripRoomAssignmentComment(fields.comments, requestedRoomNumber);
+  fields.notes = stripRoomAssignmentComment(fields.notes, requestedRoomNumber);
   return parsed;
 }
 
@@ -317,8 +352,19 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ message: "OpenAI returned no structured intake." }, { status: 502, headers: noStoreHeaders() });
       }
 
-      const parsed = normalizeGuestComposition(JSON.parse(output), message);
-      return NextResponse.json(parsed, { headers: noStoreHeaders() });
+      const parsed = normalizeRoomRequest(normalizeGuestComposition(JSON.parse(output), message), message);
+      const result = NextResponse.json(parsed, { headers: noStoreHeaders() });
+      const requestedRoomNumber = finiteInteger(parsed?.fields?.requestedRoomNumber);
+      if (requestedRoomNumber !== null && requestedRoomNumber >= 1 && requestedRoomNumber <= 10) {
+        result.cookies.set(STAFF_ROOM_COOKIE, String(requestedRoomNumber), {
+          path: "/staff",
+          maxAge: 300,
+          sameSite: "strict",
+          secure: process.env.NODE_ENV === "production",
+          httpOnly: false,
+        });
+      }
+      return result;
     } finally {
       clearTimeout(timeout);
     }
