@@ -39,11 +39,14 @@ function languageFromUrl(url: URL): LanguageCode {
   return isLanguageCode(requested) ? requested : "en";
 }
 
-function detailsUrlForRoomType(roomType: string, language: LanguageCode) {
-  if (roomType === "economy") {
+function detailsUrlForRoom(
+  room: { isEconomy: boolean; hasFullKitchen: boolean },
+  language: LanguageCode,
+) {
+  if (room.isEconomy) {
     return resolveDiscoveryUrl("economy-double", language);
   }
-  if (roomType === "family") {
+  if (room.hasFullKitchen) {
     return resolveDiscoveryUrl("family-apartment", language);
   }
   return resolveDiscoveryUrl("standard-double", language);
@@ -86,7 +89,7 @@ async function roomsPayload(url: URL, language: LanguageCode) {
       hasUpperFloorView: room.hasUpperFloorView,
       hasGardenView: room.hasGardenView,
       extraBedAvailable: room.extraBedAvailable,
-      detailsUrl: detailsUrlForRoomType(room.roomType, language),
+      detailsUrl: detailsUrlForRoom(room, language),
     })),
     liveAvailabilityUrl: resolveDiscoveryUrl("find-your-room", language),
     note:
