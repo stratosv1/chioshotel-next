@@ -48,12 +48,18 @@ if (exists("public/llms-full.txt")) {
   );
 }
 
+if (exists("public/llms.txt")) {
+  failures.push(
+    "llms.txt must not be a hand-maintained public asset; use the generated route instead",
+  );
+}
+
 expectAll(
   "app/llms-full.txt/route.ts",
   [
     'import sitemap from "@/app/sitemap"',
-    'buildLlmsFullGuide',
-    'sitemap().map((entry) => entry.url)',
+    "buildLlmsFullGuide",
+    "sitemap().map((entry) => entry.url)",
     'Content-Type": "text/plain; charset=utf-8"',
   ],
   "llms-full route must stay connected to canonical sitemap data",
@@ -92,6 +98,90 @@ expectNone(
   "Legacy URLs must not be hard-coded into the generated AI guide",
 );
 
+expectAll(
+  "app/llms.txt/route.ts",
+  [
+    "buildRootLlmsGuide",
+    'Content-Type": "text/plain; charset=utf-8"',
+    'export const dynamic = "force-static"',
+  ],
+  "root llms.txt must be generated as a static text route",
+);
+
+expectAll(
+  "app/[locale]/llms.txt/route.ts",
+  [
+    "buildLocalizedLlmsGuide",
+    "AI_DISCOVERY_LANGUAGES",
+    "isLanguageCode",
+    'locale === "en"',
+    'Content-Type": "text/plain; charset=utf-8"',
+  ],
+  "localized llms.txt routes must validate supported non-English locales",
+);
+
+expectAll(
+  "lib/ai-discovery/config.ts",
+  [
+    '"en"',
+    '"el"',
+    '"fr"',
+    '"de"',
+    '"it"',
+    '"es"',
+    '"tr"',
+    '"rooms-index"',
+    '"family-apartment"',
+    '"find-your-room"',
+    "Rooms & Apartments in Chios",
+    "Δωμάτια και Διαμερίσματα στη Χίο",
+    "Sakız Adası’nda Odalar ve Daireler",
+  ],
+  "AI discovery config must cover all supported locales and commercial accommodation entities",
+);
+
+expectAll(
+  "lib/ai-discovery/route-resolver.ts",
+  [
+    'import { routeMap } from "@/lib/url-map"',
+    'candidate.action === "KEEP"',
+    "candidate.itemId === itemId",
+    "candidate.language === language",
+  ],
+  "AI discovery URLs must resolve from KEEP routes in the canonical route map",
+);
+
+expectAll(
+  "lib/ai-discovery/llms-builder.ts",
+  [
+    "AI_DISCOVERY_COPY",
+    "resolveDiscoveryUrl",
+    "localizedLlmsUrl",
+    "buildRootLlmsGuide",
+    "buildLocalizedLlmsGuide",
+    "Complete AI-readable site index",
+  ],
+  "AI discovery guides must be generated from shared multilingual config and canonical routes",
+);
+
+expectAll(
+  "components/ai/webmcp/RoomFinderWebMCP.tsx",
+  [
+    "check_voulamandis_room_availability",
+    "/api/ai-room-finder/availability",
+    "readOnlyHint: true",
+    "controller.signal",
+    "bookingCreated: false",
+  ],
+  "WebMCP availability tool must remain read-only and use the existing room finder endpoint",
+);
+
+expect(
+  "app/ai-assistant/page.tsx",
+  "<RoomFinderWebMCP />",
+  "AI room finder page must register the WebMCP availability tool",
+);
+
 expect(
   "app/sitemap.ts",
   "deduplicateByCanonicalUrl",
@@ -99,9 +189,9 @@ expect(
 );
 
 if (failures.length > 0) {
-  console.error("llms-full QA failed:\n");
+  console.error("AI discovery QA failed:\n");
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log("llms-full QA passed");
+console.log("AI discovery QA passed");
