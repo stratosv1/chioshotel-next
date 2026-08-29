@@ -2,8 +2,12 @@ import { neon } from "@neondatabase/serverless";
 import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import { fetchBeds24BookingById, type Beds24ApiV2BookingLookup } from "@/lib/beds24/api-v2-booking";
 import { BOOKING_CORE_DEALS_CACHE_TAG } from "@/lib/booking-core/cache-tags";
-import { reconcileBookingCoreBookingEvent } from "@/lib/booking-core/reconcile-booking-event";
+import {
+  isBeds24CancellationStatus,
+  reconcileBookingCoreBookingEvent,
+} from "@/lib/booking-core/reconcile-booking-event";
 
 export const runtime = "nodejs";
 
@@ -19,12 +23,20 @@ export type Beds24BookingPayload = {
   room?: string;
   room_id?: string;
   unit_id?: string;
+  unit_name?: string;
   guest_language?: string;
   price?: string;
+  [key: string]: unknown;
 };
 
 function clean(value: unknown): string {
   return String(value ?? "").trim();
+}
+
+function dateOnly(value: unknown): string {
+  const raw = clean(value);
+  const match = raw.match(/^(\d{4}-\d{2}-\d{2})/);
+  return match ? match[1] : "";
 }
 
 function escapeHtml(value: string): string {
@@ -44,6 +56,51 @@ function getRequiredEnv(name: string): string {
 
 function nullable(value: string): string | null {
   return value ? value : null;
+}
+
+function resolveBookingPayload(
+  body: Beds24BookingPayload,
+  lookup: Beds24ApiV2BookingLookup,
+): Beds24BookingPayload {
+  const api = lookup.booking;
+  const webhookStatus = clean(body.status);
+  const apiStatus = clean(api?.status);
+  const cancellationStatus = isBeds24CancellationStatus(webhookStatus)
+    ? webhookStatus
+    : "";
+
+  const apiEmail = clean(api?.email) || clean(api?.guestEmail);
+  const apiRoomName = clean(api?.roomName);
+  const apiGuestLanguage = clean(api?.guestLanguage) || clean(api?.language);
+  const apiPrice = clean(api?.price) || clean(api?.totalPrice);
+
+  return {
+    ...body,
+    booking_id: clean(body.booking_id),
+    status: cancellationStatus || apiStatus || webhookStatus,
+    checkin: dateOnly(api?.arrival) || dateOnly(api?.checkIn) || dateOnly(body.checkin),
+    checkout: dateOnly(api?.departure) || dateOnly(api?.checkOut) || dateOnly(body.checkout),
+    firstname: clean(api?.firstName) || clean(body.firstname),
+    lastname: clean(api?.lastName) || clean(body.lastname),
+    email: apiEmail || clean(body.email),
+    property: clean(body.property),
+    room: apiRoomName || clean(body.room),
+    room_id: clean(api?.roomId) || clean(body.room_id),
+    unit_id: clean(api?.unitId) || clean(body.unit_id),
+    guest_language: apiGuestLanguage || clean(body.guest_language),
+    price: apiPrice || clean(body.price),
+    api_v2_lookup: {
+      attempted: lookup.attempted,
+      ok: lookup.ok,
+      reason: lookup.reason,
+      property_id: clean(api?.propertyId) || null,
+      room_id: clean(api?.roomId) || null,
+      unit_id: clean(api?.unitId) || null,
+      num_adult: clean(api?.numAdult) || null,
+      num_child: clean(api?.numChild) || null,
+      api_source_id: clean(api?.apiSourceId) || null,
+    },
+  };
 }
 
 async function saveBookingToDatabase(body: Beds24BookingPayload) {
@@ -249,14 +306,20 @@ export async function POST(request: Request) {
       return NextResponse.json({ ok: false, error: "Missing booking_id." }, { status: 400 });
     }
 
-    const stored = await saveBookingToDatabase(body);
+    // The Auto Action is only the trigger. Beds24 API v2 is the authoritative
+    // source for room/unit/date/status whenever the API token is available.
+    // One webhook causes one booking-specific GET; there is no polling/full scan.
+    const apiLookup = await fetchBeds24BookingById(bookingId);
+    const resolvedBody = resolveBookingPayload(body, apiLookup);
+
+    const stored = await saveBookingToDatabase(resolvedBody);
     const bookingCore = await reconcileBookingCoreBookingEvent({
       bookingId,
-      status: clean(body.status),
-      checkin: clean(body.checkin),
-      checkout: clean(body.checkout),
-      roomId: clean(body.room_id),
-      unitId: clean(body.unit_id),
+      status: clean(resolvedBody.status),
+      checkin: clean(resolvedBody.checkin),
+      checkout: clean(resolvedBody.checkout),
+      roomId: clean(resolvedBody.room_id),
+      unitId: clean(resolvedBody.unit_id),
     });
 
     if (bookingCore.rowsReleased > 0 || bookingCore.rowsBooked > 0) {
@@ -267,7 +330,7 @@ export async function POST(request: Request) {
       }
     }
 
-    await sendBookingEmail(body);
+    await sendBookingEmail(resolvedBody);
 
     return NextResponse.json({
       ok: true,
@@ -276,6 +339,13 @@ export async function POST(request: Request) {
       bookingChanged: stored.changed,
       emailed: true,
       booking_id: bookingId,
+      beds24Api: {
+        attempted: apiLookup.attempted,
+        ok: apiLookup.ok,
+        reason: apiLookup.reason,
+        room_id: clean(apiLookup.booking?.roomId) || null,
+        unit_id: clean(apiLookup.booking?.unitId) || null,
+      },
       bookingCore,
     });
   } catch (error) {
