@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import type { RoomFinderLanguage } from "@/components/ai/room-finder-copy";
 
 const TOOL_NAME = "check_voulamandis_room_availability";
+const AVAILABILITY_TIMEOUT_MS = 12_000;
 const SUPPORTED_LANGUAGES = new Set<RoomFinderLanguage>([
   "en",
   "el",
@@ -31,10 +32,7 @@ type WebMcpTool = {
     readOnlyHint?: boolean;
     untrustedContentHint?: boolean;
   };
-  execute: (
-    input: AvailabilityInput,
-    context: { signal: AbortSignal },
-  ) => Promise<unknown>;
+  execute: (input: AvailabilityInput) => Promise<unknown>;
 };
 
 type WebMcpModelContext = {
@@ -77,7 +75,7 @@ export function RoomFinderWebMCP() {
     const modelContext = (document as WebMcpDocument).modelContext;
     if (!modelContext) return;
 
-    const controller = new AbortController();
+    const registrationController = new AbortController();
 
     const tool: WebMcpTool = {
       name: TOOL_NAME,
@@ -119,8 +117,9 @@ export function RoomFinderWebMCP() {
       },
       annotations: {
         readOnlyHint: true,
+        untrustedContentHint: false,
       },
-      execute: async (input, { signal }) => {
+      execute: async (input) => {
         const checkin = typeof input.checkin === "string" ? input.checkin : "";
         const checkout = typeof input.checkout === "string" ? input.checkout : "";
         const guests = Number(input.guests);
@@ -156,13 +155,18 @@ export function RoomFinderWebMCP() {
           lang: language,
           allowSplit: allowSplit ? "1" : "0",
         });
+        const requestController = new AbortController();
+        const timeoutId = window.setTimeout(
+          () => requestController.abort(),
+          AVAILABILITY_TIMEOUT_MS,
+        );
 
         try {
           const response = await fetch(
             `/api/ai-room-finder/availability?${query.toString()}`,
             {
               cache: "no-store",
-              signal,
+              signal: requestController.signal,
             },
           );
           const payload = await response.json().catch(() => null);
@@ -196,11 +200,11 @@ export function RoomFinderWebMCP() {
               "Availability and prices are live search results. No booking or enquiry has been created.",
           };
         } catch (error) {
-          if (signal.aborted) {
+          if (requestController.signal.aborted) {
             return {
               success: false,
-              code: "CANCELLED",
-              message: "Availability search was cancelled.",
+              code: "TIMEOUT",
+              message: "Live room availability did not respond in time. Try the search again.",
             };
           }
 
@@ -210,17 +214,19 @@ export function RoomFinderWebMCP() {
             code: "AVAILABILITY_UNAVAILABLE",
             message: "Live room availability could not be confirmed right now.",
           };
+        } finally {
+          window.clearTimeout(timeoutId);
         }
       },
     };
 
     void Promise.resolve(
-      modelContext.registerTool(tool, { signal: controller.signal }),
+      modelContext.registerTool(tool, { signal: registrationController.signal }),
     ).catch((error) => {
       console.error("WebMCP room availability tool registration failed", error);
     });
 
-    return () => controller.abort();
+    return () => registrationController.abort();
   }, []);
 
   return null;
