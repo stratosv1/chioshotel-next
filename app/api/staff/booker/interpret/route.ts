@@ -85,7 +85,8 @@ DATES
 GUESTS
 - totalGuests is everyone in the booking.
 - adults and children are separate counts when explicitly stated or directly derivable from an explicit total and one explicit component.
-- "2 people" alone means totalGuests=2, not necessarily adults=2.
+- Operational staff convention: a generic count such as "3 people", "3 guests", "3 persons" or "3 άτομα" with no mention or indication of children means totalGuests=3, adults=3 and children=0. Do not ask a follow-up question for adults/children in this case.
+- If the source mentions a child/children/kid/baby/family composition but does not provide enough numbers to determine adults and children, do not guess; keep the unknown component null so the application can ask for clarification.
 - "2 adults" means adults=2 and children=0 only when the wording clearly indicates there are no children or the source presents the guest composition as complete. Otherwise children remains null.
 
 CONTACT / NAME
