@@ -167,22 +167,31 @@ expectAll(
 expectAll(
   "app/layout.tsx",
   [
+    'import { RoomFinderWebMCP } from "@/components/ai/webmcp/RoomFinderWebMCP"',
     'rel="describedby"',
     'type="text/markdown"',
     '"/llms.txt"',
     '`/${sharedLanguage}/llms.txt`',
     "WEBMCP_ORIGIN_TRIAL_TOKEN",
     'httpEquiv="origin-trial"',
-    "isAiAssistantPath(pathname)",
+    "publicWebMcpPath",
+    "!privatePhysicsPath && !staffPath && !isPolishPath",
+    "isChiosHotelHost(requestHost)",
+    "{publicWebMcpPath ? <RoomFinderWebMCP /> : null}",
   ],
-  "public pages must advertise localized llms guides and support scoped WebMCP origin-trial activation",
+  "supported public pages must advertise localized AI guides and register WebMCP while private/staff paths stay excluded",
 );
 
 expectAll(
   "components/ai/webmcp/RoomFinderWebMCP.tsx",
   [
     "check_voulamandis_room_availability",
+    "get_voulamandis_rooms",
+    "get_voulamandis_offers",
+    "get_voulamandis_property_info",
+    "search_chioshotel_information",
     "/api/ai-room-finder/availability",
+    "/api/agentic/voulamandis",
     "readOnlyHint: true",
     "untrustedContentHint: false",
     "execute: async (input, client = {}) =>",
@@ -193,8 +202,9 @@ expectAll(
     "requestController.signal",
     'code: "CANCELLED"',
     "bookingCreated: false",
+    "for (const tool of tools)",
   ],
-  "WebMCP availability tool must honor browser cancellation, keep its timeout, and remain read-only",
+  "WebMCP commercial and site-information tools must stay read-only, cancellable and connected to approved public APIs",
 );
 
 expectNone(
@@ -203,10 +213,42 @@ expectNone(
   "WebMCP execute must accept the current cancellation client argument",
 );
 
-expect(
+expectAll(
+  "app/api/agentic/voulamandis/route.ts",
+  [
+    'import { getAgentRoomGuideData } from "@/lib/agent-room-guide-data"',
+    "searchSalesKnowledge",
+    'import { searchExtraKnowledge } from "@/lib/ai-assistant/knowledge-extra"',
+    'import { AI_DISCOVERY_COPY } from "@/lib/ai-discovery/config"',
+    "resolveDiscoveryUrl",
+    'resource === "rooms"',
+    'resource === "property"',
+    'resource === "offers"',
+    'resource === "knowledge"',
+    'source: "booking_core.rooms + booking_core.room_features"',
+    'source: "existing curated site knowledge"',
+    '"X-Robots-Tag": "noindex"',
+    "discountPercent: 10",
+    "stackable: false",
+    "room.isEconomy",
+    "room.hasFullKitchen",
+    'resolveDiscoveryUrl("economy-double", language)',
+    'resolveDiscoveryUrl("family-apartment", language)',
+    'detailsUrl: detailsUrlForRoom(room, language)',
+  ],
+  "Agentic public data API must reuse Booking Core, existing site knowledge and canonical room mappings",
+);
+
+expectNone(
+  "app/api/agentic/voulamandis/route.ts",
+  ["insert into", "update booking_core", "delete from", "bookingCreated: true"],
+  "Agentic public data API must remain read-only",
+);
+
+expectNone(
   "app/ai-assistant/page.tsx",
-  "<RoomFinderWebMCP />",
-  "AI room finder page must register the WebMCP availability tool",
+  ["<RoomFinderWebMCP />", 'from "@/components/ai/webmcp/RoomFinderWebMCP"'],
+  "AI room finder must not duplicate the WebMCP registration already provided by the public root layout",
 );
 
 expect(
