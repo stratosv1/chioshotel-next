@@ -1,8 +1,8 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import BookerApp from "./BookerApp";
 
 export const metadata: Metadata = {
-  title: "Κάνε Κράτηση | Staff Area",
+  title: "Τιμές, Διαθεσιμότητα & Κράτηση | Staff Area",
   robots: {
     index: false,
     follow: false,
