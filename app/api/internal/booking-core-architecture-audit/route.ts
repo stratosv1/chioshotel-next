@@ -26,37 +26,20 @@ export async function GET() {
     order by ordinal_position
   `;
 
-  const rooms = await sql`select * from booking_core.rooms order by room_number`;
-
+  const rooms = await sql`select to_jsonb(r) as row from booking_core.rooms r`;
+  const sampleInventory = await sql`
+    select to_jsonb(i) - 'booking_id' as row
+    from booking_core.inventory i
+    order by stay_date, room_number
+    limit 5
+  `;
   const inventoryStats = await sql`
     select
       count(*)::int as total_rows,
-      count(*) filter (where available)::int as available_rows,
-      count(*) filter (where not available)::int as unavailable_rows,
-      count(*) filter (where booking_id is not null)::int as booked_with_id,
-      count(*) filter (where available and reference_price is null)::int as available_without_price,
-      count(*) filter (where booking_id is not null and reference_price is null)::int as booked_without_price,
-      count(*) filter (where booking_id is not null and reference_price is not null)::int as booked_with_price
+      count(*) filter (where booking_id is not null)::int as rows_with_booking_id,
+      count(distinct booking_id) filter (where booking_id is not null)::int as distinct_booking_ids
     from booking_core.inventory
   `;
-
-  const mappings = await sql`
-    select room_number, source_room_id::text as source_room_id, source_unit_id::text as source_unit_id,
-           min(room_name) as room_name, min(unit_name) as unit_name,
-           count(*)::int as rows
-    from booking_core.inventory
-    group by room_number, source_room_id, source_unit_id
-    order by room_number, source_room_id, source_unit_id
-  `;
-
-  const reasonStats = await sql`
-    select reason, available, count(*)::int as rows,
-           count(*) filter (where reference_price is null)::int as null_price_rows
-    from booking_core.inventory
-    group by reason, available
-    order by reason, available
-  `;
-
   const functions = await sql`
     select p.proname, pg_get_functiondef(p.oid) as definition
     from pg_proc p
@@ -67,7 +50,7 @@ export async function GET() {
   `;
 
   return NextResponse.json(
-    { ok: true, columns, roomsColumns, rooms, inventoryStats, mappings, reasonStats, functions },
+    { ok: true, columns, roomsColumns, rooms, sampleInventory, inventoryStats, functions },
     { headers: { "Cache-Control": "no-store", "X-Robots-Tag": "noindex, nofollow" } },
   );
 }
