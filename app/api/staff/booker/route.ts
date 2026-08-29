@@ -1,4 +1,5 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { neon } from "@neondatabase/serverless";
 
 export const runtime = "nodejs";
 
@@ -29,8 +30,8 @@ const roomMappings: RoomMapping[] = [
   { roomId: 268803, unitId: 2, label: "Room 6", categoryLabel: "Economy" },
   { roomId: 626129, unitId: 2, label: "Room 7", categoryLabel: "Ground Floor" },
   { roomId: 265595, unitId: 1, label: "Apartment 8", categoryLabel: "Family Apartment" },
-  { roomId: 265595, unitId: 2, label: "Apartment 9", categoryLabel: "Family Apartment" },  { roomId: 265595, unitId: 3, label: "Apartment 10", categoryLabel: "Family Apartment" },
-  { roomId: 345347, unitId: 1, label: "Apt 11", categoryLabel: "Apt 11" },
+  { roomId: 265595, unitId: 2, label: "Apartment 9", categoryLabel: "Family Apartment" },
+  { roomId: 265595, unitId: 3, label: "Apartment 10", categoryLabel: "Family Apartment" },
 ];
 
 function noStoreHeaders() {
@@ -55,38 +56,24 @@ function isAuthorized(request: NextRequest) {
   const username = process.env.STAFF_USERNAME;
   const password = process.env.STAFF_PASSWORD;
 
-  if (!username || !password) {
-    return false;
-  }
+  if (!username || !password) return false;
 
   const header = request.headers.get("authorization");
-
-  if (!header?.startsWith("Basic ")) {
-    return false;
-  }
+  if (!header?.startsWith("Basic ")) return false;
 
   try {
     const decoded = Buffer.from(header.slice(6), "base64").toString("utf8");
     const separatorIndex = decoded.indexOf(":");
+    if (separatorIndex === -1) return false;
 
-    if (separatorIndex === -1) {
-      return false;
-    }
-
-    const providedUsername = decoded.slice(0, separatorIndex);
-    const providedPassword = decoded.slice(separatorIndex + 1);
-
-    return providedUsername === username && providedPassword === password;
+    return decoded.slice(0, separatorIndex) === username && decoded.slice(separatorIndex + 1) === password;
   } catch {
     return false;
   }
 }
 
 function jsonResponse(data: unknown, status = 200) {
-  return NextResponse.json(data, {
-    status,
-    headers: noStoreHeaders(),
-  });
+  return NextResponse.json(data, { status, headers: noStoreHeaders() });
 }
 
 function cleanString(value: unknown) {
@@ -95,12 +82,7 @@ function cleanString(value: unknown) {
 
 function cleanNumber(value: unknown, fallback: number) {
   const numberValue = Number(value);
-
-  if (!Number.isFinite(numberValue)) {
-    return fallback;
-  }
-
-  return numberValue;
+  return Number.isFinite(numberValue) ? numberValue : fallback;
 }
 
 function isValidDate(value: string) {
@@ -110,11 +92,7 @@ function isValidDate(value: string) {
 function nightsBetween(arrival: string, departure: string) {
   const start = new Date(`${arrival}T00:00:00Z`).getTime();
   const end = new Date(`${departure}T00:00:00Z`).getTime();
-
-  if (!Number.isFinite(start) || !Number.isFinite(end)) {
-    return 0;
-  }
-
+  if (!Number.isFinite(start) || !Number.isFinite(end)) return 0;
   return Math.round((end - start) / 86400000);
 }
 
@@ -122,22 +100,67 @@ function findRoom(roomId: number, unitId: number) {
   return roomMappings.find((room) => room.roomId === roomId && room.unitId === unitId);
 }
 
+async function verifyBookingCoreAvailability(params: {
+  arrival: string;
+  departure: string;
+  guests: number;
+  roomId: number;
+  unitId: number;
+}) {
+  const databaseUrl = process.env.DATABASE_URL?.trim();
+  if (!databaseUrl) {
+    return { ok: false, status: 503, message: "Booking Core database is not configured." };
+  }
+
+  const sql = neon(databaseUrl);
+  const statusRows = await sql`
+    select *
+    from booking_core.inventory_status(${params.arrival}::date, ${params.departure}::date)
+  `;
+  const inventoryStatus = String((statusRows as any[])[0]?.status || "DATA_UNAVAILABLE");
+
+  if (inventoryStatus !== "READY") {
+    return {
+      ok: false,
+      status: 409,
+      message: "Η διαθεσιμότητα δεν είναι αρκετά φρέσκια. Κάνε ξανά Έλεγχο διαθεσιμότητας πριν την κράτηση.",
+    };
+  }
+
+  const availableRows = await sql`
+    select room_id::text as room_id, unit_id::text as unit_id
+    from booking_core.search_availability(
+      ${params.arrival}::date,
+      ${params.departure}::date,
+      ${params.guests}
+    )
+    where room_id::text = ${String(params.roomId)}::text
+      and unit_id::text = ${String(params.unitId)}::text
+    limit 1
+  `;
+
+  if ((availableRows as any[]).length === 0) {
+    return {
+      ok: false,
+      status: 409,
+      message: "Το δωμάτιο δεν είναι πλέον διαθέσιμο για αυτές τις ημερομηνίες. Κάνε νέο έλεγχο διαθεσιμότητας.",
+    };
+  }
+
+  return { ok: true, status: 200, message: "OK" };
+}
+
 async function exchangeInviteCode() {
   const inviteCode = process.env.BEDS24_INVITE_CODE;
-
   if (!inviteCode) {
     throw new Error("Missing BEDS24_REFRESH_TOKEN, BEDS24_LONG_LIFE_TOKEN or BEDS24_INVITE_CODE.");
   }
 
   const response = await fetch(`${beds24BaseUrl}/authentication/setup`, {
     method: "GET",
-    headers: {
-      accept: "application/json",
-      code: inviteCode,
-    },
+    headers: { accept: "application/json", code: inviteCode },
     cache: "no-store",
   });
-
   const data = (await response.json().catch(() => null)) as Beds24TokenResponse | null;
 
   if (!response.ok || !data?.refreshToken) {
@@ -149,20 +172,13 @@ async function exchangeInviteCode() {
 
 async function getAccessToken() {
   let refreshToken = process.env.BEDS24_REFRESH_TOKEN || process.env.BEDS24_LONG_LIFE_TOKEN;
-
-  if (!refreshToken) {
-    refreshToken = await exchangeInviteCode();
-  }
+  if (!refreshToken) refreshToken = await exchangeInviteCode();
 
   const response = await fetch(`${beds24BaseUrl}/authentication/token`, {
     method: "GET",
-    headers: {
-      accept: "application/json",
-      refreshToken,
-    },
+    headers: { accept: "application/json", refreshToken },
     cache: "no-store",
   });
-
   const data = (await response.json().catch(() => null)) as Beds24TokenResponse | null;
 
   if (!response.ok || !data?.token) {
@@ -174,18 +190,9 @@ async function getAccessToken() {
 
 function extractBookingId(result: Beds24BookingResponse): string | number | null {
   const paths: Array<Array<string | number>> = [
-    ["id"],
-    ["bookId"],
-    [0, "id"],
-    [0, "bookId"],
-    ["new", "id"],
-    ["new", 0, "id"],
-    ["result", 0, "new", "id"],
-    ["result", 0, "info", 0, "id"],
-    [0, "new", "id"],
-    [0, "info", 0, "id"],
-    ["data", 0, "id"],
-    ["bookings", 0, "id"],
+    ["id"], ["bookId"], [0, "id"], [0, "bookId"], ["new", "id"], ["new", 0, "id"],
+    ["result", 0, "new", "id"], ["result", 0, "info", 0, "id"], [0, "new", "id"],
+    [0, "info", 0, "id"], ["data", 0, "id"], ["bookings", 0, "id"],
   ];
 
   for (const path of paths) {
@@ -193,11 +200,7 @@ function extractBookingId(result: Beds24BookingResponse): string | number | null
     let found = true;
 
     for (const segment of path) {
-      if (
-        value !== null &&
-        typeof value === "object" &&
-        segment in value
-      ) {
+      if (value !== null && typeof value === "object" && segment in value) {
         value = (value as Record<string | number, unknown>)[segment];
       } else {
         found = false;
@@ -205,35 +208,21 @@ function extractBookingId(result: Beds24BookingResponse): string | number | null
       }
     }
 
-    if (found && value !== null && value !== "") {
-      return value as string | number;
-    }
+    if (found && value !== null && value !== "") return value as string | number;
   }
 
   return null;
 }
 
 function extractReference(result: Beds24BookingResponse): string | null {
-  if (!result || typeof result !== "object") {
-    return null;
-  }
-
+  if (!result || typeof result !== "object") return null;
   const record = result as Record<string, unknown>;
-
-  if (typeof record.reference === "string") {
-    return record.reference;
-  }
-
-  if (typeof record.bookingReference === "string") {
-    return record.bookingReference;
-  }
+  if (typeof record.reference === "string") return record.reference;
+  if (typeof record.bookingReference === "string") return record.bookingReference;
 
   if (Array.isArray(result) && result[0] && typeof result[0] === "object") {
     const first = result[0] as Record<string, unknown>;
-
-    if (typeof first.reference === "string") {
-      return first.reference;
-    }
+    if (typeof first.reference === "string") return first.reference;
   }
 
   return null;
@@ -252,10 +241,7 @@ function makeGuestMessage(params: {
   email: string;
   phone: string;
 }) {
-  const ratePerDay = params.price !== null && params.nights > 0
-    ? (params.price / params.nights).toFixed(2)
-    : null;
-
+  const ratePerDay = params.price !== null && params.nights > 0 ? (params.price / params.nights).toFixed(2) : null;
   const lines = [
     "Thank you for your booking at Voulamandis House.",
     "Your trip to Chios has just begun!",
@@ -268,31 +254,18 @@ function makeGuestMessage(params: {
     `Number of children: ${params.children}`,
   ];
 
-  if (ratePerDay) {
-    lines.push(`Rate per day: ${ratePerDay} EUR`);
-  }
-
+  if (ratePerDay) lines.push(`Rate per day: ${ratePerDay} EUR`);
   lines.push(`Name: ${params.firstName}`);
   lines.push(`Surname: ${params.lastName}`);
-
-  if (params.email) {
-    lines.push(`Email: ${params.email}`);
-  }
-
-  if (params.phone) {
-    lines.push(`Telephone: ${params.phone}`);
-  }
-
+  if (params.email) lines.push(`Email: ${params.email}`);
+  if (params.phone) lines.push(`Telephone: ${params.phone}`);
   lines.push("");
   lines.push("Please confirm that everything from the above is right.");
-
   return lines.join("\n");
 }
 
 export async function GET(request: NextRequest) {
-  if (!isAuthorized(request)) {
-    return unauthorized();
-  }
+  if (!isAuthorized(request)) return unauthorized();
 
   return jsonResponse({
     rooms: roomMappings,
@@ -304,13 +277,10 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  if (!isAuthorized(request)) {
-    return unauthorized();
-  }
+  if (!isAuthorized(request)) return unauthorized();
 
   try {
     const body = await request.json();
-
     const propertyId = Number(process.env.BEDS24_PROPERTY_ID || 0);
     const roomId = cleanNumber(body.roomId, 0);
     const unitId = cleanNumber(body.unitId, 0);
@@ -327,6 +297,7 @@ export async function POST(request: NextRequest) {
     const language = cleanString(body.language) || "en";
     const adults = Math.max(1, cleanNumber(body.adults, 1));
     const children = Math.max(0, cleanNumber(body.children, 0));
+    const totalGuests = adults + children;
     const priceRaw = body.price === "" || body.price === null || typeof body.price === "undefined"
       ? null
       : cleanNumber(body.price, NaN);
@@ -335,27 +306,18 @@ export async function POST(request: NextRequest) {
     const notes = cleanString(body.notes);
     const referrer = cleanString(body.referrer) || "Staff Direct";
 
-    if (!propertyId) {
-      return jsonResponse({ message: "Missing BEDS24_PROPERTY_ID." }, 500);
-    }
-
-    if (!room) {
-      return jsonResponse({ message: "Invalid room or unit." }, 400);
-    }
-
-    if (!isValidDate(arrival) || !isValidDate(departure)) {
-      return jsonResponse({ message: "Dates must be YYYY-MM-DD." }, 400);
-    }
+    if (!propertyId) return jsonResponse({ message: "Missing BEDS24_PROPERTY_ID." }, 500);
+    if (!room) return jsonResponse({ message: "Invalid room or unit." }, 400);
+    if (!isValidDate(arrival) || !isValidDate(departure)) return jsonResponse({ message: "Dates must be YYYY-MM-DD." }, 400);
 
     const nights = nightsBetween(arrival, departure);
+    if (nights <= 0) return jsonResponse({ message: "Departure must be after arrival." }, 400);
+    if (!firstName || !lastName) return jsonResponse({ message: "First name and last name are required." }, 400);
+    if (totalGuests < 1 || totalGuests > 5) return jsonResponse({ message: "Guest count must be between 1 and 5." }, 400);
+    if (price !== null && price < 0) return jsonResponse({ message: "Price cannot be negative." }, 400);
 
-    if (nights <= 0) {
-      return jsonResponse({ message: "Departure must be after arrival." }, 400);
-    }
-
-    if (!firstName || !lastName) {
-      return jsonResponse({ message: "First name and last name are required." }, 400);
-    }
+    const availability = await verifyBookingCoreAvailability({ arrival, departure, guests: totalGuests, roomId, unitId });
+    if (!availability.ok) return jsonResponse({ message: availability.message }, availability.status);
 
     const payload = {
       propertyId,
@@ -377,7 +339,7 @@ export async function POST(request: NextRequest) {
       notes,
       price,
       nights,
-      apiMessage: "Voulamandis Staff Vercel Booker",
+      apiMessage: "Voulamandis Staff Room Finder",
       refererEditable: referrer,
     };
 
@@ -386,7 +348,6 @@ export async function POST(request: NextRequest) {
     );
 
     const token = await getAccessToken();
-
     const response = await fetch(`${beds24BaseUrl}/bookings`, {
       method: "POST",
       headers: {
@@ -401,26 +362,13 @@ export async function POST(request: NextRequest) {
     const result = (await response.json().catch(() => null)) as Beds24BookingResponse;
 
     if (!response.ok) {
-      return jsonResponse(
-        {
-          message: `Beds24 returned error ${response.status}.`,
-          details: result,
-        },
-        400
-      );
+      return jsonResponse({ message: `Beds24 returned error ${response.status}.`, details: result }, 400);
     }
 
     const bookingId = extractBookingId(result);
     const reference = extractReference(result);
-
     if (!bookingId) {
-      return jsonResponse(
-        {
-          message: "Beds24 did not return a booking id.",
-          raw: result,
-        },
-        502
-      );
+      return jsonResponse({ message: "Beds24 did not return a booking id.", raw: result }, 502);
     }
 
     const customerPhone = mobile || phone;
@@ -449,21 +397,12 @@ export async function POST(request: NextRequest) {
       reference,
       roomLabel: room.label,
       categoryLabel: room.categoryLabel,
-      raw: result,
       whatsappUrl,
       viberMessage: guestMessage,
       viberLink: process.env.BEDS24_VIBER_LINK || "",
       customerPhone: customerPhoneDigits,
     });
   } catch (error) {
-    return jsonResponse(
-      {
-        message: error instanceof Error ? error.message : "Unknown booking error.",
-      },
-      500
-    );
+    return jsonResponse({ message: error instanceof Error ? error.message : "Unknown booking error." }, 500);
   }
 }
-
-
-
