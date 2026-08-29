@@ -99,6 +99,11 @@ function isTripPlannerPath(pathname: string): boolean {
   return normalizedPathname === "/trip-planner/";
 }
 
+function isAiAssistantPath(pathname: string): boolean {
+  const normalizedPathname = pathname.endsWith("/") ? pathname : pathname + "/";
+  return normalizedPathname === "/ai-assistant/";
+}
+
 export default async function RootLayout({
   children,
 }: {
@@ -121,12 +126,20 @@ export default async function RootLayout({
     : sharedLanguage === "en"
       ? "/llms.txt"
       : `/${sharedLanguage}/llms.txt`;
+  const webMcpOriginTrialToken = isAiAssistantPath(pathname)
+    ? process.env.WEBMCP_ORIGIN_TRIAL_TOKEN?.trim() || null
+    : null;
 
   return (
     <html lang={htmlLanguage}>
-      {aiGuideHref ? (
+      {aiGuideHref || webMcpOriginTrialToken ? (
         <head>
-          <link rel="describedby" href={aiGuideHref} type="text/markdown" />
+          {webMcpOriginTrialToken ? (
+            <meta httpEquiv="origin-trial" content={webMcpOriginTrialToken} />
+          ) : null}
+          {aiGuideHref ? (
+            <link rel="describedby" href={aiGuideHref} type="text/markdown" />
+          ) : null}
         </head>
       ) : null}
       <body>
