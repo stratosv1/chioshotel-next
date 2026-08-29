@@ -167,15 +167,19 @@ expectAll(
 expectAll(
   "app/layout.tsx",
   [
+    'import { RoomFinderWebMCP } from "@/components/ai/webmcp/RoomFinderWebMCP"',
     'rel="describedby"',
     'type="text/markdown"',
     '"/llms.txt"',
     '`/${sharedLanguage}/llms.txt`',
     "WEBMCP_ORIGIN_TRIAL_TOKEN",
     'httpEquiv="origin-trial"',
-    "isAiAssistantPath(pathname)",
+    "publicWebMcpPath",
+    "!privatePhysicsPath && !staffPath && !isPolishPath",
+    "isChiosHotelHost(requestHost)",
+    "{publicWebMcpPath ? <RoomFinderWebMCP /> : null}",
   ],
-  "public pages must advertise localized llms guides and support scoped WebMCP origin-trial activation",
+  "supported public pages must advertise localized AI guides and register WebMCP while private/staff paths stay excluded",
 );
 
 expectAll(
@@ -241,10 +245,10 @@ expectNone(
   "Agentic public data API must remain read-only",
 );
 
-expect(
+expectNone(
   "app/ai-assistant/page.tsx",
-  "<RoomFinderWebMCP />",
-  "AI room finder page must register the WebMCP tools",
+  ["<RoomFinderWebMCP />", 'from "@/components/ai/webmcp/RoomFinderWebMCP"'],
+  "AI room finder must not duplicate the WebMCP registration already provided by the public root layout",
 );
 
 expect(
