@@ -182,7 +182,11 @@ expectAll(
   "components/ai/webmcp/RoomFinderWebMCP.tsx",
   [
     "check_voulamandis_room_availability",
+    "get_voulamandis_rooms",
+    "get_voulamandis_offers",
+    "get_voulamandis_property_info",
     "/api/ai-room-finder/availability",
+    "/api/agentic/voulamandis",
     "readOnlyHint: true",
     "untrustedContentHint: false",
     "execute: async (input, client = {}) =>",
@@ -193,14 +197,39 @@ expectAll(
     "requestController.signal",
     'code: "CANCELLED"',
     "bookingCreated: false",
+    "for (const tool of tools)",
   ],
-  "WebMCP availability tool must honor browser cancellation, keep its timeout, and remain read-only",
+  "WebMCP commercial tools must stay read-only, cancellable and connected to approved public APIs",
 );
 
 expectNone(
   "components/ai/webmcp/RoomFinderWebMCP.tsx",
   ["execute: async (input) =>"],
   "WebMCP execute must accept the current cancellation client argument",
+);
+
+expectAll(
+  "app/api/agentic/voulamandis/route.ts",
+  [
+    'import { getAgentRoomGuideData } from "@/lib/agent-room-guide-data"',
+    'import { SALES_KNOWLEDGE } from "@/lib/ai-assistant/knowledge"',
+    'import { AI_DISCOVERY_COPY } from "@/lib/ai-discovery/config"',
+    "resolveDiscoveryUrl",
+    'resource === "rooms"',
+    'resource === "property"',
+    'resource === "offers"',
+    'source: "booking_core.rooms + booking_core.room_features"',
+    '"X-Robots-Tag": "noindex"',
+    "discountPercent: 10",
+    "stackable: false",
+  ],
+  "Agentic public data API must reuse Booking Core, existing sales knowledge and canonical discovery routes",
+);
+
+expectNone(
+  "app/api/agentic/voulamandis/route.ts",
+  ["insert into", "update booking_core", "delete from", "bookingCreated: true"],
+  "Agentic public data API must remain read-only",
 );
 
 expect(
