@@ -53,6 +53,7 @@ type CanonicalRow = {
   available: boolean;
   status: string;
   reason: "PRICE_OK" | "BOOKED" | "CLOSED";
+  bookingId: string | null;
 };
 
 type CanonicalSnapshot = {
@@ -101,6 +102,7 @@ function parseCanonicalRow(value: unknown, index: number): CanonicalRow {
   const status = text(row.status);
   const reason = text(row.reason).toUpperCase();
   const available = row.available;
+  const bookingId = text(row.bookingId);
 
   if (!validIsoDate(date)) throw new Error(`Source row ${index} has an invalid date`);
   if (!roomId || !unitId) throw new Error(`Source row ${index} is missing roomId/unitId`);
@@ -117,6 +119,7 @@ function parseCanonicalRow(value: unknown, index: number): CanonicalRow {
   if (available && reason !== "PRICE_OK") throw new Error(`Source row ${index} is available but reason is ${reason}`);
   if (!available && reason === "PRICE_OK") throw new Error(`Source row ${index} is unavailable but reason is PRICE_OK`);
   if (available && price === null) throw new Error(`Source row ${index} is sellable but missing the required reference price`);
+  if (reason !== "BOOKED" && bookingId) throw new Error(`Source row ${index} has bookingId but reason is ${reason}`);
 
   return {
     date,
@@ -129,6 +132,7 @@ function parseCanonicalRow(value: unknown, index: number): CanonicalRow {
     available,
     status: status || (available ? String(price) : reason),
     reason: reason as CanonicalRow["reason"],
+    bookingId: reason === "BOOKED" && bookingId ? bookingId : null,
   };
 }
 
@@ -257,6 +261,33 @@ async function recordFailure(databaseUrl: string, startedAt: number, message: st
   }
 }
 
+async function syncInventoryBookingIds(
+  sql: ReturnType<typeof neon>,
+  rows: CanonicalRow[],
+) {
+  await sql`
+    with incoming as (
+      select
+        nullif(item->>'date', '')::date as stay_date,
+        nullif(item->>'roomId', '') as room_id,
+        nullif(item->>'unitId', '') as unit_id,
+        case
+          when upper(coalesce(item->>'reason', '')) = 'BOOKED'
+            then nullif(btrim(item->>'bookingId'), '')
+          else null
+        end as booking_id
+      from jsonb_array_elements(${JSON.stringify(rows)}::jsonb) as item
+    )
+    update booking_core.inventory as inventory
+    set booking_id = incoming.booking_id
+    from incoming
+    where inventory.stay_date = incoming.stay_date
+      and inventory.source_room_id::text = incoming.room_id
+      and inventory.source_unit_id::text = incoming.unit_id
+      and inventory.booking_id is distinct from incoming.booking_id
+  `;
+}
+
 async function syncBookingCore(request: NextRequest) {
   if (!isAuthorized(request)) {
     return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
@@ -338,6 +369,8 @@ async function syncBookingCore(request: NextRequest) {
         ${source}
       )
     `;
+
+    await syncInventoryBookingIds(sql, snapshot.rows);
 
     const saved = (result as any[])?.[0] || {};
     const rowsWritten = Number(saved.rows_written || 0);
