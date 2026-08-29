@@ -13,6 +13,16 @@ import {
 
 const SECTION_ORDER = ["accommodation", "booking", "property"] as const;
 
+const FULL_INDEX_HEADINGS: Record<LanguageCode, string> = {
+  en: "Complete AI-readable site index",
+  el: "Πλήρες ευρετήριο του site για AI",
+  fr: "Index complet du site pour les agents AI",
+  de: "Vollständiger AI-lesbarer Website-Index",
+  it: "Indice completo del sito per agenti AI",
+  es: "Índice completo del sitio para agentes AI",
+  tr: "AI ajanları için tam site dizini",
+};
+
 type DiscoverySection = (typeof SECTION_ORDER)[number];
 
 function markdownLink(label: string, url: string, description: string) {
@@ -71,7 +81,7 @@ function buildLanguageGuide(language: LanguageCode, includeLocalizedIndex: boole
     "",
     ...sections,
     localizedIndex,
-    "## Complete AI-readable site index",
+    `## ${FULL_INDEX_HEADINGS[language]}`,
     "",
     markdownLink(
       copy.fullGuideLabel,
