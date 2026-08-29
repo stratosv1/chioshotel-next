@@ -336,6 +336,15 @@ function getBookingArray(payload: unknown): any[] {
   return [];
 }
 
+function getMessageArray(payload: unknown): any[] {
+  if (Array.isArray(payload)) return payload;
+  if (!payload || typeof payload !== "object") return [];
+  const record = payload as Record<string, unknown>;
+  if (Array.isArray(record.data)) return record.data as any[];
+  if (Array.isArray(record.messages)) return record.messages as any[];
+  return [];
+}
+
 function sourceLabel(booking: any) {
   const sourceId = Number(booking?.apiSourceId);
   if (Number.isInteger(sourceId) && API_SOURCE_LABELS[sourceId]) return API_SOURCE_LABELS[sourceId];
@@ -346,6 +355,48 @@ function sourceLabel(booking: any) {
 function guestCount(value: unknown) {
   const parsed = Number(value);
   return Number.isFinite(parsed) && parsed >= 0 ? Math.trunc(parsed) : 0;
+}
+
+async function getInternalNotesByBooking(token: string, bookingIds: string[]) {
+  const result = new Map<string, string[]>();
+  const ids = [...new Set(bookingIds.filter((id) => /^\d+$/.test(id)))];
+  if (!ids.length) return result;
+
+  const url = new URL("https://api.beds24.com/v2/bookings/messages");
+  url.searchParams.set("source", "internalNote");
+  for (const bookingId of ids) url.searchParams.append("bookingId", bookingId);
+
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: { accept: "application/json", token },
+      cache: "no-store",
+      signal: AbortSignal.timeout(12_000),
+    });
+
+    if (!response.ok) {
+      console.error(`Staff arrivals internal notes lookup failed with HTTP ${response.status}`);
+      return result;
+    }
+
+    const payload = await response.json().catch(() => null);
+    const messages = getMessageArray(payload)
+      .filter((item) => String(item?.source || "") === "internalNote")
+      .sort((a, b) => String(a?.time || "").localeCompare(String(b?.time || "")));
+
+    for (const item of messages) {
+      const bookingId = String(item?.bookingId ?? "").trim();
+      const message = String(item?.message ?? "").trim();
+      if (!bookingId || !message || !ids.includes(bookingId)) continue;
+      const current = result.get(bookingId) || [];
+      current.push(message);
+      result.set(bookingId, current);
+    }
+  } catch (error) {
+    console.error("Staff arrivals internal notes lookup failed", error);
+  }
+
+  return result;
 }
 
 async function buildArrivalsAnswer(date: string) {
@@ -368,10 +419,20 @@ async function buildArrivalsAnswer(date: string) {
     if (!response.ok) return `Δεν μπόρεσα να διαβάσω τις αφίξεις από το Beds24 (HTTP ${response.status}).`;
 
     const payload = await response.json().catch(() => null);
-    const bookings = getBookingArray(payload)
+    const rawBookings = getBookingArray(payload)
       .filter((booking) => dateOnly(booking?.arrival || booking?.checkIn) === date)
-      .filter((booking) => !/(cancel|canceled|cancelled)/i.test(String(booking?.status || "")))
+      .filter((booking) => !/(cancel|canceled|cancelled)/i.test(String(booking?.status || "")));
+
+    if (!rawBookings.length) return `Δεν υπάρχουν αφίξεις στις ${prettyDate(date)}.`;
+
+    const internalNotesByBooking = await getInternalNotesByBooking(
+      token,
+      rawBookings.map((booking) => String(booking?.id ?? "").trim()),
+    );
+
+    const bookings = rawBookings
       .map((booking) => {
+        const bookingId = String(booking?.id ?? "").trim();
         const roomId = String(booking?.roomId ?? "").trim();
         const unitId = String(booking?.unitId ?? "").trim();
         const roomNumber = ROOM_BY_SOURCE.get(`${roomId}:${unitId}`) ?? null;
@@ -391,18 +452,20 @@ async function buildArrivalsAnswer(date: string) {
           nights,
           adults,
           children,
+          internalNotes: internalNotesByBooking.get(bookingId) || [],
         };
       })
       .sort((a, b) => (a.roomNumber ?? 99) - (b.roomNumber ?? 99) || a.name.localeCompare(b.name, "el"));
-
-    if (!bookings.length) return `Δεν υπάρχουν αφίξεις στις ${prettyDate(date)}.`;
 
     const lines = bookings.map((booking, index) => {
       const room = booking.roomNumber ? `Δωμάτιο ${booking.roomNumber}` : (booking.roomName || "Δωμάτιο -");
       const nightsText = booking.nights === 1 ? "1 νύχτα" : `${booking.nights} νύχτες`;
       const adultsText = booking.adults === 1 ? "1 ενήλικας" : `${booking.adults} ενήλικες`;
       const childrenText = booking.children === 1 ? "1 παιδί" : `${booking.children} παιδιά`;
-      return `${index + 1}. ${booking.source} · ${room}\n${booking.name} · ${nightsText}\n${adultsText} · ${childrenText}`;
+      const notesText = booking.internalNotes.length
+        ? `\nInternal notes: ${booking.internalNotes.join(" • ")}`
+        : "";
+      return `${index + 1}. ${booking.source} · ${room}\n${booking.name} · ${nightsText}\n${adultsText} · ${childrenText}${notesText}`;
     });
 
     return `Αφίξεις ${prettyDate(date)} · ${bookings.length}\n\n${lines.join("\n\n")}`;
