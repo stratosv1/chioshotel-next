@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { CalendarDays, Check, ChevronLeft, ChevronRight, Clock3, History, LoaderCircle, MessageSquareText, Search, Send, Users } from "lucide-react";
+import { CalendarDays, Check, ChevronDown, ChevronLeft, ChevronRight, Clock3, History, LoaderCircle, MessageSquareText, Search, Send, Users } from "lucide-react";
 
 type RoomOffer = { roomNumber: number; name: string; category: string; floor: string; maxGuests: number; systemTotal: number; originalTotal: number };
 type SplitOffer = { changeDate: string; firstRoomNumber: number; firstName: string; firstCategory: string; secondRoomNumber: number; secondName: string; secondCategory: string; systemTotal: number };
@@ -71,6 +71,7 @@ export default function RoomAgreementsApp() {
   const [sending, setSending] = useState(false);
   const [feedback, setFeedback] = useState<{ kind: "ok" | "error"; text: string } | null>(null);
   const [history, setHistory] = useState<Agreement[]>([]);
+  const [historyOpen, setHistoryOpen] = useState(false);
   const [historyStatus, setHistoryStatus] = useState("all");
   const [historyPhone, setHistoryPhone] = useState("");
   const [debouncedHistoryPhone, setDebouncedHistoryPhone] = useState("");
@@ -110,7 +111,7 @@ export default function RoomAgreementsApp() {
     }
   }, [debouncedHistoryPhone, historyStatus]);
 
-  useEffect(() => { void loadHistory(); }, [loadHistory]);
+  useEffect(() => { if (historyOpen) void loadHistory(); }, [historyOpen, loadHistory]);
 
   useEffect(() => {
     setSelection(null); setAgreedTotal(""); setRooms([]); setSplits([]); setFeedback(null);
@@ -171,7 +172,7 @@ export default function RoomAgreementsApp() {
         ? { kind: "ok", text: "Τα SMS στάλθηκαν στον πελάτη και στο δικό σου κινητό." }
         : { kind: "error", text: `Η συμφωνία αποθηκεύτηκε. SMS πελάτη: ${customerSent ? "στάλθηκε" : "απέτυχε"} · δικό σου: ${ownerSent ? "στάλθηκε" : "απέτυχε"}.` });
       if (customerSent) setCustomerPhone("+30");
-      await loadHistory();
+      if (historyOpen) await loadHistory();
     } catch (error) { setFeedback({ kind: "error", text: (error as Error).message }); }
     finally { sendLockRef.current = false; setSending(false); }
   }
@@ -246,10 +247,11 @@ export default function RoomAgreementsApp() {
         </section>
 
         <section className="min-w-0 overflow-hidden rounded-3xl border border-[#e5dacb] bg-white p-3 shadow-sm sm:p-4 lg:sticky lg:top-20 lg:self-start">
-          <div className="mb-3 flex items-center gap-2"><History className="size-5 text-[#9b6b36]"/><h2 className="font-black">Ιστορικό συμφωνιών</h2>{historyLoading && <LoaderCircle className="ml-auto size-4 animate-spin"/>}</div>
-          <div className="mb-3 grid grid-cols-2 gap-2">{(["all","pending","completed","declined"] as const).map((status) => <button key={status} type="button" onClick={() => setHistoryStatus(status)} className={`min-w-0 rounded-xl border px-2 py-2 text-xs font-bold ${historyStatus === status ? "border-[#855b2c] bg-[#855b2c] text-white" : "border-[#e1d6c8] bg-[#fcfaf7]"}`}>{status === "all" ? "Όλα" : statusLabels[status]}</button>)}</div>
-          <div className="relative mb-4"><Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#887e74]"/><input value={historyPhone} onChange={(event) => setHistoryPhone(event.target.value)} inputMode="tel" aria-label="Αναζήτηση ιστορικού με κινητό" placeholder="Αναζήτηση με κινητό" className="h-11 w-full rounded-xl border border-[#ddd1c2] bg-[#fcfaf7] pl-9 pr-3 text-sm outline-none focus:ring-2 focus:ring-[#9b6b36]/25"/></div>
-          <div className="space-y-3 lg:max-h-[70vh] lg:overflow-y-auto lg:pr-1">
+          <button type="button" aria-expanded={historyOpen} aria-controls="room-agreements-history" onClick={() => setHistoryOpen((open) => !open)} className={`flex w-full items-center gap-2 text-left ${historyOpen ? "mb-3" : ""}`}><History className="size-5 shrink-0 text-[#9b6b36]"/><h2 className="font-black">Ιστορικό συμφωνιών</h2>{historyLoading && historyOpen && <LoaderCircle className="ml-auto size-4 animate-spin"/>}<ChevronDown className={`ml-auto size-5 shrink-0 text-[#8b6a46] transition-transform ${historyOpen ? "rotate-180" : ""}`}/></button>
+          {historyOpen && <div id="room-agreements-history">
+            <div className="mb-3 grid grid-cols-2 gap-2">{(["all","pending","completed","declined"] as const).map((status) => <button key={status} type="button" onClick={() => setHistoryStatus(status)} className={`min-w-0 rounded-xl border px-2 py-2 text-xs font-bold ${historyStatus === status ? "border-[#855b2c] bg-[#855b2c] text-white" : "border-[#e1d6c8] bg-[#fcfaf7]"}`}>{status === "all" ? "Όλα" : statusLabels[status]}</button>)}</div>
+            <div className="relative mb-4"><Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#887e74]"/><input value={historyPhone} onChange={(event) => setHistoryPhone(event.target.value)} inputMode="tel" aria-label="Αναζήτηση ιστορικού με κινητό" placeholder="Αναζήτηση με κινητό" className="h-11 w-full rounded-xl border border-[#ddd1c2] bg-[#fcfaf7] pl-9 pr-3 text-sm outline-none focus:ring-2 focus:ring-[#9b6b36]/25"/></div>
+            <div className="space-y-3 lg:max-h-[70vh] lg:overflow-y-auto lg:pr-1">
             {historyError && <p className="rounded-2xl bg-[#fff0ed] p-3 text-sm font-semibold text-[#8c3f35]">{historyError}</p>}
             {history.map((item) => <article key={item.id} className="min-w-0 overflow-hidden rounded-2xl border border-[#e4dacd] bg-[#fcfaf7] p-3">
               <div className="flex min-w-0 items-start justify-between gap-2"><div className="min-w-0"><strong className="block break-all text-base">+{item.customer_phone}</strong><span className="flex items-center gap-1 text-xs text-[#71675e]"><Clock3 className="size-3 shrink-0"/>{dateTime(item.created_at)}</span></div><span className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-black ${item.booking_status === "completed" ? "bg-[#e3efdc] text-[#4d693e]" : item.booking_status === "declined" ? "bg-[#f3e7e4] text-[#8b4b43]" : "bg-[#fff0d9] text-[#8c632c]"}`}>{statusLabels[item.booking_status]}</span></div>
@@ -259,7 +261,8 @@ export default function RoomAgreementsApp() {
               {item.booking_status === "pending" && <div className="grid grid-cols-2 gap-2"><button type="button" disabled={Boolean(updatingId)} onClick={() => updateStatus(item.id, "completed")} className="flex h-10 items-center justify-center gap-1 rounded-xl bg-[#657556] text-xs font-black text-white disabled:opacity-50">{updatingId === item.id ? <LoaderCircle className="size-4 animate-spin"/> : <Check className="size-4"/>}Ολοκληρώθηκε</button><button type="button" disabled={Boolean(updatingId)} onClick={() => updateStatus(item.id, "declined")} className="h-10 rounded-xl border border-[#d9c7c0] text-xs font-bold text-[#81534d] disabled:opacity-50">Δεν προχώρησε</button></div>}
             </article>)}
             {!historyLoading && history.length === 0 && <p className="py-8 text-center text-sm text-[#80756b]">Δεν υπάρχουν εγγραφές.</p>}
-          </div>
+            </div>
+          </div>}
         </section>
       </div>
 
