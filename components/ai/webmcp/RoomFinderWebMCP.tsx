@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 import type { RoomFinderLanguage } from "@/components/ai/room-finder-copy";
 
 const AVAILABILITY_TOOL = "check_voulamandis_room_availability";
@@ -432,7 +432,7 @@ function knowledgeTool(): WebMcpTool {
 }
 
 export function RoomFinderWebMCP() {
-  useEffect(() => {
+  useLayoutEffect(() => {
     const modelContext = (document as WebMcpDocument).modelContext;
     if (!modelContext) return;
 
