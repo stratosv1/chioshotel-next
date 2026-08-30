@@ -1,8 +1,8 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import ExpensesApp from "./ExpensesApp";
 
 export const metadata: Metadata = {
-  title: "Έξοδα Ξενοδοχείου | Staff Area",
+  title: "Έξοδα | Staff Area",
   robots: {
     index: false,
     follow: false,
