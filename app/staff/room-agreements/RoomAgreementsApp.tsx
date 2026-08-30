@@ -190,7 +190,7 @@ export default function RoomAgreementsApp() {
   }
 
   return (
-    <main className="min-h-screen bg-[#f7f3ec] pb-24 text-[#352f29]">
+    <main className="min-h-screen max-w-full overflow-x-hidden bg-[#f7f3ec] pb-24 text-[#352f29]">
       <header className="sticky top-0 z-30 border-b border-[#e7ddcf] bg-[#f7f3ec]/95 px-4 py-3 backdrop-blur">
         <div className="mx-auto flex max-w-5xl items-center gap-3">
           <Link href="/staff" aria-label="Πίσω στο Staff" className="flex size-11 items-center justify-center rounded-full bg-white shadow-sm"><ChevronLeft /></Link>
@@ -198,8 +198,8 @@ export default function RoomAgreementsApp() {
         </div>
       </header>
 
-      <div className="mx-auto grid max-w-5xl gap-5 px-2 py-3 sm:px-4 sm:py-4 lg:grid-cols-[1.1fr_.9fr]">
-        <section className="space-y-4">
+      <div className="mx-auto grid w-full max-w-5xl grid-cols-1 gap-5 px-2 py-3 sm:px-4 sm:py-4 lg:grid-cols-[1.1fr_.9fr]">
+        <section className="min-w-0 space-y-4">
           <div className="rounded-3xl border border-[#e5dacb] bg-white p-3 shadow-sm sm:p-4">
             <div className="mb-3 flex items-center gap-2"><CalendarDays className="size-5 text-[#9b6b36]"/><h2 className="font-black">1. Ημερομηνίες</h2></div>
             <p className="mb-3 text-sm text-[#71675e]">Πάτησε check-in και μετά check-out.</p>
@@ -245,14 +245,14 @@ export default function RoomAgreementsApp() {
           {feedback && <div className={`rounded-2xl p-4 text-sm font-bold ${feedback.kind === "ok" ? "bg-[#e9f4e3] text-[#46613b]" : "bg-[#fff0ed] text-[#8c3f35]"}`}>{feedback.text}</div>}
         </section>
 
-        <section className="rounded-3xl border border-[#e5dacb] bg-white p-3 shadow-sm sm:p-4 lg:sticky lg:top-20 lg:self-start">
+        <section className="min-w-0 overflow-hidden rounded-3xl border border-[#e5dacb] bg-white p-3 shadow-sm sm:p-4 lg:sticky lg:top-20 lg:self-start">
           <div className="mb-3 flex items-center gap-2"><History className="size-5 text-[#9b6b36]"/><h2 className="font-black">Ιστορικό συμφωνιών</h2>{historyLoading && <LoaderCircle className="ml-auto size-4 animate-spin"/>}</div>
-          <div className="mb-3 flex gap-2 overflow-x-auto pb-1">{(["all","pending","completed","declined"] as const).map((status) => <button key={status} onClick={() => setHistoryStatus(status)} className={`shrink-0 rounded-full border px-3 py-2 text-xs font-bold ${historyStatus === status ? "border-[#855b2c] bg-[#855b2c] text-white" : "border-[#e1d6c8] bg-[#fcfaf7]"}`}>{status === "all" ? "Όλα" : statusLabels[status]}</button>)}</div>
+          <div className="mb-3 grid grid-cols-2 gap-2">{(["all","pending","completed","declined"] as const).map((status) => <button key={status} type="button" onClick={() => setHistoryStatus(status)} className={`min-w-0 rounded-xl border px-2 py-2 text-xs font-bold ${historyStatus === status ? "border-[#855b2c] bg-[#855b2c] text-white" : "border-[#e1d6c8] bg-[#fcfaf7]"}`}>{status === "all" ? "Όλα" : statusLabels[status]}</button>)}</div>
           <div className="relative mb-4"><Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#887e74]"/><input value={historyPhone} onChange={(event) => setHistoryPhone(event.target.value)} inputMode="tel" aria-label="Αναζήτηση ιστορικού με κινητό" placeholder="Αναζήτηση με κινητό" className="h-11 w-full rounded-xl border border-[#ddd1c2] bg-[#fcfaf7] pl-9 pr-3 text-sm outline-none focus:ring-2 focus:ring-[#9b6b36]/25"/></div>
           <div className="space-y-3 lg:max-h-[70vh] lg:overflow-y-auto lg:pr-1">
             {historyError && <p className="rounded-2xl bg-[#fff0ed] p-3 text-sm font-semibold text-[#8c3f35]">{historyError}</p>}
-            {history.map((item) => <article key={item.id} className="rounded-2xl border border-[#e4dacd] bg-[#fcfaf7] p-3">
-              <div className="flex items-start justify-between gap-2"><div><strong className="block text-base">+{item.customer_phone}</strong><span className="flex items-center gap-1 text-xs text-[#71675e]"><Clock3 className="size-3"/>{dateTime(item.created_at)}</span></div><span className={`rounded-full px-2.5 py-1 text-[11px] font-black ${item.booking_status === "completed" ? "bg-[#e3efdc] text-[#4d693e]" : item.booking_status === "declined" ? "bg-[#f3e7e4] text-[#8b4b43]" : "bg-[#fff0d9] text-[#8c632c]"}`}>{statusLabels[item.booking_status]}</span></div>
+            {history.map((item) => <article key={item.id} className="min-w-0 overflow-hidden rounded-2xl border border-[#e4dacd] bg-[#fcfaf7] p-3">
+              <div className="flex min-w-0 items-start justify-between gap-2"><div className="min-w-0"><strong className="block break-all text-base">+{item.customer_phone}</strong><span className="flex items-center gap-1 text-xs text-[#71675e]"><Clock3 className="size-3 shrink-0"/>{dateTime(item.created_at)}</span></div><span className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-black ${item.booking_status === "completed" ? "bg-[#e3efdc] text-[#4d693e]" : item.booking_status === "declined" ? "bg-[#f3e7e4] text-[#8b4b43]" : "bg-[#fff0d9] text-[#8c632c]"}`}>{statusLabels[item.booking_status]}</span></div>
               <div className="my-3 border-y border-[#e8dfd4] py-2 text-sm"><strong>{shortDate(item.arrival)}–{shortDate(item.departure)}</strong> · {item.guests} άτομα<br/>{item.selection.type === "room" ? `Δωμάτιο ${item.selection.roomNumber}` : `Νο${item.selection.firstRoomNumber} → Νο${item.selection.secondRoomNumber} (${shortDate(item.selection.changeDate)})`} · <strong>{Number(item.agreed_total)}€</strong></div>
               <p className="mb-3 text-[11px] text-[#71675e]">SMS πελάτη: {displaySmsStatus(item.customer_sms_status)} · δικό σου: {displaySmsStatus(item.owner_sms_status)}</p>
               <details className="mb-3 rounded-xl bg-white px-3 py-2 text-xs text-[#71675e]"><summary className="cursor-pointer font-bold text-[#5c534b]">Προβολή SMS</summary><p className="mt-2 whitespace-pre-wrap leading-5">{item.message}</p></details>
