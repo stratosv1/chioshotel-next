@@ -43,8 +43,8 @@ const staffLinks = [
   {
     href: "/staff/expenses",
     icon: "🧾",
-    label: "Έξοδα Ξενοδοχείου",
-    subText: "Καταχώρηση & ανάλυση εξόδων",
+    label: "Έξοδα",
+    subText: "Καταχώρηση & ανάλυση εξόδων Κάμπου, Σπιτιού και Tailormade",
     className: styles.expenses,
   },
   {
