@@ -61,6 +61,16 @@ const NEXT_LABEL: Record<RoomFinderLanguage,string> = {
   tr:"Sonraki oda",
 };
 
+const ROOM_OPTIONS_LABEL: Record<RoomFinderLanguage,string> = {
+  el:"Διαθέσιμες επιλογές δωματίων",
+  en:"Available room options",
+  de:"Verfügbare Zimmeroptionen",
+  fr:"Options de chambres disponibles",
+  it:"Opzioni di camera disponibili",
+  es:"Opciones de habitación disponibles",
+  tr:"Müsait oda seçenekleri",
+};
+
 const RECOMMENDED_LABEL: Record<RoomFinderLanguage,string> = {
   el:"Προτεινόμενο για εσάς",
   en:"Recommended for you",
@@ -191,8 +201,8 @@ export function RoomCarousel({ offers, copy, language, money, onDetails, onSelec
     scroller.scrollBy({ left:direction*distance, behavior:"smooth" });
   };
 
-  return <section className="msg relative -mx-3 sm:mx-0 sm:ml-10">
-    {staffRequestedUnavailable && <div className="mx-3 mb-3 rounded-2xl border border-[#e3cda9] bg-[#fff8ea] px-4 py-3 text-sm font-semibold text-[#765d3b] sm:mx-10">Το Δωμάτιο {staffRequestedUnavailable} που ζήτησες δεν είναι διαθέσιμο για όλη τη διαμονή. Παρακάτω είναι οι διαθέσιμες επιλογές.</div>}
+  return <section className="msg relative -mx-3 sm:mx-0 sm:ml-10" aria-label={ROOM_OPTIONS_LABEL[language]} aria-roledescription="carousel">
+    {staffRequestedUnavailable && <div className="mx-3 mb-3 rounded-2xl border border-[#e3cda9] bg-[#fff8ea] px-4 py-3 text-sm font-semibold text-[#765d3b] sm:mx-10" role="status">Το Δωμάτιο {staffRequestedUnavailable} που ζήτησες δεν είναι διαθέσιμο για όλη τη διαμονή. Παρακάτω είναι οι διαθέσιμες επιλογές.</div>}
     <div ref={scrollerRef} className="hide-scroll flex snap-x snap-mandatory gap-3 overflow-x-auto px-3 pb-2 sm:px-10">
       {offers.map((offer,index) => {
         const key=`${offer.roomId}:${offer.unitId}:${offer.alternativeCheckin||""}`;
@@ -200,7 +210,8 @@ export function RoomCarousel({ offers, copy, language, money, onDetails, onSelec
         const splitVisuals=splitRoomVisuals(offer);
         const isSplit=splitVisuals.length>1;
         const narrative=isSplit?splitStayNarrative(offer,language):null;
-        return <article data-room-card key={key} className="min-w-[92%] snap-center overflow-hidden rounded-[24px] border border-[#dcd2c5] bg-white shadow-[0_14px_38px_rgba(70,55,35,.10)] sm:min-w-[68%]">
+        const optionName=isSplit?SPLIT_SOLUTION_LABEL[language]:offer.name;
+        return <article data-room-card key={key} aria-roledescription="slide" aria-label={`${index+1}/${offers.length}: ${optionName}`} className="min-w-[92%] snap-center overflow-hidden rounded-[24px] border border-[#dcd2c5] bg-white shadow-[0_14px_38px_rgba(70,55,35,.10)] sm:min-w-[68%]">
           <div className="relative h-44 sm:h-56">
             {isSplit ? <div className="grid h-full w-full" style={{gridTemplateColumns:`repeat(${Math.min(splitVisuals.length,3)},minmax(0,1fr))`}}>
               {splitVisuals.slice(0,3).map((roomVisual,visualIndex) => <div key={`${roomVisual.name}:${visualIndex}`} className="relative min-w-0 overflow-hidden border-r border-white/70 last:border-r-0">
@@ -211,7 +222,7 @@ export function RoomCarousel({ offers, copy, language, money, onDetails, onSelec
               </div>)}
             </div> : <Image src={offer.image} alt={offer.name} fill sizes="92vw" className="object-cover"/>}
             {offer.recommended && <span className="absolute left-3 top-3 z-10 rounded-full bg-[#66714f]/95 px-3 py-1.5 text-[11px] font-black text-white shadow-sm">★ {RECOMMENDED_LABEL[language]}</span>}
-            <span className="absolute right-3 top-3 z-10 rounded-full bg-white/90 px-2.5 py-1 text-xs font-bold">{index+1}/{offers.length}</span>
+            <span className="absolute right-3 top-3 z-10 rounded-full bg-white/90 px-2.5 py-1 text-xs font-bold" aria-hidden="true">{index+1}/{offers.length}</span>
           </div>
           <div className="p-3.5">
             {offer.alternativeCheckin && offer.alternativeCheckout && <div className="mb-3 rounded-2xl border border-[#e1d3bd] bg-[#fbf4e8] px-3 py-2 text-xs font-bold text-[#765d3b]">
@@ -219,7 +230,7 @@ export function RoomCarousel({ offers, copy, language, money, onDetails, onSelec
             </div>}
             <div className="flex justify-between gap-3">
               <div className="min-w-0 flex-1">
-                <h2 className="text-[1.35rem] font-bold">{isSplit?SPLIT_SOLUTION_LABEL[language]:offer.name}</h2>
+                <h2 className="text-[1.35rem] font-bold">{optionName}</h2>
                 {isSplit && <p className="mt-1 text-sm font-semibold leading-5 text-[#514a42]">{splitVisuals.map(room => room.name).join(" + ")}</p>}
                 {isSplit ? narrative && <p className="mt-2 text-sm leading-5 text-[#746b60]">{narrative}</p> : <p className="mt-1 text-sm text-[#746b60]">{offer.category} · {offer.floor}</p>}
               </div>
@@ -239,8 +250,8 @@ export function RoomCarousel({ offers, copy, language, money, onDetails, onSelec
             </div> : <div className="mt-2 flex flex-wrap gap-1.5">{(offer.features||[]).slice(0,4).map((feature) => <span key={feature} className="rounded-full bg-[#f1ede7] px-2.5 py-1 text-[11px] font-semibold">{feature}</span>)}</div>}
             {offer.saving > 0 && <p className="mt-3 text-sm font-bold text-[#5f7448]">{copy.saving}: {money(offer.saving,language)}</p>}
             <div className="mt-3 grid grid-cols-2 gap-2">
-              <button onClick={() => onDetails(offer)} className="min-h-11 rounded-2xl border border-[#d8cec1] font-bold">{copy.details}</button>
-              <button onClick={() => onSelect(offer)} disabled={Boolean(selectingOfferKey)} aria-busy={pending} className="min-h-11 rounded-2xl bg-[#66714f] px-2 font-bold text-white transition disabled:cursor-wait disabled:opacity-70">{pending?`✓ ${SELECTING_LABEL[language]}`:(isSplit?SELECT_SOLUTION_LABEL[language]:copy.select)}</button>
+              <button type="button" onClick={() => onDetails(offer)} aria-label={`${copy.details}: ${optionName}`} className="min-h-11 rounded-2xl border border-[#d8cec1] font-bold">{copy.details}</button>
+              <button type="button" onClick={() => onSelect(offer)} disabled={Boolean(selectingOfferKey)} aria-busy={pending} aria-label={`${isSplit?SELECT_SOLUTION_LABEL[language]:copy.select}: ${optionName}`} className="min-h-11 rounded-2xl bg-[#66714f] px-2 font-bold text-white transition disabled:cursor-wait disabled:opacity-70">{pending?`✓ ${SELECTING_LABEL[language]}`:(isSplit?SELECT_SOLUTION_LABEL[language]:copy.select)}</button>
             </div>
           </div>
         </article>;
