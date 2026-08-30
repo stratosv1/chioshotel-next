@@ -10,5 +10,11 @@
         }
       ]
     }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/beds24-refresh-keepalive",
+      "schedule": "0 4 * * 1"
+    }
   ]
 }
