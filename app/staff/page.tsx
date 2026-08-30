@@ -12,6 +12,13 @@ export const metadata: Metadata = {
 
 const staffLinks = [
   {
+    href: "/staff/room-agreements",
+    icon: "📲",
+    label: "Αναζήτηση & Συμφωνία",
+    subText: "Mobile room finder · split stay · αποστολή SMS · ιστορικό",
+    className: styles.directBooking,
+  },
+  {
     href: "/staff/booker",
     icon: "📞",
     label: "Τιμές, Διαθεσιμότητα & Κράτηση",
