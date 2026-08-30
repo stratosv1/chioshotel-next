@@ -1,7 +1,7 @@
 -- Staff expenses schema migration
 -- Date: 2026-08-30
 -- Purpose: keep DDL out of request handlers and add Tailormade as a first-class account.
--- Apply once to the production Neon database before enabling Tailormade writes.
+-- Production status: applied and verified on 2026-08-30; Tailormade insert test passed and was rolled back cleanly.
 
 BEGIN;
 
