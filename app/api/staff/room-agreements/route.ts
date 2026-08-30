@@ -3,9 +3,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 
 const OWNER_PHONE = "306944474226";
 const EMAIL = "chioshotel@gmail.com";
+const ON_DEMAND_SYNC_TIMEOUT_MS = 55_000;
+let schemaReady: Promise<void> | null = null;
 
 type Selection =
   | { type: "room"; roomNumber: number }
@@ -35,8 +38,12 @@ function phoneSearch(value: unknown) {
 }
 
 function money(value: unknown) {
-  const parsed = Number(value);
+  const parsed = Number(clean(value).replace(",", "."));
   return Number.isFinite(parsed) && parsed > 0 ? Math.round(parsed * 100) / 100 : 0;
+}
+
+function validRoomNumber(value: unknown) {
+  return Number.isInteger(value) && Number(value) > 0 && Number(value) <= 9999;
 }
 
 function displayDate(value: string) {
@@ -58,36 +65,89 @@ function getSql() {
 }
 
 async function ensureTable(sql: ReturnType<typeof neon>) {
-  await sql`
-    create table if not exists staff_room_agreements (
-      id bigserial primary key,
-      customer_phone text not null,
-      owner_phone text not null,
-      arrival date not null,
-      departure date not null,
-      guests integer not null,
-      selection jsonb not null,
-      agreed_total numeric(12,2) not null,
-      message text not null,
-      customer_sms_status text not null,
-      owner_sms_status text not null,
-      provider_response jsonb not null default '{}'::jsonb,
-      booking_status text not null default 'pending',
-      completed_at timestamptz,
-      closed_at timestamptz,
-      created_at timestamptz not null default now(),
-      updated_at timestamptz not null default now()
-    )
-  `;
-  await sql`create index if not exists staff_room_agreements_phone_idx on staff_room_agreements(customer_phone, created_at desc)`;
-  await sql`create index if not exists staff_room_agreements_status_idx on staff_room_agreements(booking_status, created_at desc)`;
+  if (!schemaReady) {
+    schemaReady = (async () => {
+      await sql`
+        create table if not exists staff_room_agreements (
+          id bigserial primary key,
+          customer_phone text not null,
+          owner_phone text not null,
+          arrival date not null,
+          departure date not null,
+          guests integer not null,
+          selection jsonb not null,
+          agreed_total numeric(12,2) not null,
+          message text not null,
+          customer_sms_status text not null,
+          owner_sms_status text not null,
+          provider_response jsonb not null default '{}'::jsonb,
+          booking_status text not null default 'pending',
+          completed_at timestamptz,
+          closed_at timestamptz,
+          created_at timestamptz not null default now(),
+          updated_at timestamptz not null default now()
+        )
+      `;
+      await sql`create index if not exists staff_room_agreements_phone_idx on staff_room_agreements(customer_phone, created_at desc)`;
+      await sql`create index if not exists staff_room_agreements_status_idx on staff_room_agreements(booking_status, created_at desc)`;
+    })().catch((error) => {
+      schemaReady = null;
+      throw error;
+    });
+  }
+  await schemaReady;
 }
 
-async function availability(sql: ReturnType<typeof neon>, arrival: string, departure: string, guests: number) {
-  const statusRows = await sql`select * from booking_core.inventory_status(${arrival}::date, ${departure}::date)`;
-  const inventoryStatus = String((statusRows as any[])[0]?.status || "DATA_UNAVAILABLE");
-  if (inventoryStatus !== "READY") {
-    return { ok: false as const, code: inventoryStatus };
+async function refreshBookingCoreOnDemand(request: NextRequest) {
+  const secret = clean(process.env.CRON_SECRET);
+  if (!secret) {
+    console.error("Staff room search cannot refresh stale booking inventory because CRON_SECRET is missing");
+    return false;
+  }
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), ON_DEMAND_SYNC_TIMEOUT_MS);
+  try {
+    const response = await fetch(new URL("/api/booking-core/sync/", request.nextUrl.origin), {
+      method: "GET",
+      cache: "no-store",
+      redirect: "follow",
+      signal: controller.signal,
+      headers: { Accept: "application/json", Authorization: `Bearer ${secret}` },
+    });
+    const raw = await response.text();
+    if (!response.ok) {
+      console.error("Staff room search on-demand Booking Core sync failed", response.status, raw.slice(0, 500));
+      return false;
+    }
+    try {
+      return (JSON.parse(raw) as { ok?: boolean }).ok === true;
+    } catch {
+      console.error("Staff room search on-demand Booking Core sync returned invalid JSON");
+      return false;
+    }
+  } catch (error) {
+    console.error("Staff room search on-demand Booking Core sync failed", error);
+    return false;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+async function inventoryStatus(sql: ReturnType<typeof neon>, request: NextRequest, arrival: string, departure: string) {
+  let rows = await sql`select * from booking_core.inventory_status(${arrival}::date, ${departure}::date)`;
+  let status = String((rows as any[])[0]?.status || "DATA_UNAVAILABLE");
+  if (status === "STALE_DATA" && await refreshBookingCoreOnDemand(request)) {
+    rows = await sql`select * from booking_core.inventory_status(${arrival}::date, ${departure}::date)`;
+    status = String((rows as any[])[0]?.status || "DATA_UNAVAILABLE");
+  }
+  return status;
+}
+
+async function availability(sql: ReturnType<typeof neon>, request: NextRequest, arrival: string, departure: string, guests: number) {
+  const currentStatus = await inventoryStatus(sql, request, arrival, departure);
+  if (currentStatus !== "READY") {
+    return { ok: false as const, code: currentStatus };
   }
 
   const roomRows = await sql`
@@ -202,12 +262,13 @@ export async function GET(request: NextRequest) {
       if (!arrival || !departure || departure <= arrival || !Number.isInteger(guests) || guests < 1 || guests > 5) {
         return noStore({ ok: false, error: "Έλεγξε τις ημερομηνίες και τους επισκέπτες." }, 400);
       }
-      const result = await availability(sql, arrival, departure, guests);
+      const result = await availability(sql, request, arrival, departure, guests);
       return result.ok ? noStore({ ok: true, ...result }) : noStore({ ok: false, code: result.code, error: "Η διαθεσιμότητα του Booking Core δεν είναι έτοιμη." }, 503);
     }
 
     await ensureTable(sql);
-    const status = clean(request.nextUrl.searchParams.get("status"));
+    const requestedStatus = clean(request.nextUrl.searchParams.get("status"));
+    const status = ["pending", "completed", "declined"].includes(requestedStatus) ? requestedStatus : "";
     const phone = phoneSearch(request.nextUrl.searchParams.get("phone"));
     const rows = await sql`
       select id::text, customer_phone, arrival::text, departure::text, guests, selection,
@@ -236,8 +297,8 @@ export async function POST(request: NextRequest) {
     const customerPhone = normalizePhone(body.customerPhone);
     const selection = body.selection as Selection;
     const validSelection = selection?.type === "room"
-      ? Number.isInteger(selection.roomNumber) && selection.roomNumber >= 1 && selection.roomNumber <= 10
-      : selection?.type === "split" && Number.isInteger(selection.firstRoomNumber) && Number.isInteger(selection.secondRoomNumber) && Boolean(isoDate(selection.changeDate));
+      ? validRoomNumber(selection.roomNumber)
+      : selection?.type === "split" && validRoomNumber(selection.firstRoomNumber) && validRoomNumber(selection.secondRoomNumber) && Boolean(isoDate(selection.changeDate));
 
     if (!arrival || !departure || departure <= arrival || !Number.isInteger(guests) || guests < 1 || guests > 5 || !agreedTotal || !customerPhone || !validSelection) {
       return noStore({ ok: false, error: "Συμπλήρωσε σωστά όλα τα στοιχεία της συμφωνίας." }, 400);
@@ -245,12 +306,22 @@ export async function POST(request: NextRequest) {
 
     const sql = getSql();
     await ensureTable(sql);
-    const statusRows = await sql`select * from booking_core.inventory_status(${arrival}::date, ${departure}::date)`;
-    if (String((statusRows as any[])[0]?.status || "") !== "READY" || !await selectionStillAvailable(sql, arrival, departure, guests, selection)) {
+    if (await inventoryStatus(sql, request, arrival, departure) !== "READY" || !await selectionStillAvailable(sql, arrival, departure, guests, selection)) {
       return noStore({ ok: false, error: "Η επιλογή δεν είναι πλέον διαθέσιμη. Κάνε νέο έλεγχο." }, 409);
     }
 
     const message = buildMessage(arrival, departure, guests, selection, agreedTotal);
+    const inserted = await sql`
+      insert into staff_room_agreements (
+        customer_phone, owner_phone, arrival, departure, guests, selection, agreed_total, message,
+        customer_sms_status, owner_sms_status, provider_response
+      ) values (
+        ${customerPhone}, ${OWNER_PHONE}, ${arrival}::date, ${departure}::date, ${guests},
+        ${JSON.stringify(selection)}::jsonb, ${agreedTotal}, ${message},
+        'queued', 'queued', '{}'::jsonb
+      ) returning id::text
+    `;
+    const agreementId = inserted[0]?.id;
     const recipients = customerPhone === OWNER_PHONE ? [customerPhone] : [customerPhone, OWNER_PHONE];
     const results = await Promise.all(recipients.map(async (to) => {
       try {
@@ -267,26 +338,31 @@ export async function POST(request: NextRequest) {
     const customerResult = results.find((item) => item.to === customerPhone)!;
     const ownerResult = results.find((item) => item.to === OWNER_PHONE) || customerResult;
 
-    const inserted = await sql`
-      insert into staff_room_agreements (
-        customer_phone, owner_phone, arrival, departure, guests, selection, agreed_total, message,
-        customer_sms_status, owner_sms_status, provider_response
-      ) values (
-        ${customerPhone}, ${OWNER_PHONE}, ${arrival}::date, ${departure}::date, ${guests},
-        ${JSON.stringify(selection)}::jsonb, ${agreedTotal}, ${message},
-        ${customerResult.status}, ${ownerResult.status}, ${JSON.stringify(results)}::jsonb
-      ) returning id::text
-    `;
-
+    let statusesSaved = true;
+    try {
+      await sql`
+        update staff_room_agreements
+        set customer_sms_status = ${customerResult.status},
+            owner_sms_status = ${ownerResult.status},
+            provider_response = ${JSON.stringify(results)}::jsonb,
+            updated_at = now()
+        where id = ${agreementId}::bigint
+      `;
+    } catch (error) {
+      statusesSaved = false;
+      console.error("Staff room agreement SMS statuses were not saved", agreementId, error);
+    }
     const allSent = results.every((item) => item.ok);
     return noStore({
-      ok: allSent,
+      ok: allSent && statusesSaved,
       saved: true,
-      id: inserted[0]?.id,
+      id: agreementId,
       message,
       results,
-      error: allSent ? null : "Η συμφωνία αποθηκεύτηκε, αλλά τουλάχιστον ένα SMS απέτυχε.",
-    }, allSent ? 201 : 207);
+      error: !statusesSaved
+        ? "Τα SMS επεξεργάστηκαν, αλλά δεν ενημερώθηκαν οι καταστάσεις τους στο ιστορικό."
+        : allSent ? null : "Η συμφωνία αποθηκεύτηκε, αλλά τουλάχιστον ένα SMS απέτυχε.",
+    }, allSent && statusesSaved ? 201 : 207);
   } catch (error) {
     console.error("Staff room agreement send failed", error);
     return noStore({ ok: false, error: error instanceof Error && error.message.includes("SMSAPI_TOKEN") ? "Δεν έχει ρυθμιστεί η αποστολή SMS." : "Η αποστολή απέτυχε." }, 500);
@@ -306,8 +382,8 @@ export async function PATCH(request: NextRequest) {
     const rows = await sql`
       update staff_room_agreements
       set booking_status = ${status},
-          completed_at = case when ${status} = 'completed' then now() else completed_at end,
-          closed_at = case when ${status} = 'declined' then now() else closed_at end,
+          completed_at = case when ${status} = 'completed' then now() else null end,
+          closed_at = case when ${status} = 'declined' then now() else null end,
           updated_at = now()
       where id = ${id}::bigint
       returning id::text, booking_status, completed_at, closed_at, updated_at

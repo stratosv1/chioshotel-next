@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CalendarDays, Check, ChevronLeft, ChevronRight, Clock3, History, LoaderCircle, MessageSquareText, Search, Send, Users } from "lucide-react";
 
 type RoomOffer = { roomNumber: number; name: string; category: string; floor: string; maxGuests: number; systemTotal: number; originalTotal: number };
@@ -15,6 +15,14 @@ type Agreement = {
 
 const API = "/api/staff/room-agreements/";
 const statusLabels = { pending: "Αναμονή", completed: "Ολοκληρώθηκε", declined: "Δεν προχώρησε" } as const;
+const smsStatusLabels: Record<string, string> = { sent: "στάλθηκε", failed: "απέτυχε" };
+const roomCategoryLabels: Record<string, string> = {
+  apartment: "Διαμέρισμα",
+  economy: "Οικονομικό",
+  family_apartment: "Οικογενειακό διαμέρισμα",
+  first_floor: "1ος όροφος",
+  ground_floor: "Ισόγειο",
+};
 
 function athensToday() {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Athens", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
@@ -28,6 +36,16 @@ function monthStart(iso: string, offset = 0) {
 function shortDate(iso: string) { return new Intl.DateTimeFormat("el-GR", { day: "2-digit", month: "2-digit", timeZone: "UTC" }).format(new Date(`${iso}T12:00:00Z`)); }
 function longDate(iso: string) { return new Intl.DateTimeFormat("el-GR", { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" }).format(new Date(`${iso}T12:00:00Z`)); }
 function dateTime(value: string) { return new Intl.DateTimeFormat("el-GR", { dateStyle: "short", timeStyle: "short", timeZone: "Europe/Athens" }).format(new Date(value)); }
+function nightsBetween(arrival: string, departure: string) {
+  if (!arrival || !departure) return 0;
+  return Math.round((new Date(`${departure}T12:00:00Z`).getTime() - new Date(`${arrival}T12:00:00Z`).getTime()) / 86_400_000);
+}
+function roomCategoryLabel(category: string) { return roomCategoryLabels[category] || category.replaceAll("_", " "); }
+function displaySmsStatus(status: string) { return smsStatusLabels[status] || status; }
+function parseMoneyInput(value: string) {
+  const parsed = Number(value.trim().replace(",", "."));
+  return Number.isFinite(parsed) && parsed > 0 ? Math.round(parsed * 100) / 100 : 0;
+}
 
 export default function RoomAgreementsApp() {
   const today = useMemo(athensToday, []);
@@ -55,25 +73,49 @@ export default function RoomAgreementsApp() {
   const [history, setHistory] = useState<Agreement[]>([]);
   const [historyStatus, setHistoryStatus] = useState("all");
   const [historyPhone, setHistoryPhone] = useState("");
+  const [debouncedHistoryPhone, setDebouncedHistoryPhone] = useState("");
   const [historyLoading, setHistoryLoading] = useState(false);
+  const [historyError, setHistoryError] = useState("");
+  const [confirmingSend, setConfirmingSend] = useState(false);
+  const [updatingId, setUpdatingId] = useState("");
+  const availabilityRequestRef = useRef(0);
+  const historyRequestRef = useRef(0);
+  const sendLockRef = useRef(false);
+  const agreementRef = useRef<HTMLDivElement>(null);
+  const nights = nightsBetween(arrival, departure);
+  const agreedAmount = parseMoneyInput(agreedTotal);
+
+  useEffect(() => {
+    const timeout = window.setTimeout(() => setDebouncedHistoryPhone(historyPhone), 300);
+    return () => window.clearTimeout(timeout);
+  }, [historyPhone]);
 
   const loadHistory = useCallback(async () => {
+    const requestId = ++historyRequestRef.current;
     setHistoryLoading(true);
+    setHistoryError("");
     const params = new URLSearchParams();
     if (historyStatus !== "all") params.set("status", historyStatus);
-    if (historyPhone.trim()) params.set("phone", historyPhone.trim());
+    const phoneDigits = debouncedHistoryPhone.replace(/\D/g, "");
+    if (phoneDigits.length >= 3) params.set("phone", phoneDigits);
     try {
       const response = await fetch(`${API}?${params}`, { cache: "no-store" });
       const data = await response.json();
-      if (data.ok) setHistory(data.agreements || []);
-    } finally { setHistoryLoading(false); }
-  }, [historyPhone, historyStatus]);
+      if (requestId === historyRequestRef.current && data.ok) setHistory(data.agreements || []);
+      else if (requestId === historyRequestRef.current) setHistoryError(data.error || "Το ιστορικό δεν φορτώθηκε.");
+    } catch {
+      if (requestId === historyRequestRef.current) setHistoryError("Το ιστορικό δεν φορτώθηκε.");
+    } finally {
+      if (requestId === historyRequestRef.current) setHistoryLoading(false);
+    }
+  }, [debouncedHistoryPhone, historyStatus]);
 
   useEffect(() => { void loadHistory(); }, [loadHistory]);
 
   useEffect(() => {
     setSelection(null); setAgreedTotal(""); setRooms([]); setSplits([]); setFeedback(null);
-    if (!arrival || !departure || departure <= arrival) return;
+    const requestId = ++availabilityRequestRef.current;
+    if (!arrival || !departure || departure <= arrival) { setLoading(false); return; }
     const controller = new AbortController();
     const run = async () => {
       setLoading(true);
@@ -82,10 +124,16 @@ export default function RoomAgreementsApp() {
         const response = await fetch(`${API}?${params}`, { cache: "no-store", signal: controller.signal });
         const data = await response.json();
         if (!response.ok || !data.ok) throw new Error(data.error || "Ο έλεγχος απέτυχε.");
-        setRooms(data.rooms || []); setSplits(data.splits || []);
+        if (requestId === availabilityRequestRef.current) {
+          setRooms(data.rooms || []); setSplits(data.splits || []);
+        }
       } catch (error) {
-        if ((error as Error).name !== "AbortError") setFeedback({ kind: "error", text: (error as Error).message });
-      } finally { setLoading(false); }
+        if ((error as Error).name !== "AbortError" && requestId === availabilityRequestRef.current) {
+          setFeedback({ kind: "error", text: (error as Error).message });
+        }
+      } finally {
+        if (!controller.signal.aborted && requestId === availabilityRequestRef.current) setLoading(false);
+      }
     };
     void run(); return () => controller.abort();
   }, [arrival, departure, guests]);
@@ -97,24 +145,21 @@ export default function RoomAgreementsApp() {
 
   function selectRoom(room: RoomOffer) {
     setSelection({ type: "room", roomNumber: room.roomNumber }); setAgreedTotal(String(room.systemTotal || ""));
+    window.setTimeout(() => agreementRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
   }
   function selectSplit(split: SplitOffer) {
     setSelection({ type: "split", firstRoomNumber: split.firstRoomNumber, secondRoomNumber: split.secondRoomNumber, changeDate: split.changeDate });
     setAgreedTotal(String(split.systemTotal || ""));
+    window.setTimeout(() => agreementRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
   }
 
-  const preview = useMemo(() => {
-    if (!arrival || !departure || !selection || !agreedTotal) return "";
-    const stay = selection.type === "room" ? `στο Δωμάτιο ${selection.roomNumber}` : `${shortDate(arrival)}–${shortDate(selection.changeDate)} στο Δωμάτιο ${selection.firstRoomNumber} και ${shortDate(selection.changeDate)}–${shortDate(departure)} στο Δωμάτιο ${selection.secondRoomNumber}`;
-    return `Η συμφωνία μας αφορά διαμονή από ${shortDate(arrival)} έως ${shortDate(departure)}, για ${guests} ${guests === 1 ? "επισκέπτη" : "επισκέπτες"}, ${stay}, με συνολική τιμή ${agreedTotal}€. Παρακαλούμε στείλτε μας email στο chioshotel@gmail.com, ώστε να σας αποστείλουμε την επιβεβαίωση της κράτησης. Voulamandis House`;
-  }, [agreedTotal, arrival, departure, guests, selection]);
-
   async function sendAgreement() {
-    if (!selection || !customerPhone.trim() || !Number(agreedTotal)) return;
-    if (!window.confirm(`Να σταλεί το SMS στον πελάτη ${customerPhone} και στο +30 694 447 4226;`)) return;
+    if (sendLockRef.current || !selection || !customerPhone.trim() || !agreedAmount) return;
+    sendLockRef.current = true;
+    setConfirmingSend(false);
     setSending(true); setFeedback(null);
     try {
-      const response = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ arrival, departure, guests, selection, agreedTotal: Number(agreedTotal), customerPhone }) });
+      const response = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ arrival, departure, guests, selection, agreedTotal: agreedAmount, customerPhone }) });
       const data = await response.json();
       if (!data.saved) throw new Error(data.error || "Η αποστολή απέτυχε.");
       const ownerSent = data.results?.find((item: { to: string }) => item.to === "306944474226")?.status === "sent";
@@ -128,14 +173,20 @@ export default function RoomAgreementsApp() {
       if (customerSent) setCustomerPhone("+30");
       await loadHistory();
     } catch (error) { setFeedback({ kind: "error", text: (error as Error).message }); }
-    finally { setSending(false); }
+    finally { sendLockRef.current = false; setSending(false); }
   }
 
   async function updateStatus(id: string, status: Agreement["booking_status"]) {
-    const response = await fetch(API, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id, status }) });
-    const data = await response.json();
-    if (!response.ok || !data.ok) { setFeedback({ kind: "error", text: data.error || "Η αλλαγή απέτυχε." }); return; }
-    await loadHistory();
+    if (updatingId) return;
+    setUpdatingId(id);
+    try {
+      const response = await fetch(API, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id, status }) });
+      const data = await response.json();
+      if (!response.ok || !data.ok) { setFeedback({ kind: "error", text: data.error || "Η αλλαγή απέτυχε." }); return; }
+      await loadHistory();
+    } catch {
+      setFeedback({ kind: "error", text: "Η αλλαγή κατάστασης δεν ολοκληρώθηκε." });
+    } finally { setUpdatingId(""); }
   }
 
   return (
@@ -147,9 +198,9 @@ export default function RoomAgreementsApp() {
         </div>
       </header>
 
-      <div className="mx-auto grid max-w-5xl gap-5 px-3 py-4 lg:grid-cols-[1.1fr_.9fr] lg:px-4">
+      <div className="mx-auto grid max-w-5xl gap-5 px-2 py-3 sm:px-4 sm:py-4 lg:grid-cols-[1.1fr_.9fr]">
         <section className="space-y-4">
-          <div className="rounded-3xl border border-[#e5dacb] bg-white p-4 shadow-sm">
+          <div className="rounded-3xl border border-[#e5dacb] bg-white p-3 shadow-sm sm:p-4">
             <div className="mb-3 flex items-center gap-2"><CalendarDays className="size-5 text-[#9b6b36]"/><h2 className="font-black">1. Ημερομηνίες</h2></div>
             <p className="mb-3 text-sm text-[#71675e]">Πάτησε check-in και μετά check-out.</p>
             <div className="mb-3 flex items-center justify-between rounded-2xl bg-[#f7f3ec] p-1.5">
@@ -165,53 +216,68 @@ export default function RoomAgreementsApp() {
               {dates.map((date) => {
                 const selected = date === arrival || date === departure; const between = Boolean(arrival && departure && date > arrival && date < departure);
                 const disabled = date < today;
-                return <button key={date} type="button" disabled={disabled} aria-label={longDate(date)} onClick={() => chooseDate(date)} className={`aspect-square min-h-10 rounded-xl border text-center text-sm font-black transition ${selected ? "border-[#855b2c] bg-[#855b2c] text-white shadow" : between ? "border-[#e7d5bf] bg-[#f3e8d9] text-[#6d5237]" : disabled ? "border-transparent bg-transparent text-[#c4bbb1]" : "border-[#ece3d8] bg-[#fcfaf7] text-[#4c443d]"}`}>{Number(date.slice(-2))}</button>;
+                return <button key={date} type="button" disabled={disabled} aria-label={longDate(date)} aria-pressed={selected} onClick={() => chooseDate(date)} className={`aspect-square min-w-0 rounded-xl border text-center text-sm font-black transition active:scale-95 ${selected ? "border-[#855b2c] bg-[#855b2c] text-white shadow" : between ? "border-[#e7d5bf] bg-[#f3e8d9] text-[#6d5237]" : disabled ? "border-transparent bg-transparent text-[#c4bbb1]" : "border-[#ece3d8] bg-[#fcfaf7] text-[#4c443d]"}`}>{Number(date.slice(-2))}</button>;
               })}
             </div>
             <div className="mt-3 grid grid-cols-2 gap-2 text-sm"><div className="rounded-xl bg-[#f7f3ec] p-3"><span className="block text-xs text-[#80756b]">Check-in</span><strong>{arrival ? shortDate(arrival) : "—"}</strong></div><div className="rounded-xl bg-[#f7f3ec] p-3"><span className="block text-xs text-[#80756b]">Check-out</span><strong>{departure ? shortDate(departure) : "—"}</strong></div></div>
           </div>
 
-          <div className="rounded-3xl border border-[#e5dacb] bg-white p-4 shadow-sm">
+          <div className="rounded-3xl border border-[#e5dacb] bg-white p-3 shadow-sm sm:p-4">
             <div className="mb-3 flex items-center gap-2"><Users className="size-5 text-[#9b6b36]"/><h2 className="font-black">2. Επισκέπτες</h2></div>
-            <div className="grid grid-cols-5 gap-2">{[1,2,3,4,5].map((count) => <button key={count} onClick={() => setGuests(count)} className={`h-12 rounded-xl border text-base font-black ${guests === count ? "border-[#855b2c] bg-[#855b2c] text-white" : "border-[#e3d8ca] bg-[#fcfaf7]"}`}>{count}</button>)}</div>
+            <div className="grid grid-cols-5 gap-1.5" style={{ gridTemplateColumns: "repeat(5, minmax(0, 1fr))" }}>{[1,2,3,4,5].map((count) => <button key={count} type="button" aria-label={`${count} ${count === 1 ? "επισκέπτης" : "επισκέπτες"}`} aria-pressed={guests === count} onClick={() => setGuests(count)} className={`h-12 min-w-0 rounded-xl border text-base font-black transition active:scale-95 ${guests === count ? "border-[#855b2c] bg-[#855b2c] text-white" : "border-[#e3d8ca] bg-[#fcfaf7]"}`}>{count}</button>)}</div>
           </div>
 
-          {(loading || (arrival && departure)) && <div className="rounded-3xl border border-[#e5dacb] bg-white p-4 shadow-sm">
-            <h2 className="mb-3 font-black">3. Διαθέσιμα δωμάτια</h2>
+          {(loading || (arrival && departure)) && <div className="rounded-3xl border border-[#e5dacb] bg-white p-3 shadow-sm sm:p-4">
+            <div className="mb-3 flex items-center justify-between gap-3"><h2 className="font-black">3. Διαθέσιμα δωμάτια</h2>{nights > 0 && <span className="shrink-0 rounded-full bg-[#f3eee6] px-2.5 py-1 text-[11px] font-bold text-[#71675e]">{nights} {nights === 1 ? "βράδυ" : "βράδια"} · {guests} άτ.</span>}</div>
             {loading ? <div className="flex items-center gap-2 py-7 text-sm text-[#71675e]"><LoaderCircle className="size-5 animate-spin"/> Έλεγχος Booking Core…</div> : <>
-              {rooms.length > 0 && <div className="mb-4"><p className="mb-2 text-xs font-bold uppercase tracking-wider text-[#657556]">Χωρίς αλλαγή</p><div className="grid grid-cols-2 gap-2">{rooms.map((room) => { const active = selection?.type === "room" && selection.roomNumber === room.roomNumber; return <button key={room.roomNumber} onClick={() => selectRoom(room)} className={`rounded-2xl border p-3 text-left ${active ? "border-[#657556] bg-[#eef3e9] ring-2 ring-[#657556]/20" : "border-[#e2d8ca] bg-[#fcfaf7]"}`}><span className="block text-base font-black">Δωμάτιο {room.roomNumber}</span><span className="mt-1 block text-xs text-[#71675e]">{room.category}</span><span className="mt-2 block text-sm font-bold text-[#657556]">Σύστημα: {room.systemTotal}€</span></button>; })}</div></div>}
-              {splits.length > 0 && <div><p className="mb-2 text-xs font-bold uppercase tracking-wider text-[#9b6b36]">Split stay · 1 αλλαγή</p><div className="space-y-2">{splits.map((split, index) => { const active = selection?.type === "split" && selection.firstRoomNumber === split.firstRoomNumber && selection.secondRoomNumber === split.secondRoomNumber && selection.changeDate === split.changeDate; return <button key={`${split.changeDate}-${split.firstRoomNumber}-${split.secondRoomNumber}-${index}`} onClick={() => selectSplit(split)} className={`w-full rounded-2xl border p-3 text-left ${active ? "border-[#9b6b36] bg-[#fff4e4] ring-2 ring-[#9b6b36]/20" : "border-[#e2d8ca] bg-[#fcfaf7]"}`}><span className="block font-black">Δωμάτιο {split.firstRoomNumber} → Δωμάτιο {split.secondRoomNumber}</span><span className="mt-1 block text-sm text-[#71675e]">{shortDate(arrival)}–{shortDate(split.changeDate)} · Νο{split.firstRoomNumber}</span><span className="block text-sm text-[#71675e]">{shortDate(split.changeDate)}–{shortDate(departure)} · Νο{split.secondRoomNumber}</span><span className="mt-2 block text-sm font-bold text-[#9b6b36]">Σύστημα: {split.systemTotal}€</span></button>; })}</div></div>}
+              {rooms.length > 0 && <div className="mb-4"><p className="mb-2 text-xs font-bold uppercase tracking-wider text-[#657556]">Χωρίς αλλαγή δωματίου</p><div className="grid grid-cols-1 gap-2 sm:grid-cols-2">{rooms.map((room) => { const active = selection?.type === "room" && selection.roomNumber === room.roomNumber; return <button key={room.roomNumber} type="button" aria-pressed={active} onClick={() => selectRoom(room)} className={`rounded-2xl border p-3 text-left transition active:scale-[.99] ${active ? "border-[#657556] bg-[#eef3e9] ring-2 ring-[#657556]/20" : "border-[#e2d8ca] bg-[#fcfaf7]"}`}><span className="block text-base font-black">{room.name || `Δωμάτιο ${room.roomNumber}`}</span><span className="mt-1 block text-xs text-[#71675e]">Δωμάτιο {room.roomNumber} · {roomCategoryLabel(room.category)}</span><span className="mt-2 block text-sm font-bold text-[#657556]">Τιμή συστήματος: {room.systemTotal}€</span></button>; })}</div></div>}
+              {rooms.length === 0 && splits.length > 0 && <div><p className="mb-2 text-xs font-bold uppercase tracking-wider text-[#9b6b36]">Μόνο split stay · 1 αλλαγή</p><p className="mb-2 text-xs text-[#71675e]">Δεν υπάρχει ένα δωμάτιο για όλη τη διαμονή.</p><div className="space-y-2">{splits.map((split, index) => { const active = selection?.type === "split" && selection.firstRoomNumber === split.firstRoomNumber && selection.secondRoomNumber === split.secondRoomNumber && selection.changeDate === split.changeDate; return <button key={`${split.changeDate}-${split.firstRoomNumber}-${split.secondRoomNumber}-${index}`} type="button" aria-pressed={active} onClick={() => selectSplit(split)} className={`w-full rounded-2xl border p-3 text-left transition active:scale-[.99] ${active ? "border-[#9b6b36] bg-[#fff4e4] ring-2 ring-[#9b6b36]/20" : "border-[#e2d8ca] bg-[#fcfaf7]"}`}><span className="block font-black">{split.firstName} → {split.secondName}</span><span className="mt-1 block text-sm text-[#71675e]">{shortDate(arrival)}–{shortDate(split.changeDate)} · Δωμάτιο {split.firstRoomNumber}</span><span className="block text-sm text-[#71675e]">{shortDate(split.changeDate)}–{shortDate(departure)} · Δωμάτιο {split.secondRoomNumber}</span><span className="mt-2 block text-sm font-bold text-[#9b6b36]">Τιμή συστήματος: {split.systemTotal}€</span></button>; })}</div></div>}
               {!rooms.length && !splits.length && <p className="rounded-2xl bg-[#fff1ef] p-4 text-sm font-semibold text-[#8c3f35]">Δεν βρέθηκε διαθέσιμη λύση.</p>}
             </>}
           </div>}
 
-          {selection && <div className="rounded-3xl border border-[#d9c8b3] bg-white p-4 shadow-md">
+          {selection && <div ref={agreementRef} className="scroll-mt-20 rounded-3xl border border-[#d9c8b3] bg-white p-3 shadow-md sm:p-4">
             <div className="mb-3 flex items-center gap-2"><MessageSquareText className="size-5 text-[#9b6b36]"/><h2 className="font-black">4. Συμφωνία & SMS</h2></div>
             <label className="mb-3 block"><span className="mb-1.5 block text-sm font-bold">Κινητό πελάτη</span><input value={customerPhone} onChange={(event) => setCustomerPhone(event.target.value)} inputMode="tel" placeholder="+30 69XXXXXXXX" className="h-13 w-full rounded-2xl border border-[#d8ccbd] bg-[#fcfaf7] px-3 text-lg font-bold outline-none focus:ring-2 focus:ring-[#9b6b36]/25"/><span className="mt-1 block text-xs text-[#71675e]">Το +30 είναι έτοιμο· μπορείς να το αλλάξεις για ξένο αριθμό.</span></label>
             <label className="mb-3 block"><span className="mb-1.5 block text-sm font-bold">Συμφωνημένη συνολική τιμή</span><div className="flex rounded-2xl border border-[#d8ccbd] bg-[#fcfaf7] focus-within:ring-2 focus-within:ring-[#9b6b36]/25"><input value={agreedTotal} onChange={(event) => setAgreedTotal(event.target.value)} inputMode="decimal" className="h-13 min-w-0 flex-1 bg-transparent px-3 text-lg font-black outline-none"/><span className="flex items-center px-4 text-lg font-black">€</span></div><span className="mt-1 block text-xs text-[#71675e]">Μπορείς να αλλάξεις την τιμή του συστήματος.</span></label>
-            {preview && <div className="mb-3 rounded-2xl bg-[#f3eee6] p-3 text-sm leading-6"><span className="mb-1 block text-xs font-black uppercase tracking-wider text-[#9b6b36]">Προεπισκόπηση SMS</span>{preview}</div>}
-            <div className="mb-3 rounded-xl border border-[#d8e4cf] bg-[#f2f7ee] p-3 text-xs font-semibold text-[#536548]">Θα σταλεί στον πελάτη και στο +30 694 447 4226.</div>
-            <button onClick={sendAgreement} disabled={sending || customerPhone.replace(/\D/g, "").length < 10 || !Number(agreedTotal)} className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-[#657556] px-4 text-base font-black text-white shadow-lg disabled:cursor-not-allowed disabled:opacity-45">{sending ? <LoaderCircle className="animate-spin"/> : <Send/>}{sending ? "Αποστολή…" : "Επιβεβαίωση & αποστολή SMS"}</button>
+            <button type="button" onClick={() => setConfirmingSend(true)} disabled={sending || customerPhone.replace(/\D/g, "").length < 10 || !agreedAmount} className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-[#657556] px-4 text-base font-black text-white shadow-lg transition active:scale-[.99] disabled:cursor-not-allowed disabled:opacity-45">{sending ? <LoaderCircle className="animate-spin"/> : <Send/>}{sending ? "Αποστολή…" : "Έλεγχος & αποστολή SMS"}</button>
           </div>}
           {feedback && <div className={`rounded-2xl p-4 text-sm font-bold ${feedback.kind === "ok" ? "bg-[#e9f4e3] text-[#46613b]" : "bg-[#fff0ed] text-[#8c3f35]"}`}>{feedback.text}</div>}
         </section>
 
-        <section className="rounded-3xl border border-[#e5dacb] bg-white p-4 shadow-sm lg:self-start lg:sticky lg:top-20">
+        <section className="rounded-3xl border border-[#e5dacb] bg-white p-3 shadow-sm sm:p-4 lg:sticky lg:top-20 lg:self-start">
           <div className="mb-3 flex items-center gap-2"><History className="size-5 text-[#9b6b36]"/><h2 className="font-black">Ιστορικό συμφωνιών</h2>{historyLoading && <LoaderCircle className="ml-auto size-4 animate-spin"/>}</div>
           <div className="mb-3 flex gap-2 overflow-x-auto pb-1">{(["all","pending","completed","declined"] as const).map((status) => <button key={status} onClick={() => setHistoryStatus(status)} className={`shrink-0 rounded-full border px-3 py-2 text-xs font-bold ${historyStatus === status ? "border-[#855b2c] bg-[#855b2c] text-white" : "border-[#e1d6c8] bg-[#fcfaf7]"}`}>{status === "all" ? "Όλα" : statusLabels[status]}</button>)}</div>
-          <div className="relative mb-4"><Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#887e74]"/><input value={historyPhone} onChange={(event) => setHistoryPhone(event.target.value)} inputMode="tel" placeholder="Αναζήτηση με κινητό" className="h-11 w-full rounded-xl border border-[#ddd1c2] bg-[#fcfaf7] pl-9 pr-3 text-sm outline-none focus:ring-2 focus:ring-[#9b6b36]/25"/></div>
-          <div className="max-h-[70vh] space-y-3 overflow-y-auto pr-1">
+          <div className="relative mb-4"><Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#887e74]"/><input value={historyPhone} onChange={(event) => setHistoryPhone(event.target.value)} inputMode="tel" aria-label="Αναζήτηση ιστορικού με κινητό" placeholder="Αναζήτηση με κινητό" className="h-11 w-full rounded-xl border border-[#ddd1c2] bg-[#fcfaf7] pl-9 pr-3 text-sm outline-none focus:ring-2 focus:ring-[#9b6b36]/25"/></div>
+          <div className="space-y-3 lg:max-h-[70vh] lg:overflow-y-auto lg:pr-1">
+            {historyError && <p className="rounded-2xl bg-[#fff0ed] p-3 text-sm font-semibold text-[#8c3f35]">{historyError}</p>}
             {history.map((item) => <article key={item.id} className="rounded-2xl border border-[#e4dacd] bg-[#fcfaf7] p-3">
               <div className="flex items-start justify-between gap-2"><div><strong className="block text-base">+{item.customer_phone}</strong><span className="flex items-center gap-1 text-xs text-[#71675e]"><Clock3 className="size-3"/>{dateTime(item.created_at)}</span></div><span className={`rounded-full px-2.5 py-1 text-[11px] font-black ${item.booking_status === "completed" ? "bg-[#e3efdc] text-[#4d693e]" : item.booking_status === "declined" ? "bg-[#f3e7e4] text-[#8b4b43]" : "bg-[#fff0d9] text-[#8c632c]"}`}>{statusLabels[item.booking_status]}</span></div>
               <div className="my-3 border-y border-[#e8dfd4] py-2 text-sm"><strong>{shortDate(item.arrival)}–{shortDate(item.departure)}</strong> · {item.guests} άτομα<br/>{item.selection.type === "room" ? `Δωμάτιο ${item.selection.roomNumber}` : `Νο${item.selection.firstRoomNumber} → Νο${item.selection.secondRoomNumber} (${shortDate(item.selection.changeDate)})`} · <strong>{Number(item.agreed_total)}€</strong></div>
-              <p className="mb-3 text-[11px] text-[#71675e]">SMS πελάτη: {item.customer_sms_status} · δικό σου: {item.owner_sms_status}</p>
+              <p className="mb-3 text-[11px] text-[#71675e]">SMS πελάτη: {displaySmsStatus(item.customer_sms_status)} · δικό σου: {displaySmsStatus(item.owner_sms_status)}</p>
               <details className="mb-3 rounded-xl bg-white px-3 py-2 text-xs text-[#71675e]"><summary className="cursor-pointer font-bold text-[#5c534b]">Προβολή SMS</summary><p className="mt-2 whitespace-pre-wrap leading-5">{item.message}</p></details>
-              {item.booking_status === "pending" && <div className="grid grid-cols-2 gap-2"><button onClick={() => updateStatus(item.id, "completed")} className="flex h-10 items-center justify-center gap-1 rounded-xl bg-[#657556] text-xs font-black text-white"><Check className="size-4"/>Ολοκληρώθηκε</button><button onClick={() => updateStatus(item.id, "declined")} className="h-10 rounded-xl border border-[#d9c7c0] text-xs font-bold text-[#81534d]">Δεν προχώρησε</button></div>}
+              {item.booking_status === "pending" && <div className="grid grid-cols-2 gap-2"><button type="button" disabled={Boolean(updatingId)} onClick={() => updateStatus(item.id, "completed")} className="flex h-10 items-center justify-center gap-1 rounded-xl bg-[#657556] text-xs font-black text-white disabled:opacity-50">{updatingId === item.id ? <LoaderCircle className="size-4 animate-spin"/> : <Check className="size-4"/>}Ολοκληρώθηκε</button><button type="button" disabled={Boolean(updatingId)} onClick={() => updateStatus(item.id, "declined")} className="h-10 rounded-xl border border-[#d9c7c0] text-xs font-bold text-[#81534d] disabled:opacity-50">Δεν προχώρησε</button></div>}
             </article>)}
             {!historyLoading && history.length === 0 && <p className="py-8 text-center text-sm text-[#80756b]">Δεν υπάρχουν εγγραφές.</p>}
           </div>
         </section>
       </div>
+
+      {confirmingSend && <div role="dialog" aria-modal="true" aria-labelledby="send-confirmation-title" className="fixed inset-0 z-50 flex items-end bg-black/45 p-2 sm:items-center sm:justify-center" onClick={() => setConfirmingSend(false)}>
+        <div className="w-full rounded-3xl bg-white p-4 shadow-2xl sm:max-w-sm" onClick={(event) => event.stopPropagation()}>
+          <h2 id="send-confirmation-title" className="text-lg font-black">Τελικός έλεγχος</h2>
+          <div className="my-4 rounded-2xl bg-[#f7f3ec] p-3 text-sm leading-7">
+            <span className="block"><strong>Πελάτης:</strong> {customerPhone}</span>
+            <span className="block"><strong>Ποσό:</strong> {agreedAmount}€</span>
+            <span className="block"><strong>Διαμονή:</strong> {shortDate(arrival)}–{shortDate(departure)}</span>
+          </div>
+          <p className="mb-4 text-sm text-[#71675e]">Θα σταλεί το ίδιο SMS στον πελάτη και στο κινητό σου.</p>
+          <div className="grid grid-cols-[.8fr_1.2fr] gap-2">
+            <button type="button" onClick={() => setConfirmingSend(false)} className="h-12 rounded-2xl border border-[#d8ccbd] font-bold">Ακύρωση</button>
+            <button type="button" autoFocus onClick={sendAgreement} className="flex h-12 items-center justify-center gap-2 rounded-2xl bg-[#657556] font-black text-white"><Send className="size-4"/>Αποστολή SMS</button>
+          </div>
+        </div>
+      </div>}
     </main>
   );
 }
