@@ -1,0 +1,98 @@
+name: Repair current package lock once
+
+on:
+  push:
+    branches:
+      - feature/staff-expenses-mobile-tailormade
+    paths:
+      - '.github/workflows/repair-current-package-lock.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Repair missing package-lock dependencies safely
+        run: |
+          cp package.json /tmp/package.before.json
+          cp package-lock.json /tmp/package-lock.before.json
+
+          npm install --package-lock-only --ignore-scripts --no-audit --no-fund \
+            '@vercel/blob@^2.8.0' \
+            '@vercel/functions@^3.9.5' \
+            'class-variance-authority@latest' \
+            'clsx@^2.1.1' \
+            'lucide-react@latest' \
+            'pdf-lib@^1.17.1' \
+            'tailwind-merge@^3.4.0'
+
+          npm install --package-lock-only --ignore-scripts --no-audit --no-fund --save-dev \
+            'shadcn@^4.18.0' \
+            'tw-animate-css@^1.4.0'
+
+          cp /tmp/package.before.json package.json
+
+          node <<'NODE'
+          const fs = require('fs');
+          const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          const before = JSON.parse(fs.readFileSync('/tmp/package-lock.before.json', 'utf8'));
+          const after = JSON.parse(fs.readFileSync('package-lock.json', 'utf8'));
+          const beforeRoot = before.packages?.[''] || {};
+          const afterRoot = after.packages?.[''] || {};
+
+          const expected = {
+            ...(pkg.dependencies || {}),
+            ...(pkg.devDependencies || {}),
+          };
+
+          for (const [name, spec] of Object.entries(expected)) {
+            const inDeps = afterRoot.dependencies?.[name];
+            const inDevDeps = afterRoot.devDependencies?.[name];
+            if (inDeps !== spec && inDevDeps !== spec) {
+              throw new Error(`Root lock entry mismatch for ${name}: expected ${spec}, got ${inDeps ?? inDevDeps ?? 'missing'}`);
+            }
+            if (!after.packages?.[`node_modules/${name}`]) {
+              throw new Error(`Package entry missing from package-lock.json: ${name}`);
+            }
+          }
+
+          const oldDirectNames = new Set([
+            ...Object.keys(beforeRoot.dependencies || {}),
+            ...Object.keys(beforeRoot.devDependencies || {}),
+          ]);
+          for (const name of oldDirectNames) {
+            const key = `node_modules/${name}`;
+            const oldVersion = before.packages?.[key]?.version;
+            const newVersion = after.packages?.[key]?.version;
+            if (oldVersion && newVersion && oldVersion !== newVersion) {
+              throw new Error(`Unexpected existing direct dependency version change: ${name} ${oldVersion} -> ${newVersion}`);
+            }
+          }
+
+          console.log('Lockfile repair guard passed.');
+          NODE
+
+          npm ci --ignore-scripts --no-audit --no-fund
+          git diff --exit-code -- package.json
+          git diff --stat -- package-lock.json
+
+      - name: Commit repaired lockfile and remove one-shot workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/repair-current-package-lock.yml
+          git add package-lock.json
+          git commit -m "Repair package lock for current dependencies"
+          git push origin HEAD:feature/staff-expenses-mobile-tailormade
