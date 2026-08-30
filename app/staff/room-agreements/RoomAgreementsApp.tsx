@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { CalendarDays, Check, ChevronLeft, Clock3, History, LoaderCircle, MessageSquareText, Search, Send, Users } from "lucide-react";
+import { CalendarDays, Check, ChevronLeft, ChevronRight, Clock3, History, LoaderCircle, MessageSquareText, Search, Send, Users } from "lucide-react";
 
 type RoomOffer = { roomNumber: number; name: string; category: string; floor: string; maxGuests: number; systemTotal: number; originalTotal: number };
 type SplitOffer = { changeDate: string; firstRoomNumber: number; firstName: string; firstCategory: string; secondRoomNumber: number; secondName: string; secondCategory: string; systemTotal: number };
@@ -36,9 +36,11 @@ export default function RoomAgreementsApp() {
   const dates = useMemo(() => {
     const nextMonth = monthStart(activeMonth, 1);
     const result: string[] = [];
-    for (let date = activeMonth; date < nextMonth; date = addDays(date, 1)) if (date >= today) result.push(date);
+    for (let date = activeMonth; date < nextMonth; date = addDays(date, 1)) result.push(date);
     return result;
-  }, [activeMonth, today]);
+  }, [activeMonth]);
+  const activeMonthIndex = months.indexOf(activeMonth);
+  const leadingCalendarCells = (new Date(`${activeMonth}T12:00:00Z`).getUTCDay() + 6) % 7;
   const [arrival, setArrival] = useState("");
   const [departure, setDeparture] = useState("");
   const [guests, setGuests] = useState(2);
@@ -150,13 +152,20 @@ export default function RoomAgreementsApp() {
           <div className="rounded-3xl border border-[#e5dacb] bg-white p-4 shadow-sm">
             <div className="mb-3 flex items-center gap-2"><CalendarDays className="size-5 text-[#9b6b36]"/><h2 className="font-black">1. Ημερομηνίες</h2></div>
             <p className="mb-3 text-sm text-[#71675e]">Πάτησε check-in και μετά check-out.</p>
-            <div className="mb-3 flex gap-2 overflow-x-auto pb-1">
-              {months.map((month) => <button key={month} type="button" onClick={() => setActiveMonth(month)} className={`shrink-0 rounded-full border px-3 py-2 text-xs font-bold capitalize ${activeMonth === month ? "border-[#855b2c] bg-[#855b2c] text-white" : "border-[#e1d6c8] bg-[#fcfaf7]"}`}>{new Intl.DateTimeFormat("el-GR", { month: "short", year: "numeric", timeZone: "UTC" }).format(new Date(`${month}T12:00:00Z`))}</button>)}
+            <div className="mb-3 flex items-center justify-between rounded-2xl bg-[#f7f3ec] p-1.5">
+              <button type="button" aria-label="Προηγούμενος μήνας" disabled={activeMonthIndex <= 0} onClick={() => setActiveMonth(months[activeMonthIndex - 1])} className="flex size-10 items-center justify-center rounded-xl bg-white text-[#6f573f] shadow-sm disabled:opacity-25"><ChevronLeft className="size-5"/></button>
+              <strong className="capitalize">{new Intl.DateTimeFormat("el-GR", { month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(`${activeMonth}T12:00:00Z`))}</strong>
+              <button type="button" aria-label="Επόμενος μήνας" disabled={activeMonthIndex >= months.length - 1} onClick={() => setActiveMonth(months[activeMonthIndex + 1])} className="flex size-10 items-center justify-center rounded-xl bg-white text-[#6f573f] shadow-sm disabled:opacity-25"><ChevronRight className="size-5"/></button>
             </div>
-            <div className="flex snap-x gap-2 overflow-x-auto pb-2">
+            <div className="mb-1 grid grid-cols-7 gap-1 text-center text-[10px] font-black uppercase text-[#8b8075]" style={{ gridTemplateColumns: "repeat(7, minmax(0, 1fr))" }}>
+              {['Δε','Τρ','Τε','Πε','Πα','Σα','Κυ'].map((day) => <span key={day} className="py-1">{day}</span>)}
+            </div>
+            <div className="grid grid-cols-7 gap-1" style={{ gridTemplateColumns: "repeat(7, minmax(0, 1fr))" }}>
+              {Array.from({ length: leadingCalendarCells }, (_, index) => <span key={`empty-${index}`} aria-hidden="true" />)}
               {dates.map((date) => {
                 const selected = date === arrival || date === departure; const between = Boolean(arrival && departure && date > arrival && date < departure);
-                return <button key={date} type="button" onClick={() => chooseDate(date)} className={`min-w-[74px] snap-start rounded-2xl border px-2 py-3 text-center transition ${selected ? "border-[#855b2c] bg-[#855b2c] text-white shadow" : between ? "border-[#d9c3a8] bg-[#f3e8d9]" : "border-[#e6ddd2] bg-[#fcfaf7]"}`}><span className="block text-[11px] font-bold uppercase">{longDate(date).split(" ")[0]}</span><span className="mt-1 block text-sm font-black">{shortDate(date)}</span></button>;
+                const disabled = date < today;
+                return <button key={date} type="button" disabled={disabled} aria-label={longDate(date)} onClick={() => chooseDate(date)} className={`aspect-square min-h-10 rounded-xl border text-center text-sm font-black transition ${selected ? "border-[#855b2c] bg-[#855b2c] text-white shadow" : between ? "border-[#e7d5bf] bg-[#f3e8d9] text-[#6d5237]" : disabled ? "border-transparent bg-transparent text-[#c4bbb1]" : "border-[#ece3d8] bg-[#fcfaf7] text-[#4c443d]"}`}>{Number(date.slice(-2))}</button>;
               })}
             </div>
             <div className="mt-3 grid grid-cols-2 gap-2 text-sm"><div className="rounded-xl bg-[#f7f3ec] p-3"><span className="block text-xs text-[#80756b]">Check-in</span><strong>{arrival ? shortDate(arrival) : "—"}</strong></div><div className="rounded-xl bg-[#f7f3ec] p-3"><span className="block text-xs text-[#80756b]">Check-out</span><strong>{departure ? shortDate(departure) : "—"}</strong></div></div>

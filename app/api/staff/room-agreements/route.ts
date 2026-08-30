@@ -97,29 +97,31 @@ async function availability(sql: ReturnType<typeof neon>, arrival: string, depar
     order by room_number
   `;
 
-  const splitRows = await sql`
-    with change_dates as (
-      select day::date as change_date
-      from generate_series(${arrival}::date + 1, ${departure}::date - 1, interval '1 day') day
-    )
-    select
-      d.change_date::text,
-      first_offer.room_number::int as first_room_number,
-      first_offer.display_name as first_name,
-      first_offer.room_type as first_category,
-      second_offer.room_number::int as second_room_number,
-      second_offer.display_name as second_name,
-      second_offer.room_type as second_category,
-      first_offer.direct_total::numeric as first_total,
-      second_offer.direct_total::numeric as second_total
-    from change_dates d
-    cross join lateral booking_core.search_availability(${arrival}::date, d.change_date, ${guests}) first_offer
-    cross join lateral booking_core.search_availability(d.change_date, ${departure}::date, ${guests}) second_offer
-    where first_offer.room_number <> second_offer.room_number
-    order by (first_offer.direct_total + second_offer.direct_total), d.change_date,
-             first_offer.room_number, second_offer.room_number
-    limit 20
-  `;
+  const splitRows = (roomRows as any[]).length === 0
+    ? await sql`
+        with change_dates as (
+          select day::date as change_date
+          from generate_series(${arrival}::date + 1, ${departure}::date - 1, interval '1 day') day
+        )
+        select
+          d.change_date::text,
+          first_offer.room_number::int as first_room_number,
+          first_offer.display_name as first_name,
+          first_offer.room_type as first_category,
+          second_offer.room_number::int as second_room_number,
+          second_offer.display_name as second_name,
+          second_offer.room_type as second_category,
+          first_offer.direct_total::numeric as first_total,
+          second_offer.direct_total::numeric as second_total
+        from change_dates d
+        cross join lateral booking_core.search_availability(${arrival}::date, d.change_date, ${guests}) first_offer
+        cross join lateral booking_core.search_availability(d.change_date, ${departure}::date, ${guests}) second_offer
+        where first_offer.room_number <> second_offer.room_number
+        order by (first_offer.direct_total + second_offer.direct_total), d.change_date,
+                 first_offer.room_number, second_offer.room_number
+        limit 20
+      `
+    : [];
 
   return {
     ok: true as const,
