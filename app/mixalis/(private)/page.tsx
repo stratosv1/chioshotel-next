@@ -44,6 +44,13 @@ export default async function MixalisDashboardPage() {
             >
               Βιβλιοθήκη πηγών
             </Link>
+            <Link
+              href="/mixalis/savvalas-audit"
+              prefetch={false}
+              className="rounded-xl bg-[#4b3d35] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#382e29]"
+            >
+              Audit Σαββάλα
+            </Link>
             <form action="/mixalis/auth/logout" method="post">
               <button
                 type="submit"
