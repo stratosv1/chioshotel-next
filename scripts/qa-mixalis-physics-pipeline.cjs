@@ -79,6 +79,47 @@ forbidText('app/mixalis/(private)/chapters/[id]/page.tsx', [
 requireText('app/mixalis/(private)/chapters/[id]/page.tsx', [
   'Νέα σταθερή ροή · PDF only',
   'Δεν ανεβάζεις πλέον φωτογραφίες',
+  'getSmartLabChapterState',
+  'LAB ready',
+  'Δημιουργία LAB',
+]);
+
+requireText('components/mixalis/PhysicsPipeline.tsx', [
+  '6 · LAB',
+  'Δημιουργία LAB',
+  'Το LAB δεν δημιουργείται αυτόματα',
+  'currentLessonRevisionIds',
+]);
+
+requireText('app/mixalis/(private)/chapters/[id]/lab/page.tsx', [
+  'SMARTLAB_PROMPT_VERSION',
+  'manual',
+  'Δημιούργησε χειροκίνητα το LAB',
+  'Δεν ξεκινά καμία δημιουργία μέχρι να πατήσεις το κουμπί',
+]);
+
+requireText('lib/mixalis/smartlab-prompt.ts', [
+  'finalver2',
+  'physicsPreset=centripetal_force',
+  'κεντρομόλος δύναμη είναι derived αποτέλεσμα και ΠΟΤΕ ανεξάρτητο control',
+]);
+
+requireText('lib/mixalis/smartlab-verified.ts', [
+  'assertRendererContract',
+  'centripetal_force renderer is required',
+  'centripetal force cannot be an independent control',
+]);
+
+requireText('lib/mixalis/smartlab-physics-audit.ts', [
+  'widget.physicsPreset === "centripetal_force"',
+  'Fκ=mυ²/r',
+  'Fκ=mω²r',
+]);
+
+requireText('app/mixalis/api/smartlab/revisions/[revisionId]/route.ts', [
+  'maxDuration = 900',
+  'MAX_AUTOMATIC_ATTEMPTS = 3',
+  'after(async () =>',
 ]);
 
 requireText('app/mixalis/api/savvalas-audit/ranges/route.ts', [
@@ -94,4 +135,4 @@ requireText('app/mixalis/api/savvalas-audit/ranges/[rangeId]/run/route.ts', [
   'recoverStaleSavvalasSourceAnalysisForRange',
 ]);
 
-console.log('Mixalis Physics PDF-only pipeline QA passed: canonical source selection, legacy quarantine, non-overlapping mappings, stage guards, START guard and stale-audit recovery are enforced.');
+console.log('Mixalis Physics PDF-only pipeline QA passed: canonical source selection, legacy quarantine, mapping guards, START guards, manual LAB workflow, SMARTLAB renderer contracts, centripetal-force numerical verification and stale-run recovery are enforced.');
