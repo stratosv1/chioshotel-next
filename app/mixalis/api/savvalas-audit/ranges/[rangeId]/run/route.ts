@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getMixalisSession } from "@/lib/mixalis/auth";
+import { recoverStaleSavvalasSourceAnalysisForRange } from "@/lib/mixalis/savvalas-source-recovery";
 import { runSavvalasSourceIntelligence } from "@/lib/mixalis/savvalas-source-intelligence";
 
 export const runtime = "nodejs";
@@ -14,6 +15,7 @@ export async function POST(
 
   const { rangeId } = await params;
   try {
+    await recoverStaleSavvalasSourceAnalysisForRange(rangeId);
     const result = await runSavvalasSourceIntelligence(rangeId);
     return NextResponse.redirect(
       new URL(`/mixalis/source-intelligence/${result.analysisId}`, request.url),
