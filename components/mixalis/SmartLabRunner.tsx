@@ -5,8 +5,16 @@ import { LoaderCircle, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { SmartLabContent, SmartLabRevisionView } from "@/lib/mixalis/smartlab-types";
 import { SmartLabExperience } from "@/components/mixalis/SmartLabWidget";
+import SmartLabGenericExperience from "@/components/mixalis/SmartLabGenericExperience";
 
 const STATUS_POLL_MS = 5_000;
+
+function ReadyExperience({ content }: { content: SmartLabContent }) {
+  const widget = content.subchapters?.[0]?.widgets?.[0];
+  return widget?.physicsPreset === "generic_relation"
+    ? <SmartLabGenericExperience content={content} />
+    : <SmartLabExperience content={content} />;
+}
 
 export default function SmartLabRunner({ initialView }: { initialView: SmartLabRevisionView }) {
   const [view, setView] = useState(initialView);
@@ -72,7 +80,7 @@ export default function SmartLabRunner({ initialView }: { initialView: SmartLabR
 
   if (view.status === "current" || view.status === "superseded") {
     const content = view.content as SmartLabContent;
-    return <SmartLabExperience content={content} />;
+    return <ReadyExperience content={content} />;
   }
 
   if (view.status === "error") {
