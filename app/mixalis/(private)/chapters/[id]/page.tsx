@@ -3,6 +3,16 @@ import { notFound } from "next/navigation";
 import PhysicsPipeline from "@/components/mixalis/PhysicsPipeline";
 import { getPhysicsChapter, listPhysicsSubchapters } from "@/lib/mixalis/db";
 import { listPhysicsPipelineByChapter } from "@/lib/mixalis/lesson-navigation";
+import { getSmartLabChapterState } from "@/lib/mixalis/smartlab-verified";
+
+async function safeSmartLabState(chapterId: string) {
+  try {
+    return await getSmartLabChapterState(chapterId);
+  } catch (error) {
+    console.error("Mixalis chapter LAB state failed", error);
+    return null;
+  }
+}
 
 export default async function MixalisChapterPage({
   params,
@@ -10,10 +20,11 @@ export default async function MixalisChapterPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const [chapter, subchapters, pipelines] = await Promise.all([
+  const [chapter, subchapters, pipelines, smartLabState] = await Promise.all([
     getPhysicsChapter(id),
     listPhysicsSubchapters(id),
     listPhysicsPipelineByChapter(id),
+    safeSmartLabState(id),
   ]);
 
   if (!chapter) notFound();
@@ -25,6 +36,14 @@ export default async function MixalisChapterPage({
   const completedLessons = pipelines.filter((pipeline) => pipeline.lesson.upToDate).length;
   const mappedSavvalas = pipelines.filter((pipeline) => Boolean(pipeline.savvalas.rangeId)).length;
   const auditedSavvalas = pipelines.filter((pipeline) => pipeline.savvalas.status === "ready").length;
+  const currentLabLessonRevisionIds = smartLabState?.current?.lessonVersions.map((lesson) => lesson.lessonRevisionId) ?? [];
+  const currentLabLessonRevisionSet = new Set(currentLabLessonRevisionIds);
+  const completedLabs = pipelines.filter(
+    (pipeline) =>
+      pipeline.lesson.upToDate &&
+      Boolean(pipeline.lesson.revisionId) &&
+      currentLabLessonRevisionSet.has(String(pipeline.lesson.revisionId)),
+  ).length;
 
   return (
     <main className="min-h-screen bg-[#f3efe8] px-4 py-5 text-[#2c2825] sm:px-8 sm:py-8">
@@ -51,7 +70,7 @@ export default async function MixalisChapterPage({
               </p>
             </div>
 
-            <div className="grid min-w-72 grid-cols-3 gap-2 text-center">
+            <div className="grid min-w-72 grid-cols-2 gap-2 text-center sm:grid-cols-4">
               <div className="rounded-2xl bg-[#f1ede7] p-4">
                 <p className="text-2xl font-semibold">{mappedSavvalas}/{subchapters.length}</p>
                 <p className="mt-1 text-xs text-[#736a63]">mapped</p>
@@ -63,6 +82,10 @@ export default async function MixalisChapterPage({
               <div className="rounded-2xl bg-[#f1ede7] p-4">
                 <p className="text-2xl font-semibold">{completedLessons}/{subchapters.length}</p>
                 <p className="mt-1 text-xs text-[#736a63]">START ready</p>
+              </div>
+              <div className="rounded-2xl bg-[#eef5ed] p-4">
+                <p className="text-2xl font-semibold text-[#40583d]">{completedLabs}/{completedLessons}</p>
+                <p className="mt-1 text-xs text-[#60715d]">LAB ready</p>
               </div>
             </div>
           </div>
@@ -79,6 +102,7 @@ export default async function MixalisChapterPage({
                 Το σχολικό βιβλίο και ο Σαββάλας αποθηκεύονται μία φορά ως πλήρη ιδιωτικά PDF.
                 Από εδώ και πέρα κάθε υποκεφάλαιο ολοκληρώνεται μόνο από το Physics Pipeline παρακάτω.
                 Τα παλιά photo batches παραμένουν μόνο ως ιστορικό και δεν συμμετέχουν σε νέα canonical γνώση ή νέο START μάθημα.
+                Μετά το START, το LAB είναι προαιρετικό και δημιουργείται μόνο χειροκίνητα από εσένα.
               </p>
             </div>
             <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
@@ -100,7 +124,15 @@ export default async function MixalisChapterPage({
         </section>
 
         {subchapters.length > 0 ? (
-          <PhysicsPipeline chapterId={chapter.id} subchapters={subchapters} pipelines={pipelines} />
+          <PhysicsPipeline
+            chapterId={chapter.id}
+            subchapters={subchapters}
+            pipelines={pipelines}
+            lab={{
+              currentRevisionId: smartLabState?.current?.id ?? null,
+              currentLessonRevisionIds: currentLabLessonRevisionIds,
+            }}
+          />
         ) : (
           <section className="mt-6 rounded-3xl border border-dashed border-black/15 bg-white/70 p-6 text-sm text-[#6f665f]">
             Δεν υπάρχουν ενεργά υποκεφάλαια σε αυτό το κεφάλαιο.
@@ -112,13 +144,14 @@ export default async function MixalisChapterPage({
             Κανόνας εργασίας
           </p>
           <h2 className="mt-2 text-2xl font-semibold">Η ίδια σειρά σε κάθε μάθημα</h2>
-          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
             {[
               ["1", "Mapping", "Επιβεβαιώνεις το PDF range του Σαββάλα."],
               ["2", "Depth Audit", "Αναλύεται μόνο αυτό το range του Σαββάλα."],
               ["3", "Official", "Αναλύεται μόνο το mapped σχολικό range."],
               ["4", "Intelligence", "Ενώνονται ακριβώς οι δύο canonical PDF πηγές."],
               ["5", "START", "Δημιουργείται η current lesson revision."],
+              ["6", "LAB", "Αφού υπάρχει current μάθημα, το δημιουργείς χειροκίνητα."],
             ].map(([number, title, detail]) => (
               <article key={number} className="rounded-2xl bg-[#f7f4ef] p-4">
                 <p className="text-xs font-semibold text-[#88786b]">{number}</p>
@@ -128,7 +161,7 @@ export default async function MixalisChapterPage({
             ))}
           </div>
           <p className="mt-5 text-sm leading-6 text-[#6a615a]">
-            Δεν χρειάζεται να θυμάσαι ποια σελίδα ή route ακολουθεί. Στο υποκεφάλαιο που δουλεύεις πατάς μόνο το πράσινο κουμπί του Pipeline και το σύστημα σε στέλνει στο σωστό επόμενο στάδιο.
+            Το πράσινο κουμπί σε οδηγεί έως το current START. Μόλις ολοκληρωθεί το μάθημα, εμφανίζεται ξεχωριστό κουμπί «Δημιουργία LAB». Το LAB δεν ξεκινά ποτέ αυτόματα.
           </p>
         </section>
       </div>
