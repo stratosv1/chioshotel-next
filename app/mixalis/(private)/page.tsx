@@ -51,6 +51,13 @@ export default async function MixalisDashboardPage() {
             >
               Audit Σαββάλα
             </Link>
+            <Link
+              href="/mixalis/savvalas-auto-map"
+              prefetch={false}
+              className="rounded-xl border border-[#9b8877] bg-[#f8f3ec] px-4 py-2.5 text-sm font-semibold text-[#5b4d43] transition hover:bg-[#eee5da]"
+            >
+              Mapping Σαββάλα
+            </Link>
             <form action="/mixalis/auth/logout" method="post">
               <button
                 type="submit"
