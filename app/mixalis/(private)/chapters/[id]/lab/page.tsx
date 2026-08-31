@@ -7,8 +7,8 @@ import SmartLabRunner from "@/components/mixalis/SmartLabRunner";
 import {
   getSmartLabChapterState,
   getSmartLabRevisionView,
-  SMARTLAB_PROMPT_VERSION,
-} from "@/lib/mixalis/smartlab";
+} from "@/lib/mixalis/smartlab-verified";
+import { SMARTLAB_PROMPT_VERSION } from "@/lib/mixalis/smartlab";
 
 export const dynamic = "force-dynamic";
 
@@ -35,7 +35,7 @@ export default async function MixalisChapterLabPage({
           <Link href={`/mixalis/chapters/${id}`} className="text-sm font-medium text-[#6e5d50] hover:underline">
             ← Πίσω στο κεφάλαιο
           </Link>
-          <Badge variant="outline" className="bg-white">SMARTLAB · {SMARTLAB_PROMPT_VERSION}</Badge>
+          <Badge variant="outline" className="bg-white">SMARTLAB · {SMARTLAB_PROMPT_VERSION} · manual</Badge>
         </div>
 
         <header className="overflow-hidden rounded-3xl border border-black/10 bg-white shadow-sm">
@@ -48,7 +48,7 @@ export default async function MixalisChapterLabPage({
                 {state.chapter.label ? `${state.chapter.label} · ` : ""}{state.chapter.title}
               </h1>
               <p className="mt-4 max-w-3xl text-sm leading-6 text-[#6c635c] sm:text-base">
-                Το SMARTLAB παίρνει μόνο τα φυσικά μεγέθη του current μαθήματος και τα μετατρέπει σε ένα διαδραστικό σχεδιάγραμμα για κάθε φυσική έννοια.
+                Το SMARTLAB δημιουργείται μόνο όταν το ζητήσεις εσύ. Παίρνει τα φυσικά μεγέθη των current START μαθημάτων και φτιάχνει ένα ξεχωριστό διαδραστικό εικονικό εργαστήριο για κάθε έτοιμο υποκεφάλαιο.
               </p>
             </div>
             <div className="border-t border-black/10 bg-[#eef2e9] p-6 lg:border-l lg:border-t-0 sm:p-8">
@@ -76,9 +76,9 @@ export default async function MixalisChapterLabPage({
             <>
               {!state.upToDate && activeRevision.status === "current" ? (
                 <Card className="mb-5 rounded-2xl border-[#d8c8ad] bg-[#fffaf1]">
-                  <CardHeader className="pb-3"><CardTitle className="text-lg">Το LAB χρειάζεται ανανέωση</CardTitle></CardHeader>
+                  <CardHeader className="pb-3"><CardTitle className="text-lg">Το LAB χρειάζεται χειροκίνητη ανανέωση</CardTitle></CardHeader>
                   <CardContent>
-                    <p className="text-sm leading-6 text-[#766753]">Έχουν αλλάξει τα φυσικά μεγέθη κάποιου current μαθήματος ή η έκδοση του SMARTLAB. Δημιούργησε νέο Lab Revision χωρίς να χαθεί το υπάρχον.</p>
+                    <p className="text-sm leading-6 text-[#766753]">Υπάρχει νεότερο current START μάθημα ή νέα έκδοση του SMARTLAB. Το υπάρχον LAB παραμένει ασφαλές μέχρι να επιλέξεις εσύ «Νέο SMARTLAB».</p>
                     <form action={`/mixalis/api/smartlab/chapters/${id}`} method="post">
                       <button className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-md bg-[#334f39] px-4 py-2 text-sm font-semibold text-white hover:bg-[#29412f]" type="submit">
                         <RefreshCw className="h-4 w-4" /> Νέο SMARTLAB
@@ -91,10 +91,10 @@ export default async function MixalisChapterLabPage({
             </>
           ) : inputsReady ? (
             <Card className="rounded-3xl border-stone-200">
-              <CardHeader><CardTitle>Δημιούργησε το LAB του κεφαλαίου</CardTitle></CardHeader>
+              <CardHeader><CardTitle>Δημιούργησε χειροκίνητα το LAB</CardTitle></CardHeader>
               <CardContent>
                 <p className="max-w-2xl text-sm leading-6 text-stone-600">
-                  Κάθε current μάθημα στέλνεται ξεχωριστά στον καθηγητή AI. Η είσοδος περιέχει μόνο την έννοια και τα φυσικά μεγέθη του μαθήματος.
+                  Θα δημιουργηθεί ένα εικονικό εργαστήριο για κάθε current START μάθημα που εμφανίζεται επάνω. Δεν ξεκινά καμία δημιουργία μέχρι να πατήσεις το κουμπί.
                 </p>
                 <form action={`/mixalis/api/smartlab/chapters/${id}`} method="post">
                   <button className="mt-5 inline-flex min-h-12 items-center gap-2 rounded-md bg-[#334f39] px-5 py-3 text-sm font-bold text-white hover:bg-[#29412f]" type="submit">
@@ -106,8 +106,8 @@ export default async function MixalisChapterLabPage({
           ) : (
             <Card className="rounded-3xl border-stone-200">
               <CardContent className="p-6 sm:p-8">
-                <h2 className="text-xl font-semibold">Πρώτα χρειάζεται current μάθημα</h2>
-                <p className="mt-2 text-sm leading-6 text-stone-600">Μόλις ένα μάθημα έχει την ενότητα «Τι μετράμε και γιατί μας νοιάζει», μπορεί να δημιουργηθεί το SMARTLAB για αυτό.</p>
+                <h2 className="text-xl font-semibold">Πρώτα χρειάζεται current START μάθημα</h2>
+                <p className="mt-2 text-sm leading-6 text-stone-600">Μόλις ολοκληρωθεί το START και υπάρχουν φυσικά μεγέθη στο current μάθημα, ενεργοποιείται η χειροκίνητη δημιουργία του SMARTLAB.</p>
               </CardContent>
             </Card>
           )}
