@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getMixalisSession } from "@/lib/mixalis/auth";
-import { createSubchapterIntelligenceVersion } from "@/lib/mixalis/subchapter-intelligence";
+import { createCanonicalSubchapterIntelligenceVersion } from "@/lib/mixalis/canonical-subchapter-sources";
 
 export const runtime = "nodejs";
 
@@ -13,7 +13,7 @@ export async function POST(
 
   const { subchapterId } = await params;
   try {
-    const version = await createSubchapterIntelligenceVersion(subchapterId);
+    const version = await createCanonicalSubchapterIntelligenceVersion(subchapterId);
     return NextResponse.redirect(
       new URL(`/mixalis/subchapter-intelligence/${version.id}`, request.url),
       303,
