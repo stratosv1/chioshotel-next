@@ -1,5 +1,7 @@
+import { get } from "@vercel/blob";
 import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
 import { NextResponse } from "next/server";
+import { PDFDocument } from "pdf-lib";
 import { getMixalisSession } from "@/lib/mixalis/auth";
 import {
   getCourseForSourceUpload,
@@ -72,6 +74,19 @@ function parsePayload(value: string | null | undefined): UploadPayload {
   };
 }
 
+async function readPrivatePdfPageCount(storageKey: string) {
+  try {
+    const result = await get(storageKey, { access: "private" });
+    if (!result || result.statusCode !== 200) return null;
+    const bytes = new Uint8Array(await new Response(result.stream).arrayBuffer());
+    const pdf = await PDFDocument.load(bytes, { ignoreEncryption: true });
+    return pdf.getPageCount();
+  } catch (error) {
+    console.error("Mixalis PDF page-count detection failed", error);
+    return null;
+  }
+}
+
 export async function POST(request: Request) {
   const body = (await request.json()) as HandleUploadBody;
 
@@ -107,6 +122,7 @@ export async function POST(request: Request) {
       onUploadCompleted: async ({ blob, tokenPayload }) => {
         const payload = parsePayload(tokenPayload);
         const book = SOURCE_BOOKS[payload.sourceKind][payload.courseCode];
+        const detectedPageCount = await readPrivatePdfPageCount(blob.pathname);
 
         if (payload.sourceKind === "savvalas_book") {
           await registerSavvalasBookDocument({
@@ -116,7 +132,7 @@ export async function POST(request: Request) {
             storageKey: blob.pathname,
             contentType: blob.contentType,
             sizeBytes: payload.sizeBytes ?? null,
-            pageCount: book.pageCount,
+            pageCount: detectedPageCount,
           });
           return;
         }
@@ -128,7 +144,7 @@ export async function POST(request: Request) {
           storageKey: blob.pathname,
           contentType: blob.contentType,
           sizeBytes: payload.sizeBytes ?? null,
-          pageCount: book.pageCount ?? 0,
+          pageCount: detectedPageCount ?? book.pageCount ?? 0,
         });
       },
     });
