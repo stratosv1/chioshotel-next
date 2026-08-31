@@ -1,6 +1,7 @@
 import { neon } from "@neondatabase/serverless";
 
 export type PhysicsCourseCode = "general_education" | "orientation";
+export type PhysicsSourceDocumentKind = "school_book" | "savvalas_book";
 
 export type PhysicsSourceDocument = {
   id: string;
@@ -8,7 +9,7 @@ export type PhysicsSourceDocument = {
   courseCode: PhysicsCourseCode;
   courseTitle: string;
   title: string;
-  sourceKind: string;
+  sourceKind: PhysicsSourceDocumentKind | string;
   originalName: string | null;
   contentType: string | null;
   sizeBytes: number | null;
@@ -62,6 +63,12 @@ export function isPhysicsCourseCode(value: string): value is PhysicsCourseCode {
   return value === "general_education" || value === "orientation";
 }
 
+export function isPhysicsSourceDocumentKind(
+  value: string,
+): value is PhysicsSourceDocumentKind {
+  return value === "school_book" || value === "savvalas_book";
+}
+
 export async function getCourseForSourceUpload(code: PhysicsCourseCode) {
   const sql = getSql();
   const rows = await sql`
@@ -75,7 +82,9 @@ export async function getCourseForSourceUpload(code: PhysicsCourseCode) {
   return rows[0] as { id: string; code: PhysicsCourseCode; title: string };
 }
 
-export async function listSchoolBookDocuments(): Promise<PhysicsSourceDocument[]> {
+export async function listSourceDocumentsByKind(
+  sourceKind: PhysicsSourceDocumentKind,
+): Promise<PhysicsSourceDocument[]> {
   const sql = getSql();
   const rows = await sql`
     SELECT
@@ -94,7 +103,7 @@ export async function listSchoolBookDocuments(): Promise<PhysicsSourceDocument[]
       sd.updated_at::text
     FROM physics.source_documents sd
     JOIN physics.courses co ON co.id = sd.course_id
-    WHERE sd.source_kind = 'school_book'
+    WHERE sd.source_kind = ${sourceKind}
       AND sd.status <> 'deleted'
     ORDER BY co.sort_order ASC, sd.created_at ASC
   `;
@@ -102,14 +111,23 @@ export async function listSchoolBookDocuments(): Promise<PhysicsSourceDocument[]
   return (rows as SourceDocumentRow[]).map(mapSourceDocument);
 }
 
-export async function registerSchoolBookDocument(input: {
+export async function listSchoolBookDocuments(): Promise<PhysicsSourceDocument[]> {
+  return listSourceDocumentsByKind("school_book");
+}
+
+export async function listSavvalasBookDocuments(): Promise<PhysicsSourceDocument[]> {
+  return listSourceDocumentsByKind("savvalas_book");
+}
+
+async function registerSourceDocument(input: {
   courseCode: PhysicsCourseCode;
+  sourceKind: PhysicsSourceDocumentKind;
   title: string;
   originalName: string;
   storageKey: string;
   contentType: string | null;
   sizeBytes: number | null;
-  pageCount: number;
+  pageCount: number | null;
 }) {
   const sql = getSql();
   const course = await getCourseForSourceUpload(input.courseCode);
@@ -119,7 +137,7 @@ export async function registerSchoolBookDocument(input: {
     SELECT id::text
     FROM physics.source_documents
     WHERE course_id = ${course.id}::uuid
-      AND source_kind = 'school_book'
+      AND source_kind = ${input.sourceKind}
       AND status <> 'deleted'
     ORDER BY created_at ASC
     LIMIT 1
@@ -160,7 +178,7 @@ export async function registerSchoolBookDocument(input: {
     VALUES (
       ${course.id}::uuid,
       ${input.title},
-      'school_book',
+      ${input.sourceKind},
       ${input.originalName.slice(0, 255)},
       'vercel_blob',
       ${input.storageKey},
@@ -173,4 +191,35 @@ export async function registerSchoolBookDocument(input: {
   `;
 
   return String(rows[0].id);
+}
+
+export async function registerSchoolBookDocument(input: {
+  courseCode: PhysicsCourseCode;
+  title: string;
+  originalName: string;
+  storageKey: string;
+  contentType: string | null;
+  sizeBytes: number | null;
+  pageCount: number;
+}) {
+  return registerSourceDocument({
+    ...input,
+    sourceKind: "school_book",
+  });
+}
+
+export async function registerSavvalasBookDocument(input: {
+  courseCode: PhysicsCourseCode;
+  title: string;
+  originalName: string;
+  storageKey: string;
+  contentType: string | null;
+  sizeBytes: number | null;
+  pageCount?: number | null;
+}) {
+  return registerSourceDocument({
+    ...input,
+    sourceKind: "savvalas_book",
+    pageCount: input.pageCount ?? null,
+  });
 }
