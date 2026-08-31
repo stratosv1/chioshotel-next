@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import { getMixalisSession } from "@/lib/mixalis/auth";
 import { proposeSavvalasMapping } from "@/lib/mixalis/savvalas-auto-mapping";
 import {
   SAVVALAS_MAPPING_PROPOSAL_COOKIE,
+  decodeSavvalasMappingProposal,
   encodeSavvalasMappingProposal,
   savvalasMappingProposalCookieOptions,
 } from "@/lib/mixalis/savvalas-mapping-proposal-cookie";
@@ -21,6 +23,24 @@ export async function POST(request: Request) {
   if (!documentId || !subchapterId) {
     const url = new URL("/mixalis/savvalas-auto-map", request.url);
     url.searchParams.set("message", "Δεν βρέθηκε βιβλίο ή υποκεφάλαιο για το mapping.");
+    return NextResponse.redirect(url, 303);
+  }
+
+  const cookieStore = await cookies();
+  const pendingProposal = decodeSavvalasMappingProposal(
+    cookieStore.get(SAVVALAS_MAPPING_PROPOSAL_COOKIE)?.value,
+  );
+
+  if (
+    pendingProposal &&
+    (pendingProposal.documentId !== documentId ||
+      pendingProposal.proposalSubchapterId !== subchapterId)
+  ) {
+    const url = new URL("/mixalis/savvalas-auto-map", request.url);
+    url.searchParams.set(
+      "message",
+      "Υπάρχει ήδη πρόταση mapping που αναμένει επιβεβαίωση. Επιβεβαίωσέ την ή απέρριψέ την πριν ζητήσεις νέα πρόταση.",
+    );
     return NextResponse.redirect(url, 303);
   }
 
