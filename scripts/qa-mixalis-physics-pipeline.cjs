@@ -125,6 +125,13 @@ requireText('app/mixalis/api/smartlab/subchapters/[subchapterId]/route.ts', [
   'revision',
 ]);
 
+requireText('app/mixalis/api/smartlab/chapters/[chapterId]/route.ts', [
+  'chapter-wide δημιουργία SMARTLAB έχει απενεργοποιηθεί',
+  'requiredRoute',
+  '/mixalis/api/smartlab/subchapters/[subchapterId]',
+  'status: 409',
+]);
+
 requireText('lib/mixalis/smartlab-prompt.ts', [
   'finalver2',
   'physicsPreset=centripetal_force',
@@ -158,4 +165,4 @@ requireText('app/mixalis/api/savvalas-audit/ranges/[rangeId]/run/route.ts', [
   'recoverStaleSavvalasSourceAnalysisForRange',
 ]);
 
-console.log('Mixalis Physics PDF-only pipeline QA passed: canonical sources, START guards and independent manual per-lesson SMARTLAB revisions are enforced without regenerating completed labs.');
+console.log('Mixalis Physics PDF-only pipeline QA passed: canonical sources, START guards and independent manual per-lesson SMARTLAB revisions are enforced; legacy chapter-wide generation is blocked.');
