@@ -78,7 +78,7 @@ forbidText('app/mixalis/(private)/chapters/[id]/page.tsx', [
   'getSmartLabChapterState',
 ]);
 requireText('app/mixalis/(private)/chapters/[id]/page.tsx', [
-  'listSingleSmartLabStatesByChapter',
+  'listSingleSmartLabStatesByChapterCompat',
   'LAB ready',
   'Κάθε μάθημα ολοκληρώνεται ανεξάρτητα',
   'δεν ξανατρέχει το 1.1',
@@ -97,8 +97,8 @@ forbidText('components/mixalis/PhysicsPipeline.tsx', [
 ]);
 
 requireText('app/mixalis/(private)/chapters/[id]/lab/page.tsx', [
-  'listSingleSmartLabStatesByChapter',
-  'getSingleSmartLabState',
+  'listSingleSmartLabStatesByChapterCompat',
+  'getSingleSmartLabStateCompat',
   '/mixalis/api/smartlab/subchapters/',
   'Κάθε LAB είναι ανεξάρτητο',
   'Κανένα άλλο μάθημα του κεφαλαίου δεν θα σταλεί στο AI',
@@ -117,6 +117,15 @@ requireText('lib/mixalis/smartlab-single.ts', [
   'assertRuntimePhysicsFormulas',
   'derivePhysicsImpactModel',
   "status = 'superseded'",
+]);
+
+requireText('lib/mixalis/smartlab-single-compat.ts', [
+  'runSingleSmartLabRevisionCompat',
+  "status = 'superseded'",
+  "status IN ('current', 'superseded')",
+  'completed_at IS NOT NULL',
+  "input_snapshot_hash LIKE 'single:%'",
+  'Free the legacy one-current-per-chapter slot',
 ]);
 
 requireText('app/mixalis/api/smartlab/subchapters/[subchapterId]/route.ts', [
@@ -148,7 +157,7 @@ requireText('app/mixalis/api/smartlab/revisions/[revisionId]/route.ts', [
   'maxDuration = 900',
   'MAX_AUTOMATIC_ATTEMPTS = 3',
   'isSingleSmartLabRevision',
-  'runSingleSmartLabRevision',
+  'runSingleSmartLabRevisionCompat',
   'after(async () =>',
 ]);
 
@@ -165,4 +174,4 @@ requireText('app/mixalis/api/savvalas-audit/ranges/[rangeId]/run/route.ts', [
   'recoverStaleSavvalasSourceAnalysisForRange',
 ]);
 
-console.log('Mixalis Physics PDF-only pipeline QA passed: canonical sources, START guards and independent manual per-lesson SMARTLAB revisions are enforced; legacy chapter-wide generation is blocked.');
+console.log('Mixalis Physics PDF-only pipeline QA passed: canonical sources, START guards and independent manual per-lesson SMARTLAB revisions are enforced; legacy chapter current-slot conflicts are handled without regenerating completed LABs.');
