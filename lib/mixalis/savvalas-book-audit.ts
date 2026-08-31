@@ -80,7 +80,7 @@ export async function listSavvalasAuditBooks(): Promise<SavvalasAuditBook[]> {
         sr.id::text AS range_id,
         sr.file_page_from,
         sr.file_page_to,
-        sr.updated_at::text AS range_updated_at,
+        sr.created_at::text AS range_updated_at,
         latest_analysis.id::text AS analysis_id,
         latest_analysis.status AS analysis_status,
         COALESCE(latest_analysis.item_count, 0)::text AS item_count
@@ -232,8 +232,7 @@ export async function upsertSavvalasSourceRange(input: {
         file_page_from = ${filePageFrom},
         file_page_to = ${filePageTo},
         printed_page_from = NULL,
-        printed_page_to = NULL,
-        updated_at = NOW()
+        printed_page_to = NULL
       WHERE id::text = ${rangeId}
     `;
 
