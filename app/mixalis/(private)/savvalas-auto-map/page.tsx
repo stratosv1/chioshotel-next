@@ -1,5 +1,27 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { listSavvalasAuditBooks } from "@/lib/mixalis/savvalas-book-audit";
+import {
+  SAVVALAS_MAPPING_PROPOSAL_COOKIE,
+  decodeSavvalasMappingProposal,
+} from "@/lib/mixalis/savvalas-mapping-proposal-cookie";
+
+type PageQuery = {
+  documentId?: string;
+  proposalSubchapterId?: string;
+  proposalFrom?: string;
+  proposalTo?: string;
+  proposalConfidence?: string;
+  proposalComplete?: string;
+  tocFound?: string;
+  tocPrintedFrom?: string;
+  tocPrintedTo?: string;
+  tocPages?: string;
+  verifyFrom?: string;
+  verifyTo?: string;
+  evidence?: string;
+  message?: string;
+};
 
 function positiveInt(value: string | undefined) {
   const parsed = Number(value);
@@ -9,28 +31,39 @@ function positiveInt(value: string | undefined) {
 export default async function SavvalasAutoMapPage({
   searchParams,
 }: {
-  searchParams: Promise<{
-    documentId?: string;
-    proposalSubchapterId?: string;
-    proposalFrom?: string;
-    proposalTo?: string;
-    proposalConfidence?: string;
-    proposalComplete?: string;
-    tocFound?: string;
-    tocPrintedFrom?: string;
-    tocPrintedTo?: string;
-    tocPages?: string;
-    verifyFrom?: string;
-    verifyTo?: string;
-    evidence?: string;
-    message?: string;
-  }>;
+  searchParams: Promise<PageQuery>;
 }) {
-  const query = await searchParams;
+  const queryFromUrl = await searchParams;
+  const cookieStore = await cookies();
+  const persisted = decodeSavvalasMappingProposal(
+    cookieStore.get(SAVVALAS_MAPPING_PROPOSAL_COOKIE)?.value,
+  );
+  const query: PageQuery = {
+    documentId: queryFromUrl.documentId ?? persisted?.documentId,
+    proposalSubchapterId:
+      queryFromUrl.proposalSubchapterId ?? persisted?.proposalSubchapterId,
+    proposalFrom: queryFromUrl.proposalFrom ?? persisted?.proposalFrom,
+    proposalTo: queryFromUrl.proposalTo ?? persisted?.proposalTo,
+    proposalConfidence:
+      queryFromUrl.proposalConfidence ?? persisted?.proposalConfidence,
+    proposalComplete: queryFromUrl.proposalComplete ?? persisted?.proposalComplete,
+    tocFound: queryFromUrl.tocFound ?? persisted?.tocFound,
+    tocPrintedFrom: queryFromUrl.tocPrintedFrom ?? persisted?.tocPrintedFrom,
+    tocPrintedTo: queryFromUrl.tocPrintedTo ?? persisted?.tocPrintedTo,
+    tocPages: queryFromUrl.tocPages ?? persisted?.tocPages,
+    verifyFrom: queryFromUrl.verifyFrom ?? persisted?.verifyFrom,
+    verifyTo: queryFromUrl.verifyTo ?? persisted?.verifyTo,
+    evidence: queryFromUrl.evidence ?? persisted?.evidence,
+    message: queryFromUrl.message,
+  };
+
   const books = await listSavvalasAuditBooks();
   const proposalFrom = positiveInt(query.proposalFrom);
   const proposalTo = positiveInt(query.proposalTo);
-  const proposalConfidence = Math.max(0, Math.min(100, Number(query.proposalConfidence) || 0));
+  const proposalConfidence = Math.max(
+    0,
+    Math.min(100, Number(query.proposalConfidence) || 0),
+  );
   const proposalComplete = query.proposalComplete === "1";
   const safeProposal =
     proposalFrom != null &&
@@ -191,7 +224,7 @@ export default async function SavvalasAutoMapPage({
                                   <div className="mt-4 rounded-2xl border border-[#d7c7b3] bg-white p-4">
                                     <div className="flex flex-wrap items-start justify-between gap-3">
                                       <div>
-                                        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#806f60]">Πρόταση AI — δεν έχει αποθηκευτεί</p>
+                                        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#806f60]">Πρόταση AI — αναμένει επιβεβαίωση</p>
                                         <p className="mt-2 text-xl font-semibold">PDF {proposalFrom}–{proposalTo}</p>
                                         <p className="mt-1 text-sm text-[#6f6258]">Confidence {proposalConfidence}% · {proposalComplete ? "βρέθηκαν και τα δύο όρια" : "δεν επιβεβαιώθηκαν πλήρως τα όρια"}</p>
                                       </div>
@@ -229,12 +262,14 @@ export default async function SavvalasAutoMapPage({
                                           Δεν επιτρέπεται αυτόματη αποθήκευση: απαιτείται complete range και confidence ≥70%. Μπορείς να ξανατρέξεις την πρόταση ή να ορίσεις χειροκίνητα το range στο Audit Σαββάλα.
                                         </p>
                                       )}
-                                      <Link
-                                        href="/mixalis/savvalas-auto-map"
-                                        className="inline-flex min-h-11 items-center justify-center rounded-xl border border-black/15 bg-white px-4 py-2.5 text-sm font-medium"
-                                      >
-                                        Απόρριψη
-                                      </Link>
+                                      <form action="/mixalis/api/savvalas-audit/auto-map/discard" method="post">
+                                        <button
+                                          type="submit"
+                                          className="inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-black/15 bg-white px-4 py-2.5 text-sm font-medium sm:w-auto"
+                                        >
+                                          Απόρριψη
+                                        </button>
+                                      </form>
                                     </div>
                                   </div>
                                 ) : null}
