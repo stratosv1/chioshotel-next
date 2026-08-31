@@ -1,11 +1,10 @@
 import { neon } from "@neondatabase/serverless";
 import { get } from "@vercel/blob";
 import { PDFDocument } from "pdf-lib";
-import { upsertSavvalasSourceRange } from "@/lib/mixalis/savvalas-book-audit";
 
-const CHUNK_SIZE = 32;
-const CHUNK_OVERLAP = 2;
-const AUTO_MAPPING_VERSION = "savvalas-auto-mapping-v1";
+const TOC_SCAN_PAGES = 28;
+const MAX_VERIFY_PAGES = 72;
+const AUTO_MAPPING_VERSION = "savvalas-auto-mapping-v2-toc-first";
 
 type TargetSubchapter = {
   id: string;
@@ -23,24 +22,44 @@ type DocumentContext = {
   pageCount: number;
   courseTitle: string;
   subchapters: TargetSubchapter[];
+  target: TargetSubchapter;
+  nextTarget: TargetSubchapter | null;
 };
 
-type Candidate = {
-  subchapterId: string;
+type TocHint = {
+  found: boolean;
+  printedPageFrom: number;
+  nextPrintedPageFrom: number;
+  matchedHeading: string;
+  confidence: number;
+  evidence: string;
+};
+
+type Verification = {
+  found: boolean;
   filePageFrom: number;
   filePageTo: number;
+  complete: boolean;
   confidence: number;
-  reason: string;
+  evidence: string;
 };
 
-type MappingResult = {
+export type SavvalasMappingProposal = {
+  documentId: string;
   subchapterId: string;
   numberLabel: string;
   title: string;
   filePageFrom: number;
   filePageTo: number;
   confidence: number;
-  changed: boolean;
+  complete: boolean;
+  tocFound: boolean;
+  tocPrintedPageFrom: number | null;
+  tocPrintedPageTo: number | null;
+  tocPagesScanned: number;
+  verificationPageFrom: number;
+  verificationPageTo: number;
+  evidence: string;
 };
 
 function getSql() {
@@ -63,7 +82,14 @@ function getOutputText(payload: any): string {
   return "";
 }
 
-async function getDocumentContext(documentId: string): Promise<DocumentContext> {
+function clampConfidence(value: unknown) {
+  return Math.max(0, Math.min(1, Number(value) || 0));
+}
+
+async function getDocumentContext(
+  documentId: string,
+  subchapterId: string,
+): Promise<DocumentContext> {
   const sql = getSql();
   const docs = await sql`
     SELECT
@@ -108,20 +134,29 @@ async function getDocumentContext(documentId: string): Promise<DocumentContext> 
     ORDER BY c.sort_order ASC, sc.sort_order ASC
   `;
 
+  const subchapters: TargetSubchapter[] = (rows as any[]).map((row) => ({
+    id: String(row.subchapter_id),
+    numberLabel: String(row.number_label),
+    title: String(row.title),
+    sortOrder: Number(row.combined_sort_order),
+    existingFrom: row.file_page_from == null ? null : Number(row.file_page_from),
+    existingTo: row.file_page_to == null ? null : Number(row.file_page_to),
+  }));
+
+  const targetIndex = subchapters.findIndex((item) => item.id === subchapterId);
+  if (targetIndex < 0) {
+    throw new Error("Το υποκεφάλαιο δεν ανήκει στο συγκεκριμένο βιβλίο.");
+  }
+
   return {
     documentId: String(doc.document_id),
     storageKey: String(doc.storage_key),
     originalName: String(doc.original_name || "savvalas.pdf"),
     pageCount: Number(doc.page_count),
     courseTitle: String(doc.course_title),
-    subchapters: (rows as any[]).map((row) => ({
-      id: String(row.subchapter_id),
-      numberLabel: String(row.number_label),
-      title: String(row.title),
-      sortOrder: Number(row.combined_sort_order),
-      existingFrom: row.file_page_from == null ? null : Number(row.file_page_from),
-      existingTo: row.file_page_to == null ? null : Number(row.file_page_to),
-    })),
+    subchapters,
+    target: subchapters[targetIndex],
+    nextTarget: subchapters[targetIndex + 1] ?? null,
   };
 }
 
@@ -133,7 +168,7 @@ async function loadPdfBytes(storageKey: string) {
   return new Uint8Array(await new Response(result.stream).arrayBuffer());
 }
 
-async function makeChunk(source: PDFDocument, from: number, to: number) {
+async function makeExcerpt(source: PDFDocument, from: number, to: number) {
   const excerpt = await PDFDocument.create();
   const indices = Array.from({ length: to - from + 1 }, (_, i) => from - 1 + i);
   const pages = await excerpt.copyPages(source, indices);
@@ -142,78 +177,18 @@ async function makeChunk(source: PDFDocument, from: number, to: number) {
   return Buffer.from(bytes).toString("base64");
 }
 
-function resultSchema(subchapterIds: string[]) {
-  return {
-    type: "object",
-    additionalProperties: false,
-    required: ["matches"],
-    properties: {
-      matches: {
-        type: "array",
-        maxItems: Math.max(8, subchapterIds.length),
-        items: {
-          type: "object",
-          additionalProperties: false,
-          required: [
-            "subchapterId",
-            "filePageFrom",
-            "filePageTo",
-            "confidence",
-            "reason",
-          ],
-          properties: {
-            subchapterId: { type: "string", enum: subchapterIds },
-            filePageFrom: { type: "integer" },
-            filePageTo: { type: "integer" },
-            confidence: { type: "number", minimum: 0, maximum: 1 },
-            reason: { type: "string" },
-          },
-        },
-      },
-    },
-  } as const;
-}
-
-function chunkPrompt(context: DocumentContext, from: number, to: number) {
-  const targets = context.subchapters
-    .map((s) => `${s.id} | ${s.numberLabel} | ${s.title}`)
-    .join("\n");
-
-  return `You are mapping a Greek B' Lykeiou Physics study guide (Savvalas) to the OFFICIAL course subchapters used by a private learning system.
-
-MAPPING VERSION: ${AUTO_MAPPING_VERSION}
-COURSE: ${context.courseTitle}
-SOURCE: ${context.originalName}
-THIS EXCERPT IS ORIGINAL PDF PAGES ${from}-${to}.
-Excerpt page 1 = original PDF page ${from}.
-
-OFFICIAL TARGET SUBCHAPTERS, in curriculum order:
-${targets}
-
-TASK:
-- Inspect the PDF pages visually and semantically.
-- Report only target subchapters that are substantially taught, explained, or exercised in this excerpt.
-- For each match, give the FIRST and LAST ORIGINAL PDF page in this excerpt that belong to that target.
-- Do not match a subchapter merely because it is mentioned in a table of contents, cross-reference, summary list, index, or answer key.
-- Prefer the actual theory/examples/exercises body of the section.
-- A target may continue beyond this excerpt; then use this excerpt's boundary page and the next chunk will continue it.
-- Use ORIGINAL PDF page numbers only (${from}-${to}), never printed page numbers.
-- Keep confidence below 0.75 when the section identity is inferred rather than explicit.
-- If the excerpt contains front matter, contents, unrelated material, solutions, or material outside these official targets, omit it.
-- Never invent a target. Return an empty matches array when appropriate.`;
-}
-
-async function analyzeChunk(
-  context: DocumentContext,
-  from: number,
-  to: number,
-  chunkBase64: string,
-): Promise<Candidate[]> {
+async function callStructuredPdf(input: {
+  prompt: string;
+  filename: string;
+  pdfBase64: string;
+  schemaName: string;
+  schema: Record<string, unknown>;
+}) {
   const apiKey = process.env.TEACHER;
   if (!apiKey) throw new Error("TEACHER is not configured for the Physics pipeline.");
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 240_000);
+  const timeout = setTimeout(() => controller.abort(), 125_000);
   try {
     const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
@@ -228,11 +203,11 @@ async function analyzeChunk(
           {
             role: "user",
             content: [
-              { type: "input_text", text: chunkPrompt(context, from, to) },
+              { type: "input_text", text: input.prompt },
               {
                 type: "input_file",
-                filename: `savvalas-map-${from}-${to}.pdf`,
-                file_data: `data:application/pdf;base64,${chunkBase64}`,
+                filename: input.filename,
+                file_data: `data:application/pdf;base64,${input.pdfBase64}`,
               },
             ],
           },
@@ -240,9 +215,9 @@ async function analyzeChunk(
         text: {
           format: {
             type: "json_schema",
-            name: "savvalas_auto_mapping_chunk",
+            name: input.schemaName,
             strict: true,
-            schema: resultSchema(context.subchapters.map((s) => s.id)),
+            schema: input.schema,
           },
         },
       }),
@@ -250,143 +225,259 @@ async function analyzeChunk(
 
     const payload = await response.json().catch(() => null);
     if (!response.ok) {
-      throw new Error(payload?.error?.message || `Auto mapping failed with HTTP ${response.status}`);
+      throw new Error(payload?.error?.message || `Savvalas mapping failed with HTTP ${response.status}`);
     }
-    const output = getOutputText(payload);
-    if (!output) return [];
-    const parsed = JSON.parse(output) as { matches?: Candidate[] };
 
-    return (Array.isArray(parsed.matches) ? parsed.matches : [])
-      .map((item) => ({
-        subchapterId: String(item.subchapterId),
-        filePageFrom: Number(item.filePageFrom),
-        filePageTo: Number(item.filePageTo),
-        confidence: Math.max(0, Math.min(1, Number(item.confidence) || 0)),
-        reason: String(item.reason || "").slice(0, 500),
-      }))
-      .filter(
-        (item) =>
-          context.subchapters.some((s) => s.id === item.subchapterId) &&
-          Number.isInteger(item.filePageFrom) &&
-          Number.isInteger(item.filePageTo) &&
-          item.filePageFrom >= from &&
-          item.filePageTo <= to &&
-          item.filePageTo >= item.filePageFrom,
-      );
+    const output = getOutputText(payload);
+    if (!output) throw new Error("Το AI δεν επέστρεψε αποτέλεσμα mapping.");
+    return JSON.parse(output) as Record<string, unknown>;
   } finally {
     clearTimeout(timeout);
   }
 }
 
-function mergeCandidates(context: DocumentContext, candidates: Candidate[]) {
-  const byTarget = new Map<string, Candidate[]>();
-  for (const candidate of candidates) {
-    const items = byTarget.get(candidate.subchapterId) || [];
-    items.push(candidate);
-    byTarget.set(candidate.subchapterId, items);
-  }
+const TOC_SCHEMA = {
+  type: "object",
+  additionalProperties: false,
+  required: [
+    "found",
+    "printedPageFrom",
+    "nextPrintedPageFrom",
+    "matchedHeading",
+    "confidence",
+    "evidence",
+  ],
+  properties: {
+    found: { type: "boolean" },
+    printedPageFrom: { type: "integer", minimum: 0 },
+    nextPrintedPageFrom: { type: "integer", minimum: 0 },
+    matchedHeading: { type: "string" },
+    confidence: { type: "number", minimum: 0, maximum: 1 },
+    evidence: { type: "string" },
+  },
+} as const;
 
-  const merged = new Map<string, { from: number; to: number; confidence: number }>();
+const VERIFY_SCHEMA = {
+  type: "object",
+  additionalProperties: false,
+  required: [
+    "found",
+    "filePageFrom",
+    "filePageTo",
+    "complete",
+    "confidence",
+    "evidence",
+  ],
+  properties: {
+    found: { type: "boolean" },
+    filePageFrom: { type: "integer", minimum: 0 },
+    filePageTo: { type: "integer", minimum: 0 },
+    complete: { type: "boolean" },
+    confidence: { type: "number", minimum: 0, maximum: 1 },
+    evidence: { type: "string" },
+  },
+} as const;
 
-  for (const subchapter of context.subchapters) {
-    const raw = (byTarget.get(subchapter.id) || [])
-      .filter((item) => item.confidence >= 0.6)
-      .sort((a, b) => a.filePageFrom - b.filePageFrom);
-    if (raw.length === 0) continue;
+function tocPrompt(context: DocumentContext, tocTo: number) {
+  const officialTargets = context.subchapters
+    .map((item) => `${item.numberLabel} | ${item.title}`)
+    .join("\n");
 
-    const groups: Candidate[][] = [];
-    for (const item of raw) {
-      const current = groups[groups.length - 1];
-      if (!current) {
-        groups.push([item]);
-        continue;
-      }
-      const currentTo = Math.max(...current.map((entry) => entry.filePageTo));
-      if (item.filePageFrom <= currentTo + CHUNK_OVERLAP + 2) current.push(item);
-      else groups.push([item]);
-    }
+  return `You are doing the TABLE-OF-CONTENTS FIRST PASS for a Greek B' Lykeiou Physics study guide by Savvalas.
 
-    groups.sort((a, b) => {
-      const scoreA = a.reduce((sum, item) => sum + item.confidence * (item.filePageTo - item.filePageFrom + 1), 0);
-      const scoreB = b.reduce((sum, item) => sum + item.confidence * (item.filePageTo - item.filePageFrom + 1), 0);
-      return scoreB - scoreA;
-    });
+MAPPING VERSION: ${AUTO_MAPPING_VERSION}
+COURSE: ${context.courseTitle}
+SOURCE: ${context.originalName}
+THE ATTACHED EXCERPT IS ORIGINAL PDF PAGES 1-${tocTo}.
 
-    const best = groups[0];
-    const from = Math.min(...best.map((item) => item.filePageFrom));
-    const to = Math.max(...best.map((item) => item.filePageTo));
-    const confidence = best.reduce((sum, item) => sum + item.confidence, 0) / best.length;
-    merged.set(subchapter.id, { from, to, confidence });
-  }
+TARGET OFFICIAL SUBCHAPTER:
+${context.target.numberLabel} | ${context.target.title}
 
-  return merged;
+ALL OFFICIAL SUBCHAPTERS IN CURRICULUM ORDER (for semantic context):
+${officialTargets}
+
+TASK:
+- The user says the first pages contain the book's structure/table of contents. Actively inspect these front-matter pages and USE that structure.
+- Find the Savvalas heading/section that semantically corresponds to the target official subchapter. The wording and numbering may differ.
+- printedPageFrom = the PRINTED BOOK page where the matching Savvalas section begins, as stated in the contents/structure. This is NOT the PDF page index.
+- nextPrintedPageFrom = the printed page where the next distinct Savvalas section begins, if visible. Otherwise use 0.
+- If the target is not actually represented in the contents excerpt, set found=false and both page fields to 0.
+- Do not invent page numbers. Explain briefly what heading/page evidence you used.
+- This pass is only a NAVIGATION HINT. It does not create a trusted mapping.`;
 }
 
-export async function runSavvalasAutoMapping(documentId: string): Promise<{
-  scannedPages: number;
-  mapped: MappingResult[];
-  skippedExisting: number;
-  unresolved: Array<{ subchapterId: string; numberLabel: string; title: string }>;
-}> {
-  const context = await getDocumentContext(documentId);
+function verificationWindow(context: DocumentContext, hint: TocHint) {
+  if (hint.found && hint.printedPageFrom > 0) {
+    const printedSpan =
+      hint.nextPrintedPageFrom > hint.printedPageFrom
+        ? hint.nextPrintedPageFrom - hint.printedPageFrom
+        : 24;
+    const from = Math.max(1, hint.printedPageFrom - 4);
+    const desiredLength = Math.min(
+      MAX_VERIFY_PAGES,
+      Math.max(44, printedSpan + TOC_SCAN_PAGES + 12),
+    );
+    const to = Math.min(context.pageCount, from + desiredLength - 1);
+    return { from, to };
+  }
+
+  // Safe fallback when the contents page is unclear: inspect only a bounded early window.
+  // This deliberately avoids the old full-book sequential scan.
+  const from = 1;
+  const to = Math.min(context.pageCount, MAX_VERIFY_PAGES);
+  return { from, to };
+}
+
+function verifyPrompt(
+  context: DocumentContext,
+  hint: TocHint,
+  from: number,
+  to: number,
+) {
+  const nextTarget = context.nextTarget
+    ? `${context.nextTarget.numberLabel} | ${context.nextTarget.title}`
+    : "none / end of official course list";
+
+  return `You are VERIFYING a proposed page range in a Greek B' Lykeiou Savvalas Physics PDF.
+
+MAPPING VERSION: ${AUTO_MAPPING_VERSION}
+COURSE: ${context.courseTitle}
+TARGET: ${context.target.numberLabel} | ${context.target.title}
+NEXT OFFICIAL TARGET: ${nextTarget}
+SOURCE: ${context.originalName}
+THIS ATTACHED EXCERPT IS ORIGINAL PDF PAGES ${from}-${to}.
+Excerpt page 1 = original PDF page ${from}.
+
+TABLE-OF-CONTENTS HINT:
+- found: ${hint.found ? "yes" : "no"}
+- matching Savvalas heading: ${hint.matchedHeading || "unknown"}
+- printed start page: ${hint.printedPageFrom || "unknown"}
+- next printed section page: ${hint.nextPrintedPageFrom || "unknown"}
+- TOC confidence: ${hint.confidence.toFixed(2)}
+
+TASK:
+- Ignore the table of contents as proof now. Inspect the ACTUAL theory/examples/exercises in this excerpt.
+- Identify the exact ORIGINAL PDF page where substantive teaching/exercises for the target begin.
+- Identify the last ORIGINAL PDF page belonging to the target before the material clearly changes to the next distinct official topic.
+- Include contiguous Savvalas internal subsections, examples and exercises that materially teach the target.
+- Do not include answer keys, indexes, front matter, unrelated revision lists, or a page merely mentioning the target.
+- Use ORIGINAL PDF page numbers only (${from}-${to}), never printed book page numbers.
+- Set complete=true only if BOTH the start boundary and end boundary are visible and justified inside this excerpt.
+- If the target is absent, set found=false, complete=false and page fields to 0.
+- If only part of the target is visible, report the visible bounds but set complete=false and keep confidence below 0.70.
+- Evidence must briefly name the visible section/transition that supports the boundaries.
+
+IMPORTANT: This is a PROPOSAL ONLY. It will be shown to a human before any trusted mapping is saved.`;
+}
+
+async function readTocHint(
+  context: DocumentContext,
+  source: PDFDocument,
+): Promise<{ hint: TocHint; scannedPages: number }> {
+  const tocTo = Math.min(context.pageCount, TOC_SCAN_PAGES);
+  const pdfBase64 = await makeExcerpt(source, 1, tocTo);
+  const raw = await callStructuredPdf({
+    prompt: tocPrompt(context, tocTo),
+    filename: `savvalas-toc-1-${tocTo}.pdf`,
+    pdfBase64,
+    schemaName: "savvalas_toc_hint",
+    schema: TOC_SCHEMA,
+  });
+
+  const printedPageFrom = Math.max(0, Math.floor(Number(raw.printedPageFrom) || 0));
+  const nextPrintedPageFrom = Math.max(0, Math.floor(Number(raw.nextPrintedPageFrom) || 0));
+  const found = Boolean(raw.found) && printedPageFrom > 0;
+
+  return {
+    scannedPages: tocTo,
+    hint: {
+      found,
+      printedPageFrom: found ? printedPageFrom : 0,
+      nextPrintedPageFrom:
+        found && nextPrintedPageFrom > printedPageFrom ? nextPrintedPageFrom : 0,
+      matchedHeading: String(raw.matchedHeading || "").trim().slice(0, 240),
+      confidence: clampConfidence(raw.confidence),
+      evidence: String(raw.evidence || "").trim().slice(0, 600),
+    },
+  };
+}
+
+async function verifyTarget(
+  context: DocumentContext,
+  source: PDFDocument,
+  hint: TocHint,
+) {
+  const window = verificationWindow(context, hint);
+  const pdfBase64 = await makeExcerpt(source, window.from, window.to);
+  const raw = await callStructuredPdf({
+    prompt: verifyPrompt(context, hint, window.from, window.to),
+    filename: `savvalas-verify-${window.from}-${window.to}.pdf`,
+    pdfBase64,
+    schemaName: "savvalas_target_verification",
+    schema: VERIFY_SCHEMA,
+  });
+
+  const verification: Verification = {
+    found: Boolean(raw.found),
+    filePageFrom: Math.floor(Number(raw.filePageFrom) || 0),
+    filePageTo: Math.floor(Number(raw.filePageTo) || 0),
+    complete: Boolean(raw.complete),
+    confidence: clampConfidence(raw.confidence),
+    evidence: String(raw.evidence || "").trim().slice(0, 700),
+  };
+
+  const validBounds =
+    verification.found &&
+    verification.filePageFrom >= window.from &&
+    verification.filePageTo >= verification.filePageFrom &&
+    verification.filePageTo <= window.to;
+
+  if (!validBounds) {
+    throw new Error(
+      hint.found
+        ? "Το TOC βρέθηκε, αλλά δεν επιβεβαιώθηκε ασφαλές πραγματικό PDF range. Χρειάζεται έλεγχος."
+        : "Δεν βρέθηκε ασφαλές range ούτε από τα περιεχόμενα ούτε από τον στοχευμένο έλεγχο.",
+    );
+  }
+
+  return { verification, window };
+}
+
+export async function proposeSavvalasMapping(
+  documentId: string,
+  subchapterId: string,
+): Promise<SavvalasMappingProposal> {
+  const context = await getDocumentContext(documentId, subchapterId);
   const bytes = await loadPdfBytes(context.storageKey);
   const source = await PDFDocument.load(bytes, { ignoreEncryption: true });
   const actualPageCount = source.getPageCount();
   if (actualPageCount !== context.pageCount) context.pageCount = actualPageCount;
 
-  const candidates: Candidate[] = [];
-  for (let from = 1; from <= context.pageCount; from += CHUNK_SIZE - CHUNK_OVERLAP) {
-    const to = Math.min(context.pageCount, from + CHUNK_SIZE - 1);
-    const chunk = await makeChunk(source, from, to);
-    const found = await analyzeChunk(context, from, to, chunk);
-    candidates.push(...found);
-    if (to === context.pageCount) break;
-  }
+  const { hint, scannedPages } = await readTocHint(context, source);
+  const { verification, window } = await verifyTarget(context, source, hint);
 
-  const merged = mergeCandidates(context, candidates);
-  const mapped: MappingResult[] = [];
-  let skippedExisting = 0;
-
-  for (const subchapter of context.subchapters) {
-    if (subchapter.existingFrom != null && subchapter.existingTo != null) {
-      skippedExisting += 1;
-      continue;
-    }
-    const match = merged.get(subchapter.id);
-    if (!match || match.confidence < 0.7) continue;
-
-    const result = await upsertSavvalasSourceRange({
-      documentId: context.documentId,
-      subchapterId: subchapter.id,
-      filePageFrom: match.from,
-      filePageTo: match.to,
-    });
-
-    mapped.push({
-      subchapterId: subchapter.id,
-      numberLabel: subchapter.numberLabel,
-      title: subchapter.title,
-      filePageFrom: match.from,
-      filePageTo: match.to,
-      confidence: match.confidence,
-      changed: result.changed,
-    });
-  }
-
-  const mappedIds = new Set(mapped.map((item) => item.subchapterId));
-  const unresolved = context.subchapters
-    .filter(
-      (s) =>
-        s.existingFrom == null &&
-        s.existingTo == null &&
-        !mappedIds.has(s.id),
-    )
-    .map((s) => ({ subchapterId: s.id, numberLabel: s.numberLabel, title: s.title }));
+  const combinedConfidence = hint.found
+    ? Math.min(1, verification.confidence * 0.8 + hint.confidence * 0.2)
+    : verification.confidence * 0.85;
 
   return {
-    scannedPages: context.pageCount,
-    mapped,
-    skippedExisting,
-    unresolved,
+    documentId: context.documentId,
+    subchapterId: context.target.id,
+    numberLabel: context.target.numberLabel,
+    title: context.target.title,
+    filePageFrom: verification.filePageFrom,
+    filePageTo: verification.filePageTo,
+    confidence: combinedConfidence,
+    complete: verification.complete,
+    tocFound: hint.found,
+    tocPrintedPageFrom: hint.found ? hint.printedPageFrom : null,
+    tocPrintedPageTo:
+      hint.found && hint.nextPrintedPageFrom > 0
+        ? hint.nextPrintedPageFrom - 1
+        : null,
+    tocPagesScanned: scannedPages,
+    verificationPageFrom: window.from,
+    verificationPageTo: window.to,
+    evidence: [hint.evidence, verification.evidence].filter(Boolean).join(" · ").slice(0, 900),
   };
 }
