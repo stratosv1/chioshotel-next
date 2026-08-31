@@ -4,7 +4,7 @@ import { PDFDocument } from "pdf-lib";
 
 const TOC_SCAN_PAGES = 28;
 const MAX_VERIFY_PAGES = 72;
-const AUTO_MAPPING_VERSION = "savvalas-auto-mapping-v3-adjacent-pdf-anchors";
+const AUTO_MAPPING_VERSION = "savvalas-auto-mapping-v4-anchor-first-skip-toc";
 
 type TargetSubchapter = {
   id: string;
@@ -86,6 +86,17 @@ function getOutputText(payload: any): string {
 
 function clampConfidence(value: unknown) {
   return Math.max(0, Math.min(1, Number(value) || 0));
+}
+
+function emptyTocHint(): TocHint {
+  return {
+    found: false,
+    printedPageFrom: 0,
+    nextPrintedPageFrom: 0,
+    matchedHeading: "",
+    confidence: 0,
+    evidence: "TOC pass skipped because a confirmed ORIGINAL PDF mapping is available as a stronger anchor.",
+  };
 }
 
 async function getDocumentContext(
@@ -245,6 +256,11 @@ async function callStructuredPdf(input: {
     const output = getOutputText(payload);
     if (!output) throw new Error("Το AI δεν επέστρεψε αποτέλεσμα mapping.");
     return JSON.parse(output) as Record<string, unknown>;
+  } catch (error) {
+    if (error instanceof Error && error.name === "AbortError") {
+      throw new Error("Η ανάλυση AI ξεπέρασε το χρονικό όριο. Δοκίμασε ξανά· δεν αποθηκεύτηκε κανένα mapping.");
+    }
+    throw error;
   } finally {
     clearTimeout(timeout);
   }
@@ -505,12 +521,21 @@ export async function proposeSavvalasMapping(
   const actualPageCount = source.getPageCount();
   if (actualPageCount !== context.pageCount) context.pageCount = actualPageCount;
 
-  const { hint, scannedPages } = await readTocHint(context, source);
+  const hasConfirmedPdfAnchor =
+    context.previousMappedTarget?.existingTo != null ||
+    context.nextMappedTarget?.existingFrom != null;
+
+  const { hint, scannedPages } = hasConfirmedPdfAnchor
+    ? { hint: emptyTocHint(), scannedPages: 0 }
+    : await readTocHint(context, source);
+
   const { verification, window } = await verifyTarget(context, source, hint);
 
-  const combinedConfidence = hint.found
-    ? Math.min(1, verification.confidence * 0.8 + hint.confidence * 0.2)
-    : verification.confidence * 0.85;
+  const combinedConfidence = hasConfirmedPdfAnchor
+    ? verification.confidence
+    : hint.found
+      ? Math.min(1, verification.confidence * 0.8 + hint.confidence * 0.2)
+      : verification.confidence * 0.85;
 
   return {
     documentId: context.documentId,
