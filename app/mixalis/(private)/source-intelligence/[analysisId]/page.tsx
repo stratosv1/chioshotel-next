@@ -36,11 +36,15 @@ export default async function MixalisSourceIntelligencePage({
   if (!view) notFound();
 
   const { context } = view;
-  const officialRangeId = view.schoolBookMapped
-    ? await getOfficialRangeForSubchapter(context.subchapterId)
-    : null;
+  const isPdfRange = context.sourceKind === "source_range";
+  const isLegacyPhotoAnalysis = context.sourceKind === "material_batch";
+  const officialRangeId =
+    isPdfRange && view.schoolBookMapped
+      ? await getOfficialRangeForSubchapter(context.subchapterId)
+      : null;
   const understanding = view.items.filter((item) => item.layer === "understanding");
   const teaching = view.items.filter((item) => item.layer === "teaching");
+  const unitLabel = isPdfRange ? "PDF σελίδες" : "legacy φωτογραφίες";
 
   return (
     <main className="min-h-screen bg-[#f3efe8] px-4 py-5 text-[#2c2825] sm:px-8 sm:py-8">
@@ -60,13 +64,13 @@ export default async function MixalisSourceIntelligencePage({
             {context.subchapterNumberLabel} · {context.subchapterTitle}
           </h1>
           <p className="mt-3 max-w-4xl text-sm leading-6 text-[#6b625b] sm:text-base">
-            Αυτή η σελίδα δεν δημιουργεί μάθημα. Μετατρέπει την πηγή σε δομημένη γνώση για το απαιτούμενο βάθος κατανόησης. Το START θα χρησιμοποιηθεί αργότερα, μόνο αφού συντεθεί και η επίσημη γνώση του σχολικού βιβλίου.
+            {isPdfRange
+              ? "Αυτό είναι structured intelligence από επιβεβαιωμένο PDF range. Δεν δημιουργεί ακόμη μάθημα."
+              : "Αυτό είναι παλιό ιστορικό analysis από φωτογραφίες. Παραμένει ορατό για αναφορά, αλλά δεν συμμετέχει πλέον στο νέο PDF-only pipeline ούτε σε νέα canonical σύνθεση."}
           </p>
 
           <div className="mt-5 flex flex-wrap gap-2 text-xs text-[#746a62]">
-            <span className="rounded-full bg-[#f1ede7] px-3 py-1.5">
-              {context.courseTitle}
-            </span>
+            <span className="rounded-full bg-[#f1ede7] px-3 py-1.5">{context.courseTitle}</span>
             <span className="rounded-full bg-[#f1ede7] px-3 py-1.5">
               {context.sourceLabel || context.sourceType || "Πηγή"}
             </span>
@@ -74,35 +78,58 @@ export default async function MixalisSourceIntelligencePage({
               {sourceRoleLabel(context.sourceRole)}
             </span>
             <span className="rounded-full bg-[#f1ede7] px-3 py-1.5">
-              {context.totalUnits} φωτογραφίες
+              {context.totalUnits} {unitLabel}
+            </span>
+            <span
+              className={`rounded-full px-3 py-1.5 font-semibold ${
+                isPdfRange
+                  ? "bg-[#eef5ed] text-[#50684b]"
+                  : "bg-[#f8eee7] text-[#7c5a49]"
+              }`}
+            >
+              {isPdfRange ? "Canonical PDF source" : "Legacy · δεν χρησιμοποιείται"}
             </span>
           </div>
         </header>
 
-        <SourceIntelligenceRunner
-          analysisId={context.id}
-          initialStatus={context.status}
-          initialProcessedUnits={context.processedUnits}
-          totalUnits={context.totalUnits}
-          initialFindingsCount={view.items.length}
-          schoolBookMapped={view.schoolBookMapped}
-          subchapterNumberLabel={context.subchapterNumberLabel}
-        />
+        {isLegacyPhotoAnalysis ? (
+          <section className="mt-6 rounded-3xl border border-[#dfc4b4] bg-[#fbf1eb] p-5 text-sm leading-6 text-[#73503f]">
+            <strong>Δεν χρειάζεται καμία ενέργεια εδώ.</strong> Για νέο μάθημα χρησιμοποίησε το Physics Pipeline του κεφαλαίου. Το σύστημα θα πάρει μόνο το πλήρες PDF του Σαββάλα και το επίσημο σχολικό PDF.
+            <div className="mt-4">
+              <Link
+                href={`/mixalis/chapters/${context.chapterId}`}
+                className="inline-flex min-h-10 items-center justify-center rounded-xl bg-[#493d35] px-4 py-2 text-xs font-semibold text-white"
+              >
+                Επιστροφή στο σωστό Pipeline
+              </Link>
+            </div>
+          </section>
+        ) : (
+          <SourceIntelligenceRunner
+            analysisId={context.id}
+            initialStatus={context.status}
+            initialProcessedUnits={context.processedUnits}
+            totalUnits={context.totalUnits}
+            initialFindingsCount={view.items.length}
+            schoolBookMapped={view.schoolBookMapped}
+            subchapterNumberLabel={context.subchapterNumberLabel}
+          />
+        )}
 
-        {!view.schoolBookMapped ? (
+        {isPdfRange && !view.schoolBookMapped ? (
           <section className="mt-6 rounded-3xl border border-[#ddc8aa] bg-[#fbf5e9] p-5 text-sm leading-6 text-[#6e5a3d]">
-            <strong>Σημαντικό:</strong> η ανάλυση του Σαββάλα μπορεί να ολοκληρωθεί τώρα, αλλά δεν θα δημιουργηθεί ακόμη canonical Subchapter Intelligence ούτε μάθημα. Πρώτα πρέπει να χαρτογραφηθεί το αντίστοιχο range του επίσημου σχολικού βιβλίου, επειδή μόνο αυτό καθορίζει την επίσημη ύλη.
+            <strong>Σημαντικό:</strong> το Depth Audit μπορεί να ολοκληρωθεί, αλλά canonical Subchapter Intelligence δημιουργείται μόνο όταν υπάρχει και το official school-book range.
           </section>
         ) : null}
 
-        {context.status === "ready" && officialRangeId ? (
+        {isPdfRange && context.status === "ready" && officialRangeId ? (
           <section className="mt-6 rounded-3xl border border-[#bfcab8] bg-[#f2f6ef] p-5 sm:p-6">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#66735f]">
-              Επόμενο στάδιο · START / PHASE3
+              Επόμενο στάδιο · 3/5
             </p>
-            <h2 className="mt-2 text-xl font-semibold">Το σχολικό range είναι πλέον χαρτογραφημένο</h2>
+            <h2 className="mt-2 text-xl font-semibold">Official School Book Intelligence</h2>
             <p className="mt-2 text-sm leading-6 text-[#596553]">
-              Ο Σαββάλας έχει δώσει το depth intelligence. Τώρα αναλύουμε μόνο τις επίσημες σελίδες του σχολικού βιβλίου για έννοιες, ορισμούς, φυσικά μεγέθη, αρχές, σχέσεις και όρια της ύλης. Δεν δημιουργείται ακόμη μάθημα.
+              Το Depth Intelligence του Σαββάλα είναι έτοιμο. Τώρα αναλύεται μόνο το mapped range του επίσημου σχολικού βιβλίου.
             </p>
             <Link
               href={`/mixalis/api/source-intelligence/from-source-range/${officialRangeId}`}
@@ -126,10 +153,6 @@ export default async function MixalisSourceIntelligencePage({
                 Understanding Intelligence
               </p>
               <h2 className="mt-1 text-2xl font-semibold">Τι απαιτούν πραγματικά οι ασκήσεις</h2>
-              <p className="mt-2 max-w-3xl text-sm leading-6 text-[#6e655e]">
-                Σχέσεις, συλλογισμοί, παγίδες και βάθος κατανόησης που πρέπει αργότερα να επηρεάσουν τη διδασκαλία της θεωρίας.
-              </p>
-
               <div className="mt-6 space-y-3">
                 {understanding.length > 0 ? (
                   understanding.map((item) => (
@@ -161,10 +184,6 @@ export default async function MixalisSourceIntelligencePage({
                 Teaching Intelligence
               </p>
               <h2 className="mt-1 text-2xl font-semibold">Τι πρέπει να αλλάξει στη διδασκαλία της θεωρίας</h2>
-              <p className="mt-2 max-w-3xl text-sm leading-6 text-[#6e655e]">
-                Αυτά δεν είναι το μάθημα. Είναι απαιτήσεις προς το START για το πού η θεωρία πρέπει να γίνει βαθύτερη, σαφέστερη ή να προετοιμάσει καλύτερα τη μεταφορά γνώσης.
-              </p>
-
               <div className="mt-6 space-y-3">
                 {teaching.length > 0 ? (
                   teaching.map((item) => (
