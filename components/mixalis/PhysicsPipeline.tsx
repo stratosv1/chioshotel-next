@@ -1,16 +1,12 @@
 import Link from "next/link";
 import type { PhysicsSubchapter } from "@/lib/mixalis/db";
 import type { PhysicsPipelineNavigation } from "@/lib/mixalis/lesson-navigation";
+import type { SingleSmartLabPipelineState } from "@/lib/mixalis/smartlab-single";
 
 type Checkpoint = {
   label: string;
   state: "ready" | "active" | "waiting" | "stale";
   detail: string;
-};
-
-export type PhysicsLabPipelineState = {
-  currentRevisionId: string | null;
-  currentLessonRevisionIds: string[];
 };
 
 function checkpointClass(state: Checkpoint["state"]) {
@@ -26,23 +22,29 @@ function checkpointMark(state: Checkpoint["state"]) {
   return "·";
 }
 
-function lessonLabReady(pipeline: PhysicsPipelineNavigation, lab: PhysicsLabPipelineState) {
+function lessonLabReady(
+  pipeline: PhysicsPipelineNavigation,
+  lab: SingleSmartLabPipelineState | undefined,
+) {
   return Boolean(
     pipeline.lesson.upToDate &&
       pipeline.lesson.revisionId &&
-      lab.currentLessonRevisionIds.includes(pipeline.lesson.revisionId),
+      lab?.upToDate &&
+      lab.currentRevisionId &&
+      lab.currentLessonRevisionId === pipeline.lesson.revisionId,
   );
 }
 
 function buildCheckpoints(
   pipeline: PhysicsPipelineNavigation,
-  labReady: boolean,
+  lab: SingleSmartLabPipelineState | undefined,
 ): Checkpoint[] {
   const savvalasMapped = Boolean(pipeline.savvalas.rangeId);
   const savvalasReady = pipeline.savvalas.status === "ready";
   const officialReady = pipeline.official.status === "ready";
   const intelligenceReady = pipeline.intelligence.upToDate;
   const lessonReady = pipeline.lesson.upToDate;
+  const labReady = lessonLabReady(pipeline, lab);
 
   return [
     {
@@ -126,12 +128,14 @@ function buildCheckpoints(
     },
     {
       label: "6 · LAB",
-      state: labReady ? "ready" : lessonReady ? "active" : "waiting",
+      state: labReady ? "ready" : lessonReady && lab?.currentRevisionId ? "stale" : lessonReady ? "active" : "waiting",
       detail: labReady
-        ? "Εικονικό εργαστήριο έτοιμο"
-        : lessonReady
-          ? "Χειροκίνητη δημιουργία"
-          : "Περιμένει current START",
+        ? "LAB αυτού του μαθήματος έτοιμο"
+        : lessonReady && lab?.currentRevisionId
+          ? "Χρειάζεται νέο LAB για το current START"
+          : lessonReady
+            ? "Χειροκίνητη δημιουργία μόνο για αυτό το μάθημα"
+            : "Περιμένει current START",
     },
   ];
 }
@@ -159,30 +163,37 @@ function PipelineCta({ pipeline }: { pipeline: PhysicsPipelineNavigation }) {
 
 function LabCta({
   chapterId,
+  subchapterId,
   pipeline,
-  labReady,
+  lab,
 }: {
   chapterId: string;
+  subchapterId: string;
   pipeline: PhysicsPipelineNavigation;
-  labReady: boolean;
+  lab: SingleSmartLabPipelineState | undefined;
 }) {
   if (!pipeline.lesson.upToDate || !pipeline.lesson.revisionId) return null;
 
   const className =
     "inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-[#9eb09a] bg-[#eef5ed] px-4 py-2.5 text-center text-sm font-bold text-[#3f5a43] transition hover:bg-[#e4eee2]";
+  const labReady = lessonLabReady(pipeline, lab);
 
-  if (labReady) {
+  if (labReady && lab?.currentRevisionId) {
     return (
-      <Link href={`/mixalis/chapters/${chapterId}/lab`} prefetch={false} className={className}>
+      <Link
+        href={`/mixalis/chapters/${chapterId}/lab?subchapter=${subchapterId}&revision=${lab.currentRevisionId}`}
+        prefetch={false}
+        className={className}
+      >
         Άνοιγμα LAB
       </Link>
     );
   }
 
   return (
-    <form action={`/mixalis/api/smartlab/chapters/${chapterId}`} method="post" className="w-full">
+    <form action={`/mixalis/api/smartlab/subchapters/${subchapterId}`} method="post" className="w-full">
       <button type="submit" className={className}>
-        Δημιουργία LAB
+        {lab?.currentRevisionId ? "Νέο LAB" : "Δημιουργία LAB"}
       </button>
     </form>
   );
@@ -192,16 +203,17 @@ export default function PhysicsPipeline({
   chapterId,
   subchapters,
   pipelines,
-  lab,
+  labStates,
 }: {
   chapterId: string;
   subchapters: PhysicsSubchapter[];
   pipelines: PhysicsPipelineNavigation[];
-  lab: PhysicsLabPipelineState;
+  labStates: SingleSmartLabPipelineState[];
 }) {
   const bySubchapter = new Map(pipelines.map((pipeline) => [pipeline.subchapterId, pipeline]));
+  const labsBySubchapter = new Map(labStates.map((lab) => [lab.subchapterId, lab]));
   const completedLessons = pipelines.filter((pipeline) => pipeline.lesson.upToDate).length;
-  const labReadyLessons = pipelines.filter((pipeline) => lessonLabReady(pipeline, lab)).length;
+  const labReadyLessons = pipelines.filter((pipeline) => lessonLabReady(pipeline, labsBySubchapter.get(pipeline.subchapterId))).length;
 
   return (
     <section className="mt-6 rounded-3xl border border-black/10 bg-white p-6 shadow-sm sm:p-8">
@@ -210,10 +222,10 @@ export default function PhysicsPipeline({
           <p className="text-sm font-semibold uppercase tracking-[0.15em] text-[#857261]">
             Physics Pipeline · PDF only
           </p>
-          <h2 className="mt-1 text-2xl font-semibold">Ένα κουμπί · πάντα το σωστό επόμενο βήμα</h2>
+          <h2 className="mt-1 text-2xl font-semibold">Ένα μάθημα · ένα ανεξάρτητο LAB</h2>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-[#6d645d]">
-            Mapping Σαββάλα → Depth Audit → Official School Book → Canonical Intelligence → START.
-            Μόλις υπάρχει current START μάθημα, το LAB γίνεται διαθέσιμο ως ξεχωριστό χειροκίνητο βήμα.
+            Mapping Σαββάλα → Depth Audit → Official School Book → Canonical Intelligence → START → LAB.
+            Το LAB δημιουργείται χειροκίνητα και αποκλειστικά από το current START του συγκεκριμένου υποκεφαλαίου.
           </p>
         </div>
         <Link
@@ -226,15 +238,15 @@ export default function PhysicsPipeline({
       </div>
 
       <div className="mt-5 rounded-2xl border border-[#c5d3c0] bg-[#f1f6ef] px-4 py-3 text-sm leading-6 text-[#53654f]">
-        <strong>Σταθερός κανόνας:</strong> το πράσινο κουμπί ολοκληρώνει τη βασική ροή έως το START. Το LAB δεν δημιουργείται αυτόματα· το δημιουργείς εσύ μόνο αφού υπάρχει current μάθημα.
+        <strong>Σταθερός κανόνας:</strong> όταν τελειώσει το START ενός μαθήματος, δημιουργείς μόνο το LAB αυτού του μαθήματος. Το 1.2 δεν ξαναδημιουργεί το LAB του 1.1 και το 1.3 δεν ξαναδημιουργεί τα προηγούμενα.
       </div>
 
       <div className="mt-6 space-y-4">
         {subchapters.map((subchapter) => {
           const pipeline = bySubchapter.get(subchapter.id);
           if (!pipeline) return null;
-          const labReady = lessonLabReady(pipeline, lab);
-          const checkpoints = buildCheckpoints(pipeline, labReady);
+          const lab = labsBySubchapter.get(subchapter.id);
+          const checkpoints = buildCheckpoints(pipeline, lab);
 
           return (
             <article
@@ -273,7 +285,12 @@ export default function PhysicsPipeline({
 
                 <div className="flex w-full shrink-0 flex-col gap-2 xl:w-52">
                   <PipelineCta pipeline={pipeline} />
-                  <LabCta chapterId={chapterId} pipeline={pipeline} labReady={labReady} />
+                  <LabCta
+                    chapterId={chapterId}
+                    subchapterId={subchapter.id}
+                    pipeline={pipeline}
+                    lab={lab}
+                  />
                 </div>
               </div>
             </article>
