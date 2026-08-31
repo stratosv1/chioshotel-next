@@ -149,7 +149,7 @@ function buildNextStep(input: {
     return {
       label: "Έλεγχος σχολικού range",
       detail: "3/5 · Λείπει το official school-book mapping",
-      href: "/mixalis/sources",
+      href: `/mixalis/official-auto-map?subchapterId=${input.subchapterId}`,
       method: "get",
     };
   }
@@ -398,7 +398,9 @@ export async function listPhysicsPipelineByChapter(
         status: lessonStatus,
         revisionId: lessonRevisionId,
         revisionNumber:
-          row.lesson_revision_number == null ? null : Number(row.lesson_revision_number),
+          row.lesson_revision_number == null
+            ? null
+            : Number(row.lesson_revision_number),
         intelligenceVersionId: lessonIntelligenceVersionId,
         promptVersion: lessonPromptVersion,
         upToDate: lessonUpToDate,
