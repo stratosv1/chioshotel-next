@@ -3,7 +3,10 @@
 import { upload } from "@vercel/blob/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import type { PhysicsCourseCode } from "@/lib/mixalis/source-documents";
+import type {
+  PhysicsCourseCode,
+  PhysicsSourceDocumentKind,
+} from "@/lib/mixalis/source-documents";
 
 const MAX_FILE_SIZE = 100 * 1024 * 1024;
 
@@ -13,18 +16,20 @@ function safeFileName(value: string) {
     .normalize("NFKD")
     .replace(/[^a-zA-Z0-9_-]+/g, "-")
     .replace(/^-+|-+$/g, "")
-    .slice(0, 90) || "school-book";
+    .slice(0, 90) || "physics-book";
   return `${safeBase}.pdf`;
 }
 
 export default function SchoolBookPdfUploader({
   courseCode,
+  sourceKind = "school_book",
   pageCount,
   uploaded,
   uploadedName,
 }: {
   courseCode: PhysicsCourseCode;
-  pageCount: number;
+  sourceKind?: PhysicsSourceDocumentKind;
+  pageCount?: number | null;
   uploaded: boolean;
   uploadedName?: string | null;
 }) {
@@ -34,6 +39,7 @@ export default function SchoolBookPdfUploader({
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const isSavvalas = sourceKind === "savvalas_book";
 
   function chooseFile(nextFile: File | null) {
     setFile(null);
@@ -63,12 +69,13 @@ export default function SchoolBookPdfUploader({
     setProgress(0);
 
     try {
-      const pathname = `mixalis/source-documents/${courseCode}/school-book-${safeFileName(file.name)}`;
+      const pathname = `mixalis/source-documents/${courseCode}/${sourceKind}/${safeFileName(file.name)}`;
       await upload(pathname, file, {
         access: "private",
         handleUploadUrl: "/mixalis/api/source-documents/upload",
         clientPayload: JSON.stringify({
           courseCode,
+          sourceKind,
           originalName: file.name,
           sizeBytes: file.size,
         }),
@@ -101,8 +108,14 @@ export default function SchoolBookPdfUploader({
             {uploaded ? "Αντικατάσταση PDF" : "Ανέβασμα PDF"}
           </p>
           <p className="mt-1 text-xs leading-5 text-[#7d736b]">
-            Ιδιωτικό αρχείο · {pageCount} σελίδες · έως 100 MB.
+            Ιδιωτικό αρχείο · {pageCount ? `${pageCount} σελίδες · ` : "πλήρες βιβλίο · "}
+            έως 100 MB.
           </p>
+          {isSavvalas ? (
+            <p className="mt-1 text-xs leading-5 text-[#7d736b]">
+              Θα χρησιμοποιείται ως πηγή βάθους, ασκήσεων, παγίδων και μεθοδολογίας — όχι ως επίσημη ύλη.
+            </p>
+          ) : null}
           {uploaded && uploadedName ? (
             <p className="mt-1 max-w-md truncate text-xs text-[#6a5b50]">
               Τρέχον: {uploadedName}
