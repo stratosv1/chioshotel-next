@@ -1,26 +1,23 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
 import type { PhysicsSubchapter } from "@/lib/mixalis/db";
 import type { PhysicsPipelineNavigation } from "@/lib/mixalis/lesson-navigation";
 import type { SingleSmartLabPipelineState } from "@/lib/mixalis/smartlab-single";
 
-type Checkpoint = {
-  label: string;
-  state: "ready" | "active" | "waiting" | "stale";
-  detail: string;
+type ManualRanges = {
+  savvalasFrom: string;
+  savvalasTo: string;
+  officialFrom: string;
+  officialTo: string;
 };
 
-function checkpointClass(state: Checkpoint["state"]) {
-  if (state === "ready") return "border-[#b8cab5] bg-[#eef5ed] text-[#40583d]";
-  if (state === "active") return "border-[#cdbd9d] bg-[#fbf5e9] text-[#725f3e]";
-  if (state === "stale") return "border-[#d8c1ad] bg-[#faf1e9] text-[#795943]";
-  return "border-black/10 bg-[#f7f4ef] text-[#7d736b]";
-}
-
-function checkpointMark(state: Checkpoint["state"]) {
-  if (state === "ready") return "✓";
-  if (state === "active" || state === "stale") return "→";
-  return "·";
-}
+type ActionState = {
+  busy: boolean;
+  message: string;
+  error: string;
+};
 
 function lessonLabReady(
   pipeline: PhysicsPipelineNavigation,
@@ -35,130 +32,17 @@ function lessonLabReady(
   );
 }
 
-function buildCheckpoints(
-  pipeline: PhysicsPipelineNavigation,
-  lab: SingleSmartLabPipelineState | undefined,
-): Checkpoint[] {
-  const savvalasMapped = Boolean(pipeline.savvalas.rangeId);
-  const savvalasReady = pipeline.savvalas.status === "ready";
-  const officialReady = pipeline.official.status === "ready";
-  const intelligenceReady = pipeline.intelligence.upToDate;
-  const lessonReady = pipeline.lesson.upToDate;
-  const labReady = lessonLabReady(pipeline, lab);
-
+function internalProgress(pipeline: PhysicsPipelineNavigation) {
+  const depth = pipeline.savvalas.status === "ready";
+  const official = pipeline.official.status === "ready";
+  const intelligence = pipeline.intelligence.upToDate;
+  const lesson = pipeline.lesson.upToDate;
   return [
-    {
-      label: "1 · Mapping",
-      state: savvalasMapped ? "ready" : "active",
-      detail: savvalasMapped ? "PDF range επιβεβαιωμένο" : "Χρειάζεται mapping Σαββάλα",
-    },
-    {
-      label: "2 · Depth",
-      state: savvalasReady
-        ? "ready"
-        : savvalasMapped
-          ? pipeline.savvalas.status === "error"
-            ? "stale"
-            : "active"
-          : "waiting",
-      detail: savvalasReady
-        ? "Σαββάλας PDF έτοιμος"
-        : !savvalasMapped
-          ? "Περιμένει mapping"
-          : pipeline.savvalas.status === "error"
-            ? "Χρειάζεται επανάληψη"
-            : "Χρειάζεται Depth Audit",
-    },
-    {
-      label: "3 · Official",
-      state: officialReady
-        ? "ready"
-        : savvalasReady && pipeline.official.rangeId
-          ? pipeline.official.status === "error"
-            ? "stale"
-            : "active"
-          : "waiting",
-      detail: officialReady
-        ? "School Book PDF έτοιμο"
-        : !pipeline.official.rangeId
-          ? "Λείπει official range"
-          : !savvalasReady
-            ? "Περιμένει Depth"
-            : pipeline.official.status === "error"
-              ? "Χρειάζεται επανάληψη"
-              : "Χρειάζεται Official Intelligence",
-    },
-    {
-      label: "4 · Intelligence",
-      state: intelligenceReady
-        ? "ready"
-        : officialReady
-          ? pipeline.intelligence.status === "current"
-            ? "stale"
-            : "active"
-          : "waiting",
-      detail: intelligenceReady
-        ? `Canonical v${pipeline.intelligence.versionNumber ?? ""}`.trim()
-        : !officialReady
-          ? "Περιμένει τις 2 PDF πηγές"
-          : pipeline.intelligence.status === "current"
-            ? "Χρειάζεται νέα canonical version"
-            : "Έτοιμο για σύνθεση",
-    },
-    {
-      label: "5 · START",
-      state: lessonReady
-        ? "ready"
-        : intelligenceReady
-          ? pipeline.lesson.status === "current"
-            ? "stale"
-            : "active"
-          : "waiting",
-      detail: lessonReady
-        ? `Revision ${pipeline.lesson.revisionNumber ?? ""} · current`.trim()
-        : !intelligenceReady
-          ? "Περιμένει canonical Intelligence"
-          : pipeline.lesson.status === "processing"
-            ? "Δημιουργείται"
-            : pipeline.lesson.status === "error"
-              ? "Χρειάζεται επανάληψη"
-              : pipeline.lesson.status === "current"
-                ? "Χρειάζεται νέα revision"
-                : "Έτοιμο για δημιουργία",
-    },
-    {
-      label: "6 · LAB",
-      state: labReady ? "ready" : lessonReady && lab?.currentRevisionId ? "stale" : lessonReady ? "active" : "waiting",
-      detail: labReady
-        ? "LAB αυτού του μαθήματος έτοιμο"
-        : lessonReady && lab?.currentRevisionId
-          ? "Χρειάζεται νέο LAB για το current START"
-          : lessonReady
-            ? "Χειροκίνητη δημιουργία μόνο για αυτό το μάθημα"
-            : "Περιμένει current START",
-    },
-  ];
-}
-
-function PipelineCta({ pipeline }: { pipeline: PhysicsPipelineNavigation }) {
-  const className =
-    "inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-[#304b35] px-5 py-3 text-center text-sm font-bold !text-white transition hover:bg-[#263d2b] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#b7c8b4]";
-
-  if (pipeline.next.method === "post") {
-    return (
-      <form action={pipeline.next.href} method="post" className="w-full">
-        <button type="submit" className={className}>
-          {pipeline.next.label}
-        </button>
-      </form>
-    );
-  }
-
-  return (
-    <Link href={pipeline.next.href} prefetch={false} className={className}>
-      {pipeline.next.label}
-    </Link>
-  );
+    ["Σαββάλας", depth],
+    ["Επίσημη ύλη", official],
+    ["Γνώση", intelligence],
+    ["START", lesson],
+  ] as const;
 }
 
 function LabCta({
@@ -173,7 +57,6 @@ function LabCta({
   lab: SingleSmartLabPipelineState | undefined;
 }) {
   if (!pipeline.lesson.upToDate || !pipeline.lesson.revisionId) return null;
-
   const className =
     "inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-[#9eb09a] bg-[#eef5ed] px-4 py-2.5 text-center text-sm font-bold text-[#3f5a43] transition hover:bg-[#e4eee2]";
   const labReady = lessonLabReady(pipeline, lab);
@@ -213,19 +96,109 @@ export default function PhysicsPipeline({
   const bySubchapter = new Map(pipelines.map((pipeline) => [pipeline.subchapterId, pipeline]));
   const labsBySubchapter = new Map(labStates.map((lab) => [lab.subchapterId, lab]));
   const completedLessons = pipelines.filter((pipeline) => pipeline.lesson.upToDate).length;
-  const labReadyLessons = pipelines.filter((pipeline) => lessonLabReady(pipeline, labsBySubchapter.get(pipeline.subchapterId))).length;
+  const labReadyLessons = pipelines.filter((pipeline) =>
+    lessonLabReady(pipeline, labsBySubchapter.get(pipeline.subchapterId)),
+  ).length;
+
+  const [ranges, setRanges] = useState<Record<string, ManualRanges>>(() =>
+    Object.fromEntries(
+      pipelines.map((pipeline) => [
+        pipeline.subchapterId,
+        {
+          savvalasFrom: pipeline.savvalas.pageFrom?.toString() || "",
+          savvalasTo: pipeline.savvalas.pageTo?.toString() || "",
+          officialFrom: pipeline.official.pageFrom?.toString() || "",
+          officialTo: pipeline.official.pageTo?.toString() || "",
+        },
+      ]),
+    ),
+  );
+  const [actions, setActions] = useState<Record<string, ActionState>>({});
+
+  function setAction(subchapterId: string, patch: Partial<ActionState>) {
+    setActions((current) => ({
+      ...current,
+      [subchapterId]: {
+        busy: current[subchapterId]?.busy ?? false,
+        message: current[subchapterId]?.message ?? "",
+        error: current[subchapterId]?.error ?? "",
+        ...patch,
+      },
+    }));
+  }
+
+  function updateRange(subchapterId: string, field: keyof ManualRanges, value: string) {
+    setRanges((current) => ({
+      ...current,
+      [subchapterId]: { ...current[subchapterId], [field]: value },
+    }));
+  }
+
+  async function saveMapping(subchapterId: string) {
+    const value = ranges[subchapterId];
+    setAction(subchapterId, { busy: true, error: "", message: "Αποθηκεύονται οι PDF σελίδες…" });
+    try {
+      const response = await fetch(`/mixalis/api/manual-mapping/${subchapterId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          savvalasFrom: Number(value.savvalasFrom),
+          savvalasTo: Number(value.savvalasTo),
+          officialFrom: Number(value.officialFrom),
+          officialTo: Number(value.officialTo),
+        }),
+      });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload?.error || "Δεν αποθηκεύτηκαν οι σελίδες.");
+      setAction(subchapterId, { busy: false, error: "", message: "Οι σελίδες αποθηκεύτηκαν." });
+      window.location.reload();
+    } catch (error) {
+      setAction(subchapterId, {
+        busy: false,
+        message: "",
+        error: error instanceof Error ? error.message : "Δεν αποθηκεύτηκαν οι σελίδες.",
+      });
+    }
+  }
+
+  async function buildLesson(subchapterId: string) {
+    setAction(subchapterId, { busy: true, error: "" });
+    try {
+      const response = await fetch(`/mixalis/api/lesson-build/${subchapterId}`, { method: "POST" });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload?.error || "Η δημιουργία του μαθήματος απέτυχε.");
+
+      if (payload?.done) {
+        setAction(subchapterId, { busy: false, message: "Το μάθημα είναι έτοιμο.", error: "" });
+        window.location.reload();
+        return;
+      }
+
+      setAction(subchapterId, {
+        busy: true,
+        message: String(payload?.message || "Η δημιουργία συνεχίζεται…"),
+        error: "",
+      });
+      window.setTimeout(() => void buildLesson(subchapterId), 6500);
+    } catch (error) {
+      setAction(subchapterId, {
+        busy: false,
+        message: "",
+        error: error instanceof Error ? error.message : "Η δημιουργία του μαθήματος απέτυχε.",
+      });
+    }
+  }
 
   return (
     <section className="mt-6 rounded-3xl border border-black/10 bg-white p-6 shadow-sm sm:p-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.15em] text-[#857261]">
-            Physics Pipeline · PDF only
+            Physics Workspace · Manual PDF
           </p>
-          <h2 className="mt-1 text-2xl font-semibold">Ένα μάθημα · ένα ανεξάρτητο LAB</h2>
+          <h2 className="mt-1 text-2xl font-semibold">Βάζεις τις σελίδες · πατάς Δημιουργία μαθήματος</h2>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-[#6d645d]">
-            Mapping Σαββάλα → Depth Audit → Official School Book → Canonical Intelligence → START → LAB.
-            Το LAB δημιουργείται χειροκίνητα και αποκλειστικά από το current START του συγκεκριμένου υποκεφαλαίου.
+            Δεν γίνεται πλέον AI εντοπισμός σελίδων. Δίνεις εσύ τα ακριβή ORIGINAL PDF ranges για Σαββάλα και σχολικό βιβλίο και το σύστημα ολοκληρώνει αυτόματα Depth → Official → Canonical → START.
           </p>
         </div>
         <Link
@@ -238,7 +211,7 @@ export default function PhysicsPipeline({
       </div>
 
       <div className="mt-5 rounded-2xl border border-[#c5d3c0] bg-[#f1f6ef] px-4 py-3 text-sm leading-6 text-[#53654f]">
-        <strong>Σταθερός κανόνας:</strong> όταν τελειώσει το START ενός μαθήματος, δημιουργείς μόνο το LAB αυτού του μαθήματος. Το 1.2 δεν ξαναδημιουργεί το LAB του 1.1 και το 1.3 δεν ξαναδημιουργεί τα προηγούμενα.
+        <strong>Σημαντικό:</strong> γράφεις αριθμούς ORIGINAL PDF σελίδων, όχι την τυπωμένη αρίθμηση του βιβλίου. Το LAB παραμένει ξεχωριστό και το δημιουργείς χειροκίνητα μόνο αφού είναι έτοιμο το START.
       </div>
 
       <div className="mt-6 space-y-4">
@@ -246,51 +219,94 @@ export default function PhysicsPipeline({
           const pipeline = bySubchapter.get(subchapter.id);
           if (!pipeline) return null;
           const lab = labsBySubchapter.get(subchapter.id);
-          const checkpoints = buildCheckpoints(pipeline, lab);
+          const value = ranges[subchapter.id] || { savvalasFrom: "", savvalasTo: "", officialFrom: "", officialTo: "" };
+          const action = actions[subchapter.id] || { busy: false, message: "", error: "" };
+          const mapped = Boolean(pipeline.savvalas.rangeId && pipeline.official.rangeId);
+          const canSave = Boolean(value.savvalasFrom && value.savvalasTo && value.officialFrom && value.officialTo);
+          const progress = internalProgress(pipeline);
 
           return (
-            <article
-              key={subchapter.id}
-              className="rounded-2xl border border-black/10 bg-[#fbfaf8] p-4 sm:p-5"
-            >
-              <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-3">
-                    <span className="inline-flex min-w-14 justify-center rounded-xl bg-[#e8dfd3] px-3 py-2 text-sm font-bold text-[#5c5047]">
-                      {subchapter.numberLabel}
-                    </span>
-                    <div className="min-w-0">
-                      <h3 className="font-semibold sm:text-lg">{subchapter.title}</h3>
-                      <p className="mt-1 text-sm font-medium text-[#51644d]">
-                        {pipeline.next.detail}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-6">
-                    {checkpoints.map((checkpoint) => (
-                      <div
-                        key={checkpoint.label}
-                        className={`rounded-xl border px-3 py-2.5 ${checkpointClass(checkpoint.state)}`}
-                      >
-                        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.06em]">
-                          <span aria-hidden="true">{checkpointMark(checkpoint.state)}</span>
-                          <span>{checkpoint.label}</span>
-                        </div>
-                        <p className="mt-1 text-xs leading-5 opacity-80">{checkpoint.detail}</p>
-                      </div>
-                    ))}
+            <article key={subchapter.id} className="rounded-2xl border border-black/10 bg-[#fbfaf8] p-4 sm:p-5">
+              <div className="flex flex-col gap-5">
+                <div className="flex items-start gap-3">
+                  <span className="inline-flex min-w-14 justify-center rounded-xl bg-[#e8dfd3] px-3 py-2 text-sm font-bold text-[#5c5047]">
+                    {subchapter.numberLabel}
+                  </span>
+                  <div className="min-w-0">
+                    <h3 className="font-semibold sm:text-lg">{subchapter.title}</h3>
+                    <p className="mt-1 text-xs text-[#776d65]">
+                      {pipeline.lesson.upToDate
+                        ? `Μάθημα έτοιμο · START Revision ${pipeline.lesson.revisionNumber ?? ""}`
+                        : mapped
+                          ? "Manual mapping έτοιμο · μπορείς να δημιουργήσεις το μάθημα"
+                          : "Συμπλήρωσε μία φορά τα δύο PDF ranges"}
+                    </p>
                   </div>
                 </div>
 
-                <div className="flex w-full shrink-0 flex-col gap-2 xl:w-52">
-                  <PipelineCta pipeline={pipeline} />
-                  <LabCta
-                    chapterId={chapterId}
-                    subchapterId={subchapter.id}
-                    pipeline={pipeline}
-                    lab={lab}
-                  />
+                <div className="grid gap-3 lg:grid-cols-2">
+                  <div className="rounded-xl border border-black/10 bg-white p-3">
+                    <p className="text-xs font-bold uppercase tracking-[0.08em] text-[#75675c]">Σαββάλας · ORIGINAL PDF</p>
+                    <div className="mt-2 grid grid-cols-2 gap-2">
+                      <label className="text-xs text-[#746b64]">Από
+                        <input type="number" min="1" inputMode="numeric" value={value.savvalasFrom} onChange={(event) => updateRange(subchapter.id, "savvalasFrom", event.target.value)} className="mt-1 min-h-11 w-full rounded-lg border border-black/15 bg-white px-3 text-base font-semibold text-[#2c2825]" />
+                      </label>
+                      <label className="text-xs text-[#746b64]">Έως
+                        <input type="number" min="1" inputMode="numeric" value={value.savvalasTo} onChange={(event) => updateRange(subchapter.id, "savvalasTo", event.target.value)} className="mt-1 min-h-11 w-full rounded-lg border border-black/15 bg-white px-3 text-base font-semibold text-[#2c2825]" />
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="rounded-xl border border-black/10 bg-white p-3">
+                    <p className="text-xs font-bold uppercase tracking-[0.08em] text-[#75675c]">Σχολικό βιβλίο · ORIGINAL PDF</p>
+                    <div className="mt-2 grid grid-cols-2 gap-2">
+                      <label className="text-xs text-[#746b64]">Από
+                        <input type="number" min="1" inputMode="numeric" value={value.officialFrom} onChange={(event) => updateRange(subchapter.id, "officialFrom", event.target.value)} className="mt-1 min-h-11 w-full rounded-lg border border-black/15 bg-white px-3 text-base font-semibold text-[#2c2825]" />
+                      </label>
+                      <label className="text-xs text-[#746b64]">Έως
+                        <input type="number" min="1" inputMode="numeric" value={value.officialTo} onChange={(event) => updateRange(subchapter.id, "officialTo", event.target.value)} className="mt-1 min-h-11 w-full rounded-lg border border-black/15 bg-white px-3 text-base font-semibold text-[#2c2825]" />
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  {progress.map(([label, ready]) => (
+                    <span key={label} className={`rounded-full border px-3 py-1 text-xs font-semibold ${ready ? "border-[#bdd0ba] bg-[#eef5ed] text-[#496149]" : "border-black/10 bg-[#f3efe9] text-[#81776f]"}`}>
+                      {ready ? "✓ " : "· "}{label}
+                    </span>
+                  ))}
+                </div>
+
+                {action.message ? <p className="rounded-xl bg-[#eef5ed] px-3 py-2 text-sm font-medium text-[#4d644c]">{action.message}</p> : null}
+                {action.error ? <p className="rounded-xl bg-[#fbefea] px-3 py-2 text-sm font-medium text-[#875342]">{action.error}</p> : null}
+
+                <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+                  <button
+                    type="button"
+                    disabled={!canSave || action.busy}
+                    onClick={() => void saveMapping(subchapter.id)}
+                    className="inline-flex min-h-12 items-center justify-center rounded-xl border border-[#9b8877] bg-white px-4 py-3 text-sm font-bold text-[#5b4d43] transition hover:bg-[#f4eee7] disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    {mapped ? "Αποθήκευση / αλλαγή σελίδων" : "Αποθήκευση σελίδων"}
+                  </button>
+
+                  {pipeline.lesson.upToDate && pipeline.lesson.revisionId ? (
+                    <Link href={`/mixalis/lessons/${pipeline.lesson.revisionId}`} prefetch={false} className="inline-flex min-h-12 items-center justify-center rounded-xl bg-[#304b35] px-5 py-3 text-center text-sm font-bold !text-white transition hover:bg-[#263d2b]">
+                      Άνοιγμα μαθήματος
+                    </Link>
+                  ) : (
+                    <button
+                      type="button"
+                      disabled={!mapped || action.busy}
+                      onClick={() => void buildLesson(subchapter.id)}
+                      className="inline-flex min-h-12 items-center justify-center rounded-xl bg-[#304b35] px-5 py-3 text-center text-sm font-bold text-white transition hover:bg-[#263d2b] disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      {action.busy ? "Δημιουργείται…" : "Δημιουργία μαθήματος"}
+                    </button>
+                  )}
+
+                  <LabCta chapterId={chapterId} subchapterId={subchapter.id} pipeline={pipeline} lab={lab} />
                 </div>
               </div>
             </article>
