@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { getMixalisSession } from "@/lib/mixalis/auth";
 import { proposeSavvalasMapping } from "@/lib/mixalis/savvalas-auto-mapping";
+import { hasSavvalasSourceRange } from "@/lib/mixalis/savvalas-book-audit";
 import {
   SAVVALAS_MAPPING_PROPOSAL_COOKIE,
   decodeSavvalasMappingProposal,
@@ -36,12 +37,19 @@ export async function POST(request: Request) {
     (pendingProposal.documentId !== documentId ||
       pendingProposal.proposalSubchapterId !== subchapterId)
   ) {
-    const url = new URL("/mixalis/savvalas-auto-map", request.url);
-    url.searchParams.set(
-      "message",
-      "Υπάρχει ήδη πρόταση mapping που αναμένει επιβεβαίωση. Επιβεβαίωσέ την ή απέρριψέ την πριν ζητήσεις νέα πρόταση.",
+    const pendingAlreadyConfirmed = await hasSavvalasSourceRange(
+      pendingProposal.documentId,
+      pendingProposal.proposalSubchapterId,
     );
-    return NextResponse.redirect(url, 303);
+
+    if (!pendingAlreadyConfirmed) {
+      const url = new URL("/mixalis/savvalas-auto-map", request.url);
+      url.searchParams.set(
+        "message",
+        "Υπάρχει ήδη πρόταση mapping που αναμένει επιβεβαίωση. Επιβεβαίωσέ την ή απέρριψέ την πριν ζητήσεις νέα πρόταση.",
+      );
+      return NextResponse.redirect(url, 303);
+    }
   }
 
   try {
