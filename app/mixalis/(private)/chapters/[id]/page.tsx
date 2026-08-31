@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import PhysicsPipeline from "@/components/mixalis/PhysicsPipeline";
 import { getPhysicsChapter, listPhysicsSubchapters } from "@/lib/mixalis/db";
 import { listPhysicsPipelineByChapter } from "@/lib/mixalis/lesson-navigation";
-import { listSingleSmartLabStatesByChapter } from "@/lib/mixalis/smartlab-single";
+import { listSingleSmartLabStatesByChapterCompat as listSingleSmartLabStatesByChapter } from "@/lib/mixalis/smartlab-single-compat";
 
 async function safeSmartLabStates(chapterId: string) {
   try {
