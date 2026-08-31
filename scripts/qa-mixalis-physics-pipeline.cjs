@@ -153,6 +153,19 @@ requireText('lib/mixalis/smartlab-physics-audit.ts', [
   'Fκ=mω²r',
 ]);
 
+requireText('components/mixalis/SmartLabRunner.tsx', [
+  'SmartLabGenericExperience',
+  'widget?.physicsPreset === "generic_relation"',
+]);
+requireText('components/mixalis/SmartLabGenericExperience.tsx', [
+  'looksLikeSystemForces',
+  'SystemForcesDiagram',
+  'RelationDiagram',
+  'Το LAB δεν επινοεί αριθμητικό τύπο που δεν έχει επαληθευτεί',
+  'εσωτερικές δυνάμεις',
+  'συνολική ορμή του συστήματος',
+]);
+
 requireText('app/mixalis/api/smartlab/revisions/[revisionId]/route.ts', [
   'maxDuration = 900',
   'MAX_AUTOMATIC_ATTEMPTS = 3',
@@ -174,4 +187,4 @@ requireText('app/mixalis/api/savvalas-audit/ranges/[rangeId]/run/route.ts', [
   'recoverStaleSavvalasSourceAnalysisForRange',
 ]);
 
-console.log('Mixalis Physics PDF-only pipeline QA passed: canonical sources, START guards and independent manual per-lesson SMARTLAB revisions are enforced; legacy chapter current-slot conflicts are handled without regenerating completed LABs.');
+console.log('Mixalis Physics PDF-only pipeline QA passed: canonical sources, START guards, independent manual per-lesson SMARTLAB revisions, and safe generic concept renderers are enforced; legacy chapter current-slot conflicts are handled without regenerating completed LABs.');
