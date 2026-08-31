@@ -27,6 +27,14 @@ function forbidText(relativePath, needles) {
   return content;
 }
 
+function requireMissing(relativePaths) {
+  for (const relativePath of relativePaths) {
+    if (fs.existsSync(path.join(root, relativePath))) {
+      throw new Error(`[mixalis-pipeline] obsolete AI page-mapping file still exists: ${relativePath}`);
+    }
+  }
+}
+
 requireText('lib/mixalis/canonical-subchapter-sources.ts', [
   "a.source_kind = 'source_range'",
   "a.source_role = 'official' AND sd.source_kind = 'school_book'",
@@ -39,11 +47,56 @@ requireText('lib/mixalis/lesson-navigation.ts', [
   "sd.source_kind = 'school_book'",
   "a.source_kind = 'source_range'",
   'CANONICAL_SUBCHAPTER_INTELLIGENCE_PROMPT_VERSION',
+  'savvalas_page_from',
+  'official_page_from',
+]);
+forbidText('lib/mixalis/lesson-navigation.ts', [
+  'savvalas-auto-map',
+  'official-auto-map',
   'Mapping Σαββάλα',
-  'Depth Audit Σαββάλα',
-  'Official Intelligence',
-  'Canonical Intelligence',
-  'Δημιουργία START',
+  'Έλεγχος σχολικού range',
+]);
+
+requireText('app/mixalis/api/manual-mapping/[subchapterId]/route.ts', [
+  'savvalasFrom',
+  'savvalasTo',
+  'officialFrom',
+  'officialTo',
+  'assertSavvalasRangeIntegrity',
+  'assertOfficialRangeIntegrity',
+  'upsertSavvalasSourceRange',
+  'upsertOfficialSourceRange',
+  'Manual mapping is authoritative',
+]);
+requireText('lib/mixalis/official-source-range.ts', [
+  "sd.source_kind = 'school_book'",
+  "status = 'superseded'",
+  'subchapter_intelligence_versions',
+]);
+
+requireMissing([
+  'app/mixalis/api/savvalas-audit/auto-map/route.ts',
+  'app/mixalis/api/savvalas-audit/auto-map/discard/route.ts',
+  'app/mixalis/(private)/savvalas-auto-map/page.tsx',
+  'lib/mixalis/savvalas-auto-mapping.ts',
+  'app/mixalis/api/official-auto-map/propose/route.ts',
+  'app/mixalis/api/official-auto-map/confirm/route.ts',
+  'app/mixalis/(private)/official-auto-map/page.tsx',
+  'lib/mixalis/official-auto-mapping.ts',
+  'lib/mixalis/savvalas-mapping-proposal-cookie.ts',
+]);
+
+requireText('app/mixalis/api/lesson-build/[subchapterId]/route.ts', [
+  'runSavvalasSourceIntelligence',
+  'createOfficialAnalysisFromRange',
+  'runOfficialSourceIntelligence',
+  'createCanonicalSubchapterIntelligenceVersion',
+  'runSubchapterIntelligence',
+  'createLessonRevisionFromIntelligence',
+  'runLessonRevision',
+  'Συμπλήρωσε πρώτα χειροκίνητα τις ORIGINAL PDF σελίδες',
+  'only the manually supplied Savvalas range',
+  'only the manually supplied official range',
 ]);
 
 requireText('app/mixalis/api/subchapter-intelligence/[versionId]/route.ts', [
@@ -76,24 +129,32 @@ forbidText('app/mixalis/(private)/chapters/[id]/page.tsx', [
   'BatchPhotoUploader',
   'listMaterialBatches',
   'getSmartLabChapterState',
+  'savvalas-auto-map',
+  'official-auto-map',
 ]);
 requireText('app/mixalis/(private)/chapters/[id]/page.tsx', [
   'listSingleSmartLabStatesByChapterCompat',
-  'LAB ready',
-  'Κάθε μάθημα ολοκληρώνεται ανεξάρτητα',
-  'δεν ξανατρέχει το 1.1',
+  'manual ranges',
+  'Σελίδες → Δημιουργία μαθήματος → LAB',
+  'Δεν γίνεται AI αναζήτηση σελίδων',
 ]);
 
 requireText('components/mixalis/PhysicsPipeline.tsx', [
-  '6 · LAB',
   'SingleSmartLabPipelineState',
+  '/mixalis/api/manual-mapping/',
+  '/mixalis/api/lesson-build/',
   '/mixalis/api/smartlab/subchapters/',
-  'Ένα μάθημα · ένα ανεξάρτητο LAB',
-  'Το 1.2 δεν ξαναδημιουργεί το LAB του 1.1',
+  'Σαββάλας · ORIGINAL PDF',
+  'Σχολικό βιβλίο · ORIGINAL PDF',
+  'Δημιουργία μαθήματος',
+  'Δεν γίνεται πλέον AI εντοπισμός σελίδων',
+  'Το LAB παραμένει ξεχωριστό',
 ]);
 forbidText('components/mixalis/PhysicsPipeline.tsx', [
   '/mixalis/api/smartlab/chapters/',
   'currentLessonRevisionIds',
+  'savvalas-auto-map',
+  'official-auto-map',
 ]);
 
 requireText('app/mixalis/(private)/chapters/[id]/lab/page.tsx', [
@@ -188,17 +249,17 @@ requireText('app/mixalis/api/smartlab/revisions/[revisionId]/route.ts', [
   'after(async () =>',
 ]);
 
-requireText('app/mixalis/api/savvalas-audit/ranges/route.ts', [
-  'assertSavvalasRangeIntegrity',
-]);
 requireText('lib/mixalis/savvalas-range-integrity.ts', [
   "sd.source_kind = 'savvalas_book'",
   'sr.file_page_from <=',
   'sr.file_page_to >=',
   'επικαλύπτεται',
 ]);
-requireText('app/mixalis/api/savvalas-audit/ranges/[rangeId]/run/route.ts', [
-  'recoverStaleSavvalasSourceAnalysisForRange',
+requireText('lib/mixalis/official-range-integrity.ts', [
+  "sd.source_kind = 'school_book'",
+  'sr.file_page_from <=',
+  'sr.file_page_to >=',
+  'επικαλύπτεται',
 ]);
 
-console.log('Mixalis Physics PDF-only pipeline QA passed: canonical sources, START guards, independent manual per-lesson SMARTLAB revisions, visible physical phenomena and safe generic renderers are enforced; legacy chapter current-slot conflicts are handled without regenerating completed LABs.');
+console.log('Mixalis Physics pipeline QA passed: page mapping is manual-only, AI page detection is removed, one-click lesson generation is enforced, canonical PDF guards remain active, and LAB stays independent per lesson with visible physical phenomena.');
