@@ -75,39 +75,60 @@ requireText('app/mixalis/(private)/source-intelligence/[analysisId]/page.tsx', [
 forbidText('app/mixalis/(private)/chapters/[id]/page.tsx', [
   'BatchPhotoUploader',
   'listMaterialBatches',
+  'getSmartLabChapterState',
 ]);
 requireText('app/mixalis/(private)/chapters/[id]/page.tsx', [
-  'Νέα σταθερή ροή · PDF only',
-  'Δεν ανεβάζεις πλέον φωτογραφίες',
-  'getSmartLabChapterState',
+  'listSingleSmartLabStatesByChapter',
   'LAB ready',
-  'Δημιουργία LAB',
+  'Κάθε μάθημα ολοκληρώνεται ανεξάρτητα',
+  'δεν ξανατρέχει το 1.1',
 ]);
 
 requireText('components/mixalis/PhysicsPipeline.tsx', [
   '6 · LAB',
-  'Δημιουργία LAB',
-  'Το LAB δεν δημιουργείται αυτόματα',
+  'SingleSmartLabPipelineState',
+  '/mixalis/api/smartlab/subchapters/',
+  'Ένα μάθημα · ένα ανεξάρτητο LAB',
+  'Το 1.2 δεν ξαναδημιουργεί το LAB του 1.1',
+]);
+forbidText('components/mixalis/PhysicsPipeline.tsx', [
+  '/mixalis/api/smartlab/chapters/',
   'currentLessonRevisionIds',
 ]);
 
 requireText('app/mixalis/(private)/chapters/[id]/lab/page.tsx', [
-  'SMARTLAB_PROMPT_VERSION',
-  'manual',
-  'Δημιούργησε χειροκίνητα το LAB',
-  'Δεν ξεκινά καμία δημιουργία μέχρι να πατήσεις το κουμπί',
+  'listSingleSmartLabStatesByChapter',
+  'getSingleSmartLabState',
+  '/mixalis/api/smartlab/subchapters/',
+  'Κάθε LAB είναι ανεξάρτητο',
+  'Κανένα άλλο μάθημα του κεφαλαίου δεν θα σταλεί στο AI',
+]);
+forbidText('app/mixalis/(private)/chapters/[id]/lab/page.tsx', [
+  '/mixalis/api/smartlab/chapters/',
+  'getSmartLabChapterState',
+]);
+
+requireText('lib/mixalis/smartlab-single.ts', [
+  'SINGLE_SNAPSHOT_PREFIX = "single:"',
+  'single-subchapter-v1',
+  'jsonb_array_length(smart_versions) = 1',
+  "smart_versions->0->>'subchapterId'",
+  'runSingleSmartLabRevision',
+  'assertRuntimePhysicsFormulas',
+  'derivePhysicsImpactModel',
+  "status = 'superseded'",
+]);
+
+requireText('app/mixalis/api/smartlab/subchapters/[subchapterId]/route.ts', [
+  'createSingleSmartLabRevision',
+  'subchapter',
+  'revision',
 ]);
 
 requireText('lib/mixalis/smartlab-prompt.ts', [
   'finalver2',
   'physicsPreset=centripetal_force',
   'κεντρομόλος δύναμη είναι derived αποτέλεσμα και ΠΟΤΕ ανεξάρτητο control',
-]);
-
-requireText('lib/mixalis/smartlab-verified.ts', [
-  'assertRendererContract',
-  'centripetal_force renderer is required',
-  'centripetal force cannot be an independent control',
 ]);
 
 requireText('lib/mixalis/smartlab-physics-audit.ts', [
@@ -119,6 +140,8 @@ requireText('lib/mixalis/smartlab-physics-audit.ts', [
 requireText('app/mixalis/api/smartlab/revisions/[revisionId]/route.ts', [
   'maxDuration = 900',
   'MAX_AUTOMATIC_ATTEMPTS = 3',
+  'isSingleSmartLabRevision',
+  'runSingleSmartLabRevision',
   'after(async () =>',
 ]);
 
@@ -135,4 +158,4 @@ requireText('app/mixalis/api/savvalas-audit/ranges/[rangeId]/run/route.ts', [
   'recoverStaleSavvalasSourceAnalysisForRange',
 ]);
 
-console.log('Mixalis Physics PDF-only pipeline QA passed: canonical source selection, legacy quarantine, mapping guards, START guards, manual LAB workflow, SMARTLAB renderer contracts, centripetal-force numerical verification and stale-run recovery are enforced.');
+console.log('Mixalis Physics PDF-only pipeline QA passed: canonical sources, START guards and independent manual per-lesson SMARTLAB revisions are enforced without regenerating completed labs.');
