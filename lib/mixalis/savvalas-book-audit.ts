@@ -44,6 +44,21 @@ function getSql() {
   return neon(databaseUrl);
 }
 
+export async function hasSavvalasSourceRange(
+  documentId: string,
+  subchapterId: string,
+) {
+  const sql = getSql();
+  const rows = await sql`
+    SELECT 1
+    FROM physics.source_ranges
+    WHERE document_id::text = ${documentId}
+      AND subchapter_id::text = ${subchapterId}
+    LIMIT 1
+  `;
+  return rows.length > 0;
+}
+
 export async function listSavvalasAuditBooks(): Promise<SavvalasAuditBook[]> {
   const sql = getSql();
   const documents = await sql`
@@ -258,7 +273,8 @@ export async function upsertSavvalasSourceRange(input: {
       file_page_from,
       file_page_to,
       printed_page_from,
-      printed_page_to
+      printed_page_to,
+      created_at
     ) VALUES (
       ${input.documentId}::uuid,
       ${String(context.chapter_id)}::uuid,
@@ -266,35 +282,11 @@ export async function upsertSavvalasSourceRange(input: {
       ${filePageFrom},
       ${filePageTo},
       NULL,
-      NULL
+      NULL,
+      NOW()
     )
     RETURNING id::text
   `;
 
   return { rangeId: String(inserted[0].id), changed: true };
-}
-
-export async function deleteSavvalasSourceRange(rangeId: string) {
-  const sql = getSql();
-  const rows = await sql`
-    SELECT sr.id::text
-    FROM physics.source_ranges sr
-    JOIN physics.source_documents sd ON sd.id = sr.document_id
-    WHERE sr.id::text = ${rangeId}
-      AND sd.source_kind = 'savvalas_book'
-      AND sd.status = 'ready'
-    LIMIT 1
-  `;
-  if (rows.length === 0) throw new Error("Το range του Σαββάλα δεν βρέθηκε.");
-
-  const analyses = await sql`
-    SELECT COUNT(*)::int AS count
-    FROM physics.source_analyses
-    WHERE source_range_id::text = ${rangeId}
-  `;
-  if (Number(analyses[0]?.count ?? 0) > 0) {
-    throw new Error("Δεν διαγράφεται mapping που έχει ήδη audit. Άλλαξε το range και τρέξε νέο audit.");
-  }
-
-  await sql`DELETE FROM physics.source_ranges WHERE id::text = ${rangeId}`;
 }
