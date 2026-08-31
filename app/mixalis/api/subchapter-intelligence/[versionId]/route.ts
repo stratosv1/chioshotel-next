@@ -1,5 +1,6 @@
 import { after, NextResponse } from "next/server";
 import { getMixalisSession } from "@/lib/mixalis/auth";
+import { CANONICAL_SUBCHAPTER_INTELLIGENCE_PROMPT_VERSION } from "@/lib/mixalis/canonical-subchapter-sources";
 import { claimSubchapterIntelligenceRun } from "@/lib/mixalis/subchapter-intelligence-run-lock";
 import {
   getSubchapterIntelligenceView,
@@ -33,6 +34,23 @@ function isRetryableSynthesisError(message: string | null | undefined) {
     "http 503",
     "http 504",
   ].some((needle) => value.includes(needle));
+}
+
+function validateCanonicalView(
+  view: Awaited<ReturnType<typeof getSubchapterIntelligenceView>>,
+) {
+  if (!view) return "Subchapter Intelligence version not found.";
+  if (view.promptVersion !== CANONICAL_SUBCHAPTER_INTELLIGENCE_PROMPT_VERSION) {
+    return "Αυτή είναι legacy έκδοση Intelligence. Γύρνα στο Physics Pipeline και δημιούργησε τη νέα PDF-only canonical version.";
+  }
+
+  const officialCount = view.sources.filter((source) => source.sourceRole === "official").length;
+  const depthCount = view.sources.filter((source) => source.sourceRole === "depth").length;
+  if (view.sources.length !== 2 || officialCount !== 1 || depthCount !== 1) {
+    return "Η canonical σύνθεση απαιτεί ακριβώς 2 πηγές: 1 Official School Book PDF και 1 Savvalas PDF Depth Audit.";
+  }
+
+  return null;
 }
 
 async function runWithAutomaticRetries(versionId: string) {
@@ -81,6 +99,12 @@ export async function POST(
 
   const { versionId } = await params;
   try {
+    const preflight = await getSubchapterIntelligenceView(versionId);
+    const validationError = validateCanonicalView(preflight);
+    if (validationError) {
+      return NextResponse.json({ error: validationError }, { status: preflight ? 409 : 404 });
+    }
+
     const claimed = await claimSubchapterIntelligenceRun(versionId);
 
     if (!claimed) {
