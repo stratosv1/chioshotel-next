@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { getMixalisSession } from "@/lib/mixalis/auth";
 import { upsertSavvalasSourceRange } from "@/lib/mixalis/savvalas-book-audit";
+import {
+  SAVVALAS_MAPPING_PROPOSAL_COOKIE,
+  savvalasMappingProposalCookieOptions,
+} from "@/lib/mixalis/savvalas-mapping-proposal-cookie";
 
 export const runtime = "nodejs";
 
@@ -36,7 +40,12 @@ export async function POST(request: Request) {
     const url = new URL("/mixalis/savvalas-audit", request.url);
     url.searchParams.set("saved", result.changed ? "range" : "same-range");
     url.searchParams.set("subchapterId", subchapterId);
-    return NextResponse.redirect(url, 303);
+    const response = NextResponse.redirect(url, 303);
+    response.cookies.set(SAVVALAS_MAPPING_PROPOSAL_COOKIE, "", {
+      ...savvalasMappingProposalCookieOptions,
+      maxAge: 0,
+    });
+    return response;
   } catch (error) {
     console.error("Mixalis Savvalas range mapping failed", error);
     const url = new URL("/mixalis/savvalas-audit", request.url);
