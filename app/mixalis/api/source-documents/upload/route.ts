@@ -4,29 +4,45 @@ import { getMixalisSession } from "@/lib/mixalis/auth";
 import {
   getCourseForSourceUpload,
   isPhysicsCourseCode,
+  isPhysicsSourceDocumentKind,
+  registerSavvalasBookDocument,
   registerSchoolBookDocument,
   type PhysicsCourseCode,
+  type PhysicsSourceDocumentKind,
 } from "@/lib/mixalis/source-documents";
 
 const MAX_FILE_SIZE = 100 * 1024 * 1024;
 const ALLOWED_CONTENT_TYPES = ["application/pdf"];
 
-const SCHOOL_BOOKS: Record<
-  PhysicsCourseCode,
-  { title: string; pageCount: number }
+const SOURCE_BOOKS: Record<
+  PhysicsSourceDocumentKind,
+  Record<PhysicsCourseCode, { title: string; pageCount: number | null }>
 > = {
-  general_education: {
-    title: "Φυσική Β΄ Λυκείου — Γενικής Παιδείας — Βιβλίο Μαθητή",
-    pageCount: 210,
+  school_book: {
+    general_education: {
+      title: "Φυσική Β΄ Λυκείου — Γενικής Παιδείας — Βιβλίο Μαθητή",
+      pageCount: 210,
+    },
+    orientation: {
+      title: "Φυσική Β΄ Λυκείου — Προσανατολισμού Θετικών Σπουδών — Βιβλίο Μαθητή",
+      pageCount: 226,
+    },
   },
-  orientation: {
-    title: "Φυσική Β΄ Λυκείου — Προσανατολισμού Θετικών Σπουδών — Βιβλίο Μαθητή",
-    pageCount: 226,
+  savvalas_book: {
+    general_education: {
+      title: "Σαββάλας — Φυσική Β΄ Λυκείου Γενικής Παιδείας",
+      pageCount: null,
+    },
+    orientation: {
+      title: "Σαββάλας — Φυσική Β΄ Λυκείου Προσανατολισμού",
+      pageCount: null,
+    },
   },
 };
 
 type UploadPayload = {
   courseCode: PhysicsCourseCode;
+  sourceKind: PhysicsSourceDocumentKind;
   originalName: string;
   sizeBytes?: number;
 };
@@ -34,10 +50,12 @@ type UploadPayload = {
 function parsePayload(value: string | null | undefined): UploadPayload {
   if (!value) throw new Error("Missing upload context.");
   const payload = JSON.parse(value) as Partial<UploadPayload>;
+  const sourceKind = payload.sourceKind || "school_book";
 
   if (
     !payload.courseCode ||
     !isPhysicsCourseCode(payload.courseCode) ||
+    !isPhysicsSourceDocumentKind(sourceKind) ||
     !payload.originalName
   ) {
     throw new Error("Invalid upload context.");
@@ -45,6 +63,7 @@ function parsePayload(value: string | null | undefined): UploadPayload {
 
   return {
     courseCode: payload.courseCode,
+    sourceKind,
     originalName: payload.originalName.slice(0, 255),
     sizeBytes:
       typeof payload.sizeBytes === "number" && Number.isFinite(payload.sizeBytes)
@@ -68,7 +87,7 @@ export async function POST(request: Request) {
         const course = await getCourseForSourceUpload(payload.courseCode);
         if (!course) throw new Error("Physics course not found.");
 
-        const expectedPrefix = `mixalis/source-documents/${payload.courseCode}/`;
+        const expectedPrefix = `mixalis/source-documents/${payload.courseCode}/${payload.sourceKind}/`;
         if (
           !pathname.startsWith(expectedPrefix) ||
           pathname.includes("..") ||
@@ -87,7 +106,20 @@ export async function POST(request: Request) {
       },
       onUploadCompleted: async ({ blob, tokenPayload }) => {
         const payload = parsePayload(tokenPayload);
-        const book = SCHOOL_BOOKS[payload.courseCode];
+        const book = SOURCE_BOOKS[payload.sourceKind][payload.courseCode];
+
+        if (payload.sourceKind === "savvalas_book") {
+          await registerSavvalasBookDocument({
+            courseCode: payload.courseCode,
+            title: book.title,
+            originalName: payload.originalName,
+            storageKey: blob.pathname,
+            contentType: blob.contentType,
+            sizeBytes: payload.sizeBytes ?? null,
+            pageCount: book.pageCount,
+          });
+          return;
+        }
 
         await registerSchoolBookDocument({
           courseCode: payload.courseCode,
@@ -96,7 +128,7 @@ export async function POST(request: Request) {
           storageKey: blob.pathname,
           contentType: blob.contentType,
           sizeBytes: payload.sizeBytes ?? null,
-          pageCount: book.pageCount,
+          pageCount: book.pageCount ?? 0,
         });
       },
     });
