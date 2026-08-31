@@ -1,6 +1,6 @@
 import { neon } from "@neondatabase/serverless";
 import { START_PROMPT_VERSION } from "@/lib/mixalis/start-prompt";
-import { SUBCHAPTER_INTELLIGENCE_PROMPT_VERSION } from "@/lib/mixalis/subchapter-intelligence";
+import { CANONICAL_SUBCHAPTER_INTELLIGENCE_PROMPT_VERSION } from "@/lib/mixalis/canonical-subchapter-sources";
 
 export type CurrentLessonNavigation = {
   subchapterId: string;
@@ -12,6 +12,7 @@ export type CurrentLessonNavigation = {
 export type PhysicsPipelineNavigation = {
   subchapterId: string;
   savvalas: {
+    rangeId: string | null;
     status: string;
     analysisId: string | null;
   };
@@ -73,7 +74,6 @@ export async function listCurrentLessonsByChapter(
       AND lr.status = 'current'
     ORDER BY lr.revision_number DESC
   `;
-
   return rows.map(mapCurrentLesson);
 }
 
@@ -93,7 +93,6 @@ export async function getCurrentLessonBySubchapter(
     ORDER BY lr.revision_number DESC
     LIMIT 1
   `;
-
   return rows.length > 0 ? mapCurrentLesson(rows[0]) : null;
 }
 
@@ -103,8 +102,8 @@ function sourceStatus(value: unknown) {
 }
 
 function buildNextStep(input: {
-  chapterId: string;
   subchapterId: string;
+  savvalasRangeId: string | null;
   savvalasStatus: string;
   savvalasAnalysisId: string | null;
   officialRangeId: string | null;
@@ -117,33 +116,39 @@ function buildNextStep(input: {
   lessonRevisionId: string | null;
   lessonUpToDate: boolean;
 }): PhysicsPipelineNavigation["next"] {
-  if (input.savvalasStatus === "missing") {
+  if (!input.savvalasRangeId) {
     return {
-      label: "Συνέχεια",
-      detail: "Επόμενο: ανέβασε ή ολοκλήρωσε το υλικό Σαββάλα",
-      href: "#chapter-material",
+      label: "Mapping Σαββάλα",
+      detail: "1/5 · Χαρτογράφησε το PDF range του Σαββάλα",
+      href: `/mixalis/savvalas-auto-map?subchapterId=${input.subchapterId}#subchapter-${input.subchapterId}`,
       method: "get",
+    };
+  }
+
+  if (input.savvalasStatus === "missing" || input.savvalasStatus === "error" || input.savvalasStatus === "superseded") {
+    return {
+      label: input.savvalasStatus === "error" ? "Επανάληψη Depth Audit" : "Depth Audit Σαββάλα",
+      detail: "2/5 · Ανάλυσε μόνο το επιβεβαιωμένο PDF range",
+      href: `/mixalis/api/savvalas-audit/ranges/${input.savvalasRangeId}/run`,
+      method: "post",
     };
   }
 
   if (input.savvalasStatus !== "ready") {
     return {
-      label: "Συνέχεια",
-      detail:
-        input.savvalasStatus === "error"
-          ? "Επόμενο: συνέχιση Source Intelligence Σαββάλα"
-          : "Επόμενο: ανάλυση Source Intelligence Σαββάλα",
+      label: "Δες Depth Audit",
+      detail: "2/5 · Το Depth Audit βρίσκεται σε εξέλιξη",
       href: input.savvalasAnalysisId
         ? `/mixalis/source-intelligence/${input.savvalasAnalysisId}`
-        : "#chapter-material",
+        : `/mixalis/savvalas-audit?subchapterId=${input.subchapterId}#subchapter-${input.subchapterId}`,
       method: "get",
     };
   }
 
   if (!input.officialRangeId) {
     return {
-      label: "Συνέχεια",
-      detail: "Επόμενο: σύνδεση με το επίσημο σχολικό βιβλίο",
+      label: "Έλεγχος σχολικού range",
+      detail: "3/5 · Λείπει το official school-book mapping",
       href: "/mixalis/sources",
       method: "get",
     };
@@ -151,8 +156,8 @@ function buildNextStep(input: {
 
   if (input.officialStatus === "missing") {
     return {
-      label: "Συνέχεια",
-      detail: "Επόμενο: Official School Book Intelligence",
+      label: "Official Intelligence",
+      detail: "3/5 · Ανάλυσε το επίσημο σχολικό range",
       href: `/mixalis/api/source-intelligence/from-source-range/${input.officialRangeId}`,
       method: "get",
     };
@@ -160,11 +165,11 @@ function buildNextStep(input: {
 
   if (input.officialStatus !== "ready") {
     return {
-      label: "Συνέχεια",
+      label: "Δες Official Intelligence",
       detail:
         input.officialStatus === "error"
-          ? "Επόμενο: επανάληψη Official School Book Intelligence"
-          : "Επόμενο: ολοκλήρωση Official School Book Intelligence",
+          ? "3/5 · Χρειάζεται επανάληψη του Official Intelligence"
+          : "3/5 · Το Official Intelligence βρίσκεται σε εξέλιξη",
       href: input.officialAnalysisId
         ? `/mixalis/source-intelligence/official/${input.officialAnalysisId}`
         : `/mixalis/api/source-intelligence/from-source-range/${input.officialRangeId}`,
@@ -172,10 +177,10 @@ function buildNextStep(input: {
     };
   }
 
-  if (input.intelligenceStatus === "missing") {
+  if (input.intelligenceStatus === "missing" || !input.intelligenceUpToDate) {
     return {
-      label: "Συνέχεια",
-      detail: "Επόμενο: δημιουργία SMART / Subchapter Intelligence",
+      label: "Canonical Intelligence",
+      detail: "4/5 · Σύνθεσε μόνο School Book PDF + Savvalas PDF",
       href: `/mixalis/api/subchapter-intelligence/from-subchapter/${input.subchapterId}`,
       method: "post",
     };
@@ -183,8 +188,8 @@ function buildNextStep(input: {
 
   if (input.intelligenceStatus !== "current") {
     return {
-      label: "Συνέχεια",
-      detail: "Επόμενο: σύνθεση SMART / Subchapter Intelligence",
+      label: "Σύνθεση Intelligence",
+      detail: "4/5 · Ολοκλήρωσε την canonical σύνθεση",
       href: input.intelligenceVersionId
         ? `/mixalis/subchapter-intelligence/${input.intelligenceVersionId}`
         : `/mixalis/api/subchapter-intelligence/from-subchapter/${input.subchapterId}`,
@@ -192,24 +197,13 @@ function buildNextStep(input: {
     };
   }
 
-  if (!input.intelligenceUpToDate) {
-    return {
-      label: "Συνέχεια",
-      detail: "Επόμενο: νέο SMART με πλήρη διατήρηση των core findings του Σαββάλα",
-      href: `/mixalis/api/subchapter-intelligence/from-subchapter/${input.subchapterId}`,
-      method: "post",
-    };
-  }
-
   if (!input.lessonUpToDate) {
     return {
-      label: "Συνέχεια",
-      detail:
+      label:
         input.lessonStatus === "processing" || input.lessonStatus === "error"
-          ? "Επόμενο: ολοκλήρωση Lesson Revision"
-          : input.lessonRevisionId
-            ? "Επόμενο: νέο Lesson Revision με το current Intelligence"
-            : "Επόμενο: δημιουργία μαθήματος με START",
+          ? "Ολοκλήρωση START"
+          : "Δημιουργία START",
+      detail: "5/5 · Δημιούργησε το μάθημα από το current canonical Intelligence",
       href:
         (input.lessonStatus === "processing" || input.lessonStatus === "error") &&
         input.lessonRevisionId
@@ -225,7 +219,7 @@ function buildNextStep(input: {
 
   return {
     label: "Άνοιγμα μαθήματος",
-    detail: "Ολοκληρωμένο: Σαββάλας → Σχολικό → SMART → Μάθημα",
+    detail: "Ολοκληρωμένο · PDF Mapping → Depth → Official → Intelligence → START",
     href: `/mixalis/lessons/${input.lessonRevisionId}`,
     method: "get",
   };
@@ -238,9 +232,10 @@ export async function listPhysicsPipelineByChapter(
   const rows = await sql`
     SELECT
       sc.id::text AS subchapter_id,
+      savr.id::text AS savvalas_range_id,
       sav.id::text AS savvalas_analysis_id,
       sav.status AS savvalas_status,
-      sr.id::text AS official_range_id,
+      offr.id::text AS official_range_id,
       offa.id::text AS official_analysis_id,
       offa.status AS official_status,
       siv.id::text AS intelligence_version_id,
@@ -254,31 +249,46 @@ export async function listPhysicsPipelineByChapter(
       lr.prompt_version AS lesson_prompt_version
     FROM physics.subchapters sc
     LEFT JOIN LATERAL (
+      SELECT r.id
+      FROM physics.source_ranges r
+      JOIN physics.source_documents sd ON sd.id = r.document_id
+      WHERE r.subchapter_id = sc.id
+        AND sd.source_kind = 'savvalas_book'
+        AND sd.status = 'ready'
+      ORDER BY r.created_at DESC, r.file_page_from ASC
+      LIMIT 1
+    ) savr ON true
+    LEFT JOIN LATERAL (
       SELECT a.id, a.status
       FROM physics.source_analyses a
-      LEFT JOIN physics.material_batches mb ON mb.id = a.material_batch_id
       WHERE a.subchapter_id = sc.id
         AND a.source_role = 'depth'
-        AND mb.source_type = 'savvalas'
+        AND a.source_kind = 'source_range'
+        AND a.source_range_id = savr.id
       ORDER BY
-        CASE a.status WHEN 'ready' THEN 0 WHEN 'processing' THEN 1 WHEN 'pending' THEN 2 ELSE 3 END,
+        CASE a.status WHEN 'ready' THEN 0 WHEN 'processing' THEN 1 WHEN 'pending' THEN 2 WHEN 'error' THEN 3 ELSE 4 END,
         a.created_at DESC
       LIMIT 1
     ) sav ON true
     LEFT JOIN LATERAL (
       SELECT r.id
       FROM physics.source_ranges r
+      JOIN physics.source_documents sd ON sd.id = r.document_id
       WHERE r.subchapter_id = sc.id
-      ORDER BY r.sort_order ASC, r.created_at ASC
+        AND sd.source_kind = 'school_book'
+        AND sd.status = 'ready'
+      ORDER BY r.sort_order ASC, r.file_page_from ASC, r.created_at ASC
       LIMIT 1
-    ) sr ON true
+    ) offr ON true
     LEFT JOIN LATERAL (
       SELECT a.id, a.status
       FROM physics.source_analyses a
       WHERE a.subchapter_id = sc.id
         AND a.source_role = 'official'
+        AND a.source_kind = 'source_range'
+        AND a.source_range_id = offr.id
       ORDER BY
-        CASE a.status WHEN 'ready' THEN 0 WHEN 'processing' THEN 1 WHEN 'pending' THEN 2 ELSE 3 END,
+        CASE a.status WHEN 'ready' THEN 0 WHEN 'processing' THEN 1 WHEN 'pending' THEN 2 WHEN 'error' THEN 3 ELSE 4 END,
         a.created_at DESC
       LIMIT 1
     ) offa ON true
@@ -287,6 +297,7 @@ export async function listPhysicsPipelineByChapter(
       FROM physics.subchapter_intelligence_versions v
       WHERE v.subchapter_id = sc.id
       ORDER BY
+        CASE WHEN v.prompt_version = ${CANONICAL_SUBCHAPTER_INTELLIGENCE_PROMPT_VERSION} THEN 0 ELSE 1 END,
         CASE v.status WHEN 'current' THEN 0 WHEN 'draft' THEN 1 ELSE 2 END,
         v.version_number DESC
       LIMIT 1
@@ -301,7 +312,12 @@ export async function listPhysicsPipelineByChapter(
       FROM physics.lesson_revisions l
       WHERE l.subchapter_id = sc.id
       ORDER BY
-        CASE l.status WHEN 'current' THEN 0 WHEN 'processing' THEN 1 WHEN 'error' THEN 2 ELSE 3 END,
+        CASE
+          WHEN l.intelligence_version_id = siv.id AND l.status = 'current' THEN 0
+          WHEN l.intelligence_version_id = siv.id THEN 1
+          WHEN l.status = 'current' THEN 2
+          ELSE 3
+        END,
         l.revision_number DESC
       LIMIT 1
     ) lr ON true
@@ -323,10 +339,8 @@ export async function listPhysicsPipelineByChapter(
       : null;
     const intelligenceUpToDate =
       intelligenceStatus === "current" &&
-      intelligencePromptVersion === SUBCHAPTER_INTELLIGENCE_PROMPT_VERSION;
-    const lessonRevisionId = row.lesson_revision_id
-      ? String(row.lesson_revision_id)
-      : null;
+      intelligencePromptVersion === CANONICAL_SUBCHAPTER_INTELLIGENCE_PROMPT_VERSION;
+    const lessonRevisionId = row.lesson_revision_id ? String(row.lesson_revision_id) : null;
     const lessonIntelligenceVersionId = row.lesson_intelligence_version_id
       ? String(row.lesson_intelligence_version_id)
       : null;
@@ -340,18 +354,16 @@ export async function listPhysicsPipelineByChapter(
       lessonIntelligenceVersionId === intelligenceVersionId &&
       lessonPromptVersion === START_PROMPT_VERSION;
 
+    const savvalasRangeId = row.savvalas_range_id ? String(row.savvalas_range_id) : null;
+    const officialRangeId = row.official_range_id ? String(row.official_range_id) : null;
     const base = {
-      chapterId,
       subchapterId: String(row.subchapter_id),
+      savvalasRangeId,
       savvalasStatus,
-      savvalasAnalysisId: row.savvalas_analysis_id
-        ? String(row.savvalas_analysis_id)
-        : null,
-      officialRangeId: row.official_range_id ? String(row.official_range_id) : null,
+      savvalasAnalysisId: row.savvalas_analysis_id ? String(row.savvalas_analysis_id) : null,
+      officialRangeId,
       officialStatus,
-      officialAnalysisId: row.official_analysis_id
-        ? String(row.official_analysis_id)
-        : null,
+      officialAnalysisId: row.official_analysis_id ? String(row.official_analysis_id) : null,
       intelligenceStatus,
       intelligenceVersionId,
       intelligenceUpToDate,
@@ -363,11 +375,12 @@ export async function listPhysicsPipelineByChapter(
     return {
       subchapterId: base.subchapterId,
       savvalas: {
+        rangeId: savvalasRangeId,
         status: savvalasStatus,
         analysisId: base.savvalasAnalysisId,
       },
       official: {
-        rangeId: base.officialRangeId,
+        rangeId: officialRangeId,
         status: officialStatus,
         analysisId: base.officialAnalysisId,
       },
