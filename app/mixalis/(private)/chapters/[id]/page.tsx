@@ -3,14 +3,14 @@ import { notFound } from "next/navigation";
 import PhysicsPipeline from "@/components/mixalis/PhysicsPipeline";
 import { getPhysicsChapter, listPhysicsSubchapters } from "@/lib/mixalis/db";
 import { listPhysicsPipelineByChapter } from "@/lib/mixalis/lesson-navigation";
-import { getSmartLabChapterState } from "@/lib/mixalis/smartlab-verified";
+import { listSingleSmartLabStatesByChapter } from "@/lib/mixalis/smartlab-single";
 
-async function safeSmartLabState(chapterId: string) {
+async function safeSmartLabStates(chapterId: string) {
   try {
-    return await getSmartLabChapterState(chapterId);
+    return await listSingleSmartLabStatesByChapter(chapterId);
   } catch (error) {
-    console.error("Mixalis chapter LAB state failed", error);
-    return null;
+    console.error("Mixalis per-lesson LAB states failed", error);
+    return [];
   }
 }
 
@@ -20,11 +20,11 @@ export default async function MixalisChapterPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const [chapter, subchapters, pipelines, smartLabState] = await Promise.all([
+  const [chapter, subchapters, pipelines, labStates] = await Promise.all([
     getPhysicsChapter(id),
     listPhysicsSubchapters(id),
     listPhysicsPipelineByChapter(id),
-    safeSmartLabState(id),
+    safeSmartLabStates(id),
   ]);
 
   if (!chapter) notFound();
@@ -36,14 +36,16 @@ export default async function MixalisChapterPage({
   const completedLessons = pipelines.filter((pipeline) => pipeline.lesson.upToDate).length;
   const mappedSavvalas = pipelines.filter((pipeline) => Boolean(pipeline.savvalas.rangeId)).length;
   const auditedSavvalas = pipelines.filter((pipeline) => pipeline.savvalas.status === "ready").length;
-  const currentLabLessonRevisionIds = smartLabState?.current?.lessonVersions.map((lesson) => lesson.lessonRevisionId) ?? [];
-  const currentLabLessonRevisionSet = new Set(currentLabLessonRevisionIds);
-  const completedLabs = pipelines.filter(
-    (pipeline) =>
+  const labBySubchapter = new Map(labStates.map((lab) => [lab.subchapterId, lab]));
+  const completedLabs = pipelines.filter((pipeline) => {
+    const lab = labBySubchapter.get(pipeline.subchapterId);
+    return Boolean(
       pipeline.lesson.upToDate &&
-      Boolean(pipeline.lesson.revisionId) &&
-      currentLabLessonRevisionSet.has(String(pipeline.lesson.revisionId)),
-  ).length;
+        pipeline.lesson.revisionId &&
+        lab?.upToDate &&
+        lab.currentLessonRevisionId === pipeline.lesson.revisionId,
+    );
+  }).length;
 
   return (
     <main className="min-h-screen bg-[#f3efe8] px-4 py-5 text-[#2c2825] sm:px-8 sm:py-8">
@@ -65,8 +67,7 @@ export default async function MixalisChapterPage({
                 {chapter.title}
               </h1>
               <p className="mt-3 max-w-3xl text-sm leading-6 text-[#6b625b] sm:text-base">
-                {chapter.note ||
-                  `${subchapters.length} υποκεφάλαια οργανωμένα σύμφωνα με το σχολικό βιβλίο.`}
+                {chapter.note || `${subchapters.length} υποκεφάλαια οργανωμένα σύμφωνα με το σχολικό βιβλίο.`}
               </p>
             </div>
 
@@ -95,14 +96,13 @@ export default async function MixalisChapterPage({
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[#65755f]">
-                Νέα σταθερή ροή · PDF only
+                Σταθερή ροή · PDF only
               </p>
-              <h2 className="mt-1 text-xl font-semibold">Δεν ανεβάζεις πλέον φωτογραφίες</h2>
+              <h2 className="mt-1 text-xl font-semibold">Κάθε μάθημα ολοκληρώνεται ανεξάρτητα</h2>
               <p className="mt-2 max-w-3xl text-sm leading-6 text-[#596653]">
-                Το σχολικό βιβλίο και ο Σαββάλας αποθηκεύονται μία φορά ως πλήρη ιδιωτικά PDF.
-                Από εδώ και πέρα κάθε υποκεφάλαιο ολοκληρώνεται μόνο από το Physics Pipeline παρακάτω.
-                Τα παλιά photo batches παραμένουν μόνο ως ιστορικό και δεν συμμετέχουν σε νέα canonical γνώση ή νέο START μάθημα.
-                Μετά το START, το LAB είναι προαιρετικό και δημιουργείται μόνο χειροκίνητα από εσένα.
+                Το σχολικό βιβλίο και ο Σαββάλας παραμένουν οι δύο PDF πηγές. Μετά το current START,
+                το LAB είναι χειροκίνητο και ανήκει μόνο στο συγκεκριμένο υποκεφάλαιο. Η δημιουργία LAB στο 1.2
+                δεν ξανατρέχει το 1.1 και η δημιουργία στο 1.3 δεν ξανατρέχει κανένα προηγούμενο μάθημα.
               </p>
             </div>
             <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
@@ -128,10 +128,7 @@ export default async function MixalisChapterPage({
             chapterId={chapter.id}
             subchapters={subchapters}
             pipelines={pipelines}
-            lab={{
-              currentRevisionId: smartLabState?.current?.id ?? null,
-              currentLessonRevisionIds: currentLabLessonRevisionIds,
-            }}
+            labStates={labStates}
           />
         ) : (
           <section className="mt-6 rounded-3xl border border-dashed border-black/15 bg-white/70 p-6 text-sm text-[#6f665f]">
@@ -151,7 +148,7 @@ export default async function MixalisChapterPage({
               ["3", "Official", "Αναλύεται μόνο το mapped σχολικό range."],
               ["4", "Intelligence", "Ενώνονται ακριβώς οι δύο canonical PDF πηγές."],
               ["5", "START", "Δημιουργείται η current lesson revision."],
-              ["6", "LAB", "Αφού υπάρχει current μάθημα, το δημιουργείς χειροκίνητα."],
+              ["6", "LAB", "Δημιουργείται χειροκίνητα μόνο για αυτό το current START."],
             ].map(([number, title, detail]) => (
               <article key={number} className="rounded-2xl bg-[#f7f4ef] p-4">
                 <p className="text-xs font-semibold text-[#88786b]">{number}</p>
@@ -161,7 +158,7 @@ export default async function MixalisChapterPage({
             ))}
           </div>
           <p className="mt-5 text-sm leading-6 text-[#6a615a]">
-            Το πράσινο κουμπί σε οδηγεί έως το current START. Μόλις ολοκληρωθεί το μάθημα, εμφανίζεται ξεχωριστό κουμπί «Δημιουργία LAB». Το LAB δεν ξεκινά ποτέ αυτόματα.
+            Το πράσινο κουμπί σε οδηγεί έως το current START. Μετά εμφανίζεται ξεχωριστό «Δημιουργία LAB» για το ίδιο μάθημα. Κανένα άλλο LAB δεν επαναδημιουργείται.
           </p>
         </section>
       </div>
