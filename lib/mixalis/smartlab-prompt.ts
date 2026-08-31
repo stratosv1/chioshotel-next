@@ -1,5 +1,5 @@
 export const SMARTLAB_PROMPT_REFERENCE = "SMARTLAB";
-export const SMARTLAB_PROMPT_VERSION = "finalver1";
+export const SMARTLAB_PROMPT_VERSION = "finalver2";
 
 export type SmartLabPromptQuantityInput = {
   id: string;
@@ -21,7 +21,7 @@ export type SmartLabPromptInput = {
 };
 
 /**
- * SMARTLAB finalver1 intentionally receives only the concept name and the
+ * SMARTLAB finalver2 intentionally receives only the concept name and the
  * physical quantities already present in the current START lesson.
  */
 export function buildSmartLabPrompt(input: SmartLabPromptInput) {
@@ -65,6 +65,10 @@ export function buildSmartLabPrompt(input: SmartLabPromptInput) {
 10. UI: super clean, minimal, premium, responsive, shadcn/ui. Το διάγραμμα είναι ο πρωταγωνιστής. Χωρίς nested containers και χωρίς περιττό κείμενο.
 11. Πριν παραδώσεις, έλεγξε ότι οι σχέσεις, οι αριθμοί, τα διανύσματα, οι αποστάσεις, οι γωνίες και η κίνηση είναι φυσικά σωστά.
 12. Για horizontal_projectile χρησιμοποίησε διευρυμένα διδακτικά ranges: το control initial_speed πρέπει να φτάνει έως 60 m/s και το control height έως 100 m. Οι υπολογισμοί πρέπει να παραμένουν ακριβείς σε όλο το range.
+13. Αν το μάθημα είναι «Οριζόντια βολή», χρησιμοποίησε υποχρεωτικά physicsPreset=horizontal_projectile.
+14. Αν το μάθημα είναι «Ομαλή κυκλική κίνηση», χρησιμοποίησε υποχρεωτικά physicsPreset=uniform_circular_motion. Η ακτίνα είναι control όταν υπάρχει και πρέπει να υπάρχει ακριβώς ένας speed driver από angular_speed, linear_speed ή frequency.
+15. Αν το μάθημα αφορά «Κεντρομόλο δύναμη», χρησιμοποίησε υποχρεωτικά physicsPreset=centripetal_force. Η κεντρομόλος δύναμη είναι derived αποτέλεσμα και ΠΟΤΕ ανεξάρτητο control. Χρησιμοποίησε ως controls μόνο ανεξάρτητες ποσότητες του μαθήματος, όπως μάζα, ακτίνα και ακριβώς έναν speed driver όταν αυτές υπάρχουν στα δοσμένα μεγέθη.
+16. Μην επιλέξεις generic_relation όταν υπάρχει ειδικός renderer που αποδίδει σωστά τη συγκεκριμένη έννοια.
 
 ΔΙΑΘΕΣΙΜΟΙ RENDERERS
 - horizontal_projectile
