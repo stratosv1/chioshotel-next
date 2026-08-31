@@ -178,16 +178,19 @@ function verifyHorizontalRuntime(widget: SmartLabWidget, errors: string[]) {
 function verifyCircularRuntime(widget: SmartLabWidget, errors: string[]) {
   const radiusControl = controlForRole(widget, "radius");
   const driver = controlForRole(widget, "angular_speed") || controlForRole(widget, "frequency") || controlForRole(widget, "linear_speed");
+  const massControl = controlForRole(widget, "mass");
   const radiusSamples = radiusControl ? [radiusControl.min, radiusControl.defaultValue, radiusControl.max] : [2];
   const driverSamples = driver ? [driver.min, driver.defaultValue, driver.max] : [2];
+  const massSamples = massControl ? [massControl.min, massControl.defaultValue, massControl.max] : [1];
 
-  for (const radius of radiusSamples) for (const driverValue of driverSamples) for (const angle of [0, 0.79, 2.4, 2 * Math.PI]) {
+  for (const radius of radiusSamples) for (const driverValue of driverSamples) for (const mass of massSamples) for (const angle of [0, 0.79, 2.4, 2 * Math.PI]) {
     const state = calculateCircularMotionPhysics({
       radius,
       angle,
       angularSpeed: driver?.role === "angular_speed" ? driverValue : undefined,
       frequency: driver?.role === "frequency" ? driverValue : undefined,
       linearSpeed: driver?.role === "linear_speed" ? driverValue : undefined,
+      mass,
     });
     assertClose(state.arcLength, radius * angle, "s=rφ", errors);
     assertClose(state.revolutions, angle / (2 * Math.PI), "N=φ/2π", errors);
@@ -196,13 +199,18 @@ function verifyCircularRuntime(widget: SmartLabWidget, errors: string[]) {
     assertClose(state.speed, state.omega * radius, "υ=ωr", errors);
     assertClose(state.acceleration, state.speed * state.speed / radius, "αₖ=υ²/r", errors);
     assertClose(state.acceleration, state.omega * state.omega * radius, "αₖ=ω²r", errors);
+    assertClose(state.force, state.mass * state.acceleration, "Fκ=mακ", errors);
+    assertClose(state.force, state.mass * state.speed * state.speed / radius, "Fκ=mυ²/r", errors);
+    assertClose(state.force, state.mass * state.omega * state.omega * radius, "Fκ=mω²r", errors);
   }
 }
 
 export function assertRuntimePhysicsFormulas(widget: SmartLabWidget) {
   const errors: string[] = [];
   if (widget.physicsPreset === "horizontal_projectile") verifyHorizontalRuntime(widget, errors);
-  if (widget.physicsPreset === "uniform_circular_motion") verifyCircularRuntime(widget, errors);
+  if (widget.physicsPreset === "uniform_circular_motion" || widget.physicsPreset === "centripetal_force") {
+    verifyCircularRuntime(widget, errors);
+  }
   if (errors.length) {
     throw new Error(`SMARTLAB numerical formula verification failed for '${widget.title}': ${errors.slice(0, 8).join("; ")}`);
   }
