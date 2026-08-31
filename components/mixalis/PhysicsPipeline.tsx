@@ -22,103 +22,100 @@ function checkpointMark(state: Checkpoint["state"]) {
 }
 
 function buildCheckpoints(pipeline: PhysicsPipelineNavigation): Checkpoint[] {
+  const savvalasMapped = Boolean(pipeline.savvalas.rangeId);
   const savvalasReady = pipeline.savvalas.status === "ready";
   const officialReady = pipeline.official.status === "ready";
-  const intelligenceCurrent = pipeline.intelligence.status === "current";
   const intelligenceReady = pipeline.intelligence.upToDate;
   const lessonReady = pipeline.lesson.upToDate;
 
   return [
     {
-      label: "Σαββάλας",
-      state: savvalasReady
-        ? "ready"
-        : pipeline.savvalas.status === "missing"
-          ? "waiting"
-          : "active",
-      detail: savvalasReady
-        ? "Depth έτοιμο"
-        : pipeline.savvalas.status === "missing"
-          ? "Δεν έχει αναλυθεί"
-          : pipeline.savvalas.status === "error"
-            ? "Χρειάζεται συνέχιση"
-            : "Σε εξέλιξη",
+      label: "1 · Mapping",
+      state: savvalasMapped ? "ready" : "active",
+      detail: savvalasMapped ? "PDF range επιβεβαιωμένο" : "Χρειάζεται mapping Σαββάλα",
     },
     {
-      label: "Σχολικό",
+      label: "2 · Depth",
+      state: savvalasReady
+        ? "ready"
+        : savvalasMapped
+          ? pipeline.savvalas.status === "error"
+            ? "stale"
+            : "active"
+          : "waiting",
+      detail: savvalasReady
+        ? "Σαββάλας PDF έτοιμος"
+        : !savvalasMapped
+          ? "Περιμένει mapping"
+          : pipeline.savvalas.status === "error"
+            ? "Χρειάζεται επανάληψη"
+            : "Χρειάζεται Depth Audit",
+    },
+    {
+      label: "3 · Official",
       state: officialReady
         ? "ready"
         : savvalasReady && pipeline.official.rangeId
-          ? "active"
+          ? pipeline.official.status === "error"
+            ? "stale"
+            : "active"
           : "waiting",
       detail: officialReady
-        ? "Official έτοιμο"
+        ? "School Book PDF έτοιμο"
         : !pipeline.official.rangeId
-          ? "Δεν έχει συνδεθεί range"
-          : pipeline.official.status === "error"
-            ? "Χρειάζεται επανάληψη"
-            : pipeline.official.status === "missing"
-              ? "Έτοιμο για ανάλυση"
-              : "Σε εξέλιξη",
+          ? "Λείπει official range"
+          : !savvalasReady
+            ? "Περιμένει Depth"
+            : pipeline.official.status === "error"
+              ? "Χρειάζεται επανάληψη"
+              : "Χρειάζεται Official Intelligence",
     },
     {
-      label: "SMART",
+      label: "4 · Intelligence",
       state: intelligenceReady
         ? "ready"
-        : intelligenceCurrent
-          ? "stale"
-          : officialReady
-            ? "active"
-            : "waiting",
+        : officialReady
+          ? pipeline.intelligence.status === "current"
+            ? "stale"
+            : "active"
+          : "waiting",
       detail: intelligenceReady
-        ? `Current v${pipeline.intelligence.versionNumber ?? ""}`.trim()
-        : intelligenceCurrent
-          ? "Χρειάζεται SMART v2"
-          : pipeline.intelligence.status === "draft"
-            ? "Χρειάζεται σύνθεση"
-            : "Αναμένει τις πηγές",
+        ? `Canonical v${pipeline.intelligence.versionNumber ?? ""}`.trim()
+        : !officialReady
+          ? "Περιμένει τις 2 PDF πηγές"
+          : pipeline.intelligence.status === "current"
+            ? "Χρειάζεται νέα canonical version"
+            : "Έτοιμο για σύνθεση",
     },
     {
-      label: "Μάθημα",
+      label: "5 · START",
       state: lessonReady
         ? "ready"
-        : intelligenceReady && pipeline.lesson.status === "current"
-          ? "stale"
-          : intelligenceReady
-            ? "active"
-            : "waiting",
+        : intelligenceReady
+          ? pipeline.lesson.status === "current"
+            ? "stale"
+            : "active"
+          : "waiting",
       detail: lessonReady
         ? `Revision ${pipeline.lesson.revisionNumber ?? ""} · current`.trim()
-        : intelligenceReady && pipeline.lesson.status === "current"
-          ? "Χρειάζεται νέα revision"
-          : intelligenceCurrent && !intelligenceReady
-            ? "Περιμένει νέο SMART"
-            : pipeline.lesson.status === "processing"
-              ? "Δημιουργείται"
-              : pipeline.lesson.status === "error"
-                ? "Χρειάζεται επανάληψη"
-                : "Δεν έχει δημιουργηθεί",
+        : !intelligenceReady
+          ? "Περιμένει canonical Intelligence"
+          : pipeline.lesson.status === "processing"
+            ? "Δημιουργείται"
+            : pipeline.lesson.status === "error"
+              ? "Χρειάζεται επανάληψη"
+              : pipeline.lesson.status === "current"
+                ? "Χρειάζεται νέα revision"
+                : "Έτοιμο για δημιουργία",
     },
   ];
 }
 
-function PipelineCta({
-  pipeline,
-  chapterId,
-}: {
-  pipeline: PhysicsPipelineNavigation;
-  chapterId: string;
-}) {
+function PipelineCta({ pipeline }: { pipeline: PhysicsPipelineNavigation }) {
   const className =
     "inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-[#304b35] px-5 py-3 text-center text-sm font-bold !text-white transition hover:bg-[#263d2b] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#b7c8b4]";
 
-  const needsSavvalasUpload =
-    pipeline.savvalas.status !== "ready" && !pipeline.savvalas.analysisId;
-  const href = needsSavvalasUpload
-    ? `/mixalis/chapters/${chapterId}?source=savvalas&subchapterId=${pipeline.subchapterId}#chapter-material`
-    : pipeline.next.href;
-
-  if (pipeline.next.method === "post" && !needsSavvalasUpload) {
+  if (pipeline.next.method === "post") {
     return (
       <form action={pipeline.next.href} method="post" className="w-full">
         <button type="submit" className={className}>
@@ -129,7 +126,7 @@ function PipelineCta({
   }
 
   return (
-    <Link href={href} prefetch={false} className={className}>
+    <Link href={pipeline.next.href} prefetch={false} className={className}>
       {pipeline.next.label}
     </Link>
   );
@@ -151,11 +148,12 @@ export default function PhysicsPipeline({
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.15em] text-[#857261]">
-            Physics Pipeline
+            Physics Pipeline · PDF only
           </p>
-          <h2 className="mt-1 text-2xl font-semibold">Ακολούθησε μόνο το επόμενο βήμα</h2>
+          <h2 className="mt-1 text-2xl font-semibold">Ένα κουμπί · πάντα το σωστό επόμενο βήμα</h2>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-[#6d645d]">
-            Κάθε υποκεφάλαιο περνά με τη σειρά από Σαββάλα, επίσημο σχολικό βιβλίο, SMART και START. Το κουμπί «Συνέχεια» ανοίγει πάντα το σωστό επόμενο στάδιο.
+            Δεν ανεβάζεις πλέον φωτογραφίες. Για κάθε υποκεφάλαιο ακολουθείς πάντα την ίδια σειρά:
+            Mapping Σαββάλα → Depth Audit → Official School Book → Canonical Intelligence → START.
           </p>
         </div>
         <Link
@@ -165,6 +163,10 @@ export default function PhysicsPipeline({
         >
           LAB · Εικονικά Εργαστήρια
         </Link>
+      </div>
+
+      <div className="mt-5 rounded-2xl border border-[#c5d3c0] bg-[#f1f6ef] px-4 py-3 text-sm leading-6 text-[#53654f]">
+        <strong>Σταθερός κανόνας:</strong> πάτησε μόνο το πράσινο κουμπί «επόμενο βήμα» στο υποκεφάλαιο που δουλεύεις. Το σύστημα δεν χρησιμοποιεί legacy φωτογραφίες για νέο μάθημα.
       </div>
 
       <div className="mt-6 space-y-4">
@@ -178,7 +180,7 @@ export default function PhysicsPipeline({
               key={subchapter.id}
               className="rounded-2xl border border-black/10 bg-[#fbfaf8] p-4 sm:p-5"
             >
-              <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+              <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-3">
                     <span className="inline-flex min-w-14 justify-center rounded-xl bg-[#e8dfd3] px-3 py-2 text-sm font-bold text-[#5c5047]">
@@ -192,13 +194,13 @@ export default function PhysicsPipeline({
                     </div>
                   </div>
 
-                  <div className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
+                  <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
                     {checkpoints.map((checkpoint) => (
                       <div
                         key={checkpoint.label}
                         className={`rounded-xl border px-3 py-2.5 ${checkpointClass(checkpoint.state)}`}
                       >
-                        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.08em]">
+                        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.06em]">
                           <span aria-hidden="true">{checkpointMark(checkpoint.state)}</span>
                           <span>{checkpoint.label}</span>
                         </div>
@@ -208,8 +210,8 @@ export default function PhysicsPipeline({
                   </div>
                 </div>
 
-                <div className="w-full shrink-0 lg:w-44">
-                  <PipelineCta pipeline={pipeline} chapterId={chapterId} />
+                <div className="w-full shrink-0 xl:w-52">
+                  <PipelineCta pipeline={pipeline} />
                 </div>
               </div>
             </article>
