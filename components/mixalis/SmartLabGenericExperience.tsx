@@ -5,13 +5,22 @@ import { FlaskConical, RotateCcw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { SmartLabContent, SmartLabControl, SmartLabQuantity, SmartLabWidget } from "@/lib/mixalis/smartlab-types";
+import SmartLabCollision1D, { looksLikeCollision } from "@/components/mixalis/SmartLabCollision1D";
+import type { SmartLabContent, SmartLabControl, SmartLabWidget } from "@/lib/mixalis/smartlab-types";
 
 type Values = Record<string, number>;
 
 function number(value: number, digits = 2) {
   if (!Number.isFinite(value)) return "—";
   return new Intl.NumberFormat("el-GR", { maximumFractionDigits: digits }).format(value);
+}
+
+function cleanSymbol(value: string | null | undefined) {
+  return String(value || "")
+    .normalize("NFC")
+    .replace(/[\u20d0-\u20ff]/g, "")
+    .replace(/⃗/g, "")
+    .trim();
 }
 
 function initialValues(widget: SmartLabWidget): Values {
@@ -25,7 +34,7 @@ function quantityById(widget: SmartLabWidget, id: string) {
 function studentText(widget: SmartLabWidget, text: string | null | undefined) {
   let output = String(text || "");
   const quantities = [...(widget.quantities || [])].sort((a, b) => b.id.length - a.id.length);
-  for (const quantity of quantities) output = output.split(quantity.id).join(quantity.symbol || quantity.name);
+  for (const quantity of quantities) output = output.split(quantity.id).join(cleanSymbol(quantity.symbol) || quantity.name);
   return output;
 }
 
@@ -37,8 +46,8 @@ function looksLikeSystemForces(widget: SmartLabWidget) {
 function externalForceControl(widget: SmartLabWidget) {
   return (widget.controls || []).find((control) => {
     const quantity = quantityById(widget, control.quantityId);
-    const text = `${quantity?.name || ""} ${quantity?.symbol || ""} ${control.label || ""}`.toLocaleLowerCase("el-GR");
-    return text.includes("εξωτερ") || text.includes("σf") || text.includes("σfεξ") || text.includes("σfεξ");
+    const text = `${quantity?.name || ""} ${cleanSymbol(quantity?.symbol)} ${control.label || ""}`.toLocaleLowerCase("el-GR");
+    return text.includes("εξωτερ") || text.includes("σf") || text.includes("σfεξ");
   }) || widget.controls?.[0];
 }
 
@@ -53,7 +62,7 @@ function SystemForcesDiagram({ widget, values }: { widget: SmartLabWidget; value
   const arrowId = `generic-system-arrow-${widget.id.replace(/[^a-zA-Z0-9_-]/g, "-")}`;
   const internalId = `${arrowId}-internal`;
   const unit = quantity?.unit || control?.unit || "";
-  const symbol = quantity?.symbol || control?.symbol || "ΣFεξ";
+  const symbol = cleanSymbol(quantity?.symbol || control?.symbol) || "ΣFεξ";
 
   return (
     <div className="min-w-0">
@@ -124,18 +133,18 @@ function RelationDiagram({ widget, values }: { widget: SmartLabWidget; values: V
     <div className="min-h-72 rounded-2xl border border-stone-200 bg-[#fcfbf9] p-5 sm:p-6">
       <p className="text-xs font-semibold uppercase tracking-[0.14em] text-stone-500">Χάρτης φυσικών σχέσεων</p>
       <p className="mt-2 max-w-2xl text-sm leading-6 text-stone-600">
-        Το LAB δεν επινοεί αριθμητικό τύπο που δεν έχει επαληθευτεί. Δείχνει ποια μεγέθη ελέγχεις και ποια επηρεάζονται σύμφωνα με το verified impact model.
+        Αυτό είναι ασφαλές fallback για αφηρημένες σχέσεις. Για φαινόμενα που μπορούν να οπτικοποιηθούν, το SMARTLAB πρέπει να χρησιμοποιεί ειδικό renderer και πραγματικό γράφημα του φαινομένου.
       </p>
       <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
         {quantities.map((quantity) => {
           const control = controls.find((item) => item.quantityId === quantity.id);
           const value = control ? Number(values[control.id] ?? control.defaultValue) : null;
-          const kind = controlIds.has(quantity.id) ? "ΑΝΕΞΑΡΤΗΤΟ" : impacted.has(quantity.id) ? "ΕΠΗΡΕΑΖΕΤΑΙ" : "ΠΑΡΑΜΕΝΕΙ / ΠΑΡΑΤΗΡΕΙΤΑΙ";
+          const kind = controlIds.has(quantity.id) ? "ΑΝΕΞΑΡΤΗΤΟ" : impacted.has(quantity.id) ? "ΕΠΗΡΕΑΖΕΤΑΙ" : "ΠΑΡΑΤΗΡΕΙΤΑΙ";
           return (
             <div key={quantity.id} className="rounded-2xl border border-stone-200 bg-white p-4">
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <p className="text-lg font-semibold text-stone-950">{quantity.symbol || quantity.name}</p>
+                  <p className="text-lg font-semibold text-stone-950">{cleanSymbol(quantity.symbol) || quantity.name}</p>
                   <p className="mt-1 text-xs leading-5 text-stone-500">{quantity.name}</p>
                 </div>
                 <Badge variant="outline" className="shrink-0 bg-stone-50 text-[10px]">{kind}</Badge>
@@ -156,7 +165,7 @@ function ControlPanel({ widget, values, onChange }: { widget: SmartLabWidget; va
         const quantity = quantityById(widget, control.quantityId);
         const value = Number(values[control.id] ?? control.defaultValue);
         const label = quantity?.name || control.label;
-        const symbol = quantity?.symbol || control.symbol;
+        const symbol = cleanSymbol(quantity?.symbol || control.symbol);
         const unit = quantity?.unit || control.unit;
         if (control.type === "toggle") {
           const checked = value > (control.min + control.max) / 2;
@@ -186,14 +195,17 @@ function GenericWidget({ widget }: { widget: SmartLabWidget }) {
   const [values, setValues] = useState<Values>(() => initialValues(widget));
   const [changedId, setChangedId] = useState<string | null>(null);
   const impact = useMemo(() => (widget.impactModel || []).find((item) => item.controlQuantityId === changedId) || null, [changedId, widget]);
-  const visual = looksLikeSystemForces(widget)
-    ? <SystemForcesDiagram widget={widget} values={values} />
-    : <RelationDiagram widget={widget} values={values} />;
+  const collision = looksLikeCollision(widget);
+  const visual = collision
+    ? <SmartLabCollision1D widget={widget} values={values} />
+    : looksLikeSystemForces(widget)
+      ? <SystemForcesDiagram widget={widget} values={values} />
+      : <RelationDiagram widget={widget} values={values} />;
 
   return (
     <Card className="overflow-hidden rounded-3xl border-stone-200 bg-white shadow-sm">
       <CardHeader className="space-y-2 border-b border-stone-100 px-4 py-5 sm:px-6">
-        <div className="flex items-center gap-2"><Badge className="gap-1.5 bg-[#334f39] text-white hover:bg-[#334f39]"><FlaskConical className="h-3.5 w-3.5" /> SMARTLAB</Badge><span className="text-xs text-stone-500">Άλλαξε μία παράμετρο και δες τι αλλάζει στο σύστημα.</span></div>
+        <div className="flex items-center gap-2"><Badge className="gap-1.5 bg-[#334f39] text-white hover:bg-[#334f39]"><FlaskConical className="h-3.5 w-3.5" /> SMARTLAB</Badge><span className="text-xs text-stone-500">Άλλαξε μία παράμετρο και δες το φυσικό φαινόμενο να αλλάζει.</span></div>
         <CardTitle className="text-xl font-semibold tracking-tight text-stone-950 sm:text-2xl">{studentText(widget, widget.title)}</CardTitle>
         {widget.scene?.description ? <p className="max-w-3xl text-sm leading-6 text-stone-600">{studentText(widget, widget.scene.description)}</p> : null}
       </CardHeader>
@@ -205,7 +217,7 @@ function GenericWidget({ widget }: { widget: SmartLabWidget }) {
             <p className="mt-1 text-xs leading-5 text-stone-500">Μετακίνησε μία παράμετρο και παρατήρησε τη φυσική συνέπεια.</p>
             <div className="mt-5"><ControlPanel widget={widget} values={values} onChange={(control, value) => { setValues((current) => ({ ...current, [control.id]: value })); setChangedId(control.quantityId); }} /></div>
             {impact ? <div className="mt-6 border-t border-stone-200 pt-5"><p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-stone-500">Τι αλλάζει</p><p className="mt-2 text-xs leading-5 text-stone-600">{studentText(widget, impact.explanation)}</p></div> : null}
-            <Button type="button" variant="outline" onClick={() => { setValues(initialValues(widget)); setChangedId(null); }} className="mt-6 min-h-10"><RotateCcw className="h-4 w-4" /> Επαναφορά</Button>
+            <Button type="button" variant="outline" onClick={() => { setValues(initialValues(widget)); setChangedId(null); }} className="mt-6 min-h-10"><RotateCcw className="h-4 w-4" /> Επαναφορά παραμέτρων</Button>
           </aside>
         </div>
       </CardContent>
