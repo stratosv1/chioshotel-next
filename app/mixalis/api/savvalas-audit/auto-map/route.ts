@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getMixalisSession } from "@/lib/mixalis/auth";
-import { runSavvalasAutoMapping } from "@/lib/mixalis/savvalas-auto-mapping";
+import { proposeSavvalasMapping } from "@/lib/mixalis/savvalas-auto-mapping";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -11,26 +11,39 @@ export async function POST(request: Request) {
 
   const formData = await request.formData();
   const documentId = String(formData.get("documentId") || "");
-  if (!documentId) {
+  const subchapterId = String(formData.get("subchapterId") || "");
+
+  if (!documentId || !subchapterId) {
     const url = new URL("/mixalis/savvalas-auto-map", request.url);
-    url.searchParams.set("message", "Δεν βρέθηκε documentId για το βιβλίο Σαββάλα.");
+    url.searchParams.set("message", "Δεν βρέθηκε βιβλίο ή υποκεφάλαιο για το mapping.");
     return NextResponse.redirect(url, 303);
   }
 
   try {
-    const result = await runSavvalasAutoMapping(documentId);
+    const proposal = await proposeSavvalasMapping(documentId, subchapterId);
     const url = new URL("/mixalis/savvalas-auto-map", request.url);
-    url.searchParams.set("autoMapped", String(result.mapped.length));
-    url.searchParams.set("autoUnresolved", String(result.unresolved.length));
-    url.searchParams.set("autoSkipped", String(result.skippedExisting));
-    url.searchParams.set("autoPages", String(result.scannedPages));
+    url.searchParams.set("documentId", proposal.documentId);
+    url.searchParams.set("proposalSubchapterId", proposal.subchapterId);
+    url.searchParams.set("proposalFrom", String(proposal.filePageFrom));
+    url.searchParams.set("proposalTo", String(proposal.filePageTo));
+    url.searchParams.set("proposalConfidence", String(Math.round(proposal.confidence * 100)));
+    url.searchParams.set("proposalComplete", proposal.complete ? "1" : "0");
+    url.searchParams.set("tocFound", proposal.tocFound ? "1" : "0");
+    url.searchParams.set("tocPrintedFrom", String(proposal.tocPrintedPageFrom ?? 0));
+    url.searchParams.set("tocPrintedTo", String(proposal.tocPrintedPageTo ?? 0));
+    url.searchParams.set("tocPages", String(proposal.tocPagesScanned));
+    url.searchParams.set("verifyFrom", String(proposal.verificationPageFrom));
+    url.searchParams.set("verifyTo", String(proposal.verificationPageTo));
+    if (proposal.evidence) url.searchParams.set("evidence", proposal.evidence.slice(0, 700));
     return NextResponse.redirect(url, 303);
   } catch (error) {
-    console.error("Mixalis Savvalas auto mapping failed", error);
+    console.error("Mixalis Savvalas mapping proposal failed", error);
     const url = new URL("/mixalis/savvalas-auto-map", request.url);
+    url.searchParams.set("documentId", documentId);
+    url.searchParams.set("proposalSubchapterId", subchapterId);
     url.searchParams.set(
       "message",
-      error instanceof Error ? error.message.slice(0, 240) : "Το αυτόματο mapping απέτυχε.",
+      error instanceof Error ? error.message.slice(0, 260) : "Η πρόταση mapping απέτυχε.",
     );
     return NextResponse.redirect(url, 303);
   }
