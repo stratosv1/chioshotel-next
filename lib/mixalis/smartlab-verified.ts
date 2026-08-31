@@ -13,7 +13,7 @@ import {
   getCurrentSmartLabForChapter,
   runSmartLabRevision as runBaseSmartLabRevision,
 } from "@/lib/mixalis/smartlab";
-import type { SmartLabContent, SmartLabRevisionView } from "@/lib/mixalis/smartlab-types";
+import type { SmartLabContent, SmartLabRevisionView, SmartLabWidget } from "@/lib/mixalis/smartlab-types";
 
 export {
   claimSmartLabRun,
@@ -72,6 +72,36 @@ async function assertCurrentLessonFormulaContracts(chapterId: string) {
   }
 }
 
+function assertRendererContract(subchapterTitle: string, widget: SmartLabWidget) {
+  const lower = subchapterTitle.toLocaleLowerCase("el-GR");
+
+  if (lower.includes("κεντρομόλος δύναμη")) {
+    if (widget.physicsPreset !== "centripetal_force") {
+      throw new Error(`SMARTLAB renderer audit failed for '${subchapterTitle}': centripetal_force renderer is required.`);
+    }
+
+    const roles = new Set(widget.quantities.map((quantity) => quantity.physicsRole));
+    if (!roles.has("centripetal_force")) {
+      throw new Error(`SMARTLAB renderer audit failed for '${subchapterTitle}': centripetal_force quantity is missing.`);
+    }
+    if (!roles.has("radius")) {
+      throw new Error(`SMARTLAB renderer audit failed for '${subchapterTitle}': radius quantity is missing.`);
+    }
+
+    const forceQuantity = widget.quantities.find((quantity) => quantity.physicsRole === "centripetal_force");
+    if (forceQuantity && widget.controls.some((control) => control.quantityId === forceQuantity.id)) {
+      throw new Error(`SMARTLAB renderer audit failed for '${subchapterTitle}': centripetal force cannot be an independent control.`);
+    }
+
+    const speedDrivers = widget.controls.filter((control) =>
+      control.role === "angular_speed" || control.role === "linear_speed" || control.role === "frequency",
+    );
+    if (speedDrivers.length !== 1) {
+      throw new Error(`SMARTLAB renderer audit failed for '${subchapterTitle}': exactly one speed driver is required.`);
+    }
+  }
+}
+
 function verifiedContent(view: SmartLabRevisionView): SmartLabContent {
   const content = view.content as SmartLabContent;
   if (!content || !Array.isArray(content.subchapters)) {
@@ -83,6 +113,7 @@ function verifiedContent(view: SmartLabRevisionView): SmartLabContent {
     subchapters: content.subchapters.map((section) => ({
       ...section,
       widgets: section.widgets.map((widget) => {
+        assertRendererContract(section.subchapterTitle, widget);
         assertRuntimePhysicsFormulas(widget);
         return {
           ...widget,
@@ -144,7 +175,7 @@ export async function runSmartLabRevision(revisionId: string) {
   if (view.status !== "current" && view.status !== "superseded") return view;
 
   try {
-    // Every generated or reused widget must pass deterministic numerical identities.
+    // Every generated or reused widget must pass deterministic renderer and numerical identities.
     // The impact list is then recalculated from real before/after physics states, never trusted from AI.
     const content = verifiedContent(view);
     await persistVerifiedContent(view, content);
