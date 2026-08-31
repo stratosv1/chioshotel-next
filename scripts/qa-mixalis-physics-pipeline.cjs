@@ -81,8 +81,17 @@ requireText('app/mixalis/(private)/chapters/[id]/page.tsx', [
   'Δεν ανεβάζεις πλέον φωτογραφίες',
 ]);
 
+requireText('app/mixalis/api/savvalas-audit/ranges/route.ts', [
+  'assertSavvalasRangeIntegrity',
+]);
+requireText('lib/mixalis/savvalas-range-integrity.ts', [
+  "sd.source_kind = 'savvalas_book'",
+  'sr.file_page_from <=',
+  'sr.file_page_to >=',
+  'επικαλύπτεται',
+]);
 requireText('app/mixalis/api/savvalas-audit/ranges/[rangeId]/run/route.ts', [
   'recoverStaleSavvalasSourceAnalysisForRange',
 ]);
 
-console.log('Mixalis Physics PDF-only pipeline QA passed: canonical source selection, legacy quarantine, stage guards, START guard and stale-audit recovery are enforced.');
+console.log('Mixalis Physics PDF-only pipeline QA passed: canonical source selection, legacy quarantine, non-overlapping mappings, stage guards, START guard and stale-audit recovery are enforced.');
