@@ -7,9 +7,9 @@ import SmartLabRunner from "@/components/mixalis/SmartLabRunner";
 import { getPhysicsChapter } from "@/lib/mixalis/db";
 import { getSmartLabRevisionView } from "@/lib/mixalis/smartlab";
 import {
-  getSingleSmartLabState,
-  listSingleSmartLabStatesByChapter,
-} from "@/lib/mixalis/smartlab-single";
+  getSingleSmartLabStateCompat as getSingleSmartLabState,
+  listSingleSmartLabStatesByChapterCompat as listSingleSmartLabStatesByChapter,
+} from "@/lib/mixalis/smartlab-single-compat";
 import { SMARTLAB_PROMPT_VERSION } from "@/lib/mixalis/smartlab-prompt";
 
 export const dynamic = "force-dynamic";
