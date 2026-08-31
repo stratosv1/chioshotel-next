@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import SubchapterIntelligenceRunner from "@/components/mixalis/SubchapterIntelligenceRunner";
+import { CANONICAL_SUBCHAPTER_INTELLIGENCE_PROMPT_VERSION } from "@/lib/mixalis/canonical-subchapter-sources";
 import { getCurrentLessonBySubchapter } from "@/lib/mixalis/lesson-navigation";
 import {
   getSubchapterIntelligenceView,
@@ -55,8 +56,15 @@ export default async function MixalisSubchapterIntelligencePage({
 
   const currentLesson = await getCurrentLessonBySubchapter(view.subchapterId);
   const findingCount = view.sources.reduce((sum, source) => sum + source.itemCount, 0);
+  const officialCount = view.sources.filter((source) => source.sourceRole === "official").length;
+  const depthCount = view.sources.filter((source) => source.sourceRole === "depth").length;
+  const canonical =
+    view.promptVersion === CANONICAL_SUBCHAPTER_INTELLIGENCE_PROMPT_VERSION &&
+    view.sources.length === 2 &&
+    officialCount === 1 &&
+    depthCount === 1;
   const ready = view.status === "current" || view.status === "superseded";
-  const content = ready ? (view.content as SubchapterIntelligenceContent) : null;
+  const content = canonical && ready ? (view.content as SubchapterIntelligenceContent) : null;
 
   return (
     <main className="min-h-screen bg-[#f3efe8] px-4 py-5 text-[#2c2825] sm:px-8 sm:py-8">
@@ -76,17 +84,24 @@ export default async function MixalisSubchapterIntelligencePage({
             {view.subchapterNumberLabel} · {view.subchapterTitle}
           </h1>
           <p className="mt-3 max-w-4xl text-sm leading-6 text-[#6b625b] sm:text-base">
-            Εδώ ενώνονται η επίσημη ύλη του σχολικού βιβλίου και το απαιτούμενο βάθος των ασκήσεων. Αυτό είναι το ενιαίο knowledge brief που καταναλώνει το START.
-            {currentLesson ? ` Το Lesson Revision ${currentLesson.revisionNumber} έχει ήδη δημιουργηθεί και είναι το current μάθημα.` : " Δεν έχει δημιουργηθεί ακόμη μάθημα."}
+            {canonical
+              ? "Εδώ ενώνονται ακριβώς δύο canonical PDF πηγές: το επίσημο σχολικό βιβλίο και το επιβεβαιωμένο Depth Audit του Σαββάλα. Αυτό είναι το knowledge brief που καταναλώνει το START."
+              : "Αυτή είναι παλιότερη έκδοση Intelligence από το legacy flow. Παραμένει μόνο ως ιστορικό και δεν επιτρέπεται να τροφοδοτήσει νέο START μάθημα."}
           </p>
 
           <div className="mt-5 flex flex-wrap gap-2 text-xs text-[#746a62]">
             <span className="rounded-full bg-[#f1ede7] px-3 py-1.5">{view.courseTitle}</span>
             <span className="rounded-full bg-[#f1ede7] px-3 py-1.5">Version {view.versionNumber}</span>
-            <span className="rounded-full bg-[#f1ede7] px-3 py-1.5">
-              {ready ? "Current" : "Draft"}
+            <span
+              className={`rounded-full px-3 py-1.5 font-semibold ${
+                canonical
+                  ? "bg-[#eaf2e7] text-[#53694e]"
+                  : "bg-[#f8eee7] text-[#7a5748]"
+              }`}
+            >
+              {canonical ? "PDF-only canonical" : "Legacy · ιστορικό"}
             </span>
-            {currentLesson ? (
+            {canonical && currentLesson ? (
               <span className="rounded-full bg-[#eaf2e7] px-3 py-1.5 text-[#53694e]">
                 Lesson Revision {currentLesson.revisionNumber} · current
               </span>
@@ -105,7 +120,9 @@ export default async function MixalisSubchapterIntelligencePage({
           </div>
           <div className="rounded-3xl border border-black/10 bg-white p-5 shadow-sm">
             <p className="text-xs uppercase tracking-[0.16em] text-[#8a7d72]">ΚΑΤΑΣΤΑΣΗ</p>
-            <p className="mt-2 text-2xl font-semibold">{ready ? "Έτοιμη" : "Προς σύνθεση"}</p>
+            <p className="mt-2 text-2xl font-semibold">
+              {canonical ? (ready ? "Έτοιμη" : "Προς σύνθεση") : "Legacy"}
+            </p>
           </div>
         </section>
 
@@ -124,18 +141,45 @@ export default async function MixalisSubchapterIntelligencePage({
           </div>
         </section>
 
-        <SubchapterIntelligenceRunner
-          versionId={view.id}
-          initialStatus={view.status}
-          initialErrorMessage={view.errorMessage}
-          versionNumber={view.versionNumber}
-          sourceCount={view.sources.length}
-          findingCount={findingCount}
-          currentLesson={currentLesson ? {
-            revisionId: currentLesson.revisionId,
-            revisionNumber: currentLesson.revisionNumber,
-          } : null}
-        />
+        {!canonical ? (
+          <section className="mt-6 rounded-3xl border border-[#dfc2b1] bg-[#fbf1eb] p-6 sm:p-8">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#7a5748]">
+              Legacy version · μπλοκαρισμένη
+            </p>
+            <h2 className="mt-2 text-2xl font-semibold">Μην συνθέσεις αυτή την έκδοση</h2>
+            <p className="mt-3 max-w-3xl text-sm leading-6 text-[#725748]">
+              Το παλιό flow μπορεί να περιλαμβάνει photo batches ή διπλό Savvalas depth. Η νέα έκδοση δημιουργείται μόνο από 2 πηγές: Official School Book PDF + Savvalas PDF Depth Audit. Το START επίσης απορρίπτει πλέον legacy Intelligence.
+            </p>
+            <form
+              action={`/mixalis/api/subchapter-intelligence/from-subchapter/${view.subchapterId}`}
+              method="post"
+              className="mt-5"
+            >
+              <button
+                type="submit"
+                className="inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-[#304b35] px-5 py-3 text-sm font-bold text-white sm:w-auto"
+              >
+                Δημιουργία νέας PDF-only Canonical Version
+              </button>
+            </form>
+            <p className="mt-3 text-xs leading-5 text-[#806555]">
+              Αν δεν είναι έτοιμες και οι δύο PDF πηγές, το σύστημα θα σταματήσει με σαφές μήνυμα και δεν θα δημιουργήσει λανθασμένη version.
+            </p>
+          </section>
+        ) : (
+          <SubchapterIntelligenceRunner
+            versionId={view.id}
+            initialStatus={view.status}
+            initialErrorMessage={view.errorMessage}
+            versionNumber={view.versionNumber}
+            sourceCount={view.sources.length}
+            findingCount={findingCount}
+            currentLesson={currentLesson ? {
+              revisionId: currentLesson.revisionId,
+              revisionNumber: currentLesson.revisionNumber,
+            } : null}
+          />
+        )}
 
         {content ? (
           <div className="mt-6 space-y-6">
