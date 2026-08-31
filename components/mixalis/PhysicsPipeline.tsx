@@ -8,6 +8,11 @@ type Checkpoint = {
   detail: string;
 };
 
+export type PhysicsLabPipelineState = {
+  currentRevisionId: string | null;
+  currentLessonRevisionIds: string[];
+};
+
 function checkpointClass(state: Checkpoint["state"]) {
   if (state === "ready") return "border-[#b8cab5] bg-[#eef5ed] text-[#40583d]";
   if (state === "active") return "border-[#cdbd9d] bg-[#fbf5e9] text-[#725f3e]";
@@ -21,7 +26,18 @@ function checkpointMark(state: Checkpoint["state"]) {
   return "·";
 }
 
-function buildCheckpoints(pipeline: PhysicsPipelineNavigation): Checkpoint[] {
+function lessonLabReady(pipeline: PhysicsPipelineNavigation, lab: PhysicsLabPipelineState) {
+  return Boolean(
+    pipeline.lesson.upToDate &&
+      pipeline.lesson.revisionId &&
+      lab.currentLessonRevisionIds.includes(pipeline.lesson.revisionId),
+  );
+}
+
+function buildCheckpoints(
+  pipeline: PhysicsPipelineNavigation,
+  labReady: boolean,
+): Checkpoint[] {
   const savvalasMapped = Boolean(pipeline.savvalas.rangeId);
   const savvalasReady = pipeline.savvalas.status === "ready";
   const officialReady = pipeline.official.status === "ready";
@@ -108,6 +124,15 @@ function buildCheckpoints(pipeline: PhysicsPipelineNavigation): Checkpoint[] {
                 ? "Χρειάζεται νέα revision"
                 : "Έτοιμο για δημιουργία",
     },
+    {
+      label: "6 · LAB",
+      state: labReady ? "ready" : lessonReady ? "active" : "waiting",
+      detail: labReady
+        ? "Εικονικό εργαστήριο έτοιμο"
+        : lessonReady
+          ? "Χειροκίνητη δημιουργία"
+          : "Περιμένει current START",
+    },
   ];
 }
 
@@ -132,16 +157,51 @@ function PipelineCta({ pipeline }: { pipeline: PhysicsPipelineNavigation }) {
   );
 }
 
+function LabCta({
+  chapterId,
+  pipeline,
+  labReady,
+}: {
+  chapterId: string;
+  pipeline: PhysicsPipelineNavigation;
+  labReady: boolean;
+}) {
+  if (!pipeline.lesson.upToDate || !pipeline.lesson.revisionId) return null;
+
+  const className =
+    "inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-[#9eb09a] bg-[#eef5ed] px-4 py-2.5 text-center text-sm font-bold text-[#3f5a43] transition hover:bg-[#e4eee2]";
+
+  if (labReady) {
+    return (
+      <Link href={`/mixalis/chapters/${chapterId}/lab`} prefetch={false} className={className}>
+        Άνοιγμα LAB
+      </Link>
+    );
+  }
+
+  return (
+    <form action={`/mixalis/api/smartlab/chapters/${chapterId}`} method="post" className="w-full">
+      <button type="submit" className={className}>
+        Δημιουργία LAB
+      </button>
+    </form>
+  );
+}
+
 export default function PhysicsPipeline({
   chapterId,
   subchapters,
   pipelines,
+  lab,
 }: {
   chapterId: string;
   subchapters: PhysicsSubchapter[];
   pipelines: PhysicsPipelineNavigation[];
+  lab: PhysicsLabPipelineState;
 }) {
   const bySubchapter = new Map(pipelines.map((pipeline) => [pipeline.subchapterId, pipeline]));
+  const completedLessons = pipelines.filter((pipeline) => pipeline.lesson.upToDate).length;
+  const labReadyLessons = pipelines.filter((pipeline) => lessonLabReady(pipeline, lab)).length;
 
   return (
     <section className="mt-6 rounded-3xl border border-black/10 bg-white p-6 shadow-sm sm:p-8">
@@ -152,8 +212,8 @@ export default function PhysicsPipeline({
           </p>
           <h2 className="mt-1 text-2xl font-semibold">Ένα κουμπί · πάντα το σωστό επόμενο βήμα</h2>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-[#6d645d]">
-            Δεν ανεβάζεις πλέον φωτογραφίες. Για κάθε υποκεφάλαιο ακολουθείς πάντα την ίδια σειρά:
             Mapping Σαββάλα → Depth Audit → Official School Book → Canonical Intelligence → START.
+            Μόλις υπάρχει current START μάθημα, το LAB γίνεται διαθέσιμο ως ξεχωριστό χειροκίνητο βήμα.
           </p>
         </div>
         <Link
@@ -161,19 +221,20 @@ export default function PhysicsPipeline({
           prefetch={false}
           className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-xl border border-[#9eb09a] bg-[#eef5ed] px-5 py-2.5 text-sm font-bold text-[#3f5a43] transition hover:bg-[#e4eee2]"
         >
-          LAB · Εικονικά Εργαστήρια
+          LAB · {labReadyLessons}/{completedLessons} έτοιμα
         </Link>
       </div>
 
       <div className="mt-5 rounded-2xl border border-[#c5d3c0] bg-[#f1f6ef] px-4 py-3 text-sm leading-6 text-[#53654f]">
-        <strong>Σταθερός κανόνας:</strong> πάτησε μόνο το πράσινο κουμπί «επόμενο βήμα» στο υποκεφάλαιο που δουλεύεις. Το σύστημα δεν χρησιμοποιεί legacy φωτογραφίες για νέο μάθημα.
+        <strong>Σταθερός κανόνας:</strong> το πράσινο κουμπί ολοκληρώνει τη βασική ροή έως το START. Το LAB δεν δημιουργείται αυτόματα· το δημιουργείς εσύ μόνο αφού υπάρχει current μάθημα.
       </div>
 
       <div className="mt-6 space-y-4">
         {subchapters.map((subchapter) => {
           const pipeline = bySubchapter.get(subchapter.id);
           if (!pipeline) return null;
-          const checkpoints = buildCheckpoints(pipeline);
+          const labReady = lessonLabReady(pipeline, lab);
+          const checkpoints = buildCheckpoints(pipeline, labReady);
 
           return (
             <article
@@ -194,7 +255,7 @@ export default function PhysicsPipeline({
                     </div>
                   </div>
 
-                  <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
+                  <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-6">
                     {checkpoints.map((checkpoint) => (
                       <div
                         key={checkpoint.label}
@@ -210,8 +271,9 @@ export default function PhysicsPipeline({
                   </div>
                 </div>
 
-                <div className="w-full shrink-0 xl:w-52">
+                <div className="flex w-full shrink-0 flex-col gap-2 xl:w-52">
                   <PipelineCta pipeline={pipeline} />
+                  <LabCta chapterId={chapterId} pipeline={pipeline} labReady={labReady} />
                 </div>
               </div>
             </article>
