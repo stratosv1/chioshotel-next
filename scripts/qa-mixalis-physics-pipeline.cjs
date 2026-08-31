@@ -142,9 +142,12 @@ requireText('app/mixalis/api/smartlab/chapters/[chapterId]/route.ts', [
 ]);
 
 requireText('lib/mixalis/smartlab-prompt.ts', [
-  'finalver2',
+  'finalver3',
+  'ΑΠΑΡΑΒΑΤΟΣ ΟΠΤΙΚΟΣ ΚΑΝΟΝΑΣ',
+  'ΒΛΕΠΩ ΤΟ ΦΑΙΝΟΜΕΝΟ ΝΑ ΑΛΛΑΖΕΙ',
   'physicsPreset=centripetal_force',
   'κεντρομόλος δύναμη είναι derived αποτέλεσμα και ΠΟΤΕ ανεξάρτητο control',
+  'Το φαινόμενο της κρούσης',
 ]);
 
 requireText('lib/mixalis/smartlab-physics-audit.ts', [
@@ -160,10 +163,21 @@ requireText('components/mixalis/SmartLabRunner.tsx', [
 requireText('components/mixalis/SmartLabGenericExperience.tsx', [
   'looksLikeSystemForces',
   'SystemForcesDiagram',
+  'looksLikeCollision',
+  'SmartLabCollision1D',
   'RelationDiagram',
-  'Το LAB δεν επινοεί αριθμητικό τύπο που δεν έχει επαληθευτεί',
+  'πρέπει να χρησιμοποιεί ειδικό renderer και πραγματικό γράφημα του φαινομένου',
   'εσωτερικές δυνάμεις',
   'συνολική ορμή του συστήματος',
+]);
+requireText('components/mixalis/SmartLabCollision1D.tsx', [
+  'Διαδραστική προσομοίωση μονοδιάστατης πλαστικής κρούσης',
+  'ΠΡΙΝ ΤΗΝ ΚΡΟΥΣΗ',
+  'ΣΤΙΓΜΗ ΚΡΟΥΣΗΣ',
+  'ΜΕΤΑ ΤΗΝ ΚΡΟΥΣΗ',
+  'Ορμή συστήματος',
+  'ΚΙΝΗΤΙΚΗ ΕΝΕΡΓΕΙΑ',
+  'Εξέλιξη της κρούσης',
 ]);
 
 requireText('app/mixalis/api/smartlab/revisions/[revisionId]/route.ts', [
@@ -187,4 +201,4 @@ requireText('app/mixalis/api/savvalas-audit/ranges/[rangeId]/run/route.ts', [
   'recoverStaleSavvalasSourceAnalysisForRange',
 ]);
 
-console.log('Mixalis Physics PDF-only pipeline QA passed: canonical sources, START guards, independent manual per-lesson SMARTLAB revisions, and safe generic concept renderers are enforced; legacy chapter current-slot conflicts are handled without regenerating completed LABs.');
+console.log('Mixalis Physics PDF-only pipeline QA passed: canonical sources, START guards, independent manual per-lesson SMARTLAB revisions, visible physical phenomena and safe generic renderers are enforced; legacy chapter current-slot conflicts are handled without regenerating completed LABs.');
