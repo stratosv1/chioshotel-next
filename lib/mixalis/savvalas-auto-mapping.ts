@@ -4,7 +4,7 @@ import { PDFDocument } from "pdf-lib";
 
 const TOC_SCAN_PAGES = 28;
 const MAX_VERIFY_PAGES = 72;
-const AUTO_MAPPING_VERSION = "savvalas-auto-mapping-v2-toc-first";
+const AUTO_MAPPING_VERSION = "savvalas-auto-mapping-v3-adjacent-pdf-anchors";
 
 type TargetSubchapter = {
   id: string;
@@ -24,6 +24,8 @@ type DocumentContext = {
   subchapters: TargetSubchapter[];
   target: TargetSubchapter;
   nextTarget: TargetSubchapter | null;
+  previousMappedTarget: TargetSubchapter | null;
+  nextMappedTarget: TargetSubchapter | null;
 };
 
 type TocHint = {
@@ -148,6 +150,16 @@ async function getDocumentContext(
     throw new Error("Το υποκεφάλαιο δεν ανήκει στο συγκεκριμένο βιβλίο.");
   }
 
+  const previousMappedTarget =
+    subchapters
+      .slice(0, targetIndex)
+      .reverse()
+      .find((item) => item.existingTo != null) ?? null;
+  const nextMappedTarget =
+    subchapters
+      .slice(targetIndex + 1)
+      .find((item) => item.existingFrom != null) ?? null;
+
   return {
     documentId: String(doc.document_id),
     storageKey: String(doc.storage_key),
@@ -157,6 +169,8 @@ async function getDocumentContext(
     subchapters,
     target: subchapters[targetIndex],
     nextTarget: subchapters[targetIndex + 1] ?? null,
+    previousMappedTarget,
+    nextMappedTarget,
   };
 }
 
@@ -307,6 +321,29 @@ TASK:
 }
 
 function verificationWindow(context: DocumentContext, hint: TocHint) {
+  const previousEnd = context.previousMappedTarget?.existingTo ?? null;
+  const nextStart = context.nextMappedTarget?.existingFrom ?? null;
+
+  // Trusted ORIGINAL PDF ranges are stronger anchors than printed book page numbers.
+  // Keep a small overlap around the boundary so the AI can see the transition itself.
+  if (previousEnd != null) {
+    const from = Math.max(1, previousEnd - 2);
+    const maxTo = Math.min(context.pageCount, from + MAX_VERIFY_PAGES - 1);
+    const to =
+      nextStart != null && nextStart > previousEnd
+        ? Math.min(maxTo, nextStart + 2)
+        : maxTo;
+    return { from, to };
+  }
+
+  if (nextStart != null) {
+    const to = Math.min(context.pageCount, nextStart + 2);
+    const from = Math.max(1, to - MAX_VERIFY_PAGES + 1);
+    return { from, to };
+  }
+
+  // Only when no confirmed PDF anchor exists do we use the printed TOC page as a rough
+  // navigation coordinate. The verification pass must still prove actual PDF boundaries.
   if (hint.found && hint.printedPageFrom > 0) {
     const printedSpan =
       hint.nextPrintedPageFrom > hint.printedPageFrom
@@ -321,8 +358,6 @@ function verificationWindow(context: DocumentContext, hint: TocHint) {
     return { from, to };
   }
 
-  // Safe fallback when the contents page is unclear: inspect only a bounded early window.
-  // This deliberately avoids the old full-book sequential scan.
   const from = 1;
   const to = Math.min(context.pageCount, MAX_VERIFY_PAGES);
   return { from, to };
@@ -337,6 +372,16 @@ function verifyPrompt(
   const nextTarget = context.nextTarget
     ? `${context.nextTarget.numberLabel} | ${context.nextTarget.title}`
     : "none / end of official course list";
+  const previousAnchor =
+    context.previousMappedTarget?.existingFrom != null &&
+    context.previousMappedTarget?.existingTo != null
+      ? `${context.previousMappedTarget.numberLabel} | ${context.previousMappedTarget.title} = confirmed ORIGINAL PDF ${context.previousMappedTarget.existingFrom}-${context.previousMappedTarget.existingTo}`
+      : "none";
+  const nextAnchor =
+    context.nextMappedTarget?.existingFrom != null &&
+    context.nextMappedTarget?.existingTo != null
+      ? `${context.nextMappedTarget.numberLabel} | ${context.nextMappedTarget.title} = confirmed ORIGINAL PDF ${context.nextMappedTarget.existingFrom}-${context.nextMappedTarget.existingTo}`
+      : "none";
 
   return `You are VERIFYING a proposed page range in a Greek B' Lykeiou Savvalas Physics PDF.
 
@@ -348,17 +393,24 @@ SOURCE: ${context.originalName}
 THIS ATTACHED EXCERPT IS ORIGINAL PDF PAGES ${from}-${to}.
 Excerpt page 1 = original PDF page ${from}.
 
+CONFIRMED ORIGINAL-PDF ANCHORS:
+- Previous mapped material: ${previousAnchor}
+- Next mapped material: ${nextAnchor}
+- These confirmed ranges are trusted ORIGINAL PDF coordinates. Use them as navigation anchors and inspect the overlap pages to prove the transition.
+
 TABLE-OF-CONTENTS HINT:
 - found: ${hint.found ? "yes" : "no"}
 - matching Savvalas heading: ${hint.matchedHeading || "unknown"}
 - printed start page: ${hint.printedPageFrom || "unknown"}
 - next printed section page: ${hint.nextPrintedPageFrom || "unknown"}
 - TOC confidence: ${hint.confidence.toFixed(2)}
+- IMPORTANT: printed book page numbers are NOT PDF page numbers. Never use them directly as ORIGINAL PDF coordinates.
 
 TASK:
 - Ignore the table of contents as proof now. Inspect the ACTUAL theory/examples/exercises in this excerpt.
 - Identify the exact ORIGINAL PDF page where substantive teaching/exercises for the target begin.
 - Identify the last ORIGINAL PDF page belonging to the target before the material clearly changes to the next distinct official topic.
+- If a previous confirmed mapping ends immediately before this target, normally the target begins after that boundary; verify the visible transition rather than guessing.
 - Include contiguous Savvalas internal subsections, examples and exercises that materially teach the target.
 - Do not include answer keys, indexes, front matter, unrelated revision lists, or a page merely mentioning the target.
 - Use ORIGINAL PDF page numbers only (${from}-${to}), never printed book page numbers.
