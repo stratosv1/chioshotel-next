@@ -12,6 +12,7 @@ import {
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
+// Keep proposal locking on the confirmed-range state, not on stale browser state.
 
 export async function POST(request: Request) {
   const session = await getMixalisSession();
