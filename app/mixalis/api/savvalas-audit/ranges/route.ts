@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getMixalisSession } from "@/lib/mixalis/auth";
 import { upsertSavvalasSourceRange } from "@/lib/mixalis/savvalas-book-audit";
+import { assertSavvalasRangeIntegrity } from "@/lib/mixalis/savvalas-range-integrity";
 import {
   SAVVALAS_MAPPING_PROPOSAL_COOKIE,
   savvalasMappingProposalCookieOptions,
@@ -31,6 +32,13 @@ export async function POST(request: Request) {
   }
 
   try {
+    await assertSavvalasRangeIntegrity({
+      documentId,
+      subchapterId,
+      filePageFrom,
+      filePageTo,
+    });
+
     const result = await upsertSavvalasSourceRange({
       documentId,
       subchapterId,
