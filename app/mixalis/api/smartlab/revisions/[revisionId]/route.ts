@@ -5,7 +5,8 @@ import {
   getSmartLabRevisionView,
   runSmartLabRevision,
 } from "@/lib/mixalis/smartlab-verified";
-import { isSingleSmartLabRevision, runSingleSmartLabRevision } from "@/lib/mixalis/smartlab-single";
+import { isSingleSmartLabRevision } from "@/lib/mixalis/smartlab-single";
+import { runSingleSmartLabRevisionCompat } from "@/lib/mixalis/smartlab-single-compat";
 
 export const runtime = "nodejs";
 export const maxDuration = 900;
@@ -40,7 +41,7 @@ async function runRevision(revisionId: string) {
   const view = await getSmartLabRevisionView(revisionId);
   if (!view) throw new Error("SMARTLAB revision not found.");
   return isSingleSmartLabRevision(view)
-    ? runSingleSmartLabRevision(revisionId)
+    ? runSingleSmartLabRevisionCompat(revisionId)
     : runSmartLabRevision(revisionId);
 }
 
