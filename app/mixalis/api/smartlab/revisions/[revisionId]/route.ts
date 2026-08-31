@@ -5,6 +5,7 @@ import {
   getSmartLabRevisionView,
   runSmartLabRevision,
 } from "@/lib/mixalis/smartlab-verified";
+import { isSingleSmartLabRevision, runSingleSmartLabRevision } from "@/lib/mixalis/smartlab-single";
 
 export const runtime = "nodejs";
 export const maxDuration = 900;
@@ -35,10 +36,18 @@ function retryable(message: string | null | undefined) {
   ].some((needle) => value.includes(needle));
 }
 
+async function runRevision(revisionId: string) {
+  const view = await getSmartLabRevisionView(revisionId);
+  if (!view) throw new Error("SMARTLAB revision not found.");
+  return isSingleSmartLabRevision(view)
+    ? runSingleSmartLabRevision(revisionId)
+    : runSmartLabRevision(revisionId);
+}
+
 async function runWithRetries(revisionId: string) {
   for (let attempt = 1; attempt <= MAX_AUTOMATIC_ATTEMPTS; attempt += 1) {
     try {
-      const view = await runSmartLabRevision(revisionId);
+      const view = await runRevision(revisionId);
       if (view.status === "current" || view.status === "superseded") return;
       if (!retryable(view.errorMessage) || attempt >= MAX_AUTOMATIC_ATTEMPTS) return;
     } catch (error) {
