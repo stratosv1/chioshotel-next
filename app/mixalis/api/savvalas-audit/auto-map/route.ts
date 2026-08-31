@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import { getMixalisSession } from "@/lib/mixalis/auth";
 import { proposeSavvalasMapping } from "@/lib/mixalis/savvalas-auto-mapping";
+import {
+  SAVVALAS_MAPPING_PROPOSAL_COOKIE,
+  encodeSavvalasMappingProposal,
+  savvalasMappingProposalCookieOptions,
+} from "@/lib/mixalis/savvalas-mapping-proposal-cookie";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -21,21 +26,34 @@ export async function POST(request: Request) {
 
   try {
     const proposal = await proposeSavvalasMapping(documentId, subchapterId);
+    const storedProposal = {
+      documentId: proposal.documentId,
+      proposalSubchapterId: proposal.subchapterId,
+      proposalFrom: String(proposal.filePageFrom),
+      proposalTo: String(proposal.filePageTo),
+      proposalConfidence: String(Math.round(proposal.confidence * 100)),
+      proposalComplete: proposal.complete ? "1" : "0",
+      tocFound: proposal.tocFound ? "1" : "0",
+      tocPrintedFrom: String(proposal.tocPrintedPageFrom ?? 0),
+      tocPrintedTo: String(proposal.tocPrintedPageTo ?? 0),
+      tocPages: String(proposal.tocPagesScanned),
+      verifyFrom: String(proposal.verificationPageFrom),
+      verifyTo: String(proposal.verificationPageTo),
+      evidence: proposal.evidence ? proposal.evidence.slice(0, 700) : undefined,
+    };
+
     const url = new URL("/mixalis/savvalas-auto-map", request.url);
-    url.searchParams.set("documentId", proposal.documentId);
-    url.searchParams.set("proposalSubchapterId", proposal.subchapterId);
-    url.searchParams.set("proposalFrom", String(proposal.filePageFrom));
-    url.searchParams.set("proposalTo", String(proposal.filePageTo));
-    url.searchParams.set("proposalConfidence", String(Math.round(proposal.confidence * 100)));
-    url.searchParams.set("proposalComplete", proposal.complete ? "1" : "0");
-    url.searchParams.set("tocFound", proposal.tocFound ? "1" : "0");
-    url.searchParams.set("tocPrintedFrom", String(proposal.tocPrintedPageFrom ?? 0));
-    url.searchParams.set("tocPrintedTo", String(proposal.tocPrintedPageTo ?? 0));
-    url.searchParams.set("tocPages", String(proposal.tocPagesScanned));
-    url.searchParams.set("verifyFrom", String(proposal.verificationPageFrom));
-    url.searchParams.set("verifyTo", String(proposal.verificationPageTo));
-    if (proposal.evidence) url.searchParams.set("evidence", proposal.evidence.slice(0, 700));
-    return NextResponse.redirect(url, 303);
+    for (const [key, value] of Object.entries(storedProposal)) {
+      if (value != null) url.searchParams.set(key, value);
+    }
+
+    const response = NextResponse.redirect(url, 303);
+    response.cookies.set(
+      SAVVALAS_MAPPING_PROPOSAL_COOKIE,
+      encodeSavvalasMappingProposal(storedProposal),
+      savvalasMappingProposalCookieOptions,
+    );
+    return response;
   } catch (error) {
     console.error("Mixalis Savvalas mapping proposal failed", error);
     const url = new URL("/mixalis/savvalas-auto-map", request.url);
