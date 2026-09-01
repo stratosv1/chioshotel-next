@@ -122,7 +122,7 @@ export function RoomWizardTailwind({ language = "en" }: RoomWizardTailwindProps)
   return (
     <div
       id="room-wizard-app"
-      className="mx-auto grid max-w-5xl gap-4 rounded-[30px] border border-amber-900/10 bg-white p-4 shadow-[0_24px_65px_rgba(47,38,31,0.10)] sm:p-6 lg:grid-cols-[1.25fr_0.75fr] lg:gap-6"
+      className="mx-auto grid max-w-5xl gap-4 rounded-[30px] border border-amber-900/10 bg-white p-4 shadow-[0_24px_65px_rgba(47,38,31,0.10)] sm:p-6 lg:grid-cols-2 lg:gap-6"
     >
       <section className="rounded-[24px] bg-[radial-gradient(circle_at_top_right,rgba(245,158,11,.16),transparent_18rem),linear-gradient(135deg,#fffaf0,#fff)] p-5 ring-1 ring-amber-900/10 sm:p-7">
         <span className="inline-flex rounded-full bg-amber-100 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-amber-900">
@@ -136,7 +136,7 @@ export function RoomWizardTailwind({ language = "en" }: RoomWizardTailwindProps)
         </p>
         <a
           href={aiHref}
-          className="mt-6 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-[#2f261f] px-5 text-center text-xs font-black uppercase tracking-[0.1em] !text-white shadow-lg shadow-stone-900/15 transition hover:-translate-y-0.5 hover:bg-amber-800 sm:w-auto"
+          className="mt-6 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-amber-700 px-5 text-center text-xs font-black uppercase tracking-[0.1em] !text-white shadow-lg shadow-amber-900/15 transition hover:-translate-y-0.5 hover:bg-amber-800 sm:w-auto"
         >
           {copy.aiCta} <span className="ml-2" aria-hidden="true">→</span>
         </a>
