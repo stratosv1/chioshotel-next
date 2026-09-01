@@ -84,10 +84,10 @@ export function LazyLastMinuteDeals({
 
   return (
     <div id="vh-lastminute-title" ref={rootRef} className="scroll-mt-24 md:scroll-mt-28">
-      <section className="px-4 py-12 md:px-8 md:py-18" aria-labelledby="live-direct-placeholder-title">
+      <section className="px-4 py-7 md:px-8 md:py-11" aria-labelledby="live-direct-placeholder-title">
         <div className="mx-auto max-w-7xl rounded-[2rem] border border-amber-900/10 bg-[#fffaf3] p-6 text-center shadow-lg shadow-stone-900/5 md:p-10">
           <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] text-amber-700">{weeklyData.kicker}</p>
-          <h2 id="live-direct-placeholder-title" className="font-serif text-3xl font-bold leading-tight text-stone-900 md:text-5xl">
+          <h2 id="live-direct-placeholder-title" className="font-serif text-3xl font-bold leading-tight text-stone-900 md:text-[2.625rem]">
             <span className="mr-2" aria-hidden="true">{weeklyData.icon}</span>
             {weeklyData.title}
           </h2>
