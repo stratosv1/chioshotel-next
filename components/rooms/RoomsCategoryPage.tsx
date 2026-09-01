@@ -413,7 +413,7 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
       </section>
 
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-amber-900/10 bg-[#fffaf3]/95 p-3 shadow-[0_-8px_30px_rgba(47,38,31,0.12)] backdrop-blur md:hidden">
-        <a href={aiAvailabilityHref} className="mx-auto flex min-h-13 max-w-lg items-center justify-center rounded-full bg-amber-700 px-5 text-center text-sm font-black uppercase tracking-[0.06em] text-white shadow-lg shadow-amber-900/15">
+        <a href={aiAvailabilityHref} className="mx-auto flex min-h-[52px] max-w-lg items-center justify-center rounded-full bg-amber-700 px-5 text-center text-sm font-black uppercase tracking-[0.06em] text-white shadow-lg shadow-amber-900/15">
           {finalCta.availabilityLabel}
         </a>
       </div>
