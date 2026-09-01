@@ -219,9 +219,9 @@ function DirectBookingBox({ data }: { data: HomePageData }) {
             <span className="inline-flex rounded-full bg-white/85 px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-orange-800 shadow-sm ring-1 ring-amber-900/10">{data.location.discount.badge}</span>
             <h3 className="mt-5 max-w-xl break-words font-serif text-[2rem] font-bold leading-tight text-stone-950 md:text-5xl">{data.location.discount.title}</h3>
             <p className="mt-4 max-w-2xl text-sm leading-7 text-stone-700 md:text-lg md:leading-8">{data.location.discount.text}</p>
-            <ul className="mt-5 grid gap-2 sm:grid-cols-3">
+            <ul className="mt-5 grid min-w-0 gap-2 sm:grid-cols-3">
               {data.location.discount.benefits.map((benefit, index) => (
-                <li key={benefit} className="rounded-2xl bg-white/90 p-3 text-sm font-black leading-6 text-stone-800 shadow-sm ring-1 ring-amber-900/10"><span className="mr-2 text-amber-700" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>{benefit}</li>
+                <li key={benefit} className="min-w-0 break-words rounded-2xl bg-white/90 p-3 text-sm font-black leading-6 text-stone-800 shadow-sm ring-1 ring-amber-900/10"><span className="mr-2 text-amber-700" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>{benefit}</li>
               ))}
             </ul>
           </div>
