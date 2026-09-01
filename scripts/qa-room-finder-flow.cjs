@@ -329,7 +329,10 @@ function testResultsUxCleanup() {
   assert(!helpers.includes("matchesRoomFilter"), "removed filter-matching logic remains in flow helpers");
   assert(!fs.existsSync(legacyFlowPath), "unused legacy Room Finder implementation still exists");
   assert(production.includes("finder.canGoBack"), "stable booking-summary back control is missing");
-  assert(production.includes("finder.editDates"), "unavailable flow is missing explicit date editing");
+  assert(production.includes('const CALL_NUMBER = "+306944764654"'), "unavailable flow call number is missing or incorrect");
+  assert(production.includes('const WHATSAPP_NUMBER = "306944474226"'), "unavailable flow WhatsApp number is missing or incorrect");
+  assert(production.includes('href={`tel:${CALL_NUMBER}`}'), "unavailable flow is missing the call action");
+  assert(production.includes("openWhatsApp(whatsappContext(copy.whatsappHelp))"), "unavailable flow is missing the WhatsApp action");
   assert(production.includes('role="dialog"') && production.includes('aria-modal="true"'), "room details accessibility dialog semantics are missing");
   assert(production.includes('event.key === "Escape"'), "room details dialog cannot be dismissed with Escape");
 }
