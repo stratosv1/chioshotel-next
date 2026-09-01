@@ -50,6 +50,8 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
   emailSent: string;
   emailError: string;
   footer: string;
+  differentDates: string;
+  checkAvailability: string;
   messageTitle: string;
   messageConfirm: string;
   topPick: string;
@@ -82,6 +84,8 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     emailSent: "Request sent to reception.",
     emailError: "Please enter a valid email.",
     footer: "Your instant request at chioshotel.gr",
+    differentDates: "Different dates?",
+    checkAvailability: "Check all dates with the AI Room Finder",
     messageTitle: "Instant request to reception - Voulamandis House",
     messageConfirm: "Please confirm availability and send your best direct offer.",
     topPick: "Top pick",
@@ -133,6 +137,8 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     emailSent: "Το αίτημα στάλθηκε στη ρεσεψιόν.",
     emailError: "Συμπληρώστε ένα έγκυρο email.",
     footer: "Το άμεσο αίτημά σας στο chioshotel.gr",
+    differentDates: "Έχετε διαφορετικές ημερομηνίες;",
+    checkAvailability: "Ελέγξτε όλες τις ημερομηνίες με το AI Room Finder",
     messageTitle: "Άμεσο αίτημα στη ρεσεψιόν - Voulamandis House",
     messageConfirm: "Παρακαλώ επιβεβαιώστε τη διαθεσιμότητα και στείλτε μου την καλύτερη απευθείας προσφορά.",
     topPick: "Κορυφαία επιλογή",
@@ -184,6 +190,8 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     emailSent: "Demande envoyée à la réception.",
     emailError: "Saisissez une adresse e-mail valide.",
     footer: "Votre demande instantanée sur chioshotel.gr",
+    differentDates: "D’autres dates ?",
+    checkAvailability: "Vérifiez toutes les dates avec l’AI Room Finder",
     messageTitle: "Demande instantanée à la réception - Voulamandis House",
     messageConfirm: "Merci de confirmer la disponibilité et de m’envoyer votre meilleure offre directe.",
     topPick: "Meilleur choix",
@@ -235,6 +243,8 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     emailSent: "Anfrage an die Rezeption gesendet.",
     emailError: "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
     footer: "Ihre Sofortanfrage auf chioshotel.gr",
+    differentDates: "Andere Reisedaten?",
+    checkAvailability: "Alle Termine mit dem AI Room Finder prüfen",
     messageTitle: "Sofortanfrage an die Rezeption - Voulamandis House",
     messageConfirm: "Bitte bestätigen Sie die Verfügbarkeit und senden Sie mir Ihr bestes Direktangebot.",
     topPick: "Beste Wahl",
@@ -286,6 +296,8 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     emailSent: "Richiesta inviata alla reception.",
     emailError: "Inserisci un indirizzo email valido.",
     footer: "La tua richiesta immediata su chioshotel.gr",
+    differentDates: "Date diverse?",
+    checkAvailability: "Controlla tutte le date con l’AI Room Finder",
     messageTitle: "Richiesta immediata alla reception - Voulamandis House",
     messageConfirm: "Per favore confermate la disponibilità e inviatemi la vostra migliore offerta diretta.",
     topPick: "Scelta migliore",
@@ -337,6 +349,8 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     emailSent: "Solicitud enviada a recepción.",
     emailError: "Introduce una dirección de email válida.",
     footer: "Su solicitud instantánea en chioshotel.gr",
+    differentDates: "¿Otras fechas?",
+    checkAvailability: "Consulta todas las fechas con AI Room Finder",
     messageTitle: "Solicitud instantánea a recepción - Voulamandis House",
     messageConfirm: "Por favor confirme la disponibilidad y envíeme su mejor oferta directa.",
     topPick: "Mejor opción",
@@ -388,6 +402,8 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     emailSent: "Talep resepsiyona gönderildi.",
     emailError: "Geçerli bir e-posta adresi girin.",
     footer: "chioshotel.gr üzerinden anında talebiniz",
+    differentDates: "Farklı tarihler mi?",
+    checkAvailability: "Tüm tarihleri AI Room Finder ile kontrol edin",
     messageTitle: "Resepsiyona anında talep - Voulamandis House",
     messageConfirm: "Lütfen uygunluğu onaylayın ve en iyi doğrudan teklifinizi gönderin.",
     topPick: "En iyi seçim",
@@ -676,7 +692,8 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
   const [emailValue, setEmailValue] = useState("");
   const [emailState, setEmailState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [emailFeedback, setEmailFeedback] = useState("");
-  const copy = LIVE_REQUEST_COPY[getLiveRequestLocale(canonicalPath)];
+  const locale = getLiveRequestLocale(canonicalPath);
+  const copy = LIVE_REQUEST_COPY[locale];
   const roomsScrollerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -1036,7 +1053,16 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
           {emailFeedback ? (
             <p className={`mt-2 text-center text-xs font-bold ${emailState === "sent" ? "text-emerald-700" : "text-red-600"}`} role="status">{emailFeedback}</p>
           ) : null}
-          <p className="mt-4 text-center text-xs font-semibold text-stone-500">{copy.footer}</p>
+          <div className="mt-4 flex flex-col items-center justify-center gap-2 rounded-2xl bg-amber-50/80 px-4 py-3 text-center ring-1 ring-amber-900/10 sm:flex-row">
+            <span className="text-sm font-bold text-stone-700">{copy.differentDates}</span>
+            <a
+              href={`/ai-assistant/?lang=${locale}`}
+              className="inline-flex min-h-10 items-center justify-center rounded-full bg-white px-4 py-2 text-sm font-black text-amber-800 shadow-sm ring-1 ring-amber-900/15 transition hover:bg-amber-100"
+            >
+              {copy.checkAvailability} <span className="ml-2" aria-hidden="true">→</span>
+            </a>
+          </div>
+          <p className="mt-3 text-center text-xs font-semibold text-stone-500">{copy.footer}</p>
         </div>
       </div>
     </section>
