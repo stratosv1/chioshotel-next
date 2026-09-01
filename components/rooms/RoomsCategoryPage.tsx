@@ -288,31 +288,29 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
           ))}
         </div>
 
-        <div className="mt-8 flex gap-4 rounded-[28px] border border-amber-900/10 bg-[#fffdfa] p-5 shadow-[0_18px_45px_rgba(47,38,31,0.08)] sm:items-start sm:p-6">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-amber-100 text-2xl shadow-inner">
-            {tip.icon}
+        <div className="mt-7 flex flex-col gap-4 rounded-[28px] border border-amber-900/10 bg-[#fffdfa] p-5 shadow-[0_18px_45px_rgba(47,38,31,0.08)] sm:flex-row sm:items-center sm:p-6">
+          <div className="flex min-w-0 flex-1 items-start gap-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-amber-100 text-xl text-stone-700 shadow-inner [filter:grayscale(1)]" aria-hidden="true">
+              {tip.icon}
+            </div>
+            <div>
+              <h4 className="text-lg font-black tracking-[-0.02em] text-[#2f261f]">
+                {tip.title}
+              </h4>
+              <p className="mt-1 text-sm leading-7 text-[#574b3f]">
+                <HtmlText html={tip.textHtml} />
+              </p>
+            </div>
           </div>
-
-          <div>
-            <h4 className="text-lg font-black tracking-[-0.02em] text-[#2f261f]">
-              {tip.title}
-            </h4>
-            <p className="mt-2 text-sm leading-7 text-[#574b3f]">
-              <HtmlText html={tip.textHtml} />
-            </p>
-          </div>
+          <span className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-2xl bg-amber-100 px-5 font-mono text-base font-black tracking-[0.12em] text-amber-950 ring-1 ring-amber-900/15">
+            WELCOME10
+          </span>
         </div>
 
-        <div className="mx-auto mt-14 max-w-3xl text-center">
-          <span className="inline-flex rounded-full border border-amber-900/10 bg-white px-4 py-2 text-[11px] font-black uppercase tracking-[0.28em] text-amber-800 shadow-sm">
-            {hero.kicker}
-          </span>
-          <h2 className="mt-5 text-balance text-3xl font-black tracking-[-0.035em] text-[#2f261f] sm:text-4xl">
+        <div className="mx-auto mt-11 max-w-3xl text-center">
+          <h2 className="text-balance text-3xl font-black tracking-[-0.035em] text-[#2f261f] sm:text-4xl">
             {ownerData.wizardIntro.title}
           </h2>
-          <p className="mt-4 text-pretty text-base leading-8 text-[#574b3f]">
-            {ownerData.wizardIntro.description}
-          </p>
         </div>
 
         <div className="mt-8">
