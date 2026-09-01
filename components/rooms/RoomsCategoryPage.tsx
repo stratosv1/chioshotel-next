@@ -232,7 +232,7 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
         </header>
 
         <div
-          className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+          className="mt-9 grid gap-5 sm:grid-cols-2 xl:grid-cols-4"
           id="rooms-list"
         >
           {cards.map((card, index) => (
@@ -280,7 +280,7 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
                   {card.description}
                 </p>
 
-                <div className="mt-5 inline-flex items-center gap-2 rounded-full bg-[#2f261f] px-4 py-2 text-xs font-black uppercase tracking-[0.14em] text-white transition group-hover:bg-amber-800">
+                <div className="mt-5 flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-amber-700 px-4 py-2 text-center text-[11px] font-black uppercase tracking-[0.1em] text-white transition group-hover:bg-amber-800">
                   {getCardCtaLabel(card.id, language, card.ctaLabel)} <span aria-hidden="true">→</span>
                 </div>
               </div>
