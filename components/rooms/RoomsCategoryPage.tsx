@@ -123,6 +123,7 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
         }
       : ownerData.intro;
   const cards = getDisplayedCards(ownerData, language);
+  const heroImage = cards[1] ?? cards[0];
   const tip =
     language === "el"
       ? {
@@ -136,47 +137,61 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#fbf6ef] text-[#2f261f]">
       <section
-        className="relative isolate overflow-hidden bg-[#2f261f] px-4 py-14 text-white sm:px-6 lg:px-8 lg:py-24"
+        className="relative isolate overflow-hidden bg-[#f3e7d7] px-4 py-10 text-[#2f261f] sm:px-6 sm:py-12 lg:px-8 lg:py-14"
         aria-labelledby="rooms-hero-title"
       >
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(245,158,11,0.28),transparent_34rem),linear-gradient(135deg,rgba(47,38,31,0.97),rgba(92,64,38,0.94))]" />
-        <div className="absolute inset-x-6 bottom-0 -z-10 h-px bg-gradient-to-r from-transparent via-amber-200/35 to-transparent" />
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.9),transparent_34rem),radial-gradient(circle_at_bottom_right,rgba(180,118,52,0.13),transparent_28rem)]" />
+        <div className="absolute inset-x-6 bottom-0 -z-10 h-px bg-gradient-to-r from-transparent via-amber-900/15 to-transparent" />
 
-        <div className="mx-auto max-w-6xl">
+        <div className="mx-auto grid max-w-7xl items-center gap-9 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,.95fr)] lg:gap-12">
           <div className="max-w-3xl">
-            <span className="inline-flex rounded-full border border-amber-200/30 bg-white/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.28em] text-amber-100">
+            <span className="inline-flex rounded-full border border-amber-900/10 bg-white/80 px-4 py-2 text-[11px] font-black uppercase tracking-[0.24em] text-amber-800 shadow-sm">
               {hero.kicker}
             </span>
 
             <h1
               id="rooms-hero-title"
-              className="mt-6 text-balance text-4xl font-black leading-[0.98] tracking-[-0.04em] text-white sm:text-5xl lg:text-7xl"
+              className="mt-5 text-balance text-4xl font-black leading-[1.02] tracking-[-0.04em] text-stone-900 sm:text-5xl lg:text-[3.75rem]"
             >
               {hero.title}{" "}
-              <span className="text-amber-200">{hero.highlightedTitle}</span>
+              <span className="text-amber-700">{hero.highlightedTitle}</span>
             </h1>
 
-            <p className="mt-6 max-w-2xl text-pretty text-base leading-8 text-stone-100/88 sm:text-lg">
+            <p className="mt-5 max-w-2xl text-pretty text-base leading-7 text-stone-600 sm:text-lg sm:leading-8">
               {hero.description}
             </p>
 
-            <div className="mt-8 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap">
+            <div className="mt-7 grid gap-3 sm:flex sm:flex-wrap">
               <a
-                className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-amber-200 px-4 text-center text-[11px] font-black uppercase tracking-[0.12em] !text-[#2f261f] shadow-[0_18px_40px_rgba(0,0,0,0.22)] transition hover:-translate-y-0.5 hover:bg-white sm:px-6 sm:text-xs"
+                className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-amber-700 px-5 text-center text-[11px] font-black uppercase tracking-[0.1em] !text-white shadow-lg shadow-amber-900/15 transition hover:-translate-y-0.5 hover:bg-amber-800 sm:px-6 sm:text-xs"
                 href={hero.primaryCta.href}
-                style={{ color: "#2f261f" }}
+                style={{ color: "#ffffff" }}
               >
                 {hero.primaryCta.label}
               </a>
 
               <a
-                className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/30 bg-white/10 px-4 text-center text-[11px] font-black uppercase tracking-[0.12em] text-white backdrop-blur transition hover:-translate-y-0.5 hover:bg-white hover:text-[#2f261f] sm:px-6 sm:text-xs"
+                className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-amber-900/15 bg-white/80 px-5 text-center text-[11px] font-black uppercase tracking-[0.1em] text-amber-900 shadow-sm transition hover:-translate-y-0.5 hover:bg-amber-50 sm:px-6 sm:text-xs"
                 href={hero.secondaryCta.href}
               >
                 {hero.secondaryCta.label}
               </a>
             </div>
           </div>
+
+          {heroImage ? (
+            <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem] bg-stone-200 shadow-xl shadow-amber-950/10 ring-1 ring-amber-900/10 lg:aspect-[5/4]">
+              <Image
+                src={heroImage.image}
+                alt={heroImage.imageAlt}
+                fill
+                priority
+                sizes="(min-width: 1024px) 44vw, 100vw"
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-amber-950/20 via-transparent to-white/5" />
+            </div>
+          ) : null}
         </div>
       </section>
 
@@ -193,7 +208,7 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
 
           <h2
             id="rooms-category-title"
-            className="mt-5 text-balance text-3xl font-black tracking-[-0.035em] text-[#2f261f] sm:text-4xl lg:text-5xl"
+            className="mt-5 text-balance text-3xl font-black tracking-[-0.035em] text-[#2f261f] sm:text-4xl lg:text-[2.625rem]"
           >
             {intro.title}
           </h2>
