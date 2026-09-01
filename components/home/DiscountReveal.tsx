@@ -196,6 +196,12 @@ const COMPACT_SECTION_CSS = `
       overflow: visible;
     }
 
+    article:has(#discountCodeForm) > div.relative > div:first-child li {
+      min-width: 0;
+      overflow-wrap: anywhere;
+      white-space: normal;
+    }
+
     article:has(#discountCodeForm) > div.relative > div:last-child {
       padding: 1.5rem 2rem 1.5rem 0;
     }
