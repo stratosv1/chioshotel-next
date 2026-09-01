@@ -3,6 +3,7 @@ import type { HomePageData } from "@/content/home";
 import { DiscountReveal } from "@/components/home/DiscountReveal";
 import { HomeReviews } from "@/components/home/HomeReviews";
 import { LazyLastMinuteDeals } from "@/components/home/LazyLastMinuteDeals";
+import { MobileStickyContact } from "@/components/home/MobileStickyContact";
 import {
   homeGuideImages,
   homeRoomImages,
@@ -248,20 +249,21 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
     <>
       <main className="overflow-x-hidden bg-[#fffaf3] text-stone-900">
         <section
+          id="home-hero"
           className="relative flex min-h-[680px] items-end overflow-hidden bg-stone-950 text-white md:min-h-[82vh]"
           aria-label={data.hero.title}
         >
           <Image src={data.hero.image} alt={data.hero.imageAlt} fill priority fetchPriority="high" sizes="100vw" quality={62} className="object-cover object-center" />
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-black/10 md:bg-gradient-to-l md:from-black/75 md:via-black/25 md:to-transparent" />
-          <div className="relative z-10 mx-auto flex w-full max-w-7xl justify-end px-4 pb-10 pt-28 md:px-8 md:pb-14 md:pt-32">
-            <div className="w-full max-w-xl rounded-[1.6rem] border border-white/15 bg-stone-950/55 p-5 shadow-2xl shadow-black/30 backdrop-blur-md md:rounded-[2rem] md:p-8">
-              <div className="mb-5 inline-flex items-center gap-3 rounded-full bg-white px-4 py-2 text-sm font-bold text-stone-800 shadow-lg" aria-label={`${data.hero.rating} - ${data.hero.reviews}`}>
+          <div className="relative z-10 mx-auto flex w-full max-w-7xl justify-end px-4 pb-8 pt-24 sm:pb-10 sm:pt-28 md:px-8 md:pb-14 md:pt-32">
+            <div className="w-full max-w-xl rounded-[1.6rem] border border-white/15 bg-stone-950/55 p-4 shadow-2xl shadow-black/30 backdrop-blur-md sm:p-5 md:rounded-[2rem] md:p-8">
+              <div className="mb-4 inline-flex items-center gap-2.5 rounded-full bg-white px-3 py-2 text-[13px] font-bold text-stone-800 shadow-lg sm:mb-5 sm:gap-3 sm:px-4 sm:text-sm" aria-label={`${data.hero.rating} - ${data.hero.reviews}`}>
                 <span>{data.hero.rating}</span><span className="text-amber-400" aria-hidden="true">★★★★★</span><span className="text-stone-500">{data.hero.reviews}</span>
               </div>
               <p className="mb-3 break-words text-xs font-black uppercase tracking-[0.22em] text-white/85">{data.hero.kicker}</p>
-              <h1 className="text-balance text-4xl font-black leading-none tracking-[-0.04em] md:text-6xl">{data.hero.title}</h1>
-              <p className="mt-5 text-base leading-8 text-white/90 md:text-lg"><HtmlText html={data.hero.descriptionHtml} /></p>
-              <div className="mt-7 grid grid-cols-2 gap-3">
+              <h1 className="text-balance text-[2rem] font-black leading-[1.02] tracking-[-0.04em] sm:text-4xl sm:leading-none md:text-6xl">{data.hero.title}</h1>
+              <p className="mt-4 text-[15px] leading-7 text-white/90 sm:mt-5 sm:text-base sm:leading-8 md:text-lg"><HtmlText html={data.hero.descriptionHtml} /></p>
+              <div className="mt-5 grid grid-cols-2 gap-3 sm:mt-7">
                 <a href={data.hero.primaryCta.href} className="inline-flex min-h-14 items-center justify-center rounded-2xl bg-orange-700 px-4 text-center text-xs font-black uppercase tracking-[0.08em] text-white shadow-lg shadow-orange-900/25 transition hover:bg-orange-800 md:rounded-full"><span className="mr-2" aria-hidden="true">{data.hero.primaryCta.icon}</span>{data.hero.primaryCta.label}</a>
                 <a href={data.hero.secondaryCta.href} className="inline-flex min-h-14 items-center justify-center rounded-2xl border border-white/35 bg-white/10 px-4 text-center text-xs font-black uppercase tracking-[0.08em] text-white backdrop-blur transition hover:bg-white/20 md:rounded-full"><span className="mr-2" aria-hidden="true">{data.hero.secondaryCta.icon}</span>{data.hero.secondaryCta.label}</a>
               </div>
@@ -321,7 +323,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
         <section className="px-4 pb-16 pt-4 md:px-8 md:pb-20"><div className="relative mx-auto max-w-7xl overflow-hidden rounded-[1.8rem] bg-stone-950 text-white shadow-2xl shadow-stone-900/20 md:rounded-[2.5rem]"><Image src="/images/site/Screenshot_2026-04-25-14-11-19-166_com.instagram.android-edit-1.webp" alt="" fill sizes="(max-width: 768px) 100vw, 1280px" className="object-cover object-center opacity-100" loading="lazy" aria-hidden="true" /><div className="absolute inset-0 bg-gradient-to-r from-black/78 via-black/48 to-black/10" /><div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(245,158,11,0.12),transparent_36%)]" /><div className="relative z-10 max-w-3xl p-8 md:p-14"><p className="mb-3 break-words text-xs font-black uppercase tracking-[0.22em] text-amber-200">{data.finalCta.kicker}</p><h2 className="break-words font-serif text-4xl font-bold leading-tight md:text-6xl"><span className="mr-2" aria-hidden="true">{data.finalCta.icon}</span>{data.finalCta.title}</h2><p className="mt-5 max-w-2xl text-lg leading-8 text-white/85">{data.finalCta.text}</p><div className="mt-8 flex flex-wrap gap-3"><PrimaryButton href={data.finalCta.primaryCta.href}><span className="mr-2" aria-hidden="true">{data.finalCta.primaryCta.icon}</span>{data.finalCta.primaryCta.label}</PrimaryButton><a href={data.finalCta.secondaryCta.href} className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/25 bg-white/10 px-6 text-sm font-black uppercase tracking-[0.08em] text-white backdrop-blur transition hover:bg-white/20"><span className="mr-2" aria-hidden="true">{data.finalCta.secondaryCta.icon}</span>{data.finalCta.secondaryCta.label}</a></div></div></div></section>
       </main>
 
-      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-amber-900/10 bg-white/95 p-3 shadow-2xl backdrop-blur md:hidden"><div className="grid grid-cols-2 gap-3"><SecondaryButton href={data.mobileSticky.call.href}>{data.mobileSticky.call.label}</SecondaryButton><a href={data.mobileSticky.viber.href} className="inline-flex min-h-12 items-center justify-center rounded-full bg-green-600 px-6 text-sm font-black uppercase tracking-[0.08em] text-white shadow-lg shadow-green-900/20 transition hover:bg-green-700">{data.mobileSticky.viber.label}</a></div></div>
+      <MobileStickyContact call={data.mobileSticky.call} chat={data.mobileSticky.viber} />
     </>
   );
 }
