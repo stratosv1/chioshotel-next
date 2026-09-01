@@ -264,7 +264,7 @@ export const homePageEn: HomePageData = {
 
   hero: {
     rating: "4.8 / 5",
-    reviews: "143 reviews",
+    reviews: "182 reviews",
     kicker: "KAMPOS CHIOS • VOULAMANDIS HOUSE",
     title: "Chios Rooms and Apartments in Kambos",
     descriptionHtml:
@@ -789,7 +789,7 @@ export const homePageEl: HomePageData = {
   hero: {
     ...homePageEn.hero,
     rating: "4.8 / 5",
-    reviews: "143 κριτικές",
+    reviews: "182 κριτικές",
     kicker: "ΚΑΜΠΟΣ ΧΙΟΥ • VOULAMANDIS HOUSE",
     title: "Ενοικιαζόμενα Δωμάτια στη Χίο στον Κάμπο",
     descriptionHtml:
@@ -1258,7 +1258,7 @@ export const homePageFr: HomePageData = {
 
   hero: {
     ...homePageEn.hero,
-    reviews: "143 avis",
+    reviews: "182 avis",
     kicker: "KAMPOS CHIOS • VOULAMANDIS HOUSE",
     title: "Chambres et appartements à Chios, au cœur de Kambos",
     descriptionHtml:
@@ -1702,7 +1702,7 @@ export const homePageDe: HomePageData = {
 
   hero: {
     ...homePageEn.hero,
-    reviews: "143 Bewertungen",
+    reviews: "182 Bewertungen",
     kicker: "KAMPOS CHIOS • VOULAMANDIS HOUSE",
     title: "Unterkunft und Apartments auf Chios in Kambos",
     descriptionHtml:
@@ -2141,7 +2141,7 @@ export const homePageIt: HomePageData = {
 
   hero: {
     ...homePageEn.hero,
-    reviews: "143 recensioni",
+    reviews: "182 recensioni",
     kicker: "KAMPOS CHIOS • VOULAMANDIS HOUSE",
     title: "Camere e appartamenti a Chios, nel cuore di Kambos",
     descriptionHtml:
@@ -2585,7 +2585,7 @@ export const homePageEs: HomePageData = {
 
   hero: {
     ...homePageEn.hero,
-    reviews: "143 reseñas",
+    reviews: "182 reseñas",
     kicker: "KAMPOS CHIOS • VOULAMANDIS HOUSE",
     title: "Habitaciones y apartamentos en Quíos, en Kambos",
     descriptionHtml:
@@ -3029,7 +3029,7 @@ export const homePageTr: HomePageData = {
 
   hero: {
     ...homePageEn.hero,
-    reviews: "143 yorum",
+    reviews: "182 yorum",
     kicker: "KAMPOS SAKIZ • VOULAMANDIS HOUSE",
     title: "Sakız Adası’nda Kambos’ta otel ve daireler",
     descriptionHtml:
