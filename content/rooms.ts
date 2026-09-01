@@ -146,7 +146,7 @@ export const roomsCategoryEn: RoomsCategoryPageData = {
       imageAlt: "First floor double and triple rooms in Chios with view in Kambos",
       badge: "Terrace view",
       ctaLabel: "View Rooms",
-      meta: ["2–4 guests", "First floor", "View"],
+      meta: ["2–4 guests", "First floor", "Terrace"],
     },
     {
       id: "family-apartments",
@@ -468,7 +468,7 @@ export const roomsCategoryEl: RoomsCategoryPageData = {
       imageAlt: "Δωμάτια ορόφου στη Χίο με θέα στον Κάμπο",
       badge: "Θέα από όροφο",
       ctaLabel: "Δείτε τα Δωμάτια",
-      meta: ["2–3 άτομα", "Όροφος", "Θέα"],
+      meta: ["2–4 άτομα", "Όροφος", "Βεράντα"],
     },
     {
       ...roomsCategoryEn.cards[3],
@@ -582,7 +582,7 @@ export const roomsCategoryFr: RoomsCategoryPageData = {
         "Chambres à l’étage à Chios avec vue sur Kambos",
       badge: "Vue terrasse",
       ctaLabel: "Voir les chambres",
-      meta: ["2–3 personnes", "Étage", "Vue"],
+      meta: ["2–4 personnes", "Étage", "Terrasse"],
     },
     {
       ...roomsCategoryEn.cards[3],
@@ -709,7 +709,7 @@ export const roomsCategoryDe: RoomsCategoryPageData = {
         "Doppel- und Dreibettzimmer im Obergeschoss mit Blick auf Kambos",
       badge: "Terrassenblick",
       ctaLabel: "Zimmer entdecken",
-      meta: ["2–3 Gäste", "Obergeschoss", "Blick"],
+      meta: ["2–4 Gäste", "Obergeschoss", "Terrasse"],
     },
     {
       ...roomsCategoryEn.cards[3],
@@ -836,7 +836,7 @@ export const roomsCategoryIt: RoomsCategoryPageData = {
         "Camere doppie e triple al primo piano a Chios con vista su Kambos",
       badge: "Vista terrazza",
       ctaLabel: "Vedi le camere",
-      meta: ["2–3 ospiti", "Primo piano", "Vista"],
+      meta: ["2–4 ospiti", "Primo piano", "Terrazza"],
     },
     {
       ...roomsCategoryEn.cards[3],
@@ -962,7 +962,7 @@ export const roomsCategoryEs: RoomsCategoryPageData = {
         "Habitaciones dobles y triples en primera planta en Chios con vistas en Kambos",
       badge: "Vista terraza",
       ctaLabel: "Ver habitaciones",
-      meta: ["2–3 huéspedes", "Primera planta", "Vista"],
+      meta: ["2–4 huéspedes", "Primera planta", "Terraza"],
     },
     {
       ...roomsCategoryEn.cards[3],
@@ -1088,7 +1088,7 @@ export const roomsCategoryTr: RoomsCategoryPageData = {
         "Sakız Adası’nda Kambos manzaralı üst kat çift ve üç kişilik odalar",
       badge: "Teras manzarası",
       ctaLabel: "Odaları gör",
-      meta: ["2–3 misafir", "Üst kat", "Manzara"],
+      meta: ["2–4 misafir", "Üst kat", "Teras"],
     },
     {
       ...roomsCategoryEn.cards[3],
