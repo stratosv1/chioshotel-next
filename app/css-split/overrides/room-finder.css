@@ -1,0 +1,8 @@
+/* AI Room Finder unavailable-state contact actions */
+[data-room-finder-shell="true"] a[href="tel:+306944764654"] {
+  background-color: #c66a34 !important;
+}
+
+[data-room-finder-shell="true"] a[href="tel:+306944764654"]:hover {
+  background-color: #b85f2d !important;
+}
