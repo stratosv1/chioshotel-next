@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import { TopicBadges } from "@/components/seo/TopicBadges";
 import type { IndividualRoomData, RoomDetailData } from "@/content/room-details";
+import { roomFinderHrefForLanguage } from "@/lib/room-finder-cta-routing";
 
 type RoomDetailPageProps = { data: RoomDetailData };
 type RoomLanguage = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
@@ -20,6 +21,8 @@ type RoomUiLabels = {
   highlights: string;
   keyDetails: string;
   propertyLocation: string;
+  checkAvailability: string;
+  bookOnline: string;
 };
 
 function getRoomLanguage(path: string): RoomLanguage {
@@ -33,13 +36,13 @@ function getRoomLanguage(path: string): RoomLanguage {
 }
 
 const labels: Record<RoomLanguage, RoomUiLabels> = {
-  en: { upToGuests: (count) => `Up to ${count} guests`, faqKicker: "Questions", faqTitle: "Room FAQ", nextRoom: "Next room", swipe: "Swipe to see more rooms", photos: "Photos", highlights: "Room highlights", keyDetails: "Room key details", propertyLocation: "Voulamandis House, Chios" },
-  el: { upToGuests: (count) => `Έως ${count} άτομα`, faqKicker: "Ερωτήσεις", faqTitle: "Συχνές ερωτήσεις δωματίου", nextRoom: "Επόμενο δωμάτιο", swipe: "Σύρε για περισσότερα δωμάτια", photos: "Φωτογραφίες", highlights: "Χαρακτηριστικά δωματίου", keyDetails: "Βασικές πληροφορίες δωματίου", propertyLocation: "Voulamandis House, Χίος" },
-  fr: { upToGuests: (count) => `Jusqu’à ${count} personnes`, faqKicker: "Questions", faqTitle: "FAQ de la chambre", nextRoom: "Chambre suivante", swipe: "Faites glisser pour voir plus", photos: "Photos", highlights: "Points forts de la chambre", keyDetails: "Informations principales", propertyLocation: "Voulamandis House, Chios" },
-  de: { upToGuests: (count) => `Bis zu ${count} Gäste`, faqKicker: "Fragen", faqTitle: "Zimmer-FAQ", nextRoom: "Nächstes Zimmer", swipe: "Wischen für weitere Zimmer", photos: "Fotos", highlights: "Zimmer-Highlights", keyDetails: "Wichtige Zimmerdetails", propertyLocation: "Voulamandis House, Chios" },
-  it: { upToGuests: (count) => `Fino a ${count} ospiti`, faqKicker: "Domande", faqTitle: "FAQ della camera", nextRoom: "Camera successiva", swipe: "Scorri per vedere altre camere", photos: "Foto", highlights: "Caratteristiche della camera", keyDetails: "Dettagli principali", propertyLocation: "Voulamandis House, Chios" },
-  es: { upToGuests: (count) => `Hasta ${count} personas`, faqKicker: "Preguntas", faqTitle: "Preguntas frecuentes", nextRoom: "Habitación siguiente", swipe: "Desliza para ver más habitaciones", photos: "Fotos", highlights: "Características de la habitación", keyDetails: "Datos principales", propertyLocation: "Voulamandis House, Quíos" },
-  tr: { upToGuests: (count) => `${count} kişiye kadar`, faqKicker: "Sorular", faqTitle: "Oda SSS", nextRoom: "Sonraki oda", swipe: "Daha fazla oda için kaydırın", photos: "Fotoğraflar", highlights: "Oda özellikleri", keyDetails: "Temel oda bilgileri", propertyLocation: "Voulamandis House, Sakız Adası" },
+  en: { checkAvailability: "Check availability", bookOnline: "Book online", upToGuests: (count) => `Up to ${count} guests`, faqKicker: "Questions", faqTitle: "Room FAQ", nextRoom: "Next room", swipe: "Swipe to see more rooms", photos: "Photos", highlights: "Room highlights", keyDetails: "Room key details", propertyLocation: "Voulamandis House, Chios" },
+  el: { checkAvailability: "Έλεγχος διαθεσιμότητας", bookOnline: "Online κράτηση", upToGuests: (count) => `Έως ${count} άτομα`, faqKicker: "Ερωτήσεις", faqTitle: "Συχνές ερωτήσεις δωματίου", nextRoom: "Επόμενο δωμάτιο", swipe: "Σύρε για περισσότερα δωμάτια", photos: "Φωτογραφίες", highlights: "Χαρακτηριστικά δωματίου", keyDetails: "Βασικές πληροφορίες δωματίου", propertyLocation: "Voulamandis House, Χίος" },
+  fr: { checkAvailability: "Voir les disponibilités", bookOnline: "Réserver en ligne", upToGuests: (count) => `Jusqu’à ${count} personnes`, faqKicker: "Questions", faqTitle: "FAQ de la chambre", nextRoom: "Chambre suivante", swipe: "Faites glisser pour voir plus", photos: "Photos", highlights: "Points forts de la chambre", keyDetails: "Informations principales", propertyLocation: "Voulamandis House, Chios" },
+  de: { checkAvailability: "Verfügbarkeit prüfen", bookOnline: "Online buchen", upToGuests: (count) => `Bis zu ${count} Gäste`, faqKicker: "Fragen", faqTitle: "Zimmer-FAQ", nextRoom: "Nächstes Zimmer", swipe: "Wischen für weitere Zimmer", photos: "Fotos", highlights: "Zimmer-Highlights", keyDetails: "Wichtige Zimmerdetails", propertyLocation: "Voulamandis House, Chios" },
+  it: { checkAvailability: "Verifica disponibilità", bookOnline: "Prenota online", upToGuests: (count) => `Fino a ${count} ospiti`, faqKicker: "Domande", faqTitle: "FAQ della camera", nextRoom: "Camera successiva", swipe: "Scorri per vedere altre camere", photos: "Foto", highlights: "Caratteristiche della camera", keyDetails: "Dettagli principali", propertyLocation: "Voulamandis House, Chios" },
+  es: { checkAvailability: "Consultar disponibilidad", bookOnline: "Reservar online", upToGuests: (count) => `Hasta ${count} personas`, faqKicker: "Preguntas", faqTitle: "Preguntas frecuentes", nextRoom: "Habitación siguiente", swipe: "Desliza para ver más habitaciones", photos: "Fotos", highlights: "Características de la habitación", keyDetails: "Datos principales", propertyLocation: "Voulamandis House, Quíos" },
+  tr: { checkAvailability: "Müsaitliği kontrol et", bookOnline: "Online rezervasyon", upToGuests: (count) => `${count} kişiye kadar`, faqKicker: "Sorular", faqTitle: "Oda SSS", nextRoom: "Sonraki oda", swipe: "Daha fazla oda için kaydırın", photos: "Fotoğraflar", highlights: "Oda özellikleri", keyDetails: "Temel oda bilgileri", propertyLocation: "Voulamandis House, Sakız Adası" },
 };
 
 const bookingPathByLanguage: Record<RoomLanguage, string> = {
@@ -181,7 +184,7 @@ function RoomVisualCard({ room, language, priority = false }: { room: Individual
 
   return (
     <article className="group w-[84vw] max-w-[380px] flex-none snap-start overflow-hidden rounded-[1.5rem] bg-white shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 transition md:w-auto md:max-w-none md:rounded-[2rem]">
-      <div className="relative aspect-[4/3] overflow-hidden bg-stone-200">
+      <div className="relative aspect-[16/10] overflow-hidden bg-stone-200">
         {activeImage ? (
           <Image
             src={activeImage.src}
@@ -237,7 +240,7 @@ function RoomVisualCard({ room, language, priority = false }: { room: Individual
         </div>
         <div className="mt-3 flex flex-wrap gap-2">
           {visibleBeds.map((bed) => (
-            <span className="rounded-full bg-stone-50 px-3 py-1.5 text-[11px] font-bold text-[#2f261f] ring-1 ring-stone-900/10" key={bed}>🛏️ {localizeRoomText(bed, language)}</span>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-stone-50 px-3 py-1.5 text-[11px] font-bold text-[#2f261f] ring-1 ring-stone-900/10" key={bed}><svg aria-hidden="true" viewBox="0 0 24 24" className="h-3.5 w-3.5 fill-none stroke-current" strokeWidth="1.8"><path d="M3 18v-7m18 7v-5a2 2 0 0 0-2-2H9a3 3 0 0 0-3 3v4m0-7V8h4a3 3 0 0 1 3 3M3 16h18M5 18v2m14-2v2" /></svg>{localizeRoomText(bed, language)}</span>
           ))}
         </div>
         <div className="mt-3 flex flex-wrap gap-2">
@@ -302,11 +305,11 @@ function IndividualRoomsSection({ data, language }: { data: RoomDetailData; lang
     const otherRooms = data.individualRooms.rooms.filter((room) => getFloorKind(room) === "other");
 
     return (
-      <section className="px-4 py-10 md:px-6 md:py-14" aria-labelledby="rd-individual-title">
+      <section className="px-4 py-9 md:px-6 md:py-12" aria-labelledby="rd-individual-title">
         <div className="mx-auto max-w-7xl">
           <header className="mb-8 max-w-[820px]">
             <span className="text-xs font-black uppercase tracking-[0.16em] text-amber-800">{data.individualRooms.kicker}</span>
-            <h2 id="rd-individual-title" className="mt-4 text-[2rem] font-black leading-[0.98] tracking-[-0.05em] text-[#2f261f] md:text-5xl">{data.individualRooms.title}</h2>
+            <h2 id="rd-individual-title" className="mt-4 text-[2rem] font-black leading-[0.98] tracking-[-0.05em] text-[#2f261f] md:text-[2.625rem]">{data.individualRooms.title}</h2>
             <p className="mt-5 max-w-[760px] text-base leading-8 text-stone-600 md:text-lg">{sectionDescription}</p>
           </header>
           <div className="space-y-10">
@@ -320,11 +323,11 @@ function IndividualRoomsSection({ data, language }: { data: RoomDetailData; lang
   }
 
   return (
-    <section className="px-4 py-10 md:px-6 md:py-14" aria-labelledby="rd-individual-title">
+    <section className="px-4 py-9 md:px-6 md:py-12" aria-labelledby="rd-individual-title">
       <div className="mx-auto max-w-7xl">
         <header className="mb-8 max-w-[820px]">
           <span className="text-xs font-black uppercase tracking-[0.16em] text-amber-800">{data.individualRooms.kicker}</span>
-          <h2 id="rd-individual-title" className="mt-4 text-[2rem] font-black leading-[0.98] tracking-[-0.05em] text-[#2f261f] md:text-5xl">{data.individualRooms.title}</h2>
+          <h2 id="rd-individual-title" className="mt-4 text-[2rem] font-black leading-[0.98] tracking-[-0.05em] text-[#2f261f] md:text-[2.625rem]">{data.individualRooms.title}</h2>
           <p className="mt-5 max-w-[760px] text-base leading-8 text-stone-600 md:text-lg">{sectionDescription}</p>
           <p className="mt-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-[11px] font-black uppercase tracking-[0.1em] text-amber-900 shadow-sm ring-1 ring-amber-900/10 md:hidden">
             {labels[language].swipe} <span aria-hidden="true">→</span>
@@ -345,24 +348,29 @@ export function RoomDetailPage({ data }: RoomDetailPageProps) {
   const language = getRoomLanguage(data.seo.canonicalPath);
   const localLabels = labels[language];
   const primaryBookingHref = bookingPathByLanguage[language] || data.hero.primaryCta.href;
+  const aiAvailabilityHref = roomFinderHrefForLanguage(language);
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#fbf6ef] text-[#2f261f]">
-      <section className="relative isolate overflow-hidden px-4 py-12 text-white sm:px-6 sm:py-16 lg:px-8 lg:py-20" aria-labelledby="rd-hero-title">
-        <Image src={data.hero.image} alt="" fill priority fetchPriority="high" sizes="100vw" className="-z-20 object-cover" />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-black/78 via-black/48 to-black/18" />
-        <div className="mx-auto max-w-6xl">
-          <div className="max-w-3xl rounded-[30px] border border-white/16 bg-[#2f261f]/72 p-4 shadow-[0_30px_90px_rgba(0,0,0,0.32)] backdrop-blur sm:p-6 lg:p-8">
-            <span className="inline-flex rounded-full border border-amber-200/30 bg-white/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.24em] text-amber-100">{data.hero.kicker}</span>
-            <h1 id="rd-hero-title" className="mt-5 text-balance text-[2.45rem] font-black leading-[0.98] tracking-[-0.04em] text-white sm:text-5xl lg:text-6xl">{data.hero.title}</h1>
-            <p className="mt-5 text-base font-extrabold text-amber-100 sm:text-xl">{data.hero.subtitle}</p>
-            <p className="mt-4 max-w-2xl text-pretty text-base leading-8 text-white/88 sm:text-lg">{data.hero.description}</p>
-            <div className="mt-6 flex flex-wrap gap-2" aria-label={localLabels.highlights}>
-              {data.hero.badges.map((badge) => <span key={badge} className="rounded-full border border-white/16 bg-white/12 px-3 py-1.5 text-xs font-extrabold text-white backdrop-blur">{localizeRoomText(badge, language)}</span>)}
+    <main className="min-h-screen overflow-x-hidden bg-[#fbf6ef] pb-20 text-[#2f261f] md:pb-0">
+      <section className="relative overflow-hidden bg-[#f3e7d7] px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12" aria-labelledby="rd-hero-title">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid overflow-hidden rounded-[32px] border border-amber-900/10 bg-[#fffaf3] shadow-[0_24px_70px_rgba(47,38,31,0.12)] lg:grid-cols-[0.92fr_1.08fr]">
+            <div className="flex flex-col justify-center p-6 sm:p-8 lg:p-10">
+              <span className="inline-flex w-fit rounded-full border border-amber-900/12 bg-amber-50 px-4 py-2 text-[11px] font-black uppercase tracking-[0.22em] text-amber-800">{data.hero.kicker}</span>
+              <h1 id="rd-hero-title" className="mt-5 text-balance text-[2.35rem] font-black leading-[0.98] tracking-[-0.045em] text-[#2f261f] sm:text-[3.25rem] lg:text-[3.75rem]">{data.hero.title}</h1>
+              <p className="mt-5 text-base font-extrabold text-amber-900 sm:text-lg">{data.hero.subtitle}</p>
+              <p className="mt-4 max-w-2xl text-pretty text-base leading-8 text-[#574b3f] sm:text-lg">{data.hero.description}</p>
+              <div className="mt-6 flex flex-wrap gap-2" aria-label={localLabels.highlights}>
+                {data.hero.badges.map((badge) => <span key={badge} className="rounded-full border border-amber-900/10 bg-white px-3 py-1.5 text-xs font-extrabold text-[#574b3f]">{localizeRoomText(badge, language)}</span>)}
+              </div>
+              <div className="mt-7 grid gap-3 sm:grid-cols-2">
+                <a className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-amber-500 px-5 text-center text-[11px] font-black uppercase tracking-[0.12em] !text-[#2f261f] shadow-[0_16px_32px_rgba(180,117,16,0.22)] transition hover:-translate-y-0.5 hover:bg-amber-400 sm:text-xs" href={aiAvailabilityHref} style={{ color: "#2f261f" }}>{localLabels.checkAvailability}</a>
+                <a className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-amber-900/20 bg-white px-5 text-center text-[11px] font-black uppercase tracking-[0.12em] text-[#2f261f] transition hover:-translate-y-0.5 hover:bg-amber-50 sm:text-xs" href={primaryBookingHref} data-booking-cta="true">{localLabels.bookOnline}</a>
+              </div>
             </div>
-            <div className="mt-7 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap">
-              <a className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-amber-200 px-4 text-center text-[11px] font-black uppercase tracking-[0.12em] !text-[#2f261f] shadow-[0_18px_40px_rgba(0,0,0,0.22)] transition hover:-translate-y-0.5 hover:bg-white sm:px-6 sm:text-xs" href={primaryBookingHref} style={{ color: "#2f261f" }}>{data.hero.primaryCta.label}</a>
-              <a className="inline-flex min-h-[50px] items-center justify-center rounded-full border border-white/30 bg-white/10 px-4 text-center text-[11px] font-black uppercase tracking-[0.12em] text-white backdrop-blur transition hover:-translate-y-0.5 hover:bg-white hover:text-[#2f261f] sm:px-6 sm:text-xs" href={data.hero.secondaryCta.href}>{data.hero.secondaryCta.label}</a>
+            <div className="relative min-h-[330px] overflow-hidden lg:min-h-[540px]">
+              <Image src={data.hero.image} alt="" fill priority fetchPriority="high" sizes="(min-width: 1024px) 54vw, 100vw" className="object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#2f261f]/28 via-transparent to-transparent" aria-hidden="true" />
             </div>
           </div>
         </div>
@@ -370,15 +378,15 @@ export function RoomDetailPage({ data }: RoomDetailPageProps) {
 
       <TopicBadges locale={language} context="room-detail" className="border-b border-amber-900/10" />
 
-      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16" aria-labelledby="rd-overview-title">
-        <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+      <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-12" aria-labelledby="rd-overview-title">
+        <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-stretch">
           <article className="rounded-[30px] border border-amber-900/10 bg-white p-5 shadow-[0_18px_45px_rgba(47,38,31,0.10)] sm:p-8">
             <span className="inline-flex rounded-full border border-amber-900/10 bg-amber-50 px-4 py-2 text-[11px] font-black uppercase tracking-[0.28em] text-amber-800">{data.overview.kicker}</span>
             <h2 id="rd-overview-title" className="mt-5 text-balance text-3xl font-black tracking-[-0.035em] text-[#2f261f] sm:text-4xl">{data.overview.title}</h2>
             <div className="mt-5 space-y-4 text-base leading-8 text-[#574b3f]">{data.overview.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
           </article>
-          <aside className="rounded-[30px] border border-amber-900/10 bg-[#fffdfa] p-5 shadow-[0_18px_45px_rgba(47,38,31,0.08)] sm:p-6" aria-label={localLabels.keyDetails}>
-            <div className="grid grid-cols-2 gap-3 lg:grid-cols-1">
+          <aside className="h-full rounded-[30px] border border-amber-900/10 bg-[#fffdfa] p-5 shadow-[0_18px_45px_rgba(47,38,31,0.08)] sm:p-6" aria-label={localLabels.keyDetails}>
+            <div className="grid h-full grid-cols-2 gap-3">
               {data.overview.highlights.map((highlight) => <div className="rounded-2xl bg-amber-50/70 p-4 ring-1 ring-amber-900/10" key={highlight.label}><span className="text-[11px] font-black uppercase tracking-[0.18em] text-amber-800">{highlight.label}</span><strong className="mt-1 block text-base font-black text-[#2f261f]">{localizeRoomText(highlight.value, language)}</strong></div>)}
             </div>
           </aside>
@@ -387,14 +395,14 @@ export function RoomDetailPage({ data }: RoomDetailPageProps) {
 
       <IndividualRoomsSection data={data} language={language} />
 
-      <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8" aria-labelledby="rd-amenities-title">
+      <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8" aria-labelledby="rd-amenities-title">
         <header className="mx-auto max-w-3xl text-center"><span className="inline-flex text-[11px] font-black uppercase tracking-[0.28em] text-amber-800">{data.amenities.kicker}</span><h2 id="rd-amenities-title" className="mt-4 text-balance text-3xl font-black tracking-[-0.04em] text-[#2f261f] sm:text-4xl">{data.amenities.title}</h2></header>
         <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {data.amenities.items.map((item) => <article className="rounded-2xl bg-white p-4 shadow-[0_12px_32px_rgba(47,38,31,0.08)]" key={item.label}><div className="text-2xl" aria-hidden="true">{item.icon}</div><h3 className="mt-3 text-sm font-black text-[#2f261f] sm:text-base">{localizeRoomText(item.label, language)}</h3><p className="mt-2 text-xs leading-5 text-[#574b3f] sm:text-sm">{item.text}</p></article>)}
+          {data.amenities.items.map((item) => <article className="rounded-2xl bg-white p-4 shadow-[0_12px_32px_rgba(47,38,31,0.08)]" key={item.label}><div className="flex h-9 w-9 items-center justify-center rounded-full bg-amber-50 text-lg grayscale contrast-125" aria-hidden="true">{item.icon}</div><h3 className="mt-3 text-sm font-black text-[#2f261f] sm:text-base">{localizeRoomText(item.label, language)}</h3><p className="mt-2 text-xs leading-5 text-[#574b3f] sm:text-sm">{item.text}</p></article>)}
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8" aria-labelledby="rd-best-title">
+      <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8" aria-labelledby="rd-best-title">
         <div className="rounded-[30px] bg-white p-5 shadow-[0_18px_45px_rgba(47,38,31,0.08)] sm:p-8">
           <span className="inline-flex text-[11px] font-black uppercase tracking-[0.28em] text-amber-800">{data.bestFor.kicker}</span>
           <h2 id="rd-best-title" className="mt-4 text-balance text-3xl font-black tracking-[-0.04em] text-[#2f261f] sm:text-4xl">{data.bestFor.title}</h2>
@@ -404,19 +412,25 @@ export function RoomDetailPage({ data }: RoomDetailPageProps) {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 pt-16 pb-12 sm:px-6 lg:px-8 lg:pt-20" aria-labelledby="rd-booking-title">
+      <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-12" aria-labelledby="rd-booking-title">
         <div className="overflow-hidden rounded-[30px] bg-gradient-to-br from-[#2f261f] via-[#5f421f] to-[#9a6f11] p-5 text-white shadow-[0_28px_70px_rgba(47,38,31,0.22)] sm:p-8 lg:p-10">
           <div className="grid gap-7 lg:grid-cols-[1fr_auto] lg:items-center">
-            <div><span className="inline-flex items-center gap-3 text-[11px] font-black uppercase tracking-[0.28em] text-amber-100 before:h-px before:w-10 before:bg-amber-200/70">{data.booking.kicker}</span><h2 id="rd-booking-title" className="mt-5 text-balance text-3xl font-black leading-tight tracking-[-0.035em] text-white sm:text-4xl lg:text-5xl">{data.booking.title}</h2><p className="mt-5 max-w-3xl text-base leading-8 text-white/88 sm:text-lg">{data.booking.text}</p><small className="mt-4 block text-sm leading-6 text-white/72">{data.booking.note}</small></div>
+            <div><span className="inline-flex items-center gap-3 text-[11px] font-black uppercase tracking-[0.28em] text-amber-100 before:h-px before:w-10 before:bg-amber-200/70">{data.booking.kicker}</span><h2 id="rd-booking-title" className="mt-5 text-balance text-3xl font-black leading-tight tracking-[-0.035em] text-white sm:text-4xl lg:text-[2.625rem]">{data.booking.title}</h2><p className="mt-5 max-w-3xl text-base leading-8 text-white/88 sm:text-lg">{data.booking.text}</p><small className="mt-4 block text-sm leading-6 text-white/72">{data.booking.note}</small></div>
             <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[320px] lg:grid-cols-1"><a className="inline-flex min-h-[54px] items-center justify-center rounded-full bg-[#25D366] px-6 text-center text-xs font-black uppercase tracking-[0.16em] text-white shadow-[0_18px_38px_rgba(37,211,102,0.26)] transition hover:-translate-y-0.5 hover:bg-[#1ebe5d]" href={data.booking.whatsappHref}>{data.booking.whatsappLabel}</a><a className="inline-flex min-h-[54px] items-center justify-center rounded-full border border-white/32 bg-white/10 px-6 text-center text-xs font-black uppercase tracking-[0.16em] text-white transition hover:-translate-y-0.5 hover:bg-white hover:text-[#2f261f]" href={data.booking.phoneHref}>{data.booking.phoneLabel}</a></div>
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8" aria-labelledby="rd-faq-title">
+      <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8" aria-labelledby="rd-faq-title">
         <header className="mx-auto max-w-3xl text-center"><span className="inline-flex text-[11px] font-black uppercase tracking-[0.28em] text-amber-800">{localLabels.faqKicker}</span><h2 id="rd-faq-title" className="mt-4 text-3xl font-black tracking-[-0.04em] text-[#2f261f] sm:text-4xl">{localLabels.faqTitle}</h2></header>
         <div className="mx-auto mt-8 max-w-3xl space-y-3">{data.faq.map((item) => <details className="rounded-2xl bg-white p-4 shadow-[0_12px_28px_rgba(47,38,31,0.07)]" key={item.question}><summary className="cursor-pointer text-base font-black text-[#2f261f]">{item.question}</summary><p className="mt-3 text-sm leading-7 text-[#574b3f]">{localizeRoomText(item.answer, language)}</p></details>)}</div>
       </section>
+
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-amber-900/10 bg-[#fffaf3]/96 p-3 shadow-[0_-12px_30px_rgba(47,38,31,0.12)] backdrop-blur md:hidden">
+        <a className="mx-auto flex min-h-[52px] max-w-md items-center justify-center rounded-full bg-amber-500 px-5 text-center text-xs font-black uppercase tracking-[0.12em] text-[#2f261f]" href={aiAvailabilityHref}>
+          {localLabels.checkAvailability}
+        </a>
+      </div>
     </main>
   );
 }
