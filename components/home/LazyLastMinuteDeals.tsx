@@ -14,6 +14,26 @@ const LiveDirectRequestClient = dynamic(
   },
 );
 
+const WEEKLY_TITLES = {
+  en: "Travelling to Chios this week?",
+  el: "Ταξιδεύετε στη Χίο αυτή την εβδομάδα;",
+  fr: "Vous voyagez à Chios cette semaine ?",
+  de: "Reisen Sie diese Woche nach Chios?",
+  it: "Viaggi a Chios questa settimana?",
+  es: "¿Viaja a Quíos esta semana?",
+  tr: "Bu hafta Sakız Adası'na mı geliyorsunuz?",
+} as const;
+
+function weeklyTitle(canonicalPath: string) {
+  if (canonicalPath.startsWith("/el")) return WEEKLY_TITLES.el;
+  if (canonicalPath.startsWith("/fr")) return WEEKLY_TITLES.fr;
+  if (canonicalPath.startsWith("/de")) return WEEKLY_TITLES.de;
+  if (canonicalPath.startsWith("/it")) return WEEKLY_TITLES.it;
+  if (canonicalPath.startsWith("/es")) return WEEKLY_TITLES.es;
+  if (canonicalPath.startsWith("/tr")) return WEEKLY_TITLES.tr;
+  return WEEKLY_TITLES.en;
+}
+
 export function LazyLastMinuteDeals({
   data,
   canonicalPath,
@@ -23,6 +43,7 @@ export function LazyLastMinuteDeals({
 }) {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const [shouldLoad, setShouldLoad] = useState(false);
+  const weeklyData: LastMinuteData = { ...data, title: weeklyTitle(canonicalPath) };
 
   useEffect(() => {
     const element = rootRef.current;
@@ -56,7 +77,7 @@ export function LazyLastMinuteDeals({
   if (shouldLoad) {
     return (
       <div id="vh-lastminute-title" ref={rootRef} className="scroll-mt-24 md:scroll-mt-28">
-        <LiveDirectRequestClient data={data} canonicalPath={canonicalPath} />
+        <LiveDirectRequestClient data={weeklyData} canonicalPath={canonicalPath} />
       </div>
     );
   }
@@ -65,12 +86,12 @@ export function LazyLastMinuteDeals({
     <div id="vh-lastminute-title" ref={rootRef} className="scroll-mt-24 md:scroll-mt-28">
       <section className="px-4 py-12 md:px-8 md:py-18" aria-labelledby="live-direct-placeholder-title">
         <div className="mx-auto max-w-7xl rounded-[2rem] border border-amber-900/10 bg-[#fffaf3] p-6 text-center shadow-lg shadow-stone-900/5 md:p-10">
-          <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] text-amber-700">{data.kicker}</p>
+          <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] text-amber-700">{weeklyData.kicker}</p>
           <h2 id="live-direct-placeholder-title" className="font-serif text-3xl font-bold leading-tight text-stone-900 md:text-5xl">
-            <span className="mr-2" aria-hidden="true">{data.icon}</span>
-            {data.title}
+            <span className="mr-2" aria-hidden="true">{weeklyData.icon}</span>
+            {weeklyData.title}
           </h2>
-          <p className="mx-auto mt-4 max-w-3xl text-base leading-8 text-stone-600 md:text-lg">{data.subtitle}</p>
+          <p className="mx-auto mt-4 max-w-3xl text-base leading-8 text-stone-600 md:text-lg">{weeklyData.subtitle}</p>
         </div>
       </section>
     </div>
