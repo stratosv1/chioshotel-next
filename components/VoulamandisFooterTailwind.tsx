@@ -63,31 +63,31 @@ export function VoulamandisFooterTailwind({ language = "en" }: FooterProps) {
   ];
 
   return (
-    <footer className="relative overflow-hidden bg-stone-950 pb-24 text-white md:pb-0">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(168,120,66,.2),transparent_28rem),radial-gradient(circle_at_85%_30%,rgba(255,255,255,.08),transparent_24rem)]" />
+    <footer className="relative overflow-hidden bg-[#efe4d5] pb-24 text-stone-800 md:pb-0">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(180,118,52,.12),transparent_28rem),radial-gradient(circle_at_85%_30%,rgba(255,255,255,.7),transparent_24rem)]" />
       <div className="relative mx-auto max-w-7xl px-3 py-3 sm:px-6 sm:py-6 lg:px-8 lg:py-10">
-        <div className="overflow-hidden rounded-[1.4rem] border border-white/10 bg-white/[0.045] shadow-xl shadow-black/15 backdrop-blur md:rounded-[1.75rem]">
-          <section className="flex items-center justify-between gap-3 border-b border-white/10 px-3 py-2.5 sm:px-5 sm:py-4 md:px-6 md:py-5">
+        <div className="overflow-hidden rounded-[1.4rem] border border-amber-900/10 bg-[#fffaf3]/95 shadow-xl shadow-amber-950/10 backdrop-blur md:rounded-[1.75rem]">
+          <section className="flex items-center justify-between gap-3 border-b border-amber-900/10 px-3 py-2.5 sm:px-5 sm:py-4 md:px-6 md:py-5">
             <a href={language === "en" ? "/" : `/${language}/`} className="flex min-w-0 items-center gap-2.5 sm:gap-3">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-xs font-black text-stone-900 shadow-md shadow-black/15 sm:h-11 sm:w-11 sm:rounded-2xl sm:text-sm">VH</span>
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-xs font-black text-amber-950 shadow-md shadow-amber-900/10 sm:h-11 sm:w-11 sm:rounded-2xl sm:text-sm">VH</span>
               <span className="min-w-0">
-                <strong className="block truncate text-[18px] font-black leading-none tracking-[-0.04em] text-white sm:text-lg md:text-xl">Voulamandis House</strong>
-                <small className="mt-1 block truncate text-[11px] font-black uppercase tracking-[0.08em] text-white/60 sm:text-[11px]">{locationLabel}</small>
+                <strong className="block truncate text-[18px] font-black leading-none tracking-[-0.04em] text-stone-900 sm:text-lg md:text-xl">Voulamandis House</strong>
+                <small className="mt-1 block truncate text-[11px] font-black uppercase tracking-[0.08em] text-stone-500 sm:text-[11px]">{locationLabel}</small>
               </span>
             </a>
-            <p className="hidden max-w-xl text-right text-sm leading-6 text-white/60 md:block">{copy.description}</p>
+            <p className="hidden max-w-xl text-right text-sm leading-6 text-stone-600 md:block">{copy.description}</p>
           </section>
 
-          <nav aria-label={footerNavLabel} className="grid grid-cols-3 divide-x divide-white/10">
+          <nav aria-label={footerNavLabel} className="grid grid-cols-3 divide-x divide-amber-900/10">
             {groups.map((group) => (
               <section key={group.title} className="min-w-0 px-1 py-2.5 sm:px-4 sm:py-5 md:px-6 md:py-6">
-                <h2 className="min-h-[2rem] break-words text-[12px] font-black uppercase leading-[1.2] tracking-[0.035em] text-amber-200 sm:min-h-0 sm:text-[12px] sm:tracking-[0.1em] md:text-sm">{group.title}</h2>
+                <h2 className="min-h-[2rem] break-words text-[12px] font-black uppercase leading-[1.2] tracking-[0.035em] text-amber-800 sm:min-h-0 sm:text-[12px] sm:tracking-[0.1em] md:text-sm">{group.title}</h2>
                 <ul className="mt-1 grid gap-0 sm:mt-4 sm:gap-1.5 md:gap-2">
                   {group.links.map((link, linkIndex) => (
                     <li key={`${group.title}-${linkIndex}`} className="min-w-0">
-                      <a href={link.href} className="group flex min-h-8 min-w-0 items-center justify-between gap-1 rounded-lg px-1 py-1 text-[14px] font-bold leading-[1.25] text-white/82 transition hover:bg-white/[0.07] hover:text-white sm:rounded-xl sm:px-2 sm:text-sm md:min-h-10 md:text-sm">
+                      <a href={link.href} className="group flex min-h-8 min-w-0 items-center justify-between gap-1 rounded-lg px-1 py-1 text-[14px] font-bold leading-[1.25] text-stone-700 transition hover:bg-amber-100/70 hover:text-stone-950 sm:rounded-xl sm:px-2 sm:text-sm md:min-h-10 md:text-sm">
                         <span className="min-w-0 break-words [overflow-wrap:anywhere]">{link.label}</span>
-                        <span aria-hidden="true" className="hidden shrink-0 text-white/35 transition group-hover:translate-x-0.5 group-hover:text-amber-200 sm:inline">→</span>
+                        <span aria-hidden="true" className="hidden shrink-0 text-stone-400 transition group-hover:translate-x-0.5 group-hover:text-amber-800 sm:inline">→</span>
                       </a>
                     </li>
                   ))}
@@ -96,20 +96,20 @@ export function VoulamandisFooterTailwind({ language = "en" }: FooterProps) {
             ))}
           </nav>
 
-          <div className="flex items-end justify-between gap-3 border-t border-white/10 px-3 py-2.5 sm:items-center sm:px-5 sm:py-4 md:px-6">
-            <div className="min-w-0 text-[11px] font-bold uppercase leading-[1.45] tracking-[0.04em] text-white/50 sm:text-[11px] sm:tracking-[0.09em] md:text-xs">
+          <div className="flex items-end justify-between gap-3 border-t border-amber-900/10 px-3 py-2.5 sm:items-center sm:px-5 sm:py-4 md:px-6">
+            <div className="min-w-0 text-[11px] font-bold uppercase leading-[1.45] tracking-[0.04em] text-stone-500 sm:text-[11px] sm:tracking-[0.09em] md:text-xs">
               <p>© {year} Voulamandis House. {copy.allRightsReserved}</p>
-              <p className="mt-0.5 text-white/36">{footerTagline}</p>
+              <p className="mt-0.5 text-stone-400">{footerTagline}</p>
             </div>
             <div className="flex shrink-0 items-center gap-2.5">
-              <a href="https://www.instagram.com/chioshotels/" target="_blank" rel="noopener" aria-label="Instagram" className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/[0.08] text-white/85 shadow-sm shadow-black/20 transition hover:bg-white/15 hover:text-white sm:h-12 sm:w-12">
+              <a href="https://www.instagram.com/chioshotels/" target="_blank" rel="noopener" aria-label="Instagram" className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-amber-900/15 bg-white/80 text-stone-700 shadow-sm shadow-amber-950/10 transition hover:bg-amber-100 hover:text-stone-950 sm:h-12 sm:w-12">
                 <svg viewBox="0 0 24 24" aria-hidden="true" className="h-[22px] w-[22px] sm:h-6 sm:w-6" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="3.5" y="3.5" width="17" height="17" rx="5" />
                   <circle cx="12" cy="12" r="4.1" />
                   <circle cx="17.4" cy="6.7" r="1" fill="currentColor" stroke="none" />
                 </svg>
               </a>
-              <a href="https://www.facebook.com/people/Voulamandis-House/100063584320703/" target="_blank" rel="noopener" aria-label="Facebook" className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/[0.08] text-white/85 shadow-sm shadow-black/20 transition hover:bg-white/15 hover:text-white sm:h-12 sm:w-12">
+              <a href="https://www.facebook.com/people/Voulamandis-House/100063584320703/" target="_blank" rel="noopener" aria-label="Facebook" className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-amber-900/15 bg-white/80 text-stone-700 shadow-sm shadow-amber-950/10 transition hover:bg-amber-100 hover:text-stone-950 sm:h-12 sm:w-12">
                 <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6 sm:h-[26px] sm:w-[26px]" fill="currentColor">
                   <path d="M13.7 21v-8h2.8l.4-3.1h-3.2V8c0-.9.3-1.5 1.6-1.5H17V3.8c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.4-4 4.1v2.1H8V13h2.6v8h3.1Z" />
                 </svg>
