@@ -7,16 +7,20 @@ import {
 export function PropertyFaqSection({
   language,
   context,
+  maxItems,
 }: {
   language: LanguageCode;
   context: PropertyFaqContext;
+  maxItems?: number;
 }) {
   const { copy, items, allHref } = getPropertyFaqContext(language, context);
 
   if (!items.length) return null;
 
+  const visibleItems = typeof maxItems === "number" ? items.slice(0, maxItems) : items;
+
   return (
-    <section className="px-4 py-10 md:px-8 md:py-16" aria-labelledby={`property-faq-${context}-title`}>
+    <section className="px-4 py-8 md:px-8 md:py-12" aria-labelledby={`property-faq-${context}-title`}>
       <div className="mx-auto max-w-5xl">
         <header className="mx-auto max-w-3xl text-center">
           <p className="text-xs font-black uppercase tracking-[0.2em] text-amber-700">
@@ -24,7 +28,7 @@ export function PropertyFaqSection({
           </p>
           <h2
             id={`property-faq-${context}-title`}
-            className="mt-3 text-balance font-serif text-3xl font-bold leading-tight text-stone-900 md:text-5xl"
+            className="mt-3 text-balance font-serif text-3xl font-bold leading-tight text-stone-900 md:text-[2.625rem]"
           >
             {copy.title}
           </h2>
@@ -34,7 +38,7 @@ export function PropertyFaqSection({
         </header>
 
         <div className="mt-8 grid gap-3">
-          {items.map((item) => (
+          {visibleItems.map((item) => (
             <details
               key={item.id}
               className="group rounded-2xl border border-amber-900/10 bg-white shadow-sm open:shadow-md"
