@@ -6,6 +6,7 @@ import { TopicBadges } from "@/components/seo/TopicBadges";
 import type { RoomsCategoryPageData } from "@/content/rooms";
 import type { LanguageCode } from "@/lib/languages";
 import { withRoomsOwnerHeroIntent } from "@/lib/rooms-owner-seo-intent";
+import { roomFinderHrefForLanguage } from "@/lib/room-finder-cta-routing";
 
 type RoomsCategoryPageProps = {
   data: RoomsCategoryPageData;
@@ -71,6 +72,64 @@ const cardCtaLabels: Record<LanguageCode, Record<string, string>> = {
   },
 };
 
+const roomsFinalCtaCopy: Record<LanguageCode, {
+  title: string;
+  text: string;
+  availabilityLabel: string;
+  bookingLabel: string;
+  bookingHref: string;
+}> = {
+  en: {
+    title: "Ready to choose your stay in Chios?",
+    text: "Check specific rooms with AI or complete an online booking for an available room category.",
+    availabilityLabel: "Check availability",
+    bookingLabel: "Book online",
+    bookingHref: "/chios-hotels-rates/",
+  },
+  el: {
+    title: "Έτοιμοι να επιλέξετε τη διαμονή σας στη Χίο;",
+    text: "Ελέγξτε συγκεκριμένα δωμάτια με το AI ή ολοκληρώστε online κράτηση διαθέσιμης κατηγορίας.",
+    availabilityLabel: "Έλεγχος διαθεσιμότητας",
+    bookingLabel: "Online κράτηση",
+    bookingHref: "/el/amesi-kratisi-voulamandis-house/",
+  },
+  fr: {
+    title: "Prêt à choisir votre séjour à Chios ?",
+    text: "Vérifiez des chambres précises avec l’IA ou réservez en ligne une catégorie disponible.",
+    availabilityLabel: "Voir les disponibilités",
+    bookingLabel: "Réserver en ligne",
+    bookingHref: "/fr/tarifs-des-hotels-a-chios/",
+  },
+  de: {
+    title: "Bereit für Ihren Aufenthalt auf Chios?",
+    text: "Prüfen Sie konkrete Zimmer mit AI oder buchen Sie eine verfügbare Kategorie direkt online.",
+    availabilityLabel: "Verfügbarkeit prüfen",
+    bookingLabel: "Online buchen",
+    bookingHref: "/de/hotelpreise-auf-der-insel-chios/",
+  },
+  it: {
+    title: "Pronto a scegliere il tuo soggiorno a Chios?",
+    text: "Verifica camere specifiche con l’AI oppure prenota online una categoria disponibile.",
+    availabilityLabel: "Verifica disponibilità",
+    bookingLabel: "Prenota online",
+    bookingHref: "/it/prezzi-hotel-chios/",
+  },
+  es: {
+    title: "¿Listo para elegir tu estancia en Quíos?",
+    text: "Consulta habitaciones concretas con AI o reserva online una categoría disponible.",
+    availabilityLabel: "Consultar disponibilidad",
+    bookingLabel: "Reservar online",
+    bookingHref: "/es/los-mejores-precios-de-hotel-en-la-isla-chios/",
+  },
+  tr: {
+    title: "Sakız Adası konaklamanızı seçmeye hazır mısınız?",
+    text: "AI ile belirli odaların müsaitliğini kontrol edin veya uygun bir kategoriyi online rezerve edin.",
+    availabilityLabel: "Müsaitliği kontrol et",
+    bookingLabel: "Online rezervasyon",
+    bookingHref: "/tr/sakiz-adasi-rezervasyon/",
+  },
+};
+
 function getCardCtaLabel(cardId: string, language: LanguageCode, fallback: string) {
   return cardCtaLabels[language]?.[cardId] ?? cardCtaLabels.en[cardId] ?? fallback;
 }
@@ -124,6 +183,8 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
       : ownerData.intro;
   const cards = getDisplayedCards(ownerData, language);
   const heroImage = cards[1] ?? cards[0];
+  const finalCta = roomsFinalCtaCopy[language];
+  const aiAvailabilityHref = roomFinderHrefForLanguage(language);
   const tip =
     language === "el"
       ? {
@@ -135,7 +196,7 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
       : ownerData.tip;
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#fbf6ef] text-[#2f261f]">
+    <main className="min-h-screen overflow-x-hidden bg-[#fbf6ef] pb-20 text-[#2f261f] md:pb-0">
       <section
         className="relative isolate overflow-hidden bg-[#f3e7d7] px-4 py-10 text-[#2f261f] sm:px-6 sm:py-12 lg:px-8 lg:py-14"
         aria-labelledby="rooms-hero-title"
@@ -329,7 +390,33 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
         </div>
       </section>
 
-      <PropertyFaqSection language={language} context="rooms" />
+      <PropertyFaqSection language={language} context="rooms" maxItems={4} />
+
+      <section className="px-4 pb-12 pt-2 sm:px-6 md:pb-16 lg:px-8" aria-labelledby="rooms-final-cta-title">
+        <div className="mx-auto grid max-w-7xl gap-6 rounded-[2rem] border border-amber-900/10 bg-[#f3e7d7] p-6 shadow-xl shadow-amber-950/5 sm:p-8 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-amber-800">Voulamandis House</p>
+            <h2 id="rooms-final-cta-title" className="mt-2 text-balance font-serif text-3xl font-bold leading-tight text-stone-900 md:text-[2.625rem]">
+              {finalCta.title}
+            </h2>
+            <p className="mt-3 max-w-2xl text-base leading-7 text-stone-600">{finalCta.text}</p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2 md:min-w-[360px]">
+            <a href={aiAvailabilityHref} className="inline-flex min-h-12 items-center justify-center rounded-full bg-amber-700 px-5 text-center text-xs font-black uppercase tracking-[0.08em] text-white shadow-lg shadow-amber-900/15 transition hover:bg-amber-800">
+              {finalCta.availabilityLabel}
+            </a>
+            <a href={finalCta.bookingHref} className="inline-flex min-h-12 items-center justify-center rounded-full border border-amber-900/15 bg-white px-5 text-center text-xs font-black uppercase tracking-[0.08em] text-amber-900 transition hover:bg-amber-50">
+              {finalCta.bookingLabel}
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-amber-900/10 bg-[#fffaf3]/95 p-3 shadow-[0_-8px_30px_rgba(47,38,31,0.12)] backdrop-blur md:hidden">
+        <a href={aiAvailabilityHref} className="mx-auto flex min-h-13 max-w-lg items-center justify-center rounded-full bg-amber-700 px-5 text-center text-sm font-black uppercase tracking-[0.06em] text-white shadow-lg shadow-amber-900/15">
+          {finalCta.availabilityLabel}
+        </a>
+      </div>
     </main>
   );
 }
