@@ -147,12 +147,22 @@ const allTopicBadges: TopicBadgeKey[] = [
 
 const badgesByContext: Record<TopicBadgeContext, TopicBadgeKey[]> = {
   home: allTopicBadges,
-  "rooms-category": allTopicBadges,
+  "rooms-category": ["rooms", "groundRooms", "firstFloorRooms", "familyStay"],
   "room-detail": allTopicBadges,
   "beach-detail": allTopicBadges,
   "village-detail": allTopicBadges,
   contact: allTopicBadges,
   "chios-guide": allTopicBadges,
+};
+
+const topicNavLabels: Record<LanguageCode, string> = {
+  en: "Room categories",
+  el: "Κατηγορίες δωματίων",
+  fr: "Catégories de chambres",
+  de: "Zimmerkategorien",
+  it: "Categorie di camere",
+  es: "Categorías de habitaciones",
+  tr: "Oda kategorileri",
 };
 
 function getPathForItem(itemId?: string, locale: LanguageCode = defaultLanguage) {
@@ -177,7 +187,7 @@ export function TopicBadges({ locale, context, className = "" }: TopicBadgesProp
 
   return (
     <nav
-      aria-label="Related topics"
+      aria-label={topicNavLabels[locale]}
       className={`relative bg-[#fbf7ef] px-4 py-4 md:px-8 ${className}`}
     >
       <div className="mx-auto flex max-w-7xl gap-2 overflow-x-auto pb-1 pr-12 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:flex-wrap md:overflow-visible md:pr-0">
