@@ -63,10 +63,12 @@ async function loadDealsFromNeon(today: string) {
     `,
   ]);
 
+  // Live Deals uses Neon as its availability source. A STALE_DATA marker means
+  // the Booking Core snapshot is older than the freshness threshold; it must not
+  // hide availability that is already stored in Neon. Keep the status only as
+  // observability metadata and let search_availability determine the room cards.
   const inventory = (inventoryRows as any[])?.[0];
-  if (!inventory || String(inventory.status) !== "READY") {
-    throw new Error(`Booking inventory is not ready: ${String(inventory?.status || "DATA_UNAVAILABLE")}`);
-  }
+  const inventoryStatus = String(inventory?.status || "DATA_UNAVAILABLE");
 
   const rooms = (roomRows as any[]).map((row) => ({
     id: Number(row.room_number),
@@ -118,6 +120,7 @@ async function loadDealsFromNeon(today: string) {
   return {
     ok: true,
     source: "neon_booking_core",
+    inventoryStatus,
     rooms,
     days,
     updatedAt: freshness,
