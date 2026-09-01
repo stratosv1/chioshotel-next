@@ -500,7 +500,7 @@ export const homePageEn: HomePageData = {
     icon: "⚡",
     title: "Traveling to Chios this week?",
     subtitle:
-      "Select the number of guests and see available deals for the next 7 days, with final cost and direct communication.",
+      "A quick view of rooms available only during the next 7 days. Select the number of guests to see current direct offers.",
     widget: {
       title: "Accommodation deals in Chios for the next 7 days",
       subtitle:
@@ -1017,7 +1017,7 @@ export const homePageEl: HomePageData = {
     icon: "⚡",
     title: "Ταξιδεύεις για Χίο αυτή την εβδομάδα;",
     subtitle:
-      "Επίλεξε αριθμό επισκεπτών και δες διαθέσιμες προσφορές για τις επόμενες 7 ημέρες, με τελικό κόστος και απευθείας επικοινωνία.",
+      "Γρήγορη εικόνα των διαθέσιμων δωματίων μόνο για τις επόμενες 7 ημέρες. Επίλεξε επισκέπτες για να δεις τις τρέχουσες απευθείας προσφορές.",
     widget: {
       title: "Προσφορές διαμονής στη Χίο για τις επόμενες 7 ημέρες",
       subtitle:
@@ -1475,7 +1475,7 @@ export const homePageFr: HomePageData = {
     icon: "⚡",
     title: "Vous voyagez à Chios cette semaine ?",
     subtitle:
-      "Choisissez le nombre de voyageurs et consultez les offres disponibles pour les 7 prochains jours, avec coût final et contact direct.",
+      "Un aperçu rapide des chambres disponibles uniquement pendant les 7 prochains jours. Choisissez le nombre de voyageurs pour voir les offres directes actuelles.",
     widget: {
       title: "Offres d’hébergement à Chios pour les 7 prochains jours",
       subtitle:
@@ -1915,7 +1915,7 @@ export const homePageDe: HomePageData = {
     icon: "⚡",
     title: "Reisen Sie diese Woche nach Chios?",
     subtitle:
-      "Wählen Sie die Anzahl der Gäste und sehen Sie verfügbare Angebote für die nächsten 7 Tage, mit Endpreis und direktem Kontakt.",
+      "Ein schneller Überblick über Zimmer, die nur in den nächsten 7 Tagen verfügbar sind. Wählen Sie die Gästezahl, um aktuelle Direktangebote zu sehen.",
     widget: {
       title: "Unterkunftsangebote auf Chios für die nächsten 7 Tage",
       subtitle:
@@ -2358,7 +2358,7 @@ export const homePageIt: HomePageData = {
     icon: "⚡",
     title: "Viaggi a Chios questa settimana?",
     subtitle:
-      "Scegli il numero di ospiti e guarda le offerte disponibili per i prossimi 7 giorni, con prezzo finale e contatto diretto.",
+      "Una panoramica rapida delle camere disponibili solo nei prossimi 7 giorni. Scegli il numero di ospiti per vedere le offerte dirette attuali.",
     widget: {
       title: "Offerte di alloggio a Chios per i prossimi 7 giorni",
       subtitle:
@@ -2802,7 +2802,7 @@ export const homePageEs: HomePageData = {
     icon: "⚡",
     title: "¿Viajas a Chios esta semana?",
     subtitle:
-      "Elige el número de huéspedes y consulta las ofertas disponibles para los próximos 7 días, con precio final y contacto directo.",
+      "Una vista rápida de las habitaciones disponibles únicamente durante los próximos 7 días. Elige el número de huéspedes para ver las ofertas directas actuales.",
     widget: {
       title: "Ofertas de alojamiento en Chios para los próximos 7 días",
       subtitle:
@@ -3242,7 +3242,7 @@ export const homePageTr: HomePageData = {
     icon: "⚡",
     title: "Bu hafta Sakız Adası’na mı geliyorsunuz?",
     subtitle:
-      "Misafir sayısını seçin ve önümüzdeki 7 gün için mevcut fırsatları, toplam fiyat ve direkt iletişimle görün.",
+      "Yalnızca önümüzdeki 7 gün içinde müsait olan odalara hızlıca göz atın. Güncel doğrudan teklifleri görmek için misafir sayısını seçin.",
     widget: {
       title: "Önümüzdeki 7 gün için Sakız Adası konaklama fırsatları",
       subtitle:
