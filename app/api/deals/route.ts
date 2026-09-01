@@ -1,12 +1,14 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { unstable_cache } from "next/cache";
 import { neon } from "@neondatabase/serverless";
 import { BOOKING_CORE_DEALS_CACHE_TAG } from "@/lib/booking-core/cache-tags";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 
 const DEALS_CACHE_REVALIDATE_SECONDS = 15 * 60;
+const ON_DEMAND_SYNC_TIMEOUT_MS = 55_000;
 
 function athensToday() {
   const parts = new Intl.DateTimeFormat("en-CA", {
@@ -30,16 +32,82 @@ function money(value: unknown) {
   return Number.isFinite(parsed) ? Math.round(parsed * 100) / 100 : 0;
 }
 
+function weekRange(today: string) {
+  const firstDate = addDays(today, 1);
+  const lastDate = addDays(today, 7);
+  return {
+    firstDate,
+    lastDate,
+    checkoutBoundary: addDays(lastDate, 1),
+  };
+}
+
+async function refreshBookingCoreOnDemand(request: NextRequest) {
+  const secret = String(process.env.CRON_SECRET || "").trim();
+  if (!secret) {
+    console.error("Live Deals cannot refresh stale booking inventory because CRON_SECRET is missing");
+    return false;
+  }
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), ON_DEMAND_SYNC_TIMEOUT_MS);
+
+  try {
+    const syncUrl = new URL("/api/booking-core/sync/", request.nextUrl.origin);
+    const response = await fetch(syncUrl, {
+      method: "GET",
+      cache: "no-store",
+      redirect: "follow",
+      signal: controller.signal,
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${secret}`,
+      },
+    });
+
+    const raw = await response.text();
+    if (!response.ok) {
+      console.error("Live Deals on-demand Booking Core sync failed", response.status, raw.slice(0, 500));
+      return false;
+    }
+
+    try {
+      const payload = JSON.parse(raw) as { ok?: boolean };
+      return payload.ok === true;
+    } catch {
+      console.error("Live Deals on-demand Booking Core sync returned invalid JSON");
+      return false;
+    }
+  } catch (error) {
+    console.error("Live Deals on-demand Booking Core sync failed", error);
+    return false;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+async function readInventoryStatus(today: string) {
+  const databaseUrl = process.env.DATABASE_URL;
+  if (!databaseUrl) throw new Error("DATABASE_URL is missing");
+
+  const sql = neon(databaseUrl);
+  const { firstDate, checkoutBoundary } = weekRange(today);
+  const rows = await sql`
+    select *
+    from booking_core.inventory_status(${firstDate}::date, ${checkoutBoundary}::date)
+  `;
+  return String((rows as any[])?.[0]?.status || "DATA_UNAVAILABLE");
+}
+
 async function loadDealsFromNeon(today: string) {
   const databaseUrl = process.env.DATABASE_URL;
   if (!databaseUrl) throw new Error("DATABASE_URL is missing");
   const sql = neon(databaseUrl);
-  const firstDate = addDays(today, 1);
-  const lastDate = addDays(today, 7);
+  const { firstDate, lastDate, checkoutBoundary } = weekRange(today);
 
   const [inventoryRows, roomRows, quoteRows] = await Promise.all([
     sql`
-      select * from booking_core.inventory_status(${firstDate}::date, ${addDays(lastDate, 1)}::date)
+      select * from booking_core.inventory_status(${firstDate}::date, ${checkoutBoundary}::date)
     `,
     sql`
       select room_number, room_id::text as room_id, unit_id::text as unit_id,
@@ -63,10 +131,6 @@ async function loadDealsFromNeon(today: string) {
     `,
   ]);
 
-  // Live Deals uses Neon as its availability source. A STALE_DATA marker means
-  // the Booking Core snapshot is older than the freshness threshold; it must not
-  // hide availability that is already stored in Neon. Keep the status only as
-  // observability metadata and let search_availability determine the room cards.
   const inventory = (inventoryRows as any[])?.[0];
   const inventoryStatus = String(inventory?.status || "DATA_UNAVAILABLE");
 
@@ -130,16 +194,47 @@ async function loadDealsFromNeon(today: string) {
 
 const getCachedDeals = unstable_cache(
   loadDealsFromNeon,
-  ["booking-core-deals-v1"],
+  ["booking-core-deals-v2"],
   {
     tags: [BOOKING_CORE_DEALS_CACHE_TAG],
     revalidate: DEALS_CACHE_REVALIDATE_SECONDS,
   },
 );
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const payload = await getCachedDeals(athensToday());
+    const today = athensToday();
+    let status = await readInventoryStatus(today);
+    let refreshed = false;
+
+    // Match AI Room Finder: stale Neon inventory triggers the Web App ->
+    // Booking Core sync, then availability is checked again in Neon.
+    if (status === "STALE_DATA") {
+      refreshed = await refreshBookingCoreOnDemand(request);
+      if (refreshed) {
+        status = await readInventoryStatus(today);
+      }
+    }
+
+    if (status !== "READY") {
+      return NextResponse.json({
+        ok: false,
+        code: status,
+        error: "Booking inventory is temporarily unavailable.",
+        source: "neon_booking_core",
+      }, {
+        status: 503,
+        headers: { "Cache-Control": "no-store" },
+      });
+    }
+
+    // If this request caused a refresh, bypass any previously computed payload
+    // for this response. The sync route also invalidates the shared deals tag
+    // whenever inventory rows actually change.
+    const payload = refreshed
+      ? await loadDealsFromNeon(today)
+      : await getCachedDeals(today);
+
     return NextResponse.json({
       ...payload,
       servedAt: new Date().toISOString(),
