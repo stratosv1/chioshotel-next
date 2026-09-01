@@ -40,6 +40,21 @@ const kambosExtraCopy: Record<LocaleCode, string> = {
   tr: "Kambos, Sakız’ın en atmosferik bölgelerinden biridir: taş duvarlar, narenciye bahçeleri, eski konaklar ve sakin yollar huzurlu, yerel ve otantik bir ortam yaratır. Şehre, havalimanına ve plajlara yakın kalırken gün sonunda daha sakin bir yere dönersiniz.",
 };
 
+function PremiumIcon({ children, compact = false }: { children: React.ReactNode; compact?: boolean }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={
+        compact
+          ? "mr-2 inline-flex h-5 w-5 shrink-0 items-center justify-center text-sm text-stone-700 [filter:grayscale(1)]"
+          : "mr-3 inline-flex h-9 w-9 translate-y-[-0.08em] items-center justify-center rounded-xl bg-amber-50 align-middle text-lg text-stone-700 ring-1 ring-amber-900/10 [filter:grayscale(1)]"
+      }
+    >
+      {children}
+    </span>
+  );
+}
+
 function SectionTitle({
   kicker,
   icon,
@@ -54,12 +69,12 @@ function SectionTitle({
   centered?: boolean;
 }) {
   return (
-    <header className={centered ? "mx-auto mb-7 max-w-3xl text-center md:mb-10" : "mb-6 max-w-3xl md:mb-8"}>
+    <header className={centered ? "mx-auto mb-6 max-w-3xl text-center md:mb-8" : "mb-5 max-w-3xl md:mb-7"}>
       <p className="mb-3 break-words text-xs font-black uppercase tracking-[0.20em] text-amber-700">
         {kicker}
       </p>
-      <h2 className="text-balance break-words font-serif text-[2rem] font-bold leading-tight text-stone-900 md:text-5xl">
-        {icon ? <span className="mr-2" aria-hidden="true">{icon}</span> : null}
+      <h2 className="text-balance break-words font-serif text-[1.875rem] font-bold leading-tight text-stone-900 md:text-[2.625rem]">
+        {icon ? <PremiumIcon>{icon}</PremiumIcon> : null}
         {title}
       </h2>
       {subtitle ? (
@@ -105,16 +120,16 @@ function SecondaryButton({
 
 function RoomsSection({ data }: { data: HomePageData }) {
   return (
-    <section className="px-4 py-9 md:px-8 md:py-16">
+    <section className="px-4 py-7 md:px-8 md:py-11">
       <div className="mx-auto max-w-7xl">
         <div className="grid gap-4 lg:grid-cols-[0.95fr_1.05fr] lg:items-end">
           <article className="rounded-[1.5rem] bg-[#2f241d] p-5 text-white shadow-lg shadow-stone-900/10 md:rounded-[2rem] md:p-9">
             <p className="mb-3 break-words text-xs font-black uppercase tracking-[0.20em] text-amber-200">{data.roomsPreview.kicker}</p>
-            <h2 className="break-words font-serif text-[2rem] font-bold leading-tight md:text-5xl"><span className="mr-2" aria-hidden="true">{data.roomsPreview.icon}</span>{data.roomsPreview.title}</h2>
+            <h2 className="break-words font-serif text-[2rem] font-bold leading-tight md:text-[2.625rem]"><PremiumIcon>{data.roomsPreview.icon}</PremiumIcon>{data.roomsPreview.title}</h2>
             <p className="mt-4 text-sm leading-7 text-white/80 md:text-lg md:leading-8">{data.roomsPreview.text}</p>
             <div className="mt-5 flex flex-wrap gap-3">
-              <PrimaryButton href={data.roomsPreview.primaryCta.href}><span className="mr-2" aria-hidden="true">{data.roomsPreview.primaryCta.icon}</span>{data.roomsPreview.primaryCta.label}</PrimaryButton>
-              <a href={data.roomsPreview.secondaryCta.href} className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/25 bg-white/10 px-6 text-sm font-black uppercase tracking-[0.08em] text-white transition hover:bg-white/20"><span className="mr-2" aria-hidden="true">{data.roomsPreview.secondaryCta.icon}</span>{data.roomsPreview.secondaryCta.label}</a>
+              <PrimaryButton href={data.roomsPreview.primaryCta.href}><PremiumIcon compact>{data.roomsPreview.primaryCta.icon}</PremiumIcon>{data.roomsPreview.primaryCta.label}</PrimaryButton>
+              <a href={data.roomsPreview.secondaryCta.href} className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/25 bg-white/10 px-6 text-sm font-black uppercase tracking-[0.08em] text-white transition hover:bg-white/20"><PremiumIcon compact>{data.roomsPreview.secondaryCta.icon}</PremiumIcon>{data.roomsPreview.secondaryCta.label}</a>
             </div>
           </article>
           <article className="hidden rounded-[2rem] bg-white p-7 shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 lg:block">
@@ -154,7 +169,7 @@ function KambosStory({ data }: { data: HomePageData }) {
   const imageSrc = homeGuideImages["vh-link-image--kampos"] || data.hero.image;
 
   return (
-    <section className="px-4 py-9 md:px-8 md:py-16">
+    <section className="px-4 py-7 md:px-8 md:py-11">
       <article className="mx-auto grid max-w-7xl overflow-hidden rounded-[1.5rem] bg-white shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 md:grid-cols-[0.95fr_1.05fr] md:rounded-[2rem]">
         <div className="relative min-h-[220px] md:min-h-[430px]">
           <Image src={imageSrc} alt={data.location.copy.title} fill sizes="(max-width: 768px) 100vw, 46vw" className="object-cover" loading="lazy" />
@@ -162,7 +177,7 @@ function KambosStory({ data }: { data: HomePageData }) {
         </div>
         <div className="p-5 md:p-9 lg:p-11">
           <p className="mb-3 break-words text-xs font-black uppercase tracking-[0.20em] text-amber-700">{data.location.copy.kicker}</p>
-          <h2 className="break-words font-serif text-[2rem] font-bold leading-tight text-stone-900 md:text-5xl">{data.location.copy.title}</h2>
+          <h2 className="break-words font-serif text-[2rem] font-bold leading-tight text-stone-900 md:text-[2.625rem]">{data.location.copy.title}</h2>
           <div className="mt-5 space-y-4 text-sm leading-7 text-stone-600 md:text-base md:leading-8">
             {data.location.copy.paragraphsHtml.map((paragraph) => (<p key={paragraph}><HtmlText html={paragraph} /></p>))}
             <p>{kambosExtraCopy[locale]}</p>
@@ -175,7 +190,7 @@ function KambosStory({ data }: { data: HomePageData }) {
 
 function LocationAndDirect({ data }: { data: HomePageData }) {
   return (
-    <section className="px-4 py-9 md:px-8 md:py-16">
+    <section className="px-4 py-7 md:px-8 md:py-11">
       <div className="mx-auto max-w-7xl">
         <SectionTitle kicker={data.location.kicker} icon={data.location.icon} title={data.location.title} subtitle={data.location.subtitle} />
         <div className="grid gap-5 lg:grid-cols-[1.05fr_0.95fr]">
@@ -200,7 +215,7 @@ function LocationAndDirect({ data }: { data: HomePageData }) {
               <a href={data.location.infoCard.emailHref} className="font-bold text-amber-800">{data.location.infoCard.email}</a>
             </address>
             <p className="mt-4 text-sm leading-7 text-stone-600 md:text-base md:leading-8">{data.location.infoCard.text}</p>
-            <div className="mt-5"><PrimaryButton href={data.location.infoCard.cta.href}><span className="mr-2" aria-hidden="true">{data.location.infoCard.cta.icon}</span>{data.location.infoCard.cta.label}</PrimaryButton></div>
+            <div className="mt-5"><PrimaryButton href={data.location.infoCard.cta.href}><PremiumIcon compact>{data.location.infoCard.cta.icon}</PremiumIcon>{data.location.infoCard.cta.label}</PrimaryButton></div>
           </article>
         </div>
       </div>
@@ -212,13 +227,13 @@ function DirectBookingBox({ data }: { data: HomePageData }) {
   const locale = getLocale(data.seo.canonicalPath);
 
   return (
-    <section className="px-4 py-9 md:px-8 md:py-16">
+    <section className="px-4 py-7 md:px-8 md:py-11">
       <article className="relative mx-auto max-w-7xl overflow-hidden rounded-[1.5rem] border border-amber-900/10 bg-[#fff8ea] shadow-lg shadow-amber-900/10 md:rounded-[2rem]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(251,191,36,0.18),transparent_36%)]" />
         <div className="relative grid gap-0 lg:grid-cols-[1fr_0.9fr]">
           <div className="p-5 md:p-9">
             <span className="inline-flex rounded-full bg-white/85 px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-orange-800 shadow-sm ring-1 ring-amber-900/10">{data.location.discount.badge}</span>
-            <h3 className="mt-5 max-w-xl break-words font-serif text-[2rem] font-bold leading-tight text-stone-950 md:text-5xl">{data.location.discount.title}</h3>
+            <h3 className="mt-5 max-w-xl break-words font-serif text-[2rem] font-bold leading-tight text-stone-950 md:text-[2.625rem]">{data.location.discount.title}</h3>
             <p className="mt-4 max-w-2xl text-sm leading-7 text-stone-700 md:text-lg md:leading-8">{data.location.discount.text}</p>
             <ul className="mt-5 grid min-w-0 gap-2 sm:grid-cols-3">
               {data.location.discount.benefits.map((benefit, index) => (
@@ -264,24 +279,24 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
               <h1 className="text-balance text-[2rem] font-black leading-[1.02] tracking-[-0.04em] sm:text-4xl sm:leading-none md:text-6xl">{data.hero.title}</h1>
               <p className="mt-4 text-[15px] leading-7 text-white/90 sm:mt-5 sm:text-base sm:leading-8 md:text-lg"><HtmlText html={data.hero.descriptionHtml} /></p>
               <div className="mt-5 grid grid-cols-2 gap-3 sm:mt-7">
-                <a href={data.hero.primaryCta.href} className="inline-flex min-h-14 items-center justify-center rounded-2xl bg-orange-700 px-4 text-center text-xs font-black uppercase tracking-[0.08em] text-white shadow-lg shadow-orange-900/25 transition hover:bg-orange-800 md:rounded-full"><span className="mr-2" aria-hidden="true">{data.hero.primaryCta.icon}</span>{data.hero.primaryCta.label}</a>
-                <a href={data.hero.secondaryCta.href} className="inline-flex min-h-14 items-center justify-center rounded-2xl border border-white/35 bg-white/10 px-4 text-center text-xs font-black uppercase tracking-[0.08em] text-white backdrop-blur transition hover:bg-white/20 md:rounded-full"><span className="mr-2" aria-hidden="true">{data.hero.secondaryCta.icon}</span>{data.hero.secondaryCta.label}</a>
+                <a href={data.hero.primaryCta.href} className="inline-flex min-h-14 items-center justify-center rounded-2xl bg-orange-700 px-4 text-center text-xs font-black uppercase tracking-[0.08em] text-white shadow-lg shadow-orange-900/25 transition hover:bg-orange-800 md:rounded-full"><PremiumIcon compact>{data.hero.primaryCta.icon}</PremiumIcon>{data.hero.primaryCta.label}</a>
+                <a href={data.hero.secondaryCta.href} className="inline-flex min-h-14 items-center justify-center rounded-2xl border border-white/35 bg-white/10 px-4 text-center text-xs font-black uppercase tracking-[0.08em] text-white backdrop-blur transition hover:bg-white/20 md:rounded-full"><PremiumIcon compact>{data.hero.secondaryCta.icon}</PremiumIcon>{data.hero.secondaryCta.label}</a>
               </div>
             </div>
           </div>
         </section>
 
         <a href={data.announceBar.href} className="relative z-20 mx-auto -mt-5 flex w-[min(1120px,92vw)] items-center justify-between gap-4 rounded-3xl bg-white px-5 py-4 text-stone-800 shadow-xl shadow-stone-900/10 ring-1 ring-amber-900/10 md:px-7">
-          <span className="text-2xl" aria-hidden="true">{data.announceBar.icon}</span>
+          <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 text-base text-stone-700 ring-1 ring-amber-900/10 [filter:grayscale(1)]" aria-hidden="true">{data.announceBar.icon}</span>
           <span className="flex-1 text-sm font-semibold md:text-base">{data.announceBar.text} <strong className="text-amber-800">{data.announceBar.strongText}</strong></span>
           <span className="text-amber-700" aria-hidden="true">→</span>
         </a>
 
-        <section className="px-4 py-8 md:px-8 md:py-14">
+        <section className="px-4 py-7 md:px-8 md:py-11">
           <div className="mx-auto grid max-w-7xl gap-4 lg:grid-cols-[1fr_1.05fr]">
             <article className="rounded-[1.5rem] bg-white p-5 shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 md:rounded-[2rem] md:p-8">
               <p className="mb-3 break-words text-xs font-black uppercase tracking-[0.20em] text-amber-700">{data.intro.left.kicker}</p>
-              <h2 className="break-words font-serif text-[2rem] font-bold leading-tight text-stone-900 md:text-5xl"><span className="mr-2" aria-hidden="true">{data.intro.left.icon}</span>{data.intro.left.title}</h2>
+              <h2 className="break-words font-serif text-[2rem] font-bold leading-tight text-stone-900 md:text-[2.625rem]"><PremiumIcon>{data.intro.left.icon}</PremiumIcon>{data.intro.left.title}</h2>
               <p className="mt-4 text-sm leading-7 text-stone-600 md:text-base md:leading-8"><HtmlText html={data.intro.left.bodyHtml} /></p>
               <div className="mt-5 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
                 {data.intro.left.pills.map((pill) => (<span key={pill} className="inline-flex min-h-10 items-center justify-center rounded-full bg-amber-50 px-3 py-2 text-center text-[12px] font-bold leading-tight text-amber-800 ring-1 ring-amber-900/10 sm:min-h-0 sm:px-4 sm:text-sm">{pill}</span>))}
@@ -289,7 +304,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
             </article>
             <article className="rounded-[1.5rem] bg-white p-5 shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 md:rounded-[2rem] md:p-8">
               <p className="mb-3 break-words text-xs font-black uppercase tracking-[0.20em] text-amber-700">{data.intro.right.kicker}</p>
-              <h3 className="break-words font-serif text-[2rem] font-bold leading-tight text-stone-900 md:text-5xl">{introRightTitle}</h3>
+              <h3 className="break-words font-serif text-[2rem] font-bold leading-tight text-stone-900 md:text-[2.625rem]">{introRightTitle}</h3>
               <div className="mt-5 grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-3">
                 {data.intro.right.cards.map((card, index) => (
                   <div key={card.title} className={index === 0 ? "col-span-2 rounded-2xl bg-[#2f241d] p-4 text-white md:col-span-1" : "rounded-2xl bg-amber-50 p-3 ring-1 ring-amber-900/10"}>
@@ -308,19 +323,19 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
         <KambosStory data={data} />
         <LocationAndDirect data={data} />
 
-        <section className="px-4 py-10 md:px-8 md:py-16"><div className="mx-auto max-w-5xl rounded-[1.5rem] bg-white p-6 text-center shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 md:rounded-[2rem] md:p-10"><SectionTitle kicker={data.reviews.kicker} icon={data.reviews.icon} title={data.reviews.title} /><HomeReviews loaderUrl={data.reviews.trustindexLoaderUrl} /></div></section>
+        <section className="px-4 py-7 md:px-8 md:py-11"><div className="mx-auto max-w-5xl rounded-[1.5rem] bg-white p-6 text-center shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 md:rounded-[2rem] md:p-10"><SectionTitle kicker={data.reviews.kicker} icon={data.reviews.icon} title={data.reviews.title} /><HomeReviews loaderUrl={data.reviews.trustindexLoaderUrl} /></div></section>
 
-        <section className="px-4 py-8 md:px-8 md:py-14"><div className="mx-auto max-w-7xl"><SectionTitle kicker={data.amenities.kicker} icon={data.amenities.icon} title={data.amenities.title} /><div className="grid grid-cols-3 gap-2 sm:grid-cols-3 lg:grid-cols-4">{data.amenities.items.map((item) => (<div key={item.label} className="flex min-h-[108px] flex-col items-center justify-center gap-2 rounded-2xl bg-white p-3 text-center shadow-sm ring-1 ring-amber-900/10"><span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-50 text-lg">{item.icon}</span><span className="text-[12px] font-black leading-4 text-stone-700 sm:text-sm">{item.label}</span></div>))}</div></div></section>
+        <section className="px-4 py-7 md:px-8 md:py-11"><div className="mx-auto max-w-7xl"><SectionTitle kicker={data.amenities.kicker} icon={data.amenities.icon} title={data.amenities.title} /><div className="grid grid-cols-3 gap-2 sm:grid-cols-3 lg:grid-cols-4">{data.amenities.items.map((item) => (<div key={item.label} className="flex min-h-[108px] flex-col items-center justify-center gap-2 rounded-2xl bg-white p-3 text-center shadow-sm ring-1 ring-amber-900/10"><span aria-hidden="true" className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-base text-stone-700 ring-1 ring-amber-900/10 [filter:grayscale(1)]">{item.icon}</span><span className="text-[12px] font-black leading-4 text-stone-700 sm:text-sm">{item.label}</span></div>))}</div></div></section>
 
-        <section className="px-4 py-8 md:px-8 md:py-14"><div className="mx-auto max-w-7xl"><SectionTitle kicker={data.traveler.kicker} icon={data.traveler.icon} title={data.traveler.title} subtitle={data.traveler.subtitle} /><div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 xl:grid-cols-4">{data.traveler.cards.map((card) => { const imageSrc = homeTravelerImages[card.className] || data.hero.image; return (<a key={card.id} href={card.href} className="group relative min-h-[320px] w-[84vw] max-w-[380px] flex-none snap-start overflow-hidden rounded-[1.5rem] bg-stone-950 text-white shadow-xl shadow-stone-900/10 md:w-auto md:max-w-none md:rounded-[2rem]"><Image src={imageSrc} alt={card.title} fill sizes="(max-width: 768px) 84vw, 25vw" className="object-cover transition duration-500 group-hover:scale-105" loading="lazy" /><div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/55 to-black/10" /><div className="absolute inset-x-0 bottom-0 p-6 text-white"><h3 className="break-words font-serif text-3xl font-bold text-white drop-shadow-[0_3px_12px_rgba(0,0,0,.7)]">{card.title}</h3><p className="mt-3 text-sm leading-7 text-white/80">{card.text}</p><span className="mt-5 inline-flex rounded-full bg-white px-4 py-2 text-xs font-black uppercase text-amber-800">{card.cta}</span></div></a>); })}</div></div></section>
+        <section className="px-4 py-7 md:px-8 md:py-11"><div className="mx-auto max-w-7xl"><SectionTitle kicker={data.traveler.kicker} icon={data.traveler.icon} title={data.traveler.title} subtitle={data.traveler.subtitle} /><div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 xl:grid-cols-4">{data.traveler.cards.map((card) => { const imageSrc = homeTravelerImages[card.className] || data.hero.image; return (<a key={card.id} href={card.href} className="group relative min-h-[320px] w-[84vw] max-w-[380px] flex-none snap-start overflow-hidden rounded-[1.5rem] bg-stone-950 text-white shadow-xl shadow-stone-900/10 md:w-auto md:max-w-none md:rounded-[2rem]"><Image src={imageSrc} alt={card.title} fill sizes="(max-width: 768px) 84vw, 25vw" className="object-cover transition duration-500 group-hover:scale-105" loading="lazy" /><div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/55 to-black/10" /><div className="absolute inset-x-0 bottom-0 p-6 text-white"><h3 className="break-words font-serif text-3xl font-bold text-white drop-shadow-[0_3px_12px_rgba(0,0,0,.7)]">{card.title}</h3><p className="mt-3 text-sm leading-7 text-white/80">{card.text}</p><span className="mt-5 inline-flex rounded-full bg-white px-4 py-2 text-xs font-black uppercase text-amber-800">{card.cta}</span></div></a>); })}</div></div></section>
 
-        <section className="px-4 py-8 md:px-8 md:py-14"><div className="mx-auto max-w-7xl"><SectionTitle kicker={data.chiosGuide.kicker} icon={data.chiosGuide.icon} title={data.chiosGuide.title} subtitle={data.chiosGuide.subtitle} /><div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 xl:grid-cols-3">{data.chiosGuide.cards.map((card) => { const imageSrc = homeGuideImages[card.imageClass] || data.hero.image; return (<a key={card.id} href={card.href} className="group w-[84vw] max-w-[380px] flex-none snap-start overflow-hidden rounded-[1.5rem] bg-white shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 transition hover:shadow-xl md:w-auto md:max-w-none md:rounded-[2rem]"><div className="relative aspect-[16/10] overflow-hidden"><Image src={imageSrc} alt={card.title} fill sizes="(max-width: 768px) 84vw, 33vw" className="object-cover transition duration-500 group-hover:scale-105" loading="lazy" /></div><div className="p-5"><h3 className="break-words font-serif text-2xl font-bold text-stone-900">{card.title}</h3><p className="mt-3 text-sm leading-7 text-stone-600 md:text-base">{card.text}</p><span className="mt-5 inline-flex rounded-full border border-amber-800/20 px-4 py-2 text-xs font-black uppercase text-amber-800"><span className="mr-2" aria-hidden="true">{card.ctaIcon}</span>{card.ctaLabel}</span></div></a>); })}</div></div></section>
+        <section className="px-4 py-7 md:px-8 md:py-11"><div className="mx-auto max-w-7xl"><SectionTitle kicker={data.chiosGuide.kicker} icon={data.chiosGuide.icon} title={data.chiosGuide.title} subtitle={data.chiosGuide.subtitle} /><div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 xl:grid-cols-3">{data.chiosGuide.cards.map((card) => { const imageSrc = homeGuideImages[card.imageClass] || data.hero.image; return (<a key={card.id} href={card.href} className="group w-[84vw] max-w-[380px] flex-none snap-start overflow-hidden rounded-[1.5rem] bg-white shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 transition hover:shadow-xl md:w-auto md:max-w-none md:rounded-[2rem]"><div className="relative aspect-[16/10] overflow-hidden"><Image src={imageSrc} alt={card.title} fill sizes="(max-width: 768px) 84vw, 33vw" className="object-cover transition duration-500 group-hover:scale-105" loading="lazy" /></div><div className="p-5"><h3 className="break-words font-serif text-2xl font-bold text-stone-900">{card.title}</h3><p className="mt-3 text-sm leading-7 text-stone-600 md:text-base">{card.text}</p><span className="mt-5 inline-flex rounded-full border border-amber-800/20 px-4 py-2 text-xs font-black uppercase text-amber-800"><PremiumIcon compact>{card.ctaIcon}</PremiumIcon>{card.ctaLabel}</span></div></a>); })}</div></div></section>
 
-        <section className="px-4 py-8 md:px-8"><div className="mx-auto grid max-w-7xl gap-5 rounded-[1.5rem] bg-[#2f241d] p-6 text-white md:grid-cols-[1fr_auto] md:items-center md:rounded-[2rem] md:p-8"><div><p className="break-words text-xs font-black uppercase tracking-[0.20em] text-amber-200">{data.quizBar.label}</p><p className="mt-2 max-w-3xl text-base leading-7 text-white/85 md:text-lg md:leading-8">{data.quizBar.text}</p></div><a href={data.quizBar.href} className="inline-flex w-full max-w-full items-center justify-center rounded-full bg-white px-6 py-3 text-center text-sm font-black uppercase tracking-[0.06em] text-amber-800 shadow-lg transition hover:bg-amber-50 sm:w-auto sm:min-w-[300px]" aria-label={data.quizBar.cta}>{data.quizBar.cta}</a></div></section>
+        <section className="px-4 py-6 md:px-8 md:py-9"><div className="mx-auto grid max-w-7xl gap-5 rounded-[1.5rem] bg-[#2f241d] p-6 text-white md:grid-cols-[1fr_auto] md:items-center md:rounded-[2rem] md:p-8"><div><p className="break-words text-xs font-black uppercase tracking-[0.20em] text-amber-200">{data.quizBar.label}</p><p className="mt-2 max-w-3xl text-base leading-7 text-white/85 md:text-lg md:leading-8">{data.quizBar.text}</p></div><a href={data.quizBar.href} className="inline-flex w-full max-w-full items-center justify-center rounded-full bg-white px-6 py-3 text-center text-sm font-black uppercase tracking-[0.06em] text-amber-800 shadow-lg transition hover:bg-amber-50 sm:w-auto sm:min-w-[300px]" aria-label={data.quizBar.cta}>{data.quizBar.cta}</a></div></section>
 
-        <section className="px-4 py-8 md:px-8 md:py-14"><div className="mx-auto max-w-5xl"><SectionTitle kicker={data.faq.kicker} icon={data.faq.icon} title={data.faq.title} /><div className="grid gap-3">{data.faq.items.map((item) => (<details key={item.question} className="group rounded-3xl bg-white p-5 shadow-sm ring-1 ring-amber-900/10"><summary className="cursor-pointer list-none font-bold text-stone-900">{item.question}</summary><div className="mt-4 leading-8 text-stone-600"><HtmlText html={item.answerHtml} /></div></details>))}</div></div></section>
+        <section className="px-4 py-7 md:px-8 md:py-11"><div className="mx-auto max-w-5xl"><SectionTitle kicker={data.faq.kicker} icon={data.faq.icon} title={data.faq.title} /><div className="grid gap-3">{data.faq.items.map((item) => (<details key={item.question} className="group rounded-3xl bg-white p-5 shadow-sm ring-1 ring-amber-900/10"><summary className="cursor-pointer list-none font-bold text-stone-900">{item.question}</summary><div className="mt-4 leading-8 text-stone-600"><HtmlText html={item.answerHtml} /></div></details>))}</div></div></section>
 
-        <section className="px-4 pb-16 pt-4 md:px-8 md:pb-20"><div className="relative mx-auto max-w-7xl overflow-hidden rounded-[1.8rem] bg-stone-950 text-white shadow-2xl shadow-stone-900/20 md:rounded-[2.5rem]"><Image src="/images/site/Screenshot_2026-04-25-14-11-19-166_com.instagram.android-edit-1.webp" alt="" fill sizes="(max-width: 768px) 100vw, 1280px" className="object-cover object-center opacity-100" loading="lazy" aria-hidden="true" /><div className="absolute inset-0 bg-gradient-to-r from-black/78 via-black/48 to-black/10" /><div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(245,158,11,0.12),transparent_36%)]" /><div className="relative z-10 max-w-3xl p-8 md:p-14"><p className="mb-3 break-words text-xs font-black uppercase tracking-[0.22em] text-amber-200">{data.finalCta.kicker}</p><h2 className="break-words font-serif text-4xl font-bold leading-tight md:text-6xl"><span className="mr-2" aria-hidden="true">{data.finalCta.icon}</span>{data.finalCta.title}</h2><p className="mt-5 max-w-2xl text-lg leading-8 text-white/85">{data.finalCta.text}</p><div className="mt-8 flex flex-wrap gap-3"><PrimaryButton href={data.finalCta.primaryCta.href}><span className="mr-2" aria-hidden="true">{data.finalCta.primaryCta.icon}</span>{data.finalCta.primaryCta.label}</PrimaryButton><a href={data.finalCta.secondaryCta.href} className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/25 bg-white/10 px-6 text-sm font-black uppercase tracking-[0.08em] text-white backdrop-blur transition hover:bg-white/20"><span className="mr-2" aria-hidden="true">{data.finalCta.secondaryCta.icon}</span>{data.finalCta.secondaryCta.label}</a></div></div></div></section>
+        <section className="px-4 pb-16 pt-4 md:px-8 md:pb-20"><div className="relative mx-auto max-w-7xl overflow-hidden rounded-[1.8rem] bg-stone-950 text-white shadow-2xl shadow-stone-900/20 md:rounded-[2.5rem]"><Image src="/images/site/Screenshot_2026-04-25-14-11-19-166_com.instagram.android-edit-1.webp" alt="" fill sizes="(max-width: 768px) 100vw, 1280px" className="object-cover object-center opacity-100" loading="lazy" aria-hidden="true" /><div className="absolute inset-0 bg-gradient-to-r from-black/78 via-black/48 to-black/10" /><div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(245,158,11,0.12),transparent_36%)]" /><div className="relative z-10 max-w-3xl p-8 md:p-14"><p className="mb-3 break-words text-xs font-black uppercase tracking-[0.22em] text-amber-200">{data.finalCta.kicker}</p><h2 className="break-words font-serif text-4xl font-bold leading-tight md:text-6xl"><PremiumIcon>{data.finalCta.icon}</PremiumIcon>{data.finalCta.title}</h2><p className="mt-5 max-w-2xl text-lg leading-8 text-white/85">{data.finalCta.text}</p><div className="mt-8 flex flex-wrap gap-3"><PrimaryButton href={data.finalCta.primaryCta.href}><PremiumIcon compact>{data.finalCta.primaryCta.icon}</PremiumIcon>{data.finalCta.primaryCta.label}</PrimaryButton><a href={data.finalCta.secondaryCta.href} className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/25 bg-white/10 px-6 text-sm font-black uppercase tracking-[0.08em] text-white backdrop-blur transition hover:bg-white/20"><PremiumIcon compact>{data.finalCta.secondaryCta.icon}</PremiumIcon>{data.finalCta.secondaryCta.label}</a></div></div></div></section>
       </main>
 
       <MobileStickyContact call={data.mobileSticky.call} chat={data.mobileSticky.viber} />
