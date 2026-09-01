@@ -286,7 +286,7 @@ function FloorRoomGroup({ title, text, rooms, language }: { title: string; text:
             →
           </button>
         ) : null}
-        <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 xl:grid-cols-3" ref={carouselRef}>
+        <div className={`flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 ${rooms.length <= 2 ? "md:mx-auto md:w-full md:max-w-5xl" : "xl:grid-cols-3"}`} ref={carouselRef}>
           {rooms.map((room, index) => <RoomVisualCard room={room} language={language} priority={index < 2} key={room.id} />)}
         </div>
       </div>
@@ -335,7 +335,7 @@ function IndividualRoomsSection({ data, language }: { data: RoomDetailData; lang
         </header>
         <div className="relative">
           <div aria-hidden="true" className="pointer-events-none absolute right-2 top-[38%] z-20 flex h-10 w-10 items-center justify-center rounded-full bg-[#2f261f]/95 text-xl font-black text-white shadow-xl md:hidden">→</div>
-          <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 xl:grid-cols-3">
+          <div className={`flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 ${data.individualRooms.rooms.length <= 2 ? "md:mx-auto md:w-full md:max-w-5xl" : "xl:grid-cols-3"}`}>
             {data.individualRooms.rooms.map((room, index) => <RoomVisualCard room={room} language={language} priority={index < 2} key={room.id} />)}
           </div>
         </div>
@@ -426,7 +426,7 @@ export function RoomDetailPage({ data }: RoomDetailPageProps) {
         <div className="mx-auto mt-8 max-w-3xl space-y-3">{data.faq.map((item) => <details className="rounded-2xl bg-white p-4 shadow-[0_12px_28px_rgba(47,38,31,0.07)]" key={item.question}><summary className="cursor-pointer text-base font-black text-[#2f261f]">{item.question}</summary><p className="mt-3 text-sm leading-7 text-[#574b3f]">{localizeRoomText(item.answer, language)}</p></details>)}</div>
       </section>
 
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-amber-900/10 bg-[#fffaf3]/96 p-3 shadow-[0_-12px_30px_rgba(47,38,31,0.12)] backdrop-blur md:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-amber-900/10 bg-[#fffaf3]/95 p-3 shadow-[0_-12px_30px_rgba(47,38,31,0.12)] backdrop-blur md:hidden">
         <a className="mx-auto flex min-h-[52px] max-w-md items-center justify-center rounded-full bg-amber-500 px-5 text-center text-xs font-black uppercase tracking-[0.12em] text-[#2f261f]" href={aiAvailabilityHref}>
           {localLabels.checkAvailability}
         </a>
