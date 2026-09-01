@@ -279,31 +279,32 @@ export function DiscountReveal({ successText, code, locale = "en" }: DiscountRev
 
     if (!canvas || !card || isRevealed) return;
 
-    const rect = card.getBoundingClientRect();
+    const width = card.clientWidth;
+    const height = card.clientHeight;
     const ratio = window.devicePixelRatio || 1;
     const ctx = canvas.getContext("2d");
 
     if (!ctx) return;
 
-    canvas.width = Math.max(1, Math.floor(rect.width * ratio));
-    canvas.height = Math.max(1, Math.floor(rect.height * ratio));
-    canvas.style.width = `${rect.width}px`;
-    canvas.style.height = `${rect.height}px`;
+    canvas.width = Math.max(1, Math.floor(width * ratio));
+    canvas.height = Math.max(1, Math.floor(height * ratio));
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
 
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
     ctx.globalCompositeOperation = "source-over";
 
-    const gradient = ctx.createLinearGradient(0, 0, rect.width, rect.height);
+    const gradient = ctx.createLinearGradient(0, 0, width, height);
     gradient.addColorStop(0, "#b98618");
     gradient.addColorStop(0.5, "#d9b76c");
     gradient.addColorStop(1, "#916006");
 
     ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, rect.width, rect.height);
+    ctx.fillRect(0, 0, width, height);
 
     ctx.fillStyle = "rgba(255,255,255,0.15)";
-    for (let x = 0; x < rect.width; x += 16) {
-      ctx.fillRect(x, 0, 7, rect.height);
+    for (let x = 0; x < width; x += 16) {
+      ctx.fillRect(x, 0, 7, height);
     }
 
     ctx.fillStyle = "#fffaf1";
@@ -311,10 +312,10 @@ export function DiscountReveal({ successText, code, locale = "en" }: DiscountRev
     ctx.textBaseline = "middle";
 
     ctx.font = "700 16px Arial, sans-serif";
-    ctx.fillText(text.coverLine1, rect.width / 2, rect.height / 2 - 9);
+    ctx.fillText(text.coverLine1, width / 2, height / 2 - 9);
 
     ctx.font = "700 14px Arial, sans-serif";
-    ctx.fillText(text.coverLine2, rect.width / 2, rect.height / 2 + 13);
+    ctx.fillText(text.coverLine2, width / 2, height / 2 + 13);
   }, [isRevealed, text.coverLine1, text.coverLine2]);
 
   useEffect(() => {
