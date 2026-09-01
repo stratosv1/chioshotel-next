@@ -15,8 +15,19 @@ import { TypingIndicator } from "./room-finder-typing-indicator";
 import { useRoomFinder } from "./use-room-finder";
 
 const WHATSAPP_NUMBER = "306944474226";
+const CALL_NUMBER = "+306944764654";
 const BREAKFAST_IMAGE = "/images/welcome/voulamandis-breakfast.jpg";
 const CORE_INPUT_STEPS = new Set(["checkin", "checkout", "rooms", "guests"]);
+
+const CALL_LABEL: Record<RoomFinderLanguage, string> = {
+  el: "Κλήση",
+  en: "Call",
+  de: "Anrufen",
+  fr: "Appeler",
+  it: "Chiama",
+  es: "Llamar",
+  tr: "Ara",
+};
 
 type ContactPrivacyCopy = {
   firstName: string;
@@ -713,18 +724,20 @@ export function RoomFinderProduction({
 
             {finder.step === "unavailable" && (
               <section className="ml-10 grid grid-cols-2 gap-2 rounded-[22px] border border-[#dfd6ca] bg-white p-4">
-                <button
-                  type="button"
-                  onClick={() => finder.editDates()}
-                  className="min-h-12 rounded-2xl border font-bold"
+                <a
+                  href={`tel:${CALL_NUMBER}`}
+                  aria-label={`${CALL_LABEL[language]} ${CALL_NUMBER}`}
+                  className="flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-[#6b604f] px-3 font-bold text-white transition active:scale-[.97]"
                 >
-                  {copy.editDates}
-                </button>
+                  <span aria-hidden="true">📞</span>
+                  {CALL_LABEL[language]}
+                </a>
                 <button
                   type="button"
                   onClick={() => openWhatsApp(whatsappContext(copy.whatsappHelp))}
-                  className="min-h-12 rounded-2xl bg-[#287d4f] font-bold text-white"
+                  className="flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-[#287d4f] px-3 font-bold text-white transition active:scale-[.97]"
                 >
+                  <span aria-hidden="true">💬</span>
                   {copy.whatsapp}
                 </button>
               </section>
