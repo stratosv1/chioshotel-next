@@ -43,6 +43,12 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
   whatsapp: string;
   sms: string;
   call: string;
+  emailPrompt: string;
+  emailPlaceholder: string;
+  emailSend: string;
+  emailSending: string;
+  emailSent: string;
+  emailError: string;
   footer: string;
   messageTitle: string;
   messageConfirm: string;
@@ -68,7 +74,13 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     nights: "nights",
     whatsapp: "WhatsApp",
     sms: "Send SMS",
-    call: "Email chioshotel@gmail.com",
+    call: "Email request",
+    emailPrompt: "Enter your email so reception can reply.",
+    emailPlaceholder: "Your email",
+    emailSend: "Send request",
+    emailSending: "Sending...",
+    emailSent: "Request sent to reception.",
+    emailError: "Please enter a valid email.",
     footer: "Your instant request at chioshotel.gr",
     messageTitle: "Instant request to reception - Voulamandis House",
     messageConfirm: "Please confirm availability and send your best direct offer.",
@@ -113,7 +125,13 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     nights: "νύχτες",
     whatsapp: "WhatsApp",
     sms: "Αποστολή SMS",
-    call: "Email chioshotel@gmail.com",
+    call: "Αίτημα με email",
+    emailPrompt: "Γράψτε το email σας για να σας απαντήσει η ρεσεψιόν.",
+    emailPlaceholder: "Το email σας",
+    emailSend: "Αποστολή αιτήματος",
+    emailSending: "Αποστολή...",
+    emailSent: "Το αίτημα στάλθηκε στη ρεσεψιόν.",
+    emailError: "Συμπληρώστε ένα έγκυρο email.",
     footer: "Το άμεσο αίτημά σας στο chioshotel.gr",
     messageTitle: "Άμεσο αίτημα στη ρεσεψιόν - Voulamandis House",
     messageConfirm: "Παρακαλώ επιβεβαιώστε τη διαθεσιμότητα και στείλτε μου την καλύτερη απευθείας προσφορά.",
@@ -158,7 +176,13 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     nights: "nuits",
     whatsapp: "WhatsApp",
     sms: "Envoyer SMS",
-    call: "Email chioshotel@gmail.com",
+    call: "Demande par e-mail",
+    emailPrompt: "Saisissez votre e-mail afin que la réception puisse vous répondre.",
+    emailPlaceholder: "Votre e-mail",
+    emailSend: "Envoyer la demande",
+    emailSending: "Envoi...",
+    emailSent: "Demande envoyée à la réception.",
+    emailError: "Saisissez une adresse e-mail valide.",
     footer: "Votre demande instantanée sur chioshotel.gr",
     messageTitle: "Demande instantanée à la réception - Voulamandis House",
     messageConfirm: "Merci de confirmer la disponibilité et de m’envoyer votre meilleure offre directe.",
@@ -203,7 +227,13 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     nights: "Nächte",
     whatsapp: "WhatsApp",
     sms: "SMS senden",
-    call: "E-Mail chioshotel@gmail.com",
+    call: "Anfrage per E-Mail",
+    emailPrompt: "Geben Sie Ihre E-Mail-Adresse ein, damit die Rezeption antworten kann.",
+    emailPlaceholder: "Ihre E-Mail-Adresse",
+    emailSend: "Anfrage senden",
+    emailSending: "Wird gesendet...",
+    emailSent: "Anfrage an die Rezeption gesendet.",
+    emailError: "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
     footer: "Ihre Sofortanfrage auf chioshotel.gr",
     messageTitle: "Sofortanfrage an die Rezeption - Voulamandis House",
     messageConfirm: "Bitte bestätigen Sie die Verfügbarkeit und senden Sie mir Ihr bestes Direktangebot.",
@@ -248,7 +278,13 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     nights: "notti",
     whatsapp: "WhatsApp",
     sms: "Invia SMS",
-    call: "Email chioshotel@gmail.com",
+    call: "Richiesta via email",
+    emailPrompt: "Inserisci la tua email per ricevere una risposta dalla reception.",
+    emailPlaceholder: "La tua email",
+    emailSend: "Invia richiesta",
+    emailSending: "Invio...",
+    emailSent: "Richiesta inviata alla reception.",
+    emailError: "Inserisci un indirizzo email valido.",
     footer: "La tua richiesta immediata su chioshotel.gr",
     messageTitle: "Richiesta immediata alla reception - Voulamandis House",
     messageConfirm: "Per favore confermate la disponibilità e inviatemi la vostra migliore offerta diretta.",
@@ -293,7 +329,13 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     nights: "noches",
     whatsapp: "WhatsApp",
     sms: "Enviar SMS",
-    call: "Email chioshotel@gmail.com",
+    call: "Solicitud por email",
+    emailPrompt: "Introduce tu email para que recepción pueda responderte.",
+    emailPlaceholder: "Tu email",
+    emailSend: "Enviar solicitud",
+    emailSending: "Enviando...",
+    emailSent: "Solicitud enviada a recepción.",
+    emailError: "Introduce una dirección de email válida.",
     footer: "Su solicitud instantánea en chioshotel.gr",
     messageTitle: "Solicitud instantánea a recepción - Voulamandis House",
     messageConfirm: "Por favor confirme la disponibilidad y envíeme su mejor oferta directa.",
@@ -338,7 +380,13 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     nights: "gece",
     whatsapp: "WhatsApp",
     sms: "SMS gönder",
-    call: "E-mail chioshotel@gmail.com",
+    call: "E-posta ile talep",
+    emailPrompt: "Resepsiyonun yanıt verebilmesi için e-posta adresinizi girin.",
+    emailPlaceholder: "E-posta adresiniz",
+    emailSend: "Talebi gönder",
+    emailSending: "Gönderiliyor...",
+    emailSent: "Talep resepsiyona gönderildi.",
+    emailError: "Geçerli bir e-posta adresi girin.",
     footer: "chioshotel.gr üzerinden anında talebiniz",
     messageTitle: "Resepsiyona anında talep - Voulamandis House",
     messageConfirm: "Lütfen uygunluğu onaylayın ve en iyi doğrudan teklifinizi gönderin.",
@@ -424,6 +472,12 @@ function buildRequestHref(
     .join("\n");
 
   return `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(text)}`;
+}
+
+function nextIsoDate(value: string) {
+  const date = new Date(`${value}T00:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + 1);
+  return date.toISOString().slice(0, 10);
 }
 
 function updateStickyRequestLink(href: string) {
@@ -618,6 +672,10 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [emailOpen, setEmailOpen] = useState(false);
+  const [emailValue, setEmailValue] = useState("");
+  const [emailState, setEmailState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [emailFeedback, setEmailFeedback] = useState("");
   const copy = LIVE_REQUEST_COPY[getLiveRequestLocale(canonicalPath)];
   const roomsScrollerRef = useRef<HTMLDivElement | null>(null);
 
@@ -703,6 +761,51 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
     updateStickyRequestLink(requestHref);
     window.dispatchEvent(new CustomEvent("live-direct-request:update", { detail: { href: requestHref } }));
   }, [requestHref]);
+
+  async function handleEmailRequest() {
+    if (!selectedRoom || !totals || !selectedDates.length || emailState === "sending") return;
+
+    const contact = emailValue.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact)) {
+      setEmailState("error");
+      setEmailFeedback(copy.emailError);
+      return;
+    }
+
+    setEmailState("sending");
+    setEmailFeedback("");
+
+    try {
+      const response = await fetch("/api/ai-assistant/request-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          requestId: `LIVE-${Date.now().toString(36).toUpperCase()}`,
+          name: "Live Deals visitor",
+          contact,
+          message: `Live Deals request from ${canonicalPath}`,
+          checkin: selectedDates[0],
+          checkout: nextIsoDate(selectedDates[selectedDates.length - 1]),
+          guests,
+          roomId: String(selectedRoom.roomId),
+          unitId: String(selectedRoom.unitId),
+          roomName: `${selectedRoom.displayName} - ${selectedRoom.type}`,
+          originalTotal: totals.original,
+          directTotal: totals.direct,
+        }),
+      });
+
+      const result = (await response.json().catch(() => null)) as { ok?: boolean; error?: string } | null;
+      if (!response.ok || !result?.ok) throw new Error(result?.error || "Could not send request email.");
+
+      setEmailState("sent");
+      setEmailFeedback(copy.emailSent);
+      setEmailOpen(false);
+    } catch {
+      setEmailState("error");
+      setEmailFeedback(copy.emailError);
+    }
+  }
 
   function handleDateClick(date: string) {
     if (!selectedRoom || !getNightInfo(deals, selectedRoom, date, guests)) return;
@@ -879,11 +982,60 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
             ))}
           </div>
 
-          <div className="mt-4 hidden gap-3 pb-10 md:grid md:grid-cols-3 md:pb-0">
+          <div className="mt-4 grid grid-cols-1 gap-3 pb-3 sm:grid-cols-3 md:grid-cols-2">
             <a href={requestHref} target="_blank" rel="noopener noreferrer" className="flex min-h-14 items-center justify-center rounded-2xl bg-[#17351f] px-5 text-center text-sm font-black uppercase tracking-[0.08em] !text-white shadow-lg shadow-emerald-950/20 transition hover:-translate-y-0.5 hover:bg-[#224d2d]">{copy.whatsapp}</a>
-            <a href={smsHref} className="flex min-h-14 items-center justify-center rounded-2xl border border-emerald-700/30 bg-white px-5 text-center text-sm font-black uppercase tracking-[0.08em] !text-emerald-800 transition hover:bg-emerald-50">{copy.sms}</a>
-            <a href={CONTACT.emailHref} className="flex min-h-14 items-center justify-center rounded-2xl border border-stone-300 bg-white px-5 text-center text-sm font-black uppercase tracking-[0.08em] !text-stone-800 transition hover:border-amber-700 hover:bg-amber-50">{copy.call}</a>
+            <a href={smsHref} className="flex min-h-14 items-center justify-center rounded-2xl border border-emerald-700/30 bg-white px-5 text-center text-sm font-black uppercase tracking-[0.08em] !text-emerald-800 transition hover:bg-emerald-50 md:hidden">{copy.sms}</a>
+            <button
+              type="button"
+              onClick={() => {
+                if (emailState !== "sent") setEmailOpen((open) => !open);
+              }}
+              className="flex min-h-14 items-center justify-center rounded-2xl border border-stone-300 bg-white px-5 text-center text-sm font-black uppercase tracking-[0.08em] text-stone-800 transition hover:border-amber-700 hover:bg-amber-50"
+            >
+              {emailState === "sent" ? copy.emailSent : copy.call}
+            </button>
           </div>
+
+          {emailOpen && emailState !== "sent" ? (
+            <form
+              onSubmit={(event) => {
+                event.preventDefault();
+                void handleEmailRequest();
+              }}
+              className="mx-auto mt-1 grid max-w-2xl gap-2 rounded-2xl border border-amber-900/10 bg-white p-3 shadow-sm sm:grid-cols-[minmax(0,1fr)_auto]"
+            >
+              <label className="min-w-0">
+                <span className="mb-1 block text-xs font-bold text-stone-600">{copy.emailPrompt}</span>
+                <input
+                  type="email"
+                  inputMode="email"
+                  autoComplete="email"
+                  value={emailValue}
+                  onChange={(event) => {
+                    setEmailValue(event.target.value);
+                    if (emailState === "error") {
+                      setEmailState("idle");
+                      setEmailFeedback("");
+                    }
+                  }}
+                  placeholder={copy.emailPlaceholder}
+                  required
+                  className="h-12 w-full rounded-xl border border-stone-300 bg-white px-4 text-base text-stone-900 outline-none ring-amber-700/20 transition focus:border-amber-700 focus:ring-4"
+                />
+              </label>
+              <button
+                type="submit"
+                disabled={emailState === "sending"}
+                className="min-h-12 self-end rounded-xl bg-amber-700 px-5 text-sm font-black uppercase tracking-[0.06em] text-white transition hover:bg-amber-800 disabled:cursor-wait disabled:opacity-70"
+              >
+                {emailState === "sending" ? copy.emailSending : copy.emailSend}
+              </button>
+            </form>
+          ) : null}
+
+          {emailFeedback ? (
+            <p className={`mt-2 text-center text-xs font-bold ${emailState === "sent" ? "text-emerald-700" : "text-red-600"}`} role="status">{emailFeedback}</p>
+          ) : null}
           <p className="mt-4 text-center text-xs font-semibold text-stone-500">{copy.footer}</p>
         </div>
       </div>
