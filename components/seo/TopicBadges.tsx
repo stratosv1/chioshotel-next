@@ -148,7 +148,7 @@ const allTopicBadges: TopicBadgeKey[] = [
 const badgesByContext: Record<TopicBadgeContext, TopicBadgeKey[]> = {
   home: allTopicBadges,
   "rooms-category": ["rooms", "groundRooms", "firstFloorRooms", "familyStay"],
-  "room-detail": allTopicBadges,
+  "room-detail": ["rooms", "groundRooms", "firstFloorRooms", "familyStay"],
   "beach-detail": allTopicBadges,
   "village-detail": allTopicBadges,
   contact: allTopicBadges,
@@ -197,7 +197,7 @@ export function TopicBadges({ locale, context, className = "" }: TopicBadgesProp
             href={item.href}
             className="inline-flex shrink-0 items-center gap-2 rounded-full border border-amber-800/15 bg-white px-3.5 py-2 text-xs font-black text-amber-900 shadow-sm transition hover:-translate-y-0.5 hover:bg-amber-50 md:text-sm"
           >
-            <span aria-hidden="true">{item.emoji}</span>
+            <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-amber-700" />
             <span>{item.label}</span>
           </a>
         ))}
