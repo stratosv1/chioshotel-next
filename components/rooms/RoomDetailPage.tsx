@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { TopicBadges } from "@/components/seo/TopicBadges";
 import type { IndividualRoomData, RoomDetailData } from "@/content/room-details";
 import { roomFinderHrefForLanguage } from "@/lib/room-finder-cta-routing";
@@ -349,6 +349,22 @@ export function RoomDetailPage({ data }: RoomDetailPageProps) {
   const localLabels = labels[language];
   const primaryBookingHref = bookingPathByLanguage[language] || data.hero.primaryCta.href;
   const aiAvailabilityHref = roomFinderHrefForLanguage(language);
+  const heroAvailabilityRef = useRef<HTMLAnchorElement>(null);
+  const [showStickyAvailability, setShowStickyAvailability] = useState(false);
+
+  useEffect(() => {
+    const heroAvailability = heroAvailabilityRef.current;
+    if (!heroAvailability) return;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      setShowStickyAvailability(
+        !entry.isIntersecting && entry.boundingClientRect.bottom < 0,
+      );
+    });
+
+    observer.observe(heroAvailability);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#fbf6ef] pb-20 text-[#2f261f] md:pb-0">
@@ -364,7 +380,7 @@ export function RoomDetailPage({ data }: RoomDetailPageProps) {
                 {data.hero.badges.map((badge) => <span key={badge} className="rounded-full border border-amber-900/10 bg-white px-3 py-1.5 text-xs font-extrabold text-[#574b3f]">{localizeRoomText(badge, language)}</span>)}
               </div>
               <div className="mt-7 grid gap-3 sm:grid-cols-2">
-                <a className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-amber-500 px-5 text-center text-[11px] font-black uppercase tracking-[0.12em] !text-[#2f261f] shadow-[0_16px_32px_rgba(180,117,16,0.22)] transition hover:-translate-y-0.5 hover:bg-amber-400 sm:text-xs" href={aiAvailabilityHref} style={{ color: "#2f261f" }}>{localLabels.checkAvailability}</a>
+                <a ref={heroAvailabilityRef} className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-amber-500 px-5 text-center text-[11px] font-black uppercase tracking-[0.12em] !text-[#2f261f] shadow-[0_16px_32px_rgba(180,117,16,0.22)] transition hover:-translate-y-0.5 hover:bg-amber-400 sm:text-xs" href={aiAvailabilityHref} style={{ color: "#2f261f" }}>{localLabels.checkAvailability}</a>
                 <a className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-amber-900/20 bg-white px-5 text-center text-[11px] font-black uppercase tracking-[0.12em] text-[#2f261f] transition hover:-translate-y-0.5 hover:bg-amber-50 sm:text-xs" href={primaryBookingHref} data-booking-cta="true">{localLabels.bookOnline}</a>
               </div>
             </div>
@@ -426,11 +442,13 @@ export function RoomDetailPage({ data }: RoomDetailPageProps) {
         <div className="mx-auto mt-8 max-w-3xl space-y-3">{data.faq.map((item) => <details className="rounded-2xl bg-white p-4 shadow-[0_12px_28px_rgba(47,38,31,0.07)]" key={item.question}><summary className="cursor-pointer text-base font-black text-[#2f261f]">{item.question}</summary><p className="mt-3 text-sm leading-7 text-[#574b3f]">{localizeRoomText(item.answer, language)}</p></details>)}</div>
       </section>
 
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-amber-900/10 bg-[#fffaf3]/95 p-3 shadow-[0_-12px_30px_rgba(47,38,31,0.12)] backdrop-blur md:hidden">
-        <a className="mx-auto flex min-h-[52px] max-w-md items-center justify-center rounded-full bg-amber-500 px-5 text-center text-xs font-black uppercase tracking-[0.12em] text-[#2f261f]" href={aiAvailabilityHref}>
-          {localLabels.checkAvailability}
-        </a>
-      </div>
+      {showStickyAvailability ? (
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-amber-900/10 bg-[#fffaf3]/95 p-3 shadow-[0_-12px_30px_rgba(47,38,31,0.12)] backdrop-blur md:hidden">
+          <a className="mx-auto flex min-h-[52px] max-w-md items-center justify-center rounded-full bg-amber-500 px-5 text-center text-xs font-black uppercase tracking-[0.12em] text-[#2f261f]" href={aiAvailabilityHref}>
+            {localLabels.checkAvailability}
+          </a>
+        </div>
+      ) : null}
     </main>
   );
 }
