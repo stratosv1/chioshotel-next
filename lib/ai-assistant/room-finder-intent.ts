@@ -14,6 +14,7 @@ const ACTION_TYPES = [
   "set_preferences",
   "restart_search",
   "ask_clarification",
+  "acknowledge_contact",
   "no_change",
 ] as const;
 
@@ -88,7 +89,8 @@ You may return only these actions:
 - set_preferences: SOFT room preferences used only to rank already-available rooms. Supported values: ground_floor, no_stairs, kitchen, balcony, garden, budget, family.
 - restart_search: customer clearly wants to start over.
 - ask_clarification: only for a value the customer attempted to provide but which is genuinely ambiguous/contradictory.
-- no_change: no supported booking fact or supported room preference was supplied in the latest message.
+- acknowledge_contact: the customer says they will call, message, write to or otherwise contact the property/reception, now or later.
+- no_change: no supported booking fact, supported room preference or contact intention was supplied in the latest message.
 
 CORE RULES
 - Read the latest message together with booking context and recent conversation.
@@ -96,6 +98,7 @@ CORE RULES
 - Corrections in the latest message override earlier context, including during selecting, breakfast, complete or unavailable states.
 - Never discard a clear fact because another fact is missing.
 - Never invent dates, rooms or guests.
+- If the customer says they will call, phone, message, WhatsApp, write to or contact the property/reception, return acknowledge_contact. Do not return no_change and do not suggest changing dates unless the customer actually asks to change them.
 - Missing information is NOT ambiguity. Do not ask a clarification merely because another booking field is absent; return the facts you understood and let the application ask the next missing field.
 - If part of a message is clear and another attempted fact is ambiguous, return the clear fact actions plus exactly one specific ask_clarification action.
 - Clarification must identify the exact ambiguity and, when useful, include one short valid example.
@@ -179,6 +182,9 @@ REFERENCE EXAMPLES
 
 10) Context preferences=[budget]. Customer: “τελικά θέλω ισόγειο χωρίς σκάλες, η τιμή δεν με νοιάζει”.
 => set_preferences(preferences=[ground_floor,no_stairs]).
+
+11) Context currentStep=unavailable. Customer: “Θα καλέσω αύριο στο τηλέφωνό σας”.
+=> acknowledge_contact. Do not return no_change, do not ask for new dates and do not modify booking facts.
 
 SCHEMA RULES
 - For irrelevant nullable fields return null.
