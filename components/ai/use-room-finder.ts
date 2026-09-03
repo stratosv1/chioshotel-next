@@ -68,6 +68,16 @@ const NO_BOOKING_CHANGE: Record<RoomFinderLanguage, string> = {
   tr: "Tarihleri, oda sayısını veya kişi sayısını değiştirebilirim. Örneğin: “aslında 3 kişi” veya “çıkış 13/10”.",
 };
 
+const CONTACT_ACKNOWLEDGED: Record<RoomFinderLanguage, string> = {
+  el: "Βεβαίως 😊 Θα χαρούμε να σας εξυπηρετήσουμε. Μπορείτε να μας καλέσετε στο +30 694 476 4654 ή να μας στείλετε μήνυμα στο WhatsApp.",
+  en: "Of course 😊 We’ll be happy to help. You can call us on +30 694 476 4654 or send us a message on WhatsApp.",
+  de: "Natürlich 😊 Wir helfen Ihnen gerne. Sie können uns unter +30 694 476 4654 anrufen oder uns eine Nachricht über WhatsApp senden.",
+  fr: "Bien sûr 😊 Nous serons ravis de vous aider. Vous pouvez nous appeler au +30 694 476 4654 ou nous envoyer un message sur WhatsApp.",
+  it: "Certamente 😊 Saremo lieti di aiutarvi. Potete chiamarci al +30 694 476 4654 o inviarci un messaggio su WhatsApp.",
+  es: "Por supuesto 😊 Estaremos encantados de ayudarles. Pueden llamarnos al +30 694 476 4654 o enviarnos un mensaje por WhatsApp.",
+  tr: "Elbette 😊 Size yardımcı olmaktan memnuniyet duyarız. Bizi +30 694 476 4654 numaralı telefondan arayabilir veya WhatsApp’tan mesaj gönderebilirsiniz.",
+};
+
 const PREFERENCE_APPLIED: Record<RoomFinderLanguage, string> = {
   el: "Το σημείωσα. Θα βάλω πρώτα τις διαθέσιμες επιλογές που ταιριάζουν περισσότερο σε αυτό που ζητάτε, χωρίς να κρύψω τις υπόλοιπες.",
   en: "Noted. I’ll place the available options that best match your preference first, without hiding the other rooms.",
@@ -475,6 +485,11 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   }
 
   async function applyCommand(command: RoomFinderCommand) {
+    if (command.actions.some(action => action.type === "acknowledge_contact")) {
+      add("assistant", CONTACT_ACKNOWLEDGED[language], "contact");
+      return;
+    }
+
     const preferenceAction = [...command.actions]
       .reverse()
       .find(action => action.type === "set_preferences");
