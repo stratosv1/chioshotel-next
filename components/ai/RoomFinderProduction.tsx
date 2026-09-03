@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { MessageCircle, Phone } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import {
   ROOM_FINDER_COPY,
@@ -600,6 +601,30 @@ export function RoomFinderProduction({
             {finder.messages.map(message => (
               <div key={message.id}>
                 <ChatMessage message={message} />
+                {message.kind === "contact" && (
+                  <section
+                    aria-label={`${CALL_LABEL[language]} / ${copy.whatsapp}`}
+                    className="msg ml-10 mt-2 grid grid-cols-2 gap-2 rounded-[22px] border border-[#dfd6ca] bg-white p-3 shadow-sm"
+                  >
+                    <a
+                      href={`tel:${CALL_NUMBER}`}
+                      aria-label={`${CALL_LABEL[language]} ${CALL_NUMBER}`}
+                      className="flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-[#c66a34] px-3 font-bold text-white transition hover:bg-[#ad572a] active:scale-[.97]"
+                    >
+                      <Phone className="h-5 w-5" aria-hidden="true" />
+                      {CALL_LABEL[language]}
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => openWhatsApp(whatsappContext(copy.whatsappHelp))}
+                      aria-label={copy.whatsapp}
+                      className="flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-[#287d4f] px-3 font-bold text-white transition hover:bg-[#20663f] active:scale-[.97]"
+                    >
+                      <MessageCircle className="h-5 w-5" aria-hidden="true" />
+                      {copy.whatsapp}
+                    </button>
+                  </section>
+                )}
                 {finder.canGoBack
                   && !finder.typing
                   && !quickRepliesHidden
@@ -720,27 +745,6 @@ export function RoomFinderProduction({
                   </div>
                 </section>
               </>
-            )}
-
-            {finder.step === "unavailable" && (
-              <section className="ml-10 grid grid-cols-2 gap-2 rounded-[22px] border border-[#dfd6ca] bg-white p-4">
-                <a
-                  href={`tel:${CALL_NUMBER}`}
-                  aria-label={`${CALL_LABEL[language]} ${CALL_NUMBER}`}
-                  className="flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-[#6b604f] px-3 font-bold text-white transition active:scale-[.97]"
-                >
-                  <span aria-hidden="true">📞</span>
-                  {CALL_LABEL[language]}
-                </a>
-                <button
-                  type="button"
-                  onClick={() => openWhatsApp(whatsappContext(copy.whatsappHelp))}
-                  className="flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-[#287d4f] px-3 font-bold text-white transition active:scale-[.97]"
-                >
-                  <span aria-hidden="true">💬</span>
-                  {copy.whatsapp}
-                </button>
-              </section>
             )}
 
             {finder.step === "complete" && (
