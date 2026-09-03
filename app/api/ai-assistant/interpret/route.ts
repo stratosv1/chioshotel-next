@@ -157,7 +157,7 @@ function deterministicFastPath(
         ? SIMPLE_GUEST_INPUT.test(message)
         : false;
 
-  if (!safeInput) return null;
+  if (!safeInput && step !== "unavailable") return null;
   return fallbackRoomFinderCommand(message, context);
 }
 
