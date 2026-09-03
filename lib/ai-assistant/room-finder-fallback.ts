@@ -14,6 +14,7 @@ const DATE_TOKEN = /\b(\d{1,2})[\/.\-](\d{1,2})(?:[\/.\-](\d{2,4}))?\b/g;
 const ROOM_WORDS = /(δωμάτι(?:ο|α)|rooms?|zimmer|chambres?|camere?|habitaciones?|odas?)/iu;
 const GUEST_WORDS = /(άτομα|ατομα|επισκέπτες|επισκεπτες|guests?|people|persons?|gäste|personen|personnes?|persone|personas?|kişi)/iu;
 const RESTART_WORDS = /(από την αρχή|απο την αρχη|νέα αναζήτηση|νεα αναζητηση|start over|new search|restart|neu beginnen|nouvelle recherche|ricomincia|nueva búsqueda|yeniden başla|yeni arama)/iu;
+const CONTACT_INTENT_WORDS = /(θα\s+(?:σας\s+)?(?:καλέσω|τηλεφωνήσω|τηλεφωνησω|επικοινωνήσω|επικοινωνησω|γράψω|γραψω|στείλω|στειλω)|θα\s+πάρω\s+τηλέφωνο|i(?:'|’)ll\s+(?:call|contact|message|write)|i\s+will\s+(?:call|contact|message|write)|i(?:'|’)ll\s+get\s+in\s+touch|ich\s+(?:rufe|melde)|werde\s+(?:anrufen|kontaktieren|schreiben)|je\s+vais\s+(?:appeler|contacter|écrire)|j(?:'|’)appellerai|je\s+vous\s+contacterai|(?:vi\s+)?(?:chiamerò|contatterò|scriverò)|voy\s+a\s+(?:llamar|contactar|escribir)|(?:les\s+)?(?:llamaré|contactaré|escribiré)|(?:sizi\s+)?arayacağım|iletişime\s+geçeceğim|mesaj\s+atacağım|yazacağım)/iu;
 const CHECKIN_WORDS = /(check\s*-?\s*in|άφιξ|αφιξ|arrival|ankunft|arrivée|arrivo|llegada|giriş)/iu;
 const CHECKOUT_WORDS = /(check\s*-?\s*out|αναχώρ|αναχωρ|departure|abreise|départ|partenza|salida|çıkış)/iu;
 const PREFERENCE_REMOVAL_WORDS = /(δεν\s+(?:με\s+)?νοιάζ|δεν\s+θέλω\s+πια|όχι\s+πια|χωρίς\s+προτίμηση|don['’]?t\s+care|do\s+not\s+care|no\s+longer|don['’]?t\s+want|do\s+not\s+want|nicht\s+mehr|nicht\s+wichtig|peu\s+importe|ne\s+veux\s+plus|non\s+importa|non\s+voglio\s+più|ya\s+no|no\s+me\s+importa|no\s+quiero|artık\s+önemli\s+değil|istemiyorum)/iu;
@@ -91,6 +92,9 @@ export function fallbackRoomFinderCommand(
   const language = context.language || "en";
   if (RESTART_WORDS.test(text)) {
     return { language, replyMode: "execute", actions: [{ type: "restart_search" }] };
+  }
+  if (CONTACT_INTENT_WORDS.test(text)) {
+    return { language, replyMode: "execute", actions: [{ type: "acknowledge_contact" }] };
   }
 
   const today = todayInAthensIso();
