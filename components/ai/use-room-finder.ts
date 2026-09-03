@@ -455,7 +455,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
         setOffers([]);
         setActiveGroup(0);
         dispatchFlow({ type: "set_step", step: "unavailable" });
-        add("assistant", tone.unavailable);
+        add("assistant", tone.unavailable, "contact");
         return;
       }
 
@@ -468,7 +468,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       setOffers([]);
       setActiveGroup(0);
       dispatchFlow({ type: "set_step", step: "unavailable" });
-      add("assistant", INVENTORY_UNAVAILABLE[language]);
+      add("assistant", INVENTORY_UNAVAILABLE[language], "contact");
     } finally {
       setTyping(false);
     }
