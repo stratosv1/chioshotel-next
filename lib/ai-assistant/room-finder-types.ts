@@ -27,6 +27,7 @@ export type RoomFinderActionType =
   | "set_preferences"
   | "restart_search"
   | "ask_clarification"
+  | "acknowledge_contact"
   | "no_change";
 
 export type RoomFinderAction = {
