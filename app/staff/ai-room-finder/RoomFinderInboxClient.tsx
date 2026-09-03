@@ -1,5 +1,6 @@
 "use client";
 
+import { MessageCircle, Phone } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type {
   RoomFinderInboxConversation,
@@ -266,6 +267,26 @@ export default function RoomFinderInboxClient({ initialData }: { initialData: Ro
                     <div key={message.id} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
                       <div className={`max-w-[88%] rounded-2xl px-4 py-3 text-sm leading-6 shadow-sm ${message.role === "user" ? "rounded-br-md bg-[#6b604f] text-white" : "rounded-bl-md border border-stone-200 bg-white text-stone-800"}`}>
                         <div className="whitespace-pre-wrap">{message.content}</div>
+                        {message.kind === "contact" && (
+                          <div className="mt-3 grid grid-cols-2 gap-2 border-t border-stone-100 pt-3">
+                            <a
+                              href="tel:+306944764654"
+                              className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#c66a34] px-3 font-bold text-white"
+                            >
+                              <Phone className="h-4 w-4" aria-hidden="true" />
+                              Κλήση
+                            </a>
+                            <a
+                              href="https://wa.me/306944474226"
+                              target="_blank"
+                              rel="noreferrer"
+                              className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#287d4f] px-3 font-bold text-white"
+                            >
+                              <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                              WhatsApp
+                            </a>
+                          </div>
+                        )}
                         <div className={`mt-1 text-[10px] ${message.role === "user" ? "text-white/70" : "text-stone-400"}`}>{message.role === "user" ? "Πελάτης" : "AI Room Finder"}{message.reaction ? ` · ${message.reaction}` : ""}</div>
                       </div>
                     </div>
