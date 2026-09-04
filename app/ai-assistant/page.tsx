@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { RoomFinderCalmMotion } from "@/components/ai/RoomFinderCalmMotion";
 import { RoomFinderProduction } from "@/components/ai/RoomFinderProduction";
 import { RoomFinderResultsViewportGuard } from "@/components/ai/RoomFinderResultsViewportGuard";
 import type { RoomFinderLanguage } from "@/components/ai/room-finder-copy";
@@ -32,7 +31,6 @@ export default async function AiAssistantPage({ searchParams }: AiAssistantPageP
 
   return (
     <div lang={initialLanguage} className="contents">
-      <RoomFinderCalmMotion />
       <RoomFinderResultsViewportGuard />
       <RoomFinderProduction initialLanguage={initialLanguage} />
     </div>

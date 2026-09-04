@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { MessageCircle, Phone } from "lucide-react";
+import { ArrowLeft, ChevronDown, MessageCircle, Phone, RotateCcw, Send } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import {
   ROOM_FINDER_COPY,
@@ -475,7 +475,7 @@ export function RoomFinderProduction({
       ref={shellRef}
       data-room-finder-shell="true"
       data-keyboard-open="false"
-      className="fixed inset-x-0 top-0 flex min-h-0 w-full flex-col overflow-hidden bg-[#f6f2eb] text-[#29251f]"
+      className="fixed inset-x-0 top-0 flex min-h-0 w-full flex-col overflow-hidden bg-[radial-gradient(circle_at_top,_#fffaf4_0,_#f6f2eb_42%,_#f3eee6_100%)] text-[#29251f]"
       style={{
         height: "var(--rf-visual-height, 100dvh)",
         top: "var(--rf-visual-offset-top, 0px)",
@@ -483,8 +483,8 @@ export function RoomFinderProduction({
     >
       <style jsx global>{`
         :root { --mandarin: #c66a34; }
-        @keyframes msg { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-        @keyframes react { from { opacity: 0; transform: translateY(2px) scale(.82); } to { opacity: 1; transform: none; } }
+        @keyframes msg { from { opacity: 0; transform: translate3d(0, 5px, 0); } to { opacity: 1; transform: translate3d(0, 0, 0); } }
+        @keyframes react { from { opacity: 0; transform: translate3d(0, 2px, 0) scale(.88); } to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); } }
         @keyframes typingDot { 0%,60%,100% { opacity: .35; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-4px); } }
         .msg { animation: msg .22s ease-out both; }
         .reaction { animation: react .22s ease-out both; }
@@ -499,36 +499,48 @@ export function RoomFinderProduction({
         [data-room-finder-shell="true"][data-keyboard-open="true"] .room-finder-composer {
           padding-bottom: .75rem;
         }
+        @media (prefers-reduced-motion: reduce) {
+          [data-room-finder-shell="true"] .msg,
+          [data-room-finder-shell="true"] .reaction,
+          [data-room-finder-shell="true"] .typing-dot {
+            animation: none !important;
+            transform: none !important;
+          }
+          [data-room-finder-shell="true"] * {
+            scroll-behavior: auto !important;
+          }
+        }
       `}</style>
 
-      <header className="shrink-0 border-b border-[#ddd4c8] bg-[#fbf8f3]/95 pt-[env(safe-area-inset-top)]">
-        <div className="mx-auto flex h-[64px] max-w-3xl items-center gap-1.5 px-2.5">
+      <header className="shrink-0 border-b border-[#ded5c9] bg-[#fbf8f3]/95 pt-[env(safe-area-inset-top)] shadow-[0_3px_14px_rgba(70,55,35,.05)]">
+        <div className="mx-auto flex h-[62px] max-w-3xl items-center gap-1.5 px-2.5">
           <a
             href={homeHref}
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-[26px] font-semibold leading-none text-[#625b52] transition hover:bg-white/70 active:scale-[.96]"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[#625b52] transition hover:bg-white active:scale-[.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9d8268]"
             aria-label="Back"
           >
-            ←
+            <ArrowLeft className="h-5 w-5" aria-hidden="true" />
           </a>
-          <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full ring-2 ring-white">
+          <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full ring-2 ring-white shadow-sm">
             <Image
               src="/images/welcome/voulamandis-welcome-hero.webp"
               alt="Voulamandis House"
               fill
-              sizes="40px"
+              sizes="36px"
               className="object-cover"
             />
           </div>
           <div className="min-w-0 flex-1 pl-1">
-            <h1 className="whitespace-nowrap text-[15px] font-bold leading-tight">Voulamandis House</h1>
-            <div className="mt-0.5 flex items-center gap-1.5 text-[11px] text-[#746b60]">
-              <span className="h-2 w-2 rounded-full bg-[#718b52]" />
-              {copy.online}
+            <h1 className="truncate text-[15px] font-black leading-tight">Voulamandis House</h1>
+            <div className="mt-0.5 flex min-w-0 items-center gap-1.5 whitespace-nowrap text-[12px] text-[#746b60]">
+              <span className="truncate font-semibold">AI Room Finder</span>
+              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#718b52]" />
+              <span className="hidden truncate min-[360px]:inline">{copy.online}</span>
             </div>
           </div>
-          <div className="relative h-11 w-[58px] shrink-0">
-            <div className="pointer-events-none flex h-full items-center justify-center gap-1 rounded-full border border-[#d8cec1] bg-white text-xs font-bold">
-              {language.toUpperCase()} <span aria-hidden="true">⌄</span>
+          <div className="relative h-10 w-[58px] shrink-0">
+            <div className="pointer-events-none flex h-full items-center justify-center gap-1 rounded-full border border-[#d8cec1] bg-white text-xs font-black shadow-sm">
+              {language.toUpperCase()} <ChevronDown className="h-3.5 w-3.5" aria-hidden="true" />
             </div>
             <select
               aria-label={copy.languageLabel}
@@ -547,9 +559,9 @@ export function RoomFinderProduction({
             aria-label={copy.newSearch}
             title={copy.newSearch}
             onClick={() => finder.reset()}
-            className="flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-full border border-[#d8cec1] bg-white text-[30px] font-black leading-none text-[#5f574d] shadow-sm transition hover:bg-[#fffdf9] active:scale-[.96]"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#d8cec1] bg-white text-[#5f574d] shadow-sm transition hover:bg-[#fffaf4] active:scale-[.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9d8268]"
           >
-            ↻
+            <RotateCcw className="h-[19px] w-[19px]" aria-hidden="true" />
           </button>
         </div>
       </header>
@@ -596,7 +608,7 @@ export function RoomFinderProduction({
         aria-busy={finder.typing}
         className="min-h-0 flex-1 overflow-y-auto overscroll-contain"
       >
-        <div className="mx-auto flex min-h-full max-w-3xl flex-col px-3 pb-7 pt-5">
+        <div className="mx-auto flex min-h-full max-w-3xl flex-col px-3.5 pb-7 pt-4 sm:px-5 sm:pt-5">
           <div className="space-y-3.5">
             {finder.messages.map(message => (
               <div key={message.id}>
@@ -914,8 +926,8 @@ export function RoomFinderProduction({
         </div>
       </div>
 
-      <form onSubmit={finder.submit} className="room-finder-composer shrink-0 border-t border-[#e2d9cd] bg-[#fbf8f3]/95">
-        <div className="mx-auto flex max-w-3xl items-center gap-2 rounded-[24px] border border-[#d8cec1] bg-white p-2 shadow-sm">
+      <form onSubmit={finder.submit} className="room-finder-composer shrink-0 border-t border-[#e2d9cd] bg-[#fbf8f3]/95 shadow-[0_-8px_24px_rgba(70,55,35,.04)]">
+        <div className="mx-auto flex max-w-3xl items-center gap-2 rounded-[22px] border border-[#d8cec1] bg-white p-1.5 shadow-[0_5px_18px_rgba(70,55,35,.07)] transition focus-within:border-[#aa9278] focus-within:ring-2 focus-within:ring-[#d9c8b5]/60">
           <label htmlFor="room-finder-message" className="sr-only">{inputPlaceholder}</label>
           <input
             ref={composerInputRef}
@@ -940,16 +952,16 @@ export function RoomFinderProduction({
               if (inputEnabled) finder.setInput(event.target.value);
             }}
             placeholder={inputPlaceholder}
-            className="min-w-0 flex-1 bg-transparent px-3 py-2 text-[16px] outline-none"
+            className="min-h-11 min-w-0 flex-1 bg-transparent px-3 py-2 text-[16px] outline-none placeholder:text-[#91877c]"
           />
           <button
             type="submit"
             aria-label={copy.send}
             onPointerDown={event => event.preventDefault()}
             disabled={!inputEnabled || !finder.input.trim()}
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#6b604f] text-white disabled:bg-[#d7d0c6]"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#62594d] text-white shadow-sm transition hover:bg-[#51493f] active:scale-[.95] disabled:bg-[#d7d0c6] disabled:shadow-none"
           >
-            ↑
+            <Send className="h-[18px] w-[18px]" aria-hidden="true" />
           </button>
         </div>
       </form>

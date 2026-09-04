@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useState, type ReactNode } from "react";
 import { ROOM_FINDER_COPY, type RoomFinderLanguage } from "./room-finder-copy";
 
@@ -63,6 +62,20 @@ function DiscountIcon() {
 
 function CalendarIcon() {
   return <MiniIcon><svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg></MiniIcon>;
+}
+
+function AssistantAvatar() {
+  return (
+    <span
+      className="mb-1 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#d9cfc2] bg-[#fffaf3] text-[#9f5a31] shadow-[0_2px_8px_rgba(70,55,35,.08)]"
+      aria-hidden="true"
+    >
+      <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 3l1.25 3.75L17 8l-3.75 1.25L12 13l-1.25-3.75L7 8l3.75-1.25L12 3Z" />
+        <path d="M18.5 14.5l.7 2.1 2.1.7-2.1.7-.7 2.1-.7-2.1-2.1-.7 2.1-.7.7-2.1Z" />
+      </svg>
+    </span>
+  );
 }
 
 let roomFinderSessionId = "";
@@ -149,22 +162,33 @@ export function ChatMessage({ message }:{ message:ChatItem }) {
     const welcome = WELCOME_FLOW[welcomeLang];
     const [directBenefit, checkInQuestion] = welcome.directBenefit.split("\n\n");
 
-    return <div className="msg flex items-end gap-2 justify-start">
-      <div className="relative mb-1 h-8 w-8 shrink-0 overflow-hidden rounded-full ring-1 ring-[#d7cdc0]"><Image src="/images/welcome/voulamandis-welcome-hero.webp" alt="" fill sizes="32px" className="object-cover"/></div>
-      <div className="relative max-w-[84%] space-y-2">
-        <div className="rounded-[20px] rounded-bl-[6px] border border-[#dfd6ca] bg-white px-4 py-3 text-[15px] leading-6 shadow-sm">
+    return <div className="msg flex items-end justify-start gap-2">
+      <AssistantAvatar />
+      <div className="relative min-w-0 flex-1 space-y-2.5 sm:max-w-[82%]">
+        <div className="rounded-[20px] rounded-bl-[7px] border border-[#ded4c8] bg-white px-4 py-3.5 text-[15px] leading-6 shadow-[0_5px_18px_rgba(70,55,35,.06)]">
           <div className="flex items-start gap-2.5"><SparkleIcon/><span>{welcome.greeting}</span></div>
         </div>
         {showWelcomeFollowup ? (
           <>
-            <div className="rf-followup-bubble rounded-[20px] rounded-bl-[6px] border border-[#dfd6ca] bg-white px-4 py-3 text-[15px] leading-6 shadow-sm">
-              <div className="flex items-start gap-2.5"><DiscountIcon/><span>{directBenefit}</span></div>
-              {checkInQuestion && <div className="mt-3 flex items-center gap-2.5 rounded-[14px] border border-[#e7ddd1] bg-[#faf7f2] px-3 py-2.5"><CalendarIcon/><span className="font-bold leading-5 text-[#433a30]">{checkInQuestion}</span></div>}
+            <div className="rf-followup-bubble overflow-hidden rounded-[20px] rounded-bl-[7px] border border-[#dfd3c4] bg-white shadow-[0_8px_24px_rgba(70,55,35,.07)]">
+              <div className="flex items-start gap-2.5 px-4 py-3.5 text-[15px] leading-6">
+                <DiscountIcon/>
+                <div className="min-w-0">
+                  <span className="mb-1.5 inline-flex rounded-full bg-[#fff0e4] px-2 py-0.5 text-[12px] font-black tracking-[.02em] text-[#a65329]">−10%</span>
+                  <p>{directBenefit}</p>
+                </div>
+              </div>
+              {checkInQuestion && (
+                <div className="flex items-center gap-2.5 border-t border-[#eadfd2] bg-[#faf6f0] px-4 py-3.5">
+                  <CalendarIcon/>
+                  <span className="text-[16px] font-black leading-5 text-[#3f382f]">{checkInQuestion}</span>
+                </div>
+              )}
             </div>
-            <p className="rf-followup-meta px-1 text-[11px] leading-4 text-[#746b60]">{CHAT_STORAGE_NOTICE[welcomeLang]}</p>
+            <p className="rf-followup-meta px-1 text-[12px] leading-[18px] text-[#746b60]">{CHAT_STORAGE_NOTICE[welcomeLang]}</p>
           </>
         ) : (
-          <div className="inline-flex h-10 items-center gap-1 rounded-[18px] rounded-bl-[6px] border border-[#dfd6ca] bg-white px-4 shadow-sm" aria-label="Typing">
+          <div className="inline-flex h-10 items-center gap-1 rounded-[18px] rounded-bl-[7px] border border-[#dfd6ca] bg-white px-4 shadow-sm" aria-label="Typing">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#9a8f82]" />
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#9a8f82] [animation-delay:150ms]" />
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#9a8f82] [animation-delay:300ms]" />
@@ -175,14 +199,14 @@ export function ChatMessage({ message }:{ message:ChatItem }) {
   }
 
   return <div className={`msg flex items-end gap-2 ${message.role === "user" ? "justify-end" : "justify-start"}`}>
-    {message.role === "assistant" && <div className="relative mb-1 h-8 w-8 shrink-0 overflow-hidden rounded-full ring-1 ring-[#d7cdc0]"><Image src="/images/welcome/voulamandis-welcome-hero.webp" alt="" fill sizes="32px" className="object-cover"/></div>}
-    <div className={`relative max-w-[84%] ${message.role === "user" ? "pb-2" : ""}`}>
-      <div className={`whitespace-pre-line px-4 py-3 text-[15px] leading-6 shadow-sm ${message.role === "user" ? "rounded-[20px] rounded-br-[6px] bg-[#6b604f] text-white" : "rounded-[20px] rounded-bl-[6px] border border-[#dfd6ca] bg-white"}`}>{message.role === "user" ? <>{icon}{content}</> : content}</div>
+    {message.role === "assistant" && <AssistantAvatar />}
+    <div className={`relative ${message.role === "user" ? "max-w-[88%] pb-2" : "min-w-0 flex-1 sm:max-w-[82%]"}`}>
+      <div className={`whitespace-pre-line px-4 py-3 text-[15px] leading-6 shadow-[0_5px_18px_rgba(70,55,35,.06)] ${message.role === "user" ? "rounded-[20px] rounded-br-[7px] bg-[#62594d] text-white" : "rounded-[20px] rounded-bl-[7px] border border-[#ded4c8] bg-white"}`}>{message.role === "user" ? <>{icon}{content}</> : content}</div>
       {message.role === "user" && message.reaction && <span className="reaction absolute -bottom-1 right-1 flex h-7 min-w-7 items-center justify-center rounded-full border border-[#ddd4c8] bg-white px-1.5 text-sm shadow-sm">{message.reaction}</span>}
     </div>
   </div>;
 }
 
 export function IconReplies({ values, icon, label, onSelect }:{ values:number[]; icon:string; label:(n:number)=>string; onSelect:(n:number)=>void }) {
-  return <div className="hide-scroll msg ml-10 flex flex-nowrap gap-2 overflow-x-auto pb-1">{values.map((value) => <button key={value} onClick={() => onSelect(value)} className="flex min-w-[76px] flex-1 flex-col items-center justify-center rounded-[18px] border border-[#d8cec1] bg-white px-2 py-2.5 text-center shadow-sm"><div className="text-lg" aria-hidden>{value === 1 ? icon : `${icon}×${value}`}</div><span className="mt-0.5 whitespace-nowrap text-[11px] font-bold">{label(value)}</span></button>)}</div>;
+  return <div className="hide-scroll msg ml-10 flex flex-nowrap gap-2 overflow-x-auto pb-1">{values.map((value) => <button key={value} onClick={() => onSelect(value)} className="flex min-h-16 min-w-[82px] flex-1 flex-col items-center justify-center rounded-[18px] border border-[#d8cec1] bg-white px-2 py-2.5 text-center shadow-[0_4px_14px_rgba(70,55,35,.06)] transition hover:border-[#bda991] hover:bg-[#fffaf4] active:scale-[.97]"><div className="text-lg" aria-hidden>{value === 1 ? icon : `${icon}×${value}`}</div><span className="mt-0.5 whitespace-nowrap text-[12px] font-bold">{label(value)}</span></button>)}</div>;
 }
