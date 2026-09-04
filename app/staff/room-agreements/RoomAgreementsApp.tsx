@@ -75,7 +75,6 @@ export default function RoomAgreementsApp() {
   const today = useMemo(athensToday, []);
   const months = useMemo(() => Array.from({ length: 13 }, (_, index) => monthStart(today, index)), [today]);
   const [activeMonth, setActiveMonth] = useState(() => monthStart(today));
-  const [calendarOpen, setCalendarOpen] = useState(false);
   const dates = useMemo(() => {
     const nextMonth = monthStart(activeMonth, 1);
     const result: string[] = [];
@@ -181,7 +180,7 @@ export default function RoomAgreementsApp() {
 
   function chooseDate(date: string) {
     if (!arrival || departure || date <= arrival) { setArrival(date); setDeparture(""); }
-    else { setDeparture(date); setCalendarOpen(false); }
+    else { setDeparture(date); }
   }
 
   function selectRoom(room: RoomOffer) {
@@ -267,10 +266,10 @@ export default function RoomAgreementsApp() {
             </div>
             <div className="flex items-center justify-between rounded-2xl bg-[#f7f3ec] p-1">
               <button type="button" aria-label="Προηγούμενος μήνας" disabled={activeMonthIndex <= 0} onClick={() => setActiveMonth(months[activeMonthIndex - 1])} className="flex size-11 items-center justify-center rounded-xl border border-[#e8dfd4] bg-white text-[#59432f] shadow-sm transition active:scale-95 disabled:border-transparent disabled:bg-transparent disabled:opacity-25"><ChevronLeft className="size-6"/></button>
-              <button type="button" aria-expanded={calendarOpen} aria-controls="stay-date-picker" onClick={() => setCalendarOpen((open) => !open)} className="flex min-h-11 min-w-0 flex-1 items-center justify-center gap-2 rounded-xl px-2 text-lg font-black capitalize focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9b6b36]/40">{monthFormatter.format(new Date(`${activeMonth}T12:00:00Z`))}<ChevronDown className={`size-5 shrink-0 transition-transform ${calendarOpen ? "rotate-180" : ""}`}/></button>
+              <div className="flex min-h-11 min-w-0 flex-1 items-center justify-center rounded-xl px-2 text-lg font-black capitalize">{monthFormatter.format(new Date(`${activeMonth}T12:00:00Z`))}</div>
               <button type="button" aria-label="Επόμενος μήνας" disabled={activeMonthIndex >= months.length - 1} onClick={() => setActiveMonth(months[activeMonthIndex + 1])} className="flex size-11 items-center justify-center rounded-xl border border-[#e8dfd4] bg-white text-[#59432f] shadow-sm transition active:scale-95 disabled:border-transparent disabled:bg-transparent disabled:opacity-25"><ChevronRight className="size-6"/></button>
             </div>
-            {calendarOpen && <div id="stay-date-picker" className="pt-3">
+            <div id="stay-date-picker" className="pt-3">
               <p className={`mb-2 rounded-xl px-3 py-2.5 text-base font-bold ${departure ? "bg-[#edf3e8] text-[#44583a]" : "bg-[#fff5e8] text-[#744b20]"}`}>{dateStepLabel}</p>
               <div className="mb-1 grid grid-cols-7 gap-1 text-center text-sm font-black uppercase text-[#675e55]" style={{ gridTemplateColumns: "repeat(7, minmax(0, 1fr))" }}>
                 {['Δε','Τρ','Τε','Πε','Πα','Σα','Κυ'].map((day) => <span key={day} className="py-1">{day}</span>)}
@@ -283,7 +282,7 @@ export default function RoomAgreementsApp() {
                   return <button key={date} type="button" disabled={disabled} aria-label={longDate(date)} aria-pressed={selected} onClick={() => chooseDate(date)} className={`h-11 min-w-0 rounded-xl border text-center text-lg font-black transition sm:h-auto sm:aspect-square active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9b6b36]/45 ${selected ? "border-[#855b2c] bg-[#855b2c] text-white shadow" : between ? "border-[#e7d5bf] bg-[#f3e8d9] text-[#6d5237]" : disabled ? "border-transparent bg-transparent text-[#b5aba1]" : "border-[#e5dbcf] bg-[#fcfaf7] text-[#3f3933] hover:border-[#cdb99f] hover:bg-[#fffaf3]"}`}>{Number(date.slice(-2))}</button>;
                 })}
               </div>
-            </div>}
+            </div>
             {(arrival || departure) && <div className="mt-3 grid grid-cols-2 gap-2"><div className={`rounded-xl border p-3 ${arrival ? "border-[#d8c4aa] bg-[#fff9f1]" : "border-transparent bg-[#f7f3ec]"}`}><span className="block text-sm font-semibold text-[#62584f]">Check-in</span><strong className="mt-0.5 block text-lg">{arrival ? shortDate(arrival) : "—"}</strong></div><div className={`rounded-xl border p-3 ${departure ? "border-[#d8c4aa] bg-[#fff9f1]" : "border-transparent bg-[#f7f3ec]"}`}><span className="block text-sm font-semibold text-[#62584f]">Check-out</span><strong className="mt-0.5 block text-lg">{departure ? shortDate(departure) : "—"}</strong></div></div>}
           </div>
 
