@@ -23,6 +23,11 @@ export const businessData = {
   telephone: "+302271031733",
   email: "chioshotel@gmail.com",
   priceRange: "€70-€90",
+  aggregateRating: {
+    ratingValue: 4.8,
+    bestRating: 5,
+    reviewCount: 182,
+  },
   address: {
     streetAddress: "Dimarchou Kalvokoressi 117",
     addressLocality: "Chios",
@@ -438,7 +443,11 @@ export function getLocalizedSchemaAddress(path?: string) {
 }
 
 export function buildHotelSchema(
-  options: { description?: string; path?: string } = {},
+  options: {
+    description?: string;
+    path?: string;
+    includeAggregateRating?: boolean;
+  } = {},
 ): SchemaObject {
   const labels = getLocalizedSchemaLabels(options.path);
 
@@ -452,6 +461,12 @@ export function buildHotelSchema(
     telephone: businessData.telephone,
     email: businessData.email,
     priceRange: businessData.priceRange,
+    aggregateRating: options.includeAggregateRating
+      ? {
+          "@type": "AggregateRating",
+          ...businessData.aggregateRating,
+        }
+      : undefined,
     address: {
       "@type": "PostalAddress",
       ...businessData.address,

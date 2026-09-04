@@ -296,7 +296,11 @@ export function buildHomePageSchema(data: HomePageData): SchemaObject {
 
   return buildSchemaGraph([
     buildOrganizationSchema(),
-    buildHotelSchema({ description: data.seo.description, path: canonicalPath }),
+    buildHotelSchema({
+      description: data.seo.description,
+      path: canonicalPath,
+      includeAggregateRating: true,
+    }),
     buildWebsiteSchema(),
     buildImageSchema(
       {

@@ -133,6 +133,31 @@ async function main() {
 
     assert(lodging, "Rendered schema is missing LodgingBusiness.");
     assert(!("inLanguage" in lodging), "LodgingBusiness must not declare inLanguage.");
+    assert(
+      lodging.aggregateRating?.["@type"] === "AggregateRating",
+      "Rendered LodgingBusiness is missing AggregateRating.",
+    );
+    assert(
+      lodging.aggregateRating.ratingValue === 4.8 &&
+        lodging.aggregateRating.bestRating === 5 &&
+        lodging.aggregateRating.reviewCount === 182,
+      "Rendered AggregateRating must match the visible 4.8/5 rating from 182 reviews.",
+    );
+
+    for (const route of ["/", "/fr/", "/de/", "/it/", "/es/", "/tr/"]) {
+      const localizedHtml = await fetchWithRetry(`${baseUrl}${route}`);
+      const localizedNodes = graphNodes(extractJsonLd(localizedHtml));
+      const localizedLodging = localizedNodes.find((node) =>
+        typeIncludes(node, "LodgingBusiness"),
+      );
+
+      assert(
+        localizedLodging?.aggregateRating?.ratingValue === 4.8 &&
+          localizedLodging.aggregateRating.bestRating === 5 &&
+          localizedLodging.aggregateRating.reviewCount === 182,
+        `Rendered AggregateRating is missing or incorrect for ${route}.`,
+      );
+    }
 
     assert(breadcrumb, "Rendered schema is missing BreadcrumbList.");
     assert(breadcrumb.inLanguage === "el", "BreadcrumbList must have inLanguage=el.");
@@ -178,7 +203,7 @@ async function main() {
       assert(!serialized.includes(malformed), `Rendered schema contains malformed Greek value: ${malformed}`);
     }
 
-    console.log("Rendered Greek homepage JSON-LD checks passed.");
+    console.log("Rendered homepage JSON-LD checks passed for all seven languages.");
   } catch (error) {
     console.error(serverOutput);
     throw error;
