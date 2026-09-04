@@ -23,6 +23,10 @@ const roomCategoryLabels: Record<string, string> = {
   first_floor: "1ος όροφος",
   ground_floor: "Ισόγειο",
 };
+const shortDateFormatter = new Intl.DateTimeFormat("el-GR", { day: "2-digit", month: "2-digit", timeZone: "UTC" });
+const longDateFormatter = new Intl.DateTimeFormat("el-GR", { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" });
+const dateTimeFormatter = new Intl.DateTimeFormat("el-GR", { dateStyle: "short", timeStyle: "short", timeZone: "Europe/Athens" });
+const monthFormatter = new Intl.DateTimeFormat("el-GR", { month: "long", year: "numeric", timeZone: "UTC" });
 
 function athensToday() {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Athens", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
@@ -33,9 +37,9 @@ function addDays(iso: string, days: number) {
 function monthStart(iso: string, offset = 0) {
   const date = new Date(`${iso}T12:00:00Z`); date.setUTCDate(1); date.setUTCMonth(date.getUTCMonth() + offset); return date.toISOString().slice(0, 10);
 }
-function shortDate(iso: string) { return new Intl.DateTimeFormat("el-GR", { day: "2-digit", month: "2-digit", timeZone: "UTC" }).format(new Date(`${iso}T12:00:00Z`)); }
-function longDate(iso: string) { return new Intl.DateTimeFormat("el-GR", { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" }).format(new Date(`${iso}T12:00:00Z`)); }
-function dateTime(value: string) { return new Intl.DateTimeFormat("el-GR", { dateStyle: "short", timeStyle: "short", timeZone: "Europe/Athens" }).format(new Date(value)); }
+function shortDate(iso: string) { return shortDateFormatter.format(new Date(`${iso}T12:00:00Z`)); }
+function longDate(iso: string) { return longDateFormatter.format(new Date(`${iso}T12:00:00Z`)); }
+function dateTime(value: string) { return dateTimeFormatter.format(new Date(value)); }
 function nightsBetween(arrival: string, departure: string) {
   if (!arrival || !departure) return 0;
   return Math.round((new Date(`${departure}T12:00:00Z`).getTime() - new Date(`${arrival}T12:00:00Z`).getTime()) / 86_400_000);
@@ -86,6 +90,11 @@ export default function RoomAgreementsApp() {
   const agreementRef = useRef<HTMLDivElement>(null);
   const nights = nightsBetween(arrival, departure);
   const agreedAmount = parseMoneyInput(agreedTotal);
+  const dateStepLabel = !arrival
+    ? "Επίλεξε ημερομηνία άφιξης"
+    : !departure
+      ? "Τώρα επίλεξε ημερομηνία αναχώρησης"
+      : `${nights} ${nights === 1 ? "βράδυ" : "βράδια"} επιλεγμένα`;
 
   useEffect(() => {
     const timeout = window.setTimeout(() => setDebouncedHistoryPhone(historyPhone), 300);
@@ -193,24 +202,27 @@ export default function RoomAgreementsApp() {
 
   return (
     <main className="min-h-screen max-w-full overflow-x-hidden bg-[#f7f3ec] pb-24 text-[#352f29]">
-      <header className="sticky top-0 z-30 border-b border-[#e7ddcf] bg-[#f7f3ec]/95 px-4 py-3 backdrop-blur">
+      <header className="sticky top-0 z-30 border-b border-[#e7ddcf] bg-[#f7f3ec] px-3 py-2.5 shadow-[0_4px_18px_rgba(69,53,37,.05)] sm:px-4 sm:py-3">
         <div className="mx-auto flex max-w-5xl items-center gap-3">
-          <Link href="/staff" aria-label="Πίσω στο Staff" className="flex size-11 items-center justify-center rounded-full bg-white shadow-sm"><ChevronLeft /></Link>
-          <div><p className="text-xs font-bold uppercase tracking-[.16em] text-[#9b6b36]">Staff only</p><h1 className="text-lg font-black">Αναζήτηση & Συμφωνία</h1></div>
+          <Link href="/staff" aria-label="Πίσω στο Staff" className="flex size-10 shrink-0 items-center justify-center rounded-full border border-[#e7ddcf] bg-white shadow-sm transition active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9b6b36]/40"><ChevronLeft className="size-5" /></Link>
+          <div className="min-w-0"><p className="text-[11px] font-black uppercase tracking-[.18em] text-[#9b6b36]">Staff only</p><h1 className="truncate text-[17px] font-black sm:text-lg">Αναζήτηση & Συμφωνία</h1></div>
         </div>
       </header>
 
-      <div className="mx-auto grid w-full max-w-5xl grid-cols-1 gap-5 px-2 py-3 sm:px-4 sm:py-4 lg:grid-cols-[1.1fr_.9fr]">
-        <section className="min-w-0 space-y-4">
-          <div className="rounded-3xl border border-[#e5dacb] bg-white p-3 shadow-sm sm:p-4">
-            <div className="mb-3 flex items-center gap-2"><CalendarDays className="size-5 text-[#9b6b36]"/><h2 className="font-black">1. Ημερομηνίες</h2></div>
-            <p className="mb-3 text-sm text-[#71675e]">Πάτησε check-in και μετά check-out.</p>
-            <div className="mb-3 flex items-center justify-between rounded-2xl bg-[#f7f3ec] p-1.5">
-              <button type="button" aria-label="Προηγούμενος μήνας" disabled={activeMonthIndex <= 0} onClick={() => setActiveMonth(months[activeMonthIndex - 1])} className="flex size-10 items-center justify-center rounded-xl bg-white text-[#6f573f] shadow-sm disabled:opacity-25"><ChevronLeft className="size-5"/></button>
-              <strong className="capitalize">{new Intl.DateTimeFormat("el-GR", { month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(`${activeMonth}T12:00:00Z`))}</strong>
-              <button type="button" aria-label="Επόμενος μήνας" disabled={activeMonthIndex >= months.length - 1} onClick={() => setActiveMonth(months[activeMonthIndex + 1])} className="flex size-10 items-center justify-center rounded-xl bg-white text-[#6f573f] shadow-sm disabled:opacity-25"><ChevronRight className="size-5"/></button>
+      <div className="mx-auto grid w-full max-w-5xl grid-cols-1 gap-4 px-3 py-3 sm:gap-5 sm:px-4 sm:py-4 lg:grid-cols-[1.1fr_.9fr]">
+        <section className="min-w-0 space-y-3.5 sm:space-y-4">
+          <div className="rounded-[26px] border border-[#e2d6c7] bg-white p-3 shadow-[0_8px_24px_rgba(69,53,37,.06)] sm:p-4">
+            <div className="mb-2.5 flex items-center justify-between gap-3">
+              <div className="flex min-w-0 items-center gap-2.5"><span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-[#f5eee4] text-[#936633]"><CalendarDays className="size-[19px]"/></span><h2 className="truncate text-lg font-black">1. Ημερομηνίες</h2></div>
+              {arrival && <button type="button" onClick={() => { setArrival(""); setDeparture(""); }} className="shrink-0 rounded-full px-2.5 py-1.5 text-xs font-bold text-[#7b6754] underline decoration-[#cdbba7] underline-offset-4">Καθαρισμός</button>}
             </div>
-            <div className="mb-1 grid grid-cols-7 gap-1 text-center text-[10px] font-black uppercase text-[#8b8075]" style={{ gridTemplateColumns: "repeat(7, minmax(0, 1fr))" }}>
+            <p className={`mb-3 rounded-xl px-3 py-2 text-sm font-bold ${departure ? "bg-[#edf3e8] text-[#526746]" : "bg-[#fff5e8] text-[#865d2f]"}`}>{dateStepLabel}</p>
+            <div className="mb-2.5 flex items-center justify-between rounded-2xl bg-[#f7f3ec] p-1">
+              <button type="button" aria-label="Προηγούμενος μήνας" disabled={activeMonthIndex <= 0} onClick={() => setActiveMonth(months[activeMonthIndex - 1])} className="flex size-9 items-center justify-center rounded-xl border border-[#e8dfd4] bg-white text-[#6f573f] shadow-sm transition active:scale-95 disabled:border-transparent disabled:bg-transparent disabled:opacity-25"><ChevronLeft className="size-5"/></button>
+              <strong className="text-[15px] capitalize">{monthFormatter.format(new Date(`${activeMonth}T12:00:00Z`))}</strong>
+              <button type="button" aria-label="Επόμενος μήνας" disabled={activeMonthIndex >= months.length - 1} onClick={() => setActiveMonth(months[activeMonthIndex + 1])} className="flex size-9 items-center justify-center rounded-xl border border-[#e8dfd4] bg-white text-[#6f573f] shadow-sm transition active:scale-95 disabled:border-transparent disabled:bg-transparent disabled:opacity-25"><ChevronRight className="size-5"/></button>
+            </div>
+            <div className="mb-1 grid grid-cols-7 gap-1 text-center text-[11px] font-black uppercase text-[#8b8075]" style={{ gridTemplateColumns: "repeat(7, minmax(0, 1fr))" }}>
               {['Δε','Τρ','Τε','Πε','Πα','Σα','Κυ'].map((day) => <span key={day} className="py-1">{day}</span>)}
             </div>
             <div className="grid grid-cols-7 gap-1" style={{ gridTemplateColumns: "repeat(7, minmax(0, 1fr))" }}>
@@ -218,18 +230,18 @@ export default function RoomAgreementsApp() {
               {dates.map((date) => {
                 const selected = date === arrival || date === departure; const between = Boolean(arrival && departure && date > arrival && date < departure);
                 const disabled = date < today;
-                return <button key={date} type="button" disabled={disabled} aria-label={longDate(date)} aria-pressed={selected} onClick={() => chooseDate(date)} className={`aspect-square min-w-0 rounded-xl border text-center text-sm font-black transition active:scale-95 ${selected ? "border-[#855b2c] bg-[#855b2c] text-white shadow" : between ? "border-[#e7d5bf] bg-[#f3e8d9] text-[#6d5237]" : disabled ? "border-transparent bg-transparent text-[#c4bbb1]" : "border-[#ece3d8] bg-[#fcfaf7] text-[#4c443d]"}`}>{Number(date.slice(-2))}</button>;
+                return <button key={date} type="button" disabled={disabled} aria-label={longDate(date)} aria-pressed={selected} onClick={() => chooseDate(date)} className={`h-10 min-w-0 rounded-xl border text-center text-[15px] font-black transition sm:h-auto sm:aspect-square active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9b6b36]/45 ${selected ? "border-[#855b2c] bg-[#855b2c] text-white shadow" : between ? "border-[#e7d5bf] bg-[#f3e8d9] text-[#6d5237]" : disabled ? "border-transparent bg-transparent text-[#c4bbb1]" : "border-[#ece3d8] bg-[#fcfaf7] text-[#4c443d] hover:border-[#cdb99f] hover:bg-[#fffaf3]"}`}>{Number(date.slice(-2))}</button>;
               })}
             </div>
-            <div className="mt-3 grid grid-cols-2 gap-2 text-sm"><div className="rounded-xl bg-[#f7f3ec] p-3"><span className="block text-xs text-[#80756b]">Check-in</span><strong>{arrival ? shortDate(arrival) : "—"}</strong></div><div className="rounded-xl bg-[#f7f3ec] p-3"><span className="block text-xs text-[#80756b]">Check-out</span><strong>{departure ? shortDate(departure) : "—"}</strong></div></div>
+            <div className="mt-3 grid grid-cols-2 gap-2 text-sm"><div className={`rounded-xl border p-2.5 ${arrival ? "border-[#d8c4aa] bg-[#fff9f1]" : "border-transparent bg-[#f7f3ec]"}`}><span className="block text-xs text-[#80756b]">Check-in</span><strong className="mt-0.5 block text-base">{arrival ? shortDate(arrival) : "—"}</strong></div><div className={`rounded-xl border p-2.5 ${departure ? "border-[#d8c4aa] bg-[#fff9f1]" : "border-transparent bg-[#f7f3ec]"}`}><span className="block text-xs text-[#80756b]">Check-out</span><strong className="mt-0.5 block text-base">{departure ? shortDate(departure) : "—"}</strong></div></div>
           </div>
 
-          <div className="rounded-3xl border border-[#e5dacb] bg-white p-3 shadow-sm sm:p-4">
-            <div className="mb-3 flex items-center gap-2"><Users className="size-5 text-[#9b6b36]"/><h2 className="font-black">2. Επισκέπτες</h2></div>
-            <div className="grid grid-cols-5 gap-1.5" style={{ gridTemplateColumns: "repeat(5, minmax(0, 1fr))" }}>{[1,2,3,4,5].map((count) => <button key={count} type="button" aria-label={`${count} ${count === 1 ? "επισκέπτης" : "επισκέπτες"}`} aria-pressed={guests === count} onClick={() => setGuests(count)} className={`h-12 min-w-0 rounded-xl border text-base font-black transition active:scale-95 ${guests === count ? "border-[#855b2c] bg-[#855b2c] text-white" : "border-[#e3d8ca] bg-[#fcfaf7]"}`}>{count}</button>)}</div>
+          <div className="rounded-[24px] border border-[#e2d6c7] bg-white p-3 shadow-[0_6px_20px_rgba(69,53,37,.05)] sm:p-4">
+            <div className="mb-2.5 flex items-center gap-2.5"><span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-[#f5eee4] text-[#936633]"><Users className="size-[19px]"/></span><h2 className="text-lg font-black">2. Επισκέπτες</h2><span className="ml-auto rounded-full bg-[#f4eee6] px-2.5 py-1 text-xs font-bold text-[#725f4c]">{guests} {guests === 1 ? "άτομο" : "άτομα"}</span></div>
+            <div className="grid grid-cols-5 gap-1.5" style={{ gridTemplateColumns: "repeat(5, minmax(0, 1fr))" }}>{[1,2,3,4,5].map((count) => <button key={count} type="button" aria-label={`${count} ${count === 1 ? "επισκέπτης" : "επισκέπτες"}`} aria-pressed={guests === count} onClick={() => setGuests(count)} className={`h-12 min-w-0 rounded-xl border text-base font-black transition active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9b6b36]/45 ${guests === count ? "border-[#855b2c] bg-[#855b2c] text-white shadow-sm" : "border-[#e3d8ca] bg-[#fcfaf7] hover:border-[#cdb99f] hover:bg-[#fffaf3]"}`}>{count}</button>)}</div>
           </div>
 
-          {(loading || (arrival && departure)) && <div className="rounded-3xl border border-[#e5dacb] bg-white p-3 shadow-sm sm:p-4">
+          {(loading || (arrival && departure)) && <div aria-live="polite" aria-busy={loading} className="rounded-3xl border border-[#e5dacb] bg-white p-3 shadow-sm sm:p-4">
             <div className="mb-3 flex items-center justify-between gap-3"><h2 className="font-black">3. Διαθέσιμα δωμάτια</h2>{nights > 0 && <span className="shrink-0 rounded-full bg-[#f3eee6] px-2.5 py-1 text-[11px] font-bold text-[#71675e]">{nights} {nights === 1 ? "βράδυ" : "βράδια"} · {guests} άτ.</span>}</div>
             {loading ? <div className="flex items-center gap-2 py-7 text-sm text-[#71675e]"><LoaderCircle className="size-5 animate-spin"/> Έλεγχος Booking Core…</div> : <>
               {rooms.length > 0 && <div className="mb-2"><p className="mb-2 text-xs font-bold uppercase tracking-wider text-[#657556]">Χωρίς αλλαγή δωματίου</p><div className="grid grid-cols-2 gap-2">{rooms.map((room) => { const active = selection?.type === "room" && selection.roomNumber === room.roomNumber; return <button key={room.roomNumber} type="button" aria-pressed={active} onClick={() => selectRoom(room)} className={`flex min-h-28 min-w-0 flex-col rounded-2xl border p-3 text-left transition active:scale-[.98] ${active ? "border-[#657556] bg-[#e6efdf] ring-2 ring-[#657556]/25" : "border-[#e2d8ca] bg-[#fcfaf7]"}`}><span className="flex items-center gap-1 text-sm font-black">{active && <Check className="size-4 shrink-0"/>}{roomTitle(room)}</span><span className="mt-1 block text-[11px] leading-4 text-[#71675e]">{roomCategoryLabel(room.category)}</span><span className="mt-auto block pt-2 text-sm font-black text-[#657556]">{room.systemTotal}€</span></button>; })}</div></div>}
@@ -244,7 +256,7 @@ export default function RoomAgreementsApp() {
             <label className="mb-3 block"><span className="mb-1.5 block text-sm font-bold">Συμφωνημένη συνολική τιμή</span><div className="flex rounded-2xl border border-[#d8ccbd] bg-[#fcfaf7] focus-within:ring-2 focus-within:ring-[#9b6b36]/25"><input value={agreedTotal} onChange={(event) => setAgreedTotal(event.target.value)} inputMode="decimal" className="h-13 min-w-0 flex-1 bg-transparent px-3 text-lg font-black outline-none"/><span className="flex items-center px-4 text-lg font-black">€</span></div><span className="mt-1 block text-xs text-[#71675e]">Μπορείς να αλλάξεις την τιμή του συστήματος.</span></label>
             <button type="button" onClick={() => setConfirmingSend(true)} disabled={sending || customerPhone.replace(/\D/g, "").length < 10 || !agreedAmount} className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-[#657556] px-4 text-base font-black text-white shadow-lg transition active:scale-[.99] disabled:cursor-not-allowed disabled:opacity-45">{sending ? <LoaderCircle className="animate-spin"/> : <Send/>}{sending ? "Αποστολή…" : "Έλεγχος & αποστολή SMS"}</button>
           </div>}
-          {feedback && <div className={`rounded-2xl p-4 text-sm font-bold ${feedback.kind === "ok" ? "bg-[#e9f4e3] text-[#46613b]" : "bg-[#fff0ed] text-[#8c3f35]"}`}>{feedback.text}</div>}
+          {feedback && <div role="status" aria-live="polite" className={`rounded-2xl p-4 text-sm font-bold ${feedback.kind === "ok" ? "bg-[#e9f4e3] text-[#46613b]" : "bg-[#fff0ed] text-[#8c3f35]"}`}>{feedback.text}</div>}
         </section>
 
         <section className="min-w-0 overflow-hidden rounded-3xl border border-[#e5dacb] bg-white p-3 shadow-sm sm:p-4 lg:sticky lg:top-20 lg:self-start">
