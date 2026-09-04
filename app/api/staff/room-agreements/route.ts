@@ -12,6 +12,7 @@ let schemaReady: Promise<void> | null = null;
 
 type Selection =
   | { type: "room"; roomNumber: number }
+  | { type: "rooms"; rooms: Array<{ roomNumber: number; guests: number }> }
   | { type: "split"; firstRoomNumber: number; secondRoomNumber: number; changeDate: string };
 
 function clean(value: unknown) {
@@ -44,6 +45,31 @@ function money(value: unknown) {
 
 function validRoomNumber(value: unknown) {
   return Number.isInteger(value) && Number(value) > 0 && Number(value) <= 9999;
+}
+
+function normalizeSelection(value: unknown): Selection | null {
+  if (!value || typeof value !== "object") return null;
+  const candidate = value as Record<string, unknown>;
+  if (candidate.type === "room" && validRoomNumber(candidate.roomNumber)) {
+    return { type: "room", roomNumber: Number(candidate.roomNumber) };
+  }
+  if (candidate.type === "split" && validRoomNumber(candidate.firstRoomNumber) && validRoomNumber(candidate.secondRoomNumber)) {
+    const changeDate = isoDate(candidate.changeDate);
+    return changeDate ? { type: "split", firstRoomNumber: Number(candidate.firstRoomNumber), secondRoomNumber: Number(candidate.secondRoomNumber), changeDate } : null;
+  }
+  if (candidate.type !== "rooms" || !Array.isArray(candidate.rooms) || candidate.rooms.length < 2 || candidate.rooms.length > 10) return null;
+  const rooms = candidate.rooms.map((item) => {
+    if (!item || typeof item !== "object") return null;
+    const room = item as Record<string, unknown>;
+    const guests = Number(room.guests);
+    return validRoomNumber(room.roomNumber) && Number.isInteger(guests) && guests >= 1 && guests <= 5
+      ? { roomNumber: Number(room.roomNumber), guests }
+      : null;
+  });
+  if (rooms.some((room) => !room)) return null;
+  const normalizedRooms = rooms as Array<{ roomNumber: number; guests: number }>;
+  if (new Set(normalizedRooms.map((room) => room.roomNumber)).size !== normalizedRooms.length) return null;
+  return { type: "rooms", rooms: normalizedRooms };
 }
 
 function displayDate(value: string) {
@@ -144,20 +170,29 @@ async function inventoryStatus(sql: ReturnType<typeof neon>, request: NextReques
   return status;
 }
 
-async function availability(sql: ReturnType<typeof neon>, request: NextRequest, arrival: string, departure: string, guests: number) {
+async function availability(sql: ReturnType<typeof neon>, request: NextRequest, arrival: string, departure: string, guests: number, groupMode: boolean) {
   const currentStatus = await inventoryStatus(sql, request, arrival, departure);
   if (currentStatus !== "READY") {
     return { ok: false as const, code: currentStatus };
   }
 
-  const roomRows = await sql`
-    select room_number::int, display_name, room_type, floor, max_guests::int,
-           original_total::numeric, direct_total::numeric
-    from booking_core.search_availability(${arrival}::date, ${departure}::date, ${guests})
-    order by room_number
-  `;
+  const roomRows = groupMode
+    ? await sql`
+        select requested.guests::int as requested_guests, offer.room_number::int, offer.display_name,
+               offer.room_type, offer.floor, offer.max_guests::int,
+               offer.original_total::numeric, offer.direct_total::numeric
+        from generate_series(1, 5) as requested(guests)
+        cross join lateral booking_core.search_availability(${arrival}::date, ${departure}::date, requested.guests) offer
+        order by offer.room_number, requested.guests
+      `
+    : await sql`
+        select room_number::int, display_name, room_type, floor, max_guests::int,
+               original_total::numeric, direct_total::numeric
+        from booking_core.search_availability(${arrival}::date, ${departure}::date, ${guests})
+        order by room_number
+      `;
 
-  const splitRows = (roomRows as any[]).length === 0
+  const splitRows = !groupMode && (roomRows as any[]).length === 0
     ? await sql`
         with change_dates as (
           select day::date as change_date
@@ -183,17 +218,41 @@ async function availability(sql: ReturnType<typeof neon>, request: NextRequest, 
       `
     : [];
 
+  const rooms = groupMode
+    ? Array.from((roomRows as any[]).reduce((offers, row) => {
+        const roomNumber = Number(row.room_number);
+        const current = offers.get(roomNumber) || {
+          roomNumber,
+          name: String(row.display_name),
+          category: String(row.room_type),
+          floor: String(row.floor),
+          maxGuests: Number(row.max_guests),
+          systemTotal: 0,
+          originalTotal: 0,
+          guestPrices: {} as Record<string, number>,
+        };
+        const requestedGuests = Number(row.requested_guests);
+        current.guestPrices[String(requestedGuests)] = money(row.direct_total);
+        if (requestedGuests === 2 || !current.systemTotal) {
+          current.systemTotal = money(row.direct_total);
+          current.originalTotal = money(row.original_total);
+        }
+        offers.set(roomNumber, current);
+        return offers;
+      }, new Map<number, { roomNumber: number; name: string; category: string; floor: string; maxGuests: number; systemTotal: number; originalTotal: number; guestPrices: Record<string, number> }>()).values())
+    : (roomRows as any[]).map((row) => ({
+        roomNumber: Number(row.room_number),
+        name: String(row.display_name),
+        category: String(row.room_type),
+        floor: String(row.floor),
+        maxGuests: Number(row.max_guests),
+        systemTotal: money(row.direct_total),
+        originalTotal: money(row.original_total),
+      }));
+
   return {
     ok: true as const,
-    rooms: (roomRows as any[]).map((row) => ({
-      roomNumber: Number(row.room_number),
-      name: String(row.display_name),
-      category: String(row.room_type),
-      floor: String(row.floor),
-      maxGuests: Number(row.max_guests),
-      systemTotal: money(row.direct_total),
-      originalTotal: money(row.original_total),
-    })),
+    rooms,
     splits: (splitRows as any[]).map((row) => ({
       changeDate: isoDate(row.change_date),
       firstRoomNumber: Number(row.first_room_number),
@@ -210,6 +269,13 @@ async function availability(sql: ReturnType<typeof neon>, request: NextRequest, 
 async function selectionStillAvailable(
   sql: ReturnType<typeof neon>, arrival: string, departure: string, guests: number, selection: Selection,
 ) {
+  if (selection.type === "rooms") {
+    const checks = await Promise.all(selection.rooms.map((room) => sql`
+      select 1 from booking_core.search_availability(${arrival}::date, ${departure}::date, ${room.guests})
+      where room_number = ${room.roomNumber} limit 1
+    `));
+    return checks.every((rows) => (rows as any[]).length > 0);
+  }
   if (selection.type === "room") {
     const rows = await sql`
       select 1 from booking_core.search_availability(${arrival}::date, ${departure}::date, ${guests})
@@ -229,8 +295,10 @@ async function selectionStillAvailable(
 function buildMessage(arrival: string, departure: string, guests: number, selection: Selection, total: number) {
   const stay = selection.type === "room"
     ? `στο Δωμάτιο ${selection.roomNumber}`
+    : selection.type === "rooms"
+      ? `στα δωμάτια ${selection.rooms.map((room) => `Νο${room.roomNumber} (${room.guests} ${room.guests === 1 ? "άτομο" : "άτομα"})`).join(", ")}`
     : `${displayDate(arrival)}–${displayDate(selection.changeDate)} στο Δωμάτιο ${selection.firstRoomNumber} και ${displayDate(selection.changeDate)}–${displayDate(departure)} στο Δωμάτιο ${selection.secondRoomNumber}`;
-  return `Η συμφωνία μας αφορά διαμονή από ${displayDate(arrival)} έως ${displayDate(departure)}, για ${guests} ${guests === 1 ? "επισκέπτη" : "επισκέπτες"}, ${stay}, με συνολική τιμή ${total.toFixed(2).replace(".00", "")}€. Παρακαλούμε στείλτε μας email στο ${EMAIL}, ώστε να σας αποστείλουμε την επιβεβαίωση της κράτησης. Voulamandis House`;
+  return `Η συμφωνία μας αφορά διαμονή ${displayDate(arrival)}–${displayDate(departure)}, για ${guests} ${guests === 1 ? "επισκέπτη" : "επισκέπτες"}, ${stay}, με συνολική τιμή ${total.toFixed(2).replace(".00", "")}€. Για την επιβεβαίωση της κράτησης, στείλτε μας email στο ${EMAIL}. Voulamandis House`;
 }
 
 async function sendSms(to: string, message: string) {
@@ -259,10 +327,11 @@ export async function GET(request: NextRequest) {
       const arrival = isoDate(request.nextUrl.searchParams.get("arrival"));
       const departure = isoDate(request.nextUrl.searchParams.get("departure"));
       const guests = Number(request.nextUrl.searchParams.get("guests"));
+      const groupMode = request.nextUrl.searchParams.get("group") === "1";
       if (!arrival || !departure || departure <= arrival || !Number.isInteger(guests) || guests < 1 || guests > 5) {
         return noStore({ ok: false, error: "Έλεγξε τις ημερομηνίες και τους επισκέπτες." }, 400);
       }
-      const result = await availability(sql, request, arrival, departure, guests);
+      const result = await availability(sql, request, arrival, departure, guests, groupMode);
       return result.ok ? noStore({ ok: true, ...result }) : noStore({ ok: false, code: result.code, error: "Η διαθεσιμότητα του Booking Core δεν είναι έτοιμη." }, 503);
     }
 
@@ -295,12 +364,13 @@ export async function POST(request: NextRequest) {
     const guests = Number(body.guests);
     const agreedTotal = money(body.agreedTotal);
     const customerPhone = normalizePhone(body.customerPhone);
-    const selection = body.selection as Selection;
-    const validSelection = selection?.type === "room"
-      ? validRoomNumber(selection.roomNumber)
-      : selection?.type === "split" && validRoomNumber(selection.firstRoomNumber) && validRoomNumber(selection.secondRoomNumber) && Boolean(isoDate(selection.changeDate));
+    const selection = normalizeSelection(body.selection);
+    const expectedGuests = selection?.type === "rooms" ? selection.rooms.reduce((sum, room) => sum + room.guests, 0) : guests;
+    const validGuests = selection?.type === "rooms"
+      ? guests === expectedGuests && guests >= 2 && guests <= 50
+      : Number.isInteger(guests) && guests >= 1 && guests <= 5;
 
-    if (!arrival || !departure || departure <= arrival || !Number.isInteger(guests) || guests < 1 || guests > 5 || !agreedTotal || !customerPhone || !validSelection) {
+    if (!arrival || !departure || departure <= arrival || !validGuests || !agreedTotal || !customerPhone || !selection) {
       return noStore({ ok: false, error: "Συμπλήρωσε σωστά όλα τα στοιχεία της συμφωνίας." }, 400);
     }
 

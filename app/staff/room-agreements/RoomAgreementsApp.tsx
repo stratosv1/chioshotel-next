@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { CalendarDays, Check, ChevronDown, ChevronLeft, ChevronRight, Clock3, History, LoaderCircle, MessageSquareText, Search, Send, Users } from "lucide-react";
+import { CalendarDays, Check, ChevronDown, ChevronLeft, ChevronRight, Clock3, History, LoaderCircle, MessageSquareText, Minus, Plus, Search, Send, Users } from "lucide-react";
 
-type RoomOffer = { roomNumber: number; name: string; category: string; floor: string; maxGuests: number; systemTotal: number; originalTotal: number };
+type RoomOffer = { roomNumber: number; name: string; category: string; floor: string; maxGuests: number; systemTotal: number; originalTotal: number; guestPrices?: Record<string, number> };
 type SplitOffer = { changeDate: string; firstRoomNumber: number; firstName: string; firstCategory: string; secondRoomNumber: number; secondName: string; secondCategory: string; systemTotal: number };
-type Selection = { type: "room"; roomNumber: number } | { type: "split"; firstRoomNumber: number; secondRoomNumber: number; changeDate: string };
+type RoomAssignment = { roomNumber: number; guests: number };
+type Selection = { type: "room"; roomNumber: number } | { type: "rooms"; rooms: RoomAssignment[] } | { type: "split"; firstRoomNumber: number; secondRoomNumber: number; changeDate: string };
 type Agreement = {
   id: string; customer_phone: string; arrival: string; departure: string; guests: number; selection: Selection;
   agreed_total: string | number; message: string; customer_sms_status: string; owner_sms_status: string;
@@ -46,6 +47,24 @@ function nightsBetween(arrival: string, departure: string) {
 }
 function roomCategoryLabel(category: string) { return roomCategoryLabels[category] || category.replaceAll("_", " "); }
 function roomTitle(room: RoomOffer) { return `${room.category.includes("apartment") ? "Διαμέρισμα" : "Δωμάτιο"} ${room.roomNumber}`; }
+function roomDetail(room: RoomOffer) {
+  const category = roomCategoryLabel(room.category);
+  return category === "Διαμέρισμα" ? `Έως ${room.maxGuests} άτομα` : category;
+}
+function roomPrice(room: RoomOffer, guests: number) { return room.guestPrices?.[String(guests)] || room.systemTotal; }
+function lowestRoomPrice(room: RoomOffer) {
+  const prices = Object.values(room.guestPrices || {}).filter((price) => price > 0);
+  return prices.length ? Math.min(...prices) : room.systemTotal;
+}
+function defaultRoomGuests(room: RoomOffer) {
+  const available = Object.keys(room.guestPrices || {}).map(Number).filter((guests) => Number.isInteger(guests)).sort((a, b) => a - b);
+  return available.includes(2) ? 2 : available[0] || 1;
+}
+function selectionLabel(selection: Selection) {
+  if (selection.type === "room") return `Δωμάτιο ${selection.roomNumber}`;
+  if (selection.type === "rooms") return `Δωμάτια ${selection.rooms.map((room) => `Νο${room.roomNumber} (${room.guests} ${room.guests === 1 ? "άτομο" : "άτομα"})`).join(", ")}`;
+  return `Νο${selection.firstRoomNumber} → Νο${selection.secondRoomNumber} (${shortDate(selection.changeDate)})`;
+}
 function displaySmsStatus(status: string) { return smsStatusLabels[status] || status; }
 function parseMoneyInput(value: string) {
   const parsed = Number(value.trim().replace(",", "."));
@@ -56,6 +75,7 @@ export default function RoomAgreementsApp() {
   const today = useMemo(athensToday, []);
   const months = useMemo(() => Array.from({ length: 13 }, (_, index) => monthStart(today, index)), [today]);
   const [activeMonth, setActiveMonth] = useState(() => monthStart(today));
+  const [calendarOpen, setCalendarOpen] = useState(false);
   const dates = useMemo(() => {
     const nextMonth = monthStart(activeMonth, 1);
     const result: string[] = [];
@@ -67,6 +87,7 @@ export default function RoomAgreementsApp() {
   const [arrival, setArrival] = useState("");
   const [departure, setDeparture] = useState("");
   const [guests, setGuests] = useState(2);
+  const [groupMode, setGroupMode] = useState(false);
   const [rooms, setRooms] = useState<RoomOffer[]>([]);
   const [splits, setSplits] = useState<SplitOffer[]>([]);
   const [selection, setSelection] = useState<Selection | null>(null);
@@ -90,6 +111,14 @@ export default function RoomAgreementsApp() {
   const agreementRef = useRef<HTMLDivElement>(null);
   const nights = nightsBetween(arrival, departure);
   const agreedAmount = parseMoneyInput(agreedTotal);
+  const selectedRoomAssignments = selection?.type === "rooms" ? selection.rooms : [];
+  const agreementGuests = groupMode ? (selection?.type === "rooms" ? selection.rooms.reduce((sum, room) => sum + room.guests, 0) : 0) : guests;
+  const completeSelection = groupMode
+    ? selection?.type === "rooms" && selection.rooms.length >= 2
+    : Boolean(selection && selection.type !== "rooms");
+  const resultSummary = groupMode && selectedRoomAssignments.length > 0
+    ? `${selectedRoomAssignments.length} δωμ. · ${agreementGuests} άτ.`
+    : `${nights} ${nights === 1 ? "βράδυ" : "βράδια"}${groupMode ? "" : ` · ${guests} άτ.`}`;
   const dateStepLabel = !arrival
     ? "Επίλεξε ημερομηνία άφιξης"
     : !departure
@@ -131,7 +160,8 @@ export default function RoomAgreementsApp() {
     const run = async () => {
       setLoading(true);
       try {
-        const params = new URLSearchParams({ mode: "availability", arrival, departure, guests: String(guests) });
+        const params = new URLSearchParams({ mode: "availability", arrival, departure, guests: String(groupMode ? 1 : guests) });
+        if (groupMode) params.set("group", "1");
         const response = await fetch(`${API}?${params}`, { cache: "no-store", signal: controller.signal });
         const data = await response.json();
         if (!response.ok || !data.ok) throw new Error(data.error || "Ο έλεγχος απέτυχε.");
@@ -147,11 +177,11 @@ export default function RoomAgreementsApp() {
       }
     };
     void run(); return () => controller.abort();
-  }, [arrival, departure, guests]);
+  }, [arrival, departure, groupMode, guests]);
 
   function chooseDate(date: string) {
     if (!arrival || departure || date <= arrival) { setArrival(date); setDeparture(""); }
-    else setDeparture(date);
+    else { setDeparture(date); setCalendarOpen(false); }
   }
 
   function selectRoom(room: RoomOffer) {
@@ -163,14 +193,33 @@ export default function RoomAgreementsApp() {
     setAgreedTotal(String(split.systemTotal || ""));
     window.setTimeout(() => agreementRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
   }
+  function setGroupSelection(nextRooms: RoomAssignment[]) {
+    const nextSelection: Selection | null = nextRooms.length ? { type: "rooms", rooms: nextRooms } : null;
+    setSelection(nextSelection);
+    setAgreedTotal(String(nextRooms.reduce((sum, assignment) => {
+      const room = rooms.find((offer) => offer.roomNumber === assignment.roomNumber);
+      return sum + (room ? roomPrice(room, assignment.guests) : 0);
+    }, 0) || ""));
+  }
+  function toggleGroupRoom(room: RoomOffer) {
+    const existing = selectedRoomAssignments.find((item) => item.roomNumber === room.roomNumber);
+    setGroupSelection(existing
+      ? selectedRoomAssignments.filter((item) => item.roomNumber !== room.roomNumber)
+      : [...selectedRoomAssignments, { roomNumber: room.roomNumber, guests: defaultRoomGuests(room) }]);
+  }
+  function updateGroupGuests(roomNumber: number, nextGuests: number) {
+    const room = rooms.find((offer) => offer.roomNumber === roomNumber);
+    if (!room || nextGuests < 1 || nextGuests > room.maxGuests || !room.guestPrices?.[String(nextGuests)]) return;
+    setGroupSelection(selectedRoomAssignments.map((item) => item.roomNumber === roomNumber ? { ...item, guests: nextGuests } : item));
+  }
 
   async function sendAgreement() {
-    if (sendLockRef.current || !selection || !customerPhone.trim() || !agreedAmount) return;
+    if (sendLockRef.current || !selection || !completeSelection || !customerPhone.trim() || !agreedAmount) return;
     sendLockRef.current = true;
     setConfirmingSend(false);
     setSending(true); setFeedback(null);
     try {
-      const response = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ arrival, departure, guests, selection, agreedTotal: agreedAmount, customerPhone }) });
+      const response = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ arrival, departure, guests: agreementGuests, selection, agreedTotal: agreedAmount, customerPhone }) });
       const data = await response.json();
       if (!data.saved) throw new Error(data.error || "Η αποστολή απέτυχε.");
       const ownerSent = data.results?.find((item: { to: string }) => item.to === "306944474226")?.status === "sent";
@@ -216,45 +265,60 @@ export default function RoomAgreementsApp() {
               <div className="flex min-w-0 items-center gap-2.5"><span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-[#f5eee4] text-[#936633]"><CalendarDays className="size-[19px]"/></span><h2 className="truncate text-lg font-black">1. Ημερομηνίες</h2></div>
               {arrival && <button type="button" onClick={() => { setArrival(""); setDeparture(""); }} className="shrink-0 rounded-full px-2.5 py-1.5 text-xs font-bold text-[#7b6754] underline decoration-[#cdbba7] underline-offset-4">Καθαρισμός</button>}
             </div>
-            <p className={`mb-3 rounded-xl px-3 py-2 text-sm font-bold ${departure ? "bg-[#edf3e8] text-[#526746]" : "bg-[#fff5e8] text-[#865d2f]"}`}>{dateStepLabel}</p>
-            <div className="mb-2.5 flex items-center justify-between rounded-2xl bg-[#f7f3ec] p-1">
+            <div className="flex items-center justify-between rounded-2xl bg-[#f7f3ec] p-1">
               <button type="button" aria-label="Προηγούμενος μήνας" disabled={activeMonthIndex <= 0} onClick={() => setActiveMonth(months[activeMonthIndex - 1])} className="flex size-9 items-center justify-center rounded-xl border border-[#e8dfd4] bg-white text-[#6f573f] shadow-sm transition active:scale-95 disabled:border-transparent disabled:bg-transparent disabled:opacity-25"><ChevronLeft className="size-5"/></button>
-              <strong className="text-[15px] capitalize">{monthFormatter.format(new Date(`${activeMonth}T12:00:00Z`))}</strong>
+              <button type="button" aria-expanded={calendarOpen} aria-controls="stay-date-picker" onClick={() => setCalendarOpen((open) => !open)} className="flex min-h-9 min-w-0 flex-1 items-center justify-center gap-2 rounded-xl px-2 text-[15px] font-black capitalize focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9b6b36]/40">{monthFormatter.format(new Date(`${activeMonth}T12:00:00Z`))}<ChevronDown className={`size-4 shrink-0 transition-transform ${calendarOpen ? "rotate-180" : ""}`}/></button>
               <button type="button" aria-label="Επόμενος μήνας" disabled={activeMonthIndex >= months.length - 1} onClick={() => setActiveMonth(months[activeMonthIndex + 1])} className="flex size-9 items-center justify-center rounded-xl border border-[#e8dfd4] bg-white text-[#6f573f] shadow-sm transition active:scale-95 disabled:border-transparent disabled:bg-transparent disabled:opacity-25"><ChevronRight className="size-5"/></button>
             </div>
-            <div className="mb-1 grid grid-cols-7 gap-1 text-center text-[11px] font-black uppercase text-[#8b8075]" style={{ gridTemplateColumns: "repeat(7, minmax(0, 1fr))" }}>
-              {['Δε','Τρ','Τε','Πε','Πα','Σα','Κυ'].map((day) => <span key={day} className="py-1">{day}</span>)}
-            </div>
-            <div className="grid grid-cols-7 gap-1" style={{ gridTemplateColumns: "repeat(7, minmax(0, 1fr))" }}>
-              {Array.from({ length: leadingCalendarCells }, (_, index) => <span key={`empty-${index}`} aria-hidden="true" />)}
-              {dates.map((date) => {
-                const selected = date === arrival || date === departure; const between = Boolean(arrival && departure && date > arrival && date < departure);
-                const disabled = date < today;
-                return <button key={date} type="button" disabled={disabled} aria-label={longDate(date)} aria-pressed={selected} onClick={() => chooseDate(date)} className={`h-10 min-w-0 rounded-xl border text-center text-[15px] font-black transition sm:h-auto sm:aspect-square active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9b6b36]/45 ${selected ? "border-[#855b2c] bg-[#855b2c] text-white shadow" : between ? "border-[#e7d5bf] bg-[#f3e8d9] text-[#6d5237]" : disabled ? "border-transparent bg-transparent text-[#c4bbb1]" : "border-[#ece3d8] bg-[#fcfaf7] text-[#4c443d] hover:border-[#cdb99f] hover:bg-[#fffaf3]"}`}>{Number(date.slice(-2))}</button>;
-              })}
-            </div>
-            <div className="mt-3 grid grid-cols-2 gap-2 text-sm"><div className={`rounded-xl border p-2.5 ${arrival ? "border-[#d8c4aa] bg-[#fff9f1]" : "border-transparent bg-[#f7f3ec]"}`}><span className="block text-xs text-[#80756b]">Check-in</span><strong className="mt-0.5 block text-base">{arrival ? shortDate(arrival) : "—"}</strong></div><div className={`rounded-xl border p-2.5 ${departure ? "border-[#d8c4aa] bg-[#fff9f1]" : "border-transparent bg-[#f7f3ec]"}`}><span className="block text-xs text-[#80756b]">Check-out</span><strong className="mt-0.5 block text-base">{departure ? shortDate(departure) : "—"}</strong></div></div>
+            {calendarOpen && <div id="stay-date-picker" className="pt-3">
+              <p className={`mb-2 rounded-xl px-3 py-2 text-sm font-bold ${departure ? "bg-[#edf3e8] text-[#526746]" : "bg-[#fff5e8] text-[#865d2f]"}`}>{dateStepLabel}</p>
+              <div className="mb-1 grid grid-cols-7 gap-1 text-center text-[11px] font-black uppercase text-[#8b8075]" style={{ gridTemplateColumns: "repeat(7, minmax(0, 1fr))" }}>
+                {['Δε','Τρ','Τε','Πε','Πα','Σα','Κυ'].map((day) => <span key={day} className="py-1">{day}</span>)}
+              </div>
+              <div className="grid grid-cols-7 gap-1" style={{ gridTemplateColumns: "repeat(7, minmax(0, 1fr))" }}>
+                {Array.from({ length: leadingCalendarCells }, (_, index) => <span key={`empty-${index}`} aria-hidden="true" />)}
+                {dates.map((date) => {
+                  const selected = date === arrival || date === departure; const between = Boolean(arrival && departure && date > arrival && date < departure);
+                  const disabled = date < today;
+                  return <button key={date} type="button" disabled={disabled} aria-label={longDate(date)} aria-pressed={selected} onClick={() => chooseDate(date)} className={`h-10 min-w-0 rounded-xl border text-center text-[15px] font-black transition sm:h-auto sm:aspect-square active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9b6b36]/45 ${selected ? "border-[#855b2c] bg-[#855b2c] text-white shadow" : between ? "border-[#e7d5bf] bg-[#f3e8d9] text-[#6d5237]" : disabled ? "border-transparent bg-transparent text-[#c4bbb1]" : "border-[#ece3d8] bg-[#fcfaf7] text-[#4c443d] hover:border-[#cdb99f] hover:bg-[#fffaf3]"}`}>{Number(date.slice(-2))}</button>;
+                })}
+              </div>
+            </div>}
+            {(arrival || departure) && <div className="mt-3 grid grid-cols-2 gap-2 text-sm"><div className={`rounded-xl border p-2.5 ${arrival ? "border-[#d8c4aa] bg-[#fff9f1]" : "border-transparent bg-[#f7f3ec]"}`}><span className="block text-xs text-[#80756b]">Check-in</span><strong className="mt-0.5 block text-base">{arrival ? shortDate(arrival) : "—"}</strong></div><div className={`rounded-xl border p-2.5 ${departure ? "border-[#d8c4aa] bg-[#fff9f1]" : "border-transparent bg-[#f7f3ec]"}`}><span className="block text-xs text-[#80756b]">Check-out</span><strong className="mt-0.5 block text-base">{departure ? shortDate(departure) : "—"}</strong></div></div>}
           </div>
 
           <div className="rounded-[24px] border border-[#e2d6c7] bg-white p-3 shadow-[0_6px_20px_rgba(69,53,37,.05)] sm:p-4">
-            <div className="mb-2.5 flex items-center gap-2.5"><span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-[#f5eee4] text-[#936633]"><Users className="size-[19px]"/></span><h2 className="text-lg font-black">2. Επισκέπτες</h2><span className="ml-auto rounded-full bg-[#f4eee6] px-2.5 py-1 text-xs font-bold text-[#725f4c]">{guests} {guests === 1 ? "άτομο" : "άτομα"}</span></div>
-            <div className="grid grid-cols-5 gap-1.5" style={{ gridTemplateColumns: "repeat(5, minmax(0, 1fr))" }}>{[1,2,3,4,5].map((count) => <button key={count} type="button" aria-label={`${count} ${count === 1 ? "επισκέπτης" : "επισκέπτες"}`} aria-pressed={guests === count} onClick={() => setGuests(count)} className={`h-12 min-w-0 rounded-xl border text-base font-black transition active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9b6b36]/45 ${guests === count ? "border-[#855b2c] bg-[#855b2c] text-white shadow-sm" : "border-[#e3d8ca] bg-[#fcfaf7] hover:border-[#cdb99f] hover:bg-[#fffaf3]"}`}>{count}</button>)}</div>
+            <div className="mb-2.5 flex items-center gap-2.5"><span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-[#f5eee4] text-[#936633]"><Users className="size-[19px]"/></span><h2 className="text-lg font-black">2. Τύπος κράτησης</h2>{groupMode && <span className="ml-auto rounded-full bg-[#f4eee6] px-2.5 py-1 text-xs font-bold text-[#725f4c]">Ομαδική</span>}</div>
+            <div className="mb-2.5 grid grid-cols-2 gap-2">
+              <button type="button" aria-pressed={!groupMode} onClick={() => setGroupMode(false)} className={`h-11 rounded-xl border text-sm font-black transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9b6b36]/40 ${!groupMode ? "border-[#855b2c] bg-[#855b2c] text-white" : "border-[#e3d8ca] bg-[#fcfaf7]"}`}>Ένα δωμάτιο</button>
+              <button type="button" aria-pressed={groupMode} onClick={() => setGroupMode(true)} className={`h-11 rounded-xl border text-sm font-black transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9b6b36]/40 ${groupMode ? "border-[#855b2c] bg-[#855b2c] text-white" : "border-[#e3d8ca] bg-[#fcfaf7]"}`}>Πολλά δωμάτια</button>
+            </div>
+            {groupMode
+              ? <p className="rounded-xl bg-[#f7f3ec] px-3 py-2 text-sm font-semibold text-[#6f6257]">Επίλεξε τουλάχιστον 2 δωμάτια. Τα άτομα ορίζονται ξεχωριστά σε κάθε δωμάτιο.</p>
+              : <><div className="mb-2 text-sm font-bold text-[#6f6257]">Επισκέπτες</div><div className="grid grid-cols-5 gap-1.5" style={{ gridTemplateColumns: "repeat(5, minmax(0, 1fr))" }}>{[1,2,3,4,5].map((count) => <button key={count} type="button" aria-label={`${count} ${count === 1 ? "επισκέπτης" : "επισκέπτες"}`} aria-pressed={guests === count} onClick={() => setGuests(count)} className={`h-12 min-w-0 rounded-xl border text-base font-black transition active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9b6b36]/45 ${guests === count ? "border-[#855b2c] bg-[#855b2c] text-white shadow-sm" : "border-[#e3d8ca] bg-[#fcfaf7] hover:border-[#cdb99f] hover:bg-[#fffaf3]"}`}>{count}</button>)}</div></>}
           </div>
 
           {(loading || (arrival && departure)) && <div aria-live="polite" aria-busy={loading} className="rounded-3xl border border-[#e5dacb] bg-white p-3 shadow-sm sm:p-4">
-            <div className="mb-3 flex items-center justify-between gap-3"><h2 className="font-black">3. Διαθέσιμα δωμάτια</h2>{nights > 0 && <span className="shrink-0 rounded-full bg-[#f3eee6] px-2.5 py-1 text-[11px] font-bold text-[#71675e]">{nights} {nights === 1 ? "βράδυ" : "βράδια"} · {guests} άτ.</span>}</div>
+            <div className="mb-3 flex items-center justify-between gap-3"><h2 className="font-black">3. Διαθέσιμα δωμάτια</h2>{nights > 0 && <span className="shrink-0 rounded-full bg-[#f3eee6] px-2.5 py-1 text-[11px] font-bold text-[#71675e]">{resultSummary}</span>}</div>
             {loading ? <div className="flex items-center gap-2 py-7 text-sm text-[#71675e]"><LoaderCircle className="size-5 animate-spin"/> Έλεγχος Booking Core…</div> : <>
-              {rooms.length > 0 && <div className="mb-2"><p className="mb-2 text-xs font-bold uppercase tracking-wider text-[#657556]">Χωρίς αλλαγή δωματίου</p><div className="grid grid-cols-2 gap-2">{rooms.map((room) => { const active = selection?.type === "room" && selection.roomNumber === room.roomNumber; return <button key={room.roomNumber} type="button" aria-pressed={active} onClick={() => selectRoom(room)} className={`flex min-h-28 min-w-0 flex-col rounded-2xl border p-3 text-left transition active:scale-[.98] ${active ? "border-[#657556] bg-[#e6efdf] ring-2 ring-[#657556]/25" : "border-[#e2d8ca] bg-[#fcfaf7]"}`}><span className="flex items-center gap-1 text-sm font-black">{active && <Check className="size-4 shrink-0"/>}{roomTitle(room)}</span><span className="mt-1 block text-[11px] leading-4 text-[#71675e]">{roomCategoryLabel(room.category)}</span><span className="mt-auto block pt-2 text-sm font-black text-[#657556]">{room.systemTotal}€</span></button>; })}</div></div>}
+              {rooms.length > 0 && <div className="mb-2"><p className="mb-2 text-xs font-bold uppercase tracking-wider text-[#657556]">{groupMode ? "Επίλεξε δωμάτια" : "Χωρίς αλλαγή δωματίου"}</p><div className="grid grid-cols-2 gap-2 sm:grid-cols-3">{rooms.map((room) => { const assignment = selectedRoomAssignments.find((item) => item.roomNumber === room.roomNumber); const active = groupMode ? Boolean(assignment) : selection?.type === "room" && selection.roomNumber === room.roomNumber; const displayedPrice = groupMode ? (assignment ? roomPrice(room, assignment.guests) : lowestRoomPrice(room)) : room.systemTotal; return <button key={room.roomNumber} type="button" aria-pressed={active} onClick={() => groupMode ? toggleGroupRoom(room) : selectRoom(room)} className={`grid min-h-[88px] min-w-0 grid-cols-[minmax(0,1fr)_auto] grid-rows-[auto_1fr] gap-x-2 rounded-2xl border p-2.5 text-left transition active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#657556]/35 ${active ? "border-[#657556] bg-[#e6efdf] ring-2 ring-[#657556]/25" : "border-[#e2d8ca] bg-[#fcfaf7] hover:border-[#c8bba9] hover:bg-white"}`}><span className="col-span-2 flex min-w-0 items-center gap-1 truncate text-sm font-black">{active && <Check className="size-4 shrink-0"/>}{roomTitle(room)}</span><span className="min-w-0 self-end truncate text-xs leading-4 text-[#71675e]">{assignment ? `${assignment.guests} ${assignment.guests === 1 ? "άτομο" : "άτομα"}` : roomDetail(room)}</span><strong className="self-end text-base font-black leading-5 text-[#657556]">{groupMode && !assignment ? "από " : ""}{displayedPrice}€</strong></button>; })}</div></div>}
+              {groupMode && selectedRoomAssignments.length > 0 && <div className="mt-3 rounded-2xl border border-[#dcd0c1] bg-[#faf7f2] p-3">
+                <h3 className="mb-2 text-sm font-black">Άτομα ανά δωμάτιο</h3>
+                <div className="space-y-2">{selectedRoomAssignments.map((assignment) => { const room = rooms.find((offer) => offer.roomNumber === assignment.roomNumber); if (!room) return null; return <div key={assignment.roomNumber} className="grid grid-cols-[1fr_auto_auto] items-center gap-2 rounded-xl bg-white p-2"><div className="min-w-0"><strong className="block truncate text-sm">{roomTitle(room)}</strong><span className="text-xs text-[#71675e]">{roomPrice(room, assignment.guests)}€</span></div><div className="flex items-center rounded-lg border border-[#ddd1c2]"><button type="button" aria-label={`Λιγότερα άτομα στο ${roomTitle(room)}`} disabled={assignment.guests <= 1} onClick={() => updateGroupGuests(room.roomNumber, assignment.guests - 1)} className="flex size-9 items-center justify-center disabled:opacity-25"><Minus className="size-4"/></button><strong className="min-w-6 text-center text-sm">{assignment.guests}</strong><button type="button" aria-label={`Περισσότερα άτομα στο ${roomTitle(room)}`} disabled={assignment.guests >= room.maxGuests || !room.guestPrices?.[String(assignment.guests + 1)]} onClick={() => updateGroupGuests(room.roomNumber, assignment.guests + 1)} className="flex size-9 items-center justify-center disabled:opacity-25"><Plus className="size-4"/></button></div><button type="button" aria-label={`Αφαίρεση ${roomTitle(room)}`} onClick={() => toggleGroupRoom(room)} className="rounded-lg px-2 py-2 text-xs font-bold text-[#8c3f35]">Αφαίρεση</button></div>; })}</div>
+                <div className="mt-3 flex items-center justify-between border-t border-[#e2d8ca] pt-3"><span className="text-sm font-bold">{selectedRoomAssignments.length} δωμάτια · {agreementGuests} άτομα</span><strong className="text-lg text-[#657556]">{agreedTotal || 0}€</strong></div>
+                <button type="button" disabled={selectedRoomAssignments.length < 2} onClick={() => agreementRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })} className="mt-3 h-12 w-full rounded-xl bg-[#657556] text-sm font-black text-white disabled:cursor-not-allowed disabled:opacity-40">{selectedRoomAssignments.length < 2 ? "Επίλεξε ακόμη 1 δωμάτιο" : "Συνέχεια στη συμφωνία"}</button>
+              </div>}
               {rooms.length === 0 && splits.length > 0 && <div><p className="mb-2 text-xs font-bold uppercase tracking-wider text-[#9b6b36]">Μόνο split stay · 1 αλλαγή</p><p className="mb-2 text-xs text-[#71675e]">Δεν υπάρχει ένα δωμάτιο για όλη τη διαμονή.</p><div className="space-y-2">{splits.map((split, index) => { const active = selection?.type === "split" && selection.firstRoomNumber === split.firstRoomNumber && selection.secondRoomNumber === split.secondRoomNumber && selection.changeDate === split.changeDate; return <button key={`${split.changeDate}-${split.firstRoomNumber}-${split.secondRoomNumber}-${index}`} type="button" aria-pressed={active} onClick={() => selectSplit(split)} className={`w-full rounded-2xl border p-3 text-left transition active:scale-[.99] ${active ? "border-[#9b6b36] bg-[#fff4e4] ring-2 ring-[#9b6b36]/20" : "border-[#e2d8ca] bg-[#fcfaf7]"}`}><span className="block font-black">{split.firstName} → {split.secondName}</span><span className="mt-1 block text-sm text-[#71675e]">{shortDate(arrival)}–{shortDate(split.changeDate)} · Δωμάτιο {split.firstRoomNumber}</span><span className="block text-sm text-[#71675e]">{shortDate(split.changeDate)}–{shortDate(departure)} · Δωμάτιο {split.secondRoomNumber}</span><span className="mt-2 block text-sm font-bold text-[#9b6b36]">Τιμή συστήματος: {split.systemTotal}€</span></button>; })}</div></div>}
               {!rooms.length && !splits.length && <p className="rounded-2xl bg-[#fff1ef] p-4 text-sm font-semibold text-[#8c3f35]">Δεν βρέθηκε διαθέσιμη λύση.</p>}
             </>}
           </div>}
 
-          {selection && <div ref={agreementRef} className="scroll-mt-20 rounded-3xl border border-[#d9c8b3] bg-white p-3 shadow-md sm:p-4">
+          {completeSelection && selection && <div ref={agreementRef} className="scroll-mt-20 rounded-3xl border border-[#d9c8b3] bg-white p-3 shadow-md sm:p-4">
             <div className="mb-3 flex items-center gap-2"><MessageSquareText className="size-5 text-[#9b6b36]"/><h2 className="font-black">4. Συμφωνία & SMS</h2></div>
+            <div className="mb-3 rounded-xl bg-[#f7f3ec] p-3 text-sm"><strong className="block">{selectionLabel(selection)}</strong><span className="text-[#71675e]">{agreementGuests} {agreementGuests === 1 ? "άτομο" : "άτομα"} · {shortDate(arrival)}–{shortDate(departure)}</span></div>
             <label className="mb-3 block"><span className="mb-1.5 block text-sm font-bold">Κινητό πελάτη</span><input value={customerPhone} onChange={(event) => setCustomerPhone(event.target.value)} inputMode="tel" placeholder="+30 69XXXXXXXX" className="h-13 w-full rounded-2xl border border-[#d8ccbd] bg-[#fcfaf7] px-3 text-lg font-bold outline-none focus:ring-2 focus:ring-[#9b6b36]/25"/><span className="mt-1 block text-xs text-[#71675e]">Το +30 είναι έτοιμο· μπορείς να το αλλάξεις για ξένο αριθμό.</span></label>
             <label className="mb-3 block"><span className="mb-1.5 block text-sm font-bold">Συμφωνημένη συνολική τιμή</span><div className="flex rounded-2xl border border-[#d8ccbd] bg-[#fcfaf7] focus-within:ring-2 focus-within:ring-[#9b6b36]/25"><input value={agreedTotal} onChange={(event) => setAgreedTotal(event.target.value)} inputMode="decimal" className="h-13 min-w-0 flex-1 bg-transparent px-3 text-lg font-black outline-none"/><span className="flex items-center px-4 text-lg font-black">€</span></div><span className="mt-1 block text-xs text-[#71675e]">Μπορείς να αλλάξεις την τιμή του συστήματος.</span></label>
-            <button type="button" onClick={() => setConfirmingSend(true)} disabled={sending || customerPhone.replace(/\D/g, "").length < 10 || !agreedAmount} className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-[#657556] px-4 text-base font-black text-white shadow-lg transition active:scale-[.99] disabled:cursor-not-allowed disabled:opacity-45">{sending ? <LoaderCircle className="animate-spin"/> : <Send/>}{sending ? "Αποστολή…" : "Έλεγχος & αποστολή SMS"}</button>
+            <button type="button" onClick={() => setConfirmingSend(true)} disabled={sending || !completeSelection || customerPhone.replace(/\D/g, "").length < 10 || !agreedAmount} className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-[#657556] px-4 text-base font-black text-white shadow-lg transition active:scale-[.99] disabled:cursor-not-allowed disabled:opacity-45">{sending ? <LoaderCircle className="animate-spin"/> : <Send/>}{sending ? "Αποστολή…" : "Έλεγχος & αποστολή SMS"}</button>
           </div>}
           {feedback && <div role="status" aria-live="polite" className={`rounded-2xl p-4 text-sm font-bold ${feedback.kind === "ok" ? "bg-[#e9f4e3] text-[#46613b]" : "bg-[#fff0ed] text-[#8c3f35]"}`}>{feedback.text}</div>}
         </section>
@@ -268,7 +332,7 @@ export default function RoomAgreementsApp() {
             {historyError && <p className="rounded-2xl bg-[#fff0ed] p-3 text-sm font-semibold text-[#8c3f35]">{historyError}</p>}
             {history.map((item) => <article key={item.id} className="min-w-0 overflow-hidden rounded-2xl border border-[#e4dacd] bg-[#fcfaf7] p-3">
               <div className="flex min-w-0 items-start justify-between gap-2"><div className="min-w-0"><strong className="block break-all text-base">+{item.customer_phone}</strong><span className="flex items-center gap-1 text-xs text-[#71675e]"><Clock3 className="size-3 shrink-0"/>{dateTime(item.created_at)}</span></div><span className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-black ${item.booking_status === "completed" ? "bg-[#e3efdc] text-[#4d693e]" : item.booking_status === "declined" ? "bg-[#f3e7e4] text-[#8b4b43]" : "bg-[#fff0d9] text-[#8c632c]"}`}>{statusLabels[item.booking_status]}</span></div>
-              <div className="my-3 border-y border-[#e8dfd4] py-2 text-sm"><strong>{shortDate(item.arrival)}–{shortDate(item.departure)}</strong> · {item.guests} άτομα<br/>{item.selection.type === "room" ? `Δωμάτιο ${item.selection.roomNumber}` : `Νο${item.selection.firstRoomNumber} → Νο${item.selection.secondRoomNumber} (${shortDate(item.selection.changeDate)})`} · <strong>{Number(item.agreed_total)}€</strong></div>
+              <div className="my-3 border-y border-[#e8dfd4] py-2 text-sm"><strong>{shortDate(item.arrival)}–{shortDate(item.departure)}</strong> · {item.guests} άτομα<br/>{selectionLabel(item.selection)} · <strong>{Number(item.agreed_total)}€</strong></div>
               <p className="mb-3 text-[11px] text-[#71675e]">SMS πελάτη: {displaySmsStatus(item.customer_sms_status)} · δικό σου: {displaySmsStatus(item.owner_sms_status)}</p>
               <details className="mb-3 rounded-xl bg-white px-3 py-2 text-xs text-[#71675e]"><summary className="cursor-pointer font-bold text-[#5c534b]">Προβολή SMS</summary><p className="mt-2 whitespace-pre-wrap leading-5">{item.message}</p></details>
               {item.booking_status === "pending" && <div className="grid grid-cols-2 gap-2"><button type="button" disabled={Boolean(updatingId)} onClick={() => updateStatus(item.id, "completed")} className="flex h-10 items-center justify-center gap-1 rounded-xl bg-[#657556] text-xs font-black text-white disabled:opacity-50">{updatingId === item.id ? <LoaderCircle className="size-4 animate-spin"/> : <Check className="size-4"/>}Ολοκληρώθηκε</button><button type="button" disabled={Boolean(updatingId)} onClick={() => updateStatus(item.id, "declined")} className="h-10 rounded-xl border border-[#d9c7c0] text-xs font-bold text-[#81534d] disabled:opacity-50">Δεν προχώρησε</button></div>}
@@ -286,6 +350,8 @@ export default function RoomAgreementsApp() {
             <span className="block"><strong>Πελάτης:</strong> {customerPhone}</span>
             <span className="block"><strong>Ποσό:</strong> {agreedAmount}€</span>
             <span className="block"><strong>Διαμονή:</strong> {shortDate(arrival)}–{shortDate(departure)}</span>
+            {selection && <span className="block"><strong>Δωμάτια:</strong> {selectionLabel(selection)}</span>}
+            <span className="block"><strong>Άτομα:</strong> {agreementGuests}</span>
           </div>
           <p className="mb-4 text-sm text-[#71675e]">Θα σταλεί το ίδιο SMS στον πελάτη και στο κινητό σου.</p>
           <div className="grid grid-cols-[.8fr_1.2fr] gap-2">
