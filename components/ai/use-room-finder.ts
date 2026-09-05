@@ -365,6 +365,23 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     throw new Error("AI_UNAVAILABLE");
   }
 
+  async function propertyKnowledgeAnswer(value: string) {
+    try {
+      const response = await fetch("/api/ai-assistant/knowledge", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: value, language, limit: 1 }),
+      });
+      const payload = await response.json().catch(() => null);
+      return response.ok && payload?.grounded && typeof payload.answer === "string"
+        ? payload.answer
+        : null;
+    } catch (error) {
+      console.error("Room Finder property knowledge request failed", error);
+      return null;
+    }
+  }
+
   async function findNearbyOffers(searchDraft: BookingDraft) {
     if (searchDraft.roomCount !== 1 || searchDraft.groups.length !== 1) return [] as RoomOffer[];
 
@@ -582,6 +599,15 @@ export function useRoomFinder(language: RoomFinderLanguage) {
 
     try {
       const command = await promise;
+      const onlyNoChange = command.actions.length > 0
+        && command.actions.every(action => action.type === "no_change");
+      if (onlyNoChange) {
+        const knowledgeAnswer = await propertyKnowledgeAnswer(value);
+        if (knowledgeAnswer) {
+          add("assistant", knowledgeAnswer);
+          return;
+        }
+      }
       await applyCommand(command);
     } catch (error) {
       console.error("Room Finder interpreter request failed", error);

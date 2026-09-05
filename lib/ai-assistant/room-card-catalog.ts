@@ -49,13 +49,13 @@ const familyDetails: Record<AssistantLanguage, string> = {
 };
 
 const guestNoteCopy: Record<AssistantLanguage, string> = {
-  el: "Για 5 άτομα προστίθεται επιπλέον κρεβάτι και ο χώρος θα είναι λίγο πιο περιορισμένος.",
-  en: "For 5 guests, an extra bed is added and the space will feel a little tighter.",
-  de: "Für 5 Gäste wird ein Zustellbett hinzugefügt und der Platz ist etwas begrenzter.",
-  fr: "Pour 5 personnes, un lit d’appoint est ajouté et l’espace sera un peu plus restreint.",
-  it: "Per 5 ospiti viene aggiunto un letto extra e lo spazio risulterà un po’ più ridotto.",
-  es: "Para 5 huéspedes se añade una cama extra y el espacio será un poco más reducido.",
-  tr: "5 kişi için ilave yatak eklenir ve alan biraz daha sıkışık olacaktır.",
+  el: "Κανονική χωρητικότητα 4 άτομα. Ο 5ος φιλοξενείται μόνο κατόπιν συνεννόησης, με πρόσθετο μονό κρεβάτι στο υπνοδωμάτιο και περιορισμένο χώρο.",
+  en: "Regular capacity is 4 guests. A 5th guest is possible only by prior agreement, with an extra single bed in the bedroom and limited space.",
+  de: "Reguläre Belegung: 4 Gäste. Ein 5. Gast ist nur nach Absprache mit einem Zustellbett im Schlafzimmer und begrenztem Platz möglich.",
+  fr: "Capacité normale : 4 personnes. Une 5e personne n’est possible qu’après accord, avec un lit simple ajouté dans la chambre et un espace limité.",
+  it: "Capienza normale: 4 ospiti. Il 5º è possibile solo previo accordo, con un letto singolo extra in camera e spazio limitato.",
+  es: "Capacidad normal: 4 huéspedes. Un 5º solo es posible previo acuerdo, con cama individual extra en el dormitorio y espacio limitado.",
+  tr: "Normal kapasite 4 kişidir. 5. kişi yalnızca önceden anlaşmayla, yatak odasında ilave tek kişilik yatak ve sınırlı alanla mümkündür.",
 };
 
 export const ROOM_CARD_CATALOG: RoomCardCatalogEntry[] = [
@@ -65,13 +65,13 @@ export const ROOM_CARD_CATALOG: RoomCardCatalogEntry[] = [
     gallery: ["/images/rooms/DSC07776-2-e1675109942622.webp", "/images/rooms/DSC07769-1.webp"],
     detailsUrl: standardDetails,
     copy: {
-      el: { name: "Δωμάτιο 1", category: "Τετράκλινο δωμάτιο", floor: "Πρώτος όροφος · με σκάλες", features: ["Ιδιωτικό μπαλκόνι", "1 διπλό και 2 μονά κρεβάτια", "Ψυγείο", "Κλιματισμός"] },
-      en: { name: "Room 1", category: "Quadruple room", floor: "First floor · stairs required", features: ["Private balcony", "1 double and 2 single beds", "Fridge", "Air conditioning"] },
-      de: { name: "Zimmer 1", category: "Vierbettzimmer", floor: "Erster Stock · Treppen erforderlich", features: ["Privater Balkon", "1 Doppelbett und 2 Einzelbetten", "Kühlschrank", "Klimaanlage"] },
-      fr: { name: "Chambre 1", category: "Chambre quadruple", floor: "Premier étage · accès par escalier", features: ["Balcon privé", "1 lit double et 2 lits simples", "Réfrigérateur", "Climatisation"] },
-      it: { name: "Camera 1", category: "Camera quadrupla", floor: "Primo piano · accesso con scale", features: ["Balcone privato", "1 matrimoniale e 2 singoli", "Frigorifero", "Aria condizionata"] },
-      es: { name: "Habitación 1", category: "Habitación cuádruple", floor: "Primera planta · acceso por escaleras", features: ["Balcón privado", "1 cama doble y 2 individuales", "Nevera", "Aire acondicionado"] },
-      tr: { name: "Oda 1", category: "Dört kişilik oda", floor: "Birinci kat · merdiven erişimi", features: ["Özel balkon", "1 çift ve 2 tek kişilik yatak", "Buzdolabı", "Klima"] },
+      el: { name: "Δωμάτιο 1", category: "Δίκλινο / Τρίκλινο", floor: "Πρώτος όροφος · 14 σκαλοπάτια", features: ["Πρόσβαση σε κοινόχρηστη βεράντα", "1 διπλό και 2 μονά κρεβάτια", "Ψυγείο", "Κλιματισμός"] },
+      en: { name: "Room 1", category: "Double / Triple room", floor: "First floor · 14 stairs", features: ["Shared-terrace access", "1 double and 2 single beds", "Fridge", "Air conditioning"] },
+      de: { name: "Zimmer 1", category: "Doppel-/Dreibettzimmer", floor: "Erster Stock · 14 Stufen", features: ["Zugang zur Gemeinschaftsterrasse", "1 Doppelbett und 2 Einzelbetten", "Kühlschrank", "Klimaanlage"] },
+      fr: { name: "Chambre 1", category: "Chambre double / triple", floor: "Premier étage · 14 marches", features: ["Accès à la terrasse commune", "1 lit double et 2 lits simples", "Réfrigérateur", "Climatisation"] },
+      it: { name: "Camera 1", category: "Camera doppia / tripla", floor: "Primo piano · 14 gradini", features: ["Accesso alla terrazza comune", "1 matrimoniale e 2 singoli", "Frigorifero", "Aria condizionata"] },
+      es: { name: "Habitación 1", category: "Habitación doble / triple", floor: "Primera planta · 14 escalones", features: ["Acceso a terraza común", "1 cama doble y 2 individuales", "Nevera", "Aire acondicionado"] },
+      tr: { name: "Oda 1", category: "Çift / üç kişilik oda", floor: "Birinci kat · 14 basamak", features: ["Ortak terasa erişim", "1 çift ve 2 tek kişilik yatak", "Buzdolabı", "Klima"] },
     },
   },
   {
@@ -80,13 +80,13 @@ export const ROOM_CARD_CATALOG: RoomCardCatalogEntry[] = [
     gallery: ["/images/rooms/DSC07803-1.webp", "/images/rooms/DSC07839.webp"],
     detailsUrl: economyDetails,
     copy: {
-      el: { name: "Δωμάτιο 2", category: "Οικονομικό δίκλινο", floor: "Πρώτος όροφος · με σκάλες", features: ["1 διπλό κρεβάτι", "Οικονομική επιλογή", "Ψυγείο", "Κλιματισμός"] },
-      en: { name: "Room 2", category: "Economy double room", floor: "First floor · stairs required", features: ["1 double bed", "Economy option", "Fridge", "Air conditioning"] },
-      de: { name: "Zimmer 2", category: "Economy-Doppelzimmer", floor: "Erster Stock · Treppen erforderlich", features: ["1 Doppelbett", "Preisgünstige Option", "Kühlschrank", "Klimaanlage"] },
-      fr: { name: "Chambre 2", category: "Chambre double économique", floor: "Premier étage · accès par escalier", features: ["1 lit double", "Option économique", "Réfrigérateur", "Climatisation"] },
-      it: { name: "Camera 2", category: "Camera doppia economy", floor: "Primo piano · accesso con scale", features: ["1 letto matrimoniale", "Opzione economica", "Frigorifero", "Aria condizionata"] },
-      es: { name: "Habitación 2", category: "Habitación doble económica", floor: "Primera planta · acceso por escaleras", features: ["1 cama doble", "Opción económica", "Nevera", "Aire acondicionado"] },
-      tr: { name: "Oda 2", category: "Ekonomik çift kişilik oda", floor: "Birinci kat · merdiven erişimi", features: ["1 çift kişilik yatak", "Ekonomik seçenek", "Buzdolabı", "Klima"] },
+      el: { name: "Δωμάτιο 2", category: "Οικονομικό δίκλινο", floor: "Πρώτος όροφος · 14 σκαλοπάτια", features: ["1 διπλό κρεβάτι", "Κοινόχρηστη βεράντα", "Ψυγείο", "Κλιματισμός"] },
+      en: { name: "Room 2", category: "Economy double room", floor: "First floor · 14 stairs", features: ["1 double bed", "Shared terrace", "Fridge", "Air conditioning"] },
+      de: { name: "Zimmer 2", category: "Economy-Doppelzimmer", floor: "Erster Stock · 14 Stufen", features: ["1 Doppelbett", "Gemeinschaftsterrasse", "Kühlschrank", "Klimaanlage"] },
+      fr: { name: "Chambre 2", category: "Chambre double économique", floor: "Premier étage · 14 marches", features: ["1 lit double", "Terrasse commune", "Réfrigérateur", "Climatisation"] },
+      it: { name: "Camera 2", category: "Camera doppia economy", floor: "Primo piano · 14 gradini", features: ["1 letto matrimoniale", "Terrazza comune", "Frigorifero", "Aria condizionata"] },
+      es: { name: "Habitación 2", category: "Habitación doble económica", floor: "Primera planta · 14 escalones", features: ["1 cama doble", "Terraza común", "Nevera", "Aire acondicionado"] },
+      tr: { name: "Oda 2", category: "Ekonomik çift kişilik oda", floor: "Birinci kat · 14 basamak", features: ["1 çift kişilik yatak", "Ortak teras", "Buzdolabı", "Klima"] },
     },
   },
   {
@@ -170,13 +170,13 @@ export const ROOM_CARD_CATALOG: RoomCardCatalogEntry[] = [
     gallery: ["/images/rooms/chios-apartments-voulamandis.webp", "/images/rooms/chios-hotels-family-apartments.webp"],
     detailsUrl: familyDetails,
     copy: {
-      el: { name: "Διαμέρισμα 8", category: "Οικογενειακό διαμέρισμα", floor: "Ανεξάρτητο διαμέρισμα", features: ["Πλήρης κουζίνα", "1 διπλό και 2 μονά κρεβάτια", "Ψυγείο", "Κλιματισμός"] },
-      en: { name: "Apartment 8", category: "Family apartment", floor: "Independent apartment", features: ["Full kitchen", "1 double and 2 single beds", "Fridge", "Air conditioning"] },
-      de: { name: "Apartment 8", category: "Familienapartment", floor: "Unabhängiges Apartment", features: ["Voll ausgestattete Küche", "1 Doppelbett und 2 Einzelbetten", "Kühlschrank", "Klimaanlage"] },
-      fr: { name: "Appartement 8", category: "Appartement familial", floor: "Appartement indépendant", features: ["Cuisine complète", "1 lit double et 2 lits simples", "Réfrigérateur", "Climatisation"] },
-      it: { name: "Appartamento 8", category: "Appartamento familiare", floor: "Appartamento indipendente", features: ["Cucina completa", "1 matrimoniale e 2 singoli", "Frigorifero", "Aria condizionata"] },
-      es: { name: "Apartamento 8", category: "Apartamento familiar", floor: "Apartamento independiente", features: ["Cocina completa", "1 cama doble y 2 individuales", "Nevera", "Aire acondicionado"] },
-      tr: { name: "Daire 8", category: "Aile dairesi", floor: "Bağımsız daire", features: ["Tam donanımlı mutfak", "1 çift ve 2 tek kişilik yatak", "Buzdolabı", "Klima"] },
+      el: { name: "Διαμέρισμα 8", category: "Οικογενειακό διαμέρισμα", floor: "Ισόγειο · 4–5 σκαλοπάτια", features: ["Πλήρης κουζίνα", "1 διπλό και 2 καναπέδες-κρεβάτια", "Ιδιωτικό μπαλκόνι με θέα στο περιβόλι", "Κλιματισμός"] },
+      en: { name: "Apartment 8", category: "Family apartment", floor: "Ground floor · 4–5 entrance steps", features: ["Full kitchen", "1 double and 2 sofa beds", "Private balcony with orchard view", "Air conditioning"] },
+      de: { name: "Apartment 8", category: "Familienapartment", floor: "Erdgeschoss · 4–5 Eingangsstufen", features: ["Voll ausgestattete Küche", "1 Doppelbett und 2 Schlafsofas", "Privatbalkon mit Obstgartenblick", "Klimaanlage"] },
+      fr: { name: "Appartement 8", category: "Appartement familial", floor: "Rez-de-chaussée · 4–5 marches", features: ["Cuisine complète", "1 lit double et 2 canapés-lits", "Balcon privé sur le verger", "Climatisation"] },
+      it: { name: "Appartamento 8", category: "Appartamento familiare", floor: "Piano terra · 4–5 gradini", features: ["Cucina completa", "1 matrimoniale e 2 divani letto", "Balcone privato sul frutteto", "Aria condizionata"] },
+      es: { name: "Apartamento 8", category: "Apartamento familiar", floor: "Planta baja · 4–5 escalones", features: ["Cocina completa", "1 cama doble y 2 sofás cama", "Balcón privado al huerto", "Aire acondicionado"] },
+      tr: { name: "Daire 8", category: "Aile dairesi", floor: "Zemin kat · 4–5 basamak", features: ["Tam donanımlı mutfak", "1 çift yatak ve 2 çekyat", "Meyve bahçesi manzaralı özel balkon", "Klima"] },
     },
   },
   {
@@ -185,13 +185,13 @@ export const ROOM_CARD_CATALOG: RoomCardCatalogEntry[] = [
     gallery: ["/images/rooms/chios-apartments-voulamandis.webp", "/images/rooms/family-room.webp"],
     detailsUrl: familyDetails,
     copy: {
-      el: { name: "Διαμέρισμα 9", category: "Οικογενειακό διαμέρισμα", floor: "Ανεξάρτητο διαμέρισμα", features: ["Πλήρης κουζίνα", "1 διπλό και 2 μονά κρεβάτια", "Ψυγείο", "Κλιματισμός"] },
-      en: { name: "Apartment 9", category: "Family apartment", floor: "Independent apartment", features: ["Full kitchen", "1 double and 2 single beds", "Fridge", "Air conditioning"] },
-      de: { name: "Apartment 9", category: "Familienapartment", floor: "Unabhängiges Apartment", features: ["Voll ausgestattete Küche", "1 Doppelbett und 2 Einzelbetten", "Kühlschrank", "Klimaanlage"] },
-      fr: { name: "Appartement 9", category: "Appartement familial", floor: "Appartement indépendant", features: ["Cuisine complète", "1 lit double et 2 lits simples", "Réfrigérateur", "Climatisation"] },
-      it: { name: "Appartamento 9", category: "Appartamento familiare", floor: "Appartamento indipendente", features: ["Cucina completa", "1 matrimoniale e 2 singoli", "Frigorifero", "Aria condizionata"] },
-      es: { name: "Apartamento 9", category: "Apartamento familiar", floor: "Apartamento independiente", features: ["Cocina completa", "1 cama doble y 2 individuales", "Nevera", "Aire acondicionado"] },
-      tr: { name: "Daire 9", category: "Aile dairesi", floor: "Bağımsız daire", features: ["Tam donanımlı mutfak", "1 çift ve 2 tek kişilik yatak", "Buzdolabı", "Klima"] },
+      el: { name: "Διαμέρισμα 9", category: "Οικογενειακό διαμέρισμα", floor: "Ισόγειο · 4–5 σκαλοπάτια", features: ["Πλήρης κουζίνα", "1 διπλό και 2 καναπέδες-κρεβάτια", "Ιδιωτικό μπαλκόνι με θέα στο περιβόλι", "Κλιματισμός"] },
+      en: { name: "Apartment 9", category: "Family apartment", floor: "Ground floor · 4–5 entrance steps", features: ["Full kitchen", "1 double and 2 sofa beds", "Private balcony with orchard view", "Air conditioning"] },
+      de: { name: "Apartment 9", category: "Familienapartment", floor: "Erdgeschoss · 4–5 Eingangsstufen", features: ["Voll ausgestattete Küche", "1 Doppelbett und 2 Schlafsofas", "Privatbalkon mit Obstgartenblick", "Klimaanlage"] },
+      fr: { name: "Appartement 9", category: "Appartement familial", floor: "Rez-de-chaussée · 4–5 marches", features: ["Cuisine complète", "1 lit double et 2 canapés-lits", "Balcon privé sur le verger", "Climatisation"] },
+      it: { name: "Appartamento 9", category: "Appartamento familiare", floor: "Piano terra · 4–5 gradini", features: ["Cucina completa", "1 matrimoniale e 2 divani letto", "Balcone privato sul frutteto", "Aria condizionata"] },
+      es: { name: "Apartamento 9", category: "Apartamento familiar", floor: "Planta baja · 4–5 escalones", features: ["Cocina completa", "1 cama doble y 2 sofás cama", "Balcón privado al huerto", "Aire acondicionado"] },
+      tr: { name: "Daire 9", category: "Aile dairesi", floor: "Zemin kat · 4–5 basamak", features: ["Tam donanımlı mutfak", "1 çift yatak ve 2 çekyat", "Meyve bahçesi manzaralı özel balkon", "Klima"] },
     },
   },
   {
@@ -200,18 +200,22 @@ export const ROOM_CARD_CATALOG: RoomCardCatalogEntry[] = [
     gallery: ["/images/rooms/DSC07899.webp", "/images/rooms/DSC07909.webp"],
     detailsUrl: familyDetails,
     copy: {
-      el: { name: "Διαμέρισμα 10", category: "Μεγάλο οικογενειακό διαμέρισμα", floor: "Ανεξάρτητο διαμέρισμα", features: ["Πλήρης κουζίνα", "Έως 5 επισκέπτες κατόπιν συνεννόησης", "Ψυγείο", "Κλιματισμός"] },
-      en: { name: "Apartment 10", category: "Large family apartment", floor: "Independent apartment", features: ["Full kitchen", "Up to 5 guests by arrangement", "Fridge", "Air conditioning"] },
-      de: { name: "Apartment 10", category: "Großes Familienapartment", floor: "Unabhängiges Apartment", features: ["Voll ausgestattete Küche", "Bis zu 5 Gäste nach Absprache", "Kühlschrank", "Klimaanlage"] },
-      fr: { name: "Appartement 10", category: "Grand appartement familial", floor: "Appartement indépendant", features: ["Cuisine complète", "Jusqu’à 5 personnes sur demande", "Réfrigérateur", "Climatisation"] },
-      it: { name: "Appartamento 10", category: "Grande appartamento familiare", floor: "Appartamento indipendente", features: ["Cucina completa", "Fino a 5 ospiti previo accordo", "Frigorifero", "Aria condizionata"] },
-      es: { name: "Apartamento 10", category: "Apartamento familiar grande", floor: "Apartamento independiente", features: ["Cocina completa", "Hasta 5 huéspedes previa consulta", "Nevera", "Aire acondicionado"] },
-      tr: { name: "Daire 10", category: "Büyük aile dairesi", floor: "Bağımsız daire", features: ["Tam donanımlı mutfak", "Önceden görüşülerek 5 kişiye kadar", "Buzdolabı", "Klima"] },
+      el: { name: "Διαμέρισμα 10", category: "Μεγάλο οικογενειακό διαμέρισμα", floor: "Ισόγειο · 4–5 σκαλοπάτια", features: ["Πλήρης κουζίνα", "1 διπλό και 1 διπλός καναπές-κρεβάτι", "Κανονικά έως 4 άτομα", "Κλιματισμός"] },
+      en: { name: "Apartment 10", category: "Large family apartment", floor: "Ground floor · 4–5 entrance steps", features: ["Full kitchen", "1 double bed and 1 double sofa bed", "Regular capacity: 4 guests", "Air conditioning"] },
+      de: { name: "Apartment 10", category: "Großes Familienapartment", floor: "Erdgeschoss · 4–5 Eingangsstufen", features: ["Voll ausgestattete Küche", "1 Doppelbett und 1 Doppelschlafsofa", "Reguläre Belegung: 4 Gäste", "Klimaanlage"] },
+      fr: { name: "Appartement 10", category: "Grand appartement familial", floor: "Rez-de-chaussée · 4–5 marches", features: ["Cuisine complète", "1 lit double et 1 canapé-lit double", "Capacité normale : 4 personnes", "Climatisation"] },
+      it: { name: "Appartamento 10", category: "Grande appartamento familiare", floor: "Piano terra · 4–5 gradini", features: ["Cucina completa", "1 matrimoniale e 1 divano letto doppio", "Capienza normale: 4 ospiti", "Aria condizionata"] },
+      es: { name: "Apartamento 10", category: "Apartamento familiar grande", floor: "Planta baja · 4–5 escalones", features: ["Cocina completa", "1 cama doble y 1 sofá cama doble", "Capacidad normal: 4 huéspedes", "Aire acondicionado"] },
+      tr: { name: "Daire 10", category: "Büyük aile dairesi", floor: "Zemin kat · 4–5 basamak", features: ["Tam donanımlı mutfak", "1 çift kişilik yatak ve 1 çift kişilik çekyat", "Normal kapasite: 4 kişi", "Klima"] },
     },
   },
 ];
 
 const ROOM_BY_KEY = new Map(ROOM_CARD_CATALOG.map((room) => [`${room.roomId}:${room.unitId}`, room]));
+
+export function getRoomCardCatalogEntry(roomId: string | number, unitId: string | number) {
+  return ROOM_BY_KEY.get(`${String(roomId)}:${String(unitId)}`);
+}
 
 export function localizeRoomOffer<T extends Record<string, any>>(offer: T, language: AssistantLanguage) {
   const room = ROOM_BY_KEY.get(`${String(offer.roomId || "")}:${String(offer.unitId || "")}`);

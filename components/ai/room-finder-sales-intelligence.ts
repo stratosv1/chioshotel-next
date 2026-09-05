@@ -7,7 +7,7 @@ export type SalesAwareOffer = {
 };
 
 const ROOM_TRAITS: Record<number, readonly RoomFinderPreference[]> = {
-  1: ["balcony", "family"],
+  1: ["family"],
   2: ["budget"],
   3: ["kitchen"],
   4: ["kitchen", "balcony"],

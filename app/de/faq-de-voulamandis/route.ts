@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server";
 import { permanentRedirectResponse } from "@/lib/permanent-redirect-response";
 
 export function GET(request: NextRequest) {
-  return permanentRedirectResponse(request, "/de/kontaktieren-voulamandis-house/");
+  return permanentRedirectResponse(request, "/de/haeufige-fragen/");
 }
 
 export const HEAD = GET;

@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getRoomCardCatalogEntry } from "@/lib/ai-assistant/room-card-catalog";
+import { searchPropertyKnowledge } from "@/lib/property-knowledge";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -44,13 +46,6 @@ type Offer = {
   guestNote: string | null;
 };
 
-type RoomMeta = {
-  number: number;
-  image: string;
-  features: string[];
-  details: Record<Language, string>;
-};
-
 type FlowCopy = {
   askCheckin: string;
   askCheckout: string;
@@ -58,52 +53,6 @@ type FlowCopy = {
   invalidCheckin: string;
   invalidCheckout: string;
   stayTooLong: string;
-};
-
-function roomLinks(type: "standard" | "economy" | "family"): Record<Language, string> {
-  const links = {
-    standard: {
-      en: "/chios-rooms/standard-double-room/",
-      el: "/el/domatia-xios/diklina-triklina-domatia/",
-      fr: "/fr/chambres-a-chios/chambres-doubles-standard/",
-      de: "/de/zimmer-chios/standard-doppelzimmer-auf-chios/",
-      it: "/it/stanze-a-chios/camere-doppie-standard-chios/",
-      es: "/es/habitaciones-en-chios/habitaciones-dobles-estandar/",
-      tr: "/tr/chios-odalari/standart-cift-kisilik-odalar/",
-    },
-    economy: {
-      en: "/chios-rooms/economy-double-rooms/",
-      el: "/el/domatia-xios/oikonomiko-diklino-domatio/",
-      fr: "/fr/chambres-a-chios/chambres-doubles-economiques/",
-      de: "/de/zimmer-chios/economy-zimmer-auf-chios/",
-      it: "/it/stanze-a-chios/camera-doppia-economica-chios/",
-      es: "/es/habitaciones-en-chios/economicas-habitaciones-en-chios/",
-      tr: "/tr/chios-odalari/sakiz-adasindaki-ekonomi-cift-kisilik-oda/",
-    },
-    family: {
-      en: "/chios-rooms/family-chios-apartments/",
-      el: "/el/domatia-xios/oikogeneiako-diamerisma/",
-      fr: "/fr/chambres-a-chios/appartements-familiaux-de-chios/",
-      de: "/de/zimmer-chios/familienapartments-in-chios/",
-      it: "/it/stanze-a-chios/appartamenti-familiari-a-chios/",
-      es: "/es/habitaciones-en-chios/apartamentos-familiares-en-chios/",
-      tr: "/tr/chios-odalari/sakiz-adasinda-buyuk-aile-daireleri/",
-    },
-  } as const;
-  return links[type];
-}
-
-const ROOM_META: Record<string, RoomMeta> = {
-  "267788:1": { number: 1, image: "/images/rooms/DSC07776-2-e1675109942622.webp", features: ["1 double bed + 2 single beds", "Private balcony", "First floor · stairs"], details: roomLinks("standard") },
-  "268803:1": { number: 2, image: "/images/rooms/DSC07803-1.webp", features: ["1 double bed", "Economy double", "First floor · stairs"], details: roomLinks("economy") },
-  "267788:2": { number: 3, image: "/images/rooms/DSC07867-1.webp", features: ["1 double bed + 1 single bed", "Kitchenette", "First floor · stairs"], details: roomLinks("standard") },
-  "267788:3": { number: 4, image: "/images/rooms/received_1748354861920234.webp", features: ["1 double bed + sofa bed", "Kitchenette", "Private balcony"], details: roomLinks("standard") },
-  "626129:1": { number: 5, image: "/images/rooms/voulamandis-house-rooms.webp", features: ["1 double bed + 1 single bed", "Ground floor", "No stairs"], details: roomLinks("standard") },
-  "268803:2": { number: 6, image: "/images/rooms/received_1753964631359257.webp", features: ["1 double bed", "Economy double", "Ground floor · no stairs"], details: roomLinks("economy") },
-  "626129:2": { number: 7, image: "/images/rooms/double-triple-room.jpg", features: ["1 double bed + sofa bed", "Ground floor", "Garden access"], details: roomLinks("standard") },
-  "265595:1": { number: 8, image: "/images/rooms/chios-apartments-voulamandis.webp", features: ["1 double bed + 2 single beds", "Full kitchen", "Independent apartment"], details: roomLinks("family") },
-  "265595:2": { number: 9, image: "/images/rooms/chios-apartments-voulamandis.webp", features: ["1 double bed + 2 single beds", "Full kitchen", "Independent apartment"], details: roomLinks("family") },
-  "265595:3": { number: 10, image: "/images/rooms/DSC07899.webp", features: ["Family apartment", "Full kitchen", "Up to 5 guests under conditions"], details: roomLinks("family") },
 };
 
 const FLOW_COPY: Record<Language, FlowCopy> = {
@@ -163,6 +112,16 @@ const FLOW_COPY: Record<Language, FlowCopy> = {
     invalidCheckout: "Check-out tarihi check-in tarihinden sonra olmalıdır. Hangi check-out tarihini istersiniz?",
     stayTooLong: `Konaklama en fazla ${MAX_NIGHTS} gece olabilir. Hangi check-out tarihini istersiniz?`,
   },
+};
+
+const KNOWLEDGE_FALLBACK: Record<Language, string> = {
+  el: "Δεν βρήκα επιβεβαιωμένη απάντηση στη βάση γνώσης. Επικοινωνήστε με το κατάλυμα για ακριβή διευκρίνιση.",
+  en: "I could not find a verified answer in the knowledge base. Please contact the property for an exact clarification.",
+  fr: "Je n’ai pas trouvé de réponse vérifiée dans la base de connaissances. Contactez l’établissement pour une précision exacte.",
+  de: "Ich habe keine bestätigte Antwort in der Wissensbasis gefunden. Bitte kontaktieren Sie die Unterkunft für eine genaue Auskunft.",
+  it: "Non ho trovato una risposta verificata nella base di conoscenza. Contattate la struttura per un chiarimento preciso.",
+  es: "No encontré una respuesta verificada en la base de conocimiento. Contacte con el alojamiento para una aclaración exacta.",
+  tr: "Bilgi tabanında doğrulanmış bir yanıt bulamadım. Kesin bilgi için tesisle iletişime geçin.",
 };
 
 function normalizeMessages(value: unknown): ChatMessage[] {
@@ -379,22 +338,23 @@ function buildOffers(payload: any, language: Language): Offer[] {
     .map((room: any): Offer | null => {
       const roomId = String(room.roomId || "");
       const unitId = String(room.unitId || "");
-      const meta = ROOM_META[`${roomId}:${unitId}`];
+      const meta = getRoomCardCatalogEntry(roomId, unitId);
       const originalTotal = Number(room.originalTotal);
       const directTotal = Number(room.directTotal);
       const saving = Number(room.saving);
       const directDiscountPercent = Number(room.directDiscountPercent);
       if (!meta || !Number.isFinite(originalTotal) || originalTotal <= 0 || !Number.isFinite(directTotal) || directTotal <= 0 || !Number.isFinite(saving) || saving < 0 || !Number.isFinite(directDiscountPercent) || directDiscountPercent < 0) return null;
+      const copy = meta.copy[language] || meta.copy.en;
       return {
         roomId,
         unitId,
-        name: String(room.name || `Room ${meta.number}`),
-        category: String(room.category || ""),
-        floor: String(room.floor || ""),
-        maxGuests: Number(room.maxGuests || 0),
-        features: meta.features,
+        name: copy.name,
+        category: copy.category,
+        floor: copy.floor,
+        maxGuests: meta.maxGuests,
+        features: copy.features,
         image: meta.image,
-        detailsUrl: meta.details[language] || meta.details.en,
+        detailsUrl: meta.detailsUrl[language] || meta.detailsUrl.en,
         bookingUrl: "/book-now",
         nights: Number(payload.nights || 0),
         originalTotal: Math.round(originalTotal * 100) / 100,
@@ -425,13 +385,17 @@ export async function POST(request: NextRequest) {
     const interpretedSearch = applyDecision(current, decision);
 
     if (!isBookingIntent(decision.intent)) {
+      const latestQuestion = [...messages].reverse().find((message) => message.role === "user")?.content || "";
+      const knowledge = await searchPropertyKnowledge({ query: latestQuestion, language, limit: 1 });
       return NextResponse.json({
-        answer: decision.answer,
+        answer: knowledge[0]?.answer || KNOWLEDGE_FALLBACK[language],
         search: interpretedSearch,
         offers: [],
         language,
         action: "respond",
         intent: decision.intent,
+        knowledgeSource: knowledge[0]?.source || null,
+        grounded: Boolean(knowledge[0]),
       });
     }
 

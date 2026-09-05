@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import { PropertyFaqRoutePage } from "@/components/faq/PropertyFaqRoutePage";
 import { getPropertyFaqPage } from "@/content/property-faq";
+import { getPropertyFaqPageFromKnowledge } from "@/lib/property-knowledge";
 import { buildPropertyFaqMetadata } from "@/lib/property-faq-seo";
 
-const data = getPropertyFaqPage("el");
+const metadataData = getPropertyFaqPage("el");
 
-export const metadata: Metadata = buildPropertyFaqMetadata(data);
+export const metadata: Metadata = buildPropertyFaqMetadata(metadataData);
 
-export default function Page() {
+export default async function Page() {
+  const data = await getPropertyFaqPageFromKnowledge("el");
   return <PropertyFaqRoutePage data={data} />;
 }

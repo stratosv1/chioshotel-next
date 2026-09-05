@@ -116,6 +116,8 @@ assert(hookSource.includes("/api/ai-room-finder/alternatives"), "production hook
 assert(hookSource.includes("languageRef.current !== language"), "language-change state preservation guard is missing");
 assert(hookSource.includes("INVENTORY_UNAVAILABLE[language]"), "technical inventory failure is not separated from no-availability copy");
 assert(hookSource.includes("answerRoomQuestion"), "room-feature Q&A is not wired into production hook");
+assert(hookSource.includes("/api/ai-assistant/knowledge"), "production hook does not query the owner-confirmed knowledge API");
+assert(hookSource.includes("propertyKnowledgeAnswer"), "production hook does not render grounded property answers");
 
 const productionSource = fs.readFileSync(productionPath, "utf8");
 assert(productionSource.includes('if (finder.typing || finder.step === "searching") return;'), "language changes are not guarded while an active Room Finder turn is running");

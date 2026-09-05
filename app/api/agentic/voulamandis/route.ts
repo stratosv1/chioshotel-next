@@ -8,6 +8,7 @@ import { searchExtraKnowledge } from "@/lib/ai-assistant/knowledge-extra";
 import { AI_DISCOVERY_COPY } from "@/lib/ai-discovery/config";
 import { resolveDiscoveryUrl } from "@/lib/ai-discovery/route-resolver";
 import { isLanguageCode, type LanguageCode } from "@/lib/languages";
+import { searchPropertyKnowledge } from "@/lib/property-knowledge";
 
 const PUBLIC_CACHE =
   "public, max-age=300, s-maxage=3600, stale-while-revalidate=86400";
@@ -84,7 +85,13 @@ async function roomsPayload(url: URL, language: LanguageCode) {
       hasKitchenette: room.hasKitchenette,
       hasBalcony: room.hasBalcony,
       sizeM2: room.sizeM2,
+      sizeLabel: room.sizeLabel,
       spaceLayout: room.spaceLayout,
+      outdoorSpace: room.outdoorSpace,
+      entranceSteps: room.entranceSteps,
+      hasHandrail: room.hasHandrail,
+      wheelchairAccessible: room.wheelchairAccessible,
+      kitchenType: room.kitchenType,
       bedSetup: room.bedSetup,
       hasUpperFloorView: room.hasUpperFloorView,
       hasGardenView: room.hasGardenView,
@@ -154,7 +161,7 @@ function offersPayload(language: LanguageCode) {
   };
 }
 
-function knowledgePayload(url: URL, language: LanguageCode) {
+async function knowledgePayload(url: URL, language: LanguageCode) {
   const query = (url.searchParams.get("q") || "").trim();
   const requestedKind = url.searchParams.get("kind") || "";
   const kind = KNOWLEDGE_KINDS.has(requestedKind as KnowledgeKind)
@@ -175,7 +182,12 @@ function knowledgePayload(url: URL, language: LanguageCode) {
     kinds: kind ? [kind] : undefined,
     limit: 8,
   };
+  const propertyResults = await searchPropertyKnowledge({ query, language, limit: 8 });
+  const filteredPropertyResults = kind
+    ? propertyResults.filter((item) => item.kind === kind)
+    : propertyResults;
   const combined = [
+    ...filteredPropertyResults,
     ...searchSalesKnowledge(input),
     ...searchExtraKnowledge(input),
   ];
@@ -205,7 +217,7 @@ function knowledgePayload(url: URL, language: LanguageCode) {
     language,
     query,
     kind: kind || null,
-    source: "existing curated site knowledge",
+    source: "neon_property_knowledge + existing curated site knowledge",
     results,
     note:
       "For live room prices and availability, use the dedicated availability tool rather than static knowledge results.",
@@ -228,7 +240,7 @@ export async function GET(request: Request) {
       return json(offersPayload(language));
     }
     if (resource === "knowledge") {
-      const payload = knowledgePayload(url, language);
+      const payload = await knowledgePayload(url, language);
       return json(payload, payload.success ? 200 : 400);
     }
 

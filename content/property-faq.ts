@@ -1,16 +1,17 @@
 import { normalizePath, type LanguageCode } from "@/lib/languages";
+import ownerConfirmedFaqSeed from "@/db/seeds/property-knowledge.json";
 
 export type PropertyFaqScope = "all" | "home" | "rooms" | "rates" | "kambos";
 export type PropertyFaqStatus = "published" | "needs-verification";
 export type PropertyFaqCategory = "general" | "location" | "rooms" | "booking" | "arrival";
 export type PropertyFaqLinkKey = "rooms" | "rates" | "kambos" | "contact" | "faq";
 
-type LocalizedFaqText = {
+export type LocalizedFaqText = {
   question: string;
   answer: string;
 };
 
-type PropertyFaqRecord = {
+export type PropertyFaqRecord = {
   id: string;
   category: PropertyFaqCategory;
   scopes: readonly PropertyFaqScope[];
@@ -521,9 +522,13 @@ export const legacyFaqArchive: readonly PropertyFaqRecord[] = [
   { id: "check-in-out", category: "arrival", scopes: ["all"], status: "needs-verification", legacySourceSummary: "Legacy FAQ listed check-in at 13:00 and check-out at 11:00, with possible flexibility around ferry arrivals if arranged in advance." },
 ];
 
-const allFaqRecords: readonly PropertyFaqRecord[] = [...publishedFaqRecords, ...legacyFaqArchive];
+export const ownerConfirmedFaqRecords = ownerConfirmedFaqSeed as unknown as readonly PropertyFaqRecord[];
 
-function buildRelatedLink(language: LanguageCode, key?: PropertyFaqLinkKey) {
+// The old published and legacy records stay in this file for audit history only.
+// Public pages and runtime fallbacks use the owner-confirmed, versioned seed.
+const allFaqRecords: readonly PropertyFaqRecord[] = ownerConfirmedFaqRecords;
+
+export function buildRelatedLink(language: LanguageCode, key?: PropertyFaqLinkKey) {
   if (!key) return undefined;
   return {
     href: relatedPaths[key][language],
@@ -542,14 +547,20 @@ export function getPropertyFaqItems(language: LanguageCode, scope: PropertyFaqSc
     });
 }
 
-export function getPropertyFaqPage(language: LanguageCode): PropertyFaqPageData {
+export function buildPropertyFaqPageFromItems(
+  language: LanguageCode,
+  items: PropertyFaqItem[],
+): PropertyFaqPageData {
   const copy = pageCopy[language];
-  const items = getPropertyFaqItems(language, "all");
   const categories = (Object.keys(categoryCopy[language]) as PropertyFaqCategory[])
     .map((id) => ({ id, ...categoryCopy[language][id], items: items.filter((item) => item.category === id) }))
     .filter((category) => category.items.length > 0);
 
   return { language, ...copy, categories };
+}
+
+export function getPropertyFaqPage(language: LanguageCode): PropertyFaqPageData {
+  return buildPropertyFaqPageFromItems(language, getPropertyFaqItems(language, "all"));
 }
 
 export function getPropertyFaqPageByPath(path: string): PropertyFaqPageData | undefined {

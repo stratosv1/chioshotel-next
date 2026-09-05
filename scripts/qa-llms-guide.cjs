@@ -226,7 +226,7 @@ expectAll(
     'resource === "offers"',
     'resource === "knowledge"',
     'source: "booking_core.rooms + booking_core.room_features"',
-    'source: "existing curated site knowledge"',
+    'source: "neon_property_knowledge + existing curated site knowledge"',
     '"X-Robots-Tag": "noindex"',
     "discountPercent: 10",
     "stackable: false",

@@ -54,7 +54,7 @@ const ROOM_PRESENTATION: Record<number, RoomPresentation> = {
     subtitle: "Double / triple room",
     image: "/images/rooms/DSC07776-2-e1675109942622.webp",
     href: "/chios-rooms/standard-double-room/",
-    features: ["Upper floor", "Private balcony", "Up to 4 guests"],
+    features: ["Upper floor", "Shared terrace", "Up to 4 guests"],
   },
   2: {
     title: "Economy room 2",
@@ -103,21 +103,21 @@ const ROOM_PRESENTATION: Record<number, RoomPresentation> = {
     subtitle: "Independent apartment",
     image: "/images/rooms/chios-apartments-voulamandis.webp",
     href: "/chios-rooms/family-chios-apartments/",
-    features: ["Full kitchen", "Living area", "Up to 4 guests"],
+    features: ["Full kitchen", "4–5 entrance steps", "Up to 4 guests"],
   },
   9: {
     title: "Family apartment 9",
     subtitle: "Independent apartment",
     image: "/images/rooms/chios-apartments-voulamandis.webp",
     href: "/chios-rooms/family-chios-apartments/",
-    features: ["Full kitchen", "Living area", "Up to 4 guests"],
+    features: ["Full kitchen", "4–5 entrance steps", "Up to 4 guests"],
   },
   10: {
     title: "Family apartment 10",
     subtitle: "Large independent apartment",
     image: "/images/rooms/DSC07899.webp",
     href: "/chios-rooms/family-chios-apartments/",
-    features: ["Full kitchen", "Family layout", "Up to 5 guests by arrangement"],
+    features: ["Full kitchen", "4–5 entrance steps", "4 guests; 5th by arrangement"],
   },
 };
 

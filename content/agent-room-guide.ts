@@ -103,6 +103,7 @@ export type AgentRoomGuideCopy = {
     photo: string;
   };
   categories: {
+    doubleTriple: string;
     largeFamilyApartment: string;
     familyApartment: string;
     economyDouble: string;
@@ -183,11 +184,12 @@ export const agentRoomGuideCopy: Record<LanguageCode, AgentRoomGuideCopy> = {
       copied: "Copied",
       sendEmail: "Email",
       sendWhatsApp: "WhatsApp",
-      roomOneNote: "Two single sofa beds are used for the 3rd and 4th guests.",
-      roomTenNote: "Standard setup is for 4 guests. For 5 guests, an extra bed is added and the space is tighter.",
+      roomOneNote: "Two open connected spaces without an internal door; the setup is 1 double and 2 single beds.",
+      roomTenNote: "Regular capacity is 4. A 5th guest is possible only by agreement, with an extra single bed in the bedroom and limited space.",
       photo: "photo",
     },
     categories: {
+      doubleTriple: "Double / triple room",
       largeFamilyApartment: "Large family apartment",
       familyApartment: "Family apartment",
       economyDouble: "Economy double room",
@@ -205,6 +207,7 @@ export const agentRoomGuideCopy: Record<LanguageCode, AgentRoomGuideCopy> = {
       double_bed: ["double bed", "double beds"],
       single_bed: ["single bed", "single beds"],
       sofa_bed: ["sofa bed", "sofa beds"],
+      double_sofa_bed: ["double sofa bed", "double sofa beds"],
       single_sofa_bed: ["single sofa bed", "single sofa beds"],
     },
     amenities: {
@@ -281,11 +284,12 @@ export const agentRoomGuideCopy: Record<LanguageCode, AgentRoomGuideCopy> = {
       copied: "Αντιγράφηκε",
       sendEmail: "Email",
       sendWhatsApp: "WhatsApp",
-      roomOneNote: "Τα δύο μονά sofa beds χρησιμοποιούνται για το 3ο και 4ο άτομο.",
-      roomTenNote: "Η κανονική διάταξη είναι για 4 άτομα. Για 5 άτομα προστίθεται extra bed και ο χώρος είναι πιο περιορισμένος.",
+      roomOneNote: "Δύο ξεχωριστοί χώροι χωρίς πόρτα, με 1 διπλό και 2 μονά κρεβάτια.",
+      roomTenNote: "Κανονική χωρητικότητα 4 άτομα. Ο 5ος μόνο κατόπιν συνεννόησης, με πρόσθετο μονό κρεβάτι στο υπνοδωμάτιο και περιορισμένο χώρο.",
       photo: "φωτογραφία",
     },
     categories: {
+      doubleTriple: "Δίκλινο / Τρίκλινο",
       largeFamilyApartment: "Μεγάλο οικογενειακό διαμέρισμα",
       familyApartment: "Οικογενειακό διαμέρισμα",
       economyDouble: "Economy δίκλινο",
@@ -303,6 +307,7 @@ export const agentRoomGuideCopy: Record<LanguageCode, AgentRoomGuideCopy> = {
       double_bed: ["διπλό κρεβάτι", "διπλά κρεβάτια"],
       single_bed: ["μονό κρεβάτι", "μονά κρεβάτια"],
       sofa_bed: ["sofa bed", "sofa beds"],
+      double_sofa_bed: ["διπλός καναπές-κρεβάτι", "διπλοί καναπέδες-κρεβάτια"],
       single_sofa_bed: ["μονό sofa bed", "μονά sofa beds"],
     },
     amenities: {
@@ -379,11 +384,12 @@ export const agentRoomGuideCopy: Record<LanguageCode, AgentRoomGuideCopy> = {
       copied: "Copié",
       sendEmail: "E-mail",
       sendWhatsApp: "WhatsApp",
-      roomOneNote: "Les deux canapés-lits simples sont utilisés pour les 3e et 4e personnes.",
-      roomTenNote: "La configuration standard est prévue pour 4 personnes. Pour 5 personnes, un lit supplémentaire est ajouté et l’espace est plus réduit.",
+      roomOneNote: "Deux espaces ouverts reliés sans porte intérieure, avec 1 lit double et 2 lits simples.",
+      roomTenNote: "Capacité normale de 4 personnes. Une 5e est possible uniquement après accord, avec un lit simple ajouté dans la chambre et un espace limité.",
       photo: "photo",
     },
     categories: {
+      doubleTriple: "Chambre double / triple",
       largeFamilyApartment: "Grand appartement familial",
       familyApartment: "Appartement familial",
       economyDouble: "Chambre double économique",
@@ -401,6 +407,7 @@ export const agentRoomGuideCopy: Record<LanguageCode, AgentRoomGuideCopy> = {
       double_bed: ["lit double", "lits doubles"],
       single_bed: ["lit simple", "lits simples"],
       sofa_bed: ["canapé-lit", "canapés-lits"],
+      double_sofa_bed: ["canapé-lit double", "canapés-lits doubles"],
       single_sofa_bed: ["canapé-lit simple", "canapés-lits simples"],
     },
     amenities: {
@@ -477,11 +484,12 @@ export const agentRoomGuideCopy: Record<LanguageCode, AgentRoomGuideCopy> = {
       copied: "Kopiert",
       sendEmail: "E-Mail",
       sendWhatsApp: "WhatsApp",
-      roomOneNote: "Die zwei Einzel-Schlafsofas werden für den 3. und 4. Gast genutzt.",
-      roomTenNote: "Die Standardbelegung ist für 4 Gäste. Für 5 Gäste wird ein Zusatzbett aufgestellt; dadurch wird der Raum enger.",
+      roomOneNote: "Zwei offen verbundene Bereiche ohne Innentür, mit 1 Doppelbett und 2 Einzelbetten.",
+      roomTenNote: "Reguläre Belegung: 4 Gäste. Ein 5. Gast ist nur nach Absprache mit einem Einzel-Zustellbett im Schlafzimmer und begrenztem Platz möglich.",
       photo: "Foto",
     },
     categories: {
+      doubleTriple: "Doppel-/Dreibettzimmer",
       largeFamilyApartment: "Großes Familienapartment",
       familyApartment: "Familienapartment",
       economyDouble: "Economy Doppelzimmer",
@@ -499,6 +507,7 @@ export const agentRoomGuideCopy: Record<LanguageCode, AgentRoomGuideCopy> = {
       double_bed: ["Doppelbett", "Doppelbetten"],
       single_bed: ["Einzelbett", "Einzelbetten"],
       sofa_bed: ["Schlafsofa", "Schlafsofas"],
+      double_sofa_bed: ["Doppelschlafsofa", "Doppelschlafsofas"],
       single_sofa_bed: ["Einzel-Schlafsofa", "Einzel-Schlafsofas"],
     },
     amenities: {
@@ -575,11 +584,12 @@ export const agentRoomGuideCopy: Record<LanguageCode, AgentRoomGuideCopy> = {
       copied: "Copiato",
       sendEmail: "E-mail",
       sendWhatsApp: "WhatsApp",
-      roomOneNote: "I due divani letto singoli sono utilizzati per il 3° e 4° ospite.",
-      roomTenNote: "La configurazione standard è per 4 ospiti. Per 5 ospiti viene aggiunto un letto extra e lo spazio risulta più ridotto.",
+      roomOneNote: "Due spazi aperti collegati senza porta interna, con 1 matrimoniale e 2 letti singoli.",
+      roomTenNote: "Capienza normale: 4 ospiti. Il 5º è possibile solo previo accordo, con un letto singolo extra in camera e spazio limitato.",
       photo: "foto",
     },
     categories: {
+      doubleTriple: "Camera doppia / tripla",
       largeFamilyApartment: "Grande appartamento familiare",
       familyApartment: "Appartamento familiare",
       economyDouble: "Camera doppia Economy",
@@ -597,6 +607,7 @@ export const agentRoomGuideCopy: Record<LanguageCode, AgentRoomGuideCopy> = {
       double_bed: ["letto matrimoniale", "letti matrimoniali"],
       single_bed: ["letto singolo", "letti singoli"],
       sofa_bed: ["divano letto", "divani letto"],
+      double_sofa_bed: ["divano letto matrimoniale", "divani letto matrimoniali"],
       single_sofa_bed: ["divano letto singolo", "divani letto singoli"],
     },
     amenities: {
@@ -673,11 +684,12 @@ export const agentRoomGuideCopy: Record<LanguageCode, AgentRoomGuideCopy> = {
       copied: "Copiado",
       sendEmail: "Correo",
       sendWhatsApp: "WhatsApp",
-      roomOneNote: "Los dos sofás cama individuales se utilizan para el 3.º y 4.º huésped.",
-      roomTenNote: "La configuración estándar es para 4 huéspedes. Para 5 se añade una cama extra y el espacio queda más ajustado.",
+      roomOneNote: "Dos espacios abiertos conectados sin puerta interior, con 1 cama doble y 2 individuales.",
+      roomTenNote: "Capacidad normal: 4 huéspedes. Un 5º solo es posible previo acuerdo, con cama individual extra en el dormitorio y espacio limitado.",
       photo: "foto",
     },
     categories: {
+      doubleTriple: "Habitación doble / triple",
       largeFamilyApartment: "Apartamento familiar grande",
       familyApartment: "Apartamento familiar",
       economyDouble: "Habitación doble Economy",
@@ -695,6 +707,7 @@ export const agentRoomGuideCopy: Record<LanguageCode, AgentRoomGuideCopy> = {
       double_bed: ["cama doble", "camas dobles"],
       single_bed: ["cama individual", "camas individuales"],
       sofa_bed: ["sofá cama", "sofás cama"],
+      double_sofa_bed: ["sofá cama doble", "sofás cama dobles"],
       single_sofa_bed: ["sofá cama individual", "sofás cama individuales"],
     },
     amenities: {
@@ -771,11 +784,12 @@ export const agentRoomGuideCopy: Record<LanguageCode, AgentRoomGuideCopy> = {
       copied: "Kopyalandı",
       sendEmail: "E-posta",
       sendWhatsApp: "WhatsApp",
-      roomOneNote: "İki tek kişilik çekyat 3. ve 4. misafir için kullanılır.",
-      roomTenNote: "Standart yerleşim 4 kişiliktir. 5 kişi için ek yatak eklenir ve alan daha sıkışık olur.",
+      roomOneNote: "İç kapısı olmayan bağlantılı iki açık alan; 1 çift ve 2 tek kişilik yatak.",
+      roomTenNote: "Normal kapasite 4 kişidir. 5. kişi yalnızca önceden anlaşmayla, yatak odasında ilave tek kişilik yatak ve sınırlı alanla mümkündür.",
       photo: "fotoğraf",
     },
     categories: {
+      doubleTriple: "Çift / üç kişilik oda",
       largeFamilyApartment: "Büyük aile dairesi",
       familyApartment: "Aile dairesi",
       economyDouble: "Ekonomik çift kişilik oda",
@@ -793,6 +807,7 @@ export const agentRoomGuideCopy: Record<LanguageCode, AgentRoomGuideCopy> = {
       double_bed: ["çift kişilik yatak", "çift kişilik yatak"],
       single_bed: ["tek kişilik yatak", "tek kişilik yatak"],
       sofa_bed: ["çekyat", "çekyat"],
+      double_sofa_bed: ["çift kişilik çekyat", "çift kişilik çekyat"],
       single_sofa_bed: ["tek kişilik çekyat", "tek kişilik çekyat"],
     },
     amenities: {

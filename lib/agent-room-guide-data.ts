@@ -77,7 +77,13 @@ type RoomRow = {
   has_balcony: boolean;
   standard_capacity: number;
   size_m2: number;
+  size_label: string | null;
   space_layout: string;
+  outdoor_space: string | null;
+  entrance_steps: number;
+  has_handrail: boolean;
+  wheelchair_accessible: boolean;
+  kitchen_type: string;
   bed_setup: Record<string, number>;
   has_upper_floor_view: boolean;
   has_garden_view: boolean;
@@ -98,6 +104,11 @@ const AMENITY_ORDER = [
   "free_wifi",
   "flat_screen_tv",
   "private_bathroom",
+  "heating",
+  "hairdryer",
+  "insect_screens",
+  "desk_or_table",
+  "shower",
   "non_smoking",
 ];
 
@@ -122,7 +133,13 @@ export const getAgentRoomGuideData = unstable_cache(
         r.has_balcony,
         f.standard_capacity,
         f.size_m2,
+        f.size_label,
         f.space_layout,
+        f.outdoor_space,
+        f.entrance_steps,
+        f.has_handrail,
+        f.wheelchair_accessible,
+        f.kitchen_type,
         f.bed_setup,
         f.has_upper_floor_view,
         f.has_garden_view,
@@ -152,7 +169,13 @@ export const getAgentRoomGuideData = unstable_cache(
       hasKitchenette: Boolean(row.has_kitchenette),
       hasBalcony: Boolean(row.has_balcony),
       sizeM2: Number(row.size_m2),
+      sizeLabel: row.size_label,
       spaceLayout: row.space_layout,
+      outdoorSpace: row.outdoor_space,
+      entranceSteps: Number(row.entrance_steps),
+      hasHandrail: Boolean(row.has_handrail),
+      wheelchairAccessible: Boolean(row.wheelchair_accessible),
+      kitchenType: row.kitchen_type,
       bedSetup: row.bed_setup || {},
       hasUpperFloorView: Boolean(row.has_upper_floor_view),
       hasGardenView: Boolean(row.has_garden_view),
@@ -170,6 +193,6 @@ export const getAgentRoomGuideData = unstable_cache(
 
     return { rooms, commonAmenities };
   },
-  ["agent-room-guide-neon-v2"],
+  ["agent-room-guide-neon-v3"],
   { revalidate: 3600 },
 );

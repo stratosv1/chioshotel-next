@@ -13,6 +13,18 @@ function replaceRequired(source, before, after, label) {
 function patchProxy() {
   let source = fs.readFileSync(proxyPath, "utf8");
 
+  // Later maintenance scripts extend the AI alias block inserted below. Treat
+  // that enriched form as already patched so repeated production builds remain
+  // deterministic instead of looking for the original, now-consumed anchor.
+  if (
+    source.includes("const normalizedPathname = normalizeLegacyPathname(pathname);") &&
+    source.includes("const directLegacyTarget: Record<string, string>") &&
+    source.includes("const directAiLanguage: Record<string, string>") &&
+    source.includes('normalizedPathname === "/book the room you like"')
+  ) {
+    return false;
+  }
+
   const before = `export async function proxy(request: NextRequest, event: NextFetchEvent) {
   const host = request.headers.get("host");
 

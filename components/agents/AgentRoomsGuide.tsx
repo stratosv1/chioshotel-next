@@ -47,7 +47,13 @@ export type AgentRoom = {
   hasKitchenette: boolean;
   hasBalcony: boolean;
   sizeM2: number;
+  sizeLabel: string | null;
   spaceLayout: string;
+  outdoorSpace: string | null;
+  entranceSteps: number;
+  hasHandrail: boolean;
+  wheelchairAccessible: boolean;
+  kitchenType: string;
   bedSetup: Record<string, number>;
   hasUpperFloorView: boolean;
   hasGardenView: boolean;
@@ -108,6 +114,7 @@ function roomName(room: AgentRoom, copy: AgentRoomGuideCopy) {
 }
 
 function roomCategory(room: AgentRoom, copy: AgentRoomGuideCopy) {
+  if (room.roomNumber === 1) return copy.categories.doubleTriple;
   if (room.roomNumber === 10) return copy.categories.largeFamilyApartment;
   if (room.roomType === "apartment") return copy.categories.familyApartment;
   if (room.isEconomy) return copy.categories.economyDouble;
