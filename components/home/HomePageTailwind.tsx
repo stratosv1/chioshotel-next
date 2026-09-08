@@ -271,7 +271,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
           aria-label={data.hero.title}
         >
           <Image src={data.hero.image} alt={data.hero.imageAlt} fill priority fetchPriority="high" sizes="100vw" quality={62} className="object-cover object-center" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-black/10 md:bg-gradient-to-l md:from-black/75 md:via-black/25 md:to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent md:bg-gradient-to-l md:from-black/75 md:via-black/25 md:to-transparent" />
           <div className="relative z-10 mx-auto flex w-full max-w-7xl justify-end px-4 pb-8 pt-24 sm:pb-10 sm:pt-28 md:px-8 md:pb-14 md:pt-32">
             <div className="w-full max-w-xl rounded-[1.6rem] border border-white/15 bg-stone-950/55 p-4 shadow-2xl shadow-black/30 backdrop-blur-md sm:p-5 md:rounded-[2rem] md:p-8">
               <div className="mb-4 inline-flex items-center gap-2.5 rounded-full bg-white px-3 py-2 text-[13px] font-bold text-stone-800 shadow-lg sm:mb-5 sm:gap-3 sm:px-4 sm:text-sm" aria-label={`${data.hero.rating} - ${data.hero.reviews}`}>
