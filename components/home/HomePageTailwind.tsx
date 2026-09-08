@@ -53,13 +53,13 @@ function HeroPicture({
   });
 
   return (
-    <picture>
+    <picture className="absolute inset-0 block">
       <source media="(max-width: 767px)" srcSet={mobileSrcSet} />
       <source media="(min-width: 768px)" srcSet={desktopSrcSet} />
       <img
         {...desktopImageProps}
         alt={alt}
-        className="absolute inset-0 h-full w-full object-cover object-center"
+        className="block h-full w-full object-cover object-center"
         decoding="async"
         fetchPriority="high"
         loading="eager"
