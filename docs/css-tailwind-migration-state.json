@@ -7,13 +7,15 @@
     "goal": "Organize the large CSS, remove duplicate and obsolete CSS, then migrate gradually to Tailwind CSS without breaking the website."
   },
   "current_status": {
-    "git_status": "clean after full Beach Lovers page Tailwind migration commit and push",
+    "git_status": "production main deployed at d55648cfae38281752c021888549108b8c5a8c4b",
     "build_status": "passed",
-    "preview_status": "OK",
+    "preview_status": "production desktop verified; hero image and content are contiguous with no black gap",
     "tailwind_present": true,
     "tailwind_detected_by": "@import \"tailwindcss\";",
     "tailwind_migration_started": true,
-    "css_lines_removed_so_far": 667
+    "homepage_custom_css_active": false,
+    "compiled_css_note": "Tailwind necessarily emits a compiled CSS asset in the production build.",
+    "css_lines_removed_so_far": 835
   },
   "completed_work": [
     {
@@ -122,17 +124,46 @@
         "hash": "0db0c5c",
         "message": "Migrate full Beach Lovers page to Tailwind"
       }
+    },
+    {
+      "phase": "Homepage and global shell Tailwind migration",
+      "status": "completed",
+      "files": [
+        "app/globals.css",
+        "app/layout.tsx",
+        "components/VoulamandisHeaderTailwind.tsx",
+        "components/home/DiscountReveal.tsx",
+        "components/home/HomePageTailwind.tsx",
+        "components/home/HomeReviews.tsx",
+        "components/pl/PolishHeaderTailwind.tsx"
+      ],
+      "details": [
+        "Reduced app/globals.css to the single required Tailwind import.",
+        "Removed the homepage/global-shell imports of legacy split CSS and override files.",
+        "Moved static homepage, header, discount reveal, CTA, and responsive rules into Tailwind utilities.",
+        "Removed active homepage style-jsx blocks and static inline style objects.",
+        "Capped the desktop hero height with Tailwind so Chrome desktop mode on a portrait phone cannot create a large black gap.",
+        "Production build passed with all 578 static routes generated.",
+        "Production desktop preview passed; the hero photo fills the hero and the next section follows without a gap.",
+        "Confirmed the floating top-right lightning decoration is absent."
+      ],
+      "lines_removed": 168,
+      "commit": {
+        "hash": "d55648cfae38281752c021888549108b8c5a8c4b",
+        "message": "refactor(home): replace global CSS patches with Tailwind"
+      }
     }
   ],
   "pushed_to_github": {
     "status": "completed",
     "remote": "origin",
     "branch": "main",
-    "latest_pushed_commit": "0db0c5c"
+    "latest_pushed_commit": "d55648cfae38281752c021888549108b8c5a8c4b"
   },
   "important_files": {
-    "css_index": "app/css-split/globals.css",
-    "original_css": "app/globals.css",
+    "css_index": "app/globals.css",
+    "tailwind_entry": "app/globals.css",
+    "legacy_route_css": "app/css-split/",
     "layout": "app/layout.tsx",
     "split_script": "split-css.py",
     "overrides": "app/css-split/overrides/overrides.css",
@@ -160,31 +191,26 @@
     ]
   },
   "next_recommended_step": {
-    "phase": "Choose next isolated Tailwind migration target",
-    "recommended_file": "app/css-split/landing/family-travel.css or another isolated landing page CSS file",
+    "phase": "Migrate remaining route-specific CSS to Tailwind",
+    "recommended_file": "app/find-your-room/layout.tsx and app/css-split/pages/find-room.css",
     "reason": [
-      "Beach Lovers page is now migrated to Tailwind",
-      "Next safest approach is to migrate another isolated landing page, not homepage/header/footer",
-      "Continue with build, preview, state update, commit after each completed page"
+      "The homepage and global shell now use Tailwind utilities only.",
+      "Legacy CSS still exists for specific routes such as Find Your Room, rooms categories, quizzes, village/beach pages, trip planner, welcome, and staff.",
+      "Each route should be migrated and verified separately to avoid visual regressions."
     ],
     "process": [
-      "Pick the next isolated landing page",
-      "Convert its component to Tailwind",
-      "Keep CSS until build and preview pass",
-      "Remove unused CSS only after confirming no old classes remain",
-      "Run npm.cmd run build",
-      "Run npm.cmd run dev",
-      "Preview the page",
-      "Update this state file",
-      "Commit if OK"
+      "Pick one route-specific stylesheet and its owning component.",
+      "Convert static styling to Tailwind utilities.",
+      "Keep only genuinely dynamic inline values such as runtime progress widths or image URLs.",
+      "Remove the route CSS import after confirming no selectors remain in use.",
+      "Run the production build and visually verify the affected route.",
+      "Update this state file and commit the isolated migration."
     ]
   },
   "do_not_do_next": [
-    "Do not migrate homepage first.",
-    "Do not migrate header/footer first.",
-    "Do not delete all overrides.css.",
-    "Do not change import order without checking cascade impact.",
-    "Do not add many UI libraries together.",
+    "Do not delete all legacy route CSS in one unverified change.",
+    "Do not claim the entire repository is Tailwind-only until every route-specific import is removed.",
+    "Do not convert genuinely dynamic runtime values into unsafe generated Tailwind class names.",
     "Do not commit next-env.d.ts if it changes automatically."
   ],
   "future_ui_direction": {
@@ -205,5 +231,5 @@
     ],
     "note": "Use shadcn/ui carefully. Keep the warm premium Voulamandis House style and avoid making the site look like a generic template."
   },
-  "short_summary": "CSS has been safely split, 339 obsolete or duplicate CSS lines were removed, Beach Lovers buttons and note card were migrated to Tailwind, then the full Beach Lovers page was migrated to Tailwind. The Beach Lovers CSS file is now only a placeholder, total CSS lines removed so far is estimated at 667, and the site builds and previews correctly."
+  "short_summary": "The homepage and global shell now use Tailwind utilities only, with app/globals.css reduced to the required Tailwind import. The production build passed and the live desktop hero was verified without the previous black gap. Route-specific legacy CSS still remains and must be migrated one route at a time."
 }
