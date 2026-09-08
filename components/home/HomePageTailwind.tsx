@@ -2,6 +2,7 @@ import Image from "next/image";
 import type { HomePageData } from "@/content/home";
 import { DiscountReveal } from "@/components/home/DiscountReveal";
 import { HomeReviews } from "@/components/home/HomeReviews";
+import { HomeGallery } from "@/components/home/HomeGallery";
 import { LazyLastMinuteDeals } from "@/components/home/LazyLastMinuteDeals";
 import { MobileStickyContact } from "@/components/home/MobileStickyContact";
 import {
@@ -259,6 +260,7 @@ function DirectBookingBox({ data }: { data: HomePageData }) {
 
 export function HomePageTailwind({ data }: HomePageTailwindProps) {
   const introRightTitle = data.intro.right.title.replace("Six reasons", "6 reasons");
+  const locale = getLocale(data.seo.canonicalPath);
 
   return (
     <>
@@ -294,7 +296,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
 
         <section className="px-4 py-7 md:px-8 md:py-11">
           <div className="mx-auto grid max-w-7xl gap-4 lg:grid-cols-[1fr_1.05fr]">
-            <article className="rounded-[1.5rem] bg-white p-5 shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 md:rounded-[2rem] md:p-8">
+            <article className="order-1 rounded-[1.5rem] bg-white p-5 shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 md:rounded-[2rem] md:p-8">
               <p className="mb-3 break-words text-xs font-black uppercase tracking-[0.20em] text-amber-700">{data.intro.left.kicker}</p>
               <h2 className="break-words font-serif text-[2rem] font-bold leading-tight text-stone-900 md:text-[2.625rem]"><PremiumIcon>{data.intro.left.icon}</PremiumIcon>{data.intro.left.title}</h2>
               <p className="mt-4 text-sm leading-7 text-stone-600 md:text-base md:leading-8"><HtmlText html={data.intro.left.bodyHtml} /></p>
@@ -302,7 +304,8 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
                 {data.intro.left.pills.map((pill) => (<span key={pill} className="inline-flex min-h-10 items-center justify-center rounded-full bg-amber-50 px-3 py-2 text-center text-[12px] font-bold leading-tight text-amber-800 ring-1 ring-amber-900/10 sm:min-h-0 sm:px-4 sm:text-sm">{pill}</span>))}
               </div>
             </article>
-            <article className="rounded-[1.5rem] bg-white p-5 shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 md:rounded-[2rem] md:p-8">
+            <HomeGallery locale={locale} />
+            <article className="order-3 rounded-[1.5rem] bg-white p-5 shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 md:rounded-[2rem] md:p-8 lg:order-2">
               <p className="mb-3 break-words text-xs font-black uppercase tracking-[0.20em] text-amber-700">{data.intro.right.kicker}</p>
               <h3 className="break-words font-serif text-[2rem] font-bold leading-tight text-stone-900 md:text-[2.625rem]">{introRightTitle}</h3>
               <div className="mt-5 grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-3">
