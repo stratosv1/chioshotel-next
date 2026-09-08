@@ -270,7 +270,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
           className="relative flex min-h-[680px] items-end overflow-hidden bg-stone-950 text-white md:min-h-[82vh]"
           aria-label={data.hero.title}
         >
-          <Image src={data.hero.image} alt={data.hero.imageAlt} fill priority fetchPriority="high" sizes="100vw" quality={62} className="object-cover object-center" />
+          <Image src={data.hero.image} alt={data.hero.imageAlt} fill priority fetchPriority="high" sizes="100vw" quality={62} className="object-cover object-center max-[767px]:object-[32%_center]" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent md:bg-gradient-to-l md:from-black/75 md:via-black/25 md:to-transparent" />
           <div className="relative z-10 mx-auto flex w-full max-w-7xl justify-end px-4 pb-8 pt-24 sm:pb-10 sm:pt-28 md:px-8 md:pb-14 md:pt-32">
             <div className="w-full max-w-xl rounded-[1.6rem] border border-white/15 bg-stone-950/55 p-4 shadow-2xl shadow-black/30 backdrop-blur-md sm:p-5 md:rounded-[2rem] md:p-8">
