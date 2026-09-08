@@ -11,8 +11,10 @@ export type HomePageData = {
     reviews: string;
     kicker: string;
     title: string;
+    tagline: string;
     descriptionHtml: string;
     image: string;
+    mobileImage: string;
     imageAlt: string;
     primaryCta: {
       label: string;
@@ -266,12 +268,15 @@ export const homePageEn: HomePageData = {
     rating: "4.8 / 5",
     reviews: "182 reviews",
     kicker: "KAMPOS CHIOS • VOULAMANDIS HOUSE",
-    title: "Chios Rooms and Apartments in Kambos",
+    title: "Chios Accommodation: Rooms & Apartments",
+    tagline: "Stay in historic Kambos, Chios",
     descriptionHtml:
       'Looking for <strong>accommodation in Chios</strong> or <strong>rooms in Chios</strong>? <strong>Voulamandis House</strong> is an authentic accommodation choice in Kambos, with comfortable rooms, peaceful surroundings and excellent guest reviews.',
-    image:
-      "/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp",
-    imageAlt: "Chios Rooms and Apartments in Kambos - Voulamandis House",
+    image: "/images/hero/voulamandis-house-room-kambos-chios.webp",
+    mobileImage:
+      "/images/hero/voulamandis-house-room-kambos-chios-portrait.webp",
+    imageAlt:
+      "Stone-built guest room at Voulamandis House accommodation in Kambos, Chios",
     primaryCta: {
       label: "AI Room Finder",
       href: "/ai-assistant/?lang=en",
@@ -791,11 +796,12 @@ export const homePageEl: HomePageData = {
     rating: "4.8 / 5",
     reviews: "182 κριτικές",
     kicker: "ΚΑΜΠΟΣ ΧΙΟΥ • VOULAMANDIS HOUSE",
-    title: "Ενοικιαζόμενα Δωμάτια στη Χίο στον Κάμπο",
+    title: "Ενοικιαζόμενα Δωμάτια στη Χίο",
+    tagline: "Διαμονή στον υπέροχο Κάμπο της Χίου",
     descriptionHtml:
       'Ψάχνετε για <strong>ξενοδοχείο στη Χίο</strong> ή <strong>ενοικιαζόμενα δωμάτια Χίος</strong>; Το <strong>Voulamandis House</strong> είναι μια αυθεντική επιλογή διαμονής στον Κάμπο, με άνετα δωμάτια, ήρεμο περιβάλλον και εξαιρετικές κριτικές επισκεπτών.',
     imageAlt:
-      "Ενοικιαζόμενα δωμάτια στη Χίο στον Κάμπο - Voulamandis House",
+      "Πέτρινο ενοικιαζόμενο δωμάτιο στο Voulamandis House, στον Κάμπο της Χίου",
     primaryCta: {
       label: "Βρες δωμάτιο με AI",
       href: "/ai-assistant/?lang=el",
@@ -1260,10 +1266,12 @@ export const homePageFr: HomePageData = {
     ...homePageEn.hero,
     reviews: "182 avis",
     kicker: "KAMPOS CHIOS • VOULAMANDIS HOUSE",
-    title: "Chambres et appartements à Chios, au cœur de Kambos",
+    title: "Hébergement à Chios : chambres et appartements",
+    tagline: "Séjournez dans le Kambos historique de Chios",
     descriptionHtml:
       'Vous cherchez un <strong>hôtel à Chios</strong> ou des <strong>chambres à Chios</strong> ? <strong>Voulamandis House</strong> vous accueille à Kambos avec des chambres confortables, une atmosphère paisible et une hospitalité authentique.',
-    imageAlt: "Hôtel et appartements à Chios - Voulamandis House à Kambos",
+    imageAlt:
+      "Chambre en pierre au Voulamandis House, hébergement à Kambos, Chios",
     primaryCta: {
       label: "Trouvez votre chambre avec l’IA",
       href: "/ai-assistant/?lang=fr",
@@ -1704,10 +1712,12 @@ export const homePageDe: HomePageData = {
     ...homePageEn.hero,
     reviews: "182 Bewertungen",
     kicker: "KAMPOS CHIOS • VOULAMANDIS HOUSE",
-    title: "Unterkunft und Apartments auf Chios in Kambos",
+    title: "Unterkunft auf Chios: Zimmer & Apartments",
+    tagline: "Übernachten im historischen Kambos auf Chios",
     descriptionHtml:
       'Suchen Sie eine <strong>Unterkunft auf Chios</strong> oder <strong>Zimmer auf Chios</strong>? <strong>Voulamandis House</strong> ist eine authentische Unterkunft in Kambos mit komfortablen Zimmern, ruhiger Umgebung und herzlicher Gastfreundschaft.',
-    imageAlt: "Unterkunft und Apartments auf Chios in Kambos - Voulamandis House",
+    imageAlt:
+      "Zimmer mit Natursteinwänden im Voulamandis House in Kambos auf Chios",
     primaryCta: {
       label: "Zimmer mit KI finden",
       href: "/ai-assistant/?lang=de",
@@ -2143,10 +2153,12 @@ export const homePageIt: HomePageData = {
     ...homePageEn.hero,
     reviews: "182 recensioni",
     kicker: "KAMPOS CHIOS • VOULAMANDIS HOUSE",
-    title: "Camere e appartamenti a Chios, nel cuore di Kambos",
+    title: "Alloggi a Chios: camere e appartamenti",
+    tagline: "Soggiorna nello storico Kambos di Chios",
     descriptionHtml:
       'Cerchi un <strong>hotel a Chios</strong> o <strong>camere a Chios</strong>? <strong>Voulamandis House</strong> ti accoglie a Kambos con camere confortevoli, atmosfera tranquilla e ospitalità autentica.',
-    imageAlt: "Camere e appartamenti a Chios - Voulamandis House a Kambos",
+    imageAlt:
+      "Camera in pietra al Voulamandis House, alloggio a Kambos, Chios",
     primaryCta: {
       label: "Trova la camera con AI",
       href: "/ai-assistant/?lang=it",
@@ -2587,10 +2599,12 @@ export const homePageEs: HomePageData = {
     ...homePageEn.hero,
     reviews: "182 reseñas",
     kicker: "KAMPOS CHIOS • VOULAMANDIS HOUSE",
-    title: "Habitaciones y apartamentos en Quíos, en Kambos",
+    title: "Alojamiento en Quíos: habitaciones y apartamentos",
+    tagline: "Alójate en el histórico Kambos de Quíos",
     descriptionHtml:
       '¿Buscas un <strong>hotel en Chios</strong> o <strong>habitaciones en Chios</strong>? <strong>Voulamandis House</strong> te recibe en Kambos con habitaciones cómodas, ambiente tranquilo y hospitalidad auténtica.',
-    imageAlt: "Habitaciones y apartamentos en Chios - Voulamandis House en Kambos",
+    imageAlt:
+      "Habitación de piedra en Voulamandis House, alojamiento en Kambos, Quíos",
     primaryCta: {
       label: "Encuentra tu habitación con IA",
       href: "/ai-assistant/?lang=es",
@@ -3031,10 +3045,12 @@ export const homePageTr: HomePageData = {
     ...homePageEn.hero,
     reviews: "182 yorum",
     kicker: "KAMPOS SAKIZ • VOULAMANDIS HOUSE",
-    title: "Sakız Adası’nda Kambos’ta otel ve daireler",
+    title: "Sakız Adası Konaklama: Odalar ve Daireler",
+    tagline: "Tarihi Kambos bölgesinde konaklayın",
     descriptionHtml:
       '<strong>Sakız Adası’nda otel</strong> ya da <strong>Sakız Adası odaları</strong> mı arıyorsunuz? <strong>Voulamandis House</strong>, Kambos’ta rahat odalar, sakin bir atmosfer ve samimi misafirperverlik sunar.',
-    imageAlt: "Sakız Adası’nda otel ve daireler - Kambos Voulamandis House",
+    imageAlt:
+      "Sakız Adası Kambos’taki Voulamandis House taş duvarlı oda",
     primaryCta: {
       label: "Yapay zekâ ile odanı bul",
       href: "/ai-assistant/?lang=tr",
@@ -3453,7 +3469,6 @@ export const homePageTr: HomePageData = {
     },
   },
 };
-
 
 
 

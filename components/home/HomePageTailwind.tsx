@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import type { HomePageData } from "@/content/home";
 import { DiscountReveal } from "@/components/home/DiscountReveal";
 import { HomeReviews } from "@/components/home/HomeReviews";
@@ -19,6 +19,53 @@ type LocaleCode = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
 
 function HtmlText({ html }: { html: string }) {
   return <span dangerouslySetInnerHTML={{ __html: html }} />;
+}
+
+function HeroPicture({
+  desktopSrc,
+  mobileSrc,
+  alt,
+}: {
+  desktopSrc: string;
+  mobileSrc: string;
+  alt: string;
+}) {
+  const common = {
+    alt,
+    sizes: "100vw",
+    quality: 76,
+  };
+  const {
+    props: { srcSet: mobileSrcSet },
+  } = getImageProps({
+    ...common,
+    src: mobileSrc,
+    width: 1024,
+    height: 1536,
+  });
+  const {
+    props: { srcSet: desktopSrcSet, ...desktopImageProps },
+  } = getImageProps({
+    ...common,
+    src: desktopSrc,
+    width: 1536,
+    height: 1152,
+  });
+
+  return (
+    <picture>
+      <source media="(max-width: 767px)" srcSet={mobileSrcSet} />
+      <source media="(min-width: 768px)" srcSet={desktopSrcSet} />
+      <img
+        {...desktopImageProps}
+        alt={alt}
+        className="absolute inset-0 h-full w-full object-cover object-center"
+        decoding="async"
+        fetchPriority="high"
+        loading="eager"
+      />
+    </picture>
+  );
 }
 
 function getLocale(canonicalPath: string): LocaleCode {
@@ -267,22 +314,29 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
       <main className="overflow-x-hidden bg-[#fffaf3] text-stone-900">
         <section
           id="home-hero"
-          className="relative flex min-h-[680px] items-end overflow-hidden bg-stone-950 text-white md:min-h-[82vh]"
+          className="relative flex h-[calc(100svh-4.5rem)] min-h-[640px] max-h-[760px] items-end overflow-hidden bg-stone-950 text-white md:h-auto md:min-h-[82vh] md:max-h-none"
           aria-label={data.hero.title}
         >
-          <Image src={data.hero.image} alt={data.hero.imageAlt} fill priority fetchPriority="high" sizes="100vw" quality={62} className="object-cover object-center max-[767px]:object-[32%_center]" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent md:bg-gradient-to-l md:from-black/75 md:via-black/25 md:to-transparent" />
-          <div className="relative z-10 mx-auto flex w-full max-w-7xl justify-end px-4 pb-8 pt-24 sm:pb-10 sm:pt-28 md:px-8 md:pb-14 md:pt-32">
-            <div className="w-full max-w-xl rounded-[1.6rem] border border-white/15 bg-stone-950/55 p-4 shadow-2xl shadow-black/30 backdrop-blur-md sm:p-5 md:rounded-[2rem] md:p-8">
-              <div className="mb-4 inline-flex items-center gap-2.5 rounded-full bg-white px-3 py-2 text-[13px] font-bold text-stone-800 shadow-lg sm:mb-5 sm:gap-3 sm:px-4 sm:text-sm" aria-label={`${data.hero.rating} - ${data.hero.reviews}`}>
+          <HeroPicture
+            desktopSrc={data.hero.image}
+            mobileSrc={data.hero.mobileImage}
+            alt={data.hero.imageAlt}
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 bg-[linear-gradient(to_top,rgba(12,10,9,0.92)_0%,rgba(12,10,9,0.62)_18%,rgba(12,10,9,0.16)_38%,transparent_54%)] md:bg-[linear-gradient(to_top,rgba(12,10,9,0.72)_0%,rgba(12,10,9,0.32)_25%,rgba(12,10,9,0.06)_46%,transparent_64%)]"
+          />
+          <div className="relative z-10 mx-auto flex w-full max-w-7xl px-5 pb-6 pt-[44vh] sm:px-6 sm:pb-8 md:px-8 md:pb-14 md:pt-48">
+            <div className="w-full max-w-3xl">
+              <div className="mb-3 inline-flex items-center gap-2.5 rounded-full bg-white px-3 py-2 text-[13px] font-bold text-stone-800 shadow-lg sm:mb-4 sm:gap-3 sm:px-4 sm:text-sm" aria-label={`${data.hero.rating} - ${data.hero.reviews}`}>
                 <span>{data.hero.rating}</span><span className="text-amber-400" aria-hidden="true">★★★★★</span><span className="text-stone-500">{data.hero.reviews}</span>
               </div>
-              <p className="mb-3 break-words text-xs font-black uppercase tracking-[0.22em] text-white/85">{data.hero.kicker}</p>
-              <h1 className="text-balance text-[2rem] font-black leading-[1.02] tracking-[-0.04em] sm:text-4xl sm:leading-none md:text-6xl">{data.hero.title}</h1>
-              <p className="mt-4 text-[15px] leading-7 text-white/90 sm:mt-5 sm:text-base sm:leading-8 md:text-lg"><HtmlText html={data.hero.descriptionHtml} /></p>
-              <div className="mt-5 grid grid-cols-2 gap-3 sm:mt-7">
-                <a href={data.hero.primaryCta.href} className="inline-flex min-h-14 items-center justify-center rounded-2xl bg-orange-700 px-4 text-center text-xs font-black uppercase tracking-[0.08em] text-white shadow-lg shadow-orange-900/25 transition hover:bg-orange-800 md:rounded-full"><PremiumIcon compact>{data.hero.primaryCta.icon}</PremiumIcon>{data.hero.primaryCta.label}</a>
-                <a href={data.hero.secondaryCta.href} className="inline-flex min-h-14 items-center justify-center rounded-2xl border border-white/35 bg-white/10 px-4 text-center text-xs font-black uppercase tracking-[0.08em] text-white backdrop-blur transition hover:bg-white/20 md:rounded-full"><PremiumIcon compact>{data.hero.secondaryCta.icon}</PremiumIcon>{data.hero.secondaryCta.label}</a>
+              <p className="mb-2 break-words text-[11px] font-black uppercase tracking-[0.17em] text-white/85 sm:text-xs md:mb-3 md:tracking-[0.20em]">{data.hero.kicker}</p>
+              <h1 className="max-w-[18ch] text-balance text-[2.15rem] font-black leading-[1.02] tracking-[-0.04em] sm:text-4xl md:max-w-none md:text-[clamp(2.75rem,4vw,4rem)]">{data.hero.title}</h1>
+              <p className="mt-2.5 max-w-2xl text-[1.05rem] font-medium leading-6 text-white/90 sm:text-lg md:mt-3 md:text-2xl md:leading-8">{data.hero.tagline}</p>
+              <div className="mt-4 grid max-w-xl grid-cols-2 gap-3 md:mt-6">
+                <a href={data.hero.primaryCta.href} className="inline-flex min-h-14 items-center justify-center rounded-2xl bg-orange-700 px-3 py-3 text-center text-sm font-black uppercase leading-5 tracking-[0.06em] text-white shadow-lg shadow-orange-950/25 transition hover:bg-orange-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:rounded-full md:px-5"><span className="mr-2 text-lg text-white" aria-hidden="true">{data.hero.primaryCta.icon}</span>{data.hero.primaryCta.label}</a>
+                <a href={data.hero.secondaryCta.href} className="inline-flex min-h-14 items-center justify-center rounded-2xl border border-white/45 bg-stone-950/20 px-3 py-3 text-center text-sm font-black uppercase leading-5 tracking-[0.06em] text-white transition hover:bg-stone-950/35 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:rounded-full md:px-5"><span className="mr-2 text-lg text-white" aria-hidden="true">{data.hero.secondaryCta.icon}</span>{data.hero.secondaryCta.label}</a>
               </div>
             </div>
           </div>

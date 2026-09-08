@@ -304,9 +304,9 @@ export function buildHomePageSchema(data: HomePageData): SchemaObject {
     buildWebsiteSchema(),
     buildImageSchema(
       {
-        url: data.seo.ogImage,
-        alt: data.seo.ogImageAlt,
-        caption: data.seo.title || data.seo.ogImageAlt || siteName,
+        url: data.hero.image,
+        alt: data.hero.imageAlt,
+        caption: data.hero.title || data.hero.imageAlt || siteName,
       },
       canonicalPath,
     ),

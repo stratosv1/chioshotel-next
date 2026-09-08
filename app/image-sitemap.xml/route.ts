@@ -1,5 +1,15 @@
 import type { RoomDetailData } from "@/content/room-details";
 import {
+  homePageDe,
+  homePageEl,
+  homePageEn,
+  homePageEs,
+  homePageFr,
+  homePageIt,
+  homePageTr,
+  type HomePageData,
+} from "@/content/home";
+import {
   economyDoubleRoomsDe,
   economyDoubleRoomsEl,
   economyDoubleRoomsEn,
@@ -65,6 +75,16 @@ const roomDetailPages: readonly RoomDetailData[] = [
   familyChiosApartmentsPl,
 ];
 
+const homePages: readonly HomePageData[] = [
+  homePageEn,
+  homePageEl,
+  homePageFr,
+  homePageDe,
+  homePageIt,
+  homePageEs,
+  homePageTr,
+];
+
 function escapeXml(value: string) {
   return value
     .replaceAll("&", "&amp;")
@@ -104,6 +124,11 @@ function mergeEntries(entries: readonly ImageSitemapEntry[]) {
 }
 
 export function GET() {
+  const homeEntries: ImageSitemapEntry[] = homePages.map((page) => ({
+    path: page.seo.canonicalPath,
+    images: [page.hero.image, page.hero.mobileImage],
+  }));
+
   const registryEntries: ImageSitemapEntry[] = getAllSeoImageSets().map((set) => ({
     path: set.path,
     images: getSeoImagesForPath(set.path).map((image) => image.src),
@@ -114,7 +139,7 @@ export function GET() {
     images: getRoomPageImages(page),
   }));
 
-  const urls = mergeEntries([...registryEntries, ...roomEntries])
+  const urls = mergeEntries([...homeEntries, ...registryEntries, ...roomEntries])
     .filter((entry) => entry.images.length > 0)
     .map((entry) => {
       const images = entry.images
