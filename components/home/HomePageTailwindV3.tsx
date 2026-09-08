@@ -237,8 +237,8 @@ export function HomePageTailwindV3({ data }: HomePageTailwindV3Props) {
         }
 
         @media (max-width: 767px) {
-          main > section:first-child > div:nth-of-type(3) > div {
-            background-color: rgba(12, 10, 9, 0.76) !important;
+          #home-hero > div.relative.z-10 > div {
+            background-color: rgba(12, 10, 9, 0.48) !important;
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
           }
