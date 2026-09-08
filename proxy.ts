@@ -72,6 +72,7 @@ const legacyRedirects: Record<string, string> = {
   "/en/contact-voulamandis-house":
     "/voulamandis-house-contact-us-form-fill-in-the-form/",
   "/el/epikoinonia": "/el/epikoinonia-voulamandis-house/",
+  "/erotisis-voulamandis-house-2": "/el/syxnes-erotiseis/",
   "/best-room-selection-wizard": "/find-your-room/",
   "/language/el/ΞΊΟΞ±Ο„Ξ·ΟƒΞ·": "/el/amesi-kratisi-voulamandis-house/",
   "/el/amesi-kratisi-voulamandis-house":
