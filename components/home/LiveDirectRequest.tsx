@@ -999,15 +999,15 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
             ))}
           </div>
 
-          <div className="mt-4 grid grid-cols-1 gap-3 pb-3 sm:grid-cols-3 md:grid-cols-2">
-            <a href={requestHref} target="_blank" rel="noopener noreferrer" className="flex min-h-14 items-center justify-center rounded-2xl bg-[#17351f] px-5 text-center text-sm font-black uppercase tracking-[0.08em] !text-white shadow-lg shadow-emerald-950/20 transition hover:-translate-y-0.5 hover:bg-[#224d2d]">{copy.whatsapp}</a>
-            <a href={smsHref} className="flex min-h-14 items-center justify-center rounded-2xl border border-emerald-700/30 bg-white px-5 text-center text-sm font-black uppercase tracking-[0.08em] !text-emerald-800 transition hover:bg-emerald-50 md:hidden">{copy.sms}</a>
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            <a href={requestHref} target="_blank" rel="noopener noreferrer" className="hidden min-h-12 items-center justify-center rounded-xl bg-[#17351f] px-4 text-center text-xs font-black uppercase leading-tight tracking-[0.06em] !text-white shadow-md shadow-emerald-950/15 transition hover:-translate-y-0.5 hover:bg-[#224d2d] md:flex">{copy.whatsapp}</a>
+            <a href={smsHref} className="flex min-h-12 items-center justify-center rounded-xl border border-emerald-700/30 bg-white px-3 text-center text-xs font-black uppercase leading-tight tracking-[0.06em] !text-emerald-800 transition hover:bg-emerald-50 md:hidden">{copy.sms}</a>
             <button
               type="button"
               onClick={() => {
                 if (emailState !== "sent") setEmailOpen((open) => !open);
               }}
-              className="flex min-h-14 items-center justify-center rounded-2xl border border-stone-300 bg-white px-5 text-center text-sm font-black uppercase tracking-[0.08em] text-stone-800 transition hover:border-amber-700 hover:bg-amber-50"
+              className="flex min-h-12 items-center justify-center rounded-xl border border-stone-300 bg-white px-3 text-center text-xs font-black uppercase leading-tight tracking-[0.06em] text-stone-800 transition hover:border-amber-700 hover:bg-amber-50"
             >
               {emailState === "sent" ? copy.emailSent : copy.call}
             </button>
@@ -1053,16 +1053,16 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
           {emailFeedback ? (
             <p className={`mt-2 text-center text-xs font-bold ${emailState === "sent" ? "text-emerald-700" : "text-red-600"}`} role="status">{emailFeedback}</p>
           ) : null}
-          <div className="mt-4 flex flex-col items-center justify-center gap-2 rounded-2xl bg-amber-50/80 px-4 py-3 text-center ring-1 ring-amber-900/10 sm:flex-row">
-            <span className="text-sm font-bold text-stone-700">{copy.differentDates}</span>
-            <a
-              href={`/ai-assistant/?lang=${locale}`}
-              className="inline-flex min-h-10 items-center justify-center rounded-full bg-white px-4 py-2 text-sm font-black text-amber-800 shadow-sm ring-1 ring-amber-900/15 transition hover:bg-amber-100"
-            >
-              {copy.checkAvailability} <span className="ml-2" aria-hidden="true">→</span>
-            </a>
-          </div>
-          <p className="mt-3 text-center text-xs font-semibold text-stone-500">{copy.footer}</p>
+          <a
+            href={`/ai-assistant/?lang=${locale}`}
+            aria-label={`${copy.differentDates} ${copy.checkAvailability}`}
+            className="mt-3 flex min-h-11 items-center justify-between gap-3 rounded-xl bg-amber-50/80 px-4 py-2.5 text-amber-800 ring-1 ring-amber-900/10 transition hover:bg-amber-100"
+          >
+            <span className="hidden text-sm font-bold text-stone-700 sm:inline">{copy.differentDates}</span>
+            <span className="text-xs font-black leading-tight sm:text-sm">{copy.checkAvailability}</span>
+            <span className="ml-auto text-base font-black" aria-hidden="true">→</span>
+          </a>
+          <p className="mt-3 hidden text-center text-xs font-semibold text-stone-500 sm:block">{copy.footer}</p>
         </div>
       </div>
     </section>
