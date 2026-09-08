@@ -147,7 +147,7 @@ export function PolishHeaderTailwind({ pathname = "/pl/" }: { pathname?: string 
 
         <div className="hidden shrink-0 items-center gap-2 lg:flex">
           <LanguagePills pathname={pathname} />
-          <Link href="/pl/rezerwacja/" className="inline-flex h-12 min-w-[112px] items-center justify-center rounded-full bg-gradient-to-br from-[#a87842] to-[#8e6607] px-5 text-center text-xs font-black uppercase leading-none tracking-[0.1em] !text-white shadow-lg shadow-amber-900/20 transition hover:-translate-y-0.5">Rezerwuj</Link>
+          <Link href="/pl/rezerwacja/" className="inline-flex h-12 min-w-[112px] items-center justify-center rounded-full bg-gradient-to-br from-[#78624d] to-[#735f45] px-5 text-center text-xs font-black uppercase leading-none tracking-[0.1em] !text-white shadow-lg shadow-stone-900/20 transition hover:-translate-y-0.5 hover:from-[#6b5847] hover:to-[#5f4e3f]">Rezerwuj</Link>
         </div>
 
         <button type="button" aria-label={isOpen ? "Zamknij" : "Menu"} aria-expanded={isOpen} onClick={() => setIsOpen((value) => !value)} className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-stone-900/10 bg-white text-stone-900 shadow-sm shadow-stone-900/5 lg:hidden">
@@ -165,7 +165,7 @@ export function PolishHeaderTailwind({ pathname = "/pl/" }: { pathname?: string 
         <div className={`absolute right-0 top-0 w-[min(92vw,420px)] rounded-l-[1.5rem] bg-[#fffaf3] p-3 pb-5 shadow-2xl shadow-stone-950/18 transition duration-300 ${isOpen ? "translate-x-0" : "translate-x-full"}`}>
           <div className="mb-2"><LanguagePills pathname={pathname} onNavigate={closeMenu} /></div>
           <div className="mb-2 grid grid-cols-2 gap-2">
-            <Link href="/pl/rezerwacja/" onClick={closeMenu} className="flex min-h-[44px] items-center justify-center rounded-full bg-gradient-to-br from-[#b8873f] to-[#8e6607] px-4 text-center text-sm font-black uppercase tracking-[0.08em] !text-white shadow-lg shadow-amber-900/12">Rezerwuj</Link>
+            <Link href="/pl/rezerwacja/" onClick={closeMenu} className="flex min-h-[44px] items-center justify-center rounded-full bg-gradient-to-br from-[#78624d] to-[#735f45] px-4 text-center text-sm font-black uppercase tracking-[0.08em] !text-white shadow-lg shadow-stone-900/15 transition hover:from-[#6b5847] hover:to-[#5f4e3f]">Rezerwuj</Link>
             <Link href="/pl/pokoje-na-chios/" onClick={closeMenu} className="flex min-h-[44px] items-center justify-center gap-2 rounded-full border border-amber-900/15 bg-white px-4 text-center text-sm font-black uppercase tracking-[0.08em] text-amber-900 shadow-sm shadow-stone-900/5"><span aria-hidden="true">🛏️</span>Pokoje</Link>
           </div>
           <section className="rounded-[1.15rem] border border-stone-900/10 bg-white p-2.5 shadow-sm shadow-stone-900/5">

@@ -14,11 +14,7 @@ import { VoulamandisFooterTailwind } from "@/components/VoulamandisFooterTailwin
 import { VoulamandisHeaderTailwind } from "@/components/VoulamandisHeaderTailwind";
 import { ensureKarfasElintaBeachCards } from "@/content/karfas-beach-card";
 import { siteName, siteUrl } from "@/lib/seo";
-import "./css-split/core.css";
-import "./css-split/overrides/home-mobile-hero-safe.css";
-import "./css-split/overrides/home-compact-mobile-fixes.css";
-import "./css-split/components/consent.css";
-import "./css-split/overrides/cta-warm-contrast.css";
+import "./globals.css";
 
 ensureKarfasElintaBeachCards();
 
@@ -153,7 +149,7 @@ export default async function RootLayout({
       : null;
 
   return (
-    <html lang={htmlLanguage}>
+    <html lang={htmlLanguage} className="overflow-x-hidden scroll-smooth">
       {aiGuideHref || webMcpOriginTrialToken || jsSelfProfilingOriginTrialToken ? (
         <head>
           {webMcpOriginTrialToken ? (
@@ -167,7 +163,7 @@ export default async function RootLayout({
           ) : null}
         </head>
       ) : null}
-      <body>
+      <body className="m-0 overflow-x-hidden bg-[linear-gradient(180deg,#faf6f0_0%,#f6f0e8_100%)] font-sans leading-normal text-[#2f261f] antialiased [-webkit-text-size-adjust:100%]">
         {publicWebMcpPath ? <RoomFinderWebMCP /> : null}
         {publicWebMcpPath ? <JsSelfProfilingMarkers /> : null}
         {!isPolishPath && !excludeAnalytics ? <RoomFinderCtaRouter /> : null}

@@ -56,5 +56,5 @@ export function HomeReviews({ loaderUrl }: HomeReviewsProps) {
     element.appendChild(script);
   }, [loaderUrl, shouldLoad]);
 
-  return <div ref={containerRef} className="vh-reviews-widget" style={{ textAlign: "center" }} />;
+  return <div ref={containerRef} className="vh-reviews-widget text-center" />;
 }

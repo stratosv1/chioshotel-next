@@ -14,201 +14,6 @@ type Locale = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
 
 const REVEAL_PERCENT = 58;
 
-const COMPACT_SECTION_CSS = `
-@media (max-width: 767px) {
-  main > section:nth-of-type(2) {
-    padding-top: 2rem;
-    padding-bottom: 2rem;
-  }
-
-  main > section:nth-of-type(2) > div {
-    gap: 1rem;
-  }
-
-  main > section:nth-of-type(2) article:first-child {
-    padding: 1.25rem;
-    border-radius: 1.5rem;
-  }
-
-  main > section:nth-of-type(2) article:first-child h2 {
-    font-size: clamp(2rem, 8vw, 2.6rem);
-    line-height: 1.05;
-  }
-
-  main > section:nth-of-type(2) article:first-child p:nth-of-type(2) {
-    margin-top: 1rem;
-    font-size: .95rem;
-    line-height: 1.65;
-    display: -webkit-box;
-    -webkit-line-clamp: 5;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  main > section:nth-of-type(2) article:first-child > div.mt-7 {
-    margin-top: 1.1rem;
-  }
-
-  main > section:nth-of-type(4) article:first-child > div.mt-7 {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: .65rem;
-  }
-
-  main > section:nth-of-type(4) article:first-child > div.mt-7 a {
-    min-height: 4.75rem;
-    width: 100%;
-    padding-left: .55rem;
-    padding-right: .55rem;
-    border-radius: 1.35rem;
-    font-size: .78rem;
-    line-height: 1.25;
-    letter-spacing: .08em;
-    white-space: normal;
-  }
-
-  main > section:last-of-type > div {
-    min-height: 430px;
-  }
-
-  main > section:last-of-type img {
-    object-position: 52% 30%;
-    transform: scale(1.06);
-  }
-
-  main > section:last-of-type > div > div.absolute {
-    background: linear-gradient(180deg, rgba(0,0,0,.58), rgba(0,0,0,.74));
-  }
-
-  main > section:last-of-type > div > div.relative {
-    max-width: 92%;
-    padding: 1.5rem;
-  }
-}
-
-@supports selector(article:has(#discountCodeForm)) {
-  article:has(#discountCodeForm) {
-    margin-top: 2rem;
-    border-radius: 1.75rem;
-    background: #fff8ea;
-    box-shadow: 0 14px 32px rgba(68, 64, 60, .08);
-  }
-
-  article:has(#discountCodeForm) > div.absolute {
-    display: none;
-  }
-
-  article:has(#discountCodeForm) > div.relative {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  article:has(#discountCodeForm) > div.relative > div:first-child {
-    padding: 1.35rem 1.35rem .5rem;
-  }
-
-  article:has(#discountCodeForm) > div.relative > div:first-child h3 {
-    margin-top: 1rem;
-    max-width: 18rem;
-    font-size: clamp(2rem, 9vw, 3rem);
-    line-height: 1.05;
-  }
-
-  article:has(#discountCodeForm) > div.relative > div:first-child p {
-    display: none;
-  }
-
-  article:has(#discountCodeForm) > div.relative > div:first-child ul {
-    margin-top: 1rem;
-    display: flex;
-    gap: .5rem;
-    overflow-x: auto;
-    padding-bottom: .25rem;
-    scrollbar-width: none;
-  }
-
-  article:has(#discountCodeForm) > div.relative > div:first-child ul::-webkit-scrollbar {
-    display: none;
-  }
-
-  article:has(#discountCodeForm) > div.relative > div:first-child li {
-    min-width: max-content;
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-    border-radius: 999px;
-    padding: .65rem .85rem;
-    font-size: .78rem;
-    line-height: 1.15;
-  }
-
-  article:has(#discountCodeForm) > div.relative > div:first-child li span:first-child {
-    margin: 0;
-    height: 1.6rem;
-    min-width: 1.6rem;
-    font-size: .62rem;
-  }
-
-  article:has(#discountCodeForm) > div.relative > div:last-child {
-    padding: .5rem 1.25rem 1.35rem;
-  }
-
-  article:has(#discountCodeForm) > div.relative > div:last-child > div {
-    max-width: 100%;
-    border-radius: 1.45rem;
-    padding: .75rem;
-    background: linear-gradient(135deg, #6f3f1d, #a35b1e);
-    box-shadow: 0 10px 22px rgba(68, 64, 60, .12);
-  }
-
-  article:has(#discountCodeForm) > div.relative > div:last-child > div > div {
-    border-radius: 1.25rem;
-    padding: .9rem;
-  }
-
-  article:has(#discountCodeForm) > div.relative > div:last-child > div > div > p {
-    display: none;
-  }
-
-  article:has(#discountCodeForm) > div.relative > div:last-child > div > div > div {
-    margin-top: 0;
-    padding: .8rem;
-    box-shadow: 0 8px 18px rgba(68, 64, 60, .12);
-  }
-}
-
-@media (min-width: 1024px) {
-  @supports selector(article:has(#discountCodeForm)) {
-    article:has(#discountCodeForm) > div.relative {
-      grid-template-columns: minmax(0, 1fr) 360px;
-      align-items: center;
-    }
-
-    article:has(#discountCodeForm) > div.relative > div:first-child {
-      padding: 2rem 2.5rem;
-    }
-
-    article:has(#discountCodeForm) > div.relative > div:first-child h3 {
-      max-width: 36rem;
-      font-size: 3rem;
-    }
-
-    article:has(#discountCodeForm) > div.relative > div:first-child ul {
-      overflow: visible;
-    }
-
-    article:has(#discountCodeForm) > div.relative > div:first-child li {
-      min-width: 0;
-      overflow-wrap: anywhere;
-      white-space: normal;
-    }
-
-    article:has(#discountCodeForm) > div.relative > div:last-child {
-      padding: 1.5rem 2rem 1.5rem 0;
-    }
-  }
-}
-`;
-
 const COPY: Record<
   Locale,
   {
@@ -294,9 +99,6 @@ export function DiscountReveal({ successText, code, locale = "en" }: DiscountRev
 
     canvas.width = Math.max(1, Math.floor(width * ratio));
     canvas.height = Math.max(1, Math.floor(height * ratio));
-    canvas.style.width = `${width}px`;
-    canvas.style.height = `${height}px`;
-
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
     ctx.globalCompositeOperation = "source-over";
 
@@ -399,86 +201,34 @@ export function DiscountReveal({ successText, code, locale = "en" }: DiscountRev
   }
 
   return (
-    <>
-      <style jsx global>{COMPACT_SECTION_CSS}</style>
-      <div
-        id="discountCodeForm"
-        style={{
-          width: "100%",
-          maxWidth: 300,
-          margin: "0 auto",
-        }}
-      >
-        <div
-          style={{
-            display: "none",
-          }}
-        >
+    <div id="discountCodeForm" className="mx-auto w-full max-w-[300px]">
+        <div className="hidden">
           🎁 {text.title}
         </div>
 
         <div
           ref={cardRef}
           aria-label={text.title}
-          style={{
-            position: "relative",
-            width: "100%",
-            height: 96,
-            border: "2px dashed rgba(142,102,7,.24)",
-            borderRadius: 16,
-            overflow: "hidden",
-            background:
-              "radial-gradient(circle at 20% 20%, rgba(255,255,255,.78), transparent 30%), linear-gradient(135deg, #fff6e5, #f2d79e)",
-            boxShadow: "0 8px 18px rgba(142,102,7,.10)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            textAlign: "center",
-            userSelect: "none",
-          }}
+          className="relative flex h-24 w-full select-none items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-amber-800/25 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,.78),transparent_30%),linear-gradient(135deg,#fff6e5,#f2d79e)] text-center shadow-[0_8px_18px_rgba(142,102,7,.10)]"
         >
-          <div style={{ padding: "9px 14px" }}>
-            <div style={{ fontSize: 16, marginBottom: 2 }} aria-hidden="true">
+          <div className="px-3.5 py-2">
+            <div className="mb-0.5 text-base" aria-hidden="true">
               🎁
             </div>
 
-            <div
-              style={{
-                marginBottom: 4,
-                color: "#6f645b",
-                fontSize: 8,
-                fontWeight: 900,
-                letterSpacing: ".12em",
-                textTransform: "uppercase",
-              }}
-            >
+            <div className="mb-1 text-[8px] font-black uppercase tracking-[.12em] text-[#6f645b]">
               {text.codeLabel}
             </div>
 
             <div
               id="discountCodeValue"
-              style={{
-                color: "#8E6607",
-                fontFamily: "Georgia, serif",
-                fontSize: "clamp(23px, 7vw, 32px)",
-                fontWeight: 900,
-                letterSpacing: ".03em",
-                lineHeight: 1,
-              }}
+              className="font-serif text-[clamp(23px,7vw,32px)] font-black leading-none tracking-[.03em] text-[#8e6607]"
             >
               {code || "WELCOME10"}
             </div>
 
             {isRevealed ? (
-              <div
-                style={{
-                  marginTop: 5,
-                  color: "#6f645b",
-                  fontSize: 10,
-                  fontWeight: 700,
-                  lineHeight: 1.25,
-                }}
-              >
+              <div className="mt-1.5 text-[10px] font-bold leading-tight text-[#6f645b]">
                 {successText}
               </div>
             ) : null}
@@ -491,20 +241,12 @@ export function DiscountReveal({ successText, code, locale = "en" }: DiscountRev
               onPointerMove={handlePointerMove}
               onPointerUp={handlePointerUp}
               onPointerCancel={handlePointerUp}
-              style={{
-                position: "absolute",
-                inset: 0,
-                width: "100%",
-                height: "100%",
-                cursor: "grab",
-                touchAction: "none",
-              }}
+              className="absolute inset-0 h-full w-full touch-none cursor-grab"
             />
           ) : null}
         </div>
 
-        <div id="discountFeedback" className="discount-error" aria-live="polite" />
-      </div>
-    </>
+        <div id="discountFeedback" className="text-sm font-bold text-red-700" aria-live="polite" />
+    </div>
   );
 }
