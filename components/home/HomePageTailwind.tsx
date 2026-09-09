@@ -1,6 +1,5 @@
 import Image, { getImageProps } from "next/image";
 import type { HomePageData } from "@/content/home";
-import { DiscountReveal } from "@/components/home/DiscountReveal";
 import { HomeReviews } from "@/components/home/HomeReviews";
 import { HomeGallery } from "@/components/home/HomeGallery";
 import { LazyLastMinuteDeals } from "@/components/home/LazyLastMinuteDeals";
@@ -272,29 +271,36 @@ function LocationAndDirect({ data }: { data: HomePageData }) {
 }
 
 function DirectBookingBox({ data }: { data: HomePageData }) {
-  const locale = getLocale(data.seo.canonicalPath);
+  const discountCode = data.location.discount.defaultCode || "WELCOME10";
 
   return (
-    <section className="px-4 py-8 md:px-8 md:py-11">
-      <article className="relative mx-auto mt-8 max-w-7xl overflow-hidden rounded-[1.75rem] border border-amber-900/10 bg-[#fff8ea] shadow-[0_14px_32px_rgba(68,64,60,.08)] md:rounded-[2rem]">
+    <section className="px-4 py-5 md:px-8 md:py-11">
+      <article className="relative mx-auto mt-2 max-w-7xl overflow-hidden rounded-[1.75rem] border border-amber-900/10 bg-[#fff8ea] shadow-[0_14px_32px_rgba(68,64,60,.08)] md:mt-8 md:rounded-[2rem]">
         <div className="relative grid gap-0 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-center">
-          <div className="px-5 pb-2 pt-5 md:p-8 lg:px-10">
-            <span className="inline-flex rounded-full bg-white/85 px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-orange-800 shadow-sm ring-1 ring-amber-900/10">{data.location.discount.badge}</span>
-            <h3 className="mt-4 max-w-[18rem] break-words font-serif text-[clamp(2rem,9vw,3rem)] font-bold leading-[1.05] text-stone-950 lg:max-w-xl lg:text-5xl">{data.location.discount.title}</h3>
+          <div className="px-4 pb-2 pt-4 md:p-8 lg:px-10">
+            <span className="inline-flex rounded-full bg-white/85 px-3 py-2 text-[10px] font-black uppercase tracking-[0.14em] text-orange-800 shadow-sm ring-1 ring-amber-900/10 md:px-4 md:text-xs md:tracking-[0.16em]">{data.location.discount.badge}</span>
+            <h3 className="mt-3 max-w-[18rem] break-words font-serif text-[1.85rem] font-bold leading-[1.05] text-stone-950 md:mt-4 md:text-[clamp(2rem,9vw,3rem)] lg:max-w-xl lg:text-5xl">{data.location.discount.title}</h3>
             <p className="mt-4 hidden max-w-2xl text-sm leading-7 text-stone-700 md:block md:text-lg md:leading-8">{data.location.discount.text}</p>
-            <ul className="mt-4 flex min-w-0 gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:overflow-visible">
+            <ul className="mt-4 grid min-w-0 grid-cols-1 gap-2 min-[360px]:grid-cols-2 lg:grid-cols-3">
               {data.location.discount.benefits.map((benefit, index) => (
-                <li key={benefit} className="flex min-w-max items-center gap-2 rounded-full bg-white/90 px-3.5 py-2.5 text-[12px] font-black leading-[1.15] text-stone-800 shadow-sm ring-1 ring-amber-900/10 lg:min-w-0 lg:flex-1 lg:break-words lg:whitespace-normal"><span className="text-amber-700" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>{benefit}</li>
+                <li key={benefit} className={`flex min-w-0 items-center gap-2 rounded-2xl bg-white/90 px-3 py-2.5 text-[11px] font-black leading-[1.25] text-stone-800 shadow-sm ring-1 ring-amber-900/10 lg:rounded-full lg:text-[12px] ${index === 2 ? "min-[360px]:col-span-2 lg:col-span-1" : ""}`}><span className="shrink-0 text-amber-700" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span><span className="min-w-0 break-words">{benefit}</span></li>
               ))}
             </ul>
           </div>
-          <div className="px-5 pb-5 pt-2 lg:py-6 lg:pl-0 lg:pr-6">
-            <div className="w-full rounded-[1.45rem] bg-gradient-to-br from-[#6f3f1d] to-[#a35b1e] p-3 text-white shadow-[0_10px_22px_rgba(68,64,60,.12)] lg:p-4">
+          <div className="px-4 pb-4 pt-2 md:px-8 md:pb-8 lg:py-6 lg:pl-0 lg:pr-6">
+            <div className="rounded-[1.25rem] bg-white p-4 text-center shadow-sm ring-1 ring-amber-900/10 lg:hidden">
+              <p className="text-[11px] font-black uppercase tracking-[0.14em] text-stone-600">{data.location.discount.successText}</p>
+              <code className="mt-2 block font-serif text-3xl font-black tracking-[0.08em] text-amber-800">{discountCode}</code>
+            </div>
+            <div className="hidden w-full rounded-[1.45rem] bg-gradient-to-br from-[#6f3f1d] to-[#a35b1e] p-3 text-white shadow-[0_10px_22px_rgba(68,64,60,.12)] lg:block lg:p-4">
               <div className="rounded-[1.25rem] border border-white/15 bg-white/10 p-3.5 backdrop-blur lg:p-4">
                 <p className="text-xs font-black uppercase tracking-[0.16em] text-amber-100">{data.location.discount.badge}</p>
                 <p className="mt-3 break-words font-serif text-2xl font-bold leading-tight md:text-3xl">{data.location.discount.title}</p>
                 <p className="mt-3 hidden text-sm leading-7 text-white/80 lg:block">{data.location.discount.formIntro}</p>
-                <div className="mt-3 rounded-[1.2rem] bg-white p-3 text-stone-900 shadow-[0_8px_18px_rgba(68,64,60,.12)]"><DiscountReveal submitLabel={data.location.discount.submitLabel} successText={data.location.discount.successText} code={data.location.discount.defaultCode || "WELCOME10"} locale={locale} /></div>
+                <div className="mt-3 rounded-[1.2rem] bg-white p-4 text-center text-stone-900 shadow-[0_8px_18px_rgba(68,64,60,.12)]">
+                  <p className="text-[11px] font-black uppercase tracking-[0.14em] text-stone-600">{data.location.discount.successText}</p>
+                  <code className="mt-2 block font-serif text-3xl font-black tracking-[0.08em] text-amber-800">{discountCode}</code>
+                </div>
               </div>
             </div>
           </div>
@@ -347,14 +353,14 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
           <span className="text-amber-700" aria-hidden="true">→</span>
         </a>
 
-        <section className="px-4 py-7 md:px-8 md:py-11">
+        <section className="px-4 py-5 md:px-8 md:py-11">
           <div className="mx-auto grid max-w-7xl gap-4 lg:grid-cols-[1fr_1.05fr]">
-            <article className="order-1 rounded-[1.5rem] bg-white p-5 shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 md:rounded-[2rem] md:p-8">
-              <p className="mb-3 break-words text-xs font-black uppercase tracking-[0.20em] text-amber-700">{data.intro.left.kicker}</p>
-              <h2 className="break-words font-serif text-[2rem] font-bold leading-tight text-stone-900 md:text-[2.625rem]"><PremiumIcon>{data.intro.left.icon}</PremiumIcon>{data.intro.left.title}</h2>
-              <p className="mt-4 text-sm leading-7 text-stone-600 md:text-base md:leading-8"><HtmlText html={data.intro.left.bodyHtml} /></p>
-              <div className="mt-5 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
-                {data.intro.left.pills.map((pill) => (<span key={pill} className="inline-flex min-h-10 items-center justify-center rounded-full bg-amber-50 px-3 py-2 text-center text-[12px] font-bold leading-tight text-amber-800 ring-1 ring-amber-900/10 sm:min-h-0 sm:px-4 sm:text-sm">{pill}</span>))}
+            <article className="order-1 rounded-[1.5rem] bg-white p-4 shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 md:rounded-[2rem] md:p-8">
+              <p className="mb-2 break-words text-[11px] font-black uppercase leading-5 tracking-[0.17em] text-amber-700 md:mb-3 md:text-xs md:tracking-[0.20em]">{data.intro.left.kicker}</p>
+              <h2 className="break-words font-serif text-[1.7rem] font-bold leading-[1.08] text-stone-900 md:text-[2.625rem] md:leading-tight"><PremiumIcon>{data.intro.left.icon}</PremiumIcon>{data.intro.left.title}</h2>
+              <p className="mt-3 text-[13px] leading-6 text-stone-600 md:mt-4 md:text-base md:leading-8"><HtmlText html={data.intro.left.bodyHtml} /></p>
+              <div className="mt-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap md:mt-5">
+                {data.intro.left.pills.map((pill) => (<span key={pill} className="inline-flex min-h-9 items-center justify-center rounded-full bg-amber-50 px-2.5 py-2 text-center text-[11px] font-bold leading-tight text-amber-800 ring-1 ring-amber-900/10 sm:min-h-0 sm:px-4 sm:text-sm">{pill}</span>))}
               </div>
             </article>
             <HomeGallery locale={locale} />
