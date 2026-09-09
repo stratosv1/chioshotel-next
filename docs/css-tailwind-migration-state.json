@@ -7,15 +7,18 @@
     "goal": "Organize the large CSS, remove duplicate and obsolete CSS, then migrate gradually to Tailwind CSS without breaking the website."
   },
   "current_status": {
-    "git_status": "production main deployed at d55648cfae38281752c021888549108b8c5a8c4b",
-    "build_status": "passed",
-    "preview_status": "production desktop verified; hero image and content are contiguous with no black gap",
+    "git_status": "homepage legacy-residue cleanup completed on main",
+    "build_status": "passed: Next.js 16.2.6 compiled successfully and generated 578/578 static pages",
+    "preview_status": "live mobile screenshots reviewed; local production HTTP/DOM verification passed for /, /el/, /fr/, /de/, /it/, /es/, /tr/, /pl/, and /nl/; local automated screenshots were unavailable because the browser sandbox blocks localhost",
     "tailwind_present": true,
     "tailwind_detected_by": "@import \"tailwindcss\";",
     "tailwind_migration_started": true,
     "homepage_custom_css_active": false,
+    "homepage_first_party_tailwind_only": true,
+    "homepage_legacy_tokens_active": false,
     "compiled_css_note": "Tailwind necessarily emits a compiled CSS asset in the production build.",
-    "css_lines_removed_so_far": 835
+    "homepage_third_party_css_note": "The Trustindex reviews integration may inject vendor-owned CSS at runtime; it is not first-party legacy CSS.",
+    "css_lines_removed_so_far": 1330
   },
   "completed_work": [
     {
@@ -152,13 +155,53 @@
         "hash": "d55648cfae38281752c021888549108b8c5a8c4b",
         "message": "refactor(home): replace global CSS patches with Tailwind"
       }
+    },
+    {
+      "phase": "Homepage legacy-residue cleanup",
+      "status": "completed",
+      "files": [
+        "components/home/HomeReviews.tsx",
+        "components/home/HomePage.tsx",
+        "components/home/HomeMap.tsx",
+        "components/home/DiscountReveal.tsx",
+        "components/VoulamandisHeader.tsx",
+        ".github/workflows/fix-home-tailwind-items.yml",
+        "components/home/HOMEPAGE_PERFORMANCE_NOTES.txt",
+        "patch-header-activities.cjs",
+        "patch-header-all-activities.cjs",
+        "scripts/fix-es-label-and-header-format.cjs",
+        "scripts/fix-header-menu-structure.cjs",
+        "scripts/fix-spanish-chios-activities-label.cjs",
+        "scripts/patch-chios-activities-header-regex.cjs",
+        "scripts/patch-chios-activities-header.cjs",
+        "app/css-split/overrides/overrides.css",
+        "app/css-split/overrides/home-mobile-hero-safe.css",
+        "app/css-split/overrides/home-compact-mobile-fixes.css",
+        "app/css-split/overrides/final-cta-mobile-photo.css",
+        "components.json"
+      ],
+      "details": [
+        "Removed four orphaned pre-migration React components and the active vh-reviews-widget class token.",
+        "Removed the obsolete homepage override stylesheets and the unused orange homepage CTA override block while preserving CSS owned by other routes.",
+        "Removed three tracked search-output text dumps that were being scanned by Tailwind and generating unused utilities.",
+        "Removed the obsolete homepage workflow, stale performance note, and unreferenced one-off header patch scripts that targeted deleted legacy components.",
+        "Updated components.json so shadcn points to the active app/globals.css Tailwind entry.",
+        "Verified /, /el/, /fr/, /de/, /it/, /es/, /tr/, /pl/, and /nl/ return HTTP 200 with one stylesheet, no style tags, and no homepage legacy class tokens.",
+        "Verified the generated homepage CSS contains no vh-, hero-, or homepage selectors and none of the phantom utilities previously sourced from the text dumps.",
+        "Reduced the primary uncompressed Tailwind asset from the 317618-byte live baseline to 298863 bytes in the final local build.",
+        "Production build passed with all 578 static pages generated."
+      ],
+      "css_lines_removed": 495,
+      "source_and_artifact_lines_removed": 12056,
+      "commit": {
+        "message": "refactor(home): remove legacy residue"
+      }
     }
   ],
   "pushed_to_github": {
     "status": "completed",
     "remote": "origin",
-    "branch": "main",
-    "latest_pushed_commit": "d55648cfae38281752c021888549108b8c5a8c4b"
+    "branch": "main"
   },
   "important_files": {
     "css_index": "app/globals.css",
@@ -166,7 +209,6 @@
     "legacy_route_css": "app/css-split/",
     "layout": "app/layout.tsx",
     "split_script": "split-css.py",
-    "overrides": "app/css-split/overrides/overrides.css",
     "state_file": "docs/css-tailwind-migration-state.json"
   },
   "rules": {
@@ -174,9 +216,9 @@
       "Work one small step at a time.",
       "Run npm.cmd run build after every meaningful CSS change.",
       "Run npm.cmd run dev and visually preview after build.",
-      "Commit after every safe completed step.",
+      "Commit or push only when explicitly requested.",
       "Do not edit many CSS sections together.",
-      "Do not start Tailwind migration from homepage, header, or footer."
+      "Migrate one route at a time and verify its active dependency graph."
     ],
     "css_order": [
       "Keep @import order identical to original CSS order unless there is a very specific reason.",
@@ -191,10 +233,10 @@
     ]
   },
   "next_recommended_step": {
-    "phase": "Migrate remaining route-specific CSS to Tailwind",
-    "recommended_file": "app/find-your-room/layout.tsx and app/css-split/pages/find-room.css",
+    "phase": "Audit and migrate Chios Rooms",
+    "recommended_file": "app/chios-rooms/layout.tsx and app/css-split/pages/rooms-category.css",
     "reason": [
-      "The homepage and global shell now use Tailwind utilities only.",
+      "The homepage first-party source and active render path now use Tailwind utilities only.",
       "Legacy CSS still exists for specific routes such as Find Your Room, rooms categories, quizzes, village/beach pages, trip planner, welcome, and staff.",
       "Each route should be migrated and verified separately to avoid visual regressions."
     ],
@@ -231,5 +273,5 @@
     ],
     "note": "Use shadcn/ui carefully. Keep the warm premium Voulamandis House style and avoid making the site look like a generic template."
   },
-  "short_summary": "The homepage and global shell now use Tailwind utilities only, with app/globals.css reduced to the required Tailwind import. The production build passed and the live desktop hero was verified without the previous black gap. Route-specific legacy CSS still remains and must be migrated one route at a time."
+  "short_summary": "The homepage first-party source and active render path are Tailwind-only, with app/globals.css reduced to the Tailwind import. Orphaned homepage components, obsolete homepage CSS, a live legacy class token, and Tailwind-polluting search dumps were removed. The production build passed with 578/578 pages. Route-specific legacy CSS remains and should be migrated one route at a time, beginning with Chios Rooms."
 }

@@ -32,21 +32,6 @@
   color: var(--vh-cta-label) !important;
 }
 
-/* Homepage orange hero CTA -> warm taupe. */
-:is(a, button)[class~="bg-[#e67e22]"],
-:is(a, button)[class~="bg-[#d35400]"] {
-  border-color: var(--vh-cta-warm) !important;
-  background-color: var(--vh-cta-warm) !important;
-  color: var(--vh-cta-label) !important;
-  font-weight: 900 !important;
-}
-
-:is(a, button)[class~="bg-[#e67e22]"]:hover,
-:is(a, button)[class~="bg-[#d35400]"]:hover {
-  border-color: var(--vh-cta-warm-hover) !important;
-  background-color: var(--vh-cta-warm-hover) !important;
-}
-
 /* Official-bright WhatsApp green is too light for white normal-size labels. */
 :is(a, button)[class~="bg-[#25D366]"],
 :is(a, button)[class~="bg-[#25d366]"] {
