@@ -222,6 +222,21 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
               {hero.description}
             </p>
 
+            <div className="mt-7 hidden flex-wrap gap-3 md:flex">
+              <a
+                className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-amber-700 px-5 text-center text-[11px] font-black uppercase tracking-[0.1em] !text-white shadow-lg shadow-amber-900/15 transition hover:-translate-y-0.5 hover:bg-amber-800 sm:px-6 sm:text-xs"
+                href={hero.primaryCta.href}
+              >
+                {hero.primaryCta.label}
+              </a>
+
+              <a
+                className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-amber-900/15 bg-white/80 px-5 text-center text-[11px] font-black uppercase tracking-[0.1em] text-amber-900 shadow-sm transition hover:-translate-y-0.5 hover:bg-amber-50 sm:px-6 sm:text-xs"
+                href={hero.secondaryCta.href}
+              >
+                {hero.secondaryCta.label}
+              </a>
+            </div>
           </div>
 
           {heroImage ? (
@@ -385,8 +400,8 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
             </h2>
             <p className="mt-3 max-w-2xl text-base leading-7 text-stone-600">{finalCta.text}</p>
           </div>
-          <div className="grid gap-3 sm:grid-cols-2 md:min-w-[360px]">
-            <a href={aiAvailabilityHref} className="inline-flex min-h-12 items-center justify-center rounded-full bg-amber-700 px-5 text-center text-xs font-black uppercase tracking-[0.08em] text-white shadow-lg shadow-amber-900/15 transition hover:bg-amber-800">
+          <div className="grid gap-3 md:min-w-[360px] md:grid-cols-2">
+            <a href={aiAvailabilityHref} className="hidden min-h-12 items-center justify-center rounded-full bg-amber-700 px-5 text-center text-xs font-black uppercase tracking-[0.08em] text-white shadow-lg shadow-amber-900/15 transition hover:bg-amber-800 md:inline-flex">
               {finalCta.availabilityLabel}
             </a>
             <a href={finalCta.bookingHref} className="inline-flex min-h-12 items-center justify-center rounded-full border border-amber-900/15 bg-white px-5 text-center text-xs font-black uppercase tracking-[0.08em] text-amber-900 transition hover:bg-amber-50">
