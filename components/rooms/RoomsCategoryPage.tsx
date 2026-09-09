@@ -222,22 +222,6 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
               {hero.description}
             </p>
 
-            <div className="mt-7 grid gap-3 sm:flex sm:flex-wrap">
-              <a
-                className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-amber-700 px-5 text-center text-[11px] font-black uppercase tracking-[0.1em] !text-white shadow-lg shadow-amber-900/15 transition hover:-translate-y-0.5 hover:bg-amber-800 sm:px-6 sm:text-xs"
-                href={hero.primaryCta.href}
-                style={{ color: "#ffffff" }}
-              >
-                {hero.primaryCta.label}
-              </a>
-
-              <a
-                className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-amber-900/15 bg-white/80 px-5 text-center text-[11px] font-black uppercase tracking-[0.1em] text-amber-900 shadow-sm transition hover:-translate-y-0.5 hover:bg-amber-50 sm:px-6 sm:text-xs"
-                href={hero.secondaryCta.href}
-              >
-                {hero.secondaryCta.label}
-              </a>
-            </div>
           </div>
 
           {heroImage ? (
