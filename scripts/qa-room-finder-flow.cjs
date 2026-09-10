@@ -44,6 +44,7 @@ const root = process.cwd();
 const datePath = path.join(root, "lib/ai-assistant/room-finder-date.ts");
 const flowPath = path.join(root, "components/ai/room-finder-booking-flow.ts");
 const offerPlanPath = path.join(root, "components/ai/room-finder-offer-plan.ts");
+const hookPath = path.join(root, "components/ai/use-room-finder.ts");
 const productionPath = path.join(root, "components/ai/RoomFinderProduction.tsx");
 const copyPath = path.join(root, "components/ai/room-finder-copy.ts");
 const flowHelpersPath = path.join(root, "components/ai/room-finder-flow-helpers.ts");
@@ -316,7 +317,36 @@ function testMultiRoomOfferFeasibility() {
   );
 }
 
+function testThreeRoomLiveShape() {
+  const liveRooms = [
+    { roomId: "268803", unitId: "2" },
+    { roomId: "626129", unitId: "1" },
+    { roomId: "626129", unitId: "2" },
+    { roomId: "267788", unitId: "1" },
+    { roomId: "267788", unitId: "2" },
+    { roomId: "267788", unitId: "3" },
+    { roomId: "265595", unitId: "1" },
+    { roomId: "265595", unitId: "2" },
+    { roomId: "265595", unitId: "3" },
+  ];
+  const groups = [liveRooms, liveRooms, liveRooms];
+
+  assert(hasDistinctOfferPlan(groups), "2-2-1 three-room live result shape was rejected");
+
+  const firstChoices = feasibleOffersForGroup(groups, 0, new Set());
+  assert(firstChoices.length === liveRooms.length, "first group received no visible room cards");
+
+  const firstKey = roomOfferKey(firstChoices[0]);
+  const secondChoices = feasibleOffersForGroup(groups, 1, new Set([firstKey]));
+  assert(secondChoices.length === liveRooms.length - 1, "second group did not exclude only the selected physical room");
+
+  const secondKey = roomOfferKey(secondChoices[0]);
+  const thirdChoices = feasibleOffersForGroup(groups, 2, new Set([firstKey, secondKey]));
+  assert(thirdChoices.length === liveRooms.length - 2, "third group could not receive a distinct room choice");
+}
+
 function testResultsUxCleanup() {
+  const hook = fs.readFileSync(hookPath, "utf8");
   const production = fs.readFileSync(productionPath, "utf8");
   const copy = fs.readFileSync(copyPath, "utf8");
   const helpers = fs.readFileSync(flowHelpersPath, "utf8");
@@ -328,6 +358,15 @@ function testResultsUxCleanup() {
   assert(!copy.includes("feedbackQ"), "removed feedback copy remains in Room Finder copy contract");
   assert(!helpers.includes("matchesRoomFilter"), "removed filter-matching logic remains in flow helpers");
   assert(!fs.existsSync(legacyFlowPath), "unused legacy Room Finder implementation still exists");
+  assert(
+    hook.includes('state: { step: "selecting", draft: searchDraft }'),
+    "availability results no longer commit the selecting step and searched draft atomically",
+  );
+  assert(
+    production.includes('finder.step === "searching" || finder.step === "selecting"'),
+    "available room cards can disappear while the selecting-state update settles",
+  );
+  assert(production.includes("{roomResultsVisible && ("), "room cards are not guarded by the resilient results state");
   assert(production.includes("finder.canGoBack"), "stable booking-summary back control is missing");
   assert(production.includes('const CALL_NUMBER = "+306944764654"'), "unavailable flow call number is missing or incorrect");
   assert(production.includes('const WHATSAPP_NUMBER = "306944474226"'), "unavailable flow WhatsApp number is missing or incorrect");
@@ -348,6 +387,7 @@ function main() {
   testButtonAllocationPath();
   testDeterministicBackNavigation();
   testMultiRoomOfferFeasibility();
+  testThreeRoomLiveShape();
   testResultsUxCleanup();
   console.log("Room Finder deterministic flow QA passed.");
 }

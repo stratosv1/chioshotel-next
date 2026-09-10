@@ -242,7 +242,7 @@ export function RoomFinderProduction({
   }, [finder.step]);
 
   useEffect(() => {
-    if (finder.step !== "selecting" || finder.visibleOffers.length === 0) return;
+    if (finder.visibleOffers.length === 0 || !["searching", "selecting"].includes(finder.step)) return;
 
     composerInputRef.current?.blur();
 
@@ -469,6 +469,8 @@ export function RoomFinderProduction({
   const awaitingStepTransition = finder.messages[finder.messages.length - 1]?.role === "user";
   const quickRepliesHidden = awaitingStepTransition
     || (!!lastAssistantMessageId && hiddenQuickReplyPromptId === lastAssistantMessageId);
+  const roomResultsVisible = finder.visibleOffers.length > 0
+    && (finder.step === "searching" || finder.step === "selecting");
 
   return (
     <main
@@ -682,7 +684,7 @@ export function RoomFinderProduction({
               />
             )}
 
-            {finder.step === "selecting" && finder.visibleOffers.length > 0 && (
+            {roomResultsVisible && (
               <div ref={resultsRef} data-room-results-start="true" className="space-y-3.5 scroll-mt-2">
                 <RoomCarousel
                   offers={finder.visibleOffers}

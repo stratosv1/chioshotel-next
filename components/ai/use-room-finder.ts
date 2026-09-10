@@ -434,7 +434,10 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   }
 
   async function runAvailabilitySearch(searchDraft: BookingDraft) {
-    dispatchFlow({ type: "set_step", step: "searching" });
+    dispatchFlow({
+      type: "commit_turn",
+      state: { step: "searching", draft: searchDraft },
+    });
     add("assistant", tone.searching);
     setTyping(true);
 
@@ -465,7 +468,10 @@ export function useRoomFinder(language: RoomFinderLanguage) {
         if (recovery.length) {
           setOffers([recovery]);
           setActiveGroup(0);
-          dispatchFlow({ type: "set_step", step: "selecting" });
+          dispatchFlow({
+            type: "commit_turn",
+            state: { step: "selecting", draft: searchDraft },
+          });
           add("assistant", SALES_RECOVERY[language]);
           return;
         }
@@ -474,27 +480,39 @@ export function useRoomFinder(language: RoomFinderLanguage) {
         if (nearby.length) {
           setOffers([nearby]);
           setActiveGroup(0);
-          dispatchFlow({ type: "set_step", step: "selecting" });
+          dispatchFlow({
+            type: "commit_turn",
+            state: { step: "selecting", draft: searchDraft },
+          });
           add("assistant", NEARBY_ALTERNATIVES[language]);
           return;
         }
 
         setOffers([]);
         setActiveGroup(0);
-        dispatchFlow({ type: "set_step", step: "unavailable" });
+        dispatchFlow({
+          type: "commit_turn",
+          state: { step: "unavailable", draft: searchDraft },
+        });
         add("assistant", tone.unavailable, "contact");
         return;
       }
 
       setOffers(eligible);
       setActiveGroup(0);
-      dispatchFlow({ type: "set_step", step: "selecting" });
+      dispatchFlow({
+        type: "commit_turn",
+        state: { step: "selecting", draft: searchDraft },
+      });
       add("assistant", tone.results(1, searchDraft.groups[0]));
     } catch (error) {
       console.error("Room Finder availability request failed", error);
       setOffers([]);
       setActiveGroup(0);
-      dispatchFlow({ type: "set_step", step: "unavailable" });
+      dispatchFlow({
+        type: "commit_turn",
+        state: { step: "unavailable", draft: searchDraft },
+      });
       add("assistant", INVENTORY_UNAVAILABLE[language], "contact");
     } finally {
       setTyping(false);
