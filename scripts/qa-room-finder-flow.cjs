@@ -44,6 +44,7 @@ const root = process.cwd();
 const datePath = path.join(root, "lib/ai-assistant/room-finder-date.ts");
 const flowPath = path.join(root, "components/ai/room-finder-booking-flow.ts");
 const offerPlanPath = path.join(root, "components/ai/room-finder-offer-plan.ts");
+const offerTrackingPath = path.join(root, "lib/ai-assistant/room-finder-offer-tracking.ts");
 const hookPath = path.join(root, "components/ai/use-room-finder.ts");
 const productionPath = path.join(root, "components/ai/RoomFinderProduction.tsx");
 const copyPath = path.join(root, "components/ai/room-finder-copy.ts");
@@ -57,6 +58,7 @@ const flow = executeCommonJs(transpile(flowPath), id => {
   return require(id);
 });
 const offerPlan = executeCommonJs(transpile(offerPlanPath));
+const offerTracking = executeCommonJs(transpile(offerTrackingPath));
 
 const {
   bookingFlowReducer,
@@ -346,6 +348,37 @@ function testThreeRoomLiveShape() {
   assert(thirdChoices.length === liveRooms.length - 2, "third group could not receive a distinct room choice");
 }
 
+function testStaffOfferSnapshotRoundTrip() {
+  const snapshot = {
+    version: 1,
+    groups: [{
+      groupNumber: 1,
+      guests: 2,
+      offers: [{
+        roomNumber: 6,
+        name: "Chambre double économique",
+        checkin: "2026-09-11",
+        checkout: "2026-09-13",
+        originalTotal: 200,
+        directTotal: 180,
+        saving: 20,
+      }],
+    }],
+  };
+  const message = "Des disponibilités proches ont été trouvées.";
+  const encoded = offerTracking.encodeRoomFinderOfferSnapshot(message, snapshot);
+  const decoded = offerTracking.decodeRoomFinderOfferSnapshot(encoded);
+
+  assert(decoded.content === message, "staff offer snapshot changed the customer-facing message");
+  assert(decoded.snapshot?.groups[0]?.offers[0]?.roomNumber === 6, "staff offer snapshot lost the room number");
+  assert(decoded.snapshot?.groups[0]?.offers[0]?.directTotal === 180, "staff offer snapshot lost the direct price");
+
+  const malformed = offerTracking.decodeRoomFinderOfferSnapshot(
+    `${message}${offerTracking.ROOM_FINDER_OFFER_SNAPSHOT_MARKER}{`,
+  );
+  assert(malformed.content === message && malformed.snapshot === null, "malformed staff snapshot was not handled safely");
+}
+
 function testResultsUxCleanup() {
   const hook = fs.readFileSync(hookPath, "utf8");
   const production = fs.readFileSync(productionPath, "utf8");
@@ -395,6 +428,7 @@ function main() {
   testDeterministicBackNavigation();
   testMultiRoomOfferFeasibility();
   testThreeRoomLiveShape();
+  testStaffOfferSnapshotRoundTrip();
   testResultsUxCleanup();
   console.log("Room Finder deterministic flow QA passed.");
 }

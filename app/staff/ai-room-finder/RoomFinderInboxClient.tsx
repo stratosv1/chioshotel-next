@@ -6,6 +6,7 @@ import type {
   RoomFinderInboxConversation,
   RoomFinderInboxData,
 } from "@/lib/ai-assistant/conversation-store";
+import { decodeRoomFinderOfferSnapshot } from "@/lib/ai-assistant/room-finder-offer-tracking";
 
 function dateTime(value: string | null | undefined) {
   if (!value) return "—";
@@ -46,6 +47,19 @@ function fullName(conversation: RoomFinderInboxConversation) {
 function phoneForWhatsApp(phone: string) {
   const digits = phone.replace(/\D/g, "");
   return digits.startsWith("00") ? digits.slice(2) : digits;
+}
+
+function shortStayDate(value: string) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  return match ? `${match[3]}/${match[2]}/${match[1]}` : value;
+}
+
+function money(value: number) {
+  return new Intl.NumberFormat("el-GR", {
+    style: "currency",
+    currency: "EUR",
+    maximumFractionDigits: 2,
+  }).format(value);
 }
 
 export default function RoomFinderInboxClient({ initialData }: { initialData: RoomFinderInboxData }) {
@@ -263,34 +277,82 @@ export default function RoomFinderInboxClient({ initialData }: { initialData: Ro
                 </div>
 
                 <div className="space-y-3 bg-[#faf8f4] p-4 sm:p-6">
-                  {messages.map((message) => (
-                    <div key={message.id} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
-                      <div className={`max-w-[88%] rounded-2xl px-4 py-3 text-sm leading-6 shadow-sm ${message.role === "user" ? "rounded-br-md bg-[#6b604f] text-white" : "rounded-bl-md border border-stone-200 bg-white text-stone-800"}`}>
-                        <div className="whitespace-pre-wrap">{message.content}</div>
-                        {(message.kind === "contact" || (message.role === "assistant" && message.content.toLowerCase().includes("whatsapp"))) && (
-                          <div className="mt-3 grid grid-cols-2 gap-2 border-t border-stone-100 pt-3">
-                            <a
-                              href="tel:+306944764654"
-                              className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#c66a34] px-3 font-bold text-white"
-                            >
-                              <Phone className="h-4 w-4" aria-hidden="true" />
-                              Κλήση
-                            </a>
-                            <a
-                              href="https://wa.me/306944474226"
-                              target="_blank"
-                              rel="noreferrer"
-                              className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#287d4f] px-3 font-bold text-white"
-                            >
-                              <MessageCircle className="h-4 w-4" aria-hidden="true" />
-                              WhatsApp
-                            </a>
-                          </div>
-                        )}
-                        <div className={`mt-1 text-[10px] ${message.role === "user" ? "text-white/70" : "text-stone-400"}`}>{message.role === "user" ? "Πελάτης" : "AI Room Finder"}{message.reaction ? ` · ${message.reaction}` : ""}</div>
+                  {messages.map((message) => {
+                    const trackedMessage = decodeRoomFinderOfferSnapshot(message.content);
+                    const snapshot = trackedMessage.snapshot;
+                    return (
+                      <div key={message.id} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
+                        <div className={`max-w-[88%] rounded-2xl px-4 py-3 text-sm leading-6 shadow-sm ${message.role === "user" ? "rounded-br-md bg-[#6b604f] text-white" : "rounded-bl-md border border-stone-200 bg-white text-stone-800"}`}>
+                          <div className="whitespace-pre-wrap">{trackedMessage.content}</div>
+                          {snapshot && (
+                            <div className="mt-3 space-y-3 border-t border-stone-200 pt-3">
+                              <p className="text-xs font-black uppercase tracking-wide text-amber-900">
+                                Προτάσεις που είδε ο πελάτης
+                              </p>
+                              {snapshot.groups.map(group => (
+                                <div key={`${message.id}-${group.groupNumber}`} className="space-y-2">
+                                  {snapshot.groups.length > 1 && (
+                                    <p className="text-xs font-bold text-stone-600">
+                                      Δωμάτιο {group.groupNumber} · {group.guests} άτομα
+                                    </p>
+                                  )}
+                                  {group.offers.map((offer, offerIndex) => (
+                                    <div
+                                      key={`${offer.roomNumber}-${offer.checkin}-${offer.checkout}-${offerIndex}`}
+                                      className="rounded-xl border border-amber-200 bg-amber-50/60 p-3"
+                                    >
+                                      <div className="flex flex-wrap items-start justify-between gap-2">
+                                        <strong className="min-w-0 flex-1 leading-5">{offer.name}</strong>
+                                        <span className="shrink-0 rounded-full bg-white px-2 py-0.5 text-[11px] font-black text-stone-700">
+                                          Δωμ. {offer.roomNumber}
+                                        </span>
+                                      </div>
+                                      <p className="mt-1 text-xs font-semibold text-stone-600">
+                                        {shortStayDate(offer.checkin)} → {shortStayDate(offer.checkout)} · {group.guests} άτομα
+                                      </p>
+                                      {offer.recoverySummary && (
+                                        <p className="mt-1 text-xs leading-5 text-stone-600">{offer.recoverySummary}</p>
+                                      )}
+                                      <div className="mt-2 flex flex-wrap items-baseline gap-2">
+                                        {offer.originalTotal > offer.directTotal && (
+                                          <span className="text-xs text-stone-500 line-through">{money(offer.originalTotal)}</span>
+                                        )}
+                                        <strong className="text-base text-emerald-800">{money(offer.directTotal)}</strong>
+                                        {offer.saving > 0 && (
+                                          <span className="text-xs font-bold text-emerald-800">Κέρδος {money(offer.saving)}</span>
+                                        )}
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          {(message.kind === "contact" || (message.role === "assistant" && trackedMessage.content.toLowerCase().includes("whatsapp"))) && (
+                            <div className="mt-3 grid grid-cols-2 gap-2 border-t border-stone-100 pt-3">
+                              <a
+                                href="tel:+306944764654"
+                                className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#c66a34] px-3 font-bold text-white"
+                              >
+                                <Phone className="h-4 w-4" aria-hidden="true" />
+                                Κλήση
+                              </a>
+                              <a
+                                href="https://wa.me/306944474226"
+                                target="_blank"
+                                rel="noreferrer"
+                                className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#287d4f] px-3 font-bold text-white"
+                              >
+                                <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                                WhatsApp
+                              </a>
+                            </div>
+                          )}
+                          <div className={`mt-1 text-[10px] ${message.role === "user" ? "text-white/70" : "text-stone-400"}`}>{message.role === "user" ? "Πελάτης" : "AI Room Finder"}{message.reaction ? ` · ${message.reaction}` : ""}</div>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                   {!messages.length && <p className="py-8 text-center text-sm text-stone-500">Δεν υπάρχουν μηνύματα.</p>}
                 </div>
               </>

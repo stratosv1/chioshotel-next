@@ -2,6 +2,10 @@
 
 import { FormEvent, useMemo, useReducer, useRef, useState } from "react";
 import { localizeRoomOffer } from "@/lib/ai-assistant/room-card-catalog";
+import {
+  encodeRoomFinderOfferSnapshot,
+  type RoomFinderOfferSnapshot,
+} from "@/lib/ai-assistant/room-finder-offer-tracking";
 import type { RoomFinderCommand, RoomFinderPreference } from "@/lib/ai-assistant/room-finder-types";
 import type { RoomFinderLanguage } from "./room-finder-copy";
 import { ROOM_FINDER_COPY } from "./room-finder-copy";
@@ -115,6 +119,52 @@ class AvailabilityError extends Error {
   }
 }
 
+function staffOfferContent(
+  content: string,
+  offerGroups: Array<{
+    groupNumber: number;
+    guests: number;
+    offers: RoomOffer[];
+  }>,
+  searchDraft: BookingDraft,
+) {
+  const snapshot: RoomFinderOfferSnapshot = {
+    version: 1,
+    groups: offerGroups.map(group => ({
+      groupNumber: group.groupNumber,
+      guests: group.guests,
+      offers: group.offers.map(offer => ({
+        roomNumber: Number(offer.roomNumber),
+        name: String(offer.name || `Room ${offer.roomNumber}`).slice(0, 160),
+        checkin: offer.alternativeCheckin || searchDraft.checkin,
+        checkout: offer.alternativeCheckout || searchDraft.checkout,
+        originalTotal: Number(offer.originalTotal || 0),
+        directTotal: Number(offer.directTotal || 0),
+        saving: Number(offer.saving || 0),
+        recoverySummary: offer.recoverySummary?.slice(0, 500) || undefined,
+      })),
+    })),
+  };
+
+  return encodeRoomFinderOfferSnapshot(content, snapshot);
+}
+
+function sortOffersForPreferences(
+  roomOffers: RoomOffer[],
+  preferences: RoomFinderPreference[],
+) {
+  const sorted = [...roomOffers].sort((left, right) => {
+    const preferenceDifference = roomPreferenceScore(Number(right.roomNumber), preferences)
+      - roomPreferenceScore(Number(left.roomNumber), preferences);
+    return preferenceDifference || left.directTotal - right.directTotal || rank(left) - rank(right);
+  });
+  const bestScore = sorted.length ? roomPreferenceScore(Number(sorted[0].roomNumber), preferences) : 0;
+  return sorted.map((offer, index) => ({
+    ...offer,
+    recommended: preferences.length > 0 && bestScore > 0 && index === 0,
+  }));
+}
+
 export function useRoomFinder(language: RoomFinderLanguage) {
   const copy = ROOM_FINDER_COPY[language];
   const tone = ROOM_FINDER_TONE[language];
@@ -152,20 +202,15 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   );
   const visibleOffers = useMemo(() => {
     const feasible = feasibleOffersForGroup(capacityEligibleOffers, activeGroup, selectedKeys);
-    const sorted = [...feasible].sort((left, right) => {
-      const preferenceDifference = roomPreferenceScore(Number(right.roomNumber), preferences)
-        - roomPreferenceScore(Number(left.roomNumber), preferences);
-      return preferenceDifference || left.directTotal - right.directTotal || rank(left) - rank(right);
-    });
-    const bestScore = sorted.length ? roomPreferenceScore(Number(sorted[0].roomNumber), preferences) : 0;
-    return sorted.map((offer, index) => ({
-      ...offer,
-      recommended: preferences.length > 0 && bestScore > 0 && index === 0,
-    }));
+    return sortOffersForPreferences(feasible, preferences);
   }, [capacityEligibleOffers, activeGroup, selectedKeys, preferences]);
 
-  const add = (role: ChatItem["role"], content: string, kind: MessageKind = "normal") =>
-    setMessages(current => [...current, { id: rid(), role, content, kind }]);
+  const add = (
+    role: ChatItem["role"],
+    content: string,
+    kind: MessageKind = "normal",
+    staffContent?: string,
+  ) => setMessages(current => [...current, { id: rid(), role, content, kind, staffContent }]);
 
   const rewindConversation = (...promptContents: string[]) =>
     setMessages(current => rewindToAssistantPrompt(current, promptContents));
@@ -472,7 +517,19 @@ export function useRoomFinder(language: RoomFinderLanguage) {
             type: "commit_turn",
             state: { step: "selecting", draft: searchDraft },
           });
-          add("assistant", SALES_RECOVERY[language]);
+          const content = SALES_RECOVERY[language];
+          const recoveryGuests = searchDraft.totalGuests
+            || searchDraft.groups.reduce((sum, guests) => sum + guests, 0);
+          add(
+            "assistant",
+            content,
+            "offers",
+            staffOfferContent(content, [{
+              groupNumber: 1,
+              guests: recoveryGuests,
+              offers: sortOffersForPreferences(recovery, preferences),
+            }], searchDraft),
+          );
           return;
         }
 
@@ -484,7 +541,17 @@ export function useRoomFinder(language: RoomFinderLanguage) {
             type: "commit_turn",
             state: { step: "selecting", draft: searchDraft },
           });
-          add("assistant", NEARBY_ALTERNATIVES[language]);
+          const content = NEARBY_ALTERNATIVES[language];
+          add(
+            "assistant",
+            content,
+            "offers",
+            staffOfferContent(content, [{
+              groupNumber: 1,
+              guests: searchDraft.groups[0] || 0,
+              offers: sortOffersForPreferences(nearby, preferences),
+            }], searchDraft),
+          );
           return;
         }
 
@@ -504,7 +571,21 @@ export function useRoomFinder(language: RoomFinderLanguage) {
         type: "commit_turn",
         state: { step: "selecting", draft: searchDraft },
       });
-      add("assistant", tone.results(1, searchDraft.groups[0]));
+      const content = tone.results(1, searchDraft.groups[0]);
+      const firstGroupOffers = sortOffersForPreferences(
+        feasibleOffersForGroup(eligible, 0, new Set()),
+        preferences,
+      );
+      add(
+        "assistant",
+        content,
+        "offers",
+        staffOfferContent(content, [{
+          groupNumber: 1,
+          guests: searchDraft.groups[0] || 0,
+          offers: firstGroupOffers,
+        }], searchDraft),
+      );
     } catch (error) {
       console.error("Room Finder availability request failed", error);
       setOffers([]);
@@ -736,7 +817,22 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       if (roomCount && activeGroup + 1 < roomCount) {
         const nextGroup = activeGroup + 1;
         setActiveGroup(nextGroup);
-        add("assistant", tone.results(nextGroup + 1, groups[nextGroup]));
+        const content = tone.results(nextGroup + 1, groups[nextGroup]);
+        const nextSelectedKeys = new Set([...selectedKeys, key]);
+        const nextGroupOffers = sortOffersForPreferences(
+          feasibleOffersForGroup(capacityEligibleOffers, nextGroup, nextSelectedKeys),
+          preferences,
+        );
+        add(
+          "assistant",
+          content,
+          "offers",
+          staffOfferContent(content, [{
+            groupNumber: nextGroup + 1,
+            guests: groups[nextGroup] || 0,
+            offers: nextGroupOffers,
+          }], draft),
+        );
       } else {
         dispatchFlow({ type: "set_step", step: "breakfast" });
       }

@@ -4,8 +4,15 @@ import { useEffect, useState, type ReactNode } from "react";
 import { ROOM_FINDER_COPY, type RoomFinderLanguage } from "./room-finder-copy";
 
 export type Reaction = "👍" | "❤️";
-export type MessageKind = "date" | "room" | "guest" | "normal" | "contact";
-export type ChatItem = { id:string; role:"assistant"|"user"; content:string; kind?:MessageKind; reaction?:Reaction };
+export type MessageKind = "date" | "room" | "guest" | "normal" | "contact" | "offers";
+export type ChatItem = {
+  id: string;
+  role: "assistant" | "user";
+  content: string;
+  staffContent?: string;
+  kind?: MessageKind;
+  reaction?: Reaction;
+};
 
 const CHAT_STORAGE_NOTICE: Record<RoomFinderLanguage, string> = {
   el: "Η συνομιλία αποθηκεύεται και μπορεί να τη δει το προσωπικό του Voulamandis House για τη διαχείριση και απάντηση στο αίτημά σας.",
@@ -118,7 +125,7 @@ function trackRoomFinderMessage(message: ChatItem) {
     messages: [{
       id: message.id,
       role: message.role,
-      content: message.content,
+      content: message.staffContent || message.content,
       kind: message.kind,
       reaction: message.reaction,
     }],
