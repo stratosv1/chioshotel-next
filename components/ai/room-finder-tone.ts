@@ -5,7 +5,7 @@ export type RoomFinderTone = {
   rooms: string;
   guests: (room: number) => string;
   searching: string;
-  results: (group: number, guests: number) => string;
+  results: (room: number, guests: number) => string;
   selected: (room: string) => string;
   finalizing: string;
   invalidDate: string;
@@ -19,7 +19,7 @@ export const ROOM_FINDER_TONE: Record<RoomFinderLanguage, RoomFinderTone> = {
     rooms: "Πόσα δωμάτια χρειάζεστε;",
     guests: room => `Πόσα άτομα θα μείνουν στο δωμάτιο ${room};`,
     searching: "Ελέγχω τώρα τη live διαθεσιμότητα για εσάς…",
-    results: (group, guests) => `Βρήκα αυτές τις διαθέσιμες επιλογές για την ομάδα ${group} · ${guests} ${guests === 1 ? "άτομο" : "άτομα"}.`,
+    results: (room, guests) => `Βρήκα αυτές τις διαθέσιμες επιλογές για το δωμάτιο ${room} · ${guests} ${guests === 1 ? "άτομο" : "άτομα"}.`,
     selected: room => `Σημείωσα το ${room} ως επιλογή σας.`,
     finalizing: "Ετοιμάζω τη σύνοψη της αίτησής σας.",
     invalidDate: "Πότε θα θέλατε να κάνετε check-in;",
@@ -31,7 +31,7 @@ export const ROOM_FINDER_TONE: Record<RoomFinderLanguage, RoomFinderTone> = {
     rooms: "How many rooms do you need?",
     guests: room => `How many guests will stay in room ${room}?`,
     searching: "I’m checking live availability for you now…",
-    results: (group, guests) => `I found these available options for group ${group} · ${guests} ${guests === 1 ? "guest" : "guests"}.`,
+    results: (room, guests) => `I found these available options for room ${room} · ${guests} ${guests === 1 ? "guest" : "guests"}.`,
     selected: room => `I’ve saved ${room} as your selection.`,
     finalizing: "I’m preparing your request summary.",
     invalidDate: "When would you like to check in?",
@@ -43,7 +43,7 @@ export const ROOM_FINDER_TONE: Record<RoomFinderLanguage, RoomFinderTone> = {
     rooms: "Wie viele Zimmer benötigen Sie?",
     guests: room => `Wie viele Gäste übernachten in Zimmer ${room}?`,
     searching: "Ich prüfe jetzt die Live-Verfügbarkeit für Sie…",
-    results: (group, guests) => `Ich habe diese verfügbaren Optionen für Gruppe ${group} · ${guests} ${guests === 1 ? "Gast" : "Gäste"} gefunden.`,
+    results: (room, guests) => `Ich habe diese verfügbaren Optionen für Zimmer ${room} · ${guests} ${guests === 1 ? "Gast" : "Gäste"} gefunden.`,
     selected: room => `Ich habe ${room} als Ihre Auswahl gespeichert.`,
     finalizing: "Ich bereite Ihre Anfrageübersicht vor.",
     invalidDate: "Wann möchten Sie einchecken?",
@@ -55,7 +55,7 @@ export const ROOM_FINDER_TONE: Record<RoomFinderLanguage, RoomFinderTone> = {
     rooms: "De combien de chambres avez-vous besoin ?",
     guests: room => `Combien de personnes séjourneront dans la chambre ${room} ?`,
     searching: "Je vérifie maintenant les disponibilités en direct…",
-    results: (group, guests) => `J’ai trouvé ces options disponibles pour le groupe ${group} · ${guests} ${guests === 1 ? "personne" : "personnes"}.`,
+    results: (room, guests) => `J’ai trouvé ces options disponibles pour la chambre ${room} · ${guests} ${guests === 1 ? "personne" : "personnes"}.`,
     selected: room => `J’ai enregistré ${room} comme votre choix.`,
     finalizing: "Je prépare le récapitulatif de votre demande.",
     invalidDate: "Quand souhaitez-vous faire le check-in ?",
@@ -67,7 +67,7 @@ export const ROOM_FINDER_TONE: Record<RoomFinderLanguage, RoomFinderTone> = {
     rooms: "Di quante camere avete bisogno?",
     guests: room => `Quante persone soggiorneranno nella camera ${room}?`,
     searching: "Sto controllando ora la disponibilità in tempo reale…",
-    results: (group, guests) => `Ho trovato queste opzioni disponibili per il gruppo ${group} · ${guests} ${guests === 1 ? "persona" : "persone"}.`,
+    results: (room, guests) => `Ho trovato queste opzioni disponibili per la camera ${room} · ${guests} ${guests === 1 ? "persona" : "persone"}.`,
     selected: room => `Ho salvato ${room} come vostra scelta.`,
     finalizing: "Sto preparando il riepilogo della vostra richiesta.",
     invalidDate: "Quando desiderate effettuare il check-in?",
@@ -79,7 +79,7 @@ export const ROOM_FINDER_TONE: Record<RoomFinderLanguage, RoomFinderTone> = {
     rooms: "¿Cuántas habitaciones necesitan?",
     guests: room => `¿Cuántas personas se alojarán en la habitación ${room}?`,
     searching: "Estoy comprobando ahora la disponibilidad en tiempo real…",
-    results: (group, guests) => `He encontrado estas opciones disponibles para el grupo ${group} · ${guests} ${guests === 1 ? "persona" : "personas"}.`,
+    results: (room, guests) => `He encontrado estas opciones disponibles para la habitación ${room} · ${guests} ${guests === 1 ? "persona" : "personas"}.`,
     selected: room => `He guardado ${room} como su elección.`,
     finalizing: "Estoy preparando el resumen de su solicitud.",
     invalidDate: "¿Cuándo desean hacer el check-in?",
@@ -91,7 +91,7 @@ export const ROOM_FINDER_TONE: Record<RoomFinderLanguage, RoomFinderTone> = {
     rooms: "Kaç odaya ihtiyacınız var?",
     guests: room => `${room}. odada kaç kişi kalacak?`,
     searching: "Canlı müsaitliği şimdi kontrol ediyorum…",
-    results: (group, guests) => `${group}. grup · ${guests} kişi için bu müsait seçenekleri buldum.`,
+    results: (room, guests) => `${room}. oda · ${guests} kişi için bu müsait seçenekleri buldum.`,
     selected: room => `${room} seçiminizi kaydettim.`,
     finalizing: "Talep özetinizi hazırlıyorum.",
     invalidDate: "Ne zaman giriş yapmak istersiniz?",

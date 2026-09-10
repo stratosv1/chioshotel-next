@@ -135,7 +135,7 @@ export function splitRoomVisuals(offer:RoomOffer) {
   }));
 }
 
-export function RoomCarousel({ offers, copy, language, money, onDetails, onSelect, selectingOfferKey }:{ offers:RoomOffer[]; copy:RoomFinderCopy; language:RoomFinderLanguage; money:(v:number,l:RoomFinderLanguage)=>string; onDetails:(offer:RoomOffer)=>void; onSelect:(offer:RoomOffer)=>void; selectingOfferKey?:string|null }) {
+export function RoomCarousel({ offers, copy, language, money, onDetails, onSelect, selectingOfferKey, selectionRoom }:{ offers:RoomOffer[]; copy:RoomFinderCopy; language:RoomFinderLanguage; money:(v:number,l:RoomFinderLanguage)=>string; onDetails:(offer:RoomOffer)=>void; onSelect:(offer:RoomOffer)=>void; selectingOfferKey?:string|null; selectionRoom?:number }) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const autoSelectedOfferRef = useRef<string|null>(null);
   const [canScrollLeft,setCanScrollLeft] = useState(false);
@@ -239,8 +239,16 @@ export function RoomCarousel({ offers, copy, language, money, onDetails, onSelec
             </div> : <div className="mt-2 flex flex-wrap gap-1.5">{(offer.features||[]).slice(0,4).map((feature) => <span key={feature} className="rounded-full bg-[#f1ede7] px-2.5 py-1 text-[11px] font-semibold">{feature}</span>)}</div>}
             {offer.saving > 0 && <p className="mt-3 text-sm font-bold text-[#5f7448]">{copy.saving}: {money(offer.saving,language)}</p>}
             <div className="mt-3 grid grid-cols-2 gap-2">
-              <button onClick={() => onDetails(offer)} className="min-h-11 rounded-2xl border border-[#d8cec1] font-bold">{copy.details}</button>
-              <button onClick={() => onSelect(offer)} disabled={Boolean(selectingOfferKey)} aria-busy={pending} className="min-h-11 rounded-2xl bg-[#66714f] px-2 font-bold text-white transition disabled:cursor-wait disabled:opacity-70">{pending?`✓ ${SELECTING_LABEL[language]}`:(isSplit?SELECT_SOLUTION_LABEL[language]:copy.select)}</button>
+              <button onClick={() => onDetails(offer)} className="min-h-14 rounded-2xl border border-[#d8cec1] font-bold">{copy.details}</button>
+              <button
+                onClick={() => onSelect(offer)}
+                disabled={Boolean(selectingOfferKey)}
+                aria-busy={pending}
+                aria-label={pending ? SELECTING_LABEL[language] : isSplit ? SELECT_SOLUTION_LABEL[language] : selectionRoom ? copy.selectForRoom(selectionRoom) : copy.select}
+                className="min-h-14 rounded-2xl bg-[#66714f] px-2 py-2 text-sm font-bold leading-tight text-white transition disabled:cursor-wait disabled:opacity-70"
+              >
+                {pending ? `✓ ${SELECTING_LABEL[language]}` : isSplit ? SELECT_SOLUTION_LABEL[language] : selectionRoom ? copy.selectForRoom(selectionRoom) : copy.select}
+              </button>
             </div>
           </div>
         </article>;

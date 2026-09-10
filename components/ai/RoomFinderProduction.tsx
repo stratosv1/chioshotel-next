@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { ArrowLeft, ChevronDown, MessageCircle, Phone, RotateCcw, Send } from "lucide-react";
+import { ArrowLeft, BedDouble, Check, ChevronDown, MessageCircle, Phone, RotateCcw, Send } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import {
   ROOM_FINDER_COPY,
@@ -177,6 +177,79 @@ function money(value: number, language: RoomFinderLanguage) {
   }).format(value);
 }
 
+function RoomSelectionContext({
+  currentRoom,
+  totalRooms,
+  guests,
+  choices,
+  copy,
+}: {
+  currentRoom: number;
+  totalRooms: number;
+  guests: number;
+  choices: ReturnType<typeof useRoomFinder>["choices"];
+  copy: (typeof ROOM_FINDER_COPY)[RoomFinderLanguage];
+}) {
+  return (
+    <section
+      data-room-selection-context="true"
+      aria-label={copy.choosingRoom(currentRoom, totalRooms)}
+      className="msg relative overflow-hidden rounded-[24px] border-2 border-[#d98a59] bg-[linear-gradient(135deg,_#fff7ee_0%,_#fffdf9_62%,_#f5eee3_100%)] p-4 shadow-[0_12px_30px_rgba(111,72,39,.12)] sm:ml-10"
+    >
+      <span aria-hidden="true" className="absolute inset-y-0 left-0 w-1.5 bg-[#c66a34]" />
+      <div className="flex items-center gap-3 pl-1">
+        <div className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#c66a34] text-white shadow-[0_8px_18px_rgba(198,106,52,.28)]">
+          <BedDouble className="h-7 w-7" aria-hidden="true" />
+          <span className="absolute -bottom-1.5 -right-1.5 rounded-full border-2 border-[#fff9f2] bg-[#4f473d] px-1.5 py-0.5 text-xs font-black [font-variant-numeric:tabular-nums]">
+            {currentRoom}/{totalRooms}
+          </span>
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-xs font-black uppercase tracking-[.11em] text-[#a65028]">{copy.choosingNow}</p>
+          <h2 className="mt-0.5 text-xl font-black leading-tight text-[#332c25]">{copy.choosingRoom(currentRoom, totalRooms)}</h2>
+          <p className="mt-1 text-xs font-semibold leading-4 text-[#6b5e52]">{copy.choosingHint(guests)}</p>
+        </div>
+      </div>
+
+      <ol
+        className="mt-4 grid gap-2"
+        style={{ gridTemplateColumns: `repeat(${totalRooms}, minmax(0, 1fr))` }}
+      >
+        {Array.from({ length: totalRooms }, (_, index) => {
+          const room = index + 1;
+          const choice = choices.find(item => item.group === room);
+          const isCurrent = room === currentRoom;
+          const isComplete = room < currentRoom && Boolean(choice);
+
+          return (
+            <li
+              key={room}
+              aria-current={isCurrent ? "step" : undefined}
+              className={`min-w-0 rounded-2xl border px-1.5 py-2 text-center ${
+                isCurrent
+                  ? "border-[#c66a34] bg-[#c66a34] text-white shadow-[0_6px_14px_rgba(198,106,52,.22)]"
+                  : isComplete
+                    ? "border-[#bdc9ae] bg-[#eef3e8] text-[#51633f]"
+                    : "border-[#ded5c9] bg-white/75 text-[#81766a]"
+              }`}
+            >
+              <span className={`mx-auto flex h-6 w-6 items-center justify-center rounded-full text-xs font-black ${
+                isCurrent ? "bg-white text-[#b75b2e]" : isComplete ? "bg-[#66714f] text-white" : "bg-[#eee8df] text-[#81766a]"
+              }`}>
+                {isComplete ? <Check className="h-3.5 w-3.5" aria-hidden="true" /> : room}
+              </span>
+              <span className="mt-1 block truncate text-xs font-black">{copy.roomStepLabel(room)}</span>
+              <span className={`mt-0.5 block min-h-3 truncate text-xs font-semibold ${isCurrent ? "text-white/90" : "text-[#71805e]"}`}>
+                {isCurrent ? copy.currentStep : choice?.offer.name || ""}
+              </span>
+            </li>
+          );
+        })}
+      </ol>
+    </section>
+  );
+}
+
 export function RoomFinderProduction({
   initialLanguage = "en",
 }: {
@@ -257,7 +330,7 @@ export function RoomFinderProduction({
       cancelAnimationFrame(frame);
       window.clearTimeout(settleTimer);
     };
-  }, [finder.step, finder.visibleOffers.length]);
+  }, [finder.activeGroup, finder.step, finder.visibleOffers.length]);
 
   useEffect(() => {
     const shell = shellRef.current;
@@ -471,6 +544,10 @@ export function RoomFinderProduction({
     || (!!lastAssistantMessageId && hiddenQuickReplyPromptId === lastAssistantMessageId);
   const roomResultsVisible = finder.visibleOffers.length > 0
     && (finder.step === "searching" || finder.step === "selecting");
+  const activeRoomNumber = Math.min(finder.activeGroup + 1, Math.max(finder.roomCount, 1));
+  const multiRoomSelectionVisible = roomResultsVisible
+    && finder.roomCount > 1
+    && !finder.visibleOffers.some(offer => Boolean(offer.recoveryType));
 
   return (
     <main
@@ -686,12 +763,23 @@ export function RoomFinderProduction({
 
             {roomResultsVisible && (
               <div ref={resultsRef} data-room-results-start="true" className="space-y-3.5 scroll-mt-2">
+                {multiRoomSelectionVisible && (
+                  <RoomSelectionContext
+                    key={`room-selection-${activeRoomNumber}`}
+                    currentRoom={activeRoomNumber}
+                    totalRooms={finder.roomCount}
+                    guests={finder.groups[finder.activeGroup] || 0}
+                    choices={finder.choices}
+                    copy={copy}
+                  />
+                )}
                 <RoomCarousel
                   offers={finder.visibleOffers}
                   copy={copy}
                   language={language}
                   money={money}
                   selectingOfferKey={finder.selectingOfferKey}
+                  selectionRoom={multiRoomSelectionVisible ? activeRoomNumber : undefined}
                   onDetails={openRoomDetail}
                   onSelect={offer => void finder.selectOffer(offer)}
                 />

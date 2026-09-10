@@ -30,6 +30,12 @@ export type RoomFinderCopy = {
   languageLabel: string;
   backLabel: string;
   editDates: string;
+  choosingNow: string;
+  choosingRoom: (current: number, total: number) => string;
+  choosingHint: (guests: number) => string;
+  roomStepLabel: (room: number) => string;
+  currentStep: string;
+  selectForRoom: (room: number) => string;
   roomLabel: (n: number) => string;
   guestLabel: (n: number) => string;
   nightLabel: (n: number) => string;
@@ -76,6 +82,12 @@ export const ROOM_FINDER_COPY: Record<RoomFinderLanguage, RoomFinderCopy> = {
     languageLabel: "Γλώσσα",
     backLabel: "Προηγούμενο βήμα",
     editDates: "Αλλαγή ημερομηνιών",
+    choosingNow: "Τώρα επιλέγετε",
+    choosingRoom: (current, total) => `Δωμάτιο ${current} από ${total}`,
+    choosingHint: guests => `Η επιλογή που θα κάνετε παρακάτω αφορά ${guests} ${guests === 1 ? "άτομο" : "άτομα"}.`,
+    roomStepLabel: room => `Δωμάτιο ${room}`,
+    currentStep: "Τώρα",
+    selectForRoom: room => `Επιλογή για το δωμάτιο ${room}`,
     roomLabel: n => `${n} ${n === 1 ? "δωμάτιο" : "δωμάτια"}`,
     guestLabel: n => `${n} ${n === 1 ? "άτομο" : "άτομα"}`,
     nightLabel: n => `${n} ${n === 1 ? "βραδιά" : "βραδιές"}`,
@@ -110,6 +122,12 @@ export const ROOM_FINDER_COPY: Record<RoomFinderLanguage, RoomFinderCopy> = {
     languageLabel: "Language",
     backLabel: "Previous step",
     editDates: "Edit dates",
+    choosingNow: "Now choosing",
+    choosingRoom: (current, total) => `Room ${current} of ${total}`,
+    choosingHint: guests => `Your choice below is for ${guests} ${guests === 1 ? "guest" : "guests"}.`,
+    roomStepLabel: room => `Room ${room}`,
+    currentStep: "Now",
+    selectForRoom: room => `Choose for room ${room}`,
     roomLabel: n => `${n} ${n === 1 ? "room" : "rooms"}`,
     guestLabel: n => `${n} ${n === 1 ? "guest" : "guests"}`,
     nightLabel: n => `${n} ${n === 1 ? "night" : "nights"}`,
@@ -144,6 +162,12 @@ export const ROOM_FINDER_COPY: Record<RoomFinderLanguage, RoomFinderCopy> = {
     languageLabel: "Sprache",
     backLabel: "Vorheriger Schritt",
     editDates: "Daten ändern",
+    choosingNow: "Sie wählen jetzt",
+    choosingRoom: (current, total) => `Zimmer ${current} von ${total}`,
+    choosingHint: guests => `Ihre Auswahl unten gilt für ${guests} ${guests === 1 ? "Gast" : "Gäste"}.`,
+    roomStepLabel: room => `Zimmer ${room}`,
+    currentStep: "Jetzt",
+    selectForRoom: room => `Für Zimmer ${room} auswählen`,
     roomLabel: n => `${n} ${n === 1 ? "Zimmer" : "Zimmer"}`,
     guestLabel: n => `${n} ${n === 1 ? "Gast" : "Gäste"}`,
     nightLabel: n => `${n} ${n === 1 ? "Nacht" : "Nächte"}`,
@@ -178,6 +202,12 @@ export const ROOM_FINDER_COPY: Record<RoomFinderLanguage, RoomFinderCopy> = {
     languageLabel: "Langue",
     backLabel: "Étape précédente",
     editDates: "Modifier les dates",
+    choosingNow: "Choix en cours",
+    choosingRoom: (current, total) => `Chambre ${current} sur ${total}`,
+    choosingHint: guests => `Votre choix ci-dessous concerne ${guests} ${guests === 1 ? "personne" : "personnes"}.`,
+    roomStepLabel: room => `Chambre ${room}`,
+    currentStep: "Maintenant",
+    selectForRoom: room => `Choisir pour la chambre ${room}`,
     roomLabel: n => `${n} ${n === 1 ? "chambre" : "chambres"}`,
     guestLabel: n => `${n} ${n === 1 ? "personne" : "personnes"}`,
     nightLabel: n => `${n} ${n === 1 ? "nuit" : "nuits"}`,
@@ -212,6 +242,12 @@ export const ROOM_FINDER_COPY: Record<RoomFinderLanguage, RoomFinderCopy> = {
     languageLabel: "Lingua",
     backLabel: "Passaggio precedente",
     editDates: "Modifica date",
+    choosingNow: "Scelta in corso",
+    choosingRoom: (current, total) => `Camera ${current} di ${total}`,
+    choosingHint: guests => `La scelta qui sotto è per ${guests} ${guests === 1 ? "persona" : "persone"}.`,
+    roomStepLabel: room => `Camera ${room}`,
+    currentStep: "Ora",
+    selectForRoom: room => `Scegli per la camera ${room}`,
     roomLabel: n => `${n} ${n === 1 ? "camera" : "camere"}`,
     guestLabel: n => `${n} ${n === 1 ? "persona" : "persone"}`,
     nightLabel: n => `${n} ${n === 1 ? "notte" : "notti"}`,
@@ -246,6 +282,12 @@ export const ROOM_FINDER_COPY: Record<RoomFinderLanguage, RoomFinderCopy> = {
     languageLabel: "Idioma",
     backLabel: "Paso anterior",
     editDates: "Editar fechas",
+    choosingNow: "Selección actual",
+    choosingRoom: (current, total) => `Habitación ${current} de ${total}`,
+    choosingHint: guests => `La opción que elijan abajo es para ${guests} ${guests === 1 ? "persona" : "personas"}.`,
+    roomStepLabel: room => `Habitación ${room}`,
+    currentStep: "Ahora",
+    selectForRoom: room => `Elegir para la habitación ${room}`,
     roomLabel: n => `${n} ${n === 1 ? "habitación" : "habitaciones"}`,
     guestLabel: n => `${n} ${n === 1 ? "persona" : "personas"}`,
     nightLabel: n => `${n} ${n === 1 ? "noche" : "noches"}`,
@@ -280,6 +322,12 @@ export const ROOM_FINDER_COPY: Record<RoomFinderLanguage, RoomFinderCopy> = {
     languageLabel: "Dil",
     backLabel: "Önceki adım",
     editDates: "Tarihleri değiştir",
+    choosingNow: "Şimdi seçiyorsunuz",
+    choosingRoom: (current, total) => `Oda ${current} / ${total}`,
+    choosingHint: guests => `Aşağıdaki seçiminiz ${guests} kişi içindir.`,
+    roomStepLabel: room => `Oda ${room}`,
+    currentStep: "Şimdi",
+    selectForRoom: room => `${room}. oda için seç`,
     roomLabel: n => `${n} oda`,
     guestLabel: n => `${n} kişi`,
     nightLabel: n => `${n} gece`,

@@ -47,6 +47,7 @@ const offerPlanPath = path.join(root, "components/ai/room-finder-offer-plan.ts")
 const hookPath = path.join(root, "components/ai/use-room-finder.ts");
 const productionPath = path.join(root, "components/ai/RoomFinderProduction.tsx");
 const copyPath = path.join(root, "components/ai/room-finder-copy.ts");
+const carouselPath = path.join(root, "components/ai/room-finder-carousel.tsx");
 const flowHelpersPath = path.join(root, "components/ai/room-finder-flow-helpers.ts");
 const legacyFlowPath = path.join(root, "components/ai/AiRoomFinderFlow.tsx");
 
@@ -349,6 +350,7 @@ function testResultsUxCleanup() {
   const hook = fs.readFileSync(hookPath, "utf8");
   const production = fs.readFileSync(productionPath, "utf8");
   const copy = fs.readFileSync(copyPath, "utf8");
+  const carousel = fs.readFileSync(carouselPath, "utf8");
   const helpers = fs.readFileSync(flowHelpersPath, "utf8");
 
   assert(!production.includes("FeedbackArea"), "results feedback flow was reintroduced");
@@ -367,6 +369,11 @@ function testResultsUxCleanup() {
     "available room cards can disappear while the selecting-state update settles",
   );
   assert(production.includes("{roomResultsVisible && ("), "room cards are not guarded by the resilient results state");
+  assert(production.includes('data-room-selection-context="true"'), "multi-room results are missing the prominent room selection context");
+  assert(production.includes("multiRoomSelectionVisible ? activeRoomNumber : undefined"), "room cards do not receive the active room context");
+  assert(production.includes("[finder.activeGroup, finder.step, finder.visibleOffers.length]"), "each room transition no longer returns the user to the active selection context");
+  assert(carousel.includes("copy.selectForRoom(selectionRoom)"), "room selection CTA does not identify its target room");
+  assert(!fs.readFileSync(path.join(root, "components/ai/room-finder-tone.ts"), "utf8").includes("for group ${group}"), "result messages still describe requested rooms as groups");
   assert(production.includes("finder.canGoBack"), "stable booking-summary back control is missing");
   assert(production.includes('const CALL_NUMBER = "+306944764654"'), "unavailable flow call number is missing or incorrect");
   assert(production.includes('const WHATSAPP_NUMBER = "306944474226"'), "unavailable flow WhatsApp number is missing or incorrect");
