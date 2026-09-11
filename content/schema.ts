@@ -307,6 +307,8 @@ export function buildHomePageSchema(data: HomePageData): SchemaObject {
         url: data.hero.image,
         alt: data.hero.imageAlt,
         caption: data.hero.title || data.hero.imageAlt || siteName,
+        width: data.hero.imageWidth,
+        height: data.hero.imageHeight,
       },
       canonicalPath,
     ),

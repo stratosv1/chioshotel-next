@@ -14,6 +14,7 @@ import {
 import type { HomePageData } from "@/content/home";
 import { buildHomePageSchema } from "@/content/schema";
 import { hardenGreekHomePageData } from "@/lib/greek-home-seo-hardening";
+import { buildHomepageMetadata } from "@/lib/homepage-metadata";
 import { withHomepageSeoIntent } from "@/lib/homepage-seo-intent";
 import {
   defaultLanguage,
@@ -21,7 +22,6 @@ import {
   languages,
   type LanguageCode,
 } from "@/lib/languages";
-import { buildPageMetadata } from "@/lib/seo";
 
 export const revalidate = 3600;
 
@@ -64,13 +64,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const data = getLocalizedHomePageData(locale);
 
-  return buildPageMetadata({
-    path: data.seo.canonicalPath,
-    title: data.seo.title,
-    description: data.seo.description,
-    image: data.seo.ogImage,
-    imageAlt: data.seo.ogImageAlt,
-  });
+  return buildHomepageMetadata(data);
 }
 
 export default async function Page({ params }: PageProps) {

@@ -2,6 +2,7 @@ import type { LanguageCode } from "@/lib/languages";
 import { propertyFaqPaths } from "@/content/property-faq";
 import { getFooterPopularGuides } from "@/content/footer-popular-guides";
 import { agentRoomGuidePaths } from "@/content/agent-room-guide";
+import { getSiteNavigationPath } from "@/lib/site-navigation";
 
 type FooterProps = {
   language?: LanguageCode;
@@ -41,15 +42,6 @@ const footerCopy: Record<LanguageCode, FooterCopy> = {
   tr: { description: "Sakız Adası’nın tarihi Kampos bölgesinde, şehir merkezine, havaalanına, plajlara, köylere ve kültürel noktalara kolay erişimli sakin odalar ve daireler.", bookStay: "Rezervasyon", whatsapp: "WhatsApp", allRightsReserved: "Tüm hakları saklıdır.", groups: { stay: "Konaklama", exploreChios: "Sakız Adası’nı keşfedin", popularGuides: "Popüler rehberler" }, links: { rooms: "Odalar", travelAgents: "Seyahat Acenteleri · B2B", ratesAvailability: "Fiyatlar & Müsaitlik", contact: "İletişim", faq: "Sık Sorulan Sorular", chiosIslandGuide: "Sakız Adası Rehberi", beaches: "Sakız Adası Plajları", villages: "Sakız Adası Köyleri", museums: "Sakız Adası Müzeleri", holidayQuiz: "Sakız Adası Tatil Testi" } },
 };
 
-const roomsPaths: Record<LanguageCode, string> = { en: "/chios-rooms/", el: "/el/domatia-xios/", fr: "/fr/chambres-a-chios/", de: "/de/chios-zimmer/", it: "/it/camere-a-chios/", es: "/es/habitaciones-en-chios/", tr: "/tr/sakiz-adasi-odalari/" };
-const ratesPaths: Record<LanguageCode, string> = { en: "/chios-hotels-rates/", el: "/el/amesi-kratisi-voulamandis-house/", fr: "/fr/tarifs-des-hotels-a-chios/", de: "/de/hotelpreise-auf-der-insel-chios/", it: "/it/prezzi-hotel-chios/", es: "/es/los-mejores-precios-de-hotel-en-la-isla-chios/", tr: "/tr/sakiz-adasi-rezervasyon/" };
-const contactPaths: Record<LanguageCode, string> = { en: "/voulamandis-house-contact-us-form-fill-in-the-form/", el: "/el/epikoinonia-voulamandis-house/", fr: "/fr/contactez-nous/", de: "/de/kontaktieren-voulamandis-house/", it: "/it/contattaci-voulamandis-house/", es: "/es/contacta-con-voulamandis-house/", tr: "/tr/sakiz-adasi-otelleri-ile-iletisim/" };
-const chiosPaths: Record<LanguageCode, string> = { en: "/chios-island/", el: "/el/ti-na-do-sti-xio/", fr: "/fr/chios-en-grece/", de: "/de/chios-insel/", it: "/it/chios-lisola-in-grecia/", es: "/es/chios-en-grecia/", tr: "/tr/sakiz-adasi/" };
-const beachPaths: Record<LanguageCode, string> = { en: "/chios/chios-beaches/", el: "/el/paralies-xios/", fr: "/fr/plages-de-chios/", de: "/de/straende-chios/", it: "/it/spiagge-chios/", es: "/es/playas-chios/", tr: "/tr/sakiz-adasi-plajlari/" };
-const villagePaths: Record<LanguageCode, string> = { en: "/chios/chios-villages/", el: "/el/xoria-xios/", fr: "/fr/villages-de-chios/", de: "/de/doerfer-chios/", it: "/it/villaggi-chios/", es: "/es/pueblos-chios/", tr: "/tr/sakiz-adasi-koyleri/" };
-const museumPaths: Record<LanguageCode, string> = { en: "/chios/chios-museums/", el: "/el/mouseia-xios/", fr: "/fr/musees-de-chios/", de: "/de/museen-chios/", it: "/it/musei-chios/", es: "/es/museos-chios/", tr: "/tr/sakiz-adasi-muzeleri/" };
-const quizPaths: Record<LanguageCode, string> = { en: "/chios-holidays-quiz/", el: "/el/diakopes-sti-chio-quiz/", fr: "/fr/quiz-vacances-a-chios/", de: "/de/chios-urlaubsquiz/", it: "/it/quiz-vacanze-a-chios/", es: "/es/quiz-vacaciones-en-quios/", tr: "/tr/sakiz-adasi-tatil-testi/" };
-
 export function VoulamandisFooterTailwind({ language = "en" }: FooterProps) {
   const copy = footerCopy[language] || footerCopy.en;
   const year = new Date().getFullYear();
@@ -57,8 +49,8 @@ export function VoulamandisFooterTailwind({ language = "en" }: FooterProps) {
   const footerTagline = language === "tr" ? "Sakız Adası odaları & daireleri · Doğrudan konaklama" : language === "el" ? "Δωμάτια & διαμερίσματα στη Χίο · Απευθείας διαμονή" : language === "fr" ? "Chambres & appartements à Chios · Réservation directe" : language === "de" ? "Zimmer & Apartments auf Chios · Direkt buchen" : language === "it" ? "Camere & appartamenti a Chios · Prenotazione diretta" : language === "es" ? "Habitaciones & apartamentos en Quíos · Reserva directa" : "Chios rooms & apartments · Direct stay";
   const footerNavLabel = language === "tr" ? "Alt bilgi menüsü" : language === "el" ? "Πλοήγηση υποσέλιδου" : language === "fr" ? "Navigation du pied de page" : language === "de" ? "Fußzeilennavigation" : language === "it" ? "Navigazione a piè di pagina" : language === "es" ? "Navegación del pie de página" : "Footer navigation";
   const groups = [
-    { title: copy.groups.stay, links: [{ label: copy.links.rooms, href: roomsPaths[language] }, { label: copy.links.travelAgents, href: agentRoomGuidePaths[language] }, { label: copy.links.ratesAvailability, href: ratesPaths[language] }, { label: copy.links.faq, href: propertyFaqPaths[language] }, { label: copy.links.contact, href: contactPaths[language] }] },
-    { title: copy.groups.exploreChios, links: [{ label: copy.links.chiosIslandGuide, href: chiosPaths[language] }, { label: copy.links.beaches, href: beachPaths[language] }, { label: copy.links.villages, href: villagePaths[language] }, { label: copy.links.museums, href: museumPaths[language] }, { label: copy.links.holidayQuiz, href: quizPaths[language] }] },
+    { title: copy.groups.stay, links: [{ label: copy.links.rooms, href: getSiteNavigationPath("rooms", language) }, { label: copy.links.travelAgents, href: agentRoomGuidePaths[language] }, { label: copy.links.ratesAvailability, href: getSiteNavigationPath("rates", language) }, { label: copy.links.faq, href: propertyFaqPaths[language] }, { label: copy.links.contact, href: getSiteNavigationPath("contact", language) }] },
+    { title: copy.groups.exploreChios, links: [{ label: copy.links.chiosIslandGuide, href: getSiteNavigationPath("chios", language) }, { label: copy.links.beaches, href: getSiteNavigationPath("beaches", language) }, { label: copy.links.villages, href: getSiteNavigationPath("villages", language) }, { label: copy.links.museums, href: getSiteNavigationPath("museums", language) }, { label: copy.links.holidayQuiz, href: getSiteNavigationPath("quiz", language) }] },
     { title: copy.groups.popularGuides, links: getFooterPopularGuides(language) },
   ];
 

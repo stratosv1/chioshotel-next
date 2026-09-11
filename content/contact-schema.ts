@@ -215,6 +215,8 @@ export function buildContactSchema(data: ContactPageData) {
         url: data.seo.ogImage || data.hero.image,
         alt: data.hero.title,
         caption: `${data.hero.title} - ${siteName}`,
+        width: data.seo.ogImageWidth,
+        height: data.seo.ogImageHeight,
       },
       canonicalPath,
     ),

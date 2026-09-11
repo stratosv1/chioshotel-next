@@ -22,11 +22,19 @@ function HtmlText({ html }: { html: string }) {
 
 function HeroPicture({
   desktopSrc,
+  desktopWidth,
+  desktopHeight,
   mobileSrc,
+  mobileWidth,
+  mobileHeight,
   alt,
 }: {
   desktopSrc: string;
+  desktopWidth: number;
+  desktopHeight: number;
   mobileSrc: string;
+  mobileWidth: number;
+  mobileHeight: number;
   alt: string;
 }) {
   const common = {
@@ -39,16 +47,16 @@ function HeroPicture({
   } = getImageProps({
     ...common,
     src: mobileSrc,
-    width: 1024,
-    height: 1536,
+    width: mobileWidth,
+    height: mobileHeight,
   });
   const {
     props: { srcSet: desktopSrcSet, ...desktopImageProps },
   } = getImageProps({
     ...common,
     src: desktopSrc,
-    width: 1536,
-    height: 1152,
+    width: desktopWidth,
+    height: desktopHeight,
   });
 
   return (
@@ -324,7 +332,11 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
         >
           <HeroPicture
             desktopSrc={data.hero.image}
+            desktopWidth={data.hero.imageWidth}
+            desktopHeight={data.hero.imageHeight}
             mobileSrc={data.hero.mobileImage}
+            mobileWidth={data.hero.mobileImageWidth}
+            mobileHeight={data.hero.mobileImageHeight}
             alt={data.hero.imageAlt}
           />
           <div

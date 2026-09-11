@@ -4,6 +4,7 @@ import {
   getLanguageForPath,
   siteUrl,
 } from "./seo";
+import { siteImageAssets } from "./site-assets";
 
 type SchemaPrimitive = string | number | boolean | null;
 type SchemaValue = SchemaPrimitive | SchemaObject | SchemaValue[];
@@ -40,9 +41,7 @@ export const businessData = {
     longitude: 26.1374,
   },
   images: [
-    absoluteUrl(
-      "/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp",
-    ),
+    absoluteUrl(siteImageAssets.homepageHero.src),
   ],
   socialProfiles: [
     "https://www.facebook.com/people/Voulamandis-House/100063584320703/",
@@ -205,7 +204,9 @@ export function buildOrganizationSchema(): SchemaObject {
     url: businessData.url,
     logo: {
       "@type": "ImageObject",
-      url: absoluteUrl("/images/voulamandis-house-og.jpg"),
+      url: absoluteUrl(siteImageAssets.organizationLogo.src),
+      width: siteImageAssets.organizationLogo.width,
+      height: siteImageAssets.organizationLogo.height,
     },
     sameAs: businessData.socialProfiles,
   };
@@ -506,13 +507,20 @@ export function buildImageSchema(
   input: ImageSchemaInput,
   pagePath: string,
 ): SchemaObject {
+  const dimensions =
+    typeof input.width === "number" &&
+    input.width > 0 &&
+    typeof input.height === "number" &&
+    input.height > 0
+      ? { width: input.width, height: input.height }
+      : {};
+
   return {
     "@type": "ImageObject",
     "@id": primaryImageId(pagePath),
     url: absoluteUrl(input.url),
     contentUrl: absoluteUrl(input.url),
-    width: input.width || 1200,
-    height: input.height || 675,
+    ...dimensions,
     caption: input.caption || input.alt,
     inLanguage: getLanguageForPath(pagePath),
   };

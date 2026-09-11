@@ -1,5 +1,10 @@
 ﻿import type { ChiosVillagesPageData } from "@/content/chios-villages";
-import { buildHotelSchema, hotelId } from "@/lib/structured-data";
+import {
+  buildHotelSchema,
+  buildOrganizationSchema,
+  hotelId,
+  organizationId,
+} from "@/lib/structured-data";
 
 export function buildChiosVillagesSchema(data: ChiosVillagesPageData) {
   const canonicalUrl = `https://chioshotel.gr${data.seo.canonicalPath}`;
@@ -7,6 +12,7 @@ export function buildChiosVillagesSchema(data: ChiosVillagesPageData) {
   return {
     "@context": "https://schema.org",
     "@graph": [
+      buildOrganizationSchema(),
       {
         "@type": "Article",
         "@id": `${canonicalUrl}#article`,
@@ -18,13 +24,7 @@ export function buildChiosVillagesSchema(data: ChiosVillagesPageData) {
           "@id": hotelId(),
         },
         publisher: {
-          "@type": "Organization",
-          "@id": "https://chioshotel.gr/#organization",
-          name: "Voulamandis House",
-          logo: {
-            "@type": "ImageObject",
-            url: "/images/site/voula-logo.png",
-          },
+          "@id": organizationId(),
         },
         mainEntityOfPage: {
           "@id": `${canonicalUrl}#webpage`,

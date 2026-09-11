@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { absoluteUrl, defaultOgImage, siteName, siteUrl } from "./seo";
+import { siteImageAssets } from "./site-assets";
 
 type PolishSeoInput = {
   path: string;
@@ -7,6 +8,8 @@ type PolishSeoInput = {
   description: string;
   image?: string;
   imageAlt?: string;
+  imageWidth?: number;
+  imageHeight?: number;
 };
 
 type AlternatePathGroup = Record<string, string>;
@@ -106,7 +109,21 @@ function buildLanguages(path: string, canonical: string): Record<string, string>
 
 export function buildPolishPageMetadata(input: PolishSeoInput): Metadata {
   const canonical = absoluteUrl(input.path);
+  const usesDefaultImage = !input.image;
   const image = absoluteUrl(input.image || defaultOgImage);
+  const imageWidth = usesDefaultImage
+    ? siteImageAssets.defaultSocial.width
+    : input.imageWidth;
+  const imageHeight = usesDefaultImage
+    ? siteImageAssets.defaultSocial.height
+    : input.imageHeight;
+  const imageDimensions =
+    typeof imageWidth === "number" &&
+    imageWidth > 0 &&
+    typeof imageHeight === "number" &&
+    imageHeight > 0
+      ? { width: imageWidth, height: imageHeight }
+      : {};
   const languages = buildLanguages(input.path, canonical);
 
   return {
@@ -133,7 +150,7 @@ export function buildPolishPageMetadata(input: PolishSeoInput): Metadata {
       description: input.description,
       locale: "pl_PL",
       alternateLocale: ["en_US", "el_GR", "fr_FR", "de_DE", "it_IT", "es_ES", "tr_TR"],
-      images: [{ url: image, width: 1200, height: 675, alt: input.imageAlt || input.title }],
+      images: [{ url: image, ...imageDimensions, alt: input.imageAlt || input.title }],
     },
     twitter: {
       card: "summary_large_image",

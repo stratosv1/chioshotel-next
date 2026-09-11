@@ -4,7 +4,12 @@ import { useEffect, useState } from "react";
 import { getGroupedLanguagePath } from "@/lib/accommodation-landing-i18n";
 import type { LanguageCode } from "@/lib/languages";
 import { languages, normalizePath } from "@/lib/languages";
-import { getRouteByPath, getRoutesByItemId } from "@/lib/url-map";
+import {
+  findPublishedLocalizedPath,
+  getSiteNavigationPath,
+  siteNavigationItemIds,
+} from "@/lib/site-navigation";
+import { getRouteByPath } from "@/lib/url-map";
 import { kamposChiosPaths } from "@/content/kampos-chios";
 
 type HeaderProps = {
@@ -133,18 +138,7 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
   },
 };
 
-const routeIds = {
-  home: "home",
-  rooms: "rooms-index",
-  rates: "booking",
-  deals: "deals",
-  chios: "chios-index",
-  beaches: "beaches-index",
-  villages: "villages-index",
-  museums: "museums-index",
-  activities: "chios-activities-hub",
-  contact: "contact",
-} as const;
+const routeIds = siteNavigationItemIds;
 
 const polishEquivalentPaths: Record<string, string> = {
   "/": "/pl/",
@@ -199,7 +193,10 @@ const polishEquivalentPaths: Record<string, string> = {
 };
 
 function pathFor(itemId: string, language: LanguageCode) {
-  return getRoutesByItemId(itemId).find((route) => route.language === language && route.action === "KEEP")?.path || "/";
+  return (
+    findPublishedLocalizedPath(itemId, language) ||
+    getSiteNavigationPath("home", language)
+  );
 }
 
 function languageHref(pathname: string, language: LanguageCode) {
@@ -217,7 +214,10 @@ function languageHref(pathname: string, language: LanguageCode) {
 
   const route = getRouteByPath(normalizedPathname);
   if (!route) return pathFor(routeIds.home, language);
-  return getRoutesByItemId(route.itemId).find((item) => item.language === language && item.action === "KEEP")?.path || pathFor(routeIds.home, language);
+  return (
+    findPublishedLocalizedPath(route.itemId, language) ||
+    pathFor(routeIds.home, language)
+  );
 }
 
 function polishLanguageHref(pathname: string) {

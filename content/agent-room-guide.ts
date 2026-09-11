@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { LanguageCode } from "@/lib/languages";
 import { siteUrl } from "@/lib/seo";
+import { siteImageAssets } from "@/lib/site-assets";
 
 export const agentRoomGuidePaths: Record<LanguageCode, string> = {
   en: "/agents/rooms/",
@@ -859,8 +860,15 @@ export function buildAgentRoomGuideMetadata(language: LanguageCode): Metadata {
       },
     },
     robots: {
-      index: true,
+      index: false,
       follow: true,
+      googleBot: {
+        index: false,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+        "max-video-preview": -1,
+      },
     },
     openGraph: {
       type: "website",
@@ -872,9 +880,9 @@ export function buildAgentRoomGuideMetadata(language: LanguageCode): Metadata {
       alternateLocale: alternateLocales,
       images: [
         {
-          url: absolute("/images/rooms/DSC07776-2-e1675109942622.webp"),
-          width: 1200,
-          height: 900,
+          url: absolute(siteImageAssets.agentRoomGuide.src),
+          width: siteImageAssets.agentRoomGuide.width,
+          height: siteImageAssets.agentRoomGuide.height,
           alt: copy.hero.title,
         },
       ],
@@ -883,7 +891,7 @@ export function buildAgentRoomGuideMetadata(language: LanguageCode): Metadata {
       card: "summary_large_image",
       title: copy.seo.title,
       description: copy.seo.description,
-      images: [absolute("/images/rooms/DSC07776-2-e1675109942622.webp")],
+      images: [absolute(siteImageAssets.agentRoomGuide.src)],
     },
   };
 }

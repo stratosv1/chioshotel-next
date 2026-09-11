@@ -1,9 +1,13 @@
+import { siteImageAssets } from "@/lib/site-assets";
+
 export type ContactPageData = {
   seo: {
     canonicalPath: string;
     title: string;
     description: string;
     ogImage: string;
+    ogImageWidth: number;
+    ogImageHeight: number;
   };
   hero: {
     kicker: string;
@@ -43,8 +47,12 @@ export type ContactPageData = {
   };
 };
 
-const contactHeroImage =
-  "/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp";
+const contactHeroImage = siteImageAssets.propertyExterior.src;
+const contactSeoImage = {
+  ogImage: contactHeroImage,
+  ogImageWidth: siteImageAssets.propertyExterior.width,
+  ogImageHeight: siteImageAssets.propertyExterior.height,
+};
 
 const whatsappPhone = "306944474226";
 const contactEmail = "chioshotel@gmail.com";
@@ -55,7 +63,7 @@ export const contactPageEn: ContactPageData = {
     title: "Contact Voulamandis House in Chios | Room Inquiry",
     description:
       "Contact Voulamandis House in Kambos, Chios. Send a room inquiry by WhatsApp or email for availability, rates and direct booking information.",
-    ogImage: contactHeroImage,
+    ...contactSeoImage,
   },
   hero: {
     kicker: "Contact Voulamandis House",
@@ -153,7 +161,7 @@ export const contactPageEl: ContactPageData = {
     title: "Επικοινωνία Voulamandis House Χίος | Αίτημα",
     description:
       "Επικοινωνήστε με το Voulamandis House στον Κάμπο της Χίου. Στείλτε αίτημα διαμονής μέσω WhatsApp ή email για διαθεσιμότητα, τιμές και απευθείας κράτηση.",
-    ogImage: contactHeroImage,
+    ...contactSeoImage,
   },
   hero: {
     kicker: "Επικοινωνία με το Voulamandis House",
@@ -251,7 +259,7 @@ export const contactPageFr: ContactPageData = {
     title: "Contactez Voulamandis House à Chios | Demande de séjour",
     description:
       "Contactez Voulamandis House à Kambos, Chios. Demandez disponibilité, tarifs et réservation directe par WhatsApp ou email.",
-    ogImage: contactHeroImage,
+    ...contactSeoImage,
   },
   hero: {
     kicker: "Contactez Voulamandis House",
@@ -349,7 +357,7 @@ export const contactPageDe: ContactPageData = {
     title: "Kontakt zum Voulamandis House auf Chios | Zimmeranfrage",
     description:
       "Kontaktieren Sie Voulamandis House in Kambos, Chios. Fragen Sie per WhatsApp oder E-Mail nach Verfügbarkeit, Preisen und Direktbuchung.",
-    ogImage: contactHeroImage,
+    ...contactSeoImage,
   },
   hero: {
     kicker: "Kontakt zum Voulamandis House",
@@ -447,7 +455,7 @@ export const contactPageIt: ContactPageData = {
     title: "Contatta Voulamandis House a Chios | Richiesta camera",
     description:
       "Contatta Voulamandis House a Kambos, Chios. Invia una richiesta via WhatsApp o email per disponibilità, tariffe e informazioni sulla prenotazione diretta.",
-    ogImage: contactHeroImage,
+    ...contactSeoImage,
   },
   hero: {
     kicker: "Contatta Voulamandis House",
@@ -545,7 +553,7 @@ export const contactPageEs: ContactPageData = {
     title: "Contacto Voulamandis House Chios | Consulta",
     description:
       "Contacta con Voulamandis House en Kambos, Chios. Envía una consulta por WhatsApp o email para disponibilidad, tarifas e información de reserva directa.",
-    ogImage: contactHeroImage,
+    ...contactSeoImage,
   },
   hero: {
     kicker: "Contacta con Voulamandis House",
@@ -643,7 +651,7 @@ export const contactPageTr: ContactPageData = {
     title: "Sakız Adası Voulamandis House İletişim | Oda Talebi",
     description:
       "Kambos, Sakız Adası’ndaki Voulamandis House ile iletişime geçin. Müsaitlik, fiyatlar ve direkt rezervasyon için WhatsApp veya e-posta kullanın.",
-    ogImage: contactHeroImage,
+    ...contactSeoImage,
   },
   hero: {
     kicker: "Voulamandis House iletişim",

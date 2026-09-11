@@ -223,17 +223,23 @@ function buildLocalizedPageMetadata({
   title,
   description,
   image,
+  imageWidth,
+  imageHeight,
 }: {
   path: string;
   title: string;
   description: string;
   image?: string;
+  imageWidth?: number;
+  imageHeight?: number;
 }): Metadata {
   const metadata = buildPageMetadata({
     path,
     title,
     description,
     image,
+    imageWidth,
+    imageHeight,
   });
 
   const alternates = buildLocalizedAlternates(path);
@@ -287,6 +293,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: contactData.seo.title,
       description: contactData.seo.description,
       image: contactData.seo.ogImage,
+      imageWidth: contactData.seo.ogImageWidth,
+      imageHeight: contactData.seo.ogImageHeight,
     });
   }
 
@@ -736,4 +744,3 @@ export default async function Page({ params }: PageProps) {
 
   redirect(englishRoute.path);
 }
-

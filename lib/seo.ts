@@ -3,11 +3,12 @@ import { languages, normalizePath, type LanguageCode } from "./languages";
 import { seoSnippetOverrides } from "./seo-snippet-overrides";
 import { preferredMetadataTitles } from "./seo-title-overrides";
 import { resolveSeoDynamicTokens } from "./seo-dynamic-tokens";
+import { siteImageAssets } from "./site-assets";
 import { getLocalizedRoutes, getRouteByPath } from "./url-map";
 
 export const siteUrl = "https://chioshotel.gr";
 export const siteName = "Voulamandis House";
-export const defaultOgImage = "/images/voulamandis-house-og.jpg";
+export const defaultOgImage = siteImageAssets.defaultSocial.src;
 
 export type SeoInput = {
   path: string;
@@ -15,6 +16,8 @@ export type SeoInput = {
   description: string;
   image?: string;
   imageAlt?: string;
+  imageWidth?: number;
+  imageHeight?: number;
   noIndex?: boolean;
   ogType?: "website" | "article";
 };
@@ -342,9 +345,21 @@ export function getAlternateLocales(path: string): string[] {
 
 export function buildPageMetadata(input: SeoInput): Metadata {
   const canonicalUrl = getCanonicalUrl(input.path);
-  const imageUrl = input.image
-    ? absoluteUrl(input.image)
-    : absoluteUrl(defaultOgImage);
+  const usesDefaultImage = !input.image;
+  const imageUrl = absoluteUrl(input.image || defaultOgImage);
+  const imageWidth = usesDefaultImage
+    ? siteImageAssets.defaultSocial.width
+    : input.imageWidth;
+  const imageHeight = usesDefaultImage
+    ? siteImageAssets.defaultSocial.height
+    : input.imageHeight;
+  const imageDimensions =
+    typeof imageWidth === "number" &&
+    imageWidth > 0 &&
+    typeof imageHeight === "number" &&
+    imageHeight > 0
+      ? { width: imageWidth, height: imageHeight }
+      : {};
   const locale = getLocaleForPath(input.path);
   const alternateLocale = getAlternateLocales(input.path);
   const title = normalizeMetadataTitle(input.path, input.title);
@@ -395,8 +410,7 @@ export function buildPageMetadata(input: SeoInput): Metadata {
       images: [
         {
           url: imageUrl,
-          width: 1200,
-          height: 675,
+          ...imageDimensions,
           alt: input.imageAlt || title,
         },
       ],

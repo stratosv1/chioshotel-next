@@ -8,11 +8,11 @@ import { quietBeachPaths } from "@/content/quiet-beaches";
 import { nearbyBeachPaths } from "@/content/nearby-beaches";
 import { sandyBeachPaths } from "@/content/sandy-beaches";
 import { romanticStayPaths } from "@/content/romantic-stay";
+import { kamposChiosPaths } from "@/content/kampos-chios";
 import { villageCategoryPaths } from "@/content/village-categories";
 import { getVillageSlugs } from "@/content/village-details";
 import { getMuseumSlugs } from "@/content/museum-details";
 import { propertyFaqPaths } from "@/content/property-faq";
-import { agentRoomGuidePaths } from "@/content/agent-room-guide";
 import { CHIOS_HOTELS_GUIDE_PATHS } from "@/lib/chios-hotels-guide-i18n";
 import { routeMap } from "@/lib/url-map";
 import { absoluteUrl } from "@/lib/seo";
@@ -24,7 +24,6 @@ const VERIFIED_LAST_MODIFIED = {
   sandyBeaches: "2026-07-10T14:21:54Z",
   spanishAccommodation: "2026-07-27T05:02:55Z",
   romanticStay: "2026-08-04T17:43:25Z",
-  agentRoomGuide: "2026-08-20T18:40:00Z",
 } as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -61,12 +60,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  const agentRoomRoutes: SitemapEntry[] = Object.values(agentRoomGuidePaths).map(
-    (path) => ({
-      url: absoluteUrl(path),
-      lastModified: VERIFIED_LAST_MODIFIED.agentRoomGuide,
+  const kamposRoutes: SitemapEntry[] = Object.values(kamposChiosPaths).map(
+    (pathname) => ({
+      url: absoluteUrl(pathname),
       changeFrequency: "monthly",
-      priority: 0.7,
+      priority: 0.8,
     }),
   );
 
@@ -188,9 +186,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return deduplicateByCanonicalUrl([
     ...accommodationLandingRoutes,
     ...romanticStayRoutes,
+    ...kamposRoutes,
     ...polishRoutes,
     ...faqRoutes,
-    ...agentRoomRoutes,
     ...routes,
     ...familyBeachRoutes,
     ...organizedBeachRoutes,

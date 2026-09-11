@@ -10,6 +10,8 @@ export const metadata: Metadata = buildPageMetadata({
   title: contactPageEn.seo.title,
   description: contactPageEn.seo.description,
   image: contactPageEn.seo.ogImage,
+  imageWidth: contactPageEn.seo.ogImageWidth,
+  imageHeight: contactPageEn.seo.ogImageHeight,
 });
 
 export default function Page() {

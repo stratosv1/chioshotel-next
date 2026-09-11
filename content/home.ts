@@ -1,3 +1,5 @@
+import { siteImageAssets } from "@/lib/site-assets";
+
 export type HomePageData = {
   seo: {
     title: string;
@@ -14,7 +16,11 @@ export type HomePageData = {
     tagline: string;
     descriptionHtml: string;
     image: string;
+    imageWidth: number;
+    imageHeight: number;
     mobileImage: string;
+    mobileImageWidth: number;
+    mobileImageHeight: number;
     imageAlt: string;
     primaryCta: {
       label: string;
@@ -258,8 +264,7 @@ export const homePageEn: HomePageData = {
     description:
       "Peaceful rooms and apartments in Kambos, Chios. Stay at Voulamandis House near Chios airport, town and beaches, with authentic hospitality and direct booking benefits.",
     canonicalPath: "/",
-    ogImage:
-      "/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp",
+    ogImage: siteImageAssets.homepageHero.src,
     ogImageAlt:
       "Voulamandis House in Kambos, Chios - authentic accommodation in a citrus estate",
   },
@@ -272,9 +277,12 @@ export const homePageEn: HomePageData = {
     tagline: "Stay in historic Kambos, Chios",
     descriptionHtml:
       'Looking for <strong>accommodation in Chios</strong> or <strong>rooms in Chios</strong>? <strong>Voulamandis House</strong> is an authentic accommodation choice in Kambos, with comfortable rooms, peaceful surroundings and excellent guest reviews.',
-    image: "/images/hero/voulamandis-house-room-kambos-chios.webp",
-    mobileImage:
-      "/images/hero/voulamandis-house-room-kambos-chios-portrait.webp",
+    image: siteImageAssets.homepageHero.src,
+    imageWidth: siteImageAssets.homepageHero.width,
+    imageHeight: siteImageAssets.homepageHero.height,
+    mobileImage: siteImageAssets.homepageHeroMobile.src,
+    mobileImageWidth: siteImageAssets.homepageHeroMobile.width,
+    mobileImageHeight: siteImageAssets.homepageHeroMobile.height,
     imageAlt:
       "Stone-built guest room at Voulamandis House accommodation in Kambos, Chios",
     primaryCta: {
@@ -3469,6 +3477,5 @@ export const homePageTr: HomePageData = {
     },
   },
 };
-
 
 
