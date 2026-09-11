@@ -166,7 +166,7 @@ const galleryImages = [
 ] as const;
 
 const desktopLayout = [
-  "sm:col-span-2 sm:aspect-[16/9] lg:col-span-6 lg:row-span-2 lg:aspect-auto",
+  "sm:col-span-2 sm:aspect-[16/9] lg:col-span-6 lg:row-span-2",
   "lg:col-span-3",
   "lg:col-span-3",
   "lg:col-span-3",
@@ -210,7 +210,7 @@ export function HomeGallery({ locale }: { locale: HomeGalleryLocale }) {
         {galleryImages.map((image, index) => (
           <figure
             key={image.src}
-            className={`group relative aspect-[4/3] w-[78vw] max-w-[330px] shrink-0 snap-center overflow-hidden rounded-[1.35rem] bg-stone-200 sm:w-auto sm:max-w-none sm:rounded-[1.6rem] ${desktopLayout[index]}`}
+            className={`group relative aspect-[4/3] w-[78vw] max-w-[330px] shrink-0 snap-center overflow-hidden rounded-[1.35rem] bg-stone-200 sm:w-auto sm:max-w-none sm:rounded-[1.6rem] lg:aspect-auto ${desktopLayout[index]}`}
           >
             <Image
               src={image.src}
