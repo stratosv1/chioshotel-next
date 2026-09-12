@@ -84,6 +84,57 @@ function parseMoneyInput(value: string) {
   return Number.isFinite(parsed) && parsed > 0 ? Math.round(parsed * 100) / 100 : 0;
 }
 
+type RoomOfferCardProps = {
+  room: RoomOffer;
+  active: boolean;
+  assignment?: RoomAssignment;
+  groupMode: boolean;
+  displayedPrice: number;
+  onSelect: () => void;
+};
+
+function RoomOfferCard({ room, active, assignment, groupMode, displayedPrice, onSelect }: RoomOfferCardProps) {
+  const detail = assignment
+    ? `${assignment.guests} ${assignment.guests === 1 ? "άτομο" : "άτομα"}`
+    : roomDetail(room);
+
+  return (
+    <button
+      type="button"
+      aria-label={`${active ? "Επιλεγμένο: " : "Επιλογή: "}${roomTitle(room)}, ${detail}, ${groupMode && !assignment ? "από " : ""}${displayedPrice} ευρώ`}
+      aria-pressed={active}
+      onClick={onSelect}
+      className={`group relative min-w-0 overflow-hidden rounded-[22px] bg-[#f1f3f4] text-left outline-none transition-[transform,box-shadow] duration-200 motion-reduce:transition-none active:scale-[.98] focus-visible:ring-[3px] focus-visible:ring-[#8b612e] ${
+        active
+          ? "shadow-[0_7px_20px_rgba(87,62,34,.18)] ring-[3px] ring-[#8b612e]"
+          : "shadow-[0_1px_3px_rgba(60,64,67,.22)] ring-1 ring-[#dadce0] hover:shadow-[0_3px_9px_rgba(60,64,67,.24)]"
+      }`}
+    >
+      <span className="relative block aspect-[4/3] w-full overflow-hidden bg-[#e5e7e8]">
+        <Image
+          src={roomImages[room.roomNumber] || "/images/rooms/double-triple-room.jpg"}
+          alt={`Φωτογραφία ${roomTitle(room)}`}
+          fill
+          sizes="(min-width: 640px) 30vw, 45vw"
+          className="object-cover transition-transform duration-300 motion-reduce:transition-none group-hover:scale-[1.02]"
+        />
+        {active && (
+          <span className="absolute right-2.5 top-2.5 flex size-9 items-center justify-center rounded-full bg-[#8b612e] text-white shadow-md ring-2 ring-white" aria-hidden="true">
+            <Check className="size-5" strokeWidth={3} />
+          </span>
+        )}
+      </span>
+      <span className={`flex min-h-[112px] flex-col px-3.5 pb-3.5 pt-3 ${active ? "bg-[#f7f0e7]" : "bg-[#f1f3f4]"}`}>
+        <span className="block text-[17px] font-bold leading-[1.25] text-[#292a2d]">{roomTitle(room)}</span>
+        <span className="mt-2 block text-sm font-normal leading-5 text-[#6b6f72]">{detail}</span>
+        <strong className={`mt-auto block pt-1 text-[20px] font-bold leading-6 ${active ? "text-[#7a5328]" : "text-[#4f6245]"}`}>
+          {groupMode && !assignment ? "από " : ""}{displayedPrice}€
+        </strong>
+      </span>
+    </button>
+  );
+}
+
 export default function RoomAgreementsApp() {
   const today = useMemo(athensToday, []);
   const months = useMemo(() => Array.from({ length: 13 }, (_, index) => monthStart(today, index)), [today]);
@@ -313,7 +364,7 @@ export default function RoomAgreementsApp() {
           {(loading || (arrival && departure)) && <div aria-live="polite" aria-busy={loading} className="rounded-3xl border border-[#e5dacb] bg-white p-3 shadow-sm sm:p-4">
             <div className="mb-3 flex items-center justify-between gap-3"><h2 className="text-lg font-black">3. Διαθέσιμα δωμάτια</h2>{nights > 0 && <span className="shrink-0 rounded-full bg-[#f3eee6] px-2.5 py-1.5 text-sm font-bold text-[#5f564e]">{resultSummary}</span>}</div>
             {loading ? <div className="flex items-center gap-2 py-7 text-base font-semibold text-[#5f564e]"><LoaderCircle className="size-5 animate-spin"/> Έλεγχος Booking Core…</div> : <>
-              {rooms.length > 0 && <div className="mb-2"><p className="mb-2 text-sm font-bold uppercase tracking-wider text-[#526146]">{groupMode ? "Επίλεξε δωμάτια" : "Χωρίς αλλαγή δωματίου"}</p><div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">{rooms.map((room) => { const assignment = selectedRoomAssignments.find((item) => item.roomNumber === room.roomNumber); const active = groupMode ? Boolean(assignment) : selection?.type === "room" && selection.roomNumber === room.roomNumber; const displayedPrice = groupMode ? (assignment ? roomPrice(room, assignment.guests) : lowestRoomPrice(room)) : room.systemTotal; return <button key={room.roomNumber} type="button" aria-pressed={active} onClick={() => groupMode ? toggleGroupRoom(room) : selectRoom(room)} className={`group min-w-0 overflow-hidden rounded-2xl border text-left shadow-[0_4px_14px_rgba(69,53,37,.06)] transition active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#657556]/40 ${active ? "border-[#657556] bg-[#edf4e8] ring-2 ring-[#657556]/25" : "border-[#ded3c5] bg-white hover:border-[#bfae98] hover:shadow-md"}`}><span className="relative block h-[78px] w-full overflow-hidden bg-[#eee7de]"><Image src={roomImages[room.roomNumber] || "/images/rooms/double-triple-room.jpg"} alt={`Φωτογραφία ${roomTitle(room)}`} fill sizes="(min-width: 640px) 30vw, 45vw" className="object-cover transition duration-300 group-hover:scale-[1.03]"/><span className={`absolute inset-0 bg-gradient-to-t from-[#2f261f]/30 via-transparent to-transparent transition ${active ? "bg-[#536446]/20" : ""}`}/>{active && <span className="absolute right-2 top-2 flex size-8 items-center justify-center rounded-full bg-[#536446] text-white shadow-md"><Check className="size-5"/></span>}</span><span className="block p-3"><span className="block truncate text-base font-black">{roomTitle(room)}</span><span className="mt-2 flex min-w-0 items-end justify-between gap-1.5"><span className="min-w-0 truncate text-sm font-semibold leading-5 text-[#5f564e]">{assignment ? `${assignment.guests} ${assignment.guests === 1 ? "άτομο" : "άτομα"}` : roomDetail(room)}</span><strong className="shrink-0 text-lg font-black leading-5 text-[#536446]">{groupMode && !assignment ? "από " : ""}{displayedPrice}€</strong></span></span></button>; })}</div></div>}
+              {rooms.length > 0 && <div className="mb-2"><p className="mb-2 text-sm font-bold uppercase tracking-wider text-[#526146]">{groupMode ? "Επίλεξε δωμάτια" : "Χωρίς αλλαγή δωματίου"}</p><div className="grid grid-cols-2 gap-3 sm:grid-cols-3">{rooms.map((room) => { const assignment = selectedRoomAssignments.find((item) => item.roomNumber === room.roomNumber); const active = groupMode ? Boolean(assignment) : selection?.type === "room" && selection.roomNumber === room.roomNumber; const displayedPrice = groupMode ? (assignment ? roomPrice(room, assignment.guests) : lowestRoomPrice(room)) : room.systemTotal; return <RoomOfferCard key={room.roomNumber} room={room} active={active} assignment={assignment} groupMode={groupMode} displayedPrice={displayedPrice} onSelect={() => groupMode ? toggleGroupRoom(room) : selectRoom(room)} />; })}</div></div>}
               {groupMode && selectedRoomAssignments.length > 0 && <div className="mt-3 rounded-2xl border border-[#dcd0c1] bg-[#faf7f2] p-3">
                 <h3 className="mb-2 text-base font-black">Άτομα ανά δωμάτιο</h3>
                 <div className="space-y-2">{selectedRoomAssignments.map((assignment) => { const room = rooms.find((offer) => offer.roomNumber === assignment.roomNumber); if (!room) return null; return <div key={assignment.roomNumber} className="grid grid-cols-[1fr_auto_auto] items-center gap-2 rounded-xl bg-white p-2"><div className="min-w-0"><strong className="block truncate text-base">{roomTitle(room)}</strong><span className="text-sm font-semibold text-[#5f564e]">{roomPrice(room, assignment.guests)}€</span></div><div className="flex items-center rounded-lg border border-[#ddd1c2]"><button type="button" aria-label={`Λιγότερα άτομα στο ${roomTitle(room)}`} disabled={assignment.guests <= 1} onClick={() => updateGroupGuests(room.roomNumber, assignment.guests - 1)} className="flex size-11 items-center justify-center disabled:opacity-25"><Minus className="size-5"/></button><strong className="min-w-7 text-center text-base">{assignment.guests}</strong><button type="button" aria-label={`Περισσότερα άτομα στο ${roomTitle(room)}`} disabled={assignment.guests >= room.maxGuests || !room.guestPrices?.[String(assignment.guests + 1)]} onClick={() => updateGroupGuests(room.roomNumber, assignment.guests + 1)} className="flex size-11 items-center justify-center disabled:opacity-25"><Plus className="size-5"/></button></div><button type="button" aria-label={`Αφαίρεση ${roomTitle(room)}`} onClick={() => toggleGroupRoom(room)} className="min-h-11 rounded-lg px-2 py-2 text-sm font-bold text-[#8c3f35]">Αφαίρεση</button></div>; })}</div>
