@@ -26,7 +26,11 @@ import {
   roomOfferKey,
 } from "./room-finder-offer-plan";
 import { rewindToAssistantPrompt } from "./room-finder-conversation-history";
-import { answerRoomQuestion, roomPreferenceScore } from "./room-finder-sales-intelligence";
+import {
+  answerRoomPriceQuestion,
+  answerRoomQuestion,
+  roomPreferenceScore,
+} from "./room-finder-sales-intelligence";
 import { fetchLongStayDiscount, longStayDiscountMessage } from "./room-finder-long-stay";
 import type { ChatItem, MessageKind, Reaction } from "./room-finder-chat-ui";
 import type { RoomOffer } from "./room-finder-carousel";
@@ -671,12 +675,20 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     const current = step;
     setInput("");
 
-    const questionAnswer = ["selecting", "breakfast", "complete"].includes(current)
+    const contextualOffers = choices.length
+      ? choices.map(choice => choice.offer)
+      : offers.flat();
+    const questionAnswer = answerRoomPriceQuestion(
+      value,
+      language,
+      contextualOffers,
+      choices.length > 0,
+    ) || (["selecting", "breakfast", "complete"].includes(current)
       ? answerRoomQuestion(value, language, [
           ...offers.flat(),
           ...choices.map(choice => choice.offer),
         ])
-      : null;
+      : null);
 
     if (questionAnswer) {
       if (!await beginUserTurn(value, "normal", "👍")) return;
@@ -710,7 +722,8 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       await applyCommand(command);
     } catch (error) {
       console.error("Room Finder interpreter request failed", error);
-      add("assistant", INTERPRETER_UNAVAILABLE[language]);
+      const knowledgeAnswer = await propertyKnowledgeAnswer(value);
+      add("assistant", knowledgeAnswer || INTERPRETER_UNAVAILABLE[language]);
     } finally {
       endUserTurn();
     }

@@ -107,6 +107,21 @@ assert(occurrences(gardenAnswer || "", "Δωμάτιο 6") === 1, "room Q&A dupl
 assert(!gardenAnswer?.includes("Split stay"), "room Q&A treated a composite split-stay offer as a physical room");
 assert(sales.answerRoomQuestion("Έχει κουζίνα;", "el", [{ roomNumber: 0, name: "Split stay" }]) === null, "room Q&A invented traits for a split-stay composite");
 
+const exactPrice = sales.answerRoomPriceQuestion("Πόσο κοστίζει το δωμάτιο ανά διανυκτέρευση;", "el", [
+  { roomNumber: 2, name: "Economy Δίκλινο 2", directTotal: 180, nights: 2 },
+], false);
+assert(exactPrice?.includes("180,00") && exactPrice?.includes("90,00") && exactPrice?.includes("ανά βραδιά"), "room-price Q&A did not calculate the exact total and nightly price");
+
+const referencedStayPrice = sales.answerRoomPriceQuestion("Τιμή δωματίου για την αναφερόμενη διαμονή", "el", [
+  { roomNumber: 2, name: "Economy Δίκλινο 2", directTotal: 180, nights: 2 },
+  { roomNumber: 6, name: "Economy Δίκλινο 6", directTotal: 200, nights: 2 },
+], false);
+assert(referencedStayPrice?.includes("ξεκινούν από") && referencedStayPrice?.includes("180,00"), "referenced-stay price question did not use the cheapest live offer");
+
+const pendingPrice = sales.answerRoomPriceQuestion("What is the room price per night?", "en", []);
+assert(pendingPrice?.includes("no single fixed nightly rate"), "price question without live offers did not explain that stay details are required");
+assert(sales.answerRoomPriceQuestion("Πόσο κοστίζει το πρωινό ανά διανυκτέρευση;", "el", []) === null, "breakfast price was incorrectly classified as a room-price question");
+
 const alternativeA = { roomId: "267788", unitId: "1", alternativeCheckin: "2026-10-09" };
 const alternativeB = { roomId: "267788", unitId: "1", alternativeCheckin: "2026-10-11" };
 assert(offerPlan.roomOfferKey(alternativeA) !== offerPlan.roomOfferKey(alternativeB), "nearby-date offers for the same physical room collapse to one identity");
@@ -118,6 +133,7 @@ assert(hookSource.includes("INVENTORY_UNAVAILABLE[language]"), "technical invent
 assert(hookSource.includes("answerRoomQuestion"), "room-feature Q&A is not wired into production hook");
 assert(hookSource.includes("/api/ai-assistant/knowledge"), "production hook does not query the owner-confirmed knowledge API");
 assert(hookSource.includes("propertyKnowledgeAnswer"), "production hook does not render grounded property answers");
+assert(hookSource.includes("answerRoomPriceQuestion"), "production hook does not answer price questions from live offer context");
 
 const productionSource = fs.readFileSync(productionPath, "utf8");
 assert(productionSource.includes('if (finder.typing || finder.step === "searching") return;'), "language changes are not guarded while an active Room Finder turn is running");

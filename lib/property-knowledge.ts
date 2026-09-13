@@ -106,13 +106,13 @@ function normalize(value: string) {
 }
 
 const STOP_WORDS = new Set([
-  "the", "is", "are", "a", "an", "and", "or", "what", "which", "how", "does", "do", "can", "i", "you",
-  "το", "η", "ο", "τα", "οι", "και", "ή", "τι", "ποιο", "ποια", "πως", "πώς", "μπορω", "μπορώ", "εχει", "έχει",
-  "le", "la", "les", "et", "ou", "quel", "quelle", "comment", "est", "des",
-  "der", "die", "das", "und", "oder", "wie", "was", "ist", "sind",
-  "il", "la", "i", "gli", "e", "o", "come", "quale", "che",
-  "el", "la", "los", "las", "y", "o", "como", "cómo", "cual", "cuál", "que", "qué",
-  "ve", "veya", "ne", "nasil", "nasıl", "mi", "mı", "mu", "mü",
+  "the", "is", "are", "a", "an", "and", "or", "what", "which", "how", "much", "does", "do", "can", "i", "you", "price", "prices", "rate", "rates", "cost", "costs", "per",
+  "το", "η", "ο", "τα", "οι", "και", "ή", "τι", "ποιο", "ποια", "πως", "πώς", "ποσο", "κοστιζει", "κοστιζουν", "κοστος", "τιμη", "τιμες", "ανα", "μπορω", "μπορώ", "εχει", "έχει",
+  "le", "la", "les", "et", "ou", "quel", "quelle", "comment", "combien", "coute", "coutent", "prix", "tarif", "tarifs", "par", "est", "des",
+  "der", "die", "das", "und", "oder", "wie", "was", "viel", "kostet", "kosten", "preis", "preise", "pro", "ist", "sind",
+  "il", "la", "i", "gli", "e", "o", "come", "quale", "che", "quanto", "costa", "costano", "prezzo", "prezzi", "tariffa", "per",
+  "el", "la", "los", "las", "y", "o", "como", "cómo", "cual", "cuál", "que", "qué", "cuanto", "cuesta", "cuestan", "precio", "precios", "tarifa", "por",
+  "ve", "veya", "ne", "nasil", "nasıl", "kadar", "fiyat", "ucret", "ücret", "maliyet", "mi", "mı", "mu", "mü",
 ]);
 
 function kindForCategory(category: PropertyFaqCategory): PropertyKnowledgeResult["kind"] {

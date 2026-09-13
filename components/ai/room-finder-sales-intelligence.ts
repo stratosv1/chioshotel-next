@@ -4,7 +4,151 @@ import type { RoomFinderLanguage } from "./room-finder-copy";
 export type SalesAwareOffer = {
   roomNumber: number;
   name: string;
+  directTotal?: number;
+  nights?: number;
 };
+
+const LOCALE: Record<RoomFinderLanguage, string> = {
+  el: "el-GR",
+  en: "en-GB",
+  de: "de-DE",
+  fr: "fr-FR",
+  it: "it-IT",
+  es: "es-ES",
+  tr: "tr-TR",
+};
+
+const ROOM_PRICE_PATTERNS: Record<RoomFinderLanguage, RegExp> = {
+  el: /(?:τιμ|κόστος|κοστίζ).*(?:δωμάτι|δωματι|διαμον)|(?:δωμάτι|δωματι|διαμον).*(?:τιμ|κόστος|κοστίζ)|ανά\s+διανυκτέρευση/iu,
+  en: /(?:price|rate|cost).*(?:room|stay|accommodation)|(?:room|stay|accommodation).*(?:price|rate|cost)|per\s+night/iu,
+  de: /(?:preis|kost).*(?:zimmer|aufenthalt|unterkunft)|(?:zimmer|aufenthalt|unterkunft).*(?:preis|kost)|pro\s+nacht/iu,
+  fr: /(?:prix|tarif|coût|cout).*(?:chambre|séjour|sejour|hébergement|hebergement)|(?:chambre|séjour|sejour|hébergement|hebergement).*(?:prix|tarif|coût|cout)|par\s+nuit/iu,
+  it: /(?:prezzo|tariff|cost).*(?:camera|soggiorno|alloggio)|(?:camera|soggiorno|alloggio).*(?:prezzo|tariff|cost)|a\s+notte/iu,
+  es: /(?:precio|tarifa|cost).*(?:habitación|habitacion|estancia|alojamiento)|(?:habitación|habitacion|estancia|alojamiento).*(?:precio|tarifa|cost)|por\s+noche/iu,
+  tr: /(?:fiyat|ücret|ucret|maliyet).*(?:oda|konaklama)|(?:oda|konaklama).*(?:fiyat|ücret|ucret|maliyet)|gecelik/iu,
+};
+
+const BREAKFAST_PATTERNS: Record<RoomFinderLanguage, RegExp> = {
+  el: /πρωιν/iu,
+  en: /breakfast/iu,
+  de: /frühstück|fruhstuck/iu,
+  fr: /petit[\s-]*déjeuner|petit[\s-]*dejeuner/iu,
+  it: /colazione/iu,
+  es: /desayuno/iu,
+  tr: /kahvalt/iu,
+};
+
+const PRICE_COPY: Record<RoomFinderLanguage, {
+  pending: string;
+  exact: (name: string, total: string, nights: number, nightly: string) => string;
+  selected: (total: string, details: string) => string;
+  starting: (name: string, total: string, nights: number, nightly: string) => string;
+  detail: (name: string, total: string, nightly: string) => string;
+}> = {
+  el: {
+    pending: "Δεν υπάρχει μία σταθερή τιμή ανά διανυκτέρευση· εξαρτάται από τις ημερομηνίες, τα άτομα και το δωμάτιο. Μόλις ολοκληρώσετε τα στοιχεία της διαμονής, θα εμφανίσω τη live συνολική τιμή και την τιμή ανά βραδιά.",
+    exact: (name, total, nights, nightly) => `Για τη διαμονή που αναφέρατε, το ${name} κοστίζει ${total} συνολικά για ${nights} ${nights === 1 ? "βραδιά" : "βραδιές"}, δηλαδή ${nightly} ανά βραδιά.`,
+    selected: (total, details) => `Η συνολική direct τιμή των επιλεγμένων δωματίων είναι ${total}. Αναλυτικά: ${details}.`,
+    starting: (name, total, nights, nightly) => `Για τη διαμονή που αναφέρατε, οι διαθέσιμες επιλογές ξεκινούν από ${total} συνολικά για ${nights} ${nights === 1 ? "βραδιά" : "βραδιές"} με το ${name}, δηλαδή ${nightly} ανά βραδιά. Η ακριβής συνολική τιμή φαίνεται σε κάθε κάρτα δωματίου.`,
+    detail: (name, total, nightly) => `${name}: ${total} (${nightly}/βραδιά)`,
+  },
+  en: {
+    pending: "There is no single fixed nightly rate; it depends on the dates, guest count and room. Once you complete the stay details, I will show the live total and price per night.",
+    exact: (name, total, nights, nightly) => `For the stay you entered, ${name} costs ${total} in total for ${nights} ${nights === 1 ? "night" : "nights"}, or ${nightly} per night.`,
+    selected: (total, details) => `The total direct price for the selected rooms is ${total}. Breakdown: ${details}.`,
+    starting: (name, total, nights, nightly) => `For the stay you entered, available options start at ${total} in total for ${nights} ${nights === 1 ? "night" : "nights"} with ${name}, or ${nightly} per night. The exact total is shown on each room card.`,
+    detail: (name, total, nightly) => `${name}: ${total} (${nightly}/night)`,
+  },
+  de: {
+    pending: "Es gibt keinen festen Preis pro Nacht; er hängt von Reisedaten, Personenzahl und Zimmer ab. Sobald Ihre Aufenthaltsdaten vollständig sind, zeige ich den Live-Gesamtpreis und den Preis pro Nacht.",
+    exact: (name, total, nights, nightly) => `Für den angegebenen Aufenthalt kostet ${name} insgesamt ${total} für ${nights} ${nights === 1 ? "Nacht" : "Nächte"}, also ${nightly} pro Nacht.`,
+    selected: (total, details) => `Der direkte Gesamtpreis der ausgewählten Zimmer beträgt ${total}. Aufschlüsselung: ${details}.`,
+    starting: (name, total, nights, nightly) => `Für den angegebenen Aufenthalt beginnen die verfügbaren Optionen bei insgesamt ${total} für ${nights} ${nights === 1 ? "Nacht" : "Nächte"} mit ${name}, also ${nightly} pro Nacht. Der genaue Gesamtpreis steht auf jeder Zimmerkarte.`,
+    detail: (name, total, nightly) => `${name}: ${total} (${nightly}/Nacht)`,
+  },
+  fr: {
+    pending: "Il n’existe pas de tarif fixe par nuit : il dépend des dates, du nombre de personnes et de la chambre. Une fois les informations du séjour complétées, j’afficherai le total en direct et le prix par nuit.",
+    exact: (name, total, nights, nightly) => `Pour le séjour indiqué, ${name} coûte ${total} au total pour ${nights} ${nights === 1 ? "nuit" : "nuits"}, soit ${nightly} par nuit.`,
+    selected: (total, details) => `Le prix direct total des chambres sélectionnées est de ${total}. Détail : ${details}.`,
+    starting: (name, total, nights, nightly) => `Pour le séjour indiqué, les options disponibles commencent à ${total} au total pour ${nights} ${nights === 1 ? "nuit" : "nuits"} avec ${name}, soit ${nightly} par nuit. Le total exact figure sur chaque fiche de chambre.`,
+    detail: (name, total, nightly) => `${name} : ${total} (${nightly}/nuit)`,
+  },
+  it: {
+    pending: "Non esiste una tariffa fissa per notte: dipende dalle date, dal numero di ospiti e dalla camera. Una volta completati i dati del soggiorno, mostrerò il totale live e il prezzo per notte.",
+    exact: (name, total, nights, nightly) => `Per il soggiorno indicato, ${name} costa ${total} in totale per ${nights} ${nights === 1 ? "notte" : "notti"}, cioè ${nightly} a notte.`,
+    selected: (total, details) => `Il prezzo direct totale delle camere selezionate è ${total}. Dettaglio: ${details}.`,
+    starting: (name, total, nights, nightly) => `Per il soggiorno indicato, le opzioni disponibili partono da ${total} in totale per ${nights} ${nights === 1 ? "notte" : "notti"} con ${name}, cioè ${nightly} a notte. Il totale esatto è indicato su ogni scheda camera.`,
+    detail: (name, total, nightly) => `${name}: ${total} (${nightly}/notte)`,
+  },
+  es: {
+    pending: "No hay una tarifa fija por noche; depende de las fechas, el número de huéspedes y la habitación. Cuando complete los datos de la estancia, mostraré el total en vivo y el precio por noche.",
+    exact: (name, total, nights, nightly) => `Para la estancia indicada, ${name} cuesta ${total} en total por ${nights} ${nights === 1 ? "noche" : "noches"}, es decir, ${nightly} por noche.`,
+    selected: (total, details) => `El precio directo total de las habitaciones seleccionadas es ${total}. Desglose: ${details}.`,
+    starting: (name, total, nights, nightly) => `Para la estancia indicada, las opciones disponibles empiezan en ${total} en total por ${nights} ${nights === 1 ? "noche" : "noches"} con ${name}, es decir, ${nightly} por noche. El total exacto aparece en cada tarjeta de habitación.`,
+    detail: (name, total, nightly) => `${name}: ${total} (${nightly}/noche)`,
+  },
+  tr: {
+    pending: "Tek bir sabit gecelik fiyat yoktur; tarihlere, kişi sayısına ve odaya göre değişir. Konaklama bilgileri tamamlandığında canlı toplam fiyatı ve gecelik fiyatı göstereceğim.",
+    exact: (name, total, nights, nightly) => `Belirttiğiniz konaklama için ${name}, ${nights} gece toplam ${total}, yani gecelik ${nightly} tutarındadır.`,
+    selected: (total, details) => `Seçilen odaların toplam doğrudan fiyatı ${total}. Ayrıntı: ${details}.`,
+    starting: (name, total, nights, nightly) => `Belirttiğiniz konaklama için müsait seçenekler ${name} ile ${nights} gece toplam ${total}, yani gecelik ${nightly} fiyatından başlar. Kesin toplam fiyat her oda kartında gösterilir.`,
+    detail: (name, total, nightly) => `${name}: ${total} (${nightly}/gece)`,
+  },
+};
+
+function price(value: number, language: RoomFinderLanguage) {
+  return new Intl.NumberFormat(LOCALE[language], {
+    style: "currency",
+    currency: "EUR",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value);
+}
+
+export function isRoomPriceQuestion(message: string, language: RoomFinderLanguage) {
+  return !BREAKFAST_PATTERNS[language].test(message) && ROOM_PRICE_PATTERNS[language].test(message);
+}
+
+export function answerRoomPriceQuestion(
+  message: string,
+  language: RoomFinderLanguage,
+  offers: readonly SalesAwareOffer[],
+  selected = false,
+) {
+  if (!isRoomPriceQuestion(message, language)) return null;
+
+  const pricedOffers = Array.from(new Map(
+    offers
+      .filter(offer => Number(offer.directTotal) > 0 && Number(offer.nights) > 0)
+      .map(offer => [
+        `${offer.roomNumber}:${offer.name}:${offer.directTotal}:${offer.nights}`,
+        offer,
+      ] as const),
+  ).values());
+  const copy = PRICE_COPY[language];
+  if (!pricedOffers.length) return copy.pending;
+
+  if (selected && pricedOffers.length > 1) {
+    const total = pricedOffers.reduce((sum, offer) => sum + Number(offer.directTotal), 0);
+    const details = pricedOffers.map(offer => copy.detail(
+      offer.name,
+      price(Number(offer.directTotal), language),
+      price(Number(offer.directTotal) / Number(offer.nights), language),
+    )).join(" · ");
+    return copy.selected(price(total, language), details);
+  }
+
+  const sorted = [...pricedOffers].sort((left, right) =>
+    Number(left.directTotal) / Number(left.nights) - Number(right.directTotal) / Number(right.nights),
+  );
+  const offer = sorted[0];
+  const nights = Number(offer.nights);
+  const total = price(Number(offer.directTotal), language);
+  const nightly = price(Number(offer.directTotal) / nights, language);
+  return sorted.length === 1 || selected
+    ? copy.exact(offer.name, total, nights, nightly)
+    : copy.starting(offer.name, total, nights, nightly);
+}
 
 const ROOM_TRAITS: Record<number, readonly RoomFinderPreference[]> = {
   1: ["family"],
