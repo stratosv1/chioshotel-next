@@ -64,6 +64,10 @@ for (const page of faqPages) {
 const roomFinder = fs.readFileSync(path.join(root, "components/ai/use-room-finder.ts"), "utf8");
 assert(roomFinder.includes("/api/ai-assistant/knowledge"), "AI Room Finder does not query property knowledge");
 
+const propertyKnowledge = fs.readFileSync(path.join(root, "lib/property-knowledge.ts"), "utf8");
+assert(propertyKnowledge.includes("isDynamicRoomPriceKnowledgeQuery"), "dynamic room-price queries are not guarded from static FAQ answers");
+assert(propertyKnowledge.includes("if (isDynamicRoomPriceKnowledgeQuery(input.query)) return []"), "static knowledge search can still answer a live room-price query");
+
 const legacyRedirects = {
   "app/domande-frequenti-voulamandis-house/route.ts": "/it/domande-frequenti/",
   "app/faq/route.ts": "/frequently-asked-questions/",

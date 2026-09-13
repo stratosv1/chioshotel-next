@@ -115,6 +115,23 @@ const STOP_WORDS = new Set([
   "ve", "veya", "ne", "nasil", "nasıl", "kadar", "fiyat", "ucret", "ücret", "maliyet", "mi", "mı", "mu", "mü",
 ]);
 
+const DYNAMIC_ROOM_PRICE_PATTERNS = [
+  /(?:τιμ|κοστος|κοστιζ).*(?:δωματι|διαμον)|(?:δωματι|διαμον).*(?:τιμ|κοστος|κοστιζ)|ανα\s+διανυκτερευσ/iu,
+  /(?:price|rate|cost).*(?:room|stay|accommodation)|(?:room|stay|accommodation).*(?:price|rate|cost)|per\s+night/iu,
+  /(?:preis|kost).*(?:zimmer|aufenthalt|unterkunft)|(?:zimmer|aufenthalt|unterkunft).*(?:preis|kost)|pro\s+nacht/iu,
+  /(?:prix|tarif|cout).*(?:chambre|sejour|hebergement)|(?:chambre|sejour|hebergement).*(?:prix|tarif|cout)|par\s+nuit/iu,
+  /(?:prezzo|tariff|cost).*(?:camera|soggiorno|alloggio)|(?:camera|soggiorno|alloggio).*(?:prezzo|tariff|cost)|a\s+notte/iu,
+  /(?:precio|tarifa|cost).*(?:habitacion|estancia|alojamiento)|(?:habitacion|estancia|alojamiento).*(?:precio|tarifa|cost)|por\s+noche/iu,
+  /(?:fiyat|ucret|maliyet).*(?:oda|konaklama)|(?:oda|konaklama).*(?:fiyat|ucret|maliyet)|gecelik/iu,
+];
+const BREAKFAST_PRICE_QUERY = /πρωιν|breakfast|fruhstuck|petit[\s-]*dejeuner|colazione|desayuno|kahvalt/iu;
+
+export function isDynamicRoomPriceKnowledgeQuery(query: string) {
+  const normalizedQuery = normalize(query);
+  return !BREAKFAST_PRICE_QUERY.test(normalizedQuery)
+    && DYNAMIC_ROOM_PRICE_PATTERNS.some(pattern => pattern.test(normalizedQuery));
+}
+
 function kindForCategory(category: PropertyFaqCategory): PropertyKnowledgeResult["kind"] {
   if (category === "rooms") return "room";
   if (category === "booking" || category === "arrival") return "booking";
@@ -146,6 +163,8 @@ export async function searchPropertyKnowledge(input: {
   categories?: PropertyFaqCategory[];
   limit?: number;
 }): Promise<PropertyKnowledgeResult[]> {
+  if (isDynamicRoomPriceKnowledgeQuery(input.query)) return [];
+
   const { rows, source } = await publishedRows(input.language);
   const normalizedQuery = normalize(input.query);
   const terms = normalizedQuery
