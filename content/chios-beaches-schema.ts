@@ -132,6 +132,12 @@ function buildChiosBeachesCollectionPageSchema(
     name: data.seo.title,
     headline: data.hero.title,
     description: data.seo.description,
+    image: Array.from(
+      new Set([
+        absoluteUrl(data.seo.ogImage || data.hero.image),
+        ...data.beaches.slice(0, 6).map((beach) => absoluteUrl(beach.image)),
+      ]),
+    ),
     inLanguage: language,
     isPartOf: {
       "@id": websiteId(),

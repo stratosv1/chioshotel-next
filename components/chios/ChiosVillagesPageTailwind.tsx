@@ -1,4 +1,6 @@
+import Image from "next/image";
 import type { ChiosVillagesPageData } from "@/content/chios-villages";
+import { ChiosCollectionImageGallery } from "@/components/chios/ChiosCollectionImageGallery";
 import { AnswerFirstSeoBlock } from "@/components/seo/AnswerFirstSeoBlock";
 
 type ChiosVillagesPageProps = {
@@ -256,10 +258,12 @@ export function ChiosVillagesPageTailwind({ data }: ChiosVillagesPageProps) {
         className="relative flex min-h-[68svh] items-end overflow-hidden text-white md:min-h-[620px]"
         aria-labelledby="villages-hero-title"
       >
-        <img
+        <Image
           src={data.hero.image}
           alt=""
-          loading="eager"
+          fill
+          priority
+          sizes="100vw"
           className="absolute inset-0 h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-black/50" aria-hidden="true" />
@@ -297,6 +301,12 @@ export function ChiosVillagesPageTailwind({ data }: ChiosVillagesPageProps) {
       </section>
 
       <AnswerFirstSeoBlock kind="villages" language={language} />
+
+      <ChiosCollectionImageGallery
+        items={data.villages}
+        kind="villages"
+        language={language}
+      />
 
       {shouldShowCategoryGuide ? (
         <section className="px-4 py-10 md:px-6 md:py-14" aria-labelledby="village-category-guide-title">
@@ -419,17 +429,18 @@ export function ChiosVillagesPageTailwind({ data }: ChiosVillagesPageProps) {
               →
             </div>
             <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 xl:grid-cols-4">
-              {data.villages.map((village, index) => (
+              {data.villages.map((village) => (
                 <a
                   className="group w-[84vw] max-w-[380px] flex-none snap-start overflow-hidden rounded-[1.5rem] bg-white shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 transition hover:shadow-xl md:w-auto md:max-w-none md:rounded-[2rem]"
                   href={village.href}
                   key={village.href}
                 >
                   <div className="relative aspect-[4/3] overflow-hidden">
-                    <img
+                    <Image
                       src={village.image}
                       alt={village.imageAlt}
-                      loading={index < 2 ? "eager" : "lazy"}
+                      fill
+                      sizes="(min-width: 1280px) 25vw, (min-width: 768px) 50vw, 84vw"
                       className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                     />
                     <div className="absolute left-3 top-3 rounded-full bg-amber-700 px-3 py-1.5 text-xs font-black text-white">
@@ -508,10 +519,11 @@ export function ChiosVillagesPageTailwind({ data }: ChiosVillagesPageProps) {
       <section className="px-4 py-12 md:px-6 md:py-18" aria-labelledby="villages-stay-title">
         <div className="mx-auto max-w-[1180px]">
           <article className="relative overflow-hidden rounded-[36px] bg-[#2f261f] p-6 text-white shadow-2xl md:p-12">
-            <img
+            <Image
               src="/images/beaches/voulamandis-house-courtyard-chios.webp"
               alt=""
-              loading="lazy"
+              fill
+              sizes="(max-width: 767px) 100vw, 1180px"
               className="absolute inset-0 h-full w-full object-cover"
             />
             <div className="absolute inset-0 bg-black/55" aria-hidden="true" />

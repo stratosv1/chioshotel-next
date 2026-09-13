@@ -69,6 +69,14 @@ const footer = read("components/VoulamandisFooterTailwind.tsx");
 const navigation = read("lib/site-navigation.ts");
 const agentGuide = read("content/agent-room-guide.ts");
 const sitemap = read("app/sitemap.ts");
+const imageSitemap = read("app/image-sitemap.xml/route.ts");
+const collectionImageGallery = read(
+  "components/chios/ChiosCollectionImageGallery.tsx",
+);
+const beachesPage = read("components/chios/ChiosBeachesPageTailwind.tsx");
+const villagesPage = read("components/chios/ChiosVillagesPageTailwind.tsx");
+const beachesSchema = read("content/chios-beaches-schema.ts");
+const villagesSchema = read("content/chios-villages-schema.ts");
 
 assert(
   rootHome.includes("buildHomepageMetadata(homePageData)"),
@@ -132,6 +140,33 @@ assert(
   !sitemap.includes("agentRoomGuidePaths") &&
     !sitemap.includes("agentRoomRoutes"),
   "Noindex B2B routes must not be advertised in the XML sitemap.",
+);
+assert(
+  collectionImageGallery.includes("data-search-image-gallery") &&
+    collectionImageGallery.includes('import Image from "next/image"'),
+  "The collection image gallery must expose crawlable, optimized image candidates.",
+);
+assert(
+  beachesPage.includes("<ChiosCollectionImageGallery") &&
+    villagesPage.includes("<ChiosCollectionImageGallery"),
+  "Beaches and villages pages must share the multilingual search image gallery.",
+);
+assert(
+  !villagesPage.includes("<img") &&
+    villagesPage.includes('import Image from "next/image"'),
+  "Villages collection images must use next/image instead of native img elements.",
+);
+assert(
+  imageSitemap.includes("chiosBeachesPages") &&
+    imageSitemap.includes("chiosVillagesPages") &&
+    imageSitemap.includes("...beachGuideEntries") &&
+    imageSitemap.includes("...villageGuideEntries"),
+  "The image sitemap must include every localized beaches and villages collection page.",
+);
+assert(
+  beachesSchema.includes("...data.beaches.slice(0, 6)") &&
+    villagesSchema.includes("...data.villages.slice(0, 6)"),
+  "CollectionPage schema must expose multiple representative images.",
 );
 
 if (failures.length > 0) {

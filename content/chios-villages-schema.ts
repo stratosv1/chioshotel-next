@@ -58,6 +58,12 @@ function buildChiosVillagesCollectionPageSchema(
     name: data.seo.title,
     headline: data.hero.title,
     description: data.seo.description,
+    image: Array.from(
+      new Set([
+        absoluteUrl(data.seo.ogImage || data.hero.image),
+        ...data.villages.slice(0, 6).map((village) => absoluteUrl(village.image)),
+      ]),
+    ),
     inLanguage: language,
     isPartOf: {
       "@id": websiteId(),

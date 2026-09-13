@@ -1,4 +1,6 @@
 import type { RoomDetailData } from "@/content/room-details";
+import { chiosBeachesPages } from "@/content/chios-beaches";
+import { chiosVillagesPages } from "@/content/chios-villages";
 import {
   homePageDe,
   homePageEl,
@@ -139,7 +141,31 @@ export function GET() {
     images: getRoomPageImages(page),
   }));
 
-  const urls = mergeEntries([...homeEntries, ...registryEntries, ...roomEntries])
+  const beachGuideEntries: ImageSitemapEntry[] = chiosBeachesPages.map((page) => ({
+    path: page.seo.canonicalPath,
+    images: unique([
+      page.seo.ogImage,
+      page.hero.image,
+      ...page.beaches.map((beach) => beach.image),
+    ]),
+  }));
+
+  const villageGuideEntries: ImageSitemapEntry[] = chiosVillagesPages.map((page) => ({
+    path: page.seo.canonicalPath,
+    images: unique([
+      page.seo.ogImage,
+      page.hero.image,
+      ...page.villages.map((village) => village.image),
+    ]),
+  }));
+
+  const urls = mergeEntries([
+    ...homeEntries,
+    ...registryEntries,
+    ...roomEntries,
+    ...beachGuideEntries,
+    ...villageGuideEntries,
+  ])
     .filter((entry) => entry.images.length > 0)
     .map((entry) => {
       const images = entry.images

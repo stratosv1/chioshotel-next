@@ -1538,26 +1538,20 @@ export const chiosBeachesPageTr: ChiosBeachesPageData = {
   },
 };
 
+export const chiosBeachesPages: ChiosBeachesPageData[] = [
+  chiosBeachesPageEn,
+  chiosBeachesPageEl,
+  chiosBeachesPageFr,
+  chiosBeachesPageDe,
+  chiosBeachesPageIt,
+  chiosBeachesPageEs,
+  chiosBeachesPageTr,
+];
+
 export function getLocalizedChiosBeachesPageByPath(
   path: string,
 ): ChiosBeachesPageData | undefined {
-  switch (path) {
-    case chiosBeachesPageEl.seo.canonicalPath:
-      return chiosBeachesPageEl;
-    case chiosBeachesPageFr.seo.canonicalPath:
-      return chiosBeachesPageFr;
-    case chiosBeachesPageDe.seo.canonicalPath:
-      return chiosBeachesPageDe;
-    case chiosBeachesPageIt.seo.canonicalPath:
-      return chiosBeachesPageIt;
-    case chiosBeachesPageEs.seo.canonicalPath:
-      return chiosBeachesPageEs;
-    case chiosBeachesPageTr.seo.canonicalPath:
-      return chiosBeachesPageTr;
-    default:
-      return undefined;
-  }
+  return chiosBeachesPages.find((page) => page.seo.canonicalPath === path);
 }
-
 
 

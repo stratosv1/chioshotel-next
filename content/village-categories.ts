@@ -420,12 +420,12 @@ export function getVillageCategoryPage(category: VillageCategoryKey, locale: Lan
   const base = basePages[locale];
   const copy = categoryCopy[category][locale];
   const ids = categoryVillageIds[category];
-  const villages = ids
+  const villages: ChiosVillagesPageData["villages"] = ids
     .map((id) => base.villages.find((village) => village.id === id))
     .filter((village): village is ChiosVillagesPageData["villages"][number] => Boolean(village))
     .map((village, index) => ({
       ...village,
-      size: index === 0 ? "large" : index === 1 ? "tall" : index === 2 ? "wide" : "normal",
+      size: (index === 0 ? "large" : index === 1 ? "tall" : index === 2 ? "wide" : "normal") as ChiosVillagesPageData["villages"][number]["size"],
     }));
 
   const heroImage = villages[0]?.image || base.hero.image;
