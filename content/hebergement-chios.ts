@@ -74,7 +74,7 @@ export const hebergementChiosPageFr: ChiosAccommodationPageData = {
         description:
           "Une solution pratique pour deux personnes qui souhaitent un point de départ confortable à Kambos dans la catégorie la plus accessible. Les chambres rénovées mesurent environ 16 m² et comprennent la climatisation, le Wi-Fi, une salle de bains privée, une télévision et un réfrigérateur.",
         href: "/fr/chambres-a-chios/chambres-doubles-economiques/",
-        image: "/images/rooms/received_1753964631359257.webp",
+        image: "/images/rooms/DSC07803-1.webp",
         imageAlt:
           "Chambre double économique au Voulamandis House à Chios",
         facts: ["2 personnes", "Environ 16 m²", "Lit double", "Option économique"],

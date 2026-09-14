@@ -1,3 +1,23 @@
+import type { ChiosAccommodationPageData } from "@/content/chios-accommodation";
+import { chiosAccommodationPageEn } from "@/content/chios-accommodation";
+import { diamoniStiXioPageEl } from "@/content/diamoni-sti-xio";
+import { hebergementChiosPageFr } from "@/content/hebergement-chios";
+import { chiosUnterkunftPageDe } from "@/content/chios-unterkunft";
+import { alloggioChiosPageIt } from "@/content/alloggio-chios";
+import { alojamientoChiosPageEs } from "@/content/alojamiento-chios";
+import { sakizAdasiKonaklamaPageTr } from "@/content/sakiz-adasi-konaklama";
+import { kamposChiosPages, type KamposChiosPageData } from "@/content/kampos-chios";
+import { localizedRatesPages, type RatesPageData } from "@/content/rates";
+import {
+  roomsCategoryDe,
+  roomsCategoryEl,
+  roomsCategoryEn,
+  roomsCategoryEs,
+  roomsCategoryFr,
+  roomsCategoryIt,
+  roomsCategoryTr,
+  type RoomsCategoryPageData,
+} from "@/content/rooms";
 import type { RoomDetailData } from "@/content/room-details";
 import { chiosBeachesPages } from "@/content/chios-beaches";
 import { chiosVillagesPages } from "@/content/chios-villages";
@@ -77,6 +97,20 @@ const roomDetailPages: readonly RoomDetailData[] = [
   familyChiosApartmentsPl,
 ];
 
+const roomCategoryPages: readonly RoomsCategoryPageData[] = [
+  roomsCategoryEn, roomsCategoryEl, roomsCategoryFr, roomsCategoryDe,
+  roomsCategoryIt, roomsCategoryEs, roomsCategoryTr,
+];
+
+const accommodationPages: readonly ChiosAccommodationPageData[] = [
+  chiosAccommodationPageEn, diamoniStiXioPageEl, hebergementChiosPageFr,
+  chiosUnterkunftPageDe, alloggioChiosPageIt, alojamientoChiosPageEs,
+  sakizAdasiKonaklamaPageTr,
+];
+
+const kamposPages: readonly KamposChiosPageData[] = Object.values(kamposChiosPages);
+const ratesPages: readonly RatesPageData[] = localizedRatesPages;
+
 const homePages: readonly HomePageData[] = [
   homePageEn,
   homePageEl,
@@ -110,6 +144,32 @@ function getRoomPageImages(page: RoomDetailData) {
   ]);
 }
 
+function getRoomCategoryPageImages(page: RoomsCategoryPageData) {
+  return unique([page.seo.ogImage, ...page.cards.map((card) => card.image)]);
+}
+
+function getAccommodationPageImages(page: ChiosAccommodationPageData) {
+  return unique([
+    page.seo.ogImage,
+    page.hero.image,
+    ...page.rooms.cards.map((card) => card.image),
+    page.location.image,
+  ]);
+}
+
+function getKamposPageImages(page: KamposChiosPageData) {
+  return unique([
+    page.seo.ogImage,
+    page.hero.image,
+    ...page.sections.map((section) => section.image),
+    ...page.gallery.map((image) => image.image),
+  ]);
+}
+
+function getRatesPageImages(page: RatesPageData) {
+  return unique([page.seo.ogImage, page.hero.image]);
+}
+
 function mergeEntries(entries: readonly ImageSitemapEntry[]) {
   const byPath = new Map<string, Set<string>>();
 
@@ -141,6 +201,24 @@ export function GET() {
     images: getRoomPageImages(page),
   }));
 
+  const roomCategoryEntries: ImageSitemapEntry[] = roomCategoryPages.map(
+    (page) => ({ path: page.seo.canonicalPath, images: getRoomCategoryPageImages(page) }),
+  );
+
+  const accommodationEntries: ImageSitemapEntry[] = accommodationPages.map(
+    (page) => ({ path: page.seo.canonicalPath, images: getAccommodationPageImages(page) }),
+  );
+
+  const kamposEntries: ImageSitemapEntry[] = kamposPages.map((page) => ({
+    path: page.seo.canonicalPath,
+    images: getKamposPageImages(page),
+  }));
+
+  const ratesEntries: ImageSitemapEntry[] = ratesPages.map((page) => ({
+    path: page.seo.canonicalPath,
+    images: getRatesPageImages(page),
+  }));
+
   const beachGuideEntries: ImageSitemapEntry[] = chiosBeachesPages.map((page) => ({
     path: page.seo.canonicalPath,
     images: unique([
@@ -163,6 +241,10 @@ export function GET() {
     ...homeEntries,
     ...registryEntries,
     ...roomEntries,
+    ...roomCategoryEntries,
+    ...accommodationEntries,
+    ...kamposEntries,
+    ...ratesEntries,
     ...beachGuideEntries,
     ...villageGuideEntries,
   ])

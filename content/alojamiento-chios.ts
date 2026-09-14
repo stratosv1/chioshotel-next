@@ -74,7 +74,7 @@ export const alojamientoChiosPageEs: ChiosAccommodationPageData = {
         description:
           "Una opción práctica para dos huéspedes que buscan una base cómoda en Kambos dentro de la categoría más asequible. Las habitaciones renovadas tienen unos 16 m² e incluyen aire acondicionado, Wi-Fi, baño privado, televisión y frigorífico.",
         href: "/es/habitaciones-en-chios/economicas-habitaciones-en-chios/",
-        image: "/images/rooms/received_1753964631359257.webp",
+        image: "/images/rooms/DSC07803-1.webp",
         imageAlt:
           "Habitación doble económica en Voulamandis House, Chios",
         facts: ["2 huéspedes", "Aprox. 16 m²", "Cama doble", "Opción económica"],

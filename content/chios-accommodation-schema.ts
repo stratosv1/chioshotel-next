@@ -1,4 +1,8 @@
 import type { ChiosAccommodationPageData } from "@/content/chios-accommodation";
+import {
+  buildAccommodationImageObjectSchemas,
+  getAccommodationImageReferences,
+} from "@/content/accommodation-image-schema";
 import { absoluteUrl, getCanonicalUrl, siteUrl } from "@/lib/seo";
 import {
   buildBreadcrumbSchema,
@@ -27,6 +31,7 @@ function buildAccommodationCollectionPage(data: ChiosAccommodationPageData): Sch
     name: data.seo.title,
     headline: data.hero.title,
     description: data.seo.description,
+    image: getAccommodationImageReferences(data),
     inLanguage: "en",
     isPartOf: { "@id": websiteId() },
     about: { "@id": hotelId() },
@@ -108,6 +113,7 @@ export function buildChiosAccommodationSchema(data: ChiosAccommodationPageData) 
       },
       path,
     ),
+    ...buildAccommodationImageObjectSchemas(data),
     buildAccommodationCollectionPage(data),
     buildAccommodationItemList(data),
     ...buildAccommodationNodes(data),

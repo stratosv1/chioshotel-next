@@ -1117,7 +1117,7 @@ export const economyDoubleRoomsEn: RoomDetailData = {
     description:
       "Economy double rooms in Chios at Voulamandis House. A value-for-money option for 2 guests in the peaceful Kambos area.",
     ogImage:
-      "/images/rooms/received_1753964631359257.webp",
+      "/images/rooms/DSC07803-1.webp",
   },
   hero: {
     kicker: "Economy rooms in Chios",
@@ -1126,7 +1126,7 @@ export const economyDoubleRoomsEn: RoomDetailData = {
     description:
       "Simple, comfortable and value-focused double rooms for guests who want to enjoy Chios while keeping accommodation practical and affordable.",
     image:
-      "/images/rooms/received_1753964631359257.webp",
+      "/images/rooms/DSC07803-1.webp",
     imageAlt: "Economy double room in Chios at Voulamandis House",
     badges: ["2 guests", "Economy choice", "Free WiFi", "Air conditioning"],
     primaryCta: {
@@ -1158,8 +1158,8 @@ export const economyDoubleRoomsEn: RoomDetailData = {
     title: "A simple and practical room base",
     images: [
       {
-        src: "/images/rooms/received_1753964631359257.webp",
-        alt: "Economy double room at Voulamandis House",
+        src: "/images/rooms/DSC07803-1.webp",
+        alt: "Economy double room in Chios at Voulamandis House",
       },
       {
         src: "/images/rooms/received_1753964581359262.webp",
@@ -1174,8 +1174,8 @@ export const economyDoubleRoomsEn: RoomDetailData = {
         alt: "Economy room bathroom and interior details",
       },
       {
-        src: "/images/rooms/DSC07803-1.webp",
-        alt: "Economy double room in Chios",
+        src: "/images/rooms/received_1753964631359257.webp",
+        alt: "Ground-floor economy double room at Voulamandis House",
       },
       {
         src: "/images/rooms/DSC07839.webp",

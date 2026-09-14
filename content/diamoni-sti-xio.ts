@@ -74,7 +74,7 @@ export const diamoniStiXioPageEl: ChiosAccommodationPageData = {
         description:
           "Πρακτική επιλογή για δύο επισκέπτες που αναζητούν άνετη και οικονομική βάση στον Κάμπο. Τα ανακαινισμένα δωμάτια είναι περίπου 16 m² και διαθέτουν κλιματισμό, Wi-Fi, ιδιωτικό μπάνιο, τηλεόραση και ψυγείο.",
         href: "/el/domatia-xios/oikonomiko-diklino-domatio/",
-        image: "/images/rooms/received_1753964631359257.webp",
+        image: "/images/rooms/DSC07803-1.webp",
         imageAlt:
           "Οικονομικό δίκλινο δωμάτιο στο Voulamandis House στη Χίο",
         facts: ["2 άτομα", "Περίπου 16 m²", "Διπλό κρεβάτι", "Οικονομική επιλογή"],
