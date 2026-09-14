@@ -126,11 +126,11 @@ export const SALES_KNOWLEDGE: KnowledgeItem[] = [
     id: "rooms-family-apartments",
     kind: "room",
     title: "Family apartments 8, 9 and 10",
-    summary: "Ground-floor family apartments with 4–5 entrance steps, a full kitchen, separate spaces and a private balcony overlooking the orchard.",
+    summary: "Ground-floor family apartments with step-free access, a full kitchen, separate spaces and a private balcony overlooking the orchard.",
     facts: [
       "Apartments 8 and 9 accommodate up to four guests.",
       "Apartment 10 normally hosts four guests; a fifth is possible only by prior agreement, with an extra single bed in the bedroom and limited space.",
-      "The apartments are on the ground floor with 4–5 entrance steps.",
+      "The apartments are on the ground floor with step-free access.",
       "They include a full kitchen and are practical for families or longer stays.",
     ],
     tags: ["family apartment", "room 8", "room 9", "room 10", "full kitchen", "ground floor", "long stay", "children"],
@@ -143,7 +143,7 @@ export const SALES_KNOWLEDGE: KnowledgeItem[] = [
       es: "/es/habitaciones-en-chios/apartamentos-familiares-en-chios/",
       tr: "/tr/chios-odalari/sakiz-adasinda-buyuk-aile-daireleri/",
     },
-    attributes: { groundFloor: true, fullKitchen: true, familyFriendly: true, suitableForChildren: true },
+    attributes: { noStairs: true, groundFloor: true, fullKitchen: true, familyFriendly: true, suitableForChildren: true },
   },
   {
     id: "pricing-live",

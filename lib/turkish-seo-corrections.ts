@@ -157,7 +157,7 @@ const turkishRoomCorrections = new Map<string, DetailCorrection>([
     {
       title: "Sakız Adası aile daireleri | Mutfak ve geniş alan",
       description:
-        "Kambos’ta 40–45 m² aile daireleri: tam mutfak, ayrı yatak odası, oturma alanı ve dört kişiye kadar konaklama.",
+        "Kambos’taki Voulamandis House’ta 40–45 m² aile daireleri: tam mutfak, ayrı yatak odası, oturma alanı ve dört kişiye kadar konaklama.",
       heroTitle: "Sakız Adası’nda mutfaklı aile daireleri",
       heroDescription:
         "Ayrı yatak odası, tam mutfak ve oturma alanıyla aileler ve daha uzun konaklamalar için geniş, bağımsız daireler.",

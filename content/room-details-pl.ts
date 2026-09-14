@@ -219,7 +219,7 @@ export const familyChiosApartmentsPl: RoomDetailData = {
   ...familyChiosApartments,
   id: "family-apartments-pl",
   seo: {
-    canonicalPath: "/pl/pokoje-na-chios/apartamenty-rodzinne/",
+    canonicalPath: "/pl/apartamenty-na-chios/",
     title: "Apartamenty rodzinne na Chios | Voulamandis House",
     description: "Rodzinne apartamenty na Chios w Voulamandis House w Kambos. Więcej przestrzeni, kuchnia i wygodny pobyt dla rodzin do 4 osób.",
     ogImage: familyChiosApartments.seo.ogImage,

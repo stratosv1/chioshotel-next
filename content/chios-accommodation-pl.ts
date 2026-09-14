@@ -95,7 +95,7 @@ export const chiosAccommodationPagePl: ChiosAccommodationPageData = {
         title: "Apartamenty rodzinne na Chios",
         description:
           "Apartamenty 40–45 m² z oddzielną sypialnią, częścią dzienną i pełną kuchnią dla rodzin i małych grup potrzebujących większej niezależności.",
-        href: "/pl/pokoje-na-chios/apartamenty-rodzinne/",
+        href: "/pl/apartamenty-na-chios/",
         imageAlt: "Apartament rodzinny z kuchnią w Voulamandis House na Chios",
         facts: ["do 4 osób", "40–45 m²", "pełna kuchnia", "część dzienna"],
       },

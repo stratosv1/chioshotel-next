@@ -10,11 +10,6 @@ import {
   siteUrl,
 } from "@/lib/seo";
 import {
-  buildSeoImageObjectSchemas,
-  getSeoImageReferences,
-  getSeoImageUrls,
-} from "@/lib/seo-image-schema";
-import {
   buildBreadcrumbSchema,
   buildFaqSchema,
   buildHotelSchema,
@@ -146,8 +141,8 @@ const roomSchemaTerms: Record<string, RoomSchemaDictionary> = {
   "Private balcony": { el: "Ιδιωτικό μπαλκόνι", fr: "Balcon privé", de: "Privater Balkon", it: "Balcone privato", es: "Balcón privado", tr: "Özel balkon" },
   "Shared terrace": { el: "Κοινόχρηστη βεράντα", fr: "Terrasse commune", de: "Gemeinschaftsterrasse", it: "Terrazza comune", es: "Terraza común", tr: "Ortak teras" },
   "14 stairs": { el: "14 σκαλοπάτια", fr: "14 marches", de: "14 Stufen", it: "14 gradini", es: "14 escalones", tr: "14 basamak" },
-  "4–5 entrance steps": { el: "4–5 σκαλοπάτια στην είσοδο", fr: "4–5 marches à l’entrée", de: "4–5 Eingangsstufen", it: "4–5 gradini all’ingresso", es: "4–5 escalones de entrada", tr: "Girişte 4–5 basamak" },
-  "Ground floor · 4–5 entrance steps": { el: "Ισόγειο · 4–5 σκαλοπάτια", fr: "Rez-de-chaussée · 4–5 marches", de: "Erdgeschoss · 4–5 Eingangsstufen", it: "Piano terra · 4–5 gradini", es: "Planta baja · 4–5 escalones", tr: "Zemin kat · 4–5 basamak" },
+  "Step-free access": { el: "Χωρίς σκαλοπάτια", fr: "Accès sans marches", de: "Stufenloser Zugang", it: "Accesso senza gradini", es: "Acceso sin escalones", tr: "Basamaksız erişim" },
+  "Ground floor · step-free access": { el: "Ισόγειο · χωρίς σκαλοπάτια", fr: "Rez-de-chaussée · accès sans marches", de: "Erdgeschoss · stufenloser Zugang", it: "Piano terra · accesso senza gradini", es: "Planta baja · acceso sin escalones", tr: "Zemin kat · basamaksız erişim" },
   "Separate bedroom with door": { el: "Ξεχωριστό υπνοδωμάτιο με πόρτα", fr: "Chambre séparée avec porte", de: "Separates Schlafzimmer mit Tür", it: "Camera separata con porta", es: "Dormitorio separado con puerta", tr: "Kapılı ayrı yatak odası" },
   Kitchenette: { el: "Μικρή κουζίνα", fr: "Kitchenette", de: "Kitchenette", it: "Angolo cottura", es: "Kitchenette", tr: "Mini mutfak" },
   Kitchen: { el: "Κουζίνα", fr: "Cuisine", de: "Küche", it: "Cucina", es: "Cocina", tr: "Mutfak" },
@@ -228,6 +223,73 @@ function getRoomDetailImages(data: RoomDetailData): string[] {
   );
 
   return uniqueItems([...heroImages, ...individualRoomImages]).map(absoluteUrl);
+}
+
+type RoomImageAsset = {
+  src: string;
+  alt: string;
+  caption: string;
+};
+
+function getRepresentativeRoomImages(data: RoomDetailData): RoomImageAsset[] {
+  const language = getRoomSchemaLanguage(data.seo.canonicalPath);
+  const primaryUrl = absoluteUrl(data.seo.ogImage || data.hero.image);
+  const candidates: RoomImageAsset[] = [];
+  const maxImagesPerRoom = Math.max(
+    0,
+    ...data.individualRooms.rooms.map((room) => room.images.length),
+  );
+
+  // Round-robin ordering gives every room or apartment a representative image
+  // before adding secondary views from the same unit.
+  for (let imageIndex = 0; imageIndex < maxImagesPerRoom; imageIndex += 1) {
+    for (const room of data.individualRooms.rooms) {
+      const image = room.images[imageIndex];
+      if (!image) continue;
+
+      const roomName = localizeRoomSchemaName(room.name, language);
+      candidates.push({
+        src: absoluteUrl(image.src),
+        alt: `${roomName} — ${data.hero.imageAlt}`,
+        caption: `${roomName} — ${data.hero.title}`,
+      });
+    }
+  }
+
+  const bySrc = new Map<string, RoomImageAsset>();
+  for (const image of candidates) {
+    if (image.src !== primaryUrl && !bySrc.has(image.src)) {
+      bySrc.set(image.src, image);
+    }
+  }
+
+  return Array.from(bySrc.values()).slice(0, 5);
+}
+
+function buildRoomImageObjectSchemas(data: RoomDetailData): SchemaObject[] {
+  const canonicalPath = data.seo.canonicalPath;
+  const language = getRoomSchemaLanguage(canonicalPath);
+
+  return getRepresentativeRoomImages(data).map((image, index) => ({
+    "@type": "ImageObject",
+    "@id": schemaId(canonicalPath, `room-image-${index + 1}`),
+    url: image.src,
+    contentUrl: image.src,
+    name: image.alt,
+    caption: image.caption,
+    inLanguage: language,
+  }));
+}
+
+function getRoomImageReferences(data: RoomDetailData): SchemaObject[] {
+  const canonicalPath = data.seo.canonicalPath;
+
+  return [
+    { "@id": primaryImageId(canonicalPath) },
+    ...getRepresentativeRoomImages(data).map((_, index) => ({
+      "@id": schemaId(canonicalPath, `room-image-${index + 1}`),
+    })),
+  ];
 }
 
 function getRoomDetailAmenities(data: RoomDetailData) {
@@ -334,10 +396,7 @@ function buildRoomSchema(data: RoomDetailData): SchemaObject {
   const canonicalPath = data.seo.canonicalPath;
   const labels = getRoomSchemaLabels(canonicalPath);
   const maxGuests = getMaxGuests(data);
-  const allImages = uniqueItems([
-    ...getRoomDetailImages(data),
-    ...getSeoImageUrls(canonicalPath),
-  ]);
+  const allImages = getRoomDetailImages(data);
 
   return {
     "@type": "Accommodation",
@@ -373,7 +432,7 @@ function buildRoomSchema(data: RoomDetailData): SchemaObject {
 function buildRoomWebPageSchema(data: RoomDetailData): SchemaObject {
   const canonicalPath = data.seo.canonicalPath;
   const language = getLanguageForPath(canonicalPath);
-  const galleryImages = getSeoImageReferences(canonicalPath);
+  const galleryImages = getRoomImageReferences(data);
 
   return {
     "@type": "WebPage",
@@ -382,7 +441,7 @@ function buildRoomWebPageSchema(data: RoomDetailData): SchemaObject {
     name: data.seo.title,
     headline: data.hero.title,
     description: data.seo.description,
-    image: galleryImages.length ? galleryImages : undefined,
+    image: galleryImages,
     inLanguage: language,
     isPartOf: {
       "@id": websiteId(),
@@ -420,7 +479,7 @@ export function buildRoomDetailSchema(data: RoomDetailData) {
       },
       canonicalPath,
     ),
-    ...buildSeoImageObjectSchemas(canonicalPath),
+    ...buildRoomImageObjectSchemas(data),
     buildRoomWebPageSchema(data),
     buildRoomSchema(data),
     ...data.individualRooms.rooms.map((room) =>

@@ -83,8 +83,8 @@ const dictionary: Record<string, RoomDictionary> = {
   "Private balcony": { el: "Ιδιωτικό μπαλκόνι", fr: "Balcon privé", de: "Privater Balkon", it: "Balcone privato", es: "Balcón privado", tr: "Özel balkon" },
   "Shared terrace": { el: "Κοινόχρηστη βεράντα", fr: "Terrasse commune", de: "Gemeinschaftsterrasse", it: "Terrazza comune", es: "Terraza común", tr: "Ortak teras" },
   "14 stairs": { el: "14 σκαλοπάτια", fr: "14 marches", de: "14 Stufen", it: "14 gradini", es: "14 escalones", tr: "14 basamak" },
-  "4–5 entrance steps": { el: "4–5 σκαλοπάτια στην είσοδο", fr: "4–5 marches à l’entrée", de: "4–5 Eingangsstufen", it: "4–5 gradini all’ingresso", es: "4–5 escalones de entrada", tr: "Girişte 4–5 basamak" },
-  "Ground floor · 4–5 entrance steps": { el: "Ισόγειο · 4–5 σκαλοπάτια", fr: "Rez-de-chaussée · 4–5 marches", de: "Erdgeschoss · 4–5 Eingangsstufen", it: "Piano terra · 4–5 gradini", es: "Planta baja · 4–5 escalones", tr: "Zemin kat · 4–5 basamak" },
+  "Step-free access": { el: "Χωρίς σκαλοπάτια", fr: "Accès sans marches", de: "Stufenloser Zugang", it: "Accesso senza gradini", es: "Acceso sin escalones", tr: "Basamaksız erişim" },
+  "Ground floor · step-free access": { el: "Ισόγειο · χωρίς σκαλοπάτια", fr: "Rez-de-chaussée · accès sans marches", de: "Erdgeschoss · stufenloser Zugang", it: "Piano terra · accesso senza gradini", es: "Planta baja · acceso sin escalones", tr: "Zemin kat · basamaksız erişim" },
   "Separate bedroom with door": { el: "Ξεχωριστό υπνοδωμάτιο με πόρτα", fr: "Chambre séparée avec porte", de: "Separates Schlafzimmer mit Tür", it: "Camera separata con porta", es: "Dormitorio separado con puerta", tr: "Kapılı ayrı yatak odası" },
   Kitchenette: { el: "Μικρή κουζίνα", fr: "Kitchenette", de: "Kitchenette", it: "Angolo cottura", es: "Kitchenette", tr: "Mini mutfak" },
   Kitchen: { el: "Κουζίνα", fr: "Cuisine", de: "Küche", it: "Cucina", es: "Cocina", tr: "Mutfak" },
@@ -182,7 +182,7 @@ function getFloorKind(room: IndividualRoomData): FloorKind {
   return "other";
 }
 
-function RoomVisualCard({ room, language, priority = false }: { room: IndividualRoomData; language: RoomLanguage; priority?: boolean }) {
+function RoomVisualCard({ room, language }: { room: IndividualRoomData; language: RoomLanguage }) {
   const [activeImage, setActiveImage] = useState(room.images[0]);
   const visibleBadges = room.badges.slice(0, 3);
   const visibleBeds = room.beds.slice(0, 2);
@@ -196,7 +196,6 @@ function RoomVisualCard({ room, language, priority = false }: { room: Individual
             src={activeImage.src}
             alt={localizeImageAlt(room, activeImage, language)}
             fill
-            priority={priority}
             sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 84vw"
             className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
           />
@@ -293,7 +292,7 @@ function FloorRoomGroup({ title, text, rooms, language }: { title: string; text:
           </button>
         ) : null}
         <div className={`flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 ${rooms.length <= 2 ? "md:mx-auto md:w-full md:max-w-5xl" : "xl:grid-cols-3"}`} ref={carouselRef}>
-          {rooms.map((room, index) => <RoomVisualCard room={room} language={language} priority={index < 2} key={room.id} />)}
+          {rooms.map((room) => <RoomVisualCard room={room} language={language} key={room.id} />)}
         </div>
       </div>
     </section>
@@ -342,7 +341,7 @@ function IndividualRoomsSection({ data, language }: { data: RoomDetailData; lang
         <div className="relative">
           <div aria-hidden="true" className="pointer-events-none absolute right-2 top-[38%] z-20 flex h-10 w-10 items-center justify-center rounded-full bg-[#2f261f]/95 text-xl font-black text-white shadow-xl md:hidden">→</div>
           <div className={`flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 ${data.individualRooms.rooms.length <= 2 ? "md:mx-auto md:w-full md:max-w-5xl" : "xl:grid-cols-3"}`}>
-            {data.individualRooms.rooms.map((room, index) => <RoomVisualCard room={room} language={language} priority={index < 2} key={room.id} />)}
+            {data.individualRooms.rooms.map((room) => <RoomVisualCard room={room} language={language} key={room.id} />)}
           </div>
         </div>
       </div>
@@ -391,7 +390,7 @@ export function RoomDetailPage({ data }: RoomDetailPageProps) {
               </div>
             </div>
             <div className="relative min-h-[330px] overflow-hidden lg:min-h-[540px]">
-              <Image src={data.hero.image} alt="" fill priority fetchPriority="high" sizes="(min-width: 1024px) 54vw, 100vw" className="object-cover" />
+              <Image src={data.hero.image} alt={data.hero.imageAlt} fill priority fetchPriority="high" sizes="(min-width: 1024px) 54vw, 100vw" className="object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#2f261f]/28 via-transparent to-transparent" aria-hidden="true" />
             </div>
           </div>

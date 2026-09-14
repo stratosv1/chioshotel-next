@@ -59,38 +59,52 @@ for (const itemId of expectedItems) {
   }
 }
 
-console.log("\nENGLISH ROOM DETAIL CSS AUDIT");
-console.log("=============================");
+console.log("\nROOM DETAIL RENDERING AND SEARCH AUDIT");
+console.log("======================================");
 
-const cssExpectations = [
-  {
-    file: "app/chios-rooms/standard-double-room/layout.tsx",
-    needsFloorGroups: true,
-  },
-  {
-    file: "app/chios-rooms/economy-double-rooms/layout.tsx",
-    needsFloorGroups: true,
-  },
-  {
-    file: "app/chios-rooms/family-chios-apartments/layout.tsx",
-    needsFloorGroups: false,
-  },
+const roomComponent = fs.readFileSync("components/rooms/RoomDetailPage.tsx", "utf8");
+const roomSchema = fs.readFileSync("content/room-detail-schema.ts", "utf8");
+const localizedRouter = fs.readFileSync("app/[locale]/[...slug]/page.tsx", "utf8");
+const polishRoomDetails = fs.readFileSync("content/room-details-pl.ts", "utf8");
+const polishAccommodation = fs.readFileSync("content/chios-accommodation-pl.ts", "utf8");
+const propertyKnowledge = fs.readFileSync("db/seeds/property-knowledge.json", "utf8");
+const stepFreeMigration = fs.readFileSync("db/migrations/20260913_step_free_family_apartments.sql", "utf8");
+const seo = fs.readFileSync("lib/seo.ts", "utf8");
+const seoPl = fs.readFileSync("lib/seo-pl.ts", "utf8");
+const roomFactSources = [
+  roomDetails,
+  propertyKnowledge,
+  fs.readFileSync("lib/ai-assistant/knowledge.ts", "utf8"),
+  fs.readFileSync("lib/ai-assistant/room-catalog.ts", "utf8"),
+  fs.readFileSync("lib/ai-assistant/room-card-catalog.ts", "utf8"),
+  fs.readFileSync("components/booking/ChiosHotelsLiveSearch.tsx", "utf8"),
+  fs.readFileSync("components/booking/LocalizedChiosHotelsLiveSearch.tsx", "utf8"),
+].join("\n");
+
+JSON.parse(propertyKnowledge);
+
+const sourceChecks = [
+  ["Room images use Next/Image", roomComponent.includes('from "next/image"')],
+  ["Hero exposes its descriptive alt", roomComponent.includes("alt={data.hero.imageAlt}")],
+  ["Legacy room CSS is absent", !roomComponent.includes("room-detail.css") && !roomComponent.includes("room-detail-cards.css") && !roomComponent.includes("room-detail-floor-groups.css")],
+  ["Raw img elements are absent", !roomComponent.includes("<img")],
+  ["Only the hero is marked priority", (roomComponent.match(/\bpriority\b/g) || []).length === 1],
+  ["Room schema emits representative ImageObjects", roomSchema.includes("buildRoomImageObjectSchemas")],
+  ["WebPage schema references representative images", roomSchema.includes("getRoomImageReferences(data)")],
+  ["Accommodation schema contains the complete room image set", roomSchema.includes("const allImages = getRoomDetailImages(data)") && roomSchema.includes("image: allImages")],
+  ["Family apartments use step-free access", roomDetails.includes('"Ground floor · step-free access"') && roomDetails.includes('"Step-free access"')],
+  ["Removed 4–5-step claim is absent from every room fact source", !roomFactSources.includes("4–5")],
+  ["Database correction marks Apartments 8–10 step-free", stepFreeMigration.includes("set no_stairs = true") && stepFreeMigration.includes("entrance_steps = 0") && stepFreeMigration.includes("room_number in (8, 9, 10)")],
+  ["Standard rooms publish Polish alternates", seo.includes('pl: "/pl/pokoje-na-chios/pokoje-standardowe/"') && seo.includes('"/tr/chios-odalari/standart-cift-kisilik-odalar/"')],
+  ["Localized metadata preserves extended alternates", localizedRouter.includes("{ ...getAlternates(path) }")],
+  ["Polish room alternates include all seven primary languages", ["en", "el", "fr", "de", "it", "es", "tr", "pl"].every((lang) => new RegExp(`\\n\\s+${lang}:`).test(seoPl))],
+  ["Polish family canonical matches its published route", polishRoomDetails.includes('canonicalPath: "/pl/apartamenty-na-chios/"')],
+  ["Polish accommodation links to the published family route", !polishAccommodation.includes("/pl/pokoje-na-chios/apartamenty-rodzinne/") && polishAccommodation.includes("/pl/apartamenty-na-chios/")],
 ];
 
-for (const item of cssExpectations) {
-  const s = fs.existsSync(item.file) ? fs.readFileSync(item.file, "utf8") : "";
-  const hasRoomDetail = s.includes("room-detail.css");
-  const hasCards = s.includes("room-detail-cards.css");
-  const hasFloorGroups = s.includes("room-detail-floor-groups.css");
-
-  console.log(`\n${item.file}`);
-  console.log(`  room-detail.css: ${hasRoomDetail ? "✅" : "❌"}`);
-  console.log(`  room-detail-cards.css: ${hasCards ? "✅" : "❌"}`);
-  console.log(`  room-detail-floor-groups.css: ${hasFloorGroups ? "✅" : item.needsFloorGroups ? "❌" : "➖ not needed"}`);
-
-  if (!hasRoomDetail || !hasCards || (item.needsFloorGroups && !hasFloorGroups)) {
-    hasError = true;
-  }
+for (const [label, passed] of sourceChecks) {
+  console.log(`  ${passed ? "✅" : "❌"} ${label}`);
+  if (!passed) hasError = true;
 }
 
 console.log("\nROOM DETAIL EXPORT AUDIT");

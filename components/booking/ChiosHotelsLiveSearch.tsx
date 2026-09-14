@@ -103,21 +103,21 @@ const ROOM_PRESENTATION: Record<number, RoomPresentation> = {
     subtitle: "Independent apartment",
     image: "/images/rooms/chios-apartments-voulamandis.webp",
     href: "/chios-rooms/family-chios-apartments/",
-    features: ["Full kitchen", "4–5 entrance steps", "Up to 4 guests"],
+    features: ["Full kitchen", "Step-free access", "Up to 4 guests"],
   },
   9: {
     title: "Family apartment 9",
     subtitle: "Independent apartment",
     image: "/images/rooms/chios-apartments-voulamandis.webp",
     href: "/chios-rooms/family-chios-apartments/",
-    features: ["Full kitchen", "4–5 entrance steps", "Up to 4 guests"],
+    features: ["Full kitchen", "Step-free access", "Up to 4 guests"],
   },
   10: {
     title: "Family apartment 10",
     subtitle: "Large independent apartment",
     image: "/images/rooms/DSC07899.webp",
     href: "/chios-rooms/family-chios-apartments/",
-    features: ["Full kitchen", "4–5 entrance steps", "4 guests; 5th by arrangement"],
+    features: ["Full kitchen", "Step-free access", "4 guests; 5th by arrangement"],
   },
 };
 

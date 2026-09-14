@@ -93,6 +93,18 @@ const polishAlternateGroups: ReadonlyArray<{
     ],
   },
   {
+    pl: "/pl/pokoje-na-chios/pokoje-standardowe/",
+    paths: [
+      "/chios-rooms/standard-double-room/",
+      "/el/domatia-xios/diklina-triklina-domatia/",
+      "/fr/chambres-a-chios/chambres-doubles-standard/",
+      "/de/zimmer-chios/standard-doppelzimmer-auf-chios/",
+      "/it/stanze-a-chios/camere-doppie-standard-chios/",
+      "/es/habitaciones-en-chios/habitaciones-dobles-estandar/",
+      "/tr/chios-odalari/standart-cift-kisilik-odalar/",
+    ],
+  },
+  {
     pl: "/pl/rezerwacja/",
     paths: [
       "/chios-hotels-rates/",

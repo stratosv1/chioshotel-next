@@ -86,7 +86,7 @@ import { buildMuseumDetailSchema } from "@/content/museum-detail-schema";
 import { getLocalizedMuseumDetailByPath } from "@/content/museum-details";
 import { buildRoomDetailSchema } from "@/content/room-detail-schema";
 import { buildRoomsCategorySchema } from "@/content/rooms-schema";
-import { absoluteUrl, buildPageMetadata } from "@/lib/seo";
+import { absoluteUrl, buildPageMetadata, getAlternates } from "@/lib/seo";
 import { getRouteByPath, getRoutesByItemId, routeMap } from "@/lib/url-map";
 
 type PageProps = {
@@ -201,7 +201,7 @@ function buildLocalizedAlternates(path: string) {
       acc[item.language] = absoluteUrl(item.path);
       return acc;
     },
-    {},
+    { ...getAlternates(path) },
   );
 
   const defaultRoute = relatedRoutes.find(

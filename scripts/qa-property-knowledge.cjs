@@ -37,7 +37,8 @@ for (const required of [
   "Κονταρίου",
   "8 km",
   "8 χλμ",
-  "4–5",
+  "step-free access",
+  "χωρίς σκαλοπάτια",
   "14 σκαλοπάτια",
   "12€",
   "15€",
@@ -45,6 +46,8 @@ for (const required of [
 ]) {
   assert(serialized.includes(required), `Critical owner-confirmed fact is missing: ${required}`);
 }
+
+assert(!serialized.includes("4–5"), "Superseded 4–5-step claim is still present");
 
 const faqPages = [
   "app/frequently-asked-questions/page.tsx",
