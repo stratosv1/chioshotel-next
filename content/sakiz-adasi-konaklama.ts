@@ -74,7 +74,7 @@ export const sakizAdasiKonaklamaPageTr: ChiosAccommodationPageData = {
         description:
           "Kambos’ta konforlu ve uygun fiyatlı bir üs arayan iki misafir için pratik bir seçenektir. Yaklaşık 16 m² büyüklüğündeki yenilenmiş odalarda klima, Wi-Fi, özel banyo, televizyon ve buzdolabı gibi temel ihtiyaçlar bulunur.",
         href: "/tr/chios-odalari/sakiz-adasindaki-ekonomi-cift-kisilik-oda/",
-        image: "/images/rooms/received_1753964631359257.webp",
+        image: "/images/rooms/DSC07803-1.webp",
         imageAlt:
           "Voulamandis House Sakız Adası ekonomik çift kişilik oda",
         facts: ["2 misafir", "Yaklaşık 16 m²", "Çift kişilik yatak", "Avantajlı seçim"],

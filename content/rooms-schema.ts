@@ -1,7 +1,6 @@
-import {
-  roomsCategoryEl,
-  type RoomCategoryCard,
-  type RoomsCategoryPageData,
+import type {
+  RoomCategoryCard,
+  RoomsCategoryPageData,
 } from "@/content/rooms";
 import {
   absoluteUrl,
@@ -12,7 +11,6 @@ import {
 } from "@/lib/seo";
 import { resolveSeoDynamicTokens } from "@/lib/seo-dynamic-tokens";
 import { seoSnippetOverrides } from "@/lib/seo-snippet-overrides";
-import { buildSeoImageObjectSchemas, getSeoImageReferences } from "@/lib/seo-image-schema";
 import {
   buildBreadcrumbSchema,
   buildHotelSchema,
@@ -29,16 +27,68 @@ import {
   type SchemaObject,
 } from "@/lib/structured-data";
 
-const GREEK_ROOMS_PRIMARY_IMAGE =
-  "/images/rooms/received_1753964631359257.webp";
-
-// The catch-all page imports this schema module before generateMetadata runs.
-// Keep the shared Greek data source aligned so OG/Twitter and JSON-LD use the
-// same image that visitors can see in the first clickable room card.
-roomsCategoryEl.seo.ogImage = GREEK_ROOMS_PRIMARY_IMAGE;
-
 function getRoomCardSchemaId(card: RoomCategoryCard): string {
   return schemaId(card.href, card.id);
+}
+
+type RoomCategorySchemaImage = {
+  card: RoomCategoryCard;
+  id: string;
+};
+
+function getRoomCategorySchemaImages(
+  data: RoomsCategoryPageData,
+): RoomCategorySchemaImage[] {
+  const preferredHero = data.cards[1] ?? data.cards[0];
+  const orderedCards = preferredHero
+    ? [preferredHero, ...data.cards.filter((card) => card.id !== preferredHero.id)]
+    : data.cards;
+  const seen = new Set<string>();
+
+  return orderedCards
+    .filter((card) => {
+      if (seen.has(card.image)) return false;
+      seen.add(card.image);
+      return true;
+    })
+    .map((card) => ({
+      card,
+      id:
+        card.image === data.seo.ogImage
+          ? primaryImageId(data.seo.canonicalPath)
+          : schemaId(data.seo.canonicalPath, `room-category-${card.id}-image`),
+    }));
+}
+
+function getRoomCategoryImageReferences(
+  data: RoomsCategoryPageData,
+): SchemaObject[] {
+  const primaryId = primaryImageId(data.seo.canonicalPath);
+
+  return [
+    { "@id": primaryId },
+    ...getRoomCategorySchemaImages(data)
+      .filter((image) => image.id !== primaryId)
+      .map((image) => ({ "@id": image.id })),
+  ];
+}
+
+function buildRoomCategoryImageSchemas(
+  data: RoomsCategoryPageData,
+): SchemaObject[] {
+  const primaryId = primaryImageId(data.seo.canonicalPath);
+
+  return getRoomCategorySchemaImages(data)
+    .filter((image) => image.id !== primaryId)
+    .map(({ card, id }) => ({
+      "@type": "ImageObject",
+      "@id": id,
+      url: absoluteUrl(card.image),
+      contentUrl: absoluteUrl(card.image),
+      name: card.imageAlt,
+      caption: card.title,
+      inLanguage: getLanguageForPath(data.seo.canonicalPath),
+    }));
 }
 
 function buildRoomCardSchema(card: RoomCategoryCard): SchemaObject {
@@ -121,10 +171,7 @@ function resolveRoomsSchemaSeo(data: RoomsCategoryPageData): RoomsCategoryPageDa
         override?.description ?? data.seo.description,
         canonicalPath,
       ),
-      ogImage:
-        canonicalPath === "/el/domatia-xios/"
-          ? GREEK_ROOMS_PRIMARY_IMAGE
-          : data.seo.ogImage,
+      ogImage: data.seo.ogImage,
     },
   };
 }
@@ -162,7 +209,7 @@ function hardenGreekRoomsSchemaData(data: RoomsCategoryPageData): RoomsCategoryP
 function buildRoomsCollectionPageSchema(data: RoomsCategoryPageData): SchemaObject {
   const canonicalPath = data.seo.canonicalPath;
   const language = getLanguageForPath(canonicalPath);
-  const galleryImages = getSeoImageReferences(canonicalPath);
+  const pageImages = getRoomCategoryImageReferences(data);
 
   return {
     "@type": "CollectionPage",
@@ -171,7 +218,7 @@ function buildRoomsCollectionPageSchema(data: RoomsCategoryPageData): SchemaObje
     name: data.seo.title,
     headline: data.seo.title,
     description: data.seo.description,
-    image: galleryImages.length ? galleryImages : undefined,
+    image: pageImages,
     inLanguage: language,
     isPartOf: {
       "@id": websiteId(),
@@ -221,7 +268,7 @@ export function buildRoomsCategorySchema(data: RoomsCategoryPageData) {
       },
       canonicalPath,
     ),
-    ...buildSeoImageObjectSchemas(canonicalPath),
+    ...buildRoomCategoryImageSchemas(safeData),
     buildRoomsCollectionPageSchema(safeData),
     buildRoomsItemListSchema(safeData),
     ...safeData.cards.map(buildRoomCardSchema),

@@ -80,7 +80,7 @@ export const roomsCategoryEn: RoomsCategoryPageData = {
     description:
       "Explore rooms and apartments in Chios at Voulamandis House in Kambos. Choose economy double rooms, ground floor rooms, first floor rooms or family apartments.",
     ogImage:
-      "/images/rooms/chios-hotels-family-apartments.webp",
+      "/images/rooms/double-triple-room.jpg",
   },
 
   hero: {
@@ -114,7 +114,7 @@ export const roomsCategoryEn: RoomsCategoryPageData = {
         "The best value option for 2 guests. Renovated 16m² rooms with essentials and a peaceful Kambos atmosphere.",
       href: "/chios-rooms/economy-double-rooms/",
       image:
-        "/images/rooms/received_1753964631359257.webp",
+        "/images/rooms/DSC07803-1.webp",
       imageAlt: "Economy double room in Chios at Voulamandis House",
       badge: "Best value",
       ctaLabel: "Explore Room",
@@ -402,7 +402,7 @@ export const roomsCategoryEl: RoomsCategoryPageData = {
     description:
       "Δείτε δωμάτια και διαμερίσματα στο Voulamandis House στον Κάμπο Χίου: οικονομικά δίκλινα, ισόγεια δωμάτια και οικογενειακά διαμερίσματα.",
     ogImage:
-      "/images/rooms/chios-hotels-family-apartments.webp",
+      "/images/rooms/double-triple-room.jpg",
   },
 
   hero: {
@@ -436,7 +436,7 @@ export const roomsCategoryEl: RoomsCategoryPageData = {
         "Η πιο value επιλογή για 2 άτομα. Ανακαινισμένα δωμάτια 16m² με σύγχρονες παροχές και αυθεντική αίσθηση Κάμπου.",
       href: "/el/domatia-xios/oikonomiko-diklino-domatio/",
       image:
-        "/images/rooms/received_1753964631359257.webp",
+        "/images/rooms/DSC07803-1.webp",
       imageAlt: "Οικονομικό δίκλινο δωμάτιο στη Χίο στο Voulamandis House",
       badge: "Value επιλογή",
       ctaLabel: "Εξερεύνηση Δωματίου",
@@ -513,7 +513,7 @@ export const roomsCategoryFr: RoomsCategoryPageData = {
     description:
       "Découvrez les chambres et appartements du Voulamandis House à Kambos, Chios : doubles économiques, chambres avec jardin et appartements familiaux.",
     ogImage:
-      "/images/rooms/chios-hotels-family-apartments.webp",
+      "/images/rooms/double-triple-room.jpg",
   },
 
   hero: {
@@ -547,7 +547,7 @@ export const roomsCategoryFr: RoomsCategoryPageData = {
         "Le meilleur rapport qualité-prix pour 2 personnes. Chambres rénovées de 16m² avec les essentiels et une atmosphère paisible à Kambos.",
       href: "/fr/chambres-a-chios/chambres-doubles-economiques/",
       image:
-        "/images/rooms/received_1753964631359257.webp",
+        "/images/rooms/DSC07803-1.webp",
       imageAlt:
         "Chambre double économique à Chios au Voulamandis House",
       badge: "Meilleur prix",
@@ -640,7 +640,7 @@ export const roomsCategoryDe: RoomsCategoryPageData = {
     description:
       "Entdecken Sie Zimmer und Apartments im Voulamandis House in Kambos, Chios. Economy Zimmer, Doppel- und Dreibettzimmer sowie Familienapartments mit Küche.",
     ogImage:
-      "/images/rooms/chios-hotels-family-apartments.webp",
+      "/images/rooms/double-triple-room.jpg",
   },
 
   hero: {
@@ -674,7 +674,7 @@ export const roomsCategoryDe: RoomsCategoryPageData = {
         "Unsere preiswerteste Unterkunft für 2 Gäste. Renovierte Zimmer mit ca. 16m² und allen wichtigen Annehmlichkeiten für einen angenehmen Aufenthalt im ruhigen Kambos von Chios.",
       href: "/de/zimmer-chios/economy-zimmer-auf-chios/",
       image:
-        "/images/rooms/received_1753964631359257.webp",
+        "/images/rooms/DSC07803-1.webp",
       imageAlt:
         "Economy Zimmer auf Chios im Voulamandis House",
       badge: "Preiswert",
@@ -767,7 +767,7 @@ export const roomsCategoryIt: RoomsCategoryPageData = {
     description:
       "Scopri camere e appartamenti a Chios presso Voulamandis House a Kambos: doppie economy, camere al piano terra e appartamenti familiari.",
     ogImage:
-      "/images/rooms/chios-hotels-family-apartments.webp",
+      "/images/rooms/double-triple-room.jpg",
   },
 
   hero: {
@@ -801,7 +801,7 @@ export const roomsCategoryIt: RoomsCategoryPageData = {
         "La scelta con il miglior rapporto qualità-prezzo per 2 ospiti. Camere rinnovate di 16m² con servizi essenziali e la tranquilla atmosfera di Kambos.",
       href: "/it/stanze-a-chios/camera-doppia-economica-chios/",
       image:
-        "/images/rooms/received_1753964631359257.webp",
+        "/images/rooms/DSC07803-1.webp",
       imageAlt:
         "Camera doppia economy a Chios al Voulamandis House",
       badge: "Miglior rapporto qualità-prezzo",
@@ -893,7 +893,7 @@ export const roomsCategoryEs: RoomsCategoryPageData = {
     description:
       "Explora habitaciones y apartamentos de Voulamandis House en Kambos, Chios: dobles económicas, planta baja y apartamentos familiares.",
     ogImage:
-      "/images/rooms/chios-hotels-family-apartments.webp",
+      "/images/rooms/double-triple-room.jpg",
   },
 
   hero: {
@@ -927,7 +927,7 @@ export const roomsCategoryEs: RoomsCategoryPageData = {
         "La mejor opción calidad-precio para 2 huéspedes. Habitaciones renovadas de 16m² con lo esencial y un ambiente tranquilo en Kambos.",
       href: "/es/habitaciones-en-chios/economicas-habitaciones-en-chios/",
       image:
-        "/images/rooms/received_1753964631359257.webp",
+        "/images/rooms/DSC07803-1.webp",
       imageAlt:
         "Habitación doble económica en Chios en Voulamandis House",
       badge: "Mejor valor",
@@ -1019,7 +1019,7 @@ export const roomsCategoryTr: RoomsCategoryPageData = {
     description:
       "Kambos, Sakız Adası’ndaki Voulamandis House oda ve dairelerini keşfedin: ekonomik çift kişilik odalar, zemin kat odaları ve aile daireleri.",
     ogImage:
-      "/images/rooms/chios-hotels-family-apartments.webp",
+      "/images/rooms/double-triple-room.jpg",
   },
 
   hero: {
@@ -1053,7 +1053,7 @@ export const roomsCategoryTr: RoomsCategoryPageData = {
         "2 misafir için en iyi fiyat-performans seçeneği. Temel ihtiyaçlara sahip, yenilenmiş 16m² odalar ve huzurlu bir Kambos atmosferi.",
       href: "/tr/chios-odalari/sakiz-adasindaki-ekonomi-cift-kisilik-oda/",
       image:
-        "/images/rooms/received_1753964631359257.webp",
+        "/images/rooms/DSC07803-1.webp",
       imageAlt:
         "Sakız Adası’nda Voulamandis House ekonomik çift kişilik oda",
       badge: "En avantajlı",

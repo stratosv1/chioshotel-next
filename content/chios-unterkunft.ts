@@ -74,7 +74,7 @@ export const chiosUnterkunftPageDe: ChiosAccommodationPageData = {
         description:
           "Eine praktische und preiswerte Wahl für zwei Gäste, die Kambos als ruhigen Ausgangspunkt nutzen möchten. Die renovierten Zimmer sind etwa 16 m² groß und verfügen über Klimaanlage, WLAN, eigenes Bad, Fernseher und Kühlschrank.",
         href: "/de/zimmer-chios/economy-zimmer-auf-chios/",
-        image: "/images/rooms/received_1753964631359257.webp",
+        image: "/images/rooms/DSC07803-1.webp",
         imageAlt:
           "Economy-Doppelzimmer im Voulamandis House auf Chios",
         facts: ["2 Gäste", "Ca. 16 m²", "Doppelbett", "Preiswerte Wahl"],

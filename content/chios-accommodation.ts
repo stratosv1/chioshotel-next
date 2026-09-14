@@ -165,7 +165,7 @@ export const chiosAccommodationPageEn: ChiosAccommodationPageData = {
         description:
           "A practical choice for two guests who want a comfortable base in Kambos at the lowest room category. The renovated rooms are approximately 16 m² and include the essentials for a relaxed stay, including air conditioning, Wi-Fi, a private bathroom, television and fridge.",
         href: "/chios-rooms/economy-double-rooms/",
-        image: "/images/rooms/received_1753964631359257.webp",
+        image: "/images/rooms/DSC07803-1.webp",
         imageAlt:
           "Economy double room at Voulamandis House accommodation in Chios",
         facts: ["2 guests", "Approx. 16 m²", "Double bed", "Value choice"],
