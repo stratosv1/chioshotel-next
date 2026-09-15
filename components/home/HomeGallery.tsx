@@ -54,7 +54,7 @@ const galleryCopy: Record<HomeGalleryLocale, GalleryCopy> = {
   },
 };
 
-const galleryImages = [
+export const homeGalleryImages = [
   {
     src: "/images/homepage-gallery/voulamandis-house-garden.webp",
     alt: {
@@ -207,7 +207,7 @@ export function HomeGallery({ locale }: { locale: HomeGalleryLocale }) {
       </header>
 
       <div className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 pr-12 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-3 sm:overflow-visible sm:px-0 sm:pr-0 lg:auto-rows-[155px] lg:grid-cols-12 [&::-webkit-scrollbar]:hidden">
-        {galleryImages.map((image, index) => (
+        {homeGalleryImages.map((image, index) => (
           <figure
             key={image.src}
             className={`group relative aspect-[4/3] w-[78vw] max-w-[330px] shrink-0 snap-center overflow-hidden rounded-[1.35rem] bg-stone-200 sm:w-auto sm:max-w-none sm:rounded-[1.6rem] lg:aspect-auto ${desktopLayout[index]}`}

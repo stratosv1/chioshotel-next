@@ -1,4 +1,5 @@
 import type { ChiosAccommodationPageData } from "@/content/chios-accommodation";
+import { homeGalleryImages } from "@/components/home/HomeGallery";
 import { chiosAccommodationPageEn } from "@/content/chios-accommodation";
 import { diamoniStiXioPageEl } from "@/content/diamoni-sti-xio";
 import { hebergementChiosPageFr } from "@/content/hebergement-chios";
@@ -252,7 +253,11 @@ function mergeEntries(entries: readonly ImageSitemapEntry[]) {
 export function GET() {
   const homeEntries: ImageSitemapEntry[] = homePages.map((page) => ({
     path: page.seo.canonicalPath,
-    images: [page.hero.image, page.hero.mobileImage],
+    images: unique([
+      page.hero.image,
+      page.hero.mobileImage,
+      ...homeGalleryImages.map((image) => image.src),
+    ]),
   }));
 
   const registryEntries: ImageSitemapEntry[] = getAllSeoImageSets().map((set) => ({
