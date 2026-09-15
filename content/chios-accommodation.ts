@@ -97,7 +97,7 @@ const heroImage =
 export const chiosAccommodationPageEn: ChiosAccommodationPageData = {
   seo: {
     canonicalPath: "/chios-accommodation/",
-    title: "Chios Accommodation | Rooms & Apartments in Kambos",
+    title: "Family-Run Accommodation in Chios | Voulamandis House",
     description:
       "Stay at Voulamandis House in Kambos, Chios: peaceful rooms and family apartments near Chios Town, the airport and beaches. Check direct availability.",
     ogImage: heroImage,
@@ -216,9 +216,9 @@ export const chiosAccommodationPageEn: ChiosAccommodationPageData = {
       "The area works well as a base because it combines atmosphere with practical access. Voulamandis House is about 3 km from Chios Airport and 6 km from the port. Chios Town is within easy reach for restaurants, shopping, the waterfront and ferry connections, while roads from Kambos lead naturally towards the southern beaches and the medieval mastic villages.",
       "This location is particularly useful for travelers who plan to explore different parts of the island rather than remain in one resort. You can start the morning in the garden, drive to a beach or village for the day and return to a quieter environment in the evening.",
     ],
-    image: "/images/kampos/kampos-chios-mansion-garden.webp",
+    image: "/images/beaches/voulamandis-house-courtyard-chios.webp",
     imageAlt:
-      "Traditional mansion and citrus garden in Kambos near Voulamandis House",
+      "Voulamandis House courtyard and garden in Kambos, Chios",
     distances: [
       {
         label: "Chios Airport",

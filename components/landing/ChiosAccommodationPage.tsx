@@ -3,6 +3,7 @@ import type { ChiosAccommodationPageData } from "@/content/chios-accommodation";
 
 type Props = {
   data: ChiosAccommodationPageData;
+  prioritizeRooms?: boolean;
 };
 
 const primaryButton =
@@ -24,7 +25,81 @@ function SwipeHint() {
   );
 }
 
-export function ChiosAccommodationPage({ data }: Props) {
+function AccommodationRoomsSection({ data }: { data: ChiosAccommodationPageData }) {
+  return (
+    <section
+      className="bg-[#f1e7d8] px-4 py-11 sm:px-6 sm:py-14 lg:px-8 lg:py-24"
+      aria-labelledby="accommodation-rooms-title"
+    >
+      <div className="mx-auto max-w-7xl">
+        <header className="mx-auto max-w-4xl text-center">
+          <p className={kicker}>{data.rooms.kicker}</p>
+          <h2
+            id="accommodation-rooms-title"
+            className="mt-3 text-balance text-3xl font-black tracking-[-0.04em] sm:mt-4 sm:text-4xl lg:text-5xl"
+          >
+            {data.rooms.title}
+          </h2>
+          <p className="mx-auto mt-4 max-w-3xl text-[15px] leading-7 text-[#574b3f] sm:mt-5 sm:text-lg sm:leading-8">
+            {data.rooms.description}
+          </p>
+        </header>
+
+        <SwipeHint />
+
+        <div className={`${mobileCarousel} mt-7 md:grid-cols-2 md:gap-6 sm:mt-10`}>
+          {data.rooms.cards.map((card, index) => (
+            <a
+              key={card.id}
+              href={card.href}
+              className="group min-w-[86vw] snap-start overflow-hidden rounded-[28px] border border-amber-900/10 bg-white shadow-[0_22px_60px_rgba(47,38,31,0.11)] transition hover:-translate-y-1 hover:shadow-[0_30px_90px_rgba(47,38,31,0.17)] focus:outline-none focus:ring-4 focus:ring-amber-700/20 sm:min-w-[72vw] md:min-w-0 md:rounded-[32px]"
+            >
+              <article className="grid h-full sm:grid-cols-[0.9fr_1.1fr]">
+                <div className="relative min-h-[210px] bg-stone-200 sm:min-h-full">
+                  <Image
+                    src={card.image}
+                    alt={card.imageAlt}
+                    fill
+                    priority={index < 2}
+                    sizes="(min-width: 768px) 34vw, 86vw"
+                    className="object-cover transition duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
+                </div>
+                <div className="flex flex-col p-5 sm:p-7">
+                  <p className="text-[9px] font-black uppercase tracking-[0.2em] text-amber-800 sm:text-[10px] sm:tracking-[0.22em]">
+                    {card.eyebrow}
+                  </p>
+                  <h3 className="mt-2.5 text-xl font-black tracking-[-0.035em] sm:mt-3 sm:text-2xl">
+                    {card.title}
+                  </h3>
+                  <p className="mt-3 flex-1 text-sm leading-6 text-[#574b3f] sm:mt-4 sm:leading-7">
+                    {card.description}
+                  </p>
+                  <div className="mt-4 flex flex-wrap gap-2 sm:mt-5">
+                    {card.facts.map((fact) => (
+                      <span
+                        key={fact}
+                        className="rounded-full bg-amber-50 px-2.5 py-1.5 text-[9px] font-black uppercase tracking-[0.08em] text-amber-900 ring-1 ring-amber-900/10 sm:px-3 sm:text-[10px] sm:tracking-[0.1em]"
+                      >
+                        {fact}
+                      </span>
+                    ))}
+                  </div>
+                  <span className="mt-5 inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.13em] text-amber-800 sm:mt-6 sm:text-xs sm:tracking-[0.14em]">
+                    View accommodation <span aria-hidden="true">→</span>
+                  </span>
+                </div>
+              </article>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export function ChiosAccommodationPage({ data, prioritizeRooms = false }: Props) {
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#fbf6ef] text-[#2f261f]">
       <section
@@ -103,6 +178,8 @@ export function ChiosAccommodationPage({ data }: Props) {
         </div>
       </section>
 
+      {prioritizeRooms ? <AccommodationRoomsSection data={data} /> : null}
+
       <section
         className="px-4 py-11 sm:px-6 sm:py-14 lg:px-8 lg:py-24"
         aria-labelledby="accommodation-intro-title"
@@ -142,75 +219,7 @@ export function ChiosAccommodationPage({ data }: Props) {
         </div>
       </section>
 
-      <section
-        className="bg-[#f1e7d8] px-4 py-11 sm:px-6 sm:py-14 lg:px-8 lg:py-24"
-        aria-labelledby="accommodation-rooms-title"
-      >
-        <div className="mx-auto max-w-7xl">
-          <header className="mx-auto max-w-4xl text-center">
-            <p className={kicker}>{data.rooms.kicker}</p>
-            <h2
-              id="accommodation-rooms-title"
-              className="mt-3 text-balance text-3xl font-black tracking-[-0.04em] sm:mt-4 sm:text-4xl lg:text-5xl"
-            >
-              {data.rooms.title}
-            </h2>
-            <p className="mx-auto mt-4 max-w-3xl text-[15px] leading-7 text-[#574b3f] sm:mt-5 sm:text-lg sm:leading-8">
-              {data.rooms.description}
-            </p>
-          </header>
-
-          <SwipeHint />
-
-          <div className={`${mobileCarousel} mt-7 md:grid-cols-2 md:gap-6 sm:mt-10`}>
-            {data.rooms.cards.map((card, index) => (
-              <a
-                key={card.id}
-                href={card.href}
-                className="group min-w-[86vw] snap-start overflow-hidden rounded-[28px] border border-amber-900/10 bg-white shadow-[0_22px_60px_rgba(47,38,31,0.11)] transition hover:-translate-y-1 hover:shadow-[0_30px_90px_rgba(47,38,31,0.17)] focus:outline-none focus:ring-4 focus:ring-amber-700/20 sm:min-w-[72vw] md:min-w-0 md:rounded-[32px]"
-              >
-                <article className="grid h-full sm:grid-cols-[0.9fr_1.1fr]">
-                  <div className="relative min-h-[210px] bg-stone-200 sm:min-h-full">
-                    <Image
-                      src={card.image}
-                      alt={card.imageAlt}
-                      fill
-                      priority={index < 2}
-                      sizes="(min-width: 768px) 34vw, 86vw"
-                      className="object-cover transition duration-500 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
-                  </div>
-                  <div className="flex flex-col p-5 sm:p-7">
-                    <p className="text-[9px] font-black uppercase tracking-[0.2em] text-amber-800 sm:text-[10px] sm:tracking-[0.22em]">
-                      {card.eyebrow}
-                    </p>
-                    <h3 className="mt-2.5 text-xl font-black tracking-[-0.035em] sm:mt-3 sm:text-2xl">
-                      {card.title}
-                    </h3>
-                    <p className="mt-3 flex-1 text-sm leading-6 text-[#574b3f] sm:mt-4 sm:leading-7">
-                      {card.description}
-                    </p>
-                    <div className="mt-4 flex flex-wrap gap-2 sm:mt-5">
-                      {card.facts.map((fact) => (
-                        <span
-                          key={fact}
-                          className="rounded-full bg-amber-50 px-2.5 py-1.5 text-[9px] font-black uppercase tracking-[0.08em] text-amber-900 ring-1 ring-amber-900/10 sm:px-3 sm:text-[10px] sm:tracking-[0.1em]"
-                        >
-                          {fact}
-                        </span>
-                      ))}
-                    </div>
-                    <span className="mt-5 inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.13em] text-amber-800 sm:mt-6 sm:text-xs sm:tracking-[0.14em]">
-                      View accommodation <span aria-hidden="true">→</span>
-                    </span>
-                  </div>
-                </article>
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
+      {!prioritizeRooms ? <AccommodationRoomsSection data={data} /> : null}
 
       <section
         className="px-4 py-11 sm:px-6 sm:py-14 lg:px-8 lg:py-24"
