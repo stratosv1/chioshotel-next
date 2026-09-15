@@ -30,7 +30,7 @@ export default function Page() {
   return (
     <>
       <JsonLd data={buildChiosAccommodationSchema(pageData)} />
-      <ChiosAccommodationPage data={pageData} />
+      <ChiosAccommodationPage data={pageData} prioritizeRooms />
       <AccommodationLandingAnalytics
         language="en"
         pathname={pageData.seo.canonicalPath}

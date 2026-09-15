@@ -13,7 +13,7 @@ type TraditionalIntentCopy = {
 const copy: Record<LanguageCode, TraditionalIntentCopy> = {
   en: {
     seoDescription:
-      "Stay at Voulamandis House in Kambos, Chios: peaceful family-run guest accommodation near Chios Airport, with traditional character, rooms, apartments and direct availability.",
+      "Stay at Voulamandis House in Kambos: family-run accommodation in Chios with peaceful rooms and apartments near the airport. Check direct availability.",
     introTitle: "A family-run guest accommodation with traditional Chios character",
     paragraph:
       "Travellers searching for a guest house or traditional accommodation in Chios often want something smaller, quieter and more personal than a large hotel. Voulamandis House fits that travel style through its family-run scale, historic Kambos setting, citrus gardens and direct contact with the hosts, while remaining clearly a rooms-and-apartments accommodation rather than a full-service hotel.",
