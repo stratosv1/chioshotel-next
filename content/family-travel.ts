@@ -25,6 +25,7 @@ export type FamilyTravelStoryStep = {
 export type FamilyTravelPageContent = {
   locale: LanguageCode;
   path: string;
+  searchImages?: FamilyTravelImage[];
   seo: {
     title: string;
     description: string;

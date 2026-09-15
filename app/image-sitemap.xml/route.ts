@@ -7,6 +7,17 @@ import { alloggioChiosPageIt } from "@/content/alloggio-chios";
 import { alojamientoChiosPageEs } from "@/content/alojamiento-chios";
 import { sakizAdasiKonaklamaPageTr } from "@/content/sakiz-adasi-konaklama";
 import { kamposChiosPages, type KamposChiosPageData } from "@/content/kampos-chios";
+import { chiosHotelsGuide } from "@/content/chios-hotels-guide";
+import type { ChiosHotelsGuideContent } from "@/content/chios-hotels-guide-types";
+import { xenodoxeiaXiosGuide } from "@/content/xenodoxeia-xios-guide";
+import { hotelsChiosGuideFr } from "@/content/hotels-chios-guide-fr";
+import { hotelsAufChiosGuide } from "@/content/hotels-auf-chios-guide";
+import { hotelChiosGuideIt } from "@/content/hotel-chios-guide-it";
+import { hotelesChiosGuideEs } from "@/content/hoteles-chios-guide-es";
+import { sakizAdasiOtelleriGuide } from "@/content/sakiz-adasi-otelleri-guide";
+import { getDealsIntentData } from "@/content/deals-intent";
+import { getFamilyTravelIntentData } from "@/content/family-travel-intent";
+import { getRomanticStayData } from "@/content/romantic-stay";
 import { localizedRatesPages, type RatesPageData } from "@/content/rates";
 import {
   roomsCategoryDe,
@@ -60,6 +71,7 @@ import {
   standardDoubleRoomPl,
 } from "@/content/room-details-pl";
 import { absoluteUrl } from "@/lib/seo";
+import { getCommercialRoomGalleryImages } from "@/lib/commercial-room-images";
 import { getAllSeoImageSets } from "@/lib/seo-image-registry";
 import { getSeoImagesForPath } from "@/lib/seo-image-schema";
 
@@ -69,6 +81,8 @@ type ImageSitemapEntry = {
   path: string;
   images: string[];
 };
+
+const activeCommercialLocales = ["en", "el", "fr", "de", "it", "es", "tr"] as const;
 
 const roomDetailPages: readonly RoomDetailData[] = [
   standardDoubleRoomEn,
@@ -110,6 +124,22 @@ const accommodationPages: readonly ChiosAccommodationPageData[] = [
 
 const kamposPages: readonly KamposChiosPageData[] = Object.values(kamposChiosPages);
 const ratesPages: readonly RatesPageData[] = localizedRatesPages;
+const hotelGuidePages: readonly ChiosHotelsGuideContent[] = [
+  chiosHotelsGuide,
+  xenodoxeiaXiosGuide,
+  hotelsChiosGuideFr,
+  hotelsAufChiosGuide,
+  hotelChiosGuideIt,
+  hotelesChiosGuideEs,
+  sakizAdasiOtelleriGuide,
+];
+const dealsPages = activeCommercialLocales.map((locale) => getDealsIntentData(locale));
+const familyTravelPages = activeCommercialLocales.map((locale) =>
+  getFamilyTravelIntentData(locale),
+);
+const romanticStayPages = activeCommercialLocales.map((locale) =>
+  getRomanticStayData(locale),
+);
 
 const homePages: readonly HomePageData[] = [
   homePageEn,
@@ -167,7 +197,41 @@ function getKamposPageImages(page: KamposChiosPageData) {
 }
 
 function getRatesPageImages(page: RatesPageData) {
-  return unique([page.seo.ogImage, page.hero.image]);
+  return unique([
+    page.seo.ogImage,
+    page.hero.image,
+    ...getCommercialRoomGalleryImages(page.seo.canonicalPath).map((image) => image.src),
+  ]);
+}
+
+function getHotelGuideImages(page: ChiosHotelsGuideContent) {
+  return unique([
+    page.seo.image,
+    ...page.roomCategories.items.map((room) => room.image),
+  ]);
+}
+
+function getDealsPageImages(page: ReturnType<typeof getDealsIntentData>) {
+  return unique([
+    page.seo.ogImage,
+    page.hero.image,
+    ...page.offers.map((offer) => offer.image),
+  ]);
+}
+
+function getFamilyTravelImages(page: ReturnType<typeof getFamilyTravelIntentData>) {
+  return unique([
+    page.hero.image.src,
+    ...(page.searchImages || []).map((image) => image.src),
+  ]);
+}
+
+function getRomanticStayImages(page: ReturnType<typeof getRomanticStayData>) {
+  return unique([
+    page.seo.ogImage,
+    page.hero.image.src,
+    ...(page.searchImages || []).map((image) => image.src),
+  ]);
 }
 
 function mergeEntries(entries: readonly ImageSitemapEntry[]) {
@@ -219,6 +283,26 @@ export function GET() {
     images: getRatesPageImages(page),
   }));
 
+  const hotelGuideEntries: ImageSitemapEntry[] = hotelGuidePages.map((page) => ({
+    path: page.seo.canonicalPath,
+    images: getHotelGuideImages(page),
+  }));
+
+  const dealsEntries: ImageSitemapEntry[] = dealsPages.map((page) => ({
+    path: page.seo.canonicalPath,
+    images: getDealsPageImages(page),
+  }));
+
+  const familyTravelEntries: ImageSitemapEntry[] = familyTravelPages.map((page) => ({
+    path: page.path,
+    images: getFamilyTravelImages(page),
+  }));
+
+  const romanticStayEntries: ImageSitemapEntry[] = romanticStayPages.map((page) => ({
+    path: page.path,
+    images: getRomanticStayImages(page),
+  }));
+
   const beachGuideEntries: ImageSitemapEntry[] = chiosBeachesPages.map((page) => ({
     path: page.seo.canonicalPath,
     images: unique([
@@ -245,6 +329,10 @@ export function GET() {
     ...accommodationEntries,
     ...kamposEntries,
     ...ratesEntries,
+    ...hotelGuideEntries,
+    ...dealsEntries,
+    ...familyTravelEntries,
+    ...romanticStayEntries,
     ...beachGuideEntries,
     ...villageGuideEntries,
   ])

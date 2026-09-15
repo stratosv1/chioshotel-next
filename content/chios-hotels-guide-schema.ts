@@ -1,10 +1,14 @@
 import type { ChiosHotelsGuideData } from "@/content/chios-hotels-guide";
 import { absoluteUrl, getCanonicalUrl, siteUrl } from "@/lib/seo";
 import {
+  buildCommercialImageObjectSchemas,
+  getCommercialImageReferences,
+  type CommercialPageImage,
+} from "@/lib/commercial-room-images";
+import {
   buildBreadcrumbSchema,
   buildFaqSchema,
   buildHotelSchema,
-  buildImageSchema,
   buildOrganizationSchema,
   buildSchemaGraph,
   buildWebsiteSchema,
@@ -21,7 +25,10 @@ function roomCategoryId(path: string, index: number) {
   return schemaId(path, `room-category-${index + 1}`);
 }
 
-function buildCollectionPage(data: ChiosHotelsGuideData): SchemaObject {
+function buildCollectionPage(
+  data: ChiosHotelsGuideData,
+  imageReferences: SchemaObject[],
+): SchemaObject {
   const path = data.seo.canonicalPath;
 
   return {
@@ -39,6 +46,7 @@ function buildCollectionPage(data: ChiosHotelsGuideData): SchemaObject {
     ],
     mainEntity: { "@id": itemListId(path) },
     primaryImageOfPage: { "@id": primaryImageId(path) },
+    image: imageReferences,
     breadcrumb: { "@id": schemaId(path, "breadcrumb") },
     publisher: { "@id": `${siteUrl}/#organization` },
   };
@@ -88,6 +96,20 @@ function buildRoomItemList(data: ChiosHotelsGuideData): SchemaObject {
 
 export function buildChiosHotelsGuideSchema(data: ChiosHotelsGuideData) {
   const path = data.seo.canonicalPath;
+  const primaryImage: CommercialPageImage = {
+    src: data.seo.image,
+    alt: data.seo.imageAlt,
+    caption: "Rooms and apartments in historic Kambos, Chios",
+  };
+  const images = [
+    primaryImage,
+    ...data.roomCategories.items.map((room) => ({
+      src: room.image,
+      alt: `${room.title} · Voulamandis House`,
+      caption: room.title,
+    })),
+  ];
+  const imageReferences = getCommercialImageReferences(path, images);
 
   return buildSchemaGraph([
     buildOrganizationSchema(),
@@ -97,15 +119,8 @@ export function buildChiosHotelsGuideSchema(data: ChiosHotelsGuideData) {
         "Voulamandis House is a family-run guest accommodation in Kambos, Chios, offering private rooms and family apartments as an alternative to a traditional hotel stay.",
     }),
     buildWebsiteSchema(),
-    buildImageSchema(
-      {
-        url: data.seo.image,
-        alt: data.seo.imageAlt,
-        caption: "Rooms and apartments in historic Kambos, Chios",
-      },
-      path,
-    ),
-    buildCollectionPage(data),
+    ...buildCommercialImageObjectSchemas(path, images),
+    buildCollectionPage(data, imageReferences),
     buildRoomItemList(data),
     ...buildRoomCategoryNodes(data),
     buildBreadcrumbSchema(path, [{ name: "Chios hotels and where to stay", path }]),

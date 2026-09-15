@@ -50,7 +50,7 @@ const bookingIframeSrc =
   "https://beds24.com/booking2.php?propid=117813&referer=iframe";
 
 const ratesHeroImage =
-  "/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp";
+  "/images/rooms/DSC07867-1.webp";
 
 export const ratesPageEn: RatesPageData = {
   seo: {

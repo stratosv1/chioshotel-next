@@ -1,4 +1,5 @@
 import type { LanguageCode } from "@/lib/languages";
+import { getCommercialRoomGalleryImages } from "@/lib/commercial-room-images";
 
 type RomanticLocale = Exclude<LanguageCode, "pl">;
 
@@ -14,6 +15,7 @@ type RomanticCard = {
 export type RomanticStayPageData = {
   locale: RomanticLocale;
   path: string;
+  searchImages?: Image[];
   seo: {
     title: string;
     description: string;
@@ -241,6 +243,24 @@ export const romanticStayData: Record<RomanticLocale, RomanticStayPageData> = {
   },
 };
 
-export function getRomanticStayData(locale: RomanticLocale) {
-  return romanticStayData[locale];
+export function getRomanticStayData(locale: RomanticLocale): RomanticStayPageData {
+  const page = romanticStayData[locale];
+  const roomImages = getCommercialRoomGalleryImages(page.path);
+  const heroImage = {
+    src: "/images/rooms/received_1748354861920234.webp",
+    alt: page.stay.image.alt,
+  };
+
+  return {
+    ...page,
+    searchImages: [heroImage, ...roomImages],
+    seo: {
+      ...page.seo,
+      ogImage: heroImage.src,
+    },
+    hero: {
+      ...page.hero,
+      image: heroImage,
+    },
+  };
 }

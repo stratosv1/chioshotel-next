@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CommercialRoomGallery } from "@/components/landing/CommercialRoomGallery";
 import type { RomanticStayPageData } from "@/content/romantic-stay";
 
 type Props = { data: RomanticStayPageData };
@@ -26,6 +27,8 @@ export function RomanticStayPage({ data }: Props) {
           </div>
         </div>
       </section>
+
+      <CommercialRoomGallery path={data.path} />
 
       <section className="py-16 md:py-20">
         <div className="mx-auto max-w-[920px] px-5 text-center md:px-8">

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { PropertyFaqSection } from "@/components/faq/PropertyFaqSection";
+import { CommercialRoomGallery } from "@/components/landing/CommercialRoomGallery";
 import type { RatesPageData } from "@/content/rates";
 import { isLanguageCode } from "@/lib/languages";
 
@@ -257,6 +258,8 @@ export function RatesPage({ data }: RatesPageProps) {
           </div>
         </div>
       </section>
+
+      <CommercialRoomGallery path={data.seo.canonicalPath} />
 
       <section className="py-10 md:py-14">
         <div className="mx-auto grid w-[min(1220px,calc(100%-40px))] gap-7 lg:grid-cols-2">
