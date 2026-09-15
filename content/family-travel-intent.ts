@@ -1,6 +1,7 @@
 import type { FamilyTravelPageContent } from "@/content/family-travel";
 import { getFamilyTravelPageByLocale } from "@/content/family-travel";
 import type { LanguageCode } from "@/lib/languages";
+import { getCommercialRoomGalleryImages } from "@/lib/commercial-room-images";
 
 type FamilyTravelCopy = {
   seoTitle: string;
@@ -104,9 +105,14 @@ export function getFamilyTravelIntentData(
 ): FamilyTravelPageContent {
   const base = getFamilyTravelPageByLocale(locale);
   const text = copy[locale];
+  const roomImages = getCommercialRoomGalleryImages(base.path);
+  const heroImage =
+    roomImages.find((image) => image.src.includes("chios-apartments-voulamandis")) ||
+    base.hero.image;
 
   return {
     ...base,
+    searchImages: [heroImage, ...roomImages],
     seo: {
       ...base.seo,
       title: text.seoTitle,
@@ -114,6 +120,7 @@ export function getFamilyTravelIntentData(
     },
     hero: {
       ...base.hero,
+      image: heroImage,
       title: text.heroTitle,
       subtitle: text.heroSubtitle,
       secondaryCta: {

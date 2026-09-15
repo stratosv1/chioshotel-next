@@ -2,10 +2,14 @@ import type { ChiosHotelsGuideContent } from "@/content/chios-hotels-guide-types
 import type { ChiosHotelsGuideLocale } from "@/lib/chios-hotels-guide-i18n";
 import { absoluteUrl, getCanonicalUrl, siteUrl } from "@/lib/seo";
 import {
+  buildCommercialImageObjectSchemas,
+  getCommercialImageReferences,
+  type CommercialPageImage,
+} from "@/lib/commercial-room-images";
+import {
   buildBreadcrumbSchema,
   buildFaqSchema,
   buildHotelSchema,
-  buildImageSchema,
   buildOrganizationSchema,
   buildSchemaGraph,
   buildWebsiteSchema,
@@ -80,7 +84,11 @@ function roomCategoryId(path: string, index: number) {
   return schemaId(path, `room-category-${index + 1}`);
 }
 
-function buildCollectionPage(data: ChiosHotelsGuideContent, locale: ChiosHotelsGuideLocale): SchemaObject {
+function buildCollectionPage(
+  data: ChiosHotelsGuideContent,
+  locale: ChiosHotelsGuideLocale,
+  imageReferences: SchemaObject[],
+): SchemaObject {
   const path = data.seo.canonicalPath;
   return {
     "@type": "CollectionPage",
@@ -97,6 +105,7 @@ function buildCollectionPage(data: ChiosHotelsGuideContent, locale: ChiosHotelsG
     ],
     mainEntity: { "@id": itemListId(path) },
     primaryImageOfPage: { "@id": primaryImageId(path) },
+    image: imageReferences,
     breadcrumb: { "@id": schemaId(path, "breadcrumb") },
     publisher: { "@id": `${siteUrl}/#organization` },
   };
@@ -142,21 +151,42 @@ function buildRoomItemList(data: ChiosHotelsGuideContent, locale: ChiosHotelsGui
   };
 }
 
-export function buildLocalizedChiosHotelsGuideSchema(data: ChiosHotelsGuideContent, locale: ChiosHotelsGuideLocale) {
+export function buildLocalizedChiosHotelsGuideSchema(
+  data: ChiosHotelsGuideContent,
+  locale: ChiosHotelsGuideLocale,
+) {
   const path = data.seo.canonicalPath;
   const labels = LABELS[locale];
+  const primaryImage: CommercialPageImage = {
+    src: data.seo.image,
+    alt: data.seo.imageAlt,
+    caption: labels.imageCaption,
+  };
+  const images = [
+    primaryImage,
+    ...data.roomCategories.items.map((room) => ({
+      src: room.image,
+      alt: `${room.title} · Voulamandis House`,
+      caption: room.title,
+    })),
+  ];
+  const imageReferences = getCommercialImageReferences(path, images);
+
   return buildSchemaGraph([
     buildOrganizationSchema(),
     buildHotelSchema({ path, description: labels.businessDescription }),
     buildWebsiteSchema(),
-    buildImageSchema({ url: data.seo.image, alt: data.seo.imageAlt, caption: labels.imageCaption }, path),
-    buildCollectionPage(data, locale),
+    ...buildCommercialImageObjectSchemas(path, images),
+    buildCollectionPage(data, locale, imageReferences),
     buildRoomItemList(data, locale),
     ...buildRoomCategoryNodes(data, locale),
     buildBreadcrumbSchema(path, [{ name: labels.breadcrumb, path }]),
     buildFaqSchema({
       path,
-      questions: data.faq.items.map((item) => ({ question: item.question, answer: item.answer })),
+      questions: data.faq.items.map((item) => ({
+        question: item.question,
+        answer: item.answer,
+      })),
     }),
   ]);
 }

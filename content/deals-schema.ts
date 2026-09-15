@@ -3,13 +3,16 @@ import {
   absoluteUrl,
   getCanonicalUrl,
   getLanguageForPath,
-  siteName,
   siteUrl,
 } from "@/lib/seo";
 import {
+  buildCommercialImageObjectSchemas,
+  getCommercialImageReferences,
+  type CommercialPageImage,
+} from "@/lib/commercial-room-images";
+import {
   buildBreadcrumbSchema,
   buildHotelSchema,
-  buildImageSchema,
   buildOrganizationSchema,
   buildSchemaGraph,
   buildWebsiteSchema,
@@ -112,7 +115,10 @@ function normalizeTelephone(phoneHref: string): string {
   return cleaned;
 }
 
-function buildDealsCollectionPageSchema(data: DealsPageData): SchemaObject {
+function buildDealsCollectionPageSchema(
+  data: DealsPageData,
+  imageReferences: SchemaObject[],
+): SchemaObject {
   const canonicalPath = data.seo.canonicalPath;
   const language = getLanguageForPath(canonicalPath);
 
@@ -136,6 +142,7 @@ function buildDealsCollectionPageSchema(data: DealsPageData): SchemaObject {
     primaryImageOfPage: {
       "@id": primaryImageId(canonicalPath),
     },
+    image: imageReferences,
     breadcrumb: {
       "@id": schemaId(canonicalPath, "breadcrumb"),
     },
@@ -311,20 +318,27 @@ function buildDealsReservationActionSchema(data: DealsPageData): SchemaObject {
 
 export function buildDealsSchema(data: DealsPageData) {
   const canonicalPath = data.seo.canonicalPath;
+  const primaryImage: CommercialPageImage = {
+    src: data.seo.ogImage || data.hero.image,
+    alt: data.hero.title,
+    caption: data.hero.title,
+  };
+  const images = [
+    primaryImage,
+    ...data.offers.map((offer) => ({
+      src: offer.image,
+      alt: offer.imageAlt,
+      caption: offer.title,
+    })),
+  ];
+  const imageReferences = getCommercialImageReferences(canonicalPath, images);
 
   return buildSchemaGraph([
     buildOrganizationSchema(),
     buildDealsHotelSchema(data),
     buildWebsiteSchema(),
-    buildImageSchema(
-      {
-        url: data.seo.ogImage || data.hero.image,
-        alt: data.hero.title,
-        caption: `${data.hero.title} - ${siteName}`,
-      },
-      canonicalPath,
-    ),
-    buildDealsCollectionPageSchema(data),
+    ...buildCommercialImageObjectSchemas(canonicalPath, images),
+    buildDealsCollectionPageSchema(data, imageReferences),
     buildOfferCatalogSchema(data),
     buildDealsItemListSchema(data),
     ...data.offers.map((offer) => buildDealOfferSchema(data, offer)),

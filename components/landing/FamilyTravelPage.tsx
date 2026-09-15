@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CommercialRoomGallery } from "@/components/landing/CommercialRoomGallery";
 import type { FamilyTravelPageContent } from "@/content/family-travel";
 
 type FamilyTravelPageProps = {
@@ -47,6 +48,8 @@ export default function FamilyTravelPage({ data }: FamilyTravelPageProps) {
           </div>
         </div>
       </section>
+
+      <CommercialRoomGallery path={data.path} />
 
       <section className="py-16 md:py-20" aria-labelledby="family-intro-title">
         <div className="mx-auto max-w-[920px] px-5 md:px-8">

@@ -6,6 +6,11 @@ import {
   siteUrl,
 } from "@/lib/seo";
 import {
+  buildCommercialImageObjectSchemas,
+  getCommercialImageReferences,
+  type CommercialPageImage,
+} from "@/lib/commercial-room-images";
+import {
   buildBreadcrumbSchema,
   buildHotelSchema,
   buildImageSchema,
@@ -42,6 +47,7 @@ type LandingCta = string | { label: string; href: string };
 
 type LandingPageSchemaData = {
   path?: string;
+  searchImages?: ImageLike[];
   seo: {
     canonicalPath?: string;
     title: string;
@@ -211,7 +217,10 @@ function getChiosIslandPath(canonicalPath: string): string {
   return chiosIslandPathByLanguage[language] || chiosIslandPathByLanguage.en;
 }
 
-function buildLandingWebPageSchema(data: LandingPageSchemaData): SchemaObject {
+function buildLandingWebPageSchema(
+  data: LandingPageSchemaData,
+  imageReferences: SchemaObject[],
+): SchemaObject {
   const canonicalPath = getCanonicalPath(data);
   const language = getLanguageForPath(canonicalPath);
 
@@ -243,6 +252,7 @@ function buildLandingWebPageSchema(data: LandingPageSchemaData): SchemaObject {
     primaryImageOfPage: {
       "@id": primaryImageId(canonicalPath),
     },
+    image: imageReferences.length ? imageReferences : undefined,
     breadcrumb: {
       "@id": schemaId(canonicalPath, "breadcrumb"),
     },
@@ -252,7 +262,10 @@ function buildLandingWebPageSchema(data: LandingPageSchemaData): SchemaObject {
   };
 }
 
-function buildTravelThemeSchema(data: LandingPageSchemaData): SchemaObject {
+function buildTravelThemeSchema(
+  data: LandingPageSchemaData,
+  imageReferences: SchemaObject[],
+): SchemaObject {
   const canonicalPath = getCanonicalPath(data);
   const image = getPrimaryImage(data);
   const language = getLanguageForPath(canonicalPath);
@@ -268,7 +281,7 @@ function buildTravelThemeSchema(data: LandingPageSchemaData): SchemaObject {
       data.hero.subtitle ||
       data.hero.description ||
       data.seo.description,
-    image: absoluteUrl(image),
+    image: imageReferences.length ? imageReferences : absoluteUrl(image),
     inLanguage: language,
     about: {
       "@id": schemaId(getChiosIslandPath(canonicalPath), "destination"),
@@ -476,21 +489,42 @@ function buildSecondaryViewActionSchema(
 export function buildLandingPageSchema(data: LandingPageSchemaData) {
   const canonicalPath = getCanonicalPath(data);
   const image = getPrimaryImage(data);
+  const primaryImage: CommercialPageImage = {
+    src: image,
+    alt: getImageAlt(data.hero.image, data.hero.title),
+    caption: `${data.hero.title} - ${siteName}`,
+  };
+  const commercialImages = data.searchImages?.length
+    ? [
+        primaryImage,
+        ...data.searchImages.map((searchImage) => ({
+          src: getImageUrl(searchImage) || image,
+          alt: getImageAlt(searchImage, data.hero.title),
+        })),
+      ]
+    : [];
+  const imageReferences = commercialImages.length
+    ? getCommercialImageReferences(canonicalPath, commercialImages)
+    : [];
 
   return buildSchemaGraph([
     buildOrganizationSchema(),
     buildHotelSchema({ path: canonicalPath }),
     buildWebsiteSchema(),
-    buildImageSchema(
-      {
-        url: image,
-        alt: getImageAlt(data.hero.image, data.hero.title),
-        caption: `${data.hero.title} - ${siteName}`,
-      },
-      canonicalPath,
-    ),
-    buildLandingWebPageSchema(data),
-    buildTravelThemeSchema(data),
+    ...(commercialImages.length
+      ? buildCommercialImageObjectSchemas(canonicalPath, commercialImages)
+      : [
+          buildImageSchema(
+            {
+              url: image,
+              alt: primaryImage.alt,
+              caption: primaryImage.caption,
+            },
+            canonicalPath,
+          ),
+        ]),
+    buildLandingWebPageSchema(data, imageReferences),
+    buildTravelThemeSchema(data, imageReferences),
     buildIntroSchema(data),
     buildLandingContentItemListSchema(data),
     buildStaySchema(data),

@@ -2,13 +2,17 @@ import type { RatesPageData } from "@/content/rates";
 import {
   getCanonicalUrl,
   getLanguageForPath,
-  siteName,
   siteUrl,
 } from "@/lib/seo";
 import {
+  buildCommercialImageObjectSchemas,
+  getCommercialImageReferences,
+  getCommercialRoomGalleryImages,
+  type CommercialPageImage,
+} from "@/lib/commercial-room-images";
+import {
   buildBreadcrumbSchema,
   buildHotelSchema,
-  buildImageSchema,
   buildOrganizationSchema,
   buildSchemaGraph,
   buildWebsiteSchema,
@@ -88,7 +92,10 @@ function getRatesLabels(path: string) {
   return ratesLabelsByLanguage[language] ?? ratesLabelsByLanguage.en;
 }
 
-function buildRatesWebPageSchema(data: RatesPageData): SchemaObject {
+function buildRatesWebPageSchema(
+  data: RatesPageData,
+  imageReferences: SchemaObject[],
+): SchemaObject {
   const canonicalPath = data.seo.canonicalPath;
   const language = getLanguageForPath(canonicalPath);
 
@@ -112,6 +119,7 @@ function buildRatesWebPageSchema(data: RatesPageData): SchemaObject {
     primaryImageOfPage: {
       "@id": primaryImageId(canonicalPath),
     },
+    image: imageReferences,
     breadcrumb: {
       "@id": schemaId(canonicalPath, "breadcrumb"),
     },
@@ -247,20 +255,23 @@ function buildRatesHotelSchema(data: RatesPageData): SchemaObject {
 
 export function buildRatesSchema(data: RatesPageData) {
   const canonicalPath = data.seo.canonicalPath;
+  const primaryImage: CommercialPageImage = {
+    src: data.seo.ogImage || data.hero.image,
+    alt: data.hero.title,
+    caption: data.hero.title,
+  };
+  const images = [
+    primaryImage,
+    ...getCommercialRoomGalleryImages(canonicalPath),
+  ];
+  const imageReferences = getCommercialImageReferences(canonicalPath, images);
 
   return buildSchemaGraph([
     buildOrganizationSchema(),
     buildRatesHotelSchema(data),
     buildWebsiteSchema(),
-    buildImageSchema(
-      {
-        url: data.seo.ogImage || data.hero.image,
-        alt: data.hero.title,
-        caption: `${data.hero.title} - ${siteName}`,
-      },
-      canonicalPath,
-    ),
-    buildRatesWebPageSchema(data),
+    ...buildCommercialImageObjectSchemas(canonicalPath, images),
+    buildRatesWebPageSchema(data, imageReferences),
     buildDirectBookingOfferSchema(data),
     buildDirectBookingBenefitsSchema(data),
     buildBookingActionSchema(data),

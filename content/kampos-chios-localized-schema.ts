@@ -1,9 +1,14 @@
 import type { KamposChiosPageData } from "@/content/kampos-chios";
 import {
+  buildCommercialImageObjectSchemas,
+  getCommercialImageReferences,
+  getCommercialRoomGalleryImages,
+  type CommercialPageImage,
+} from "@/lib/commercial-room-images";
+import {
   buildBreadcrumbSchema,
   buildFaqSchema,
   buildHotelSchema,
-  buildImageSchema,
   buildItemListSchema,
   buildOrganizationSchema,
   buildSchemaGraph,
@@ -133,25 +138,27 @@ const localized: Record<Language, SeoCopy> = {
   },
 };
 
-const roomImages = [
-  "/images/rooms/received_1753964631359257.webp",
-  "/images/rooms/double-triple-room.jpg",
-  "/images/rooms/DSC07776-2-e1675109942622.webp",
-  "/images/rooms/chios-apartments-voulamandis.webp",
-];
-
 export function buildLocalizedKamposChiosSchema(data: KamposChiosPageData): SchemaObject {
   if (data.language === "el") return buildSchemaGraph([]);
   const t = localized[data.language];
   const path = data.seo.canonicalPath;
   const faq = buildFaqSchema({ path, questions: t.faq });
+  const roomImages = getCommercialRoomGalleryImages(path);
+  const primaryImage: CommercialPageImage = {
+    src: data.seo.ogImage,
+    alt: data.hero.imageAlt,
+    caption: t.title,
+  };
+  const images = [primaryImage, ...roomImages];
+  const imageReferences = getCommercialImageReferences(path, images);
 
   return buildSchemaGraph([
     buildOrganizationSchema(),
     buildHotelSchema({ path }),
     buildWebsiteSchema(),
-    buildImageSchema({ url: data.seo.ogImage, alt: data.hero.imageAlt, caption: t.title }, path),
-    buildWebPageSchema({
+    ...buildCommercialImageObjectSchemas(path, images),
+    {
+      ...buildWebPageSchema({
       path,
       title: t.title,
       description: t.description,
@@ -160,7 +167,9 @@ export function buildLocalizedKamposChiosSchema(data: KamposChiosPageData): Sche
         { name: t.breadcrumbHome, path: data.language === "en" ? "/chios/" : `/${data.language}/chios/` },
         { name: t.breadcrumbPage, path },
       ],
-    }),
+      }),
+      image: imageReferences,
+    },
     buildTouristPlaceSchema({
       path,
       name: t.placeName,
@@ -179,7 +188,7 @@ export function buildLocalizedKamposChiosSchema(data: KamposChiosPageData): Sche
       items: t.roomNames.map((name, index) => ({
         name,
         url: data.hero.primaryCta.href,
-        image: roomImages[index],
+        image: roomImages[index]?.src,
       })),
     }),
     buildBreadcrumbSchema(path, [
