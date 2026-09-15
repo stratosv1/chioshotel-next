@@ -8,7 +8,6 @@ import { alojamientoChiosPageEs } from "@/content/alojamiento-chios";
 import { sakizAdasiKonaklamaPageTr } from "@/content/sakiz-adasi-konaklama";
 import { kamposChiosPages, type KamposChiosPageData } from "@/content/kampos-chios";
 import { chiosHotelsGuide } from "@/content/chios-hotels-guide";
-import type { ChiosHotelsGuideContent } from "@/content/chios-hotels-guide-types";
 import { xenodoxeiaXiosGuide } from "@/content/xenodoxeia-xios-guide";
 import { hotelsChiosGuideFr } from "@/content/hotels-chios-guide-fr";
 import { hotelsAufChiosGuide } from "@/content/hotels-auf-chios-guide";
@@ -124,7 +123,7 @@ const accommodationPages: readonly ChiosAccommodationPageData[] = [
 
 const kamposPages: readonly KamposChiosPageData[] = Object.values(kamposChiosPages);
 const ratesPages: readonly RatesPageData[] = localizedRatesPages;
-const hotelGuidePages: readonly ChiosHotelsGuideContent[] = [
+const hotelGuidePages = [
   chiosHotelsGuide,
   xenodoxeiaXiosGuide,
   hotelsChiosGuideFr,
@@ -204,7 +203,7 @@ function getRatesPageImages(page: RatesPageData) {
   ]);
 }
 
-function getHotelGuideImages(page: ChiosHotelsGuideContent) {
+function getHotelGuideImages(page: (typeof hotelGuidePages)[number]) {
   return unique([
     page.seo.image,
     ...page.roomCategories.items.map((room) => room.image),
