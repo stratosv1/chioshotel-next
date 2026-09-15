@@ -190,6 +190,7 @@ function getKamposPageImages(page: KamposChiosPageData) {
   return unique([
     page.seo.ogImage,
     page.hero.image,
+    ...getCommercialRoomGalleryImages(page.seo.canonicalPath).map((image) => image.src),
     ...page.sections.map((section) => section.image),
     ...page.gallery.map((image) => image.image),
   ]);
