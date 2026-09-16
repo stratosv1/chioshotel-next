@@ -1,21 +1,19 @@
 import { NextResponse } from "next/server";
 import { getMixalisSession } from "@/lib/mixalis/auth";
-import { createSingleSmartLabRevision } from "@/lib/mixalis/smartlab-single";
+import {
+  createSingleSmartLabRevision,
+  getSmartLabChapterIdForSubchapter,
+} from "@/lib/mixalis/smartlab-single";
 
 export const runtime = "nodejs";
 
-function labPageErrorRedirect(request: Request, subchapterId: string) {
-  const referer = request.headers.get("referer");
-  if (!referer) return null;
-
+async function labPageErrorRedirect(request: Request, subchapterId: string) {
   try {
     const requestUrl = new URL(request.url);
-    const returnUrl = new URL(referer);
-    const isLabPage = /^\/mixalis\/chapters\/[^/]+\/lab\/?$/.test(returnUrl.pathname);
-    if (returnUrl.origin !== requestUrl.origin || !isLabPage) return null;
-
+    const chapterId = await getSmartLabChapterIdForSubchapter(subchapterId);
+    if (!chapterId) return null;
+    const returnUrl = new URL(`/mixalis/chapters/${chapterId}/lab`, requestUrl);
     returnUrl.searchParams.set("subchapter", subchapterId);
-    returnUrl.searchParams.delete("revision");
     returnUrl.searchParams.set("labError", "creation_failed");
     return NextResponse.redirect(returnUrl, { status: 303 });
   } catch {
@@ -39,7 +37,7 @@ export async function POST(
     return NextResponse.redirect(url, { status: 303 });
   } catch (error) {
     console.error("Mixalis per-subchapter SMARTLAB creation failed", error);
-    const redirect = labPageErrorRedirect(request, subchapterId);
+    const redirect = await labPageErrorRedirect(request, subchapterId);
     if (redirect) return redirect;
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "SMARTLAB creation failed." },

@@ -638,6 +638,18 @@ export async function getSingleSmartLabState(subchapterId: string): Promise<Sing
   };
 }
 
+export async function getSmartLabChapterIdForSubchapter(subchapterId: string): Promise<string | null> {
+  const sql = sqlClient();
+  const rows = await sql`
+    SELECT chapter_id::text
+    FROM physics.subchapters
+    WHERE id::text = ${subchapterId}
+      AND status = 'active'
+    LIMIT 1
+  `;
+  return rows.length ? String(rows[0].chapter_id) : null;
+}
+
 export async function listSingleSmartLabStatesByChapter(chapterId: string): Promise<SingleSmartLabPipelineState[]> {
   const sql = sqlClient();
   const rows = await sql`

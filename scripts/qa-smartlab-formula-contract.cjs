@@ -52,10 +52,34 @@ const substitutedSpeed = lessonFormulas.map((formula) => (
 ));
 assert.doesNotThrow(() => assertLessonFormulaContract("Οριζόντια βολή", substitutedSpeed));
 
+const circularMotion = [
+  String.raw`s = r\phi`,
+  String.raw`f = \frac{1}{T}`,
+  String.raw`\Delta\phi = \omega\Delta t`,
+  String.raw`v = \omega r`,
+  String.raw`\omega = 2\pi f`,
+  String.raw`\alpha_\kappa = \frac{v^2}{r}`,
+  String.raw`\alpha_\kappa = \omega^2 r`,
+].map((expression) => ({
+  expression,
+  readAs: "",
+  physicalMeaning: "",
+  conditions: "",
+  sourceItemIds: [],
+}));
+assert.doesNotThrow(() => assertLessonFormulaContract("Ομαλή κυκλική κίνηση", circularMotion));
+
+const circularWithInitialAngle = circularMotion.map((formula) => (
+  formula.expression === String.raw`\Delta\phi = \omega\Delta t`
+    ? { ...formula, expression: String.raw`\theta = \theta_0 + \omega t` }
+    : formula
+));
+assert.doesNotThrow(() => assertLessonFormulaContract("Ομαλή κυκλική κίνηση", circularWithInitialAngle));
+
 const incomplete = lessonFormulas.filter((formula) => !formula.expression.includes("v_y = g t"));
 assert.throws(
   () => assertLessonFormulaContract("Οριζόντια βολή", incomplete),
   /lesson formula missing 'υy=gt'/,
 );
 
-console.log("SMARTLAB formula contract QA passed: Unicode, plain-text and LaTeX-equivalent horizontal-projectile formulas are accepted, while missing physics is rejected.");
+console.log("SMARTLAB formula contract QA passed: equivalent horizontal-projectile and circular-motion notation is accepted, while missing physics is rejected.");

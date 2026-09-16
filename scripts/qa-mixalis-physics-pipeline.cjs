@@ -180,6 +180,7 @@ requireText('lib/mixalis/smartlab-single.ts', [
   'assertRuntimePhysicsFormulas',
   'derivePhysicsImpactModel',
   "status = 'superseded'",
+  'getSmartLabChapterIdForSubchapter',
 ]);
 
 requireText('lib/mixalis/smartlab-single-compat.ts', [
@@ -193,6 +194,9 @@ requireText('lib/mixalis/smartlab-single-compat.ts', [
 
 requireText('app/mixalis/api/smartlab/subchapters/[subchapterId]/route.ts', [
   'createSingleSmartLabRevision',
+  'getSmartLabChapterIdForSubchapter',
+  'await labPageErrorRedirect',
+  'labError',
   'subchapter',
   'revision',
 ]);

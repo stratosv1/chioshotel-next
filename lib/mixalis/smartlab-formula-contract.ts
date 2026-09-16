@@ -22,10 +22,15 @@ export function normalizeLessonFormula(value: string) {
     .replace(/\\(?:left|right)\b/g, "")
     .replace(/\\(?:cdot|times)\b/g, "")
     .replace(/\\(?:lvert|rvert|vert)\b/g, "")
-    .replace(/\\theta\b/g, "θ")
-    .replace(/\\(?:upsilon|nu)\b/g, "υ")
-    .replace(/\\pi\b/g, "π")
-    .replace(/\\tan\b/g, "tan");
+    .replace(/\\theta(?![a-z])/g, "θ")
+    .replace(/\\(?:phi|varphi)(?![a-z])/g, "φ")
+    .replace(/\\omega(?![a-z])/g, "ω")
+    .replace(/\\alpha(?![a-z])/g, "α")
+    .replace(/\\kappa(?![a-z])/g, "κ")
+    .replace(/\\delta(?![a-z])/g, "δ")
+    .replace(/\\(?:upsilon|nu)(?![a-z])/g, "υ")
+    .replace(/\\pi(?![a-z])/g, "π")
+    .replace(/\\tan(?![a-z])/g, "tan");
 
   // Flatten LaTeX indices before fractions so values such as v_{0}^{2}
   // no longer contain nested braces.
@@ -90,7 +95,16 @@ export function assertLessonFormulaContract(subchapterTitle: string, formulas: L
   if (title.includes("ομαλή κυκλική κίνηση")) {
     requireFormula(text, ["s=rφ", "φ=s/r"], "s=rφ", errors);
     requireFormula(text, ["f=1/t", "f=1/T"], "f=1/T", errors);
-    requireFormula(text, ["φ=ωt"], "φ=ωt", errors);
+    requireFormula(
+      text,
+      [
+        "φ=ωt", "θ=ωt", "Δφ=ωΔt", "Δθ=ωΔt",
+        "φ=φ₀+ωt", "θ=θ₀+ωt", "φ-φ₀=ωt", "θ-θ₀=ωt",
+        "ω=Δφ/Δt", "ω=Δθ/Δt", "ω=φ/t", "ω=θ/t",
+      ],
+      "φ=ωt",
+      errors,
+    );
     requireFormula(text, ["υ=ωr"], "υ=ωr", errors);
     requireFormula(text, ["ω=2πf", "2πf"], "ω=2πf", errors);
     requireFormula(text, ["αₖ=υ²/r", "ακ=υ²/r"], "αₖ=υ²/r", errors);
