@@ -21,6 +21,7 @@ export function normalizeLessonFormula(value: string) {
     .toLocaleLowerCase("el-GR")
     .replace(/\\(?:left|right)\b/g, "")
     .replace(/\\(?:cdot|times)\b/g, "")
+    .replace(/\\(?:lvert|rvert|vert)\b/g, "")
     .replace(/\\theta\b/g, "θ")
     .replace(/\\(?:upsilon|nu)\b/g, "υ")
     .replace(/\\pi\b/g, "π")
@@ -29,6 +30,7 @@ export function normalizeLessonFormula(value: string) {
   // Flatten LaTeX indices before fractions so values such as v_{0}^{2}
   // no longer contain nested braces.
   normalized = replaceRepeatedly(normalized, /[_^]\s*\{([^{}]+)\}/g, "$1");
+  normalized = replaceRepeatedly(normalized, /\\(?:vec|overrightarrow)\s*\{([^{}]+)\}/g, "$1");
   normalized = replaceRepeatedly(normalized, /\\(?:mathrm|text)\s*\{([^{}]+)\}/g, "$1");
   normalized = replaceRepeatedly(normalized, /\\frac\s*\{([^{}]+)\}\s*\{([^{}]+)\}/g, "($1)/($2)");
   normalized = replaceRepeatedly(normalized, /\\sqrt\s*\{([^{}]+)\}/g, "√($1)");
@@ -40,6 +42,7 @@ export function normalizeLessonFormula(value: string) {
     // U+1D67 is commonly used visually as a subscript y, but NFKC expands it
     // to Greek gamma. In this contract it only appears after velocity υ.
     .replace(/υγ/g, "υy")
+    .replace(/[\u20d0-\u20ff→|‖]/g, "")
     .replace(/[⁄∕]/g, "/")
     .replace(/[·⋅×]/g, "")
     .replace(/\*+/g, "")
@@ -72,7 +75,11 @@ export function assertLessonFormulaContract(subchapterTitle: string, formulas: L
     requireFormula(text, ["tπτ=√(2h/g)", "√(2h/g)=tπτ"], "tπτ=√(2h/g)", errors);
     requireFormula(
       text,
-      ["υ=√(υx²+υy²)", "√(υx²+υy²)=υ", "υ²=υx²+υy²", "υx²+υy²=υ²"],
+      [
+        "υ=√(υx²+υy²)", "√(υx²+υy²)=υ", "υ²=υx²+υy²", "υx²+υy²=υ²",
+        "υ=√(υ₀²+υy²)", "υ²=υ₀²+υy²", "υ=√(υ₀²+(gt)²)", "υ=√(υ₀²+g²t²)",
+        "υ²=υ₀²+g²t²", "υ₀²+g²t²=υ²",
+      ],
       "υ=√(υx²+υy²)",
       errors,
     );

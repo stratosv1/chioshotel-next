@@ -39,7 +39,18 @@ const lessonFormulas = latexHorizontalProjectile.map((expression) => ({
 assert.equal(normalizeLessonFormula("υᵧ = g·t"), "υy=gt");
 assert.equal(normalizeLessonFormula("y = ½ g t²"), "y=1/2gt2");
 assert.equal(normalizeLessonFormula(String.raw`\tan\theta = \frac{v_y}{v_x}`), "tanθ=υy/υx");
+assert.equal(
+  normalizeLessonFormula(String.raw`\left|\vec{v}\right| = \sqrt{v_x^2 + v_y^2}`),
+  "υ=√υx2+υy2",
+);
 assert.doesNotThrow(() => assertLessonFormulaContract("Οριζόντια βολή", lessonFormulas));
+
+const substitutedSpeed = lessonFormulas.map((formula) => (
+  formula.expression === String.raw`v^2 = v_x^2 + v_y^2`
+    ? { ...formula, expression: String.raw`v = \sqrt{v_0^2 + (g t)^2}` }
+    : formula
+));
+assert.doesNotThrow(() => assertLessonFormulaContract("Οριζόντια βολή", substitutedSpeed));
 
 const incomplete = lessonFormulas.filter((formula) => !formula.expression.includes("v_y = g t"));
 assert.throws(
