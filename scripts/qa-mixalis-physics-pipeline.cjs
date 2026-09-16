@@ -3,6 +3,8 @@ const path = require('node:path');
 
 const root = process.cwd();
 
+require('./qa-smartlab-formula-contract.cjs');
+
 function read(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), 'utf8');
 }

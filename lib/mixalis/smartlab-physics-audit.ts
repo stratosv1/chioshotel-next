@@ -1,4 +1,3 @@
-import type { LessonFormula } from "@/lib/mixalis/start-lesson";
 import type {
   SmartLabControl,
   SmartLabQuantity,
@@ -11,60 +10,10 @@ import {
   physicsAlmostEqual,
 } from "@/lib/mixalis/smartlab-physics";
 
+export { assertLessonFormulaContract } from "@/lib/mixalis/smartlab-formula-contract";
+
 type Values = Record<string, number>;
 type RoleValues = Partial<Record<SmartLabQuantityPhysicsRole, number>>;
-
-function normalizeFormula(value: string) {
-  return value
-    .normalize("NFKC")
-    .toLocaleLowerCase("el-GR")
-    .replace(/\s+/g, "")
-    .replace(/[·⋅]/g, "")
-    .replace(/\*+/g, "")
-    .replace(/−/g, "-")
-    .replace(/⇔/g, "=");
-}
-
-function lessonFormulaText(formulas: LessonFormula[]) {
-  return formulas.map((formula) => normalizeFormula(formula.expression)).join("\n");
-}
-
-function requireFormula(text: string, alternatives: string[], label: string, errors: string[]) {
-  if (!alternatives.some((alternative) => text.includes(normalizeFormula(alternative)))) {
-    errors.push(`lesson formula missing '${label}'`);
-  }
-}
-
-export function assertLessonFormulaContract(subchapterTitle: string, formulas: LessonFormula[]) {
-  const errors: string[] = [];
-  const text = lessonFormulaText(formulas);
-  const title = subchapterTitle.toLocaleLowerCase("el-GR");
-
-  if (title.includes("οριζόντια βολή")) {
-    requireFormula(text, ["υx=υ₀"], "υx=υ₀", errors);
-    requireFormula(text, ["x=υ₀t"], "x=υ₀t", errors);
-    requireFormula(text, ["υy=gt"], "υy=gt", errors);
-    requireFormula(text, ["y=(1/2)gt²", "y=1/2gt²"], "y=(1/2)gt²", errors);
-    requireFormula(text, ["tπτ=√(2h/g)"], "tπτ=√(2h/g)", errors);
-    requireFormula(text, ["υ=√(υx²+υy²)"], "υ=√(υx²+υy²)", errors);
-    requireFormula(text, ["tanθ=υy/υx"], "tanθ=υy/υx", errors);
-    requireFormula(text, ["y=(g/2υ₀²)x²"], "y=(g/2υ₀²)x²", errors);
-  }
-
-  if (title.includes("ομαλή κυκλική κίνηση")) {
-    requireFormula(text, ["s=rφ", "φ=s/r"], "s=rφ", errors);
-    requireFormula(text, ["f=1/t", "f=1/T"], "f=1/T", errors);
-    requireFormula(text, ["φ=ωt"], "φ=ωt", errors);
-    requireFormula(text, ["υ=ωr"], "υ=ωr", errors);
-    requireFormula(text, ["ω=2πf", "2πf"], "ω=2πf", errors);
-    requireFormula(text, ["αₖ=υ²/r", "ακ=υ²/r"], "αₖ=υ²/r", errors);
-    requireFormula(text, ["αₖ=ω²r", "ακ=ω²r"], "αₖ=ω²r", errors);
-  }
-
-  if (errors.length) {
-    throw new Error(`SMARTLAB lesson-formula audit failed for '${subchapterTitle}': ${errors.join("; ")}`);
-  }
-}
 
 function controlsOf(widget: SmartLabWidget) {
   return Array.isArray(widget.controls) ? widget.controls : [];

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Beaker, BrainCircuit, RefreshCw } from "lucide-react";
+import { AlertCircle, Beaker, BrainCircuit, RefreshCw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SmartLabRunner from "@/components/mixalis/SmartLabRunner";
@@ -19,7 +19,7 @@ export default async function MixalisChapterLabPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ revision?: string; subchapter?: string }>;
+  searchParams: Promise<{ revision?: string; subchapter?: string; labError?: string }>;
 }) {
   const { id } = await params;
   const query = await searchParams;
@@ -81,6 +81,18 @@ export default async function MixalisChapterLabPage({
             </div>
           </div>
         </header>
+
+        {query.labError === "creation_failed" ? (
+          <div className="mt-5 flex gap-3 rounded-2xl border border-red-200 bg-red-50 p-4 text-red-900" role="alert">
+            <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
+            <div>
+              <p className="font-semibold">Το LAB δεν δημιουργήθηκε.</p>
+              <p className="mt-1 text-sm leading-6 text-red-800">
+                Παρουσιάστηκε τεχνικό σφάλμα και καταγράφηκε. Μπορείς να επιστρέψεις στα LAB και να δοκιμάσεις ξανά.
+              </p>
+            </div>
+          </div>
+        ) : null}
 
         {selected ? (
           <section className="mt-6">
