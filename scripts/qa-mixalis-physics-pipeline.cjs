@@ -4,6 +4,7 @@ const path = require('node:path');
 const root = process.cwd();
 
 require('./qa-smartlab-formula-contract.cjs');
+require('./qa-smartlab-electrostatics.cjs');
 
 function read(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), 'utf8');
@@ -228,6 +229,8 @@ requireText('components/mixalis/SmartLabRunner.tsx', [
   'widget?.physicsPreset === "generic_relation"',
 ]);
 requireText('components/mixalis/SmartLabGenericExperience.tsx', [
+  'looksLikeElectrostatics',
+  'SmartLabElectrostatics',
   'looksLikeSystemForces',
   'SystemForcesDiagram',
   'looksLikeCollision',
@@ -236,6 +239,20 @@ requireText('components/mixalis/SmartLabGenericExperience.tsx', [
   'πρέπει να χρησιμοποιεί ειδικό renderer και πραγματικό γράφημα του φαινομένου',
   'εσωτερικές δυνάμεις',
   'συνολική ορμή του συστήματος',
+]);
+requireText('components/mixalis/SmartLabElectrostatics.tsx', [
+  'Διαδραστική απεικόνιση του νόμου του Coulomb με δύο φορτία',
+  'Διαδραστική απεικόνιση ηλεκτρικού πεδίου σημειακού φορτίου',
+  'F = k |Qq| / r²',
+  'E = k |Q| / r²',
+  'V = kQ / r',
+  'U = qV',
+]);
+requireText('lib/mixalis/smartlab-electrostatics.ts', [
+  'calculateCoulombPair',
+  'calculatePointChargeField',
+  'electrostaticsMode',
+  'parseFixedCharge',
 ]);
 requireText('components/mixalis/SmartLabCollision1D.tsx', [
   'Διαδραστική προσομοίωση μονοδιάστατης πλαστικής κρούσης',

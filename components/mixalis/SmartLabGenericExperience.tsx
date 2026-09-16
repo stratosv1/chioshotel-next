@@ -6,12 +6,17 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SmartLabCollision1D, { looksLikeCollision } from "@/components/mixalis/SmartLabCollision1D";
+import SmartLabElectrostatics, { looksLikeElectrostatics } from "@/components/mixalis/SmartLabElectrostatics";
 import type { SmartLabContent, SmartLabControl, SmartLabWidget } from "@/lib/mixalis/smartlab-types";
 
 type Values = Record<string, number>;
 
 function number(value: number, digits = 2) {
   if (!Number.isFinite(value)) return "—";
+  const magnitude = Math.abs(value);
+  if (magnitude > 0 && (magnitude < 0.01 || magnitude >= 10_000)) {
+    return new Intl.NumberFormat("el-GR", { notation: "scientific", maximumFractionDigits: digits }).format(value);
+  }
   return new Intl.NumberFormat("el-GR", { maximumFractionDigits: digits }).format(value);
 }
 
@@ -195,12 +200,15 @@ function GenericWidget({ widget }: { widget: SmartLabWidget }) {
   const [values, setValues] = useState<Values>(() => initialValues(widget));
   const [changedId, setChangedId] = useState<string | null>(null);
   const impact = useMemo(() => (widget.impactModel || []).find((item) => item.controlQuantityId === changedId) || null, [changedId, widget]);
+  const electrostatics = looksLikeElectrostatics(widget);
   const collision = looksLikeCollision(widget);
-  const visual = collision
-    ? <SmartLabCollision1D widget={widget} values={values} />
-    : looksLikeSystemForces(widget)
-      ? <SystemForcesDiagram widget={widget} values={values} />
-      : <RelationDiagram widget={widget} values={values} />;
+  const visual = electrostatics
+    ? <SmartLabElectrostatics widget={widget} values={values} />
+    : collision
+      ? <SmartLabCollision1D widget={widget} values={values} />
+      : looksLikeSystemForces(widget)
+        ? <SystemForcesDiagram widget={widget} values={values} />
+        : <RelationDiagram widget={widget} values={values} />;
 
   return (
     <Card className="overflow-hidden rounded-3xl border-stone-200 bg-white shadow-sm">
