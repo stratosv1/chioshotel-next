@@ -218,13 +218,32 @@ ${pageMap}
 - Ξεχώρισε καθαρά δεδομένα, ζητούμενα, σχέδιο λύσης και αριθμητικές πράξεις.
 - Σε κάθε βήμα εξήγησε γιατί επιλέγεται ο συγκεκριμένος νόμος ή τύπος.
 - Κράτησε σύμβολα, μονάδες SI, πρόσημα και διανύσματα συνεπή.
+- Χρησιμοποίησε ασφαλή απλή μαθηματική γραφή Unicode: v0, vx, vy, ΣF, mg, ½mv², ⇒.
+- Μην χρησιμοποιήσεις LaTeX εντολές, σύμβολα $ ή combining χαρακτήρες βέλους πάνω από γράμματα (όπως v⃗, i⃗, g⃗), επειδή δεν εμφανίζονται σωστά στην οθόνη.
+- Για διανύσματα γράψε τη διεύθυνση με λέξεις, π.χ. «v0 = 200 m/s οριζόντια προς τα δεξιά» και «ΣF = mg κατακόρυφα προς τα κάτω».
 - Κάνε έλεγχο μονάδων και φυσικής λογικής του αποτελέσματος.
 - Αν υπάρχει σχήμα, περιέγραψε πώς πρέπει να το διαβάσει ο μαθητής.
 - Αν found=false, όλα τα πεδία της λύσης πρέπει να είναι κενά, εκτός από matchExplanation και exerciseLabel.`;
 }
 
+function normalizePhysicsText(value: unknown) {
+  return String(value ?? "")
+    .normalize("NFC")
+    .replace(/\\(?:overrightarrow|vec)\s*\{([^{}]+)\}/g, "$1")
+    .replace(/[\u20d0-\u20ff]/g, "")
+    .replace(/\uFFFD/g, "")
+    .replace(/\\frac\s*\{1\}\s*\{2\}/g, "½")
+    .replace(/\\cdot/g, "·")
+    .replace(/\\times/g, "×")
+    .replace(/\\(?:Rightarrow|implies)/g, "⇒")
+    .replace(/\\rightarrow/g, "→")
+    .replace(/\\(?:left|right)/g, "")
+    .replace(/\$+/g, "")
+    .normalize("NFC");
+}
+
 function cleanText(value: unknown, maxLength: number) {
-  return String(value ?? "").trim().slice(0, maxLength);
+  return normalizePhysicsText(value).trim().slice(0, maxLength);
 }
 
 function cleanTextArray(value: unknown, maxItems: number, maxLength: number) {

@@ -178,9 +178,9 @@ export default function SavvalasExerciseSolver({
                   <h6 className="mt-1 text-lg font-black text-slate-950">{step.title}</h6>
                   <p className="mt-2 whitespace-pre-line text-base leading-8 text-slate-700">{step.explanation}</p>
                   {step.calculation ? (
-                    <pre className="mt-4 overflow-x-auto whitespace-pre-wrap rounded-lg bg-slate-950 px-4 py-3 font-mono text-sm leading-7 text-white">
+                    <div className="mt-4 overflow-x-auto whitespace-pre-wrap rounded-lg bg-slate-950 px-4 py-3 font-sans text-[15px] font-semibold leading-7 text-white sm:text-base">
                       {step.calculation}
-                    </pre>
+                    </div>
                   ) : null}
                 </article>
               ))}

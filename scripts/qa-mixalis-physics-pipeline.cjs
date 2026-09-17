@@ -176,6 +176,8 @@ requireText('lib/mixalis/savvalas-exercise-solver.ts', [
   'Μην μαντέψεις',
   'sourcePdfPages',
   'input_file',
+  'normalizePhysicsText',
+  'combining χαρακτήρες βέλους',
 ]);
 forbidText('components/mixalis/PhysicsPipeline.tsx', [
   '/mixalis/api/smartlab/chapters/',
