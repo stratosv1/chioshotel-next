@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import SavvalasExerciseSolver from "@/components/mixalis/SavvalasExerciseSolver";
 import type { PhysicsSubchapter } from "@/lib/mixalis/db";
 import type { PhysicsPipelineNavigation } from "@/lib/mixalis/lesson-navigation";
 import type { SingleSmartLabPipelineState } from "@/lib/mixalis/smartlab-single";
@@ -308,6 +309,13 @@ export default function PhysicsPipeline({
 
                   <LabCta chapterId={chapterId} subchapterId={subchapter.id} pipeline={pipeline} lab={lab} />
                 </div>
+
+                <SavvalasExerciseSolver
+                  subchapterId={subchapter.id}
+                  savvalasFrom={value.savvalasFrom}
+                  savvalasTo={value.savvalasTo}
+                  disabled={!value.savvalasFrom || !value.savvalasTo || action.busy}
+                />
               </div>
             </article>
           );

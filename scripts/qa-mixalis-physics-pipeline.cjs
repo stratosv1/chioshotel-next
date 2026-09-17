@@ -144,6 +144,7 @@ requireText('app/mixalis/(private)/chapters/[id]/page.tsx', [
 
 requireText('components/mixalis/PhysicsPipeline.tsx', [
   'SingleSmartLabPipelineState',
+  'SavvalasExerciseSolver',
   '/mixalis/api/manual-mapping/',
   '/mixalis/api/lesson-build/',
   '/mixalis/api/smartlab/subchapters/',
@@ -152,6 +153,29 @@ requireText('components/mixalis/PhysicsPipeline.tsx', [
   'Δημιουργία μαθήματος',
   'Δεν γίνεται πλέον AI εντοπισμός σελίδων',
   'Το LAB παραμένει ξεχωριστό',
+]);
+
+requireText('components/mixalis/SavvalasExerciseSolver.tsx', [
+  'Αριθμός άσκησης',
+  '/mixalis/api/exercises/',
+  'Λύση βήμα προς βήμα',
+  'OpenAI API',
+]);
+
+requireText('app/mixalis/api/exercises/[subchapterId]/solve/route.ts', [
+  'normalizeExerciseIdentifier',
+  'solveSavvalasExercise',
+  'assertSavvalasRangeIntegrity',
+  'upsertSavvalasSourceRange',
+  'savvalasFrom',
+  'savvalasTo',
+]);
+
+requireText('lib/mixalis/savvalas-exercise-solver.ts', [
+  'αναγνωριστικό άσκησης του βιβλίου',
+  'Μην μαντέψεις',
+  'sourcePdfPages',
+  'input_file',
 ]);
 forbidText('components/mixalis/PhysicsPipeline.tsx', [
   '/mixalis/api/smartlab/chapters/',
@@ -285,4 +309,4 @@ requireText('lib/mixalis/official-range-integrity.ts', [
   'επικαλύπτεται',
 ]);
 
-console.log('Mixalis Physics pipeline QA passed: page mapping is manual-only, AI page detection is removed, one-click lesson generation is enforced, canonical PDF guards remain active, and LAB stays independent per lesson with visible physical phenomena.');
+console.log('Mixalis Physics pipeline QA passed: page mapping is manual-only, exercise solving is restricted to the selected Savvalas range, one-click lesson generation is enforced, canonical PDF guards remain active, and LAB stays independent per lesson with visible physical phenomena.');
