@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import SavvalasExerciseSolver from "@/components/mixalis/SavvalasExerciseSolver";
 import type { PhysicsSubchapter } from "@/lib/mixalis/db";
+import type { SavedExerciseSummary } from "@/lib/mixalis/exercise-solutions";
 import type { PhysicsPipelineNavigation } from "@/lib/mixalis/lesson-navigation";
 import type { SingleSmartLabPipelineState } from "@/lib/mixalis/smartlab-single";
 
@@ -94,14 +95,22 @@ export default function PhysicsPipeline({
   subchapters,
   pipelines,
   labStates,
+  savedExercises,
 }: {
   chapterId: string;
   subchapters: PhysicsSubchapter[];
   pipelines: PhysicsPipelineNavigation[];
   labStates: SingleSmartLabPipelineState[];
+  savedExercises: SavedExerciseSummary[];
 }) {
   const bySubchapter = new Map(pipelines.map((pipeline) => [pipeline.subchapterId, pipeline]));
   const labsBySubchapter = new Map(labStates.map((lab) => [lab.subchapterId, lab]));
+  const savedExercisesBySubchapter = new Map<string, SavedExerciseSummary[]>();
+  for (const exercise of savedExercises) {
+    const current = savedExercisesBySubchapter.get(exercise.subchapterId) || [];
+    current.push(exercise);
+    savedExercisesBySubchapter.set(exercise.subchapterId, current);
+  }
   const completedLessons = pipelines.filter((pipeline) => pipeline.lesson.upToDate).length;
   const labReadyLessons = pipelines.filter((pipeline) =>
     lessonLabReady(pipeline, labsBySubchapter.get(pipeline.subchapterId)),
@@ -221,6 +230,7 @@ export default function PhysicsPipeline({
           const pipeline = bySubchapter.get(subchapter.id);
           if (!pipeline) return null;
           const lab = labsBySubchapter.get(subchapter.id);
+          const solvedExercises = savedExercisesBySubchapter.get(subchapter.id) || [];
           const value = ranges[subchapter.id] || {
             savvalasFrom: "",
             savvalasTo: "",
@@ -309,6 +319,33 @@ export default function PhysicsPipeline({
 
                   <LabCta chapterId={chapterId} subchapterId={subchapter.id} pipeline={pipeline} lab={lab} />
                 </div>
+
+                {solvedExercises.length > 0 ? (
+                  <section className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4">
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <p className="text-xs font-bold uppercase tracking-[0.1em] text-emerald-700">Αρχείο ασκήσεων</p>
+                        <h4 className="mt-1 font-bold text-emerald-950">
+                          Λυμένες ασκήσεις · {solvedExercises.length}
+                        </h4>
+                      </div>
+                      <span className="rounded-full bg-emerald-700 px-3 py-1 text-xs font-bold text-white">✓ Λυμένες</span>
+                    </div>
+                    <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                      {solvedExercises.map((exercise) => (
+                        <Link
+                          key={exercise.id}
+                          href={`/mixalis/exercises/${exercise.id}`}
+                          prefetch={false}
+                          className="flex min-h-12 items-center justify-between gap-3 rounded-xl border border-emerald-200 bg-white px-4 py-3 text-sm font-bold !text-emerald-950 transition hover:border-emerald-400 hover:bg-emerald-100"
+                        >
+                          <span>✓ Άσκηση {exercise.exerciseIdentifier}</span>
+                          <span className="text-xs text-emerald-700" aria-hidden="true">Προβολή →</span>
+                        </Link>
+                      ))}
+                    </div>
+                  </section>
+                ) : null}
 
                 <SavvalasExerciseSolver
                   subchapterId={subchapter.id}

@@ -158,8 +158,15 @@ requireText('components/mixalis/PhysicsPipeline.tsx', [
 requireText('components/mixalis/SavvalasExerciseSolver.tsx', [
   'Αριθμός άσκησης',
   '/mixalis/api/exercises/',
-  'Λύση βήμα προς βήμα',
   'OpenAI API',
+  'Η άσκηση αποθηκεύτηκε ως λυμένη',
+  '/mixalis/exercises/',
+]);
+
+requireText('components/mixalis/SavvalasExerciseSolutionView.tsx', [
+  'Λύση βήμα προς βήμα',
+  'Τελικό αποτέλεσμα',
+  'Τι να θυμάσαι',
 ]);
 
 requireText('app/mixalis/api/exercises/[subchapterId]/solve/route.ts', [
@@ -169,6 +176,27 @@ requireText('app/mixalis/api/exercises/[subchapterId]/solve/route.ts', [
   'upsertSavvalasSourceRange',
   'savvalasFrom',
   'savvalasTo',
+  'saveExerciseSolution',
+]);
+
+requireText('lib/mixalis/exercise-solutions.ts', [
+  'physics.exercise_solutions',
+  'ensureExerciseSolutionsTable',
+  'saveExerciseSolution',
+  'listSavedExerciseSolutionsByChapter',
+  'getSavedExerciseSolution',
+]);
+
+requireText('app/mixalis/(private)/exercises/[solutionId]/page.tsx', [
+  'getSavedExerciseSolution',
+  '✓ Λυμένη άσκηση',
+  'SavvalasExerciseSolutionView',
+]);
+
+requireText('components/mixalis/PhysicsPipeline.tsx', [
+  'Λυμένες ασκήσεις',
+  'savedExercisesBySubchapter',
+  '/mixalis/exercises/',
 ]);
 
 requireText('lib/mixalis/savvalas-exercise-solver.ts', [

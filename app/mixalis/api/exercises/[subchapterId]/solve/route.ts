@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { getMixalisSession } from "@/lib/mixalis/auth";
 import { assertSavvalasRangeIntegrity } from "@/lib/mixalis/savvalas-range-integrity";
 import { upsertSavvalasSourceRange } from "@/lib/mixalis/savvalas-book-audit";
+import { saveExerciseSolution } from "@/lib/mixalis/exercise-solutions";
 import {
   normalizeExerciseIdentifier,
   solveSavvalasExercise,
@@ -87,7 +88,12 @@ export async function POST(
 
     await saveSavvalasRange(subchapterId, savvalasFrom, savvalasTo);
     const solution = await solveSavvalasExercise(subchapterId, exerciseIdentifier);
-    return NextResponse.json({ solution });
+    const savedSolution = await saveExerciseSolution({
+      subchapterId,
+      exerciseIdentifier: solution.exerciseLabel || exerciseIdentifier,
+      solution,
+    });
+    return NextResponse.json({ solution, savedSolution });
   } catch (error) {
     console.error("Mixalis Savvalas exercise solve failed", error);
     return NextResponse.json(

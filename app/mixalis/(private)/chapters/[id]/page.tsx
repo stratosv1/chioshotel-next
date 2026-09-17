@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import PhysicsPipeline from "@/components/mixalis/PhysicsPipeline";
 import { getPhysicsChapter, listPhysicsSubchapters } from "@/lib/mixalis/db";
+import { listSavedExerciseSolutionsByChapter } from "@/lib/mixalis/exercise-solutions";
 import { listPhysicsPipelineByChapter } from "@/lib/mixalis/lesson-navigation";
 import { listSingleSmartLabStatesByChapterCompat as listSingleSmartLabStatesByChapter } from "@/lib/mixalis/smartlab-single-compat";
 
@@ -14,17 +15,27 @@ async function safeSmartLabStates(chapterId: string) {
   }
 }
 
+async function safeSavedExercises(chapterId: string) {
+  try {
+    return await listSavedExerciseSolutionsByChapter(chapterId);
+  } catch (error) {
+    console.error("Mixalis saved exercise list failed", error);
+    return [];
+  }
+}
+
 export default async function MixalisChapterPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const [chapter, subchapters, pipelines, labStates] = await Promise.all([
+  const [chapter, subchapters, pipelines, labStates, savedExercises] = await Promise.all([
     getPhysicsChapter(id),
     listPhysicsSubchapters(id),
     listPhysicsPipelineByChapter(id),
     safeSmartLabStates(id),
+    safeSavedExercises(id),
   ]);
 
   if (!chapter) notFound();
@@ -95,7 +106,13 @@ export default async function MixalisChapterPage({
         </section>
 
         {subchapters.length > 0 ? (
-          <PhysicsPipeline chapterId={chapter.id} subchapters={subchapters} pipelines={pipelines} labStates={labStates} />
+          <PhysicsPipeline
+            chapterId={chapter.id}
+            subchapters={subchapters}
+            pipelines={pipelines}
+            labStates={labStates}
+            savedExercises={savedExercises}
+          />
         ) : (
           <section className="mt-6 rounded-3xl border border-dashed border-black/15 bg-white/70 p-6 text-sm text-[#6f665f]">
             Δεν υπάρχουν ενεργά υποκεφάλαια σε αυτό το κεφάλαιο.
