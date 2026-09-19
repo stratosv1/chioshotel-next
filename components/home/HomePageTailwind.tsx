@@ -282,8 +282,8 @@ function DirectBookingBox({ data }: { data: HomePageData }) {
   const discountCode = data.location.discount.defaultCode || "WELCOME10";
 
   return (
-    <section className="px-4 py-5 md:px-8 md:py-11">
-      <article className="relative mx-auto mt-2 max-w-7xl overflow-hidden rounded-[1.75rem] border border-amber-900/10 bg-[#fff8ea] shadow-[0_14px_32px_rgba(68,64,60,.08)] md:mt-8 md:rounded-[2rem]">
+    <section className="px-4 pb-5 pt-1 md:px-8 md:py-11">
+      <article className="relative mx-auto max-w-7xl overflow-hidden rounded-[1.75rem] border border-amber-900/10 bg-[#fff8ea] shadow-[0_14px_32px_rgba(68,64,60,.08)] md:mt-8 md:rounded-[2rem]">
         <div className="relative grid gap-0 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-center">
           <div className="px-4 pb-2 pt-4 md:p-8 lg:px-10">
             <span className="inline-flex rounded-full bg-white/85 px-3 py-2 text-[10px] font-black uppercase tracking-[0.14em] text-orange-800 shadow-sm ring-1 ring-amber-900/10 md:px-4 md:text-xs md:tracking-[0.16em]">{data.location.discount.badge}</span>

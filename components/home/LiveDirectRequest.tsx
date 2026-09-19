@@ -461,7 +461,14 @@ function localizeRoomName(value: string, copy: (typeof LIVE_REQUEST_COPY)[LiveRe
 }
 
 function localizeRoomType(value: string, copy: (typeof LIVE_REQUEST_COPY)[LiveRequestLocale]) {
+  if (/^apartment$/i.test(value.trim())) return copy.apartmentWord;
+  if (/^room$/i.test(value.trim())) return copy.roomWord;
   return copy.roomTypes[value] || value;
+}
+
+function visibleRoomType(value: string, copy: (typeof LIVE_REQUEST_COPY)[LiveRequestLocale]) {
+  if (/^(apartment|room)$/i.test(value.trim())) return "";
+  return localizeRoomType(value, copy);
 }
 
 function localizeBadge(value: string, copy: (typeof LIVE_REQUEST_COPY)[LiveRequestLocale]) {
@@ -595,7 +602,7 @@ function RoomCard({
   copy: (typeof LIVE_REQUEST_COPY)[LiveRequestLocale];
 }) {
   const roomName = localizeRoomName(room.displayName, copy);
-  const roomType = localizeRoomType(room.type, copy);
+  const roomType = visibleRoomType(room.type, copy);
   const featureBadges = room.featureBadges.map((badge) => localizeBadge(badge, copy));
 
   return (
@@ -612,7 +619,7 @@ function RoomCard({
       <div className="relative h-[180px] overflow-hidden bg-stone-100 md:h-[150px]">
         <Image
           src={room.images[0]}
-          alt={`${roomName} ${roomType}`}
+          alt={[roomName, roomType].filter(Boolean).join(" ")}
           width={640}
           height={460}
           sizes="(max-width: 768px) 80vw, (max-width: 1280px) 245px, 270px"
@@ -622,7 +629,7 @@ function RoomCard({
           {index === 0 ? copy.topPick : copy.directDeal}
         </span>
         {active ? (
-          <span className="absolute inset-x-3 bottom-3 inline-flex min-h-9 items-center justify-center gap-1.5 rounded-xl bg-[#17351f]/95 px-3 py-2 text-[10px] font-black uppercase tracking-[0.08em] text-white shadow-lg backdrop-blur-sm">
+          <span className="absolute right-3 top-3 inline-flex min-h-8 items-center gap-1.5 rounded-full bg-[#17351f]/95 px-2.5 py-1.5 text-[9px] font-black uppercase tracking-[0.06em] text-white shadow-lg backdrop-blur-sm">
             <span aria-hidden="true">✓</span> {copy.selectedLabel}
           </span>
         ) : (
@@ -633,7 +640,7 @@ function RoomCard({
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <h3 className="truncate text-[19px] font-black leading-6 text-stone-950 md:text-xl">{roomName}</h3>
-            <p className="mt-0.5 line-clamp-2 text-[12px] font-semibold leading-4 text-stone-600 md:text-[13px]">{roomType}</p>
+            {roomType ? <p className="mt-0.5 line-clamp-2 text-[12px] font-semibold leading-4 text-stone-600 md:text-[13px]">{roomType}</p> : null}
           </div>
           {amount ? (
             <div className="flex-none text-right">
@@ -876,7 +883,7 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
   }
 
   return (
-    <section className="px-4 py-6 md:px-8 md:pt-10 md:pb-8" aria-labelledby="live-direct-title">
+    <section className="px-4 pb-2 pt-6 md:px-8 md:pb-5 md:pt-10" aria-labelledby="live-direct-title">
       <div className="mx-auto max-w-7xl overflow-hidden rounded-[2rem] border border-amber-900/10 bg-[#fffaf3] shadow-2xl shadow-stone-900/10 md:rounded-[2.5rem]">
         <div className="min-w-0 p-4 md:p-7 lg:p-8">
           <div className="mb-4 flex justify-center rounded-full bg-amber-100/90 px-4 py-2.5 text-[10px] font-black uppercase tracking-[0.15em] text-amber-800 ring-1 ring-amber-900/10 md:inline-flex md:justify-start md:text-[11px]">
@@ -951,12 +958,12 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
           </div>
 
           {selectedRoom ? (
-            <div className="mt-1 flex items-center gap-3 rounded-2xl border border-[#7b8a4b]/35 bg-[#17351f] px-3.5 py-3 text-white shadow-lg shadow-emerald-950/15 md:hidden" aria-live="polite">
-              <span className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-white text-base font-black text-[#17351f]" aria-hidden="true">✓</span>
+            <div className="mt-1 flex items-center gap-2.5 rounded-2xl border border-[#7b8a4b]/35 bg-[#17351f] px-3 py-2.5 text-white shadow-lg shadow-emerald-950/15 md:hidden" aria-live="polite">
+              <span className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-white text-sm font-black text-[#17351f]" aria-hidden="true">✓</span>
               <div className="min-w-0 flex-1">
                 <span className="block text-[9px] font-black uppercase tracking-[0.14em] text-white/70">{copy.selectedLabel}</span>
                 <strong className="mt-0.5 block truncate text-[15px] font-black leading-5">{localizeRoomName(selectedRoom.displayName, copy)}</strong>
-                <span className="block truncate text-[11px] font-semibold text-white/75">{localizeRoomType(selectedRoom.type, copy)}</span>
+                {visibleRoomType(selectedRoom.type, copy) ? <span className="block truncate text-[11px] font-semibold text-white/75">{visibleRoomType(selectedRoom.type, copy)}</span> : null}
               </div>
               <div className="flex-none text-right">
                 <span className="block text-[9px] font-bold text-white/65">{copy.from}</span>
@@ -970,7 +977,7 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
               <div className="relative h-[145px] overflow-hidden rounded-[1.05rem] bg-stone-100 lg:h-[155px]">
                 <Image
                   src={selectedRoom.images[0]}
-                  alt={`${localizeRoomName(selectedRoom.displayName, copy)} ${localizeRoomType(selectedRoom.type, copy)}`}
+                  alt={[localizeRoomName(selectedRoom.displayName, copy), visibleRoomType(selectedRoom.type, copy)].filter(Boolean).join(" ")}
                   fill
                   sizes="190px"
                   className="scale-110 object-cover object-center"
@@ -982,7 +989,7 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
                   <span className="inline-flex rounded-full bg-amber-50 px-3 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-amber-800 ring-1 ring-amber-900/10">{localizeBadge(selectedRoom.primaryBadge, copy)}</span>
                 </div>
                 <h3 className="mt-1.5 font-serif text-2xl font-bold leading-tight text-stone-950 lg:text-3xl">{localizeRoomName(selectedRoom.displayName, copy)}</h3>
-                <p className="mt-0.5 font-bold text-amber-800">{localizeRoomType(selectedRoom.type, copy)}</p>
+                {visibleRoomType(selectedRoom.type, copy) ? <p className="mt-0.5 font-bold text-amber-800">{visibleRoomType(selectedRoom.type, copy)}</p> : null}
                 <div className="mt-2"><SalesBadges copy={copy} /></div>
                 <div className="mt-2 flex flex-wrap gap-1.5">
                   {selectedRoom.featureBadges.map((badge) => (
@@ -1024,7 +1031,7 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
           {totals ? (
             <div className="mt-2 rounded-[1.25rem] bg-white px-4 py-2.5 text-center shadow-sm ring-1 ring-amber-900/10 md:rounded-[1.4rem] md:py-3">
               <div className="text-[10px] font-black uppercase tracking-[0.14em] text-stone-500 md:text-xs">
-                {selectedRoom ? localizeRoomName(selectedRoom.displayName, copy) : "-"} · {copy.directOffer} · {totals.nights} {totals.nights === 1 ? copy.night : copy.nights}
+                {selectedRoom ? <span className="hidden md:inline">{localizeRoomName(selectedRoom.displayName, copy)} · </span> : null}{copy.directOffer} · {totals.nights} {totals.nights === 1 ? copy.night : copy.nights}
               </div>
               <div className="mt-1 text-[11px] font-bold text-stone-500 md:text-xs">{selectedDateLabel}</div>
               <div className="mt-1 flex items-end justify-center gap-3">
@@ -1064,34 +1071,37 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
                 event.preventDefault();
                 void handleEmailRequest();
               }}
-              className="mx-auto mt-1 grid max-w-2xl gap-2 rounded-2xl border border-amber-900/10 bg-white p-3 shadow-sm sm:grid-cols-[minmax(0,1fr)_auto]"
+              className="mx-auto mt-1 max-w-2xl rounded-2xl border border-amber-900/10 bg-white p-2.5 shadow-sm"
             >
-              <label className="min-w-0">
-                <span className="mb-1 block text-xs font-bold text-stone-600">{copy.emailPrompt}</span>
-                <input
-                  type="email"
-                  inputMode="email"
-                  autoComplete="email"
-                  value={emailValue}
-                  onChange={(event) => {
-                    setEmailValue(event.target.value);
-                    if (emailState === "error") {
-                      setEmailState("idle");
-                      setEmailFeedback("");
-                    }
-                  }}
-                  placeholder={copy.emailPlaceholder}
-                  required
-                  className="h-12 w-full rounded-xl border border-stone-300 bg-white px-4 text-base text-stone-900 outline-none ring-amber-700/20 transition focus:border-amber-700 focus:ring-4"
-                />
-              </label>
-              <button
-                type="submit"
-                disabled={emailState === "sending"}
-                className="min-h-12 self-end rounded-xl bg-amber-700 px-5 text-sm font-black uppercase tracking-[0.06em] text-white transition hover:bg-amber-800 disabled:cursor-wait disabled:opacity-70"
-              >
-                {emailState === "sending" ? copy.emailSending : copy.emailSend}
-              </button>
+              <p className="mb-1.5 text-[11px] font-bold leading-4 text-stone-600">{copy.emailPrompt}</p>
+              <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-2">
+                <label className="min-w-0">
+                  <span className="sr-only">{copy.emailPrompt}</span>
+                  <input
+                    type="email"
+                    inputMode="email"
+                    autoComplete="email"
+                    value={emailValue}
+                    onChange={(event) => {
+                      setEmailValue(event.target.value);
+                      if (emailState === "error") {
+                        setEmailState("idle");
+                        setEmailFeedback("");
+                      }
+                    }}
+                    placeholder={copy.emailPlaceholder}
+                    required
+                    className="h-11 w-full rounded-xl border border-stone-300 bg-white px-3 text-sm text-stone-900 outline-none ring-amber-700/20 transition focus:border-amber-700 focus:ring-4"
+                  />
+                </label>
+                <button
+                  type="submit"
+                  disabled={emailState === "sending"}
+                  className="min-h-11 rounded-xl bg-amber-700 px-3 text-[10px] font-black uppercase leading-tight tracking-[0.04em] text-white transition hover:bg-amber-800 disabled:cursor-wait disabled:opacity-70 sm:px-5 sm:text-xs"
+                >
+                  {emailState === "sending" ? copy.emailSending : copy.emailSend}
+                </button>
+              </div>
             </form>
           ) : null}
 
