@@ -4,6 +4,10 @@ export type SiteImageAsset = {
   height: number;
 };
 
+export type PropertyShowcaseImageAsset = SiteImageAsset & {
+  roomNumber: 1 | 3 | 5 | 7;
+};
+
 export const siteImageAssets = {
   homepageHero: {
     src: "/images/hero/voulamandis-house-room-kambos-chios.webp",
@@ -36,3 +40,30 @@ export const siteImageAssets = {
     height: 534,
   },
 } as const satisfies Record<string, SiteImageAsset>;
+
+export const propertyShowcaseImageAssets = [
+  {
+    roomNumber: 1,
+    src: "/images/rooms/DSC07776-2-e1675109942622.webp",
+    width: 1200,
+    height: 801,
+  },
+  {
+    roomNumber: 3,
+    src: "/images/rooms/DSC07867-1.webp",
+    width: 1200,
+    height: 801,
+  },
+  {
+    roomNumber: 7,
+    src: "/images/rooms/double-triple-room.jpg",
+    width: 1200,
+    height: 800,
+  },
+  {
+    roomNumber: 5,
+    src: "/images/rooms/voulamandis-house-rooms.webp",
+    width: 1200,
+    height: 800,
+  },
+] as const satisfies readonly PropertyShowcaseImageAsset[];

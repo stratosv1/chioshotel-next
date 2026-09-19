@@ -74,6 +74,7 @@ import { absoluteUrl } from "@/lib/seo";
 import { getCommercialRoomGalleryImages } from "@/lib/commercial-room-images";
 import { getAllSeoImageSets } from "@/lib/seo-image-registry";
 import { getSeoImagesForPath } from "@/lib/seo-image-schema";
+import { propertyShowcaseImageAssets } from "@/lib/site-assets";
 
 export const dynamic = "force-static";
 
@@ -83,6 +84,7 @@ type ImageSitemapEntry = {
 };
 
 const activeCommercialLocales = ["en", "el", "fr", "de", "it", "es", "tr"] as const;
+const propertyShowcaseImages = propertyShowcaseImageAssets.map((image) => image.src);
 
 const roomDetailPages: readonly RoomDetailData[] = [
   standardDoubleRoomEn,
@@ -162,6 +164,10 @@ function escapeXml(value: string) {
 
 function unique(values: readonly string[]) {
   return Array.from(new Set(values));
+}
+
+function withPropertyShowcase(images: readonly string[]) {
+  return unique([...images, ...propertyShowcaseImages]);
 }
 
 function getRoomPageImages(page: RoomDetailData) {
@@ -271,41 +277,47 @@ export function GET() {
   }));
 
   const roomCategoryEntries: ImageSitemapEntry[] = roomCategoryPages.map(
-    (page) => ({ path: page.seo.canonicalPath, images: getRoomCategoryPageImages(page) }),
+    (page) => ({
+      path: page.seo.canonicalPath,
+      images: withPropertyShowcase(getRoomCategoryPageImages(page)),
+    }),
   );
 
   const accommodationEntries: ImageSitemapEntry[] = accommodationPages.map(
-    (page) => ({ path: page.seo.canonicalPath, images: getAccommodationPageImages(page) }),
+    (page) => ({
+      path: page.seo.canonicalPath,
+      images: withPropertyShowcase(getAccommodationPageImages(page)),
+    }),
   );
 
   const kamposEntries: ImageSitemapEntry[] = kamposPages.map((page) => ({
     path: page.seo.canonicalPath,
-    images: getKamposPageImages(page),
+    images: withPropertyShowcase(getKamposPageImages(page)),
   }));
 
   const ratesEntries: ImageSitemapEntry[] = ratesPages.map((page) => ({
     path: page.seo.canonicalPath,
-    images: getRatesPageImages(page),
+    images: withPropertyShowcase(getRatesPageImages(page)),
   }));
 
   const hotelGuideEntries: ImageSitemapEntry[] = hotelGuidePages.map((page) => ({
     path: page.seo.canonicalPath,
-    images: getHotelGuideImages(page),
+    images: withPropertyShowcase(getHotelGuideImages(page)),
   }));
 
   const dealsEntries: ImageSitemapEntry[] = dealsPages.map((page) => ({
     path: page.seo.canonicalPath,
-    images: getDealsPageImages(page),
+    images: withPropertyShowcase(getDealsPageImages(page)),
   }));
 
   const familyTravelEntries: ImageSitemapEntry[] = familyTravelPages.map((page) => ({
     path: page.path,
-    images: getFamilyTravelImages(page),
+    images: withPropertyShowcase(getFamilyTravelImages(page)),
   }));
 
   const romanticStayEntries: ImageSitemapEntry[] = romanticStayPages.map((page) => ({
     path: page.path,
-    images: getRomanticStayImages(page),
+    images: withPropertyShowcase(getRomanticStayImages(page)),
   }));
 
   const beachGuideEntries: ImageSitemapEntry[] = chiosBeachesPages.map((page) => ({

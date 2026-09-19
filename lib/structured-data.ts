@@ -4,7 +4,10 @@ import {
   getLanguageForPath,
   siteUrl,
 } from "./seo";
-import { siteImageAssets } from "./site-assets";
+import {
+  propertyShowcaseImageAssets,
+  siteImageAssets,
+} from "./site-assets";
 
 type SchemaPrimitive = string | number | boolean | null;
 type SchemaValue = SchemaPrimitive | SchemaObject | SchemaValue[];
@@ -42,6 +45,7 @@ export const businessData = {
   },
   images: [
     absoluteUrl(siteImageAssets.homepageHero.src),
+    ...propertyShowcaseImageAssets.map((image) => absoluteUrl(image.src)),
   ],
   socialProfiles: [
     "https://www.facebook.com/people/Voulamandis-House/100063584320703/",

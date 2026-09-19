@@ -65,6 +65,7 @@ const localizedCatchAll = read("app/[locale]/[...slug]/page.tsx");
 const seo = read("lib/seo.ts");
 const polishSeo = read("lib/seo-pl.ts");
 const structuredData = read("lib/structured-data.ts");
+const siteAssets = read("lib/site-assets.ts");
 const footer = read("components/VoulamandisFooterTailwind.tsx");
 const navigation = read("lib/site-navigation.ts");
 const agentGuide = read("content/agent-room-guide.ts");
@@ -120,6 +121,20 @@ assert(
 assert(
   structuredData.includes("siteImageAssets.organizationLogo.src"),
   "Organization schema must use the shared logo asset.",
+);
+assert(
+  siteAssets.includes("propertyShowcaseImageAssets") &&
+    siteAssets.includes("roomNumber: 1") &&
+    siteAssets.includes("roomNumber: 3") &&
+    siteAssets.includes("roomNumber: 7") &&
+    siteAssets.includes("roomNumber: 5") &&
+    structuredData.includes("...propertyShowcaseImageAssets.map"),
+  "LodgingBusiness must expose the verified Room 1, 3, 7 and 5 showcase images.",
+);
+assert(
+  imageSitemap.includes("withPropertyShowcase") &&
+    imageSitemap.includes("propertyShowcaseImageAssets"),
+  "Commercial property URLs must inherit the shared Voulamandis House showcase images.",
 );
 assert(
   navigation.includes('contact: "contact"') &&
