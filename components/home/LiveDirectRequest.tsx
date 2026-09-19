@@ -56,6 +56,7 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
   messageConfirm: string;
   topPick: string;
   directDeal: string;
+  selectedLabel: string;
   from: string;
   roomWord: string;
   apartmentWord: string;
@@ -90,6 +91,7 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     messageConfirm: "Please confirm availability and send your best direct offer.",
     topPick: "Top pick",
     directDeal: "Direct deal",
+    selectedLabel: "Your selection",
     from: "from",
     roomWord: "Room",
     apartmentWord: "Apartment",
@@ -143,6 +145,7 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     messageConfirm: "Παρακαλώ επιβεβαιώστε τη διαθεσιμότητα και στείλτε μου την καλύτερη απευθείας προσφορά.",
     topPick: "Κορυφαία επιλογή",
     directDeal: "Απευθείας προσφορά",
+    selectedLabel: "Η επιλογή σας",
     from: "από",
     roomWord: "Δωμάτιο",
     apartmentWord: "Διαμέρισμα",
@@ -196,6 +199,7 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     messageConfirm: "Merci de confirmer la disponibilité et de m’envoyer votre meilleure offre directe.",
     topPick: "Meilleur choix",
     directDeal: "Offre directe",
+    selectedLabel: "Votre sélection",
     from: "à partir de",
     roomWord: "Chambre",
     apartmentWord: "Appartement",
@@ -249,6 +253,7 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     messageConfirm: "Bitte bestätigen Sie die Verfügbarkeit und senden Sie mir Ihr bestes Direktangebot.",
     topPick: "Beste Wahl",
     directDeal: "Direktangebot",
+    selectedLabel: "Ihre Auswahl",
     from: "ab",
     roomWord: "Zimmer",
     apartmentWord: "Apartment",
@@ -302,6 +307,7 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     messageConfirm: "Per favore confermate la disponibilità e inviatemi la vostra migliore offerta diretta.",
     topPick: "Scelta migliore",
     directDeal: "Offerta diretta",
+    selectedLabel: "La tua selezione",
     from: "da",
     roomWord: "Camera",
     apartmentWord: "Appartamento",
@@ -355,6 +361,7 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     messageConfirm: "Por favor confirme la disponibilidad y envíeme su mejor oferta directa.",
     topPick: "Mejor opción",
     directDeal: "Oferta directa",
+    selectedLabel: "Tu selección",
     from: "desde",
     roomWord: "Habitación",
     apartmentWord: "Apartamento",
@@ -408,6 +415,7 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     messageConfirm: "Lütfen uygunluğu onaylayın ve en iyi doğrudan teklifinizi gönderin.",
     topPick: "En iyi seçim",
     directDeal: "Doğrudan teklif",
+    selectedLabel: "Seçiminiz",
     from: "başlayan",
     roomWord: "Oda",
     apartmentWord: "Daire",
@@ -594,45 +602,52 @@ function RoomCard({
     <button
       type="button"
       onClick={onSelect}
-      className={`group w-[78vw] max-w-[315px] flex-none snap-start rounded-[1.25rem] bg-white p-2 text-left transition md:w-[230px] md:max-w-none xl:w-[255px] ${
+      aria-pressed={Boolean(active)}
+      className={`group w-[80vw] max-w-[320px] flex-none snap-start overflow-hidden rounded-[1.35rem] bg-white text-left transition duration-300 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-amber-500/40 md:w-[245px] md:max-w-none xl:w-[270px] ${
         active
-          ? "border border-[#7b8a4b] shadow-md shadow-stone-300/70 ring-2 ring-[#7b8a4b]/30"
-          : "border border-stone-200/70 shadow-md shadow-stone-900/5 hover:-translate-y-1 hover:border-[#7b8a4b]/40 hover:shadow-lg hover:shadow-stone-900/10"
+          ? "border border-[#58703b] shadow-lg shadow-emerald-950/15 ring-2 ring-[#7b8a4b]/35"
+          : "border border-stone-200/80 shadow-md shadow-stone-900/5 hover:-translate-y-1 hover:border-[#7b8a4b]/40 hover:shadow-lg hover:shadow-stone-900/10"
       }`}
     >
-      <div className="relative h-[165px] overflow-hidden rounded-[1rem] bg-stone-100 md:h-[132px]">
+      <div className="relative h-[180px] overflow-hidden bg-stone-100 md:h-[150px]">
         <Image
           src={room.images[0]}
           alt={`${roomName} ${roomType}`}
           width={640}
           height={460}
-          sizes="(max-width: 768px) 78vw, 255px"
-          className="h-full w-full scale-110 object-cover object-center transition duration-500 group-hover:scale-[1.16]"
+          sizes="(max-width: 768px) 80vw, (max-width: 1280px) 245px, 270px"
+          className="h-full w-full object-cover object-center transition duration-500 group-hover:scale-105"
         />
-        <span className="absolute left-2 top-2 rounded-md bg-[#f8f1e4]/95 px-2.5 py-1 text-[10px] font-black text-[#765735] shadow-sm ring-1 ring-white/80">
+        <span className="absolute left-3 top-3 rounded-lg bg-[#f8f1e4]/95 px-2.5 py-1.5 text-[10px] font-black text-[#765735] shadow-sm ring-1 ring-white/80 backdrop-blur-sm">
           {index === 0 ? copy.topPick : copy.directDeal}
         </span>
         {active ? (
-          <span className="absolute right-2 top-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/95 text-lg font-black text-[#6f7f3f] shadow-sm ring-1 ring-[#7b8a4b]/20">✓</span>
+          <span className="absolute inset-x-3 bottom-3 inline-flex min-h-9 items-center justify-center gap-1.5 rounded-xl bg-[#17351f]/95 px-3 py-2 text-[10px] font-black uppercase tracking-[0.08em] text-white shadow-lg backdrop-blur-sm">
+            <span aria-hidden="true">✓</span> {copy.selectedLabel}
+          </span>
         ) : (
-          <span className="absolute right-2 top-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-stone-950/30 text-white backdrop-blur-sm"><HeartIcon /></span>
+          <span className="absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-stone-950/35 text-white shadow-sm backdrop-blur-sm"><HeartIcon /></span>
         )}
       </div>
-      <div className="px-1.5 pb-2 pt-2.5 md:px-2">
-        <h3 className="truncate text-[17px] font-black leading-6 text-stone-950 md:text-lg">{roomName}</h3>
-        <p className="mt-0.5 truncate text-[13px] font-semibold text-amber-800 md:text-sm">{roomType}</p>
-        <div className="mt-2"><SalesBadges compact copy={copy} /></div>
+      <div className="p-3.5 md:p-4">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h3 className="truncate text-[19px] font-black leading-6 text-stone-950 md:text-xl">{roomName}</h3>
+            <p className="mt-0.5 line-clamp-2 text-[12px] font-semibold leading-4 text-stone-600 md:text-[13px]">{roomType}</p>
+          </div>
+          {amount ? (
+            <div className="flex-none text-right">
+              <span className="block text-[10px] font-bold text-stone-500">{copy.from}</span>
+              <strong className="block text-[1.45rem] font-black leading-none text-[#17351f] md:text-2xl">{money(amount)}</strong>
+            </div>
+          ) : null}
+        </div>
+        <div className="mt-3"><SalesBadges compact copy={copy} /></div>
         <div className="mt-2 flex flex-wrap gap-1.5">
           {featureBadges.slice(0, 4).map((badge) => (
-            <span key={badge} className="inline-flex items-center rounded-md bg-stone-100/90 px-1.5 py-1 text-[9px] font-bold text-stone-700 ring-1 ring-stone-200 md:px-2 md:text-[10px]">{badge}</span>
+            <span key={badge} className="inline-flex items-center rounded-md bg-stone-100/90 px-2 py-1 text-[9px] font-bold text-stone-700 ring-1 ring-stone-200 md:text-[10px]">{badge}</span>
           ))}
         </div>
-        {amount ? (
-          <div className="mt-2 flex items-end gap-1.5">
-            <span className="text-xs text-stone-500 md:text-sm">{copy.from}</span>
-            <strong className="text-[1.35rem] font-black leading-none text-[#17351f] md:text-2xl">{money(amount)}</strong>
-          </div>
-        ) : null}
       </div>
     </button>
   );
@@ -756,6 +771,20 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
       setSelectedDates(validSelectedDates);
     }
   }, [deals, guests, selectedDates, selectedKey, selectedRoom]);
+
+  useEffect(() => {
+    const scroller = roomsScrollerRef.current;
+    if (!scroller || !selectedRoom) return;
+
+    const selectedIndex = rooms.findIndex((room) => roomKey(room) === roomKey(selectedRoom));
+    const selectedCard = scroller.children.item(selectedIndex);
+    if (!(selectedCard instanceof HTMLElement)) return;
+
+    const targetLeft = Math.max(0, selectedCard.offsetLeft - scroller.offsetLeft - 16);
+    if (Math.abs(scroller.scrollLeft - targetLeft) > 16) {
+      scroller.scrollTo({ left: targetLeft, behavior: "smooth" });
+    }
+  }, [rooms, selectedRoom]);
 
   const totals = selectionTotals(deals, selectedRoom, selectedDates, guests);
   const requestHref = buildRequestHref(copy, selectedRoom, selectedDates, guests, totals);
@@ -887,7 +916,7 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
                 <button
                   type="button"
                   onClick={() => roomsScrollerRef.current?.scrollBy({ left: -310, behavior: "smooth" })}
-                  className="absolute left-3 top-[76px] z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-xl font-black text-[#17351f] shadow-lg ring-1 ring-amber-900/10 transition hover:scale-105 hover:bg-amber-50 md:left-4 md:top-[67px] md:h-10 md:w-10 md:text-2xl"
+                  className="absolute left-3 top-[88px] z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-xl font-black text-[#17351f] shadow-lg ring-1 ring-amber-900/10 transition hover:scale-105 hover:bg-amber-50 md:left-4 md:top-[74px] md:h-10 md:w-10 md:text-2xl"
                   aria-label="Show previous available rooms"
                 >
                   ←
@@ -895,7 +924,7 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
                 <button
                   type="button"
                   onClick={() => roomsScrollerRef.current?.scrollBy({ left: 310, behavior: "smooth" })}
-                  className="absolute right-3 top-[76px] z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-xl font-black text-[#17351f] shadow-lg ring-1 ring-amber-900/10 transition hover:scale-105 hover:bg-amber-50 md:right-4 md:top-[67px] md:h-10 md:w-10 md:text-2xl"
+                  className="absolute right-3 top-[88px] z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-xl font-black text-[#17351f] shadow-lg ring-1 ring-amber-900/10 transition hover:scale-105 hover:bg-amber-50 md:right-4 md:top-[74px] md:h-10 md:w-10 md:text-2xl"
                   aria-label="Show more available rooms"
                 >
                   →
@@ -922,6 +951,21 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
           </div>
 
           {selectedRoom ? (
+            <div className="mt-1 flex items-center gap-3 rounded-2xl border border-[#7b8a4b]/35 bg-[#17351f] px-3.5 py-3 text-white shadow-lg shadow-emerald-950/15 md:hidden" aria-live="polite">
+              <span className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-white text-base font-black text-[#17351f]" aria-hidden="true">✓</span>
+              <div className="min-w-0 flex-1">
+                <span className="block text-[9px] font-black uppercase tracking-[0.14em] text-white/70">{copy.selectedLabel}</span>
+                <strong className="mt-0.5 block truncate text-[15px] font-black leading-5">{localizeRoomName(selectedRoom.displayName, copy)}</strong>
+                <span className="block truncate text-[11px] font-semibold text-white/75">{localizeRoomType(selectedRoom.type, copy)}</span>
+              </div>
+              <div className="flex-none text-right">
+                <span className="block text-[9px] font-bold text-white/65">{copy.from}</span>
+                <strong className="block text-xl font-black leading-none">{money(minDirectPrice(deals, selectedRoom, guests) || 0)}</strong>
+              </div>
+            </div>
+          ) : null}
+
+          {selectedRoom ? (
             <div className="mt-1 hidden gap-4 rounded-[1.45rem] bg-white p-3 shadow-sm ring-1 ring-amber-900/10 md:grid md:grid-cols-[170px_minmax(0,1fr)_210px] md:items-center lg:grid-cols-[190px_minmax(0,1fr)_230px]">
               <div className="relative h-[145px] overflow-hidden rounded-[1.05rem] bg-stone-100 lg:h-[155px]">
                 <Image
@@ -933,7 +977,10 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
                 />
               </div>
               <div className="min-w-0 py-1">
-                <span className="inline-flex rounded-full bg-amber-50 px-3 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-amber-800 ring-1 ring-amber-900/10">{localizeBadge(selectedRoom.primaryBadge, copy)}</span>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#17351f] px-3 py-1 text-[10px] font-black uppercase tracking-[0.1em] text-white"><span aria-hidden="true">✓</span>{copy.selectedLabel}</span>
+                  <span className="inline-flex rounded-full bg-amber-50 px-3 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-amber-800 ring-1 ring-amber-900/10">{localizeBadge(selectedRoom.primaryBadge, copy)}</span>
+                </div>
                 <h3 className="mt-1.5 font-serif text-2xl font-bold leading-tight text-stone-950 lg:text-3xl">{localizeRoomName(selectedRoom.displayName, copy)}</h3>
                 <p className="mt-0.5 font-bold text-amber-800">{localizeRoomType(selectedRoom.type, copy)}</p>
                 <div className="mt-2"><SalesBadges copy={copy} /></div>
