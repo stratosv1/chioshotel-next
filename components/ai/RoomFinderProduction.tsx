@@ -18,7 +18,7 @@ import { useRoomFinder } from "./use-room-finder";
 const WHATSAPP_NUMBER = "306944474226";
 const CALL_NUMBER = "+306944764654";
 const BREAKFAST_IMAGE = "/images/welcome/voulamandis-breakfast.jpg";
-const CORE_INPUT_STEPS = new Set(["checkin", "checkout", "rooms", "guests"]);
+const CORE_INPUT_STEPS = new Set(["destination", "checkin", "checkout", "rooms", "guests"]);
 
 const CALL_LABEL: Record<RoomFinderLanguage, string> = {
   el: "Κλήση",

@@ -8,6 +8,7 @@ import type {
 } from "./room-finder-types";
 
 const ACTION_TYPES = [
+  "set_stay_destination",
   "set_stay_dates",
   "set_room_count",
   "set_guest_count",
@@ -44,6 +45,8 @@ const COMMAND_SCHEMA = {
         additionalProperties: false,
         required: [
           "type",
+          "destination",
+          "destinationKind",
           "checkin",
           "checkout",
           "nights",
@@ -57,6 +60,11 @@ const COMMAND_SCHEMA = {
         ],
         properties: {
           type: { type: "string", enum: ACTION_TYPES },
+          destination: { type: ["string", "null"] },
+          destinationKind: {
+            type: ["string", "null"],
+            enum: ["property", "island", "other", null],
+          },
           checkin: { type: ["string", "null"] },
           checkout: { type: ["string", "null"] },
           nights: { type: ["integer", "null"], minimum: 1, maximum: 60 },
@@ -83,6 +91,7 @@ EVERY customer text message reaches you, including corrections after room result
 
 SUPPORTED CONTRACT
 You may return only these actions:
+- set_stay_destination: an explicit place where the customer wants accommodation, plus its destinationKind.
 - set_stay_dates: exact check-in/check-out/nights facts.
 - set_room_count: exact number of rooms requested. Return the customer's exact number even when it is 4 or more; the application routes requests above 3 rooms to the front desk.
 - set_guest_count: either a total booking guest count OR a guest count assigned to a specific room.
@@ -103,6 +112,16 @@ CORE RULES
 - If part of a message is clear and another attempted fact is ambiguous, return the clear fact actions plus exactly one specific ask_clarification action.
 - Clarification must identify the exact ambiguity and, when useful, include one short valid example.
 - Never use vague wording such as “I did not understand” or “please be more specific” without naming what is unclear.
+
+STAY DESTINATION
+- Voulamandis House is guest accommodation in Kampos (Kambos), Chios. The Room Finder searches availability only for Voulamandis House.
+- When the customer explicitly says where they want to stay, return set_stay_destination with the place name and exactly one destinationKind:
+  property = Voulamandis House or Kampos/Kambos;
+  island = Chios/Sakiz broadly, without naming another specific town, village or area;
+  other = any specific accommodation area other than Kampos, for example Mesta, Karfas or Chios town.
+- A place they want to visit, see, drive to or ask about is not a stay destination. Do not emit set_stay_destination for “stay in Kampos and visit Mesta” except for Kampos.
+- Always extract clear dates, rooms, guests and preferences from the same message even when destinationKind=other. The application will preserve those facts and pause before availability.
+- When currentStep=destination and the customer chooses Voulamandis House/Kampos, return set_stay_destination(destinationKind=property). If they state only Chios generally, use island. If they insist on another specific area, return other again.
 
 DATES
 - Normalize each exact resolved date to YYYY-MM-DD.
@@ -186,8 +205,15 @@ REFERENCE EXAMPLES
 11) Context currentStep=unavailable. Customer: “Θα καλέσω αύριο στο τηλέφωνό σας”.
 => acknowledge_contact. Do not return no_change, do not ask for new dates and do not modify booking facts.
 
+12) “Ενδιαφερόμαστε να μείνουμε στα Μεστά για 4 ημέρες, 13 έως 16 Αυγούστου 2027”.
+=> set_stay_destination(destination="Μεστά", destinationKind=other), set_stay_dates(checkin=2027-08-13, checkout=2027-08-16). Do not answer with room facts and do not start availability.
+
+13) “Θέλουμε να μείνουμε στον Κάμπο και να επισκεφτούμε τα Μεστά”.
+=> set_stay_destination(destination="Κάμπος", destinationKind=property). Mesta is a visit, not the accommodation destination.
+
 SCHEMA RULES
 - For irrelevant nullable fields return null.
+- destination and destinationKind are populated only for set_stay_destination; otherwise return null.
 - preferences is [] when unused.
 - query is an empty string when unused.
 - missingFields is [] when unused.
@@ -220,6 +246,12 @@ function cleanAction(raw: any): RoomFinderAction {
   const type = ACTION_TYPES.includes(raw?.type) ? raw.type : "no_change";
   const action: RoomFinderAction = { type };
 
+  if (type === "set_stay_destination" && raw?.destination) {
+    action.destination = String(raw.destination).trim().slice(0, 120);
+    if (["property", "island", "other"].includes(raw?.destinationKind)) {
+      action.destinationKind = raw.destinationKind;
+    }
+  }
   if (raw?.checkin) action.checkin = raw.checkin;
   if (raw?.checkout) action.checkout = raw.checkout;
   if (raw?.nights != null) action.nights = Number(raw.nights);
@@ -252,7 +284,7 @@ export async function interpretRoomFinderMessage(
   if (!apiKey) throw new Error("OPENAI_API_KEY is not configured");
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 12_000);
+  const timeout = setTimeout(() => controller.abort(), 18_000);
 
   try {
     const response = await fetch("https://api.openai.com/v1/responses", {

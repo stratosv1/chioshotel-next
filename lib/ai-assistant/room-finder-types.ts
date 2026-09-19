@@ -9,7 +9,10 @@ export type RoomFinderPreference =
   | "budget"
   | "family";
 
+export type RoomFinderDestinationKind = "property" | "island" | "other";
+
 export type RoomFinderConversationStep =
+  | "destination"
   | "checkin"
   | "checkout"
   | "rooms"
@@ -21,6 +24,7 @@ export type RoomFinderConversationStep =
   | "unavailable";
 
 export type RoomFinderActionType =
+  | "set_stay_destination"
   | "set_stay_dates"
   | "set_room_count"
   | "set_guest_count"
@@ -32,6 +36,8 @@ export type RoomFinderActionType =
 
 export type RoomFinderAction = {
   type: RoomFinderActionType;
+  destination?: string;
+  destinationKind?: RoomFinderDestinationKind;
   checkin?: string;
   checkout?: string;
   nights?: number;
@@ -56,6 +62,8 @@ export type RoomFinderConversationMessage = {
 };
 
 export type RoomFinderConversationContext = {
+  stayDestination?: string;
+  destinationKind?: RoomFinderDestinationKind;
   checkin?: string;
   checkout?: string;
   roomCount?: number;

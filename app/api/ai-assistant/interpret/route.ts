@@ -15,9 +15,6 @@ const MAX_RECENT_MESSAGES = 12;
 const MAX_RECENT_MESSAGE_CHARS = 500;
 const BURST_MAX_REQUESTS = 20;
 const HOUR_MAX_REQUESTS = 60;
-const SIMPLE_DATE_INPUT = /^\d{1,2}[\/.\-]\d{1,2}(?:[\/.\-]\d{2,4})?$/;
-const SIMPLE_NUMBER_INPUT = /^\d{1,2}$/;
-const SIMPLE_GUEST_INPUT = /^[1-5]$/;
 
 function isAbortError(error: unknown) {
   return error instanceof Error && error.name === "AbortError";
@@ -131,6 +128,12 @@ function sanitizeContext(value: unknown): RoomFinderConversationContext {
     : undefined;
 
   return {
+    stayDestination: typeof raw.stayDestination === "string"
+      ? raw.stayDestination.slice(0, 120)
+      : undefined,
+    destinationKind: ["property", "island", "other"].includes(String(raw.destinationKind))
+      ? raw.destinationKind
+      : undefined,
     checkin: raw.checkin,
     checkout: raw.checkout,
     roomCount: raw.roomCount,
@@ -144,23 +147,6 @@ function sanitizeContext(value: unknown): RoomFinderConversationContext {
   };
 }
 
-function deterministicFastPath(
-  message: string,
-  context: RoomFinderConversationContext,
-) {
-  const step = context.currentStep;
-  const safeInput = (step === "checkin" || step === "checkout")
-    ? SIMPLE_DATE_INPUT.test(message)
-    : step === "rooms"
-      ? SIMPLE_NUMBER_INPUT.test(message)
-      : step === "guests"
-        ? SIMPLE_GUEST_INPUT.test(message)
-        : false;
-
-  if (!safeInput && step !== "unavailable") return null;
-  return fallbackRoomFinderCommand(message, context);
-}
-
 function noStoreJson(body: unknown, init?: ResponseInit) {
   const headers = new Headers(init?.headers);
   headers.set("Cache-Control", "no-store");
@@ -170,7 +156,6 @@ function noStoreJson(body: unknown, init?: ResponseInit) {
 export async function POST(request: NextRequest) {
   let message = "";
   let context: RoomFinderConversationContext = {};
-  let interpreterStarted = false;
 
   try {
     if (!isAllowedBrowserOrigin(request)) {
@@ -196,31 +181,25 @@ export async function POST(request: NextRequest) {
       return noStoreJson({ error: "Conversation context is too large.", code: "CONTEXT_TOO_LARGE" }, { status: 400 });
     }
 
-    const deterministicCommand = deterministicFastPath(message, context);
-    if (deterministicCommand) {
-      return noStoreJson({
-        ok: true,
-        command: deterministicCommand,
-        fallback: false,
-        deterministic: true,
-      });
-    }
-
     const rate = await checkDistributedRateLimit(getClientIp(request));
     if (rate.limited) {
+      const fallbackCommand = fallbackRoomFinderCommand(message, context);
+      if (fallbackCommand) {
+        console.warn("AI Room Finder deterministic rate-limit rescue used");
+        return noStoreJson({ ok: true, command: fallbackCommand, fallback: true });
+      }
       return noStoreJson(
         { error: "Too many requests. Please try again shortly.", code: "RATE_LIMITED" },
         { status: 429, headers: { "Retry-After": String(rate.retryAfterSeconds) } },
       );
     }
 
-    interpreterStarted = true;
     const command = await interpretRoomFinderMessage(message, context);
     return noStoreJson({ ok: true, command, fallback: false });
   } catch (error) {
     console.error("AI Room Finder intent endpoint error", error);
 
-    if (interpreterStarted) {
+    if (message) {
       const command = fallbackRoomFinderCommand(message, context);
       if (command) {
         console.warn("AI Room Finder deterministic interpreter rescue used");

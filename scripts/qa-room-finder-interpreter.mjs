@@ -3,11 +3,14 @@
 const BASE_URL = String(process.env.AI_QA_BASE_URL || "https://chioshotel.gr").replace(/\/$/, "");
 const TIMEOUT_MS = Number(process.env.AI_QA_TIMEOUT_MS || 30000);
 const ALLOWED_ACTIONS = new Set([
+  "set_stay_destination",
   "set_stay_dates",
   "set_room_count",
   "set_guest_count",
+  "set_preferences",
   "restart_search",
   "ask_clarification",
+  "acknowledge_contact",
   "no_change",
 ]);
 
@@ -19,6 +22,16 @@ const TEXT_DATE = {
   it: "10 ottobre",
   es: "10 octubre",
   tr: "10 Ekim",
+};
+
+const DESTINATION_EXAMPLES = {
+  el: "Ενδιαφερόμαστε να μείνουμε στα Μεστά από 13 έως 16 Αυγούστου 2027",
+  en: "We would like to stay in Mesta from 13 to 16 August 2027",
+  de: "Wir möchten vom 13. bis 16. August 2027 in Mesta übernachten",
+  fr: "Nous souhaitons séjourner à Mesta du 13 au 16 août 2027",
+  it: "Vorremmo soggiornare a Mesta dal 13 al 16 agosto 2027",
+  es: "Queremos alojarnos en Mesta del 13 al 16 de agosto de 2027",
+  tr: "13-16 Ağustos 2027 tarihleri arasında Mesta'da kalmak istiyoruz",
 };
 
 function assert(condition, message) {
@@ -43,10 +56,6 @@ async function interpret(message, context) {
       payload.command.actions.every((action) => ALLOWED_ACTIONS.has(action?.type)),
       `unsupported action returned: ${payload.command.actions.map((action) => action?.type).join(", ")}`,
     );
-    assert(
-      payload.command.actions.every((action) => !("preferences" in action)),
-      "Room Finder action unexpectedly contains preferences",
-    );
     return { command: payload.command, durationMs: Date.now() - started };
   } finally {
     clearTimeout(timer);
@@ -65,6 +74,10 @@ function roomGuest(actions, room) {
 
 function clarifications(actions) {
   return actions.filter((action) => action?.type === "ask_clarification");
+}
+
+function stayDestination(actions) {
+  return actions.find((action) => action?.type === "set_stay_destination");
 }
 
 function assertNoClarification(actions, label) {
@@ -89,6 +102,20 @@ async function exactDateJourney(language) {
   assertNoClarification(departure.command.actions, `${language} numeric check-out`);
 
   return { arrivalMs: arrival.durationMs, namedArrivalMs: namedArrival.durationMs, departureMs: departure.durationMs };
+}
+
+async function destinationGuardJourney(language) {
+  const result = await interpret(DESTINATION_EXAMPLES[language], {
+    language,
+    currentStep: "checkin",
+  });
+  const actions = result.command.actions;
+  const destination = stayDestination(actions);
+  assert(destination?.destinationKind === "other", `${language}: Mesta was not identified as another stay destination`);
+  assert(fact(actions, "checkin") === "2027-08-13", `${language}: destination message lost check-in`);
+  assert(fact(actions, "checkout") === "2027-08-16", `${language}: destination message lost check-out`);
+  assertNoClarification(actions, `${language} explicit outside destination`);
+  return { durationMs: result.durationMs };
 }
 
 async function greekPreferenceRemovalRegression() {
@@ -230,6 +257,8 @@ async function main() {
   for (const language of languages) {
     const timing = await exactDateJourney(language);
     console.log(`✓ ${language} AI date understanding (${timing.arrivalMs}ms / ${timing.namedArrivalMs}ms / ${timing.departureMs}ms)`);
+    const destination = await destinationGuardJourney(language);
+    console.log(`✓ ${language} stay-destination guard (${destination.durationMs}ms)`);
   }
 
   const preferenceRemoval = await greekPreferenceRemovalRegression();

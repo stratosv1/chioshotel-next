@@ -1,4 +1,7 @@
-import type { RoomFinderCommand } from "@/lib/ai-assistant/room-finder-types";
+import type {
+  RoomFinderCommand,
+  RoomFinderDestinationKind,
+} from "@/lib/ai-assistant/room-finder-types";
 import {
   addDaysToIsoDate,
   daysBetweenIsoDates,
@@ -6,6 +9,7 @@ import {
 } from "@/lib/ai-assistant/room-finder-date";
 
 export type FinderStep =
+  | "destination"
   | "checkin"
   | "checkout"
   | "rooms"
@@ -17,6 +21,8 @@ export type FinderStep =
   | "unavailable";
 
 export type BookingDraft = {
+  stayDestination: string;
+  destinationKind: RoomFinderDestinationKind | null;
   checkin: string;
   checkout: string;
   roomCount: number | null;
@@ -29,10 +35,11 @@ export type BookingFlowState = {
   draft: BookingDraft;
 };
 
-type ClarificationStep = "checkin" | "checkout" | "rooms" | "guests";
+type ClarificationStep = "destination" | "checkin" | "checkout" | "rooms" | "guests";
 
 export type BookingTurnOutcome =
   | { kind: "restart" }
+  | { kind: "destination_mismatch"; destination: string }
   | { kind: "invalid_checkout" }
   | { kind: "clarification"; query: string; step: FinderStep }
   | { kind: "prompt"; field: ClarificationStep; guestRoom?: number }
@@ -57,7 +64,7 @@ export type BookingFlowAction =
 const MAX_ROOMS = 3;
 const MAX_GUESTS_PER_ROOM = 5;
 const MAX_TOTAL_GUESTS = MAX_ROOMS * MAX_GUESTS_PER_ROOM;
-const CORE_INPUT_STEPS = new Set<FinderStep>(["checkin", "checkout", "rooms", "guests"]);
+const CORE_INPUT_STEPS = new Set<FinderStep>(["destination", "checkin", "checkout", "rooms", "guests"]);
 
 const ROOM_LIMIT_MESSAGE: Record<RoomFinderCommand["language"], string> = {
   el: "Μέσω του αυτόματου συστήματος αναζήτησης μπορείτε να αναζητήσετε έως 3 δωμάτια. Για περισσότερα δωμάτια, επικοινωνήστε απευθείας με το front desk του Voulamandis House μέσω WhatsApp.",
@@ -73,6 +80,8 @@ export function createInitialBookingFlowState(): BookingFlowState {
   return {
     step: "checkin",
     draft: {
+      stayDestination: "",
+      destinationKind: null,
       checkin: "",
       checkout: "",
       roomCount: null,
@@ -146,11 +155,19 @@ function normalizeGuestAllocation(draft: BookingDraft) {
 }
 
 function bookingCoreIsComplete(draft: BookingDraft) {
-  return Boolean(draft.checkin && draft.checkout && draft.roomCount && guestAllocationComplete(draft));
+  return Boolean(
+    draft.destinationKind !== "other"
+      && draft.checkin
+      && draft.checkout
+      && draft.roomCount
+      && guestAllocationComplete(draft),
+  );
 }
 
 function draftsEqual(left: BookingDraft, right: BookingDraft) {
   return (
+    left.stayDestination === right.stayDestination &&
+    left.destinationKind === right.destinationKind &&
     left.checkin === right.checkin &&
     left.checkout === right.checkout &&
     left.roomCount === right.roomCount &&
@@ -269,6 +286,7 @@ export function nightsBetween(checkin: string, checkout: string) {
 }
 
 function normalizeClarificationStep(field: string): ClarificationStep | null {
+  if (field === "destination" || field === "stayDestination") return "destination";
   if (field === "roomCount") return "rooms";
   if (field === "totalGuests" || field === "guests" || field === "guestRoom" || field === "guestGroups") return "guests";
   if (field === "checkin" || field === "checkout" || field === "rooms") return field;
@@ -277,6 +295,10 @@ function normalizeClarificationStep(field: string): ClarificationStep | null {
 
 function commandSuppliesField(command: RoomFinderCommand, field: ClarificationStep) {
   switch (field) {
+    case "destination":
+      return command.actions.some(action =>
+        action.type === "set_stay_destination" && Boolean(action.destination && action.destinationKind),
+      );
     case "checkin":
       return command.actions.some(action => Boolean(action.checkin && isStrictIsoDate(action.checkin)));
     case "checkout":
@@ -315,6 +337,9 @@ function unresolvedClarification(command: RoomFinderCommand, fallbackStep: Finde
 }
 
 function nextOutcome(draft: BookingDraft): BookingTurnOutcome {
+  if (draft.destinationKind === "other" && draft.stayDestination) {
+    return { kind: "destination_mismatch", destination: draft.stayDestination };
+  }
   if (!draft.checkin) return { kind: "prompt", field: "checkin" };
   if (!draft.checkout) return { kind: "prompt", field: "checkout" };
   if (!draft.roomCount) return { kind: "prompt", field: "rooms" };
@@ -324,6 +349,7 @@ function nextOutcome(draft: BookingDraft): BookingTurnOutcome {
 }
 
 function stepForOutcome(outcome: BookingTurnOutcome, fallback: FinderStep): FinderStep {
+  if (outcome.kind === "destination_mismatch") return "destination";
   if (outcome.kind === "invalid_checkout") return "checkout";
   if (outcome.kind === "clarification") return outcome.step;
   if (outcome.kind === "prompt") return outcome.field;
@@ -344,6 +370,16 @@ export function resolveAssistantTurn(current: BookingFlowState, command: RoomFin
     ...current.draft,
     groups: [...current.draft.groups],
   };
+
+  const incomingDestination = [...command.actions]
+    .reverse()
+    .find(action =>
+      action.type === "set_stay_destination" && action.destination && action.destinationKind,
+    );
+  if (incomingDestination?.destination && incomingDestination.destinationKind) {
+    draft.stayDestination = incomingDestination.destination.slice(0, 120);
+    draft.destinationKind = incomingDestination.destinationKind;
+  }
 
   for (const action of command.actions) {
     if (action.checkin && isStrictIsoDate(action.checkin)) draft.checkin = action.checkin;
@@ -412,6 +448,18 @@ export function resolveAssistantTurn(current: BookingFlowState, command: RoomFin
 
   normalizeGuestAllocation(draft);
   const changed = !draftsEqual(current.draft, draft);
+
+  if (draft.destinationKind === "other" && draft.stayDestination) {
+    const outcome: BookingTurnOutcome = {
+      kind: "destination_mismatch",
+      destination: draft.stayDestination,
+    };
+    return {
+      state: { step: stepForOutcome(outcome, current.step), draft },
+      outcome,
+      changed,
+    };
+  }
 
   if (draft.checkin && draft.checkout && nightsBetween(draft.checkin, draft.checkout) < 1) {
     draft.checkout = "";

@@ -189,10 +189,18 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   const announcedLongStayKey = useRef<string | null>(null);
 
   const { step, draft } = flow;
-  const { checkin, checkout, roomCount, totalGuests, groups } = draft;
+  const {
+    stayDestination,
+    destinationKind,
+    checkin,
+    checkout,
+    roomCount,
+    totalGuests,
+    groups,
+  } = draft;
   const guestTotal = totalGuests || groups.reduce((sum, guests) => sum + guests, 0);
   const nights = checkin && checkout ? Math.max(0, nightsBetween(checkin, checkout)) : 0;
-  const canGoBack = step !== "checkin" && step !== "searching" && step !== "unavailable";
+  const canGoBack = step !== "destination" && step !== "checkin" && step !== "searching" && step !== "unavailable";
   const selectedKeys = useMemo(
     () => new Set(choices.map(choice => roomOfferKey(choice.offer))),
     [choices],
@@ -365,6 +373,8 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       context: {
         language,
         currentStep: current,
+        stayDestination: stayDestination || undefined,
+        destinationKind: destinationKind || undefined,
         checkin: checkin || undefined,
         checkout: checkout || undefined,
         totalGuests: totalGuests || undefined,
@@ -376,42 +386,22 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       },
     });
 
-    for (let attempt = 0; attempt < 2; attempt += 1) {
-      const controller = new AbortController();
-      const timeout = window.setTimeout(() => controller.abort(), 15_000);
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 25_000);
 
-      try {
-        const response = await fetch("/api/ai-assistant/interpret", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          signal: controller.signal,
-          body: requestBody,
-        });
-        const data = await response.json().catch(() => null);
-        if (response.ok && data?.command) return data.command as RoomFinderCommand;
-
-        const code = String(data?.code || "AI_UNAVAILABLE");
-        const transient = response.status === 502
-          || response.status === 504
-          || code === "AI_TIMEOUT"
-          || code === "AI_UNAVAILABLE";
-        if (attempt === 0 && transient) {
-          await wait(250);
-          continue;
-        }
-        throw new Error(code);
-      } catch (error) {
-        if (attempt === 0 && error instanceof TypeError) {
-          await wait(250);
-          continue;
-        }
-        throw error;
-      } finally {
-        window.clearTimeout(timeout);
-      }
+    try {
+      const response = await fetch("/api/ai-assistant/interpret", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        signal: controller.signal,
+        body: requestBody,
+      });
+      const data = await response.json().catch(() => null);
+      if (response.ok && data?.command) return data.command as RoomFinderCommand;
+      throw new Error(String(data?.code || "AI_UNAVAILABLE"));
+    } finally {
+      window.clearTimeout(timeout);
     }
-
-    throw new Error("AI_UNAVAILABLE");
   }
 
   async function propertyKnowledgeAnswer(value: string) {
@@ -625,6 +615,11 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     if (resolution.changed) clearSearchSelectionState();
     dispatchFlow({ type: "commit_turn", state: resolution.state });
 
+    if (resolution.outcome.kind === "destination_mismatch") {
+      add("assistant", tone.destinationMismatch(resolution.outcome.destination));
+      return;
+    }
+
     if (resolution.outcome.kind === "invalid_checkout") {
       add("assistant", tone.invalidCheckout);
       return;
@@ -722,8 +717,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       await applyCommand(command);
     } catch (error) {
       console.error("Room Finder interpreter request failed", error);
-      const knowledgeAnswer = await propertyKnowledgeAnswer(value);
-      add("assistant", knowledgeAnswer || INTERPRETER_UNAVAILABLE[language]);
+      add("assistant", INTERPRETER_UNAVAILABLE[language]);
     } finally {
       endUserTurn();
     }

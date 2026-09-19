@@ -1,6 +1,7 @@
 import type { RoomFinderLanguage } from "./room-finder-copy";
 
 export type RoomFinderTone = {
+  destinationMismatch: (destination: string) => string;
   checkout: string;
   rooms: string;
   guests: (room: number) => string;
@@ -15,6 +16,7 @@ export type RoomFinderTone = {
 
 export const ROOM_FINDER_TONE: Record<RoomFinderLanguage, RoomFinderTone> = {
   el: {
+    destinationMismatch: destination => `Κατάλαβα ότι ο προορισμός διαμονής σας είναι «${destination}». Το Voulamandis House βρίσκεται στον Κάμπο της Χίου. Θέλετε να ελέγξω διαθεσιμότητα στο Voulamandis House στον Κάμπο ή αναζητάτε αποκλειστικά κατάλυμα στην περιοχή «${destination}»;`,
     checkout: "Ποια ημερομηνία θα θέλατε για check-out;",
     rooms: "Πόσα δωμάτια χρειάζεστε;",
     guests: room => `Πόσα άτομα θα μείνουν στο δωμάτιο ${room};`,
@@ -27,6 +29,7 @@ export const ROOM_FINDER_TONE: Record<RoomFinderLanguage, RoomFinderTone> = {
     unavailable: "Έλεγξα τη live διαθεσιμότητα και δεν βρήκα διαθέσιμη λύση για τα ακριβή στοιχεία της αναζήτησής σας. Η Reception μπορεί να ελέγξει επιπλέον επιλογές μέσω WhatsApp.",
   },
   en: {
+    destinationMismatch: destination => `I understood that your requested place to stay is “${destination}”. Voulamandis House is in Kampos, Chios. Would you like me to check availability at Voulamandis House in Kampos, or are you looking exclusively for accommodation in “${destination}”?`,
     checkout: "What date would you like to check out?",
     rooms: "How many rooms do you need?",
     guests: room => `How many guests will stay in room ${room}?`,
@@ -39,6 +42,7 @@ export const ROOM_FINDER_TONE: Record<RoomFinderLanguage, RoomFinderTone> = {
     unavailable: "I checked live availability and found no available solution for the exact details of your search. Reception can check additional options with you on WhatsApp.",
   },
   de: {
+    destinationMismatch: destination => `Ich habe verstanden, dass Ihr gewünschter Aufenthaltsort „${destination}“ ist. Das Voulamandis House befindet sich in Kampos auf Chios. Soll ich die Verfügbarkeit im Voulamandis House in Kampos prüfen, oder suchen Sie ausschließlich eine Unterkunft in „${destination}“?`,
     checkout: "An welchem Datum möchten Sie auschecken?",
     rooms: "Wie viele Zimmer benötigen Sie?",
     guests: room => `Wie viele Gäste übernachten in Zimmer ${room}?`,
@@ -51,6 +55,7 @@ export const ROOM_FINDER_TONE: Record<RoomFinderLanguage, RoomFinderTone> = {
     unavailable: "Ich habe die Live-Verfügbarkeit geprüft und für die exakten Angaben Ihrer Suche keine verfügbare Lösung gefunden. Die Rezeption kann über WhatsApp weitere Möglichkeiten prüfen.",
   },
   fr: {
+    destinationMismatch: destination => `J’ai compris que vous souhaitez séjourner à « ${destination} ». Voulamandis House se trouve à Kampos, sur l’île de Chios. Souhaitez-vous que je vérifie les disponibilités à Voulamandis House, à Kampos, ou cherchez-vous exclusivement un hébergement à « ${destination} » ?`,
     checkout: "Quelle date souhaitez-vous pour le check-out ?",
     rooms: "De combien de chambres avez-vous besoin ?",
     guests: room => `Combien de personnes séjourneront dans la chambre ${room} ?`,
@@ -63,6 +68,7 @@ export const ROOM_FINDER_TONE: Record<RoomFinderLanguage, RoomFinderTone> = {
     unavailable: "J’ai vérifié les disponibilités en direct et n’ai trouvé aucune solution disponible pour les critères exacts de votre recherche. La réception peut vérifier d’autres possibilités via WhatsApp.",
   },
   it: {
+    destinationMismatch: destination => `Ho capito che desiderate soggiornare a «${destination}». Voulamandis House si trova a Kampos, Chios. Volete che controlli la disponibilità al Voulamandis House di Kampos oppure cercate esclusivamente un alloggio a «${destination}»?`,
     checkout: "Quale data desiderate per il check-out?",
     rooms: "Di quante camere avete bisogno?",
     guests: room => `Quante persone soggiorneranno nella camera ${room}?`,
@@ -75,6 +81,7 @@ export const ROOM_FINDER_TONE: Record<RoomFinderLanguage, RoomFinderTone> = {
     unavailable: "Ho verificato la disponibilità live e non ho trovato una soluzione disponibile per i dati esatti della ricerca. La Reception può verificare altre possibilità tramite WhatsApp.",
   },
   es: {
+    destinationMismatch: destination => `He entendido que desean alojarse en «${destination}». Voulamandis House se encuentra en Kampos, Quíos. ¿Quieren que compruebe la disponibilidad en Voulamandis House, en Kampos, o buscan exclusivamente alojamiento en «${destination}»?`,
     checkout: "¿Qué fecha desean para el check-out?",
     rooms: "¿Cuántas habitaciones necesitan?",
     guests: room => `¿Cuántas personas se alojarán en la habitación ${room}?`,
@@ -87,6 +94,7 @@ export const ROOM_FINDER_TONE: Record<RoomFinderLanguage, RoomFinderTone> = {
     unavailable: "He comprobado la disponibilidad en vivo y no encontré una solución disponible para los datos exactos de la búsqueda. Recepción puede revisar otras opciones por WhatsApp.",
   },
   tr: {
+    destinationMismatch: destination => `Konaklamak istediğiniz yerin “${destination}” olduğunu anladım. Voulamandis House, Sakız Adası’nın Kampos bölgesindedir. Kampos’taki Voulamandis House için müsaitliği kontrol etmemi ister misiniz, yoksa yalnızca “${destination}” bölgesinde mi konaklama arıyorsunuz?`,
     checkout: "Hangi tarihte çıkış yapmak istersiniz?",
     rooms: "Kaç odaya ihtiyacınız var?",
     guests: room => `${room}. odada kaç kişi kalacak?`,

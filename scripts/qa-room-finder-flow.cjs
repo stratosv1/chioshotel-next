@@ -45,12 +45,14 @@ const datePath = path.join(root, "lib/ai-assistant/room-finder-date.ts");
 const flowPath = path.join(root, "components/ai/room-finder-booking-flow.ts");
 const offerPlanPath = path.join(root, "components/ai/room-finder-offer-plan.ts");
 const offerTrackingPath = path.join(root, "lib/ai-assistant/room-finder-offer-tracking.ts");
+const fallbackPath = path.join(root, "lib/ai-assistant/room-finder-fallback.ts");
 const hookPath = path.join(root, "components/ai/use-room-finder.ts");
 const productionPath = path.join(root, "components/ai/RoomFinderProduction.tsx");
 const copyPath = path.join(root, "components/ai/room-finder-copy.ts");
 const carouselPath = path.join(root, "components/ai/room-finder-carousel.tsx");
 const flowHelpersPath = path.join(root, "components/ai/room-finder-flow-helpers.ts");
 const legacyFlowPath = path.join(root, "components/ai/AiRoomFinderFlow.tsx");
+const interpretRoutePath = path.join(root, "app/api/ai-assistant/interpret/route.ts");
 
 const dateUtils = executeCommonJs(transpile(datePath));
 const flow = executeCommonJs(transpile(flowPath), id => {
@@ -59,6 +61,10 @@ const flow = executeCommonJs(transpile(flowPath), id => {
 });
 const offerPlan = executeCommonJs(transpile(offerPlanPath));
 const offerTracking = executeCommonJs(transpile(offerTrackingPath));
+const fallback = executeCommonJs(transpile(fallbackPath), id => {
+  if (id === "./room-finder-date") return dateUtils;
+  return require(id);
+});
 
 const {
   bookingFlowReducer,
@@ -67,6 +73,7 @@ const {
   resolveAssistantTurn,
 } = flow;
 const { feasibleOffersForGroup, hasDistinctOfferPlan, roomOfferKey } = offerPlan;
+const { fallbackRoomFinderCommand } = fallback;
 
 function command(actions, replyMode = "execute") {
   return { language: "el", replyMode, actions };
@@ -74,6 +81,8 @@ function command(actions, replyMode = "execute") {
 
 function fullDraft(overrides = {}) {
   return {
+    stayDestination: "",
+    destinationKind: null,
     checkin: "2026-10-10",
     checkout: "2026-10-12",
     roomCount: 1,
@@ -113,6 +122,47 @@ function testFullOneTurnBooking() {
   assert(result.state.draft.groups.length === 1 && result.state.draft.groups[0] === 2, "one-room total guests were not allocated");
   assert(result.state.draft.totalGuests === 2, "one-room total guest count was lost");
   assert(result.changed === true, "full booking was not marked changed");
+}
+
+function testDestinationMismatchPreservesBookingFacts() {
+  const examples = [
+    ["el", "Καλησπέρα σας! Ενδιαφερόμαστε να μείνουμε στη στα Μεστά για 4 ημέρες, 13 έως 16 Αυγούστου 2027"],
+    ["en", "We would like to stay in Mesta from 13 to 16 August 2027"],
+    ["de", "Wir möchten vom 13. bis 16. August 2027 in Mesta übernachten"],
+    ["fr", "Nous souhaitons séjourner à Mesta du 13 au 16 août 2027"],
+    ["it", "Vorremmo soggiornare a Mesta dal 13 al 16 agosto 2027"],
+    ["es", "Queremos alojarnos en Mesta del 13 al 16 de agosto de 2027"],
+    ["tr", "13-16 Ağustos 2027 tarihleri arasında Mesta'da kalmak istiyoruz"],
+  ];
+
+  for (const [language, message] of examples) {
+    const interpreted = fallbackRoomFinderCommand(message, { language, currentStep: "checkin" });
+    assert(interpreted, `${language}: timeout fallback returned no command`);
+    const destination = interpreted.actions.find(action => action.type === "set_stay_destination");
+    const dates = interpreted.actions.find(action => action.type === "set_stay_dates");
+    assert(destination?.destinationKind === "other", `${language}: Mesta was not classified as another stay destination`);
+    assert(dates?.checkin === "2027-08-13", `${language}: named check-in date was not preserved`);
+    assert(dates?.checkout === "2027-08-16", `${language}: named check-out date was not preserved`);
+  }
+
+  const screenshotCommand = fallbackRoomFinderCommand(examples[0][1], {
+    language: "el",
+    currentStep: "checkin",
+  });
+  const result = resolveAssistantTurn(createInitialBookingFlowState(), screenshotCommand);
+  assert(result.outcome.kind === "destination_mismatch", "different stay destination did not pause the booking flow");
+  assert(result.state.step === "destination", "destination mismatch did not enter confirmation state");
+  assert(result.state.draft.checkin === "2027-08-13" && result.state.draft.checkout === "2027-08-16", "destination clarification lost parsed dates");
+
+  const propertyConfirmation = fallbackRoomFinderCommand("Ναι, στον Κάμπο", {
+    language: "el",
+    currentStep: "destination",
+  });
+  const confirmedDestination = propertyConfirmation.actions.find(action => action.type === "set_stay_destination");
+  assert(confirmedDestination?.destinationKind === "property", "Kampos confirmation was not understood by the timeout fallback");
+
+  const confirmed = resolveAssistantTurn(result.state, propertyConfirmation);
+  assert(confirmed.outcome.kind === "prompt" && confirmed.outcome.field === "rooms", "Kampos confirmation did not resume at the next missing booking field");
 }
 
 function testMultiRoomTotalIsNotGuessed() {
@@ -385,6 +435,7 @@ function testResultsUxCleanup() {
   const copy = fs.readFileSync(copyPath, "utf8");
   const carousel = fs.readFileSync(carouselPath, "utf8");
   const helpers = fs.readFileSync(flowHelpersPath, "utf8");
+  const interpretRoute = fs.readFileSync(interpretRoutePath, "utf8");
 
   assert(!production.includes("FeedbackArea"), "results feedback flow was reintroduced");
   assert(!production.includes("whatsappTurn"), "WhatsApp still uses a synthetic chat turn");
@@ -393,6 +444,11 @@ function testResultsUxCleanup() {
   assert(!copy.includes("feedbackQ"), "removed feedback copy remains in Room Finder copy contract");
   assert(!helpers.includes("matchesRoomFilter"), "removed filter-matching logic remains in flow helpers");
   assert(!fs.existsSync(legacyFlowPath), "unused legacy Room Finder implementation still exists");
+  assert(!interpretRoute.includes("deterministicFastPath"), "simple first answers still bypass the OpenAI interpreter");
+  assert(
+    (hook.match(/await propertyKnowledgeAnswer\(value\)/g) || []).length === 1,
+    "interpreter failures can still be routed into unrelated property knowledge",
+  );
   assert(
     hook.includes('state: { step: "selecting", draft: searchDraft }'),
     "availability results no longer commit the selecting step and searched draft atomically",
@@ -418,6 +474,7 @@ function testResultsUxCleanup() {
 
 function main() {
   testStrictDates();
+  testDestinationMismatchPreservesBookingFacts();
   testFullOneTurnBooking();
   testMultiRoomTotalIsNotGuessed();
   testClarificationKeepsClearFacts();
