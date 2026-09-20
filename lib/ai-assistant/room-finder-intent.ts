@@ -17,6 +17,7 @@ const ACTION_TYPES = [
   "set_stay_dates",
   "set_room_count",
   "set_guest_count",
+  "set_room_interest",
   "set_preferences",
   "restart_search",
   "ask_clarification",
@@ -58,6 +59,7 @@ const COMMAND_SCHEMA = {
           "checkout",
           "nights",
           "roomCount",
+          "roomNumber",
           "totalGuests",
           "guests",
           "guestRoom",
@@ -77,6 +79,7 @@ const COMMAND_SCHEMA = {
           checkout: { type: ["string", "null"] },
           nights: { type: ["integer", "null"], minimum: 1, maximum: 60 },
           roomCount: { type: ["integer", "null"], minimum: 1, maximum: 99 },
+          roomNumber: { type: ["integer", "null"], minimum: 1, maximum: 10 },
           totalGuests: { type: ["integer", "null"], minimum: 1, maximum: 15 },
           guests: { type: ["integer", "null"], minimum: 1, maximum: 5 },
           guestRoom: { type: ["integer", "null"], minimum: 1, maximum: 3 },
@@ -104,6 +107,7 @@ You may return only these actions:
 - set_stay_dates: exact check-in/check-out/nights facts.
 - set_room_count: exact number of rooms requested. Return the customer's exact number even when it is 4 or more; the application routes requests above 3 rooms to the front desk.
 - set_guest_count: either a total booking guest count OR a guest count assigned to a specific room.
+- set_room_interest: the customer explicitly wants, chooses or is interested in a numbered Voulamandis House room (1-10). The application remembers it, prioritizes it after live availability, or selects it when it is already available in the current results.
 - set_preferences: SOFT room preferences used only to rank already-available rooms. Supported values: ground_floor, no_stairs, kitchen, balcony, garden, budget, family.
 - restart_search: customer clearly wants to start over.
 - ask_clarification: only for a value the customer attempted to provide but which is genuinely ambiguous/contradictory.
@@ -154,6 +158,9 @@ DATES
 
 ROOMS AND GUESTS
 - roomCount is the number of rooms for the booking.
+- roomNumber is the Voulamandis House room identifier, not the number of rooms requested. Phrases such as “I am interested in room 8”, “θέλω το δωμάτιο 8” or “Zimmer 8 auswählen” mean set_room_interest(roomNumber=8), never set_room_count(roomCount=8).
+- A specific room interest does not prove availability. Preserve it and let the application query live inventory after dates, room count and guests are complete.
+- If currentStep=selecting and the customer names one of the displayed available rooms, use set_room_interest so the application can select that exact live offer.
 - The automated Room Finder supports up to 3 rooms, but you MUST still return the exact roomCount when the customer asks for 4 or more rooms. Never clamp 4+ to 3, never silently ignore it, and never convert it to a guest count. The application will stop the automated search and route the customer to the front desk.
 - When roomCount is 4 or more, do not emit per-room guest assignments with guestRoom; return the exact roomCount and any other clear top-level facts that fit the schema.
 - totalGuests is the number of people across the entire booking.
@@ -235,9 +242,13 @@ REFERENCE EXAMPLES
 16) “Έχετε πισίνα;”
 => answer_property_question with the exact garden/pool knowledge ID, even when currentStep=checkin.
 
+17) “Ενδιαφέρομαι για το δωμάτιο 8”.
+=> set_room_interest(roomNumber=8). Do not convert 8 into roomCount and do not claim availability before the live search.
+
 SCHEMA RULES
 - For irrelevant nullable fields return null.
 - destination and destinationKind are populated only for set_stay_destination; otherwise return null.
+- roomNumber is populated only for set_room_interest; otherwise return null.
 - preferences is [] when unused.
 - query is an empty string when unused.
 - missingFields is [] when unused.
@@ -280,7 +291,15 @@ function cleanAction(raw: any): RoomFinderAction {
   if (raw?.checkin) action.checkin = raw.checkin;
   if (raw?.checkout) action.checkout = raw.checkout;
   if (raw?.nights != null) action.nights = Number(raw.nights);
-  if (raw?.roomCount != null) action.roomCount = Number(raw.roomCount);
+  if (type !== "set_room_interest" && raw?.roomCount != null) {
+    action.roomCount = Number(raw.roomCount);
+  }
+  if (type === "set_room_interest" && raw?.roomNumber != null) {
+    const roomNumber = Number(raw.roomNumber);
+    if (Number.isInteger(roomNumber) && roomNumber >= 1 && roomNumber <= 10) {
+      action.roomNumber = roomNumber;
+    }
+  }
   if (raw?.totalGuests != null) action.totalGuests = Number(raw.totalGuests);
   if (raw?.guests != null) action.guests = Number(raw.guests);
   if (raw?.guestRoom != null) action.guestRoom = Number(raw.guestRoom);
@@ -393,7 +412,7 @@ async function requestOpenAICommand(input: {
   knowledge: PublishedPropertyKnowledge[];
 }) {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 9_000);
+  const timeout = setTimeout(() => controller.abort(), 15_000);
 
   try {
     const response = await fetch("https://api.openai.com/v1/responses", {

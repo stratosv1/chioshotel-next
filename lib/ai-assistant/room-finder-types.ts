@@ -28,6 +28,7 @@ export type RoomFinderActionType =
   | "set_stay_dates"
   | "set_room_count"
   | "set_guest_count"
+  | "set_room_interest"
   | "set_preferences"
   | "restart_search"
   | "ask_clarification"
@@ -44,6 +45,7 @@ export type RoomFinderAction = {
   checkout?: string;
   nights?: number;
   roomCount?: number;
+  roomNumber?: number;
   totalGuests?: number;
   guests?: number;
   guestRoom?: number;
@@ -72,6 +74,7 @@ export type RoomFinderConversationContext = {
   checkin?: string;
   checkout?: string;
   roomCount?: number;
+  preferredRoomNumber?: number;
   totalGuests?: number;
   guestGroups?: number[];
   currentRoom?: number;

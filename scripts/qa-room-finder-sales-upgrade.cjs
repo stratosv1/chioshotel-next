@@ -90,6 +90,8 @@ const roomFiveScore = sales.roomPreferenceScore(5, ["no_stairs", "ground_floor"]
 const roomOneScore = sales.roomPreferenceScore(1, ["no_stairs", "ground_floor"]);
 assert(roomFiveScore > roomOneScore, "preference ranking does not prioritize a factual no-stairs ground-floor room");
 assert(sales.roomPreferenceScore(6, ["garden"]) > 0, "room 6 garden access is missing from sales traits");
+assert(sales.roomInterestPriority(8, 8) === 1, "explicit room interest does not prioritize the requested room");
+assert(sales.roomInterestPriority(9, 8) === 0, "explicit room interest incorrectly prioritizes another room");
 
 const answer = sales.answerRoomQuestion("Ποιο είναι χωρίς σκάλες;", "el", [
   { roomNumber: 1, name: "Δωμάτιο 1" },
@@ -135,9 +137,15 @@ assert(hookSource.includes("answerRoomQuestion"), "room-feature Q&A is not wired
 assert(hookSource.includes('action.type === "answer_property_question"'), "production hook does not render explicit grounded property answers");
 assert(!hookSource.includes("propertyKnowledgeAnswer"), "production hook still guesses when to invoke property knowledge after no_change");
 assert(hookSource.includes("answerRoomPriceQuestion"), "production hook does not answer price questions from live offer context");
+assert(hookSource.includes("setPreferredRoomNumber(roomInterestNumber)"), "typed room interest is not preserved for live ranking");
+assert(hookSource.includes("commitOfferSelection(matchingOffer)"), "typed room interest cannot select an already available live offer");
+assert(hookSource.includes("preferredRoomNumber: preferredRoomNumber || undefined"), "room interest is missing from the next OpenAI conversation context");
+assert(hookSource.includes("38_000"), "browser timeout does not allow the bounded server-side OpenAI retry window to complete");
 
 const interpretRouteSource = fs.readFileSync(interpretRoutePath, "utf8");
 assert(!interpretRouteSource.includes("fallbackRoomFinderCommand"), "production interpreter still falls back to deterministic guessing");
+assert(interpretRouteSource.includes("export const maxDuration = 40"), "interpreter route duration is too short for the bounded OpenAI retry window");
+assert(interpretRouteSource.includes("ai_room_finder_interpret_failed"), "interpreter route is missing structured timeout diagnostics");
 
 const productionSource = fs.readFileSync(productionPath, "utf8");
 assert(productionSource.includes('if (finder.typing || finder.step === "searching") return;'), "language changes are not guarded while an active Room Finder turn is running");
@@ -149,6 +157,8 @@ assert(carouselSource.includes("Nearby available dates"), "nearby-date card labe
 
 const intentSource = fs.readFileSync(intentPath, "utf8");
 assert(intentSource.includes('"set_preferences"'), "AI interpreter preference action is missing");
+assert(intentSource.includes('"set_room_interest"'), "AI interpreter specific-room interest action is missing");
+assert(intentSource.includes("15_000"), "OpenAI attempt timeout is still too short for observed production latency");
 assert(intentSource.includes("Preferences are SOFT ranking signals"), "AI prompt does not protect availability from preference filtering");
 
 const alternativesSource = fs.readFileSync(alternativesPath, "utf8");

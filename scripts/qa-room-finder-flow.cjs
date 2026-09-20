@@ -124,6 +124,18 @@ function testFullOneTurnBooking() {
   assert(result.changed === true, "full booking was not marked changed");
 }
 
+function testRoomInterestContinuesMissingFieldFlow() {
+  const result = resolveAssistantTurn(
+    createInitialBookingFlowState(),
+    command([{ type: "set_room_interest", roomNumber: 8 }]),
+  );
+  assert(result.changed === false, "specific room interest incorrectly changed booking facts");
+  assert(
+    result.outcome.kind === "prompt" && result.outcome.field === "checkin",
+    "specific room interest did not continue with the next missing booking field",
+  );
+}
+
 function testDestinationMismatchPreservesBookingFacts() {
   const examples = [
     ["el", "Καλησπέρα σας! Ενδιαφερόμαστε να μείνουμε στη στα Μεστά για 4 ημέρες, 13 έως 16 Αυγούστου 2027"],
@@ -458,6 +470,10 @@ function testResultsUxCleanup() {
     "failed OpenAI turns do not restore the user input for a safe retry",
   );
   assert(
+    hook.includes("commitOfferSelection(matchingOffer)"),
+    "a typed specific-room selection cannot execute the matching live offer",
+  );
+  assert(
     hook.includes('state: { step: "selecting", draft: searchDraft }'),
     "availability results no longer commit the selecting step and searched draft atomically",
   );
@@ -483,6 +499,7 @@ function testResultsUxCleanup() {
 function main() {
   testStrictDates();
   testDestinationMismatchPreservesBookingFacts();
+  testRoomInterestContinuesMissingFieldFlow();
   testFullOneTurnBooking();
   testMultiRoomTotalIsNotGuessed();
   testClarificationKeepsClearFacts();

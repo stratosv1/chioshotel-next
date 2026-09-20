@@ -6,6 +6,7 @@ import type { RoomFinderConversationContext } from "@/lib/ai-assistant/room-find
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const maxDuration = 40;
 
 const MAX_BODY_BYTES = 24_000;
 const MAX_MESSAGE_CHARS = 500;
@@ -136,6 +137,11 @@ function sanitizeContext(value: unknown): RoomFinderConversationContext {
     checkin: raw.checkin,
     checkout: raw.checkout,
     roomCount: raw.roomCount,
+    preferredRoomNumber: Number.isInteger(raw.preferredRoomNumber)
+      && Number(raw.preferredRoomNumber) >= 1
+      && Number(raw.preferredRoomNumber) <= 10
+      ? Number(raw.preferredRoomNumber)
+      : undefined,
     totalGuests: raw.totalGuests,
     guestGroups: Array.isArray(raw.guestGroups) ? raw.guestGroups.slice(0, 3) : undefined,
     currentRoom: raw.currentRoom,
@@ -153,6 +159,8 @@ function noStoreJson(body: unknown, init?: ResponseInit) {
 }
 
 export async function POST(request: NextRequest) {
+  const startedAt = Date.now();
+  const requestId = request.headers.get("x-vercel-id") || undefined;
   let message = "";
   let context: RoomFinderConversationContext = {};
 
@@ -188,10 +196,31 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    console.info(JSON.stringify({
+      level: "info",
+      msg: "ai_room_finder_interpret_start",
+      route: "/api/ai-assistant/interpret",
+      requestId,
+    }));
     const command = await interpretRoomFinderMessage(message, context);
+    console.info(JSON.stringify({
+      level: "info",
+      msg: "ai_room_finder_interpret_done",
+      route: "/api/ai-assistant/interpret",
+      requestId,
+      ms: Date.now() - startedAt,
+    }));
     return noStoreJson({ ok: true, command });
   } catch (error) {
-    console.error("AI Room Finder intent endpoint error", error);
+    console.error(JSON.stringify({
+      level: "error",
+      msg: "ai_room_finder_interpret_failed",
+      route: "/api/ai-assistant/interpret",
+      requestId,
+      errorName: error instanceof Error ? error.name : "UnknownError",
+      error: error instanceof Error ? error.message : String(error),
+      ms: Date.now() - startedAt,
+    }));
 
     const timeout = isAbortError(error);
     return noStoreJson(

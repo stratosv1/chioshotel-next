@@ -7,6 +7,7 @@ const ALLOWED_ACTIONS = new Set([
   "set_stay_dates",
   "set_room_count",
   "set_guest_count",
+  "set_room_interest",
   "set_preferences",
   "restart_search",
   "ask_clarification",
@@ -277,6 +278,20 @@ async function groundedPropertyKnowledgeRegression() {
   return { poolMs: pool.durationMs, priceMs: price.durationMs };
 }
 
+async function specificRoomInterestRegression() {
+  const result = await interpret("Ενδιαφέρομαι για το δωμάτιο 8", {
+    language: "el",
+    currentStep: "checkin",
+  });
+  const interest = result.command.actions.find((action) => action.type === "set_room_interest");
+  assert(interest?.roomNumber === 8, "Specific Room 8 interest was not returned as an executable room action");
+  assert(
+    !result.command.actions.some((action) => action.type === "set_room_count" && action.roomCount === 8),
+    "Room 8 interest was incorrectly converted into a request for eight rooms",
+  );
+  return { durationMs: result.durationMs };
+}
+
 async function main() {
   const languages = ["el", "en", "de", "fr", "it", "es", "tr"];
   console.log(`Room Finder AI contract QA target: ${BASE_URL}`);
@@ -317,6 +332,9 @@ async function main() {
 
   const knowledge = await groundedPropertyKnowledgeRegression();
   console.log(`✓ grounded property answer and live-price routing (${knowledge.poolMs}ms / ${knowledge.priceMs}ms)`);
+
+  const roomInterest = await specificRoomInterestRegression();
+  console.log(`✓ specific Room 8 interest routes to executable selection (${roomInterest.durationMs}ms)`);
 }
 
 main().catch((error) => {

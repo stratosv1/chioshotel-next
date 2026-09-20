@@ -29,6 +29,7 @@ import { rewindToAssistantPrompt } from "./room-finder-conversation-history";
 import {
   answerRoomPriceQuestion,
   answerRoomQuestion,
+  roomInterestPriority,
   roomPreferenceScore,
 } from "./room-finder-sales-intelligence";
 import { fetchLongStayDiscount, longStayDiscountMessage } from "./room-finder-long-stay";
@@ -96,6 +97,26 @@ const PREFERENCE_APPLIED: Record<RoomFinderLanguage, string> = {
   tr: "Not ettim. Diğer odaları gizlemeden, tercihinize en çok uyan müsait seçenekleri önce göstereceğim.",
 };
 
+const ROOM_INTEREST_SAVED: Record<RoomFinderLanguage, (room: number) => string> = {
+  el: room => `Σημείωσα ότι σας ενδιαφέρει το Δωμάτιο ${room}. Θα ελέγξω τη live διαθεσιμότητά του μόλις έχω τις ημερομηνίες και τα άτομα της διαμονής.`,
+  en: room => `I’ve noted your interest in Room ${room}. I’ll check its live availability once I have the stay dates and guest details.`,
+  de: room => `Ich habe Ihr Interesse an Zimmer ${room} vermerkt. Sobald Reisedaten und Gästeangaben vollständig sind, prüfe ich die Live-Verfügbarkeit.`,
+  fr: room => `J’ai noté votre intérêt pour la chambre ${room}. Je vérifierai sa disponibilité en direct dès que les dates et le nombre de personnes seront renseignés.`,
+  it: room => `Ho annotato il vostro interesse per la camera ${room}. Verificherò la disponibilità live non appena avrò le date e il numero di ospiti.`,
+  es: room => `He anotado su interés por la habitación ${room}. Comprobaré su disponibilidad en vivo cuando tenga las fechas y el número de huéspedes.`,
+  tr: room => `${room} numaralı odayla ilgilendiğinizi not ettim. Tarihler ve konuk bilgileri tamamlandığında canlı müsaitliğini kontrol edeceğim.`,
+};
+
+const ROOM_INTEREST_UNAVAILABLE: Record<RoomFinderLanguage, (room: number) => string> = {
+  el: room => `Το Δωμάτιο ${room} δεν εμφανίζεται διαθέσιμο στα live αποτελέσματα για αυτά τα στοιχεία. Σας δείχνω τις διαθέσιμες εναλλακτικές χωρίς να αλλάξω την αναζήτησή σας.`,
+  en: room => `Room ${room} is not shown as available in the live results for these details. I’m showing the available alternatives without changing your search.`,
+  de: room => `Zimmer ${room} wird für diese Angaben in den Live-Ergebnissen nicht als verfügbar angezeigt. Ich zeige Ihnen die verfügbaren Alternativen, ohne Ihre Suche zu ändern.`,
+  fr: room => `La chambre ${room} n’apparaît pas disponible dans les résultats en direct pour ces critères. Je vous montre les alternatives disponibles sans modifier votre recherche.`,
+  it: room => `La camera ${room} non risulta disponibile nei risultati live per questi dati. Vi mostro le alternative disponibili senza modificare la ricerca.`,
+  es: room => `La habitación ${room} no aparece disponible en los resultados en vivo para estos datos. Les muestro las alternativas disponibles sin modificar la búsqueda.`,
+  tr: room => `${room} numaralı oda bu bilgiler için canlı sonuçlarda müsait görünmüyor. Aramanızı değiştirmeden müsait alternatifleri gösteriyorum.`,
+};
+
 const NEARBY_ALTERNATIVES: Record<RoomFinderLanguage, string> = {
   el: "Για τις ακριβείς ημερομηνίες δεν βρήκα διαθέσιμο δωμάτιο, αλλά βρήκα live διαθεσιμότητα πολύ κοντά στις ημερομηνίες σας. Οι κάρτες παρακάτω γράφουν καθαρά τη νέα περίοδο και οι ημερομηνίες αλλάζουν μόνο αν επιλέξετε μία από αυτές.",
   en: "I could not find a room for the exact dates, but I found live availability very close to them. Each card clearly shows the alternative period, and your dates change only if you select one.",
@@ -156,16 +177,22 @@ function staffOfferContent(
 function sortOffersForPreferences(
   roomOffers: RoomOffer[],
   preferences: RoomFinderPreference[],
+  preferredRoomNumber: number | null,
 ) {
   const sorted = [...roomOffers].sort((left, right) => {
+    const interestDifference = roomInterestPriority(Number(right.roomNumber), preferredRoomNumber)
+      - roomInterestPriority(Number(left.roomNumber), preferredRoomNumber);
     const preferenceDifference = roomPreferenceScore(Number(right.roomNumber), preferences)
       - roomPreferenceScore(Number(left.roomNumber), preferences);
-    return preferenceDifference || left.directTotal - right.directTotal || rank(left) - rank(right);
+    return interestDifference || preferenceDifference || left.directTotal - right.directTotal || rank(left) - rank(right);
   });
   const bestScore = sorted.length ? roomPreferenceScore(Number(sorted[0].roomNumber), preferences) : 0;
   return sorted.map((offer, index) => ({
     ...offer,
-    recommended: preferences.length > 0 && bestScore > 0 && index === 0,
+    recommended: index === 0 && (
+      roomInterestPriority(Number(offer.roomNumber), preferredRoomNumber) > 0
+      || (preferences.length > 0 && bestScore > 0)
+    ),
   }));
 }
 
@@ -181,6 +208,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   const [activeGroup, setActiveGroup] = useState(0);
   const [choices, setChoices] = useState<RoomChoice[]>([]);
   const [preferences, setPreferences] = useState<RoomFinderPreference[]>([]);
+  const [preferredRoomNumber, setPreferredRoomNumber] = useState<number | null>(null);
   const [breakfast, setBreakfast] = useState(false);
   const [typing, setTyping] = useState(false);
   const [selectingOfferKey, setSelectingOfferKey] = useState<string | null>(null);
@@ -214,8 +242,8 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   );
   const visibleOffers = useMemo(() => {
     const feasible = feasibleOffersForGroup(capacityEligibleOffers, activeGroup, selectedKeys);
-    return sortOffersForPreferences(feasible, preferences);
-  }, [capacityEligibleOffers, activeGroup, selectedKeys, preferences]);
+    return sortOffersForPreferences(feasible, preferences, preferredRoomNumber);
+  }, [capacityEligibleOffers, activeGroup, selectedKeys, preferences, preferredRoomNumber]);
 
   const add = (
     role: ChatItem["role"],
@@ -299,6 +327,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     setMessages([{ id: rid(), role: "assistant", content: copy.welcome }]);
     setInput("");
     setPreferences([]);
+    setPreferredRoomNumber(null);
     clearSearchSelectionState();
     setTyping(false);
   }
@@ -379,6 +408,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
         checkout: checkout || undefined,
         totalGuests: totalGuests || undefined,
         roomCount: roomCount || undefined,
+        preferredRoomNumber: preferredRoomNumber || undefined,
         guestGroups: groups,
         currentRoom: current === "guests" ? nextMissingGuestRoom(draft) || undefined : undefined,
         preferences,
@@ -387,7 +417,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     });
 
     const controller = new AbortController();
-    const timeout = window.setTimeout(() => controller.abort(), 25_000);
+    const timeout = window.setTimeout(() => controller.abort(), 38_000);
 
     try {
       const response = await fetch("/api/ai-assistant/interpret", {
@@ -455,7 +485,10 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     }
   }
 
-  async function runAvailabilitySearch(searchDraft: BookingDraft) {
+  async function runAvailabilitySearch(
+    searchDraft: BookingDraft,
+    roomInterest = preferredRoomNumber,
+  ) {
     dispatchFlow({
       type: "commit_turn",
       state: { step: "searching", draft: searchDraft },
@@ -504,7 +537,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
             staffOfferContent(content, [{
               groupNumber: 1,
               guests: recoveryGuests,
-              offers: sortOffersForPreferences(recovery, preferences),
+              offers: sortOffersForPreferences(recovery, preferences, roomInterest),
             }], searchDraft),
           );
           return;
@@ -526,7 +559,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
             staffOfferContent(content, [{
               groupNumber: 1,
               guests: searchDraft.groups[0] || 0,
-              offers: sortOffersForPreferences(nearby, preferences),
+              offers: sortOffersForPreferences(nearby, preferences, roomInterest),
             }], searchDraft),
           );
           return;
@@ -548,10 +581,17 @@ export function useRoomFinder(language: RoomFinderLanguage) {
         type: "commit_turn",
         state: { step: "selecting", draft: searchDraft },
       });
+      if (
+        roomInterest
+        && !eligible.some(groupOffers => groupOffers.some(offer => Number(offer.roomNumber) === roomInterest))
+      ) {
+        add("assistant", ROOM_INTEREST_UNAVAILABLE[language](roomInterest));
+      }
       const content = tone.results(1, searchDraft.groups[0]);
       const firstGroupOffers = sortOffersForPreferences(
         feasibleOffersForGroup(eligible, 0, new Set()),
         preferences,
+        roomInterest,
       );
       add(
         "assistant",
@@ -604,6 +644,34 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       .find(action => action.type === "set_preferences");
     if (preferenceAction) setPreferences(preferenceAction.preferences || []);
 
+    const roomInterestAction = [...executableActions]
+      .reverse()
+      .find(action =>
+        action.type === "set_room_interest"
+        && Number.isInteger(action.roomNumber)
+        && Number(action.roomNumber) >= 1
+        && Number(action.roomNumber) <= 10,
+      );
+    const roomInterestNumber = roomInterestAction?.roomNumber || null;
+    if (roomInterestNumber) {
+      setPreferredRoomNumber(roomInterestNumber);
+      const hasOtherExecutableAction = executableActions.some(action =>
+        action.type !== "set_room_interest" && action.type !== "no_change",
+      );
+
+      if (step === "selecting" && !hasOtherExecutableAction) {
+        const matchingOffer = visibleOffers.find(offer => Number(offer.roomNumber) === roomInterestNumber);
+        if (matchingOffer) {
+          await commitOfferSelection(matchingOffer);
+        } else {
+          add("assistant", ROOM_INTEREST_UNAVAILABLE[language](roomInterestNumber));
+        }
+        return;
+      }
+
+      add("assistant", ROOM_INTEREST_SAVED[language](roomInterestNumber));
+    }
+
     const resolution = resolveAssistantTurn(flow, executableCommand);
 
     if (resolution.outcome.kind === "restart") {
@@ -639,9 +707,13 @@ export function useRoomFinder(language: RoomFinderLanguage) {
         && resolution.state.draft.groups.length === resolution.state.draft.roomCount
       ) {
         clearSearchSelectionState();
-        await runAvailabilitySearch(resolution.state.draft);
+        await runAvailabilitySearch(
+          resolution.state.draft,
+          roomInterestNumber || preferredRoomNumber,
+        );
         return;
       }
+      if (roomInterestNumber) return;
       add("assistant", preferenceAction ? PREFERENCE_APPLIED[language] : NO_BOOKING_CHANGE[language]);
       return;
     }
@@ -654,7 +726,10 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     }
 
     if (resolution.outcome.kind === "ready") {
-      await runAvailabilitySearch(resolution.state.draft);
+      await runAvailabilitySearch(
+        resolution.state.draft,
+        roomInterestNumber || preferredRoomNumber,
+      );
       return;
     }
 
@@ -771,6 +846,79 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     }
   }
 
+  async function commitOfferSelection(offer: RoomOffer) {
+    const key = roomOfferKey(offer);
+    if (offer.alternativeCheckin && offer.alternativeCheckout) {
+      dispatchFlow({
+        type: "commit_turn",
+        state: {
+          step: "selecting",
+          draft: {
+            ...draft,
+            checkin: offer.alternativeCheckin,
+            checkout: offer.alternativeCheckout,
+          },
+        },
+      });
+    }
+
+    const recoveryType = String((offer as any).recoveryType || "");
+    if (recoveryType) {
+      const recoveryGuests = guestTotal || groups.reduce((sum, value) => sum + value, 0);
+      setChoices([{ group: 1, guests: recoveryGuests, offer }]);
+      add("assistant", tone.selected(offer.name));
+
+      if (recoveryType === "consolidated") {
+        dispatchFlow({
+          type: "commit_turn",
+          state: {
+            step: "breakfast",
+            draft: {
+              ...draft,
+              roomCount: 1,
+              totalGuests: recoveryGuests,
+              groups: [recoveryGuests],
+            },
+          },
+        });
+      } else {
+        dispatchFlow({ type: "set_step", step: "breakfast" });
+      }
+      return;
+    }
+
+    const nextChoices = [
+      ...choices,
+      { group: activeGroup + 1, guests: groups[activeGroup], offer },
+    ];
+    setChoices(nextChoices);
+    add("assistant", tone.selected(offer.name));
+
+    if (roomCount && activeGroup + 1 < roomCount) {
+      const nextGroup = activeGroup + 1;
+      setActiveGroup(nextGroup);
+      const content = tone.results(nextGroup + 1, groups[nextGroup]);
+      const nextSelectedKeys = new Set([...selectedKeys, key]);
+      const nextGroupOffers = sortOffersForPreferences(
+        feasibleOffersForGroup(capacityEligibleOffers, nextGroup, nextSelectedKeys),
+        preferences,
+        preferredRoomNumber,
+      );
+      add(
+        "assistant",
+        content,
+        "offers",
+        staffOfferContent(content, [{
+          groupNumber: nextGroup + 1,
+          guests: groups[nextGroup] || 0,
+          offers: nextGroupOffers,
+        }], draft),
+      );
+    } else {
+      dispatchFlow({ type: "set_step", step: "breakfast" });
+    }
+  }
+
   async function selectOffer(offer: RoomOffer) {
     if (turnLocked.current) return;
     const key = roomOfferKey(offer);
@@ -779,75 +927,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     setSelectingOfferKey(key);
     try {
       if (!await beginUserTurn(`${copy.select}: ${offer.name}`, "room", "❤️", "quick")) return;
-
-      if (offer.alternativeCheckin && offer.alternativeCheckout) {
-        dispatchFlow({
-          type: "commit_turn",
-          state: {
-            step: "selecting",
-            draft: {
-              ...draft,
-              checkin: offer.alternativeCheckin,
-              checkout: offer.alternativeCheckout,
-            },
-          },
-        });
-      }
-
-      const recoveryType = String((offer as any).recoveryType || "");
-      if (recoveryType) {
-        const recoveryGuests = guestTotal || groups.reduce((sum, value) => sum + value, 0);
-        setChoices([{ group: 1, guests: recoveryGuests, offer }]);
-        add("assistant", tone.selected(offer.name));
-
-        if (recoveryType === "consolidated") {
-          dispatchFlow({
-            type: "commit_turn",
-            state: {
-              step: "breakfast",
-              draft: {
-                ...draft,
-                roomCount: 1,
-                totalGuests: recoveryGuests,
-                groups: [recoveryGuests],
-              },
-            },
-          });
-        } else {
-          dispatchFlow({ type: "set_step", step: "breakfast" });
-        }
-        return;
-      }
-
-      const nextChoices = [
-        ...choices,
-        { group: activeGroup + 1, guests: groups[activeGroup], offer },
-      ];
-      setChoices(nextChoices);
-      add("assistant", tone.selected(offer.name));
-
-      if (roomCount && activeGroup + 1 < roomCount) {
-        const nextGroup = activeGroup + 1;
-        setActiveGroup(nextGroup);
-        const content = tone.results(nextGroup + 1, groups[nextGroup]);
-        const nextSelectedKeys = new Set([...selectedKeys, key]);
-        const nextGroupOffers = sortOffersForPreferences(
-          feasibleOffersForGroup(capacityEligibleOffers, nextGroup, nextSelectedKeys),
-          preferences,
-        );
-        add(
-          "assistant",
-          content,
-          "offers",
-          staffOfferContent(content, [{
-            groupNumber: nextGroup + 1,
-            guests: groups[nextGroup] || 0,
-            offers: nextGroupOffers,
-          }], draft),
-        );
-      } else {
-        dispatchFlow({ type: "set_step", step: "breakfast" });
-      }
+      await commitOfferSelection(offer);
     } finally {
       setSelectingOfferKey(null);
       endUserTurn();

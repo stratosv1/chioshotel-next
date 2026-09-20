@@ -246,6 +246,10 @@ export function roomPreferenceScore(roomNumber: number, preferences: readonly Ro
   return preferences.reduce((score, preference) => score + (traits.has(preference) ? 1 : 0), 0);
 }
 
+export function roomInterestPriority(roomNumber: number, preferredRoomNumber: number | null) {
+  return preferredRoomNumber === roomNumber ? 1 : 0;
+}
+
 export function answerRoomQuestion(
   message: string,
   language: RoomFinderLanguage,
