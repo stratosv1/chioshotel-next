@@ -22,6 +22,18 @@ type KnowledgeRow = {
   question: string;
   answer: string;
   search_terms: string[];
+  source_note: string;
+  updated_at: string;
+};
+
+export type PublishedPropertyKnowledge = {
+  id: string;
+  category: PropertyFaqCategory;
+  question: string;
+  answer: string;
+  searchTerms: string[];
+  sourceNote: string;
+  updatedAt: string;
 };
 
 export type PropertyKnowledgeResult = {
@@ -53,7 +65,9 @@ const loadRows = unstable_cache(
         e.sort_order,
         t.question,
         t.answer,
-        t.search_terms
+        t.search_terms,
+        e.source_note,
+        greatest(e.updated_at, t.updated_at)::text as updated_at
       from property_knowledge.entries e
       join property_knowledge.translations t on t.entry_id = e.id
       where e.status = 'published'
@@ -77,6 +91,8 @@ function fallbackRows(language: LanguageCode): KnowledgeRow[] {
     question: item.question,
     answer: item.answer,
     search_terms: [],
+    source_note: "Owner-confirmed Voulamandis House repository knowledge",
+    updated_at: "2026-09-05T00:00:00.000Z",
   }));
 }
 
@@ -93,6 +109,27 @@ async function publishedRows(language: LanguageCode) {
     console.error("Property knowledge Neon read failed; using owner-confirmed fallback", error);
     return { rows: fallbackRows(language), source: "owner_confirmed_fallback" as const };
   }
+}
+
+export async function getPublishedPropertyKnowledge(
+  language: LanguageCode,
+): Promise<{
+  entries: PublishedPropertyKnowledge[];
+  source: PropertyKnowledgeResult["source"];
+}> {
+  const { rows, source } = await publishedRows(language);
+  return {
+    source,
+    entries: rows.map((row) => ({
+      id: row.id,
+      category: row.category,
+      question: row.question,
+      answer: row.answer,
+      searchTerms: row.search_terms || [],
+      sourceNote: row.source_note,
+      updatedAt: row.updated_at,
+    })),
+  };
 }
 
 function normalize(value: string) {
@@ -125,11 +162,30 @@ const DYNAMIC_ROOM_PRICE_PATTERNS = [
   /(?:fiyat|ucret|maliyet).*(?:oda|konaklama)|(?:oda|konaklama).*(?:fiyat|ucret|maliyet)|gecelik/iu,
 ];
 const BREAKFAST_PRICE_QUERY = /πρωιν|breakfast|fruhstuck|petit[\s-]*dejeuner|colazione|desayuno|kahvalt/iu;
+const LIVE_AVAILABILITY_NOUN = /διαθεσιμοτ|availability|verfugbarkeit|disponibilites?|disponibilita|disponibilidad|musaitlik/iu;
+const ROOM_INVENTORY_CONTEXT = /δωματι|διαμον|room|stay|accommodation|zimmer|aufenthalt|chambre|sejour|camera|soggiorno|habitacion|estancia|oda|konaklama/iu;
+const LIVE_ROOM_AVAILABLE = [
+  /(?:διαθεσιμ).*(?:δωματι|διαμον|ημερομην)|(?:δωματι|διαμον|ημερομην).*(?:διαθεσιμ)/iu,
+  /(?:available).*(?:room|stay|date)|(?:room|stay|date).*(?:available)/iu,
+  /(?:verfugbar).*(?:zimmer|aufenthalt|datum)|(?:zimmer|aufenthalt|datum).*(?:verfugbar)/iu,
+  /(?:disponible).*(?:chambre|sejour|date)|(?:chambre|sejour|date).*(?:disponible)/iu,
+  /(?:disponibile).*(?:camera|soggiorno|data)|(?:camera|soggiorno|data).*(?:disponibile)/iu,
+  /(?:disponible).*(?:habitacion|estancia|fecha)|(?:habitacion|estancia|fecha).*(?:disponible)/iu,
+  /(?:musait).*(?:oda|konaklama|tarih)|(?:oda|konaklama|tarih).*(?:musait)/iu,
+];
 
 export function isDynamicRoomPriceKnowledgeQuery(query: string) {
   const normalizedQuery = normalize(query);
   return !BREAKFAST_PRICE_QUERY.test(normalizedQuery)
     && DYNAMIC_ROOM_PRICE_PATTERNS.some(pattern => pattern.test(normalizedQuery));
+}
+
+export function requiresLiveRoomInventory(query: string) {
+  const normalizedQuery = normalize(query);
+  if (BREAKFAST_PRICE_QUERY.test(normalizedQuery) && !ROOM_INVENTORY_CONTEXT.test(normalizedQuery)) return false;
+  return isDynamicRoomPriceKnowledgeQuery(query)
+    || LIVE_AVAILABILITY_NOUN.test(normalizedQuery)
+    || LIVE_ROOM_AVAILABLE.some((pattern) => pattern.test(normalizedQuery));
 }
 
 function kindForCategory(category: PropertyFaqCategory): PropertyKnowledgeResult["kind"] {
@@ -163,7 +219,7 @@ export async function searchPropertyKnowledge(input: {
   categories?: PropertyFaqCategory[];
   limit?: number;
 }): Promise<PropertyKnowledgeResult[]> {
-  if (isDynamicRoomPriceKnowledgeQuery(input.query)) return [];
+  if (requiresLiveRoomInventory(input.query)) return [];
 
   const { rows, source } = await publishedRows(input.language);
   const normalizedQuery = normalize(input.query);

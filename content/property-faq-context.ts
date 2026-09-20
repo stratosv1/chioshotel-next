@@ -9,26 +9,24 @@ export type PropertyFaqContext = "rooms" | "rates" | "kambos";
 
 const itemIdsByContext: Record<PropertyFaqContext, readonly string[]> = {
   rooms: [
-    "couples",
-    "solo",
-    "three-guests",
-    "family-four",
-    "kitchenette",
-    "no-stairs",
-    "specific-room-request",
+    "first-floor-rooms",
+    "ground-floor-rooms",
+    "apartments-8-10",
+    "accessibility",
+    "kitchen-equipment",
+    "children-extra-beds",
   ],
   rates: [
     "direct-booking",
-    "booking-details",
-    "specific-room-request",
-    "booking-confirmation",
+    "payment-confirmation",
+    "changes-split-groups",
+    "arrival-departure",
   ],
   kambos: [
-    "location",
-    "airport-port",
-    "parking",
-    "getting-around",
-    "nearby-beach",
+    "distances-transfer",
+    "beach-nearby-walk",
+    "parking-rentals",
+    "kambos-estate",
   ],
 };
 

@@ -446,8 +446,16 @@ function testResultsUxCleanup() {
   assert(!fs.existsSync(legacyFlowPath), "unused legacy Room Finder implementation still exists");
   assert(!interpretRoute.includes("deterministicFastPath"), "simple first answers still bypass the OpenAI interpreter");
   assert(
-    (hook.match(/await propertyKnowledgeAnswer\(value\)/g) || []).length === 1,
-    "interpreter failures can still be routed into unrelated property knowledge",
+    !interpretRoute.includes("fallbackRoomFinderCommand"),
+    "interpreter failures can still execute the deterministic parsing fallback",
+  );
+  assert(
+    hook.includes('action.type === "answer_property_question"') && !hook.includes("propertyKnowledgeAnswer"),
+    "grounded knowledge is not handled as an explicit OpenAI action",
+  );
+  assert(
+    hook.includes("setInput(currentValue => currentValue || value)"),
+    "failed OpenAI turns do not restore the user input for a safe retry",
   );
   assert(
     hook.includes('state: { step: "selecting", draft: searchDraft }'),

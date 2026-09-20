@@ -11,6 +11,8 @@ const ALLOWED_ACTIONS = new Set([
   "restart_search",
   "ask_clarification",
   "acknowledge_contact",
+  "answer_property_question",
+  "request_live_availability",
   "no_change",
 ]);
 
@@ -250,6 +252,31 @@ async function greekSpecificClarificationRegression() {
   return { durationMs: result.durationMs, query };
 }
 
+async function groundedPropertyKnowledgeRegression() {
+  const pool = await interpret("Έχετε πισίνα;", {
+    language: "el",
+    currentStep: "checkin",
+  });
+  const answer = pool.command.actions.find((action) => action.type === "answer_property_question");
+  assert(answer?.grounded === true, "Pool question did not return a grounded property answer");
+  assert(answer?.knowledgeIds?.includes("garden-pool-bbq"), "Pool answer does not cite the verified garden/pool record");
+  assert(typeof answer?.answer === "string" && /πισίνα/i.test(answer.answer), "Pool answer was not hydrated from the Greek knowledge record");
+
+  const price = await interpret("Πόσο κοστίζει ένα δωμάτιο στις 10/10 για 2 άτομα;", {
+    language: "el",
+    currentStep: "checkin",
+  });
+  assert(
+    price.command.actions.some((action) => action.type === "request_live_availability"),
+    "Dynamic room price question was not routed to live availability",
+  );
+  assert(
+    !price.command.actions.some((action) => action.type === "answer_property_question"),
+    "Dynamic room price question was answered from static property knowledge",
+  );
+  return { poolMs: pool.durationMs, priceMs: price.durationMs };
+}
+
 async function main() {
   const languages = ["el", "en", "de", "fr", "it", "es", "tr"];
   console.log(`Room Finder AI contract QA target: ${BASE_URL}`);
@@ -287,6 +314,9 @@ async function main() {
 
   const clarification = await greekSpecificClarificationRegression();
   console.log(`✓ el specific ambiguity clarification (${clarification.durationMs}ms): ${clarification.query}`);
+
+  const knowledge = await groundedPropertyKnowledgeRegression();
+  console.log(`✓ grounded property answer and live-price routing (${knowledge.poolMs}ms / ${knowledge.priceMs}ms)`);
 }
 
 main().catch((error) => {

@@ -404,23 +404,6 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     }
   }
 
-  async function propertyKnowledgeAnswer(value: string) {
-    try {
-      const response = await fetch("/api/ai-assistant/knowledge", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: value, language, limit: 1 }),
-      });
-      const payload = await response.json().catch(() => null);
-      return response.ok && payload?.grounded && typeof payload.answer === "string"
-        ? payload.answer
-        : null;
-    } catch (error) {
-      console.error("Room Finder property knowledge request failed", error);
-      return null;
-    }
-  }
-
   async function findNearbyOffers(searchDraft: BookingDraft) {
     if (searchDraft.roomCount !== 1 || searchDraft.groups.length !== 1) return [] as RoomOffer[];
 
@@ -595,17 +578,33 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   }
 
   async function applyCommand(command: RoomFinderCommand) {
-    if (command.actions.some(action => action.type === "acknowledge_contact")) {
+    const knowledgeActions = command.actions.filter(action =>
+      action.type === "answer_property_question" && typeof action.answer === "string" && action.answer.trim(),
+    );
+    for (const action of knowledgeActions) add("assistant", action.answer!.trim());
+
+    const executableActions = command.actions.filter(action =>
+      action.type !== "answer_property_question"
+      && !(knowledgeActions.length > 0 && action.type === "no_change"),
+    );
+    if (!executableActions.length) return;
+
+    const executableCommand = { ...command, actions: executableActions };
+    const liveAvailabilityRequested = executableActions.some(action =>
+      action.type === "request_live_availability",
+    );
+
+    if (executableActions.some(action => action.type === "acknowledge_contact")) {
       add("assistant", CONTACT_ACKNOWLEDGED[language], "contact");
       return;
     }
 
-    const preferenceAction = [...command.actions]
+    const preferenceAction = [...executableActions]
       .reverse()
       .find(action => action.type === "set_preferences");
     if (preferenceAction) setPreferences(preferenceAction.preferences || []);
 
-    const resolution = resolveAssistantTurn(flow, command);
+    const resolution = resolveAssistantTurn(flow, executableCommand);
 
     if (resolution.outcome.kind === "restart") {
       reset();
@@ -631,6 +630,18 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     }
 
     if (resolution.outcome.kind === "unchanged") {
+      if (
+        liveAvailabilityRequested
+        && resolution.state.draft.destinationKind !== "other"
+        && resolution.state.draft.checkin
+        && resolution.state.draft.checkout
+        && resolution.state.draft.roomCount
+        && resolution.state.draft.groups.length === resolution.state.draft.roomCount
+      ) {
+        clearSearchSelectionState();
+        await runAvailabilitySearch(resolution.state.draft);
+        return;
+      }
       add("assistant", preferenceAction ? PREFERENCE_APPLIED[language] : NO_BOOKING_CHANGE[language]);
       return;
     }
@@ -673,12 +684,14 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     const contextualOffers = choices.length
       ? choices.map(choice => choice.offer)
       : offers.flat();
-    const questionAnswer = answerRoomPriceQuestion(
-      value,
-      language,
-      contextualOffers,
-      choices.length > 0,
-    ) || (["selecting", "breakfast", "complete"].includes(current)
+    const questionAnswer = (contextualOffers.length > 0
+      ? answerRoomPriceQuestion(
+          value,
+          language,
+          contextualOffers,
+          choices.length > 0,
+        )
+      : null) || (["selecting", "breakfast", "complete"].includes(current)
       ? answerRoomQuestion(value, language, [
           ...offers.flat(),
           ...choices.map(choice => choice.offer),
@@ -705,18 +718,10 @@ export function useRoomFinder(language: RoomFinderLanguage) {
 
     try {
       const command = await promise;
-      const onlyNoChange = command.actions.length > 0
-        && command.actions.every(action => action.type === "no_change");
-      if (onlyNoChange) {
-        const knowledgeAnswer = await propertyKnowledgeAnswer(value);
-        if (knowledgeAnswer) {
-          add("assistant", knowledgeAnswer);
-          return;
-        }
-      }
       await applyCommand(command);
     } catch (error) {
       console.error("Room Finder interpreter request failed", error);
+      setInput(currentValue => currentValue || value);
       add("assistant", INTERPRETER_UNAVAILABLE[language]);
     } finally {
       endUserTurn();

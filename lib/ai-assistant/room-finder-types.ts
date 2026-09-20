@@ -32,6 +32,8 @@ export type RoomFinderActionType =
   | "restart_search"
   | "ask_clarification"
   | "acknowledge_contact"
+  | "answer_property_question"
+  | "request_live_availability"
   | "no_change";
 
 export type RoomFinderAction = {
@@ -48,6 +50,9 @@ export type RoomFinderAction = {
   preferences?: RoomFinderPreference[];
   query?: string;
   missingFields?: string[];
+  knowledgeIds?: string[];
+  answer?: string;
+  grounded?: boolean;
 };
 
 export type RoomFinderCommand = {

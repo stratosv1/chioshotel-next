@@ -49,6 +49,7 @@ const intentPath = path.join(root, "lib/ai-assistant/room-finder-intent.ts");
 const alternativesPath = path.join(root, "app/api/ai-room-finder/alternatives/route.ts");
 const tonePath = path.join(root, "components/ai/room-finder-tone.ts");
 const catalogPath = path.join(root, "lib/ai-assistant/room-card-catalog.ts");
+const interpretRoutePath = path.join(root, "app/api/ai-assistant/interpret/route.ts");
 
 const dateUtils = executeCommonJs(transpile(datePath));
 const fallback = executeCommonJs(transpile(fallbackPath), id => {
@@ -131,9 +132,12 @@ assert(hookSource.includes("/api/ai-room-finder/alternatives"), "production hook
 assert(hookSource.includes("languageRef.current !== language"), "language-change state preservation guard is missing");
 assert(hookSource.includes("INVENTORY_UNAVAILABLE[language]"), "technical inventory failure is not separated from no-availability copy");
 assert(hookSource.includes("answerRoomQuestion"), "room-feature Q&A is not wired into production hook");
-assert(hookSource.includes("/api/ai-assistant/knowledge"), "production hook does not query the owner-confirmed knowledge API");
-assert(hookSource.includes("propertyKnowledgeAnswer"), "production hook does not render grounded property answers");
+assert(hookSource.includes('action.type === "answer_property_question"'), "production hook does not render explicit grounded property answers");
+assert(!hookSource.includes("propertyKnowledgeAnswer"), "production hook still guesses when to invoke property knowledge after no_change");
 assert(hookSource.includes("answerRoomPriceQuestion"), "production hook does not answer price questions from live offer context");
+
+const interpretRouteSource = fs.readFileSync(interpretRoutePath, "utf8");
+assert(!interpretRouteSource.includes("fallbackRoomFinderCommand"), "production interpreter still falls back to deterministic guessing");
 
 const productionSource = fs.readFileSync(productionPath, "utf8");
 assert(productionSource.includes('if (finder.typing || finder.step === "searching") return;'), "language changes are not guarded while an active Room Finder turn is running");
@@ -159,4 +163,4 @@ assert(!toneSource.includes("ούτε κοντινή αυτόματη εναλλ
 const catalogSource = fs.readFileSync(catalogPath, "utf8");
 assert(catalogSource.includes('roomNumber: 6') && catalogSource.includes('Garden access'), "canonical room catalog no longer supports the room 6 garden trait QA assumption");
 
-console.log("Room Finder sales upgrade QA passed: rescue safety, factual no-availability, preserved state, guarded language changes, soft recommendations, room Q&A and nearby-date fallback are wired safely.");
+console.log("Room Finder sales upgrade QA passed: grounded knowledge, factual no-availability, preserved state, guarded language changes, soft recommendations, room Q&A and nearby-date search are wired safely.");

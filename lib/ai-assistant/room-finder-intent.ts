@@ -1,4 +1,9 @@
 import { todayInAthensIso } from "./room-finder-date";
+import {
+  getPublishedPropertyKnowledge,
+  requiresLiveRoomInventory,
+  type PublishedPropertyKnowledge,
+} from "@/lib/property-knowledge";
 import type {
   RoomFinderAction,
   RoomFinderAssistantLanguage,
@@ -16,6 +21,8 @@ const ACTION_TYPES = [
   "restart_search",
   "ask_clarification",
   "acknowledge_contact",
+  "answer_property_question",
+  "request_live_availability",
   "no_change",
 ] as const;
 
@@ -57,6 +64,7 @@ const COMMAND_SCHEMA = {
           "preferences",
           "query",
           "missingFields",
+          "knowledgeIds",
         ],
         properties: {
           type: { type: "string", enum: ACTION_TYPES },
@@ -79,6 +87,7 @@ const COMMAND_SCHEMA = {
           },
           query: { type: "string" },
           missingFields: { type: "array", items: { type: "string" }, maxItems: 6 },
+          knowledgeIds: { type: "array", items: { type: "string" }, maxItems: 3 },
         },
       },
     },
@@ -99,6 +108,8 @@ You may return only these actions:
 - restart_search: customer clearly wants to start over.
 - ask_clarification: only for a value the customer attempted to provide but which is genuinely ambiguous/contradictory.
 - acknowledge_contact: the customer says they will call, message, write to or otherwise contact the property/reception, now or later.
+- answer_property_question: a question about Voulamandis House whose answer is present in verifiedPropertyKnowledge. Select only the exact supporting knowledgeIds; never write or invent the answer yourself.
+- request_live_availability: the customer asks about current room availability or a room/stay price. The application, not you, will collect missing booking facts and query live inventory.
 - no_change: no supported booking fact, supported room preference or contact intention was supplied in the latest message.
 
 CORE RULES
@@ -108,6 +119,10 @@ CORE RULES
 - Never discard a clear fact because another fact is missing.
 - Never invent dates, rooms or guests.
 - If the customer says they will call, phone, message, WhatsApp, write to or contact the property/reception, return acknowledge_contact. Do not return no_change and do not suggest changing dates unless the customer actually asks to change them.
+- Treat questions about amenities, rooms, breakfast, policies, location, access, contact details and the property as property questions. Use answer_property_question whenever verifiedPropertyKnowledge contains the answer, even if the current booking step asks for something else.
+- Treat current availability and room/stay prices as live data. Use request_live_availability for them and never answer them from static property knowledge. Breakfast price and other explicitly stated fixed property policies may use verified knowledge.
+- verifiedPropertyKnowledge is the only allowed source for static Voulamandis House answers. Return 1-3 exact IDs that directly support the answer. If no entry supports the question, return answer_property_question with an empty knowledgeIds array so the application can state that the answer is not verified.
+- You may return a property/live-data action together with booking facts from the same message. Never copy prose from the knowledge entries into query or any other field.
 - Missing information is NOT ambiguity. Do not ask a clarification merely because another booking field is absent; return the facts you understood and let the application ask the next missing field.
 - If part of a message is clear and another attempted fact is ambiguous, return the clear fact actions plus exactly one specific ask_clarification action.
 - Clarification must identify the exact ambiguity and, when useful, include one short valid example.
@@ -211,12 +226,22 @@ REFERENCE EXAMPLES
 13) “Θέλουμε να μείνουμε στον Κάμπο και να επισκεφτούμε τα Μεστά”.
 => set_stay_destination(destination="Κάμπος", destinationKind=property). Mesta is a visit, not the accommodation destination.
 
+14) “Έχετε πρωινό και πόσο κοστίζει;”
+=> answer_property_question with the exact breakfast knowledge ID. Do not calculate or paraphrase the answer.
+
+15) “Πόσο κοστίζει ένα δωμάτιο στις 10/10 για δύο άτομα;”
+=> request_live_availability plus the exact check-in and guest facts supplied. Room prices must come from live inventory, never verifiedPropertyKnowledge.
+
+16) “Έχετε πισίνα;”
+=> answer_property_question with the exact garden/pool knowledge ID, even when currentStep=checkin.
+
 SCHEMA RULES
 - For irrelevant nullable fields return null.
 - destination and destinationKind are populated only for set_stay_destination; otherwise return null.
 - preferences is [] when unused.
 - query is an empty string when unused.
 - missingFields is [] when unused.
+- knowledgeIds contains exact verifiedPropertyKnowledge IDs only for answer_property_question and is [] for every other action.
 - Use missingFields values from: checkin, checkout, roomCount, totalGuests, guests, guestRoom.
 - replyMode=execute unless a genuine ambiguity requires an answer; then use clarify.
 - Return JSON only and exactly match the schema.`;
@@ -264,6 +289,10 @@ function cleanAction(raw: any): RoomFinderAction {
   if (Array.isArray(raw?.missingFields) && raw.missingFields.length) {
     action.missingFields = raw.missingFields.map(String);
   }
+  if (type === "answer_property_question" && Array.isArray(raw?.knowledgeIds)) {
+    const knowledgeIds = raw.knowledgeIds.map((value: unknown) => String(value));
+    action.knowledgeIds = Array.from(new Set<string>(knowledgeIds)).slice(0, 3);
+  }
 
   return action;
 }
@@ -276,28 +305,112 @@ function cleanCommand(raw: any, context: RoomFinderConversationContext): RoomFin
   };
 }
 
-export async function interpretRoomFinderMessage(
-  message: string,
-  context: RoomFinderConversationContext = {},
-): Promise<RoomFinderCommand> {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) throw new Error("OPENAI_API_KEY is not configured");
+const KNOWLEDGE_GAP: Record<RoomFinderAssistantLanguage, string> = {
+  el: "Δεν βρήκα επιβεβαιωμένη απάντηση στις πληροφορίες του Voulamandis House. Για ακριβή διευκρίνιση, επικοινωνήστε μαζί μας μέσω WhatsApp ή τηλεφώνου.",
+  en: "I could not find a verified answer in the Voulamandis House information. Please contact us by WhatsApp or phone for an exact clarification.",
+  de: "Ich habe in den bestätigten Informationen des Voulamandis House keine verlässliche Antwort gefunden. Bitte kontaktieren Sie uns für eine genaue Auskunft per WhatsApp oder Telefon.",
+  fr: "Je n’ai pas trouvé de réponse vérifiée dans les informations de Voulamandis House. Contactez-nous par WhatsApp ou téléphone pour une précision exacte.",
+  it: "Non ho trovato una risposta verificata nelle informazioni di Voulamandis House. Contattateci tramite WhatsApp o telefono per un chiarimento preciso.",
+  es: "No encontré una respuesta verificada en la información de Voulamandis House. Contáctenos por WhatsApp o teléfono para una aclaración exacta.",
+  tr: "Voulamandis House’ın doğrulanmış bilgilerinde bu sorunun yanıtını bulamadım. Kesin bilgi için WhatsApp veya telefonla bize ulaşın.",
+};
 
+class OpenAIInterpreterError extends Error {
+  constructor(
+    message: string,
+    readonly status: number,
+    readonly retryAfterMs = 0,
+  ) {
+    super(message);
+    this.name = "OpenAIInterpreterError";
+  }
+}
+
+function retryAfterMs(response: Response) {
+  const value = response.headers.get("retry-after");
+  if (!value) return 0;
+  const seconds = Number(value);
+  if (Number.isFinite(seconds)) return Math.max(0, seconds * 1_000);
+  const date = Date.parse(value);
+  return Number.isNaN(date) ? 0 : Math.max(0, date - Date.now());
+}
+
+function isRetryableInterpreterError(error: unknown) {
+  if (error instanceof Error && error.name === "AbortError") return true;
+  return error instanceof OpenAIInterpreterError
+    && (error.status === 408 || error.status === 409 || error.status === 429 || error.status >= 500);
+}
+
+function waitForRetry(ms: number) {
+  return new Promise<void>((resolve) => setTimeout(resolve, ms));
+}
+
+function verifiedKnowledgeForPrompt(entries: PublishedPropertyKnowledge[]) {
+  return entries.map((entry) => ({
+    id: entry.id,
+    category: entry.category,
+    question: entry.question,
+    answer: entry.answer,
+    searchTerms: entry.searchTerms,
+  }));
+}
+
+function hydrateKnowledgeActions(
+  command: RoomFinderCommand,
+  entries: PublishedPropertyKnowledge[],
+  message: string,
+): RoomFinderCommand {
+  const byId = new Map(entries.map((entry) => [entry.id, entry]));
+  const liveInventoryRequired = requiresLiveRoomInventory(message);
+
+  return {
+    ...command,
+    actions: command.actions.map((action) => {
+      if (action.type !== "answer_property_question") return action;
+      if (liveInventoryRequired) return { type: "request_live_availability" };
+
+      const knowledgeIds = Array.from(new Set(action.knowledgeIds || []))
+        .filter((id) => byId.has(id))
+        .slice(0, 3);
+      const answers = knowledgeIds
+        .map((id) => byId.get(id)?.answer.trim() || "")
+        .filter(Boolean);
+
+      return {
+        ...action,
+        knowledgeIds,
+        answer: answers.length ? answers.join("\n\n") : KNOWLEDGE_GAP[command.language],
+        grounded: answers.length > 0,
+      };
+    }),
+  };
+}
+
+async function requestOpenAICommand(input: {
+  apiKey: string;
+  message: string;
+  context: RoomFinderConversationContext;
+  knowledge: PublishedPropertyKnowledge[];
+}) {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 18_000);
+  const timeout = setTimeout(() => controller.abort(), 9_000);
 
   try {
     const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${apiKey}`,
+        Authorization: `Bearer ${input.apiKey}`,
         "Content-Type": "application/json",
       },
       signal: controller.signal,
       body: JSON.stringify({
         model: process.env.OPENAI_CONCIERGE_MODEL || process.env.OPENAI_ASSISTANT_MODEL || "gpt-5-mini",
-        instructions: `${SYSTEM_PROMPT}\nToday in Europe/Athens is ${todayInAthensIso()}.\nSelected UI language is ${safeLanguage(context.language)}.`,
-        input: JSON.stringify({ message, context }),
+        instructions: `${SYSTEM_PROMPT}\nToday in Europe/Athens is ${todayInAthensIso()}.\nSelected UI language is ${safeLanguage(input.context.language)}.`,
+        input: JSON.stringify({
+          message: input.message,
+          context: input.context,
+          verifiedPropertyKnowledge: verifiedKnowledgeForPrompt(input.knowledge),
+        }),
         text: {
           format: {
             type: "json_schema",
@@ -311,20 +424,50 @@ export async function interpretRoomFinderMessage(
 
     const payload = await response.json().catch(() => null);
     if (!response.ok) {
-      throw new Error(payload?.error?.message || `OpenAI Room Finder interpreter failed with HTTP ${response.status}`);
+      throw new OpenAIInterpreterError(
+        payload?.error?.message || `OpenAI Room Finder interpreter failed with HTTP ${response.status}`,
+        response.status,
+        retryAfterMs(response),
+      );
     }
 
     const output = getOutputText(payload);
-    if (!output) throw new Error("OpenAI Room Finder interpreter returned an empty response");
-
-    const command = cleanCommand(JSON.parse(output), context);
-    if (!command.actions.length) throw new Error("OpenAI Room Finder interpreter returned no actions");
-
-    return command;
-  } catch (error) {
-    console.error("OpenAI Room Finder interpreter failed", error);
-    throw error;
+    if (!output) {
+      throw new OpenAIInterpreterError("OpenAI Room Finder interpreter returned an empty response", 502);
+    }
+    return JSON.parse(output);
   } finally {
     clearTimeout(timeout);
   }
+}
+
+export async function interpretRoomFinderMessage(
+  message: string,
+  context: RoomFinderConversationContext = {},
+): Promise<RoomFinderCommand> {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) throw new Error("OPENAI_API_KEY is not configured");
+
+  const language = safeLanguage(context.language);
+  const { entries } = await getPublishedPropertyKnowledge(language);
+  let lastError: unknown;
+
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    try {
+      const raw = await requestOpenAICommand({ apiKey, message, context, knowledge: entries });
+      const command = cleanCommand(raw, context);
+      if (!command.actions.length) {
+        throw new OpenAIInterpreterError("OpenAI Room Finder interpreter returned no actions", 502);
+      }
+      return hydrateKnowledgeActions(command, entries, message);
+    } catch (error) {
+      lastError = error;
+      if (attempt === 1 || !isRetryableInterpreterError(error)) break;
+      const requestedDelay = error instanceof OpenAIInterpreterError ? error.retryAfterMs : 0;
+      await waitForRetry(Math.min(Math.max(requestedDelay, 250), 1_000));
+    }
+  }
+
+  console.error("OpenAI Room Finder interpreter failed after retry", lastError);
+  throw lastError;
 }

@@ -1,7 +1,6 @@
 import { createHash } from "node:crypto";
 import { neon } from "@neondatabase/serverless";
 import { NextRequest, NextResponse } from "next/server";
-import { fallbackRoomFinderCommand } from "@/lib/ai-assistant/room-finder-fallback";
 import { interpretRoomFinderMessage } from "@/lib/ai-assistant/room-finder-intent";
 import type { RoomFinderConversationContext } from "@/lib/ai-assistant/room-finder-types";
 
@@ -183,11 +182,6 @@ export async function POST(request: NextRequest) {
 
     const rate = await checkDistributedRateLimit(getClientIp(request));
     if (rate.limited) {
-      const fallbackCommand = fallbackRoomFinderCommand(message, context);
-      if (fallbackCommand) {
-        console.warn("AI Room Finder deterministic rate-limit rescue used");
-        return noStoreJson({ ok: true, command: fallbackCommand, fallback: true });
-      }
       return noStoreJson(
         { error: "Too many requests. Please try again shortly.", code: "RATE_LIMITED" },
         { status: 429, headers: { "Retry-After": String(rate.retryAfterSeconds) } },
@@ -195,17 +189,9 @@ export async function POST(request: NextRequest) {
     }
 
     const command = await interpretRoomFinderMessage(message, context);
-    return noStoreJson({ ok: true, command, fallback: false });
+    return noStoreJson({ ok: true, command });
   } catch (error) {
     console.error("AI Room Finder intent endpoint error", error);
-
-    if (message) {
-      const command = fallbackRoomFinderCommand(message, context);
-      if (command) {
-        console.warn("AI Room Finder deterministic interpreter rescue used");
-        return noStoreJson({ ok: true, command, fallback: true });
-      }
-    }
 
     const timeout = isAbortError(error);
     return noStoreJson(
