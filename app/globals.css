@@ -1,1 +1,5 @@
 @import "tailwindcss";
+
+/* Private workspace utilities are compiled only for /mixalis. */
+@source not "../app/mixalis";
+@source not "../components/mixalis";

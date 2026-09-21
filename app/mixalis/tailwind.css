@@ -1,0 +1,4 @@
+@import "tailwindcss/utilities.css" layer(utilities) source(none);
+
+@source "./**/*.{ts,tsx}";
+@source "../../components/mixalis/**/*.{ts,tsx}";

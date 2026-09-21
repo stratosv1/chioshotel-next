@@ -7,9 +7,9 @@
     "goal": "Organize the large CSS, remove duplicate and obsolete CSS, then migrate gradually to Tailwind CSS without breaking the website."
   },
   "current_status": {
-    "git_status": "Chios Rooms legacy CSS cleanup completed on main",
+    "git_status": "Homepage rendering containment and Mixalis Tailwind route split completed on main",
     "build_status": "passed: Next.js 16.2.6 compiled successfully and generated 578/578 static pages",
-    "preview_status": "local production HTTP/DOM verification passed for /chios-rooms/ and /chios-rooms/economy-double-rooms/ with one stylesheet, no style tags, and no legacy room selectors; automated screenshots were unavailable because the installed Playwright runtime has no Chromium binary",
+    "preview_status": "local production HTTP/DOM verification passed for all seven homepage locales and /mixalis/login/; the homepage loads only the reduced global Tailwind asset and the private Mixalis utilities load only inside /mixalis",
     "tailwind_present": true,
     "tailwind_detected_by": "@import \"tailwindcss\";",
     "tailwind_migration_started": true,
@@ -221,6 +221,27 @@
       "commit": {
         "message": "refactor(rooms): remove unused legacy CSS"
       }
+    },
+    {
+      "phase": "Homepage Tailwind delivery and rendering optimization",
+      "status": "completed",
+      "files": [
+        "app/globals.css",
+        "app/mixalis/layout.tsx",
+        "app/mixalis/tailwind.css",
+        "components/home/HomePageTailwind.tsx"
+      ],
+      "details": [
+        "Excluded the private Mixalis workspace from the global Tailwind source scan and compiled its utilities in a route-only Tailwind entry with no custom CSS declarations.",
+        "Reduced the homepage global CSS asset from 306277 to 287104 uncompressed bytes, from 43512 to 40283 gzip bytes, and from 30417 to 28510 Brotli bytes.",
+        "Kept /mixalis/login/ fully styled by loading the private utility chunk only within the /mixalis layout.",
+        "Added Tailwind arbitrary content-visibility and contain-intrinsic-size utilities to 11 below-the-fold homepage sections without adding JavaScript or changing their visual styles.",
+        "Verified /, /el/, /fr/, /de/, /it/, /es/, and /tr/ return HTTP 200 and reference only the reduced global stylesheet.",
+        "The full production build and all project QA checks passed with 578/578 static pages generated."
+      ],
+      "commit": {
+        "message": "perf(home): reduce global Tailwind and defer offscreen rendering"
+      }
     }
   ],
   "pushed_to_github": {
@@ -299,5 +320,5 @@
     ],
     "note": "Use shadcn/ui carefully. Keep the warm premium Voulamandis House style and avoid making the site look like a generic template."
   },
-  "short_summary": "The homepage first-party source and active render path are Tailwind-only, with app/globals.css reduced to the Tailwind import. Orphaned homepage components, obsolete homepage CSS, a live legacy class token, and Tailwind-polluting search dumps were removed. The production build passed with 578/578 pages. Route-specific legacy CSS remains and should be migrated one route at a time, beginning with Chios Rooms."
+  "short_summary": "The homepage first-party render path remains Tailwind-only. Private Mixalis utilities are now route-scoped, reducing the homepage global CSS by 19173 uncompressed bytes and 3229 gzip bytes. Eleven below-the-fold homepage sections use Tailwind content-visibility containment to avoid unnecessary initial rendering work. The production build passed with 578/578 pages."
 }
