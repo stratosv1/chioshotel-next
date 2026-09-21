@@ -1,4 +1,5 @@
 import Image, { getImageProps } from "next/image";
+import { preload } from "react-dom";
 import type { HomePageData } from "@/content/home";
 import { HomeReviews } from "@/components/home/HomeReviews";
 import { HomeGallery } from "@/components/home/HomeGallery";
@@ -40,15 +41,17 @@ function HeroPicture({
   const common = {
     alt,
     sizes: "100vw",
-    quality: 76,
   };
+  const mobileMedia = "(max-width: 767px)";
+  const desktopMedia = "(min-width: 768px)";
   const {
-    props: { srcSet: mobileSrcSet },
+    props: { src: mobileImageSrc, srcSet: mobileSrcSet },
   } = getImageProps({
     ...common,
     src: mobileSrc,
     width: mobileWidth,
     height: mobileHeight,
+    quality: 50,
   });
   const {
     props: { srcSet: desktopSrcSet, ...desktopImageProps },
@@ -57,14 +60,33 @@ function HeroPicture({
     src: desktopSrc,
     width: desktopWidth,
     height: desktopHeight,
+    quality: 62,
+  });
+
+  // Start the matching hero request in the head, using the same responsive
+  // candidates as the picture. Media queries prevent fetching both crops.
+  preload(mobileImageSrc, {
+    as: "image",
+    imageSrcSet: mobileSrcSet,
+    imageSizes: common.sizes,
+    media: mobileMedia,
+    fetchPriority: "high",
+  });
+  preload(desktopImageProps.src, {
+    as: "image",
+    imageSrcSet: desktopSrcSet,
+    imageSizes: common.sizes,
+    media: desktopMedia,
+    fetchPriority: "high",
   });
 
   return (
     <picture className="absolute inset-0 block">
-      <source media="(max-width: 767px)" srcSet={mobileSrcSet} />
-      <source media="(min-width: 768px)" srcSet={desktopSrcSet} />
+      <source media={mobileMedia} srcSet={mobileSrcSet} sizes={common.sizes} />
+      <source media={desktopMedia} srcSet={desktopSrcSet} sizes={common.sizes} />
       <img
         {...desktopImageProps}
+        srcSet={desktopSrcSet}
         alt={alt}
         className="block h-full w-full object-cover object-center"
         decoding="async"
