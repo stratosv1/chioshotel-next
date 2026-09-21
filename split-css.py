@@ -6,7 +6,6 @@ SECTIONS = [
     ("at", "*{\n  box-sizing:border-box;\n}", "base/base.css"),
     ("at", "/* HERO */", "pages/home.css"),
     ("comment", "MOBILE EXACT PATCH", "pages/home-mobile-patch.css"),
-    ("comment", "ROOMS CATEGORY PAGE TEMPLATE", "pages/rooms-category.css"),
     ("comment", "ROOM WIZARD", "pages/room-wizard.css"),
     ("comment", "ROOM DETAIL PAGE TEMPLATE", "pages/room-detail.css"),
     ("comment", "INDIVIDUAL ROOM CARDS PATCH", "pages/room-detail-cards.css"),

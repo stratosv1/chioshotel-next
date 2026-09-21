@@ -5,9 +5,6 @@
 @import "./base/tokens.css";
 @import "./base/base.css";
 
-/* ---- pages ---- */
-@import "./pages/rooms-category.css";
-
 /* ---- components ---- */
 @import "./components/header.css";
 @import "./components/footer.css";
