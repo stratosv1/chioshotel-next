@@ -319,7 +319,7 @@ requireText('components/mixalis/SmartLabCollision1D.tsx', [
 ]);
 
 requireText('app/mixalis/api/smartlab/revisions/[revisionId]/route.ts', [
-  'maxDuration = 900',
+  'maxDuration = 300',
   'MAX_AUTOMATIC_ATTEMPTS = 3',
   'isSingleSmartLabRevision',
   'runSingleSmartLabRevisionCompat',

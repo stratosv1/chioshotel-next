@@ -9,7 +9,7 @@ import { isSingleSmartLabRevision } from "@/lib/mixalis/smartlab-single";
 import { runSingleSmartLabRevisionCompat } from "@/lib/mixalis/smartlab-single-compat";
 
 export const runtime = "nodejs";
-export const maxDuration = 900;
+export const maxDuration = 300;
 
 const MAX_AUTOMATIC_ATTEMPTS = 3;
 

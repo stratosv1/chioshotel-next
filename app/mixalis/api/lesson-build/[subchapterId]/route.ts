@@ -15,7 +15,7 @@ import {
 } from "@/lib/mixalis/start-lesson";
 
 export const runtime = "nodejs";
-export const maxDuration = 900;
+export const maxDuration = 300;
 
 type BuildState = {
   chapterId: string;

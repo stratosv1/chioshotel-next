@@ -8,7 +8,7 @@ import {
 } from "@/lib/mixalis/subchapter-intelligence";
 
 export const runtime = "nodejs";
-export const maxDuration = 420;
+export const maxDuration = 300;
 
 const MAX_AUTOMATIC_ATTEMPTS = 3;
 
