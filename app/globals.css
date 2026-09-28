@@ -3,3 +3,48 @@
 /* Private workspace utilities are compiled only for /mixalis. */
 @source not "../app/mixalis";
 @source not "../components/mixalis";
+
+/*
+ * Mobile type floor for the public guest experience.
+ *
+ * The site intentionally uses compact Tailwind sizes in badges and cards, but
+ * 12px body copy and 9–13px labels are difficult to read on a phone. These
+ * overrides keep regular copy at 16–17px and recurring labels at 14px without
+ * changing desktop typography or the private staff and Mixalis workspaces.
+ * `!important` is limited to the font-size floor so route-level legacy CSS
+ * cannot reintroduce unreadably small mobile text later in the cascade.
+ */
+@media (max-width: 47.999rem) {
+  .vh-public-site .text-base {
+    font-size: 1.0625rem !important;
+    line-height: 1.75rem;
+  }
+
+  .vh-public-site .text-sm {
+    font-size: 1rem !important;
+    line-height: 1.5rem;
+  }
+
+  .vh-public-site .text-xs,
+  .vh-public-site [class*="text-[7px]"],
+  .vh-public-site [class*="text-[7.2px]"],
+  .vh-public-site [class*="text-[8px]"],
+  .vh-public-site [class*="text-[9px]"],
+  .vh-public-site [class*="text-[10px]"],
+  .vh-public-site [class*="text-[10.5px]"],
+  .vh-public-site [class*="text-[11px]"],
+  .vh-public-site [class*="text-[12px]"],
+  .vh-public-site [class*="text-[12.5px]"],
+  .vh-public-site [class*="text-[13px]"],
+  .vh-public-site [class*="text-[13.5px]"] {
+    font-size: 0.875rem !important;
+    line-height: 1.25rem;
+  }
+
+  .vh-public-site [class*="text-[14px]"],
+  .vh-public-site [class*="text-[15px]"],
+  .vh-public-site [class*="text-[15.5px]"] {
+    font-size: 1rem !important;
+    line-height: 1.5rem;
+  }
+}

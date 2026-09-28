@@ -134,6 +134,7 @@ export default async function RootLayout({
   const hideFooter = isTripPlannerPath(pathname) || privatePhysicsPath;
   const excludeAnalytics = staffPath || privatePhysicsPath;
   const publicWebMcpPath = !privatePhysicsPath && !staffPath && !isPolishPath;
+  const publicTypography = !privatePhysicsPath && !staffPath;
   const aiGuideHref = publicWebMcpPath
     ? sharedLanguage === "en"
       ? "/llms.txt"
@@ -163,7 +164,7 @@ export default async function RootLayout({
           ) : null}
         </head>
       ) : null}
-      <body className="m-0 overflow-x-hidden bg-[linear-gradient(180deg,#faf6f0_0%,#f6f0e8_100%)] font-sans leading-normal text-[#2f261f] antialiased [-webkit-text-size-adjust:100%]">
+      <body className={`m-0 overflow-x-hidden bg-[linear-gradient(180deg,#faf6f0_0%,#f6f0e8_100%)] font-sans leading-normal text-[#2f261f] antialiased [-webkit-text-size-adjust:100%]${publicTypography ? " vh-public-site" : ""}`}>
         {publicWebMcpPath ? <RoomFinderWebMCP /> : null}
         {publicWebMcpPath ? <JsSelfProfilingMarkers /> : null}
         {!isPolishPath && !excludeAnalytics ? <RoomFinderCtaRouter /> : null}
