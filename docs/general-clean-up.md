@@ -96,6 +96,10 @@ npm run qa:rendered-routes
 - The shared footer changes from three compressed columns to one readable mobile column, with 44px navigation rows; desktop keeps the three-column layout.
 - Mobile fixed booking/contact actions on home, room and Chios overview surfaces now respect device safe areas, and the footer reserves matching bottom space.
 - These mobile guarantees are enforced by the General Clean Up QA command so later compact-style changes cannot silently undo them.
+- The narrow-phone audit now covers 320px, 390px and 430px width budgets for homepage, gallery and shared carousel cards.
+- The Live Deals date rail reserves top space for the selected check badge instead of clipping it, and its trust items switch to a 2×2 grid on narrow screens.
+- The global homepage Call/WhatsApp bar automatically leaves the screen while Live Deals is visible, preventing it from covering the date, price and request controls.
+- Homepage amenity cards use two columns at narrow widths and expand to three/four columns only when space allows.
 
 ## Definition of done
 

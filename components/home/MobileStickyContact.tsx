@@ -19,22 +19,37 @@ type LiveRequestDetail = {
 
 export function MobileStickyContact({ call, chat }: MobileStickyContactProps) {
   const [chatHref, setChatHref] = useState(chat.href);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isPastHero, setIsPastHero] = useState(false);
+  const [isLiveRequestVisible, setIsLiveRequestVisible] = useState(false);
+  const isVisible = isPastHero && !isLiveRequestVisible;
 
   useEffect(() => {
     const hero = document.getElementById("home-hero");
+    const liveRequest = document.getElementById("vh-lastminute-title");
     if (!hero) {
-      setIsVisible(true);
-      return;
+      setIsPastHero(true);
     }
 
-    const observer = new IntersectionObserver(
-      ([entry]) => setIsVisible(entry.intersectionRatio < 0.05),
-      { threshold: [0, 0.05] },
-    );
+    const heroObserver = hero
+      ? new IntersectionObserver(
+          ([entry]) => setIsPastHero(entry.intersectionRatio < 0.05),
+          { threshold: [0, 0.05] },
+        )
+      : null;
+    const liveRequestObserver = liveRequest
+      ? new IntersectionObserver(
+          ([entry]) => setIsLiveRequestVisible(entry.isIntersecting),
+          { rootMargin: "0px 0px 80px 0px", threshold: 0 },
+        )
+      : null;
 
-    observer.observe(hero);
-    return () => observer.disconnect();
+    if (hero && heroObserver) heroObserver.observe(hero);
+    if (liveRequest && liveRequestObserver) liveRequestObserver.observe(liveRequest);
+
+    return () => {
+      heroObserver?.disconnect();
+      liveRequestObserver?.disconnect();
+    };
   }, []);
 
   useEffect(() => {
@@ -52,6 +67,7 @@ export function MobileStickyContact({ call, chat }: MobileStickyContactProps) {
   return (
     <div
       aria-hidden={!isVisible}
+      inert={!isVisible}
       className={`fixed inset-x-0 bottom-0 z-50 border-t border-amber-900/10 bg-white/95 px-3 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-2xl backdrop-blur transition duration-300 md:hidden ${
         isVisible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-full opacity-0"
       }`}

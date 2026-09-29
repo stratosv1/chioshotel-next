@@ -1021,7 +1021,7 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
           ) : null}
 
           {selectedRoom && visibleDays.length ? (
-            <div className="mt-3 flex snap-x gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-7 md:gap-3 md:overflow-visible md:pb-0">
+            <div className="mt-3 flex snap-x gap-2 overflow-x-auto pb-2 pt-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-7 md:gap-3 md:overflow-visible md:pb-0 md:pt-2">
               {visibleDays.map((day) => {
                 const info = getNightInfo(deals, selectedRoom, day.checkin, guests);
                 return <DateChip key={day.checkin} day={day.checkin} info={info} active={selectedDates.includes(day.checkin)} onClick={() => handleDateClick(day.checkin)} copy={copy} />;
@@ -1042,9 +1042,9 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
             </div>
           ) : null}
 
-          <div className="mt-3 grid grid-cols-4 gap-0 rounded-[1.25rem] bg-white p-2.5 text-center shadow-sm ring-1 ring-amber-900/10 md:rounded-[1.4rem] md:p-3">
-            {copy.trustItems.map((item) => (
-              <div key={item.title} className="border-r border-stone-200 px-1 text-[9px] font-semibold leading-4 text-stone-800 last:border-r-0 md:text-xs md:leading-5">
+          <div className="mt-3 grid grid-cols-2 gap-0 rounded-[1.25rem] bg-white p-2.5 text-center shadow-sm ring-1 ring-amber-900/10 sm:grid-cols-4 md:rounded-[1.4rem] md:p-3">
+            {copy.trustItems.map((item, index) => (
+              <div key={item.title} className={`${index < 2 ? "border-b pb-2" : "pt-2"} ${index % 2 === 0 ? "border-r" : ""} border-stone-200 px-2 text-[9px] font-semibold leading-4 text-stone-800 sm:border-b-0 sm:border-r sm:px-1 sm:py-0 sm:last:border-r-0 md:text-xs md:leading-5`}>
                 <span className="mb-1 flex justify-center" aria-hidden="true"><TrustIcon type={item.icon} /></span>
                 <strong className="block font-black">{item.title}</strong>
                 <span className="hidden text-stone-500 md:block">{item.text}</span>

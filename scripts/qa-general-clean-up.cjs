@@ -124,6 +124,9 @@ const roomsCategorySource = read("components/rooms/RoomsCategoryPage.tsx");
 const roomDetailSource = read("components/rooms/RoomDetailPage.tsx");
 const chiosIslandSource = read("components/chios/ChiosIslandPage.tsx");
 const polishHomeSource = read("components/home/PolishHomePageTailwind.tsx");
+const homePageSource = read("components/home/HomePageTailwind.tsx");
+const liveDirectRequestSource = read("components/home/LiveDirectRequest.tsx");
+const mobileStickyContactSource = read("components/home/MobileStickyContact.tsx");
 const packageJson = JSON.parse(read("package.json"));
 
 check(
@@ -267,6 +270,41 @@ check(
   "Mobile footer uses a readable single-column layout, 44px links and safe-area spacing.",
   "Mobile footer layout, touch targets or safe-area spacing regressed.",
 );
+check(
+  liveDirectRequestSource.includes("overflow-x-auto pb-2 pt-2") &&
+    liveDirectRequestSource.includes("grid grid-cols-2 gap-0") &&
+    liveDirectRequestSource.includes("sm:grid-cols-4"),
+  "Homepage date chips keep top clearance and trust chips use a readable 2×2 mobile grid.",
+  "Homepage date-chip clearance or compact trust-grid layout regressed.",
+);
+check(
+  mobileStickyContactSource.includes('getElementById("vh-lastminute-title")') &&
+    mobileStickyContactSource.includes("isPastHero && !isLiveRequestVisible") &&
+    mobileStickyContactSource.includes("inert={!isVisible}"),
+  "Homepage contact bar hides while the interactive Live Deals section is visible.",
+  "Homepage contact bar can overlap the interactive Live Deals section.",
+);
+check(
+  homePageSource.includes('className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4"') &&
+    polishHomeSource.includes('className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4"'),
+  "Homepage amenity cards use two columns on narrow phones.",
+  "Homepage amenity cards are too dense on narrow phones.",
+);
+
+for (const viewportWidth of [320, 390, 430]) {
+  const liveRequestContentWidth = viewportWidth - 64;
+  const liveRoomCardWidth = Math.min(viewportWidth * 0.8, 320);
+  const standardCarouselCardWidth = Math.min(viewportWidth * 0.84, 380);
+  const galleryCardWidth = Math.min(viewportWidth * 0.78, 330);
+
+  check(
+    liveRoomCardWidth <= liveRequestContentWidth &&
+      standardCarouselCardWidth <= viewportWidth - 32 &&
+      galleryCardWidth <= viewportWidth - 32,
+    `${viewportWidth}px mobile card width budgets fit their intended scroll tracks.`,
+    `${viewportWidth}px mobile card width budget exceeds its intended scroll track.`,
+  );
+}
 
 for (const [label, source] of [
   ["rooms category", roomsCategorySource],
