@@ -89,6 +89,7 @@ npm run qa:rendered-routes
 - The Greek Trip Planner CTA now links directly to the tool's canonical `/trip-planner/` route instead of passing through `/el/trip-planner/`.
 - The seven public travel-agent room guides have a database-independent fallback, so a missing or unavailable database no longer turns linked pages into HTTP 500 responses.
 - The travel-agent presentation layer enforces the owner-confirmed step-free status of Apartments 8–10 even if an older database value is returned.
+- All 168 rendered beach, village and museum detail pages now expose a contextual, localized path to rooms and direct rates; the rendered QA checks both destinations on every page.
 
 ## Definition of done
 

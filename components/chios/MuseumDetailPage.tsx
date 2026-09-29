@@ -1,5 +1,6 @@
 import type { MuseumDetailData } from "@/content/museum-details";
 import { localizedMuseumDetails, museumDetails } from "@/content/museum-details";
+import { getSiteNavigationPath } from "@/lib/site-navigation";
 
 type MuseumDetailPageProps = {
   museum: MuseumDetailData;
@@ -14,6 +15,8 @@ const museumUiCopy = {
     localTipLabel: "Voulamandis House local tip",
     relatedKicker: "Chios museum guide",
     exploreMuseum: "Explore museum →",
+    viewRooms: "View rooms & apartments",
+    checkRates: "Check direct rates",
   },
   el: {
     tagsLabel: "Χαρακτηριστικά μουσείου",
@@ -23,6 +26,8 @@ const museumUiCopy = {
     localTipLabel: "Τοπική συμβουλή από το Voulamandis House",
     relatedKicker: "Οδηγός μουσείων Χίου",
     exploreMuseum: "Δείτε το μουσείο →",
+    viewRooms: "Δωμάτια & διαμερίσματα",
+    checkRates: "Δείτε απευθείας τιμές",
   },
   fr: {
     tagsLabel: "Caractéristiques du musée",
@@ -32,6 +37,8 @@ const museumUiCopy = {
     localTipLabel: "Conseil local de Voulamandis House",
     relatedKicker: "Guide des musées de Chios",
     exploreMuseum: "Explorer le musée →",
+    viewRooms: "Voir chambres & appartements",
+    checkRates: "Voir les tarifs directs",
   },
   de: {
     tagsLabel: "Museumsmerkmale",
@@ -41,6 +48,8 @@ const museumUiCopy = {
     localTipLabel: "Lokaler Tipp von Voulamandis House",
     relatedKicker: "Museumsführer für Chios",
     exploreMuseum: "Museum ansehen →",
+    viewRooms: "Zimmer & Apartments ansehen",
+    checkRates: "Direktpreise prüfen",
   },
   it: {
     tagsLabel: "Caratteristiche del museo",
@@ -50,6 +59,8 @@ const museumUiCopy = {
     localTipLabel: "Consiglio locale di Voulamandis House",
     relatedKicker: "Guida ai musei di Chios",
     exploreMuseum: "Esplora il museo →",
+    viewRooms: "Vedi camere & appartamenti",
+    checkRates: "Controlla le tariffe dirette",
   },
   es: {
     tagsLabel: "Características del museo",
@@ -59,6 +70,8 @@ const museumUiCopy = {
     localTipLabel: "Consejo local de Voulamandis House",
     relatedKicker: "Guía de museos de Chios",
     exploreMuseum: "Explorar museo →",
+    viewRooms: "Ver habitaciones & apartamentos",
+    checkRates: "Consultar tarifas directas",
   },
   tr: {
     tagsLabel: "Müze özellikleri",
@@ -68,6 +81,8 @@ const museumUiCopy = {
     localTipLabel: "Voulamandis House yerel tavsiyesi",
     relatedKicker: "Sakız Adası müze rehberi",
     exploreMuseum: "Müzeyi keşfet →",
+    viewRooms: "Oda & daireleri görün",
+    checkRates: "Doğrudan fiyatları görün",
   },
 } as const;
 
@@ -213,6 +228,20 @@ export function MuseumDetailPage({ museum }: MuseumDetailPageProps) {
               <p className="mt-4 max-w-[860px] text-base leading-8 text-white/85">
                 {museum.baseTip.text} <a className="font-black text-white underline decoration-white/30 underline-offset-4" href={museum.baseTip.href}>{museum.baseTip.linkLabel}</a>
               </p>
+              <div className="mt-6 flex flex-wrap gap-3" data-gcu-contextual-stay-links>
+                <a
+                  className="inline-flex min-h-12 items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-black !text-stone-900 shadow-lg transition hover:-translate-y-0.5"
+                  href={getSiteNavigationPath("rooms", language)}
+                >
+                  {copy.viewRooms}
+                </a>
+                <a
+                  className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/25 bg-white/10 px-6 py-3 text-sm font-black !text-white transition hover:-translate-y-0.5 hover:bg-white/20"
+                  href={getSiteNavigationPath("rates", language)}
+                >
+                  {copy.checkRates}
+                </a>
+              </div>
             </div>
           </article>
         </div>

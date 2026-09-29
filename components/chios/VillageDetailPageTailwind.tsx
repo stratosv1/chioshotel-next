@@ -1,5 +1,6 @@
 import type { VillageDetailData } from "@/content/village-details";
 import { localizedVillageDetails, villageDetails } from "@/content/village-details";
+import { getSiteNavigationPath } from "@/lib/site-navigation";
 
 type VillageDetailPageProps = {
   village: VillageDetailData;
@@ -19,6 +20,8 @@ const villageUiCopy = {
     relatedKicker: "Chios village guide",
     exploreVillage: "Explore village →",
     swipeHint: "Swipe to explore more villages",
+    viewRooms: "View rooms & apartments",
+    checkRates: "Check direct rates",
   },
   el: {
     tagsLabel: "Χαρακτηριστικά χωριού",
@@ -33,6 +36,8 @@ const villageUiCopy = {
     relatedKicker: "Οδηγός χωριών Χίου",
     exploreVillage: "Δείτε το χωριό →",
     swipeHint: "Σύρετε για περισσότερα χωριά",
+    viewRooms: "Δωμάτια & διαμερίσματα",
+    checkRates: "Δείτε απευθείας τιμές",
   },
   fr: {
     tagsLabel: "Caractéristiques du village",
@@ -47,6 +52,8 @@ const villageUiCopy = {
     relatedKicker: "Guide des villages de Chios",
     exploreVillage: "Explorer le village →",
     swipeHint: "Faites glisser pour voir plus de villages",
+    viewRooms: "Voir chambres & appartements",
+    checkRates: "Voir les tarifs directs",
   },
   de: {
     tagsLabel: "Dorfmerkmale",
@@ -61,6 +68,8 @@ const villageUiCopy = {
     relatedKicker: "Dorfführer für Chios",
     exploreVillage: "Dorf ansehen →",
     swipeHint: "Wischen Sie für weitere Dörfer",
+    viewRooms: "Zimmer & Apartments ansehen",
+    checkRates: "Direktpreise prüfen",
   },
   it: {
     tagsLabel: "Caratteristiche del villaggio",
@@ -75,6 +84,8 @@ const villageUiCopy = {
     relatedKicker: "Guida ai villaggi di Chios",
     exploreVillage: "Esplora il villaggio →",
     swipeHint: "Scorri per altri villaggi",
+    viewRooms: "Vedi camere & appartamenti",
+    checkRates: "Controlla le tariffe dirette",
   },
   es: {
     tagsLabel: "Características del pueblo",
@@ -89,6 +100,8 @@ const villageUiCopy = {
     relatedKicker: "Guía de pueblos de Chios",
     exploreVillage: "Explorar pueblo →",
     swipeHint: "Desliza para ver más pueblos",
+    viewRooms: "Ver habitaciones & apartamentos",
+    checkRates: "Consultar tarifas directas",
   },
   tr: {
     tagsLabel: "Köy özellikleri",
@@ -103,6 +116,8 @@ const villageUiCopy = {
     relatedKicker: "Sakız Adası köy rehberi",
     exploreVillage: "Köyü keşfet →",
     swipeHint: "Daha fazla köy için kaydırın",
+    viewRooms: "Oda & daireleri görün",
+    checkRates: "Doğrudan fiyatları görün",
   },
 } as const;
 
@@ -343,6 +358,20 @@ export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
                   {village.baseTip.linkLabel}
                 </a>
               </p>
+              <div className="mt-7 flex flex-wrap gap-3" data-gcu-contextual-stay-links>
+                <a
+                  className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#2f261f] px-6 py-3 text-sm font-black !text-white shadow-lg transition hover:-translate-y-0.5"
+                  href={getSiteNavigationPath("rooms", language)}
+                >
+                  {copy.viewRooms}
+                </a>
+                <a
+                  className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#8e6607]/25 bg-[#fff7e8] px-6 py-3 text-sm font-black !text-[#6f5215] transition hover:-translate-y-0.5 hover:bg-[#f9edcf]"
+                  href={getSiteNavigationPath("rates", language)}
+                >
+                  {copy.checkRates}
+                </a>
+              </div>
             </div>
           </article>
         </div>

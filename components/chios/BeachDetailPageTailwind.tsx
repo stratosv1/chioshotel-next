@@ -422,7 +422,7 @@ export function BeachDetailPageTailwind({ beach }: BeachDetailPageProps) {
               <p className="mt-4 max-w-[760px] text-base leading-8 text-white/78">
                 {beach.baseTip.text}
               </p>
-              <div className="mt-7 flex flex-wrap gap-3">
+              <div className="mt-7 flex flex-wrap gap-3" data-gcu-contextual-stay-links>
                 <a
                   className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-black !text-slate-950 shadow-lg transition hover:-translate-y-0.5"
                   href={beach.baseTip.href}

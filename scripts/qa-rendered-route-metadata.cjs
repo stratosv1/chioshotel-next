@@ -23,6 +23,9 @@ function routeRecords() {
       return {
         path: block.match(/path: "([^"]+)"/)?.[1],
         language: block.match(/language: "([^"]+)"/)?.[1],
+        contentType: block.match(/contentType: "([^"]+)"/)?.[1],
+        category: block.match(/category: "([^"]+)"/)?.[1],
+        itemId: block.match(/itemId: "([^"]+)"/)?.[1],
         action: block.match(/action: "([^"]+)"/)?.[1],
         canonicalPath: block.match(/canonicalPath: "([^"]+)"/)?.[1],
       };
@@ -79,7 +82,7 @@ function isLanguageNeutralPath(pathname) {
   );
 }
 
-function auditInternalAnchors(route, html) {
+function auditInternalAnchors(route, html, ownerPaths) {
   const failures = [];
   const destinations = [];
   const anchorTags = [...html.matchAll(/<a\b[^>]*>/gi)].map((match) => match[0]);
@@ -107,10 +110,41 @@ function auditInternalAnchors(route, html) {
     }
   }
 
+  if (
+    route.contentType === "chios-detail" &&
+    ["beaches", "villages", "museums"].includes(route.category)
+  ) {
+    const contextualBlock = html.match(
+      /<div[^>]*data-gcu-contextual-stay-links[^>]*>[\s\S]*?<\/div>/i,
+    )?.[0];
+
+    if (!contextualBlock) {
+      failures.push({ path: route.path, type: "missing-contextual-stay-links" });
+    } else {
+      const contextualDestinations = new Set(
+        [...contextualBlock.matchAll(/<a\b[^>]*>/gi)]
+          .map((match) => internalLinkPath(readAttribute(match[0], "href")))
+          .filter(Boolean),
+      );
+      const expected = ownerPaths[route.language];
+
+      for (const [kind, destination] of Object.entries(expected || {})) {
+        if (!contextualDestinations.has(destination)) {
+          failures.push({
+            path: route.path,
+            type: "missing-contextual-conversion-link",
+            kind,
+            expected: destination,
+          });
+        }
+      }
+    }
+  }
+
   return { failures, destinations };
 }
 
-async function auditRoute(route) {
+async function auditRoute(route, ownerPaths) {
   const response = await fetch(`${localOrigin}${route.path}`, { redirect: "manual" });
   const html = await response.text();
 
@@ -151,13 +185,13 @@ async function auditRoute(route) {
     });
   }
 
-  const anchorAudit = auditInternalAnchors(route, html);
+  const anchorAudit = auditInternalAnchors(route, html, ownerPaths);
   failures.push(...anchorAudit.failures);
 
   return { failures, destinations: anchorAudit.destinations };
 }
 
-async function auditAllRoutes(routes) {
+async function auditAllRoutes(routes, ownerPaths) {
   const failures = [];
   const destinations = new Set();
   let cursor = 0;
@@ -168,7 +202,7 @@ async function auditAllRoutes(routes) {
       cursor += 1;
 
       try {
-        const result = await auditRoute(route);
+        const result = await auditRoute(route, ownerPaths);
         failures.push(...result.failures);
         result.destinations.forEach((destination) => destinations.add(destination));
       } catch (error) {
@@ -222,6 +256,20 @@ async function auditInternalDestinations(destinations) {
 
 async function main() {
   const routes = routeRecords();
+  const contextualConversionRoutes = routes.filter(
+    (route) =>
+      route.contentType === "chios-detail" &&
+      ["beaches", "villages", "museums"].includes(route.category),
+  );
+  const ownerPaths = Object.fromEntries(
+    activeLanguages.map((language) => [
+      language,
+      {
+        rooms: routes.find((route) => route.itemId === "rooms-index" && route.language === language)?.path,
+        rates: routes.find((route) => route.itemId === "booking" && route.language === language)?.path,
+      },
+    ]),
+  );
   const logs = [];
   const nextBin = require.resolve("next/dist/bin/next");
   const server = spawn(
@@ -235,7 +283,7 @@ async function main() {
 
   try {
     await waitForServer(logs);
-    const routeAudit = await auditAllRoutes(routes);
+    const routeAudit = await auditAllRoutes(routes, ownerPaths);
     const destinationFailures = await auditInternalDestinations(routeAudit.destinations);
     const failures = [...routeAudit.failures, ...destinationFailures];
 
@@ -243,6 +291,7 @@ async function main() {
     console.log("=============================");
     console.log(`  Routes checked: ${routes.length}`);
     console.log(`  Unique internal destinations checked: ${routeAudit.destinations.size}`);
+    console.log(`  Contextual conversion pages checked: ${contextualConversionRoutes.length}`);
     console.log(`  Failures: ${failures.length}`);
 
     if (failures.length) {
@@ -253,6 +302,7 @@ async function main() {
 
     console.log("  ✅ Every indexable route returns 200 with its expected canonical and all seven hreflangs plus x-default.");
     console.log("  ✅ Rendered content links stay in-language and point directly to healthy destinations.\n");
+    console.log("  ✅ Beach, village and museum detail pages link contextually to localized rooms and direct rates.\n");
   } finally {
     server.kill("SIGTERM");
   }
