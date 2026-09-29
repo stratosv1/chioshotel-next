@@ -35,9 +35,9 @@ Make the public chioshotel.gr experience cleaner, safer and easier to maintain w
 | GCU-01 | URL and indexation hygiene | Completed | Canonical host, redirects, robots, sitemap and legacy URLs pass QA |
 | GCU-02 | Seven-language parity | Completed | Every public English owner page has the intended localized equivalents |
 | GCU-03 | Localized links | Completed | Navigation and transactional CTAs resolve to the matching locale |
-| GCU-04 | Content and internal linking | Planned | Facts are consistent and guide pages connect clearly to rooms and booking |
+| GCU-04 | Content and internal linking | Completed | Facts are consistent and guide pages connect clearly to rooms and booking |
 | GCU-05 | Mobile UI and accessibility | Planned | Readable type, usable controls, semantic structure and no overlapping UI |
-| GCU-06 | Images and performance | Planned | Correct Next/Image usage, dimensions, alt text and no avoidable payload |
+| GCU-06 | Images and performance | In progress | Correct Next/Image usage, dimensions, alt text and no avoidable payload |
 | GCU-07 | Code and dependency cleanup | Planned | Dead code and obsolete patch paths are removed only after usage proof |
 | GCU-08 | Regression protection | Active | One command runs the cleanup guardrails and existing public SEO QA |
 
@@ -90,6 +90,7 @@ npm run qa:rendered-routes
 - The seven public travel-agent room guides have a database-independent fallback, so a missing or unavailable database no longer turns linked pages into HTTP 500 responses.
 - The travel-agent presentation layer enforces the owner-confirmed step-free status of Apartments 8–10 even if an older database value is returned.
 - All 168 rendered beach, village and museum detail pages now expose a contextual, localized path to rooms and direct rates; the rendered QA checks both destinations on every page.
+- Shared village and museum detail templates now use `next/image` for hero and related-content media, reducing the public raw-image inventory from 35 to 33 references; Wikimedia is the only newly approved remote image host.
 
 ## Definition of done
 

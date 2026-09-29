@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { VillageDetailData } from "@/content/village-details";
 import { localizedVillageDetails, villageDetails } from "@/content/village-details";
 import { getSiteNavigationPath } from "@/lib/site-navigation";
@@ -177,10 +178,12 @@ export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
         className="relative flex min-h-[68svh] items-end overflow-hidden text-white md:min-h-[640px]"
         aria-labelledby="village-hero-title"
       >
-        <img
+        <Image
           src={village.hero.image}
           alt=""
-          loading="eager"
+          fill
+          priority
+          sizes="100vw"
           className="absolute inset-0 h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/45 to-black/10" aria-hidden="true" />
@@ -334,10 +337,11 @@ export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
         <div className="mx-auto max-w-[1180px]">
           <article className="grid overflow-hidden rounded-[36px] border border-[#8e6607]/15 bg-white shadow-2xl shadow-black/10 md:grid-cols-[0.9fr_1.1fr]">
             <div className="relative min-h-[260px] overflow-hidden bg-[#efe0cc] md:min-h-[360px]">
-              <img
+              <Image
                 src="/images/beaches/voulamandis-house-courtyard-chios.webp"
                 alt="Voulamandis House in Kampos, Chios"
-                loading="lazy"
+                fill
+                sizes="(min-width: 768px) 45vw, 100vw"
                 className="absolute inset-0 h-full w-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent" aria-hidden="true" />
@@ -405,17 +409,18 @@ export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
               →
             </div>
             <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 xl:grid-cols-3">
-              {relatedVillages.slice(0, 6).map((related, index) => (
+              {relatedVillages.slice(0, 6).map((related) => (
                 <a
                   className="group w-[84vw] max-w-[380px] flex-none snap-start overflow-hidden rounded-[1.5rem] bg-white shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 transition hover:shadow-xl md:w-auto md:max-w-none md:rounded-[2rem]"
                   href={related.seo.canonicalPath}
                   key={related.seo.canonicalPath}
                 >
                   <div className="relative aspect-[4/3] overflow-hidden">
-                    <img
+                    <Image
                       src={related.hero.image}
                       alt=""
-                      loading={index < 2 ? "eager" : "lazy"}
+                      fill
+                      sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 84vw"
                       className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                     />
                     <span className="absolute left-3 top-3 rounded-full bg-amber-700 px-3 py-1.5 text-xs font-black text-white">

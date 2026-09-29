@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { MuseumDetailData } from "@/content/museum-details";
 import { localizedMuseumDetails, museumDetails } from "@/content/museum-details";
 import { getSiteNavigationPath } from "@/lib/site-navigation";
@@ -145,7 +146,7 @@ export function MuseumDetailPage({ museum }: MuseumDetailPageProps) {
     <main className="min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_top_left,rgba(168,120,66,.14),transparent_34rem),linear-gradient(180deg,#fbf6ef_0%,#f4eadf_52%,#fbf6ef_100%)] pb-16 text-stone-800">
       <section className="relative flex min-h-[640px] items-end overflow-hidden text-white max-md:min-h-[76svh]" aria-labelledby="md-hero-title">
         <div className="absolute inset-0 z-0" aria-hidden="true">
-          <img className="h-full w-full object-cover" src={museum.hero.image} alt="" loading="eager" />
+          <Image className="object-cover" src={museum.hero.image} alt="" fill priority sizes="100vw" />
         </div>
         <div className="absolute inset-0 z-[1] bg-[linear-gradient(90deg,rgba(32,24,18,.84)_0%,rgba(32,24,18,.54)_42%,rgba(32,24,18,.18)_100%),linear-gradient(0deg,rgba(32,24,18,.72)_0%,transparent_58%)]" />
 
@@ -258,7 +259,7 @@ export function MuseumDetailPage({ museum }: MuseumDetailPageProps) {
           <div className="grid auto-rows-[260px] gap-4 md:grid-cols-3">
             {relatedMuseums.map((related, index) => (
               <a className={`group relative overflow-hidden rounded-[1.75rem] bg-stone-900 shadow-xl shadow-stone-900/10 ring-1 ring-amber-900/10 ${getRelatedCardClass(index)}`} href={related.seo.canonicalPath} key={related.seo.canonicalPath}>
-                <img src={related.hero.image} alt="" loading={index < 2 ? "eager" : "lazy"} className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105" />
+                <Image src={related.hero.image} alt="" fill sizes="(min-width: 768px) 66vw, 100vw" className="object-cover transition duration-700 group-hover:scale-105" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/82 via-black/34 to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 z-10 p-5 text-white">
                   <span className="rounded-full bg-white/15 px-3 py-1.5 text-xs font-black uppercase text-white backdrop-blur">{getBadgeFromMuseum(related)}</span>

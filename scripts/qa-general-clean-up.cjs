@@ -115,6 +115,8 @@ const routeMapSource = read("lib/url-map.ts");
 const nextConfigSource = read("next.config.ts");
 const agentRoomGuideDataSource = read("lib/agent-room-guide-data.ts");
 const answerFirstSeoSource = read("components/seo/AnswerFirstSeoBlock.tsx");
+const villageDetailSource = read("components/chios/VillageDetailPageTailwind.tsx");
+const museumDetailSource = read("components/chios/MuseumDetailPage.tsx");
 const packageJson = JSON.parse(read("package.json"));
 
 check(
@@ -225,6 +227,16 @@ check(
     agentRoomGuideDataSource.includes("isStepFreeApartment ? 0 : Number(row.entrance_steps)"),
   "Travel-agent room data enforces step-free Apartments 8–10.",
   "Travel-agent room data can regress Apartments 8–10 to stair access.",
+);
+check(
+  !/<img(?:\s|>)/.test(villageDetailSource) && !/<img(?:\s|>)/.test(museumDetailSource),
+  "Shared village and museum detail templates use Next/Image.",
+  "Shared village or museum detail templates still contain raw img elements.",
+);
+check(
+  nextConfigSource.includes('hostname: "upload.wikimedia.org"'),
+  "Next/Image allows the approved Wikimedia image host used by Chios guides.",
+  "Next/Image is missing the Wikimedia remote image allowlist used by Chios guides.",
 );
 
 const publicFiles = ["app", "components", "content", "lib"]

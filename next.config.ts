@@ -1127,6 +1127,12 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
     qualities: [50, 62, 75],
     minimumCacheTTL: 2592000,
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "upload.wikimedia.org",
+      },
+    ],
   },
   async redirects() {
     return legacyRedirects;
