@@ -19,6 +19,7 @@
     "qa:property-knowledge": "node scripts/qa-property-knowledge.cjs",
     "seed:property-knowledge": "node scripts/seed-property-knowledge.mjs",
     "qa:performance": "node scripts/qa-js-self-profiling.cjs",
+    "qa:general-clean-up": "node scripts/qa-general-clean-up.cjs && node scripts/qa-gsc-index-routing.cjs && node scripts/qa-search-appearance.cjs && node scripts/audit-room-language-parity.cjs && node scripts/qa-seo-intent-architecture.cjs && node scripts/qa-llms-guide.cjs && node scripts/qa-property-knowledge.cjs",
     "qa:mixalis-physics": "node scripts/qa-mixalis-physics-pipeline.cjs",
     "optimize:images": "node scripts/optimize-frog-images.cjs"
   },

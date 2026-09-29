@@ -1,0 +1,86 @@
+# General Clean Up
+
+## Mission
+
+Make the public chioshotel.gr experience cleaner, safer and easier to maintain without weakening existing SEO, booking, availability or AI Room Finder flows.
+
+## Scope
+
+- Public pages and shared components for `en`, `el`, `fr`, `de`, `it`, `es` and `tr`.
+- Routing, redirects, canonicals, hreflang, sitemap and indexability.
+- Localized internal links, navigation and conversion paths.
+- Public content accuracy and consistent Voulamandis House terminology.
+- Mobile UI, accessibility, images, performance and obsolete code.
+- Repeatable QA that prevents fixed issues from returning.
+
+## Out of scope
+
+- `/staff`, `/mixalis` and internal-only APIs, unless a shared change would break them.
+- Deleting Polish pages. They are tracked separately while Polish expansion is paused.
+- Redesigning working booking, Beds24 or AI Room Finder flows without a specific finding.
+- Blocking `/_next/image` in `robots.txt`; optimized images must remain crawlable.
+
+## Non-negotiable facts
+
+- Voulamandis House is guest accommodation with rooms and family apartments in Kambos, not a large hotel or resort.
+- The public active-language set is `en`, `el`, `fr`, `de`, `it`, `es`, `tr`.
+- The canonical origin is `https://chioshotel.gr` without `www`.
+- Localized CTAs must stay in the visitor's language.
+- Existing indexed URLs are preserved or moved only through an intentional permanent redirect.
+
+## Workstreams
+
+| ID | Workstream | Initial status | Completion rule |
+| --- | --- | --- | --- |
+| GCU-01 | URL and indexation hygiene | Baseline passed | Canonical host, redirects, robots, sitemap and legacy URLs pass QA |
+| GCU-02 | Seven-language parity | In progress | Every public English owner page has the intended localized equivalents |
+| GCU-03 | Localized links | Baseline passed | Navigation and transactional CTAs resolve to the matching locale |
+| GCU-04 | Content and internal linking | Planned | Facts are consistent and guide pages connect clearly to rooms and booking |
+| GCU-05 | Mobile UI and accessibility | Planned | Readable type, usable controls, semantic structure and no overlapping UI |
+| GCU-06 | Images and performance | Planned | Correct Next/Image usage, dimensions, alt text and no avoidable payload |
+| GCU-07 | Code and dependency cleanup | Planned | Dead code and obsolete patch paths are removed only after usage proof |
+| GCU-08 | Regression protection | In progress | One command runs the cleanup guardrails and existing public SEO QA |
+
+## First baseline
+
+The first guardrail checks:
+
+1. the exact seven active languages;
+2. the seven localized booking destinations;
+3. canonical `https://chioshotel.gr` configuration;
+4. the permanent `www` to non-`www` redirect;
+5. canonical robots and sitemap hosts;
+6. absence of public links to the known misplaced Turkish museum URL;
+7. absence of public links to `www.chioshotel.gr`;
+8. crawlability of `/_next/image`;
+9. a non-blocking inventory of raw `<img>`, TODO/FIXME and public console usage.
+
+Baseline snapshot on 2026-09-29:
+
+- 216 public page files in scope;
+- 35 raw `<img>` references for image/performance review;
+- 0 TODO/FIXME references;
+- 13 public console references, all currently error-path diagnostics;
+- all blocking baseline checks passed;
+- existing GSC routing, search appearance, room-language parity, SEO architecture, AI discovery and property-knowledge checks passed.
+
+Run it with:
+
+```bash
+npm run qa:general-clean-up
+```
+
+## Current decisions
+
+- The localized booking-link defect on beach detail pages was fixed before this tracker was created.
+- Existing `/chios-hotels/`, `/chios-hotels-rates/` and localized deal pages are active Next.js owner pages, not abandoned WordPress pages.
+- The misplaced Turkish museum URL already has a permanent redirect to `/tr/sakiz-adasi-muzeleri/`.
+- `www.chioshotel.gr` already redirects permanently to the canonical non-`www` host.
+
+## Definition of done
+
+- All blocking General Clean Up checks pass.
+- The production build succeeds.
+- Every functional cleanup includes evidence of the affected routes and languages.
+- Unrelated generated build changes are excluded from commits.
+- Each completed workstream is updated here before the final project handoff.
