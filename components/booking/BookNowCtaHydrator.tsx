@@ -2,7 +2,17 @@
 
 import { useEffect } from "react";
 
-const BOOKING_PAGE = "/chios-hotels-rates/";
+const BOOKING_PAGES = {
+  en: "/chios-hotels-rates/",
+  el: "/el/amesi-kratisi-voulamandis-house/",
+  fr: "/fr/tarifs-des-hotels-a-chios/",
+  de: "/de/hotelpreise-auf-der-insel-chios/",
+  it: "/it/prezzi-hotel-chios/",
+  es: "/es/los-mejores-precios-de-hotel-en-la-isla-chios/",
+  tr: "/tr/sakiz-adasi-rezervasyon/",
+} as const;
+
+type BookingLanguage = keyof typeof BOOKING_PAGES;
 
 const BOOK_NOW_LABELS = [
   "book now",
@@ -35,33 +45,47 @@ function isBookNowLink(link: HTMLAnchorElement) {
   return BOOK_NOW_LABELS.some((bookNowLabel) => label.includes(bookNowLabel));
 }
 
-function updateLink(link: HTMLAnchorElement) {
+function getBookingPage(pathname: string) {
+  const locale = pathname.split("/").filter(Boolean)[0];
+
+  if (locale && locale in BOOKING_PAGES) {
+    return BOOKING_PAGES[locale as BookingLanguage];
+  }
+
+  return BOOKING_PAGES.en;
+}
+
+function updateLink(link: HTMLAnchorElement, bookingPage: string) {
   if (!isBookNowLink(link)) {
     return;
   }
 
-  link.setAttribute("href", BOOKING_PAGE);
+  link.setAttribute("href", bookingPage);
   link.removeAttribute("target");
   link.removeAttribute("rel");
 }
 
-function updateBookNowLinks(root: ParentNode = document) {
+function updateBookNowLinks(bookingPage: string, root: ParentNode = document) {
   if (root instanceof HTMLAnchorElement) {
-    updateLink(root);
+    updateLink(root, bookingPage);
   }
 
-  root.querySelectorAll<HTMLAnchorElement>("a[href]").forEach(updateLink);
+  root
+    .querySelectorAll<HTMLAnchorElement>("a[href]")
+    .forEach((link) => updateLink(link, bookingPage));
 }
 
 export function BookNowCtaHydrator() {
   useEffect(() => {
-    updateBookNowLinks();
+    const bookingPage = getBookingPage(window.location.pathname);
+
+    updateBookNowLinks(bookingPage);
 
     const observer = new MutationObserver((mutations) => {
       for (const mutation of mutations) {
         mutation.addedNodes.forEach((node) => {
           if (node instanceof HTMLElement) {
-            updateBookNowLinks(node);
+            updateBookNowLinks(bookingPage, node);
           }
         });
       }

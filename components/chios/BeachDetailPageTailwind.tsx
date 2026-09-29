@@ -167,6 +167,16 @@ const beachUiCopy = {
 
 type BeachUiLanguage = keyof typeof beachUiCopy;
 
+const bookingPageByLanguage: Record<BeachUiLanguage, string> = {
+  en: "/chios-hotels-rates/",
+  el: "/el/amesi-kratisi-voulamandis-house/",
+  fr: "/fr/tarifs-des-hotels-a-chios/",
+  de: "/de/hotelpreise-auf-der-insel-chios/",
+  it: "/it/prezzi-hotel-chios/",
+  es: "/es/los-mejores-precios-de-hotel-en-la-isla-chios/",
+  tr: "/tr/sakiz-adasi-rezervasyon/",
+};
+
 function getBeachLanguage(beach: BeachDetailData): BeachUiLanguage {
   const path = beach.seo.canonicalPath;
 
@@ -421,7 +431,7 @@ export function BeachDetailPageTailwind({ beach }: BeachDetailPageProps) {
                 </a>
                 <a
                   className="inline-flex items-center justify-center rounded-full border border-white/25 px-6 py-3 text-sm font-black !text-white transition hover:-translate-y-0.5 hover:bg-white/10"
-                  href="/chios-hotels-rates/"
+                  href={bookingPageByLanguage[language]}
                 >
                   {copy.checkRates}
                 </a>
