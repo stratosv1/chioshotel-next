@@ -16,6 +16,7 @@ const museumUiCopy = {
     localTipLabel: "Voulamandis House local tip",
     relatedKicker: "Chios museum guide",
     exploreMuseum: "Explore museum →",
+    swipeHint: "Swipe to explore more museums",
     viewRooms: "View rooms & apartments",
     checkRates: "Check direct rates",
   },
@@ -27,6 +28,7 @@ const museumUiCopy = {
     localTipLabel: "Τοπική συμβουλή από το Voulamandis House",
     relatedKicker: "Οδηγός μουσείων Χίου",
     exploreMuseum: "Δείτε το μουσείο →",
+    swipeHint: "Σύρετε για περισσότερα μουσεία",
     viewRooms: "Δωμάτια & διαμερίσματα",
     checkRates: "Δείτε απευθείας τιμές",
   },
@@ -38,6 +40,7 @@ const museumUiCopy = {
     localTipLabel: "Conseil local de Voulamandis House",
     relatedKicker: "Guide des musées de Chios",
     exploreMuseum: "Explorer le musée →",
+    swipeHint: "Faites glisser pour voir plus de musées",
     viewRooms: "Voir chambres & appartements",
     checkRates: "Voir les tarifs directs",
   },
@@ -49,6 +52,7 @@ const museumUiCopy = {
     localTipLabel: "Lokaler Tipp von Voulamandis House",
     relatedKicker: "Museumsführer für Chios",
     exploreMuseum: "Museum ansehen →",
+    swipeHint: "Wischen Sie für weitere Museen",
     viewRooms: "Zimmer & Apartments ansehen",
     checkRates: "Direktpreise prüfen",
   },
@@ -60,6 +64,7 @@ const museumUiCopy = {
     localTipLabel: "Consiglio locale di Voulamandis House",
     relatedKicker: "Guida ai musei di Chios",
     exploreMuseum: "Esplora il museo →",
+    swipeHint: "Scorri per vedere altri musei",
     viewRooms: "Vedi camere & appartamenti",
     checkRates: "Controlla le tariffe dirette",
   },
@@ -71,6 +76,7 @@ const museumUiCopy = {
     localTipLabel: "Consejo local de Voulamandis House",
     relatedKicker: "Guía de museos de Chios",
     exploreMuseum: "Explorar museo →",
+    swipeHint: "Desliza para ver más museos",
     viewRooms: "Ver habitaciones & apartamentos",
     checkRates: "Consultar tarifas directas",
   },
@@ -82,6 +88,7 @@ const museumUiCopy = {
     localTipLabel: "Voulamandis House yerel tavsiyesi",
     relatedKicker: "Sakız Adası müze rehberi",
     exploreMuseum: "Müzeyi keşfet →",
+    swipeHint: "Daha fazla müze için kaydırın",
     viewRooms: "Oda & daireleri görün",
     checkRates: "Doğrudan fiyatları görün",
   },
@@ -254,21 +261,27 @@ export function MuseumDetailPage({ museum }: MuseumDetailPageProps) {
             <span className="mb-4 inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.16em] text-amber-900 before:h-px before:w-8 before:bg-current before:opacity-75">{copy.relatedKicker}</span>
             <h2 id="md-related-title" className="m-0 text-[clamp(32px,4.6vw,58px)] font-black leading-none tracking-[-0.055em] text-stone-800">{museum.relatedTitle}</h2>
             <p className="mx-auto mt-5 max-w-[760px] text-base leading-8 text-stone-600">{museum.relatedText}</p>
+            <p className="mt-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-black uppercase tracking-[0.1em] text-amber-900 shadow-sm ring-1 ring-amber-900/10 md:hidden">
+              {copy.swipeHint} <span aria-hidden="true">→</span>
+            </p>
           </header>
 
-          <div className="grid auto-rows-[260px] gap-4 md:grid-cols-3">
-            {relatedMuseums.map((related, index) => (
-              <a className={`group relative overflow-hidden rounded-[1.75rem] bg-stone-900 shadow-xl shadow-stone-900/10 ring-1 ring-amber-900/10 ${getRelatedCardClass(index)}`} href={related.seo.canonicalPath} key={related.seo.canonicalPath}>
-                <Image src={related.hero.image} alt="" fill sizes="(min-width: 768px) 66vw, 100vw" className="object-cover transition duration-700 group-hover:scale-105" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/82 via-black/34 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 z-10 p-5 text-white">
-                  <span className="rounded-full bg-white/15 px-3 py-1.5 text-xs font-black uppercase text-white backdrop-blur">{getBadgeFromMuseum(related)}</span>
-                  <h3 className="mt-4 font-serif text-2xl font-bold leading-tight text-white">{related.hero.title}</h3>
-                  <p className="mt-2 line-clamp-2 text-sm leading-6 text-white/80">{related.seo.description}</p>
-                  <strong className="mt-4 inline-flex rounded-full border border-white/25 px-4 py-2 text-xs font-black uppercase text-white">{copy.exploreMuseum}</strong>
-                </div>
-              </a>
-            ))}
+          <div className="relative">
+            <div aria-hidden="true" className="pointer-events-none absolute right-2 top-[38%] z-20 flex h-10 w-10 items-center justify-center rounded-full bg-stone-900/95 text-xl font-black text-white shadow-xl md:hidden">→</div>
+            <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:auto-rows-[260px] md:grid-cols-3 md:overflow-visible md:pr-0">
+              {relatedMuseums.map((related, index) => (
+                <a className={`group relative min-h-[300px] w-[84vw] max-w-[380px] flex-none snap-start overflow-hidden rounded-[1.75rem] bg-stone-900 shadow-xl shadow-stone-900/10 ring-1 ring-amber-900/10 md:min-h-0 md:w-auto md:max-w-none ${getRelatedCardClass(index)}`} href={related.seo.canonicalPath} key={related.seo.canonicalPath}>
+                  <Image src={related.hero.image} alt="" fill sizes="(min-width: 768px) 66vw, 100vw" className="object-cover transition duration-700 group-hover:scale-105" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/82 via-black/34 to-transparent" />
+                  <div className="absolute inset-x-0 bottom-0 z-10 p-5 text-white">
+                    <span className="rounded-full bg-white/15 px-3 py-1.5 text-xs font-black uppercase text-white backdrop-blur">{getBadgeFromMuseum(related)}</span>
+                    <h3 className="mt-4 font-serif text-2xl font-bold leading-tight text-white">{related.hero.title}</h3>
+                    <p className="mt-2 line-clamp-2 text-sm leading-6 text-white/80">{related.seo.description}</p>
+                    <strong className="mt-4 inline-flex rounded-full border border-white/25 px-4 py-2 text-xs font-black uppercase text-white">{copy.exploreMuseum}</strong>
+                  </div>
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </section>

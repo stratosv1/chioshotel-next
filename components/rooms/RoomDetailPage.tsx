@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import { MobileAvailabilityBar } from "@/components/rooms/MobileAvailabilityBar";
 import { TopicBadges } from "@/components/seo/TopicBadges";
 import type { IndividualRoomData, RoomDetailData } from "@/content/room-details";
 import { roomFinderHrefForLanguage } from "@/lib/room-finder-cta-routing";
@@ -220,7 +221,7 @@ function RoomVisualCard({ room, language }: { room: IndividualRoomData; language
             key={image.src}
             type="button"
             onClick={() => setActiveImage(image)}
-            className={`relative aspect-square overflow-hidden rounded-2xl border-2 transition ${activeImage?.src === image.src ? "border-[#2f261f]" : "border-white"}`}
+            className={`relative min-h-11 touch-manipulation overflow-hidden rounded-2xl border-2 transition ${activeImage?.src === image.src ? "border-[#2f261f]" : "border-white"}`}
             aria-label={`${labels[language].photos} ${index + 1}`}
           >
             <Image src={image.src} alt={localizeImageAlt(room, image, language)} fill sizes="22vw" className="object-cover" />
@@ -354,23 +355,6 @@ export function RoomDetailPage({ data }: RoomDetailPageProps) {
   const localLabels = labels[language];
   const primaryBookingHref = bookingPathByLanguage[language] || data.hero.primaryCta.href;
   const aiAvailabilityHref = roomFinderHrefForLanguage(language);
-  const heroAvailabilityRef = useRef<HTMLAnchorElement>(null);
-  const [showStickyAvailability, setShowStickyAvailability] = useState(false);
-
-  useEffect(() => {
-    const heroAvailability = heroAvailabilityRef.current;
-    if (!heroAvailability) return;
-
-    const observer = new IntersectionObserver(([entry]) => {
-      setShowStickyAvailability(
-        !entry.isIntersecting && entry.boundingClientRect.bottom < 0,
-      );
-    });
-
-    observer.observe(heroAvailability);
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#fbf6ef] pb-20 text-[#2f261f] md:pb-0">
       <section className="relative overflow-hidden bg-[#f3e7d7] px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12" aria-labelledby="rd-hero-title">
@@ -385,7 +369,7 @@ export function RoomDetailPage({ data }: RoomDetailPageProps) {
                 {data.hero.badges.map((badge) => <span key={badge} className="rounded-full border border-amber-900/10 bg-white px-3 py-1.5 text-xs font-extrabold text-[#574b3f]">{localizeRoomText(badge, language)}</span>)}
               </div>
               <div className="mt-7 grid gap-3 sm:grid-cols-2">
-                <a ref={heroAvailabilityRef} className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-amber-500 px-5 text-center text-[11px] font-black uppercase tracking-[0.12em] !text-[#2f261f] shadow-[0_16px_32px_rgba(180,117,16,0.22)] transition hover:-translate-y-0.5 hover:bg-amber-400 sm:text-xs" href={aiAvailabilityHref} style={{ color: "#2f261f" }}>{localLabels.checkAvailability}</a>
+                <a id="rd-hero-availability" className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-amber-500 px-5 text-center text-[11px] font-black uppercase tracking-[0.12em] !text-[#2f261f] shadow-[0_16px_32px_rgba(180,117,16,0.22)] transition hover:-translate-y-0.5 hover:bg-amber-400 sm:text-xs" href={aiAvailabilityHref} style={{ color: "#2f261f" }}>{localLabels.checkAvailability}</a>
                 <a className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-amber-900/20 bg-white px-5 text-center text-[11px] font-black uppercase tracking-[0.12em] text-[#2f261f] transition hover:-translate-y-0.5 hover:bg-amber-50 sm:text-xs" href={primaryBookingHref} data-booking-cta="true">{localLabels.bookOnline}</a>
               </div>
             </div>
@@ -407,7 +391,7 @@ export function RoomDetailPage({ data }: RoomDetailPageProps) {
             <div className="mt-5 space-y-4 text-base leading-8 text-[#574b3f]">{data.overview.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
           </article>
           <aside className="h-full rounded-[30px] border border-amber-900/10 bg-[#fffdfa] p-5 shadow-[0_18px_45px_rgba(47,38,31,0.08)] sm:p-6" aria-label={localLabels.keyDetails}>
-            <div className="grid h-full grid-cols-2 gap-3">
+            <div className="grid h-full grid-cols-1 gap-3 min-[390px]:grid-cols-2">
               {data.overview.highlights.map((highlight) => <div className="rounded-2xl bg-amber-50/70 p-4 ring-1 ring-amber-900/10" key={highlight.label}><span className="text-[11px] font-black uppercase tracking-[0.18em] text-amber-800">{highlight.label}</span><strong className="mt-1 block text-base font-black text-[#2f261f]">{localizeRoomText(highlight.value, language)}</strong></div>)}
             </div>
           </aside>
@@ -427,13 +411,13 @@ export function RoomDetailPage({ data }: RoomDetailPageProps) {
         <div className="rounded-[30px] bg-white p-5 shadow-[0_18px_45px_rgba(47,38,31,0.08)] sm:p-8">
           <span className="inline-flex text-[11px] font-black uppercase tracking-[0.28em] text-amber-800">{data.bestFor.kicker}</span>
           <h2 id="rd-best-title" className="mt-4 text-balance text-3xl font-black tracking-[-0.04em] text-[#2f261f] sm:text-4xl">{data.bestFor.title}</h2>
-          <div className="mt-7 grid grid-cols-2 gap-3">
+          <div className="mt-7 grid grid-cols-1 gap-3 min-[390px]:grid-cols-2">
             {data.bestFor.items.map((item) => <div className="rounded-2xl bg-amber-50/50 p-3 text-sm leading-6 text-[#574b3f] ring-1 ring-amber-900/10" key={item}><span className="mr-2 font-black text-emerald-700">✓</span>{localizeRoomText(item, language)}</div>)}
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-12" aria-labelledby="rd-booking-title">
+      <section id="rd-booking-section" className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-12" aria-labelledby="rd-booking-title">
         <div className="overflow-hidden rounded-[30px] bg-gradient-to-br from-[#2f261f] via-[#5f421f] to-[#9a6f11] p-5 text-white shadow-[0_28px_70px_rgba(47,38,31,0.22)] sm:p-8 lg:p-10">
           <div className="grid gap-7 lg:grid-cols-[1fr_auto] lg:items-center">
             <div><span className="inline-flex items-center gap-3 text-[11px] font-black uppercase tracking-[0.28em] text-amber-100 before:h-px before:w-10 before:bg-amber-200/70">{data.booking.kicker}</span><h2 id="rd-booking-title" className="mt-5 text-balance text-3xl font-black leading-tight tracking-[-0.035em] text-white sm:text-4xl lg:text-[2.625rem]">{data.booking.title}</h2><p className="mt-5 max-w-3xl text-base leading-8 text-white/88 sm:text-lg">{data.booking.text}</p><small className="mt-4 block text-sm leading-6 text-white/72">{data.booking.note}</small></div>
@@ -447,13 +431,13 @@ export function RoomDetailPage({ data }: RoomDetailPageProps) {
         <div className="mx-auto mt-8 max-w-3xl space-y-3">{data.faq.map((item) => <details className="rounded-2xl bg-white p-4 shadow-[0_12px_28px_rgba(47,38,31,0.07)]" key={item.question}><summary className="cursor-pointer text-base font-black text-[#2f261f]">{item.question}</summary><p className="mt-3 text-sm leading-7 text-[#574b3f]">{localizeRoomText(item.answer, language)}</p></details>)}</div>
       </section>
 
-      {showStickyAvailability ? (
-        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-amber-900/10 bg-[#fffaf3]/95 px-3 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-[0_-12px_30px_rgba(47,38,31,0.12)] backdrop-blur md:hidden">
-          <a className="mx-auto flex min-h-[52px] max-w-md items-center justify-center rounded-full bg-amber-500 px-5 text-center text-xs font-black uppercase tracking-[0.12em] text-[#2f261f]" href={aiAvailabilityHref}>
-            {localLabels.checkAvailability}
-          </a>
-        </div>
-      ) : null}
+      <MobileAvailabilityBar
+        href={aiAvailabilityHref}
+        label={localLabels.checkAvailability}
+        tone="gold"
+        showAfterId="rd-hero-availability"
+        hideWhileIds={["rd-booking-section"]}
+      />
     </main>
   );
 }

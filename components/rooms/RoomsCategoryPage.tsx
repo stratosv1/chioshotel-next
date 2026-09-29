@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { PropertyFaqSection } from "@/components/faq/PropertyFaqSection";
 import { GreekRoomWizardTailwind } from "@/components/rooms/GreekRoomWizardTailwind";
+import { MobileAvailabilityBar } from "@/components/rooms/MobileAvailabilityBar";
 import { RoomWizardTailwind } from "@/components/rooms/RoomWizardTailwind";
 import { TopicBadges } from "@/components/seo/TopicBadges";
 import type { RoomsCategoryPageData } from "@/content/rooms";
@@ -373,7 +374,7 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
           </h2>
         </div>
 
-        <div className="mt-8">
+        <div id="rooms-wizard" className="mt-8">
           {language === "el" ? (
             <GreekRoomWizardTailwind
               rooms={ownerData.wizard.rooms}
@@ -391,7 +392,7 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
 
       <PropertyFaqSection language={language} context="rooms" maxItems={4} />
 
-      <section className="px-4 pb-12 pt-2 sm:px-6 md:pb-16 lg:px-8" aria-labelledby="rooms-final-cta-title">
+      <section id="rooms-final-cta" className="px-4 pb-12 pt-2 sm:px-6 md:pb-16 lg:px-8" aria-labelledby="rooms-final-cta-title">
         <div className="mx-auto grid max-w-7xl gap-6 rounded-[2rem] border border-amber-900/10 bg-[#f3e7d7] p-6 shadow-xl shadow-amber-950/5 sm:p-8 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.2em] text-amber-800">Voulamandis House</p>
@@ -401,7 +402,7 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
             <p className="mt-3 max-w-2xl text-base leading-7 text-stone-600">{finalCta.text}</p>
           </div>
           <div className="grid gap-3 md:min-w-[360px] md:grid-cols-2">
-            <a href={aiAvailabilityHref} className="hidden min-h-12 items-center justify-center rounded-full bg-amber-700 px-5 text-center text-xs font-black uppercase tracking-[0.08em] text-white shadow-lg shadow-amber-900/15 transition hover:bg-amber-800 md:inline-flex">
+            <a href={aiAvailabilityHref} className="inline-flex min-h-12 items-center justify-center rounded-full bg-amber-700 px-5 text-center text-xs font-black uppercase tracking-[0.08em] text-white shadow-lg shadow-amber-900/15 transition hover:bg-amber-800">
               {finalCta.availabilityLabel}
             </a>
             <a href={finalCta.bookingHref} className="inline-flex min-h-12 items-center justify-center rounded-full border border-amber-900/15 bg-white px-5 text-center text-xs font-black uppercase tracking-[0.08em] text-amber-900 transition hover:bg-amber-50">
@@ -411,11 +412,11 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
         </div>
       </section>
 
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-amber-900/10 bg-[#fffaf3]/95 px-3 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-[0_-8px_30px_rgba(47,38,31,0.12)] backdrop-blur md:hidden">
-        <a href={aiAvailabilityHref} className="mx-auto flex min-h-[52px] max-w-lg items-center justify-center rounded-full bg-amber-700 px-5 text-center text-sm font-black uppercase tracking-[0.06em] text-white shadow-lg shadow-amber-900/15">
-          {finalCta.availabilityLabel}
-        </a>
-      </div>
+      <MobileAvailabilityBar
+        href={aiAvailabilityHref}
+        label={finalCta.availabilityLabel}
+        hideWhileIds={["rooms-wizard", "rooms-final-cta"]}
+      />
     </main>
   );
 }

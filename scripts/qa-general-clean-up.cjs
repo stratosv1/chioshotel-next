@@ -122,6 +122,7 @@ const headerSource = read("components/VoulamandisHeaderTailwind.tsx");
 const footerSource = read("components/VoulamandisFooterTailwind.tsx");
 const roomsCategorySource = read("components/rooms/RoomsCategoryPage.tsx");
 const roomDetailSource = read("components/rooms/RoomDetailPage.tsx");
+const mobileAvailabilityBarSource = read("components/rooms/MobileAvailabilityBar.tsx");
 const chiosIslandSource = read("components/chios/ChiosIslandPage.tsx");
 const polishHomeSource = read("components/home/PolishHomePageTailwind.tsx");
 const homePageSource = read("components/home/HomePageTailwind.tsx");
@@ -290,6 +291,31 @@ check(
   "Homepage amenity cards use two columns on narrow phones.",
   "Homepage amenity cards are too dense on narrow phones.",
 );
+check(
+  mobileAvailabilityBarSource.includes("visibleBlockers") &&
+    mobileAvailabilityBarSource.includes("inert={!isVisible}") &&
+    mobileAvailabilityBarSource.includes('rootMargin: "0px 0px 72px 0px"') &&
+    roomsCategorySource.includes('id="rooms-wizard"') &&
+    roomsCategorySource.includes('id="rooms-final-cta"') &&
+    roomDetailSource.includes('id="rd-booking-section"'),
+  "Room mobile availability bars leave interactive booking sections unobstructed.",
+  "Room mobile availability bars can overlap interactive booking sections.",
+);
+check(
+  roomDetailSource.includes("grid h-full grid-cols-1 gap-3 min-[390px]:grid-cols-2") &&
+    roomDetailSource.includes("mt-7 grid grid-cols-1 gap-3 min-[390px]:grid-cols-2") &&
+    roomDetailSource.includes("min-h-11 touch-manipulation"),
+  "Room detail cards stay readable at 320px and gallery thumbnails keep 44px touch targets.",
+  "Room detail grids or gallery targets are too dense at 320px.",
+);
+check(
+  museumDetailSource.includes("flex snap-x snap-mandatory") &&
+    museumDetailSource.includes("md:auto-rows-[260px]") &&
+    museumDetailSource.includes("w-[84vw] max-w-[380px]") &&
+    museumDetailSource.includes("copy.swipeHint"),
+  "Museum detail related cards use the shared mobile swipe pattern.",
+  "Museum detail related cards regress to a long mobile stack.",
+);
 
 for (const viewportWidth of [320, 390, 430]) {
   const liveRequestContentWidth = viewportWidth - 64;
@@ -307,8 +333,8 @@ for (const viewportWidth of [320, 390, 430]) {
 }
 
 for (const [label, source] of [
-  ["rooms category", roomsCategorySource],
-  ["room detail", roomDetailSource],
+  ["rooms category", `${roomsCategorySource}\n${mobileAvailabilityBarSource}`],
+  ["room detail", `${roomDetailSource}\n${mobileAvailabilityBarSource}`],
   ["Chios island", chiosIslandSource],
   ["Polish home", polishHomeSource],
 ]) {

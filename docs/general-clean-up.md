@@ -100,6 +100,9 @@ npm run qa:rendered-routes
 - The Live Deals date rail reserves top space for the selected check badge instead of clipping it, and its trust items switch to a 2×2 grid on narrow screens.
 - The global homepage Call/WhatsApp bar automatically leaves the screen while Live Deals is visible, preventing it from covering the date, price and request controls.
 - Homepage amenity cards use two columns at narrow widths and expand to three/four columns only when space allows.
+- Room category and detail sticky availability bars now leave room-finder, final CTA and booking sections unobstructed, while keeping a safe-area-aware mobile action elsewhere.
+- Room detail key facts and best-for lists collapse to one column at 320px, and gallery thumbnails retain at least 44px touch targets.
+- Museum detail related content now follows the same horizontal mobile carousel pattern as beach and village details, reducing long vertical stacks without removing content.
 
 ## Definition of done
 
