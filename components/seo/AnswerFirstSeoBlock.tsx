@@ -266,7 +266,7 @@ export function AnswerFirstSeoBlock({ kind, language = "en" }: AnswerFirstSeoBlo
         </p>
         {language === "el" && (
           <a
-            href="/el/trip-planner/"
+            href="/trip-planner/"
             className="mt-4 inline-flex min-h-11 items-center justify-center rounded-full border border-[#8e6607]/25 bg-[#fff7e8] px-5 py-2.5 text-sm font-black text-[#6f5215] transition hover:bg-[#f9edcf]"
           >
             {kind === "beaches"

@@ -113,6 +113,8 @@ const proxySource = read("proxy.ts");
 const robotsSource = read("app/robots.ts");
 const routeMapSource = read("lib/url-map.ts");
 const nextConfigSource = read("next.config.ts");
+const agentRoomGuideDataSource = read("lib/agent-room-guide-data.ts");
+const answerFirstSeoSource = read("components/seo/AnswerFirstSeoBlock.tsx");
 const packageJson = JSON.parse(read("package.json"));
 
 check(
@@ -205,6 +207,24 @@ check(
   !robotsSource.includes('"/_next/image"'),
   "Next.js optimized images remain crawlable.",
   "robots.ts must not block /_next/image.",
+);
+check(
+  answerFirstSeoSource.includes('href="/trip-planner/"') &&
+    !answerFirstSeoSource.includes('href="/el/trip-planner/"'),
+  "Greek Trip Planner CTA links directly to its canonical route.",
+  "Greek Trip Planner CTA still points through a localized redirect.",
+);
+check(
+  agentRoomGuideDataSource.includes("return fallbackGuideData();") &&
+    agentRoomGuideDataSource.includes("if (!process.env.DATABASE_URL)"),
+  "Public travel-agent room pages remain available without a database connection.",
+  "Travel-agent room pages have no database-independent fallback.",
+);
+check(
+  agentRoomGuideDataSource.includes("isStepFreeApartment || Boolean(row.no_stairs)") &&
+    agentRoomGuideDataSource.includes("isStepFreeApartment ? 0 : Number(row.entrance_steps)"),
+  "Travel-agent room data enforces step-free Apartments 8–10.",
+  "Travel-agent room data can regress Apartments 8–10 to stair access.",
 );
 
 const publicFiles = ["app", "components", "content", "lib"]

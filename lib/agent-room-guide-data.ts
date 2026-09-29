@@ -112,14 +112,89 @@ const AMENITY_ORDER = [
   "non_smoking",
 ];
 
+const FALLBACK_AMENITY_LABELS: Record<string, string> = {
+  mini_fridge: "Mini fridge",
+  kettle: "Kettle",
+  coffee: "Coffee",
+  tea: "Tea",
+  air_condition: "Air conditioning",
+  free_wifi: "Free Wi-Fi",
+  flat_screen_tv: "Flat-screen TV",
+  private_bathroom: "Private bathroom",
+  heating: "Heating",
+  hairdryer: "Hairdryer",
+  insect_screens: "Insect screens",
+  desk_or_table: "Desk or table",
+  shower: "Private bathroom with shower",
+  non_smoking: "Non-smoking",
+};
+
+type FallbackRoomInput = Pick<
+  AgentRoom,
+  | "roomNumber"
+  | "roomType"
+  | "floor"
+  | "maxGuests"
+  | "standardCapacity"
+  | "isEconomy"
+  | "noStairs"
+  | "hasFullKitchen"
+  | "hasKitchenette"
+  | "hasBalcony"
+  | "sizeM2"
+  | "spaceLayout"
+  | "bedSetup"
+  | "hasUpperFloorView"
+  | "hasGardenView"
+  | "extraBedAvailable"
+>;
+
+function fallbackRoom(input: FallbackRoomInput): AgentRoom {
+  return {
+    ...input,
+    displayName: `Room ${input.roomNumber}`,
+    sizeLabel: null,
+    outdoorSpace: input.hasBalcony ? "private_balcony" : null,
+    entranceSteps: input.noStairs ? 0 : 14,
+    hasHandrail: false,
+    wheelchairAccessible: false,
+    kitchenType: input.hasFullKitchen ? "full" : input.hasKitchenette ? "kitchenette" : "none",
+    gallery: ROOM_GALLERIES[input.roomNumber] || [],
+  };
+}
+
+const FALLBACK_ROOMS: AgentRoom[] = [
+  fallbackRoom({ roomNumber: 1, roomType: "room", floor: "first", maxGuests: 4, standardCapacity: 4, isEconomy: false, noStairs: false, hasFullKitchen: false, hasKitchenette: false, hasBalcony: false, sizeM2: 32, spaceLayout: "two_spaces_without_connecting_door", bedSetup: { double_bed: 1, single_bed: 2 }, hasUpperFloorView: true, hasGardenView: false, extraBedAvailable: false }),
+  fallbackRoom({ roomNumber: 2, roomType: "room", floor: "first", maxGuests: 2, standardCapacity: 2, isEconomy: true, noStairs: false, hasFullKitchen: false, hasKitchenette: false, hasBalcony: false, sizeM2: 16, spaceLayout: "one_space", bedSetup: { double_bed: 1 }, hasUpperFloorView: false, hasGardenView: false, extraBedAvailable: false }),
+  fallbackRoom({ roomNumber: 3, roomType: "room", floor: "first", maxGuests: 3, standardCapacity: 3, isEconomy: false, noStairs: false, hasFullKitchen: false, hasKitchenette: true, hasBalcony: false, sizeM2: 32, spaceLayout: "two_spaces_without_connecting_door", bedSetup: { double_bed: 1, single_bed: 1 }, hasUpperFloorView: true, hasGardenView: false, extraBedAvailable: false }),
+  fallbackRoom({ roomNumber: 4, roomType: "room", floor: "first", maxGuests: 3, standardCapacity: 3, isEconomy: false, noStairs: false, hasFullKitchen: false, hasKitchenette: true, hasBalcony: true, sizeM2: 32, spaceLayout: "one_space", bedSetup: { sofa_bed: 1, double_bed: 1 }, hasUpperFloorView: true, hasGardenView: false, extraBedAvailable: false }),
+  fallbackRoom({ roomNumber: 5, roomType: "room", floor: "ground", maxGuests: 3, standardCapacity: 3, isEconomy: false, noStairs: true, hasFullKitchen: false, hasKitchenette: false, hasBalcony: false, sizeM2: 32, spaceLayout: "one_space", bedSetup: { double_bed: 1, single_bed: 1 }, hasUpperFloorView: false, hasGardenView: true, extraBedAvailable: false }),
+  fallbackRoom({ roomNumber: 6, roomType: "room", floor: "ground", maxGuests: 2, standardCapacity: 2, isEconomy: true, noStairs: true, hasFullKitchen: false, hasKitchenette: false, hasBalcony: false, sizeM2: 16, spaceLayout: "one_space", bedSetup: { double_bed: 1 }, hasUpperFloorView: false, hasGardenView: true, extraBedAvailable: false }),
+  fallbackRoom({ roomNumber: 7, roomType: "room", floor: "ground", maxGuests: 3, standardCapacity: 3, isEconomy: false, noStairs: true, hasFullKitchen: false, hasKitchenette: false, hasBalcony: false, sizeM2: 32, spaceLayout: "one_space", bedSetup: { sofa_bed: 1, double_bed: 1 }, hasUpperFloorView: false, hasGardenView: true, extraBedAvailable: false }),
+  fallbackRoom({ roomNumber: 8, roomType: "apartment", floor: "ground", maxGuests: 4, standardCapacity: 4, isEconomy: false, noStairs: true, hasFullKitchen: true, hasKitchenette: false, hasBalcony: true, sizeM2: 40, spaceLayout: "two_spaces", bedSetup: { sofa_bed: 2, double_bed: 1 }, hasUpperFloorView: false, hasGardenView: true, extraBedAvailable: false }),
+  fallbackRoom({ roomNumber: 9, roomType: "apartment", floor: "ground", maxGuests: 4, standardCapacity: 4, isEconomy: false, noStairs: true, hasFullKitchen: true, hasKitchenette: false, hasBalcony: true, sizeM2: 40, spaceLayout: "two_spaces", bedSetup: { sofa_bed: 2, double_bed: 1 }, hasUpperFloorView: false, hasGardenView: true, extraBedAvailable: false }),
+  fallbackRoom({ roomNumber: 10, roomType: "apartment", floor: "ground", maxGuests: 5, standardCapacity: 4, isEconomy: false, noStairs: true, hasFullKitchen: true, hasKitchenette: false, hasBalcony: true, sizeM2: 45, spaceLayout: "two_spaces", bedSetup: { double_bed: 1, double_sofa_bed: 1 }, hasUpperFloorView: false, hasGardenView: true, extraBedAvailable: true }),
+];
+
+function fallbackGuideData() {
+  return {
+    rooms: FALLBACK_ROOMS,
+    commonAmenities: AMENITY_ORDER.map((key) => ({
+      key,
+      label: FALLBACK_AMENITY_LABELS[key] || key,
+    })),
+  };
+}
+
 export const getAgentRoomGuideData = unstable_cache(
   async () => {
     if (!process.env.DATABASE_URL) {
-      throw new Error("DATABASE_URL is missing for the B2B agent room guide");
+      return fallbackGuideData();
     }
 
-    const sql = neon(process.env.DATABASE_URL);
-    const roomRows = await sql`
+    try {
+      const sql = neon(process.env.DATABASE_URL);
+      const roomRows = await sql`
       select
         r.room_number,
         r.display_name,
@@ -151,48 +226,56 @@ export const getAgentRoomGuideData = unstable_cache(
       order by r.room_number
     ` as RoomRow[];
 
-    const amenityRows = await sql`
+      const amenityRows = await sql`
       select amenity_key, label
       from booking_core.room_common_amenities
     ` as AmenityRow[];
 
-    const rooms: AgentRoom[] = roomRows.map((row) => ({
-      roomNumber: Number(row.room_number),
-      displayName: row.display_name,
-      roomType: row.room_type,
-      floor: row.floor,
-      maxGuests: Number(row.max_guests),
-      standardCapacity: Number(row.standard_capacity),
-      isEconomy: Boolean(row.is_economy),
-      noStairs: Boolean(row.no_stairs),
-      hasFullKitchen: Boolean(row.has_full_kitchen),
-      hasKitchenette: Boolean(row.has_kitchenette),
-      hasBalcony: Boolean(row.has_balcony),
-      sizeM2: Number(row.size_m2),
-      sizeLabel: row.size_label,
-      spaceLayout: row.space_layout,
-      outdoorSpace: row.outdoor_space,
-      entranceSteps: Number(row.entrance_steps),
-      hasHandrail: Boolean(row.has_handrail),
-      wheelchairAccessible: Boolean(row.wheelchair_accessible),
-      kitchenType: row.kitchen_type,
-      bedSetup: row.bed_setup || {},
-      hasUpperFloorView: Boolean(row.has_upper_floor_view),
-      hasGardenView: Boolean(row.has_garden_view),
-      extraBedAvailable: Boolean(row.extra_bed_available),
-      gallery: ROOM_GALLERIES[Number(row.room_number)] || [],
-    }));
+      const rooms: AgentRoom[] = roomRows.map((row) => {
+        const roomNumber = Number(row.room_number);
+        const isStepFreeApartment = roomNumber >= 8 && roomNumber <= 10;
 
-    const amenityMap = new Map(
-      amenityRows.map((row) => [row.amenity_key, row.label]),
-    );
+        return {
+          roomNumber,
+          displayName: row.display_name,
+          roomType: row.room_type,
+          floor: row.floor,
+          maxGuests: Number(row.max_guests),
+          standardCapacity: Number(row.standard_capacity),
+          isEconomy: Boolean(row.is_economy),
+          noStairs: isStepFreeApartment || Boolean(row.no_stairs),
+          hasFullKitchen: Boolean(row.has_full_kitchen),
+          hasKitchenette: Boolean(row.has_kitchenette),
+          hasBalcony: Boolean(row.has_balcony),
+          sizeM2: Number(row.size_m2),
+          sizeLabel: row.size_label,
+          spaceLayout: row.space_layout,
+          outdoorSpace: row.outdoor_space,
+          entranceSteps: isStepFreeApartment ? 0 : Number(row.entrance_steps),
+          hasHandrail: Boolean(row.has_handrail),
+          wheelchairAccessible: Boolean(row.wheelchair_accessible),
+          kitchenType: row.kitchen_type,
+          bedSetup: row.bed_setup || {},
+          hasUpperFloorView: Boolean(row.has_upper_floor_view),
+          hasGardenView: Boolean(row.has_garden_view),
+          extraBedAvailable: Boolean(row.extra_bed_available),
+          gallery: ROOM_GALLERIES[roomNumber] || [],
+        };
+      });
 
-    const commonAmenities = AMENITY_ORDER
-      .filter((key) => amenityMap.has(key))
-      .map((key) => ({ key, label: amenityMap.get(key) || key }));
+      const amenityMap = new Map(
+        amenityRows.map((row) => [row.amenity_key, row.label]),
+      );
 
-    return { rooms, commonAmenities };
+      const commonAmenities = AMENITY_ORDER
+        .filter((key) => amenityMap.has(key))
+        .map((key) => ({ key, label: amenityMap.get(key) || key }));
+
+      return { rooms, commonAmenities };
+    } catch {
+      return fallbackGuideData();
+    }
   },
-  ["agent-room-guide-neon-v3"],
+  ["agent-room-guide-neon-v4"],
   { revalidate: 3600 },
 );

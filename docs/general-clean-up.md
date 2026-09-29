@@ -33,8 +33,8 @@ Make the public chioshotel.gr experience cleaner, safer and easier to maintain w
 | ID | Workstream | Initial status | Completion rule |
 | --- | --- | --- | --- |
 | GCU-01 | URL and indexation hygiene | Completed | Canonical host, redirects, robots, sitemap and legacy URLs pass QA |
-| GCU-02 | Seven-language parity | In progress | Every public English owner page has the intended localized equivalents |
-| GCU-03 | Localized links | Baseline passed | Navigation and transactional CTAs resolve to the matching locale |
+| GCU-02 | Seven-language parity | Completed | Every public English owner page has the intended localized equivalents |
+| GCU-03 | Localized links | Completed | Navigation and transactional CTAs resolve to the matching locale |
 | GCU-04 | Content and internal linking | Planned | Facts are consistent and guide pages connect clearly to rooms and booking |
 | GCU-05 | Mobile UI and accessibility | Planned | Readable type, usable controls, semantic structure and no overlapping UI |
 | GCU-06 | Images and performance | Planned | Correct Next/Image usage, dimensions, alt text and no avoidable payload |
@@ -85,6 +85,10 @@ npm run qa:rendered-routes
 - Seven retired Room Finder aliases now redirect directly to their localized AI Room Finder destination without an intermediate hop.
 - A rendered crawl of every indexable route exposed seven obsolete Find Your Room URLs incorrectly marked as `KEEP`; the AI Assistant URLs are now the canonical route family and the old URLs are explicit redirects.
 - The rendered-route QA now checks all 343 indexable URLs for HTTP 200, the expected canonical and the complete seven-language hreflang set plus `x-default`.
+- The same rendered crawl validates 467 unique internal destinations, rejects broken or redirecting content links and verifies that non-language-selector links stay in the current locale.
+- The Greek Trip Planner CTA now links directly to the tool's canonical `/trip-planner/` route instead of passing through `/el/trip-planner/`.
+- The seven public travel-agent room guides have a database-independent fallback, so a missing or unavailable database no longer turns linked pages into HTTP 500 responses.
+- The travel-agent presentation layer enforces the owner-confirmed step-free status of Apartments 8–10 even if an older database value is returned.
 
 ## Definition of done
 
