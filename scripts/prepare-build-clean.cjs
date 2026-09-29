@@ -1,6 +1,9 @@
 const { spawnSync } = require("node:child_process");
 const { performance } = require("node:perf_hooks");
 
+// Manual, one-time materialization runner for historical maintenance patches.
+// Do not add this script back to `npm run build`: production builds must be
+// reproducible and must not rewrite tracked source files.
 // The AI Room Finder is fully materialized in source code.
 // Production builds must not mutate AI components or AI API routes.
 const PATCHES = [

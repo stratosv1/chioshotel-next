@@ -32,14 +32,14 @@ Make the public chioshotel.gr experience cleaner, safer and easier to maintain w
 
 | ID | Workstream | Initial status | Completion rule |
 | --- | --- | --- | --- |
-| GCU-01 | URL and indexation hygiene | Baseline passed | Canonical host, redirects, robots, sitemap and legacy URLs pass QA |
+| GCU-01 | URL and indexation hygiene | Completed | Canonical host, redirects, robots, sitemap and legacy URLs pass QA |
 | GCU-02 | Seven-language parity | In progress | Every public English owner page has the intended localized equivalents |
 | GCU-03 | Localized links | Baseline passed | Navigation and transactional CTAs resolve to the matching locale |
 | GCU-04 | Content and internal linking | Planned | Facts are consistent and guide pages connect clearly to rooms and booking |
 | GCU-05 | Mobile UI and accessibility | Planned | Readable type, usable controls, semantic structure and no overlapping UI |
 | GCU-06 | Images and performance | Planned | Correct Next/Image usage, dimensions, alt text and no avoidable payload |
 | GCU-07 | Code and dependency cleanup | Planned | Dead code and obsolete patch paths are removed only after usage proof |
-| GCU-08 | Regression protection | In progress | One command runs the cleanup guardrails and existing public SEO QA |
+| GCU-08 | Regression protection | Active | One command runs the cleanup guardrails and existing public SEO QA |
 
 ## First baseline
 
@@ -63,6 +63,7 @@ Baseline snapshot on 2026-09-29:
 - 13 public console references, all currently error-path diagnostics;
 - all blocking baseline checks passed;
 - existing GSC routing, search appearance, room-language parity, SEO architecture, AI discovery and property-knowledge checks passed.
+- the production build previously rewrote seven tracked source files through ten patch scripts; those approved patches are now materialized in source and the build is read-only.
 
 Run it with:
 
@@ -76,6 +77,10 @@ npm run qa:general-clean-up
 - Existing `/chios-hotels/`, `/chios-hotels-rates/` and localized deal pages are active Next.js owner pages, not abandoned WordPress pages.
 - The misplaced Turkish museum URL already has a permanent redirect to `/tr/sakiz-adasi-muzeleri/`.
 - `www.chioshotel.gr` already redirects permanently to the canonical non-`www` host.
+- Historical maintenance patches remain available through `npm run maintenance:materialize`, but production builds must never execute them automatically.
+- All 49 indexable route families have complete `en`, `el`, `fr`, `de`, `it`, `es`, `tr` coverage in the central route map.
+- The last three unresolved route-map records are now explicit permanent redirects; no route remains in `CHECK` state.
+- Seven retired Room Finder aliases now redirect directly to their localized AI Room Finder destination without an intermediate hop.
 
 ## Definition of done
 

@@ -54,7 +54,7 @@ export const villageDetails: VillageDetailData[] = [
       description:
         "Discover Pyrgi in Chios, the famous painted medieval village known for its black-and-white xysta patterns, narrow streets and mastic village identity.",
       ogImage:
-        "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Pyrgi_house1.JPG/1280px-Pyrgi_house1.JPG",
     },
     hero: {
       kicker: "South Chios • Mastic village",
@@ -62,7 +62,7 @@ export const villageDetails: VillageDetailData[] = [
       description:
         "One of the most distinctive villages in Chios, famous for its black-and-white geometric xysta patterns and its strong medieval mastic-village character.",
       image:
-        "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Pyrgi_house1.JPG/1280px-Pyrgi_house1.JPG",
       tags: ["#pyrgi", "#mastic_village", "#xysta", "#medieval_chios"],
     },
     details: [
@@ -691,13 +691,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/el/xoria-xios/pyrgi-xios/",
       title: "Πυργί Χίος | Το ζωγραφιστό μεσαιωνικό χωριό",
       description: "Ανακαλύψτε το Πυργί στη Χίο, το διάσημο ζωγραφιστό μεσαιωνικό χωριό με τα ασπρόμαυρα ξυστά, τα στενά σοκάκια και την αυθεντική ταυτότητα των Μαστιχοχωρίων.",
-      ogImage: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+      ogImage: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Pyrgi_house1.JPG/1280px-Pyrgi_house1.JPG",
     },
     hero: {
       kicker: "Νότια Χίος • Μαστιχοχώρι",
       title: "Πυργί: το ζωγραφιστό χωριό της Χίου",
       description: "Ανακαλύψτε το Πυργί στη Χίο, το διάσημο ζωγραφιστό μεσαιωνικό χωριό με τα ασπρόμαυρα ξυστά, τα στενά σοκάκια και την αυθεντική ταυτότητα των Μαστιχοχωρίων.",
-      image: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Pyrgi_house1.JPG/1280px-Pyrgi_house1.JPG",
       tags: ["#pyrgi", "#mastic_village", "#xysta", "#medieval_chios"],
     },
     details: [
@@ -1231,13 +1231,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/fr/villages-de-chios/village-pyrgi/",
       title: "Pyrgi Chios | Le village médiéval peint",
       description: "Découvrez Pyrgi à Chios, le célèbre village médiéval peint, connu pour ses motifs noirs et blancs, ses ruelles étroites et son identité de village du mastic.",
-      ogImage: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+      ogImage: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Pyrgi_house1.JPG/1280px-Pyrgi_house1.JPG",
     },
     hero: {
       kicker: "Sud de Chios • Village du mastic",
       title: "Pyrgi : le village peint de Chios",
       description: "Découvrez Pyrgi à Chios, le célèbre village médiéval peint, connu pour ses motifs noirs et blancs, ses ruelles étroites et son identité de village du mastic.",
-      image: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Pyrgi_house1.JPG/1280px-Pyrgi_house1.JPG",
       tags: ["#pyrgi", "#mastic_village", "#xysta", "#medieval_chios"],
     },
     details: [
@@ -1771,13 +1771,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/de/doerfer-chios/pyrgi-dorf/",
       title: "Pyrgi Chios | Das bemalte mittelalterliche Dorf",
       description: "Entdecken Sie Pyrgi auf Chios, das berühmte bemalte mittelalterliche Dorf mit schwarz-weißen Xysta-Mustern, engen Gassen und Mastixdorf-Charakter.",
-      ogImage: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+      ogImage: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Pyrgi_house1.JPG/1280px-Pyrgi_house1.JPG",
     },
     hero: {
       kicker: "Süd-Chios • Mastixdorf",
       title: "Pyrgi: das bemalte Dorf von Chios",
       description: "Entdecken Sie Pyrgi auf Chios, das berühmte bemalte mittelalterliche Dorf mit schwarz-weißen Xysta-Mustern, engen Gassen und Mastixdorf-Charakter.",
-      image: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Pyrgi_house1.JPG/1280px-Pyrgi_house1.JPG",
       tags: ["#pyrgi", "#mastic_village", "#xysta", "#medieval_chios"],
     },
     details: [
@@ -2311,13 +2311,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/it/villaggi-chios/villaggio-pyrgi/",
       title: "Pyrgi Chios | Il villaggio medievale dipinto",
       description: "Scopri Pyrgi a Chios, il famoso villaggio medievale dipinto, noto per i motivi bianchi e neri, i vicoli stretti e l’identità dei villaggi del mastice.",
-      ogImage: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+      ogImage: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Pyrgi_house1.JPG/1280px-Pyrgi_house1.JPG",
     },
     hero: {
       kicker: "Chios meridionale • Villaggio del mastice",
       title: "Pyrgi: il villaggio dipinto di Chios",
       description: "Scopri Pyrgi a Chios, il famoso villaggio medievale dipinto, noto per i motivi bianchi e neri, i vicoli stretti e l’identità dei villaggi del mastice.",
-      image: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Pyrgi_house1.JPG/1280px-Pyrgi_house1.JPG",
       tags: ["#pyrgi", "#mastic_village", "#xysta", "#medieval_chios"],
     },
     details: [
@@ -2851,13 +2851,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/es/pueblos-chios/pueblo-pyrgi/",
       title: "Pyrgi Chios | El pueblo medieval pintado",
       description: "Descubre Pyrgi en Chios, un pueblo medieval pintado con motivos blancos y negros, callejones estrechos y carácter de mastiha.",
-      ogImage: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+      ogImage: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Pyrgi_house1.JPG/1280px-Pyrgi_house1.JPG",
     },
     hero: {
       kicker: "Sur de Chios • Pueblo del mastiha",
       title: "Pyrgi: el pueblo pintado de Chios",
       description: "Descubre Pyrgi en Chios, un pueblo medieval pintado con motivos blancos y negros, callejones estrechos y carácter de mastiha.",
-      image: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Pyrgi_house1.JPG/1280px-Pyrgi_house1.JPG",
       tags: ["#pyrgi", "#mastic_village", "#xysta", "#medieval_chios"],
     },
     details: [
@@ -3391,13 +3391,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/tr/sakiz-adasi-koyleri/pyrgi-koyu/",
       title: "Pyrgi Sakız Adası | Boyalı Orta Çağ köyü",
       description: "Sakız Adası’ndaki Pyrgi’yi keşfedin: siyah beyaz desenleri, dar sokakları ve mastik köyü kimliğiyle ünlü boyalı Orta Çağ köyü.",
-      ogImage: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+      ogImage: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Pyrgi_house1.JPG/1280px-Pyrgi_house1.JPG",
     },
     hero: {
       kicker: "Güney Sakız • Mastik köyü",
       title: "Pyrgi: Sakız’ın boyalı köyü",
       description: "Sakız Adası’ndaki Pyrgi’yi keşfedin: siyah beyaz desenleri, dar sokakları ve mastik köyü kimliğiyle ünlü boyalı Orta Çağ köyü.",
-      image: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Pyrgi_house1.JPG/1280px-Pyrgi_house1.JPG",
       tags: ["#pyrgi", "#mastic_village", "#xysta", "#medieval_chios"],
     },
     details: [
@@ -3935,7 +3935,7 @@ export const relatedVillageCards = [
     description: "The painted village of Chios, famous for its black-and-white xysta facades.",
     href: "/chios/chios-villages/chios-pyrgi/",
     image:
-      "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Pyrgi_house1.JPG/1280px-Pyrgi_house1.JPG",
     imageAlt: "Pyrgi village in Chios with black and white xysta patterns",
     badge: "Painted",
     size: "large",

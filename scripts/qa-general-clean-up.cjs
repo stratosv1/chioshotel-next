@@ -111,6 +111,77 @@ for (const [language, bookingPath] of Object.entries(bookingPaths)) {
 const seoSource = read("lib/seo.ts");
 const proxySource = read("proxy.ts");
 const robotsSource = read("app/robots.ts");
+const routeMapSource = read("lib/url-map.ts");
+const nextConfigSource = read("next.config.ts");
+const packageJson = JSON.parse(read("package.json"));
+
+check(
+  !packageJson.scripts?.build?.includes("prepare-build-clean.cjs"),
+  "Production build is read-only and does not run source patchers.",
+  "Production build must not mutate tracked source through prepare-build-clean.cjs.",
+);
+check(
+  !routeMapSource.includes('action: "CHECK"'),
+  "Central route map contains no unresolved CHECK records.",
+  "Central route map still contains unresolved CHECK records.",
+);
+
+const routeRecords = [...routeMapSource.matchAll(
+  /\n  \{\n    path: "([^"]+)",[\s\S]*?\n  \},/g,
+)].map((match) => {
+  const block = match[0];
+  return {
+    path: block.match(/path: "([^"]+)"/)?.[1],
+    language: block.match(/language: "([^"]+)"/)?.[1],
+    itemId: block.match(/itemId: "([^"]+)"/)?.[1],
+    action: block.match(/action: "([^"]+)"/)?.[1],
+  };
+});
+const indexableRouteFamilies = new Map();
+
+for (const route of routeRecords.filter((route) => route.action === "KEEP")) {
+  const familyLanguages = indexableRouteFamilies.get(route.itemId) || new Set();
+  familyLanguages.add(route.language);
+  indexableRouteFamilies.set(route.itemId, familyLanguages);
+}
+
+const incompleteRouteFamilies = [...indexableRouteFamilies.entries()]
+  .map(([itemId, familyLanguages]) => ({
+    itemId,
+    missing: activeLanguages.filter((language) => !familyLanguages.has(language)),
+  }))
+  .filter((family) => family.missing.length > 0);
+
+check(
+  routeRecords.length > 0 && incompleteRouteFamilies.length === 0,
+  `All ${indexableRouteFamilies.size} indexable route families cover the seven active languages.`,
+  `Incomplete route families: ${incompleteRouteFamilies
+    .map((family) => `${family.itemId} (${family.missing.join(", ")})`)
+    .join("; ") || "route map could not be parsed"}.`,
+);
+
+const directRoomFinderRedirects = [
+  ["/el/vre-to-domatio-pou-sou-tairiazei", "/el/ai-assistant/"],
+  ["/el/voulamandis-room-finder-gr", "/el/ai-assistant/"],
+  ["/it/trova-la-stanza-che-fa-per-te", "/it/ai-assistant/"],
+  ["/de/zimmer-suchassistent", "/de/ai-assistant/"],
+  ["/tr/en-uygun-oda", "/tr/ai-assistant/"],
+  ["/mike-2", "/ai-assistant/"],
+  ["/es/mike", "/es/ai-assistant/"],
+];
+
+for (const [source, destination] of directRoomFinderRedirects) {
+  const sourceIndex = nextConfigSource.indexOf(`"source":  "${source}"`);
+  const redirectBlock = sourceIndex >= 0
+    ? nextConfigSource.slice(sourceIndex, sourceIndex + 220)
+    : "";
+
+  check(
+    redirectBlock.includes(`"destination":  "${destination}"`),
+    `${source} redirects directly to ${destination}.`,
+    `${source} does not redirect directly to ${destination}.`,
+  );
+}
 
 check(
   seoSource.includes('export const siteUrl = "https://chioshotel.gr"'),

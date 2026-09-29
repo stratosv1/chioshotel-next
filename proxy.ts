@@ -16,6 +16,11 @@ const wordpressGonePrefixes = [
   "/elementor-landing-page-4251",
   "/.cloud/rum",
   "/web-stories",
+  // Explicitly retired legacy/test resources from GSC Full Audit run 44
+  "/post-sitemap.xml",
+  "/flio-box",
+  "/platform-voulamandis",
+  "/test-2",
 ];
 
 const wordpressArchiveGonePrefixes = [
@@ -378,6 +383,103 @@ const legacyRedirects: Record<string, string> = {
 
   // Italian old special route
   "/it/esplorare-chio": "/it/esplora-chios/",
+  // GSC Full Audit run 44: exact, independently matched legacy replacements
+  "/de/uncategorized-de/museen-von-chios": "/de/museen-chios/",
+  "/de/uncategorized-de/orchideen-von-chios": "/de/orchideen-auf-chios/",
+  "/es/uncategorized-es/apartamentos-familiares-en-chios": "/es/habitaciones-en-chios/apartamentos-familiares-en-chios/",
+  "/es/uncategorized-es/habitaciones-dobles-en-la-isla-de-chios": "/es/habitaciones-en-chios/habitaciones-dobles-estandar/",
+  "/es/uncategorized-es/museos-en-la-isla-de-chios": "/es/museos-chios/",
+  "/es/uncategorized-es/playas-de-chios-2": "/es/playas-chios/",
+  "/fr/uncategorized-fr/appartements-familiaux-de-chios": "/fr/chambres-a-chios/appartements-familiaux-de-chios/",
+  "/fr/uncategorized-fr/chambres-doubles-economiques": "/fr/chambres-a-chios/chambres-doubles-economiques/",
+  "/fr/uncategorized-fr/chambres-doubles-standard": "/fr/chambres-a-chios/chambres-doubles-standard/",
+  "/fr/uncategorized-fr/fr-chios-kambos": "/fr/chios/kampos-chios/",
+  "/it/uncategorized-it/appartamenti-familiari-a-chios": "/it/stanze-a-chios/appartamenti-familiari-a-chios/",
+  "/it/uncategorized-it/camera-doppia-economica-chios": "/it/stanze-a-chios/camera-doppia-economica-chios/",
+  "/it/uncategorized-it/camere-doppie-standard-chios": "/it/stanze-a-chios/camere-doppie-standard-chios/",
+  "/it/uncategorized-it/la-bellezza-delle-orchidee-di-chios": "/it/orchidee-di-chios/",
+  "/it/uncategorized-it/spiagge-di-chios": "/it/spiagge-chios/",
+  "/tr/uncategorized-tr/chiosun-orkidelerinin-guzelligi": "/tr/sakiz-adasi-orkideleri/",
+  "/tr/uncategorized-tr/sakiz-adasinda-buyuk-aile-daireleri": "/tr/chios-odalari/sakiz-adasinda-buyuk-aile-daireleri/",
+  "/tr/uncategorized-tr/sakiz-adasindaki-ekonomi-cift-kisilik-oda": "/tr/chios-odalari/sakiz-adasindaki-ekonomi-cift-kisilik-oda/",
+  "/tr/uncategorized-tr/sakiz-adasinin-plajlari": "/tr/sakiz-adasi-plajlari/",
+  "/tr/uncategorized-tr/standart-cift-kisilik-odalar-sakiz-adasi": "/tr/chios-odalari/standart-cift-kisilik-odalar/",
+  "/el/chios-el/paralies-tis-xiou": "/el/paralies-xios/",
+  "/chios-el/chios-activities-el/chios-springs": "/el/iamatika-loutra-xiou/",
+  "/el/chios-el/chios-beaches-2": "/el/paralies-xios/",
+  "/el/chios-el/chios-hiking-2": "/el/pezoporia-sti-xio/",
+  "/el/chios-el/chios-springs": "/el/iamatika-loutra-xiou/",
+  "/el/chios-el/chios-villages-2": "/el/xoria-xios/",
+  "/tr/chios-el/chios-activities-el/chios-hiking-2": "/tr/sakiz-adasi-yuruyus-rotalari/",
+  "/tr/chios-el/chios-activities-el/chios-orchids-2": "/tr/sakiz-adasi-orkideleri/",
+  "/tr/chios-el/chios-activities-el/chios-springs": "/tr/sakiz-adasi-termal-kaplicalari/",
+  "/tr/chios-el/chios-activities-el/greek-language-2": "/tr/sakiz-adasi-yunanca-kurslari/",
+  "/tr/chios-el/chios-beaches-el/chios-beach-agia-fotia": "/tr/sakiz-adasi-plajlari/agia-fotia-plaji/",
+  "/tr/chios-el/chios-beaches-el/chios-beach-nagos": "/tr/sakiz-adasi-plajlari/nagos-plaji/",
+  "/tr/chios-el/chios-beaches-el/komi-beach-2": "/tr/sakiz-adasi-plajlari/komi-plaji/",
+  "/tr/chios-el/chios-beaches-el/mavra-volia-2": "/tr/sakiz-adasi-plajlari/mavra-volia-plaji/",
+  "/tr/chios-el/chios-museums-el/chios-byzantine": "/tr/sakiz-adasi-muzeleri/bizans-muzesi-sakiz/",
+  "/tr/chios-el/chios-museums-el/chios-korais-library": "/tr/sakiz-adasi-muzeleri/korais-kutuphanesi-sakiz/",
+  "/de/chios-zimmer-preise": "/de/hotelpreise-auf-der-insel-chios/",
+  "/el/times-domation-xios": "/el/amesi-kratisi-voulamandis-house/",
+  "/fr/tarifs-chambres-chios": "/fr/tarifs-des-hotels-a-chios/",
+  "/it/prezzi-camere-chios": "/it/prezzi-hotel-chios/",
+  "/tr/sakiz-adasi-oda-fiyatlari": "/tr/sakiz-adasi-rezervasyon/",
+  "/es/chios-holidays-quiz": "/es/quiz-vacaciones-en-quios/",
+  "/fr/chios-holidays-quiz": "/fr/quiz-vacances-a-chios/",
+  "/it/quanto-conosci-chio-quiz": "/it/quiz-vacanze-a-chios/",
+  "/tr/chios-adasini-ne-kadar-iyi-taniyorsun": "/tr/sakiz-adasi-tatil-testi/",
+  "/el/taste-lover-el-gastronomiko-taxidi-xios": "/el/geuseis-tis-xiou/",
+  "/it/esperienza-per-amanti-del-gusto-a-chio-sapori-autentici-dellisola": "/it/sapori-di-chios/",
+  "/el/xenodoxeio-chios-diamoni-kampos": "/el/chios/kampos-chios/",
+  "/fr/chios/chios-kambos": "/fr/chios/kampos-chios/",
+  "/es/habitaciones-en-chios/olympi-quios": "/es/pueblos-chios/pueblo-olympoi/",
+  "/it/chios-it/chios-villages-it/chios-pyrgi-village": "/it/villaggi-chios/villaggio-pyrgi/",
+  "/it/le-migliori-spiagge-di-chio": "/it/spiagge-chios/",
+  "/es/chios-hotels-rates": "/es/los-mejores-precios-de-hotel-en-la-isla-chios/",
+  "/fr/chios/plages-de-chios": "/fr/plages-de-chios/",
+  "/it/isola-di-chios": "/it/chios-lisola-in-grecia/",
+  "/it/le-migliori-camere-a-chios-hotel-a-chios-camere-a-chios": "/it/camere-a-chios/",
+  "/tr/chios-odalari": "/tr/sakiz-adasi-odalari/",
+  "/tr/crazy-travel-deals-for-chios-hotels": "/tr/sakiz-adasi-otel-firsatlari/",
+  // GA4/Vercel 404 audit 2026-08-16: verified one-hop replacements
+  "/contact": "/voulamandis-house-contact-us-form-fill-in-the-form/",
+  "/contact-us": "/voulamandis-house-contact-us-form-fill-in-the-form/",
+  "/epikoinonia": "/el/epikoinonia-voulamandis-house/",
+  "/el/erotisis-voulamandis-house": "/el/syxnes-erotiseis/",
+  "/el/faq-2": "/el/syxnes-erotiseis/",
+  "/el/faq-apories-voulamandis-house": "/el/syxnes-erotiseis/",
+  "/fr/faq-fr-voulamandis": "/fr/questions-frequentes/",
+  "/de/faq-de-voulamandis": "/de/haeufige-fragen/",
+  "/voulamandis-house-photos": "/",
+  "/vh-photos/voulamandis-seating-area/voulamandis-house-seating-area-voulamandis-house-chios-hotels": "/",
+  "/el/vh-φωτογραφίες/voulamandis-house-farm": "/el/",
+  "/el/vh-φωτογραφίες/chios-garden": "/el/",
+  "/el/vh-φωτογραφίες/vh-seating-room": "/el/",
+  "/el/albums": "/el/",
+  "/el/domatia-xios/chios-2": "/el/domatia-xios/",
+  "/el/domatia-xios/chios-mastic-2": "/el/domatia-xios/",
+  "/el/1voulamandis-house-logo4-2": "/el/",
+  "/fr/chios-videos": "/fr/chios-en-grece/",
+  "/fr/chios.html": "/fr/chios-en-grece/",
+  "/fr/ile-de-chios": "/fr/chios-en-grece/",
+  "/fr/connaissez-vous-vraiment-chios-relevez-le-defi-du-quiz-insider": "/fr/quiz-vacances-a-chios/",
+  "/it/stanze-a-chios/italiaagia-fotia-beachthe-captivating-beach-of-chios": "/it/spiagge-chios/spiaggia-agia-fotia/",
+  "/tr/voulamandis-house-photos": "/tr/",
+  "/tr/chios-videos-2": "/tr/sakiz-adasi/",
+  "/en/chios/chios-orchids": "/chios-orchids/",
+  "/el/paralies-xios/paralia-karfas/null": "/el/paralies-xios/paralia-karfas/",
+  "/images/family/ChatGPT-Image-Feb-13-2026-08_32_22-PM.png": "/images/family/ChatGPT-Image-Feb-13-2026-08_32_22-PM.webp",
+  "/favicon.ico": "/favicon/favicon.ico",
+  "/apple-touch-icon.png": "/favicon/apple-touch-icon.png",
+  "/apple-touch-icon-precomposed.png": "/favicon/apple-touch-icon.png",
+  "/sitemap_index.xml": "/sitemap.xml",
+  "/page-sitemap.xml": "/sitemap.xml",
+  "/category-sitemap.xml": "/sitemap.xml",
+  "/local-sitemap.xml": "/sitemap.xml",
+  "/video-sitemap.xml": "/sitemap.xml",
+  // Legacy malformed URL: /pre%20arrival/ -> canonical private pre-arrival page
+  "/pre arrival": "/pre-arrival/",
 };
 
 function normalizeLegacyPathname(pathname: string) {
@@ -392,8 +494,57 @@ function normalizeLegacyPathname(pathname: string) {
 
 function getLegacyRedirectTarget(pathname: string) {
   const normalizedPathname = normalizeLegacyPathname(pathname);
-  const target = legacyRedirects[normalizedPathname] || null;
+  const exactTarget = legacyRedirects[normalizedPathname] || null;
 
+  // GSC_RUN44_PATTERN_REDIRECTS: malformed/double-encoded legacy paths where
+  // the content identity is still deterministic from the final slug.
+  let patternTarget: string | null = null;
+  if (normalizedPathname.startsWith("/de/chios-insel/")) {
+    if (normalizedPathname.endsWith("/agia-dynami-strand")) {
+      patternTarget = "/de/straende-chios/agia-dynami-strand/";
+    } else if (normalizedPathname.endsWith("/agia-fotia-strand")) {
+      patternTarget = "/de/straende-chios/agia-fotia-strand/";
+    } else if (normalizedPathname.endsWith("/avlonia-strand")) {
+      patternTarget = "/de/straende-chios/avlonia-strand/";
+    }
+  } else if (normalizedPathname.startsWith("/el/chios-el/chios-villages-el/armolia-xios/")) {
+    patternTarget = "/el/xoria-xios/armolia-xios/";
+  }
+
+  // GA4_RSC_FOOTER_ARTIFACT_REDIRECT: some crawlers treated React Server
+  // Component list keys such as "Soggiorno-/it/camere-a-chios/" as relative URLs.
+  // Redirect only when the nested suffix resolves to a real KEEP route.
+  let rscFooterArtifactTarget: string | null = null;
+  const nestedRouteMarker = normalizedPathname.indexOf("-/");
+  if (nestedRouteMarker !== -1) {
+    const nestedPath = normalizedPathname.slice(nestedRouteMarker + 1);
+    const nestedRoute = getRouteByPath(nestedPath);
+    if (nestedRoute?.action === "KEEP") {
+      rscFooterArtifactTarget = nestedRoute.path;
+    }
+  }
+
+  // GA4_SAFE_PARENT_ARTIFACT_REDIRECT: crawlers occasionally promote serialized
+  // RSC tokens or null data values into child URLs. Only collapse them when the
+  // parent is a known KEEP route, so arbitrary unknown paths still remain 404.
+  let safeParentArtifactTarget: string | null = null;
+  const artifactSuffixes = ["/null", "/Next.Metadata", "/Next.MetadataOutlet"];
+  const artifactSuffix = artifactSuffixes.find((suffix) =>
+    normalizedPathname.endsWith(suffix),
+  );
+  if (artifactSuffix) {
+    const parentPath = normalizedPathname.slice(0, -artifactSuffix.length) || "/";
+    const parentRoute = getRouteByPath(parentPath);
+    if (parentRoute?.action === "KEEP") {
+      safeParentArtifactTarget = parentRoute.path;
+    }
+  }
+
+  const target =
+    exactTarget ||
+    patternTarget ||
+    rscFooterArtifactTarget ||
+    safeParentArtifactTarget;
   if (!target) {
     return null;
   }
@@ -515,21 +666,88 @@ function shouldCheckSeoRuntimeRule(pathname: string) {
 
 export async function proxy(request: NextRequest, event: NextFetchEvent) {
   const host = request.headers.get("host");
-
-  if (host === "www.chioshotel.gr") {
-    const url = request.nextUrl.clone();
-    url.hostname = "chioshotel.gr";
-    return NextResponse.redirect(url, 308);
-  }
   const { pathname } = request.nextUrl;
+  const normalizedPathname = normalizeLegacyPathname(pathname);
+
+  // These historical URLs have exact, verified final destinations. Resolve them
+  // before route handlers so Google never has to traverse an intermediate alias.
+  const directLegacyTarget: Record<string, string> = {
+    "/gr": "/el/",
+    "/tr/chios-odalari/armolia-koyu-chios":
+      "/tr/sakiz-adasi-koyleri/armolia-koyu/",
+    "/tr/chios-odalari/kambos-sakiz-adasi": "/tr/sakiz-adasi/",
+    "/tr/chios-odalari/lagada-koyu-chios":
+      "/tr/sakiz-adasi-koyleri/lagada-koyu/",
+    "/tr/chios-odalari/mesta-koyu-chios":
+      "/tr/sakiz-adasi-koyleri/mesta-koyu/",
+    "/tr/chios-odalari/olympoi-koyu-chios":
+      "/tr/sakiz-adasi-koyleri/olympoi-koyu/",
+    "/tr/chios-odalari/pyrgi-sakiz-adasi-koyu":
+      "/tr/sakiz-adasi-koyleri/pyrgi-koyu/",
+    "/tr/chios-odalari/vessa-koyu-chios":
+      "/tr/sakiz-adasi-koyleri/vessa-koyu/",
+  };
+
+  const directTarget = directLegacyTarget[normalizedPathname];
+  if (directTarget) {
+    const url = request.nextUrl.clone();
+    url.protocol = "https:";
+    url.hostname = "chioshotel.gr";
+    url.pathname = directTarget;
+    url.search = "";
+    return NextResponse.redirect(url, 301);
+  }
+
+  const directAiLanguage: Record<string, string> = {
+    "/best-room-selection-wizard": "en",
+    "/reservations": "en",
+    "/de/uncategorized-de/zimmer-suchassistent": "de",
+    "/el/best room selection wizard": "el",
+    "/en/chios-ai-chatbox": "en",
+    // GA4 404 audit: obsolete room-finder aliases go directly to AI in one hop
+    "/el/βρες-τον-κατάλληλο-τύπου-δωματίου-για": "el",
+    "/de/room-finder-de": "de",
+    "/fr/room-wizard-fr": "fr",
+    "/it/room-finder-it": "it",
+    "/tr/voulamandis-house-find-the-best-room-tr": "tr",
+  };
+  const aiLanguage = directAiLanguage[normalizedPathname];
+  if (aiLanguage) {
+    const url = request.nextUrl.clone();
+    url.protocol = "https:";
+    url.hostname = "chioshotel.gr";
+    url.pathname = aiLanguage === "en" ? "/ai-assistant/" : `/${aiLanguage}/ai-assistant/`;
+    url.search = "";
+    return NextResponse.redirect(url, 301);
+  }
+
+  // This encoded historical GSC URL used to traverse /find-your-room/ first.
+  // Keep the downstream patch anchor above stable, but flatten this source
+  // directly to the final AI Room Finder destination.
+  if (normalizedPathname === "/book the room you like") {
+    const url = request.nextUrl.clone();
+    url.protocol = "https:";
+    url.hostname = "chioshotel.gr";
+    url.pathname = "/ai-assistant/";
+    url.search = "";
+    return NextResponse.redirect(url, 301);
+  }
 
   const legacyRedirectTarget = getLegacyRedirectTarget(pathname);
 
   if (legacyRedirectTarget) {
     const url = request.nextUrl.clone();
+    url.protocol = "https:";
+    if (host === "www.chioshotel.gr") url.hostname = "chioshotel.gr";
     url.pathname = legacyRedirectTarget;
     url.search = "";
     return NextResponse.redirect(url, 301);
+  }
+
+  if (host === "www.chioshotel.gr") {
+    const url = request.nextUrl.clone();
+    url.hostname = "chioshotel.gr";
+    return NextResponse.redirect(url, 308);
   }
 
   if (
@@ -593,6 +811,7 @@ export async function proxy(request: NextRequest, event: NextFetchEvent) {
 
 export const config = {
   matcher: [
+    "/favicon.ico",
     "/wp-admin/:path*",
     "/wp-login.php",
     "/wp-comments-post.php",

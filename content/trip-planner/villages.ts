@@ -23,7 +23,7 @@ export const villages: VillageMaster[] = [
     id: "pyrgi",
     name: "Πυργί",
     region: "south",
-    image: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Pyrgi_house1.JPG/1280px-Pyrgi_house1.JPG",
     bestTime: "Πρωί ή αργά το απόγευμα",
     recommendedDuration: "1,5–2 ώρες",
     character: ["Μαστιχοχώρι", "μεσαιωνικό", "ξυστά", "φωτογενές"],

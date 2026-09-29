@@ -71,7 +71,7 @@ export type ChiosVillagesPageData = {
 
 const villageImages = {
   pyrgi:
-    "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Pyrgi_house1.JPG/1280px-Pyrgi_house1.JPG",
   mesta:
     "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
   vessa:
