@@ -36,7 +36,7 @@ Make the public chioshotel.gr experience cleaner, safer and easier to maintain w
 | GCU-02 | Seven-language parity | Completed | Every public English owner page has the intended localized equivalents |
 | GCU-03 | Localized links | Completed | Navigation and transactional CTAs resolve to the matching locale |
 | GCU-04 | Content and internal linking | Completed | Facts are consistent and guide pages connect clearly to rooms and booking |
-| GCU-05 | Mobile UI and accessibility | Planned | Readable type, usable controls, semantic structure and no overlapping UI |
+| GCU-05 | Mobile UI and accessibility | In progress | Readable type, usable controls, semantic structure and no overlapping UI |
 | GCU-06 | Images and performance | In progress | Correct Next/Image usage, dimensions, alt text and no avoidable payload |
 | GCU-07 | Code and dependency cleanup | Planned | Dead code and obsolete patch paths are removed only after usage proof |
 | GCU-08 | Regression protection | Active | One command runs the cleanup guardrails and existing public SEO QA |
@@ -91,6 +91,11 @@ npm run qa:rendered-routes
 - The travel-agent presentation layer enforces the owner-confirmed step-free status of Apartments 8–10 even if an older database value is returned.
 - All 168 rendered beach, village and museum detail pages now expose a contextual, localized path to rooms and direct rates; the rendered QA checks both destinations on every page.
 - Shared village and museum detail templates now use `next/image` for hero and related-content media, reducing the public raw-image inventory from 35 to 33 references; Wikimedia is the only newly approved remote image host.
+- Public mobile typography now has shared 14px label and 16–17px reading floors, plus a consistent visible focus treatment for links and form controls.
+- The shared mobile menu now provides 44px language targets, scrolls inside short viewports, locks background scrolling and closes with Escape.
+- The shared footer changes from three compressed columns to one readable mobile column, with 44px navigation rows; desktop keeps the three-column layout.
+- Mobile fixed booking/contact actions on home, room and Chios overview surfaces now respect device safe areas, and the footer reserves matching bottom space.
+- These mobile guarantees are enforced by the General Clean Up QA command so later compact-style changes cannot silently undo them.
 
 ## Definition of done
 

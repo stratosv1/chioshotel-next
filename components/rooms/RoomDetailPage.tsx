@@ -448,7 +448,7 @@ export function RoomDetailPage({ data }: RoomDetailPageProps) {
       </section>
 
       {showStickyAvailability ? (
-        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-amber-900/10 bg-[#fffaf3]/95 p-3 shadow-[0_-12px_30px_rgba(47,38,31,0.12)] backdrop-blur md:hidden">
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-amber-900/10 bg-[#fffaf3]/95 px-3 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-[0_-12px_30px_rgba(47,38,31,0.12)] backdrop-blur md:hidden">
           <a className="mx-auto flex min-h-[52px] max-w-md items-center justify-center rounded-full bg-amber-500 px-5 text-center text-xs font-black uppercase tracking-[0.12em] text-[#2f261f]" href={aiAvailabilityHref}>
             {localLabels.checkAvailability}
           </a>

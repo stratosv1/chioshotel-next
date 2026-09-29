@@ -271,7 +271,7 @@ function LanguagePills({ currentLanguage, pathname, onNavigate }: { currentLangu
             aria-current={active ? "page" : undefined}
             title={item.label}
             onClick={onNavigate}
-            className={`flex h-8 min-w-9 shrink-0 items-center justify-center rounded-full px-2 text-[11px] font-black uppercase tracking-[0.08em] transition ${active ? "bg-[#fff4df] text-amber-900 shadow-sm ring-1 ring-amber-800/20" : "text-stone-700 hover:bg-amber-50 hover:text-amber-900"}`}
+            className={`flex h-11 min-w-11 shrink-0 items-center justify-center rounded-full px-2 text-[11px] font-black uppercase tracking-[0.08em] transition lg:h-8 lg:min-w-9 ${active ? "bg-[#fff4df] text-amber-900 shadow-sm ring-1 ring-amber-800/20" : "text-stone-700 hover:bg-amber-50 hover:text-amber-900"}`}
           >
             {item.code.toUpperCase()}
           </a>
@@ -283,7 +283,7 @@ function LanguagePills({ currentLanguage, pathname, onNavigate }: { currentLangu
         lang="pl"
         title="Polski"
         onClick={onNavigate}
-        className="flex h-8 min-w-9 shrink-0 items-center justify-center rounded-full px-2 text-[11px] font-black uppercase tracking-[0.08em] text-stone-700 transition hover:bg-amber-50 hover:text-amber-900"
+        className="flex h-11 min-w-11 shrink-0 items-center justify-center rounded-full px-2 text-[11px] font-black uppercase tracking-[0.08em] text-stone-700 transition hover:bg-amber-50 hover:text-amber-900 lg:h-8 lg:min-w-9"
       >
         PL
       </a>
@@ -314,6 +314,23 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/" }: H
   function closeMenu() {
     setIsOpen(false);
   }
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsOpen(false);
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", closeOnEscape);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [isOpen]);
 
   return (
     <header className="sticky top-0 z-50 border-b border-stone-900/10 bg-[#fffaf3]/92 shadow-[0_10px_30px_rgba(41,30,20,0.07)] backdrop-blur-xl supports-[backdrop-filter]:bg-[#fffaf3]/82">
@@ -363,7 +380,7 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/" }: H
 
       <div className={`fixed inset-0 top-[72px] z-50 bg-stone-950/15 backdrop-blur-[1px] transition lg:hidden ${isOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}>
         <button type="button" aria-label={copy.close} onClick={closeMenu} className="absolute inset-0 h-full w-full" />
-        <div className={`absolute right-0 top-0 w-[min(92vw,420px)] rounded-l-[1.5rem] bg-[#fffaf3] p-3 pb-5 shadow-2xl shadow-stone-950/18 transition duration-300 ${isOpen ? "translate-x-0" : "translate-x-full"}`}>
+        <div className={`absolute right-0 top-0 max-h-[calc(100dvh-72px)] w-[min(92vw,420px)] overflow-y-auto overscroll-contain rounded-l-[1.5rem] bg-[#fffaf3] p-3 pb-[calc(1.25rem+env(safe-area-inset-bottom))] shadow-2xl shadow-stone-950/18 transition duration-300 ${isOpen ? "translate-x-0" : "translate-x-full"}`}>
           <div className="mb-2"><LanguagePills currentLanguage={language} pathname={pathname} onNavigate={closeMenu} /></div>
           <a href={pathFor(routeIds.rates, language)} onClick={closeMenu} className="mb-2 flex min-h-[44px] items-center justify-center rounded-full bg-gradient-to-br from-[#78624d] to-[#735f45] px-5 text-sm font-black uppercase tracking-[0.1em] !text-white shadow-lg shadow-stone-900/15 transition hover:from-[#6b5847] hover:to-[#5f4e3f]">
             {copy.bookNow}

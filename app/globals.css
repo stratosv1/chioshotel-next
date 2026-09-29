@@ -4,6 +4,11 @@
 @source not "../app/mixalis";
 @source not "../components/mixalis";
 
+.vh-public-site :where(a, button, input, select, summary, textarea):focus-visible {
+  outline: 3px solid #b7791f;
+  outline-offset: 3px;
+}
+
 /*
  * Mobile type floor for the public guest experience.
  *

@@ -55,12 +55,12 @@ export function VoulamandisFooterTailwind({ language = "en" }: FooterProps) {
   ];
 
   return (
-    <footer className="relative overflow-hidden bg-[#efe4d5] pb-24 text-stone-800 md:pb-0">
+    <footer className="relative overflow-hidden bg-[#efe4d5] pb-[calc(6rem+env(safe-area-inset-bottom))] text-stone-800 md:pb-0">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(180,118,52,.12),transparent_28rem),radial-gradient(circle_at_85%_30%,rgba(255,255,255,.7),transparent_24rem)]" />
       <div className="relative mx-auto max-w-7xl px-3 py-3 sm:px-6 sm:py-6 lg:px-8 lg:py-10">
         <div className="overflow-hidden rounded-[1.4rem] border border-amber-900/10 bg-[#fffaf3]/95 shadow-xl shadow-amber-950/10 backdrop-blur md:rounded-[1.75rem]">
           <section className="flex items-center justify-between gap-3 border-b border-amber-900/10 px-3 py-2.5 sm:px-5 sm:py-4 md:px-6 md:py-5">
-            <a href={language === "en" ? "/" : `/${language}/`} className="flex min-w-0 items-center gap-2.5 sm:gap-3">
+            <a href={language === "en" ? "/" : `/${language}/`} className="flex min-h-11 min-w-0 items-center gap-2.5 sm:gap-3">
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-xs font-black text-amber-950 shadow-md shadow-amber-900/10 sm:h-11 sm:w-11 sm:rounded-2xl sm:text-sm">VH</span>
               <span className="min-w-0">
                 <strong className="block truncate text-[18px] font-black leading-none tracking-[-0.04em] text-stone-900 sm:text-lg md:text-xl">Voulamandis House</strong>
@@ -70,14 +70,14 @@ export function VoulamandisFooterTailwind({ language = "en" }: FooterProps) {
             <p className="hidden max-w-xl text-right text-sm leading-6 text-stone-600 md:block">{copy.description}</p>
           </section>
 
-          <nav aria-label={footerNavLabel} className="grid grid-cols-3 divide-x divide-amber-900/10">
+          <nav aria-label={footerNavLabel} className="grid grid-cols-1 divide-y divide-amber-900/10 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
             {groups.map((group) => (
-              <section key={group.title} className="min-w-0 px-1 py-2.5 sm:px-4 sm:py-5 md:px-6 md:py-6">
-                <h2 className="min-h-[2rem] break-words text-[12px] font-black uppercase leading-[1.2] tracking-[0.035em] text-amber-800 sm:min-h-0 sm:text-[12px] sm:tracking-[0.1em] md:text-sm">{group.title}</h2>
-                <ul className="mt-1 grid gap-0 sm:mt-4 sm:gap-1.5 md:gap-2">
+              <section key={group.title} className="min-w-0 px-3 py-3 sm:px-4 sm:py-5 md:px-6 md:py-6">
+                <h2 className="break-words text-[12px] font-black uppercase leading-[1.2] tracking-[0.08em] text-amber-800 sm:text-[12px] sm:tracking-[0.1em] md:text-sm">{group.title}</h2>
+                <ul className="mt-2 grid gap-1 sm:mt-4 sm:gap-1.5 md:gap-2">
                   {group.links.map((link, linkIndex) => (
                     <li key={`${group.title}-${linkIndex}`} className="min-w-0">
-                      <a href={link.href} className="group flex min-h-8 min-w-0 items-center justify-between gap-1 rounded-lg px-1 py-1 text-[14px] font-bold leading-[1.25] text-stone-700 transition hover:bg-amber-100/70 hover:text-stone-950 sm:rounded-xl sm:px-2 sm:text-sm md:min-h-10 md:text-sm">
+                      <a href={link.href} className="group flex min-h-11 min-w-0 items-center justify-between gap-1 rounded-lg px-2 py-2 text-[14px] font-bold leading-[1.25] text-stone-700 transition hover:bg-amber-100/70 hover:text-stone-950 sm:rounded-xl sm:text-sm md:text-sm">
                         <span className="min-w-0 break-words [overflow-wrap:anywhere]">{link.label}</span>
                         <span aria-hidden="true" className="hidden shrink-0 text-stone-400 transition group-hover:translate-x-0.5 group-hover:text-amber-800 sm:inline">→</span>
                       </a>

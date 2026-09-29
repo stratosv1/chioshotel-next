@@ -221,7 +221,7 @@ export function ChiosIslandPage({ data }: ChiosIslandPageProps) {
         </div>
       </section>
 
-      <div className="fixed inset-x-3 bottom-3 z-40 grid grid-cols-2 gap-2 rounded-2xl border border-white/20 bg-stone-950/88 p-2 shadow-2xl shadow-stone-950/25 backdrop-blur md:hidden" aria-label={ui.quickActionsAriaLabel}>
+      <div className="fixed inset-x-3 bottom-[calc(0.75rem+env(safe-area-inset-bottom))] z-40 grid grid-cols-2 gap-2 rounded-2xl border border-white/20 bg-stone-950/88 p-2 shadow-2xl shadow-stone-950/25 backdrop-blur md:hidden" aria-label={ui.quickActionsAriaLabel}>
         <a className="inline-flex min-h-12 items-center justify-center rounded-xl bg-[#25d366] px-3 text-xs font-black uppercase tracking-[0.08em] text-white" href={data.sticky.whatsappHref}>
           💬 {ui.whatsapp}
         </a>

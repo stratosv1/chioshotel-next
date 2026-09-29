@@ -117,6 +117,13 @@ const agentRoomGuideDataSource = read("lib/agent-room-guide-data.ts");
 const answerFirstSeoSource = read("components/seo/AnswerFirstSeoBlock.tsx");
 const villageDetailSource = read("components/chios/VillageDetailPageTailwind.tsx");
 const museumDetailSource = read("components/chios/MuseumDetailPage.tsx");
+const globalCssSource = read("app/globals.css");
+const headerSource = read("components/VoulamandisHeaderTailwind.tsx");
+const footerSource = read("components/VoulamandisFooterTailwind.tsx");
+const roomsCategorySource = read("components/rooms/RoomsCategoryPage.tsx");
+const roomDetailSource = read("components/rooms/RoomDetailPage.tsx");
+const chiosIslandSource = read("components/chios/ChiosIslandPage.tsx");
+const polishHomeSource = read("components/home/PolishHomePageTailwind.tsx");
 const packageJson = JSON.parse(read("package.json"));
 
 check(
@@ -238,6 +245,41 @@ check(
   "Next/Image allows the approved Wikimedia image host used by Chios guides.",
   "Next/Image is missing the Wikimedia remote image allowlist used by Chios guides.",
 );
+check(
+  globalCssSource.includes(".vh-public-site .text-xs") &&
+    globalCssSource.includes("font-size: 0.875rem !important") &&
+    globalCssSource.includes(":focus-visible"),
+  "Public mobile typography and visible keyboard focus have shared accessibility floors.",
+  "Public mobile typography or visible keyboard focus guardrails are missing.",
+);
+check(
+  headerSource.includes("h-11 min-w-11") &&
+    headerSource.includes("max-h-[calc(100dvh-72px)]") &&
+    headerSource.includes('document.body.style.overflow = "hidden"') &&
+    headerSource.includes('event.key === "Escape"'),
+  "Mobile navigation has 44px language targets, viewport scrolling, scroll lock and Escape support.",
+  "Mobile navigation accessibility safeguards are incomplete.",
+);
+check(
+  footerSource.includes("grid-cols-1 divide-y") &&
+    footerSource.includes("min-h-11 min-w-0") &&
+    footerSource.includes("env(safe-area-inset-bottom)"),
+  "Mobile footer uses a readable single-column layout, 44px links and safe-area spacing.",
+  "Mobile footer layout, touch targets or safe-area spacing regressed.",
+);
+
+for (const [label, source] of [
+  ["rooms category", roomsCategorySource],
+  ["room detail", roomDetailSource],
+  ["Chios island", chiosIslandSource],
+  ["Polish home", polishHomeSource],
+]) {
+  check(
+    source.includes("env(safe-area-inset-bottom)"),
+    `${label} mobile fixed actions respect device safe areas.`,
+    `${label} mobile fixed actions do not respect device safe areas.`,
+  );
+}
 
 const publicFiles = ["app", "components", "content", "lib"]
   .flatMap(walk)
