@@ -103,6 +103,8 @@ npm run qa:rendered-routes
 - Room category and detail sticky availability bars now leave room-finder, final CTA and booking sections unobstructed, while keeping a safe-area-aware mobile action elsewhere.
 - Room detail key facts and best-for lists collapse to one column at 320px, and gallery thumbnails retain at least 44px touch targets.
 - Museum detail related content now follows the same horizontal mobile carousel pattern as beach and village details, reducing long vertical stacks without removing content.
+- Active Kambos landing pages now stack long CTA labels and the room-helper action at 320–390px, then move to two columns from 430px; the Greek benefit grid can expand sooner because its cards contain shorter copy.
+- The museums landing page uses shorter mobile section spacing and full-width stacked CTAs, while preserving its desktop rhythm and layout.
 
 ## Definition of done
 

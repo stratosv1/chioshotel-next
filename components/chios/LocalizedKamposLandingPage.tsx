@@ -253,7 +253,7 @@ export function LocalizedKamposLandingPage({ data }: Props) {
             <p className={eyebrow}>{t.eyebrow}</p>
             <h1 className="mt-3 max-w-4xl text-balance font-serif text-[2.4rem] font-semibold leading-[0.96] tracking-[-0.05em] text-[#493a31] sm:text-6xl lg:text-7xl">{t.heroTitle}</h1>
             <p className={`${body} mt-4 max-w-2xl sm:mt-6`}>{t.heroDescription}</p>
-            <div className="mt-5 grid grid-cols-2 gap-2.5 sm:mt-8 sm:flex">
+            <div className="mt-5 grid grid-cols-1 gap-2.5 min-[430px]:grid-cols-2 sm:mt-8 sm:flex">
               <Cta href={data.hero.primaryCta.href}>{data.hero.primaryCta.label}</Cta>
               <Cta href={data.hero.secondaryCta.href} secondary>{data.hero.secondaryCta.label}</Cta>
             </div>
@@ -322,7 +322,7 @@ export function LocalizedKamposLandingPage({ data }: Props) {
               </article>
             ))}
           </div>
-          <div className="mt-5 flex items-center justify-between gap-4 rounded-2xl border border-[#dfd1c4] bg-[#fffdf9] p-4 shadow-sm"><p className="text-sm leading-6 text-[#75665b]">{t.unsure}</p><Cta href={data.hero.primaryCta.href} secondary>{t.allRooms}</Cta></div>
+          <div className="mt-5 flex flex-col items-stretch gap-3 rounded-2xl border border-[#dfd1c4] bg-[#fffdf9] p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:gap-4"><p className="text-sm leading-6 text-[#75665b]">{t.unsure}</p><Cta href={data.hero.primaryCta.href} secondary>{t.allRooms}</Cta></div>
         </div>
       </section>
 
@@ -341,7 +341,7 @@ export function LocalizedKamposLandingPage({ data }: Props) {
         <div className={shell}><p className={eyebrow}>{t.faqEyebrow}</p><h2 className={`${heading} mt-3 max-w-3xl`}>{t.faqTitle}</h2><div className="mt-6 divide-y divide-[#dfcfbf] rounded-[1.5rem] border border-[#ddcdbd] bg-[#fffdf9] px-4 sm:px-7">{t.faq.map((item) => <details key={item.question} className="group py-4"><summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-serif text-[1.02rem] font-semibold leading-snug text-[#513d31] sm:text-xl [&::-webkit-details-marker]:hidden">{item.question}<span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#6f5949] text-white transition group-open:rotate-45">+</span></summary><p className="pb-1 pt-3 text-sm leading-6 text-[#6d5949] sm:text-base">{item.answer}</p></details>)}</div></div>
       </section>
 
-      <section className="px-4 py-7 sm:px-6 sm:py-12 lg:px-8"><div className="relative mx-auto max-w-7xl overflow-hidden rounded-[1.6rem] bg-[#e8ddd2] px-5 py-8 shadow-xl shadow-[#6f5949]/10 sm:rounded-[2.5rem] sm:px-10 sm:py-14"><Image src={data.gallery[1].image} alt={data.gallery[1].imageAlt} fill className="object-cover opacity-20" sizes="100vw" /><div className="absolute inset-0 bg-gradient-to-r from-[#f4ede5]/95 via-[#efe5dc]/90 to-[#eadfd4]/75" /><div className="relative z-10 grid gap-5 lg:grid-cols-[1fr_auto] lg:items-end"><div className="max-w-3xl"><p className={eyebrow}>{data.stay.kicker}</p><h2 className={`${heading} mt-3`}>{data.stay.title}</h2><p className={`${body} mt-3`}>{data.stay.text}</p></div><div className="grid grid-cols-2 gap-2.5 sm:flex"><Cta href={data.stay.primaryCta.href}>{data.stay.primaryCta.label}</Cta><Cta href={data.stay.secondaryCta.href} secondary>{data.stay.secondaryCta.label}</Cta></div></div></div></section>
+      <section className="px-4 py-7 sm:px-6 sm:py-12 lg:px-8"><div className="relative mx-auto max-w-7xl overflow-hidden rounded-[1.6rem] bg-[#e8ddd2] px-5 py-8 shadow-xl shadow-[#6f5949]/10 sm:rounded-[2.5rem] sm:px-10 sm:py-14"><Image src={data.gallery[1].image} alt={data.gallery[1].imageAlt} fill className="object-cover opacity-20" sizes="100vw" /><div className="absolute inset-0 bg-gradient-to-r from-[#f4ede5]/95 via-[#efe5dc]/90 to-[#eadfd4]/75" /><div className="relative z-10 grid gap-5 lg:grid-cols-[1fr_auto] lg:items-end"><div className="max-w-3xl"><p className={eyebrow}>{data.stay.kicker}</p><h2 className={`${heading} mt-3`}>{data.stay.title}</h2><p className={`${body} mt-3`}>{data.stay.text}</p></div><div className="grid grid-cols-1 gap-2.5 min-[430px]:grid-cols-2 sm:flex"><Cta href={data.stay.primaryCta.href}>{data.stay.primaryCta.label}</Cta><Cta href={data.stay.secondaryCta.href} secondary>{data.stay.secondaryCta.label}</Cta></div></div></div></section>
     </main>
   );
 }

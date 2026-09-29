@@ -149,7 +149,7 @@ export function GreekKamposLandingPageElegant({ data }: Props) {
               θόρυβο και το άγχος.
             </p>
 
-            <div className="mt-5 grid grid-cols-2 gap-2.5 sm:mt-8 sm:flex">
+            <div className="mt-5 grid grid-cols-1 gap-2.5 min-[430px]:grid-cols-2 sm:mt-8 sm:flex">
               <Cta href="/el/domatia-xios/">Δείτε δωμάτια</Cta>
               <Cta href="/el/amesi-kratisi-voulamandis-house/" variant="secondary">
                 Τιμές & διαθεσιμότητα
@@ -221,7 +221,7 @@ export function GreekKamposLandingPageElegant({ data }: Props) {
             Ηρεμία, αυθεντικότητα και εύκολη πρόσβαση
           </h2>
 
-          <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+          <div className="mt-6 grid grid-cols-1 gap-3 min-[390px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
             {benefits.map(([title, text]) => (
               <article
                 key={title}
@@ -302,7 +302,7 @@ export function GreekKamposLandingPageElegant({ data }: Props) {
             ))}
           </div>
 
-          <div className="mt-5 flex items-center justify-between gap-4 rounded-2xl border border-[#dfd1c4] bg-[#fffdf9] p-4 shadow-sm">
+          <div className="mt-5 flex flex-col items-stretch gap-3 rounded-2xl border border-[#dfd1c4] bg-[#fffdf9] p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:gap-4">
             <p className="text-sm leading-6 text-[#75665b]">
               Δεν είστε σίγουροι ποιο δωμάτιο σας ταιριάζει;
             </p>
@@ -339,7 +339,7 @@ export function GreekKamposLandingPageElegant({ data }: Props) {
               ))}
             </div>
 
-            <div className="mt-5 grid grid-cols-2 gap-2.5 sm:flex">
+            <div className="mt-5 grid grid-cols-1 gap-2.5 min-[430px]:grid-cols-2 sm:flex">
               <Cta href="/el/paralies-xios/">Παραλίες Χίου</Cta>
               <Cta
                 href="https://www.google.com/maps/search/?api=1&query=Voulamandis+House+Chios"
@@ -418,7 +418,7 @@ export function GreekKamposLandingPageElegant({ data }: Props) {
                 από την ηρεμία του Κάμπου.
               </p>
             </div>
-            <div className="grid grid-cols-2 gap-2.5 sm:flex">
+            <div className="grid grid-cols-1 gap-2.5 min-[430px]:grid-cols-2 sm:flex">
               <Cta href="/el/amesi-kratisi-voulamandis-house/">Τιμές & διαθεσιμότητα</Cta>
               <Cta href="/el/domatia-xios/" variant="secondary">
                 Δείτε δωμάτια

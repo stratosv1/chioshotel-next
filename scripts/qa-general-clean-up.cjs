@@ -124,6 +124,9 @@ const roomsCategorySource = read("components/rooms/RoomsCategoryPage.tsx");
 const roomDetailSource = read("components/rooms/RoomDetailPage.tsx");
 const mobileAvailabilityBarSource = read("components/rooms/MobileAvailabilityBar.tsx");
 const chiosIslandSource = read("components/chios/ChiosIslandPage.tsx");
+const museumsPageSource = read("components/chios/ChiosMuseumsPage.tsx");
+const localizedKamposSource = read("components/chios/LocalizedKamposLandingPage.tsx");
+const greekKamposSource = read("components/chios/GreekKamposLandingPageElegant.tsx");
 const polishHomeSource = read("components/home/PolishHomePageTailwind.tsx");
 const homePageSource = read("components/home/HomePageTailwind.tsx");
 const liveDirectRequestSource = read("components/home/LiveDirectRequest.tsx");
@@ -316,17 +319,47 @@ check(
   "Museum detail related cards use the shared mobile swipe pattern.",
   "Museum detail related cards regress to a long mobile stack.",
 );
+check(
+  localizedKamposSource.includes("grid grid-cols-1 gap-2.5 min-[430px]:grid-cols-2 sm:mt-8 sm:flex") &&
+    localizedKamposSource.includes("flex flex-col items-stretch gap-3") &&
+    localizedKamposSource.includes("sm:flex-row sm:items-center sm:justify-between sm:gap-4") &&
+    localizedKamposSource.includes("grid grid-cols-1 gap-2.5 min-[430px]:grid-cols-2 sm:flex"),
+  "Localized Kambos CTAs and room helper stack safely at 320px.",
+  "Localized Kambos CTAs or room helper can compress at 320px.",
+);
+check(
+  greekKamposSource.includes("grid grid-cols-1 gap-2.5 min-[430px]:grid-cols-2 sm:mt-8 sm:flex") &&
+    greekKamposSource.includes("grid grid-cols-1 gap-3 min-[390px]:grid-cols-2 sm:grid-cols-3") &&
+    greekKamposSource.includes("flex flex-col items-stretch gap-3") &&
+    greekKamposSource.includes("grid grid-cols-1 gap-2.5 min-[430px]:grid-cols-2 sm:flex"),
+  "Greek Kambos actions and benefit cards remain readable at 320px.",
+  "Greek Kambos actions or benefit cards are too dense at 320px.",
+);
+check(
+  museumsPageSource.includes("pb-12 text-stone-800 md:pb-16") &&
+    museumsPageSource.includes("py-10 md:py-20") &&
+    museumsPageSource.includes("py-8 md:py-16") &&
+    museumsPageSource.includes("mt-8 grid gap-3 sm:flex sm:flex-wrap") &&
+    museumsPageSource.includes("min-h-[54px] w-full") &&
+    museumsPageSource.includes("sm:w-auto"),
+  "Museum landing spacing and CTA groups are compact and deterministic on mobile.",
+  "Museum landing spacing or CTA groups regressed on mobile.",
+);
 
 for (const viewportWidth of [320, 390, 430]) {
   const liveRequestContentWidth = viewportWidth - 64;
   const liveRoomCardWidth = Math.min(viewportWidth * 0.8, 320);
   const standardCarouselCardWidth = Math.min(viewportWidth * 0.84, 380);
   const galleryCardWidth = Math.min(viewportWidth * 0.78, 330);
+  const kambosCtaWidth = viewportWidth < 430
+    ? viewportWidth - 72
+    : (viewportWidth - 72 - 10) / 2;
 
   check(
     liveRoomCardWidth <= liveRequestContentWidth &&
       standardCarouselCardWidth <= viewportWidth - 32 &&
-      galleryCardWidth <= viewportWidth - 32,
+      galleryCardWidth <= viewportWidth - 32 &&
+      kambosCtaWidth >= 174,
     `${viewportWidth}px mobile card width budgets fit their intended scroll tracks.`,
     `${viewportWidth}px mobile card width budget exceeds its intended scroll track.`,
   );
