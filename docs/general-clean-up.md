@@ -69,6 +69,8 @@ Run it with:
 
 ```bash
 npm run qa:general-clean-up
+npm run build
+npm run qa:rendered-routes
 ```
 
 ## Current decisions
@@ -81,6 +83,8 @@ npm run qa:general-clean-up
 - All 49 indexable route families have complete `en`, `el`, `fr`, `de`, `it`, `es`, `tr` coverage in the central route map.
 - The last three unresolved route-map records are now explicit permanent redirects; no route remains in `CHECK` state.
 - Seven retired Room Finder aliases now redirect directly to their localized AI Room Finder destination without an intermediate hop.
+- A rendered crawl of every indexable route exposed seven obsolete Find Your Room URLs incorrectly marked as `KEEP`; the AI Assistant URLs are now the canonical route family and the old URLs are explicit redirects.
+- The rendered-route QA now checks all 343 indexable URLs for HTTP 200, the expected canonical and the complete seven-language hreflang set plus `x-default`.
 
 ## Definition of done
 
