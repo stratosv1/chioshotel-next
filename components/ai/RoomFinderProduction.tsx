@@ -784,12 +784,12 @@ export function RoomFinderProduction({
                   onDetails={openRoomDetail}
                   onSelect={offer => void finder.selectOffer(offer)}
                 />
-                <section className="msg flex items-center gap-3 rounded-[20px] border border-[#dfd6ca] bg-white px-4 py-3 shadow-sm sm:ml-10">
+                <section className="msg flex flex-col items-stretch gap-3 rounded-[20px] border border-[#dfd6ca] bg-white px-4 py-3 shadow-sm min-[390px]:flex-row min-[390px]:items-center sm:ml-10">
                   <p className="min-w-0 flex-1 text-sm font-semibold leading-5">{copy.whatsappHelp}</p>
                   <button
                     type="button"
                     onClick={() => openWhatsApp(whatsappContext(copy.whatsappHelp))}
-                    className="min-h-11 shrink-0 rounded-full bg-[#287d4f] px-4 py-2.5 text-sm font-bold text-white"
+                    className="min-h-11 w-full shrink-0 rounded-full bg-[#287d4f] px-4 py-2.5 text-sm font-bold text-white min-[390px]:w-auto"
                   >
                     💬 {copy.whatsapp}
                   </button>
@@ -986,7 +986,7 @@ export function RoomFinderProduction({
                         <span>{contactCopy.privacyNotice}</span>
                       </label>
                     </div>
-                    <div className="mt-3 grid grid-cols-2 gap-2">
+                    <div className="mt-3 grid grid-cols-1 gap-2 min-[390px]:grid-cols-2">
                       <button
                         type="button"
                         disabled={sendStatus === "sending" || !canSendRequest}

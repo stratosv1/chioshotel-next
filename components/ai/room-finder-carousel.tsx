@@ -227,7 +227,7 @@ export function RoomCarousel({ offers, copy, language, money, onDetails, onSelec
             </div>
             {isSplit ? <div className="mt-3">
               <div className="mb-2 text-[11px] font-black uppercase tracking-[.08em] text-[#8a7f72]">{ROOMS_IN_SOLUTION_LABEL[language]}</div>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 gap-2 min-[390px]:grid-cols-2">
                 {splitVisuals.map((roomVisual,visualIndex) => <div key={`${roomVisual.name}:mini:${visualIndex}`} className="flex min-w-0 items-center gap-2 rounded-2xl border border-[#e7ded2] bg-[#faf7f2] p-2">
                   <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl">
                     <Image src={roomVisual.image} alt={roomVisual.name} fill sizes="48px" className="object-cover"/>
@@ -238,7 +238,7 @@ export function RoomCarousel({ offers, copy, language, money, onDetails, onSelec
               <div className="mt-2 space-y-1.5">{(offer.features||[]).slice(0,2).map((feature) => <div key={feature} className="rounded-2xl bg-[#f1ede7] px-3 py-2 text-[11px] font-semibold leading-4 text-[#514a42]">{feature}</div>)}</div>
             </div> : <div className="mt-2 flex flex-wrap gap-1.5">{(offer.features||[]).slice(0,4).map((feature) => <span key={feature} className="rounded-full bg-[#f1ede7] px-2.5 py-1 text-[11px] font-semibold">{feature}</span>)}</div>}
             {offer.saving > 0 && <p className="mt-3 text-sm font-bold text-[#5f7448]">{copy.saving}: {money(offer.saving,language)}</p>}
-            <div className="mt-3 grid grid-cols-2 gap-2">
+            <div className="mt-3 grid grid-cols-1 gap-2 min-[390px]:grid-cols-2">
               <button onClick={() => onDetails(offer)} className="min-h-14 rounded-2xl border border-[#d8cec1] font-bold">{copy.details}</button>
               <button
                 onClick={() => onSelect(offer)}

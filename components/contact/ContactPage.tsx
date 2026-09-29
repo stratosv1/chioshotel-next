@@ -135,8 +135,8 @@ function buildWhatsAppUrl(data: ContactPageData, lead: ContactLead, ui: ContactU
   return `https://wa.me/${data.form.whatsappPhone}?text=${encodeURIComponent(buildInquiryText(lead, ui))}`;
 }
 
-const labelClass = "ml-3 text-[10px] font-black uppercase tracking-[0.12em] text-[#8b5e34]";
-const fieldClass = "w-full rounded-full border border-[#eee5db] bg-white px-[18px] py-3.5 text-[15px] text-[#42362b] outline-none transition focus:border-[#c7925b] focus:ring-4 focus:ring-[#c7925b]/15";
+const labelClass = "ml-3 text-xs font-black uppercase tracking-[0.1em] text-[#8b5e34]";
+const fieldClass = "min-h-12 min-w-0 w-full rounded-full border border-[#eee5db] bg-white px-[18px] py-3.5 text-[16px] text-[#42362b] outline-none transition focus:border-[#c7925b] focus:ring-4 focus:ring-[#c7925b]/15";
 
 export function ContactPage({ data }: ContactPageProps) {
   const today = useMemo(() => getTodayDate(), []);
@@ -261,7 +261,7 @@ export function ContactPage({ data }: ContactPageProps) {
                 <div className="grid gap-2"><label className={labelClass} htmlFor="contact-checkin">{ui.labels.checkin}</label><input className={fieldClass} id="contact-checkin" type="date" required min={today} value={lead.checkin} onChange={(event) => handleCheckin(event.target.value)} /></div>
                 <div className="grid gap-2"><label className={labelClass} htmlFor="contact-checkout">{ui.labels.checkout}</label><input className={fieldClass} id="contact-checkout" type="date" required min={lead.checkin || tomorrow} value={lead.checkout} onChange={(event) => updateLead("checkout", event.target.value)} /></div>
                 <div className="grid gap-2 md:col-span-2"><label className={labelClass} htmlFor="contact-room">{ui.labels.room}</label><select className={fieldClass} id="contact-room" value={lead.room} onChange={(event) => updateLead("room", event.target.value)}>{data.form.roomOptions.map((option) => <option value={option.value} key={option.value}>{option.label}</option>)}</select></div>
-                <div className="grid gap-2 md:col-span-2"><label className={labelClass} htmlFor="contact-message">{ui.labels.message}</label><textarea className="min-h-[120px] w-full resize-y rounded-3xl border border-[#eee5db] bg-white px-[18px] py-3.5 text-[15px] leading-7 text-[#42362b] outline-none transition focus:border-[#c7925b] focus:ring-4 focus:ring-[#c7925b]/15" id="contact-message" rows={4} placeholder={ui.placeholders.message} value={lead.message} onChange={(event) => updateLead("message", event.target.value)} /></div>
+                <div className="grid gap-2 md:col-span-2"><label className={labelClass} htmlFor="contact-message">{ui.labels.message}</label><textarea className="min-h-[120px] min-w-0 w-full resize-y rounded-3xl border border-[#eee5db] bg-white px-[18px] py-3.5 text-[16px] leading-7 text-[#42362b] outline-none transition focus:border-[#c7925b] focus:ring-4 focus:ring-[#c7925b]/15" id="contact-message" rows={4} placeholder={ui.placeholders.message} value={lead.message} onChange={(event) => updateLead("message", event.target.value)} /></div>
               </div>
 
               <div className="mt-7 grid gap-3.5 md:grid-cols-2">

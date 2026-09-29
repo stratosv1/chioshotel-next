@@ -127,6 +127,11 @@ const chiosIslandSource = read("components/chios/ChiosIslandPage.tsx");
 const museumsPageSource = read("components/chios/ChiosMuseumsPage.tsx");
 const localizedKamposSource = read("components/chios/LocalizedKamposLandingPage.tsx");
 const greekKamposSource = read("components/chios/GreekKamposLandingPageElegant.tsx");
+const contactPageSource = read("components/contact/ContactPage.tsx");
+const ratesPageSource = read("components/rates/RatesPage.tsx");
+const roomFinderProductionSource = read("components/ai/RoomFinderProduction.tsx");
+const roomFinderCarouselSource = read("components/ai/room-finder-carousel.tsx");
+const tripPlannerCssSource = read("app/trip-planner/trip-planner.module.css");
 const polishHomeSource = read("components/home/PolishHomePageTailwind.tsx");
 const homePageSource = read("components/home/HomePageTailwind.tsx");
 const liveDirectRequestSource = read("components/home/LiveDirectRequest.tsx");
@@ -344,6 +349,39 @@ check(
     museumsPageSource.includes("sm:w-auto"),
   "Museum landing spacing and CTA groups are compact and deterministic on mobile.",
   "Museum landing spacing or CTA groups regressed on mobile.",
+);
+check(
+  contactPageSource.includes('const labelClass = "ml-3 text-xs') &&
+    contactPageSource.includes("min-h-12 min-w-0 w-full") &&
+    contactPageSource.includes("min-h-[120px] min-w-0 w-full") &&
+    !contactPageSource.includes('text-[15px] text-[#42362b] outline-none'),
+  "Contact fields keep a 16px mobile input floor and cannot exceed their grid track.",
+  "Contact fields can trigger mobile zoom or overflow their grid track.",
+);
+check(
+  ratesPageSource.includes("grid grid-cols-1 gap-3 min-[390px]:grid-cols-2") &&
+    ratesPageSource.includes("min-[390px]:col-span-2") &&
+    ratesPageSource.includes("min-h-12 min-w-0 w-full") &&
+    !ratesPageSource.includes('className="col-span-2 grid gap-1.5'),
+  "Mobile rates form uses one column at 320px and bounded controls at wider breakpoints.",
+  "Mobile rates form controls can compress or overflow at 320px.",
+);
+check(
+  roomFinderProductionSource.includes("flex flex-col items-stretch gap-3") &&
+    roomFinderProductionSource.includes("min-[390px]:flex-row min-[390px]:items-center") &&
+    roomFinderProductionSource.includes("w-full shrink-0 rounded-full") &&
+    roomFinderProductionSource.includes("grid grid-cols-1 gap-2 min-[390px]:grid-cols-2") &&
+    roomFinderCarouselSource.includes("grid grid-cols-1 gap-2 min-[390px]:grid-cols-2"),
+  "AI Room Finder assistance and action groups stack safely at 320px.",
+  "AI Room Finder assistance or action groups are too dense at 320px.",
+);
+check(
+  tripPlannerCssSource.includes("bottom: max(0.75rem, env(safe-area-inset-bottom))") &&
+    tripPlannerCssSource.includes("overflow-y: auto !important") &&
+    tripPlannerCssSource.includes("overscroll-behavior: contain") &&
+    tripPlannerCssSource.includes("@media (min-width: 390px) and (max-width: 767px)"),
+  "Trip Planner sticky CTA respects safe areas and its stay modal remains scrollable at 320px.",
+  "Trip Planner sticky CTA or stay modal can be obstructed on narrow phones.",
 );
 
 for (const viewportWidth of [320, 390, 430]) {

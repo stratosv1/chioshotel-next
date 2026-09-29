@@ -358,44 +358,44 @@ export function RatesPage({ data }: RatesPageProps) {
               </div>
               <p className="mt-2 text-xs leading-5 text-stone-500">{mobileBooking.categoryNote}</p>
 
-              <form method="get" action={beds24Action} className="mt-4 grid grid-cols-2 gap-3">
+              <form method="get" action={beds24Action} className="mt-4 grid grid-cols-1 gap-3 min-[390px]:grid-cols-2">
                 <input type="hidden" name="propid" value={beds24PropId} />
                 <input type="hidden" name="referer" value="website-mobile" />
                 <input type="hidden" name="mobile" value="1" />
                 <input type="hidden" name="lang" value={locale} />
 
-                <label className="col-span-2 grid gap-1.5 text-xs font-black uppercase tracking-[0.06em] text-stone-600">
+                <label className="grid min-w-0 gap-1.5 text-xs font-black uppercase tracking-[0.06em] text-stone-600 min-[390px]:col-span-2">
                   {mobileBooking.checkin}
                   <input
                     type="date"
                     name="checkin"
                     required
-                    className="min-h-12 w-full rounded-xl border border-stone-300 bg-white px-3 text-base font-semibold normal-case tracking-normal text-stone-800 outline-none focus:border-[#a15d33] focus:ring-2 focus:ring-[#a15d33]/15"
+                    className="min-h-12 min-w-0 w-full rounded-xl border border-stone-300 bg-white px-3 text-base font-semibold normal-case tracking-normal text-stone-800 outline-none focus:border-[#a15d33] focus:ring-2 focus:ring-[#a15d33]/15"
                   />
                 </label>
 
                 <label className="grid gap-1.5 text-xs font-black uppercase tracking-[0.06em] text-stone-600">
                   {mobileBooking.nights}
-                  <select name="numnight" defaultValue="2" className="min-h-12 rounded-xl border border-stone-300 bg-white px-3 text-base font-semibold normal-case tracking-normal text-stone-800 outline-none focus:border-[#a15d33]">
+                  <select name="numnight" defaultValue="2" className="min-h-12 min-w-0 w-full rounded-xl border border-stone-300 bg-white px-3 text-base font-semibold normal-case tracking-normal text-stone-800 outline-none focus:border-[#a15d33]">
                     {Array.from({ length: 14 }, (_, index) => index + 1).map((night) => <option key={night} value={night}>{night}</option>)}
                   </select>
                 </label>
 
                 <label className="grid gap-1.5 text-xs font-black uppercase tracking-[0.06em] text-stone-600">
                   {mobileBooking.adults}
-                  <select name="numadult" defaultValue="2" className="min-h-12 rounded-xl border border-stone-300 bg-white px-3 text-base font-semibold normal-case tracking-normal text-stone-800 outline-none focus:border-[#a15d33]">
+                  <select name="numadult" defaultValue="2" className="min-h-12 min-w-0 w-full rounded-xl border border-stone-300 bg-white px-3 text-base font-semibold normal-case tracking-normal text-stone-800 outline-none focus:border-[#a15d33]">
                     {[1, 2, 3, 4, 5].map((count) => <option key={count} value={count}>{count}</option>)}
                   </select>
                 </label>
 
-                <label className="col-span-2 grid gap-1.5 text-xs font-black uppercase tracking-[0.06em] text-stone-600">
+                <label className="grid min-w-0 gap-1.5 text-xs font-black uppercase tracking-[0.06em] text-stone-600 min-[390px]:col-span-2">
                   {mobileBooking.children}
-                  <select name="numchild" defaultValue="0" className="min-h-12 rounded-xl border border-stone-300 bg-white px-3 text-base font-semibold normal-case tracking-normal text-stone-800 outline-none focus:border-[#a15d33]">
+                  <select name="numchild" defaultValue="0" className="min-h-12 min-w-0 w-full rounded-xl border border-stone-300 bg-white px-3 text-base font-semibold normal-case tracking-normal text-stone-800 outline-none focus:border-[#a15d33]">
                     {[0, 1, 2, 3, 4].map((count) => <option key={count} value={count}>{count}</option>)}
                   </select>
                 </label>
 
-                <button type="submit" className="col-span-2 min-h-14 rounded-2xl bg-[#a15d33] px-5 text-sm font-black uppercase tracking-[0.07em] text-white shadow-lg shadow-[#a15d33]/20 active:scale-[0.99]">
+                <button type="submit" className="min-h-14 rounded-2xl bg-[#a15d33] px-5 text-sm font-black uppercase tracking-[0.07em] text-white shadow-lg shadow-[#a15d33]/20 active:scale-[0.99] min-[390px]:col-span-2">
                   {mobileBooking.submit}
                 </button>
               </form>
