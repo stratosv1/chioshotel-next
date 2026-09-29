@@ -17,7 +17,7 @@ export const sakizAdasiOtelleriGuide: ChiosHotelsGuideContent = {
     disclosure: "Voulamandis House bir otel değildir. Kambos, Sakız Adası’nda özel odalar ve aile daireleri sunan aile işletmesi bir konaklama tesisidir.",
     primaryCta: { label: "Canlı müsaitlik ara", href: "#live-availability" },
     secondaryCta: { label: "Bölgeleri karşılaştır", href: "#where-to-stay" },
-    aiCta: { label: "AI Room Finder’a sor", href: "/ai-assistant/?lang=tr" },
+    aiCta: { label: "AI Room Finder’a sor", href: "/tr/ai-assistant/" },
   },
   trustPoints: [
     { label: "Yerel üs", value: "Tarihi Kambos" },

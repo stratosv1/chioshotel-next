@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { ArrowLeft, BedDouble, Check, ChevronDown, MessageCircle, Phone, RotateCcw, Send } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -14,6 +15,7 @@ import { stayRange } from "./room-finder-format";
 import { SelectedRoomCard } from "./room-finder-selected-card";
 import { TypingIndicator } from "./room-finder-typing-indicator";
 import { useRoomFinder } from "./use-room-finder";
+import { ROOM_FINDER_HREFS } from "@/lib/room-finder-cta-routing";
 
 const WHATSAPP_NUMBER = "306944474226";
 const CALL_NUMBER = "+306944764654";
@@ -255,6 +257,7 @@ export function RoomFinderProduction({
 }: {
   initialLanguage?: RoomFinderLanguage;
 }) {
+  const router = useRouter();
   const [language, setLanguage] = useState<RoomFinderLanguage>(initialLanguage);
   const finder = useRoomFinder(language);
   const copy = ROOM_FINDER_COPY[language];
@@ -425,10 +428,8 @@ export function RoomFinderProduction({
 
   function changeLanguage(next: RoomFinderLanguage) {
     if (finder.typing || finder.step === "searching") return;
-    const url = new URL(window.location.href);
-    url.searchParams.set("lang", next);
-    history.replaceState(history.state, "", url);
     setLanguage(next);
+    router.replace(ROOM_FINDER_HREFS[next], { scroll: false });
   }
 
   function openRoomDetail(offer: RoomOffer) {

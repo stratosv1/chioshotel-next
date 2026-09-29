@@ -16,7 +16,7 @@ export const chiosHotelsGuide = {
       "Voulamandis House is not a hotel. It is a family-run guest accommodation offering rooms and family apartments in Kambos, Chios.",
     primaryCta: { label: "Search live availability", href: "#live-availability" },
     secondaryCta: { label: "Compare areas", href: "#where-to-stay" },
-    aiCta: { label: "Ask the AI Room Finder", href: "/ai-assistant/?lang=en" },
+    aiCta: { label: "Ask the AI Room Finder", href: "/ai-assistant/" },
   },
   trustPoints: [
     { label: "Local base", value: "Historic Kambos" },

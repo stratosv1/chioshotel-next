@@ -175,13 +175,13 @@ function patchPatternRedirects(source) {
 function patchDirectAiRedirects(source) {
   if (source.includes("const directAiLanguage: Record<string, string>")) return source;
 
-  const before = `  if (\n    normalizedPathname === "/best-room-selection-wizard" ||\n    normalizedPathname === "/reservations"\n  ) {\n    const url = request.nextUrl.clone();\n    url.protocol = "https:";\n    url.hostname = "chioshotel.gr";\n    url.pathname = "/ai-assistant/";\n    url.search = "?lang=en";\n    return NextResponse.redirect(url, 301);\n  }\n`;
+  const before = `  if (\n    normalizedPathname === "/best-room-selection-wizard" ||\n    normalizedPathname === "/reservations"\n  ) {\n    const url = request.nextUrl.clone();\n    url.protocol = "https:";\n    url.hostname = "chioshotel.gr";\n    url.pathname = "/ai-assistant/";\n    url.search = "";\n    return NextResponse.redirect(url, 301);\n  }\n`;
 
   const entries = Object.entries(DIRECT_AI_LANGUAGES)
     .map(([from, language]) => `    ${JSON.stringify(from)}: ${JSON.stringify(language)},`)
     .join("\n");
 
-  const after = `  const directAiLanguage: Record<string, string> = {\n${entries}\n  };\n  const aiLanguage = directAiLanguage[normalizedPathname];\n  if (aiLanguage) {\n    const url = request.nextUrl.clone();\n    url.protocol = "https:";\n    url.hostname = "chioshotel.gr";\n    url.pathname = "/ai-assistant/";\n    url.search = \`?lang=\${aiLanguage}\`;\n    return NextResponse.redirect(url, 301);\n  }\n`;
+  const after = `  const directAiLanguage: Record<string, string> = {\n${entries}\n  };\n  const aiLanguage = directAiLanguage[normalizedPathname];\n  if (aiLanguage) {\n    const url = request.nextUrl.clone();\n    url.protocol = "https:";\n    url.hostname = "chioshotel.gr";\n    url.pathname = aiLanguage === "en" ? "/ai-assistant/" : \`/\${aiLanguage}/ai-assistant/\`;\n    url.search = "";\n    return NextResponse.redirect(url, 301);\n  }\n`;
 
   if (!source.includes(before)) {
     throw new Error("direct AI redirect patch anchor not found; redirect-chain hardening must run first");

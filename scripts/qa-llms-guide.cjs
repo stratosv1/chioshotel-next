@@ -253,7 +253,7 @@ expectNone(
 
 expect(
   "app/find-your-room/page.tsx",
-  'permanentRedirect("/ai-assistant/?lang=en")',
+  'permanentRedirect("/ai-assistant/")',
   "public English room-finder discovery URL must resolve to the WebMCP-enabled assistant",
 );
 

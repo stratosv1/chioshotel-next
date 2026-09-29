@@ -287,7 +287,7 @@ export const homePageEn: HomePageData = {
       "Stone-built guest room at Voulamandis House accommodation in Kambos, Chios",
     primaryCta: {
       label: "AI Room Finder",
-      href: "/ai-assistant/?lang=en",
+      href: "/ai-assistant/",
       icon: "✨",
     },
     secondaryCta: {
@@ -812,7 +812,7 @@ export const homePageEl: HomePageData = {
       "Πέτρινο ενοικιαζόμενο δωμάτιο στο Voulamandis House, στον Κάμπο της Χίου",
     primaryCta: {
       label: "Βρες δωμάτιο με AI",
-      href: "/ai-assistant/?lang=el",
+      href: "/el/ai-assistant/",
       icon: "✨",
     },
     secondaryCta: {
@@ -1282,7 +1282,7 @@ export const homePageFr: HomePageData = {
       "Chambre en pierre au Voulamandis House, hébergement à Kambos, Chios",
     primaryCta: {
       label: "Trouvez votre chambre avec l’IA",
-      href: "/ai-assistant/?lang=fr",
+      href: "/fr/ai-assistant/",
       icon: "✨",
     },
     secondaryCta: {
@@ -1728,7 +1728,7 @@ export const homePageDe: HomePageData = {
       "Zimmer mit Natursteinwänden im Voulamandis House in Kambos auf Chios",
     primaryCta: {
       label: "Zimmer mit KI finden",
-      href: "/ai-assistant/?lang=de",
+      href: "/de/ai-assistant/",
       icon: "✨",
     },
     secondaryCta: {
@@ -2169,7 +2169,7 @@ export const homePageIt: HomePageData = {
       "Camera in pietra al Voulamandis House, alloggio a Kambos, Chios",
     primaryCta: {
       label: "Trova la camera con AI",
-      href: "/ai-assistant/?lang=it",
+      href: "/it/ai-assistant/",
       icon: "✨",
     },
     secondaryCta: {
@@ -2615,7 +2615,7 @@ export const homePageEs: HomePageData = {
       "Habitación de piedra en Voulamandis House, alojamiento en Kambos, Quíos",
     primaryCta: {
       label: "Encuentra tu habitación con IA",
-      href: "/ai-assistant/?lang=es",
+      href: "/es/ai-assistant/",
       icon: "✨",
     },
     secondaryCta: {
@@ -3061,7 +3061,7 @@ export const homePageTr: HomePageData = {
       "Sakız Adası Kambos’taki Voulamandis House taş duvarlı oda",
     primaryCta: {
       label: "Yapay zekâ ile odanı bul",
-      href: "/ai-assistant/?lang=tr",
+      href: "/tr/ai-assistant/",
       icon: "✨",
     },
     secondaryCta: {
@@ -3477,5 +3477,4 @@ export const homePageTr: HomePageData = {
     },
   },
 };
-
 

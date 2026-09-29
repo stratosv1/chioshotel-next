@@ -56,12 +56,12 @@ const GSC_VALIDATION_REDIRECTS = [
   // Search Console: Page with redirect entries that still passed through an
   // intermediate legacy alias. Keep the historical source but send it directly
   // to the final destination Google should see.
-  ["/de/zimmer-suchassistent/", "/ai-assistant/?lang=de"],
-  ["/el/voulamandis-room-finder-gr/", "/ai-assistant/?lang=el"],
-  ["/es/mike/", "/ai-assistant/?lang=es"],
-  ["/it/trova-la-stanza-che-fa-per-te/", "/ai-assistant/?lang=it"],
-  ["/mike-2/", "/ai-assistant/?lang=en"],
-  ["/tr/en-uygun-oda/", "/ai-assistant/?lang=tr"],
+  ["/de/zimmer-suchassistent/", "/de/ai-assistant/"],
+  ["/el/voulamandis-room-finder-gr/", "/el/ai-assistant/"],
+  ["/es/mike/", "/es/ai-assistant/"],
+  ["/it/trova-la-stanza-che-fa-per-te/", "/it/ai-assistant/"],
+  ["/mike-2/", "/ai-assistant/"],
+  ["/tr/en-uygun-oda/", "/tr/ai-assistant/"],
   [
     "/tr/chios-odalari/sakiz-adasinin-plajlari/",
     "/tr/sakiz-adasi-plajlari/",
@@ -80,16 +80,16 @@ const GSC_VALIDATION_REDIRECTS = [
     "/it/spiagge-chios/spiaggia-agia-fotia/",
   ],
 
-  // Retired Room Finder aliases. The AI application itself intentionally stays
-  // noindex, but these historical aliases should redirect instead of returning 404.
-  ["/room-finder/", "/ai-assistant/?lang=en"],
-  ["/de/room-finder-de/", "/ai-assistant/?lang=de"],
-  ["/el/vre-to-domatio-pou-sou-tairiazei/", "/ai-assistant/?lang=el"],
-  ["/es/room-finder-es/", "/ai-assistant/?lang=es"],
-  ["/fr/room-wizard-fr/", "/ai-assistant/?lang=fr"],
-  ["/it/room-finder-it/", "/ai-assistant/?lang=it"],
-  ["/tr/voulamandis-house-room-finder-wizard-tr/", "/ai-assistant/?lang=tr"],
-  ["/tr/voulamandis-house-find-the-best-room-tr/", "/ai-assistant/?lang=tr"],
+  // Retired Room Finder aliases should resolve directly to the matching
+  // localized AI Assistant URL instead of returning 404 or adding a redirect hop.
+  ["/room-finder/", "/ai-assistant/"],
+  ["/de/room-finder-de/", "/de/ai-assistant/"],
+  ["/el/vre-to-domatio-pou-sou-tairiazei/", "/el/ai-assistant/"],
+  ["/es/room-finder-es/", "/es/ai-assistant/"],
+  ["/fr/room-wizard-fr/", "/fr/ai-assistant/"],
+  ["/it/room-finder-it/", "/it/ai-assistant/"],
+  ["/tr/voulamandis-house-room-finder-wizard-tr/", "/tr/ai-assistant/"],
+  ["/tr/voulamandis-house-find-the-best-room-tr/", "/tr/ai-assistant/"],
 ];
 
 function formatRedirect([source, destination]) {

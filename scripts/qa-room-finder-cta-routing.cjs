@@ -15,10 +15,18 @@ const policy = read("lib/room-finder-cta-routing.ts");
 const router = read("components/navigation/RoomFinderCtaRouter.tsx");
 const layout = read("app/layout.tsx");
 
-const languages = ["en", "el", "fr", "de", "it", "es", "tr"];
-for (const language of languages) {
+const destinations = {
+  en: "/ai-assistant/",
+  el: "/el/ai-assistant/",
+  fr: "/fr/ai-assistant/",
+  de: "/de/ai-assistant/",
+  it: "/it/ai-assistant/",
+  es: "/es/ai-assistant/",
+  tr: "/tr/ai-assistant/",
+};
+for (const [language, destination] of Object.entries(destinations)) {
   assert(
-    policy.includes(`${language}: \"/ai-assistant/?lang=${language}\"`),
+    policy.includes(`${language}: \"${destination}\"`),
     `Missing AI Room Finder destination for ${language}`,
   );
 }
@@ -64,23 +72,32 @@ assert(layout.includes("<RoomFinderCtaRouter />"), "Room Finder CTA router is no
 assert(layout.includes("!isPolishPath && !excludeAnalytics"), "CTA router should stay out of Polish and staff surfaces");
 
 const redirects = {
-  "app/find-your-room/page.tsx": "en",
-  "app/el/vres-to-domatio-sou/page.tsx": "el",
-  "app/fr/trouvez-votre-chambre/page.tsx": "fr",
-  "app/de/finde-dein-zimmer/page.tsx": "de",
-  "app/it/trova-la-tua-camera/page.tsx": "it",
-  "app/es/encuentra-tu-habitacion/page.tsx": "es",
-  "app/tr/odani-bul/page.tsx": "tr",
+  "app/find-your-room/page.tsx": destinations.en,
+  "app/el/vres-to-domatio-sou/page.tsx": destinations.el,
+  "app/fr/trouvez-votre-chambre/page.tsx": destinations.fr,
+  "app/de/finde-dein-zimmer/page.tsx": destinations.de,
+  "app/it/trova-la-tua-camera/page.tsx": destinations.it,
+  "app/es/encuentra-tu-habitacion/page.tsx": destinations.es,
+  "app/tr/odani-bul/page.tsx": destinations.tr,
 };
 
-for (const [file, language] of Object.entries(redirects)) {
+for (const [file, destination] of Object.entries(redirects)) {
   const source = read(file);
   assert(source.includes("permanentRedirect"), `${file} must be a server-side redirect`);
   assert(
-    source.includes(`/ai-assistant/?lang=${language}`),
+    source.includes(`permanentRedirect(\"${destination}\")`),
     `${file} does not redirect to the correct AI Room Finder language`,
   );
 }
+
+const localizedPage = read("app/[locale]/ai-assistant/page.tsx");
+const pageLocalization = read("lib/ai-assistant/page-localization.ts");
+const sitemap = read("app/sitemap.ts");
+assert(localizedPage.includes("generateStaticParams"), "Localized AI Room Finder routes must be statically discoverable");
+assert(localizedPage.includes("buildAiAssistantMetadata"), "Localized AI Room Finder metadata is missing");
+assert(pageLocalization.includes('\"x-default\"'), "AI Room Finder hreflang set is missing x-default");
+assert(pageLocalization.includes("canonical"), "AI Room Finder canonical metadata is missing");
+assert(sitemap.includes("aiAssistantRoutes"), "Localized AI Room Finder URLs are missing from the sitemap");
 
 // Transactional label+href objects must never point to the AI Room Finder.
 const sourceRoots = ["app", "components", "content", "lib"];

@@ -31,7 +31,7 @@ export const diamoniStiXioPageEl: ChiosAccommodationPageData = {
     },
     aiCta: {
       label: "Βρείτε δωμάτιο με AI",
-      href: "/ai-assistant/?lang=el",
+      href: "/el/ai-assistant/",
     },
   },
   highlights: [
@@ -233,7 +233,7 @@ export const diamoniStiXioPageEl: ChiosAccommodationPageData = {
     },
     secondaryCta: {
       label: "Χρησιμοποιήστε το AI Room Finder",
-      href: "/ai-assistant/?lang=el",
+      href: "/el/ai-assistant/",
     },
     whatsappCta: {
       label: "Ρωτήστε στο WhatsApp",

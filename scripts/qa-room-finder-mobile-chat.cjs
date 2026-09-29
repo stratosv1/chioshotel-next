@@ -10,6 +10,7 @@ function assert(condition, message) {
 const root = process.cwd();
 const production = fs.readFileSync(path.join(root, "components/ai/RoomFinderProduction.tsx"), "utf8");
 const page = fs.readFileSync(path.join(root, "app/ai-assistant/page.tsx"), "utf8");
+const pageLocalization = fs.readFileSync(path.join(root, "lib/ai-assistant/page-localization.ts"), "utf8");
 const hook = fs.readFileSync(path.join(root, "components/ai/use-room-finder.ts"), "utf8");
 
 assert(production.includes("window.visualViewport"), "Room Finder is missing VisualViewport keyboard handling");
@@ -31,8 +32,8 @@ assert(!production.includes("disabled={!inputEnabled}\n            placeholder")
 assert(hook.includes("turnLocked.current = true;\n    setTyping(true);"), "Composer is not locked immediately when a user turn starts");
 assert(hook.includes("turnLocked.current = false;\n    setTyping(false);"), "Composer is not unlocked when the assistant turn ends");
 
-assert(page.includes('interactiveWidget: "resizes-content"'), "AI Room Finder viewport does not request keyboard content resizing");
-assert(page.includes('viewportFit: "cover"'), "AI Room Finder viewport is missing safe-area cover support");
+assert(pageLocalization.includes('interactiveWidget: "resizes-content"'), "AI Room Finder viewport does not request keyboard content resizing");
+assert(pageLocalization.includes('viewportFit: "cover"'), "AI Room Finder viewport is missing safe-area cover support");
 assert(!page.includes("RoomFinderAutoFocus"), "Legacy programmatic keyboard reopening is still mounted");
 
 console.log("Room Finder Android/iOS mobile chat QA passed.");

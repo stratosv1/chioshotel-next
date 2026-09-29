@@ -87,7 +87,7 @@ function patchProxy() {
     url.protocol = "https:";
     url.hostname = "chioshotel.gr";
     url.pathname = "/ai-assistant/";
-    url.search = "?lang=en";
+    url.search = "";
     return NextResponse.redirect(url, 301);
   }
 
@@ -99,7 +99,7 @@ function patchProxy() {
     url.protocol = "https:";
     url.hostname = "chioshotel.gr";
     url.pathname = "/ai-assistant/";
-    url.search = "?lang=en";
+    url.search = "";
     return NextResponse.redirect(url, 301);
   }
 

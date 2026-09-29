@@ -120,7 +120,7 @@ function AccommodationModal({ onClose }: { onClose: () => void }) {
 
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             <a
-              href="/ai-assistant/?lang=el"
+              href="/el/ai-assistant/"
               className="flex min-h-[60px] items-center justify-center rounded-2xl bg-[#596544] px-5 text-center text-[16px] font-extrabold text-white shadow-[0_10px_24px_rgba(77,91,57,.28)] transition hover:bg-[#4c5838]"
             >
               Δες διαθεσιμότητα · AI Room Finder

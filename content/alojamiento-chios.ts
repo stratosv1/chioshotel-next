@@ -31,7 +31,7 @@ export const alojamientoChiosPageEs: ChiosAccommodationPageData = {
     },
     aiCta: {
       label: "Encontrar habitación con IA",
-      href: "/ai-assistant/?lang=es",
+      href: "/es/ai-assistant/",
     },
   },
   highlights: [
@@ -233,7 +233,7 @@ export const alojamientoChiosPageEs: ChiosAccommodationPageData = {
     },
     secondaryCta: {
       label: "Usar el AI Room Finder",
-      href: "/ai-assistant/?lang=es",
+      href: "/es/ai-assistant/",
     },
     whatsappCta: {
       label: "Preguntar por WhatsApp",

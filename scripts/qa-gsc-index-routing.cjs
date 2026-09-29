@@ -46,7 +46,7 @@ assert(
   "proxy.ts must check relevant one-to-one legacy redirects before returning 410.",
 );
 assert(
-  proxySource.includes('normalizedPathname === "/book the room you like"'),
+  proxySource.includes('"/book the room you like": "/ai-assistant/"'),
   "The historical 'book the room you like' GSC URL must bypass the old Find Your Room alias and redirect directly to the AI Room Finder.",
 );
 

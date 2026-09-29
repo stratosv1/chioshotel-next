@@ -50,7 +50,7 @@ const wordpressArchiveGonePrefixes = [
 
 const legacyRedirects: Record<string, string> = {
   "/en": "/",
-  "/book the room you like": "/find-your-room/",
+  "/book the room you like": "/ai-assistant/",
 
   // Rooms / booking / contact / deals
   "/fr/chios-rooms": "/fr/chambres-a-chios/",
@@ -73,7 +73,7 @@ const legacyRedirects: Record<string, string> = {
     "/voulamandis-house-contact-us-form-fill-in-the-form/",
   "/el/epikoinonia": "/el/epikoinonia-voulamandis-house/",
   "/erotisis-voulamandis-house-2": "/el/syxnes-erotiseis/",
-  "/best-room-selection-wizard": "/find-your-room/",
+  "/best-room-selection-wizard": "/ai-assistant/",
   "/language/el/ΞΊΟΞ±Ο„Ξ·ΟƒΞ·": "/el/amesi-kratisi-voulamandis-house/",
   "/el/amesi-kratisi-voulamandis-house":
     "/el/amesi-kratisi-voulamandis-house/",
@@ -358,7 +358,7 @@ const legacyRedirects: Record<string, string> = {
     "/best-chios-travel-deals-for-chios-hotels/",
   "/crazy-travel-deals-for-chios-hotels":
     "/best-chios-travel-deals-for-chios-hotels/",
-  "/reservations": "/find-your-room/",
+  "/reservations": "/ai-assistant/",
   "/voulamandis-house-contact-form":
     "/voulamandis-house-contact-us-form-fill-in-the-form/",
   "/el/ΞµΟ€ΞΉΞΊΞΏΞΉΞ½Ο‰Ξ½Ξ―Ξ±": "/el/epikoinonia-voulamandis-house/",
@@ -502,6 +502,7 @@ function shouldCheckSeoRuntimeRule(pathname: string) {
   const normalized = normalizeLegacyPathname(pathname);
   if (normalized === "/") return false;
   if (isStaffPath(normalized) || normalized.startsWith("/api/")) return false;
+  if (/^\/(?:el|fr|de|it|es|tr)\/ai-assistant(?:\/|$)/.test(normalized)) return false;
   if (seoRuntimeExemptPrefixes.some((prefix) => normalized === prefix || normalized.startsWith(`${prefix}/`))) return false;
   if (/\.[a-z0-9]{2,8}$/i.test(normalized)) return false;
 

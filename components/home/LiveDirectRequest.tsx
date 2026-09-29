@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { HomePageData } from "@/content/home";
+import { roomFinderHrefForLanguage } from "@/lib/room-finder-cta-routing";
 import {
   firstAvailableDate,
   formatDate,
@@ -1109,7 +1110,7 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
             <p className={`mt-2 text-center text-xs font-bold ${emailState === "sent" ? "text-emerald-700" : "text-red-600"}`} role="status">{emailFeedback}</p>
           ) : null}
           <a
-            href={`/ai-assistant/?lang=${locale}`}
+            href={roomFinderHrefForLanguage(locale)}
             aria-label={`${copy.differentDates} ${copy.checkAvailability}`}
             className="mt-3 flex min-h-11 items-center justify-between gap-3 rounded-xl bg-amber-50/80 px-4 py-2.5 text-amber-800 ring-1 ring-amber-900/10 transition hover:bg-amber-100"
           >

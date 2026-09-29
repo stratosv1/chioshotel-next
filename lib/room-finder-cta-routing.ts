@@ -3,13 +3,13 @@ export type RoomFinderSiteLanguage = "en" | "el" | "fr" | "de" | "it" | "es" | "
 const SUPPORTED_LANGUAGES: RoomFinderSiteLanguage[] = ["en", "el", "fr", "de", "it", "es", "tr"];
 
 export const ROOM_FINDER_HREFS: Record<RoomFinderSiteLanguage, string> = {
-  en: "/ai-assistant/?lang=en",
-  el: "/ai-assistant/?lang=el",
-  fr: "/ai-assistant/?lang=fr",
-  de: "/ai-assistant/?lang=de",
-  it: "/ai-assistant/?lang=it",
-  es: "/ai-assistant/?lang=es",
-  tr: "/ai-assistant/?lang=tr",
+  en: "/ai-assistant/",
+  el: "/el/ai-assistant/",
+  fr: "/fr/ai-assistant/",
+  de: "/de/ai-assistant/",
+  it: "/it/ai-assistant/",
+  es: "/es/ai-assistant/",
+  tr: "/tr/ai-assistant/",
 };
 
 const DISCOVERY_PATTERNS = [

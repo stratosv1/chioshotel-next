@@ -14,6 +14,8 @@ import { getVillageSlugs } from "@/content/village-details";
 import { getMuseumSlugs } from "@/content/museum-details";
 import { propertyFaqPaths } from "@/content/property-faq";
 import { CHIOS_HOTELS_GUIDE_PATHS } from "@/lib/chios-hotels-guide-i18n";
+import { AI_ASSISTANT_LANGUAGES } from "@/lib/ai-assistant/page-localization";
+import { ROOM_FINDER_HREFS } from "@/lib/room-finder-cta-routing";
 import { routeMap } from "@/lib/url-map";
 import { absoluteUrl } from "@/lib/seo";
 
@@ -59,6 +61,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: "monthly",
     priority: 0.8,
   }));
+
+  const aiAssistantRoutes: SitemapEntry[] = AI_ASSISTANT_LANGUAGES.map(
+    (language) => ({
+      url: absoluteUrl(ROOM_FINDER_HREFS[language]),
+      changeFrequency: "weekly",
+      priority: 0.7,
+    }),
+  );
 
   const kamposRoutes: SitemapEntry[] = Object.values(kamposChiosPaths).map(
     (pathname) => ({
@@ -189,6 +199,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...kamposRoutes,
     ...polishRoutes,
     ...faqRoutes,
+    ...aiAssistantRoutes,
     ...routes,
     ...familyBeachRoutes,
     ...organizedBeachRoutes,

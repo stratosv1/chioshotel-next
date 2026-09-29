@@ -17,7 +17,7 @@ export const xenodoxeiaXiosGuide: ChiosHotelsGuideContent = {
     disclosure: "Το Voulamandis House δεν είναι ξενοδοχείο. Είναι οικογενειακό κατάλυμα με δωμάτια και οικογενειακά διαμερίσματα στον Κάμπο της Χίου.",
     primaryCta: { label: "Ζωντανός έλεγχος διαθεσιμότητας", href: "#live-availability" },
     secondaryCta: { label: "Σύγκριση περιοχών", href: "#where-to-stay" },
-    aiCta: { label: "Ρωτήστε το AI Room Finder", href: "/ai-assistant/?lang=el" },
+    aiCta: { label: "Ρωτήστε το AI Room Finder", href: "/el/ai-assistant/" },
   },
   trustPoints: [
     { label: "Τοπική βάση", value: "Ιστορικός Κάμπος" },

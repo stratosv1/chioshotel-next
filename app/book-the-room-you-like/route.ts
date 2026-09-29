@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server";
 import { permanentRedirectResponse } from "@/lib/permanent-redirect-response";
 
 export function GET(request: NextRequest) {
-  return permanentRedirectResponse(request, "/ai-assistant/?lang=en");
+  return permanentRedirectResponse(request, "/ai-assistant/");
 }
 
 export const HEAD = GET;

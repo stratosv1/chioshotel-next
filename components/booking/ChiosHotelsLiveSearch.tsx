@@ -447,7 +447,7 @@ export function ChiosHotelsLiveSearch() {
                   <a href={`https://wa.me/306944474226?text=${whatsappText}`} target="_blank" rel="noreferrer" className="inline-flex min-h-12 items-center justify-center rounded-full bg-emerald-100 px-5 py-3 text-sm font-black !text-emerald-950">
                     Ask on WhatsApp
                   </a>
-                  <a href="/ai-assistant/?lang=en" className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/25 px-5 py-3 text-sm font-black !text-white">
+                  <a href="/ai-assistant/" className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/25 px-5 py-3 text-sm font-black !text-white">
                     Try the AI Room Finder
                   </a>
                 </div>

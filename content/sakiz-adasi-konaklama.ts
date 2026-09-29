@@ -31,7 +31,7 @@ export const sakizAdasiKonaklamaPageTr: ChiosAccommodationPageData = {
     },
     aiCta: {
       label: "AI ile doğru odayı bul",
-      href: "/ai-assistant/?lang=tr",
+      href: "/tr/ai-assistant/",
     },
   },
   highlights: [
@@ -233,7 +233,7 @@ export const sakizAdasiKonaklamaPageTr: ChiosAccommodationPageData = {
     },
     secondaryCta: {
       label: "AI Oda Bulucu’yu kullan",
-      href: "/ai-assistant/?lang=tr",
+      href: "/tr/ai-assistant/",
     },
     whatsappCta: {
       label: "WhatsApp’tan sor",

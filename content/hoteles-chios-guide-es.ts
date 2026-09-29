@@ -17,7 +17,7 @@ export const hotelesChiosGuideEs: ChiosHotelsGuideContent = {
     disclosure: "Voulamandis House no es un hotel. Es un alojamiento familiar con habitaciones privadas y apartamentos familiares en Kambos, Chios.",
     primaryCta: { label: "Buscar disponibilidad en directo", href: "#live-availability" },
     secondaryCta: { label: "Comparar zonas", href: "#where-to-stay" },
-    aiCta: { label: "Preguntar al AI Room Finder", href: "/ai-assistant/?lang=es" },
+    aiCta: { label: "Preguntar al AI Room Finder", href: "/es/ai-assistant/" },
   },
   trustPoints: [
     { label: "Base local", value: "Kambos histórico" },

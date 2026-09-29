@@ -309,7 +309,7 @@ function LeadFunnel({ groups }: { groups: LeadGroup[] }) {
             <div className="p-5">
               <p className="text-[15px] font-bold leading-6 text-[#665b52]">Δες άμεσα ποιο δωμάτιο ταιριάζει στο ταξίδι σου ή μίλησε απευθείας μαζί μας στο WhatsApp.</p>
               <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                <a href="/ai-assistant/?lang=el" className="flex min-h-[58px] items-center justify-center rounded-2xl bg-[#687451] px-4 text-center text-[15px] font-extrabold text-white shadow-[0_8px_18px_rgba(88,101,65,.2)] transition hover:bg-[#596544]">Δες διαθεσιμότητα · AI Room Finder</a>
+                <a href="/el/ai-assistant/" className="flex min-h-[58px] items-center justify-center rounded-2xl bg-[#687451] px-4 text-center text-[15px] font-extrabold text-white shadow-[0_8px_18px_rgba(88,101,65,.2)] transition hover:bg-[#596544]">Δες διαθεσιμότητα · AI Room Finder</a>
                 <a href="https://wa.me/306944474226" target="_blank" rel="noreferrer" className="flex min-h-[58px] items-center justify-center rounded-2xl border-2 border-[#7fa184] bg-[#f7fbf5] px-4 text-center text-[15px] font-extrabold text-[#47634d] transition hover:bg-[#edf6ea]">WhatsApp με τη reception</a>
               </div>
               <p className="mt-4 text-center text-[13px] font-extrabold leading-5 text-[#776a60]">Έχεις ήδη κλείσει; Τέλεια — το προσωπικό σου πρόγραμμα είναι στο email σου.</p>

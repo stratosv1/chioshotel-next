@@ -228,7 +228,7 @@ export async function POST(request: Request) {
                 <table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:17px">
                   <tr>
                     <td style="padding:0 8px 8px 0">
-                      <a href="https://chioshotel.gr/ai-assistant/?lang=el" style="display:inline-block;background:#737d58;color:#ffffff;text-decoration:none;padding:14px 18px;border-radius:12px;font-size:14px;font-weight:800">Δες διαθεσιμότητα</a>
+                      <a href="https://chioshotel.gr/el/ai-assistant/" style="display:inline-block;background:#737d58;color:#ffffff;text-decoration:none;padding:14px 18px;border-radius:12px;font-size:14px;font-weight:800">Δες διαθεσιμότητα</a>
                     </td>
                     <td style="padding:0 0 8px 0">
                       <a href="https://wa.me/306944474226" style="display:inline-block;background:#eef4ea;color:#4e654f;text-decoration:none;padding:13px 17px;border-radius:12px;border:1px solid #b9c8b4;font-size:14px;font-weight:800">WhatsApp</a>
@@ -265,7 +265,7 @@ export async function POST(request: Request) {
       replyTo: contactTo,
       subject: "Το προσωπικό σου Chios Trip Plan είναι έτοιμο",
       html,
-      text: `Το προσωπικό σου Chios Trip Plan\n\n${stops.map((stop, index) => `${suggestedTime(index)} — ${stop.title}\n${stop.summary}\n${stop.rows.map((row) => `${row.label}: ${row.value}`).join("\n")}${stop.tip ? `\nTip: ${stop.tip}` : ""}`).join("\n\n")}\n\nAI Room Finder: https://chioshotel.gr/ai-assistant/?lang=el\nWhatsApp: https://wa.me/306944474226`,
+      text: `Το προσωπικό σου Chios Trip Plan\n\n${stops.map((stop, index) => `${suggestedTime(index)} — ${stop.title}\n${stop.summary}\n${stop.rows.map((row) => `${row.label}: ${row.value}`).join("\n")}${stop.tip ? `\nTip: ${stop.tip}` : ""}`).join("\n\n")}\n\nAI Room Finder: https://chioshotel.gr/el/ai-assistant/\nWhatsApp: https://wa.me/306944474226`,
     });
 
     if (body.accommodationConsent && contactTo) {

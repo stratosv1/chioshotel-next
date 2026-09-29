@@ -14,7 +14,7 @@ const roomsOwnerExperienceByPath: Readonly<Record<string, RoomsOwnerExperience>>
     highlightedTitle: "in Chios",
     primaryCta: {
       label: "Find your room with AI",
-      href: "/ai-assistant/?lang=en",
+      href: "/ai-assistant/",
     },
     wizardIntro: {
       title: "Not sure which room fits you?",
@@ -27,7 +27,7 @@ const roomsOwnerExperienceByPath: Readonly<Record<string, RoomsOwnerExperience>>
     highlightedTitle: "στη Χίο",
     primaryCta: {
       label: "Βρείτε το δωμάτιό σας με AI",
-      href: "/ai-assistant/?lang=el",
+      href: "/el/ai-assistant/",
     },
     wizardIntro: {
       title: "Δεν είστε σίγουροι ποιο δωμάτιο σας ταιριάζει;",
@@ -40,7 +40,7 @@ const roomsOwnerExperienceByPath: Readonly<Record<string, RoomsOwnerExperience>>
     highlightedTitle: "à Chios",
     primaryCta: {
       label: "Trouver votre chambre avec l’IA",
-      href: "/ai-assistant/?lang=fr",
+      href: "/fr/ai-assistant/",
     },
     wizardIntro: {
       title: "Vous ne savez pas quelle chambre vous convient ?",
@@ -53,7 +53,7 @@ const roomsOwnerExperienceByPath: Readonly<Record<string, RoomsOwnerExperience>>
     highlightedTitle: "auf Chios",
     primaryCta: {
       label: "Zimmer mit AI finden",
-      href: "/ai-assistant/?lang=de",
+      href: "/de/ai-assistant/",
     },
     wizardIntro: {
       title: "Nicht sicher, welches Zimmer zu Ihnen passt?",
@@ -66,7 +66,7 @@ const roomsOwnerExperienceByPath: Readonly<Record<string, RoomsOwnerExperience>>
     highlightedTitle: "a Chios",
     primaryCta: {
       label: "Trova la tua camera con l’AI",
-      href: "/ai-assistant/?lang=it",
+      href: "/it/ai-assistant/",
     },
     wizardIntro: {
       title: "Non sai quale camera fa per te?",
@@ -79,7 +79,7 @@ const roomsOwnerExperienceByPath: Readonly<Record<string, RoomsOwnerExperience>>
     highlightedTitle: "en Chios",
     primaryCta: {
       label: "Encuentra tu habitación con IA",
-      href: "/ai-assistant/?lang=es",
+      href: "/es/ai-assistant/",
     },
     wizardIntro: {
       title: "¿No sabes qué habitación es la adecuada para ti?",
@@ -92,7 +92,7 @@ const roomsOwnerExperienceByPath: Readonly<Record<string, RoomsOwnerExperience>>
     highlightedTitle: "ve daireleri",
     primaryCta: {
       label: "AI ile odanızı bulun",
-      href: "/ai-assistant/?lang=tr",
+      href: "/tr/ai-assistant/",
     },
     wizardIntro: {
       title: "Hangi odanın size uygun olduğundan emin değil misiniz?",
