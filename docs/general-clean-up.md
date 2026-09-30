@@ -110,6 +110,7 @@ npm run qa:rendered-routes
 - The museums landing page uses shorter mobile section spacing and full-width stacked CTAs, while preserving its desktop rhythm and layout.
 - Contact inputs now keep a 16px mobile text floor and bounded widths, preventing iOS focus zoom and narrow-grid overflow.
 - All seven localized Contact URLs now publish the same verified `lastModified` value in the sitemap. This gives Google a fresh crawl signal after the WordPress-to-Next.js migration while preserving each page's self-canonical and complete hreflang set.
+- The Search Console 404 set was re-audited against the current production router: 36 historical URLs already reach a valid page and 18 intentionally return `410 Gone`. The final gallery URL now redirects to the homepage gallery, while obsolete Cloudflare `/cdn-cgi/content` artifacts return `410`, leaving no unresolved live 404 in that reported sample.
 - The direct-rates form, AI Room Finder action groups and room-result controls stack at 320px and expand only when enough width is available.
 - The Trip Planner sticky action respects device safe areas; its stay modal uses scrollable content and single-column CTAs on the narrowest phones.
 

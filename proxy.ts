@@ -15,6 +15,8 @@ const wordpressGonePrefixes = [
   "/wp-sitemap.xml",
   "/elementor-landing-page-4251",
   "/.cloud/rum",
+  // Retired Cloudflare challenge artifacts retained in Google's historical crawl set.
+  "/cdn-cgi/content",
   "/web-stories",
   // Explicitly retired legacy/test resources from GSC Full Audit run 44
   "/post-sitemap.xml",
@@ -452,6 +454,7 @@ const legacyRedirects: Record<string, string> = {
   "/fr/faq-fr-voulamandis": "/fr/questions-frequentes/",
   "/de/faq-de-voulamandis": "/de/haeufige-fragen/",
   "/voulamandis-house-photos": "/",
+  "/photo-gallery.html": "/",
   "/vh-photos/voulamandis-seating-area/voulamandis-house-seating-area-voulamandis-house-chios-hotels": "/",
   "/el/vh-φωτογραφίες/voulamandis-house-farm": "/el/",
   "/el/vh-φωτογραφίες/chios-garden": "/el/",

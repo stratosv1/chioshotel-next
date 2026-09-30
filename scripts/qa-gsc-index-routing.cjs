@@ -49,6 +49,14 @@ assert(
   proxySource.includes('"/book the room you like": "/ai-assistant/"'),
   "The historical 'book the room you like' GSC URL must bypass the old Find Your Room alias and redirect directly to the AI Room Finder.",
 );
+assert(
+  proxySource.includes('"/photo-gallery.html": "/"'),
+  "The historical photo-gallery.html URL must redirect to the homepage gallery.",
+);
+assert(
+  proxySource.includes('"/cdn-cgi/content"'),
+  "Retired Cloudflare content artifacts must return 410 instead of remaining in the 404 set.",
+);
 
 const requiredGoneRoutes = [
   "app/elementor-landing-page-4251/[[...slug]]/route.ts",
