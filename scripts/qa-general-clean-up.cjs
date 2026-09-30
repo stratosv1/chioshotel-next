@@ -112,6 +112,7 @@ for (const [language, bookingPath] of Object.entries(bookingPaths)) {
 const seoSource = read("lib/seo.ts");
 const proxySource = read("proxy.ts");
 const robotsSource = read("app/robots.ts");
+const sitemapSource = read("app/sitemap.ts");
 const routeMapSource = read("lib/url-map.ts");
 const nextConfigSource = read("next.config.ts");
 const agentRoomGuideDataSource = read("lib/agent-room-guide-data.ts");
@@ -148,6 +149,14 @@ const tripPlannerCssSource = read("app/trip-planner/trip-planner.module.css");
 const polishHomeSource = read("components/home/PolishHomePageTailwind.tsx");
 const homePageSource = read("components/home/HomePageTailwind.tsx");
 const liveDirectRequestSource = read("components/home/LiveDirectRequest.tsx");
+
+check(
+  sitemapSource.includes('contact: "2026-09-30T11:33:11Z"') &&
+    sitemapSource.includes('route.itemId === "contact"') &&
+    sitemapSource.includes("lastModified: VERIFIED_LAST_MODIFIED.contact"),
+  "All localized Contact routes carry the verified sitemap last-modified signal.",
+  "Localized Contact routes lost their verified sitemap last-modified signal.",
+);
 const mobileStickyContactSource = read("components/home/MobileStickyContact.tsx");
 const packageJson = JSON.parse(read("package.json"));
 

@@ -26,6 +26,7 @@ const VERIFIED_LAST_MODIFIED = {
   sandyBeaches: "2026-07-10T14:21:54Z",
   spanishAccommodation: "2026-07-27T05:02:55Z",
   romanticStay: "2026-08-04T17:43:25Z",
+  contact: "2026-09-30T11:33:11Z",
 } as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -102,6 +103,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     .filter((route) => !isOldMuseumDetailRoute(route.path))
     .map((route) => ({
       url: absoluteUrl(route.path),
+      ...(route.itemId === "contact"
+        ? { lastModified: VERIFIED_LAST_MODIFIED.contact }
+        : {}),
       changeFrequency: getChangeFrequency(route.priority),
       priority: getPriority(route.priority),
     }));

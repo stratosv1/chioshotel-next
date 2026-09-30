@@ -109,6 +109,7 @@ npm run qa:rendered-routes
 - Active Kambos landing pages now stack long CTA labels and the room-helper action at 320–390px, then move to two columns from 430px; the Greek benefit grid can expand sooner because its cards contain shorter copy.
 - The museums landing page uses shorter mobile section spacing and full-width stacked CTAs, while preserving its desktop rhythm and layout.
 - Contact inputs now keep a 16px mobile text floor and bounded widths, preventing iOS focus zoom and narrow-grid overflow.
+- All seven localized Contact URLs now publish the same verified `lastModified` value in the sitemap. This gives Google a fresh crawl signal after the WordPress-to-Next.js migration while preserving each page's self-canonical and complete hreflang set.
 - The direct-rates form, AI Room Finder action groups and room-result controls stack at 320px and expand only when enough width is available.
 - The Trip Planner sticky action respects device safe areas; its stay modal uses scrollable content and single-column CTAs on the narrowest phones.
 
