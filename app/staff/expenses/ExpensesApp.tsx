@@ -26,6 +26,7 @@ import {
   staffTuitionSubjects,
   type StaffExpenseAccount,
 } from "@/lib/staff-expenses-config";
+import { ExpensesPwaInstall } from "./ExpensesPwaInstall";
 
 type StaffExpense = {
   id: string;
@@ -781,6 +782,8 @@ export default function ExpensesApp() {
             <h1 className="text-2xl font-black tracking-tight">Έξοδα</h1>
           </div>
         </header>
+
+        <ExpensesPwaInstall />
 
         <section className="mb-4 grid min-w-0 grid-cols-[repeat(3,minmax(0,1fr))] gap-2" aria-label="Σύνολα εξόδων">
           <div className="min-w-0 rounded-2xl bg-white px-2 py-3 text-center shadow-sm ring-1 ring-stone-200/70">
