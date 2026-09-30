@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Image from "next/image";
 import { welcomeContact, welcomeImages } from "@/content/welcome";
 import type { WelcomeButton, WelcomeItem, WelcomePageCopy } from "@/content/welcome";
 
@@ -209,7 +210,15 @@ export function WelcomePage({ data }: { data: WelcomePageCopy }) {
         </nav>
 
         <header className="relative min-h-[390px] overflow-hidden rounded-[28px] bg-slate-950 shadow-[0_18px_45px_rgba(15,23,42,0.24)] md:min-h-[540px] md:rounded-[34px]">
-          <img src={welcomeImages.hero} alt="" className="absolute inset-0 h-full w-full object-cover" loading="eager" />
+          <Image
+            src={welcomeImages.hero}
+            alt=""
+            fill
+            priority
+            fetchPriority="high"
+            sizes="(max-width: 1080px) 100vw, 1080px"
+            className="object-cover"
+          />
           <div className="absolute inset-0 bg-gradient-to-b from-black/12 via-black/8 to-black/78" />
           <div className="absolute inset-x-4 top-4 flex flex-wrap gap-2 md:inset-x-8 md:top-8">
             <span className="rounded-full bg-white/95 px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.12em] text-slate-800 md:px-4 md:py-2 md:text-xs">Stay Guide</span>
@@ -260,7 +269,14 @@ export function WelcomePage({ data }: { data: WelcomePageCopy }) {
         </Section>
 
         <Section id="breakfast" title={data.sections.breakfast.title} eyebrow="Homemade morning">
-          <img src={welcomeImages.breakfast} alt="Breakfast at Voulamandis House" className="mb-4 h-auto w-full rounded-[22px] object-cover shadow-[0_12px_30px_rgba(15,23,42,0.12)] md:mb-6 md:rounded-[26px]" loading="lazy" />
+          <Image
+            src={welcomeImages.breakfast}
+            alt="Breakfast at Voulamandis House"
+            width={1200}
+            height={1200}
+            sizes="(max-width: 1080px) calc(100vw - 40px), 1000px"
+            className="mb-4 h-auto w-full rounded-[22px] object-cover shadow-[0_12px_30px_rgba(15,23,42,0.12)] md:mb-6 md:rounded-[26px]"
+          />
           <p className="text-base font-bold leading-7 text-slate-800 md:text-lg md:leading-8">{data.sections.breakfast.intro}</p>
           <div className="mt-3 md:mt-4"><TextBlock paragraphs={data.sections.breakfast.paragraphs} /></div>
           <Highlight><p>{data.sections.breakfast.highlight}</p></Highlight>

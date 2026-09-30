@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useMemo, useState, type FormEvent } from "react";
 import type { ContactPageData } from "@/content/contact";
 
@@ -231,7 +232,15 @@ export function ContactPage({ data }: ContactPageProps) {
     <main className="min-h-screen overflow-x-hidden bg-gradient-to-b from-[#fcfaf8] to-[#f5f0ea] text-[#42362b]">
       <section className="relative flex min-h-[440px] items-end overflow-hidden text-white max-md:min-h-[76svh]" aria-labelledby="contact-hero-title">
         <div className="absolute inset-0 z-0" aria-hidden="true">
-          <img className="h-full w-full object-cover" src={data.hero.image} alt="" loading="eager" />
+          <Image
+            src={data.hero.image}
+            alt=""
+            fill
+            priority
+            fetchPriority="high"
+            sizes="100vw"
+            className="object-cover"
+          />
         </div>
         <div className="absolute inset-0 z-[1] bg-[linear-gradient(135deg,rgba(46,35,27,.86)_0%,rgba(92,65,42,.58)_58%,rgba(46,35,27,.28)_100%),linear-gradient(0deg,rgba(46,35,27,.76)_0%,transparent_60%)]" />
         <div className="relative z-[2] mx-auto w-[min(1180px,calc(100%-40px))] py-[70px] pt-[110px] max-md:w-[calc(100%-24px)] max-md:py-6 max-md:pt-5">

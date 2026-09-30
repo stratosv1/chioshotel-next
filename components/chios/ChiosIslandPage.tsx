@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { ChiosIslandPageData } from "@/content/chios-island";
 
 type ChiosIslandPageProps = {
@@ -84,7 +85,15 @@ export function ChiosIslandPage({ data }: ChiosIslandPageProps) {
     <main className="min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_top_left,rgba(168,120,66,.18),transparent_34rem),linear-gradient(180deg,#fbf6ef_0%,#f4eadf_52%,#fbf6ef_100%)] pb-20 text-stone-800 md:pb-0">
       <section className="relative flex min-h-[640px] items-end overflow-hidden text-white max-md:min-h-[76svh]" aria-labelledby="ci-hero-title">
         <div className="absolute inset-0 z-0" aria-hidden="true">
-          <img className="h-full w-full object-cover" src={data.hero.image} alt="" loading="eager" />
+          <Image
+            src={data.hero.image}
+            alt=""
+            fill
+            priority
+            fetchPriority="high"
+            sizes="100vw"
+            className="object-cover"
+          />
         </div>
 
         <div className="absolute inset-0 z-[1] bg-[linear-gradient(90deg,rgba(32,24,18,.84)_0%,rgba(32,24,18,.54)_42%,rgba(32,24,18,.18)_100%),linear-gradient(0deg,rgba(32,24,18,.72)_0%,transparent_58%)]" />
@@ -155,8 +164,14 @@ export function ChiosIslandPage({ data }: ChiosIslandPageProps) {
           <div className="grid gap-5 lg:grid-cols-3">
             {data.experiences.items.map((item) => (
               <article className="group overflow-hidden rounded-[1.875rem] border border-amber-800/15 bg-white/90 shadow-xl shadow-stone-900/5 transition hover:-translate-y-1 hover:shadow-2xl hover:shadow-stone-900/10" key={item.title}>
-                <div className="h-[260px] overflow-hidden bg-stone-200">
-                  <img className="h-full w-full object-cover transition duration-700 group-hover:scale-105" src={item.image} alt={item.imageAlt} loading="lazy" />
+                <div className="relative h-[260px] overflow-hidden bg-stone-200">
+                  <Image
+                    src={item.image}
+                    alt={item.imageAlt}
+                    fill
+                    sizes="(max-width: 1023px) 100vw, 33vw"
+                    className="object-cover transition duration-700 group-hover:scale-105"
+                  />
                 </div>
 
                 <div className="p-6">

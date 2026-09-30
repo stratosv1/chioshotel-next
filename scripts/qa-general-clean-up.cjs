@@ -129,6 +129,8 @@ const localizedKamposSource = read("components/chios/LocalizedKamposLandingPage.
 const greekKamposSource = read("components/chios/GreekKamposLandingPageElegant.tsx");
 const contactPageSource = read("components/contact/ContactPage.tsx");
 const ratesPageSource = read("components/rates/RatesPage.tsx");
+const dealsPageSource = read("components/deals/DealsPage.tsx");
+const welcomePageSource = read("components/welcome/WelcomePage.tsx");
 const roomFinderProductionSource = read("components/ai/RoomFinderProduction.tsx");
 const roomFinderCarouselSource = read("components/ai/room-finder-carousel.tsx");
 const tripPlannerCssSource = read("app/trip-planner/trip-planner.module.css");
@@ -251,6 +253,12 @@ check(
   !/<img(?:\s|>)/.test(villageDetailSource) && !/<img(?:\s|>)/.test(museumDetailSource),
   "Shared village and museum detail templates use Next/Image.",
   "Shared village or museum detail templates still contain raw img elements.",
+);
+check(
+  [headerSource, contactPageSource, ratesPageSource, dealsPageSource, welcomePageSource, chiosIslandSource]
+    .every((source) => !/<img(?:\s|>)/.test(source)),
+  "Shared header and primary conversion templates use Next/Image.",
+  "Header, Contact, Rates, Deals, Welcome or Chios Island regressed to raw img elements.",
 );
 check(
   nextConfigSource.includes('hostname: "upload.wikimedia.org"'),

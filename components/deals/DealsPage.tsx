@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { DealsPageData } from "@/content/deals";
 
@@ -200,7 +201,15 @@ export function DealsPage({ data }: DealsPageProps) {
 
       <section className="relative flex min-h-[500px] items-end overflow-hidden text-white max-md:min-h-[76svh]" aria-labelledby="deals-hero-title">
         <div className="absolute inset-0 z-0" aria-hidden="true">
-          <img className="h-full w-full object-cover" src={data.hero.image} alt="" loading="eager" />
+          <Image
+            src={data.hero.image}
+            alt=""
+            fill
+            priority
+            fetchPriority="high"
+            sizes="100vw"
+            className="object-cover"
+          />
         </div>
 
         <div className="absolute inset-0 z-[1] bg-[linear-gradient(135deg,rgba(18,25,18,.86)_0%,rgba(55,43,24,.56)_58%,rgba(18,25,18,.26)_100%),linear-gradient(0deg,rgba(18,25,18,.78)_0%,transparent_62%)]" />
@@ -268,8 +277,14 @@ export function DealsPage({ data }: DealsPageProps) {
                 className="group basis-[92%] shrink-0 snap-center overflow-hidden rounded-[2rem] border border-amber-800/15 bg-white shadow-xl shadow-stone-900/5 transition hover:-translate-y-1 hover:shadow-2xl hover:shadow-stone-900/10 sm:basis-[72%] lg:basis-auto lg:shrink"
                 key={offer.id}
               >
-                <div className="h-[260px] overflow-hidden bg-stone-200 md:h-[360px]">
-                  <img className="h-full w-full object-cover transition duration-700 group-hover:scale-105" src={offer.image} alt={offer.imageAlt} loading="lazy" />
+                <div className="relative h-[260px] overflow-hidden bg-stone-200 md:h-[360px]">
+                  <Image
+                    src={offer.image}
+                    alt={offer.imageAlt}
+                    fill
+                    sizes="(max-width: 1023px) 92vw, 50vw"
+                    className="object-cover transition duration-700 group-hover:scale-105"
+                  />
                 </div>
 
                 <div className="p-[clamp(24px,4vw,38px)] text-center">
