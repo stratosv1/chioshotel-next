@@ -92,6 +92,7 @@ npm run qa:rendered-routes
 - All 168 rendered beach, village and museum detail pages now expose a contextual, localized path to rooms and direct rates; the rendered QA checks both destinations on every page.
 - Shared village and museum detail templates now use `next/image` for hero and related-content media, reducing the public raw-image inventory from 35 to 33 references; Wikimedia is the only newly approved remote image host.
 - The shared header plus Contact, Rates, Deals, Welcome and Chios Island templates now use responsive `next/image` output with explicit `sizes`; above-the-fold hero media is prioritized and lower-page cards remain lazy. The public raw-image inventory is now 24 references.
+- Romantic Stay, Family Travel, Taste Lover, Chios Explorer, Chios Activities and the active Trip Planner layers now use responsive `next/image` output. Hero media is prioritized, below-fold cards remain lazy, and the Trip Planner's official `www.chios.gr` source is restricted to its beach-image path. The public raw-image inventory is now 8 source lines.
 - Public mobile typography now has shared 14px label and 16–17px reading floors, plus a consistent visible focus treatment for links and form controls.
 - The shared mobile menu now provides 44px language targets, scrolls inside short viewports, locks background scrolling and closes with Escape.
 - The shared footer changes from three compressed columns to one readable mobile column, with 44px navigation rows; desktop keeps the three-column layout.

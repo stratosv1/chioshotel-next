@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { ChiosActivitiesPageData } from "@/content/chios-activities";
 
 type ChiosActivitiesPageProps = {
@@ -111,11 +112,15 @@ export default function ChiosActivitiesPage({ data }: ChiosActivitiesPageProps) 
         </div>
 
         {data.hero.image ? (
-          <div className="overflow-hidden rounded-[2rem] bg-[#e8dfcf] shadow-2xl shadow-stone-900/10">
-            <img
-              className="block min-h-[300px] w-full object-cover md:min-h-[420px]"
+          <div className="relative min-h-[300px] overflow-hidden rounded-[2rem] bg-[#e8dfcf] shadow-2xl shadow-stone-900/10 md:min-h-[420px]">
+            <Image
               src={data.hero.image}
               alt={data.hero.imageAlt || data.hero.title}
+              fill
+              priority
+              fetchPriority="high"
+              sizes="(max-width: 1023px) 100vw, 42vw"
+              className="object-cover"
             />
           </div>
         ) : null}
@@ -156,18 +161,19 @@ export default function ChiosActivitiesPage({ data }: ChiosActivitiesPageProps) 
                 →
               </div>
               <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 xl:grid-cols-3">
-                {data.cards.map((card, index) => (
+                {data.cards.map((card) => (
                   <Link
                     className="group w-[84vw] max-w-[380px] flex-none snap-start overflow-hidden rounded-[1.5rem] bg-white shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 transition hover:shadow-xl md:w-auto md:max-w-none md:rounded-[2rem]"
                     href={card.href}
                     key={card.key}
                   >
                     <div className="relative aspect-[4/3] overflow-hidden">
-                      <img
-                        className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                      <Image
                         src={card.image}
                         alt={card.imageAlt}
-                        loading={index < 2 ? "eager" : "lazy"}
+                        fill
+                        sizes="(max-width: 767px) 84vw, (max-width: 1279px) 50vw, 33vw"
+                        className="object-cover transition duration-500 group-hover:scale-105"
                       />
                       <span className="absolute left-3 top-3 rounded-full bg-amber-700 px-3 py-1.5 text-xs font-black text-white">
                         {copy.cardBadge}
@@ -224,8 +230,8 @@ export default function ChiosActivitiesPage({ data }: ChiosActivitiesPageProps) 
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {data.gallery.map((image) => (
-                <figure className="m-0 overflow-hidden rounded-[1.75rem] bg-[#e8dfcf] shadow-lg shadow-stone-900/5" key={image.src}>
-                  <img className="block h-[280px] w-full object-cover" src={image.src} alt={image.alt} />
+                <figure className="relative m-0 h-[280px] overflow-hidden rounded-[1.75rem] bg-[#e8dfcf] shadow-lg shadow-stone-900/5" key={image.src}>
+                  <Image src={image.src} alt={image.alt} fill sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw" className="object-cover" />
                 </figure>
               ))}
             </div>
@@ -258,11 +264,13 @@ export default function ChiosActivitiesPage({ data }: ChiosActivitiesPageProps) 
             </div>
           </div>
 
-          <div className="overflow-hidden rounded-[2rem] bg-[#e8dfcf] shadow-2xl shadow-stone-950/20">
-            <img
+          <div className="relative min-h-[300px] overflow-hidden rounded-[2rem] bg-[#e8dfcf] shadow-2xl shadow-stone-950/20 md:min-h-[420px]">
+            <Image
               src="/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp"
               alt="Voulamandis House in Kampos Chios"
-              className="block min-h-[300px] w-full object-cover md:min-h-[420px]"
+              fill
+              sizes="(max-width: 1023px) 100vw, 52vw"
+              className="object-cover"
             />
           </div>
         </div>

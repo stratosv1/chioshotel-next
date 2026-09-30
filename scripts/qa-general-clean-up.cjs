@@ -131,6 +131,14 @@ const contactPageSource = read("components/contact/ContactPage.tsx");
 const ratesPageSource = read("components/rates/RatesPage.tsx");
 const dealsPageSource = read("components/deals/DealsPage.tsx");
 const welcomePageSource = read("components/welcome/WelcomePage.tsx");
+const romanticStaySource = read("components/landing/RomanticStayPage.tsx");
+const familyTravelSource = read("components/landing/FamilyTravelPage.tsx");
+const tasteLoverSource = read("components/landing/TasteLoverPage.tsx");
+const chiosExplorerSource = read("components/landing/ChiosExplorerPage.tsx");
+const chiosActivitiesSource = read("components/landing/ChiosActivitiesPage.tsx");
+const tripPlannerV2Source = read("components/trip-planner/TripPlannerStartV2.tsx");
+const tripPlannerV3Source = read("components/trip-planner/TripPlannerStartV3.tsx");
+const tripPlannerV4Source = read("components/trip-planner/TripPlannerStartV4.tsx");
 const roomFinderProductionSource = read("components/ai/RoomFinderProduction.tsx");
 const roomFinderCarouselSource = read("components/ai/room-finder-carousel.tsx");
 const tripPlannerCssSource = read("app/trip-planner/trip-planner.module.css");
@@ -261,9 +269,29 @@ check(
   "Header, Contact, Rates, Deals, Welcome or Chios Island regressed to raw img elements.",
 );
 check(
+  [
+    romanticStaySource,
+    familyTravelSource,
+    tasteLoverSource,
+    chiosExplorerSource,
+    chiosActivitiesSource,
+    tripPlannerV2Source,
+    tripPlannerV3Source,
+    tripPlannerV4Source,
+  ].every((source) => !/<img(?:\s|>)/.test(source) && source.includes('from "next/image"')),
+  "Commercial landing pages and the active Trip Planner use Next/Image.",
+  "A commercial landing page or active Trip Planner layer regressed to raw img elements.",
+);
+check(
   nextConfigSource.includes('hostname: "upload.wikimedia.org"'),
   "Next/Image allows the approved Wikimedia image host used by Chios guides.",
   "Next/Image is missing the Wikimedia remote image allowlist used by Chios guides.",
+);
+check(
+  nextConfigSource.includes('hostname: "www.chios.gr"') &&
+    nextConfigSource.includes('pathname: "/images/beaches-pages/**"'),
+  "Next/Image narrowly allows the official Chios beach-image path used by Trip Planner.",
+  "Trip Planner's official Chios image host is missing or is not path-restricted.",
 );
 check(
   globalCssSource.includes(".vh-public-site .text-xs") &&

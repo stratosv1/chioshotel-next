@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import TripPlannerStartV3 from "@/components/trip-planner/TripPlannerStartV3";
@@ -70,11 +71,12 @@ function AccommodationModal({ onClose }: { onClose: () => void }) {
     >
       <div className="relative max-h-[92svh] w-full max-w-[660px] overflow-y-auto rounded-[24px] border border-white/20 bg-[#fffdf9] shadow-[0_30px_90px_rgba(31,22,16,.35)]">
         <div className="relative h-[215px] overflow-hidden bg-[#554334] sm:h-[250px]">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src="/images/rooms/DSC07867-1-v2.webp"
             alt="Voulamandis House στον Κάμπο της Χίου"
-            className="h-full w-full object-cover"
+            fill
+            sizes="(max-width: 660px) 100vw, 660px"
+            className="object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#2f2118]/95 via-[#38291f]/25 to-black/5" />
 

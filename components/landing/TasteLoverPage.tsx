@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { TasteLoverPageContent } from "@/content/taste-lover";
 
 type TasteLoverPageProps = {
@@ -16,7 +17,7 @@ export default function TasteLoverPage({ data }: TasteLoverPageProps) {
     <main className="min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_top_left,rgba(168,120,66,.14),transparent_34rem),linear-gradient(180deg,#fffaf4_0%,#f4eadf_55%,#fffaf4_100%)] text-stone-800">
       <section className="relative flex min-h-[640px] items-end overflow-hidden text-white max-md:min-h-[76svh]" aria-labelledby="taste-lover-title">
         <div className="absolute inset-0 z-0" aria-hidden="true">
-          <img className="h-full w-full object-cover" src={data.hero.image.src} alt="" loading="eager" />
+          <Image src={data.hero.image.src} alt="" fill priority fetchPriority="high" sizes="100vw" className="object-cover" />
         </div>
         <div className="absolute inset-0 z-[1] bg-[linear-gradient(90deg,rgba(32,24,18,.86)_0%,rgba(58,39,19,.58)_48%,rgba(32,24,18,.18)_100%),linear-gradient(0deg,rgba(32,24,18,.72)_0%,transparent_58%)]" />
 
@@ -52,10 +53,10 @@ export default function TasteLoverPage({ data }: TasteLoverPageProps) {
           </header>
 
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {data.highlights.cards.map((card, index) => (
+            {data.highlights.cards.map((card) => (
               <article className="group overflow-hidden rounded-[1.875rem] border border-amber-900/10 bg-white shadow-xl shadow-stone-900/5 transition hover:-translate-y-1 hover:shadow-2xl hover:shadow-stone-900/10" key={card.title}>
-                <div className="aspect-[4/3] overflow-hidden bg-stone-200">
-                  <img className="h-full w-full object-cover transition duration-700 group-hover:scale-105" src={card.image.src} alt={card.image.alt} loading={index < 2 ? "eager" : "lazy"} />
+                <div className="relative aspect-[4/3] overflow-hidden bg-stone-200">
+                  <Image src={card.image.src} alt={card.image.alt} fill sizes="(max-width: 767px) 100vw, 33vw" className="object-cover transition duration-700 group-hover:scale-105" />
                 </div>
                 <div className="p-6">
                   <h3 className="text-[28px] font-black leading-none tracking-[-0.04em] text-amber-900">{card.title}</h3>
@@ -76,10 +77,10 @@ export default function TasteLoverPage({ data }: TasteLoverPageProps) {
           </header>
 
           <div className="grid gap-5 md:grid-cols-2">
-            {data.experiences.cards.map((card, index) => (
+            {data.experiences.cards.map((card) => (
               <article className="grid overflow-hidden rounded-[1.875rem] border border-amber-900/10 bg-white shadow-xl shadow-stone-900/5 md:grid-cols-[0.9fr_1.1fr]" key={card.title}>
-                <div className="min-h-[240px] overflow-hidden bg-stone-200">
-                  <img className="h-full min-h-[240px] w-full object-cover" src={card.image.src} alt={card.image.alt} loading={index < 2 ? "eager" : "lazy"} />
+                <div className="relative min-h-[240px] overflow-hidden bg-stone-200">
+                  <Image src={card.image.src} alt={card.image.alt} fill sizes="(max-width: 767px) 100vw, 45vw" className="object-cover" />
                 </div>
                 <div className="flex flex-col justify-center p-6">
                   <h3 className="text-[28px] font-black leading-none tracking-[-0.04em] text-amber-900">{card.title}</h3>

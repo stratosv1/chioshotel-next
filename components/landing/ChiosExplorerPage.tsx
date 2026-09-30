@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { ChiosExplorerPageContent } from "@/content/chios-explorer";
 
 type ChiosExplorerPageProps = {
@@ -16,7 +17,7 @@ export default function ChiosExplorerPage({ data }: ChiosExplorerPageProps) {
     <main className="min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_top_left,rgba(168,120,66,.14),transparent_34rem),linear-gradient(180deg,#fbf6ef_0%,#f4eadf_52%,#fbf6ef_100%)] text-stone-800">
       <section className="relative flex min-h-[640px] items-end overflow-hidden text-white max-md:min-h-[76svh]" aria-labelledby="chios-explorer-title">
         <div className="absolute inset-0 z-0" aria-hidden="true">
-          <img className="h-full w-full object-cover" src={data.hero.image.src} alt="" loading="eager" />
+          <Image src={data.hero.image.src} alt="" fill priority fetchPriority="high" sizes="100vw" className="object-cover" />
         </div>
         <div className="absolute inset-0 z-[1] bg-[linear-gradient(90deg,rgba(32,24,18,.84)_0%,rgba(32,24,18,.54)_42%,rgba(32,24,18,.18)_100%),linear-gradient(0deg,rgba(32,24,18,.72)_0%,transparent_58%)]" />
 
@@ -52,10 +53,10 @@ export default function ChiosExplorerPage({ data }: ChiosExplorerPageProps) {
           </header>
 
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {data.highlights.items.map((item, index) => (
+            {data.highlights.items.map((item) => (
               <Link className="group overflow-hidden rounded-[1.875rem] border border-amber-900/10 bg-white shadow-xl shadow-stone-900/5 transition hover:-translate-y-1 hover:shadow-2xl hover:shadow-stone-900/10" href={item.href} key={item.title}>
-                <span className="block aspect-[4/3] overflow-hidden bg-stone-200">
-                  <img className="h-full w-full object-cover transition duration-700 group-hover:scale-105" src={item.image.src} alt={item.image.alt} loading={index < 2 ? "eager" : "lazy"} />
+                <span className="relative block aspect-[4/3] overflow-hidden bg-stone-200">
+                  <Image src={item.image.src} alt={item.image.alt} fill sizes="(max-width: 767px) 100vw, 33vw" className="object-cover transition duration-700 group-hover:scale-105" />
                 </span>
                 <span className="block p-6">
                   <span className="block text-[28px] font-black leading-none tracking-[-0.04em] text-amber-900">{item.title}</span>

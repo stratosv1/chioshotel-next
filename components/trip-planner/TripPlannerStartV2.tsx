@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   beaches,
@@ -174,8 +175,13 @@ function CategoryCard({ category, selected, onToggle }: { category: Category; se
   return (
     <button type="button" aria-pressed={selected} onClick={onToggle} className={`group relative min-w-0 overflow-hidden rounded-[15px] border bg-white text-left shadow-[0_7px_20px_rgba(65,48,36,.065)] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#aeb39a]/60 md:rounded-[18px] ${category.wideOnMobile ? "col-span-2 md:col-span-1" : ""} ${selected ? "border-[#c49a61] bg-[#fdfbf7] ring-2 ring-[#c49a61]/20" : "border-[#e7ded3] hover:-translate-y-0.5 hover:border-[#d6c3af]"}`}>
       <div className={`relative overflow-hidden bg-[#eee5db] ${category.wideOnMobile ? "h-[104px] md:h-auto md:aspect-[1.18/1]" : "h-[98px] sm:h-[108px] md:h-auto md:aspect-[1.18/1]"}`}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={category.image} alt="" className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.025]" />
+        <Image
+          src={category.image}
+          alt=""
+          fill
+          sizes="(max-width: 767px) 50vw, 20vw"
+          className="object-cover transition duration-500 group-hover:scale-[1.025]"
+        />
         {selected ? <span className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-[#c28a4c] text-white shadow-md">✓</span> : null}
       </div>
       <div className="relative flex min-h-[48px] items-end justify-center px-2.5 pb-2.5 pt-5 md:min-h-[82px] md:pb-5 md:pt-10">
@@ -324,10 +330,8 @@ function PlaceImage({ src, name, category }: { src: string | null; name: string;
   if (!src) return <GenericPlaceVisual category={category} />;
   return (
     <>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={src} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full scale-110 object-cover opacity-30 blur-xl" loading="lazy" />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={src} alt={name} className="relative z-[1] block h-full w-full object-contain" loading="lazy" />
+      <Image src={src} alt="" aria-hidden="true" fill sizes="(max-width: 767px) 86vw, 33vw" className="scale-110 object-cover opacity-30 blur-xl" />
+      <Image src={src} alt={name} fill sizes="(max-width: 767px) 86vw, 33vw" className="z-[1] object-contain" />
     </>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState, type FormEvent } from "react";
 import { createPortal } from "react-dom";
 import TripPlannerStartV2 from "@/components/trip-planner/TripPlannerStartV2";
@@ -298,8 +299,13 @@ function LeadFunnel({ groups }: { groups: LeadGroup[] }) {
 
           <div className="mt-4 overflow-hidden rounded-[24px] border border-[#ddd3c6] bg-[#fffdfa] shadow-[0_12px_30px_rgba(65,48,36,.08)]">
             <div className="relative h-[170px] overflow-hidden bg-[#dfd5ca]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/rooms/DSC07867-1-v2.webp" alt="Voulamandis House στον Κάμπο της Χίου" className="h-full w-full object-cover" />
+              <Image
+                src="/images/rooms/DSC07867-1-v2.webp"
+                alt="Voulamandis House στον Κάμπο της Χίου"
+                fill
+                sizes="(max-width: 660px) 100vw, 660px"
+                className="object-cover"
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-[#302219]/82 via-[#302219]/8 to-transparent" />
               <div className="absolute bottom-4 left-4 right-4 text-white">
                 <div className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-white/85">Voulamandis House · Κάμπος Χίου</div>

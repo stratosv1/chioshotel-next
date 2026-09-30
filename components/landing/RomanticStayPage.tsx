@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { CommercialRoomGallery } from "@/components/landing/CommercialRoomGallery";
 import type { RomanticStayPageData } from "@/content/romantic-stay";
 
@@ -12,7 +13,7 @@ export function RomanticStayPage({ data }: Props) {
     <main className="min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_top_left,rgba(168,120,66,.14),transparent_34rem),linear-gradient(180deg,#fffaf4_0%,#f4eadf_58%,#fffaf4_100%)] text-stone-800">
       <section className="relative flex min-h-[650px] items-end overflow-hidden text-white max-md:min-h-[78svh]" aria-labelledby="romantic-stay-title">
         <div className="absolute inset-0 z-0" aria-hidden="true">
-          <img src={data.hero.image.src} alt="" className="h-full w-full object-cover" loading="eager" />
+          <Image src={data.hero.image.src} alt="" fill priority fetchPriority="high" sizes="100vw" className="object-cover" />
         </div>
         <div className="absolute inset-0 z-[1] bg-[linear-gradient(90deg,rgba(33,24,18,.88)_0%,rgba(33,24,18,.58)_52%,rgba(33,24,18,.16)_100%),linear-gradient(0deg,rgba(33,24,18,.72)_0%,transparent_60%)]" />
         <div className="relative z-[2] mx-auto w-[min(1180px,calc(100%-40px))] py-20 pt-28 max-md:w-[calc(100%-24px)] max-md:py-14 max-md:pt-6">
@@ -45,10 +46,10 @@ export function RomanticStayPage({ data }: Props) {
             <p className="mx-auto mt-5 max-w-[760px] text-base leading-8 text-stone-600">{data.reasons.intro}</p>
           </header>
           <div className="grid gap-5 md:grid-cols-2">
-            {data.reasons.cards.map((card, index) => (
+            {data.reasons.cards.map((card) => (
               <article key={card.title} className="group overflow-hidden rounded-[1.875rem] border border-amber-900/10 bg-white shadow-xl shadow-stone-900/5">
-                <div className="aspect-[16/10] overflow-hidden bg-stone-200">
-                  <img src={card.image.src} alt={card.image.alt} loading={index < 2 ? "eager" : "lazy"} className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
+                <div className="relative aspect-[16/10] overflow-hidden bg-stone-200">
+                  <Image src={card.image.src} alt={card.image.alt} fill sizes="(max-width: 767px) 100vw, 50vw" className="object-cover transition duration-700 group-hover:scale-105" />
                 </div>
                 <div className="p-6 md:p-8">
                   <h3 className="text-[26px] font-black leading-tight tracking-[-0.04em] text-amber-900">{card.title}</h3>
@@ -62,8 +63,8 @@ export function RomanticStayPage({ data }: Props) {
 
       <section className="py-16 md:py-20" aria-labelledby="romantic-room-title">
         <div className="mx-auto grid w-[min(1180px,calc(100%-40px))] gap-7 max-md:w-[calc(100%-24px)] md:grid-cols-2 md:items-stretch">
-          <div className="min-h-[380px] overflow-hidden rounded-[2rem] bg-stone-200 shadow-xl shadow-stone-900/10">
-            <img src={data.stay.image.src} alt={data.stay.image.alt} loading="lazy" className="h-full min-h-[380px] w-full object-cover" />
+          <div className="relative min-h-[380px] overflow-hidden rounded-[2rem] bg-stone-200 shadow-xl shadow-stone-900/10">
+            <Image src={data.stay.image.src} alt={data.stay.image.alt} fill sizes="(max-width: 767px) 100vw, 50vw" className="object-cover" />
           </div>
           <article className="flex flex-col justify-center rounded-[2rem] bg-gradient-to-br from-[#263127] to-[#495248] p-[clamp(30px,5vw,56px)] text-white shadow-2xl shadow-stone-900/15">
             <p className="mb-4 text-xs font-black uppercase tracking-[0.16em] text-[#e7c98d]">{data.stay.eyebrow}</p>
