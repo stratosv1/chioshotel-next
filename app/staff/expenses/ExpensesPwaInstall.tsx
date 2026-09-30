@@ -8,6 +8,8 @@ type InstallPromptEvent = Event & {
   userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 };
 
+type InstallPlatform = "ios" | "android" | "other";
+
 function runsStandalone() {
   return (
     window.matchMedia("(display-mode: standalone)").matches ||
@@ -17,23 +19,28 @@ function runsStandalone() {
 
 export function ExpensesPwaInstall() {
   const [installPrompt, setInstallPrompt] = useState<InstallPromptEvent | null>(null);
-  const [iosInstallHelp, setIosInstallHelp] = useState(false);
+  const [platform, setPlatform] = useState<InstallPlatform>("other");
   const [installed, setInstalled] = useState(true);
   const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
     setInstalled(runsStandalone());
-    setDismissed(window.sessionStorage.getItem("expenses-pwa-install-dismissed") === "1");
+    setDismissed(window.sessionStorage.getItem("expenses-pwa-install-dismissed-v2") === "1");
 
     if ("serviceWorker" in navigator) {
-      void navigator.serviceWorker.register("/staff-expenses-sw.js", {
-        scope: "/staff/expenses/",
-      });
+      void navigator.serviceWorker
+        .register("/staff-expenses-sw.js", {
+          scope: "/staff/expenses/",
+        })
+        .catch(() => undefined);
     }
 
     const userAgent = window.navigator.userAgent.toLowerCase();
-    const isIos = /iphone|ipad|ipod/.test(userAgent);
-    setIosInstallHelp(isIos && !runsStandalone());
+    if (/iphone|ipad|ipod/.test(userAgent)) {
+      setPlatform("ios");
+    } else if (/android/.test(userAgent)) {
+      setPlatform("android");
+    }
 
     function captureInstallPrompt(event: Event) {
       event.preventDefault();
@@ -57,27 +64,45 @@ export function ExpensesPwaInstall() {
 
   async function installApp() {
     if (!installPrompt) return;
-    await installPrompt.prompt();
-    const choice = await installPrompt.userChoice;
-    setInstallPrompt(null);
-    if (choice.outcome === "accepted") {
-      setInstalled(true);
+
+    try {
+      await installPrompt.prompt();
+      const choice = await installPrompt.userChoice;
+      setInstallPrompt(null);
+      if (choice.outcome === "accepted") {
+        setInstalled(true);
+      }
+    } catch {
+      setInstallPrompt(null);
     }
   }
 
   function dismiss() {
-    window.sessionStorage.setItem("expenses-pwa-install-dismissed", "1");
+    window.sessionStorage.setItem("expenses-pwa-install-dismissed-v2", "1");
     setDismissed(true);
   }
 
-  if (installed || dismissed || (!installPrompt && !iosInstallHelp)) {
+  if (installed || dismissed) {
     return null;
   }
 
+  const fallbackInstructions =
+    platform === "ios"
+      ? "Στο Safari πάτησε Κοινή χρήση και μετά «Προσθήκη στην οθόνη Αφετηρίας»."
+      : platform === "android"
+        ? "Αν είσαι μέσα σε άλλη εφαρμογή, άνοιξε τη σελίδα στο Chrome. Μετά πάτησε ⋮ και «Προσθήκη στην αρχική οθόνη»."
+        : "Άνοιξε το μενού του browser και επίλεξε «Εγκατάσταση εφαρμογής» ή «Προσθήκη στην αρχική οθόνη».";
+
   return (
-    <aside className="mb-4 rounded-[1.5rem] border border-[#d8c4ae] bg-[#fffaf4] p-3.5 shadow-sm" aria-label="Εγκατάσταση εφαρμογής">
+    <aside
+      className="mb-4 rounded-[1.5rem] border border-[#d8c4ae] bg-[#fffaf4] p-3.5 shadow-sm"
+      aria-label="Εγκατάσταση εφαρμογής"
+    >
       <div className="flex items-start gap-3">
-        <div className="grid size-11 shrink-0 place-items-center rounded-2xl bg-[#805536] text-white shadow-sm" aria-hidden="true">
+        <div
+          className="grid size-11 shrink-0 place-items-center rounded-2xl bg-[#805536] text-white shadow-sm"
+          aria-hidden="true"
+        >
           <Smartphone className="size-5" />
         </div>
         <div className="min-w-0 flex-1">
@@ -88,9 +113,9 @@ export function ExpensesPwaInstall() {
             Βάλε τα Έξοδα στην αρχική οθόνη
           </h2>
           <p className="mt-1 text-sm font-medium leading-5 text-stone-600">
-            {iosInstallHelp && !installPrompt
-              ? "Πάτησε Κοινή χρήση και μετά «Προσθήκη στην οθόνη Αφετηρίας»."
-              : "Θα ανοίγει αυτόνομα, γρήγορα και χωρίς τα κουμπιά του browser."}
+            {installPrompt
+              ? "Θα ανοίγει αυτόνομα, γρήγορα και χωρίς τα κουμπιά του browser."
+              : fallbackInstructions}
           </p>
         </div>
         <button
@@ -113,9 +138,9 @@ export function ExpensesPwaInstall() {
           Εγκατάσταση εφαρμογής
         </button>
       ) : (
-        <div className="mt-3 flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-[#d8c4ae] bg-white px-4 text-sm font-extrabold text-[#684a35]">
-          <Share2 className="size-5" />
-          Κοινή χρήση → Προσθήκη στην οθόνη
+        <div className="mt-3 flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-[#d8c4ae] bg-white px-4 text-center text-sm font-extrabold text-[#684a35]">
+          <Share2 className="size-5 shrink-0" />
+          {platform === "ios" ? "Κοινή χρήση → Προσθήκη στην οθόνη" : "Chrome → ⋮ → Προσθήκη στην αρχική"}
         </div>
       )}
     </aside>

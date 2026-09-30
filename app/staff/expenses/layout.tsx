@@ -3,7 +3,7 @@ import type { Metadata, Viewport } from "next";
 export const metadata: Metadata = {
   applicationName: "Έξοδα",
   description: "Καταχώρηση και παρακολούθηση εξόδων Voulamandis House.",
-  manifest: "/staff/expenses/manifest.webmanifest",
+  manifest: "/staff-expenses.webmanifest",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
