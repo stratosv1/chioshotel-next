@@ -54,6 +54,7 @@ function isPublicSource(relativePath) {
     normalized.startsWith("app/staff/") ||
     normalized.startsWith("app/mixalis/") ||
     normalized.startsWith("components/staff/") ||
+    normalized.startsWith("components/mixalis/") ||
     normalized.startsWith("lib/staff/")
   );
 }
@@ -139,6 +140,8 @@ const chiosActivitiesSource = read("components/landing/ChiosActivitiesPage.tsx")
 const tripPlannerV2Source = read("components/trip-planner/TripPlannerStartV2.tsx");
 const tripPlannerV3Source = read("components/trip-planner/TripPlannerStartV3.tsx");
 const tripPlannerV4Source = read("components/trip-planner/TripPlannerStartV4.tsx");
+const tripPlannerBeachCardSource = read("components/trip-planner/BeachCard.tsx");
+const tripPlannerLeadPreviewSource = read("app/trip-planner/lead-funnel-preview/page.tsx");
 const roomFinderProductionSource = read("components/ai/RoomFinderProduction.tsx");
 const roomFinderCarouselSource = read("components/ai/room-finder-carousel.tsx");
 const tripPlannerCssSource = read("app/trip-planner/trip-planner.module.css");
@@ -278,9 +281,28 @@ check(
     tripPlannerV2Source,
     tripPlannerV3Source,
     tripPlannerV4Source,
+    tripPlannerBeachCardSource,
+    tripPlannerLeadPreviewSource,
   ].every((source) => !/<img(?:\s|>)/.test(source) && source.includes('from "next/image"')),
   "Commercial landing pages and the active Trip Planner use Next/Image.",
   "A commercial landing page or active Trip Planner layer regressed to raw img elements.",
+);
+check(
+  !/<img(?:\s|>)/.test(museumsPageSource) && museumsPageSource.includes('from "next/image"'),
+  "The active museum collection template uses Next/Image.",
+  "The active museum collection template regressed to raw img elements.",
+);
+check(
+  [
+    "components/chios/ChiosBeachesPage.tsx",
+    "components/chios/ChiosVillagesPage.tsx",
+    "components/chios/BeachDetailPage.tsx",
+    "components/chios/VillageDetailPage.tsx",
+    "app/css-split/pages/beach-detail.css",
+    "app/css-split/pages/village-detail.css",
+  ].every((relativePath) => !fs.existsSync(path.join(root, relativePath))),
+  "Superseded Chios guide templates and their orphaned CSS are absent.",
+  "A superseded Chios guide template or orphaned stylesheet returned.",
 );
 check(
   nextConfigSource.includes('hostname: "upload.wikimedia.org"'),
@@ -476,9 +498,32 @@ const publicPages = publicFiles.filter((relativePath) =>
   relativePath.split(path.sep).join("/").startsWith("app/") &&
   /\/page\.(?:ts|tsx|js|jsx)$/.test(relativePath.split(path.sep).join("/")),
 );
-const rawImageMatches = findMatches(publicFiles, /<img(?:\s|>)/);
+const rawImageMatches = publicFiles.flatMap((relativePath) => {
+  const source = read(relativePath);
+
+  return [...source.matchAll(/<img(?=\s|>)/g)].map((match) => {
+    const line = source.slice(0, match.index).split(/\r?\n/).length;
+    return `${relativePath.split(path.sep).join("/")}:${line}`;
+  });
+});
+const allowedRawImageFiles = new Set([
+  "components/home/HomePageTailwind.tsx",
+  "components/pl/PolishHeaderTailwind.tsx",
+]);
+const unexpectedRawImages = rawImageMatches.filter((match) => {
+  const relativePath = match.slice(0, match.lastIndexOf(":"));
+  return !allowedRawImageFiles.has(relativePath);
+});
 const todoMatches = findMatches(publicFiles, /\b(?:TODO|FIXME)\b/);
 const consoleMatches = findMatches(publicFiles, /\bconsole\.(?:log|warn|error)\s*\(/);
+
+check(
+  unexpectedRawImages.length === 0 &&
+    homePageSource.includes("getImageProps") &&
+    homePageSource.includes("<picture"),
+  "Raw public images are limited to the optimized homepage picture and paused Polish header.",
+  `Unexpected raw public images: ${unexpectedRawImages.join(", ") || "homepage picture guard is incomplete"}.`,
+);
 
 console.log("\nGENERAL CLEAN UP BASELINE");
 console.log("=========================");

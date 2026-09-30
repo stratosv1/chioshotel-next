@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Trip Planner Lead Funnel Preview",
@@ -17,8 +18,7 @@ export default function LeadFunnelPreviewPage() {
     <main className="min-h-screen bg-[#f7f3ec] pb-12 text-[#2f261f]">
       <section className="relative mx-auto max-w-[760px] overflow-hidden bg-white shadow-[0_26px_70px_rgba(61,46,35,.16)] sm:mt-6 sm:rounded-[28px]">
         <div className="relative h-[250px] overflow-hidden sm:h-[300px]">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/rooms/DSC07867-1-v2.webp" alt="Voulamandis House" className="h-full w-full object-cover" />
+          <Image src="/images/rooms/DSC07867-1-v2.webp" alt="Voulamandis House" fill priority sizes="(max-width: 760px) 100vw, 760px" className="object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#2d2119]/85 via-[#2d2119]/15 to-transparent" />
           <div className="absolute bottom-5 left-5 right-5 text-white sm:bottom-7 sm:left-7 sm:right-7">
             <div className="text-[11px] font-extrabold uppercase tracking-[0.24em] text-white/80">Voulamandis House · Κάμπος Χίου</div>

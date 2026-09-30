@@ -37,7 +37,7 @@ Make the public chioshotel.gr experience cleaner, safer and easier to maintain w
 | GCU-03 | Localized links | Completed | Navigation and transactional CTAs resolve to the matching locale |
 | GCU-04 | Content and internal linking | Completed | Facts are consistent and guide pages connect clearly to rooms and booking |
 | GCU-05 | Mobile UI and accessibility | In progress | Readable type, usable controls, semantic structure and no overlapping UI |
-| GCU-06 | Images and performance | In progress | Correct Next/Image usage, dimensions, alt text and no avoidable payload |
+| GCU-06 | Images and performance | Completed | Correct Next/Image usage, dimensions, alt text and no avoidable payload |
 | GCU-07 | Code and dependency cleanup | Planned | Dead code and obsolete patch paths are removed only after usage proof |
 | GCU-08 | Regression protection | Active | One command runs the cleanup guardrails and existing public SEO QA |
 
@@ -93,6 +93,7 @@ npm run qa:rendered-routes
 - Shared village and museum detail templates now use `next/image` for hero and related-content media, reducing the public raw-image inventory from 35 to 33 references; Wikimedia is the only newly approved remote image host.
 - The shared header plus Contact, Rates, Deals, Welcome and Chios Island templates now use responsive `next/image` output with explicit `sizes`; above-the-fold hero media is prioritized and lower-page cards remain lazy. The public raw-image inventory is now 24 references.
 - Romantic Stay, Family Travel, Taste Lover, Chios Explorer, Chios Activities and the active Trip Planner layers now use responsive `next/image` output. Hero media is prioritized, below-fold cards remain lazy, and the Trip Planner's official `www.chios.gr` source is restricted to its beach-image path. The public raw-image inventory is now 8 source lines.
+- The active museums collection, Trip Planner beach card and lead preview now use responsive `next/image`. Four superseded Chios guide components and two orphaned legacy stylesheets were removed after repository-wide usage checks. The only remaining raw public image tags are the homepage's intentional `getImageProps` art-directed `<picture>` and the paused Polish header; the General Clean Up QA now blocks any new exception. GCU-06 is complete.
 - Public mobile typography now has shared 14px label and 16–17px reading floors, plus a consistent visible focus treatment for links and form controls.
 - The shared mobile menu now provides 44px language targets, scrolls inside short viewports, locks background scrolling and closes with Escape.
 - The shared footer changes from three compressed columns to one readable mobile column, with 44px navigation rows; desktop keeps the three-column layout.

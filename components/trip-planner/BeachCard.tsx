@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 
 type BeachCardWeather = {
@@ -74,11 +75,12 @@ export default function BeachCard({
       }`}
     >
       <div className="relative h-[214px] overflow-hidden bg-[#e9e1d7] md:h-[190px]">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           src={image}
           alt={name}
-          className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.035]"
+          fill
+          sizes="(max-width: 767px) 100vw, 360px"
+          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.035]"
         />
 
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/45 via-black/10 to-transparent" />
