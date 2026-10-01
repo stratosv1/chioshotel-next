@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, BedDouble, Check, ChevronDown, MessageCircle, Phone, RotateCcw, Send } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { ArrowDown, ArrowLeft, BedDouble, Check, ChevronDown, MessageCircle, Phone, RotateCcw, Send } from "lucide-react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   ROOM_FINDER_COPY,
   ROOM_FINDER_LANGUAGES,
@@ -31,6 +31,27 @@ const CALL_LABEL: Record<RoomFinderLanguage, string> = {
   es: "Llamar",
   tr: "Ara",
 };
+
+const CHAT_UI_LABELS: Record<RoomFinderLanguage, { home: string; latest: string; typing: string }> = {
+  el: { home: "Επιστροφή στην αρχική", latest: "Μετάβαση στο τελευταίο μήνυμα", typing: "Γράφει…" },
+  en: { home: "Back to home page", latest: "Jump to latest message", typing: "Typing…" },
+  de: { home: "Zurück zur Startseite", latest: "Zur neuesten Nachricht", typing: "Schreibt…" },
+  fr: { home: "Retour à l’accueil", latest: "Aller au dernier message", typing: "Écrit…" },
+  it: { home: "Torna alla home page", latest: "Vai all’ultimo messaggio", typing: "Sta scrivendo…" },
+  es: { home: "Volver a la página de inicio", latest: "Ir al último mensaje", typing: "Escribiendo…" },
+  tr: { home: "Ana sayfaya dön", latest: "Son mesaja git", typing: "Yazıyor…" },
+};
+
+// The feed keeps following new messages only while the reader is near the
+// bottom, like a normal chat. Scrolling up to re-read pauses it.
+const STICK_TO_BOTTOM_THRESHOLD_PX = 120;
+const COMPOSER_MAX_HEIGHT_PX = 132;
+
+function isTouchKeyboardDevice() {
+  return typeof window !== "undefined"
+    && typeof window.matchMedia === "function"
+    && window.matchMedia("(pointer: coarse)").matches;
+}
 
 type ContactPrivacyCopy = {
   firstName: string;
@@ -272,7 +293,10 @@ export function RoomFinderProduction({
   const shellRef = useRef<HTMLElement>(null);
   const feedRef = useRef<HTMLDivElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
-  const composerInputRef = useRef<HTMLInputElement>(null);
+  const composerInputRef = useRef<HTMLTextAreaElement>(null);
+  const stickToBottomRef = useRef(true);
+  const lastFollowedUserMessageRef = useRef<string | null>(null);
+  const [hasUnseenMessages, setHasUnseenMessages] = useState(false);
   const detailDialogRef = useRef<HTMLElement>(null);
   const detailCloseRef = useRef<HTMLButtonElement>(null);
   const detailTriggerRef = useRef<HTMLElement | null>(null);
@@ -306,6 +330,20 @@ export function RoomFinderProduction({
       return;
     }
 
+    // A message the guest just sent always brings the conversation into view
+    // once; later updates to that same message must not override scrolling up.
+    const lastMessage = finder.messages[finder.messages.length - 1];
+    if (lastMessage?.role === "user" && lastMessage.id !== lastFollowedUserMessageRef.current) {
+      lastFollowedUserMessageRef.current = lastMessage.id;
+      stickToBottomRef.current = true;
+      setHasUnseenMessages(false);
+    }
+
+    if (!stickToBottomRef.current) {
+      setHasUnseenMessages(true);
+      return;
+    }
+
     const frame = requestAnimationFrame(() => {
       feedRef.current?.scrollTo({ top: feedRef.current.scrollHeight, behavior: "smooth" });
     });
@@ -314,13 +352,17 @@ export function RoomFinderProduction({
 
   useEffect(() => {
     if (finder.step !== "searching") return;
-    composerInputRef.current?.blur();
+    // Close the on-screen keyboard so results get the full screen. On desktop
+    // the composer keeps focus, as in any chat.
+    if (isTouchKeyboardDevice()) composerInputRef.current?.blur();
   }, [finder.step]);
 
   useEffect(() => {
     if (finder.visibleOffers.length === 0 || !["searching", "selecting"].includes(finder.step)) return;
 
-    composerInputRef.current?.blur();
+    if (isTouchKeyboardDevice()) composerInputRef.current?.blur();
+    stickToBottomRef.current = false;
+    setHasUnseenMessages(false);
 
     const scrollToResults = (behavior: ScrollBehavior) => {
       resultsRef.current?.scrollIntoView({ block: "start", behavior });
@@ -426,6 +468,28 @@ export function RoomFinderProduction({
     };
   }, [detail]);
 
+  useLayoutEffect(() => {
+    const composer = composerInputRef.current;
+    if (!composer) return;
+    composer.style.height = "auto";
+    composer.style.height = `${Math.min(composer.scrollHeight, COMPOSER_MAX_HEIGHT_PX)}px`;
+    composer.style.overflowY = composer.scrollHeight > COMPOSER_MAX_HEIGHT_PX ? "auto" : "hidden";
+  }, [finder.input]);
+
+  function handleFeedScroll() {
+    const feed = feedRef.current;
+    if (!feed) return;
+    const nearBottom = feed.scrollHeight - feed.scrollTop - feed.clientHeight < STICK_TO_BOTTOM_THRESHOLD_PX;
+    stickToBottomRef.current = nearBottom;
+    if (nearBottom) setHasUnseenMessages(false);
+  }
+
+  function jumpToLatest() {
+    stickToBottomRef.current = true;
+    setHasUnseenMessages(false);
+    feedRef.current?.scrollTo({ top: feedRef.current.scrollHeight, behavior: "smooth" });
+  }
+
   function changeLanguage(next: RoomFinderLanguage) {
     if (finder.typing || finder.step === "searching") return;
     setLanguage(next);
@@ -436,7 +500,7 @@ export function RoomFinderProduction({
     detailTriggerRef.current = document.activeElement instanceof HTMLElement
       ? document.activeElement
       : null;
-    composerInputRef.current?.blur();
+    if (isTouchKeyboardDevice()) composerInputRef.current?.blur();
     setDetail(offer);
   }
 
@@ -540,6 +604,9 @@ export function RoomFinderProduction({
   const lastAssistantMessageId = [...finder.messages]
     .reverse()
     .find(message => message.role === "assistant")?.id;
+  const latestAssistantText = [...finder.messages]
+    .reverse()
+    .find(message => message.role === "assistant")?.content || "";
   const awaitingStepTransition = finder.messages[finder.messages.length - 1]?.role === "user";
   const quickRepliesHidden = awaitingStepTransition
     || (!!lastAssistantMessageId && hiddenQuickReplyPromptId === lastAssistantMessageId);
@@ -597,11 +664,11 @@ export function RoomFinderProduction({
           <a
             href={homeHref}
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[#625b52] transition hover:bg-white active:scale-[.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9d8268]"
-            aria-label="Back"
+            aria-label={CHAT_UI_LABELS[language].home}
           >
             <ArrowLeft className="h-5 w-5" aria-hidden="true" />
           </a>
-          <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full ring-2 ring-white shadow-sm">
+          <div className="relative hidden h-9 w-9 shrink-0 overflow-hidden rounded-full ring-2 ring-white shadow-sm min-[400px]:block">
             <Image
               src="/images/welcome/voulamandis-welcome-hero.webp"
               alt="Voulamandis House"
@@ -615,7 +682,7 @@ export function RoomFinderProduction({
             <div className="mt-0.5 flex min-w-0 items-center gap-1.5 whitespace-nowrap text-[12px] text-[#746b60]">
               <span className="truncate font-semibold">AI Room Finder</span>
               <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#718b52]" />
-              <span className="hidden truncate min-[360px]:inline">{copy.online}</span>
+              <span className="hidden truncate min-[420px]:inline">{copy.online}</span>
             </div>
           </div>
           <div className="relative h-10 w-[58px] shrink-0">
@@ -679,14 +746,18 @@ export function RoomFinderProduction({
         </div>
       )}
 
+      {/* Screen readers hear only the newest assistant message, not every card and form. */}
+      <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+        {finder.typing ? CHAT_UI_LABELS[language].typing : latestAssistantText}
+      </div>
+
       <div
         ref={feedRef}
-        role="log"
-        aria-live="polite"
-        aria-relevant="additions text"
-        aria-atomic="false"
+        data-room-finder-feed="true"
+        aria-label="AI Room Finder"
         aria-busy={finder.typing}
-        className="min-h-0 flex-1 overflow-y-auto overscroll-contain"
+        onScroll={handleFeedScroll}
+        className="relative min-h-0 flex-1 overflow-y-auto overscroll-contain"
       >
         <div className="mx-auto flex min-h-full max-w-3xl flex-col px-3.5 pb-7 pt-4 sm:px-5 sm:pt-5">
           <div className="space-y-3.5">
@@ -737,7 +808,7 @@ export function RoomFinderProduction({
                   )}
               </div>
             ))}
-            {finder.typing && <TypingIndicator />}
+            {finder.typing && <TypingIndicator label={CHAT_UI_LABELS[language].typing} />}
 
             {finder.step === "rooms" && !quickRepliesHidden && (
               <IconReplies
@@ -1017,33 +1088,41 @@ export function RoomFinderProduction({
         </div>
       </div>
 
-      <form onSubmit={finder.submit} className="room-finder-composer shrink-0 border-t border-[#e2d9cd] bg-[#fbf8f3]/95 shadow-[0_-8px_24px_rgba(70,55,35,.04)]">
-        <div className="mx-auto flex max-w-3xl items-center gap-2 rounded-[22px] border border-[#d8cec1] bg-white p-1.5 shadow-[0_5px_18px_rgba(70,55,35,.07)] transition focus-within:border-[#aa9278] focus-within:ring-2 focus-within:ring-[#d9c8b5]/60">
+      <form onSubmit={finder.submit} className="room-finder-composer relative shrink-0 border-t border-[#e2d9cd] bg-[#fbf8f3]/95 shadow-[0_-8px_24px_rgba(70,55,35,.04)]">
+        {hasUnseenMessages && (
+          <button
+            type="button"
+            onClick={jumpToLatest}
+            aria-label={CHAT_UI_LABELS[language].latest}
+            title={CHAT_UI_LABELS[language].latest}
+            className="msg absolute -top-14 left-1/2 flex h-11 w-11 -translate-x-1/2 items-center justify-center rounded-full border border-[#d8cec1] bg-white text-[#5f574d] shadow-[0_6px_18px_rgba(70,55,35,.14)] transition hover:bg-[#fffaf4] active:scale-[.96]"
+          >
+            <ArrowDown className="h-5 w-5" aria-hidden="true" />
+          </button>
+        )}
+        <div className="mx-auto flex max-w-3xl items-end gap-2 rounded-[22px] border border-[#d8cec1] bg-white p-1.5 shadow-[0_5px_18px_rgba(70,55,35,.07)] transition focus-within:border-[#aa9278] focus-within:ring-2 focus-within:ring-[#d9c8b5]/60">
           <label htmlFor="room-finder-message" className="sr-only">{inputPlaceholder}</label>
-          <input
+          {/* Guests can keep typing while the assistant replies; sending waits
+              for the reply (send button disabled, submit guarded in the hook). */}
+          <textarea
             ref={composerInputRef}
             id="room-finder-message"
             name="room-finder-message"
+            rows={1}
             autoComplete="off"
             enterKeyHint="send"
             aria-label={inputPlaceholder}
             aria-disabled={!inputEnabled}
             aria-busy={!inputEnabled}
             value={finder.input}
-            onBeforeInput={event => {
-              if (!inputEnabled) event.preventDefault();
-            }}
-            onPaste={event => {
-              if (!inputEnabled) event.preventDefault();
-            }}
-            onDrop={event => {
-              if (!inputEnabled) event.preventDefault();
-            }}
-            onChange={event => {
-              if (inputEnabled) finder.setInput(event.target.value);
+            onChange={event => finder.setInput(event.target.value)}
+            onKeyDown={event => {
+              if (event.key !== "Enter" || event.shiftKey || event.nativeEvent.isComposing) return;
+              event.preventDefault();
+              if (inputEnabled && finder.input.trim()) event.currentTarget.form?.requestSubmit();
             }}
             placeholder={inputPlaceholder}
-            className="min-h-11 min-w-0 flex-1 bg-transparent px-3 py-2 text-[16px] outline-none placeholder:text-[#91877c]"
+            className="max-h-[132px] min-h-11 min-w-0 flex-1 resize-none overflow-hidden bg-transparent px-3 py-[10px] text-[16px] leading-6 outline-none! placeholder:text-[#91877c]"
           />
           <button
             type="submit"

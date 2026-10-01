@@ -23,7 +23,11 @@ assert(production.includes("env(safe-area-inset-top)"), "Room Finder top safe-ar
 assert(production.includes('enterKeyHint="send"'), "Room Finder mobile send keyboard hint is missing");
 assert(production.includes("onPointerDown={event => event.preventDefault()}"), "Send button no longer preserves composer focus");
 assert(production.includes("aria-disabled={!inputEnabled}"), "Composer busy semantics are missing");
-assert(production.includes("onBeforeInput={event =>"), "Composer no longer blocks input safely while AI is busy");
+assert(production.includes("<textarea"), "Composer is no longer a multi-line chat textarea");
+assert(production.includes('event.key !== "Enter" || event.shiftKey || event.nativeEvent.isComposing'), "Composer no longer sends on Enter while keeping Shift+Enter and IME composition safe");
+assert(production.includes("onChange={event => finder.setInput(event.target.value)}"), "Composer drops what the guest types while the assistant is replying");
+assert(production.includes("disabled={!inputEnabled || !finder.input.trim()}"), "Send button is no longer blocked while the assistant is replying");
+assert(production.includes("stickToBottomRef"), "Conversation no longer pauses auto-scroll while the guest reads earlier messages");
 assert(production.includes("text-[16px]"), "Composer is below the iOS-safe 16px text size");
 assert(production.includes("overscroll-contain"), "Conversation scroller is missing overscroll containment");
 assert(production.includes("fixed inset-x-0 top-0"), "Room Finder is no longer pinned to the visible viewport");
@@ -35,5 +39,7 @@ assert(hook.includes("turnLocked.current = false;\n    setTyping(false);"), "Com
 assert(pageLocalization.includes('interactiveWidget: "resizes-content"'), "AI Room Finder viewport does not request keyboard content resizing");
 assert(pageLocalization.includes('viewportFit: "cover"'), "AI Room Finder viewport is missing safe-area cover support");
 assert(!page.includes("RoomFinderAutoFocus"), "Legacy programmatic keyboard reopening is still mounted");
+const experience = fs.readFileSync(path.join(root, "components/ai/AiAssistantExperience.tsx"), "utf8");
+assert(!experience.includes("RoomFinderResultsViewportGuard"), "Composer-locking results viewport guard is mounted again");
 
 console.log("Room Finder Android/iOS mobile chat QA passed.");

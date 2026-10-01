@@ -162,17 +162,16 @@ export function ChatMessage({ message }:{ message:ChatItem }) {
     return () => window.clearTimeout(timer);
   }, [message.id, welcomeLang]);
 
-  const icon = message.kind === "room" ? "🛏️ " : message.kind === "guest" ? "👤 " : "";
   const content = message.content.replaceAll("📅", "").trim();
 
   if (welcomeLang) {
     const welcome = WELCOME_FLOW[welcomeLang];
     const [directBenefit, checkInQuestion] = welcome.directBenefit.split("\n\n");
 
-    return <div className="msg flex items-end justify-start gap-2">
+    return <div className="msg flex items-start justify-start gap-2">
       <AssistantAvatar />
-      <div className="relative min-w-0 flex-1 space-y-2.5 sm:max-w-[82%]">
-        <div className="rounded-[20px] rounded-bl-[7px] border border-[#ded4c8] bg-white px-4 py-3.5 text-[15px] leading-6 shadow-[0_5px_18px_rgba(70,55,35,.06)]">
+      <div className="relative min-w-0 max-w-[85%] space-y-2.5 sm:max-w-[75%]">
+        <div className="w-fit rounded-[20px] rounded-bl-[7px] border border-[#ded4c8] bg-white px-4 py-3.5 text-[15px] leading-6 shadow-[0_5px_18px_rgba(70,55,35,.06)]">
           <div className="flex items-start gap-2.5"><SparkleIcon/><span>{welcome.greeting}</span></div>
         </div>
         {showWelcomeFollowup ? (
@@ -207,13 +206,12 @@ export function ChatMessage({ message }:{ message:ChatItem }) {
 
   return <div className={`msg flex items-end gap-2 ${message.role === "user" ? "justify-end" : "justify-start"}`}>
     {message.role === "assistant" && <AssistantAvatar />}
-    <div className={`relative ${message.role === "user" ? "max-w-[88%] pb-2" : "min-w-0 flex-1 sm:max-w-[82%]"}`}>
-      <div className={`whitespace-pre-line px-4 py-3 text-[15px] leading-6 shadow-[0_5px_18px_rgba(70,55,35,.06)] ${message.role === "user" ? "rounded-[20px] rounded-br-[7px] bg-[#62594d] text-white" : "rounded-[20px] rounded-bl-[7px] border border-[#ded4c8] bg-white"}`}>{message.role === "user" ? <>{icon}{content}</> : content}</div>
-      {message.role === "user" && message.reaction && <span className="reaction absolute -bottom-1 right-1 flex h-7 min-w-7 items-center justify-center rounded-full border border-[#ddd4c8] bg-white px-1.5 text-sm shadow-sm">{message.reaction}</span>}
+    <div className="relative min-w-0 max-w-[85%] sm:max-w-[75%]">
+      <div className={`whitespace-pre-line break-words px-4 py-3 text-[15px] leading-6 shadow-[0_5px_18px_rgba(70,55,35,.06)] ${message.role === "user" ? "rounded-[20px] rounded-br-[7px] bg-[#62594d] text-white" : "rounded-[20px] rounded-bl-[7px] border border-[#ded4c8] bg-white"}`}>{content}</div>
     </div>
   </div>;
 }
 
 export function IconReplies({ values, icon, label, onSelect }:{ values:number[]; icon:string; label:(n:number)=>string; onSelect:(n:number)=>void }) {
-  return <div className="hide-scroll msg ml-10 flex flex-nowrap gap-2 overflow-x-auto pb-1">{values.map((value) => <button key={value} onClick={() => onSelect(value)} className="flex min-h-16 min-w-[82px] flex-1 flex-col items-center justify-center rounded-[18px] border border-[#d8cec1] bg-white px-2 py-2.5 text-center shadow-[0_4px_14px_rgba(70,55,35,.06)] transition hover:border-[#bda991] hover:bg-[#fffaf4] active:scale-[.97]"><div className="text-lg" aria-hidden>{value === 1 ? icon : `${icon}×${value}`}</div><span className="mt-0.5 whitespace-nowrap text-[12px] font-bold">{label(value)}</span></button>)}</div>;
+  return <div className="hide-scroll msg ml-10 flex flex-nowrap gap-2 overflow-x-auto pb-1">{values.map((value) => <button key={value} onClick={() => onSelect(value)} className="flex min-h-16 min-w-[82px] flex-1 flex-col items-center justify-center rounded-[18px] border border-[#d8cec1] bg-white px-2 py-2.5 text-center shadow-[0_4px_14px_rgba(70,55,35,.06)] transition hover:border-[#bda991] hover:bg-[#fffaf4] active:scale-[.97]"><div className="text-lg" aria-hidden>{icon}</div><span className="mt-0.5 whitespace-nowrap text-[12px] font-bold">{label(value)}</span></button>)}</div>;
 }
