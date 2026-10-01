@@ -213,5 +213,9 @@ export function ChatMessage({ message }:{ message:ChatItem }) {
 }
 
 export function IconReplies({ values, icon, label, onSelect }:{ values:number[]; icon:string; label:(n:number)=>string; onSelect:(n:number)=>void }) {
-  return <div className="hide-scroll msg ml-10 flex flex-nowrap gap-2 overflow-x-auto pb-1">{values.map((value) => <button key={value} onClick={() => onSelect(value)} className="flex min-h-16 min-w-[82px] flex-1 flex-col items-center justify-center rounded-[18px] border border-[#d8cec1] bg-white px-2 py-2.5 text-center shadow-[0_4px_14px_rgba(70,55,35,.06)] transition hover:border-[#bda991] hover:bg-[#fffaf4] active:scale-[.97]"><div className="text-lg" aria-hidden>{icon}</div><span className="mt-0.5 whitespace-nowrap text-[12px] font-bold">{label(value)}</span></button>)}</div>;
+  // Compact chips: all options fit on one row on a 360px phone without
+  // sideways scrolling, in every language. The question above already names
+  // the unit, so each chip shows icon + number; the full label stays as the
+  // accessible name and tooltip.
+  return <div className="msg ml-10 flex gap-2">{values.map((value) => <button key={value} type="button" onClick={() => onSelect(value)} aria-label={label(value)} title={label(value)} className="flex min-h-12 min-w-0 max-w-24 flex-1 items-center justify-center gap-1 rounded-2xl border border-[#d8cec1] bg-white px-1 text-center shadow-[0_4px_14px_rgba(70,55,35,.06)] transition hover:border-[#bda991] hover:bg-[#fffaf4] active:scale-[.97]"><span className="text-base leading-none" aria-hidden>{icon}</span><span className="text-[17px] font-black leading-none [font-variant-numeric:tabular-nums]" aria-hidden>{value}</span></button>)}</div>;
 }
