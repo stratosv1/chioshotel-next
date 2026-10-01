@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { neon } from "@neondatabase/serverless";
 import { localizeRoomOffer } from "@/lib/ai-assistant/room-card-catalog";
-import { isStrictIsoDate } from "@/lib/ai-assistant/room-finder-date";
+import { daysBetweenIsoDates, isStrictIsoDate, todayInAthensIso } from "@/lib/ai-assistant/room-finder-date";
+import { checkPublicRateLimit } from "@/lib/ai-assistant/public-rate-limit";
 import type { AssistantLanguage } from "@/lib/ai-assistant/types";
 
 export const runtime = "nodejs";
@@ -9,7 +10,20 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
 const supported = new Set<AssistantLanguage>(["el", "en", "de", "fr", "it", "es", "tr"]);
-const ON_DEMAND_SYNC_TIMEOUT_MS = 55_000;
+// Keep the on-demand refresh well inside maxDuration (60s) so there is time
+// left to re-check inventory and run the search afterwards.
+const ON_DEMAND_SYNC_TIMEOUT_MS = 40_000;
+// When another refresh is already running (SOURCE_BUSY) or the refresh call
+// timed out, wait for it to finish instead of failing the guest's search.
+const REFRESH_WAIT_DEADLINE_MS = 50_000;
+const REFRESH_POLL_INTERVAL_MS = 3_000;
+// Same stay-length rule as /api/ai-room-finder/alternatives and the chat flow.
+const MAX_STAY_NIGHTS = 60;
+const RATE_LIMITS = { perMinute: 60, perHour: 300 };
+
+type RefreshOutcome = "refreshed" | "busy" | "failed";
+
+const wait = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms));
 
 const SPLIT_COPY: Record<AssistantLanguage, { category: string; change: string; discount: string }> = {
   el: { category: "Λύση split stay επειδή δεν υπάρχει ένα δωμάτιο για όλες τις νύχτες", change: "1 αλλαγή δωματίου", discount: "Περιλαμβάνεται επιπλέον έκπτωση split stay" },
@@ -50,11 +64,11 @@ function shortDate(value: string, language: AssistantLanguage) {
     .format(new Date(Date.UTC(year, month - 1, day)));
 }
 
-async function refreshBookingCoreOnDemand(request: NextRequest) {
+async function refreshBookingCoreOnDemand(request: NextRequest): Promise<RefreshOutcome> {
   const secret = String(process.env.CRON_SECRET || "").trim();
   if (!secret) {
     console.error("AI Room Finder cannot refresh stale booking inventory because CRON_SECRET is missing");
-    return false;
+    return "failed";
   }
 
   const controller = new AbortController();
@@ -75,27 +89,46 @@ async function refreshBookingCoreOnDemand(request: NextRequest) {
 
     const raw = await response.text();
     if (!response.ok) {
+      // Another refresh is already running; it will update the inventory.
+      if (raw.includes("SOURCE_BUSY")) {
+        console.warn("AI Room Finder on-demand Booking Core sync skipped: source refresh already running");
+        return "busy";
+      }
       console.error("AI Room Finder on-demand Booking Core sync failed", response.status, raw.slice(0, 500));
-      return false;
+      return "failed";
     }
 
     try {
       const payload = JSON.parse(raw) as { ok?: boolean };
-      return payload.ok === true;
+      return payload.ok === true ? "refreshed" : "failed";
     } catch {
       console.error("AI Room Finder on-demand Booking Core sync returned invalid JSON");
-      return false;
+      return "failed";
     }
   } catch (error) {
+    // A timed-out call may still finish in the sync function itself.
+    if (error instanceof Error && error.name === "AbortError") {
+      console.warn("AI Room Finder on-demand Booking Core sync is still running after timeout; waiting for inventory");
+      return "busy";
+    }
     console.error("AI Room Finder on-demand Booking Core sync failed", error);
-    return false;
+    return "failed";
   } finally {
     clearTimeout(timeout);
   }
 }
 
 export async function GET(request: NextRequest) {
+  const startedAt = Date.now();
   try {
+    const rateLimit = await checkPublicRateLimit(request, "room-finder:availability", RATE_LIMITS);
+    if (rateLimit.limited) {
+      return NextResponse.json(
+        { success: false, code: "RATE_LIMITED", message: "Too many availability requests. Please try again shortly." },
+        { status: 429, headers: { "Retry-After": String(rateLimit.retryAfterSeconds), "Cache-Control": "no-store" } },
+      );
+    }
+
     const checkin = request.nextUrl.searchParams.get("checkin") || "";
     const checkout = request.nextUrl.searchParams.get("checkout") || "";
     const guests = Number.parseInt(request.nextUrl.searchParams.get("guests") || "0", 10);
@@ -107,6 +140,14 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ success: false, message: "Invalid availability request." }, { status: 400 });
     }
 
+    const nights = daysBetweenIsoDates(checkin, checkout);
+    if (checkin < todayInAthensIso() || !Number.isInteger(nights) || nights > MAX_STAY_NIGHTS) {
+      return NextResponse.json(
+        { success: false, code: "INVALID_STAY", message: "Unsupported stay dates." },
+        { status: 400, headers: { "Cache-Control": "no-store" } },
+      );
+    }
+
     if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL is missing");
     const sql = neon(process.env.DATABASE_URL);
     let statusRows = await sql`select * from booking_core.inventory_status(${checkin}::date, ${checkout}::date)`;
@@ -116,8 +157,19 @@ export async function GET(request: NextRequest) {
     // When inventory freshness has naturally expired, refresh it only because a
     // real guest is asking for availability, then re-check the database status.
     if (status === "STALE_DATA") {
-      const refreshed = await refreshBookingCoreOnDemand(request);
-      if (refreshed) {
+      const outcome = await refreshBookingCoreOnDemand(request);
+      if (outcome !== "failed") {
+        statusRows = await sql`select * from booking_core.inventory_status(${checkin}::date, ${checkout}::date)`;
+        status = String((statusRows[0] as any)?.status || "DATA_UNAVAILABLE");
+      }
+      // A refresh started elsewhere is still running: poll until it lands
+      // rather than telling the guest that inventory is unavailable.
+      while (
+        outcome === "busy"
+        && status === "STALE_DATA"
+        && Date.now() - startedAt + REFRESH_POLL_INTERVAL_MS < REFRESH_WAIT_DEADLINE_MS
+      ) {
+        await wait(REFRESH_POLL_INTERVAL_MS);
         statusRows = await sql`select * from booking_core.inventory_status(${checkin}::date, ${checkout}::date)`;
         status = String((statusRows[0] as any)?.status || "DATA_UNAVAILABLE");
       }

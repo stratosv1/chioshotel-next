@@ -41,6 +41,23 @@ export type { FinderStep } from "./room-finder-booking-flow";
 
 const wait = (ms: number) => new Promise<void>(resolve => window.setTimeout(resolve, ms));
 const rid = () => `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
+// Availability can take up to the server's 60s limit when inventory must be
+// refreshed first, so the client waits a little longer than that. Fallback
+// lookups are lighter and get a shorter limit. Without a timeout a stalled
+// mobile connection would leave the guest on "searching" indefinitely.
+const AVAILABILITY_TIMEOUT_MS = 65_000;
+const FALLBACK_LOOKUP_TIMEOUT_MS = 30_000;
+
+async function fetchWithTimeout(url: string, timeoutMs: number) {
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { cache: "no-store", signal: controller.signal });
+  } finally {
+    window.clearTimeout(timeout);
+  }
+}
 const rank = (room: RoomOffer) => {
   const order = [2, 6, 5, 7, 1, 3, 4, 8, 9, 10];
   const index = order.indexOf(Number(room.roomNumber));
@@ -445,7 +462,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     });
 
     try {
-      const response = await fetch(`/api/ai-room-finder/alternatives?${query}`, { cache: "no-store" });
+      const response = await fetchWithTimeout(`/api/ai-room-finder/alternatives?${query}`, FALLBACK_LOOKUP_TIMEOUT_MS);
       const payload = await response.json().catch(() => null);
       if (!response.ok || !payload?.success || !Array.isArray(payload.alternatives)) return [];
 
@@ -475,7 +492,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     });
 
     try {
-      const response = await fetch(`/api/ai-room-finder/sales-recovery?${query}`, { cache: "no-store" });
+      const response = await fetchWithTimeout(`/api/ai-room-finder/sales-recovery?${query}`, FALLBACK_LOOKUP_TIMEOUT_MS);
       const payload = await response.json().catch(() => null);
       if (!response.ok || !payload?.success || !Array.isArray(payload.offers)) return [];
       return payload.offers as RoomOffer[];
@@ -505,7 +522,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
           lang: language,
           allowSplit: searchDraft.roomCount === 1 ? "1" : "0",
         });
-        const response = await fetch(`/api/ai-room-finder/availability?${query}`, { cache: "no-store" });
+        const response = await fetchWithTimeout(`/api/ai-room-finder/availability?${query}`, AVAILABILITY_TIMEOUT_MS);
         const payload = await response.json();
         if (!response.ok || !payload?.success) {
           throw new AvailabilityError(String(payload?.code || "REQUEST_FAILED"));

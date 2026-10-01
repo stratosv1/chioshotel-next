@@ -7,6 +7,7 @@ import {
   isStrictIsoDate,
 } from "@/lib/ai-assistant/room-finder-date";
 import type { AssistantLanguage } from "@/lib/ai-assistant/types";
+import { checkPublicRateLimit } from "@/lib/ai-assistant/public-rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -259,6 +260,14 @@ function settingValue(settings: Map<string, number>, key: string, fallback: numb
 
 export async function GET(request: NextRequest) {
   try {
+    const rateLimit = await checkPublicRateLimit(request, "room-finder:sales-recovery", { perMinute: 60, perHour: 300 });
+    if (rateLimit.limited) {
+      return NextResponse.json(
+        { success: false, code: "RATE_LIMITED", message: "Too many requests. Please try again shortly." },
+        { status: 429, headers: { "Retry-After": String(rateLimit.retryAfterSeconds), "Cache-Control": "no-store" } },
+      );
+    }
+
     const checkin = request.nextUrl.searchParams.get("checkin") || "";
     const checkout = request.nextUrl.searchParams.get("checkout") || "";
     const groups = parseGroups(request.nextUrl.searchParams.get("groups") || "");

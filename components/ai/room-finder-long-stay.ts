@@ -10,7 +10,15 @@ export type LongStayDiscountInfo = {
 
 export async function fetchLongStayDiscount(checkin: string, checkout: string) {
   const query = new URLSearchParams({ checkin, checkout });
-  const response = await fetch(`/api/ai-room-finder/long-stay-discount?${query}`, { cache: "no-store" });
+  // Optional notice: never let it hold up the conversation for long.
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), 10_000);
+  let response: Response;
+  try {
+    response = await fetch(`/api/ai-room-finder/long-stay-discount?${query}`, { cache: "no-store", signal: controller.signal });
+  } finally {
+    window.clearTimeout(timeout);
+  }
   const payload = await response.json().catch(() => null);
   if (!response.ok || !payload?.success) return null;
 

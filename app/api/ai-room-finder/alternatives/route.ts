@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { localizeRoomOffer } from "@/lib/ai-assistant/room-card-catalog";
 import { daysBetweenIsoDates, isStrictIsoDate, parseStrictIsoDate, todayInAthensIso } from "@/lib/ai-assistant/room-finder-date";
 import type { AssistantLanguage } from "@/lib/ai-assistant/types";
+import { checkPublicRateLimit } from "@/lib/ai-assistant/public-rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -26,6 +27,14 @@ function rounded(value: unknown) {
 
 export async function GET(request: NextRequest) {
   try {
+    const rateLimit = await checkPublicRateLimit(request, "room-finder:alternatives", { perMinute: 60, perHour: 300 });
+    if (rateLimit.limited) {
+      return NextResponse.json(
+        { success: false, code: "RATE_LIMITED", message: "Too many requests. Please try again shortly." },
+        { status: 429, headers: { "Retry-After": String(rateLimit.retryAfterSeconds), "Cache-Control": "no-store" } },
+      );
+    }
+
     const checkin = request.nextUrl.searchParams.get("checkin") || "";
     const checkout = request.nextUrl.searchParams.get("checkout") || "";
     const guests = Number.parseInt(request.nextUrl.searchParams.get("guests") || "0", 10);
