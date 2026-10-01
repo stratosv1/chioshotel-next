@@ -124,45 +124,18 @@ const CLOSE_DETAILS: Record<RoomFinderLanguage, string> = {
 };
 
 const COST_BREAKDOWN_COPY: Record<RoomFinderLanguage, {
-  dayLabel: (count: number) => string;
   perNight: string;
   perPerson: string;
+  privacyShort: string;
+  privacyMore: string;
 }> = {
-  el: {
-    dayLabel: count => count === 1 ? "μέρα" : "μέρες",
-    perNight: "/διανυκτέρευση",
-    perPerson: "/άτομο",
-  },
-  en: {
-    dayLabel: count => count === 1 ? "day" : "days",
-    perNight: "/night",
-    perPerson: "/person",
-  },
-  de: {
-    dayLabel: count => count === 1 ? "Tag" : "Tage",
-    perNight: "/Nacht",
-    perPerson: "/Person",
-  },
-  fr: {
-    dayLabel: count => count === 1 ? "jour" : "jours",
-    perNight: "/nuit",
-    perPerson: "/personne",
-  },
-  it: {
-    dayLabel: count => count === 1 ? "giorno" : "giorni",
-    perNight: "/notte",
-    perPerson: "/persona",
-  },
-  es: {
-    dayLabel: count => count === 1 ? "día" : "días",
-    perNight: "/noche",
-    perPerson: "/persona",
-  },
-  tr: {
-    dayLabel: () => "gün",
-    perNight: "/gece",
-    perPerson: "/kişi",
-  },
+  el: { perNight: "/βράδυ", perPerson: "/άτομο", privacyShort: "Συμφωνώ να χρησιμοποιηθούν τα στοιχεία μου μόνο για την απάντηση σε αυτό το αίτημα.", privacyMore: "Περισσότερα" },
+  en: { perNight: "/night", perPerson: "/person", privacyShort: "I agree that my details are used only to reply to this request.", privacyMore: "More" },
+  de: { perNight: "/Nacht", perPerson: "/Person", privacyShort: "Ich bin einverstanden, dass meine Daten nur zur Beantwortung dieser Anfrage verwendet werden.", privacyMore: "Mehr" },
+  fr: { perNight: "/nuit", perPerson: "/personne", privacyShort: "J’accepte que mes données soient utilisées uniquement pour répondre à cette demande.", privacyMore: "Plus" },
+  it: { perNight: "/notte", perPerson: "/persona", privacyShort: "Accetto che i miei dati siano usati solo per rispondere a questa richiesta.", privacyMore: "Altro" },
+  es: { perNight: "/noche", perPerson: "/persona", privacyShort: "Acepto que mis datos se usen solo para responder a esta solicitud.", privacyMore: "Más" },
+  tr: { perNight: "/gece", perPerson: "/kişi", privacyShort: "Bilgilerimin yalnızca bu talebe yanıt vermek için kullanılmasını kabul ediyorum.", privacyMore: "Daha fazla" },
 };
 
 function detectLanguage(): RoomFinderLanguage {
@@ -926,165 +899,162 @@ export function RoomFinderProduction({
             )}
 
             {finder.step === "complete" && (
-              <section className="msg relative rounded-[26px] border border-[#dcd2c5] bg-white shadow-[0_16px_45px_rgba(70,55,35,.10)] sm:ml-10">
-                <div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute right-[14px] -top-[14px] z-10 flex h-[58px] w-[58px] -rotate-[9deg] items-center justify-center rounded-full border-2 bg-white text-center opacity-[.92] [border-color:var(--mandarin)] [border-style:double] [color:var(--mandarin)]"
-                >
-                  <span className="text-[7.2px] font-extrabold uppercase leading-[9px] tracking-[0.05em]">
-                    VH ·<br />KAMBOS ·<br />CHIOS
-                  </span>
+              <section className="msg ml-10 overflow-hidden rounded-[22px] border border-[#e1d8cc] bg-white shadow-[0_8px_24px_rgba(70,55,35,.08)]">
+                <div className="bg-[#faf7f2] px-4 pb-3.5 pt-4">
+                  <h2 className="text-[17px] font-black leading-snug text-[#29251f]">{copy.summary}</h2>
+                  <p className="mt-1 text-[13px] font-semibold text-[#746b60] [font-variant-numeric:tabular-nums]">
+                    {[stay, copy.nightLabel(finder.nights), finder.guestTotal ? copy.guestLabel(finder.guestTotal) : ""].filter(Boolean).join(" · ")}
+                  </p>
                 </div>
 
-                <div className="rounded-t-[26px] bg-[#faf7f2] p-4 pr-[82px]">
-                  <div className="flex justify-between gap-3">
-                    <h2 className="text-lg font-black">{copy.summary}</h2>
-                    <button type="button" onClick={() => finder.reset()} className="min-h-11 text-xs font-bold underline">
-                      {copy.newSearch}
-                    </button>
-                  </div>
-                  <p className="mt-2 text-sm text-[#746b60] [font-variant-numeric:tabular-nums]">{stay} · {copy.nightLabel(finder.nights)}</p>
+                <div aria-hidden="true" className="relative h-0 border-t-2 border-dashed border-[#e1d8cc]">
+                  <span className="absolute -left-[9px] -top-[9px] h-4 w-4 rounded-full border border-[#e1d8cc] bg-[#f4efe8]" />
+                  <span className="absolute -right-[9px] -top-[9px] h-4 w-4 rounded-full border border-[#e1d8cc] bg-[#f4efe8]" />
                 </div>
 
-                <div className="relative h-0 border-t-2 border-dashed border-[#d8cec1]">
-                  <span aria-hidden="true" className="absolute -left-[11px] -top-[10px] h-5 w-5 rounded-full border border-[#d8cec1] bg-[#f6f2eb]" />
-                  <span aria-hidden="true" className="absolute -right-[11px] -top-[10px] h-5 w-5 rounded-full border border-[#d8cec1] bg-[#f6f2eb]" />
-                </div>
-
-                <div className="p-4">
+                <div className="px-4 pt-1">
                   {finder.choices.map(choice => {
                     const choiceNights = Math.max(1, Number(choice.offer.nights || finder.nights || 1));
                     const nightlyRate = choice.offer.directTotal / choiceNights;
                     return (
-                      <div key={choice.group} className="flex items-center gap-3 border-b py-3">
-                        <div className="relative h-14 w-[72px] shrink-0 overflow-hidden rounded-xl">
-                          <Image src={choice.offer.image} alt={choice.offer.name} fill sizes="72px" className="object-cover" />
+                      <div key={choice.group} className="flex items-center gap-3 border-b border-[#eee6db] py-3">
+                        <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl">
+                          <Image src={choice.offer.image} alt="" fill sizes="48px" className="object-cover" />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className="font-bold">{choice.offer.name}</p>
-                          <p className="text-xs text-[#746b60]">{copy.guestLabel(choice.guests)}</p>
-                          <p className="mt-1 text-xs font-semibold leading-5 text-[#625b52] [font-variant-numeric:tabular-nums]">
-                            {choiceNights} {breakdownCopy.dayLabel(choiceNights)} × {money(nightlyRate, language)}{breakdownCopy.perNight} = {money(choice.offer.directTotal, language)}
+                          <p className="line-clamp-2 text-[15px] font-bold leading-snug text-[#29251f]">{choice.offer.category || choice.offer.name}</p>
+                          <p className="text-[12px] leading-4 text-[#746b60]">{[choice.offer.name, copy.guestLabel(choice.guests)].join(" · ")}</p>
+                          <p className="mt-0.5 text-[12px] font-semibold leading-4 text-[#625b52] [font-variant-numeric:tabular-nums]">
+                            {copy.nightLabel(choiceNights)} × {money(nightlyRate, language)}
                           </p>
                         </div>
-                        <strong className="shrink-0 text-[#5f7448] [font-variant-numeric:tabular-nums]">{money(choice.offer.directTotal, language)}</strong>
+                        <strong className="shrink-0 text-[15px] text-[#5f7448] [font-variant-numeric:tabular-nums]">{money(choice.offer.directTotal, language)}</strong>
                       </div>
                     );
                   })}
                   {finder.breakfast && (
-                    <div className="flex items-center gap-3 border-b py-3">
-                      <div className="relative h-14 w-[72px] shrink-0 overflow-hidden rounded-xl">
-                        <Image src={BREAKFAST_IMAGE} alt={copy.breakfastLabel} fill sizes="72px" className="object-cover" />
+                    <div className="flex items-center gap-3 border-b border-[#eee6db] py-3">
+                      <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl">
+                        <Image src={BREAKFAST_IMAGE} alt="" fill sizes="48px" className="object-cover" />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="font-bold">{copy.breakfastLabel}</p>
-                        <p className="mt-1 text-xs font-semibold leading-5 text-[#625b52] [font-variant-numeric:tabular-nums]">
-                          {copy.guestLabel(finder.guestTotal)} × {money(breakfastUnitPrice, language)}{breakdownCopy.perPerson} × {finder.nights} {breakdownCopy.dayLabel(finder.nights)} = {money(breakfastTotal, language)}
+                        <p className="truncate text-[15px] font-bold leading-snug text-[#29251f]">{copy.breakfastLabel}</p>
+                        <p className="mt-0.5 text-[12px] font-semibold leading-4 text-[#625b52] [font-variant-numeric:tabular-nums]">
+                          {copy.guestLabel(finder.guestTotal)} × {money(breakfastUnitPrice, language)} × {copy.nightLabel(finder.nights)}
                         </p>
                       </div>
-                      <strong className="shrink-0 [font-variant-numeric:tabular-nums]">{money(breakfastTotal, language)}</strong>
+                      <strong className="shrink-0 text-[15px] text-[#514a42] [font-variant-numeric:tabular-nums]">{money(breakfastTotal, language)}</strong>
                     </div>
                   )}
-                  <div className="mt-4 flex justify-between rounded-2xl bg-[#f1ede7] p-4 text-lg">
-                    <b>{copy.total}</b>
-                    <strong className="text-xl text-[#5f7448] [font-variant-numeric:tabular-nums]">{money(roomTotal + breakfastTotal, language)}</strong>
+                  <div className="flex items-baseline justify-between py-3.5">
+                    <span className="text-[15px] font-bold text-[#29251f]">{copy.total}</span>
+                    <strong className="text-[20px] font-black text-[#5f7448] [font-variant-numeric:tabular-nums]">{money(roomTotal + breakfastTotal, language)}</strong>
                   </div>
-                  <div className="mt-5">
-                    <h3 className="text-lg font-black">{copy.contactTitle}</h3>
-                    <p className="mt-1 text-sm text-[#746b60]">{contactCopy.contactHelp}</p>
-                    <div className="mt-3 space-y-2">
-                      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                        <div>
-                          <label htmlFor="room-finder-first-name" className="sr-only">{contactCopy.firstName}</label>
-                          <input
-                            id="room-finder-first-name"
-                            name="given-name"
-                            autoComplete="given-name"
-                            required
-                            value={contact.firstName}
-                            onChange={event => setContact({ ...contact, firstName: event.target.value })}
-                            placeholder={`${contactCopy.firstName} *`}
-                            className="h-12 w-full rounded-2xl border border-[#d8cec1] px-4 text-[16px]"
-                          />
-                        </div>
-                        <div>
-                          <label htmlFor="room-finder-last-name" className="sr-only">{contactCopy.lastName}</label>
-                          <input
-                            id="room-finder-last-name"
-                            name="family-name"
-                            autoComplete="family-name"
-                            required
-                            value={contact.lastName}
-                            onChange={event => setContact({ ...contact, lastName: event.target.value })}
-                            placeholder={`${contactCopy.lastName} *`}
-                            className="h-12 w-full rounded-2xl border border-[#d8cec1] px-4 text-[16px]"
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <label htmlFor="room-finder-phone" className="sr-only">{copy.phone}</label>
+                </div>
+
+                <div className="border-t border-[#eee6db] bg-[#fcfaf7] px-4 pb-4 pt-3.5">
+                  <h3 className="text-[16px] font-black text-[#29251f]">{copy.contactTitle}</h3>
+                  <p className="mt-0.5 text-[13px] leading-[18px] text-[#746b60]">{contactCopy.contactHelp}</p>
+                  <div className="mt-3 space-y-2">
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="min-w-0">
+                        <label htmlFor="room-finder-first-name" className="sr-only">{contactCopy.firstName}</label>
                         <input
-                          id="room-finder-phone"
-                          name="tel"
-                          type="tel"
-                          inputMode="tel"
-                          autoComplete="tel"
+                          id="room-finder-first-name"
+                          name="given-name"
+                          autoComplete="given-name"
                           required
-                          value={contact.phone}
-                          onChange={event => setContact({ ...contact, phone: event.target.value })}
-                          placeholder={`${copy.phone} *`}
-                          className="h-12 w-full rounded-2xl border border-[#d8cec1] px-4 text-[16px]"
+                          value={contact.firstName}
+                          onChange={event => setContact({ ...contact, firstName: event.target.value })}
+                          placeholder={`${contactCopy.firstName} *`}
+                          className="h-12 w-full min-w-0 rounded-2xl border border-[#d8cec1] bg-white px-3.5 text-[16px]"
                         />
                       </div>
-                      <div>
-                        <label htmlFor="room-finder-email" className="sr-only">{copy.email}</label>
+                      <div className="min-w-0">
+                        <label htmlFor="room-finder-last-name" className="sr-only">{contactCopy.lastName}</label>
                         <input
-                          id="room-finder-email"
-                          name="email"
-                          type="email"
-                          inputMode="email"
-                          autoComplete="email"
-                          value={contact.email}
-                          onChange={event => setContact({ ...contact, email: event.target.value })}
-                          placeholder={copy.email}
-                          className="h-12 w-full rounded-2xl border border-[#d8cec1] px-4 text-[16px]"
-                        />
-                      </div>
-                      <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-[#e1d8cd] bg-[#faf7f2] p-3 text-xs leading-5 text-[#625b52]">
-                        <input
-                          type="checkbox"
+                          id="room-finder-last-name"
+                          name="family-name"
+                          autoComplete="family-name"
                           required
-                          checked={privacyAccepted}
-                          onChange={event => setPrivacyAccepted(event.target.checked)}
-                          className="mt-0.5 h-5 w-5 shrink-0 accent-[#66714f]"
+                          value={contact.lastName}
+                          onChange={event => setContact({ ...contact, lastName: event.target.value })}
+                          placeholder={`${contactCopy.lastName} *`}
+                          className="h-12 w-full min-w-0 rounded-2xl border border-[#d8cec1] bg-white px-3.5 text-[16px]"
                         />
-                        <span>{contactCopy.privacyNotice}</span>
-                      </label>
+                      </div>
                     </div>
-                    <div className="mt-3 grid grid-cols-1 gap-2 min-[390px]:grid-cols-2">
-                      <button
-                        type="button"
-                        disabled={sendStatus === "sending" || !canSendRequest}
-                        onClick={() => void sendRequest()}
-                        className="min-h-12 rounded-2xl bg-[#66714f] font-bold text-white disabled:cursor-not-allowed disabled:opacity-40"
-                      >
-                        {copy.send}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => openWhatsApp(whatsappContext(copy.contactTitle, true))}
-                        className="min-h-12 rounded-2xl bg-[#287d4f] font-bold text-white"
-                      >
-                        {copy.whatsapp}
-                      </button>
+                    <div>
+                      <label htmlFor="room-finder-phone" className="sr-only">{copy.phone}</label>
+                      <input
+                        id="room-finder-phone"
+                        name="tel"
+                        type="tel"
+                        inputMode="tel"
+                        autoComplete="tel"
+                        required
+                        value={contact.phone}
+                        onChange={event => setContact({ ...contact, phone: event.target.value })}
+                        placeholder={`${copy.phone} *`}
+                        className="h-12 w-full rounded-2xl border border-[#d8cec1] bg-white px-3.5 text-[16px]"
+                      />
                     </div>
-                    {sendStatus === "sent" && (
-                      <p className="mt-3 rounded-2xl bg-[#eef4e7] p-3 font-bold text-[#5f7448]">{copy.sent}</p>
-                    )}
-                    {sendStatus === "error" && (
-                      <p className="mt-3 rounded-2xl bg-red-50 p-3 text-sm text-red-700">{copy.sendError}</p>
-                    )}
+                    <div>
+                      <label htmlFor="room-finder-email" className="sr-only">{copy.email}</label>
+                      <input
+                        id="room-finder-email"
+                        name="email"
+                        type="email"
+                        inputMode="email"
+                        autoComplete="email"
+                        value={contact.email}
+                        onChange={event => setContact({ ...contact, email: event.target.value })}
+                        placeholder={copy.email}
+                        className="h-12 w-full rounded-2xl border border-[#d8cec1] bg-white px-3.5 text-[16px]"
+                      />
+                    </div>
+                    <div className="flex items-start gap-3 px-1 pt-1 text-[13px] leading-[18px] text-[#625b52]">
+                      <input
+                        id="room-finder-privacy"
+                        type="checkbox"
+                        required
+                        checked={privacyAccepted}
+                        onChange={event => setPrivacyAccepted(event.target.checked)}
+                        aria-describedby="room-finder-privacy-full"
+                        className="mt-0.5 h-5 w-5 shrink-0 accent-[#66714f]"
+                      />
+                      <div className="min-w-0">
+                        <label htmlFor="room-finder-privacy" className="cursor-pointer">{breakdownCopy.privacyShort}</label>
+                        <details className="mt-1">
+                          <summary className="w-fit cursor-pointer text-[12px] font-bold text-[#8a6a4e] underline underline-offset-2">{breakdownCopy.privacyMore}</summary>
+                          <p id="room-finder-privacy-full" className="mt-1.5 text-[12px] leading-[17px] text-[#746b60]">{contactCopy.privacyNotice}</p>
+                        </details>
+                      </div>
+                    </div>
                   </div>
+                  <div className="mt-3.5 grid grid-cols-1 gap-2 min-[400px]:grid-cols-[1fr_auto]">
+                    <button
+                      type="button"
+                      disabled={sendStatus === "sending" || !canSendRequest}
+                      onClick={() => void sendRequest()}
+                      className="min-h-12 rounded-full bg-[#66714f] px-5 text-[15px] font-bold text-white transition hover:bg-[#5a6446] active:scale-[.98] disabled:cursor-not-allowed disabled:opacity-45"
+                    >
+                      {copy.send}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => openWhatsApp(whatsappContext(copy.contactTitle, true))}
+                      className="min-h-12 rounded-full border border-[#287d4f] px-5 text-[15px] font-bold text-[#287d4f] transition hover:bg-[#f1f8f3] active:scale-[.98]"
+                    >
+                      💬 {copy.whatsapp}
+                    </button>
+                  </div>
+                  {sendStatus === "sent" && (
+                    <p role="status" className="mt-3 rounded-2xl bg-[#eef4e7] p-3 text-[14px] font-bold text-[#5f7448]">{copy.sent}</p>
+                  )}
+                  {sendStatus === "error" && (
+                    <p role="alert" className="mt-3 rounded-2xl bg-red-50 p-3 text-sm text-red-700">{copy.sendError}</p>
+                  )}
                 </div>
               </section>
             )}
