@@ -859,12 +859,12 @@ export function RoomFinderProduction({
                   onDetails={openRoomDetail}
                   onSelect={offer => void finder.selectOffer(offer)}
                 />
-                <section className="msg flex flex-col items-stretch gap-3 rounded-[20px] border border-[#dfd6ca] bg-white px-4 py-3 shadow-sm min-[390px]:flex-row min-[390px]:items-center sm:ml-10">
+                <section className="msg ml-10 flex flex-col items-stretch gap-3 rounded-[20px] border border-[#dfd6ca] bg-white px-4 py-3 shadow-sm min-[420px]:flex-row min-[420px]:items-center">
                   <p className="min-w-0 flex-1 text-sm font-semibold leading-5">{copy.whatsappHelp}</p>
                   <button
                     type="button"
                     onClick={() => openWhatsApp(whatsappContext(copy.whatsappHelp))}
-                    className="min-h-11 w-full shrink-0 rounded-full bg-[#287d4f] px-4 py-2.5 text-sm font-bold text-white min-[390px]:w-auto"
+                    className="min-h-11 w-full shrink-0 rounded-full bg-[#287d4f] px-4 py-2.5 text-sm font-bold text-white min-[420px]:w-auto"
                   >
                     💬 {copy.whatsapp}
                   </button>

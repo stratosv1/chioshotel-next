@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { Info } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { RoomFinderCopy, RoomFinderLanguage } from "./room-finder-copy";
 import { splitStayNarrative } from "./room-finder-split-narrative";
@@ -111,6 +112,21 @@ const SELECT_SOLUTION_LABEL: Record<RoomFinderLanguage,string> = {
   tr:"Çözümü seç",
 };
 
+const PER_NIGHT_LABEL: Record<RoomFinderLanguage,string> = {
+  el:"/βράδυ",
+  en:"/night",
+  de:"/Nacht",
+  fr:"/nuit",
+  it:"/notte",
+  es:"/noche",
+  tr:"/gece",
+};
+
+function discountPercent(offer:RoomOffer) {
+  if (!(offer.originalTotal > offer.directTotal) || offer.originalTotal <= 0) return 0;
+  return Math.round((1 - offer.directTotal / offer.originalTotal) * 100);
+}
+
 function shortDate(value:string,language:RoomFinderLanguage) {
   const locale = { el:"el-GR", en:"en-GB", de:"de-DE", fr:"fr-FR", it:"it-IT", es:"es-ES", tr:"tr-TR" }[language];
   const [year,month,day] = value.split("-").map(Number);
@@ -191,72 +207,72 @@ export function RoomCarousel({ offers, copy, language, money, onDetails, onSelec
     scroller.scrollBy({ left:direction*distance, behavior:"smooth" });
   };
 
-  return <section className="msg relative -mx-3 sm:mx-0 sm:ml-10">
-    {staffRequestedUnavailable && <div className="mx-3 mb-3 rounded-2xl border border-[#e3cda9] bg-[#fff8ea] px-4 py-3 text-sm font-semibold text-[#765d3b] sm:mx-10">Το Δωμάτιο {staffRequestedUnavailable} που ζήτησες δεν είναι διαθέσιμο για όλη τη διαμονή. Παρακάτω είναι οι διαθέσιμες επιλογές.</div>}
-    <div ref={scrollerRef} className="hide-scroll flex snap-x snap-mandatory gap-3 overflow-x-auto px-3 pb-2 sm:px-10">
-      {offers.map((offer,index) => {
+  // Compact, chat-aligned cards: about three quarters of the chat column wide
+  // so the next option peeks in (no arrows needed on phones), image on top,
+  // what the guest compares (room type, price per night, total) up front.
+  return <section className="msg relative -mr-3.5 ml-10 sm:mr-0">
+    {staffRequestedUnavailable && <div className="mb-3 mr-3.5 rounded-2xl border border-[#e3cda9] bg-[#fff8ea] px-4 py-3 text-sm font-semibold text-[#765d3b] sm:mr-0">Το Δωμάτιο {staffRequestedUnavailable} που ζήτησες δεν είναι διαθέσιμο για όλη τη διαμονή. Παρακάτω είναι οι διαθέσιμες επιλογές.</div>}
+    <div ref={scrollerRef} className="-mb-4 -mt-2 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-6 pr-3.5 pt-2 [scrollbar-width:none] sm:pr-0 [&::-webkit-scrollbar]:hidden">
+      {offers.map((offer) => {
         const key=`${offer.roomId}:${offer.unitId}:${offer.alternativeCheckin||""}`;
         const pending=selectingOfferKey===key;
         const splitVisuals=splitRoomVisuals(offer);
         const isSplit=splitVisuals.length>1;
         const narrative=isSplit?splitStayNarrative(offer,language):null;
-        return <article data-room-card key={key} className="min-w-[92%] snap-center overflow-hidden rounded-[24px] border border-[#dcd2c5] bg-white shadow-[0_14px_38px_rgba(70,55,35,.10)] sm:min-w-[68%]">
-          <div className="relative h-44 sm:h-56">
+        const nights=Math.max(1,Number(offer.nights)||1);
+        const perNight=offer.directTotal/nights;
+        const discount=discountPercent(offer);
+        const title=isSplit?SPLIT_SOLUTION_LABEL[language]:offer.category||offer.name;
+        const subtitle=isSplit?splitVisuals.map(room => room.name).join(" + "):[offer.name,offer.floor].filter(Boolean).join(" · ");
+        const highlights=(offer.features||[]).slice(0,2).join(" · ");
+        const selectLabel=pending ? SELECTING_LABEL[language] : isSplit ? SELECT_SOLUTION_LABEL[language] : selectionRoom ? copy.selectForRoom(selectionRoom) : copy.select;
+        return <article data-room-card key={key} className="flex w-[78%] max-w-[300px] shrink-0 snap-start flex-col overflow-hidden rounded-[22px] border border-[#e1d8cc] bg-white shadow-[0_8px_24px_rgba(70,55,35,.08)] sm:w-[280px]">
+          <button type="button" onClick={() => onDetails(offer)} aria-label={`${copy.details}: ${title}`} className="relative block aspect-[16/10] w-full shrink-0 overflow-hidden bg-[#efe8de] text-left">
             {isSplit ? <div className="grid h-full w-full" style={{gridTemplateColumns:`repeat(${Math.min(splitVisuals.length,3)},minmax(0,1fr))`}}>
               {splitVisuals.slice(0,3).map((roomVisual,visualIndex) => <div key={`${roomVisual.name}:${visualIndex}`} className="relative min-w-0 overflow-hidden border-r border-white/70 last:border-r-0">
-                <Image src={roomVisual.image} alt={roomVisual.name} fill sizes="46vw" className="object-cover"/>
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/35 to-transparent px-2 pb-2.5 pt-8">
-                  <div className="truncate text-[11px] font-black text-white sm:text-xs">{roomVisual.name}</div>
-                </div>
+                <Image src={roomVisual.image} alt="" fill sizes="(min-width: 640px) 140px, 38vw" className="object-cover"/>
               </div>)}
-            </div> : <Image src={offer.image} alt={offer.name} fill sizes="92vw" className="object-cover"/>}
-            {offer.recommended && <span className="absolute left-3 top-3 z-10 rounded-full bg-[#66714f]/95 px-3 py-1.5 text-[11px] font-black text-white shadow-sm">★ {RECOMMENDED_LABEL[language]}</span>}
-            <span className="absolute right-3 top-3 z-10 rounded-full bg-white/90 px-2.5 py-1 text-xs font-bold">{index+1}/{offers.length}</span>
-          </div>
-          <div className="p-3.5">
-            {offer.alternativeCheckin && offer.alternativeCheckout && <div className="mb-3 rounded-2xl border border-[#e1d3bd] bg-[#fbf4e8] px-3 py-2 text-xs font-bold text-[#765d3b]">
+            </div> : <Image src={offer.image} alt="" fill sizes="(min-width: 640px) 280px, 75vw" className="object-cover"/>}
+            {offer.recommended && <span className="absolute left-2.5 top-2.5 rounded-full bg-[#66714f]/95 px-2.5 py-1 text-[11px] font-black text-white shadow-sm">★ {RECOMMENDED_LABEL[language]}</span>}
+            {discount > 0 && <span className="absolute right-2.5 top-2.5 rounded-full bg-[#c66a34] px-2 py-1 text-[12px] font-black leading-none text-white shadow-sm [font-variant-numeric:tabular-nums]">−{discount}%</span>}
+          </button>
+          <div className="flex flex-1 flex-col p-3">
+            {offer.alternativeCheckin && offer.alternativeCheckout && <p className="mb-2 w-fit rounded-full bg-[#fbf4e8] px-2.5 py-1 text-[11px] font-bold text-[#765d3b]">
               {ALTERNATIVE_LABEL[language]} · {shortDate(offer.alternativeCheckin,language)}–{shortDate(offer.alternativeCheckout,language)}
-            </div>}
-            <div className="flex justify-between gap-3">
-              <div className="min-w-0 flex-1">
-                <h2 className="text-[1.35rem] font-bold">{isSplit?SPLIT_SOLUTION_LABEL[language]:offer.name}</h2>
-                {isSplit && <p className="mt-1 text-sm font-semibold leading-5 text-[#514a42]">{splitVisuals.map(room => room.name).join(" + ")}</p>}
-                {isSplit ? narrative && <p className="mt-2 text-sm leading-5 text-[#746b60]">{narrative}</p> : <p className="mt-1 text-sm text-[#746b60]">{offer.category} · {offer.floor}</p>}
+            </p>}
+            <h2 className="line-clamp-2 text-[16px] font-black leading-snug text-[#29251f]">{title}</h2>
+            <p className="mt-0.5 line-clamp-2 text-[13px] leading-[18px] text-[#746b60]">{subtitle}</p>
+            {isSplit ? narrative && <p className="mt-1.5 line-clamp-2 text-[13px] leading-[18px] text-[#625b52]">{narrative}</p> : highlights && <p className="mt-1.5 line-clamp-1 text-[13px] leading-[18px] text-[#625b52]">{highlights}</p>}
+            <div className="mt-auto pt-3">
+              <p className="flex items-baseline gap-1 [font-variant-numeric:tabular-nums]">
+                <span className="text-[19px] font-black text-[#5f7448]">{money(perNight,language)}</span>
+                <span className="text-[13px] font-semibold text-[#746b60]">{PER_NIGHT_LABEL[language]}</span>
+              </p>
+              <p className="mt-0.5 text-[12px] leading-4 text-[#746b60] [font-variant-numeric:tabular-nums]">
+                {discount > 0 && <s className="mr-1 text-[#a59a8d]">{money(offer.originalTotal,language)}</s>}
+                <b className="font-bold text-[#514a42]">{money(offer.directTotal,language)}</b> · {copy.nightLabel(nights)}
+              </p>
+              <div className="mt-2.5 flex gap-2">
+                <button type="button" onClick={() => onDetails(offer)} aria-label={`${copy.details}: ${title}`} title={copy.details} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#d8cec1] text-[#514a42] transition hover:bg-[#fbf8f3] active:scale-[.97]"><Info className="h-5 w-5" aria-hidden="true" /></button>
+                <button
+                  type="button"
+                  onClick={() => onSelect(offer)}
+                  disabled={Boolean(selectingOfferKey)}
+                  aria-busy={pending}
+                  aria-label={selectLabel}
+                  className="min-h-11 min-w-0 flex-1 rounded-full bg-[#66714f] px-3 text-[14px] font-bold leading-tight text-white transition hover:bg-[#5a6446] active:scale-[.97] disabled:cursor-wait disabled:opacity-70"
+                >
+                  {pending ? `✓ ${selectLabel}` : selectLabel}
+                </button>
               </div>
-              <div className="shrink-0 text-right">{offer.originalTotal > offer.directTotal && <p className="text-xs text-[#b05252] line-through">{money(offer.originalTotal,language)}</p>}<p className="text-xl font-black text-[#5f7448]">{money(offer.directTotal,language)}</p></div>
-            </div>
-            {isSplit ? <div className="mt-3">
-              <div className="mb-2 text-[11px] font-black uppercase tracking-[.08em] text-[#8a7f72]">{ROOMS_IN_SOLUTION_LABEL[language]}</div>
-              <div className="grid grid-cols-1 gap-2 min-[390px]:grid-cols-2">
-                {splitVisuals.map((roomVisual,visualIndex) => <div key={`${roomVisual.name}:mini:${visualIndex}`} className="flex min-w-0 items-center gap-2 rounded-2xl border border-[#e7ded2] bg-[#faf7f2] p-2">
-                  <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl">
-                    <Image src={roomVisual.image} alt={roomVisual.name} fill sizes="48px" className="object-cover"/>
-                  </div>
-                  <div className="min-w-0 text-xs font-black leading-4 text-[#514a42]">{roomVisual.name}</div>
-                </div>)}
-              </div>
-              <div className="mt-2 space-y-1.5">{(offer.features||[]).slice(0,2).map((feature) => <div key={feature} className="rounded-2xl bg-[#f1ede7] px-3 py-2 text-[11px] font-semibold leading-4 text-[#514a42]">{feature}</div>)}</div>
-            </div> : <div className="mt-2 flex flex-wrap gap-1.5">{(offer.features||[]).slice(0,4).map((feature) => <span key={feature} className="rounded-full bg-[#f1ede7] px-2.5 py-1 text-[11px] font-semibold">{feature}</span>)}</div>}
-            {offer.saving > 0 && <p className="mt-3 text-sm font-bold text-[#5f7448]">{copy.saving}: {money(offer.saving,language)}</p>}
-            <div className="mt-3 grid grid-cols-1 gap-2 min-[390px]:grid-cols-2">
-              <button onClick={() => onDetails(offer)} className="min-h-14 rounded-2xl border border-[#d8cec1] font-bold">{copy.details}</button>
-              <button
-                onClick={() => onSelect(offer)}
-                disabled={Boolean(selectingOfferKey)}
-                aria-busy={pending}
-                aria-label={pending ? SELECTING_LABEL[language] : isSplit ? SELECT_SOLUTION_LABEL[language] : selectionRoom ? copy.selectForRoom(selectionRoom) : copy.select}
-                className="min-h-14 rounded-2xl bg-[#66714f] px-2 py-2 text-sm font-bold leading-tight text-white transition disabled:cursor-wait disabled:opacity-70"
-              >
-                {pending ? `✓ ${SELECTING_LABEL[language]}` : isSplit ? SELECT_SOLUTION_LABEL[language] : selectionRoom ? copy.selectForRoom(selectionRoom) : copy.select}
-              </button>
             </div>
           </div>
         </article>;
       })}
     </div>
     {offers.length > 1 && <>
-      <button type="button" aria-label={PREVIOUS_LABEL[language]} onClick={() => move(-1)} disabled={!canScrollLeft} className="absolute left-3 top-[35%] z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#d8cec1] bg-white/95 text-2xl font-semibold leading-none text-[#4f473d] shadow-lg backdrop-blur transition hover:scale-105 disabled:cursor-default disabled:opacity-45 sm:left-12 sm:h-12 sm:w-12 sm:text-3xl">‹</button>
-      <button type="button" aria-label={NEXT_LABEL[language]} onClick={() => move(1)} disabled={!canScrollRight} className="absolute right-3 top-[35%] z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#d8cec1] bg-white/95 text-2xl font-semibold leading-none text-[#4f473d] shadow-lg backdrop-blur transition hover:scale-105 disabled:cursor-default disabled:opacity-45 sm:right-12 sm:h-12 sm:w-12 sm:text-3xl">›</button>
+      <button type="button" aria-label={PREVIOUS_LABEL[language]} onClick={() => move(-1)} disabled={!canScrollLeft} className="absolute -left-5 top-[88px] z-20 hidden h-10 w-10 items-center justify-center rounded-full border border-[#d8cec1] bg-white text-2xl font-semibold leading-none text-[#4f473d] shadow-md transition hover:scale-105 disabled:pointer-events-none disabled:opacity-0 sm:flex">‹</button>
+      <button type="button" aria-label={NEXT_LABEL[language]} onClick={() => move(1)} disabled={!canScrollRight} className="absolute -right-5 top-[88px] z-20 hidden h-10 w-10 items-center justify-center rounded-full border border-[#d8cec1] bg-white text-2xl font-semibold leading-none text-[#4f473d] shadow-md transition hover:scale-105 disabled:pointer-events-none disabled:opacity-0 sm:flex">›</button>
     </>}
   </section>;
 }
