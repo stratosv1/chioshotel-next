@@ -162,10 +162,12 @@ export async function GET(request: NextRequest) {
         statusRows = await sql`select * from booking_core.inventory_status(${checkin}::date, ${checkout}::date)`;
         status = String((statusRows[0] as any)?.status || "DATA_UNAVAILABLE");
       }
-      // A refresh started elsewhere is still running: poll until it lands
-      // rather than telling the guest that inventory is unavailable.
+      // Poll until fresh inventory lands rather than telling the guest that it
+      // is unavailable: either a refresh started elsewhere is still running
+      // ("busy"), or our refresh succeeded but the status has not caught up yet
+      // ("refreshed"). Only a failed refresh stops immediately.
       while (
-        outcome === "busy"
+        outcome !== "failed"
         && status === "STALE_DATA"
         && Date.now() - startedAt + REFRESH_POLL_INTERVAL_MS < REFRESH_WAIT_DEADLINE_MS
       ) {

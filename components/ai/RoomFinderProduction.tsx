@@ -326,17 +326,21 @@ export function RoomFinderProduction({
   }, [finder.step]);
 
   useEffect(() => {
-    if (finder.step === "searching" || (finder.step === "selecting" && finder.visibleOffers.length > 0)) {
-      return;
-    }
-
-    // A message the guest just sent always brings the conversation into view
-    // once; later updates to that same message must not override scrolling up.
-    const lastMessage = finder.messages[finder.messages.length - 1];
-    if (lastMessage?.role === "user" && lastMessage.id !== lastFollowedUserMessageRef.current) {
-      lastFollowedUserMessageRef.current = lastMessage.id;
+    // Any new guest action (typed message, chip, room "Select", breakfast
+    // choice) resumes following the conversation, so the next step always
+    // comes into view, even if the assistant replies before the step changes.
+    // Checked before the results early-return below, because "Select" on a
+    // room card is sent while the results are still on screen. Later updates
+    // to the same message (e.g. its reaction) must not override scrolling up.
+    const latestUserMessage = [...finder.messages].reverse().find(message => message.role === "user");
+    if (latestUserMessage && latestUserMessage.id !== lastFollowedUserMessageRef.current) {
+      lastFollowedUserMessageRef.current = latestUserMessage.id;
       stickToBottomRef.current = true;
       setHasUnseenMessages(false);
+    }
+
+    if (finder.step === "searching" || (finder.step === "selecting" && finder.visibleOffers.length > 0)) {
+      return;
     }
 
     if (!stickToBottomRef.current) {
