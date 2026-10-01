@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import { guardEmailEndpoint } from "@/lib/ai-assistant/email-endpoint-guard";
 import { markRoomFinderEnquirySent } from "@/lib/ai-assistant/conversation-store";
 
 export const runtime = "nodejs";
@@ -53,6 +54,9 @@ function readCookie(request: Request, name: string) {
 }
 
 export async function POST(request: Request) {
+  const rejected = await guardEmailEndpoint(request, "summary");
+  if (rejected) return rejected;
+
   try {
     const body = (await request.json()) as SummaryEmailBody;
     const subject = clean(body.subject, 180) || "Αίτημα διαμονής από AI Room Finder";

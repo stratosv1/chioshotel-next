@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import { guardEmailEndpoint } from "@/lib/ai-assistant/email-endpoint-guard";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -37,6 +38,9 @@ function escapeHtml(value: string) {
 }
 
 export async function POST(request: Request) {
+  const rejected = await guardEmailEndpoint(request, "request");
+  if (rejected) return rejected;
+
   try {
     const body = (await request.json()) as RequestEmailBody;
     const requestId = clean(body.requestId, 80);
