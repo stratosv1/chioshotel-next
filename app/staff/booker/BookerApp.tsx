@@ -242,6 +242,52 @@ function displayUserText(value: string) {
   return `${trimmed.slice(0, 1800)}\n… [το υπόλοιπο κείμενο αναλύθηκε κανονικά]`;
 }
 
+function todayInAthens() {
+  const parts = new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Athens", year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(new Date());
+  const value = (type: string) => parts.find((part) => part.type === type)?.value || "";
+  return `${value("year")}-${value("month")}-${value("day")}`;
+}
+
+const NETWORK_ERROR = "Η σύνδεση κόπηκε πριν πάρω απάντηση. Τα στοιχεία που έχεις γράψει κρατήθηκαν — δοκίμασε ξανά.";
+
+// Vercel Functions reject request bodies over 4.5 MB, and phone screenshots
+// often exceed that. Downscale to a size that keeps text readable for OCR.
+const MAX_UPLOAD_BYTES = 3.5 * 1024 * 1024;
+const MAX_IMAGE_SIDE = 2200;
+
+async function prepareScreenshot(file: File): Promise<File> {
+  if (typeof createImageBitmap !== "function") return file;
+  try {
+    const bitmap = await createImageBitmap(file);
+    const scale = Math.min(1, MAX_IMAGE_SIDE / Math.max(bitmap.width, bitmap.height));
+    if (scale === 1 && file.size <= MAX_UPLOAD_BYTES) {
+      bitmap.close();
+      return file;
+    }
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(bitmap.width * scale);
+    canvas.height = Math.round(bitmap.height * scale);
+    const context = canvas.getContext("2d");
+    if (!context) {
+      bitmap.close();
+      return file;
+    }
+    context.fillStyle = "#ffffff";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    bitmap.close();
+    for (const quality of [0.88, 0.75, 0.6]) {
+      const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", quality));
+      if (blob && blob.size <= MAX_UPLOAD_BYTES) {
+        return new File([blob], file.name.replace(/\.[a-z0-9]+$/i, "") + ".jpg", { type: "image/jpeg" });
+      }
+    }
+    return file;
+  } catch {
+    return file;
+  }
+}
+
 function StaffMessage({ message }: { message: ChatMessage }) {
   return (
     <div className={`msg flex items-end gap-2 ${message.role === "user" ? "justify-end" : "justify-start"}`}>
@@ -393,10 +439,17 @@ export default function BookerApp() {
       allowSplit: "0",
     });
 
-    const response = await fetch(`/api/ai-room-finder/availability/?${query.toString()}`, {
-      cache: "no-store",
-      credentials: "same-origin",
-    });
+    let response: Response;
+    try {
+      response = await fetch(`/api/ai-room-finder/availability/?${query.toString()}`, {
+        cache: "no-store",
+        credentials: "same-origin",
+      });
+    } catch {
+      setSearching(false);
+      push(assistant(`${NETWORK_ERROR} Γράψε «έλεγξε ξανά» για νέα αναζήτηση διαθεσιμότητας.`));
+      return;
+    }
     const data = await response.json().catch(() => null);
     setSearching(false);
 
@@ -424,6 +477,13 @@ export default function BookerApp() {
       setAwaiting("checkout");
       setMode("collecting");
       push(assistant("Το check-out πρέπει να είναι μετά το check-in. Ποια είναι η σωστή ημερομηνία check-out;"));
+      return;
+    }
+
+    if (nextDraft.checkin && nextDraft.checkin < todayInAthens()) {
+      setAwaiting("checkin");
+      setMode("collecting");
+      push(assistant(`Το check-in ${prettyDate(nextDraft.checkin)} είναι στο παρελθόν — ίσως λάθος έτος. Ποια είναι η σωστή ημερομηνία check-in;`));
       return;
     }
 
@@ -478,6 +538,7 @@ export default function BookerApp() {
 
     setComposer("");
     setInterpreting(true);
+    const upload = image ? await prepareScreenshot(image) : undefined;
     const form = new FormData();
     form.set("message", text);
     form.set("context", JSON.stringify({
@@ -487,15 +548,28 @@ export default function BookerApp() {
       emailSkipped,
       phoneSkipped,
     }));
-    if (image) form.set("image", image);
+    if (upload) form.set("image", upload);
 
-    const response = await fetch("/api/staff/booker/interpret/", {
-      method: "POST",
-      credentials: "same-origin",
-      body: form,
-    });
+    let response: Response;
+    try {
+      response = await fetch("/api/staff/booker/interpret/", {
+        method: "POST",
+        credentials: "same-origin",
+        body: form,
+      });
+    } catch {
+      setInterpreting(false);
+      if (text) setComposer(text);
+      push(assistant(NETWORK_ERROR));
+      return;
+    }
     const data = (await response.json().catch(() => null)) as IntakeResult | null;
     setInterpreting(false);
+
+    if (response.status === 413) {
+      push(assistant("Το screenshot είναι πολύ μεγάλο για αποστολή. Κάνε crop μόνο το κομμάτι με τα στοιχεία της κράτησης και ξαναδοκίμασε."));
+      return;
+    }
 
     if (!response.ok || !data?.fields) {
       push(assistant(data?.message || "Δεν μπόρεσα να αναλύσω αυτό το μήνυμα. Δοκίμασε ξανά."));
@@ -582,27 +656,34 @@ export default function BookerApp() {
     setSaving(true);
     push(assistant("Κάνω έναν τελευταίο server-side έλεγχο διαθεσιμότητας και καταχωρώ την κράτηση στο Beds24…"));
 
-    const response = await fetch("/api/staff/booker/create/", {
-      method: "POST",
-      credentials: "same-origin",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        roomId: Number(selectedOffer.roomId),
-        unitId: Number(selectedOffer.unitId),
-        arrival: draft.checkin,
-        departure: draft.checkout,
-        firstName: draft.firstName,
-        lastName: draft.lastName,
-        email: draft.email,
-        phone: draft.phone,
-        language: draft.language,
-        adults: draft.adults,
-        children: draft.children,
-        price: draft.totalPrice,
-        comments: draft.comments,
-        notes: draft.notes,
-      }),
-    });
+    let response: Response;
+    try {
+      response = await fetch("/api/staff/booker/create/", {
+        method: "POST",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          roomId: Number(selectedOffer.roomId),
+          unitId: Number(selectedOffer.unitId),
+          arrival: draft.checkin,
+          departure: draft.checkout,
+          firstName: draft.firstName,
+          lastName: draft.lastName,
+          email: draft.email,
+          phone: draft.phone,
+          language: draft.language,
+          adults: draft.adults,
+          children: draft.children,
+          price: draft.totalPrice,
+          comments: draft.comments,
+          notes: draft.notes,
+        }),
+      });
+    } catch {
+      setSaving(false);
+      push(assistant("⚠️ Η σύνδεση κόπηκε πριν πάρω απάντηση από το Beds24. Η κράτηση ΜΠΟΡΕΙ να έχει δημιουργηθεί. Έλεγξε πρώτα στο Beds24. Αν πατήσεις ξανά «Καταχώρηση», το σύστημα ελέγχει ζωντανά το Beds24 και δεν θα περάσει δεύτερη κράτηση στο ίδιο δωμάτιο."));
+      return;
+    }
     const data = (await response.json().catch(() => null)) as BookingResult | null;
     setSaving(false);
 
