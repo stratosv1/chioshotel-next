@@ -28,7 +28,14 @@ export function ConsentAnalytics({ language: _language }: { language: LanguageCo
           }
         `}
       </Script>
-      <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
+      {/*
+        gtag.js loads after the page has finished loading so it never competes
+        with the hero image (afterInteractive also preloads it in <head>). The
+        inline queue below still runs right after hydration, so page views and
+        events sent before gtag.js arrives wait in dataLayer and are delivered
+        when it loads.
+      */}
+      <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="lazyOnload" />
       <Script id="ga4-init" strategy="afterInteractive">
         {`
           window.dataLayer = window.dataLayer || [];
