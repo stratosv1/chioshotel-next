@@ -5,7 +5,9 @@ export const runtime = "nodejs";
 export const maxDuration = 60;
 
 const LANGUAGES = ["el", "en", "de", "fr", "it", "es", "tr"] as const;
-const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
+// Vercel Functions reject request bodies over 4.5 MB before this code runs;
+// the client compresses screenshots, this is the server-side backstop.
+const MAX_IMAGE_BYTES = 4 * 1024 * 1024;
 const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 const STAFF_ROOM_COOKIE = "staff_requested_room";
 const BEDS24_PROPERTY_ID = "117813";
@@ -520,7 +522,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ message: "Screenshot must be JPG, PNG or WebP." }, { status: 415, headers: noStoreHeaders() });
       }
       if (image.size > MAX_IMAGE_BYTES) {
-        return NextResponse.json({ message: "Screenshot is too large. Maximum size is 8 MB." }, { status: 413, headers: noStoreHeaders() });
+        return NextResponse.json({ message: "Το screenshot είναι πολύ μεγάλο (μέγιστο 4 MB). Κάνε crop μόνο το κομμάτι με τα στοιχεία της κράτησης." }, { status: 413, headers: noStoreHeaders() });
       }
     }
 

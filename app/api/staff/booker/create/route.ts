@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { neon } from "@neondatabase/serverless";
+import { todayInAthensIso } from "@/lib/ai-assistant/room-finder-date";
 
 export const runtime = "nodejs";
 
@@ -91,6 +92,20 @@ function extractBookingId(result: any): string | number | null {
   return candidates.find((value) => value !== null && typeof value !== "undefined" && value !== "") ?? null;
 }
 
+/**
+ * wa.me needs the full international number without "+" or "00".
+ * Greek numbers are often written without the country code (69xxxxxxxx /
+ * 2xxxxxxxxx), which would open the wrong chat, so "30" is added for those.
+ */
+function whatsappNumber(raw: string) {
+  const trimmed = raw.trim();
+  let digits = trimmed.replace(/\D+/g, "");
+  if (!digits) return "";
+  if (trimmed.startsWith("00")) digits = digits.slice(2);
+  else if (!trimmed.startsWith("+") && /^(69|2)\d{8,9}$/.test(digits) && digits.length === 10) digits = `30${digits}`;
+  return digits.length >= 8 ? digits : "";
+}
+
 function hasRefreshWriteCredential() {
   return Boolean(process.env.BEDS24_REFRESH_TOKEN?.trim());
 }
@@ -118,6 +133,62 @@ async function getBeds24Token() {
   if (directWriteToken) return directWriteToken;
 
   throw new Error("No valid Beds24 write credential is configured. Add BEDS24_REFRESH_TOKEN or BEDS24_WRITE_API_TOKEN with booking-write permission.");
+}
+
+function addDaysIso(date: string, days: number) {
+  const [year, month, day] = date.split("-").map(Number);
+  return new Date(Date.UTC(year, month - 1, day + days)).toISOString().slice(0, 10);
+}
+
+function bookingsFromPayload(payload: any): any[] {
+  if (Array.isArray(payload)) return payload;
+  if (Array.isArray(payload?.data)) return payload.data;
+  if (Array.isArray(payload?.bookings)) return payload.bookings;
+  return [];
+}
+
+/**
+ * Live duplicate/overlap guard against Beds24 itself. Booking Core is a synced
+ * snapshot, so a booking created seconds ago (e.g. a retry after a dropped
+ * connection) is not in it yet. Beds24 is the source of truth: any
+ * non-cancelled booking on the same room unit that overlaps the stay blocks
+ * creation. If Beds24 cannot be read, creation is blocked too (fail closed).
+ */
+async function findLiveOverlap(params: { arrival: string; departure: string; roomId: number; unitId: number; writeToken: string }) {
+  const token = process.env.BEDS24_API_TOKEN?.trim() || params.writeToken;
+  const url = new URL(`${beds24BaseUrl}/bookings`);
+  url.searchParams.set("propertyId", String(beds24PropertyId));
+  url.searchParams.set("roomId", String(params.roomId));
+  // Overlap: existing.arrival < new.departure AND existing.departure > new.arrival
+  url.searchParams.set("arrivalTo", addDaysIso(params.departure, -1));
+  url.searchParams.set("departureFrom", addDaysIso(params.arrival, 1));
+
+  let response: Response;
+  try {
+    response = await fetch(url, {
+      headers: { accept: "application/json", token },
+      cache: "no-store",
+      signal: AbortSignal.timeout(12_000),
+    });
+  } catch {
+    return { checked: false as const, status: 0 };
+  }
+  if (!response.ok) {
+    return { checked: false as const, status: response.status };
+  }
+
+  const payload = await response.json().catch(() => null);
+  const conflict = bookingsFromPayload(payload).find((booking) => {
+    const status = String(booking?.status || "").toLowerCase();
+    if (status === "cancelled" || status === "canceled" || status === "inquiry") return false;
+    if (Number(booking?.roomId) !== params.roomId) return false;
+    if (Number(booking?.unitId) !== params.unitId) return false;
+    const arrival = String(booking?.arrival || "").slice(0, 10);
+    const departure = String(booking?.departure || "").slice(0, 10);
+    return arrival < params.departure && departure > params.arrival;
+  });
+
+  return { checked: true as const, conflict: conflict || null };
 }
 
 async function verifyAvailability(params: { arrival: string; departure: string; guests: number; roomId: number; unitId: number }) {
@@ -191,6 +262,9 @@ export async function POST(request: NextRequest) {
     if (!firstName || !lastName) return json({ message: "First name and last name are required." }, 400);
     const nights = nightsBetween(arrival, departure);
     if (nights <= 0) return json({ message: "Departure must be after arrival." }, 400);
+    if (arrival < todayInAthensIso()) {
+      return json({ message: `Το check-in (${arrival}) είναι στο παρελθόν. Έλεγξε τις ημερομηνίες — ίσως λάθος έτος.` }, 400);
+    }
     const guests = adults + children;
     if (guests < 1 || guests > 5) return json({ message: "This booking must contain between 1 and 5 guests." }, 400);
     if (price !== null && (!Number.isFinite(price) || price < 0)) return json({ message: "Invalid total price." }, 400);
@@ -199,6 +273,20 @@ export async function POST(request: NextRequest) {
     if (!availability.ok) return json({ message: availability.message }, availability.status);
 
     const token = await getBeds24Token();
+
+    const overlap = await findLiveOverlap({ arrival, departure, roomId, unitId, writeToken: token });
+    if (!overlap.checked) {
+      return json({ message: `Δεν μπόρεσα να ελέγξω ζωντανά το Beds24 για διπλή κράτηση (HTTP ${overlap.status}). Η κράτηση δεν καταχωρήθηκε — δοκίμασε ξανά σε λίγο.` }, 503);
+    }
+    if (overlap.conflict) {
+      const existingName = `${String(overlap.conflict.firstName || "").trim()} ${String(overlap.conflict.lastName || "").trim()}`.trim();
+      const existingRef = [existingName, overlap.conflict.id ? `#${overlap.conflict.id}` : ""].filter(Boolean).join(", ");
+      return json({
+        message: `Υπάρχει ήδη κράτηση στο ${room.label} που πέφτει σε αυτές τις ημερομηνίες${existingRef ? ` (${existingRef})` : ""}. Δεν δημιουργήθηκε νέα κράτηση — έλεγξε στο Beds24 μήπως έχει ήδη περαστεί.`,
+        existingBookingId: overlap.conflict.id ?? null,
+      }, 409);
+    }
+
     const payload = {
       propertyId,
       status: "confirmed",
@@ -242,7 +330,7 @@ export async function POST(request: NextRequest) {
     const bookingId = extractBookingId(result);
     if (!bookingId) return json({ message: "Beds24 did not return a booking id.", details: result }, 502);
 
-    const digits = phone.replace(/\D+/g, "");
+    const digits = whatsappNumber(phone);
     const whatsappText = encodeURIComponent(
       `Voulamandis House\nBooking ${bookingId}\n${arrival} → ${departure}\n${room.label}\n${adults} adults${children ? ` + ${children} children` : ""}${price !== null ? `\nTotal: €${price}` : ""}`,
     );
