@@ -12,6 +12,7 @@ import { JsSelfProfilingMarkers } from "@/components/performance/JsSelfProfiling
 import { ExploreVoulamandisJourney } from "@/components/seo/ExploreVoulamandisJourney";
 import { VoulamandisFooterTailwind } from "@/components/VoulamandisFooterTailwind";
 import { VoulamandisHeaderTailwind } from "@/components/VoulamandisHeaderTailwind";
+import { getHeaderLinks } from "@/lib/header-links";
 import { ensureKarfasElintaBeachCards } from "@/content/karfas-beach-card";
 import { siteName, siteUrl } from "@/lib/seo";
 import "./globals.css";
@@ -170,7 +171,7 @@ export default async function RootLayout({
         {publicWebMcpPath ? <JsSelfProfilingMarkers /> : null}
         {!isPolishPath && !excludeAnalytics ? <RoomFinderCtaRouter /> : null}
         {!hideGlobalChrome ? (
-          <VoulamandisHeaderTailwind language={sharedLanguage} pathname={pathname} />
+          <VoulamandisHeaderTailwind language={sharedLanguage} pathname={pathname} headerLinks={getHeaderLinks(sharedLanguage, pathname)} />
         ) : null}
         {children}
         {!hideGlobalChrome && !hideJourney ? (

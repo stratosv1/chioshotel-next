@@ -2,20 +2,16 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { getGroupedLanguagePath } from "@/lib/accommodation-landing-i18n";
 import type { LanguageCode } from "@/lib/languages";
 import { languages, normalizePath } from "@/lib/languages";
-import {
-  findPublishedLocalizedPath,
-  getSiteNavigationPath,
-  siteNavigationItemIds,
-} from "@/lib/site-navigation";
-import { getRouteByPath } from "@/lib/url-map";
-import { kamposChiosPaths } from "@/content/kampos-chios-paths";
+import type { HeaderLinks } from "@/lib/header-links";
 
+// All localized hrefs are resolved on the server (lib/header-links) and passed
+// in, so the URL registry never ships in this client component's bundle.
 type HeaderProps = {
   language?: LanguageCode;
   pathname?: string;
+  headerLinks: HeaderLinks;
 };
 
 type HeaderMenuLink = {
@@ -139,8 +135,6 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
   },
 };
 
-const routeIds = siteNavigationItemIds;
-
 const polishEquivalentPaths: Record<string, string> = {
   "/": "/pl/",
   "/el/": "/pl/",
@@ -193,34 +187,6 @@ const polishEquivalentPaths: Record<string, string> = {
   "/tr/chios/kampos-chios/": "/pl/kambos-chios/",
 };
 
-function pathFor(itemId: string, language: LanguageCode) {
-  return (
-    findPublishedLocalizedPath(itemId, language) ||
-    getSiteNavigationPath("home", language)
-  );
-}
-
-function languageHref(pathname: string, language: LanguageCode) {
-  const normalizedPathname = normalizePath(pathname);
-  const isKamposPage = (Object.values(kamposChiosPaths) as string[]).some(
-    (path) => normalizePath(path) === normalizedPathname,
-  );
-
-  if (isKamposPage) {
-    return kamposChiosPaths[language];
-  }
-
-  const groupedPath = getGroupedLanguagePath(pathname, language);
-  if (groupedPath) return groupedPath;
-
-  const route = getRouteByPath(normalizedPathname);
-  if (!route) return pathFor(routeIds.home, language);
-  return (
-    findPublishedLocalizedPath(route.itemId, language) ||
-    pathFor(routeIds.home, language)
-  );
-}
-
 function polishLanguageHref(pathname: string) {
   return polishEquivalentPaths[normalizePath(pathname)] || "/pl/";
 }
@@ -258,7 +224,7 @@ function useReceptionStatus() {
   return status;
 }
 
-function LanguagePills({ currentLanguage, pathname, onNavigate }: { currentLanguage: LanguageCode; pathname: string; onNavigate?: () => void }) {
+function LanguagePills({ currentLanguage, pathname, languageHrefs, onNavigate }: { currentLanguage: LanguageCode; pathname: string; languageHrefs: HeaderLinks["languages"]; onNavigate?: () => void }) {
   return (
     <nav aria-label={copyByLanguage[currentLanguage].language} className="flex min-w-0 flex-nowrap items-center gap-1 overflow-x-auto rounded-full border border-stone-900/10 bg-white/85 p-1 shadow-sm shadow-stone-900/5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       {languages.map((item) => {
@@ -266,7 +232,7 @@ function LanguagePills({ currentLanguage, pathname, onNavigate }: { currentLangu
         return (
           <a
             key={item.code}
-            href={languageHref(pathname, item.code)}
+            href={languageHrefs[item.code]}
             hrefLang={item.code}
             lang={item.code}
             aria-current={active ? "page" : undefined}
@@ -292,23 +258,23 @@ function LanguagePills({ currentLanguage, pathname, onNavigate }: { currentLangu
   );
 }
 
-export function VoulamandisHeaderTailwind({ language = "en", pathname = "/" }: HeaderProps) {
+export function VoulamandisHeaderTailwind({ language = "en", pathname = "/", headerLinks }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const copy = copyByLanguage[language] || copyByLanguage.en;
   const reception = useReceptionStatus();
   const statusLabel = reception.isOpen ? copy.openNow : "06:00";
 
   const links: HeaderMenuLink[] = [
-    { label: copy.links.rooms, href: pathFor(routeIds.rooms, language), icon: "🛏️" },
-    { label: copy.links.deals, href: pathFor(routeIds.deals, language), icon: "🔥" },
-    { label: copy.links.chios, href: pathFor(routeIds.chios, language), icon: "🏝️" },
-    { label: copy.links.activities, href: pathFor(routeIds.activities, language), icon: "✨" },
-    { label: copy.links.contact, href: pathFor(routeIds.contact, language), icon: "💬" },
+    { label: copy.links.rooms, href: headerLinks.nav.rooms, icon: "🛏️" },
+    { label: copy.links.deals, href: headerLinks.nav.deals, icon: "🔥" },
+    { label: copy.links.chios, href: headerLinks.nav.chios, icon: "🏝️" },
+    { label: copy.links.activities, href: headerLinks.nav.activities, icon: "✨" },
+    { label: copy.links.contact, href: headerLinks.nav.contact, icon: "💬" },
   ];
   const exploreLinks: HeaderMenuLink[] = [
-    { label: copy.links.beaches, href: pathFor(routeIds.beaches, language), text: copy.explore.beaches, icon: "🌊" },
-    { label: copy.links.villages, href: pathFor(routeIds.villages, language), text: copy.explore.villages, icon: "🏘️" },
-    { label: copy.links.museums, href: pathFor(routeIds.museums, language), text: copy.explore.museums, icon: "🏛️" },
+    { label: copy.links.beaches, href: headerLinks.nav.beaches, text: copy.explore.beaches, icon: "🌊" },
+    { label: copy.links.villages, href: headerLinks.nav.villages, text: copy.explore.villages, icon: "🏘️" },
+    { label: copy.links.museums, href: headerLinks.nav.museums, text: copy.explore.museums, icon: "🏛️" },
   ];
   const mobileLinks: HeaderMenuLink[] = [...links, ...exploreLinks];
 
@@ -336,7 +302,7 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/" }: H
   return (
     <header className="sticky top-0 z-50 border-b border-stone-900/10 bg-[#fffaf3]/92 shadow-[0_10px_30px_rgba(41,30,20,0.07)] backdrop-blur-xl supports-[backdrop-filter]:bg-[#fffaf3]/82">
       <div className="mx-auto flex h-[72px] w-full max-w-none items-center gap-3 px-3 sm:px-5 lg:h-[84px] lg:px-6 xl:px-8">
-        <a href={pathFor(routeIds.home, language)} onClick={closeMenu} className="group flex min-w-0 flex-1 items-center gap-3 lg:max-w-[500px] xl:flex-[0_1_470px] 2xl:flex-[0_1_560px]">
+        <a href={headerLinks.nav.home} onClick={closeMenu} className="group flex min-w-0 flex-1 items-center gap-3 lg:max-w-[500px] xl:flex-[0_1_470px] 2xl:flex-[0_1_560px]">
           <span className="relative flex h-[54px] w-[54px] shrink-0 items-center justify-center rounded-2xl border border-amber-900/10 bg-white shadow-lg shadow-stone-900/10 lg:h-[58px] lg:w-[58px]">
             <span className="absolute inset-0 rounded-2xl bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,.95),transparent_55%)]" />
             <Image
@@ -370,8 +336,8 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/" }: H
         </nav>
 
         <div className="hidden shrink-0 items-center gap-2 lg:flex">
-          <LanguagePills currentLanguage={language} pathname={pathname} />
-          <a href={pathFor(routeIds.rates, language)} className="inline-flex h-12 min-w-[112px] items-center justify-center rounded-full bg-gradient-to-br from-[#78624d] to-[#735f45] px-5 text-center text-xs font-black uppercase leading-none tracking-[0.1em] !text-white shadow-lg shadow-stone-900/20 transition hover:-translate-y-0.5 hover:from-[#6b5847] hover:to-[#5f4e3f]">
+          <LanguagePills currentLanguage={language} pathname={pathname} languageHrefs={headerLinks.languages} />
+          <a href={headerLinks.nav.rates} className="inline-flex h-12 min-w-[112px] items-center justify-center rounded-full bg-gradient-to-br from-[#78624d] to-[#735f45] px-5 text-center text-xs font-black uppercase leading-none tracking-[0.1em] !text-white shadow-lg shadow-stone-900/20 transition hover:-translate-y-0.5 hover:from-[#6b5847] hover:to-[#5f4e3f]">
             {copy.bookNow}
           </a>
         </div>
@@ -389,8 +355,8 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/" }: H
       <div className={`fixed inset-0 top-[72px] z-50 bg-stone-950/15 backdrop-blur-[1px] transition lg:hidden ${isOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}>
         <button type="button" aria-label={copy.close} onClick={closeMenu} className="absolute inset-0 h-full w-full" />
         <div className={`absolute right-0 top-0 max-h-[calc(100dvh-72px)] w-[min(92vw,420px)] overflow-y-auto overscroll-contain rounded-l-[1.5rem] bg-[#fffaf3] p-3 pb-[calc(1.25rem+env(safe-area-inset-bottom))] shadow-2xl shadow-stone-950/18 transition duration-300 ${isOpen ? "translate-x-0" : "translate-x-full"}`}>
-          <div className="mb-2"><LanguagePills currentLanguage={language} pathname={pathname} onNavigate={closeMenu} /></div>
-          <a href={pathFor(routeIds.rates, language)} onClick={closeMenu} className="mb-2 flex min-h-[44px] items-center justify-center rounded-full bg-gradient-to-br from-[#78624d] to-[#735f45] px-5 text-sm font-black uppercase tracking-[0.1em] !text-white shadow-lg shadow-stone-900/15 transition hover:from-[#6b5847] hover:to-[#5f4e3f]">
+          <div className="mb-2"><LanguagePills currentLanguage={language} pathname={pathname} languageHrefs={headerLinks.languages} onNavigate={closeMenu} /></div>
+          <a href={headerLinks.nav.rates} onClick={closeMenu} className="mb-2 flex min-h-[44px] items-center justify-center rounded-full bg-gradient-to-br from-[#78624d] to-[#735f45] px-5 text-sm font-black uppercase tracking-[0.1em] !text-white shadow-lg shadow-stone-900/15 transition hover:from-[#6b5847] hover:to-[#5f4e3f]">
             {copy.bookNow}
           </a>
           <section className="rounded-[1.15rem] border border-stone-900/10 bg-white p-2.5 shadow-sm shadow-stone-900/5">
