@@ -86,17 +86,17 @@ const germanPageSeoCorrections = new Map<string, SeoCorrection>([
   [
     "/de/straende-chios/",
     {
-      title: "Strände auf Chios | Karte, Zugang & lokale Tipps",
+      title: "Strände auf Chios: Die 9 schönsten (mit Geheimtipps)",
       description:
-        "Vergleichen Sie die schönsten Strände auf Chios nach Lage, Zugang, Ausstattung und Charakter – mit lokalen Tipps für Familien und ruhige Badetage.",
+        "Schwarzer Kies in Mavra Volia, Sand in Komi, smaragdgrünes Wasser in Agia Dynami: der richtige Strand auf Chios für Familien, Ruhe oder Beachbars.",
     },
   ],
   [
     "/de/doerfer-chios/",
     {
-      title: "Dörfer auf Chios | Mittelalter, Mastix & Küste",
+      title: "Chios Dörfer: Die 7 schönsten (mit Insider-Tipps)",
       description:
-        "Entdecken Sie Pyrgi, Mesta, Olympoi, Armolia, Lagada, Vessa und Volissos mit Tipps für mittelalterliche Dörfer, Mastixkultur und Küstenrouten.",
+        "Vom bemalten Pyrgi über das Burgdorf Mesta bis zum Hafen von Lagada: die 7 schönsten Dörfer auf Chios – mit Routenideen und Tipps aus Kambos.",
     },
   ],
   [

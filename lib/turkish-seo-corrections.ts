@@ -74,17 +74,17 @@ const turkishPageSeoCorrections = new Map<string, SeoCorrection>([
   [
     chiosBeachesPageTr.seo.canonicalPath,
     {
-      title: "Sakız Adası plajları | Ulaşım, özellikler ve yerel öneriler",
+      title: "Sakız Adası Plajları: En İyi 9 Plaj ve Gizli Koylar",
       description:
-        "Mavra Volia, Komi, Lithi, Agia Dynami, Nagos ve diğer Sakız Adası plajlarını konum, ulaşım, deniz yapısı ve olanaklara göre karşılaştırın.",
+        "Mavra Volia'nın siyah çakılları, Komi'nin kumu, Agia Dynami'nin zümrüt suyu: aileler, sakinlik veya beach bar için doğru Sakız Adası plajını seçin.",
     },
   ],
   [
     "/tr/sakiz-adasi-koyleri/",
     {
-      title: "Sakız Adası köyleri | Orta Çağ, mastik ve sahil rotaları",
+      title: "Sakız Adası Köyleri: En Güzel 7 Köy (Yerel Rehber)",
       description:
-        "Pyrgi, Mesta, Olympoi, Armolia, Vessa, Volissos ve Lagada’yı keşfedin; Orta Çağ sokakları, mastik kültürü, limanlar ve yerel rotalar.",
+        "Desenli Pyrgi'den Orta Çağ köyü Mesta'ya ve balık tavernalı Lagada'ya: Sakız Adası'nda mutlaka görülmesi gereken 7 köy, rotalar ve yerel ipuçları.",
     },
   ],
   [

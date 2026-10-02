@@ -10,11 +10,35 @@ export type SeoSnippetOverride = {
  */
 export const seoSnippetOverrides = new Map<string, SeoSnippetOverride>([
   [
+    "/chios/chios-villages/",
+    {
+      title: "Chios Villages: The 7 Most Beautiful (Local's Guide)",
+      description:
+        "From painted Pyrgi to medieval Mesta and seaside Lagada: the 7 Chios villages worth a day, with route ideas and tips from locals in Kambos.",
+    },
+  ],
+  [
+    "/es/pueblos-chios/",
+    {
+      title: "Pueblos de Quíos: los 7 más bonitos (guía local)",
+      description:
+        "De la pintada Pyrgi a la medieval Mesta y el puerto de Lagada: los 7 pueblos imprescindibles de Quíos, con rutas y consejos de quienes viven en Kambos.",
+    },
+  ],
+  [
+    "/es/playas-chios/",
+    {
+      title: "Playas de Quíos: las 9 mejores (+ calas escondidas)",
+      description:
+        "Guijarros negros en Mavra Volia, arena en Komi, aguas esmeralda en Agia Dynami: elige la playa ideal de Quíos para familias, calma o ambiente.",
+    },
+  ],
+  [
     "/chios/chios-beaches/",
     {
-      title: "Best Beaches in Chios | Map, Access & Local Tips",
+      title: "Chios Beaches: The 9 Best Beaches & Hidden Coves",
       description:
-        "Compare the best beaches in Chios by area, access, facilities and sea conditions, with local tips for families, quiet swims and day routes.",
+        "Black-pebble Mavra Volia, sandy Komi, emerald Agia Dynami: pick the right Chios beach for families, quiet swims or lively days, with local tips.",
     },
   ],
   [
@@ -252,9 +276,9 @@ export const seoSnippetOverrides = new Map<string, SeoSnippetOverride>([
   [
     "/el/paralies-xios/",
     {
-      title: "Παραλίες Χίου | Χάρτης, πρόσβαση & τοπικές συμβουλές",
+      title: "Παραλίες Χίου: Οι 9 καλύτερες & κρυφοί κολπίσκοι",
       description:
-        "Συγκρίνετε τις καλύτερες παραλίες της Χίου ανά περιοχή, πρόσβαση και παροχές, με τοπικές συμβουλές για οικογένειες, ηρεμία και ημερήσιες διαδρομές.",
+        "Μαύρα Βόλια, Κώμη, Αγία Δύναμη και άλλες 6: βρείτε την ιδανική παραλία της Χίου για οικογένεια, ησυχία ή beach bar, με συμβουλές από ντόπιους.",
     },
   ],
   [
