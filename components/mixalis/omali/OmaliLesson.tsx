@@ -6,6 +6,7 @@ import { AccelDirection } from "./AccelDirection";
 import { Banking } from "./Banking";
 import { CircularLab } from "./CircularLab";
 import { ConicalPendulum, SecondHand, TrackRunners } from "./Examples";
+import { Exercises } from "./Exercises";
 import { ForceCar } from "./ForceCar";
 import { Quiz, ThinkCard, type ThinkQuestion } from "./Think";
 import { RotatingDisk, Wheels } from "./Wheels";
@@ -346,6 +347,7 @@ const nav = [
   ["klisi", "Κλίση"],
   ["diskos", "Δίσκος & τροχοί"],
   ["paradeigmata", "Λυμένα"],
+  ["askiseis", "Ασκήσεις"],
   ["thema2", "Θέμα 2"],
   ["test", "Τεστ"],
 ] as const;
@@ -496,8 +498,22 @@ export function OmaliLesson() {
         </Section>
 
         <Section
+          id="askiseis"
+          kicker="7 · Ασκήσεις φυλλαδίου"
+          title="Λύσε τις μόνος σου"
+          intro={
+            <p>
+              Όλες οι ασκήσεις του φυλλαδίου «Κυκλική κίνηση». Προσπάθησε πρώτα μόνος σου και γράψε την απάντηση για άμεσο έλεγχο. Αν κολλήσεις,
+              άνοιξε την <b>υπόδειξη</b>. Η <b>λύση</b> ανοίγει ένα βήμα τη φορά, ώστε να συνεχίσεις μόνος σου μόλις καταλάβεις το κόλπο.
+            </p>
+          }
+        >
+          <Exercises />
+        </Section>
+
+        <Section
           id="thema2"
-          kicker="7 · Εξάσκηση για διαγώνισμα"
+          kicker="8 · Εξάσκηση για διαγώνισμα"
           title="Θέμα 2 · Επιλογή & αιτιολόγηση"
           intro={
             <p>
@@ -513,7 +529,7 @@ export function OmaliLesson() {
           </div>
         </Section>
 
-        <Section id="test" kicker="8 · Τελικό τεστ" title="Πόσο καλά την κατάλαβες;">
+        <Section id="test" kicker="9 · Τελικό τεστ" title="Πόσο καλά την κατάλαβες;">
           <Quiz questions={finalQuiz} />
         </Section>
 
