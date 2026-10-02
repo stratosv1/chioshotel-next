@@ -98,7 +98,7 @@ export function LazyLastMinuteDeals({
                 </select>
               }
             />
-            <LiveDirectBodySkeleton />
+            <LiveDirectBodySkeleton locale={liveRequestLocale(canonicalPath)} />
           </div>
         </div>
       </section>

@@ -149,6 +149,7 @@ const tripPlannerCssSource = read("app/trip-planner/trip-planner.module.css");
 const polishHomeSource = read("components/home/PolishHomePageTailwind.tsx");
 const homePageSource = read("components/home/HomePageTailwind.tsx");
 const liveDirectRequestSource = read("components/home/LiveDirectRequest.tsx");
+const liveDirectRequestFrameSource = read("components/home/LiveDirectRequestFrame.tsx");
 
 check(
   sitemapSource.includes('contact: "2026-09-30T11:33:11Z"') &&
@@ -348,8 +349,9 @@ check(
 );
 check(
   liveDirectRequestSource.includes("overflow-x-auto pb-2 pt-2") &&
-    liveDirectRequestSource.includes("grid grid-cols-2 gap-0") &&
-    liveDirectRequestSource.includes("sm:grid-cols-4"),
+    liveDirectRequestSource.includes("<LiveTrustGrid locale={locale} />") &&
+    liveDirectRequestFrameSource.includes("grid grid-cols-2 gap-0") &&
+    liveDirectRequestFrameSource.includes("sm:grid-cols-4"),
   "Homepage date chips keep top clearance and trust chips use a readable 2×2 mobile grid.",
   "Homepage date-chip clearance or compact trust-grid layout regressed.",
 );

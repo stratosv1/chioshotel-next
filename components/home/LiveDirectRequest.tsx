@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { HomePageData } from "@/content/home";
-import { roomFinderHrefForLanguage } from "@/lib/room-finder-cta-routing";
 import {
   firstAvailableDate,
   formatDate,
@@ -26,6 +25,8 @@ import {
   LIVE_SECTION_CLASS,
   LiveDirectBodySkeleton,
   LiveDirectHeader,
+  LiveFinderFooter,
+  LiveTrustGrid,
   ROOM_CARD_HEIGHT_CLASS,
   SUMMARY_MIN_HEIGHT_CLASS,
   liveRequestLocale,
@@ -33,7 +34,6 @@ import {
 } from "@/components/home/LiveDirectRequestFrame";
 
 type LastMinuteData = HomePageData["lastMinute"];
-type TrustIconType = "tag" | "chat" | "bed" | "card";
 type NightInfo = NonNullable<ReturnType<typeof getNightInfo>>;
 
 const CONTACT = {
@@ -61,9 +61,6 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
   emailSending: string;
   emailSent: string;
   emailError: string;
-  footer: string;
-  differentDates: string;
-  checkAvailability: string;
   messageTitle: string;
   messageConfirm: string;
   topPick: string;
@@ -74,7 +71,6 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
   apartmentWord: string;
   roomTypes: Record<string, string>;
   badges: Record<string, string>;
-  trustItems: { icon: TrustIconType; title: string; text: string }[];
 }> = {
   en: {
     dateLocale: "en-GB",
@@ -96,9 +92,6 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     emailSending: "Sending...",
     emailSent: "Request sent to reception.",
     emailError: "Please enter a valid email.",
-    footer: "Your instant request at chioshotel.gr",
-    differentDates: "Different dates?",
-    checkAvailability: "Check all dates with the AI Room Finder",
     messageTitle: "Instant request to reception - Voulamandis House",
     messageConfirm: "Please confirm availability and send your best direct offer.",
     topPick: "Top pick",
@@ -123,12 +116,6 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
       Stairs: "Stairs",
       "No stairs": "No stairs",
     },
-    trustItems: [
-      { icon: "tag", title: "Best direct offer", text: "Best available rate" },
-      { icon: "chat", title: "Direct reply", text: "Reception response" },
-      { icon: "bed", title: "Choose room", text: "Pick what suits you" },
-      { icon: "card", title: "No card needed", text: "No payment now" },
-    ],
   },
   el: {
     dateLocale: "el-GR",
@@ -150,9 +137,6 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     emailSending: "Αποστολή...",
     emailSent: "Το αίτημα στάλθηκε στη ρεσεψιόν.",
     emailError: "Συμπληρώστε ένα έγκυρο email.",
-    footer: "Το άμεσο αίτημά σας στο chioshotel.gr",
-    differentDates: "Έχετε διαφορετικές ημερομηνίες;",
-    checkAvailability: "Ελέγξτε όλες τις ημερομηνίες με το AI Room Finder",
     messageTitle: "Άμεσο αίτημα στη ρεσεψιόν - Voulamandis House",
     messageConfirm: "Παρακαλώ επιβεβαιώστε τη διαθεσιμότητα και στείλτε μου την καλύτερη απευθείας προσφορά.",
     topPick: "Κορυφαία επιλογή",
@@ -177,12 +161,6 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
       Stairs: "Σκάλες",
       "No stairs": "Χωρίς σκάλες",
     },
-    trustItems: [
-      { icon: "tag", title: "Καλύτερη απευθείας προσφορά", text: "Καλύτερη διαθέσιμη τιμή" },
-      { icon: "chat", title: "Άμεση απάντηση", text: "Απάντηση από τη ρεσεψιόν" },
-      { icon: "bed", title: "Επιλογή δωματίου", text: "Διαλέξτε αυτό που σας ταιριάζει" },
-      { icon: "card", title: "Χωρίς κάρτα", text: "Καμία πληρωμή τώρα" },
-    ],
   },
   fr: {
     dateLocale: "fr-FR",
@@ -204,9 +182,6 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     emailSending: "Envoi...",
     emailSent: "Demande envoyée à la réception.",
     emailError: "Saisissez une adresse e-mail valide.",
-    footer: "Votre demande instantanée sur chioshotel.gr",
-    differentDates: "D’autres dates ?",
-    checkAvailability: "Vérifiez toutes les dates avec l’AI Room Finder",
     messageTitle: "Demande instantanée à la réception - Voulamandis House",
     messageConfirm: "Merci de confirmer la disponibilité et de m’envoyer votre meilleure offre directe.",
     topPick: "Meilleur choix",
@@ -231,12 +206,6 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
       Stairs: "Escaliers",
       "No stairs": "Sans escaliers",
     },
-    trustItems: [
-      { icon: "tag", title: "Meilleure offre directe", text: "Meilleur tarif disponible" },
-      { icon: "chat", title: "Réponse directe", text: "Réponse de la réception" },
-      { icon: "bed", title: "Choisir la chambre", text: "Choisissez ce qui vous convient" },
-      { icon: "card", title: "Sans carte bancaire", text: "Aucun paiement maintenant" },
-    ],
   },
   de: {
     dateLocale: "de-DE",
@@ -258,9 +227,6 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     emailSending: "Wird gesendet...",
     emailSent: "Anfrage an die Rezeption gesendet.",
     emailError: "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
-    footer: "Ihre Sofortanfrage auf chioshotel.gr",
-    differentDates: "Andere Reisedaten?",
-    checkAvailability: "Alle Termine mit dem AI Room Finder prüfen",
     messageTitle: "Sofortanfrage an die Rezeption - Voulamandis House",
     messageConfirm: "Bitte bestätigen Sie die Verfügbarkeit und senden Sie mir Ihr bestes Direktangebot.",
     topPick: "Beste Wahl",
@@ -285,12 +251,6 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
       Stairs: "Treppen",
       "No stairs": "Keine Treppen",
     },
-    trustItems: [
-      { icon: "tag", title: "Bestes Direktangebot", text: "Bester verfügbarer Preis" },
-      { icon: "chat", title: "Direkte Antwort", text: "Antwort der Rezeption" },
-      { icon: "bed", title: "Zimmer wählen", text: "Wählen Sie, was passt" },
-      { icon: "card", title: "Keine Karte nötig", text: "Keine Zahlung jetzt" },
-    ],
   },
   it: {
     dateLocale: "it-IT",
@@ -312,9 +272,6 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     emailSending: "Invio...",
     emailSent: "Richiesta inviata alla reception.",
     emailError: "Inserisci un indirizzo email valido.",
-    footer: "La tua richiesta immediata su chioshotel.gr",
-    differentDates: "Date diverse?",
-    checkAvailability: "Controlla tutte le date con l’AI Room Finder",
     messageTitle: "Richiesta immediata alla reception - Voulamandis House",
     messageConfirm: "Per favore confermate la disponibilità e inviatemi la vostra migliore offerta diretta.",
     topPick: "Scelta migliore",
@@ -339,12 +296,6 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
       Stairs: "Scale",
       "No stairs": "Senza scale",
     },
-    trustItems: [
-      { icon: "tag", title: "Migliore offerta diretta", text: "Miglior prezzo disponibile" },
-      { icon: "chat", title: "Risposta diretta", text: "Risposta dalla reception" },
-      { icon: "bed", title: "Scegli camera", text: "Scegli ciò che fa per te" },
-      { icon: "card", title: "Senza carta", text: "Nessun pagamento ora" },
-    ],
   },
   es: {
     dateLocale: "es-ES",
@@ -366,9 +317,6 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     emailSending: "Enviando...",
     emailSent: "Solicitud enviada a recepción.",
     emailError: "Introduce una dirección de email válida.",
-    footer: "Su solicitud instantánea en chioshotel.gr",
-    differentDates: "¿Otras fechas?",
-    checkAvailability: "Consulta todas las fechas con AI Room Finder",
     messageTitle: "Solicitud instantánea a recepción - Voulamandis House",
     messageConfirm: "Por favor confirme la disponibilidad y envíeme su mejor oferta directa.",
     topPick: "Mejor opción",
@@ -393,12 +341,6 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
       Stairs: "Escaleras",
       "No stairs": "Sin escaleras",
     },
-    trustItems: [
-      { icon: "tag", title: "Mejor oferta directa", text: "Mejor tarifa disponible" },
-      { icon: "chat", title: "Respuesta directa", text: "Respuesta de recepción" },
-      { icon: "bed", title: "Elija habitación", text: "Elija lo que le conviene" },
-      { icon: "card", title: "Sin tarjeta", text: "Sin pago ahora" },
-    ],
   },
   tr: {
     dateLocale: "tr-TR",
@@ -420,9 +362,6 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
     emailSending: "Gönderiliyor...",
     emailSent: "Talep resepsiyona gönderildi.",
     emailError: "Geçerli bir e-posta adresi girin.",
-    footer: "chioshotel.gr üzerinden anında talebiniz",
-    differentDates: "Farklı tarihler mi?",
-    checkAvailability: "Tüm tarihleri AI Room Finder ile kontrol edin",
     messageTitle: "Resepsiyona anında talep - Voulamandis House",
     messageConfirm: "Lütfen uygunluğu onaylayın ve en iyi doğrudan teklifinizi gönderin.",
     topPick: "En iyi seçim",
@@ -447,12 +386,6 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
       Stairs: "Merdiven",
       "No stairs": "Merdiven yok",
     },
-    trustItems: [
-      { icon: "tag", title: "En iyi doğrudan teklif", text: "En iyi mevcut fiyat" },
-      { icon: "chat", title: "Doğrudan yanıt", text: "Resepsiyondan yanıt" },
-      { icon: "bed", title: "Oda seçin", text: "Size uygun olanı seçin" },
-      { icon: "card", title: "Kart gerekmez", text: "Şimdi ödeme yok" },
-    ],
   },
 };
 
@@ -471,44 +404,6 @@ function localizeRoomType(value: string, copy: (typeof LIVE_REQUEST_COPY)[LiveRe
 function localizeBadge(value: string, copy: (typeof LIVE_REQUEST_COPY)[LiveRequestLocale]) {
   if (/^👤×\d+/.test(value)) return value;
   return copy.badges[value] || value;
-}
-
-function TrustIcon({ type }: { type: TrustIconType }) {
-  const common = "h-5 w-5 text-amber-700 md:h-6 md:w-6";
-
-  if (type === "tag") {
-    return (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={common} aria-hidden="true">
-        <path d="M20 13.2 13.2 20a2.4 2.4 0 0 1-3.4 0L4 14.2V4h10.2L20 9.8a2.4 2.4 0 0 1 0 3.4Z" />
-        <path d="M8.3 8.3h.01" strokeLinecap="round" />
-      </svg>
-    );
-  }
-
-  if (type === "chat") {
-    return (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={common} aria-hidden="true">
-        <path d="M5 17.5 3.8 21l3.8-1.1A9.5 9.5 0 1 0 4.5 17.5Z" />
-        <path d="M8 11.5h.01M12 11.5h.01M16 11.5h.01" strokeLinecap="round" />
-      </svg>
-    );
-  }
-
-  if (type === "bed") {
-    return (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={common} aria-hidden="true">
-        <path d="M4 19V8.5A2.5 2.5 0 0 1 6.5 6H10a2 2 0 0 1 2 2v2h5.5A2.5 2.5 0 0 1 20 12.5V19" />
-        <path d="M4 14h16M7 19v-2M17 19v-2" />
-      </svg>
-    );
-  }
-
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={common} aria-hidden="true">
-      <rect x="3.5" y="6.5" width="17" height="11" rx="2" />
-      <path d="M3.5 10h17M7 14.5h4" />
-    </svg>
-  );
 }
 
 type LiveCopy = (typeof LIVE_REQUEST_COPY)[LiveRequestLocale];
@@ -941,7 +836,7 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
             }
           />
 
-          {showSkeleton ? <LiveDirectBodySkeleton includeFinderLink={false} /> : null}
+          {showSkeleton ? <LiveDirectBodySkeleton locale={locale} includeFinderLink={false} /> : null}
 
           {!loading && failed ? (
             <div className="mt-5 rounded-3xl bg-white p-6 text-sm font-bold leading-6 text-stone-600 ring-1 ring-amber-900/10" role="status">{extra.error}</div>
@@ -1041,15 +936,7 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
                 ) : null}
               </div>
 
-              <div className="mt-3 grid grid-cols-2 gap-0 rounded-[1.25rem] bg-white p-2.5 text-center shadow-sm ring-1 ring-amber-900/10 sm:grid-cols-4 md:rounded-[1.4rem] md:p-3">
-                {copy.trustItems.map((item, index) => (
-                  <div key={item.title} className={`${index < 2 ? "border-b pb-2" : "pt-2"} ${index % 2 === 0 ? "border-r" : ""} border-stone-200 px-2 text-[12px] font-semibold leading-4 text-stone-800 sm:border-b-0 sm:border-r sm:px-1 sm:py-0 sm:last:border-r-0 md:text-xs md:leading-5`}>
-                    <span className="mb-1 flex justify-center" aria-hidden="true"><TrustIcon type={item.icon} /></span>
-                    <strong className="block font-black">{item.title}</strong>
-                    <span className="hidden text-stone-500 md:block">{item.text}</span>
-                  </div>
-                ))}
-              </div>
+              <LiveTrustGrid locale={locale} />
 
               <div className="mt-3 grid grid-cols-2 gap-2">
                 <a href={requestHref} target="_blank" rel="noopener noreferrer" className="col-span-2 flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#17351f] px-4 text-center text-[13px] font-black uppercase leading-tight tracking-[0.06em] !text-white shadow-md shadow-emerald-950/15 transition hover:-translate-y-0.5 hover:bg-[#224d2d] md:col-span-1">
@@ -1114,16 +1001,7 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
             </>
           ) : null}
 
-          <a
-            href={roomFinderHrefForLanguage(locale)}
-            aria-label={`${copy.differentDates} ${copy.checkAvailability}`}
-            className="mt-3 flex min-h-11 items-center justify-between gap-3 rounded-xl bg-amber-50/80 px-4 py-2.5 text-amber-800 ring-1 ring-amber-900/10 transition hover:bg-amber-100"
-          >
-            <span className="hidden text-sm font-bold text-stone-700 sm:inline">{copy.differentDates}</span>
-            <span className="text-xs font-black leading-tight sm:text-sm">{copy.checkAvailability}</span>
-            <span className="ml-auto text-base font-black" aria-hidden="true">→</span>
-          </a>
-          <p className="mt-3 hidden text-center text-xs font-semibold text-stone-500 sm:block">{copy.footer}</p>
+          <LiveFinderFooter locale={locale} />
         </div>
       </div>
     </section>
