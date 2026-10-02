@@ -1,4 +1,4 @@
-import { absoluteUrl } from "@/lib/seo";
+import { absoluteUrl } from "@/lib/site-url";
 
 export type ChiosHotelsGuideLocale = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
 

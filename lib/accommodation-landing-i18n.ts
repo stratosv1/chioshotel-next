@@ -1,8 +1,8 @@
 import { karfasBeachPaths, elintaBeachPaths } from "@/content/karfas-elinta-paths";
-import { propertyFaqPaths } from "@/content/property-faq";
+import { propertyFaqPaths } from "@/content/property-faq-paths";
 import { type LanguageCode, normalizePath } from "./languages";
 import { CHIOS_HOTELS_GUIDE_PATHS } from "./chios-hotels-guide-i18n";
-import { absoluteUrl } from "./seo";
+import { absoluteUrl } from "./site-url";
 
 export const ACCOMMODATION_LANDING_PATHS: Record<LanguageCode, string> = {
   en: "/chios-accommodation/",

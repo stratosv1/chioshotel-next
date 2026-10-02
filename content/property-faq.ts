@@ -60,15 +60,9 @@ export type PropertyFaqPageData = {
   };
 };
 
-export const propertyFaqPaths: Record<LanguageCode, string> = {
-  en: "/frequently-asked-questions/",
-  el: "/el/syxnes-erotiseis/",
-  fr: "/fr/questions-frequentes/",
-  de: "/de/haeufige-fragen/",
-  it: "/it/domande-frequenti/",
-  es: "/es/preguntas-frecuentes/",
-  tr: "/tr/sik-sorulan-sorular/",
-};
+import { propertyFaqPaths } from "./property-faq-paths";
+
+export { propertyFaqPaths };
 
 const relatedPaths: Record<PropertyFaqLinkKey, Record<LanguageCode, string>> = {
   rooms: {

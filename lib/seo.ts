@@ -6,7 +6,9 @@ import { resolveSeoDynamicTokens } from "./seo-dynamic-tokens";
 import { siteImageAssets } from "./site-assets";
 import { getLocalizedRoutes, getRouteByPath } from "./url-map";
 
-export const siteUrl = "https://chioshotel.gr";
+import { absoluteUrl, siteUrl } from "./site-url";
+
+export { absoluteUrl, siteUrl };
 export const siteName = "Voulamandis House";
 export const defaultOgImage = siteImageAssets.defaultSocial.src;
 
@@ -130,29 +132,6 @@ const polishAlternateGroups: ReadonlyArray<{
   },
 ];
 
-function splitPath(path: string) {
-  const hashIndex = path.indexOf("#");
-  const queryIndex = path.indexOf("?");
-
-  const firstSpecialIndex =
-    hashIndex === -1
-      ? queryIndex
-      : queryIndex === -1
-        ? hashIndex
-        : Math.min(hashIndex, queryIndex);
-
-  if (firstSpecialIndex === -1) {
-    return {
-      pathname: path,
-      suffix: "",
-    };
-  }
-
-  return {
-    pathname: path.slice(0, firstSpecialIndex),
-    suffix: path.slice(firstSpecialIndex),
-  };
-}
 
 function normalizeMetadataTitle(path: string, title: string): string {
   const pathOverride = seoSnippetOverrides.get(normalizePath(path));
@@ -186,28 +165,6 @@ function buildMetadataTitle(title: string): Metadata["title"] {
   };
 }
 
-export function absoluteUrl(path: string): string {
-  if (!path) {
-    return `${siteUrl}/`;
-  }
-
-  if (path.startsWith("http://") || path.startsWith("https://")) {
-    return path;
-  }
-
-  if (path.startsWith("#")) {
-    return `${siteUrl}/${path}`;
-  }
-
-  const { pathname, suffix } = splitPath(path);
-  const normalizedPath = normalizePath(pathname);
-
-  if (normalizedPath === "/") {
-    return `${siteUrl}/${suffix}`;
-  }
-
-  return `${siteUrl}${normalizedPath}${suffix}`;
-}
 
 export function getCanonicalUrl(path: string): string {
   const route = getRouteByPath(path);

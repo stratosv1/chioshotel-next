@@ -62,15 +62,9 @@ const stoneMansionImage = "/images/kampos/kampos-chios-stone-mansion.webp";
 const citrusPathImage = "/images/kampos/kampos-chios-citrus-garden-path.webp";
 const historicEstateImage = "/images/kampos/kampos-chios-historic-estate.webp";
 
-export const kamposChiosPaths = {
-  en: "/chios/kampos-chios/",
-  el: "/el/chios/kampos-chios/",
-  fr: "/fr/chios/kampos-chios/",
-  de: "/de/chios/kampos-chios/",
-  it: "/it/chios/kampos-chios/",
-  es: "/es/chios/kampos-chios/",
-  tr: "/tr/chios/kampos-chios/",
-} as const;
+import { kamposChiosPaths } from "./kampos-chios-paths";
+
+export { kamposChiosPaths };
 
 export const kamposChiosPageEn: KamposChiosPageData = {
   language: "en",

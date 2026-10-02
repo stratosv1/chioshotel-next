@@ -11,7 +11,7 @@ import {
   siteNavigationItemIds,
 } from "@/lib/site-navigation";
 import { getRouteByPath } from "@/lib/url-map";
-import { kamposChiosPaths } from "@/content/kampos-chios";
+import { kamposChiosPaths } from "@/content/kampos-chios-paths";
 
 type HeaderProps = {
   language?: LanguageCode;

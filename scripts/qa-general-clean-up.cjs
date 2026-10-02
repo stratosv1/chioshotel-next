@@ -110,6 +110,7 @@ for (const [language, bookingPath] of Object.entries(bookingPaths)) {
 }
 
 const seoSource = read("lib/seo.ts");
+const siteUrlSource = read("lib/site-url.ts");
 const proxySource = read("proxy.ts");
 const robotsSource = read("app/robots.ts");
 const sitemapSource = read("app/sitemap.ts");
@@ -230,7 +231,8 @@ for (const [source, destination] of directRoomFinderRedirects) {
 }
 
 check(
-  seoSource.includes('export const siteUrl = "https://chioshotel.gr"'),
+  siteUrlSource.includes('export const siteUrl = "https://chioshotel.gr"') &&
+    seoSource.includes('export { absoluteUrl, siteUrl }'),
   "Canonical site origin is https://chioshotel.gr.",
   "Canonical site origin is not the expected non-www HTTPS URL.",
 );
