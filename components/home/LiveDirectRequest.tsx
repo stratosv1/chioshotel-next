@@ -418,6 +418,7 @@ const LIVE_EXTRA_COPY: Record<LiveRequestLocale, {
   perNight: string;
   calculating: string;
   indicative: string;
+  unavailable: string;
   checkin: string;
   checkout: string;
   room: string;
@@ -427,18 +428,18 @@ const LIVE_EXTRA_COPY: Record<LiveRequestLocale, {
   directOffer: string;
   priceByReception: string;
 }> = {
-  en: { error: "Live availability is temporarily unavailable. Please try the AI Room Finder or contact us.", previousRooms: "Show previous rooms", nextRooms: "Show more rooms", booked: "Booked", perNight: "/night", calculating: "Calculating the exact price…", indicative: "Indicative price – reception will confirm the exact amount.", checkin: "Check-in", checkout: "Check-out", room: "Room", guests: "Guests", nights: "Nights", originalPrice: "Original price", directOffer: "Direct offer", priceByReception: "Price to be confirmed by reception" },
-  el: { error: "Η ζωντανή διαθεσιμότητα είναι προσωρινά μη διαθέσιμη. Δοκιμάστε το AI Room Finder ή επικοινωνήστε μαζί μας.", previousRooms: "Προηγούμενα δωμάτια", nextRooms: "Περισσότερα δωμάτια", booked: "Κλειστό", perNight: "/νύχτα", calculating: "Υπολογισμός ακριβούς τιμής…", indicative: "Ενδεικτική τιμή – η ρεσεψιόν θα επιβεβαιώσει το ακριβές ποσό.", checkin: "Άφιξη", checkout: "Αναχώρηση", room: "Δωμάτιο", guests: "Επισκέπτες", nights: "Νύχτες", originalPrice: "Αρχική τιμή", directOffer: "Απευθείας προσφορά", priceByReception: "Η τιμή θα επιβεβαιωθεί από τη ρεσεψιόν" },
-  fr: { error: "La disponibilité en direct est momentanément indisponible. Essayez l’AI Room Finder ou contactez-nous.", previousRooms: "Chambres précédentes", nextRooms: "Plus de chambres", booked: "Réservé", perNight: "/nuit", calculating: "Calcul du prix exact…", indicative: "Prix indicatif – la réception confirmera le montant exact.", checkin: "Arrivée", checkout: "Départ", room: "Chambre", guests: "Voyageurs", nights: "Nuits", originalPrice: "Prix initial", directOffer: "Offre directe", priceByReception: "Prix à confirmer par la réception" },
-  de: { error: "Die Live-Verfügbarkeit ist vorübergehend nicht erreichbar. Nutzen Sie den AI Room Finder oder kontaktieren Sie uns.", previousRooms: "Vorherige Zimmer", nextRooms: "Weitere Zimmer", booked: "Belegt", perNight: "/Nacht", calculating: "Genauer Preis wird berechnet…", indicative: "Richtpreis – die Rezeption bestätigt den genauen Betrag.", checkin: "Anreise", checkout: "Abreise", room: "Zimmer", guests: "Gäste", nights: "Nächte", originalPrice: "Ursprünglicher Preis", directOffer: "Direktangebot", priceByReception: "Preis wird von der Rezeption bestätigt" },
-  it: { error: "La disponibilità in tempo reale non è al momento disponibile. Prova l’AI Room Finder o contattaci.", previousRooms: "Camere precedenti", nextRooms: "Altre camere", booked: "Occupata", perNight: "/notte", calculating: "Calcolo del prezzo esatto…", indicative: "Prezzo indicativo – la reception confermerà l’importo esatto.", checkin: "Arrivo", checkout: "Partenza", room: "Camera", guests: "Ospiti", nights: "Notti", originalPrice: "Prezzo iniziale", directOffer: "Offerta diretta", priceByReception: "Prezzo da confermare dalla reception" },
-  es: { error: "La disponibilidad en directo no está disponible temporalmente. Pruebe el AI Room Finder o contáctenos.", previousRooms: "Habitaciones anteriores", nextRooms: "Más habitaciones", booked: "Ocupada", perNight: "/noche", calculating: "Calculando el precio exacto…", indicative: "Precio orientativo – recepción confirmará el importe exacto.", checkin: "Llegada", checkout: "Salida", room: "Habitación", guests: "Huéspedes", nights: "Noches", originalPrice: "Precio inicial", directOffer: "Oferta directa", priceByReception: "Precio a confirmar por recepción" },
-  tr: { error: "Canlı müsaitlik geçici olarak kullanılamıyor. AI Room Finder'ı deneyin veya bizimle iletişime geçin.", previousRooms: "Önceki odalar", nextRooms: "Daha fazla oda", booked: "Dolu", perNight: "/gece", calculating: "Kesin fiyat hesaplanıyor…", indicative: "Tahmini fiyat – resepsiyon kesin tutarı onaylayacak.", checkin: "Giriş", checkout: "Çıkış", room: "Oda", guests: "Misafirler", nights: "Gece", originalPrice: "İlk fiyat", directOffer: "Doğrudan teklif", priceByReception: "Fiyat resepsiyon tarafından onaylanacak" },
+  en: { error: "Live availability is temporarily unavailable. Please try the AI Room Finder or contact us.", previousRooms: "Show previous rooms", nextRooms: "Show more rooms", booked: "Booked", perNight: "/night", calculating: "Calculating the exact price…", indicative: "Indicative price – reception will confirm the exact amount.", unavailable: "These dates are no longer free for this room – send the request and reception will suggest the closest option.", checkin: "Check-in", checkout: "Check-out", room: "Room", guests: "Guests", nights: "Nights", originalPrice: "Original price", directOffer: "Direct offer", priceByReception: "Price to be confirmed by reception" },
+  el: { error: "Η ζωντανή διαθεσιμότητα είναι προσωρινά μη διαθέσιμη. Δοκιμάστε το AI Room Finder ή επικοινωνήστε μαζί μας.", previousRooms: "Προηγούμενα δωμάτια", nextRooms: "Περισσότερα δωμάτια", booked: "Κλειστό", perNight: "/νύχτα", calculating: "Υπολογισμός ακριβούς τιμής…", indicative: "Ενδεικτική τιμή – η ρεσεψιόν θα επιβεβαιώσει το ακριβές ποσό.", unavailable: "Οι ημερομηνίες δεν είναι πλέον διαθέσιμες για αυτό το δωμάτιο – στείλτε το αίτημα και η ρεσεψιόν θα προτείνει την πιο κοντινή επιλογή.", checkin: "Άφιξη", checkout: "Αναχώρηση", room: "Δωμάτιο", guests: "Επισκέπτες", nights: "Νύχτες", originalPrice: "Αρχική τιμή", directOffer: "Απευθείας προσφορά", priceByReception: "Η τιμή θα επιβεβαιωθεί από τη ρεσεψιόν" },
+  fr: { error: "La disponibilité en direct est momentanément indisponible. Essayez l’AI Room Finder ou contactez-nous.", previousRooms: "Chambres précédentes", nextRooms: "Plus de chambres", booked: "Réservé", perNight: "/nuit", calculating: "Calcul du prix exact…", indicative: "Prix indicatif – la réception confirmera le montant exact.", unavailable: "Ces dates ne sont plus libres pour ce logement – envoyez la demande et la réception proposera l’option la plus proche.", checkin: "Arrivée", checkout: "Départ", room: "Chambre", guests: "Voyageurs", nights: "Nuits", originalPrice: "Prix initial", directOffer: "Offre directe", priceByReception: "Prix à confirmer par la réception" },
+  de: { error: "Die Live-Verfügbarkeit ist vorübergehend nicht erreichbar. Nutzen Sie den AI Room Finder oder kontaktieren Sie uns.", previousRooms: "Vorherige Zimmer", nextRooms: "Weitere Zimmer", booked: "Belegt", perNight: "/Nacht", calculating: "Genauer Preis wird berechnet…", indicative: "Richtpreis – die Rezeption bestätigt den genauen Betrag.", unavailable: "Diese Daten sind für dieses Zimmer nicht mehr frei – senden Sie die Anfrage, die Rezeption schlägt die nächstbeste Option vor.", checkin: "Anreise", checkout: "Abreise", room: "Zimmer", guests: "Gäste", nights: "Nächte", originalPrice: "Ursprünglicher Preis", directOffer: "Direktangebot", priceByReception: "Preis wird von der Rezeption bestätigt" },
+  it: { error: "La disponibilità in tempo reale non è al momento disponibile. Prova l’AI Room Finder o contattaci.", previousRooms: "Camere precedenti", nextRooms: "Altre camere", booked: "Occupata", perNight: "/notte", calculating: "Calcolo del prezzo esatto…", indicative: "Prezzo indicativo – la reception confermerà l’importo esatto.", unavailable: "Queste date non sono più libere per questa camera – invia la richiesta e la reception proporrà l’opzione più vicina.", checkin: "Arrivo", checkout: "Partenza", room: "Camera", guests: "Ospiti", nights: "Notti", originalPrice: "Prezzo iniziale", directOffer: "Offerta diretta", priceByReception: "Prezzo da confermare dalla reception" },
+  es: { error: "La disponibilidad en directo no está disponible temporalmente. Pruebe el AI Room Finder o contáctenos.", previousRooms: "Habitaciones anteriores", nextRooms: "Más habitaciones", booked: "Ocupada", perNight: "/noche", calculating: "Calculando el precio exacto…", indicative: "Precio orientativo – recepción confirmará el importe exacto.", unavailable: "Estas fechas ya no están libres para esta habitación – envíe la solicitud y recepción le propondrá la opción más cercana.", checkin: "Llegada", checkout: "Salida", room: "Habitación", guests: "Huéspedes", nights: "Noches", originalPrice: "Precio inicial", directOffer: "Oferta directa", priceByReception: "Precio a confirmar por recepción" },
+  tr: { error: "Canlı müsaitlik geçici olarak kullanılamıyor. AI Room Finder'ı deneyin veya bizimle iletişime geçin.", previousRooms: "Önceki odalar", nextRooms: "Daha fazla oda", booked: "Dolu", perNight: "/gece", calculating: "Kesin fiyat hesaplanıyor…", indicative: "Tahmini fiyat – resepsiyon kesin tutarı onaylayacak.", unavailable: "Bu tarihler bu oda için artık müsait değil – talebinizi gönderin, resepsiyon en yakın seçeneği önerecek.", checkin: "Giriş", checkout: "Çıkış", room: "Oda", guests: "Misafirler", nights: "Gece", originalPrice: "İlk fiyat", directOffer: "Doğrudan teklif", priceByReception: "Fiyat resepsiyon tarafından onaylanacak" },
 };
 
 type StayQuote = {
   key: string;
-  status: "loading" | "exact" | "indicative";
+  status: "loading" | "exact" | "indicative" | "unavailable";
   original: number;
   direct: number;
   nights: number;
@@ -603,23 +604,48 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
   const copy = LIVE_REQUEST_COPY[locale];
   const extra = LIVE_EXTRA_COPY[locale];
   const roomsScrollerRef = useRef<HTMLDivElement | null>(null);
+  const selectedDatesRef = useRef<string[]>([]);
 
   useEffect(() => {
     let active = true;
+    let followUp: number | undefined;
+
+    async function fetchDeals() {
+      const response = await fetch(CONTACT.endpoint, {
+        headers: { Accept: "application/json" },
+        cache: "no-store",
+      });
+      if (!response.ok) throw new Error("Live availability unavailable");
+      return (await response.json()) as DealsResponse;
+    }
+
+    // The server answers instantly from its last snapshot and refreshes from
+    // Beds24 in the background. When that happened, quietly fetch again so the
+    // visitor sees the refreshed availability without any loading state. Dates
+    // already picked are left alone; they are checked live instead.
+    function scheduleSilentRefresh(attempt: number) {
+      if (attempt > 2) return;
+      followUp = window.setTimeout(async () => {
+        try {
+          const json = await fetchDeals();
+          if (!active) return;
+          if (selectedDatesRef.current.length === 0) setDeals(json);
+          if (json.refreshing) scheduleSilentRefresh(attempt + 1);
+        } catch {
+          // Keep showing the snapshot already on screen.
+        }
+      }, attempt === 1 ? 20_000 : 30_000);
+    }
 
     async function loadDeals() {
       setLoading(true);
       setFailed(false);
 
       try {
-        const response = await fetch(CONTACT.endpoint, {
-          headers: { Accept: "application/json" },
-          cache: "no-store",
-        });
-
-        if (!response.ok) throw new Error("Live availability unavailable");
-        const json = (await response.json()) as DealsResponse;
-        if (active) setDeals(json);
+        const json = await fetchDeals();
+        if (!active) return;
+        setDeals(json);
+        if (json.refreshing) scheduleSilentRefresh(1);
       } catch {
         if (active) setFailed(true);
       } finally {
@@ -631,6 +657,7 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
 
     return () => {
       active = false;
+      window.clearTimeout(followUp);
     };
   }, []);
 
@@ -687,17 +714,22 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
     }
   }, [rooms, selectedRoom]);
 
+  selectedDatesRef.current = selectedDates;
   const nightlyTotals = selectionTotals(deals, selectedRoom, selectedDates, guests);
+  // A fresh feed prices a single night exactly. If it came from an older
+  // snapshot (background refresh running), check even one night live.
+  const needsLiveQuote = selectedDates.length >= 2 || (selectedDates.length === 1 && deals?.fresh === false);
   const quoteKey = selectedRoom && selectedDates.length
     ? `${roomKey(selectedRoom)}:${guests}:${selectedDates.join(",")}`
     : "";
 
-  // A single night is priced exactly by the deals feed (1-night quotes). For
-  // longer stays, ask the same live endpoint the AI Room Finder uses so the
-  // length-of-stay discount is applied and the price matches what reception
-  // will offer. If that lookup fails, the nightly sum is shown as indicative.
+  // For longer stays (or any stay when the feed is an older snapshot), ask the
+  // same live endpoint the AI Room Finder uses so the length-of-stay discount
+  // is applied and the price matches what reception will offer. If the room is
+  // no longer offered for those dates, say so; if the lookup fails, the nightly
+  // sum is shown as indicative.
   useEffect(() => {
-    if (!selectedRoom || selectedDates.length < 2 || !nightlyTotals) {
+    if (!selectedRoom || !needsLiveQuote || !nightlyTotals) {
       setRangeQuote(null);
       return;
     }
@@ -718,15 +750,18 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
     fetch(`/api/ai-room-finder/availability?${query}`, { cache: "no-store", signal: controller.signal })
       .then((response) => response.json().then((payload) => ({ ok: response.ok, payload })))
       .then(({ ok, payload }) => {
-        const offer = ok && payload?.success && Array.isArray(payload.offers)
-          ? payload.offers.find((item: { roomId?: unknown; unitId?: unknown }) =>
+        const liveOffers = ok && payload?.success && Array.isArray(payload.offers) ? payload.offers : null;
+        const offer = liveOffers
+          ? liveOffers.find((item: { roomId?: unknown; unitId?: unknown }) =>
               String(item.roomId) === String(selectedRoom.roomId) && String(item.unitId) === String(selectedRoom.unitId))
           : null;
         const original = Number(offer?.originalTotal);
         const direct = Number(offer?.directTotal);
         setRangeQuote(offer && original > 0 && direct > 0
           ? { key, status: "exact", original, direct, nights: nightlyTotals.nights }
-          : fallback);
+          : liveOffers && !offer
+            ? { ...fallback, status: "unavailable" }
+            : fallback);
       })
       .catch(() => {
         if (!controller.signal.aborted) setRangeQuote(fallback);
@@ -740,11 +775,11 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
     };
     // nightlyTotals is derived from the same inputs as quoteKey.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [quoteKey, locale]);
+  }, [quoteKey, locale, needsLiveQuote]);
 
   const quote: StayQuote | null = !nightlyTotals
     ? null
-    : selectedDates.length < 2
+    : !needsLiveQuote
       ? { key: quoteKey, status: "exact", original: nightlyTotals.original, direct: nightlyTotals.direct, nights: nightlyTotals.nights }
       : rangeQuote?.key === quoteKey
         ? rangeQuote
@@ -786,7 +821,9 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
           contact,
           message: exact
             ? `Live Deals request from ${canonicalPath}`
-            : `Live Deals request from ${canonicalPath} (price not confirmed online - please quote)`,
+            : quote.status === "unavailable"
+              ? `Live Deals request from ${canonicalPath} (room no longer free for these dates online - please suggest an alternative)`
+              : `Live Deals request from ${canonicalPath} (price not confirmed online - please quote)`,
           checkin: selectedDates[0],
           checkout: nextIsoDate(selectedDates[selectedDates.length - 1]),
           guests,
@@ -922,6 +959,8 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
                     <div className="text-[13px] font-bold leading-5 text-stone-500">{selectedDateLabel}</div>
                     {quote.status === "loading" ? (
                       <div className="mt-1.5 text-[15px] font-bold leading-8 text-stone-500">{extra.calculating}</div>
+                    ) : quote.status === "unavailable" ? (
+                      <div className="mt-1 text-[13px] font-bold leading-5 text-[#9a4a1f]">{extra.unavailable}</div>
                     ) : (
                       <>
                         <div className="mt-1 flex items-center justify-center gap-2.5">

@@ -32,6 +32,9 @@ export type DealsResponse = {
   days?: DealDay[];
   updatedAt?: string;
   updated_at?: string;
+  /** false when the server answered from an older snapshot while refreshing. */
+  fresh?: boolean;
+  refreshing?: boolean;
 };
 
 export type RoomMeta = Required<Pick<DealRoom, "id" | "roomId" | "unitId" | "displayName" | "type" | "location" | "maxGuests" | "images">> & {

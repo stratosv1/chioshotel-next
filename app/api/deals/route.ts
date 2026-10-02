@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { after, NextRequest, NextResponse } from "next/server";
 import { unstable_cache } from "next/cache";
 import { neon } from "@neondatabase/serverless";
 import { BOOKING_CORE_DEALS_CACHE_TAG } from "@/lib/booking-core/cache-tags";
@@ -11,12 +11,13 @@ const DEALS_CACHE_REVALIDATE_SECONDS = 15 * 60;
 // Keep the on-demand refresh inside maxDuration (60s), leaving time to read
 // inventory and build the payload afterwards.
 const ON_DEMAND_SYNC_TIMEOUT_MS = 40_000;
-const REFRESH_WAIT_DEADLINE_MS = 50_000;
-const REFRESH_POLL_INTERVAL_MS = 3_000;
+// Fresh deals are shared by everyone, so let Vercel's CDN answer most homepage
+// visits without reaching this function or Neon. Stale deals are cached only
+// briefly, so visitors pick up the background refresh within seconds.
+const FRESH_CACHE_CONTROL = "public, max-age=0, s-maxage=60, stale-while-revalidate=300";
+const STALE_CACHE_CONTROL = "public, max-age=0, s-maxage=10, stale-while-revalidate=30";
 
 type RefreshOutcome = "refreshed" | "busy" | "failed";
-
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 function athensToday() {
   const parts = new Intl.DateTimeFormat("en-CA", {
@@ -50,7 +51,7 @@ function weekRange(today: string) {
   };
 }
 
-async function refreshBookingCoreOnDemand(request: NextRequest): Promise<RefreshOutcome> {
+async function refreshBookingCoreOnDemand(origin: string): Promise<RefreshOutcome> {
   const secret = String(process.env.CRON_SECRET || "").trim();
   if (!secret) {
     console.error("Live Deals cannot refresh stale booking inventory because CRON_SECRET is missing");
@@ -61,7 +62,7 @@ async function refreshBookingCoreOnDemand(request: NextRequest): Promise<Refresh
   const timeout = setTimeout(() => controller.abort(), ON_DEMAND_SYNC_TIMEOUT_MS);
 
   try {
-    const syncUrl = new URL("/api/booking-core/sync/", request.nextUrl.origin);
+    const syncUrl = new URL("/api/booking-core/sync/", origin);
     const response = await fetch(syncUrl, {
       method: "GET",
       cache: "no-store",
@@ -220,32 +221,16 @@ const getCachedDeals = unstable_cache(
 );
 
 export async function GET(request: NextRequest) {
-  const startedAt = Date.now();
   try {
     const today = athensToday();
-    let status = await readInventoryStatus(today);
-    let refreshed = false;
+    const status = await readInventoryStatus(today);
+    const stale = status === "STALE_DATA";
 
-    // Match AI Room Finder: stale Neon inventory triggers the Web App ->
-    // Booking Core sync, then availability is checked again in Neon. If a
-    // refresh is already running, wait for it instead of failing the homepage.
-    if (status === "STALE_DATA") {
-      const outcome = await refreshBookingCoreOnDemand(request);
-      refreshed = outcome !== "failed";
-      if (refreshed) {
-        status = await readInventoryStatus(today);
-      }
-      while (
-        outcome !== "failed"
-        && status === "STALE_DATA"
-        && Date.now() - startedAt + REFRESH_POLL_INTERVAL_MS < REFRESH_WAIT_DEADLINE_MS
-      ) {
-        await wait(REFRESH_POLL_INTERVAL_MS);
-        status = await readInventoryStatus(today);
-      }
-    }
-
-    if (status !== "READY") {
+    // Never make the visitor wait for Beds24. Stale inventory is still the last
+    // complete snapshot: show it immediately and refresh Booking Core after the
+    // response. The sync route invalidates the deals cache tag when inventory
+    // changes, and the widget re-checks the exact dates live before a request.
+    if (status !== "READY" && !stale) {
       return NextResponse.json({
         ok: false,
         code: status,
@@ -257,17 +242,22 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // If this request caused a refresh, bypass any previously computed payload
-    // for this response. The sync route also invalidates the shared deals tag
-    // whenever inventory rows actually change.
-    const payload = refreshed
-      ? await loadDealsFromNeon(today)
-      : await getCachedDeals(today);
+    if (stale) {
+      const origin = request.nextUrl.origin;
+      after(async () => {
+        const outcome = await refreshBookingCoreOnDemand(origin);
+        if (outcome === "failed") console.error("Live Deals background Booking Core refresh failed");
+      });
+    }
+
+    const payload = await getCachedDeals(today);
 
     return NextResponse.json({
       ...payload,
+      fresh: !stale,
+      refreshing: stale,
       servedAt: new Date().toISOString(),
-    }, { headers: { "Cache-Control": "no-store" } });
+    }, { headers: { "Cache-Control": stale ? STALE_CACHE_CONTROL : FRESH_CACHE_CONTROL } });
   } catch (error) {
     console.error("booking_core deals failed", error);
     return NextResponse.json({ ok: false, error: "Live availability is temporarily unavailable.", source: "neon_booking_core_error" }, {
