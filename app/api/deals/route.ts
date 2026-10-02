@@ -8,7 +8,15 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
 const DEALS_CACHE_REVALIDATE_SECONDS = 15 * 60;
-const ON_DEMAND_SYNC_TIMEOUT_MS = 55_000;
+// Keep the on-demand refresh inside maxDuration (60s), leaving time to read
+// inventory and build the payload afterwards.
+const ON_DEMAND_SYNC_TIMEOUT_MS = 40_000;
+const REFRESH_WAIT_DEADLINE_MS = 50_000;
+const REFRESH_POLL_INTERVAL_MS = 3_000;
+
+type RefreshOutcome = "refreshed" | "busy" | "failed";
+
+const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 function athensToday() {
   const parts = new Intl.DateTimeFormat("en-CA", {
@@ -42,11 +50,11 @@ function weekRange(today: string) {
   };
 }
 
-async function refreshBookingCoreOnDemand(request: NextRequest) {
+async function refreshBookingCoreOnDemand(request: NextRequest): Promise<RefreshOutcome> {
   const secret = String(process.env.CRON_SECRET || "").trim();
   if (!secret) {
     console.error("Live Deals cannot refresh stale booking inventory because CRON_SECRET is missing");
-    return false;
+    return "failed";
   }
 
   const controller = new AbortController();
@@ -67,20 +75,30 @@ async function refreshBookingCoreOnDemand(request: NextRequest) {
 
     const raw = await response.text();
     if (!response.ok) {
+      // Another refresh is already running (or the source is still preparing
+      // its first snapshot); it will update the inventory, so wait for it.
+      if (raw.includes("SOURCE_BUSY") || raw.includes("SOURCE_NOT_READY")) {
+        console.warn("Live Deals on-demand Booking Core sync skipped: source refresh already running");
+        return "busy";
+      }
       console.error("Live Deals on-demand Booking Core sync failed", response.status, raw.slice(0, 500));
-      return false;
+      return "failed";
     }
 
     try {
       const payload = JSON.parse(raw) as { ok?: boolean };
-      return payload.ok === true;
+      return payload.ok === true ? "refreshed" : "failed";
     } catch {
       console.error("Live Deals on-demand Booking Core sync returned invalid JSON");
-      return false;
+      return "failed";
     }
   } catch (error) {
+    if (error instanceof Error && error.name === "AbortError") {
+      console.warn("Live Deals on-demand Booking Core sync still running after timeout; waiting for inventory");
+      return "busy";
+    }
     console.error("Live Deals on-demand Booking Core sync failed", error);
-    return false;
+    return "failed";
   } finally {
     clearTimeout(timeout);
   }
@@ -202,16 +220,27 @@ const getCachedDeals = unstable_cache(
 );
 
 export async function GET(request: NextRequest) {
+  const startedAt = Date.now();
   try {
     const today = athensToday();
     let status = await readInventoryStatus(today);
     let refreshed = false;
 
     // Match AI Room Finder: stale Neon inventory triggers the Web App ->
-    // Booking Core sync, then availability is checked again in Neon.
+    // Booking Core sync, then availability is checked again in Neon. If a
+    // refresh is already running, wait for it instead of failing the homepage.
     if (status === "STALE_DATA") {
-      refreshed = await refreshBookingCoreOnDemand(request);
+      const outcome = await refreshBookingCoreOnDemand(request);
+      refreshed = outcome !== "failed";
       if (refreshed) {
+        status = await readInventoryStatus(today);
+      }
+      while (
+        outcome !== "failed"
+        && status === "STALE_DATA"
+        && Date.now() - startedAt + REFRESH_POLL_INTERVAL_MS < REFRESH_WAIT_DEADLINE_MS
+      ) {
+        await wait(REFRESH_POLL_INTERVAL_MS);
         status = await readInventoryStatus(today);
       }
     }
@@ -240,9 +269,8 @@ export async function GET(request: NextRequest) {
       servedAt: new Date().toISOString(),
     }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Booking core deals query failed";
     console.error("booking_core deals failed", error);
-    return NextResponse.json({ ok: false, error: message, source: "neon_booking_core_error" }, {
+    return NextResponse.json({ ok: false, error: "Live availability is temporarily unavailable.", source: "neon_booking_core_error" }, {
       status: 503,
       headers: { "Cache-Control": "no-store" },
     });

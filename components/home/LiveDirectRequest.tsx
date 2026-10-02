@@ -7,26 +7,37 @@ import { roomFinderHrefForLanguage } from "@/lib/room-finder-cta-routing";
 import {
   firstAvailableDate,
   formatDate,
+  formatDayParts,
   getNightInfo,
   mergeDealRooms,
   minDirectPrice,
   money,
+  nextIsoDate,
+  nextSelection,
   roomKey,
   selectionTotals,
   type DealsResponse,
   type RoomMeta,
 } from "@/components/home/liveDirectRequestUtils";
+import {
+  DATE_CHIP_HEIGHT_CLASS,
+  GUESTS_SELECT_CLASS,
+  LIVE_CARD_CLASS,
+  LIVE_SECTION_CLASS,
+  LiveDirectBodySkeleton,
+  LiveDirectHeader,
+  ROOM_CARD_HEIGHT_CLASS,
+  SUMMARY_MIN_HEIGHT_CLASS,
+  liveRequestLocale,
+  type LiveRequestLocale,
+} from "@/components/home/LiveDirectRequestFrame";
 
 type LastMinuteData = HomePageData["lastMinute"];
 type TrustIconType = "tag" | "chat" | "bed" | "card";
 type NightInfo = NonNullable<ReturnType<typeof getNightInfo>>;
-type LiveRequestLocale = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
 
 const CONTACT = {
   endpoint: "/api/deals",
-  phoneHref: "tel:+302271031733",
-  phoneDisplay: "+30 22710 31733",
-  emailHref: "mailto:chioshotel@gmail.com?subject=Direct%20request%20-%20Voulamandis%20House",
   whatsapp: "306944474226",
 };
 
@@ -445,16 +456,6 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
   },
 };
 
-function getLiveRequestLocale(canonicalPath: string): LiveRequestLocale {
-  if (canonicalPath.startsWith("/el")) return "el";
-  if (canonicalPath.startsWith("/fr")) return "fr";
-  if (canonicalPath.startsWith("/de")) return "de";
-  if (canonicalPath.startsWith("/it")) return "it";
-  if (canonicalPath.startsWith("/es")) return "es";
-  if (canonicalPath.startsWith("/tr")) return "tr";
-  return "en";
-}
-
 function localizeRoomName(value: string, copy: (typeof LIVE_REQUEST_COPY)[LiveRequestLocale]) {
   return value
     .replace(/^Room\s+(\d+)/i, `${copy.roomWord} $1`)
@@ -467,60 +468,9 @@ function localizeRoomType(value: string, copy: (typeof LIVE_REQUEST_COPY)[LiveRe
   return copy.roomTypes[value] || value;
 }
 
-function visibleRoomType(value: string, copy: (typeof LIVE_REQUEST_COPY)[LiveRequestLocale]) {
-  if (/^(apartment|room)$/i.test(value.trim())) return "";
-  return localizeRoomType(value, copy);
-}
-
 function localizeBadge(value: string, copy: (typeof LIVE_REQUEST_COPY)[LiveRequestLocale]) {
   if (/^👤×\d+/.test(value)) return value;
   return copy.badges[value] || value;
-}
-
-function buildRequestHref(
-  copy: (typeof LIVE_REQUEST_COPY)[LiveRequestLocale],
-  room: RoomMeta | null,
-  dates: string[],
-  guests: number,
-  totals: { original: number; direct: number; nights: number } | null,
-) {
-  const spanish = copy === LIVE_REQUEST_COPY.es;
-  const roomText = room
-    ? `${spanish ? localizeRoomName(room.displayName, copy) : room.displayName} - ${spanish ? localizeRoomType(room.type, copy) : room.type}`
-    : "-";
-  const text = [
-    copy.messageTitle,
-    "",
-    `${spanish ? "Habitación" : "Room"}: ${roomText}`,
-    `${spanish ? "Huéspedes" : "Guests"}: ${guests}`,
-    `${spanish ? "Fechas" : "Dates"}: ${dates.length ? dates.join(", ") : "-"}`,
-    totals ? `${spanish ? "Noches" : "Nights"}: ${totals.nights}` : null,
-    totals ? `${spanish ? "Precio inicial" : "Original price"}: ${money(totals.original)}` : null,
-    totals ? `${spanish ? "Oferta directa" : "Direct offer"}: ${money(totals.direct)}` : null,
-    "",
-    copy.messageConfirm,
-  ]
-    .filter(Boolean)
-    .join("\n");
-
-  return `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(text)}`;
-}
-
-function nextIsoDate(value: string) {
-  const date = new Date(`${value}T00:00:00Z`);
-  date.setUTCDate(date.getUTCDate() + 1);
-  return date.toISOString().slice(0, 10);
-}
-
-function updateStickyRequestLink(href: string) {
-  if (typeof document === "undefined") return;
-  const fixedLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>("div.fixed a"));
-  const chatLink = fixedLinks.find((link) => (link.textContent || "").toLowerCase().includes("whatsapp"));
-  if (chatLink) {
-    chatLink.href = href;
-    chatLink.target = "_blank";
-    chatLink.rel = "noopener noreferrer";
-  }
 }
 
 function TrustIcon({ type }: { type: TrustIconType }) {
@@ -561,102 +511,143 @@ function TrustIcon({ type }: { type: TrustIconType }) {
   );
 }
 
-function HeartIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5" aria-hidden="true">
-      <path d="M20.8 5.6a5 5 0 0 0-7.1 0L12 7.3l-1.7-1.7a5 5 0 0 0-7.1 7.1L12 21.5l8.8-8.8a5 5 0 0 0 0-7.1Z" />
-    </svg>
-  );
+type LiveCopy = (typeof LIVE_REQUEST_COPY)[LiveRequestLocale];
+
+// Copy added in the Live Deals audit fixes (kept separate from the original
+// per-locale block so translations stay reviewable).
+const LIVE_EXTRA_COPY: Record<LiveRequestLocale, {
+  error: string;
+  previousRooms: string;
+  nextRooms: string;
+  booked: string;
+  perNight: string;
+  calculating: string;
+  indicative: string;
+  checkin: string;
+  checkout: string;
+  room: string;
+  guests: string;
+  nights: string;
+  originalPrice: string;
+  directOffer: string;
+  priceByReception: string;
+}> = {
+  en: { error: "Live availability is temporarily unavailable. Please try the AI Room Finder or contact us.", previousRooms: "Show previous rooms", nextRooms: "Show more rooms", booked: "Booked", perNight: "/night", calculating: "Calculating the exact price…", indicative: "Indicative price – reception will confirm the exact amount.", checkin: "Check-in", checkout: "Check-out", room: "Room", guests: "Guests", nights: "Nights", originalPrice: "Original price", directOffer: "Direct offer", priceByReception: "Price to be confirmed by reception" },
+  el: { error: "Η ζωντανή διαθεσιμότητα είναι προσωρινά μη διαθέσιμη. Δοκιμάστε το AI Room Finder ή επικοινωνήστε μαζί μας.", previousRooms: "Προηγούμενα δωμάτια", nextRooms: "Περισσότερα δωμάτια", booked: "Κλειστό", perNight: "/νύχτα", calculating: "Υπολογισμός ακριβούς τιμής…", indicative: "Ενδεικτική τιμή – η ρεσεψιόν θα επιβεβαιώσει το ακριβές ποσό.", checkin: "Άφιξη", checkout: "Αναχώρηση", room: "Δωμάτιο", guests: "Επισκέπτες", nights: "Νύχτες", originalPrice: "Αρχική τιμή", directOffer: "Απευθείας προσφορά", priceByReception: "Η τιμή θα επιβεβαιωθεί από τη ρεσεψιόν" },
+  fr: { error: "La disponibilité en direct est momentanément indisponible. Essayez l’AI Room Finder ou contactez-nous.", previousRooms: "Chambres précédentes", nextRooms: "Plus de chambres", booked: "Réservé", perNight: "/nuit", calculating: "Calcul du prix exact…", indicative: "Prix indicatif – la réception confirmera le montant exact.", checkin: "Arrivée", checkout: "Départ", room: "Chambre", guests: "Voyageurs", nights: "Nuits", originalPrice: "Prix initial", directOffer: "Offre directe", priceByReception: "Prix à confirmer par la réception" },
+  de: { error: "Die Live-Verfügbarkeit ist vorübergehend nicht erreichbar. Nutzen Sie den AI Room Finder oder kontaktieren Sie uns.", previousRooms: "Vorherige Zimmer", nextRooms: "Weitere Zimmer", booked: "Belegt", perNight: "/Nacht", calculating: "Genauer Preis wird berechnet…", indicative: "Richtpreis – die Rezeption bestätigt den genauen Betrag.", checkin: "Anreise", checkout: "Abreise", room: "Zimmer", guests: "Gäste", nights: "Nächte", originalPrice: "Ursprünglicher Preis", directOffer: "Direktangebot", priceByReception: "Preis wird von der Rezeption bestätigt" },
+  it: { error: "La disponibilità in tempo reale non è al momento disponibile. Prova l’AI Room Finder o contattaci.", previousRooms: "Camere precedenti", nextRooms: "Altre camere", booked: "Occupata", perNight: "/notte", calculating: "Calcolo del prezzo esatto…", indicative: "Prezzo indicativo – la reception confermerà l’importo esatto.", checkin: "Arrivo", checkout: "Partenza", room: "Camera", guests: "Ospiti", nights: "Notti", originalPrice: "Prezzo iniziale", directOffer: "Offerta diretta", priceByReception: "Prezzo da confermare dalla reception" },
+  es: { error: "La disponibilidad en directo no está disponible temporalmente. Pruebe el AI Room Finder o contáctenos.", previousRooms: "Habitaciones anteriores", nextRooms: "Más habitaciones", booked: "Ocupada", perNight: "/noche", calculating: "Calculando el precio exacto…", indicative: "Precio orientativo – recepción confirmará el importe exacto.", checkin: "Llegada", checkout: "Salida", room: "Habitación", guests: "Huéspedes", nights: "Noches", originalPrice: "Precio inicial", directOffer: "Oferta directa", priceByReception: "Precio a confirmar por recepción" },
+  tr: { error: "Canlı müsaitlik geçici olarak kullanılamıyor. AI Room Finder'ı deneyin veya bizimle iletişime geçin.", previousRooms: "Önceki odalar", nextRooms: "Daha fazla oda", booked: "Dolu", perNight: "/gece", calculating: "Kesin fiyat hesaplanıyor…", indicative: "Tahmini fiyat – resepsiyon kesin tutarı onaylayacak.", checkin: "Giriş", checkout: "Çıkış", room: "Oda", guests: "Misafirler", nights: "Gece", originalPrice: "İlk fiyat", directOffer: "Doğrudan teklif", priceByReception: "Fiyat resepsiyon tarafından onaylanacak" },
+};
+
+type StayQuote = {
+  key: string;
+  status: "loading" | "exact" | "indicative";
+  original: number;
+  direct: number;
+  nights: number;
+};
+
+function discountPercent(original: number, direct: number) {
+  if (!(original > direct) || original <= 0) return 0;
+  return Math.round((1 - direct / original) * 100);
 }
 
-function SalesBadges({
-  compact = false,
-  copy,
-}: {
-  compact?: boolean;
-  copy: (typeof LIVE_REQUEST_COPY)[LiveRequestLocale];
-}) {
-  const size = compact ? "px-2 py-1 text-[10px]" : "px-3 py-1.5 text-xs";
-
-  return (
-    <div className="flex flex-wrap gap-1.5">
-      <span className={`rounded-md bg-amber-100 font-black text-amber-900 ring-1 ring-amber-200 ${size}`}>{copy.trustItems[0].title}</span>
-      <span className={`rounded-md bg-stone-100 font-black text-stone-700 ring-1 ring-stone-200 ${size}`}>{copy.trustItems[3].title}</span>
-      <span className={`rounded-md bg-[#eef2dc] font-black text-[#5f6f35] ring-1 ring-[#d9dfbc] ${size}`}>{copy.trustItems[1].title}</span>
-    </div>
-  );
+function buildRequestText(
+  copy: LiveCopy,
+  extra: (typeof LIVE_EXTRA_COPY)[LiveRequestLocale],
+  room: RoomMeta | null,
+  dates: string[],
+  guests: number,
+  quote: StayQuote | null,
+) {
+  const roomText = room ? `${localizeRoomName(room.displayName, copy)} - ${localizeRoomType(room.type, copy)}` : "-";
+  const checkin = dates[0];
+  const checkout = dates.length ? nextIsoDate(dates[dates.length - 1]) : "";
+  const exact = quote?.status === "exact";
+  return [
+    copy.messageTitle,
+    "",
+    `${extra.room}: ${roomText}`,
+    `${extra.guests}: ${guests}`,
+    checkin ? `${extra.checkin}: ${formatDate(checkin, copy.dateLocale)} (${checkin})` : null,
+    checkout ? `${extra.checkout}: ${formatDate(checkout, copy.dateLocale)} (${checkout})` : null,
+    dates.length ? `${extra.nights}: ${dates.length}` : null,
+    exact && quote ? `${extra.originalPrice}: ${money(quote.original, copy.dateLocale)}` : null,
+    exact && quote ? `${extra.directOffer}: ${money(quote.direct, copy.dateLocale)}` : null,
+    !exact && dates.length ? extra.priceByReception : null,
+    "",
+    copy.messageConfirm,
+  ].filter((line) => line !== null).join("\n");
 }
 
 function RoomCard({
   room,
   active,
-  index,
   amount,
   onSelect,
   copy,
+  extra,
 }: {
   room: RoomMeta;
-  active: boolean | null;
-  index: number;
+  active: boolean;
   amount: number | null;
   onSelect: () => void;
-  copy: (typeof LIVE_REQUEST_COPY)[LiveRequestLocale];
+  copy: LiveCopy;
+  extra: (typeof LIVE_EXTRA_COPY)[LiveRequestLocale];
 }) {
   const roomName = localizeRoomName(room.displayName, copy);
-  const roomType = visibleRoomType(room.type, copy);
-  const featureBadges = room.featureBadges.map((badge) => localizeBadge(badge, copy));
+  const roomType = localizeRoomType(room.type, copy);
+  const featureBadges = room.featureBadges.slice(0, 3).map((badge) => localizeBadge(badge, copy));
 
   return (
     <button
       type="button"
       onClick={onSelect}
-      aria-pressed={Boolean(active)}
-      className={`group w-[80vw] max-w-[320px] flex-none snap-start overflow-hidden rounded-[1.35rem] bg-white text-left transition duration-300 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-amber-500/40 md:w-[245px] md:max-w-none xl:w-[270px] ${
+      aria-pressed={active}
+      aria-label={[roomName, roomType, amount ? `${copy.from} ${money(amount, copy.dateLocale)}${extra.perNight}` : ""].filter(Boolean).join(", ")}
+      className={`group flex w-[78vw] max-w-[300px] flex-none snap-start flex-col overflow-hidden rounded-[1.35rem] bg-white text-left transition duration-300 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-amber-500/40 md:w-[245px] md:max-w-none xl:w-[270px] ${ROOM_CARD_HEIGHT_CLASS} ${
         active
           ? "border border-[#58703b] shadow-lg shadow-emerald-950/15 ring-2 ring-[#7b8a4b]/35"
           : "border border-stone-200/80 shadow-md shadow-stone-900/5 hover:-translate-y-1 hover:border-[#7b8a4b]/40 hover:shadow-lg hover:shadow-stone-900/10"
       }`}
     >
-      <div className="relative h-[180px] overflow-hidden bg-stone-100 md:h-[150px]">
+      <span className="relative block h-[170px] w-full flex-none overflow-hidden bg-stone-100 md:h-[150px]">
         <Image
           src={room.images[0]}
-          alt={[roomName, roomType].filter(Boolean).join(" ")}
+          alt=""
           width={640}
           height={460}
-          sizes="(max-width: 768px) 80vw, (max-width: 1280px) 245px, 270px"
+          sizes="(max-width: 768px) 78vw, (max-width: 1280px) 245px, 270px"
           className="h-full w-full object-cover object-center transition duration-500 group-hover:scale-105"
         />
-        <span className="absolute left-3 top-3 rounded-lg bg-[#f8f1e4]/95 px-2.5 py-1.5 text-[10px] font-black text-[#765735] shadow-sm ring-1 ring-white/80 backdrop-blur-sm">
-          {index === 0 ? copy.topPick : copy.directDeal}
-        </span>
         {active ? (
-          <span className="absolute right-3 top-3 inline-flex min-h-8 items-center gap-1.5 rounded-full bg-[#17351f]/95 px-2.5 py-1.5 text-[9px] font-black uppercase tracking-[0.06em] text-white shadow-lg backdrop-blur-sm">
+          <span className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-[#17351f]/95 px-3 py-1.5 text-[12px] font-black text-white shadow-lg backdrop-blur-sm">
             <span aria-hidden="true">✓</span> {copy.selectedLabel}
           </span>
-        ) : (
-          <span className="absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-stone-950/35 text-white shadow-sm backdrop-blur-sm"><HeartIcon /></span>
-        )}
-      </div>
-      <div className="p-3.5 md:p-4">
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <h3 className="truncate text-[19px] font-black leading-6 text-stone-950 md:text-xl">{roomName}</h3>
-            {roomType ? <p className="mt-0.5 line-clamp-2 text-[12px] font-semibold leading-4 text-stone-600 md:text-[13px]">{roomType}</p> : null}
-          </div>
+        ) : null}
+      </span>
+      <span className="flex min-h-0 flex-1 flex-col p-3.5 md:p-4">
+        <span className="flex items-start justify-between gap-3">
+          <span className="min-w-0">
+            <span className="block truncate text-[18px] font-black leading-6 text-stone-950">{roomName}</span>
+            <span className="mt-0.5 block line-clamp-1 text-[13px] font-semibold leading-5 text-stone-600">{roomType}</span>
+          </span>
           {amount ? (
-            <div className="flex-none text-right">
-              <span className="block text-[10px] font-bold text-stone-500">{copy.from}</span>
-              <strong className="block text-[1.45rem] font-black leading-none text-[#17351f] md:text-2xl">{money(amount)}</strong>
-            </div>
+            <span className="flex-none text-right">
+              <span className="block text-[12px] font-bold leading-4 text-stone-500">{copy.from}</span>
+              <strong className="block text-[1.4rem] font-black leading-7 text-[#17351f]">{money(amount, copy.dateLocale)}</strong>
+              <span className="block text-[12px] font-semibold leading-4 text-stone-500">{extra.perNight}</span>
+            </span>
           ) : null}
-        </div>
-        <div className="mt-3"><SalesBadges compact copy={copy} /></div>
-        <div className="mt-2 flex flex-wrap gap-1.5">
-          {featureBadges.slice(0, 4).map((badge) => (
-            <span key={badge} className="inline-flex items-center rounded-md bg-stone-100/90 px-2 py-1 text-[9px] font-bold text-stone-700 ring-1 ring-stone-200 md:text-[10px]">{badge}</span>
+        </span>
+        <span className="mt-auto flex flex-nowrap gap-1.5 overflow-hidden pt-2">
+          {featureBadges.map((badge) => (
+            <span key={badge} className="inline-flex flex-none items-center whitespace-nowrap rounded-md bg-stone-100/90 px-2 py-1 text-[12px] font-bold leading-4 text-stone-700 ring-1 ring-stone-200">{badge}</span>
           ))}
-        </div>
-      </div>
+        </span>
+      </span>
     </button>
   );
 }
@@ -667,39 +658,36 @@ function DateChip({
   active,
   onClick,
   copy,
+  extra,
 }: {
   day: string;
   info: NightInfo | null;
   active: boolean;
   onClick: () => void;
-  copy: (typeof LIVE_REQUEST_COPY)[LiveRequestLocale];
+  copy: LiveCopy;
+  extra: (typeof LIVE_EXTRA_COPY)[LiveRequestLocale];
 }) {
+  const parts = formatDayParts(day, copy.dateLocale);
   return (
     <button
       type="button"
       disabled={!info}
       onClick={onClick}
-      className={`relative flex h-[86px] w-[70px] flex-none snap-start flex-col justify-center rounded-2xl border px-1.5 py-2 text-center shadow-sm transition md:h-[94px] md:w-full md:flex-auto ${
+      aria-pressed={active}
+      aria-label={`${formatDate(day, copy.dateLocale)}, ${info ? `${money(info.direct, copy.dateLocale)}${extra.perNight}` : extra.booked}`}
+      className={`relative flex w-[76px] flex-none snap-start flex-col items-center justify-center gap-0.5 rounded-2xl border px-1 text-center shadow-sm transition md:w-full md:flex-auto ${DATE_CHIP_HEIGHT_CLASS} ${
         active
           ? "border-[#17351f] bg-[#17351f] text-white shadow-lg shadow-emerald-950/15"
           : info
             ? "border-stone-200 bg-white text-stone-900 hover:border-amber-700"
-            : "border-stone-200 bg-stone-100/80 text-stone-400"
+            : "cursor-not-allowed border-stone-200 bg-stone-100/80 text-stone-400"
       }`}
     >
-      {active ? <span className="absolute -right-1.5 -top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-amber-500 text-[11px] font-black text-white shadow-sm">✓</span> : null}
-      <span className="block text-[10px] font-black leading-3 md:text-xs md:leading-4">{formatDate(day, copy.dateLocale)}</span>
-      <span className="mt-1 block text-[9px] font-bold leading-3 md:text-[11px]">{info ? copy.available : "-"}</span>
-      {info ? (
-        active ? (
-          <span className="mt-1 block">
-            <span className="block text-[9px] font-black leading-3 text-white/70 line-through">{money(info.original)}</span>
-            <span className="block text-[13px] font-black leading-4 text-white md:text-sm">{money(info.direct)}</span>
-          </span>
-        ) : (
-          <span className="mt-1 block text-[12px] font-black leading-4 text-[#17351f] md:text-sm">{money(info.original)}</span>
-        )
-      ) : null}
+      <span className="block text-[12px] font-bold uppercase leading-4 tracking-[0.04em] opacity-80">{parts.weekday}</span>
+      <span className="block whitespace-nowrap text-[13px] font-black leading-5">{parts.day}</span>
+      <span className={`block whitespace-nowrap text-[13px] font-black leading-5 ${active ? "text-white" : info ? "text-[#17351f]" : ""}`}>
+        {info ? money(info.direct, copy.dateLocale) : extra.booked}
+      </span>
     </button>
   );
 }
@@ -710,13 +698,15 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [failed, setFailed] = useState(false);
   const [emailOpen, setEmailOpen] = useState(false);
   const [emailValue, setEmailValue] = useState("");
   const [emailState, setEmailState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [emailFeedback, setEmailFeedback] = useState("");
-  const locale = getLiveRequestLocale(canonicalPath);
+  const [rangeQuote, setRangeQuote] = useState<StayQuote | null>(null);
+  const locale = liveRequestLocale(canonicalPath);
   const copy = LIVE_REQUEST_COPY[locale];
+  const extra = LIVE_EXTRA_COPY[locale];
   const roomsScrollerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -724,7 +714,7 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
 
     async function loadDeals() {
       setLoading(true);
-      setError("");
+      setFailed(false);
 
       try {
         const response = await fetch(CONTACT.endpoint, {
@@ -732,11 +722,11 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
           cache: "no-store",
         });
 
-        if (!response.ok) throw new Error("Live availability is temporarily unavailable.");
+        if (!response.ok) throw new Error("Live availability unavailable");
         const json = (await response.json()) as DealsResponse;
         if (active) setDeals(json);
-      } catch (err) {
-        if (active) setError(err instanceof Error ? err.message : "Live availability is temporarily unavailable.");
+      } catch {
+        if (active) setFailed(true);
       } finally {
         if (active) setLoading(false);
       }
@@ -764,6 +754,7 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
 
   const selectedRoom = rooms.find((room) => roomKey(room) === selectedKey) || rooms[0] || null;
   const visibleDays = useMemo(() => (deals?.days || []).slice(0, 7), [deals]);
+  const dayList = useMemo(() => visibleDays.map((day) => day.checkin), [visibleDays]);
 
   useEffect(() => {
     if (!selectedRoom) return;
@@ -771,14 +762,21 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
     const nextKey = roomKey(selectedRoom);
     if (selectedKey !== nextKey) setSelectedKey(nextKey);
 
-    const validSelectedDates = selectedDates.filter((date) => getNightInfo(deals, selectedRoom, date, guests));
-    if (!validSelectedDates.length) {
+    // Keep only a consecutive run of bookable nights for the current room/guests.
+    const available = (date: string) => Boolean(getNightInfo(deals, selectedRoom, date, guests));
+    let valid: string[] = [];
+    for (const date of selectedDates) {
+      if (!available(date)) break;
+      if (valid.length && dayList.indexOf(date) !== dayList.indexOf(valid[valid.length - 1]) + 1) break;
+      valid = [...valid, date];
+    }
+    if (!valid.length) {
       const firstDate = firstAvailableDate(deals, selectedRoom, guests);
       setSelectedDates(firstDate ? [firstDate] : []);
-    } else if (validSelectedDates.length !== selectedDates.length) {
-      setSelectedDates(validSelectedDates);
+    } else if (valid.length !== selectedDates.length) {
+      setSelectedDates(valid);
     }
-  }, [deals, guests, selectedDates, selectedKey, selectedRoom]);
+  }, [deals, guests, selectedDates, selectedKey, selectedRoom, dayList]);
 
   useEffect(() => {
     const scroller = roomsScrollerRef.current;
@@ -794,30 +792,83 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
     }
   }, [rooms, selectedRoom]);
 
-  const totals = selectionTotals(deals, selectedRoom, selectedDates, guests);
-  const requestHref = buildRequestHref(copy, selectedRoom, selectedDates, guests, totals);
-  const smsText = [
-    copy.messageTitle,
-    "",
-    `Room: ${selectedRoom ? `${selectedRoom.displayName} - ${selectedRoom.type}` : "-"}`,
-    `Guests: ${guests}`,
-    `Dates: ${selectedDates.length ? selectedDates.join(", ") : "-"}`,
-    totals ? `Nights: ${totals.nights}` : null,
-    totals ? `Original price: ${money(totals.original)}` : null,
-    totals ? `Direct offer: ${money(totals.direct)}` : null,
-    "",
-    copy.messageConfirm,
-  ].filter(Boolean).join("\n");
-  const smsHref = `sms:+306944474226?&body=${encodeURIComponent(smsText)}`;
-  const selectedDateLabel = selectedDates.length ? selectedDates.map((date) => formatDate(date, copy.dateLocale)).join(" → ") : "";
+  const nightlyTotals = selectionTotals(deals, selectedRoom, selectedDates, guests);
+  const quoteKey = selectedRoom && selectedDates.length
+    ? `${roomKey(selectedRoom)}:${guests}:${selectedDates.join(",")}`
+    : "";
+
+  // A single night is priced exactly by the deals feed (1-night quotes). For
+  // longer stays, ask the same live endpoint the AI Room Finder uses so the
+  // length-of-stay discount is applied and the price matches what reception
+  // will offer. If that lookup fails, the nightly sum is shown as indicative.
+  useEffect(() => {
+    if (!selectedRoom || selectedDates.length < 2 || !nightlyTotals) {
+      setRangeQuote(null);
+      return;
+    }
+
+    const controller = new AbortController();
+    const key = quoteKey;
+    const fallback: StayQuote = { key, status: "indicative", original: nightlyTotals.original, direct: nightlyTotals.direct, nights: nightlyTotals.nights };
+    setRangeQuote({ ...fallback, status: "loading" });
+    const timeout = window.setTimeout(() => controller.abort(), 30_000);
+
+    const query = new URLSearchParams({
+      checkin: selectedDates[0],
+      checkout: nextIsoDate(selectedDates[selectedDates.length - 1]),
+      guests: String(guests),
+      lang: locale,
+    });
+
+    fetch(`/api/ai-room-finder/availability?${query}`, { cache: "no-store", signal: controller.signal })
+      .then((response) => response.json().then((payload) => ({ ok: response.ok, payload })))
+      .then(({ ok, payload }) => {
+        const offer = ok && payload?.success && Array.isArray(payload.offers)
+          ? payload.offers.find((item: { roomId?: unknown; unitId?: unknown }) =>
+              String(item.roomId) === String(selectedRoom.roomId) && String(item.unitId) === String(selectedRoom.unitId))
+          : null;
+        const original = Number(offer?.originalTotal);
+        const direct = Number(offer?.directTotal);
+        setRangeQuote(offer && original > 0 && direct > 0
+          ? { key, status: "exact", original, direct, nights: nightlyTotals.nights }
+          : fallback);
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) setRangeQuote(fallback);
+        else setRangeQuote((current) => (current?.key === key && current.status === "loading" ? fallback : current));
+      })
+      .finally(() => window.clearTimeout(timeout));
+
+    return () => {
+      window.clearTimeout(timeout);
+      controller.abort();
+    };
+    // nightlyTotals is derived from the same inputs as quoteKey.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [quoteKey, locale]);
+
+  const quote: StayQuote | null = !nightlyTotals
+    ? null
+    : selectedDates.length < 2
+      ? { key: quoteKey, status: "exact", original: nightlyTotals.original, direct: nightlyTotals.direct, nights: nightlyTotals.nights }
+      : rangeQuote?.key === quoteKey
+        ? rangeQuote
+        : { key: quoteKey, status: "loading", original: nightlyTotals.original, direct: nightlyTotals.direct, nights: nightlyTotals.nights };
+
+  const requestText = buildRequestText(copy, extra, selectedRoom, selectedDates, guests, quote);
+  const requestHref = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(requestText)}`;
+  const smsHref = `sms:+${CONTACT.whatsapp}?&body=${encodeURIComponent(requestText)}`;
+  const selectedDateLabel = selectedDates.length
+    ? `${formatDate(selectedDates[0], copy.dateLocale)} → ${formatDate(nextIsoDate(selectedDates[selectedDates.length - 1]), copy.dateLocale)}`
+    : "";
+  const quoteDiscount = quote && quote.status !== "loading" ? discountPercent(quote.original, quote.direct) : 0;
 
   useEffect(() => {
-    updateStickyRequestLink(requestHref);
     window.dispatchEvent(new CustomEvent("live-direct-request:update", { detail: { href: requestHref } }));
   }, [requestHref]);
 
   async function handleEmailRequest() {
-    if (!selectedRoom || !totals || !selectedDates.length || emailState === "sending") return;
+    if (!selectedRoom || !quote || !selectedDates.length || emailState === "sending") return;
 
     const contact = emailValue.trim();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact)) {
@@ -828,6 +879,7 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
 
     setEmailState("sending");
     setEmailFeedback("");
+    const exact = quote.status === "exact";
 
     try {
       const response = await fetch("/api/ai-assistant/request-email", {
@@ -837,15 +889,17 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
           requestId: `LIVE-${Date.now().toString(36).toUpperCase()}`,
           name: "Live Deals visitor",
           contact,
-          message: `Live Deals request from ${canonicalPath}`,
+          message: exact
+            ? `Live Deals request from ${canonicalPath}`
+            : `Live Deals request from ${canonicalPath} (price not confirmed online - please quote)`,
           checkin: selectedDates[0],
           checkout: nextIsoDate(selectedDates[selectedDates.length - 1]),
           guests,
           roomId: String(selectedRoom.roomId),
           unitId: String(selectedRoom.unitId),
           roomName: `${selectedRoom.displayName} - ${selectedRoom.type}`,
-          originalTotal: totals.original,
-          directTotal: totals.direct,
+          originalTotal: exact ? quote.original : 0,
+          directTotal: exact ? quote.direct : 0,
         }),
       });
 
@@ -862,89 +916,67 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
   }
 
   function handleDateClick(date: string) {
-    if (!selectedRoom || !getNightInfo(deals, selectedRoom, date, guests)) return;
-
-    const availableDates = visibleDays
-      .filter((day) => getNightInfo(deals, selectedRoom, day.checkin, guests))
-      .map((day) => day.checkin);
-
-    if (!selectedDates.length) {
-      setSelectedDates([date]);
-      return;
-    }
-
-    const firstIndex = availableDates.indexOf(selectedDates[0]);
-    const targetIndex = availableDates.indexOf(date);
-    if (firstIndex < 0 || targetIndex < 0 || targetIndex < firstIndex) {
-      setSelectedDates([date]);
-      return;
-    }
-
-    setSelectedDates(availableDates.slice(firstIndex, targetIndex + 1));
+    if (!selectedRoom) return;
+    setSelectedDates((current) =>
+      nextSelection(dayList, current, date, (value) => Boolean(getNightInfo(deals, selectedRoom, value, guests))),
+    );
   }
 
-  return (
-    <section className="px-4 pb-2 pt-6 md:px-8 md:pb-5 md:pt-10" aria-labelledby="live-direct-title">
-      <div className="mx-auto max-w-7xl overflow-hidden rounded-[2rem] border border-amber-900/10 bg-[#fffaf3] shadow-2xl shadow-stone-900/10 md:rounded-[2.5rem]">
-        <div className="min-w-0 p-4 md:p-7 lg:p-8">
-          <div className="mb-4 flex justify-center rounded-full bg-amber-100/90 px-4 py-2.5 text-[10px] font-black uppercase tracking-[0.15em] text-amber-800 ring-1 ring-amber-900/10 md:inline-flex md:justify-start md:text-[11px]">
-            <span className="mr-2" aria-hidden="true">⚡</span>
-            {copy.pill}
-          </div>
-          <div className="grid gap-4 xl:grid-cols-[1fr_250px] xl:items-end">
-            <div>
-              <h2 id="live-direct-title" className="max-w-[640px] font-serif text-[2.35rem] font-bold leading-[0.98] tracking-[-0.04em] text-[#17351f] md:text-5xl xl:text-6xl">
-                {data.title}
-              </h2>
-              <p className="mt-3 max-w-2xl text-[15px] leading-7 text-stone-700 md:text-lg md:leading-8">
-                {copy.subtitle}
-              </p>
-            </div>
+  const showSkeleton = loading;
 
-            <label className="block">
-              <span className="mb-2 block text-[11px] font-black uppercase tracking-[0.16em] text-stone-500 md:text-xs">{copy.guests}</span>
-              <select
-                value={guests}
-                onChange={(event) => setGuests(Number(event.target.value))}
-                className="h-12 w-full rounded-2xl border border-stone-200 bg-white px-4 text-base font-black text-stone-900 shadow-sm outline-none ring-amber-700/20 transition focus:ring-4 md:h-14"
-              >
+  return (
+    <section className={LIVE_SECTION_CLASS} aria-labelledby="live-direct-title" aria-busy={loading}>
+      <div className={LIVE_CARD_CLASS}>
+        <div className="min-w-0 p-4 md:p-7 lg:p-8">
+          <LiveDirectHeader
+            locale={locale}
+            title={data.title}
+            headingId="live-direct-title"
+            guestsControl={
+              <select value={guests} onChange={(event) => setGuests(Number(event.target.value))} className={GUESTS_SELECT_CLASS}>
                 {data.widget.guestButtons.map((button) => (
                   <option key={button.value} value={button.value}>{button.label}</option>
                 ))}
               </select>
-            </label>
-          </div>
+            }
+          />
 
-          <div className="mt-5">
-            {loading ? <div className="rounded-3xl bg-white p-6 text-sm font-bold text-stone-600 ring-1 ring-amber-900/10">{data.widget.loadingText}</div> : null}
-            {error ? <div className="rounded-3xl bg-white p-6 text-sm font-bold text-stone-600 ring-1 ring-amber-900/10">{copy.dateLocale === "el-GR" ? "Η ζωντανή διαθεσιμότητα είναι προσωρινά μη διαθέσιμη." : error}</div> : null}
-            {!loading && !error && !rooms.length ? <div className="rounded-3xl bg-white p-6 text-sm font-bold text-stone-600 ring-1 ring-amber-900/10">{copy.empty}</div> : null}
-            {!loading && !error && rooms.length ? (
-              <div className="relative -mx-4 md:mx-0 lg:-mx-2">
+          {showSkeleton ? <LiveDirectBodySkeleton includeFinderLink={false} /> : null}
+
+          {!loading && failed ? (
+            <div className="mt-5 rounded-3xl bg-white p-6 text-sm font-bold leading-6 text-stone-600 ring-1 ring-amber-900/10" role="status">{extra.error}</div>
+          ) : null}
+          {!loading && !failed && !rooms.length ? (
+            <div className="mt-5 rounded-3xl bg-white p-6 text-sm font-bold leading-6 text-stone-600 ring-1 ring-amber-900/10" role="status">{copy.empty}</div>
+          ) : null}
+
+          {!loading && !failed && rooms.length ? (
+            <>
+              <div className="relative mt-5 -mx-4 md:mx-0 lg:-mx-2">
                 <button
                   type="button"
                   onClick={() => roomsScrollerRef.current?.scrollBy({ left: -310, behavior: "smooth" })}
-                  className="absolute left-3 top-[88px] z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white/95 text-xl font-black text-[#17351f] shadow-lg ring-1 ring-amber-900/10 transition hover:scale-105 hover:bg-amber-50 md:left-4 md:top-[74px] md:h-10 md:w-10 md:text-2xl"
-                  aria-label="Show previous available rooms"
+                  className="absolute left-4 top-[55px] z-20 hidden h-10 w-10 items-center justify-center rounded-full bg-white/95 text-2xl font-black text-[#17351f] shadow-lg ring-1 ring-amber-900/10 transition hover:scale-105 hover:bg-amber-50 md:flex"
+                  aria-label={extra.previousRooms}
                 >
                   ←
                 </button>
                 <button
                   type="button"
                   onClick={() => roomsScrollerRef.current?.scrollBy({ left: 310, behavior: "smooth" })}
-                  className="absolute right-3 top-[88px] z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white/95 text-xl font-black text-[#17351f] shadow-lg ring-1 ring-amber-900/10 transition hover:scale-105 hover:bg-amber-50 md:right-4 md:top-[74px] md:h-10 md:w-10 md:text-2xl"
-                  aria-label="Show more available rooms"
+                  className="absolute right-4 top-[55px] z-20 hidden h-10 w-10 items-center justify-center rounded-full bg-white/95 text-2xl font-black text-[#17351f] shadow-lg ring-1 ring-amber-900/10 transition hover:scale-105 hover:bg-amber-50 md:flex"
+                  aria-label={extra.nextRooms}
                 >
                   →
                 </button>
                 <div ref={roomsScrollerRef} className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-4 pr-14 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:gap-4 md:px-2 md:pr-16 xl:gap-5">
-                  {rooms.map((room, index) => (
+                  {rooms.map((room) => (
                     <RoomCard
                       key={roomKey(room)}
                       room={room}
                       copy={copy}
-                      index={index}
-                      active={selectedRoom && roomKey(selectedRoom) === roomKey(room)}
+                      extra={extra}
+                      active={Boolean(selectedRoom && roomKey(selectedRoom) === roomKey(room))}
                       amount={minDirectPrice(deals, room, guests)}
                       onSelect={() => {
                         setSelectedKey(roomKey(room));
@@ -955,160 +987,133 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
                   ))}
                 </div>
               </div>
-            ) : null}
-          </div>
 
-          {selectedRoom ? (
-            <div className="mt-1 flex items-center gap-2.5 rounded-2xl border border-[#7b8a4b]/35 bg-[#17351f] px-3 py-2.5 text-white shadow-lg shadow-emerald-950/15 md:hidden" aria-live="polite">
-              <span className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-white text-sm font-black text-[#17351f]" aria-hidden="true">✓</span>
-              <div className="min-w-0 flex-1">
-                <span className="block text-[9px] font-black uppercase tracking-[0.14em] text-white/70">{copy.selectedLabel}</span>
-                <strong className="mt-0.5 block truncate text-[15px] font-black leading-5">{localizeRoomName(selectedRoom.displayName, copy)}</strong>
-                {visibleRoomType(selectedRoom.type, copy) ? <span className="block truncate text-[11px] font-semibold text-white/75">{visibleRoomType(selectedRoom.type, copy)}</span> : null}
-              </div>
-              <div className="flex-none text-right">
-                <span className="block text-[9px] font-bold text-white/65">{copy.from}</span>
-                <strong className="block text-xl font-black leading-none">{money(minDirectPrice(deals, selectedRoom, guests) || 0)}</strong>
-              </div>
-            </div>
-          ) : null}
-
-          {selectedRoom ? (
-            <div className="mt-1 hidden gap-4 rounded-[1.45rem] bg-white p-3 shadow-sm ring-1 ring-amber-900/10 md:grid md:grid-cols-[170px_minmax(0,1fr)_210px] md:items-center lg:grid-cols-[190px_minmax(0,1fr)_230px]">
-              <div className="relative h-[145px] overflow-hidden rounded-[1.05rem] bg-stone-100 lg:h-[155px]">
-                <Image
-                  src={selectedRoom.images[0]}
-                  alt={[localizeRoomName(selectedRoom.displayName, copy), visibleRoomType(selectedRoom.type, copy)].filter(Boolean).join(" ")}
-                  fill
-                  sizes="190px"
-                  className="scale-110 object-cover object-center"
-                />
-              </div>
-              <div className="min-w-0 py-1">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#17351f] px-3 py-1 text-[10px] font-black uppercase tracking-[0.1em] text-white"><span aria-hidden="true">✓</span>{copy.selectedLabel}</span>
-                  <span className="inline-flex rounded-full bg-amber-50 px-3 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-amber-800 ring-1 ring-amber-900/10">{localizeBadge(selectedRoom.primaryBadge, copy)}</span>
-                </div>
-                <h3 className="mt-1.5 font-serif text-2xl font-bold leading-tight text-stone-950 lg:text-3xl">{localizeRoomName(selectedRoom.displayName, copy)}</h3>
-                {visibleRoomType(selectedRoom.type, copy) ? <p className="mt-0.5 font-bold text-amber-800">{visibleRoomType(selectedRoom.type, copy)}</p> : null}
-                <div className="mt-2"><SalesBadges copy={copy} /></div>
-                <div className="mt-2 flex flex-wrap gap-1.5">
-                  {selectedRoom.featureBadges.map((badge) => (
-                    <span key={badge} className="rounded-md bg-stone-100/90 px-2.5 py-1 text-[11px] font-bold text-stone-700 ring-1 ring-stone-200">{localizeBadge(badge, copy)}</span>
-                  ))}
-                </div>
-                <p className="mt-2 max-w-2xl text-sm leading-6 text-stone-600">
-                  {copy.selectedText}
-                </p>
-              </div>
-              <div className="rounded-[1.1rem] bg-[#f8f1e4] p-4 text-center ring-1 ring-amber-900/10">
-                <div className="text-[10px] font-black uppercase tracking-[0.14em] text-stone-500">
-                  {copy.directOffer}
-                </div>
-                {totals ? (
-                  <>
-                    <div className="mt-1 text-[11px] font-bold text-stone-500">{totals.nights} {totals.nights === 1 ? copy.night : copy.nights}</div>
-                    <div className="mt-2 flex items-end justify-center gap-2">
-                      <span className="text-sm font-black text-red-600 line-through">{money(totals.original)}</span>
-                      <strong className="text-3xl font-black leading-none text-emerald-700">{money(totals.direct)}</strong>
+              {selectedRoom ? (
+                <div className="mt-1 hidden h-[171px] gap-4 rounded-[1.45rem] bg-white p-3 shadow-sm ring-1 ring-amber-900/10 md:grid md:grid-cols-[170px_minmax(0,1fr)] md:items-center lg:h-[181px] lg:grid-cols-[190px_minmax(0,1fr)]">
+                  <div className="relative h-[145px] overflow-hidden rounded-[1.05rem] bg-stone-100 lg:h-[155px]">
+                    <Image src={selectedRoom.images[0]} alt="" fill sizes="190px" className="scale-110 object-cover object-center" />
+                  </div>
+                  <div className="min-w-0 py-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-[#17351f] px-3 py-1 text-[11px] font-black uppercase tracking-[0.1em] text-white"><span aria-hidden="true">✓</span>{copy.selectedLabel}</span>
                     </div>
+                    <h3 className="mt-1.5 font-serif text-2xl font-bold leading-tight text-stone-950 lg:text-3xl">{localizeRoomName(selectedRoom.displayName, copy)}</h3>
+                    <p className="mt-0.5 font-bold text-amber-800">{localizeRoomType(selectedRoom.type, copy)}</p>
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {selectedRoom.featureBadges.map((badge) => (
+                        <span key={badge} className="rounded-md bg-stone-100/90 px-2.5 py-1 text-[12px] font-bold text-stone-700 ring-1 ring-stone-200">{localizeBadge(badge, copy)}</span>
+                      ))}
+                    </div>
+                    <p className="mt-2 line-clamp-1 max-w-2xl text-sm leading-6 text-stone-600">{copy.selectedText}</p>
+                  </div>
+                </div>
+              ) : null}
+
+              {selectedRoom && visibleDays.length ? (
+                <div className="mt-3 flex snap-x gap-2 overflow-x-auto pb-2 pt-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-7 md:gap-3 md:overflow-visible">
+                  {visibleDays.map((day) => {
+                    const info = getNightInfo(deals, selectedRoom, day.checkin, guests);
+                    return <DateChip key={day.checkin} day={day.checkin} info={info} active={selectedDates.includes(day.checkin)} onClick={() => handleDateClick(day.checkin)} copy={copy} extra={extra} />;
+                  })}
+                </div>
+              ) : null}
+
+              <div className={`mt-2 flex flex-col justify-center rounded-[1.25rem] bg-white px-4 py-3 text-center shadow-sm ring-1 ring-amber-900/10 md:rounded-[1.4rem] ${SUMMARY_MIN_HEIGHT_CLASS}`} aria-live="polite">
+                {selectedRoom && quote ? (
+                  <>
+                    <div className="text-[12px] font-black uppercase leading-5 tracking-[0.12em] text-stone-500">
+                      {localizeRoomName(selectedRoom.displayName, copy)} · {quote.nights} {quote.nights === 1 ? copy.night : copy.nights}
+                    </div>
+                    <div className="text-[13px] font-bold leading-5 text-stone-500">{selectedDateLabel}</div>
+                    {quote.status === "loading" ? (
+                      <div className="mt-1.5 text-[15px] font-bold leading-8 text-stone-500">{extra.calculating}</div>
+                    ) : (
+                      <>
+                        <div className="mt-1 flex items-center justify-center gap-2.5">
+                          {quote.original > quote.direct ? <span className="text-base font-bold text-stone-400 line-through md:text-lg">{money(quote.original, copy.dateLocale)}</span> : null}
+                          <strong className="text-2xl font-black text-[#17351f] md:text-3xl">{money(quote.direct, copy.dateLocale)}</strong>
+                          {quoteDiscount > 0 ? <span className="rounded-full bg-[#c66a34] px-2 py-0.5 text-[12px] font-black text-white">−{quoteDiscount}%</span> : null}
+                        </div>
+                        {quote.status === "indicative" ? <div className="mt-1 text-[12px] font-semibold leading-4 text-stone-500">{extra.indicative}</div> : null}
+                      </>
+                    )}
                   </>
-                ) : (
-                  <strong className="mt-2 block text-2xl font-black text-[#17351f]">{money(minDirectPrice(deals, selectedRoom, guests) || 0)}</strong>
-                )}
+                ) : null}
               </div>
-            </div>
-          ) : null}
 
-          {selectedRoom && visibleDays.length ? (
-            <div className="mt-3 flex snap-x gap-2 overflow-x-auto pb-2 pt-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-7 md:gap-3 md:overflow-visible md:pb-0 md:pt-2">
-              {visibleDays.map((day) => {
-                const info = getNightInfo(deals, selectedRoom, day.checkin, guests);
-                return <DateChip key={day.checkin} day={day.checkin} info={info} active={selectedDates.includes(day.checkin)} onClick={() => handleDateClick(day.checkin)} copy={copy} />;
-              })}
-            </div>
-          ) : null}
-
-          {totals ? (
-            <div className="mt-2 rounded-[1.25rem] bg-white px-4 py-2.5 text-center shadow-sm ring-1 ring-amber-900/10 md:rounded-[1.4rem] md:py-3">
-              <div className="text-[10px] font-black uppercase tracking-[0.14em] text-stone-500 md:text-xs">
-                {selectedRoom ? <span className="hidden md:inline">{localizeRoomName(selectedRoom.displayName, copy)} · </span> : null}{copy.directOffer} · {totals.nights} {totals.nights === 1 ? copy.night : copy.nights}
+              <div className="mt-3 grid grid-cols-2 gap-0 rounded-[1.25rem] bg-white p-2.5 text-center shadow-sm ring-1 ring-amber-900/10 sm:grid-cols-4 md:rounded-[1.4rem] md:p-3">
+                {copy.trustItems.map((item, index) => (
+                  <div key={item.title} className={`${index < 2 ? "border-b pb-2" : "pt-2"} ${index % 2 === 0 ? "border-r" : ""} border-stone-200 px-2 text-[12px] font-semibold leading-4 text-stone-800 sm:border-b-0 sm:border-r sm:px-1 sm:py-0 sm:last:border-r-0 md:text-xs md:leading-5`}>
+                    <span className="mb-1 flex justify-center" aria-hidden="true"><TrustIcon type={item.icon} /></span>
+                    <strong className="block font-black">{item.title}</strong>
+                    <span className="hidden text-stone-500 md:block">{item.text}</span>
+                  </div>
+                ))}
               </div>
-              <div className="mt-1 text-[11px] font-bold text-stone-500 md:text-xs">{selectedDateLabel}</div>
-              <div className="mt-1 flex items-end justify-center gap-3">
-                <span className="text-base font-black text-red-600 line-through md:text-lg">{money(totals.original)}</span>
-                <strong className="text-2xl font-black text-emerald-700 md:text-3xl">{money(totals.direct)}</strong>
-              </div>
-            </div>
-          ) : null}
 
-          <div className="mt-3 grid grid-cols-2 gap-0 rounded-[1.25rem] bg-white p-2.5 text-center shadow-sm ring-1 ring-amber-900/10 sm:grid-cols-4 md:rounded-[1.4rem] md:p-3">
-            {copy.trustItems.map((item, index) => (
-              <div key={item.title} className={`${index < 2 ? "border-b pb-2" : "pt-2"} ${index % 2 === 0 ? "border-r" : ""} border-stone-200 px-2 text-[9px] font-semibold leading-4 text-stone-800 sm:border-b-0 sm:border-r sm:px-1 sm:py-0 sm:last:border-r-0 md:text-xs md:leading-5`}>
-                <span className="mb-1 flex justify-center" aria-hidden="true"><TrustIcon type={item.icon} /></span>
-                <strong className="block font-black">{item.title}</strong>
-                <span className="hidden text-stone-500 md:block">{item.text}</span>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-3 grid grid-cols-2 gap-2">
-            <a href={requestHref} target="_blank" rel="noopener noreferrer" className="hidden min-h-12 items-center justify-center rounded-xl bg-[#17351f] px-4 text-center text-xs font-black uppercase leading-tight tracking-[0.06em] !text-white shadow-md shadow-emerald-950/15 transition hover:-translate-y-0.5 hover:bg-[#224d2d] md:flex">{copy.whatsapp}</a>
-            <a href={smsHref} className="flex min-h-12 items-center justify-center rounded-xl border border-emerald-700/30 bg-white px-3 text-center text-xs font-black uppercase leading-tight tracking-[0.06em] !text-emerald-800 transition hover:bg-emerald-50 md:hidden">{copy.sms}</a>
-            <button
-              type="button"
-              onClick={() => {
-                if (emailState !== "sent") setEmailOpen((open) => !open);
-              }}
-              className="flex min-h-12 items-center justify-center rounded-xl border border-stone-300 bg-white px-3 text-center text-xs font-black uppercase leading-tight tracking-[0.06em] text-stone-800 transition hover:border-amber-700 hover:bg-amber-50"
-            >
-              {emailState === "sent" ? copy.emailSent : copy.call}
-            </button>
-          </div>
-
-          {emailOpen && emailState !== "sent" ? (
-            <form
-              onSubmit={(event) => {
-                event.preventDefault();
-                void handleEmailRequest();
-              }}
-              className="mx-auto mt-1 max-w-2xl rounded-2xl border border-amber-900/10 bg-white p-2.5 shadow-sm"
-            >
-              <p className="mb-1.5 text-[11px] font-bold leading-4 text-stone-600">{copy.emailPrompt}</p>
-              <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-2">
-                <label className="min-w-0">
-                  <span className="sr-only">{copy.emailPrompt}</span>
-                  <input
-                    type="email"
-                    inputMode="email"
-                    autoComplete="email"
-                    value={emailValue}
-                    onChange={(event) => {
-                      setEmailValue(event.target.value);
-                      if (emailState === "error") {
-                        setEmailState("idle");
-                        setEmailFeedback("");
-                      }
-                    }}
-                    placeholder={copy.emailPlaceholder}
-                    required
-                    className="h-11 w-full rounded-xl border border-stone-300 bg-white px-3 text-sm text-stone-900 outline-none ring-amber-700/20 transition focus:border-amber-700 focus:ring-4"
-                  />
-                </label>
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                <a href={requestHref} target="_blank" rel="noopener noreferrer" className="col-span-2 flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#17351f] px-4 text-center text-[13px] font-black uppercase leading-tight tracking-[0.06em] !text-white shadow-md shadow-emerald-950/15 transition hover:-translate-y-0.5 hover:bg-[#224d2d] md:col-span-1">
+                  <span aria-hidden="true">💬</span>{copy.whatsapp}
+                </a>
+                <a href={smsHref} className="flex min-h-12 items-center justify-center rounded-xl border border-emerald-700/30 bg-white px-3 text-center text-[13px] font-black uppercase leading-tight tracking-[0.06em] !text-emerald-800 transition hover:bg-emerald-50 md:hidden">{copy.sms}</a>
                 <button
-                  type="submit"
-                  disabled={emailState === "sending"}
-                  className="min-h-11 rounded-xl bg-amber-700 px-3 text-[10px] font-black uppercase leading-tight tracking-[0.04em] text-white transition hover:bg-amber-800 disabled:cursor-wait disabled:opacity-70 sm:px-5 sm:text-xs"
+                  type="button"
+                  onClick={() => {
+                    if (emailState !== "sent") setEmailOpen((open) => !open);
+                  }}
+                  aria-expanded={emailOpen}
+                  className="flex min-h-12 items-center justify-center rounded-xl border border-stone-300 bg-white px-3 text-center text-[13px] font-black uppercase leading-tight tracking-[0.06em] text-stone-800 transition hover:border-amber-700 hover:bg-amber-50"
                 >
-                  {emailState === "sending" ? copy.emailSending : copy.emailSend}
+                  {emailState === "sent" ? copy.emailSent : copy.call}
                 </button>
               </div>
-            </form>
+
+              {emailOpen && emailState !== "sent" ? (
+                <form
+                  onSubmit={(event) => {
+                    event.preventDefault();
+                    void handleEmailRequest();
+                  }}
+                  className="mx-auto mt-2 max-w-2xl rounded-2xl border border-amber-900/10 bg-white p-2.5 shadow-sm"
+                >
+                  <p className="mb-1.5 text-[12px] font-bold leading-4 text-stone-600">{copy.emailPrompt}</p>
+                  <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-2">
+                    <label className="min-w-0">
+                      <span className="sr-only">{copy.emailPrompt}</span>
+                      <input
+                        type="email"
+                        inputMode="email"
+                        autoComplete="email"
+                        value={emailValue}
+                        onChange={(event) => {
+                          setEmailValue(event.target.value);
+                          if (emailState === "error") {
+                            setEmailState("idle");
+                            setEmailFeedback("");
+                          }
+                        }}
+                        placeholder={copy.emailPlaceholder}
+                        required
+                        className="h-11 w-full rounded-xl border border-stone-300 bg-white px-3 text-base text-stone-900 outline-none ring-amber-700/20 transition focus:border-amber-700 focus:ring-4"
+                      />
+                    </label>
+                    <button
+                      type="submit"
+                      disabled={emailState === "sending"}
+                      className="min-h-11 rounded-xl bg-amber-700 px-3 text-[12px] font-black uppercase leading-tight tracking-[0.04em] text-white transition hover:bg-amber-800 disabled:cursor-wait disabled:opacity-70 sm:px-5"
+                    >
+                      {emailState === "sending" ? copy.emailSending : copy.emailSend}
+                    </button>
+                  </div>
+                </form>
+              ) : null}
+
+              {emailFeedback && emailState !== "sent" ? (
+                <p className="mt-2 text-center text-xs font-bold text-red-600" role="alert">{emailFeedback}</p>
+              ) : null}
+            </>
           ) : null}
 
-          {emailFeedback ? (
-            <p className={`mt-2 text-center text-xs font-bold ${emailState === "sent" ? "text-emerald-700" : "text-red-600"}`} role="status">{emailFeedback}</p>
-          ) : null}
           <a
             href={roomFinderHrefForLanguage(locale)}
             aria-label={`${copy.differentDates} ${copy.checkAvailability}`}

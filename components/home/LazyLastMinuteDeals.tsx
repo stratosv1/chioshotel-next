@@ -1,17 +1,23 @@
 "use client";
 
-import dynamic from "next/dynamic";
-import { useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import type { HomePageData } from "@/content/home";
+import {
+  GUESTS_SELECT_CLASS,
+  LIVE_CARD_CLASS,
+  LIVE_SECTION_CLASS,
+  LiveDirectBodySkeleton,
+  LiveDirectHeader,
+  liveRequestLocale,
+} from "@/components/home/LiveDirectRequestFrame";
 
 type LastMinuteData = HomePageData["lastMinute"];
 
-const LiveDirectRequestClient = dynamic(
-  () => import("@/components/home/LiveDirectRequest").then((module) => module.LiveDirectRequest),
-  {
-    ssr: false,
-    loading: () => null,
-  },
+// React.lazy + Suspense (instead of next/dynamic with an empty loading state)
+// keeps the full-size placeholder on screen while the widget code downloads.
+// Previously the section collapsed to 0px for a moment, shifting the page.
+const LiveDirectRequestClient = lazy(() =>
+  import("@/components/home/LiveDirectRequest").then((module) => ({ default: module.LiveDirectRequest })),
 );
 
 const WEEKLY_TITLES = {
@@ -74,26 +80,37 @@ export function LazyLastMinuteDeals({
     return () => observer.disconnect();
   }, [shouldLoad]);
 
-  if (shouldLoad) {
-    return (
-      <div id="vh-lastminute-title" ref={rootRef} className="scroll-mt-24 md:scroll-mt-28">
-        <LiveDirectRequestClient data={weeklyData} canonicalPath={canonicalPath} />
-      </div>
-    );
-  }
+  // Same header and footprint as the loaded widget, so jumping here from the
+  // hero "Offers" link lands in the right place and nothing shifts later.
+  const placeholder = (
+      <section className={LIVE_SECTION_CLASS} aria-labelledby="live-direct-placeholder-title" aria-busy="true">
+        <div className={LIVE_CARD_CLASS}>
+          <div className="min-w-0 p-4 md:p-7 lg:p-8">
+            <LiveDirectHeader
+              locale={liveRequestLocale(canonicalPath)}
+              title={weeklyData.title}
+              headingId="live-direct-placeholder-title"
+              guestsControl={
+                <select disabled value={2} className={GUESTS_SELECT_CLASS} aria-hidden="true" tabIndex={-1} onChange={() => undefined}>
+                  {weeklyData.widget.guestButtons.map((button) => (
+                    <option key={button.value} value={button.value}>{button.label}</option>
+                  ))}
+                </select>
+              }
+            />
+            <LiveDirectBodySkeleton />
+          </div>
+        </div>
+      </section>
+  );
 
   return (
     <div id="vh-lastminute-title" ref={rootRef} className="scroll-mt-24 md:scroll-mt-28">
-      <section className="px-4 py-7 md:px-8 md:py-11" aria-labelledby="live-direct-placeholder-title">
-        <div className="mx-auto max-w-7xl rounded-[2rem] border border-amber-900/10 bg-[#fffaf3] p-6 text-center shadow-lg shadow-stone-900/5 md:p-10">
-          <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] text-amber-700">{weeklyData.kicker}</p>
-          <h2 id="live-direct-placeholder-title" className="font-serif text-3xl font-bold leading-tight text-stone-900 md:text-[2.625rem]">
-            <span className="mr-2" aria-hidden="true">{weeklyData.icon}</span>
-            {weeklyData.title}
-          </h2>
-          <p className="mx-auto mt-4 max-w-3xl text-base leading-8 text-stone-600 md:text-lg">{weeklyData.subtitle}</p>
-        </div>
-      </section>
+      {shouldLoad ? (
+        <Suspense fallback={placeholder}>
+          <LiveDirectRequestClient data={weeklyData} canonicalPath={canonicalPath} />
+        </Suspense>
+      ) : placeholder}
     </div>
   );
 }

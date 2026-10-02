@@ -64,12 +64,37 @@ const ROOM_VISUALS: VisualRoom[] = [
   { id: 10, roomId: 265595, unitId: 3, displayName: "Apartment 10", type: "Family Apartment", location: "Ground floor", image: "/images/rooms/DSC07899.webp", primaryBadge: "Kitchen", featureBadges: ["Ground floor", "Kitchen", "No stairs"] },
 ];
 
+// Booking Core now returns machine codes for room types ("economy",
+// "first_floor", ...). Map them to the labels the widget translates, so guests
+// and reception never see raw database codes.
+const ROOM_TYPE_CODES: Record<string, string> = {
+  economy: "Economy Double",
+  first_floor: "Upper Floor Double / Triple",
+  ground_floor: "Ground Floor Double / Triple",
+  apartment: "Family Apartment",
+};
+
+export function normalizeRoomType(value: string | undefined, fallback: string) {
+  const raw = String(value || "").trim();
+  if (!raw) return fallback;
+  return ROOM_TYPE_CODES[raw.toLowerCase()] || raw;
+}
+
 export function roomKey(room: Pick<DealRoom, "roomId" | "unitId">) {
   return `${room.roomId}_${room.unitId}`;
 }
 
-export function money(value: number) {
-  return `€${Math.round(value)}`;
+// Whole euros stay short ("€72"); exact multi-night totals keep their cents
+// ("€464.80") so the widget matches the AI Room Finder and the reception email.
+export function money(value: number, locale = "en-GB") {
+  const rounded = Math.round(value * 100) / 100;
+  const whole = Number.isInteger(rounded);
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: "EUR",
+    minimumFractionDigits: whole ? 0 : 2,
+    maximumFractionDigits: whole ? 0 : 2,
+  }).format(rounded);
 }
 
 export function formatDate(value: string | null, locale = "en-GB") {
@@ -85,6 +110,43 @@ function findVisualRoom(room: DealRoom) {
   if (byKey) return byKey;
   const id = Number(room.id || 0);
   return ROOM_VISUALS.find((item) => item.id === id) || null;
+}
+
+export function formatDayParts(value: string, locale = "en-GB") {
+  const date = new Date(`${value}T00:00:00`);
+  if (Number.isNaN(date.getTime())) return { weekday: value, day: "" };
+  return {
+    weekday: date.toLocaleDateString(locale, { weekday: "short" }),
+    day: date.toLocaleDateString(locale, { day: "numeric", month: "short" }),
+  };
+}
+
+export function nextIsoDate(value: string) {
+  const date = new Date(`${value}T12:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + 1);
+  return date.toISOString().slice(0, 10);
+}
+
+/**
+ * Nights of a stay must be consecutive and every night bookable: a guest who
+ * picks a later night after a booked one starts a new selection instead of
+ * creating a stay with a gap.
+ */
+export function nextSelection(
+  dayList: string[],
+  current: string[],
+  clicked: string,
+  isAvailable: (date: string) => boolean,
+) {
+  if (!isAvailable(clicked)) return current;
+  // Like a date-range picker: first click = arrival night, second = last
+  // night; a click after a finished range starts a new one.
+  if (current.length !== 1) return [clicked];
+  const start = dayList.indexOf(current[0]);
+  const end = dayList.indexOf(clicked);
+  if (start < 0 || end < 0 || end <= start) return [clicked];
+  const range = dayList.slice(start, end + 1);
+  return range.every(isAvailable) ? range : [clicked];
 }
 
 export function getNightInfo(deals: DealsResponse | null, room: RoomMeta, date: string | null, guests = 2) {
@@ -147,8 +209,10 @@ export function mergeDealRooms(deals: DealsResponse | null): RoomMeta[] {
         id: visual.id,
         roomId: Number(room.roomId),
         unitId: Number(room.unitId),
-        displayName: room.displayName || visual.displayName,
-        type: room.type || visual.type,
+        // Stable public names ("Room 1", "Apartment 8") keyed by room/unit;
+        // Booking Core display names can carry extra words ("Double / Triple Room 1").
+        displayName: visual.displayName,
+        type: normalizeRoomType(room.type, visual.type),
         location: room.location || visual.location,
         maxGuests,
         images: [visual.image],

@@ -435,10 +435,11 @@ check(
 );
 check(
   roomFinderProductionSource.includes("flex flex-col items-stretch gap-3") &&
-    roomFinderProductionSource.includes("min-[390px]:flex-row min-[390px]:items-center") &&
+    roomFinderProductionSource.includes("min-[420px]:flex-row min-[420px]:items-center") &&
     roomFinderProductionSource.includes("w-full shrink-0 rounded-full") &&
-    roomFinderProductionSource.includes("grid grid-cols-1 gap-2 min-[390px]:grid-cols-2") &&
-    roomFinderCarouselSource.includes("grid grid-cols-1 gap-2 min-[390px]:grid-cols-2"),
+    roomFinderProductionSource.includes("grid grid-cols-1 gap-2 min-[400px]:grid-cols-[1fr_auto]") &&
+    roomFinderCarouselSource.includes("h-11 w-11 shrink-0") &&
+    roomFinderCarouselSource.includes("min-h-11 min-w-0 flex-1"),
   "AI Room Finder assistance and action groups stack safely at 320px.",
   "AI Room Finder assistance or action groups are too dense at 320px.",
 );
