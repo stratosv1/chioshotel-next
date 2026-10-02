@@ -27,7 +27,7 @@ const copy: Record<LanguageCode, HomepageIntentCopy> = {
   en: {
     seoTitle: "Chios Accommodation | Rooms & Apartments in Kambos",
     seoDescription:
-      "Official website of Voulamandis House in Chios. Personal hospitality, a peaceful citrus-garden setting, rooms and family apartments near Chios Town, the airport and beaches.",
+      "Official website of Voulamandis House in Chios: personal hospitality, a peaceful citrus garden, rooms and family apartments near Chios Town, airport and beaches.",
     heroTitle: "Chios Accommodation: Rooms & Apartments",
     heroTagline: "Stay in historic Kambos, Chios",
     heroDescriptionHtml: `A peaceful, personal stay in historic Kambos, close to Chios Town, the airport and beaches. Explore our <a href="/chios-rooms/" class="${heroLinkClass}">rooms and apartments in Chios</a> and choose the category that suits your trip.`,
@@ -117,7 +117,7 @@ const copy: Record<LanguageCode, HomepageIntentCopy> = {
   es: {
     seoTitle: "Alojamiento en Quíos | Habitaciones & apartamentos",
     seoDescription:
-      "Web oficial de Voulamandis House en Quíos: hospitalidad personal, tranquilo jardín de cítricos, habitaciones y apartamentos familiares cerca de la ciudad, aeropuerto y playas.",
+      "Web oficial de Voulamandis House en Quíos: trato cercano, tranquilo jardín de cítricos, habitaciones y apartamentos familiares cerca de la ciudad y playas.",
     heroTitle: "Alojamiento en Quíos: habitaciones y apartamentos",
     heroTagline: "Alójate en el histórico Kambos de Quíos",
     heroDescriptionHtml: `Una estancia tranquila y personal en el histórico Kambos, cerca de la ciudad, el aeropuerto y las playas. Descubre nuestras <a href="/es/habitaciones-en-chios/" class="${heroLinkClass}">habitaciones y apartamentos en Quíos</a> y elige la categoría adecuada.`,

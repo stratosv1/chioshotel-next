@@ -287,9 +287,14 @@ function LocationAndDirect({ data }: { data: HomePageData }) {
             <p className="break-words text-xs font-black uppercase tracking-[0.20em] text-amber-700">{data.location.infoCard.kicker}</p>
             <h3 className="mt-3 break-words font-serif text-3xl font-bold text-amber-800">{data.location.infoCard.title}</h3>
             <address className="mt-4 not-italic text-sm leading-7 text-stone-600 md:text-base md:leading-8">
-              {data.location.infoCard.addressLines[0]}<br />{data.location.infoCard.addressLines[1]}<br />{data.location.infoCard.phoneLabel}{" "}
-              <a href={data.location.infoCard.phoneHref} className="font-bold text-amber-800">{data.location.infoCard.phone}</a><br />{data.location.infoCard.emailLabel}{" "}
-              <a href={data.location.infoCard.emailHref} className="font-bold text-amber-800">{data.location.infoCard.email}</a>
+              {data.location.infoCard.addressLines[0]}<br />{data.location.infoCard.addressLines[1]}
+              {/* Phone and email on their own rows with a 44px touch target. */}
+              <span className="flex min-h-11 flex-wrap items-center gap-x-1">{data.location.infoCard.phoneLabel}
+                <a href={data.location.infoCard.phoneHref} className="inline-flex min-h-11 items-center font-bold text-amber-800">{data.location.infoCard.phone}</a>
+              </span>
+              <span className="flex min-h-11 flex-wrap items-center gap-x-1">{data.location.infoCard.emailLabel}
+                <a href={data.location.infoCard.emailHref} className="inline-flex min-h-11 items-center break-all font-bold text-amber-800">{data.location.infoCard.email}</a>
+              </span>
             </address>
             <p className="mt-4 text-sm leading-7 text-stone-600 md:text-base md:leading-8">{data.location.infoCard.text}</p>
             <div className="mt-5"><PrimaryButton href={data.location.infoCard.cta.href}><PremiumIcon compact>{data.location.infoCard.cta.icon}</PremiumIcon>{data.location.infoCard.cta.label}</PrimaryButton></div>

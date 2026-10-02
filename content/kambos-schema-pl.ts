@@ -63,6 +63,13 @@ function buildPage(): SchemaObject {
     isPartOf: { "@id": websiteId() },
     about: [{ "@id": destinationId }, { "@id": hotelId() }],
     mainEntity: { "@id": destinationId },
+    primaryImageOfPage: {
+      "@type": "ImageObject",
+      "@id": schemaId(path, "primaryimage"),
+      url: absoluteUrl("/images/kampos/kambos-chios.jpg"),
+      contentUrl: absoluteUrl("/images/kampos/kambos-chios.jpg"),
+      caption: "Kambos na Chios",
+    },
     breadcrumb: { "@id": schemaId(path, "breadcrumb") },
     publisher: { "@id": `${siteUrl}/#organization` },
   };

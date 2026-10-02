@@ -40,6 +40,13 @@ function walk(value: unknown, options: PolishSchemaOptions): unknown {
   const localized: Record<string, unknown> = {};
 
   for (const [key, child] of Object.entries(source)) {
+    // Schema.org keywords (@type, @id, @context) are identifiers, not labels:
+    // translating "@type": "Accommodation" produced an unknown type.
+    if (key.startsWith("@")) {
+      localized[key] = child;
+      continue;
+    }
+
     if (key === "inLanguage" && child === "en") {
       localized[key] = "pl";
       continue;

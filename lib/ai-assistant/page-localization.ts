@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import type { AssistantLanguage } from "@/lib/ai-assistant/types";
 import { ROOM_FINDER_HREFS } from "@/lib/room-finder-cta-routing";
 import { absoluteUrl } from "@/lib/seo";
+import { siteImageAssets } from "@/lib/site-assets";
 
 type AiAssistantPageCopy = {
   title: string;
@@ -95,7 +96,26 @@ export function buildAiAssistantMetadata(language: AssistantLanguage): Metadata 
       description: copy.description,
       url: absoluteUrl(canonicalPath),
       type: "website",
+      images: [
+        {
+          url: absoluteUrl(siteImageAssets.homepageHero.src),
+          width: siteImageAssets.homepageHero.width,
+          height: siteImageAssets.homepageHero.height,
+          alt: "Voulamandis House in Kambos, Chios - rooms and apartments",
+        },
+      ],
     },
-    robots: { index: true, follow: true },
+    // Same Google preview directives as the rest of the site (lib/seo).
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+        "max-video-preview": -1,
+      },
+    },
   };
 }

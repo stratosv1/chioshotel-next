@@ -35,6 +35,7 @@ function buildHomePage(): SchemaObject {
     isPartOf: { "@id": websiteId() },
     about: { "@id": hotelId() },
     mainEntity: { "@id": hotelId() },
+    primaryImageOfPage: { "@id": schemaId(path, "primaryimage") },
     publisher: { "@id": `${siteUrl}/#organization` },
   };
 }

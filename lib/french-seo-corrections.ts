@@ -9,7 +9,7 @@ const frenchSeoCorrections: ReadonlyArray<
     {
       title: "Chambres et appartements à Chios | Séjour au calme",
       description:
-        "Séjournez à Voulamandis House, dans le quartier historique de Kambos à Chios. Chambres calmes et appartements familiaux près de la ville, de l’aéroport et des plages.",
+        "Séjournez à Voulamandis House, dans le Kambos historique de Chios : chambres calmes et appartements familiaux près de la ville, de l’aéroport et des plages.",
     },
   ],
   [

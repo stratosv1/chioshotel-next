@@ -1,6 +1,9 @@
 import type { ChiosAccommodationPageData } from "@/content/chios-accommodation";
 import { homeGalleryImages } from "@/components/home/HomeGallery";
 import { chiosAccommodationPageEn } from "@/content/chios-accommodation";
+import { chiosAccommodationPagePl } from "@/content/chios-accommodation-pl";
+import { roomsCategoryPl } from "@/content/rooms-pl";
+import { ratesPagePl } from "@/content/rates-pl";
 import { diamoniStiXioPageEl } from "@/content/diamoni-sti-xio";
 import { hebergementChiosPageFr } from "@/content/hebergement-chios";
 import { chiosUnterkunftPageDe } from "@/content/chios-unterkunft";
@@ -115,17 +118,58 @@ const roomDetailPages: readonly RoomDetailData[] = [
 
 const roomCategoryPages: readonly RoomsCategoryPageData[] = [
   roomsCategoryEn, roomsCategoryEl, roomsCategoryFr, roomsCategoryDe,
-  roomsCategoryIt, roomsCategoryEs, roomsCategoryTr,
+  roomsCategoryIt, roomsCategoryEs, roomsCategoryTr, roomsCategoryPl,
 ];
 
 const accommodationPages: readonly ChiosAccommodationPageData[] = [
   chiosAccommodationPageEn, diamoniStiXioPageEl, hebergementChiosPageFr,
   chiosUnterkunftPageDe, alloggioChiosPageIt, alojamientoChiosPageEs,
-  sakizAdasiKonaklamaPageTr,
+  sakizAdasiKonaklamaPageTr, chiosAccommodationPagePl,
 ];
 
 const kamposPages: readonly KamposChiosPageData[] = Object.values(kamposChiosPages);
-const ratesPages: readonly RatesPageData[] = localizedRatesPages;
+const ratesPages: readonly RatesPageData[] = [
+  ...localizedRatesPages,
+  ...(localizedRatesPages.some((page) => page.seo.canonicalPath === ratesPagePl.seo.canonicalPath) ? [] : [ratesPagePl]),
+];
+
+// Polish pages built from their own components (not shared page data): the
+// property photos each page shows, so they are listed like the other languages.
+const polishRoomCardImages = [
+  "/images/rooms/received_1753964631359257.webp",
+  "/images/rooms/double-triple-room.jpg",
+  "/images/rooms/DSC07776-2-e1675109942622.webp",
+  "/images/rooms/chios-apartments-voulamandis.webp",
+];
+const polishCustomPages: readonly ImageSitemapEntry[] = [
+  {
+    path: "/pl/",
+    images: [
+      "/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp",
+      ...polishRoomCardImages,
+      "/images/kampos/kampos-chios-mansion-garden.webp",
+    ],
+  },
+  {
+    path: "/pl/hotele-chios/",
+    images: [
+      "/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp",
+      "/images/beaches/voulamandis-house-courtyard-chios.webp",
+      ...polishRoomCardImages,
+    ],
+  },
+  {
+    path: "/pl/kambos-chios/",
+    images: [
+      "/images/kampos/kambos-chios.jpg",
+      "/images/kampos/kampos-chios-mansion-garden.webp",
+      "/images/kampos/antouaniko-kampos-chios.webp",
+      ...polishRoomCardImages,
+      "/images/kampos/kampos-chios-stone-mansion.webp",
+      "/images/kampos/kampos-chios-citrus-estate.webp",
+    ],
+  },
+];
 const hotelGuidePages = [
   chiosHotelsGuide,
   xenodoxeiaXiosGuide,
@@ -338,8 +382,14 @@ export function GET() {
     ]),
   }));
 
+  const polishCustomEntries: ImageSitemapEntry[] = polishCustomPages.map((page) => ({
+    path: page.path,
+    images: withPropertyShowcase(page.images),
+  }));
+
   const urls = mergeEntries([
     ...homeEntries,
+    ...polishCustomEntries,
     ...registryEntries,
     ...roomEntries,
     ...roomCategoryEntries,

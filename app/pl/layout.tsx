@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { PolishHeaderTailwind } from "@/components/pl/PolishHeaderTailwind";
 import { PolishFooterTailwind } from "@/components/pl/PolishFooterTailwind";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { businessData } from "@/lib/structured-data";
 
 const polishLodgingSchema = {
   "@context": "https://schema.org",
@@ -10,7 +11,12 @@ const polishLodgingSchema = {
   "@id": "https://chioshotel.gr/#lodging-business",
   name: "Voulamandis House",
   url: "https://chioshotel.gr/",
-  image: "https://chioshotel.gr/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp",
+  // Same property photo set as the other languages, so Google can pick
+  // several images for the result, not just one.
+  image: Array.from(new Set([
+    "https://chioshotel.gr/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp",
+    ...businessData.images,
+  ])),
   telephone: "+302271031733",
   email: "chioshotel@gmail.com",
   address: {
