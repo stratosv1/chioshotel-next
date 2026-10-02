@@ -56,6 +56,18 @@ const galleryCopy: Record<HomeGalleryLocale, GalleryCopy> = {
 
 export const homeGalleryImages = [
   {
+    src: "/images/homepage-gallery/voulamandis-house-balcony.webp",
+    alt: {
+      en: "Bougainvillea-covered balcony overlooking Kampos at Voulamandis House, Chios",
+      el: "Μπαλκόνι με ανθισμένες βουκαμβίλιες και θέα στον Κάμπο στο Voulamandis House στη Χίο",
+      fr: "Balcon couvert de bougainvilliers avec vue sur Kampos au Voulamandis House à Chios",
+      de: "Mit Bougainvillea bewachsener Balkon mit Blick auf Kampos im Voulamandis House auf Chios",
+      it: "Balcone fiorito di bouganville con vista sul Kampos al Voulamandis House di Chios",
+      es: "Balcón cubierto de buganvillas con vistas a Kampos en Voulamandis House, Quíos",
+      tr: "Sakız Adası Voulamandis House'ta begonvillerle çevrili ve Kampos manzaralı balkon",
+    },
+  },
+  {
     src: "/images/homepage-gallery/voulamandis-house-garden.webp",
     alt: {
       en: "Shaded garden dining area beneath trees and vines at Voulamandis House in Chios",
@@ -137,18 +149,6 @@ export const homeGalleryImages = [
       it: "Divano e tavolo nel cortile curato del Voulamandis House a Chios",
       es: "Sofá y mesa en el cuidado patio de Voulamandis House en Quíos",
       tr: "Sakız Adası Voulamandis House'un bakımlı avlusunda kanepe ve masa",
-    },
-  },
-  {
-    src: "/images/homepage-gallery/voulamandis-house-balcony.webp",
-    alt: {
-      en: "Bougainvillea-covered balcony overlooking Kampos at Voulamandis House, Chios",
-      el: "Μπαλκόνι με ανθισμένες βουκαμβίλιες και θέα στον Κάμπο στο Voulamandis House στη Χίο",
-      fr: "Balcon couvert de bougainvilliers avec vue sur Kampos au Voulamandis House à Chios",
-      de: "Mit Bougainvillea bewachsener Balkon mit Blick auf Kampos im Voulamandis House auf Chios",
-      it: "Balcone fiorito di bouganville con vista sul Kampos al Voulamandis House di Chios",
-      es: "Balcón cubierto de buganvillas con vistas a Kampos en Voulamandis House, Quíos",
-      tr: "Sakız Adası Voulamandis House'ta begonvillerle çevrili ve Kampos manzaralı balkon",
     },
   },
   {

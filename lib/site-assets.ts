@@ -41,6 +41,30 @@ export const siteImageAssets = {
   },
 } as const satisfies Record<string, SiteImageAsset>;
 
+/**
+ * Property highlight photos, in priority order, for Google's image-rich
+ * results. All are visible on the homepage gallery (first three tiles), so
+ * structured data and visible content agree. Order matters: Google tends to
+ * pick from the first images declared and shown.
+ */
+export const propertyHighlightImageAssets = [
+  {
+    src: "/images/homepage-gallery/voulamandis-house-balcony.webp",
+    width: 1200,
+    height: 799,
+  },
+  {
+    src: "/images/homepage-gallery/voulamandis-house-garden.webp",
+    width: 1200,
+    height: 1200,
+  },
+  {
+    src: "/images/homepage-gallery/voulamandis-house-outdoor-lounge.webp",
+    width: 1200,
+    height: 900,
+  },
+] as const satisfies readonly SiteImageAsset[];
+
 export const propertyShowcaseImageAssets = [
   {
     roomNumber: 1,
