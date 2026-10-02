@@ -5,6 +5,7 @@ import {
   siteUrl,
 } from "./seo";
 import {
+  propertyHighlightImageAssets,
   propertyShowcaseImageAssets,
   siteImageAssets,
 } from "./site-assets";
@@ -45,6 +46,7 @@ export const businessData = {
   },
   images: [
     absoluteUrl(siteImageAssets.homepageHero.src),
+    ...propertyHighlightImageAssets.map((image) => absoluteUrl(image.src)),
     ...propertyShowcaseImageAssets.map((image) => absoluteUrl(image.src)),
   ],
   socialProfiles: [
