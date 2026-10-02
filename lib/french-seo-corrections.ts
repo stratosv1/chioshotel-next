@@ -5,6 +5,22 @@ const frenchSeoCorrections: ReadonlyArray<
   readonly [string, { title: string; description: string }]
 > = [
   [
+    "/fr/villages-de-chios/",
+    {
+      title: "Villages de Chios : les 7 plus beaux (guide local)",
+      description:
+        "De Pyrgi la peinte à Mesta la médiévale et au port de Lagada : les 7 villages incontournables de Chios, avec idées d'itinéraires et conseils locaux.",
+    },
+  ],
+  [
+    "/fr/plages-de-chios/",
+    {
+      title: "Plages de Chios : les 9 plus belles (+ criques secrètes)",
+      description:
+        "Galets noirs de Mavra Volia, sable de Komi, eaux émeraude d'Agia Dynami : trouvez la plage idéale à Chios pour les familles, le calme ou l'ambiance.",
+    },
+  ],
+  [
     "/fr/",
     {
       title: "Chambres et appartements à Chios | Séjour au calme",
