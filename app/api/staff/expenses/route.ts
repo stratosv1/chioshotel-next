@@ -6,6 +6,8 @@ import {
   categoryBelongsToEntity,
   categoryExists,
   entityExists,
+  staffExpenseCategories,
+  staffExpenseEntities,
   type StaffExpenseAccount,
 } from "@/lib/staff-expenses-config";
 
@@ -43,6 +45,45 @@ type CategoryTotalRow = {
   category: string;
   total: string;
 };
+
+type MonthlyRow = {
+  month: string;
+  primary_account: StaffExpenseAccount;
+  category: string;
+  total: string;
+  count: number;
+};
+
+type UsageRow = {
+  primary_account: StaffExpenseAccount;
+  category: string;
+  count: number;
+};
+
+const GREEK_ACCENTED = "άέήίόύώϊϋΐΰ";
+const GREEK_PLAIN = "αεηιουωιυιυ";
+
+function normalizeSearch(value: string) {
+  return value
+    .toLocaleLowerCase("el-GR")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/ς/g, "σ")
+    .trim();
+}
+
+// Map a free-text search to category/entity slugs by their Greek labels, so
+// "βενζινη" or "Μιχάλης" match even though the DB stores English slugs.
+function slugsMatching(search: string) {
+  const term = normalizeSearch(search);
+  if (!term) return { categories: [] as string[], entities: [] as string[] };
+  const matches = (label: string, slug: string) =>
+    normalizeSearch(label).includes(term) || slug.includes(term);
+  return {
+    categories: staffExpenseCategories.filter((c) => matches(c.label, c.slug)).map((c) => c.slug),
+    entities: staffExpenseEntities.filter((e) => matches(e.label, e.slug)).map((e) => e.slug),
+  };
+}
 
 const ATHENS_TIME_ZONE = "Europe/Athens";
 
@@ -260,9 +301,12 @@ export async function GET(request: NextRequest) {
   const { month, account, search, limit } = parseFilters(request);
   const today = athensIsoDate();
   const currentMonth = today.slice(0, 7);
-  const searchPattern = `%${search}%`;
+  const searchPattern = `%${normalizeSearch(search)}%`;
+  const { categories: searchCategories, entities: searchEntities } = slugsMatching(search);
+  const [startYear, startMonth] = currentMonth.split("-").map(Number);
+  const trendStart = new Date(Date.UTC(startYear, startMonth - 12, 1)).toISOString().slice(0, 10);
 
-  const [rows, aggregateRows, accountRows, categoryRows, globalRows] = await Promise.all([
+  const [rows, aggregateRows, accountRows, categoryRows, globalRows, monthlyRows, usageRows] = await Promise.all([
     sql`
       SELECT
         id,
@@ -280,9 +324,9 @@ export async function GET(request: NextRequest) {
         AND (${account} = '' OR primary_account = ${account})
         AND (
           ${search} = ''
-          OR comments ILIKE ${searchPattern}
-          OR category ILIKE ${searchPattern}
-          OR entity ILIKE ${searchPattern}
+          OR replace(translate(lower(COALESCE(comments, '')), ${GREEK_ACCENTED}, ${GREEK_PLAIN}), 'ς', 'σ') LIKE ${searchPattern}
+          OR category = ANY(${searchCategories})
+          OR entity = ANY(${searchEntities})
         )
       ORDER BY expense_date DESC, id DESC
       LIMIT ${limit}
@@ -297,9 +341,9 @@ export async function GET(request: NextRequest) {
         AND (${account} = '' OR primary_account = ${account})
         AND (
           ${search} = ''
-          OR comments ILIKE ${searchPattern}
-          OR category ILIKE ${searchPattern}
-          OR entity ILIKE ${searchPattern}
+          OR replace(translate(lower(COALESCE(comments, '')), ${GREEK_ACCENTED}, ${GREEK_PLAIN}), 'ς', 'σ') LIKE ${searchPattern}
+          OR category = ANY(${searchCategories})
+          OR entity = ANY(${searchEntities})
         )
     `,
     sql`
@@ -310,9 +354,9 @@ export async function GET(request: NextRequest) {
         AND (${account} = '' OR primary_account = ${account})
         AND (
           ${search} = ''
-          OR comments ILIKE ${searchPattern}
-          OR category ILIKE ${searchPattern}
-          OR entity ILIKE ${searchPattern}
+          OR replace(translate(lower(COALESCE(comments, '')), ${GREEK_ACCENTED}, ${GREEK_PLAIN}), 'ς', 'σ') LIKE ${searchPattern}
+          OR category = ANY(${searchCategories})
+          OR entity = ANY(${searchEntities})
         )
       GROUP BY primary_account
     `,
@@ -324,9 +368,9 @@ export async function GET(request: NextRequest) {
         AND (${account} = '' OR primary_account = ${account})
         AND (
           ${search} = ''
-          OR comments ILIKE ${searchPattern}
-          OR category ILIKE ${searchPattern}
-          OR entity ILIKE ${searchPattern}
+          OR replace(translate(lower(COALESCE(comments, '')), ${GREEK_ACCENTED}, ${GREEK_PLAIN}), 'ς', 'σ') LIKE ${searchPattern}
+          OR category = ANY(${searchCategories})
+          OR entity = ANY(${searchEntities})
         )
       GROUP BY category
       ORDER BY SUM(amount) DESC
@@ -337,6 +381,22 @@ export async function GET(request: NextRequest) {
         COALESCE(SUM(amount) FILTER (WHERE to_char(expense_date, 'YYYY-MM') = ${currentMonth}), 0)::text AS current_month_total,
         COALESCE(SUM(amount), 0)::text AS all_total
       FROM staff_expenses
+    `,
+    sql`
+      SELECT
+        to_char(expense_date, 'YYYY-MM') AS month,
+        primary_account,
+        category,
+        SUM(amount)::text AS total,
+        COUNT(*)::int AS count
+      FROM staff_expenses
+      WHERE expense_date >= CAST(${trendStart} AS date)
+      GROUP BY 1, 2, 3
+    `,
+    sql`
+      SELECT primary_account, category, COUNT(*)::int AS count
+      FROM staff_expenses
+      GROUP BY 1, 2
     `,
   ]);
 
@@ -373,6 +433,18 @@ export async function GET(request: NextRequest) {
           total: Number(row.total),
         })),
       },
+      monthly: (monthlyRows as MonthlyRow[]).map((row) => ({
+        month: row.month,
+        account: row.primary_account,
+        category: row.category,
+        total: Number(row.total),
+        count: row.count,
+      })),
+      usage: (usageRows as UsageRow[]).map((row) => ({
+        account: row.primary_account,
+        category: row.category,
+        count: row.count,
+      })),
     },
     { headers: responseHeaders() },
   );
