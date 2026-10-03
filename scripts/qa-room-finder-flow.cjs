@@ -538,9 +538,9 @@ function testResultsUxCleanup() {
   );
   assert(production.includes("{roomResultsVisible && ("), "room cards are not guarded by the resilient results state");
   assert(production.includes('data-room-selection-context="true"'), "multi-room results are missing the prominent room selection context");
-  assert(production.includes("multiRoomSelectionVisible ? activeRoomNumber : undefined"), "room cards do not receive the active room context");
+  assert(production.includes("selectionGuests={multiRoomSelectionVisible ? finder.groups[finder.activeGroup]"), "room cards do not receive the active choice guest context");
   assert(production.includes("[finder.activeGroup, finder.step, finder.visibleOffers.length]"), "each room transition no longer returns the user to the active selection context");
-  assert(carousel.includes("copy.selectForRoom(selectionRoom)"), "room selection CTA does not identify its target room");
+  assert(carousel.includes("copy.selectForGuests(selectionGuests)"), "room selection CTA does not say which guests it is for");
   assert(!fs.readFileSync(path.join(root, "components/ai/room-finder-tone.ts"), "utf8").includes("for group ${group}"), "result messages still describe requested rooms as groups");
   assert(production.includes("finder.canGoBack"), "stable booking-summary back control is missing");
   assert(production.includes('const CALL_NUMBER = "+306944764654"'), "unavailable flow call number is missing or incorrect");

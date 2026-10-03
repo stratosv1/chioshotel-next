@@ -151,7 +151,7 @@ export function splitRoomVisuals(offer:RoomOffer) {
   }));
 }
 
-export function RoomCarousel({ offers, copy, language, money, onDetails, onSelect, selectingOfferKey, selectionRoom }:{ offers:RoomOffer[]; copy:RoomFinderCopy; language:RoomFinderLanguage; money:(v:number,l:RoomFinderLanguage)=>string; onDetails:(offer:RoomOffer)=>void; onSelect:(offer:RoomOffer)=>void; selectingOfferKey?:string|null; selectionRoom?:number }) {
+export function RoomCarousel({ offers, copy, language, money, onDetails, onSelect, selectingOfferKey, selectionGuests }:{ offers:RoomOffer[]; copy:RoomFinderCopy; language:RoomFinderLanguage; money:(v:number,l:RoomFinderLanguage)=>string; onDetails:(offer:RoomOffer)=>void; onSelect:(offer:RoomOffer)=>void; selectingOfferKey?:string|null; selectionGuests?:number }) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const autoSelectedOfferRef = useRef<string|null>(null);
   const [canScrollLeft,setCanScrollLeft] = useState(false);
@@ -225,7 +225,7 @@ export function RoomCarousel({ offers, copy, language, money, onDetails, onSelec
         const title=isSplit?SPLIT_SOLUTION_LABEL[language]:offer.category||offer.name;
         const subtitle=isSplit?splitVisuals.map(room => room.name).join(" + "):[offer.name,offer.floor].filter(Boolean).join(" · ");
         const highlights=(offer.features||[]).slice(0,2).join(" · ");
-        const selectLabel=pending ? SELECTING_LABEL[language] : isSplit ? SELECT_SOLUTION_LABEL[language] : selectionRoom ? copy.selectForRoom(selectionRoom) : copy.select;
+        const selectLabel=pending ? SELECTING_LABEL[language] : isSplit ? SELECT_SOLUTION_LABEL[language] : selectionGuests ? copy.selectForGuests(selectionGuests) : copy.select;
         return <article data-room-card key={key} className="flex w-[78%] max-w-[300px] shrink-0 snap-start flex-col overflow-hidden rounded-[22px] border border-[#e1d8cc] bg-white shadow-[0_8px_24px_rgba(70,55,35,.08)] sm:w-[280px]">
           <button type="button" onClick={() => onDetails(offer)} aria-label={`${copy.details}: ${title}`} className="relative block aspect-[16/10] w-full shrink-0 overflow-hidden bg-[#efe8de] text-left">
             {isSplit ? <div className="grid h-full w-full" style={{gridTemplateColumns:`repeat(${Math.min(splitVisuals.length,3)},minmax(0,1fr))`}}>
