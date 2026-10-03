@@ -11,6 +11,7 @@ import { ForceCar } from "./ForceCar";
 import { Quiz, ThinkCard, type ThinkQuestion } from "./Think";
 import { RotatingDisk, Wheels } from "./Wheels";
 import { Formula, Note } from "./shared";
+import { TrapezaThemata } from "./TrapezaThemata";
 
 function Section({
   id,
@@ -349,6 +350,7 @@ const nav = [
   ["paradeigmata", "Λυμένα"],
   ["askiseis", "Ασκήσεις"],
   ["thema2", "Θέμα 2"],
+  ["trapeza", "Τράπεζα Θεμάτων"],
   ["test", "Τεστ"],
 ] as const;
 
@@ -529,7 +531,22 @@ export function OmaliLesson() {
           </div>
         </Section>
 
-        <Section id="test" kicker="9 · Τελικό τεστ" title="Πόσο καλά την κατάλαβες;">
+        <Section
+          id="trapeza"
+          kicker="9 · Από την Τράπεζα Θεμάτων"
+          title="Τα 33 θέματα της Τράπεζας, λυμένα και εξηγημένα"
+          intro={
+            <p>
+              Όλα τα θέματα της επίσημης Τράπεζας Θεμάτων για την ομαλή κυκλική κίνηση και την κεντρομόλο δύναμη. Διάβασε την εκφώνηση, διάλεξε απάντηση
+              και <b>πες δυνατά γιατί</b>, πριν δεις τη λύση. Μετά διάβασε την αιτιολόγηση βήμα-βήμα: αυτά τα βήματα γράφεις στο γραπτό για να πάρεις
+              τις μονάδες της αιτιολόγησης.
+            </p>
+          }
+        >
+          <TrapezaThemata />
+        </Section>
+
+        <Section id="test" kicker="10 · Τελικό τεστ" title="Πόσο καλά την κατάλαβες;">
           <Quiz questions={finalQuiz} />
         </Section>
 
