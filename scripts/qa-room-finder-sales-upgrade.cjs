@@ -143,7 +143,7 @@ assert(hookSource.includes("preferredRoomNumber: preferredRoomNumber || undefine
 assert(hookSource.includes("38_000"), "browser timeout does not allow the bounded server-side OpenAI retry window to complete");
 
 const interpretRouteSource = fs.readFileSync(interpretRoutePath, "utf8");
-assert(!interpretRouteSource.includes("fallbackRoomFinderCommand"), "production interpreter still falls back to deterministic guessing");
+assert(interpretRouteSource.indexOf("fallbackRoomFinderCommand(message, context)") > interpretRouteSource.indexOf("ai_room_finder_interpret_failed"), "deterministic fallback is used before the AI interpreter has failed");
 assert(interpretRouteSource.includes("export const maxDuration = 40"), "interpreter route duration is too short for the bounded OpenAI retry window");
 assert(interpretRouteSource.includes("ai_room_finder_interpret_failed"), "interpreter route is missing structured timeout diagnostics");
 
@@ -158,7 +158,9 @@ assert(carouselSource.includes("Nearby available dates"), "nearby-date card labe
 const intentSource = fs.readFileSync(intentPath, "utf8");
 assert(intentSource.includes('"set_preferences"'), "AI interpreter preference action is missing");
 assert(intentSource.includes('"set_room_interest"'), "AI interpreter specific-room interest action is missing");
-assert(intentSource.includes("15_000"), "OpenAI attempt timeout is still too short for observed production latency");
+assert(intentSource.includes("INTERPRETER_ATTEMPT_TIMEOUT_MS = 20_000"), "OpenAI attempt timeout is too short for multi-fact enquiries");
+assert(intentSource.includes('reasoning: { effort: "low" }'), "interpreter does not limit reasoning effort for a JSON-mapping task");
+assert(intentSource.includes("isAbortError(error)) break"), "a timed-out interpreter request is retried and doubles the guest's wait");
 assert(intentSource.includes("Preferences are SOFT ranking signals"), "AI prompt does not protect availability from preference filtering");
 
 const alternativesSource = fs.readFileSync(alternativesPath, "utf8");

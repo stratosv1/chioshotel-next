@@ -1,4 +1,4 @@
-import { todayInAthensIso } from "./room-finder-date";
+import { todayInAthensIso, upcomingEasterDates } from "./room-finder-date";
 import {
   getPublishedPropertyKnowledge,
   requiresLiveRoomInventory,
@@ -80,7 +80,7 @@ const COMMAND_SCHEMA = {
           nights: { type: ["integer", "null"], minimum: 1, maximum: 60 },
           roomCount: { type: ["integer", "null"], minimum: 1, maximum: 99 },
           roomNumber: { type: ["integer", "null"], minimum: 1, maximum: 10 },
-          totalGuests: { type: ["integer", "null"], minimum: 1, maximum: 15 },
+          totalGuests: { type: ["integer", "null"], minimum: 1, maximum: 99 },
           guests: { type: ["integer", "null"], minimum: 1, maximum: 5 },
           guestRoom: { type: ["integer", "null"], minimum: 1, maximum: 3 },
           preferences: {
@@ -156,6 +156,17 @@ DATES
 - If departure is before arrival, preserve the exact stated dates; deterministic code validates their relationship.
 - Approximate phrases such as “early October”, “around the 10th”, or “sometime next week” are ambiguous. Ask for the exact date and provide an example.
 
+HOLIDAYS (EASTER)
+- The application supplies upcoming Easter Sunday dates (Orthodox and Western) below. Never compute Easter yourself.
+- In Greek (Πάσχα, Πασχαλινές διακοπές, Μεγάλη Εβδομάδα) Easter means Orthodox Easter. In other languages, if Orthodox and Western Easter fall on different dates, the customer may mean either one.
+- “For Easter” is an approximate period, not an exact arrival date. Keep every clear fact (nights, rooms, guests) and return exactly one ask_clarification with missingFields=[checkin] that NAMES the relevant Easter Sunday date and asks for the arrival day with one concrete example (for example Holy Thursday or Good Friday of that year). In other languages where the two Easter dates differ, name both dates and ask which arrival date they want.
+- If the customer gives nights together with Easter (“για το Πάσχα, 7 διανυκτερεύσεις”), still return set_stay_dates with nights only (checkin and checkout null) so the application keeps the stay length while it asks for the arrival day.
+
+RANGES AND UNCERTAIN COUNTS
+- A guest range or alternative (“7-8 άτομα”, “7 ή 8 άτομα”, “7 or 8 people”) means totalGuests = the HIGHER number, so capacity is never underestimated. Do not ask a clarification for a guest range.
+- A room range or alternative (“3 ή 4 δωμάτια”, “3 or 4 rooms”) is not a fixed room count: do NOT emit roomCount and do not ask a clarification; the application asks for the room count and checks capacity.
+- Groups larger than 15 people: still return the exact totalGuests; the application routes them to the front desk.
+
 ROOMS AND GUESTS
 - roomCount is the number of rooms for the booking.
 - roomNumber is the Voulamandis House room identifier, not the number of rooms requested. Phrases such as “I am interested in room 8”, “θέλω το δωμάτιο 8” or “Zimmer 8 auswählen” mean set_room_interest(roomNumber=8), never set_room_count(roomCount=8).
@@ -163,7 +174,7 @@ ROOMS AND GUESTS
 - If currentStep=selecting and the customer names one of the displayed available rooms, use set_room_interest so the application can select that exact live offer.
 - The automated Room Finder supports up to 3 rooms, but you MUST still return the exact roomCount when the customer asks for 4 or more rooms. Never clamp 4+ to 3, never silently ignore it, and never convert it to a guest count. The application will stop the automated search and route the customer to the front desk.
 - When roomCount is 4 or more, do not emit per-room guest assignments with guestRoom; return the exact roomCount and any other clear top-level facts that fit the schema.
-- totalGuests is the number of people across the entire booking.
+- totalGuests is the number of people across the entire booking (return the exact number even above 15).
 - guests + guestRoom is the number of people assigned to one specific room.
 - Never use a single guests value to mean total guests for a multi-room booking.
 - If the customer says “2 rooms for 4 people”, return roomCount=2 and totalGuests=4. Do NOT invent how the 4 people are divided between rooms.
@@ -173,7 +184,7 @@ ROOMS AND GUESTS
 - When not answering a specific room-allocation question, phrases such as “3 people”, “two adults and one child”, or “2ατομα” mean totalGuests.
 - A downstream correction such as “τελικά 3 άτομα” means totalGuests=3 unless the customer explicitly names a particular room.
 - For one room, totalGuests still means the booking total; deterministic code maps it to that room.
-- Each room allocation supports 1-5 guests. Total guests across up to 3 rooms may be 1-15.
+- Each room allocation supports 1-5 guests. The automated search handles up to 15 guests in up to 3 rooms; larger groups are routed to the front desk by the application.
 
 ROOM PREFERENCES
 - Preferences are SOFT ranking signals. They must never alter availability, price, capacity or hide an otherwise valid room.
@@ -244,6 +255,9 @@ REFERENCE EXAMPLES
 
 17) “Ενδιαφέρομαι για το δωμάτιο 8”.
 => set_room_interest(roomNumber=8). Do not convert 8 into roomCount and do not claim availability before the live search.
+
+18) “Είμαστε παρέα 7-8 άτομα, για το Πάσχα, 7 διανυκτερεύσεις, πιθανώς 3 ή 4 δωμάτια.”
+=> set_guest_count(totalGuests=8), set_stay_dates(nights=7), ask_clarification(missingFields=[checkin]) naming the Orthodox Easter Sunday date and asking for the arrival day, with one example. No roomCount.
 
 SCHEMA RULES
 - For irrelevant nullable fields return null.
@@ -354,6 +368,10 @@ function retryAfterMs(response: Response) {
   return Number.isNaN(date) ? 0 : Math.max(0, date - Date.now());
 }
 
+function isAbortError(error: unknown) {
+  return error instanceof Error && error.name === "AbortError";
+}
+
 function isRetryableInterpreterError(error: unknown) {
   if (error instanceof Error && error.name === "AbortError") return true;
   return error instanceof OpenAIInterpreterError
@@ -405,14 +423,39 @@ function hydrateKnowledgeActions(
   };
 }
 
+// The interpreter only maps text to a small JSON contract, so it does not
+// need deep reasoning. Low effort keeps multi-fact messages (the most valuable
+// enquiries) well inside the time budget.
+const INTERPRETER_ATTEMPT_TIMEOUT_MS = 20_000;
+// A second attempt is only started when it can still finish inside the
+// route's 40s limit (and the browser's 38s wait).
+const INTERPRETER_TOTAL_BUDGET_MS = 32_000;
+
+function interpreterModel() {
+  return process.env.OPENAI_CONCIERGE_MODEL || process.env.OPENAI_ASSISTANT_MODEL || "gpt-5-mini";
+}
+
+function supportsReasoningEffort(model: string) {
+  return /^(gpt-5|o\d)/i.test(model);
+}
+
+function easterContextLine(today: string) {
+  return upcomingEasterDates(today)
+    .map(row => `${row.year}: Orthodox Easter Sunday ${row.orthodox}; Western Easter Sunday ${row.western}`)
+    .join(" | ");
+}
+
 async function requestOpenAICommand(input: {
   apiKey: string;
   message: string;
   context: RoomFinderConversationContext;
   knowledge: PublishedPropertyKnowledge[];
+  timeoutMs: number;
 }) {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 15_000);
+  const timeout = setTimeout(() => controller.abort(), input.timeoutMs);
+  const model = interpreterModel();
+  const today = todayInAthensIso();
 
   try {
     const response = await fetch("https://api.openai.com/v1/responses", {
@@ -423,8 +466,9 @@ async function requestOpenAICommand(input: {
       },
       signal: controller.signal,
       body: JSON.stringify({
-        model: process.env.OPENAI_CONCIERGE_MODEL || process.env.OPENAI_ASSISTANT_MODEL || "gpt-5-mini",
-        instructions: `${SYSTEM_PROMPT}\nToday in Europe/Athens is ${todayInAthensIso()}.\nSelected UI language is ${safeLanguage(input.context.language)}.`,
+        model,
+        ...(supportsReasoningEffort(model) ? { reasoning: { effort: "low" } } : {}),
+        instructions: `${SYSTEM_PROMPT}\nToday in Europe/Athens is ${today}.\nUpcoming Easter dates: ${easterContextLine(today)}.\nSelected UI language is ${safeLanguage(input.context.language)}.`,
         input: JSON.stringify({
           message: input.message,
           context: input.context,
@@ -467,13 +511,22 @@ export async function interpretRoomFinderMessage(
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) throw new Error("OPENAI_API_KEY is not configured");
 
+  const startedAt = Date.now();
   const language = safeLanguage(context.language);
   const { entries } = await getPublishedPropertyKnowledge(language);
   let lastError: unknown;
 
   for (let attempt = 0; attempt < 2; attempt += 1) {
+    const remaining = INTERPRETER_TOTAL_BUDGET_MS - (Date.now() - startedAt);
+    if (attempt > 0 && remaining < 8_000) break;
     try {
-      const raw = await requestOpenAICommand({ apiKey, message, context, knowledge: entries });
+      const raw = await requestOpenAICommand({
+        apiKey,
+        message,
+        context,
+        knowledge: entries,
+        timeoutMs: Math.min(INTERPRETER_ATTEMPT_TIMEOUT_MS, Math.max(remaining, 1_000)),
+      });
       const command = cleanCommand(raw, context);
       if (!command.actions.length) {
         throw new OpenAIInterpreterError("OpenAI Room Finder interpreter returned no actions", 502);
@@ -481,7 +534,10 @@ export async function interpretRoomFinderMessage(
       return hydrateKnowledgeActions(command, entries, message);
     } catch (error) {
       lastError = error;
-      if (attempt === 1 || !isRetryableInterpreterError(error)) break;
+      // A timed-out request is not retried: the same slow request would
+      // usually time out again while the guest keeps waiting. The route
+      // falls back to the deterministic parser instead.
+      if (attempt === 1 || !isRetryableInterpreterError(error) || isAbortError(error)) break;
       const requestedDelay = error instanceof OpenAIInterpreterError ? error.retryAfterMs : 0;
       await waitForRetry(Math.min(Math.max(requestedDelay, 250), 1_000));
     }

@@ -28,6 +28,9 @@ export type BookingDraft = {
   roomCount: number | null;
   totalGuests: number | null;
   groups: number[];
+  /** Stay length the guest stated in nights, kept until check-in is known and
+   * when check-in is corrected later, so the stay length never changes silently. */
+  statedNights?: number | null;
 };
 
 export type BookingFlowState = {
@@ -41,7 +44,8 @@ export type BookingTurnOutcome =
   | { kind: "restart" }
   | { kind: "destination_mismatch"; destination: string }
   | { kind: "invalid_checkout" }
-  | { kind: "clarification"; query: string; step: FinderStep }
+  | { kind: "clarification"; query: string; step: FinderStep; lead?: boolean }
+  | { kind: "capacity"; guests: number; minimumRooms: number }
   | { kind: "prompt"; field: ClarificationStep; guestRoom?: number }
   | { kind: "ready" }
   | { kind: "unchanged" };
@@ -66,14 +70,24 @@ const MAX_GUESTS_PER_ROOM = 5;
 const MAX_TOTAL_GUESTS = MAX_ROOMS * MAX_GUESTS_PER_ROOM;
 const CORE_INPUT_STEPS = new Set<FinderStep>(["destination", "checkin", "checkout", "rooms", "guests"]);
 
+const GROUP_LIMIT_MESSAGE: Record<RoomFinderCommand["language"], (guests: number) => string> = {
+  el: guests => `Για ${guests} άτομα η reception ετοιμάζει προσωπικά πρόταση, γιατί η αυτόματη αναζήτηση καλύπτει έως 15 άτομα σε 3 δωμάτια. Αφήστε μας τα στοιχεία σας παρακάτω ή καλέστε μας και θα σας απαντήσουμε σύντομα.`,
+  en: guests => `For ${guests} guests our reception prepares a personal proposal, as the automated search covers up to 15 guests in 3 rooms. Leave your details below or call us and we will reply shortly.`,
+  de: guests => `Für ${guests} Gäste erstellt unsere Rezeption ein persönliches Angebot, da die automatische Suche bis zu 15 Gäste in 3 Zimmern abdeckt. Hinterlassen Sie unten Ihre Daten oder rufen Sie uns an – wir melden uns in Kürze.`,
+  fr: guests => `Pour ${guests} personnes, notre réception prépare une proposition personnalisée, car la recherche automatique couvre jusqu’à 15 personnes dans 3 chambres. Laissez vos coordonnées ci-dessous ou appelez-nous, nous vous répondrons rapidement.`,
+  it: guests => `Per ${guests} ospiti la nostra reception prepara una proposta personalizzata, perché la ricerca automatica copre fino a 15 ospiti in 3 camere. Lasciate i vostri dati qui sotto o chiamateci e vi risponderemo a breve.`,
+  es: guests => `Para ${guests} personas nuestra recepción prepara una propuesta personal, ya que la búsqueda automática cubre hasta 15 personas en 3 habitaciones. Dejen sus datos abajo o llámennos y les responderemos en breve.`,
+  tr: guests => `${guests} kişi için resepsiyonumuz size özel bir teklif hazırlar; otomatik arama 3 odada en fazla 15 kişiyi kapsar. Bilgilerinizi aşağıya bırakın veya bizi arayın, kısa sürede dönüş yapalım.`,
+};
+
 const ROOM_LIMIT_MESSAGE: Record<RoomFinderCommand["language"], string> = {
-  el: "Μέσω του αυτόματου συστήματος αναζήτησης μπορείτε να αναζητήσετε έως 3 δωμάτια. Για περισσότερα δωμάτια, επικοινωνήστε απευθείας με το front desk του Voulamandis House μέσω WhatsApp.",
-  en: "The automated search supports up to 3 rooms. For more rooms, please contact the Voulamandis House front desk directly via WhatsApp.",
-  de: "Die automatische Suche unterstützt bis zu 3 Zimmer. Für mehr Zimmer kontaktieren Sie bitte die Rezeption des Voulamandis House direkt über WhatsApp.",
-  fr: "La recherche automatique permet de rechercher jusqu’à 3 chambres. Pour davantage de chambres, contactez directement la réception de Voulamandis House via WhatsApp.",
-  it: "La ricerca automatica consente di cercare fino a 3 camere. Per più camere, contattate direttamente la reception di Voulamandis House tramite WhatsApp.",
-  es: "La búsqueda automática permite buscar hasta 3 habitaciones. Para más habitaciones, contacte directamente con la recepción de Voulamandis House por WhatsApp.",
-  tr: "Otomatik arama sistemi en fazla 3 oda için arama yapabilir. Daha fazla oda için lütfen Voulamandis House resepsiyonuyla WhatsApp üzerinden doğrudan iletişime geçin.",
+  el: "Η αυτόματη αναζήτηση καλύπτει έως 3 δωμάτια, οπότε για περισσότερα δωμάτια η reception του Voulamandis House ετοιμάζει προσωπικά πρόταση. Αφήστε μας τα στοιχεία σας παρακάτω ή επικοινωνήστε μαζί μας μέσω τηλεφώνου ή WhatsApp.",
+  en: "The automated search covers up to 3 rooms, so for more rooms the Voulamandis House reception prepares a personal proposal. Leave your details below or contact us by phone or WhatsApp.",
+  de: "Die automatische Suche deckt bis zu 3 Zimmer ab; für mehr Zimmer erstellt die Rezeption des Voulamandis House ein persönliches Angebot. Hinterlassen Sie unten Ihre Daten oder kontaktieren Sie uns telefonisch oder über WhatsApp.",
+  fr: "La recherche automatique couvre jusqu’à 3 chambres ; pour davantage de chambres, la réception de Voulamandis House prépare une proposition personnalisée. Laissez vos coordonnées ci-dessous ou contactez-nous par téléphone ou WhatsApp.",
+  it: "La ricerca automatica copre fino a 3 camere; per più camere la reception di Voulamandis House prepara una proposta personalizzata. Lasciate i vostri dati qui sotto o contattateci per telefono o WhatsApp.",
+  es: "La búsqueda automática cubre hasta 3 habitaciones; para más habitaciones, la recepción de Voulamandis House prepara una propuesta personal. Dejen sus datos abajo o contáctennos por teléfono o WhatsApp.",
+  tr: "Otomatik arama en fazla 3 odayı kapsar; daha fazla oda için Voulamandis House resepsiyonu size özel bir teklif hazırlar. Bilgilerinizi aşağıya bırakın veya bize telefonla ya da WhatsApp üzerinden ulaşın.",
 };
 
 export function createInitialBookingFlowState(): BookingFlowState {
@@ -87,8 +101,23 @@ export function createInitialBookingFlowState(): BookingFlowState {
       roomCount: null,
       totalGuests: null,
       groups: [],
+      statedNights: null,
     },
   };
+}
+
+/** Fewest rooms that can host this many guests (up to 5 per room). */
+export function minimumRoomsForGuests(guests: number) {
+  return Math.ceil(guests / MAX_GUESTS_PER_ROOM);
+}
+
+/** True when the chosen room count cannot host the stated guest total. */
+export function roomCountTooSmall(draft: BookingDraft) {
+  return Boolean(
+    draft.roomCount
+      && draft.totalGuests
+      && draft.totalGuests > draft.roomCount * MAX_GUESTS_PER_ROOM,
+  );
 }
 
 function validRoomCount(value: number) {
@@ -172,6 +201,7 @@ function draftsEqual(left: BookingDraft, right: BookingDraft) {
     left.checkout === right.checkout &&
     left.roomCount === right.roomCount &&
     left.totalGuests === right.totalGuests &&
+    (left.statedNights ?? null) === (right.statedNights ?? null) &&
     left.groups.length === right.groups.length &&
     left.groups.every((value, index) => value === right.groups[index])
   );
@@ -188,10 +218,12 @@ function goBackState(state: BookingFlowState): BookingFlowState {
     case "checkout":
       draft.checkin = "";
       draft.checkout = "";
+      draft.statedNights = null;
       return { step: "checkin", draft };
 
     case "rooms":
       draft.checkout = "";
+      draft.statedNights = null;
       return { step: "checkout", draft };
 
     case "guests": {
@@ -243,10 +275,18 @@ export function bookingFlowReducer(state: BookingFlowState, action: BookingFlowA
       const draft = cloneDraft(state.draft);
       draft.checkin = "";
       draft.checkout = "";
+      draft.statedNights = null;
       return { step: "checkin", draft };
     }
 
     case "choose_rooms": {
+      if (state.draft.totalGuests && state.draft.totalGuests > action.roomCount * MAX_GUESTS_PER_ROOM) {
+        // Not enough beds for the stated group: stay on the room question.
+        return {
+          step: "rooms",
+          draft: { ...state.draft, roomCount: null, groups: [] },
+        };
+      }
       const roomCountChanged = state.draft.roomCount !== action.roomCount;
       const draft = normalizeGuestAllocation({
         ...state.draft,
@@ -352,6 +392,7 @@ function stepForOutcome(outcome: BookingTurnOutcome, fallback: FinderStep): Find
   if (outcome.kind === "destination_mismatch") return "destination";
   if (outcome.kind === "invalid_checkout") return "checkout";
   if (outcome.kind === "clarification") return outcome.step;
+  if (outcome.kind === "capacity") return "rooms";
   if (outcome.kind === "prompt") return outcome.field;
   if (outcome.kind === "ready") return "searching";
   return fallback;
@@ -381,15 +422,31 @@ export function resolveAssistantTurn(current: BookingFlowState, command: RoomFin
     draft.destinationKind = incomingDestination.destinationKind;
   }
 
+  // Dates are resolved as a whole, independent of the order in which the
+  // interpreter listed its actions: check-in first, then checkout or nights.
+  let incomingCheckin = "";
+  let incomingCheckout = "";
+  let incomingNights = 0;
   for (const action of command.actions) {
-    if (action.checkin && isStrictIsoDate(action.checkin)) draft.checkin = action.checkin;
-
-    if (action.checkout && isStrictIsoDate(action.checkout)) {
-      draft.checkout = action.checkout;
-    } else if (action.nights && Number.isInteger(action.nights) && action.nights >= 1 && action.nights <= 60) {
-      const derivedCheckout = addDaysToIsoDate(draft.checkin, action.nights);
-      if (derivedCheckout) draft.checkout = derivedCheckout;
+    if (action.checkin && isStrictIsoDate(action.checkin)) incomingCheckin = action.checkin;
+    if (action.checkout && isStrictIsoDate(action.checkout)) incomingCheckout = action.checkout;
+    if (action.nights && Number.isInteger(action.nights) && action.nights >= 1 && action.nights <= 60) {
+      incomingNights = action.nights;
     }
+  }
+
+  if (incomingCheckin) draft.checkin = incomingCheckin;
+  if (incomingCheckout) {
+    draft.checkout = incomingCheckout;
+    draft.statedNights = null;
+  } else if (incomingNights) {
+    draft.statedNights = incomingNights;
+    const derivedCheckout = addDaysToIsoDate(draft.checkin, incomingNights);
+    if (derivedCheckout) draft.checkout = derivedCheckout;
+  } else if (incomingCheckin && draft.statedNights) {
+    // A corrected arrival keeps the stay length the guest asked for.
+    const derivedCheckout = addDaysToIsoDate(incomingCheckin, draft.statedNights);
+    if (derivedCheckout) draft.checkout = derivedCheckout;
   }
 
   const incomingRoomCount = [...command.actions]
@@ -401,13 +458,16 @@ export function resolveAssistantTurn(current: BookingFlowState, command: RoomFin
     Number.isInteger(incomingRoomCount) &&
     incomingRoomCount > MAX_ROOMS
   ) {
+    // The guest total is kept so reception sees the group size in the lead.
     draft.roomCount = null;
-    draft.totalGuests = null;
     draft.groups = [];
+    const statedGuests = [...command.actions].reverse().find(action => action.totalGuests != null)?.totalGuests;
+    if (statedGuests && validTotalGuests(statedGuests)) draft.totalGuests = statedGuests;
     const outcome: BookingTurnOutcome = {
       kind: "clarification",
       query: ROOM_LIMIT_MESSAGE[command.language] || ROOM_LIMIT_MESSAGE.en,
       step: "unavailable",
+      lead: true,
     };
     return {
       state: { step: "unavailable", draft },
@@ -424,6 +484,28 @@ export function resolveAssistantTurn(current: BookingFlowState, command: RoomFin
   const incomingTotalGuests = [...command.actions]
     .reverse()
     .find(action => action.totalGuests != null)?.totalGuests;
+
+  if (
+    incomingTotalGuests != null &&
+    Number.isInteger(incomingTotalGuests) &&
+    incomingTotalGuests > MAX_TOTAL_GUESTS
+  ) {
+    draft.roomCount = null;
+    draft.totalGuests = null;
+    draft.groups = [];
+    const language = command.language;
+    return {
+      state: { step: "unavailable", draft },
+      outcome: {
+        kind: "clarification",
+        query: (GROUP_LIMIT_MESSAGE[language] || GROUP_LIMIT_MESSAGE.en)(incomingTotalGuests),
+        step: "unavailable",
+        lead: true,
+      },
+      changed: true,
+    };
+  }
+
   if (incomingTotalGuests && validTotalGuests(incomingTotalGuests)) {
     if (draft.totalGuests !== incomingTotalGuests && assignedGuestTotal(draft.groups) !== incomingTotalGuests) {
       draft.groups = [];
@@ -444,6 +526,20 @@ export function resolveAssistantTurn(current: BookingFlowState, command: RoomFin
       draft.totalGuests = action.guests;
       draft.groups = [action.guests];
     }
+  }
+
+  // The guest total must fit the chosen rooms (5 guests per room). Otherwise
+  // ask for the room count again instead of looping on an impossible
+  // per-room question or silently dropping guests.
+  let capacityOutcome: BookingTurnOutcome | null = null;
+  if (roomCountTooSmall(draft)) {
+    capacityOutcome = {
+      kind: "capacity",
+      guests: draft.totalGuests!,
+      minimumRooms: minimumRoomsForGuests(draft.totalGuests!),
+    };
+    draft.roomCount = null;
+    draft.groups = [];
   }
 
   normalizeGuestAllocation(draft);
@@ -482,6 +578,14 @@ export function resolveAssistantTurn(current: BookingFlowState, command: RoomFin
     return {
       state: { step: stepForOutcome(outcome, current.step), draft },
       outcome,
+      changed,
+    };
+  }
+
+  if (capacityOutcome) {
+    return {
+      state: { step: "rooms", draft },
+      outcome: capacityOutcome,
       changed,
     };
   }

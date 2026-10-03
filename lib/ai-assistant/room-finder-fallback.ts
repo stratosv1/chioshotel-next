@@ -1,6 +1,7 @@
 import {
   isStrictIsoDate,
   todayInAthensIso,
+  upcomingEasterDates,
 } from "./room-finder-date";
 import type {
   RoomFinderAction,
@@ -9,7 +10,8 @@ import type {
   RoomFinderPreference,
 } from "./room-finder-types";
 
-const DATE_TOKEN = /\b(\d{1,2})[\/.\-](\d{1,2})(?:[\/.\-](\d{2,4}))?\b/g;
+// The year group must not swallow the day of a following date ("10/10-12/10").
+const DATE_TOKEN = /\b(\d{1,2})[\/.\-](\d{1,2})(?:[\/.\-](\d{2,4})(?![\/.\-]\d))?\b/g;
 
 const MONTH_ALIASES: Record<string, number> = {
   january: 1, januar: 1, janvier: 1, gennaio: 1, enero: 1, ocak: 1, ιανουαριος: 1, ιανουαριου: 1,
@@ -41,8 +43,11 @@ const DESTINATION_PATTERNS = [
   /([\p{L}][\p{L}'-]*(?:\s+[\p{L}][\p{L}'-]*){0,3}?)(?:'da|'de|da|de)\s+(?:kalmak|konaklamak|kalacagiz|konaklayacagiz)/iu,
 ];
 
+const NIGHT_WORDS = /(διανυκτερε\p{L}*|βράδ\p{L}*|βραδ\p{L}*|νύχτ\p{L}*|νυχτ\p{L}*|nights?|nächte|nachte|übernachtungen|nuits?|notti|noches|gece)/iu;
 const ROOM_WORDS = /(δωμάτι(?:ο|α)|rooms?|zimmer|chambres?|camere?|habitaciones?|odas?)/iu;
 const GUEST_WORDS = /(άτομα|ατομα|επισκέπτες|επισκεπτες|guests?|people|persons?|gäste|personen|personnes?|persone|personas?|kişi)/iu;
+const COUNT_AFTER_TOKEN = new RegExp(`^\\s*(?:${GUEST_WORDS.source}|${ROOM_WORDS.source}|${NIGHT_WORDS.source})`, "iu");
+const EASTER_WORDS = /(πάσχα|πασχα|πασχαλ\p{L}*|μεγάλη εβδομάδα|μεγαλη εβδομαδα|easter|ostern|pâques|paques|pasqua|pascua|semana santa|paskalya)/iu;
 const RESTART_WORDS = /(από την αρχή|απο την αρχη|νέα αναζήτηση|νεα αναζητηση|start over|new search|restart|neu beginnen|nouvelle recherche|ricomincia|nueva búsqueda|yeniden başla|yeni arama)/iu;
 const CONTACT_INTENT_WORDS = /(θα\s+(?:σας\s+)?(?:καλέσω|τηλεφωνήσω|τηλεφωνησω|επικοινωνήσω|επικοινωνησω|γράψω|γραψω|στείλω|στειλω)|θα\s+πάρω\s+τηλέφωνο|i(?:'|’)ll\s+(?:call|contact|message|write)|i\s+will\s+(?:call|contact|message|write)|i(?:'|’)ll\s+get\s+in\s+touch|ich\s+(?:rufe|melde)|werde\s+(?:anrufen|kontaktieren|schreiben)|je\s+vais\s+(?:appeler|contacter|écrire)|j(?:'|’)appellerai|je\s+vous\s+contacterai|(?:vi\s+)?(?:chiamerò|contatterò|scriverò)|voy\s+a\s+(?:llamar|contactar|escribir)|(?:les\s+)?(?:llamaré|contactaré|escribiré)|(?:sizi\s+)?arayacağım|iletişime\s+geçeceğim|mesaj\s+atacağım|yazacağım)/iu;
 const CHECKIN_WORDS = /(check\s*-?\s*in|άφιξ|αφιξ|arrival|ankunft|arrivée|arrivo|llegada|giriş)/iu;
@@ -167,6 +172,9 @@ function extractNamedDates(text: string, today: string) {
 function extractDates(text: string, today: string) {
   const values: Array<{ value: string; index: number }> = [];
   for (const match of text.matchAll(DATE_TOKEN)) {
+    // "7-8 άτομα" or "2-3 nights" is a count range, not 7 August.
+    const after = text.slice((match.index ?? 0) + match[0].length, (match.index ?? 0) + match[0].length + 24);
+    if (COUNT_AFTER_TOKEN.test(after)) continue;
     const day = Number(match[1]);
     const month = Number(match[2]);
     const year = normalizeYear(match[3], day, month, today);
@@ -179,8 +187,22 @@ function extractDates(text: string, today: string) {
     .filter((date, index, dates) => index === 0 || date.value !== dates[index - 1].value || date.index !== dates[index - 1].index);
 }
 
-function numberBeforeWords(text: string, words: RegExp, max: number) {
+const RANGE_SEPARATOR = "(?:-|–|—|/|ή|η|or|oder|ou|o|y|veya|bis|à|a|έως|εως|to)";
+
+/**
+ * Reads "N <words>". A range or alternative such as "7-8 άτομα" or "3 ή 4
+ * δωμάτια" is never read as just its last number: with rangeMode "max" the
+ * higher value is used (guest capacity must not be underestimated), with
+ * "skip" no value is returned so the flow asks for it explicitly.
+ */
+function numberBeforeWords(text: string, words: RegExp, max: number, rangeMode: "max" | "skip" = "skip") {
   const source = words.source;
+  const range = text.match(new RegExp(`\\b(\\d{1,2})\\s*${RANGE_SEPARATOR}\\s*(\\d{1,2})\\s*(?:${source})`, "iu"));
+  if (range) {
+    if (rangeMode === "skip") return null;
+    const value = Math.max(Number(range[1]), Number(range[2]));
+    return Number.isInteger(value) && value >= 1 && value <= max ? value : null;
+  }
   const match = text.match(new RegExp(`\\b(\\d{1,2})\\s*(?:${source})`, "iu"));
   if (!match) return null;
   const value = Number(match[1]);
@@ -202,6 +224,50 @@ function uniqueActions(actions: RoomFinderAction[]) {
     seen.add(key);
     return true;
   });
+}
+
+function dayMonth(iso: string) {
+  return `${Number(iso.slice(8, 10))}/${Number(iso.slice(5, 7))}`;
+}
+
+function easterArrivalQuestion(language: string, orthodox: string, western: string) {
+  const o = dayMonth(orthodox);
+  const w = dayMonth(western);
+  const same = orthodox === western;
+  switch (language) {
+    case "el":
+      return `Το Πάσχα είναι την Κυριακή ${o}. Ποια ημέρα θα φτάσετε; Π.χ. ${dayMonth(shiftIso(orthodox, -3))} (Μεγάλη Πέμπτη).`;
+    case "de":
+      return same
+        ? `Ostersonntag ist am ${o}. An welchem Tag möchten Sie anreisen? Z. B. ${dayMonth(shiftIso(orthodox, -3))}.`
+        : `Das orthodoxe Ostern ist am ${o}, das westliche am ${w}. An welchem Tag möchten Sie anreisen? Z. B. ${dayMonth(shiftIso(orthodox, -3))}.`;
+    case "fr":
+      return same
+        ? `Le dimanche de Pâques est le ${o}. Quel jour souhaitez-vous arriver ? Par ex. ${dayMonth(shiftIso(orthodox, -3))}.`
+        : `La Pâque orthodoxe est le ${o}, la Pâque occidentale le ${w}. Quel jour souhaitez-vous arriver ? Par ex. ${dayMonth(shiftIso(orthodox, -3))}.`;
+    case "it":
+      return same
+        ? `La domenica di Pasqua è il ${o}. In quale giorno volete arrivare? Per es. ${dayMonth(shiftIso(orthodox, -3))}.`
+        : `La Pasqua ortodossa è il ${o}, quella occidentale il ${w}. In quale giorno volete arrivare? Per es. ${dayMonth(shiftIso(orthodox, -3))}.`;
+    case "es":
+      return same
+        ? `El domingo de Pascua es el ${o}. ¿Qué día desean llegar? Por ejemplo ${dayMonth(shiftIso(orthodox, -3))}.`
+        : `La Pascua ortodoxa es el ${o} y la occidental el ${w}. ¿Qué día desean llegar? Por ejemplo ${dayMonth(shiftIso(orthodox, -3))}.`;
+    case "tr":
+      return same
+        ? `Paskalya Pazarı ${o} tarihinde. Hangi gün varmak istersiniz? Örneğin ${dayMonth(shiftIso(orthodox, -3))}.`
+        : `Ortodoks Paskalya ${o}, Batı Paskalyası ${w} tarihinde. Hangi gün varmak istersiniz? Örneğin ${dayMonth(shiftIso(orthodox, -3))}.`;
+    default:
+      return same
+        ? `Easter Sunday is on ${o}. Which day would you like to arrive? For example ${dayMonth(shiftIso(orthodox, -3))}.`
+        : `Orthodox Easter is on ${o} and Western Easter on ${w}. Which day would you like to arrive? For example ${dayMonth(shiftIso(orthodox, -3))}.`;
+  }
+}
+
+function shiftIso(iso: string, days: number) {
+  const date = new Date(`${iso}T12:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().slice(0, 10);
 }
 
 export function fallbackRoomFinderCommand(
@@ -245,7 +311,14 @@ export function fallbackRoomFinderCommand(
     }
   }
 
-  const roomCount = numberBeforeWords(text, ROOM_WORDS, 99);
+  const nights = numberBeforeWords(text, NIGHT_WORDS, 60, "skip");
+  if (nights && !actions.some(action => action.type === "set_stay_dates" && action.checkout)) {
+    const dateAction = actions.find(action => action.type === "set_stay_dates");
+    if (dateAction) dateAction.nights = nights;
+    else actions.push({ type: "set_stay_dates", nights });
+  }
+
+  const roomCount = numberBeforeWords(text, ROOM_WORDS, 99, "skip");
   if (roomCount) {
     actions.push({ type: "set_room_count", roomCount });
   } else if (context.currentStep === "rooms" && /^\s*\d{1,2}\s*$/.test(text)) {
@@ -253,7 +326,7 @@ export function fallbackRoomFinderCommand(
     if (value >= 1 && value <= 99) actions.push({ type: "set_room_count", roomCount: value });
   }
 
-  const explicitGuests = numberBeforeWords(text, GUEST_WORDS, 15);
+  const explicitGuests = numberBeforeWords(text, GUEST_WORDS, 99, "max");
   if (explicitGuests) {
     if (context.currentStep === "guests" && context.currentRoom && explicitGuests <= 5) {
       actions.push({ type: "set_guest_count", guestRoom: context.currentRoom, guests: explicitGuests });
@@ -271,6 +344,17 @@ export function fallbackRoomFinderCommand(
   if (preferences.length) {
     const merged = Array.from(new Set([...(context.preferences || []), ...preferences]));
     actions.push({ type: "set_preferences", preferences: merged });
+  }
+
+  if (EASTER_WORDS.test(text) && !actions.some(action => action.checkin)) {
+    const easter = upcomingEasterDates(today)[0];
+    if (easter) {
+      actions.push({
+        type: "ask_clarification",
+        query: easterArrivalQuestion(language, easter.orthodox, easter.western),
+        missingFields: ["checkin"],
+      });
+    }
   }
 
   const normalized = uniqueActions(actions);

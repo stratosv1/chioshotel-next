@@ -177,6 +177,60 @@ function testDestinationMismatchPreservesBookingFacts() {
   assert(confirmed.outcome.kind === "prompt" && confirmed.outcome.field === "rooms", "Kampos confirmation did not resume at the next missing booking field");
 }
 
+function testGroupEasterEnquiryKeepsEveryFact() {
+  // Regression: the 7-8 person Easter enquiry that previously ended in an error.
+  const message = "Καλησπέρα, είμαστε μια παρέα 7-8 άτομα, ενδιαφερόμαστε για το προσεχές Πάσχα, 7 διανυκτερεύσεις, πιθανώς 3 ή 4 δωμάτια. Επειδή κάποιοι θα έρθουν από το εξωτερικό, θα θέλαμε κάποιες πληροφορίες...";
+  const rescued = fallbackRoomFinderCommand(message, { language: "el", currentStep: "checkin" });
+  assert(rescued, "group Easter enquiry produced no fallback command");
+  assert(rescued.actions.some(action => action.totalGuests === 8), "guest range 7-8 was not read as 8");
+  assert(rescued.actions.some(action => action.nights === 7), "7 nights were lost");
+  assert(!rescued.actions.some(action => action.checkin), "count range 7-8 was misread as a date");
+  assert(!rescued.actions.some(action => action.roomCount), "room alternative 3 or 4 was turned into a fixed room count");
+  const easter = rescued.actions.find(action => action.type === "ask_clarification");
+  assert(easter && /\d{1,2}\/\d{1,2}/.test(easter.query) && easter.missingFields.includes("checkin"), "Easter did not produce a dated arrival question");
+
+  const first = resolveAssistantTurn(createInitialBookingFlowState(), rescued);
+  assert(first.outcome.kind === "clarification" && first.state.step === "checkin", "Easter enquiry did not ask for the arrival day");
+  assert(first.state.draft.totalGuests === 8 && first.state.draft.statedNights === 7, "group size or stay length was dropped while asking for arrival");
+
+  const arrival = resolveAssistantTurn(first.state, command([{ type: "set_stay_dates", checkin: "2027-04-29" }]));
+  assert(arrival.state.draft.checkout === "2027-05-06", "stated nights did not produce the checkout once arrival was known");
+  assert(arrival.outcome.kind === "prompt" && arrival.outcome.field === "rooms", "group flow did not continue to the room question");
+
+  const tooFewRooms = resolveAssistantTurn(arrival.state, command([{ type: "set_room_count", roomCount: 1 }]));
+  assert(tooFewRooms.outcome.kind === "capacity" && tooFewRooms.outcome.minimumRooms === 2, "1 room for 8 guests was accepted");
+  assert(tooFewRooms.state.step === "rooms" && tooFewRooms.state.draft.roomCount === null, "capacity problem did not return to the room question");
+  assert(tooFewRooms.state.draft.totalGuests === 8, "capacity check lost the guest total");
+
+  const buttonTooFew = bookingFlowReducer(arrival.state, { type: "choose_rooms", roomCount: 1 });
+  assert(buttonTooFew.step === "rooms" && buttonTooFew.draft.roomCount === null, "room button allowed 1 room for 8 guests");
+
+  const moved = resolveAssistantTurn(
+    { step: "selecting", draft: { ...arrival.state.draft, roomCount: 2, groups: [4, 4] } },
+    command([{ type: "set_stay_dates", checkin: "2027-04-30" }]),
+  );
+  assert(moved.state.draft.checkout === "2027-05-07", "a corrected arrival silently changed the stated stay length");
+}
+
+function testDateFactsAreOrderIndependent() {
+  const result = resolveAssistantTurn(
+    createInitialBookingFlowState(),
+    command([
+      { type: "set_stay_dates", nights: 3 },
+      { type: "set_stay_dates", checkin: "2026-10-10" },
+    ]),
+  );
+  assert(result.state.draft.checkout === "2026-10-13", "nights listed before check-in were dropped");
+}
+
+function testFrontDeskRoutesOfferLeadCapture() {
+  const rooms = resolveAssistantTurn(createInitialBookingFlowState(), command([{ type: "set_room_count", roomCount: 4 }]));
+  assert(rooms.outcome.kind === "clarification" && rooms.outcome.lead === true, "4+ rooms did not offer the lead form");
+  const group = resolveAssistantTurn(createInitialBookingFlowState(), command([{ type: "set_guest_count", totalGuests: 20 }]));
+  assert(group.outcome.kind === "clarification" && group.outcome.lead === true, "groups above 15 did not offer the lead form");
+  assert(group.state.step === "unavailable", "large group continued into an impossible automated search");
+}
+
 function testMultiRoomTotalIsNotGuessed() {
   const result = resolveAssistantTurn(
     createInitialBookingFlowState(),
@@ -457,10 +511,11 @@ function testResultsUxCleanup() {
   assert(!helpers.includes("matchesRoomFilter"), "removed filter-matching logic remains in flow helpers");
   assert(!fs.existsSync(legacyFlowPath), "unused legacy Room Finder implementation still exists");
   assert(!interpretRoute.includes("deterministicFastPath"), "simple first answers still bypass the OpenAI interpreter");
-  assert(
-    !interpretRoute.includes("fallbackRoomFinderCommand"),
-    "interpreter failures can still execute the deterministic parsing fallback",
-  );
+  // The deterministic parser is a rescue path only: it runs after the AI
+  // interpreter fails and its turns are marked as degraded for staff.
+  const fallbackCall = interpretRoute.indexOf("fallbackRoomFinderCommand(message, context)");
+  assert(fallbackCall > interpretRoute.indexOf("ai_room_finder_interpret_failed"), "deterministic fallback runs before the AI interpreter has failed");
+  assert(interpretRoute.includes("degraded: true"), "fallback interpreter turns are not marked as degraded");
   assert(
     hook.includes('action.type === "answer_property_question"') && !hook.includes("propertyKnowledgeAnswer"),
     "grounded knowledge is not handled as an explicit OpenAI action",
@@ -502,6 +557,9 @@ function main() {
   testRoomInterestContinuesMissingFieldFlow();
   testFullOneTurnBooking();
   testMultiRoomTotalIsNotGuessed();
+  testGroupEasterEnquiryKeepsEveryFact();
+  testDateFactsAreOrderIndependent();
+  testFrontDeskRoutesOfferLeadCapture();
   testClarificationKeepsClearFacts();
   testDownstreamCorrectionAndNoChange();
   testDownstreamDateClarification();

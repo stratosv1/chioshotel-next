@@ -4,7 +4,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { ROOM_FINDER_COPY, type RoomFinderLanguage } from "./room-finder-copy";
 
 export type Reaction = "👍" | "❤️";
-export type MessageKind = "date" | "room" | "guest" | "normal" | "contact" | "offers";
+export type MessageKind = "date" | "room" | "guest" | "normal" | "contact" | "lead" | "offers";
 export type ChatItem = {
   id: string;
   role: "assistant" | "user";

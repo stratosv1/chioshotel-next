@@ -26,7 +26,7 @@ export const ROOM_FINDER_TONE: Record<RoomFinderLanguage, RoomFinderTone> = {
     finalizing: "Ετοιμάζω τη σύνοψη της αίτησής σας.",
     invalidDate: "Πότε θα θέλατε να κάνετε check-in;",
     invalidCheckout: "Το check-out πρέπει να είναι μετά το check-in. Ποια ημερομηνία θέλετε για αναχώρηση;",
-    unavailable: "Έλεγξα τη live διαθεσιμότητα και δεν βρήκα διαθέσιμη λύση για τα ακριβή στοιχεία της αναζήτησής σας. Η Reception μπορεί να ελέγξει επιπλέον επιλογές μέσω WhatsApp.",
+    unavailable: "Έλεγξα τη live διαθεσιμότητα και δεν βρήκα διαθέσιμη λύση για τα ακριβή στοιχεία της αναζήτησής σας. Η reception μπορεί να ελέγξει επιπλέον επιλογές για εσάς: αφήστε μας τα στοιχεία σας παρακάτω ή επικοινωνήστε μαζί μας μέσω τηλεφώνου ή WhatsApp.",
   },
   en: {
     destinationMismatch: destination => `I understood that your requested place to stay is “${destination}”. Voulamandis House is in Kampos, Chios. Would you like me to check availability at Voulamandis House in Kampos, or are you looking exclusively for accommodation in “${destination}”?`,
@@ -39,7 +39,7 @@ export const ROOM_FINDER_TONE: Record<RoomFinderLanguage, RoomFinderTone> = {
     finalizing: "I’m preparing your request summary.",
     invalidDate: "When would you like to check in?",
     invalidCheckout: "Check-out must be after check-in. What departure date would you like?",
-    unavailable: "I checked live availability and found no available solution for the exact details of your search. Reception can check additional options with you on WhatsApp.",
+    unavailable: "I checked live availability and found no available solution for the exact details of your search. Reception can check more options for you: leave your details below or contact us by phone or WhatsApp.",
   },
   de: {
     destinationMismatch: destination => `Ich habe verstanden, dass Ihr gewünschter Aufenthaltsort „${destination}“ ist. Das Voulamandis House befindet sich in Kampos auf Chios. Soll ich die Verfügbarkeit im Voulamandis House in Kampos prüfen, oder suchen Sie ausschließlich eine Unterkunft in „${destination}“?`,
@@ -52,7 +52,7 @@ export const ROOM_FINDER_TONE: Record<RoomFinderLanguage, RoomFinderTone> = {
     finalizing: "Ich bereite Ihre Anfrageübersicht vor.",
     invalidDate: "Wann möchten Sie einchecken?",
     invalidCheckout: "Der Check-out muss nach dem Check-in liegen. Welches Abreisedatum wünschen Sie?",
-    unavailable: "Ich habe die Live-Verfügbarkeit geprüft und für die exakten Angaben Ihrer Suche keine verfügbare Lösung gefunden. Die Rezeption kann über WhatsApp weitere Möglichkeiten prüfen.",
+    unavailable: "Ich habe die Live-Verfügbarkeit geprüft und für die exakten Angaben Ihrer Suche keine verfügbare Lösung gefunden. Die Rezeption kann weitere Möglichkeiten für Sie prüfen: Hinterlassen Sie unten Ihre Daten oder kontaktieren Sie uns telefonisch oder über WhatsApp.",
   },
   fr: {
     destinationMismatch: destination => `J’ai compris que vous souhaitez séjourner à « ${destination} ». Voulamandis House se trouve à Kampos, sur l’île de Chios. Souhaitez-vous que je vérifie les disponibilités à Voulamandis House, à Kampos, ou cherchez-vous exclusivement un hébergement à « ${destination} » ?`,
@@ -65,7 +65,7 @@ export const ROOM_FINDER_TONE: Record<RoomFinderLanguage, RoomFinderTone> = {
     finalizing: "Je prépare le récapitulatif de votre demande.",
     invalidDate: "Quand souhaitez-vous faire le check-in ?",
     invalidCheckout: "Le check-out doit être après le check-in. Quelle date de départ souhaitez-vous ?",
-    unavailable: "J’ai vérifié les disponibilités en direct et n’ai trouvé aucune solution disponible pour les critères exacts de votre recherche. La réception peut vérifier d’autres possibilités via WhatsApp.",
+    unavailable: "J’ai vérifié les disponibilités en direct et n’ai trouvé aucune solution disponible pour les critères exacts de votre recherche. La réception peut vérifier d’autres possibilités pour vous : laissez vos coordonnées ci-dessous ou contactez-nous par téléphone ou WhatsApp.",
   },
   it: {
     destinationMismatch: destination => `Ho capito che desiderate soggiornare a «${destination}». Voulamandis House si trova a Kampos, Chios. Volete che controlli la disponibilità al Voulamandis House di Kampos oppure cercate esclusivamente un alloggio a «${destination}»?`,
@@ -78,7 +78,7 @@ export const ROOM_FINDER_TONE: Record<RoomFinderLanguage, RoomFinderTone> = {
     finalizing: "Sto preparando il riepilogo della vostra richiesta.",
     invalidDate: "Quando desiderate effettuare il check-in?",
     invalidCheckout: "Il check-out deve essere successivo al check-in. Quale data di partenza desiderate?",
-    unavailable: "Ho verificato la disponibilità live e non ho trovato una soluzione disponibile per i dati esatti della ricerca. La Reception può verificare altre possibilità tramite WhatsApp.",
+    unavailable: "Ho verificato la disponibilità live e non ho trovato una soluzione disponibile per i dati esatti della ricerca. La reception può verificare altre possibilità per voi: lasciate i vostri dati qui sotto o contattateci per telefono o WhatsApp.",
   },
   es: {
     destinationMismatch: destination => `He entendido que desean alojarse en «${destination}». Voulamandis House se encuentra en Kampos, Quíos. ¿Quieren que compruebe la disponibilidad en Voulamandis House, en Kampos, o buscan exclusivamente alojamiento en «${destination}»?`,
@@ -91,7 +91,7 @@ export const ROOM_FINDER_TONE: Record<RoomFinderLanguage, RoomFinderTone> = {
     finalizing: "Estoy preparando el resumen de su solicitud.",
     invalidDate: "¿Cuándo desean hacer el check-in?",
     invalidCheckout: "El check-out debe ser posterior al check-in. ¿Qué fecha de salida desean?",
-    unavailable: "He comprobado la disponibilidad en vivo y no encontré una solución disponible para los datos exactos de la búsqueda. Recepción puede revisar otras opciones por WhatsApp.",
+    unavailable: "He comprobado la disponibilidad en vivo y no encontré una solución disponible para los datos exactos de la búsqueda. Recepción puede revisar otras opciones para ustedes: dejen sus datos abajo o contáctennos por teléfono o WhatsApp.",
   },
   tr: {
     destinationMismatch: destination => `Konaklamak istediğiniz yerin “${destination}” olduğunu anladım. Voulamandis House, Sakız Adası’nın Kampos bölgesindedir. Kampos’taki Voulamandis House için müsaitliği kontrol etmemi ister misiniz, yoksa yalnızca “${destination}” bölgesinde mi konaklama arıyorsunuz?`,
@@ -104,6 +104,6 @@ export const ROOM_FINDER_TONE: Record<RoomFinderLanguage, RoomFinderTone> = {
     finalizing: "Talep özetinizi hazırlıyorum.",
     invalidDate: "Ne zaman giriş yapmak istersiniz?",
     invalidCheckout: "Çıkış tarihi giriş tarihinden sonra olmalıdır. Hangi tarihte ayrılmak istersiniz?",
-    unavailable: "Canlı müsaitliği kontrol ettim ve aramanızın tam bilgileri için müsait bir çözüm bulamadım. Resepsiyon WhatsApp üzerinden ek seçenekleri kontrol edebilir.",
+    unavailable: "Canlı müsaitliği kontrol ettim ve aramanızın tam bilgileri için müsait bir çözüm bulamadım. Resepsiyon sizin için başka seçenekleri kontrol edebilir: bilgilerinizi aşağıya bırakın veya bize telefonla ya da WhatsApp üzerinden ulaşın.",
   },
 };

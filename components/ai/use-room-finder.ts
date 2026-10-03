@@ -4,6 +4,7 @@ import { FormEvent, useMemo, useReducer, useRef, useState } from "react";
 import { localizeRoomOffer } from "@/lib/ai-assistant/room-card-catalog";
 import {
   encodeRoomFinderOfferSnapshot,
+  ROOM_FINDER_OFFER_SNAPSHOT_MARKER,
   type RoomFinderOfferSnapshot,
 } from "@/lib/ai-assistant/room-finder-offer-tracking";
 import type { RoomFinderCommand, RoomFinderPreference } from "@/lib/ai-assistant/room-finder-types";
@@ -14,6 +15,7 @@ import { TURN_TIMING, type TurnPace } from "./room-finder-flow-helpers";
 import {
   bookingFlowReducer,
   createInitialBookingFlowState,
+  minimumRoomsForGuests,
   nextMissingGuestRoom,
   nightsBetween,
   resolveAssistantTurn,
@@ -74,24 +76,47 @@ const INVENTORY_UNAVAILABLE: Record<RoomFinderLanguage, string> = {
   tr: "Canlı müsaitlik şu anda doğrulanamıyor. Daha önce girdiğiniz bilgiler bu aramada korunuyor. Tekrar deneyin veya WhatsApp üzerinden bize ulaşın.",
 };
 
+// Shown only when neither the AI interpreter nor the deterministic fallback
+// could process the message. The guest's text is restored in the composer and
+// the lead form below the message lets reception reply personally.
 const INTERPRETER_UNAVAILABLE: Record<RoomFinderLanguage, string> = {
-  el: "Δεν μπόρεσα να ερμηνεύσω αυτή την απάντηση αυτή τη στιγμή. Δεν έχασα τα προηγούμενα στοιχεία σας· μπορείτε να δοκιμάσετε ξανά ή να γράψετε την πληροφορία πιο απλά.",
-  en: "I could not interpret that answer right now. Your previous details have not been lost; please try again or write the information more simply.",
-  de: "Ich konnte diese Antwort gerade nicht auswerten. Ihre bisherigen Angaben sind nicht verloren; versuchen Sie es erneut oder formulieren Sie die Information einfacher.",
-  fr: "Je n’ai pas pu interpréter cette réponse pour le moment. Vos informations précédentes ne sont pas perdues ; réessayez ou formulez l’information plus simplement.",
-  it: "Non sono riuscito a interpretare questa risposta in questo momento. I dati precedenti non sono andati persi; riprovate o scrivete l’informazione in modo più semplice.",
-  es: "No he podido interpretar esa respuesta en este momento. Sus datos anteriores no se han perdido; inténtenlo de nuevo o escriban la información de forma sencilla.",
-  tr: "Bu yanıtı şu anda yorumlayamadım. Önceki bilgileriniz kaybolmadı; tekrar deneyin veya bilgiyi daha basit yazın.",
+  el: "Συγγνώμη, αυτή τη στιγμή δεν μπορώ να επεξεργαστώ το μήνυμά σας αυτόματα. Το κείμενό σας παραμένει στο πεδίο για να το στείλετε ξανά. Αν προτιμάτε, αφήστε μας τα στοιχεία σας παρακάτω και η reception θα σας απαντήσει προσωπικά.",
+  en: "Sorry, I can’t process your message automatically right now. Your text is still in the box so you can send it again. If you prefer, leave your details below and our reception will reply to you personally.",
+  de: "Entschuldigung, ich kann Ihre Nachricht gerade nicht automatisch verarbeiten. Ihr Text steht noch im Eingabefeld, damit Sie ihn erneut senden können. Wenn Sie möchten, hinterlassen Sie unten Ihre Daten und unsere Rezeption antwortet Ihnen persönlich.",
+  fr: "Désolé, je ne peux pas traiter votre message automatiquement pour le moment. Votre texte est toujours dans le champ pour que vous puissiez le renvoyer. Si vous préférez, laissez vos coordonnées ci-dessous et notre réception vous répondra personnellement.",
+  it: "Spiacenti, al momento non riesco a elaborare automaticamente il vostro messaggio. Il testo è ancora nel campo per poterlo inviare di nuovo. Se preferite, lasciate i vostri dati qui sotto e la reception vi risponderà personalmente.",
+  es: "Lo sentimos, ahora mismo no puedo procesar su mensaje automáticamente. Su texto sigue en el campo para que puedan enviarlo de nuevo. Si lo prefieren, dejen sus datos abajo y recepción les responderá personalmente.",
+  tr: "Üzgünüz, mesajınızı şu anda otomatik olarak işleyemiyorum. Metniniz yeniden gönderebilmeniz için kutuda duruyor. İsterseniz bilgilerinizi aşağıya bırakın, resepsiyonumuz size kişisel olarak yanıt versin.",
+};
+
+const CAPACITY_ROOMS: Record<RoomFinderLanguage, (guests: number, rooms: number) => string> = {
+  el: (guests, rooms) => `Κάθε δωμάτιο φιλοξενεί έως 5 άτομα, οπότε για ${guests} άτομα χρειάζονται τουλάχιστον ${rooms} δωμάτια. Πόσα δωμάτια θέλετε;`,
+  en: (guests, rooms) => `Each room hosts up to 5 guests, so ${guests} guests need at least ${rooms} rooms. How many rooms would you like?`,
+  de: (guests, rooms) => `Jedes Zimmer bietet Platz für bis zu 5 Gäste, für ${guests} Gäste brauchen Sie also mindestens ${rooms} Zimmer. Wie viele Zimmer möchten Sie?`,
+  fr: (guests, rooms) => `Chaque chambre accueille jusqu’à 5 personnes : pour ${guests} personnes, il faut au moins ${rooms} chambres. Combien de chambres souhaitez-vous ?`,
+  it: (guests, rooms) => `Ogni camera ospita fino a 5 persone, quindi per ${guests} ospiti servono almeno ${rooms} camere. Quante camere desiderate?`,
+  es: (guests, rooms) => `Cada habitación aloja hasta 5 personas, así que para ${guests} personas se necesitan al menos ${rooms} habitaciones. ¿Cuántas habitaciones desean?`,
+  tr: (guests, rooms) => `Her oda en fazla 5 kişi alır; ${guests} kişi için en az ${rooms} oda gerekir. Kaç oda istersiniz?`,
+};
+
+const GUEST_TOTAL_ADJUSTED: Record<RoomFinderLanguage, (previous: number, next: number) => string> = {
+  el: (previous, next) => `Σημείωση: με αυτή την κατανομή η αναζήτηση γίνεται για ${next} άτομα (είχατε αναφέρει ${previous}). Αν χρειάζεστε θέση για ${previous}, γράψτε μου «τελικά ${previous} άτομα».`,
+  en: (previous, next) => `Note: with this allocation I’m searching for ${next} guests (you mentioned ${previous}). If you need space for ${previous}, write “actually ${previous} guests”.`,
+  de: (previous, next) => `Hinweis: Mit dieser Aufteilung suche ich für ${next} Gäste (Sie hatten ${previous} genannt). Wenn Sie Platz für ${previous} brauchen, schreiben Sie „doch ${previous} Gäste“.`,
+  fr: (previous, next) => `Remarque : avec cette répartition, je recherche pour ${next} personnes (vous en aviez indiqué ${previous}). S’il vous faut de la place pour ${previous}, écrivez « finalement ${previous} personnes ».`,
+  it: (previous, next) => `Nota: con questa distribuzione cerco per ${next} ospiti (ne avevate indicati ${previous}). Se vi serve posto per ${previous}, scrivete « in realtà ${previous} ospiti ».`,
+  es: (previous, next) => `Nota: con esta distribución busco para ${next} personas (habían indicado ${previous}). Si necesitan sitio para ${previous}, escriban « al final ${previous} personas ».`,
+  tr: (previous, next) => `Not: Bu dağılımla ${next} kişi için arıyorum (${previous} kişi belirtmiştiniz). ${previous} kişilik yer gerekiyorsa “aslında ${previous} kişi” yazın.`,
 };
 
 const NO_BOOKING_CHANGE: Record<RoomFinderLanguage, string> = {
-  el: "Μπορώ να αλλάξω ημερομηνίες, αριθμό δωματίων ή άτομα. Γράψτε μου π.χ. «τελικά 3 άτομα» ή «αναχώρηση 13/10».",
-  en: "I can change your dates, number of rooms or guests. For example: “actually 3 guests” or “check-out 13/10”.",
-  de: "Ich kann Ihre Daten, die Zimmeranzahl oder die Gästezahl ändern. Zum Beispiel: „doch 3 Gäste“ oder „Check-out 13/10“.",
-  fr: "Je peux modifier vos dates, le nombre de chambres ou de personnes. Par exemple : « finalement 3 personnes » ou « check-out 13/10 ».",
-  it: "Posso modificare le date, il numero di camere o degli ospiti. Per esempio: « in realtà 3 ospiti » oppure « check-out 13/10 ».",
-  es: "Puedo cambiar las fechas, el número de habitaciones o de huéspedes. Por ejemplo: « al final 3 personas » o « check-out 13/10 ».",
-  tr: "Tarihleri, oda sayısını veya kişi sayısını değiştirebilirim. Örneğin: “aslında 3 kişi” veya “çıkış 13/10”.",
+  el: "Είμαι εδώ αν χρειαστεί κάτι ακόμα 😊 Αν θέλετε να αλλάξουμε ημερομηνίες, δωμάτια ή άτομα, γράψτε μου π.χ. «τελικά 3 άτομα» ή «αναχώρηση 13/10». Για οτιδήποτε άλλο, η reception είναι στη διάθεσή σας στο τηλέφωνο ή στο WhatsApp.",
+  en: "I’m here if you need anything else 😊 To change dates, rooms or guests, write for example “actually 3 guests” or “check-out 13/10”. For anything else, our reception is happy to help by phone or WhatsApp.",
+  de: "Ich bin da, wenn Sie noch etwas brauchen 😊 Um Daten, Zimmer oder Gäste zu ändern, schreiben Sie z. B. „doch 3 Gäste“ oder „Check-out 13/10“. Für alles andere hilft Ihnen unsere Rezeption gern telefonisch oder über WhatsApp.",
+  fr: "Je reste à votre disposition 😊 Pour modifier les dates, les chambres ou le nombre de personnes, écrivez par exemple « finalement 3 personnes » ou « check-out 13/10 ». Pour toute autre demande, notre réception vous aide volontiers par téléphone ou WhatsApp.",
+  it: "Sono qui se serve altro 😊 Per modificare date, camere od ospiti scrivete per esempio « in realtà 3 ospiti » oppure « check-out 13/10 ». Per qualsiasi altra cosa la reception è a disposizione al telefono o su WhatsApp.",
+  es: "Estoy aquí si necesitan algo más 😊 Para cambiar fechas, habitaciones o personas, escriban por ejemplo « al final 3 personas » o « check-out 13/10 ». Para cualquier otra cosa, recepción les ayuda encantada por teléfono o WhatsApp.",
+  tr: "Başka bir şeye ihtiyacınız olursa buradayım 😊 Tarihleri, odaları veya kişi sayısını değiştirmek için örneğin “aslında 3 kişi” veya “çıkış 13/10” yazın. Diğer her konuda resepsiyonumuz telefonda veya WhatsApp’ta yardımcı olur.",
 };
 
 const CONTACT_ACKNOWLEDGED: Record<RoomFinderLanguage, string> = {
@@ -152,6 +177,19 @@ const SALES_RECOVERY: Record<RoomFinderLanguage, string> = {
   it: "La distribuzione esatta delle camere non è disponibile per tutto il soggiorno. Prima di indirizzarvi alla reception, ho ricontrollato la disponibilità live e trovato queste soluzioni per le stesse date, con il minor numero possibile di cambi.",
   es: "La distribución exacta de habitaciones no está disponible durante toda la estancia. Antes de enviarles a recepción, he vuelto a comprobar la disponibilidad en vivo y encontré estas soluciones para las mismas fechas, con el menor número posible de cambios.",
   tr: "İstediğiniz oda dağılımı tüm konaklama boyunca müsait değil. Sizi resepsiyona yönlendirmeden önce canlı müsaitliği tekrar kontrol ettim ve aynı tarihler için mümkün olan en az oda değişikliğiyle bu çözümleri buldum.",
+};
+
+class InterpreterError extends Error {
+  constructor(readonly code: string) {
+    super(code);
+    this.name = "InterpreterError";
+  }
+}
+
+type InterpretResult = {
+  command: RoomFinderCommand;
+  degraded: boolean;
+  cause: string;
 };
 
 class AvailabilityError extends Error {
@@ -232,6 +270,9 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   const turnLocked = useRef(false);
   const languageRef = useRef(language);
   const announcedLongStayKey = useRef<string | null>(null);
+  // Internal note attached to the next assistant message in the staff inbox
+  // only (never shown to the guest), e.g. why a turn used the fallback.
+  const pendingStaffNote = useRef<string | null>(null);
 
   const { step, draft } = flow;
   const {
@@ -267,7 +308,20 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     content: string,
     kind: MessageKind = "normal",
     staffContent?: string,
-  ) => setMessages(current => [...current, { id: rid(), role, content, kind, staffContent }]);
+  ) => {
+    let trackedContent = staffContent;
+    if (role === "assistant" && pendingStaffNote.current) {
+      const base = staffContent || content;
+      const note = `\n\n[staff] ${pendingStaffNote.current}`;
+      // Keep an encoded offer snapshot (if any) at the very end so it still parses.
+      const markerIndex = base.indexOf(ROOM_FINDER_OFFER_SNAPSHOT_MARKER);
+      trackedContent = markerIndex >= 0
+        ? `${base.slice(0, markerIndex)}${note}${base.slice(markerIndex)}`
+        : `${base}${note}`;
+      pendingStaffNote.current = null;
+    }
+    setMessages(current => [...current, { id: rid(), role, content, kind, staffContent: trackedContent }]);
+  };
 
   const rewindConversation = (...promptContents: string[]) =>
     setMessages(current => rewindToAssistantPrompt(current, promptContents));
@@ -412,7 +466,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     add("assistant", tone.invalidDate);
   }
 
-  async function interpret(value: string, current: FinderStep): Promise<RoomFinderCommand> {
+  async function interpret(value: string, current: FinderStep): Promise<InterpretResult> {
     const recentMessages = messages.slice(-8).map(({ role, content }) => ({ role, content }));
     const requestBody = JSON.stringify({
       message: value,
@@ -444,8 +498,18 @@ export function useRoomFinder(language: RoomFinderLanguage) {
         body: requestBody,
       });
       const data = await response.json().catch(() => null);
-      if (response.ok && data?.command) return data.command as RoomFinderCommand;
-      throw new Error(String(data?.code || "AI_UNAVAILABLE"));
+      if (response.ok && data?.command) {
+        return {
+          command: data.command as RoomFinderCommand,
+          degraded: data.degraded === true,
+          cause: String(data.cause || ""),
+        };
+      }
+      throw new InterpreterError(String(data?.code || `HTTP_${response.status}`));
+    } catch (error) {
+      if (error instanceof InterpreterError) throw error;
+      const aborted = error instanceof Error && error.name === "AbortError";
+      throw new InterpreterError(aborted ? "CLIENT_TIMEOUT" : "NETWORK_ERROR");
     } finally {
       window.clearTimeout(timeout);
     }
@@ -588,7 +652,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
           type: "commit_turn",
           state: { step: "unavailable", draft: searchDraft },
         });
-        add("assistant", tone.unavailable, "contact");
+        add("assistant", tone.unavailable, "lead");
         return;
       }
 
@@ -628,7 +692,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
         type: "commit_turn",
         state: { step: "unavailable", draft: searchDraft },
       });
-      add("assistant", INVENTORY_UNAVAILABLE[language], "contact");
+      add("assistant", INVENTORY_UNAVAILABLE[language], "lead");
     } finally {
       setTyping(false);
     }
@@ -653,7 +717,12 @@ export function useRoomFinder(language: RoomFinderLanguage) {
 
     if (executableActions.some(action => action.type === "acknowledge_contact")) {
       add("assistant", CONTACT_ACKNOWLEDGED[language], "contact");
-      return;
+      // Facts given in the same message ("I'll call you, we are 3 people")
+      // are still applied; a pure contact message ends here.
+      const hasFacts = executableActions.some(action =>
+        !["acknowledge_contact", "no_change", "ask_clarification"].includes(action.type),
+      );
+      if (!hasFacts) return;
     }
 
     const preferenceAction = [...executableActions]
@@ -690,6 +759,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     }
 
     const resolution = resolveAssistantTurn(flow, executableCommand);
+    const commandSetTotalGuests = executableActions.some(action => action.totalGuests != null);
 
     if (resolution.outcome.kind === "restart") {
       reset();
@@ -710,7 +780,12 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     }
 
     if (resolution.outcome.kind === "clarification") {
-      add("assistant", resolution.outcome.query);
+      add("assistant", resolution.outcome.query, resolution.outcome.lead ? "lead" : "normal");
+      return;
+    }
+
+    if (resolution.outcome.kind === "capacity") {
+      add("assistant", CAPACITY_ROOMS[language](resolution.outcome.guests, resolution.outcome.minimumRooms));
       return;
     }
 
@@ -742,6 +817,8 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       if (announced) await wait(220);
     }
 
+    if (!commandSetTotalGuests) announceGuestTotalAdjustment(flow.draft, resolution.state.draft);
+
     if (resolution.outcome.kind === "ready") {
       await runAvailabilitySearch(
         resolution.state.draft,
@@ -758,11 +835,27 @@ export function useRoomFinder(language: RoomFinderLanguage) {
         add("assistant", tone.checkout);
         return;
       case "rooms":
-        add("assistant", tone.rooms);
+        add("assistant", roomsPrompt(resolution.state.draft));
         return;
       case "guests":
         add("assistant", tone.guests(resolution.outcome.guestRoom || 1));
     }
+  }
+
+  function roomsPrompt(nextDraft: BookingDraft) {
+    const groupSize = nextDraft.totalGuests || 0;
+    const minimumRooms = groupSize ? minimumRoomsForGuests(groupSize) : 1;
+    return minimumRooms > 1 ? CAPACITY_ROOMS[language](groupSize, minimumRooms) : tone.rooms;
+  }
+
+  // When per-room answers add up to a different total than the guest stated
+  // (e.g. 8 people, then 2 + 5), say so instead of silently dropping guests.
+  function announceGuestTotalAdjustment(previous: BookingDraft, next: BookingDraft) {
+    const before = previous.totalGuests || 0;
+    const after = next.totalGuests || 0;
+    if (!before || !after || before === after) return;
+    if (next.groups.length !== next.roomCount) return;
+    add("assistant", GUEST_TOTAL_ADJUSTED[language](before, after));
   }
 
   async function submit(event: FormEvent) {
@@ -808,14 +901,33 @@ export function useRoomFinder(language: RoomFinderLanguage) {
 
     if (!await beginUserTurn(value, kind, current === "rooms" ? "❤️" : "👍")) return;
 
+    let result: InterpretResult;
     try {
-      const command = await promise;
-      await applyCommand(command);
+      result = await promise;
     } catch (error) {
       console.error("Room Finder interpreter request failed", error);
+      const code = error instanceof InterpreterError ? error.code : "UNKNOWN";
       setInput(currentValue => currentValue || value);
-      add("assistant", INTERPRETER_UNAVAILABLE[language]);
+      pendingStaffNote.current = `Interpreter failed (${code}); the guest was offered the contact form.`;
+      add("assistant", INTERPRETER_UNAVAILABLE[language], "lead");
+      endUserTurn();
+      return;
+    }
+
+    if (result.degraded) {
+      pendingStaffNote.current = `AI interpreter unavailable (${result.cause || "AI_UNAVAILABLE"}); this turn used the deterministic fallback parser.`;
+    }
+
+    try {
+      await applyCommand(result.command);
+    } catch (error) {
+      // A bug while applying an understood command is not an interpreter
+      // failure: log it separately so it can be found and fixed.
+      console.error("Room Finder could not apply the interpreted command", error);
+      pendingStaffNote.current = `Client error while applying the command: ${error instanceof Error ? error.message : String(error)}`;
+      add("assistant", INTERPRETER_UNAVAILABLE[language], "lead");
     } finally {
+      pendingStaffNote.current = null;
       endUserTurn();
     }
   }
@@ -829,6 +941,14 @@ export function useRoomFinder(language: RoomFinderLanguage) {
         roomCount: roomCountValue,
       });
       dispatchFlow({ type: "commit_turn", state: nextFlow });
+
+      if (nextFlow.step === "rooms" && nextFlow.draft.totalGuests) {
+        add("assistant", CAPACITY_ROOMS[language](
+          nextFlow.draft.totalGuests,
+          minimumRoomsForGuests(nextFlow.draft.totalGuests),
+        ));
+        return;
+      }
 
       const announced = await maybeAnnounceLongStay(nextFlow.draft);
       if (announced) await wait(220);
@@ -849,6 +969,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     try {
       const nextFlow = bookingFlowReducer(flow, { type: "choose_guests", guests });
       dispatchFlow({ type: "commit_turn", state: nextFlow });
+      announceGuestTotalAdjustment(flow.draft, nextFlow.draft);
 
       const announced = await maybeAnnounceLongStay(nextFlow.draft);
       if (announced) await wait(220);

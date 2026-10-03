@@ -13,6 +13,7 @@ import { ChatMessage, IconReplies } from "./room-finder-chat-ui";
 import { RoomCarousel, type RoomOffer } from "./room-finder-carousel";
 import { stayRange } from "./room-finder-format";
 import { SelectedRoomCard } from "./room-finder-selected-card";
+import { RoomFinderLeadCard, type LeadStatus } from "./room-finder-lead-card";
 import { TypingIndicator } from "./room-finder-typing-indicator";
 import { useRoomFinder } from "./use-room-finder";
 import { ROOM_FINDER_HREFS } from "@/lib/room-finder-cta-routing";
@@ -261,6 +262,7 @@ export function RoomFinderProduction({
   const [contact, setContact] = useState({ firstName: "", lastName: "", phone: "", email: "" });
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [sendStatus, setSendStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [leadStatus, setLeadStatus] = useState<LeadStatus>("idle");
   const [hiddenQuickReplyPromptId, setHiddenQuickReplyPromptId] = useState<string | null>(null);
   const [breakfastChoicePending, setBreakfastChoicePending] = useState<boolean | null>(null);
   const shellRef = useRef<HTMLElement>(null);
@@ -578,6 +580,13 @@ export function RoomFinderProduction({
       && contact.phone.trim()
       && privacyAccepted,
   );
+  const latestLeadMessageId = [...finder.messages]
+    .reverse()
+    .find(message => message.kind === "lead")?.id;
+  const guestMessages = finder.messages
+    .filter(message => message.role === "user")
+    .slice(-6)
+    .map(message => message.content.slice(0, 600));
   const lastAssistantMessageId = [...finder.messages]
     .reverse()
     .find(message => message.role === "assistant")?.id;
@@ -741,6 +750,22 @@ export function RoomFinderProduction({
             {finder.messages.map(message => (
               <div key={message.id}>
                 <ChatMessage message={message} />
+                {message.kind === "lead" && (
+                  <RoomFinderLeadCard
+                    language={language}
+                    callNumber={CALL_NUMBER}
+                    privacyShort={breakdownCopy.privacyShort}
+                    privacyMore={breakdownCopy.privacyMore}
+                    privacyNotice={contactCopy.privacyNotice}
+                    bookingFacts={[stay, guestSummary, roomSummary].filter(Boolean)}
+                    guestMessages={guestMessages}
+                    reason={message.content}
+                    status={leadStatus}
+                    onStatusChange={setLeadStatus}
+                    onWhatsApp={() => openWhatsApp(whatsappContext(copy.whatsappHelp))}
+                    showForm={message.id === latestLeadMessageId}
+                  />
+                )}
                 {message.kind === "contact" && (
                   <section
                     aria-label={`${CALL_LABEL[language]} / ${copy.whatsapp}`}
@@ -1084,6 +1109,7 @@ export function RoomFinderProduction({
             name="room-finder-message"
             rows={1}
             autoComplete="off"
+            maxLength={1500}
             enterKeyHint="send"
             aria-label={inputPlaceholder}
             aria-disabled={!inputEnabled}

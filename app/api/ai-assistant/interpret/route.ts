@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { neon } from "@neondatabase/serverless";
 import { NextRequest, NextResponse } from "next/server";
 import { interpretRoomFinderMessage } from "@/lib/ai-assistant/room-finder-intent";
+import { fallbackRoomFinderCommand } from "@/lib/ai-assistant/room-finder-fallback";
 import type { RoomFinderConversationContext } from "@/lib/ai-assistant/room-finder-types";
 
 export const runtime = "nodejs";
@@ -9,7 +10,7 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 40;
 
 const MAX_BODY_BYTES = 24_000;
-const MAX_MESSAGE_CHARS = 500;
+const MAX_MESSAGE_CHARS = 1_500;
 const MAX_CONTEXT_CHARS = 8_000;
 const MAX_RECENT_MESSAGES = 12;
 const MAX_RECENT_MESSAGE_CHARS = 500;
@@ -28,6 +29,47 @@ function getClientIp(request: NextRequest): string {
 
 function clientKey(ip: string) {
   return createHash("sha256").update(`room-finder-interpreter:${ip}`).digest("hex");
+}
+
+// Used only when the shared Postgres limiter is unreachable, so a database
+// outage does not take the whole Room Finder down. It is per serverless
+// instance, which is enough to blunt a burst until the database is back.
+const localWindows = new Map<string, { minute: number; minuteStart: number; hour: number; hourStart: number }>();
+
+function checkLocalRateLimit(ip: string) {
+  const now = Date.now();
+  const key = clientKey(ip);
+  const entry = localWindows.get(key) || { minute: 0, minuteStart: now, hour: 0, hourStart: now };
+  if (now - entry.minuteStart >= 60_000) { entry.minute = 0; entry.minuteStart = now; }
+  if (now - entry.hourStart >= 3_600_000) { entry.hour = 0; entry.hourStart = now; }
+  entry.minute += 1;
+  entry.hour += 1;
+  localWindows.set(key, entry);
+  if (localWindows.size > 5_000) localWindows.clear();
+  const minuteLimited = entry.minute > BURST_MAX_REQUESTS;
+  const hourLimited = entry.hour > HOUR_MAX_REQUESTS;
+  return {
+    limited: minuteLimited || hourLimited,
+    retryAfterSeconds: minuteLimited
+      ? Math.max(1, Math.ceil((entry.minuteStart + 60_000 - now) / 1_000))
+      : hourLimited
+        ? Math.max(1, Math.ceil((entry.hourStart + 3_600_000 - now) / 1_000))
+        : 0,
+  };
+}
+
+async function checkRateLimit(ip: string) {
+  try {
+    return await checkDistributedRateLimit(ip);
+  } catch (error) {
+    console.error(JSON.stringify({
+      level: "error",
+      msg: "ai_room_finder_rate_limit_store_unavailable",
+      route: "/api/ai-assistant/interpret",
+      error: error instanceof Error ? error.message : String(error),
+    }));
+    return checkLocalRateLimit(ip);
+  }
 }
 
 async function checkDistributedRateLimit(ip: string) {
@@ -188,7 +230,7 @@ export async function POST(request: NextRequest) {
       return noStoreJson({ error: "Conversation context is too large.", code: "CONTEXT_TOO_LARGE" }, { status: 400 });
     }
 
-    const rate = await checkDistributedRateLimit(getClientIp(request));
+    const rate = await checkRateLimit(getClientIp(request));
     if (rate.limited) {
       return noStoreJson(
         { error: "Too many requests. Please try again shortly.", code: "RATE_LIMITED" },
@@ -212,6 +254,7 @@ export async function POST(request: NextRequest) {
     }));
     return noStoreJson({ ok: true, command });
   } catch (error) {
+    const timeout = isAbortError(error);
     console.error(JSON.stringify({
       level: "error",
       msg: "ai_room_finder_interpret_failed",
@@ -219,10 +262,41 @@ export async function POST(request: NextRequest) {
       requestId,
       errorName: error instanceof Error ? error.name : "UnknownError",
       error: error instanceof Error ? error.message : String(error),
+      currentStep: context.currentStep,
+      language: context.language,
+      messageChars: message.length,
       ms: Date.now() - startedAt,
     }));
 
-    const timeout = isAbortError(error);
+    // When the AI interpreter is down or too slow, keep the conversation
+    // moving with the conservative deterministic parser. It only extracts
+    // unambiguous facts (exact dates, counts, nights); anything uncertain is
+    // left for the normal flow to ask. The client marks such turns for staff.
+    if (message) {
+      try {
+        const fallback = fallbackRoomFinderCommand(message, context);
+        if (fallback) {
+          console.warn(JSON.stringify({
+            level: "warning",
+            msg: "ai_room_finder_interpret_degraded",
+            route: "/api/ai-assistant/interpret",
+            requestId,
+            cause: timeout ? "AI_TIMEOUT" : "AI_UNAVAILABLE",
+            actions: fallback.actions.map(action => action.type),
+            ms: Date.now() - startedAt,
+          }));
+          return noStoreJson({
+            ok: true,
+            degraded: true,
+            cause: timeout ? "AI_TIMEOUT" : "AI_UNAVAILABLE",
+            command: fallback,
+          });
+        }
+      } catch (fallbackError) {
+        console.error("Room Finder deterministic fallback failed", fallbackError);
+      }
+    }
+
     return noStoreJson(
       {
         error: timeout ? "AI interpreter timed out." : "AI interpreter is temporarily unavailable.",
