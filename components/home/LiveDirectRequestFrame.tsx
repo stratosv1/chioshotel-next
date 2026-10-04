@@ -14,7 +14,7 @@ export const LIVE_HEADER_COPY: Record<LiveRequestLocale, { pill: string; subtitl
   fr: { pill: "Demande instantanée à la réception", subtitle: "Envoyez une demande instantanée à la réception et recevez la meilleure offre directe.", guests: "Voyageurs" },
   de: { pill: "Sofortanfrage an die Rezeption", subtitle: "Senden Sie eine Sofortanfrage an die Rezeption und erhalten Sie das beste Direktangebot.", guests: "Gäste" },
   it: { pill: "Richiesta immediata alla reception", subtitle: "Invia una richiesta immediata alla reception e ricevi la migliore offerta diretta.", guests: "Ospiti" },
-  es: { pill: "Solicitud instantánea a recepción", subtitle: "Envíe una solicitud instantánea a recepción y reciba la mejor oferta directa.", guests: "Huéspedes" },
+  es: { pill: "Solicitud instantánea a recepción", subtitle: "Envía una solicitud instantánea a recepción y recibe la mejor oferta directa.", guests: "Huéspedes" },
   tr: { pill: "Resepsiyona anında talep", subtitle: "Resepsiyona anında talep gönderin ve en iyi doğrudan teklifi alın.", guests: "Misafirler" },
 };
 
@@ -130,7 +130,7 @@ export const LIVE_FOOTER_COPY: Record<LiveRequestLocale, {
   },
   el: {
     differentDates: "Έχετε διαφορετικές ημερομηνίες;",
-    checkAvailability: "Ελέγξτε όλες τις ημερομηνίες με το AI Room Finder",
+    checkAvailability: "Ελέγξτε όλες τις ημερομηνίες με τον βοηθό AI",
     footer: "Το άμεσο αίτημά σας στο chioshotel.gr",
     trustItems: [
       { icon: "tag", title: "Καλύτερη απευθείας προσφορά", text: "Καλύτερη διαθέσιμη τιμή" },
@@ -141,7 +141,7 @@ export const LIVE_FOOTER_COPY: Record<LiveRequestLocale, {
   },
   fr: {
     differentDates: "D’autres dates ?",
-    checkAvailability: "Vérifiez toutes les dates avec l’AI Room Finder",
+    checkAvailability: "Vérifiez toutes les dates avec notre assistant IA",
     footer: "Votre demande instantanée sur chioshotel.gr",
     trustItems: [
       { icon: "tag", title: "Meilleure offre directe", text: "Meilleur tarif disponible" },
@@ -152,7 +152,7 @@ export const LIVE_FOOTER_COPY: Record<LiveRequestLocale, {
   },
   de: {
     differentDates: "Andere Reisedaten?",
-    checkAvailability: "Alle Termine mit dem AI Room Finder prüfen",
+    checkAvailability: "Alle Termine mit unserem KI-Assistenten prüfen",
     footer: "Ihre Sofortanfrage auf chioshotel.gr",
     trustItems: [
       { icon: "tag", title: "Bestes Direktangebot", text: "Bester verfügbarer Preis" },
@@ -163,7 +163,7 @@ export const LIVE_FOOTER_COPY: Record<LiveRequestLocale, {
   },
   it: {
     differentDates: "Date diverse?",
-    checkAvailability: "Controlla tutte le date con l’AI Room Finder",
+    checkAvailability: "Controlla tutte le date con il nostro assistente AI",
     footer: "La tua richiesta immediata su chioshotel.gr",
     trustItems: [
       { icon: "tag", title: "Migliore offerta diretta", text: "Miglior prezzo disponibile" },
@@ -174,18 +174,18 @@ export const LIVE_FOOTER_COPY: Record<LiveRequestLocale, {
   },
   es: {
     differentDates: "¿Otras fechas?",
-    checkAvailability: "Consulta todas las fechas con AI Room Finder",
+    checkAvailability: "Consulta todas las fechas con nuestro asistente de IA",
     footer: "Su solicitud instantánea en chioshotel.gr",
     trustItems: [
       { icon: "tag", title: "Mejor oferta directa", text: "Mejor tarifa disponible" },
       { icon: "chat", title: "Respuesta directa", text: "Respuesta de recepción" },
-      { icon: "bed", title: "Elija habitación", text: "Elija lo que le conviene" },
+      { icon: "bed", title: "Elige habitación", text: "Elige lo que te conviene" },
       { icon: "card", title: "Sin tarjeta", text: "Sin pago ahora" },
     ],
   },
   tr: {
     differentDates: "Farklı tarihler mi?",
-    checkAvailability: "Tüm tarihleri AI Room Finder ile kontrol edin",
+    checkAvailability: "Tüm tarihleri yapay zekâ asistanımızla kontrol edin",
     footer: "chioshotel.gr üzerinden anında talebiniz",
     trustItems: [
       { icon: "tag", title: "En iyi doğrudan teklif", text: "En iyi mevcut fiyat" },

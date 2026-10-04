@@ -26,7 +26,7 @@ const WEEKLY_TITLES = {
   fr: "Vous voyagez à Chios cette semaine ?",
   de: "Reisen Sie diese Woche nach Chios?",
   it: "Viaggi a Chios questa settimana?",
-  es: "¿Viaja a Quíos esta semana?",
+  es: "¿Viajas a Quíos esta semana?",
   tr: "Bu hafta Sakız Adası'na mı geliyorsunuz?",
 } as const;
 

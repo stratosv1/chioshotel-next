@@ -1,6 +1,7 @@
 import type { HomePageData } from "@/content/home";
 import { withUpdatedIntroReasons } from "@/content/homeIntroReasons";
 import type { LanguageCode } from "@/lib/languages";
+import { normalizeMetadataDescription, normalizeMetadataTitle } from "@/lib/seo";
 
 type HomepageIntentCopy = {
   seoTitle: string;
@@ -162,8 +163,10 @@ export function withHomepageSeoIntent(
     ...data,
     seo: {
       ...data.seo,
-      title: text.seoTitle,
-      description: text.seoDescription,
+      // Resolve through the same per-path SEO overrides as the <title>, so the
+      // WebPage name in the JSON-LD always matches the rendered metadata.
+      title: normalizeMetadataTitle(data.seo.canonicalPath, text.seoTitle),
+      description: normalizeMetadataDescription(data.seo.canonicalPath, text.seoDescription),
     },
     hero: {
       ...data.hero,
