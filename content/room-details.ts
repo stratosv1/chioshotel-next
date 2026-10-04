@@ -1149,7 +1149,7 @@ export const economyDoubleRoomsEn: RoomDetailData = {
     highlights: [
       { label: "Guests", value: "2" },
       { label: "Room type", value: "Economy double" },
-      { label: "Size", value: "Approx. 16m²" },
+      { label: "Size", value: "Approx. 16 m²" },
       { label: "Style", value: "Simple comfort" },
     ],
   },
@@ -1199,7 +1199,7 @@ export const economyDoubleRoomsEn: RoomDetailData = {
     kicker: "Available rooms",
     title: "Choose your specific economy room",
     description:
-      "The economy category includes two renovated 16m² double rooms: Room 6 on the ground floor with direct garden access, and Room 2 on the first floor with Kambos view.",
+      "The economy category includes two renovated 16 m² double rooms: Room 6 on the ground floor with direct garden access, and Room 2 on the first floor with Kambos view.",
     rooms: [
       {
         id: "room-6",
@@ -1362,7 +1362,7 @@ export const economyDoubleRoomsEl: RoomDetailData = {
     highlights: [
       { label: "Άτομα", value: "2" },
       { label: "Τύπος", value: "Οικονομικό δίκλινο" },
-      { label: "Μέγεθος", value: "Περ. 16m²" },
+      { label: "Μέγεθος", value: "Περ. 16 m²" },
       { label: "Στυλ", value: "Απλή άνεση" },
     ],
   },
@@ -1388,7 +1388,7 @@ export const economyDoubleRoomsEl: RoomDetailData = {
     kicker: "Διαθέσιμα δωμάτια",
     title: "Επιλέξτε το οικονομικό δωμάτιο που σας ταιριάζει",
     description:
-      "Η οικονομική κατηγορία περιλαμβάνει δύο ανακαινισμένα δίκλινα δωμάτια περίπου 16m²: το Δωμάτιο 6 στο ισόγειο με άμεση πρόσβαση στον κήπο και το Δωμάτιο 2 στον πρώτο όροφο με θέα στον Κάμπο.",
+      "Η οικονομική κατηγορία περιλαμβάνει δύο ανακαινισμένα δίκλινα δωμάτια περίπου 16 m²: το Δωμάτιο 6 στο ισόγειο με άμεση πρόσβαση στον κήπο και το Δωμάτιο 2 στον πρώτο όροφο με θέα στον Κάμπο.",
   },
   bestFor: {
     kicker: "Ιδανικό για",
@@ -1464,7 +1464,7 @@ export const economyDoubleRoomsFr: RoomDetailData = {
     highlights: [
       { label: "Personnes", value: "2" },
       { label: "Type", value: "Double économique" },
-      { label: "Surface", value: "Env. 16m²" },
+      { label: "Surface", value: "Env. 16 m²" },
       { label: "Style", value: "Confort simple" },
     ],
   },
@@ -1490,7 +1490,7 @@ export const economyDoubleRoomsFr: RoomDetailData = {
     kicker: "Chambres disponibles",
     title: "Choisissez votre chambre économique",
     description:
-      "Cette catégorie comprend deux chambres doubles rénovées d’environ 16m² : la chambre 6 au rez-de-chaussée avec accès direct au jardin et la chambre 2 au premier étage avec vue sur Kambos.",
+      "Cette catégorie comprend deux chambres doubles rénovées d’environ 16 m² : la chambre 6 au rez-de-chaussée avec accès direct au jardin et la chambre 2 au premier étage avec vue sur Kambos.",
   },
   bestFor: {
     kicker: "Idéal pour",
@@ -1539,18 +1539,18 @@ export const economyDoubleRoomsDe: RoomDetailData = {
   seo: {
     ...economyDoubleRoomsEn.seo,
     canonicalPath: "/de/zimmer-chios/economy-zimmer-auf-chios/",
-    title: "Economy Doppelzimmer auf Chios | Voulamandis House",
+    title: "Economy-Doppelzimmer auf Chios | Voulamandis House",
     description:
-      "Economy Doppelzimmer auf Chios im Voulamandis House. Eine praktische und preiswerte Option für 2 Gäste im ruhigen Kambos.",
+      "Economy-Doppelzimmer auf Chios im Voulamandis House. Eine praktische und preiswerte Option für 2 Gäste im ruhigen Kambos.",
   },
   hero: {
     ...economyDoubleRoomsEn.hero,
     kicker: "Economy Zimmer auf Chios",
-    title: "Economy Doppelzimmer auf Chios",
+    title: "Economy-Doppelzimmer auf Chios",
     subtitle: "Die beste Preis-Leistungs-Option für 2 Gäste",
     description:
       "Einfache, komfortable und preiswerte Doppelzimmer für Gäste, die Chios praktisch und erschwinglich erleben möchten.",
-    imageAlt: "Economy Doppelzimmer auf Chios im Voulamandis House",
+    imageAlt: "Economy-Doppelzimmer auf Chios im Voulamandis House",
     badges: ["2 Gäste", "Economy Auswahl", "Kostenloses WiFi", "Klimaanlage"],
     primaryCta: { ...economyDoubleRoomsEn.hero.primaryCta, label: "Direkt buchen" },
     secondaryCta: { ...economyDoubleRoomsEn.hero.secondaryCta, label: "Verfügbarkeit anfragen" },
@@ -1559,14 +1559,14 @@ export const economyDoubleRoomsDe: RoomDetailData = {
     kicker: "Zimmerüberblick",
     title: "Praktischer und preiswerter Aufenthalt in Kambos",
     paragraphs: [
-      "Die Economy Doppelzimmer sind ideal für Gäste, die eine einfache und komfortable Basis auf Chios suchen, ohne für zusätzlichen Platz zu zahlen.",
+      "Die Economy-Doppelzimmer sind ideal für Gäste, die eine einfache und komfortable Basis auf Chios suchen, ohne für zusätzlichen Platz zu zahlen.",
       "Sie eignen sich für Paare, Alleinreisende oder zwei Freunde, die tagsüber die Insel erkunden und abends in eine ruhige Umgebung in Kambos zurückkehren möchten.",
       "Diese Kategorie ist die beste Wahl, wenn Preis, Lage und grundlegender Komfort im Vordergrund stehen.",
     ],
     highlights: [
       { label: "Gäste", value: "2" },
-      { label: "Zimmertyp", value: "Economy Doppelzimmer" },
-      { label: "Größe", value: "Ca. 16m²" },
+      { label: "Zimmertyp", value: "Economy-Doppelzimmer" },
+      { label: "Größe", value: "Ca. 16 m²" },
       { label: "Stil", value: "Einfacher Komfort" },
     ],
   },
@@ -1592,11 +1592,11 @@ export const economyDoubleRoomsDe: RoomDetailData = {
     kicker: "Verfügbare Zimmer",
     title: "Wählen Sie Ihr Economy Zimmer",
     description:
-      "Die Economy Kategorie umfasst zwei renovierte Doppelzimmer von etwa 16m²: Zimmer 6 im Erdgeschoss mit direktem Gartenzugang und Zimmer 2 im ersten Stock mit Blick auf Kambos.",
+      "Die Economy Kategorie umfasst zwei renovierte Doppelzimmer von etwa 16 m²: Zimmer 6 im Erdgeschoss mit direktem Gartenzugang und Zimmer 2 im ersten Stock mit Blick auf Kambos.",
   },
   bestFor: {
     kicker: "Ideal für",
-    title: "Für wen sind die Economy Doppelzimmer geeignet?",
+    title: "Für wen sind die Economy-Doppelzimmer geeignet?",
     items: [
       "Paare, die die preiswerteste Zimmerkategorie suchen.",
       "Alleinreisende, die ruhig und praktisch wohnen möchten.",
@@ -1608,7 +1608,7 @@ export const economyDoubleRoomsDe: RoomDetailData = {
     ...economyDoubleRoomsEn.booking,
     kicker: "Direktbuchung",
     title: "Fragen Sie nach der besten verfügbaren Economy Option",
-    text: "Teilen Sie uns Ihre Daten mit und wir sagen Ihnen, welches Economy Doppelzimmer verfügbar ist.",
+    text: "Teilen Sie uns Ihre Daten mit und wir sagen Ihnen, welches Economy-Doppelzimmer verfügbar ist.",
     phoneLabel: "Anrufen",
     whatsappHref:
       "https://wa.me/306944474226?text=Hallo!%20Ich%20interessiere%20mich%20für%20das%20Economy%20Doppelzimmer%20auf%20Chios.",
@@ -1616,8 +1616,8 @@ export const economyDoubleRoomsDe: RoomDetailData = {
   },
   faq: [
     {
-      question: "Wie viele Gäste können in einem Economy Doppelzimmer übernachten?",
-      answer: "Die Economy Doppelzimmer sind für bis zu 2 Gäste ausgelegt.",
+      question: "Wie viele Gäste können in einem Economy-Doppelzimmer übernachten?",
+      answer: "Die Economy-Doppelzimmer sind für bis zu 2 Gäste ausgelegt.",
     },
     {
       question: "Sind die Economy Zimmer die günstigste Kategorie?",
@@ -1668,7 +1668,7 @@ export const economyDoubleRoomsIt: RoomDetailData = {
     highlights: [
       { label: "Ospiti", value: "2" },
       { label: "Tipo", value: "Doppia economy" },
-      { label: "Dimensione", value: "Circa 16m²" },
+      { label: "Dimensione", value: "Circa 16 m²" },
       { label: "Stile", value: "Comfort semplice" },
     ],
   },
@@ -1694,7 +1694,7 @@ export const economyDoubleRoomsIt: RoomDetailData = {
     kicker: "Camere disponibili",
     title: "Scegli la tua camera economy",
     description:
-      "La categoria economy comprende due camere doppie rinnovate di circa 16m²: la Camera 6 al piano terra con accesso diretto al giardino e la Camera 2 al primo piano con vista su Kambos.",
+      "La categoria economy comprende due camere doppie rinnovate di circa 16 m²: la Camera 6 al piano terra con accesso diretto al giardino e la Camera 2 al primo piano con vista su Kambos.",
   },
   bestFor: {
     kicker: "Ideale per",
@@ -1743,18 +1743,18 @@ export const economyDoubleRoomsEs: RoomDetailData = {
   seo: {
     ...economyDoubleRoomsEn.seo,
     canonicalPath: "/es/habitaciones-en-chios/economicas-habitaciones-en-chios/",
-    title: "Habitación Doble Económica en Quíos | Voulamandis House",
+    title: "Habitación Doble Económica en Chios | Voulamandis House",
     description:
-      "Habitación doble económica en Quíos en Voulamandis House. Una opción práctica y asequible para 2 personas en la tranquila zona de Kambos.",
+      "Habitación doble económica en Chios en Voulamandis House. Una opción práctica y asequible para 2 personas en la tranquila zona de Kambos.",
   },
   hero: {
     ...economyDoubleRoomsEn.hero,
-    kicker: "Habitaciones económicas en Quíos",
-    title: "Habitación doble económica en Quíos",
+    kicker: "Habitaciones económicas en Chios",
+    title: "Habitación doble económica en Chios",
     subtitle: "La mejor opción calidad-precio para 2 personas",
     description:
-      "Habitaciones dobles sencillas, cómodas y asequibles para disfrutar de Quíos con una estancia práctica.",
-    imageAlt: "Habitación doble económica en Quíos en Voulamandis House",
+      "Habitaciones dobles sencillas, cómodas y asequibles para disfrutar de Chios con una estancia práctica.",
+    imageAlt: "Habitación doble económica en Chios en Voulamandis House",
     badges: ["2 personas", "Opción económica", "WiFi gratis", "Aire acondicionado"],
     primaryCta: { ...economyDoubleRoomsEn.hero.primaryCta, label: "Reservar directo" },
     secondaryCta: { ...economyDoubleRoomsEn.hero.secondaryCta, label: "Consultar disponibilidad" },
@@ -1763,14 +1763,14 @@ export const economyDoubleRoomsEs: RoomDetailData = {
     kicker: "Resumen de la habitación",
     title: "Una estancia práctica y económica en Kambos",
     paragraphs: [
-      "Las habitaciones dobles económicas son ideales para huéspedes que buscan una base sencilla y cómoda en Quíos sin pagar por espacio adicional que quizá no necesiten.",
+      "Las habitaciones dobles económicas son ideales para huéspedes que buscan una base sencilla y cómoda en Chios sin pagar por espacio adicional que quizá no necesiten.",
       "Son adecuadas para parejas, viajeros solos o dos amigos que desean explorar la isla durante el día y volver a un entorno tranquilo en Kambos.",
       "Es la mejor categoría si tus prioridades son precio, ubicación y comodidad esencial.",
     ],
     highlights: [
       { label: "Personas", value: "2" },
       { label: "Tipo", value: "Doble económica" },
-      { label: "Tamaño", value: "Aprox. 16m²" },
+      { label: "Tamaño", value: "Aprox. 16 m²" },
       { label: "Estilo", value: "Comodidad sencilla" },
     ],
   },
@@ -1784,7 +1784,7 @@ export const economyDoubleRoomsEs: RoomDetailData = {
     title: "Comodidad esencial para tu estancia",
     items: [
       { icon: "📶", label: "WiFi gratis", text: "Acceso a internet durante la estancia." },
-      { icon: "❄️", label: "Aire acondicionado", text: "Confort durante el verano en Quíos." },
+      { icon: "❄️", label: "Aire acondicionado", text: "Confort durante el verano en Chios." },
       { icon: "🧊", label: "Nevera", text: "Útil para bebidas y aperitivos." },
       { icon: "☕", label: "Hervidor", text: "Para preparar café o té en la habitación." },
       { icon: "💨", label: "Secador de pelo", text: "Servicio práctico de baño." },
@@ -1796,7 +1796,7 @@ export const economyDoubleRoomsEs: RoomDetailData = {
     kicker: "Habitaciones disponibles",
     title: "Elige tu habitación económica",
     description:
-      "La categoría económica incluye dos habitaciones dobles renovadas de unos 16m²: la Habitación 6 en planta baja con acceso directo al jardín y la Habitación 2 en primera planta con vistas a Kambos.",
+      "La categoría económica incluye dos habitaciones dobles renovadas de unos 16 m²: la Habitación 6 en planta baja con acceso directo al jardín y la Habitación 2 en primera planta con vistas a Kambos.",
   },
   bestFor: {
     kicker: "Ideal para",
@@ -1804,7 +1804,7 @@ export const economyDoubleRoomsEs: RoomDetailData = {
     items: [
       "Parejas que buscan la categoría más económica.",
       "Viajeros solos que quieren una estancia tranquila y práctica.",
-      "Huéspedes que pasarán la mayor parte del día explorando Quíos.",
+      "Huéspedes que pasarán la mayor parte del día explorando Chios.",
       "Viajeros que valoran más la ubicación y el precio que el espacio adicional.",
     ],
   },
@@ -1815,7 +1815,7 @@ export const economyDoubleRoomsEs: RoomDetailData = {
     text: "Indícanos tus fechas y te diremos qué habitación doble económica está disponible.",
     phoneLabel: "Llámanos",
     whatsappHref:
-      "https://wa.me/306944474226?text=Hola!%20Estoy%20interesado%20en%20la%20habitación%20doble%20económica%20en%20Quíos.",
+      "https://wa.me/306944474226?text=Hola!%20Estoy%20interesado%20en%20la%20habitación%20doble%20económica%20en%20Chios.",
     note: "Las habitaciones económicas son limitadas, por lo que la disponibilidad puede cambiar rápidamente en temporada alta.",
   },
   faq: [
@@ -1872,7 +1872,7 @@ export const economyDoubleRoomsTr: RoomDetailData = {
     highlights: [
       { label: "Kişi", value: "2" },
       { label: "Oda tipi", value: "Ekonomi çift kişilik" },
-      { label: "Büyüklük", value: "Yaklaşık 16m²" },
+      { label: "Büyüklük", value: "Yaklaşık 16 m²" },
       { label: "Stil", value: "Sade konfor" },
     ],
   },
@@ -1898,7 +1898,7 @@ export const economyDoubleRoomsTr: RoomDetailData = {
     kicker: "Mevcut odalar",
     title: "Size uygun ekonomi odayı seçin",
     description:
-      "Ekonomi kategorisinde yaklaşık 16m² büyüklüğünde iki yenilenmiş çift kişilik oda bulunur: bahçeye doğrudan erişimi olan zemin kattaki Oda 6 ve Kambos manzaralı birinci kattaki Oda 2.",
+      "Ekonomi kategorisinde yaklaşık 16 m² büyüklüğünde iki yenilenmiş çift kişilik oda bulunur: bahçeye doğrudan erişimi olan zemin kattaki Oda 6 ve Kambos manzaralı birinci kattaki Oda 2.",
   },
   bestFor: {
     kicker: "Kimler için ideal",

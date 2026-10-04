@@ -13,6 +13,7 @@ const baseMetadata = buildPageMetadata({
   title: data.seo.title,
   description: data.seo.description,
   image: data.seo.ogImage,
+  imageAlt: data.hero.imageAlt,
 });
 
 export const metadata: Metadata = {

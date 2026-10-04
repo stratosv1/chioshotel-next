@@ -156,9 +156,11 @@ export const seoSnippetOverrides = new Map<string, SeoSnippetOverride>([
   [
     "/el/domatia-xios/oikonomiko-diklino-domatio/",
     {
-      title: "Οικονομικά δίκλινα δωμάτια στη Χίο | Κάμπος",
+      // Matches the title/description the page sets explicitly (page.tsx), so
+      // the WebPage JSON-LD and the rendered metadata agree.
+      title: "Οικονομικά Δωμάτια στη Χίο | Οικονομικό Δίκλινο",
       description:
-        "Ανακαινισμένα οικονομικά δίκλινα για 2 άτομα στον Κάμπο της Χίου, με κλιματισμό, Wi‑Fi, ψυγείο και ιδιωτικό μπάνιο.",
+        "Ψάχνετε οικονομικά ή φθηνά δωμάτια στη Χίο; Δείτε τα οικονομικά δίκλινα του Voulamandis House στον Κάμπο για 2 άτομα, με μπάνιο, WiFi, κλιματισμό και ψυγείο.",
     },
   ],
   [

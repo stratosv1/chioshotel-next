@@ -42,7 +42,7 @@ const economyIntentCopy: Record<EconomyIntentLocale, EconomyIntentCopy> = {
       "Si vous comparez des chambres économiques, un hébergement abordable ou des solutions moins chères à Chios, cette catégorie de Voulamandis House est pensée pour offrir l’essentiel à deux personnes.",
   },
   de: {
-    seoTitle: "Günstige Zimmer auf Chios | Economy Doppelzimmer | Voulamandis House",
+    seoTitle: "Günstige Zimmer auf Chios | Economy-Doppelzimmer | Voulamandis House",
     seoDescription:
       "Sie suchen günstige Zimmer auf Chios? Entdecken Sie Economy-Doppelzimmer im Voulamandis House in Kambos für zwei Gäste mit Bad, WLAN, Klimaanlage und Kühlschrank.",
     heroTitle: "Günstige Economy-Doppelzimmer auf Chios",
@@ -62,14 +62,14 @@ const economyIntentCopy: Record<EconomyIntentLocale, EconomyIntentCopy> = {
       "Se stai confrontando camere economiche, alloggi convenienti o sistemazioni a buon prezzo a Chios, questa categoria di Voulamandis House è pensata per offrire valore e comfort a due ospiti.",
   },
   es: {
-    seoTitle: "Habitaciones económicas en Quíos | Habitación doble | Voulamandis House",
+    seoTitle: "Habitaciones económicas en Chios | Habitación doble | Voulamandis House",
     seoDescription:
-      "¿Buscas habitaciones económicas en Quíos? Descubre las dobles economy de Voulamandis House en Kambos para dos personas, con baño privado, WiFi, aire acondicionado y nevera.",
-    heroTitle: "Habitaciones dobles económicas en Quíos",
+      "¿Buscas habitaciones económicas en Chios? Descubre las dobles economy de Voulamandis House en Kambos para dos personas, con baño privado, WiFi, aire acondicionado y nevera.",
+    heroTitle: "Habitaciones dobles económicas en Chios",
     heroDescription:
-      "Una opción de alojamiento económico en Quíos para dos personas que buscan una habitación cómoda en el tranquilo Kambos con los servicios esenciales y buena relación calidad-precio.",
+      "Una opción de alojamiento económico en Chios para dos personas que buscan una habitación cómoda en el tranquilo Kambos con los servicios esenciales y buena relación calidad-precio.",
     overviewParagraph:
-      "Si comparas habitaciones económicas, alojamiento asequible o lugares de menor precio en Quíos, esta categoría de Voulamandis House está pensada para ofrecer valor y comodidad a dos huéspedes.",
+      "Si comparas habitaciones económicas, alojamiento asequible o lugares de menor precio en Chios, esta categoría de Voulamandis House está pensada para ofrecer valor y comodidad a dos huéspedes.",
   },
   tr: {
     seoTitle: "Sakız Adası Ekonomik Odalar | Ekonomi Çift Kişilik Oda | Voulamandis House",
