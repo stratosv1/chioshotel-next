@@ -6,11 +6,11 @@ import {
   absoluteUrl,
   getCanonicalUrl,
   getLanguageForPath,
+  normalizeMetadataDescription,
+  normalizeMetadataTitle,
   siteName,
   siteUrl,
 } from "@/lib/seo";
-import { resolveSeoDynamicTokens } from "@/lib/seo-dynamic-tokens";
-import { seoSnippetOverrides } from "@/lib/seo-snippet-overrides";
 import {
   buildBreadcrumbSchema,
   buildHotelSchema,
@@ -160,17 +160,15 @@ function getRoomsSchemaLabels(path: string) {
 
 function resolveRoomsSchemaSeo(data: RoomsCategoryPageData): RoomsCategoryPageData {
   const canonicalPath = data.seo.canonicalPath;
-  const override = seoSnippetOverrides.get(canonicalPath);
 
+  // Resolve through the same rules as the page metadata, so the CollectionPage
+  // and ItemList names always match the rendered <title>.
   return {
     ...data,
     seo: {
       ...data.seo,
-      title: resolveSeoDynamicTokens(override?.title ?? data.seo.title, canonicalPath),
-      description: resolveSeoDynamicTokens(
-        override?.description ?? data.seo.description,
-        canonicalPath,
-      ),
+      title: normalizeMetadataTitle(canonicalPath, data.seo.title),
+      description: normalizeMetadataDescription(canonicalPath, data.seo.description),
       ogImage: data.seo.ogImage,
     },
   };
@@ -187,9 +185,9 @@ function hardenGreekRoomsSchemaData(data: RoomsCategoryPageData): RoomsCategoryP
           ...card,
           subtitle: "Οικονομική επιλογή για 2 άτομα",
           description:
-            "Η πιο οικονομική επιλογή για 2 άτομα. Ανακαινισμένα δωμάτια 16m² με σύγχρονες παροχές και αυθεντική αίσθηση Κάμπου.",
+            "Η πιο οικονομική επιλογή για 2 άτομα. Ανακαινισμένα δωμάτια 16 m² με σύγχρονες παροχές και αυθεντική αίσθηση Κάμπου.",
           badge: "Οικονομική επιλογή",
-          meta: ["2 άτομα", "16m²", "Οικονομικό"],
+          meta: ["2 άτομα", "16 m²", "Οικονομικό"],
         };
       }
 
