@@ -74,7 +74,7 @@ const turkishPageSeoCorrections = new Map<string, SeoCorrection>([
   [
     chiosBeachesPageTr.seo.canonicalPath,
     {
-      title: "Sakız Adası Plajları: En İyi 9 Plaj ve Gizli Koylar",
+      title: "Sakız Adası Plajları: En İyi 11 Plaj ve Gizli Koylar",
       description:
         "Mavra Volia'nın siyah çakılları, Komi'nin kumu, Agia Dynami'nin zümrüt suyu: aileler, sakinlik veya beach bar için doğru Sakız Adası plajını seçin.",
     },

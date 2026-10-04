@@ -8,6 +8,7 @@ import {
 } from "@/lib/seo";
 import {
   buildBreadcrumbSchema,
+  buildFaqSchema,
   buildHotelSchema,
   buildImageSchema,
   buildOrganizationSchema,
@@ -332,6 +333,9 @@ export function buildChiosBeachesSchema(data: ChiosBeachesPageData) {
       buildBeachPlaceSchema(beach, canonicalPath, labels.chiosIslandPath),
     ),
     buildBeachStayActionSchema(data),
+    data.faq
+      ? buildFaqSchema({ path: canonicalPath, questions: data.faq.items })
+      : null,
     buildBreadcrumbSchema(canonicalPath, [
       {
         name: labels.chiosIsland,

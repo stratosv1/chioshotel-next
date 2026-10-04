@@ -6,7 +6,7 @@ import { buildChiosBeachesSchema } from "@/content/chios-beaches-schema";
 import { buildPageMetadata } from "@/lib/seo";
 
 const PATH = "/el/paralies-xios/";
-const CTR_TEST_TITLE = "Παραλίες Χίου: Οι 9 καλύτερες & κρυφοί κολπίσκοι";
+const CTR_TEST_TITLE = "Παραλίες Χίου: Οι 11 καλύτερες & κρυφοί κολπίσκοι";
 
 function getPageData() {
   const data = getLocalizedChiosBeachesPageByPath(PATH);

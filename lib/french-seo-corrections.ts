@@ -15,7 +15,7 @@ const frenchSeoCorrections: ReadonlyArray<
   [
     "/fr/plages-de-chios/",
     {
-      title: "Plages de Chios : les 9 plus belles (+ criques secrètes)",
+      title: "Plages de Chios : les 11 plus belles (+ criques secrètes)",
       description:
         "Galets noirs de Mavra Volia, sable de Komi, eaux émeraude d'Agia Dynami : trouvez la plage idéale à Chios pour les familles, le calme ou l'ambiance.",
     },

@@ -186,6 +186,9 @@ export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
   const language = getBeachesPageLanguage(data);
   const copy = beachesPageUiCopy[language];
   const categoryGuide = beachCategoryGuideCopy[language];
+  const heroImageAlt =
+    data.beaches.find((beach) => beach.image === data.hero.image)?.imageAlt ??
+    data.hero.title;
 
   return (
     <main className="overflow-hidden bg-[#eaf5f3] text-[#102b2d]">
@@ -195,7 +198,7 @@ export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
       >
         <Image
           src={data.hero.image}
-          alt=""
+          alt={heroImageAlt}
           fill
           priority
           sizes="100vw"
@@ -411,6 +414,44 @@ export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
           </div>
         </div>
       </section>
+
+      {data.faq ? (
+        <section className="px-4 pb-12 md:px-6 md:pb-18" aria-labelledby="beaches-faq-title">
+          <div className="mx-auto max-w-[1180px] rounded-[34px] border border-teal-900/10 bg-white p-6 shadow-xl shadow-black/5 md:p-10">
+            <span className="text-xs font-black uppercase tracking-[0.16em] text-teal-800">
+              {data.faq.kicker}
+            </span>
+            <h2
+              id="beaches-faq-title"
+              className="mt-4 text-3xl font-black leading-none tracking-[-0.05em] text-[#102b2d] md:text-5xl"
+            >
+              {data.faq.title}
+            </h2>
+            <div className="mt-6 grid gap-3">
+              {data.faq.items.map((item, index) => (
+                <details
+                  className="group rounded-[22px] bg-teal-50 px-5 py-4 ring-1 ring-teal-900/10"
+                  key={item.question}
+                  open={index === 0}
+                >
+                  <summary className="flex cursor-pointer list-none items-start justify-between gap-4 text-base font-black leading-7 text-[#102b2d] md:text-lg [&::-webkit-details-marker]:hidden">
+                    <h3 className="text-base font-black leading-7 md:text-lg">{item.question}</h3>
+                    <span
+                      className="mt-1 shrink-0 text-xl leading-none text-teal-800 transition group-open:rotate-45"
+                      aria-hidden="true"
+                    >
+                      +
+                    </span>
+                  </summary>
+                  <p className="mt-3 text-sm leading-7 text-slate-700 md:text-base md:leading-8">
+                    {item.answer}
+                  </p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
     </main>
   );
 }

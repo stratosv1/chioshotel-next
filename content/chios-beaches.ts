@@ -54,6 +54,14 @@
       text: string;
     }[];
   };
+  faq?: {
+    kicker: string;
+    title: string;
+    items: {
+      question: string;
+      answer: string;
+    }[];
+  };
   stay: {
     kicker: string;
     title: string;
@@ -244,7 +252,7 @@ export const chiosBeachesPageEn: ChiosBeachesPageData = {
       name: "Lefkathia",
       title: "Lefkathia",
       description:
-        "A northern beach with deep blue waters and a youthful summer vibe, close to the Kardamyla area.",
+        "A northern beach with deep blue waters and a youthful summer vibe, close to Volissos.",
       image: beachImages.lefkathia,
       imageAlt: "Lefkathia beach in Chios with deep blue waters",
       href: "/chios/chios-beaches/lefkathia-beach/",
@@ -277,6 +285,42 @@ export const chiosBeachesPageEn: ChiosBeachesPageData = {
         title: "Match the beach to your day",
         text:
           "Choose Lithi for families, Komi for beach life, Mavra Volia for scenery and Agia Dynami for exotic waters.",
+      },
+    ],
+  },
+  faq: {
+    kicker: "Beach FAQ",
+    title: "Chios beaches: common questions",
+    items: [
+      {
+        question: "Which beaches are closest to Voulamandis House?",
+        answer:
+          "Karfas and Agia Fotia are the nearest swimming options to Kambos, along with Glari Beach and Daskalopetra. They work well for half days and arrival or departure days, when you do not want a long drive.",
+      },
+      {
+        question: "Which Chios beaches are best for families with children?",
+        answer:
+          "Lithi, Karfas and Komi are the easiest family choices: sandy shores, shallow water near the edge and tavernas or beach bars close by. Karfas is also the shortest drive from Kambos.",
+      },
+      {
+        question: "Where should I swim on a windy day in Chios?",
+        answer:
+          "Wind can change the best beach of the day. Sheltered bays such as Salagona, Agia Dynami and Elinta are usually the calmer choices. Ask us in the morning and we will suggest the best option for that day’s wind.",
+      },
+      {
+        question: "Which beach is best for snorkeling?",
+        answer:
+          "Salagona and Agia Dynami in south Chios have clear turquoise water and rocky edges that make them the most rewarding for snorkeling.",
+      },
+      {
+        question: "Are Chios beaches sandy or pebbly?",
+        answer:
+          "Both. Karfas, Komi and Lithi are sandy, while Mavra Volia has black volcanic pebbles, Elinta white pebbles and Agia Fotia mostly pebbles. Water shoes are useful for the pebbly beaches.",
+      },
+      {
+        question: "Do I need a car to reach the best beaches?",
+        answer:
+          "For most of them, yes. The beaches are spread across the island, so a car or taxi makes beach days from Kambos much easier, especially for south Chios and the northern beaches.",
       },
     ],
   },
@@ -484,6 +528,42 @@ export const chiosBeachesPageEl: ChiosBeachesPageData = {
         title: "Ταιριάξτε την παραλία με τη μέρα σας",
         text:
           "Διαλέξτε Λιθί για οικογένειες, Κώμη για ζωή στην παραλία, Μαύρα Βόλια για τοπίο και Αγία Δύναμη για εξωτικά νερά.",
+      },
+    ],
+  },
+  faq: {
+    kicker: "Συχνές ερωτήσεις",
+    title: "Παραλίες Χίου: συχνές ερωτήσεις",
+    items: [
+      {
+        question: "Ποιες παραλίες είναι πιο κοντά στο Voulamandis House;",
+        answer:
+          "Ο Καρφάς και η Αγία Φωτιά είναι οι πιο κοντινές επιλογές για μπάνιο από τον Κάμπο, μαζί με το Γλάρι και τη Δασκαλόπετρα. Είναι ιδανικές για μισή μέρα ή για τη μέρα άφιξης και αναχώρησης, όταν δεν θέλετε πολλή οδήγηση.",
+      },
+      {
+        question: "Ποιες παραλίες της Χίου είναι καλύτερες για οικογένειες με παιδιά;",
+        answer:
+          "Το Λιθί, ο Καρφάς και η Κώμη είναι οι πιο εύκολες οικογενειακές επιλογές: αμμουδιά, ρηχά νερά στην ακτή και ταβέρνες ή beach bars κοντά. Ο Καρφάς είναι και η πιο σύντομη διαδρομή από τον Κάμπο.",
+      },
+      {
+        question: "Πού να κάνω μπάνιο όταν φυσάει στη Χίο;",
+        answer:
+          "Ο αέρας μπορεί να αλλάξει την καλύτερη παραλία της ημέρας. Προστατευμένοι κόλποι όπως η Σαλάγωνα, η Αγία Δύναμη και η Ελίντα είναι συνήθως οι πιο ήρεμες επιλογές. Ρωτήστε μας το πρωί και θα σας προτείνουμε την καλύτερη παραλία για τον αέρα της μέρας.",
+      },
+      {
+        question: "Ποια παραλία είναι καλύτερη για snorkeling;",
+        answer:
+          "Η Σαλάγωνα και η Αγία Δύναμη στη νότια Χίο έχουν καθαρά γαλαζοπράσινα νερά και βραχώδεις άκρες που τις κάνουν τις πιο ενδιαφέρουσες για snorkeling.",
+      },
+      {
+        question: "Οι παραλίες της Χίου έχουν άμμο ή βότσαλο;",
+        answer:
+          "Και τα δύο. Ο Καρφάς, η Κώμη και το Λιθί έχουν άμμο, ενώ τα Μαύρα Βόλια έχουν μαύρα ηφαιστειακά βότσαλα, η Ελίντα λευκά βότσαλα και η Αγία Φωτιά κυρίως βότσαλο. Για τις βοτσαλωτές παραλίες βοηθούν τα παπούτσια θαλάσσης.",
+      },
+      {
+        question: "Χρειάζομαι αυτοκίνητο για τις καλύτερες παραλίες;",
+        answer:
+          "Για τις περισσότερες, ναι. Οι παραλίες είναι απλωμένες σε όλο το νησί, οπότε με αυτοκίνητο ή ταξί οι μέρες στη θάλασσα από τον Κάμπο γίνονται πολύ πιο εύκολες, ειδικά για τη νότια και τη βόρεια Χίο.",
       },
     ],
   },

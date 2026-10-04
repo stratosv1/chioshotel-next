@@ -28,7 +28,7 @@ export const seoSnippetOverrides = new Map<string, SeoSnippetOverride>([
   [
     "/es/playas-chios/",
     {
-      title: "Playas de Quíos: las 9 mejores (+ calas escondidas)",
+      title: "Playas de Quíos: las 11 mejores (+ calas escondidas)",
       description:
         "Guijarros negros en Mavra Volia, arena en Komi, aguas esmeralda en Agia Dynami: elige la playa ideal de Quíos para familias, calma o ambiente.",
     },
@@ -36,7 +36,7 @@ export const seoSnippetOverrides = new Map<string, SeoSnippetOverride>([
   [
     "/chios/chios-beaches/",
     {
-      title: "Chios Beaches: The 9 Best Beaches & Hidden Coves",
+      title: "Chios Beaches: The 11 Best Beaches & Hidden Coves",
       description:
         "Black-pebble Mavra Volia, sandy Komi, emerald Agia Dynami: pick the right Chios beach for families, quiet swims or lively days, with local tips.",
     },
@@ -280,9 +280,9 @@ export const seoSnippetOverrides = new Map<string, SeoSnippetOverride>([
   [
     "/el/paralies-xios/",
     {
-      title: "Παραλίες Χίου: Οι 9 καλύτερες & κρυφοί κολπίσκοι",
+      title: "Παραλίες Χίου: Οι 11 καλύτερες & κρυφοί κολπίσκοι",
       description:
-        "Μαύρα Βόλια, Κώμη, Αγία Δύναμη και άλλες 6: βρείτε την ιδανική παραλία της Χίου για οικογένεια, ησυχία ή beach bar, με συμβουλές από ντόπιους.",
+        "Μαύρα Βόλια, Κώμη, Αγία Δύναμη και άλλες 8: βρείτε την ιδανική παραλία της Χίου για οικογένεια, ησυχία ή beach bar, με συμβουλές από ντόπιους.",
     },
   ],
   [

@@ -86,7 +86,7 @@ const germanPageSeoCorrections = new Map<string, SeoCorrection>([
   [
     "/de/straende-chios/",
     {
-      title: "Strände auf Chios: Die 9 schönsten (mit Geheimtipps)",
+      title: "Strände auf Chios: Die 11 schönsten (mit Geheimtipps)",
       description:
         "Schwarzer Kies in Mavra Volia, Sand in Komi, smaragdgrünes Wasser in Agia Dynami: der richtige Strand auf Chios für Familien, Ruhe oder Beachbars.",
     },
