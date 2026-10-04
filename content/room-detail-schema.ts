@@ -6,6 +6,8 @@ import {
   absoluteUrl,
   getCanonicalUrl,
   getLanguageForPath,
+  normalizeMetadataDescription,
+  normalizeMetadataTitle,
   siteName,
   siteUrl,
 } from "@/lib/seo";
@@ -133,7 +135,8 @@ const roomSchemaTerms: Record<string, RoomSchemaDictionary> = {
   "Independent unit": { el: "Ανεξάρτητη μονάδα", fr: "Unité indépendante", de: "Eigenständige Einheit", it: "Unità indipendente", es: "Unidad independiente", tr: "Bağımsız birim" },
   "Ground-floor double / triple": { el: "Ισόγειο δίκλινο / τρίκλινο", fr: "Double / triple au rez-de-chaussée", de: "Doppel- / Dreibettzimmer im Erdgeschoss", it: "Doppia / tripla al piano terra", es: "Doble / triple en planta baja", tr: "Zemin kat çift / üç kişilik oda" },
   "First-floor double / triple": { el: "Δίκλινο / τρίκλινο πρώτου ορόφου", fr: "Double / triple au premier étage", de: "Doppel- / Dreibettzimmer im Obergeschoss", it: "Doppia / tripla al primo piano", es: "Doble / triple en primera planta", tr: "Üst kat çift / üç kişilik oda" },
-  "Budget double room": { el: "Οικονομικό δίκλινο", fr: "Chambre double économique", de: "Economy Doppelzimmer", it: "Camera doppia economy", es: "Habitación doble económica", tr: "Ekonomik çift kişilik oda" },
+  Economy: { el: "Οικονομικό", fr: "Économique", de: "Economy", it: "Economica", es: "Económica", tr: "Ekonomik" },
+  "Budget double room": { el: "Οικονομικό δίκλινο", fr: "Chambre double économique", de: "Economy-Doppelzimmer", it: "Camera doppia economy", es: "Habitación doble económica", tr: "Ekonomik çift kişilik oda" },
   "Garden access": { el: "Πρόσβαση στον κήπο", fr: "Accès jardin", de: "Gartenzugang", it: "Accesso al giardino", es: "Acceso al jardín", tr: "Bahçe erişimi" },
   "No stairs": { el: "Χωρίς σκάλες", fr: "Sans escaliers", de: "Keine Treppen", it: "Senza scale", es: "Sin escaleras", tr: "Merdivensiz" },
   "Kambos view": { el: "Θέα στον Κάμπο", fr: "Vue sur Kambos", de: "Blick auf Kambos", it: "Vista su Kambos", es: "Vista a Kambos", tr: "Kambos manzarası" },
@@ -438,9 +441,10 @@ function buildRoomWebPageSchema(data: RoomDetailData): SchemaObject {
     "@type": "WebPage",
     "@id": webPageId(canonicalPath),
     url: getCanonicalUrl(canonicalPath),
-    name: data.seo.title,
+    // Same resolution as the page metadata, so the name matches the rendered <title>.
+    name: normalizeMetadataTitle(canonicalPath, data.seo.title),
     headline: data.hero.title,
-    description: data.seo.description,
+    description: normalizeMetadataDescription(canonicalPath, data.seo.description),
     image: galleryImages,
     inLanguage: language,
     isPartOf: {

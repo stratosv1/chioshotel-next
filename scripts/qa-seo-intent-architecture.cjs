@@ -91,7 +91,7 @@ expectAll(
     "Οικονομικά Δωμάτια στη Χίο",
     "Günstige Zimmer auf Chios",
     "Camere economiche a Chios",
-    "Habitaciones económicas en Quíos",
+    "Habitaciones económicas en Chios",
     "Sakız Adası Ekonomik Odalar",
   ],
   "Economy-room commercial intent is incomplete",

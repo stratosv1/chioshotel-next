@@ -8,7 +8,7 @@ import { absoluteUrl, buildPageMetadata, getAlternates, getCanonicalUrl } from "
 
 const data = withEconomyRoomIntent(economyDoubleRoomsEs, "es");
 const path = data.seo.canonicalPath;
-const baseMetadata = buildPageMetadata({ path, title: data.seo.title, description: data.seo.description, image: data.seo.ogImage });
+const baseMetadata = buildPageMetadata({ path, title: data.seo.title, description: data.seo.description, image: data.seo.ogImage, imageAlt: data.hero.imageAlt });
 
 export const metadata: Metadata = {
   ...baseMetadata,
