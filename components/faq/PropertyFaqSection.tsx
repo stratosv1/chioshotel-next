@@ -8,10 +8,12 @@ export function PropertyFaqSection({
   language,
   context,
   maxItems,
+  relatedHrefOverrides,
 }: {
   language: LanguageCode;
   context: PropertyFaqContext;
   maxItems?: number;
+  relatedHrefOverrides?: Partial<Record<string, string | undefined>>;
 }) {
   const { copy, items, allHref } = getPropertyFaqContext(language, context);
 
@@ -56,7 +58,7 @@ export function PropertyFaqSection({
                 <p>{item.answer}</p>
                 {item.relatedLink ? (
                   <a
-                    href={item.relatedLink.href}
+                    href={relatedHrefOverrides?.[item.id] ?? item.relatedLink.href}
                     className="mt-3 inline-flex font-black text-amber-800 underline decoration-amber-300 underline-offset-4"
                   >
                     {item.relatedLink.label}

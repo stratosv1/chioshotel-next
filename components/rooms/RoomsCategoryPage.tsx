@@ -116,7 +116,7 @@ const roomsFinalCtaCopy: Record<LanguageCode, {
     bookingHref: "/it/prezzi-hotel-chios/",
   },
   es: {
-    title: "¿Listo para elegir tu estancia en Quíos?",
+    title: "¿Listo para elegir tu estancia en Chios?",
     text: "Consulta habitaciones concretas con AI o reserva online una categoría disponible.",
     availabilityLabel: "Consultar disponibilidad",
     bookingLabel: "Reservar online",
@@ -144,9 +144,9 @@ function getDisplayedCards(data: RoomsCategoryPageData, language: LanguageCode) 
         ...card,
         subtitle: "Οικονομική επιλογή για 2 άτομα",
         description:
-          "Η πιο οικονομική επιλογή για 2 άτομα. Ανακαινισμένα δωμάτια 16m² με σύγχρονες παροχές και αυθεντική αίσθηση Κάμπου.",
+          "Η πιο οικονομική επιλογή για 2 άτομα. Ανακαινισμένα δωμάτια 16 m² με σύγχρονες παροχές και αυθεντική αίσθηση Κάμπου.",
         badge: "Οικονομική επιλογή",
-        meta: ["2 άτομα", "16m²", "Οικονομικό"],
+        meta: ["2 άτομα", "16 m²", "Οικονομικό"],
       };
     }
 
@@ -269,7 +269,7 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
 
           <h2
             id="rooms-category-title"
-            className="mt-5 text-balance text-3xl font-black tracking-[-0.035em] text-[#2f261f] sm:text-4xl lg:text-[2.625rem]"
+            className="mt-5 text-balance break-words text-3xl font-black tracking-[-0.035em] text-[#2f261f] hyphens-auto sm:text-4xl lg:text-[2.625rem]"
           >
             {intro.title}
           </h2>
@@ -299,7 +299,8 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
           {cards.map((card, index) => (
             <a
               href={card.href}
-              className="group overflow-hidden rounded-[30px] border border-amber-900/10 bg-white shadow-[0_18px_45px_rgba(47,38,31,0.10)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_30px_80px_rgba(47,38,31,0.16)] focus:outline-none focus:ring-4 focus:ring-amber-700/20"
+              id={`room-${card.id}`}
+              className="group scroll-mt-28 overflow-hidden rounded-[30px] border border-amber-900/10 bg-white shadow-[0_18px_45px_rgba(47,38,31,0.10)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_30px_80px_rgba(47,38,31,0.16)] focus:outline-none focus:ring-4 focus:ring-amber-700/20"
               key={card.id}
             >
               <div className="relative aspect-[4/3] overflow-hidden bg-stone-200">
@@ -390,7 +391,16 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
         </div>
       </section>
 
-      <PropertyFaqSection language={language} context="rooms" maxItems={4} />
+      <PropertyFaqSection
+        language={language}
+        context="rooms"
+        maxItems={4}
+        relatedHrefOverrides={{
+          "first-floor-rooms": cards.find((card) => card.id === "first-floor")?.href,
+          "ground-floor-rooms": cards.find((card) => card.id === "ground-floor")?.href,
+          "apartments-8-10": cards.find((card) => card.id === "family-apartments")?.href,
+        }}
+      />
 
       <section id="rooms-final-cta" className="px-4 pb-12 pt-2 sm:px-6 md:pb-16 lg:px-8" aria-labelledby="rooms-final-cta-title">
         <div className="mx-auto grid max-w-7xl gap-6 rounded-[2rem] border border-amber-900/10 bg-[#f3e7d7] p-6 shadow-xl shadow-amber-950/5 sm:p-8 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">

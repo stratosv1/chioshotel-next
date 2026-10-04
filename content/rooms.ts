@@ -76,7 +76,7 @@ export type RoomsCategoryPageData = {
 export const roomsCategoryEn: RoomsCategoryPageData = {
   seo: {
     canonicalPath: "/chios-rooms/",
-    title: "Rooms in Chios & Apartments in Chios | Voulamandis House",
+    title: "Rooms & Apartments in Chios | Kambos | Voulamandis House",
     description:
       "Explore rooms and apartments in Chios at Voulamandis House in Kambos. Choose economy double rooms, ground floor rooms, first floor rooms or family apartments.",
     ogImage:
@@ -111,14 +111,14 @@ export const roomsCategoryEn: RoomsCategoryPageData = {
       title: "Economy Double Room",
       subtitle: "Best value for 2 guests",
       description:
-        "The best value option for 2 guests. Renovated 16m² rooms with essentials and a peaceful Kambos atmosphere.",
+        "The best value option for 2 guests. Renovated 16 m² rooms with essentials and a peaceful Kambos atmosphere.",
       href: "/chios-rooms/economy-double-rooms/",
       image:
         "/images/rooms/DSC07803-1.webp",
       imageAlt: "Economy double room in Chios at Voulamandis House",
       badge: "Best value",
       ctaLabel: "Explore Room",
-      meta: ["2 guests", "16m²", "Economy"],
+      meta: ["2 guests", "16 m²", "Economy"],
     },
     {
       id: "ground-floor",
@@ -153,14 +153,14 @@ export const roomsCategoryEn: RoomsCategoryPageData = {
       title: "Family Apartments",
       subtitle: "Kitchen & living area",
       description:
-        "Spacious 40–45m² apartments with a full kitchen and living area, perfect for families who want home-like comfort.",
+        "Spacious 40–45 m² apartments with a full kitchen and living area, perfect for families who want home-like comfort.",
       href: "/chios-rooms/family-chios-apartments/",
       image:
         "/images/rooms/chios-apartments-voulamandis.webp",
       imageAlt: "Family apartments in Chios with kitchen at Voulamandis House",
       badge: "Family choice",
       ctaLabel: "View Apartments",
-      meta: ["Up to 4 guests", "40–45m²", "Kitchen"],
+      meta: ["Up to 4 guests", "40–45 m²", "Kitchen"],
     },
   ],
 
@@ -416,7 +416,7 @@ export const roomsCategoryEl: RoomsCategoryPageData = {
       href: "#room-wizard-app",
     },
     secondaryCta: {
-      label: "Δες όλα τα δωμάτια",
+      label: "Δείτε όλα τα δωμάτια",
       href: "#rooms-list",
     },
   },
@@ -433,14 +433,14 @@ export const roomsCategoryEl: RoomsCategoryPageData = {
       title: "Οικονομικό Δίκλινο",
       subtitle: "Value επιλογή για 2 άτομα",
       description:
-        "Η πιο value επιλογή για 2 άτομα. Ανακαινισμένα δωμάτια 16m² με σύγχρονες παροχές και αυθεντική αίσθηση Κάμπου.",
+        "Η πιο value επιλογή για 2 άτομα. Ανακαινισμένα δωμάτια 16 m² με σύγχρονες παροχές και αυθεντική αίσθηση Κάμπου.",
       href: "/el/domatia-xios/oikonomiko-diklino-domatio/",
       image:
         "/images/rooms/DSC07803-1.webp",
       imageAlt: "Οικονομικό δίκλινο δωμάτιο στη Χίο στο Voulamandis House",
       badge: "Value επιλογή",
       ctaLabel: "Εξερεύνηση Δωματίου",
-      meta: ["2 άτομα", "16m²", "Economy"],
+      meta: ["2 άτομα", "16 m²", "Economy"],
     },
     {
       ...roomsCategoryEn.cards[1],
@@ -475,14 +475,14 @@ export const roomsCategoryEl: RoomsCategoryPageData = {
       title: "Οικογενειακά Διαμερίσματα",
       subtitle: "Κουζίνα & καθιστικό",
       description:
-        "Ευρύχωρα διαμερίσματα 40–45m² με πλήρη κουζίνα και καθιστικό. Η απόλυτη επιλογή για οικογένειες που αναζητούν την άνεση του σπιτιού τους.",
+        "Ευρύχωρα διαμερίσματα 40–45 m² με πλήρη κουζίνα και καθιστικό. Η απόλυτη επιλογή για οικογένειες που αναζητούν την άνεση του σπιτιού τους.",
       href: "/el/domatia-xios/oikogeneiako-diamerisma/",
       image:
         "/images/rooms/chios-apartments-voulamandis.webp",
       imageAlt: "Οικογενειακά διαμερίσματα στη Χίο στο Voulamandis House",
       badge: "Για οικογένειες",
       ctaLabel: "Δείτε τα Διαμερίσματα",
-      meta: ["Έως 4 άτομα", "40–45m²", "Κουζίνα"],
+      meta: ["Έως 4 άτομα", "40–45 m²", "Κουζίνα"],
     },
   ],
 
@@ -544,7 +544,7 @@ export const roomsCategoryFr: RoomsCategoryPageData = {
       title: "Chambre double économique",
       subtitle: "Meilleur rapport qualité-prix pour 2 personnes",
       description:
-        "Le meilleur rapport qualité-prix pour 2 personnes. Chambres rénovées de 16m² avec les essentiels et une atmosphère paisible à Kambos.",
+        "Le meilleur rapport qualité-prix pour 2 personnes. Chambres rénovées de 16 m² avec les essentiels et une atmosphère paisible à Kambos.",
       href: "/fr/chambres-a-chios/chambres-doubles-economiques/",
       image:
         "/images/rooms/DSC07803-1.webp",
@@ -552,7 +552,7 @@ export const roomsCategoryFr: RoomsCategoryPageData = {
         "Chambre double économique à Chios au Voulamandis House",
       badge: "Meilleur prix",
       ctaLabel: "Découvrir la chambre",
-      meta: ["2 personnes", "16m²", "Économique"],
+      meta: ["2 personnes", "16 m²", "Économique"],
     },
     {
       ...roomsCategoryEn.cards[1],
@@ -589,7 +589,7 @@ export const roomsCategoryFr: RoomsCategoryPageData = {
       title: "Appartements familiaux",
       subtitle: "Cuisine et espace salon",
       description:
-        "Appartements spacieux de 40–45m² avec cuisine complète et coin salon. Parfaits pour les familles qui souhaitent plus d’espace et le confort d’un chez-soi.",
+        "Appartements spacieux de 40–45 m² avec cuisine complète et coin salon. Parfaits pour les familles qui souhaitent plus d’espace et le confort d’un chez-soi.",
       href: "/fr/chambres-a-chios/appartements-familiaux-de-chios/",
       image:
         "/images/rooms/chios-apartments-voulamandis.webp",
@@ -597,7 +597,7 @@ export const roomsCategoryFr: RoomsCategoryPageData = {
         "Appartements familiaux à Chios avec cuisine au Voulamandis House",
       badge: "Choix famille",
       ctaLabel: "Voir les appartements",
-      meta: ["Jusqu’à 4 personnes", "40–45m²", "Cuisine"],
+      meta: ["Jusqu’à 4 personnes", "40–45 m²", "Cuisine"],
     },
   ],
 
@@ -638,7 +638,7 @@ export const roomsCategoryDe: RoomsCategoryPageData = {
     canonicalPath: "/de/chios-zimmer/",
     title: "Zimmer und Apartments auf Chios | Voulamandis House",
     description:
-      "Entdecken Sie Zimmer und Apartments im Voulamandis House in Kambos, Chios. Economy Zimmer, Doppel- und Dreibettzimmer sowie Familienapartments mit Küche.",
+      "Entdecken Sie Zimmer und Apartments im Voulamandis House in Kambos, Chios. Economy-Zimmer, Doppel- und Dreibettzimmer sowie Familienapartments mit Küche.",
     ogImage:
       "/images/rooms/double-triple-room.jpg",
   },
@@ -660,26 +660,26 @@ export const roomsCategoryDe: RoomsCategoryPageData = {
   },
 
   intro: {
-    title: "Unterkunftsmöglichkeiten auf Chios",
+    title: "Unsere Unterkünfte auf Chios",
     description:
-      "Entdecken Sie unsere 4 Unterkunftskategorien im historischen Kambos von Chios. Vom preiswerten Economy Zimmer über komfortable Doppel- und Dreibettzimmer bis zu großzügigen Familienapartments mit Küche.",
+      "Entdecken Sie unsere 4 Unterkunftskategorien im historischen Kambos von Chios. Vom preiswerten Economy-Zimmer über komfortable Doppel- und Dreibettzimmer bis zu großzügigen Familienapartments mit Küche.",
   },
 
   cards: [
     {
       ...roomsCategoryEn.cards[0],
-      title: "Economy Zimmer",
+      title: "Economy-Zimmer",
       subtitle: "Preiswerte Option für 2 Gäste",
       description:
-        "Unsere preiswerteste Unterkunft für 2 Gäste. Renovierte Zimmer mit ca. 16m² und allen wichtigen Annehmlichkeiten für einen angenehmen Aufenthalt im ruhigen Kambos von Chios.",
+        "Unsere preiswerteste Unterkunft für 2 Gäste. Renovierte Zimmer mit ca. 16 m² und allen wichtigen Annehmlichkeiten für einen angenehmen Aufenthalt im ruhigen Kambos von Chios.",
       href: "/de/zimmer-chios/economy-zimmer-auf-chios/",
       image:
         "/images/rooms/DSC07803-1.webp",
       imageAlt:
-        "Economy Zimmer auf Chios im Voulamandis House",
+        "Economy-Zimmer auf Chios im Voulamandis House",
       badge: "Preiswert",
       ctaLabel: "Zimmer ansehen",
-      meta: ["2 Gäste", "16m²", "Economy"],
+      meta: ["2 Gäste", "16 m²", "Economy"],
     },
     {
       ...roomsCategoryEn.cards[1],
@@ -716,7 +716,7 @@ export const roomsCategoryDe: RoomsCategoryPageData = {
       title: "Familienapartments",
       subtitle: "Küche und Wohnbereich",
       description:
-        "Geräumige Apartments mit 40–45m², voll ausgestatteter Küche und separatem Wohnbereich. Perfekt für Familien oder Gäste, die mehr Platz und Unabhängigkeit wünschen.",
+        "Geräumige Apartments mit 40–45 m², voll ausgestatteter Küche und separatem Wohnbereich. Perfekt für Familien oder Gäste, die mehr Platz und Unabhängigkeit wünschen.",
       href: "/de/zimmer-chios/familienapartments-in-chios/",
       image:
         "/images/rooms/chios-apartments-voulamandis.webp",
@@ -724,7 +724,7 @@ export const roomsCategoryDe: RoomsCategoryPageData = {
         "Familienapartments auf Chios mit Küche im Voulamandis House",
       badge: "Für Familien",
       ctaLabel: "Apartments ansehen",
-      meta: ["Bis 4 Gäste", "40–45m²", "Küche"],
+      meta: ["Bis 4 Gäste", "40–45 m²", "Küche"],
     },
   ],
 
@@ -798,7 +798,7 @@ export const roomsCategoryIt: RoomsCategoryPageData = {
       title: "Camera doppia economy",
       subtitle: "Miglior rapporto qualità-prezzo per 2 ospiti",
       description:
-        "La scelta con il miglior rapporto qualità-prezzo per 2 ospiti. Camere rinnovate di 16m² con servizi essenziali e la tranquilla atmosfera di Kambos.",
+        "La scelta con il miglior rapporto qualità-prezzo per 2 ospiti. Camere rinnovate di 16 m² con servizi essenziali e la tranquilla atmosfera di Kambos.",
       href: "/it/stanze-a-chios/camera-doppia-economica-chios/",
       image:
         "/images/rooms/DSC07803-1.webp",
@@ -806,7 +806,7 @@ export const roomsCategoryIt: RoomsCategoryPageData = {
         "Camera doppia economy a Chios al Voulamandis House",
       badge: "Miglior rapporto qualità-prezzo",
       ctaLabel: "Scopri la camera",
-      meta: ["2 ospiti", "16m²", "Economy"],
+      meta: ["2 ospiti", "16 m²", "Economy"],
     },
     {
       ...roomsCategoryEn.cards[1],
@@ -843,7 +843,7 @@ export const roomsCategoryIt: RoomsCategoryPageData = {
       title: "Appartamenti familiari",
       subtitle: "Cucina e zona giorno",
       description:
-        "Ampi appartamenti di 40–45m² con cucina completa e zona giorno, perfetti per famiglie e ospiti che desiderano il comfort di casa durante il soggiorno a Chios.",
+        "Ampi appartamenti di 40–45 m² con cucina completa e zona giorno, perfetti per famiglie e ospiti che desiderano il comfort di casa durante il soggiorno a Chios.",
       href: "/it/stanze-a-chios/appartamenti-familiari-a-chios/",
       image:
         "/images/rooms/chios-apartments-voulamandis.webp",
@@ -851,7 +851,7 @@ export const roomsCategoryIt: RoomsCategoryPageData = {
         "Appartamenti familiari a Chios con cucina al Voulamandis House",
       badge: "Per famiglie",
       ctaLabel: "Vedi gli appartamenti",
-      meta: ["Fino a 4 ospiti", "40–45m²", "Cucina"],
+      meta: ["Fino a 4 ospiti", "40–45 m²", "Cucina"],
     },
   ],
 
@@ -924,7 +924,7 @@ export const roomsCategoryEs: RoomsCategoryPageData = {
       title: "Habitación doble económica",
       subtitle: "Mejor relación calidad-precio para 2 huéspedes",
       description:
-        "La mejor opción calidad-precio para 2 huéspedes. Habitaciones renovadas de 16m² con lo esencial y un ambiente tranquilo en Kambos.",
+        "La mejor opción calidad-precio para 2 huéspedes. Habitaciones renovadas de 16 m² con lo esencial y un ambiente tranquilo en Kambos.",
       href: "/es/habitaciones-en-chios/economicas-habitaciones-en-chios/",
       image:
         "/images/rooms/DSC07803-1.webp",
@@ -932,7 +932,7 @@ export const roomsCategoryEs: RoomsCategoryPageData = {
         "Habitación doble económica en Chios en Voulamandis House",
       badge: "Mejor valor",
       ctaLabel: "Ver habitación",
-      meta: ["2 huéspedes", "16m²", "Económica"],
+      meta: ["2 huéspedes", "16 m²", "Económica"],
     },
     {
       ...roomsCategoryEn.cards[1],
@@ -969,7 +969,7 @@ export const roomsCategoryEs: RoomsCategoryPageData = {
       title: "Apartamentos familiares",
       subtitle: "Cocina y sala de estar",
       description:
-        "Amplios apartamentos de 40–45m² con cocina completa y sala de estar, perfectos para familias que buscan la comodidad de sentirse como en casa.",
+        "Amplios apartamentos de 40–45 m² con cocina completa y sala de estar, perfectos para familias que buscan la comodidad de sentirse como en casa.",
       href: "/es/habitaciones-en-chios/apartamentos-familiares-en-chios/",
       image:
         "/images/rooms/chios-apartments-voulamandis.webp",
@@ -977,7 +977,7 @@ export const roomsCategoryEs: RoomsCategoryPageData = {
         "Apartamentos familiares en Chios con cocina en Voulamandis House",
       badge: "Para familias",
       ctaLabel: "Ver apartamentos",
-      meta: ["Hasta 4 huéspedes", "40–45m²", "Cocina"],
+      meta: ["Hasta 4 huéspedes", "40–45 m²", "Cocina"],
     },
   ],
 
@@ -1050,7 +1050,7 @@ export const roomsCategoryTr: RoomsCategoryPageData = {
       title: "Ekonomik çift kişilik oda",
       subtitle: "2 misafir için en avantajlı seçenek",
       description:
-        "2 misafir için en iyi fiyat-performans seçeneği. Temel ihtiyaçlara sahip, yenilenmiş 16m² odalar ve huzurlu bir Kambos atmosferi.",
+        "2 misafir için en iyi fiyat-performans seçeneği. Temel ihtiyaçlara sahip, yenilenmiş 16 m² odalar ve huzurlu bir Kambos atmosferi.",
       href: "/tr/chios-odalari/sakiz-adasindaki-ekonomi-cift-kisilik-oda/",
       image:
         "/images/rooms/DSC07803-1.webp",
@@ -1058,7 +1058,7 @@ export const roomsCategoryTr: RoomsCategoryPageData = {
         "Sakız Adası’nda Voulamandis House ekonomik çift kişilik oda",
       badge: "En avantajlı",
       ctaLabel: "Odayı keşfet",
-      meta: ["2 misafir", "16m²", "Ekonomik"],
+      meta: ["2 misafir", "16 m²", "Ekonomik"],
     },
     {
       ...roomsCategoryEn.cards[1],
@@ -1095,7 +1095,7 @@ export const roomsCategoryTr: RoomsCategoryPageData = {
       title: "Aile daireleri",
       subtitle: "Mutfak ve oturma alanı",
       description:
-        "Tam donanımlı mutfak ve oturma alanına sahip geniş 40–45m² daireler. Ev rahatlığı isteyen aileler ve küçük gruplar için mükemmel.",
+        "Tam donanımlı mutfak ve oturma alanına sahip geniş 40–45 m² daireler. Ev rahatlığı isteyen aileler ve küçük gruplar için mükemmel.",
       href: "/tr/chios-odalari/sakiz-adasinda-buyuk-aile-daireleri/",
       image:
         "/images/rooms/chios-apartments-voulamandis.webp",
@@ -1103,7 +1103,7 @@ export const roomsCategoryTr: RoomsCategoryPageData = {
         "Sakız Adası’nda mutfaklı aile daireleri Voulamandis House",
       badge: "Aileler için",
       ctaLabel: "Daireleri gör",
-      meta: ["4 misafire kadar", "40–45m²", "Mutfak"],
+      meta: ["4 misafire kadar", "40–45 m²", "Mutfak"],
     },
   ],
 
