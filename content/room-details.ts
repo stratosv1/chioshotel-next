@@ -1950,7 +1950,7 @@ export const familyChiosApartmentsEn: RoomDetailData = {
     canonicalPath: "/chios-rooms/family-chios-apartments/",
     title: "Family Apartments in Chios | Voulamandis House",
     description:
-      "Family apartments in Chios at Voulamandis House in Kambos. Spacious 40–45m² apartments with kitchen, bedroom and living area.",
+      "Family apartments in Chios at Voulamandis House in Kambos. Spacious 40–45 m² apartments with kitchen, bedroom and living area.",
     ogImage:
       "/images/rooms/chios-apartments-voulamandis.webp",
   },
@@ -1963,7 +1963,7 @@ export const familyChiosApartmentsEn: RoomDetailData = {
     image:
       "/images/rooms/chios-apartments-voulamandis.webp",
     imageAlt: "Family apartment in Chios at Voulamandis House",
-    badges: ["Up to 4 guests", "40–45m²", "Kitchen", "Living area"],
+    badges: ["Up to 4 guests", "40–45 m²", "Kitchen", "Living area"],
     primaryCta: {
       label: "Book direct",
       href: "https://beds24.com/booking.php?propid=117813&referer=BookingLink&roomid=265595&lang=en",
@@ -1983,7 +1983,7 @@ export const familyChiosApartmentsEn: RoomDetailData = {
     ],
     highlights: [
       { label: "Guests", value: "Up to 4" },
-      { label: "Size", value: "40–45m²" },
+      { label: "Size", value: "40–45 m²" },
       { label: "Kitchen", value: "Full kitchen" },
       { label: "Layout", value: "Bedroom + living area" },
     ],
@@ -2217,7 +2217,7 @@ export const familyChiosApartmentsEl: RoomDetailData = {
     canonicalPath: "/el/domatia-xios/oikogeneiako-diamerisma/",
     title: "Οικογενειακά Διαμερίσματα στη Χίο | Voulamandis House",
     description:
-      "Οικογενειακά διαμερίσματα στη Χίο στο Voulamandis House στον Κάμπο. Ευρύχωρα διαμερίσματα 40–45m² με κουζίνα, υπνοδωμάτιο και καθιστικό.",
+      "Οικογενειακά διαμερίσματα στη Χίο στο Voulamandis House στον Κάμπο. Ευρύχωρα διαμερίσματα 40–45 m² με κουζίνα, υπνοδωμάτιο και καθιστικό.",
   },
   hero: {
     ...familyChiosApartmentsEn.hero,
@@ -2227,7 +2227,7 @@ export const familyChiosApartmentsEl: RoomDetailData = {
     description:
       "Ευρύχωρα οικογενειακά διαμερίσματα με ξεχωριστό υπνοδωμάτιο, κουζίνα και καθιστικό. Ιδανικά για οικογένειες ή επισκέπτες που θέλουν περισσότερη ανεξαρτησία στη διαμονή τους στη Χίο.",
     imageAlt: "Οικογενειακό διαμέρισμα στη Χίο στο Voulamandis House",
-    badges: ["Έως 4 άτομα", "40–45m²", "Κουζίνα", "Καθιστικό"],
+    badges: ["Έως 4 άτομα", "40–45 m²", "Κουζίνα", "Καθιστικό"],
     primaryCta: { ...familyChiosApartmentsEn.hero.primaryCta, label: "Κάντε κράτηση" },
     secondaryCta: { ...familyChiosApartmentsEn.hero.secondaryCta, label: "Ρωτήστε διαθεσιμότητα" },
   },
@@ -2241,7 +2241,7 @@ export const familyChiosApartmentsEl: RoomDetailData = {
     ],
     highlights: [
       { label: "Άτομα", value: "Έως 4" },
-      { label: "Μέγεθος", value: "40–45m²" },
+      { label: "Μέγεθος", value: "40–45 m²" },
       { label: "Κουζίνα", value: "Πλήρης κουζίνα" },
       { label: "Διαρρύθμιση", value: "Υπνοδωμάτιο + καθιστικό" },
     ],
@@ -2354,7 +2354,7 @@ export const familyChiosApartmentsFr: RoomDetailData = {
     canonicalPath: "/fr/chambres-a-chios/appartements-familiaux-de-chios/",
     title: "Appartements Familiaux à Chios | Voulamandis House",
     description:
-      "Appartements familiaux à Chios au Voulamandis House à Kambos. Appartements spacieux de 40–45m² avec cuisine, chambre et salon.",
+      "Appartements familiaux à Chios au Voulamandis House à Kambos. Appartements spacieux de 40–45 m² avec cuisine, chambre et salon.",
   },
   hero: {
     ...familyChiosApartmentsEn.hero,
@@ -2364,7 +2364,7 @@ export const familyChiosApartmentsFr: RoomDetailData = {
     description:
       "Appartements familiaux spacieux avec chambre séparée, cuisine et salon. Idéal pour les familles ou les hôtes qui souhaitent plus d’indépendance pendant leur séjour à Chios.",
     imageAlt: "Appartement familial à Chios au Voulamandis House",
-    badges: ["Jusqu’à 4 personnes", "40–45m²", "Cuisine", "Salon"],
+    badges: ["Jusqu’à 4 personnes", "40–45 m²", "Cuisine", "Salon"],
     primaryCta: { ...familyChiosApartmentsEn.hero.primaryCta, label: "Réserver en direct" },
     secondaryCta: { ...familyChiosApartmentsEn.hero.secondaryCta, label: "Demander la disponibilité" },
   },
@@ -2378,7 +2378,7 @@ export const familyChiosApartmentsFr: RoomDetailData = {
     ],
     highlights: [
       { label: "Personnes", value: "Jusqu’à 4" },
-      { label: "Surface", value: "40–45m²" },
+      { label: "Surface", value: "40–45 m²" },
       { label: "Cuisine", value: "Cuisine complète" },
       { label: "Disposition", value: "Chambre + salon" },
     ],
@@ -2455,7 +2455,7 @@ export const familyChiosApartmentsDe: RoomDetailData = {
     canonicalPath: "/de/zimmer-chios/familienapartments-in-chios/",
     title: "Familienapartments auf Chios | Voulamandis House",
     description:
-      "Familienapartments auf Chios im Voulamandis House in Kambos. Geräumige Apartments mit 40–45m², Küche, Schlafzimmer und Wohnbereich.",
+      "Familienapartments auf Chios im Voulamandis House in Kambos. Geräumige Apartments mit 40–45 m², Küche, Schlafzimmer und Wohnbereich.",
   },
   hero: {
     ...familyChiosApartmentsEn.hero,
@@ -2465,7 +2465,7 @@ export const familyChiosApartmentsDe: RoomDetailData = {
     description:
       "Geräumige Familienapartments mit separatem Schlafzimmer, Küche und Wohnbereich. Ideal für Familien oder Gäste, die während ihres Aufenthalts auf Chios mehr Unabhängigkeit wünschen.",
     imageAlt: "Familienapartment auf Chios im Voulamandis House",
-    badges: ["Bis zu 4 Gäste", "40–45m²", "Küche", "Wohnbereich"],
+    badges: ["Bis zu 4 Gäste", "40–45 m²", "Küche", "Wohnbereich"],
     primaryCta: { ...familyChiosApartmentsEn.hero.primaryCta, label: "Direkt buchen" },
     secondaryCta: { ...familyChiosApartmentsEn.hero.secondaryCta, label: "Verfügbarkeit anfragen" },
   },
@@ -2479,7 +2479,7 @@ export const familyChiosApartmentsDe: RoomDetailData = {
     ],
     highlights: [
       { label: "Gäste", value: "Bis zu 4" },
-      { label: "Größe", value: "40–45m²" },
+      { label: "Größe", value: "40–45 m²" },
       { label: "Küche", value: "Voll ausgestattete Küche" },
       { label: "Aufteilung", value: "Schlafzimmer + Wohnbereich" },
     ],
@@ -2556,7 +2556,7 @@ export const familyChiosApartmentsIt: RoomDetailData = {
     canonicalPath: "/it/stanze-a-chios/appartamenti-familiari-a-chios/",
     title: "Appartamenti Familiari a Chios | Voulamandis House",
     description:
-      "Appartamenti familiari a Chios presso Voulamandis House a Kambos. Ampi appartamenti di 40–45m² con cucina, camera da letto e zona giorno.",
+      "Appartamenti familiari a Chios presso Voulamandis House a Kambos. Ampi appartamenti di 40–45 m² con cucina, camera da letto e zona giorno.",
   },
   hero: {
     ...familyChiosApartmentsEn.hero,
@@ -2566,7 +2566,7 @@ export const familyChiosApartmentsIt: RoomDetailData = {
     description:
       "Spaziosi appartamenti familiari con camera separata, cucina e zona giorno. Ideali per famiglie o ospiti che desiderano più indipendenza durante il soggiorno a Chios.",
     imageAlt: "Appartamento familiare a Chios presso Voulamandis House",
-    badges: ["Fino a 4 ospiti", "40–45m²", "Cucina", "Zona giorno"],
+    badges: ["Fino a 4 ospiti", "40–45 m²", "Cucina", "Zona giorno"],
     primaryCta: { ...familyChiosApartmentsEn.hero.primaryCta, label: "Prenota direttamente" },
     secondaryCta: { ...familyChiosApartmentsEn.hero.secondaryCta, label: "Chiedi disponibilità" },
   },
@@ -2580,7 +2580,7 @@ export const familyChiosApartmentsIt: RoomDetailData = {
     ],
     highlights: [
       { label: "Ospiti", value: "Fino a 4" },
-      { label: "Dimensione", value: "40–45m²" },
+      { label: "Dimensione", value: "40–45 m²" },
       { label: "Cucina", value: "Cucina completa" },
       { label: "Layout", value: "Camera + zona giorno" },
     ],
@@ -2655,19 +2655,19 @@ export const familyChiosApartmentsEs: RoomDetailData = {
   seo: {
     ...familyChiosApartmentsEn.seo,
     canonicalPath: "/es/habitaciones-en-chios/apartamentos-familiares-en-chios/",
-    title: "Apartamentos Familiares en Quíos | Voulamandis House",
+    title: "Apartamentos Familiares en Chios | Voulamandis House",
     description:
-      "Apartamentos familiares en Quíos en Voulamandis House, Kambos. Amplios apartamentos de 40–45m² con cocina, dormitorio y zona de estar.",
+      "Apartamentos familiares en Chios en Voulamandis House, Kambos. Amplios apartamentos de 40–45 m² con cocina, dormitorio y zona de estar.",
   },
   hero: {
     ...familyChiosApartmentsEn.hero,
-    kicker: "Apartamentos familiares en Quíos",
-    title: "Apartamentos familiares en Quíos",
+    kicker: "Apartamentos familiares en Chios",
+    title: "Apartamentos familiares en Chios",
     subtitle: "Más espacio, cocina y comodidad como en casa",
     description:
-      "Apartamentos familiares espaciosos con dormitorio separado, cocina y zona de estar. Ideales para familias o huéspedes que desean más independencia durante su estancia en Quíos.",
-    imageAlt: "Apartamento familiar en Quíos en Voulamandis House",
-    badges: ["Hasta 4 personas", "40–45m²", "Cocina", "Zona de estar"],
+      "Apartamentos familiares espaciosos con dormitorio separado, cocina y zona de estar. Ideales para familias o huéspedes que desean más independencia durante su estancia en Chios.",
+    imageAlt: "Apartamento familiar en Chios en Voulamandis House",
+    badges: ["Hasta 4 personas", "40–45 m²", "Cocina", "Zona de estar"],
     primaryCta: { ...familyChiosApartmentsEn.hero.primaryCta, label: "Reservar directo" },
     secondaryCta: { ...familyChiosApartmentsEn.hero.secondaryCta, label: "Consultar disponibilidad" },
   },
@@ -2675,13 +2675,13 @@ export const familyChiosApartmentsEs: RoomDetailData = {
     kicker: "Resumen del apartamento",
     title: "Una opción espaciosa para familias y estancias más largas",
     paragraphs: [
-      "Los apartamentos familiares de Voulamandis House están pensados para huéspedes que desean más espacio y la comodidad de una cocina durante su estancia en Quíos.",
+      "Los apartamentos familiares de Voulamandis House están pensados para huéspedes que desean más espacio y la comodidad de una cocina durante su estancia en Chios.",
       "Cada apartamento ofrece una experiencia más independiente, similar a estar en casa, con dormitorio separado, zona de estar y servicios prácticos para familias.",
       "Son una opción sólida para familias con niños, huéspedes que se quedan más noches o viajeros que prefieren preparar comidas sencillas.",
     ],
     highlights: [
       { label: "Personas", value: "Hasta 4" },
-      { label: "Tamaño", value: "40–45m²" },
+      { label: "Tamaño", value: "40–45 m²" },
       { label: "Cocina", value: "Cocina completa" },
       { label: "Distribución", value: "Dormitorio + salón" },
     ],
@@ -2725,7 +2725,7 @@ export const familyChiosApartmentsEs: RoomDetailData = {
     text: "Indícanos tus fechas y número de huéspedes, y te sugeriremos el apartamento familiar disponible más adecuado.",
     phoneLabel: "Llámanos",
     whatsappHref:
-      "https://wa.me/306944474226?text=Hola!%20Estoy%20interesado%20en%20los%20apartamentos%20familiares%20en%20Quíos.",
+      "https://wa.me/306944474226?text=Hola!%20Estoy%20interesado%20en%20los%20apartamentos%20familiares%20en%20Chios.",
     note: "Los apartamentos familiares son especialmente útiles para familias y estancias más largas, por lo que se recomienda contactar con antelación.",
   },
   faq: [
@@ -2742,7 +2742,7 @@ export const familyChiosApartmentsEs: RoomDetailData = {
     {
       question: "¿Los apartamentos son adecuados para estancias más largas?",
       answer:
-        "Sí, el espacio extra, la cocina y la zona de estar los convierten en una buena opción para estancias más largas en Quíos.",
+        "Sí, el espacio extra, la cocina y la zona de estar los convierten en una buena opción para estancias más largas en Chios.",
     },
   ],
 };
@@ -2768,7 +2768,7 @@ export const familyChiosApartmentsTr: RoomDetailData = {
     description:
       "Ayrı yatak odası, mutfak ve oturma alanına sahip geniş aile apartları. Sakız Adası’nda daha bağımsız bir konaklama isteyen aileler veya misafirler için idealdir.",
     imageAlt: "Sakız Adası Voulamandis House aile apartı",
-    badges: ["4 kişiye kadar", "40–45m²", "Mutfak", "Oturma alanı"],
+    badges: ["4 kişiye kadar", "40–45 m²", "Mutfak", "Oturma alanı"],
     primaryCta: { ...familyChiosApartmentsEn.hero.primaryCta, label: "Doğrudan rezervasyon" },
     secondaryCta: { ...familyChiosApartmentsEn.hero.secondaryCta, label: "Müsaitlik sor" },
   },
@@ -2782,7 +2782,7 @@ export const familyChiosApartmentsTr: RoomDetailData = {
     ],
     highlights: [
       { label: "Kişi", value: "4 kişiye kadar" },
-      { label: "Büyüklük", value: "40–45m²" },
+      { label: "Büyüklük", value: "40–45 m²" },
       { label: "Mutfak", value: "Tam mutfak" },
       { label: "Plan", value: "Yatak odası + oturma alanı" },
     ],

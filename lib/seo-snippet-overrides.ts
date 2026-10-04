@@ -174,9 +174,11 @@ export const seoSnippetOverrides = new Map<string, SeoSnippetOverride>([
   [
     "/el/domatia-xios/oikogeneiako-diamerisma/",
     {
-      title: "Οικογενειακά διαμερίσματα στη Χίο | Κουζίνα & άνεση",
+      // Matches the title/description the page sets explicitly (page.tsx owns
+      // the Greek apartment intent), so the WebPage JSON-LD and metadata agree.
+      title: "Διαμερίσματα στη Χίο | Οικογενειακά Διαμερίσματα",
       description:
-        "Ευρύχωρα οικογενειακά διαμερίσματα 40–45 m² στον Κάμπο, με πλήρη κουζίνα, καθιστικό και χώρο για έως 4 άτομα.",
+        "Διαμερίσματα στη Χίο στο Voulamandis House στον Κάμπο. Τρία ευρύχωρα οικογενειακά διαμερίσματα 40–45 m² με πλήρη κουζίνα, καθιστικό και χώρο για έως 4 άτομα.",
     },
   ],
   [
