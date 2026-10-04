@@ -2,10 +2,10 @@ import type { HomePageData } from "@/content/home";
 
 const greekUiReplacements: ReadonlyArray<readonly [string, string]> = [
   ["💎 Value for money", "💎 Καλή σχέση ποιότητας–τιμής"],
-  ["Room Wizard", "Βρες το δωμάτιό σου"],
+  ["Room Wizard", "Βρείτε το δωμάτιό σας"],
   ["Scratch to reveal your discount", "Ξύσε για να αποκαλύψεις την έκπτωσή σου"],
   ["Direct booking code", "Κωδικός απευθείας κράτησης"],
-  ["Discover Chios", "Ανακάλυψε τη Χίο"],
+  ["Discover Chios", "Ανακαλύψτε τη Χίο"],
   ["Clear waters", "Καθαρά νερά"],
   ["Mastic villages", "Μαστιχοχώρια"],
   ["Culture", "Πολιτισμός"],
@@ -63,14 +63,14 @@ export function hardenGreekHomePageData(data: HomePageData): HomePageData {
       ...localized.location,
       discount: {
         ...localized.location.discount,
-        badge: "Προσφορά τώρα • Πάρε κωδικό",
+        badge: "Προσφορά τώρα • Πάρτε κωδικό",
       },
     },
     roomsPreview: {
       ...localized.roomsPreview,
       primaryCta: {
         ...localized.roomsPreview.primaryCta,
-        label: "Βρες το δωμάτιό σου",
+        label: "Βρείτε το δωμάτιό σας",
       },
       rooms: localized.roomsPreview.rooms.map((room) => ({
         ...room,
@@ -87,7 +87,7 @@ export function hardenGreekHomePageData(data: HomePageData): HomePageData {
     },
     traveler: {
       ...localized.traveler,
-      kicker: "Ανακάλυψε τη Χίο",
+      kicker: "Ανακαλύψτε τη Χίο",
     },
   };
 }

@@ -133,7 +133,7 @@ const polishAlternateGroups: ReadonlyArray<{
 ];
 
 
-function normalizeMetadataTitle(path: string, title: string): string {
+export function normalizeMetadataTitle(path: string, title: string): string {
   const pathOverride = seoSnippetOverrides.get(normalizePath(path));
 
   if (pathOverride) {
@@ -152,7 +152,7 @@ function normalizeMetadataTitle(path: string, title: string): string {
   );
 }
 
-function normalizeMetadataDescription(path: string, description: string): string {
+export function normalizeMetadataDescription(path: string, description: string): string {
   return resolveSeoDynamicTokens(
     seoSnippetOverrides.get(normalizePath(path))?.description || description.trim(),
     path,

@@ -308,7 +308,7 @@ export const homePageEn: HomePageData = {
   announceBar: {
     href: "#vh-lastminute-title",
     icon: "🔥",
-    text: "Traveling to Chios this week?",
+    text: "Travelling to Chios this week?",
     strongText: "See available accommodation deals.",
   },
 
@@ -368,7 +368,7 @@ export const homePageEn: HomePageData = {
       previewImage:
         "/images/site/voulamandis.house_.google.maps_.webp",
       iframeSrc:
-        "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12648.784411135249!2d26.1360051!3d38.3370954!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14bac5b2f6b8b9f1%3A0x6b8b9f1b2f6b8b9f!2sVoulamandis%20House!5e0!3m2!1sel!2sgr!4v1614241234567!5m2!1sel!2sgr",
+        "https://www.google.com/maps/search/?api=1&query=Voulamandis%20House%2C%20Dimarchou%20Kalvokoressi%20117%2C%20Kambos%2C%20Chios%2082100",
       buttonLabel: "Show Map",
     },
     distances: [
@@ -388,7 +388,7 @@ export const homePageEn: HomePageData = {
     infoCard: {
       kicker: "Local information",
       title: "Voulamandis House",
-      addressLines: ["Mayor Kalvokoresi 117", "Kambos, Chios 82100"],
+      addressLines: ["Dimarchou Kalvokoressi 117", "Kambos, Chios 82100"],
       phoneLabel: "Tel:",
       phone: "+30 22710 31733",
       phoneHref: "tel:+302271031733",
@@ -436,7 +436,7 @@ export const homePageEn: HomePageData = {
     text: "Our rooms are cleaned daily and designed for a comfortable, peaceful and quality stay in Kambos, Chios.",
     primaryCta: {
       label: "Room Wizard",
-      href: "/chios-rooms/",
+      href: "/ai-assistant/",
       icon: "✨",
     },
     secondaryCta: {
@@ -511,7 +511,7 @@ export const homePageEn: HomePageData = {
   lastMinute: {
     kicker: "Last Minute Deals",
     icon: "⚡",
-    title: "Traveling to Chios this week?",
+    title: "Travelling to Chios this week?",
     subtitle:
       "A quick view of rooms available only during the next 7 days. Select the number of guests to see current direct offers.",
     widget: {
@@ -727,9 +727,9 @@ export const homePageEn: HomePageData = {
     title: "What you should know before booking your stay",
     items: [
       {
-        question: "Is Voulamandis House an accommodation?",
+        question: "Is Voulamandis House a hotel?",
         answerHtml:
-          "Voulamandis House is a property with rooms and apartments in Kambos, Chios. If you are searching for accommodation in Chios but prefer quieter and more personal hospitality, it is an authentic alternative.",
+          "No. Voulamandis House is a property with rooms and apartments in Kambos, Chios. If you are searching for a hotel in Chios but prefer quieter and more personal hospitality, it is an authentic alternative.",
       },
       {
         question: "Where exactly is Voulamandis House located?",
@@ -811,30 +811,30 @@ export const homePageEl: HomePageData = {
     imageAlt:
       "Πέτρινο ενοικιαζόμενο δωμάτιο στο Voulamandis House, στον Κάμπο της Χίου",
     primaryCta: {
-      label: "Βρες δωμάτιο με AI",
+      label: "Βρείτε δωμάτιο με AI",
       href: "/el/ai-assistant/",
       icon: "✨",
     },
     secondaryCta: {
-      label: "Προσφορές",
-      href: "#vh-lastminute-title",
+      label: "Κράτηση",
+      href: "/el/amesi-kratisi-voulamandis-house/",
       icon: "🔥",
     },
     quizCard: {
       href: "/el/diakopes-sti-chio-quiz/",
       icon: "🧭",
       liveLabel: "LIVE Κωδικός έκπτωσης",
-      title: "Ανακάλυψε τη Χίο",
-      text: "Μάθε τα μυστικά του νησιού και πάρε κωδικό για τη διαμονή σου.",
-      cta: "Ξεκίνα →",
+      title: "Ανακαλύψτε τη Χίο",
+      text: "Μάθετε τα μυστικά του νησιού και πάρτε κωδικό για τη διαμονή σας.",
+      cta: "Ξεκινήστε →",
     },
   },
 
   announceBar: {
     href: "#vh-lastminute-title",
     icon: "🔥",
-    text: "Ταξιδεύεις για Χίο αυτή την εβδομάδα;",
-    strongText: "Δες διαθέσιμες προσφορές διαμονής.",
+    text: "Ταξιδεύετε στη Χίο αυτή την εβδομάδα;",
+    strongText: "Δείτε διαθέσιμες προσφορές διαμονής.",
   },
 
   intro: {
@@ -906,7 +906,7 @@ export const homePageEl: HomePageData = {
       },
       {
         label: "🏖️ Παραλία",
-        value: "1.5 χλμ",
+        value: "1,5 χλμ",
       },
     ],
     infoCard: {
@@ -927,9 +927,9 @@ export const homePageEl: HomePageData = {
       },
     },
     discount: {
-      badge: "LIVE Ευκαιρία • Πάρε κωδικό",
+      badge: "LIVE Ευκαιρία • Πάρτε κωδικό",
       title: "Κλείστε απευθείας μαζί μας",
-      text: "Πάρε κωδικό έκπτωσης και προχώρησε σε απευθείας κράτηση χωρίς προμήθειες.",
+      text: "Πάρτε κωδικό έκπτωσης και προχωρήστε σε απευθείας κράτηση χωρίς προμήθειες.",
       benefits: [
         "✔️ Καλύτερη διαθέσιμη τιμή",
         "✔️ Άμεση επικοινωνία με το κατάλυμα",
@@ -961,7 +961,7 @@ export const homePageEl: HomePageData = {
     text: "Τα δωμάτιά μας καθαρίζονται καθημερινά και έχουν σχεδιαστεί για άνετη, ήρεμη και ποιοτική διαμονή στον Κάμπο της Χίου.",
     primaryCta: {
       label: "Room Wizard",
-      href: "/el/domatia-xios/",
+      href: "/el/ai-assistant/",
       icon: "✨",
     },
     secondaryCta: {
@@ -985,7 +985,7 @@ export const homePageEl: HomePageData = {
           "Ιδανική επιλογή για δύο άτομα που θέλουν προσεγμένη διαμονή στον Κάμπο της Χίου.",
         meta: ["👥 2 άτομα", "Economy", "🍊 Κάμπος"],
         amenities: ["❄️ A/C", "📶 Wi-Fi", "☕ Καφές", "🧊 Ψυγείο"],
-        cta: "Δες το δωμάτιο",
+        cta: "Δείτε το δωμάτιο",
       },
       {
         ...homePageEn.roomsPreview.rooms[1],
@@ -997,7 +997,7 @@ export const homePageEl: HomePageData = {
           "Άνετη λύση για ζευγάρια ή μικρές οικογένειες με εύκολη πρόσβαση.",
         meta: ["👤 ×2-3", "🌿 Ισόγειο", "Εύκολα"],
         amenities: ["❄️ A/C", "📶 Wi-Fi", "☕ Καφές", "🧊 Ψυγείο"],
-        cta: "Δες το δωμάτιο",
+        cta: "Δείτε το δωμάτιο",
       },
       {
         ...homePageEn.roomsPreview.rooms[2],
@@ -1009,7 +1009,7 @@ export const homePageEl: HomePageData = {
           "Επιλογή για επισκέπτες που αναζητούν πιο ήρεμη ατμόσφαιρα και κλασική φιλοξενία.",
         meta: ["👤 ×2-3", "🏛️ Όροφος", "Ήσυχα"],
         amenities: ["❄️ A/C", "📶 Wi-Fi", "☕ Καφές", "🧊 Ψυγείο"],
-        cta: "Δες το δωμάτιο",
+        cta: "Δείτε το δωμάτιο",
       },
       {
         ...homePageEn.roomsPreview.rooms[3],
@@ -1021,7 +1021,7 @@ export const homePageEl: HomePageData = {
           "Ιδανικό για οικογένειες ή μικρές παρέες που χρειάζονται περισσότερο χώρο.",
         meta: ["👤 ×4", "Χώρος", "🏡 Apt"],
         amenities: ["❄️ A/C", "📶 Wi-Fi", "☕ Καφές", "🧊 Ψυγείο"],
-        cta: "Δες το διαμέρισμα",
+        cta: "Δείτε το διαμέρισμα",
       },
     ],
   },
@@ -1029,7 +1029,7 @@ export const homePageEl: HomePageData = {
   lastMinute: {
     kicker: "Last Minute Προσφορές",
     icon: "⚡",
-    title: "Ταξιδεύεις για Χίο αυτή την εβδομάδα;",
+    title: "Ταξιδεύετε στη Χίο αυτή την εβδομάδα;",
     subtitle:
       "Γρήγορη εικόνα των διαθέσιμων δωματίων μόνο για τις επόμενες 7 ημέρες. Επίλεξε επισκέπτες για να δεις τις τρέχουσες απευθείας προσφορές.",
     widget: {
@@ -1097,37 +1097,37 @@ export const homePageEl: HomePageData = {
   traveler: {
     kicker: "Discover Chios",
     icon: "🧳",
-    title: "Ποιος τύπος ταξιδιώτη είσαι;",
+    title: "Τι τύπος ταξιδιώτη είστε;",
     subtitle:
-      "Επίλεξε την εμπειρία που σου ταιριάζει και ανακάλυψε τη Χίο με βάση το δικό σου ταξιδιωτικό στυλ.",
+      "Επιλέξτε την εμπειρία που σας ταιριάζει και ανακαλύψτε τη Χίο με βάση το δικό σας ταξιδιωτικό στυλ.",
     cards: [
       {
         ...homePageEn.traveler.cards[0],
         title: "Θάλασσα",
         text: "Κρυστάλλινα νερά, μοναδικές παραλίες και χαλάρωση στο νησί.",
         href: "/el/xios-gia-latreis-paralias/",
-        cta: "🏖️ Εξερεύνησε",
+        cta: "🏖️ Εξερευνήστε",
       },
       {
         ...homePageEn.traveler.cards[1],
         title: "Εξερεύνηση",
         text: "Χωριά, φύση και πολιτισμός σε κάθε γωνιά της Χίου.",
         href: "/el/exerevnisi-xiou/",
-        cta: "🧭 Εξερεύνησε",
+        cta: "🧭 Εξερευνήστε",
       },
       {
         ...homePageEn.traveler.cards[2],
         title: "Οικογένεια",
         text: "Ιδέες και δραστηριότητες για αξέχαστες οικογενειακές διακοπές.",
         href: "/el/oikogeneiakes-diakopes-sti-xio/",
-        cta: "👨‍👩‍👧‍👦 Εξερεύνησε",
+        cta: "👨‍👩‍👧‍👦 Εξερευνήστε",
       },
       {
         ...homePageEn.traveler.cards[3],
         title: "Γαστρονομία",
         text: "Αυθεντικές γεύσεις, μαστίχα και τοπικές εμπειρίες.",
         href: "/el/geuseis-tis-xiou/",
-        cta: "🍽️ Εξερεύνησε",
+        cta: "🍽️ Εξερευνήστε",
       },
     ],
   },
@@ -1144,51 +1144,51 @@ export const homePageEl: HomePageData = {
         title: "Παραλίες της Χίου",
         text: "Δείτε προτάσεις και οργανώστε πιο εύκολα τις καλοκαιρινές σας εξορμήσεις.",
         href: "/el/paralies-xios/",
-        ctaLabel: "Δες περισσότερα",
+        ctaLabel: "Δείτε περισσότερα",
       },
       {
         ...homePageEn.chiosGuide.cards[1],
         title: "Χωριά της Χίου",
         text: "Ανακαλύψτε παραδοσιακούς οικισμούς και σημεία που αξίζει να επισκεφθείτε.",
         href: "/el/xoria-xios/",
-        ctaLabel: "Δες περισσότερα",
+        ctaLabel: "Δείτε περισσότερα",
       },
       {
         ...homePageEn.chiosGuide.cards[2],
         title: "Κάμπος της Χίου",
         text: "Μάθετε περισσότερα για την περιοχή που κάνει τη διαμονή στον Κάμπο ξεχωριστή.",
         href: "/el/chios/kampos-chios/",
-        ctaLabel: "Δες περισσότερα",
+        ctaLabel: "Δείτε περισσότερα",
       },
       {
         ...homePageEn.chiosGuide.cards[3],
         title: "Μουσεία της Χίου",
         text: "Πολιτιστικές στάσεις για όσους αγαπούν την ιστορία και την τοπική ταυτότητα.",
         href: "/el/mouseia-xios/",
-        ctaLabel: "Δες περισσότερα",
+        ctaLabel: "Δείτε περισσότερα",
       },
       {
         ...homePageEn.chiosGuide.cards[4],
         title: "Ορχιδέες της Χίου",
         text: "Μια ιδιαίτερη δραστηριότητα για φυσιολάτρες που θέλουν να δουν μια διαφορετική πλευρά του νησιού.",
         href: "/el/orchidees-xiou/",
-        ctaLabel: "Δες περισσότερα",
+        ctaLabel: "Δείτε περισσότερα",
       },
       {
         ...homePageEn.chiosGuide.cards[5],
         title: "Ιαματικές Πηγές",
         text: "Επιλογές για χαλάρωση και wellness εμπειρίες που συμπληρώνουν ιδανικά τις διακοπές σας.",
         href: "/el/iamatika-loutra-xiou/",
-        ctaLabel: "Δες περισσότερα",
+        ctaLabel: "Δείτε περισσότερα",
       },
     ],
   },
 
   quizBar: {
     label: "ΑΝΑΚΑΛΥΨΤΕ ΤΗ ΧΙΟ",
-    text: "Αφιέρωσε 5 λεπτά και παίξε αυτό το quiz που θα σε βοηθήσει να γνωρίσεις τη Χίο, να μάθεις τα μυστικά της και να πάρεις κωδικό έκπτωσης στο τέλος.",
+    text: "Αφιερώστε 5 λεπτά και παίξτε αυτό το quiz που θα σας βοηθήσει να γνωρίσετε τη Χίο, να μάθετε τα μυστικά της και να πάρετε κωδικό έκπτωσης στο τέλος.",
     href: "/el/diakopes-sti-chio-quiz/",
-    cta: "🧭 ΞΕΚΙΝΑ ΤΗΝ ΕΜΠΕΙΡΙΑ →",
+    cta: "🧭 ΞΕΚΙΝΗΣΤΕ ΤΗΝ ΕΜΠΕΙΡΙΑ →",
   },
 
   faq: {
@@ -1367,13 +1367,13 @@ export const homePageFr: HomePageData = {
     distances: [
       { label: "✈️ Aéroport", value: "3 km" },
       { label: "⛴️ Port", value: "6 km" },
-      { label: "🏖️ Plage", value: "1.5 km" },
+      { label: "🏖️ Plage", value: "1,5 km" },
     ],
     infoCard: {
       ...homePageEn.location.infoCard,
       kicker: "Informations locales",
       title: "Voulamandis House",
-      addressLines: ["Mayor Kalvokoresi 117", "Kambos, Chios 82100"],
+      addressLines: ["Dimarchou Kalvokoressi 117", "Kambos, Chios 82100"],
       phoneLabel: "Tél :",
       emailLabel: "Email :",
       text: "L’établissement se trouve dans un endroit qui combine calme, accès facile et courtes distances vers les principaux points de Chios.",
@@ -1417,7 +1417,7 @@ export const homePageFr: HomePageData = {
     text: "Nos chambres sont nettoyées chaque jour et pensées pour un séjour confortable, calme et de qualité à Kambos, Chios.",
     primaryCta: {
       label: "Trouver votre chambre",
-      href: "/fr/chambres-a-chios/",
+      href: "/fr/ai-assistant/",
       icon: "✨",
     },
     secondaryCta: {
@@ -1813,13 +1813,13 @@ export const homePageDe: HomePageData = {
     distances: [
       { label: "✈️ Flughafen", value: "3 km" },
       { label: "⛴️ Hafen", value: "6 km" },
-      { label: "🏖️ Strand", value: "1.5 km" },
+      { label: "🏖️ Strand", value: "1,5 km" },
     ],
     infoCard: {
       ...homePageEn.location.infoCard,
       kicker: "Lokale Informationen",
       title: "Voulamandis House",
-      addressLines: ["Mayor Kalvokoresi 117", "Kambos, Chios 82100"],
+      addressLines: ["Dimarchou Kalvokoressi 117", "Kambos, Chios 82100"],
       phoneLabel: "Tel:",
       emailLabel: "Email:",
       text: "Die Unterkunft liegt an einem Ort, der Ruhe, einfache Erreichbarkeit und kurze Wege zu den wichtigsten Punkten von Chios verbindet.",
@@ -1863,7 +1863,7 @@ export const homePageDe: HomePageData = {
     text: "Unsere Zimmer werden täglich gereinigt und sind für einen komfortablen, ruhigen und hochwertigen Aufenthalt in Kambos gestaltet.",
     primaryCta: {
       label: "Room Wizard",
-      href: "/de/chios-zimmer/",
+      href: "/de/ai-assistant/",
       icon: "✨",
     },
     secondaryCta: {
@@ -1885,7 +1885,7 @@ export const homePageDe: HomePageData = {
         bedBadge: "🛏️ 1 Doppelbett oder 2 Einzelbetten",
         description:
           "Ideal für zwei Gäste, die einen gepflegten Aufenthalt in Kambos suchen.",
-        meta: ["👥 2 Gäste", "Economy", "🍊 Kambos"],
+        meta: ["👥 2 Gäste", "Günstig", "🍊 Kambos"],
         amenities: ["❄️ A/C", "📶 Wi-Fi", "☕ Kaffee", "🧊 Kühlschrank"],
         cta: "Zimmer ansehen",
       },
@@ -2084,9 +2084,9 @@ export const homePageDe: HomePageData = {
     title: "Was Sie vor der Buchung wissen sollten",
     items: [
       {
-        question: "Ist Voulamandis House eine Unterkunft?",
+        question: "Ist Voulamandis House ein Hotel?",
         answerHtml:
-          "Voulamandis House ist eine Unterkunft mit Zimmern und Apartments in Kambos, Chios. Wenn Sie eine Unterkunft auf Chios suchen, aber eine ruhigere und persönlichere Gastfreundschaft bevorzugen, ist es eine authentische Alternative.",
+          "Nein. Voulamandis House ist eine Unterkunft mit Zimmern und Apartments in Kambos, Chios. Wenn Sie ein Hotel auf Chios suchen, aber eine ruhigere und persönlichere Gastfreundschaft bevorzugen, ist es eine authentische Alternative.",
       },
       {
         question: "Wo genau liegt Voulamandis House?",
@@ -2254,13 +2254,13 @@ export const homePageIt: HomePageData = {
     distances: [
       { label: "✈️ Aeroporto", value: "3 km" },
       { label: "⛴️ Porto", value: "6 km" },
-      { label: "🏖️ Spiaggia", value: "1.5 km" },
+      { label: "🏖️ Spiaggia", value: "1,5 km" },
     ],
     infoCard: {
       ...homePageEn.location.infoCard,
       kicker: "Informazioni locali",
       title: "Voulamandis House",
-      addressLines: ["Mayor Kalvokoresi 117", "Kambos, Chios 82100"],
+      addressLines: ["Dimarchou Kalvokoressi 117", "Kambos, Chios 82100"],
       phoneLabel: "Tel:",
       emailLabel: "Email:",
       text: "La struttura si trova in una zona che unisce tranquillità, accesso facile e brevi distanze dai punti principali di Chios.",
@@ -2304,7 +2304,7 @@ export const homePageIt: HomePageData = {
     text: "Le nostre camere vengono pulite ogni giorno e sono pensate per un soggiorno comodo, tranquillo e curato a Kambos, Chios.",
     primaryCta: {
       label: "Trova la tua camera",
-      href: "/it/camere-a-chios/",
+      href: "/it/ai-assistant/",
       icon: "✨",
     },
     secondaryCta: {
@@ -2327,7 +2327,7 @@ export const homePageIt: HomePageData = {
         bedBadge: "🛏️ 1 letto matrimoniale o 2 letti singoli",
         description:
           "Ideale per due persone che desiderano un soggiorno curato a Kambos.",
-        meta: ["👥 2 ospiti", "Economy", "🍊 Kambos"],
+        meta: ["👥 2 ospiti", "Economica", "🍊 Kambos"],
         amenities: ["❄️ A/C", "📶 Wi-Fi", "☕ Caffè", "🧊 Frigo"],
         cta: "Vedi camera",
       },
@@ -2567,7 +2567,7 @@ export const homePageIt: HomePageData = {
     title: "Il tuo viaggio a Chios inizia qui",
     text: "Ospitalità calorosa, atmosfera autentica e posizione ideale a Kambos.",
     primaryCta: {
-      label: "Prenota direttamente",
+      label: "Prenota da noi",
       href: "/it/prezzi-hotel-chios/",
       icon: "🛎️",
     },
@@ -2700,13 +2700,13 @@ export const homePageEs: HomePageData = {
     distances: [
       { label: "✈️ Aeropuerto", value: "3 km" },
       { label: "⛴️ Puerto", value: "6 km" },
-      { label: "🏖️ Playa", value: "1.5 km" },
+      { label: "🏖️ Playa", value: "1,5 km" },
     ],
     infoCard: {
       ...homePageEn.location.infoCard,
       kicker: "Información local",
       title: "Voulamandis House",
-      addressLines: ["Mayor Kalvokoresi 117", "Kambos, Chios 82100"],
+      addressLines: ["Dimarchou Kalvokoressi 117", "Kambos, Chios 82100"],
       phoneLabel: "Tel:",
       emailLabel: "Email:",
       text: "El alojamiento se encuentra en una zona que combina tranquilidad, acceso fácil y distancias cortas a los puntos principales de Chios.",
@@ -2750,7 +2750,7 @@ export const homePageEs: HomePageData = {
     text: "Nuestras habitaciones se limpian cada día y están pensadas para una estancia cómoda, tranquila y cuidada en Kambos, Chios.",
     primaryCta: {
       label: "Encuentra tu habitación",
-      href: "/es/habitaciones-en-chios/",
+      href: "/es/ai-assistant/",
       icon: "✨",
     },
     secondaryCta: {
@@ -3065,7 +3065,7 @@ export const homePageTr: HomePageData = {
       icon: "✨",
     },
     secondaryCta: {
-      label: "Rezervasyon",
+      label: "Rezerve et",
       href: "/tr/sakiz-adasi-rezervasyon/",
       icon: "🔥",
     },
@@ -3146,13 +3146,13 @@ export const homePageTr: HomePageData = {
     distances: [
       { label: "✈️ Havaalanı", value: "3 km" },
       { label: "⛴️ Liman", value: "6 km" },
-      { label: "🏖️ Plaj", value: "1.5 km" },
+      { label: "🏖️ Plaj", value: "1,5 km" },
     ],
     infoCard: {
       ...homePageEn.location.infoCard,
       kicker: "Yerel bilgiler",
       title: "Voulamandis House",
-      addressLines: ["Mayor Kalvokoresi 117", "Kambos, Chios 82100"],
+      addressLines: ["Dimarchou Kalvokoressi 117", "Kambos, Chios 82100"],
       phoneLabel: "Tel:",
       emailLabel: "Email:",
       text: "Tesis, Sakız Adası’nın önemli noktalarına kısa mesafede; sakinlik ve kolay ulaşımı bir arada sunan bir konumdadır.",
@@ -3196,7 +3196,7 @@ export const homePageTr: HomePageData = {
     text: "Odalarımız her gün temizlenir ve Kambos’ta rahat, sakin ve kaliteli bir konaklama için hazırlanmıştır.",
     primaryCta: {
       label: "Room Wizard",
-      href: "/tr/sakiz-adasi-odalari/",
+      href: "/tr/ai-assistant/",
       icon: "✨",
     },
     secondaryCta: {

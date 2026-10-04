@@ -73,7 +73,7 @@ function localizeInheritedCopy(data: HomePageData): HomePageData {
           ...data.intro.right,
           cards: data.intro.right.cards.map((card) =>
             card.title.includes("Room Wizard")
-              ? { ...card, title: "🧭 Βρες το δωμάτιό σου" }
+              ? { ...card, title: "🧭 Βρείτε το δωμάτιό σας" }
               : card,
           ),
         },
@@ -82,14 +82,14 @@ function localizeInheritedCopy(data: HomePageData): HomePageData {
         ...data.location,
         discount: {
           ...data.location.discount,
-          badge: "Προσφορά τώρα • Πάρε κωδικό",
+          badge: "Προσφορά τώρα • Πάρτε κωδικό",
         },
       },
       roomsPreview: {
         ...data.roomsPreview,
         primaryCta: {
           ...data.roomsPreview.primaryCta,
-          label: "Βρες το δωμάτιό σου",
+          label: "Βρείτε το δωμάτιό σας",
         },
         rooms: data.roomsPreview.rooms.map((room) => ({
           ...room,
@@ -119,7 +119,7 @@ function localizeInheritedCopy(data: HomePageData): HomePageData {
       },
       traveler: {
         ...data.traveler,
-        kicker: "Ανακάλυψε τη Χίο",
+        kicker: "Ανακαλύψτε τη Χίο",
       },
     };
   }
@@ -149,7 +149,7 @@ function localizeInheritedCopy(data: HomePageData): HomePageData {
         ...data.roomsPreview,
         primaryCta: {
           ...data.roomsPreview.primaryCta,
-          label: "Zimmerfinder",
+          label: "Zimmer finden",
         },
         rooms: data.roomsPreview.rooms.map((room) => ({
           ...room,
@@ -182,7 +182,7 @@ function localizeInheritedCopy(data: HomePageData): HomePageData {
       ...data.location,
       infoCard: {
         ...data.location.infoCard,
-        addressLines: ["Mayor Kalvokoresi 117", "Kambos, Sakız Adası 82100"],
+        addressLines: ["Dimarchou Kalvokoressi 117", "Kambos, Sakız Adası 82100"],
         emailLabel: "E-posta:",
       },
     },
