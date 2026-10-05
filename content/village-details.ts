@@ -47,6 +47,8 @@ export type VillageDetailData = {
   relatedText: string;
   /** Optional overrides for the template headings (keeps grammar correct per village). */
   answerTitle?: string;
+  /** Short answer text for the quick-answer box (defaults to hero description). */
+  answerText?: string;
   specialTitle?: string;
   heroImageAlt?: string;
   /** Optional in-depth guide sections rendered after the details cards. */
@@ -803,10 +805,12 @@ export const localizedVillageDetails: VillageDetailData[] = [
       title: "Μεστά: το αυθεντικό μεσαιωνικό καστροχώρι",
       description: "Ανακαλύψτε τα Μεστά στη Χίο, ένα από τα καλύτερα διατηρημένα μεσαιωνικά καστροχώρια με πέτρινα σοκάκια, καμάρες και αυθεντική ατμόσφαιρα.",
       image: "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
-      tags: ["#mesta", "#medieval_village", "#mastichochoria", "#stone_alleys"],
+      tags: ["#Μεστά", "#Μαστιχοχώρια", "#καστροχώρι"],
     },
     heroImageAlt: "Πέτρινο σοκάκι με καμάρες στο μεσαιωνικό χωριό Μεστά Χίου",
     answerTitle: "Γιατί να επισκεφθείτε τα Μεστά Χίου;",
+    answerText:
+      "Γιατί είναι το πιο ακέραιο οχυρωμένο χωριό της Χίου: τα σπίτια σχηματίζουν τείχος, τα σοκάκια είναι λαβύρινθος και μέσα δεν μπαίνουν αυτοκίνητα. Χρειάζεστε 1,5–2 ώρες και συνδυάζονται εύκολα με Ολύμπους και Πυργί.",
     specialTitle: "Τι κάνει τα Μεστά ξεχωριστά;",
     details: [
       {
@@ -883,19 +887,17 @@ export const localizedVillageDetails: VillageDetailData[] = [
       ],
     },
     practical: {
-      title: "Πρακτικές πληροφορίες για τα Μεστά",
+      title: "Αποστάσεις από τα Μεστά",
       items: [
-        { label: "Απόσταση από την πόλη της Χίου", value: "περίπου 35 χλμ. (45 λεπτά)" },
-        { label: "Από τον Κάμπο / Voulamandis House", value: "περίπου 40–45 λεπτά με αυτοκίνητο" },
+        { label: "Πόλη της Χίου", value: "περίπου 35 χλμ. (45 λεπτά)" },
+        { label: "Κάμπος / Voulamandis House", value: "περίπου 40–45 λεπτά με αυτοκίνητο" },
         { label: "Ολύμποι", value: "περίπου 4 χλμ." },
         { label: "Πυργί", value: "περίπου 10 χλμ." },
-        { label: "Αυτοκίνητο στο χωριό", value: "όχι, στάθμευση έξω από τον οικισμό" },
-        { label: "Χρόνος επίσκεψης", value: "1,5–2 ώρες, μισή μέρα με Ολύμπους" },
         { label: "Καλύτερη ώρα το καλοκαίρι", value: "πρωί ή αργά το απόγευμα" },
       ],
     },
     routeIdeas: {
-      title: "Ιδέες διαδρομής από τα Μεστά",
+      title: "Πώς να συνδυάσετε τα Μεστά",
       items: [
         {
           icon: "🌿",

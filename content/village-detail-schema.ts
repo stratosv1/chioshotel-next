@@ -284,7 +284,7 @@ export function buildVillageDetailSchema(village: VillageDetailData) {
     buildVillagePlaceSchema(village),
     buildVillageDetailsItemListSchema(village),
     buildVillageHighlightsSchema(village),
-    buildVillageExperienceSchema(village),
+    village.guide ? null : buildVillageExperienceSchema(village),
     buildVillageRouteIdeasSchema(village),
     buildVillageLocalTipSchema(village),
     buildVillageStayActionSchema(village),

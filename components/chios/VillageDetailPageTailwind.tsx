@@ -146,8 +146,7 @@ function getVillageCollectionForLanguage(language: VillageUiLanguage) {
 }
 
 function getBadgeFromVillage(village: VillageDetailData) {
-  const firstTag = village.hero.tags[0];
-  return firstTag ? firstTag.replace(/^#/, "").replaceAll("_", " ") : village.hero.kicker;
+  return getVillageDisplayName(village.hero.title) || village.hero.kicker;
 }
 
 function getVillageDisplayName(title: string) {
@@ -203,7 +202,7 @@ export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
             <p className="mt-6 max-w-[650px] text-base font-semibold leading-8 text-white/90 md:text-lg">
               {heroDescription}
             </p>
-            <div className="mt-7 flex flex-wrap gap-2" aria-label={copy.tagsLabel}>
+            <div className="mt-7 hidden flex-wrap gap-2 md:flex" aria-label={copy.tagsLabel}>
               {village.hero.tags.map((tag) => (
                 <span
                   className="rounded-full border border-white/25 bg-white/15 px-3 py-2 text-[11px] font-black uppercase tracking-[0.08em] text-white backdrop-blur"
@@ -226,7 +225,7 @@ export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
             {village.answerTitle ?? `${copy.answerTitlePrefix} ${villageName}${language === "el" ? ";" : "?"}`}
           </h2>
           <p className="mt-4 text-sm font-semibold leading-7 text-[#4d4238] md:text-lg md:leading-8">
-            {heroDescription}
+            {village.answerText ?? heroDescription}
           </p>
           <ul className="mt-5 grid gap-2 md:grid-cols-2 md:gap-3">
             {village.highlights.items.slice(0, 4).map((item) => (
@@ -317,6 +316,7 @@ export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
         </section>
       ) : null}
 
+      {village.guide ? null : (
       <section className="px-4 py-14 md:px-6 md:py-20" aria-labelledby="village-story-title">
         <div className="mx-auto grid max-w-[1180px] gap-6 lg:grid-cols-[1.15fr_0.85fr]">
           <article className="rounded-[34px] border border-[#8e6607]/15 bg-white p-6 shadow-xl shadow-black/5 md:p-10">
@@ -353,6 +353,8 @@ export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
           </aside>
         </div>
       </section>
+
+      )}
 
       <section className="px-4 py-14 md:px-6 md:py-20" aria-labelledby="village-routes-title">
         <div className="mx-auto max-w-[1180px]">
@@ -434,8 +436,14 @@ export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
                   className="group rounded-2xl border border-[#8e6607]/15 bg-white p-5 shadow-sm"
                   key={item.question}
                 >
-                  <summary className="cursor-pointer list-none text-base font-black text-[#2f261f] marker:hidden">
-                    {item.question}
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-black text-[#2f261f] [&::-webkit-details-marker]:hidden">
+                    <span>{item.question}</span>
+                    <span
+                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#fff4df] text-lg font-black text-[#8e6607] transition group-open:rotate-45"
+                      aria-hidden="true"
+                    >
+                      +
+                    </span>
                   </summary>
                   <p className="mt-3 text-sm leading-7 text-[#574b3f]">{item.answer}</p>
                 </details>
