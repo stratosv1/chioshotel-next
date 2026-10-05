@@ -34,3 +34,6 @@ Thumbs.db
 backups/
 reports/
 room-detail-schema-paths-check.txt
+
+# TypeScript incremental build info
+*.tsbuildinfo
