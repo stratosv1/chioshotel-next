@@ -23,6 +23,7 @@ const villageUiCopy = {
     swipeHint: "Swipe to explore more villages",
     viewRooms: "View rooms & apartments",
     checkRates: "Check direct rates",
+    checkAvailability: "Check availability",
   },
   el: {
     tagsLabel: "Χαρακτηριστικά χωριού",
@@ -39,6 +40,7 @@ const villageUiCopy = {
     swipeHint: "Σύρετε για περισσότερα χωριά",
     viewRooms: "Δωμάτια & διαμερίσματα",
     checkRates: "Δείτε απευθείας τιμές",
+    checkAvailability: "Δείτε διαθεσιμότητα",
   },
   fr: {
     tagsLabel: "Caractéristiques du village",
@@ -55,6 +57,7 @@ const villageUiCopy = {
     swipeHint: "Faites glisser pour voir plus de villages",
     viewRooms: "Voir chambres & appartements",
     checkRates: "Voir les tarifs directs",
+    checkAvailability: "Voir les disponibilités",
   },
   de: {
     tagsLabel: "Dorfmerkmale",
@@ -71,6 +74,7 @@ const villageUiCopy = {
     swipeHint: "Wischen Sie für weitere Dörfer",
     viewRooms: "Zimmer & Apartments ansehen",
     checkRates: "Direktpreise prüfen",
+    checkAvailability: "Verfügbarkeit prüfen",
   },
   it: {
     tagsLabel: "Caratteristiche del villaggio",
@@ -87,6 +91,7 @@ const villageUiCopy = {
     swipeHint: "Scorri per altri villaggi",
     viewRooms: "Vedi camere & appartamenti",
     checkRates: "Controlla le tariffe dirette",
+    checkAvailability: "Verifica disponibilità",
   },
   es: {
     tagsLabel: "Características del pueblo",
@@ -103,6 +108,7 @@ const villageUiCopy = {
     swipeHint: "Desliza para ver más pueblos",
     viewRooms: "Ver habitaciones & apartamentos",
     checkRates: "Consultar tarifas directas",
+    checkAvailability: "Ver disponibilidad",
   },
   tr: {
     tagsLabel: "Köy özellikleri",
@@ -119,6 +125,7 @@ const villageUiCopy = {
     swipeHint: "Daha fazla köy için kaydırın",
     viewRooms: "Oda & daireleri görün",
     checkRates: "Doğrudan fiyatları görün",
+    checkAvailability: "Müsaitliği görün",
   },
 } as const;
 
@@ -256,6 +263,15 @@ export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
               <p className="mt-3 text-sm leading-7 text-[#574b3f]">
                 {detail.text}
               </p>
+              {detail.href ? (
+                <a
+                  className="mt-4 inline-flex font-black text-[#8e6607] underline decoration-[#8e6607]/30 underline-offset-4"
+                  data-cta-placement="details_card"
+                  href={detail.href}
+                >
+                  {detail.linkLabel ?? detail.title}
+                </a>
+              ) : null}
             </article>
           ))}
         </div>
@@ -398,6 +414,61 @@ export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
         </div>
       </section>
 
+      <section className="px-4 py-10 md:px-6 md:py-14" aria-label={copy.localTipLabel} data-cta-placement="mid_page_stay">
+        <div className="mx-auto max-w-[1180px]">
+          <article className="grid overflow-hidden rounded-[36px] border border-[#8e6607]/15 bg-white shadow-2xl shadow-black/10 md:grid-cols-[0.9fr_1.1fr]">
+            <div className="relative min-h-[220px] overflow-hidden bg-[#efe0cc] md:min-h-[360px]">
+              <Image
+                src="/images/beaches/voulamandis-house-courtyard-chios.webp"
+                alt={language === "el" ? "Η αυλή του Voulamandis House στον Κάμπο της Χίου" : "Voulamandis House in Kampos, Chios"}
+                fill
+                sizes="(min-width: 768px) 45vw, 100vw"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent" aria-hidden="true" />
+              <span className="absolute bottom-5 left-5 rounded-full border border-white/30 bg-white/20 px-4 py-2 text-xs font-black uppercase tracking-[0.14em] text-white backdrop-blur-md">
+                {language === "el" ? "Voulamandis House · Κάμπος" : "Voulamandis House · Kampos"}
+              </span>
+            </div>
+            <div className="flex flex-col justify-center p-6 md:p-10">
+              <h2 className="text-3xl font-black leading-[1.05] tracking-[-0.04em] text-[#2f261f] md:text-4xl">
+                {village.baseTip.title}
+              </h2>
+              <p className="mt-4 text-base leading-8 text-[#574b3f] md:text-lg">
+                {village.baseTip.text}{" "}
+                <a className="font-black text-[#8e6607] underline decoration-[#8e6607]/30 underline-offset-4" href={village.baseTip.href}>
+                  {village.baseTip.linkLabel}
+                </a>
+              </p>
+              {village.baseTip.benefits?.length ? (
+                <ul className="mt-5 space-y-2">
+                  {village.baseTip.benefits.map((benefit) => (
+                    <li className="flex items-start gap-3 text-sm font-bold leading-6 text-[#3b2f25]" key={benefit}>
+                      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#e9f2e3] text-[11px] font-black text-[#3f6b2f]" aria-hidden="true">✓</span>
+                      <span>{benefit}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+              <div className="mt-7 flex flex-wrap gap-3" data-gcu-contextual-stay-links>
+                <a
+                  className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#2f261f] px-6 py-3 text-sm font-black !text-white shadow-lg transition hover:-translate-y-0.5"
+                  href={getSiteNavigationPath("rates", language)}
+                >
+                  {copy.checkAvailability}
+                </a>
+                <a
+                  className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#8e6607]/25 bg-[#fff7e8] px-6 py-3 text-sm font-black !text-[#6f5215] transition hover:-translate-y-0.5 hover:bg-[#f9edcf]"
+                  href={getSiteNavigationPath("rooms", language)}
+                >
+                  {copy.viewRooms}
+                </a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
       {village.practical ? (
         <section className="px-4 py-10 md:px-6 md:py-14" aria-labelledby="village-practical-title">
           <div className="mx-auto max-w-[920px] rounded-[28px] border border-[#8e6607]/15 bg-white p-6 shadow-xl shadow-black/5 md:p-8">
@@ -408,7 +479,19 @@ export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
               {village.practical.items.map((item) => (
                 <div className="grid gap-1 py-3 md:grid-cols-[0.9fr_1.1fr] md:gap-6" key={item.label}>
                   <dt className="text-sm font-black text-[#2f261f]">{item.label}</dt>
-                  <dd className="text-sm leading-7 text-[#574b3f]">{item.value}</dd>
+                  <dd className="text-sm leading-7 text-[#574b3f]">
+                    {item.href ? (
+                      <a
+                        className="font-bold text-[#8e6607] underline decoration-[#8e6607]/30 underline-offset-4"
+                        data-cta-placement="practical_table"
+                        href={item.href}
+                      >
+                        {item.value}
+                      </a>
+                    ) : (
+                      item.value
+                    )}
+                  </dd>
                 </div>
               ))}
             </dl>
@@ -453,53 +536,6 @@ export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
         </section>
       ) : null}
 
-      <section className="px-4 py-14 md:px-6 md:py-20" aria-label={copy.localTipLabel}>
-        <div className="mx-auto max-w-[1180px]">
-          <article className="grid overflow-hidden rounded-[36px] border border-[#8e6607]/15 bg-white shadow-2xl shadow-black/10 md:grid-cols-[0.9fr_1.1fr]">
-            <div className="relative min-h-[260px] overflow-hidden bg-[#efe0cc] md:min-h-[360px]">
-              <Image
-                src="/images/beaches/voulamandis-house-courtyard-chios.webp"
-                alt="Voulamandis House in Kampos, Chios"
-                fill
-                sizes="(min-width: 768px) 45vw, 100vw"
-                className="absolute inset-0 h-full w-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent" aria-hidden="true" />
-              <span className="absolute bottom-5 left-5 rounded-full border border-white/30 bg-white/20 px-4 py-2 text-xs font-black uppercase tracking-[0.14em] text-white backdrop-blur-md">
-                Voulamandis House
-              </span>
-            </div>
-            <div className="flex flex-col justify-center p-6 md:p-10">
-              <span className="mb-4 inline-flex w-fit items-center gap-3 rounded-full bg-[#fff4df] px-4 py-2 text-[11px] font-black uppercase tracking-[0.14em] text-[#8e6607] ring-1 ring-[#8e6607]/15">
-                {village.baseTip.icon} Voulamandis House
-              </span>
-              <h2 className="text-3xl font-black leading-none tracking-[-0.05em] text-[#2f261f] md:text-5xl">
-                {village.baseTip.title}
-              </h2>
-              <p className="mt-5 text-base leading-8 text-[#574b3f] md:text-lg">
-                {village.baseTip.text}{" "}
-                <a className="font-black text-[#8e6607] underline decoration-[#8e6607]/30 underline-offset-4" href={village.baseTip.href}>
-                  {village.baseTip.linkLabel}
-                </a>
-              </p>
-              <div className="mt-7 flex flex-wrap gap-3" data-gcu-contextual-stay-links>
-                <a
-                  className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#2f261f] px-6 py-3 text-sm font-black !text-white shadow-lg transition hover:-translate-y-0.5"
-                  href={getSiteNavigationPath("rooms", language)}
-                >
-                  {copy.viewRooms}
-                </a>
-                <a
-                  className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#8e6607]/25 bg-[#fff7e8] px-6 py-3 text-sm font-black !text-[#6f5215] transition hover:-translate-y-0.5 hover:bg-[#f9edcf]"
-                  href={getSiteNavigationPath("rates", language)}
-                >
-                  {copy.checkRates}
-                </a>
-              </div>
-            </div>
-          </article>
-        </div>
-      </section>
 
       <section className="px-4 py-14 md:px-6 md:py-20" aria-labelledby="village-related-title">
         <div className="mx-auto max-w-7xl">

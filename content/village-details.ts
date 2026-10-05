@@ -17,6 +17,8 @@ export type VillageDetailData = {
     icon: string;
     title: string;
     text: string;
+    href?: string;
+    linkLabel?: string;
   }[];
   highlights: {
     title: string;
@@ -42,6 +44,8 @@ export type VillageDetailData = {
     text: string;
     linkLabel: string;
     href: string;
+    /** Short, verifiable stay benefits shown as a checklist. */
+    benefits?: string[];
   };
   relatedTitle: string;
   relatedText: string;
@@ -65,7 +69,7 @@ export type VillageDetailData = {
   /** Optional practical facts (distance, parking, time needed). */
   practical?: {
     title: string;
-    items: { label: string; value: string }[];
+    items: { label: string; value: string; href?: string }[];
   };
   /** Optional FAQ, also emitted as FAQPage schema. */
   faq?: {
@@ -817,6 +821,8 @@ export const localizedVillageDetails: VillageDetailData[] = [
         icon: "📍",
         title: "Τοποθεσία & πρόσβαση",
         text: "Τα Μεστά βρίσκονται στη νοτιοδυτική Χίο, περίπου 35 χλμ. από την πόλη. Από τον Κάμπο θα χρειαστείτε περίπου 40–45 λεπτά με αυτοκίνητο.",
+        href: "/el/diamoni-sti-xio/",
+        linkLabel: "Διαμονή στον Κάμπο →",
       },
       {
         icon: "🅿️",
@@ -890,7 +896,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
       title: "Αποστάσεις από τα Μεστά",
       items: [
         { label: "Πόλη της Χίου", value: "περίπου 35 χλμ. (45 λεπτά)" },
-        { label: "Κάμπος / Voulamandis House", value: "περίπου 40–45 λεπτά με αυτοκίνητο" },
+        { label: "Κάμπος / Voulamandis House", value: "περίπου 40–45 λεπτά με αυτοκίνητο", href: "/el/diamoni-sti-xio/" },
         { label: "Ολύμποι", value: "περίπου 4 χλμ." },
         { label: "Πυργί", value: "περίπου 10 χλμ." },
         { label: "Καλύτερη ώρα το καλοκαίρι", value: "πρωί ή αργά το απόγευμα" },
@@ -954,10 +960,15 @@ export const localizedVillageDetails: VillageDetailData[] = [
     },
     baseTip: {
       icon: "🗺️",
-      title: "Η στρατηγική σας βάση",
-      text: "Ο Κάμπος είναι στη σωστή πλευρά του νησιού για τα Μαστιχοχώρια: φεύγετε το πρωί για Μεστά και Πυργί και το βράδυ επιστρέφετε σε ένα ήσυχο περιβόλι κοντά στην πόλη.",
-      linkLabel: "Δείτε τη διαμονή στη Χίο στο Voulamandis House.",
+      title: "Τα Μεστά σε 40 λεπτά από το περιβόλι σας στον Κάμπο",
+      text: "Φύγετε νωρίς για τα Μαστιχοχώρια και επιστρέψτε το βράδυ σε ένα ήσυχο, ιστορικό περιβόλι, κοντά στην πόλη και στο αεροδρόμιο.",
+      linkLabel: "Διαμονή στη Χίο στο Voulamandis House",
       href: "/el/diamoni-sti-xio/",
+      benefits: [
+        "Δωρεάν στάθμευση για τις εκδρομές σας",
+        "Δωμάτια και οικογενειακά διαμερίσματα",
+        "Απευθείας κράτηση χωρίς προμήθειες",
+      ],
     },
     relatedTitle: "Ανακαλύψτε περισσότερα χωριά της Χίου",
     relatedText: "Γνωρίστε τα Μαστιχοχώρια, τα μεσαιωνικά σοκάκια, τα βόρεια τοπία και τα παραθαλάσσια χωριά της Χίου.",

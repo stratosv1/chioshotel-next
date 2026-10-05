@@ -171,7 +171,9 @@ export function ContentEngagementAnalytics({ language, pathname }: Props) {
         destination_path: url.pathname,
         destination_type: url.origin === window.location.origin ? destinationType(url.pathname) : "external",
         link_text: label,
-        link_position: anchor.closest("main") ? "main_content" : "page_content",
+        link_position:
+          anchor.closest("[data-cta-placement]")?.getAttribute("data-cta-placement") ??
+          (anchor.closest("main") ? "main_content" : "page_content"),
       });
     }
 
