@@ -1,3 +1,5 @@
+import { applyVillageGuideOverlay } from "@/content/mesta-guide-i18n";
+
 export type VillageDetailData = {
   slug: string;
   seo: {
@@ -3061,7 +3063,7 @@ export const localizedVillageDetails: VillageDetailData[] = [
     seo: {
       canonicalPath: "/es/pueblos-chios/pueblo-mesta/",
       title: "Mesta Chios | Pueblo medieval fortificado",
-      description: "Descubre Mesta en Chios, uno de los pueblos fortificados medievales mejor conservados, con calles de piedra, arcos y atmósfera auténtica.",
+      description: "Guía de Mesta, el pueblo medieval fortificado de Quíos: qué ver, cómo llegar, dónde aparcar, cuánto tiempo necesita y qué combinar.",
       ogImage: "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
     },
     hero: {
@@ -4143,12 +4145,12 @@ export const relatedVillageCards = [
 ] as const;
 
 export function getVillageDetailBySlug(slug: string) {
-  return villageDetails.find((village) => village.slug === slug);
+  return applyVillageGuideOverlay(villageDetails.find((village) => village.slug === slug));
 }
 
 export function getLocalizedVillageDetailByPath(path: string) {
-  return localizedVillageDetails.find(
-    (village) => village.seo.canonicalPath === path,
+  return applyVillageGuideOverlay(
+    localizedVillageDetails.find((village) => village.seo.canonicalPath === path),
   );
 }
 

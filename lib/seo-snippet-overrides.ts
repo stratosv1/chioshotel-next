@@ -54,7 +54,7 @@ export const seoSnippetOverrides = new Map<string, SeoSnippetOverride>([
     {
       title: "Mesta Chios | Medieval Village, Alleys & Visitor Tips",
       description:
-        "Visit Mesta in Chios, a preserved medieval fortress village. Find access details, what to see, local tips and ideas for a south Chios route.",
+        "Guide to Mesta, the medieval fortress village of Chios: what to see, how to get there, where to park, how much time you need and what to combine.",
     },
   ],
   [

@@ -308,7 +308,7 @@ const turkishVillageCorrections: ReadonlyArray<
     {
       title: "Mesta, Sakız Adası | Orta Çağ kale köyü",
       description:
-        "Mesta’yı keşfedin: taş sokakları, kemerli geçitleri ve kapalı kale düzeniyle Sakız Adası’nın en iyi korunmuş Orta Çağ köylerinden biri.",
+        "Mesta, Sakız Adası rehberi: Orta Çağ kale köyünde görülecek yerler, ulaşım, otopark, gereken süre ve Olympoi ile Pyrgi’yi birleştirme.",
       heroTitle: "Mesta: Taş sokaklı Orta Çağ kale köyü",
       heroDescription:
         "Dar taş sokakları, kemerleri ve kapalı savunma düzeniyle Sakız Adası’nın en etkileyici ve iyi korunmuş Orta Çağ köylerinden biri.",

@@ -73,7 +73,7 @@ const frenchSeoCorrections: ReadonlyArray<
     {
       title: "Mesta Chios | Village fortifié médiéval",
       description:
-        "Découvrez Mesta à Chios, un village fortifié médiéval remarquablement préservé, avec ruelles de pierre, passages voûtés et atmosphère authentique.",
+        "Guide de Mesta, le village fortifié médiéval de Chios : que voir, comment y aller, où se garer, combien de temps prévoir et quoi combiner.",
     },
   ],
   [

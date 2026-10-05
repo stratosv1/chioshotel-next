@@ -282,7 +282,7 @@ const germanVillageCorrections = new Map<string, DetailCorrection>([
     {
       title: "Mesta auf Chios | Mittelalterliches Festungsdorf",
       description:
-        "Entdecken Sie Mesta auf Chios, ein hervorragend erhaltenes mittelalterliches Festungsdorf mit Steingassen, Gewölben und authentischer Atmosphäre.",
+        "Mesta auf Chios: Führer zum mittelalterlichen Festungsdorf – Sehenswertes, Anfahrt, Parken, Zeitbedarf und Kombinationen mit Olympoi und Pyrgi.",
       heroTitle: "Mesta auf Chios: Mittelalterliches Festungsdorf",
       heroDescription:
         "Mesta ist eines der am besten erhaltenen mittelalterlichen Dörfer von Chios, mit engen Steingassen, Gewölben und einer geschlossenen Festungsstruktur.",
