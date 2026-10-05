@@ -8,6 +8,7 @@ import {
 } from "@/lib/seo";
 import {
   buildBreadcrumbSchema,
+  buildFaqSchema,
   buildHotelSchema,
   buildImageSchema,
   buildOrganizationSchema,
@@ -287,6 +288,9 @@ export function buildVillageDetailSchema(village: VillageDetailData) {
     buildVillageRouteIdeasSchema(village),
     buildVillageLocalTipSchema(village),
     buildVillageStayActionSchema(village),
+    village.faq
+      ? buildFaqSchema({ path: canonicalPath, questions: village.faq.items })
+      : null,
     buildBreadcrumbSchema(canonicalPath, [
       {
         name: labels.category,

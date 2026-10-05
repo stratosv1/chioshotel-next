@@ -180,7 +180,7 @@ export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
       >
         <Image
           src={village.hero.image}
-          alt=""
+          alt={village.heroImageAlt ?? ""}
           fill
           priority
           sizes="100vw"
@@ -223,7 +223,7 @@ export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
             {copy.answerKicker}
           </span>
           <h2 className="mt-3 font-serif text-[2rem] font-bold leading-tight text-stone-900 md:text-5xl">
-            {copy.answerTitlePrefix} {villageName}?
+            {village.answerTitle ?? `${copy.answerTitlePrefix} ${villageName}${language === "el" ? ";" : "?"}`}
           </h2>
           <p className="mt-4 text-sm font-semibold leading-7 text-[#4d4238] md:text-lg md:leading-8">
             {heroDescription}
@@ -262,6 +262,61 @@ export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
         </div>
       </section>
 
+      {village.guide ? (
+        <section className="px-4 py-14 md:px-6 md:py-20" aria-labelledby="village-guide-title">
+          <div className="mx-auto max-w-[920px]">
+            <header className="mb-8">
+              {village.guide.kicker ? (
+                <span className="text-xs font-black uppercase tracking-[0.16em] text-[#8e6607]">
+                  {village.guide.kicker}
+                </span>
+              ) : null}
+              <h2
+                id="village-guide-title"
+                className="mt-4 font-serif text-[2rem] font-bold leading-tight text-stone-900 md:text-5xl"
+              >
+                {village.guide.title}
+              </h2>
+              {village.guide.intro ? (
+                <p className="mt-5 text-base leading-8 text-[#574b3f] md:text-lg">{village.guide.intro}</p>
+              ) : null}
+            </header>
+            <div className="space-y-6">
+              {village.guide.sections.map((section) => (
+                <article
+                  className="rounded-[28px] border border-[#8e6607]/15 bg-white p-6 shadow-xl shadow-black/5 md:p-8"
+                  key={section.title}
+                >
+                  <h3 className="text-2xl font-black leading-tight tracking-[-0.03em] text-[#2f261f]">
+                    {section.title}
+                  </h3>
+                  <div className="mt-4 space-y-4">
+                    {section.paragraphs.map((paragraph) => (
+                      <p className="text-base leading-8 text-[#574b3f]" key={paragraph}>
+                        {paragraph}
+                      </p>
+                    ))}
+                  </div>
+                  {section.links?.length ? (
+                    <div className="mt-5 flex flex-wrap gap-2">
+                      {section.links.map((link) => (
+                        <a
+                          className="inline-flex rounded-full border border-[#8e6607]/25 bg-[#fff7e8] px-4 py-2 text-sm font-black text-[#6f5215] transition hover:bg-[#f9edcf]"
+                          href={link.href}
+                          key={link.href}
+                        >
+                          {link.label}
+                        </a>
+                      ))}
+                    </div>
+                  ) : null}
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
       <section className="px-4 py-14 md:px-6 md:py-20" aria-labelledby="village-story-title">
         <div className="mx-auto grid max-w-[1180px] gap-6 lg:grid-cols-[1.15fr_0.85fr]">
           <article className="rounded-[34px] border border-[#8e6607]/15 bg-white p-6 shadow-xl shadow-black/5 md:p-10">
@@ -272,7 +327,7 @@ export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
               id="village-story-title"
               className="mt-4 text-3xl font-black leading-none tracking-[-0.05em] text-[#2f261f] md:text-5xl"
             >
-              {copy.specialTitlePrefix} {villageName} {copy.specialTitleSuffix}
+              {village.specialTitle ?? `${copy.specialTitlePrefix} ${villageName} ${copy.specialTitleSuffix}`}
             </h2>
             <div className="mt-6 space-y-5">
               {village.experience.paragraphs.map((paragraph) => (
@@ -327,11 +382,68 @@ export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
                 <p className="mt-3 text-sm leading-7 text-[#574b3f]">
                   {item.text}
                 </p>
+                {item.href ? (
+                  <a
+                    className="mt-4 inline-flex font-black text-[#8e6607] underline decoration-[#8e6607]/30 underline-offset-4"
+                    href={item.href}
+                  >
+                    {item.linkLabel ?? item.title}
+                  </a>
+                ) : null}
               </article>
             ))}
           </div>
         </div>
       </section>
+
+      {village.practical ? (
+        <section className="px-4 py-10 md:px-6 md:py-14" aria-labelledby="village-practical-title">
+          <div className="mx-auto max-w-[920px] rounded-[28px] border border-[#8e6607]/15 bg-white p-6 shadow-xl shadow-black/5 md:p-8">
+            <h2 id="village-practical-title" className="text-2xl font-black leading-tight tracking-[-0.03em] text-[#2f261f] md:text-3xl">
+              {village.practical.title}
+            </h2>
+            <dl className="mt-6 divide-y divide-[#8e6607]/10">
+              {village.practical.items.map((item) => (
+                <div className="grid gap-1 py-3 md:grid-cols-[0.9fr_1.1fr] md:gap-6" key={item.label}>
+                  <dt className="text-sm font-black text-[#2f261f]">{item.label}</dt>
+                  <dd className="text-sm leading-7 text-[#574b3f]">{item.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </section>
+      ) : null}
+
+      {village.faq ? (
+        <section className="px-4 py-10 md:px-6 md:py-14" aria-labelledby="village-faq-title">
+          <div className="mx-auto max-w-[920px]">
+            {village.faq.kicker ? (
+              <span className="text-xs font-black uppercase tracking-[0.16em] text-[#8e6607]">
+                {village.faq.kicker}
+              </span>
+            ) : null}
+            <h2
+              id="village-faq-title"
+              className="mt-4 font-serif text-[2rem] font-bold leading-tight text-stone-900 md:text-4xl"
+            >
+              {village.faq.title}
+            </h2>
+            <div className="mt-6 space-y-3">
+              {village.faq.items.map((item) => (
+                <details
+                  className="group rounded-2xl border border-[#8e6607]/15 bg-white p-5 shadow-sm"
+                  key={item.question}
+                >
+                  <summary className="cursor-pointer list-none text-base font-black text-[#2f261f] marker:hidden">
+                    {item.question}
+                  </summary>
+                  <p className="mt-3 text-sm leading-7 text-[#574b3f]">{item.answer}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       <section className="px-4 py-14 md:px-6 md:py-20" aria-label={copy.localTipLabel}>
         <div className="mx-auto max-w-[1180px]">
