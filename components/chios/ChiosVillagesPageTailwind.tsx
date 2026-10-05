@@ -2,6 +2,7 @@ import Image from "next/image";
 import type { ChiosVillagesPageData } from "@/content/chios-villages";
 import { ChiosCollectionImageGallery } from "@/components/chios/ChiosCollectionImageGallery";
 import { AnswerFirstSeoBlock } from "@/components/seo/AnswerFirstSeoBlock";
+import { MedievalVillagesAnswer, MedievalVillagesGuideSections } from "@/components/chios/MedievalVillagesGuide";
 
 type ChiosVillagesPageProps = {
   data: ChiosVillagesPageData;
@@ -300,7 +301,11 @@ export function ChiosVillagesPageTailwind({ data }: ChiosVillagesPageProps) {
         </div>
       </section>
 
-      <AnswerFirstSeoBlock kind="villages" language={language} />
+      {data.medievalGuide ? (
+        <MedievalVillagesAnswer guide={data.medievalGuide} />
+      ) : (
+        <AnswerFirstSeoBlock kind="villages" language={language} />
+      )}
 
       <ChiosCollectionImageGallery
         items={data.villages}
@@ -359,6 +364,10 @@ export function ChiosVillagesPageTailwind({ data }: ChiosVillagesPageProps) {
         </section>
       ) : null}
 
+      {data.medievalGuide ? (
+        <MedievalVillagesGuideSections guide={data.medievalGuide} language={language} />
+      ) : (
+        <>
       <section className="px-4 py-12 md:px-6 md:py-18" aria-labelledby="villages-intro-title">
         <div className="mx-auto grid max-w-[1180px] gap-5 md:grid-cols-[1.05fr_0.95fr]">
           <article className="rounded-[32px] border border-[#8e6607]/15 bg-white p-6 shadow-xl shadow-black/5 md:p-9">
@@ -558,6 +567,8 @@ export function ChiosVillagesPageTailwind({ data }: ChiosVillagesPageProps) {
           </article>
         </div>
       </section>
+        </>
+      )}
     </main>
   );
 }

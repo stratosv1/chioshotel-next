@@ -1,3 +1,5 @@
+import type { MedievalGuide } from "@/content/medieval-villages-guide-i18n";
+
 export type ChiosVillagesPageData = {
   seo: {
     canonicalPath: string;
@@ -66,7 +68,8 @@ export type ChiosVillagesPageData = {
       label: string;
       href: string;
     };
-  };
+  };  /** Optional fortress-village guide (medieval villages category page). */
+  medievalGuide?: MedievalGuide;
 };
 
 const villageImages = {

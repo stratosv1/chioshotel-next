@@ -98,9 +98,9 @@ const turkishPageSeoCorrections = new Map<string, SeoCorrection>([
   [
     "/tr/sakiz-adasi-orta-cag-koyleri/",
     {
-      title: "Sakız Adası Orta Çağ köyleri | Mesta, Pyrgi ve Olympoi",
+      title: "Sakız Adası Orta Çağ köyleri | Kale köyler ve tarihi",
       description:
-        "Mesta, Pyrgi, Olympoi, Vessa ve Volissos’un taş sokaklarını, kale dokusunu ve mastik köyü kültürünü keşfedin.",
+        "Sakız Adası’nın Orta Çağ köyleri: neden kale gibi inşa edildiler, Mesta, Pyrgi, Olympoi ve Vessa nasıl farklı ve Kambos’tan bir günlük rota.",
     },
   ],
   [

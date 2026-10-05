@@ -8,23 +8,7 @@ import {
 } from "@/content/village-categories";
 import { absoluteUrl, buildPageMetadata } from "@/lib/seo";
 
-const source = getVillageCategoryPage("medieval", "el");
-
-const data = {
-  ...source,
-  seo: {
-    ...source.seo,
-    title: "Μεσαιωνικά χωριά Χίου | Κάστρα, σοκάκια & ιστορία",
-    description:
-      "Περιηγηθείτε στα καλύτερα διατηρημένα μεσαιωνικά χωριά της Χίου, με πέτρινα σοκάκια, καμάρες, κάστρα και αυθεντική ατμόσφαιρα.",
-  },
-  hero: {
-    ...source.hero,
-    title: "Μεσαιωνικά χωριά της Χίου με κάστρα και πέτρινα σοκάκια",
-    description:
-      "Ανακαλύψτε καστροχώρια με καμάρες, στενά δρομάκια και οχυρωμένη αρχιτεκτονική που διατηρούν ζωντανή τη μεσαιωνική ιστορία της Χίου.",
-  },
-};
+const data = getVillageCategoryPage("medieval", "el");
 
 export const metadata: Metadata = {
   ...buildPageMetadata({

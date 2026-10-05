@@ -21,6 +21,7 @@ import {
   webPageId,
   websiteId,
   type SchemaObject,
+  buildFaqSchema,
 } from "@/lib/structured-data";
 
 type VillageSchemaLanguage = "en" | "el" | "de" | "fr" | "it" | "es" | "tr";
@@ -241,8 +242,11 @@ export function buildChiosVillagesSchema(data: ChiosVillagesPageData) {
     ),
     buildChiosVillagesCollectionPageSchema(data),
     buildVillagesItemListSchema(data),
-    buildVillagePlanningSchema(data),
-    buildVillageGuideTipSchema(data),
+    data.medievalGuide ? null : buildVillagePlanningSchema(data),
+    data.medievalGuide ? null : buildVillageGuideTipSchema(data),
+    data.medievalGuide
+      ? buildFaqSchema({ path: canonicalPath, questions: data.medievalGuide.faq.items })
+      : null,
     ...data.villages.map((village) =>
       buildVillagePlaceSchema(village, canonicalPath),
     ),

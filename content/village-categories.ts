@@ -9,6 +9,7 @@ import {
   chiosVillagesPageTr,
 } from "@/content/chios-villages";
 import { absoluteUrl } from "@/lib/seo";
+import { getMedievalGuide } from "@/content/medieval-villages-guide-i18n";
 
 type LanguageCode = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
 export type VillageCategoryKey = "mastic" | "medieval" | "seaside";
@@ -429,20 +430,21 @@ export function getVillageCategoryPage(category: VillageCategoryKey, locale: Lan
     }));
 
   const heroImage = villages[0]?.image || base.hero.image;
+  const medievalGuide = category === "medieval" ? getMedievalGuide(locale) : undefined;
 
   return {
     ...base,
     seo: {
       canonicalPath: villageCategoryPaths[category][locale],
-      title: copy.seoTitle,
-      description: copy.seoDescription,
+      title: medievalGuide?.seo.title ?? copy.seoTitle,
+      description: medievalGuide?.seo.description ?? copy.seoDescription,
       ogImage: heroImage,
     },
     hero: {
       ...base.hero,
       kicker: copy.kicker,
-      title: copy.title,
-      description: copy.description,
+      title: medievalGuide?.hero.title ?? copy.title,
+      description: medievalGuide?.hero.description ?? copy.description,
       image: heroImage,
       primaryCta: {
         label: base.hero.primaryCta.label,
@@ -461,5 +463,6 @@ export function getVillageCategoryPage(category: VillageCategoryKey, locale: Lan
       title: copy.planningTitle,
       description: copy.planningDescription,
     },
+    medievalGuide,
   };
 }
