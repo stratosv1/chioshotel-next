@@ -28,8 +28,8 @@ export default function FamilyTravelPage({ data }: FamilyTravelPageProps) {
   return (
     <main className="min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_top_left,rgba(168,120,66,.14),transparent_34rem),linear-gradient(180deg,#fffaf4_0%,#f4eadf_55%,#fffaf4_100%)] text-stone-800">
       <section className="relative flex min-h-[640px] items-end overflow-hidden text-white max-md:min-h-[76svh]" aria-labelledby="family-travel-title">
-        <div className="absolute inset-0 z-0" aria-hidden="true">
-          <Image src={data.hero.image.src} alt="" fill priority fetchPriority="high" sizes="100vw" className="object-cover" />
+        <div className="absolute inset-0 z-0">
+          <Image src={data.hero.image.src} alt={data.hero.image.alt} fill priority fetchPriority="high" sizes="100vw" className="object-cover" />
         </div>
         <div className="absolute inset-0 z-[1] bg-[linear-gradient(90deg,rgba(32,24,18,.84)_0%,rgba(32,24,18,.56)_48%,rgba(32,24,18,.18)_100%),linear-gradient(0deg,rgba(32,24,18,.72)_0%,transparent_58%)]" />
 

@@ -9,6 +9,8 @@ const greekKamposPage = {
   ...kamposChiosPageEl,
   seo: {
     ...kamposChiosPageEl.seo,
+    // Same photo as the hero, so Google sees one consistent main image for this stay page.
+    ogImage: "/images/voulamandis-house-og.jpg",
     title: "Διαμονή στον Κάμπο Χίου | Voulamandis House",
     description:
       "Διαμονή στον Κάμπο της Χίου στο Voulamandis House, μέσα σε περιβόλι εσπεριδοειδών. Ενοικιαζόμενα δωμάτια και οικογενειακά διαμερίσματα κοντά σε πόλη, αεροδρόμιο και παραλίες.",

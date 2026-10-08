@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { heroImageAlt } from "@/lib/seo/hero-image-alt";
 import Image from "next/image";
 import { PropertyFaqSection } from "@/components/faq/PropertyFaqSection";
 import { CommercialRoomGallery } from "@/components/landing/CommercialRoomGallery";
@@ -239,10 +240,10 @@ export function RatesPage({ data }: RatesPageProps) {
   return (
     <main className="min-h-screen overflow-x-hidden bg-gradient-to-b from-[#fcfaf8] to-[#f5f0ea] text-stone-800">
       <section className="relative flex min-h-[460px] items-end overflow-hidden text-white md:min-h-[560px]" aria-labelledby="rates-hero-title">
-        <div className="absolute inset-0 z-0" aria-hidden="true">
+        <div className="absolute inset-0 z-0">
           <Image
             src={data.hero.image}
-            alt=""
+            alt={heroImageAlt("room", data.seo.canonicalPath)}
             fill
             priority
             fetchPriority="high"

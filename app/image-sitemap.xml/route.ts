@@ -22,6 +22,7 @@ import { getDealsIntentData } from "@/content/deals-intent";
 import { getFamilyTravelIntentData } from "@/content/family-travel-intent";
 import { getRomanticStayData } from "@/content/romantic-stay";
 import { localizedRatesPages, type RatesPageData } from "@/content/rates";
+import { localizedContactPages } from "@/content/contact";
 import {
   roomsCategoryDe,
   roomsCategoryEl,
@@ -344,6 +345,11 @@ export function GET() {
     images: withPropertyShowcase(getRatesPageImages(page)),
   }));
 
+  const contactEntries: ImageSitemapEntry[] = localizedContactPages.map((page) => ({
+    path: page.seo.canonicalPath,
+    images: withPropertyShowcase(unique([page.seo.ogImage, page.hero.image])),
+  }));
+
   const hotelGuideEntries: ImageSitemapEntry[] = hotelGuidePages.map((page) => ({
     path: page.seo.canonicalPath,
     images: withPropertyShowcase(getHotelGuideImages(page)),
@@ -396,6 +402,7 @@ export function GET() {
     ...accommodationEntries,
     ...kamposEntries,
     ...ratesEntries,
+    ...contactEntries,
     ...hotelGuideEntries,
     ...dealsEntries,
     ...familyTravelEntries,

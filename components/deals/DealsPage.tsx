@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { heroImageAlt } from "@/lib/seo/hero-image-alt";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { track } from "@vercel/analytics";
 import type { DealsPageData } from "@/content/deals";
@@ -499,8 +500,8 @@ export function DealsPage({ data, lastMinute }: DealsPageProps) {
       </div>
 
       <section className="relative flex min-h-[500px] items-end overflow-hidden text-white max-md:min-h-[72svh]" aria-labelledby="deals-hero-title">
-        <div className="absolute inset-0 z-0" aria-hidden="true">
-          <Image src={data.hero.image} alt="" fill priority fetchPriority="high" sizes="100vw" className="object-cover" />
+        <div className="absolute inset-0 z-0">
+          <Image src={data.hero.image} alt={heroImageAlt("room", data.seo.canonicalPath)} fill priority fetchPriority="high" sizes="100vw" className="object-cover" />
         </div>
         <div className="absolute inset-0 z-[1] bg-[linear-gradient(135deg,rgba(18,25,18,.86)_0%,rgba(55,43,24,.56)_58%,rgba(18,25,18,.26)_100%),linear-gradient(0deg,rgba(18,25,18,.78)_0%,transparent_62%)]" />
         <div className="relative z-[2] mx-auto w-[min(1240px,calc(100%-40px))] py-20 pt-28 max-md:w-[calc(100%-24px)] max-md:py-14 max-md:pt-5">

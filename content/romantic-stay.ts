@@ -248,7 +248,7 @@ export function getRomanticStayData(locale: RomanticLocale): RomanticStayPageDat
   const roomImages = getCommercialRoomGalleryImages(page.path);
   const heroImage = {
     src: "/images/rooms/received_1748354861920234.webp",
-    alt: page.stay.image.alt,
+    alt: page.hero.image.alt,
   };
 
   return {

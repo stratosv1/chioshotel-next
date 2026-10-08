@@ -24,7 +24,7 @@ const copy: Record<LanguageCode, TraditionalIntentCopy> = {
   },
   el: {
     seoDescription:
-      "Διαμονή στη Χίο στο Voulamandis House στον Κάμπο: οικογενειακό κατάλυμα κοντά στο αεροδρόμιο Χίου, με παραδοσιακό χαρακτήρα, δωμάτια, διαμερίσματα και άμεση διαθεσιμότητα.",
+      "Διαμονή στη Χίο στο Voulamandis House, στον Κάμπο: οικογενειακό κατάλυμα με παραδοσιακό χαρακτήρα, κοντά στο αεροδρόμιο. Δωμάτια, διαμερίσματα, άμεση κράτηση.",
     introTitle: "Οικογενειακό κατάλυμα με τον χαρακτήρα παραδοσιακής διαμονής στη Χίο",
     paragraph:
       "Όσοι αναζητούν ξενώνα ή παραδοσιακό κατάλυμα στη Χίο συνήθως θέλουν μικρότερη κλίμακα, ησυχία και πιο προσωπική φιλοξενία από ένα μεγάλο ξενοδοχείο. Το Voulamandis House ταιριάζει σε αυτό το στυλ διαμονής χάρη στον οικογενειακό χαρακτήρα του, τη θέση του στον ιστορικό Κάμπο, τα περιβόλια και την άμεση επικοινωνία με τους οικοδεσπότες, ενώ παραμένει ξεκάθαρα κατάλυμα με δωμάτια και διαμερίσματα και όχι ξενοδοχείο πλήρων υπηρεσιών.",
@@ -35,7 +35,7 @@ const copy: Record<LanguageCode, TraditionalIntentCopy> = {
   },
   fr: {
     seoDescription:
-      "Hébergement à Chios au Voulamandis House à Kambos, près de l’aéroport de Chios : maison d’hôtes familiale au caractère traditionnel, avec chambres, appartements et disponibilité directe.",
+      "Hébergement à Chios au Voulamandis House, à Kambos : maison d’hôtes familiale et traditionnelle près de l’aéroport. Chambres, appartements, réservation directe.",
     introTitle: "Une adresse familiale au caractère traditionnel de Chios",
     paragraph:
       "Les voyageurs qui recherchent une maison d’hôtes ou un hébergement traditionnel à Chios souhaitent souvent une adresse plus petite, plus calme et plus personnelle qu’un grand hôtel. Voulamandis House correspond à cet esprit grâce à sa taille familiale, son cadre historique à Kambos, ses agrumes et le contact direct avec les hôtes, tout en restant clairement un hébergement de chambres et d’appartements plutôt qu’un hôtel avec services complets.",
@@ -46,7 +46,7 @@ const copy: Record<LanguageCode, TraditionalIntentCopy> = {
   },
   de: {
     seoDescription:
-      "Unterkunft auf Chios im Voulamandis House in Kambos, nahe dem Flughafen Chios: familiengeführte Gästeunterkunft mit traditionellem Charakter, Zimmern, Apartments und Direktverfügbarkeit.",
+      "Unterkunft auf Chios im Voulamandis House in Kambos: familiengeführt, traditionell und nah am Flughafen. Zimmer, Apartments und Direktbuchung.",
     introTitle: "Familiengeführte Gästeunterkunft mit traditionellem Chios-Charakter",
     paragraph:
       "Wer nach einem Gästehaus oder einer traditionellen Unterkunft auf Chios sucht, wünscht sich oft eine kleinere, ruhigere und persönlichere Alternative zu einem großen Hotel. Voulamandis House passt zu diesem Reisestil durch seine familiäre Größe, die historische Lage in Kambos, die Zitrusgärten und den direkten Kontakt zu den Gastgebern, bleibt dabei aber klar eine Unterkunft mit Zimmern und Apartments und kein Full-Service-Hotel.",
@@ -68,7 +68,7 @@ const copy: Record<LanguageCode, TraditionalIntentCopy> = {
   },
   es: {
     seoDescription:
-      "Alojamiento en Quíos en Voulamandis House, Kambos, cerca del aeropuerto de Quíos: alojamiento familiar de carácter tradicional, con habitaciones, apartamentos y disponibilidad directa.",
+      "Alojamiento en Quíos en Voulamandis House, Kambos: casa familiar y tradicional cerca del aeropuerto. Habitaciones, apartamentos y reserva directa.",
     introTitle: "Un alojamiento familiar con el carácter tradicional de Quíos",
     paragraph:
       "Quienes buscan una casa de huéspedes o un alojamiento tradicional en Quíos suelen preferir una opción más pequeña, tranquila y personal que un gran hotel. Voulamandis House encaja con ese estilo gracias a su escala familiar, su ubicación en el histórico Kambos, los jardines de cítricos y el contacto directo con los anfitriones, manteniéndose claramente como alojamiento de habitaciones y apartamentos y no como hotel de servicio completo.",
@@ -79,7 +79,7 @@ const copy: Record<LanguageCode, TraditionalIntentCopy> = {
   },
   tr: {
     seoDescription:
-      "Sakız Adası’nda Kambos’taki Voulamandis House’ta, Sakız Havalimanı’na yakın konaklama: geleneksel karakterli aile işletmesi, oda ve daire seçenekleri ve direkt müsaitlik.",
+      "Sakız Adası’nda konaklama: Kambos’taki Voulamandis House, havalimanına yakın, geleneksel bir aile işletmesi. Oda, daire ve direkt rezervasyon.",
     introTitle: "Sakız Adası’nın geleneksel karakterini taşıyan aile işletmesi konaklama",
     paragraph:
       "Sakız Adası’nda pansiyon veya geleneksel konaklama arayan gezginler genellikle büyük bir otelden daha küçük, sakin ve kişisel bir yer ister. Voulamandis House aile işletmesi yapısı, tarihi Kambos konumu, narenciye bahçeleri ve ev sahipleriyle doğrudan iletişim sayesinde bu beklentiye uygundur; ancak kendisini tam hizmet veren bir otel olarak değil, oda ve daire sunan bir konaklama tesisi olarak açıkça konumlandırır.",

@@ -54,7 +54,7 @@ const economyIntentCopy: Record<EconomyIntentLocale, EconomyIntentCopy> = {
   it: {
     seoTitle: "Camere economiche a Chios | Camera doppia | Voulamandis House",
     seoDescription:
-      "Cerchi camere economiche a Chios? Scopri le camere doppie economy di Voulamandis House a Kambos per due ospiti, con bagno privato, WiFi, aria condizionata e frigorifero.",
+      "Camere economiche a Chios? Le doppie economy di Voulamandis House a Kambos: per due ospiti, con bagno privato, WiFi, aria condizionata e frigo.",
     heroTitle: "Camere doppie economiche a Chios",
     heroDescription:
       "Una soluzione conveniente per soggiornare a Chios in due, con una camera confortevole nel tranquillo Kambos e tutti i servizi essenziali senza costi inutili.",
@@ -64,7 +64,7 @@ const economyIntentCopy: Record<EconomyIntentLocale, EconomyIntentCopy> = {
   es: {
     seoTitle: "Habitaciones económicas en Chios | Habitación doble | Voulamandis House",
     seoDescription:
-      "¿Buscas habitaciones económicas en Chios? Descubre las dobles economy de Voulamandis House en Kambos para dos personas, con baño privado, WiFi, aire acondicionado y nevera.",
+      "¿Habitaciones económicas en Chios? Las dobles economy de Voulamandis House en Kambos: para dos, con baño privado, WiFi, aire acondicionado y nevera.",
     heroTitle: "Habitaciones dobles económicas en Chios",
     heroDescription:
       "Una opción de alojamiento económico en Chios para dos personas que buscan una habitación cómoda en el tranquilo Kambos con los servicios esenciales y buena relación calidad-precio.",

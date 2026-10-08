@@ -12,8 +12,8 @@ export function RomanticStayPage({ data }: Props) {
   return (
     <main className="min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_top_left,rgba(168,120,66,.14),transparent_34rem),linear-gradient(180deg,#fffaf4_0%,#f4eadf_58%,#fffaf4_100%)] text-stone-800">
       <section className="relative flex min-h-[650px] items-end overflow-hidden text-white max-md:min-h-[78svh]" aria-labelledby="romantic-stay-title">
-        <div className="absolute inset-0 z-0" aria-hidden="true">
-          <Image src={data.hero.image.src} alt="" fill priority fetchPriority="high" sizes="100vw" className="object-cover" />
+        <div className="absolute inset-0 z-0">
+          <Image src={data.hero.image.src} alt={data.hero.image.alt} fill priority fetchPriority="high" sizes="100vw" className="object-cover" />
         </div>
         <div className="absolute inset-0 z-[1] bg-[linear-gradient(90deg,rgba(33,24,18,.88)_0%,rgba(33,24,18,.58)_52%,rgba(33,24,18,.16)_100%),linear-gradient(0deg,rgba(33,24,18,.72)_0%,transparent_60%)]" />
         <div className="relative z-[2] mx-auto w-[min(1180px,calc(100%-40px))] py-20 pt-28 max-md:w-[calc(100%-24px)] max-md:py-14 max-md:pt-6">

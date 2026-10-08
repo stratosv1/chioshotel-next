@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { heroImageAlt } from "@/lib/seo/hero-image-alt";
 import { useMemo, useState, type FormEvent } from "react";
 import type { ContactPageData } from "@/content/contact";
 
@@ -231,10 +232,10 @@ export function ContactPage({ data }: ContactPageProps) {
   return (
     <main className="min-h-screen overflow-x-hidden bg-gradient-to-b from-[#fcfaf8] to-[#f5f0ea] text-[#42362b]">
       <section className="relative flex min-h-[440px] items-end overflow-hidden text-white max-md:min-h-[76svh]" aria-labelledby="contact-hero-title">
-        <div className="absolute inset-0 z-0" aria-hidden="true">
+        <div className="absolute inset-0 z-0">
           <Image
             src={data.hero.image}
-            alt=""
+            alt={heroImageAlt("courtyard", data.seo.canonicalPath)}
             fill
             priority
             fetchPriority="high"
