@@ -1,5 +1,6 @@
 "use client";
 
+import { CHIOS_HOTELS_GUIDE_PATHS } from "@/lib/chios-hotels-guide-i18n";
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { DealsPageData } from "@/content/deals";
@@ -98,6 +99,16 @@ const uiCopy: Record<string, DealsUiCopy> = {
     bookNow: "Şimdi rezervasyon",
     viewRoom: "Kategoriyi gör",
   },
+};
+
+const hotelsGuideLink: Record<string, { before: string; label: string; after: string }> = {
+  en: { before: "Still comparing areas? See our guide to ", label: "Chios hotels", after: " and where to stay." },
+  el: { before: "Συγκρίνετε ακόμη περιοχές; Δείτε τον οδηγό για ", label: "ξενοδοχεία στη Χίο", after: " και πού να μείνετε." },
+  fr: { before: "Vous comparez encore les quartiers ? Consultez notre guide des ", label: "hôtels à Chios", after: "." },
+  de: { before: "Sie vergleichen noch Gegenden? Lesen Sie unseren Ratgeber zu ", label: "Hotels auf Chios", after: "." },
+  it: { before: "State ancora confrontando le zone? Leggete la nostra guida agli ", label: "hotel a Chios", after: "." },
+  es: { before: "¿Todavía comparando zonas? Consulte nuestra guía de ", label: "hoteles en Quíos", after: "." },
+  tr: { before: "Bölgeleri mi karşılaştırıyorsunuz? ", label: "Sakız Adası otelleri", after: " rehberimize göz atın." },
 };
 
 function localeFromPath(path: string) {
@@ -241,6 +252,21 @@ export function DealsPage({ data }: DealsPageProps) {
               {data.intro.title}
             </h2>
             <p className="mx-auto mt-5 max-w-[760px] text-base leading-7 text-stone-600">{data.intro.description}</p>
+            {(() => {
+              const locale = localeFromPath(data.seo.canonicalPath);
+              const link = hotelsGuideLink[locale];
+              const href = CHIOS_HOTELS_GUIDE_PATHS[locale as keyof typeof CHIOS_HOTELS_GUIDE_PATHS];
+              if (!link || !href) return null;
+              return (
+                <p className="mx-auto mt-3 max-w-[760px] text-sm leading-7 text-stone-600">
+                  {link.before}
+                  <a className="font-black text-amber-800 underline decoration-amber-300 underline-offset-4" href={href}>
+                    {link.label}
+                  </a>
+                  {link.after}
+                </p>
+              );
+            })()}
           </header>
 
           <div className="mb-4 flex items-center justify-between lg:hidden">
