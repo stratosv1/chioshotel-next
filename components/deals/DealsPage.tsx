@@ -8,6 +8,7 @@ import type { HomePageData } from "@/content/home";
 import { LazyLastMinuteDeals } from "@/components/home/LazyLastMinuteDeals";
 import { LocalizedChiosHotelsLiveSearch } from "@/components/booking/LocalizedChiosHotelsLiveSearch";
 import { CHIOS_HOTELS_GUIDE_PATHS } from "@/lib/chios-hotels-guide-i18n";
+import { NewsletterSignupForm } from "@/components/newsletter/NewsletterSignupForm";
 
 type DealsPageProps = {
   data: DealsPageData;
@@ -451,89 +452,6 @@ function CopyCodeButton({ code, labels, offerId, locale }: { code: string; label
   );
 }
 
-function NewsletterForm({ labels, locale }: { labels: DealsUiCopy; locale: Locale }) {
-  const [email, setEmail] = useState("");
-  const [consent, setConsent] = useState(false);
-  const [website, setWebsite] = useState("");
-  const [state, setState] = useState<"idle" | "sending" | "done">("idle");
-  const [error, setError] = useState("");
-
-  async function submit(event: React.FormEvent) {
-    event.preventDefault();
-    setError("");
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim())) return setError(labels.errorEmail);
-    if (!consent) return setError(labels.errorConsent);
-    setState("sending");
-    try {
-      const offer = typeof window !== "undefined" ? window.location.hash.replace(/^#offer-/, "") : "";
-      const params = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
-      const response = await fetch("/api/newsletter/subscribe/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: email.trim(),
-          consent,
-          consentText: labels.consent,
-          language: locale,
-          source: params?.get("utm_source") ? `deals:${params.get("utm_source")}` : "deals-page",
-          offer: offer && !offer.startsWith("#") ? offer : undefined,
-          website,
-        }),
-      });
-      const payload = await response.json().catch(() => ({ ok: false }));
-      if (!payload.ok) throw new Error(payload.error || "server");
-      setState("done");
-      emit("newsletter_signup", { language: locale, source: "deals-page" });
-    } catch (err) {
-      setState("idle");
-      const code = err instanceof Error ? err.message : "server";
-      setError(code === "email" ? labels.errorEmail : code === "consent" ? labels.errorConsent : labels.errorServer);
-    }
-  }
-
-  if (state === "done") {
-    return <p className="rounded-2xl bg-emerald-50 px-5 py-4 text-center text-base font-black text-emerald-800" role="status">{labels.subscribed}</p>;
-  }
-
-  return (
-    <form onSubmit={submit} className="mx-auto max-w-[560px]" noValidate>
-      <label className="sr-only" htmlFor="deals-newsletter-email">{labels.emailPlaceholder}</label>
-      <input
-        id="deals-newsletter-email"
-        type="email"
-        autoComplete="email"
-        inputMode="email"
-        value={email}
-        onChange={(event) => setEmail(event.target.value)}
-        placeholder={labels.emailPlaceholder}
-        className="min-h-[52px] w-full rounded-full border border-amber-800/25 bg-white px-5 text-base text-stone-900 outline-none focus:border-amber-800 focus:ring-2 focus:ring-amber-200"
-      />
-      <input
-        type="text"
-        name="website"
-        tabIndex={-1}
-        autoComplete="off"
-        value={website}
-        onChange={(event) => setWebsite(event.target.value)}
-        className="hidden"
-        aria-hidden="true"
-      />
-      <label className="mt-4 flex items-start gap-3 text-left text-[13px] leading-6 text-stone-600">
-        <input type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} className="mt-1 h-4 w-4 shrink-0 accent-amber-800" />
-        <span>{labels.consent}</span>
-      </label>
-      {error ? <p className="mt-3 text-sm font-bold text-red-700" role="alert">{error}</p> : null}
-      <button
-        type="submit"
-        disabled={state === "sending"}
-        className="mt-5 min-h-[52px] w-full rounded-full bg-amber-800 px-7 text-[12px] font-black uppercase tracking-[0.1em] text-white shadow-lg shadow-amber-900/15 disabled:opacity-60 sm:w-auto"
-      >
-        {labels.subscribe}
-      </button>
-    </form>
-  );
-}
-
 export function DealsPage({ data, lastMinute }: DealsPageProps) {
   const offersCarouselRef = useRef<HTMLDivElement>(null);
   const locale = localeFromPath(data.seo.canonicalPath);
@@ -759,7 +677,7 @@ export function DealsPage({ data, lastMinute }: DealsPageProps) {
             {labels.newsletterTitle}
           </h2>
           <p className="mx-auto mb-7 mt-3 max-w-[620px] text-[15px] leading-7 text-stone-600">{labels.newsletterText}</p>
-          <NewsletterForm labels={labels} locale={locale} />
+          <NewsletterSignupForm locale={locale} source="deals-page" />
         </div>
       </section>
     </main>

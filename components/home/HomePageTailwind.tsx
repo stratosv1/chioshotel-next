@@ -4,6 +4,7 @@ import type { HomePageData } from "@/content/home";
 import { HomeReviews } from "@/components/home/HomeReviews";
 import { HomeGallery } from "@/components/home/HomeGallery";
 import { LazyLastMinuteDeals } from "@/components/home/LazyLastMinuteDeals";
+import { NewsletterSignupCard, type NewsletterLocale } from "@/components/newsletter/NewsletterSignupForm";
 import { MobileStickyContact } from "@/components/home/MobileStickyContact";
 import {
   homeGuideImages,
@@ -195,12 +196,17 @@ function SecondaryButton({
   );
 }
 
+function homeNewsletterLocale(path: string): NewsletterLocale {
+  const segment = path.split("/")[1];
+  return (["el", "fr", "de", "it", "es", "tr"] as const).find((lang) => lang === segment) ?? "en";
+}
+
 function RoomsSection({ data }: { data: HomePageData }) {
   return (
     <section className="px-4 py-8 [contain-intrinsic-size:auto_900px] [content-visibility:auto] md:px-8 md:py-11">
       <div className="mx-auto max-w-7xl">
-        <div className="grid gap-4 lg:grid-cols-[0.95fr_1.05fr] lg:items-end">
-          <article className="rounded-[1.5rem] bg-[#2f241d] p-5 text-white shadow-lg shadow-stone-900/10 md:rounded-[2rem] md:p-9">
+        <div className="grid gap-4 lg:grid-cols-[0.95fr_1.05fr] lg:items-stretch">
+          <article className="rounded-[1.5rem] bg-[#2f241d] p-5 text-white shadow-lg shadow-stone-900/10 md:rounded-[2rem] md:p-9 lg:flex lg:flex-col lg:justify-center">
             <p className="mb-3 break-words text-xs font-black uppercase tracking-[0.20em] text-amber-200">{data.roomsPreview.kicker}</p>
             <h2 className="break-words font-serif text-[2rem] font-bold leading-tight md:text-[2.625rem]"><PremiumIcon>{data.roomsPreview.icon}</PremiumIcon>{data.roomsPreview.title}</h2>
             <p className="mt-4 text-sm leading-7 text-white/80 md:text-lg md:leading-8">{data.roomsPreview.text}</p>
@@ -209,11 +215,14 @@ function RoomsSection({ data }: { data: HomePageData }) {
               <a href={data.roomsPreview.secondaryCta.href} className="inline-flex break-words hyphens-auto max-sm:flex-col max-sm:gap-1 max-sm:py-2 max-sm:[&>span:first-child]:mr-0 min-h-12 min-w-0 items-center justify-center rounded-[1.1rem] border border-white/25 bg-white/10 px-2 text-center text-[11px] font-black uppercase leading-[1.15] tracking-[0.06em] text-white transition hover:bg-white/20 sm:rounded-full sm:px-6 sm:text-sm sm:tracking-[0.08em]"><PremiumIcon compact>{data.roomsPreview.secondaryCta.icon}</PremiumIcon>{data.roomsPreview.secondaryCta.label}</a>
             </div>
           </article>
-          <article className="hidden rounded-[2rem] bg-white p-7 shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 lg:block">
-            <p className="break-words text-xs font-black uppercase tracking-[0.20em] text-amber-700">{data.roomsPreview.sideCard.kicker}</p>
-            <h3 className="mt-3 break-words font-serif text-3xl font-bold text-stone-900">{data.roomsPreview.sideCard.title}</h3>
-            <p className="mt-4 leading-8 text-stone-600">{data.roomsPreview.sideCard.text}</p>
-          </article>
+          <div className="hidden flex-col gap-4 lg:flex">
+            <NewsletterSignupCard locale={homeNewsletterLocale(data.seo.canonicalPath)} source="homepage" />
+            <article className="flex-1 rounded-[2rem] bg-white px-7 py-6 shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10">
+              <p className="break-words text-xs font-black uppercase tracking-[0.20em] text-amber-700">{data.roomsPreview.sideCard.kicker}</p>
+              <h3 className="mt-2 break-words font-serif text-[1.65rem] font-bold leading-tight text-stone-900">{data.roomsPreview.sideCard.title}</h3>
+              <p className="mt-2 text-[15px] leading-7 text-stone-600">{data.roomsPreview.sideCard.text}</p>
+            </article>
+          </div>
         </div>
         <div className="mt-5 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 xl:grid-cols-4">
           {data.roomsPreview.rooms.map((room) => {
