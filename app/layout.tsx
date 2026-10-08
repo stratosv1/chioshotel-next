@@ -131,7 +131,7 @@ export default async function RootLayout({
   const hideHeader = isGuidePath(pathname);
   const privatePhysicsPath = isMixalisPath(pathname);
   const staffPath = isStaffPath(pathname);
-  const hideGlobalChrome = hideHeader || isPolishPath || privatePhysicsPath || staffPath;
+  const hideGlobalChrome = hideHeader || isPolishPath || privatePhysicsPath || staffPath || isTripPlannerPath(pathname);
   const hideJourney = isTripPlannerPath(pathname) || isAgentRoomPath(pathname) || privatePhysicsPath;
   const hideFooter = isTripPlannerPath(pathname) || privatePhysicsPath;
   const excludeAnalytics = staffPath || privatePhysicsPath;
