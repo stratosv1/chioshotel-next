@@ -26,6 +26,8 @@ const t = {
   morning: "Καλημέρα!",
   afternoon: "Καλησπέρα!",
   homeTitle: "Πού πάμε σήμερα;",
+  homeTitleTomorrow: "Πού πάμε αύριο;",
+  homeTitleOther: "Πού πάμε;",
   homeIntro: "Διάλεξε μια έτοιμη εκδρομή. Τη στήνουμε με βάση τη θάλασσα της ημέρας και την προσαρμόζεις όπως θέλεις.",
   today: "Σήμερα",
   tomorrow: "Αύριο",
@@ -358,7 +360,7 @@ export function DayPlanner({ seaDays, nowMinutes, source }: Props) {
         <BrandBar />
         <div className="mx-auto max-w-[640px] px-4 pt-5">
           <p className="text-[14px] font-bold text-[#a7743f]">{greeting}</p>
-          <h1 className="mt-1 font-serif text-[34px] font-bold leading-[1.05] tracking-[-0.02em]">{t.homeTitle}</h1>
+          <h1 className="mt-1 font-serif text-[34px] font-bold leading-[1.05] tracking-[-0.02em]">{seaDay?.offsetFromToday === 1 ? t.homeTitleTomorrow : seaDay && seaDay.offsetFromToday > 1 ? t.homeTitleOther : t.homeTitle}</h1>
           <p className="mt-2 text-[15px] leading-6 text-[#6c6057]">{t.homeIntro}</p>
 
           {seaDays.length > 1 ? (
