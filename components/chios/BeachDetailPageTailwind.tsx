@@ -1,7 +1,8 @@
 import Image from "next/image";
 import type { BeachDetailData } from "@/content/beach-details";
 import { BeachSeaConditionsDetail } from "@/components/chios/BeachSeaConditions";
-import { beachIdFromPath } from "@/lib/beach-conditions/beach-meta";
+import { beachIdFromPath, beachName as seaBeachName, greekInBeachPhrase } from "@/lib/beach-conditions/beach-meta";
+import { getBeachWhyVisit } from "@/content/beach-why-visit";
 import {
   chiosBeachesPageDe,
   chiosBeachesPageEl,
@@ -224,6 +225,28 @@ function getYouTubeThumbnail(embedUrl: string, fallbackImage: string) {
     : fallbackImage;
 }
 
+function whyVisitTitle(language: BeachUiLanguage, beachId: string | null) {
+  if (!beachId) return "";
+  const name = seaBeachName(beachId, language);
+  switch (language) {
+    case "el":
+      return `Γιατί αξίζει να πάτε ${greekInBeachPhrase(beachId)}; 4 λόγοι`;
+    case "fr":
+      return `Pourquoi aller à la plage ${/^[AEIOUÉ]/i.test(name) ? "d’" : "de "}${name} ? 4 bonnes raisons`;
+    case "de":
+      return `Warum lohnt sich der Strand ${name}? 4 gute Gründe`;
+    case "it":
+      return `Perché andare alla spiaggia di ${name}? 4 ottimi motivi`;
+    case "es":
+      return `¿Por qué ir a la playa de ${name}? 4 buenas razones`;
+    case "tr":
+      return `${name} plajına neden gitmeli? 4 güçlü neden`;
+    case "en":
+    default:
+      return `Why visit ${name} beach? 4 reasons it’s worth it`;
+  }
+}
+
 function getBeachDisplayName(title: string) {
   return title.split(":")[0].trim();
 }
@@ -239,6 +262,8 @@ export function BeachDetailPageTailwind({ beach }: BeachDetailPageProps) {
   const videoImage = getYouTubeThumbnail(beach.media.video.embedUrl, beach.hero.image);
   const roomsLabel = copy.viewRooms;
   const beachName = getBeachDisplayName(beach.hero.title);
+  const beachId = beachIdFromPath(beach.seo.canonicalPath);
+  const whyVisit = getBeachWhyVisit(beachId, language);
 
   return (
     <main className="overflow-hidden bg-[#f7fbfc] text-slate-950">
@@ -290,27 +315,43 @@ export function BeachDetailPageTailwind({ beach }: BeachDetailPageProps) {
             {copy.answerKicker}
           </span>
           <h2 className="mt-3 font-serif text-[2rem] font-bold leading-tight text-slate-950 md:text-5xl">
-            {copy.answerTitlePrefix} {beachName}?
+            {whyVisit ? whyVisitTitle(language, beachId) : `${copy.answerTitlePrefix} ${beachName}${language === "el" ? ";" : "?"}`}
           </h2>
           <p className="mt-4 text-sm font-semibold leading-7 text-slate-700 md:text-lg md:leading-8">
-            {beach.hero.description}
+            {whyVisit ? whyVisit.answer : beach.hero.description}
           </p>
-          <ul className="mt-5 grid gap-2 md:grid-cols-2 md:gap-3">
-            {beach.details.slice(0, 3).map((detail) => (
-              <li
-                className="rounded-2xl bg-cyan-50 px-4 py-3 text-sm font-bold leading-6 text-slate-800 ring-1 ring-cyan-900/10"
-                key={detail.title}
-              >
-                {detail.title}: <span className="font-semibold">{detail.text}</span>
-              </li>
-            ))}
-          </ul>
+          {whyVisit ? (
+            <ol className="mt-5 grid gap-2 md:grid-cols-2 md:gap-3">
+              {whyVisit.reasons.map((reason, index) => (
+                <li
+                  className="flex items-start gap-3 rounded-2xl bg-cyan-50 px-4 py-3 text-sm font-bold leading-6 text-slate-800 ring-1 ring-cyan-900/10"
+                  key={reason}
+                >
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-cyan-800 text-xs font-black text-white" aria-hidden="true">
+                    {index + 1}
+                  </span>
+                  <span>{reason}</span>
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <ul className="mt-5 grid gap-2 md:grid-cols-2 md:gap-3">
+              {beach.details.slice(0, 3).map((detail) => (
+                <li
+                  className="rounded-2xl bg-cyan-50 px-4 py-3 text-sm font-bold leading-6 text-slate-800 ring-1 ring-cyan-900/10"
+                  key={detail.title}
+                >
+                  {detail.title}: <span className="font-semibold">{detail.text}</span>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </section>
 
       <BeachSeaConditionsDetail
         language={language}
-        beachId={beachIdFromPath(beach.seo.canonicalPath)}
+        beachId={beachId}
       />
 
       <section className="px-3 py-14 md:px-5 md:py-20" aria-label={copy.detailsLabel}>
