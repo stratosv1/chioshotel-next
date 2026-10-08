@@ -170,7 +170,7 @@ function buildDealOfferSchema(
     inLanguage: language,
     availability: "https://schema.org/InStock",
     priceCurrency: "EUR",
-    validThrough: data.countdown.targetIso,
+    ...(offer.validUntil ? { validThrough: offer.validUntil } : {}),
     seller: {
       "@id": hotelId(),
     },

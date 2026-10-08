@@ -43,13 +43,18 @@ function weeklyTitle(canonicalPath: string) {
 export function LazyLastMinuteDeals({
   data,
   canonicalPath,
+  title,
+  anchorId = "vh-lastminute-title",
 }: {
   data: LastMinuteData;
   canonicalPath: string;
+  /** Optional heading override (e.g. on the deals page). */
+  title?: string;
+  anchorId?: string;
 }) {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const [shouldLoad, setShouldLoad] = useState(false);
-  const weeklyData: LastMinuteData = { ...data, title: weeklyTitle(canonicalPath) };
+  const weeklyData: LastMinuteData = { ...data, title: title ?? weeklyTitle(canonicalPath) };
 
   useEffect(() => {
     const element = rootRef.current;
@@ -105,7 +110,7 @@ export function LazyLastMinuteDeals({
   );
 
   return (
-    <div id="vh-lastminute-title" ref={rootRef} className="scroll-mt-24 md:scroll-mt-28">
+    <div id={anchorId} ref={rootRef} className="scroll-mt-24 md:scroll-mt-28">
       {shouldLoad ? (
         <Suspense fallback={placeholder}>
           <LiveDirectRequestClient data={weeklyData} canonicalPath={canonicalPath} />

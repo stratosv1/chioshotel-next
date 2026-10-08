@@ -3,22 +3,28 @@ import { DealsPage } from "@/components/deals/DealsPage";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getDealsIntentData } from "@/content/deals-intent";
 import { buildDealsSchema } from "@/content/deals-schema";
+import { getLiveDealsPage } from "@/lib/offers/deals-page-data";
 import { buildPageMetadata } from "@/lib/seo";
 
-const data = getDealsIntentData("it");
+// Offers are managed from /staff/offers; saving there refreshes this page immediately,
+// and expired offers drop off on the next refresh (at most 5 minutes).
+export const revalidate = 300;
+
+const seo = getDealsIntentData("it").seo;
 
 export const metadata: Metadata = buildPageMetadata({
-  path: data.seo.canonicalPath,
-  title: data.seo.title,
-  description: data.seo.description,
-  image: data.seo.ogImage,
+  path: seo.canonicalPath,
+  title: seo.title,
+  description: seo.description,
+  image: seo.ogImage,
 });
 
-export default function Page() {
+export default async function Page() {
+  const { data, lastMinute } = await getLiveDealsPage("it");
   return (
     <>
       <JsonLd data={buildDealsSchema(data)} />
-      <DealsPage data={data} />
+      <DealsPage data={data} lastMinute={lastMinute} />
     </>
   );
 }

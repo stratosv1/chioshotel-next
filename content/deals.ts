@@ -35,6 +35,8 @@ export type DealsPageData = {
     discountLabel: string;
     bookingHref: string;
     roomPageHref: string;
+    /** ISO date-time when this offer stops; null/undefined = no end date. */
+    validUntil?: string | null;
   }[];
 };
 

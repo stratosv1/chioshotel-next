@@ -41,6 +41,13 @@ const staffLinks = [
     external: true,
   },
   {
+    href: "/staff/offers",
+    icon: "🏷️",
+    label: "Προσφορές & Newsletter",
+    subText: "Προσφορές σελίδας Deals · κωδικοί · λήξη · links για newsletter · εγγραφές",
+    className: styles.directBooking,
+  },
+  {
     href: "/staff/statistics",
     icon: "📈",
     label: "Στατιστικά Voulamandis House",
