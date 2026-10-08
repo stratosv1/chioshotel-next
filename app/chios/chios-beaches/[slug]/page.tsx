@@ -6,6 +6,9 @@ import { buildBeachDetailSchema } from "@/content/beach-detail-schema";
 import { getBeachDetailBySlug, getBeachSlugs } from "@/content/beach-details";
 import { buildPageMetadata } from "@/lib/seo";
 
+// Sea-condition blocks refresh with the marine forecast cache.
+export const revalidate = 900;
+
 type PageProps = {
   params: Promise<{
     slug: string;

@@ -1,5 +1,7 @@
 import Image from "next/image";
 import type { BeachDetailData } from "@/content/beach-details";
+import { BeachSeaConditionsDetail } from "@/components/chios/BeachSeaConditions";
+import { beachIdFromPath } from "@/lib/beach-conditions/beach-meta";
 import {
   chiosBeachesPageDe,
   chiosBeachesPageEl,
@@ -305,6 +307,11 @@ export function BeachDetailPageTailwind({ beach }: BeachDetailPageProps) {
           </ul>
         </div>
       </section>
+
+      <BeachSeaConditionsDetail
+        language={language}
+        beachId={beachIdFromPath(beach.seo.canonicalPath)}
+      />
 
       <section className="px-3 py-14 md:px-5 md:py-20" aria-label={copy.detailsLabel}>
         <div className="mx-auto grid max-w-[1180px] gap-4 md:grid-cols-3">

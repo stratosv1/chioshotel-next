@@ -5,6 +5,9 @@ import { getLocalizedChiosBeachesPageByPath } from "@/content/chios-beaches";
 import { buildChiosBeachesSchema } from "@/content/chios-beaches-schema";
 import { buildPageMetadata } from "@/lib/seo";
 
+// Sea-condition blocks refresh with the marine forecast cache.
+export const revalidate = 900;
+
 const PATH = "/el/paralies-xios/";
 const CTR_TEST_TITLE = "Παραλίες Χίου: Οι 11 καλύτερες & κρυφοί κολπίσκοι";
 

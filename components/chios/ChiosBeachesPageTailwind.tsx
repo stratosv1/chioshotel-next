@@ -3,6 +3,7 @@ import type { ChiosBeachesPageData } from "@/content/chios-beaches";
 import { ChiosCollectionImageGallery } from "@/components/chios/ChiosCollectionImageGallery";
 import { AnswerFirstSeoBlock } from "@/components/seo/AnswerFirstSeoBlock";
 import { HorizontalChipScroller } from "@/components/ui/HorizontalChipScroller";
+import { BeachSeaConditionsHub } from "@/components/chios/BeachSeaConditions";
 
 type ChiosBeachesPageProps = {
   data: ChiosBeachesPageData;
@@ -245,6 +246,8 @@ export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
         kind="beaches"
         language={language}
       />
+
+      <BeachSeaConditionsHub language={language} />
 
       <section className="px-4 pt-4 md:px-6 md:pt-6" aria-labelledby="beach-category-guide-title">
         <div className="mx-auto max-w-[1180px] rounded-[30px] border border-teal-900/10 bg-white/95 p-4 shadow-xl shadow-black/5 md:p-6">
