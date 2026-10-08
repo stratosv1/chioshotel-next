@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { BeachLoversPageData } from "@/content/beach-lovers";
+import { BeachSeaShortlist, BeachSeaTodayBadge } from "@/components/chios/BeachSeaConditions";
+import { beachIdFromPath } from "@/lib/beach-conditions/beach-meta";
 
 type BeachLoversPageProps = {
   data: BeachLoversPageData;
@@ -253,6 +255,9 @@ export function BeachLoversPage({ data }: BeachLoversPageProps) {
   const bookingHref = getBookingHref(data.locale);
   const roomsHref = getRoomsHref(data.locale);
   const uiText = beachLoversUiText[data.locale];
+  const beachIds = data.beaches
+    .map((beach) => beachIdFromPath(beach.href))
+    .filter((id): id is string => Boolean(id));
 
   return (
     <main className="bg-[#fffaf2] text-slate-900">
@@ -304,6 +309,8 @@ export function BeachLoversPage({ data }: BeachLoversPageProps) {
         </div>
       </section>
 
+      <BeachSeaShortlist language={data.locale} beachIds={beachIds} />
+
       <section id="beaches" className="bg-white">
         <div className={beachLoversSection}>
           <div className={beachLoversSectionHead}>
@@ -326,6 +333,9 @@ export function BeachLoversPage({ data }: BeachLoversPageProps) {
                   />
                 </div>
                 <div className={beachLoversCardBody}>
+                  <div className="mb-2">
+                    <BeachSeaTodayBadge language={data.locale} beachId={beachIdFromPath(beach.href)} />
+                  </div>
                   <p className={beachLoversCardTag}>{beach.tag}</p>
                   <h3 className={beachLoversCardTitle}>{beach.name}</h3>
                   <p className={beachLoversCardText}>{beach.description}</p>

@@ -50,8 +50,7 @@ const images = {
     "/images/beaches/mavra-volia-beach-chios.webp",
   agiaFotia: "/images/beaches/agia-fotia-beach-chios.webp",
   komi: "/images/beaches/komi-beach-chios.webp",
-  salagona:
-    "/images/beaches/komi-beach-chios.webp",
+  salagona: "/images/beaches/salagona-beach-chios.webp",
   vroulidia: "/images/beaches/vroulidia-2-1.jpg",
   katoFana: "/images/beaches/kato-fana-beach-chios.webp",
   voulamandis:

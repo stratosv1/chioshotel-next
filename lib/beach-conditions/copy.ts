@@ -50,6 +50,13 @@ type SeaCopy = {
   none: string;
   meltemi: Record<MeltemiFit, string>;
   viewBeach: string;
+  // Shortlist (beach-lovers page)
+  shortlistKicker: string;
+  shortlistTitle: string;
+  shortlistIntro: string;
+  shortlistBest: (day: string, names: string) => string;
+  shortlistHubLink: string;
+  todayBadge: string;
 };
 
 const dirShortLatin: Record<MarineDirection, string> = {
@@ -119,6 +126,12 @@ export const seaCopy: Record<SeaLanguage, SeaCopy> = {
       exposed: "Με μελτέμι (βοριά) εδώ συνήθως σηκώνει κύμα — κρατήστε την για μέρες με νηνεμία ή νότιο αέρα.",
     },
     viewBeach: "Δείτε την παραλία",
+    shortlistKicker: "Θάλασσα για το beach day σας",
+    shortlistTitle: "Πού να πάτε για μπάνιο σήμερα;",
+    shortlistIntro: "Οι παραλίες αυτής της σελίδας με την πρόγνωση για σήμερα και τις επόμενες δύο μέρες. Ξεκινήστε το πρόγραμμα από όποια έχει την πιο ήρεμη θάλασσα.",
+    shortlistBest: (day, names) => `${day}: πιο ήρεμη θάλασσα σε ${names}.`,
+    shortlistHubLink: "Δείτε τη θάλασσα σε όλες τις παραλίες της Χίου →",
+    todayBadge: "Σήμερα",
   },
   en: {
     intlLocale: "en-GB",
@@ -178,6 +191,12 @@ export const seaCopy: Record<SeaLanguage, SeaCopy> = {
       exposed: "With the meltemi (north wind) this beach usually gets waves — keep it for still days or a south wind.",
     },
     viewBeach: "View beach",
+    shortlistKicker: "Sea for your beach day",
+    shortlistTitle: "Where to swim today?",
+    shortlistIntro: "The beaches on this page with the forecast for today and the next two days. Start your plan with the one that has the calmest sea.",
+    shortlistBest: (day, names) => `${day}: calmest sea at ${names}.`,
+    shortlistHubLink: "See the sea at every Chios beach →",
+    todayBadge: "Today",
   },
   fr: {
     intlLocale: "fr-FR",
@@ -237,6 +256,12 @@ export const seaCopy: Record<SeaLanguage, SeaCopy> = {
       exposed: "Avec le meltem (vent du nord), cette plage a souvent des vagues — gardez-la pour les jours sans vent ou de vent du sud.",
     },
     viewBeach: "Voir la plage",
+    shortlistKicker: "La mer pour votre journée plage",
+    shortlistTitle: "Où se baigner aujourd’hui ?",
+    shortlistIntro: "Les plages de cette page avec la prévision pour aujourd’hui et les deux jours suivants. Commencez par celle où la mer est la plus calme.",
+    shortlistBest: (day, names) => `${day} : mer la plus calme à ${names}.`,
+    shortlistHubLink: "Voir la mer sur toutes les plages de Chios →",
+    todayBadge: "Aujourd’hui",
   },
   de: {
     intlLocale: "de-DE",
@@ -296,6 +321,12 @@ export const seaCopy: Record<SeaLanguage, SeaCopy> = {
       exposed: "Beim Meltemi (Nordwind) gibt es hier meist Wellen – besser für windstille Tage oder Südwind.",
     },
     viewBeach: "Strand ansehen",
+    shortlistKicker: "Meer für Ihren Strandtag",
+    shortlistTitle: "Wo heute baden?",
+    shortlistIntro: "Die Strände dieser Seite mit der Prognose für heute und die nächsten zwei Tage. Beginnen Sie mit dem Strand, an dem das Meer am ruhigsten ist.",
+    shortlistBest: (day, names) => `${day}: ruhigstes Meer in ${names}.`,
+    shortlistHubLink: "Das Meer an allen Stränden von Chios →",
+    todayBadge: "Heute",
   },
   it: {
     intlLocale: "it-IT",
@@ -355,6 +386,12 @@ export const seaCopy: Record<SeaLanguage, SeaCopy> = {
       exposed: "Con il meltemi (vento da nord) qui di solito c’è onda: meglio nei giorni senza vento o con vento da sud.",
     },
     viewBeach: "Vedi la spiaggia",
+    shortlistKicker: "Il mare per la tua giornata in spiaggia",
+    shortlistTitle: "Dove fare il bagno oggi?",
+    shortlistIntro: "Le spiagge di questa pagina con le previsioni per oggi e i prossimi due giorni. Inizia dalla spiaggia con il mare più calmo.",
+    shortlistBest: (day, names) => `${day}: mare più calmo a ${names}.`,
+    shortlistHubLink: "Il mare in tutte le spiagge di Chios →",
+    todayBadge: "Oggi",
   },
   es: {
     intlLocale: "es-ES",
@@ -414,6 +451,12 @@ export const seaCopy: Record<SeaLanguage, SeaCopy> = {
       exposed: "Con el meltemi (viento del norte) aquí suele haber olas: mejor para días sin viento o con viento del sur.",
     },
     viewBeach: "Ver la playa",
+    shortlistKicker: "El mar para tu día de playa",
+    shortlistTitle: "¿Dónde bañarse hoy?",
+    shortlistIntro: "Las playas de esta página con la previsión para hoy y los dos días siguientes. Empieza por la que tenga el mar más tranquilo.",
+    shortlistBest: (day, names) => `${day}: mar más tranquilo en ${names}.`,
+    shortlistHubLink: "Ver el mar en todas las playas de Quíos →",
+    todayBadge: "Hoy",
   },
   tr: {
     intlLocale: "tr-TR",
@@ -473,6 +516,12 @@ export const seaCopy: Record<SeaLanguage, SeaCopy> = {
       exposed: "Meltemde (kuzey rüzgârı) burada genellikle dalga olur — rüzgârsız ya da güney rüzgârlı günleri tercih edin.",
     },
     viewBeach: "Plajı gör",
+    shortlistKicker: "Plaj gününüz için deniz",
+    shortlistTitle: "Bugün nerede yüzülür?",
+    shortlistIntro: "Bu sayfadaki plajlar; bugün ve sonraki iki gün için tahminle. Planınıza denizin en sakin olduğu plajdan başlayın.",
+    shortlistBest: (day, names) => `${day}: en sakin deniz ${names} plajında.`,
+    shortlistHubLink: "Sakız Adası’nın tüm plajlarında deniz →",
+    todayBadge: "Bugün",
   },
 };
 

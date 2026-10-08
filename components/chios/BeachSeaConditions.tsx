@@ -3,6 +3,7 @@ import {
   beachName,
   beachPagePath,
   beachRegionById,
+  beachesHubSeaPath,
   directionFromDegrees,
   exposedDirections,
   exposureFor,
@@ -506,6 +507,76 @@ export async function BeachSeaConditionsDetail({
           </>
         ) : null}
 
+        <SourceNote language={language} outlook={outlook} />
+      </div>
+    </section>
+  );
+}
+
+/** Small "today" sea-state chip for beach cards (renders nothing without forecast). */
+export async function BeachSeaTodayBadge({
+  language,
+  beachId,
+}: {
+  language: SeaLanguage;
+  beachId: string | null;
+}) {
+  if (!beachId) return null;
+  const outlook = await getBeachSeaOutlook();
+  const day = outlook?.days[0];
+  const condition = day?.byId[beachId];
+  if (!day || !condition) return null;
+  const copy = seaCopyFor(language);
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-black ring-1 ${stateStyles[condition.state].chip}`}
+    >
+      <span className={`h-2 w-2 rounded-full ${stateStyles[condition.state].dot}`} aria-hidden="true" />
+      {shortDayLabel(language, day)}: {copy.states[condition.state]}
+    </span>
+  );
+}
+
+/** Sea outlook for a hand-picked set of beaches (e.g. the beach-lovers page). */
+export async function BeachSeaShortlist({
+  language,
+  beachIds,
+}: {
+  language: SeaLanguage;
+  beachIds: string[];
+}) {
+  const outlook = await getBeachSeaOutlook();
+  const first = outlook?.days[0];
+  if (!outlook || !first) return null;
+  const copy = seaCopyFor(language);
+  const ids = first.ranked.map((row) => row.beachId).filter((id) => beachIds.includes(id));
+  if (!ids.length) return null;
+  const bestScore = first.byId[ids[0]].score;
+  const best = ids.filter((id) => first.byId[id].score >= bestScore - 3).slice(0, 2);
+
+  return (
+    <section className="px-4 py-12 md:px-6 md:py-16" id="sea-today" aria-labelledby="sea-today-title">
+      <div className="mx-auto max-w-[1100px] rounded-[32px] border border-cyan-100 bg-white p-5 shadow-[0_20px_44px_rgba(15,23,42,0.08)] md:p-10">
+        <span className="text-xs font-black uppercase tracking-[0.16em] text-cyan-800">{copy.shortlistKicker}</span>
+        <h2 id="sea-today-title" className="mt-3 text-3xl font-[950] leading-tight tracking-[-0.04em] text-slate-950 md:text-5xl">
+          {copy.shortlistTitle}
+        </h2>
+        <p className="mt-4 max-w-[760px] text-base leading-8 text-slate-600">{copy.shortlistIntro}</p>
+        <p className={`mt-5 rounded-2xl px-5 py-4 text-base font-bold leading-7 ring-1 md:text-lg ${stateStyles[first.byId[ids[0]].state].panel}`}>
+          {copy.shortlistBest(
+            dayLabel(language, first),
+            best.map((id) => beachName(id, language)).join(" & "),
+          )}{" "}
+          {islandWindText(language, first)}.
+        </p>
+        <ol className="mt-4 list-none">
+          {ids.map((id, index) => (
+            <OutlookRow id={id} key={id} language={language} outlook={outlook} rank={index + 1} />
+          ))}
+        </ol>
+        <a className="mt-5 inline-flex text-sm font-black uppercase tracking-[0.08em] text-cyan-800" href={beachesHubSeaPath(language)}>
+          {copy.shortlistHubLink}
+        </a>
         <SourceNote language={language} outlook={outlook} />
       </div>
     </section>

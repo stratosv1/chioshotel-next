@@ -7,6 +7,7 @@ import {
 } from "@/content/trip-planner/marine-exposure";
 import { getAllBeachDetails } from "@/content/beach-details";
 import { elintaBeachPaths, karfasBeachPaths } from "@/content/karfas-elinta-paths";
+import { chiosBeachesPages } from "@/content/chios-beaches";
 
 export type SeaLanguage = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
 
@@ -127,6 +128,12 @@ let beachPageIndex: Record<SeaLanguage, Record<string, string>> | null = null;
 export function beachPagePath(id: string, language: SeaLanguage): string | null {
   beachPageIndex ??= buildBeachPageIndex();
   return beachPageIndex[language][id] ?? null;
+}
+
+/** Beaches hub page in the given language (anchored to the sea-conditions section). */
+export function beachesHubSeaPath(language: SeaLanguage): string {
+  const page = chiosBeachesPages.find((item) => languageFromPath(item.seo.canonicalPath) === language);
+  return `${page?.seo.canonicalPath ?? "/chios/chios-beaches/"}#sea-today`;
 }
 
 export function directionFromDegrees(degrees: number | null): MarineDirection | null {

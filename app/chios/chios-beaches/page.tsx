@@ -5,9 +5,6 @@ import { chiosBeachesPageEn } from "@/content/chios-beaches";
 import { buildChiosBeachesSchema } from "@/content/chios-beaches-schema";
 import { buildPageMetadata } from "@/lib/seo";
 
-// Sea-condition blocks refresh with the marine forecast cache.
-export const revalidate = 900;
-
 export const metadata: Metadata = buildPageMetadata({
   path: chiosBeachesPageEn.seo.canonicalPath,
   title: chiosBeachesPageEn.seo.title,

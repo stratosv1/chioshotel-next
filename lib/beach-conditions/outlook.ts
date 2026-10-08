@@ -32,7 +32,6 @@ export type BeachDayCondition = {
   windGustsKmh: number | null;
   windDirectionDeg: number | null;
   beaufort: number | null;
-  temperatureC: number | null;
 };
 
 export type BeachOutlookDay = {
@@ -122,7 +121,6 @@ function toCondition(row: RankedBeachMarineDiagnostic): BeachDayCondition {
     windGustsKmh: summary.windGustsKmhMax,
     windDirectionDeg: summary.windDirectionDeg,
     beaufort: beaufortFromKmh(summary.windSpeedKmhAvg),
-    temperatureC: summary.temperatureC,
   };
 }
 
