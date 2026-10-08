@@ -421,7 +421,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       rewindConversation(
         String((lastChoice.offer as any).recoveryType || "")
           ? SALES_RECOVERY[language]
-          : tone.results(lastChoice.group, lastChoice.guests),
+          : tone.results(lastChoice.group, lastChoice.guests, groups.length),
       );
       return;
     }
@@ -668,7 +668,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       ) {
         add("assistant", ROOM_INTEREST_UNAVAILABLE[language](roomInterest));
       }
-      const content = tone.results(1, searchDraft.groups[0]);
+      const content = tone.results(1, searchDraft.groups[0], searchDraft.groups.length);
       const firstGroupOffers = sortOffersForPreferences(
         feasibleOffersForGroup(eligible, 0, new Set()),
         preferences,
@@ -1035,7 +1035,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     if (roomCount && activeGroup + 1 < roomCount) {
       const nextGroup = activeGroup + 1;
       setActiveGroup(nextGroup);
-      const content = tone.results(nextGroup + 1, groups[nextGroup]);
+      const content = tone.results(nextGroup + 1, groups[nextGroup], groups.length);
       const nextSelectedKeys = new Set([...selectedKeys, key]);
       const nextGroupOffers = sortOffersForPreferences(
         feasibleOffersForGroup(capacityEligibleOffers, nextGroup, nextSelectedKeys),

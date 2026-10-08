@@ -203,6 +203,7 @@ ROOM PREFERENCES
 
 LANGUAGE
 - Preserve the selected UI language from context for command.language and clarification text.
+- Write every clarification question ONLY in the selected UI language, even though most reference examples below are in Greek and even if the customer mixes languages. Never answer a de/en/fr/it/es/tr guest in Greek.
 
 REFERENCE EXAMPLES
 1) “Θέλω ένα δωμάτιο για 2 άτομα χωρίς σκάλες, άφιξη 10/10 αναχώρηση 12/10”
@@ -330,11 +331,26 @@ function cleanAction(raw: any): RoomFinderAction {
   return action;
 }
 
+// The prompt's reference examples are mostly Greek, so the model can echo a
+// Greek clarification to a guest browsing in another language. Free text the
+// guest would read must be in the selected UI language; anything else is
+// dropped so the app falls back to its own localized question.
+const GREEK_LETTERS = /[\u0370-\u03ff\u1f00-\u1fff]/u;
+
+function dropWrongLanguageText(action: RoomFinderAction, language: RoomFinderAssistantLanguage): RoomFinderAction {
+  if (language === "el" || !action.query || !GREEK_LETTERS.test(action.query)) return action;
+  const { query: _query, ...rest } = action;
+  return rest;
+}
+
 function cleanCommand(raw: any, context: RoomFinderConversationContext): RoomFinderCommand {
+  const language = safeLanguage(context.language || raw?.language);
   return {
-    language: safeLanguage(context.language || raw?.language),
+    language,
     replyMode: raw?.replyMode === "clarify" ? "clarify" : "execute",
-    actions: Array.isArray(raw?.actions) ? raw.actions.map(cleanAction) : [],
+    actions: Array.isArray(raw?.actions)
+      ? raw.actions.map(cleanAction).map((action: RoomFinderAction) => dropWrongLanguageText(action, language))
+      : [],
   };
 }
 
