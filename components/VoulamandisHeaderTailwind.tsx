@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { LanguageCode } from "@/lib/languages";
 import { languages, normalizePath } from "@/lib/languages";
 import type { HeaderLinks } from "@/lib/header-links";
@@ -17,9 +17,12 @@ type HeaderProps = {
 type HeaderMenuLink = {
   label: string;
   href: string;
-  icon: string;
   text?: string;
 };
+
+// Same direct lines as the homepage mobile call / WhatsApp bar.
+const CALL_HREF = "tel:+306944764654";
+const WHATSAPP_HREF = "https://wa.me/306944474226";
 
 type HeaderCopy = {
   bookNow: string;
@@ -27,6 +30,8 @@ type HeaderCopy = {
   close: string;
   nav: string;
   language: string;
+  call: string;
+  exploreTitle: string;
   directLine: string;
   location: string;
   links: {
@@ -54,6 +59,8 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     close: "Close",
     nav: "Main navigation",
     language: "Language",
+    call: "Call",
+    exploreTitle: "Explore Chios",
     directLine: "Direct Booking",
     location: "Kampos, Chios",
     links: { rooms: "Rooms", rates: "Rates", deals: "Deals", chios: "Chios Island", beaches: "Beaches", villages: "Villages", museums: "Museums", activities: "Do in Chios", contact: "Contact" },
@@ -65,6 +72,8 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     close: "Κλείσιμο",
     nav: "Κύρια πλοήγηση",
     language: "Γλώσσα",
+    call: "Κλήση",
+    exploreTitle: "Ανακαλύψτε τη Χίο",
     directLine: "Απευθείας κράτηση",
     location: "Κάμπος, Χίος",
     links: { rooms: "Δωμάτια", rates: "Τιμές", deals: "Προσφορές", chios: "Χίος", beaches: "Παραλίες", villages: "Χωριά", museums: "Μουσεία", activities: "Τι να κάνεις", contact: "Επικοινωνία" },
@@ -76,6 +85,8 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     close: "Fermer",
     nav: "Navigation principale",
     language: "Langue",
+    call: "Appeler",
+    exploreTitle: "Découvrir Chios",
     directLine: "Réservation directe",
     location: "Kambos, Chios",
     links: { rooms: "Chambres", rates: "Tarifs", deals: "Offres", chios: "Île de Chios", beaches: "Plages", villages: "Villages", museums: "Musées", activities: "À faire", contact: "Contact" },
@@ -87,6 +98,8 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     close: "Schließen",
     nav: "Hauptnavigation",
     language: "Sprache",
+    call: "Anrufen",
+    exploreTitle: "Chios entdecken",
     directLine: "Direktbuchung",
     location: "Kambos, Chios",
     links: { rooms: "Zimmer", rates: "Preise", deals: "Angebote", chios: "Insel Chios", beaches: "Strände", villages: "Dörfer", museums: "Museen", activities: "Aktivitäten", contact: "Kontakt" },
@@ -98,6 +111,8 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     close: "Chiudi",
     nav: "Navigazione principale",
     language: "Lingua",
+    call: "Chiama",
+    exploreTitle: "Scopri Chios",
     directLine: "Prenotazione diretta",
     location: "Kambos, Chios",
     links: { rooms: "Camere", rates: "Prezzi", deals: "Offerte", chios: "Isola di Chios", beaches: "Spiagge", villages: "Villaggi", museums: "Musei", activities: "Cosa fare", contact: "Contatti" },
@@ -109,6 +124,8 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     close: "Cerrar",
     nav: "Navegación principal",
     language: "Idioma",
+    call: "Llamar",
+    exploreTitle: "Descubre Quíos",
     directLine: "Reserva directa",
     location: "Kambos, Quíos",
     links: { rooms: "Habitaciones", rates: "Precios", deals: "Ofertas", chios: "Isla de Chios", beaches: "Playas", villages: "Pueblos", museums: "Museos", activities: "Qué hacer", contact: "Contacto" },
@@ -120,6 +137,8 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     close: "Kapat",
     nav: "Ana gezinme",
     language: "Dil",
+    call: "Ara",
+    exploreTitle: "Sakız Adası'nı keşfedin",
     directLine: "Doğrudan rezervasyon",
     location: "Kambos, Sakız Adası",
     links: { rooms: "Odalar", rates: "Fiyatlar", deals: "Fırsatlar", chios: "Sakız Adası", beaches: "Plajlar", villages: "Köyler", museums: "Müzeler", activities: "Ne yapılır", contact: "İletişim" },
@@ -222,18 +241,21 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/", hea
   const copy = copyByLanguage[language] || copyByLanguage.en;
 
   const links: HeaderMenuLink[] = [
-    { label: copy.links.rooms, href: headerLinks.nav.rooms, icon: "🛏️" },
-    { label: copy.links.deals, href: headerLinks.nav.deals, icon: "🔥" },
-    { label: copy.links.chios, href: headerLinks.nav.chios, icon: "🏝️" },
-    { label: copy.links.activities, href: headerLinks.nav.activities, icon: "✨" },
-    { label: copy.links.contact, href: headerLinks.nav.contact, icon: "💬" },
+    { label: copy.links.rooms, href: headerLinks.nav.rooms },
+    { label: copy.links.deals, href: headerLinks.nav.deals },
+    { label: copy.links.chios, href: headerLinks.nav.chios },
+    { label: copy.links.activities, href: headerLinks.nav.activities },
+    { label: copy.links.contact, href: headerLinks.nav.contact },
   ];
   const exploreLinks: HeaderMenuLink[] = [
-    { label: copy.links.beaches, href: headerLinks.nav.beaches, text: copy.explore.beaches, icon: "🌊" },
-    { label: copy.links.villages, href: headerLinks.nav.villages, text: copy.explore.villages, icon: "🏘️" },
-    { label: copy.links.museums, href: headerLinks.nav.museums, text: copy.explore.museums, icon: "🏛️" },
+    { label: copy.links.beaches, href: headerLinks.nav.beaches, text: copy.explore.beaches },
+    { label: copy.links.villages, href: headerLinks.nav.villages, text: copy.explore.villages },
+    { label: copy.links.museums, href: headerLinks.nav.museums, text: copy.explore.museums },
   ];
-  const mobileLinks: HeaderMenuLink[] = [...links, ...exploreLinks];
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const currentPath = normalizePath(pathname);
+  const isCurrent = (href: string) => normalizePath(href) === currentPath;
 
   function closeMenu() {
     setIsOpen(false);
@@ -247,16 +269,38 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/", hea
       if (event.key === "Escape") setIsOpen(false);
     };
 
+    const trapFocus = (event: KeyboardEvent) => {
+      if (event.key !== "Tab" || !panelRef.current) return;
+      const focusable = Array.from(panelRef.current.querySelectorAll<HTMLElement>("a[href], button")).filter((element) => element.offsetParent !== null);
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
     document.body.style.overflow = "hidden";
     window.addEventListener("keydown", closeOnEscape);
+    window.addEventListener("keydown", trapFocus);
+    const firstItem = panelRef.current?.querySelector<HTMLElement>("a[href], button");
+    window.setTimeout(() => firstItem?.focus({ preventScroll: true }), 50);
+    const menuButton = menuButtonRef.current;
 
     return () => {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", closeOnEscape);
+      window.removeEventListener("keydown", trapFocus);
+      menuButton?.focus({ preventScroll: true });
     };
   }, [isOpen]);
 
   return (
+    <>
     <header className="sticky top-0 z-50 border-b border-stone-900/10 bg-[#fffaf3]/92 shadow-[0_10px_30px_rgba(41,30,20,0.07)] backdrop-blur-xl supports-[backdrop-filter]:bg-[#fffaf3]/82">
       <div className="mx-auto flex h-[72px] w-full max-w-none items-center gap-3 px-3 sm:px-5 lg:h-[84px] lg:px-6 xl:px-8">
         <a href={headerLinks.nav.home} onClick={closeMenu} className="group flex min-w-0 flex-1 items-center gap-3 lg:max-w-[500px] xl:flex-[0_1_470px] 2xl:flex-[0_1_560px]">
@@ -298,7 +342,7 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/", hea
           </a>
         </div>
 
-        <button type="button" aria-label={isOpen ? copy.close : copy.menu} aria-expanded={isOpen} onClick={() => setIsOpen((value) => !value)} className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-stone-900/10 bg-white text-stone-900 shadow-sm shadow-stone-900/5 xl:hidden">
+        <button ref={menuButtonRef} type="button" aria-label={isOpen ? copy.close : copy.menu} aria-expanded={isOpen} aria-controls="vh-mobile-menu" onClick={() => setIsOpen((value) => !value)} className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-stone-900/10 bg-white text-stone-900 shadow-sm shadow-stone-900/5 xl:hidden">
           <span className="sr-only">{copy.menu}</span>
           <span className="grid gap-1.5">
             <span className={`block h-0.5 w-5 rounded-full bg-current transition ${isOpen ? "translate-y-2 rotate-45" : ""}`} />
@@ -308,29 +352,65 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/", hea
         </button>
       </div>
 
-      <div className={`fixed inset-0 top-[72px] z-50 bg-stone-950/15 backdrop-blur-[1px] [transition-property:opacity,visibility] duration-200 lg:top-[84px] xl:hidden ${isOpen ? "visible pointer-events-auto opacity-100" : "invisible pointer-events-none opacity-0"}`}>
-        <button type="button" aria-label={copy.close} onClick={closeMenu} className="absolute inset-0 h-full w-full" />
-        <div className={`absolute right-0 top-0 max-h-[calc(100dvh-72px)] w-[min(92vw,420px)] lg:max-h-[calc(100dvh-84px)] overflow-y-auto overscroll-contain rounded-l-[1.5rem] bg-[#fffaf3] p-3 pb-[calc(1.25rem+env(safe-area-inset-bottom))] shadow-2xl shadow-stone-950/18 transition duration-300 ${isOpen ? "translate-x-0" : "translate-x-full"}`}>
-          <div className="mb-2 lg:hidden"><LanguagePills currentLanguage={language} pathname={pathname} languageHrefs={headerLinks.languages} onNavigate={closeMenu} fullWidth /></div>
-          <a href={headerLinks.nav.rates} onClick={closeMenu} className="mb-2 flex min-h-[44px] lg:hidden items-center justify-center rounded-full bg-gradient-to-br from-[#78624d] to-[#735f45] px-5 text-sm font-black uppercase tracking-[0.1em] !text-white shadow-lg shadow-stone-900/15 transition hover:from-[#6b5847] hover:to-[#5f4e3f]">
+    </header>
+      <div className={`fixed inset-0 top-[72px] z-50 [transition-property:visibility] duration-300 lg:top-[84px] xl:hidden ${isOpen ? "visible" : "invisible"}`}>
+        <button type="button" tabIndex={-1} aria-label={copy.close} onClick={closeMenu} className={`absolute inset-0 h-full w-full bg-stone-950/45 backdrop-blur-[2px] transition-opacity duration-300 ${isOpen ? "opacity-100" : "opacity-0"}`} />
+        <div
+          id="vh-mobile-menu"
+          ref={panelRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label={copy.nav}
+          className={`absolute bottom-0 right-0 top-0 flex w-[min(88vw,400px)] flex-col overflow-y-auto overscroll-contain bg-[#fffaf3] px-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] pt-5 shadow-2xl shadow-stone-950/25 transition-transform duration-300 ease-out ${isOpen ? "translate-x-0" : "translate-x-full"}`}
+        >
+          <a href={headerLinks.nav.rates} onClick={closeMenu} className="flex min-h-12 items-center justify-center rounded-full bg-gradient-to-br from-[#78624d] to-[#735f45] px-5 text-sm font-black uppercase tracking-[0.1em] !text-white shadow-lg shadow-stone-900/15 transition hover:from-[#6b5847] hover:to-[#5f4e3f] lg:hidden">
             {copy.bookNow}
           </a>
-          <section className="rounded-[1.15rem] border border-stone-900/10 bg-white p-2.5 shadow-sm shadow-stone-900/5">
-            <p className="mb-2 px-1 text-[10px] font-black uppercase tracking-[0.16em] text-stone-500">{copy.nav}</p>
-            <div className="grid grid-cols-2 gap-2">
-              {mobileLinks.map((link) => (
-                <a key={link.href} href={link.href} onClick={closeMenu} className="flex min-h-[54px] items-center gap-2 rounded-2xl bg-gradient-to-br from-white to-[#fff7ea] px-3 py-2 text-stone-800 ring-1 ring-amber-900/10 shadow-sm shadow-stone-900/[0.03]">
-                  <span className="text-[19px]" aria-hidden="true">{link.icon}</span>
-                  <span className="min-w-0">
-                    <strong className="block truncate text-[13px] font-black leading-tight">{link.label}</strong>
-                    {link.text ? <small className="mt-0.5 block text-[11px] font-semibold leading-tight text-amber-800/80">{link.text}</small> : null}
-                  </span>
-                </a>
+          <div className="mt-3 grid grid-cols-2 gap-2 lg:mt-0">
+            <a href={CALL_HREF} className="flex min-h-11 items-center justify-center gap-2 rounded-full border border-stone-900/12 bg-white px-3 text-sm font-bold text-stone-800 shadow-sm transition hover:bg-amber-50">
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2Z" /></svg>
+              {copy.call}
+            </a>
+            <a href={WHATSAPP_HREF} target="_blank" rel="noopener" className="flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#25D366] px-3 text-sm font-bold text-white shadow-sm transition hover:bg-[#1ebe5d]">
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.4 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.3.4c-.1.1-.3.3-.1.6.2.3.7 1.2 1.6 2 1.1 1 2 1.3 2.3 1.4.3.2.5.1.6 0l.9-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.1.1.6-.1 1.1Z" /></svg>
+              WhatsApp
+            </a>
+          </div>
+
+          <nav aria-label={copy.nav} className="mt-5">
+            <ul className="border-t border-stone-900/10">
+              {links.map((link) => (
+                <li key={link.href} className="border-b border-stone-900/10">
+                  <a href={link.href} onClick={closeMenu} aria-current={isCurrent(link.href) ? "page" : undefined} className={`group flex min-h-[54px] items-center justify-between gap-3 py-3 text-[17px] font-bold tracking-[-0.01em] transition hover:text-amber-800 ${isCurrent(link.href) ? "text-amber-800" : "text-stone-900"}`}>
+                    <span>{link.label}</span>
+                    <svg aria-hidden="true" viewBox="0 0 16 16" className="h-4 w-4 shrink-0 text-stone-300 transition group-hover:translate-x-0.5 group-hover:text-amber-800" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
+                  </a>
+                </li>
               ))}
-            </div>
-          </section>
+            </ul>
+          </nav>
+
+          <p className="mt-6 text-[11px] font-black uppercase tracking-[0.16em] text-stone-500">{copy.exploreTitle}</p>
+          <ul className="mt-1">
+            {exploreLinks.map((link) => (
+              <li key={link.href} className="border-b border-stone-900/10 last:border-b-0">
+                <a href={link.href} onClick={closeMenu} aria-current={isCurrent(link.href) ? "page" : undefined} className={`group flex min-h-12 items-center justify-between gap-3 py-2.5 transition hover:text-amber-800 ${isCurrent(link.href) ? "text-amber-800" : "text-stone-800"}`}>
+                  <span className="min-w-0">
+                    <span className="block text-[15px] font-semibold leading-tight">{link.label}</span>
+                    {link.text ? <span className="mt-0.5 block text-[12px] font-medium leading-tight text-stone-500">{link.text}</span> : null}
+                  </span>
+                  <svg aria-hidden="true" viewBox="0 0 16 16" className="h-4 w-4 shrink-0 text-stone-300 transition group-hover:translate-x-0.5 group-hover:text-amber-800" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
+                </a>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-auto pt-6 lg:hidden">
+            <p className="mb-2 text-[11px] font-black uppercase tracking-[0.16em] text-stone-500">{copy.language}</p>
+            <LanguagePills currentLanguage={language} pathname={pathname} languageHrefs={headerLinks.languages} onNavigate={closeMenu} fullWidth />
+          </div>
         </div>
       </div>
-    </header>
+    </>
   );
 }
