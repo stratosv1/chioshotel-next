@@ -548,6 +548,13 @@ export async function POST(request: NextRequest) {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 45_000);
 
+    const model = process.env.OPENAI_STAFF_BOOKING_MODEL || process.env.OPENAI_CONCIERGE_MODEL || process.env.OPENAI_ASSISTANT_MODEL || "gpt-5-mini";
+    // Field extraction needs little reasoning; the default (medium) effort
+    // added several seconds to every staff reply. Screenshots get "low" so
+    // OCR-heavy inputs keep a little more care. Only gpt-5 family models
+    // accept this parameter.
+    const reasoning = /^gpt-5/i.test(model) ? { effort: image ? "low" : "minimal" } : undefined;
+
     try {
       const response = await fetch("https://api.openai.com/v1/responses", {
         method: "POST",
@@ -557,7 +564,8 @@ export async function POST(request: NextRequest) {
         },
         signal: controller.signal,
         body: JSON.stringify({
-          model: process.env.OPENAI_STAFF_BOOKING_MODEL || process.env.OPENAI_CONCIERGE_MODEL || process.env.OPENAI_ASSISTANT_MODEL || "gpt-5-mini",
+          model,
+          ...(reasoning ? { reasoning } : {}),
           store: false,
           instructions: `${SYSTEM_PROMPT}\nToday in Europe/Athens is ${todayInAthensIso()}.`,
           input: [{ role: "user", content }],

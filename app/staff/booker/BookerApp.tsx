@@ -70,9 +70,45 @@ type Capability = {
 };
 
 type AwaitingField = "checkin" | "checkout" | "adults" | "children" | "firstName" | "lastName" | "email" | "phone" | "language" | "price" | null;
-type Mode = "collecting" | "rooms" | "review" | "done";
+type Mode = "collecting" | "rooms" | "details" | "review" | "done";
 
 const copy = ROOM_FINDER_COPY.el;
+
+// Customer details are collected in one form card (not one chat question each).
+const CUSTOMER_FIELDS = new Set<AwaitingField>(["firstName", "lastName", "email", "phone", "language", "price"]);
+
+const LANGUAGE_OPTIONS = [
+  { code: "el", label: "Ελληνικά" },
+  { code: "en", label: "Αγγλικά" },
+  { code: "de", label: "Γερμανικά" },
+  { code: "fr", label: "Γαλλικά" },
+  { code: "it", label: "Ιταλικά" },
+  { code: "es", label: "Ισπανικά" },
+  { code: "tr", label: "Τουρκικά" },
+] as const;
+
+function languageLabel(code: string) {
+  return LANGUAGE_OPTIONS.find((option) => option.code === code.toLowerCase())?.label || code.toUpperCase();
+}
+
+// Best-effort guess of the guest language from the phone prefix.
+function guessLanguageFromPhone(raw: string): string | null {
+  const phone = raw.replace(/[\s().-]/g, "").replace(/^00/, "+");
+  if (!phone) return null;
+  if (/^(\+30|69\d{8}$|2\d{9}$)/.test(phone)) return "el";
+  if (/^\+(44|1|61|64|353|27)/.test(phone)) return "en";
+  if (/^\+(49|43|41)/.test(phone)) return "de";
+  if (/^\+(33|32|352)/.test(phone)) return "fr";
+  if (/^\+39/.test(phone)) return "it";
+  if (/^\+34/.test(phone)) return "es";
+  if (/^\+90/.test(phone)) return "tr";
+  return null;
+}
+
+function parsePrice(value: string) {
+  const number = Number(value.replace(/\s|€/g, "").replace(",", "."));
+  return value.trim() && Number.isFinite(number) && number >= 0 ? number : null;
+}
 const EMPTY_DRAFT: Draft = {
   checkin: "",
   checkout: "",
@@ -104,8 +140,7 @@ function user(text: string): ChatMessage {
 
 function initialMessages(): ChatMessage[] {
   return [
-    assistant("Staff Booking Assistant. Γράψε μου τα στοιχεία όπως σε βολεύει: μία απάντηση τη φορά, ολόκληρο copy-paste από email/μήνυμα ή ανέβασε screenshot. Το OpenAI θα εξάγει όσα στοιχεία βρίσκει και θα σε ρωτάω μόνο όσα λείπουν."),
-    assistant("Δεν δημιουργείται καμία κράτηση αυτόματα. Πρώτα θα δεις διαθέσιμα δωμάτια, θα επιλέξεις εσύ και στο τέλος θα πατήσεις «Καταχώρηση στο Beds24». Πες μου τι κράτηση θέλεις να περάσουμε."),
+    assistant("Νέα κράτηση. Διάλεξε ημερομηνία άφιξης — ή κάνε επικόλληση email/μηνύματος ή screenshot και τα συμπληρώνω μόνος μου."),
   ];
 }
 
@@ -222,16 +257,16 @@ function nextMissing(draft: Draft, hasRoom: boolean, emailSkipped: boolean, phon
 
 function questionFor(field: AwaitingField) {
   const questions: Record<Exclude<AwaitingField, null>, string> = {
-    checkin: "Ποια είναι η ημερομηνία check-in;",
-    checkout: "Ποια είναι η ημερομηνία check-out;",
-    adults: "Πόσοι ενήλικες είναι στην κράτηση;",
-    children: "Πόσα παιδιά είναι στην κράτηση; Αν δεν υπάρχουν, γράψε 0.",
-    firstName: "Ποιο είναι το όνομα του πελάτη;",
-    lastName: "Ποιο είναι το επώνυμο του πελάτη;",
-    email: "Ποιο είναι το email του πελάτη; Αν δεν υπάρχει, πάτησε Παράλειψη.",
-    phone: "Ποιο είναι το τηλέφωνο/κινητό του πελάτη; Αν δεν υπάρχει, πάτησε Παράλειψη.",
-    language: "Σε ποια γλώσσα είναι ο πελάτης; Μπορείς να γράψεις π.χ. English, Ελληνικά ή Türkçe.",
-    price: "Ποια συνολική τιμή θέλεις να καταχωρηθεί στο Beds24;",
+    checkin: "Ημερομηνία άφιξης;",
+    checkout: "Πόσες νύχτες;",
+    adults: "Πόσοι ενήλικες;",
+    children: "Πόσα παιδιά;",
+    firstName: "Όνομα πελάτη;",
+    lastName: "Επώνυμο πελάτη;",
+    email: "Email πελάτη;",
+    phone: "Τηλέφωνο πελάτη;",
+    language: "Γλώσσα πελάτη;",
+    price: "Συνολική τιμή;",
   };
   return field ? questions[field] : "";
 }
@@ -308,11 +343,114 @@ function StaffMessage({ message }: { message: ChatMessage }) {
   );
 }
 
+function Chip({ label, onClick, active = false, disabled = false }: { label: string; onClick: () => void; active?: boolean; disabled?: boolean }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className={`min-h-11 min-w-11 shrink-0 rounded-full border px-4 text-sm font-bold disabled:opacity-40 ${active
+        ? "border-[#66714f] bg-[#66714f] text-white"
+        : "border-[#ddd3c6] bg-white text-[#3f3a33]"
+      }`}
+    >
+      {label}
+    </button>
+  );
+}
+
+function DatePick({ min, onPick }: { min: string; onPick: (date: string) => void }) {
+  const [value, setValue] = useState("");
+  return (
+    <div className="flex items-center gap-2">
+      <input
+        type="date"
+        aria-label="Ημερομηνία"
+        min={min}
+        value={value}
+        onChange={(event) => setValue(event.target.value)}
+        className="min-h-11 rounded-full border border-[#ddd3c6] bg-white px-3 text-[16px] font-bold"
+      />
+      <Chip label="OK" active disabled={!value || value < min} onClick={() => onPick(value)} />
+    </div>
+  );
+}
+
+type DetailsValues = Pick<Draft, "firstName" | "lastName" | "email" | "phone" | "language" | "totalPrice" | "comments">;
+
+function DetailsForm({ draft, suggestedPrice, onSubmit }: { draft: Draft; suggestedPrice: number; onSubmit: (values: DetailsValues) => void }) {
+  const [firstName, setFirstName] = useState(draft.firstName);
+  const [lastName, setLastName] = useState(draft.lastName);
+  const [email, setEmail] = useState(draft.email);
+  const [phone, setPhone] = useState(draft.phone);
+  const [language, setLanguage] = useState(draft.language || guessLanguageFromPhone(draft.phone) || "");
+  const [languageTouched, setLanguageTouched] = useState(Boolean(draft.language));
+  const [price, setPrice] = useState(String(draft.totalPrice ?? suggestedPrice));
+  const [comments, setComments] = useState(draft.comments);
+  const parsedPrice = parsePrice(price);
+  const ready = Boolean(firstName.trim() && lastName.trim() && language && parsedPrice !== null);
+  const input = "min-h-11 w-full rounded-xl border border-[#ddd3c6] bg-[#fbf9f6] px-3 text-[16px] outline-none focus:border-[#66714f]";
+
+  function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!ready || parsedPrice === null) return;
+    onSubmit({
+      firstName: firstName.trim(),
+      lastName: lastName.trim(),
+      email: email.trim(),
+      phone: phone.trim(),
+      language,
+      totalPrice: parsedPrice,
+      comments: comments.trim(),
+    });
+  }
+
+  return (
+    <form onSubmit={submit} className="msg rounded-[24px] border border-[#dcd2c5] bg-white p-4 shadow-sm sm:ml-10">
+      <p className="text-[11px] font-black uppercase tracking-[.18em] text-[#8a6f50]">Στοιχεία πελάτη</p>
+      <div className="mt-3 grid grid-cols-2 gap-2">
+        <input aria-label="Όνομα" placeholder="Όνομα *" value={firstName} onChange={(event) => setFirstName(event.target.value)} autoComplete="off" className={input} />
+        <input aria-label="Επώνυμο" placeholder="Επώνυμο *" value={lastName} onChange={(event) => setLastName(event.target.value)} autoComplete="off" className={input} />
+        <input
+          aria-label="Τηλέφωνο"
+          placeholder="Τηλέφωνο"
+          type="tel"
+          inputMode="tel"
+          value={phone}
+          onChange={(event) => {
+            setPhone(event.target.value);
+            if (!languageTouched) setLanguage(guessLanguageFromPhone(event.target.value) || "");
+          }}
+          autoComplete="off"
+          className={`${input} col-span-2`}
+        />
+        <input aria-label="Email" placeholder="Email" type="email" inputMode="email" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="off" className={`${input} col-span-2`} />
+      </div>
+      <p className="mt-3 text-xs font-bold text-[#8a7f72]">Γλώσσα *</p>
+      <div className="mt-1.5 flex flex-wrap gap-2">
+        {LANGUAGE_OPTIONS.map((option) => (
+          <Chip key={option.code} label={option.label} active={language === option.code} onClick={() => { setLanguage(option.code); setLanguageTouched(true); }} />
+        ))}
+      </div>
+      <p className="mt-3 text-xs font-bold text-[#8a7f72]">Συνολική τιμή (€) *</p>
+      <div className="mt-1.5 flex items-center gap-2">
+        <input aria-label="Συνολική τιμή" inputMode="decimal" value={price} onChange={(event) => setPrice(event.target.value)} className={`${input} flex-1`} />
+        {parsePrice(price) !== suggestedPrice && <Chip label={`Προτεινόμενη ${money(suggestedPrice)}`} onClick={() => setPrice(String(suggestedPrice))} />}
+      </div>
+      <textarea aria-label="Σχόλια" placeholder="Σχόλια (π.χ. ώρα άφιξης)" rows={2} value={comments} onChange={(event) => setComments(event.target.value)} className={`${input} mt-3 resize-none py-2.5`} />
+      <button type="submit" disabled={!ready} className="mt-3 min-h-12 w-full rounded-2xl bg-[#66714f] px-5 font-black text-white disabled:bg-[#b8b2a9]">
+        Συνέχεια
+      </button>
+    </form>
+  );
+}
+
 export default function BookerApp() {
   const [draft, setDraft] = useState<Draft>(EMPTY_DRAFT);
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [mode, setMode] = useState<Mode>("collecting");
-  const [awaiting, setAwaiting] = useState<AwaitingField>(null);
+  const [awaiting, setAwaiting] = useState<AwaitingField>("checkin");
+  const [detailsKey, setDetailsKey] = useState(0);
   const [offers, setOffers] = useState<RoomOffer[]>([]);
   const [selectedOffer, setSelectedOffer] = useState<RoomOffer | null>(null);
   const [detail, setDetail] = useState<RoomOffer | null>(null);
@@ -350,6 +488,41 @@ export default function BookerApp() {
 
   function push(...items: ChatMessage[]) {
     setMessages((current) => [...current, ...items]);
+  }
+
+  // Ask for the next missing field: booking basics as a short chat question
+  // with chips, customer details as a single form card.
+  function ask(field: Exclude<AwaitingField, null>) {
+    setAwaiting(field);
+    if (CUSTOMER_FIELDS.has(field)) {
+      if (mode !== "details") push(assistant("Συμπλήρωσε τα στοιχεία του πελάτη."));
+      setDetailsKey((key) => key + 1);
+      setMode("details");
+      return;
+    }
+    setMode("collecting");
+    push(assistant(questionFor(field)));
+  }
+
+  // Chip / quick-input answers: update the draft locally, no OpenAI call.
+  async function applyLocal(patch: Partial<Draft>, label: string) {
+    if (interpreting || searching || saving) return;
+    push(user(label));
+    const nextDraft = normalizeDraft({ ...draft, ...patch });
+    const changed = coreChanged(draft, nextDraft);
+    setDraft(nextDraft);
+    setResult(null);
+    await advance(nextDraft, changed, emailSkipped, phoneSkipped);
+  }
+
+  function submitDetails(values: DetailsValues) {
+    setDraft((current) => ({ ...current, ...values }));
+    setEmailSkipped(!values.email);
+    setPhoneSkipped(!values.phone);
+    push(user(`${values.firstName} ${values.lastName} · ${languageLabel(values.language)} · ${money(values.totalPrice ?? 0)}`));
+    setAwaiting(null);
+    setMode("review");
+    push(assistant("Έλεγξε τη σύνοψη και πάτησε «Καταχώρηση στο Beds24»."));
   }
 
   useEffect(() => {
@@ -406,7 +579,7 @@ export default function BookerApp() {
     setDraft(EMPTY_DRAFT);
     setMessages(initialMessages());
     setMode("collecting");
-    setAwaiting(null);
+    setAwaiting("checkin");
     setOffers([]);
     setSelectedOffer(null);
     setDetail(null);
@@ -420,7 +593,9 @@ export default function BookerApp() {
     if (!nextDraft.checkin || !nextDraft.checkout || nextDraft.adults === null || nextDraft.children === null) return;
     const guests = nextDraft.adults + nextDraft.children;
     if (guests < 1 || guests > 5) {
-      push(assistant("Η συγκεκριμένη καταχώρηση υποστηρίζει ένα δωμάτιο με έως 5 άτομα. Διόρθωσε τον αριθμό ενηλίκων/παιδιών μέσα στο chat."));
+      push(assistant("Ένα δωμάτιο χωράει έως 5 άτομα. Διόρθωσε ενήλικες/παιδιά."));
+      setDraft((current) => ({ ...current, adults: null, children: null, totalGuests: null }));
+      setAwaiting("adults");
       setMode("collecting");
       return;
     }
@@ -429,7 +604,7 @@ export default function BookerApp() {
     setMode("collecting");
     setOffers([]);
     setSelectedOffer(null);
-    push(assistant("Ελέγχω τώρα τη live διαθεσιμότητα και τις τιμές στο Booking Core…"));
+    push(assistant("Ελέγχω διαθεσιμότητα και τιμές…"));
 
     const query = new URLSearchParams({
       checkin: nextDraft.checkin,
@@ -460,8 +635,9 @@ export default function BookerApp() {
 
     const nextOffers = (data.offers || []) as RoomOffer[];
     if (!nextOffers.length) {
-      push(assistant("Δεν βρήκα διαθέσιμο δωμάτιο για όλη τη διαμονή. Γράψε άλλες ημερομηνίες και θα ξαναελέγξω."));
+      push(assistant("Δεν υπάρχει διαθέσιμο δωμάτιο για όλη τη διαμονή. Διάλεξε άλλη ημερομηνία άφιξης."));
       setOffers([]);
+      setAwaiting("checkin");
       setMode("collecting");
       return;
     }
@@ -469,7 +645,7 @@ export default function BookerApp() {
     setOffers(nextOffers);
     setMode("rooms");
     setAwaiting(null);
-    push(assistant(`Βρήκα ${nextOffers.length} διαθέσιμες επιλογές. Επίλεξε εσύ το δωμάτιο που θέλεις να καταχωρήσουμε.`));
+    push(assistant(`${nextOffers.length} διαθέσιμα. Διάλεξε δωμάτιο.`));
   }
 
   async function advance(nextDraft: Draft, changedCore: boolean, nextEmailSkipped: boolean, nextPhoneSkipped: boolean) {
@@ -489,9 +665,7 @@ export default function BookerApp() {
 
     const missingCore = nextMissing(nextDraft, false, nextEmailSkipped, nextPhoneSkipped);
     if (missingCore && ["checkin", "checkout", "adults", "children"].includes(missingCore)) {
-      setAwaiting(missingCore);
-      setMode("collecting");
-      push(assistant(questionFor(missingCore)));
+      ask(missingCore);
       return;
     }
 
@@ -505,7 +679,7 @@ export default function BookerApp() {
     if (!selectedOffer) {
       if (offers.length) {
         setMode("rooms");
-        push(assistant("Τα διαθέσιμα δωμάτια είναι παραπάνω. Επίλεξε ποιο θέλεις να κρατήσουμε."));
+        push(assistant("Διάλεξε δωμάτιο από τα διαθέσιμα."));
         return;
       }
       await findRooms(nextDraft);
@@ -514,21 +688,29 @@ export default function BookerApp() {
 
     const missing = nextMissing(nextDraft, true, nextEmailSkipped, nextPhoneSkipped);
     if (missing) {
-      setAwaiting(missing);
-      setMode("collecting");
-      push(assistant(questionFor(missing)));
+      ask(missing);
       return;
     }
 
     setAwaiting(null);
     setMode("review");
-    push(assistant("Έχω όλα τα στοιχεία. Έλεγξε την τελική σύνοψη. Αν θέλεις αλλαγή, γράψ' την κανονικά στο chat. Αν είναι σωστά, πάτησε «Καταχώρηση στο Beds24»."));
+    push(assistant("Έλεγξε τη σύνοψη και πάτησε «Καταχώρηση στο Beds24»."));
   }
 
   async function submitIntake(message: string, image?: File) {
     if (interpreting || searching || saving) return;
     const text = message.trim();
     if (!text && !image) return;
+
+    // A bare number answering the guest-count question needs no AI.
+    if (!image && /^\d{1,2}$/.test(text) && (awaiting === "adults" || awaiting === "children")) {
+      const count = Number(text);
+      if (awaiting === "adults" ? count >= 1 : count >= 0) {
+        setComposer("");
+        await applyLocal(awaiting === "adults" ? { adults: count } : { children: count }, text);
+        return;
+      }
+    }
 
     if (image) {
       push(user(`📎 Screenshot: ${image.name}`));
@@ -602,53 +784,31 @@ export default function BookerApp() {
 
     const missing = nextMissing(draft, true, emailSkipped, phoneSkipped);
     if (missing) {
-      setAwaiting(missing);
-      setMode("collecting");
-      push(assistant(questionFor(missing)));
+      ask(missing);
     } else {
       setAwaiting(null);
       setMode("review");
-      push(assistant("Η κράτηση είναι συμπληρωμένη. Έλεγξε τη σύνοψη και πάτησε «Καταχώρηση στο Beds24». Μπορείς ακόμη να γράψεις οποιαδήποτε διόρθωση στο chat."));
+      push(assistant("Έλεγξε τη σύνοψη και πάτησε «Καταχώρηση στο Beds24»."));
     }
   }
 
-  function skipOptional(field: "email" | "phone") {
-    if (field === "email") {
-      setEmailSkipped(true);
-      push(user("Παράλειψη email"));
-      const missing = nextMissing(draft, Boolean(selectedOffer), true, phoneSkipped);
-      if (missing) {
-        setAwaiting(missing);
-        push(assistant(questionFor(missing)));
-      } else {
-        setAwaiting(null);
-        setMode("review");
-        push(assistant("Έχω όλα τα στοιχεία. Έλεγξε τη σύνοψη πριν την καταχώρηση."));
-      }
-      return;
-    }
-
-    setPhoneSkipped(true);
-    push(user("Παράλειψη τηλεφώνου"));
-    const missing = nextMissing(draft, Boolean(selectedOffer), emailSkipped, true);
-    if (missing) {
-      setAwaiting(missing);
-      push(assistant(questionFor(missing)));
-    } else {
-      setAwaiting(null);
-      setMode("review");
-      push(assistant("Έχω όλα τα στοιχεία. Έλεγξε τη σύνοψη πριν την καταχώρηση."));
-    }
+  function pickCheckin(date: string) {
+    const keepCheckout = Boolean(draft.checkout && draft.checkout > date);
+    void applyLocal({
+      checkin: date,
+      checkout: keepCheckout ? draft.checkout : "",
+      nights: keepCheckout ? draft.nights : null,
+    }, prettyDate(date));
   }
 
-  function useSuggestedPrice() {
-    if (!selectedOffer) return;
-    const nextDraft = { ...draft, totalPrice: selectedOffer.directTotal };
-    setDraft(nextDraft);
-    push(user(money(selectedOffer.directTotal)));
-    setAwaiting(null);
-    setMode("review");
-    push(assistant("Χρησιμοποίησα την προτεινόμενη συνολική τιμή. Έλεγξε τη σύνοψη πριν την καταχώρηση."));
+  function pickNights(nightsCount: number) {
+    void applyLocal({ checkout: addDays(draft.checkin, nightsCount), nights: nightsCount }, `${nightsCount} ${nightsCount === 1 ? "νύχτα" : "νύχτες"}`);
+  }
+
+  function editDetails() {
+    setDetailsKey((key) => key + 1);
+    setAwaiting("firstName");
+    setMode("details");
   }
 
   async function createBooking() {
@@ -694,7 +854,7 @@ export default function BookerApp() {
 
     setResult(data);
     setMode("done");
-    push(assistant(`✓ Η κράτηση δημιουργήθηκε στο Beds24. Booking ID: ${data.bookingId}.`));
+    push(assistant(`✓ Η κράτηση δημιουργήθηκε στο Beds24 (#${data.bookingId}).`));
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -715,11 +875,10 @@ export default function BookerApp() {
   ].filter(Boolean).join(" · ");
 
   const busy = interpreting || searching || saving;
-  const placeholder = mode === "review"
-    ? "Γράψε οποιαδήποτε διόρθωση…"
-    : awaiting
-      ? questionFor(awaiting)
-      : "Γράψε ή κάνε paste στοιχεία κράτησης…";
+  const today = todayInAthens();
+  const placeholder = mode === "review" || mode === "details"
+    ? "Γράψε διόρθωση…"
+    : "Ή γράψε / επικόλλησε στοιχεία…";
 
   return (
     <main
@@ -742,15 +901,15 @@ export default function BookerApp() {
 
       <header className="shrink-0 border-b border-[#ddd4c8] bg-[#fbf8f3]/95 pt-[env(safe-area-inset-top)]">
         <div className="mx-auto flex h-[64px] max-w-3xl items-center gap-1.5 px-2.5">
-          <Link href="/staff" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-[26px] font-semibold text-[#625b52] hover:bg-white/70" aria-label="Staff Area">←</Link>
+          <Link href="/staff" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-[26px] font-semibold text-[#625b52] hover:bg-white/70" aria-label="Πίσω">←</Link>
           <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full ring-2 ring-white">
             <Image src="/images/welcome/voulamandis-welcome-hero.webp" alt="Voulamandis House" fill sizes="40px" className="object-cover" />
           </div>
           <div className="min-w-0 flex-1 pl-1">
-            <h1 className="truncate text-[15px] font-bold leading-tight">Staff Booking Assistant</h1>
+            <h1 className="truncate text-[15px] font-bold leading-tight">Νέα κράτηση</h1>
             <div className="mt-0.5 flex items-center gap-1.5 text-[11px] text-[#746b60]">
               <span className={`h-2 w-2 rounded-full ${capability?.apiReady && capability?.propertyReady ? "bg-[#718b52]" : "bg-amber-500"}`} />
-              OpenAI · Booking Core · Beds24
+              {capability?.apiReady && capability?.propertyReady ? "Beds24 συνδεδεμένο" : "Beds24 μη διαθέσιμο"}
             </div>
           </div>
           <button type="button" onClick={resetChat} disabled={busy} aria-label="Νέα κράτηση" className="flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-full border border-[#d8cec1] bg-white text-[30px] font-black leading-none text-[#5f574d] shadow-sm disabled:opacity-50">↻</button>
@@ -786,52 +945,67 @@ export default function BookerApp() {
               </div>
             )}
 
-            {awaiting === "email" && !busy && (
-              <div className="hide-scroll msg ml-10 flex gap-2 overflow-x-auto pb-1">
-                <button type="button" onClick={() => skipOptional("email")} className="min-h-11 shrink-0 rounded-full border border-[#ddd3c6] bg-white px-4 text-sm font-bold">Παράλειψη email</button>
+            {mode === "collecting" && !busy && awaiting === "checkin" && (
+              <div className="msg ml-10 flex flex-wrap items-center gap-2">
+                <Chip label="Σήμερα" onClick={() => pickCheckin(today)} />
+                <Chip label="Αύριο" onClick={() => pickCheckin(addDays(today, 1))} />
+                <DatePick min={today} onPick={pickCheckin} />
               </div>
             )}
 
-            {awaiting === "phone" && !busy && (
-              <div className="hide-scroll msg ml-10 flex gap-2 overflow-x-auto pb-1">
-                <button type="button" onClick={() => skipOptional("phone")} className="min-h-11 shrink-0 rounded-full border border-[#ddd3c6] bg-white px-4 text-sm font-bold">Παράλειψη τηλεφώνου</button>
+            {mode === "collecting" && !busy && awaiting === "checkout" && draft.checkin && (
+              <div className="msg ml-10 flex flex-wrap items-center gap-2">
+                {[1, 2, 3, 4, 5, 6, 7].map((count) => <Chip key={count} label={String(count)} onClick={() => pickNights(count)} />)}
+                <DatePick min={addDays(draft.checkin, 1)} onPick={(date) => void applyLocal({ checkout: date }, `Αναχώρηση ${prettyDate(date)}`)} />
               </div>
             )}
 
-            {awaiting === "price" && selectedOffer && !busy && (
-              <div className="hide-scroll msg ml-10 flex gap-2 overflow-x-auto pb-1">
-                <button type="button" onClick={useSuggestedPrice} className="min-h-11 shrink-0 rounded-full border border-[#b9c6aa] bg-[#eef4e7] px-4 text-sm font-black text-[#4f6539]">Προτεινόμενη {money(selectedOffer.directTotal)}</button>
+            {mode === "collecting" && !busy && awaiting === "adults" && (
+              <div className="msg ml-10 flex flex-wrap gap-2">
+                {[1, 2, 3, 4, 5].map((count) => <Chip key={count} label={String(count)} onClick={() => void applyLocal({ adults: count }, `${count} ενήλ.`)} />)}
               </div>
+            )}
+
+            {mode === "collecting" && !busy && awaiting === "children" && (
+              <div className="msg ml-10 flex flex-wrap gap-2">
+                {Array.from({ length: Math.max(0, Math.min(4, 5 - (draft.adults ?? 1))) + 1 }, (_, count) => (
+                  <Chip key={count} label={String(count)} onClick={() => void applyLocal({ children: count }, `${count} παιδιά`)} />
+                ))}
+              </div>
+            )}
+
+            {mode === "details" && selectedOffer && !busy && (
+              <DetailsForm key={detailsKey} draft={draft} suggestedPrice={selectedOffer.directTotal} onSubmit={submitDetails} />
             )}
 
             {mode === "review" && selectedOffer && (
               <section className="msg relative rounded-[26px] border border-[#dcd2c5] bg-white shadow-[0_16px_45px_rgba(70,55,35,.10)] sm:ml-10">
                 <div className="rounded-t-[26px] bg-[#faf7f2] p-4">
                   <p className="text-[11px] font-black uppercase tracking-[.18em] text-[#8a6f50]">Τελικός έλεγχος</p>
-                  <h2 className="mt-1 text-lg font-black">Έτοιμη κράτηση για Beds24</h2>
-                  <p className="mt-1 text-xs text-[#746b60]">Μπορείς να γράψεις οποιαδήποτε διόρθωση στο chat πριν πατήσεις καταχώρηση.</p>
+                  <h2 className="mt-1 text-lg font-black">Έτοιμη για καταχώρηση</h2>
+                  <button type="button" onClick={editDetails} className="mt-2 min-h-11 rounded-full border border-[#ddd3c6] bg-white px-4 text-sm font-bold">Αλλαγή στοιχείων πελάτη</button>
                 </div>
                 <div className="grid gap-2 p-4 sm:grid-cols-2">
                   <div className="rounded-2xl bg-[#f8f5f0] p-3"><span className="text-xs text-[#8a7f72]">Διαμονή</span><strong className="mt-1 block text-sm">{prettyDate(draft.checkin)} → {prettyDate(draft.checkout)} · {nights} νύχτες</strong></div>
                   <div className="rounded-2xl bg-[#f8f5f0] p-3"><span className="text-xs text-[#8a7f72]">Επισκέπτες</span><strong className="mt-1 block text-sm">{draft.adults} ενήλικες · {draft.children} παιδιά</strong></div>
                   <div className="rounded-2xl bg-[#f8f5f0] p-3"><span className="text-xs text-[#8a7f72]">Δωμάτιο</span><strong className="mt-1 block text-sm">{selectedOffer.name}</strong></div>
                   <div className="rounded-2xl bg-[#f8f5f0] p-3"><span className="text-xs text-[#8a7f72]">Συνολική τιμή</span><strong className="mt-1 block text-lg text-[#5f7448]">{money(draft.totalPrice || 0)}</strong></div>
-                  <div className="rounded-2xl bg-[#f8f5f0] p-3"><span className="text-xs text-[#8a7f72]">Πελάτης</span><strong className="mt-1 block text-sm">{draft.firstName} {draft.lastName}</strong><span className="mt-1 block text-xs text-[#746b60]">Γλώσσα: {draft.language.toUpperCase()}</span></div>
+                  <div className="rounded-2xl bg-[#f8f5f0] p-3"><span className="text-xs text-[#8a7f72]">Πελάτης</span><strong className="mt-1 block text-sm">{draft.firstName} {draft.lastName}</strong><span className="mt-1 block text-xs text-[#746b60]">Γλώσσα: {languageLabel(draft.language)}</span></div>
                   <div className="rounded-2xl bg-[#f8f5f0] p-3"><span className="text-xs text-[#8a7f72]">Επικοινωνία</span><strong className="mt-1 block break-all text-sm">{draft.email || "Χωρίς email"}</strong><span className="mt-1 block text-sm">{draft.phone || "Χωρίς τηλέφωνο"}</span></div>
-                  {(draft.comments || draft.notes) && <div className="rounded-2xl bg-[#f8f5f0] p-3 sm:col-span-2"><span className="text-xs text-[#8a7f72]">Σημειώσεις</span>{draft.comments && <p className="mt-1 text-sm"><b>Guest:</b> {draft.comments}</p>}{draft.notes && <p className="mt-1 text-sm"><b>Staff:</b> {draft.notes}</p>}</div>}
+                  {(draft.comments || draft.notes) && <div className="rounded-2xl bg-[#f8f5f0] p-3 sm:col-span-2"><span className="text-xs text-[#8a7f72]">Σημειώσεις</span>{draft.comments && <p className="mt-1 text-sm"><b>Πελάτης:</b> {draft.comments}</p>}{draft.notes && <p className="mt-1 text-sm"><b>Εσωτερικό:</b> {draft.notes}</p>}</div>}
                 </div>
                 <div className="border-t border-[#eee7dd] p-4">
                   <button type="button" onClick={() => void createBooking()} disabled={!bookingReady || saving} className="min-h-12 w-full rounded-2xl bg-[#66714f] px-5 font-black text-white shadow-sm disabled:cursor-not-allowed disabled:bg-[#b8b2a9]">
                     {saving ? "Καταχώρηση…" : "Καταχώρηση στο Beds24"}
                   </button>
-                  {!capability?.apiReady || !capability?.propertyReady ? <p className="mt-2 text-center text-xs font-semibold text-amber-700">Η σύνδεση δημιουργίας κράτησης με Beds24 δεν είναι έτοιμη. Το κουμπί θα ενεργοποιηθεί μόνο όταν το backend επιβεβαιώσει token + property.</p> : null}
+                  {!capability?.apiReady || !capability?.propertyReady ? <p className="mt-2 text-center text-xs font-semibold text-amber-700">Η σύνδεση με το Beds24 δεν είναι έτοιμη — η καταχώρηση είναι προσωρινά κλειστή.</p> : null}
                 </div>
               </section>
             )}
 
             {mode === "done" && result?.bookingId && (
               <section className="msg rounded-[24px] border border-[#b9c6aa] bg-[#eef4e7] p-4 sm:ml-10">
-                <p className="text-lg font-black text-[#4f6539]">✓ Booking #{result.bookingId}</p>
+                <p className="text-lg font-black text-[#4f6539]">✓ Κράτηση #{result.bookingId}</p>
                 <p className="mt-1 text-sm text-[#56644a]">Η κράτηση δημιουργήθηκε επιτυχώς στο Beds24.</p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {result.whatsappUrl && <a href={result.whatsappUrl} target="_blank" rel="noreferrer" className="rounded-full bg-[#287d4f] px-4 py-2.5 text-sm font-bold text-white">WhatsApp πελάτη</a>}
@@ -846,7 +1020,7 @@ export default function BookerApp() {
       <form onSubmit={handleSubmit} className="room-finder-composer shrink-0 border-t border-[#e2d9cd] bg-[#fbf8f3]/95">
         <div className="mx-auto flex max-w-3xl items-end gap-2 rounded-[24px] border border-[#d8cec1] bg-white p-2 shadow-sm">
           <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={(event) => handleImage(event.target.files?.[0])} />
-          <button type="button" onClick={() => fileRef.current?.click()} disabled={busy || mode === "done"} aria-label="Ανέβασε screenshot" title="Ανέβασε screenshot" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#ddd3c6] bg-[#faf7f2] text-xl font-bold disabled:opacity-40">＋</button>
+          <button type="button" onClick={() => fileRef.current?.click()} disabled={busy || mode === "done"} aria-label="Screenshot" title="Screenshot" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#ddd3c6] bg-[#faf7f2] text-xl font-bold disabled:opacity-40">＋</button>
           <label htmlFor="staff-booking-message" className="sr-only">{placeholder}</label>
           <textarea
             ref={composerRef}
@@ -873,7 +1047,7 @@ export default function BookerApp() {
           />
           <button type="submit" disabled={busy || mode === "done" || !composer.trim()} aria-label="Αποστολή" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#6b604f] text-white disabled:bg-[#d7d0c6]">↑</button>
         </div>
-        <p className="mx-auto mt-1.5 max-w-3xl px-2 text-center text-[10px] leading-4 text-[#8a8176]">Κείμενο και screenshots αναλύονται από OpenAI για εξαγωγή στοιχείων. Η πραγματική κράτηση δημιουργείται μόνο με το τελικό κουμπί.</p>
+        <p className="mx-auto mt-1.5 max-w-3xl px-2 text-center text-[10px] leading-4 text-[#8a8176]">Η κράτηση καταχωρείται μόνο με το τελικό κουμπί.</p>
       </form>
 
       {detail && (
