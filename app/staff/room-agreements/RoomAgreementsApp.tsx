@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { CalendarDays, Check, ChevronDown, ChevronLeft, ChevronRight, Clock3, History, LoaderCircle, MessageSquareText, Minus, Plus, Search, Send, Users } from "lucide-react";
+import { CalendarDays, Check, ExternalLink, ChevronDown, ChevronLeft, ChevronRight, Clock3, History, LoaderCircle, MessageSquareText, Minus, Plus, Search, Send, Users } from "lucide-react";
 
 type RoomOffer = { roomNumber: number; name: string; category: string; floor: string; maxGuests: number; systemTotal: number; originalTotal: number; guestPrices?: Record<string, number> };
 type SplitOffer = { changeDate: string; firstRoomNumber: number; firstName: string; firstCategory: string; secondRoomNumber: number; secondName: string; secondCategory: string; systemTotal: number };
@@ -77,6 +77,32 @@ function selectionLabel(selection: Selection) {
   if (selection.type === "room") return `Δωμάτιο ${selection.roomNumber}`;
   if (selection.type === "rooms") return `Δωμάτια ${selection.rooms.map((room) => `Νο${room.roomNumber} (${room.guests} ${room.guests === 1 ? "άτομο" : "άτομα"})`).join(", ")}`;
   return `Νο${selection.firstRoomNumber} → Νο${selection.secondRoomNumber} (${shortDate(selection.changeDate)})`;
+}
+// Open the property's own Booking.com / Expedia page with the same dates and
+// guests, so staff can see the live OTA prices a guest sees (logged-out view,
+// or Genius prices if signed in to Booking.com).
+const BOOKING_HOTEL_URL = "https://www.booking.com/hotel/gr/voulamandis-house.el.html";
+const EXPEDIA_HOTEL_URL = "https://www.expedia.ie/Chios-Hotels-Voulamandis-House.h13457033.Hotel-Information";
+function otaRooms(groupMode: boolean, guests: number, assignments: RoomAssignment[]) {
+  if (groupMode && assignments.length) return assignments.map((room) => room.guests);
+  return [groupMode ? 2 : guests];
+}
+function bookingLink(arrival: string, departure: string, rooms: number[]) {
+  const params = new URLSearchParams({
+    checkin: arrival,
+    checkout: departure,
+    group_adults: String(rooms.reduce((sum, count) => sum + count, 0)),
+    group_children: "0",
+    no_rooms: String(rooms.length),
+    selected_currency: "EUR",
+    lang: "el",
+  });
+  return `${BOOKING_HOTEL_URL}?${params}`;
+}
+function expediaLink(arrival: string, departure: string, rooms: number[]) {
+  const params = new URLSearchParams({ chkin: arrival, chkout: departure });
+  rooms.forEach((count, index) => params.set(`rm${index + 1}`, `a${count}`));
+  return `${EXPEDIA_HOTEL_URL}?${params}`;
 }
 function displaySmsStatus(status: string) { return smsStatusLabels[status] || status; }
 function parseMoneyInput(value: string) {
@@ -363,6 +389,10 @@ export default function RoomAgreementsApp() {
 
           {(loading || (arrival && departure)) && <div aria-live="polite" aria-busy={loading} className="rounded-3xl border border-[#e5dacb] bg-white p-3 shadow-sm sm:p-4">
             <div className="mb-3 flex items-center justify-between gap-3"><h2 className="text-lg font-black">3. Διαθέσιμα δωμάτια</h2>{nights > 0 && <span className="shrink-0 rounded-full bg-[#f3eee6] px-2.5 py-1.5 text-sm font-bold text-[#5f564e]">{resultSummary}</span>}</div>
+            {arrival && departure && departure > arrival && <div className="mb-3 grid grid-cols-2 gap-2">
+              <a href={bookingLink(arrival, departure, otaRooms(groupMode, guests, selectedRoomAssignments))} target="_blank" rel="noopener noreferrer" className="flex h-12 items-center justify-center gap-1.5 rounded-xl bg-[#003b95] px-3 text-base font-black text-white shadow-sm active:scale-[.98]">Τιμές Booking <ExternalLink className="size-4" /></a>
+              <a href={expediaLink(arrival, departure, otaRooms(groupMode, guests, selectedRoomAssignments))} target="_blank" rel="noopener noreferrer" className="flex h-12 items-center justify-center gap-1.5 rounded-xl bg-[#191e3b] px-3 text-base font-black text-white shadow-sm active:scale-[.98]">Τιμές Expedia <ExternalLink className="size-4" /></a>
+            </div>}
             {loading ? <div className="flex items-center gap-2 py-7 text-base font-semibold text-[#5f564e]"><LoaderCircle className="size-5 animate-spin"/> Έλεγχος Booking Core…</div> : <>
               {rooms.length > 0 && <div className="mb-2"><p className="mb-2 text-sm font-bold uppercase tracking-wider text-[#526146]">{groupMode ? "Επίλεξε δωμάτια" : "Χωρίς αλλαγή δωματίου"}</p><div className="grid grid-cols-2 gap-3 sm:grid-cols-3">{rooms.map((room) => { const assignment = selectedRoomAssignments.find((item) => item.roomNumber === room.roomNumber); const active = groupMode ? Boolean(assignment) : selection?.type === "room" && selection.roomNumber === room.roomNumber; const displayedPrice = groupMode ? (assignment ? roomPrice(room, assignment.guests) : lowestRoomPrice(room)) : room.systemTotal; return <RoomOfferCard key={room.roomNumber} room={room} active={active} assignment={assignment} groupMode={groupMode} displayedPrice={displayedPrice} onSelect={() => groupMode ? toggleGroupRoom(room) : selectRoom(room)} />; })}</div></div>}
               {groupMode && selectedRoomAssignments.length > 0 && <div className="mt-3 rounded-2xl border border-[#dcd0c1] bg-[#faf7f2] p-3">
