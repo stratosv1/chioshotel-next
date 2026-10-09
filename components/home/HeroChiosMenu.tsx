@@ -189,26 +189,26 @@ const linkFocus = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-
 
 export function HeroChiosMenu({ locale }: { locale: LocaleCode }) {
   const c = copy[locale] ?? copy.en;
+  const row = `group flex items-center justify-between gap-2 py-1.5 text-[13px] font-semibold text-stone-800 transition hover:text-amber-800 ${linkFocus}`;
 
   return (
     <nav
       aria-label={c.title}
-      className="hidden w-[300px] shrink-0 self-end rounded-[1.5rem] bg-[#fffaf3]/95 px-6 pb-5 pt-6 text-stone-900 shadow-[0_24px_60px_rgba(12,10,9,.35)] ring-1 ring-white/60 backdrop-blur-sm lg:block xl:w-[330px]"
+      className="hidden w-[270px] shrink-0 self-end rounded-2xl bg-[#fffaf3]/80 px-4 pb-3.5 pt-4 text-stone-900 shadow-[0_16px_40px_rgba(12,10,9,.28)] ring-1 ring-white/50 backdrop-blur-md lg:block xl:w-[290px]"
     >
-      <p className="text-[10.5px] font-black uppercase tracking-[0.24em] text-amber-800">{c.kicker}</p>
-      <p className="mt-1.5 font-serif text-[1.7rem] font-bold leading-tight text-stone-900">{c.title}</p>
+      <p className="font-serif text-[1.2rem] font-bold leading-tight text-stone-900">{c.title}</p>
 
-      <div className="mt-5 flex items-baseline justify-between gap-3">
-        <p className="text-[11px] font-black uppercase tracking-[0.16em] text-stone-500">{c.beachesTitle}</p>
-        <a href={c.beachesAllHref} className={`group inline-flex shrink-0 items-center gap-1 text-[12px] font-bold text-amber-800 transition hover:text-amber-950 ${linkFocus}`}>
+      <div className="mt-3 flex items-baseline justify-between gap-3">
+        <p className="text-[10px] font-black uppercase tracking-[0.16em] text-stone-500">{c.beachesTitle}</p>
+        <a href={c.beachesAllHref} className={`group inline-flex shrink-0 items-center gap-1 text-[11.5px] font-bold text-amber-800 transition hover:text-amber-950 ${linkFocus}`}>
           {c.beachesAllLabel}
           <Arrow className="transition group-hover:translate-x-0.5" />
         </a>
       </div>
-      <ul className="mt-1.5 grid grid-cols-2 gap-x-5">
+      <ul className="mt-0.5 grid grid-cols-2 gap-x-4">
         {c.beaches.map((link) => (
           <li key={link.href} className="border-b border-stone-900/10">
-            <a href={link.href} className={`group flex items-center justify-between gap-2 py-2.5 text-[14px] font-semibold text-stone-800 transition hover:text-amber-800 ${linkFocus}`}>
+            <a href={link.href} className={row}>
               <span className="min-w-0 break-words">{link.label}</span>
               <Arrow className="text-stone-300 transition group-hover:translate-x-0.5 group-hover:text-amber-800" />
             </a>
@@ -216,11 +216,11 @@ export function HeroChiosMenu({ locale }: { locale: LocaleCode }) {
         ))}
       </ul>
 
-      <p className="mt-5 text-[11px] font-black uppercase tracking-[0.16em] text-stone-500">{c.villagesTitle}</p>
-      <ul className="mt-1.5">
+      <p className="mt-3 text-[10px] font-black uppercase tracking-[0.16em] text-stone-500">{c.villagesTitle}</p>
+      <ul className="mt-0.5">
         {c.villages.map((link) => (
           <li key={link.href} className="border-b border-stone-900/10">
-            <a href={link.href} className={`group flex items-center justify-between gap-2 py-2.5 text-[14px] font-semibold text-stone-800 transition hover:text-amber-800 ${linkFocus}`}>
+            <a href={link.href} className={row}>
               <span className="min-w-0 break-words">{link.label}</span>
               <Arrow className="text-stone-300 transition group-hover:translate-x-0.5 group-hover:text-amber-800" />
             </a>
@@ -228,11 +228,9 @@ export function HeroChiosMenu({ locale }: { locale: LocaleCode }) {
         ))}
       </ul>
 
-      <a href={c.planner.href} className={`group mt-4 flex items-center justify-between gap-3 rounded-full bg-stone-900 py-2 pl-5 pr-2 text-[13px] font-bold text-white transition hover:bg-amber-900 ${linkFocus}`}>
-        <span>{c.planner.label}</span>
-        <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#c9822f] text-white transition group-hover:translate-x-0.5">
-          <Arrow />
-        </span>
+      <a href={c.planner.href} className={`group mt-2.5 inline-flex items-center gap-1.5 text-[12.5px] font-bold text-amber-800 transition hover:text-amber-950 ${linkFocus}`}>
+        {c.planner.label}
+        <Arrow className="transition group-hover:translate-x-0.5" />
       </a>
     </nav>
   );
