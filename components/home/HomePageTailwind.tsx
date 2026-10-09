@@ -393,7 +393,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
             <article className="order-1 rounded-[1.5rem] bg-white p-4 shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 md:rounded-[2rem] md:p-8">
               <p className="mb-2 break-words text-[11px] font-black uppercase leading-5 tracking-[0.17em] text-amber-700 md:mb-3 md:text-xs md:tracking-[0.20em]">{data.intro.left.kicker}</p>
               <h2 className="break-words tracking-[-0.02em] text-[1.7rem] font-extrabold leading-[1.08] text-stone-900 md:text-[2.625rem] md:leading-tight"><PremiumIcon>{data.intro.left.icon}</PremiumIcon>{data.intro.left.title}</h2>
-              <p className="mt-3 text-[13px] leading-6 text-stone-600 md:mt-4 md:text-base md:leading-8"><HtmlText html={data.intro.left.bodyHtml} /></p>
+              <p className="mt-3 text-sm leading-7 text-stone-600 md:mt-4 md:text-base md:leading-8"><HtmlText html={data.intro.left.bodyHtml} /></p>
               <div className="mt-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap md:mt-5">
                 {data.intro.left.pills.map((pill) => (<span key={pill} className="inline-flex min-h-9 items-center justify-center rounded-full bg-amber-50 px-2.5 py-2 text-center text-[11px] font-bold leading-tight text-amber-800 ring-1 ring-amber-900/10 sm:min-h-0 sm:px-4 sm:text-sm">{pill}</span>))}
               </div>
