@@ -377,6 +377,10 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/", hea
             </a>
           </div>
 
+          <div className="mt-3 lg:hidden">
+            <LanguagePills currentLanguage={language} pathname={pathname} languageHrefs={headerLinks.languages} onNavigate={closeMenu} fullWidth />
+          </div>
+
           <nav aria-label={copy.nav} className="mt-5">
             <ul className="border-t border-stone-900/10">
               {links.map((link) => (
@@ -405,10 +409,6 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/", hea
             ))}
           </ul>
 
-          <div className="mt-auto pt-6 lg:hidden">
-            <p className="mb-2 text-[11px] font-black uppercase tracking-[0.16em] text-stone-500">{copy.language}</p>
-            <LanguagePills currentLanguage={language} pathname={pathname} languageHrefs={headerLinks.languages} onNavigate={closeMenu} fullWidth />
-          </div>
         </div>
       </div>
     </>
