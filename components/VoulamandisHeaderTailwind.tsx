@@ -312,7 +312,7 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/", hea
               width={56}
               height={56}
               sizes="56px"
-              className="relative h-[52px] w-[52px] object-contain transition duration-300 group-hover:scale-110 lg:h-[56px] lg:w-[56px]"
+              className="relative h-[52px] w-[52px] motion-safe:animate-pulse object-contain transition duration-300 group-hover:scale-110 lg:h-[56px] lg:w-[56px]"
             />
           </span>
           <span className="min-w-0 flex-1">
