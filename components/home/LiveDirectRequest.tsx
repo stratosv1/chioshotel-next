@@ -929,7 +929,7 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="inline-flex items-center gap-1.5 rounded-full bg-[#17351f] px-3 py-1 text-[11px] font-black uppercase tracking-[0.1em] text-white"><span aria-hidden="true">✓</span>{copy.selectedLabel}</span>
                     </div>
-                    <h3 className="mt-1.5 font-serif text-2xl font-bold leading-tight text-stone-950 lg:text-3xl">{localizeRoomName(selectedRoom.displayName, copy)}</h3>
+                    <h3 className="mt-1.5 tracking-[-0.02em] text-2xl font-extrabold leading-tight text-stone-950 lg:text-3xl">{localizeRoomName(selectedRoom.displayName, copy)}</h3>
                     <p className="mt-0.5 font-bold text-amber-800">{localizeRoomType(selectedRoom.type, copy)}</p>
                     <div className="mt-2 flex flex-wrap gap-1.5">
                       {selectedRoom.featureBadges.map((badge) => (

@@ -193,7 +193,7 @@ export function HomeGallery({ locale }: { locale: HomeGalleryLocale }) {
           </p>
           <h2
             id="home-gallery-title"
-            className="text-balance font-serif text-[2rem] font-bold leading-tight text-stone-900 md:text-[2.625rem]"
+            className="text-balance tracking-[-0.02em] text-[2rem] font-extrabold leading-tight text-stone-900 md:text-[2.625rem]"
           >
             {copy.title}
           </h2>

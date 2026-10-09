@@ -234,7 +234,7 @@ export function NewsletterSignupCard({ locale, source }: { locale: NewsletterLoc
   return (
     <article className="rounded-[2rem] bg-white px-7 py-6 shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10" aria-labelledby={`newsletter-title-${source}`}>
       <p className="break-words text-xs font-black uppercase tracking-[0.20em] text-amber-700">{labels.newsletterKicker}</p>
-      <h3 id={`newsletter-title-${source}`} className="mt-2 break-words font-serif text-[1.65rem] font-bold leading-tight text-stone-900">{labels.newsletterTitle}</h3>
+      <h3 id={`newsletter-title-${source}`} className="mt-2 break-words tracking-[-0.02em] text-[1.65rem] font-extrabold leading-tight text-stone-900">{labels.newsletterTitle}</h3>
       <p className="mb-4 mt-2 text-[15px] leading-6 text-stone-600">{labels.newsletterText}</p>
       <NewsletterSignupForm locale={locale} source={source} compact />
     </article>
