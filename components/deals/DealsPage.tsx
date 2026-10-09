@@ -622,7 +622,7 @@ export function DealsPage({ data, lastMinute }: DealsPageProps) {
                         {offer.couponCode ? (
                           <div className="mt-4 rounded-[1.25rem] border-2 border-dashed border-amber-800 bg-[#f8f7f2] p-4" aria-label={`${offer.title} coupon code`}>
                             <span className="mb-2 block text-[10px] font-black uppercase tracking-[0.12em] text-stone-600">{labels.code}</span>
-                            <strong className="block font-mono text-3xl font-black leading-none tracking-[0.06em] text-amber-800">{offer.couponCode}</strong>
+                            <strong className="block font-sans text-3xl font-black leading-none tracking-[0.06em] text-amber-800">{offer.couponCode}</strong>
                             <CopyCodeButton code={offer.couponCode} labels={labels} offerId={offer.id} locale={locale} />
                           </div>
                         ) : null}

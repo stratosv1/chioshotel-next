@@ -30,7 +30,7 @@ export function PropertyFaqSection({
           </p>
           <h2
             id={`property-faq-${context}-title`}
-            className="mt-3 text-balance font-serif text-3xl font-bold leading-tight text-stone-900 md:text-[2.625rem]"
+            className="mt-3 text-balance tracking-[-0.02em] text-3xl font-extrabold leading-tight text-stone-900 md:text-[2.625rem]"
           >
             {copy.title}
           </h2>

@@ -452,7 +452,7 @@ export async function BeachSeaConditionsDetail({
     <section className="px-3 py-8 md:px-5 md:py-10" id="sea-today" aria-labelledby="sea-today-title">
       <div className="mx-auto max-w-[1180px] rounded-[28px] bg-white p-5 shadow-xl shadow-black/5 ring-1 ring-cyan-900/10 md:rounded-[32px] md:p-8">
         <span className="text-[10px] font-black uppercase tracking-[0.16em] text-cyan-800 md:text-xs">{copy.beachKicker}</span>
-        <h2 id="sea-today-title" className="mt-3 font-serif text-[1.9rem] font-bold leading-tight text-slate-950 md:text-5xl">
+        <h2 id="sea-today-title" className="mt-3 tracking-[-0.02em] text-[1.9rem] font-extrabold leading-tight text-slate-950 md:text-5xl">
           {title}
         </h2>
 

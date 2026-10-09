@@ -190,7 +190,7 @@ function BrandBar() {
     <header className="sticky top-0 z-30 border-b border-[#e8dfd4] bg-[#fffdf9]/95 backdrop-blur">
       <div className="mx-auto flex h-14 max-w-[640px] items-center justify-between px-4">
         <div className="leading-tight">
-          <div className="font-serif text-[17px] font-bold text-[#3a2e26]">{t.brandTop}</div>
+          <div className="tracking-[-0.02em] text-[17px] font-extrabold text-[#3a2e26]">{t.brandTop}</div>
           <div className="text-[10px] font-black uppercase tracking-[0.2em] text-[#a7743f]">{t.brandBottom}</div>
         </div>
         <a
@@ -360,7 +360,7 @@ export function DayPlanner({ seaDays, nowMinutes, source }: Props) {
         <BrandBar />
         <div className="mx-auto max-w-[640px] px-4 pt-5">
           <p className="text-[14px] font-bold text-[#a7743f]">{greeting}</p>
-          <h1 className="mt-1 font-serif text-[34px] font-bold leading-[1.05] tracking-[-0.02em]">{seaDay?.offsetFromToday === 1 ? t.homeTitleTomorrow : seaDay && seaDay.offsetFromToday > 1 ? t.homeTitleOther : t.homeTitle}</h1>
+          <h1 className="mt-1 text-[34px] font-extrabold leading-[1.05] tracking-[-0.02em]">{seaDay?.offsetFromToday === 1 ? t.homeTitleTomorrow : seaDay && seaDay.offsetFromToday > 1 ? t.homeTitleOther : t.homeTitle}</h1>
           <p className="mt-2 text-[15px] leading-6 text-[#6c6057]">{t.homeIntro}</p>
 
           {seaDays.length > 1 ? (
@@ -416,7 +416,7 @@ export function DayPlanner({ seaDays, nowMinutes, source }: Props) {
                         {index === 0 && hasForecast ? <span className="rounded-full bg-[#3a2e26] px-2.5 py-1 text-[11px] font-black uppercase tracking-[0.08em] text-white">{t.bestToday}</span> : null}
                         {beach && hasForecast ? <SeaChip seaDay={seaDay} beachId={beach.id} /> : null}
                       </div>
-                      <h2 className="mt-2 font-serif text-[24px] font-bold leading-tight text-[#2f2722]">{area.title}</h2>
+                      <h2 className="mt-2 tracking-[-0.02em] text-[24px] font-extrabold leading-tight text-[#2f2722]">{area.title}</h2>
                       <p className="mt-1 text-[14px] leading-6 text-[#6c6057]">{area.subtitle}</p>
                       <p className="mt-2 text-[13px] font-semibold text-[#8b7a6b]">
                         {plan0?.stops.map((stop) => stop.place.name).join(" → ")}
@@ -459,7 +459,7 @@ export function DayPlanner({ seaDays, nowMinutes, source }: Props) {
           {t.back}
         </button>
         <p className="mt-4 text-[13px] font-black uppercase tracking-[0.14em] text-[#a7743f]">{planSeaDay ? dayLabel(planSeaDay) : ""}</p>
-        <h1 className="mt-1 font-serif text-[30px] font-bold leading-[1.08]">{area.title}</h1>
+        <h1 className="mt-1 tracking-[-0.02em] text-[30px] font-extrabold leading-[1.08]">{area.title}</h1>
         <p className="mt-1 text-[14px] leading-6 text-[#6c6057]">{area.subtitle}</p>
 
         <div className="mt-4">
@@ -518,7 +518,7 @@ export function DayPlanner({ seaDays, nowMinutes, source }: Props) {
                       <p className="text-[13px] font-black text-[#a7743f]">
                         {stop.arrive}–{stop.leave} · {t.kinds[stop.place.kind]}
                       </p>
-                      <h2 className="mt-0.5 font-serif text-[21px] font-bold leading-tight text-[#2f2722]">{stop.place.name}</h2>
+                      <h2 className="mt-0.5 tracking-[-0.02em] text-[21px] font-extrabold leading-tight text-[#2f2722]">{stop.place.name}</h2>
                       <p className="mt-0.5 text-[13px] leading-5 text-[#6c6057]">{stop.place.summary}</p>
                       {sea ? <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1"><SeaChip seaDay={planSeaDay} beachId={stop.place.id} compact />{sea.beaufort !== null ? <span className="text-[12px] font-semibold text-[#6c6057]">{t.wind} {directionIndex(sea.windDirectionDeg) !== null ? `${t.directionsShort[directionIndex(sea.windDirectionDeg) as number]} ` : ""}{sea.beaufort} {t.bft}</span> : null}</div> : null}
                     </div>
@@ -668,7 +668,7 @@ export function DayPlanner({ seaDays, nowMinutes, source }: Props) {
           <div className="max-h-[82svh] w-full overflow-y-auto overflow-x-hidden rounded-t-[26px] bg-[#fffdf9] p-4 pb-8 shadow-2xl">
             <div className="mx-auto mb-3 h-1.5 w-12 rounded-full bg-[#e0d4c4]" aria-hidden="true" />
             <div className="flex items-center justify-between">
-              <h2 className="font-serif text-[22px] font-bold">{t.sheetTitle}: {t.kinds[sheet.kind].toLocaleLowerCase("el-GR")}</h2>
+              <h2 className="tracking-[-0.02em] text-[22px] font-extrabold">{t.sheetTitle}: {t.kinds[sheet.kind].toLocaleLowerCase("el-GR")}</h2>
               <button type="button" onClick={() => setSheetSlot(null)} className="rounded-full px-3 py-1 text-[14px] font-bold text-[#6b5545]">{t.close}</button>
             </div>
             {sheet.kind === "beach" && hasForecast ? <p className="mt-1 text-[13px] text-[#8b7a6b]">{t.sheetBeachHint}</p> : null}

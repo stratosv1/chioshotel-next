@@ -364,7 +364,7 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
               </p>
             </div>
           </div>
-          <span className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-2xl bg-amber-100 px-5 font-mono text-base font-black tracking-[0.12em] text-amber-950 ring-1 ring-amber-900/15">
+          <span className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-2xl bg-amber-100 px-5 font-sans text-base font-black tracking-[0.12em] text-amber-950 ring-1 ring-amber-900/15">
             WELCOME10
           </span>
         </div>
@@ -406,7 +406,7 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
         <div className="mx-auto grid max-w-7xl gap-6 rounded-[2rem] border border-amber-900/10 bg-[#f3e7d7] p-6 shadow-xl shadow-amber-950/5 sm:p-8 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.2em] text-amber-800">Voulamandis House</p>
-            <h2 id="rooms-final-cta-title" className="mt-2 text-balance font-serif text-3xl font-bold leading-tight text-stone-900 md:text-[2.625rem]">
+            <h2 id="rooms-final-cta-title" className="mt-2 text-balance tracking-[-0.02em] text-3xl font-extrabold leading-tight text-stone-900 md:text-[2.625rem]">
               {finalCta.title}
             </h2>
             <p className="mt-3 max-w-2xl text-base leading-7 text-stone-600">{finalCta.text}</p>

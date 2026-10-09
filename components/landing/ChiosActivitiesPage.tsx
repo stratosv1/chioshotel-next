@@ -181,7 +181,7 @@ export default function ChiosActivitiesPage({ data }: ChiosActivitiesPageProps) 
                     </div>
 
                     <div className="p-5">
-                      <h3 className="break-words font-serif text-2xl font-bold leading-tight text-amber-800">
+                      <h3 className="break-words tracking-[-0.02em] text-2xl font-extrabold leading-tight text-amber-800">
                         {card.title}
                       </h3>
                       <p className="mt-3 line-clamp-3 text-sm leading-7 text-stone-600">

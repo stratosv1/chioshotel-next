@@ -238,7 +238,7 @@
 .find-room-step h2 {
   margin: 0 0 1.35rem;
   color: var(--tb-olive-dark);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: inherit;
   font-size: clamp(1.9rem, 4.6vw, 3.2rem);
   line-height: 1.03;
   letter-spacing: -0.045em;
@@ -760,7 +760,7 @@
 
 .find-room-direct-price strong {
   color: #ffffff;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: inherit;
   font-size: 1.8rem;
   line-height: 1;
   font-weight: 900;

@@ -318,7 +318,7 @@ export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
             </span>
             <h2
               id="beaches-list-title"
-              className="mt-4 font-serif text-[2rem] font-bold leading-tight text-slate-950 md:text-5xl"
+              className="mt-4 tracking-[-0.02em] text-[2rem] font-extrabold leading-tight text-slate-950 md:text-5xl"
             >
               {copy.beachesTitle}
             </h2>
@@ -361,7 +361,7 @@ export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
                     </div>
                   </div>
                   <div className="p-5">
-                    <h3 className="break-words font-serif text-2xl font-bold leading-tight text-teal-800">
+                    <h3 className="break-words tracking-[-0.02em] text-2xl font-extrabold leading-tight text-teal-800">
                       {beach.title}
                     </h3>
                     <p className="mt-3 text-sm leading-7 text-stone-600">

@@ -27,7 +27,7 @@ export function KarfasBeachPage({ data }: KarfasBeachPageProps) {
             <p className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-[#8a6a43]">
               {data.hero.kicker}
             </p>
-            <h1 className="text-balance font-serif text-4xl leading-tight text-[#342b24] md:text-5xl lg:text-6xl">
+            <h1 className="text-balance tracking-[-0.02em] text-4xl leading-tight text-[#342b24] md:text-5xl lg:text-6xl">
               {data.hero.title}
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-[#62564a]">
@@ -60,7 +60,7 @@ export function KarfasBeachPage({ data }: KarfasBeachPageProps) {
         <section aria-labelledby="karfas-details" className="py-16">
           <div className="mb-8 max-w-3xl">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#8a6a43]">Γρήγορη απάντηση</p>
-            <h2 id="karfas-details" className="mt-2 font-serif text-3xl text-[#342b24] md:text-4xl">
+            <h2 id="karfas-details" className="mt-2 tracking-[-0.02em] text-3xl text-[#342b24] md:text-4xl">
               Γιατί να επισκεφθείτε τον Καρφά
             </h2>
           </div>
@@ -78,7 +78,7 @@ export function KarfasBeachPage({ data }: KarfasBeachPageProps) {
         <section className="grid gap-8 rounded-[2rem] bg-[#3f4f48] p-6 text-white md:grid-cols-[0.8fr_1.2fr] md:p-10">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#d9c8a9]">Με μια ματιά</p>
-            <h2 className="mt-3 font-serif text-3xl md:text-4xl">Πληροφορίες παραλίας</h2>
+            <h2 className="mt-3 tracking-[-0.02em] text-3xl md:text-4xl">Πληροφορίες παραλίας</h2>
             <p className="mt-4 leading-7 text-white/75">
               Τα βασικά χαρακτηριστικά για να οργανώσετε εύκολα τη μέρα σας στον Καρφά.
             </p>
@@ -96,7 +96,7 @@ export function KarfasBeachPage({ data }: KarfasBeachPageProps) {
         <section className="grid gap-10 py-16 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#8a6a43]">Τοπικός οδηγός</p>
-            <h2 className="mt-2 font-serif text-3xl text-[#342b24] md:text-4xl">{data.guide.title}</h2>
+            <h2 className="mt-2 tracking-[-0.02em] text-3xl text-[#342b24] md:text-4xl">{data.guide.title}</h2>
             <div className="mt-6 space-y-5 text-lg leading-8 text-[#65594d]">
               {data.guide.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
             </div>
@@ -124,7 +124,7 @@ export function KarfasBeachPage({ data }: KarfasBeachPageProps) {
         <section className="grid overflow-hidden rounded-[2rem] border border-[#dfd2bf] bg-white lg:grid-cols-[0.7fr_1.3fr]">
           <div className="p-7 md:p-10">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#8a6a43]">Χάρτης</p>
-            <h2 className="mt-2 font-serif text-3xl text-[#342b24]">{data.map.title}</h2>
+            <h2 className="mt-2 tracking-[-0.02em] text-3xl text-[#342b24]">{data.map.title}</h2>
             <p className="mt-4 leading-7 text-[#6d6155]">
               Ανοίξτε τη διαδρομή στο κινητό σας πριν ξεκινήσετε από τον Κάμπο.
             </p>
@@ -148,7 +148,7 @@ export function KarfasBeachPage({ data }: KarfasBeachPageProps) {
         </section>
 
         <section className="mt-16 rounded-[2rem] bg-[#eadfc9] p-7 text-center md:p-12">
-          <h2 className="font-serif text-3xl text-[#342b24] md:text-4xl">{data.cta.title}</h2>
+          <h2 className="tracking-[-0.02em] text-3xl text-[#342b24] md:text-4xl">{data.cta.title}</h2>
           <p className="mx-auto mt-4 max-w-3xl text-lg leading-8 text-[#65594d]">{data.cta.text}</p>
           <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
             <Link className="rounded-full bg-[#3f4f48] px-7 py-3 font-semibold text-white transition hover:bg-[#314039]" href={data.cta.roomsHref}>

@@ -11,7 +11,7 @@ body{
   margin:0;
   background:linear-gradient(180deg,#faf6f0 0%,#f6f0e8 100%);
   color:var(--vh-text);
-  font-family:Arial, Helvetica, sans-serif;
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   line-height:1.5;
   overflow-x:hidden;
   -webkit-text-size-adjust:100%;
@@ -97,7 +97,7 @@ input{
 
 .vh-title{
   margin:0 0 14px;
-  font-family:Georgia,"Times New Roman",serif;
+  font-family: inherit;
   font-size:clamp(30px,4vw,54px);
   line-height:1.05;
   color:var(--vh-accent-dark)!important;

@@ -109,7 +109,7 @@ export default function BeachCard({
       </div>
 
       <div className="px-4 pb-3 pt-4 md:px-5 md:pt-5">
-        <div className="font-serif text-[27px] font-bold leading-[1.08] tracking-[-0.025em] text-[#241d19] md:text-[26px]">
+        <div className=" text-[27px] font-extrabold leading-[1.08] tracking-[-0.025em] text-[#241d19] md:text-[26px]">
           {name}
         </div>
         <p className="mt-1.5 text-[15px] font-semibold leading-6 text-[#665a51]">{meta}</p>

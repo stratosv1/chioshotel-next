@@ -17,7 +17,7 @@ const shell = "mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8";
 const eyebrow =
   "text-[0.68rem] font-extrabold uppercase tracking-[0.22em] text-[#8a6a52] sm:text-xs";
 const heading =
-  "text-balance font-serif text-[2rem] font-semibold leading-[1.02] tracking-[-0.04em] text-[#49372b] sm:text-4xl lg:text-5xl";
+  "text-balance text-[2rem] font-bold leading-[1.02] tracking-[-0.04em] text-[#49372b] sm:text-4xl lg:text-5xl";
 const body = "text-[0.96rem] leading-7 text-[#6d5949] sm:text-lg sm:leading-8";
 
 function Cta({ href, children, variant = "primary", external = false }: CtaProps) {
@@ -140,7 +140,7 @@ export function GreekKamposLandingPage({ data }: Props) {
             <p className={eyebrow}>Κάμπος Χίου · Voulamandis House</p>
             <h1
               id="kampos-title"
-              className="mt-3 max-w-4xl text-balance font-serif text-[2.45rem] font-semibold leading-[0.95] tracking-[-0.05em] text-[#49372b] sm:text-6xl lg:text-7xl"
+              className="mt-3 max-w-4xl text-balance text-[2.45rem] font-bold leading-[0.95] tracking-[-0.05em] text-[#49372b] sm:text-6xl lg:text-7xl"
             >
               Διαμονή στον Κάμπο της Χίου
             </h1>
@@ -163,7 +163,7 @@ export function GreekKamposLandingPage({ data }: Props) {
                   key={label}
                   className="rounded-2xl border border-[#ddcdbd] bg-[#fffaf3]/85 px-3 py-3 shadow-sm shadow-[#6b5141]/5 backdrop-blur"
                 >
-                  <strong className="block font-serif text-lg text-[#5a4436] sm:text-xl">
+                  <strong className="block tracking-[-0.02em] text-lg text-[#5a4436] sm:text-xl">
                     {value}
                   </strong>
                   <span className="block text-[0.7rem] font-semibold text-[#8a7462] sm:text-xs">
@@ -188,7 +188,7 @@ export function GreekKamposLandingPage({ data }: Props) {
               <span className="text-[0.62rem] font-bold uppercase tracking-[0.16em] text-[#ead6c0] sm:text-xs">
                 Ζευγάρια & οικογένειες
               </span>
-              <strong className="mt-1 block font-serif text-lg font-semibold sm:text-2xl">
+              <strong className="mt-1 block tracking-[-0.02em] text-lg font-bold sm:text-2xl">
                 Ηρεμία στον ιστορικό Κάμπο
               </strong>
             </div>
@@ -238,8 +238,8 @@ export function GreekKamposLandingPage({ data }: Props) {
                 key={title}
                 className="rounded-2xl border border-[#f4eadf] bg-[#fffaf3]/90 p-4 shadow-sm shadow-[#6b5141]/5 sm:p-5"
               >
-                <span className="font-serif text-sm font-semibold text-[#a1836c]">{number}</span>
-                <h3 className="mt-2 font-serif text-[1.05rem] font-semibold leading-tight text-[#513d31] sm:text-xl">
+                <span className="tracking-[-0.02em] text-sm font-bold text-[#a1836c]">{number}</span>
+                <h3 className="mt-2 tracking-[-0.02em] text-[1.05rem] font-bold leading-tight text-[#513d31] sm:text-xl">
                   {title}
                 </h3>
                 <p className="mt-2 text-[0.75rem] leading-5 text-[#796555] sm:text-sm sm:leading-6">
@@ -262,7 +262,7 @@ export function GreekKamposLandingPage({ data }: Props) {
           </p>
           <h2
             id="rooms-title"
-            className="mt-3 max-w-3xl text-balance font-serif text-[2rem] font-semibold leading-[1.02] tracking-[-0.04em] text-[#fffaf3] sm:text-4xl lg:text-5xl"
+            className="mt-3 max-w-3xl text-balance text-[2rem] font-bold leading-[1.02] tracking-[-0.04em] text-[#fffaf3] sm:text-4xl lg:text-5xl"
           >
             Επιλέξτε τη διαμονή που σας ταιριάζει
           </h2>
@@ -289,7 +289,7 @@ export function GreekKamposLandingPage({ data }: Props) {
                   <p className="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-[#ead6c0]">
                     {room.subtitle}
                   </p>
-                  <h3 className="mt-1.5 font-serif text-[1.5rem] font-semibold leading-tight text-[#fffaf3]">
+                  <h3 className="mt-1.5 tracking-[-0.02em] text-[1.5rem] font-bold leading-tight text-[#fffaf3]">
                     {room.title}
                   </h3>
                   <ul className="mt-3 flex flex-wrap gap-1.5">
@@ -333,7 +333,7 @@ export function GreekKamposLandingPage({ data }: Props) {
             <div className="mt-5 grid grid-cols-2 gap-2.5 sm:mt-7">
               {facts.map(([value, label]) => (
                 <article key={label} className="rounded-2xl border border-[#dfcfbf] bg-[#fffaf3] p-4 shadow-sm shadow-[#6b5141]/5">
-                  <strong className="block font-serif text-xl text-[#5a4436] sm:text-2xl">{value}</strong>
+                  <strong className="block tracking-[-0.02em] text-xl text-[#5a4436] sm:text-2xl">{value}</strong>
                   <span className="mt-0.5 block text-xs text-[#8a7462]">{label}</span>
                 </article>
               ))}
@@ -371,7 +371,7 @@ export function GreekKamposLandingPage({ data }: Props) {
             </div>
             <div className="min-w-0 flex-1">
               <p className={eyebrow}>Η ιστορία του Κάμπου</p>
-              <h2 className="mt-1 font-serif text-xl font-semibold leading-tight text-[#513d31] sm:text-3xl">
+              <h2 className="mt-1 tracking-[-0.02em] text-xl font-bold leading-tight text-[#513d31] sm:text-3xl">
                 Ένας τόπος που διατηρεί τη μνήμη του
               </h2>
             </div>
@@ -406,7 +406,7 @@ export function GreekKamposLandingPage({ data }: Props) {
           <div className="mt-6 divide-y divide-[#dfcfbf] rounded-[1.5rem] border border-[#ddcdbd] bg-[#fffaf3] px-4 sm:px-7">
             {faqs.map((item) => (
               <details key={item.question} className="group py-4">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-serif text-[1.02rem] font-semibold leading-snug text-[#513d31] sm:text-xl [&::-webkit-details-marker]:hidden">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 tracking-[-0.02em] text-[1.02rem] font-bold leading-snug text-[#513d31] sm:text-xl [&::-webkit-details-marker]:hidden">
                   {item.question}
                   <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#6b5141] text-[#fffaf3] transition group-open:rotate-45">
                     +
@@ -436,7 +436,7 @@ export function GreekKamposLandingPage({ data }: Props) {
               <p className="text-[0.68rem] font-extrabold uppercase tracking-[0.2em] text-[#ead6c0] sm:text-xs">
                 Voulamandis House · Κάμπος Χίου
               </p>
-              <h2 className="mt-3 text-balance font-serif text-[2rem] font-semibold leading-[1.02] tracking-[-0.04em] text-[#fffaf3] sm:text-4xl lg:text-5xl">
+              <h2 className="mt-3 text-balance text-[2rem] font-bold leading-[1.02] tracking-[-0.04em] text-[#fffaf3] sm:text-4xl lg:text-5xl">
                 Κοντά σε όλα, μακριά από το άγχος
               </h2>
               <p className="mt-3 text-sm leading-6 text-[#eaded3] sm:text-lg sm:leading-8">

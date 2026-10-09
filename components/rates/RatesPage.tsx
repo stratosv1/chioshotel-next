@@ -321,7 +321,7 @@ export function RatesPage({ data }: RatesPageProps) {
 
             <div className="mt-5 rounded-2xl border border-dashed border-emerald-700/40 bg-emerald-50 p-5 text-center" aria-label={ui.discountCodeAriaLabel}>
               <span className="mb-2 block text-[11px] font-black uppercase tracking-[0.12em] text-emerald-800">{ui.yourDiscountCode}</span>
-              <strong className="block font-mono text-3xl font-black leading-none tracking-[0.05em] text-emerald-800 md:text-4xl">{data.discount.code}</strong>
+              <strong className="block font-sans text-3xl font-black leading-none tracking-[0.05em] text-emerald-800 md:text-4xl">{data.discount.code}</strong>
             </div>
 
             <p className="mt-4 text-sm italic leading-6 text-stone-600">{data.discount.note}</p>

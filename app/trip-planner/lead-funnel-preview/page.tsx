@@ -22,7 +22,7 @@ export default function LeadFunnelPreviewPage() {
           <div className="absolute inset-0 bg-gradient-to-t from-[#2d2119]/85 via-[#2d2119]/15 to-transparent" />
           <div className="absolute bottom-5 left-5 right-5 text-white sm:bottom-7 sm:left-7 sm:right-7">
             <div className="text-[11px] font-extrabold uppercase tracking-[0.24em] text-white/80">Voulamandis House · Κάμπος Χίου</div>
-            <h1 className="mt-2 font-serif text-[33px] font-semibold leading-[1.04] sm:text-[42px]">Το προσωπικό σου Chios Trip Plan είναι σχεδόν έτοιμο.</h1>
+            <h1 className="mt-2 tracking-[-0.02em] text-[33px] font-bold leading-[1.04] sm:text-[42px]">Το προσωπικό σου Chios Trip Plan είναι σχεδόν έτοιμο.</h1>
           </div>
         </div>
 
@@ -36,7 +36,7 @@ export default function LeadFunnelPreviewPage() {
 
         <div className="px-5 py-6 sm:px-8 sm:py-8">
           <p className="text-[11px] font-extrabold uppercase tracking-[0.2em] text-[#a17d58]">Ολοκλήρωση</p>
-          <h2 className="mt-2 font-serif text-[32px] font-semibold leading-[1.05] sm:text-[40px]">Πάρε όλο το πρόγραμμα στο email σου</h2>
+          <h2 className="mt-2 tracking-[-0.02em] text-[32px] font-bold leading-[1.05] sm:text-[40px]">Πάρε όλο το πρόγραμμα στο email σου</h2>
           <p className="mt-3 text-[15px] font-semibold leading-6 text-[#6c6158] sm:text-[16px]">
             Θα σου στείλουμε το πλήρες itinerary με ώρες, σωστή σειρά στάσεων, αποστάσεις, πρακτικά tips και αναλυτικές πληροφορίες για κάθε περιοχή που θα επισκεφθείς.
           </p>
@@ -85,7 +85,7 @@ export default function LeadFunnelPreviewPage() {
 
           <div className="rounded-[24px] border border-[#ddd3c6] bg-[#fffdfa] p-5 sm:p-6">
             <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-[#9b7957]">Μετά την αποστολή</p>
-            <h3 className="mt-2 font-serif text-[28px] font-semibold leading-[1.08]">Έχεις ήδη κανονίσει τη διαμονή σου στη Χίο;</h3>
+            <h3 className="mt-2 tracking-[-0.02em] text-[28px] font-bold leading-[1.08]">Έχεις ήδη κανονίσει τη διαμονή σου στη Χίο;</h3>
             <p className="mt-2 text-[14px] font-semibold leading-6 text-[#70645b]">Αν όχι, μπορείς να δεις ποιο δωμάτιο ταιριάζει στο ταξίδι σου ή να μιλήσεις απευθείας μαζί μας.</p>
 
             <div className="mt-5 grid gap-3 sm:grid-cols-2">

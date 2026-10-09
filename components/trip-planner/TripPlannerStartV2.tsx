@@ -164,7 +164,7 @@ function BrandMark() {
         <path d="M26 10v7M14.5 14.5l5 5M37.5 14.5l-5 5M8 25h7M37 25h7M16 24c1.8-4.6 5.4-7 10-7s8.2 2.4 10 7" stroke="#c88745" strokeWidth="1.5" strokeLinecap="round" />
       </svg>
       <div className="leading-none">
-        <div className="font-serif text-[16px] tracking-[0.16em] text-[#4b382d] md:text-[18px]">CHIOS</div>
+        <div className=" text-[16px] tracking-[0.16em] text-[#4b382d] md:text-[18px]">CHIOS</div>
         <div className="mt-1 text-[7px] font-semibold tracking-[0.22em] text-[#8b5e34] md:text-[8px]">TRIP PLANNER</div>
       </div>
     </div>
@@ -498,7 +498,7 @@ export default function TripPlannerStartV2() {
         <section className="relative overflow-hidden">
           <div className="mx-auto flex w-[min(1260px,calc(100%_-_24px))] flex-col py-4 pb-5 md:min-h-[calc(100svh-68px)] md:w-[min(1260px,calc(100%_-_48px))] md:items-center md:justify-center md:py-8">
             <div className="mx-auto text-center">
-              <h1 className="font-serif text-[30px] font-semibold leading-[1.02] tracking-[-0.035em] text-[#2e241f] sm:text-[36px] md:text-[54px] lg:text-[60px]">Τι θέλεις να κάνεις σήμερα;</h1>
+              <h1 className=" text-[30px] font-bold leading-[1.02] tracking-[-0.035em] text-[#2e241f] sm:text-[36px] md:text-[54px] lg:text-[60px]">Τι θέλεις να κάνεις σήμερα;</h1>
               <p className="mt-2 text-[13px] font-semibold text-[#b1763f] md:mt-3 md:text-[17px]">Διάλεξε όσα θέλεις</p>
             </div>
             <div className="mt-4 grid w-full grid-cols-2 gap-2.5 sm:gap-3 md:mt-7 md:grid-cols-5 md:gap-4 lg:gap-5">
@@ -515,7 +515,7 @@ export default function TripPlannerStartV2() {
         <section className="mx-auto flex w-[min(820px,calc(100%_-_28px))] flex-col items-center py-5 text-center md:min-h-[calc(100svh-112px)] md:justify-center md:py-8">
           <button type="button" onClick={() => setStep("activities")} className="mb-3 self-start rounded-full border border-[#ded5ca] bg-white/75 px-3.5 py-1.5 text-[12px] font-medium text-[#6b6159] shadow-sm">← Πίσω</button>
           <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#b1763f] md:text-[11px]">Βήμα 2</p>
-          <h2 className="mt-2 max-w-[620px] font-serif text-[31px] font-semibold leading-[1.05] tracking-[-0.03em] md:text-[46px]">Προς τα πού θέλεις να κινηθείς;</h2>
+          <h2 className="mt-2 max-w-[620px] text-[31px] font-bold leading-[1.05] tracking-[-0.03em] md:text-[46px]">Προς τα πού θέλεις να κινηθείς;</h2>
           <p className="mt-2 max-w-[540px] text-[12px] leading-5 text-[#766c64] md:mt-3 md:text-[13px]">Επέλεξες {selectedLabels.join(", ")}. Οι σημερινές συνθήκες θάλασσας και ανέμου σε βοηθούν να διαλέξεις πλευρά.</p>
 
           <div aria-live="polite" className="mt-4 w-full max-w-[560px] rounded-2xl border border-[#d7dcc7] bg-[#f0f2e8] p-3 text-left shadow-[0_8px_20px_rgba(86,93,64,.08)] md:p-4">
@@ -552,7 +552,7 @@ export default function TripPlannerStartV2() {
           <button type="button" onClick={goBackFromPlaces} className="mb-3 rounded-full border border-[#ded5ca] bg-white/75 px-3.5 py-1.5 text-[12px] font-medium text-[#6b6159] shadow-sm">← Πίσω</button>
           <div className="text-center">
             <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#b1763f]">Βήμα {3 + placeCategoryIndex}</p>
-            <h2 className="mt-1.5 font-serif text-[31px] font-semibold leading-tight tracking-[-0.03em] md:text-[46px]">Διάλεξε {MULTI_SELECT.has(currentCategory) ? currentCategoryInfo.plural : currentCategoryInfo.singular}</h2>
+            <h2 className="mt-1.5 text-[31px] font-bold leading-tight tracking-[-0.03em] md:text-[46px]">Διάλεξε {MULTI_SELECT.has(currentCategory) ? currentCategoryInfo.plural : currentCategoryInfo.singular}</h2>
             <p className="mx-auto mt-2 max-w-[620px] text-[11px] leading-5 text-[#766c64] md:text-[13px]">{MULTI_SELECT.has(currentCategory) ? "Μπορείς να επιλέξεις περισσότερα από ένα." : "Επίλεξε μία επιλογή."} {region === "auto" ? (allRegionsRecommended ? "Βλέπεις επιλογές από όλη τη Χίο." : `Βλέπεις επιλογές από τις προτεινόμενες περιοχές: ${recommendedRegionIds.map(regionLabel).join(" · ")}.`) : `Πλευρά: ${regionName(region)}.`}</p>
             {currentCategory === "beach" ? <p className="mx-auto mt-1 max-w-[680px] text-[10px] leading-4 text-[#9a8877]">Οι παραλίες είναι ήδη ταξινομημένες από καλύτερη προς δυσκολότερη για τις σημερινές συνθήκες.</p> : null}
           </div>
@@ -577,7 +577,7 @@ export default function TripPlannerStartV2() {
                     {item.weather ? <span className={`absolute bottom-2 left-2 z-[3] rounded-full border px-2.5 py-1 text-[10px] font-bold shadow-sm ${ratingClasses(item.weather.rating)}`}>{ratingLabel(item.weather.rating)}</span> : null}
                   </div>
                   <div className="p-3.5 md:p-4">
-                    <div className="font-serif text-[21px] font-semibold text-[#332923] md:text-[21px]">{item.name}</div>
+                    <div className="tracking-[-0.02em] text-[21px] font-bold text-[#332923] md:text-[21px]">{item.name}</div>
                     <div className="mt-1 text-[11px] leading-4 text-[#82766c] md:text-[12px]">{item.meta}</div>
                     {item.weather ? <BeachWeatherCard weather={item.weather} /> : null}
                   </div>
@@ -601,7 +601,7 @@ export default function TripPlannerStartV2() {
         <section className="mx-auto flex min-h-[calc(100svh-112px)] w-[min(820px,calc(100%_-_28px))] flex-col items-center justify-center py-7 text-center">
           <button type="button" onClick={() => { setStep(placeCategories.length ? "places" : "region"); setPlaceCategoryIndex(Math.max(placeCategories.length - 1, 0)); }} className="mb-4 self-start rounded-full border border-[#ded5ca] bg-white/75 px-3.5 py-1.5 text-[12px] font-medium text-[#6b6159] shadow-sm">← Πίσω</button>
           <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#b1763f]">Το πλάνο σου</p>
-          <h2 className="mt-2 font-serif text-[34px] font-semibold leading-tight tracking-[-0.03em] md:text-[50px]">Ωραία, έχουμε τις επιλογές της εκδρομής σου.</h2>
+          <h2 className="mt-2 text-[34px] font-bold leading-tight tracking-[-0.03em] md:text-[50px]">Ωραία, έχουμε τις επιλογές της εκδρομής σου.</h2>
           <div className="mt-5 grid w-full gap-3 sm:grid-cols-2">
             {selectedNameGroups.map((group) => (
               <div key={group.category} className="rounded-2xl border border-[#e0d5c8] bg-white p-4 text-left shadow-[0_7px_20px_rgba(65,48,36,.05)]">

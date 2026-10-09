@@ -228,7 +228,7 @@ export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
           <span className="text-[10px] font-black uppercase tracking-[0.16em] text-[#8e6607] md:text-xs">
             {copy.answerKicker}
           </span>
-          <h2 className="mt-3 font-serif text-[2rem] font-bold leading-tight text-stone-900 md:text-5xl">
+          <h2 className="mt-3 tracking-[-0.02em] text-[2rem] font-extrabold leading-tight text-stone-900 md:text-5xl">
             {village.answerTitle ?? `${copy.answerTitlePrefix} ${villageName}${language === "el" ? ";" : "?"}`}
           </h2>
           <p className="mt-4 text-sm font-semibold leading-7 text-[#4d4238] md:text-lg md:leading-8">
@@ -288,7 +288,7 @@ export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
               ) : null}
               <h2
                 id="village-guide-title"
-                className="mt-4 font-serif text-[2rem] font-bold leading-tight text-stone-900 md:text-5xl"
+                className="mt-4 tracking-[-0.02em] text-[2rem] font-extrabold leading-tight text-stone-900 md:text-5xl"
               >
                 {village.guide.title}
               </h2>
@@ -509,7 +509,7 @@ export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
             ) : null}
             <h2
               id="village-faq-title"
-              className="mt-4 font-serif text-[2rem] font-bold leading-tight text-stone-900 md:text-4xl"
+              className="mt-4 tracking-[-0.02em] text-[2rem] font-extrabold leading-tight text-stone-900 md:text-4xl"
             >
               {village.faq.title}
             </h2>
@@ -545,7 +545,7 @@ export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
             </span>
             <h2
               id="village-related-title"
-              className="mt-4 font-serif text-[2rem] font-bold leading-tight text-stone-900 md:text-5xl"
+              className="mt-4 tracking-[-0.02em] text-[2rem] font-extrabold leading-tight text-stone-900 md:text-5xl"
             >
               {village.relatedTitle}
             </h2>
@@ -584,7 +584,7 @@ export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
                     </span>
                   </div>
                   <div className="p-5">
-                    <h3 className="break-words font-serif text-2xl font-bold leading-tight text-amber-800">
+                    <h3 className="break-words tracking-[-0.02em] text-2xl font-extrabold leading-tight text-amber-800">
                       {related.hero.title}
                     </h3>
                     <p className="mt-3 line-clamp-3 text-sm leading-7 text-stone-600">

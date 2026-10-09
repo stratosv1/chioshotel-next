@@ -241,7 +241,7 @@ export function LocalizedKamposLandingPage({ data }: Props) {
   const t = copy[data.language];
   const shell = "mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8";
   const eyebrow = "text-[0.68rem] font-extrabold uppercase tracking-[0.22em] text-[#9a7a62] sm:text-xs";
-  const heading = "text-balance font-serif text-[2rem] font-semibold leading-[1.02] tracking-[-0.04em] text-[#493a31] sm:text-4xl lg:text-5xl";
+  const heading = "text-balance text-[2rem] font-bold leading-[1.02] tracking-[-0.04em] text-[#493a31] sm:text-4xl lg:text-5xl";
   const body = "text-[0.96rem] leading-7 text-[#75665b] sm:text-lg sm:leading-8";
   const facts = [["1.5 km", t.beach], ["3 km", t.airport], ["8 km", t.town], ["Free", t.parking]];
 
@@ -251,7 +251,7 @@ export function LocalizedKamposLandingPage({ data }: Props) {
         <div className={`${shell} grid items-center gap-6 pb-8 sm:gap-10 sm:pb-14 lg:grid-cols-[1.02fr_0.98fr] lg:gap-14`}>
           <div>
             <p className={eyebrow}>{t.eyebrow}</p>
-            <h1 className="mt-3 max-w-4xl text-balance font-serif text-[2.4rem] font-semibold leading-[0.96] tracking-[-0.05em] text-[#493a31] sm:text-6xl lg:text-7xl">{t.heroTitle}</h1>
+            <h1 className="mt-3 max-w-4xl text-balance text-[2.4rem] font-bold leading-[0.96] tracking-[-0.05em] text-[#493a31] sm:text-6xl lg:text-7xl">{t.heroTitle}</h1>
             <p className={`${body} mt-4 max-w-2xl sm:mt-6`}>{t.heroDescription}</p>
             <div className="mt-5 grid grid-cols-1 gap-2.5 min-[430px]:grid-cols-2 sm:mt-8 sm:flex">
               <Cta href={data.hero.primaryCta.href}>{data.hero.primaryCta.label}</Cta>
@@ -260,7 +260,7 @@ export function LocalizedKamposLandingPage({ data }: Props) {
             <ul className="mt-5 grid grid-cols-2 gap-2 sm:mt-7 sm:grid-cols-4">
               {facts.map(([value, label]) => (
                 <li key={label} className="rounded-2xl border border-[#e4d7cb] bg-[#fffdf9]/90 px-3 py-3 shadow-sm">
-                  <strong className="block font-serif text-lg text-[#59473b] sm:text-xl">{value}</strong>
+                  <strong className="block tracking-[-0.02em] text-lg text-[#59473b] sm:text-xl">{value}</strong>
                   <span className="block text-[0.7rem] font-semibold text-[#8a7869] sm:text-xs">{label}</span>
                 </li>
               ))}
@@ -287,7 +287,7 @@ export function LocalizedKamposLandingPage({ data }: Props) {
             {data.highlights.map((item) => (
               <article key={`${item.label}-${item.value}`} className="rounded-2xl border border-[#e4d7cb] bg-[#fffdf9] p-4 shadow-sm">
                 <span className="text-[0.68rem] font-extrabold uppercase tracking-[0.16em] text-[#9a7a62]">{item.label}</span>
-                <strong className="mt-2 block font-serif text-lg text-[#4e3d32] sm:text-xl">{item.value}</strong>
+                <strong className="mt-2 block tracking-[-0.02em] text-lg text-[#4e3d32] sm:text-xl">{item.value}</strong>
               </article>
             ))}
           </div>
@@ -318,7 +318,7 @@ export function LocalizedKamposLandingPage({ data }: Props) {
                   <Image src={image} alt={t.roomTitles[index]} fill className="object-cover transition duration-500 hover:scale-105" sizes="(max-width: 640px) 80vw, (max-width: 1024px) 50vw, 25vw" />
                   <span className="absolute left-3 top-3 rounded-full border border-white/60 bg-[#fffdf9]/90 px-3 py-1.5 text-[0.68rem] font-extrabold text-[#57463b]">{t.roomBadges[index]}</span>
                 </a>
-                <div className="p-4"><p className="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-[#9b7d66]">{t.roomSubtitles[index]}</p><h3 className="mt-1.5 font-serif text-[1.45rem] font-semibold leading-tight text-[#4d3c31]">{t.roomTitles[index]}</h3><a href={data.hero.primaryCta.href} className="mt-4 inline-flex text-sm font-extrabold !text-[#6f5949]">{t.details} →</a></div>
+                <div className="p-4"><p className="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-[#9b7d66]">{t.roomSubtitles[index]}</p><h3 className="mt-1.5 tracking-[-0.02em] text-[1.45rem] font-bold leading-tight text-[#4d3c31]">{t.roomTitles[index]}</h3><a href={data.hero.primaryCta.href} className="mt-4 inline-flex text-sm font-extrabold !text-[#6f5949]">{t.details} →</a></div>
               </article>
             ))}
           </div>
@@ -328,17 +328,17 @@ export function LocalizedKamposLandingPage({ data }: Props) {
 
       <section className={`${shell} py-9 sm:py-16`}>
         <div className="grid items-center gap-6 lg:grid-cols-[1fr_0.8fr] lg:gap-14">
-          <div><p className={eyebrow}>{t.locationEyebrow}</p><h2 className={`${heading} mt-3`}>{t.locationTitle}</h2><p className={`${body} mt-4`}>{data.stay.text}</p><div className="mt-5 grid grid-cols-2 gap-2.5">{facts.map(([value, label]) => <article key={label} className="rounded-2xl border border-[#e4d7cb] bg-[#fffdf9] p-4 shadow-sm"><strong className="block font-serif text-xl text-[#4f3e33]">{value}</strong><span className="text-xs text-[#897668]">{label}</span></article>)}</div></div>
+          <div><p className={eyebrow}>{t.locationEyebrow}</p><h2 className={`${heading} mt-3`}>{t.locationTitle}</h2><p className={`${body} mt-4`}>{data.stay.text}</p><div className="mt-5 grid grid-cols-2 gap-2.5">{facts.map(([value, label]) => <article key={label} className="rounded-2xl border border-[#e4d7cb] bg-[#fffdf9] p-4 shadow-sm"><strong className="block tracking-[-0.02em] text-xl text-[#4f3e33]">{value}</strong><span className="text-xs text-[#897668]">{label}</span></article>)}</div></div>
           <div className="relative hidden aspect-[4/3] overflow-hidden rounded-[2.5rem] shadow-xl shadow-[#6f5949]/10 md:block"><Image src={data.gallery[2].image} alt={data.gallery[2].imageAlt} fill className="object-cover" sizes="44vw" /></div>
         </div>
       </section>
 
       <section className={`${shell} pb-9 sm:pb-16`}>
-        <details className="group overflow-hidden rounded-[1.6rem] border border-[#ddcdbd] bg-[#fffdf9] shadow-sm"><summary className="flex cursor-pointer list-none items-center gap-4 p-4 sm:p-6 [&::-webkit-details-marker]:hidden"><div className="relative h-20 w-24 shrink-0 overflow-hidden rounded-xl sm:h-28 sm:w-36"><Image src={data.gallery[3].image} alt={data.gallery[3].imageAlt} fill className="object-cover" sizes="144px" /></div><div className="min-w-0 flex-1"><p className={eyebrow}>{t.historyLabel}</p><h2 className="mt-1 font-serif text-xl font-semibold leading-tight text-[#513d31] sm:text-3xl">{data.sections[2]?.title || t.historyLabel}</h2></div><span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#6f5949] text-white transition group-open:rotate-45">+</span></summary><div className="border-t border-[#e3d4c5] px-5 py-5"><p className={body}>{data.sections[2]?.text}</p></div></details>
+        <details className="group overflow-hidden rounded-[1.6rem] border border-[#ddcdbd] bg-[#fffdf9] shadow-sm"><summary className="flex cursor-pointer list-none items-center gap-4 p-4 sm:p-6 [&::-webkit-details-marker]:hidden"><div className="relative h-20 w-24 shrink-0 overflow-hidden rounded-xl sm:h-28 sm:w-36"><Image src={data.gallery[3].image} alt={data.gallery[3].imageAlt} fill className="object-cover" sizes="144px" /></div><div className="min-w-0 flex-1"><p className={eyebrow}>{t.historyLabel}</p><h2 className="mt-1 tracking-[-0.02em] text-xl font-bold leading-tight text-[#513d31] sm:text-3xl">{data.sections[2]?.title || t.historyLabel}</h2></div><span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#6f5949] text-white transition group-open:rotate-45">+</span></summary><div className="border-t border-[#e3d4c5] px-5 py-5"><p className={body}>{data.sections[2]?.text}</p></div></details>
       </section>
 
       <section className="bg-[#eee6dd] py-9 sm:py-16">
-        <div className={shell}><p className={eyebrow}>{t.faqEyebrow}</p><h2 className={`${heading} mt-3 max-w-3xl`}>{t.faqTitle}</h2><div className="mt-6 divide-y divide-[#dfcfbf] rounded-[1.5rem] border border-[#ddcdbd] bg-[#fffdf9] px-4 sm:px-7">{t.faq.map((item) => <details key={item.question} className="group py-4"><summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-serif text-[1.02rem] font-semibold leading-snug text-[#513d31] sm:text-xl [&::-webkit-details-marker]:hidden">{item.question}<span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#6f5949] text-white transition group-open:rotate-45">+</span></summary><p className="pb-1 pt-3 text-sm leading-6 text-[#6d5949] sm:text-base">{item.answer}</p></details>)}</div></div>
+        <div className={shell}><p className={eyebrow}>{t.faqEyebrow}</p><h2 className={`${heading} mt-3 max-w-3xl`}>{t.faqTitle}</h2><div className="mt-6 divide-y divide-[#dfcfbf] rounded-[1.5rem] border border-[#ddcdbd] bg-[#fffdf9] px-4 sm:px-7">{t.faq.map((item) => <details key={item.question} className="group py-4"><summary className="flex cursor-pointer list-none items-center justify-between gap-4 tracking-[-0.02em] text-[1.02rem] font-bold leading-snug text-[#513d31] sm:text-xl [&::-webkit-details-marker]:hidden">{item.question}<span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#6f5949] text-white transition group-open:rotate-45">+</span></summary><p className="pb-1 pt-3 text-sm leading-6 text-[#6d5949] sm:text-base">{item.answer}</p></details>)}</div></div>
       </section>
 
       <section className="px-4 py-7 sm:px-6 sm:py-12 lg:px-8"><div className="relative mx-auto max-w-7xl overflow-hidden rounded-[1.6rem] bg-[#e8ddd2] px-5 py-8 shadow-xl shadow-[#6f5949]/10 sm:rounded-[2.5rem] sm:px-10 sm:py-14"><Image src={data.gallery[1].image} alt={data.gallery[1].imageAlt} fill className="object-cover opacity-20" sizes="100vw" /><div className="absolute inset-0 bg-gradient-to-r from-[#f4ede5]/95 via-[#efe5dc]/90 to-[#eadfd4]/75" /><div className="relative z-10 grid gap-5 lg:grid-cols-[1fr_auto] lg:items-end"><div className="max-w-3xl"><p className={eyebrow}>{data.stay.kicker}</p><h2 className={`${heading} mt-3`}>{data.stay.title}</h2><p className={`${body} mt-3`}>{data.stay.text}</p></div><div className="grid grid-cols-1 gap-2.5 min-[430px]:grid-cols-2 sm:flex"><Cta href={data.stay.primaryCta.href}>{data.stay.primaryCta.label}</Cta><Cta href={data.stay.secondaryCta.href} secondary>{data.stay.secondaryCta.label}</Cta></div></div></div></section>

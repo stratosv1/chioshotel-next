@@ -314,7 +314,7 @@ export function BeachDetailPageTailwind({ beach }: BeachDetailPageProps) {
           <span className="text-[10px] font-black uppercase tracking-[0.16em] text-cyan-800 md:text-xs">
             {copy.answerKicker}
           </span>
-          <h2 className="mt-3 font-serif text-[2rem] font-bold leading-tight text-slate-950 md:text-5xl">
+          <h2 className="mt-3 tracking-[-0.02em] text-[2rem] font-extrabold leading-tight text-slate-950 md:text-5xl">
             {whyVisit ? whyVisitTitle(language, beachId) : `${copy.answerTitlePrefix} ${beachName}${language === "el" ? ";" : "?"}`}
           </h2>
           <p className="mt-4 text-sm font-semibold leading-7 text-slate-700 md:text-lg md:leading-8">
@@ -507,7 +507,7 @@ export function BeachDetailPageTailwind({ beach }: BeachDetailPageProps) {
             </span>
             <h2
               id="bd-related-title"
-              className="mt-3 font-serif text-[2rem] font-bold leading-tight text-slate-950 md:text-5xl"
+              className="mt-3 tracking-[-0.02em] text-[2rem] font-extrabold leading-tight text-slate-950 md:text-5xl"
             >
               {beach.relatedTitle}
             </h2>
@@ -545,7 +545,7 @@ export function BeachDetailPageTailwind({ beach }: BeachDetailPageProps) {
                     </span>
                   </div>
                   <div className="p-5">
-                    <h3 className="break-words font-serif text-xl font-bold leading-tight text-cyan-900">
+                    <h3 className="break-words tracking-[-0.02em] text-xl font-extrabold leading-tight text-cyan-900">
                       {related.title}
                     </h3>
                     <p className="mt-3 text-sm leading-7 text-slate-600">

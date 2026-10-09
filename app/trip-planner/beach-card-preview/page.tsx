@@ -11,7 +11,7 @@ export default function BeachCardPreviewPage() {
       <div className="mx-auto max-w-5xl">
         <div className="mb-6 text-center">
           <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#b1763f]">Beach Card Preview</p>
-          <h1 className="mt-2 font-serif text-3xl font-semibold tracking-[-0.03em] md:text-4xl">Νέα κάρτα παραλίας</h1>
+          <h1 className="mt-2 text-3xl font-bold tracking-[-0.03em] md:text-4xl">Νέα κάρτα παραλίας</h1>
           <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-[#766c64]">Mobile-first preview πριν περάσει μέσα στον Trip Planner.</p>
         </div>
 

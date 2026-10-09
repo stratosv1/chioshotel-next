@@ -270,7 +270,7 @@ export async function POST(request: Request) {
       subject: `New inquiry from ${fullName}`,
       text: textLines.join("\n"),
       html: `
-        <div style="font-family:Arial,sans-serif;line-height:1.6;color:#222">
+        <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;line-height:1.6;color:#222">
           <h2>New inquiry from chioshotel.gr</h2>
           <p><strong>Name:</strong> ${safe.fullName}</p>
           <p><strong>Email:</strong> ${safe.email}</p>

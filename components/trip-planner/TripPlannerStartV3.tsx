@@ -248,7 +248,7 @@ function LeadFunnel({ groups }: { groups: LeadGroup[] }) {
     <div className="trip-planner-lead-funnel w-full text-left">
       <div className="text-center">
         <p className="text-[12px] font-extrabold uppercase tracking-[0.17em] text-[#a47a51]">Το πλάνο σου</p>
-        <h2 className="mx-auto mt-2 max-w-[680px] font-serif text-[36px] font-bold leading-[1.04] tracking-[-0.03em] text-[#2f261f] md:text-[52px]">Πάρε το προσωπικό σου Chios Trip Plan</h2>
+        <h2 className="mx-auto mt-2 max-w-[680px] text-[36px] font-extrabold leading-[1.04] tracking-[-0.03em] text-[#2f261f] md:text-[52px]">Πάρε το προσωπικό σου Chios Trip Plan</h2>
         <p className="mx-auto mt-3 max-w-[650px] text-[16px] font-bold leading-7 text-[#655a52] md:text-[17px]">Στείλε το πλήρες πρόγραμμα στο email σου, με προτεινόμενη σειρά στάσεων, ώρες, πρακτικά tips και αναλυτικές πληροφορίες για κάθε μέρος που επέλεξες.</p>
       </div>
 
@@ -309,7 +309,7 @@ function LeadFunnel({ groups }: { groups: LeadGroup[] }) {
               <div className="absolute inset-0 bg-gradient-to-t from-[#302219]/82 via-[#302219]/8 to-transparent" />
               <div className="absolute bottom-4 left-4 right-4 text-white">
                 <div className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-white/85">Voulamandis House · Κάμπος Χίου</div>
-                <div className="mt-1 font-serif text-[28px] font-bold leading-tight">Δεν έχεις κλείσει ακόμη διαμονή στη Χίο;</div>
+                <div className="mt-1 tracking-[-0.02em] text-[28px] font-extrabold leading-tight">Δεν έχεις κλείσει ακόμη διαμονή στη Χίο;</div>
               </div>
             </div>
             <div className="p-5">

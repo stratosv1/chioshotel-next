@@ -123,7 +123,7 @@ export async function POST(request: Request) {
       subject,
       text,
       html: `
-        <div style="font-family:Arial,sans-serif;line-height:1.6;color:#222">
+        <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;line-height:1.6;color:#222">
           <h2>Νέο αίτημα ενδιαφέροντος από το AI Assistant</h2>
           <p><strong>Προσοχή:</strong> Δεν αποτελεί κράτηση ή επιβεβαίωση κράτησης.</p>
           <p><strong>Αριθμός αιτήματος:</strong> ${safe.requestId}</p>

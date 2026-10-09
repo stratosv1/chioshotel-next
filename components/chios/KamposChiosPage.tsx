@@ -18,7 +18,7 @@ const containerClass = "mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8";
 const kickerClass =
   "text-[0.68rem] font-black uppercase tracking-[0.2em] text-amber-700 sm:text-xs";
 const headingClass =
-  "text-balance font-serif text-[2rem] font-semibold leading-[1.02] tracking-[-0.035em] text-stone-950 sm:text-4xl lg:text-5xl";
+  "text-balance text-[2rem] font-bold leading-[1.02] tracking-[-0.035em] text-stone-950 sm:text-4xl lg:text-5xl";
 const bodyClass = "text-[0.98rem] leading-7 text-stone-600 sm:text-lg sm:leading-8";
 
 function CtaLink({
@@ -188,7 +188,7 @@ function GreekKamposLanding({ data }: KamposChiosPageProps) {
             <p className={kickerClass}>Κάμπος Χίου · Voulamandis House</p>
             <h1
               id="kampos-landing-title"
-              className="mt-3 max-w-4xl text-balance font-serif text-[2.45rem] font-semibold leading-[0.95] tracking-[-0.045em] text-stone-950 sm:mt-4 sm:text-6xl lg:text-7xl"
+              className="mt-3 max-w-4xl text-balance text-[2.45rem] font-bold leading-[0.95] tracking-[-0.045em] text-stone-950 sm:mt-4 sm:text-6xl lg:text-7xl"
             >
               Διαμονή στον Κάμπο της Χίου
             </h1>
@@ -217,7 +217,7 @@ function GreekKamposLanding({ data }: KamposChiosPageProps) {
                   key={label}
                   className="rounded-2xl border border-white/80 bg-white/75 px-3 py-3 shadow-sm backdrop-blur"
                 >
-                  <strong className="block font-serif text-lg text-stone-950 sm:text-xl">
+                  <strong className="block tracking-[-0.02em] text-lg text-stone-950 sm:text-xl">
                     {value}
                   </strong>
                   <span className="block text-[0.7rem] font-semibold text-stone-500 sm:text-xs">
@@ -242,7 +242,7 @@ function GreekKamposLanding({ data }: KamposChiosPageProps) {
               <span className="text-[0.62rem] font-bold uppercase tracking-[0.16em] text-amber-200 sm:text-xs">
                 Ζευγάρια & οικογένειες
               </span>
-              <strong className="mt-1 block font-serif text-lg font-semibold sm:text-2xl">
+              <strong className="mt-1 block tracking-[-0.02em] text-lg font-bold sm:text-2xl">
                 Ηρεμία στον ιστορικό Κάμπο
               </strong>
             </div>
@@ -297,7 +297,7 @@ function GreekKamposLanding({ data }: KamposChiosPageProps) {
                 >
                   {benefit.icon}
                 </span>
-                <h3 className="mt-3 font-serif text-[1.08rem] font-semibold leading-tight text-stone-950 sm:text-xl">
+                <h3 className="mt-3 tracking-[-0.02em] text-[1.08rem] font-bold leading-tight text-stone-950 sm:text-xl">
                   {benefit.title}
                 </h3>
                 <p className="mt-2 text-[0.76rem] leading-5 text-stone-600 sm:text-sm sm:leading-6">
@@ -363,7 +363,7 @@ function GreekKamposLanding({ data }: KamposChiosPageProps) {
             </p>
             <h2
               id="kampos-rooms-title"
-              className="mt-3 text-balance font-serif text-[2rem] font-semibold leading-[1.02] tracking-[-0.035em] text-white sm:text-4xl lg:text-5xl"
+              className="mt-3 text-balance text-[2rem] font-bold leading-[1.02] tracking-[-0.035em] text-white sm:text-4xl lg:text-5xl"
             >
               Επιλέξτε τη διαμονή που σας ταιριάζει
             </h2>
@@ -395,7 +395,7 @@ function GreekKamposLanding({ data }: KamposChiosPageProps) {
                   <p className="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-amber-300">
                     {room.subtitle}
                   </p>
-                  <h3 className="mt-1.5 font-serif text-[1.55rem] font-semibold leading-tight text-white">
+                  <h3 className="mt-1.5 tracking-[-0.02em] text-[1.55rem] font-bold leading-tight text-white">
                     {room.title}
                   </h3>
                   <ul className="mt-3 flex flex-wrap gap-1.5">
@@ -460,7 +460,7 @@ function GreekKamposLanding({ data }: KamposChiosPageProps) {
                   key={label}
                   className="rounded-2xl border border-stone-200 bg-white p-4 shadow-sm"
                 >
-                  <strong className="block font-serif text-xl text-stone-950 sm:text-2xl">
+                  <strong className="block tracking-[-0.02em] text-xl text-stone-950 sm:text-2xl">
                     {value}
                   </strong>
                   <span className="mt-0.5 block text-xs text-stone-500">
@@ -535,7 +535,7 @@ function GreekKamposLanding({ data }: KamposChiosPageProps) {
                 >
                   {icon}
                 </span>
-                <h3 className="mt-3 font-serif text-xl font-semibold text-stone-950">
+                <h3 className="mt-3 tracking-[-0.02em] text-xl font-bold text-stone-950">
                   {title}
                 </h3>
                 <p className="mt-2 text-sm leading-6 text-stone-600">{text}</p>
@@ -565,7 +565,7 @@ function GreekKamposLanding({ data }: KamposChiosPageProps) {
               <p className={kickerClass}>Η ιστορία του Κάμπου</p>
               <h2
                 id="kampos-history-title"
-                className="mt-1 font-serif text-xl font-semibold leading-tight text-stone-950 sm:text-3xl"
+                className="mt-1 tracking-[-0.02em] text-xl font-bold leading-tight text-stone-950 sm:text-3xl"
               >
                 Ένας τόπος που διατηρεί τη μνήμη του
               </h2>
@@ -592,7 +592,7 @@ function GreekKamposLanding({ data }: KamposChiosPageProps) {
                 σπάνιο πολιτιστικό τοπίο.
               </p>
             </div>
-            <blockquote className="mt-5 rounded-2xl border-l-4 border-amber-700 bg-[#fbf7ef] p-4 font-serif text-lg leading-7 text-stone-800">
+            <blockquote className="mt-5 rounded-2xl border-l-4 border-amber-700 bg-[#fbf7ef] p-4 tracking-[-0.02em] text-lg leading-7 text-stone-800">
               Εδώ δεν επισκέπτεστε απλώς ένα αξιοθέατο. Ξυπνάτε και κοιμάστε
               μέσα σε αυτό το τοπίο.
             </blockquote>
@@ -616,7 +616,7 @@ function GreekKamposLanding({ data }: KamposChiosPageProps) {
           <div className="mt-6 divide-y divide-stone-200 rounded-[1.5rem] border border-stone-200 bg-[#fbf7ef] px-4 sm:px-7">
             {greekKamposFaqs.map((item) => (
               <details key={item.question} className="group py-4">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-serif text-[1.04rem] font-semibold leading-snug text-stone-950 sm:text-xl [&::-webkit-details-marker]:hidden">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 tracking-[-0.02em] text-[1.04rem] font-bold leading-snug text-stone-950 sm:text-xl [&::-webkit-details-marker]:hidden">
                   {item.question}
                   <span
                     className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-stone-950 text-white transition group-open:rotate-45"
@@ -649,7 +649,7 @@ function GreekKamposLanding({ data }: KamposChiosPageProps) {
               <p className="text-[0.68rem] font-black uppercase tracking-[0.2em] text-amber-300 sm:text-xs">
                 Voulamandis House · Κάμπος Χίου
               </p>
-              <h2 className="mt-3 text-balance font-serif text-[2rem] font-semibold leading-[1.02] tracking-[-0.035em] text-white sm:text-4xl lg:text-5xl">
+              <h2 className="mt-3 text-balance text-[2rem] font-bold leading-[1.02] tracking-[-0.035em] text-white sm:text-4xl lg:text-5xl">
                 Κοντά σε όλα, μακριά από το άγχος
               </h2>
               <p className="mt-3 text-sm leading-6 text-stone-200 sm:text-lg sm:leading-8">
@@ -685,7 +685,7 @@ function StandardKamposPage({ data }: KamposChiosPageProps) {
         >
           <div>
             <p className={kickerClass}>{data.hero.kicker}</p>
-            <h1 className="mt-3 text-balance font-serif text-[2.45rem] font-semibold leading-[0.95] tracking-[-0.045em] text-stone-950 sm:text-6xl lg:text-7xl">
+            <h1 className="mt-3 text-balance text-[2.45rem] font-bold leading-[0.95] tracking-[-0.045em] text-stone-950 sm:text-6xl lg:text-7xl">
               {data.hero.title}
             </h1>
             <p className="mt-4 max-w-2xl text-base leading-7 text-stone-600 sm:mt-6 sm:text-xl sm:leading-9">
@@ -741,7 +741,7 @@ function StandardKamposPage({ data }: KamposChiosPageProps) {
                 <span className="block text-[0.68rem] font-black uppercase tracking-[0.16em] text-amber-700">
                   {item.label}
                 </span>
-                <strong className="mt-2 block font-serif text-lg text-stone-950 sm:text-2xl">
+                <strong className="mt-2 block tracking-[-0.02em] text-lg text-stone-950 sm:text-2xl">
                   {item.value}
                 </strong>
               </article>
@@ -796,7 +796,7 @@ function StandardKamposPage({ data }: KamposChiosPageProps) {
             <p className="text-[0.68rem] font-black uppercase tracking-[0.2em] text-amber-300">
               {data.stay.kicker}
             </p>
-            <h2 className="mt-3 font-serif text-[2rem] font-semibold leading-[1.02] text-white sm:text-4xl">
+            <h2 className="mt-3 tracking-[-0.02em] text-[2rem] font-bold leading-[1.02] text-white sm:text-4xl">
               {data.stay.title}
             </h2>
             <p className="mt-3 text-sm leading-6 text-stone-200 sm:text-lg sm:leading-8">

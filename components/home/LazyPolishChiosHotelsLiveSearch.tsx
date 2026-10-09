@@ -40,7 +40,7 @@ export function LazyPolishChiosHotelsLiveSearch() {
         <section className="px-4 py-12 md:px-8 md:py-18" aria-labelledby="pl-live-placeholder-title">
           <div className="mx-auto max-w-7xl rounded-[2rem] border border-amber-900/10 bg-[#fffaf3] p-6 text-center shadow-lg shadow-stone-900/5 md:p-10">
             <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] text-amber-700">AKTUALNA DOSTĘPNOŚĆ</p>
-            <h2 id="pl-live-placeholder-title" className="font-serif text-3xl font-bold leading-tight text-stone-900 md:text-5xl">Sprawdź pokoje i apartamenty na swoje daty</h2>
+            <h2 id="pl-live-placeholder-title" className="tracking-[-0.02em] text-3xl font-extrabold leading-tight text-stone-900 md:text-5xl">Sprawdź pokoje i apartamenty na swoje daty</h2>
             <p className="mx-auto mt-4 max-w-3xl text-base leading-8 text-stone-600 md:text-lg">Wyniki pochodzą z aktualnych danych Voulamandis House i pokazują rzeczywiste opcje pobytu.</p>
           </div>
         </section>

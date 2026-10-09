@@ -10,7 +10,7 @@ export function PropertyFaqPage({ data }: { data: PropertyFaqPageData }) {
             <span className="inline-flex rounded-full border border-amber-200/30 bg-white/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.24em] text-amber-100">
               {data.hero.kicker}
             </span>
-            <h1 id="property-faq-title" className="mt-6 text-balance font-serif text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-white sm:text-5xl lg:text-7xl">
+            <h1 id="property-faq-title" className="mt-6 text-balance text-4xl font-extrabold leading-[0.98] tracking-[-0.04em] text-white sm:text-5xl lg:text-7xl">
               {data.hero.title}
             </h1>
             <p className="mt-6 max-w-2xl text-pretty text-base leading-8 text-stone-100/90 sm:text-lg">
@@ -35,7 +35,7 @@ export function PropertyFaqPage({ data }: { data: PropertyFaqPageData }) {
               aria-labelledby={`faq-category-${category.id}`}
             >
               <header className="max-w-3xl">
-                <h2 id={`faq-category-${category.id}`} className="font-serif text-3xl font-bold tracking-[-0.03em] text-stone-900 md:text-4xl">
+                <h2 id={`faq-category-${category.id}`} className=" text-3xl font-extrabold tracking-[-0.03em] text-stone-900 md:text-4xl">
                   {category.title}
                 </h2>
                 <p className="mt-3 text-sm leading-7 text-stone-600 md:text-base md:leading-8">
@@ -69,7 +69,7 @@ export function PropertyFaqPage({ data }: { data: PropertyFaqPageData }) {
       <section className="px-4 pb-16 sm:px-6 lg:px-8 lg:pb-24">
         <div className="mx-auto max-w-5xl rounded-[2rem] bg-[#2f261f] p-7 text-white shadow-xl md:flex md:items-center md:justify-between md:gap-8 md:p-10">
           <div className="max-w-2xl">
-            <h2 className="font-serif text-3xl font-bold md:text-4xl">{data.cta.title}</h2>
+            <h2 className="tracking-[-0.02em] text-3xl font-extrabold md:text-4xl">{data.cta.title}</h2>
             <p className="mt-3 text-sm leading-7 text-stone-200 md:text-base md:leading-8">{data.cta.text}</p>
           </div>
           <div className="mt-6 flex flex-wrap gap-3 md:mt-0 md:shrink-0">

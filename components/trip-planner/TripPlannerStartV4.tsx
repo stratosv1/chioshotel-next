@@ -93,7 +93,7 @@ function AccommodationModal({ onClose }: { onClose: () => void }) {
             <p className="text-[11px] font-black uppercase tracking-[0.19em] text-white sm:text-[12px]">
               Voulamandis House · Κάμπος Χίου
             </p>
-            <h2 id="trip-planner-stay-title" className="mt-1.5 max-w-[540px] font-serif text-[31px] font-bold leading-[1.03] text-white drop-shadow-sm sm:text-[39px]">
+            <h2 id="trip-planner-stay-title" className="mt-1.5 max-w-[540px] tracking-[-0.02em] text-[31px] font-extrabold leading-[1.03] text-white drop-shadow-sm sm:text-[39px]">
               Η ήρεμη βάση για το ταξίδι σου στη Χίο
             </h2>
           </div>
@@ -113,7 +113,7 @@ function AccommodationModal({ onClose }: { onClose: () => void }) {
             <p className="mt-1.5 text-[15px] font-extrabold text-[#4f5d40]">Το προσωπικό σου Trip Plan στάλθηκε</p>
           </div>
 
-          <h3 className="mt-4 font-serif text-[28px] font-bold leading-[1.08] text-[#302720] sm:text-[32px]">
+          <h3 className="mt-4 tracking-[-0.02em] text-[28px] font-extrabold leading-[1.08] text-[#302720] sm:text-[32px]">
             Συνέχισε με τη διαμονή σου
           </h3>
           <p className="mt-2 text-[15px] font-bold leading-6 text-[#6c6057] sm:text-[16px] sm:leading-7">

@@ -48,7 +48,7 @@ async function sendAlertEmail(minutes: number, lastSuccess: string, lastError: s
     to: alertTo,
     subject,
     text: body,
-    html: `<div style="font-family:Arial,sans-serif;line-height:1.6;color:#222"><h2>Booking Core sync alert</h2><p>Έχουν περάσει τουλάχιστον <strong>${minutes} λεπτά</strong> χωρίς επιτυχημένο sync στη Neon.</p><p><strong>Τελευταίο επιτυχημένο sync:</strong> ${lastSuccess}</p>${lastError ? `<p><strong>Τελευταίο error:</strong> ${lastError.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")}</p>` : ""}<p>Το AI Room Finder θα θεωρεί τα δεδομένα stale μέχρι να ολοκληρωθεί νέο επιτυχημένο sync.</p></div>`,
+    html: `<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;line-height:1.6;color:#222"><h2>Booking Core sync alert</h2><p>Έχουν περάσει τουλάχιστον <strong>${minutes} λεπτά</strong> χωρίς επιτυχημένο sync στη Neon.</p><p><strong>Τελευταίο επιτυχημένο sync:</strong> ${lastSuccess}</p>${lastError ? `<p><strong>Τελευταίο error:</strong> ${lastError.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")}</p>` : ""}<p>Το AI Room Finder θα θεωρεί τα δεδομένα stale μέχρι να ολοκληρωθεί νέο επιτυχημένο sync.</p></div>`,
   });
 
   const accepted = (info.accepted || []).map(String).map(value => value.toLowerCase());

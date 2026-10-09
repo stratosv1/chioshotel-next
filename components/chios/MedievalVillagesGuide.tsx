@@ -13,7 +13,7 @@ export function MedievalVillagesAnswer({ guide }: { guide: MedievalGuide }) {
         </span>
         <h2
           id="medieval-answer-title"
-          className="mt-3 font-serif text-[2rem] font-bold leading-tight text-stone-900 md:text-5xl"
+          className="mt-3 tracking-[-0.02em] text-[2rem] font-extrabold leading-tight text-stone-900 md:text-5xl"
         >
           {guide.answer.title}
         </h2>
@@ -52,7 +52,7 @@ export function MedievalVillagesGuideSections({
           </span>
           <h2
             id="medieval-history-title"
-            className="mt-4 font-serif text-[2rem] font-bold leading-tight text-stone-900 md:text-5xl"
+            className="mt-4 tracking-[-0.02em] text-[2rem] font-extrabold leading-tight text-stone-900 md:text-5xl"
           >
             {guide.history.title}
           </h2>
@@ -281,7 +281,7 @@ export function MedievalVillagesGuideSections({
       <section className="px-4 py-10 md:px-6 md:py-14" aria-labelledby="medieval-faq-title">
         <div className="mx-auto max-w-[920px]">
           <span className="text-xs font-black uppercase tracking-[0.16em] text-[#8e6607]">{guide.faq.kicker}</span>
-          <h2 id="medieval-faq-title" className="mt-4 font-serif text-[2rem] font-bold leading-tight text-stone-900 md:text-4xl">
+          <h2 id="medieval-faq-title" className="mt-4 tracking-[-0.02em] text-[2rem] font-extrabold leading-tight text-stone-900 md:text-4xl">
             {guide.faq.title}
           </h2>
           <div className="mt-6 space-y-3">

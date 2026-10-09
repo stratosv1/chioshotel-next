@@ -56,7 +56,7 @@ function emailHtml(plan: DayPlan, day: string) {
         <tr>
           <td style="padding:18px 0;border-bottom:1px solid #e7ded3">
             <div style="font-size:13px;font-weight:800;color:#9a7653">${esc(stop.arrive)}–${esc(stop.leave)} · ${KIND_EMOJI[place.kind]} ${KIND_LABEL[place.kind]} <span style="color:#a39486;font-weight:600">· 🚗 ~${stop.driveMin}′</span></div>
-            <div style="font-family:Georgia,'Times New Roman',serif;font-size:24px;line-height:1.15;color:#30261f;font-weight:700;margin-top:4px">${esc(place.name)}</div>
+            <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:24px;line-height:1.15;color:#30261f;font-weight:700;margin-top:4px">${esc(place.name)}</div>
             <div style="font-size:14px;line-height:1.6;color:#75695f;font-weight:600;margin-top:5px">${esc(place.summary)}</div>
             ${place.detail ? `<div style="font-size:14px;line-height:1.6;color:#5f554d;margin-top:6px">${esc(place.detail)}</div>` : ""}
             <a href="${esc(directionsUrl(place))}" style="display:inline-block;margin-top:10px;color:#3f6b4f;font-size:14px;font-weight:800;text-decoration:none">📍 Οδηγίες στο Google Maps</a>
@@ -67,13 +67,13 @@ function emailHtml(plan: DayPlan, day: string) {
 
   return `<!doctype html>
 <html lang="el">
-  <body style="margin:0;padding:0;background:#f3eee6;font-family:Arial,Helvetica,sans-serif;color:#302820">
+  <body style="margin:0;padding:0;background:#f3eee6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#302820">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;background:#f3eee6">
       <tr><td align="center" style="padding:18px 8px">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;max-width:640px;background:#ffffff">
           <tr><td style="background:#4c3b30;padding:28px 22px;color:#ffffff">
             <div style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#eadfce;font-weight:800">VOULAMANDIS HOUSE · CHIOS DAY PLANNER</div>
-            <div style="font-family:Georgia,'Times New Roman',serif;font-size:30px;line-height:1.1;font-weight:700;margin-top:10px">${esc(plan.area.title)}</div>
+            <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:30px;line-height:1.1;font-weight:700;margin-top:10px">${esc(plan.area.title)}</div>
             <div style="margin-top:10px;font-size:14px;color:#f1e9df;font-weight:600">${esc(day)} · ξεκίνημα ${esc(plan.start)} · επιστροφή ~${esc(plan.returnAt)}</div>
           </td></tr>
           <tr><td style="padding:18px 20px 0">

@@ -268,7 +268,7 @@ async function sendBookingEmail(body: Beds24BookingPayload) {
     subject: `Beds24 booking ${bookingId} - ${status || "update"}`,
     text: textLines.join("\n"),
     html: `
-      <div style="font-family:Arial,sans-serif;line-height:1.6;color:#222">
+      <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;line-height:1.6;color:#222">
         <h2>Beds24 booking notification</h2>
         <p><strong>Booking ID:</strong> ${safe.bookingId}</p>
         <p><strong>Status:</strong> ${safe.status}</p>

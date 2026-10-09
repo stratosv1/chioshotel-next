@@ -275,7 +275,7 @@ export function MuseumDetailPage({ museum }: MuseumDetailPageProps) {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/82 via-black/34 to-transparent" />
                   <div className="absolute inset-x-0 bottom-0 z-10 p-5 text-white">
                     <span className="rounded-full bg-white/15 px-3 py-1.5 text-xs font-black uppercase text-white backdrop-blur">{getBadgeFromMuseum(related)}</span>
-                    <h3 className="mt-4 font-serif text-2xl font-bold leading-tight text-white">{related.hero.title}</h3>
+                    <h3 className="mt-4 tracking-[-0.02em] text-2xl font-extrabold leading-tight text-white">{related.hero.title}</h3>
                     <p className="mt-2 line-clamp-2 text-sm leading-6 text-white/80">{related.seo.description}</p>
                     <strong className="mt-4 inline-flex rounded-full border border-white/25 px-4 py-2 text-xs font-black uppercase text-white">{copy.exploreMuseum}</strong>
                   </div>
