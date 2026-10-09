@@ -196,7 +196,7 @@ export function HeroChiosMenu({ locale }: { locale: LocaleCode }) {
       aria-label={c.title}
       className="absolute bottom-14 right-5 z-10 hidden w-[270px] rounded-2xl bg-[#fffaf3]/55 px-4 pb-3.5 pt-4 text-stone-900 shadow-[0_16px_40px_rgba(12,10,9,.22)] ring-1 ring-white/40 backdrop-blur-xl lg:block xl:right-8 xl:w-[290px]"
     >
-      <p className="font-serif text-[1.2rem] font-bold leading-tight text-stone-900">{c.title}</p>
+      <p className="text-[1.2rem] font-black leading-tight tracking-[-0.03em] text-stone-900">{c.title}</p>
 
       <div className="mt-3 flex items-baseline justify-between gap-3">
         <p className="text-[10px] font-black uppercase tracking-[0.16em] text-stone-500">{c.beachesTitle}</p>
