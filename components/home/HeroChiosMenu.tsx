@@ -9,7 +9,6 @@ type LocaleCode = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
 type MenuLink = { label: string; href: string };
 
 type HeroChiosMenuCopy = {
-  kicker: string;
   title: string;
   beachesTitle: string;
   beachesAllLabel: string;
@@ -22,7 +21,6 @@ type HeroChiosMenuCopy = {
 
 const copy: Record<LocaleCode, HeroChiosMenuCopy> = {
   en: {
-    kicker: "Chios guide",
     title: "Explore Chios",
     beachesTitle: "Chios beaches",
     beachesAllLabel: "All beaches",
@@ -44,7 +42,6 @@ const copy: Record<LocaleCode, HeroChiosMenuCopy> = {
     planner: { label: "Plan your day in Chios", href: "/trip-planner/" },
   },
   el: {
-    kicker: "Οδηγός Χίου",
     title: "Εξερευνήστε τη Χίο",
     beachesTitle: "Παραλίες της Χίου",
     beachesAllLabel: "Όλες",
@@ -66,7 +63,6 @@ const copy: Record<LocaleCode, HeroChiosMenuCopy> = {
     planner: { label: "Οργανώστε τη μέρα σας", href: "/trip-planner/" },
   },
   fr: {
-    kicker: "Guide de Chios",
     title: "Découvrir Chios",
     beachesTitle: "Plages de Chios",
     beachesAllLabel: "Toutes",
@@ -88,7 +84,6 @@ const copy: Record<LocaleCode, HeroChiosMenuCopy> = {
     planner: { label: "Planifiez votre journée", href: "/trip-planner/" },
   },
   de: {
-    kicker: "Chios-Guide",
     title: "Chios entdecken",
     beachesTitle: "Strände auf Chios",
     beachesAllLabel: "Alle",
@@ -110,7 +105,6 @@ const copy: Record<LocaleCode, HeroChiosMenuCopy> = {
     planner: { label: "Ihren Tag planen", href: "/trip-planner/" },
   },
   it: {
-    kicker: "Guida di Chios",
     title: "Scopri Chios",
     beachesTitle: "Spiagge di Chios",
     beachesAllLabel: "Tutte",
@@ -132,7 +126,6 @@ const copy: Record<LocaleCode, HeroChiosMenuCopy> = {
     planner: { label: "Pianifica la tua giornata", href: "/trip-planner/" },
   },
   es: {
-    kicker: "Guía de Quíos",
     title: "Descubre Quíos",
     beachesTitle: "Playas de Quíos",
     beachesAllLabel: "Todas",
@@ -154,7 +147,6 @@ const copy: Record<LocaleCode, HeroChiosMenuCopy> = {
     planner: { label: "Planifica tu día", href: "/trip-planner/" },
   },
   tr: {
-    kicker: "Sakız Adası rehberi",
     title: "Sakız Adası'nı keşfedin",
     beachesTitle: "Sakız Adası plajları",
     beachesAllLabel: "Tümü",

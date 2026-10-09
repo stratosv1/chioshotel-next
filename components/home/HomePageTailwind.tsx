@@ -180,23 +180,6 @@ function PrimaryButton({
   );
 }
 
-function SecondaryButton({
-  href,
-  children,
-}: {
-  href: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <a
-      href={href}
-      className="inline-flex min-h-12 items-center justify-center rounded-full border border-amber-800/20 bg-white px-6 text-sm font-black uppercase tracking-[0.08em] text-amber-800 shadow-sm transition hover:bg-amber-50"
-    >
-      {children}
-    </a>
-  );
-}
-
 function homeNewsletterLocale(path: string): NewsletterLocale {
   const segment = path.split("/")[1];
   return (["el", "fr", "de", "it", "es", "tr"] as const).find((lang) => lang === segment) ?? "en";

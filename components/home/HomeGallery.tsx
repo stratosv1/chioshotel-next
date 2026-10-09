@@ -222,7 +222,7 @@ export function HomeGallery({ locale }: { locale: HomeGalleryLocale }) {
                   : "(max-width: 639px) 78vw, (max-width: 1023px) 50vw, 25vw"
               }
               className="object-cover transition-transform duration-500 motion-safe:group-hover:scale-[1.025]"
-              quality={72}
+              quality={75}
               loading="lazy"
             />
           </figure>
