@@ -20,9 +20,6 @@ type HeaderMenuLink = {
   text?: string;
 };
 
-// Same direct lines as the homepage mobile call / WhatsApp bar.
-const CALL_HREF = "tel:+306944764654";
-const WHATSAPP_HREF = "https://wa.me/306944474226";
 
 type HeaderCopy = {
   bookNow: string;
@@ -30,7 +27,6 @@ type HeaderCopy = {
   close: string;
   nav: string;
   language: string;
-  call: string;
   exploreTitle: string;
   directLine: string;
   location: string;
@@ -59,7 +55,6 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     close: "Close",
     nav: "Main navigation",
     language: "Language",
-    call: "Call",
     exploreTitle: "Explore Chios",
     directLine: "Direct Booking",
     location: "Kambos, Chios",
@@ -72,7 +67,6 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     close: "Κλείσιμο",
     nav: "Κύρια πλοήγηση",
     language: "Γλώσσα",
-    call: "Κλήση",
     exploreTitle: "Ανακαλύψτε τη Χίο",
     directLine: "Απευθείας κράτηση",
     location: "Κάμπος, Χίος",
@@ -85,7 +79,6 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     close: "Fermer",
     nav: "Navigation principale",
     language: "Langue",
-    call: "Appeler",
     exploreTitle: "Découvrir Chios",
     directLine: "Réservation directe",
     location: "Kambos, Chios",
@@ -98,7 +91,6 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     close: "Schließen",
     nav: "Hauptnavigation",
     language: "Sprache",
-    call: "Anrufen",
     exploreTitle: "Chios entdecken",
     directLine: "Direktbuchung",
     location: "Kambos, Chios",
@@ -111,7 +103,6 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     close: "Chiudi",
     nav: "Navigazione principale",
     language: "Lingua",
-    call: "Chiama",
     exploreTitle: "Scopri Chios",
     directLine: "Prenotazione diretta",
     location: "Kambos, Chios",
@@ -124,7 +115,6 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     close: "Cerrar",
     nav: "Navegación principal",
     language: "Idioma",
-    call: "Llamar",
     exploreTitle: "Descubre Quíos",
     directLine: "Reserva directa",
     location: "Kambos, Quíos",
@@ -137,7 +127,6 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     close: "Kapat",
     nav: "Ana gezinme",
     language: "Dil",
-    call: "Ara",
     exploreTitle: "Sakız Adası'nı keşfedin",
     directLine: "Doğrudan rezervasyon",
     location: "Kambos, Sakız Adası",
@@ -366,22 +355,12 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/", hea
           <a href={headerLinks.nav.rates} onClick={closeMenu} className="flex min-h-12 items-center justify-center rounded-full bg-gradient-to-br from-[#78624d] to-[#735f45] px-5 text-sm font-black uppercase tracking-[0.1em] !text-white shadow-lg shadow-stone-900/15 transition hover:from-[#6b5847] hover:to-[#5f4e3f] lg:hidden">
             {copy.bookNow}
           </a>
-          <div className="mt-3 grid grid-cols-2 gap-2 lg:mt-0">
-            <a href={CALL_HREF} className="flex min-h-11 items-center justify-center gap-2 rounded-full border border-stone-900/12 bg-white px-3 text-sm font-bold text-stone-800 shadow-sm transition hover:bg-amber-50">
-              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2Z" /></svg>
-              {copy.call}
-            </a>
-            <a href={WHATSAPP_HREF} target="_blank" rel="noopener" className="flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#25D366] px-3 text-sm font-bold text-white shadow-sm transition hover:bg-[#1ebe5d]">
-              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.4 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.3.4c-.1.1-.3.3-.1.6.2.3.7 1.2 1.6 2 1.1 1 2 1.3 2.3 1.4.3.2.5.1.6 0l.9-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.1.1.6-.1 1.1Z" /></svg>
-              WhatsApp
-            </a>
-          </div>
 
           <div className="mt-3 lg:hidden">
             <LanguagePills currentLanguage={language} pathname={pathname} languageHrefs={headerLinks.languages} onNavigate={closeMenu} fullWidth />
           </div>
 
-          <nav aria-label={copy.nav} className="mt-5">
+          <nav aria-label={copy.nav} className="mt-5 lg:mt-0">
             <ul className="border-t border-stone-900/10">
               {links.map((link) => (
                 <li key={link.href} className="border-b border-stone-900/10">
