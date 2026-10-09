@@ -6,7 +6,7 @@ import { kamposChiosPaths } from "@/content/kampos-chios-paths";
 
 type LocaleCode = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
 
-type MenuLink = { label: string; href: string; icon: string };
+type MenuLink = { label: string; href: string };
 
 type HeroChiosMenuCopy = {
   kicker: string;
@@ -28,20 +28,20 @@ const copy: Record<LocaleCode, HeroChiosMenuCopy> = {
     beachesAllLabel: "All beaches",
     beachesAllHref: "/chios/chios-beaches/",
     beaches: [
-      { label: "Sandy", href: "/chios-sandy-beaches/", icon: "🏖️" },
-      { label: "Organized", href: "/chios-organized-beaches/", icon: "⛱️" },
-      { label: "Quiet", href: "/chios-quiet-beaches/", icon: "🌿" },
-      { label: "For kids", href: "/chios-family-beaches/", icon: "👨‍👩‍👧" },
-      { label: "Sheltered", href: "/chios-sheltered-beaches/", icon: "🍃" },
-      { label: "Near us", href: "/beaches-near-voulamandis-house/", icon: "📍" },
+      { label: "Sandy", href: "/chios-sandy-beaches/" },
+      { label: "Organized", href: "/chios-organized-beaches/" },
+      { label: "Quiet", href: "/chios-quiet-beaches/" },
+      { label: "For kids", href: "/chios-family-beaches/" },
+      { label: "Sheltered", href: "/chios-sheltered-beaches/" },
+      { label: "Near us", href: "/beaches-near-voulamandis-house/" },
     ],
     villagesTitle: "Villages & Kambos",
     villages: [
-      { label: "Mastic villages", href: "/chios-mastic-villages/", icon: "🌳" },
-      { label: "Medieval villages", href: "/chios-medieval-villages/", icon: "🏰" },
-      { label: "Kambos, Chios", href: kamposChiosPaths.en, icon: "🍊" },
+      { label: "Mastic villages", href: "/chios-mastic-villages/" },
+      { label: "Medieval villages", href: "/chios-medieval-villages/" },
+      { label: "Kambos, Chios", href: kamposChiosPaths.en },
     ],
-    planner: { label: "Plan your day in Chios", href: "/trip-planner/", icon: "🗺️" },
+    planner: { label: "Plan your day in Chios", href: "/trip-planner/" },
   },
   el: {
     kicker: "Οδηγός Χίου",
@@ -50,20 +50,20 @@ const copy: Record<LocaleCode, HeroChiosMenuCopy> = {
     beachesAllLabel: "Όλες",
     beachesAllHref: "/el/paralies-xios/",
     beaches: [
-      { label: "Με άμμο", href: "/el/paralies-me-ammo-xios/", icon: "🏖️" },
-      { label: "Οργανωμένες", href: "/el/organomenes-paralies-xios/", icon: "⛱️" },
-      { label: "Ήσυχες", href: "/el/isixes-paralies-xios/", icon: "🌿" },
-      { label: "Για παιδιά", href: "/el/paralies-xios-gia-paidia/", icon: "👨‍👩‍👧" },
-      { label: "Απάνεμες", href: "/el/apanemes-paralies-xios/", icon: "🍃" },
-      { label: "Κοντά μας", href: "/el/kontines-paralies-voulamandis-house/", icon: "📍" },
+      { label: "Με άμμο", href: "/el/paralies-me-ammo-xios/" },
+      { label: "Οργανωμένες", href: "/el/organomenes-paralies-xios/" },
+      { label: "Ήσυχες", href: "/el/isixes-paralies-xios/" },
+      { label: "Για παιδιά", href: "/el/paralies-xios-gia-paidia/" },
+      { label: "Απάνεμες", href: "/el/apanemes-paralies-xios/" },
+      { label: "Κοντά μας", href: "/el/kontines-paralies-voulamandis-house/" },
     ],
     villagesTitle: "Χωριά & Κάμπος",
     villages: [
-      { label: "Μαστιχοχώρια", href: "/el/mastichochoria-xios/", icon: "🌳" },
-      { label: "Μεσαιωνικά χωριά", href: "/el/mesaionika-xoria-xios/", icon: "🏰" },
-      { label: "Κάμπος Χίου", href: kamposChiosPaths.el, icon: "🍊" },
+      { label: "Μαστιχοχώρια", href: "/el/mastichochoria-xios/" },
+      { label: "Μεσαιωνικά χωριά", href: "/el/mesaionika-xoria-xios/" },
+      { label: "Κάμπος Χίου", href: kamposChiosPaths.el },
     ],
-    planner: { label: "Οργανώστε τη μέρα σας", href: "/trip-planner/", icon: "🗺️" },
+    planner: { label: "Οργανώστε τη μέρα σας", href: "/trip-planner/" },
   },
   fr: {
     kicker: "Guide de Chios",
@@ -72,20 +72,20 @@ const copy: Record<LocaleCode, HeroChiosMenuCopy> = {
     beachesAllLabel: "Toutes",
     beachesAllHref: "/fr/plages-de-chios/",
     beaches: [
-      { label: "Sable", href: "/fr/plages-de-sable-chios/", icon: "🏖️" },
-      { label: "Organisées", href: "/fr/plages-organisees-chios/", icon: "⛱️" },
-      { label: "Calmes", href: "/fr/plages-calmes-chios/", icon: "🌿" },
-      { label: "Enfants", href: "/fr/plages-de-chios-pour-enfants/", icon: "👨‍👩‍👧" },
-      { label: "Abritées", href: "/fr/plages-abritees-chios/", icon: "🍃" },
-      { label: "Près de nous", href: "/fr/plages-proches-voulamandis-house/", icon: "📍" },
+      { label: "Sable", href: "/fr/plages-de-sable-chios/" },
+      { label: "Organisées", href: "/fr/plages-organisees-chios/" },
+      { label: "Calmes", href: "/fr/plages-calmes-chios/" },
+      { label: "Enfants", href: "/fr/plages-de-chios-pour-enfants/" },
+      { label: "Abritées", href: "/fr/plages-abritees-chios/" },
+      { label: "Près de nous", href: "/fr/plages-proches-voulamandis-house/" },
     ],
     villagesTitle: "Villages & Kambos",
     villages: [
-      { label: "Villages du mastic", href: "/fr/villages-du-mastic-chios/", icon: "🌳" },
-      { label: "Villages médiévaux", href: "/fr/villages-medievaux-chios/", icon: "🏰" },
-      { label: "Kambos, Chios", href: kamposChiosPaths.fr, icon: "🍊" },
+      { label: "Villages du mastic", href: "/fr/villages-du-mastic-chios/" },
+      { label: "Villages médiévaux", href: "/fr/villages-medievaux-chios/" },
+      { label: "Kambos, Chios", href: kamposChiosPaths.fr },
     ],
-    planner: { label: "Planifiez votre journée", href: "/trip-planner/", icon: "🗺️" },
+    planner: { label: "Planifiez votre journée", href: "/trip-planner/" },
   },
   de: {
     kicker: "Chios-Guide",
@@ -94,20 +94,20 @@ const copy: Record<LocaleCode, HeroChiosMenuCopy> = {
     beachesAllLabel: "Alle",
     beachesAllHref: "/de/straende-chios/",
     beaches: [
-      { label: "Sand", href: "/de/sandstraende-chios/", icon: "🏖️" },
-      { label: "Organisiert", href: "/de/organisierte-straende-chios/", icon: "⛱️" },
-      { label: "Ruhig", href: "/de/ruhige-straende-chios/", icon: "🌿" },
-      { label: "Für Kinder", href: "/de/chios-straende-fuer-kinder/", icon: "👨‍👩‍👧" },
-      { label: "Geschützt", href: "/de/geschuetzte-straende-chios/", icon: "🍃" },
-      { label: "In der Nähe", href: "/de/straende-nahe-voulamandis-house/", icon: "📍" },
+      { label: "Sand", href: "/de/sandstraende-chios/" },
+      { label: "Organisiert", href: "/de/organisierte-straende-chios/" },
+      { label: "Ruhig", href: "/de/ruhige-straende-chios/" },
+      { label: "Für Kinder", href: "/de/chios-straende-fuer-kinder/" },
+      { label: "Geschützt", href: "/de/geschuetzte-straende-chios/" },
+      { label: "In der Nähe", href: "/de/straende-nahe-voulamandis-house/" },
     ],
     villagesTitle: "Dörfer & Kambos",
     villages: [
-      { label: "Mastixdörfer", href: "/de/mastixdoerfer-chios/", icon: "🌳" },
-      { label: "Mittelalterliche Dörfer", href: "/de/mittelalterliche-doerfer-chios/", icon: "🏰" },
-      { label: "Kambos, Chios", href: kamposChiosPaths.de, icon: "🍊" },
+      { label: "Mastixdörfer", href: "/de/mastixdoerfer-chios/" },
+      { label: "Mittelalterliche Dörfer", href: "/de/mittelalterliche-doerfer-chios/" },
+      { label: "Kambos, Chios", href: kamposChiosPaths.de },
     ],
-    planner: { label: "Ihren Tag planen", href: "/trip-planner/", icon: "🗺️" },
+    planner: { label: "Ihren Tag planen", href: "/trip-planner/" },
   },
   it: {
     kicker: "Guida di Chios",
@@ -116,20 +116,20 @@ const copy: Record<LocaleCode, HeroChiosMenuCopy> = {
     beachesAllLabel: "Tutte",
     beachesAllHref: "/it/spiagge-chios/",
     beaches: [
-      { label: "Sabbia", href: "/it/spiagge-di-sabbia-chios/", icon: "🏖️" },
-      { label: "Attrezzate", href: "/it/spiagge-attrezzate-chios/", icon: "⛱️" },
-      { label: "Tranquille", href: "/it/spiagge-tranquille-chios/", icon: "🌿" },
-      { label: "Per bambini", href: "/it/spiagge-chios-per-bambini/", icon: "👨‍👩‍👧" },
-      { label: "Riparate", href: "/it/spiagge-riparate-chios/", icon: "🍃" },
-      { label: "Vicino a noi", href: "/it/spiagge-vicine-voulamandis-house/", icon: "📍" },
+      { label: "Sabbia", href: "/it/spiagge-di-sabbia-chios/" },
+      { label: "Attrezzate", href: "/it/spiagge-attrezzate-chios/" },
+      { label: "Tranquille", href: "/it/spiagge-tranquille-chios/" },
+      { label: "Per bambini", href: "/it/spiagge-chios-per-bambini/" },
+      { label: "Riparate", href: "/it/spiagge-riparate-chios/" },
+      { label: "Vicino a noi", href: "/it/spiagge-vicine-voulamandis-house/" },
     ],
     villagesTitle: "Villaggi & Kambos",
     villages: [
-      { label: "Villaggi del mastice", href: "/it/villaggi-del-mastice-chios/", icon: "🌳" },
-      { label: "Villaggi medievali", href: "/it/villaggi-medievali-chios/", icon: "🏰" },
-      { label: "Kambos, Chios", href: kamposChiosPaths.it, icon: "🍊" },
+      { label: "Villaggi del mastice", href: "/it/villaggi-del-mastice-chios/" },
+      { label: "Villaggi medievali", href: "/it/villaggi-medievali-chios/" },
+      { label: "Kambos, Chios", href: kamposChiosPaths.it },
     ],
-    planner: { label: "Pianifica la tua giornata", href: "/trip-planner/", icon: "🗺️" },
+    planner: { label: "Pianifica la tua giornata", href: "/trip-planner/" },
   },
   es: {
     kicker: "Guía de Quíos",
@@ -138,20 +138,20 @@ const copy: Record<LocaleCode, HeroChiosMenuCopy> = {
     beachesAllLabel: "Todas",
     beachesAllHref: "/es/playas-chios/",
     beaches: [
-      { label: "De arena", href: "/es/playas-de-arena-quios/", icon: "🏖️" },
-      { label: "Organizadas", href: "/es/playas-organizadas-quios/", icon: "⛱️" },
-      { label: "Tranquilas", href: "/es/playas-tranquilas-quios/", icon: "🌿" },
-      { label: "Para niños", href: "/es/playas-de-quios-para-ninos/", icon: "👨‍👩‍👧" },
-      { label: "Resguardadas", href: "/es/playas-resguardadas-quios/", icon: "🍃" },
-      { label: "Cerca de nosotros", href: "/es/playas-cerca-voulamandis-house/", icon: "📍" },
+      { label: "De arena", href: "/es/playas-de-arena-quios/" },
+      { label: "Organizadas", href: "/es/playas-organizadas-quios/" },
+      { label: "Tranquilas", href: "/es/playas-tranquilas-quios/" },
+      { label: "Para niños", href: "/es/playas-de-quios-para-ninos/" },
+      { label: "Resguardadas", href: "/es/playas-resguardadas-quios/" },
+      { label: "Cerca de nosotros", href: "/es/playas-cerca-voulamandis-house/" },
     ],
     villagesTitle: "Pueblos y Kambos",
     villages: [
-      { label: "Pueblos de la mastiha", href: "/es/pueblos-del-mastiha-quios/", icon: "🌳" },
-      { label: "Pueblos medievales", href: "/es/pueblos-medievales-quios/", icon: "🏰" },
-      { label: "Kambos, Quíos", href: kamposChiosPaths.es, icon: "🍊" },
+      { label: "Pueblos de la mastiha", href: "/es/pueblos-del-mastiha-quios/" },
+      { label: "Pueblos medievales", href: "/es/pueblos-medievales-quios/" },
+      { label: "Kambos, Quíos", href: kamposChiosPaths.es },
     ],
-    planner: { label: "Planifica tu día", href: "/trip-planner/", icon: "🗺️" },
+    planner: { label: "Planifica tu día", href: "/trip-planner/" },
   },
   tr: {
     kicker: "Sakız Adası rehberi",
@@ -160,22 +160,32 @@ const copy: Record<LocaleCode, HeroChiosMenuCopy> = {
     beachesAllLabel: "Tümü",
     beachesAllHref: "/tr/sakiz-adasi-plajlari/",
     beaches: [
-      { label: "Kumlu", href: "/tr/sakiz-adasi-kumlu-plajlar/", icon: "🏖️" },
-      { label: "Düzenli", href: "/tr/sakiz-adasi-duzenli-plajlar/", icon: "⛱️" },
-      { label: "Sakin", href: "/tr/sakiz-adasi-sakin-plajlar/", icon: "🌿" },
-      { label: "Çocuklar için", href: "/tr/cocuklar-icin-sakiz-adasi-plajlari/", icon: "👨‍👩‍👧" },
-      { label: "Korunaklı", href: "/tr/sakiz-adasi-korunakli-plajlar/", icon: "🍃" },
-      { label: "Yakınımızda", href: "/tr/voulamandis-house-yakin-plajlar/", icon: "📍" },
+      { label: "Kumlu", href: "/tr/sakiz-adasi-kumlu-plajlar/" },
+      { label: "Düzenli", href: "/tr/sakiz-adasi-duzenli-plajlar/" },
+      { label: "Sakin", href: "/tr/sakiz-adasi-sakin-plajlar/" },
+      { label: "Çocuklar için", href: "/tr/cocuklar-icin-sakiz-adasi-plajlari/" },
+      { label: "Korunaklı", href: "/tr/sakiz-adasi-korunakli-plajlar/" },
+      { label: "Yakınımızda", href: "/tr/voulamandis-house-yakin-plajlar/" },
     ],
     villagesTitle: "Köyler ve Kambos",
     villages: [
-      { label: "Mastik köyleri", href: "/tr/sakiz-adasi-mastik-koyleri/", icon: "🌳" },
-      { label: "Orta Çağ köyleri", href: "/tr/sakiz-adasi-orta-cag-koyleri/", icon: "🏰" },
-      { label: "Kambos, Sakız Adası", href: kamposChiosPaths.tr, icon: "🍊" },
+      { label: "Mastik köyleri", href: "/tr/sakiz-adasi-mastik-koyleri/" },
+      { label: "Orta Çağ köyleri", href: "/tr/sakiz-adasi-orta-cag-koyleri/" },
+      { label: "Kambos, Sakız Adası", href: kamposChiosPaths.tr },
     ],
-    planner: { label: "Gününüzü planlayın", href: "/trip-planner/", icon: "🗺️" },
+    planner: { label: "Gününüzü planlayın", href: "/trip-planner/" },
   },
 };
+
+function Arrow({ className = "" }: { className?: string }) {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 16 16" className={`h-3.5 w-3.5 shrink-0 ${className}`} fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 8h10M9 4l4 4-4 4" />
+    </svg>
+  );
+}
+
+const linkFocus = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-800";
 
 export function HeroChiosMenu({ locale }: { locale: LocaleCode }) {
   const c = copy[locale] ?? copy.en;
@@ -183,56 +193,46 @@ export function HeroChiosMenu({ locale }: { locale: LocaleCode }) {
   return (
     <nav
       aria-label={c.title}
-      className="hidden w-[300px] shrink-0 self-end rounded-[1.75rem] border border-white/20 bg-stone-950/40 p-5 text-white shadow-2xl shadow-black/30 backdrop-blur-md lg:block xl:w-[340px]"
+      className="hidden w-[300px] shrink-0 self-end rounded-[1.5rem] bg-[#fffaf3]/95 px-6 pb-5 pt-6 text-stone-900 shadow-[0_24px_60px_rgba(12,10,9,.35)] ring-1 ring-white/60 backdrop-blur-sm lg:block xl:w-[330px]"
     >
-      <p className="text-[11px] font-black uppercase tracking-[0.2em] text-amber-200/90">{c.kicker}</p>
-      <p className="mt-1 font-serif text-2xl font-bold leading-tight text-white">{c.title}</p>
+      <p className="text-[10.5px] font-black uppercase tracking-[0.24em] text-amber-800">{c.kicker}</p>
+      <p className="mt-1.5 font-serif text-[1.7rem] font-bold leading-tight text-stone-900">{c.title}</p>
 
-      <div className="mt-4 flex items-baseline justify-between gap-3 border-t border-white/15 pt-4">
-        <p className="text-xs font-black uppercase tracking-[0.14em] text-white/80">🌊 {c.beachesTitle}</p>
-        <a
-          href={c.beachesAllHref}
-          className="shrink-0 rounded-full text-xs font-bold text-amber-200 underline decoration-amber-200/40 underline-offset-4 transition hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-        >
-          {c.beachesAllLabel} →
+      <div className="mt-5 flex items-baseline justify-between gap-3">
+        <p className="text-[11px] font-black uppercase tracking-[0.16em] text-stone-500">{c.beachesTitle}</p>
+        <a href={c.beachesAllHref} className={`group inline-flex shrink-0 items-center gap-1 text-[12px] font-bold text-amber-800 transition hover:text-amber-950 ${linkFocus}`}>
+          {c.beachesAllLabel}
+          <Arrow className="transition group-hover:translate-x-0.5" />
         </a>
       </div>
-      <ul className="mt-3 grid grid-cols-2 gap-2">
+      <ul className="mt-1.5 grid grid-cols-2 gap-x-5">
         {c.beaches.map((link) => (
-          <li key={link.href}>
-            <a
-              href={link.href}
-              className="flex min-h-10 items-center gap-2 rounded-xl bg-white/10 px-3 py-2 text-[13px] font-bold leading-tight text-white ring-1 ring-white/10 transition hover:bg-white/20 hover:ring-white/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-            >
-              <span aria-hidden="true">{link.icon}</span>
+          <li key={link.href} className="border-b border-stone-900/10">
+            <a href={link.href} className={`group flex items-center justify-between gap-2 py-2.5 text-[14px] font-semibold text-stone-800 transition hover:text-amber-800 ${linkFocus}`}>
               <span className="min-w-0 break-words">{link.label}</span>
+              <Arrow className="text-stone-300 transition group-hover:translate-x-0.5 group-hover:text-amber-800" />
             </a>
           </li>
         ))}
       </ul>
 
-      <p className="mt-4 border-t border-white/15 pt-4 text-xs font-black uppercase tracking-[0.14em] text-white/80">{c.villagesTitle}</p>
-      <ul className="mt-2 space-y-1">
+      <p className="mt-5 text-[11px] font-black uppercase tracking-[0.16em] text-stone-500">{c.villagesTitle}</p>
+      <ul className="mt-1.5">
         {c.villages.map((link) => (
-          <li key={link.href}>
-            <a
-              href={link.href}
-              className="group flex items-center gap-2.5 rounded-xl px-2 py-1.5 text-sm font-bold text-white transition hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-            >
-              <span aria-hidden="true">{link.icon}</span>
-              <span className="min-w-0 flex-1 break-words">{link.label}</span>
-              <span aria-hidden="true" className="text-white/50 transition group-hover:translate-x-0.5 group-hover:text-white">→</span>
+          <li key={link.href} className="border-b border-stone-900/10">
+            <a href={link.href} className={`group flex items-center justify-between gap-2 py-2.5 text-[14px] font-semibold text-stone-800 transition hover:text-amber-800 ${linkFocus}`}>
+              <span className="min-w-0 break-words">{link.label}</span>
+              <Arrow className="text-stone-300 transition group-hover:translate-x-0.5 group-hover:text-amber-800" />
             </a>
           </li>
         ))}
       </ul>
 
-      <a
-        href={c.planner.href}
-        className="mt-4 flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#c9822f] px-4 py-2.5 text-center text-sm font-black text-white shadow-lg shadow-black/20 transition hover:bg-[#b37226] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-      >
-        <span aria-hidden="true">{c.planner.icon}</span>
-        {c.planner.label}
+      <a href={c.planner.href} className={`group mt-4 flex items-center justify-between gap-3 rounded-full bg-stone-900 py-2 pl-5 pr-2 text-[13px] font-bold text-white transition hover:bg-amber-900 ${linkFocus}`}>
+        <span>{c.planner.label}</span>
+        <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#c9822f] text-white transition group-hover:translate-x-0.5">
+          <Arrow />
+        </span>
       </a>
     </nav>
   );
