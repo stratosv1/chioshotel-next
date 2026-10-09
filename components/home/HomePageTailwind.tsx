@@ -380,8 +380,8 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
             aria-hidden="true"
             className="absolute inset-0 bg-[linear-gradient(to_top,rgba(12,10,9,0.92)_0%,rgba(12,10,9,0.62)_18%,rgba(12,10,9,0.16)_38%,transparent_54%)] md:bg-[linear-gradient(to_top,rgba(12,10,9,0.72)_0%,rgba(12,10,9,0.32)_25%,rgba(12,10,9,0.06)_46%,transparent_64%)]"
           />
-          <div className="relative z-10 mx-auto flex w-full max-w-7xl px-5 pb-6 pt-[44vh] sm:px-6 sm:pb-8 md:px-8 md:pb-14 md:pt-48 lg:items-end lg:justify-between lg:gap-8">
-            <div className="w-full min-w-0 max-w-3xl">
+          <div className="relative z-10 mx-auto flex w-full max-w-7xl px-5 pb-6 pt-[44vh] sm:px-6 sm:pb-8 md:px-8 md:pb-14 md:pt-48">
+            <div className="w-full max-w-3xl lg:max-w-[calc(100%-300px)] xl:max-w-3xl">
               <div className="mb-3 inline-flex items-center gap-2.5 rounded-full bg-white px-3 py-2 text-[13px] font-bold text-stone-800 shadow-lg sm:mb-4 sm:gap-3 sm:px-4 sm:text-sm" aria-label={`${data.hero.rating} - ${data.hero.reviews}`}>
                 <span>{data.hero.rating}</span><span className="text-amber-400" aria-hidden="true">★★★★★</span><span className="text-stone-500">{data.hero.reviews}</span>
               </div>
@@ -394,8 +394,8 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
                 <a href={data.hero.secondaryCta.href} className="inline-flex min-h-14 min-w-0 break-words hyphens-auto items-center justify-center rounded-2xl border border-white/45 bg-stone-950/20 px-3 py-3 text-center text-sm font-black uppercase leading-5 tracking-[0.06em] text-white transition hover:bg-stone-950/35 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:rounded-full md:px-5"><span className="mr-2 text-lg text-white" aria-hidden="true">{data.hero.secondaryCta.icon}</span>{data.hero.secondaryCta.label}</a>
               </div>
             </div>
-            <HeroChiosMenu locale={locale} />
           </div>
+          <HeroChiosMenu locale={locale} />
         </section>
 
         <a href={data.announceBar.href} className="relative z-20 mx-auto -mt-5 flex w-[min(1120px,92vw)] items-center justify-between gap-4 rounded-3xl bg-white px-5 py-4 text-stone-800 shadow-xl shadow-stone-900/10 ring-1 ring-amber-900/10 md:px-7">

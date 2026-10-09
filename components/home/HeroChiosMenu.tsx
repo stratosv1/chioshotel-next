@@ -194,7 +194,7 @@ export function HeroChiosMenu({ locale }: { locale: LocaleCode }) {
   return (
     <nav
       aria-label={c.title}
-      className="hidden w-[270px] shrink-0 self-end rounded-2xl bg-[#fffaf3]/80 px-4 pb-3.5 pt-4 text-stone-900 shadow-[0_16px_40px_rgba(12,10,9,.28)] ring-1 ring-white/50 backdrop-blur-md lg:block xl:w-[290px]"
+      className="absolute bottom-14 right-5 z-10 hidden w-[270px] rounded-2xl bg-[#fffaf3]/55 px-4 pb-3.5 pt-4 text-stone-900 shadow-[0_16px_40px_rgba(12,10,9,.22)] ring-1 ring-white/40 backdrop-blur-xl lg:block xl:right-8 xl:w-[290px]"
     >
       <p className="font-serif text-[1.2rem] font-bold leading-tight text-stone-900">{c.title}</p>
 
