@@ -119,18 +119,19 @@ const kambosExtraCopy: Record<LocaleCode, string> = {
   tr: "Kambos, Sakız’ın en atmosferik bölgelerinden biridir: taş duvarlar, narenciye bahçeleri, eski konaklar ve sakin yollar huzurlu, yerel ve otantik bir ortam yaratır. Şehre, havalimanına ve plajlara yakın kalırken gün sonunda daha sakin bir yere dönersiniz.",
 };
 
-function PremiumIcon({ children, compact = false }: { children: React.ReactNode; compact?: boolean }) {
+// The emoji is drawn with CSS (::before) so it never becomes part of the
+// heading or link text that search engines and screen readers read.
+function PremiumIcon({ children, compact = false }: { children: string; compact?: boolean }) {
   return (
     <span
       aria-hidden="true"
+      data-icon={children}
       className={
         compact
-          ? "mr-2 inline-flex h-5 w-5 shrink-0 items-center justify-center text-sm text-stone-700 [filter:grayscale(1)]"
-          : "mr-3 inline-flex h-9 w-9 translate-y-[-0.08em] items-center justify-center rounded-xl bg-amber-50 align-middle text-lg text-stone-700 ring-1 ring-amber-900/10 [filter:grayscale(1)]"
+          ? "mr-2 inline-flex h-5 w-5 shrink-0 items-center justify-center text-sm text-stone-700 [filter:grayscale(1)] before:content-[attr(data-icon)]"
+          : "mr-3 inline-flex h-9 w-9 translate-y-[-0.08em] items-center justify-center rounded-xl bg-amber-50 align-middle text-lg text-stone-700 ring-1 ring-amber-900/10 [filter:grayscale(1)] before:content-[attr(data-icon)]"
       }
-    >
-      {children}
-    </span>
+    />
   );
 }
 
@@ -397,7 +398,6 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
                 {data.intro.left.pills.map((pill) => (<span key={pill} className="inline-flex min-h-9 items-center justify-center rounded-full bg-amber-50 px-2.5 py-2 text-center text-[11px] font-bold leading-tight text-amber-800 ring-1 ring-amber-900/10 sm:min-h-0 sm:px-4 sm:text-sm">{pill}</span>))}
               </div>
             </article>
-            <HomeGallery locale={locale} />
             <article className="order-3 rounded-[1.5rem] bg-white p-5 shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 md:rounded-[2rem] md:p-8 lg:order-2">
               <p className="mb-3 break-words text-xs font-black uppercase tracking-[0.20em] text-amber-700">{data.intro.right.kicker}</p>
               <h3 className="break-words tracking-[-0.02em] text-[2rem] font-extrabold leading-tight text-stone-900 md:text-[2.625rem]">{introRightTitle}</h3>
@@ -410,6 +410,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
                 ))}
               </div>
             </article>
+            <HomeGallery locale={locale} />
           </div>
         </section>
 
