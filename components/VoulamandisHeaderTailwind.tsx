@@ -62,7 +62,7 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     call: "Call",
     exploreTitle: "Explore Chios",
     directLine: "Direct Booking",
-    location: "Kampos, Chios",
+    location: "Kambos, Chios",
     links: { rooms: "Rooms", rates: "Rates", deals: "Deals", chios: "Chios Island", beaches: "Beaches", villages: "Villages", museums: "Museums", activities: "Do in Chios", contact: "Contact" },
     explore: { beaches: "Clear waters", villages: "Mastic villages", museums: "Culture" },
   },
@@ -312,7 +312,7 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/", hea
               width={56}
               height={56}
               sizes="56px"
-              className="relative h-[52px] w-[52px] animate-pulse object-contain transition duration-300 group-hover:scale-110 lg:h-[56px] lg:w-[56px]"
+              className="relative h-[52px] w-[52px] object-contain transition duration-300 group-hover:scale-110 lg:h-[56px] lg:w-[56px]"
             />
           </span>
           <span className="min-w-0 flex-1">

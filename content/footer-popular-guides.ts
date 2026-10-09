@@ -22,7 +22,7 @@ export type FooterPopularGuideLink = Readonly<{
 
 const guideLabels: Readonly<Record<LanguageCode, Readonly<Record<FooterGuideKey, string>>>> = {
   en: {
-    kampos: "Kampos Chios",
+    kampos: "Kambos Chios",
     mesta: "Mesta Village",
     pyrgi: "Pyrgi Village",
     mavraVolia: "Mavra Volia Beach",
@@ -55,7 +55,7 @@ const guideLabels: Readonly<Record<LanguageCode, Readonly<Record<FooterGuideKey,
     orchids: "Orchidées de Chios",
   },
   de: {
-    kampos: "Kampos auf Chios",
+    kampos: "Kambos auf Chios",
     mesta: "Mesta Dorf",
     pyrgi: "Pyrgi Dorf",
     mavraVolia: "Mavra Volia Strand",
@@ -66,7 +66,7 @@ const guideLabels: Readonly<Record<LanguageCode, Readonly<Record<FooterGuideKey,
     orchids: "Orchideen auf Chios",
   },
   it: {
-    kampos: "Kampos di Chios",
+    kampos: "Kambos di Chios",
     mesta: "Villaggio di Mesta",
     pyrgi: "Villaggio di Pyrgi",
     mavraVolia: "Spiaggia di Mavra Volia",
@@ -77,7 +77,7 @@ const guideLabels: Readonly<Record<LanguageCode, Readonly<Record<FooterGuideKey,
     orchids: "Orchidee di Chios",
   },
   es: {
-    kampos: "Kampos de Quíos",
+    kampos: "Kambos de Quíos",
     mesta: "Pueblo de Mesta",
     pyrgi: "Pueblo de Pyrgi",
     mavraVolia: "Playa Mavra Volia",
