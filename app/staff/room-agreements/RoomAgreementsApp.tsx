@@ -96,7 +96,17 @@ function bookingLink(arrival: string, departure: string, rooms: number[]) {
     no_rooms: String(rooms.length),
     selected_currency: "EUR",
     lang: "el",
+    // Same shape as Booking.com's own availability form: dates split into
+    // month/day, one "A" per adult per room, and total (not per-night) prices.
+    checkin_year_month: arrival.slice(0, 7).replace(/-0/, "-"),
+    checkin_monthday: String(Number(arrival.slice(8))),
+    checkout_year_month: departure.slice(0, 7).replace(/-0/, "-"),
+    checkout_monthday: String(Number(departure.slice(8))),
+    hp_avform: "1",
+    sb_price_type: "total",
+    type: "total",
   });
+  rooms.forEach((count, index) => params.set(`room${index + 1}`, Array.from({ length: count }, () => "A").join(",")));
   return `${BOOKING_HOTEL_URL}?${params}`;
 }
 function expediaLink(arrival: string, departure: string, rooms: number[]) {
