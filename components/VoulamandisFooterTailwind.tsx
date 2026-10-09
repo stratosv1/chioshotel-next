@@ -1,4 +1,6 @@
+import Image from "next/image";
 import type { LanguageCode } from "@/lib/languages";
+import { businessData } from "@/lib/structured-data";
 import { propertyFaqPaths } from "@/content/property-faq";
 import { getFooterPopularGuides } from "@/content/footer-popular-guides";
 import { agentRoomGuidePaths } from "@/content/agent-room-guide";
@@ -10,8 +12,6 @@ type FooterProps = {
 
 type FooterCopy = {
   description: string;
-  bookStay: string;
-  whatsapp: string;
   allRightsReserved: string;
   groups: {
     stay: string;
@@ -33,13 +33,13 @@ type FooterCopy = {
 };
 
 const footerCopy: Record<LanguageCode, FooterCopy> = {
-  en: { description: "Quiet rooms and apartments in the historic Kampos area of Chios, with easy access to Chios Town, the airport, beaches, villages and cultural landmarks.", bookStay: "Book", whatsapp: "WhatsApp", allRightsReserved: "All rights reserved.", groups: { stay: "Stay", exploreChios: "Explore Chios", popularGuides: "Popular Guides" }, links: { rooms: "Rooms", travelAgents: "Travel Agents · B2B", ratesAvailability: "Rates & Availability", contact: "Contact", faq: "Frequently Asked Questions", chiosIslandGuide: "Chios Island Guide", beaches: "Chios Beaches", villages: "Chios Villages", museums: "Chios Museums", holidayQuiz: "Chios Holiday Quiz" } },
-  el: { description: "Ήσυχα δωμάτια και διαμερίσματα στον ιστορικό Κάμπο της Χίου, με εύκολη πρόσβαση στην πόλη, το αεροδρόμιο, τις παραλίες, τα χωριά και τα αξιοθέατα.", bookStay: "Κράτηση", whatsapp: "WhatsApp", allRightsReserved: "Με επιφύλαξη παντός δικαιώματος.", groups: { stay: "Διαμονή", exploreChios: "Ανακαλύψτε τη Χίο", popularGuides: "Δημοφιλείς οδηγοί" }, links: { rooms: "Δωμάτια", travelAgents: "Τουριστικοί Πράκτορες · B2B", ratesAvailability: "Τιμές & Διαθεσιμότητα", contact: "Επικοινωνία", faq: "Συχνές Ερωτήσεις", chiosIslandGuide: "Οδηγός Χίου", beaches: "Παραλίες της Χίου", villages: "Χωριά της Χίου", museums: "Μουσεία της Χίου", holidayQuiz: "Quiz διακοπών στη Χίο" } },
-  fr: { description: "Chambres et appartements calmes dans le quartier historique de Kampos à Chios, avec un accès facile à la ville, à l’aéroport, aux plages, aux villages et aux sites culturels.", bookStay: "Réserver", whatsapp: "WhatsApp", allRightsReserved: "Tous droits réservés.", groups: { stay: "Séjour", exploreChios: "Explorer Chios", popularGuides: "Guides populaires" }, links: { rooms: "Chambres", travelAgents: "Agences de voyage · B2B", ratesAvailability: "Tarifs & Disponibilité", contact: "Contact", faq: "Questions fréquentes", chiosIslandGuide: "Guide de Chios", beaches: "Plages de Chios", villages: "Villages de Chios", museums: "Musées de Chios", holidayQuiz: "Quiz vacances à Chios" } },
-  de: { description: "Ruhige Zimmer und Apartments im historischen Kampos-Gebiet von Chios, mit einfachem Zugang zur Stadt, zum Flughafen, zu Stränden, Dörfern und Sehenswürdigkeiten.", bookStay: "Buchen", whatsapp: "WhatsApp", allRightsReserved: "Alle Rechte vorbehalten.", groups: { stay: "Aufenthalt", exploreChios: "Chios entdecken", popularGuides: "Beliebte Reiseführer" }, links: { rooms: "Zimmer", travelAgents: "Reisebüros · B2B", ratesAvailability: "Preise & Verfügbarkeit", contact: "Kontakt", faq: "Häufige Fragen", chiosIslandGuide: "Chios Reiseführer", beaches: "Strände auf Chios", villages: "Dörfer auf Chios", museums: "Museen auf Chios", holidayQuiz: "Chios Urlaubsquiz" } },
-  it: { description: "Camere e appartamenti tranquilli nella storica zona di Kampos a Chios, con facile accesso alla città, all’aeroporto, alle spiagge, ai villaggi e ai luoghi culturali.", bookStay: "Prenota", whatsapp: "WhatsApp", allRightsReserved: "Tutti i diritti riservati.", groups: { stay: "Soggiorno", exploreChios: "Esplora Chios", popularGuides: "Guide popolari" }, links: { rooms: "Camere", travelAgents: "Agenzie di viaggio · B2B", ratesAvailability: "Prezzi & Disponibilità", contact: "Contatti", faq: "Domande frequenti", chiosIslandGuide: "Guida di Chios", beaches: "Spiagge di Chios", villages: "Villaggi di Chios", museums: "Musei di Chios", holidayQuiz: "Quiz vacanze a Chios" } },
-  es: { description: "Habitaciones y apartamentos tranquilos en la histórica zona de Kampos en Chios, con fácil acceso a la ciudad, al aeropuerto, a playas, pueblos y lugares culturales.", bookStay: "Reserva", whatsapp: "WhatsApp", allRightsReserved: "Todos los derechos reservados.", groups: { stay: "Estancia", exploreChios: "Explorar Chios", popularGuides: "Guías populares" }, links: { rooms: "Habitaciones", travelAgents: "Agencias de viajes · B2B", ratesAvailability: "Precios & Disponibilidad", contact: "Contacto", faq: "Preguntas frecuentes", chiosIslandGuide: "Guía de Chios", beaches: "Playas de Chios", villages: "Pueblos de Chios", museums: "Museos de Chios", holidayQuiz: "Quiz de vacaciones en Chios" } },
-  tr: { description: "Sakız Adası’nın tarihi Kampos bölgesinde, şehir merkezine, havaalanına, plajlara, köylere ve kültürel noktalara kolay erişimli sakin odalar ve daireler.", bookStay: "Rezervasyon", whatsapp: "WhatsApp", allRightsReserved: "Tüm hakları saklıdır.", groups: { stay: "Konaklama", exploreChios: "Sakız Adası’nı keşfedin", popularGuides: "Popüler rehberler" }, links: { rooms: "Odalar", travelAgents: "Seyahat Acenteleri · B2B", ratesAvailability: "Fiyatlar & Müsaitlik", contact: "İletişim", faq: "Sık Sorulan Sorular", chiosIslandGuide: "Sakız Adası Rehberi", beaches: "Sakız Adası Plajları", villages: "Sakız Adası Köyleri", museums: "Sakız Adası Müzeleri", holidayQuiz: "Sakız Adası Tatil Testi" } },
+  en: { description: "Quiet rooms and apartments in the historic Kampos area of Chios, with easy access to Chios Town, the airport, beaches, villages and cultural landmarks.", allRightsReserved: "All rights reserved.", groups: { stay: "Stay", exploreChios: "Explore Chios", popularGuides: "Popular Guides" }, links: { rooms: "Rooms", travelAgents: "Travel Agents · B2B", ratesAvailability: "Rates & Availability", contact: "Contact", faq: "Frequently Asked Questions", chiosIslandGuide: "Chios Island Guide", beaches: "Chios Beaches", villages: "Chios Villages", museums: "Chios Museums", holidayQuiz: "Chios Holiday Quiz" } },
+  el: { description: "Ήσυχα δωμάτια και διαμερίσματα στον ιστορικό Κάμπο της Χίου, με εύκολη πρόσβαση στην πόλη, το αεροδρόμιο, τις παραλίες, τα χωριά και τα αξιοθέατα.", allRightsReserved: "Με επιφύλαξη παντός δικαιώματος.", groups: { stay: "Διαμονή", exploreChios: "Ανακαλύψτε τη Χίο", popularGuides: "Δημοφιλείς οδηγοί" }, links: { rooms: "Δωμάτια", travelAgents: "Τουριστικοί Πράκτορες · B2B", ratesAvailability: "Τιμές & Διαθεσιμότητα", contact: "Επικοινωνία", faq: "Συχνές Ερωτήσεις", chiosIslandGuide: "Οδηγός Χίου", beaches: "Παραλίες της Χίου", villages: "Χωριά της Χίου", museums: "Μουσεία της Χίου", holidayQuiz: "Quiz διακοπών στη Χίο" } },
+  fr: { description: "Chambres et appartements calmes dans le quartier historique de Kampos à Chios, avec un accès facile à la ville, à l’aéroport, aux plages, aux villages et aux sites culturels.", allRightsReserved: "Tous droits réservés.", groups: { stay: "Séjour", exploreChios: "Explorer Chios", popularGuides: "Guides populaires" }, links: { rooms: "Chambres", travelAgents: "Agences de voyage · B2B", ratesAvailability: "Tarifs & Disponibilité", contact: "Contact", faq: "Questions fréquentes", chiosIslandGuide: "Guide de Chios", beaches: "Plages de Chios", villages: "Villages de Chios", museums: "Musées de Chios", holidayQuiz: "Quiz vacances à Chios" } },
+  de: { description: "Ruhige Zimmer und Apartments im historischen Kampos-Gebiet von Chios, mit einfachem Zugang zur Stadt, zum Flughafen, zu Stränden, Dörfern und Sehenswürdigkeiten.", allRightsReserved: "Alle Rechte vorbehalten.", groups: { stay: "Aufenthalt", exploreChios: "Chios entdecken", popularGuides: "Beliebte Reiseführer" }, links: { rooms: "Zimmer", travelAgents: "Reisebüros · B2B", ratesAvailability: "Preise & Verfügbarkeit", contact: "Kontakt", faq: "Häufige Fragen", chiosIslandGuide: "Chios Reiseführer", beaches: "Strände auf Chios", villages: "Dörfer auf Chios", museums: "Museen auf Chios", holidayQuiz: "Chios Urlaubsquiz" } },
+  it: { description: "Camere e appartamenti tranquilli nella storica zona di Kampos a Chios, con facile accesso alla città, all’aeroporto, alle spiagge, ai villaggi e ai luoghi culturali.", allRightsReserved: "Tutti i diritti riservati.", groups: { stay: "Soggiorno", exploreChios: "Esplora Chios", popularGuides: "Guide popolari" }, links: { rooms: "Camere", travelAgents: "Agenzie di viaggio · B2B", ratesAvailability: "Prezzi & Disponibilità", contact: "Contatti", faq: "Domande frequenti", chiosIslandGuide: "Guida di Chios", beaches: "Spiagge di Chios", villages: "Villaggi di Chios", museums: "Musei di Chios", holidayQuiz: "Quiz vacanze a Chios" } },
+  es: { description: "Habitaciones y apartamentos tranquilos en la histórica zona de Kampos en Chios, con fácil acceso a la ciudad, al aeropuerto, a playas, pueblos y lugares culturales.", allRightsReserved: "Todos los derechos reservados.", groups: { stay: "Estancia", exploreChios: "Explorar Chios", popularGuides: "Guías populares" }, links: { rooms: "Habitaciones", travelAgents: "Agencias de viajes · B2B", ratesAvailability: "Precios & Disponibilidad", contact: "Contacto", faq: "Preguntas frecuentes", chiosIslandGuide: "Guía de Chios", beaches: "Playas de Chios", villages: "Pueblos de Chios", museums: "Museos de Chios", holidayQuiz: "Quiz de vacaciones en Chios" } },
+  tr: { description: "Sakız Adası’nın tarihi Kampos bölgesinde, şehir merkezine, havaalanına, plajlara, köylere ve kültürel noktalara kolay erişimli sakin odalar ve daireler.", allRightsReserved: "Tüm hakları saklıdır.", groups: { stay: "Konaklama", exploreChios: "Sakız Adası’nı keşfedin", popularGuides: "Popüler rehberler" }, links: { rooms: "Odalar", travelAgents: "Seyahat Acenteleri · B2B", ratesAvailability: "Fiyatlar & Müsaitlik", contact: "İletişim", faq: "Sık Sorulan Sorular", chiosIslandGuide: "Sakız Adası Rehberi", beaches: "Sakız Adası Plajları", villages: "Sakız Adası Köyleri", museums: "Sakız Adası Müzeleri", holidayQuiz: "Sakız Adası Tatil Testi" } },
 };
 
 export function VoulamandisFooterTailwind({ language = "en" }: FooterProps) {
@@ -47,6 +47,7 @@ export function VoulamandisFooterTailwind({ language = "en" }: FooterProps) {
   const year = new Date().getFullYear();
   const locationLabel = language === "tr" ? "Kambos, Sakız Adası" : language === "el" ? "Κάμπος, Χίος" : language === "fr" ? "Kambos, Chios" : language === "de" ? "Kambos, Chios" : language === "it" ? "Kambos, Chios" : language === "es" ? "Kambos, Quíos" : "Kampos, Chios";
   const footerTagline = language === "tr" ? "Sakız Adası odaları & daireleri · Doğrudan konaklama" : language === "el" ? "Δωμάτια & διαμερίσματα στη Χίο · Απευθείας διαμονή" : language === "fr" ? "Chambres & appartements à Chios · Réservation directe" : language === "de" ? "Zimmer & Apartments auf Chios · Direkt buchen" : language === "it" ? "Camere & appartamenti a Chios · Prenotazione diretta" : language === "es" ? "Habitaciones & apartamentos en Quíos · Reserva directa" : "Chios rooms & apartments · Direct stay";
+  const phoneLabel = businessData.telephone.replace(/^\+30(\d{5})(\d+)$/, "+30 $1 $2");
   const footerNavLabel = language === "tr" ? "Alt bilgi menüsü" : language === "el" ? "Πλοήγηση υποσέλιδου" : language === "fr" ? "Navigation du pied de page" : language === "de" ? "Fußzeilennavigation" : language === "it" ? "Navigazione a piè di pagina" : language === "es" ? "Navegación del pie de página" : "Footer navigation";
   const groups = [
     { title: copy.groups.stay, links: [{ label: copy.links.rooms, href: getSiteNavigationPath("rooms", language) }, { label: copy.links.travelAgents, href: agentRoomGuidePaths[language] }, { label: copy.links.ratesAvailability, href: getSiteNavigationPath("rates", language) }, { label: copy.links.faq, href: propertyFaqPaths[language] }, { label: copy.links.contact, href: getSiteNavigationPath("contact", language) }] },
@@ -55,13 +56,13 @@ export function VoulamandisFooterTailwind({ language = "en" }: FooterProps) {
   ];
 
   return (
-    <footer className="relative overflow-hidden bg-[#efe4d5] pb-[calc(6rem+env(safe-area-inset-bottom))] text-stone-800 md:pb-0">
+    <footer className="vh-site-footer relative overflow-hidden bg-[#efe4d5] text-stone-800">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(180,118,52,.12),transparent_28rem),radial-gradient(circle_at_85%_30%,rgba(255,255,255,.7),transparent_24rem)]" />
       <div className="relative mx-auto max-w-7xl px-3 py-3 sm:px-6 sm:py-6 lg:px-8 lg:py-10">
         <div className="overflow-hidden rounded-[1.4rem] border border-amber-900/10 bg-[#fffaf3]/95 shadow-xl shadow-amber-950/10 backdrop-blur md:rounded-[1.75rem]">
           <section className="flex items-center justify-between gap-3 border-b border-amber-900/10 px-3 py-2.5 sm:px-5 sm:py-4 md:px-6 md:py-5">
             <a href={language === "en" ? "/" : `/${language}/`} className="flex min-h-11 min-w-0 items-center gap-2.5 sm:gap-3">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-xs font-black text-amber-950 shadow-md shadow-amber-900/10 sm:h-11 sm:w-11 sm:rounded-2xl sm:text-sm">VH</span>
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-amber-900/10 bg-white shadow-md shadow-amber-900/10 sm:h-11 sm:w-11 sm:rounded-2xl"><Image src="/favicon/vh-heart-128.webp" alt="" width={40} height={40} sizes="40px" loading="lazy" className="h-9 w-9 object-contain sm:h-10 sm:w-10" /></span>
               <span className="min-w-0">
                 <strong className="block truncate text-[18px] font-black leading-none tracking-[-0.04em] text-stone-900 sm:text-lg md:text-xl">Voulamandis House</strong>
                 <small className="mt-1 block truncate text-[11px] font-black uppercase tracking-[0.08em] text-stone-500 sm:text-[11px]">{locationLabel}</small>
@@ -69,6 +70,12 @@ export function VoulamandisFooterTailwind({ language = "en" }: FooterProps) {
             </a>
             <p className="hidden max-w-xl text-right text-sm leading-6 text-stone-600 md:block">{copy.description}</p>
           </section>
+
+          <address className="flex flex-col gap-1 border-b border-amber-900/10 px-3 py-2.5 text-[13px] font-semibold not-italic leading-6 text-stone-600 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-5 sm:px-5 md:px-6">
+            <span>{businessData.address.streetAddress}, {locationLabel} {businessData.address.postalCode}</span>
+            <a href={`tel:${businessData.telephone}`} className="inline-flex min-h-11 items-center text-amber-800 underline decoration-amber-800/25 underline-offset-4 hover:text-amber-950 sm:min-h-0">{phoneLabel}</a>
+            <a href={`mailto:${businessData.email}`} className="inline-flex min-h-11 items-center text-amber-800 underline decoration-amber-800/25 underline-offset-4 hover:text-amber-950 sm:min-h-0">{businessData.email}</a>
+          </address>
 
           <nav aria-label={footerNavLabel} className="grid grid-cols-1 divide-y divide-amber-900/10 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
             {groups.map((group) => (
@@ -88,7 +95,7 @@ export function VoulamandisFooterTailwind({ language = "en" }: FooterProps) {
             ))}
           </nav>
 
-          <div className="flex items-end justify-between gap-3 border-t border-amber-900/10 px-3 py-2.5 sm:items-center sm:px-5 sm:py-4 md:px-6">
+          <div className="flex flex-col items-start justify-between gap-3 border-t border-amber-900/10 px-3 py-3 sm:flex-row sm:items-center sm:px-5 sm:py-4 md:px-6">
             <div className="min-w-0 text-[11px] font-bold uppercase leading-[1.45] tracking-[0.04em] text-stone-500 sm:text-[11px] sm:tracking-[0.09em] md:text-xs">
               <p>© {year} Voulamandis House. {copy.allRightsReserved}</p>
               <p className="mt-0.5 text-stone-400">{footerTagline}</p>

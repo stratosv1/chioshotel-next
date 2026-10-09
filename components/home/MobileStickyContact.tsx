@@ -66,6 +66,7 @@ export function MobileStickyContact({ call, chat }: MobileStickyContactProps) {
 
   return (
     <div
+      data-mobile-sticky-contact=""
       aria-hidden={!isVisible}
       inert={!isVisible}
       className={`fixed inset-x-0 bottom-0 z-50 border-t border-amber-900/10 bg-white/95 px-3 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-2xl backdrop-blur transition duration-300 md:hidden ${

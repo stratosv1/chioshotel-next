@@ -28,7 +28,6 @@ type HeaderCopy = {
   nav: string;
   language: string;
   directLine: string;
-  openNow: string;
   location: string;
   links: {
     rooms: string;
@@ -56,7 +55,6 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     nav: "Main navigation",
     language: "Language",
     directLine: "Direct Booking",
-    openNow: "OPEN",
     location: "Kampos, Chios",
     links: { rooms: "Rooms", rates: "Rates", deals: "Deals", chios: "Chios Island", beaches: "Beaches", villages: "Villages", museums: "Museums", activities: "Do in Chios", contact: "Contact" },
     explore: { beaches: "Clear waters", villages: "Mastic villages", museums: "Culture" },
@@ -68,7 +66,6 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     nav: "Κύρια πλοήγηση",
     language: "Γλώσσα",
     directLine: "Απευθείας κράτηση",
-    openNow: "ΑΝΟΙΧΤΑ",
     location: "Κάμπος, Χίος",
     links: { rooms: "Δωμάτια", rates: "Τιμές", deals: "Προσφορές", chios: "Χίος", beaches: "Παραλίες", villages: "Χωριά", museums: "Μουσεία", activities: "Τι να κάνεις", contact: "Επικοινωνία" },
     explore: { beaches: "Καθαρά νερά", villages: "Μαστιχοχώρια", museums: "Πολιτισμός" },
@@ -80,7 +77,6 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     nav: "Navigation principale",
     language: "Langue",
     directLine: "Réservation directe",
-    openNow: "OUVERT",
     location: "Kambos, Chios",
     links: { rooms: "Chambres", rates: "Tarifs", deals: "Offres", chios: "Île de Chios", beaches: "Plages", villages: "Villages", museums: "Musées", activities: "À faire", contact: "Contact" },
     explore: { beaches: "Eaux cristallines", villages: "Villages du mastic", museums: "Culture" },
@@ -92,7 +88,6 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     nav: "Hauptnavigation",
     language: "Sprache",
     directLine: "Direktbuchung",
-    openNow: "OFFEN",
     location: "Kambos, Chios",
     links: { rooms: "Zimmer", rates: "Preise", deals: "Angebote", chios: "Insel Chios", beaches: "Strände", villages: "Dörfer", museums: "Museen", activities: "Aktivitäten", contact: "Kontakt" },
     explore: { beaches: "Klares Wasser", villages: "Mastixdörfer", museums: "Kultur" },
@@ -104,7 +99,6 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     nav: "Navigazione principale",
     language: "Lingua",
     directLine: "Prenotazione diretta",
-    openNow: "APERTO",
     location: "Kambos, Chios",
     links: { rooms: "Camere", rates: "Prezzi", deals: "Offerte", chios: "Isola di Chios", beaches: "Spiagge", villages: "Villaggi", museums: "Musei", activities: "Cosa fare", contact: "Contatti" },
     explore: { beaches: "Acque cristalline", villages: "Villaggi del mastice", museums: "Cultura" },
@@ -116,7 +110,6 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     nav: "Navegación principal",
     language: "Idioma",
     directLine: "Reserva directa",
-    openNow: "ABIERTO",
     location: "Kambos, Quíos",
     links: { rooms: "Habitaciones", rates: "Precios", deals: "Ofertas", chios: "Isla de Chios", beaches: "Playas", villages: "Pueblos", museums: "Museos", activities: "Qué hacer", contact: "Contacto" },
     explore: { beaches: "Aguas cristalinas", villages: "Pueblos del mástique", museums: "Cultura" },
@@ -128,7 +121,6 @@ const copyByLanguage: Record<LanguageCode, HeaderCopy> = {
     nav: "Ana gezinme",
     language: "Dil",
     directLine: "Doğrudan rezervasyon",
-    openNow: "AÇIK",
     location: "Kambos, Sakız Adası",
     links: { rooms: "Odalar", rates: "Fiyatlar", deals: "Fırsatlar", chios: "Sakız Adası", beaches: "Plajlar", villages: "Köyler", museums: "Müzeler", activities: "Ne yapılır", contact: "İletişim" },
     explore: { beaches: "Berrak sular", villages: "Mastik köyleri", museums: "Kültür" },
@@ -191,42 +183,9 @@ function polishLanguageHref(pathname: string) {
   return polishEquivalentPaths[normalizePath(pathname)] || "/pl/";
 }
 
-function getAthensNow() {
-  const parts = new Intl.DateTimeFormat("en-GB", {
-    timeZone: "Europe/Athens",
-    hour: "2-digit",
-    minute: "2-digit",
-    day: "2-digit",
-    month: "short",
-    hour12: false,
-  }).formatToParts(new Date());
-  const value = (type: string) => parts.find((part) => part.type === type)?.value || "";
-  const hour = Number(value("hour"));
-  const minute = Number(value("minute"));
-  return { hour, minute, dateLabel: `${value("day")} ${value("month")}` };
-}
-
-function useReceptionStatus() {
-  const [status, setStatus] = useState(() => ({ isOpen: true, dateLabel: "" }));
-
-  useEffect(() => {
-    function updateStatus() {
-      const now = getAthensNow();
-      const minutes = now.hour * 60 + now.minute;
-      setStatus({ isOpen: minutes >= 6 * 60 && minutes < 24 * 60, dateLabel: now.dateLabel });
-    }
-
-    updateStatus();
-    const interval = window.setInterval(updateStatus, 60_000);
-    return () => window.clearInterval(interval);
-  }, []);
-
-  return status;
-}
-
-function LanguagePills({ currentLanguage, pathname, languageHrefs, onNavigate }: { currentLanguage: LanguageCode; pathname: string; languageHrefs: HeaderLinks["languages"]; onNavigate?: () => void }) {
+function LanguagePills({ currentLanguage, pathname, languageHrefs, onNavigate, fullWidth = false }: { currentLanguage: LanguageCode; pathname: string; languageHrefs: HeaderLinks["languages"]; onNavigate?: () => void; fullWidth?: boolean }) {
   return (
-    <nav aria-label={copyByLanguage[currentLanguage].language} className="flex min-w-0 flex-nowrap items-center gap-1 overflow-x-auto rounded-full border border-stone-900/10 bg-white/85 p-1 shadow-sm shadow-stone-900/5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <nav aria-label={copyByLanguage[currentLanguage].language} className={`${fullWidth ? "grid grid-cols-8" : "flex flex-nowrap overflow-x-auto"} min-w-0 items-center gap-1 rounded-full border border-stone-900/10 bg-white/85 p-1 shadow-sm shadow-stone-900/5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden`}>
       {languages.map((item) => {
         const active = item.code === currentLanguage;
         return (
@@ -238,7 +197,7 @@ function LanguagePills({ currentLanguage, pathname, languageHrefs, onNavigate }:
             aria-current={active ? "page" : undefined}
             title={item.label}
             onClick={onNavigate}
-            className={`flex h-11 min-w-11 shrink-0 items-center justify-center rounded-full px-2 text-[11px] font-black uppercase tracking-[0.08em] transition lg:h-8 lg:min-w-9 ${active ? "bg-[#fff4df] text-amber-900 shadow-sm ring-1 ring-amber-800/20" : "text-stone-700 hover:bg-amber-50 hover:text-amber-900"}`}
+            className={`flex h-11 ${fullWidth ? "min-w-0 px-0" : "min-w-11 px-2"} shrink-0 items-center justify-center rounded-full text-[11px] font-black uppercase tracking-[0.08em] transition lg:h-8 lg:min-w-9 xl:min-w-8 2xl:min-w-9 ${active ? "bg-[#fff4df] text-amber-900 shadow-sm ring-1 ring-amber-800/20" : "text-stone-700 hover:bg-amber-50 hover:text-amber-900"}`}
           >
             {item.code.toUpperCase()}
           </a>
@@ -250,7 +209,7 @@ function LanguagePills({ currentLanguage, pathname, languageHrefs, onNavigate }:
         lang="pl"
         title="Polski"
         onClick={onNavigate}
-        className="flex h-11 min-w-11 shrink-0 items-center justify-center rounded-full px-2 text-[11px] font-black uppercase tracking-[0.08em] text-stone-700 transition hover:bg-amber-50 hover:text-amber-900 lg:h-8 lg:min-w-9"
+        className={`flex h-11 ${fullWidth ? "min-w-0 px-0" : "min-w-11 px-2"} shrink-0 items-center justify-center rounded-full text-[11px] font-black uppercase tracking-[0.08em] text-stone-700 transition hover:bg-amber-50 hover:text-amber-900 lg:h-8 lg:min-w-9 xl:min-w-8 2xl:min-w-9`}
       >
         PL
       </a>
@@ -261,8 +220,6 @@ function LanguagePills({ currentLanguage, pathname, languageHrefs, onNavigate }:
 export function VoulamandisHeaderTailwind({ language = "en", pathname = "/", headerLinks }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const copy = copyByLanguage[language] || copyByLanguage.en;
-  const reception = useReceptionStatus();
-  const statusLabel = reception.isOpen ? copy.openNow : "06:00";
 
   const links: HeaderMenuLink[] = [
     { label: copy.links.rooms, href: headerLinks.nav.rooms, icon: "🛏️" },
@@ -316,20 +273,19 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/", hea
           </span>
           <span className="min-w-0 flex-1">
             <span className="flex min-w-0 items-center gap-2">
-              <strong className="block min-w-0 truncate text-[21px] font-black leading-none tracking-[-0.035em] text-stone-900 sm:text-[1.34rem] lg:text-[1.46rem]">Voulamandis House</strong>
-              <span className="hidden shrink-0 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-emerald-700 ring-1 ring-emerald-700/10">{statusLabel}<span className="ml-1.5 text-emerald-700/70">{reception.dateLabel}</span></span>
-            </span>
-            <span className="mt-1 block truncate text-[10px] font-black uppercase tracking-[0.12em] text-stone-500 sm:text-[11px]">
+              <strong className="block min-w-0 truncate text-[21px] font-black leading-none tracking-[-0.035em] text-stone-900 sm:text-[1.34rem] lg:text-[1.46rem] xl:text-[1.3rem] 2xl:text-[1.46rem]">Voulamandis House</strong>
+                          </span>
+            <span className="mt-1 block truncate text-[10px] font-black uppercase tracking-[0.06em] text-stone-500 sm:text-[11px] sm:tracking-[0.12em] xl:tracking-[0.08em] 2xl:tracking-[0.12em]">
               <span>{copy.location}</span>
-              <span className="px-1.5 text-amber-800">·</span>
-              <span className="text-amber-800">{copy.directLine}</span>
+              <span className="px-1.5 text-amber-800 max-sm:hidden">·</span>
+              <span className="text-amber-800 max-sm:hidden">{copy.directLine}</span>
             </span>
           </span>
         </a>
 
         <nav aria-label={copy.nav} className="hidden max-w-[650px] flex-[1_1_auto] items-center justify-center gap-0.5 rounded-full border border-stone-900/10 bg-white/66 p-1 shadow-sm shadow-stone-900/5 xl:flex">
           {links.map((link) => (
-            <a key={link.href} href={link.href} className="rounded-full px-2.5 py-2 text-center text-[13.5px] font-black text-stone-700 transition hover:bg-amber-50 hover:text-amber-900 2xl:px-3">
+            <a key={link.href} href={link.href} className="whitespace-nowrap rounded-full px-2 py-2 text-center text-[13px] font-black text-stone-700 2xl:px-3 2xl:text-[13.5px] transition hover:bg-amber-50 hover:text-amber-900">
               {link.label}
             </a>
           ))}
@@ -342,7 +298,7 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/", hea
           </a>
         </div>
 
-        <button type="button" aria-label={isOpen ? copy.close : copy.menu} aria-expanded={isOpen} onClick={() => setIsOpen((value) => !value)} className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-stone-900/10 bg-white text-stone-900 shadow-sm shadow-stone-900/5 lg:hidden">
+        <button type="button" aria-label={isOpen ? copy.close : copy.menu} aria-expanded={isOpen} onClick={() => setIsOpen((value) => !value)} className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-stone-900/10 bg-white text-stone-900 shadow-sm shadow-stone-900/5 xl:hidden">
           <span className="sr-only">{copy.menu}</span>
           <span className="grid gap-1.5">
             <span className={`block h-0.5 w-5 rounded-full bg-current transition ${isOpen ? "translate-y-2 rotate-45" : ""}`} />
@@ -352,11 +308,11 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/", hea
         </button>
       </div>
 
-      <div className={`fixed inset-0 top-[72px] z-50 bg-stone-950/15 backdrop-blur-[1px] transition lg:hidden ${isOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}>
+      <div className={`fixed inset-0 top-[72px] z-50 bg-stone-950/15 backdrop-blur-[1px] [transition-property:opacity,visibility] duration-200 lg:top-[84px] xl:hidden ${isOpen ? "visible pointer-events-auto opacity-100" : "invisible pointer-events-none opacity-0"}`}>
         <button type="button" aria-label={copy.close} onClick={closeMenu} className="absolute inset-0 h-full w-full" />
-        <div className={`absolute right-0 top-0 max-h-[calc(100dvh-72px)] w-[min(92vw,420px)] overflow-y-auto overscroll-contain rounded-l-[1.5rem] bg-[#fffaf3] p-3 pb-[calc(1.25rem+env(safe-area-inset-bottom))] shadow-2xl shadow-stone-950/18 transition duration-300 ${isOpen ? "translate-x-0" : "translate-x-full"}`}>
-          <div className="mb-2"><LanguagePills currentLanguage={language} pathname={pathname} languageHrefs={headerLinks.languages} onNavigate={closeMenu} /></div>
-          <a href={headerLinks.nav.rates} onClick={closeMenu} className="mb-2 flex min-h-[44px] items-center justify-center rounded-full bg-gradient-to-br from-[#78624d] to-[#735f45] px-5 text-sm font-black uppercase tracking-[0.1em] !text-white shadow-lg shadow-stone-900/15 transition hover:from-[#6b5847] hover:to-[#5f4e3f]">
+        <div className={`absolute right-0 top-0 max-h-[calc(100dvh-72px)] w-[min(92vw,420px)] lg:max-h-[calc(100dvh-84px)] overflow-y-auto overscroll-contain rounded-l-[1.5rem] bg-[#fffaf3] p-3 pb-[calc(1.25rem+env(safe-area-inset-bottom))] shadow-2xl shadow-stone-950/18 transition duration-300 ${isOpen ? "translate-x-0" : "translate-x-full"}`}>
+          <div className="mb-2 lg:hidden"><LanguagePills currentLanguage={language} pathname={pathname} languageHrefs={headerLinks.languages} onNavigate={closeMenu} fullWidth /></div>
+          <a href={headerLinks.nav.rates} onClick={closeMenu} className="mb-2 flex min-h-[44px] lg:hidden items-center justify-center rounded-full bg-gradient-to-br from-[#78624d] to-[#735f45] px-5 text-sm font-black uppercase tracking-[0.1em] !text-white shadow-lg shadow-stone-900/15 transition hover:from-[#6b5847] hover:to-[#5f4e3f]">
             {copy.bookNow}
           </a>
           <section className="rounded-[1.15rem] border border-stone-900/10 bg-white p-2.5 shadow-sm shadow-stone-900/5">
@@ -367,7 +323,7 @@ export function VoulamandisHeaderTailwind({ language = "en", pathname = "/", hea
                   <span className="text-[19px]" aria-hidden="true">{link.icon}</span>
                   <span className="min-w-0">
                     <strong className="block truncate text-[13px] font-black leading-tight">{link.label}</strong>
-                    {link.text ? <small className="mt-0.5 block truncate text-[9px] font-black uppercase tracking-[0.1em] text-amber-800/70">{link.text}</small> : null}
+                    {link.text ? <small className="mt-0.5 block text-[11px] font-semibold leading-tight text-amber-800/80">{link.text}</small> : null}
                   </span>
                 </a>
               ))}

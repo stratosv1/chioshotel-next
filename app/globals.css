@@ -4,6 +4,14 @@
 @source not "../app/mixalis";
 @source not "../components/mixalis";
 
+/* Reserve room under the footer only on pages that show the mobile sticky
+ * call/WhatsApp bar (homepage), instead of leaving a blank strip everywhere. */
+@media (max-width: 47.999rem) {
+  body:has([data-mobile-sticky-contact]) .vh-site-footer {
+    padding-bottom: calc(6rem + env(safe-area-inset-bottom));
+  }
+}
+
 .vh-public-site :where(a, button, input, select, summary, textarea):focus-visible {
   outline: 3px solid #b7791f;
   outline-offset: 3px;
