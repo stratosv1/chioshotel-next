@@ -1,6 +1,10 @@
 import Image from "next/image";
 import { HomeReviews } from "@/components/home/HomeReviews";
 import { LazyPolishChiosHotelsLiveSearch } from "@/components/home/LazyPolishChiosHotelsLiveSearch";
+import { RoomCard } from "@/components/rooms/RoomCard";
+import type { RoomCategoryCard } from "@/content/rooms";
+import { roomsCategoryPl } from "@/content/rooms-pl";
+import { getCategoryFromPrices, type RoomCategoryId } from "@/lib/booking-core/category-from-prices";
 
 const heroImage = "/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp";
 
@@ -21,11 +25,14 @@ const rooms = [
   { title: "Apartamenty rodzinne", href: "/pl/apartamenty-na-chios/", image: "/images/rooms/chios-apartments-voulamandis.webp", badge: "Do 4 gości", text: "Więcej przestrzeni dla rodzin: osobna sypialnia, część dzienna i pełna kuchnia w apartamentach 40–45 m².", meta: ["Kuchnia", "Salon", "Rodzina"] },
 ];
 
+const roomCategoryOrder: RoomCategoryId[] = ["economy-double", "ground-floor", "first-floor", "family-apartments"];
+
 const amenities = [
   ["📶", "Wi-Fi"], ["❄️", "Klimatyzacja"], ["🔥", "Ogrzewanie"], ["📺", "TV"], ["🧊", "Lodówka"], ["☕", "Kawa i herbata"], ["🧼", "Codzienne sprzątanie"], ["🌿", "Ogród"], ["🚗", "Parking"], ["🥐", "Śniadanie na życzenie"], ["🏡", "Kameralny pobyt"], ["📍", "Kambos Chios"],
 ];
 
-export function PolishHomePageTailwind() {
+export async function PolishHomePageTailwind() {
+  const fromPrices = await getCategoryFromPrices();
   return (
     <>
       <main className="overflow-x-hidden bg-[#fffaf3] text-stone-900">
@@ -54,7 +61,12 @@ export function PolishHomePageTailwind() {
         </div></section>
 
         <section className="px-4 py-9 md:px-8 md:py-16"><div className="mx-auto max-w-7xl"><div className="grid gap-4 lg:grid-cols-[0.95fr_1.05fr] lg:items-end"><article className="rounded-[1.5rem] bg-[#2f241d] p-5 text-white shadow-lg shadow-stone-900/10 md:rounded-[2rem] md:p-9"><p className="mb-3 text-xs font-black uppercase tracking-[0.20em] text-amber-200">Pokoje i noclegi na Chios</p><h2 className="tracking-[-0.02em] text-[2rem] font-extrabold leading-tight md:text-5xl"><span className="mr-2 before:content-[attr(data-icon)]" aria-hidden="true" data-icon="🛏️" />Wybierz odpowiedni pokój lub apartament</h2><p className="mt-4 text-sm leading-7 text-white/80 md:text-lg md:leading-8">Porównaj dostęp, piętro, przestrzeń i wyposażenie. Każda karta prowadzi do szczegółów właściwej kategorii.</p><div className="mt-5 flex flex-wrap gap-3"><a href="/pl/pokoje-na-chios/" className="inline-flex min-h-12 items-center justify-center rounded-full bg-amber-700 px-6 text-sm font-black uppercase tracking-[0.08em] text-white shadow-lg">Wszystkie pokoje</a><a href="/pl/noclegi-chios/" className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/25 bg-white/10 px-6 text-sm font-black uppercase tracking-[0.08em] text-white">Noclegi na Chios</a></div></article><article className="hidden rounded-[2rem] bg-white p-7 shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 lg:block"><p className="text-xs font-black uppercase tracking-[0.20em] text-amber-700">Od par po rodziny</p><h3 className="mt-3 tracking-[-0.02em] text-3xl font-extrabold text-stone-900">Od ekonomicznego pokoju po rodzinny apartament</h3><p className="mt-4 leading-8 text-stone-600">Wybierz kategorię według liczby gości, piętra i tego, czy potrzebujesz kuchni lub większej przestrzeni.</p></article></div>
-          <div className="mt-5 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 xl:grid-cols-4">{rooms.map((room) => <a key={room.title} href={room.href} className="group w-[84vw] max-w-[380px] flex-none snap-start overflow-hidden rounded-[1.5rem] bg-white shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 transition hover:shadow-xl md:w-auto md:max-w-none md:rounded-[2rem]"><div className="relative aspect-[4/3] overflow-hidden"><Image src={room.image} alt={room.title} fill sizes="(max-width: 768px) 84vw, (max-width: 1280px) 50vw, 25vw" className="object-cover transition duration-500 group-hover:scale-105" loading="lazy" /><div className="absolute left-3 top-3 rounded-full bg-emerald-700 px-3 py-1.5 text-xs font-black text-white">{room.badge}</div><div className="absolute right-3 top-3 rounded-full bg-white/95 px-3 py-1.5 text-xs font-black text-emerald-700">Direct</div></div><div className="p-5"><h3 className="tracking-[-0.02em] text-2xl font-extrabold leading-tight text-amber-800">{room.title}</h3><p className="mt-3 text-sm leading-7 text-stone-600">{room.text}</p><div className="mt-4 flex flex-wrap gap-2">{room.meta.map((item) => <span key={item} className="rounded-full bg-amber-50 px-3 py-1.5 text-[11px] font-bold text-amber-800">{item}</span>)}</div><span className="mt-5 inline-flex rounded-full border border-amber-800/20 px-4 py-2 text-xs font-black uppercase text-amber-800">Zobacz szczegóły</span></div></a>)}</div>
+          <div className="mt-5 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 xl:grid-cols-4">{rooms.map((room, index) => {
+            const plCard = roomsCategoryPl.cards[index];
+            const categoryId = roomCategoryOrder[index];
+            const card: RoomCategoryCard = { ...plCard, id: `home-${categoryId}`, title: room.title, description: room.text, href: room.href, image: room.image };
+            return <RoomCard key={room.title} card={card} locale="pl" categoryId={categoryId} anchorId={null} price={fromPrices?.[categoryId]} priority={false} className="w-[84vw] max-w-[360px] flex-none snap-start md:w-auto md:max-w-none" />;
+          })}</div>
         </div></section>
 
         <LazyPolishChiosHotelsLiveSearch />
