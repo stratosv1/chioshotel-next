@@ -40,21 +40,25 @@ export const metadata: Metadata = {
   },
   description:
     "Quiet rooms and apartments in Kampos, Chios. Stay at Voulamandis House near Chios Town, the airport, beaches, villages and local attractions.",
+  // Favicon set v2 (2026-10-11): heart fills the tile, no baked-in white shadow,
+  // simplified 16/32 px. New folder name because /favicon/* is cached immutably.
   icons: {
     icon: [
-      { url: "/favicon/vh-heart-48x48.png", sizes: "48x48", type: "image/png" },
-      { url: "/favicon/vh-heart-192x192.png", sizes: "192x192", type: "image/png" },
-      { url: "/favicon/favicon.ico" },
+      { url: "/favicon/v2/favicon.ico", sizes: "16x16 32x32 48x48" },
+      { url: "/favicon/v2/icon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon/v2/icon-48.png", sizes: "48x48", type: "image/png" },
+      { url: "/favicon/v2/icon-96.png", sizes: "96x96", type: "image/png" },
+      { url: "/favicon/v2/icon-192.png", sizes: "192x192", type: "image/png" },
     ],
     apple: [
       {
-        url: "/favicon/apple-touch-icon.png",
+        url: "/favicon/v2/apple-touch-icon.png",
         sizes: "180x180",
         type: "image/png",
       },
     ],
   },
-  manifest: "/favicon/site.webmanifest",
+  manifest: "/favicon/v2/site.webmanifest",
 };
 
 export const viewport: Viewport = {

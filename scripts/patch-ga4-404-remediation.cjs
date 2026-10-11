@@ -49,9 +49,9 @@ const EXACT_REDIRECTS = {
   "/el/paralies-xios/paralia-karfas/null": "/el/paralies-xios/paralia-karfas/",
   "/images/family/ChatGPT-Image-Feb-13-2026-08_32_22-PM.png":
     "/images/family/ChatGPT-Image-Feb-13-2026-08_32_22-PM.webp",
-  "/favicon.ico": "/favicon/favicon.ico",
-  "/apple-touch-icon.png": "/favicon/apple-touch-icon.png",
-  "/apple-touch-icon-precomposed.png": "/favicon/apple-touch-icon.png",
+  "/favicon.ico": "/favicon/v2/favicon.ico",
+  "/apple-touch-icon.png": "/favicon/v2/apple-touch-icon.png",
+  "/apple-touch-icon-precomposed.png": "/favicon/v2/apple-touch-icon.png",
   "/sitemap_index.xml": "/sitemap.xml",
   "/page-sitemap.xml": "/sitemap.xml",
   "/category-sitemap.xml": "/sitemap.xml",

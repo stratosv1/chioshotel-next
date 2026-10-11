@@ -1,0 +1,17 @@
+{
+  "id": "/",
+  "name": "Voulamandis House",
+  "short_name": "Voulamandis",
+  "description": "Rooms and apartments in Kambos, Chios",
+  "lang": "en",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#a4907c",
+  "background_color": "#fff8eb",
+  "icons": [
+    { "src": "/favicon/v2/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/favicon/v2/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/favicon/v2/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
