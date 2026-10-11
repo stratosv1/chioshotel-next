@@ -1,6 +1,10 @@
 import Image, { getImageProps } from "next/image";
 import { preload } from "react-dom";
 import type { HomePageData } from "@/content/home";
+import type { RoomCategoryCard, RoomsCategoryPageData } from "@/content/rooms";
+import { roomsCategoryDe, roomsCategoryEl, roomsCategoryEn, roomsCategoryEs, roomsCategoryFr, roomsCategoryIt, roomsCategoryTr } from "@/content/rooms";
+import { RoomCard } from "@/components/rooms/RoomCard";
+import { getCategoryFromPrices, type RoomCategoryId } from "@/lib/booking-core/category-from-prices";
 import { HomeReviews } from "@/components/home/HomeReviews";
 import { HomeGallery } from "@/components/home/HomeGallery";
 import { LazyLastMinuteDeals } from "@/components/home/LazyLastMinuteDeals";
@@ -109,6 +113,23 @@ function getLocale(canonicalPath: string): LocaleCode {
   return "en";
 }
 
+const homeRoomCategory: Record<string, RoomCategoryId> = {
+  "economy-double": "economy-double",
+  "ground-floor-double-triple": "ground-floor",
+  "upper-floor-double-triple": "first-floor",
+  "family-apartment": "family-apartments",
+};
+
+const roomsByLocale: Record<LocaleCode, RoomsCategoryPageData> = {
+  en: roomsCategoryEn,
+  el: roomsCategoryEl,
+  fr: roomsCategoryFr,
+  de: roomsCategoryDe,
+  it: roomsCategoryIt,
+  es: roomsCategoryEs,
+  tr: roomsCategoryTr,
+};
+
 const kambosExtraCopy: Record<LocaleCode, string> = {
   en: "Kambos is one of the most atmospheric areas of Chios: stone walls, citrus gardens, old mansions and quiet lanes create a setting that feels peaceful, local and close to the island’s real character. Staying here means you are only a short drive from Chios town, the airport and the beaches, but you return to a calmer place at the end of the day.",
   el: "Ο Κάμπος είναι μία από τις πιο ατμοσφαιρικές περιοχές της Χίου: πέτρινοι μαντρότοιχοι, περιβόλια με εσπεριδοειδή, παλιά αρχοντικά και ήσυχοι δρόμοι δημιουργούν ένα περιβάλλον γαλήνιο, τοπικό και αυθεντικό. Μένοντας εδώ βρίσκεστε κοντά στην πόλη, στο αεροδρόμιο και στις παραλίες, αλλά επιστρέφετε σε ένα πιο ήρεμο σημείο στο τέλος της ημέρας.",
@@ -186,7 +207,10 @@ function homeNewsletterLocale(path: string): NewsletterLocale {
   return (["el", "fr", "de", "it", "es", "tr"] as const).find((lang) => lang === segment) ?? "en";
 }
 
-function RoomsSection({ data }: { data: HomePageData }) {
+async function RoomsSection({ data }: { data: HomePageData }) {
+  const locale = getLocale(data.seo.canonicalPath);
+  const fromPrices = await getCategoryFromPrices();
+
   return (
     <section className="px-4 py-8 [contain-intrinsic-size:auto_900px] [content-visibility:auto] md:px-8 md:py-11">
       <div className="mx-auto max-w-7xl">
@@ -210,23 +234,32 @@ function RoomsSection({ data }: { data: HomePageData }) {
           </div>
         </div>
         <div className="mt-5 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 xl:grid-cols-4">
-          {data.roomsPreview.rooms.map((room) => {
-            const imageSrc = homeRoomImages[room.imageClass] || data.hero.image;
+          {data.roomsPreview.rooms.map((room, index) => {
+            const categoryId = homeRoomCategory[room.id] ?? null;
+            const categoryCard = categoryId ? roomsByLocale[locale].cards.find((card) => card.id === categoryId) : undefined;
+            const card: RoomCategoryCard = {
+              id: room.id,
+              title: room.title,
+              subtitle: categoryCard?.subtitle ?? "",
+              description: room.description,
+              href: room.href,
+              image: homeRoomImages[room.imageClass] || data.hero.image,
+              imageAlt: categoryCard?.imageAlt ?? room.title,
+              badge: categoryCard?.badge ?? room.liveBadge,
+              ctaLabel: room.cta,
+              meta: categoryCard?.meta ?? [],
+            };
             return (
-              <a key={room.id} href={room.href} className="group flex w-[84vw] flex-col max-w-[380px] flex-none snap-start overflow-hidden rounded-[1.5rem] bg-white shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 transition hover:shadow-xl md:w-auto md:max-w-none md:rounded-[2rem]">
-                <div className="relative aspect-[4/3] overflow-hidden">
-                  <Image src={imageSrc} alt={room.title} fill sizes="(max-width: 768px) 84vw, (max-width: 1280px) 50vw, 25vw" className="object-cover transition duration-500 group-hover:scale-105" loading="lazy" />
-                  <div className="absolute left-3 top-3 rounded-full bg-emerald-700 px-3 py-1.5 text-xs font-black text-white">{room.liveBadge}</div>
-                  <div className="absolute right-3 top-3 rounded-full bg-white/95 px-3 py-1.5 text-xs font-black text-emerald-700">{room.directBadge}</div>
-                  <div className="absolute bottom-3 left-3 rounded-full bg-white/95 px-3 py-1.5 text-xs font-black text-stone-700">{room.bedBadge}</div>
-                </div>
-                <div className="flex flex-1 flex-col p-5">
-                  <h3 className="break-words tracking-[-0.02em] text-2xl font-extrabold leading-tight text-amber-800">{room.title}</h3>
-                  <p className="mt-3 text-sm leading-7 text-stone-600">{room.description}</p>
-                  <div className="mt-4 flex flex-wrap gap-2">{[...room.meta, ...room.amenities].map((item) => (<span key={item} className="rounded-full bg-amber-50 px-3 py-1.5 text-[11px] font-bold text-amber-800">{item}</span>))}</div>
-                  <div className="mt-auto pt-5"><span className="inline-flex rounded-full border border-amber-800/20 px-4 py-2 text-xs font-black uppercase text-amber-800">{room.cta}</span></div>
-                </div>
-              </a>
+              <RoomCard
+                key={room.id}
+                card={card}
+                locale={locale}
+                categoryId={categoryId}
+                anchorId={null}
+                price={categoryId ? fromPrices?.[categoryId] : null}
+                priority={false}
+                className="w-[84vw] max-w-[360px] flex-none snap-start md:w-auto md:max-w-none"
+              />
             );
           })}
         </div>

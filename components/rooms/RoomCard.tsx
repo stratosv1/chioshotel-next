@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { RoomCategoryCard } from "@/content/rooms";
+import type { RoomCategoryId } from "@/lib/booking-core/category-from-prices";
 import {
   amenityLabels,
   bedLabels,
@@ -17,6 +18,11 @@ type RoomCardProps = {
   priority?: boolean;
   /** Full, descriptive CTA text for screen readers (visible label stays short). */
   ctaLabel?: string;
+  /** Category override when card.id is not a category id (e.g. homepage data). */
+  categoryId?: RoomCategoryId | null;
+  /** DOM id for in-page anchors; pass null to omit. Defaults to room-<card.id>. */
+  anchorId?: string | null;
+  className?: string;
 };
 
 const iconProps = {
@@ -105,8 +111,8 @@ function AmenityIcon({ amenity }: { amenity: AmenityKey }) {
   }
 }
 
-export function RoomCard({ card, locale, price, priority, ctaLabel }: RoomCardProps) {
-  const categoryId = toRoomCategoryId(card.id);
+export function RoomCard({ card, locale, price, priority, ctaLabel, categoryId: categoryOverride, anchorId, className = "" }: RoomCardProps) {
+  const categoryId = categoryOverride ?? toRoomCategoryId(card.id);
   const facts = categoryId ? roomCategoryFacts[categoryId] : null;
   const bed = categoryId ? bedLabels[categoryId][locale] : null;
   const ui = roomCardUi[locale];
@@ -115,8 +121,8 @@ export function RoomCard({ card, locale, price, priority, ctaLabel }: RoomCardPr
   return (
     <a
       href={card.href}
-      id={`room-${card.id}`}
-      className="group flex scroll-mt-28 flex-col rounded-3xl border border-[#eadfce] bg-white p-2.5 shadow-[0_1px_2px_rgba(47,38,31,0.06)] transition duration-200 hover:shadow-[0_10px_30px_rgba(47,38,31,0.12)] focus:outline-none focus-visible:ring-4 focus-visible:ring-amber-700/25 target:ring-4 target:ring-amber-600/50"
+      id={anchorId === undefined ? `room-${card.id}` : anchorId ?? undefined}
+      className={`group flex scroll-mt-28 flex-col rounded-3xl border border-[#eadfce] bg-white p-2.5 shadow-[0_1px_2px_rgba(47,38,31,0.06)] transition duration-200 hover:shadow-[0_10px_30px_rgba(47,38,31,0.12)] focus:outline-none focus-visible:ring-4 focus-visible:ring-amber-700/25 target:ring-4 target:ring-amber-600/50 ${className}`}
     >
       <div className="relative h-[196px] overflow-hidden rounded-[18px] bg-[#e8dccb] sm:h-[210px]">
         <Image

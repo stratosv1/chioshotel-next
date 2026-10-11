@@ -431,16 +431,16 @@ export const roomsCategoryEl: RoomsCategoryPageData = {
     {
       ...roomsCategoryEn.cards[0],
       title: "Οικονομικό Δίκλινο",
-      subtitle: "Value επιλογή για 2 άτομα",
+      subtitle: "Οικονομική επιλογή για 2 άτομα",
       description:
-        "Η πιο value επιλογή για 2 άτομα. Ανακαινισμένα δωμάτια 16 m² με σύγχρονες παροχές και αυθεντική αίσθηση Κάμπου.",
+        "Η πιο οικονομική επιλογή για 2 άτομα. Ανακαινισμένα δωμάτια 16 m² με σύγχρονες παροχές και αυθεντική αίσθηση Κάμπου.",
       href: "/el/domatia-xios/oikonomiko-diklino-domatio/",
       image:
         "/images/rooms/DSC07803-1.webp",
       imageAlt: "Οικονομικό δίκλινο δωμάτιο στη Χίο στο Voulamandis House",
-      badge: "Value επιλογή",
+      badge: "Οικονομική επιλογή",
       ctaLabel: "Εξερεύνηση Δωματίου",
-      meta: ["2 άτομα", "16 m²", "Economy"],
+      meta: ["2 άτομα", "16 m²", "Οικονομικό"],
     },
     {
       ...roomsCategoryEn.cards[1],
