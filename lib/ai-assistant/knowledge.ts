@@ -99,8 +99,8 @@ export const SALES_KNOWLEDGE: KnowledgeItem[] = [
     ],
     tags: ["ground floor", "no stairs", "room 5", "room 6", "room 7", "garden access", "three guests"],
     links: {
-      en: "/chios-rooms/standard-double-room/",
-      el: "/el/domatia-xios/diklina-triklina-domatia/",
+      en: "/chios-rooms/ground-floor-rooms/",
+      el: "/el/domatia-xios/isogeia-domatia/",
     },
     attributes: { noStairs: true, groundFloor: true, familyFriendly: true },
   },

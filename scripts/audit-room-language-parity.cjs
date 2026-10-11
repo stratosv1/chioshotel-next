@@ -1,7 +1,7 @@
 ﻿const fs = require("fs");
 
 const languages = ["en", "el", "fr", "de", "it", "es", "tr"];
-const expectedItems = ["rooms-index", "economy-double", "standard-double", "family-apartment"];
+const expectedItems = ["rooms-index", "economy-double", "standard-double", "ground-floor", "family-apartment"];
 
 const routeMap = fs.readFileSync("lib/url-map.ts", "utf8");
 const roomDetails = fs.readFileSync("content/room-details.ts", "utf8");

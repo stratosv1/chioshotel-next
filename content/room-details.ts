@@ -4,6 +4,8 @@ export type IndividualRoomData = {
   type: string;
   location: string;
   maxGuests: number;
+  /** Optional approximate floor area in m², published as schema.org floorSize. */
+  sizeM2?: number;
   description: string;
   badges: string[];
   beds: string[];
@@ -94,6 +96,27 @@ export type RoomDetailData = {
     question: string;
     answer: string;
   }[];
+  /** Optional: side-by-side facts for the rooms in this category. */
+  comparison?: {
+    kicker: string;
+    title: string;
+    note?: string;
+    columns: string[];
+    rows: { label: string; values: string[] }[];
+  };
+  /** Optional: outdoor spaces right outside the room (photos + text). */
+  outdoor?: {
+    kicker: string;
+    title: string;
+    paragraphs: string[];
+    images: { src: string; alt: string }[];
+  };
+  /** Optional: links to the other room categories. */
+  related?: {
+    kicker: string;
+    title: string;
+    links: { href: string; title: string; text: string }[];
+  };
 };
 
 /* ==========================================================================

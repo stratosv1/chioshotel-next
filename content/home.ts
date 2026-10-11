@@ -467,7 +467,7 @@ export const homePageEn: HomePageData = {
       {
         id: "ground-floor-double-triple",
         title: "Ground Floor Double & Triple",
-        href: "/chios-rooms/standard-double-room/",
+        href: "/chios-rooms/ground-floor-rooms/",
         imageClass: "vh-room-image--ground",
         liveBadge: "LIVE",
         directBadge: "🎁 -10% Discount",
@@ -990,7 +990,7 @@ export const homePageEl: HomePageData = {
       {
         ...homePageEn.roomsPreview.rooms[1],
         title: "Δίκλινα & Τρίκλινα Ισογείου",
-        href: "/el/domatia-xios/diklina-triklina-domatia/",
+        href: "/el/domatia-xios/isogeia-domatia/",
         directBadge: "🎁 -10% Έκπτωση",
         bedBadge: "🛏️ Διπλό + extra",
         description:
@@ -1448,7 +1448,7 @@ export const homePageFr: HomePageData = {
         ...homePageEn.roomsPreview.rooms[1],
         title: "Chambres rez-de-chaussée",
         liveBadge: "EN DIRECT",
-        href: "/fr/chambres-a-chios/chambres-doubles-standard/",
+        href: "/fr/chambres-a-chios/chambres-rez-de-chaussee/",
         directBadge: "🎁 -10% Réduction",
         bedBadge: "🛏️ Double + lit supplémentaire",
         description:
@@ -1892,7 +1892,7 @@ export const homePageDe: HomePageData = {
       {
         ...homePageEn.roomsPreview.rooms[1],
         title: "Zimmer im Erdgeschoss",
-        href: "/de/zimmer-chios/standard-doppelzimmer-auf-chios/",
+        href: "/de/zimmer-chios/erdgeschoss-zimmer/",
         directBadge: "🎁 -10% Rabatt",
         bedBadge: "🛏️ Doppelbett + Zusatzbett",
         description:
@@ -2334,7 +2334,7 @@ export const homePageIt: HomePageData = {
       {
         ...homePageEn.roomsPreview.rooms[1],
         title: "Camere al piano terra",
-        href: "/it/stanze-a-chios/camere-doppie-standard-chios/",
+        href: "/it/stanze-a-chios/camere-piano-terra/",
         directBadge: "🎁 -10% Sconto",
         liveBadge: "IN DIRETTA",
         bedBadge: "🛏️ Matrimoniale + letto extra",
@@ -2780,7 +2780,7 @@ export const homePageEs: HomePageData = {
       {
         ...homePageEn.roomsPreview.rooms[1],
         title: "Habitaciones en planta baja",
-        href: "/es/habitaciones-en-chios/habitaciones-dobles-estandar/",
+        href: "/es/habitaciones-en-chios/habitaciones-planta-baja/",
         directBadge: "🎁 -10% Descuento",
         liveBadge: "EN DIRECTO",
         bedBadge: "🛏️ Doble + cama extra",
@@ -3225,7 +3225,7 @@ export const homePageTr: HomePageData = {
       {
         ...homePageEn.roomsPreview.rooms[1],
         title: "Zemin kat odaları",
-        href: "/tr/chios-odalari/standart-cift-kisilik-odalar/",
+        href: "/tr/chios-odalari/zemin-kat-odalari/",
         directBadge: "🎁 -10% İndirim",
         bedBadge: "🛏️ Çift kişilik + ek yatak",
         description:

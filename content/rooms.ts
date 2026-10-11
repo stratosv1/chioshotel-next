@@ -126,7 +126,7 @@ export const roomsCategoryEn: RoomsCategoryPageData = {
       subtitle: "Double & triple rooms",
       description:
         "Double and triple rooms with direct access to the courtyard and garden. Ideal if you prefer easy access and a calm outdoor vibe.",
-      href: "/chios-rooms/standard-double-room/",
+      href: "/chios-rooms/ground-floor-rooms/",
       image:
         "/images/rooms/double-triple-room.jpg",
       imageAlt: "Ground floor double and triple rooms in Chios with garden access",
@@ -448,7 +448,7 @@ export const roomsCategoryEl: RoomsCategoryPageData = {
       subtitle: "Δίκλινα & τρίκλινα δωμάτια",
       description:
         "Δίκλινα και τρίκλινα δωμάτια με άμεση πρόσβαση στον κήπο. Ιδανικά για όσους αναζητούν δροσιά και την ηρεμία της φύσης.",
-      href: "/el/domatia-xios/diklina-triklina-domatia/",
+      href: "/el/domatia-xios/isogeia-domatia/",
       image:
         "/images/rooms/double-triple-room.jpg",
       imageAlt: "Ισόγεια δίκλινα και τρίκλινα δωμάτια στη Χίο",
@@ -560,7 +560,7 @@ export const roomsCategoryFr: RoomsCategoryPageData = {
       subtitle: "Chambres doubles et triples",
       description:
         "Chambres doubles et triples avec accès direct à la cour et au jardin. Idéal pour un accès facile et une ambiance calme en plein air.",
-      href: "/fr/chambres-a-chios/chambres-doubles-standard/",
+      href: "/fr/chambres-a-chios/chambres-rez-de-chaussee/",
       image:
         "/images/rooms/double-triple-room.jpg",
       imageAlt:
@@ -687,7 +687,7 @@ export const roomsCategoryDe: RoomsCategoryPageData = {
       subtitle: "Doppel- und Dreibettzimmer",
       description:
         "Zimmer mit direktem Zugang zum Innenhof und zum Garten. Ideal für Gäste, die eine ruhige Atmosphäre und einfachen Zugang ohne Treppen bevorzugen.",
-      href: "/de/zimmer-chios/standard-doppelzimmer-auf-chios/",
+      href: "/de/zimmer-chios/erdgeschoss-zimmer/",
       image:
         "/images/rooms/double-triple-room.jpg",
       imageAlt:
@@ -814,7 +814,7 @@ export const roomsCategoryIt: RoomsCategoryPageData = {
       subtitle: "Camere doppie e triple",
       description:
         "Camere doppie e triple con accesso diretto al cortile e al giardino. Ideali se desideri comodità, accesso facile e un’atmosfera esterna rilassante.",
-      href: "/it/stanze-a-chios/camere-doppie-standard-chios/",
+      href: "/it/stanze-a-chios/camere-piano-terra/",
       image:
         "/images/rooms/double-triple-room.jpg",
       imageAlt:
@@ -940,7 +940,7 @@ export const roomsCategoryEs: RoomsCategoryPageData = {
       subtitle: "Habitaciones dobles y triples",
       description:
         "Habitaciones dobles y triples con acceso directo al patio y al jardín. Ideales si prefieres un acceso fácil y un ambiente exterior tranquilo.",
-      href: "/es/habitaciones-en-chios/habitaciones-dobles-estandar/",
+      href: "/es/habitaciones-en-chios/habitaciones-planta-baja/",
       image:
         "/images/rooms/double-triple-room.jpg",
       imageAlt:
@@ -1066,7 +1066,7 @@ export const roomsCategoryTr: RoomsCategoryPageData = {
       subtitle: "Çift ve üç kişilik odalar",
       description:
         "Avluya ve bahçeye doğrudan erişimi olan çift ve üç kişilik odalar. Kolay erişim ve sakin bir açık hava atmosferi tercih edenler için ideal.",
-      href: "/tr/chios-odalari/standart-cift-kisilik-odalar/",
+      href: "/tr/chios-odalari/zemin-kat-odalari/",
       image:
         "/images/rooms/double-triple-room.jpg",
       imageAlt:

@@ -81,7 +81,7 @@ const ROOM_PRESENTATION: Record<number, RoomPresentation> = {
     title: "Ground-floor room 5",
     subtitle: "Easy-access double / triple room",
     image: "/images/rooms/voulamandis-house-rooms.webp",
-    href: "/chios-rooms/standard-double-room/",
+    href: "/chios-rooms/ground-floor-rooms/",
     features: ["Ground floor", "No stairs", "Up to 3 guests"],
   },
   6: {
@@ -95,7 +95,7 @@ const ROOM_PRESENTATION: Record<number, RoomPresentation> = {
     title: "Ground-floor room 7",
     subtitle: "Garden-access double / triple room",
     image: "/images/rooms/double-triple-room.jpg",
-    href: "/chios-rooms/standard-double-room/",
+    href: "/chios-rooms/ground-floor-rooms/",
     features: ["Ground floor", "Garden access", "Up to 3 guests"],
   },
   8: {

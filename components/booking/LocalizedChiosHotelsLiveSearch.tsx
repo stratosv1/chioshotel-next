@@ -346,14 +346,14 @@ const INTL_LOCALE: Record<ChiosHotelsGuideLocale, string> = {
   tr: "tr-TR",
 };
 
-const ROUTES: Record<ChiosHotelsGuideLocale, { rooms: string; standard: string; economy: string; family: string; rates: string; ai: string }> = {
-  en: { rooms: "/chios-rooms/", standard: "/chios-rooms/standard-double-room/", economy: "/chios-rooms/economy-double-rooms/", family: "/chios-rooms/family-chios-apartments/", rates: "/chios-hotels-rates/", ai: "/ai-assistant/" },
-  el: { rooms: "/el/domatia-xios/", standard: "/el/domatia-xios/diklina-triklina-domatia/", economy: "/el/domatia-xios/oikonomiko-diklino-domatio/", family: "/el/domatia-xios/oikogeneiako-diamerisma/", rates: "/el/amesi-kratisi-voulamandis-house/", ai: "/el/ai-assistant/" },
-  fr: { rooms: "/fr/chambres-a-chios/", standard: "/fr/chambres-a-chios/chambres-doubles-standard/", economy: "/fr/chambres-a-chios/chambres-doubles-economiques/", family: "/fr/chambres-a-chios/appartements-familiaux-de-chios/", rates: "/fr/tarifs-des-hotels-a-chios/", ai: "/fr/ai-assistant/" },
-  de: { rooms: "/de/chios-zimmer/", standard: "/de/zimmer-chios/standard-doppelzimmer-auf-chios/", economy: "/de/zimmer-chios/economy-zimmer-auf-chios/", family: "/de/zimmer-chios/familienapartments-in-chios/", rates: "/de/hotelpreise-auf-der-insel-chios/", ai: "/de/ai-assistant/" },
-  it: { rooms: "/it/camere-a-chios/", standard: "/it/stanze-a-chios/camere-doppie-standard-chios/", economy: "/it/stanze-a-chios/camera-doppia-economica-chios/", family: "/it/stanze-a-chios/appartamenti-familiari-a-chios/", rates: "/it/prezzi-hotel-chios/", ai: "/it/ai-assistant/" },
-  es: { rooms: "/es/habitaciones-en-chios/", standard: "/es/habitaciones-en-chios/habitaciones-dobles-estandar/", economy: "/es/habitaciones-en-chios/economicas-habitaciones-en-chios/", family: "/es/habitaciones-en-chios/apartamentos-familiares-en-chios/", rates: "/es/los-mejores-precios-de-hotel-en-la-isla-chios/", ai: "/es/ai-assistant/" },
-  tr: { rooms: "/tr/sakiz-adasi-odalari/", standard: "/tr/chios-odalari/standart-cift-kisilik-odalar/", economy: "/tr/chios-odalari/sakiz-adasindaki-ekonomi-cift-kisilik-oda/", family: "/tr/chios-odalari/sakiz-adasinda-buyuk-aile-daireleri/", rates: "/tr/sakiz-adasi-rezervasyon/", ai: "/tr/ai-assistant/" },
+const ROUTES: Record<ChiosHotelsGuideLocale, { rooms: string; standard: string; ground: string; economy: string; family: string; rates: string; ai: string }> = {
+  en: { rooms: "/chios-rooms/", standard: "/chios-rooms/standard-double-room/", ground: "/chios-rooms/ground-floor-rooms/", economy: "/chios-rooms/economy-double-rooms/", family: "/chios-rooms/family-chios-apartments/", rates: "/chios-hotels-rates/", ai: "/ai-assistant/" },
+  el: { rooms: "/el/domatia-xios/", standard: "/el/domatia-xios/diklina-triklina-domatia/", ground: "/el/domatia-xios/isogeia-domatia/", economy: "/el/domatia-xios/oikonomiko-diklino-domatio/", family: "/el/domatia-xios/oikogeneiako-diamerisma/", rates: "/el/amesi-kratisi-voulamandis-house/", ai: "/el/ai-assistant/" },
+  fr: { rooms: "/fr/chambres-a-chios/", standard: "/fr/chambres-a-chios/chambres-doubles-standard/", ground: "/fr/chambres-a-chios/chambres-rez-de-chaussee/", economy: "/fr/chambres-a-chios/chambres-doubles-economiques/", family: "/fr/chambres-a-chios/appartements-familiaux-de-chios/", rates: "/fr/tarifs-des-hotels-a-chios/", ai: "/fr/ai-assistant/" },
+  de: { rooms: "/de/chios-zimmer/", standard: "/de/zimmer-chios/standard-doppelzimmer-auf-chios/", ground: "/de/zimmer-chios/erdgeschoss-zimmer/", economy: "/de/zimmer-chios/economy-zimmer-auf-chios/", family: "/de/zimmer-chios/familienapartments-in-chios/", rates: "/de/hotelpreise-auf-der-insel-chios/", ai: "/de/ai-assistant/" },
+  it: { rooms: "/it/camere-a-chios/", standard: "/it/stanze-a-chios/camere-doppie-standard-chios/", ground: "/it/stanze-a-chios/camere-piano-terra/", economy: "/it/stanze-a-chios/camera-doppia-economica-chios/", family: "/it/stanze-a-chios/appartamenti-familiari-a-chios/", rates: "/it/prezzi-hotel-chios/", ai: "/it/ai-assistant/" },
+  es: { rooms: "/es/habitaciones-en-chios/", standard: "/es/habitaciones-en-chios/habitaciones-dobles-estandar/", ground: "/es/habitaciones-en-chios/habitaciones-planta-baja/", economy: "/es/habitaciones-en-chios/economicas-habitaciones-en-chios/", family: "/es/habitaciones-en-chios/apartamentos-familiares-en-chios/", rates: "/es/los-mejores-precios-de-hotel-en-la-isla-chios/", ai: "/es/ai-assistant/" },
+  tr: { rooms: "/tr/sakiz-adasi-odalari/", standard: "/tr/chios-odalari/standart-cift-kisilik-odalar/", ground: "/tr/chios-odalari/zemin-kat-odalari/", economy: "/tr/chios-odalari/sakiz-adasindaki-ekonomi-cift-kisilik-oda/", family: "/tr/chios-odalari/sakiz-adasinda-buyuk-aile-daireleri/", rates: "/tr/sakiz-adasi-rezervasyon/", ai: "/tr/ai-assistant/" },
 };
 
 type FeatureKey = "upperFloor" | "groundFloor" | "privateBalcony" | "sharedTerrace" | "doubleBed" | "kitchenette" | "noStairs" | "gardenAccess" | "fullKitchen" | "livingArea" | "familyLayout" | "upTo2" | "upTo3" | "upTo4" | "upTo5";
@@ -378,14 +378,14 @@ const ROOM_LABELS: Record<ChiosHotelsGuideLocale, { upper: string; ground: strin
   tr: { upper: "Üst kat oda", ground: "Zemin kat oda", economy: "Ekonomik oda", apartment: "Aile dairesi", standardSub: "Çift / üç kişilik oda", economySub: "Avantajlı çift kişilik oda", groundSub: "Kolay erişimli çift / üç kişilik oda", apartmentSub: "Bağımsız daire", largeApartmentSub: "Geniş bağımsız daire" },
 };
 
-const ROOM_META: Record<number, { kind: "upper" | "ground" | "economy" | "apartment"; route: "standard" | "economy" | "family"; image: string; features: FeatureKey[]; large?: boolean }> = {
+const ROOM_META: Record<number, { kind: "upper" | "ground" | "economy" | "apartment"; route: "standard" | "ground" | "economy" | "family"; image: string; features: FeatureKey[]; large?: boolean }> = {
   1: { kind: "upper", route: "standard", image: "/images/rooms/DSC07776-2-e1675109942622.webp", features: ["upperFloor", "sharedTerrace", "upTo4"] },
   2: { kind: "economy", route: "economy", image: "/images/rooms/DSC07803-1.webp", features: ["upperFloor", "doubleBed", "upTo2"] },
   3: { kind: "upper", route: "standard", image: "/images/rooms/DSC07867-1.webp", features: ["upperFloor", "kitchenette", "upTo3"] },
   4: { kind: "upper", route: "standard", image: "/images/rooms/received_1748354861920234.webp", features: ["upperFloor", "kitchenette", "privateBalcony"] },
-  5: { kind: "ground", route: "standard", image: "/images/rooms/voulamandis-house-rooms.webp", features: ["groundFloor", "noStairs", "upTo3"] },
+  5: { kind: "ground", route: "ground", image: "/images/rooms/voulamandis-house-rooms.webp", features: ["groundFloor", "noStairs", "upTo3"] },
   6: { kind: "economy", route: "economy", image: "/images/rooms/received_1753964631359257.webp", features: ["groundFloor", "noStairs", "upTo2"] },
-  7: { kind: "ground", route: "standard", image: "/images/rooms/double-triple-room.jpg", features: ["groundFloor", "gardenAccess", "upTo3"] },
+  7: { kind: "ground", route: "ground", image: "/images/rooms/double-triple-room.jpg", features: ["groundFloor", "gardenAccess", "upTo3"] },
   8: { kind: "apartment", route: "family", image: "/images/rooms/chios-apartments-voulamandis.webp", features: ["fullKitchen", "noStairs", "upTo4"] },
   9: { kind: "apartment", route: "family", image: "/images/rooms/chios-apartments-voulamandis.webp", features: ["fullKitchen", "noStairs", "upTo4"] },
   10: { kind: "apartment", route: "family", image: "/images/rooms/DSC07899.webp", features: ["fullKitchen", "noStairs", "upTo5"], large: true },

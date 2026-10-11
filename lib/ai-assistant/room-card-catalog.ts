@@ -28,6 +28,13 @@ const standardDetails: Record<AssistantLanguage, string> = {
   tr: "/tr/chios-odalari/standart-cift-kisilik-odalar/",
 };
 
+const groundFloorDetails: Record<AssistantLanguage, string> = {
+  en: "/chios-rooms/ground-floor-rooms/", el: "/el/domatia-xios/isogeia-domatia/",
+  fr: "/fr/chambres-a-chios/chambres-rez-de-chaussee/", de: "/de/zimmer-chios/erdgeschoss-zimmer/",
+  it: "/it/stanze-a-chios/camere-piano-terra/", es: "/es/habitaciones-en-chios/habitaciones-planta-baja/",
+  tr: "/tr/chios-odalari/zemin-kat-odalari/",
+};
+
 const economyDetails: Record<AssistantLanguage, string> = {
   en: "/chios-rooms/economy-double-rooms/",
   el: "/el/domatia-xios/oikonomiko-diklino-domatio/",
@@ -123,7 +130,7 @@ export const ROOM_CARD_CATALOG: RoomCardCatalogEntry[] = [
     roomId: "626129", unitId: "1", roomNumber: 5, maxGuests: 3,
     image: "/images/rooms/voulamandis-house-rooms.webp",
     gallery: ["/images/rooms/voulamandis-house-rooms.webp", "/images/rooms/chios-hotels-triple-rooms_1646x1080.webp"],
-    detailsUrl: standardDetails,
+    detailsUrl: groundFloorDetails,
     copy: {
       el: { name: "Δωμάτιο 5", category: "Τρίκλινο δωμάτιο ισογείου", floor: "Ισόγειο · χωρίς σκάλες", features: ["Άμεση πρόσβαση στην αυλή", "1 διπλό και 1 μονό κρεβάτι", "Ψυγείο", "Κλιματισμός"] },
       en: { name: "Room 5", category: "Ground-floor triple room", floor: "Ground floor · no stairs", features: ["Direct courtyard access", "1 double and 1 single bed", "Fridge", "Air conditioning"] },
@@ -153,7 +160,7 @@ export const ROOM_CARD_CATALOG: RoomCardCatalogEntry[] = [
     roomId: "626129", unitId: "2", roomNumber: 7, maxGuests: 3,
     image: "/images/rooms/double-triple-room.jpg",
     gallery: ["/images/rooms/double-triple-room.jpg", "/images/rooms/view-double-room-chios-hotels.webp"],
-    detailsUrl: standardDetails,
+    detailsUrl: groundFloorDetails,
     copy: {
       el: { name: "Δωμάτιο 7", category: "Τρίκλινο δωμάτιο ισογείου", floor: "Ισόγειο · χωρίς σκάλες", features: ["Πρόσβαση στον κήπο", "1 διπλό κρεβάτι και καναπές-κρεβάτι", "Ψυγείο", "Κλιματισμός"] },
       en: { name: "Room 7", category: "Ground-floor triple room", floor: "Ground floor · no stairs", features: ["Garden access", "1 double bed and sofa bed", "Fridge", "Air conditioning"] },

@@ -62,7 +62,6 @@ const legacyRedirects: Record<string, string> = {
   // Rooms / booking / contact / deals
   "/fr/chios-rooms": "/fr/chambres-a-chios/",
   "/our-rooms": "/chios-rooms/",
-  "/chios-rooms/ground-floor-rooms": "/chios-rooms/standard-double-room/",
   "/chios-rooms/economy-double-room": "/chios-rooms/economy-double-rooms/",
   "/chios-rooms/double-triple-rooms": "/chios-rooms/standard-double-room/",
   "/de/uncategorized-de/economy-zimmer-auf-chios":

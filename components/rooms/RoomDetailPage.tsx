@@ -7,7 +7,7 @@ import { TopicBadges } from "@/components/seo/TopicBadges";
 import type { IndividualRoomData, RoomDetailData } from "@/content/room-details";
 import { roomFinderHrefForLanguage } from "@/lib/room-finder-cta-routing";
 
-type RoomDetailPageProps = { data: RoomDetailData };
+type RoomDetailPageProps = { data: RoomDetailData; fromPriceLabel?: string | null };
 type RoomLanguage = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
 type FloorKind = "ground" | "first" | "other";
 type RoomDictionary = Partial<Record<RoomLanguage, string>>;
@@ -24,6 +24,7 @@ type RoomUiLabels = {
   propertyLocation: string;
   checkAvailability: string;
   bookOnline: string;
+  priceNote: string;
 };
 
 function getRoomLanguage(path: string): RoomLanguage {
@@ -37,13 +38,13 @@ function getRoomLanguage(path: string): RoomLanguage {
 }
 
 const labels: Record<RoomLanguage, RoomUiLabels> = {
-  en: { checkAvailability: "Check availability", bookOnline: "Book online", upToGuests: (count) => `Up to ${count} guests`, faqKicker: "Questions", faqTitle: "Room FAQ", nextRoom: "Next room", swipe: "Swipe to see more rooms", photos: "Photos", highlights: "Room highlights", keyDetails: "Room key details", propertyLocation: "Voulamandis House, Chios" },
-  el: { checkAvailability: "Έλεγχος διαθεσιμότητας", bookOnline: "Online κράτηση", upToGuests: (count) => `Έως ${count} άτομα`, faqKicker: "Ερωτήσεις", faqTitle: "Συχνές ερωτήσεις δωματίου", nextRoom: "Επόμενο δωμάτιο", swipe: "Σύρετε για περισσότερα δωμάτια", photos: "Φωτογραφίες", highlights: "Χαρακτηριστικά δωματίου", keyDetails: "Βασικές πληροφορίες δωματίου", propertyLocation: "Voulamandis House, Χίος" },
-  fr: { checkAvailability: "Voir les disponibilités", bookOnline: "Réserver en ligne", upToGuests: (count) => `Jusqu’à ${count} personnes`, faqKicker: "Questions", faqTitle: "FAQ de la chambre", nextRoom: "Chambre suivante", swipe: "Faites glisser pour voir plus", photos: "Photos", highlights: "Points forts de la chambre", keyDetails: "Informations principales", propertyLocation: "Voulamandis House, Chios" },
-  de: { checkAvailability: "Verfügbarkeit prüfen", bookOnline: "Online buchen", upToGuests: (count) => `Bis zu ${count} Gäste`, faqKicker: "Fragen", faqTitle: "Zimmer-FAQ", nextRoom: "Nächstes Zimmer", swipe: "Wischen für weitere Zimmer", photos: "Fotos", highlights: "Zimmer-Highlights", keyDetails: "Wichtige Zimmerdetails", propertyLocation: "Voulamandis House, Chios" },
-  it: { checkAvailability: "Verifica disponibilità", bookOnline: "Prenota online", upToGuests: (count) => `Fino a ${count} ospiti`, faqKicker: "Domande", faqTitle: "FAQ della camera", nextRoom: "Camera successiva", swipe: "Scorri per vedere altre camere", photos: "Foto", highlights: "Caratteristiche della camera", keyDetails: "Dettagli principali", propertyLocation: "Voulamandis House, Chios" },
-  es: { checkAvailability: "Consultar disponibilidad", bookOnline: "Reservar online", upToGuests: (count) => `Hasta ${count} personas`, faqKicker: "Preguntas", faqTitle: "Preguntas frecuentes", nextRoom: "Habitación siguiente", swipe: "Desliza para ver más habitaciones", photos: "Fotos", highlights: "Características de la habitación", keyDetails: "Datos principales", propertyLocation: "Voulamandis House, Chios" },
-  tr: { checkAvailability: "Müsaitliği kontrol et", bookOnline: "Online rezervasyon", upToGuests: (count) => `${count} kişiye kadar`, faqKicker: "Sorular", faqTitle: "Oda SSS", nextRoom: "Sonraki oda", swipe: "Daha fazla oda için kaydırın", photos: "Fotoğraflar", highlights: "Oda özellikleri", keyDetails: "Temel oda bilgileri", propertyLocation: "Voulamandis House, Sakız Adası" },
+  en: { checkAvailability: "Check availability", bookOnline: "Book online", upToGuests: (count) => `Up to ${count} guests`, faqKicker: "Questions", faqTitle: "Room FAQ", nextRoom: "Next room", swipe: "Swipe to see more rooms", photos: "Photos", highlights: "Room highlights", keyDetails: "Room key details", propertyLocation: "Voulamandis House, Chios", priceNote: "Lowest direct price for 2 guests, incl. direct-booking discount" },
+  el: { checkAvailability: "Έλεγχος διαθεσιμότητας", bookOnline: "Online κράτηση", upToGuests: (count) => `Έως ${count} άτομα`, faqKicker: "Ερωτήσεις", faqTitle: "Συχνές ερωτήσεις δωματίου", nextRoom: "Επόμενο δωμάτιο", swipe: "Σύρετε για περισσότερα δωμάτια", photos: "Φωτογραφίες", highlights: "Χαρακτηριστικά δωματίου", keyDetails: "Βασικές πληροφορίες δωματίου", propertyLocation: "Voulamandis House, Χίος", priceNote: "Χαμηλότερη τιμή απευθείας κράτησης για 2 άτομα, με την έκπτωση" },
+  fr: { checkAvailability: "Voir les disponibilités", bookOnline: "Réserver en ligne", upToGuests: (count) => `Jusqu’à ${count} personnes`, faqKicker: "Questions", faqTitle: "FAQ de la chambre", nextRoom: "Chambre suivante", swipe: "Faites glisser pour voir plus", photos: "Photos", highlights: "Points forts de la chambre", keyDetails: "Informations principales", propertyLocation: "Voulamandis House, Chios", priceNote: "Meilleur prix direct pour 2 personnes, remise directe incluse" },
+  de: { checkAvailability: "Verfügbarkeit prüfen", bookOnline: "Online buchen", upToGuests: (count) => `Bis zu ${count} Gäste`, faqKicker: "Fragen", faqTitle: "Zimmer-FAQ", nextRoom: "Nächstes Zimmer", swipe: "Wischen für weitere Zimmer", photos: "Fotos", highlights: "Zimmer-Highlights", keyDetails: "Wichtige Zimmerdetails", propertyLocation: "Voulamandis House, Chios", priceNote: "Günstigster Direktpreis für 2 Gäste, inkl. Direktbuchungsrabatt" },
+  it: { checkAvailability: "Verifica disponibilità", bookOnline: "Prenota online", upToGuests: (count) => `Fino a ${count} ospiti`, faqKicker: "Domande", faqTitle: "FAQ della camera", nextRoom: "Camera successiva", swipe: "Scorri per vedere altre camere", photos: "Foto", highlights: "Caratteristiche della camera", keyDetails: "Dettagli principali", propertyLocation: "Voulamandis House, Chios", priceNote: "Prezzo diretto più basso per 2 ospiti, sconto diretto incluso" },
+  es: { checkAvailability: "Consultar disponibilidad", bookOnline: "Reservar online", upToGuests: (count) => `Hasta ${count} personas`, faqKicker: "Preguntas", faqTitle: "Preguntas frecuentes", nextRoom: "Habitación siguiente", swipe: "Desliza para ver más habitaciones", photos: "Fotos", highlights: "Características de la habitación", keyDetails: "Datos principales", propertyLocation: "Voulamandis House, Chios", priceNote: "Precio directo más bajo para 2 personas, con descuento directo" },
+  tr: { checkAvailability: "Müsaitliği kontrol et", bookOnline: "Online rezervasyon", upToGuests: (count) => `${count} kişiye kadar`, faqKicker: "Sorular", faqTitle: "Oda SSS", nextRoom: "Sonraki oda", swipe: "Daha fazla oda için kaydırın", photos: "Fotoğraflar", highlights: "Oda özellikleri", keyDetails: "Temel oda bilgileri", propertyLocation: "Voulamandis House, Sakız Adası", priceNote: "2 kişi için en düşük direkt fiyat, direkt rezervasyon indirimi dahil" },
 };
 
 const bookingPathByLanguage: Record<RoomLanguage, string> = {
@@ -114,19 +115,19 @@ const dictionary: Record<string, RoomDictionary> = {
   "Living area": { el: "Καθιστικό", fr: "Salon", de: "Wohnbereich", it: "Soggiorno", es: "Sala de estar", tr: "Oturma alanı" },
   Bathroom: { el: "Μπάνιο", fr: "Salle de bain", de: "Bad", it: "Bagno", es: "Baño", tr: "Banyo" },
   Layout: { fr: "Disposition", it: "Disposizione", tr: "Yerleşim", es: "Distribución"},
-  Detail: { fr: "Détail", it: "Dettaglio", tr: "Detay", es: "Detalle"},
+  Detail: { el: "Λεπτομέρεια", de: "Detail", fr: "Détail", it: "Dettaglio", tr: "Detay", es: "Detalle"},
   Desk: { fr: "Bureau", it: "Scrivania", tr: "Çalışma masası", es: "Escritorio"},
-  "Traditional interior": { fr: "Intérieur traditionnel", it: "Interni tradizionali", tr: "Geleneksel iç mekân", es: "Interior tradicional"},
-  "Courtyard access": { fr: "Accès à la cour", it: "Accesso al cortile", tr: "Avlu erişimi", es: "Acceso al patio"},
-  "Room layout": { fr: "Agencement de la chambre", it: "Disposizione della camera", tr: "Oda düzeni", es: "Distribución de la habitación"},
-  "Stone wall interior": { fr: "Intérieur avec mur en pierre", it: "Interni con parete in pietra", tr: "Taş duvarlı iç mekân", es: "Interior con pared de piedra"},
-  "Stone bathroom details": { fr: "Détails en pierre de la salle de bain", it: "Dettagli in pietra del bagno", tr: "Taş banyo detayları", es: "Detalles de piedra en el baño"},
-  "Spacious layout": { fr: "Agencement spacieux", it: "Disposizione spaziosa", tr: "Geniş yerleşim", es: "Distribución amplia"},
-  "Traditional details": { fr: "Détails traditionnels", it: "Dettagli tradizionali", tr: "Geleneksel detaylar", es: "Detalles tradicionales"},
-  "Terrace access": { fr: "Accès à la terrasse", it: "Accesso alla terrazza", es: "Acceso a la terraza"},
-  "Kitchenette area": { fr: "Espace kitchenette", it: "Area angolo cottura", es: "Zona de cocina pequeña"},
-  "Traditional decoration": { fr: "Décoration traditionnelle", it: "Arredi tradizionali", es: "Decoración tradicional"},
-  "Balcony view": { fr: "Vue depuis le balcon", it: "Vista dal balcone", es: "Vista desde el balcón"},
+  "Traditional interior": { el: "Παραδοσιακό εσωτερικό", de: "Traditionelles Interieur", fr: "Intérieur traditionnel", it: "Interni tradizionali", tr: "Geleneksel iç mekân", es: "Interior tradicional"},
+  "Courtyard access": { el: "Πρόσβαση στην αυλή", de: "Zugang zum Innenhof", fr: "Accès à la cour", it: "Accesso al cortile", tr: "Avlu erişimi", es: "Acceso al patio"},
+  "Room layout": { el: "Διαρρύθμιση δωματίου", de: "Zimmeraufteilung", fr: "Agencement de la chambre", it: "Disposizione della camera", tr: "Oda düzeni", es: "Distribución de la habitación"},
+  "Stone wall interior": { el: "Εσωτερικό με πέτρινο τοίχο", de: "Interieur mit Steinwand", fr: "Intérieur avec mur en pierre", it: "Interni con parete in pietra", tr: "Taş duvarlı iç mekân", es: "Interior con pared de piedra"},
+  "Stone bathroom details": { el: "Πέτρινες λεπτομέρειες μπάνιου", de: "Steindetails im Bad", fr: "Détails en pierre de la salle de bain", it: "Dettagli in pietra del bagno", tr: "Taş banyo detayları", es: "Detalles de piedra en el baño"},
+  "Spacious layout": { el: "Ευρύχωρη διαρρύθμιση", de: "Großzügige Aufteilung", fr: "Agencement spacieux", it: "Disposizione spaziosa", tr: "Geniş yerleşim", es: "Distribución amplia"},
+  "Traditional details": { el: "Παραδοσιακές λεπτομέρειες", de: "Traditionelle Details", fr: "Détails traditionnels", it: "Dettagli tradizionali", tr: "Geleneksel detaylar", es: "Detalles tradicionales"},
+  "Terrace access": { el: "Πρόσβαση στη βεράντα", de: "Zugang zur Terrasse", tr: "Teras erişimi", fr: "Accès à la terrasse", it: "Accesso alla terrazza", es: "Acceso a la terraza"},
+  "Kitchenette area": { el: "Χώρος μικρής κουζίνας", de: "Kochnische", tr: "Mini mutfak alanı", fr: "Espace kitchenette", it: "Area angolo cottura", es: "Zona de cocina pequeña"},
+  "Traditional decoration": { el: "Παραδοσιακή διακόσμηση", de: "Traditionelle Einrichtung", tr: "Geleneksel dekorasyon", fr: "Décoration traditionnelle", it: "Arredi tradizionali", es: "Decoración tradicional"},
+  "Balcony view": { el: "Θέα από το μπαλκόνι", de: "Blick vom Balkon", tr: "Balkon manzarası", fr: "Vue depuis le balcon", it: "Vista dal balcone", es: "Vista desde el balcón"},
   "Bu kategori doğrudan bahçe erişimli zemin kat odalar ve teras hissi veren birinci kat odaları içerir. Bazı birinci kat odalarda kitchenette de bulunur.": { tr: "Bu kategori doğrudan bahçe erişimli zemin kat odalar ve teras hissi veren üst kat odaları içerir. Bazı üst kat odalarda mini mutfak da bulunur." },
   "Economy kategorisine göre daha fazla konfor isteyen çiftler.": { tr: "Ekonomik kategoriye göre daha fazla konfor isteyen çiftler." },
   "Bazı birinci kat odalarda kitchenette bulunabilir. Tam mutfağa ihtiyacınız varsa aile apartları genellikle daha iyi seçimdir.": { tr: "Bazı üst kat odalarda mini mutfak bulunabilir. Tam mutfağa ihtiyacınız varsa aile daireleri genellikle daha iyi seçimdir." },
@@ -263,7 +264,17 @@ function RoomVisualCard({ room, language }: { room: IndividualRoomData; language
   );
 }
 
-function FloorRoomGroup({ title, text, rooms, language }: { title: string; text: string; rooms: IndividualRoomData[]; language: RoomLanguage }) {
+const groundFloorPageLinks: Record<RoomLanguage, { href: string; label: string }> = {
+  en: { href: "/chios-rooms/ground-floor-rooms/", label: "All details on the ground floor rooms page" },
+  el: { href: "/el/domatia-xios/isogeia-domatia/", label: "Όλες οι λεπτομέρειες στη σελίδα των ισόγειων δωματίων" },
+  fr: { href: "/fr/chambres-a-chios/chambres-rez-de-chaussee/", label: "Tous les détails sur la page des chambres au rez-de-chaussée" },
+  de: { href: "/de/zimmer-chios/erdgeschoss-zimmer/", label: "Alle Details auf der Seite der Erdgeschoss-Zimmer" },
+  it: { href: "/it/stanze-a-chios/camere-piano-terra/", label: "Tutti i dettagli nella pagina delle camere al piano terra" },
+  es: { href: "/es/habitaciones-en-chios/habitaciones-planta-baja/", label: "Todos los detalles en la página de habitaciones en planta baja" },
+  tr: { href: "/tr/chios-odalari/zemin-kat-odalari/", label: "Tüm ayrıntılar zemin kat odaları sayfasında" },
+};
+
+function FloorRoomGroup({ title, text, rooms, language, moreLink }: { title: string; text: string; rooms: IndividualRoomData[]; language: RoomLanguage; moreLink?: { href: string; label: string } }) {
   const carouselRef = useRef<HTMLDivElement>(null);
   if (!rooms.length) return null;
 
@@ -279,6 +290,11 @@ function FloorRoomGroup({ title, text, rooms, language }: { title: string; text:
       <header className="mb-5 max-w-[820px]">
         <span className="text-xs font-black uppercase tracking-[0.16em] text-amber-800">{title}</span>
         <p className="mt-3 max-w-[760px] text-sm leading-7 text-stone-600">{localizeRoomText(text, language)}</p>
+        {moreLink ? (
+          <a href={moreLink.href} className="mt-3 inline-flex min-h-11 items-center text-sm font-black text-amber-800 underline decoration-amber-300 underline-offset-4 hover:text-amber-900">
+            {moreLink.label} <span aria-hidden="true">&nbsp;→</span>
+          </a>
+        ) : null}
         {rooms.length > 1 ? (
           <p className="mt-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-[11px] font-black uppercase tracking-[0.1em] text-amber-900 shadow-sm ring-1 ring-amber-900/10 md:hidden">
             {labels[language].swipe} <span aria-hidden="true">→</span>
@@ -323,7 +339,7 @@ function IndividualRoomsSection({ data, language }: { data: RoomDetailData; lang
             <p className="mt-5 max-w-[760px] text-base leading-8 text-stone-600 md:text-lg">{sectionDescription}</p>
           </header>
           <div className="space-y-10">
-            <FloorRoomGroup title={localizedSectionLabels.groundTitle} text={localizedSectionLabels.groundText} rooms={groundFloorRooms} language={language} />
+            <FloorRoomGroup title={localizedSectionLabels.groundTitle} text={localizedSectionLabels.groundText} rooms={groundFloorRooms} language={language} moreLink={data.id === "standard-double-room" ? groundFloorPageLinks[language] : undefined} />
             <FloorRoomGroup title={localizedSectionLabels.firstTitle} text={localizedSectionLabels.firstText} rooms={firstFloorRooms} language={language} />
             {otherRooms.length ? <FloorRoomGroup title={data.individualRooms.title} text={sectionDescription} rooms={otherRooms} language={language} /> : null}
           </div>
@@ -354,7 +370,7 @@ function IndividualRoomsSection({ data, language }: { data: RoomDetailData; lang
   );
 }
 
-export function RoomDetailPage({ data }: RoomDetailPageProps) {
+export function RoomDetailPage({ data, fromPriceLabel }: RoomDetailPageProps) {
   const language = getRoomLanguage(data.seo.canonicalPath);
   const localLabels = labels[language];
   const primaryBookingHref = bookingPathByLanguage[language] || data.hero.primaryCta.href;
@@ -372,6 +388,12 @@ export function RoomDetailPage({ data }: RoomDetailPageProps) {
               <div className="mt-6 flex flex-wrap gap-2" aria-label={localLabels.highlights}>
                 {data.hero.badges.map((badge) => <span key={badge} className="rounded-full border border-amber-900/10 bg-white px-3 py-1.5 text-xs font-extrabold text-[#574b3f]">{localizeRoomText(badge, language)}</span>)}
               </div>
+              {fromPriceLabel ? (
+                <p className="mt-5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                  <span className="text-2xl font-black tracking-[-0.03em] text-amber-800">{fromPriceLabel}</span>
+                  <span className="text-xs font-bold text-[#6a5b4e]">{localLabels.priceNote}</span>
+                </p>
+              ) : null}
               <div className="mt-7 grid gap-3 sm:grid-cols-2">
                 <a id="rd-hero-availability" className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-amber-500 px-5 text-center text-[11px] font-black uppercase tracking-[0.12em] !text-[#2f261f] shadow-[0_16px_32px_rgba(180,117,16,0.22)] transition hover:-translate-y-0.5 hover:bg-amber-400 sm:text-xs" href={aiAvailabilityHref} style={{ color: "#2f261f" }}>{localLabels.checkAvailability}</a>
                 <a className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-amber-900/20 bg-white px-5 text-center text-[11px] font-black uppercase tracking-[0.12em] text-[#2f261f] transition hover:-translate-y-0.5 hover:bg-amber-50 sm:text-xs" href={primaryBookingHref} data-booking-cta="true">{localLabels.bookOnline}</a>
@@ -396,13 +418,77 @@ export function RoomDetailPage({ data }: RoomDetailPageProps) {
           </article>
           <aside className="h-full rounded-[30px] border border-amber-900/10 bg-[#fffdfa] p-5 shadow-[0_18px_45px_rgba(47,38,31,0.08)] sm:p-6" aria-label={localLabels.keyDetails}>
             <div className="grid h-full grid-cols-1 gap-3 min-[390px]:grid-cols-2">
-              {data.overview.highlights.map((highlight) => <div className="min-w-0 break-words rounded-2xl bg-amber-50/70 p-4 ring-1 ring-amber-900/10 hyphens-auto" key={highlight.label}><span className="text-[11px] font-black uppercase tracking-[0.18em] text-amber-800">{highlight.label}</span><strong className="mt-1 block text-base font-black text-[#2f261f]">{localizeRoomText(highlight.value, language)}</strong></div>)}
+              {data.overview.highlights.map((highlight) => <div className="min-w-0 break-words rounded-2xl bg-amber-50/70 p-4 ring-1 ring-amber-900/10 hyphens-auto" key={highlight.label}><span className="text-[11px] font-black uppercase tracking-[0.18em] text-amber-800">{highlight.label}</span><strong className="mt-1 block text-lg font-black leading-tight tracking-[-0.02em] text-[#2f261f] lg:text-2xl">{localizeRoomText(highlight.value, language)}</strong></div>)}
             </div>
           </aside>
         </div>
       </section>
 
       <IndividualRoomsSection data={data} language={language} />
+
+      {data.comparison ? (
+        <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8" aria-labelledby="rd-compare-title">
+          <header className="max-w-3xl">
+            <span className="text-xs font-black uppercase tracking-[0.16em] text-amber-800">{data.comparison.kicker}</span>
+            <h2 id="rd-compare-title" className="mt-4 text-balance text-3xl font-black tracking-[-0.04em] text-[#2f261f] sm:text-4xl">{data.comparison.title}</h2>
+          </header>
+          <div className="mt-6 overflow-hidden rounded-[24px] border border-amber-900/10 bg-white shadow-[0_18px_45px_rgba(47,38,31,0.08)] sm:hidden">
+            <dl className="divide-y divide-amber-900/10">
+              {data.comparison.rows.map((row) => (
+                <div className="px-4 py-3" key={row.label}>
+                  <dt className="text-[11px] font-black uppercase tracking-[0.1em] text-[#8a7866]">{row.label}</dt>
+                  <dd className="mt-1.5 grid grid-cols-2 gap-3">
+                    {row.values.map((value, index) => (
+                      <span className="min-w-0 hyphens-auto text-sm font-bold leading-6 text-[#2f261f]" key={`${row.label}-${index}`}>
+                        <span className="block text-[11px] font-black text-amber-800">{data.comparison?.columns[index]}</span>
+                        {value}
+                      </span>
+                    ))}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+          <div className="mt-6 hidden overflow-hidden rounded-[24px] border border-amber-900/10 bg-white shadow-[0_18px_45px_rgba(47,38,31,0.08)] sm:block">
+            <table className="w-full table-fixed border-collapse text-left text-sm">
+              <thead className="bg-[#f3e7d7] text-[11px] font-black uppercase tracking-[0.12em] text-amber-900">
+                <tr>
+                  <th scope="col" className="w-[34%] px-5 py-3"><span className="sr-only">{data.comparison.kicker}</span></th>
+                  {data.comparison.columns.map((column) => <th scope="col" className="px-3 py-3 text-sm normal-case tracking-normal sm:px-5 sm:text-base" key={column}>{column}</th>)}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-amber-900/10 text-[#2f261f]">
+                {data.comparison.rows.map((row) => (
+                  <tr key={row.label} className="align-top">
+                    <th scope="row" className="px-5 py-3 text-[11px] font-black uppercase tracking-[0.1em] text-[#8a7866] hyphens-auto">{row.label}</th>
+                    {row.values.map((value, index) => <td className="break-words px-3 py-3 font-bold leading-6 sm:px-5" key={`${row.label}-${index}`}>{value}</td>)}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {data.comparison.note ? <p className="mt-3 text-xs leading-6 text-[#6a5b4e]">{data.comparison.note}</p> : null}
+        </section>
+      ) : null}
+
+      {data.outdoor ? (
+        <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8" aria-labelledby="rd-outdoor-title">
+          <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+            <div>
+              <span className="text-xs font-black uppercase tracking-[0.16em] text-amber-800">{data.outdoor.kicker}</span>
+              <h2 id="rd-outdoor-title" className="mt-4 text-balance text-3xl font-black tracking-[-0.04em] text-[#2f261f] sm:text-4xl">{data.outdoor.title}</h2>
+              <div className="mt-5 space-y-4 text-base leading-8 text-[#574b3f]">{data.outdoor.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              {data.outdoor.images.slice(0, 4).map((image) => (
+                <div className="relative aspect-[4/3] overflow-hidden rounded-[20px] bg-stone-200 ring-1 ring-amber-900/10" key={image.src}>
+                  <Image src={image.src} alt={image.alt} fill sizes="(min-width: 1024px) 28vw, 46vw" className="object-cover" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8" aria-labelledby="rd-amenities-title">
         <header className="mx-auto max-w-3xl text-center"><span className="inline-flex text-[11px] font-black uppercase tracking-[0.28em] text-amber-800">{data.amenities.kicker}</span><h2 id="rd-amenities-title" className="mt-4 text-balance text-3xl font-black tracking-[-0.04em] text-[#2f261f] sm:text-4xl">{data.amenities.title}</h2></header>
@@ -415,7 +501,7 @@ export function RoomDetailPage({ data }: RoomDetailPageProps) {
         <div className="rounded-[30px] bg-white p-5 shadow-[0_18px_45px_rgba(47,38,31,0.08)] sm:p-8">
           <span className="inline-flex text-[11px] font-black uppercase tracking-[0.28em] text-amber-800">{data.bestFor.kicker}</span>
           <h2 id="rd-best-title" className="break-words hyphens-auto mt-4 text-balance text-3xl font-black tracking-[-0.04em] text-[#2f261f] sm:text-4xl">{data.bestFor.title}</h2>
-          <div className="mt-7 grid grid-cols-1 gap-3 min-[390px]:grid-cols-2">
+          <div className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-2">
             {data.bestFor.items.map((item) => <div className="rounded-2xl bg-amber-50/50 p-3 text-sm leading-6 text-[#574b3f] ring-1 ring-amber-900/10" key={item}><span className="mr-2 font-black text-emerald-700">✓</span>{localizeRoomText(item, language)}</div>)}
           </div>
         </div>
@@ -434,6 +520,23 @@ export function RoomDetailPage({ data }: RoomDetailPageProps) {
         <header className="mx-auto max-w-3xl text-center"><span className="inline-flex text-[11px] font-black uppercase tracking-[0.28em] text-amber-800">{localLabels.faqKicker}</span><h2 id="rd-faq-title" className="mt-4 text-3xl font-black tracking-[-0.04em] text-[#2f261f] sm:text-4xl">{localLabels.faqTitle}</h2></header>
         <div className="mx-auto mt-8 max-w-3xl space-y-3">{data.faq.map((item) => <details className="rounded-2xl bg-white p-4 shadow-[0_12px_28px_rgba(47,38,31,0.07)]" key={item.question}><summary className="cursor-pointer text-base font-black text-[#2f261f]">{item.question}</summary><p className="mt-3 text-sm leading-7 text-[#574b3f]">{localizeRoomText(item.answer, language)}</p></details>)}</div>
       </section>
+
+      {data.related ? (
+        <nav className="mx-auto max-w-7xl px-4 pb-12 pt-2 sm:px-6 lg:px-8" aria-labelledby="rd-related-title">
+          <span className="text-xs font-black uppercase tracking-[0.16em] text-amber-800">{data.related.kicker}</span>
+          <h2 id="rd-related-title" className="mt-3 text-balance text-2xl font-black tracking-[-0.03em] text-[#2f261f] sm:text-3xl">{data.related.title}</h2>
+          <ul className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {data.related.links.map((link) => (
+              <li key={link.href}>
+                <a href={link.href} className="group block h-full rounded-2xl border border-amber-900/10 bg-white p-4 shadow-[0_10px_26px_rgba(47,38,31,0.06)] transition hover:-translate-y-0.5 hover:bg-amber-50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-amber-700/25">
+                  <span className="block text-base font-black text-[#2f261f] group-hover:text-amber-800">{link.title} <span aria-hidden="true">→</span></span>
+                  <span className="mt-1 block text-sm leading-6 text-[#574b3f]">{link.text}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      ) : null}
 
       <MobileAvailabilityBar
         href={aiAvailabilityHref}
