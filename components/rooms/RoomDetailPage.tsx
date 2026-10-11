@@ -1,11 +1,17 @@
 "use client";
 
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { useRef, useState } from "react";
 import { MobileAvailabilityBar } from "@/components/rooms/MobileAvailabilityBar";
 import { TopicBadges } from "@/components/seo/TopicBadges";
 import type { IndividualRoomData, RoomDetailData } from "@/content/room-details";
 import { roomFinderHrefForLanguage } from "@/lib/room-finder-cta-routing";
+import { roomPanoramas } from "@/content/room-panoramas";
+import type { RoomPanoramaViewerLabels } from "@/components/rooms/RoomPanoramaViewer";
+
+// Loaded only when a guest opens a 360° view, so it adds nothing to the initial page.
+const RoomPanoramaViewer = dynamic(() => import("@/components/rooms/RoomPanoramaViewer"), { ssr: false });
 
 type RoomDetailPageProps = { data: RoomDetailData; fromPriceLabel?: string | null };
 type RoomLanguage = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
@@ -45,6 +51,16 @@ const labels: Record<RoomLanguage, RoomUiLabels> = {
   it: { checkAvailability: "Verifica disponibilità", bookOnline: "Prenota online", upToGuests: (count) => `Fino a ${count} ospiti`, faqKicker: "Domande", faqTitle: "FAQ della camera", nextRoom: "Camera successiva", swipe: "Scorri per vedere altre camere", photos: "Foto", highlights: "Caratteristiche della camera", keyDetails: "Dettagli principali", propertyLocation: "Voulamandis House, Chios", priceNote: "Prezzo diretto più basso per 2 ospiti, sconto diretto incluso" },
   es: { checkAvailability: "Consultar disponibilidad", bookOnline: "Reservar online", upToGuests: (count) => `Hasta ${count} personas`, faqKicker: "Preguntas", faqTitle: "Preguntas frecuentes", nextRoom: "Habitación siguiente", swipe: "Desliza para ver más habitaciones", photos: "Fotos", highlights: "Características de la habitación", keyDetails: "Datos principales", propertyLocation: "Voulamandis House, Chios", priceNote: "Precio directo más bajo para 2 personas, con descuento directo" },
   tr: { checkAvailability: "Müsaitliği kontrol et", bookOnline: "Online rezervasyon", upToGuests: (count) => `${count} kişiye kadar`, faqKicker: "Sorular", faqTitle: "Oda SSS", nextRoom: "Sonraki oda", swipe: "Daha fazla oda için kaydırın", photos: "Fotoğraflar", highlights: "Oda özellikleri", keyDetails: "Temel oda bilgileri", propertyLocation: "Voulamandis House, Sakız Adası", priceNote: "2 kişi için en düşük direkt fiyat, direkt rezervasyon indirimi dahil" },
+};
+
+const panoramaLabels: Record<RoomLanguage, Omit<RoomPanoramaViewerLabels, "title"> & { open: string }> = {
+  en: { open: "360° view", hint: "Drag to look around", close: "Close 360° view", loading: "Loading 360° view…", unsupported: "Your browser can’t display the 360° view." },
+  el: { open: "Περιήγηση 360°", hint: "Σύρετε για να δείτε γύρω", close: "Κλείσιμο περιήγησης 360°", loading: "Φόρτωση περιήγησης 360°…", unsupported: "Ο browser σας δεν μπορεί να εμφανίσει την περιήγηση 360°." },
+  fr: { open: "Visite 360°", hint: "Faites glisser pour regarder autour", close: "Fermer la visite 360°", loading: "Chargement de la visite 360°…", unsupported: "Votre navigateur ne peut pas afficher la visite 360°." },
+  de: { open: "360°-Ansicht", hint: "Ziehen, um sich umzusehen", close: "360°-Ansicht schließen", loading: "360°-Ansicht wird geladen…", unsupported: "Ihr Browser kann die 360°-Ansicht nicht anzeigen." },
+  it: { open: "Vista 360°", hint: "Trascina per guardarti intorno", close: "Chiudi vista 360°", loading: "Caricamento vista 360°…", unsupported: "Il tuo browser non può mostrare la vista 360°." },
+  es: { open: "Vista 360°", hint: "Arrastra para mirar alrededor", close: "Cerrar vista 360°", loading: "Cargando vista 360°…", unsupported: "Tu navegador no puede mostrar la vista 360°." },
+  tr: { open: "360° görünüm", hint: "Etrafa bakmak için sürükleyin", close: "360° görünümü kapat", loading: "360° görünüm yükleniyor…", unsupported: "Tarayıcınız 360° görünümü gösteremiyor." },
 };
 
 const bookingPathByLanguage: Record<RoomLanguage, string> = {
@@ -190,6 +206,10 @@ function getFloorKind(room: IndividualRoomData): FloorKind {
 
 function RoomVisualCard({ room, language }: { room: IndividualRoomData; language: RoomLanguage }) {
   const [activeImage, setActiveImage] = useState(room.images[0]);
+  const [panoramaOpen, setPanoramaOpen] = useState(false);
+  const panorama = roomPanoramas[room.id];
+  const panoramaText = panoramaLabels[language];
+  const roomName = localizeName(room.name, language);
   const visibleBadges = room.badges.slice(0, 3);
   const visibleBeds = room.beds.slice(0, 2);
   const visibleAmenities = room.amenities.slice(0, 3);
@@ -218,7 +238,26 @@ function RoomVisualCard({ room, language }: { room: IndividualRoomData; language
             {localizeRoomText(activeImage.caption, language)}
           </div>
         ) : null}
+        {panorama ? (
+          <button
+            type="button"
+            onClick={() => setPanoramaOpen(true)}
+            className="absolute bottom-3 right-3 inline-flex min-h-11 touch-manipulation items-center gap-1.5 rounded-full bg-[#2f261f]/95 px-3.5 text-[11px] font-black uppercase tracking-[0.12em] text-white shadow-lg transition hover:bg-[#2f261f] focus-visible:outline focus-visible:outline-4 focus-visible:outline-amber-400"
+            aria-label={`${panoramaText.open} – ${roomName}`}
+          >
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 fill-none stroke-current" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><ellipse cx="12" cy="12" rx="9" ry="4" /><path d="M12 3a4 9 0 0 1 0 18M12 3a4 9 0 0 0 0 18" /></svg>
+            {panoramaText.open}
+          </button>
+        ) : null}
       </div>
+      {panorama && panoramaOpen ? (
+        <RoomPanoramaViewer
+          src={panorama.src}
+          initialYawDeg={panorama.initialYawDeg}
+          labels={{ ...panoramaText, title: `${roomName} · 360°` }}
+          onClose={() => setPanoramaOpen(false)}
+        />
+      ) : null}
 
       <div className="grid grid-cols-4 gap-2 bg-[#fffdfa] p-3" aria-label={`${localizeName(room.name, language)} ${labels[language].photos}`}>
         {room.images.slice(0, 4).map((image, index) => (
