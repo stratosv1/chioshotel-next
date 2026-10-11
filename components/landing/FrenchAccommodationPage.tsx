@@ -216,10 +216,10 @@ export function FrenchAccommodationPage({ data }: Props) {
           <SwipeHint />
           <div className={`${mobileCarousel} mt-7 md:grid-cols-2 md:gap-4 lg:grid-cols-4 sm:mt-10`}>
             {data.explore.links.map((link) => (
-              <a key={link.href} href={link.href} className="group min-w-[78vw] snap-start rounded-[24px] border border-amber-900/10 bg-[#fbf6ef] p-5 shadow-[0_16px_40px_rgba(47,38,31,0.07)] transition hover:-translate-y-1 hover:bg-white hover:shadow-[0_24px_65px_rgba(47,38,31,0.12)] focus:outline-none focus:ring-4 focus:ring-amber-700/15 sm:min-w-[52vw] sm:rounded-[28px] sm:p-6 md:min-w-0">
+              <a key={link.href} href={link.href} className="flex flex-col group min-w-[78vw] snap-start rounded-[24px] border border-amber-900/10 bg-[#fbf6ef] p-5 shadow-[0_16px_40px_rgba(47,38,31,0.07)] transition hover:-translate-y-1 hover:bg-white hover:shadow-[0_24px_65px_rgba(47,38,31,0.12)] focus:outline-none focus:ring-4 focus:ring-amber-700/15 sm:min-w-[52vw] sm:rounded-[28px] sm:p-6 md:min-w-0">
                 <h3 className="text-lg font-black tracking-[-0.025em] sm:text-xl">{link.title}</h3>
                 <p className="mt-3 text-sm leading-6 text-[#574b3f] sm:leading-7">{link.text}</p>
-                <span className="mt-4 inline-flex text-[11px] font-black uppercase tracking-[0.08em] text-amber-800 sm:mt-5 sm:text-xs">Découvrir <span className="ml-2 transition group-hover:translate-x-1" aria-hidden="true">→</span></span>
+                <span className="mt-auto self-start pt-4 sm:pt-5 inline-flex text-[11px] font-black uppercase tracking-[0.08em] text-amber-800 sm:text-xs">Découvrir <span className="ml-2 transition group-hover:translate-x-1" aria-hidden="true">→</span></span>
               </a>
             ))}
           </div>

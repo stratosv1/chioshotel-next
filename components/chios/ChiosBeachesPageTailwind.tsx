@@ -346,7 +346,7 @@ export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
             <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 xl:grid-cols-3">
               {data.beaches.map((beach, index) => (
                 <a
-                  className="group w-[84vw] max-w-[380px] flex-none snap-start overflow-hidden rounded-[1.5rem] bg-white shadow-lg shadow-stone-900/5 ring-1 ring-teal-900/10 transition hover:shadow-xl md:w-auto md:max-w-none md:rounded-[2rem]"
+                  className="group flex flex-col w-[84vw] max-w-[380px] flex-none snap-start overflow-hidden rounded-[1.5rem] bg-white shadow-lg shadow-stone-900/5 ring-1 ring-teal-900/10 transition hover:shadow-xl md:w-auto md:max-w-none md:rounded-[2rem]"
                   href={beach.href}
                   key={beach.href}
                 >
@@ -366,7 +366,7 @@ export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
                       {beach.mood}
                     </div>
                   </div>
-                  <div className="p-5">
+                  <div className="flex flex-1 flex-col p-5">
                     <div className="mb-3 empty:hidden">
                       <BeachSeaTodayBadge beachId={beachIdFromPath(beach.href)} language={language} showWave />
                     </div>
@@ -386,9 +386,12 @@ export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
                         </span>
                       ))}
                     </div>
-                    <span className="mt-5 inline-flex rounded-full border border-teal-800/20 px-4 py-2 text-xs font-black uppercase text-teal-800">
-                      {getExploreBeachLabel(language, beach.title)}
-                    </span>
+                    {/* Pinned to the bottom so every card's button lines up while swiping. */}
+                    <div className="mt-auto pt-5">
+                      <span className="inline-flex rounded-full border border-teal-800/20 px-4 py-2 text-xs font-black uppercase text-teal-800">
+                        {getExploreBeachLabel(language, beach.title)}
+                      </span>
+                    </div>
                   </div>
                 </a>
               ))}

@@ -53,7 +53,7 @@ export function PropertyFaqPage({ data }: { data: PropertyFaqPageData }) {
                     <div className="border-t border-amber-900/10 px-5 py-4 text-sm leading-7 text-stone-600 md:px-6 md:text-base md:leading-8">
                       <p>{item.answer}</p>
                       {item.relatedLink ? (
-                        <a href={item.relatedLink.href} className="mt-3 inline-flex font-black text-amber-800 underline decoration-amber-300 underline-offset-4">
+                        <a href={item.relatedLink.href} className="mt-1 inline-flex min-h-11 items-center font-black text-amber-800 underline decoration-amber-300 underline-offset-4">
                           {item.relatedLink.label}
                         </a>
                       ) : null}

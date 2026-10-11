@@ -213,18 +213,18 @@ function RoomsSection({ data }: { data: HomePageData }) {
           {data.roomsPreview.rooms.map((room) => {
             const imageSrc = homeRoomImages[room.imageClass] || data.hero.image;
             return (
-              <a key={room.id} href={room.href} className="group w-[84vw] max-w-[380px] flex-none snap-start overflow-hidden rounded-[1.5rem] bg-white shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 transition hover:shadow-xl md:w-auto md:max-w-none md:rounded-[2rem]">
+              <a key={room.id} href={room.href} className="group flex w-[84vw] flex-col max-w-[380px] flex-none snap-start overflow-hidden rounded-[1.5rem] bg-white shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 transition hover:shadow-xl md:w-auto md:max-w-none md:rounded-[2rem]">
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <Image src={imageSrc} alt={room.title} fill sizes="(max-width: 768px) 84vw, (max-width: 1280px) 50vw, 25vw" className="object-cover transition duration-500 group-hover:scale-105" loading="lazy" />
                   <div className="absolute left-3 top-3 rounded-full bg-emerald-700 px-3 py-1.5 text-xs font-black text-white">{room.liveBadge}</div>
                   <div className="absolute right-3 top-3 rounded-full bg-white/95 px-3 py-1.5 text-xs font-black text-emerald-700">{room.directBadge}</div>
                   <div className="absolute bottom-3 left-3 rounded-full bg-white/95 px-3 py-1.5 text-xs font-black text-stone-700">{room.bedBadge}</div>
                 </div>
-                <div className="p-5">
+                <div className="flex flex-1 flex-col p-5">
                   <h3 className="break-words tracking-[-0.02em] text-2xl font-extrabold leading-tight text-amber-800">{room.title}</h3>
                   <p className="mt-3 text-sm leading-7 text-stone-600">{room.description}</p>
                   <div className="mt-4 flex flex-wrap gap-2">{[...room.meta, ...room.amenities].map((item) => (<span key={item} className="rounded-full bg-amber-50 px-3 py-1.5 text-[11px] font-bold text-amber-800">{item}</span>))}</div>
-                  <span className="mt-5 inline-flex rounded-full border border-amber-800/20 px-4 py-2 text-xs font-black uppercase text-amber-800">{room.cta}</span>
+                  <div className="mt-auto pt-5"><span className="inline-flex rounded-full border border-amber-800/20 px-4 py-2 text-xs font-black uppercase text-amber-800">{room.cta}</span></div>
                 </div>
               </a>
             );

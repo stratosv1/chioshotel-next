@@ -444,7 +444,7 @@ function CopyCodeButton({ code, labels, offerId, locale }: { code: string; label
         window.setTimeout(() => setCopied(false), 2000);
         emit("offer_copy_code", { offer_id: offerId, coupon_code: code, language: locale });
       }}
-      className={`mt-3 inline-flex min-h-10 items-center justify-center rounded-full px-5 text-[11px] font-black uppercase tracking-[0.1em] transition ${
+      className={`inline-flex min-h-11 shrink-0 items-center justify-center rounded-full px-4 text-[11px] font-black uppercase tracking-[0.1em] transition ${
         copied ? "bg-emerald-700 text-white" : "bg-white text-amber-900 ring-1 ring-amber-800/30 hover:bg-amber-50"
       }`}
     >
@@ -579,12 +579,12 @@ export function DealsPage({ data, lastMinute }: DealsPageProps) {
                     <article
                       id={`offer-${offer.id}`}
                       data-offer-card
-                      className={`group relative basis-[92%] shrink-0 snap-center scroll-mt-28 overflow-hidden rounded-[2rem] border bg-white shadow-xl shadow-stone-900/5 transition hover:-translate-y-1 hover:shadow-2xl hover:shadow-stone-900/10 sm:basis-[72%] lg:basis-auto lg:shrink ${
+                      className={`group relative flex basis-[92%] shrink-0 flex-col snap-center scroll-mt-28 overflow-hidden rounded-[2rem] border bg-white shadow-xl shadow-stone-900/5 transition hover:-translate-y-1 hover:shadow-2xl hover:shadow-stone-900/10 sm:basis-[72%] lg:basis-auto lg:shrink ${
                         highlighted === offer.id ? "border-amber-600 ring-4 ring-amber-300" : "border-amber-800/15"
                       }`}
                       key={offer.id}
                     >
-                      <div className="relative h-[240px] overflow-hidden bg-stone-200 md:h-[340px]">
+                      <div className="relative h-[200px] overflow-hidden bg-stone-200 sm:h-[240px] md:h-[340px]">
                         <Image src={offer.image} alt={offer.imageAlt} fill sizes="(max-width: 1023px) 92vw, 50vw" className="object-cover transition duration-700 group-hover:scale-105" />
                         <span
                           className={`absolute left-4 top-4 inline-flex min-h-8 items-center gap-2 rounded-full px-3 text-[11px] font-black uppercase tracking-[0.08em] shadow-lg ${
@@ -596,40 +596,49 @@ export function DealsPage({ data, lastMinute }: DealsPageProps) {
                         </span>
                       </div>
 
-                      <div className="p-[clamp(24px,4vw,38px)] text-center">
+                      <div className="flex flex-1 flex-col p-5 text-center sm:p-[clamp(24px,4vw,38px)]">
                         {offer.discountLabel ? (
                           <span className="inline-flex min-h-[30px] items-center rounded-full border border-amber-800/15 bg-amber-50 px-3 text-[10px] font-black uppercase tracking-[0.12em] text-amber-800">
                             {offer.discountLabel}
                           </span>
                         ) : null}
-                        <h3 className="mt-4 text-[clamp(28px,4vw,44px)] font-black leading-none tracking-[-0.045em] text-amber-800">{offer.title}</h3>
-                        <p className="mt-4 text-[15px] leading-7 text-stone-600">{offer.description}</p>
+                        <h3 className="mt-3 text-[clamp(28px,4vw,44px)] font-black leading-none tracking-[-0.045em] text-amber-800 sm:mt-4">{offer.title}</h3>
+                        <p className="mt-3 text-[15px] leading-7 text-stone-600 sm:mt-4">{offer.description}</p>
 
+                        {/* Keyword chips look like buttons but do nothing; keep them in the DOM for search, but only show them on large screens where they do not push the booking button below the fold. */}
                         {offer.tags.length ? (
-                          <div className="mt-5 flex flex-wrap justify-center gap-2" aria-label={`${offer.title} tags`}>
+                          <div className="mt-5 hidden flex-wrap justify-center gap-2 lg:flex" aria-label={`${offer.title} tags`}>
                             {offer.tags.map((tag) => (
                               <span className="inline-flex min-h-7 items-center rounded-full border border-amber-800/20 bg-white px-3 text-[9px] font-black uppercase tracking-[0.1em] text-amber-800" key={tag}>{tag}</span>
                             ))}
                           </div>
                         ) : null}
 
-                        {offer.tip ? (
-                          <div className="mt-5 rounded-[1.125rem] border border-amber-800/15 bg-amber-50 p-4 text-[13px] leading-6 text-stone-800">
+                        {offer.couponCode ? (
+                          <div className="mt-4 rounded-[1.25rem] border-2 border-dashed border-amber-800 bg-[#f8f7f2] p-3 text-left sm:p-4" aria-label={`${offer.title} coupon code`}>
+                            {/* Code and copy button share a row when they fit; a long "copy" label (e.g. Greek) wraps below instead of squeezing the code. */}
+                            <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+                              <div>
+                                <span className="block text-[10px] font-black uppercase tracking-[0.12em] text-stone-600">{labels.code}</span>
+                                <strong className="mt-1 block whitespace-nowrap font-sans text-xl font-black leading-none tracking-[0.06em] text-amber-800 sm:text-3xl">{offer.couponCode}</strong>
+                              </div>
+                              <CopyCodeButton code={offer.couponCode} labels={labels} offerId={offer.id} locale={locale} />
+                            </div>
+                            {offer.tip ? (
+                              <p className="mt-2 text-[13px] leading-5 text-stone-700">
+                                <strong className="text-amber-800">{labels.tip}:</strong> {offer.tip}
+                              </p>
+                            ) : null}
+                          </div>
+                        ) : offer.tip ? (
+                          <div className="mt-4 rounded-[1.125rem] border border-amber-800/15 bg-amber-50 p-4 text-[13px] leading-6 text-stone-800">
                             <strong className="text-amber-800">{labels.tip}:</strong> {offer.tip}
                           </div>
                         ) : null}
 
-                        {offer.couponCode ? (
-                          <div className="mt-4 rounded-[1.25rem] border-2 border-dashed border-amber-800 bg-[#f8f7f2] p-4" aria-label={`${offer.title} coupon code`}>
-                            <span className="mb-2 block text-[10px] font-black uppercase tracking-[0.12em] text-stone-600">{labels.code}</span>
-                            <strong className="block font-sans text-3xl font-black leading-none tracking-[0.06em] text-amber-800">{offer.couponCode}</strong>
-                            <CopyCodeButton code={offer.couponCode} labels={labels} offerId={offer.id} locale={locale} />
-                          </div>
-                        ) : null}
-
-                        <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                        <div className="mt-auto grid grid-cols-2 gap-3 pt-4 sm:pt-6">
                           <a
-                            className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-amber-800 px-4 text-[11px] font-black uppercase tracking-[0.1em] !text-white shadow-lg shadow-amber-900/15"
+                            className="inline-flex min-h-[50px] items-center justify-center rounded-full bg-amber-800 px-3 text-center text-[11px] leading-tight font-black uppercase tracking-[0.1em] !text-white shadow-lg shadow-amber-900/15"
                             href={offer.bookingHref}
                             target="_blank"
                             rel="noopener noreferrer"
@@ -637,7 +646,7 @@ export function DealsPage({ data, lastMinute }: DealsPageProps) {
                           >
                             {labels.bookNow}
                           </a>
-                          <a className="inline-flex min-h-[50px] items-center justify-center rounded-full border border-amber-800/20 bg-[#fff7ee] px-4 text-[11px] font-black uppercase tracking-[0.1em] text-amber-900" href={offer.roomPageHref}>
+                          <a className="inline-flex min-h-[50px] items-center justify-center rounded-full border border-amber-800/20 bg-[#fff7ee] px-3 text-center text-[11px] leading-tight font-black uppercase tracking-[0.1em] text-amber-900" href={offer.roomPageHref}>
                             {labels.viewRoom}
                           </a>
                         </div>

@@ -265,7 +265,7 @@ export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
               </p>
               {detail.href ? (
                 <a
-                  className="mt-4 inline-flex font-black text-[#8e6607] underline decoration-[#8e6607]/30 underline-offset-4"
+                  className="mt-2 inline-flex min-h-11 items-center font-black text-[#8e6607] underline decoration-[#8e6607]/30 underline-offset-4"
                   data-cta-placement="details_card"
                   href={detail.href}
                 >
@@ -402,7 +402,7 @@ export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
                 </p>
                 {item.href ? (
                   <a
-                    className="mt-4 inline-flex font-black text-[#8e6607] underline decoration-[#8e6607]/30 underline-offset-4"
+                    className="mt-2 inline-flex min-h-11 items-center font-black text-[#8e6607] underline decoration-[#8e6607]/30 underline-offset-4"
                     href={item.href}
                   >
                     {item.linkLabel ?? item.title}

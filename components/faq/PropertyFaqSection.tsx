@@ -59,7 +59,7 @@ export function PropertyFaqSection({
                 {item.relatedLink ? (
                   <a
                     href={relatedHrefOverrides?.[item.id] ?? item.relatedLink.href}
-                    className="mt-3 inline-flex font-black text-amber-800 underline decoration-amber-300 underline-offset-4"
+                    className="mt-1 inline-flex min-h-11 items-center font-black text-amber-800 underline decoration-amber-300 underline-offset-4"
                   >
                     {item.relatedLink.label}
                   </a>

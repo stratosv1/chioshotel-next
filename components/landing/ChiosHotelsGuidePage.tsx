@@ -145,7 +145,7 @@ export function ChiosHotelsGuidePage({ data }: { data: ChiosHotelsGuideData }) {
           <SwipeHint />
           <div className={`${mobileCarousel} mt-7 md:grid-cols-2 md:gap-5 sm:mt-10`}>
             {data.areas.items.map((area) => (
-              <article key={area.id} id={area.id} className="min-w-[86vw] snap-start rounded-[28px] border border-amber-900/10 bg-white p-5 shadow-[0_20px_55px_rgba(47,38,31,0.09)] sm:min-w-[64vw] sm:p-7 md:min-w-0">
+              <article key={area.id} id={area.id} className="flex flex-col min-w-[86vw] snap-start rounded-[28px] border border-amber-900/10 bg-white p-5 shadow-[0_20px_55px_rgba(47,38,31,0.09)] sm:min-w-[64vw] sm:p-7 md:min-w-0">
                 <span className="rounded-full bg-amber-100 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.08em] text-amber-900">{area.badge}</span>
                 <h3 className="mt-5 text-2xl font-black tracking-[-0.035em]">{area.title}</h3>
                 <p className="mt-3 text-sm leading-7 text-[#574b3f]">{area.text}</p>
@@ -153,7 +153,7 @@ export function ChiosHotelsGuidePage({ data }: { data: ChiosHotelsGuideData }) {
                   <p className="text-[10px] font-black uppercase tracking-[0.12em] text-amber-800">Best for</p>
                   <p className="mt-2 text-sm font-bold leading-6">{area.bestFor}</p>
                 </div>
-                <a href={area.link} className="mt-5 inline-flex text-xs font-black uppercase tracking-[0.08em] text-amber-800">
+                <a href={area.link} className="mt-auto min-h-11 items-center self-start pt-3 inline-flex text-xs font-black uppercase tracking-[0.08em] text-amber-800">
                   Explore this area <span className="ml-2" aria-hidden="true">→</span>
                 </a>
               </article>
@@ -189,10 +189,10 @@ export function ChiosHotelsGuidePage({ data }: { data: ChiosHotelsGuideData }) {
           <SwipeHint />
           <div className={`${mobileCarousel} mt-7 md:grid-cols-2 md:gap-5 lg:grid-cols-3 sm:mt-10`}>
             {data.popularSearches.items.map((item) => (
-              <article key={item.id} id={item.id} className="min-w-[84vw] snap-start rounded-[26px] border border-amber-900/10 bg-[#fbf6ef] p-5 shadow-[0_18px_45px_rgba(47,38,31,0.07)] sm:min-w-[58vw] sm:p-6 md:min-w-0">
+              <article key={item.id} id={item.id} className="flex flex-col min-w-[84vw] snap-start rounded-[26px] border border-amber-900/10 bg-[#fbf6ef] p-5 shadow-[0_18px_45px_rgba(47,38,31,0.07)] sm:min-w-[58vw] sm:p-6 md:min-w-0">
                 <h3 className="text-xl font-black tracking-[-0.03em]">{item.title}</h3>
                 <p className="mt-3 text-sm leading-7 text-[#574b3f]">{item.text}</p>
-                <a href={item.href} className="mt-5 inline-flex text-[11px] font-black uppercase tracking-[0.08em] text-amber-800">
+                <a href={item.href} className="mt-auto min-h-11 items-center self-start pt-3 inline-flex text-[11px] font-black uppercase tracking-[0.08em] text-amber-800">
                   {item.cta} <span className="ml-2" aria-hidden="true">→</span>
                 </a>
               </article>
@@ -265,10 +265,10 @@ export function ChiosHotelsGuidePage({ data }: { data: ChiosHotelsGuideData }) {
           <SwipeHint />
           <div className={`${mobileCarousel} mt-7 md:grid-cols-2 md:gap-4 lg:grid-cols-4 sm:mt-10`}>
             {data.planning.links.map((link) => (
-              <a key={link.href} href={link.href} className="group min-w-[78vw] snap-start rounded-[24px] border border-amber-900/10 bg-[#fbf6ef] p-5 shadow-[0_16px_40px_rgba(47,38,31,0.07)] transition hover:-translate-y-1 hover:bg-white hover:shadow-[0_24px_65px_rgba(47,38,31,0.12)] sm:min-w-[52vw] sm:p-6 md:min-w-0">
+              <a key={link.href} href={link.href} className="flex flex-col group min-w-[78vw] snap-start rounded-[24px] border border-amber-900/10 bg-[#fbf6ef] p-5 shadow-[0_16px_40px_rgba(47,38,31,0.07)] transition hover:-translate-y-1 hover:bg-white hover:shadow-[0_24px_65px_rgba(47,38,31,0.12)] sm:min-w-[52vw] sm:p-6 md:min-w-0">
                 <h3 className="text-xl font-black tracking-[-0.03em]">{link.title}</h3>
                 <p className="mt-3 text-sm leading-7 text-[#574b3f]">{link.text}</p>
-                <span className="mt-5 inline-flex text-xs font-black uppercase tracking-[0.08em] text-amber-800">Open guide <span className="ml-2 transition group-hover:translate-x-1" aria-hidden="true">→</span></span>
+                <span className="mt-auto self-start pt-4 sm:pt-5 inline-flex text-xs font-black uppercase tracking-[0.08em] text-amber-800">Open guide <span className="ml-2 transition group-hover:translate-x-1" aria-hidden="true">→</span></span>
               </a>
             ))}
           </div>

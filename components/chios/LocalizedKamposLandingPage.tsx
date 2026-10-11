@@ -313,12 +313,12 @@ export function LocalizedKamposLandingPage({ data }: Props) {
           <h2 className={`${heading} mt-3 max-w-3xl`}>{t.roomsTitle}</h2>
           <div className="-mx-4 mt-6 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-3 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 lg:grid-cols-4 [&::-webkit-scrollbar]:hidden">
             {roomImages.map((image, index) => (
-              <article key={t.roomTitles[index]} className="w-[80vw] max-w-[315px] shrink-0 snap-center overflow-hidden rounded-[1.5rem] border border-[#dfd1c4] bg-[#fffdf9] shadow-md shadow-[#6f5949]/8 sm:w-auto sm:max-w-none">
+              <article key={t.roomTitles[index]} className="flex w-[80vw] max-w-[315px] shrink-0 snap-center flex-col overflow-hidden rounded-[1.5rem] border border-[#dfd1c4] bg-[#fffdf9] shadow-md shadow-[#6f5949]/8 sm:w-auto sm:max-w-none">
                 <a href={data.hero.primaryCta.href} className="relative block aspect-[16/10] overflow-hidden">
                   <Image src={image} alt={t.roomTitles[index]} fill className="object-cover transition duration-500 hover:scale-105" sizes="(max-width: 640px) 80vw, (max-width: 1024px) 50vw, 25vw" />
-                  <span className="absolute left-3 top-3 rounded-full border border-white/60 bg-[#fffdf9]/90 px-3 py-1.5 text-[0.68rem] font-extrabold text-[#57463b]">{t.roomBadges[index]}</span>
+                  <span className="absolute left-3 top-3 rounded-full border border-white/60 bg-[#fffdf9]/90 px-3 py-1.5 text-xs font-extrabold text-[#57463b]">{t.roomBadges[index]}</span>
                 </a>
-                <div className="p-4"><p className="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-[#9b7d66]">{t.roomSubtitles[index]}</p><h3 className="mt-1.5 tracking-[-0.02em] text-[1.45rem] font-bold leading-tight text-[#4d3c31]">{t.roomTitles[index]}</h3><a href={data.hero.primaryCta.href} className="mt-4 inline-flex text-sm font-extrabold !text-[#6f5949]">{t.details} →</a></div>
+                <div className="flex flex-1 flex-col items-start p-4"><p className="text-xs font-bold uppercase tracking-[0.12em] text-[#7a5f4b]">{t.roomSubtitles[index]}</p><h3 className="mt-1.5 tracking-[-0.02em] text-[1.45rem] font-bold leading-tight text-[#4d3c31]">{t.roomTitles[index]}</h3><a href={data.hero.primaryCta.href} className="mt-auto inline-flex min-h-11 items-center pt-2 text-sm font-extrabold !text-[#6f5949]">{t.details} →</a></div>
               </article>
             ))}
           </div>
