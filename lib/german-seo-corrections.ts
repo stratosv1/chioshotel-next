@@ -86,9 +86,9 @@ const germanPageSeoCorrections = new Map<string, SeoCorrection>([
   [
     "/de/straende-chios/",
     {
-      title: "Strände auf Chios: Die 11 schönsten (mit Geheimtipps)",
+      title: "Strände auf Chios: Die 11 schönsten + Wellen & Wind heute",
       description:
-        "Schwarzer Kies in Mavra Volia, Sand in Komi, smaragdgrünes Wasser in Agia Dynami: der richtige Strand auf Chios für Familien, Ruhe oder Beachbars.",
+        "Live-Check für 26 Strände auf Chios: wo das Meer heute ruhig ist, Wellen und Wind für 3 Tage, dazu die 11 schönsten Strände von Mavra Volia bis Komi.",
     },
   ],
   [

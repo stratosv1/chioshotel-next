@@ -74,9 +74,9 @@ const turkishPageSeoCorrections = new Map<string, SeoCorrection>([
   [
     chiosBeachesPageTr.seo.canonicalPath,
     {
-      title: "Sakız Adası Plajları: En İyi 11 Plaj ve Gizli Koylar",
+      title: "Sakız Adası Plajları: En İyi 11 + Bugün Dalga ve Rüzgar",
       description:
-        "Mavra Volia'nın siyah çakılları, Komi'nin kumu, Agia Dynami'nin zümrüt suyu: aileler, sakinlik veya beach bar için doğru Sakız Adası plajını seçin.",
+        "26 Sakız Adası plajında canlı deniz durumu: bugün deniz nerede sakin, 3 günlük dalga ve rüzgar tahmini ve Mavra Volia'dan Komi'ye en iyi 11 plaj.",
     },
   ],
   [

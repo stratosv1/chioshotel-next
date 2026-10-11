@@ -15,9 +15,9 @@ const frenchSeoCorrections: ReadonlyArray<
   [
     "/fr/plages-de-chios/",
     {
-      title: "Plages de Chios : les 11 plus belles (+ criques secrètes)",
+      title: "Plages de Chios : les 11 plus belles + mer et vent du jour",
       description:
-        "Galets noirs de Mavra Volia, sable de Komi, eaux émeraude d'Agia Dynami : trouvez la plage idéale à Chios pour les familles, le calme ou l'ambiance.",
+        "La mer en direct sur 26 plages de Chios : où elle est calme aujourd'hui, vagues et vent sur 3 jours, et les 11 plus belles plages, de Mavra Volia à Komi.",
     },
   ],
   [

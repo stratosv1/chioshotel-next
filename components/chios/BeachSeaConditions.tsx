@@ -86,6 +86,8 @@ function shortDayLabel(language: SeaLanguage, day: BeachOutlookDay) {
 function updatedLabel(language: SeaLanguage, outlook: BeachSeaOutlook) {
   const copy = seaCopyFor(language);
   const time = new Intl.DateTimeFormat(copy.intlLocale, {
+    day: "numeric",
+    month: "short",
     hour: "2-digit",
     minute: "2-digit",
     hourCycle: "h23",
@@ -517,9 +519,11 @@ export async function BeachSeaConditionsDetail({
 export async function BeachSeaTodayBadge({
   language,
   beachId,
+  showWave = false,
 }: {
   language: SeaLanguage;
   beachId: string | null;
+  showWave?: boolean;
 }) {
   if (!beachId) return null;
   const outlook = await getBeachSeaOutlook();
@@ -533,7 +537,40 @@ export async function BeachSeaTodayBadge({
     >
       <span className={`h-2 w-2 rounded-full ${stateStyles[condition.state].dot}`} aria-hidden="true" />
       {shortDayLabel(language, day)}: {copy.states[condition.state]}
+      {showWave && condition.waveHeightM !== null
+        ? ` · ${formatNumber(language, condition.waveHeightM)} ${copy.waveUnit}`
+        : ""}
     </span>
+  );
+}
+
+/**
+ * Compact live answer for the beaches hub hero: today's island wind and the calmest
+ * beaches, linking down to the full ranking. Shares the cached outlook with the hub
+ * section, so it adds no extra forecast request.
+ */
+export async function BeachSeaHeroStrip({ language }: { language: SeaLanguage }) {
+  const outlook = await getBeachSeaOutlook();
+  const first = outlook?.days[0];
+  if (!outlook || !first) return null;
+  const copy = seaCopyFor(language);
+  const calmest = first.ranked.slice(0, 3).map((row) => beachName(row.beachId, language));
+  return (
+    <a
+      className="mt-6 flex flex-col gap-2 rounded-2xl bg-white/95 px-4 py-3 text-[#102b2d] shadow-xl ring-1 ring-white/40 transition hover:-translate-y-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
+      href="#sea-today"
+    >
+      <span className="flex items-start gap-2.5 text-sm font-bold leading-6 md:text-base">
+        <span className="mt-1.5 inline-flex shrink-0 items-center gap-1.5 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-black uppercase tracking-[0.1em] text-emerald-900">
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500 motion-reduce:animate-none" aria-hidden="true" />
+          {copy.heroLive}
+        </span>
+        <span>{copy.hubAnswer(dayLabel(language, first), islandWindText(language, first), calmest.join(", "))}</span>
+      </span>
+      <span className="shrink-0 text-xs font-black uppercase tracking-[0.1em] text-teal-800">
+        {copy.heroCta(first.ranked.length)}
+      </span>
+    </a>
   );
 }
 

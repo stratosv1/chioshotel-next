@@ -28,17 +28,17 @@ export const seoSnippetOverrides = new Map<string, SeoSnippetOverride>([
   [
     "/es/playas-chios/",
     {
-      title: "Playas de Quíos: las 11 mejores (+ calas escondidas)",
+      title: "Playas de Quíos: las 11 mejores + olas y viento hoy",
       description:
-        "Guijarros negros en Mavra Volia, arena en Komi, aguas esmeralda en Agia Dynami: elige la playa ideal de Quíos para familias, calma o ambiente.",
+        "El mar en directo en 26 playas de Quíos: dónde está en calma hoy, olas y viento a 3 días y las 11 mejores playas, de Mavra Volia a Komi.",
     },
   ],
   [
     "/chios/chios-beaches/",
     {
-      title: "Chios Beaches: The 11 Best Beaches & Hidden Coves",
+      title: "Chios Beaches: 11 Best + Today's Waves & Wind",
       description:
-        "Black-pebble Mavra Volia, sandy Komi, emerald Agia Dynami: pick the right Chios beach for families, quiet swims or lively days, with local tips.",
+        "Live sea check for 26 Chios beaches: where the sea is calm today, waves and wind for 3 days, plus the 11 best beaches from Mavra Volia to Komi.",
     },
   ],
   [
@@ -280,9 +280,9 @@ export const seoSnippetOverrides = new Map<string, SeoSnippetOverride>([
   [
     "/el/paralies-xios/",
     {
-      title: "Παραλίες Χίου: Οι 11 καλύτερες & κρυφοί κολπίσκοι",
+      title: "Παραλίες Χίου: Οι 11 καλύτερες + κύμα & αέρας σήμερα",
       description:
-        "Μαύρα Βόλια, Κώμη, Αγία Δύναμη και άλλες 8: βρείτε την ιδανική παραλία της Χίου για οικογένεια, ησυχία ή beach bar, με συμβουλές από ντόπιους.",
+        "Δείτε live πού έχει κύμα σήμερα σε 26 παραλίες της Χίου και πού είναι ήρεμα, με πρόγνωση 3 ημερών. Μαύρα Βόλια, Κώμη, Αγία Δύναμη και άλλες.",
     },
   ],
   [

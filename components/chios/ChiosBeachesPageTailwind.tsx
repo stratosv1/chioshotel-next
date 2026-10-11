@@ -3,7 +3,12 @@ import type { ChiosBeachesPageData } from "@/content/chios-beaches";
 import { ChiosCollectionImageGallery } from "@/components/chios/ChiosCollectionImageGallery";
 import { AnswerFirstSeoBlock } from "@/components/seo/AnswerFirstSeoBlock";
 import { HorizontalChipScroller } from "@/components/ui/HorizontalChipScroller";
-import { BeachSeaConditionsHub } from "@/components/chios/BeachSeaConditions";
+import {
+  BeachSeaConditionsHub,
+  BeachSeaHeroStrip,
+  BeachSeaTodayBadge,
+} from "@/components/chios/BeachSeaConditions";
+import { beachIdFromPath } from "@/lib/beach-conditions/beach-meta";
 
 type ChiosBeachesPageProps = {
   data: ChiosBeachesPageData;
@@ -221,6 +226,7 @@ export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
             <p className="mt-6 max-w-[650px] text-base font-semibold leading-8 text-white/90 md:text-lg">
               {data.hero.description}
             </p>
+            <BeachSeaHeroStrip language={language} />
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <a
                 className="inline-flex min-h-[54px] items-center justify-center rounded-full bg-gradient-to-r from-[#0f766e] to-[#115e59] px-7 text-xs font-black uppercase tracking-[0.12em] text-white shadow-xl transition hover:-translate-y-1"
@@ -361,6 +367,9 @@ export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
                     </div>
                   </div>
                   <div className="p-5">
+                    <div className="mb-3 empty:hidden">
+                      <BeachSeaTodayBadge beachId={beachIdFromPath(beach.href)} language={language} showWave />
+                    </div>
                     <h3 className="break-words tracking-[-0.02em] text-2xl font-extrabold leading-tight text-teal-800">
                       {beach.title}
                     </h3>

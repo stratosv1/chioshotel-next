@@ -57,6 +57,9 @@ type SeaCopy = {
   shortlistBest: (day: string, names: string) => string;
   shortlistHubLink: string;
   todayBadge: string;
+  // Hero strip (beaches hub)
+  heroLive: string;
+  heroCta: (count: number) => string;
 };
 
 const dirShortLatin: Record<MarineDirection, string> = {
@@ -132,6 +135,8 @@ export const seaCopy: Record<SeaLanguage, SeaCopy> = {
     shortlistBest: (day, names) => `${day}: πιο ήρεμη θάλασσα σε ${names}.`,
     shortlistHubLink: "Δείτε τη θάλασσα σε όλες τις παραλίες της Χίου →",
     todayBadge: "Σήμερα",
+    heroLive: "Live",
+    heroCta: (count) => `Κύμα σε ${count} παραλίες ↓`,
   },
   en: {
     intlLocale: "en-GB",
@@ -197,6 +202,8 @@ export const seaCopy: Record<SeaLanguage, SeaCopy> = {
     shortlistBest: (day, names) => `${day}: calmest sea at ${names}.`,
     shortlistHubLink: "See the sea at every Chios beach →",
     todayBadge: "Today",
+    heroLive: "Live",
+    heroCta: (count) => `Waves at all ${count} beaches ↓`,
   },
   fr: {
     intlLocale: "fr-FR",
@@ -262,6 +269,8 @@ export const seaCopy: Record<SeaLanguage, SeaCopy> = {
     shortlistBest: (day, names) => `${day} : mer la plus calme à ${names}.`,
     shortlistHubLink: "Voir la mer sur toutes les plages de Chios →",
     todayBadge: "Aujourd’hui",
+    heroLive: "En direct",
+    heroCta: (count) => `Les vagues sur ${count} plages ↓`,
   },
   de: {
     intlLocale: "de-DE",
@@ -327,6 +336,8 @@ export const seaCopy: Record<SeaLanguage, SeaCopy> = {
     shortlistBest: (day, names) => `${day}: ruhigstes Meer in ${names}.`,
     shortlistHubLink: "Das Meer an allen Stränden von Chios →",
     todayBadge: "Heute",
+    heroLive: "Live",
+    heroCta: (count) => `Wellen an ${count} Stränden ↓`,
   },
   it: {
     intlLocale: "it-IT",
@@ -392,6 +403,8 @@ export const seaCopy: Record<SeaLanguage, SeaCopy> = {
     shortlistBest: (day, names) => `${day}: mare più calmo a ${names}.`,
     shortlistHubLink: "Il mare in tutte le spiagge di Chios →",
     todayBadge: "Oggi",
+    heroLive: "Live",
+    heroCta: (count) => `Onde in ${count} spiagge ↓`,
   },
   es: {
     intlLocale: "es-ES",
@@ -457,6 +470,8 @@ export const seaCopy: Record<SeaLanguage, SeaCopy> = {
     shortlistBest: (day, names) => `${day}: mar más tranquilo en ${names}.`,
     shortlistHubLink: "Ver el mar en todas las playas de Quíos →",
     todayBadge: "Hoy",
+    heroLive: "En directo",
+    heroCta: (count) => `Olas en ${count} playas ↓`,
   },
   tr: {
     intlLocale: "tr-TR",
@@ -522,6 +537,8 @@ export const seaCopy: Record<SeaLanguage, SeaCopy> = {
     shortlistBest: (day, names) => `${day}: en sakin deniz ${names} plajında.`,
     shortlistHubLink: "Sakız Adası’nın tüm plajlarında deniz →",
     todayBadge: "Bugün",
+    heroLive: "Canlı",
+    heroCta: (count) => `${count} plajda dalga durumu ↓`,
   },
 };
 
