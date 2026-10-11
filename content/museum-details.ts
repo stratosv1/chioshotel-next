@@ -54,7 +54,7 @@ export const museumDetails: MuseumDetailData[] = [
       description:
         "Visit the Chios Mastic Museum and discover the history, cultivation and cultural importance of mastic, one of the island’s most unique traditions.",
       ogImage:
-        "/images/museums/mousio.mastic.webp",
+        "/images/museums/mousio.mastic-hd.webp",
     },
     hero: {
       kicker: "South Chios • Mastic culture",
@@ -62,7 +62,7 @@ export const museumDetails: MuseumDetailData[] = [
       description:
         "A must-visit museum dedicated to the history, cultivation and cultural value of Chios mastic, the island’s most distinctive natural product.",
       image:
-        "/images/museums/mousio.mastic.webp",
+        "/images/museums/mousio.mastic-hd.webp",
       tags: ["#mastic_museum", "#south_chios", "#mastic_culture", "#mastichochoria"],
     },
     details: [
@@ -235,7 +235,7 @@ export const museumDetails: MuseumDetailData[] = [
       description:
         "Visit the Chios Byzantine Museum and explore Byzantine and post-Byzantine art, icons, manuscripts and religious heritage in Chios Town.",
       ogImage:
-        "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
+        "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece-hd.webp",
     },
     hero: {
       kicker: "Chios Town • Byzantine heritage",
@@ -243,7 +243,7 @@ export const museumDetails: MuseumDetailData[] = [
       description:
         "A cultural stop in Chios Town dedicated to Byzantine and post-Byzantine art, religious heritage and the historic layers of the island.",
       image:
-        "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
+        "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece-hd.webp",
       tags: ["#byzantine_museum", "#icons", "#chios_town", "#culture"],
     },
     details: [
@@ -596,13 +596,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/el/mouseia-xios/mouseio-mastichas-xios/",
       "title": "Μουσείο Μαστίχας Χίου | Πολιτιστικός οδηγός Χίου",
       "description": "Επισκεφθείτε Μουσείο Μαστίχας Χίου και ανακαλύψτε την ιστορία, την καλλιέργεια και την πολιτιστική αξία της μαστίχας.",
-      "ogImage": "/images/museums/mousio.mastic.webp"
+      "ogImage": "/images/museums/mousio.mastic-hd.webp"
     },
     "hero": {
       "kicker": "Νότια Χίος • Πολιτισμός μαστίχας",
       "title": "Μουσείο Μαστίχας Χίου",
       "description": "Επισκεφθείτε Μουσείο Μαστίχας Χίου και ανακαλύψτε την ιστορία, την καλλιέργεια και την πολιτιστική αξία της μαστίχας.",
-      "image": "/images/museums/mousio.mastic.webp",
+      "image": "/images/museums/mousio.mastic-hd.webp",
       "tags": [
         "#mastic_museum",
         "#south_chios",
@@ -678,13 +678,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/fr/musees-de-chios/musee-du-mastic-chios/",
       "title": "Musée du Mastic de Chios | Guide culturel de Chios",
       "description": "Visitez Musée du Mastic de Chios et découvrez l’histoire, la culture et l’importance culturelle du mastic.",
-      "ogImage": "/images/museums/mousio.mastic.webp"
+      "ogImage": "/images/museums/mousio.mastic-hd.webp"
     },
     "hero": {
       "kicker": "Sud de Chios • Culture du mastic",
       "title": "Musée du Mastic de Chios",
       "description": "Visitez Musée du Mastic de Chios et découvrez l’histoire, la culture et l’importance culturelle du mastic.",
-      "image": "/images/museums/mousio.mastic.webp",
+      "image": "/images/museums/mousio.mastic-hd.webp",
       "tags": [
         "#mastic_museum",
         "#south_chios",
@@ -760,13 +760,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/de/museen-chios/mastix-museum-chios/",
       "title": "Mastix-Museum Chios | Kulturführer für Chios",
       "description": "Besuchen Sie Mastix-Museum Chios und entdecken Sie Geschichte, Anbau und kulturelle Bedeutung des Mastix.",
-      "ogImage": "/images/museums/mousio.mastic.webp"
+      "ogImage": "/images/museums/mousio.mastic-hd.webp"
     },
     "hero": {
       "kicker": "Süd-Chios • Mastixkultur",
       "title": "Mastix-Museum Chios",
       "description": "Besuchen Sie Mastix-Museum Chios und entdecken Sie Geschichte, Anbau und kulturelle Bedeutung des Mastix.",
-      "image": "/images/museums/mousio.mastic.webp",
+      "image": "/images/museums/mousio.mastic-hd.webp",
       "tags": [
         "#mastic_museum",
         "#south_chios",
@@ -842,13 +842,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/it/musei-chios/museo-del-mastice-chios/",
       "title": "Museo del Mastice di Chios | Guida culturale di Chios",
       "description": "Visita Museo del Mastice di Chios e scopri la storia, la coltivazione e il valore culturale del mastice.",
-      "ogImage": "/images/museums/mousio.mastic.webp"
+      "ogImage": "/images/museums/mousio.mastic-hd.webp"
     },
     "hero": {
       "kicker": "Chios meridionale • Cultura del mastice",
       "title": "Museo del Mastice di Chios",
       "description": "Visita Museo del Mastice di Chios e scopri la storia, la coltivazione e il valore culturale del mastice.",
-      "image": "/images/museums/mousio.mastic.webp",
+      "image": "/images/museums/mousio.mastic-hd.webp",
       "tags": [
         "#mastic_museum",
         "#south_chios",
@@ -924,13 +924,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/es/museos-chios/museo-mastiha-chios/",
       "title": "Museo de la Mastiha de Chios | Guía cultural de Chios",
       "description": "Visita Museo de la Mastiha de Chios y descubre la historia, el cultivo y la importancia cultural de la mastiha.",
-      "ogImage": "/images/museums/mousio.mastic.webp"
+      "ogImage": "/images/museums/mousio.mastic-hd.webp"
     },
     "hero": {
       "kicker": "Sur de Chios • Cultura de la mastiha",
       "title": "Museo de la Mastiha de Chios",
       "description": "Visita Museo de la Mastiha de Chios y descubre la historia, el cultivo y la importancia cultural de la mastiha.",
-      "image": "/images/museums/mousio.mastic.webp",
+      "image": "/images/museums/mousio.mastic-hd.webp",
       "tags": [
         "#mastic_museum",
         "#south_chios",
@@ -1006,13 +1006,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/tr/sakiz-adasi-muzeleri/sakiz-mastik-muzesi/",
       "title": "Sakız Mastik Müzesi | Sakız Adası kültür rehberi",
       "description": "Ziyaret edin Sakız Mastik Müzesi ve keşfedin mastiğin tarihini, üretimini ve kültürel önemini.",
-      "ogImage": "/images/museums/mousio.mastic.webp"
+      "ogImage": "/images/museums/mousio.mastic-hd.webp"
     },
     "hero": {
       "kicker": "Güney Sakız • Mastik kültürü",
       "title": "Sakız Mastik Müzesi",
       "description": "Ziyaret edin Sakız Mastik Müzesi ve keşfedin mastiğin tarihini, üretimini ve kültürel önemini.",
-      "image": "/images/museums/mousio.mastic.webp",
+      "image": "/images/museums/mousio.mastic-hd.webp",
       "tags": [
         "#mastic_museum",
         "#south_chios",
@@ -1580,13 +1580,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/el/mouseia-xios/vyzantino-mouseio-xios/",
       "title": "Βυζαντινό Μουσείο Χίου | Πολιτιστικός οδηγός Χίου",
       "description": "Επισκεφθείτε Βυζαντινό Μουσείο Χίου και ανακαλύψτε τη βυζαντινή και μεταβυζαντινή τέχνη, τις εικόνες και τη θρησκευτική κληρονομιά.",
-      "ogImage": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp"
+      "ogImage": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece-hd.webp"
     },
     "hero": {
       "kicker": "Πόλη Χίου • Βυζαντινή κληρονομιά",
       "title": "Βυζαντινό Μουσείο Χίου",
       "description": "Επισκεφθείτε Βυζαντινό Μουσείο Χίου και ανακαλύψτε τη βυζαντινή και μεταβυζαντινή τέχνη, τις εικόνες και τη θρησκευτική κληρονομιά.",
-      "image": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
+      "image": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece-hd.webp",
       "tags": [
         "#byzantine_museum",
         "#icons",
@@ -1662,13 +1662,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/fr/musees-de-chios/musee-byzantin-chios/",
       "title": "Musée byzantin de Chios | Guide culturel de Chios",
       "description": "Visitez Musée byzantin de Chios et découvrez l’art byzantin et post-byzantin, les icônes et le patrimoine religieux.",
-      "ogImage": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp"
+      "ogImage": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece-hd.webp"
     },
     "hero": {
       "kicker": "Ville de Chios • Patrimoine byzantin",
       "title": "Musée byzantin de Chios",
       "description": "Visitez Musée byzantin de Chios et découvrez l’art byzantin et post-byzantin, les icônes et le patrimoine religieux.",
-      "image": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
+      "image": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece-hd.webp",
       "tags": [
         "#byzantine_museum",
         "#icons",
@@ -1744,13 +1744,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/de/museen-chios/byzantinisches-museum-chios/",
       "title": "Byzantinisches Museum Chios | Kulturführer für Chios",
       "description": "Besuchen Sie Byzantinisches Museum Chios und entdecken Sie byzantinische und postbyzantinische Kunst, Ikonen und religiöses Erbe.",
-      "ogImage": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp"
+      "ogImage": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece-hd.webp"
     },
     "hero": {
       "kicker": "Chios-Stadt • Byzantinisches Erbe",
       "title": "Byzantinisches Museum Chios",
       "description": "Besuchen Sie Byzantinisches Museum Chios und entdecken Sie byzantinische und postbyzantinische Kunst, Ikonen und religiöses Erbe.",
-      "image": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
+      "image": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece-hd.webp",
       "tags": [
         "#byzantine_museum",
         "#icons",
@@ -1826,13 +1826,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/it/musei-chios/museo-bizantino-chios/",
       "title": "Museo Bizantino di Chios | Guida culturale di Chios",
       "description": "Visita Museo Bizantino di Chios e scopri l’arte bizantina e post-bizantina, le icone e il patrimonio religioso.",
-      "ogImage": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp"
+      "ogImage": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece-hd.webp"
     },
     "hero": {
       "kicker": "Città di Chios • Patrimonio bizantino",
       "title": "Museo Bizantino di Chios",
       "description": "Visita Museo Bizantino di Chios e scopri l’arte bizantina e post-bizantina, le icone e il patrimonio religioso.",
-      "image": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
+      "image": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece-hd.webp",
       "tags": [
         "#byzantine_museum",
         "#icons",
@@ -1908,13 +1908,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/es/museos-chios/museo-bizantino-chios/",
       "title": "Museo Bizantino de Chios | Guía cultural de Chios",
       "description": "Visita Museo Bizantino de Chios y descubre el arte bizantino y posbizantino, los iconos y el patrimonio religioso.",
-      "ogImage": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp"
+      "ogImage": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece-hd.webp"
     },
     "hero": {
       "kicker": "Ciudad de Chios • Patrimonio bizantino",
       "title": "Museo Bizantino de Chios",
       "description": "Visita Museo Bizantino de Chios y descubre el arte bizantino y posbizantino, los iconos y el patrimonio religioso.",
-      "image": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
+      "image": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece-hd.webp",
       "tags": [
         "#byzantine_museum",
         "#icons",
@@ -1990,13 +1990,13 @@ export const localizedMuseumDetails: MuseumDetailData[] = [
       "canonicalPath": "/tr/sakiz-adasi-muzeleri/bizans-muzesi-sakiz/",
       "title": "Sakız Bizans Müzesi | Sakız Adası kültür rehberi",
       "description": "Ziyaret edin Sakız Bizans Müzesi ve keşfedin Bizans ve Bizans sonrası sanatı, ikonaları ve dini mirası.",
-      "ogImage": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp"
+      "ogImage": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece-hd.webp"
     },
     "hero": {
       "kicker": "Sakız şehir merkezi • Bizans mirası",
       "title": "Sakız Bizans Müzesi",
       "description": "Ziyaret edin Sakız Bizans Müzesi ve keşfedin Bizans ve Bizans sonrası sanatı, ikonaları ve dini mirası.",
-      "image": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
+      "image": "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece-hd.webp",
       "tags": [
         "#byzantine_museum",
         "#icons",
@@ -3559,7 +3559,7 @@ export const relatedMuseumCards = [
     description: "The story of Chios mastic, from cultivation to culture.",
     href: "/chios/chios-museums/the-mastic-museum-chios/",
     image:
-      "/images/museums/mousio.mastic.webp",
+      "/images/museums/mousio.mastic-hd.webp",
     imageAlt: "Chios Mastic Museum",
     badge: "Mastic",
     size: "large",
@@ -3581,7 +3581,7 @@ export const relatedMuseumCards = [
     description: "Icons, religious art and Byzantine heritage.",
     href: "/chios/chios-museums/chios-byzantine-museum/",
     image:
-      "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
+      "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece-hd.webp",
     imageAlt: "Chios Byzantine Museum",
     badge: "Byzantine",
     size: "normal",

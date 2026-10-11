@@ -366,7 +366,7 @@ export const homePageEn: HomePageData = {
     subtitle: "Map, distances, contact details and direct booking advantages.",
     map: {
       previewImage:
-        "/images/site/voulamandis.house_.google.maps_.webp",
+        "/images/site/kambos-map-preview.webp",
       iframeSrc:
         "https://www.google.com/maps/search/?api=1&query=Voulamandis%20House%2C%20Dimarchou%20Kalvokoressi%20117%2C%20Kambos%2C%20Chios%2082100",
       buttonLabel: "Show Map",

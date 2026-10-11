@@ -57,7 +57,7 @@ export type FamilyBeachesPageData = {
 
 const images = {
   hero: "/images/beaches/lithi-beach-chios.webp",
-  komi: "/images/beaches/komi-sandy-beach-chios.webp",
+  komi: "/images/beaches/komi-sandy-beach-chios-hd.webp",
   karfas: "/images/beaches/agia-fotia-beach-chios.webp",
   lithi: "/images/beaches/lithi-beach-chios.webp",
   agiaDynami: "/images/beaches/agia-dynami-beach-chios.webp",

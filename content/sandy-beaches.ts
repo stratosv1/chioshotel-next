@@ -6,7 +6,7 @@ const images = {
   hero: "/images/beaches/lithi-beach-chios.webp",
   lithi: "/images/beaches/lithi-beach-chios.webp",
   karfas: "/images/beaches/agia-fotia-beach-chios.webp",
-  komi: "/images/beaches/komi-sandy-beach-chios.webp",
+  komi: "/images/beaches/komi-sandy-beach-chios-hd.webp",
   stay: "/images/beaches/voulamandis-house-courtyard-chios.webp",
 };
 

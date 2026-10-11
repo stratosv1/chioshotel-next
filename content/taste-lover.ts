@@ -120,7 +120,7 @@ const images = {
     alt: "Masourakia, traditional Chios sweets with mastiha",
   },
   passas: {
-    src: "/images/taste/passas.chios_.jpg",
+    src: "/images/taste/passas.chios_-hd.webp",
     alt: "Traditional dishes at Passas Tavern in Chios",
   },
   makelos: {
@@ -132,7 +132,7 @@ const images = {
     alt: "Traditional food and local flavors at Kechrimpari in Chios",
   },
   kafenes: {
-    src: "/images/taste/kafenes.jpg",
+    src: "/images/taste/kafenes-hd.webp",
     alt: "Traditional kafenes in Chios with tables outside",
   },
   asteri: {

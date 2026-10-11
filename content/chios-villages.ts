@@ -82,9 +82,9 @@ const villageImages = {
   olympoi:
     "/images/villages/olympoi-1-768x432.webp",
   volissos:
-    "/images/villages/Volissos-Chios.webp",
+    "/images/villages/Volissos-Chios-hd.webp",
   armolia:
-    "/images/villages/unnamed-e1702830815478.webp",
+    "/images/villages/unnamed-e1702830815478-hd.webp",
   lagada:
     "/images/villages/lagada_3.webp",
 };

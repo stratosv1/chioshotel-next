@@ -148,7 +148,7 @@ const polishCustomPages: readonly ImageSitemapEntry[] = [
     images: [
       "/images/activities/chios.hotels.voulamandis.house_.hero_.image_.webp",
       ...polishRoomCardImages,
-      "/images/kampos/kampos-chios-mansion-garden.webp",
+      "/images/kampos/kampos-chios-mansion-garden-hd.webp",
     ],
   },
   {
@@ -163,7 +163,7 @@ const polishCustomPages: readonly ImageSitemapEntry[] = [
     path: "/pl/kambos-chios/",
     images: [
       "/images/kampos/kambos-chios.jpg",
-      "/images/kampos/kampos-chios-mansion-garden.webp",
+      "/images/kampos/kampos-chios-mansion-garden-hd.webp",
       "/images/kampos/antouaniko-kampos-chios.webp",
       ...polishRoomCardImages,
       "/images/kampos/kampos-chios-stone-mansion.webp",

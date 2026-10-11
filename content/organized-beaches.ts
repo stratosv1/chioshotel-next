@@ -15,12 +15,12 @@ export type OrganizedBeachesPageData = {
 };
 
 const images = {
-  hero: "/images/beaches/komi-sandy-beach-chios.webp",
+  hero: "/images/beaches/komi-sandy-beach-chios-hd.webp",
   karfas: "/images/beaches/agia-fotia-beach-chios.webp",
   agiaFotia: "/images/beaches/agia-fotia-beach-chios.webp",
-  komi: "/images/beaches/komi-sandy-beach-chios.webp",
-  emporios: "/images/beaches/mavra-volia-beach-chios.webp",
-  lefkathia: "/images/beaches/lefkathia-2.jpg",
+  komi: "/images/beaches/komi-sandy-beach-chios-hd.webp",
+  emporios: "/images/beaches/mavra-volia-beach-chios-hd.webp",
+  lefkathia: "/images/beaches/lefkathia-2-hd.webp",
   lithi: "/images/beaches/lithi-beach-chios.webp",
   stay: "/images/beaches/voulamandis-house-courtyard-chios.webp",
 };

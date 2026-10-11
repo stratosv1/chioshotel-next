@@ -156,7 +156,7 @@ const images = {
     alt: "Korais Library in Chios with historic manuscripts and cultural treasures",
   },
   masticMuseum: {
-    src: "/images/museums/mousio.mastic.webp",
+    src: "/images/museums/mousio.mastic-hd.webp",
     alt: "Chios Mastic Museum and mastic tradition in southern Chios",
   },
   mesta: {

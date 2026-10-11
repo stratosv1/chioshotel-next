@@ -56,7 +56,7 @@ const EXTRA_KNOWLEDGE: KnowledgeItem[] = [
       "Driving is recommended from Kambos.",
     ],
     tags: ["komi", "sandy", "family beach", "children", "south chios", "organized"],
-    image: "/images/beaches/komi-sandy-beach-chios.webp",
+    image: "/images/beaches/komi-sandy-beach-chios-hd.webp",
     links: {
       en: "/chios/chios-beaches/komi-beach/", el: "/el/paralies-xios/paralia-komi/", fr: "/fr/plages-de-chios/plage-komi/", de: "/de/straende-chios/komi-strand/", it: "/it/spiagge-chios/spiaggia-komi/", es: "/es/playas-chios/playa-komi/",
     },
@@ -87,7 +87,7 @@ const EXTRA_KNOWLEDGE: KnowledgeItem[] = [
       "Opening hours and ticket prices should be checked from the official museum source before visiting.",
     ],
     tags: ["mastic museum", "masticha", "culture", "family", "south chios", "history"],
-    image: "/images/family/moysio-mastixas-1-Copy.webp",
+    image: "/images/family/moysio-mastixas-1-Copy-hd.webp",
     links: {
       en: "/chios/chios-museums/the-mastic-museum-chios/", el: "/el/mouseia-xios/mouseio-mastichas-xios/", fr: "/fr/musees-de-chios/musee-du-mastic-chios/", de: "/de/museen-chios/mastix-museum-chios/", it: "/it/musei-chios/museo-del-mastice-chios/", es: "/es/museos-chios/museo-mastiha-chios/",
     },

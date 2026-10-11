@@ -71,11 +71,11 @@ export type ChiosMuseumsPageData = {
 
 const museumImages = {
   mastic:
-    "/images/museums/mousio.mastic.webp",
+    "/images/museums/mousio.mastic-hd.webp",
   archaeological:
     "/images/museums/caption.webp",
   byzantine:
-    "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp",
+    "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece-hd.webp",
   koraes:
     "/images/museums/vivlitothiki-korai-1.webp",
   maritime:

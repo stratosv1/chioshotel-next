@@ -191,14 +191,14 @@ export const beachDetails: BeachDetailData[] = [
       title: "Lefkathia Beach Chios | Crystal Waters in Volissos",
       description:
         "Discover Lefkathia Beach in northwestern Chios, a beautiful enclosed bay near Volissos and Limnia with crystal waters, tamarisk trees and sunset views.",
-      ogImage: "/images/beaches/lefkathia-2.jpg",
+      ogImage: "/images/beaches/lefkathia-2-hd.webp",
     },
     hero: {
       kicker: "Northwestern Chios • Volissos",
       title: "Lefkathia Beach: Crystal Waters in Volissos",
       description:
         "A beautiful enclosed bay in northwestern Chios. Its semi-circular shape, crystal-clear waters and stunning sunsets will enchant you.",
-      image: "/images/beaches/lefkathia-2.jpg",
+      image: "/images/beaches/lefkathia-2-hd.webp",
       tags: ["#northwest_chios", "#volissos", "#youth_vibe", "#sunset_spot"],
     },
     details: [
@@ -533,7 +533,7 @@ export const beachDetails: BeachDetailData[] = [
       description:
         "Discover Komi Beach in southeastern Chios, one of the island’s most popular organized sandy beaches with shallow waters, restaurants, cafe-bars and beach activities.",
       ogImage:
-        "/images/beaches/komi-sandy-beach-chios.webp",
+        "/images/beaches/komi-sandy-beach-chios-hd.webp",
     },
     hero: {
       kicker: "Southeast Chios • Golden sand",
@@ -541,7 +541,7 @@ export const beachDetails: BeachDetailData[] = [
       description:
         "One of the most popular and fully organized beaches in Chios, with endless sand, shallow crystal waters and excellent options for dining and entertainment by the waves.",
       image:
-        "/images/beaches/komi-sandy-beach-chios.webp",
+        "/images/beaches/komi-sandy-beach-chios-hd.webp",
       tags: ["#southeast_chios", "#golden_sand", "#organized_beach", "#family_friendly"],
     },
     details: [
@@ -602,7 +602,7 @@ export const beachDetails: BeachDetailData[] = [
       description:
         "Explore Emporios Mavra Volia Beach in southern Chios, the island’s iconic volcanic beach with black pebbles, three bays, deep cool waters and wild cliffs.",
       ogImage:
-        "/images/beaches/mavra-volia-beach-chios.webp",
+        "/images/beaches/mavra-volia-beach-chios-hd.webp",
     },
     hero: {
       kicker: "Emporios • Volcanic beach",
@@ -610,7 +610,7 @@ export const beachDetails: BeachDetailData[] = [
       description:
         "The most iconic and impressive beach of Chios: three consecutive bays with deep dark waters and breathtaking black volcanic pebbles.",
       image:
-        "/images/beaches/mavra-volia-beach-chios.webp",
+        "/images/beaches/mavra-volia-beach-chios-hd.webp",
       tags: ["#mavra_volia", "#emporios", "#volcanic_beach", "#mavros_gialos"],
     },
     details: [
@@ -1652,14 +1652,14 @@ export const localizedBeachDetails: BeachDetailData[] = [
       title: "Παραλία Λευκάθια Χίος | Κρυστάλλινα νερά στη Βολισσό",
       description:
         "Ανακαλύψτε την παραλία Λευκάθια στη βορειοδυτική Χίο, έναν όμορφο κλειστό κόλπο κοντά στη Βολισσό και τη Λιμνιά με κρυστάλλινα νερά, αρμυρίκια και υπέροχο ηλιοβασίλεμα.",
-      ogImage: "/images/beaches/lefkathia-2.jpg",
+      ogImage: "/images/beaches/lefkathia-2-hd.webp",
     },
     hero: {
       kicker: "Βορειοδυτική Χίος • Βολισσός",
       title: "Παραλία Λευκάθια: κρυστάλλινα νερά στη Βολισσό",
       description:
         "Ένας όμορφος κλειστός κόλπος στη βορειοδυτική Χίο. Το ημικυκλικό σχήμα, τα καθαρά νερά και τα μαγικά ηλιοβασιλέματα δημιουργούν μια ξεχωριστή εμπειρία.",
-      image: "/images/beaches/lefkathia-2.jpg",
+      image: "/images/beaches/lefkathia-2-hd.webp",
       tags: ["#βορειοδυτική_χίος", "#βολισσός", "#νεανική_ατμόσφαιρα", "#ηλιοβασίλεμα"],
     },
     details: [
@@ -1719,14 +1719,14 @@ export const localizedBeachDetails: BeachDetailData[] = [
       title: "Plage de Lefkathia à Chios | Eaux cristallines à Volissos",
       description:
         "Découvrez la plage de Lefkathia au nord-ouest de Chios, une belle baie fermée près de Volissos et Limnia avec des eaux cristallines, des tamaris et une vue sur le coucher du soleil.",
-      ogImage: "/images/beaches/lefkathia-2.jpg",
+      ogImage: "/images/beaches/lefkathia-2-hd.webp",
     },
     hero: {
       kicker: "Nord-ouest de Chios • Volissos",
       title: "Plage de Lefkathia : eaux cristallines à Volissos",
       description:
         "Une belle baie fermée au nord-ouest de Chios. Sa forme semi-circulaire, ses eaux limpides et ses superbes couchers de soleil créent une atmosphère unique.",
-      image: "/images/beaches/lefkathia-2.jpg",
+      image: "/images/beaches/lefkathia-2-hd.webp",
       tags: ["#nord_ouest_chios", "#volissos", "#ambiance_jeune", "#coucher_de_soleil"],
     },
     details: [
@@ -1786,14 +1786,14 @@ export const localizedBeachDetails: BeachDetailData[] = [
       title: "Lefkathia Strand Chios | Kristallklares Wasser bei Volissos",
       description:
         "Entdecken Sie den Lefkathia Strand im Nordwesten von Chios, eine schöne geschlossene Bucht nahe Volissos und Limnia mit kristallklarem Wasser, Tamarisken und Sonnenuntergangsblick.",
-      ogImage: "/images/beaches/lefkathia-2.jpg",
+      ogImage: "/images/beaches/lefkathia-2-hd.webp",
     },
     hero: {
       kicker: "Nordwest-Chios • Volissos",
       title: "Lefkathia Strand: kristallklares Wasser bei Volissos",
       description:
         "Eine schöne geschlossene Bucht im Nordwesten von Chios. Die halbkreisförmige Bucht, das klare Wasser und die Sonnenuntergänge schaffen eine besondere Atmosphäre.",
-      image: "/images/beaches/lefkathia-2.jpg",
+      image: "/images/beaches/lefkathia-2-hd.webp",
       tags: ["#nordwest_chios", "#volissos", "#junge_atmosphaere", "#sonnenuntergang"],
     },
     details: [
@@ -1853,14 +1853,14 @@ export const localizedBeachDetails: BeachDetailData[] = [
       title: "Spiaggia di Lefkathia Chios | Acque cristalline a Volissos",
       description:
         "Scopri la spiaggia di Lefkathia nel nord-ovest di Chios, una splendida baia chiusa vicino a Volissos e Limnia con acque cristalline, tamerici e tramonti suggestivi.",
-      ogImage: "/images/beaches/lefkathia-2.jpg",
+      ogImage: "/images/beaches/lefkathia-2-hd.webp",
     },
     hero: {
       kicker: "Nord-ovest di Chios • Volissos",
       title: "Spiaggia di Lefkathia: acque cristalline a Volissos",
       description:
         "Una splendida baia chiusa nel nord-ovest di Chios. La sua forma semicircolare, le acque limpide e i tramonti creano un’atmosfera speciale.",
-      image: "/images/beaches/lefkathia-2.jpg",
+      image: "/images/beaches/lefkathia-2-hd.webp",
       tags: ["#nord_ovest_chios", "#volissos", "#atmosfera_giovane", "#tramonto"],
     },
     details: [
@@ -1920,14 +1920,14 @@ export const localizedBeachDetails: BeachDetailData[] = [
       title: "Playa de Lefkathia Chios | Aguas cristalinas en Volissos",
       description:
         "Descubre la playa de Lefkathia en el noroeste de Chios, una hermosa bahía cerrada cerca de Volissos y Limnia con aguas cristalinas, tamariscos y vistas al atardecer.",
-      ogImage: "/images/beaches/lefkathia-2.jpg",
+      ogImage: "/images/beaches/lefkathia-2-hd.webp",
     },
     hero: {
       kicker: "Noroeste de Chios • Volissos",
       title: "Playa de Lefkathia: aguas cristalinas en Volissos",
       description:
         "Una hermosa bahía cerrada en el noroeste de Chios. Su forma semicircular, sus aguas claras y sus atardeceres crean una atmósfera muy especial.",
-      image: "/images/beaches/lefkathia-2.jpg",
+      image: "/images/beaches/lefkathia-2-hd.webp",
       tags: ["#noroeste_de_chios", "#volissos", "#ambiente_joven", "#atardecer"],
     },
     details: [
@@ -1987,14 +1987,14 @@ export const localizedBeachDetails: BeachDetailData[] = [
       title: "Lefkathia Plajı Sakız Adası | Volissos’ta kristal sular",
       description:
         "Sakız Adası’nın kuzeybatısındaki Lefkathia Plajı’nı keşfedin: Volissos ve Limnia yakınında kristal suları, ılgın ağaçları ve gün batımı manzarasıyla güzel bir kapalı koy.",
-      ogImage: "/images/beaches/lefkathia-2.jpg",
+      ogImage: "/images/beaches/lefkathia-2-hd.webp",
     },
     hero: {
       kicker: "Kuzeybatı Sakız • Volissos",
       title: "Lefkathia Plajı: Volissos’ta kristal sular",
       description:
         "Sakız Adası’nın kuzeybatısında güzel bir kapalı koy. Yarım daire şekli, berrak suları ve gün batımı manzarası özel bir atmosfer yaratır.",
-      image: "/images/beaches/lefkathia-2.jpg",
+      image: "/images/beaches/lefkathia-2-hd.webp",
       tags: ["#kuzeybati_sakiz", "#volissos", "#genç_atmosfer", "#gun_batimi"],
     },
     details: [
@@ -3724,7 +3724,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Ανακαλύψτε την παραλία Κώμη στη νοτιοανατολική Χίο, μία από τις πιο δημοφιλείς οργανωμένες αμμώδεις παραλίες του νησιού με ρηχά νερά, εστιατόρια, καφέ-μπαρ και δραστηριότητες.",
       ogImage:
-        "/images/beaches/komi-sandy-beach-chios.webp",
+        "/images/beaches/komi-sandy-beach-chios-hd.webp",
     },
     hero: {
       kicker: "Νοτιοανατολική Χίος • Χρυσή άμμος",
@@ -3732,7 +3732,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Μία από τις πιο δημοφιλείς και πλήρως οργανωμένες παραλίες της Χίου, με ατελείωτη άμμο, ρηχά κρυστάλλινα νερά και εξαιρετικές επιλογές για φαγητό και διασκέδαση δίπλα στο κύμα.",
       image:
-        "/images/beaches/komi-sandy-beach-chios.webp",
+        "/images/beaches/komi-sandy-beach-chios-hd.webp",
       tags: ["#νοτιοανατολική_χίος", "#χρυσή_άμμος", "#οργανωμένη", "#οικογενειακή"],
     },
     details: [
@@ -3793,7 +3793,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Découvrez la plage de Komi au sud-est de Chios, l’une des plages de sable organisées les plus populaires de l’île avec eaux peu profondes, restaurants, cafés-bars et activités de plage.",
       ogImage:
-        "/images/beaches/komi-sandy-beach-chios.webp",
+        "/images/beaches/komi-sandy-beach-chios-hd.webp",
     },
     hero: {
       kicker: "Sud-est de Chios • Sable doré",
@@ -3801,7 +3801,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "L’une des plages les plus populaires et les mieux organisées de Chios, avec du sable à perte de vue, des eaux peu profondes et cristallines, et d’excellentes options pour manger et se divertir au bord des vagues.",
       image:
-        "/images/beaches/komi-sandy-beach-chios.webp",
+        "/images/beaches/komi-sandy-beach-chios-hd.webp",
       tags: ["#sud_est_chios", "#sable_dore", "#organisee", "#famille"],
     },
     details: [
@@ -3862,7 +3862,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Entdecken Sie den Komi Strand im Südosten von Chios, einen der beliebtesten organisierten Sandstrände der Insel mit flachem Wasser, Restaurants, Café-Bars und Strandaktivitäten.",
       ogImage:
-        "/images/beaches/komi-sandy-beach-chios.webp",
+        "/images/beaches/komi-sandy-beach-chios-hd.webp",
     },
     hero: {
       kicker: "Südost-Chios • Goldener Sand",
@@ -3870,7 +3870,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Einer der beliebtesten und vollständig organisierten Strände von Chios, mit endlosem Sand, flachem kristallklarem Wasser und hervorragenden Möglichkeiten zum Essen und Entspannen am Meer.",
       image:
-        "/images/beaches/komi-sandy-beach-chios.webp",
+        "/images/beaches/komi-sandy-beach-chios-hd.webp",
       tags: ["#suedost_chios", "#goldener_sand", "#organisiert", "#familienfreundlich"],
     },
     details: [
@@ -3931,7 +3931,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Scopri la spiaggia di Komi nel sud-est di Chios, una delle spiagge sabbiose organizzate più popolari dell’isola, con acque basse, ristoranti, café-bar e attività sul mare.",
       ogImage:
-        "/images/beaches/komi-sandy-beach-chios.webp",
+        "/images/beaches/komi-sandy-beach-chios-hd.webp",
     },
     hero: {
       kicker: "Sud-est di Chios • Sabbia dorata",
@@ -3939,7 +3939,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Una delle spiagge più popolari e completamente organizzate di Chios, con sabbia infinita, acque basse e cristalline, e ottime opzioni per mangiare e divertirsi sul mare.",
       image:
-        "/images/beaches/komi-sandy-beach-chios.webp",
+        "/images/beaches/komi-sandy-beach-chios-hd.webp",
       tags: ["#sud_est_chios", "#sabbia_dorata", "#organizzata", "#famiglie"],
     },
     details: [
@@ -4000,7 +4000,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Descubre la playa de Komi en el sureste de Chios, una de las playas de arena organizadas más populares de la isla, con aguas poco profundas, restaurantes, cafés-bares y actividades.",
       ogImage:
-        "/images/beaches/komi-sandy-beach-chios.webp",
+        "/images/beaches/komi-sandy-beach-chios-hd.webp",
     },
     hero: {
       kicker: "Sureste de Chios • Arena dorada",
@@ -4008,7 +4008,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Una de las playas más populares y totalmente organizadas de Chios, con arena interminable, aguas poco profundas y cristalinas, y excelentes opciones para comer y divertirse junto al mar.",
       image:
-        "/images/beaches/komi-sandy-beach-chios.webp",
+        "/images/beaches/komi-sandy-beach-chios-hd.webp",
       tags: ["#sureste_de_chios", "#arena_dorada", "#organizada", "#familias"],
     },
     details: [
@@ -4069,7 +4069,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Sakız Adası’nın güneydoğusundaki Komi Plajı’nı keşfedin: sığ suları, restoranları, kafe-barları ve plaj aktiviteleriyle adanın en popüler organize kum plajlarından biri.",
       ogImage:
-        "/images/beaches/komi-sandy-beach-chios.webp",
+        "/images/beaches/komi-sandy-beach-chios-hd.webp",
     },
     hero: {
       kicker: "Güneydoğu Sakız • Altın kum",
@@ -4077,7 +4077,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Sakız Adası’nın en popüler ve tamamen organize plajlarından biri; sonsuz kumu, sığ kristal suları ve deniz kenarında yemek ve eğlence seçenekleriyle öne çıkar.",
       image:
-        "/images/beaches/komi-sandy-beach-chios.webp",
+        "/images/beaches/komi-sandy-beach-chios-hd.webp",
       tags: ["#guneydogu_sakiz", "#altin_kum", "#organize", "#aile_dostu"],
     },
     details: [
@@ -4143,7 +4143,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Εξερευνήστε την παραλία Μαύρα Βόλια στον Εμπορειό της νότιας Χίου, την εμβληματική ηφαιστειακή παραλία του νησιού με μαύρα βότσαλα, τρεις κόλπους, βαθιά δροσερά νερά και άγριους βράχους.",
       ogImage:
-        "/images/beaches/mavra-volia-beach-chios.webp",
+        "/images/beaches/mavra-volia-beach-chios-hd.webp",
     },
     hero: {
       kicker: "Εμπορειός • Ηφαιστειακή παραλία",
@@ -4151,7 +4151,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Η πιο εμβληματική και εντυπωσιακή παραλία της Χίου: τρεις συνεχόμενοι κόλποι με βαθιά σκούρα νερά και μοναδικά μαύρα ηφαιστειακά βότσαλα.",
       image:
-        "/images/beaches/mavra-volia-beach-chios.webp",
+        "/images/beaches/mavra-volia-beach-chios-hd.webp",
       tags: ["#μαύρα_βόλια", "#εμπορειός", "#ηφαιστειακή_παραλία", "#μαύρος_γιαλός"],
     },
     details: [
@@ -4212,7 +4212,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Explorez la plage de Mavra Volia à Emporios, au sud de Chios, la plage volcanique emblématique de l’île avec galets noirs, trois baies, eaux profondes et falaises sauvages.",
       ogImage:
-        "/images/beaches/mavra-volia-beach-chios.webp",
+        "/images/beaches/mavra-volia-beach-chios-hd.webp",
     },
     hero: {
       kicker: "Emporios • Plage volcanique",
@@ -4220,7 +4220,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "La plage la plus emblématique et impressionnante de Chios : trois baies successives aux eaux profondes et sombres, avec de spectaculaires galets volcaniques noirs.",
       image:
-        "/images/beaches/mavra-volia-beach-chios.webp",
+        "/images/beaches/mavra-volia-beach-chios-hd.webp",
       tags: ["#mavra_volia", "#emporios", "#plage_volcanique", "#mavros_gialos"],
     },
     details: [
@@ -4281,7 +4281,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Entdecken Sie den Mavra Volia Strand bei Emporios im Süden von Chios, den ikonischen Vulkanstrand der Insel mit schwarzen Kieseln, drei Buchten, tiefem kühlem Wasser und wilden Klippen.",
       ogImage:
-        "/images/beaches/mavra-volia-beach-chios.webp",
+        "/images/beaches/mavra-volia-beach-chios-hd.webp",
     },
     hero: {
       kicker: "Emporios • Vulkanstrand",
@@ -4289,7 +4289,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Der ikonischste und beeindruckendste Strand von Chios: drei aufeinanderfolgende Buchten mit tiefem dunklem Wasser und atemberaubenden schwarzen Vulkansteinen.",
       image:
-        "/images/beaches/mavra-volia-beach-chios.webp",
+        "/images/beaches/mavra-volia-beach-chios-hd.webp",
       tags: ["#mavra_volia", "#emporios", "#vulkanstrand", "#mavros_gialos"],
     },
     details: [
@@ -4350,7 +4350,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Esplora la spiaggia Mavra Volia a Emporios, nel sud di Chios, l’iconica spiaggia vulcanica dell’isola con ciottoli neri, tre baie, acque profonde e fresche e scogliere selvagge.",
       ogImage:
-        "/images/beaches/mavra-volia-beach-chios.webp",
+        "/images/beaches/mavra-volia-beach-chios-hd.webp",
     },
     hero: {
       kicker: "Emporios • Spiaggia vulcanica",
@@ -4358,7 +4358,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "La spiaggia più iconica e impressionante di Chios: tre baie consecutive con acque profonde e scure e spettacolari ciottoli vulcanici neri.",
       image:
-        "/images/beaches/mavra-volia-beach-chios.webp",
+        "/images/beaches/mavra-volia-beach-chios-hd.webp",
       tags: ["#mavra_volia", "#emporios", "#spiaggia_vulcanica", "#mavros_gialos"],
     },
     details: [
@@ -4419,7 +4419,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Explora la playa Mavra Volia en Emporios, al sur de Chios, la playa volcánica icónica de la isla con guijarros negros, tres bahías, aguas profundas y frescas y acantilados salvajes.",
       ogImage:
-        "/images/beaches/mavra-volia-beach-chios.webp",
+        "/images/beaches/mavra-volia-beach-chios-hd.webp",
     },
     hero: {
       kicker: "Emporios • Playa volcánica",
@@ -4427,7 +4427,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "La playa más icónica e impresionante de Chios: tres bahías consecutivas con aguas profundas y oscuras y espectaculares guijarros volcánicos negros.",
       image:
-        "/images/beaches/mavra-volia-beach-chios.webp",
+        "/images/beaches/mavra-volia-beach-chios-hd.webp",
       tags: ["#mavra_volia", "#emporios", "#playa_volcanica", "#mavros_gialos"],
     },
     details: [
@@ -4488,7 +4488,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Sakız Adası’nın güneyindeki Emporios Mavra Volia Plajı’nı keşfedin: siyah çakılları, üç koyu, derin serin suları ve vahşi kayalıklarıyla adanın ikonik volkanik plajı.",
       ogImage:
-        "/images/beaches/mavra-volia-beach-chios.webp",
+        "/images/beaches/mavra-volia-beach-chios-hd.webp",
     },
     hero: {
       kicker: "Emporios • Volkanik plaj",
@@ -4496,7 +4496,7 @@ export const localizedBeachDetails: BeachDetailData[] = [
       description:
         "Sakız Adası’nın en ikonik ve etkileyici plajı: derin koyu sulara ve nefes kesici siyah volkanik çakıllara sahip üç ardışık koy.",
       image:
-        "/images/beaches/mavra-volia-beach-chios.webp",
+        "/images/beaches/mavra-volia-beach-chios-hd.webp",
       tags: ["#mavra_volia", "#emporios", "#volkanik_plaj", "#mavros_gialos"],
     },
     details: [
@@ -5363,7 +5363,7 @@ export const relatedBeachCards = [
     description: "The most imposing beach in Chios with unique volcanic beauty.",
     href: "/chios/chios-beaches/emporios-beach/",
     image:
-      "/images/beaches/mavra-volia-beach-chios.webp",
+      "/images/beaches/mavra-volia-beach-chios-hd.webp",
     imageAlt: "Mavra Volia beach in Chios with black volcanic pebbles",
     badge: "Top pick",
     size: "large",
@@ -5406,7 +5406,7 @@ export const relatedBeachCards = [
     description: "Golden sand, shallow waters and summer beach life.",
     href: "/chios/chios-beaches/komi-beach/",
     image:
-      "/images/beaches/komi-sandy-beach-chios.webp",
+      "/images/beaches/komi-sandy-beach-chios-hd.webp",
     imageAlt: "Komi beach in Chios with golden sand",
     badge: "Sandy",
     size: "normal",
@@ -5438,7 +5438,7 @@ export const relatedBeachCards = [
     title: "Lefkathia",
     description: "Crystal waters and sunset views near Volissos.",
     href: "/chios/chios-beaches/lefkathia-beach/",
-    image: "/images/beaches/lefkathia-2.jpg",
+    image: "/images/beaches/lefkathia-2-hd.webp",
     imageAlt: "Lefkathia beach in northwestern Chios",
     badge: "Sunset",
     size: "normal",

@@ -79,10 +79,10 @@
 
 const beachImages = {
   mavraVolia:
-    "/images/beaches/mavra-volia-beach-chios.webp",
+    "/images/beaches/mavra-volia-beach-chios-hd.webp",
   agiaFotia: "/images/beaches/agia-fotia-beach-chios.webp",
   komi:
-    "/images/beaches/komi-sandy-beach-chios.webp",
+    "/images/beaches/komi-sandy-beach-chios-hd.webp",
   salagona:
     "/images/beaches/salagona-beach-chios.webp",
   lithi:
@@ -91,7 +91,7 @@ const beachImages = {
     "/images/beaches/agia-dynami-beach-chios.webp",
   avlonia:
     "/images/beaches/avlonia-1024x768.webp",
-  lefkathia: "/images/beaches/lefkathia-2.jpg",
+  lefkathia: "/images/beaches/lefkathia-2-hd.webp",
   nagos:
     "/images/beaches/nagos-beach-chios.webp",
 };

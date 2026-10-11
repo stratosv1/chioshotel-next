@@ -76,7 +76,7 @@ const villagesImage =
   "/images/villages/lagada_3.webp";
 
 const museumsImage =
-  "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece.webp";
+  "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece-hd.webp";
 
 const whatsappHref = "https://wa.me/306944474226";
 

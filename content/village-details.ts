@@ -452,7 +452,7 @@ export const villageDetails: VillageDetailData[] = [
       description:
         "Explore Volissos in northwest Chios, the main village of Amani with castle views, old streets, nearby beaches and access to Agia Markella.",
       ogImage:
-        "/images/villages/Volissos-Chios.webp",
+        "/images/villages/Volissos-Chios-hd.webp",
     },
     hero: {
       kicker: "Northwest Chios • Amani",
@@ -460,7 +460,7 @@ export const villageDetails: VillageDetailData[] = [
       description:
         "The main village of Amani, known for its castle, hillside views, old streets, nearby beaches and strong northwest Chios character.",
       image:
-        "/images/villages/Volissos-Chios.webp",
+        "/images/villages/Volissos-Chios-hd.webp",
       tags: ["#volissos", "#amani", "#castle_views", "#northwest_chios"],
     },
     details: [
@@ -544,7 +544,7 @@ export const villageDetails: VillageDetailData[] = [
       description:
         "Discover Armolia in Chios, a traditional village known for pottery, ceramics, stone houses and its position on southern Chios routes.",
       ogImage:
-        "/images/villages/unnamed-e1702830815478.webp",
+        "/images/villages/unnamed-e1702830815478-hd.webp",
     },
     hero: {
       kicker: "South Chios • Pottery tradition",
@@ -552,7 +552,7 @@ export const villageDetails: VillageDetailData[] = [
       description:
         "A traditional village in southern Chios known for pottery, ceramics and local craftsmanship, making it a meaningful stop on the way to the mastic villages.",
       image:
-        "/images/villages/unnamed-e1702830815478.webp",
+        "/images/villages/unnamed-e1702830815478-hd.webp",
       tags: ["#armolia", "#pottery", "#ceramics", "#south_chios"],
     },
     details: [
@@ -1135,13 +1135,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/el/xoria-xios/volissos-xios/",
       title: "Βολισσός Χίος | Κάστρο, Αμανή και βορειοδυτικές παραλίες",
       description: "Ανακαλύψτε τη Βολισσό στη βορειοδυτική Χίο, ένα ιστορικό χωριό με κάστρο, θέα στην Αμανή και πρόσβαση σε υπέροχες βόρειες παραλίες.",
-      ogImage: "/images/villages/Volissos-Chios.webp",
+      ogImage: "/images/villages/Volissos-Chios-hd.webp",
     },
     hero: {
       kicker: "Βορειοδυτική Χίος • Κάστρο",
       title: "Βολισσός: κάστρο και βόρεια Χίος",
       description: "Ανακαλύψτε τη Βολισσό στη βορειοδυτική Χίο, ένα ιστορικό χωριό με κάστρο, θέα στην Αμανή και πρόσβαση σε υπέροχες βόρειες παραλίες.",
-      image: "/images/villages/Volissos-Chios.webp",
+      image: "/images/villages/Volissos-Chios-hd.webp",
       tags: ["#volissos", "#north_chios", "#castle", "#amani"],
     },
     details: [
@@ -1212,13 +1212,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/el/xoria-xios/armolia-xios/",
       title: "Αρμόλια Χίος | Χωριό κεραμικής και τοπικής τέχνης",
       description: "Ανακαλύψτε τα Αρμόλια στη Χίο, το χωριό της κεραμικής με εργαστήρια, τοπική τέχνη και εύκολη στάση σε διαδρομές προς τα Μαστιχοχώρια.",
-      ogImage: "/images/villages/unnamed-e1702830815478.webp",
+      ogImage: "/images/villages/unnamed-e1702830815478-hd.webp",
     },
     hero: {
       kicker: "Νότια Χίος • Κεραμική παράδοση",
       title: "Αρμόλια: το χωριό της κεραμικής",
       description: "Ανακαλύψτε τα Αρμόλια στη Χίο, το χωριό της κεραμικής με εργαστήρια, τοπική τέχνη και εύκολη στάση σε διαδρομές προς τα Μαστιχοχώρια.",
-      image: "/images/villages/unnamed-e1702830815478.webp",
+      image: "/images/villages/unnamed-e1702830815478-hd.webp",
       tags: ["#armolia", "#pottery", "#local_crafts", "#south_chios"],
     },
     details: [
@@ -1675,13 +1675,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/fr/villages-de-chios/village-volissos/",
       title: "Volissos Chios | Château, Amani et plages du nord-ouest",
       description: "Découvrez Volissos au nord-ouest de Chios, un village historique avec château, vues sur Amani et accès à de belles plages du nord.",
-      ogImage: "/images/villages/Volissos-Chios.webp",
+      ogImage: "/images/villages/Volissos-Chios-hd.webp",
     },
     hero: {
       kicker: "Nord-ouest de Chios • Château",
       title: "Volissos : château et nord de Chios",
       description: "Découvrez Volissos au nord-ouest de Chios, un village historique avec château, vues sur Amani et accès à de belles plages du nord.",
-      image: "/images/villages/Volissos-Chios.webp",
+      image: "/images/villages/Volissos-Chios-hd.webp",
       tags: ["#volissos", "#north_chios", "#castle", "#amani"],
     },
     details: [
@@ -1752,13 +1752,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/fr/villages-de-chios/village-armolia/",
       title: "Armolia Chios | Village de poterie et artisanat local",
       description: "Découvrez Armolia à Chios, le village de la poterie avec ateliers, artisanat local et halte facile vers les villages du mastic.",
-      ogImage: "/images/villages/unnamed-e1702830815478.webp",
+      ogImage: "/images/villages/unnamed-e1702830815478-hd.webp",
     },
     hero: {
       kicker: "Sud de Chios • Tradition de poterie",
       title: "Armolia : le village de la poterie",
       description: "Découvrez Armolia à Chios, le village de la poterie avec ateliers, artisanat local et halte facile vers les villages du mastic.",
-      image: "/images/villages/unnamed-e1702830815478.webp",
+      image: "/images/villages/unnamed-e1702830815478-hd.webp",
       tags: ["#armolia", "#pottery", "#local_crafts", "#south_chios"],
     },
     details: [
@@ -2215,13 +2215,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/de/doerfer-chios/volissos-dorf/",
       title: "Volissos Chios | Burg, Amani und Strände im Nordwesten",
       description: "Entdecken Sie Volissos im Nordwesten von Chios, ein historisches Dorf mit Burg, Blick auf Amani und Zugang zu schönen nördlichen Stränden.",
-      ogImage: "/images/villages/Volissos-Chios.webp",
+      ogImage: "/images/villages/Volissos-Chios-hd.webp",
     },
     hero: {
       kicker: "Nordwest-Chios • Burg",
       title: "Volissos: Burg und Nord-Chios",
       description: "Entdecken Sie Volissos im Nordwesten von Chios, ein historisches Dorf mit Burg, Blick auf Amani und Zugang zu schönen nördlichen Stränden.",
-      image: "/images/villages/Volissos-Chios.webp",
+      image: "/images/villages/Volissos-Chios-hd.webp",
       tags: ["#volissos", "#north_chios", "#castle", "#amani"],
     },
     details: [
@@ -2292,13 +2292,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/de/doerfer-chios/armolia-dorf/",
       title: "Armolia Chios | Töpferdorf und lokales Handwerk",
       description: "Entdecken Sie Armolia auf Chios, das Töpferdorf mit Werkstätten, lokalem Handwerk und gutem Halt auf Routen zu den Mastixdörfern.",
-      ogImage: "/images/villages/unnamed-e1702830815478.webp",
+      ogImage: "/images/villages/unnamed-e1702830815478-hd.webp",
     },
     hero: {
       kicker: "Süd-Chios • Töpfertradition",
       title: "Armolia: das Töpferdorf",
       description: "Entdecken Sie Armolia auf Chios, das Töpferdorf mit Werkstätten, lokalem Handwerk und gutem Halt auf Routen zu den Mastixdörfern.",
-      image: "/images/villages/unnamed-e1702830815478.webp",
+      image: "/images/villages/unnamed-e1702830815478-hd.webp",
       tags: ["#armolia", "#pottery", "#local_crafts", "#south_chios"],
     },
     details: [
@@ -2755,13 +2755,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/it/villaggi-chios/villaggio-volissos/",
       title: "Volissos Chios | Castello, Amani e spiagge del nord-ovest",
       description: "Scopri Volissos nel nord-ovest di Chios, un villaggio storico con castello, vista su Amani e accesso a splendide spiagge del nord.",
-      ogImage: "/images/villages/Volissos-Chios.webp",
+      ogImage: "/images/villages/Volissos-Chios-hd.webp",
     },
     hero: {
       kicker: "Nord-ovest di Chios • Castello",
       title: "Volissos: castello e nord di Chios",
       description: "Scopri Volissos nel nord-ovest di Chios, un villaggio storico con castello, vista su Amani e accesso a splendide spiagge del nord.",
-      image: "/images/villages/Volissos-Chios.webp",
+      image: "/images/villages/Volissos-Chios-hd.webp",
       tags: ["#volissos", "#north_chios", "#castle", "#amani"],
     },
     details: [
@@ -2832,13 +2832,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/it/villaggi-chios/villaggio-armolia/",
       title: "Armolia Chios | Villaggio della ceramica e artigianato",
       description: "Scopri Armolia a Chios, il villaggio della ceramica con laboratori, artigianato locale e comoda tappa verso i villaggi del mastice.",
-      ogImage: "/images/villages/unnamed-e1702830815478.webp",
+      ogImage: "/images/villages/unnamed-e1702830815478-hd.webp",
     },
     hero: {
       kicker: "Chios meridionale • Tradizione ceramica",
       title: "Armolia: il villaggio della ceramica",
       description: "Scopri Armolia a Chios, il villaggio della ceramica con laboratori, artigianato locale e comoda tappa verso i villaggi del mastice.",
-      image: "/images/villages/unnamed-e1702830815478.webp",
+      image: "/images/villages/unnamed-e1702830815478-hd.webp",
       tags: ["#armolia", "#pottery", "#local_crafts", "#south_chios"],
     },
     details: [
@@ -3295,13 +3295,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/es/pueblos-chios/pueblo-volissos/",
       title: "Volissos Chios | Castillo, Amani y playas del noroeste",
       description: "Descubre Volissos en el noroeste de Chios, un pueblo histórico con castillo, vistas a Amani y acceso a bonitas playas del norte.",
-      ogImage: "/images/villages/Volissos-Chios.webp",
+      ogImage: "/images/villages/Volissos-Chios-hd.webp",
     },
     hero: {
       kicker: "Noroeste de Chios • Castillo",
       title: "Volissos: castillo y norte de Chios",
       description: "Descubre Volissos en el noroeste de Chios, un pueblo histórico con castillo, vistas a Amani y acceso a bonitas playas del norte.",
-      image: "/images/villages/Volissos-Chios.webp",
+      image: "/images/villages/Volissos-Chios-hd.webp",
       tags: ["#volissos", "#north_chios", "#castle", "#amani"],
     },
     details: [
@@ -3372,13 +3372,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/es/pueblos-chios/pueblo-armolia/",
       title: "Armolia Chios | Pueblo de cerámica y artesanía local",
       description: "Descubre Armolia en Chios, el pueblo de la cerámica con talleres, artesanía local y parada fácil hacia los pueblos del mastiha.",
-      ogImage: "/images/villages/unnamed-e1702830815478.webp",
+      ogImage: "/images/villages/unnamed-e1702830815478-hd.webp",
     },
     hero: {
       kicker: "Sur de Chios • Tradición cerámica",
       title: "Armolia: el pueblo de la cerámica",
       description: "Descubre Armolia en Chios, el pueblo de la cerámica con talleres, artesanía local y parada fácil hacia los pueblos del mastiha.",
-      image: "/images/villages/unnamed-e1702830815478.webp",
+      image: "/images/villages/unnamed-e1702830815478-hd.webp",
       tags: ["#armolia", "#pottery", "#local_crafts", "#south_chios"],
     },
     details: [
@@ -3835,13 +3835,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/tr/sakiz-adasi-koyleri/volissos-koyu/",
       title: "Volissos Sakız Adası | Kale, Amani ve kuzeybatı plajları",
       description: "Sakız Adası’nın kuzeybatısındaki Volissos’u keşfedin: kalesi, Amani manzaraları ve güzel kuzey plajlarına erişimiyle tarihi bir köy.",
-      ogImage: "/images/villages/Volissos-Chios.webp",
+      ogImage: "/images/villages/Volissos-Chios-hd.webp",
     },
     hero: {
       kicker: "Kuzeybatı Sakız • Kale",
       title: "Volissos: kale ve kuzey Sakız",
       description: "Sakız Adası’nın kuzeybatısındaki Volissos’u keşfedin: kalesi, Amani manzaraları ve güzel kuzey plajlarına erişimiyle tarihi bir köy.",
-      image: "/images/villages/Volissos-Chios.webp",
+      image: "/images/villages/Volissos-Chios-hd.webp",
       tags: ["#volissos", "#north_chios", "#castle", "#amani"],
     },
     details: [
@@ -3912,13 +3912,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/tr/sakiz-adasi-koyleri/armolia-koyu/",
       title: "Armolia Sakız Adası | Seramik ve yerel zanaat köyü",
       description: "Sakız Adası’ndaki Armolia’yı keşfedin: atölyeleri, yerel zanaatı ve mastik köyleri rotasındaki kolay konumuyla seramik köyü.",
-      ogImage: "/images/villages/unnamed-e1702830815478.webp",
+      ogImage: "/images/villages/unnamed-e1702830815478-hd.webp",
     },
     hero: {
       kicker: "Güney Sakız • Seramik geleneği",
       title: "Armolia: seramik köyü",
       description: "Sakız Adası’ndaki Armolia’yı keşfedin: atölyeleri, yerel zanaatı ve mastik köyleri rotasındaki kolay konumuyla seramik köyü.",
-      image: "/images/villages/unnamed-e1702830815478.webp",
+      image: "/images/villages/unnamed-e1702830815478-hd.webp",
       tags: ["#armolia", "#pottery", "#local_crafts", "#south_chios"],
     },
     details: [
@@ -4115,7 +4115,7 @@ export const relatedVillageCards = [
     description: "Castle views, northern landscapes and access to beaches around Amani.",
     href: "/chios/chios-villages/volissos-chios/",
     image:
-      "/images/villages/Volissos-Chios.webp",
+      "/images/villages/Volissos-Chios-hd.webp",
     imageAlt: "Volissos village in Chios with castle views",
     badge: "Castle",
     size: "normal",
@@ -4126,7 +4126,7 @@ export const relatedVillageCards = [
     description: "A traditional pottery village and useful stop on southern Chios routes.",
     href: "/chios/chios-villages/armolia-chios/",
     image:
-      "/images/villages/unnamed-e1702830815478.webp",
+      "/images/villages/unnamed-e1702830815478-hd.webp",
     imageAlt: "Armolia village in Chios known for pottery tradition",
     badge: "Pottery",
     size: "normal",

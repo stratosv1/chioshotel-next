@@ -47,7 +47,7 @@ export type BeachLoversPageData = {
 const images = {
   hero: "/images/beaches/agia-fotia-beach-chios.webp",
   mavraVolia:
-    "/images/beaches/mavra-volia-beach-chios.webp",
+    "/images/beaches/mavra-volia-beach-chios-hd.webp",
   agiaFotia: "/images/beaches/agia-fotia-beach-chios.webp",
   komi: "/images/beaches/komi-beach-chios.webp",
   salagona: "/images/beaches/salagona-beach-chios.webp",
