@@ -353,6 +353,12 @@ export function buildPageMetadata(input: SeoInput): Metadata {
     : {
         index: true,
         follow: true,
+        // The generic robots tag is what Bing (and so Copilot / ChatGPT
+        // search) reads; without these it may only show small thumbnails
+        // and shortened snippets. Google already gets them via googleBot.
+        "max-image-preview": "large",
+        "max-snippet": -1,
+        "max-video-preview": -1,
         googleBot: {
           index: true,
           follow: true,

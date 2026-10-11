@@ -109,6 +109,9 @@ export function buildAiAssistantMetadata(language: AssistantLanguage): Metadata 
     robots: {
       index: true,
       follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
       googleBot: {
         index: true,
         follow: true,
