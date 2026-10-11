@@ -55,7 +55,7 @@ const copy: Record<CompareLocale, Copy> = {
       "economy-double": { name: "Economy Double", rooms: "Rooms 2 & 6", guests: "2", size: "16 m²", access: "Ground floor (6) or first floor (2)", kitchen: "No kitchenette", outdoor: "Courtyard or shared terrace" },
       "ground-floor": { name: "Ground Floor Rooms", rooms: "Rooms 5 & 7", guests: "2–3", size: "30–35 m²", access: "No stairs", kitchen: "Small fridge", outdoor: "Courtyard & garden" },
       "first-floor": { name: "First Floor Rooms", rooms: "Rooms 1, 3 & 4", guests: "2–4", size: "30–35 m²", access: "14 stairs with handrail", kitchen: "Kitchenette in 3 & 4", outdoor: "Shared terrace or balcony" },
-      "family-apartments": { name: "Family Apartments", rooms: "Apartments 8–10", guests: "Up to 4", size: "40–45 m²", access: "No stairs", kitchen: "Full kitchen", outdoor: "Private balcony, orchard view" },
+      "family-apartments": { name: "Family Apartments", rooms: "Apartments 8–10", guests: "Up to 4", size: "40–45 m²", access: "4–5 entrance steps", kitchen: "Full kitchen", outdoor: "Private balcony, orchard view" },
     },
   },
   el: {
@@ -78,7 +78,7 @@ const copy: Record<CompareLocale, Copy> = {
       "economy-double": { name: "Οικονομικό δίκλινο", rooms: "Δωμάτια 2 & 6", guests: "2", size: "16 m²", access: "Ισόγειο (6) ή όροφος (2)", kitchen: "Χωρίς kitchenette", outdoor: "Αυλή ή κοινόχρηστη βεράντα" },
       "ground-floor": { name: "Δωμάτια ισογείου", rooms: "Δωμάτια 5 & 7", guests: "2–3", size: "30–35 m²", access: "Χωρίς σκάλες", kitchen: "Μικρό ψυγείο", outdoor: "Αυλή & κήπος" },
       "first-floor": { name: "Δωμάτια ορόφου", rooms: "Δωμάτια 1, 3 & 4", guests: "2–4", size: "30–35 m²", access: "14 σκαλιά με κουπαστή", kitchen: "Kitchenette στα 3 & 4", outdoor: "Κοινόχρηστη βεράντα ή μπαλκόνι" },
-      "family-apartments": { name: "Οικογενειακά διαμερίσματα", rooms: "Διαμερίσματα 8–10", guests: "Έως 4", size: "40–45 m²", access: "Χωρίς σκάλες", kitchen: "Πλήρης κουζίνα", outdoor: "Ιδιωτικό μπαλκόνι με θέα στον κήπο" },
+      "family-apartments": { name: "Οικογενειακά διαμερίσματα", rooms: "Διαμερίσματα 8–10", guests: "Έως 4", size: "40–45 m²", access: "4–5 σκαλιά στην είσοδο", kitchen: "Πλήρης κουζίνα", outdoor: "Ιδιωτικό μπαλκόνι με θέα στον κήπο" },
     },
   },
   fr: {
@@ -101,7 +101,7 @@ const copy: Record<CompareLocale, Copy> = {
       "economy-double": { name: "Double économique", rooms: "Chambres 2 & 6", guests: "2", size: "16 m²", access: "Rez-de-chaussée (6) ou étage (2)", kitchen: "Sans kitchenette", outdoor: "Cour ou terrasse partagée" },
       "ground-floor": { name: "Chambres au rez-de-chaussée", rooms: "Chambres 5 & 7", guests: "2–3", size: "30–35 m²", access: "Sans escalier", kitchen: "Petit réfrigérateur", outdoor: "Cour & jardin" },
       "first-floor": { name: "Chambres à l’étage", rooms: "Chambres 1, 3 & 4", guests: "2–4", size: "30–35 m²", access: "14 marches avec rampe", kitchen: "Kitchenette (3 & 4)", outdoor: "Terrasse partagée ou balcon" },
-      "family-apartments": { name: "Appartements familiaux", rooms: "Appartements 8–10", guests: "Jusqu’à 4", size: "40–45 m²", access: "Sans escalier", kitchen: "Cuisine complète", outdoor: "Balcon privé, vue sur le verger" },
+      "family-apartments": { name: "Appartements familiaux", rooms: "Appartements 8–10", guests: "Jusqu’à 4", size: "40–45 m²", access: "4–5 marches à l’entrée", kitchen: "Cuisine complète", outdoor: "Balcon privé, vue sur le verger" },
     },
   },
   de: {
@@ -124,7 +124,7 @@ const copy: Record<CompareLocale, Copy> = {
       "economy-double": { name: "Economy-Doppelzimmer", rooms: "Zimmer 2 & 6", guests: "2", size: "16 m²", access: "Erdgeschoss (6) oder Obergeschoss (2)", kitchen: "Ohne Kochnische", outdoor: "Innenhof oder Gemeinschaftsterrasse" },
       "ground-floor": { name: "Zimmer im Erdgeschoss", rooms: "Zimmer 5 & 7", guests: "2–3", size: "30–35 m²", access: "Ohne Treppen", kitchen: "Kleiner Kühlschrank", outdoor: "Innenhof & Garten" },
       "first-floor": { name: "Zimmer im Obergeschoss", rooms: "Zimmer 1, 3 & 4", guests: "2–4", size: "30–35 m²", access: "14 Stufen mit Handlauf", kitchen: "Kochnische in 3 & 4", outdoor: "Gemeinschaftsterrasse oder Balkon" },
-      "family-apartments": { name: "Familienapartments", rooms: "Apartments 8–10", guests: "Bis 4", size: "40–45 m²", access: "Ohne Treppen", kitchen: "Voll ausgestattete Küche", outdoor: "Privater Balkon mit Blick auf den Garten" },
+      "family-apartments": { name: "Familienapartments", rooms: "Apartments 8–10", guests: "Bis 4", size: "40–45 m²", access: "4–5 Eingangsstufen", kitchen: "Voll ausgestattete Küche", outdoor: "Privater Balkon mit Blick auf den Garten" },
     },
   },
   it: {
@@ -147,7 +147,7 @@ const copy: Record<CompareLocale, Copy> = {
       "economy-double": { name: "Doppia economica", rooms: "Camere 2 & 6", guests: "2", size: "16 m²", access: "Piano terra (6) o primo piano (2)", kitchen: "Senza angolo cottura", outdoor: "Cortile o terrazza condivisa" },
       "ground-floor": { name: "Camere al piano terra", rooms: "Camere 5 & 7", guests: "2–3", size: "30–35 m²", access: "Senza scale", kitchen: "Piccolo frigorifero", outdoor: "Cortile & giardino" },
       "first-floor": { name: "Camere al primo piano", rooms: "Camere 1, 3 & 4", guests: "2–4", size: "30–35 m²", access: "14 gradini con corrimano", kitchen: "Angolo cottura (3 & 4)", outdoor: "Terrazza condivisa o balcone" },
-      "family-apartments": { name: "Appartamenti familiari", rooms: "Appartamenti 8–10", guests: "Fino a 4", size: "40–45 m²", access: "Senza scale", kitchen: "Cucina completa", outdoor: "Balcone privato, vista sul frutteto" },
+      "family-apartments": { name: "Appartamenti familiari", rooms: "Appartamenti 8–10", guests: "Fino a 4", size: "40–45 m²", access: "4–5 gradini all’ingresso", kitchen: "Cucina completa", outdoor: "Balcone privato, vista sul frutteto" },
     },
   },
   es: {
@@ -170,7 +170,7 @@ const copy: Record<CompareLocale, Copy> = {
       "economy-double": { name: "Doble económica", rooms: "Habitaciones 2 & 6", guests: "2", size: "16 m²", access: "Planta baja (6) o primera planta (2)", kitchen: "Sin kitchenette", outdoor: "Patio o terraza compartida" },
       "ground-floor": { name: "Habitaciones en planta baja", rooms: "Habitaciones 5 & 7", guests: "2–3", size: "30–35 m²", access: "Sin escaleras", kitchen: "Nevera pequeña", outdoor: "Patio & jardín" },
       "first-floor": { name: "Habitaciones en primera planta", rooms: "Habitaciones 1, 3 & 4", guests: "2–4", size: "30–35 m²", access: "14 escalones con pasamanos", kitchen: "Kitchenette en 3 & 4", outdoor: "Terraza compartida o balcón" },
-      "family-apartments": { name: "Apartamentos familiares", rooms: "Apartamentos 8–10", guests: "Hasta 4", size: "40–45 m²", access: "Sin escaleras", kitchen: "Cocina completa", outdoor: "Balcón privado con vistas al huerto" },
+      "family-apartments": { name: "Apartamentos familiares", rooms: "Apartamentos 8–10", guests: "Hasta 4", size: "40–45 m²", access: "4–5 escalones de entrada", kitchen: "Cocina completa", outdoor: "Balcón privado con vistas al huerto" },
     },
   },
   tr: {
@@ -193,7 +193,7 @@ const copy: Record<CompareLocale, Copy> = {
       "economy-double": { name: "Ekonomik çift kişilik", rooms: "Oda 2 & 6", guests: "2", size: "16 m²", access: "Zemin kat (6) veya üst kat (2)", kitchen: "Mini mutfak yok", outdoor: "Avlu veya ortak teras" },
       "ground-floor": { name: "Zemin kat odaları", rooms: "Oda 5 & 7", guests: "2–3", size: "30–35 m²", access: "Merdivensiz", kitchen: "Küçük buzdolabı", outdoor: "Avlu & bahçe" },
       "first-floor": { name: "Üst kat odaları", rooms: "Oda 1, 3 & 4", guests: "2–4", size: "30–35 m²", access: "Tırabzanlı 14 basamak", kitchen: "3 & 4’te mini mutfak", outdoor: "Ortak teras veya balkon" },
-      "family-apartments": { name: "Aile apartları", rooms: "Apart 8–10", guests: "4’e kadar", size: "40–45 m²", access: "Merdivensiz", kitchen: "Tam donanımlı mutfak", outdoor: "Bahçe manzaralı özel balkon" },
+      "family-apartments": { name: "Aile apartları", rooms: "Apart 8–10", guests: "4’e kadar", size: "40–45 m²", access: "Girişte 4–5 basamak", kitchen: "Tam donanımlı mutfak", outdoor: "Bahçe manzaralı özel balkon" },
     },
   },
   pl: {
@@ -216,7 +216,7 @@ const copy: Record<CompareLocale, Copy> = {
       "economy-double": { name: "Ekonomiczny dwuosobowy", rooms: "Pokoje 2 i 6", guests: "2", size: "16 m²", access: "Parter (6) lub piętro (2)", kitchen: "Bez aneksu kuchennego", outdoor: "Dziedziniec lub wspólny taras" },
       "ground-floor": { name: "Pokoje na parterze", rooms: "Pokoje 5 i 7", guests: "2–3", size: "30–35 m²", access: "Bez schodów", kitchen: "Mała lodówka", outdoor: "Dziedziniec i ogród" },
       "first-floor": { name: "Pokoje na piętrze", rooms: "Pokoje 1, 3 i 4", guests: "2–4", size: "30–35 m²", access: "14 stopni z poręczą", kitchen: "Aneks kuchenny w 3 i 4", outdoor: "Wspólny taras lub balkon" },
-      "family-apartments": { name: "Apartamenty rodzinne", rooms: "Apartamenty 8–10", guests: "Do 4", size: "40–45 m²", access: "Bez schodów", kitchen: "Pełna kuchnia", outdoor: "Prywatny balkon z widokiem na sad" },
+      "family-apartments": { name: "Apartamenty rodzinne", rooms: "Apartamenty 8–10", guests: "Do 4", size: "40–45 m²", access: "4–5 stopni przy wejściu", kitchen: "Pełna kuchnia", outdoor: "Prywatny balkon z widokiem na sad" },
     },
   },
 };

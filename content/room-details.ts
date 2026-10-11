@@ -1095,11 +1095,11 @@ export const familyChiosApartmentsEn: RoomDetailData = {
         id: "apartment-8",
         name: "Apartment 8",
         type: "Apartment",
-        location: "Ground floor · step-free access",
+        location: "Ground floor · 4–5 entrance steps",
         maxGuests: 4,
         description:
           "Apartment 8 is approximately 40 m², with a separate bedroom, living room/full kitchen and private balcony overlooking the orchard. It sleeps up to 4 guests.",
-        badges: ["Ground floor", "Step-free access", "Full kitchen", "Up to 4 guests"],
+        badges: ["Ground floor", "4–5 entrance steps", "Full kitchen", "Up to 4 guests"],
         beds: ["1 double bed", "2 sofa beds"],
         amenities: [
           { icon: "📶", label: "Wi-Fi" },
@@ -1107,7 +1107,7 @@ export const familyChiosApartmentsEn: RoomDetailData = {
           { icon: "🌤️", label: "Private balcony" },
           { icon: "🌿", label: "Garden view" },
           { icon: "🍳", label: "Kitchen" },
-          { icon: "♿", label: "Step-free access" },
+          { icon: "🪜", label: "4–5 entrance steps" },
           { icon: "🧩", label: "Separate bedroom with door" },
         ],
         images: [
@@ -1137,11 +1137,11 @@ export const familyChiosApartmentsEn: RoomDetailData = {
         id: "apartment-9",
         name: "Apartment 9",
         type: "Apartment",
-        location: "Ground floor · step-free access",
+        location: "Ground floor · 4–5 entrance steps",
         maxGuests: 4,
         description:
           "Apartment 9 is approximately 40 m², with a separate bedroom, living room/full kitchen and private balcony overlooking the orchard. It sleeps up to 4 guests.",
-        badges: ["Ground floor", "Step-free access", "Full kitchen", "Up to 4 guests"],
+        badges: ["Ground floor", "4–5 entrance steps", "Full kitchen", "Up to 4 guests"],
         beds: ["1 double bed", "2 sofa beds"],
         amenities: [
           { icon: "📶", label: "Wi-Fi" },
@@ -1149,7 +1149,7 @@ export const familyChiosApartmentsEn: RoomDetailData = {
           { icon: "🌤️", label: "Private balcony" },
           { icon: "🌿", label: "Garden view" },
           { icon: "🍳", label: "Kitchen" },
-          { icon: "♿", label: "Step-free access" },
+          { icon: "🪜", label: "4–5 entrance steps" },
           { icon: "🧩", label: "Separate bedroom with door" },
         ],
         images: [
@@ -1179,11 +1179,11 @@ export const familyChiosApartmentsEn: RoomDetailData = {
         id: "apartment-10",
         name: "Apartment 10",
         type: "Apartment",
-        location: "Ground floor · step-free access",
+        location: "Ground floor · 4–5 entrance steps",
         maxGuests: 4,
         description:
           "Apartment 10 is approximately 45 m² and normally sleeps 4 guests, with 1 double bed, 1 double sofa bed, a separate bedroom and full kitchen. A 5th guest is possible only by prior agreement with an extra single bed in the bedroom and limited space.",
-        badges: ["Ground floor", "Step-free access", "Full kitchen", "Normally up to 4 guests"],
+        badges: ["Ground floor", "4–5 entrance steps", "Full kitchen", "Normally up to 4 guests"],
         beds: ["1 double bed", "1 double sofa bed"],
         amenities: [
           { icon: "📶", label: "Wi-Fi" },
@@ -1191,7 +1191,7 @@ export const familyChiosApartmentsEn: RoomDetailData = {
           { icon: "🌤️", label: "Private balcony" },
           { icon: "🌿", label: "Garden view" },
           { icon: "🍳", label: "Kitchen" },
-          { icon: "♿", label: "Step-free access" },
+          { icon: "🪜", label: "4–5 entrance steps" },
           { icon: "🧩", label: "Separate bedroom with door" },
         ],
         images: [
@@ -1329,7 +1329,7 @@ export const familyChiosApartmentsEl: RoomDetailData = {
         ...familyChiosApartmentsEn.individualRooms.rooms[0],
         name: "Διαμέρισμα 8",
         type: "Διαμέρισμα",
-        location: "Ισόγειο · χωρίς σκαλοπάτια",
+        location: "Ισόγειο · 4–5 σκαλοπάτια στην είσοδο",
         description:
           "Το Διαμέρισμα 8 είναι οικογενειακό διαμέρισμα με καθιστικό και κουζίνα, ξεχωριστό υπνοδωμάτιο και μπάνιο. Είναι κατάλληλο για έως 4 άτομα.",
         badges: ["Ανεξάρτητη μονάδα", "Πλήρης κουζίνα", "Θέα στον κήπο", "Έως 4 άτομα"],
@@ -1339,7 +1339,7 @@ export const familyChiosApartmentsEl: RoomDetailData = {
         ...familyChiosApartmentsEn.individualRooms.rooms[1],
         name: "Διαμέρισμα 9",
         type: "Διαμέρισμα",
-        location: "Ισόγειο · χωρίς σκαλοπάτια",
+        location: "Ισόγειο · 4–5 σκαλοπάτια στην είσοδο",
         description:
           "Το Διαμέρισμα 9 προσφέρει την ίδια οικογενειακή διαρρύθμιση με κουζίνα, καθιστικό, υπνοδωμάτιο και μπάνιο, κατάλληλο για έως 4 άτομα.",
         badges: ["Ανεξάρτητη μονάδα", "Πλήρης κουζίνα", "Θέα στον κήπο", "Έως 4 άτομα"],
@@ -1349,10 +1349,10 @@ export const familyChiosApartmentsEl: RoomDetailData = {
         ...familyChiosApartmentsEn.individualRooms.rooms[2],
         name: "Διαμέρισμα 10",
         type: "Διαμέρισμα",
-        location: "Ισόγειο · χωρίς σκαλοπάτια",
+        location: "Ισόγειο · 4–5 σκαλοπάτια στην είσοδο",
         description:
           "Το Διαμέρισμα 10 είναι περίπου 45 τ.μ. και φιλοξενεί κανονικά έως 4 άτομα, με 1 διπλό κρεβάτι και 1 διπλό καναπέ-κρεβάτι. Ο 5ος φιλοξενείται μόνο κατόπιν συνεννόησης, με πρόσθετο μονό κρεβάτι στο υπνοδωμάτιο και περιορισμένο χώρο.",
-        badges: ["Ισόγειο", "Χωρίς σκαλοπάτια", "Πλήρης κουζίνα", "Κανονικά έως 4 άτομα"],
+        badges: ["Ισόγειο", "4–5 σκαλοπάτια στην είσοδο", "Πλήρης κουζίνα", "Κανονικά έως 4 άτομα"],
         beds: ["1 διπλό κρεβάτι", "1 διπλός καναπές-κρεβάτι"],
       },
     ],

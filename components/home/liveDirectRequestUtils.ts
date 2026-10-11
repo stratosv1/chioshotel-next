@@ -62,9 +62,9 @@ const ROOM_VISUALS: VisualRoom[] = [
   { id: 5, roomId: 626129, unitId: 1, displayName: "Room 5", type: "Ground Floor Double / Triple", location: "Ground floor", image: "/images/rooms/voulamandis-house-rooms.webp", primaryBadge: "Ground floor", featureBadges: ["Ground floor", "No kitchenette", "No stairs"] },
   { id: 6, roomId: 268803, unitId: 2, displayName: "Room 6", type: "Economy Double", location: "Ground floor", image: "/images/rooms/received_1753964631359257.webp", primaryBadge: "Economy", featureBadges: ["Ground floor", "No kitchenette", "No stairs"] },
   { id: 7, roomId: 626129, unitId: 2, displayName: "Room 7", type: "Ground Floor Double / Triple", location: "Ground floor", image: "/images/rooms/double-triple-room.jpg", primaryBadge: "Ground floor", featureBadges: ["Ground floor", "No kitchenette", "No stairs"] },
-  { id: 8, roomId: 265595, unitId: 1, displayName: "Apartment 8", type: "Family Apartment", location: "Ground floor", image: "/images/rooms/chios-apartments-voulamandis.webp", primaryBadge: "Kitchen", featureBadges: ["Ground floor", "Kitchen", "No stairs"] },
-  { id: 9, roomId: 265595, unitId: 2, displayName: "Apartment 9", type: "Family Apartment", location: "Ground floor", image: "/images/rooms/chios-apartments-voulamandis.webp", primaryBadge: "Kitchen", featureBadges: ["Ground floor", "Kitchen", "No stairs"] },
-  { id: 10, roomId: 265595, unitId: 3, displayName: "Apartment 10", type: "Family Apartment", location: "Ground floor", image: "/images/rooms/DSC07899.webp", primaryBadge: "Kitchen", featureBadges: ["Ground floor", "Kitchen", "No stairs"] },
+  { id: 8, roomId: 265595, unitId: 1, displayName: "Apartment 8", type: "Family Apartment", location: "Ground floor", image: "/images/rooms/chios-apartments-voulamandis.webp", primaryBadge: "Kitchen", featureBadges: ["Ground floor", "Kitchen", "Stairs"] },
+  { id: 9, roomId: 265595, unitId: 2, displayName: "Apartment 9", type: "Family Apartment", location: "Ground floor", image: "/images/rooms/chios-apartments-voulamandis.webp", primaryBadge: "Kitchen", featureBadges: ["Ground floor", "Kitchen", "Stairs"] },
+  { id: 10, roomId: 265595, unitId: 3, displayName: "Apartment 10", type: "Family Apartment", location: "Ground floor", image: "/images/rooms/DSC07899.webp", primaryBadge: "Kitchen", featureBadges: ["Ground floor", "Kitchen", "Stairs"] },
 ];
 
 // Booking Core now returns machine codes for room types ("economy",

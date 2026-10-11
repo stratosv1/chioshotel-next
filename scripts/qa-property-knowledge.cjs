@@ -38,8 +38,8 @@ for (const required of [
   "Κονταρίου",
   "8 km",
   "8 χλμ",
-  "step-free access",
-  "χωρίς σκαλοπάτια",
+  "4–5 entrance steps",
+  "4–5 σκαλοπάτια",
   "14 σκαλοπάτια",
   "12€",
   "15€",
@@ -48,7 +48,7 @@ for (const required of [
   assert(serialized.includes(required), `Critical owner-confirmed fact is missing: ${required}`);
 }
 
-assert(!serialized.includes("4–5"), "Superseded 4–5-step claim is still present");
+assert(!/apartments with step-free access|Apartments 8, 9 and 10 have step-free/i.test(serialized), "Apartments 8–10 must not be described as step-free (owner correction 2026-10-11)");
 
 const faqPages = [
   "app/frequently-asked-questions/page.tsx",

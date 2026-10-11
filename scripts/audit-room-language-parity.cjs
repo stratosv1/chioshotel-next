@@ -68,7 +68,7 @@ const localizedRouter = fs.readFileSync("app/[locale]/[...slug]/page.tsx", "utf8
 const polishRoomDetails = fs.readFileSync("content/room-details-pl.ts", "utf8");
 const polishAccommodation = fs.readFileSync("content/chios-accommodation-pl.ts", "utf8");
 const propertyKnowledge = fs.readFileSync("db/seeds/property-knowledge.json", "utf8");
-const stepFreeMigration = fs.readFileSync("db/migrations/20260913_step_free_family_apartments.sql", "utf8");
+const apartmentStepsMigration = fs.readFileSync("db/migrations/20261011_family_apartments_entrance_steps.sql", "utf8");
 const seo = fs.readFileSync("lib/seo.ts", "utf8");
 const seoPl = fs.readFileSync("lib/seo-pl.ts", "utf8");
 const roomFactSources = [
@@ -92,9 +92,9 @@ const sourceChecks = [
   ["Room schema emits representative ImageObjects", roomSchema.includes("buildRoomImageObjectSchemas")],
   ["WebPage schema references representative images", roomSchema.includes("getRoomImageReferences(data)")],
   ["Accommodation schema contains the complete room image set", roomSchema.includes("const allImages = getRoomDetailImages(data)") && roomSchema.includes("image: allImages")],
-  ["Family apartments use step-free access", roomDetails.includes('"Ground floor · step-free access"') && roomDetails.includes('"Step-free access"')],
-  ["Removed 4–5-step claim is absent from every room fact source", !roomFactSources.includes("4–5")],
-  ["Database correction marks Apartments 8–10 step-free", stepFreeMigration.includes("set no_stairs = true") && stepFreeMigration.includes("entrance_steps = 0") && stepFreeMigration.includes("room_number in (8, 9, 10)")],
+  ["Family apartments show their 4–5 entrance steps", roomDetails.includes('"Ground floor · 4–5 entrance steps"') && roomDetails.includes('"4–5 entrance steps"') && !roomDetails.includes("step-free access")],
+  ["No room fact source calls Apartments 8–10 step-free", !/Ground floor · step-free access|Apartments 8, 9 and 10 have step-free|apartments with step-free access|ground floor with step-free access/i.test(roomFactSources)],
+  ["Database correction gives Apartments 8–10 their entrance steps", apartmentStepsMigration.includes("set no_stairs = false") && apartmentStepsMigration.includes("entrance_steps = 5") && apartmentStepsMigration.includes("room_number in (8, 9, 10)")],
   ["Standard rooms publish Polish alternates", seo.includes('pl: "/pl/pokoje-na-chios/pokoje-standardowe/"') && seo.includes('"/tr/chios-odalari/standart-cift-kisilik-odalar/"')],
   ["Localized metadata preserves extended alternates", localizedRouter.includes("{ ...getAlternates(path) }")],
   ["Polish room alternates include all seven primary languages", ["en", "el", "fr", "de", "it", "es", "tr", "pl"].every((lang) => new RegExp(`\\n\\s+${lang}:`).test(seoPl))],
