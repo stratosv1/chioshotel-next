@@ -53,7 +53,7 @@ const labels: Record<RoomLanguage, RoomUiLabels> = {
   tr: { checkAvailability: "Müsaitliği kontrol et", bookOnline: "Online rezervasyon", upToGuests: (count) => `${count} kişiye kadar`, faqKicker: "Sorular", faqTitle: "Oda SSS", nextRoom: "Sonraki oda", swipe: "Daha fazla oda için kaydırın", photos: "Fotoğraflar", highlights: "Oda özellikleri", keyDetails: "Temel oda bilgileri", propertyLocation: "Voulamandis House, Sakız Adası", priceNote: "2 kişi için en düşük direkt fiyat, direkt rezervasyon indirimi dahil" },
 };
 
-const panoramaLabels: Record<RoomLanguage, Omit<RoomPanoramaViewerLabels, "title"> & { open: string }> = {
+const panoramaLabels: Record<RoomLanguage, Omit<RoomPanoramaViewerLabels, "title">> = {
   en: { open: "360° view", hint: "Drag to look around", close: "Close 360° view", loading: "Loading 360° view…", unsupported: "Your browser can’t display the 360° view." },
   el: { open: "Περιήγηση 360°", hint: "Σύρετε για να δείτε γύρω", close: "Κλείσιμο περιήγησης 360°", loading: "Φόρτωση περιήγησης 360°…", unsupported: "Ο browser σας δεν μπορεί να εμφανίσει την περιήγηση 360°." },
   fr: { open: "Visite 360°", hint: "Faites glisser pour regarder autour", close: "Fermer la visite 360°", loading: "Chargement de la visite 360°…", unsupported: "Votre navigateur ne peut pas afficher la visite 360°." },

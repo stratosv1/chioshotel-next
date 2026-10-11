@@ -11,6 +11,8 @@ import { useEffect, useRef, useState } from "react";
 
 export type RoomPanoramaViewerLabels = {
   title: string;
+  /** Text on the slider handle, e.g. "360° view". */
+  open: string;
   hint: string;
   close: string;
   loading: string;
@@ -59,6 +61,15 @@ const MIN_FOV = (35 * Math.PI) / 180;
 const MAX_FOV = (100 * Math.PI) / 180;
 const MAX_PITCH = (85 * Math.PI) / 180;
 const AUTO_ROTATE_SPEED = 0.06; // radians per second
+const TWO_PI = Math.PI * 2;
+const SLIDER_KEY_STEP = (10 * Math.PI) / 180;
+
+type ViewerControls = {
+  /** Set the horizontal direction from a 0–1 slider position (0 = starting view, 1 = full turn). */
+  setTurn: (fraction: number) => void;
+  /** Rotate by a number of radians (keyboard on the slider). */
+  turnBy: (radians: number) => void;
+};
 
 function compileShader(gl: WebGLRenderingContext, type: number, source: string) {
   const shader = gl.createShader(type);
@@ -86,7 +97,10 @@ export default function RoomPanoramaViewer({ src, initialYawDeg = 0, labels, onC
   const dialogRef = useRef<HTMLDialogElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [status, setStatus] = useState<"loading" | "ready" | "unsupported">("loading");
-  const [hintVisible, setHintVisible] = useState(true);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const thumbRef = useRef<HTMLDivElement>(null);
+  const controlsRef = useRef<ViewerControls | null>(null);
+  const thumbGrabOffsetRef = useRef<number | null>(null);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -148,6 +162,24 @@ export default function RoomPanoramaViewer({ src, initialYawDeg = 0, labels, onC
     let frame = 0;
     let lastTime = 0;
     let disposed = false;
+    const startYaw = view.yaw;
+    let lastSliderDegrees = -1;
+
+    // Keep the slider handle in step with the view (auto-rotate, dragging the photo, keyboard).
+    function syncSlider() {
+      const track = trackRef.current;
+      const thumb = thumbRef.current;
+      if (!track || !thumb) return;
+      const fraction = ((((view.yaw - startYaw) % TWO_PI) + TWO_PI) % TWO_PI) / TWO_PI;
+      const travel = Math.max(0, track.clientWidth - thumb.offsetWidth - 12);
+      thumb.style.transform = `translateX(${fraction * travel}px)`;
+      const degrees = Math.round(fraction * 360) % 360;
+      if (degrees !== lastSliderDegrees) {
+        lastSliderDegrees = degrees;
+        thumb.setAttribute("aria-valuenow", String(degrees));
+        thumb.setAttribute("aria-valuetext", `${degrees}°`);
+      }
+    }
 
     function resize() {
       if (!canvas || !gl) return;
@@ -174,6 +206,7 @@ export default function RoomPanoramaViewer({ src, initialYawDeg = 0, labels, onC
         gl.uniform1f(uTanHalfFov, Math.tan(view.fov / 2));
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
       }
+      syncSlider();
       frame = requestAnimationFrame(draw);
     }
 
@@ -205,8 +238,18 @@ export default function RoomPanoramaViewer({ src, initialYawDeg = 0, labels, onC
 
     function stopAutoRotate() {
       autoRotate = false;
-      setHintVisible(false);
     }
+
+    controlsRef.current = {
+      setTurn(fraction) {
+        stopAutoRotate();
+        view.yaw = startYaw + Math.min(1, Math.max(0, fraction)) * TWO_PI;
+      },
+      turnBy(radians) {
+        stopAutoRotate();
+        view.yaw += radians;
+      },
+    };
 
     function radiansPerPixel() {
       return view.fov / Math.max(1, canvas?.clientHeight ?? 1);
@@ -272,6 +315,7 @@ export default function RoomPanoramaViewer({ src, initialYawDeg = 0, labels, onC
 
     return () => {
       disposed = true;
+      controlsRef.current = null;
       cancelAnimationFrame(frame);
       image.onload = null;
       image.onerror = null;
@@ -289,6 +333,46 @@ export default function RoomPanoramaViewer({ src, initialYawDeg = 0, labels, onC
       gl.deleteShader(fragment);
     };
   }, [src, initialYawDeg]);
+
+  function sliderFractionAt(clientX: number) {
+    const track = trackRef.current;
+    const thumb = thumbRef.current;
+    if (!track || !thumb) return 0;
+    const rect = track.getBoundingClientRect();
+    const grab = thumbGrabOffsetRef.current ?? thumb.offsetWidth / 2;
+    const travel = Math.max(1, rect.width - thumb.offsetWidth - 12);
+    return (clientX - rect.left - 6 - grab) / travel;
+  }
+
+  function onSliderPointerDown(event: React.PointerEvent<HTMLDivElement>) {
+    const thumb = thumbRef.current;
+    if (!thumb) return;
+    event.currentTarget.setPointerCapture(event.pointerId);
+    const thumbRect = thumb.getBoundingClientRect();
+    const onThumb = event.clientX >= thumbRect.left && event.clientX <= thumbRect.right;
+    thumbGrabOffsetRef.current = onThumb ? event.clientX - thumbRect.left : null;
+    controlsRef.current?.setTurn(sliderFractionAt(event.clientX));
+    if (!onThumb) thumbGrabOffsetRef.current = thumb.offsetWidth / 2;
+    thumb.focus({ preventScroll: true });
+  }
+
+  function onSliderPointerMove(event: React.PointerEvent<HTMLDivElement>) {
+    if (thumbGrabOffsetRef.current === null || !event.currentTarget.hasPointerCapture(event.pointerId)) return;
+    controlsRef.current?.setTurn(sliderFractionAt(event.clientX));
+  }
+
+  function onSliderPointerUp() {
+    thumbGrabOffsetRef.current = null;
+  }
+
+  function onSliderKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (event.key === "ArrowLeft" || event.key === "ArrowDown") controlsRef.current?.turnBy(-SLIDER_KEY_STEP);
+    else if (event.key === "ArrowRight" || event.key === "ArrowUp") controlsRef.current?.turnBy(SLIDER_KEY_STEP);
+    else if (event.key === "Home") controlsRef.current?.setTurn(0);
+    else if (event.key === "End") controlsRef.current?.setTurn(359 / 360);
+    else return;
+    event.preventDefault();
+  }
 
   return (
     <dialog
@@ -326,10 +410,35 @@ export default function RoomPanoramaViewer({ src, initialYawDeg = 0, labels, onC
       {status === "unsupported" ? (
         <p className="absolute inset-0 flex items-center justify-center px-8 text-center text-sm font-bold text-white/85" role="alert">{labels.unsupported}</p>
       ) : null}
-      {status === "ready" && hintVisible ? (
-        <p className="pointer-events-none absolute inset-x-0 bottom-6 mx-auto w-fit rounded-full bg-black/55 px-4 py-2 text-xs font-bold text-white">
-          <span aria-hidden="true">↔ </span>{labels.hint}
-        </p>
+      {status === "ready" ? (
+        <div className="absolute inset-x-0 bottom-[max(1.5rem,env(safe-area-inset-bottom))] flex justify-center px-4">
+          <div
+            ref={trackRef}
+            onPointerDown={onSliderPointerDown}
+            onPointerMove={onSliderPointerMove}
+            onPointerUp={onSliderPointerUp}
+            onPointerCancel={onSliderPointerUp}
+            className="relative w-full max-w-[420px] cursor-pointer touch-none select-none rounded-full bg-[#efe6d9]/95 p-1.5 shadow-[0_12px_32px_rgba(0,0,0,0.28)]"
+          >
+            <span aria-hidden="true" className="pointer-events-none absolute inset-x-6 top-1/2 h-px -translate-y-1/2 bg-[#2f261f]/20" />
+            <div
+              ref={thumbRef}
+              role="slider"
+              tabIndex={0}
+              aria-label={`${labels.title}. ${labels.hint}`}
+              aria-valuemin={0}
+              aria-valuemax={359}
+              aria-valuenow={0}
+              aria-valuetext="0°"
+              onKeyDown={onSliderKeyDown}
+              className="relative inline-flex h-11 cursor-grab items-center gap-3 rounded-full bg-white px-4 text-[15px] font-bold text-[#2f261f] shadow-[0_2px_8px_rgba(47,38,31,0.18)] will-change-transform active:cursor-grabbing focus-visible:outline focus-visible:outline-4 focus-visible:outline-amber-400"
+            >
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 fill-none stroke-current" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 6l-6 6 6 6" /></svg>
+              <span className="whitespace-nowrap">{labels.open}</span>
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 fill-none stroke-current" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 6l6 6-6 6" /></svg>
+            </div>
+          </div>
+        </div>
       ) : null}
     </dialog>
   );
