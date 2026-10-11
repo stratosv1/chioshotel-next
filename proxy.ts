@@ -828,6 +828,14 @@ export const config = {
     "/web-stories/:path*",
     "/staff/:path*",
     "/api/staff/:path*",
-    "/((?!api|_next/static|_next/image|favicon|favicon.ico|robots.txt|sitemap.xml).*)",
+    // Static images in /public/images are served straight from the CDN; the
+    // proxy only needs them for the www -> apex redirect and the one legacy
+    // .png -> .webp alias in legacyRedirects.
+    {
+      source: "/images/:path*",
+      has: [{ type: "header", key: "host", value: "www.chioshotel.gr" }],
+    },
+    "/images/family/ChatGPT-Image-Feb-13-2026-08_32_22-PM.png",
+    "/((?!api|_next/static|_next/image|images/|favicon|favicon.ico|robots.txt|sitemap.xml).*)",
   ],
 };
