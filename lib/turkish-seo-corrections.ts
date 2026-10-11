@@ -144,12 +144,12 @@ const turkishRoomCorrections = new Map<string, DetailCorrection>([
   [
     standardDoubleRoomTr.seo.canonicalPath,
     {
-      title: "Standart çift ve üç kişilik odalar | Sakız Adası",
+      title: "Sakız Adası Üst Kat Çift ve Üç Kişilik Odalar",
       description:
-        "Kambos’ta bahçe erişimli zemin kat veya terasa yakın üst kat seçenekleriyle 2–4 kişilik standart çift ve üç kişilik odalar.",
-      heroTitle: "Sakız Adası’nda çift ve üç kişilik odalar",
+        "Kambos, Sakız Adası’nda üst kat odaları 1, 3 ve 4: 30–35 m², 4 kişiye kadar, teras veya özel balkon, Oda 3 ve 4’te mini mutfak. Direkt rezervasyonda %10 indirim.",
+      heroTitle: "Üst kat çift ve üç kişilik odalar",
       heroDescription:
-        "Çiftler, arkadaşlar ve küçük aileler için bahçe erişimli zemin kat ya da daha aydınlık üst kat seçenekleri sunan rahat odalar.",
+        "Kambos’taki tarihi çiftliğimizin üst katında, taş duvarlı, narenciye bahçelerine bakan ve ortak teras ya da özel balkonlu aydınlık odalar. Oda 3 ve 4’te ayrıca kendi mini mutfağı bulunur.",
     },
   ],
   [
@@ -643,7 +643,7 @@ const turkishMuseumCorrections: ReadonlyArray<
 const turkishRoomDescriptions = new Map<string, string>([
   [
     "room-1",
-    "Oda 1 üst katta yer alır ve iki ayrı uyku alanıyla dört kişiye kadar konaklama sunar.",
+    "Oda 1 yaklaşık 30–35 m²’dir; 1 çift ve 2 tek kişilik yatakla 4 kişiye kadar ağırlar. Ara kapısı olmayan iki bağlantılı alanı ve ortak terasa erişimi vardır.",
   ],
   [
     "room-2",
@@ -651,11 +651,11 @@ const turkishRoomDescriptions = new Map<string, string>([
   ],
   [
     "room-3",
-    "Oda 3, küçük mutfak ve merdiven erişimi olan üst kat çift veya üç kişilik odadır.",
+    "Oda 3 yaklaşık 30–35 m²’dir; 1 çift ve 1 tek kişilik yatakla 3 kişiye kadar, ara kapısız iki bağlantılı alan, mini mutfak ve ortak terasa erişim sunar.",
   ],
   [
     "room-4",
-    "Oda 4, küçük mutfak, çekyat ve üst kat manzarası sunan çift veya üç kişilik odadır.",
+    "Oda 4 yaklaşık 30–35 m², açık planlıdır; 1 çift kişilik yatak ve 1 çekyatla 3 kişiye kadar, mini mutfak ve kendine ait özel balkon sunar.",
   ],
   [
     "room-5",

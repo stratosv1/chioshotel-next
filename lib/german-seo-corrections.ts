@@ -46,9 +46,9 @@ const germanPageSeoCorrections = new Map<string, SeoCorrection>([
   [
     "/de/zimmer-chios/standard-doppelzimmer-auf-chios/",
     {
-      title: "Standard-Doppel- und Dreibettzimmer auf Chios",
+      title: "Doppel- und Dreibettzimmer im Obergeschoss auf Chios",
       description:
-        "Wählen Sie ein Standard-Doppel- oder Dreibettzimmer im Erdgeschoss mit Gartenzugang oder im ersten Stock mit Terrasse in Kambos.",
+        "Zimmer 1, 3 & 4 im Obergeschoss in Kambos, Chios: 30–35 m², bis 4 Gäste, Terrasse oder Privatbalkon, Kochnische in Zimmer 3 & 4. Direkt buchen, 10 % sparen.",
     },
   ],
   [

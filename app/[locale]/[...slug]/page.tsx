@@ -16,6 +16,7 @@ import ChiosActivitiesPage from "@/components/landing/ChiosActivitiesPage";
 import FindYourRoomPage from "@/components/booking/FindYourRoomPage";
 import { RoomsCategoryPage } from "@/components/rooms/RoomsCategoryPage";
 import { RoomDetailPage } from "@/components/rooms/RoomDetailPage";
+import { getRoomDetailFromPriceLabel } from "@/components/rooms/room-price";
 import { DealsPage } from "@/components/deals/DealsPage";
 import { ContactPage } from "@/components/contact/ContactPage";
 import { RatesPage } from "@/components/rates/RatesPage";
@@ -617,10 +618,11 @@ export default async function Page({ params }: PageProps) {
   const roomDetailData = getLocalizedRoomDetailData(requestedPath);
 
   if (roomDetailData) {
+    const fromPriceLabel = await getRoomDetailFromPriceLabel(roomDetailData);
     return (
       <>
         <JsonLd data={buildRoomDetailSchema(roomDetailData)} />
-        <RoomDetailPage data={roomDetailData} />
+        <RoomDetailPage data={roomDetailData} fromPriceLabel={fromPriceLabel} />
       </>
     );
   }

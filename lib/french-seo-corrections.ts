@@ -39,9 +39,9 @@ const frenchSeoCorrections: ReadonlyArray<
   [
     "/fr/chambres-a-chios/chambres-doubles-standard/",
     {
-      title: "Chambres doubles et triples à Chios | Kambos",
+      title: "Chambres doubles et triples à l’étage à Chios",
       description:
-        "Choisissez une chambre double ou triple au Voulamandis House à Kambos : rez-de-chaussée avec accès au jardin ou étage avec terrasse.",
+        "Chambres 1, 3 et 4 à l’étage à Kambos, Chios : 30–35 m², jusqu’à 4 personnes, terrasse ou balcon privé, kitchenette dans les chambres 3 et 4. -10 % en direct.",
     },
   ],
   [

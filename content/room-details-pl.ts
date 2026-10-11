@@ -1,10 +1,12 @@
 import {
   economyDoubleRoomsEn,
   familyChiosApartments,
+  legacyStandardAmenityItems,
   standardDoubleRoom,
   type IndividualRoomData,
   type RoomDetailData,
 } from "@/content/room-details";
+import { groundFloorRoomsEn } from "@/content/ground-floor-rooms";
 
 function roomNumber(name: string) {
   const match = name.match(/(\d+)/);
@@ -111,8 +113,14 @@ function localizeIndividualRooms(
   }));
 }
 
+// The Polish page still presents ground floor (5, 7) and first floor (1, 3, 4)
+// rooms together, so it takes both room lists and the legacy amenity set and
+// leaves out the English-only comparison/related blocks of the first-floor page.
 export const standardDoubleRoomPl: RoomDetailData = {
   ...standardDoubleRoom,
+  comparison: undefined,
+  related: undefined,
+  outdoor: undefined,
   id: "standard-double-room-pl",
   seo: {
     canonicalPath: "/pl/pokoje-na-chios/pokoje-standardowe/",
@@ -153,13 +161,13 @@ export const standardDoubleRoomPl: RoomDetailData = {
     ...standardDoubleRoom.amenities,
     kicker: "Udogodnienia",
     title: "Wygodny pobyt na Chios",
-    items: standardDoubleRoom.amenities.items.map((item) => ({ ...item, label: localizeAmenity(item.label) })),
+    items: legacyStandardAmenityItems.map((item) => ({ ...item, label: localizeAmenity(item.label) })),
   },
   individualRooms: {
     kicker: "Dostępne pokoje",
     title: "Wybierz konkretny pokój standardowy",
     description: "Kategoria obejmuje pokoje na parterze z łatwym dostępem do ogrodu oraz pokoje na piętrze. Niektóre pokoje na piętrze mają także aneks kuchenny.",
-    rooms: localizeIndividualRooms(standardDoubleRoom.individualRooms.rooms, "standard"),
+    rooms: localizeIndividualRooms([...groundFloorRoomsEn.individualRooms.rooms, ...standardDoubleRoom.individualRooms.rooms], "standard"),
   },
   bestFor: { ...standardDoubleRoom.bestFor, kicker: "Dla kogo", title: "Dobry wybór dla", items: ["Par i dwóch osób", "Małych rodzin", "Gości wybierających parter bez schodów", "Gości preferujących pokój na piętrze"] },
   booking: { ...standardDoubleRoom.booking, kicker: "Rezerwacja bezpośrednia", title: "Sprawdź dostępność pokoi standardowych", text: "Podaj daty i liczbę osób, a pomożemy wybrać odpowiedni pokój na parterze lub piętrze.", whatsappHref: "https://wa.me/306944474226", whatsappLabel: "WhatsApp", note: "Dostępność zależy od terminu i liczby gości." },

@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { RoomDetailPage } from "@/components/rooms/RoomDetailPage";
-import { formatFromPrice } from "@/components/rooms/RoomsCompareSection";
+import { getRoomDetailFromPriceLabel } from "@/components/rooms/room-price";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { groundFloorRoomsByLanguage } from "@/content/ground-floor-rooms";
 import { buildRoomDetailSchema } from "@/content/room-detail-schema";
-import { getCategoryFromPrices } from "@/lib/booking-core/category-from-prices";
 import { buildPageMetadata } from "@/lib/seo";
 
 type GroundFloorLanguage = keyof typeof groundFloorRoomsByLanguage;
@@ -26,9 +25,7 @@ export function groundFloorRoomsMetadata(language: GroundFloorLanguage): Metadat
 /** Server wrapper: adds the live "from €X / night" price from Booking Core. */
 export async function GroundFloorRoomsRoute({ language }: { language: GroundFloorLanguage }) {
   const data = groundFloorRoomsByLanguage[language];
-  const prices = await getCategoryFromPrices();
-  const fromPrice = prices?.["ground-floor"];
-  const fromPriceLabel = typeof fromPrice === "number" ? formatFromPrice(fromPrice, language) : null;
+  const fromPriceLabel = await getRoomDetailFromPriceLabel(data);
 
   return (
     <>

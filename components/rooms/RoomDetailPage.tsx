@@ -176,7 +176,7 @@ function localizeImageAlt(room: IndividualRoomData, image: IndividualRoomData["i
 }
 
 function shouldGroupRoomsByFloor(data: RoomDetailData) {
-  return data.id === "standard-double-room" || data.id === "economy-double-rooms";
+  return data.id === "economy-double-rooms";
 }
 
 function getFloorKind(room: IndividualRoomData): FloorKind {
@@ -264,17 +264,7 @@ function RoomVisualCard({ room, language }: { room: IndividualRoomData; language
   );
 }
 
-const groundFloorPageLinks: Record<RoomLanguage, { href: string; label: string }> = {
-  en: { href: "/chios-rooms/ground-floor-rooms/", label: "All details on the ground floor rooms page" },
-  el: { href: "/el/domatia-xios/isogeia-domatia/", label: "Όλες οι λεπτομέρειες στη σελίδα των ισόγειων δωματίων" },
-  fr: { href: "/fr/chambres-a-chios/chambres-rez-de-chaussee/", label: "Tous les détails sur la page des chambres au rez-de-chaussée" },
-  de: { href: "/de/zimmer-chios/erdgeschoss-zimmer/", label: "Alle Details auf der Seite der Erdgeschoss-Zimmer" },
-  it: { href: "/it/stanze-a-chios/camere-piano-terra/", label: "Tutti i dettagli nella pagina delle camere al piano terra" },
-  es: { href: "/es/habitaciones-en-chios/habitaciones-planta-baja/", label: "Todos los detalles en la página de habitaciones en planta baja" },
-  tr: { href: "/tr/chios-odalari/zemin-kat-odalari/", label: "Tüm ayrıntılar zemin kat odaları sayfasında" },
-};
-
-function FloorRoomGroup({ title, text, rooms, language, moreLink }: { title: string; text: string; rooms: IndividualRoomData[]; language: RoomLanguage; moreLink?: { href: string; label: string } }) {
+function FloorRoomGroup({ title, text, rooms, language }: { title: string; text: string; rooms: IndividualRoomData[]; language: RoomLanguage }) {
   const carouselRef = useRef<HTMLDivElement>(null);
   if (!rooms.length) return null;
 
@@ -290,11 +280,6 @@ function FloorRoomGroup({ title, text, rooms, language, moreLink }: { title: str
       <header className="mb-5 max-w-[820px]">
         <span className="text-xs font-black uppercase tracking-[0.16em] text-amber-800">{title}</span>
         <p className="mt-3 max-w-[760px] text-sm leading-7 text-stone-600">{localizeRoomText(text, language)}</p>
-        {moreLink ? (
-          <a href={moreLink.href} className="mt-3 inline-flex min-h-11 items-center text-sm font-black text-amber-800 underline decoration-amber-300 underline-offset-4 hover:text-amber-900">
-            {moreLink.label} <span aria-hidden="true">&nbsp;→</span>
-          </a>
-        ) : null}
         {rooms.length > 1 ? (
           <p className="mt-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-[11px] font-black uppercase tracking-[0.1em] text-amber-900 shadow-sm ring-1 ring-amber-900/10 md:hidden">
             {labels[language].swipe} <span aria-hidden="true">→</span>
@@ -339,7 +324,7 @@ function IndividualRoomsSection({ data, language }: { data: RoomDetailData; lang
             <p className="mt-5 max-w-[760px] text-base leading-8 text-stone-600 md:text-lg">{sectionDescription}</p>
           </header>
           <div className="space-y-10">
-            <FloorRoomGroup title={localizedSectionLabels.groundTitle} text={localizedSectionLabels.groundText} rooms={groundFloorRooms} language={language} moreLink={data.id === "standard-double-room" ? groundFloorPageLinks[language] : undefined} />
+            <FloorRoomGroup title={localizedSectionLabels.groundTitle} text={localizedSectionLabels.groundText} rooms={groundFloorRooms} language={language} />
             <FloorRoomGroup title={localizedSectionLabels.firstTitle} text={localizedSectionLabels.firstText} rooms={firstFloorRooms} language={language} />
             {otherRooms.length ? <FloorRoomGroup title={data.individualRooms.title} text={sectionDescription} rooms={otherRooms} language={language} /> : null}
           </div>
@@ -437,9 +422,9 @@ export function RoomDetailPage({ data, fromPriceLabel }: RoomDetailPageProps) {
               {data.comparison.rows.map((row) => (
                 <div className="px-4 py-3" key={row.label}>
                   <dt className="text-[11px] font-black uppercase tracking-[0.1em] text-[#8a7866]">{row.label}</dt>
-                  <dd className="mt-1.5 grid grid-cols-2 gap-3">
+                  <dd className="mt-1.5 grid gap-3" style={{ gridTemplateColumns: `repeat(${row.values.length}, minmax(0, 1fr))` }}>
                     {row.values.map((value, index) => (
-                      <span className="min-w-0 hyphens-auto text-sm font-bold leading-6 text-[#2f261f]" key={`${row.label}-${index}`}>
+                      <span className={`min-w-0 hyphens-auto font-bold leading-6 text-[#2f261f] [overflow-wrap:anywhere] ${row.values.length > 2 ? "text-[13px]" : "text-sm"}`} key={`${row.label}-${index}`}>
                         <span className="block text-[11px] font-black text-amber-800">{data.comparison?.columns[index]}</span>
                         {value}
                       </span>
