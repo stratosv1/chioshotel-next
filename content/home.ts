@@ -457,7 +457,7 @@ export const homePageEn: HomePageData = {
         imageClass: "vh-room-image--economy",
         liveBadge: "LIVE",
         directBadge: "🎁 -10% Discount",
-        bedBadge: "🛏️ 1 double or 2 singles",
+        bedBadge: "🛏️ 1 double bed",
         description:
           "Ideal for two guests who want a well-kept stay in Kambos, Chios.",
         meta: ["👥 2 guests", "Economy", "🍊 Kambos"],
@@ -980,7 +980,7 @@ export const homePageEl: HomePageData = {
         title: "Οικονομικό Δίκλινο",
         href: "/el/domatia-xios/oikonomiko-diklino-domatio/",
         directBadge: "🎁 -10% Έκπτωση",
-        bedBadge: "🛏️ 1 διπλό ή 2 μονά",
+        bedBadge: "🛏️ 1 διπλό κρεβάτι",
         description:
           "Ιδανική επιλογή για δύο άτομα που θέλουν προσεγμένη διαμονή στον Κάμπο της Χίου.",
         meta: ["👥 2 άτομα", "Economy", "🍊 Κάμπος"],
@@ -1437,7 +1437,7 @@ export const homePageFr: HomePageData = {
         liveBadge: "EN DIRECT",
         href: "/fr/chambres-a-chios/chambres-doubles-economiques/",
         directBadge: "🎁 -10% Réduction",
-        bedBadge: "🛏️ 1 lit double ou 2 lits simples",
+        bedBadge: "🛏️ 1 lit double",
         description:
           "Idéale pour deux personnes qui souhaitent un séjour soigné à Kambos, Chios.",
         meta: ["👥 2 personnes", "Économique", "🍊 Kambos"],
@@ -1882,7 +1882,7 @@ export const homePageDe: HomePageData = {
         title: "Economy Doppelzimmer",
         href: "/de/zimmer-chios/economy-zimmer-auf-chios/",
         directBadge: "🎁 -10% Rabatt",
-        bedBadge: "🛏️ 1 Doppelbett oder 2 Einzelbetten",
+        bedBadge: "🛏️ 1 Doppelbett",
         description:
           "Ideal für zwei Gäste, die einen gepflegten Aufenthalt in Kambos suchen.",
         meta: ["👥 2 Gäste", "Günstig", "🍊 Kambos"],
@@ -2324,7 +2324,7 @@ export const homePageIt: HomePageData = {
         href: "/it/stanze-a-chios/camera-doppia-economica-chios/",
         directBadge: "🎁 -10% Sconto",
         liveBadge: "IN DIRETTA",
-        bedBadge: "🛏️ 1 letto matrimoniale o 2 letti singoli",
+        bedBadge: "🛏️ 1 letto matrimoniale",
         description:
           "Ideale per due persone che desiderano un soggiorno curato a Kambos.",
         meta: ["👥 2 ospiti", "Economica", "🍊 Kambos"],
@@ -2770,7 +2770,7 @@ export const homePageEs: HomePageData = {
         href: "/es/habitaciones-en-chios/economicas-habitaciones-en-chios/",
         directBadge: "🎁 -10% Descuento",
         liveBadge: "EN DIRECTO",
-        bedBadge: "🛏️ 1 cama doble o 2 camas individuales",
+        bedBadge: "🛏️ 1 cama doble",
         description:
           "Ideal para dos personas que desean una estancia cuidada en Kambos.",
         meta: ["👥 2 huéspedes", "Económica", "🍊 Kambos"],
@@ -3215,7 +3215,7 @@ export const homePageTr: HomePageData = {
         title: "Ekonomik çift kişilik oda",
         href: "/tr/chios-odalari/sakiz-adasindaki-ekonomi-cift-kisilik-oda/",
         directBadge: "🎁 -10% İndirim",
-        bedBadge: "🛏️ 1 çift kişilik veya 2 tek kişilik yatak",
+        bedBadge: "🛏️ 1 çift kişilik yatak",
         description:
           "Kambos’ta özenli bir konaklama isteyen iki kişi için idealdir.",
         meta: ["👥 2 misafir", "Ekonomik", "🍊 Kambos"],
