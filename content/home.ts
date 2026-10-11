@@ -499,7 +499,7 @@ export const homePageEn: HomePageData = {
         imageClass: "vh-room-image--family",
         liveBadge: "LIVE",
         directBadge: "🎁 -10% Discount",
-        bedBadge: "🛏️ Family beds",
+        bedBadge: "🛏️ 1 double + 2 singles",
         description: "Ideal for families or small groups who need more space.",
         meta: ["👤 ×4", "Space", "🏡 Apt"],
         amenities: ["❄️ A/C", "📶 Wi-Fi", "☕ Coffee", "🧊 Fridge"],
@@ -1016,7 +1016,7 @@ export const homePageEl: HomePageData = {
         title: "Οικογενειακό Διαμέρισμα",
         href: "/el/domatia-xios/oikogeneiako-diamerisma/",
         directBadge: "🎁 -10% Έκπτωση",
-        bedBadge: "🛏️ Family beds",
+        bedBadge: "🛏️ 1 διπλό + 2 μονά",
         description:
           "Ιδανικό για οικογένειες ή μικρές παρέες που χρειάζονται περισσότερο χώρο.",
         meta: ["👤 ×4", "Χώρος", "🏡 Apt"],
@@ -1476,7 +1476,7 @@ export const homePageFr: HomePageData = {
         liveBadge: "EN DIRECT",
         href: "/fr/chambres-a-chios/appartements-familiaux-de-chios/",
         directBadge: "🎁 -10% Réduction",
-        bedBadge: "🛏️ Lits famille",
+        bedBadge: "🛏️ 1 lit double + 2 lits simples",
         description:
           "Idéal pour les familles ou petits groupes qui souhaitent plus d’espace.",
         meta: ["👤 ×4", "Espace", "🏡 Appartement"],
@@ -1918,7 +1918,7 @@ export const homePageDe: HomePageData = {
         title: "Familienapartment",
         href: "/de/zimmer-chios/familienapartments-in-chios/",
         directBadge: "🎁 -10% Rabatt",
-        bedBadge: "🛏️ Familienbetten",
+        bedBadge: "🛏️ 1 Doppelbett + 2 Einzelbetten",
         description:
           "Ideal für Familien oder kleine Gruppen, die mehr Platz wünschen.",
         meta: ["👤 ×4", "Platz", "🏡 Apt"],
@@ -2363,7 +2363,7 @@ export const homePageIt: HomePageData = {
         href: "/it/stanze-a-chios/appartamenti-familiari-a-chios/",
         directBadge: "🎁 -10% Sconto",
         liveBadge: "IN DIRETTA",
-        bedBadge: "🛏️ Letti famiglia",
+        bedBadge: "🛏️ 1 matrimoniale + 2 singoli",
         description:
           "Ideale per famiglie o piccoli gruppi che desiderano più spazio.",
         meta: ["👤 ×4", "Spazio", "🏡 Appartamento"],
@@ -2809,7 +2809,7 @@ export const homePageEs: HomePageData = {
         href: "/es/habitaciones-en-chios/apartamentos-familiares-en-chios/",
         directBadge: "🎁 -10% Descuento",
         liveBadge: "EN DIRECTO",
-        bedBadge: "🛏️ Camas familiares",
+        bedBadge: "🛏️ 1 cama doble + 2 individuales",
         description:
           "Ideal para familias o grupos pequeños que desean más espacio.",
         meta: ["👤 ×4", "Espacio", "🏡 Apartamento"],
@@ -3251,7 +3251,7 @@ export const homePageTr: HomePageData = {
         title: "Aile dairesi",
         href: "/tr/chios-odalari/sakiz-adasinda-buyuk-aile-daireleri/",
         directBadge: "🎁 -10% İndirim",
-        bedBadge: "🛏️ Aile yatakları",
+        bedBadge: "🛏️ 1 çift + 2 tek kişilik yatak",
         description:
           "Daha fazla alan isteyen aileler veya küçük gruplar için idealdir.",
         meta: ["👤 ×4", "Alan", "🏡 Daire"],
