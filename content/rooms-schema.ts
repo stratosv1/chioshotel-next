@@ -26,6 +26,12 @@ import {
   websiteId,
   type SchemaObject,
 } from "@/lib/structured-data";
+import type { RoomCategoryId } from "@/lib/booking-core/category-from-prices";
+import {
+  amenitySchemaNames,
+  roomCategoryFacts,
+  toRoomCategoryId,
+} from "@/lib/room-category-facts";
 
 function getRoomCardSchemaId(card: RoomCategoryCard): string {
   return schemaId(card.href, card.id);
@@ -91,9 +97,25 @@ function buildRoomCategoryImageSchemas(
     }));
 }
 
+const roomCategoryExtraFeatures: Record<RoomCategoryId, string[]> = {
+  "economy-double": ["Renovated room"],
+  "ground-floor": ["Step-free access", "Direct garden and courtyard access"],
+  "first-floor": ["Shared terrace", "Citrus estate views"],
+  "family-apartments": ["Living area", "Private balcony"],
+};
+
 function buildRoomCardSchema(card: RoomCategoryCard): SchemaObject {
-  return {
-    "@type": "Accommodation",
+  const categoryId = toRoomCategoryId(card.id);
+  const facts = categoryId ? roomCategoryFacts[categoryId] : null;
+  const amenityNames = facts
+    ? [
+        ...facts.amenities.map((amenity) => amenitySchemaNames[amenity]),
+        ...roomCategoryExtraFeatures[facts.id],
+      ]
+    : card.meta;
+
+  const schema: SchemaObject = {
+    "@type": facts ? facts.schemaType : "Accommodation",
     "@id": getRoomCardSchemaId(card),
     name: card.title,
     alternateName: card.subtitle,
@@ -107,12 +129,43 @@ function buildRoomCardSchema(card: RoomCategoryCard): SchemaObject {
     isPartOf: {
       "@id": hotelId(),
     },
-    amenityFeature: card.meta.map((item) => ({
+    amenityFeature: amenityNames.map((name) => ({
       "@type": "LocationFeatureSpecification",
-      name: item,
+      name,
       value: true,
     })),
+    smokingAllowed: false,
   };
+
+  if (facts) {
+    schema.occupancy = {
+      "@type": "QuantitativeValue",
+      minValue: facts.minGuests,
+      maxValue: facts.maxGuests,
+      unitText: "guests",
+    };
+
+    if (facts.sizeM2) {
+      schema.floorSize = {
+        "@type": "QuantitativeValue",
+        ...(facts.sizeM2.min === facts.sizeM2.max
+          ? { value: facts.sizeM2.min }
+          : { minValue: facts.sizeM2.min, maxValue: facts.sizeM2.max }),
+        unitCode: "MTK",
+        unitText: "m²",
+      };
+    }
+
+    if (facts.beds?.length) {
+      schema.bed = facts.beds.map((bed) => ({
+        "@type": "BedDetails",
+        numberOfBeds: bed.count,
+        typeOfBed: bed.type,
+      }));
+    }
+  }
+
+  return schema;
 }
 
 function buildRoomsItemListSchema(data: RoomsCategoryPageData): SchemaObject {

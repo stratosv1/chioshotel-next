@@ -2,8 +2,10 @@ import Image from "next/image";
 import { PropertyFaqSection } from "@/components/faq/PropertyFaqSection";
 import { GreekRoomWizardTailwind } from "@/components/rooms/GreekRoomWizardTailwind";
 import { MobileAvailabilityBar } from "@/components/rooms/MobileAvailabilityBar";
-import { RoomsCompareSection, formatFromPrice, type CompareLocale } from "@/components/rooms/RoomsCompareSection";
+import { RoomsCompareSection, type CompareLocale } from "@/components/rooms/RoomsCompareSection";
 import { RoomWizardTailwind } from "@/components/rooms/RoomWizardTailwind";
+import { RoomCard } from "@/components/rooms/RoomCard";
+import { toRoomCategoryId } from "@/lib/room-category-facts";
 import { TopicBadges } from "@/components/seo/TopicBadges";
 import type { RoomsCategoryPageData } from "@/content/rooms";
 import type { LanguageCode } from "@/lib/languages";
@@ -29,51 +31,6 @@ function getWizardLanguage(path: string): LanguageCode {
 
   return "en";
 }
-
-const cardCtaLabels: Record<LanguageCode, Record<string, string>> = {
-  en: {
-    "first-floor": "View first floor rooms",
-    "ground-floor": "View ground floor rooms",
-    "economy-double": "View economy double rooms",
-    "family-apartments": "View family apartments",
-  },
-  el: {
-    "first-floor": "Δείτε δωμάτια ορόφου",
-    "ground-floor": "Δείτε δωμάτια ισογείου",
-    "economy-double": "Δείτε οικονομικά δίκλινα δωμάτια",
-    "family-apartments": "Δείτε οικογενειακά διαμερίσματα",
-  },
-  fr: {
-    "first-floor": "Voir les chambres à l’étage",
-    "ground-floor": "Voir les chambres au rez-de-chaussée",
-    "economy-double": "Voir les chambres doubles économiques",
-    "family-apartments": "Voir les appartements familiaux",
-  },
-  de: {
-    "first-floor": "Zimmer im Obergeschoss ansehen",
-    "ground-floor": "Zimmer im Erdgeschoss ansehen",
-    "economy-double": "Economy-Doppelzimmer ansehen",
-    "family-apartments": "Familienapartments ansehen",
-  },
-  it: {
-    "first-floor": "Vedi camere al primo piano",
-    "ground-floor": "Vedi camere al piano terra",
-    "economy-double": "Vedi le camere doppie economiche",
-    "family-apartments": "Vedi appartamenti familiari",
-  },
-  es: {
-    "first-floor": "Ver habitaciones en primera planta",
-    "ground-floor": "Ver habitaciones en planta baja",
-    "economy-double": "Ver habitaciones dobles económicas",
-    "family-apartments": "Ver apartamentos familiares",
-  },
-  tr: {
-    "first-floor": "Üst kat odalarını görüntüle",
-    "ground-floor": "Zemin kat odalarını görüntüle",
-    "economy-double": "Ekonomik çift kişilik odaları görüntüle",
-    "family-apartments": "Aile apartlarını görüntüle",
-  },
-};
 
 const roomsFinalCtaCopy: Record<LanguageCode, {
   title: string;
@@ -133,10 +90,6 @@ const roomsFinalCtaCopy: Record<LanguageCode, {
   },
 };
 
-function getCardCtaLabel(cardId: string, language: LanguageCode, fallback: string) {
-  return cardCtaLabels[language]?.[cardId] ?? cardCtaLabels.en[cardId] ?? fallback;
-}
-
 function getDisplayedCards(data: RoomsCategoryPageData, language: LanguageCode) {
   if (language !== "el") return data.cards;
 
@@ -190,7 +143,7 @@ export async function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
   const heroImage = cards[1] ?? cards[0];
   const finalCta = roomsFinalCtaCopy[language];
   const aiAvailabilityHref = roomFinderHrefForLanguage(language);
-  const categoryHrefs = Object.fromEntries(cards.map((card) => [card.id, card.href])) as Partial<Record<RoomCategoryId, string>>;
+  const categoryHrefs = Object.fromEntries(cards.map((card) => [toRoomCategoryId(card.id) ?? card.id, card.href])) as Partial<Record<RoomCategoryId, string>>;
   const tip =
     language === "el"
       ? {
@@ -301,63 +254,18 @@ export async function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
           className="mt-9 grid gap-5 sm:grid-cols-2 xl:grid-cols-4"
           id="rooms-list"
         >
-          {cards.map((card, index) => (
-            <a
-              href={card.href}
-              id={`room-${card.id}`}
-              className="group scroll-mt-28 overflow-hidden rounded-[30px] border border-amber-900/10 bg-white shadow-[0_18px_45px_rgba(47,38,31,0.10)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_30px_80px_rgba(47,38,31,0.16)] focus:outline-none focus:ring-4 focus:ring-amber-700/20 target:ring-4 target:ring-amber-600/50"
-              key={card.id}
-            >
-              <div className="relative aspect-[4/3] overflow-hidden bg-stone-200">
-                <Image
-                  src={card.image}
-                  alt={card.imageAlt}
-                  fill
-                  priority={index < 2}
-                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                  className="object-cover transition duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/55 to-transparent" />
-                <span className="absolute left-4 top-4 rounded-full bg-white/92 px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.16em] text-[#2f261f] shadow-lg backdrop-blur">
-                  {card.badge}
-                </span>
-                {typeof fromPrices?.[card.id as RoomCategoryId] === "number" ? (
-                  <span className="absolute bottom-4 right-4 rounded-full bg-[#2f261f]/85 px-3 py-1.5 text-sm font-black text-white shadow-lg backdrop-blur">
-                    {formatFromPrice(fromPrices[card.id as RoomCategoryId] as number, compareLocale)}
-                  </span>
-                ) : null}
-              </div>
-
-              <div className="p-5 sm:p-6">
-                <div className="flex flex-wrap gap-2">
-                  {card.meta.map((item) => (
-                    <span
-                      key={item}
-                      className="rounded-full bg-amber-50 px-3 py-1 text-[11px] font-bold text-amber-900 ring-1 ring-amber-900/10"
-                    >
-                      {item}
-                    </span>
-                  ))}
-                </div>
-
-                <h3 className="mt-4 text-2xl font-black tracking-[-0.03em] text-[#2f261f]">
-                  {card.title}
-                </h3>
-
-                <p className="mt-1 text-sm font-extrabold uppercase tracking-[0.14em] text-amber-800">
-                  {card.subtitle}
-                </p>
-
-                <p className="mt-4 text-sm leading-7 text-[#574b3f]">
-                  {card.description}
-                </p>
-
-                <div className="mt-5 flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-amber-700 px-4 py-2 text-center text-[11px] font-black uppercase tracking-[0.1em] text-white transition group-hover:bg-amber-800">
-                  {getCardCtaLabel(card.id, language, card.ctaLabel)} <span aria-hidden="true">→</span>
-                </div>
-              </div>
-            </a>
-          ))}
+          {cards.map((card, index) => {
+            const categoryId = toRoomCategoryId(card.id);
+            return (
+              <RoomCard
+                key={card.id}
+                card={card}
+                locale={compareLocale}
+                price={categoryId ? fromPrices?.[categoryId] : null}
+                priority={index < 2}
+              />
+            );
+          })}
         </div>
 
         <RoomsCompareSection locale={compareLocale} prices={fromPrices} hrefs={categoryHrefs} />
