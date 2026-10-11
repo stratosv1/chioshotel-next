@@ -2,11 +2,13 @@ import Image from "next/image";
 import { PropertyFaqSection } from "@/components/faq/PropertyFaqSection";
 import { GreekRoomWizardTailwind } from "@/components/rooms/GreekRoomWizardTailwind";
 import { MobileAvailabilityBar } from "@/components/rooms/MobileAvailabilityBar";
+import { RoomsCompareSection, formatFromPrice, type CompareLocale } from "@/components/rooms/RoomsCompareSection";
 import { RoomWizardTailwind } from "@/components/rooms/RoomWizardTailwind";
 import { TopicBadges } from "@/components/seo/TopicBadges";
 import type { RoomsCategoryPageData } from "@/content/rooms";
 import type { LanguageCode } from "@/lib/languages";
 import { withRoomsOwnerHeroIntent } from "@/lib/rooms-owner-seo-intent";
+import { getCategoryFromPrices, type RoomCategoryId } from "@/lib/booking-core/category-from-prices";
 import { roomFinderHrefForLanguage } from "@/lib/room-finder-cta-routing";
 
 type RoomsCategoryPageProps = {
@@ -162,9 +164,11 @@ function getDisplayedCards(data: RoomsCategoryPageData, language: LanguageCode) 
   });
 }
 
-export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
+export async function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
   const ownerData = withRoomsOwnerHeroIntent(data);
   const language = getWizardLanguage(ownerData.seo.canonicalPath);
+  const compareLocale: CompareLocale = ownerData.seo.canonicalPath.startsWith("/pl/") ? "pl" : language;
+  const fromPrices = await getCategoryFromPrices();
   const hero =
     language === "el"
       ? {
@@ -186,6 +190,7 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
   const heroImage = cards[1] ?? cards[0];
   const finalCta = roomsFinalCtaCopy[language];
   const aiAvailabilityHref = roomFinderHrefForLanguage(language);
+  const categoryHrefs = Object.fromEntries(cards.map((card) => [card.id, card.href])) as Partial<Record<RoomCategoryId, string>>;
   const tip =
     language === "el"
       ? {
@@ -300,7 +305,7 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
             <a
               href={card.href}
               id={`room-${card.id}`}
-              className="group scroll-mt-28 overflow-hidden rounded-[30px] border border-amber-900/10 bg-white shadow-[0_18px_45px_rgba(47,38,31,0.10)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_30px_80px_rgba(47,38,31,0.16)] focus:outline-none focus:ring-4 focus:ring-amber-700/20"
+              className="group scroll-mt-28 overflow-hidden rounded-[30px] border border-amber-900/10 bg-white shadow-[0_18px_45px_rgba(47,38,31,0.10)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_30px_80px_rgba(47,38,31,0.16)] focus:outline-none focus:ring-4 focus:ring-amber-700/20 target:ring-4 target:ring-amber-600/50"
               key={card.id}
             >
               <div className="relative aspect-[4/3] overflow-hidden bg-stone-200">
@@ -316,6 +321,11 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
                 <span className="absolute left-4 top-4 rounded-full bg-white/92 px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.16em] text-[#2f261f] shadow-lg backdrop-blur">
                   {card.badge}
                 </span>
+                {typeof fromPrices?.[card.id as RoomCategoryId] === "number" ? (
+                  <span className="absolute bottom-4 right-4 rounded-full bg-[#2f261f]/85 px-3 py-1.5 text-sm font-black text-white shadow-lg backdrop-blur">
+                    {formatFromPrice(fromPrices[card.id as RoomCategoryId] as number, compareLocale)}
+                  </span>
+                ) : null}
               </div>
 
               <div className="p-5 sm:p-6">
@@ -350,7 +360,9 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
           ))}
         </div>
 
-        <div className="mt-7 flex flex-col gap-4 rounded-[28px] border border-amber-900/10 bg-[#fffdfa] p-5 shadow-[0_18px_45px_rgba(47,38,31,0.08)] sm:flex-row sm:items-center sm:p-6">
+        <RoomsCompareSection locale={compareLocale} prices={fromPrices} hrefs={categoryHrefs} />
+
+        <div className="mt-10 flex flex-col gap-4 rounded-[28px] border border-amber-900/10 bg-[#fffdfa] p-5 shadow-[0_18px_45px_rgba(47,38,31,0.08)] sm:flex-row sm:items-center sm:p-6">
           <div className="flex min-w-0 flex-1 items-start gap-4">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-amber-100 text-xl text-stone-700 shadow-inner [filter:grayscale(1)]" aria-hidden="true">
               {tip.icon}
@@ -412,19 +424,19 @@ export function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
             <p className="mt-3 max-w-2xl text-base leading-7 text-stone-600">{finalCta.text}</p>
           </div>
           <div className="grid gap-3 md:min-w-[360px] md:grid-cols-2">
-            <a href={aiAvailabilityHref} className="inline-flex min-h-12 items-center justify-center rounded-full bg-amber-700 px-5 text-center text-xs font-black uppercase tracking-[0.08em] text-white shadow-lg shadow-amber-900/15 transition hover:bg-amber-800">
-              {finalCta.availabilityLabel}
-            </a>
-            <a href={finalCta.bookingHref} className="inline-flex min-h-12 items-center justify-center rounded-full border border-amber-900/15 bg-white px-5 text-center text-xs font-black uppercase tracking-[0.08em] text-amber-900 transition hover:bg-amber-50">
+            <a href={finalCta.bookingHref} className="inline-flex min-h-12 items-center justify-center rounded-full bg-amber-700 px-5 text-center text-xs font-black uppercase tracking-[0.08em] !text-white shadow-lg shadow-amber-900/15 transition hover:bg-amber-800">
               {finalCta.bookingLabel}
+            </a>
+            <a href={aiAvailabilityHref} className="inline-flex min-h-12 items-center justify-center rounded-full border border-amber-900/15 bg-white px-5 text-center text-xs font-black uppercase tracking-[0.08em] text-amber-900 transition hover:bg-amber-50">
+              {finalCta.availabilityLabel}
             </a>
           </div>
         </div>
       </section>
 
       <MobileAvailabilityBar
-        href={aiAvailabilityHref}
-        label={finalCta.availabilityLabel}
+        href={finalCta.bookingHref}
+        label={finalCta.bookingLabel}
         hideWhileIds={["rooms-wizard", "rooms-final-cta"]}
       />
     </main>
