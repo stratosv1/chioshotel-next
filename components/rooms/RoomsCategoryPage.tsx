@@ -32,6 +32,55 @@ function getWizardLanguage(path: string): LanguageCode {
   return "en";
 }
 
+const cardCtaLabels: Record<LanguageCode, Record<string, string>> = {
+  en: {
+    "first-floor": "View first floor rooms",
+    "ground-floor": "View ground floor rooms",
+    "economy-double": "View economy double rooms",
+    "family-apartments": "View family apartments",
+  },
+  el: {
+    "first-floor": "Δείτε δωμάτια ορόφου",
+    "ground-floor": "Δείτε δωμάτια ισογείου",
+    "economy-double": "Δείτε οικονομικά δίκλινα δωμάτια",
+    "family-apartments": "Δείτε οικογενειακά διαμερίσματα",
+  },
+  fr: {
+    "first-floor": "Voir les chambres à l’étage",
+    "ground-floor": "Voir les chambres au rez-de-chaussée",
+    "economy-double": "Voir les chambres doubles économiques",
+    "family-apartments": "Voir les appartements familiaux",
+  },
+  de: {
+    "first-floor": "Zimmer im Obergeschoss ansehen",
+    "ground-floor": "Zimmer im Erdgeschoss ansehen",
+    "economy-double": "Economy-Doppelzimmer ansehen",
+    "family-apartments": "Familienapartments ansehen",
+  },
+  it: {
+    "first-floor": "Vedi camere al primo piano",
+    "ground-floor": "Vedi camere al piano terra",
+    "economy-double": "Vedi le camere doppie economiche",
+    "family-apartments": "Vedi appartamenti familiari",
+  },
+  es: {
+    "first-floor": "Ver habitaciones en primera planta",
+    "ground-floor": "Ver habitaciones en planta baja",
+    "economy-double": "Ver habitaciones dobles económicas",
+    "family-apartments": "Ver apartamentos familiares",
+  },
+  tr: {
+    "first-floor": "Üst kat odalarını görüntüle",
+    "ground-floor": "Zemin kat odalarını görüntüle",
+    "economy-double": "Ekonomik çift kişilik odaları görüntüle",
+    "family-apartments": "Aile apartlarını görüntüle",
+  },
+};
+
+function getCardCtaLabel(cardId: string, language: LanguageCode, fallback: string) {
+  return cardCtaLabels[language]?.[cardId] ?? cardCtaLabels.en[cardId] ?? fallback;
+}
+
 const roomsFinalCtaCopy: Record<LanguageCode, {
   title: string;
   text: string;
@@ -263,6 +312,7 @@ export async function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
                 locale={compareLocale}
                 price={categoryId ? fromPrices?.[categoryId] : null}
                 priority={index < 2}
+                ctaLabel={getCardCtaLabel(card.id, language, card.ctaLabel)}
               />
             );
           })}

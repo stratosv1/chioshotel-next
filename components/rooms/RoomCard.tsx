@@ -15,6 +15,8 @@ type RoomCardProps = {
   locale: RoomFactsLocale;
   price?: number | null;
   priority?: boolean;
+  /** Full, descriptive CTA text for screen readers (visible label stays short). */
+  ctaLabel?: string;
 };
 
 const iconProps = {
@@ -103,7 +105,7 @@ function AmenityIcon({ amenity }: { amenity: AmenityKey }) {
   }
 }
 
-export function RoomCard({ card, locale, price, priority }: RoomCardProps) {
+export function RoomCard({ card, locale, price, priority, ctaLabel }: RoomCardProps) {
   const categoryId = toRoomCategoryId(card.id);
   const facts = categoryId ? roomCategoryFacts[categoryId] : null;
   const bed = categoryId ? bedLabels[categoryId][locale] : null;
@@ -189,7 +191,8 @@ export function RoomCard({ card, locale, price, priority }: RoomCardProps) {
             ) : null}
           </div>
           <span className="inline-flex min-h-11 shrink-0 items-center gap-1 rounded-full bg-[#fbeee0] px-4 text-sm font-semibold text-[#7c2d12] transition group-hover:bg-[#f7e0c8]">
-            {ui.view}
+            <span aria-hidden={ctaLabel ? true : undefined}>{ui.view}</span>
+            {ctaLabel ? <span className="sr-only">{ctaLabel}</span> : null}
             <span aria-hidden="true">→</span>
           </span>
         </div>
