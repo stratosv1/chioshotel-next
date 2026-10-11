@@ -651,7 +651,7 @@ const turkishRoomDescriptions = new Map<string, string>([
   ],
   [
     "room-3",
-    "Oda 3 yaklaşık 30–35 m²’dir; 1 çift ve 1 tek kişilik yatakla 3 kişiye kadar, ara kapısız iki bağlantılı alan, mini mutfak ve ortak terasa erişim sunar.",
+    "Oda 3 yaklaşık 30–35 m²’dir; 1 çift kişilik yatak ve 1 çekyatla 3 kişiye kadar, ara kapısız iki bağlantılı alan, mini mutfak ve ortak terasa erişim sunar.",
   ],
   [
     "room-4",

@@ -199,7 +199,7 @@ export const roomsCategoryEn: RoomsCategoryPageData = {
           "/images/rooms/----1-1.webp",
           "/images/rooms/voulamandis-house-bathrooms-1.webp",
         ],
-        beds: { double: 2, single: 2, sofa: 0 },
+        beds: { double: 1, single: 2, sofa: 0 },
       },
       {
         id: 2,
@@ -220,7 +220,7 @@ export const roomsCategoryEn: RoomsCategoryPageData = {
           "/images/rooms/DSC07832.webp",
           "/images/rooms/received_1385287484893642_1500478431120_1200x800_3240x2160-1.webp",
         ],
-        beds: { double: 2, single: 0, sofa: 0 },
+        beds: { double: 1, single: 0, sofa: 0 },
       },
       {
         id: 3,
@@ -241,7 +241,7 @@ export const roomsCategoryEn: RoomsCategoryPageData = {
           "/images/rooms/DSC07849-1.webp",
           "/images/rooms/DSC07891-1.webp",
         ],
-        beds: { double: 1, single: 1, sofa: 0 },
+        beds: { double: 1, single: 0, sofa: 1 },
       },
       {
         id: 4,
@@ -282,7 +282,7 @@ export const roomsCategoryEn: RoomsCategoryPageData = {
           "/images/rooms/voulamandis-house-double-room-bathroom_1620x1080.webp",
           "/images/rooms/hotels-chios-voulamandis_1620x1080.webp",
         ],
-        beds: { double: 1, single: 1, sofa: 0 },
+        beds: { double: 1, single: 0, sofa: 1 },
       },
       {
         id: 6,

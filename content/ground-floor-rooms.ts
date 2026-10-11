@@ -6,7 +6,7 @@ import type { IndividualRoomData, RoomDetailData } from "@/content/room-details"
    Facts are owner-confirmed (booking_core.rooms / room_features, 2026-09-05):
    - Rooms 5 and 7: ground floor, 0 entrance steps, direct courtyard & garden
      access, approx. 30–35 m², open-plan, max 3 guests, mini fridge + kettle,
-     no kitchenette. Room 5: 1 double + 1 single. Room 7: 1 double + 1 sofa bed.
+     no kitchenette. Rooms 5 and 7: 1 double + 1 sofa bed.
    - 3rd guest supplement: €15 per night (booking_core.guest_pricing).
    - Not specially adapted for wheelchair users.
    ========================================================================== */
@@ -90,7 +90,7 @@ const groundFloorRooms: IndividualRoomData[] = [
     description:
       "Room 5 is a ground-floor double / triple room with direct courtyard and garden access. It is ideal for guests who prefer no stairs and an easy outdoor connection.",
     badges: ["Ground floor", "No stairs", "Garden access", "Up to 3 guests"],
-    beds: ["1 double bed", "1 single bed"],
+    beds: ["1 double bed", "1 sofa bed"],
     amenities: [
       { icon: "🪜❌", label: "No stairs" },
       { icon: "🌿", label: "Garden access" },
@@ -284,7 +284,7 @@ export const groundFloorRoomsEn = build("en", {
     title: "Easy, step-free rooms in a quiet citrus estate",
     paragraphs: [
       "Rooms 5 and 7 are the double / triple rooms on the ground floor of Voulamandis House. There are no entrance steps: you walk in directly from the courtyard, with the garden and the shaded pergola just outside your door.",
-      "Each room is about 30–35 m², open-plan, with traditional Chian stone walls, a private bathroom with shower and enough space for a third guest. Room 5 has a double and a single bed; Room 7 has a double bed and a sofa bed.",
+      "Each room is about 30–35 m², open-plan, with traditional Chian stone walls, a private bathroom with shower and enough space for a third guest. Both rooms have a double bed and a sofa bed.",
       "They suit couples who want more space than an economy room, friends travelling together, parents with a child, older guests and anyone carrying heavy luggage or simply preferring to avoid stairs.",
     ],
     highlights: [
@@ -324,7 +324,7 @@ export const groundFloorRoomsEn = build("en", {
     kicker: "Choose your room",
     title: "Room 5 and Room 7",
     description:
-      "Both rooms are on the ground floor with direct courtyard and garden access. The main difference is the third bed: a single bed in Room 5, a sofa bed in Room 7.",
+      "Both rooms are on the ground floor with direct courtyard and garden access. Both have the same bed setup: a double bed and a sofa bed for the third guest.",
   },
   comparison: {
     kicker: "Side by side",
@@ -334,7 +334,7 @@ export const groundFloorRoomsEn = build("en", {
     rows: [
       { label: "Size", values: ["≈ 30–35 m²", "≈ 30–35 m²"] },
       { label: "Max guests", values: ["3", "3"] },
-      { label: "Beds", values: ["1 double + 1 single", "1 double + 1 sofa bed"] },
+      { label: "Beds", values: ["1 double + 1 sofa bed", "1 double + 1 sofa bed"] },
       { label: "Layout", values: ["Open-plan", "Open-plan"] },
       { label: "Access", values: ["0 steps", "0 steps"] },
       { label: "Outside", values: ["Courtyard & garden", "Courtyard & garden"] },
@@ -389,12 +389,12 @@ export const groundFloorRoomsEn = build("en", {
     {
       question: "How many guests can stay in Room 5 or Room 7?",
       answer:
-        "Up to 3 guests. Room 5 has a double bed and a single bed, Room 7 a double bed and a sofa bed. The third guest is charged €15 per night. A baby cot is free on request.",
+        "Up to 3 guests. Both Room 5 and Room 7 have a double bed and a sofa bed. The third guest is charged €15 per night. A baby cot is free on request.",
     },
     {
       question: "What is the difference between Room 5 and Room 7?",
       answer:
-        "Both are about 30–35 m², open-plan and open onto the courtyard and garden. Room 5 has a single bed as the third bed, Room 7 a sofa bed.",
+        "Both are about 30–35 m², open-plan and open onto the courtyard and garden. Both have a double bed and a sofa bed, so they are practically equivalent.",
     },
     {
       question: "Can I book a specific ground floor room?",
@@ -446,7 +446,7 @@ export const groundFloorRoomsEl = build("el", {
     title: "Άνετα δωμάτια χωρίς σκαλιά, σε ένα ήσυχο κτήμα με εσπεριδοειδή",
     paragraphs: [
       "Τα Δωμάτια 5 και 7 είναι τα δίκλινα / τρίκλινα δωμάτια του ισογείου στο Voulamandis House. Δεν υπάρχουν σκαλιά στην είσοδο: μπαίνετε απευθείας από την αυλή, με τον κήπο και τη σκιερή πέργκολα ακριβώς έξω από την πόρτα σας.",
-      "Κάθε δωμάτιο έχει περίπου 30–35 m², ενιαίο χώρο με παραδοσιακούς χιώτικους πέτρινους τοίχους, ιδιωτικό μπάνιο με ντους και άνεση για τρίτο άτομο. Το Δωμάτιο 5 έχει ένα διπλό και ένα μονό κρεβάτι, το Δωμάτιο 7 ένα διπλό κρεβάτι και έναν καναπέ-κρεβάτι.",
+      "Κάθε δωμάτιο έχει περίπου 30–35 m², ενιαίο χώρο με παραδοσιακούς χιώτικους πέτρινους τοίχους, ιδιωτικό μπάνιο με ντους και άνεση για τρίτο άτομο. Και τα δύο δωμάτια έχουν ένα διπλό κρεβάτι και έναν καναπέ-κρεβάτι.",
       "Ταιριάζουν σε ζευγάρια που θέλουν περισσότερο χώρο από ένα οικονομικό δωμάτιο, σε φίλους, σε γονείς με ένα παιδί, σε ηλικιωμένους και σε όποιον έχει βαριές αποσκευές ή απλώς προτιμά να αποφύγει τις σκάλες.",
     ],
     highlights: [
@@ -486,7 +486,7 @@ export const groundFloorRoomsEl = build("el", {
     kicker: "Επιλέξτε δωμάτιο",
     title: "Δωμάτιο 5 και Δωμάτιο 7",
     description:
-      "Και τα δύο δωμάτια βρίσκονται στο ισόγειο με άμεση πρόσβαση σε αυλή και κήπο. Η βασική διαφορά είναι το τρίτο κρεβάτι: μονό κρεβάτι στο Δωμάτιο 5, καναπές-κρεβάτι στο Δωμάτιο 7.",
+      "Και τα δύο δωμάτια βρίσκονται στο ισόγειο με άμεση πρόσβαση σε αυλή και κήπο. Έχουν την ίδια διάταξη κρεβατιών: ένα διπλό κρεβάτι και έναν καναπέ-κρεβάτι για το τρίτο άτομο.",
   },
   comparison: {
     kicker: "Δίπλα-δίπλα",
@@ -496,7 +496,7 @@ export const groundFloorRoomsEl = build("el", {
     rows: [
       { label: "Εμβαδόν", values: ["≈ 30–35 m²", "≈ 30–35 m²"] },
       { label: "Μέγ. άτομα", values: ["3", "3"] },
-      { label: "Κρεβάτια", values: ["1 διπλό + 1 μονό", "1 διπλό + 1 καναπές-κρεβάτι"] },
+      { label: "Κρεβάτια", values: ["1 διπλό + 1 καναπές-κρεβάτι", "1 διπλό + 1 καναπές-κρεβάτι"] },
       { label: "Διαρρύθμιση", values: ["Ενιαίος χώρος", "Ενιαίος χώρος"] },
       { label: "Πρόσβαση", values: ["0 σκαλιά", "0 σκαλιά"] },
       { label: "Έξω", values: ["Αυλή & κήπος", "Αυλή & κήπος"] },
@@ -551,12 +551,12 @@ export const groundFloorRoomsEl = build("el", {
     {
       question: "Πόσα άτομα χωράνε στο Δωμάτιο 5 ή στο Δωμάτιο 7;",
       answer:
-        "Έως 3 άτομα. Το Δωμάτιο 5 έχει διπλό και μονό κρεβάτι, το Δωμάτιο 7 διπλό κρεβάτι και καναπέ-κρεβάτι. Το τρίτο άτομο χρεώνεται 15 € τη βραδιά. Βρεφική κούνια παρέχεται δωρεάν κατόπιν αιτήματος.",
+        "Έως 3 άτομα. Και το Δωμάτιο 5 και το Δωμάτιο 7 έχουν διπλό κρεβάτι και καναπέ-κρεβάτι. Το τρίτο άτομο χρεώνεται 15 € τη βραδιά. Βρεφική κούνια παρέχεται δωρεάν κατόπιν αιτήματος.",
     },
     {
       question: "Ποια είναι η διαφορά ανάμεσα στο Δωμάτιο 5 και στο Δωμάτιο 7;",
       answer:
-        "Και τα δύο έχουν περίπου 30–35 m², ενιαίο χώρο και ανοίγουν στην αυλή και στον κήπο. Στο Δωμάτιο 5 το τρίτο κρεβάτι είναι μονό, στο Δωμάτιο 7 καναπές-κρεβάτι.",
+        "Και τα δύο έχουν περίπου 30–35 m², ενιαίο χώρο και ανοίγουν στην αυλή και στον κήπο. Και τα δύο έχουν διπλό κρεβάτι και καναπέ-κρεβάτι, οπότε είναι πρακτικά ισοδύναμα.",
     },
     {
       question: "Μπορώ να κλείσω συγκεκριμένο ισόγειο δωμάτιο;",
@@ -608,7 +608,7 @@ export const groundFloorRoomsFr = build("fr", {
     title: "Des chambres de plain-pied dans un domaine d’agrumes paisible",
     paragraphs: [
       "Les chambres 5 et 7 sont les chambres doubles / triples du rez-de-chaussée de Voulamandis House. Aucune marche à l’entrée : on y entre directement depuis la cour, avec le jardin et la pergola ombragée juste devant la porte.",
-      "Chaque chambre fait environ 30–35 m², en espace ouvert, avec murs en pierre traditionnels de Chios, salle de bain privée avec douche et assez d’espace pour une troisième personne. La chambre 5 a un lit double et un lit simple, la chambre 7 un lit double et un canapé-lit.",
+      "Chaque chambre fait environ 30–35 m², en espace ouvert, avec murs en pierre traditionnels de Chios, salle de bain privée avec douche et assez d’espace pour une troisième personne. Les deux chambres ont un lit double et un canapé-lit.",
       "Elles conviennent aux couples qui veulent plus d’espace qu’une chambre économique, aux amis, aux parents avec un enfant, aux voyageurs âgés et à tous ceux qui préfèrent éviter les escaliers.",
     ],
     highlights: [
@@ -648,7 +648,7 @@ export const groundFloorRoomsFr = build("fr", {
     kicker: "Choisissez votre chambre",
     title: "Chambre 5 et chambre 7",
     description:
-      "Les deux chambres sont au rez-de-chaussée avec accès direct à la cour et au jardin. La différence principale est le troisième couchage : un lit simple dans la chambre 5, un canapé-lit dans la chambre 7.",
+      "Les deux chambres sont au rez-de-chaussée avec accès direct à la cour et au jardin. Elles ont le même couchage : un lit double et un canapé-lit pour la troisième personne.",
   },
   comparison: {
     kicker: "Côte à côte",
@@ -658,7 +658,7 @@ export const groundFloorRoomsFr = build("fr", {
     rows: [
       { label: "Surface", values: ["≈ 30–35 m²", "≈ 30–35 m²"] },
       { label: "Personnes max.", values: ["3", "3"] },
-      { label: "Lits", values: ["1 double + 1 simple", "1 double + 1 canapé-lit"] },
+      { label: "Lits", values: ["1 double + 1 canapé-lit", "1 double + 1 canapé-lit"] },
       { label: "Agencement", values: ["Espace ouvert", "Espace ouvert"] },
       { label: "Accès", values: ["0 marche", "0 marche"] },
       { label: "Extérieur", values: ["Cour & jardin", "Cour & jardin"] },
@@ -713,12 +713,12 @@ export const groundFloorRoomsFr = build("fr", {
     {
       question: "Combien de personnes peuvent dormir dans la chambre 5 ou 7 ?",
       answer:
-        "Jusqu’à 3 personnes. La chambre 5 a un lit double et un lit simple, la chambre 7 un lit double et un canapé-lit. La troisième personne coûte 15 € par nuit. Lit bébé gratuit sur demande.",
+        "Jusqu’à 3 personnes. Les deux chambres ont un lit double et un canapé-lit. La troisième personne coûte 15 € par nuit. Lit bébé gratuit sur demande.",
     },
     {
       question: "Quelle est la différence entre la chambre 5 et la chambre 7 ?",
       answer:
-        "Les deux font environ 30–35 m², en espace ouvert, et donnent sur la cour et le jardin. Le troisième couchage est un lit simple dans la chambre 5 et un canapé-lit dans la chambre 7.",
+        "Les deux font environ 30–35 m², en espace ouvert, et donnent sur la cour et le jardin. Les deux ont un lit double et un canapé-lit : elles sont pratiquement équivalentes.",
     },
     {
       question: "Puis-je réserver une chambre précise ?",
@@ -770,7 +770,7 @@ export const groundFloorRoomsDe = build("de", {
     title: "Stufenlose Zimmer auf einem ruhigen Zitrusanwesen",
     paragraphs: [
       "Die Zimmer 5 und 7 sind die Doppel- / Dreibettzimmer im Erdgeschoss des Voulamandis House. Es gibt keine Eingangsstufen: Sie betreten das Zimmer direkt vom Innenhof, Garten und schattige Pergola liegen gleich vor der Tür.",
-      "Jedes Zimmer hat ca. 30–35 m², einen offenen Grundriss mit traditionellen Chios-Steinwänden, ein eigenes Bad mit Dusche und Platz für eine dritte Person. Zimmer 5 hat ein Doppel- und ein Einzelbett, Zimmer 7 ein Doppelbett und ein Schlafsofa.",
+      "Jedes Zimmer hat ca. 30–35 m², einen offenen Grundriss mit traditionellen Chios-Steinwänden, ein eigenes Bad mit Dusche und Platz für eine dritte Person. Beide Zimmer haben ein Doppelbett und ein Schlafsofa.",
       "Ideal für Paare, die mehr Platz als im Economy-Zimmer möchten, für Freunde, Eltern mit einem Kind, ältere Gäste und alle, die schweres Gepäck haben oder Treppen lieber vermeiden.",
     ],
     highlights: [
@@ -810,7 +810,7 @@ export const groundFloorRoomsDe = build("de", {
     kicker: "Ihr Zimmer wählen",
     title: "Zimmer 5 und Zimmer 7",
     description:
-      "Beide Zimmer liegen im Erdgeschoss mit direktem Zugang zu Hof und Garten. Der Hauptunterschied ist das dritte Bett: ein Einzelbett in Zimmer 5, ein Schlafsofa in Zimmer 7.",
+      "Beide Zimmer liegen im Erdgeschoss mit direktem Zugang zu Hof und Garten. Beide haben dieselbe Bettenaufteilung: ein Doppelbett und ein Schlafsofa für die dritte Person.",
   },
   comparison: {
     kicker: "Im Vergleich",
@@ -820,7 +820,7 @@ export const groundFloorRoomsDe = build("de", {
     rows: [
       { label: "Größe", values: ["≈ 30–35 m²", "≈ 30–35 m²"] },
       { label: "Max. Gäste", values: ["3", "3"] },
-      { label: "Betten", values: ["1 Doppel- + 1 Einzelbett", "1 Doppelbett + 1 Schlafsofa"] },
+      { label: "Betten", values: ["1 Doppelbett + 1 Schlafsofa", "1 Doppelbett + 1 Schlafsofa"] },
       { label: "Grundriss", values: ["Offen", "Offen"] },
       { label: "Zugang", values: ["0 Stufen", "0 Stufen"] },
       { label: "Draußen", values: ["Hof & Garten", "Hof & Garten"] },
@@ -875,12 +875,12 @@ export const groundFloorRoomsDe = build("de", {
     {
       question: "Wie viele Gäste können in Zimmer 5 oder 7 übernachten?",
       answer:
-        "Bis zu 3 Gäste. Zimmer 5 hat ein Doppel- und ein Einzelbett, Zimmer 7 ein Doppelbett und ein Schlafsofa. Der dritte Gast kostet 15 € pro Nacht. Ein Babybett ist auf Anfrage kostenlos.",
+        "Bis zu 3 Gäste. Beide Zimmer haben ein Doppelbett und ein Schlafsofa. Der dritte Gast kostet 15 € pro Nacht. Ein Babybett ist auf Anfrage kostenlos.",
     },
     {
       question: "Was ist der Unterschied zwischen Zimmer 5 und Zimmer 7?",
       answer:
-        "Beide haben ca. 30–35 m², einen offenen Grundriss und öffnen sich zu Hof und Garten. Das dritte Bett ist in Zimmer 5 ein Einzelbett, in Zimmer 7 ein Schlafsofa.",
+        "Beide haben ca. 30–35 m², einen offenen Grundriss und öffnen sich zu Hof und Garten. Beide haben ein Doppelbett und ein Schlafsofa und sind praktisch gleichwertig.",
     },
     {
       question: "Kann ich ein bestimmtes Erdgeschoss-Zimmer buchen?",
@@ -932,7 +932,7 @@ export const groundFloorRoomsIt = build("it", {
     title: "Camere senza gradini in una tranquilla tenuta di agrumi",
     paragraphs: [
       "Le camere 5 e 7 sono le doppie / triple al piano terra di Voulamandis House. Non ci sono gradini all’ingresso: si entra direttamente dal cortile, con il giardino e il pergolato ombreggiato appena fuori dalla porta.",
-      "Ogni camera misura circa 30–35 m², open space, con muri in pietra tradizionali di Chios, bagno privato con doccia e spazio per un terzo ospite. La camera 5 ha un letto matrimoniale e uno singolo, la camera 7 un letto matrimoniale e un divano letto.",
+      "Ogni camera misura circa 30–35 m², open space, con muri in pietra tradizionali di Chios, bagno privato con doccia e spazio per un terzo ospite. Entrambe le camere hanno un letto matrimoniale e un divano letto.",
       "Perfette per coppie che vogliono più spazio di una camera economica, amici, genitori con un bambino, ospiti anziani e chiunque abbia bagagli pesanti o preferisca evitare le scale.",
     ],
     highlights: [
@@ -972,7 +972,7 @@ export const groundFloorRoomsIt = build("it", {
     kicker: "Scegli la camera",
     title: "Camera 5 e camera 7",
     description:
-      "Entrambe le camere sono al piano terra con accesso diretto a cortile e giardino. La differenza principale è il terzo letto: un letto singolo nella camera 5, un divano letto nella camera 7.",
+      "Entrambe le camere sono al piano terra con accesso diretto a cortile e giardino. Hanno la stessa disposizione: un letto matrimoniale e un divano letto per il terzo ospite.",
   },
   comparison: {
     kicker: "A confronto",
@@ -982,7 +982,7 @@ export const groundFloorRoomsIt = build("it", {
     rows: [
       { label: "Metratura", values: ["≈ 30–35 m²", "≈ 30–35 m²"] },
       { label: "Ospiti max", values: ["3", "3"] },
-      { label: "Letti", values: ["1 matrimoniale + 1 singolo", "1 matrimoniale + 1 divano letto"] },
+      { label: "Letti", values: ["1 matrimoniale + 1 divano letto", "1 matrimoniale + 1 divano letto"] },
       { label: "Disposizione", values: ["Open space", "Open space"] },
       { label: "Accesso", values: ["0 gradini", "0 gradini"] },
       { label: "Esterno", values: ["Cortile & giardino", "Cortile & giardino"] },
@@ -1037,12 +1037,12 @@ export const groundFloorRoomsIt = build("it", {
     {
       question: "Quanti ospiti possono dormire nella camera 5 o 7?",
       answer:
-        "Fino a 3 ospiti. La camera 5 ha un matrimoniale e un singolo, la camera 7 un matrimoniale e un divano letto. Il terzo ospite costa 15 € a notte. Culla gratuita su richiesta.",
+        "Fino a 3 ospiti. Le camere 5 e 7 hanno entrambe un matrimoniale e un divano letto. Il terzo ospite costa 15 € a notte. Culla gratuita su richiesta.",
     },
     {
       question: "Qual è la differenza tra camera 5 e camera 7?",
       answer:
-        "Entrambe misurano circa 30–35 m², sono open space e si aprono su cortile e giardino. Il terzo letto è singolo nella camera 5 e un divano letto nella camera 7.",
+        "Entrambe misurano circa 30–35 m², sono open space e si aprono su cortile e giardino. Entrambe hanno un matrimoniale e un divano letto: sono praticamente equivalenti.",
     },
     {
       question: "Posso prenotare una camera specifica al piano terra?",
@@ -1094,7 +1094,7 @@ export const groundFloorRoomsEs = build("es", {
     title: "Habitaciones sin escalones en una tranquila finca de cítricos",
     paragraphs: [
       "Las habitaciones 5 y 7 son las dobles / triples de la planta baja de Voulamandis House. No hay escalones en la entrada: se entra directamente desde el patio, con el jardín y la pérgola con sombra justo delante de la puerta.",
-      "Cada habitación tiene unos 30–35 m², espacio abierto con paredes de piedra tradicionales de Quíos, baño privado con ducha y sitio para una tercera persona. La habitación 5 tiene una cama doble y una individual; la 7, una cama doble y un sofá cama.",
+      "Cada habitación tiene unos 30–35 m², espacio abierto con paredes de piedra tradicionales de Quíos, baño privado con ducha y sitio para una tercera persona. Las dos habitaciones tienen una cama doble y un sofá cama.",
       "Son ideales para parejas que quieren más espacio que en una habitación económica, amigos, padres con un niño, viajeros mayores y cualquiera con equipaje pesado o que prefiera evitar escaleras.",
     ],
     highlights: [
@@ -1134,7 +1134,7 @@ export const groundFloorRoomsEs = build("es", {
     kicker: "Elige tu habitación",
     title: "Habitación 5 y habitación 7",
     description:
-      "Las dos habitaciones están en planta baja con acceso directo al patio y al jardín. La principal diferencia es la tercera cama: individual en la habitación 5, sofá cama en la 7.",
+      "Las dos habitaciones están en planta baja con acceso directo al patio y al jardín. Tienen la misma distribución: una cama doble y un sofá cama para la tercera persona.",
   },
   comparison: {
     kicker: "Lado a lado",
@@ -1144,7 +1144,7 @@ export const groundFloorRoomsEs = build("es", {
     rows: [
       { label: "Superficie", values: ["≈ 30–35 m²", "≈ 30–35 m²"] },
       { label: "Máx. personas", values: ["3", "3"] },
-      { label: "Camas", values: ["1 doble + 1 individual", "1 doble + 1 sofá cama"] },
+      { label: "Camas", values: ["1 doble + 1 sofá cama", "1 doble + 1 sofá cama"] },
       { label: "Distribución", values: ["Espacio abierto", "Espacio abierto"] },
       { label: "Acceso", values: ["0 escalones", "0 escalones"] },
       { label: "Exterior", values: ["Patio y jardín", "Patio y jardín"] },
@@ -1199,12 +1199,12 @@ export const groundFloorRoomsEs = build("es", {
     {
       question: "¿Cuántas personas caben en la habitación 5 o 7?",
       answer:
-        "Hasta 3 personas. La habitación 5 tiene cama doble e individual; la 7, cama doble y sofá cama. La tercera persona paga 15 € por noche. Cuna gratis bajo petición.",
+        "Hasta 3 personas. Las habitaciones 5 y 7 tienen cama doble y sofá cama. La tercera persona paga 15 € por noche. Cuna gratis bajo petición.",
     },
     {
       question: "¿Qué diferencia hay entre la habitación 5 y la 7?",
       answer:
-        "Ambas tienen unos 30–35 m², espacio abierto y salida al patio y al jardín. La tercera cama es individual en la 5 y un sofá cama en la 7.",
+        "Ambas tienen unos 30–35 m², espacio abierto y salida al patio y al jardín. Las dos tienen cama doble y sofá cama, así que son prácticamente equivalentes.",
     },
     {
       question: "¿Puedo reservar una habitación concreta?",
@@ -1256,7 +1256,7 @@ export const groundFloorRoomsTr = build("tr", {
     title: "Sakin bir narenciye çiftliğinde basamaksız odalar",
     paragraphs: [
       "Oda 5 ve 7, Voulamandis House’un zemin kattaki çift / üç kişilik odalarıdır. Girişte basamak yoktur: odaya doğrudan avludan girersiniz; bahçe ve gölgeli pergola kapınızın hemen önündedir.",
-      "Her oda yaklaşık 30–35 m², açık planlı, geleneksel Sakız taş duvarlı, duşlu özel banyolu ve üçüncü kişi için yeterince geniştir. Oda 5’te bir çift ve bir tek kişilik yatak, Oda 7’de bir çift kişilik yatak ve bir çekyat bulunur.",
+      "Her oda yaklaşık 30–35 m², açık planlı, geleneksel Sakız taş duvarlı, duşlu özel banyolu ve üçüncü kişi için yeterince geniştir. İki odada da bir çift kişilik yatak ve bir çekyat bulunur.",
       "Ekonomik odadan daha fazla alan isteyen çiftler, arkadaş grupları, bir çocuklu aileler, yaşlı misafirler ve ağır bavulu olan ya da merdivenden kaçınmak isteyen herkes için idealdir.",
     ],
     highlights: [
@@ -1296,7 +1296,7 @@ export const groundFloorRoomsTr = build("tr", {
     kicker: "Odanızı seçin",
     title: "Oda 5 ve Oda 7",
     description:
-      "İki oda da zemin kattadır ve avlu ile bahçeye doğrudan açılır. Temel fark üçüncü yataktır: Oda 5’te tek kişilik yatak, Oda 7’de çekyat.",
+      "İki oda da zemin kattadır ve avlu ile bahçeye doğrudan açılır. Yatak düzenleri aynıdır: bir çift kişilik yatak ve üçüncü kişi için bir çekyat.",
   },
   comparison: {
     kicker: "Yan yana",
@@ -1306,7 +1306,7 @@ export const groundFloorRoomsTr = build("tr", {
     rows: [
       { label: "Büyüklük", values: ["≈ 30–35 m²", "≈ 30–35 m²"] },
       { label: "Maks. misafir", values: ["3", "3"] },
-      { label: "Yataklar", values: ["1 çift + 1 tek", "1 çift + 1 çekyat"] },
+      { label: "Yataklar", values: ["1 çift + 1 çekyat", "1 çift + 1 çekyat"] },
       { label: "Düzen", values: ["Açık plan", "Açık plan"] },
       { label: "Erişim", values: ["0 basamak", "0 basamak"] },
       { label: "Dış alan", values: ["Avlu ve bahçe", "Avlu ve bahçe"] },
@@ -1361,12 +1361,12 @@ export const groundFloorRoomsTr = build("tr", {
     {
       question: "Oda 5 veya Oda 7’de kaç kişi kalabilir?",
       answer:
-        "3 kişiye kadar. Oda 5’te çift ve tek kişilik yatak, Oda 7’de çift kişilik yatak ve çekyat vardır. Üçüncü kişi için gecelik 15 € ücret alınır. Bebek yatağı istek üzerine ücretsizdir.",
+        "3 kişiye kadar. Oda 5 ve Oda 7’de çift kişilik yatak ve çekyat vardır. Üçüncü kişi için gecelik 15 € ücret alınır. Bebek yatağı istek üzerine ücretsizdir.",
     },
     {
       question: "Oda 5 ile Oda 7 arasındaki fark nedir?",
       answer:
-        "İkisi de yaklaşık 30–35 m², açık planlıdır ve avlu ile bahçeye açılır. Üçüncü yatak Oda 5’te tek kişilik yatak, Oda 7’de çekyattır.",
+        "İkisi de yaklaşık 30–35 m², açık planlıdır ve avlu ile bahçeye açılır. İkisinde de çift kişilik yatak ve çekyat vardır; pratikte eşdeğerdir.",
     },
     {
       question: "Belirli bir zemin kat odasını rezerve edebilir miyim?",

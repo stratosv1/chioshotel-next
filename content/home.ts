@@ -485,7 +485,7 @@ export const homePageEn: HomePageData = {
         imageClass: "vh-room-image--upper",
         liveBadge: "LIVE",
         directBadge: "🎁 -10% Discount",
-        bedBadge: "🛏️ Double + extra",
+        bedBadge: "🛏️ 1 double + sofa bed or 2 singles",
         description:
           "A choice for guests looking for a quieter atmosphere and classic hospitality.",
         meta: ["👤 ×2-3", "🏛️ Upper", "Quiet"],
@@ -499,7 +499,7 @@ export const homePageEn: HomePageData = {
         imageClass: "vh-room-image--family",
         liveBadge: "LIVE",
         directBadge: "🎁 -10% Discount",
-        bedBadge: "🛏️ 1 double + 2 singles",
+        bedBadge: "🛏️ 1 double + 2 singles or sofa bed",
         description: "Ideal for families or small groups who need more space.",
         meta: ["👤 ×4", "Space", "🏡 Apt"],
         amenities: ["❄️ A/C", "📶 Wi-Fi", "☕ Coffee", "🧊 Fridge"],
@@ -1004,7 +1004,7 @@ export const homePageEl: HomePageData = {
         title: "Δίκλινα & Τρίκλινα Ορόφου",
         href: "/el/domatia-xios/diklina-triklina-domatia/",
         directBadge: "🎁 -10% Έκπτωση",
-        bedBadge: "🛏️ Διπλό + extra",
+        bedBadge: "🛏️ 1 διπλό + καναπές-κρεβάτι ή 2 μονά",
         description:
           "Επιλογή για επισκέπτες που αναζητούν πιο ήρεμη ατμόσφαιρα και κλασική φιλοξενία.",
         meta: ["👤 ×2-3", "🏛️ Όροφος", "Ήσυχα"],
@@ -1016,7 +1016,7 @@ export const homePageEl: HomePageData = {
         title: "Οικογενειακό Διαμέρισμα",
         href: "/el/domatia-xios/oikogeneiako-diamerisma/",
         directBadge: "🎁 -10% Έκπτωση",
-        bedBadge: "🛏️ 1 διπλό + 2 μονά",
+        bedBadge: "🛏️ 1 διπλό + 2 μονά ή καναπές-κρεβάτι",
         description:
           "Ιδανικό για οικογένειες ή μικρές παρέες που χρειάζονται περισσότερο χώρο.",
         meta: ["👤 ×4", "Χώρος", "🏡 Apt"],
@@ -1463,7 +1463,7 @@ export const homePageFr: HomePageData = {
         liveBadge: "EN DIRECT",
         href: "/fr/chambres-a-chios/chambres-doubles-standard/",
         directBadge: "🎁 -10% Réduction",
-        bedBadge: "🛏️ Double + lit supplémentaire",
+        bedBadge: "🛏️ 1 lit double + canapé-lit ou 2 simples",
         description:
           "Pour les voyageurs qui recherchent une atmosphère plus calme et classique.",
         meta: ["👤 ×2-3", "🏛️ Étage", "Calme"],
@@ -1476,7 +1476,7 @@ export const homePageFr: HomePageData = {
         liveBadge: "EN DIRECT",
         href: "/fr/chambres-a-chios/appartements-familiaux-de-chios/",
         directBadge: "🎁 -10% Réduction",
-        bedBadge: "🛏️ 1 lit double + 2 lits simples",
+        bedBadge: "🛏️ 1 lit double + 2 simples ou canapé-lit",
         description:
           "Idéal pour les familles ou petits groupes qui souhaitent plus d’espace.",
         meta: ["👤 ×4", "Espace", "🏡 Appartement"],
@@ -1906,7 +1906,7 @@ export const homePageDe: HomePageData = {
         title: "Zimmer im Obergeschoss",
         href: "/de/zimmer-chios/standard-doppelzimmer-auf-chios/",
         directBadge: "🎁 -10% Rabatt",
-        bedBadge: "🛏️ Doppelbett + Zusatzbett",
+        bedBadge: "🛏️ 1 Doppelbett + Schlafsofa oder 2 Einzelbetten",
         description:
           "Für Gäste, die eine ruhigere Atmosphäre und klassische Gastfreundschaft suchen.",
         meta: ["👤 ×2-3", "🏛️ Obergeschoss", "Ruhig"],
@@ -1918,7 +1918,7 @@ export const homePageDe: HomePageData = {
         title: "Familienapartment",
         href: "/de/zimmer-chios/familienapartments-in-chios/",
         directBadge: "🎁 -10% Rabatt",
-        bedBadge: "🛏️ 1 Doppelbett + 2 Einzelbetten",
+        bedBadge: "🛏️ 1 Doppelbett + 2 Einzelbetten oder Schlafsofa",
         description:
           "Ideal für Familien oder kleine Gruppen, die mehr Platz wünschen.",
         meta: ["👤 ×4", "Platz", "🏡 Apt"],
@@ -2350,7 +2350,7 @@ export const homePageIt: HomePageData = {
         href: "/it/stanze-a-chios/camere-doppie-standard-chios/",
         directBadge: "🎁 -10% Sconto",
         liveBadge: "IN DIRETTA",
-        bedBadge: "🛏️ Matrimoniale + letto extra",
+        bedBadge: "🛏️ 1 matrimoniale + divano letto o 2 singoli",
         description:
           "Per chi cerca un’atmosfera più tranquilla e classica.",
         meta: ["👤 ×2-3", "🏛️ Piano superiore", "Tranquillo"],
@@ -2363,7 +2363,7 @@ export const homePageIt: HomePageData = {
         href: "/it/stanze-a-chios/appartamenti-familiari-a-chios/",
         directBadge: "🎁 -10% Sconto",
         liveBadge: "IN DIRETTA",
-        bedBadge: "🛏️ 1 matrimoniale + 2 singoli",
+        bedBadge: "🛏️ 1 matrimoniale + 2 singoli o divano letto",
         description:
           "Ideale per famiglie o piccoli gruppi che desiderano più spazio.",
         meta: ["👤 ×4", "Spazio", "🏡 Appartamento"],
@@ -2796,7 +2796,7 @@ export const homePageEs: HomePageData = {
         href: "/es/habitaciones-en-chios/habitaciones-dobles-estandar/",
         directBadge: "🎁 -10% Descuento",
         liveBadge: "EN DIRECTO",
-        bedBadge: "🛏️ Doble + cama extra",
+        bedBadge: "🛏️ 1 doble + sofá cama o 2 individuales",
         description:
           "Para viajeros que buscan un ambiente más tranquilo y clásico.",
         meta: ["👤 ×2-3", "🏛️ Planta superior", "Tranquilo"],
@@ -2809,7 +2809,7 @@ export const homePageEs: HomePageData = {
         href: "/es/habitaciones-en-chios/apartamentos-familiares-en-chios/",
         directBadge: "🎁 -10% Descuento",
         liveBadge: "EN DIRECTO",
-        bedBadge: "🛏️ 1 cama doble + 2 individuales",
+        bedBadge: "🛏️ 1 doble + 2 individuales o sofá cama",
         description:
           "Ideal para familias o grupos pequeños que desean más espacio.",
         meta: ["👤 ×4", "Espacio", "🏡 Apartamento"],
@@ -3239,7 +3239,7 @@ export const homePageTr: HomePageData = {
         title: "Üst kat odaları",
         href: "/tr/chios-odalari/standart-cift-kisilik-odalar/",
         directBadge: "🎁 -10% İndirim",
-        bedBadge: "🛏️ Çift kişilik + ek yatak",
+        bedBadge: "🛏️ 1 çift + çekyat veya 2 tek yatak",
         description:
           "Daha sakin ve klasik bir atmosfer arayan gezginler için.",
         meta: ["👤 ×2-3", "🏛️ Üst kat", "Sakin"],
@@ -3251,7 +3251,7 @@ export const homePageTr: HomePageData = {
         title: "Aile dairesi",
         href: "/tr/chios-odalari/sakiz-adasinda-buyuk-aile-daireleri/",
         directBadge: "🎁 -10% İndirim",
-        bedBadge: "🛏️ 1 çift + 2 tek kişilik yatak",
+        bedBadge: "🛏️ 1 çift + 2 tek yatak veya çekyat",
         description:
           "Daha fazla alan isteyen aileler veya küçük gruplar için idealdir.",
         meta: ["👤 ×4", "Alan", "🏡 Daire"],

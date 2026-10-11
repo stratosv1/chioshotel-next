@@ -2,8 +2,9 @@ import type { RoomCategoryId } from "@/lib/booking-core/category-from-prices";
 
 /**
  * Factual room-category data shared by the room cards and the room JSON-LD.
- * Only owner-confirmed facts belong here: bed setups for economy, ground floor and
- * family were confirmed by the owner; first floor keeps the long-standing
+ * Only owner-confirmed facts belong here: bed setups confirmed by the owner. Schema `beds` is set only where every
+ * room in the category has the same setup (economy, ground floor); first floor
+ * (Room 1 differs) and family (Apartment 10 differs) keep the long-standing
  * "double + extra bed" wording already used on the site.
  */
 
@@ -59,10 +60,6 @@ export const roomCategoryFacts: Record<RoomCategoryId, RoomCategoryFacts> = {
     minGuests: 1,
     maxGuests: 4,
     sizeM2: { min: 40, max: 45 },
-    beds: [
-      { type: "Double bed", count: 1 },
-      { type: "Single bed", count: 2 },
-    ],
     amenities: ["ac", "wifi", "bathroom", "kitchen", "tv"],
     schemaType: "Suite",
   },
@@ -96,25 +93,27 @@ export const bedLabels: Record<RoomCategoryId, Record<RoomFactsLocale, string>> 
     pl: "1 podwójne + 1 sofa rozkładana",
   },
   "first-floor": {
-    en: "Double + extra bed",
-    el: "Διπλό + extra κρεβάτι",
-    fr: "Lit double + lit d'appoint",
-    de: "Doppelbett + Zusatzbett",
-    it: "Matrimoniale + letto extra",
-    es: "Doble + cama extra",
-    tr: "Çift kişilik + ek yatak",
-    pl: "Podwójne + dostawka",
+    en: "1 double + sofa bed or 2 singles",
+    el: "1 διπλό + καναπές-κρεβάτι ή 2 μονά",
+    fr: "1 lit double + canapé-lit ou 2 simples",
+    de: "1 Doppelbett + Schlafsofa oder 2 Einzelbetten",
+    it: "1 matrimoniale + divano letto o 2 singoli",
+    es: "1 doble + sofá cama o 2 individuales",
+    tr: "1 çift + çekyat veya 2 tek yatak",
+    pl: "1 podwójne + sofa lub 2 pojedyncze",
   },
+
   "family-apartments": {
-    en: "1 double + 2 singles",
-    el: "1 διπλό + 2 μονά",
-    fr: "1 lit double + 2 lits simples",
-    de: "1 Doppelbett + 2 Einzelbetten",
-    it: "1 matrimoniale + 2 singoli",
-    es: "1 cama doble + 2 individuales",
-    tr: "1 çift + 2 tek kişilik yatak",
-    pl: "1 podwójne + 2 pojedyncze",
+    en: "1 double + 2 singles or sofa bed",
+    el: "1 διπλό + 2 μονά ή καναπές-κρεβάτι",
+    fr: "1 lit double + 2 simples ou canapé-lit",
+    de: "1 Doppelbett + 2 Einzelbetten oder Schlafsofa",
+    it: "1 matrimoniale + 2 singoli o divano letto",
+    es: "1 doble + 2 individuales o sofá cama",
+    tr: "1 çift + 2 tek yatak veya çekyat",
+    pl: "1 podwójne + 2 pojedyncze lub sofa",
   },
+
 };
 
 export const amenityLabels: Record<AmenityKey, Record<RoomFactsLocale, string>> = {

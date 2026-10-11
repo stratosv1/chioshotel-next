@@ -130,10 +130,10 @@ export function RoomCard({ card, locale, price, priority }: RoomCardProps) {
         </span>
         {bed ? (
           <span
-            className="absolute bottom-3 left-3 inline-flex min-h-8 items-center gap-1.5 rounded-full bg-[#2f261f]/90 px-3 text-[13px] font-semibold text-white"
+            className="absolute bottom-3 left-3 inline-flex min-h-8 max-w-[calc(100%-1.5rem)] items-center gap-1.5 rounded-2xl bg-[#2f261f]/90 px-3 py-1 text-[13px] font-semibold leading-tight text-white"
             aria-label={`${ui.bedAria}: ${bed}`}
           >
-            <BedIcon />
+            <span className="shrink-0"><BedIcon /></span>
             {bed}
           </span>
         ) : null}

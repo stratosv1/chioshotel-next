@@ -1100,7 +1100,7 @@ export const familyChiosApartmentsEn: RoomDetailData = {
         description:
           "Apartment 8 is approximately 40 m², with a separate bedroom, living room/full kitchen and private balcony overlooking the orchard. It sleeps up to 4 guests.",
         badges: ["Ground floor", "4–5 entrance steps", "Full kitchen", "Up to 4 guests"],
-        beds: ["1 double bed", "2 sofa beds"],
+        beds: ["1 double bed", "2 single beds"],
         amenities: [
           { icon: "📶", label: "Wi-Fi" },
           { icon: "☕", label: "Coffee and tea kettle" },
@@ -1142,7 +1142,7 @@ export const familyChiosApartmentsEn: RoomDetailData = {
         description:
           "Apartment 9 is approximately 40 m², with a separate bedroom, living room/full kitchen and private balcony overlooking the orchard. It sleeps up to 4 guests.",
         badges: ["Ground floor", "4–5 entrance steps", "Full kitchen", "Up to 4 guests"],
-        beds: ["1 double bed", "2 sofa beds"],
+        beds: ["1 double bed", "2 single beds"],
         amenities: [
           { icon: "📶", label: "Wi-Fi" },
           { icon: "☕", label: "Coffee and tea kettle" },
@@ -1333,7 +1333,7 @@ export const familyChiosApartmentsEl: RoomDetailData = {
         description:
           "Το Διαμέρισμα 8 είναι οικογενειακό διαμέρισμα με καθιστικό και κουζίνα, ξεχωριστό υπνοδωμάτιο και μπάνιο. Είναι κατάλληλο για έως 4 άτομα.",
         badges: ["Ανεξάρτητη μονάδα", "Πλήρης κουζίνα", "Θέα στον κήπο", "Έως 4 άτομα"],
-        beds: ["1 διπλό κρεβάτι", "2 καναπέδες-κρεβάτια"],
+        beds: ["1 διπλό κρεβάτι", "2 μονά κρεβάτια"],
       },
       {
         ...familyChiosApartmentsEn.individualRooms.rooms[1],
@@ -1343,7 +1343,7 @@ export const familyChiosApartmentsEl: RoomDetailData = {
         description:
           "Το Διαμέρισμα 9 προσφέρει την ίδια οικογενειακή διαρρύθμιση με κουζίνα, καθιστικό, υπνοδωμάτιο και μπάνιο, κατάλληλο για έως 4 άτομα.",
         badges: ["Ανεξάρτητη μονάδα", "Πλήρης κουζίνα", "Θέα στον κήπο", "Έως 4 άτομα"],
-        beds: ["1 διπλό κρεβάτι", "2 καναπέδες-κρεβάτια"],
+        beds: ["1 διπλό κρεβάτι", "2 μονά κρεβάτια"],
       },
       {
         ...familyChiosApartmentsEn.individualRooms.rooms[2],

@@ -10,7 +10,7 @@ import type { IndividualRoomData, RoomDetailData } from "@/content/room-details"
    - Room 1: up to 4 guests, 1 double + 2 single beds, two spaces without a
      connecting door, shared terrace, mini fridge & kettle (no kitchenette).
      3rd and 4th guest +€15 per night each.
-   - Room 3: up to 3 guests, 1 double + 1 single, two spaces without a
+   - Room 3: up to 3 guests, 1 double + 1 sofa bed, two spaces without a
      connecting door, kitchenette, shared terrace. 3rd guest +€15.
    - Room 4: up to 3 guests, 1 double + 1 sofa bed, open-plan, kitchenette,
      private balcony. 3rd guest +€15.
@@ -119,9 +119,9 @@ const baseRooms: IndividualRoomData[] = [
     maxGuests: 3,
     sizeM2: 32,
     description:
-      "Room 3 is approximately 30–35 m² with 1 double and 1 single bed for up to 3 guests. It has two connected spaces without an internal door, a kitchenette and access to the shared terrace.",
+      "Room 3 is approximately 30–35 m² with 1 double bed and 1 sofa bed for up to 3 guests. It has two connected spaces without an internal door, a kitchenette and access to the shared terrace.",
     badges: ["First floor", "Kitchenette", "Shared terrace", "Up to 3 guests"],
-    beds: ["1 double bed", "1 single bed"],
+    beds: ["1 double bed", "1 sofa bed"],
     amenities: [
       { icon: "🥣", label: "Kitchenette" },
       { icon: "🌤️", label: "Shared terrace" },
@@ -314,7 +314,7 @@ export const firstFloorRoomsEn = build("en", {
   },
   roomDescriptions: [
     "Room 1 is approximately 30–35 m² and sleeps up to 4 guests in 1 double and 2 single beds. It has two open connected spaces without an internal door and access to a shared terrace.",
-    "Room 3 is approximately 30–35 m² with 1 double and 1 single bed for up to 3 guests. It has two connected spaces without an internal door, a kitchenette and access to the shared terrace.",
+    "Room 3 is approximately 30–35 m² with 1 double bed and 1 sofa bed for up to 3 guests. It has two connected spaces without an internal door, a kitchenette and access to the shared terrace.",
     "Room 4 is approximately 30–35 m², open-plan, with 1 double bed and 1 sofa bed for up to 3 guests, a kitchenette and its own private balcony.",
   ],
   comparison: {
@@ -324,7 +324,7 @@ export const firstFloorRoomsEn = build("en", {
     columns: ["Room 1", "Room 3", "Room 4"],
     rows: [
       { label: "Max guests", values: ["4", "3", "3"] },
-      { label: "Beds", values: ["1 double + 2 single", "1 double + 1 single", "1 double + 1 sofa bed"] },
+      { label: "Beds", values: ["1 double + 2 single", "1 double + 1 sofa bed", "1 double + 1 sofa bed"] },
       { label: "Layout", values: ["2 spaces, no door", "2 spaces, no door", "Open-plan"] },
       { label: "Kitchen", values: ["Mini fridge & kettle", "Kitchenette", "Kitchenette"] },
       { label: "Outside", values: ["Shared terrace", "Shared terrace", "Private balcony"] },
@@ -460,7 +460,7 @@ export const firstFloorRoomsEl = build("el", {
   },
   roomDescriptions: [
     "Το Δωμάτιο 1 έχει περίπου 30–35 m² και φιλοξενεί έως 4 άτομα σε 1 διπλό και 2 μονά κρεβάτια. Έχει δύο ενωμένους χώρους χωρίς ενδιάμεση πόρτα και πρόσβαση σε κοινόχρηστη βεράντα.",
-    "Το Δωμάτιο 3 έχει περίπου 30–35 m² με 1 διπλό και 1 μονό κρεβάτι για έως 3 άτομα. Έχει δύο ενωμένους χώρους χωρίς ενδιάμεση πόρτα, μικρή κουζίνα και πρόσβαση στην κοινόχρηστη βεράντα.",
+    "Το Δωμάτιο 3 έχει περίπου 30–35 m² με 1 διπλό κρεβάτι και 1 καναπέ-κρεβάτι για έως 3 άτομα. Έχει δύο ενωμένους χώρους χωρίς ενδιάμεση πόρτα, μικρή κουζίνα και πρόσβαση στην κοινόχρηστη βεράντα.",
     "Το Δωμάτιο 4 έχει περίπου 30–35 m², ενιαίο χώρο με 1 διπλό κρεβάτι και 1 καναπέ-κρεβάτι για έως 3 άτομα, μικρή κουζίνα και δικό του ιδιωτικό μπαλκόνι.",
   ],
   comparison: {
@@ -470,7 +470,7 @@ export const firstFloorRoomsEl = build("el", {
     columns: ["Δωμάτιο 1", "Δωμάτιο 3", "Δωμάτιο 4"],
     rows: [
       { label: "Μέγ. άτομα", values: ["4", "3", "3"] },
-      { label: "Κρεβάτια", values: ["1 διπλό + 2 μονά", "1 διπλό + 1 μονό", "1 διπλό + 1 καναπές-κρεβάτι"] },
+      { label: "Κρεβάτια", values: ["1 διπλό + 2 μονά", "1 διπλό + 1 καναπές-κρεβάτι", "1 διπλό + 1 καναπές-κρεβάτι"] },
       { label: "Διαρρύθμιση", values: ["2 χώροι, χωρίς πόρτα", "2 χώροι, χωρίς πόρτα", "Ενιαίος χώρος"] },
       { label: "Κουζίνα", values: ["Ψυγειάκι & βραστήρας", "Μικρή κουζίνα", "Μικρή κουζίνα"] },
       { label: "Έξω", values: ["Κοινόχρηστη βεράντα", "Κοινόχρηστη βεράντα", "Ιδιωτικό μπαλκόνι"] },
@@ -606,7 +606,7 @@ export const firstFloorRoomsFr = build("fr", {
   },
   roomDescriptions: [
     "La chambre 1 fait environ 30–35 m² et accueille jusqu’à 4 personnes avec 1 lit double et 2 lits simples, dans deux espaces communicants sans porte intérieure, avec accès à une terrasse partagée.",
-    "La chambre 3 fait environ 30–35 m² avec 1 lit double et 1 lit simple pour jusqu’à 3 personnes, deux espaces communicants sans porte, une kitchenette et l’accès à la terrasse partagée.",
+    "La chambre 3 fait environ 30–35 m² avec 1 lit double et 1 canapé-lit pour jusqu’à 3 personnes, deux espaces communicants sans porte, une kitchenette et l’accès à la terrasse partagée.",
     "La chambre 4 fait environ 30–35 m², en espace ouvert, avec 1 lit double et 1 canapé-lit pour jusqu’à 3 personnes, une kitchenette et son propre balcon privé.",
   ],
   comparison: {
@@ -616,7 +616,7 @@ export const firstFloorRoomsFr = build("fr", {
     columns: ["Chambre 1", "Chambre 3", "Chambre 4"],
     rows: [
       { label: "Personnes max.", values: ["4", "3", "3"] },
-      { label: "Lits", values: ["1 double + 2 simples", "1 double + 1 simple", "1 double + 1 canapé-lit"] },
+      { label: "Lits", values: ["1 double + 2 simples", "1 double + 1 canapé-lit", "1 double + 1 canapé-lit"] },
       { label: "Agencement", values: ["2 espaces, sans porte", "2 espaces, sans porte", "Espace ouvert"] },
       { label: "Cuisine", values: ["Mini-frigo & bouilloire", "Kitchenette", "Kitchenette"] },
       { label: "Extérieur", values: ["Terrasse partagée", "Terrasse partagée", "Balcon privé"] },
@@ -752,7 +752,7 @@ export const firstFloorRoomsDe = build("de", {
   },
   roomDescriptions: [
     "Zimmer 1 hat ca. 30–35 m² und bietet bis zu 4 Gästen 1 Doppelbett und 2 Einzelbetten in zwei verbundenen Bereichen ohne Innentür, mit Zugang zu einer Gemeinschaftsterrasse.",
-    "Zimmer 3 hat ca. 30–35 m² mit 1 Doppel- und 1 Einzelbett für bis zu 3 Gäste, zwei verbundenen Bereichen ohne Tür, Kochnische und Zugang zur Gemeinschaftsterrasse.",
+    "Zimmer 3 hat ca. 30–35 m² mit 1 Doppelbett und 1 Schlafsofa für bis zu 3 Gäste, zwei verbundenen Bereichen ohne Tür, Kochnische und Zugang zur Gemeinschaftsterrasse.",
     "Zimmer 4 hat ca. 30–35 m², einen offenen Grundriss mit 1 Doppelbett und 1 Schlafsofa für bis zu 3 Gäste, eine Kochnische und einen eigenen Privatbalkon.",
   ],
   comparison: {
@@ -762,7 +762,7 @@ export const firstFloorRoomsDe = build("de", {
     columns: ["Zimmer 1", "Zimmer 3", "Zimmer 4"],
     rows: [
       { label: "Max. Gäste", values: ["4", "3", "3"] },
-      { label: "Betten", values: ["1 Doppel- + 2 Einzelbetten", "1 Doppel- + 1 Einzelbett", "1 Doppelbett + 1 Schlafsofa"] },
+      { label: "Betten", values: ["1 Doppel- + 2 Einzelbetten", "1 Doppelbett + 1 Schlafsofa", "1 Doppelbett + 1 Schlafsofa"] },
       { label: "Grundriss", values: ["2 Bereiche, ohne Tür", "2 Bereiche, ohne Tür", "Offen"] },
       { label: "Küche", values: ["Minikühlschrank & Wasserkocher", "Kochnische", "Kochnische"] },
       { label: "Draußen", values: ["Gemeinschaftsterrasse", "Gemeinschaftsterrasse", "Privatbalkon"] },
@@ -898,7 +898,7 @@ export const firstFloorRoomsIt = build("it", {
   },
   roomDescriptions: [
     "La camera 1 misura circa 30–35 m² e ospita fino a 4 persone con 1 letto matrimoniale e 2 singoli, in due ambienti comunicanti senza porta interna, con accesso a una terrazza condivisa.",
-    "La camera 3 misura circa 30–35 m² con 1 letto matrimoniale e 1 singolo per fino a 3 ospiti, due ambienti comunicanti senza porta, angolo cottura e accesso alla terrazza condivisa.",
+    "La camera 3 misura circa 30–35 m² con 1 letto matrimoniale e 1 divano letto per fino a 3 ospiti, due ambienti comunicanti senza porta, angolo cottura e accesso alla terrazza condivisa.",
     "La camera 4 misura circa 30–35 m², open space, con 1 letto matrimoniale e 1 divano letto per fino a 3 ospiti, angolo cottura e un proprio balcone privato.",
   ],
   comparison: {
@@ -908,7 +908,7 @@ export const firstFloorRoomsIt = build("it", {
     columns: ["Camera 1", "Camera 3", "Camera 4"],
     rows: [
       { label: "Ospiti max", values: ["4", "3", "3"] },
-      { label: "Letti", values: ["1 matrimoniale + 2 singoli", "1 matrimoniale + 1 singolo", "1 matrimoniale + 1 divano letto"] },
+      { label: "Letti", values: ["1 matrimoniale + 2 singoli", "1 matrimoniale + 1 divano letto", "1 matrimoniale + 1 divano letto"] },
       { label: "Disposizione", values: ["2 ambienti, senza porta", "2 ambienti, senza porta", "Open space"] },
       { label: "Cucina", values: ["Frigobar & bollitore", "Angolo cottura", "Angolo cottura"] },
       { label: "Esterno", values: ["Terrazza condivisa", "Terrazza condivisa", "Balcone privato"] },
@@ -1044,7 +1044,7 @@ export const firstFloorRoomsEs = build("es", {
   },
   roomDescriptions: [
     "La habitación 1 tiene unos 30–35 m² y aloja hasta 4 personas con 1 cama doble y 2 individuales, en dos espacios comunicados sin puerta interior, con acceso a una terraza compartida.",
-    "La habitación 3 tiene unos 30–35 m² con 1 cama doble y 1 individual para hasta 3 personas, dos espacios comunicados sin puerta, kitchenette y acceso a la terraza compartida.",
+    "La habitación 3 tiene unos 30–35 m² con 1 cama doble y 1 sofá cama para hasta 3 personas, dos espacios comunicados sin puerta, kitchenette y acceso a la terraza compartida.",
     "La habitación 4 tiene unos 30–35 m², espacio abierto, con 1 cama doble y 1 sofá cama para hasta 3 personas, kitchenette y su propio balcón privado.",
   ],
   comparison: {
@@ -1054,7 +1054,7 @@ export const firstFloorRoomsEs = build("es", {
     columns: ["Habitación 1", "Habitación 3", "Habitación 4"],
     rows: [
       { label: "Máx. personas", values: ["4", "3", "3"] },
-      { label: "Camas", values: ["1 doble + 2 individuales", "1 doble + 1 individual", "1 doble + 1 sofá cama"] },
+      { label: "Camas", values: ["1 doble + 2 individuales", "1 doble + 1 sofá cama", "1 doble + 1 sofá cama"] },
       { label: "Distribución", values: ["2 espacios, sin puerta", "2 espacios, sin puerta", "Espacio abierto"] },
       { label: "Cocina", values: ["Mininevera y hervidor", "Kitchenette", "Kitchenette"] },
       { label: "Exterior", values: ["Terraza compartida", "Terraza compartida", "Balcón privado"] },
@@ -1190,7 +1190,7 @@ export const firstFloorRoomsTr = build("tr", {
   },
   roomDescriptions: [
     "Oda 1 yaklaşık 30–35 m²’dir; 1 çift ve 2 tek kişilik yatakla 4 kişiye kadar ağırlar. Ara kapısı olmayan iki bağlantılı alanı ve ortak terasa erişimi vardır.",
-    "Oda 3 yaklaşık 30–35 m²’dir; 1 çift ve 1 tek kişilik yatakla 3 kişiye kadar, ara kapısız iki bağlantılı alan, mini mutfak ve ortak terasa erişim sunar.",
+    "Oda 3 yaklaşık 30–35 m²’dir; 1 çift kişilik yatak ve 1 çekyatla 3 kişiye kadar, ara kapısız iki bağlantılı alan, mini mutfak ve ortak terasa erişim sunar.",
     "Oda 4 yaklaşık 30–35 m², açık planlıdır; 1 çift kişilik yatak ve 1 çekyatla 3 kişiye kadar, mini mutfak ve kendine ait özel balkon sunar.",
   ],
   comparison: {
@@ -1200,7 +1200,7 @@ export const firstFloorRoomsTr = build("tr", {
     columns: ["Oda 1", "Oda 3", "Oda 4"],
     rows: [
       { label: "Maks. misafir", values: ["4", "3", "3"] },
-      { label: "Yataklar", values: ["1 çift + 2 tek", "1 çift + 1 tek", "1 çift + 1 çekyat"] },
+      { label: "Yataklar", values: ["1 çift + 2 tek", "1 çift + 1 çekyat", "1 çift + 1 çekyat"] },
       { label: "Düzen", values: ["2 alan, kapısız", "2 alan, kapısız", "Açık plan"] },
       { label: "Mutfak", values: ["Mini buzdolabı ve su ısıtıcı", "Mini mutfak", "Mini mutfak"] },
       { label: "Dış alan", values: ["Ortak teras", "Ortak teras", "Özel balkon"] },
