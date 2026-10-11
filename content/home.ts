@@ -471,7 +471,7 @@ export const homePageEn: HomePageData = {
         imageClass: "vh-room-image--ground",
         liveBadge: "LIVE",
         directBadge: "🎁 -10% Discount",
-        bedBadge: "🛏️ Double + extra",
+        bedBadge: "🛏️ 1 double + 1 sofa bed",
         description:
           "A comfortable choice for couples or small families with easy access.",
         meta: ["👤 ×2-3", "🌿 Ground", "Easy"],
@@ -992,7 +992,7 @@ export const homePageEl: HomePageData = {
         title: "Δίκλινα & Τρίκλινα Ισογείου",
         href: "/el/domatia-xios/isogeia-domatia/",
         directBadge: "🎁 -10% Έκπτωση",
-        bedBadge: "🛏️ Διπλό + extra",
+        bedBadge: "🛏️ 1 διπλό + 1 καναπές-κρεβάτι",
         description:
           "Άνετη λύση για ζευγάρια ή μικρές οικογένειες με εύκολη πρόσβαση.",
         meta: ["👤 ×2-3", "🌿 Ισόγειο", "Εύκολα"],
@@ -1450,7 +1450,7 @@ export const homePageFr: HomePageData = {
         liveBadge: "EN DIRECT",
         href: "/fr/chambres-a-chios/chambres-rez-de-chaussee/",
         directBadge: "🎁 -10% Réduction",
-        bedBadge: "🛏️ Double + lit supplémentaire",
+        bedBadge: "🛏️ 1 lit double + 1 canapé-lit",
         description:
           "Un choix confortable pour couples ou petites familles, avec accès facile.",
         meta: ["👤 ×2-3", "🌿 Rez-de-chaussée", "Facile"],
@@ -1894,7 +1894,7 @@ export const homePageDe: HomePageData = {
         title: "Zimmer im Erdgeschoss",
         href: "/de/zimmer-chios/erdgeschoss-zimmer/",
         directBadge: "🎁 -10% Rabatt",
-        bedBadge: "🛏️ Doppelbett + Zusatzbett",
+        bedBadge: "🛏️ 1 Doppelbett + 1 Schlafsofa",
         description:
           "Eine komfortable Wahl für Paare oder kleine Familien mit einfachem Zugang.",
         meta: ["👤 ×2-3", "🌿 Erdgeschoss", "Einfach"],
@@ -2337,7 +2337,7 @@ export const homePageIt: HomePageData = {
         href: "/it/stanze-a-chios/camere-piano-terra/",
         directBadge: "🎁 -10% Sconto",
         liveBadge: "IN DIRETTA",
-        bedBadge: "🛏️ Matrimoniale + letto extra",
+        bedBadge: "🛏️ 1 matrimoniale + 1 divano letto",
         description:
           "Una scelta comoda per coppie o piccole famiglie, con accesso facile.",
         meta: ["👤 ×2-3", "🌿 Piano terra", "Facile"],
@@ -2783,7 +2783,7 @@ export const homePageEs: HomePageData = {
         href: "/es/habitaciones-en-chios/habitaciones-planta-baja/",
         directBadge: "🎁 -10% Descuento",
         liveBadge: "EN DIRECTO",
-        bedBadge: "🛏️ Doble + cama extra",
+        bedBadge: "🛏️ 1 cama doble + 1 sofá cama",
         description:
           "Una opción cómoda para parejas o familias pequeñas, con acceso fácil.",
         meta: ["👤 ×2-3", "🌿 Planta baja", "Fácil"],
@@ -3227,7 +3227,7 @@ export const homePageTr: HomePageData = {
         title: "Zemin kat odaları",
         href: "/tr/chios-odalari/zemin-kat-odalari/",
         directBadge: "🎁 -10% İndirim",
-        bedBadge: "🛏️ Çift kişilik + ek yatak",
+        bedBadge: "🛏️ 1 çift kişilik yatak + 1 çekyat",
         description:
           "Kolay erişim isteyen çiftler veya küçük aileler için rahat bir seçenek.",
         meta: ["👤 ×2-3", "🌿 Zemin kat", "Kolay"],

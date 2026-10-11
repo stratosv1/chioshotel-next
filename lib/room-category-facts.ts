@@ -2,8 +2,8 @@ import type { RoomCategoryId } from "@/lib/booking-core/category-from-prices";
 
 /**
  * Factual room-category data shared by the room cards and the room JSON-LD.
- * Only owner-confirmed facts belong here: bed setups for economy and family
- * were confirmed by the owner; ground/first floor keep the long-standing
+ * Only owner-confirmed facts belong here: bed setups for economy, ground floor and
+ * family were confirmed by the owner; first floor keeps the long-standing
  * "double + extra bed" wording already used on the site.
  */
 
@@ -39,6 +39,10 @@ export const roomCategoryFacts: Record<RoomCategoryId, RoomCategoryFacts> = {
     minGuests: 1,
     maxGuests: 3,
     sizeM2: { min: 30, max: 35 },
+    beds: [
+      { type: "Double bed", count: 1 },
+      { type: "Sofa bed", count: 1 },
+    ],
     amenities: ["ac", "wifi", "bathroom", "fridge", "tv"],
     schemaType: "HotelRoom",
   },
@@ -82,14 +86,14 @@ export const bedLabels: Record<RoomCategoryId, Record<RoomFactsLocale, string>> 
     pl: "1 łóżko podwójne",
   },
   "ground-floor": {
-    en: "Double + extra bed",
-    el: "Διπλό + extra κρεβάτι",
-    fr: "Lit double + lit d'appoint",
-    de: "Doppelbett + Zusatzbett",
-    it: "Matrimoniale + letto extra",
-    es: "Doble + cama extra",
-    tr: "Çift kişilik + ek yatak",
-    pl: "Podwójne + dostawka",
+    en: "1 double + 1 sofa bed",
+    el: "1 διπλό + 1 καναπές-κρεβάτι",
+    fr: "1 lit double + 1 canapé-lit",
+    de: "1 Doppelbett + 1 Schlafsofa",
+    it: "1 matrimoniale + 1 divano letto",
+    es: "1 cama doble + 1 sofá cama",
+    tr: "1 çift kişilik yatak + 1 çekyat",
+    pl: "1 podwójne + 1 sofa rozkładana",
   },
   "first-floor": {
     en: "Double + extra bed",
