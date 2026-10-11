@@ -6,7 +6,7 @@ import { BOOKING_CORE_DEALS_CACHE_TAG } from "@/lib/booking-core/cache-tags";
  * Lowest direct nightly price ("from €X / night") per public room category,
  * read from Booking Core. Used by the rooms category page.
  *
- * - 2 guests, the cheapest available night in the next 365 days
+ * - 2 guests, the cheapest available night in the next 300 days
  * - includes the 1–2 night direct discount, so it matches what a 1-night
  *   direct quote would show
  * - cached and invalidated together with Live Deals whenever Booking Core
@@ -25,7 +25,8 @@ export const ROOM_CATEGORY_ROOMS: Record<RoomCategoryId, number[]> = {
   "family-apartments": [8, 9, 10],
 };
 
-const LOOKAHEAD_DAYS = 365;
+// nightly_quotes returns nothing for ranges of a year or more, so stay well inside it.
+const LOOKAHEAD_DAYS = 300;
 const PRICE_GUESTS = 2;
 
 // Throws on failure so an error is never cached; the exported wrapper turns it into null.
