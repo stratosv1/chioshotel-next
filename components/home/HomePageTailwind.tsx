@@ -385,7 +385,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
       <main className="overflow-x-hidden bg-[#fffaf3] text-stone-900">
         <MarkerObserver />
         <RevealObserver />
-        <script dangerouslySetInnerHTML={{ __html: "if(!matchMedia('(prefers-reduced-motion: reduce)').matches&&'IntersectionObserver'in window)(function(){var s=document.createElement('style');s.id='vh-reveal';s.textContent='[data-reveal]:not([data-shown]){opacity:0;transform:translate3d(0,18px,0)}';document.head.appendChild(s)})()" }} />
+        <script dangerouslySetInnerHTML={{ __html: "if(!matchMedia('(prefers-reduced-motion: reduce)').matches&&'IntersectionObserver'in window)(function(){var s=document.createElement('style');s.id='vh-reveal';s.textContent='[data-reveal]:not([data-shown]){opacity:0;transform:translate3d(0,24px,0)}';document.head.appendChild(s)})()" }} />
         <section
           id="home-hero"
           className="relative flex h-[calc(100svh-4.5rem)] min-h-[640px] max-h-[760px] items-end overflow-hidden bg-stone-950 text-white md:h-[clamp(680px,82svh,900px)] md:min-h-0 md:max-h-none"
