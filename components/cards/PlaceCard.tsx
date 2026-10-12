@@ -1,4 +1,5 @@
 import Image from "next/image";
+import type { ReactNode } from "react";
 
 /**
  * Google-Travel style card for places (villages, beaches, sights). Visual
@@ -19,6 +20,9 @@ type PlaceCardProps = {
   ctaShort?: string;
   sizes?: string;
   className?: string;
+  priority?: boolean;
+  /** Optional live element shown above the title (e.g. sea conditions). */
+  extra?: ReactNode;
 };
 
 const iconProps = {
@@ -44,6 +48,8 @@ export function PlaceCard({
   ctaShort,
   sizes = "(min-width: 1280px) 25vw, (min-width: 768px) 50vw, 84vw",
   className = "",
+  priority,
+  extra,
 }: PlaceCardProps) {
   return (
     <a
@@ -55,6 +61,7 @@ export function PlaceCard({
           src={image}
           alt={imageAlt}
           fill
+          priority={priority}
           sizes={sizes}
           className="object-cover transition duration-500 group-hover:scale-[1.03]"
         />
@@ -75,6 +82,7 @@ export function PlaceCard({
       </div>
 
       <div className="flex flex-1 flex-col px-2 pb-1.5 pt-3.5">
+        {extra ? <div className="mb-2 empty:hidden">{extra}</div> : null}
         <h3 className="text-[19px] font-semibold leading-snug tracking-[-0.01em] text-[#2f261f]">
           {title}
         </h3>

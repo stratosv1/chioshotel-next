@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { PlaceCard } from "@/components/cards/PlaceCard";
 import type { ChiosBeachesPageData } from "@/content/chios-beaches";
 import { ChiosCollectionImageGallery } from "@/components/chios/ChiosCollectionImageGallery";
 import { AnswerFirstSeoBlock } from "@/components/seo/AnswerFirstSeoBlock";
@@ -178,14 +179,14 @@ function getBeachesPageLanguage(data: ChiosBeachesPageData): BeachesPageUiLangua
 function getExploreBeachLabel(language: BeachesPageUiLanguage, title: string) {
   const beachName = title.split(":")[0].trim();
 
-  if (language === "el") return `Δείτε την ${beachName} →`;
-  if (language === "fr") return `Voir ${beachName} →`;
-  if (language === "de") return `${beachName} ansehen →`;
-  if (language === "it") return `Scopri ${beachName} →`;
-  if (language === "es") return `Ver ${beachName} →`;
-  if (language === "tr") return `${beachName} plajını keşfet →`;
+  if (language === "el") return `Δείτε την ${beachName}`;
+  if (language === "fr") return `Voir ${beachName}`;
+  if (language === "de") return `${beachName} ansehen`;
+  if (language === "it") return `Scopri ${beachName}`;
+  if (language === "es") return `Ver ${beachName}`;
+  if (language === "tr") return `${beachName} plajını keşfet`;
 
-  return `Explore ${beachName} →`;
+  return `Explore ${beachName}`;
 }
 
 export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
@@ -337,63 +338,24 @@ export function ChiosBeachesPageTailwind({ data }: ChiosBeachesPageProps) {
           </header>
 
           <div className="relative">
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute right-2 top-[38%] z-20 flex h-10 w-10 items-center justify-center rounded-full bg-teal-950/95 text-xl font-black text-white shadow-xl md:hidden"
-            >
-              →
-            </div>
-            <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 xl:grid-cols-3">
+            <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 xl:grid-cols-3" id="beaches-list">
               {data.beaches.map((beach, index) => (
-                <a
-                  className="group flex flex-col w-[84vw] max-w-[380px] flex-none snap-start overflow-hidden rounded-[1.5rem] bg-white shadow-lg shadow-stone-900/5 ring-1 ring-teal-900/10 transition hover:shadow-xl md:w-auto md:max-w-none md:rounded-[2rem]"
-                  href={beach.href}
+                <PlaceCard
                   key={beach.href}
-                >
-                  <div className="relative aspect-[4/3] overflow-hidden">
-                    <Image
-                      src={beach.image}
-                      alt={beach.imageAlt}
-                      fill
-                      priority={index < 2}
-                      sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 84vw"
-                      className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                    />
-                    <div className="absolute left-3 top-3 rounded-full bg-emerald-700 px-3 py-1.5 text-xs font-black text-white">
-                      {beach.region}
-                    </div>
-                    <div className="absolute right-3 top-3 rounded-full bg-white/95 px-3 py-1.5 text-xs font-black text-emerald-700">
-                      {beach.mood}
-                    </div>
-                  </div>
-                  <div className="flex flex-1 flex-col p-5">
-                    <div className="mb-3 empty:hidden">
-                      <BeachSeaTodayBadge beachId={beachIdFromPath(beach.href)} language={language} showWave />
-                    </div>
-                    <h3 className="break-words tracking-[-0.02em] text-2xl font-extrabold leading-tight text-teal-800">
-                      {beach.title}
-                    </h3>
-                    <p className="mt-3 text-sm leading-7 text-stone-600">
-                      {beach.description}
-                    </p>
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {beach.badges.map((badge) => (
-                        <span
-                          className="rounded-full bg-teal-50 px-3 py-1.5 text-[11px] font-bold text-teal-800"
-                          key={badge}
-                        >
-                          {badge}
-                        </span>
-                      ))}
-                    </div>
-                    {/* Pinned to the bottom so every card's button lines up while swiping. */}
-                    <div className="mt-auto pt-5">
-                      <span className="inline-flex rounded-full border border-teal-800/20 px-4 py-2 text-xs font-black uppercase text-teal-800">
-                        {getExploreBeachLabel(language, beach.title)}
-                      </span>
-                    </div>
-                  </div>
-                </a>
+                  href={beach.href}
+                  title={beach.title}
+                  description={beach.description}
+                  image={beach.image}
+                  imageAlt={beach.imageAlt}
+                  topBadge={beach.mood}
+                  bottomBadge={beach.region}
+                  tags={beach.badges}
+                  ctaLabel={getExploreBeachLabel(language, beach.title)}
+                  priority={index < 2}
+                  sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 84vw"
+                  extra={<BeachSeaTodayBadge beachId={beachIdFromPath(beach.href)} language={language} showWave />}
+                  className="w-[84vw] max-w-[360px] flex-none snap-start md:w-auto md:max-w-none"
+                />
               ))}
             </div>
           </div>
