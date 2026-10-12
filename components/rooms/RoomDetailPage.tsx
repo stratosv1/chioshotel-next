@@ -396,6 +396,7 @@ function IndividualRoomsSection({ data, language }: { data: RoomDetailData; lang
 
 const roomHeroCategory: Record<string, string> = {
   "economy-double-rooms": "economy-double",
+  "economy-double-carousel": "economy-double",
   "ground-floor-rooms": "ground-floor",
   "standard-double-room": "first-floor",
   "family-chios-apartments": "family-apartments",

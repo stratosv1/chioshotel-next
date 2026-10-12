@@ -71,14 +71,37 @@
   navigation: auto;
 }
 
-::view-transition-old(root),
+/* Old page fades out quickly; new page fades in rising slightly. */
+::view-transition-old(root) {
+  animation: 220ms cubic-bezier(0.4, 0, 1, 1) both vh-vt-fade-out;
+}
+
 ::view-transition-new(root) {
-  animation-duration: 280ms;
+  animation: 460ms cubic-bezier(0.16, 1, 0.3, 1) both vh-vt-fade-in;
+}
+
+/* The sticky site header stays put while the page underneath changes. */
+body > header.sticky,
+.vh-public-site header.sticky {
+  view-transition-name: vh-site-header;
 }
 
 ::view-transition-group(*) {
-  animation-duration: 380ms;
-  animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+  animation-duration: 460ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes vh-vt-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes vh-vt-fade-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
