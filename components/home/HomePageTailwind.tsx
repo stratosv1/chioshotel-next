@@ -4,6 +4,8 @@ import type { HomePageData } from "@/content/home";
 import type { RoomCategoryCard, RoomsCategoryPageData } from "@/content/rooms";
 import { roomsCategoryDe, roomsCategoryEl, roomsCategoryEn, roomsCategoryEs, roomsCategoryFr, roomsCategoryIt, roomsCategoryTr } from "@/content/rooms";
 import { RoomCard } from "@/components/rooms/RoomCard";
+import { MarkerText } from "@/components/effects/MarkerText";
+import { MarkerObserver } from "@/components/effects/MarkerObserver";
 import { getCategoryFromPrices, type RoomCategoryId } from "@/lib/booking-core/category-from-prices";
 import { HomeReviews } from "@/components/home/HomeReviews";
 import { HomeGallery } from "@/components/home/HomeGallery";
@@ -176,7 +178,7 @@ function SectionTitle({
       </p>
       <h2 className="text-balance break-words tracking-[-0.02em] text-[1.875rem] font-extrabold leading-tight text-stone-900 md:text-[2.625rem]">
         {icon ? <PremiumIcon>{icon}</PremiumIcon> : null}
-        {title}
+        <MarkerText>{title}</MarkerText>
       </h2>
       {subtitle ? (
         <p className="mt-3 text-sm leading-7 text-stone-600 md:mt-4 md:text-lg md:leading-8">{subtitle}</p>
@@ -217,7 +219,7 @@ async function RoomsSection({ data }: { data: HomePageData }) {
         <div className="grid gap-4 lg:grid-cols-[0.95fr_1.05fr] lg:items-stretch">
           <article className="rounded-[1.5rem] bg-[#2f241d] p-5 text-white shadow-lg shadow-stone-900/10 md:rounded-[2rem] md:p-9 lg:flex lg:flex-col lg:justify-center">
             <p className="mb-3 break-words text-xs font-black uppercase tracking-[0.20em] text-amber-200">{data.roomsPreview.kicker}</p>
-            <h2 className="break-words tracking-[-0.02em] text-[2rem] font-extrabold leading-tight md:text-[2.625rem]"><PremiumIcon>{data.roomsPreview.icon}</PremiumIcon>{data.roomsPreview.title}</h2>
+            <h2 className="break-words tracking-[-0.02em] text-[2rem] font-extrabold leading-tight md:text-[2.625rem]"><PremiumIcon>{data.roomsPreview.icon}</PremiumIcon><MarkerText onDark>{data.roomsPreview.title}</MarkerText></h2>
             <p className="mt-4 text-sm leading-7 text-white/80 md:text-lg md:leading-8">{data.roomsPreview.text}</p>
             <div className="mt-5 grid grid-cols-2 gap-3">
               <a href={data.roomsPreview.primaryCta.href} className="inline-flex break-words hyphens-auto max-sm:flex-col max-sm:gap-1 max-sm:py-2 max-sm:[&>span:first-child]:mr-0 min-h-12 min-w-0 items-center justify-center rounded-[1.1rem] bg-amber-700 px-2 text-center text-[11px] font-black uppercase leading-[1.15] tracking-[0.06em] text-white shadow-lg shadow-amber-900/20 transition hover:bg-amber-800 sm:rounded-full sm:px-6 sm:text-sm sm:tracking-[0.08em]"><PremiumIcon compact>{data.roomsPreview.primaryCta.icon}</PremiumIcon>{data.roomsPreview.primaryCta.label}</a>
@@ -281,7 +283,7 @@ function KambosStory({ data }: { data: HomePageData }) {
         </div>
         <div className="p-5 md:p-9 lg:p-11">
           <p className="mb-3 break-words text-xs font-black uppercase tracking-[0.20em] text-amber-700">{data.location.copy.kicker}</p>
-          <h2 className="break-words tracking-[-0.02em] text-[2rem] font-extrabold leading-tight text-stone-900 md:text-[2.625rem]">{data.location.copy.title}</h2>
+          <h2 className="break-words tracking-[-0.02em] text-[2rem] font-extrabold leading-tight text-stone-900 md:text-[2.625rem]"><MarkerText>{data.location.copy.title}</MarkerText></h2>
           <div className="mt-5 space-y-4 text-sm leading-7 text-stone-600 md:text-base md:leading-8">
             {data.location.copy.paragraphsHtml.map((paragraph) => (<p key={paragraph}><HtmlText html={paragraph} /></p>))}
             <p>{kambosExtraCopy[locale]}</p>
@@ -379,6 +381,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
   return (
     <>
       <main className="overflow-x-hidden bg-[#fffaf3] text-stone-900">
+        <MarkerObserver />
         <section
           id="home-hero"
           className="relative flex h-[calc(100svh-4.5rem)] min-h-[640px] max-h-[760px] items-end overflow-hidden bg-stone-950 text-white md:h-[clamp(680px,82svh,900px)] md:min-h-0 md:max-h-none"
@@ -425,7 +428,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
           <div className="mx-auto grid max-w-7xl gap-4 lg:grid-cols-[1fr_1.05fr]">
             <article className="order-1 rounded-[1.5rem] bg-white p-4 shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 md:rounded-[2rem] md:p-8">
               <p className="mb-2 break-words text-[11px] font-black uppercase leading-5 tracking-[0.17em] text-amber-700 md:mb-3 md:text-xs md:tracking-[0.20em]">{data.intro.left.kicker}</p>
-              <h2 className="break-words tracking-[-0.02em] text-[1.7rem] font-extrabold leading-[1.08] text-stone-900 md:text-[2.625rem] md:leading-tight"><PremiumIcon>{data.intro.left.icon}</PremiumIcon>{data.intro.left.title}</h2>
+              <h2 className="break-words tracking-[-0.02em] text-[1.7rem] font-extrabold leading-[1.08] text-stone-900 md:text-[2.625rem] md:leading-tight"><PremiumIcon>{data.intro.left.icon}</PremiumIcon><MarkerText>{data.intro.left.title}</MarkerText></h2>
               <p className="mt-3 text-sm leading-7 text-stone-600 md:mt-4 md:text-base md:leading-8"><HtmlText html={data.intro.left.bodyHtml} /></p>
               <div className="mt-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap md:mt-5">
                 {data.intro.left.pills.map((pill) => (<span key={pill} className="inline-flex min-h-9 items-center justify-center rounded-full bg-amber-50 px-2.5 py-2 text-center text-[11px] font-bold leading-tight text-amber-800 ring-1 ring-amber-900/10 sm:min-h-0 sm:px-4 sm:text-sm">{pill}</span>))}
@@ -465,7 +468,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
 
         <section className="px-4 py-7 [contain-intrinsic-size:auto_720px] [content-visibility:auto] md:px-8 md:py-11"><div className="mx-auto max-w-5xl"><SectionTitle kicker={data.faq.kicker} icon={data.faq.icon} title={data.faq.title} /><div className="grid gap-3">{data.faq.items.map((item) => (<details key={item.question} className="group rounded-3xl bg-white p-5 shadow-sm ring-1 ring-amber-900/10"><summary className="cursor-pointer list-none font-bold text-stone-900">{item.question}</summary><div className="mt-4 leading-8 text-stone-600"><HtmlText html={item.answerHtml} /></div></details>))}</div></div></section>
 
-        <section className="px-4 pb-16 pt-4 [contain-intrinsic-size:auto_520px] [content-visibility:auto] md:px-8 md:pb-20"><div className="relative mx-auto min-h-[430px] max-w-7xl overflow-hidden rounded-[1.8rem] bg-stone-950 text-white shadow-2xl shadow-stone-900/20 md:min-h-0 md:rounded-[2.5rem]"><Image src="/images/site/Screenshot_2026-04-25-14-11-19-166_com.instagram.android-edit-1.webp" alt="" fill sizes="(max-width: 768px) 100vw, 1280px" className="scale-[1.06] object-cover object-[52%_30%] opacity-100 md:scale-100 md:object-center" loading="lazy" aria-hidden="true" /><div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,.58),rgba(0,0,0,.74))] md:bg-gradient-to-r md:from-black/55 md:via-black/30 md:to-black/5" /><div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(245,158,11,0.12),transparent_36%)] opacity-[.55]" /><div className="relative z-10 max-w-[92%] p-6 md:max-w-3xl md:p-14"><p className="mb-3 break-words text-xs font-black uppercase tracking-[0.22em] text-amber-200">{data.finalCta.kicker}</p><h2 className="break-words tracking-[-0.02em] text-4xl font-extrabold leading-tight md:text-6xl"><PremiumIcon>{data.finalCta.icon}</PremiumIcon>{data.finalCta.title}</h2><p className="mt-5 max-w-2xl text-lg leading-8 text-white/85">{data.finalCta.text}</p><div className="mt-8 grid grid-cols-2 gap-3"><a href={data.finalCta.primaryCta.href} className="inline-flex break-words hyphens-auto max-sm:flex-col max-sm:gap-1 max-sm:py-2 max-sm:[&>span:first-child]:mr-0 min-h-[50px] min-w-0 items-center justify-center rounded-[1.1rem] bg-amber-700 px-2 text-center text-[11px] font-black uppercase leading-[1.15] tracking-[0.05em] text-white shadow-lg shadow-amber-900/20 transition hover:bg-amber-800 sm:rounded-full sm:px-6 sm:text-sm sm:tracking-[0.08em]"><PremiumIcon compact>{data.finalCta.primaryCta.icon}</PremiumIcon>{data.finalCta.primaryCta.label}</a><a href={data.finalCta.secondaryCta.href} className="inline-flex break-words hyphens-auto max-sm:flex-col max-sm:gap-1 max-sm:py-2 max-sm:[&>span:first-child]:mr-0 min-h-[50px] min-w-0 items-center justify-center rounded-[1.1rem] border border-white/25 bg-white/10 px-2 text-center text-[11px] font-black uppercase leading-[1.15] tracking-[0.05em] text-white backdrop-blur transition hover:bg-white/20 sm:rounded-full sm:px-6 sm:text-sm sm:tracking-[0.08em]"><PremiumIcon compact>{data.finalCta.secondaryCta.icon}</PremiumIcon>{data.finalCta.secondaryCta.label}</a></div></div></div></section>
+        <section className="px-4 pb-16 pt-4 [contain-intrinsic-size:auto_520px] [content-visibility:auto] md:px-8 md:pb-20"><div className="relative mx-auto min-h-[430px] max-w-7xl overflow-hidden rounded-[1.8rem] bg-stone-950 text-white shadow-2xl shadow-stone-900/20 md:min-h-0 md:rounded-[2.5rem]"><Image src="/images/site/Screenshot_2026-04-25-14-11-19-166_com.instagram.android-edit-1.webp" alt="" fill sizes="(max-width: 768px) 100vw, 1280px" className="scale-[1.06] object-cover object-[52%_30%] opacity-100 md:scale-100 md:object-center" loading="lazy" aria-hidden="true" /><div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,.58),rgba(0,0,0,.74))] md:bg-gradient-to-r md:from-black/55 md:via-black/30 md:to-black/5" /><div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(245,158,11,0.12),transparent_36%)] opacity-[.55]" /><div className="relative z-10 max-w-[92%] p-6 md:max-w-3xl md:p-14"><p className="mb-3 break-words text-xs font-black uppercase tracking-[0.22em] text-amber-200">{data.finalCta.kicker}</p><h2 className="break-words tracking-[-0.02em] text-4xl font-extrabold leading-tight md:text-6xl"><PremiumIcon>{data.finalCta.icon}</PremiumIcon><MarkerText onDark>{data.finalCta.title}</MarkerText></h2><p className="mt-5 max-w-2xl text-lg leading-8 text-white/85">{data.finalCta.text}</p><div className="mt-8 grid grid-cols-2 gap-3"><a href={data.finalCta.primaryCta.href} className="inline-flex break-words hyphens-auto max-sm:flex-col max-sm:gap-1 max-sm:py-2 max-sm:[&>span:first-child]:mr-0 min-h-[50px] min-w-0 items-center justify-center rounded-[1.1rem] bg-amber-700 px-2 text-center text-[11px] font-black uppercase leading-[1.15] tracking-[0.05em] text-white shadow-lg shadow-amber-900/20 transition hover:bg-amber-800 sm:rounded-full sm:px-6 sm:text-sm sm:tracking-[0.08em]"><PremiumIcon compact>{data.finalCta.primaryCta.icon}</PremiumIcon>{data.finalCta.primaryCta.label}</a><a href={data.finalCta.secondaryCta.href} className="inline-flex break-words hyphens-auto max-sm:flex-col max-sm:gap-1 max-sm:py-2 max-sm:[&>span:first-child]:mr-0 min-h-[50px] min-w-0 items-center justify-center rounded-[1.1rem] border border-white/25 bg-white/10 px-2 text-center text-[11px] font-black uppercase leading-[1.15] tracking-[0.05em] text-white backdrop-blur transition hover:bg-white/20 sm:rounded-full sm:px-6 sm:text-sm sm:tracking-[0.08em]"><PremiumIcon compact>{data.finalCta.secondaryCta.icon}</PremiumIcon>{data.finalCta.secondaryCta.label}</a></div></div></div></section>
       </main>
 
       <MobileStickyContact call={data.mobileSticky.call} chat={data.mobileSticky.viber} />

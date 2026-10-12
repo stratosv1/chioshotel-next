@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { MarkerText } from "@/components/effects/MarkerText";
 
 export type HomeGalleryLocale = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
 
@@ -195,7 +196,7 @@ export function HomeGallery({ locale }: { locale: HomeGalleryLocale }) {
             id="home-gallery-title"
             className="text-balance tracking-[-0.02em] text-[2rem] font-extrabold leading-tight text-stone-900 md:text-[2.625rem]"
           >
-            {copy.title}
+            <MarkerText>{copy.title}</MarkerText>
           </h2>
           <p className="mt-2 text-sm leading-6 text-stone-600 md:text-base md:leading-7">
             {copy.subtitle}
