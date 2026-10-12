@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { ChiosVillagesPageData } from "@/content/chios-villages";
 import { ChiosCollectionImageGallery } from "@/components/chios/ChiosCollectionImageGallery";
+import { PlaceCard } from "@/components/cards/PlaceCard";
 import { AnswerFirstSeoBlock } from "@/components/seo/AnswerFirstSeoBlock";
 import { MedievalVillagesAnswer, MedievalVillagesGuideSections } from "@/components/chios/MedievalVillagesGuide";
 
@@ -237,14 +238,14 @@ function getVillagesPageLanguage(
 function getExploreVillageLabel(language: VillagesPageUiLanguage, title: string) {
   const villageName = title.split(":")[0].trim();
 
-  if (language === "el") return `Δείτε το ${villageName} →`;
-  if (language === "fr") return `Voir ${villageName} →`;
-  if (language === "de") return `${villageName} ansehen →`;
-  if (language === "it") return `Scopri ${villageName} →`;
-  if (language === "es") return `Ver ${villageName} →`;
-  if (language === "tr") return `${villageName} köyünü keşfet →`;
+  if (language === "el") return `Δείτε το ${villageName}`;
+  if (language === "fr") return `Voir ${villageName}`;
+  if (language === "de") return `${villageName} ansehen`;
+  if (language === "it") return `Scopri ${villageName}`;
+  if (language === "es") return `Ver ${villageName}`;
+  if (language === "tr") return `${villageName} köyünü keşfet`;
 
-  return `Explore ${villageName} →`;
+  return `Explore ${villageName}`;
 }
 
 export function ChiosVillagesPageTailwind({ data }: ChiosVillagesPageProps) {
@@ -331,30 +332,23 @@ export function ChiosVillagesPageTailwind({ data }: ChiosVillagesPageProps) {
               </p>
             </div>
             <div className="relative">
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute right-2 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-[#2f261f]/95 text-xl font-black text-white shadow-xl md:hidden"
-              >
-                →
-              </div>
-              <div data-carousel-track="true" className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 pr-12 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-3 md:overflow-visible md:pr-0">
+              <div data-carousel-track="true" className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 pr-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-3 md:overflow-visible md:pr-0">
               {categoryGuide.items.map((item) => (
                 <a
-                  className="group flex w-[82vw] max-w-[360px] flex-none snap-start flex-col justify-between rounded-[24px] border border-[#8e6607]/15 bg-[#fffdfa] p-5 shadow-sm transition hover:-translate-y-1 hover:border-[#8e6607]/35 hover:shadow-xl md:w-auto md:max-w-none"
+                  className="group flex w-[78vw] max-w-[320px] flex-none snap-start flex-col rounded-3xl border border-[#eadfce] bg-white p-5 shadow-[0_1px_2px_rgba(47,38,31,0.06)] transition duration-200 hover:shadow-[0_10px_30px_rgba(47,38,31,0.12)] focus:outline-none focus-visible:ring-4 focus-visible:ring-amber-700/25 md:w-auto md:max-w-none"
                   href={item.href}
                   key={item.href}
                 >
-                  <span className="inline-flex w-fit rounded-full bg-[#fff4df] px-3 py-1 text-[11px] font-black uppercase tracking-[0.12em] text-[#8e6607]">
-                    {categoryGuide.kicker}
-                  </span>
-                  <h3 className="mt-4 text-xl font-black leading-tight tracking-[-0.03em] text-[#2f261f]">
+                  <h3 className="text-[19px] font-semibold leading-snug tracking-[-0.01em] text-[#2f261f]">
                     {item.label}
                   </h3>
-                  <p className="mt-3 text-sm leading-6 text-[#574b3f]">
+                  <p className="mt-1.5 text-sm leading-[1.5] text-[#5f4e41]">
                     {item.text}
                   </p>
-                  <span className="mt-5 inline-flex text-sm font-black text-[#8e6607]">
-                    {item.label} <span aria-hidden="true" className="ml-2 transition group-hover:translate-x-1">→</span>
+                  <span className="mt-auto pt-4">
+                    <span className="inline-flex min-h-11 items-center gap-1 rounded-full bg-[#fbeee0] px-4 text-sm font-semibold text-[#7c2d12] transition group-hover:bg-[#f7e0c8]">
+                      {item.label} <span aria-hidden="true">→</span>
+                    </span>
                   </span>
                 </a>
               ))}
@@ -431,56 +425,21 @@ export function ChiosVillagesPageTailwind({ data }: ChiosVillagesPageProps) {
           </header>
 
           <div className="relative">
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute right-2 top-[38%] z-20 flex h-10 w-10 items-center justify-center rounded-full bg-[#2f261f]/95 text-xl font-black text-white shadow-xl md:hidden"
-            >
-              →
-            </div>
-            <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 xl:grid-cols-4">
+            <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 xl:grid-cols-4" id="villages-list">
               {data.villages.map((village) => (
-                <a
-                  className="group w-[84vw] max-w-[380px] flex-none snap-start overflow-hidden rounded-[1.5rem] bg-white shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 transition hover:shadow-xl md:w-auto md:max-w-none md:rounded-[2rem]"
-                  href={village.href}
+                <PlaceCard
                   key={village.href}
-                >
-                  <div className="relative aspect-[4/3] overflow-hidden">
-                    <Image
-                      src={village.image}
-                      alt={village.imageAlt}
-                      fill
-                      sizes="(min-width: 1280px) 25vw, (min-width: 768px) 50vw, 84vw"
-                      className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                    />
-                    <div className="absolute left-3 top-3 rounded-full bg-amber-700 px-3 py-1.5 text-xs font-black text-white">
-                      {village.region}
-                    </div>
-                    <div className="absolute right-3 top-3 rounded-full bg-white/95 px-3 py-1.5 text-xs font-black text-amber-800">
-                      {village.mood}
-                    </div>
-                  </div>
-                  <div className="p-5">
-                    <h3 className="break-words tracking-[-0.02em] text-2xl font-extrabold leading-tight text-amber-800">
-                      {village.title}
-                    </h3>
-                    <p className="mt-3 text-sm leading-7 text-stone-600">
-                      {village.description}
-                    </p>
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {village.badges.map((badge) => (
-                        <span
-                          className="rounded-full bg-amber-50 px-3 py-1.5 text-[11px] font-bold text-amber-800"
-                          key={badge}
-                        >
-                          {badge}
-                        </span>
-                      ))}
-                    </div>
-                    <span className="mt-5 inline-flex rounded-full border border-amber-800/20 px-4 py-2 text-xs font-black uppercase text-amber-800">
-                      {getExploreVillageLabel(language, village.title)}
-                    </span>
-                  </div>
-                </a>
+                  href={village.href}
+                  title={village.title}
+                  description={village.description}
+                  image={village.image}
+                  imageAlt={village.imageAlt}
+                  topBadge={village.mood}
+                  bottomBadge={village.region}
+                  tags={village.badges}
+                  ctaLabel={getExploreVillageLabel(language, village.title)}
+                  className="w-[84vw] max-w-[360px] flex-none snap-start md:w-auto md:max-w-none"
+                />
               ))}
             </div>
           </div>
