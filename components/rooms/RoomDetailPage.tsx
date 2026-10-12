@@ -394,20 +394,6 @@ function IndividualRoomsSection({ data, language }: { data: RoomDetailData; lang
   );
 }
 
-const roomHeroCategory: Record<string, string> = {
-  "economy-double-rooms": "economy-double",
-  "economy-double-carousel": "economy-double",
-  "ground-floor-rooms": "ground-floor",
-  "standard-double-room": "first-floor",
-  "family-chios-apartments": "family-apartments",
-};
-
-/** Matches the RoomCard photo so it morphs into this hero (view transitions). */
-function roomHeroTransitionName(id: string) {
-  const category = roomHeroCategory[id];
-  return category ? { viewTransitionName: `vt-room-${category}` } : undefined;
-}
-
 export function RoomDetailPage({ data, fromPriceLabel }: RoomDetailPageProps) {
   const language = getRoomLanguage(data.seo.canonicalPath);
   const localLabels = labels[language];
@@ -437,7 +423,7 @@ export function RoomDetailPage({ data, fromPriceLabel }: RoomDetailPageProps) {
                 <a className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-amber-900/20 bg-white px-5 text-center text-[11px] font-black uppercase tracking-[0.12em] text-[#2f261f] transition hover:-translate-y-0.5 hover:bg-amber-50 sm:text-xs" href={primaryBookingHref} data-booking-cta="true">{localLabels.bookOnline}</a>
               </div>
             </div>
-            <div className="relative min-h-[330px] overflow-hidden lg:min-h-[540px]" style={roomHeroTransitionName(data.id)}>
+            <div className="relative min-h-[330px] overflow-hidden lg:min-h-[540px]">
               <Image src={data.hero.image} alt={data.hero.imageAlt} fill priority fetchPriority="high" sizes="(min-width: 1024px) 54vw, 100vw" className="object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#2f261f]/28 via-transparent to-transparent" aria-hidden="true" />
             </div>
