@@ -23,6 +23,8 @@ type RoomCardProps = {
   /** DOM id for in-page anchors; pass null to omit. Defaults to room-<card.id>. */
   anchorId?: string | null;
   className?: string;
+  /** Fade up on scroll (needs <RevealObserver/> on the page). */
+  reveal?: boolean;
 };
 
 const iconProps = {
@@ -111,7 +113,7 @@ function AmenityIcon({ amenity }: { amenity: AmenityKey }) {
   }
 }
 
-export function RoomCard({ card, locale, price, priority, ctaLabel, categoryId: categoryOverride, anchorId, className = "" }: RoomCardProps) {
+export function RoomCard({ card, locale, price, priority, ctaLabel, categoryId: categoryOverride, anchorId, className = "", reveal }: RoomCardProps) {
   const categoryId = categoryOverride ?? toRoomCategoryId(card.id);
   const facts = categoryId ? roomCategoryFacts[categoryId] : null;
   const bed = categoryId ? bedLabels[categoryId][locale] : null;
@@ -121,10 +123,14 @@ export function RoomCard({ card, locale, price, priority, ctaLabel, categoryId: 
   return (
     <a
       href={card.href}
+      data-reveal={reveal ? "" : undefined}
       id={anchorId === undefined ? `room-${card.id}` : anchorId ?? undefined}
       className={`group flex scroll-mt-28 flex-col rounded-3xl border border-[#eadfce] bg-white p-2.5 shadow-[0_1px_2px_rgba(47,38,31,0.06)] transition duration-200 hover:shadow-[0_10px_30px_rgba(47,38,31,0.12)] focus:outline-none focus-visible:ring-4 focus-visible:ring-amber-700/25 target:ring-4 target:ring-amber-600/50 ${className}`}
     >
-      <div className="relative h-[196px] overflow-hidden rounded-[18px] bg-[#e8dccb] sm:h-[210px]">
+      <div
+        className="relative h-[196px] overflow-hidden rounded-[18px] bg-[#e8dccb] sm:h-[210px]"
+        style={categoryId ? { viewTransitionName: `vt-room-${categoryId}` } : undefined}
+      >
         <Image
           src={card.image}
           alt={card.imageAlt}

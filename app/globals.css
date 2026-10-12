@@ -61,3 +61,36 @@
     line-height: 1.5rem;
   }
 }
+
+/*
+ * Cross-document view transitions: pages cross-fade instead of flashing, and
+ * room photos with the same view-transition-name morph between pages.
+ * Progressive enhancement: unsupported browsers navigate normally.
+ */
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 280ms;
+}
+
+::view-transition-group(*) {
+  animation-duration: 380ms;
+  animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+}
+
+/* Scroll reveal (homepage). The hidden state is injected by an inline script
+ * (see HomePageTailwind), so without JS everything stays visible. */
+[data-reveal] {
+  transition:
+    opacity 0.6s ease,
+    transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+}

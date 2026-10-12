@@ -211,6 +211,7 @@ export function HomeGallery({ locale }: { locale: HomeGalleryLocale }) {
         {homeGalleryImages.map((image, index) => (
           <figure
             key={image.src}
+            data-reveal=""
             className={`group relative aspect-[4/3] w-[78vw] max-w-[330px] shrink-0 snap-center overflow-hidden rounded-[1.35rem] bg-stone-200 sm:w-auto sm:max-w-none sm:rounded-[1.6rem] lg:aspect-auto ${desktopLayout[index]}`}
           >
             <Image
