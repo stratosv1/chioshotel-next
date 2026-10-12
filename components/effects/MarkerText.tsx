@@ -9,7 +9,7 @@ import type { ReactNode } from "react";
 const markerImage =
   "linear-gradient(100deg, rgba(245,158,11,0) 0.6%, rgba(245,158,11,0.5) 2.2%, rgba(245,158,11,0.32) 6%, rgba(245,158,11,0.36) 92%, rgba(245,158,11,0.52) 96.5%, rgba(245,158,11,0) 99%)";
 const markerImageDark =
-  "linear-gradient(100deg, rgba(217,119,6,0) 0.6%, rgba(217,119,6,0.75) 2.2%, rgba(217,119,6,0.55) 6%, rgba(217,119,6,0.6) 92%, rgba(217,119,6,0.78) 96.5%, rgba(217,119,6,0) 99%)";
+  "linear-gradient(100deg, rgba(252,211,77,0) 0.6%, rgba(252,211,77,0.7) 2.2%, rgba(252,211,77,0.55) 6%, rgba(252,211,77,0.6) 92%, rgba(252,211,77,0.72) 96.5%, rgba(252,211,77,0) 99%)";
 
 export function MarkerText({ children, onDark = false }: { children: ReactNode; onDark?: boolean }) {
   return (
