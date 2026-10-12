@@ -63,9 +63,11 @@
 }
 
 /* Scroll reveal (homepage). The hidden state is injected by an inline script
- * (see HomePageTailwind), so without JS everything stays visible. */
-[data-reveal] {
+ * (see HomePageTailwind), so without JS everything stays visible. The reveal
+ * transition only applies while revealing; afterwards (data-reveal-done) the
+ * element's own hover transitions take over again. */
+[data-reveal][data-shown]:not([data-reveal-done]) {
   transition:
-    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    transform 0.8s cubic-bezier(0.33, 1, 0.68, 1);
 }

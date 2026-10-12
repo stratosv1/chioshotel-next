@@ -44,6 +44,20 @@ export function RevealObserver() {
           observer.unobserve(el);
           el.style.transitionDelay = `${Math.min(index, 5) * STAGGER_MS}ms`;
           el.setAttribute("data-shown", "true");
+          const done = (event: TransitionEvent) => {
+            if (event.target !== el || event.propertyName !== "transform") return;
+            el.removeEventListener("transitionend", done);
+            el.style.transitionDelay = "";
+            el.setAttribute("data-reveal-done", "");
+          };
+          el.addEventListener("transitionend", done);
+          // Fallback when no transitionend fires (e.g. off-screen carousel items).
+          window.setTimeout(() => {
+            if (el.hasAttribute("data-reveal-done")) return;
+            el.removeEventListener("transitionend", done);
+            el.style.transitionDelay = "";
+            el.setAttribute("data-reveal-done", "");
+          }, 1600);
         });
       },
       { threshold: 0.15, rootMargin: "0px 0px -6% 0px" },
