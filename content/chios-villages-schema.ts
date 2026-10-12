@@ -106,11 +106,11 @@ function buildVillagePlaceSchema(
     inLanguage: language,
     address: {
       "@type": "PostalAddress",
-      addressLocality: village.region || address.addressLocality,
+      addressLocality: address.addressLocality,
       addressRegion: address.addressRegion,
       addressCountry: "GR",
     },
-    touristType: village.badges,
+    keywords: village.badges.join(", "),
     isPartOf: {
       "@id": webPageId(collectionPath),
     },

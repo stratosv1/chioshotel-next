@@ -21,6 +21,7 @@ import {
   webPageId,
   websiteId,
   type SchemaObject,
+  getLocalizedSchemaAddress,
 } from "@/lib/structured-data";
 
 type BeachSchemaLanguage = "en" | "el" | "de" | "fr" | "it" | "es" | "tr";
@@ -184,11 +185,11 @@ function buildBeachPlaceSchema(
     inLanguage: getLanguageForPath(beach.href),
     address: {
       "@type": "PostalAddress",
-      addressLocality: beach.region,
+      addressLocality: getLocalizedSchemaAddress(beach.href).addressLocality,
       addressRegion: labels.addressRegion,
       addressCountry: "GR",
     },
-    touristType: beach.badges,
+    keywords: beach.badges.join(", "),
     isPartOf: [
       {
         "@id": schemaId(destinationPath, "destination"),

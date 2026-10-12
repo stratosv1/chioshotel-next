@@ -121,12 +121,12 @@ export const chiosBeachesPageEn: ChiosBeachesPageData = {
   },
   intro: {
     kicker: "Beach planning",
-    title: "Choose the right beach for each day",
+    title: "The Chios coastline at a glance",
     description:
       "Chios has a coastline full of contrasts: volcanic black pebbles in the south, sandy family beaches in the west, lively beach bars, quiet coves and deep blue waters in the north. The best beach often depends on your mood, route and the wind direction of the day.",
     tip: {
       icon: "🗺️",
-      title: "Your strategic island outpost",
+      title: "Kambos: a central base for every beach",
       text:
         "To truly master your itinerary of beaches in Chios, make Voulamandis House in Kambos your home base. Our local team can help you choose beaches based on the weather, your route and the kind of day you want.",
       linkLabel: "View rooms at Voulamandis House",
@@ -365,12 +365,12 @@ export const chiosBeachesPageEl: ChiosBeachesPageData = {
   },
   intro: {
     kicker: "Οργάνωση παραλιών",
-    title: "Διαλέξτε την κατάλληλη παραλία για κάθε μέρα",
+    title: "Η ακτογραμμή της Χίου με μια ματιά",
     description:
       "Η Χίος έχει μια ακτογραμμή γεμάτη αντιθέσεις: μαύρα ηφαιστειακά βότσαλα στο νότο, αμμώδεις οικογενειακές παραλίες στα δυτικά, ζωντανά beach bars, ήσυχους όρμους και βαθιά γαλάζια νερά στο βορρά. Η καλύτερη επιλογή εξαρτάται από τη διάθεση, τη διαδρομή και τον άνεμο της ημέρας.",
     tip: {
       icon: "🗺️",
-      title: "Η στρατηγική σας βάση στο νησί",
+      title: "Κάμπος: κεντρική βάση για κάθε παραλία",
       text:
         "Για να οργανώσετε σωστά τις παραλίες της Χίου, κάντε το Voulamandis House στον Κάμπο τη βάση σας. Η τοπική μας ομάδα μπορεί να σας βοηθήσει να επιλέξετε παραλίες ανάλογα με τον καιρό, τη διαδρομή και τη μέρα που θέλετε.",
       linkLabel: "Δείτε τα δωμάτια στο Voulamandis House",
@@ -608,12 +608,12 @@ export const chiosBeachesPageFr: ChiosBeachesPageData = {
   },
   intro: {
     kicker: "Préparer vos journées plage",
-    title: "Choisissez la bonne plage pour chaque journée",
+    title: "Le littoral de Chios en un coup d’œil",
     description:
       "Le littoral de Chios est plein de contrastes : galets volcaniques noirs au sud, plages de sable familiales à l’ouest, beach bars animés, criques tranquilles et eaux bleu profond au nord. La meilleure plage dépend souvent de votre humeur, de votre itinéraire et du vent du jour.",
     tip: {
       icon: "🗺️",
-      title: "Votre base stratégique sur l’île",
+      title: "Kambos : une base centrale pour toutes les plages",
       text:
         "Pour bien organiser vos plages à Chios, faites de Voulamandis House à Kambos votre base. Notre équipe locale peut vous aider à choisir les plages selon la météo, votre route et le type de journée que vous souhaitez.",
       linkLabel: "Voir les chambres de Voulamandis House",
@@ -815,12 +815,12 @@ export const chiosBeachesPageDe: ChiosBeachesPageData = {
   },
   intro: {
     kicker: "Strandplanung",
-    title: "Wählen Sie für jeden Tag den passenden Strand",
+    title: "Die Küste von Chios im Überblick",
     description:
       "Die Küste von Chios ist voller Kontraste: schwarze vulkanische Kiesel im Süden, familienfreundliche Sandstrände im Westen, lebhafte Beach Bars, ruhige Buchten und tiefblaues Wasser im Norden. Der beste Strand hängt oft von Stimmung, Route und Windrichtung ab.",
     tip: {
       icon: "🗺️",
-      title: "Ihre strategische Inselbasis",
+      title: "Kambos: zentraler Ausgangspunkt für alle Strände",
       text:
         "Um Ihre Strandtage auf Chios gut zu planen, machen Sie Voulamandis House in Kambos zu Ihrer Basis. Unser lokales Team hilft Ihnen gern, Strände nach Wetter, Route und gewünschter Tagesstimmung auszuwählen.",
       linkLabel: "Zimmer im Voulamandis House ansehen",
@@ -1022,12 +1022,12 @@ export const chiosBeachesPageIt: ChiosBeachesPageData = {
   },
   intro: {
     kicker: "Organizzare le giornate al mare",
-    title: "Scegli la spiaggia giusta per ogni giornata",
+    title: "La costa di Chios in breve",
     description:
       "La costa di Chios è ricca di contrasti: ciottoli vulcanici neri a sud, spiagge sabbiose per famiglie a ovest, beach bar vivaci, baie tranquille e acque blu profonde a nord. La spiaggia migliore dipende spesso dall’umore, dall’itinerario e dal vento del giorno.",
     tip: {
       icon: "🗺️",
-      title: "La tua base strategica sull’isola",
+      title: "Kambos: una base centrale per ogni spiaggia",
       text:
         "Per organizzare al meglio le spiagge di Chios, fai di Voulamandis House a Kambos la tua base. Il nostro team locale può aiutarti a scegliere le spiagge in base al meteo, al percorso e al tipo di giornata che desideri.",
       linkLabel: "Vedi le camere di Voulamandis House",
@@ -1229,12 +1229,12 @@ export const chiosBeachesPageEs: ChiosBeachesPageData = {
   },
   intro: {
     kicker: "Planificación de playas",
-    title: "Elige la playa adecuada para cada día",
+    title: "La costa de Chios de un vistazo",
     description:
       "La costa de Chios está llena de contrastes: guijarros volcánicos negros en el sur, playas de arena familiares en el oeste, beach bars animados, calas tranquilas y aguas azul profundo en el norte. La mejor playa suele depender de tu plan, tu ruta y el viento del día.",
     tip: {
       icon: "🗺️",
-      title: "Tu base estratégica en la isla",
+      title: "Kambos: una base central para cada playa",
       text:
         "Para organizar bien tus días de playa en Chios, haz de Voulamandis House en Kambos tu base. Nuestro equipo local puede ayudarte a elegir playas según el tiempo, la ruta y el tipo de día que buscas.",
       linkLabel: "Ver habitaciones en Voulamandis House",
@@ -1436,12 +1436,12 @@ export const chiosBeachesPageTr: ChiosBeachesPageData = {
   },
   intro: {
     kicker: "Plaj planlama",
-    title: "Her gün için doğru plajı seçin",
+    title: "Sakız Adası kıyıları bir bakışta",
     description:
       "Sakız Adası’nın kıyıları güçlü kontrastlarla doludur: güneyde siyah volkanik çakıllar, batıda aile dostu kum plajları, hareketli beach barlar, sakin koylar ve kuzeyde derin mavi sular. En iyi plaj genellikle ruh halinize, rotanıza ve günün rüzgarına bağlıdır.",
     tip: {
       icon: "🗺️",
-      title: "Adadaki stratejik üssünüz",
+      title: "Kambos: her plaja merkezi bir üs",
       text:
         "Sakız Adası plajlarını doğru planlamak için Kambos’taki Voulamandis House’u üssünüz yapın. Yerel ekibimiz hava durumuna, rotanıza ve istediğiniz güne göre plaj seçmenize yardımcı olabilir.",
       linkLabel: "Voulamandis House odalarını görüntüleyin",
