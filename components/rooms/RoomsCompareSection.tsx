@@ -1,3 +1,4 @@
+import { MarkerText } from "@/components/effects/MarkerText";
 import type { CategoryFromPrices, RoomCategoryId } from "@/lib/booking-core/category-from-prices";
 
 /**
@@ -248,7 +249,7 @@ export function RoomsCompareSection({ locale, prices, hrefs }: Props) {
           {c.kicker}
         </span>
         <h2 id="rooms-compare-title" className="mt-5 text-balance text-3xl font-black tracking-[-0.035em] text-[#2f261f] sm:text-4xl">
-          {c.title}
+          <MarkerText>{c.title}</MarkerText>
         </h2>
         <p className="mt-3 text-pretty text-base leading-7 text-[#574b3f]">{c.text}</p>
       </header>
@@ -271,7 +272,7 @@ export function RoomsCompareSection({ locale, prices, hrefs }: Props) {
         {ORDER.map((id) => {
           const row = c.rows[id];
           return (
-            <li key={id} className="rounded-[22px] border border-amber-900/10 bg-white p-4 shadow-[0_10px_30px_rgba(47,38,31,0.07)]">
+            <li key={id} data-reveal="" className="rounded-[22px] border border-amber-900/10 bg-white p-4 shadow-[0_10px_30px_rgba(47,38,31,0.07)]">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <p className="text-lg font-black tracking-[-0.02em] text-[#2f261f]">{row.name}</p>

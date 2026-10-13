@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { PropertyFaqSection } from "@/components/faq/PropertyFaqSection";
+import { MarkerText } from "@/components/effects/MarkerText";
+import { ScrollEffects } from "@/components/effects/ScrollEffects";
 import { GreekRoomWizardTailwind } from "@/components/rooms/GreekRoomWizardTailwind";
 import { MobileAvailabilityBar } from "@/components/rooms/MobileAvailabilityBar";
 import { RoomsCompareSection, type CompareLocale } from "@/components/rooms/RoomsCompareSection";
@@ -205,6 +207,7 @@ export async function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#fbf6ef] pb-20 text-[#2f261f] md:pb-0">
+      <ScrollEffects />
       <section
         className="relative isolate overflow-hidden bg-[#f3e7d7] px-4 py-10 text-[#2f261f] sm:px-6 sm:py-12 lg:px-8 lg:py-14"
         aria-labelledby="rooms-hero-title"
@@ -278,7 +281,7 @@ export async function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
             id="rooms-category-title"
             className="mt-5 text-balance break-words text-3xl font-black tracking-[-0.035em] text-[#2f261f] hyphens-auto sm:text-4xl lg:text-[2.625rem]"
           >
-            {intro.title}
+            <MarkerText>{intro.title}</MarkerText>
           </h2>
 
           <p className="mt-4 text-pretty text-base leading-8 text-[#574b3f] sm:text-lg">
@@ -312,6 +315,8 @@ export async function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
                 locale={compareLocale}
                 price={categoryId ? fromPrices?.[categoryId] : null}
                 priority={index < 2}
+                reveal
+                markerTitle
                 ctaLabel={getCardCtaLabel(card.id, language, card.ctaLabel)}
               />
             );
@@ -341,7 +346,7 @@ export async function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
 
         <div className="mx-auto mt-11 max-w-3xl text-center">
           <h2 className="text-balance text-3xl font-black tracking-[-0.035em] text-[#2f261f] sm:text-4xl">
-            {ownerData.wizardIntro.title}
+            <MarkerText>{ownerData.wizardIntro.title}</MarkerText>
           </h2>
         </div>
 
@@ -362,6 +367,7 @@ export async function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
       </section>
 
       <PropertyFaqSection
+        marker
         language={language}
         context="rooms"
         maxItems={4}
@@ -373,11 +379,11 @@ export async function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
       />
 
       <section id="rooms-final-cta" className="px-4 pb-12 pt-2 sm:px-6 md:pb-16 lg:px-8" aria-labelledby="rooms-final-cta-title">
-        <div className="mx-auto grid max-w-7xl gap-6 rounded-[2rem] border border-amber-900/10 bg-[#f3e7d7] p-6 shadow-xl shadow-amber-950/5 sm:p-8 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
+        <div data-reveal="" className="mx-auto grid max-w-7xl gap-6 rounded-[2rem] border border-amber-900/10 bg-[#f3e7d7] p-6 shadow-xl shadow-amber-950/5 sm:p-8 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.2em] text-amber-800">Voulamandis House</p>
             <h2 id="rooms-final-cta-title" className="mt-2 text-balance tracking-[-0.02em] text-3xl font-extrabold leading-tight text-stone-900 md:text-[2.625rem]">
-              {finalCta.title}
+              <MarkerText>{finalCta.title}</MarkerText>
             </h2>
             <p className="mt-3 max-w-2xl text-base leading-7 text-stone-600">{finalCta.text}</p>
           </div>

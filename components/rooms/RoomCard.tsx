@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { MarkerText } from "@/components/effects/MarkerText";
 import type { RoomCategoryCard } from "@/content/rooms";
 import type { RoomCategoryId } from "@/lib/booking-core/category-from-prices";
 import {
@@ -25,6 +26,8 @@ type RoomCardProps = {
   className?: string;
   /** Fade up on scroll (needs <RevealObserver/> on the page). */
   reveal?: boolean;
+  /** Highlighter stroke on the room name (needs <ScrollEffects/>). */
+  markerTitle?: boolean;
 };
 
 const iconProps = {
@@ -113,7 +116,7 @@ function AmenityIcon({ amenity }: { amenity: AmenityKey }) {
   }
 }
 
-export function RoomCard({ card, locale, price, priority, ctaLabel, categoryId: categoryOverride, anchorId, className = "", reveal }: RoomCardProps) {
+export function RoomCard({ card, locale, price, priority, ctaLabel, categoryId: categoryOverride, anchorId, className = "", reveal, markerTitle }: RoomCardProps) {
   const categoryId = categoryOverride ?? toRoomCategoryId(card.id);
   const facts = categoryId ? roomCategoryFacts[categoryId] : null;
   const bed = categoryId ? bedLabels[categoryId][locale] : null;
@@ -152,7 +155,7 @@ export function RoomCard({ card, locale, price, priority, ctaLabel, categoryId: 
 
       <div className="flex flex-1 flex-col px-2 pb-1.5 pt-3.5">
         <h3 className="text-[19px] font-semibold leading-snug tracking-[-0.01em] text-[#2f261f]">
-          {card.title}
+          {markerTitle ? <MarkerText>{card.title}</MarkerText> : card.title}
         </h3>
         <p className="mt-1.5 line-clamp-3 text-sm leading-[1.5] text-[#5f4e41]">
           {card.description}

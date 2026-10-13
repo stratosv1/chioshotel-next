@@ -5,8 +5,7 @@ import type { RoomCategoryCard, RoomsCategoryPageData } from "@/content/rooms";
 import { roomsCategoryDe, roomsCategoryEl, roomsCategoryEn, roomsCategoryEs, roomsCategoryFr, roomsCategoryIt, roomsCategoryTr } from "@/content/rooms";
 import { RoomCard } from "@/components/rooms/RoomCard";
 import { MarkerText } from "@/components/effects/MarkerText";
-import { MarkerObserver } from "@/components/effects/MarkerObserver";
-import { RevealObserver } from "@/components/effects/RevealObserver";
+import { ScrollEffects } from "@/components/effects/ScrollEffects";
 import { getCategoryFromPrices, type RoomCategoryId } from "@/lib/booking-core/category-from-prices";
 import { HomeReviews } from "@/components/home/HomeReviews";
 import { HomeGallery } from "@/components/home/HomeGallery";
@@ -383,9 +382,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
   return (
     <>
       <main className="overflow-x-hidden bg-[#fffaf3] text-stone-900">
-        <MarkerObserver />
-        <RevealObserver />
-        <script dangerouslySetInnerHTML={{ __html: "if(!matchMedia('(prefers-reduced-motion: reduce)').matches&&'IntersectionObserver'in window)(function(){var s=document.createElement('style');s.id='vh-reveal';s.textContent='[data-reveal]:not([data-shown]){opacity:0;transform:translate3d(0,24px,0)}';document.head.appendChild(s)})()" }} />
+        <ScrollEffects />
         <section
           id="home-hero"
           className="relative flex h-[calc(100svh-4.5rem)] min-h-[640px] max-h-[760px] items-end overflow-hidden bg-stone-950 text-white md:h-[clamp(680px,82svh,900px)] md:min-h-0 md:max-h-none"

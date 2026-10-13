@@ -1,4 +1,5 @@
 import type { LanguageCode } from "@/lib/languages";
+import { MarkerText } from "@/components/effects/MarkerText";
 import {
   getPropertyFaqContext,
   type PropertyFaqContext,
@@ -9,11 +10,14 @@ export function PropertyFaqSection({
   context,
   maxItems,
   relatedHrefOverrides,
+  marker = false,
 }: {
   language: LanguageCode;
   context: PropertyFaqContext;
   maxItems?: number;
   relatedHrefOverrides?: Partial<Record<string, string | undefined>>;
+  /** Highlighter stroke on the section title (needs <ScrollEffects/>). */
+  marker?: boolean;
 }) {
   const { copy, items, allHref } = getPropertyFaqContext(language, context);
 
@@ -32,7 +36,7 @@ export function PropertyFaqSection({
             id={`property-faq-${context}-title`}
             className="mt-3 text-balance tracking-[-0.02em] text-3xl font-extrabold leading-tight text-stone-900 md:text-[2.625rem]"
           >
-            {copy.title}
+            {marker ? <MarkerText>{copy.title}</MarkerText> : copy.title}
           </h2>
           <p className="mt-4 text-sm leading-7 text-stone-600 md:text-base md:leading-8">
             {copy.description}
