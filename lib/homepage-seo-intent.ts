@@ -35,7 +35,7 @@ const copy: Record<LanguageCode, HomepageIntentCopy> = {
     introTitle: "Authentic hospitality at Voulamandis House",
     introBodyHtml: `Voulamandis House combines a quiet citrus-garden setting with personal hospitality for couples and families. Discover why <a href="/chios/kampos-chios/" class="${linkClass}">staying in Kambos, Chios</a> is a distinctive choice. If you are comparing <a href="/chios-hotels/" class="${linkClass}">hotels in Chios</a> with other accommodation types, use our guide before choosing an area and property.`,
     roomsKicker: "Voulamandis House rooms & apartments",
-    roomsTitle: "Choose the category that fits your trip",
+    roomsTitle: "Choose the room category that fits your stay in Chios",
     roomsText:
       "From economy doubles to comfortable rooms and family apartments, compare the available categories and choose the best fit for your stay.",
     roomsSideKicker: "All options in one place",
@@ -53,7 +53,7 @@ const copy: Record<LanguageCode, HomepageIntentCopy> = {
     introTitle: "Αυθεντική φιλοξενία στο Voulamandis House",
     introBodyHtml: `Το Voulamandis House συνδυάζει ήρεμο περιβάλλον, περιβόλια εσπεριδοειδών και προσωπική φιλοξενία. Ανακαλύψτε γιατί η <a href="/el/chios/kampos-chios/" class="${linkClass}">διαμονή στον Κάμπο της Χίου</a> είναι μια ξεχωριστή επιλογή. Αν συγκρίνετε <a href="/el/xenodoxeia-xios/" class="${linkClass}">ξενοδοχεία στη Χίο</a> και άλλους τύπους διαμονής, δείτε τον αναλυτικό οδηγό μας πριν αποφασίσετε περιοχή και κατάλυμα.`,
     roomsKicker: "Δωμάτια & διαμερίσματα Voulamandis House",
-    roomsTitle: "Επιλέξτε την κατηγορία που ταιριάζει στο ταξίδι σας",
+    roomsTitle: "Επιλέξτε την κατηγορία δωματίου που ταιριάζει στη διαμονή σας στη Χίο",
     roomsText:
       "Από οικονομικά δίκλινα έως άνετα δωμάτια και οικογενειακά διαμερίσματα, δείτε τις διαθέσιμες κατηγορίες και βρείτε την κατάλληλη επιλογή για τη διαμονή σας.",
     roomsSideKicker: "Όλες οι επιλογές σε μία σελίδα",
@@ -71,7 +71,7 @@ const copy: Record<LanguageCode, HomepageIntentCopy> = {
     introTitle: "Une hospitalité authentique à Voulamandis House",
     introBodyHtml: `Voulamandis House associe calme, agrumes et accueil personnel. Découvrez pourquoi un <a href="/fr/chios/kampos-chios/" class="${linkClass}">séjour à Kambos, Chios</a> est un choix particulier. Si vous comparez les <a href="/fr/hotels-chios/" class="${linkClass}">hôtels à Chios</a> avec d’autres hébergements, consultez notre guide avant de choisir votre quartier et votre établissement.`,
     roomsKicker: "Chambres & appartements Voulamandis House",
-    roomsTitle: "Choisissez la catégorie adaptée à votre séjour",
+    roomsTitle: "Choisissez la catégorie de chambre adaptée à votre séjour à Chios",
     roomsText:
       "Des chambres doubles économiques aux chambres confortables et appartements familiaux, comparez les catégories disponibles avant de réserver.",
     roomsSideKicker: "Toutes les options en une page",
@@ -89,7 +89,7 @@ const copy: Record<LanguageCode, HomepageIntentCopy> = {
     introTitle: "Authentische Gastfreundschaft im Voulamandis House",
     introBodyHtml: `Voulamandis House verbindet Ruhe, Zitrusgärten und persönliche Gastfreundschaft. Erfahren Sie, warum <a href="/de/chios/kampos-chios/" class="${linkClass}">Übernachten in Kambos auf Chios</a> besonders ist. Wenn Sie <a href="/de/hotels-auf-chios/" class="${linkClass}">Hotels auf Chios</a> mit anderen Unterkunftsarten vergleichen, hilft unser Guide bei der Wahl von Lage und Unterkunft.`,
     roomsKicker: "Zimmer & Apartments im Voulamandis House",
-    roomsTitle: "Wählen Sie die passende Kategorie für Ihre Reise",
+    roomsTitle: "Wählen Sie die passende Zimmerkategorie für Ihren Aufenthalt auf Chios",
     roomsText:
       "Von günstigen Doppelzimmern bis zu komfortablen Zimmern und Familienapartments: Vergleichen Sie die Kategorien und finden Sie die passende Unterkunft.",
     roomsSideKicker: "Alle Optionen auf einen Blick",
@@ -107,7 +107,7 @@ const copy: Record<LanguageCode, HomepageIntentCopy> = {
     introTitle: "Ospitalità autentica al Voulamandis House",
     introBodyHtml: `Voulamandis House unisce tranquillità, agrumeti e ospitalità personale. Scopri perché un <a href="/it/chios/kampos-chios/" class="${linkClass}">soggiorno a Kambos, Chios</a> è una scelta speciale. Se stai confrontando <a href="/it/hotel-chios/" class="${linkClass}">hotel a Chios</a> con altri tipi di alloggio, consulta la nostra guida prima di scegliere zona e struttura.`,
     roomsKicker: "Camere & appartamenti Voulamandis House",
-    roomsTitle: "Scegli la categoria adatta al tuo viaggio",
+    roomsTitle: "Scegli la categoria di camera adatta al tuo soggiorno a Chios",
     roomsText:
       "Dalle camere doppie economy alle camere più spaziose e agli appartamenti familiari, confronta le categorie disponibili prima di scegliere.",
     roomsSideKicker: "Tutte le opzioni in una pagina",
@@ -125,7 +125,7 @@ const copy: Record<LanguageCode, HomepageIntentCopy> = {
     introTitle: "Hospitalidad auténtica en Voulamandis House",
     introBodyHtml: `Voulamandis House combina tranquilidad, cítricos y hospitalidad personal. Descubre por qué el <a href="/es/chios/kampos-chios/" class="${linkClass}">alojamiento en Kambos, Quíos</a> es una opción especial. Si comparas <a href="/es/hoteles-chios/" class="${linkClass}">hoteles en Quíos</a> con otros tipos de alojamiento, consulta nuestra guía antes de elegir zona y establecimiento.`,
     roomsKicker: "Habitaciones & apartamentos Voulamandis House",
-    roomsTitle: "Elige la categoría adecuada para tu viaje",
+    roomsTitle: "Elige la categoría de habitación adecuada para tu estancia en Quíos",
     roomsText:
       "Desde habitaciones dobles económicas hasta habitaciones cómodas y apartamentos familiares, compara las categorías disponibles antes de reservar.",
     roomsSideKicker: "Todas las opciones en una página",
@@ -143,7 +143,7 @@ const copy: Record<LanguageCode, HomepageIntentCopy> = {
     introTitle: "Voulamandis House’ta otantik misafirperverlik",
     introBodyHtml: `Voulamandis House sakinlik, narenciye bahçeleri ve kişisel misafirperverliği bir araya getirir. <a href="/tr/chios/kampos-chios/" class="${linkClass}">Sakız Kambos’ta konaklamanın</a> neden özel olduğunu keşfedin. <a href="/tr/sakiz-adasi-otelleri/" class="${linkClass}">Sakız Adası otellerini</a> diğer konaklama türleriyle karşılaştırıyorsanız bölge ve tesis seçmeden önce rehberimize bakın.`,
     roomsKicker: "Voulamandis House oda & daireleri",
-    roomsTitle: "Seyahatinize uygun kategoriyi seçin",
+    roomsTitle: "Sakız Adası'ndaki konaklamanıza uygun oda kategorisini seçin",
     roomsText:
       "Ekonomi çift kişilik odalardan konforlu odalara ve aile dairelerine kadar seçenekleri karşılaştırın ve konaklamanıza uygun kategoriyi bulun.",
     roomsSideKicker: "Tüm seçenekler tek sayfada",
