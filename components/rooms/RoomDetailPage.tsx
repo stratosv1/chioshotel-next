@@ -1,5 +1,7 @@
 "use client";
 
+import { MarkerText } from "@/components/effects/MarkerText";
+import { ScrollEffects } from "@/components/effects/ScrollEffects";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { useRef, useState } from "react";
@@ -215,7 +217,7 @@ function RoomVisualCard({ room, language }: { room: IndividualRoomData; language
   const visibleAmenities = room.amenities.slice(0, 3);
 
   return (
-    <article className="group w-[84vw] max-w-[380px] flex-none snap-start overflow-hidden rounded-[1.5rem] bg-white shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 transition md:w-auto md:max-w-none md:rounded-[2rem]">
+    <article data-reveal="" className="group w-[84vw] max-w-[380px] flex-none snap-start overflow-hidden rounded-[1.5rem] bg-white shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 transition md:w-auto md:max-w-none md:rounded-[2rem]">
       <div className="relative aspect-[16/10] overflow-hidden bg-stone-200">
         {activeImage ? (
           <Image
@@ -275,7 +277,7 @@ function RoomVisualCard({ room, language }: { room: IndividualRoomData; language
 
       <div className="p-5">
         <h3 className="break-words text-3xl font-black leading-[0.96] tracking-[-0.055em] text-[#2f261f]">
-          {localizeName(room.name, language)}
+          <MarkerText>{localizeName(room.name, language)}</MarkerText>
         </h3>
         <p className="mt-2 text-[11px] font-black uppercase tracking-[0.16em] text-amber-800">
           {localizeRoomText(room.type, language)}
@@ -359,7 +361,7 @@ function IndividualRoomsSection({ data, language }: { data: RoomDetailData; lang
         <div className="mx-auto max-w-7xl">
           <header className="mb-8 max-w-[820px]">
             <span className="text-xs font-black uppercase tracking-[0.16em] text-amber-800">{data.individualRooms.kicker}</span>
-            <h2 id="rd-individual-title" className="mt-4 text-[2rem] font-black leading-[0.98] tracking-[-0.05em] text-[#2f261f] md:text-[2.625rem]">{data.individualRooms.title}</h2>
+            <h2 id="rd-individual-title" className="mt-4 text-[2rem] font-black leading-[0.98] tracking-[-0.05em] text-[#2f261f] md:text-[2.625rem]"><MarkerText>{data.individualRooms.title}</MarkerText></h2>
             <p className="mt-5 max-w-[760px] text-base leading-8 text-stone-600 md:text-lg">{sectionDescription}</p>
           </header>
           <div className="space-y-10">
@@ -377,7 +379,7 @@ function IndividualRoomsSection({ data, language }: { data: RoomDetailData; lang
       <div className="mx-auto max-w-7xl">
         <header className="mb-8 max-w-[820px]">
           <span className="text-xs font-black uppercase tracking-[0.16em] text-amber-800">{data.individualRooms.kicker}</span>
-          <h2 id="rd-individual-title" className="mt-4 text-[2rem] font-black leading-[0.98] tracking-[-0.05em] text-[#2f261f] md:text-[2.625rem]">{data.individualRooms.title}</h2>
+          <h2 id="rd-individual-title" className="mt-4 text-[2rem] font-black leading-[0.98] tracking-[-0.05em] text-[#2f261f] md:text-[2.625rem]"><MarkerText>{data.individualRooms.title}</MarkerText></h2>
           <p className="mt-5 max-w-[760px] text-base leading-8 text-stone-600 md:text-lg">{sectionDescription}</p>
           <p className="mt-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-[11px] font-black uppercase tracking-[0.1em] text-amber-900 shadow-sm ring-1 ring-amber-900/10 md:hidden">
             {labels[language].swipe} <span aria-hidden="true">→</span>
@@ -401,6 +403,7 @@ export function RoomDetailPage({ data, fromPriceLabel }: RoomDetailPageProps) {
   const aiAvailabilityHref = roomFinderHrefForLanguage(language);
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#fbf6ef] pb-20 text-[#2f261f] md:pb-0">
+      <ScrollEffects />
       <section className="relative overflow-hidden bg-[#f3e7d7] px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12" aria-labelledby="rd-hero-title">
         <div className="mx-auto max-w-7xl">
           <div className="grid overflow-hidden rounded-[32px] border border-amber-900/10 bg-[#fffaf3] shadow-[0_24px_70px_rgba(47,38,31,0.12)] lg:grid-cols-[0.92fr_1.08fr]">
@@ -437,7 +440,7 @@ export function RoomDetailPage({ data, fromPriceLabel }: RoomDetailPageProps) {
         <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-stretch">
           <article className="rounded-[30px] border border-amber-900/10 bg-white p-5 shadow-[0_18px_45px_rgba(47,38,31,0.10)] sm:p-8">
             <span className="inline-flex rounded-full border border-amber-900/10 bg-amber-50 px-4 py-2 text-[11px] font-black uppercase tracking-[0.28em] text-amber-800">{data.overview.kicker}</span>
-            <h2 id="rd-overview-title" className="break-words hyphens-auto mt-5 text-balance text-3xl font-black tracking-[-0.035em] text-[#2f261f] sm:text-4xl">{data.overview.title}</h2>
+            <h2 id="rd-overview-title" className="break-words hyphens-auto mt-5 text-balance text-3xl font-black tracking-[-0.035em] text-[#2f261f] sm:text-4xl"><MarkerText>{data.overview.title}</MarkerText></h2>
             <div className="mt-5 space-y-4 text-base leading-8 text-[#574b3f]">{data.overview.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
           </article>
           <aside className="h-full rounded-[30px] border border-amber-900/10 bg-[#fffdfa] p-5 shadow-[0_18px_45px_rgba(47,38,31,0.08)] sm:p-6" aria-label={localLabels.keyDetails}>
@@ -454,7 +457,7 @@ export function RoomDetailPage({ data, fromPriceLabel }: RoomDetailPageProps) {
         <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8" aria-labelledby="rd-compare-title">
           <header className="max-w-3xl">
             <span className="text-xs font-black uppercase tracking-[0.16em] text-amber-800">{data.comparison.kicker}</span>
-            <h2 id="rd-compare-title" className="mt-4 text-balance text-3xl font-black tracking-[-0.04em] text-[#2f261f] sm:text-4xl">{data.comparison.title}</h2>
+            <h2 id="rd-compare-title" className="mt-4 text-balance text-3xl font-black tracking-[-0.04em] text-[#2f261f] sm:text-4xl"><MarkerText>{data.comparison.title}</MarkerText></h2>
           </header>
           <div className="mt-6 overflow-hidden rounded-[24px] border border-amber-900/10 bg-white shadow-[0_18px_45px_rgba(47,38,31,0.08)] sm:hidden">
             <dl className="divide-y divide-amber-900/10">
@@ -500,7 +503,7 @@ export function RoomDetailPage({ data, fromPriceLabel }: RoomDetailPageProps) {
           <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
             <div>
               <span className="text-xs font-black uppercase tracking-[0.16em] text-amber-800">{data.outdoor.kicker}</span>
-              <h2 id="rd-outdoor-title" className="mt-4 text-balance text-3xl font-black tracking-[-0.04em] text-[#2f261f] sm:text-4xl">{data.outdoor.title}</h2>
+              <h2 id="rd-outdoor-title" className="mt-4 text-balance text-3xl font-black tracking-[-0.04em] text-[#2f261f] sm:text-4xl"><MarkerText>{data.outdoor.title}</MarkerText></h2>
               <div className="mt-5 space-y-4 text-base leading-8 text-[#574b3f]">{data.outdoor.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
             </div>
             <div className="grid grid-cols-2 gap-3">
@@ -515,43 +518,43 @@ export function RoomDetailPage({ data, fromPriceLabel }: RoomDetailPageProps) {
       ) : null}
 
       <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8" aria-labelledby="rd-amenities-title">
-        <header className="mx-auto max-w-3xl text-center"><span className="inline-flex text-[11px] font-black uppercase tracking-[0.28em] text-amber-800">{data.amenities.kicker}</span><h2 id="rd-amenities-title" className="mt-4 text-balance text-3xl font-black tracking-[-0.04em] text-[#2f261f] sm:text-4xl">{data.amenities.title}</h2></header>
+        <header className="mx-auto max-w-3xl text-center"><span className="inline-flex text-[11px] font-black uppercase tracking-[0.28em] text-amber-800">{data.amenities.kicker}</span><h2 id="rd-amenities-title" className="mt-4 text-balance text-3xl font-black tracking-[-0.04em] text-[#2f261f] sm:text-4xl"><MarkerText>{data.amenities.title}</MarkerText></h2></header>
         <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {data.amenities.items.map((item) => <article className="min-w-0 break-words rounded-2xl bg-white p-4 shadow-[0_12px_32px_rgba(47,38,31,0.08)] hyphens-auto" key={item.label}><div className="flex h-9 w-9 items-center justify-center rounded-full bg-amber-50 text-lg grayscale contrast-125" aria-hidden="true">{item.icon}</div><h3 className="mt-3 text-sm font-black text-[#2f261f] sm:text-base">{localizeRoomText(item.label, language)}</h3><p className="mt-2 text-xs leading-5 text-[#574b3f] sm:text-sm">{item.text}</p></article>)}
+          {data.amenities.items.map((item) => <article data-reveal="" className="min-w-0 break-words rounded-2xl bg-white p-4 shadow-[0_12px_32px_rgba(47,38,31,0.08)] hyphens-auto" key={item.label}><div className="flex h-9 w-9 items-center justify-center rounded-full bg-amber-50 text-lg grayscale contrast-125" aria-hidden="true">{item.icon}</div><h3 className="mt-3 text-sm font-black text-[#2f261f] sm:text-base">{localizeRoomText(item.label, language)}</h3><p className="mt-2 text-xs leading-5 text-[#574b3f] sm:text-sm">{item.text}</p></article>)}
         </div>
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8" aria-labelledby="rd-best-title">
         <div className="rounded-[30px] bg-white p-5 shadow-[0_18px_45px_rgba(47,38,31,0.08)] sm:p-8">
           <span className="inline-flex text-[11px] font-black uppercase tracking-[0.28em] text-amber-800">{data.bestFor.kicker}</span>
-          <h2 id="rd-best-title" className="break-words hyphens-auto mt-4 text-balance text-3xl font-black tracking-[-0.04em] text-[#2f261f] sm:text-4xl">{data.bestFor.title}</h2>
+          <h2 id="rd-best-title" className="break-words hyphens-auto mt-4 text-balance text-3xl font-black tracking-[-0.04em] text-[#2f261f] sm:text-4xl"><MarkerText>{data.bestFor.title}</MarkerText></h2>
           <div className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-2">
-            {data.bestFor.items.map((item) => <div className="rounded-2xl bg-amber-50/50 p-3 text-sm leading-6 text-[#574b3f] ring-1 ring-amber-900/10" key={item}><span className="mr-2 font-black text-emerald-700">✓</span>{localizeRoomText(item, language)}</div>)}
+            {data.bestFor.items.map((item) => <div data-reveal="" className="rounded-2xl bg-amber-50/50 p-3 text-sm leading-6 text-[#574b3f] ring-1 ring-amber-900/10" key={item}><span className="mr-2 font-black text-emerald-700">✓</span>{localizeRoomText(item, language)}</div>)}
           </div>
         </div>
       </section>
 
       <section id="rd-booking-section" className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-12" aria-labelledby="rd-booking-title">
-        <div className="overflow-hidden rounded-[30px] bg-gradient-to-br from-[#2f261f] via-[#5f421f] to-[#9a6f11] p-5 text-white shadow-[0_28px_70px_rgba(47,38,31,0.22)] sm:p-8 lg:p-10">
+        <div data-reveal="" className="overflow-hidden rounded-[30px] bg-gradient-to-br from-[#2f261f] via-[#5f421f] to-[#9a6f11] p-5 text-white shadow-[0_28px_70px_rgba(47,38,31,0.22)] sm:p-8 lg:p-10">
           <div className="grid gap-7 lg:grid-cols-[1fr_auto] lg:items-center">
-            <div><span className="inline-flex items-center gap-3 text-[11px] font-black uppercase tracking-[0.28em] text-amber-100 before:h-px before:w-10 before:bg-amber-200/70">{data.booking.kicker}</span><h2 id="rd-booking-title" className="mt-5 text-balance text-3xl font-black leading-tight tracking-[-0.035em] text-white sm:text-4xl lg:text-[2.625rem]">{data.booking.title}</h2><p className="mt-5 max-w-3xl text-base leading-8 text-white/88 sm:text-lg">{data.booking.text}</p><small className="mt-4 block text-sm leading-6 text-white/72">{data.booking.note}</small></div>
+            <div><span className="inline-flex items-center gap-3 text-[11px] font-black uppercase tracking-[0.28em] text-amber-100 before:h-px before:w-10 before:bg-amber-200/70">{data.booking.kicker}</span><h2 id="rd-booking-title" className="mt-5 text-balance text-3xl font-black leading-tight tracking-[-0.035em] text-white sm:text-4xl lg:text-[2.625rem]"><MarkerText onDark>{data.booking.title}</MarkerText></h2><p className="mt-5 max-w-3xl text-base leading-8 text-white/88 sm:text-lg">{data.booking.text}</p><small className="mt-4 block text-sm leading-6 text-white/72">{data.booking.note}</small></div>
             <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[320px] lg:grid-cols-1"><a className="inline-flex min-h-[54px] items-center justify-center rounded-full bg-[#25D366] px-6 text-center text-xs font-black uppercase tracking-[0.16em] text-white shadow-[0_18px_38px_rgba(37,211,102,0.26)] transition hover:-translate-y-0.5 hover:bg-[#1ebe5d]" href={data.booking.whatsappHref}>{data.booking.whatsappLabel}</a><a className="inline-flex min-h-[54px] items-center justify-center rounded-full border border-white/32 bg-white/10 px-6 text-center text-xs font-black uppercase tracking-[0.16em] text-white transition hover:-translate-y-0.5 hover:bg-white hover:text-[#2f261f]" href={data.booking.phoneHref}>{data.booking.phoneLabel}</a></div>
           </div>
         </div>
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8" aria-labelledby="rd-faq-title">
-        <header className="mx-auto max-w-3xl text-center"><span className="inline-flex text-[11px] font-black uppercase tracking-[0.28em] text-amber-800">{localLabels.faqKicker}</span><h2 id="rd-faq-title" className="mt-4 text-3xl font-black tracking-[-0.04em] text-[#2f261f] sm:text-4xl">{localLabels.faqTitle}</h2></header>
-        <div className="mx-auto mt-8 max-w-3xl space-y-3">{data.faq.map((item) => <details className="rounded-2xl bg-white p-4 shadow-[0_12px_28px_rgba(47,38,31,0.07)]" key={item.question}><summary className="cursor-pointer text-base font-black text-[#2f261f]">{item.question}</summary><p className="mt-3 text-sm leading-7 text-[#574b3f]">{localizeRoomText(item.answer, language)}</p></details>)}</div>
+        <header className="mx-auto max-w-3xl text-center"><span className="inline-flex text-[11px] font-black uppercase tracking-[0.28em] text-amber-800">{localLabels.faqKicker}</span><h2 id="rd-faq-title" className="mt-4 text-3xl font-black tracking-[-0.04em] text-[#2f261f] sm:text-4xl"><MarkerText>{localLabels.faqTitle}</MarkerText></h2></header>
+        <div className="mx-auto mt-8 max-w-3xl space-y-3">{data.faq.map((item) => <details data-reveal="" className="rounded-2xl bg-white p-4 shadow-[0_12px_28px_rgba(47,38,31,0.07)]" key={item.question}><summary className="cursor-pointer text-base font-black text-[#2f261f]">{item.question}</summary><p className="mt-3 text-sm leading-7 text-[#574b3f]">{localizeRoomText(item.answer, language)}</p></details>)}</div>
       </section>
 
       {data.related ? (
         <nav className="mx-auto max-w-7xl px-4 pb-12 pt-2 sm:px-6 lg:px-8" aria-labelledby="rd-related-title">
           <span className="text-xs font-black uppercase tracking-[0.16em] text-amber-800">{data.related.kicker}</span>
-          <h2 id="rd-related-title" className="mt-3 text-balance text-2xl font-black tracking-[-0.03em] text-[#2f261f] sm:text-3xl">{data.related.title}</h2>
+          <h2 id="rd-related-title" className="mt-3 text-balance text-2xl font-black tracking-[-0.03em] text-[#2f261f] sm:text-3xl"><MarkerText>{data.related.title}</MarkerText></h2>
           <ul className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {data.related.links.map((link) => (
-              <li key={link.href}>
+              <li key={link.href} data-reveal="">
                 <a href={link.href} className="group block h-full rounded-2xl border border-amber-900/10 bg-white p-4 shadow-[0_10px_26px_rgba(47,38,31,0.06)] transition hover:-translate-y-0.5 hover:bg-amber-50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-amber-700/25">
                   <span className="block text-base font-black text-[#2f261f] group-hover:text-amber-800">{link.title} <span aria-hidden="true">→</span></span>
                   <span className="mt-1 block text-sm leading-6 text-[#574b3f]">{link.text}</span>
