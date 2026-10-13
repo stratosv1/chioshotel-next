@@ -98,6 +98,9 @@ const baseRooms: IndividualRoomData[] = [
     badges: ["First floor", "Shared terrace", "Two spaces", "Up to 4 guests"],
     beds: ["1 double bed", "2 single beds"],
     amenities: [
+      { icon: "❄️", label: "Air conditioning" },
+      { icon: "🧊", label: "Fridge" },
+      { icon: "💨", label: "Hair dryer" },
       { icon: "🌤️", label: "Shared terrace" },
       { icon: "🚪", label: "Two spaces, no connecting door" },
       { icon: "🌾", label: "Upper-floor view" },
@@ -123,6 +126,9 @@ const baseRooms: IndividualRoomData[] = [
     badges: ["First floor", "Kitchenette", "Shared terrace", "Up to 3 guests"],
     beds: ["1 double bed", "1 sofa bed"],
     amenities: [
+      { icon: "❄️", label: "Air conditioning" },
+      { icon: "🧊", label: "Fridge" },
+      { icon: "💨", label: "Hair dryer" },
       { icon: "🥣", label: "Kitchenette" },
       { icon: "🌤️", label: "Shared terrace" },
       { icon: "🚪", label: "Two spaces, no connecting door" },
@@ -148,6 +154,9 @@ const baseRooms: IndividualRoomData[] = [
     badges: ["First floor", "Private balcony", "Kitchenette", "Up to 3 guests"],
     beds: ["1 double bed", "1 sofa bed"],
     amenities: [
+      { icon: "❄️", label: "Air conditioning" },
+      { icon: "🧊", label: "Fridge" },
+      { icon: "💨", label: "Hair dryer" },
       { icon: "🌤️", label: "Private balcony" },
       { icon: "🥣", label: "Kitchenette" },
       { icon: "📐", label: "Open-plan space" },

@@ -92,6 +92,9 @@ const groundFloorRooms: IndividualRoomData[] = [
     badges: ["Ground floor", "No stairs", "Garden access", "Up to 3 guests"],
     beds: ["1 double bed", "1 sofa bed"],
     amenities: [
+      { icon: "❄️", label: "Air conditioning" },
+      { icon: "🧊", label: "Fridge" },
+      { icon: "💨", label: "Hair dryer" },
       { icon: "🪜❌", label: "No stairs" },
       { icon: "🌿", label: "Garden access" },
       { icon: "📐", label: "Open-plan space" },
@@ -133,6 +136,9 @@ const groundFloorRooms: IndividualRoomData[] = [
     badges: ["Ground floor", "No stairs", "Garden access", "Sofa bed"],
     beds: ["1 double bed", "1 sofa bed"],
     amenities: [
+      { icon: "❄️", label: "Air conditioning" },
+      { icon: "🧊", label: "Fridge" },
+      { icon: "💨", label: "Hair dryer" },
       { icon: "🪜❌", label: "No stairs" },
       { icon: "🌿", label: "Garden access" },
       { icon: "🛋️", label: "Sofa bed" },

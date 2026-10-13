@@ -92,6 +92,13 @@ function AmenityIcon({ amenity }: { amenity: AmenityKey }) {
           <path d="M6 12V5a2 2 0 0 1 4 0" />
         </svg>
       );
+    case "hairdryer":
+      return (
+        <svg {...iconProps} width="14" height="14">
+          <path d="M14 6a5 5 0 1 0 0 8h6V6z" />
+          <path d="M9 14l1 7h3l-1-7" />
+        </svg>
+      );
     case "fridge":
       return (
         <svg {...iconProps} width="14" height="14">

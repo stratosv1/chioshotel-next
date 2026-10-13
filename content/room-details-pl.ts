@@ -66,6 +66,8 @@ function localizeAmenity(label: string) {
     "Air conditioning": "Klimatyzacja",
     "LCD TV": "Telewizor LCD",
     "Refrigerator": "Lodówka",
+    "Fridge": "Lodówka",
+    "Hair dryer": "Suszarka do włosów",
     "Kettle": "Czajnik",
     "Private bathroom": "Prywatna łazienka",
     "Garden atmosphere": "Atmosfera ogrodu",

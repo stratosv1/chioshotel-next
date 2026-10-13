@@ -265,6 +265,9 @@ export const economyDoubleRoomsEn: RoomDetailData = {
         badges: ["Ground floor", "Garden access", "No stairs", "Economy"],
         beds: ["1 double bed"],
         amenities: [
+          { icon: "❄️", label: "Air conditioning" },
+          { icon: "🧊", label: "Fridge" },
+          { icon: "💨", label: "Hair dryer" },
           { icon: "📶", label: "Wi-Fi" },
           { icon: "☕", label: "Coffee and tea kettle" },
           { icon: "🌿", label: "Ground-floor view" },
@@ -305,6 +308,9 @@ export const economyDoubleRoomsEn: RoomDetailData = {
         badges: ["First floor", "Kambos view", "Access by stairs", "Economy"],
         beds: ["1 double bed"],
         amenities: [
+          { icon: "❄️", label: "Air conditioning" },
+          { icon: "🧊", label: "Fridge" },
+          { icon: "💨", label: "Hair dryer" },
           { icon: "📶", label: "Wi-Fi" },
           { icon: "☕", label: "Coffee and tea kettle" },
           { icon: "🪜", label: "Access by stairs" },
@@ -1102,6 +1108,9 @@ export const familyChiosApartmentsEn: RoomDetailData = {
         badges: ["Ground floor", "4–5 entrance steps", "Full kitchen", "Up to 4 guests"],
         beds: ["1 double bed", "2 single beds"],
         amenities: [
+          { icon: "❄️", label: "Air conditioning" },
+          { icon: "🧊", label: "Fridge" },
+          { icon: "💨", label: "Hair dryer" },
           { icon: "📶", label: "Wi-Fi" },
           { icon: "☕", label: "Coffee and tea kettle" },
           { icon: "🌤️", label: "Private balcony" },
@@ -1144,6 +1153,9 @@ export const familyChiosApartmentsEn: RoomDetailData = {
         badges: ["Ground floor", "4–5 entrance steps", "Full kitchen", "Up to 4 guests"],
         beds: ["1 double bed", "2 single beds"],
         amenities: [
+          { icon: "❄️", label: "Air conditioning" },
+          { icon: "🧊", label: "Fridge" },
+          { icon: "💨", label: "Hair dryer" },
           { icon: "📶", label: "Wi-Fi" },
           { icon: "☕", label: "Coffee and tea kettle" },
           { icon: "🌤️", label: "Private balcony" },
@@ -1186,6 +1198,9 @@ export const familyChiosApartmentsEn: RoomDetailData = {
         badges: ["Ground floor", "4–5 entrance steps", "Full kitchen", "Normally up to 4 guests"],
         beds: ["1 double bed", "1 double sofa bed"],
         amenities: [
+          { icon: "❄️", label: "Air conditioning" },
+          { icon: "🧊", label: "Fridge" },
+          { icon: "💨", label: "Hair dryer" },
           { icon: "📶", label: "Wi-Fi" },
           { icon: "☕", label: "Coffee and tea kettle" },
           { icon: "🌤️", label: "Private balcony" },

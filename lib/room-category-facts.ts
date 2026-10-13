@@ -10,7 +10,7 @@ import type { RoomCategoryId } from "@/lib/booking-core/category-from-prices";
 
 export type RoomFactsLocale = "en" | "el" | "fr" | "de" | "it" | "es" | "tr" | "pl";
 
-export type AmenityKey = "ac" | "wifi" | "bathroom" | "fridge" | "tv" | "kitchen";
+export type AmenityKey = "ac" | "wifi" | "bathroom" | "fridge" | "hairdryer" | "tv" | "kitchen";
 
 type BedSpec = { type: string; count: number };
 
@@ -32,7 +32,7 @@ export const roomCategoryFacts: Record<RoomCategoryId, RoomCategoryFacts> = {
     maxGuests: 2,
     sizeM2: { min: 16, max: 16 },
     beds: [{ type: "Double bed", count: 1 }],
-    amenities: ["ac", "wifi", "bathroom", "fridge", "tv"],
+    amenities: ["ac", "wifi", "bathroom", "fridge", "hairdryer", "tv"],
     schemaType: "HotelRoom",
   },
   "ground-floor": {
@@ -44,7 +44,7 @@ export const roomCategoryFacts: Record<RoomCategoryId, RoomCategoryFacts> = {
       { type: "Double bed", count: 1 },
       { type: "Sofa bed", count: 1 },
     ],
-    amenities: ["ac", "wifi", "bathroom", "fridge", "tv"],
+    amenities: ["ac", "wifi", "bathroom", "fridge", "hairdryer", "tv"],
     schemaType: "HotelRoom",
   },
   "first-floor": {
@@ -52,7 +52,7 @@ export const roomCategoryFacts: Record<RoomCategoryId, RoomCategoryFacts> = {
     minGuests: 1,
     maxGuests: 4,
     sizeM2: { min: 30, max: 35 },
-    amenities: ["ac", "wifi", "bathroom", "fridge", "tv"],
+    amenities: ["ac", "wifi", "bathroom", "fridge", "hairdryer", "tv"],
     schemaType: "HotelRoom",
   },
   "family-apartments": {
@@ -60,7 +60,7 @@ export const roomCategoryFacts: Record<RoomCategoryId, RoomCategoryFacts> = {
     minGuests: 1,
     maxGuests: 4,
     sizeM2: { min: 40, max: 45 },
-    amenities: ["ac", "wifi", "bathroom", "kitchen", "tv"],
+    amenities: ["ac", "wifi", "bathroom", "kitchen", "fridge", "hairdryer", "tv"],
     schemaType: "Suite",
   },
 };
@@ -130,6 +130,7 @@ export const amenityLabels: Record<AmenityKey, Record<RoomFactsLocale, string>> 
     pl: "Prywatna łazienka",
   },
   fridge: { en: "Fridge", el: "Ψυγείο", fr: "Réfrigérateur", de: "Kühlschrank", it: "Frigo", es: "Nevera", tr: "Buzdolabı", pl: "Lodówka" },
+  hairdryer: { en: "Hair dryer", el: "Σεσουάρ", fr: "Sèche-cheveux", de: "Föhn", it: "Asciugacapelli", es: "Secador", tr: "Saç kurutma", pl: "Suszarka" },
   tv: { en: "TV", el: "TV", fr: "TV", de: "TV", it: "TV", es: "TV", tr: "TV", pl: "TV" },
   kitchen: { en: "Full kitchen", el: "Πλήρης κουζίνα", fr: "Cuisine équipée", de: "Volle Küche", it: "Cucina completa", es: "Cocina completa", tr: "Tam mutfak", pl: "Pełna kuchnia" },
 };
@@ -140,6 +141,7 @@ export const amenitySchemaNames: Record<AmenityKey, string> = {
   wifi: "Free Wi-Fi",
   bathroom: "Private bathroom",
   fridge: "Refrigerator",
+  hairdryer: "Hair dryer",
   tv: "TV",
   kitchen: "Full kitchen",
 };
