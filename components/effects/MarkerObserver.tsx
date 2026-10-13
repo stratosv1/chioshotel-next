@@ -36,7 +36,12 @@ export function MarkerObserver() {
       (entries) => {
         const entering = entries
           .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+          // Reading order: titles on roughly the same row go left to right.
+          .sort((a, b) => {
+            const dy = a.boundingClientRect.top - b.boundingClientRect.top;
+            if (Math.abs(dy) < 160) return a.boundingClientRect.left - b.boundingClientRect.left;
+            return dy;
+          });
         for (const entry of entering) {
           observer.unobserve(entry.target);
           queue.push(entry.target);
