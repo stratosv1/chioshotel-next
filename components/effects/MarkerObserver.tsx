@@ -13,7 +13,6 @@ const STAGGER_MS = 700;
 export function MarkerObserver() {
   useEffect(() => {
     const targets = Array.from(document.querySelectorAll<HTMLElement>("[data-marker]"));
-    if (!targets.length) return;
 
     if (!("IntersectionObserver" in window)) {
       targets.forEach((el) => el.setAttribute("data-drawn", "true"));
@@ -49,8 +48,27 @@ export function MarkerObserver() {
       { threshold: 0.6, rootMargin: "0px 0px -12% 0px" },
     );
 
+    const seen = new WeakSet<Element>(targets);
     targets.forEach((el) => observer.observe(el));
+
+    // Titles rendered later (lazy sections, client widgets) are picked up too.
+    let scan = 0;
+    const mutations = new MutationObserver(() => {
+      if (scan) return;
+      scan = window.requestAnimationFrame(() => {
+        scan = 0;
+        document.querySelectorAll<HTMLElement>("[data-marker]:not([data-drawn])").forEach((el) => {
+          if (seen.has(el)) return;
+          seen.add(el);
+          observer.observe(el);
+        });
+      });
+    });
+    mutations.observe(document.body, { childList: true, subtree: true });
+
     return () => {
+      mutations.disconnect();
+      if (scan) window.cancelAnimationFrame(scan);
       observer.disconnect();
       if (timer !== undefined) window.clearTimeout(timer);
     };

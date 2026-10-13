@@ -230,7 +230,7 @@ async function RoomsSection({ data }: { data: HomePageData }) {
             <NewsletterSignupCard locale={homeNewsletterLocale(data.seo.canonicalPath)} source="homepage" />
             <article className="flex-1 rounded-[2rem] bg-white px-7 py-6 shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10">
               <p className="break-words text-xs font-black uppercase tracking-[0.20em] text-amber-700">{data.roomsPreview.sideCard.kicker}</p>
-              <h3 className="mt-2 break-words tracking-[-0.02em] text-[1.65rem] font-extrabold leading-tight text-stone-900">{data.roomsPreview.sideCard.title}</h3>
+              <h3 className="mt-2 break-words tracking-[-0.02em] text-[1.65rem] font-extrabold leading-tight text-stone-900"><MarkerText>{data.roomsPreview.sideCard.title}</MarkerText></h3>
               <p className="mt-2 text-[15px] leading-7 text-stone-600">{data.roomsPreview.sideCard.text}</p>
             </article>
           </div>
@@ -261,6 +261,7 @@ async function RoomsSection({ data }: { data: HomePageData }) {
                 price={categoryId ? fromPrices?.[categoryId] : null}
                 priority={false}
                 reveal
+                markerTitle
                 className="w-[84vw] max-w-[360px] flex-none snap-start md:w-auto md:max-w-none"
               />
             );
@@ -344,7 +345,7 @@ function DirectBookingBox({ data }: { data: HomePageData }) {
         <div className="relative grid gap-0 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-center">
           <div className="px-4 pb-2 pt-4 md:p-8 lg:px-10">
             <span className="inline-flex rounded-full bg-white/85 px-3 py-2 text-[10px] font-black uppercase tracking-[0.14em] text-orange-800 shadow-sm ring-1 ring-amber-900/10 md:px-4 md:text-xs md:tracking-[0.16em]">{data.location.discount.badge}</span>
-            <h3 className="mt-3 max-w-[18rem] break-words tracking-[-0.02em] text-[1.85rem] font-extrabold leading-[1.05] text-stone-950 md:mt-4 md:text-[clamp(2rem,9vw,3rem)] lg:max-w-xl lg:text-5xl">{data.location.discount.title}</h3>
+            <h3 className="mt-3 max-w-[18rem] break-words tracking-[-0.02em] text-[1.85rem] font-extrabold leading-[1.05] text-stone-950 md:mt-4 md:text-[clamp(2rem,9vw,3rem)] lg:max-w-xl lg:text-5xl"><MarkerText>{data.location.discount.title}</MarkerText></h3>
             <p className="mt-4 hidden max-w-2xl text-sm leading-7 text-stone-700 md:block md:text-lg md:leading-8">{data.location.discount.text}</p>
             <ul className="mt-4 grid min-w-0 grid-cols-1 gap-2 min-[360px]:grid-cols-2 lg:grid-cols-3">
               {data.location.discount.benefits.map((benefit, index) => (
@@ -360,7 +361,7 @@ function DirectBookingBox({ data }: { data: HomePageData }) {
             <div className="hidden w-full rounded-[1.45rem] bg-gradient-to-br from-[#6f3f1d] to-[#a35b1e] p-3 text-white shadow-[0_10px_22px_rgba(68,64,60,.12)] lg:block lg:p-4">
               <div className="rounded-[1.25rem] border border-white/15 bg-white/10 p-3.5 backdrop-blur lg:p-4">
                 <p className="text-xs font-black uppercase tracking-[0.16em] text-amber-100">{data.location.discount.badge}</p>
-                <p className="mt-3 break-words tracking-[-0.02em] text-2xl font-extrabold leading-tight md:text-3xl">{data.location.discount.title}</p>
+                <p className="mt-3 break-words tracking-[-0.02em] text-2xl font-extrabold leading-tight md:text-3xl"><MarkerText onDark>{data.location.discount.title}</MarkerText></p>
                 <p className="mt-3 hidden text-sm leading-7 text-white/80 lg:block">{data.location.discount.formIntro}</p>
                 <div className="mt-3 rounded-[1.2rem] bg-white p-4 text-center text-stone-900 shadow-[0_8px_18px_rgba(68,64,60,.12)]">
                   <p className="text-[11px] font-black uppercase tracking-[0.14em] text-stone-600">{data.location.discount.successText}</p>
@@ -421,7 +422,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
 
         <a href={data.announceBar.href} className="relative z-20 mx-auto -mt-5 flex w-[min(1120px,92vw)] items-center justify-between gap-4 rounded-3xl bg-white px-5 py-4 text-stone-800 shadow-xl shadow-stone-900/10 ring-1 ring-amber-900/10 md:px-7">
           <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 text-base text-stone-700 ring-1 ring-amber-900/10 [filter:grayscale(1)]" aria-hidden="true">{data.announceBar.icon}</span>
-          <span className="flex-1 text-sm font-semibold md:text-base">{data.announceBar.text} <strong className="text-amber-800">{data.announceBar.strongText}</strong></span>
+          <span className="flex-1 text-sm font-semibold md:text-base"><MarkerText>{data.announceBar.text}</MarkerText> <strong className="text-amber-800">{data.announceBar.strongText}</strong></span>
           <span className="text-amber-700" aria-hidden="true">→</span>
         </a>
 
@@ -437,7 +438,7 @@ export function HomePageTailwind({ data }: HomePageTailwindProps) {
             </article>
             <article className="order-3 rounded-[1.5rem] bg-white p-5 shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 md:rounded-[2rem] md:p-8 lg:order-2">
               <p className="mb-3 break-words text-xs font-black uppercase tracking-[0.20em] text-amber-700">{data.intro.right.kicker}</p>
-              <h3 className="break-words tracking-[-0.02em] text-[2rem] font-extrabold leading-tight text-stone-900 md:text-[2.625rem]">{introRightTitle}</h3>
+              <h3 className="break-words tracking-[-0.02em] text-[2rem] font-extrabold leading-tight text-stone-900 md:text-[2.625rem]"><MarkerText>{introRightTitle}</MarkerText></h3>
               <div className="mt-5 grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-3">
                 {data.intro.right.cards.map((card, index) => (
                   <div key={card.title} data-reveal="" className={`${index === 0 ? "col-span-2 rounded-2xl bg-[#2f241d] p-4 text-white md:col-span-1" : "rounded-2xl bg-amber-50 p-3 ring-1 ring-amber-900/10"}${index > 0 && index === data.intro.right.cards.length - 1 && index % 2 === 1 ? " col-span-2 md:col-span-1" : ""} min-w-0 break-words hyphens-auto`}>

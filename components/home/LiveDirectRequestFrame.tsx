@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { MarkerText } from "@/components/effects/MarkerText";
 import { roomFinderHrefForLanguage } from "@/lib/room-finder-cta-routing";
 
 // Shared shell for the homepage Live Deals widget. The lazy placeholder, the
@@ -57,7 +58,7 @@ export function LiveDirectHeader({
       <div className="grid gap-4 xl:grid-cols-[1fr_250px] xl:items-end">
         <div>
           <h2 id={headingId} className="max-w-[640px] text-[2.35rem] font-extrabold leading-[0.98] tracking-[-0.04em] text-[#17351f] md:text-5xl xl:text-6xl">
-            {title}
+            <MarkerText>{title}</MarkerText>
           </h2>
           <p className="mt-3 max-w-2xl text-[15px] leading-7 text-stone-700 md:text-lg md:leading-8">{copy.subtitle}</p>
         </div>
