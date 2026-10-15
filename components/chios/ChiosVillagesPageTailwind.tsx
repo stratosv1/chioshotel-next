@@ -253,6 +253,11 @@ export function ChiosVillagesPageTailwind({ data }: ChiosVillagesPageProps) {
   const copy = villagesPageUiCopy[language];
   const categoryGuide = villageCategoryGuideCopy[language];
   const shouldShowCategoryGuide = data.villages.length > 5;
+  // Descriptive alt for the hero (search engines skip empty-alt images when
+  // choosing result thumbnails), same as the beaches page.
+  const heroImageAlt =
+    data.villages.find((village) => village.image === data.hero.image)?.imageAlt ??
+    data.hero.title;
 
   return (
     <main className="overflow-hidden bg-[#f7efe5] text-[#2f261f]">
@@ -262,7 +267,7 @@ export function ChiosVillagesPageTailwind({ data }: ChiosVillagesPageProps) {
       >
         <Image
           src={data.hero.image}
-          alt=""
+          alt={heroImageAlt}
           fill
           priority
           sizes="100vw"
@@ -426,7 +431,7 @@ export function ChiosVillagesPageTailwind({ data }: ChiosVillagesPageProps) {
 
           <div className="relative">
             <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 xl:grid-cols-4" id="villages-list">
-              {data.villages.map((village) => (
+              {data.villages.map((village, index) => (
                 <PlaceCard
                   key={village.href}
                   href={village.href}
@@ -438,6 +443,8 @@ export function ChiosVillagesPageTailwind({ data }: ChiosVillagesPageProps) {
                   bottomBadge={village.region}
                   tags={village.badges}
                   ctaLabel={getExploreVillageLabel(language, village.title)}
+                  priority={index < 2}
+                  sizes="(min-width: 1280px) 25vw, (min-width: 768px) 50vw, 84vw"
                   className="w-[84vw] max-w-[360px] flex-none snap-start md:w-auto md:max-w-none"
                 />
               ))}
@@ -483,6 +490,44 @@ export function ChiosVillagesPageTailwind({ data }: ChiosVillagesPageProps) {
           </div>
         </div>
       </section>
+
+      {data.faq && !data.medievalGuide ? (
+        <section className="px-4 pb-12 md:px-6 md:pb-18" aria-labelledby="villages-faq-title">
+          <div className="mx-auto max-w-[1180px] rounded-[34px] border border-[#8e6607]/15 bg-white p-6 shadow-xl shadow-black/5 md:p-10">
+            <span className="text-xs font-black uppercase tracking-[0.16em] text-[#8e6607]">
+              {data.faq.kicker}
+            </span>
+            <h2
+              id="villages-faq-title"
+              className="mt-4 text-3xl font-black leading-none tracking-[-0.05em] text-[#2f261f] md:text-5xl"
+            >
+              {data.faq.title}
+            </h2>
+            <div className="mt-6 grid gap-3">
+              {data.faq.items.map((item, index) => (
+                <details
+                  className="group rounded-[22px] bg-[#fbf4e8] px-5 py-4 ring-1 ring-[#8e6607]/10"
+                  key={item.question}
+                  open={index === 0}
+                >
+                  <summary className="flex cursor-pointer list-none items-start justify-between gap-4 text-base font-black leading-7 text-[#2f261f] md:text-lg [&::-webkit-details-marker]:hidden">
+                    <h3 className="text-base font-black leading-7 md:text-lg">{item.question}</h3>
+                    <span
+                      className="mt-1 shrink-0 text-xl leading-none text-[#8e6607] transition group-open:rotate-45"
+                      aria-hidden="true"
+                    >
+                      +
+                    </span>
+                  </summary>
+                  <p className="mt-3 text-sm leading-7 text-[#5f5348] md:text-base md:leading-8">
+                    {item.answer}
+                  </p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       <section className="px-4 py-12 md:px-6 md:py-18" aria-labelledby="villages-stay-title">
         <div className="mx-auto max-w-[1180px]">

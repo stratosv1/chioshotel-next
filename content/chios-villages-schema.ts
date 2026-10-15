@@ -246,7 +246,9 @@ export function buildChiosVillagesSchema(data: ChiosVillagesPageData) {
     data.medievalGuide ? null : buildVillageGuideTipSchema(data),
     data.medievalGuide
       ? buildFaqSchema({ path: canonicalPath, questions: data.medievalGuide.faq.items })
-      : null,
+      : data.faq
+        ? buildFaqSchema({ path: canonicalPath, questions: data.faq.items })
+        : null,
     ...data.villages.map((village) =>
       buildVillagePlaceSchema(village, canonicalPath),
     ),

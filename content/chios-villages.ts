@@ -68,7 +68,14 @@ export type ChiosVillagesPageData = {
       label: string;
       href: string;
     };
-  };  /** Optional fortress-village guide (medieval villages category page). */
+  };
+  /** Optional FAQ (villages hub), rendered with FAQPage structured data. */
+  faq?: {
+    kicker: string;
+    title: string;
+    items: { question: string; answer: string }[];
+  };
+  /** Optional fortress-village guide (medieval villages category page). */
   medievalGuide?: MedievalGuide;
 };
 
@@ -95,7 +102,7 @@ export const chiosVillagesPageEn: ChiosVillagesPageData = {
     title: "Chios Villages Guide | Voulamandis House",
     description:
       "Explore beautiful villages in Chios, from Pyrgi and Mesta to Vessa, Olympoi, Volissos, Armolia and Lagada.",
-    ogImage: villageImages.lagada,
+    ogImage: villageImages.volissos,
   },
   hero: {
     kicker: "Chios villages guide",
@@ -256,6 +263,42 @@ export const chiosVillagesPageEn: ChiosVillagesPageData = {
       },
     ],
   },
+  faq: {
+    kicker: "Village FAQ",
+    title: "Chios villages: common questions",
+    items: [
+      {
+        question: "Which Chios villages are worth visiting?",
+        answer:
+          "The seven classic choices are Pyrgi with its black-and-white painted facades, medieval Mesta, quiet Vessa, Olympoi, Volissos with its castle in the northwest, Armolia for pottery and seaside Lagada for fish taverns.",
+      },
+      {
+        question: "Which are the mastic villages of Chios?",
+        answer:
+          "In south Chios, Pyrgi, Mesta, Olympoi and Vessa are the mastic villages most visitors combine in one route, with medieval layouts, narrow lanes and the island’s mastic tradition.",
+      },
+      {
+        question: "Can I see the villages in one day?",
+        answer:
+          "Not all of them. Plan by area: one day for the south (Pyrgi, Mesta, Olympoi, Vessa, with Armolia on the way), and a separate trip for Volissos in the northwest. Lagada is an easy half day northeast of Chios Town.",
+      },
+      {
+        question: "Do I need a car to visit the villages?",
+        answer:
+          "Yes, a car is the practical choice. The villages are spread across the island, and a car lets you combine villages, beaches and food stops at your own pace.",
+      },
+      {
+        question: "Where should I eat on a village day?",
+        answer:
+          "Lagada is known for its harbor fish taverns, while Volissos and the village squares of the south are good places to slow down for a local meal.",
+      },
+      {
+        question: "Where is a good base for exploring the villages?",
+        answer:
+          "Kambos, where Voulamandis House is, is close to Chios Town and the airport and on the way to the southern villages, so it works well as a base for village days.",
+      },
+    ],
+  },
   stay: {
     kicker: "Stay with local advice",
     title: "Explore Chios villages from Kambos",
@@ -278,7 +321,7 @@ export const chiosVillagesPageEl: ChiosVillagesPageData = {
     title: "Χωριά της Χίου | Voulamandis House",
     description:
       "Ανακαλύψτε τα χωριά της Χίου: Πυργί, Μεστά, Βέσσα, Ολύμποι, Βολισσός, Αρμόλια και Λαγκάδα.",
-    ogImage: villageImages.lagada,
+    ogImage: villageImages.volissos,
   },
   hero: {
     kicker: "Οδηγός χωριών Χίου",
@@ -439,6 +482,42 @@ export const chiosVillagesPageEl: ChiosVillagesPageData = {
       },
     ],
   },
+  faq: {
+    kicker: "Συχνές ερωτήσεις",
+    title: "Χωριά της Χίου: συχνές ερωτήσεις",
+    items: [
+      {
+        question: "Ποια χωριά της Χίου αξίζει να επισκεφθώ;",
+        answer:
+          "Οι επτά κλασικές επιλογές είναι το Πυργί με τα ασπρόμαυρα ξυστά, τα μεσαιωνικά Μεστά, η ήσυχη Βέσσα, οι Ολύμποι, η Βολισσός με το κάστρο στη βορειοδυτική Χίο, τα Αρμόλια για κεραμική και η παραθαλάσσια Λαγκάδα για ψαροταβέρνες.",
+      },
+      {
+        question: "Ποια είναι τα Μαστιχοχώρια της Χίου;",
+        answer:
+          "Στη νότια Χίο, το Πυργί, τα Μεστά, οι Ολύμποι και η Βέσσα είναι τα Μαστιχοχώρια που οι περισσότεροι επισκέπτες συνδυάζουν σε μία διαδρομή, με μεσαιωνική ρυμοτομία, στενά σοκάκια και την παράδοση της μαστίχας.",
+      },
+      {
+        question: "Μπορώ να δω τα χωριά σε μία μέρα;",
+        answer:
+          "Όχι όλα. Οργανώστε τα ανά περιοχή: μία μέρα για τα νότια (Πυργί, Μεστά, Ολύμποι, Βέσσα, με στάση στα Αρμόλια), και ξεχωριστή εκδρομή για τη Βολισσό στη βορειοδυτική Χίο. Η Λαγκάδα, βορειοανατολικά της πόλης, είναι εύκολη μισή μέρα.",
+      },
+      {
+        question: "Χρειάζομαι αυτοκίνητο για τα χωριά;",
+        answer:
+          "Ναι, το αυτοκίνητο είναι η πρακτική επιλογή. Τα χωριά βρίσκονται σε διαφορετικά σημεία του νησιού και με αυτοκίνητο συνδυάζετε χωριά, παραλίες και στάσεις για φαγητό με τον δικό σας ρυθμό.",
+      },
+      {
+        question: "Πού να φάω σε μια εκδρομή στα χωριά;",
+        answer:
+          "Η Λαγκάδα είναι γνωστή για τις ψαροταβέρνες στο λιμανάκι, ενώ η Βολισσός και οι πλατείες των νότιων χωριών είναι ιδανικές για ένα χαλαρό τοπικό γεύμα.",
+      },
+      {
+        question: "Πού να μείνω για να γυρίσω τα χωριά;",
+        answer:
+          "Ο Κάμπος, όπου βρίσκεται το Voulamandis House, είναι κοντά στην πόλη της Χίου και στο αεροδρόμιο και στον δρόμο προς τα νότια χωριά, οπότε είναι πρακτική βάση για εκδρομές στα χωριά.",
+      },
+    ],
+  },
   stay: {
     kicker: "Μείνετε με τοπική καθοδήγηση",
     title: "Εξερευνήστε τα χωριά της Χίου από τον Κάμπο",
@@ -461,7 +540,7 @@ export const chiosVillagesPageFr: ChiosVillagesPageData = {
     title: "Villages de Chios | Voulamandis House",
     description:
       "Explorez les villages de Chios, de Pyrgi et Mesta à Vessa, Olympoi, Volissos, Armolia et Lagada.",
-    ogImage: villageImages.lagada,
+    ogImage: villageImages.volissos,
   },
   hero: {
     kicker: "Guide des villages de Chios",
@@ -644,7 +723,7 @@ export const chiosVillagesPageDe: ChiosVillagesPageData = {
     title: "Dörfer auf Chios | Voulamandis House",
     description:
       "Entdecken Sie die Dörfer auf Chios: Pyrgi, Mesta, Vessa, Olympoi, Volissos, Armolia und Lagada.",
-    ogImage: villageImages.lagada,
+    ogImage: villageImages.volissos,
   },
   hero: {
     kicker: "Dorfführer für Chios",
@@ -827,7 +906,7 @@ export const chiosVillagesPageIt: ChiosVillagesPageData = {
     title: "Villaggi di Chios | Voulamandis House",
     description:
       "Scopri i villaggi di Chios, da Pyrgi e Mesta a Vessa, Olympoi, Volissos, Armolia e Lagada.",
-    ogImage: villageImages.lagada,
+    ogImage: villageImages.volissos,
   },
   hero: {
     kicker: "Guida ai villaggi di Chios",
@@ -1010,7 +1089,7 @@ export const chiosVillagesPageEs: ChiosVillagesPageData = {
     title: "Pueblos de Chios | Voulamandis House",
     description:
       "Explora los pueblos de Chios: Pyrgi, Mesta, Vessa, Olympoi, Volissos, Armolia y Lagada.",
-    ogImage: villageImages.lagada,
+    ogImage: villageImages.volissos,
   },
   hero: {
     kicker: "Guía de pueblos de Chios",
@@ -1193,7 +1272,7 @@ export const chiosVillagesPageTr: ChiosVillagesPageData = {
     title: "Sakız Adası Köyleri | Voulamandis House",
     description:
       "Sakız Adası köylerini keşfedin: Pyrgi, Mesta, Vessa, Olympoi, Volissos, Armolia ve Lagada.",
-    ogImage: villageImages.lagada,
+    ogImage: villageImages.volissos,
   },
   hero: {
     kicker: "Sakız Adası köy rehberi",

@@ -434,6 +434,7 @@ export function getVillageCategoryPage(category: VillageCategoryKey, locale: Lan
 
   return {
     ...base,
+    faq: undefined,
     seo: {
       canonicalPath: villageCategoryPaths[category][locale],
       title: medievalGuide?.seo.title ?? copy.seoTitle,
