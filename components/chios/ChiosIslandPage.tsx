@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { roomFinderHrefForLanguage } from "@/lib/room-finder-cta-routing";
 import { ChiosCollectionImageGallery } from "@/components/chios/ChiosCollectionImageGallery";
 import type { ChiosIslandPageData } from "@/content/chios-island";
 
@@ -24,7 +25,7 @@ const chiosIslandUiByLocale: Record<string, ChiosIslandUiText> = {
     quizKicker: "Chios quiz",
     quickActionsAriaLabel: "Quick actions",
     whatsapp: "WhatsApp",
-    bookNow: "Book now",
+    bookNow: "Check availability",
   },
   el: {
     heroImageAlt: "Η αυλή του Voulamandis House με την πέργκολα και το κόκκινο μαγγάνι στον Κάμπο της Χίου",
@@ -33,7 +34,7 @@ const chiosIslandUiByLocale: Record<string, ChiosIslandUiText> = {
     quizKicker: "Κουίζ για τη Χίο",
     quickActionsAriaLabel: "Γρήγορες ενέργειες",
     whatsapp: "WhatsApp",
-    bookNow: "Κάντε κράτηση",
+    bookNow: "Έλεγχος διαθεσιμότητας",
   },
   fr: {
     heroImageAlt: "Cour de Voulamandis House avec pergola et roue à eau rouge à Kambos, Chios",
@@ -42,7 +43,7 @@ const chiosIslandUiByLocale: Record<string, ChiosIslandUiText> = {
     quizKicker: "Quiz sur Chios",
     quickActionsAriaLabel: "Actions rapides",
     whatsapp: "WhatsApp",
-    bookNow: "Réserver",
+    bookNow: "Disponibilités",
   },
   de: {
     heroImageAlt: "Innenhof des Voulamandis House mit Pergola und rotem Wasserrad in Kambos, Chios",
@@ -51,7 +52,7 @@ const chiosIslandUiByLocale: Record<string, ChiosIslandUiText> = {
     quizKicker: "Chios-Quiz",
     quickActionsAriaLabel: "Schnellaktionen",
     whatsapp: "WhatsApp",
-    bookNow: "Jetzt buchen",
+    bookNow: "Verfügbarkeit",
   },
   it: {
     heroImageAlt: "Cortile di Voulamandis House con pergolato e ruota idraulica rossa a Kambos, Chios",
@@ -60,7 +61,7 @@ const chiosIslandUiByLocale: Record<string, ChiosIslandUiText> = {
     quizKicker: "Quiz su Chios",
     quickActionsAriaLabel: "Azioni rapide",
     whatsapp: "WhatsApp",
-    bookNow: "Prenota ora",
+    bookNow: "Disponibilità",
   },
   es: {
     heroImageAlt: "Patio de Voulamandis House con pérgola y noria roja en Kambos, Quíos",
@@ -69,7 +70,7 @@ const chiosIslandUiByLocale: Record<string, ChiosIslandUiText> = {
     quizKicker: "Quiz sobre Quíos",
     quickActionsAriaLabel: "Acciones rápidas",
     whatsapp: "WhatsApp",
-    bookNow: "Reservar ahora",
+    bookNow: "Disponibilidad",
   },
   tr: {
     heroImageAlt: "Voulamandis House’un pergolalı avlusu ve kırmızı su çarkı, Kambos, Sakız Adası",
@@ -78,7 +79,7 @@ const chiosIslandUiByLocale: Record<string, ChiosIslandUiText> = {
     quizKicker: "Sakız Adası testi",
     quickActionsAriaLabel: "Hızlı işlemler",
     whatsapp: "WhatsApp",
-    bookNow: "Şimdi rezervasyon yap",
+    bookNow: "Müsaitlik",
   },
 };
 
@@ -292,8 +293,8 @@ export function ChiosIslandPage({ data }: ChiosIslandPageProps) {
           💬 {ui.whatsapp}
         </a>
 
-        <a className="inline-flex min-h-12 items-center justify-center rounded-xl bg-[#a87842] px-3 text-xs font-black uppercase tracking-[0.08em] text-white" href={data.sticky.bookingHref}>
-          🏨 {ui.bookNow}
+        <a className="inline-flex min-h-12 items-center justify-center rounded-xl bg-[#a87842] px-3 text-xs font-black uppercase tracking-[0.08em] text-white" href={roomFinderHrefForLanguage(getChiosIslandLocale(data.seo.canonicalPath))}>
+          {ui.bookNow}
         </a>
       </div>
     </main>
