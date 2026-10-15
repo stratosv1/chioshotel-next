@@ -280,7 +280,7 @@ export const agentRoomGuideCopy: Record<LanguageCode, AgentRoomGuideCopy> = {
       extraBedAvailable: "Δυνατότητα extra bed για 5ο άτομο",
       allocation: "Κατανομή",
       selectRoom: "Επιλογή δωματίου",
-      roomSelected: "Επιλεγμένο δωμάτιο",
+      roomSelected: "Επιλέχθηκε",
       guestsStaying: "Άτομα που θα μείνουν στο δωμάτιο",
       max: "Max",
       extraBedRequired: "Απαιτείται extra bed για το 5ο άτομο.",

@@ -9,7 +9,6 @@ import {
   BedDouble,
   Building2,
   Check,
-  ChevronLeft,
   ChevronRight,
   CircleCheck,
   Copy,
@@ -26,14 +25,11 @@ import {
 } from "lucide-react";
 import type { LanguageCode } from "@/lib/languages";
 import {
-  agentLanguageNames,
-  agentRoomGuidePaths,
   type AgentRoomGuideCopy,
 } from "@/content/agent-room-guide";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { ChiosCollectionImageGallery } from "@/components/chios/ChiosCollectionImageGallery";
 import {
   fillAgentTemplate,
@@ -85,7 +81,6 @@ type Props = {
 
 const CONTACT_EMAIL = "chioshotel@gmail.com";
 const WHATSAPP_PHONE = "306944474226";
-const LANGUAGES: LanguageCode[] = ["en", "el", "fr", "de", "it", "es", "tr"];
 
 const ICONS: Record<string, LucideIcon> = {
   users: Users,
@@ -183,28 +178,28 @@ function PhotoGallery({
 
   return (
     <div className="min-w-0">
-      <div className="relative aspect-[4/3] overflow-hidden bg-stone-100 md:h-full md:min-h-[430px] md:aspect-auto">
+      <div className="relative aspect-[3/2] overflow-hidden bg-stone-100">
         <Image
           src={current}
           alt={photoAlt(room, copy, extras, activeIndex)}
           fill
-          sizes="(max-width: 767px) 88vw, 36vw"
+          sizes="(max-width: 639px) 92vw, (max-width: 1279px) 46vw, 31vw"
           className="object-cover"
         />
-        <Badge className="absolute left-4 top-4 border-white/60 bg-white/90 text-[#554a3d] shadow-sm backdrop-blur hover:bg-white/90">
+        <Badge className="absolute left-3 top-3 border-white/60 bg-white/90 text-[#554a3d] shadow-sm backdrop-blur hover:bg-white/90">
           {activeIndex + 1} / {room.gallery.length}
         </Badge>
-        <div className="absolute inset-x-0 bottom-0 flex gap-2 overflow-x-auto bg-gradient-to-t from-black/45 to-transparent p-3 pt-8 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="absolute inset-x-0 bottom-0 flex gap-1.5 overflow-x-auto bg-gradient-to-t from-black/45 to-transparent p-2.5 pt-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {room.gallery.map((photo, index) => (
             <Button
               type="button"
               variant="outline"
               key={`${room.roomNumber}-${photo}`}
               onClick={() => onSelect(index)}
-              className={`relative h-14 w-20 shrink-0 overflow-hidden rounded-lg border-2 p-0 shadow-sm ${index === activeIndex ? "border-white" : "border-white/55 opacity-85"}`}
+              className={`relative h-9 w-12 shrink-0 overflow-hidden rounded-md border-2 p-0 shadow-sm ${index === activeIndex ? "border-white" : "border-white/55 opacity-85"}`}
               aria-label={`${roomName(room, copy)} ${copy.labels.photo} ${index + 1}`}
             >
-              <Image src={photo} alt="" fill sizes="80px" className="object-cover" />
+              <Image src={photo} alt="" fill sizes="48px" className="object-cover" />
             </Button>
           ))}
         </div>
@@ -230,6 +225,7 @@ function kitchenText(room: AgentRoom, copy: AgentRoomGuideCopy, extras: AgentRoo
 
 export function AgentRoomsGuide({ language, copy, rooms, commonAmenities, extras, stats, faq }: Props) {
   const carouselRef = useRef<HTMLDivElement>(null);
+  const [activeRoom, setActiveRoom] = useState<number>(rooms[0]?.roomNumber ?? 1);
   const [selectedRooms, setSelectedRooms] = useState<number[]>([]);
   const [guestCounts, setGuestCounts] = useState<Record<number, string>>({});
   const [activePhotos, setActivePhotos] = useState<Record<number, number>>({});
@@ -297,24 +293,41 @@ export function AgentRoomsGuide({ language, copy, rooms, commonAmenities, extras
     setGuestCounts((current) => ({ ...current, [room.roomNumber]: String(clamped) }));
   }
 
+  function isCarousel() {
+    const carousel = carouselRef.current;
+    return Boolean(carousel && carousel.scrollWidth > carousel.clientWidth + 4);
+  }
+
+  function showRoom(roomNumber: number) {
+    const carousel = carouselRef.current;
+    const target = document.getElementById(`room-${roomNumber}`);
+    if (!carousel || !target) return;
+    carousel.scrollTo({ left: target.offsetLeft - carousel.offsetLeft - 16, behavior: "smooth" });
+    setActiveRoom(roomNumber);
+  }
+
+  function onCarouselScroll() {
+    const carousel = carouselRef.current;
+    if (!carousel || !isCarousel()) return;
+    const cards = Array.from(carousel.querySelectorAll<HTMLElement>("[data-room]"));
+    const center = carousel.scrollLeft + carousel.clientWidth / 2;
+    let best = cards[0];
+    for (const card of cards) {
+      if (Math.abs(card.offsetLeft - carousel.offsetLeft + card.offsetWidth / 2 - center) < Math.abs(best.offsetLeft - carousel.offsetLeft + best.offsetWidth / 2 - center)) best = card;
+    }
+    if (best) setActiveRoom(Number(best.dataset.room));
+  }
+
   function goToRoom(event: React.MouseEvent<HTMLAnchorElement>, roomNumber: number) {
     const target = document.getElementById(`room-${roomNumber}`);
     if (!target) return;
     event.preventDefault();
-    const carousel = carouselRef.current;
-    if (carousel && carousel.scrollWidth > carousel.clientWidth + 4) {
-      carousel.scrollTo({ left: target.offsetLeft - carousel.offsetLeft - 16, behavior: "smooth" });
-    }
-    const top = (carousel && carousel.scrollWidth > carousel.clientWidth + 4 ? carousel : target).getBoundingClientRect().top + window.scrollY - 88;
-    window.scrollTo({ top, behavior: "smooth" });
+    if (isCarousel()) showRoom(roomNumber);
+    const anchor = isCarousel() && carouselRef.current ? carouselRef.current : target;
+    window.scrollTo({ top: anchor.getBoundingClientRect().top + window.scrollY - 140, behavior: "smooth" });
     window.history.replaceState(null, "", `#room-${roomNumber}`);
   }
 
-  function scrollMobile(direction: -1 | 1) {
-    const element = carouselRef.current;
-    if (!element) return;
-    element.scrollBy({ left: direction * element.clientWidth * 0.92, behavior: "smooth" });
-  }
 
   async function copyAllocation() {
     if (!allocationText) return;
@@ -338,7 +351,7 @@ export function AgentRoomsGuide({ language, copy, rooms, commonAmenities, extras
   }
 
   return (
-    <main className="min-h-screen bg-[#f7f4ef] text-[#332d27]">
+    <main className={`min-h-screen bg-[#f7f4ef] text-[#332d27] ${selected.length ? "pb-36 lg:pb-24" : ""}`}>
       <section className="border-b border-[#ded5c9] bg-[#eee7de]">
         <div className="mx-auto max-w-[1500px] px-4 py-8 sm:px-6 md:py-11 lg:px-8">
           <div className="grid gap-7 lg:grid-cols-[minmax(0,1.35fr)_minmax(320px,.65fr)] lg:items-end">
@@ -353,20 +366,6 @@ export function AgentRoomsGuide({ language, copy, rooms, commonAmenities, extras
                   <Users className="h-3.5 w-3.5" />
                   {copy.hero.noPrices}
                 </Badge>
-              </div>
-              <div className="flex flex-wrap gap-1.5 lg:justify-end" aria-label={copy.labels.language}>
-                {LANGUAGES.map((code) => (
-                  <a key={code} href={agentRoomGuidePaths[code]} hrefLang={code}>
-                    <Badge
-                      variant={code === language ? "default" : "outline"}
-                      className={code === language
-                        ? "border-[#6e5f50] bg-[#6e5f50] px-2.5 py-1.5 text-[11px] text-white hover:bg-[#6e5f50]"
-                        : "border-[#cfc3b5] bg-transparent px-2.5 py-1.5 text-[11px] text-[#65594c] hover:border-[#9c8974]"}
-                    >
-                      {agentLanguageNames[code]}
-                    </Badge>
-                  </a>
-                ))}
               </div>
             </div>
           </div>
@@ -425,30 +424,10 @@ export function AgentRoomsGuide({ language, copy, rooms, commonAmenities, extras
         </dl>
       </section>
 
-      <section className="mx-auto max-w-[1500px] px-4 pt-8 md:px-6 lg:px-8" aria-labelledby="agent-overview-title">
+      <section className="mx-auto hidden max-w-[1500px] px-4 pt-8 md:block md:px-6 lg:px-8" aria-labelledby="agent-overview-title">
         <h2 id="agent-overview-title" className="text-lg font-bold text-[#3d352e] md:text-xl">{extras.overview.title}</h2>
         <p className="mt-1 text-xs leading-5 text-[#7a7066] md:text-sm">{extras.overview.intro}</p>
-        <ul className="mt-4 grid grid-cols-[minmax(0,1fr)] gap-2 md:hidden">
-          {rooms.map((room) => (
-            <li key={room.roomNumber}>
-              <a href={`#room-${room.roomNumber}`} onClick={(event) => goToRoom(event, room.roomNumber)} className="flex min-w-0 items-center gap-3 rounded-2xl border border-[#e2d9ce] bg-white p-2.5 pr-3 shadow-[0_6px_18px_rgba(77,64,49,0.05)]">
-                <span className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-stone-100">
-                  {room.gallery[0] ? <Image src={room.gallery[0]} alt="" fill sizes="80px" className="object-cover" /> : null}
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="block text-sm font-bold text-[#3d342c]">{roomName(room, copy)}</span>
-                  <span className="block text-[11px] font-medium text-[#7a6c5d]">{roomCategory(room, copy)}</span>
-                  <span className="mt-0.5 block text-[11px] font-semibold text-[#5c5146]">
-                    {room.sizeM2} m² · {room.standardCapacity < room.maxGuests ? `${room.standardCapacity}–${room.maxGuests}` : room.maxGuests} {copy.labels.totalGuests} · {room.noStairs ? copy.labels.noStairs : copy.labels.firstFloor}
-                  </span>
-                  <span className="mt-0.5 block text-[11px] leading-4 text-[#766b60]">{bedsText(room, copy)}</span>
-                </span>
-                <ChevronRight className="h-4 w-4 shrink-0 text-[#857463]" aria-hidden="true" />
-              </a>
-            </li>
-          ))}
-        </ul>
-        <div className="mt-4 hidden overflow-x-auto rounded-2xl border border-[#ded5c9] bg-white shadow-[0_8px_26px_rgba(77,64,49,0.06)] md:block">
+        <div className="mt-4 overflow-x-auto rounded-2xl border border-[#ded5c9] bg-white shadow-[0_8px_26px_rgba(77,64,49,0.06)]">
           <table className="w-full min-w-[860px] border-collapse text-left text-xs text-[#4f453b]">
             <thead className="bg-[#f2ece4] text-[11px] uppercase tracking-[0.08em] text-[#6f6152]">
               <tr>
@@ -496,23 +475,27 @@ export function AgentRoomsGuide({ language, copy, rooms, commonAmenities, extras
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1500px] py-6 md:px-6 md:py-9 lg:px-8">
-        <div className="mb-5 flex items-center justify-between px-4 md:px-0">
-          <div>
-            <h2 className="text-lg font-bold text-[#3d352e]">{copy.labels.roomsTitle}</h2>
-            <p className="mt-0.5 text-xs text-[#7a7066] md:hidden">{copy.labels.swipe}</p>
-          </div>
-          <div className="flex gap-2 md:hidden">
-            <Button type="button" variant="ghost" size="icon" onClick={() => scrollMobile(-1)} className="rounded-full text-[#5d5144]" aria-label={copy.labels.previousRoom}>
-              <ChevronLeft className="h-5 w-5" />
-            </Button>
-            <Button type="button" variant="ghost" size="icon" onClick={() => scrollMobile(1)} className="rounded-full text-[#5d5144]" aria-label={copy.labels.nextRoom}>
-              <ChevronRight className="h-5 w-5" />
-            </Button>
-          </div>
-        </div>
+      <section className="mx-auto max-w-[1500px] px-4 py-8 md:px-6 md:py-10 lg:px-8" aria-labelledby="agent-rooms-title">
+        <h2 id="agent-rooms-title" className="text-lg font-bold text-[#3d352e] md:text-xl">{copy.labels.roomsTitle}</h2>
 
-        <div ref={carouselRef} className="flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:block md:space-y-8 md:overflow-visible md:px-0">
+        <p className="mt-0.5 text-xs text-[#7a7066] sm:hidden">{copy.labels.swipe}</p>
+        <div className="mt-3 flex gap-1.5 overflow-x-auto pb-1 [scrollbar-width:none] sm:hidden [&::-webkit-scrollbar]:hidden">
+          {rooms.map((room) => (
+            <button
+              type="button"
+              key={room.roomNumber}
+              onClick={() => showRoom(room.roomNumber)}
+              className={`shrink-0 rounded-full border px-3 py-1.5 text-xs font-bold ${activeRoom === room.roomNumber ? "border-[#6e5f50] bg-[#6e5f50] text-white" : selectedRooms.includes(room.roomNumber) ? "border-[#8b765f] bg-[#f2ece4] text-[#4f4336]" : "border-[#d4c8ba] bg-white text-[#5d5144]"}`}
+            >
+              {roomName(room, copy)}
+            </button>
+          ))}
+        </div>
+        <div
+          ref={carouselRef}
+          onScroll={onCarouselScroll}
+          className="-mx-4 mt-3 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none] sm:mx-0 sm:mt-4 sm:grid sm:grid-cols-2 sm:gap-4 sm:overflow-visible sm:px-0 sm:pb-0 xl:grid-cols-3 [&::-webkit-scrollbar]:hidden"
+        >
           {rooms.map((room) => {
             const isSelected = selectedRooms.includes(room.roomNumber);
             const assigned = Number(guestCounts[room.roomNumber] || 0);
@@ -520,27 +503,25 @@ export function AgentRoomsGuide({ language, copy, rooms, commonAmenities, extras
             const capacityText = room.standardCapacity < room.maxGuests
               ? format(copy.labels.standardMax, { standard: room.standardCapacity, max: room.maxGuests })
               : format(copy.labels.upToGuests, { count: room.maxGuests });
-            const details = [
+            const chips = [
               { icon: "users", label: capacityText },
-              { icon: "floor", label: floorText(room, copy) },
-              { icon: "stairs", label: room.noStairs ? copy.labels.noStairs : copy.labels.stairsRequired },
               { icon: "size", label: `${room.sizeM2} m²` },
+              { icon: room.noStairs ? "floor" : "stairs", label: `${floorText(room, copy)} · ${room.noStairs ? copy.labels.noStairs : copy.labels.stairsRequired}` },
               { icon: "bed", label: spacesText(room.spaceLayout, copy) },
-            ];
-            const roomAmenities = [
               room.hasFullKitchen ? { icon: "kitchen", label: copy.labels.fullKitchen } : null,
               room.hasKitchenette ? { icon: "kitchen", label: copy.labels.kitchenette } : null,
               room.hasBalcony ? { icon: "balcony", label: copy.labels.privateBalcony } : null,
               room.hasUpperFloorView ? { icon: "view", label: copy.labels.upperFloorView } : null,
               room.hasGardenView ? { icon: "view", label: copy.labels.gardenView } : null,
-              room.extraBedAvailable ? { icon: "bed", label: copy.labels.extraBedAvailable } : null,
             ].filter(Boolean) as { icon: string; label: string }[];
+            const note = room.roomNumber === 1 ? copy.labels.roomOneNote : room.roomNumber === 10 ? copy.labels.roomTenNote : null;
 
             return (
               <Card
                 key={room.roomNumber}
                 id={`room-${room.roomNumber}`}
-                className={`scroll-mt-24 min-w-[88vw] snap-center overflow-hidden rounded-[24px] border bg-white p-0 transition md:min-w-0 md:grid md:grid-cols-[minmax(300px,38%)_1fr_230px] ${isSelected ? "border-[#8b765f] shadow-[0_12px_36px_rgba(89,72,54,0.12)] ring-1 ring-[#8b765f]/20" : "border-[#ded5c9] shadow-[0_8px_26px_rgba(77,64,49,0.06)]"}`}
+                data-room={room.roomNumber}
+                className={`flex w-[86vw] max-w-[380px] shrink-0 snap-center self-start sm:self-auto scroll-mt-24 flex-col overflow-hidden rounded-[22px] sm:w-auto sm:max-w-none border bg-white p-0 transition ${isSelected ? "border-[#8b765f] shadow-[0_12px_36px_rgba(89,72,54,0.14)] ring-1 ring-[#8b765f]/25" : "border-[#ded5c9] shadow-[0_8px_26px_rgba(77,64,49,0.06)]"}`}
               >
                 <PhotoGallery
                   room={room}
@@ -550,89 +531,53 @@ export function AgentRoomsGuide({ language, copy, rooms, commonAmenities, extras
                   onSelect={(index) => setActivePhotos((current) => ({ ...current, [room.roomNumber]: index }))}
                 />
 
-                <div className="px-5 py-6 md:px-7 md:py-7">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <Badge className="bg-[#ece4da] px-2.5 py-1 text-[11px] uppercase tracking-[0.12em] text-[#68594a] hover:bg-[#ece4da]">{copy.labels.room} {room.roomNumber}</Badge>
-                    {room.isEconomy ? <Badge variant="outline" className="border-[#ddd2c4] px-2.5 py-1 text-[11px] text-[#756858]">{copy.labels.economy}</Badge> : null}
+                <div className="flex flex-1 flex-col p-4 md:p-5">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <h3 className="text-lg font-semibold tracking-tight text-[#342d27]">{roomName(room, copy)}</h3>
+                      <p className="text-xs font-medium text-[#756858]">{roomCategory(room, copy)}</p>
+                    </div>
+                    {room.isEconomy ? <Badge variant="outline" className="shrink-0 border-[#ddd2c4] px-2 py-0.5 text-[10px] text-[#756858]">{copy.labels.economy}</Badge> : null}
                   </div>
-                  <h3 className="mt-2 text-2xl font-semibold tracking-tight text-[#342d27]">{roomName(room, copy)}</h3>
-                  <p className="mt-1 text-sm font-medium text-[#756858]">{roomCategory(room, copy)}</p>
 
-                  <div className="mt-6 grid gap-x-6 gap-y-3 sm:grid-cols-2 xl:grid-cols-3">
-                    {details.map((detail) => (
-                      <div key={`${detail.icon}-${detail.label}`} className="flex items-center gap-2 text-xs font-semibold leading-5 text-[#5c5146]">
-                        <FeatureIcon type={detail.icon} className="h-4 w-4 shrink-0 text-[#766553]" />
-                        <span>{detail.label}</span>
-                      </div>
+                  <p className="mt-3 flex items-start gap-2 text-sm font-semibold leading-5 text-[#3f3730]">
+                    <BedDouble className="mt-0.5 h-4 w-4 shrink-0 text-[#766553]" aria-hidden="true" />
+                    <span><span className="sr-only">{copy.labels.beds}: </span>{bedsText(room, copy)}</span>
+                  </p>
+                  {note ? <p className="mt-1 pl-6 text-[11px] leading-4 text-[#7a6f64]">{note}</p> : null}
+
+                  <ul className="mb-4 mt-3 flex flex-wrap gap-1.5">
+                    {chips.map((chip) => (
+                      <li key={chip.label} className="inline-flex items-center gap-1.5 rounded-full bg-[#f4efe8] px-2.5 py-1 text-[11px] font-semibold text-[#5c5146]">
+                        <FeatureIcon type={chip.icon} className="h-3.5 w-3.5 shrink-0 text-[#847563]" />
+                        {chip.label}
+                      </li>
                     ))}
-                  </div>
+                  </ul>
 
-                  <div className="mt-6 border-t border-[#eee7df] pt-5">
-                    <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.11em] text-[#7a6c5d]"><BedDouble className="h-4 w-4" /> {copy.labels.beds}</p>
-                    <p className="mt-1.5 text-[15px] font-semibold leading-6 text-[#3f3730]">{bedsText(room, copy)}</p>
-                    {room.roomNumber === 1 ? <p className="mt-1 text-xs leading-5 text-[#766b60]">{copy.labels.roomOneNote}</p> : null}
-                    {room.roomNumber === 10 ? <p className="mt-1 text-xs leading-5 text-[#766b60]">{copy.labels.roomTenNote}</p> : null}
-                  </div>
-
-                  <div className="mt-5 grid gap-5 border-t border-[#eee7df] pt-5 lg:grid-cols-2">
-                    <div>
-                      <p className="text-xs font-bold uppercase tracking-[0.11em] text-[#7a6c5d]">{copy.labels.specificFeatures}</p>
-                      <div className="mt-2 flex flex-wrap gap-x-3 gap-y-2">
-                        {roomAmenities.length ? roomAmenities.map((item) => (
-                          <span key={item.label} className="inline-flex items-center gap-1.5 text-xs font-medium text-[#5f5448]">
-                            <FeatureIcon type={item.icon} className="h-3.5 w-3.5 text-[#847563]" />{item.label}
-                          </span>
-                        )) : <span className="text-xs text-[#7a7066]">{copy.labels.standardOnly}</span>}
-                      </div>
-                    </div>
-                    <div>
-                      <p className="text-xs font-bold uppercase tracking-[0.11em] text-[#7a6c5d]">{copy.labels.standardAmenities}</p>
-                      <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-2">
-                        {commonAmenities.map((amenity) => (
-                          <div key={`${room.roomNumber}-${amenity.key}`} className="flex items-center gap-1.5 text-[11px] font-medium text-[#6a6056]">
-                            <FeatureIcon type={amenity.key} className="h-3.5 w-3.5 text-[#847563]" />
-                            {copy.amenities[amenity.key] || amenity.label}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <aside className={`border-t border-[#e8e0d7] px-5 py-5 transition-colors md:border-l md:border-t-0 md:px-5 md:py-7 ${isSelected ? "bg-[#f2ece4]" : "bg-[#fbf9f6]"}`}>
-                  <div className="md:sticky md:top-24">
-                    <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#746657]">{copy.labels.allocation}</p>
+                  <div className="mt-auto flex items-center gap-2 border-t border-[#eee7df] pt-4">
                     <Button
                       type="button"
                       variant={isSelected ? "default" : "outline"}
                       onClick={() => toggleRoom(room)}
-                      className={`mt-4 h-12 w-full rounded-xl text-sm font-bold ${isSelected ? "bg-[#6e5f50] text-white hover:bg-[#5d5043]" : "border-[#cfc3b5] bg-transparent text-[#554a3f] hover:border-[#9c8974] hover:bg-white"}`}
+                      aria-pressed={isSelected}
+                      className={`h-11 min-w-0 flex-1 rounded-xl px-3 text-sm font-bold ${isSelected ? "bg-[#6e5f50] text-white hover:bg-[#5d5043]" : "border-[#cfc3b5] bg-transparent text-[#554a3f] hover:border-[#9c8974] hover:bg-[#fbf9f6]"}`}
                     >
-                      {isSelected ? <Check className="h-4 w-4" /> : <CircleCheck className="h-4 w-4" />}
-                      {isSelected ? copy.labels.roomSelected : copy.labels.selectRoom}
+                      {isSelected ? <Check className="h-4 w-4 shrink-0" /> : <CircleCheck className="h-4 w-4 shrink-0" />}
+                      <span className="truncate">{isSelected ? copy.labels.roomSelected : copy.labels.selectRoom}</span>
                     </Button>
-
-                    <label className="mt-5 block">
-                      <span className="mb-2 block text-xs font-semibold text-[#6c6054]">{copy.labels.guestsStaying}</span>
-                      <div className="flex items-center gap-3">
-                        <Input
-                          type="number"
-                          inputMode="numeric"
-                          min={1}
-                          max={room.maxGuests}
-                          disabled={!isSelected}
-                          value={isSelected ? guestCounts[room.roomNumber] ?? "" : ""}
-                          onChange={(event) => updateGuests(room, event.target.value)}
-                          placeholder="—"
-                          className="h-12 w-20 rounded-xl border-[#cfc4b7] bg-white text-center text-lg font-bold text-[#40362e] focus-visible:ring-[#796754]/30"
-                        />
-                        <span className="text-xs leading-5 text-[#756a5f]">{copy.labels.max}<br/><strong className="text-[#4d4339]">{room.maxGuests}</strong></span>
+                    {isSelected ? (
+                      <div className="flex h-11 shrink-0 items-center rounded-xl border border-[#cfc4b7] bg-white" role="group" aria-label={copy.labels.guestsStaying}>
+                        <button type="button" onClick={() => updateGuests(room, String(Math.max(1, (assigned || 1) - 1)))} className="h-full w-8 text-lg font-bold text-[#5d5144] disabled:opacity-30" disabled={assigned <= 1} aria-label="−">−</button>
+                        <span className="min-w-[2.25rem] whitespace-nowrap text-center text-sm font-bold text-[#40362e]">
+                          {assigned || 1}<span className="text-[11px] font-medium text-[#8a7e72]">/{room.maxGuests}</span>
+                        </span>
+                        <button type="button" onClick={() => updateGuests(room, String(Math.min(room.maxGuests, (assigned || 1) + 1)))} className="h-full w-8 text-lg font-bold text-[#5d5144] disabled:opacity-30" disabled={assigned >= room.maxGuests} aria-label="+">+</button>
                       </div>
-                    </label>
-
-                    {needsExtraBed ? <p className="mt-4 border-l-2 border-[#cdb58f] pl-3 text-xs font-semibold leading-5 text-[#69563d]">{copy.labels.extraBedRequired}</p> : null}
+                    ) : null}
                   </div>
-                </aside>
+                  {needsExtraBed ? <p className="mt-2 border-l-2 border-[#cdb58f] pl-3 text-[11px] font-semibold leading-4 text-[#69563d]">{copy.labels.extraBedRequired}</p> : null}
+                </div>
               </Card>
             );
           })}
@@ -671,7 +616,7 @@ export function AgentRoomsGuide({ language, copy, rooms, commonAmenities, extras
         </div>
       </section>
 
-      <div className={`sticky bottom-0 z-30 border-t border-[#d7ccbf] bg-[#f7f2ec]/95 shadow-[0_-8px_26px_rgba(67,54,42,0.11)] backdrop-blur-lg transition ${selected.length ? "translate-y-0" : "pointer-events-none invisible translate-y-full"}`}>
+      <div className={`fixed inset-x-0 bottom-0 z-40 border-t border-[#d7ccbf] bg-[#f7f2ec]/95 shadow-[0_-8px_26px_rgba(67,54,42,0.11)] backdrop-blur-lg transition ${selected.length ? "translate-y-0" : "pointer-events-none invisible translate-y-full"}`}>
         <div className="mx-auto flex max-w-[1500px] flex-col gap-3 px-4 py-3 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
           <div className="min-w-0">
             <p className="text-sm font-bold text-[#433930]">{selected.length} {copy.labels.selectedRooms} · {totalGuests} {copy.labels.totalGuests}</p>
