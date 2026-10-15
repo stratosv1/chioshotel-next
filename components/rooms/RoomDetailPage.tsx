@@ -513,7 +513,9 @@ export function RoomDetailPage({ data, fromPriceLabel }: RoomDetailPageProps) {
               ? [{
                   image: image.src,
                   imageAlt: localizeImageAlt(room, image, language),
-                  title: localizeName(room.name, language),
+                  // Only a room's first photo carries its name, so two tiles
+                  // of the same room are not labelled twice.
+                  title: photoIndex === 0 ? localizeName(room.name, language) : "",
                   href: "#rd-individual-title",
                 }]
               : [];

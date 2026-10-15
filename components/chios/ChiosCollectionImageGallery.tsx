@@ -69,7 +69,7 @@ export function ChiosCollectionImageGallery({
             className={`group relative min-h-0 overflow-hidden rounded-[18px] md:rounded-[24px] ${
               index === 0 ? "row-span-2" : ""
             }`}
-            aria-label={item.title}
+            aria-label={item.title || item.imageAlt}
           >
             <Image
               src={item.image}
@@ -83,11 +83,13 @@ export function ChiosCollectionImageGallery({
               quality={78}
               className="object-cover transition-transform duration-500 motion-safe:group-hover:scale-[1.025]"
             />
-            <span
-              className={`absolute inset-x-2 bottom-2 truncate rounded-full px-3 py-1.5 text-[10px] font-black text-white shadow-lg ring-1 backdrop-blur-sm sm:text-xs ${labelClass}`}
-            >
-              {item.title}
-            </span>
+            {item.title ? (
+              <span
+                className={`absolute inset-x-2 bottom-2 truncate rounded-full px-3 py-1.5 text-[10px] font-black text-white shadow-lg ring-1 backdrop-blur-sm sm:text-xs ${labelClass}`}
+              >
+                {item.title}
+              </span>
+            ) : null}
           </a>
         ))}
       </div>
