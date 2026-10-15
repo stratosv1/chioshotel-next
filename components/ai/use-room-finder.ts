@@ -38,6 +38,7 @@ import {
   fetchLongStayDiscount,
   longStayDiscountMessage,
   stayExtensionButton,
+  stayExtensionDecline,
   stayExtensionMessage,
   type StayExtensionSuggestion,
 } from "./room-finder-long-stay";
@@ -463,6 +464,11 @@ const RETRY_SEARCH_LABEL: Record<RoomFinderLanguage, string> = {
 
 // Short replies that mean "try the same search again" after a failed live
 // check. Recognized without the AI, so a retry works even when it is down.
+// Short typed answers to the "one more night" offer.
+const EXTENSION_YES = /^(?:ναι|ναί|ok|οκ|εντάξει|ενταξει|σίγουρα|σιγουρα|yes|yeah|sure|ja|oui|sì|si|sí|evet|tamam)(?:[\s,!.]+[^\d]{0,24})?$/iu;
+const EXTENSION_NO = /^(?:όχι|οχι|no|nope|nein|non|hayır|hayir)(?:[\s,!.]+[^\d]{0,24})?$/iu;
+const STAY_EXTENSION_LOOKUP_TIMEOUT_MS = 6_000;
+
 const RETRY_WORDS = /^(?:ok(?:ay)?|ναι|οκ|εντάξει|ενταξει|ξανά|ξανα|(?:δοκίμασε|δοκιμασε|δοκιμάστε|δοκιμαστε|ψάξε|ψαξε|ψάξτε|ψαξτε)(?:\s+(?:ξανά|ξανα|πάλι|παλι))?|πάλι|παλι|(?:please\s+)?(?:try|search|check)(?:\s+it)?\s+again(?:\s+please)?|retry|again|yes|nochmal|noch\s*mal|erneut(?:\s+versuchen)?|ja|réessayer|reessayer|encore|oui|riprova|ancora|sì|si|de\s+nuevo|otra\s+vez|intentar\s+de\s+nuevo|tekrar(?:\s+dene)?|evet|tamam)[\s.!?]*$/iu;
 
 // One quiet automatic retry covers short inventory refreshes and network
@@ -575,6 +581,9 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   // from an older search is dropped.
   const searchSeq = useRef(0);
   const [stayExtension, setStayExtension] = useState<StayExtensionSuggestion | null>(null);
+  // Results held back while the guest answers the "one more night" offer.
+  const [heldResults, setHeldResults] = useState<{ content: string; staffContent: string; nights: number } | null>(null);
+  const declinedExtensionKey = useRef<string | null>(null);
   // Internal note attached to the next assistant message in the staff inbox
   // only (never shown to the guest), e.g. why a turn used the fallback.
   const pendingStaffNote = useRef<string | null>(null);
@@ -655,6 +664,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   function clearSearchSelectionState() {
     searchSeq.current += 1;
     setStayExtension(null);
+    setHeldResults(null);
     setOffers([]);
     setActiveGroup(0);
     setChoices([]);
@@ -972,17 +982,18 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   }
 
   // When one more night reaches a higher length-of-stay discount, check that
-  // the longer stay is actually bookable and tell the guest what it costs.
-  async function suggestStayExtension(searchDraft: BookingDraft, shownOffers: RoomOffer[], thisSearch: number) {
+  // the longer stay is actually bookable and what it would cost. Kept short:
+  // it runs before the results are shown.
+  async function findStayExtension(searchDraft: BookingDraft, shownOffers: RoomOffer[], thisSearch: number): Promise<StayExtensionSuggestion | null> {
     try {
       const info = await fetchLongStayDiscount(searchDraft.checkin, searchDraft.checkout);
-      if (!info?.nextTier || searchSeq.current !== thisSearch) return;
+      if (!info?.nextTier || searchSeq.current !== thisSearch) return null;
       const extraNights = info.nextTier.nights - info.nights;
-      if (extraNights !== 1) return;
+      if (extraNights !== 1) return null;
 
       const reference = shownOffers.find(offer => !offer.recoveryType && !offer.alternativeCheckin);
       const guests = searchDraft.groups[0] || 0;
-      if (!reference || !guests) return;
+      if (!reference || !guests) return null;
 
       const candidates: { checkin: string; checkout: string; direction: "later" | "earlier" }[] = [
         { checkin: searchDraft.checkin, checkout: shiftIsoDate(searchDraft.checkout, extraNights), direction: "later" },
@@ -1001,8 +1012,8 @@ export function useRoomFinder(language: RoomFinderLanguage) {
           lang: language,
           allowSplit: "0",
         });
-        const { response, payload } = await fetchJsonForSearch(`/api/ai-room-finder/availability?${query}`, FALLBACK_LOOKUP_TIMEOUT_MS);
-        if (searchSeq.current !== thisSearch) return;
+        const { response, payload } = await fetchJsonForSearch(`/api/ai-room-finder/availability?${query}`, STAY_EXTENSION_LOOKUP_TIMEOUT_MS);
+        if (searchSeq.current !== thisSearch) return null;
         if (!response.ok || !payload?.success || !Array.isArray(payload.offers)) continue;
         const offers = (payload.offers as RoomOffer[])
           .filter(offer => !offer.recoveryType && (!offer.maxGuests || offer.maxGuests >= guests));
@@ -1025,20 +1036,19 @@ export function useRoomFinder(language: RoomFinderLanguage) {
           extraCost: current ? Math.round((Number(pick.directTotal) - Number(current.directTotal)) * 100) / 100 : null,
           stay: stayLabel(candidate.checkin, candidate.checkout),
         };
-        setStayExtension(suggestion);
-        add("assistant", stayExtensionMessage(language, suggestion, value => euros(value, language)));
-        return;
+        return suggestion;
       }
     } catch (error) {
       console.warn("Room Finder stay-extension suggestion skipped", error);
     }
+    return null;
   }
 
-  // "Yes, add the night" button under the suggestion: searches the longer stay.
-  async function acceptStayExtension() {
+  // "Yes": searches the longer stay.
+  async function acceptStayExtension(typed?: string) {
     const suggestion = stayExtension;
     if (!suggestion || step !== "selecting") return;
-    if (!await beginUserTurn(stayExtensionButton(language, suggestion), "normal", "❤️")) return;
+    if (!await beginUserTurn(typed || stayExtensionButton(language, suggestion), "normal", "❤️")) return;
     try {
       const nextDraft: BookingDraft = {
         ...flow.draft,
@@ -1056,6 +1066,30 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     }
   }
 
+  // "No": shows the results that were held back for the original dates.
+  async function declineStayExtension(typed?: string) {
+    const held = heldResults;
+    if (!held || !stayExtension) return;
+    if (!await beginUserTurn(typed || stayExtensionDecline(language, held.nights), "normal", "👍")) return;
+    try {
+      declinedExtensionKey.current = `${flow.draft.checkin}:${flow.draft.checkout}`;
+      setStayExtension(null);
+      setHeldResults(null);
+      add("assistant", held.content, "offers", held.staffContent);
+    } finally {
+      endUserTurn();
+    }
+  }
+
+  // Any other message while the offer is open first releases the results.
+  function releaseHeldResults() {
+    const held = heldResults;
+    if (!held) return;
+    setStayExtension(null);
+    setHeldResults(null);
+    add("assistant", held.content, "offers", held.staffContent);
+  }
+
   async function runAvailabilitySearch(
     searchDraft: BookingDraft,
     roomInterest = preferredRoomNumber,
@@ -1067,6 +1101,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     searchSeq.current += 1;
     const thisSearch = searchSeq.current;
     setStayExtension(null);
+    setHeldResults(null);
     setFailedSearch(null);
     setUnavailableSearch(null);
     add("assistant", tone.searching);
@@ -1234,29 +1269,37 @@ export function useRoomFinder(language: RoomFinderLanguage) {
         }
       }
 
-      setOffers(resultOffers);
-      setActiveGroup(0);
-      dispatchFlow({
-        type: "commit_turn",
-        state: { step: "selecting", draft: searchDraft },
-      });
       const firstGroupOffers = sortOffersForPreferences(
         feasibleOffersForGroup(resultOffers, 0, new Set()),
         preferences,
         roomInterest,
         focusRooms,
       );
-      add(
-        "assistant",
-        content,
-        "offers",
-        staffOfferContent(content, [{
-          groupNumber: 1,
-          guests: searchDraft.groups[0] || 0,
-          offers: firstGroupOffers,
-        }], searchDraft),
-      );
-      if (singleRoom) void suggestStayExtension(searchDraft, firstGroupOffers, thisSearch);
+      const staffContent = staffOfferContent(content, [{
+        groupNumber: 1,
+        guests: searchDraft.groups[0] || 0,
+        offers: firstGroupOffers,
+      }], searchDraft);
+      // Before the results: offer one more night when it unlocks a bigger
+      // discount (unless the guest already said no for these dates).
+      const extension = singleRoom && declinedExtensionKey.current !== `${searchDraft.checkin}:${searchDraft.checkout}`
+        ? await findStayExtension(searchDraft, firstGroupOffers, thisSearch)
+        : null;
+      if (searchSeq.current !== thisSearch) return;
+
+      setOffers(resultOffers);
+      setActiveGroup(0);
+      dispatchFlow({
+        type: "commit_turn",
+        state: { step: "selecting", draft: searchDraft },
+      });
+      if (extension) {
+        setStayExtension(extension);
+        setHeldResults({ content, staffContent, nights: daysBetweenIsoDates(searchDraft.checkin, searchDraft.checkout) });
+        add("assistant", stayExtensionMessage(language, extension, value => euros(value, language)));
+      } else {
+        add("assistant", content, "offers", staffContent);
+      }
     } catch (error) {
       console.error("Room Finder availability request failed", error);
       setOffers([]);
@@ -1453,6 +1496,18 @@ export function useRoomFinder(language: RoomFinderLanguage) {
 
     const current = step;
     setInput("");
+
+    if (heldResults && stayExtension && current === "selecting") {
+      if (EXTENSION_YES.test(value)) {
+        await acceptStayExtension(value);
+        return;
+      }
+      if (EXTENSION_NO.test(value)) {
+        await declineStayExtension(value);
+        return;
+      }
+      releaseHeldResults();
+    }
 
     if (failedSearch && current === "unavailable" && RETRY_WORDS.test(value)) {
       const retry = failedSearch;
@@ -1720,8 +1775,10 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     changeDates,
     changeGuests,
     acceptStayExtension,
-    stayExtension,
+    declineStayExtension,
+    extensionPending: Boolean(heldResults && stayExtension),
     stayExtensionLabel: stayExtension ? stayExtensionButton(language, stayExtension) : "",
+    stayExtensionDeclineLabel: heldResults ? stayExtensionDecline(language, heldResults.nights) : "",
     resultActions: RESULT_ACTIONS[language],
     unavailableSearch: step === "unavailable" ? unavailableSearch : null,
     canRetryAvailability: Boolean(failedSearch) && step === "unavailable",

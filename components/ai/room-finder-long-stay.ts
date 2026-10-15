@@ -71,23 +71,36 @@ export type StayExtensionSuggestion = {
   stay: string;
 };
 
-// Shown under the results when one more night reaches a higher length-of-stay
-// discount (2 → 3, 4 → 5, 6 → 7 nights).
+// Asked before the results when one more night reaches a higher
+// length-of-stay discount (2 → 3, 4 → 5, 6 → 7 nights).
 export function stayExtensionMessage(language: RoomFinderLanguage, s: StayExtensionSuggestion, money: (value: number) => string) {
   const from = percent(s.fromPercent);
   const to = percent(s.toPercent);
   const total = money(s.newTotal);
   const extra = s.extraCost !== null && s.extraCost > 0 ? money(s.extraCost) : null;
   const messages: Record<RoomFinderLanguage, string> = {
-    el: `💡 Αν ${s.direction === "later" ? "μείνετε 1 νύχτα ακόμα" : "έρθετε 1 μέρα νωρίτερα"} (${s.stay}, ${s.nights} νύχτες), η έκπτωση ανεβαίνει από ${from}% σε ${to}%. ${extra ? `Το ${s.room} θα κοστίζει ${total} συνολικά, δηλαδή η επιπλέον νύχτα μόνο ${extra}.` : `Π.χ. το ${s.room}: ${total} συνολικά.`}`,
-    en: `💡 If you ${s.direction === "later" ? "stay 1 more night" : "arrive 1 day earlier"} (${s.stay}, ${s.nights} nights), your discount goes up from ${from}% to ${to}%. ${extra ? `${s.room} would be ${total} in total, so the extra night costs just ${extra}.` : `For example, ${s.room}: ${total} in total.`}`,
-    de: `💡 Wenn Sie ${s.direction === "later" ? "1 Nacht länger bleiben" : "1 Tag früher anreisen"} (${s.stay}, ${s.nights} Nächte), steigt Ihr Rabatt von ${from}% auf ${to}%. ${extra ? `${s.room} kostet dann insgesamt ${total} – die zusätzliche Nacht nur ${extra}.` : `Zum Beispiel ${s.room}: insgesamt ${total}.`}`,
-    fr: `💡 Si vous ${s.direction === "later" ? "restez 1 nuit de plus" : "arrivez 1 jour plus tôt"} (${s.stay}, ${s.nights} nuits), votre réduction passe de ${from}% à ${to}%. ${extra ? `${s.room} coûterait ${total} au total : la nuit supplémentaire seulement ${extra}.` : `Par exemple, ${s.room} : ${total} au total.`}`,
-    it: `💡 Se ${s.direction === "later" ? "restate 1 notte in più" : "arrivate 1 giorno prima"} (${s.stay}, ${s.nights} notti), lo sconto sale dal ${from}% al ${to}%. ${extra ? `${s.room} costerebbe ${total} in totale: la notte in più solo ${extra}.` : `Ad esempio ${s.room}: ${total} in totale.`}`,
-    es: `💡 Si ${s.direction === "later" ? "se quedan 1 noche más" : "llegan 1 día antes"} (${s.stay}, ${s.nights} noches), el descuento sube del ${from}% al ${to}%. ${extra ? `${s.room} costaría ${total} en total: la noche extra solo ${extra}.` : `Por ejemplo, ${s.room}: ${total} en total.`}`,
-    tr: `💡 ${s.direction === "later" ? "1 gece daha kalırsanız" : "1 gün erken gelirseniz"} (${s.stay}, ${s.nights} gece) indiriminiz %${from} yerine %${to} olur. ${extra ? `${s.room} toplam ${total} olur; ek gece yalnızca ${extra}.` : `Örneğin ${s.room}: toplam ${total}.`}`,
+    el: `🎁 Προσφορά για εσάς: αν ${s.direction === "later" ? "μείνετε 1 νύχτα ακόμα" : "έρθετε 1 μέρα νωρίτερα"} (${s.stay}, ${s.nights} νύχτες), η συνολική σας έκπτωση ανεβαίνει από ${from}% σε ${to}%.\n${extra ? `Π.χ. στο ${s.room} η επιπλέον νύχτα κοστίζει μόνο ${extra} (${total} για ${s.nights} νύχτες).` : `Π.χ. το ${s.room}: ${total} για ${s.nights} νύχτες.`}\nΣας ενδιαφέρει;`,
+    en: `🎁 A special offer for you: if you ${s.direction === "later" ? "stay 1 more night" : "arrive 1 day earlier"} (${s.stay}, ${s.nights} nights), your total discount goes up from ${from}% to ${to}%.\n${extra ? `For example, in ${s.room} the extra night costs just ${extra} (${total} for ${s.nights} nights).` : `For example, ${s.room}: ${total} for ${s.nights} nights.`}\nWould you like that?`,
+    de: `🎁 Ein Angebot für Sie: Wenn Sie ${s.direction === "later" ? "1 Nacht länger bleiben" : "1 Tag früher anreisen"} (${s.stay}, ${s.nights} Nächte), steigt Ihr Gesamtrabatt von ${from}% auf ${to}%.\n${extra ? `Zum Beispiel kostet in ${s.room} die zusätzliche Nacht nur ${extra} (${total} für ${s.nights} Nächte).` : `Zum Beispiel ${s.room}: ${total} für ${s.nights} Nächte.`}\nInteressiert?`,
+    fr: `🎁 Une offre pour vous : si vous ${s.direction === "later" ? "restez 1 nuit de plus" : "arrivez 1 jour plus tôt"} (${s.stay}, ${s.nights} nuits), votre réduction totale passe de ${from}% à ${to}%.\n${extra ? `Par exemple, pour ${s.room}, la nuit supplémentaire ne coûte que ${extra} (${total} pour ${s.nights} nuits).` : `Par exemple, ${s.room} : ${total} pour ${s.nights} nuits.`}\nCela vous intéresse ?`,
+    it: `🎁 Un’offerta per voi: se ${s.direction === "later" ? "restate 1 notte in più" : "arrivate 1 giorno prima"} (${s.stay}, ${s.nights} notti), lo sconto totale sale dal ${from}% al ${to}%.\n${extra ? `Ad esempio, in ${s.room} la notte in più costa solo ${extra} (${total} per ${s.nights} notti).` : `Ad esempio ${s.room}: ${total} per ${s.nights} notti.`}\nVi interessa?`,
+    es: `🎁 Una oferta para usted: si ${s.direction === "later" ? "se queda 1 noche más" : "llega 1 día antes"} (${s.stay}, ${s.nights} noches), su descuento total sube del ${from}% al ${to}%.\n${extra ? `Por ejemplo, en ${s.room} la noche extra cuesta solo ${extra} (${total} por ${s.nights} noches).` : `Por ejemplo, ${s.room}: ${total} por ${s.nights} noches.`}\n¿Le interesa?`,
+    tr: `🎁 Size özel teklif: ${s.direction === "later" ? "1 gece daha kalırsanız" : "1 gün erken gelirseniz"} (${s.stay}, ${s.nights} gece) toplam indiriminiz %${from} yerine %${to} olur.\n${extra ? `Örneğin ${s.room} için ek gece yalnızca ${extra} (${s.nights} gece için ${total}).` : `Örneğin ${s.room}: ${s.nights} gece için ${total}.`}\nİlginizi çeker mi?`,
   };
   return messages[language];
+}
+
+export function stayExtensionDecline(language: RoomFinderLanguage, currentNights: number) {
+  const labels: Record<RoomFinderLanguage, string> = {
+    el: `Όχι, κρατάω ${currentNights} ${currentNights === 1 ? "νύχτα" : "νύχτες"}`,
+    en: `No, keep ${currentNights} ${currentNights === 1 ? "night" : "nights"}`,
+    de: `Nein, bei ${currentNights} ${currentNights === 1 ? "Nacht" : "Nächten"} bleiben`,
+    fr: `Non, garder ${currentNights} ${currentNights === 1 ? "nuit" : "nuits"}`,
+    it: `No, tengo ${currentNights} ${currentNights === 1 ? "notte" : "notti"}`,
+    es: `No, mantener ${currentNights} ${currentNights === 1 ? "noche" : "noches"}`,
+    tr: `Hayır, ${currentNights} gece kalsın`,
+  };
+  return labels[language];
 }
 
 export function stayExtensionButton(language: RoomFinderLanguage, s: StayExtensionSuggestion) {
