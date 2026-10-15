@@ -11,6 +11,7 @@ import {
 } from "./room-finder-copy";
 import { ChatMessage, IconReplies } from "./room-finder-chat-ui";
 import { RoomCarousel, type RoomOffer } from "./room-finder-carousel";
+import { RoomFinderWatchCard } from "./room-finder-watch-card";
 import { stayRange } from "./room-finder-format";
 import { SelectedRoomCard } from "./room-finder-selected-card";
 import { RoomFinderLeadCard, type LeadStatus } from "./room-finder-lead-card";
@@ -847,6 +848,20 @@ export function RoomFinderProduction({
                       {finder.retryLabel}
                     </button>
                   </div>
+                )}
+                {message.kind === "lead"
+                  && message.id === latestLeadMessageId
+                  && finder.unavailableSearch && (
+                  <RoomFinderWatchCard
+                    key={`${finder.unavailableSearch.checkin}:${finder.unavailableSearch.checkout}:${finder.unavailableSearch.groups.join(",")}`}
+                    language={language}
+                    checkin={finder.unavailableSearch.checkin}
+                    checkout={finder.unavailableSearch.checkout}
+                    groups={finder.unavailableSearch.groups}
+                    privacyShort={breakdownCopy.privacyShort}
+                    privacyMore={breakdownCopy.privacyMore}
+                    privacyNotice={contactCopy.privacyNotice}
+                  />
                 )}
                 {message.kind === "lead" && (
                   <RoomFinderLeadCard

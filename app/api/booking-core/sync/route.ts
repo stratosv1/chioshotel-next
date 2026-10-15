@@ -1,8 +1,24 @@
-import { NextRequest, NextResponse } from "next/server";
+import { after, NextRequest, NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
 import { scryptSync, timingSafeEqual } from "node:crypto";
 import { neon } from "@neondatabase/serverless";
 import { BOOKING_CORE_DEALS_CACHE_TAG } from "@/lib/booking-core/cache-tags";
+import { runAvailabilityWatchCheck } from "@/lib/ai-assistant/availability-watch";
+
+// After every successful sync, check Room Finder availability alerts against
+// the fresh inventory. Runs after the response, so the sync is never slowed.
+function scheduleAvailabilityWatchCheck() {
+  after(async () => {
+    try {
+      const result = await runAvailabilityWatchCheck();
+      if (result.checked || result.notified || result.expired) {
+        console.info(JSON.stringify({ level: "info", msg: "ai_room_finder_watch_check", trigger: "sync", ...result }));
+      }
+    } catch (error) {
+      console.error("AI Room Finder availability watch check after sync failed", error);
+    }
+  });
+}
 import {
   detectPriceChanges,
   retryPendingPricingAlert,
@@ -351,6 +367,7 @@ async function syncBookingCore(request: NextRequest) {
         )
       `;
 
+      scheduleAvailabilityWatchCheck();
       return NextResponse.json({
         ok: true,
         alreadyApplied: true,
@@ -412,6 +429,7 @@ async function syncBookingCore(request: NextRequest) {
       }
     }
 
+    scheduleAvailabilityWatchCheck();
     return NextResponse.json({
       ok: true,
       source,

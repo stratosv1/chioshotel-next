@@ -299,6 +299,9 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   // The last search that failed because live availability could not be
   // confirmed, so the guest can retry it without re-entering anything.
   const [failedSearch, setFailedSearch] = useState<{ draft: BookingDraft; roomInterest: number | null } | null>(null);
+  // The last search that found no rooms, for the "notify me if these dates
+  // open up" card.
+  const [unavailableSearch, setUnavailableSearch] = useState<BookingDraft | null>(null);
   const turnLocked = useRef(false);
   const languageRef = useRef(language);
   const announcedLongStayKey = useRef<string | null>(null);
@@ -459,6 +462,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     setPreferredRoomNumber(null);
     clearSearchSelectionState();
     setFailedSearch(null);
+    setUnavailableSearch(null);
     setTyping(false);
   }
 
@@ -648,6 +652,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       state: { step: "searching", draft: searchDraft },
     });
     setFailedSearch(null);
+    setUnavailableSearch(null);
     add("assistant", tone.searching);
     setTyping(true);
 
@@ -736,6 +741,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
           type: "commit_turn",
           state: { step: "unavailable", draft: searchDraft },
         });
+        setUnavailableSearch(searchDraft);
         add("assistant", tone.unavailable, "lead");
         return;
       }
@@ -1221,6 +1227,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     selectOffer,
     chooseBreakfast,
     retryAvailability,
+    unavailableSearch: step === "unavailable" ? unavailableSearch : null,
     canRetryAvailability: Boolean(failedSearch) && step === "unavailable",
     retryLabel: RETRY_SEARCH_LABEL[language],
   };

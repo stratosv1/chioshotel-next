@@ -107,7 +107,7 @@ export function setRoomFinderTrackingFacts(facts: RoomFinderTrackingFacts) {
   roomFinderTrackingFacts = facts;
 }
 
-function getRoomFinderSessionId() {
+export function getRoomFinderSessionId() {
   if (roomFinderSessionId) return roomFinderSessionId;
   const randomPart = typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
     ? crypto.randomUUID()
