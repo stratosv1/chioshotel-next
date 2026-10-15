@@ -2,6 +2,7 @@
 
 import { MessageCircle, Phone } from "lucide-react";
 import { useId, useState } from "react";
+import { trackLead } from "@/lib/analytics/lead";
 import type { RoomFinderLanguage } from "./room-finder-copy";
 
 // Shown under assistant messages that end the automated flow (no
@@ -217,6 +218,7 @@ export function RoomFinderLeadCard({
       });
       if (!response.ok) throw new Error(`Lead send failed: ${response.status}`);
       onStatusChange("sent");
+      trackLead("ai_room_finder_contact", { lead_channel: "email" });
     } catch (error) {
       console.error("Room Finder lead request failed", error);
       onStatusChange("error");

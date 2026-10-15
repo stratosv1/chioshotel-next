@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { trackLead } from "@/lib/analytics/lead";
 import type { HomePageData } from "@/content/home";
 import {
   firstAvailableDate,
@@ -840,6 +841,13 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
 
       setEmailState("sent");
       setEmailFeedback(copy.emailSent);
+      trackLead("live_deals_request", {
+        lead_channel: "email",
+        room_id: String(selectedRoom.roomId),
+        nights: selectedDates.length,
+        guests,
+        price_status: quote.status,
+      });
       setEmailOpen(false);
     } catch {
       setEmailState("error");

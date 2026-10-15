@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ArrowDown, ArrowLeft, CalendarDays, Check, ChevronDown, MessageCircle, Phone, RotateCcw, Send, Users } from "lucide-react";
 import { useEffect, useLayoutEffect, useRef, useState, type FormEvent } from "react";
+import { trackLead } from "@/lib/analytics/lead";
 import {
   ROOM_FINDER_COPY,
   ROOM_FINDER_LANGUAGES,
@@ -678,6 +679,7 @@ export function RoomFinderProduction({
       });
       if (!response.ok) throw new Error("Request send failed");
       setSendStatus("sent");
+      trackLead("ai_room_finder_request", { lead_channel: "email", nights: finder.nights, guests: finder.guestTotal });
     } catch {
       setSendStatus("error");
     }

@@ -38,6 +38,9 @@ export function ConsentAnalytics({ language: _language }: { language: LanguageCo
       <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="lazyOnload" />
       <Script id="ga4-init" strategy="afterInteractive">
         {`
+          if (window.location.hostname !== 'chioshotel.gr' || navigator.webdriver) {
+            window['ga-disable-${GA_ID}'] = true;
+          }
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           window.gtag = window.gtag || gtag;

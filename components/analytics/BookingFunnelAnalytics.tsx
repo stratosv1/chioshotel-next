@@ -59,7 +59,7 @@ function bookingEvent(anchor: HTMLAnchorElement | null, button: HTMLButtonElemen
   if (href.includes("rates") || href.includes("kratis") || href.includes("booking") || href.includes("beds24") || href.includes("rezerwacja")) return "begin_booking";
   if (/book|reserve|κρατ|réserv|buch|prenot|reservar|rezerv|rezerw/.test(label)) return "begin_booking";
   if (/availability|διαθεσιμό|disponibil|verfüg|disponib|müsait|dostępn/.test(label)) return "availability_search";
-  if (/interested|ενδιαφέρομαι|intéress|interess|interesado|ilgilen|zainteres/.test(label)) return "generate_lead";
+  if (/interested|ενδιαφέρομαι|intéress|interess|interesado|ilgilen|zainteres/.test(label)) return "lead_intent_click";
   if (/choose room|select room|επιλογή δωματίου|διάλεξε|zimmer wählen|choisir|wybierz pokój|znajdź pokój|zobacz pokój/.test(label)) return "select_room";
   return null;
 }
@@ -135,14 +135,9 @@ export function BookingFunnelAnalytics({ language, pathname }: { language: Langu
     function handleSubmit(event: SubmitEvent) {
       const form = event.target as HTMLFormElement | null;
       if (!form) return;
-      const signature = `generate_lead|${window.location.pathname}|${form.action}|${form.id}`;
+      const signature = `form_attempt|${window.location.pathname}|${form.action}|${form.id}`;
       if (!shouldSend(signature)) return;
-      emit("generate_lead", {
-        ...common(),
-        form_id: form.id || undefined,
-        form_action: form.action || undefined,
-        lead_type: "form_submit",
-      });
+      emit("form_attempt", { form_id: form.id || undefined });
     }
 
     document.addEventListener("click", handleClick);

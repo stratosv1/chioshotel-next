@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { heroImageAlt } from "@/lib/seo/hero-image-alt";
 import { useMemo, useState, type FormEvent } from "react";
+import { trackLead } from "@/lib/analytics/lead";
 import type { ContactPageData } from "@/content/contact";
 
 type ContactPageProps = { data: ContactPageData };
@@ -212,6 +213,7 @@ export function ContactPage({ data }: ContactPageProps) {
       }
 
       setFeedback(ui.feedback.success);
+      trackLead("contact_form", { lead_channel: "email" });
     } catch {
       setFeedback(ui.feedback.errorWhatsapp);
     }
