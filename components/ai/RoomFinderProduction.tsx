@@ -739,6 +739,18 @@ export function RoomFinderProduction({
   const RESULT_ACTION_CLASS = "flex min-h-[52px] min-w-0 flex-col items-center justify-center gap-1 rounded-2xl border border-[#e1d8cc] bg-white px-1.5 py-2 text-center text-[12.5px] font-bold leading-tight text-[#4a4339] shadow-sm transition hover:bg-[#fffaf4] active:scale-[.97] disabled:opacity-45";
   const resultActions = (showChanges: boolean) => (
     <div data-room-finder-result-actions="true" className="msg ml-10 mt-2">
+      {showChanges && finder.step === "selecting" && finder.stayExtension && (
+        <button
+          type="button"
+          data-room-finder-stay-extension="true"
+          disabled={resultActionsDisabled}
+          onClick={() => void finder.acceptStayExtension()}
+          className="mb-2 flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-[#b9c6aa] bg-[#eef4e7] px-4 py-2.5 text-center text-[14px] font-black leading-tight text-[#4f6539] shadow-sm transition hover:bg-[#e4eedb] active:scale-[.98] disabled:opacity-45"
+        >
+          <CalendarDays className="h-[18px] w-[18px] shrink-0" aria-hidden="true" />
+          <span>{finder.stayExtensionLabel}</span>
+        </button>
+      )}
       <div className={showChanges ? "grid grid-cols-3 gap-2" : "flex"}>
         {showChanges && (
           <>

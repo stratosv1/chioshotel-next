@@ -36,7 +36,8 @@ export async function GET(request: NextRequest) {
         'los_total_discount_1_2_nights',
         'los_total_discount_3_4_nights',
         'los_total_discount_5_6_nights',
-        'los_total_discount_7_plus_nights'
+        'los_total_discount_7_plus_nights',
+        'max_stay_nights'
       )
     `;
 
@@ -46,14 +47,26 @@ export async function GET(request: NextRequest) {
     }
 
     const standardDirectDiscountPercent = values.get("direct_discount_percent") ?? 10;
-    const key = nights <= 2
-      ? "los_total_discount_1_2_nights"
-      : nights <= 4
-        ? "los_total_discount_3_4_nights"
-        : nights <= 6
-          ? "los_total_discount_5_6_nights"
-          : "los_total_discount_7_plus_nights";
-    const totalDiscountPercent = values.get(key) ?? standardDirectDiscountPercent;
+    const discountFor = (stayNights: number) => {
+      const key = stayNights <= 2
+        ? "los_total_discount_1_2_nights"
+        : stayNights <= 4
+          ? "los_total_discount_3_4_nights"
+          : stayNights <= 6
+            ? "los_total_discount_5_6_nights"
+            : "los_total_discount_7_plus_nights";
+      return values.get(key) ?? standardDirectDiscountPercent;
+    };
+    const totalDiscountPercent = discountFor(nights);
+
+    // One more night that reaches a higher discount tier (e.g. 2 → 3 nights),
+    // so the Room Finder can suggest extending the stay.
+    const maxStayNights = values.get("max_stay_nights") ?? 30;
+    const nextNights = nights + 1;
+    const nextDiscount = discountFor(nextNights);
+    const nextTier = nextNights <= maxStayNights && nextDiscount > totalDiscountPercent
+      ? { nights: nextNights, totalDiscountPercent: nextDiscount }
+      : null;
 
     return NextResponse.json({
       success: true,
@@ -63,6 +76,7 @@ export async function GET(request: NextRequest) {
       totalDiscountPercent,
       extraDiscountPercent: Math.max(0, Math.round((totalDiscountPercent - standardDirectDiscountPercent) * 100) / 100),
       eligible: totalDiscountPercent > standardDirectDiscountPercent,
+      nextTier,
     }, {
       headers: { "Cache-Control": "no-store" },
     });

@@ -34,7 +34,14 @@ import {
   roomInterestPriority,
   roomPreferenceScore,
 } from "./room-finder-sales-intelligence";
-import { fetchLongStayDiscount, longStayDiscountMessage } from "./room-finder-long-stay";
+import {
+  fetchLongStayDiscount,
+  longStayDiscountMessage,
+  stayExtensionButton,
+  stayExtensionMessage,
+  type StayExtensionSuggestion,
+} from "./room-finder-long-stay";
+import { daysBetweenIsoDates, todayInAthensIso } from "@/lib/ai-assistant/room-finder-date";
 import { setRoomFinderTrackingFacts, type ChatItem, type MessageKind, type Reaction } from "./room-finder-chat-ui";
 import type { RoomOffer } from "./room-finder-carousel";
 import type { RoomChoice } from "./room-finder-selected-card";
@@ -217,6 +224,13 @@ const LOCALE: Record<RoomFinderLanguage, string> = {
 function stayLabel(checkin: string, checkout: string) {
   const day = (iso: string) => `${iso.slice(8, 10)}/${iso.slice(5, 7)}`;
   return `${day(checkin)}–${day(checkout)}`;
+}
+
+function shiftIsoDate(iso: string, days: number) {
+  const date = new Date(`${iso}T00:00:00Z`);
+  if (Number.isNaN(date.getTime())) return "";
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().slice(0, 10);
 }
 
 function euros(value: number, language: RoomFinderLanguage) {
@@ -557,6 +571,10 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   const turnLocked = useRef(false);
   const languageRef = useRef(language);
   const announcedLongStayKey = useRef<string | null>(null);
+  // Bumped on every new search or reset, so a late "add a night" suggestion
+  // from an older search is dropped.
+  const searchSeq = useRef(0);
+  const [stayExtension, setStayExtension] = useState<StayExtensionSuggestion | null>(null);
   // Internal note attached to the next assistant message in the staff inbox
   // only (never shown to the guest), e.g. why a turn used the fallback.
   const pendingStaffNote = useRef<string | null>(null);
@@ -635,6 +653,8 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     setMessages(current => rewindToAssistantPrompt(current, promptContents));
 
   function clearSearchSelectionState() {
+    searchSeq.current += 1;
+    setStayExtension(null);
     setOffers([]);
     setActiveGroup(0);
     setChoices([]);
@@ -951,6 +971,91 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     }
   }
 
+  // When one more night reaches a higher length-of-stay discount, check that
+  // the longer stay is actually bookable and tell the guest what it costs.
+  async function suggestStayExtension(searchDraft: BookingDraft, shownOffers: RoomOffer[], thisSearch: number) {
+    try {
+      const info = await fetchLongStayDiscount(searchDraft.checkin, searchDraft.checkout);
+      if (!info?.nextTier || searchSeq.current !== thisSearch) return;
+      const extraNights = info.nextTier.nights - info.nights;
+      if (extraNights !== 1) return;
+
+      const reference = shownOffers.find(offer => !offer.recoveryType && !offer.alternativeCheckin);
+      const guests = searchDraft.groups[0] || 0;
+      if (!reference || !guests) return;
+
+      const candidates: { checkin: string; checkout: string; direction: "later" | "earlier" }[] = [
+        { checkin: searchDraft.checkin, checkout: shiftIsoDate(searchDraft.checkout, extraNights), direction: "later" },
+      ];
+      const earlier = shiftIsoDate(searchDraft.checkin, -extraNights);
+      if (earlier && earlier >= todayInAthensIso()) {
+        candidates.push({ checkin: earlier, checkout: searchDraft.checkout, direction: "earlier" });
+      }
+
+      for (const candidate of candidates) {
+        if (!candidate.checkin || !candidate.checkout) continue;
+        const query = new URLSearchParams({
+          checkin: candidate.checkin,
+          checkout: candidate.checkout,
+          guests: String(guests),
+          lang: language,
+          allowSplit: "0",
+        });
+        const { response, payload } = await fetchJsonForSearch(`/api/ai-room-finder/availability?${query}`, FALLBACK_LOOKUP_TIMEOUT_MS);
+        if (searchSeq.current !== thisSearch) return;
+        if (!response.ok || !payload?.success || !Array.isArray(payload.offers)) continue;
+        const offers = (payload.offers as RoomOffer[])
+          .filter(offer => !offer.recoveryType && (!offer.maxGuests || offer.maxGuests >= guests));
+        if (!offers.length) continue;
+
+        const sameRoom = offers.find(offer => Number(offer.roomNumber) === Number(reference.roomNumber));
+        const pick = sameRoom || [...offers].sort((a, b) => a.directTotal - b.directTotal)[0];
+        const current = shownOffers.find(offer => Number(offer.roomNumber) === Number(pick.roomNumber)
+          && !offer.recoveryType && !offer.alternativeCheckin);
+        const suggestion: StayExtensionSuggestion = {
+          checkin: candidate.checkin,
+          checkout: candidate.checkout,
+          nights: daysBetweenIsoDates(candidate.checkin, candidate.checkout),
+          extraNights,
+          direction: candidate.direction,
+          fromPercent: info.totalDiscountPercent,
+          toPercent: info.nextTier.totalDiscountPercent,
+          room: roomName(language, Number(pick.roomNumber)),
+          newTotal: Number(pick.directTotal),
+          extraCost: current ? Math.round((Number(pick.directTotal) - Number(current.directTotal)) * 100) / 100 : null,
+          stay: stayLabel(candidate.checkin, candidate.checkout),
+        };
+        setStayExtension(suggestion);
+        add("assistant", stayExtensionMessage(language, suggestion, value => euros(value, language)));
+        return;
+      }
+    } catch (error) {
+      console.warn("Room Finder stay-extension suggestion skipped", error);
+    }
+  }
+
+  // "Yes, add the night" button under the suggestion: searches the longer stay.
+  async function acceptStayExtension() {
+    const suggestion = stayExtension;
+    if (!suggestion || step !== "selecting") return;
+    if (!await beginUserTurn(stayExtensionButton(language, suggestion), "normal", "❤️")) return;
+    try {
+      const nextDraft: BookingDraft = {
+        ...flow.draft,
+        checkin: suggestion.checkin,
+        checkout: suggestion.checkout,
+        statedNights: null,
+      };
+      clearSearchSelectionState();
+      announcedLongStayKey.current = null;
+      const announced = await maybeAnnounceLongStay(nextDraft);
+      if (announced) await wait(220);
+      await runAvailabilitySearch(nextDraft, preferredRoomNumber);
+    } finally {
+      endUserTurn();
+    }
+  }
+
   async function runAvailabilitySearch(
     searchDraft: BookingDraft,
     roomInterest = preferredRoomNumber,
@@ -959,6 +1064,9 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       type: "commit_turn",
       state: { step: "searching", draft: searchDraft },
     });
+    searchSeq.current += 1;
+    const thisSearch = searchSeq.current;
+    setStayExtension(null);
     setFailedSearch(null);
     setUnavailableSearch(null);
     add("assistant", tone.searching);
@@ -1148,6 +1256,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
           offers: firstGroupOffers,
         }], searchDraft),
       );
+      if (singleRoom) void suggestStayExtension(searchDraft, firstGroupOffers, thisSearch);
     } catch (error) {
       console.error("Room Finder availability request failed", error);
       setOffers([]);
@@ -1610,6 +1719,9 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     focusCategoryFromLink,
     changeDates,
     changeGuests,
+    acceptStayExtension,
+    stayExtension,
+    stayExtensionLabel: stayExtension ? stayExtensionButton(language, stayExtension) : "",
     resultActions: RESULT_ACTIONS[language],
     unavailableSearch: step === "unavailable" ? unavailableSearch : null,
     canRetryAvailability: Boolean(failedSearch) && step === "unavailable",
