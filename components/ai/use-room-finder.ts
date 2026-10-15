@@ -44,26 +44,68 @@ export type { FinderStep } from "./room-finder-booking-flow";
 const wait = (ms: number) => new Promise<void>(resolve => window.setTimeout(resolve, ms));
 const rid = () => `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
-// Availability can take up to the server's 60s limit when inventory must be
-// refreshed first, so the client waits a little longer than that. Fallback
-// lookups are lighter and get a shorter limit. Without a timeout a stalled
-// mobile connection would leave the guest on "searching" indefinitely.
-const AVAILABILITY_TIMEOUT_MS = 65_000;
-const FALLBACK_LOOKUP_TIMEOUT_MS = 30_000;
+// A normal availability answer takes well under a second; only an on-demand
+// inventory refresh takes longer. The first attempt is cut at 30s and retried
+// once (the retry finds the refresh already running and waits for it), so a
+// stalled mobile connection can never leave the guest on "searching".
+// Fallback lookups are lighter and get a shorter limit.
+const AVAILABILITY_FIRST_TIMEOUT_MS = 30_000;
+const AVAILABILITY_RETRY_TIMEOUT_MS = 45_000;
+const FALLBACK_LOOKUP_TIMEOUT_MS = 20_000;
+// After this long the guest gets a short "still checking" note.
+const SLOW_SEARCH_NOTICE_MS = 8_000;
+// A phone that left the page during a search often freezes the request; on
+// return after this long the search is restarted instead of waiting on it.
+const RESUME_RESTART_AFTER_HIDDEN_MS = 3_000;
 
-async function fetchWithTimeout(url: string, timeoutMs: number) {
+// Fetches JSON (body included) with a timeout, and aborts early when the page
+// comes back from the background after the request may have been frozen.
+async function fetchJsonForSearch(url: string, timeoutMs: number) {
   const controller = new AbortController();
-  const timeout = window.setTimeout(() => controller.abort(), timeoutMs);
+  let reason: "timeout" | "resume" | null = null;
+  const timeout = window.setTimeout(() => {
+    reason = "timeout";
+    controller.abort();
+  }, timeoutMs);
+  let hiddenAt = document.visibilityState === "hidden" ? Date.now() : 0;
+  const onVisibility = () => {
+    if (document.visibilityState === "hidden") {
+      hiddenAt = Date.now();
+      return;
+    }
+    if (hiddenAt && Date.now() - hiddenAt >= RESUME_RESTART_AFTER_HIDDEN_MS) {
+      reason = "resume";
+      controller.abort();
+    }
+    hiddenAt = 0;
+  };
+  document.addEventListener("visibilitychange", onVisibility);
   try {
-    return await fetch(url, { cache: "no-store", signal: controller.signal });
+    const response = await fetch(url, { cache: "no-store", signal: controller.signal });
+    const payload = await response.json().catch(() => null);
+    return { response, payload };
+  } catch (error) {
+    if (reason) throw new AvailabilityError(reason === "resume" ? "PAGE_RESUMED" : "CLIENT_TIMEOUT");
+    throw error;
   } finally {
     window.clearTimeout(timeout);
+    document.removeEventListener("visibilitychange", onVisibility);
   }
 }
 const rank = (room: RoomOffer) => {
   const order = [2, 6, 5, 7, 1, 3, 4, 8, 9, 10];
   const index = order.indexOf(Number(room.roomNumber));
   return index < 0 ? 99 : index;
+};
+
+const SLOW_SEARCH_NOTICE: Record<RoomFinderLanguage, string> = {
+  el: "Ενημερώνω τη διαθεσιμότητα από το σύστημα κρατήσεων, λίγα δευτερόλεπτα ακόμα…",
+  en: "I’m refreshing availability from our booking system, just a few more seconds…",
+  de: "Ich aktualisiere die Verfügbarkeit aus unserem Buchungssystem, nur noch einen Moment…",
+  fr: "Je mets à jour les disponibilités depuis notre système de réservation, encore quelques secondes…",
+  it: "Sto aggiornando la disponibilità dal nostro sistema di prenotazione, ancora qualche secondo…",
+  es: "Estoy actualizando la disponibilidad desde nuestro sistema de reservas, unos segundos más…",
+  tr: "Müsaitliği rezervasyon sistemimizden güncelliyorum, birkaç saniye daha…",
 };
 
 const INVENTORY_UNAVAILABLE: Record<RoomFinderLanguage, string> = {
@@ -871,8 +913,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     });
 
     try {
-      const response = await fetchWithTimeout(`/api/ai-room-finder/alternatives?${query}`, FALLBACK_LOOKUP_TIMEOUT_MS);
-      const payload = await response.json().catch(() => null);
+      const { response, payload } = await fetchJsonForSearch(`/api/ai-room-finder/alternatives?${query}`, FALLBACK_LOOKUP_TIMEOUT_MS);
       if (!response.ok || !payload?.success || !Array.isArray(payload.alternatives)) return [];
 
       return payload.alternatives.flatMap((alternative: any) =>
@@ -901,8 +942,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     });
 
     try {
-      const response = await fetchWithTimeout(`/api/ai-room-finder/sales-recovery?${query}`, FALLBACK_LOOKUP_TIMEOUT_MS);
-      const payload = await response.json().catch(() => null);
+      const { response, payload } = await fetchJsonForSearch(`/api/ai-room-finder/sales-recovery?${query}`, FALLBACK_LOOKUP_TIMEOUT_MS);
       if (!response.ok || !payload?.success || !Array.isArray(payload.offers)) return [];
       return payload.offers as RoomOffer[];
     } catch (error) {
@@ -924,7 +964,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     add("assistant", tone.searching);
     setTyping(true);
 
-    const searchAllGroups = () => Promise.all(searchDraft.groups.map(async guests => {
+    const searchAllGroups = (timeoutMs: number) => Promise.all(searchDraft.groups.map(async guests => {
         const query = new URLSearchParams({
           checkin: searchDraft.checkin,
           checkout: searchDraft.checkout,
@@ -932,24 +972,28 @@ export function useRoomFinder(language: RoomFinderLanguage) {
           lang: language,
           allowSplit: searchDraft.roomCount === 1 ? "1" : "0",
         });
-        const response = await fetchWithTimeout(`/api/ai-room-finder/availability?${query}`, AVAILABILITY_TIMEOUT_MS);
-        const payload = await response.json();
+        const { response, payload } = await fetchJsonForSearch(`/api/ai-room-finder/availability?${query}`, timeoutMs);
         if (!response.ok || !payload?.success) {
           throw new AvailabilityError(String(payload?.code || "REQUEST_FAILED"));
         }
         return (Array.isArray(payload.offers) ? payload.offers : []) as RoomOffer[];
       }));
 
+    const slowNotice = window.setTimeout(() => add("assistant", SLOW_SEARCH_NOTICE[language]), SLOW_SEARCH_NOTICE_MS);
     try {
       let result: RoomOffer[][];
       try {
-        result = await searchAllGroups();
+        result = await searchAllGroups(AVAILABILITY_FIRST_TIMEOUT_MS);
       } catch (firstError) {
         if (!isRetryableAvailabilityFailure(firstError)) throw firstError;
         console.warn("Room Finder availability failed once; retrying", firstError);
-        await wait(AVAILABILITY_AUTO_RETRY_DELAY_MS);
-        result = await searchAllGroups();
+        // A timed-out or frozen request is retried straight away.
+        const immediate = firstError instanceof AvailabilityError
+          && (firstError.code === "PAGE_RESUMED" || firstError.code === "CLIENT_TIMEOUT");
+        if (!immediate) await wait(AVAILABILITY_AUTO_RETRY_DELAY_MS);
+        result = await searchAllGroups(AVAILABILITY_RETRY_TIMEOUT_MS);
       }
+      window.clearTimeout(slowNotice);
 
       const eligible = result.map((groupOffers, groupIndex) => {
         const guests = searchDraft.groups[groupIndex] || 0;
@@ -1115,6 +1159,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       setFailedSearch({ draft: searchDraft, roomInterest: roomInterest || null });
       add("assistant", INVENTORY_UNAVAILABLE[language], "lead");
     } finally {
+      window.clearTimeout(slowNotice);
       setTyping(false);
     }
   }
