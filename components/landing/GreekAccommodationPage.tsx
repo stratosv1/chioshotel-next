@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { ChiosCollectionImageGallery } from "@/components/chios/ChiosCollectionImageGallery";
 import { SearchImageGallery } from "@/components/seo/SearchImageGallery";
 import type { ChiosAccommodationPageData } from "@/content/chios-accommodation";
 
@@ -113,6 +114,19 @@ export function GreekAccommodationPage({ data }: Props) {
           </div>
         </div>
       </section>
+
+      {/* Three-photo strip, same as the beaches, villages and room pages:
+          search engines use it for the image row under the result. */}
+      <ChiosCollectionImageGallery
+        kind="rooms"
+        language="el"
+        items={data.rooms.cards.map((card) => ({
+          image: card.image,
+          imageAlt: card.imageAlt,
+          title: card.title,
+          href: card.href,
+        }))}
+      />
 
       <section
         className="border-b border-amber-900/10 bg-white"
