@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
     }
 
     const nights = daysBetweenIsoDates(checkin, checkout);
-    if (!Number.isInteger(nights) || nights < 1 || nights > 60) {
+    if (!Number.isInteger(nights) || nights < 1 || nights > 30) {
       return NextResponse.json(
         { success: false, code: "INVALID_STAY", message: "Unsupported stay length." },
         { status: 400, headers: { "Cache-Control": "no-store" } },

@@ -34,7 +34,9 @@ export function daysBetweenIsoDates(start: string, end: string) {
 
 export function addDaysToIsoDate(iso: string, days: number) {
   const date = parseStrictIsoDate(iso);
-  if (!date || !Number.isInteger(days) || days < 1 || days > 60) return "";
+  // Up to a year, so long stated stays still resolve to a checkout date and
+  // reach the long-stay reception message instead of being dropped.
+  if (!date || !Number.isInteger(days) || days < 1 || days > 365) return "";
   date.setUTCDate(date.getUTCDate() + days);
   return date.toISOString().slice(0, 10);
 }

@@ -25,8 +25,9 @@ const REFRESH_POLL_INTERVAL_MS = 3_000;
 // a source that is genuinely down still answers the guest in reasonable time.
 const NOT_READY_RETRY_INTERVAL_MS = 5_000;
 const NOT_READY_DEADLINE_MS = 30_000;
-// Same stay-length rule as /api/ai-room-finder/alternatives and the chat flow.
-const MAX_STAY_NIGHTS = 60;
+// Matches booking_core.settings.max_stay_nights; longer stays are routed to
+// reception by the chat flow (MAX_AUTOMATED_STAY_NIGHTS).
+const MAX_STAY_NIGHTS = 30;
 const RATE_LIMITS = { perMinute: 60, perHour: 300 };
 
 type RefreshOutcome = "refreshed" | "busy" | "not_ready" | "failed";

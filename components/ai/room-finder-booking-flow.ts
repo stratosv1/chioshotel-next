@@ -68,6 +68,10 @@ export type BookingFlowAction =
 const MAX_ROOMS = 3;
 const MAX_GUESTS_PER_ROOM = 5;
 const MAX_TOTAL_GUESTS = MAX_ROOMS * MAX_GUESTS_PER_ROOM;
+// Longest stay the live inventory can price: booking_core.search_availability
+// and search_split_stay return nothing above the max_stay_nights setting
+// (30). Longer stays go to reception instead of a false "no availability".
+export const MAX_AUTOMATED_STAY_NIGHTS = 30;
 const CORE_INPUT_STEPS = new Set<FinderStep>(["destination", "checkin", "checkout", "rooms", "guests"]);
 
 const GROUP_LIMIT_MESSAGE: Record<RoomFinderCommand["language"], (guests: number) => string> = {
@@ -78,6 +82,16 @@ const GROUP_LIMIT_MESSAGE: Record<RoomFinderCommand["language"], (guests: number
   it: guests => `Per ${guests} ospiti la nostra reception prepara una proposta personalizzata, perché la ricerca automatica copre fino a 15 ospiti in 3 camere. Lasciate i vostri dati qui sotto o chiamateci e vi risponderemo a breve.`,
   es: guests => `Para ${guests} personas nuestra recepción prepara una propuesta personal, ya que la búsqueda automática cubre hasta 15 personas en 3 habitaciones. Dejen sus datos abajo o llámennos y les responderemos en breve.`,
   tr: guests => `${guests} kişi için resepsiyonumuz size özel bir teklif hazırlar; otomatik arama 3 odada en fazla 15 kişiyi kapsar. Bilgilerinizi aşağıya bırakın veya bizi arayın, kısa sürede dönüş yapalım.`,
+};
+
+const LONG_STAY_MESSAGE: Record<RoomFinderCommand["language"], (nights: number) => string> = {
+  el: nights => `Για διαμονή ${nights} νυχτών η reception του Voulamandis House ετοιμάζει προσωπικά πρόταση, γιατί η αυτόματη αναζήτηση καλύπτει διαμονές έως 30 νύχτες. Αφήστε μας τα στοιχεία σας παρακάτω ή επικοινωνήστε μαζί μας μέσω τηλεφώνου ή WhatsApp.`,
+  en: nights => `For a ${nights}-night stay the Voulamandis House reception prepares a personal proposal, as the automated search covers stays of up to 30 nights. Leave your details below or contact us by phone or WhatsApp.`,
+  de: nights => `Für einen Aufenthalt von ${nights} Nächten erstellt die Rezeption des Voulamandis House ein persönliches Angebot, da die automatische Suche Aufenthalte bis zu 30 Nächten abdeckt. Hinterlassen Sie unten Ihre Daten oder kontaktieren Sie uns telefonisch oder über WhatsApp.`,
+  fr: nights => `Pour un séjour de ${nights} nuits, la réception de Voulamandis House prépare une proposition personnalisée, car la recherche automatique couvre les séjours jusqu’à 30 nuits. Laissez vos coordonnées ci-dessous ou contactez-nous par téléphone ou WhatsApp.`,
+  it: nights => `Per un soggiorno di ${nights} notti la reception di Voulamandis House prepara una proposta personalizzata, perché la ricerca automatica copre soggiorni fino a 30 notti. Lasciate i vostri dati qui sotto o contattateci per telefono o WhatsApp.`,
+  es: nights => `Para una estancia de ${nights} noches, la recepción de Voulamandis House prepara una propuesta personal, ya que la búsqueda automática cubre estancias de hasta 30 noches. Dejen sus datos abajo o contáctennos por teléfono o WhatsApp.`,
+  tr: nights => `${nights} gecelik konaklama için Voulamandis House resepsiyonu size özel bir teklif hazırlar; otomatik arama en fazla 30 gecelik konaklamaları kapsar. Bilgilerinizi aşağıya bırakın veya bize telefonla ya da WhatsApp üzerinden ulaşın.`,
 };
 
 const ROOM_LIMIT_MESSAGE: Record<RoomFinderCommand["language"], string> = {
@@ -430,7 +444,7 @@ export function resolveAssistantTurn(current: BookingFlowState, command: RoomFin
   for (const action of command.actions) {
     if (action.checkin && isStrictIsoDate(action.checkin)) incomingCheckin = action.checkin;
     if (action.checkout && isStrictIsoDate(action.checkout)) incomingCheckout = action.checkout;
-    if (action.nights && Number.isInteger(action.nights) && action.nights >= 1 && action.nights <= 60) {
+    if (action.nights && Number.isInteger(action.nights) && action.nights >= 1 && action.nights <= 365) {
       incomingNights = action.nights;
     }
   }
@@ -565,6 +579,21 @@ export function resolveAssistantTurn(current: BookingFlowState, command: RoomFin
       state: { step: stepForOutcome(outcome, current.step), draft },
       outcome,
       changed: invalidChanged,
+    };
+  }
+
+  // Keep the dates so reception sees the requested stay in the lead.
+  if (draft.checkin && draft.checkout && nightsBetween(draft.checkin, draft.checkout) > MAX_AUTOMATED_STAY_NIGHTS) {
+    const nights = nightsBetween(draft.checkin, draft.checkout);
+    return {
+      state: { step: "unavailable", draft },
+      outcome: {
+        kind: "clarification",
+        query: (LONG_STAY_MESSAGE[command.language] || LONG_STAY_MESSAGE.en)(nights),
+        step: "unavailable",
+        lead: true,
+      },
+      changed: true,
     };
   }
 

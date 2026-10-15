@@ -164,7 +164,7 @@ assert(intentSource.includes("isAbortError(error)) break"), "a timed-out interpr
 assert(intentSource.includes("Preferences are SOFT ranking signals"), "AI prompt does not protect availability from preference filtering");
 
 const alternativesSource = fs.readFileSync(alternativesPath, "utf8");
-assert(alternativesSource.includes("nights > 60"), "nearby-date fallback stay limit is inconsistent with the 60-night Room Finder contract");
+assert(alternativesSource.includes("nights > 30"), "nearby-date fallback stay limit is inconsistent with the 30-night Booking Core max_stay_nights contract");
 assert(!alternativesSource.includes("Promise.all(candidates"), "nearby-date fallback still fans out all candidate windows in parallel");
 assert(alternativesSource.includes("ALTERNATIVES_DATA_UNAVAILABLE"), "nearby-date fallback can still collapse unverified inventory into false no-availability");
 

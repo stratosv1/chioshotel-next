@@ -77,7 +77,7 @@ const COMMAND_SCHEMA = {
           },
           checkin: { type: ["string", "null"] },
           checkout: { type: ["string", "null"] },
-          nights: { type: ["integer", "null"], minimum: 1, maximum: 60 },
+          nights: { type: ["integer", "null"], minimum: 1, maximum: 365 },
           roomCount: { type: ["integer", "null"], minimum: 1, maximum: 99 },
           roomNumber: { type: ["integer", "null"], minimum: 1, maximum: 10 },
           totalGuests: { type: ["integer", "null"], minimum: 1, maximum: 99 },

@@ -311,7 +311,7 @@ export function fallbackRoomFinderCommand(
     }
   }
 
-  const nights = numberBeforeWords(text, NIGHT_WORDS, 60, "skip");
+  const nights = numberBeforeWords(text, NIGHT_WORDS, 365, "skip");
   if (nights && !actions.some(action => action.type === "set_stay_dates" && action.checkout)) {
     const dateAction = actions.find(action => action.type === "set_stay_dates");
     if (dateAction) dateAction.nights = nights;
