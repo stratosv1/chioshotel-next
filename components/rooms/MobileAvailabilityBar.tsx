@@ -79,6 +79,9 @@ export function MobileAvailabilityBar({
     >
       <a
         href={href}
+        // Links that already carry Room Finder context must not be rewritten
+        // by the site-wide CTA router.
+        {...(href.includes("ai-assistant/?") ? { "data-room-finder-cta": "false" } : {})}
         className={`mx-auto flex min-h-[52px] max-w-lg items-center justify-center rounded-full px-5 text-center text-sm font-black uppercase tracking-[0.06em] shadow-lg ${buttonClassName}`}
       >
         {label}

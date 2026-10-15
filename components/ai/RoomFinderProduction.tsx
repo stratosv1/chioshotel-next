@@ -313,15 +313,27 @@ export function RoomFinderProduction({
   const autoLanguageSwitched = useRef(false);
   // Room number from a room page's "Check availability" button (?room=N).
   const pendingRoomFocus = useRef<number | null>(null);
+  // Rooms of a category page's "Check availability" button (?rooms=1,3,4).
+  const pendingCategoryFocus = useRef<number[] | null>(null);
   const pendingAutoLanguageMessage = useRef<string | null>(null);
 
   useEffect(() => {
-    const roomParam = Number(new URLSearchParams(window.location.search).get("room"));
+    const params = new URLSearchParams(window.location.search);
+    const roomParam = Number(params.get("room"));
+    const categoryParam = (params.get("rooms") || "")
+      .split(",")
+      .map(Number)
+      .filter(room => Number.isInteger(room) && room >= 1 && room <= 10);
     if (Number.isInteger(roomParam) && roomParam >= 1 && roomParam <= 10) {
       pendingRoomFocus.current = roomParam;
+    } else if (categoryParam.length) {
+      pendingCategoryFocus.current = categoryParam;
+    }
+    if (params.has("room") || params.has("rooms")) {
       // Keep the address clean so a reload or shared link starts fresh.
       const url = new URL(window.location.href);
       url.searchParams.delete("room");
+      url.searchParams.delete("rooms");
       window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}${url.hash}`);
     }
     const detected = detectLanguage();
@@ -343,13 +355,18 @@ export function RoomFinderProduction({
   // has finished appearing.
   useEffect(() => {
     const room = pendingRoomFocus.current;
-    if (!room) return;
+    const category = pendingCategoryFocus.current;
+    if (!room && !category) return;
     // Cleared only when it fires: a language change in between reschedules it
     // for the conversation in the new language.
     const timer = window.setTimeout(() => {
-      if (pendingRoomFocus.current !== room) return;
-      pendingRoomFocus.current = null;
-      finder.focusRoomFromLink(room);
+      if (room && pendingRoomFocus.current === room) {
+        pendingRoomFocus.current = null;
+        finder.focusRoomFromLink(room);
+      } else if (category && pendingCategoryFocus.current === category) {
+        pendingCategoryFocus.current = null;
+        finder.focusCategoryFromLink(category);
+      }
     }, 1_500);
     return () => window.clearTimeout(timer);
   }, [language]);

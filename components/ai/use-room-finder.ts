@@ -213,6 +213,95 @@ const ROOM_INTEREST_BOOKED: Record<RoomFinderLanguage, (room: number, stay: stri
   tr: (room, stay) => `Maalesef ${roomName("tr", room)} ${stay} için dolu. Tarihleriniz için şu odalar boş:`,
 };
 
+// Room categories, matching the four category pages. A guest who opens the
+// Room Finder from one of them is looking for that category first.
+type RoomCategory = "economy" | "apartments" | "ground" | "first";
+const CATEGORY_ROOMS: Record<RoomCategory, number[]> = {
+  economy: [2, 6],
+  apartments: [8, 9, 10],
+  ground: [5, 6, 7],
+  first: [1, 3, 4],
+};
+
+export function roomCategoryFor(rooms: number[]): RoomCategory | null {
+  if (!rooms.length) return null;
+  const order: RoomCategory[] = ["economy", "apartments", "first", "ground"];
+  return order.find(category => rooms.every(room => CATEGORY_ROOMS[category].includes(room))) || null;
+}
+
+// [plural phrase used in sentences, short badge on the cards]
+const CATEGORY_COPY: Record<RoomFinderLanguage, Record<RoomCategory | "other", [string, string]>> = {
+  el: { economy: ["οικονομικά δίκλινα", "Οικονομικό δίκλινο"], apartments: ["οικογενειακά διαμερίσματα", "Διαμέρισμα"], ground: ["ισόγεια δωμάτια", "Ισόγειο"], first: ["δωμάτια ορόφου", "Όροφος"], other: ["δωμάτια που βλέπατε", "Από τη σελίδα σας"] },
+  en: { economy: ["economy double rooms", "Economy double"], apartments: ["family apartments", "Family apartment"], ground: ["ground-floor rooms", "Ground floor"], first: ["first-floor rooms", "First floor"], other: ["rooms you were viewing", "From your page"] },
+  de: { economy: ["Economy-Doppelzimmer", "Economy-Doppelzimmer"], apartments: ["Familienapartments", "Familienapartment"], ground: ["Zimmer im Erdgeschoss", "Erdgeschoss"], first: ["Zimmer im ersten Stock", "Erster Stock"], other: ["Zimmer, die Sie angesehen haben", "Von Ihrer Seite"] },
+  fr: { economy: ["chambres doubles économiques", "Chambre économique"], apartments: ["appartements familiaux", "Appartement familial"], ground: ["chambres en rez-de-chaussée", "Rez-de-chaussée"], first: ["chambres à l’étage", "À l’étage"], other: ["chambres que vous consultiez", "De votre page"] },
+  it: { economy: ["camere doppie economy", "Camera economy"], apartments: ["appartamenti familiari", "Appartamento familiare"], ground: ["camere al piano terra", "Piano terra"], first: ["camere al primo piano", "Primo piano"], other: ["camere che stavate guardando", "Dalla vostra pagina"] },
+  es: { economy: ["habitaciones dobles económicas", "Habitación económica"], apartments: ["apartamentos familiares", "Apartamento familiar"], ground: ["habitaciones en planta baja", "Planta baja"], first: ["habitaciones en la primera planta", "Primera planta"], other: ["habitaciones que estaba viendo", "De su página"] },
+  tr: { economy: ["ekonomik çift kişilik odalar", "Ekonomik oda"], apartments: ["aile daireleri", "Aile dairesi"], ground: ["zemin kat odaları", "Zemin kat"], first: ["birinci kat odaları", "Birinci kat"], other: ["baktığınız odalar", "Sayfanızdan"] },
+};
+
+function categoryPhrase(language: RoomFinderLanguage, rooms: number[]) {
+  return CATEGORY_COPY[language][roomCategoryFor(rooms) || "other"][0];
+}
+
+function categoryBadge(language: RoomFinderLanguage, rooms: number[]) {
+  return CATEGORY_COPY[language][roomCategoryFor(rooms) || "other"][1];
+}
+
+function roomList(language: RoomFinderLanguage, rooms: number[]) {
+  return rooms.map(room => roomName(language, room)).join(", ");
+}
+
+const CATEGORY_FROM_LINK: Record<RoomFinderLanguage, (category: string, rooms: string) => string> = {
+  el: (c, r) => `Βλέπω ότι ψάχνετε ${c} (${r}). Πείτε μου πότε θέλετε να έρθετε και για πόσα άτομα, και θα σας δείξω ποια είναι διαθέσιμα, μαζί με τις εναλλακτικές.`,
+  en: (c, r) => `I see you’re looking for ${c} (${r}). Tell me your dates and how many guests, and I’ll show you which are available, along with the alternatives.`,
+  de: (c, r) => `Sie suchen ${c} (${r}). Nennen Sie mir Ihre Reisedaten und die Anzahl der Gäste, dann zeige ich Ihnen, welche frei sind – und die Alternativen.`,
+  fr: (c, r) => `Vous cherchez des ${c} (${r}). Indiquez-moi vos dates et le nombre de personnes, et je vous montre lesquelles sont disponibles, ainsi que les alternatives.`,
+  it: (c, r) => `Vedo che cercate ${c} (${r}). Indicatemi le date e il numero di ospiti e vi mostro quali sono disponibili, insieme alle alternative.`,
+  es: (c, r) => `Veo que busca ${c} (${r}). Dígame sus fechas y cuántas personas, y le muestro cuáles están disponibles, junto con las alternativas.`,
+  tr: (c, r) => `${c} aradığınızı görüyorum (${r}). Tarihlerinizi ve kişi sayısını yazın, hangilerinin müsait olduğunu ve alternatifleri göstereyim.`,
+};
+
+const CATEGORY_AVAILABLE: Record<RoomFinderLanguage, (category: string, rooms: string, count: number) => string> = {
+  el: (c, r, n) => `Καλά νέα! Από τα ${c} ${n === 1 ? "είναι διαθέσιμο" : "είναι διαθέσιμα"} για τις ημερομηνίες σας: ${r}. ${n === 1 ? "Το βλέπετε" : "Τα βλέπετε"} πρώτα παρακάτω, μαζί με τις άλλες διαθέσιμες επιλογές.`,
+  en: (c, r) => `Good news! Of the ${c}, available for your dates: ${r}. You’ll see them first below, together with the other available options.`,
+  de: (c, r) => `Gute Nachrichten! Von den ${c} ist für Ihre Daten frei: ${r}. Sie sehen sie unten zuerst, zusammen mit den anderen freien Optionen.`,
+  fr: (c, r) => `Bonne nouvelle ! Parmi les ${c}, disponible(s) à vos dates : ${r}. Vous les voyez en premier ci-dessous, avec les autres options disponibles.`,
+  it: (c, r) => `Buone notizie! Tra le ${c}, disponibili per le vostre date: ${r}. Le trovate per prime qui sotto, insieme alle altre opzioni.`,
+  es: (c, r) => `¡Buenas noticias! De las ${c}, disponibles para sus fechas: ${r}. Las verá primero abajo, junto con las demás opciones.`,
+  tr: (c, r) => `İyi haber! ${c} arasından tarihleriniz için müsait olanlar: ${r}. Aşağıda ilk sırada, diğer seçeneklerle birlikte görebilirsiniz.`,
+};
+
+const CATEGORY_NEARBY: Record<RoomFinderLanguage, (category: string, stay: string, room: string, alternative: string, price: string) => string> = {
+  el: (c, stay, room, alt, price) => `Τα ${c} είναι κλεισμένα για ${stay}, αλλά το ${room} είναι ελεύθερο για ${alt} (τιμή απευθείας κράτησης ${price}). Το βλέπετε πρώτο παρακάτω, μαζί με τα δωμάτια που είναι ελεύθερα για τις δικές σας ημερομηνίες.`,
+  en: (c, stay, room, alt, price) => `The ${c} are booked for ${stay}, but ${room} is free for ${alt} (direct price ${price}). You’ll see it first below, together with the rooms free for your own dates.`,
+  de: (c, stay, room, alt, price) => `Die ${c} sind für ${stay} belegt, aber ${room} ist für ${alt} frei (Direktpreis ${price}). Sie sehen es unten zuerst, zusammen mit den Zimmern, die für Ihre Daten frei sind.`,
+  fr: (c, stay, room, alt, price) => `Les ${c} sont réservées pour ${stay}, mais ${room.toLowerCase()} est libre pour ${alt} (tarif direct ${price}). Elle apparaît en premier ci-dessous, avec les chambres libres à vos dates.`,
+  it: (c, stay, room, alt, price) => `Le ${c} sono occupate per ${stay}, ma ${room.toLowerCase()} è libera per ${alt} (prezzo diretto ${price}). La trovate per prima qui sotto, insieme alle camere libere per le vostre date.`,
+  es: (c, stay, room, alt, price) => `Las ${c} están reservadas para ${stay}, pero ${room.toLowerCase()} está libre para ${alt} (precio directo ${price}). La verá primero abajo, junto con las habitaciones libres para sus fechas.`,
+  tr: (c, stay, room, alt, price) => `${c} ${stay} için dolu, ancak ${room} ${alt} için boş (doğrudan fiyat ${price}). Aşağıda ilk sırada, kendi tarihleriniz için boş odalarla birlikte görebilirsiniz.`,
+};
+
+const CATEGORY_BOOKED: Record<RoomFinderLanguage, (category: string, stay: string) => string> = {
+  el: (c, stay) => `Τα ${c} είναι δυστυχώς κλεισμένα για ${stay}. Για τις ημερομηνίες σας είναι ελεύθερα τα παρακάτω δωμάτια:`,
+  en: (c, stay) => `Unfortunately the ${c} are booked for ${stay}. These rooms are free for your dates:`,
+  de: (c, stay) => `Leider sind die ${c} für ${stay} belegt. Diese Zimmer sind für Ihre Daten frei:`,
+  fr: (c, stay) => `Malheureusement, les ${c} sont réservées pour ${stay}. Ces chambres sont libres à vos dates :`,
+  it: (c, stay) => `Purtroppo le ${c} sono occupate per ${stay}. Queste camere sono libere per le vostre date:`,
+  es: (c, stay) => `Lamentablemente, las ${c} están reservadas para ${stay}. Estas habitaciones están libres para sus fechas:`,
+  tr: (c, stay) => `Maalesef ${c} ${stay} için dolu. Tarihleriniz için şu odalar boş:`,
+};
+
+const CATEGORY_TOO_SMALL: Record<RoomFinderLanguage, (category: string, maxGuests: number, guests: number) => string> = {
+  el: (c, max, guests) => `Τα ${c} φιλοξενούν έως ${max} ${max === 1 ? "άτομο" : "άτομα"}, οπότε για ${guests} άτομα σας προτείνω τα παρακάτω διαθέσιμα δωμάτια:`,
+  en: (c, max, guests) => `The ${c} sleep up to ${max}, so for ${guests} guests here are the rooms available for your dates:`,
+  de: (c, max, guests) => `Die ${c} bieten Platz für bis zu ${max} Personen. Für ${guests} Personen sind diese Zimmer für Ihre Daten frei:`,
+  fr: (c, max, guests) => `Les ${c} accueillent jusqu’à ${max} personnes. Pour ${guests} personnes, voici les chambres disponibles à vos dates :`,
+  it: (c, max, guests) => `Le ${c} ospitano fino a ${max} persone. Per ${guests} persone, ecco le camere disponibili per le vostre date:`,
+  es: (c, max, guests) => `Las ${c} admiten hasta ${max} personas. Para ${guests} personas, estas son las habitaciones disponibles para sus fechas:`,
+  tr: (c, max, guests) => `${c} en fazla ${max} kişiliktir. ${guests} kişi için tarihlerinizde müsait odalar şunlar:`,
+};
+
 // The room the guest asked for cannot host the whole party.
 const ROOM_INTEREST_TOO_SMALL: Record<RoomFinderLanguage, (room: number, maxGuests: number, guests: number) => string> = {
   el: (room, max, guests) => `Το ${roomName("el", room)} φιλοξενεί έως ${max} ${max === 1 ? "άτομο" : "άτομα"}, οπότε δεν χωράει ${guests} άτομα. Σας προτείνω τα παρακάτω διαθέσιμα δωμάτια για τις ημερομηνίες σας.`,
@@ -362,10 +451,14 @@ function sortOffersForPreferences(
   roomOffers: RoomOffer[],
   preferences: RoomFinderPreference[],
   preferredRoomNumber: number | null,
+  focusRooms: number[] = [],
+  focusBadge?: string,
 ) {
+  const inFocus = (offer: RoomOffer) => focusRooms.includes(Number(offer.roomNumber)) && !offer.recoveryType ? 1 : 0;
   const sorted = [...roomOffers].sort((left, right) => {
     const interestDifference = roomInterestPriority(Number(right.roomNumber), preferredRoomNumber)
-      - roomInterestPriority(Number(left.roomNumber), preferredRoomNumber);
+      - roomInterestPriority(Number(left.roomNumber), preferredRoomNumber)
+      || inFocus(right) - inFocus(left);
     const preferenceDifference = roomPreferenceScore(Number(right.roomNumber), preferences)
       - roomPreferenceScore(Number(left.roomNumber), preferences);
     return interestDifference || preferenceDifference || left.directTotal - right.directTotal || rank(left) - rank(right);
@@ -377,7 +470,8 @@ function sortOffersForPreferences(
       ...offer,
       // Every card of the room the guest asked for (also on nearby dates).
       requested,
-      recommended: !requested && index === 0 && preferences.length > 0 && bestScore > 0,
+      categoryBadge: !requested && focusBadge && inFocus(offer) ? focusBadge : undefined,
+      recommended: !requested && !inFocus(offer) && index === 0 && preferences.length > 0 && bestScore > 0,
     };
   });
 }
@@ -404,6 +498,8 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   // The last search that found no rooms, for the "notify me if these dates
   // open up" card.
   const [unavailableSearch, setUnavailableSearch] = useState<BookingDraft | null>(null);
+  // Rooms of the category page the guest came from (?rooms=1,3,4).
+  const [focusRooms, setFocusRooms] = useState<number[]>([]);
   const turnLocked = useRef(false);
   const languageRef = useRef(language);
   const announcedLongStayKey = useRef<string | null>(null);
@@ -437,8 +533,8 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   );
   const visibleOffers = useMemo(() => {
     const feasible = feasibleOffersForGroup(capacityEligibleOffers, activeGroup, selectedKeys);
-    return sortOffersForPreferences(feasible, preferences, preferredRoomNumber);
-  }, [capacityEligibleOffers, activeGroup, selectedKeys, preferences, preferredRoomNumber]);
+    return sortOffersForPreferences(feasible, preferences, preferredRoomNumber, focusRooms, categoryBadge(language, focusRooms));
+  }, [capacityEligibleOffers, activeGroup, selectedKeys, preferences, preferredRoomNumber, focusRooms, language]);
 
   // Layout effect: runs before the chat messages' tracking effects of the same
   // render, so a message is stored together with the facts it produced.
@@ -565,6 +661,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     clearSearchSelectionState();
     setFailedSearch(null);
     setUnavailableSearch(null);
+    setFocusRooms([]);
     setTyping(false);
   }
 
@@ -575,6 +672,15 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     setPreferredRoomNumber(room);
     dispatchFlow({ type: "prefill_single_room" });
     add("assistant", ROOM_FROM_LINK[language](room));
+  }
+
+  // Called once when the page was opened from a category page's availability
+  // button (?rooms=1,3,4): those rooms are answered about and shown first.
+  function focusCategoryFromLink(rooms: number[]) {
+    const valid = [...new Set(rooms)].filter(room => Number.isInteger(room) && room >= 1 && room <= 10).sort((a, b) => a - b);
+    if (!valid.length) return;
+    setFocusRooms(valid);
+    add("assistant", CATEGORY_FROM_LINK[language](categoryPhrase(language, valid), roomList(language, valid)));
   }
 
   async function retryAvailability() {
@@ -892,6 +998,37 @@ export function useRoomFinder(language: RoomFinderLanguage) {
         }
       } else if (roomInterest && !interestAvailable) {
         add("assistant", ROOM_INTEREST_UNAVAILABLE[language](roomInterest));
+      } else if (!roomInterest && focusRooms.length && singleRoom) {
+        // Guest came from a category page: answer about that category first.
+        const category = categoryPhrase(language, focusRooms);
+        const stay = stayLabel(searchDraft.checkin, searchDraft.checkout);
+        const inCategory = (eligible[0] || [])
+          .filter(offer => focusRooms.includes(Number(offer.roomNumber)) && !offer.recoveryType);
+        const categoryCapacity = Math.max(0, ...focusRooms.map(room => ROOM_MAX_GUESTS.get(room) || 0));
+        const partySize = searchDraft.groups[0] || 0;
+        if (inCategory.length) {
+          const rooms = [...new Set(inCategory.map(offer => Number(offer.roomNumber)))].sort((a, b) => a - b);
+          content = CATEGORY_AVAILABLE[language](category, roomList(language, rooms), rooms.length);
+        } else if (categoryCapacity && partySize > categoryCapacity) {
+          content = CATEGORY_TOO_SMALL[language](category, categoryCapacity, partySize);
+        } else {
+          const nearbyInCategory = (await findNearbyOffers(searchDraft))
+            .filter(offer => focusRooms.includes(Number(offer.roomNumber)) && !offer.recoveryType)
+            .slice(0, 2);
+          if (nearbyInCategory.length) {
+            const first = nearbyInCategory[0];
+            content = CATEGORY_NEARBY[language](
+              category,
+              stay,
+              roomName(language, Number(first.roomNumber)),
+              stayLabel(String(first.alternativeCheckin), String(first.alternativeCheckout)),
+              euros(Number(first.directTotal), language),
+            );
+            resultOffers = [[...nearbyInCategory, ...(eligible[0] || [])]];
+          } else {
+            content = CATEGORY_BOOKED[language](category, stay);
+          }
+        }
       }
 
       setOffers(resultOffers);
@@ -904,6 +1041,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
         feasibleOffersForGroup(resultOffers, 0, new Set()),
         preferences,
         roomInterest,
+        focusRooms,
       );
       add(
         "assistant",
@@ -1373,6 +1511,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     chooseBreakfast,
     retryAvailability,
     focusRoomFromLink,
+    focusCategoryFromLink,
     unavailableSearch: step === "unavailable" ? unavailableSearch : null,
     canRetryAvailability: Boolean(failedSearch) && step === "unavailable",
     retryLabel: RETRY_SEARCH_LABEL[language],

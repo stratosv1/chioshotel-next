@@ -452,7 +452,15 @@ export function RoomDetailPage({ data, fromPriceLabel }: RoomDetailPageProps) {
   const language = getRoomLanguage(data.seo.canonicalPath);
   const localLabels = labels[language];
   const primaryBookingHref = bookingPathByLanguage[language] || data.hero.primaryCta.href;
-  const aiAvailabilityHref = roomFinderHrefForLanguage(language);
+  // The Room Finder answers about this page's rooms first (?rooms=1,3,4).
+  const pageRoomNumbers = [...new Set(
+    data.individualRooms.rooms
+      .map(room => Number(room.id.match(/(\d+)$/)?.[1] || 0))
+      .filter(room => room >= 1 && room <= 10),
+  )].sort((a, b) => a - b);
+  const aiAvailabilityHref = pageRoomNumbers.length
+    ? `${roomFinderHrefForLanguage(language)}?rooms=${pageRoomNumbers.join(",")}`
+    : roomFinderHrefForLanguage(language);
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#fbf6ef] pb-20 text-[#2f261f] md:pb-0">
       <ScrollEffects />
@@ -473,7 +481,7 @@ export function RoomDetailPage({ data, fromPriceLabel }: RoomDetailPageProps) {
                 </p>
               ) : null}
               <div className="mt-7 grid gap-3 sm:grid-cols-2">
-                <a id="rd-hero-availability" className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-amber-500 px-5 text-center text-[11px] font-black uppercase tracking-[0.12em] !text-[#2f261f] shadow-[0_16px_32px_rgba(180,117,16,0.22)] transition hover:-translate-y-0.5 hover:bg-amber-400 sm:text-xs" href={aiAvailabilityHref} style={{ color: "#2f261f" }}>{localLabels.checkAvailability}</a>
+                <a id="rd-hero-availability" data-room-finder-cta="false" className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-amber-500 px-5 text-center text-[11px] font-black uppercase tracking-[0.12em] !text-[#2f261f] shadow-[0_16px_32px_rgba(180,117,16,0.22)] transition hover:-translate-y-0.5 hover:bg-amber-400 sm:text-xs" href={aiAvailabilityHref} style={{ color: "#2f261f" }}>{localLabels.checkAvailability}</a>
                 <a className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-amber-900/20 bg-white px-5 text-center text-[11px] font-black uppercase tracking-[0.12em] text-[#2f261f] transition hover:-translate-y-0.5 hover:bg-amber-50 sm:text-xs" href={primaryBookingHref} data-booking-cta="true">{localLabels.bookOnline}</a>
               </div>
               {data.individualRooms.rooms.length > 1 ? (

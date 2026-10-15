@@ -25,6 +25,7 @@ export type RoomOffer = {
   breakfastTotalIfAdded?:number;
   recommended?:boolean;
   requested?:boolean;
+  categoryBadge?:string;
   alternativeCheckin?:string;
   alternativeCheckout?:string;
   alternativeShiftDays?:number;
@@ -247,7 +248,9 @@ export function RoomCarousel({ offers, copy, language, money, onDetails, onSelec
             </div> : <Image src={offer.image} alt="" fill sizes="(min-width: 640px) 280px, 75vw" className="object-cover"/>}
             {offer.requested
               ? <span className="absolute left-2.5 top-2.5 rounded-full bg-[#c66a34]/95 px-2.5 py-1 text-[11px] font-black text-white shadow-sm">★ {REQUESTED_LABEL[language]}</span>
-              : offer.recommended && <span className="absolute left-2.5 top-2.5 rounded-full bg-[#66714f]/95 px-2.5 py-1 text-[11px] font-black text-white shadow-sm">★ {RECOMMENDED_LABEL[language]}</span>}
+              : offer.categoryBadge
+                ? <span className="absolute left-2.5 top-2.5 rounded-full bg-[#2f261f]/90 px-2.5 py-1 text-[11px] font-black text-white shadow-sm">★ {offer.categoryBadge}</span>
+                : offer.recommended && <span className="absolute left-2.5 top-2.5 rounded-full bg-[#66714f]/95 px-2.5 py-1 text-[11px] font-black text-white shadow-sm">★ {RECOMMENDED_LABEL[language]}</span>}
             {discount > 0 && <span className="absolute right-2.5 top-2.5 rounded-full bg-[#c66a34] px-2 py-1 text-[12px] font-black leading-none text-white shadow-sm [font-variant-numeric:tabular-nums]">−{discount}%</span>}
           </button>
           <div className="flex flex-1 flex-col p-3">
