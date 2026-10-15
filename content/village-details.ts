@@ -180,7 +180,7 @@ export const villageDetails: VillageDetailData[] = [
       description:
         "Explore Mesta in Chios, one of the best-preserved medieval mastic villages, with stone houses, arches, narrow alleys and authentic atmosphere.",
       ogImage:
-        "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+        "/images/villages/mesta-chios-hd.webp",
     },
     hero: {
       kicker: "Southwest Chios • Fortress village",
@@ -188,7 +188,7 @@ export const villageDetails: VillageDetailData[] = [
       description:
         "One of the most beautiful and well-preserved medieval villages in Chios, built like a castle with stone houses, arches and narrow atmospheric alleys.",
       image:
-        "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+        "/images/villages/mesta-chios-hd.webp",
       tags: ["#mesta", "#mastic_village", "#medieval_village", "#stone_alleys"],
     },
     details: [
@@ -271,7 +271,7 @@ export const villageDetails: VillageDetailData[] = [
       description:
         "Discover Vessa in Chios, a quiet traditional mastic village with medieval character, authentic atmosphere and easy access toward Lithi Beach.",
       ogImage:
-        "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+        "/images/villages/vessa-chios-hd.webp",
     },
     hero: {
       kicker: "South Chios • Quiet mastic village",
@@ -279,7 +279,7 @@ export const villageDetails: VillageDetailData[] = [
       description:
         "A peaceful mastic village in southern Chios, known for its traditional character, medieval roots and slower local atmosphere.",
       image:
-        "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+        "/images/villages/vessa-chios-hd.webp",
       tags: ["#vessa", "#mastic_village", "#quiet_chios", "#medieval_village"],
     },
     details: [
@@ -361,7 +361,7 @@ export const villageDetails: VillageDetailData[] = [
       description:
         "Visit Olympoi in southern Chios, a medieval mastic village with fortified character, historic buildings and a walking route toward Mesta.",
       ogImage:
-        "/images/villages/olympoi-1-768x432.webp",
+        "/images/villages/olympoi-chios-hd.webp",
     },
     hero: {
       kicker: "South Chios • Medieval mastic village",
@@ -369,7 +369,7 @@ export const villageDetails: VillageDetailData[] = [
       description:
         "A characteristic medieval mastic village in southern Chios, with defensive architecture, historic points of interest and a walking route toward Mesta.",
       image:
-        "/images/villages/olympoi-1-768x432.webp",
+        "/images/villages/olympoi-chios-hd.webp",
       tags: ["#olympoi", "#mastic_village", "#medieval_chios", "#walking_route"],
     },
     details: [
@@ -634,7 +634,7 @@ export const villageDetails: VillageDetailData[] = [
       description:
         "Discover Lagada in northeast Chios, a picturesque seaside village with a small harbor, fish taverns, views toward Oinousses and relaxed local atmosphere.",
       ogImage:
-        "/images/villages/lagada_3.webp",
+        "/images/villages/lagada-chios-hd.webp",
     },
     hero: {
       kicker: "Northeast Chios • Seaside village",
@@ -642,7 +642,7 @@ export const villageDetails: VillageDetailData[] = [
       description:
         "A picturesque seaside village in northeast Chios, known for its small harbor, taverns by the water and views toward Oinousses.",
       image:
-        "/images/villages/lagada_3.webp",
+        "/images/villages/lagada-chios-hd.webp",
       tags: ["#lagada", "#seaside_village", "#fish_taverns", "#oinousses_view"],
     },
     details: [
@@ -804,13 +804,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/el/xoria-xios/mesta-xios/",
       title: "Μεστά Χίος | Μεσαιωνικό καστροχώρι στα Μαστιχοχώρια",
       description: "Οδηγός για τα Μεστά Χίου: τι να δείτε στο μεσαιωνικό καστροχώρι, πώς θα πάτε, πού να παρκάρετε, πόση ώρα χρειάζεστε και τι να συνδυάσετε.",
-      ogImage: "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+      ogImage: "/images/villages/mesta-chios-hd.webp",
     },
     hero: {
       kicker: "Νότια Χίος • Μαστιχοχώρι",
       title: "Μεστά: το αυθεντικό μεσαιωνικό καστροχώρι",
       description: "Ανακαλύψτε τα Μεστά στη Χίο, ένα από τα καλύτερα διατηρημένα μεσαιωνικά καστροχώρια με πέτρινα σοκάκια, καμάρες και αυθεντική ατμόσφαιρα.",
-      image: "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+      image: "/images/villages/mesta-chios-hd.webp",
       tags: ["#Μεστά", "#Μαστιχοχώρια", "#καστροχώρι"],
     },
     heroImageAlt: "Πέτρινο σοκάκι με καμάρες στο μεσαιωνικό χωριό Μεστά Χίου",
@@ -981,13 +981,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/el/xoria-xios/vessa-xios/",
       title: "Βέσσα Χίος | Ήσυχο μεσαιωνικό Μαστιχοχώρι",
       description: "Ανακαλύψτε τη Βέσσα στη Χίο, ένα ήσυχο μεσαιωνικό Μαστιχοχώρι με αυθεντική ατμόσφαιρα, πέτρινα στενά και χαμηλούς ρυθμούς.",
-      ogImage: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+      ogImage: "/images/villages/vessa-chios-hd.webp",
     },
     hero: {
       kicker: "Νότια Χίος • Ήσυχο Μαστιχοχώρι",
       title: "Βέσσα: ήσυχο μεσαιωνικό Μαστιχοχώρι",
       description: "Ανακαλύψτε τη Βέσσα στη Χίο, ένα ήσυχο μεσαιωνικό Μαστιχοχώρι με αυθεντική ατμόσφαιρα, πέτρινα στενά και χαμηλούς ρυθμούς.",
-      image: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+      image: "/images/villages/vessa-chios-hd.webp",
       tags: ["#vessa", "#quiet_village", "#mastichochoria", "#authentic_chios"],
     },
     details: [
@@ -1058,13 +1058,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/el/xoria-xios/olympoi-xios/",
       title: "Ολύμποι Χίος | Μεσαιωνικό Μαστιχοχώρι & διαδρομή προς Μεστά",
       description: "Ανακαλύψτε τους Ολύμπους στη Χίο, ένα μεσαιωνικό Μαστιχοχώρι με οχυρωμένη δομή, αυθεντικά σοκάκια και ωραία σύνδεση με τα Μεστά.",
-      ogImage: "/images/villages/olympoi-1-768x432.webp",
+      ogImage: "/images/villages/olympoi-chios-hd.webp",
     },
     hero: {
       kicker: "Νότια Χίος • Οχυρωμένο χωριό",
       title: "Ολύμποι: μεσαιωνικό Μαστιχοχώρι με χαρακτήρα",
       description: "Ανακαλύψτε τους Ολύμπους στη Χίο, ένα μεσαιωνικό Μαστιχοχώρι με οχυρωμένη δομή, αυθεντικά σοκάκια και ωραία σύνδεση με τα Μεστά.",
-      image: "/images/villages/olympoi-1-768x432.webp",
+      image: "/images/villages/olympoi-chios-hd.webp",
       tags: ["#olympoi", "#mastic_village", "#medieval_chios", "#south_chios"],
     },
     details: [
@@ -1289,13 +1289,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/el/xoria-xios/lagada-xios/",
       title: "Λαγκάδα Χίος | Παραθαλάσσιο χωριό, λιμάνι και ψαροταβέρνες",
       description: "Ανακαλύψτε τη Λαγκάδα στη Χίο, ένα παραθαλάσσιο χωριό με λιμάνι, θέα στις Οινούσσες, ψαροταβέρνες και χαλαρή τοπική ατμόσφαιρα.",
-      ogImage: "/images/villages/lagada_3.webp",
+      ogImage: "/images/villages/lagada-chios-hd.webp",
     },
     hero: {
       kicker: "Ανατολική Χίος • Παραθαλάσσιο χωριό",
       title: "Λαγκάδα: λιμάνι, θάλασσα και ψαροταβέρνες",
       description: "Ανακαλύψτε τη Λαγκάδα στη Χίο, ένα παραθαλάσσιο χωριό με λιμάνι, θέα στις Οινούσσες, ψαροταβέρνες και χαλαρή τοπική ατμόσφαιρα.",
-      image: "/images/villages/lagada_3.webp",
+      image: "/images/villages/lagada-chios-hd.webp",
       tags: ["#lagada", "#seaside_village", "#fish_taverns", "#oinousses_views"],
     },
     details: [
@@ -1444,13 +1444,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/fr/villages-de-chios/village-mesta/",
       title: "Mesta Chios | Village fortifié médiéval du mastic",
       description: "Découvrez Mesta à Chios, l’un des villages fortifiés médiévaux les mieux préservés, avec ruelles en pierre, passages voûtés et atmosphère authentique.",
-      ogImage: "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+      ogImage: "/images/villages/mesta-chios-hd.webp",
     },
     hero: {
       kicker: "Sud de Chios • Village fortifié",
       title: "Mesta : le village-forteresse médiéval",
       description: "Découvrez Mesta à Chios, l’un des villages fortifiés médiévaux les mieux préservés, avec ruelles en pierre, passages voûtés et atmosphère authentique.",
-      image: "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+      image: "/images/villages/mesta-chios-hd.webp",
       tags: ["#mesta", "#medieval_village", "#mastichochoria", "#stone_alleys"],
     },
     details: [
@@ -1521,13 +1521,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/fr/villages-de-chios/village-vessa/",
       title: "Vessa Chios | Village médiéval tranquille du mastic",
       description: "Découvrez Vessa à Chios, un village médiéval du mastic paisible, avec atmosphère authentique, ruelles en pierre et rythme lent.",
-      ogImage: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+      ogImage: "/images/villages/vessa-chios-hd.webp",
     },
     hero: {
       kicker: "Sud de Chios • Village calme",
       title: "Vessa : village médiéval paisible",
       description: "Découvrez Vessa à Chios, un village médiéval du mastic paisible, avec atmosphère authentique, ruelles en pierre et rythme lent.",
-      image: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+      image: "/images/villages/vessa-chios-hd.webp",
       tags: ["#vessa", "#quiet_village", "#mastichochoria", "#authentic_chios"],
     },
     details: [
@@ -1598,13 +1598,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/fr/villages-de-chios/village-olympoi/",
       title: "Olympoi Chios | Village médiéval du mastic et route vers Mesta",
       description: "Découvrez Olympoi à Chios, un village médiéval du mastic avec structure fortifiée, ruelles authentiques et belle connexion avec Mesta.",
-      ogImage: "/images/villages/olympoi-1-768x432.webp",
+      ogImage: "/images/villages/olympoi-chios-hd.webp",
     },
     hero: {
       kicker: "Sud de Chios • Village fortifié",
       title: "Olympoi : village médiéval du mastic",
       description: "Découvrez Olympoi à Chios, un village médiéval du mastic avec structure fortifiée, ruelles authentiques et belle connexion avec Mesta.",
-      image: "/images/villages/olympoi-1-768x432.webp",
+      image: "/images/villages/olympoi-chios-hd.webp",
       tags: ["#olympoi", "#mastic_village", "#medieval_chios", "#south_chios"],
     },
     details: [
@@ -1829,13 +1829,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/fr/villages-de-chios/village-lagada/",
       title: "Lagada Chios | Village de bord de mer, port et tavernes de poisson",
       description: "Découvrez Lagada à Chios, un village de bord de mer avec port, vues vers Oinousses, tavernes de poisson et atmosphère locale détendue.",
-      ogImage: "/images/villages/lagada_3.webp",
+      ogImage: "/images/villages/lagada-chios-hd.webp",
     },
     hero: {
       kicker: "Est de Chios • Village de bord de mer",
       title: "Lagada : port, mer et tavernes de poisson",
       description: "Découvrez Lagada à Chios, un village de bord de mer avec port, vues vers Oinousses, tavernes de poisson et atmosphère locale détendue.",
-      image: "/images/villages/lagada_3.webp",
+      image: "/images/villages/lagada-chios-hd.webp",
       tags: ["#lagada", "#seaside_village", "#fish_taverns", "#oinousses_views"],
     },
     details: [
@@ -1984,13 +1984,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/de/doerfer-chios/mesta-dorf/",
       title: "Mesta Chios | Mittelalterliches Festungsdorf",
       description: "Entdecken Sie Mesta auf Chios, eines der am besten erhaltenen mittelalterlichen Festungsdörfer mit Steingassen, Bögen und authentischer Atmosphäre.",
-      ogImage: "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+      ogImage: "/images/villages/mesta-chios-hd.webp",
     },
     hero: {
       kicker: "Süd-Chios • Festungsdorf",
       title: "Mesta: das mittelalterliche Festungsdorf",
       description: "Entdecken Sie Mesta auf Chios, eines der am besten erhaltenen mittelalterlichen Festungsdörfer mit Steingassen, Bögen und authentischer Atmosphäre.",
-      image: "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+      image: "/images/villages/mesta-chios-hd.webp",
       tags: ["#mesta", "#medieval_village", "#mastichochoria", "#stone_alleys"],
     },
     details: [
@@ -2061,13 +2061,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/de/doerfer-chios/vessa-dorf/",
       title: "Vessa Chios | Ruhiges mittelalterliches Mastixdorf",
       description: "Entdecken Sie Vessa auf Chios, ein ruhiges mittelalterliches Mastixdorf mit authentischer Atmosphäre, Steingassen und langsamem Rhythmus.",
-      ogImage: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+      ogImage: "/images/villages/vessa-chios-hd.webp",
     },
     hero: {
       kicker: "Süd-Chios • Ruhiges Mastixdorf",
       title: "Vessa: ruhiges mittelalterliches Mastixdorf",
       description: "Entdecken Sie Vessa auf Chios, ein ruhiges mittelalterliches Mastixdorf mit authentischer Atmosphäre, Steingassen und langsamem Rhythmus.",
-      image: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+      image: "/images/villages/vessa-chios-hd.webp",
       tags: ["#vessa", "#quiet_village", "#mastichochoria", "#authentic_chios"],
     },
     details: [
@@ -2138,13 +2138,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/de/doerfer-chios/olympoi-dorf/",
       title: "Olympoi Chios | Mittelalterliches Mastixdorf und Route nach Mesta",
       description: "Entdecken Sie Olympoi auf Chios, ein mittelalterliches Mastixdorf mit befestigter Struktur, authentischen Gassen und schöner Verbindung nach Mesta.",
-      ogImage: "/images/villages/olympoi-1-768x432.webp",
+      ogImage: "/images/villages/olympoi-chios-hd.webp",
     },
     hero: {
       kicker: "Süd-Chios • Befestigtes Dorf",
       title: "Olympoi: mittelalterliches Mastixdorf",
       description: "Entdecken Sie Olympoi auf Chios, ein mittelalterliches Mastixdorf mit befestigter Struktur, authentischen Gassen und schöner Verbindung nach Mesta.",
-      image: "/images/villages/olympoi-1-768x432.webp",
+      image: "/images/villages/olympoi-chios-hd.webp",
       tags: ["#olympoi", "#mastic_village", "#medieval_chios", "#south_chios"],
     },
     details: [
@@ -2369,13 +2369,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/de/doerfer-chios/lagada-dorf/",
       title: "Lagada Chios | Dorf am Meer, Hafen und Fischtavernen",
       description: "Entdecken Sie Lagada auf Chios, ein Dorf am Meer mit Hafen, Blick nach Oinousses, Fischtavernen und entspannter lokaler Atmosphäre.",
-      ogImage: "/images/villages/lagada_3.webp",
+      ogImage: "/images/villages/lagada-chios-hd.webp",
     },
     hero: {
       kicker: "Ost-Chios • Dorf am Meer",
       title: "Lagada: Hafen, Meer und Fischtavernen",
       description: "Entdecken Sie Lagada auf Chios, ein Dorf am Meer mit Hafen, Blick nach Oinousses, Fischtavernen und entspannter lokaler Atmosphäre.",
-      image: "/images/villages/lagada_3.webp",
+      image: "/images/villages/lagada-chios-hd.webp",
       tags: ["#lagada", "#seaside_village", "#fish_taverns", "#oinousses_views"],
     },
     details: [
@@ -2524,13 +2524,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/it/villaggi-chios/villaggio-mesta/",
       title: "Mesta Chios | Villaggio medievale fortificato",
       description: "Scopri Mesta a Chios, uno dei villaggi fortificati medievali meglio conservati, con vicoli in pietra, archi e atmosfera autentica.",
-      ogImage: "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+      ogImage: "/images/villages/mesta-chios-hd.webp",
     },
     hero: {
       kicker: "Chios meridionale • Villaggio fortificato",
       title: "Mesta: il villaggio-fortezza medievale",
       description: "Scopri Mesta a Chios, uno dei villaggi fortificati medievali meglio conservati, con vicoli in pietra, archi e atmosfera autentica.",
-      image: "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+      image: "/images/villages/mesta-chios-hd.webp",
       tags: ["#mesta", "#medieval_village", "#mastichochoria", "#stone_alleys"],
     },
     details: [
@@ -2601,13 +2601,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/it/villaggi-chios/villaggio-vessa/",
       title: "Vessa Chios | Tranquillo villaggio medievale del mastice",
       description: "Scopri Vessa a Chios, un tranquillo villaggio medievale del mastice con atmosfera autentica, vicoli in pietra e ritmi lenti.",
-      ogImage: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+      ogImage: "/images/villages/vessa-chios-hd.webp",
     },
     hero: {
       kicker: "Chios meridionale • Villaggio tranquillo",
       title: "Vessa: tranquillo villaggio medievale",
       description: "Scopri Vessa a Chios, un tranquillo villaggio medievale del mastice con atmosfera autentica, vicoli in pietra e ritmi lenti.",
-      image: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+      image: "/images/villages/vessa-chios-hd.webp",
       tags: ["#vessa", "#quiet_village", "#mastichochoria", "#authentic_chios"],
     },
     details: [
@@ -2678,13 +2678,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/it/villaggi-chios/villaggio-olympoi/",
       title: "Olympoi Chios | Villaggio medievale del mastice e percorso verso Mesta",
       description: "Scopri Olympoi a Chios, un villaggio medievale del mastice con struttura fortificata, vicoli autentici e bel collegamento con Mesta.",
-      ogImage: "/images/villages/olympoi-1-768x432.webp",
+      ogImage: "/images/villages/olympoi-chios-hd.webp",
     },
     hero: {
       kicker: "Chios meridionale • Villaggio fortificato",
       title: "Olympoi: villaggio medievale del mastice",
       description: "Scopri Olympoi a Chios, un villaggio medievale del mastice con struttura fortificata, vicoli autentici e bel collegamento con Mesta.",
-      image: "/images/villages/olympoi-1-768x432.webp",
+      image: "/images/villages/olympoi-chios-hd.webp",
       tags: ["#olympoi", "#mastic_village", "#medieval_chios", "#south_chios"],
     },
     details: [
@@ -2909,13 +2909,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/it/villaggi-chios/villaggio-lagada/",
       title: "Lagada Chios | Villaggio sul mare, porto e taverne di pesce",
       description: "Scopri Lagada a Chios, un villaggio sul mare con porto, vista su Oinousses, taverne di pesce e atmosfera locale rilassata.",
-      ogImage: "/images/villages/lagada_3.webp",
+      ogImage: "/images/villages/lagada-chios-hd.webp",
     },
     hero: {
       kicker: "Chios orientale • Villaggio sul mare",
       title: "Lagada: porto, mare e taverne di pesce",
       description: "Scopri Lagada a Chios, un villaggio sul mare con porto, vista su Oinousses, taverne di pesce e atmosfera locale rilassata.",
-      image: "/images/villages/lagada_3.webp",
+      image: "/images/villages/lagada-chios-hd.webp",
       tags: ["#lagada", "#seaside_village", "#fish_taverns", "#oinousses_views"],
     },
     details: [
@@ -3064,13 +3064,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/es/pueblos-chios/pueblo-mesta/",
       title: "Mesta Chios | Pueblo medieval fortificado",
       description: "Guía de Mesta, el pueblo medieval fortificado de Quíos: qué ver, cómo llegar, dónde aparcar, cuánto tiempo necesita y qué combinar.",
-      ogImage: "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+      ogImage: "/images/villages/mesta-chios-hd.webp",
     },
     hero: {
       kicker: "Sur de Chios • Pueblo fortificado",
       title: "Mesta: el pueblo fortaleza medieval",
       description: "Descubre Mesta en Chios, uno de los pueblos fortificados medievales mejor conservados, con calles de piedra, arcos y atmósfera auténtica.",
-      image: "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+      image: "/images/villages/mesta-chios-hd.webp",
       tags: ["#mesta", "#medieval_village", "#mastichochoria", "#stone_alleys"],
     },
     details: [
@@ -3141,13 +3141,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/es/pueblos-chios/pueblo-vessa/",
       title: "Vessa Chios | Tranquilo pueblo medieval del mastiha",
       description: "Descubre Vessa en Chios, un tranquilo pueblo medieval del mastiha con atmósfera auténtica, calles de piedra y ritmo pausado.",
-      ogImage: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+      ogImage: "/images/villages/vessa-chios-hd.webp",
     },
     hero: {
       kicker: "Sur de Chios • Pueblo tranquilo",
       title: "Vessa: pueblo medieval tranquilo",
       description: "Descubre Vessa en Chios, un tranquilo pueblo medieval del mastiha con atmósfera auténtica, calles de piedra y ritmo pausado.",
-      image: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+      image: "/images/villages/vessa-chios-hd.webp",
       tags: ["#vessa", "#quiet_village", "#mastichochoria", "#authentic_chios"],
     },
     details: [
@@ -3218,13 +3218,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/es/pueblos-chios/pueblo-olympoi/",
       title: "Olympoi Chios | Pueblo medieval del mastiha y ruta a Mesta",
       description: "Descubre Olympoi en Chios, un pueblo medieval del mastiha con estructura fortificada, calles auténticas y bonita conexión con Mesta.",
-      ogImage: "/images/villages/olympoi-1-768x432.webp",
+      ogImage: "/images/villages/olympoi-chios-hd.webp",
     },
     hero: {
       kicker: "Sur de Chios • Pueblo fortificado",
       title: "Olympoi: pueblo medieval del mastiha",
       description: "Descubre Olympoi en Chios, un pueblo medieval del mastiha con estructura fortificada, calles auténticas y bonita conexión con Mesta.",
-      image: "/images/villages/olympoi-1-768x432.webp",
+      image: "/images/villages/olympoi-chios-hd.webp",
       tags: ["#olympoi", "#mastic_village", "#medieval_chios", "#south_chios"],
     },
     details: [
@@ -3449,13 +3449,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/es/pueblos-chios/pueblo-lagada/",
       title: "Lagada Chios | Pueblo junto al mar, puerto y tabernas de pescado",
       description: "Descubre Lagada en Chios, un pueblo junto al mar con puerto, vistas a Oinousses, tabernas de pescado y ambiente local relajado.",
-      ogImage: "/images/villages/lagada_3.webp",
+      ogImage: "/images/villages/lagada-chios-hd.webp",
     },
     hero: {
       kicker: "Este de Chios • Pueblo costero",
       title: "Lagada: puerto, mar y tabernas de pescado",
       description: "Descubre Lagada en Chios, un pueblo junto al mar con puerto, vistas a Oinousses, tabernas de pescado y ambiente local relajado.",
-      image: "/images/villages/lagada_3.webp",
+      image: "/images/villages/lagada-chios-hd.webp",
       tags: ["#lagada", "#seaside_village", "#fish_taverns", "#oinousses_views"],
     },
     details: [
@@ -3604,13 +3604,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/tr/sakiz-adasi-koyleri/mesta-koyu/",
       title: "Mesta Sakız Adası | Orta Çağ kale köyü",
       description: "Sakız Adası’ndaki Mesta’yı keşfedin: taş sokakları, kemerleri ve otantik atmosferiyle en iyi korunmuş Orta Çağ kale köylerinden biri.",
-      ogImage: "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+      ogImage: "/images/villages/mesta-chios-hd.webp",
     },
     hero: {
       kicker: "Güney Sakız • Kale köyü",
       title: "Mesta: Orta Çağ kale köyü",
       description: "Sakız Adası’ndaki Mesta’yı keşfedin: taş sokakları, kemerleri ve otantik atmosferiyle en iyi korunmuş Orta Çağ kale köylerinden biri.",
-      image: "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+      image: "/images/villages/mesta-chios-hd.webp",
       tags: ["#mesta", "#medieval_village", "#mastichochoria", "#stone_alleys"],
     },
     details: [
@@ -3681,13 +3681,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/tr/sakiz-adasi-koyleri/vessa-koyu/",
       title: "Vessa Sakız Adası | Sakin Orta Çağ mastik köyü",
       description: "Sakız Adası’ndaki Vessa’yı keşfedin: otantik atmosferi, taş sokakları ve sakin temposuyla huzurlu bir Orta Çağ mastik köyü.",
-      ogImage: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+      ogImage: "/images/villages/vessa-chios-hd.webp",
     },
     hero: {
       kicker: "Güney Sakız • Sakin mastik köyü",
       title: "Vessa: sakin Orta Çağ mastik köyü",
       description: "Sakız Adası’ndaki Vessa’yı keşfedin: otantik atmosferi, taş sokakları ve sakin temposuyla huzurlu bir Orta Çağ mastik köyü.",
-      image: "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+      image: "/images/villages/vessa-chios-hd.webp",
       tags: ["#vessa", "#quiet_village", "#mastichochoria", "#authentic_chios"],
     },
     details: [
@@ -3758,13 +3758,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/tr/sakiz-adasi-koyleri/olympoi-koyu/",
       title: "Olympoi Sakız Adası | Orta Çağ mastik köyü ve Mesta rotası",
       description: "Sakız Adası’ndaki Olympoi’yi keşfedin: surlu dokusu, otantik sokakları ve Mesta ile güzel bağlantısıyla Orta Çağ mastik köyü.",
-      ogImage: "/images/villages/olympoi-1-768x432.webp",
+      ogImage: "/images/villages/olympoi-chios-hd.webp",
     },
     hero: {
       kicker: "Güney Sakız • Surlu köy",
       title: "Olympoi: Orta Çağ mastik köyü",
       description: "Sakız Adası’ndaki Olympoi’yi keşfedin: surlu dokusu, otantik sokakları ve Mesta ile güzel bağlantısıyla Orta Çağ mastik köyü.",
-      image: "/images/villages/olympoi-1-768x432.webp",
+      image: "/images/villages/olympoi-chios-hd.webp",
       tags: ["#olympoi", "#mastic_village", "#medieval_chios", "#south_chios"],
     },
     details: [
@@ -3989,13 +3989,13 @@ export const localizedVillageDetails: VillageDetailData[] = [
       canonicalPath: "/tr/sakiz-adasi-koyleri/lagada-koyu/",
       title: "Lagada Sakız Adası | Deniz köyü, liman ve balık tavernaları",
       description: "Sakız Adası’ndaki Lagada’yı keşfedin: limanı, Oinousses manzaraları, balık tavernaları ve rahat yerel atmosferiyle deniz kenarı köyü.",
-      ogImage: "/images/villages/lagada_3.webp",
+      ogImage: "/images/villages/lagada-chios-hd.webp",
     },
     hero: {
       kicker: "Doğu Sakız • Deniz kenarı köyü",
       title: "Lagada: liman, deniz ve balık tavernaları",
       description: "Sakız Adası’ndaki Lagada’yı keşfedin: limanı, Oinousses manzaraları, balık tavernaları ve rahat yerel atmosferiyle deniz kenarı köyü.",
-      image: "/images/villages/lagada_3.webp",
+      image: "/images/villages/lagada-chios-hd.webp",
       tags: ["#lagada", "#seaside_village", "#fish_taverns", "#oinousses_views"],
     },
     details: [
@@ -4082,7 +4082,7 @@ export const relatedVillageCards = [
     description: "A beautifully preserved medieval fortress village with stone alleys.",
     href: "/chios/chios-villages/mesta-chios/",
     image:
-      "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+      "/images/villages/mesta-chios-hd.webp",
     imageAlt: "Mesta village in Chios with medieval stone alleys",
     badge: "Medieval",
     size: "wide",
@@ -4093,7 +4093,7 @@ export const relatedVillageCards = [
     description: "A quieter mastic village with medieval roots and authentic local atmosphere.",
     href: "/chios/chios-villages/vessa-chios/",
     image:
-      "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+      "/images/villages/vessa-chios-hd.webp",
     imageAlt: "Vessa village in Chios with traditional mastic village character",
     badge: "Quiet",
     size: "normal",
@@ -4104,7 +4104,7 @@ export const relatedVillageCards = [
     description: "A fortified mastic village with historic sights and a walking route to Mesta.",
     href: "/chios/chios-villages/olympoi-chios/",
     image:
-      "/images/villages/olympoi-1-768x432.webp",
+      "/images/villages/olympoi-chios-hd.webp",
     imageAlt: "Olympoi village in Chios with traditional architecture",
     badge: "Fortified",
     size: "normal",
@@ -4137,7 +4137,7 @@ export const relatedVillageCards = [
     description: "A seaside village with harbor views, fish taverns and relaxed local food.",
     href: "/chios/chios-villages/lagada-chios/",
     image:
-      "/images/villages/lagada_3.webp",
+      "/images/villages/lagada-chios-hd.webp",
     imageAlt: "Lagada seaside village in Chios with harbor and taverns",
     badge: "Seaside",
     size: "wide",

@@ -73,7 +73,7 @@ const agiaDynamiImage =
   "/images/chios-guide/sakiz-agia-dynami.jpg";
 
 const villagesImage =
-  "/images/villages/lagada_3.webp";
+  "/images/villages/lagada-chios-hd.webp";
 
 const museumsImage =
   "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece-hd.webp";

@@ -83,17 +83,17 @@ const villageImages = {
   pyrgi:
     "https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Pyrgi_house1.JPG/1280px-Pyrgi_house1.JPG",
   mesta:
-    "/images/villages/9ac4cf44d16c4af6d873c5bba4a6696b_L-768x480.webp",
+    "/images/villages/mesta-chios-hd.webp",
   vessa:
-    "/images/villages/29651245457_aa8f702ef7_b-768x432.webp",
+    "/images/villages/vessa-chios-hd.webp",
   olympoi:
-    "/images/villages/olympoi-1-768x432.webp",
+    "/images/villages/olympoi-chios-hd.webp",
   volissos:
     "/images/villages/Volissos-Chios-hd.webp",
   armolia:
     "/images/villages/unnamed-e1702830815478-hd.webp",
   lagada:
-    "/images/villages/lagada_3.webp",
+    "/images/villages/lagada-chios-hd.webp",
 };
 
 export const chiosVillagesPageEn: ChiosVillagesPageData = {

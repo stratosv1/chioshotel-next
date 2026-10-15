@@ -5,6 +5,8 @@ const ROOT = process.cwd();
 const WRONG_VESSA_IMAGE =
   "/images/villages/29651245457_aa8f702ef7_b-768x432.webp";
 
+const VESSA_HD_IMAGE = "/images/villages/vessa-chios-hd.webp";
+
 // Public-domain Pyrgi photo (Wikimedia Commons, Pyrgi house1.JPG).
 // Use one central URL everywhere Pyrgi is rendered or exposed in metadata.
 const PYRGI_IMAGE =
@@ -38,8 +40,12 @@ function patchHubImage() {
     throw new Error("Could not verify the central Pyrgi village-card image.");
   }
 
-  // Vessa must continue to use its own existing photo.
-  if (!next.includes(`vessa:\n    \"${WRONG_VESSA_IMAGE}\"`)) {
+  // Vessa must continue to use its own photo (the original or its
+  // high-resolution version), never the Pyrgi one.
+  if (
+    !next.includes(`vessa:\n    \"${WRONG_VESSA_IMAGE}\"`) &&
+    !next.includes(`vessa:\n    \"${VESSA_HD_IMAGE}\"`)
+  ) {
     throw new Error("Vessa image mapping changed unexpectedly.");
   }
 
