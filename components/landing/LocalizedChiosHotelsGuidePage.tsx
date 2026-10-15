@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { ChiosCollectionImageGallery } from "@/components/chios/ChiosCollectionImageGallery";
 import { LocalizedChiosHotelsLiveSearch } from "@/components/booking/LocalizedChiosHotelsLiveSearch";
 import type { ChiosHotelsGuideContent } from "@/content/chios-hotels-guide-types";
 import type { ChiosHotelsGuideLocale } from "@/lib/chios-hotels-guide-i18n";
@@ -59,6 +60,19 @@ export function LocalizedChiosHotelsGuidePage({ data, locale }: { data: ChiosHot
           <div className="relative min-h-[320px] sm:min-h-[420px] lg:min-h-full"><Image src={data.seo.image} alt={data.seo.imageAlt} fill priority sizes="(min-width: 1024px) 46vw, 100vw" className="object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-[#263127]/85 via-transparent to-transparent lg:bg-gradient-to-r lg:from-[#263127]/45 lg:via-transparent lg:to-transparent" /><div className="absolute bottom-4 left-4 right-4 rounded-[24px] border border-white/20 bg-[#263127]/76 p-5 shadow-2xl backdrop-blur-md sm:bottom-8 sm:left-8 sm:right-8 sm:p-6"><p className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-200">{ui.imageKicker}</p><p className="mt-2 text-xl font-black tracking-[-0.03em] text-white sm:text-2xl">{ui.imageText}</p></div></div>
         </div>
       </section>
+
+      {/* Voulamandis House room photos near the top (three-photo strip, same as
+          the beaches, villages and room pages). */}
+      <ChiosCollectionImageGallery
+        kind="rooms"
+        language={locale}
+        items={data.roomCategories.items.map((room) => ({
+          image: room.image,
+          imageAlt: `${room.title} · Voulamandis House`,
+          title: room.title,
+          href: room.href,
+        }))}
+      />
 
       <section className="border-b border-amber-900/10 bg-white"><div className="mx-auto flex max-w-7xl snap-x snap-mandatory overflow-x-auto bg-amber-900/10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:grid lg:grid-cols-6 lg:gap-px lg:overflow-visible">{data.trustPoints.map((item) => <div key={item.label} className="min-w-[44%] snap-start border-r border-amber-900/10 bg-white px-3 py-4 text-center sm:min-w-[30%] sm:px-4 sm:py-5 lg:min-w-0 lg:border-r-0"><p className="text-[9px] font-black uppercase tracking-[0.14em] text-amber-800 sm:text-[10px]">{item.label}</p><p className="mt-1.5 text-sm font-black sm:mt-2 sm:text-base">{item.value}</p></div>)}</div></section>
 

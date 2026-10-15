@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { ChiosCollectionImageGallery } from "@/components/chios/ChiosCollectionImageGallery";
 import { ChiosHotelsLiveSearch } from "@/components/booking/ChiosHotelsLiveSearch";
 import type { ChiosHotelsGuideData } from "@/content/chios-hotels-guide";
 
@@ -93,6 +94,19 @@ export function ChiosHotelsGuidePage({ data }: { data: ChiosHotelsGuideData }) {
           </div>
         </div>
       </section>
+
+      {/* Voulamandis House room photos near the top (three-photo strip, same as
+          the beaches, villages and room pages). */}
+      <ChiosCollectionImageGallery
+        kind="rooms"
+        language={"en"}
+        items={data.roomCategories.items.map((room) => ({
+          image: room.image,
+          imageAlt: `${room.title} at Voulamandis House in Chios`,
+          title: room.title,
+          href: room.href,
+        }))}
+      />
 
       <section className="border-b border-amber-900/10 bg-white" aria-label="Key Chios accommodation information">
         <div className="mx-auto flex max-w-7xl snap-x snap-mandatory overflow-x-auto bg-amber-900/10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:grid lg:grid-cols-6 lg:gap-px lg:overflow-visible">
