@@ -2,6 +2,7 @@ import { after, NextRequest, NextResponse } from "next/server";
 import { unstable_cache } from "next/cache";
 import { neon } from "@neondatabase/serverless";
 import { BOOKING_CORE_DEALS_CACHE_TAG } from "@/lib/booking-core/cache-tags";
+import { bookingCoreSyncUrl } from "@/lib/booking-core/sync-url";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -62,7 +63,7 @@ async function refreshBookingCoreOnDemand(origin: string): Promise<RefreshOutcom
   const timeout = setTimeout(() => controller.abort(), ON_DEMAND_SYNC_TIMEOUT_MS);
 
   try {
-    const syncUrl = new URL("/api/booking-core/sync/", origin);
+    const syncUrl = bookingCoreSyncUrl(origin);
     const response = await fetch(syncUrl, {
       method: "GET",
       cache: "no-store",

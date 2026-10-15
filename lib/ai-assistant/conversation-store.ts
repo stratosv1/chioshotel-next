@@ -130,6 +130,33 @@ function toIso(value: unknown) {
   return Number.isNaN(date.getTime()) ? null : date.toISOString();
 }
 
+// Upper bound on "new conversation" alert emails across all sessions. The
+// alerts go through the same Gmail SMTP account as real booking enquiries, so
+// a scripted flood of fake conversations must never exhaust its sending quota.
+// Conversations over the cap are still stored and visible in the staff inbox.
+function startedAlertsPerHour() {
+  const configured = Number(process.env.AI_ROOM_FINDER_ALERTS_PER_HOUR);
+  return Number.isInteger(configured) && configured > 0 ? configured : 20;
+}
+
+function sanitizeSelectedRooms(value: unknown) {
+  return safeJsonArray<Record<string, unknown>>(value)
+    .filter((room) => room && typeof room === "object")
+    .slice(0, 3)
+    .map((room) => {
+      const group = safeNumber(room.group);
+      const guests = safeNumber(room.guests);
+      const directTotal = safeNumber(room.directTotal);
+      return {
+        group: group !== null && Number.isInteger(group) && group >= 1 && group <= 10 ? group : null,
+        guests: guests !== null && Number.isInteger(guests) && guests >= 1 && guests <= 20 ? guests : null,
+        roomNumber: text(room.roomNumber, 40) || null,
+        name: text(room.name, 160) || null,
+        directTotal: directTotal !== null && directTotal >= 0 && directTotal < 1_000_000 ? directTotal : null,
+      };
+    });
+}
+
 function safeJsonArray<T>(value: unknown): T[] {
   return Array.isArray(value) ? (value as T[]) : [];
 }
@@ -221,7 +248,7 @@ export async function recordRoomFinderConversation(input: RoomFinderTrackingSnap
     .map((value) => Number(value))
     .filter((value) => Number.isInteger(value) && value > 0 && value <= 20)
     .slice(0, 10);
-  const selectedRooms = safeJsonArray<Record<string, unknown>>(input.selectedRooms).slice(0, 10);
+  const selectedRooms = sanitizeSelectedRooms(input.selectedRooms);
   const breakfast = Boolean(input.breakfast);
   const messages = safeJsonArray<RoomFinderTrackedMessage>(input.messages)
     .filter((message) => message && (message.role === "assistant" || message.role === "user"))
@@ -322,6 +349,11 @@ export async function recordRoomFinderConversation(input: RoomFinderTrackingSnap
       set notification_sent_at = now(), updated_at = now()
       where session_id = ${sid}
         and notification_sent_at is null
+        and (
+          select count(*)
+          from ai_room_finder_conversations recent
+          where recent.notification_sent_at >= now() - interval '1 hour'
+        ) < ${startedAlertsPerHour()}
       returning session_id
     `;
 

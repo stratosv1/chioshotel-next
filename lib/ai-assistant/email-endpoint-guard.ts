@@ -8,7 +8,8 @@ import { checkPublicRateLimit } from "@/lib/ai-assistant/public-rate-limit";
 
 const EMAIL_LIMITS = { perMinute: 3, perHour: 10 };
 
-function isAllowedOrigin(request: Request) {
+// Shared by every public Room Finder endpoint that writes data or sends email.
+export function isAllowedSiteOrigin(request: Request) {
   const origin = request.headers.get("origin");
   // Browsers always send Origin on fetch POST requests; scripts usually do not.
   if (!origin) return false;
@@ -28,7 +29,7 @@ function isAllowedOrigin(request: Request) {
  * rejected, or null when the request may proceed.
  */
 export async function guardEmailEndpoint(request: Request, scope: string): Promise<NextResponse | null> {
-  if (!isAllowedOrigin(request)) {
+  if (!isAllowedSiteOrigin(request)) {
     return NextResponse.json({ ok: false, error: "Forbidden." }, { status: 403 });
   }
 

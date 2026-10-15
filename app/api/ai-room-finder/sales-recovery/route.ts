@@ -5,6 +5,7 @@ import {
   addDaysToIsoDate,
   daysBetweenIsoDates,
   isStrictIsoDate,
+  todayInAthensIso,
 } from "@/lib/ai-assistant/room-finder-date";
 import type { AssistantLanguage } from "@/lib/ai-assistant/types";
 import { checkPublicRateLimit } from "@/lib/ai-assistant/public-rate-limit";
@@ -274,7 +275,7 @@ export async function GET(request: NextRequest) {
     const requestedLanguage = request.nextUrl.searchParams.get("lang") as AssistantLanguage | null;
     const language: AssistantLanguage = requestedLanguage && SUPPORTED.has(requestedLanguage) ? requestedLanguage : "en";
 
-    if (!isStrictIsoDate(checkin) || !isStrictIsoDate(checkout) || checkout <= checkin || !groups) {
+    if (!isStrictIsoDate(checkin) || !isStrictIsoDate(checkout) || checkout <= checkin || checkin < todayInAthensIso() || !groups) {
       return NextResponse.json(
         { success: false, code: "INVALID_REQUEST", message: "Invalid sales recovery request." },
         { status: 400, headers: { "Cache-Control": "no-store" } },

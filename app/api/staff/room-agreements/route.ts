@@ -1,5 +1,6 @@
 import { neon } from "@neondatabase/serverless";
 import { NextRequest, NextResponse } from "next/server";
+import { bookingCoreSyncUrl } from "@/lib/booking-core/sync-url";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -134,7 +135,7 @@ async function refreshBookingCoreOnDemand(request: NextRequest) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), ON_DEMAND_SYNC_TIMEOUT_MS);
   try {
-    const response = await fetch(new URL("/api/booking-core/sync/", request.nextUrl.origin), {
+    const response = await fetch(bookingCoreSyncUrl(request.nextUrl.origin), {
       method: "GET",
       cache: "no-store",
       redirect: "follow",

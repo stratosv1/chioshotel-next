@@ -3,6 +3,7 @@ import { neon } from "@neondatabase/serverless";
 import { localizeRoomOffer } from "@/lib/ai-assistant/room-card-catalog";
 import { daysBetweenIsoDates, isStrictIsoDate, todayInAthensIso } from "@/lib/ai-assistant/room-finder-date";
 import { checkPublicRateLimit } from "@/lib/ai-assistant/public-rate-limit";
+import { bookingCoreSyncUrl } from "@/lib/booking-core/sync-url";
 import type { AssistantLanguage } from "@/lib/ai-assistant/types";
 
 export const runtime = "nodejs";
@@ -17,11 +18,18 @@ const ON_DEMAND_SYNC_TIMEOUT_MS = 40_000;
 // timed out, wait for it to finish instead of failing the guest's search.
 const REFRESH_WAIT_DEADLINE_MS = 50_000;
 const REFRESH_POLL_INTERVAL_MS = 3_000;
+// SOURCE_NOT_READY means the Google Apps Script source is still building its
+// snapshot (or is recovering from a stuck refresh). Nothing else will pull the
+// snapshot into Neon, so ask the source again a few times instead of failing
+// the guest's search on the first attempt. Kept shorter than the busy wait so
+// a source that is genuinely down still answers the guest in reasonable time.
+const NOT_READY_RETRY_INTERVAL_MS = 5_000;
+const NOT_READY_DEADLINE_MS = 30_000;
 // Same stay-length rule as /api/ai-room-finder/alternatives and the chat flow.
 const MAX_STAY_NIGHTS = 60;
 const RATE_LIMITS = { perMinute: 60, perHour: 300 };
 
-type RefreshOutcome = "refreshed" | "busy" | "failed";
+type RefreshOutcome = "refreshed" | "busy" | "not_ready" | "failed";
 
 const wait = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms));
 
@@ -64,7 +72,7 @@ function shortDate(value: string, language: AssistantLanguage) {
     .format(new Date(Date.UTC(year, month - 1, day)));
 }
 
-async function refreshBookingCoreOnDemand(request: NextRequest): Promise<RefreshOutcome> {
+async function refreshBookingCoreOnDemand(request: NextRequest, timeoutMs = ON_DEMAND_SYNC_TIMEOUT_MS): Promise<RefreshOutcome> {
   const secret = String(process.env.CRON_SECRET || "").trim();
   if (!secret) {
     console.error("AI Room Finder cannot refresh stale booking inventory because CRON_SECRET is missing");
@@ -72,10 +80,10 @@ async function refreshBookingCoreOnDemand(request: NextRequest): Promise<Refresh
   }
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), ON_DEMAND_SYNC_TIMEOUT_MS);
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
-    const syncUrl = new URL("/api/booking-core/sync/", request.nextUrl.origin);
+    const syncUrl = bookingCoreSyncUrl(request.nextUrl.origin);
     const response = await fetch(syncUrl, {
       method: "GET",
       cache: "no-store",
@@ -93,6 +101,11 @@ async function refreshBookingCoreOnDemand(request: NextRequest): Promise<Refresh
       if (raw.includes("SOURCE_BUSY")) {
         console.warn("AI Room Finder on-demand Booking Core sync skipped: source refresh already running");
         return "busy";
+      }
+      // The source has no completed snapshot yet; retried by the caller.
+      if (raw.includes("SOURCE_NOT_READY")) {
+        console.warn("AI Room Finder on-demand Booking Core sync: source not ready yet, will retry");
+        return "not_ready";
       }
       console.error("AI Room Finder on-demand Booking Core sync failed", response.status, raw.slice(0, 500));
       return "failed";
@@ -157,23 +170,44 @@ export async function GET(request: NextRequest) {
     // When inventory freshness has naturally expired, refresh it only because a
     // real guest is asking for availability, then re-check the database status.
     if (status === "STALE_DATA") {
-      const outcome = await refreshBookingCoreOnDemand(request);
-      if (outcome !== "failed") {
+      const readStatus = async () => {
         statusRows = await sql`select * from booking_core.inventory_status(${checkin}::date, ${checkout}::date)`;
         status = String((statusRows[0] as any)?.status || "DATA_UNAVAILABLE");
-      }
-      // Poll until fresh inventory lands rather than telling the guest that it
-      // is unavailable: either a refresh started elsewhere is still running
-      // ("busy"), or our refresh succeeded but the status has not caught up yet
-      // ("refreshed"). Only a failed refresh stops immediately.
-      while (
-        outcome !== "failed"
-        && status === "STALE_DATA"
-        && Date.now() - startedAt + REFRESH_POLL_INTERVAL_MS < REFRESH_WAIT_DEADLINE_MS
-      ) {
+      };
+      const elapsed = () => Date.now() - startedAt;
+
+      let outcome = await refreshBookingCoreOnDemand(request);
+      if (outcome !== "failed") await readStatus();
+
+      // Wait for fresh inventory rather than telling the guest that it is
+      // unavailable:
+      // - "busy": a refresh started elsewhere (or our timed-out call) is still
+      //   running and will write the inventory; poll the database.
+      // - "refreshed": our refresh succeeded but the status has not caught up.
+      // - "not_ready": the source is still preparing its snapshot; ask it again.
+      // Only a hard failure stops immediately.
+      while (outcome !== "failed" && status === "STALE_DATA") {
+        if (outcome === "not_ready") {
+          if (elapsed() + NOT_READY_RETRY_INTERVAL_MS >= NOT_READY_DEADLINE_MS) break;
+          await wait(NOT_READY_RETRY_INTERVAL_MS);
+          const remaining = REFRESH_WAIT_DEADLINE_MS - elapsed();
+          outcome = await refreshBookingCoreOnDemand(request, Math.max(1_000, Math.min(ON_DEMAND_SYNC_TIMEOUT_MS, remaining)));
+          if (outcome !== "failed") await readStatus();
+          continue;
+        }
+        if (elapsed() + REFRESH_POLL_INTERVAL_MS >= REFRESH_WAIT_DEADLINE_MS) break;
         await wait(REFRESH_POLL_INTERVAL_MS);
-        statusRows = await sql`select * from booking_core.inventory_status(${checkin}::date, ${checkout}::date)`;
-        status = String((statusRows[0] as any)?.status || "DATA_UNAVAILABLE");
+        await readStatus();
+      }
+
+      if (status === "STALE_DATA") {
+        console.error(JSON.stringify({
+          level: "error",
+          msg: "ai_room_finder_inventory_still_stale",
+          route: "/api/ai-room-finder/availability",
+          lastRefreshOutcome: outcome,
+          ms: elapsed(),
+        }));
       }
     }
 
