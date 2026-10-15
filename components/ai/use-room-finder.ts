@@ -168,16 +168,49 @@ function roomName(language: RoomFinderLanguage, room: number) {
   return `${room >= 8 ? words.apartment : words.room} ${room}`;
 }
 
-// Results for a single-room search when the room the guest asked for is free:
-// only that room is shown, with an option to see the other free rooms.
+const LOCALE: Record<RoomFinderLanguage, string> = {
+  el: "el-GR", en: "en-GB", de: "de-DE", fr: "fr-FR", it: "it-IT", es: "es-ES", tr: "tr-TR",
+};
+
+function stayLabel(checkin: string, checkout: string) {
+  const day = (iso: string) => `${iso.slice(8, 10)}/${iso.slice(5, 7)}`;
+  return `${day(checkin)}–${day(checkout)}`;
+}
+
+function euros(value: number, language: RoomFinderLanguage) {
+  return new Intl.NumberFormat(LOCALE[language], { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(value);
+}
+
+// Single-room search for a room the guest asked for (from its page or by
+// name): one clear answer about THAT room, then the other options.
 const ROOM_INTEREST_AVAILABLE: Record<RoomFinderLanguage, (room: number) => string> = {
-  el: room => `Καλά νέα! Το ${roomName("el", room)} είναι διαθέσιμο για τις ημερομηνίες σας. Δείτε την τιμή απευθείας κράτησης παρακάτω.`,
-  en: room => `Good news! ${roomName("en", room)} is available for your dates. See the direct booking price below.`,
-  de: room => `Gute Nachrichten! ${roomName("de", room)} ist für Ihre Daten frei. Den Direktbuchungspreis sehen Sie unten.`,
-  fr: room => `Bonne nouvelle ! ${roomName("fr", room)} est disponible pour vos dates. Voici le tarif de réservation directe.`,
-  it: room => `Buone notizie! ${roomName("it", room)} è disponibile per le vostre date. Ecco il prezzo di prenotazione diretta.`,
-  es: room => `¡Buenas noticias! ${roomName("es", room)} está disponible para sus fechas. Vea abajo el precio de reserva directa.`,
-  tr: room => `İyi haber! ${roomName("tr", room)} tarihleriniz için müsait. Doğrudan rezervasyon fiyatını aşağıda görebilirsiniz.`,
+  el: room => `Καλά νέα! Το ${roomName("el", room)} είναι διαθέσιμο για τις ημερομηνίες σας. Το βλέπετε πρώτο παρακάτω, μαζί με τις άλλες διαθέσιμες επιλογές.`,
+  en: room => `Good news! ${roomName("en", room)} is available for your dates. You’ll see it first below, together with the other available options.`,
+  de: room => `Gute Nachrichten! ${roomName("de", room)} ist für Ihre Daten frei. Sie sehen es unten an erster Stelle, zusammen mit den anderen freien Optionen.`,
+  fr: room => `Bonne nouvelle ! ${roomName("fr", room)} est disponible pour vos dates. Elle apparaît en premier ci-dessous, avec les autres options disponibles.`,
+  it: room => `Buone notizie! ${roomName("it", room)} è disponibile per le vostre date. La trovate per prima qui sotto, insieme alle altre opzioni disponibili.`,
+  es: room => `¡Buenas noticias! ${roomName("es", room)} está disponible para sus fechas. La verá primero abajo, junto con las demás opciones disponibles.`,
+  tr: room => `İyi haber! ${roomName("tr", room)} tarihleriniz için müsait. Aşağıda ilk sırada, diğer müsait seçeneklerle birlikte görebilirsiniz.`,
+};
+
+const ROOM_INTEREST_NEARBY: Record<RoomFinderLanguage, (room: number, stay: string, alternative: string, price: string) => string> = {
+  el: (room, stay, alt, price) => `Το ${roomName("el", room)} είναι κλεισμένο για ${stay}, αλλά είναι ελεύθερο για ${alt} (τιμή απευθείας κράτησης ${price}). Το βλέπετε πρώτο παρακάτω, μαζί με τα δωμάτια που είναι ελεύθερα για τις δικές σας ημερομηνίες.`,
+  en: (room, stay, alt, price) => `${roomName("en", room)} is booked for ${stay}, but it’s free for ${alt} (direct price ${price}). You’ll see it first below, together with the rooms free for your own dates.`,
+  de: (room, stay, alt, price) => `${roomName("de", room)} ist für ${stay} belegt, aber für ${alt} frei (Direktpreis ${price}). Sie sehen es unten an erster Stelle, zusammen mit den Zimmern, die für Ihre Daten frei sind.`,
+  fr: (room, stay, alt, price) => `${roomName("fr", room)} est réservée pour ${stay}, mais libre pour ${alt} (tarif direct ${price}). Elle apparaît en premier ci-dessous, avec les chambres libres à vos dates.`,
+  it: (room, stay, alt, price) => `${roomName("it", room)} è occupata per ${stay}, ma è libera per ${alt} (prezzo diretto ${price}). La trovate per prima qui sotto, insieme alle camere libere per le vostre date.`,
+  es: (room, stay, alt, price) => `${roomName("es", room)} está reservada para ${stay}, pero está libre para ${alt} (precio directo ${price}). La verá primero abajo, junto con las habitaciones libres para sus fechas.`,
+  tr: (room, stay, alt, price) => `${roomName("tr", room)} ${stay} için dolu, ancak ${alt} için boş (doğrudan fiyat ${price}). Aşağıda ilk sırada, kendi tarihleriniz için boş odalarla birlikte görebilirsiniz.`,
+};
+
+const ROOM_INTEREST_BOOKED: Record<RoomFinderLanguage, (room: number, stay: string) => string> = {
+  el: (room, stay) => `Το ${roomName("el", room)} είναι δυστυχώς κλεισμένο για ${stay}. Για τις ημερομηνίες σας είναι ελεύθερα τα παρακάτω δωμάτια:`,
+  en: (room, stay) => `Unfortunately ${roomName("en", room)} is booked for ${stay}. These rooms are free for your dates:`,
+  de: (room, stay) => `Leider ist ${roomName("de", room)} für ${stay} belegt. Diese Zimmer sind für Ihre Daten frei:`,
+  fr: (room, stay) => `Malheureusement, ${roomName("fr", room).toLowerCase()} est réservée pour ${stay}. Ces chambres sont libres à vos dates :`,
+  it: (room, stay) => `Purtroppo ${roomName("it", room).toLowerCase()} è occupata per ${stay}. Queste camere sono libere per le vostre date:`,
+  es: (room, stay) => `Lamentablemente, ${roomName("es", room).toLowerCase()} está reservada para ${stay}. Estas habitaciones están libres para sus fechas:`,
+  tr: (room, stay) => `Maalesef ${roomName("tr", room)} ${stay} için dolu. Tarihleriniz için şu odalar boş:`,
 };
 
 // The room the guest asked for cannot host the whole party.
@@ -203,15 +236,6 @@ const GUESTS_SINGLE_ROOM: Record<RoomFinderLanguage, string> = {
   tr: "Kaç kişi için?",
 };
 
-const SHOW_OTHER_ROOMS: Record<RoomFinderLanguage, (count: number) => string> = {
-  el: count => `Δείτε και άλλα διαθέσιμα δωμάτια (${count})`,
-  en: count => `See other available rooms (${count})`,
-  de: count => `Weitere freie Zimmer ansehen (${count})`,
-  fr: count => `Voir les autres chambres disponibles (${count})`,
-  it: count => `Vedi altre camere disponibili (${count})`,
-  es: count => `Ver otras habitaciones disponibles (${count})`,
-  tr: count => `Diğer müsait odaları gör (${count})`,
-};
 
 // First message when the guest arrives from a room's "Check availability"
 // button: the room is remembered and checked first once dates are known.
@@ -347,13 +371,15 @@ function sortOffersForPreferences(
     return interestDifference || preferenceDifference || left.directTotal - right.directTotal || rank(left) - rank(right);
   });
   const bestScore = sorted.length ? roomPreferenceScore(Number(sorted[0].roomNumber), preferences) : 0;
-  return sorted.map((offer, index) => ({
-    ...offer,
-    recommended: index === 0 && (
-      roomInterestPriority(Number(offer.roomNumber), preferredRoomNumber) > 0
-      || (preferences.length > 0 && bestScore > 0)
-    ),
-  }));
+  return sorted.map((offer, index) => {
+    const requested = roomInterestPriority(Number(offer.roomNumber), preferredRoomNumber) > 0 && !offer.recoveryType;
+    return {
+      ...offer,
+      // Every card of the room the guest asked for (also on nearby dates).
+      requested,
+      recommended: !requested && index === 0 && preferences.length > 0 && bestScore > 0,
+    };
+  });
 }
 
 export function useRoomFinder(language: RoomFinderLanguage) {
@@ -378,9 +404,6 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   // The last search that found no rooms, for the "notify me if these dates
   // open up" card.
   const [unavailableSearch, setUnavailableSearch] = useState<BookingDraft | null>(null);
-  // Single-room search for a specific room that is free: show only that room
-  // until the guest asks to see the others.
-  const [showAllOffers, setShowAllOffers] = useState(false);
   const turnLocked = useRef(false);
   const languageRef = useRef(language);
   const announcedLongStayKey = useRef<string | null>(null);
@@ -412,18 +435,10 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     }),
     [offers, groups],
   );
-  const sortedOffers = useMemo(() => {
+  const visibleOffers = useMemo(() => {
     const feasible = feasibleOffersForGroup(capacityEligibleOffers, activeGroup, selectedKeys);
     return sortOffersForPreferences(feasible, preferences, preferredRoomNumber);
   }, [capacityEligibleOffers, activeGroup, selectedKeys, preferences, preferredRoomNumber]);
-  const focusedOffer = !showAllOffers && preferredRoomNumber && roomCount === 1 && groups.length === 1
-    ? sortedOffers.find(offer => Number(offer.roomNumber) === preferredRoomNumber && !offer.recoveryType) || null
-    : null;
-  const visibleOffers = useMemo(
-    () => focusedOffer ? [focusedOffer] : sortedOffers,
-    [focusedOffer, sortedOffers],
-  );
-  const hiddenOfferCount = focusedOffer ? sortedOffers.length - 1 : 0;
 
   // Layout effect: runs before the chat messages' tracking effects of the same
   // render, so a message is stored together with the facts it produced.
@@ -749,7 +764,6 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     });
     setFailedSearch(null);
     setUnavailableSearch(null);
-    setShowAllOffers(false);
     add("assistant", tone.searching);
     setTyping(true);
 
@@ -843,30 +857,51 @@ export function useRoomFinder(language: RoomFinderLanguage) {
         return;
       }
 
-      setOffers(eligible);
+      const singleRoom = searchDraft.groups.length === 1;
+      const interestAvailable = Boolean(roomInterest)
+        && eligible.some(groupOffers => groupOffers.some(offer => Number(offer.roomNumber) === roomInterest && !offer.recoveryType));
+      let resultOffers = eligible;
+      let content = tone.results(1, searchDraft.groups[0], searchDraft.groups.length);
+
+      if (roomInterest && singleRoom) {
+        const stay = stayLabel(searchDraft.checkin, searchDraft.checkout);
+        const maxGuests = ROOM_MAX_GUESTS.get(roomInterest) || 0;
+        const partySize = searchDraft.groups[0] || 0;
+        if (interestAvailable) {
+          content = ROOM_INTEREST_AVAILABLE[language](roomInterest);
+        } else if (maxGuests && partySize > maxGuests) {
+          content = ROOM_INTEREST_TOO_SMALL[language](roomInterest, maxGuests, partySize);
+        } else {
+          // The room is booked: look for the same room a few days earlier or
+          // later before falling back to the other rooms.
+          const sameRoomNearby = (await findNearbyOffers(searchDraft))
+            .filter(offer => Number(offer.roomNumber) === roomInterest && !offer.recoveryType)
+            .slice(0, 2);
+          if (sameRoomNearby.length) {
+            const first = sameRoomNearby[0];
+            content = ROOM_INTEREST_NEARBY[language](
+              roomInterest,
+              stay,
+              stayLabel(String(first.alternativeCheckin), String(first.alternativeCheckout)),
+              euros(Number(first.directTotal), language),
+            );
+            resultOffers = [[...sameRoomNearby, ...(eligible[0] || [])]];
+          } else {
+            content = ROOM_INTEREST_BOOKED[language](roomInterest, stay);
+          }
+        }
+      } else if (roomInterest && !interestAvailable) {
+        add("assistant", ROOM_INTEREST_UNAVAILABLE[language](roomInterest));
+      }
+
+      setOffers(resultOffers);
       setActiveGroup(0);
       dispatchFlow({
         type: "commit_turn",
         state: { step: "selecting", draft: searchDraft },
       });
-      const singleRoom = searchDraft.groups.length === 1;
-      const interestAvailable = Boolean(roomInterest)
-        && eligible.some(groupOffers => groupOffers.some(offer => Number(offer.roomNumber) === roomInterest && !offer.recoveryType));
-      if (roomInterest && !interestAvailable) {
-        const maxGuests = ROOM_MAX_GUESTS.get(roomInterest) || 0;
-        const partySize = searchDraft.groups[0] || 0;
-        add(
-          "assistant",
-          singleRoom && maxGuests && partySize > maxGuests
-            ? ROOM_INTEREST_TOO_SMALL[language](roomInterest, maxGuests, partySize)
-            : ROOM_INTEREST_UNAVAILABLE[language](roomInterest),
-        );
-      }
-      const content = roomInterest && interestAvailable && singleRoom
-        ? ROOM_INTEREST_AVAILABLE[language](roomInterest)
-        : tone.results(1, searchDraft.groups[0], searchDraft.groups.length);
       const firstGroupOffers = sortOffersForPreferences(
-        feasibleOffersForGroup(eligible, 0, new Set()),
+        feasibleOffersForGroup(resultOffers, 0, new Set()),
         preferences,
         roomInterest,
       );
@@ -1338,9 +1373,6 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     chooseBreakfast,
     retryAvailability,
     focusRoomFromLink,
-    hiddenOfferCount,
-    showOtherRoomsLabel: SHOW_OTHER_ROOMS[language](hiddenOfferCount),
-    showAllRooms: () => setShowAllOffers(true),
     unavailableSearch: step === "unavailable" ? unavailableSearch : null,
     canRetryAvailability: Boolean(failedSearch) && step === "unavailable",
     retryLabel: RETRY_SEARCH_LABEL[language],

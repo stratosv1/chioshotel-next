@@ -24,6 +24,7 @@ export type RoomOffer = {
   saving:number;
   breakfastTotalIfAdded?:number;
   recommended?:boolean;
+  requested?:boolean;
   alternativeCheckin?:string;
   alternativeCheckout?:string;
   alternativeShiftDays?:number;
@@ -60,6 +61,17 @@ const NEXT_LABEL: Record<RoomFinderLanguage,string> = {
   it:"Camera successiva",
   es:"Habitación siguiente",
   tr:"Sonraki oda",
+};
+
+// The room the guest came for (from its page or by name).
+const REQUESTED_LABEL: Record<RoomFinderLanguage,string> = {
+  el:"Το δωμάτιο που ζητήσατε",
+  en:"The room you asked for",
+  de:"Ihr gewünschtes Zimmer",
+  fr:"La chambre demandée",
+  it:"La camera richiesta",
+  es:"La habitación que pidió",
+  tr:"İstediğiniz oda",
 };
 
 const RECOMMENDED_LABEL: Record<RoomFinderLanguage,string> = {
@@ -233,7 +245,9 @@ export function RoomCarousel({ offers, copy, language, money, onDetails, onSelec
                 <Image src={roomVisual.image} alt="" fill sizes="(min-width: 640px) 140px, 38vw" className="object-cover"/>
               </div>)}
             </div> : <Image src={offer.image} alt="" fill sizes="(min-width: 640px) 280px, 75vw" className="object-cover"/>}
-            {offer.recommended && <span className="absolute left-2.5 top-2.5 rounded-full bg-[#66714f]/95 px-2.5 py-1 text-[11px] font-black text-white shadow-sm">★ {RECOMMENDED_LABEL[language]}</span>}
+            {offer.requested
+              ? <span className="absolute left-2.5 top-2.5 rounded-full bg-[#c66a34]/95 px-2.5 py-1 text-[11px] font-black text-white shadow-sm">★ {REQUESTED_LABEL[language]}</span>
+              : offer.recommended && <span className="absolute left-2.5 top-2.5 rounded-full bg-[#66714f]/95 px-2.5 py-1 text-[11px] font-black text-white shadow-sm">★ {RECOMMENDED_LABEL[language]}</span>}
             {discount > 0 && <span className="absolute right-2.5 top-2.5 rounded-full bg-[#c66a34] px-2 py-1 text-[12px] font-black leading-none text-white shadow-sm [font-variant-numeric:tabular-nums]">−{discount}%</span>}
           </button>
           <div className="flex flex-1 flex-col p-3">
