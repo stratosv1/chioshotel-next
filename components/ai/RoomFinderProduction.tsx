@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ArrowDown, ArrowLeft, Check, ChevronDown, MessageCircle, Phone, RotateCcw, Send } from "lucide-react";
+import { ArrowDown, ArrowLeft, CalendarDays, Check, ChevronDown, MessageCircle, Phone, RotateCcw, Send, Users } from "lucide-react";
 import { useEffect, useLayoutEffect, useRef, useState, type FormEvent } from "react";
 import {
   ROOM_FINDER_COPY,
@@ -722,6 +722,55 @@ export function RoomFinderProduction({
   const awaitingStepTransition = finder.messages[finder.messages.length - 1]?.role === "user";
   const quickRepliesHidden = awaitingStepTransition
     || (!!lastAssistantMessageId && hiddenQuickReplyPromptId === lastAssistantMessageId);
+  // Results, "no availability" and the summary are never a dead end: the guest
+  // can change dates, change the party or start again from right there.
+  function startNewSearch() {
+    finder.reset();
+    setDetail(null);
+    setSendStatus("idle");
+    setHiddenQuickReplyPromptId(null);
+    setBreakfastChoicePending(null);
+  }
+  const resultActionsDisabled = finder.typing || finder.step === "searching";
+  const resultActions = (showChanges: boolean) => (
+    <div data-room-finder-result-actions="true" className="msg ml-10 mt-2">
+      <div className="flex flex-wrap gap-2">
+        {showChanges && (
+          <>
+            <button
+              type="button"
+              disabled={resultActionsDisabled}
+              onClick={() => void finder.changeDates()}
+              className="flex min-h-11 items-center gap-1.5 rounded-full border border-[#d8cec1] bg-white px-4 text-sm font-bold text-[#3f392f] shadow-sm transition hover:bg-[#fffaf4] active:scale-[.97] disabled:opacity-45"
+            >
+              <CalendarDays className="h-4 w-4" aria-hidden="true" />
+              {finder.resultActions.dates}
+            </button>
+            <button
+              type="button"
+              disabled={resultActionsDisabled}
+              onClick={() => void finder.changeGuests()}
+              className="flex min-h-11 items-center gap-1.5 rounded-full border border-[#d8cec1] bg-white px-4 text-sm font-bold text-[#3f392f] shadow-sm transition hover:bg-[#fffaf4] active:scale-[.97] disabled:opacity-45"
+            >
+              <Users className="h-4 w-4" aria-hidden="true" />
+              {finder.resultActions.guests}
+            </button>
+          </>
+        )}
+        <button
+          type="button"
+          disabled={resultActionsDisabled}
+          onClick={startNewSearch}
+          className="flex min-h-11 items-center gap-1.5 rounded-full border border-[#d8cec1] bg-white px-4 text-sm font-bold text-[#3f392f] shadow-sm transition hover:bg-[#fffaf4] active:scale-[.97] disabled:opacity-45"
+        >
+          <RotateCcw className="h-4 w-4" aria-hidden="true" />
+          {finder.resultActions.restart}
+        </button>
+      </div>
+      {showChanges && <p className="mt-2 px-1 text-[12px] leading-[17px] text-[#746b60]">{finder.resultActions.hint}</p>}
+    </div>
+  );
+
   const roomResultsVisible = finder.visibleOffers.length > 0
     && (finder.step === "searching" || finder.step === "selecting");
   const activeRoomNumber = Math.min(finder.activeGroup + 1, Math.max(finder.roomCount, 1));
@@ -817,7 +866,7 @@ export function RoomFinderProduction({
             type="button"
             aria-label={copy.newSearch}
             title={copy.newSearch}
-            onClick={() => finder.reset()}
+            onClick={startNewSearch}
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#d8cec1] bg-white text-[#5f574d] shadow-sm transition hover:bg-[#fffaf4] active:scale-[.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9d8268]"
           >
             <RotateCcw className="h-[19px] w-[19px]" aria-hidden="true" />
@@ -905,6 +954,11 @@ export function RoomFinderProduction({
                     privacyNotice={contactCopy.privacyNotice}
                   />
                 )}
+                {message.kind === "lead"
+                  && message.id === latestLeadMessageId
+                  && finder.step === "unavailable"
+                  && !finder.typing
+                  && resultActions(Boolean(finder.checkin && finder.checkout))}
                 {message.kind === "lead" && (
                   <RoomFinderLeadCard
                     language={language}
@@ -1014,6 +1068,7 @@ export function RoomFinderProduction({
                   onDetails={openRoomDetail}
                   onSelect={offer => void finder.selectOffer(offer)}
                 />
+                {finder.step === "selecting" && resultActions(true)}
                 <section className="msg ml-10 flex flex-col items-stretch gap-3 rounded-[20px] border border-[#dfd6ca] bg-white px-4 py-3 shadow-sm min-[420px]:flex-row min-[420px]:items-center">
                   <p className="min-w-0 flex-1 text-sm font-semibold leading-5">{copy.whatsappHelp}</p>
                   <button
@@ -1240,6 +1295,7 @@ export function RoomFinderProduction({
                 </div>
               </section>
             )}
+            {finder.step === "complete" && resultActions(sendStatus !== "sent")}
           </div>
         </div>
       </div>

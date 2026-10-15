@@ -313,6 +313,18 @@ const ROOM_INTEREST_TOO_SMALL: Record<RoomFinderLanguage, (room: number, maxGues
   tr: (room, max, guests) => `${roomName("tr", room)} en fazla ${max} kişiliktir, ${guests} kişi için uygun değil. Tarihleriniz için müsait odalar aşağıda.`,
 };
 
+// Actions offered under results, "no availability" and the summary, so the
+// guest can keep searching instead of hitting a dead end.
+const RESULT_ACTIONS: Record<RoomFinderLanguage, { dates: string; guests: string; restart: string; hint: string }> = {
+  el: { dates: "Αλλαγή ημερομηνιών", guests: "Αλλαγή ατόμων", restart: "Νέα αναζήτηση", hint: "Μπορείτε και να μου γράψετε την αλλαγή, π.χ. «check-out 15/5» ή «τελικά 3 άτομα»." },
+  en: { dates: "Change dates", guests: "Change guests", restart: "New search", hint: "You can also just type the change, e.g. “check-out 15/5” or “actually 3 guests”." },
+  de: { dates: "Daten ändern", guests: "Gäste ändern", restart: "Neue Suche", hint: "Sie können die Änderung auch einfach schreiben, z. B. „Abreise 15.5.“ oder „doch 3 Personen“." },
+  fr: { dates: "Changer les dates", guests: "Changer le nombre", restart: "Nouvelle recherche", hint: "Vous pouvez aussi simplement écrire le changement, par ex. « départ le 15/5 » ou « finalement 3 personnes »." },
+  it: { dates: "Cambia date", guests: "Cambia ospiti", restart: "Nuova ricerca", hint: "Potete anche scrivere la modifica, ad es. “check-out 15/5” o “in realtà 3 persone”." },
+  es: { dates: "Cambiar fechas", guests: "Cambiar personas", restart: "Nueva búsqueda", hint: "También puede escribir el cambio, p. ej. «salida el 15/5» o «al final 3 personas»." },
+  tr: { dates: "Tarihleri değiştir", guests: "Kişi sayısını değiştir", restart: "Yeni arama", hint: "Değişikliği yazabilirsiniz de, ör. “çıkış 15/5” veya “aslında 3 kişi”." },
+};
+
 // Guest question when the booking is one room: "how many guests", without
 // numbering the room ("room 1" read like Room 1 to guests who came for Room 5).
 const GUESTS_SINGLE_ROOM: Record<RoomFinderLanguage, string> = {
@@ -758,6 +770,45 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     announcedLongStayKey.current = null;
     dispatchFlow({ type: "commit_turn", state: nextFlow });
     add("assistant", tone.invalidDate);
+  }
+
+  // "Change dates" button: keeps rooms, guests and the room/category focus,
+  // and asks for the new check-in.
+  async function changeDates() {
+    if (step === "searching") return;
+    if (!await beginUserTurn(RESULT_ACTIONS[language].dates, "normal", "👍")) return;
+    try {
+      const nextFlow = bookingFlowReducer(flow, { type: "edit_dates" });
+      clearSearchSelectionState();
+      setFailedSearch(null);
+      setUnavailableSearch(null);
+      announcedLongStayKey.current = null;
+      dispatchFlow({ type: "commit_turn", state: nextFlow });
+      add("assistant", tone.invalidDate);
+    } finally {
+      endUserTurn();
+    }
+  }
+
+  // "Change guests" button: keeps the dates and asks for the party again.
+  async function changeGuests() {
+    if (step === "searching") return;
+    if (!await beginUserTurn(RESULT_ACTIONS[language].guests, "normal", "👍")) return;
+    try {
+      const nextFlow = bookingFlowReducer(flow, { type: "edit_guests" });
+      clearSearchSelectionState();
+      setFailedSearch(null);
+      setUnavailableSearch(null);
+      dispatchFlow({ type: "commit_turn", state: nextFlow });
+      add(
+        "assistant",
+        nextFlow.step === "guests"
+          ? guestsPrompt(nextFlow.draft, nextMissingGuestRoom(nextFlow.draft) || 1)
+          : roomsPrompt(nextFlow.draft),
+      );
+    } finally {
+      endUserTurn();
+    }
   }
 
   async function interpret(value: string, current: FinderStep): Promise<InterpretResult> {
@@ -1512,6 +1563,9 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     retryAvailability,
     focusRoomFromLink,
     focusCategoryFromLink,
+    changeDates,
+    changeGuests,
+    resultActions: RESULT_ACTIONS[language],
     unavailableSearch: step === "unavailable" ? unavailableSearch : null,
     canRetryAvailability: Boolean(failedSearch) && step === "unavailable",
     retryLabel: RETRY_SEARCH_LABEL[language],

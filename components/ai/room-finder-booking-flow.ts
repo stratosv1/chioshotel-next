@@ -64,6 +64,8 @@ export type BookingFlowAction =
   | { type: "choose_guests"; guests: number }
   | { type: "go_back" }
   | { type: "edit_dates" }
+  // Change the party after seeing results; dates and rooms are kept.
+  | { type: "edit_guests" }
   // The guest came from one room's page: they want one room, so the flow
   // does not ask how many rooms (they can still say otherwise later).
   | { type: "prefill_single_room" };
@@ -287,6 +289,13 @@ export function bookingFlowReducer(state: BookingFlowState, action: BookingFlowA
 
     case "go_back":
       return goBackState(state);
+
+    case "edit_guests": {
+      const draft = cloneDraft(state.draft);
+      draft.totalGuests = null;
+      draft.groups = [];
+      return { step: draft.roomCount ? "guests" : "rooms", draft };
+    }
 
     case "edit_dates": {
       const draft = cloneDraft(state.draft);
