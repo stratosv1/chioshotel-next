@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useLayoutEffect, useMemo, useReducer, useRef, useState } from "react";
-import { localizeRoomOffer } from "@/lib/ai-assistant/room-card-catalog";
+import { roomCatalogForLanguage, localizeRoomOffer } from "@/lib/ai-assistant/room-card-catalog";
 import {
   encodeRoomFinderOfferSnapshot,
   ROOM_FINDER_OFFER_SNAPSHOT_MARKER,
@@ -149,16 +149,80 @@ const ROOM_INTEREST_SAVED: Record<RoomFinderLanguage, (room: number) => string> 
   tr: room => `${room} numaralı odayla ilgilendiğinizi not ettim. Tarihler ve konuk bilgileri tamamlandığında canlı müsaitliğini kontrol edeceğim.`,
 };
 
+// Guest capacity of each room, for explaining why a room the guest asked for
+// is not in the results.
+const ROOM_MAX_GUESTS = new Map(roomCatalogForLanguage("en").map(room => [room.roomNumber, room.maxGuests]));
+
+const ROOM_WORD: Record<RoomFinderLanguage, { room: string; apartment: string }> = {
+  el: { room: "Δωμάτιο", apartment: "Διαμέρισμα" },
+  en: { room: "Room", apartment: "Apartment" },
+  de: { room: "Zimmer", apartment: "Apartment" },
+  fr: { room: "La chambre", apartment: "L’appartement" },
+  it: { room: "La camera", apartment: "L’appartamento" },
+  es: { room: "La habitación", apartment: "El apartamento" },
+  tr: { room: "Oda", apartment: "Daire" },
+};
+
+function roomName(language: RoomFinderLanguage, room: number) {
+  const words = ROOM_WORD[language];
+  return `${room >= 8 ? words.apartment : words.room} ${room}`;
+}
+
+// Results for a single-room search when the room the guest asked for is free:
+// only that room is shown, with an option to see the other free rooms.
+const ROOM_INTEREST_AVAILABLE: Record<RoomFinderLanguage, (room: number) => string> = {
+  el: room => `Καλά νέα! Το ${roomName("el", room)} είναι διαθέσιμο για τις ημερομηνίες σας. Δείτε την τιμή απευθείας κράτησης παρακάτω.`,
+  en: room => `Good news! ${roomName("en", room)} is available for your dates. See the direct booking price below.`,
+  de: room => `Gute Nachrichten! ${roomName("de", room)} ist für Ihre Daten frei. Den Direktbuchungspreis sehen Sie unten.`,
+  fr: room => `Bonne nouvelle ! ${roomName("fr", room)} est disponible pour vos dates. Voici le tarif de réservation directe.`,
+  it: room => `Buone notizie! ${roomName("it", room)} è disponibile per le vostre date. Ecco il prezzo di prenotazione diretta.`,
+  es: room => `¡Buenas noticias! ${roomName("es", room)} está disponible para sus fechas. Vea abajo el precio de reserva directa.`,
+  tr: room => `İyi haber! ${roomName("tr", room)} tarihleriniz için müsait. Doğrudan rezervasyon fiyatını aşağıda görebilirsiniz.`,
+};
+
+// The room the guest asked for cannot host the whole party.
+const ROOM_INTEREST_TOO_SMALL: Record<RoomFinderLanguage, (room: number, maxGuests: number, guests: number) => string> = {
+  el: (room, max, guests) => `Το ${roomName("el", room)} φιλοξενεί έως ${max} ${max === 1 ? "άτομο" : "άτομα"}, οπότε δεν χωράει ${guests} άτομα. Σας προτείνω τα παρακάτω διαθέσιμα δωμάτια για τις ημερομηνίες σας.`,
+  en: (room, max, guests) => `${roomName("en", room)} sleeps up to ${max}, so it can’t host ${guests} guests. Here are the rooms available for your dates.`,
+  de: (room, max, guests) => `${roomName("de", room)} bietet Platz für bis zu ${max} Personen, also nicht für ${guests}. Hier sind die freien Zimmer für Ihre Daten.`,
+  fr: (room, max, guests) => `${roomName("fr", room)} accueille jusqu’à ${max} personnes, elle ne convient donc pas pour ${guests}. Voici les chambres disponibles pour vos dates.`,
+  it: (room, max, guests) => `${roomName("it", room)} ospita fino a ${max} persone, quindi non è adatta a ${guests}. Ecco le camere disponibili per le vostre date.`,
+  es: (room, max, guests) => `${roomName("es", room)} admite hasta ${max} personas, así que no sirve para ${guests}. Estas son las habitaciones disponibles para sus fechas.`,
+  tr: (room, max, guests) => `${roomName("tr", room)} en fazla ${max} kişiliktir, ${guests} kişi için uygun değil. Tarihleriniz için müsait odalar aşağıda.`,
+};
+
+// Guest question when the booking is one room: "how many guests", without
+// numbering the room ("room 1" read like Room 1 to guests who came for Room 5).
+const GUESTS_SINGLE_ROOM: Record<RoomFinderLanguage, string> = {
+  el: "Για πόσα άτομα;",
+  en: "How many guests?",
+  de: "Für wie viele Personen?",
+  fr: "Pour combien de personnes ?",
+  it: "Per quante persone?",
+  es: "¿Para cuántas personas?",
+  tr: "Kaç kişi için?",
+};
+
+const SHOW_OTHER_ROOMS: Record<RoomFinderLanguage, (count: number) => string> = {
+  el: count => `Δείτε και άλλα διαθέσιμα δωμάτια (${count})`,
+  en: count => `See other available rooms (${count})`,
+  de: count => `Weitere freie Zimmer ansehen (${count})`,
+  fr: count => `Voir les autres chambres disponibles (${count})`,
+  it: count => `Vedi altre camere disponibili (${count})`,
+  es: count => `Ver otras habitaciones disponibles (${count})`,
+  tr: count => `Diğer müsait odaları gör (${count})`,
+};
+
 // First message when the guest arrives from a room's "Check availability"
 // button: the room is remembered and checked first once dates are known.
 const ROOM_FROM_LINK: Record<RoomFinderLanguage, (room: number) => string> = {
-  el: room => `Βλέπω ότι σας ενδιαφέρει το ${room >= 8 ? "Διαμέρισμα" : "Δωμάτιο"} ${room}. Πείτε μου πότε θέλετε να έρθετε και για πόσα άτομα, και θα σας δείξω αμέσως αν είναι διαθέσιμο και σε ποια τιμή.`,
-  en: room => `I see you’re interested in ${room >= 8 ? "Apartment" : "Room"} ${room}. Tell me your dates and how many guests, and I’ll show you straight away whether it’s available and at what price.`,
-  de: room => `Sie interessieren sich für ${room >= 8 ? "Apartment" : "Zimmer"} ${room}. Nennen Sie mir Ihre Reisedaten und die Anzahl der Gäste, dann zeige ich Ihnen sofort Verfügbarkeit und Preis.`,
-  fr: room => `Vous vous intéressez ${room >= 8 ? "à l’appartement" : "à la chambre"} ${room}. Indiquez-moi vos dates et le nombre de personnes, et je vous montre tout de suite sa disponibilité et son prix.`,
-  it: room => `Vedo che vi interessa ${room >= 8 ? "l’appartamento" : "la camera"} ${room}. Indicatemi le date e il numero di ospiti e vi mostro subito disponibilità e prezzo.`,
-  es: room => `Veo que le interesa ${room >= 8 ? "el apartamento" : "la habitación"} ${room}. Dígame sus fechas y cuántas personas, y le muestro enseguida si está disponible y a qué precio.`,
-  tr: room => `${room} numaralı ${room >= 8 ? "daireyle" : "odayla"} ilgilendiğinizi görüyorum. Tarihlerinizi ve kişi sayısını yazın, müsaitliğini ve fiyatını hemen göstereyim.`,
+  el: room => `Βλέπω ότι σας ενδιαφέρει το ${roomName("el", room)}. Πείτε μου πότε θέλετε να έρθετε και για πόσα άτομα, και θα σας δείξω αμέσως αν είναι διαθέσιμο και σε ποια τιμή.`,
+  en: room => `I see you’re interested in ${roomName("en", room)}. Tell me your dates and how many guests, and I’ll show you straight away whether it’s available and at what price.`,
+  de: room => `Sie interessieren sich für ${roomName("de", room)}. Nennen Sie mir Ihre Reisedaten und die Anzahl der Gäste, dann zeige ich Ihnen sofort Verfügbarkeit und Preis.`,
+  fr: room => `Vous vous intéressez à ${roomName("fr", room).toLowerCase()}. Indiquez-moi vos dates et le nombre de personnes, et je vous montre tout de suite sa disponibilité et son prix.`,
+  it: room => `Vedo che vi interessa ${roomName("it", room).toLowerCase()}. Indicatemi le date e il numero di ospiti e vi mostro subito disponibilità e prezzo.`,
+  es: room => `Veo que le interesa ${roomName("es", room).toLowerCase()}. Dígame sus fechas y cuántas personas, y le muestro enseguida si está disponible y a qué precio.`,
+  tr: room => `${roomName("tr", room)} ile ilgilendiğinizi görüyorum. Tarihlerinizi ve kişi sayısını yazın, müsaitliğini ve fiyatını hemen göstereyim.`,
 };
 
 const ROOM_INTEREST_UNAVAILABLE: Record<RoomFinderLanguage, (room: number) => string> = {
@@ -314,6 +378,9 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   // The last search that found no rooms, for the "notify me if these dates
   // open up" card.
   const [unavailableSearch, setUnavailableSearch] = useState<BookingDraft | null>(null);
+  // Single-room search for a specific room that is free: show only that room
+  // until the guest asks to see the others.
+  const [showAllOffers, setShowAllOffers] = useState(false);
   const turnLocked = useRef(false);
   const languageRef = useRef(language);
   const announcedLongStayKey = useRef<string | null>(null);
@@ -345,10 +412,18 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     }),
     [offers, groups],
   );
-  const visibleOffers = useMemo(() => {
+  const sortedOffers = useMemo(() => {
     const feasible = feasibleOffersForGroup(capacityEligibleOffers, activeGroup, selectedKeys);
     return sortOffersForPreferences(feasible, preferences, preferredRoomNumber);
   }, [capacityEligibleOffers, activeGroup, selectedKeys, preferences, preferredRoomNumber]);
+  const focusedOffer = !showAllOffers && preferredRoomNumber && roomCount === 1 && groups.length === 1
+    ? sortedOffers.find(offer => Number(offer.roomNumber) === preferredRoomNumber && !offer.recoveryType) || null
+    : null;
+  const visibleOffers = useMemo(
+    () => focusedOffer ? [focusedOffer] : sortedOffers,
+    [focusedOffer, sortedOffers],
+  );
+  const hiddenOfferCount = focusedOffer ? sortedOffers.length - 1 : 0;
 
   // Layout effect: runs before the chat messages' tracking effects of the same
   // render, so a message is stored together with the facts it produced.
@@ -483,6 +558,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   function focusRoomFromLink(room: number) {
     if (!Number.isInteger(room) || room < 1 || room > 10) return;
     setPreferredRoomNumber(room);
+    dispatchFlow({ type: "prefill_single_room" });
     add("assistant", ROOM_FROM_LINK[language](room));
   }
 
@@ -547,7 +623,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
         rewindConversation(tone.rooms);
         return;
       case "guests":
-        rewindConversation(tone.guests(nextMissingGuestRoom(nextFlow.draft) || 1));
+        rewindConversation(guestsPrompt(nextFlow.draft, nextMissingGuestRoom(nextFlow.draft) || 1));
         return;
       default:
         return;
@@ -673,6 +749,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     });
     setFailedSearch(null);
     setUnavailableSearch(null);
+    setShowAllOffers(false);
     add("assistant", tone.searching);
     setTyping(true);
 
@@ -772,13 +849,22 @@ export function useRoomFinder(language: RoomFinderLanguage) {
         type: "commit_turn",
         state: { step: "selecting", draft: searchDraft },
       });
-      if (
-        roomInterest
-        && !eligible.some(groupOffers => groupOffers.some(offer => Number(offer.roomNumber) === roomInterest))
-      ) {
-        add("assistant", ROOM_INTEREST_UNAVAILABLE[language](roomInterest));
+      const singleRoom = searchDraft.groups.length === 1;
+      const interestAvailable = Boolean(roomInterest)
+        && eligible.some(groupOffers => groupOffers.some(offer => Number(offer.roomNumber) === roomInterest && !offer.recoveryType));
+      if (roomInterest && !interestAvailable) {
+        const maxGuests = ROOM_MAX_GUESTS.get(roomInterest) || 0;
+        const partySize = searchDraft.groups[0] || 0;
+        add(
+          "assistant",
+          singleRoom && maxGuests && partySize > maxGuests
+            ? ROOM_INTEREST_TOO_SMALL[language](roomInterest, maxGuests, partySize)
+            : ROOM_INTEREST_UNAVAILABLE[language](roomInterest),
+        );
       }
-      const content = tone.results(1, searchDraft.groups[0], searchDraft.groups.length);
+      const content = roomInterest && interestAvailable && singleRoom
+        ? ROOM_INTEREST_AVAILABLE[language](roomInterest)
+        : tone.results(1, searchDraft.groups[0], searchDraft.groups.length);
       const firstGroupOffers = sortOffersForPreferences(
         feasibleOffersForGroup(eligible, 0, new Set()),
         preferences,
@@ -956,8 +1042,12 @@ export function useRoomFinder(language: RoomFinderLanguage) {
         add("assistant", roomsPrompt(resolution.state.draft));
         return;
       case "guests":
-        add("assistant", tone.guests(resolution.outcome.guestRoom || 1));
+        add("assistant", guestsPrompt(resolution.state.draft, resolution.outcome.guestRoom || 1));
     }
+  }
+
+  function guestsPrompt(nextDraft: BookingDraft, guestRoom: number) {
+    return nextDraft.roomCount === 1 ? GUESTS_SINGLE_ROOM[language] : tone.guests(guestRoom);
   }
 
   function roomsPrompt(nextDraft: BookingDraft) {
@@ -1088,7 +1178,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       if (nextFlow.step === "searching") {
         await runAvailabilitySearch(nextFlow.draft);
       } else {
-        add("assistant", tone.guests(nextMissingGuestRoom(nextFlow.draft) || 1));
+        add("assistant", guestsPrompt(nextFlow.draft, nextMissingGuestRoom(nextFlow.draft) || 1));
       }
     } finally {
       endUserTurn();
@@ -1109,7 +1199,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       if (nextFlow.step === "searching") {
         await runAvailabilitySearch(nextFlow.draft);
       } else {
-        add("assistant", tone.guests(nextMissingGuestRoom(nextFlow.draft) || 1));
+        add("assistant", guestsPrompt(nextFlow.draft, nextMissingGuestRoom(nextFlow.draft) || 1));
       }
     } finally {
       endUserTurn();
@@ -1248,6 +1338,9 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     chooseBreakfast,
     retryAvailability,
     focusRoomFromLink,
+    hiddenOfferCount,
+    showOtherRoomsLabel: SHOW_OTHER_ROOMS[language](hiddenOfferCount),
+    showAllRooms: () => setShowAllOffers(true),
     unavailableSearch: step === "unavailable" ? unavailableSearch : null,
     canRetryAvailability: Boolean(failedSearch) && step === "unavailable",
     retryLabel: RETRY_SEARCH_LABEL[language],

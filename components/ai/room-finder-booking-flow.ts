@@ -63,7 +63,10 @@ export type BookingFlowAction =
   | { type: "choose_rooms"; roomCount: number }
   | { type: "choose_guests"; guests: number }
   | { type: "go_back" }
-  | { type: "edit_dates" };
+  | { type: "edit_dates" }
+  // The guest came from one room's page: they want one room, so the flow
+  // does not ask how many rooms (they can still say otherwise later).
+  | { type: "prefill_single_room" };
 
 const MAX_ROOMS = 3;
 const MAX_GUESTS_PER_ROOM = 5;
@@ -311,6 +314,11 @@ export function bookingFlowReducer(state: BookingFlowState, action: BookingFlowA
         step: bookingCoreIsComplete(draft) ? "searching" : "guests",
         draft,
       };
+    }
+
+    case "prefill_single_room": {
+      if (state.draft.roomCount) return state;
+      return { ...state, draft: { ...cloneDraft(state.draft), roomCount: 1 } };
     }
 
     case "choose_guests": {

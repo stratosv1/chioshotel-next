@@ -997,6 +997,17 @@ export function RoomFinderProduction({
                   onDetails={openRoomDetail}
                   onSelect={offer => void finder.selectOffer(offer)}
                 />
+                {finder.hiddenOfferCount > 0 && (
+                  <div className="msg ml-10">
+                    <button
+                      type="button"
+                      onClick={finder.showAllRooms}
+                      className="min-h-11 w-full rounded-full border border-[#d8cec1] bg-white px-4 text-sm font-bold text-[#7c2d12] shadow-sm transition hover:bg-[#fffaf4] sm:w-auto"
+                    >
+                      {finder.showOtherRoomsLabel}
+                    </button>
+                  </div>
+                )}
                 <section className="msg ml-10 flex flex-col items-stretch gap-3 rounded-[20px] border border-[#dfd6ca] bg-white px-4 py-3 shadow-sm min-[420px]:flex-row min-[420px]:items-center">
                   <p className="min-w-0 flex-1 text-sm font-semibold leading-5">{copy.whatsappHelp}</p>
                   <button
