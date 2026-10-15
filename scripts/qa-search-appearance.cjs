@@ -148,13 +148,12 @@ assert(
   "The active footer must not duplicate localized route tables.",
 );
 assert(
-  agentGuide.includes("index: false") && agentGuide.includes("follow: true"),
-  "The private B2B guide must remain crawlable for links but excluded from search.",
+  agentGuide.includes("index: true") && !agentGuide.includes("index: false"),
+  "The travel-agent room guide is a public, indexable page in every language.",
 );
 assert(
-  !sitemap.includes("agentRoomGuidePaths") &&
-    !sitemap.includes("agentRoomRoutes"),
-  "Noindex B2B routes must not be advertised in the XML sitemap.",
+  sitemap.includes("agentRoomGuidePaths") && sitemap.includes("agentRoomRoutes"),
+  "Indexable travel-agent room guide routes must be listed in the XML sitemap.",
 );
 assert(
   collectionImageGallery.includes("data-search-image-gallery") &&

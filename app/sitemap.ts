@@ -13,6 +13,7 @@ import { villageCategoryPaths } from "@/content/village-categories";
 import { getVillageSlugs } from "@/content/village-details";
 import { getMuseumSlugs } from "@/content/museum-details";
 import { propertyFaqPaths } from "@/content/property-faq";
+import { agentRoomGuidePaths } from "@/content/agent-room-guide";
 import { CHIOS_HOTELS_GUIDE_PATHS } from "@/lib/chios-hotels-guide-i18n";
 import { AI_ASSISTANT_LANGUAGES } from "@/lib/ai-assistant/page-localization";
 import { ROOM_FINDER_HREFS } from "@/lib/room-finder-cta-routing";
@@ -27,6 +28,7 @@ const VERIFIED_LAST_MODIFIED = {
   spanishAccommodation: "2026-07-27T05:02:55Z",
   romanticStay: "2026-08-04T17:43:25Z",
   contact: "2026-09-30T11:33:11Z",
+  agentRoomGuide: "2026-10-15T16:30:00Z",
 } as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -67,6 +69,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     (language) => ({
       url: absoluteUrl(ROOM_FINDER_HREFS[language]),
       changeFrequency: "weekly",
+      priority: 0.7,
+    }),
+  );
+
+  const agentRoomRoutes: SitemapEntry[] = Object.values(agentRoomGuidePaths).map(
+    (path) => ({
+      url: absoluteUrl(path),
+      lastModified: VERIFIED_LAST_MODIFIED.agentRoomGuide,
+      changeFrequency: "monthly",
       priority: 0.7,
     }),
   );
@@ -203,6 +214,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...kamposRoutes,
     ...polishRoutes,
     ...faqRoutes,
+    ...agentRoomRoutes,
     ...aiAssistantRoutes,
     ...routes,
     ...familyBeachRoutes,

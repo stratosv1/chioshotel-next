@@ -36,8 +36,8 @@ export const siteImageAssets = {
   },
   agentRoomGuide: {
     src: "/images/rooms/DSC07776-2-e1675109942622.webp",
-    width: 800,
-    height: 534,
+    width: 1200,
+    height: 801,
   },
 } as const satisfies Record<string, SiteImageAsset>;
 

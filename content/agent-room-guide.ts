@@ -131,8 +131,8 @@ export type AgentRoomGuideCopy = {
 export const agentRoomGuideCopy: Record<LanguageCode, AgentRoomGuideCopy> = {
   en: {
     seo: {
-      title: "Travel Agent Room Allocation Guide | Voulamandis House Chios",
-      description: "B2B room guide for travel agents and tour operators working with Voulamandis House in Chios. Compare room layouts, beds, capacity, amenities and photos, allocate guests and send the room plan by email or WhatsApp.",
+      title: "Chios Rooms for Travel Agents & Groups | Voulamandis House",
+      description: "B2B guide to the rooms and apartments of Voulamandis House in Kambos, Chios: photos, beds, size, capacity, floor and amenities of every unit. Plan group room allocations and send them by email or WhatsApp.",
       keywords: ["Chios travel agent accommodation", "Chios B2B rooms", "Voulamandis House travel agents", "Chios group room allocation", "Chios tour operator accommodation"],
     },
     hero: {
@@ -221,6 +221,11 @@ export const agentRoomGuideCopy: Record<LanguageCode, AgentRoomGuideCopy> = {
       flat_screen_tv: "Flat-screen TV",
       private_bathroom: "Private bathroom",
       non_smoking: "Non-smoking",
+      heating: "Heating",
+      hairdryer: "Hairdryer",
+      insect_screens: "Insect screens",
+      desk_or_table: "Desk or table",
+      shower: "Private bathroom with shower",
     },
     message: {
       title: "Voulamandis House — B2B room allocation",
@@ -231,8 +236,8 @@ export const agentRoomGuideCopy: Record<LanguageCode, AgentRoomGuideCopy> = {
   },
   el: {
     seo: {
-      title: "B2B Οδηγός Δωματίων για Τουριστικούς Πράκτορες | Voulamandis House",
-      description: "B2B οδηγός δωματίων του Voulamandis House στη Χίο για τουριστικούς πράκτορες και γραφεία. Δείτε κρεβάτια, χωρητικότητα, διαρρύθμιση, παροχές και φωτογραφίες, μοιράστε τους επισκέπτες και στείλτε την κατανομή με email ή WhatsApp.",
+      title: "Δωμάτια στη Χίο για Τουριστικούς Πράκτορες & Γκρουπ | Voulamandis House",
+      description: "B2B οδηγός για τα δωμάτια και τα διαμερίσματα του Voulamandis House στον Κάμπο Χίου: φωτογραφίες, κρεβάτια, εμβαδόν, χωρητικότητα, όροφος και παροχές κάθε καταλύματος. Κάντε κατανομή γκρουπ και στείλτε τη με email ή WhatsApp.",
       keywords: ["τουριστικοί πράκτορες Χίος διαμονή", "B2B δωμάτια Χίος", "κατανομή δωματίων γκρουπ Χίος", "Voulamandis House πράκτορες"],
     },
     hero: {
@@ -268,7 +273,7 @@ export const agentRoomGuideCopy: Record<LanguageCode, AgentRoomGuideCopy> = {
       standardAmenities: "Βασικές παροχές του δωματίου",
       standardOnly: "Μόνο οι βασικές παροχές",
       fullKitchen: "Πλήρης κουζίνα",
-      kitchenette: "Kitchenette",
+      kitchenette: "Μικρή κουζίνα (kitchenette)",
       privateBalcony: "Ιδιωτικό μπαλκόνι",
       upperFloorView: "Θέα από επάνω όροφο",
       gardenView: "Θέα στον κήπο",
@@ -307,20 +312,25 @@ export const agentRoomGuideCopy: Record<LanguageCode, AgentRoomGuideCopy> = {
     beds: {
       double_bed: ["διπλό κρεβάτι", "διπλά κρεβάτια"],
       single_bed: ["μονό κρεβάτι", "μονά κρεβάτια"],
-      sofa_bed: ["sofa bed", "sofa beds"],
+      sofa_bed: ["καναπές-κρεβάτι", "καναπέδες-κρεβάτια"],
       double_sofa_bed: ["διπλός καναπές-κρεβάτι", "διπλοί καναπέδες-κρεβάτια"],
-      single_sofa_bed: ["μονό sofa bed", "μονά sofa beds"],
+      single_sofa_bed: ["μονός καναπές-κρεβάτι", "μονοί καναπέδες-κρεβάτια"],
     },
     amenities: {
       mini_fridge: "Μικρό ψυγείο",
       kettle: "Βραστήρας",
       coffee: "Καφές",
       tea: "Τσάι",
-      air_condition: "Air condition",
+      air_condition: "Κλιματισμός",
       free_wifi: "Δωρεάν Wi-Fi",
-      flat_screen_tv: "Flat-screen TV",
+      flat_screen_tv: "Τηλεόραση επίπεδης οθόνης",
       private_bathroom: "Ιδιωτικό μπάνιο",
       non_smoking: "Μη καπνιζόντων",
+      heating: "Θέρμανση",
+      hairdryer: "Πιστολάκι μαλλιών",
+      insect_screens: "Σήτες",
+      desk_or_table: "Γραφείο ή τραπέζι",
+      shower: "Ιδιωτικό μπάνιο με ντους",
     },
     message: {
       title: "Voulamandis House — B2B κατανομή δωματίων",
@@ -331,8 +341,8 @@ export const agentRoomGuideCopy: Record<LanguageCode, AgentRoomGuideCopy> = {
   },
   fr: {
     seo: {
-      title: "Guide B2B des chambres pour agences de voyage | Voulamandis House",
-      description: "Guide B2B de Voulamandis House à Chios pour agences de voyage et tour-opérateurs. Comparez lits, capacité, disposition, équipements et photos, répartissez les voyageurs puis envoyez le plan par e-mail ou WhatsApp.",
+      title: "Chambres à Chios pour agences de voyage et groupes | Voulamandis House",
+      description: "Guide B2B des chambres et appartements de Voulamandis House à Kambos, Chios : photos, lits, surface, capacité, étage et équipements de chaque logement. Préparez la répartition d’un groupe et envoyez-la par e-mail ou WhatsApp.",
       keywords: ["agence de voyage Chios hébergement", "B2B chambres Chios", "répartition chambres groupe Chios", "Voulamandis House agences"],
     },
     hero: {
@@ -421,6 +431,11 @@ export const agentRoomGuideCopy: Record<LanguageCode, AgentRoomGuideCopy> = {
       flat_screen_tv: "Télévision écran plat",
       private_bathroom: "Salle de bains privée",
       non_smoking: "Non-fumeur",
+      heating: "Chauffage",
+      hairdryer: "Sèche-cheveux",
+      insect_screens: "Moustiquaires",
+      desk_or_table: "Bureau ou table",
+      shower: "Salle de bain privée avec douche",
     },
     message: {
       title: "Voulamandis House — répartition B2B des chambres",
@@ -431,8 +446,8 @@ export const agentRoomGuideCopy: Record<LanguageCode, AgentRoomGuideCopy> = {
   },
   de: {
     seo: {
-      title: "B2B Zimmerguide für Reisebüros | Voulamandis House Chios",
-      description: "B2B Zimmerguide von Voulamandis House auf Chios für Reisebüros und Veranstalter. Betten, Belegung, Aufteilung, Ausstattung und Fotos vergleichen, Gäste Zimmern zuordnen und den Plan per E-Mail oder WhatsApp senden.",
+      title: "Zimmer auf Chios für Reisebüros & Gruppen | Voulamandis House",
+      description: "B2B Guide zu den Zimmern und Apartments von Voulamandis House in Kambos, Chios: Fotos, Betten, Größe, Belegung, Etage und Ausstattung jeder Einheit. Gruppen-Zimmeraufteilung planen und per E-Mail oder WhatsApp senden.",
       keywords: ["Reisebüro Chios Unterkunft", "B2B Zimmer Chios", "Zimmeraufteilung Gruppen Chios", "Voulamandis House Reisebüros"],
     },
     hero: {
@@ -468,7 +483,7 @@ export const agentRoomGuideCopy: Record<LanguageCode, AgentRoomGuideCopy> = {
       standardAmenities: "Standardausstattung dieses Zimmers",
       standardOnly: "Nur Standardausstattung",
       fullKitchen: "Voll ausgestattete Küche",
-      kitchenette: "Kitchenette",
+      kitchenette: "Kochnische",
       privateBalcony: "Privater Balkon",
       upperFloorView: "Aussicht vom Obergeschoss",
       gardenView: "Gartenblick",
@@ -521,6 +536,11 @@ export const agentRoomGuideCopy: Record<LanguageCode, AgentRoomGuideCopy> = {
       flat_screen_tv: "Flachbild-TV",
       private_bathroom: "Privates Bad",
       non_smoking: "Nichtraucher",
+      heating: "Heizung",
+      hairdryer: "Haartrockner",
+      insect_screens: "Insektenschutzgitter",
+      desk_or_table: "Schreibtisch oder Tisch",
+      shower: "Eigenes Bad mit Dusche",
     },
     message: {
       title: "Voulamandis House — B2B Zimmeraufteilung",
@@ -531,8 +551,8 @@ export const agentRoomGuideCopy: Record<LanguageCode, AgentRoomGuideCopy> = {
   },
   it: {
     seo: {
-      title: "Guida B2B camere per agenzie di viaggio | Voulamandis House",
-      description: "Guida B2B di Voulamandis House a Chios per agenzie di viaggio e tour operator. Confronta letti, capienza, disposizione, servizi e foto, assegna gli ospiti alle camere e invia il piano via e-mail o WhatsApp.",
+      title: "Camere a Chios per agenzie di viaggio e gruppi | Voulamandis House",
+      description: "Guida B2B alle camere e agli appartamenti di Voulamandis House a Kambos, Chios: foto, letti, superficie, capienza, piano e servizi di ogni unità. Prepara l’assegnazione di un gruppo e inviala via e-mail o WhatsApp.",
       keywords: ["agenzie viaggio Chios alloggio", "B2B camere Chios", "assegnazione camere gruppi Chios", "Voulamandis House agenzie"],
     },
     hero: {
@@ -621,6 +641,11 @@ export const agentRoomGuideCopy: Record<LanguageCode, AgentRoomGuideCopy> = {
       flat_screen_tv: "TV a schermo piatto",
       private_bathroom: "Bagno privato",
       non_smoking: "Non fumatori",
+      heating: "Riscaldamento",
+      hairdryer: "Asciugacapelli",
+      insect_screens: "Zanzariere",
+      desk_or_table: "Scrivania o tavolo",
+      shower: "Bagno privato con doccia",
     },
     message: {
       title: "Voulamandis House — assegnazione camere B2B",
@@ -631,8 +656,8 @@ export const agentRoomGuideCopy: Record<LanguageCode, AgentRoomGuideCopy> = {
   },
   es: {
     seo: {
-      title: "Guía B2B de habitaciones para agencias de viaje | Voulamandis House",
-      description: "Guía B2B de Voulamandis House en Quíos para agencias de viaje y turoperadores. Compara camas, capacidad, distribución, servicios y fotos, asigna huéspedes y envía el plan por correo electrónico o WhatsApp.",
+      title: "Habitaciones en Quíos para agencias de viaje y grupos | Voulamandis House",
+      description: "Guía B2B de las habitaciones y apartamentos de Voulamandis House en Kambos, Quíos: fotos, camas, superficie, capacidad, planta y servicios de cada alojamiento. Prepara la asignación de un grupo y envíala por correo o WhatsApp.",
       keywords: ["agencias de viaje Quíos alojamiento", "B2B habitaciones Quíos", "distribución habitaciones grupos Quíos", "Voulamandis House agencias"],
     },
     hero: {
@@ -721,6 +746,11 @@ export const agentRoomGuideCopy: Record<LanguageCode, AgentRoomGuideCopy> = {
       flat_screen_tv: "TV de pantalla plana",
       private_bathroom: "Baño privado",
       non_smoking: "No fumadores",
+      heating: "Calefacción",
+      hairdryer: "Secador de pelo",
+      insect_screens: "Mosquiteras",
+      desk_or_table: "Escritorio o mesa",
+      shower: "Baño privado con ducha",
     },
     message: {
       title: "Voulamandis House — asignación B2B de habitaciones",
@@ -731,8 +761,8 @@ export const agentRoomGuideCopy: Record<LanguageCode, AgentRoomGuideCopy> = {
   },
   tr: {
     seo: {
-      title: "Seyahat Acenteleri için B2B Oda Rehberi | Voulamandis House Sakız",
-      description: "Sakız Adası Voulamandis House için seyahat acenteleri ve tur operatörlerine özel B2B oda rehberi. Yatak, kapasite, oda planı, olanak ve fotoğrafları karşılaştırın; misafirleri odalara dağıtıp planı e-posta veya WhatsApp ile gönderin.",
+      title: "Acenteler ve Gruplar için Sakız Adası Odaları | Voulamandis House",
+      description: "Sakız Adası Kambos’taki Voulamandis House oda ve dairelerine B2B rehber: her birimin fotoğrafları, yatakları, büyüklüğü, kapasitesi, katı ve olanakları. Grup oda dağılımını planlayıp e-posta veya WhatsApp ile gönderin.",
       keywords: ["Sakız Adası seyahat acentesi konaklama", "Sakız B2B oda", "grup oda dağılımı Sakız", "Voulamandis House acente"],
     },
     hero: {
@@ -821,6 +851,11 @@ export const agentRoomGuideCopy: Record<LanguageCode, AgentRoomGuideCopy> = {
       flat_screen_tv: "Düz ekran TV",
       private_bathroom: "Özel banyo",
       non_smoking: "Sigara içilmez",
+      heating: "Isıtma",
+      hairdryer: "Saç kurutma makinesi",
+      insect_screens: "Sineklik",
+      desk_or_table: "Çalışma masası veya masa",
+      shower: "Duşlu özel banyo",
     },
     message: {
       title: "Voulamandis House — B2B oda dağılımı",
@@ -860,10 +895,10 @@ export function buildAgentRoomGuideMetadata(language: LanguageCode): Metadata {
       },
     },
     robots: {
-      index: false,
+      index: true,
       follow: true,
       googleBot: {
-        index: false,
+        index: true,
         follow: true,
         "max-image-preview": "large",
         "max-snippet": -1,

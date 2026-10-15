@@ -6,6 +6,11 @@ import {
   agentRoomGuidePaths,
   getAgentLanguageTag,
 } from "@/content/agent-room-guide";
+import {
+  agentRoomGuideExtras,
+  buildAgentGuideFaq,
+  computeAgentGuideStats,
+} from "@/content/agent-room-guide-extras";
 import { getAgentRoomGuideData } from "@/lib/agent-room-guide-data";
 
 type Props = {
@@ -19,14 +24,26 @@ function absolute(path: string) {
 export async function AgentRoomsPage({ language }: Props) {
   const { rooms, commonAmenities } = await getAgentRoomGuideData();
   const copy = agentRoomGuideCopy[language];
+  const extras = agentRoomGuideExtras[language];
+  const stats = computeAgentGuideStats(rooms);
+  const faq = buildAgentGuideFaq(language, stats);
+  const pageUrl = absolute(agentRoomGuidePaths[language]);
+  const homePath = language === "en" ? "/" : `/${language}/`;
+  const pageImages = rooms
+    .map((room) => room.gallery[0])
+    .filter(Boolean)
+    .map((path) => absolute(path));
 
-  const jsonLd = {
-    "@context": "https://schema.org",
+  const webPage = {
     "@type": "WebPage",
+    "@id": `${pageUrl}#webpage`,
     name: copy.seo.title,
     description: copy.seo.description,
-    url: absolute(agentRoomGuidePaths[language]),
+    url: pageUrl,
     inLanguage: getAgentLanguageTag(language),
+    primaryImageOfPage: pageImages[0],
+    image: pageImages,
+    breadcrumb: { "@id": `${pageUrl}#breadcrumb` },
     isPartOf: {
       "@type": "WebSite",
       name: "Voulamandis House",
@@ -56,6 +73,8 @@ export async function AgentRoomsPage({ language }: Props) {
         item: {
           "@type": "Accommodation",
           name: `${room.roomType === "apartment" ? copy.labels.apartment : copy.labels.room} ${room.roomNumber}`,
+          url: `${pageUrl}#room-${room.roomNumber}`,
+          numberOfRooms: room.spaceLayout === "one_space" ? 1 : 2,
           occupancy: {
             "@type": "QuantitativeValue",
             maxValue: room.maxGuests,
@@ -88,6 +107,31 @@ export async function AgentRoomsPage({ language }: Props) {
     },
   };
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      webPage,
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${pageUrl}#breadcrumb`,
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: extras.breadcrumbHome, item: absolute(homePath) },
+          { "@type": "ListItem", position: 2, name: extras.breadcrumbAgents, item: pageUrl },
+        ],
+      },
+      {
+        "@type": "FAQPage",
+        "@id": `${pageUrl}#faq`,
+        inLanguage: getAgentLanguageTag(language),
+        mainEntity: faq.map((item) => ({
+          "@type": "Question",
+          name: item.question,
+          acceptedAnswer: { "@type": "Answer", text: item.answer },
+        })),
+      },
+    ],
+  };
+
   return (
     <>
       <script
@@ -99,6 +143,9 @@ export async function AgentRoomsPage({ language }: Props) {
         copy={copy}
         rooms={rooms}
         commonAmenities={commonAmenities}
+        extras={extras}
+        stats={stats}
+        faq={faq}
       />
     </>
   );

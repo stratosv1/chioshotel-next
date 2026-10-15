@@ -37,10 +37,12 @@ export function ChiosCollectionImageGallery({
   items,
   kind,
   language,
+  priorityFirst = false,
 }: {
   items: readonly CollectionImageItem[];
   kind: CollectionKind;
   language: CollectionLanguage;
+  priorityFirst?: boolean;
 }) {
   const featuredImages = getUniqueImages(items).slice(0, 3);
 
@@ -81,6 +83,7 @@ export function ChiosCollectionImageGallery({
                   : "(max-width: 767px) 38vw, 460px"
               }
               quality={78}
+              priority={priorityFirst && index === 0}
               className="object-cover transition-transform duration-500 motion-safe:group-hover:scale-[1.025]"
             />
             {item.title ? (
