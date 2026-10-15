@@ -140,5 +140,25 @@ export function splitStayNarrative(offer: SplitNarrativeOffer, language: RoomFin
     }
   }
 
+  // One room for the first nights, then the whole party moves to another
+  // room (the single-room split stay from /api/ai-room-finder/availability).
+  if (
+    first.assignments.length === 1
+    && second.assignments.length === 1
+    && first.assignments[0].room !== second.assignments[0].room
+  ) {
+    const from = first.assignments[0].room;
+    const to = second.assignments[0].room;
+    switch (language) {
+      case "el": return `${firstDate}: διαμονή στο ${from}. ${secondDate}: μεταφορά στο ${to} για τις υπόλοιπες νύχτες.`;
+      case "de": return `${firstDate}: Aufenthalt im ${from}. ${secondDate}: Umzug ins ${to} für die restlichen Nächte.`;
+      case "fr": return `${firstDate} : séjour dans ${from}. ${secondDate} : changement pour ${to} pour les nuits restantes.`;
+      case "it": return `${firstDate}: soggiorno in ${from}. ${secondDate}: trasferimento in ${to} per le notti restanti.`;
+      case "es": return `${firstDate}: estancia en ${from}. ${secondDate}: cambio a ${to} para las noches restantes.`;
+      case "tr": return `${firstDate}: ${from} odasında konaklama. ${secondDate}: kalan geceler için ${to} odasına geçiş.`;
+      default: return `${firstDate}: stay in ${from}. ${secondDate}: move to ${to} for the remaining nights.`;
+    }
+  }
+
   return genericNarrative(first, second, language);
 }

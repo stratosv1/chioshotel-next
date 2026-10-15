@@ -419,7 +419,9 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       setSelectingOfferKey(null);
       dispatchFlow({ type: "commit_turn", state: nextFlow });
       rewindConversation(
-        String((lastChoice.offer as any).recoveryType || "")
+        // Multi-room recovery offers came with the sales-recovery message;
+        // a single-room split stay came with the normal results message.
+        String(lastChoice.offer.roomId || "").startsWith("recovery:")
           ? SALES_RECOVERY[language]
           : tone.results(lastChoice.group, lastChoice.guests, groups.length),
       );

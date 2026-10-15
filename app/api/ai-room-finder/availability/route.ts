@@ -33,14 +33,14 @@ type RefreshOutcome = "refreshed" | "busy" | "not_ready" | "failed";
 
 const wait = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms));
 
-const SPLIT_COPY: Record<AssistantLanguage, { category: string; change: string; discount: string }> = {
-  el: { category: "Λύση split stay επειδή δεν υπάρχει ένα δωμάτιο για όλες τις νύχτες", change: "1 αλλαγή δωματίου", discount: "Περιλαμβάνεται επιπλέον έκπτωση split stay" },
-  en: { category: "Split-stay solution because one room is not available for every night", change: "1 room change", discount: "Extra split-stay discount included" },
-  de: { category: "Split-Stay-Lösung, da kein Zimmer für alle Nächte verfügbar ist", change: "1 Zimmerwechsel", discount: "Zusätzlicher Split-Stay-Rabatt enthalten" },
-  fr: { category: "Solution split stay car une seule chambre n’est pas disponible pour toutes les nuits", change: "1 changement de chambre", discount: "Remise split stay supplémentaire incluse" },
-  it: { category: "Soluzione split stay perché non c’è una sola camera disponibile per tutte le notti", change: "1 cambio camera", discount: "Sconto split stay aggiuntivo incluso" },
-  es: { category: "Solución split stay porque no hay una sola habitación disponible para todas las noches", change: "1 cambio de habitación", discount: "Descuento split stay adicional incluido" },
-  tr: { category: "Tüm geceler için tek oda bulunmadığından split stay çözümü", change: "1 oda değişikliği", discount: "Ek split stay indirimi dahildir" },
+const SPLIT_COPY: Record<AssistantLanguage, { category: string; change: string; discount: string; guests: (count: number) => string }> = {
+  el: { category: "Λύση split stay επειδή δεν υπάρχει ένα δωμάτιο για όλες τις νύχτες", change: "1 αλλαγή δωματίου", discount: "Περιλαμβάνεται επιπλέον έκπτωση split stay", guests: count => `${count} ${count === 1 ? "άτομο" : "άτομα"}` },
+  en: { category: "Split-stay solution because one room is not available for every night", change: "1 room change", discount: "Extra split-stay discount included", guests: count => `${count} ${count === 1 ? "guest" : "guests"}` },
+  de: { category: "Split-Stay-Lösung, da kein Zimmer für alle Nächte verfügbar ist", change: "1 Zimmerwechsel", discount: "Zusätzlicher Split-Stay-Rabatt enthalten", guests: count => `${count} ${count === 1 ? "Gast" : "Gäste"}` },
+  fr: { category: "Solution split stay car une seule chambre n’est pas disponible pour toutes les nuits", change: "1 changement de chambre", discount: "Remise split stay supplémentaire incluse", guests: count => `${count} ${count === 1 ? "personne" : "personnes"}` },
+  it: { category: "Soluzione split stay perché non c’è una sola camera disponibile per tutte le notti", change: "1 cambio camera", discount: "Sconto split stay aggiuntivo incluso", guests: count => `${count} ${count === 1 ? "ospite" : "ospiti"}` },
+  es: { category: "Solución split stay porque no hay una sola habitación disponible para todas las noches", change: "1 cambio de habitación", discount: "Descuento split stay adicional incluido", guests: count => `${count} ${count === 1 ? "huésped" : "huéspedes"}` },
+  tr: { category: "Tüm geceler için tek oda bulunmadığından split stay çözümü", change: "1 oda değişikliği", discount: "Ek split stay indirimi dahildir", guests: count => `${count} kişi` },
 };
 
 function rounded(value: unknown) {
@@ -289,6 +289,12 @@ export async function GET(request: NextRequest) {
           guestNote: row.second_guest_note ? String(row.second_guest_note) : null,
         }, language) as any;
         const split = SPLIT_COPY[language];
+        // Same segment format as the multi-room split offers from
+        // /api/ai-room-finder/sales-recovery ("start–end: Room (N guests)"),
+        // so the chat renders it as a split solution (both rooms, a narrative
+        // of the room change) and the change date reaches staff and email.
+        const firstSegment = `${shortDate(checkin, language)}–${shortDate(changeDate, language)}: ${first.name} (${split.guests(guests)})`;
+        const secondSegment = `${shortDate(changeDate, language)}–${shortDate(checkout, language)}: ${second.name} (${split.guests(guests)})`;
         const splitOffer = {
           roomId: `split:${first.roomId}:${second.roomId}`,
           unitId: `${first.unitId}:${second.unitId}:${changeDate}`,
@@ -297,11 +303,7 @@ export async function GET(request: NextRequest) {
           category: split.category,
           floor: split.change,
           maxGuests: guests,
-          features: [
-            `${first.name}: ${shortDate(checkin, language)}–${shortDate(changeDate, language)}`,
-            `${second.name}: ${shortDate(changeDate, language)}–${shortDate(checkout, language)}`,
-            split.discount,
-          ],
+          features: [firstSegment, secondSegment, split.discount],
           image: first.image,
           gallery: [first.image, second.image].filter(Boolean),
           detailsUrl: first.detailsUrl,
@@ -310,6 +312,9 @@ export async function GET(request: NextRequest) {
           directTotal: rounded(row.split_total),
           saving: rounded(row.savings),
           breakfastTotalIfAdded: rounded(row.breakfast_total_if_added),
+          recoveryType: "split",
+          recoveryRoomCount: 1,
+          recoverySummary: `${firstSegment}; ${secondSegment}`,
         };
 
         return NextResponse.json({ success: true, checkin, checkout, guests, language, offers: [splitOffer], splitStay: true }, { headers: { "Cache-Control": "no-store" } });

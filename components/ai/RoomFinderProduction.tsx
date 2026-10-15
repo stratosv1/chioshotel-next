@@ -514,9 +514,19 @@ export function RoomFinderProduction({
     );
   }
 
+  // A split stay is one offer covering two rooms; reception needs the exact
+  // nights in each room (and the guest allocation) to enter the booking.
+  function splitStayLines(offer: RoomOffer) {
+    if (offer.recoveryType !== "split" || !offer.recoverySummary) return [] as string[];
+    return offer.recoverySummary.split("; ").map(segment => `  ↳ ${segment}`);
+  }
+
   function whatsappContext(base: string, includeSelectedRooms = false) {
     const selectedRooms = includeSelectedRooms
-      ? finder.choices.map(choice => `${choice.offer.name} · ${money(choice.offer.directTotal, language)}`)
+      ? finder.choices.flatMap(choice => [
+          `${choice.offer.name} · ${money(choice.offer.directTotal, language)}`,
+          ...splitStayLines(choice.offer),
+        ])
       : [];
 
     return [
@@ -547,7 +557,10 @@ export function RoomFinderProduction({
     const summary = [
       stayRange(finder.checkin, finder.checkout, language),
       copy.guestLabel(finder.guestTotal),
-      ...finder.choices.map(choice => `${choice.offer.name}: ${money(choice.offer.directTotal, language)}`),
+      ...finder.choices.flatMap(choice => [
+        `${choice.offer.name}: ${money(choice.offer.directTotal, language)}`,
+        ...splitStayLines(choice.offer),
+      ]),
       ...(finder.breakfast ? [`${copy.breakfastLabel}: ${money(breakfastTotal, language)}`] : []),
       `${copy.total}: ${money(roomTotal + breakfastTotal, language)}`,
     ].join("\n");
