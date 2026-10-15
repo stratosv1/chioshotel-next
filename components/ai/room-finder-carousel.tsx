@@ -66,13 +66,13 @@ const NEXT_LABEL: Record<RoomFinderLanguage,string> = {
 
 // The room the guest came for (from its page or by name).
 const REQUESTED_LABEL: Record<RoomFinderLanguage,string> = {
-  el:"Το δωμάτιο που ζητήσατε",
-  en:"The room you asked for",
-  de:"Ihr gewünschtes Zimmer",
-  fr:"La chambre demandée",
-  it:"La camera richiesta",
-  es:"La habitación que pidió",
-  tr:"İstediğiniz oda",
+  el:"Το δωμάτιό σας",
+  en:"Your room",
+  de:"Ihr Zimmer",
+  fr:"Votre chambre",
+  it:"La vostra camera",
+  es:"Su habitación",
+  tr:"Odanız",
 };
 
 const RECOMMENDED_LABEL: Record<RoomFinderLanguage,string> = {
@@ -246,12 +246,15 @@ export function RoomCarousel({ offers, copy, language, money, onDetails, onSelec
                 <Image src={roomVisual.image} alt="" fill sizes="(min-width: 640px) 140px, 38vw" className="object-cover"/>
               </div>)}
             </div> : <Image src={offer.image} alt="" fill sizes="(min-width: 640px) 280px, 75vw" className="object-cover"/>}
-            {offer.requested
-              ? <span className="absolute left-2.5 top-2.5 rounded-full bg-[#c66a34]/95 px-2.5 py-1 text-[11px] font-black text-white shadow-sm">★ {REQUESTED_LABEL[language]}</span>
-              : offer.categoryBadge
-                ? <span className="absolute left-2.5 top-2.5 rounded-full bg-[#2f261f]/90 px-2.5 py-1 text-[11px] font-black text-white shadow-sm">★ {offer.categoryBadge}</span>
-                : offer.recommended && <span className="absolute left-2.5 top-2.5 rounded-full bg-[#66714f]/95 px-2.5 py-1 text-[11px] font-black text-white shadow-sm">★ {RECOMMENDED_LABEL[language]}</span>}
-            {discount > 0 && <span className="absolute right-2.5 top-2.5 rounded-full bg-[#c66a34] px-2 py-1 text-[12px] font-black leading-none text-white shadow-sm [font-variant-numeric:tabular-nums]">−{discount}%</span>}
+            {/* Badge and discount share one row so a long badge never runs under the discount. */}
+            <span className="absolute inset-x-2.5 top-2.5 flex items-start gap-2">
+              {offer.requested
+                ? <span className="min-w-0 truncate rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-black text-[#ad572a] shadow-sm">★ {REQUESTED_LABEL[language]}</span>
+                : offer.categoryBadge
+                  ? <span className="min-w-0 truncate rounded-full bg-[#2f261f]/90 px-2.5 py-1 text-[11px] font-black text-white shadow-sm">★ {offer.categoryBadge}</span>
+                  : offer.recommended && <span className="min-w-0 truncate rounded-full bg-[#66714f]/95 px-2.5 py-1 text-[11px] font-black text-white shadow-sm">★ {RECOMMENDED_LABEL[language]}</span>}
+              {discount > 0 && <span className="ml-auto shrink-0 rounded-full bg-[#c66a34] px-2 py-1 text-[12px] font-black leading-none text-white shadow-sm [font-variant-numeric:tabular-nums]">−{discount}%</span>}
+            </span>
           </button>
           <div className="flex flex-1 flex-col p-3">
             {offer.alternativeCheckin && offer.alternativeCheckout && <p className="mb-2 w-fit rounded-full bg-[#fbf4e8] px-2.5 py-1 text-[11px] font-bold text-[#765d3b]">

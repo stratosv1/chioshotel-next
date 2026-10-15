@@ -732,28 +732,35 @@ export function RoomFinderProduction({
     setBreakfastChoicePending(null);
   }
   const resultActionsDisabled = finder.typing || finder.step === "searching";
+  // Once there are results, the dates and guests in the top bar are tappable too.
+  const summaryEditable = !resultActionsDisabled
+    && (finder.step === "selecting" || finder.step === "unavailable" || (finder.step === "complete" && sendStatus !== "sent"))
+    && Boolean(finder.checkin && finder.checkout);
+  const RESULT_ACTION_CLASS = "flex min-h-[52px] min-w-0 flex-col items-center justify-center gap-1 rounded-2xl border border-[#e1d8cc] bg-white px-1.5 py-2 text-center text-[12.5px] font-bold leading-tight text-[#4a4339] shadow-sm transition hover:bg-[#fffaf4] active:scale-[.97] disabled:opacity-45";
   const resultActions = (showChanges: boolean) => (
     <div data-room-finder-result-actions="true" className="msg ml-10 mt-2">
-      <div className="flex flex-wrap gap-2">
+      <div className={showChanges ? "grid grid-cols-3 gap-2" : "flex"}>
         {showChanges && (
           <>
             <button
               type="button"
+              aria-label={finder.resultActions.dates}
               disabled={resultActionsDisabled}
               onClick={() => void finder.changeDates()}
-              className="flex min-h-11 items-center gap-1.5 rounded-full border border-[#d8cec1] bg-white px-4 text-sm font-bold text-[#3f392f] shadow-sm transition hover:bg-[#fffaf4] active:scale-[.97] disabled:opacity-45"
+              className={RESULT_ACTION_CLASS}
             >
-              <CalendarDays className="h-4 w-4" aria-hidden="true" />
-              {finder.resultActions.dates}
+              <CalendarDays className="h-[18px] w-[18px] text-[#8a6a4e]" aria-hidden="true" />
+              <span>{finder.resultActions.datesShort}</span>
             </button>
             <button
               type="button"
+              aria-label={finder.resultActions.guests}
               disabled={resultActionsDisabled}
               onClick={() => void finder.changeGuests()}
-              className="flex min-h-11 items-center gap-1.5 rounded-full border border-[#d8cec1] bg-white px-4 text-sm font-bold text-[#3f392f] shadow-sm transition hover:bg-[#fffaf4] active:scale-[.97] disabled:opacity-45"
+              className={RESULT_ACTION_CLASS}
             >
-              <Users className="h-4 w-4" aria-hidden="true" />
-              {finder.resultActions.guests}
+              <Users className="h-[18px] w-[18px] text-[#8a6a4e]" aria-hidden="true" />
+              <span>{finder.resultActions.guestsShort}</span>
             </button>
           </>
         )}
@@ -761,13 +768,13 @@ export function RoomFinderProduction({
           type="button"
           disabled={resultActionsDisabled}
           onClick={startNewSearch}
-          className="flex min-h-11 items-center gap-1.5 rounded-full border border-[#d8cec1] bg-white px-4 text-sm font-bold text-[#3f392f] shadow-sm transition hover:bg-[#fffaf4] active:scale-[.97] disabled:opacity-45"
+          className={showChanges ? RESULT_ACTION_CLASS : `${RESULT_ACTION_CLASS} !flex-row gap-2 px-4`}
         >
-          <RotateCcw className="h-4 w-4" aria-hidden="true" />
-          {finder.resultActions.restart}
+          <RotateCcw className="h-[18px] w-[18px] text-[#8a6a4e]" aria-hidden="true" />
+          <span>{finder.resultActions.restart}</span>
         </button>
       </div>
-      {showChanges && <p className="mt-2 px-1 text-[12px] leading-[17px] text-[#746b60]">{finder.resultActions.hint}</p>}
+      {showChanges && <p className="mt-1.5 px-1 text-[12px] leading-4 text-[#8a8176]">{finder.resultActions.hint}</p>}
     </div>
   );
 
@@ -886,15 +893,33 @@ export function RoomFinderProduction({
                 className="absolute -left-[6px] top-1/2 h-3 w-3 -translate-y-1/2 rounded-full border-[1.5px] bg-[#f6f2eb] [border-color:var(--mandarin)]"
               />
               <div className="flex min-w-0 flex-1 items-center justify-center overflow-hidden">
-                {stay && (
+                {stay && (summaryEditable ? (
+                  <button
+                    type="button"
+                    aria-label={finder.resultActions.dates}
+                    onClick={() => void finder.changeDates()}
+                    className="min-w-0 truncate underline decoration-[#cbbfaf] decoration-dashed underline-offset-[3px] [font-variant-numeric:tabular-nums]"
+                  >
+                    {stay}
+                  </button>
+                ) : (
                   <span className="min-w-0 truncate [font-variant-numeric:tabular-nums]">{stay}</span>
-                )}
+                ))}
                 {stay && guestSummary && (
                   <span aria-hidden="true" className="mx-2 h-3 shrink-0 border-l border-dashed border-[#d8cec1]" />
                 )}
-                {guestSummary && (
+                {guestSummary && (summaryEditable ? (
+                  <button
+                    type="button"
+                    aria-label={finder.resultActions.guests}
+                    onClick={() => void finder.changeGuests()}
+                    className="min-w-0 truncate underline decoration-[#cbbfaf] decoration-dashed underline-offset-[3px]"
+                  >
+                    {guestSummary}
+                  </button>
+                ) : (
                   <span className="min-w-0 truncate">{guestSummary}</span>
-                )}
+                ))}
                 {(stay || guestSummary) && roomSummary && (
                   <span aria-hidden="true" className="mx-2 h-3 shrink-0 border-l border-dashed border-[#d8cec1]" />
                 )}
