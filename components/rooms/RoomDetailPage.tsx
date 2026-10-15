@@ -219,14 +219,14 @@ const unitListLabel: Record<RoomLanguage, (count: number, apartments: boolean) =
   tr: (n, apt) => `${n} ${apt ? "daireyi" : "odayı"} görün`,
 };
 
-const unitUi: Record<RoomLanguage, { askDates: string; askMessage: (name: string) => string; size: (m2: number) => string; direct: string }> = {
-  en: { askDates: "Ask for dates", askMessage: (n) => `Hello! I would like to ask about availability for ${n} at Voulamandis House.`, size: (m) => `≈ ${m} m²`, direct: "−10% direct booking" },
-  el: { askDates: "Ρωτήστε για ημερομηνίες", askMessage: (n) => `Καλησπέρα! Θα ήθελα να ρωτήσω για διαθεσιμότητα στο ${n} στο Voulamandis House.`, size: (m) => `≈ ${m} m²`, direct: "−10% απευθείας κράτηση" },
-  fr: { askDates: "Demander vos dates", askMessage: (n) => `Bonjour ! Je souhaiterais connaître les disponibilités pour : ${n}, Voulamandis House.`, size: (m) => `≈ ${m} m²`, direct: "−10 % réservation directe" },
-  de: { askDates: "Termine anfragen", askMessage: (n) => `Hallo! Ich möchte die Verfügbarkeit für ${n} im Voulamandis House anfragen.`, size: (m) => `≈ ${m} m²`, direct: "−10 % Direktbuchung" },
-  it: { askDates: "Chiedi le date", askMessage: (n) => `Buongiorno! Vorrei sapere la disponibilità per ${n} a Voulamandis House.`, size: (m) => `≈ ${m} m²`, direct: "−10% prenotazione diretta" },
-  es: { askDates: "Consultar fechas", askMessage: (n) => `¡Hola! Me gustaría consultar la disponibilidad de ${n} en Voulamandis House.`, size: (m) => `≈ ${m} m²`, direct: "−10% reserva directa" },
-  tr: { askDates: "Tarihleri sorun", askMessage: (n) => `Merhaba! Voulamandis House'ta ${n} için müsaitlik sormak istiyorum.`, size: (m) => `≈ ${m} m²`, direct: "Doğrudan rezervasyonda −%10" },
+const unitUi: Record<RoomLanguage, { askDates: string; checkAvailability: string; askMessage: (name: string) => string; size: (m2: number) => string; direct: string }> = {
+  en: { askDates: "Ask for dates", checkAvailability: "Check availability", askMessage: (n) => `Hello! I would like to ask about availability for ${n} at Voulamandis House.`, size: (m) => `≈ ${m} m²`, direct: "−10% direct booking" },
+  el: { askDates: "Ρωτήστε για ημερομηνίες", checkAvailability: "Δείτε διαθεσιμότητα", askMessage: (n) => `Καλησπέρα! Θα ήθελα να ρωτήσω για διαθεσιμότητα στο ${n} στο Voulamandis House.`, size: (m) => `≈ ${m} m²`, direct: "−10% απευθείας κράτηση" },
+  fr: { askDates: "Demander vos dates", checkAvailability: "Voir les disponibilités", askMessage: (n) => `Bonjour ! Je souhaiterais connaître les disponibilités pour : ${n}, Voulamandis House.`, size: (m) => `≈ ${m} m²`, direct: "−10 % réservation directe" },
+  de: { askDates: "Termine anfragen", checkAvailability: "Verfügbarkeit prüfen", askMessage: (n) => `Hallo! Ich möchte die Verfügbarkeit für ${n} im Voulamandis House anfragen.`, size: (m) => `≈ ${m} m²`, direct: "−10 % Direktbuchung" },
+  it: { askDates: "Chiedi le date", checkAvailability: "Verifica disponibilità", askMessage: (n) => `Buongiorno! Vorrei sapere la disponibilità per ${n} a Voulamandis House.`, size: (m) => `≈ ${m} m²`, direct: "−10% prenotazione diretta" },
+  es: { askDates: "Consultar fechas", checkAvailability: "Ver disponibilidad", askMessage: (n) => `¡Hola! Me gustaría consultar la disponibilidad de ${n} en Voulamandis House.`, size: (m) => `≈ ${m} m²`, direct: "−10% reserva directa" },
+  tr: { askDates: "Tarihleri sorun", checkAvailability: "Müsaitliği gör", askMessage: (n) => `Merhaba! Voulamandis House'ta ${n} için müsaitlik sormak istiyorum.`, size: (m) => `≈ ${m} m²`, direct: "Doğrudan rezervasyonda −%10" },
 };
 
 const WHATSAPP_NUMBER = "306944474226";
@@ -255,6 +255,13 @@ function RoomVisualCard({ room, language }: { room: IndividualRoomData; language
   const visibleAmenities = room.amenities.filter((amenity) => !bedText.includes(amenity.label.toLowerCase())).slice(0, 4);
   const subtitle = [localizeRoomText(room.type, language), room.sizeM2 ? ui.size(room.sizeM2) : null].filter(Boolean).join(" · ");
   const whatsappHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(ui.askMessage(roomName))}`;
+  // Opens the AI Room Finder focused on this room, so the guest sees live
+  // availability and the direct price instead of waiting for a WhatsApp reply.
+  // Units without a number (none today) keep the WhatsApp question.
+  const roomNumber = Number(room.id.match(/(\d+)$/)?.[1] || 0);
+  const roomFinderHref = roomNumber >= 1 && roomNumber <= 10
+    ? `${roomFinderHrefForLanguage(language)}?room=${roomNumber}`
+    : null;
 
   return (
     <article data-reveal="" className="flex w-[84vw] max-w-[360px] flex-none snap-start flex-col rounded-3xl border border-[#eadfce] bg-white p-2.5 shadow-[0_1px_2px_rgba(47,38,31,0.06)] md:w-auto md:max-w-none">
@@ -352,13 +359,13 @@ function RoomVisualCard({ room, language }: { room: IndividualRoomData; language
           <div className="flex items-center justify-between gap-3 border-t border-[#f0e7da] pt-3">
             <span className="text-xs font-semibold text-[#166534]">{ui.direct}</span>
             <a
-              href={whatsappHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-booking-cta="true"
+              href={roomFinderHref || whatsappHref}
+              {...(roomFinderHref
+                ? { "data-room-finder-cta": "false" }
+                : { target: "_blank", rel: "noopener noreferrer", "data-booking-cta": "true" })}
               className="inline-flex min-h-11 shrink-0 items-center gap-1 rounded-full bg-[#fbeee0] px-4 text-sm font-semibold text-[#7c2d12] transition hover:bg-[#f7e0c8]"
             >
-              {ui.askDates}
+              {roomFinderHref ? ui.checkAvailability : ui.askDates}
               <span className="sr-only"> – {roomName}</span>
               <span aria-hidden="true">→</span>
             </a>

@@ -149,6 +149,18 @@ const ROOM_INTEREST_SAVED: Record<RoomFinderLanguage, (room: number) => string> 
   tr: room => `${room} numaralı odayla ilgilendiğinizi not ettim. Tarihler ve konuk bilgileri tamamlandığında canlı müsaitliğini kontrol edeceğim.`,
 };
 
+// First message when the guest arrives from a room's "Check availability"
+// button: the room is remembered and checked first once dates are known.
+const ROOM_FROM_LINK: Record<RoomFinderLanguage, (room: number) => string> = {
+  el: room => `Βλέπω ότι σας ενδιαφέρει το ${room >= 8 ? "Διαμέρισμα" : "Δωμάτιο"} ${room}. Πείτε μου πότε θέλετε να έρθετε και για πόσα άτομα, και θα σας δείξω αμέσως αν είναι διαθέσιμο και σε ποια τιμή.`,
+  en: room => `I see you’re interested in ${room >= 8 ? "Apartment" : "Room"} ${room}. Tell me your dates and how many guests, and I’ll show you straight away whether it’s available and at what price.`,
+  de: room => `Sie interessieren sich für ${room >= 8 ? "Apartment" : "Zimmer"} ${room}. Nennen Sie mir Ihre Reisedaten und die Anzahl der Gäste, dann zeige ich Ihnen sofort Verfügbarkeit und Preis.`,
+  fr: room => `Vous vous intéressez ${room >= 8 ? "à l’appartement" : "à la chambre"} ${room}. Indiquez-moi vos dates et le nombre de personnes, et je vous montre tout de suite sa disponibilité et son prix.`,
+  it: room => `Vedo che vi interessa ${room >= 8 ? "l’appartamento" : "la camera"} ${room}. Indicatemi le date e il numero di ospiti e vi mostro subito disponibilità e prezzo.`,
+  es: room => `Veo que le interesa ${room >= 8 ? "el apartamento" : "la habitación"} ${room}. Dígame sus fechas y cuántas personas, y le muestro enseguida si está disponible y a qué precio.`,
+  tr: room => `${room} numaralı ${room >= 8 ? "daireyle" : "odayla"} ilgilendiğinizi görüyorum. Tarihlerinizi ve kişi sayısını yazın, müsaitliğini ve fiyatını hemen göstereyim.`,
+};
+
 const ROOM_INTEREST_UNAVAILABLE: Record<RoomFinderLanguage, (room: number) => string> = {
   el: room => `Το Δωμάτιο ${room} δεν εμφανίζεται διαθέσιμο στα live αποτελέσματα για αυτά τα στοιχεία. Σας δείχνω τις διαθέσιμες εναλλακτικές χωρίς να αλλάξω την αναζήτησή σας.`,
   en: room => `Room ${room} is not shown as available in the live results for these details. I’m showing the available alternatives without changing your search.`,
@@ -464,6 +476,14 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     setFailedSearch(null);
     setUnavailableSearch(null);
     setTyping(false);
+  }
+
+  // Called once when the page was opened from a room's availability button
+  // (?room=N): remembers the room so live results show it first.
+  function focusRoomFromLink(room: number) {
+    if (!Number.isInteger(room) || room < 1 || room > 10) return;
+    setPreferredRoomNumber(room);
+    add("assistant", ROOM_FROM_LINK[language](room));
   }
 
   async function retryAvailability() {
@@ -1227,6 +1247,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     selectOffer,
     chooseBreakfast,
     retryAvailability,
+    focusRoomFromLink,
     unavailableSearch: step === "unavailable" ? unavailableSearch : null,
     canRetryAvailability: Boolean(failedSearch) && step === "unavailable",
     retryLabel: RETRY_SEARCH_LABEL[language],

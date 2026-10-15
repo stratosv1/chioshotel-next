@@ -311,9 +311,19 @@ export function RoomFinderProduction({
   const detailCloseRef = useRef<HTMLButtonElement>(null);
   const detailTriggerRef = useRef<HTMLElement | null>(null);
   const autoLanguageSwitched = useRef(false);
+  // Room number from a room page's "Check availability" button (?room=N).
+  const pendingRoomFocus = useRef<number | null>(null);
   const pendingAutoLanguageMessage = useRef<string | null>(null);
 
   useEffect(() => {
+    const roomParam = Number(new URLSearchParams(window.location.search).get("room"));
+    if (Number.isInteger(roomParam) && roomParam >= 1 && roomParam <= 10) {
+      pendingRoomFocus.current = roomParam;
+      // Keep the address clean so a reload or shared link starts fresh.
+      const url = new URL(window.location.href);
+      url.searchParams.delete("room");
+      window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}${url.hash}`);
+    }
     const detected = detectLanguage();
     if (detected !== language) setLanguage(detected);
   }, []);
@@ -327,6 +337,21 @@ export function RoomFinderProduction({
     setSendStatus("idle");
     setHiddenQuickReplyPromptId(null);
     setBreakfastChoicePending(null);
+  }, [language]);
+
+  // After the reset above: note the room the guest came for, once the welcome
+  // has finished appearing.
+  useEffect(() => {
+    const room = pendingRoomFocus.current;
+    if (!room) return;
+    // Cleared only when it fires: a language change in between reschedules it
+    // for the conversation in the new language.
+    const timer = window.setTimeout(() => {
+      if (pendingRoomFocus.current !== room) return;
+      pendingRoomFocus.current = null;
+      finder.focusRoomFromLink(room);
+    }, 1_500);
+    return () => window.clearTimeout(timer);
   }, [language]);
 
   // Runs after the reset above, so the guest's Greek message is answered by
