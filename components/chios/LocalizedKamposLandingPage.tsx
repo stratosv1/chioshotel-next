@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { ChiosCollectionImageGallery } from "@/components/chios/ChiosCollectionImageGallery";
 import type { ReactNode } from "react";
 import type { KamposChiosPageData } from "@/content/kampos-chios";
 
@@ -271,6 +272,17 @@ export function LocalizedKamposLandingPage({ data }: Props) {
           </div>
         </div>
       </section>
+
+      {/* Three-photo strip, same as the beaches hub. */}
+      <ChiosCollectionImageGallery
+        kind="kambos"
+        language={data.language}
+        items={[
+          { image: data.gallery[1].image, imageAlt: data.gallery[1].imageAlt, title: "", href: "#rooms-kambos" },
+          { image: data.gallery[2].image, imageAlt: data.gallery[2].imageAlt, title: "", href: "#rooms-kambos" },
+          { image: roomImages[0], imageAlt: t.roomTitles[0], title: t.roomTitles[0], href: "#rooms-kambos" },
+        ]}
+      />
 
       <section className={`${shell} py-9 sm:py-16`}>
         <div className="grid items-center gap-5 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14">

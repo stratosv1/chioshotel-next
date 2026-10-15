@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { SearchImageGallery } from "@/components/seo/SearchImageGallery";
+import { ChiosCollectionImageGallery } from "@/components/chios/ChiosCollectionImageGallery";
 import type { ReactNode } from "react";
 import type { KamposChiosPageData } from "@/content/kampos-chios";
 
@@ -195,7 +196,33 @@ export function GreekKamposLandingPageElegant({ data }: Props) {
         </div>
       </section>
 
-      <SearchImageGallery path={data.seo.canonicalPath} />
+      {/* Three-photo strip, same as the beaches hub: search engines use it
+          for the image row under the result. The larger photo gallery follows
+          the "why Kambos" section. */}
+      <ChiosCollectionImageGallery
+        kind="kambos"
+        language="el"
+        items={[
+          {
+            image: "/images/kampos/kambos-chios.jpg",
+            imageAlt: "Ιστορικός Κάμπος της Χίου με παραδοσιακή αρχιτεκτονική",
+            title: "Ο ιστορικός Κάμπος",
+            href: "#why-kampos",
+          },
+          {
+            image: "/images/kampos/kampos-chios-citrus-estate-hd.webp",
+            imageAlt: "Κτήμα με περιβόλι εσπεριδοειδών και πέτρινους τοίχους στον Κάμπο της Χίου",
+            title: "Περιβόλια & κτήματα",
+            href: "#why-kampos",
+          },
+          {
+            image: "/images/rooms/double-triple-room.jpg",
+            imageAlt: "Ισόγειο δωμάτιο με πρόσβαση στον κήπο στον Κάμπο της Χίου",
+            title: "Δωμάτια στον Κάμπο",
+            href: "/el/domatia-xios/",
+          },
+        ]}
+      />
 
       <section className={`${shell} py-9 sm:py-16`} aria-labelledby="why-kampos">
         <div className="grid gap-5 lg:grid-cols-[0.8fr_1.2fr] lg:gap-14">
@@ -213,6 +240,8 @@ export function GreekKamposLandingPageElegant({ data }: Props) {
           </p>
         </div>
       </section>
+
+      <SearchImageGallery path={data.seo.canonicalPath} />
 
       <section className="bg-[#eee6dd] py-9 sm:py-16" aria-labelledby="benefits-title">
         <div className={shell}>

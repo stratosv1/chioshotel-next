@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 type CollectionLanguage = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
-type CollectionKind = "beaches" | "villages" | "rooms" | "island";
+type CollectionKind = "beaches" | "villages" | "rooms" | "island" | "kambos";
 
 type CollectionImageItem = {
   image: string;
@@ -14,13 +14,13 @@ const galleryLabels: Record<
   CollectionLanguage,
   Record<CollectionKind, string>
 > = {
-  en: { beaches: "Featured Chios beaches", villages: "Featured Chios villages", rooms: "Room photos at Voulamandis House", island: "Highlights of Chios" },
-  el: { beaches: "Επιλεγμένες παραλίες της Χίου", villages: "Επιλεγμένα χωριά της Χίου", rooms: "Φωτογραφίες δωματίων στο Voulamandis House", island: "Τα αξιοθέατα της Χίου" },
-  fr: { beaches: "Plages incontournables de Chios", villages: "Villages incontournables de Chios", rooms: "Photos des chambres de Voulamandis House", island: "Les incontournables de Chios" },
-  de: { beaches: "Ausgewählte Strände auf Chios", villages: "Ausgewählte Dörfer auf Chios", rooms: "Zimmerfotos im Voulamandis House", island: "Highlights von Chios" },
-  it: { beaches: "Spiagge da non perdere a Chios", villages: "Villaggi da non perdere a Chios", rooms: "Foto delle camere di Voulamandis House", island: "Da non perdere a Chios" },
-  es: { beaches: "Playas destacadas de Quíos", villages: "Pueblos destacados de Quíos", rooms: "Fotos de las habitaciones de Voulamandis House", island: "Lo mejor de Quíos" },
-  tr: { beaches: "Sakız Adası’nın öne çıkan plajları", villages: "Sakız Adası’nın öne çıkan köyleri", rooms: "Voulamandis House oda fotoğrafları", island: "Sakız Adası’nın öne çıkanları" },
+  en: { beaches: "Featured Chios beaches", villages: "Featured Chios villages", rooms: "Room photos at Voulamandis House", island: "Highlights of Chios", kambos: "Kambos, Chios" },
+  el: { beaches: "Επιλεγμένες παραλίες της Χίου", villages: "Επιλεγμένα χωριά της Χίου", rooms: "Φωτογραφίες δωματίων στο Voulamandis House", island: "Τα αξιοθέατα της Χίου", kambos: "Ο Κάμπος της Χίου" },
+  fr: { beaches: "Plages incontournables de Chios", villages: "Villages incontournables de Chios", rooms: "Photos des chambres de Voulamandis House", island: "Les incontournables de Chios", kambos: "Kambos à Chios" },
+  de: { beaches: "Ausgewählte Strände auf Chios", villages: "Ausgewählte Dörfer auf Chios", rooms: "Zimmerfotos im Voulamandis House", island: "Highlights von Chios", kambos: "Kambos auf Chios" },
+  it: { beaches: "Spiagge da non perdere a Chios", villages: "Villaggi da non perdere a Chios", rooms: "Foto delle camere di Voulamandis House", island: "Da non perdere a Chios", kambos: "Kambos a Chios" },
+  es: { beaches: "Playas destacadas de Quíos", villages: "Pueblos destacados de Quíos", rooms: "Fotos de las habitaciones de Voulamandis House", island: "Lo mejor de Quíos", kambos: "Kambos en Quíos" },
+  tr: { beaches: "Sakız Adası’nın öne çıkan plajları", villages: "Sakız Adası’nın öne çıkan köyleri", rooms: "Voulamandis House oda fotoğrafları", island: "Sakız Adası’nın öne çıkanları", kambos: "Sakız Adası, Kambos" },
 };
 
 function getUniqueImages(items: readonly CollectionImageItem[]) {

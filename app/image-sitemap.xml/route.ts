@@ -166,8 +166,8 @@ const polishCustomPages: readonly ImageSitemapEntry[] = [
       "/images/kampos/kampos-chios-mansion-garden-hd.webp",
       "/images/kampos/antouaniko-kampos-chios.webp",
       ...polishRoomCardImages,
-      "/images/kampos/kampos-chios-stone-mansion.webp",
-      "/images/kampos/kampos-chios-citrus-estate.webp",
+      "/images/kampos/kampos-chios-stone-mansion-hd.webp",
+      "/images/kampos/kampos-chios-citrus-estate-hd.webp",
     ],
   },
 ];

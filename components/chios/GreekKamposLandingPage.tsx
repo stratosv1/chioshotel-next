@@ -424,7 +424,7 @@ export function GreekKamposLandingPage({ data }: Props) {
       <section className="px-4 py-7 sm:px-6 sm:py-12 lg:px-8">
         <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[1.6rem] bg-[#665044] px-5 py-8 text-[#fffaf3] shadow-xl shadow-[#4b3425]/15 sm:rounded-[2.5rem] sm:px-10 sm:py-14">
           <Image
-            src="/images/kampos/kampos-chios-citrus-estate.webp"
+            src="/images/kampos/kampos-chios-citrus-estate-hd.webp"
             alt="Περιβόλι εσπεριδοειδών στον Κάμπο της Χίου"
             fill
             className="object-cover opacity-30"
