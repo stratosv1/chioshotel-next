@@ -169,6 +169,16 @@ function getDisplayedCards(data: RoomsCategoryPageData, language: LanguageCode) 
   });
 }
 
+const HUB_CHECK_AVAILABILITY: Partial<Record<string, string>> & { en: string } = {
+  en: "Check availability",
+  el: "Έλεγχος διαθεσιμότητας",
+  fr: "Voir les disponibilités",
+  de: "Verfügbarkeit prüfen",
+  it: "Verifica disponibilità",
+  es: "Consultar disponibilidad",
+  tr: "Müsaitliği kontrol et",
+};
+
 export async function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
   const ownerData = withRoomsOwnerHeroIntent(data);
   const language = getWizardLanguage(ownerData.seo.canonicalPath);
@@ -411,9 +421,12 @@ export async function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
         </div>
       </section>
 
+      {/* Mobile sticky button: check availability in the AI Room Finder
+          (same as the room category pages), not the booking engine. */}
       <MobileAvailabilityBar
-        href={finalCta.bookingHref}
-        label={finalCta.bookingLabel}
+        href={aiAvailabilityHref}
+        label={HUB_CHECK_AVAILABILITY[language] || HUB_CHECK_AVAILABILITY.en}
+        tone="gold"
         hideWhileIds={["rooms-wizard", "rooms-final-cta"]}
       />
     </main>
