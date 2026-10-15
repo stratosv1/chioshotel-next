@@ -425,7 +425,9 @@ export function RoomFinderProduction({
       setHasUnseenMessages(false);
     }
 
-    if (finder.step === "searching" || (finder.step === "selecting" && finder.visibleOffers.length > 0)) {
+    // While the "one more night" offer is open the results are held back, so
+    // the feed keeps following the conversation down to the offer buttons.
+    if (finder.step === "searching" || (finder.step === "selecting" && finder.visibleOffers.length > 0 && !finder.extensionPending)) {
       return;
     }
 
@@ -438,7 +440,7 @@ export function RoomFinderProduction({
       feedRef.current?.scrollTo({ top: feedRef.current.scrollHeight, behavior: "smooth" });
     });
     return () => cancelAnimationFrame(frame);
-  }, [finder.messages, finder.step, finder.typing, finder.choices, finder.visibleOffers.length, sendStatus]);
+  }, [finder.messages, finder.step, finder.typing, finder.choices, finder.visibleOffers.length, finder.extensionPending, sendStatus]);
 
   useEffect(() => {
     if (finder.step !== "searching") return;
@@ -449,6 +451,7 @@ export function RoomFinderProduction({
 
   useEffect(() => {
     if (finder.visibleOffers.length === 0 || !["searching", "selecting"].includes(finder.step)) return;
+    if (finder.extensionPending) return;
 
     if (isTouchKeyboardDevice()) composerInputRef.current?.blur();
     stickToBottomRef.current = false;
@@ -465,7 +468,7 @@ export function RoomFinderProduction({
       cancelAnimationFrame(frame);
       window.clearTimeout(settleTimer);
     };
-  }, [finder.activeGroup, finder.step, finder.visibleOffers.length]);
+  }, [finder.activeGroup, finder.step, finder.visibleOffers.length, finder.extensionPending]);
 
   useEffect(() => {
     const shell = shellRef.current;
