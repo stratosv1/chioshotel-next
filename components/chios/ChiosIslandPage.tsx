@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { ChiosCollectionImageGallery } from "@/components/chios/ChiosCollectionImageGallery";
 import type { ChiosIslandPageData } from "@/content/chios-island";
 
 type ChiosIslandPageProps = {
@@ -6,6 +7,7 @@ type ChiosIslandPageProps = {
 };
 
 type ChiosIslandUiText = {
+  heroImageAlt: string;
   introKicker: string;
   highlightsAriaLabel: string;
   quizKicker: string;
@@ -16,6 +18,7 @@ type ChiosIslandUiText = {
 
 const chiosIslandUiByLocale: Record<string, ChiosIslandUiText> = {
   en: {
+    heroImageAlt: "Courtyard of Voulamandis House with a pergola and a red water wheel in Kambos, Chios",
     introKicker: "Why visit Chios",
     highlightsAriaLabel: "Chios island highlights",
     quizKicker: "Chios quiz",
@@ -24,6 +27,7 @@ const chiosIslandUiByLocale: Record<string, ChiosIslandUiText> = {
     bookNow: "Book now",
   },
   el: {
+    heroImageAlt: "Η αυλή του Voulamandis House με την πέργκολα και το κόκκινο μαγγάνι στον Κάμπο της Χίου",
     introKicker: "Γιατί να επισκεφθείτε τη Χίο",
     highlightsAriaLabel: "Σημαντικά στοιχεία για τη Χίο",
     quizKicker: "Κουίζ για τη Χίο",
@@ -32,6 +36,7 @@ const chiosIslandUiByLocale: Record<string, ChiosIslandUiText> = {
     bookNow: "Κάντε κράτηση",
   },
   fr: {
+    heroImageAlt: "Cour de Voulamandis House avec pergola et roue à eau rouge à Kambos, Chios",
     introKicker: "Pourquoi visiter Chios",
     highlightsAriaLabel: "Points forts de l’île de Chios",
     quizKicker: "Quiz sur Chios",
@@ -40,6 +45,7 @@ const chiosIslandUiByLocale: Record<string, ChiosIslandUiText> = {
     bookNow: "Réserver",
   },
   de: {
+    heroImageAlt: "Innenhof des Voulamandis House mit Pergola und rotem Wasserrad in Kambos, Chios",
     introKicker: "Warum Chios besuchen",
     highlightsAriaLabel: "Highlights der Insel Chios",
     quizKicker: "Chios-Quiz",
@@ -48,6 +54,7 @@ const chiosIslandUiByLocale: Record<string, ChiosIslandUiText> = {
     bookNow: "Jetzt buchen",
   },
   it: {
+    heroImageAlt: "Cortile di Voulamandis House con pergolato e ruota idraulica rossa a Kambos, Chios",
     introKicker: "Perché visitare Chios",
     highlightsAriaLabel: "Punti salienti dell’isola di Chios",
     quizKicker: "Quiz su Chios",
@@ -56,6 +63,7 @@ const chiosIslandUiByLocale: Record<string, ChiosIslandUiText> = {
     bookNow: "Prenota ora",
   },
   es: {
+    heroImageAlt: "Patio de Voulamandis House con pérgola y noria roja en Kambos, Quíos",
     introKicker: "Por qué visitar Quíos",
     highlightsAriaLabel: "Aspectos destacados de la isla de Quíos",
     quizKicker: "Quiz sobre Quíos",
@@ -64,6 +72,7 @@ const chiosIslandUiByLocale: Record<string, ChiosIslandUiText> = {
     bookNow: "Reservar ahora",
   },
   tr: {
+    heroImageAlt: "Voulamandis House’un pergolalı avlusu ve kırmızı su çarkı, Kambos, Sakız Adası",
     introKicker: "Sakız Adası neden ziyaret edilmeli",
     highlightsAriaLabel: "Sakız Adası öne çıkanlar",
     quizKicker: "Sakız Adası testi",
@@ -87,7 +96,7 @@ export function ChiosIslandPage({ data }: ChiosIslandPageProps) {
         <div className="absolute inset-0 z-0" aria-hidden="true">
           <Image
             src={data.hero.image}
-            alt=""
+            alt={ui.heroImageAlt}
             fill
             priority
             fetchPriority="high"
@@ -122,6 +131,19 @@ export function ChiosIslandPage({ data }: ChiosIslandPageProps) {
           </div>
         </div>
       </section>
+
+      {/* Three-photo strip, same as the beaches and villages hubs: search
+          engines use it for the image row under the result. */}
+      <ChiosCollectionImageGallery
+        kind="island"
+        language={getChiosIslandLocale(data.seo.canonicalPath) as "en" | "el" | "fr" | "de" | "it" | "es" | "tr"}
+        items={data.experiences.items.map((item) => ({
+          image: item.image,
+          imageAlt: item.imageAlt,
+          title: item.title,
+          href: item.href,
+        }))}
+      />
 
       <section className="py-16 md:py-20" aria-labelledby="ci-intro-title">
         <div className="mx-auto grid w-[min(1180px,calc(100%-40px))] items-start gap-8 max-md:w-[calc(100%-24px)] lg:grid-cols-[minmax(0,1.35fr)_minmax(320px,.65fr)]">
@@ -162,13 +184,14 @@ export function ChiosIslandPage({ data }: ChiosIslandPageProps) {
           </header>
 
           <div className="grid gap-5 lg:grid-cols-3">
-            {data.experiences.items.map((item) => (
+            {data.experiences.items.map((item, index) => (
               <article className="group overflow-hidden rounded-[1.875rem] border border-amber-800/15 bg-white/90 shadow-xl shadow-stone-900/5 transition hover:-translate-y-1 hover:shadow-2xl hover:shadow-stone-900/10" key={item.title}>
                 <div className="relative h-[260px] overflow-hidden bg-stone-200">
                   <Image
                     src={item.image}
                     alt={item.imageAlt}
                     fill
+                    priority={index < 2}
                     sizes="(max-width: 1023px) 100vw, 33vw"
                     className="object-cover transition duration-700 group-hover:scale-105"
                   />
@@ -193,6 +216,34 @@ export function ChiosIslandPage({ data }: ChiosIslandPageProps) {
           </div>
         </div>
       </section>
+
+      {data.faq ? (
+        <section className="py-12 md:py-16" aria-labelledby="ci-faq-title">
+          <div className="mx-auto w-[min(1180px,calc(100%-40px))] rounded-[2rem] border border-amber-800/15 bg-white/90 p-[clamp(24px,4vw,40px)] shadow-xl shadow-stone-900/5 max-md:w-[calc(100%-24px)]">
+            <span className="mb-4 inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.16em] text-amber-900 before:h-px before:w-8 before:bg-current before:opacity-75">
+              {data.faq.kicker}
+            </span>
+            <h2 id="ci-faq-title" className="m-0 text-[clamp(30px,4vw,48px)] font-black leading-none tracking-[-0.05em] text-stone-800">
+              {data.faq.title}
+            </h2>
+            <div className="mt-6 grid gap-3">
+              {data.faq.items.map((item, index) => (
+                <details
+                  className="group rounded-[22px] bg-[#fff7ee] px-5 py-4 ring-1 ring-amber-800/10"
+                  key={item.question}
+                  open={index === 0}
+                >
+                  <summary className="flex cursor-pointer list-none items-start justify-between gap-4 [&::-webkit-details-marker]:hidden">
+                    <h3 className="text-base font-black leading-7 text-stone-800 md:text-lg">{item.question}</h3>
+                    <span className="mt-1 shrink-0 text-xl leading-none text-amber-900 transition group-open:rotate-45" aria-hidden="true">+</span>
+                  </summary>
+                  <p className="mt-3 text-sm leading-7 text-stone-600 md:text-base md:leading-8">{item.answer}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       <section className="py-12 md:py-16" aria-labelledby="ci-quiz-title">
         <div className="mx-auto w-[min(1180px,calc(100%-40px))] max-md:w-[calc(100%-24px)]">

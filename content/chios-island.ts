@@ -64,6 +64,12 @@ export type ChiosIslandPageData = {
     whatsappHref: string;
     bookingHref: string;
   };
+  /** Optional FAQ, rendered on the page and exposed as FAQPage. */
+  faq?: {
+    kicker: string;
+    title: string;
+    items: { question: string; answer: string }[];
+  };
 };
 
 const chiosIslandHeroImage =
@@ -188,6 +194,37 @@ export const chiosIslandPageEn: ChiosIslandPageData = {
       href: "/chios-rooms/",
     },
   },
+  faq: {
+    kicker: "Chios FAQ",
+    title: "Visiting Chios: common questions",
+    items: [
+      {
+        question: "What is Chios known for?",
+        answer:
+          "Chios is best known for mastic, which is cultivated only here, for its medieval fortified villages such as Mesta and Pyrgi, and for a varied coastline with clear-water beaches.",
+      },
+      {
+        question: "What should I see in Chios?",
+        answer:
+          "Start with the beaches, such as Agia Dynami with its turquoise water, the medieval villages of south Chios like Mesta and Pyrgi, and the island’s museums for its history, maritime tradition and mastic culture.",
+      },
+      {
+        question: "Is Chios good for a quiet holiday?",
+        answer:
+          "Yes. Chios offers an authentic Greek island experience with history, local tradition and natural beauty, and a calmer holiday away from the crowds.",
+      },
+      {
+        question: "Do I need a car in Chios?",
+        answer:
+          "It helps a lot. Beaches and villages are spread across the island, so a car makes it much easier to combine them at your own pace.",
+      },
+      {
+        question: "Where should I stay in Chios?",
+        answer:
+          "Kambos, where Voulamandis House is, keeps you close to Chios Town and the airport and on the routes to beaches, villages and cultural sights.",
+      },
+    ],
+  },
   sticky: {
     whatsappHref,
     bookingHref: "/chios-hotels-rates/",
@@ -301,6 +338,37 @@ export const chiosIslandPageEl: ChiosIslandPageData = {
       label: "Δείτε δωμάτια",
       href: "/el/domatia-xios/",
     },
+  },
+  faq: {
+    kicker: "Συχνές ερωτήσεις",
+    title: "Επίσκεψη στη Χίο: συχνές ερωτήσεις",
+    items: [
+      {
+        question: "Για τι είναι γνωστή η Χίος;",
+        answer:
+          "Η Χίος είναι γνωστή για τη μαστίχα, που καλλιεργείται μόνο εδώ, για τα μεσαιωνικά καστροχώρια όπως τα Μεστά και το Πυργί, και για τις όμορφες ακτές με καθαρά νερά.",
+      },
+      {
+        question: "Τι να δω στη Χίο;",
+        answer:
+          "Ξεκινήστε από τις παραλίες, όπως η Αγία Δύναμη με τα γαλαζοπράσινα νερά, τα μεσαιωνικά χωριά της νότιας Χίου όπως τα Μεστά και το Πυργί, και τα μουσεία για την ιστορία, τη ναυτική παράδοση και τη μαστίχα.",
+      },
+      {
+        question: "Είναι η Χίος κατάλληλη για ήσυχες διακοπές;",
+        answer:
+          "Ναι. Η Χίος προσφέρει μια αυθεντική εμπειρία ελληνικού νησιού, με ιστορία, τοπική παράδοση, φυσική ομορφιά και πιο ήρεμες διακοπές μακριά από την πολυκοσμία.",
+      },
+      {
+        question: "Χρειάζομαι αυτοκίνητο στη Χίο;",
+        answer:
+          "Βοηθά πολύ. Οι παραλίες και τα χωριά βρίσκονται σε διαφορετικά σημεία του νησιού, οπότε με αυτοκίνητο τα συνδυάζετε πολύ πιο εύκολα και με τον δικό σας ρυθμό.",
+      },
+      {
+        question: "Πού να μείνω στη Χίο;",
+        answer:
+          "Ο Κάμπος, όπου βρίσκεται το Voulamandis House, σας κρατά κοντά στην πόλη της Χίου και στο αεροδρόμιο και πάνω στις διαδρομές προς παραλίες, χωριά και πολιτιστικά αξιοθέατα.",
+      },
+    ],
   },
   sticky: {
     whatsappHref,

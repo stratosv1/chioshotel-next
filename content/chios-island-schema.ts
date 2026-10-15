@@ -8,6 +8,7 @@ import {
 } from "@/lib/seo";
 import {
   buildBreadcrumbSchema,
+  buildFaqSchema,
   buildHotelSchema,
   buildImageSchema,
   buildOrganizationSchema,
@@ -34,6 +35,12 @@ function buildChiosIslandWebPageSchema(data: ChiosIslandPageData): SchemaObject 
     name: data.seo.title,
     headline: data.hero.title,
     description: data.seo.description,
+    image: Array.from(
+      new Set([
+        absoluteUrl(data.seo.ogImage || data.hero.image),
+        ...data.experiences.items.map((item) => absoluteUrl(item.image)),
+      ]),
+    ),
     inLanguage: language,
     isPartOf: {
       "@id": websiteId(),
@@ -218,6 +225,7 @@ export function buildChiosIslandSchema(data: ChiosIslandPageData) {
       buildExperiencePlaceSchema(item, canonicalPath),
     ),
     buildChiosStayActionSchema(data),
+    data.faq ? buildFaqSchema({ path: canonicalPath, questions: data.faq.items }) : null,
     buildBreadcrumbSchema(canonicalPath, [
       {
         name: address.addressLocality,
