@@ -6,6 +6,7 @@ import {
   addDaysToIsoDate,
   daysBetweenIsoDates,
   isStrictIsoDate,
+  todayInAthensIso,
 } from "@/lib/ai-assistant/room-finder-date";
 
 export type FinderStep =
@@ -87,6 +88,17 @@ const GROUP_LIMIT_MESSAGE: Record<RoomFinderCommand["language"], (guests: number
   it: guests => `Per ${guests} ospiti la nostra reception prepara una proposta personalizzata, perché la ricerca automatica copre fino a 15 ospiti in 3 camere. Lasciate i vostri dati qui sotto o chiamateci e vi risponderemo a breve.`,
   es: guests => `Para ${guests} personas nuestra recepción prepara una propuesta personal, ya que la búsqueda automática cubre hasta 15 personas en 3 habitaciones. Dejen sus datos abajo o llámennos y les responderemos en breve.`,
   tr: guests => `${guests} kişi için resepsiyonumuz size özel bir teklif hazırlar; otomatik arama 3 odada en fazla 15 kişiyi kapsar. Bilgilerinizi aşağıya bırakın veya bizi arayın, kısa sürede dönüş yapalım.`,
+};
+
+// A check-in before today (e.g. "yesterday") is asked again.
+const PAST_CHECKIN_MESSAGE: Record<RoomFinderCommand["language"], string> = {
+  el: "Αυτή η ημερομηνία check-in έχει ήδη περάσει. Από ποια ημερομηνία θα θέλατε να ξεκινήσει η διαμονή σας;",
+  en: "That check-in date has already passed. From which date would you like your stay to start?",
+  de: "Dieses Anreisedatum liegt bereits in der Vergangenheit. Ab welchem Datum möchten Sie anreisen?",
+  fr: "Cette date d’arrivée est déjà passée. À partir de quelle date souhaitez-vous commencer votre séjour ?",
+  it: "Questa data di check-in è già passata. Da quale data desiderate iniziare il soggiorno?",
+  es: "Esa fecha de llegada ya ha pasado. ¿A partir de qué fecha desea comenzar su estancia?",
+  tr: "Bu giriş tarihi geçmiş bir tarih. Konaklamanızın hangi tarihte başlamasını istersiniz?",
 };
 
 const LONG_STAY_MESSAGE: Record<RoomFinderCommand["language"], (nights: number) => string> = {
@@ -585,6 +597,21 @@ export function resolveAssistantTurn(current: BookingFlowState, command: RoomFin
       state: { step: stepForOutcome(outcome, current.step), draft },
       outcome,
       changed,
+    };
+  }
+
+  if (draft.checkin && draft.checkin < todayInAthensIso()) {
+    // The stated length ("for 2 nights") is kept for the corrected arrival.
+    draft.checkin = "";
+    draft.checkout = "";
+    return {
+      state: { step: "checkin", draft },
+      outcome: {
+        kind: "clarification",
+        query: PAST_CHECKIN_MESSAGE[command.language] || PAST_CHECKIN_MESSAGE.en,
+        step: "checkin",
+      },
+      changed: true,
     };
   }
 

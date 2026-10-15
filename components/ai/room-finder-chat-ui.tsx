@@ -160,7 +160,7 @@ function trackRoomFinderMessage(message: ChatItem) {
     }],
   });
 
-  const send = () => fetch("/api/ai-assistant/conversation", {
+  const send = () => fetch("/api/ai-assistant/conversation/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: payload,

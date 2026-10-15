@@ -83,8 +83,8 @@ function fullDraft(overrides = {}) {
   return {
     stayDestination: "",
     destinationKind: null,
-    checkin: "2026-10-10",
-    checkout: "2026-10-12",
+    checkin: "2030-10-10",
+    checkout: "2030-10-12",
     roomCount: 1,
     totalGuests: 2,
     groups: [2],
@@ -97,7 +97,7 @@ function offer(id) {
 }
 
 function testStrictDates() {
-  assert(dateUtils.isStrictIsoDate("2026-10-10"), "valid ISO date rejected");
+  assert(dateUtils.isStrictIsoDate("2030-10-10"), "valid ISO date rejected");
   assert(!dateUtils.isStrictIsoDate("2026-02-31"), "impossible February date accepted");
   assert(!dateUtils.isStrictIsoDate("2026-02-29"), "non-leap-year February 29 accepted");
   assert(dateUtils.isStrictIsoDate("2028-02-29"), "valid leap-day rejected");
@@ -111,7 +111,7 @@ function testFullOneTurnBooking() {
   const result = resolveAssistantTurn(
     createInitialBookingFlowState(),
     command([
-      { type: "set_stay_dates", checkin: "2026-10-10", checkout: "2026-10-12" },
+      { type: "set_stay_dates", checkin: "2030-10-10", checkout: "2030-10-12" },
       { type: "set_room_count", roomCount: 1 },
       { type: "set_guest_count", totalGuests: 2 },
     ]),
@@ -217,10 +217,10 @@ function testDateFactsAreOrderIndependent() {
     createInitialBookingFlowState(),
     command([
       { type: "set_stay_dates", nights: 3 },
-      { type: "set_stay_dates", checkin: "2026-10-10" },
+      { type: "set_stay_dates", checkin: "2030-10-10" },
     ]),
   );
-  assert(result.state.draft.checkout === "2026-10-13", "nights listed before check-in were dropped");
+  assert(result.state.draft.checkout === "2030-10-13", "nights listed before check-in were dropped");
 }
 
 function testFrontDeskRoutesOfferLeadCapture() {
@@ -235,7 +235,7 @@ function testMultiRoomTotalIsNotGuessed() {
   const result = resolveAssistantTurn(
     createInitialBookingFlowState(),
     command([
-      { type: "set_stay_dates", checkin: "2026-10-10", checkout: "2026-10-12" },
+      { type: "set_stay_dates", checkin: "2030-10-10", checkout: "2030-10-12" },
       { type: "set_room_count", roomCount: 2 },
       { type: "set_guest_count", totalGuests: 4 },
     ]),
@@ -318,8 +318,8 @@ function testInvalidDatesAndCheckoutOrder() {
     createInitialBookingFlowState(),
     command([{
       type: "set_stay_dates",
-      checkin: "2026-10-12",
-      checkout: "2026-10-10",
+      checkin: "2030-10-12",
+      checkout: "2030-10-10",
     }]),
   );
   assert(backwards.outcome.kind === "invalid_checkout", "checkout before check-in was not rejected");
@@ -330,8 +330,8 @@ function testButtonAllocationPath() {
   let state = {
     step: "rooms",
     draft: {
-      checkin: "2026-10-10",
-      checkout: "2026-10-12",
+      checkin: "2030-10-10",
+      checkout: "2030-10-12",
       roomCount: null,
       totalGuests: null,
       groups: [],
@@ -352,35 +352,35 @@ function testButtonAllocationPath() {
 function testDeterministicBackNavigation() {
   const checkoutBack = bookingFlowReducer({
     step: "checkout",
-    draft: { checkin: "2026-10-10", checkout: "", roomCount: null, totalGuests: null, groups: [] },
+    draft: { checkin: "2030-10-10", checkout: "", roomCount: null, totalGuests: null, groups: [] },
   }, { type: "go_back" });
   assert(checkoutBack.step === "checkin", "checkout back did not target check-in");
   assert(checkoutBack.draft.checkin === "" && checkoutBack.draft.checkout === "", "checkout back did not clear the date dependency");
 
   const roomsBack = bookingFlowReducer({
     step: "rooms",
-    draft: { checkin: "2026-10-10", checkout: "2026-10-12", roomCount: null, totalGuests: null, groups: [] },
+    draft: { checkin: "2030-10-10", checkout: "2030-10-12", roomCount: null, totalGuests: null, groups: [] },
   }, { type: "go_back" });
   assert(roomsBack.step === "checkout" && roomsBack.draft.checkout === "", "rooms back did not reopen checkout");
-  assert(roomsBack.draft.checkin === "2026-10-10", "rooms back unnecessarily cleared check-in");
+  assert(roomsBack.draft.checkin === "2030-10-10", "rooms back unnecessarily cleared check-in");
 
   const secondRoomGuestsBack = bookingFlowReducer({
     step: "guests",
-    draft: { checkin: "2026-10-10", checkout: "2026-10-12", roomCount: 2, totalGuests: null, groups: [3] },
+    draft: { checkin: "2030-10-10", checkout: "2030-10-12", roomCount: 2, totalGuests: null, groups: [3] },
   }, { type: "go_back" });
   assert(secondRoomGuestsBack.step === "guests", "multi-room guest back left guest allocation");
   assert(nextMissingGuestRoom(secondRoomGuestsBack.draft) === 1, "multi-room guest back did not reopen the previous room");
 
   const firstRoomGuestsBack = bookingFlowReducer({
     step: "guests",
-    draft: { checkin: "2026-10-10", checkout: "2026-10-12", roomCount: 2, totalGuests: 4, groups: [] },
+    draft: { checkin: "2030-10-10", checkout: "2030-10-12", roomCount: 2, totalGuests: 4, groups: [] },
   }, { type: "go_back" });
   assert(firstRoomGuestsBack.step === "rooms", "first guest step did not go back to rooms");
   assert(firstRoomGuestsBack.draft.roomCount === null && firstRoomGuestsBack.draft.groups.length === 0, "rooms back kept incompatible allocation state");
 
   const selectingBack = bookingFlowReducer({
     step: "selecting",
-    draft: { checkin: "2026-10-10", checkout: "2026-10-12", roomCount: 2, totalGuests: 4, groups: [2, 2] },
+    draft: { checkin: "2030-10-10", checkout: "2030-10-12", roomCount: 2, totalGuests: 4, groups: [2, 2] },
   }, { type: "go_back" });
   assert(selectingBack.step === "guests", "selecting back did not return to guests");
   assert(nextMissingGuestRoom(selectingBack.draft) === 2, "selecting back did not reopen the last room guest allocation");

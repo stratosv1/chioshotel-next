@@ -212,6 +212,20 @@ export async function GET(request: NextRequest) {
       }
     }
 
+    if (status === "DATA_UNAVAILABLE") {
+      // Dates past the end of the synced inventory are not a temporary
+      // failure: online availability simply has not opened yet. Say so, so
+      // the guest is not told to "try again".
+      const windowRows = await sql`select min(stay_date)::text as first_date, max(stay_date)::text as last_date from booking_core.inventory`;
+      const lastDate = String((windowRows[0] as any)?.last_date || "").slice(0, 10);
+      if (lastDate && daysBetweenIsoDates(lastDate, checkout) > 1) {
+        return NextResponse.json(
+          { success: false, code: "OUTSIDE_INVENTORY_WINDOW", bookableUntil: lastDate, message: "Online availability is not open for these dates yet." },
+          { status: 409, headers: { "Cache-Control": "no-store" } },
+        );
+      }
+    }
+
     if (status !== "READY") {
       return NextResponse.json({ success: false, code: status, message: "Booking inventory is temporarily unavailable." }, { status: 503, headers: { "Cache-Control": "no-store" } });
     }

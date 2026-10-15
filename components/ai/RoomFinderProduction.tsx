@@ -656,7 +656,7 @@ export function RoomFinderProduction({
     const privacyAcceptedAt = new Date().toISOString();
 
     try {
-      const response = await fetch("/api/ai-assistant/summary-email", {
+      const response = await fetch("/api/ai-assistant/summary-email/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

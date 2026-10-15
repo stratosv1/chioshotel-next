@@ -82,10 +82,15 @@ export async function GET(request: NextRequest) {
       offers: any[];
     }> = [];
     let unverifiedWindows = 0;
+    // Windows past the last synced inventory day are not bookable online
+    // yet; they are skipped instead of counting as "could not verify".
+    const windowRows = await sql`select max(stay_date)::text as last_date from booking_core.inventory`;
+    const lastDate = String((windowRows[0] as any)?.last_date || "").slice(0, 10);
 
     // Check nearest windows first and stop once enough useful periods are found.
     // This avoids the previous 6-way parallel fan-out against Neon on every fallback request.
     for (const candidate of candidates) {
+      if (lastDate && daysBetweenIsoDates(lastDate, candidate.checkout) > 1) continue;
       const statusRows = await sql`select * from booking_core.inventory_status(${candidate.checkin}::date, ${candidate.checkout}::date)`;
       const status = String((statusRows[0] as any)?.status || "DATA_UNAVAILABLE");
       if (status !== "READY") {

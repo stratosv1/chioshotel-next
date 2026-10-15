@@ -106,6 +106,17 @@ const rank = (room: RoomOffer) => {
   return index < 0 ? 99 : index;
 };
 
+// Dates after the last synced inventory day: online booking is not open yet.
+const OUTSIDE_WINDOW: Record<RoomFinderLanguage, string> = {
+  el: "Για αυτές τις ημερομηνίες η online διαθεσιμότητα δεν έχει ανοίξει ακόμη. Στείλτε μας το αίτημά σας και η reception θα σας απαντήσει προσωπικά με διαθεσιμότητα και τιμή.",
+  en: "Online availability for these dates has not opened yet. Send us your request and our reception will reply personally with availability and price.",
+  de: "Die Online-Verfügbarkeit für diese Daten ist noch nicht freigeschaltet. Senden Sie uns Ihre Anfrage – unsere Rezeption antwortet Ihnen persönlich mit Verfügbarkeit und Preis.",
+  fr: "Les disponibilités en ligne ne sont pas encore ouvertes pour ces dates. Envoyez-nous votre demande : notre réception vous répondra personnellement avec disponibilité et tarif.",
+  it: "La disponibilità online per queste date non è ancora aperta. Inviateci la richiesta e la reception vi risponderà personalmente con disponibilità e prezzo.",
+  es: "La disponibilidad online para estas fechas aún no está abierta. Envíenos su solicitud y la recepción le responderá personalmente con disponibilidad y precio.",
+  tr: "Bu tarihler için çevrimiçi müsaitlik henüz açılmadı. Talebinizi gönderin, resepsiyonumuz müsaitlik ve fiyatla size kişisel olarak dönüş yapsın.",
+};
+
 const SLOW_SEARCH_NOTICE: Record<RoomFinderLanguage, string> = {
   el: "Ενημερώνω τη διαθεσιμότητα από το σύστημα κρατήσεων, λίγα δευτερόλεπτα ακόμα…",
   en: "I’m refreshing availability from our booking system, just a few more seconds…",
@@ -276,7 +287,7 @@ type RoomCategory = "economy" | "apartments" | "ground" | "first";
 const CATEGORY_ROOMS: Record<RoomCategory, number[]> = {
   economy: [2, 6],
   apartments: [8, 9, 10],
-  ground: [5, 6, 7],
+  ground: [5, 7],
   first: [1, 3, 4],
 };
 
@@ -479,7 +490,7 @@ const AVAILABILITY_AUTO_RETRY_DELAY_MS = 4_000;
 function isRetryableAvailabilityFailure(error: unknown) {
   if (error instanceof Error && error.name === "AbortError") return false;
   if (error instanceof AvailabilityError) {
-    return !["RATE_LIMITED", "INVALID_STAY"].includes(error.code);
+    return !["RATE_LIMITED", "INVALID_STAY", "OUTSIDE_INVENTORY_WINDOW"].includes(error.code);
   }
   return true;
 }
@@ -908,7 +919,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     const timeout = window.setTimeout(() => controller.abort(), 38_000);
 
     try {
-      const response = await fetch("/api/ai-assistant/interpret", {
+      const response = await fetch("/api/ai-assistant/interpret/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         signal: controller.signal,
@@ -943,7 +954,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     });
 
     try {
-      const { response, payload } = await fetchJsonForSearch(`/api/ai-room-finder/alternatives?${query}`, FALLBACK_LOOKUP_TIMEOUT_MS);
+      const { response, payload } = await fetchJsonForSearch(`/api/ai-room-finder/alternatives/?${query}`, FALLBACK_LOOKUP_TIMEOUT_MS);
       if (!response.ok || !payload?.success || !Array.isArray(payload.alternatives)) return [];
 
       return payload.alternatives.flatMap((alternative: any) =>
@@ -972,7 +983,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     });
 
     try {
-      const { response, payload } = await fetchJsonForSearch(`/api/ai-room-finder/sales-recovery?${query}`, FALLBACK_LOOKUP_TIMEOUT_MS);
+      const { response, payload } = await fetchJsonForSearch(`/api/ai-room-finder/sales-recovery/?${query}`, FALLBACK_LOOKUP_TIMEOUT_MS);
       if (!response.ok || !payload?.success || !Array.isArray(payload.offers)) return [];
       return payload.offers as RoomOffer[];
     } catch (error) {
@@ -1012,7 +1023,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
           lang: language,
           allowSplit: "0",
         });
-        const { response, payload } = await fetchJsonForSearch(`/api/ai-room-finder/availability?${query}`, STAY_EXTENSION_LOOKUP_TIMEOUT_MS);
+        const { response, payload } = await fetchJsonForSearch(`/api/ai-room-finder/availability/?${query}`, STAY_EXTENSION_LOOKUP_TIMEOUT_MS);
         if (searchSeq.current !== thisSearch) return null;
         if (!response.ok || !payload?.success || !Array.isArray(payload.offers)) continue;
         const offers = (payload.offers as RoomOffer[])
@@ -1115,7 +1126,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
           lang: language,
           allowSplit: searchDraft.roomCount === 1 ? "1" : "0",
         });
-        const { response, payload } = await fetchJsonForSearch(`/api/ai-room-finder/availability?${query}`, timeoutMs);
+        const { response, payload } = await fetchJsonForSearch(`/api/ai-room-finder/availability/?${query}`, timeoutMs);
         if (!response.ok || !payload?.success) {
           throw new AvailabilityError(String(payload?.code || "REQUEST_FAILED"));
         }
@@ -1206,6 +1217,9 @@ export function useRoomFinder(language: RoomFinderLanguage) {
         && eligible.some(groupOffers => groupOffers.some(offer => Number(offer.roomNumber) === roomInterest && !offer.recoveryType));
       let resultOffers = eligible;
       let content = tone.results(1, searchDraft.groups[0], searchDraft.groups.length);
+      // The "one more night" offer is only made when the room or category the
+      // guest came for is actually available; otherwise that answer comes first.
+      let extensionAllowed = !(roomInterest && singleRoom && !interestAvailable);
 
       if (roomInterest && singleRoom) {
         const stay = stayLabel(searchDraft.checkin, searchDraft.checkout);
@@ -1244,6 +1258,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
           .filter(offer => focusRooms.includes(Number(offer.roomNumber)) && !offer.recoveryType);
         const categoryCapacity = Math.max(0, ...focusRooms.map(room => ROOM_MAX_GUESTS.get(room) || 0));
         const partySize = searchDraft.groups[0] || 0;
+        extensionAllowed = inCategory.length > 0;
         if (inCategory.length) {
           const rooms = [...new Set(inCategory.map(offer => Number(offer.roomNumber)))].sort((a, b) => a - b);
           content = CATEGORY_AVAILABLE[language](category, roomList(language, rooms), rooms.length);
@@ -1282,7 +1297,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       }], searchDraft);
       // Before the results: offer one more night when it unlocks a bigger
       // discount (unless the guest already said no for these dates).
-      const extension = singleRoom && declinedExtensionKey.current !== `${searchDraft.checkin}:${searchDraft.checkout}`
+      const extension = singleRoom && extensionAllowed && declinedExtensionKey.current !== `${searchDraft.checkin}:${searchDraft.checkout}`
         ? await findStayExtension(searchDraft, firstGroupOffers, thisSearch)
         : null;
       if (searchSeq.current !== thisSearch) return;
@@ -1301,6 +1316,16 @@ export function useRoomFinder(language: RoomFinderLanguage) {
         add("assistant", content, "offers", staffContent);
       }
     } catch (error) {
+      if (error instanceof AvailabilityError && error.code === "OUTSIDE_INVENTORY_WINDOW") {
+        setOffers([]);
+        setActiveGroup(0);
+        dispatchFlow({
+          type: "commit_turn",
+          state: { step: "unavailable", draft: searchDraft },
+        });
+        add("assistant", OUTSIDE_WINDOW[language], "lead");
+        return;
+      }
       console.error("Room Finder availability request failed", error);
       setOffers([]);
       setActiveGroup(0);

@@ -135,7 +135,7 @@ export function RoomFinderWatchCard({
     if (!canSend) return;
     setStatus("sending");
     try {
-      const response = await fetch("/api/ai-room-finder/availability-watch", {
+      const response = await fetch("/api/ai-room-finder/availability-watch/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

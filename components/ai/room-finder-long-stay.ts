@@ -16,7 +16,7 @@ export async function fetchLongStayDiscount(checkin: string, checkout: string) {
   const timeout = window.setTimeout(() => controller.abort(), 10_000);
   let response: Response;
   try {
-    response = await fetch(`/api/ai-room-finder/long-stay-discount?${query}`, { cache: "no-store", signal: controller.signal });
+    response = await fetch(`/api/ai-room-finder/long-stay-discount/?${query}`, { cache: "no-store", signal: controller.signal });
   } finally {
     window.clearTimeout(timeout);
   }

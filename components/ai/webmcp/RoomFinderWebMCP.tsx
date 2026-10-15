@@ -133,7 +133,7 @@ async function fetchPublicResource(
 
   try {
     const response = await fetch(
-      `/api/agentic/voulamandis?${query.toString()}`,
+      `/api/agentic/voulamandis/?${query.toString()}`,
       {
         cache: "no-store",
         signal: requestController.signal,
@@ -261,7 +261,7 @@ function availabilityTool(): WebMcpTool {
 
       try {
         const response = await fetch(
-          `/api/ai-room-finder/availability?${query.toString()}`,
+          `/api/ai-room-finder/availability/?${query.toString()}`,
           {
             cache: "no-store",
             signal: requestController.signal,
