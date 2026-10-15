@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ArrowDown, ArrowLeft, Check, ChevronDown, MessageCircle, Phone, RotateCcw, Send } from "lucide-react";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type FormEvent } from "react";
 import {
   ROOM_FINDER_COPY,
   ROOM_FINDER_LANGUAGES,
@@ -138,6 +138,17 @@ const COST_BREAKDOWN_COPY: Record<RoomFinderLanguage, {
   es: { perNight: "/noche", perPerson: "/persona", privacyShort: "Acepto que mis datos se usen solo para responder a esta solicitud.", privacyMore: "Más" },
   tr: { perNight: "/gece", perPerson: "/kişi", privacyShort: "Bilgilerimin yalnızca bu talebe yanıt vermek için kullanılmasını kabul ediyorum.", privacyMore: "Daha fazla" },
 };
+
+// Greek guests often land on the English page (home page or Google). When
+// they write in Greek, the conversation switches to Greek automatically.
+const GREEK_LETTER = /[\u0370-\u03ff\u1f00-\u1fff]/gu;
+const LATIN_LETTER = /[A-Za-z]/g;
+
+function isGreekText(text: string) {
+  const greek = text.match(GREEK_LETTER)?.length || 0;
+  const latin = text.match(LATIN_LETTER)?.length || 0;
+  return greek >= 2 && greek > latin;
+}
 
 function detectLanguage(): RoomFinderLanguage {
   if (typeof window === "undefined") return "en";
@@ -298,6 +309,8 @@ export function RoomFinderProduction({
   const detailDialogRef = useRef<HTMLElement>(null);
   const detailCloseRef = useRef<HTMLButtonElement>(null);
   const detailTriggerRef = useRef<HTMLElement | null>(null);
+  const autoLanguageSwitched = useRef(false);
+  const pendingAutoLanguageMessage = useRef<string | null>(null);
 
   useEffect(() => {
     const detected = detectLanguage();
@@ -314,6 +327,38 @@ export function RoomFinderProduction({
     setHiddenQuickReplyPromptId(null);
     setBreakfastChoicePending(null);
   }, [language]);
+
+  // Runs after the reset above, so the guest's Greek message is answered by
+  // the conversation that is now in Greek.
+  useEffect(() => {
+    const pending = pendingAutoLanguageMessage.current;
+    if (!pending || language !== "el") return;
+    pendingAutoLanguageMessage.current = null;
+    void finder.submit(undefined, pending);
+  }, [language]);
+
+  function submitComposer(event: FormEvent) {
+    const text = finder.input.trim();
+    if (
+      text
+      && language !== "el"
+      && !autoLanguageSwitched.current
+      && !finder.typing
+      && finder.step !== "searching"
+      && isGreekText(text)
+    ) {
+      event.preventDefault();
+      autoLanguageSwitched.current = true;
+      pendingAutoLanguageMessage.current = text;
+      finder.setInput("");
+      setLanguage("el");
+      // Update the address without a navigation: the English and Greek pages
+      // are different routes, and navigating would remount the chat.
+      window.history.replaceState(window.history.state, "", ROOM_FINDER_HREFS.el);
+      return;
+    }
+    void finder.submit(event);
+  }
 
   useEffect(() => {
     setSendStatus("idle");
@@ -581,6 +626,8 @@ export function RoomFinderProduction({
             privacyAccepted: true,
             privacyAcceptedAt,
           },
+          // The guest receives a copy of this summary in their language.
+          ...(contact.email.trim() ? { guestCopy: { language, lines: summary.split("\n") } } : {}),
         }),
       });
       if (!response.ok) throw new Error("Request send failed");
@@ -786,6 +833,21 @@ export function RoomFinderProduction({
             {finder.messages.map(message => (
               <div key={message.id}>
                 <ChatMessage message={message} />
+                {message.kind === "lead"
+                  && message.id === latestLeadMessageId
+                  && finder.canRetryAvailability
+                  && !finder.typing && (
+                  <div className="msg ml-10 mt-2">
+                    <button
+                      type="button"
+                      onClick={() => void finder.retryAvailability()}
+                      className="flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#c66a34] px-4 font-bold text-white shadow-sm transition hover:bg-[#ad572a] active:scale-[.97] sm:w-auto"
+                    >
+                      <RotateCcw className="h-5 w-5" aria-hidden="true" />
+                      {finder.retryLabel}
+                    </button>
+                  </div>
+                )}
                 {message.kind === "lead" && (
                   <RoomFinderLeadCard
                     language={language}
@@ -1125,7 +1187,7 @@ export function RoomFinderProduction({
         </div>
       </div>
 
-      <form onSubmit={finder.submit} className="room-finder-composer relative shrink-0 border-t border-[#e2d9cd] bg-[#fbf8f3]/95 shadow-[0_-8px_24px_rgba(70,55,35,.04)]">
+      <form onSubmit={submitComposer} className="room-finder-composer relative shrink-0 border-t border-[#e2d9cd] bg-[#fbf8f3]/95 shadow-[0_-8px_24px_rgba(70,55,35,.04)]">
         {hasUnseenMessages && (
           <button
             type="button"

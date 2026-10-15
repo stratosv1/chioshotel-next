@@ -32,6 +32,16 @@ const MONTH_PATTERN = Object.keys(MONTH_ALIASES)
   .sort((left, right) => right.length - left.length)
   .join("|");
 
+const TIME_WORDS = new Set([
+  "next", "this", "the", "summer", "winter", "spring", "autumn", "fall", "week", "weekend", "month",
+  "sommer", "winter", "fruhling", "herbst", "woche", "wochenende", "monat", "nachsten", "diesem",
+]);
+
+function isTimeExpression(value: string) {
+  const words = value.toLowerCase().split(/\s+/).filter(Boolean);
+  return words.length > 0 && words.every(word => word in MONTH_ALIASES || TIME_WORDS.has(word) || /^\d+$/.test(word));
+}
+
 const DESTINATION_PATTERNS = [
   /(?:μειν\p{L}*|διαμον\p{L}*)\s+(?:(?:στον|στην|στο|στη|στα)\s+)+([\p{L}][\p{L}'-]*(?:\s+[\p{L}][\p{L}'-]*){0,3}?)(?=\s+(?:για|απο|στις|\d)|[,.!?]|$)/iu,
   /(?:stay(?:ing)?|accommodation)\s+(?:in|at)\s+([\p{L}][\p{L}'-]*(?:\s+[\p{L}][\p{L}'-]*){0,3}?)(?=\s+(?:for|from|between|on|\d)|[,.!?]|$)/iu,
@@ -44,7 +54,7 @@ const DESTINATION_PATTERNS = [
 ];
 
 const NIGHT_WORDS = /(διανυκτερε\p{L}*|βράδ\p{L}*|βραδ\p{L}*|νύχτ\p{L}*|νυχτ\p{L}*|nights?|nächte|nachte|übernachtungen|nuits?|notti|noches|gece)/iu;
-const ROOM_WORDS = /(δωμάτι(?:ο|α)|rooms?|zimmer|chambres?|camere?|habitaciones?|odas?)/iu;
+const ROOM_WORDS = /(δωμάτι(?:ο|α)|δωματι(?:ο|α)|rooms?|zimmer|chambres?|camere?|habitaciones?|odas?)/iu;
 const GUEST_WORDS = /(άτομα|ατομα|επισκέπτες|επισκεπτες|guests?|people|persons?|gäste|personen|personnes?|persone|personas?|kişi)/iu;
 const COUNT_AFTER_TOKEN = new RegExp(`^\\s*(?:${GUEST_WORDS.source}|${ROOM_WORDS.source}|${NIGHT_WORDS.source})`, "iu");
 const EASTER_WORDS = /(πάσχα|πασχα|πασχαλ\p{L}*|μεγάλη εβδομάδα|μεγαλη εβδομαδα|easter|ostern|pâques|paques|pasqua|pascua|semana santa|paskalya)/iu;
@@ -115,6 +125,8 @@ function extractStayDestination(text: string, context: RoomFinderConversationCon
   for (const pattern of DESTINATION_PATTERNS) {
     const match = normalized.match(pattern);
     const extracted = match?.[1]?.trim();
+    // "in May 2027" / "im August" is a travel period, not a place to stay.
+    if (extracted && isTimeExpression(extracted)) continue;
     if (extracted) return restoreDestination(text, extracted);
   }
 
@@ -129,12 +141,18 @@ function extractStayDestination(text: string, context: RoomFinderConversationCon
   return "";
 }
 
+// JavaScript's \b only treats ASCII letters as word characters, so a \b after
+// a Greek month name ("13 Αυγούστου" at the end of a message) never matches.
+// These Unicode-aware boundaries work for every script.
+const WORD_START = "(?<![\\p{L}\\p{N}])";
+const WORD_END = "(?![\\p{L}\\p{N}])";
+
 function extractNamedDates(text: string, today: string) {
   const normalized = normalizeText(text);
   const values: Array<{ value: string; index: number }> = [];
   const occupied: Array<[number, number]> = [];
   const rangePattern = new RegExp(
-    `\\b(\\d{1,2})\\.?\\s*(?:-|–|—|εως|to|bis|au|al|hasta|a|ile)\\s*(\\d{1,2})\\.?\\s*(?:de\\s+)?(${MONTH_PATTERN})(?:\\s+(?:de\\s+)?(\\d{4}))?\\b`,
+    `${WORD_START}(\\d{1,2})\\.?\\s*(?:-|–|—|εως|to|bis|au|al|hasta|a|ile)\\s*(\\d{1,2})\\.?\\s*(?:de\\s+)?(${MONTH_PATTERN})(?:\\s+(?:de\\s+)?(\\d{4}))?${WORD_END}`,
     "giu",
   );
 
@@ -153,7 +171,7 @@ function extractNamedDates(text: string, today: string) {
   }
 
   const singlePattern = new RegExp(
-    `\\b(\\d{1,2})\\.?\\s+(?:de\\s+)?(${MONTH_PATTERN})(?:\\s+(?:de\\s+)?(\\d{4}))?\\b`,
+    `${WORD_START}(\\d{1,2})\\.?\\s+(?:de\\s+)?(${MONTH_PATTERN})(?:\\s+(?:de\\s+)?(\\d{4}))?${WORD_END}`,
     "giu",
   );
   for (const match of normalized.matchAll(singlePattern)) {

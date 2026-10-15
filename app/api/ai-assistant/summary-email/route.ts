@@ -2,11 +2,21 @@ import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import { guardEmailEndpoint } from "@/lib/ai-assistant/email-endpoint-guard";
 import { markRoomFinderEnquirySent } from "@/lib/ai-assistant/conversation-store";
+import { buildGuestConfirmationEmail, guestLanguage } from "@/lib/ai-assistant/guest-confirmation-email";
+import { checkGlobalHourlyLimit } from "@/lib/ai-assistant/public-rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+// Site-wide cap on copies sent to guest-supplied addresses (real traffic is a
+// few enquiries a day); the reception email is never affected by it.
+const GUEST_COPIES_PER_HOUR = 20;
+
 type SummaryEmailBody = {
+  guestCopy?: {
+    language?: string;
+    lines?: string[];
+  };
   subject?: string;
   message?: string;
   source?: string;
@@ -141,9 +151,37 @@ export async function POST(request: Request) {
       }
     }
 
+    // Copy for the guest. Optional: a failure here never fails the enquiry,
+    // which reception has already received.
+    let guestCopySent = false;
+    if (source === "ai-room-finder" && isLikelyEmail(guestEmail) && body.guestCopy) {
+      try {
+        const guestEmailContent = buildGuestConfirmationEmail({
+          language: guestLanguage(body.guestCopy.language),
+          firstName: body.guest?.firstName || body.guest?.name,
+          lines: body.guestCopy.lines,
+        });
+        if (guestEmailContent && await checkGlobalHourlyLimit("room-finder:guest-copy", GUEST_COPIES_PER_HOUR)) {
+          const guestInfo = await transporter.sendMail({
+            from: `"Voulamandis House" <${smtpFrom}>`,
+            to: guestEmail,
+            replyTo: receptionEmail,
+            subject: guestEmailContent.subject,
+            text: guestEmailContent.text,
+            html: guestEmailContent.html,
+          });
+          guestCopySent = (guestInfo.accepted || []).map(String)
+            .some(address => address.toLowerCase() === guestEmail.toLowerCase());
+        }
+      } catch (error) {
+        console.error("AI Room Finder guest confirmation email failed", error);
+      }
+    }
+
     return NextResponse.json({
       ok: true,
       emailSent: true,
+      guestCopySent,
       messageId: info.messageId,
     });
   } catch (error) {

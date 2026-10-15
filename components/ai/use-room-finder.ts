@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useMemo, useReducer, useRef, useState } from "react";
+import { FormEvent, useLayoutEffect, useMemo, useReducer, useRef, useState } from "react";
 import { localizeRoomOffer } from "@/lib/ai-assistant/room-card-catalog";
 import {
   encodeRoomFinderOfferSnapshot,
@@ -35,7 +35,7 @@ import {
   roomPreferenceScore,
 } from "./room-finder-sales-intelligence";
 import { fetchLongStayDiscount, longStayDiscountMessage } from "./room-finder-long-stay";
-import type { ChatItem, MessageKind, Reaction } from "./room-finder-chat-ui";
+import { setRoomFinderTrackingFacts, type ChatItem, type MessageKind, type Reaction } from "./room-finder-chat-ui";
 import type { RoomOffer } from "./room-finder-carousel";
 import type { RoomChoice } from "./room-finder-selected-card";
 
@@ -192,6 +192,35 @@ type InterpretResult = {
   cause: string;
 };
 
+// Shown as the guest's own message when they tap "try again" after a failed
+// live-availability check.
+const RETRY_SEARCH_LABEL: Record<RoomFinderLanguage, string> = {
+  el: "Δοκιμάστε ξανά",
+  en: "Try again",
+  de: "Erneut versuchen",
+  fr: "Réessayer",
+  it: "Riprova",
+  es: "Intentar de nuevo",
+  tr: "Tekrar dene",
+};
+
+// Short replies that mean "try the same search again" after a failed live
+// check. Recognized without the AI, so a retry works even when it is down.
+const RETRY_WORDS = /^(?:ok(?:ay)?|ναι|οκ|εντάξει|ενταξει|ξανά|ξανα|(?:δοκίμασε|δοκιμασε|δοκιμάστε|δοκιμαστε|ψάξε|ψαξε|ψάξτε|ψαξτε)(?:\s+(?:ξανά|ξανα|πάλι|παλι))?|πάλι|παλι|(?:please\s+)?(?:try|search|check)(?:\s+it)?\s+again(?:\s+please)?|retry|again|yes|nochmal|noch\s*mal|erneut(?:\s+versuchen)?|ja|réessayer|reessayer|encore|oui|riprova|ancora|sì|si|de\s+nuevo|otra\s+vez|intentar\s+de\s+nuevo|tekrar(?:\s+dene)?|evet|tamam)[\s.!?]*$/iu;
+
+// One quiet automatic retry covers short inventory refreshes and network
+// blips before the guest ever sees a failure. Timeouts are not retried: the
+// guest has already waited the full server limit.
+const AVAILABILITY_AUTO_RETRY_DELAY_MS = 4_000;
+
+function isRetryableAvailabilityFailure(error: unknown) {
+  if (error instanceof Error && error.name === "AbortError") return false;
+  if (error instanceof AvailabilityError) {
+    return !["RATE_LIMITED", "INVALID_STAY"].includes(error.code);
+  }
+  return true;
+}
+
 class AvailabilityError extends Error {
   constructor(readonly code: string) {
     super(code);
@@ -267,6 +296,9 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   const [breakfast, setBreakfast] = useState(false);
   const [typing, setTyping] = useState(false);
   const [selectingOfferKey, setSelectingOfferKey] = useState<string | null>(null);
+  // The last search that failed because live availability could not be
+  // confirmed, so the guest can retry it without re-entering anything.
+  const [failedSearch, setFailedSearch] = useState<{ draft: BookingDraft; roomInterest: number | null } | null>(null);
   const turnLocked = useRef(false);
   const languageRef = useRef(language);
   const announcedLongStayKey = useRef<string | null>(null);
@@ -302,6 +334,27 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     const feasible = feasibleOffersForGroup(capacityEligibleOffers, activeGroup, selectedKeys);
     return sortOffersForPreferences(feasible, preferences, preferredRoomNumber);
   }, [capacityEligibleOffers, activeGroup, selectedKeys, preferences, preferredRoomNumber]);
+
+  // Layout effect: runs before the chat messages' tracking effects of the same
+  // render, so a message is stored together with the facts it produced.
+  useLayoutEffect(() => {
+    setRoomFinderTrackingFacts({
+      step,
+      checkin,
+      checkout,
+      roomCount: roomCount || null,
+      guestTotal: guestTotal || null,
+      groups: groups.filter(guests => guests > 0),
+      selectedRooms: choices.map(choice => ({
+        group: choice.group,
+        guests: choice.guests,
+        roomNumber: choice.offer.roomNumber || choice.offer.roomId,
+        name: String(choice.offer.name || "").slice(0, 160),
+        directTotal: Number(choice.offer.directTotal || 0),
+      })),
+      breakfast,
+    });
+  }, [step, checkin, checkout, roomCount, guestTotal, groups, choices, breakfast]);
 
   const add = (
     role: ChatItem["role"],
@@ -381,7 +434,11 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   }
 
   function reset() {
-    if (languageRef.current !== language) {
+    // A language change before the guest has written anything starts a fresh
+    // conversation in the new language (welcome included); later changes keep
+    // the conversation and only relocalize the live offers.
+    const guestHasWritten = messages.some(message => message.role === "user");
+    if (languageRef.current !== language && guestHasWritten) {
       languageRef.current = language;
       setOffers(current => current.map(group => group.map(offer => localizeRoomOffer(offer, language)) as RoomOffer[]));
       setChoices(current => current.map(choice => ({
@@ -392,6 +449,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       return;
     }
 
+    languageRef.current = language;
     turnLocked.current = false;
     announcedLongStayKey.current = null;
     dispatchFlow({ type: "reset" });
@@ -400,7 +458,20 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     setPreferences([]);
     setPreferredRoomNumber(null);
     clearSearchSelectionState();
+    setFailedSearch(null);
     setTyping(false);
+  }
+
+  async function retryAvailability() {
+    if (!failedSearch || step !== "unavailable") return;
+    const retry = failedSearch;
+    if (!await beginUserTurn(RETRY_SEARCH_LABEL[language], "normal", "👍")) return;
+    try {
+      clearSearchSelectionState();
+      await runAvailabilitySearch(retry.draft, retry.roomInterest);
+    } finally {
+      endUserTurn();
+    }
   }
 
   function goBack() {
@@ -576,11 +647,11 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       type: "commit_turn",
       state: { step: "searching", draft: searchDraft },
     });
+    setFailedSearch(null);
     add("assistant", tone.searching);
     setTyping(true);
 
-    try {
-      const result = await Promise.all(searchDraft.groups.map(async guests => {
+    const searchAllGroups = () => Promise.all(searchDraft.groups.map(async guests => {
         const query = new URLSearchParams({
           checkin: searchDraft.checkin,
           checkout: searchDraft.checkout,
@@ -595,6 +666,17 @@ export function useRoomFinder(language: RoomFinderLanguage) {
         }
         return (Array.isArray(payload.offers) ? payload.offers : []) as RoomOffer[];
       }));
+
+    try {
+      let result: RoomOffer[][];
+      try {
+        result = await searchAllGroups();
+      } catch (firstError) {
+        if (!isRetryableAvailabilityFailure(firstError)) throw firstError;
+        console.warn("Room Finder availability failed once; retrying", firstError);
+        await wait(AVAILABILITY_AUTO_RETRY_DELAY_MS);
+        result = await searchAllGroups();
+      }
 
       const eligible = result.map((groupOffers, groupIndex) => {
         const guests = searchDraft.groups[groupIndex] || 0;
@@ -694,6 +776,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
         type: "commit_turn",
         state: { step: "unavailable", draft: searchDraft },
       });
+      setFailedSearch({ draft: searchDraft, roomInterest: roomInterest || null });
       add("assistant", INVENTORY_UNAVAILABLE[language], "lead");
     } finally {
       setTyping(false);
@@ -792,6 +875,13 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     }
 
     if (resolution.outcome.kind === "unchanged") {
+      // "Try again", "ok", or the same details again after a failed live
+      // check: rerun that search instead of answering "nothing changed".
+      if (failedSearch && step === "unavailable") {
+        clearSearchSelectionState();
+        await runAvailabilitySearch(failedSearch.draft, failedSearch.roomInterest);
+        return;
+      }
       if (
         liveAvailabilityRequested
         && resolution.state.draft.destinationKind !== "other"
@@ -860,13 +950,27 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     add("assistant", GUEST_TOTAL_ADJUSTED[language](before, after));
   }
 
-  async function submit(event: FormEvent) {
-    event.preventDefault();
-    const value = input.trim();
+  // `text` lets the page send a message the guest already typed, e.g. after
+  // switching the conversation to the language they wrote in.
+  async function submit(event?: FormEvent, text?: string) {
+    event?.preventDefault();
+    const value = (text ?? input).trim();
     if (!value || turnLocked.current || step === "searching") return;
 
     const current = step;
     setInput("");
+
+    if (failedSearch && current === "unavailable" && RETRY_WORDS.test(value)) {
+      const retry = failedSearch;
+      if (!await beginUserTurn(value, "normal", "👍")) return;
+      try {
+        clearSearchSelectionState();
+        await runAvailabilitySearch(retry.draft, retry.roomInterest);
+      } finally {
+        endUserTurn();
+      }
+      return;
+    }
 
     const contextualOffers = choices.length
       ? choices.map(choice => choice.offer)
@@ -1116,5 +1220,8 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     chooseGuests,
     selectOffer,
     chooseBreakfast,
+    retryAvailability,
+    canRetryAvailability: Boolean(failedSearch) && step === "unavailable",
+    retryLabel: RETRY_SEARCH_LABEL[language],
   };
 }

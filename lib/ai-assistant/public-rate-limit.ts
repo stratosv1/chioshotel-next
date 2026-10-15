@@ -65,3 +65,28 @@ export async function checkPublicRateLimit(
     return { limited: false, retryAfterSeconds: 0 };
   }
 }
+
+/**
+ * Site-wide hourly cap shared by every caller of `scope` (not per IP), for
+ * actions whose cost is global, such as emails sent to guest-supplied
+ * addresses. Fails closed: if the counter cannot be read the action is
+ * refused, because these actions are optional extras.
+ */
+export async function checkGlobalHourlyLimit(scope: string, perHour: number): Promise<boolean> {
+  if (!process.env.DATABASE_URL) return false;
+  try {
+    const sql = neon(process.env.DATABASE_URL);
+    const key = createHash("sha256").update(`global:${scope}`).digest("hex");
+    const rows = await sql`
+      insert into ai_security.rate_limit_windows (client_key, window_kind, window_start, request_count, updated_at)
+      values (${key}, 'hour', date_trunc('hour', now()), 1, now())
+      on conflict (client_key, window_kind, window_start)
+      do update set request_count = ai_security.rate_limit_windows.request_count + 1, updated_at = now()
+      returning request_count
+    `;
+    return Number((rows[0] as Record<string, unknown> | undefined)?.request_count || 0) <= perHour;
+  } catch (error) {
+    console.error(`Global limit check failed for ${scope}`, error);
+    return false;
+  }
+}

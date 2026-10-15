@@ -88,6 +88,25 @@ function AssistantAvatar() {
 let roomFinderSessionId = "";
 let roomFinderHasUserMessage = false;
 
+// Booking facts sent with every tracked message so the staff inbox shows the
+// dates, party and stage of each conversation, not only its messages.
+export type RoomFinderTrackingFacts = {
+  step: string;
+  checkin: string;
+  checkout: string;
+  roomCount: number | null;
+  guestTotal: number | null;
+  groups: number[];
+  selectedRooms: Array<{ group: number; guests: number; roomNumber: number | string; name: string; directTotal: number }>;
+  breakfast: boolean;
+};
+
+let roomFinderTrackingFacts: RoomFinderTrackingFacts | null = null;
+
+export function setRoomFinderTrackingFacts(facts: RoomFinderTrackingFacts) {
+  roomFinderTrackingFacts = facts;
+}
+
 function getRoomFinderSessionId() {
   if (roomFinderSessionId) return roomFinderSessionId;
   const randomPart = typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
@@ -122,6 +141,16 @@ function trackRoomFinderMessage(message: ChatItem) {
     sessionId: getRoomFinderSessionId(),
     language: roomFinderLanguage(),
     sourcePath: window.location.pathname,
+    ...(roomFinderTrackingFacts ? {
+      step: roomFinderTrackingFacts.step,
+      checkin: roomFinderTrackingFacts.checkin || undefined,
+      checkout: roomFinderTrackingFacts.checkout || undefined,
+      roomCount: roomFinderTrackingFacts.roomCount,
+      guestTotal: roomFinderTrackingFacts.guestTotal,
+      groups: roomFinderTrackingFacts.groups,
+      selectedRooms: roomFinderTrackingFacts.selectedRooms,
+      breakfast: roomFinderTrackingFacts.breakfast,
+    } : {}),
     messages: [{
       id: message.id,
       role: message.role,
