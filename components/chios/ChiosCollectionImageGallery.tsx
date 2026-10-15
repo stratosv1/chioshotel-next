@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 type CollectionLanguage = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
-type CollectionKind = "beaches" | "villages";
+type CollectionKind = "beaches" | "villages" | "rooms";
 
 type CollectionImageItem = {
   image: string;
@@ -14,13 +14,13 @@ const galleryLabels: Record<
   CollectionLanguage,
   Record<CollectionKind, string>
 > = {
-  en: { beaches: "Featured Chios beaches", villages: "Featured Chios villages" },
-  el: { beaches: "Επιλεγμένες παραλίες της Χίου", villages: "Επιλεγμένα χωριά της Χίου" },
-  fr: { beaches: "Plages incontournables de Chios", villages: "Villages incontournables de Chios" },
-  de: { beaches: "Ausgewählte Strände auf Chios", villages: "Ausgewählte Dörfer auf Chios" },
-  it: { beaches: "Spiagge da non perdere a Chios", villages: "Villaggi da non perdere a Chios" },
-  es: { beaches: "Playas destacadas de Quíos", villages: "Pueblos destacados de Quíos" },
-  tr: { beaches: "Sakız Adası’nın öne çıkan plajları", villages: "Sakız Adası’nın öne çıkan köyleri" },
+  en: { beaches: "Featured Chios beaches", villages: "Featured Chios villages", rooms: "Room photos at Voulamandis House" },
+  el: { beaches: "Επιλεγμένες παραλίες της Χίου", villages: "Επιλεγμένα χωριά της Χίου", rooms: "Φωτογραφίες δωματίων στο Voulamandis House" },
+  fr: { beaches: "Plages incontournables de Chios", villages: "Villages incontournables de Chios", rooms: "Photos des chambres de Voulamandis House" },
+  de: { beaches: "Ausgewählte Strände auf Chios", villages: "Ausgewählte Dörfer auf Chios", rooms: "Zimmerfotos im Voulamandis House" },
+  it: { beaches: "Spiagge da non perdere a Chios", villages: "Villaggi da non perdere a Chios", rooms: "Foto delle camere di Voulamandis House" },
+  es: { beaches: "Playas destacadas de Quíos", villages: "Pueblos destacados de Quíos", rooms: "Fotos de las habitaciones de Voulamandis House" },
+  tr: { beaches: "Sakız Adası’nın öne çıkan plajları", villages: "Sakız Adası’nın öne çıkan köyleri", rooms: "Voulamandis House oda fotoğrafları" },
 };
 
 function getUniqueImages(items: readonly CollectionImageItem[]) {

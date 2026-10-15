@@ -11,8 +11,11 @@ import {
   siteName,
   siteUrl,
 } from "@/lib/seo";
+import { getPropertyFaqContext } from "@/content/property-faq-context";
+import type { LanguageCode } from "@/lib/languages";
 import {
   buildBreadcrumbSchema,
+  buildFaqSchema,
   buildHotelSchema,
   buildImageSchema,
   buildOrganizationSchema,
@@ -302,6 +305,19 @@ function getPrimaryImageCaption(data: RoomsCategoryPageData): string {
     : `${data.seo.title} - ${siteName}`;
 }
 
+const ROOMS_HUB_FAQ_LANGUAGES = new Set(["en", "el", "fr", "de", "it", "es", "tr"]);
+
+function buildRoomsHubFaqSchema(canonicalPath: string) {
+  const language = getLanguageForPath(canonicalPath);
+  if (!ROOMS_HUB_FAQ_LANGUAGES.has(language)) return null;
+  return buildFaqSchema({
+    path: canonicalPath,
+    questions: getPropertyFaqContext(language as LanguageCode, "rooms")
+      .items.slice(0, 4)
+      .map((item) => ({ question: item.question, answer: item.answer })),
+  });
+}
+
 export function buildRoomsCategorySchema(data: RoomsCategoryPageData) {
   const safeData = resolveRoomsSchemaSeo(hardenGreekRoomsSchemaData(data));
   const canonicalPath = safeData.seo.canonicalPath;
@@ -323,6 +339,9 @@ export function buildRoomsCategorySchema(data: RoomsCategoryPageData) {
     buildRoomsCollectionPageSchema(safeData),
     buildRoomsItemListSchema(safeData),
     ...safeData.cards.map(buildRoomCardSchema),
+    // The rooms hub shows the first 4 property questions (PropertyFaqSection
+    // with maxItems 4); the same questions are exposed as FAQPage.
+    buildRoomsHubFaqSchema(canonicalPath),
     buildBreadcrumbSchema(canonicalPath, [
       {
         name: labels.breadcrumbName,

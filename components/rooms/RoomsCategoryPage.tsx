@@ -9,6 +9,7 @@ import { RoomWizardTailwind } from "@/components/rooms/RoomWizardTailwind";
 import { RoomCard } from "@/components/rooms/RoomCard";
 import { toRoomCategoryId } from "@/lib/room-category-facts";
 import { TopicBadges } from "@/components/seo/TopicBadges";
+import { ChiosCollectionImageGallery } from "@/components/chios/ChiosCollectionImageGallery";
 import type { RoomsCategoryPageData } from "@/content/rooms";
 import type { LanguageCode } from "@/lib/languages";
 import { withRoomsOwnerHeroIntent } from "@/lib/rooms-owner-seo-intent";
@@ -267,6 +268,18 @@ export async function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
       </section>
 
       <TopicBadges locale={language} context="rooms-category" className="border-b border-amber-900/10" />
+
+      {/* Three-photo strip, same as the beaches and villages hubs. */}
+      <ChiosCollectionImageGallery
+        kind="rooms"
+        language={language as "en" | "el" | "fr" | "de" | "it" | "es" | "tr"}
+        items={cards.map((card) => ({
+          image: card.image,
+          imageAlt: card.imageAlt,
+          title: card.title,
+          href: card.href,
+        }))}
+      />
 
       <section
         className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16"

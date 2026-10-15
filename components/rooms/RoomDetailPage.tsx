@@ -7,6 +7,7 @@ import dynamic from "next/dynamic";
 import { useState } from "react";
 import { MobileAvailabilityBar } from "@/components/rooms/MobileAvailabilityBar";
 import { TopicBadges } from "@/components/seo/TopicBadges";
+import { ChiosCollectionImageGallery } from "@/components/chios/ChiosCollectionImageGallery";
 import type { IndividualRoomData, RoomDetailData } from "@/content/room-details";
 import { roomFinderHrefForLanguage } from "@/lib/room-finder-cta-routing";
 import { roomPanoramas } from "@/content/room-panoramas";
@@ -497,6 +498,28 @@ export function RoomDetailPage({ data, fromPriceLabel }: RoomDetailPageProps) {
           </div>
         </div>
       </section>
+
+      {/* Three-photo strip, same as the beaches and villages hubs: search
+          engines use it for the image row under the result. */}
+      <ChiosCollectionImageGallery
+        kind="rooms"
+        language={language}
+        // One photo per room first, then each room's second photo, so the
+        // strip shows different rooms rather than one room twice.
+        items={[0, 1].flatMap((photoIndex) =>
+          data.individualRooms.rooms.flatMap((room) => {
+            const image = room.images[photoIndex];
+            return image
+              ? [{
+                  image: image.src,
+                  imageAlt: localizeImageAlt(room, image, language),
+                  title: localizeName(room.name, language),
+                  href: "#rd-individual-title",
+                }]
+              : [];
+          }),
+        )}
+      />
 
       <IndividualRoomsSection data={data} language={language} />
 
