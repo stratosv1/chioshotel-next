@@ -3,6 +3,7 @@ import { preload } from "react-dom";
 import type { HomePageData } from "@/content/home";
 import type { RoomCategoryCard, RoomsCategoryPageData } from "@/content/rooms";
 import { roomsCategoryDe, roomsCategoryEl, roomsCategoryEn, roomsCategoryEs, roomsCategoryFr, roomsCategoryIt, roomsCategoryTr } from "@/content/rooms";
+import { roomsCategoryPl } from "@/content/rooms-pl";
 import { RoomCard } from "@/components/rooms/RoomCard";
 import { MarkerText } from "@/components/effects/MarkerText";
 import { ScrollEffects } from "@/components/effects/ScrollEffects";
@@ -23,7 +24,7 @@ type HomePageTailwindProps = {
   data: HomePageData;
 };
 
-type LocaleCode = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
+type LocaleCode = "en" | "el" | "fr" | "de" | "it" | "es" | "tr" | "pl";
 
 function HtmlText({ html }: { html: string }) {
   return <span dangerouslySetInnerHTML={{ __html: html }} />;
@@ -108,7 +109,7 @@ function HeroPicture({
 function getLocale(canonicalPath: string): LocaleCode {
   const segment = canonicalPath.split("/").filter(Boolean)[0];
 
-  if (segment === "el" || segment === "fr" || segment === "de" || segment === "it" || segment === "es" || segment === "tr") {
+  if (segment === "el" || segment === "fr" || segment === "de" || segment === "it" || segment === "es" || segment === "tr" || segment === "pl") {
     return segment;
   }
 
@@ -130,6 +131,7 @@ const roomsByLocale: Record<LocaleCode, RoomsCategoryPageData> = {
   it: roomsCategoryIt,
   es: roomsCategoryEs,
   tr: roomsCategoryTr,
+  pl: roomsCategoryPl,
 };
 
 const kambosExtraCopy: Record<LocaleCode, string> = {
@@ -139,6 +141,7 @@ const kambosExtraCopy: Record<LocaleCode, string> = {
   de: "Kambos ist eine der stimmungsvollsten Gegenden von Chios: Steinmauern, Zitrusgärten, alte Herrenhäuser und ruhige Wege schaffen eine friedliche, lokale und authentische Umgebung. Sie wohnen nahe an Stadt, Flughafen und Stränden, kehren am Ende des Tages aber an einen ruhigeren Ort zurück.",
   it: "Kambos è una delle zone più suggestive di Chios: muri in pietra, agrumeti, antiche dimore e strade tranquille creano un ambiente sereno, locale e autentico. Siete vicini alla città, all’aeroporto e alle spiagge, ma alla fine della giornata tornate in un luogo più calmo.",
   es: "Kambos es una de las zonas con más encanto de Quíos: muros de piedra, jardines de cítricos, antiguas mansiones y caminos tranquilos crean un ambiente sereno, local y auténtico. Estás cerca de la ciudad, del aeropuerto y de las playas, pero al final del día vuelves a un lugar más tranquilo.",
+  pl: "Kambos to jedna z najbardziej klimatycznych okolic Chios: kamienne mury, ogrody cytrusowe, dawne rezydencje i spokojne uliczki tworzą otoczenie pełne ciszy, lokalnego charakteru i autentyzmu. Jesteś blisko miasta, lotniska i plaż, a pod koniec dnia wracasz do spokojniejszego miejsca.",
   tr: "Kambos, Sakız’ın en atmosferik bölgelerinden biridir: taş duvarlar, narenciye bahçeleri, eski konaklar ve sakin yollar huzurlu, yerel ve otantik bir ortam yaratır. Şehre, havalimanına ve plajlara yakın kalırken gün sonunda daha sakin bir yere dönersiniz.",
 };
 
@@ -206,7 +209,7 @@ function PrimaryButton({
 
 function homeNewsletterLocale(path: string): NewsletterLocale {
   const segment = path.split("/")[1];
-  return (["el", "fr", "de", "it", "es", "tr"] as const).find((lang) => lang === segment) ?? "en";
+  return (["el", "fr", "de", "it", "es", "tr", "pl"] as const).find((lang) => lang === segment) ?? "en";
 }
 
 async function RoomsSection({ data }: { data: HomePageData }) {
@@ -238,7 +241,7 @@ async function RoomsSection({ data }: { data: HomePageData }) {
         <div className="mt-5 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 xl:grid-cols-4">
           {data.roomsPreview.rooms.map((room, index) => {
             const categoryId = homeRoomCategory[room.id] ?? null;
-            const categoryCard = categoryId ? roomsByLocale[locale].cards.find((card) => card.id === categoryId) : undefined;
+            const categoryCard = categoryId ? roomsByLocale[locale].cards.find((card) => card.id === categoryId || card.id === `pl-${categoryId}`) : undefined;
             const card: RoomCategoryCard = {
               id: room.id,
               title: room.title,

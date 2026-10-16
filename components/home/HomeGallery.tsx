@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { MarkerText } from "@/components/effects/MarkerText";
 
-export type HomeGalleryLocale = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
+export type HomeGalleryLocale = "en" | "el" | "fr" | "de" | "it" | "es" | "tr" | "pl";
 
 type GalleryCopy = {
   kicker: string;
@@ -53,6 +53,12 @@ const galleryCopy: Record<HomeGalleryLocale, GalleryCopy> = {
     subtitle: "Sakız Adası Kampos'ta taş avlular, narenciye ağaçları ve huzurlu köşeler.",
     swipeHint: "Keşfetmek için kaydırın",
   },
+  pl: {
+    kicker: "Galeria Voulamandis House",
+    title: "Życie w ogrodzie",
+    subtitle: "Kamienne dziedzińce, drzewa cytrusowe i spokojne zakątki w Kambos na Chios.",
+    swipeHint: "Przesuń, aby zobaczyć",
+  },
 };
 
 export const homeGalleryImages = [
@@ -66,6 +72,7 @@ export const homeGalleryImages = [
       it: "Balcone fiorito di bouganville con vista sul Kampos al Voulamandis House di Chios",
       es: "Balcón cubierto de buganvillas con vistas a Kampos en Voulamandis House, Quíos",
       tr: "Sakız Adası Voulamandis House'ta begonvillerle çevrili ve Kampos manzaralı balkon",
+      pl: "Balkon porośnięty bugenwillą z widokiem na Kambos w Voulamandis House na Chios",
     },
   },
   {
@@ -78,6 +85,7 @@ export const homeGalleryImages = [
       it: "Giardino ombreggiato con tavoli sotto alberi e viti al Voulamandis House di Chios",
       es: "Jardín sombreado con mesas bajo árboles y parras en Voulamandis House, Quíos",
       tr: "Sakız Adası Voulamandis House'ta ağaçlar ve asmalar altında gölgeli bahçe yemek alanı",
+      pl: "Zacieniona jadalnia w ogrodzie pod drzewami i winoroślą w Voulamandis House na Chios",
     },
   },
   {
@@ -90,6 +98,7 @@ export const homeGalleryImages = [
       it: "Salotto esterno con divani nel cortile del Voulamandis House nel Kampos di Chios",
       es: "Zona de descanso con sofás en el patio de Voulamandis House, Kampos de Quíos",
       tr: "Sakız Adası Kampos'taki Voulamandis House avlusunda kanepeli açık hava dinlenme alanı",
+      pl: "Strefa wypoczynku z sofami na dziedzińcu Voulamandis House w Kambos na Chios",
     },
   },
   {
@@ -102,6 +111,7 @@ export const homeGalleryImages = [
       it: "Terrazza in pietra con salotto esterno al Voulamandis House nel Kampos di Chios",
       es: "Terraza de piedra con zona de descanso exterior en Voulamandis House, Kampos de Quíos",
       tr: "Sakız Adası Kampos'taki Voulamandis House'ta açık hava oturma alanına sahip taş teras",
+      pl: "Kamienny taras z miejscami do siedzenia w Voulamandis House w Kambos na Chios",
     },
   },
   {
@@ -114,6 +124,7 @@ export const homeGalleryImages = [
       it: "Cortile ombreggiato con tavoli nel verde giardino del Voulamandis House nel Kampos di Chios",
       es: "Patio sombreado con mesas en el frondoso jardín de Voulamandis House, Kampos de Quíos",
       tr: "Sakız Adası Kampos'taki Voulamandis House'un yemyeşil bahçesinde masalı gölgeli avlu",
+      pl: "Zacieniony dziedziniec ogrodowy ze stolikami w Voulamandis House w Kambos na Chios",
     },
   },
   {
@@ -126,6 +137,7 @@ export const homeGalleryImages = [
       it: "Salotto esterno con muri in pietra e oleandri in fiore al Voulamandis House nel Kampos di Chios",
       es: "Zona de descanso exterior con muros de piedra y adelfas en flor en Voulamandis House, Kampos de Quíos",
       tr: "Sakız Adası Kampos'taki Voulamandis House'ta taş duvarlı ve çiçekli zakkumlarla çevrili açık hava oturma alanı",
+      pl: "Strefa wypoczynku z kamiennymi murami i kwitnącymi oleandrami w Voulamandis House w Kambos na Chios",
     },
   },
   {
@@ -138,6 +150,7 @@ export const homeGalleryImages = [
       it: "Zona relax ombreggiata sotto archi in pietra nel cortile del Voulamandis House nel Kampos di Chios",
       es: "Zona de descanso sombreada bajo arcos de piedra en el patio de Voulamandis House, Kampos de Quíos",
       tr: "Sakız Adası Kampos'taki Voulamandis House avlusunda taş kemerlerin altında gölgeli oturma alanı",
+      pl: "Zacienione miejsce do siedzenia pod kamiennymi łukami w Voulamandis House w Kambos na Chios",
     },
   },
   {
@@ -150,6 +163,7 @@ export const homeGalleryImages = [
       it: "Divano e tavolo nel cortile curato del Voulamandis House a Chios",
       es: "Sofá y mesa en el cuidado patio de Voulamandis House en Quíos",
       tr: "Sakız Adası Voulamandis House'un bakımlı avlusunda kanepe ve masa",
+      pl: "Sofa i stolik w ogrodzie Voulamandis House na Chios",
     },
   },
   {
@@ -162,6 +176,7 @@ export const homeGalleryImages = [
       it: "Vista sugli agrumeti e sulle dimore storiche del Kampos di Chios",
       es: "Vista de los huertos de cítricos y las mansiones históricas de Kampos en Quíos",
       tr: "Sakız Adası Kampos'un narenciye bahçeleri ve tarihi konaklarının manzarası",
+      pl: "Widok na sady cytrusowe i historyczne rezydencje Kambos na Chios",
     },
   },
 ] as const;

@@ -388,6 +388,51 @@ const LIVE_REQUEST_COPY: Record<LiveRequestLocale, {
       "No stairs": "Merdiven yok",
     },
   },
+  pl: {
+    dateLocale: "pl-PL",
+    pill: "Szybkie zapytanie do recepcji",
+    subtitle: "Wyślij szybkie zapytanie do recepcji i otrzymaj najlepszą ofertę bezpośrednią.",
+    guests: "Goście",
+    available: "Dostępne",
+    empty: "Obecnie brak wolnych pokoi dla tej liczby gości.",
+    selectedText: "Wyślij bezpośrednie zapytanie o ten pokój, a recepcja odpowie osobiście z najlepszą dostępną ofertą.",
+    directOffer: "Oferta bezpośrednia",
+    night: "noc",
+    nights: "nocy",
+    whatsapp: "WhatsApp",
+    sms: "Wyślij SMS",
+    call: "Zapytanie e-mailem",
+    emailPrompt: "Podaj swój e-mail, aby recepcja mogła odpowiedzieć.",
+    emailPlaceholder: "Twój e-mail",
+    emailSend: "Wyślij zapytanie",
+    emailSending: "Wysyłanie...",
+    emailSent: "Zapytanie wysłane do recepcji.",
+    emailError: "Podaj prawidłowy adres e-mail.",
+    messageTitle: "Szybkie zapytanie do recepcji - Voulamandis House",
+    messageConfirm: "Proszę o potwierdzenie dostępności i najlepszą ofertę bezpośrednią.",
+    topPick: "Polecamy",
+    directDeal: "Oferta bezpośrednia",
+    selectedLabel: "Twój wybór",
+    from: "od",
+    roomWord: "Pokój",
+    apartmentWord: "Apartament",
+    roomTypes: {
+      "Upper Floor Double / Triple": "Pokój 2/3-os. na piętrze",
+      "Economy Double": "Pokój dwuosobowy economy",
+      "Ground Floor Double / Triple": "Pokój 2/3-os. na parterze",
+      "Family Apartment": "Apartament rodzinny",
+    },
+    badges: {
+      Economy: "Economy",
+      Kitchenette: "Aneks kuchenny",
+      Kitchen: "Kuchnia",
+      "First floor": "Piętro",
+      "Ground floor": "Parter",
+      "No kitchenette": "Bez aneksu",
+      Stairs: "Schody",
+      "No stairs": "Bez schodów",
+    },
+  },
 };
 
 function localizeRoomName(value: string, copy: (typeof LIVE_REQUEST_COPY)[LiveRequestLocale]) {
@@ -408,6 +453,17 @@ function localizeBadge(value: string, copy: (typeof LIVE_REQUEST_COPY)[LiveReque
 }
 
 type LiveCopy = (typeof LIVE_REQUEST_COPY)[LiveRequestLocale];
+
+// Polish has three plural forms (1 noc, 2–4 noce, 5+ nocy); others use two.
+function nightsWord(count: number, copy: LiveCopy) {
+  if (count === 1) return copy.night;
+  if (copy.dateLocale === "pl-PL") {
+    const lastDigit = count % 10;
+    const lastTwo = count % 100;
+    if (lastDigit >= 2 && lastDigit <= 4 && (lastTwo < 12 || lastTwo > 14)) return "noce";
+  }
+  return copy.nights;
+}
 
 // Copy added in the Live Deals audit fixes (kept separate from the original
 // per-locale block so translations stay reviewable).
@@ -436,6 +492,7 @@ const LIVE_EXTRA_COPY: Record<LiveRequestLocale, {
   it: { error: "La disponibilità in tempo reale non è al momento disponibile. Prova il nostro assistente AI o contattaci.", previousRooms: "Camere precedenti", nextRooms: "Altre camere", booked: "Occupata", perNight: "/notte", calculating: "Calcolo del prezzo esatto…", indicative: "Prezzo indicativo – la reception confermerà l’importo esatto.", unavailable: "Queste date non sono più libere per questa camera – invia la richiesta e la reception proporrà l’opzione più vicina.", checkin: "Arrivo", checkout: "Partenza", room: "Camera", guests: "Ospiti", nights: "Notti", originalPrice: "Prezzo iniziale", directOffer: "Offerta diretta", priceByReception: "Prezzo da confermare dalla reception" },
   es: { error: "La disponibilidad en directo no está disponible temporalmente. Prueba nuestro asistente de IA o contáctanos.", previousRooms: "Habitaciones anteriores", nextRooms: "Más habitaciones", booked: "Ocupada", perNight: "/noche", calculating: "Calculando el precio exacto…", indicative: "Precio orientativo – recepción confirmará el importe exacto.", unavailable: "Estas fechas ya no están libres para esta habitación – envíe la solicitud y recepción le propondrá la opción más cercana.", checkin: "Llegada", checkout: "Salida", room: "Habitación", guests: "Huéspedes", nights: "Noches", originalPrice: "Precio inicial", directOffer: "Oferta directa", priceByReception: "Precio a confirmar por recepción" },
   tr: { error: "Canlı müsaitlik geçici olarak kullanılamıyor. Yapay zekâ asistanımızı deneyin veya bizimle iletişime geçin.", previousRooms: "Önceki odalar", nextRooms: "Daha fazla oda", booked: "Dolu", perNight: "/gece", calculating: "Kesin fiyat hesaplanıyor…", indicative: "Tahmini fiyat – resepsiyon kesin tutarı onaylayacak.", unavailable: "Bu tarihler bu oda için artık müsait değil – talebinizi gönderin, resepsiyon en yakın seçeneği önerecek.", checkin: "Giriş", checkout: "Çıkış", room: "Oda", guests: "Misafirler", nights: "Gece", originalPrice: "İlk fiyat", directOffer: "Doğrudan teklif", priceByReception: "Fiyat resepsiyon tarafından onaylanacak" },
+  pl: { error: "Dostępność na żywo jest chwilowo niedostępna. Skorzystaj z asystenta AI lub skontaktuj się z nami.", previousRooms: "Poprzednie pokoje", nextRooms: "Więcej pokoi", booked: "Zajęte", perNight: "/noc", calculating: "Obliczanie dokładnej ceny…", indicative: "Cena orientacyjna – recepcja potwierdzi dokładną kwotę.", unavailable: "Te daty nie są już wolne dla tego pokoju – wyślij zapytanie, a recepcja zaproponuje najbliższą opcję.", checkin: "Przyjazd", checkout: "Wyjazd", room: "Pokój", guests: "Goście", nights: "Noce", originalPrice: "Cena wyjściowa", directOffer: "Oferta bezpośrednia", priceByReception: "Cenę potwierdzi recepcja" },
 };
 
 type StayQuote = {
@@ -745,7 +802,8 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
       checkin: selectedDates[0],
       checkout: nextIsoDate(selectedDates[selectedDates.length - 1]),
       guests: String(guests),
-      lang: locale,
+      // The availability API has no Polish copy yet; English is its fallback.
+      lang: locale === "pl" ? "en" : locale,
     });
 
     fetch(`/api/ai-room-finder/availability?${query}`, { cache: "no-store", signal: controller.signal })
@@ -962,7 +1020,7 @@ export function LiveDirectRequest({ data, canonicalPath }: { data: LastMinuteDat
                 {selectedRoom && quote ? (
                   <>
                     <div className="text-[12px] font-black uppercase leading-5 tracking-[0.12em] text-stone-500">
-                      {localizeRoomName(selectedRoom.displayName, copy)} · {quote.nights} {quote.nights === 1 ? copy.night : copy.nights}
+                      {localizeRoomName(selectedRoom.displayName, copy)} · {quote.nights} {nightsWord(quote.nights, copy)}
                     </div>
                     <div className="text-[13px] font-bold leading-5 text-stone-500">{selectedDateLabel}</div>
                     {quote.status === "loading" ? (

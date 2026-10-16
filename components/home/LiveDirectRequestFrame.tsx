@@ -7,7 +7,7 @@ import { roomFinderHrefForLanguage } from "@/lib/room-finder-cta-routing";
 // the same body size, so the page does not jump when availability arrives
 // (e.g. after the hero "Offers" link jumps to #vh-lastminute-title).
 
-export type LiveRequestLocale = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
+export type LiveRequestLocale = "en" | "el" | "fr" | "de" | "it" | "es" | "tr" | "pl";
 
 export const LIVE_HEADER_COPY: Record<LiveRequestLocale, { pill: string; subtitle: string; guests: string }> = {
   en: { pill: "Instant request to reception", subtitle: "Send an instant request to reception and get the best direct offer.", guests: "Guests" },
@@ -17,6 +17,7 @@ export const LIVE_HEADER_COPY: Record<LiveRequestLocale, { pill: string; subtitl
   it: { pill: "Richiesta immediata alla reception", subtitle: "Invia una richiesta immediata alla reception e ricevi la migliore offerta diretta.", guests: "Ospiti" },
   es: { pill: "Solicitud instantánea a recepción", subtitle: "Envía una solicitud instantánea a recepción y recibe la mejor oferta directa.", guests: "Huéspedes" },
   tr: { pill: "Resepsiyona anında talep", subtitle: "Resepsiyona anında talep gönderin ve en iyi doğrudan teklifi alın.", guests: "Misafirler" },
+  pl: { pill: "Szybkie zapytanie do recepcji", subtitle: "Wyślij szybkie zapytanie do recepcji i otrzymaj najlepszą ofertę bezpośrednią.", guests: "Goście" },
 };
 
 export function liveRequestLocale(canonicalPath: string): LiveRequestLocale {
@@ -26,6 +27,7 @@ export function liveRequestLocale(canonicalPath: string): LiveRequestLocale {
   if (canonicalPath.startsWith("/it")) return "it";
   if (canonicalPath.startsWith("/es")) return "es";
   if (canonicalPath.startsWith("/tr")) return "tr";
+  if (canonicalPath.startsWith("/pl")) return "pl";
   return "en";
 }
 
@@ -193,6 +195,17 @@ export const LIVE_FOOTER_COPY: Record<LiveRequestLocale, {
       { icon: "chat", title: "Doğrudan yanıt", text: "Resepsiyondan yanıt" },
       { icon: "bed", title: "Oda seçin", text: "Size uygun olanı seçin" },
       { icon: "card", title: "Kart gerekmez", text: "Şimdi ödeme yok" },
+    ],
+  },
+  pl: {
+    differentDates: "Inne daty?",
+    checkAvailability: "Sprawdź wszystkie daty z asystentem AI",
+    footer: "Twoje szybkie zapytanie na chioshotel.gr",
+    trustItems: [
+      { icon: "tag", title: "Najlepsza oferta", text: "Najlepsza dostępna cena" },
+      { icon: "chat", title: "Bezpośrednia odpowiedź", text: "Odpowiedź recepcji" },
+      { icon: "bed", title: "Wybierz pokój", text: "Wybierz to, co Ci pasuje" },
+      { icon: "card", title: "Bez karty", text: "Bez płatności teraz" },
     ],
   },
 };

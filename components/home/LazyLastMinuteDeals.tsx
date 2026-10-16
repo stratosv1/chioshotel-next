@@ -28,6 +28,7 @@ const WEEKLY_TITLES = {
   it: "Viaggi a Chios questa settimana?",
   es: "¿Viajas a Quíos esta semana?",
   tr: "Bu hafta Sakız Adası'na mı geliyorsunuz?",
+  pl: "Przyjeżdżasz na Chios w tym tygodniu?",
 } as const;
 
 function weeklyTitle(canonicalPath: string) {
@@ -37,6 +38,7 @@ function weeklyTitle(canonicalPath: string) {
   if (canonicalPath.startsWith("/it")) return WEEKLY_TITLES.it;
   if (canonicalPath.startsWith("/es")) return WEEKLY_TITLES.es;
   if (canonicalPath.startsWith("/tr")) return WEEKLY_TITLES.tr;
+  if (canonicalPath.startsWith("/pl")) return WEEKLY_TITLES.pl;
   return WEEKLY_TITLES.en;
 }
 

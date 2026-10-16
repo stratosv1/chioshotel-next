@@ -4,7 +4,7 @@ import { kamposChiosPaths } from "@/content/kampos-chios-paths";
 // Links point to the strongest Chios guide pages (beaches broken down by
 // category, villages and Kambos) and are fully localized per language.
 
-type LocaleCode = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
+type LocaleCode = "en" | "el" | "fr" | "de" | "it" | "es" | "tr" | "pl";
 
 type MenuLink = { label: string; href: string };
 
@@ -166,6 +166,29 @@ const copy: Record<LocaleCode, HeroChiosMenuCopy> = {
       { label: "Kambos, Sakız Adası", href: kamposChiosPaths.tr },
     ],
     planner: { label: "Gününüzü planlayın", href: "/trip-planner/" },
+  },
+  // Polish has no localized beach/village guides yet, so the links point to
+  // the English guides; Kambos goes to the Polish Kambos page.
+  pl: {
+    title: "Odkryj Chios",
+    beachesTitle: "Plaże Chios",
+    beachesAllLabel: "Wszystkie",
+    beachesAllHref: "/chios/chios-beaches/",
+    beaches: [
+      { label: "Piaszczyste", href: "/chios-sandy-beaches/" },
+      { label: "Zorganizowane", href: "/chios-organized-beaches/" },
+      { label: "Spokojne", href: "/chios-quiet-beaches/" },
+      { label: "Dla dzieci", href: "/chios-family-beaches/" },
+      { label: "Osłonięte", href: "/chios-sheltered-beaches/" },
+      { label: "W pobliżu", href: "/beaches-near-voulamandis-house/" },
+    ],
+    villagesTitle: "Wioski i Kambos",
+    villages: [
+      { label: "Wioski mastyksowe", href: "/chios-mastic-villages/" },
+      { label: "Wioski średniowieczne", href: "/chios-medieval-villages/" },
+      { label: "Kambos, Chios", href: "/pl/kambos-chios/" },
+    ],
+    planner: { label: "Zaplanuj swój dzień", href: "/trip-planner/" },
   },
 };
 

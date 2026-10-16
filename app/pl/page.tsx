@@ -1,21 +1,29 @@
-import { PolishHomePageTailwind } from "@/components/home/PolishHomePageTailwind";
+import { HomePageTailwindV3 } from "@/components/home/HomePageTailwindV3";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { buildPolishHomeSchema } from "@/content/home-schema-pl";
+import { homePagePl } from "@/content/home-pl";
+import { buildHomePageSchema } from "@/content/schema";
 import { buildPolishPageMetadata } from "@/lib/seo-pl";
 
+export const revalidate = 3600;
+
+// Same layout, images and metadata shape as the other homepages
+// (buildHomepageMetadata), but through the Polish metadata builder so the
+// pl_PL Open Graph locale and the /pl/ hreflang group stay correct.
 export const metadata = buildPolishPageMetadata({
-  path: "/pl/",
-  title: "Noclegi Chios | Pokoje i apartamenty w Kambos",
-  description:
-    "Noclegi na Chios w spokojnym Kambos. Pokoje i rodzinne apartamenty Voulamandis House, aktualna dostępność, bezpośrednia rezerwacja i praktyczna lokalizacja.",
-  imageAlt: "Voulamandis House w Kambos na wyspie Chios",
+  path: homePagePl.seo.canonicalPath,
+  title: homePagePl.seo.title,
+  description: homePagePl.seo.description,
+  image: homePagePl.hero.image,
+  imageAlt: homePagePl.seo.ogImageAlt,
+  imageWidth: homePagePl.hero.imageWidth,
+  imageHeight: homePagePl.hero.imageHeight,
 });
 
 export default function PolishHomePage() {
   return (
     <>
-      <JsonLd data={buildPolishHomeSchema()} />
-      <PolishHomePageTailwind />
+      <JsonLd data={buildHomePageSchema(homePagePl)} />
+      <HomePageTailwindV3 data={homePagePl} />
     </>
   );
 }

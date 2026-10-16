@@ -55,6 +55,12 @@ const accommodationLinks: Record<string, AccommodationLinkCopy> = {
     label: "Sakız Adası konaklama rehberimize",
     suffix: " göz atın.",
   },
+  "/pl/": {
+    href: "/pl/noclegi-chios/",
+    prefix: "Więcej opcji i praktycznych informacji przed rezerwacją znajdziesz w naszym przewodniku ",
+    label: "noclegi na Chios",
+    suffix: ".",
+  },
 };
 
 function localizeInheritedCopy(data: HomePageData): HomePageData {

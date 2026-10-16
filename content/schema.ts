@@ -15,6 +15,7 @@ import {
   buildOrganizationSchema,
   buildSchemaGraph,
   buildWebsiteSchema,
+  breadcrumbId,
   hotelId,
   schemaId,
   webPageId,
@@ -36,6 +37,8 @@ function getHomePageLanguage(canonicalPath: string): string {
       return "es";
     case "/tr/":
       return "tr";
+    case "/pl/":
+      return "pl";
     case "/":
     default:
       return "en";
@@ -257,6 +260,31 @@ const homeRoomSchemaByLanguage: Record<string, HomeRoomSchemaContent> = {
       },
     ],
   },
+  pl: {
+    listName: "Pokoje i apartamenty w Voulamandis House",
+    listDescription:
+      "Wybór pokoi i apartamentów w Voulamandis House w Kambos na Chios.",
+    rooms: [
+      {
+        name: "Pokoje dwu- i trzyosobowe na Chios",
+        urlPath: "/pl/pokoje-na-chios/pokoje-standardowe/",
+        description:
+          "Odnowione pokoje dwu- i trzyosobowe w Voulamandis House w Kambos na Chios, odpowiednie dla maksymalnie 4 gości.",
+      },
+      {
+        name: "Ekonomiczne pokoje dwuosobowe na Chios",
+        urlPath: "/pl/pokoje-na-chios/pokoj-dwuosobowy-economy/",
+        description:
+          "Ekonomiczne pokoje dwuosobowe w Voulamandis House w Kambos na Chios, idealne dla par lub dwóch osób szukających wygodnego noclegu w dobrej cenie.",
+      },
+      {
+        name: "Apartamenty rodzinne na Chios",
+        urlPath: "/pl/apartamenty-na-chios/",
+        description:
+          "Przestronne apartamenty rodzinne w Voulamandis House w Kambos na Chios, z osobną sypialnią, kuchnią i częścią dzienną.",
+      },
+    ],
+  },
 };
 
 function getHomeRoomSchemaContent(canonicalPath: string): HomeRoomSchemaContent {
@@ -291,17 +319,43 @@ function buildHomeRoomReferencesSchema(canonicalPath: string): SchemaObject[] {
   );
 }
 
+// The shared structured-data helpers only know the seven main languages, so
+// the Polish homepage gets its own breadcrumb and a WebSite node listing "pl".
+function buildPolishHomeBreadcrumbSchema(): SchemaObject {
+  return {
+    "@type": "BreadcrumbList",
+    "@id": breadcrumbId("/pl/"),
+    inLanguage: "pl",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Strona główna",
+        item: absoluteUrl("/pl/"),
+      },
+    ],
+  };
+}
+
+function buildPolishWebsiteSchema(): SchemaObject {
+  return {
+    ...buildWebsiteSchema(),
+    inLanguage: ["en", "el", "fr", "de", "it", "es", "tr", "pl"],
+  };
+}
+
 export function buildHomePageSchema(data: HomePageData): SchemaObject {
   const canonicalPath = data.seo.canonicalPath;
+  const isPolish = canonicalPath === "/pl/";
 
-  return buildSchemaGraph([
+  const nodes: SchemaObject[] = [
     buildOrganizationSchema(),
     buildHotelSchema({
       description: data.seo.description,
       path: canonicalPath,
       includeAggregateRating: true,
     }),
-    buildWebsiteSchema(),
+    isPolish ? buildPolishWebsiteSchema() : buildWebsiteSchema(),
     buildImageSchema(
       {
         url: data.hero.image,
@@ -315,8 +369,16 @@ export function buildHomePageSchema(data: HomePageData): SchemaObject {
     buildHomeWebPageSchema(data),
     buildHomeRoomsItemListSchema(canonicalPath),
     ...buildHomeRoomReferencesSchema(canonicalPath),
-    buildBreadcrumbSchema(canonicalPath, []),
-  ]);
+    isPolish ? buildPolishHomeBreadcrumbSchema() : buildBreadcrumbSchema(canonicalPath, []),
+  ];
+
+  // Shared helpers fall back to "en" for /pl/ paths; the Polish homepage
+  // content (image, room list, accommodations) is Polish.
+  return buildSchemaGraph(
+    isPolish
+      ? nodes.map((node) => (node.inLanguage === "en" ? { ...node, inLanguage: "pl" } : node))
+      : nodes,
+  );
 }
 
 export const homePageSchema = buildHomePageSchema(homePageEn);

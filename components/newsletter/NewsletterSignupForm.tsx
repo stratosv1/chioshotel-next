@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { track } from "@vercel/analytics";
 
-export type NewsletterLocale = "en" | "el" | "fr" | "de" | "it" | "es" | "tr";
+export type NewsletterLocale = "en" | "el" | "fr" | "de" | "it" | "es" | "tr" | "pl";
 
 type NewsletterCopy = {
   newsletterKicker: string;
@@ -102,6 +102,18 @@ const COPY: Record<NewsletterLocale, NewsletterCopy> = {
     errorEmail: "Geçerli bir e-posta girin.",
     errorConsent: "Lütfen onay kutusunu işaretleyin.",
     errorServer: "Bir sorun oluştu. Tekrar deneyin.",
+  },
+  pl: {
+    newsletterKicker: "Newsletter",
+    newsletterTitle: "Poznaj nasze oferty jako pierwszy",
+    newsletterText: "Kilka e-maili w roku z nowymi ofertami i kodami na rezerwację bezpośrednią w Voulamandis House. Bez spamu.",
+    emailPlaceholder: "Twój e-mail",
+    consent: "Zgadzam się na otrzymywanie ofert od Voulamandis House e-mailem. Mogę zrezygnować w każdej chwili.",
+    subscribe: "Zapisz się",
+    subscribed: "Dziękujemy! Jesteś na liście.",
+    errorEmail: "Podaj prawidłowy adres e-mail.",
+    errorConsent: "Zaznacz pole zgody.",
+    errorServer: "Coś poszło nie tak. Spróbuj ponownie.",
   },
 };
 
