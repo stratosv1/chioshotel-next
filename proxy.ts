@@ -59,6 +59,14 @@ const legacyRedirects: Record<string, string> = {
   "/en": "/",
   "/book the room you like": "/ai-assistant/",
 
+  // GA4 404 report (Sep 19 – Oct 16, 2026): old WP-era URLs still receiving visits
+  "/en/chios-hotels-voulamandis-house": "/",
+  "/chios-hotels-voulamandis-house": "/",
+  "/en/chios/chios-museums/koraes-library": "/chios/chios-museums/koraes-library-chios/",
+  "/en/chios/chios-beaches/agia-dynami-beach": "/chios/chios-beaches/agia-dynami-beach-chios/",
+  "/en/chios/chios-beaches/nagos-beach": "/chios/chios-beaches/nagos-beach/",
+  "/tr/sakiz-adasi-plaji/mavra-volia-plaji": "/tr/sakiz-adasi-plajlari/mavra-volia-plaji/",
+
   // Rooms / booking / contact / deals
   "/fr/chios-rooms": "/fr/chambres-a-chios/",
   "/our-rooms": "/chios-rooms/",
