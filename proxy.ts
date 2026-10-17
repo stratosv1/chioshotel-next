@@ -480,7 +480,6 @@ const legacyRedirects: Record<string, string> = {
   "/en/chios/chios-orchids": "/chios-orchids/",
   "/el/paralies-xios/paralia-karfas/null": "/el/paralies-xios/paralia-karfas/",
   "/images/family/ChatGPT-Image-Feb-13-2026-08_32_22-PM.png": "/images/family/ChatGPT-Image-Feb-13-2026-08_32_22-PM.webp",
-  "/favicon.ico": "/favicon/v2/favicon.ico",
   "/apple-touch-icon.png": "/favicon/v2/apple-touch-icon.png",
   "/apple-touch-icon-precomposed.png": "/favicon/v2/apple-touch-icon.png",
   "/sitemap_index.xml": "/sitemap.xml",
@@ -821,7 +820,6 @@ export async function proxy(request: NextRequest, event: NextFetchEvent) {
 
 export const config = {
   matcher: [
-    "/favicon.ico",
     "/wp-admin/:path*",
     "/wp-login.php",
     "/wp-comments-post.php",

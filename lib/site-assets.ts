@@ -14,6 +14,13 @@ export const siteImageAssets = {
     width: 1536,
     height: 1152,
   },
+  // JPEG copy of the homepage hero for og:image / schema.org image. Search
+  // engines (notably Bing result thumbnails) handle JPEG more reliably than WebP.
+  homepageHeroJpeg: {
+    src: "/images/hero/voulamandis-house-room-kambos-chios.jpg",
+    width: 1200,
+    height: 900,
+  },
   homepageHeroMobile: {
     src: "/images/hero/voulamandis-house-room-kambos-chios-portrait.webp",
     width: 1024,

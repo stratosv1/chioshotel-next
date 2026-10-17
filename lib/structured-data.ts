@@ -45,6 +45,7 @@ export const businessData = {
     longitude: 26.1374,
   },
   images: [
+    absoluteUrl(siteImageAssets.homepageHeroJpeg.src),
     absoluteUrl(siteImageAssets.homepageHero.src),
     ...propertyHighlightImageAssets.map((image) => absoluteUrl(image.src)),
     ...propertyShowcaseImageAssets.map((image) => absoluteUrl(image.src)),
