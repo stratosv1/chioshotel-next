@@ -4,13 +4,13 @@
  * Google Apps Script for vhouse.reservations@gmail.com (script.google.com).
  * Every 10 minutes it finds new guest replies to the pre-arrival emails
  * ("Few days left..." / "Λίγες μέρες έμειναν πια...") and sends them to
- * https://chioshotel.gr/api/gmail/arrival-notes, which extracts the
+ * https://chioshotel.gr/api/gmail/arrival-notes/, which extracts the
  * arrival info and appends it to the booking notes in Beds24.
  *
  * Setup: see docs/gmail-arrival-notes.md
  */
 
-var ENDPOINT = "https://chioshotel.gr/api/gmail/arrival-notes";
+var ENDPOINT = "https://chioshotel.gr/api/gmail/arrival-notes/";
 var OWN_ADDRESS = "vhouse.reservations@gmail.com";
 var SEARCH_QUERY =
   'newer_than:3d -from:me subject:("Few days left" OR "Λίγες μέρες")';
