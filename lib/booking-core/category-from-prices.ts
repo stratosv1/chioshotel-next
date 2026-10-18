@@ -25,9 +25,15 @@ export const ROOM_CATEGORY_ROOMS: Record<RoomCategoryId, number[]> = {
   "family-apartments": [8, 9, 10],
 };
 
-// nightly_quotes returns nothing for ranges of a year or more, so stay well inside it.
 const LOOKAHEAD_DAYS = 300;
 const PRICE_GUESTS = 2;
+// "From" prices are indicative, so they read the stored inventory directly instead of
+// booking_core.nightly_quotes, which returns nothing once the last sync is older than
+// max_inventory_age_minutes. The Apps Script only pushes when Beds24 changes, so in quiet
+// periods (winter) that gate hid prices for hours although the data was still current.
+// Bookings and live availability keep the strict freshness check. This guard only hides
+// prices if no sync at all succeeded for a long time (e.g. the script stopped running).
+const MAX_SYNC_AGE_HOURS = 72;
 
 // Throws on failure so an error is never cached; the exported wrapper turns it into null.
 async function loadCategoryFromPrices(): Promise<CategoryFromPrices> {
@@ -43,22 +49,31 @@ async function loadCategoryFromPrices(): Promise<CategoryFromPrices> {
         10
       ) as discount
     ),
-    q as (
-      select *
-      from booking_core.nightly_quotes(
-        (now() at time zone 'Europe/Athens')::date + 1,
-        (now() at time zone 'Europe/Athens')::date + 1 + ${LOOKAHEAD_DAYS}::integer,
-        ${PRICE_GUESTS}::integer
-      )
+    last_ok as (
+      select max(completed_at) as completed_at
+      from booking_core.sync_runs
+      where status = 'ok'
     )
-    select q.room_number,
-           round(min(q.effective_price) * (1 - max(cfg.discount) / 100)) as from_price
-    from q
+    select i.room_number,
+           round(min(i.base_price + gp.supplement_per_night) * (1 - max(cfg.discount) / 100)) as from_price
+    from booking_core.inventory i
+    join booking_core.rooms r
+      on r.room_number = i.room_number
+     and r.is_active = true
+     and ${PRICE_GUESTS}::integer between 1 and r.max_guests
+    join booking_core.guest_pricing gp
+      on gp.room_number = r.room_number
+     and gp.guest_count = ${PRICE_GUESTS}::integer
+     and gp.allowed = true
     cross join cfg
-    where q.available = true
-      and q.effective_price is not null
-      and q.effective_price > 0
-    group by q.room_number
+    cross join last_ok
+    where i.stay_date >= (now() at time zone 'Europe/Athens')::date + 1
+      and i.stay_date < (now() at time zone 'Europe/Athens')::date + 1 + ${LOOKAHEAD_DAYS}::integer
+      and i.available = true
+      and i.base_price is not null
+      and i.base_price + gp.supplement_per_night > 0
+      and last_ok.completed_at >= now() - (${MAX_SYNC_AGE_HOURS}::integer * interval '1 hour')
+    group by i.room_number
   `) as Array<{ room_number: number | string; from_price: number | string | null }>;
 
   const byRoom = new Map<number, number>();
