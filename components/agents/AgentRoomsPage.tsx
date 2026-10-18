@@ -12,6 +12,7 @@ import {
   computeAgentGuideStats,
 } from "@/content/agent-room-guide-extras";
 import { getAgentRoomGuideData } from "@/lib/agent-room-guide-data";
+import { sanitizeJsonLd } from "@/lib/schema-sanitize";
 
 type Props = {
   language: LanguageCode;
@@ -136,7 +137,7 @@ export async function AgentRoomsPage({ language }: Props) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(sanitizeJsonLd(jsonLd)) }}
       />
       <AgentRoomsGuide
         language={language}

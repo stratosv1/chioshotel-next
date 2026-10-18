@@ -160,7 +160,7 @@ async function main() {
     }
 
     assert(breadcrumb, "Rendered schema is missing BreadcrumbList.");
-    assert(breadcrumb.inLanguage === "el", "BreadcrumbList must have inLanguage=el.");
+    assert(!("inLanguage" in breadcrumb), "BreadcrumbList must not declare inLanguage.");
     assert(
       breadcrumb.itemListElement?.[0]?.name === "Αρχική",
       "Greek breadcrumb must start with Αρχική.",
@@ -174,13 +174,13 @@ async function main() {
     assert(primaryImage.inLanguage === "el", "Primary ImageObject must have inLanguage=el.");
 
     assert(itemList, "Rendered schema is missing the homepage ItemList.");
-    assert(itemList.inLanguage === "el", "Homepage ItemList must have inLanguage=el.");
+    assert(!("inLanguage" in itemList), "Homepage ItemList must not declare inLanguage.");
 
     assert(accommodations.length === 3, "Greek homepage must render exactly three Accommodation nodes.");
     for (const accommodation of accommodations) {
       assert(
-        accommodation.inLanguage === "el",
-        `Accommodation ${accommodation.name || accommodation["@id"]} must have inLanguage=el.`,
+        !("inLanguage" in accommodation),
+        `Accommodation ${accommodation.name || accommodation["@id"]} must not declare inLanguage.`,
       );
       assert(
         typeof accommodation.url === "string" &&
