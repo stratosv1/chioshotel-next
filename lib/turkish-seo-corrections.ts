@@ -146,7 +146,7 @@ const turkishRoomCorrections = new Map<string, DetailCorrection>([
     {
       title: "Sakız Adası Üst Kat Çift ve Üç Kişilik Odalar",
       description:
-        "Kambos, Sakız Adası’nda üst kat odaları 1, 3 ve 4: 30–35 m², 4 kişiye kadar, teras veya özel balkon, Oda 3 ve 4’te mini mutfak. Direkt rezervasyonda %10 indirim.",
+        "Kambos’ta üst kattaki 1, 3 ve 4 numaralı odalar: 30–35 m², 4 kişiye kadar, teras veya balkon, 3 ve 4’te mini mutfak. Direkt rezervasyonda %10 indirim.",
       heroTitle: "Üst kat çift ve üç kişilik odalar",
       heroDescription:
         "Kambos’taki tarihi çiftliğimizin üst katında, taş duvarlı, narenciye bahçelerine bakan ve ortak teras ya da özel balkonlu aydınlık odalar. Oda 3 ve 4’te ayrıca kendi mini mutfağı bulunur.",
