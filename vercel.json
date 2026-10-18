@@ -23,6 +23,14 @@
     {
       "path": "/api/cron/availability-watch/",
       "schedule": "17 6 * * *"
+    },
+    {
+      "path": "/api/cron/availability-watch/?run=evening",
+      "schedule": "17 18 * * *"
+    },
+    {
+      "path": "/api/booking-core/sync-health/",
+      "schedule": "47 4 * * *"
     }
   ]
 }
