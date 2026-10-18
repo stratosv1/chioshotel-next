@@ -88,7 +88,7 @@ export function ChiosCollectionImageGallery({
             />
             {item.title ? (
               <span
-                className={`absolute inset-x-2 bottom-2 truncate rounded-full px-3 py-1.5 text-[10px] font-black text-white shadow-lg ring-1 backdrop-blur-sm sm:text-xs ${labelClass}`}
+                className={`absolute bottom-2 left-2 max-w-[calc(100%-1rem)] truncate rounded-full px-2.5 py-1 text-[10px] font-bold text-white shadow-md ring-1 backdrop-blur-sm sm:bottom-3 sm:left-3 sm:max-w-[calc(100%-1.5rem)] sm:text-[11px] ${labelClass}`}
               >
                 {item.title}
               </span>
