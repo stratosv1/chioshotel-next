@@ -1137,7 +1137,7 @@ export const firstFloorRoomsTr = build("tr", {
   seo: {
     title: "Sakız Adası Üst Kat Çift ve Üç Kişilik Odalar | Voulamandis House",
     description:
-      "Kambos, Sakız Adası’nda üst kat odaları 1, 3 ve 4: 30–35 m², 4 kişiye kadar, teras veya özel balkon, Oda 3 ve 4’te mini mutfak. Direkt rezervasyonda %10 indirim.",
+      "Kambos’ta üst kattaki 1, 3 ve 4 numaralı odalar: 30–35 m², 4 kişiye kadar, teras veya balkon, 3 ve 4’te mini mutfak. Direkt rezervasyonda %10 indirim.",
   },
   hero: {
     kicker: "Sakız Adası üst kat odaları",
