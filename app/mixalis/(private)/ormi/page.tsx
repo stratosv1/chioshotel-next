@@ -1,25 +1,52 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Note } from "@/components/mixalis/omali/shared";
+import { OrmiAnimationsClient } from "@/components/mixalis/ormi/OrmiAnimationsClient";
 
 export const metadata: Metadata = {
   title: { absolute: "Ορμή και κρούσεις · Τυπολόγιο · Physics Workspace" },
-  description: "30 περιπτώσεις ασκήσεων ορμής και κρούσεων της Τράπεζας Θεμάτων Φυσικής Β΄ Λυκείου σε ένα poster.",
+  description:
+    "40 περιπτώσεις ορμής και κρούσεων (Τράπεζα Θεμάτων, σχολικό βιβλίο, Σαββάλας) σε ένα poster, με κινούμενο σχέδιο για κάθε περίπτωση.",
 };
 
+const POSTER_W = 1212;
+const POSTER_H = 2232;
+
+const sectionNames = [
+  "Ορμή",
+  "Δύναμη",
+  "ΑΔΟ",
+  "Πλαστική",
+  "Βλήμα",
+  "Εκρήξεις",
+  "Άλλες κρούσεις",
+  "Ωθήσεις & ροές",
+];
+
 const groups: { range: string; title: string; text: string }[] = [
-  { range: "1–5", title: "Ορμή και μεταβολή ορμής", text: "Πάντα διάλεξε θετική φορά πριν γράψεις Δp = p_τελ − p_αρχ. Στην αναπήδηση τα πρόσημα «προστίθενται»." },
+  { range: "1–5", title: "Ορμή και μεταβολή ορμής", text: "Πάντα διάλεξε θετική φορά πριν γράψεις Δp = p_τελ − p_αρχ. Στην αναπήδηση τα μέτρα «προστίθενται»." },
   { range: "6–10", title: "Δύναμη και ρυθμός μεταβολής", text: "ΣF = Δp/Δt. Σε διάγραμμα F–t το εμβαδόν είναι Δp, σε διάγραμμα p–t η κλίση είναι ΣF." },
   { range: "11–15", title: "ΑΔΟ σε συστήματα", text: "Έλεγξε ότι ΣF_εξ = 0 (ή ότι η κρούση/έκρηξη διαρκεί ελάχιστα). Αρχικά ακίνητο σύστημα ⇒ p_ολ = 0." },
   { range: "16–20", title: "Πλαστική κρούση", text: "Μία κοινή ταχύτητα V. Η ορμή διατηρείται, η κινητική όχι: Q = K_πριν − K_μετά." },
   { range: "21–25", title: "Βλήμα και στόχος", text: "Πρώτα ΑΔΟ για την κρούση, μετά ΘΜΚΕ (τριβή), ΑΔΜΕ (ύψος h) ή κεντρομόλο (τάση νήματος)." },
   { range: "26–30", title: "Εκρήξεις και συνδυαστικά", text: "Στην έκρηξη η κινητική αυξάνεται. Μετά την κρούση συχνά ακολουθεί οριζόντια βολή: t = √(2H/g)." },
+  { range: "31–35", title: "Κρούσεις χωρίς συσσωμάτωση", text: "Δύο ταχύτητες μετά: θέλεις τη μία δοσμένη. Δύναμη εδάφους: N = Δp/Δt + mg. Βλήμα μέσα σε ξύλο: Q = F·d." },
+  { range: "36–40", title: "Ωθήσεις, ροές, κατακόρυφη βολή", text: "Ελατήριο και πύραυλος είναι «εκρήξεις». Σανίδα: το κέντρο μάζας μένει ακίνητο. Βροχή: F = (N/Δt)·m·υ." },
 ];
+
+/** Clickable areas over the poster cells (SVG coordinates of the poster). */
+const cells = Array.from({ length: 40 }, (_, i) => {
+  const section = Math.floor(i / 5);
+  const col = i % 5;
+  return { n: i + 1, x: 17 + 238 * col, y: 146 + 256 * section, w: 226, h: 212 };
+});
+
+const pct = (v: number, total: number) => `${((v / total) * 100).toFixed(3)}%`;
 
 export default function OrmiPage() {
   return (
     <main className="min-h-screen bg-[#f3efe8] px-4 py-5 text-[#2c2825] sm:px-8 sm:py-8">
-      <div className="mx-auto max-w-5xl space-y-6">
+      <div className="mx-auto max-w-6xl space-y-6">
         <header className="rounded-3xl border border-black/10 bg-white p-6 shadow-sm sm:p-8">
           <Link href="/mixalis" prefetch={false} className="text-sm font-semibold text-[#857261] hover:text-[#5f5045]">
             ← Physics Workspace
@@ -27,25 +54,64 @@ export default function OrmiPage() {
           <p className="mt-5 text-sm font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Φυσική Προσανατολισμού Β΄ Λυκείου</p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-5xl">Ορμή και κρούσεις: τυπολόγιο</h1>
           <p className="mt-4 max-w-3xl text-[15px] leading-7 text-[#5c534c] sm:text-base">
-            Όλες οι περιπτώσεις ασκήσεων της Τράπεζας Θεμάτων για την ορμή σε ένα σχέδιο. Σε κάθε κουτάκι βλέπεις το «πριν» και το «μετά», ποιες
-            ταχύτητες (μπλε), δυνάμεις (κόκκινο) και αποτελέσματα (πράσινο) παίζουν ρόλο, και την εξίσωση που γράφεις. Πάτα την εικόνα για να την
-            ανοίξεις σε πλήρες μέγεθος.
+            40 περιπτώσεις σε ένα σχέδιο: όλες της Τράπεζας Θεμάτων, μαζί με όσες προσθέτουν το σχολικό βιβλίο και οι λυμένες του Σαββάλα. Σε κάθε
+            κουτάκι βλέπεις ταχύτητες (μπλε), δυνάμεις (κόκκινο) και αποτελέσματα (πράσινο). <b>Πάτα ένα κουτάκι</b> και θα σε πάει στο κινούμενο
+            σχέδιό του, όπου το φαινόμενο εξηγείται βήμα βήμα.
           </p>
+          <div className="mt-5 flex flex-wrap gap-2 text-sm font-semibold">
+            <a href="/mixalis/ormi-typologio.svg" target="_blank" rel="noopener" className="rounded-full border border-black/10 bg-white px-4 py-1.5 hover:bg-[#f3efe8]">
+              Poster σε πλήρες μέγεθος
+            </a>
+            <a href="/mixalis/ormi-typologio-A4.pdf" target="_blank" rel="noopener" className="rounded-full bg-[#2c2825] px-4 py-1.5 text-white hover:bg-black">
+              Εκτύπωση σε A4 (PDF, 2 σελίδες)
+            </a>
+          </div>
         </header>
 
         <section className="rounded-3xl border border-black/10 bg-white p-3 shadow-sm sm:p-5">
-          <a href="/mixalis/ormi-typologio.svg" target="_blank" rel="noopener" className="block overflow-hidden rounded-2xl border border-black/10 bg-[#fbfaf7]">
+          <div className="relative overflow-hidden rounded-2xl border border-black/10 bg-[#fbfaf7]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/mixalis/ormi-typologio.svg"
-              alt="Τυπολόγιο ορμής και κρούσεων: 30 περιπτώσεις με σχήματα και εξισώσεις"
-              width={1212}
-              height={1720}
+              alt="Τυπολόγιο ορμής και κρούσεων: 40 περιπτώσεις με σχήματα και εξισώσεις"
+              width={POSTER_W}
+              height={POSTER_H}
               decoding="async"
               className="mx-auto h-auto w-full"
             />
-          </a>
+            {cells.map((c) => (
+              <a
+                key={c.n}
+                href={`#k${c.n}`}
+                aria-label={`Κινούμενο σχέδιο για το κουτάκι ${c.n}`}
+                className="absolute rounded-lg outline-none ring-[#c9822f] transition hover:bg-[#c9822f]/10 hover:ring-2 focus-visible:ring-2"
+                style={{ left: pct(c.x, POSTER_W), top: pct(c.y, POSTER_H), width: pct(c.w, POSTER_W), height: pct(c.h, POSTER_H) }}
+              />
+            ))}
+          </div>
         </section>
+
+        <nav className="sticky top-2 z-10 rounded-2xl border border-black/10 bg-white/90 p-2 shadow-sm backdrop-blur" aria-label="Ενότητες">
+          <div className="flex gap-1.5 overflow-x-auto text-sm font-semibold">
+            {sectionNames.map((name, i) => (
+              <a key={name} href={`#enotita-${i + 1}`} className="shrink-0 rounded-full px-3 py-1.5 text-[#4d4138] hover:bg-[#f3efe8]">
+                {i + 1}. {name}
+              </a>
+            ))}
+          </div>
+        </nav>
+
+        <section className="rounded-3xl border border-black/10 bg-white p-5 shadow-sm sm:p-8">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Κινούμενα σχέδια</p>
+          <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">Δες κάθε περίπτωση να συμβαίνει</h2>
+          <p className="mt-3 max-w-3xl text-[15px] leading-7 text-[#5c534c]">
+            Κάθε σχέδιο παίζει σε επανάληψη. Κάτω από την εικόνα γράφει τι συμβαίνει εκείνη τη στιγμή. Πάτα μια φάση (π.χ. «Κρούση») για να πας
+            εκεί, ή <b>🐢 Αργά</b> για να το δεις με την ησυχία σου. Οι ράβδοι δείχνουν τις ορμές με πρόσημο: δεξιά από τη γραμμή είναι θετικές,
+            αριστερά αρνητικές. Η <b>μαύρη ράβδος</b> είναι η ολική ορμή.
+          </p>
+        </section>
+
+        <OrmiAnimationsClient />
 
         <section className="rounded-3xl border border-black/10 bg-white p-5 shadow-sm sm:p-8">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Οδηγός</p>
@@ -68,7 +134,8 @@ export default function OrmiPage() {
               </ul>
             </Note>
             <Note tone="ok" title="Σύμβολα του poster">
-              T = τριβή στο 22 και τάση νήματος στο 25 • Q = θερμότητα (χαμένη κινητική) • ℓ = μήκος νήματος • g = 10 m/s².
+              T = τριβή στο 22 και τάση νήματος στο 25 • Q = θερμότητα (χαμένη κινητική) • ℓ = μήκος νήματος ή σανίδας • N = κάθετη δύναμη • d =
+              διείσδυση βλήματος • g = 10 m/s².
             </Note>
           </div>
         </section>
