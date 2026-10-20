@@ -351,6 +351,7 @@ const nav = [
   ["askiseis", "Ασκήσεις"],
   ["thema2", "Θέμα 2"],
   ["trapeza", "Τράπεζα Θεμάτων"],
+  ["typologio", "Τυπολόγιο"],
   ["test", "Τεστ"],
 ] as const;
 
@@ -546,7 +547,48 @@ export function OmaliLesson() {
           <TrapezaThemata />
         </Section>
 
-        <Section id="test" kicker="10 · Τελικό τεστ" title="Πόσο καλά την κατάλαβες;">
+        <Section
+          id="typologio"
+          kicker="10 · Τυπολόγιο σε μία εικόνα"
+          title="30 περιπτώσεις κυκλικής κίνησης σε ένα σχέδιο"
+          intro={
+            <p>
+              Όλες οι κλασικές περιπτώσεις μαζί: δρόμοι με κλίση, κωνικό εκκρεμές, νήμα σε κατακόρυφο κύκλο, λόφοι, κοιλάδες και λούπες. Για κάθε
+              μία δες <b>ποιες δυνάμεις δείχνουν προς το κέντρο</b> — αυτές γράφεις στο ΣF = mυ²/R. Πάτα την εικόνα για να την ανοίξεις σε πλήρες μέγεθος.
+            </p>
+          }
+        >
+          <a href="/mixalis/omali-typologio.webp" target="_blank" rel="noopener" className="block overflow-hidden rounded-2xl border border-black/10 bg-[#fbf8f2]">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/mixalis/omali-typologio.webp"
+              alt="Τυπολόγιο κυκλικής κίνησης: 30 περιπτώσεις με διαγράμματα δυνάμεων και τύπους"
+              width={1121}
+              height={1403}
+              loading="lazy"
+              decoding="async"
+              className="mx-auto h-auto w-full max-w-3xl"
+            />
+          </a>
+          <Note tone="warn" title="Προσοχή στα σύμβολα (διαφέρουν από το βιβλίο)">
+            <ul className="mt-1 space-y-1">
+              <li>• Εδώ η <b>περίοδος</b> γράφεται <b>P</b>. Στο βιβλίο είναι <b>T</b>.</li>
+              <li>• Εδώ το <b>T</b> είναι η <b>τάση του νήματος</b>.</li>
+              <li>• Η γωνία λέγεται <b>θ</b> (στις ασκήσεις μας συχνά <b>φ</b>), ενώ <b>v</b> = υ, <b>a</b> = α, <b>f<sub>s</sub></b> = στατική τριβή.</li>
+            </ul>
+          </Note>
+          <div className="rounded-2xl border border-black/10 bg-[#fbf8f2] p-4 text-sm leading-6 text-[#4d4138] sm:p-5">
+            <p className="font-semibold text-[#2c2825]">Πού θα το χρειαστείς</p>
+            <ul className="mt-2 space-y-1">
+              <li>• <b>Κωνικό εκκρεμές</b> (T·συνφ = mg, T·ημφ = mυ²/r): κουτάκια 11–15.</li>
+              <li>• <b>Αεροπλάνο / πιλότος σε κατακόρυφο κύκλο</b>: 21 (κάτω: N − mg) και 25 (πάνω: N + mg).</li>
+              <li>• <b>Γρανάζια, ιμάντας, δίσκος</b> (υ = ωR): κουτάκι 5.</li>
+              <li>• <b>Στροφή με κλίση</b> (εφφ = υ²/(gR)): κουτάκι 6.</li>
+            </ul>
+          </div>
+        </Section>
+
+        <Section id="test" kicker="11 · Τελικό τεστ" title="Πόσο καλά την κατάλαβες;">
           <Quiz questions={finalQuiz} />
         </Section>
 
