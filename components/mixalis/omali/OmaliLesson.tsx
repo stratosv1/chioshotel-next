@@ -558,23 +558,23 @@ export function OmaliLesson() {
             </p>
           }
         >
-          <a href="/mixalis/omali-typologio.webp" target="_blank" rel="noopener" className="block overflow-hidden rounded-2xl border border-black/10 bg-[#fbf8f2]">
+          <a href="/mixalis/omali-typologio.svg" target="_blank" rel="noopener" className="block overflow-hidden rounded-2xl border border-black/10 bg-[#fbf8f2]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/mixalis/omali-typologio.webp"
+              src="/mixalis/omali-typologio.svg"
               alt="Τυπολόγιο κυκλικής κίνησης: 30 περιπτώσεις με διαγράμματα δυνάμεων και τύπους"
-              width={1121}
-              height={1403}
+              width={1212}
+              height={1720}
               loading="lazy"
               decoding="async"
               className="mx-auto h-auto w-full max-w-3xl"
             />
           </a>
-          <Note tone="warn" title="Προσοχή στα σύμβολα (διαφέρουν από το βιβλίο)">
+          <Note tone="warn" title="Προσοχή στα σύμβολα">
             <ul className="mt-1 space-y-1">
-              <li>• Εδώ η <b>περίοδος</b> γράφεται <b>P</b>. Στο βιβλίο είναι <b>T</b>.</li>
-              <li>• Εδώ το <b>T</b> είναι η <b>τάση του νήματος</b>.</li>
-              <li>• Η γωνία λέγεται <b>θ</b> (στις ασκήσεις μας συχνά <b>φ</b>), ενώ <b>v</b> = υ, <b>a</b> = α, <b>f<sub>s</sub></b> = στατική τριβή.</li>
+              <li>• Το <b>T</b> είναι <b>περίοδος</b> στα κουτάκια 2 και 12 και <b>τάση νήματος</b> σε όλα τα άλλα.</li>
+              <li>• Το <b>T<sub>σ</sub></b> είναι η <b>στατική τριβή</b> και το <b>μ<sub>σ</sub></b> ο συντελεστής της.</li>
+              <li>• Κουτάκια 1, 4, 16–20 και 27–30: <b>μη ομαλή</b> κίνηση (αλλάζει το μέτρο της υ). Το ΣF = mυ²/R ισχύει σε κάθε στιγμή.</li>
             </ul>
           </Note>
           <div className="rounded-2xl border border-black/10 bg-[#fbf8f2] p-4 text-sm leading-6 text-[#4d4138] sm:p-5">
