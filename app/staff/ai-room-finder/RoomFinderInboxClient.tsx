@@ -1,12 +1,14 @@
 "use client";
 
-import { MessageCircle, Phone } from "lucide-react";
+import { ArrowLeft, Mail, MessageCircle, Phone, RefreshCw } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type {
   RoomFinderInboxConversation,
   RoomFinderInboxData,
 } from "@/lib/ai-assistant/conversation-store";
 import { decodeRoomFinderOfferSnapshot } from "@/lib/ai-assistant/room-finder-offer-tracking";
+
+const ACCENT = "#c9822f";
 
 function dateTime(value: string | null | undefined) {
   if (!value) return "—";
@@ -20,25 +22,68 @@ function dateTime(value: string | null | undefined) {
   }).format(date);
 }
 
-function relativeTime(value: string) {
-  const time = new Date(value).getTime();
-  if (!Number.isFinite(time)) return "";
-  const seconds = Math.round((time - Date.now()) / 1000);
-  const rtf = new Intl.RelativeTimeFormat("el", { numeric: "auto" });
-  if (Math.abs(seconds) < 60) return rtf.format(seconds, "second");
-  const minutes = Math.round(seconds / 60);
-  if (Math.abs(minutes) < 60) return rtf.format(minutes, "minute");
-  const hours = Math.round(minutes / 60);
-  if (Math.abs(hours) < 24) return rtf.format(hours, "hour");
-  return rtf.format(Math.round(hours / 24), "day");
+function shortTime(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  const now = new Date();
+  const sameDay = date.toDateString() === now.toDateString();
+  if (sameDay) {
+    return new Intl.DateTimeFormat("el-GR", { hour: "2-digit", minute: "2-digit" }).format(date);
+  }
+  const yesterday = new Date(now);
+  yesterday.setDate(now.getDate() - 1);
+  if (date.toDateString() === yesterday.toDateString()) return "Χθες";
+  return new Intl.DateTimeFormat("el-GR", { day: "numeric", month: "short" }).format(date);
 }
 
-function statusLabel(conversation: RoomFinderInboxConversation) {
-  if (conversation.active) return { label: "LIVE", className: "bg-emerald-100 text-emerald-800" };
-  if (conversation.enquirySentAt) return { label: "Αίτημα στάλθηκε", className: "bg-amber-100 text-amber-900" };
-  if (conversation.currentStep === "complete") return { label: "Ολοκλήρωσε", className: "bg-sky-100 text-sky-800" };
-  return { label: "Ανενεργή", className: "bg-stone-100 text-stone-600" };
+function stayRange(checkin: string, checkout: string) {
+  const parse = (value: string) => {
+    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+    return match ? new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3])) : null;
+  };
+  const from = parse(checkin);
+  const to = parse(checkout);
+  if (!from || !to) return "";
+  const day = (date: Date) => date.getDate();
+  const month = (date: Date) => new Intl.DateTimeFormat("el-GR", { month: "short" }).format(date);
+  const nights = Math.round((to.getTime() - from.getTime()) / 86_400_000);
+  const range = from.getMonth() === to.getMonth()
+    ? `${day(from)}–${day(to)} ${month(to)}`
+    : `${day(from)} ${month(from)} – ${day(to)} ${month(to)}`;
+  return nights > 0 ? `${range} · ${nights} ${nights === 1 ? "νύχτα" : "νύχτες"}` : range;
 }
+
+function shortStayDate(value: string) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  return match ? `${match[3]}/${match[2]}` : value;
+}
+
+function stayLine(conversation: RoomFinderInboxConversation) {
+  const parts: string[] = [];
+  const range = stayRange(conversation.checkin, conversation.checkout);
+  if (range) parts.push(range);
+  if (conversation.guestTotal) parts.push(`${conversation.guestTotal} άτ.`);
+  if (conversation.roomCount && conversation.roomCount > 1) parts.push(`${conversation.roomCount} δωμ.`);
+  return parts.join(" · ");
+}
+
+type Status = { label: string; tone: "live" | "lead" | "done" | "none" | "idle" };
+
+function statusOf(conversation: RoomFinderInboxConversation): Status {
+  if (conversation.active) return { label: "Live", tone: "live" };
+  if (conversation.enquirySentAt) return { label: "Αίτημα", tone: "lead" };
+  if (conversation.currentStep === "complete") return { label: "Ολοκλήρωσε", tone: "done" };
+  if (conversation.currentStep === "unavailable") return { label: "Χωρίς διαθεσιμότητα", tone: "none" };
+  return { label: "Σταμάτησε", tone: "idle" };
+}
+
+const toneClass: Record<Status["tone"], string> = {
+  live: "bg-emerald-50 text-emerald-700 ring-emerald-200",
+  lead: "bg-amber-50 text-amber-800 ring-amber-200",
+  done: "bg-sky-50 text-sky-700 ring-sky-200",
+  none: "bg-rose-50 text-rose-700 ring-rose-200",
+  idle: "bg-stone-50 text-stone-500 ring-stone-200",
+};
 
 function fullName(conversation: RoomFinderInboxConversation) {
   return [conversation.firstName, conversation.lastName].filter(Boolean).join(" ");
@@ -49,24 +94,25 @@ function phoneForWhatsApp(phone: string) {
   return digits.startsWith("00") ? digits.slice(2) : digits;
 }
 
-function shortStayDate(value: string) {
-  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
-  return match ? `${match[3]}/${match[2]}/${match[1]}` : value;
-}
-
 function money(value: number) {
   return new Intl.NumberFormat("el-GR", {
     style: "currency",
     currency: "EUR",
-    maximumFractionDigits: 2,
+    maximumFractionDigits: 0,
   }).format(value);
+}
+
+function sessionFromUrl() {
+  if (typeof window === "undefined") return "";
+  return new URLSearchParams(window.location.search).get("session") || "";
 }
 
 export default function RoomFinderInboxClient({ initialData }: { initialData: RoomFinderInboxData }) {
   const [data, setData] = useState(initialData);
   const [selectedSessionId, setSelectedSessionId] = useState(initialData.selected.conversation?.sessionId || "");
+  // On phones only one pane is shown: the list, or the conversation opened from it / from a link.
+  const [mobileDetail, setMobileDetail] = useState(() => Boolean(sessionFromUrl()));
   const [refreshing, setRefreshing] = useState(false);
-  const [lastRefresh, setLastRefresh] = useState(new Date());
   const markedRead = useRef(new Set<string>());
 
   const selected = data.selected.conversation;
@@ -80,10 +126,9 @@ export default function RoomFinderInboxClient({ initialData }: { initialData: Ro
       if (!response.ok) throw new Error("Inbox refresh failed");
       const next = await response.json() as RoomFinderInboxData;
       setData(next);
-      if (!selectedSessionId && next.selected.conversation?.sessionId) {
+      if (!sessionId && next.selected.conversation?.sessionId) {
         setSelectedSessionId(next.selected.conversation.sessionId);
       }
-      setLastRefresh(new Date());
     } catch (error) {
       console.error(error);
     } finally {
@@ -118,16 +163,43 @@ export default function RoomFinderInboxClient({ initialData }: { initialData: Ro
 
   async function openConversation(sessionId: string) {
     setSelectedSessionId(sessionId);
+    setMobileDetail(true);
     const url = new URL(window.location.href);
+    const alreadyOpen = url.searchParams.get("session") === sessionId;
     url.searchParams.set("session", sessionId);
-    history.replaceState(history.state, "", url);
+    // Push so the phone's back button returns to the list.
+    if (!alreadyOpen) history.pushState({ session: sessionId }, "", url);
+    window.scrollTo({ top: 0 });
     await load(sessionId);
-    markedRead.current.delete(sessionId);
     await markRead(sessionId);
   }
 
+  function backToList() {
+    if (history.state?.session) {
+      history.back();
+      return;
+    }
+    const url = new URL(window.location.href);
+    url.searchParams.delete("session");
+    history.replaceState(null, "", url);
+    setMobileDetail(false);
+  }
+
   useEffect(() => {
-    if (selectedSessionId && selected?.unread) void markRead(selectedSessionId);
+    function onPop() {
+      const sessionId = sessionFromUrl();
+      setMobileDetail(Boolean(sessionId));
+      if (sessionId && sessionId !== selectedSessionId) {
+        setSelectedSessionId(sessionId);
+        void load(sessionId);
+      }
+    }
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, [selectedSessionId]);
+
+  useEffect(() => {
+    if (selectedSessionId && selected?.unread && sessionFromUrl()) void markRead(selectedSessionId);
   }, []);
 
   useEffect(() => {
@@ -135,234 +207,213 @@ export default function RoomFinderInboxClient({ initialData }: { initialData: Ro
     return () => window.clearInterval(timer);
   }, [selectedSessionId]);
 
-  const selectedStatus = selected ? statusLabel(selected) : null;
-  const selectedName = selected ? fullName(selected) : "";
   const selectedRooms = useMemo(
     () => selected?.selectedRooms?.map((room) => String(room.name || room.roomNumber || "")).filter(Boolean) || [],
     [selected],
   );
 
+  const listPane = (
+    <section className={`${mobileDetail ? "hidden lg:flex" : "flex"} min-h-0 flex-col bg-white lg:rounded-2xl lg:border lg:border-stone-200`}>
+      <div className="flex items-center justify-between px-4 pb-2 pt-1 text-xs text-stone-500 lg:border-b lg:border-stone-100 lg:py-3">
+        <span>Σήμερα {data.stats.today} · 7 ημέρες {data.stats.last7Days}</span>
+        {data.stats.active > 0 && (
+          <span className="inline-flex items-center gap-1.5 font-medium text-emerald-700">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
+            {data.stats.active} live
+          </span>
+        )}
+      </div>
+      <ul className="min-h-0 flex-1 divide-y divide-stone-100 lg:overflow-y-auto">
+        {data.conversations.map((conversation) => {
+          const status = statusOf(conversation);
+          const name = fullName(conversation);
+          const isSelected = conversation.sessionId === selectedSessionId;
+          const line = stayLine(conversation);
+          return (
+            <li key={conversation.sessionId}>
+              <button
+                type="button"
+                onClick={() => void openConversation(conversation.sessionId)}
+                className={`flex w-full items-start gap-3 px-4 py-3.5 text-left transition-colors ${isSelected ? "lg:bg-stone-100" : "hover:bg-stone-50 active:bg-stone-100"}`}
+              >
+                <span
+                  className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-xs font-semibold text-white"
+                  style={{ backgroundColor: conversation.unread ? ACCENT : "#a8a29e" }}
+                >
+                  {conversation.language.toUpperCase()}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="flex items-baseline justify-between gap-2">
+                    <span className={`truncate text-[15px] ${conversation.unread ? "font-semibold text-stone-900" : "font-medium text-stone-700"}`}>
+                      {name || "Επισκέπτης"}
+                    </span>
+                    <span className={`shrink-0 text-xs ${conversation.unread ? "font-semibold" : "text-stone-400"}`} style={conversation.unread ? { color: ACCENT } : undefined}>
+                      {shortTime(conversation.lastActivityAt)}
+                    </span>
+                  </span>
+                  <span className="mt-0.5 block truncate text-sm text-stone-500">
+                    {line || conversation.lastUserMessage || "Άνοιξε τον Room Finder"}
+                  </span>
+                  <span className="mt-1.5 flex items-center gap-2">
+                    <span className={`rounded-full px-2 py-0.5 text-[11px] font-medium ring-1 ring-inset ${toneClass[status.tone]}`}>
+                      {status.label}
+                    </span>
+                    {conversation.phone && <Phone className="h-3.5 w-3.5 text-stone-400" aria-label="Άφησε τηλέφωνο" />}
+                    {conversation.unread && <span className="ml-auto h-2 w-2 rounded-full" style={{ backgroundColor: ACCENT }} aria-label="Μη αναγνωσμένη" />}
+                  </span>
+                </span>
+              </button>
+            </li>
+          );
+        })}
+        {!data.conversations.length && (
+          <li className="p-10 text-center text-sm text-stone-500">Δεν υπάρχουν ακόμη συνομιλίες.</li>
+        )}
+      </ul>
+    </section>
+  );
+
+  const detailPane = (
+    <section className={`${mobileDetail ? "flex" : "hidden lg:flex"} min-h-0 flex-col bg-[#f7f5f1] lg:rounded-2xl lg:border lg:border-stone-200`}>
+      {selected ? (
+        <>
+          <div className="sticky top-0 z-10 border-b border-stone-200 bg-white/95 px-3 py-2.5 backdrop-blur lg:static lg:rounded-t-2xl lg:px-5 lg:py-4">
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={backToList}
+                className="-ml-1 flex h-10 w-10 items-center justify-center rounded-full text-stone-700 hover:bg-stone-100 lg:hidden"
+                aria-label="Πίσω στη λίστα"
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </button>
+              <div className="min-w-0 flex-1">
+                <h2 className="truncate text-base font-semibold text-stone-900">
+                  {fullName(selected) || "Επισκέπτης"}
+                  <span className="ml-2 text-xs font-normal text-stone-400">{selected.language.toUpperCase()}</span>
+                </h2>
+                <p className="truncate text-xs text-stone-500">
+                  {stayLine(selected) || "Χωρίς ημερομηνίες"} · {dateTime(selected.createdAt)}
+                </p>
+              </div>
+              <span className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium ring-1 ring-inset ${toneClass[statusOf(selected).tone]}`}>
+                {statusOf(selected).label}
+              </span>
+            </div>
+
+            {(selected.phone || selected.email) && (
+              <div className="mt-2.5 flex gap-2">
+                {selected.phone && (
+                  <a href={`tel:${selected.phone}`} className="flex min-h-10 flex-1 items-center justify-center gap-1.5 rounded-xl bg-stone-900 px-3 text-sm font-medium text-white">
+                    <Phone className="h-4 w-4" /> Κλήση
+                  </a>
+                )}
+                {selected.phone && (
+                  <a href={`https://wa.me/${phoneForWhatsApp(selected.phone)}`} target="_blank" rel="noreferrer" className="flex min-h-10 flex-1 items-center justify-center gap-1.5 rounded-xl bg-[#287d4f] px-3 text-sm font-medium text-white">
+                    <MessageCircle className="h-4 w-4" /> WhatsApp
+                  </a>
+                )}
+                {selected.email && (
+                  <a href={`mailto:${selected.email}`} className="flex min-h-10 flex-1 items-center justify-center gap-1.5 rounded-xl border border-stone-300 bg-white px-3 text-sm font-medium text-stone-800">
+                    <Mail className="h-4 w-4" /> Email
+                  </a>
+                )}
+              </div>
+            )}
+            {(selected.phone || selected.email || selectedRooms.length > 0 || selected.breakfast) && (
+              <p className="mt-2 text-xs leading-5 text-stone-500">
+                {[selected.phone, selected.email, selectedRooms.length ? `Δωμάτια: ${selectedRooms.join(", ")}` : "", selected.breakfast ? "Με πρωινό" : ""]
+                  .filter(Boolean)
+                  .join(" · ")}
+              </p>
+            )}
+          </div>
+
+          <div className="flex-1 space-y-2 px-3 py-4 lg:overflow-y-auto lg:px-6">
+            {messages.map((message) => {
+              const tracked = decodeRoomFinderOfferSnapshot(message.content);
+              const snapshot = tracked.snapshot;
+              const isUser = message.role === "user";
+              return (
+                <div key={message.id} className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
+                  <div
+                    className={`max-w-[85%] rounded-2xl px-3.5 py-2 text-[15px] leading-6 ${isUser ? "rounded-br-sm text-white" : "rounded-bl-sm bg-white text-stone-800 shadow-[0_1px_1px_rgba(0,0,0,0.04)]"}`}
+                    style={isUser ? { backgroundColor: ACCENT } : undefined}
+                  >
+                    <div className="whitespace-pre-wrap">{tracked.content}</div>
+                    {snapshot && (
+                      <div className="mt-2 space-y-1.5 border-t border-stone-100 pt-2">
+                        {snapshot.groups.map((group) => (
+                          <div key={`${message.id}-${group.groupNumber}`} className="space-y-1.5">
+                            {snapshot.groups.length > 1 && (
+                              <p className="text-xs text-stone-500">Δωμάτιο {group.groupNumber} · {group.guests} άτομα</p>
+                            )}
+                            {group.offers.map((offer, offerIndex) => (
+                              <div key={`${offer.roomNumber}-${offer.checkin}-${offerIndex}`} className="flex items-center justify-between gap-3 rounded-xl bg-stone-50 px-3 py-2 text-sm">
+                                <span className="min-w-0">
+                                  <span className="block truncate font-medium">{offer.name}</span>
+                                  <span className="block text-xs text-stone-500">
+                                    Δωμ. {offer.roomNumber} · {shortStayDate(offer.checkin)}–{shortStayDate(offer.checkout)}
+                                  </span>
+                                </span>
+                                <span className="shrink-0 text-right">
+                                  {offer.originalTotal > offer.directTotal && (
+                                    <span className="block text-[11px] text-stone-400 line-through">{money(offer.originalTotal)}</span>
+                                  )}
+                                  <span className="block font-semibold text-emerald-700">{money(offer.directTotal)}</span>
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    <div className={`mt-0.5 text-right text-[10px] ${isUser ? "text-white/75" : "text-stone-400"}`}>
+                      {shortTime(message.createdAt)}{message.reaction ? ` · ${message.reaction}` : ""}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+            {!messages.length && <p className="py-10 text-center text-sm text-stone-500">Δεν υπάρχουν μηνύματα.</p>}
+          </div>
+        </>
+      ) : (
+        <div className="m-auto p-12 text-center text-sm text-stone-500">Επίλεξε μια συνομιλία.</div>
+      )}
+    </section>
+  );
+
   return (
-    <main className="min-h-screen bg-[#f7f3eb] px-3 py-5 text-stone-900 sm:px-5 sm:py-8">
-      <div className="mx-auto max-w-7xl">
-        <header className="flex flex-col gap-4 border-b border-stone-300 pb-5 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <a href="/staff" className="text-sm font-semibold text-stone-600 hover:text-stone-950">← Staff Area</a>
-            <p className="mt-3 text-xs font-bold uppercase tracking-[0.2em] text-amber-800">Voulamandis House</p>
-            <h1 className="mt-1 text-3xl font-black tracking-tight">AI Room Finder Inbox</h1>
-            <p className="mt-2 max-w-2xl text-sm text-stone-600">
-              Πραγματικές συνομιλίες πελατών, χρήση του Room Finder και αιτήματα ενδιαφέροντος.
-            </p>
-          </div>
-          <div className="flex items-center gap-3 text-xs text-stone-500">
-            <span className="inline-flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-emerald-500" />Live refresh 15s</span>
-            <button
-              type="button"
-              onClick={() => void load()}
-              disabled={refreshing}
-              className="rounded-xl border border-stone-300 bg-white px-3 py-2 font-bold text-stone-700 disabled:opacity-50"
-            >
-              {refreshing ? "Ανανέωση…" : "Ανανέωση"}
-            </button>
-          </div>
+    <main className="min-h-[100dvh] bg-white font-sans text-stone-900 lg:bg-[#f7f5f1] lg:px-6 lg:py-6">
+      <div className="mx-auto flex max-w-6xl flex-col lg:h-[calc(100dvh-3rem)]">
+        <header className={`${mobileDetail ? "hidden lg:flex" : "flex"} items-center gap-2 px-3 py-2.5 lg:px-0 lg:pb-4 lg:pt-0`}>
+          <a href="/staff" className="flex h-10 w-10 items-center justify-center rounded-full text-stone-700 hover:bg-stone-100" aria-label="Staff Area">
+            <ArrowLeft className="h-5 w-5" />
+          </a>
+          <h1 className="flex-1 text-lg font-semibold">
+            Room Finder
+            {data.stats.unread > 0 && (
+              <span className="ml-2 rounded-full px-2 py-0.5 align-middle text-xs font-medium text-white" style={{ backgroundColor: ACCENT }}>
+                {data.stats.unread}
+              </span>
+            )}
+          </h1>
+          <button
+            type="button"
+            onClick={() => void load()}
+            disabled={refreshing}
+            className="flex h-10 w-10 items-center justify-center rounded-full text-stone-600 hover:bg-stone-100 disabled:opacity-50"
+            aria-label="Ανανέωση"
+          >
+            <RefreshCw className={`h-4 w-4 ${refreshing ? "animate-spin" : ""}`} />
+          </button>
         </header>
 
-        <section className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-5">
-          {[
-            ["Σήμερα", data.stats.today],
-            ["7 ημέρες", data.stats.last7Days],
-            ["Live τώρα", data.stats.active],
-            ["Μη αναγνωσμένες", data.stats.unread],
-            ["Αιτήματα 30ημ.", data.stats.enquiries],
-          ].map(([label, value]) => (
-            <div key={String(label)} className="rounded-2xl border border-stone-200 bg-white p-3 sm:p-4">
-              <div className="text-2xl font-black tabular-nums">{value}</div>
-              <div className="mt-1 text-xs font-semibold text-stone-500">{label}</div>
-            </div>
-          ))}
-        </section>
-
-        <div className="mt-5 grid gap-4 lg:grid-cols-[360px_minmax(0,1fr)]">
-          <section className="overflow-hidden rounded-3xl border border-stone-200 bg-white">
-            <div className="flex items-center justify-between border-b border-stone-200 px-4 py-3">
-              <h2 className="font-black">Συνομιλίες</h2>
-              <span className="text-xs text-stone-500">{data.conversations.length} πρόσφατες</span>
-            </div>
-            <div className="max-h-[70vh] overflow-y-auto">
-              {data.conversations.length ? data.conversations.map((conversation) => {
-                const status = statusLabel(conversation);
-                const name = fullName(conversation);
-                const active = conversation.sessionId === selectedSessionId;
-                return (
-                  <button
-                    type="button"
-                    key={conversation.sessionId}
-                    onClick={() => void openConversation(conversation.sessionId)}
-                    className={`block w-full border-b border-stone-100 px-4 py-4 text-left transition last:border-0 ${active ? "bg-[#f4eee4]" : "hover:bg-stone-50"}`}
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-2">
-                          {conversation.unread && <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-red-500" aria-label="Μη αναγνωσμένη" />}
-                          <strong className="truncate text-sm">{name || `Επισκέπτης · ${conversation.language.toUpperCase()}`}</strong>
-                        </div>
-                        <p className="mt-1 line-clamp-2 text-sm leading-5 text-stone-600">{conversation.lastUserMessage || "Ξεκίνησε τη συνομιλία"}</p>
-                      </div>
-                      <span className={`shrink-0 rounded-full px-2 py-1 text-[10px] font-black ${status.className}`}>{status.label}</span>
-                    </div>
-                    <div className="mt-2 flex items-center justify-between text-[11px] text-stone-500">
-                      <span>{conversation.userMessageCount} μηνύματα πελάτη · {conversation.language.toUpperCase()}</span>
-                      <span>{relativeTime(conversation.lastActivityAt)}</span>
-                    </div>
-                  </button>
-                );
-              }) : (
-                <div className="p-8 text-center text-sm text-stone-500">
-                  Δεν υπάρχει ακόμη πραγματική χρήση του AI Room Finder.
-                </div>
-              )}
-            </div>
-          </section>
-
-          <section className="overflow-hidden rounded-3xl border border-stone-200 bg-white">
-            {selected ? (
-              <>
-                <div className="border-b border-stone-200 p-4 sm:p-5">
-                  <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <h2 className="text-xl font-black">{selectedName || "Επισκέπτης AI Room Finder"}</h2>
-                        {selected.unread && <span className="h-2.5 w-2.5 rounded-full bg-red-500" />}
-                      </div>
-                      <p className="mt-1 text-xs text-stone-500">Ξεκίνησε {dateTime(selected.createdAt)} · τελευταία δραστηριότητα {dateTime(selected.lastActivityAt)}</p>
-                    </div>
-                    {selectedStatus && <span className={`rounded-full px-3 py-1.5 text-xs font-black ${selectedStatus.className}`}>{selectedStatus.label}</span>}
-                  </div>
-
-                  <div className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
-                    <div className="rounded-2xl bg-stone-50 p-3">
-                      <div className="text-[11px] font-bold uppercase text-stone-500">Γλώσσα</div>
-                      <div className="mt-1 font-bold">{selected.language.toUpperCase()}</div>
-                    </div>
-                    <div className="rounded-2xl bg-stone-50 p-3">
-                      <div className="text-[11px] font-bold uppercase text-stone-500">Μηνύματα</div>
-                      <div className="mt-1 font-bold">{selected.messageCount}</div>
-                    </div>
-                    <div className="rounded-2xl bg-stone-50 p-3">
-                      <div className="text-[11px] font-bold uppercase text-stone-500">Διαμονή</div>
-                      <div className="mt-1 font-bold">{selected.checkin && selected.checkout ? `${selected.checkin} → ${selected.checkout}` : "Μέσα στη συνομιλία"}</div>
-                    </div>
-                    <div className="rounded-2xl bg-stone-50 p-3">
-                      <div className="text-[11px] font-bold uppercase text-stone-500">Αίτημα</div>
-                      <div className="mt-1 font-bold">{selected.enquirySentAt ? dateTime(selected.enquirySentAt) : "Δεν στάλθηκε"}</div>
-                    </div>
-                  </div>
-
-                  {(selectedName || selected.phone || selected.email) && (
-                    <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50/60 p-4">
-                      <div className="text-xs font-black uppercase tracking-wide text-amber-900">Στοιχεία πελάτη</div>
-                      <div className="mt-2 flex flex-wrap gap-x-5 gap-y-2 text-sm">
-                        {selectedName && <span><strong>Όνομα:</strong> {selectedName}</span>}
-                        {selected.phone && <a className="font-semibold underline" href={`tel:${selected.phone}`}><strong>Τηλ:</strong> {selected.phone}</a>}
-                        {selected.email && <a className="font-semibold underline" href={`mailto:${selected.email}`}><strong>Email:</strong> {selected.email}</a>}
-                        {selected.phone && <a className="font-semibold text-emerald-800 underline" href={`https://wa.me/${phoneForWhatsApp(selected.phone)}`} target="_blank" rel="noreferrer">WhatsApp</a>}
-                      </div>
-                      {selected.privacyAcceptedAt && <p className="mt-2 text-[11px] text-stone-500">Ενημέρωση προσωπικών δεδομένων: {dateTime(selected.privacyAcceptedAt)}</p>}
-                    </div>
-                  )}
-
-                  {selectedRooms.length > 0 && (
-                    <p className="mt-3 text-sm text-stone-600"><strong>Επιλεγμένα δωμάτια:</strong> {selectedRooms.join(", ")}</p>
-                  )}
-                </div>
-
-                <div className="space-y-3 bg-[#faf8f4] p-4 sm:p-6">
-                  {messages.map((message) => {
-                    const trackedMessage = decodeRoomFinderOfferSnapshot(message.content);
-                    const snapshot = trackedMessage.snapshot;
-                    return (
-                      <div key={message.id} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
-                        <div className={`max-w-[88%] rounded-2xl px-4 py-3 text-sm leading-6 shadow-sm ${message.role === "user" ? "rounded-br-md bg-[#6b604f] text-white" : "rounded-bl-md border border-stone-200 bg-white text-stone-800"}`}>
-                          <div className="whitespace-pre-wrap">{trackedMessage.content}</div>
-                          {snapshot && (
-                            <div className="mt-3 space-y-3 border-t border-stone-200 pt-3">
-                              <p className="text-xs font-black uppercase tracking-wide text-amber-900">
-                                Προτάσεις που είδε ο πελάτης
-                              </p>
-                              {snapshot.groups.map(group => (
-                                <div key={`${message.id}-${group.groupNumber}`} className="space-y-2">
-                                  {snapshot.groups.length > 1 && (
-                                    <p className="text-xs font-bold text-stone-600">
-                                      Δωμάτιο {group.groupNumber} · {group.guests} άτομα
-                                    </p>
-                                  )}
-                                  {group.offers.map((offer, offerIndex) => (
-                                    <div
-                                      key={`${offer.roomNumber}-${offer.checkin}-${offer.checkout}-${offerIndex}`}
-                                      className="rounded-xl border border-amber-200 bg-amber-50/60 p-3"
-                                    >
-                                      <div className="flex flex-wrap items-start justify-between gap-2">
-                                        <strong className="min-w-0 flex-1 leading-5">{offer.name}</strong>
-                                        <span className="shrink-0 rounded-full bg-white px-2 py-0.5 text-[11px] font-black text-stone-700">
-                                          Δωμ. {offer.roomNumber}
-                                        </span>
-                                      </div>
-                                      <p className="mt-1 text-xs font-semibold text-stone-600">
-                                        {shortStayDate(offer.checkin)} → {shortStayDate(offer.checkout)} · {group.guests} άτομα
-                                      </p>
-                                      {offer.recoverySummary && (
-                                        <p className="mt-1 text-xs leading-5 text-stone-600">{offer.recoverySummary}</p>
-                                      )}
-                                      <div className="mt-2 flex flex-wrap items-baseline gap-2">
-                                        {offer.originalTotal > offer.directTotal && (
-                                          <span className="text-xs text-stone-500 line-through">{money(offer.originalTotal)}</span>
-                                        )}
-                                        <strong className="text-base text-emerald-800">{money(offer.directTotal)}</strong>
-                                        {offer.saving > 0 && (
-                                          <span className="text-xs font-bold text-emerald-800">Κέρδος {money(offer.saving)}</span>
-                                        )}
-                                      </div>
-                                    </div>
-                                  ))}
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                          {(message.kind === "contact" || (message.role === "assistant" && trackedMessage.content.toLowerCase().includes("whatsapp"))) && (
-                            <div className="mt-3 grid grid-cols-2 gap-2 border-t border-stone-100 pt-3">
-                              <a
-                                href="tel:+306944764654"
-                                className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#c66a34] px-3 font-bold text-white"
-                              >
-                                <Phone className="h-4 w-4" aria-hidden="true" />
-                                Κλήση
-                              </a>
-                              <a
-                                href="https://wa.me/306944474226"
-                                target="_blank"
-                                rel="noreferrer"
-                                className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#287d4f] px-3 font-bold text-white"
-                              >
-                                <MessageCircle className="h-4 w-4" aria-hidden="true" />
-                                WhatsApp
-                              </a>
-                            </div>
-                          )}
-                          <div className={`mt-1 text-[10px] ${message.role === "user" ? "text-white/70" : "text-stone-400"}`}>{message.role === "user" ? "Πελάτης" : "AI Room Finder"}{message.reaction ? ` · ${message.reaction}` : ""}</div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                  {!messages.length && <p className="py-8 text-center text-sm text-stone-500">Δεν υπάρχουν μηνύματα.</p>}
-                </div>
-              </>
-            ) : (
-              <div className="p-12 text-center text-stone-500">Επίλεξε μια συνομιλία.</div>
-            )}
-          </section>
+        <div className="grid min-h-0 flex-1 lg:grid-cols-[380px_minmax(0,1fr)] lg:gap-4">
+          {listPane}
+          {detailPane}
         </div>
-
-        <p className="mt-4 text-right text-[11px] text-stone-400">Τελευταία ανανέωση: {dateTime(lastRefresh.toISOString())}</p>
       </div>
     </main>
   );
