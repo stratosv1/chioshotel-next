@@ -60,6 +60,13 @@ export function AnimCard({ data, accent }: { data: Case; accent: string }) {
         <h3 className="text-lg font-semibold tracking-tight text-[#1c2433]">{data.title}</h3>
       </header>
 
+      <p className="mt-2 px-4 text-[15px] leading-6 text-[#3d4452] sm:px-5">
+        <span className="font-semibold" style={{ color: accent }}>
+          Τι βλέπεις:{" "}
+        </span>
+        {data.what}
+      </p>
+
       <div className="mt-3 border-y border-black/5 bg-[#fbfaf7]">
         <svg
           viewBox={`0 0 ${W} ${H}`}

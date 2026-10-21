@@ -30,6 +30,8 @@ export type Phase = { until: number; label: string; say: ReactNode };
 export type Case = {
   n: number;
   title: string;
+  /** One plain sentence: what the student is looking at (the phenomenon). */
+  what: string;
   /** Loop length in seconds of animation time. */
   period: number;
   phases: Phase[];
