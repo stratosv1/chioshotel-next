@@ -26,7 +26,7 @@ const heroLinkClass =
 
 const copy: Record<LanguageCode, HomepageIntentCopy> = {
   en: {
-    seoTitle: "Chios Accommodation | Rooms & Apartments in Kambos",
+    seoTitle: "Chios Accommodation in Kambos | Rooms & Apartments",
     seoDescription:
       "Official website of Voulamandis House in Chios: personal hospitality, a peaceful citrus garden, rooms and family apartments near Chios Town, airport and beaches.",
     heroTitle: "Chios Accommodation: Rooms & Apartments",
@@ -44,7 +44,7 @@ const copy: Record<LanguageCode, HomepageIntentCopy> = {
       "See categories, capacity and key features together before choosing the room or apartment that suits you.",
   },
   el: {
-    seoTitle: "Ενοικιαζόμενα Δωμάτια στη Χίο | Κάμπος Χίου",
+    seoTitle: "Διαμονή στη Χίο, Κάμπος | Ενοικιαζόμενα Δωμάτια & Διαμερίσματα",
     seoDescription:
       "Μείνετε στον ιστορικό Κάμπο της Χίου, 3 χλμ. από το αεροδρόμιο. Δείτε δωμάτια, διαμερίσματα, τιμές και κάντε απευθείας κράτηση.",
     heroTitle: "Ενοικιαζόμενα Δωμάτια στη Χίο",
@@ -62,7 +62,7 @@ const copy: Record<LanguageCode, HomepageIntentCopy> = {
       "Δείτε συγκεντρωμένα τις κατηγορίες, τη χωρητικότητα και τα βασικά χαρακτηριστικά τους πριν επιλέξετε το δωμάτιο που σας ταιριάζει.",
   },
   fr: {
-    seoTitle: "Hébergement à Chios | Chambres & appartements",
+    seoTitle: "Hébergement à Chios, Kambos | Chambres & Appartements",
     seoDescription:
       "Site officiel de Voulamandis House à Chios : accueil personnel, jardin d’agrumes paisible, chambres et appartements familiaux près de la ville, de l’aéroport et des plages.",
     heroTitle: "Hébergement à Chios : chambres et appartements",
@@ -80,7 +80,7 @@ const copy: Record<LanguageCode, HomepageIntentCopy> = {
       "Consultez capacité, catégorie et caractéristiques essentielles avant de choisir votre hébergement.",
   },
   de: {
-    seoTitle: "Unterkunft auf Chios | Zimmer & Apartments in Kambos",
+    seoTitle: "Unterkunft auf Chios in Kambos | Zimmer & Apartments",
     seoDescription:
       "Offizielle Website des Voulamandis House auf Chios: persönliche Gastfreundschaft, ruhiger Zitrusgarten, Zimmer und Familienapartments nahe Stadt, Flughafen und Stränden.",
     heroTitle: "Unterkunft auf Chios: Zimmer & Apartments",
@@ -98,7 +98,7 @@ const copy: Record<LanguageCode, HomepageIntentCopy> = {
       "Vergleichen Sie Kapazität, Kategorie und wichtige Merkmale, bevor Sie sich entscheiden.",
   },
   it: {
-    seoTitle: "Alloggi a Chios | Camere & appartamenti a Kambos",
+    seoTitle: "Alloggi a Chios, Kambos | Camere & Appartamenti",
     seoDescription:
       "Sito ufficiale di Voulamandis House a Chios: ospitalità personale, tranquillo giardino di agrumi, camere e appartamenti familiari vicino a città, aeroporto e spiagge.",
     heroTitle: "Alloggi a Chios: camere e appartamenti",
@@ -116,7 +116,7 @@ const copy: Record<LanguageCode, HomepageIntentCopy> = {
       "Confronta capienza, categoria e caratteristiche principali prima di scegliere la sistemazione più adatta.",
   },
   es: {
-    seoTitle: "Alojamiento en Quíos | Habitaciones & apartamentos",
+    seoTitle: "Alojamiento en Quíos, Kambos | Habitaciones & Apartamentos",
     seoDescription:
       "Web oficial de Voulamandis House en Quíos: trato cercano, tranquilo jardín de cítricos, habitaciones y apartamentos familiares cerca de la ciudad y playas.",
     heroTitle: "Alojamiento en Quíos: habitaciones y apartamentos",
@@ -134,7 +134,7 @@ const copy: Record<LanguageCode, HomepageIntentCopy> = {
       "Consulta capacidad, categoría y características principales antes de elegir tu alojamiento.",
   },
   tr: {
-    seoTitle: "Sakız Adası Konaklama | Kambos’ta Oda ve Daireler",
+    seoTitle: "Sakız Adası Konaklama, Kambos | Oda & Daireler",
     seoDescription:
       "Voulamandis House resmi sitesi: kişisel misafirperverlik, sakin narenciye bahçesi, Sakız merkezi, havaalanı ve plajlara yakın oda ve aile daireleri.",
     heroTitle: "Sakız Adası Konaklama: Odalar ve Daireler",

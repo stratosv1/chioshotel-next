@@ -482,7 +482,7 @@ export const seoSnippetOverrides = new Map<string, SeoSnippetOverride>([
   [
     "/",
     {
-      title: "Chios Accommodation in Kambos | 4.8★ Rooms & Apartments",
+      title: "Chios Accommodation in Kambos | Rooms & Apartments",
       description:
         "Rated 4.8/5 by guests: peaceful rooms & family apartments in a citrus garden in Kambos, minutes from Chios Town & the airport. Book direct, save 10%.",
     },

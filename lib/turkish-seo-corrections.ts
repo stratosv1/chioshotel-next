@@ -34,7 +34,7 @@ const turkishPageSeoCorrections = new Map<string, SeoCorrection>([
   [
     "/tr/",
     {
-      title: "Sakız Adası’nda oda ve daireler | Voulamandis House",
+      title: "Sakız Adası Konaklama, Kambos | Oda & Daireler",
       description:
         "Sakız Adası’nın tarihi Kambos bölgesinde sakin odalar ve aile daireleri. Şehre, havalimanına ve plajlara yakın, doğrudan rezervasyon imkânı.",
     },

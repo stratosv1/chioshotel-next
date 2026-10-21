@@ -8,7 +8,7 @@ type DetailCorrection = SeoCorrection & { heroTitle: string; heroDescription: st
 type LocalizedDetail = BeachDetailData | VillageDetailData | MuseumDetailData;
 
 const pageSeo = new Map<string, SeoCorrection>([
-  ["/it/", { title: "Camere e appartamenti a Chios | Voulamandis House", description: "Camere tranquille e appartamenti familiari nella storica zona di Kambos a Chios, vicino alla città, all’aeroporto e alle spiagge, con prenotazione diretta." }],
+  ["/it/", { title: "Alloggi a Chios, Kambos | Camere & Appartamenti", description: "Camere tranquille e appartamenti familiari nella storica zona di Kambos a Chios, vicino alla città, all’aeroporto e alle spiagge, con prenotazione diretta." }],
   ["/it/camere-a-chios/", { title: "Camere e appartamenti a Chios | Kambos", description: "Confronta camere doppie economy, camere standard e appartamenti familiari con cucina al Voulamandis House, nella tranquilla zona di Kambos." }],
   ["/it/contattaci-voulamandis-house/", { title: "Contatti Voulamandis House | Camere e disponibilità", description: "Contatta Voulamandis House a Kambos via WhatsApp o email per chiedere disponibilità, tariffe e la camera o l’appartamento più adatto al soggiorno." }],
   ["/it/prezzi-hotel-chios/", { title: "Prenotazione diretta a Chios | Tariffe e disponibilità", description: "Controlla la disponibilità, scegli una camera o un appartamento e prenota direttamente e in sicurezza il soggiorno al Voulamandis House." }],

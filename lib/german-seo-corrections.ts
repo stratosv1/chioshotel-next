@@ -22,7 +22,7 @@ const germanPageSeoCorrections = new Map<string, SeoCorrection>([
   [
     "/de/",
     {
-      title: "Zimmer und Apartments auf Chios | Voulamandis House",
+      title: "Unterkunft auf Chios in Kambos | Zimmer & Apartments",
       description:
         "Übernachten Sie im historischen Kambos auf Chios: ruhige Zimmer und Familienapartments nahe Stadt, Flughafen und Stränden mit persönlicher Gastfreundschaft.",
     },
