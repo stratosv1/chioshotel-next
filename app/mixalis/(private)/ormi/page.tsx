@@ -103,12 +103,52 @@ export default function OrmiPage() {
 
         <section className="rounded-3xl border border-black/10 bg-white p-5 shadow-sm sm:p-8">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Κινούμενα σχέδια</p>
-          <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">Δες κάθε περίπτωση να συμβαίνει</h2>
-          <p className="mt-3 max-w-3xl text-[15px] leading-7 text-[#5c534c]">
-            Κάθε σχέδιο παίζει σε επανάληψη. Κάτω από την εικόνα γράφει τι συμβαίνει εκείνη τη στιγμή. Πάτα μια φάση (π.χ. «Κρούση») για να πας
-            εκεί, ή <b>🐢 Αργά</b> για να το δεις με την ησυχία σου. Οι ράβδοι δείχνουν τις ορμές με πρόσημο: δεξιά από τη γραμμή είναι θετικές,
-            αριστερά αρνητικές. Η <b>μαύρη ράβδος</b> είναι η ολική ορμή.
-          </p>
+          <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">Πώς διαβάζεις τα σχέδια</h2>
+          <ol className="mt-4 max-w-3xl list-decimal space-y-2 pl-5 text-[15px] leading-7 text-[#3d4452]">
+            <li>
+              Διάβασε το <b>«Τι βλέπεις»</b> και τα <b>Δεδομένα</b>: είναι σαν την εκφώνηση μιας άσκησης.
+            </li>
+            <li>
+              Το σχέδιο παίζει <b>ένα βήμα τη φορά</b> και σταματά. Διάβασε την εξήγηση κάτω από την εικόνα και πάτα <b>«Επόμενο βήμα»</b>. Αν
+              θες να το δεις ξανά, πάτα πάνω στο όνομα του βήματος.
+            </li>
+            <li>
+              Πριν ανοίξεις τη λύση, προσπάθησε να τη γράψεις μόνος σου. Μετά πάτα <b>«Δείξε τη λύση»</b> και σύγκρινε.
+            </li>
+          </ol>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            <div className="rounded-2xl border border-black/10 bg-[#fbf8f3] p-4 text-sm leading-6 text-[#3d4452]">
+              <p className="font-semibold text-[#1c2433]">Τα χρώματα</p>
+              <p className="mt-1">
+                <span className="font-semibold text-[#1f6fd1]">Μπλε βέλος</span> = ταχύτητα ·{" "}
+                <span className="font-semibold text-[#d9342b]">κόκκινο</span> = δύναμη ·{" "}
+                <span className="font-semibold text-[#1f9d55]">πράσινο</span> = ορμή ή Δp ·{" "}
+                <span className="font-semibold text-[#e08a1e]">πορτοκαλί</span> = κινητική ενέργεια. Όσο πιο μακρύ το βέλος, τόσο μεγαλύτερο το μέγεθος.
+              </p>
+            </div>
+            <div className="rounded-2xl border border-black/10 bg-[#fbf8f3] p-4 text-sm leading-6 text-[#3d4452]">
+              <p className="font-semibold text-[#1c2433]">Οι ράβδοι κάτω από την εικόνα</p>
+              <p className="mt-1">
+                Δείχνουν ορμές με πρόσημο. Ράβδος <b>δεξιά</b> από τη γκρι γραμμή = θετική (προς τα δεξιά ή όπως λέει η «θετική φορά»),{" "}
+                <b>αριστερά</b> = αρνητική. Η <b>μαύρη ράβδος</b> είναι η ολική ορμή. Όταν ισχύει η ΑΔΟ, δεν κουνιέται.
+              </p>
+            </div>
+            <div className="rounded-2xl border border-black/10 bg-[#fbf8f3] p-4 text-sm leading-6 text-[#3d4452] sm:col-span-2">
+              <p className="font-semibold text-[#1c2433]">Συντομογραφίες</p>
+              <ul className="mt-1 grid gap-x-6 gap-y-1 sm:grid-cols-2">
+                <li><b>ΑΔΟ</b>: Αρχή Διατήρησης της Ορμής</li>
+                <li><b>ΑΔΜΕ</b>: Αρχή Διατήρησης της Μηχανικής Ενέργειας</li>
+                <li><b>ΘΜΚΕ</b>: Θεώρημα Μεταβολής της Κινητικής Ενέργειας</li>
+                <li>
+                  <b>ΣF<sub>εξ</sub></b>: συνισταμένη των εξωτερικών δυνάμεων
+                </li>
+                <li><b>Δp</b>: μεταβολή ορμής = τελική − αρχική</li>
+                <li><b>Q</b>: θερμότητα, δηλαδή η κινητική ενέργεια που «χάθηκε»</li>
+                <li><b>F<sub>μ</sub></b>: μέση δύναμη (F<sub>μ</sub> = Δp/Δt)</li>
+                <li><b>υ′</b>: ταχύτητα μετά την κρούση</li>
+              </ul>
+            </div>
+          </div>
         </section>
 
         <OrmiAnimationsClient />

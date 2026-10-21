@@ -32,6 +32,10 @@ export type Case = {
   title: string;
   /** One plain sentence: what the student is looking at (the phenomenon). */
   what: string;
+  /** The data of the example, as in an exercise statement. */
+  given: string;
+  /** What we are asked to find. */
+  ask: string;
   /** Loop length in seconds of animation time. */
   period: number;
   phases: Phase[];
@@ -348,24 +352,26 @@ export function Bars({
   unit?: string;
   title?: string;
 }) {
-  const labelW = 52;
-  const valueW = 86;
+  const labelW = 54;
+  const valueW = 96;
   const zero = x + labelW + (w - labelW - valueW) / 2;
   const half = (w - labelW - valueW) / 2 - 2;
-  const rowH = 13;
+  const rowH = 15;
   return (
     <g>
       {title ? <T x={x} y={y - 3} s={title} size={9} color={C.muted} anchor="start" bold={false} /> : null}
       <line x1={zero} y1={y} x2={zero} y2={y + items.length * rowH} stroke={C.faint} strokeWidth={1} />
+      <T x={zero - 5} y={y - 2} s="−" size={10} color={C.faint} anchor="end" />
+      <T x={zero + 5} y={y - 2} s="+" size={10} color={C.faint} anchor="start" />
       {items.map((it, i) => {
         const yy = y + i * rowH;
         const len = clamp(it.value / max, -1, 1) * half;
         const color = it.color ?? C.p;
         return (
           <g key={it.label}>
-            <T x={x} y={yy + 10} s={it.label} size={10} color={color} anchor="start" italic />
-            <rect x={Math.min(zero, zero + len)} y={yy + 2} width={Math.abs(len)} height={9} rx={2} fill={color} opacity={0.85} />
-            <text x={x + w} y={yy + 10} fontSize={10} fill={color} textAnchor="end" fontWeight={700} style={{ fontVariantNumeric: "tabular-nums" }}>
+            <T x={x} y={yy + 11} s={it.label} size={11.5} color={color} anchor="start" italic />
+            <rect x={Math.min(zero, zero + len)} y={yy + 2} width={Math.abs(len)} height={11} rx={2} fill={color} opacity={0.85} />
+            <text x={x + w} y={yy + 11} fontSize={11.5} fill={color} textAnchor="end" fontWeight={700} style={{ fontVariantNumeric: "tabular-nums" }}>
               {num(it.value)} {it.unit ?? unit}
             </text>
           </g>

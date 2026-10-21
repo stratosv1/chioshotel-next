@@ -2,6 +2,8 @@
 
 import { Bars, Box, C, Ground, Heat, T, Tag, Vec, bump, type BarItem } from "./kit";
 
+const W_FRAME = 360;
+
 export type Collision = {
   m1: number;
   m2: number;
@@ -57,7 +59,12 @@ export function collisionState(c: Collision, t: number) {
     s2 = c.u2 + (c.v2 - c.u2) * k;
   } else {
     phase = "after";
-    const dt = t - tc - dc;
+    // Stop drifting before a body (or its arrow) leaves the 360 px frame,
+    // so the frame where the step pauses still shows both bodies.
+    const room = (x: number, v: number, half: number) =>
+      v > 0.01 ? (W_FRAME - 12 - (x + half) - v * 9) / (S * v) : v < -0.01 ? (x - half - 12 - Math.abs(v) * 9) / (S * Math.abs(v)) : Infinity;
+    const dtMax = Math.max(0, Math.min(room(X - w1 / 2, c.v1, w1 / 2), room(X + w2 / 2, c.v2, w2 / 2)));
+    const dt = Math.min(t - tc - dc, dtMax);
     x1 = X - w1 / 2 + S * c.v1 * dt;
     x2 = X + w2 / 2 + S * c.v2 * dt;
     s1 = c.v1;
