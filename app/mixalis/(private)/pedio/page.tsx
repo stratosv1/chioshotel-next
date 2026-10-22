@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Note } from "@/components/mixalis/omali/shared";
 import { PedioAnimationsClient } from "@/components/mixalis/pedio/PedioAnimationsClient";
+import { PedioIntroEmbed } from "@/components/mixalis/pedio/PedioIntroEmbed";
 
 export const metadata: Metadata = {
   title: { absolute: "Ηλεκτρικό πεδίο · Τυπολόγιο · Physics Workspace" },
@@ -85,6 +86,22 @@ export default function PedioPage() {
             </a>
           </div>
         </header>
+
+        <section id="eisagogi" className="scroll-mt-20 rounded-3xl border border-black/10 bg-white p-3 shadow-sm sm:p-5">
+          <div className="flex flex-wrap items-end justify-between gap-3 px-2 pb-3 pt-1 sm:px-1">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Ξεκίνα από εδώ</p>
+              <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">Πρώτη γνωριμία με το ηλεκτρικό πεδίο</h2>
+              <p className="mt-1 max-w-3xl text-[15px] leading-7 text-[#5c534c]">
+                14 σύντομες διαφάνειες με κινούμενα σχέδια: τι είναι το πεδίο, η ένταση, οι δυναμικές γραμμές, το δυναμικό και ο πυκνωτής. Μετά πέρασε στο τυπολόγιο.
+              </p>
+            </div>
+            <a href="/mixalis/pedio-intro.html" target="_blank" rel="noopener" className="shrink-0 rounded-full border border-black/10 bg-white px-4 py-1.5 text-sm font-semibold hover:bg-[#f3efe8]">
+              Σε πλήρη οθόνη ↗
+            </a>
+          </div>
+          <PedioIntroEmbed />
+        </section>
 
         <section className="rounded-3xl border border-black/10 bg-white p-3 shadow-sm sm:p-5">
           <div className="relative overflow-hidden rounded-2xl border border-black/10 bg-[#fbfaf7]">

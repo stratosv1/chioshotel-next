@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="el" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Πρώτη γνωριμία με το ηλεκτρικό πεδίο</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Commissioner:wght@500;700;800&family=Literata:opsz,wght@7..72,400;7..72,600&family=Noto+Sans+Mono:wght@500&display=swap">
+<style>
+/* Layout: one slide at a time — text column beside a live canvas "bench"; stacks on phones. */
+:root {
+  --bg: #f4f1ea;
+  --paper: #fffdf8;
+  --ink: #1d2433;
+  --muted: #5d6475;
+  --line: #ddd6c8;
+  --accent: #2257a6;
+  --pos: #d6453b;
+  --neg: #2f6fcf;
+  --field: #148a52;
+  --energy: #d9821c;
+  --bench: #f7f4ec;
+  --grid: #e7e1d4;
+  --display: "Commissioner", "Segoe UI", system-ui, sans-serif;
+  --body: "Literata", Georgia, "Times New Roman", serif;
+  --mono: "Noto Sans Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12151d; --paper: #1a1f2a; --ink: #e9ecf3; --muted: #a2a9b8; --line: #2c3343;
+    --accent: #7fa8ee; --pos: #ff7a6e; --neg: #6aa6ff; --field: #45cf8c; --energy: #f3a64a;
+    --bench: #151a24; --grid: #222a38; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12151d; --paper: #1a1f2a; --ink: #e9ecf3; --muted: #a2a9b8; --line: #2c3343;
+  --accent: #7fa8ee; --pos: #ff7a6e; --neg: #6aa6ff; --field: #45cf8c; --energy: #f3a64a;
+  --bench: #151a24; --grid: #222a38; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 18px; display: flex; flex-direction: column; align-items: center; gap: 14px;
+}
+.top { width: 100%; max-width: 1120px; display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.brand { font-family: var(--display); font-weight: 800; letter-spacing: 0.02em; font-size: 15px; color: var(--accent); }
+.brand span { color: var(--muted); font-weight: 500; }
+.counter { font-family: var(--mono); font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.stage {
+  width: 100%; max-width: 1120px; background: var(--paper); border: 1px solid var(--line); border-radius: 18px;
+  display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); min-height: 560px; overflow: hidden;
+}
+.text { padding: 34px 34px 28px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.kicker { font-family: var(--display); font-size: 12.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--accent); }
+h1, h2 { font-family: var(--display); font-weight: 800; line-height: 1.12; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+h1 { font-size: clamp(30px, 4.2vw, 46px); }
+h2 { font-size: clamp(24px, 3vw, 34px); }
+.text p { margin: 0; max-width: 34em; }
+.text p.lead { font-size: 19px; }
+.formula {
+  align-self: flex-start; font-family: var(--mono); font-size: 18px; padding: 8px 14px; border-radius: 10px;
+  border: 1.5px solid var(--accent); color: var(--accent); background: transparent;
+}
+.note { font-size: 15px; color: var(--muted); border-left: 3px solid var(--energy); padding-left: 12px; }
+.q { font-family: var(--display); font-weight: 700; color: var(--energy); }
+.bench { background: var(--bench); border-left: 1px solid var(--line); position: relative; min-width: 0; }
+.bench canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.caption {
+  position: absolute; left: 14px; right: 14px; bottom: 12px; font-family: var(--display); font-size: 13px; color: var(--muted);
+  text-align: center; pointer-events: none;
+}
+.controls { width: 100%; max-width: 1120px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.controls button {
+  font-family: var(--display); font-weight: 700; font-size: 15px; border-radius: 999px; padding: 10px 20px; cursor: pointer;
+  border: 1.5px solid var(--line); background: var(--paper); color: var(--ink);
+}
+.controls button.primary { background: var(--accent); border-color: var(--accent); color: var(--paper); }
+.controls button:disabled { opacity: 0.4; cursor: default; }
+.controls button:focus-visible, .dots button:focus-visible { outline: 3px solid var(--energy); outline-offset: 2px; }
+.dots { display: flex; gap: 6px; flex-wrap: wrap; flex: 1; justify-content: center; }
+.controls .dots button { width: 11px; min-width: 0; font-size: 0; height: 11px; padding: 0; border-radius: 50%; border: none; background: var(--line); cursor: pointer; }
+.controls .dots button[aria-current="true"] { background: var(--accent); width: 26px; border-radius: 6px; }
+ul.recap { margin: 0; padding-left: 1.1em; display: flex; flex-direction: column; gap: 8px; }
+a { color: var(--accent); }
+.slide[hidden] { display: none !important; }
+@media (max-width: 820px) {
+  .dots { order: 3; flex-basis: 100%; }
+  .controls { justify-content: space-between; }
+  .stage { grid-template-columns: 1fr; min-height: 0; }
+  .text { padding: 22px 20px 18px; }
+  .bench { border-left: none; border-top: 1px solid var(--line); height: 62vw; min-height: 260px; max-height: 420px; }
+  body { font-size: 16px; }
+  .text p.lead { font-size: 17px; }
+  .controls button { padding: 9px 14px; }
+}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="brand">Ηλεκτρικό πεδίο <span>· πρώτη γνωριμία</span></div>
+  <div class="counter" id="counter" aria-live="polite">1 / 14</div>
+</div>
+
+<main class="stage" id="stage">
+  <section class="text" id="text"></section>
+  <div class="bench"><canvas id="cv" aria-label="Κινούμενο σχέδιο της διαφάνειας"></canvas><div class="caption" id="caption"></div></div>
+</main>
+
+<nav class="controls" aria-label="Πλοήγηση διαφανειών">
+  <button id="prev" type="button">← Πίσω</button>
+  <div class="dots" id="dots"></div>
+  <button id="next" type="button" class="primary">Επόμενο →</button>
+</nav>
+
+<script>
+const SLIDES = [
+  { kicker: "Ξεκινάμε", title: "Ηλεκτρικό πεδίο", h1: true, html: `
+      <p class="lead">Ένα ηλεκτρικό φορτίο δεν κάθεται απλώς κάπου. Αλλάζει τον χώρο γύρω του.</p>
+      <p>Σε αυτή την παρουσίαση θα δεις τι σημαίνει αυτό, πώς το μετράμε και γιατί είναι η βάση για όλο το κεφάλαιο: ένταση, δυναμικό, πυκνωτές.</p>
+      <p class="note">Προχώρα με το κουμπί «Επόμενο» ή με τα βέλη του πληκτρολογίου.</p>`, caption: "Ένα φορτίο και ο χώρος γύρω του", scene: "intro" },
+  { kicker: "Το παράδοξο", title: "Σπρώχνονται χωρίς να αγγίζονται", html: `
+      <p class="lead">Δύο θετικά φορτία απωθούνται. Ο νόμος του Coulomb μάς λέει πόσο: F = k·|Q·q|/r².</p>
+      <p>Δεν ακουμπούν όμως ποτέ. Πώς «ξέρει» το ένα ότι υπάρχει το άλλο;</p>
+      <p class="note"><span class="q">Ερώτηση:</span> αν βγάλεις το ένα φορτίο, αλλάζει κάτι στον χώρο εκεί που ήταν;</p>`, caption: "Απώθηση από απόσταση", scene: "coulomb" },
+  { kicker: "Η ιδέα", title: "Το φορτίο αλλάζει τον χώρο", html: `
+      <p class="lead">Η απάντηση της Φυσικής: το φορτίο Q δημιουργεί γύρω του <b>ηλεκτρικό πεδίο</b>.</p>
+      <p>Σε κάθε σημείο του χώρου υπάρχει πια μια «οδηγία»: πόσο δυνατά και προς τα πού θα σπρωχτεί ένα φορτίο αν βρεθεί εκεί.</p>
+      <p>Τα βελάκια δείχνουν αυτές τις οδηγίες. Υπάρχουν ακόμη κι αν δεν υπάρχει κανένα άλλο φορτίο να τις «ακούσει».</p>`, caption: "Σε κάθε σημείο μια οδηγία: κατεύθυνση και μέγεθος", scene: "arrows" },
+  { kicker: "Κάτι γνωστό", title: "Το έχεις ήδη δει: βαρύτητα", html: `
+      <p class="lead">Γύρω από τη Γη υπάρχει βαρυτικό πεδίο. Δεν το βλέπεις, αλλά αν αφήσεις ένα κλειδί, πέφτει.</p>
+      <p>Το g = 10 N/kg λέει: «εδώ κάθε κιλό τραβιέται με 10 N». Είναι ιδιότητα του σημείου, όχι του κλειδιού.</p>
+      <p>Το ηλεκτρικό πεδίο είναι το ίδιο, με τη μάζα να γίνεται <b>φορτίο</b>.</p>
+      <div class="formula">g = F/m  ⟷  E = F/q</div>`, caption: "Αριστερά βαρύτητα, δεξιά ηλεκτρικό πεδίο", scene: "gravity" },
+  { kicker: "Πώς το ανιχνεύουμε", title: "Το δοκιμαστικό φορτίο", html: `
+      <p class="lead">Για να «δεις» το πεδίο, βάζεις ένα μικρό θετικό φορτίο q και κοιτάς τη δύναμη που δέχεται.</p>
+      <p>Το μετακινούμε γύρω από το Q. Κοντά η δύναμη είναι μεγάλη, μακριά μικρή. Πάντα δείχνει μακριά από το θετικό Q.</p>
+      <p class="note">Το q πρέπει να είναι μικρό, ώστε να μην «χαλάει» το πεδίο που μετράει.</p>`, caption: "Το δοκιμαστικό +q ψηλαφεί το πεδίο", scene: "probe" },
+  { kicker: "Ο ορισμός", title: "Ένταση: δύναμη ανά φορτίο", html: `
+      <p class="lead">Στο ίδιο σημείο βάζουμε πρώτα q και μετά 2q. Η δύναμη διπλασιάζεται, το πηλίκο F/q μένει ίδιο.</p>
+      <p>Αυτό το πηλίκο είναι η <b>ένταση</b> του πεδίου στο σημείο. Είναι διάνυσμα, με μονάδα το N/C.</p>
+      <div class="formula">E = F / q</div>
+      <p class="note">Η ένταση περιγράφει το σημείο, όχι το φορτίο που έβαλες.</p>`, caption: "F διπλασιάζεται, E μένει ίδια", scene: "ratio" },
+  { kicker: "Η φορά", title: "Θετικό με την E, αρνητικό ανάποδα", html: `
+      <p class="lead">Η φορά της έντασης ορίζεται από τη δύναμη σε <b>θετικό</b> φορτίο.</p>
+      <p>Ένα αρνητικό φορτίο στο ίδιο σημείο δέχεται δύναμη ίδιου μέτρου, αλλά αντίθετης φοράς.</p>
+      <div class="formula">F = q·E</div>`, caption: "Πράσινο: E · Κόκκινο: δύναμη", scene: "sign" },
+  { kicker: "Σημειακό φορτίο", title: "Πεδίο Coulomb", html: `
+      <p class="lead">Από τον νόμο του Coulomb και τον ορισμό της E βγαίνει η ένταση γύρω από σημειακό φορτίο.</p>
+      <div class="formula">E = k·|Q| / r²</div>
+      <p>Διπλάσια απόσταση: τέταρτο της έντασης. Τριπλάσια: το ένα ένατο. Το πεδίο αδυνατίζει γρήγορα.</p>
+      <p class="note">k = 9·10⁹ N·m²/C²</p>`, caption: "Το βέλος μικραίνει με το 1/r²", scene: "coulombE" },
+  { kicker: "Ο χάρτης", title: "Δυναμικές γραμμές", html: `
+      <p class="lead">Αν ενώσεις τις οδηγίες, παίρνεις γραμμές. Σε κάθε σημείο τους η E είναι εφαπτόμενη.</p>
+      <p>Βγαίνουν από τα θετικά φορτία και καταλήγουν στα αρνητικά. Όπου είναι πυκνές, το πεδίο είναι δυνατό.</p>
+      <p class="note">Οι γραμμές δεν τέμνονται ποτέ: σε κάθε σημείο υπάρχει μία μόνο οδηγία.</p>`, caption: "Ένα φορτίο, μετά ένα ζευγάρι + και −", scene: "lines" },
+  { kicker: "Πολλά φορτία", title: "Οι εντάσεις προστίθενται", html: `
+      <p class="lead">Με δύο φορτία, κάθε σημείο παίρνει δύο οδηγίες. Η ολική είναι το διανυσματικό τους άθροισμα.</p>
+      <p>Γι' αυτό σε κάποια σημεία οι εντάσεις αλληλοαναιρούνται και η E γίνεται μηδέν.</p>
+      <div class="formula">E⃗ = E⃗₁ + E⃗₂</div>`, caption: "Παραλληλόγραμμο εντάσεων", scene: "superpose" },
+  { kicker: "Το πιο απλό πεδίο", title: "Ομογενές πεδίο", html: `
+      <p class="lead">Ανάμεσα σε δύο παράλληλες πλάκες με αντίθετα φορτία, η ένταση είναι <b>ίδια παντού</b>.</p>
+      <p>Γραμμές παράλληλες και ισαπέχουσες. Ένα φορτίο δέχεται σταθερή δύναμη, άρα κάνει ομαλά επιταχυνόμενη κίνηση, όπως ένα σώμα που πέφτει.</p>
+      <div class="formula">α = q·E / m</div>`, caption: "Ένα θετικό φορτίο αφήνεται ακίνητο", scene: "uniform" },
+  { kicker: "Ενέργεια", title: "Το δυναμικό είναι σαν ύψος", html: `
+      <p class="lead">Μια μπάλα κυλά από ψηλά προς χαμηλά και κερδίζει ταχύτητα. Ένα θετικό φορτίο «κυλά» από υψηλό σε χαμηλό <b>δυναμικό</b>.</p>
+      <p>Το δυναμικό V είναι ένας αριθμός για κάθε σημείο: πόση ενέργεια έχει εκεί κάθε coulomb. Η δυναμική ενέργεια γίνεται κινητική.</p>
+      <div class="formula">U = q·V   ·   E = V/ℓ</div>`, caption: "Πορτοκαλί: δυναμική ενέργεια · Μπλε: κινητική", scene: "energy" },
+  { kicker: "Αποθήκευση", title: "Ο πυκνωτής κρατά πεδίο", html: `
+      <p class="lead">Φορτίζεις δύο πλάκες με μια μπαταρία. Ανάμεσά τους δημιουργείται πεδίο, και σε αυτό αποθηκεύεται ενέργεια.</p>
+      <p>Όταν ενώσεις τις πλάκες με μια λάμπα, το πεδίο «αδειάζει» και η λάμπα ανάβει για λίγο.</p>
+      <div class="formula">C = Q/V   ·   U = ½·C·V²</div>`, caption: "Φόρτιση και εκφόρτιση", scene: "capacitor" },
+  { kicker: "Να θυμάσαι", title: "Πέντε φράσεις για όλο το κεφάλαιο", html: `
+      <ul class="recap">
+        <li>Ένα φορτίο αλλάζει τον χώρο γύρω του: δημιουργεί <b>ηλεκτρικό πεδίο</b>.</li>
+        <li>Η <b>ένταση</b> E = F/q είναι η οδηγία σε κάθε σημείο: διάνυσμα, σε N/C.</li>
+        <li>Θετικό φορτίο: δύναμη κατά την E. Αρνητικό: αντίθετα.</li>
+        <li>Οι <b>δυναμικές γραμμές</b> είναι ο χάρτης: από + σε −, πυκνές όπου το πεδίο είναι δυνατό.</li>
+        <li>Το <b>δυναμικό</b> είναι σαν ύψος και το πεδίο αποθηκεύει <b>ενέργεια</b> (πυκνωτής).</li>
+      </ul>
+      <p class="note">Επόμενο βήμα: το τυπολόγιο με τις 30 περιπτώσεις και τις ασκήσεις, ακριβώς από κάτω σε αυτή τη σελίδα.</p>`, caption: "Όλο το κεφάλαιο σε μία εικόνα", scene: "recap" },
+];
+
+/* ---------- theme colours from CSS tokens ---------- */
+let COL = {};
+function readColors() {
+  const cs = getComputedStyle(document.documentElement);
+  for (const k of ["ink", "muted", "line", "accent", "pos", "neg", "field", "energy", "bench", "grid", "paper"]) COL[k] = cs.getPropertyValue("--" + k).trim();
+}
+readColors();
+matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", readColors);
+new MutationObserver(readColors).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+/* ---------- canvas ---------- */
+const cv = document.getElementById("cv");
+const ctx = cv.getContext("2d");
+let W = 0, H = 0;
+function resize() {
+  const r = cv.getBoundingClientRect();
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  W = r.width; H = r.height;
+  cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+new ResizeObserver(resize).observe(cv);
+
+const FONT = (s, w = 700) => `${w} ${s}px Commissioner, "Segoe UI", system-ui, sans-serif`;
+function arrow(x1, y1, x2, y2, color, width = 3, label, head = 10) {
+  const dx = x2 - x1, dy = y2 - y1, L = Math.hypot(dx, dy);
+  if (L < 2) return;
+  const ux = dx / L, uy = dy / L, h = Math.min(head, L * 0.6);
+  ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = width; ctx.lineCap = "round";
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2 - ux * h, y2 - uy * h); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(x2 - ux * h - uy * h * 0.55, y2 - uy * h + ux * h * 0.55); ctx.lineTo(x2 - ux * h + uy * h * 0.55, y2 - uy * h - ux * h * 0.55); ctx.closePath(); ctx.fill();
+  if (label) { ctx.font = FONT(15); ctx.textAlign = "center"; ctx.fillText(label, (x1 + x2) / 2 - uy * 16, (y1 + y2) / 2 + ux * 16 + 5); }
+}
+function charge(x, y, sign, r = 18, glow = 0) {
+  const c = sign > 0 ? COL.pos : COL.neg;
+  if (glow > 0) {
+    const g = ctx.createRadialGradient(x, y, r * 0.5, x, y, r * (2.4 + glow));
+    g.addColorStop(0, c + "55"); g.addColorStop(1, c + "00");
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r * (2.4 + glow), 0, Math.PI * 2); ctx.fill();
+  }
+  ctx.fillStyle = c; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = "#ffffff"; ctx.font = FONT(r * 1.35, 800); ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  ctx.fillText(sign > 0 ? "+" : "−", x, y + 1); ctx.textBaseline = "alphabetic";
+}
+function text(s, x, y, color = COL.muted, size = 14, align = "center", w = 700) { ctx.fillStyle = color; ctx.font = FONT(size, w); ctx.textAlign = align; ctx.fillText(s, x, y); }
+function fieldAt(px, py, qs) {
+  let ex = 0, ey = 0;
+  for (const q of qs) { const dx = px - q.x, dy = py - q.y, r2 = dx * dx + dy * dy + 30, r = Math.sqrt(r2); ex += q.s * dx / (r2 * r); ey += q.s * dy / (r2 * r); }
+  return [ex, ey];
+}
+function traceLines(qs, perCharge = 12, r0 = 20, alpha = 1) {
+  ctx.strokeStyle = COL.field; ctx.lineWidth = 1.6; ctx.globalAlpha = alpha;
+  for (const q of qs) {
+    if (q.s < 0 && qs.some((o) => o.s > 0)) continue;
+    for (let i = 0; i < perCharge; i++) {
+      const a = (i + 0.5) * 2 * Math.PI / perCharge;
+      let x = q.x + Math.cos(a) * r0, y = q.y + Math.sin(a) * r0;
+      const dir = q.s > 0 ? 1 : -1;
+      ctx.beginPath(); ctx.moveTo(x, y);
+      let mid = null;
+      for (let s = 0; s < 900; s++) {
+        const [ex, ey] = fieldAt(x, y, qs); const L = Math.hypot(ex, ey) || 1;
+        x += dir * ex / L * 3; y += dir * ey / L * 3;
+        ctx.lineTo(x, y);
+        if (s === 40) mid = [x, y, dir * ex / L, dir * ey / L];
+        if (x < -20 || y < -20 || x > W + 20 || y > H + 20) break;
+        if (qs.some((o) => o !== q && Math.hypot(x - o.x, y - o.y) < r0 - 2)) break;
+      }
+      ctx.stroke();
+      if (mid) { const [mx, my, ux, uy] = mid; ctx.fillStyle = COL.field; ctx.beginPath(); ctx.moveTo(mx + ux * 6, my + uy * 6); ctx.lineTo(mx - ux * 4 - uy * 4, my - uy * 4 + ux * 4); ctx.lineTo(mx - ux * 4 + uy * 4, my - uy * 4 - ux * 4); ctx.fill(); }
+    }
+  }
+  ctx.globalAlpha = 1;
+}
+function plates(x1, x2, y1, y2) {
+  ctx.fillStyle = COL.pos; ctx.fillRect(x1 - 5, y1, 10, y2 - y1);
+  ctx.fillStyle = COL.neg; ctx.fillRect(x2 - 5, y1, 10, y2 - y1);
+  text("+", x1, y1 - 10, COL.pos, 20, "center", 800); text("−", x2, y1 - 10, COL.neg, 20, "center", 800);
+}
+const ease = (k) => (k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2);
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+
+/* ---------- scenes ---------- */
+const SCENES = {
+  intro(t) {
+    const cx = W / 2, cy = H / 2 - 10;
+    const grow = clamp(t / 3);
+    const n = 16;
+    ctx.strokeStyle = COL.field; ctx.lineWidth = 1.6;
+    for (let i = 0; i < n; i++) {
+      const a = i * 2 * Math.PI / n + t * 0.05;
+      const R = 28 + grow * Math.min(W, H) * 0.45;
+      ctx.globalAlpha = 0.85;
+      arrow(cx + Math.cos(a) * 26, cy + Math.sin(a) * 26, cx + Math.cos(a) * R, cy + Math.sin(a) * R, COL.field, 1.6, null, 8);
+    }
+    ctx.globalAlpha = 1;
+    for (let k = 0; k < 3; k++) {
+      const p = ((t * 0.35 + k / 3) % 1);
+      ctx.strokeStyle = COL.field; ctx.globalAlpha = (1 - p) * 0.5; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(cx, cy, 26 + p * Math.min(W, H) * 0.42, 0, Math.PI * 2); ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+    charge(cx, cy, 1, 22, 0.6 + 0.2 * Math.sin(t * 2));
+  },
+  coulomb(t) {
+    const cy = H / 2 - 10;
+    const d = 70 + 40 * (0.5 + 0.5 * Math.sin(t * 1.2));
+    const x1 = W / 2 - d, x2 = W / 2 + d;
+    const F = 2600 / (d * d) * 40;
+    ctx.setLineDash([5, 5]); ctx.strokeStyle = COL.muted; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(x1, cy + 40); ctx.lineTo(x2, cy + 40); ctx.stroke(); ctx.setLineDash([]);
+    text("r", W / 2, cy + 58, COL.muted, 15);
+    charge(x1, cy, 1, 20); charge(x2, cy, 1, 20);
+    arrow(x1 - 24, cy, x1 - 24 - F, cy, COL.pos, 3.5, "F");
+    arrow(x2 + 24, cy, x2 + 24 + F, cy, COL.pos, 3.5, "F");
+    text("κανένα σκοινί, καμία επαφή", W / 2, cy - 60, COL.energy, 15);
+  },
+  arrows(t) {
+    const cx = W * 0.5, cy = H * 0.47;
+    const appear = clamp(t / 2.5);
+    const step = Math.max(34, Math.min(W, H) / 9);
+    for (let x = step / 2; x < W; x += step) for (let y = step / 2; y < H - 30; y += step) {
+      const dx = x - cx, dy = y - cy, r = Math.hypot(dx, dy);
+      if (r < 34) continue;
+      const order = r / Math.hypot(W, H);
+      if (order > appear) continue;
+      const mag = Math.min(1, 1800 / (r * r)) ;
+      const L = 6 + mag * step * 0.75;
+      ctx.globalAlpha = 0.35 + 0.65 * Math.min(1, mag * 3);
+      arrow(x - dx / r * L / 2, y - dy / r * L / 2, x + dx / r * L / 2, y + dy / r * L / 2, COL.field, 1.8, null, 7);
+    }
+    ctx.globalAlpha = 1;
+    charge(cx, cy, 1, 20, 0.4);
+    text("Q", cx, cy - 30, COL.ink, 15);
+  },
+  gravity(t) {
+    const half = W / 2;
+    ctx.strokeStyle = COL.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(half, 20); ctx.lineTo(half, H - 40); ctx.stroke();
+    // Earth
+    const ex = half / 2, ey = H - 30, R = Math.min(half * 0.7, 120);
+    ctx.fillStyle = "#4f8fd1"; ctx.beginPath(); ctx.arc(ex, ey + R * 0.55, R, Math.PI, 0); ctx.fill();
+    text("Γη", ex, ey, "#ffffff", 15);
+    const p = (t % 2.4) / 2.4; const ky = 50 + p * p * (ey - R * 0.45 - 60);
+    ctx.fillStyle = COL.energy; ctx.fillRect(ex - 7, ky - 7, 14, 14);
+    arrow(ex + 16, ky, ex + 16, ky + 34, COL.pos, 3, "mg");
+    text("g", ex - 40, 70, COL.field, 18);
+    arrow(ex - 40, 80, ex - 40, 120, COL.field, 2.4);
+    // Charge
+    const qx = half + half / 2, qy = H / 2;
+    charge(qx - 70, qy, 1, 18, 0.3);
+    const q2 = qx + 10 + ((t % 2.4) / 2.4) ** 2 * (half / 2 - 30);
+    charge(q2, qy, 1, 8);
+    arrow(q2 + 12, qy, q2 + 44, qy, COL.pos, 3, "F");
+    text("E", qx - 10, qy - 46, COL.field, 18);
+    arrow(qx - 30, qy - 36, qx + 10, qy - 36, COL.field, 2.4);
+  },
+  probe(t) {
+    const cx = W * 0.45, cy = H * 0.46;
+    charge(cx, cy, 1, 20, 0.3); text("Q", cx, cy - 30, COL.ink, 15);
+    const a = t * 0.6, rr = (0.22 + 0.16 * Math.sin(t * 0.9)) * Math.min(W, H) + 40;
+    const px = cx + Math.cos(a) * rr * 1.25, py = cy + Math.sin(a) * rr * 0.8;
+    const dx = px - cx, dy = py - cy, r = Math.hypot(dx, dy);
+    const F = Math.min(110, 260000 / (r * r));
+    ctx.setLineDash([3, 5]); ctx.strokeStyle = COL.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(px, py); ctx.stroke(); ctx.setLineDash([]);
+    charge(px, py, 1, 9);
+    arrow(px + dx / r * 12, py + dy / r * 12, px + dx / r * (12 + F), py + dy / r * (12 + F), COL.pos, 3.4, "F");
+    text("+q", px, py - 16, COL.ink, 13);
+  },
+  ratio(t) {
+    const cx = W * 0.25, cy = H * 0.46, px = W * 0.62;
+    charge(cx, cy, 1, 20, 0.3); text("Q", cx, cy - 30, COL.ink, 15);
+    const two = Math.floor(t / 2.6) % 2 === 1;
+    const k = two ? 2 : 1;
+    charge(px, cy, 1, two ? 13 : 9);
+    arrow(px + 16, cy, px + 16 + 46 * k, cy, COL.pos, 3.4, two ? "F = 2·F₁" : "F₁");
+    arrow(px - 20, cy + 46, px + 30, cy + 46, COL.field, 2.6, "E (ίδια)");
+    text(two ? "φορτίο 2q" : "φορτίο q", px, cy - 26, COL.ink, 14);
+    text(two ? "F/q = 2F₁ / 2q = F₁/q" : "F/q = F₁/q", W / 2, H - 60, COL.accent, 17);
+  },
+  sign(t) {
+    const y1 = H * 0.32, y2 = H * 0.62;
+    for (const y of [y1 - 40, y2 + 40]) arrow(30, y, W - 30, y, COL.field, 1.6, null, 8);
+    text("E", W - 34, y1 - 50, COL.field, 16);
+    const x = W / 2 + Math.sin(t) * W * 0.2;
+    charge(x, y1, 1, 12); arrow(x + 18, y1, x + 78, y1, COL.pos, 3.4, "F");
+    charge(x, y2, -1, 12); arrow(x - 18, y2, x - 78, y2, COL.pos, 3.4, "F");
+    text("θετικό: ίδια φορά με την E", W / 2, y1 + 36, COL.ink, 14, "center", 500);
+    text("αρνητικό: αντίθετη φορά", W / 2, y2 + 36, COL.ink, 14, "center", 500);
+  },
+  coulombE(t) {
+    const cx = 60, cy = H * 0.36;
+    charge(cx, cy, 1, 20, 0.3);
+    const unit = Math.min(110, (W - 120) / 3.3);
+    for (let m = 1; m <= 3; m++) { ctx.fillStyle = COL.muted; ctx.fillRect(cx + m * unit - 1, cy + 30, 2, 8); text(m === 1 ? "r" : m + "r", cx + m * unit, cy + 54, COL.muted, 13); }
+    const s = 1 + 2 * (0.5 - 0.5 * Math.cos(t * 0.8));
+    const px = cx + s * unit, L = 90 / (s * s);
+    ctx.fillStyle = COL.ink; ctx.beginPath(); ctx.arc(px, cy, 4, 0, 7); ctx.fill();
+    arrow(px + 6, cy, px + 6 + L, cy, COL.field, 3.4, "E");
+    // graph
+    const gx = 50, gy = H - 50, gw = W - 100, gh = H * 0.28;
+    ctx.strokeStyle = COL.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(gx, gy - gh); ctx.lineTo(gx, gy); ctx.lineTo(gx + gw, gy); ctx.stroke();
+    ctx.strokeStyle = COL.field; ctx.lineWidth = 2.4; ctx.beginPath();
+    for (let i = 0; i <= 100; i++) { const r = 0.8 + i / 100 * 2.6; const xx = gx + (r - 0.8) / 2.6 * gw, yy = gy - gh / (r * r) * 0.64; i ? ctx.lineTo(xx, yy) : ctx.moveTo(xx, yy); }
+    ctx.stroke();
+    const gxP = gx + (s - 0.8) / 2.6 * gw, gyP = gy - gh / (s * s) * 0.64;
+    ctx.fillStyle = COL.field; ctx.beginPath(); ctx.arc(gxP, gyP, 5, 0, 7); ctx.fill();
+    text("E", gx - 14, gy - gh + 6, COL.muted, 13); text("r", gx + gw + 10, gy + 4, COL.muted, 13);
+  },
+  lines(t) {
+    const phase = Math.floor(t / 6) % 2;
+    const k = (t % 6) / 6;
+    const fade = Math.min(1, k * 5, (1 - k) * 5);
+    if (phase === 0) {
+      const qs = [{ x: W / 2, y: H * 0.46, s: 1 }];
+      traceLines(qs, 16, 22, fade); charge(qs[0].x, qs[0].y, 1, 20);
+    } else {
+      const qs = [{ x: W * 0.32, y: H * 0.46, s: 1 }, { x: W * 0.68, y: H * 0.46, s: -1 }];
+      traceLines(qs, 16, 22, fade); charge(qs[0].x, qs[0].y, 1, 20); charge(qs[1].x, qs[1].y, -1, 20);
+    }
+  },
+  superpose(t) {
+    const q1 = { x: W * 0.22, y: H * 0.7, s: 1 }, q2 = { x: W * 0.78, y: H * 0.7, s: 1 };
+    const px = W / 2 + Math.sin(t * 0.7) * W * 0.18, py = H * 0.32;
+    const S = 9000;
+    const parts = [q1, q2].map((q) => { const dx = px - q.x, dy = py - q.y, r = Math.hypot(dx, dy); const m = Math.min(130, S * 6 / r); return [dx / r * m, dy / r * m]; });
+    ctx.setLineDash([4, 5]); ctx.strokeStyle = COL.muted; ctx.lineWidth = 1;
+    for (const q of [q1, q2]) { ctx.beginPath(); ctx.moveTo(q.x, q.y); ctx.lineTo(px, py); ctx.stroke(); }
+    const [a, b] = parts;
+    ctx.beginPath(); ctx.moveTo(px + a[0], py + a[1]); ctx.lineTo(px + a[0] + b[0], py + a[1] + b[1]); ctx.lineTo(px + b[0], py + b[1]); ctx.stroke(); ctx.setLineDash([]);
+    ctx.globalAlpha = 0.7; arrow(px, py, px + a[0], py + a[1], COL.field, 2.4, "E₁"); arrow(px, py, px + b[0], py + b[1], COL.field, 2.4, "E₂"); ctx.globalAlpha = 1;
+    arrow(px, py, px + a[0] + b[0], py + a[1] + b[1], COL.accent, 3.6, "E");
+    ctx.fillStyle = COL.ink; ctx.beginPath(); ctx.arc(px, py, 4, 0, 7); ctx.fill();
+    charge(q1.x, q1.y, 1, 18); charge(q2.x, q2.y, 1, 18);
+  },
+  uniform(t) {
+    const x1 = 50, x2 = W - 50, y1 = 40, y2 = H - 70;
+    plates(x1, x2, y1, y2);
+    for (let i = 0; i < 6; i++) { const y = y1 + 18 + i * (y2 - y1 - 36) / 5; arrow(x1 + 12, y, x2 - 12, y, COL.field, 1.4, null, 7); }
+    const p = (t % 3.2) / 3.2, x = x1 + 24 + p * p * (x2 - x1 - 48), y = (y1 + y2) / 2;
+    charge(x, y, 1, 11);
+    arrow(x + 16, y - 22, x + 16 + 10 + 60 * p, y - 22, COL.neg, 3, "υ");
+    arrow(x + 16, y + 22, x + 52, y + 22, COL.pos, 3, "F");
+  },
+  energy(t) {
+    const half = W / 2;
+    // hill
+    const hx = 20, hw = half - 40, top = 60, base = H - 120;
+    ctx.strokeStyle = COL.muted; ctx.lineWidth = 2; ctx.beginPath();
+    for (let i = 0; i <= 50; i++) { const u = i / 50; const xx = hx + u * hw, yy = top + (base - top) * (0.5 - 0.5 * Math.cos(Math.PI * u)); i ? ctx.lineTo(xx, yy) : ctx.moveTo(xx, yy); }
+    ctx.stroke();
+    const p = ease((t % 4) / 4);
+    const bx = hx + p * hw, by = top + (base - top) * (0.5 - 0.5 * Math.cos(Math.PI * p)) - 10;
+    ctx.fillStyle = COL.energy; ctx.beginPath(); ctx.arc(bx, by, 10, 0, 7); ctx.fill();
+    text("ύψος", hx + 10, top - 14, COL.muted, 13, "left");
+    // potential between plates
+    const x1 = half + 30, x2 = W - 30, y1 = 50, y2 = H - 130;
+    const g = ctx.createLinearGradient(x1, 0, x2, 0); g.addColorStop(0, COL.energy + "66"); g.addColorStop(1, COL.energy + "00");
+    ctx.fillStyle = g; ctx.fillRect(x1, y1, x2 - x1, y2 - y1);
+    plates(x1, x2, y1, y2);
+    const qx = x1 + 16 + p * (x2 - x1 - 32);
+    charge(qx, (y1 + y2) / 2, 1, 10);
+    if (x2 - x1 > 170) { text("υψηλό V", x1 + 8, y2 + 20, COL.energy, 12, "left"); text("χαμηλό V", x2 - 8, y2 + 20, COL.energy, 12, "right"); } else { text("V ↑", x1, y2 + 20, COL.energy, 12); text("V ↓", x2, y2 + 20, COL.energy, 12); }
+    // bars
+    const bw = W - 80, bxx = 40, byy = H - 84;
+    ctx.fillStyle = COL.grid; ctx.fillRect(bxx + 30, byy, bw - 30, 10); ctx.fillRect(bxx + 30, byy + 18, bw - 30, 10);
+    ctx.fillStyle = COL.energy; ctx.fillRect(bxx + 30, byy, (bw - 30) * (1 - p), 10);
+    ctx.fillStyle = COL.neg; ctx.fillRect(bxx + 30, byy + 18, (bw - 30) * p, 10);
+    text("U", bxx + 10, byy + 10, COL.energy, 13); text("K", bxx + 10, byy + 28, COL.neg, 13);
+  },
+  capacitor(t) {
+    const cyc = t % 9;
+    const x1 = W * 0.38, x2 = W * 0.62, y1 = 40, y2 = H - 130;
+    let charge01 = 0, lamp = 0;
+    if (cyc < 4) charge01 = ease(cyc / 4);
+    else if (cyc < 5.5) charge01 = 1;
+    else { charge01 = Math.max(0, 1 - (cyc - 5.5) / 2.5); lamp = charge01; }
+    ctx.fillStyle = COL.pos; ctx.fillRect(x1 - 5, y1, 10, y2 - y1);
+    ctx.fillStyle = COL.neg; ctx.fillRect(x2 - 5, y1, 10, y2 - y1);
+    const n = Math.round(charge01 * 6);
+    for (let i = 0; i < n; i++) { const yy = y1 + 16 + i * (y2 - y1 - 32) / 5; text("+", x1 - 16, yy + 5, COL.pos, 15, "center", 800); text("−", x2 + 16, yy + 5, COL.neg, 15, "center", 800); }
+    ctx.globalAlpha = charge01;
+    for (let i = 0; i < 5; i++) { const yy = y1 + 24 + i * (y2 - y1 - 48) / 4; arrow(x1 + 10, yy, x2 - 10, yy, COL.field, 1.6, null, 7); }
+    ctx.globalAlpha = 1;
+    const wy = H - 80;
+    ctx.strokeStyle = COL.muted; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(x1, y2); ctx.lineTo(x1, wy); ctx.lineTo(W / 2 - 18, wy); ctx.moveTo(W / 2 + 18, wy); ctx.lineTo(x2, wy); ctx.lineTo(x2, y2); ctx.stroke();
+    if (cyc < 5.5) { ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(W / 2 - 6, wy - 14); ctx.lineTo(W / 2 - 6, wy + 14); ctx.moveTo(W / 2 + 6, wy - 8); ctx.lineTo(W / 2 + 6, wy + 8); ctx.stroke(); text("μπαταρία", W / 2, wy + 34, COL.muted, 13); }
+    else {
+      ctx.fillStyle = COL.energy; ctx.globalAlpha = 0.2 + 0.8 * lamp; ctx.beginPath(); ctx.arc(W / 2, wy, 14, 0, 7); ctx.fill(); ctx.globalAlpha = 1;
+      ctx.strokeStyle = COL.muted; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(W / 2, wy, 14, 0, 7); ctx.stroke(); text("λάμπα", W / 2, wy + 34, COL.muted, 13);
+    }
+    const bw = 150; ctx.fillStyle = COL.grid; ctx.fillRect(W / 2 - bw / 2, 14, bw, 9); ctx.fillStyle = COL.energy; ctx.fillRect(W / 2 - bw / 2, 14, bw * charge01 * charge01, 9);
+    text("ενέργεια στο πεδίο", W / 2, 40, COL.energy, 12);
+  },
+  recap(t) {
+    const qs = [{ x: W * 0.3, y: H * 0.42, s: 1 }, { x: W * 0.7, y: H * 0.42, s: -1 }];
+    traceLines(qs, 14, 22, 0.85);
+    charge(qs[0].x, qs[0].y, 1, 20, 0.3 + 0.2 * Math.sin(t * 2)); charge(qs[1].x, qs[1].y, -1, 20);
+    const a = t * 0.5, px = W / 2 + Math.cos(a) * W * 0.12, py = H * 0.42 + Math.sin(a) * H * 0.22;
+    const [ex, ey] = fieldAt(px, py, qs); const L = Math.hypot(ex, ey) || 1;
+    charge(px, py, 1, 8); arrow(px + ex / L * 12, py + ey / L * 12, px + ex / L * 52, py + ey / L * 52, COL.pos, 3, "F");
+  },
+};
+
+/* ---------- slide engine ---------- */
+const textEl = document.getElementById("text"), capEl = document.getElementById("caption"), counter = document.getElementById("counter");
+const prev = document.getElementById("prev"), next = document.getElementById("next"), dots = document.getElementById("dots");
+let idx = 0, t0 = performance.now();
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+SLIDES.forEach((s, i) => {
+  const b = document.createElement("button"); b.type = "button"; b.setAttribute("aria-label", `Διαφάνεια ${i + 1}: ${s.title}`);
+  b.addEventListener("click", () => go(i)); dots.appendChild(b);
+});
+function render() {
+  const s = SLIDES[idx];
+  textEl.innerHTML = `<div class="kicker">${s.kicker}</div>${s.h1 ? `<h1>${s.title}</h1>` : `<h2>${s.title}</h2>`}${s.html}`;
+  capEl.textContent = s.caption;
+  counter.textContent = `${idx + 1} / ${SLIDES.length}`;
+  prev.disabled = idx === 0; next.disabled = idx === SLIDES.length - 1;
+  next.textContent = idx === SLIDES.length - 1 ? "Τέλος" : "Επόμενο →";
+  [...dots.children].forEach((d, i) => d.setAttribute("aria-current", i === idx ? "true" : "false"));
+  t0 = performance.now();
+  try { localStorage.setItem("pedio-intro-slide", String(idx)); } catch (e) {}
+}
+function go(i) { idx = Math.max(0, Math.min(SLIDES.length - 1, i)); render(); }
+prev.addEventListener("click", () => go(idx - 1));
+next.addEventListener("click", () => go(idx + 1));
+addEventListener("keydown", (e) => { if (e.key === "ArrowRight" || e.key === "PageDown") go(idx + 1); if (e.key === "ArrowLeft" || e.key === "PageUp") go(idx - 1); });
+let sx = null;
+document.getElementById("stage").addEventListener("touchstart", (e) => { sx = e.touches[0].clientX; }, { passive: true });
+document.getElementById("stage").addEventListener("touchend", (e) => { if (sx === null) return; const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 60) go(idx + (dx < 0 ? 1 : -1)); sx = null; });
+try { const saved = Number(localStorage.getItem("pedio-intro-slide")); if (saved > 0 && saved < SLIDES.length) idx = saved; } catch (e) {}
+render(); resize();
+function frame(now) {
+  const t = reduce ? 3.2 : (now - t0) / 1000;
+  ctx.clearRect(0, 0, W, H);
+  if (W > 0 && H > 0) SCENES[SLIDES[idx].scene](t);
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+/* Report height to the embedding page so the iframe never scrolls internally. */
+let lastH = 0;
+function reportHeight() {
+  const h = Math.ceil(document.querySelector(".controls").getBoundingClientRect().bottom + window.scrollY + 18);
+  if (h !== lastH && window.parent !== window) { lastH = h; window.parent.postMessage({ type: "pedio-intro-height", height: h }, "*"); }
+}
+new ResizeObserver(reportHeight).observe(document.body);
+addEventListener("load", reportHeight);
+document.fonts && document.fonts.ready.then(reportHeight);
+addEventListener("message", (e) => { if (e.data === "pedio-intro-ping") { lastH = 0; reportHeight(); } });
+</script>
+</body>
+</html>
