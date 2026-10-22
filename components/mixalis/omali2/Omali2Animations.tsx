@@ -8,6 +8,7 @@ import { section3 } from "./scenes-3";
 import { section4 } from "./scenes-4";
 import { section5 } from "./scenes-5";
 import { section6 } from "./scenes-6";
+import { section7 } from "./scenes-7";
 
 /* Colours and titles follow the six sections of the omali poster. */
 export const SECTIONS: { title: string; color: string; bg: string; intro: string; cases: OCase[] }[] = [
@@ -53,6 +54,13 @@ export const SECTIONS: { title: string; color: string; bg: string; intro: string
     intro: "Συνδυάζουμε ΣF = mυ²/R με την ΑΔΜΕ: ποια είναι η μικρότερη ταχύτητα για να κάνει το σώμα όλο τον κύκλο, πότε χάνει την επαφή, πώς κινείται ένας δορυφόρος.",
     cases: section6,
   },
+  {
+    title: "Ρολόγια και συναντήσεις",
+    color: "#8e3b6a",
+    bg: "#f9edf4",
+    intro: "Δύο σώματα που κινούνται ταυτόχρονα: δείκτες ρολογιού, δρομείς σε κυκλικό στίβο, κυκλική μαζί με ευθύγραμμη. Το κλειδί είναι η σχετική κίνηση: ομόρροπα αφαιρείς, αντίρροπα προσθέτεις.",
+    cases: section7,
+  },
 ];
 
 export function Omali2Animations() {
@@ -61,7 +69,7 @@ export function Omali2Animations() {
       {SECTIONS.map((s, i) => !s.cases.length ? null : (
         <section key={s.title} id={`enotita-${i + 1}`} className="scroll-mt-20 rounded-3xl border p-4 sm:p-6" style={{ borderColor: s.color, backgroundColor: s.bg }}>
           <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: s.color }}>
-            Ενότητα {i + 1} · κουτάκια {s.cases[0].n}–{s.cases[s.cases.length - 1].n}
+            Ενότητα {i + 1} · {s.cases[0].n > 30 ? "επιπλέον ασκήσεις" : "κουτάκια"} {s.cases[0].n}–{s.cases[s.cases.length - 1].n}
           </p>
           <h2 className="mt-1 text-2xl font-semibold tracking-tight text-[#1c2433] sm:text-3xl">{s.title}</h2>
           <p className="mt-2 max-w-3xl text-[15px] leading-7 text-[#3d4452]">{s.intro}</p>

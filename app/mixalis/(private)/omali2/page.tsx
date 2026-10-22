@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 const POSTER_W = 1212;
 const POSTER_H = 1720;
 
-const sectionNames = ["Κίνηση", "Δρόμοι & δίσκοι", "Κωνικό εκκρεμές", "Νήμα κατακόρυφα", "Λόφοι & λούπες", "Όρια & ενέργεια"];
+const sectionNames = ["Κίνηση", "Δρόμοι & δίσκοι", "Κωνικό εκκρεμές", "Νήμα κατακόρυφα", "Λόφοι & λούπες", "Όρια & ενέργεια", "Συναντήσεις"];
 
 const groups: { range: string; title: string; text: string }[] = [
   {
@@ -45,6 +45,11 @@ const groups: { range: string; title: string; text: string }[] = [
     title: "Ενέργεια, όρια και τροχιές",
     text: "Όριο = N = 0 ή T = 0. Μετά ΑΔΜΕ ανάμεσα σε δύο θέσεις: υ_κάτω,min = √(5gR), h_min = 5R/2, T_κάτω − T_πάνω = 6mg. Δορυφόρος: υ = √(GM/r).",
   },
+  {
+    range: "31–34",
+    title: "Ρολόγια και συναντήσεις",
+    text: "Δούλευε με τη σχετική κίνηση. Ομόρροπα: (ω₁ − ω₂)·t = Δφ. Αντίρροπα: (ω₁ + ω₂)·t = Δφ. Πρώτη συνάντηση από κοινή αφετηρία: Δφ = 2π. Ορθή γωνία δεικτών: Δφ = π/2, μετά 3π/2.",
+  },
 ];
 
 /** Clickable areas over the poster cells (same grid as the poster SVG). */
@@ -74,7 +79,8 @@ export default function Omali2Page() {
           <p className="mt-4 max-w-3xl text-[15px] leading-7 text-[#5c534c] sm:text-base">
             30 περιπτώσεις σε ένα σχέδιο: δρόμοι με κλίση, δίσκοι, κωνικό εκκρεμές, νήμα σε κατακόρυφο κύκλο, λόφοι, λούπες και όρια. Σε κάθε κουτάκι
             βλέπεις ποιες δυνάμεις δείχνουν <b>προς το κέντρο</b>: αυτές γράφεις στο ΣF = mυ²/R. <b>Πάτα ένα κουτάκι</b> και θα σε πάει στο κινούμενο
-            σχέδιό του, όπου το φαινόμενο εξηγείται βήμα βήμα, με αριθμούς σαν άσκηση.
+            σχέδιό του, όπου το φαινόμενο εξηγείται βήμα βήμα, με αριθμούς σαν άσκηση. Στο τέλος υπάρχουν και 4 επιπλέον ασκήσεις (31–34): δείκτες
+            ρολογιού, συναντήσεις σε κυκλικό στίβο και κυκλική μαζί με ευθύγραμμη κίνηση.
           </p>
           <div className="mt-5 flex flex-wrap gap-2 text-sm font-semibold">
             <a href="/mixalis/omali-typologio.svg" target="_blank" rel="noopener" className="rounded-full border border-black/10 bg-white px-4 py-1.5 hover:bg-[#f3efe8]">
@@ -191,7 +197,7 @@ export default function Omali2Page() {
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             {groups.map((g) => (
               <div key={g.range} className="rounded-2xl border border-black/10 bg-[#fbf8f3] p-4">
-                <p className="text-xs font-semibold text-[#857261]">Κουτάκια {g.range}</p>
+                <p className="text-xs font-semibold text-[#857261]">{g.range === "31–34" ? "Επιπλέον ασκήσεις" : "Κουτάκια"} {g.range}</p>
                 <p className="mt-1 font-semibold">{g.title}</p>
                 <p className="mt-2 text-sm leading-6 text-[#5c534c]">{g.text}</p>
               </div>
