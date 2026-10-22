@@ -64,6 +64,9 @@ export default async function MixalisDashboardPage() {
             <Link href="/mixalis/ormi" prefetch={false} className="rounded-full border border-black/10 px-4 py-2 hover:bg-[#f3efe8]">
               Ορμή και κρούσεις
             </Link>
+            <a href="/mixalis/organiki1" className="rounded-full border border-black/10 px-4 py-2 hover:bg-[#f3efe8]">
+              Οργανική χημεία (Β΄ Λυκείου)
+            </a>
           </div>
         </section>
 
