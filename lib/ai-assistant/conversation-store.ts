@@ -234,6 +234,77 @@ async function sendStartedNotification(conversationSessionId: string, language: 
   }
 }
 
+function alertTransport() {
+  const smtpHost = process.env.SMTP_HOST || "smtp.gmail.com";
+  const smtpPort = Number(process.env.SMTP_PORT || "465");
+  const smtpUser = process.env.SMTP_USER;
+  const smtpPass = process.env.SMTP_PASS;
+  const smtpFrom = process.env.SMTP_FROM || smtpUser;
+  const recipient = process.env.AI_ROOM_FINDER_ALERT_TO || process.env.CONTACT_TO || "chioshotel@gmail.com";
+  if (!smtpUser || !smtpPass || !smtpFrom || !recipient) {
+    throw new Error("AI Room Finder alert email is not configured.");
+  }
+  const transporter = nodemailer.createTransport({
+    host: smtpHost,
+    port: smtpPort,
+    secure: smtpPort === 465,
+    auth: { user: smtpUser, pass: smtpPass },
+  });
+  return { transporter, smtpFrom, recipient };
+}
+
+function greekDate(value: string | null) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value || "");
+  return match ? `${match[3]}/${match[2]}/${match[1]}` : "—";
+}
+
+// Sent once per conversation when the guest reaches the booking summary with a
+// chosen room. This is the moment staff most want to know about: the guest is
+// one step from leaving details, and often leaves without doing it.
+async function sendLeadAlert(input: {
+  sessionId: string;
+  language: string;
+  checkin: string | null;
+  checkout: string | null;
+  guestTotal: number | null;
+  breakfast: boolean;
+  selectedRooms: ReturnType<typeof sanitizeSelectedRooms>;
+}) {
+  const { transporter, smtpFrom, recipient } = alertTransport();
+  const rooms = input.selectedRooms
+    .map((room) => {
+      const parts = [room.name || (room.roomNumber ? `Δωμάτιο ${room.roomNumber}` : "Δωμάτιο")];
+      if (room.guests) parts.push(`${room.guests} άτομα`);
+      if (room.directTotal !== null) parts.push(`${Math.round(room.directTotal)} €`);
+      return `• ${parts.join(" · ")}`;
+    })
+    .join("\n");
+  const staffUrl = `https://chioshotel.gr/staff/ai-room-finder?session=${encodeURIComponent(input.sessionId)}`;
+  const firstRoom = input.selectedRooms[0]?.name || "δωμάτιο";
+  const info = await transporter.sendMail({
+    from: `"Voulamandis House AI Room Finder" <${smtpFrom}>`,
+    to: recipient,
+    subject: `🔥 Επέλεξε ${firstRoom} · ${greekDate(input.checkin)} → ${greekDate(input.checkout)}`,
+    text: [
+      "Ένας επισκέπτης του AI Room Finder επέλεξε δωμάτιο και είδε την περίληψη κράτησης.",
+      "Αν αφήσει στοιχεία θα έρθει ξεχωριστό email με το αίτημα.",
+      "",
+      `Διαμονή: ${greekDate(input.checkin)} → ${greekDate(input.checkout)}`,
+      `Άτομα: ${input.guestTotal ?? "—"}`,
+      `Γλώσσα: ${input.language.toUpperCase()}`,
+      `Πρωινό: ${input.breakfast ? "Ναι" : "Όχι"}`,
+      "",
+      rooms || "• —",
+      "",
+      `Δες τη συνομιλία: ${staffUrl}`,
+    ].join("\n"),
+  });
+  const accepted = (info.accepted || []).map(String).map((value) => value.toLowerCase());
+  if (!accepted.includes(recipient.toLowerCase())) {
+    throw new Error("AI Room Finder lead alert was not accepted by SMTP server.");
+  }
+}
+
 export async function recordRoomFinderConversation(input: RoomFinderTrackingSnapshot) {
   const sql = getSql();
   const sid = sessionId(input.sessionId);
@@ -365,6 +436,35 @@ export async function recordRoomFinderConversation(input: RoomFinderTrackingSnap
         await sql`
           update ai_room_finder_conversations
           set notification_sent_at = null, updated_at = now()
+          where session_id = ${sid}
+        `;
+      }
+    }
+  }
+
+  if (step === "complete" && selectedRooms.length) {
+    const claimed = await sql`
+      update ai_room_finder_conversations
+      set lead_alert_sent_at = now(), updated_at = now()
+      where session_id = ${sid}
+        and lead_alert_sent_at is null
+        and enquiry_sent_at is null
+        and (
+          select count(*)
+          from ai_room_finder_conversations recent
+          where recent.lead_alert_sent_at >= now() - interval '1 hour'
+        ) < ${startedAlertsPerHour()}
+      returning session_id
+    `;
+
+    if (claimed.length) {
+      try {
+        await sendLeadAlert({ sessionId: sid, language, checkin, checkout, guestTotal, breakfast, selectedRooms });
+      } catch (error) {
+        console.error("AI Room Finder lead alert failed", error);
+        await sql`
+          update ai_room_finder_conversations
+          set lead_alert_sent_at = null, updated_at = now()
           where session_id = ${sid}
         `;
       }

@@ -58,6 +58,7 @@ async function main() {
       last_activity_at timestamptz not null default now(),
       enquiry_sent_at timestamptz,
       notification_sent_at timestamptz,
+      lead_alert_sent_at timestamptz,
       staff_read_at timestamptz,
       created_at timestamptz not null default now(),
       updated_at timestamptz not null default now()
