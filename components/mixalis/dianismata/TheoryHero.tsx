@@ -14,7 +14,7 @@ const chapters = [
 
 export function TheoryHero() {
   return (
-    <section id="theoria" className="relative left-1/2 w-screen -translate-x-1/2 scroll-mt-4 overflow-hidden bg-[#141821] text-white">
+    <section id="theoria" className="relative overflow-hidden bg-[#141821] text-white">
       <style>{`
         .th-grid { stroke: rgba(255,255,255,.07); }
         .th-axis { stroke: rgba(255,255,255,.35); }
@@ -57,42 +57,52 @@ export function TheoryHero() {
       </svg>
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#141821] via-[#141821]/70 to-transparent" />
 
-      <div className="relative mx-auto max-w-6xl px-5 py-14 sm:px-8 sm:py-20">
-        <p className="th-rise text-sm font-semibold uppercase tracking-[0.2em] text-[#e7b77a]">1 · Θεωρία · ξεκίνα από εδώ</p>
-        <h2 className="th-rise mt-3 max-w-2xl text-4xl font-semibold leading-[1.05] tracking-tight sm:text-6xl" style={{ animationDelay: ".08s" }}>
-          Τα διανύσματα γίνονται αριθμοί
-        </h2>
-        <p className="th-rise mt-5 max-w-xl text-[15px] leading-7 text-white/75 sm:text-base" style={{ animationDelay: ".16s" }}>
-          Συντεταγμένες στο επίπεδο σε 27 κινούμενες διαφάνειες, σε όλη την οθόνη: η §1.4 του σχολικού, η σύνοψη του Σαββάλα και οι σημειώσεις του
-          Δημήτρη, με τις ασκήσεις του λυμένες και τρία quiz.
-        </p>
-        <a
-          href={DECK}
-          className="th-rise mt-8 inline-flex items-center gap-2 rounded-full bg-[#e7b77a] px-6 py-3 text-base font-semibold text-[#141821] shadow-lg shadow-black/30 transition hover:-translate-y-0.5 hover:bg-[#f0c98f]"
-          style={{ animationDelay: ".24s" }}
-        >
-          Ξεκίνα τη θεωρία <span aria-hidden="true">→</span>
+      <div className="relative mx-auto max-w-6xl px-5 pb-14 pt-6 sm:px-8 sm:pb-20 sm:pt-8">
+        <a href="/mixalis" className="th-rise text-sm font-semibold text-white/55 hover:text-white">
+          ← Αρχική
         </a>
+        <p className="th-rise mt-10 text-sm font-semibold uppercase tracking-[0.2em] text-[#e7b77a] sm:mt-14">Μαθηματικά Προσανατολισμού · Β΄ Λυκείου</p>
+        <h1 className="th-rise mt-3 max-w-3xl text-5xl font-semibold leading-[1.02] tracking-tight sm:text-7xl" style={{ animationDelay: ".08s" }}>
+          Διανύσματα
+        </h1>
+        <p className="th-rise mt-5 max-w-xl text-[15px] leading-7 text-white/75 sm:text-base" style={{ animationDelay: ".16s" }}>
+          Η θεωρία των συντεταγμένων σε 27 κινούμενες διαφάνειες (σχολικό §1.4, Σαββάλας, σημειώσεις Δημήτρη), θέματα της Τράπεζας λυμένα βήμα
+          βήμα και ασκήσεις με αυτόματο έλεγχο.
+        </p>
+        <div className="th-rise mt-8 flex flex-wrap items-center gap-x-6 gap-y-3" style={{ animationDelay: ".24s" }}>
+          <a
+            href={DECK}
+            className="inline-flex items-center gap-2 rounded-full bg-[#e7b77a] px-6 py-3 text-base font-semibold text-[#141821] shadow-lg shadow-black/30 transition hover:-translate-y-0.5 hover:bg-[#f0c98f]"
+          >
+            Ξεκίνα τη θεωρία <span aria-hidden="true">→</span>
+          </a>
+          <a href="#trapeza" className="text-sm font-semibold text-white/70 hover:text-white">
+            Τράπεζα Θεμάτων ↓
+          </a>
+          <a href="#eksaskisi" className="text-sm font-semibold text-white/70 hover:text-white">
+            Εξάσκηση ↓
+          </a>
+        </div>
 
-        <div className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-14 grid border-t border-white/10 sm:grid-cols-2 lg:grid-cols-4">
           {chapters.map((c, i) => (
             <a
               key={c.letter}
               href={`${DECK}?s=${c.slide}`}
-              className="th-rise group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur transition hover:-translate-y-1 hover:border-[#e7b77a]/60 hover:bg-white/[0.1]"
+              className="th-rise group relative flex gap-4 border-b border-white/10 py-5 transition sm:pr-6 lg:border-b-0"
               style={{ animationDelay: `${0.32 + i * 0.08}s` }}
             >
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute -right-2 -top-6 text-[110px] font-bold leading-none text-transparent transition group-hover:scale-110"
-                style={{ WebkitTextStroke: "1.5px rgba(231,183,122,.28)" }}
+                className="text-5xl font-bold leading-none text-transparent transition duration-300 group-hover:-translate-y-1"
+                style={{ WebkitTextStroke: "1.5px rgba(231,183,122,.7)" }}
               >
                 {c.letter}
               </span>
-              <p className="relative text-xs font-semibold uppercase tracking-[0.16em] text-[#e7b77a]">Κεφάλαιο {c.letter}</p>
-              <p className="relative mt-2 text-lg font-semibold">{c.title}</p>
-              <p className="relative mt-1.5 text-sm leading-6 text-white/65">{c.text}</p>
-              <p className="relative mt-3 text-sm font-semibold text-white/80 transition group-hover:translate-x-1 group-hover:text-[#e7b77a]">Άνοιγμα →</p>
+              <span className="min-w-0">
+                <span className="block font-semibold transition group-hover:text-[#e7b77a]">{c.title} →</span>
+                <span className="mt-1 block text-sm leading-6 text-white/60">{c.text}</span>
+              </span>
             </a>
           ))}
         </div>

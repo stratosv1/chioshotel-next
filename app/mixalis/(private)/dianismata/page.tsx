@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DianismataClient } from "@/components/mixalis/dianismata/DianismataClient";
+import { DianismataPage } from "@/components/mixalis/dianismata/DianismataPage";
 
 export const metadata: Metadata = {
   title: { absolute: "Διανύσματα · Μαθηματικά Β΄ Λυκείου" },
@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function DianismataRoute() {
-  return <DianismataClient />;
+  return <DianismataPage />;
 }

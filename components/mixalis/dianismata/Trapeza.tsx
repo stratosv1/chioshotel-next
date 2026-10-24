@@ -34,7 +34,7 @@ function PartCard({ part, mark, onMark }: { part: BankPart; mark?: Mark; onMark:
   const allShown = shown >= total;
 
   return (
-    <div className="rounded-2xl border border-black/10 bg-white p-4">
+    <div className="border-l-2 border-[#c9822f]/30 py-1 pl-4 sm:pl-5">
       <div className="flex items-start gap-3">
         <span
           className={`inline-flex h-8 min-w-8 shrink-0 items-center justify-center rounded-full px-2 text-sm font-bold ${
@@ -140,7 +140,7 @@ function ItemCard({ item, index, progress, onMark }: { item: BankItem; index: nu
   const [showKey, setShowKey] = useState(false);
 
   return (
-    <article id={`thema-${item.code}`} className="scroll-mt-24 rounded-3xl border border-black/10 bg-[#fffdf9] p-4 shadow-sm sm:p-6">
+    <article id={`thema-${item.code}`} className="scroll-mt-16 border-t border-black/10 pt-8 first:border-t-0 first:pt-0">
       <header className="flex flex-wrap items-center gap-2">
         <span className="inline-flex h-8 min-w-8 items-center justify-center rounded-full bg-[#c9822f] px-2 text-sm font-bold text-white">{index}</span>
         <span className="rounded-full bg-[#2c2825]/5 px-2.5 py-1 font-mono text-xs font-semibold text-[#4d4138]">
@@ -152,11 +152,11 @@ function ItemCard({ item, index, progress, onMark }: { item: BankItem; index: nu
         </span>
       </header>
 
-      <h3 className="mt-3 text-lg font-semibold tracking-tight sm:text-xl">{item.title}</h3>
+      <h3 className="mt-3 text-xl font-semibold tracking-tight sm:text-2xl">{item.title}</h3>
       <div className="mt-2 text-[15px] leading-8 text-[#2c2825]">{item.statement}</div>
-      {item.figure ? <div className="mt-3 rounded-xl border border-black/5 bg-white p-2">{item.figure}</div> : null}
+      {item.figure ? <div className="mt-3 max-w-xl">{item.figure}</div> : null}
 
-      <div className="mt-4 space-y-3">
+      <div className="mt-5 space-y-6">
         {item.parts.map((part) => (
           <PartCard key={part.label} part={part} mark={progress[partKey(item, part)]} onMark={(m) => onMark(partKey(item, part), m)} />
         ))}
@@ -226,7 +226,7 @@ export function Trapeza() {
 
   return (
     <div className="space-y-5">
-      <div className="rounded-2xl border border-black/10 bg-[#fbf8f3] p-4">
+      <div>
         <div className="flex flex-wrap items-baseline justify-between gap-3 text-sm">
           <span className="font-semibold text-[#4d4138]">Πρόοδος</span>
           <span className="font-mono font-semibold text-[#2e8b57]">
@@ -272,7 +272,7 @@ export function Trapeza() {
         ))}
       </div>
 
-      <div className="grid gap-5">
+      <div className="grid gap-10 pt-4">
         {list.map(({ item, n }) => (
           <ItemCard key={item.code} item={item} index={n} progress={progress} onMark={setMark} />
         ))}

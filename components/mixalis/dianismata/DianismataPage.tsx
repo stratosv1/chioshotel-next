@@ -1,66 +1,58 @@
-"use client";
-
-import Link from "next/link";
 import type { ReactNode } from "react";
-import { Practice } from "./Practice";
+import { PracticeClient } from "./PracticeClient";
 import { TheoryHero } from "./TheoryHero";
 import { Trapeza } from "./Trapeza";
 
-function Section({ id, kicker, title, intro, children }: { id: string; kicker: string; title: string; intro?: ReactNode; children: ReactNode }) {
+/** Open section: no card, just a numbered heading and a hairline on top. */
+function Section({ id, n, kicker, title, intro, children }: { id: string; n: string; kicker: string; title: string; intro?: ReactNode; children: ReactNode }) {
   return (
-    <section id={id} className="scroll-mt-20 rounded-3xl border border-black/10 bg-white p-4 shadow-sm sm:p-8">
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">{kicker}</p>
-      <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">{title}</h2>
-      {intro ? <div className="mt-3 max-w-3xl text-[15px] leading-7 text-[#5c534c]">{intro}</div> : null}
-      <div className="mt-6">{children}</div>
+    <section id={id} className="scroll-mt-14 border-t border-black/10 py-12 sm:py-16">
+      <div className="flex items-start gap-4 sm:gap-6">
+        <span aria-hidden="true" className="text-4xl font-bold leading-none text-transparent sm:text-7xl" style={{ WebkitTextStroke: "1.5px #c9822f" }}>
+          {n}
+        </span>
+        <div className="min-w-0">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">{kicker}</p>
+          <h2 className="mt-1 text-3xl font-semibold tracking-tight sm:text-4xl">{title}</h2>
+          {intro ? <div className="mt-3 max-w-2xl text-[15px] leading-7 text-[#5c534c]">{intro}</div> : null}
+        </div>
+      </div>
+      <div className="mt-8">{children}</div>
     </section>
   );
 }
 
+const nav: [string, string][] = [
+  ["#theoria", "Θεωρία"],
+  ["#trapeza", "Τράπεζα Θεμάτων"],
+  ["#eksaskisi", "Εξάσκηση"],
+];
+
 export function DianismataPage() {
   return (
-    <main className="min-h-screen overflow-x-clip bg-[#f3efe8] px-4 py-5 text-[#2c2825] sm:px-8 sm:py-8">
-      <div className="mx-auto max-w-4xl space-y-6">
-        <header className="rounded-3xl bg-[#2c2825] p-6 text-white shadow-sm sm:p-10">
-          <Link href="/mixalis" prefetch={false} className="text-sm font-semibold text-white/60 hover:text-white">
-            ← Αρχική
-          </Link>
-          <p className="mt-4 text-sm font-semibold uppercase tracking-[0.18em] text-[#e7b77a]">Μαθηματικά Προσανατολισμού · Β΄ Λυκείου</p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-5xl">Διανύσματα</h1>
-          <p className="mt-4 max-w-2xl text-[15px] leading-7 text-white/80">
-            Η θεωρία των συντεταγμένων με κινούμενα σχέδια, θέματα της Τράπεζας Θεμάτων λυμένα βήμα-βήμα, και ασκήσεις εξάσκησης με αυτόματο
-            έλεγχο. Λύσε πρώτα στο τετράδιο. Αν κολλήσεις, άνοιξε
-            την <b className="text-white">υπόδειξη</b>. Η <b className="text-white">λύση</b> ανοίγει ένα βήμα τη φορά, ώστε να συνεχίσεις μόνος σου
-            μόλις καταλάβεις το κόλπο.
-          </p>
-        </header>
+    <main className="min-h-screen bg-[#f3efe8] text-[#2c2825]">
+      <TheoryHero />
 
-        <nav className="sticky top-0 z-10 -mx-4 flex gap-2 overflow-x-auto bg-[#f3efe8]/95 px-4 py-2 backdrop-blur sm:mx-0 sm:rounded-2xl sm:px-2">
-          {[
-            ["#theoria", "Θεωρία"],
-            ["#trapeza", "Τράπεζα Θεμάτων"],
-            ["#eksaskisi", "Εξάσκηση"],
-          ].map(([href, label]) => (
-            <a
-              key={href}
-              href={href}
-              className="shrink-0 rounded-full border border-black/10 bg-white px-3.5 py-1.5 text-sm font-semibold text-[#4d4138] hover:bg-[#fdf3e6]"
-            >
+      <nav className="sticky top-0 z-20 border-b border-black/10 bg-[#f3efe8]/90 backdrop-blur" aria-label="Ενότητες">
+        <div className="mx-auto flex max-w-4xl gap-1 overflow-x-auto px-3 py-2 sm:px-6">
+          {nav.map(([href, label]) => (
+            <a key={href} href={href} className="shrink-0 rounded-full px-3.5 py-1.5 text-sm font-semibold text-[#4d4138] hover:bg-black/5">
               {label}
             </a>
           ))}
-        </nav>
+        </div>
+      </nav>
 
-        <TheoryHero />
-
+      <div className="mx-auto max-w-4xl px-4 sm:px-6">
         <Section
           id="trapeza"
-          kicker="2 · Τράπεζα Θεμάτων"
+          n="2"
+          kicker="Τράπεζα Θεμάτων"
           title="Θέματα 2 και 4, λυμένα και εξηγημένα"
           intro={
             <p>
-              Τα θέματα είναι σε σειρά δυσκολίας: πρώτα τα Θέματα 2, μετά τα Θέματα 4. Μετά από κάθε λύση σημείωσε αν το είχες σωστά ή θέλεις
-              επανάληψη· το φίλτρο «Για επανάληψη» σου δείχνει μόνο όσα δεν έχεις ακόμα κατακτήσει.
+              Σε σειρά δυσκολίας: πρώτα τα Θέματα 2, μετά τα Θέματα 4. Λύσε στο τετράδιο· αν κολλήσεις, άνοιξε την <b>υπόδειξη</b>. Η <b>λύση</b>{" "}
+              ανοίγει ένα βήμα τη φορά. Μετά σημείωσε αν το είχες σωστά ή θέλεις επανάληψη.
             </p>
           }
         >
@@ -69,19 +61,20 @@ export function DianismataPage() {
 
         <Section
           id="eksaskisi"
-          kicker="3 · Εξάσκηση"
+          n="3"
+          kicker="Εξάσκηση"
           title="Ασκήσεις με νέους αριθμούς κάθε φορά"
           intro={
             <p>
-              Οι βασικοί υπολογισμοί που χρειάζονται τα θέματα: συντεταγμένες, μέτρο, εσωτερικό γινόμενο, παραλληλία, καθετότητα, γωνία. Γράψε την
-              απάντηση και πάτα «Έλεγχος». Κάθε «Νέα άσκηση» βγάζει άλλους αριθμούς.
+              Συντεταγμένες, μέτρο, εσωτερικό γινόμενο, παραλληλία, καθετότητα, γωνία. Γράψε την απάντηση και πάτα «Έλεγχος». Κάθε «Νέα άσκηση» βγάζει
+              άλλους αριθμούς.
             </p>
           }
         >
-          <Practice />
+          <PracticeClient />
         </Section>
 
-        <p className="pb-6 text-center text-xs text-[#857261]">
+        <p className="border-t border-black/10 py-8 text-center text-xs text-[#857261]">
           Πηγή εκφωνήσεων: Τράπεζα Θεμάτων Διαβαθμισμένης Δυσκολίας (ΙΕΠ), Μαθηματικά Προσανατολισμού Β΄ Λυκείου, Κεφ. 1 Διανύσματα. Τα σχήματα είναι
           ξανασχεδιασμένα.
         </p>

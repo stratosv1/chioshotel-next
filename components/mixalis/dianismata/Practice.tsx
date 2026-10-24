@@ -487,7 +487,7 @@ export function Practice() {
         ))}
       </div>
 
-      <div className="rounded-2xl border border-black/10 bg-[#fffdf9] p-4 sm:p-5">
+      <div className="border-l-2 border-[#c9822f]/40 py-1 pl-4 sm:pl-5">
         <div className="text-[15px] leading-8 text-[#2c2825]">{problem.prompt}</div>
 
         <form
