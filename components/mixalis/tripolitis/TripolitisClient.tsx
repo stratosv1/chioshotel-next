@@ -8,6 +8,6 @@ const TripolitisList = dynamic(() => import("./TripolitisList").then((m) => m.Tr
   loading: () => <p className="py-10 text-center text-sm font-semibold text-[#857261]">Φόρτωση ασκήσεων…</p>,
 });
 
-export function TripolitisClient() {
-  return <TripolitisList />;
+export function TripolitisClient({ embedded = false }: { embedded?: boolean }) {
+  return <TripolitisList embedded={embedded} />;
 }

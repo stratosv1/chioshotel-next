@@ -6,10 +6,10 @@ import { GROUPS } from "./index";
 
 const anchor = (id: string) => `a${id.replace(".", "-")}`;
 
-export function TripolitisList() {
+export function TripolitisList({ embedded = false }: { embedded?: boolean }) {
   return (
     <div className="space-y-10">
-      <nav className="sticky top-2 z-20 rounded-3xl border border-black/10 bg-white/95 p-3 shadow-sm backdrop-blur">
+      <nav className={`${embedded ? "" : "sticky top-2 z-20 "}rounded-3xl border border-black/10 bg-white/95 p-3 shadow-sm backdrop-blur`} aria-label="Ασκήσεις Τριπολίτη">
         <div className="flex max-h-40 flex-wrap gap-1.5 overflow-y-auto">
           {GROUPS.flatMap((g) =>
             g.items.map((e) => (

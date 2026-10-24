@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Note } from "@/components/mixalis/omali/shared";
 import { OrmiAnimationsClient } from "@/components/mixalis/ormi/OrmiAnimationsClient";
 import { OrmiTheoryEmbed } from "@/components/mixalis/ormi/OrmiTheoryEmbed";
+import { TripolitisClient } from "@/components/mixalis/tripolitis/TripolitisClient";
 
 export const metadata: Metadata = {
   title: { absolute: "Ορμή και κρούσεις · Τυπολόγιο · Physics Workspace" },
@@ -66,9 +67,9 @@ export default function OrmiPage() {
             <a href="/mixalis/ormi-typologio-A4.pdf" target="_blank" rel="noopener" className="rounded-full bg-[#2c2825] px-4 py-1.5 text-white hover:bg-black">
               Εκτύπωση σε A4 (PDF, 2 σελίδες)
             </a>
-            <Link href="/mixalis/tripolitis" prefetch={false} className="rounded-full border border-black/10 bg-white px-4 py-1.5 hover:bg-[#f3efe8]">
-              Λυμένες ασκήσεις Τριπολίτη
-            </Link>
+            <a href="#askiseis" className="rounded-full border border-black/10 bg-white px-4 py-1.5 hover:bg-[#f3efe8]">
+              Λυμένες ασκήσεις Τριπολίτη ↓
+            </a>
           </div>
         </header>
 
@@ -119,6 +120,9 @@ export default function OrmiPage() {
                 {i + 1}. {name}
               </a>
             ))}
+            <a href="#askiseis" className="shrink-0 rounded-full bg-[#2c2825] px-3 py-1.5 text-white hover:bg-black">
+              Ασκήσεις Τριπολίτη
+            </a>
           </div>
         </nav>
 
@@ -199,6 +203,18 @@ export default function OrmiPage() {
               διείσδυση βλήματος • g = 10 m/s².
             </Note>
           </div>
+        </section>
+
+        <section id="askiseis" className="scroll-mt-20 space-y-6">
+          <div className="rounded-3xl border border-black/10 bg-white p-5 shadow-sm sm:p-8">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Εξάσκηση</p>
+            <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">Λυμένες ασκήσεις Τριπολίτη (4.67–4.123)</h2>
+            <p className="mt-2 max-w-3xl text-[15px] leading-7 text-[#5c534c]">
+              Όλες οι ασκήσεις και τα προβλήματα από τις φωτοτυπίες, με τη σειρά του βιβλίου. Σε κάθε άσκηση: τι λέει με λίγα λόγια, ένα κινούμενο
+              σχέδιο που προχωράει <b>ένα βήμα τη φορά</b> και η λύση που ανοίγει επίσης βήμα βήμα. Δοκίμασε πρώτα μόνος σου, μετά άνοιξε τη λύση.
+            </p>
+          </div>
+          <TripolitisClient embedded />
         </section>
       </div>
     </main>

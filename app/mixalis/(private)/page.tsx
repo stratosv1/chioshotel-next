@@ -64,7 +64,7 @@ export default async function MixalisDashboardPage() {
             <Link href="/mixalis/ormi" prefetch={false} className="rounded-full border border-black/10 px-4 py-2 hover:bg-[#f3efe8]">
               Ορμή και κρούσεις
             </Link>
-            <Link href="/mixalis/tripolitis" prefetch={false} className="rounded-full border border-black/10 px-4 py-2 hover:bg-[#f3efe8]">
+            <Link href="/mixalis/ormi#askiseis" prefetch={false} className="rounded-full border border-black/10 px-4 py-2 hover:bg-[#f3efe8]">
               Φωτοτυπίες Τριπολίτη · Ορμή (λυμένες)
             </Link>
             <a href="/mixalis/organiki1" className="rounded-full border border-black/10 px-4 py-2 hover:bg-[#f3efe8]">
