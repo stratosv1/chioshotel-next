@@ -1,0 +1,1210 @@
+<!doctype html>
+<html lang="el" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Διανύσματα με συντεταγμένες</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Commissioner:wght@500;700;800&family=Literata:opsz,wght@7..72,400;7..72,600&family=Noto+Sans+Mono:wght@500&display=swap">
+<style>
+/* One slide at a time: text column beside a live canvas "bench" with optional controls; stacks on phones. */
+:root {
+  --bg: #f4f1ea; --paper: #fffdf8; --ink: #1d2433; --muted: #5d6475; --line: #ddd6c8;
+  --accent: #1f6f5c; --a: #1f6fd1; --b: #d9342b; --r: #1f9d55; --j: #8e44ad; --K: #d9821c; --axis: #7b8190;
+  --bench: #f7f4ec; --grid: #e9e3d6; --ok: #1f9d55; --bad: #c0392b;
+  --display: "Commissioner", "Segoe UI", system-ui, sans-serif;
+  --body: "Literata", Georgia, "Times New Roman", serif;
+  --mono: "Noto Sans Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12151d; --paper: #1a1f2a; --ink: #e9ecf3; --muted: #a2a9b8; --line: #2c3343; --accent: #5fd0ae;
+    --a: #6aa6ff; --b: #ff7a6e; --r: #45cf8c; --j: #c58af0; --K: #f3a64a; --axis: #8d95a6;
+    --bench: #151a24; --grid: #222a38; --ok: #45cf8c; --bad: #ff7a6e; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12151d; --paper: #1a1f2a; --ink: #e9ecf3; --muted: #a2a9b8; --line: #2c3343; --accent: #5fd0ae;
+    --a: #6aa6ff; --b: #ff7a6e; --r: #45cf8c; --j: #c58af0; --K: #f3a64a; --axis: #8d95a6;
+    --bench: #151a24; --grid: #222a38; --ok: #45cf8c; --bad: #ff7a6e; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.6;
+  padding: 18px max(16px, env(safe-area-inset-right, 0px)) 18px max(16px, env(safe-area-inset-left, 0px));
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+}
+.top { width: 100%; max-width: 1160px; display: flex; flex-direction: column; gap: 10px; }
+.topline { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.brand { font-family: var(--display); font-weight: 800; letter-spacing: 0.02em; font-size: 15px; color: var(--accent); }
+.brand span { color: var(--muted); font-weight: 500; }
+.counter { font-family: var(--mono); font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.chapters { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.chapters button {
+  all: unset; cursor: pointer; display: flex; flex-direction: column; gap: 5px; min-width: 0;
+  font-family: var(--display); font-size: 12.5px; font-weight: 700; color: var(--muted);
+}
+.chapters button .bar { height: 5px; border-radius: 3px; background: var(--line); overflow: hidden; }
+.chapters button .bar i { display: block; height: 100%; width: 0; background: var(--accent); border-radius: 3px; transition: width .3s; }
+.chapters button[aria-current="true"] { color: var(--ink); }
+.chapters button .lbl { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chapters button:focus-visible { outline: 3px solid var(--K); outline-offset: 3px; border-radius: 4px; }
+.stage {
+  width: 100%; max-width: 1160px; background: var(--paper); border: 1px solid var(--line); border-radius: 20px;
+  display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); min-height: 580px; overflow: hidden;
+}
+.text { padding: 32px 32px 26px; display: flex; flex-direction: column; gap: 13px; min-width: 0; }
+.kicker { font-family: var(--display); font-size: 12.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--accent); }
+h1, h2 { font-family: var(--display); font-weight: 800; line-height: 1.12; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+h1 { font-size: clamp(30px, 4.2vw, 46px); }
+h2 { font-size: clamp(23px, 2.8vw, 32px); }
+.text p { margin: 0; max-width: 35em; }
+.text p.lead { font-size: 19px; }
+.formula {
+  align-self: flex-start; font-family: var(--mono); font-size: 17px; padding: 7px 14px; border-radius: 10px;
+  border: 1.5px solid var(--accent); color: var(--accent);
+}
+.note { font-size: 15px; color: var(--muted); border-left: 3px solid var(--K); padding-left: 12px; }
+.trap { font-size: 15px; border-left: 3px solid var(--F); padding-left: 12px; }
+.trap b:first-child { color: var(--F); font-family: var(--display); }
+.q { font-family: var(--display); font-weight: 700; color: var(--K); }
+.vec { position: relative; display: inline-block; }
+.vec::after { content: "→"; position: absolute; left: 0; right: 0; top: -0.78em; font-size: 0.62em; text-align: center; line-height: 1; }
+.formula .vec::after { top: -0.62em; }
+.c-v { color: var(--v); font-weight: 600; } .c-F { color: var(--F); font-weight: 600; } .c-p { color: var(--p); font-weight: 600; } .c-K { color: var(--K); font-weight: 600; }
+ol.steps, ul.recap { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 7px; }
+.bench { background: var(--bench); border-left: 1px solid var(--line); display: flex; flex-direction: column; min-width: 0; }
+.cwrap { position: relative; flex: 1; min-height: 360px; }
+.cwrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.caption { font-family: var(--display); font-size: 13px; font-weight: 700; color: var(--muted); padding: 10px 16px; border-bottom: 1px solid var(--line); min-height: 40px; }
+.caption:empty { display: none; }
+.knobs { border-top: 1px solid var(--line); padding: 12px 16px 14px; display: grid; gap: 10px; font-family: var(--display); }
+.knobs[hidden] { display: none; }
+.knob { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; align-items: baseline; font-size: 14px; }
+.knob label { font-weight: 700; color: var(--ink); }
+.knob output { font-family: var(--mono); font-size: 14px; color: var(--accent); }
+.knob input[type="range"] { grid-column: 1 / -1; width: 100%; accent-color: var(--accent); height: 22px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips span { font-size: 13px; font-weight: 700; color: var(--muted); align-self: center; margin-right: 4px; }
+.chips button, .replay {
+  font-family: var(--display); font-weight: 700; font-size: 13.5px; border-radius: 999px; padding: 6px 13px; cursor: pointer;
+  border: 1.5px solid var(--line); background: var(--paper); color: var(--ink);
+}
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.chips button:focus-visible, .replay:focus-visible, .opt:focus-visible { outline: 3px solid var(--K); outline-offset: 2px; }
+.frac { display: inline-flex; flex-direction: column; vertical-align: middle; text-align: center; font-size: 0.86em; line-height: 1.15; margin: 0 0.12em; }
+.frac > span:first-child { border-bottom: 1.2px solid currentColor; padding: 0 0.2em 1px; }
+.frac > span:last-child { padding-top: 1px; }
+.det { display: inline-grid; grid-template-columns: auto auto; gap: 0 0.8em; border-left: 1.5px solid currentColor; border-right: 1.5px solid currentColor; padding: 0 0.45em; vertical-align: middle; line-height: 1.2; font-size: 0.9em; text-align: center; }
+.formula { line-height: 1.9; }
+details.try { border: 1.5px dashed var(--K); border-radius: 12px; padding: 9px 14px; background: color-mix(in srgb, var(--K) 5%, var(--paper)); }
+details.try > summary, details.sol > summary { cursor: pointer; font-family: var(--display); font-weight: 700; font-size: 15px; color: var(--K); }
+details.try[open] > summary { margin-bottom: 6px; }
+details.try p { margin: 6px 0 0; font-size: 16px; }
+details.sol { margin-top: 8px; border-top: 1px solid var(--line); padding-top: 6px; }
+details.sol > summary { color: var(--ok); }
+summary:focus-visible { outline: 3px solid var(--K); outline-offset: 3px; border-radius: 4px; }
+/* quiz */
+.quiz { display: flex; flex-direction: column; gap: 10px; }
+.quiz .qhead { font-family: var(--display); font-size: 13px; font-weight: 700; color: var(--muted); display: flex; justify-content: space-between; }
+.quiz .qtext { font-size: 18px; font-weight: 600; }
+.opt {
+  all: unset; box-sizing: border-box; cursor: pointer; display: flex; gap: 10px; align-items: flex-start; width: 100%;
+  border: 1.5px solid var(--line); border-radius: 12px; padding: 10px 14px; font-size: 16px; line-height: 1.45; background: var(--paper);
+}
+.opt .lt { font-family: var(--display); font-weight: 800; color: var(--muted); min-width: 1.2em; }
+.opt:hover { border-color: var(--accent); }
+.opt[data-state="right"] { border-color: var(--ok); background: color-mix(in srgb, var(--ok) 12%, var(--paper)); }
+.opt[data-state="wrong"] { border-color: var(--bad); background: color-mix(in srgb, var(--bad) 10%, var(--paper)); }
+.opt[disabled] { cursor: default; }
+.explain { font-size: 15px; border-radius: 12px; padding: 10px 14px; background: var(--bench); border: 1px solid var(--line); }
+.explain b { font-family: var(--display); }
+.qnav { display: flex; gap: 8px; flex-wrap: wrap; }
+.qnav button { font-family: var(--display); font-weight: 700; font-size: 14px; border-radius: 999px; padding: 7px 16px; cursor: pointer; border: 1.5px solid var(--accent); background: var(--accent); color: var(--paper); }
+.qnav button.ghost { background: transparent; color: var(--accent); }
+.controls { width: 100%; max-width: 1160px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.controls > button {
+  font-family: var(--display); font-weight: 700; font-size: 15px; border-radius: 999px; padding: 10px 20px; cursor: pointer;
+  border: 1.5px solid var(--line); background: var(--paper); color: var(--ink);
+}
+.controls > button.primary { background: var(--accent); border-color: var(--accent); color: var(--paper); }
+.controls > button:disabled { opacity: 0.4; cursor: default; }
+.controls > button:focus-visible, .dots button:focus-visible { outline: 3px solid var(--K); outline-offset: 2px; }
+.dots { display: flex; gap: 6px; flex-wrap: wrap; flex: 1; justify-content: center; }
+.dots button { width: 10px; height: 10px; padding: 0; border-radius: 50%; border: none; background: var(--line); cursor: pointer; }
+.dots button[aria-current="true"] { background: var(--accent); width: 24px; border-radius: 6px; }
+.dots button.quizdot { background: color-mix(in srgb, var(--K) 55%, var(--line)); }
+.dots button.quizdot[aria-current="true"] { background: var(--K); }
+@media (max-width: 860px) {
+  .dots { order: 3; flex-basis: 100%; }
+  .controls { justify-content: space-between; }
+  .stage { grid-template-columns: 1fr; min-height: 0; }
+  .text { padding: 22px 20px 18px; }
+  .bench { border-left: none; border-top: 1px solid var(--line); }
+  .cwrap { flex: none; height: 64vw; min-height: 270px; max-height: 430px; }
+  body { font-size: 16px; }
+  .text p.lead { font-size: 17px; }
+  .controls > button { padding: 9px 14px; }
+  .chapters button { font-size: 11px; }
+}
+@media (max-width: 480px) { .chapters button .lbl .long { display: none; } }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="topline">
+    <div class="brand">Διανύσματα <span>· συντεταγμένες στο επίπεδο</span></div>
+    <div class="counter" id="counter" aria-live="polite">1 / 1</div>
+  </div>
+  <nav class="chapters" id="chapters" aria-label="Κεφάλαια"></nav>
+</div>
+
+<main class="stage" id="stage">
+  <section class="text" id="text"></section>
+  <div class="bench">
+    <div class="caption" id="caption"></div>
+    <div class="cwrap"><canvas id="cv" aria-label="Κινούμενο σχέδιο της διαφάνειας"></canvas></div>
+    <div class="knobs" id="knobs" hidden></div>
+  </div>
+</main>
+
+<nav class="controls" aria-label="Πλοήγηση διαφανειών">
+  <button id="prev" type="button">← Πίσω</button>
+  <div class="dots" id="dots"></div>
+  <button id="next" type="button" class="primary">Επόμενο →</button>
+</nav>
+
+<script>
+/* ═══════════════════════════ CONTENT ═══════════════════════════ */
+const V = (s) => `<span class='vec'>${s}</span>`;
+const FR = (a, b) => `<span class='frac'><span>${a}</span><span>${b}</span></span>`;
+const DET = (a, b, c, d) => `<span class='det'><span>${a}</span><span>${b}</span><span>${c}</span><span>${d}</span></span>`;
+
+const CHAPTERS = [
+  { id: "A", name: "Α. Άξονες", long: "Το σύστημα συντεταγμένων" },
+  { id: "B", name: "Β. Διάνυσμα", long: "Συντεταγμένες διανύσματος" },
+  { id: "C", name: "Γ. Σημεία", long: "Μέσο, μέτρο, απόσταση" },
+  { id: "D", name: "Δ. Κατεύθυνση", long: "Γωνία, λ, παραλληλία" },
+];
+
+const SLIDES = [
+  /* ─────────────── Α. ΑΞΟΝΕΣ ─────────────── */
+  { ch: "A", kicker: "Ξεκινάμε", title: "Διανύσματα με αριθμούς", h1: true, scene: "hook", caption: "Το ίδιο βέλος, όπου κι αν το βάλεις: 3 δεξιά, 2 πάνω", html: `
+    <p class="lead">Μέχρι τώρα τα διανύσματα ήταν βέλη που τα σχεδίαζες. Από εδώ και πέρα κάθε διάνυσμα θα γίνεται <b>δύο αριθμοί</b>.</p>
+    <p>Κοίτα δεξιά: το βέλος μετακινείται, αλλά κάθε φορά κάνει την ίδια διαδρομή, <b>3 βήματα δεξιά και 2 πάνω</b>. Γι' αυτό το λέμε απλά ${V("α")} = (3, 2).</p>
+    <p>Με αυτή την ιδέα οι πράξεις, το μέτρο, το μέσο και η παραλληλία γίνονται απλοί λογαριασμοί, χωρίς σχήμα.</p>
+    <p class="note">Προχώρα με «Επόμενο», με τα βέλη του πληκτρολογίου ή σέρνοντας το δάχτυλο. Όπου υπάρχουν μπάρες, πείραξέ τες. Τα κουτιά «Δοκίμασε» είναι οι ασκήσεις του Δημήτρη: λύσε τες στο τετράδιο και μετά άνοιξε τη λύση.</p>` },
+
+  { ch: "A", kicker: "Σχολικό §1.4", title: "Ο άξονας", scene: "axis", caption: "Το σημείο M(x) και το διάνυσμα OM = x·i",
+    knobs: [{ id: "x", label: "τετμημένη x", min: -4, max: 4, step: 0.5, value: 2.5, unit: "" }], html: `
+    <p class="lead">Πάνω σε μια ευθεία x′x παίρνουμε δύο σημεία O και I, ώστε το ${V("OI")} να έχει <b>μέτρο 1</b>. Το ${V("OI")} = ${V("i")} το λέμε <b>μοναδιαίο διάνυσμα</b>.</p>
+    <p>Τότε έχουμε έναν <b>άξονα</b> με αρχή το O. Η Ox είναι ο <b>θετικός</b> ημιάξονας και η Ox′ ο <b>αρνητικός</b>.</p>
+    <p>Για κάθε σημείο M του άξονα, το ${V("OM")} είναι παράλληλο στο ${V("i")}, άρα υπάρχει <b>ένας μόνο</b> αριθμός x με</p>
+    <div class="formula">${V("OM")} = x · ${V("i")}</div>
+    <p>Τον x τον λέμε <b>τετμημένη</b> του M και γράφουμε M(x). Μετακίνησε τη μπάρα: αρνητικό x σημαίνει ότι το M είναι στον αρνητικό ημιάξονα.</p>` },
+
+  { ch: "A", kicker: "Σχολικό §1.4", title: "Το καρτεσιανό επίπεδο Oxy", scene: "plane", caption: "Μετακίνησε το M: οι προβολές του δίνουν τις συντεταγμένες",
+    knobs: [{ id: "x", label: "x", min: -4, max: 4, step: 0.5, value: 3, unit: "" }, { id: "y", label: "y", min: -3, max: 3, step: 0.5, value: 2, unit: "" }], html: `
+    <p class="lead">Δύο κάθετοι άξονες x′x και y′y με κοινή αρχή O και μοναδιαία διανύσματα ${V("i")} και ${V("j")} φτιάχνουν ένα <b>ορθοκανονικό σύστημα συντεταγμένων</b> Oxy.</p>
+    <p><b>Ορθο-</b> γιατί οι άξονες είναι κάθετοι, <b>-κανονικό</b> γιατί τα ${V("i")}, ${V("j")} είναι ισομήκη.</p>
+    <p>Από το M φέρνουμε παράλληλες στους άξονες: το M₁ δίνει την <b>τετμημένη x</b>, το M₂ την <b>τεταγμένη y</b>. Γράφουμε M(x, y).</p>
+    <p class="note"><b>Αποστάσεις από τους άξονες</b> (Σαββάλας): το M(x, y) απέχει <b>|y|</b> από τον x′x και <b>|x|</b> από τον y′y. Προσοχή, είναι ανάποδα απ' ό,τι περιμένεις!</p>` },
+
+  /* ─────────────── Β. ΣΥΝΤΕΤΑΓΜΕΝΕΣ ΔΙΑΝΥΣΜΑΤΟΣ ─────────────── */
+  { ch: "B", kicker: "Ο ορισμός", title: "Κάθε διάνυσμα γράφεται x·i + y·j", scene: "components", caption: "Πράσινο: x·i · μωβ: y·j · μπλε: α = x·i + y·j",
+    knobs: [{ id: "x", label: "x", min: -4, max: 4, step: 0.5, value: 3, unit: "" }, { id: "y", label: "y", min: -3, max: 4, step: 0.5, value: 2, unit: "" }], html: `
+    <p class="lead">Σχεδιάζουμε το ${V("α")} με αρχή το O: ${V("OA")} = ${V("α")}. Αν A₁, A₂ οι προβολές του A στους άξονες, τότε</p>
+    <div class="formula">${V("OA")} = ${V("OA")}₁ + ${V("OA")}₂ = x${V("i")} + y${V("j")}</div>
+    <p>Δηλαδή κάθε διάνυσμα είναι <b>γραμμικός συνδυασμός</b> των ${V("i")}, ${V("j")}. Τα x${V("i")} και y${V("j")} λέγονται <b>συνιστώσες</b> του ${V("α")}, οι αριθμοί x, y <b>συντεταγμένες</b> του (τετμημένη και τεταγμένη).</p>
+    <div class="formula">${V("α")} = x${V("i")} + y${V("j")}  ⇔  ${V("α")} = (x, y)</div>
+    <p>Ειδικά: ${V("i")} = (1, 0) και ${V("j")} = (0, 1). Ο συντελεστής του ${V("i")} πάει πρώτος, του ${V("j")} δεύτερος.</p>` },
+
+  { ch: "B", kicker: "Μοναδικότητα", title: "Ίσα διανύσματα, ίσες συντεταγμένες", scene: "unique", caption: "Όλα τα μπλε βέλη είναι το ίδιο διάνυσμα (2, 1)", html: `
+    <p class="lead">Η γραφή ${V("α")} = x${V("i")} + y${V("j")} είναι <b>μοναδική</b>. Γιατί; Αν και ${V("α")} = x′${V("i")} + y′${V("j")} με x ≠ x′, τότε</p>
+    <div class="formula">${V("i")} = ${FR("y′ − y", "x − x′")} ${V("j")}  ⇒  ${V("i")} // ${V("j")}</div>
+    <p>που είναι <b>άτοπο</b>, αφού οι άξονες είναι κάθετοι. Άρα x = x′ και y = y′.</p>
+    <p>Συνέπειες, για ${V("α")} = (x₁, y₁), ${V("β")} = (x₂, y₂):</p>
+    <ul class="recap"><li>${V("α")} = ${V("β")}  ⇔  x₁ = x₂ <b>και</b> y₁ = y₂</li><li>${V("α")} = ${V("0")}  ⇔  x = 0 <b>και</b> y = 0</li></ul>
+    <details class="try"><summary>Δοκίμασε (Δημήτρης): ίσα και μηδενικό</summary>
+      <p><b>1.</b> Βρες k, λ ώστε ${V("α")} = (k² − 1, λ − 1) και ${V("β")} = (3, 2k + 1) να είναι ίσα.</p>
+      <p><b>2.</b> Βρες k, λ ώστε το ${V("u")} = (k² + k − 2, 3λ − 3) να είναι μηδενικό.</p>
+      <details class="sol"><summary>Λύση</summary>
+        <p><b>1.</b> k² − 1 = 3 ⇒ k = 2 ή k = −2. Και λ − 1 = 2k + 1 ⇒ λ = 2k + 2. Για k = 2: λ = 6. Για k = −2: λ = −2. Δύο ζευγάρια: (k, λ) = (2, 6) ή (−2, −2).</p>
+        <p><b>2.</b> k² + k − 2 = 0 ⇒ k = 1 ή k = −2. Και 3λ − 3 = 0 ⇒ λ = 1.</p>
+      </details>
+    </details>` },
+
+  { ch: "B", kicker: "Πράξεις", title: "Πράξεις: συντεταγμένη με συντεταγμένη", scene: "ops", caption: "α = (1, −1), β = (1, 2): τα βέλη μπαίνουν το ένα μετά το άλλο",
+    chips: [{ id: "op", label: "Δείξε:", options: [["sum", "α + β"], ["diff", "α − β"], ["dbl", "2α"], ["mix", "2α − β"]], value: "sum" }], html: `
+    <p class="lead">Για ${V("α")} = (x₁, y₁), ${V("β")} = (x₂, y₂) και λ, μ ∈ ℝ:</p>
+    <div class="formula">${V("α")} + ${V("β")} = (x₁ + x₂, y₁ + y₂)</div>
+    <div class="formula">λ${V("α")} = (λx₁, λy₁)</div>
+    <div class="formula">λ${V("α")} + μ${V("β")} = (λx₁ + μx₂, λy₁ + μy₂)</div>
+    <p>Απόδειξη: γράψε ${V("α")} = x₁${V("i")} + y₁${V("j")}, ${V("β")} = x₂${V("i")} + y₂${V("j")} και μάζεψε τα ${V("i")} και τα ${V("j")}.</p>
+    <p>Η αφαίρεση είναι πρόσθεση του αντίθετου: −${V("β")} = (−x₂, −y₂), άρα ${V("α")} − ${V("β")} = (x₁ − x₂, y₁ − y₂).</p>
+    <p class="note">Παράδειγμα σχολικού: (1, −1) + (1, 2) = (2, 1), 2${V("α")} = (2, −2), ${V("α")} − ${V("β")} = (0, −3), 2${V("α")} − ${V("β")} = (1, −4). Πάτα τα κουμπιά για να τα δεις.</p>` },
+
+  { ch: "B", kicker: "Ειδικές θέσεις", title: "Πότε είναι παράλληλο σε άξονα", scene: "axispar", caption: "α = (λ² − 4, λ − 2): πείραξε το λ",
+    knobs: [{ id: "l", label: "λ", min: -4, max: 4, step: 0.25, value: 1, unit: "" }], html: `
+    <p class="lead">Για ${V("α")} = (x, y) ≠ ${V("0")}:</p>
+    <ul class="recap"><li>x = 0  ⇒  ${V("α")} // y′y (κατακόρυφο)</li><li>y = 0  ⇒  ${V("α")} // x′x (οριζόντιο)</li></ul>
+    <p class="trap"><b>Παγίδα:</b> μην ξεχάσεις τον έλεγχο ${V("α")} ≠ ${V("0")}. Το μηδενικό διάνυσμα είναι παράλληλο με όλα, οπότε οι ασκήσεις ζητούν «μη μηδενικό και παράλληλο».</p>
+    <details class="try"><summary>Δοκίμασε (Δημήτρης): ${V("α")} = (λ² − 4, λ − 2)</summary>
+      <p>Βρες το λ ώστε: (i) ${V("α")} = ${V("0")}, (ii) ${V("α")} ≠ ${V("0")} και ${V("α")} // x′x, (iii) ${V("α")} ≠ ${V("0")} και ${V("α")} // y′y.</p>
+      <details class="sol"><summary>Λύση</summary>
+        <p><b>(i)</b> λ² − 4 = 0 και λ − 2 = 0 ⇒ λ = 2.</p>
+        <p><b>(ii)</b> y = 0 ⇒ λ = 2. Τότε όμως και x = 0, δηλαδή ${V("α")} = ${V("0")}. <b>Κανένα λ</b> δεν κάνει. Δες το στη μπάρα!</p>
+        <p><b>(iii)</b> x = 0 ⇒ λ = ±2. Το λ = 2 δίνει μηδενικό, άρα <b>λ = −2</b> και ${V("α")} = (0, −4).</p>
+      </details>
+    </details>` },
+
+  { ch: "B", kicker: "Έλεγχος", title: "Quiz 1: συντεταγμένες και πράξεις", scene: "quiz", quiz: "q1", caption: "", html: "" },
+
+  /* ─────────────── Γ. ΣΗΜΕΙΑ ─────────────── */
+  { ch: "C", kicker: "Σημείο και διάνυσμα", title: "Το διάνυσμα θέσης", scene: "position", caption: "Το A κινείται: οι συντεταγμένες του A και του OA είναι πάντα ίδιες", html: `
+    <p class="lead">Αν ένα διάνυσμα έχει αρχή το O(0, 0), οι συντεταγμένες του <b>συμπίπτουν</b> με τις συντεταγμένες του τέλους του:</p>
+    <div class="formula">A(x, y)  ⇔  ${V("OA")} = (x, y)</div>
+    <p>Το ${V("OA")} λέγεται <b>διάνυσμα θέσης</b> ή <b>διανυσματική ακτίνα</b> του A. Είναι η «γέφυρα» ανάμεσα σε σημεία και διανύσματα: κάθε φορά που έχεις σημεία, γράφεις τις διανυσματικές τους ακτίνες και κάνεις πράξεις.</p>
+    <p class="note">Γι' αυτό σε όλες τις αποδείξεις που ακολουθούν βλέπεις πρώτα «${V("OA")} = (x₁, y₁), ${V("OB")} = (x₂, y₂)».</p>` },
+
+  { ch: "C", kicker: "Ο πιο χρήσιμος τύπος", title: "AB = τέλος μείον αρχή", scene: "ab", caption: "Από το A στο B: πόσο δεξιά και πόσο πάνω;",
+    chips: [{ id: "ex", label: "Παράδειγμα:", options: [["d", "Δημήτρης"], ["s", "Σχολικό"], ["v", "Σαββάλας"]], value: "d" }], html: `
+    <p class="lead">Για A(x₁, y₁) και B(x₂, y₂), αφού ${V("AB")} = ${V("OB")} − ${V("OA")}:</p>
+    <div class="formula">${V("AB")} = (x₂ − x₁, y₂ − y₁)</div>
+    <p>Δηλαδή <b>τετμημένη του ${V("AB")} = τετμημένη του B (τέλους) − τετμημένη του A (αρχής)</b>, και το ίδιο για την τεταγμένη.</p>
+    <p>Δημήτρης: A(−2, 3), B(5, −7) ⇒ ${V("AB")} = (5 − (−2), −7 − 3) = (7, −10).</p>
+    <p class="trap"><b>Παγίδα:</b> «τέλος μείον αρχή», όχι ανάποδα. Το ${V("BA")} = −${V("AB")}. Και πρόσεχε τα πρόσημα: 5 − (−2) = 7.</p>` },
+
+  { ch: "C", kicker: "Δοκίμασε", title: "Βρες σημείο από ισότητα διανυσμάτων", scene: "ak", caption: "A(−1, 1), B(2, −1), Γ(3, 4)", html: `
+    <p class="lead">Δημήτρης: δίνονται A(−1, 1), B(2, −1), Γ(3, 4). Βρες σημεία K, Λ ώστε ${V("AK")} = 2${V("BΓ")} και ${V("AΛ")} = 3${V("BΓ")}.</p>
+    <p>Η τεχνική: ονόμασε το άγνωστο σημείο K(x, y), γράψε <b>και τα δύο μέλη</b> με συντεταγμένες και εξίσωσε τετμημένες και τεταγμένες.</p>
+    <details class="sol"><summary>Λύση</summary>
+      <p>${V("BΓ")} = (3 − 2, 4 − (−1)) = (1, 5).</p>
+      <p>${V("AK")} = (x + 1, y − 1) = 2(1, 5) = (2, 10) ⇒ x = 1, y = 11. Άρα <b>K(1, 11)</b>.</p>
+      <p>${V("AΛ")} = (x + 1, y − 1) = 3(1, 5) = (3, 15) ⇒ <b>Λ(2, 16)</b>.</p>
+      <p class="note">Τα K, Λ είναι πάνω στην ευθεία από το A παράλληλη στο ${V("BΓ")}, όπως βλέπεις στο σχήμα.</p>
+    </details>` },
+
+  { ch: "C", kicker: "Σχολικό §1.4", title: "Συντεταγμένες μέσου τμήματος", scene: "mid", caption: "Το M μένει πάντα στη μέση: OM = ½(OA + OB)", html: `
+    <p class="lead">Αν M(x, y) είναι το μέσο του AB με A(x₁, y₁), B(x₂, y₂):</p>
+    <div class="formula">x = ${FR("x₁ + x₂", "2")}   y = ${FR("y₁ + y₂", "2")}</div>
+    <p>Απόδειξη: ${V("OM")} = ½(${V("OA")} + ${V("OB")}), άρα (x, y) = ½[(x₁, y₁) + (x₂, y₂)] = (${FR("x₁ + x₂", "2")}, ${FR("y₁ + y₂", "2")}).</p>
+    <p>Στο σχήμα το διακεκομμένο είναι το ${V("OA")} + ${V("OB")} (διαγώνιος του παραλληλογράμμου) και το M είναι στη μέση του.</p>
+    <p class="note">Σαββάλας: A(2, 5), B(1, −3) ⇒ M(${FR("2 + 1", "2")}, ${FR("5 − 3", "2")}) = M(3/2, 1).</p>
+    <p class="note">Ανάποδα: αν ξέρεις το μέσο M και το A, τότε <b>B = 2M − A</b>, δηλαδή x₂ = 2x − x₁, y₂ = 2y − y₁.</p>` },
+
+  { ch: "C", kicker: "Εφαρμογή", title: "Παραλληλόγραμμο: οι διαγώνιες διχοτομούνται", scene: "para", caption: "Το κέντρο K είναι μέσο και της ΑΓ και της ΒΔ",
+    chips: [{ id: "ex", label: "Άσκηση:", options: [["d", "Δημήτρης"], ["s", "Σχολικό"]], value: "d" }], html: `
+    <p class="lead">Σε παραλληλόγραμμο ΑΒΓΔ το κέντρο K είναι <b>μέσο και των δύο διαγωνίων</b>. Αυτό λύνει σχεδόν κάθε άσκηση με παραλληλόγραμμο.</p>
+    <details class="try"><summary>Δοκίμασε (Δημήτρης)</summary>
+      <p>Δίνονται οι κορυφές A(2, 3), B(4, −1), Γ(0, 5) παραλληλογράμμου ΑΒΓΔ. Βρες το κέντρο K και την κορυφή Δ.</p>
+      <details class="sol"><summary>Λύση</summary>
+        <p>K μέσο της ΑΓ: K(${FR("2 + 0", "2")}, ${FR("3 + 5", "2")}) = <b>K(1, 4)</b>.</p>
+        <p>K μέσο της ΒΔ: 1 = ${FR("4 + x", "2")} ⇒ x = −2 και 4 = ${FR("−1 + y", "2")} ⇒ y = 9. Άρα <b>Δ(−2, 9)</b>.</p>
+        <p>Έλεγχος: ${V("AB")} = (2, −4) και ${V("ΔΓ")} = (2, −4). Ίσα, άρα σωστά.</p>
+      </details>
+    </details>
+    <p class="note">Σχολικό (Εφαρμογή 1): A(−2, 1), B(1, 4) και κέντρο K(2, −3) ⇒ Γ(6, −7) και Δ(3, −10). Διάλεξε «Σχολικό» στα κουμπιά.</p>` },
+
+  { ch: "C", kicker: "Σχολικό, Εφαρμογή 2", title: "Κέντρο βάρους τριγώνου", scene: "centroid", caption: "A(−1, 1), B(2, 0), Γ(2, −3)", html: `
+    <p class="lead">Το κέντρο βάρους G του τριγώνου ΑΒΓ, αφού ${V("OG")} = ${FR(V("OA") + " + " + V("OB") + " + " + V("OΓ"), "3")}, έχει</p>
+    <div class="formula">x = ${FR("x₁ + x₂ + x₃", "3")}   y = ${FR("y₁ + y₂ + y₃", "3")}</div>
+    <details class="try"><summary>Δοκίμασε (Δημήτρης)</summary>
+      <p>Τρίγωνο ΑΒΓ με A(−1, 1), B(2, 0), Γ(2, −3). Βρες τις συντεταγμένες της διαμέσου ${V("AM")} και του σημείου Δ με ${V("BΔ")} = ${V("AΓ")}.</p>
+      <details class="sol"><summary>Λύση</summary>
+        <p>M μέσο της ΒΓ: M(${FR("2 + 2", "2")}, ${FR("0 − 3", "2")}) = M(2, −3/2). Άρα ${V("AM")} = (2 + 1, −3/2 − 1) = <b>(3, −5/2)</b>.</p>
+        <p>${V("AΓ")} = (3, −4). Αν Δ(x, y): ${V("BΔ")} = (x − 2, y) = (3, −4) ⇒ <b>Δ(5, −4)</b>.</p>
+        <p>Μπόνους: G(${FR("−1 + 2 + 2", "3")}, ${FR("1 + 0 − 3", "3")}) = G(1, −2/3), πάνω στη διάμεσο AM.</p>
+      </details>
+    </details>` },
+
+  { ch: "C", kicker: "Μέτρο", title: "Το μέτρο είναι Πυθαγόρειο", scene: "norm", caption: "Οι κάθετες πλευρές είναι |x| και |y|",
+    knobs: [{ id: "x", label: "x", min: -5, max: 5, step: 0.5, value: 3, unit: "" }, { id: "y", label: "y", min: -4, max: 4, step: 0.5, value: 4, unit: "" }], html: `
+    <p class="lead">Για ${V("α")} = (x, y), στο ορθογώνιο τρίγωνο OA₁A οι κάθετες πλευρές είναι (OA₁) = |x| και (A₁A) = (OA₂) = |y|. Πυθαγόρειο:</p>
+    <div class="formula">|${V("α")}| = √(x² + y²)</div>
+    <p>Σαββάλας: ${V("α")} = (5, −12) ⇒ |${V("α")}| = √(25 + 144) = √169 = 13. Δημήτρης: (−4, 3) ⇒ √(16 + 9) = 5.</p>
+    <details class="try"><summary>Δοκίμασε (Δημήτρης): μέτρο μέσα στις συντεταγμένες</summary>
+      <p>Βρες το |${V("α")}| αν ${V("α")} = (−3, ${FR("|" + V("α") + "| + 3", "2")}).</p>
+      <details class="sol"><summary>Λύση</summary>
+        <p>Βάλε m = |${V("α")}| ≥ 0. Τότε m² = 9 + ${FR("(m + 3)²", "4")} ⇒ 4m² = 36 + m² + 6m + 9 ⇒ 3m² − 6m − 45 = 0 ⇒ m² − 2m − 15 = 0.</p>
+        <p>m = 5 ή m = −3. Το μέτρο δεν είναι αρνητικό, άρα <b>|${V("α")}| = 5</b> και ${V("α")} = (−3, 4). Έλεγχος: √(9 + 16) = 5 ✓.</p>
+      </details>
+    </details>` },
+
+  { ch: "C", kicker: "Απόσταση", title: "Απόσταση δύο σημείων", scene: "dist", caption: "(AB) = |AB|: το μέτρο του διανύσματος AB",
+    chips: [{ id: "ex", label: "Παράδειγμα:", options: [["s", "Σχολικό"], ["v", "Σαββάλας"]], value: "s" }], html: `
+    <p class="lead">Η απόσταση των A και B είναι το μέτρο του ${V("AB")} = (x₂ − x₁, y₂ − y₁):</p>
+    <div class="formula">(AB) = √((x₂ − x₁)² + (y₂ − y₁)²)</div>
+    <p>Σχολικό: A(2, −7), B(5, −3) ⇒ (AB) = √(3² + 4²) = 5.</p>
+    <p>Σαββάλας: A(8, 3), B(2, −5) ⇒ (AB) = √((−6)² + (−8)²) = √100 = 10.</p>
+    <p class="note">Η σειρά δεν πειράζει εδώ, γιατί υψώνεις στο τετράγωνο: (AB) = (BA). Στο ${V("AB")} όμως η σειρά μετράει!</p>
+    <p class="note">Τρικ για ασκήσεις «σημείο του x′x που ισαπέχει από A και B»: πάρε M(x, 0), γράψε (MA)² = (MB)² και λύσε. Τα τετράγωνα σε γλιτώνουν από τις ρίζες.</p>` },
+
+  { ch: "C", kicker: "Δοκίμασε", title: "Τρίγωνα και τετράπλευρα με αποστάσεις", scene: "trap", caption: "",
+    chips: [{ id: "ex", label: "Άσκηση:", options: [["t", "1. Τραπέζιο"], ["e", "2. Ισόπλευρο"]], value: "t" }], html: `
+    <p class="lead">Με διανύσματα δείχνεις <b>παραλληλία</b> (πλευρές // ). Με αποστάσεις δείχνεις <b>ισότητα πλευρών</b>.</p>
+    <details class="try"><summary>1. (Δημήτρης) Ισοσκελές τραπέζιο</summary>
+      <p>Δείξε ότι τα A(−4, −6), B(5, 3), Γ(−4, −1), Δ(0, 3) είναι κορυφές ισοσκελούς τραπεζίου.</p>
+      <details class="sol"><summary>Λύση</summary>
+        <p>${V("AB")} = (9, 9) και ${V("ΓΔ")} = (4, 4). Είναι ${V("AB")} = ${FR("9", "4")}${V("ΓΔ")}, άρα <b>ΑΒ // ΓΔ</b> (οι βάσεις).</p>
+        <p>${V("AΓ")} = (0, 5) και ${V("BΔ")} = (−5, 0): δεν είναι παράλληλα, άρα είναι τα σκέλη. Και (ΑΓ) = 5 = (ΒΔ).</p>
+        <p>Άρα το ΑΒΔΓ είναι <b>ισοσκελές τραπέζιο</b>. Πρόσεξε: η σειρά των κορυφών είναι Α, Β, Δ, Γ.</p>
+      </details>
+    </details>
+    <details class="try"><summary>2. (Δημήτρης) Ισόπλευρο τρίγωνο</summary>
+      <p>Αν B(4, 0), Γ(0, 6), βρες τα σημεία A(x, y) ώστε το ΑΒΓ να είναι ισόπλευρο.</p>
+      <details class="sol"><summary>Λύση</summary>
+        <p>(ΒΓ)² = 16 + 36 = 52. Θέλουμε (AB)² = (AΓ)² = 52.</p>
+        <p>(AB)² = (AΓ)²: (x − 4)² + y² = x² + (y − 6)² ⇒ −8x + 16 = −12y + 36 ⇒ <b>2x = 3y − 5</b>.</p>
+        <p>Βάλε x = (3y − 5)/2 στο (x − 4)² + y² = 52: ${FR("(3y − 13)²", "4")} + y² = 52 ⇒ 13y² − 78y − 39 = 0 ⇒ y² − 6y − 3 = 0 ⇒ y = 3 ± 2√3.</p>
+        <p>Τότε x = 2 ± 3√3. Δύο λύσεις: <b>A(2 + 3√3, 3 + 2√3)</b> ή <b>A(2 − 3√3, 3 − 2√3)</b>, μία από κάθε μεριά της ΒΓ.</p>
+      </details>
+    </details>` },
+
+  { ch: "C", kicker: "Έλεγχος", title: "Quiz 2: σημεία, μέσο, μέτρο", scene: "quiz", quiz: "q2", caption: "", html: "" },
+
+  /* ─────────────── Δ. ΚΑΤΕΥΘΥΝΣΗ ─────────────── */
+  { ch: "D", kicker: "Σχολικό §1.4", title: "Η γωνία του διανύσματος με τον x′x", scene: "angle", caption: "Ο ημιάξονας Ox στρίβει αριστερόστροφα μέχρι να πέσει πάνω στο α",
+    knobs: [{ id: "phi", label: "γωνία φ", min: 0, max: 359, step: 1, value: 135, unit: "°" }], html: `
+    <p class="lead">Παίρνουμε A με ${V("OA")} = ${V("α")} ≠ ${V("0")}. <b>Γωνία του ${V("α")} με τον x′x</b> είναι η γωνία φ που διαγράφει ο ημιάξονας Ox όταν στραφεί γύρω από το O κατά τη <b>θετική φορά</b> (αντίθετα από τους δείκτες του ρολογιού) μέχρι να συμπέσει με την ημιευθεία OA.</p>
+    <div class="formula">0 ≤ φ < 2π   (0° ≤ φ < 360°)</div>
+    <p>Σύγκρινε με τη γωνία ω <b>δύο διανυσμάτων</b>, που μάθαμε πριν: εκεί 0 ≤ ω ≤ π και (${V("α")}, ${V("β")}) = (${V("β")}, ${V("α")}). Αν ω = 0 τα διανύσματα είναι ομόρροπα, αν ω = π αντίρροπα.</p>
+    <p class="note">Σαββάλας: για ${V("α")} δεξιά-κάτω φ = 315°, για ${V("β")} προς τα αριστερά φ = 180°, για ${V("γ")} προς τα κάτω φ = 270°.</p>` },
+
+  { ch: "D", kicker: "Ο ορισμός", title: "Συντελεστής διεύθυνσης λ = y/x = εφφ", scene: "slope", caption: "Κλίση: πόσο ανεβαίνει για κάθε 1 προς τα δεξιά",
+    knobs: [{ id: "phi", label: "γωνία φ", min: 0, max: 359, step: 1, value: 60, unit: "°" }], html: `
+    <p class="lead">Για ${V("α")} = (x, y) με <b>x ≠ 0</b>, ο αριθμός</p>
+    <div class="formula">λ = ${FR("y", "x")} = εφφ</div>
+    <p>λέγεται <b>συντελεστής διεύθυνσης</b> του ${V("α")} (λ<sub>α</sub> ή απλά λ). Η ισότητα με την εφφ βγαίνει από την τριγωνομετρία: το A(x, y) είναι στην τελική πλευρά της φ.</p>
+    <ul class="recap"><li>y = 0: ${V("α")} // x′x, λ = 0, φ = 0 ή φ = π.</li><li>x = 0: ${V("α")} // y′y, <b>δεν ορίζεται</b> λ, φ = π/2 ή φ = 3π/2.</li></ul>
+    <p class="trap"><b>Παγίδα:</b> το λ δεν φτάνει για να βρεις τη φ. Το εφφ = 1 δίνει 45° <b>ή</b> 225°. Ποια από τις δύο το αποφασίζουν τα πρόσημα των x, y (το τεταρτημόριο). Στο σχήμα, το διακεκομμένο βέλος έχει το ίδιο λ!</p>
+    <p class="note">Για ${V("AB")} με A(x₁, y₁), B(x₂, y₂), x₁ ≠ x₂: λ = ${FR("y₂ − y₁", "x₂ − x₁")}.</p>` },
+
+  { ch: "D", kicker: "Δοκίμασε", title: "Βρες τις γωνίες με τον x′x", scene: "angles8", caption: "Πρώτα το τεταρτημόριο, μετά η εφαπτομένη", html: `
+    <details class="try" open><summary>1. (Δημήτρης) Οκτώ διανύσματα</summary>
+      <p>${V("α")} = (1, √3), ${V("β")} = (1, 1), ${V("γ")} = (−√3, −3), ${V("δ")} = (2, −2), ${V("u")} = (0, 2), ${V("v")} = (2, 0), ${V("w")} = (0, −2), ${V("t")} = (−2, 0).</p>
+      <details class="sol"><summary>Λύση</summary>
+        <p>${V("α")}: εφφ = √3, 1ο τεταρτημόριο ⇒ 60°. ${V("β")}: εφφ = 1 ⇒ 45°. ${V("γ")}: εφφ = √3, 3ο τεταρτημόριο ⇒ 180° + 60° = <b>240°</b>. ${V("δ")}: εφφ = −1, 4ο ⇒ <b>315°</b>.</p>
+        <p>${V("u")} = (0, 2): προς τα πάνω ⇒ 90°. ${V("v")}: 0°. ${V("w")}: 270°. ${V("t")}: 180°. (Στα τέσσερα τελευταία δεν υπάρχει λ για τα ${V("u")}, ${V("w")}.)</p>
+      </details>
+    </details>
+    <details class="try"><summary>2. (Δημήτρης) ${V("v")} = (μ − 1, 2μ)</summary>
+      <p>α) Για ποια μ ορίζεται συντελεστής διεύθυνσης; β) γ) δ) Βρες τη γωνία με τον x′x για μ = −1, μ = 1/3, μ = 1.</p>
+      <details class="sol"><summary>Λύση</summary>
+        <p>α) Θέλουμε x ≠ 0: μ ≠ 1, και τότε λ = ${FR("2μ", "μ − 1")}.</p>
+        <p>β) μ = −1: ${V("v")} = (−2, −2), 3ο τεταρτημόριο, εφφ = 1 ⇒ <b>225°</b>.</p>
+        <p>γ) μ = 1/3: ${V("v")} = (−2/3, 2/3), 2ο τεταρτημόριο, εφφ = −1 ⇒ <b>135°</b>.</p>
+        <p>δ) μ = 1: ${V("v")} = (0, 2) // y′y, δεν ορίζεται λ, φ = <b>90°</b>.</p>
+      </details>
+    </details>` },
+
+  { ch: "D", kicker: "Νέο εργαλείο", title: "Η ορίζουσα det(α, β)", scene: "det", caption: "Το εμβαδόν του παραλληλογράμμου είναι |det|",
+    knobs: [{ id: "th", label: "γωνία του β", min: 0, max: 180, step: 1, value: 70, unit: "°" }], html: `
+    <p class="lead">Για ${V("α")} = (x₁, y₁) και ${V("β")} = (x₂, y₂), η <b>ορίζουσα των ${V("α")}, ${V("β")}</b> (με αυτή τη σειρά) έχει 1η γραμμή το ${V("α")} και 2η το ${V("β")}:</p>
+    <div class="formula">det(${V("α")}, ${V("β")}) = ${DET("x₁", "y₁", "x₂", "y₂")} = x₁y₂ − x₂y₁</div>
+    <p>Υπολογίζεις «χιαστί»: κύρια διαγώνιος μείον δευτερεύουσα. Π.χ. ${DET("2", "3", "−1", "2")} = 4 − (−3) = 7.</p>
+    <p class="note"><b>Για να το καταλάβεις</b> (εκτός ύλης): η |det| είναι το εμβαδόν του παραλληλογράμμου που φτιάχνουν τα ${V("α")}, ${V("β")}. Γύρνα το ${V("β")} μέχρι να «πέσει» πάνω στη διεύθυνση του ${V("α")}: το παραλληλόγραμμο πλακώνει και det = 0.</p>
+    <p class="trap"><b>Παγίδα:</b> det(${V("β")}, ${V("α")}) = −det(${V("α")}, ${V("β")}). Η σειρά αλλάζει το πρόσημο (όχι όμως το αν είναι 0).</p>` },
+
+  { ch: "D", kicker: "Το θεώρημα", title: "Συνθήκη παραλληλίας: α // β ⇔ det(α, β) = 0", scene: "parallel", caption: "α = (1, 2), β = (λ, 3): βρες το λ που τα κάνει παράλληλα",
+    knobs: [{ id: "l", label: "λ", min: -3, max: 4, step: 0.25, value: 0.5, unit: "" }], html: `
+    <div class="formula">${V("α")} // ${V("β")}  ⇔  det(${V("α")}, ${V("β")}) = 0</div>
+    <p><b>(⇒)</b> Αν ${V("β")} ≠ ${V("0")}, τότε ${V("α")} = λ${V("β")}, δηλαδή x₁ = λx₂, y₁ = λy₂, άρα det = λx₂y₂ − x₂λy₂ = 0. Αν ${V("β")} = ${V("0")}, τότε det = x₁·0 − 0·y₁ = 0.</p>
+    <p><b>(⇐)</b> Από x₁y₂ = x₂y₁: αν x₂ ≠ 0, με λ = x₁/x₂ παίρνουμε x₁ = λx₂ και y₁ = λy₂, άρα ${V("α")} = λ${V("β")}. Αν x₂ = 0, τότε τα δύο είναι // y′y ή το ${V("β")} είναι μηδενικό.</p>
+    <p class="note"><b>Σ.Σ. (Δημήτρης):</b> η συνθήκη det = 0 είναι <b>ευρύτερη</b> από την ${V("α")} = λ${V("β")}, γιατί καλύπτει και την περίπτωση ${V("β")} = ${V("0")}.</p>
+    <p class="note">Σαββάλας: det = 1·3 − λ·2 = 0 ⇒ λ = 3/2. Φέρε τη μπάρα στο 1,5!</p>` },
+
+  { ch: "D", kicker: "Σύνοψη Δημήτρη", title: "Τρεις τρόποι να γράψεις α // β", scene: "sumpar", caption: "",
+    chips: [{ id: "dir", label: "Τα α, β είναι:", options: [["same", "ομόρροπα (k > 0)"], ["opp", "αντίρροπα (k < 0)"]], value: "same" }], html: `
+    <p class="lead">Όταν μια άσκηση λέει ${V("α")} // ${V("β")}, διάλεξε τη μορφή που σε βολεύει:</p>
+    <ol class="steps">
+      <li><b>${V("α")} = k${V("β")}</b> (αν ${V("β")} ≠ ${V("0")}). Με k > 0 ομόρροπα (${V("α")} ↑↑ ${V("β")}), με k < 0 αντίρροπα (${V("α")} ↑↓ ${V("β")}). <i>Μόνο αυτή η μορφή λέει και τη φορά!</i></li>
+      <li><b>det(${V("α")}, ${V("β")}) = 0</b>. Η πιο γενική, δουλεύει πάντα.</li>
+      <li><b>λ<sub>α</sub> = λ<sub>β</sub></b>, αν κανένα δεν είναι // y′y (x₁ ≠ 0 και x₂ ≠ 0). Από x₁y₂ = x₂y₁ ⇔ y₁/x₁ = y₂/x₂.</li>
+    </ol>
+    <p>Και θυμήσου το μέτρο του αθροίσματος: ομόρροπα ⇒ |${V("α")} + ${V("β")}| = |${V("α")}| + |${V("β")}|, αντίρροπα ⇒ |${V("α")} + ${V("β")}| = ||${V("α")}| − |${V("β")}||.</p>
+    <details class="try"><summary>Δοκίμασε (Δημήτρης): ομόρροπα ή αντίρροπα;</summary>
+      <p>${V("α")} = (2, −6), ${V("β")} = (1, −3). Δείξε ότι ${V("α")} ↑↑ ${V("β")}.</p>
+      <details class="sol"><summary>Λύση</summary><p>(2, −6) = 2·(1, −3), δηλαδή ${V("α")} = 2${V("β")} με k = 2 > 0, άρα ομόρροπα. Το det = 2·(−3) − 1·(−6) = 0 δείχνει μόνο ότι είναι παράλληλα, όχι τη φορά.</p></details>
+    </details>` },
+
+  { ch: "D", kicker: "Σχολικό, Εφαρμογή", title: "Συνευθειακά σημεία", scene: "collinear", caption: "A(1, 0), B(−μ², 3), Γ(−5μ, 9)",
+    knobs: [{ id: "m", label: "μ", min: -1, max: 2, step: 1 / 6, value: 0, unit: "" }], html: `
+    <p class="lead">Τρία σημεία A, B, Γ είναι <b>συνευθειακά</b> αν και μόνο αν ${V("AB")} // ${V("AΓ")}, δηλαδή</p>
+    <div class="formula">det(${V("AB")}, ${V("AΓ")}) = 0</div>
+    <p>Σχολικό: για A(1, 0), B(−μ², 3), Γ(−5μ, 9) είναι ${V("AB")} = (−μ² − 1, 3), ${V("AΓ")} = (−5μ − 1, 9) και</p>
+    <p>${DET("−μ² − 1", "3", "−5μ − 1", "9")} = 0 ⇔ −9μ² − 9 + 15μ + 3 = 0 ⇔ 3μ² − 5μ + 2 = 0 ⇔ <b>μ = 1 ή μ = 2/3</b>.</p>
+    <p class="note">Κούνησε τη μπάρα: στο 0,67 και στο 1 τα τρία σημεία ευθυγραμμίζονται. Αν det ≠ 0, τα A, B, Γ είναι κορυφές τριγώνου.</p>
+    <details class="try"><summary>Δοκίμασε (Δημήτρης)</summary>
+      <p>A(1, −2), B(−2, 3). α) Αν ${V("AK")} = −2${V("KB")}, βρες το K. β) Σχηματίζουν τρίγωνο τα A, B, K; γ) Βρες τη γωνία του ${V("AK")} με τον x′x.</p>
+      <details class="sol"><summary>Λύση</summary>
+        <p>α) K(x, y): (x − 1, y + 2) = −2(−2 − x, 3 − y) = (4 + 2x, −6 + 2y) ⇒ x = −5, y = 8. <b>K(−5, 8)</b>.</p>
+        <p>β) Όχι: ${V("AK")} = −2${V("KB")}, άρα ${V("AK")} // ${V("KB")} με κοινό σημείο το K. Τα A, B, K είναι συνευθειακά.</p>
+        <p>γ) ${V("AK")} = (−6, 10): 2ο τεταρτημόριο, εφφ = −5/3, άρα φ = 180° − ω με εφω = 5/3 (ω ≈ 59°), δηλαδή <b>φ ≈ 121°</b>.</p>
+      </details>
+    </details>` },
+
+  { ch: "D", kicker: "Έλεγχος", title: "Quiz 3: γωνία, λ και παραλληλία", scene: "quiz", quiz: "q3", caption: "", html: "" },
+
+  { ch: "D", kicker: "Τέλος", title: "Τυπολόγιο σε μία σελίδα", scene: "recap", caption: "Όλα σε ένα σχήμα", html: `
+    <ul class="recap">
+      <li>A(x, y) ⇔ ${V("OA")} = (x, y) · ${V("α")} = x${V("i")} + y${V("j")} ⇔ ${V("α")} = (x, y)</li>
+      <li>Πράξεις: συντεταγμένη με συντεταγμένη. λ${V("α")} + μ${V("β")} = (λx₁ + μx₂, λy₁ + μy₂)</li>
+      <li>${V("AB")} = (x₂ − x₁, y₂ − y₁): τέλος μείον αρχή</li>
+      <li>Μέσο: (${FR("x₁ + x₂", "2")}, ${FR("y₁ + y₂", "2")}) · Κέντρο βάρους: διαιρείς με 3</li>
+      <li>|${V("α")}| = √(x² + y²) · (AB) = √((x₂ − x₁)² + (y₂ − y₁)²)</li>
+      <li>0 ≤ φ < 2π · λ = y/x = εφφ (x ≠ 0)</li>
+      <li>${V("α")} // ${V("β")} ⇔ det(${V("α")}, ${V("β")}) = 0 ⇔ λ₁ = λ₂ (αν ορίζονται)</li>
+      <li>${V("α")} // x′x ⇔ y = 0 · ${V("α")} // y′y ⇔ x = 0 · αντίθετα ⇔ x₁ = −x₂ και y₁ = −y₂</li>
+    </ul>
+    <p class="note">Παρατηρήσεις Σαββάλα: απόσταση του M(x, y) από τον x′x είναι |y|, από τον y′y είναι |x|. Το M(α, β) είναι πάνω από το N(α, γ) όταν β > γ. ${V("α")} ≠ ${V("0")} ⇔ x ≠ 0 <b>ή</b> y ≠ 0.</p>
+    <p class="note">Τυπογραφικό στο βοήθημα (σελ. 39): στο τελευταίο παράδειγμα γράφει «${V("α")} ∦ ${V("β")}», ενώ εννοεί ${V("α")} ∦ ${V("γ")}.</p>` },
+];
+
+/* ═══════════════════════════ QUIZZES ═══════════════════════════ */
+const QUIZZES = {
+  q1: [
+    { q: `Αν ${V("α")} = 3${V("i")} − 2${V("j")}, τότε:`, o: ["α = (3, 2)", "α = (3, −2)", "α = (−2, 3)"], a: 1,
+      e: "Ο συντελεστής του i είναι η τετμημένη, ο συντελεστής του j η τεταγμένη, με το πρόσημό του." },
+    { q: `Αν ${V("α")} = (1, −1) και ${V("β")} = (1, 2), το 2${V("α")} − ${V("β")} είναι:`, o: ["(1, −4)", "(3, 0)", "(1, 0)", "(2, −4)"], a: 0,
+      e: "2α = (2, −2) και −β = (−1, −2). Άθροισμα: (1, −4). Είναι το παράδειγμα του σχολικού." },
+    { q: `Το ${V("α")} = (0, −5) είναι:`, o: ["παράλληλο στον x′x", "παράλληλο στον y′y", "μηδενικό"], a: 1,
+      e: "x = 0 και α ≠ 0, άρα κατακόρυφο: α // y′y. Δείχνει προς τα κάτω." },
+    { q: `Για ποιο λ το ${V("α")} = (λ² − 4, λ − 2) είναι μη μηδενικό και παράλληλο στον x′x;`, o: ["λ = 2", "λ = ±2", "για κανένα λ"], a: 2,
+      e: "y = 0 ⇒ λ = 2, αλλά τότε και x = 0, δηλαδή α = 0. Άρα κανένα λ. Η κλασική παγίδα του Δημήτρη." },
+    { q: "Αν (x − 1, 4) = (3, y + 1), τότε:", o: ["x = 4, y = 3", "x = 2, y = 5", "x = 4, y = 5"], a: 0,
+      e: "Ίσα διανύσματα ⇔ ίσες συντεταγμένες: x − 1 = 3 και 4 = y + 1." },
+  ],
+  q2: [
+    { q: "A(3, −2), B(−1, 5). Το AB είναι:", o: ["(4, −7)", "(−4, 7)", "(2, 3)"], a: 1,
+      e: "Τέλος μείον αρχή: (−1 − 3, 5 − (−2)) = (−4, 7). Παράδειγμα του Σαββάλα." },
+    { q: "Το μέσο του AB με A(2, 5) και B(1, −3) είναι:", o: ["(3/2, 1)", "(1/2, 4)", "(3, 2)"], a: 0,
+      e: "((2 + 1)/2, (5 − 3)/2) = (3/2, 1)." },
+    { q: `Αν ${V("α")} = (5, −12), τότε |${V("α")}| =`, o: ["7", "13", "√119"], a: 1,
+      e: "√(25 + 144) = √169 = 13. Το (−12)² είναι +144." },
+    { q: "Η απόσταση του M(−3, 4) από τον άξονα x′x είναι:", o: ["3", "4", "5"], a: 1,
+      e: "Από τον x′x μετράς κατακόρυφα, άρα |y| = 4. Το 5 είναι η απόσταση από την αρχή O." },
+    { q: "K(−3, 3) είναι το κέντρο κύκλου και A(1, 2) σημείο του. Το αντιδιαμετρικό του A είναι:", o: ["(−7, 4)", "(−1, 5/2)", "(4, −1)"], a: 0,
+      e: "Το K είναι μέσο του AA′: A′ = 2K − A = (−6 − 1, 6 − 2) = (−7, 4). Άσκηση 9 του Δημήτρη." },
+  ],
+  q3: [
+    { q: `Η γωνία του ${V("α")} = (−1, −1) με τον x′x είναι:`, o: ["45°", "135°", "225°", "315°"], a: 2,
+      e: "εφφ = 1 δίνει 45° ή 225°. Και τα δύο πρόσημα αρνητικά ⇒ 3ο τεταρτημόριο ⇒ 225°." },
+    { q: `Ο συντελεστής διεύθυνσης του ${V("α")} = (0, 3) είναι:`, o: ["0", "3", "δεν ορίζεται"], a: 2,
+      e: "x = 0, άρα α // y′y και το y/x δεν ορίζεται. Λ = 0 έχουν τα οριζόντια." },
+    { q: `det(${V("α")}, ${V("β")}) για ${V("α")} = (2, 3), ${V("β")} = (−1, 2):`, o: ["1", "7", "−7"], a: 1,
+      e: "2·2 − (−1)·3 = 4 + 3 = 7 ≠ 0, άρα δεν είναι παράλληλα (σχολικό)." },
+    { q: `${V("α")} = (1, 2), ${V("β")} = (λ, 3). Είναι παράλληλα όταν:`, o: ["λ = 3/2", "λ = 2/3", "λ = 6"], a: 0,
+      e: "det = 1·3 − λ·2 = 0 ⇒ λ = 3/2. Ή με συντελεστές: 2/1 = 3/λ." },
+    { q: "Αν det(α, β) = 0, τότε σίγουρα:", o: ["α = λβ για κάποιο λ", "α // β (μπορεί και β = 0)", "α = β"], a: 1,
+      e: "Αν β = 0 και α ≠ 0, δεν υπάρχει λ με α = λβ, αλλά det = 0. Γι' αυτό η det είναι πιο γενική (Σ.Σ. Δημήτρη)." },
+    { q: `${V("α")} = (2, −6), ${V("β")} = (1, −3). Ισχύει:`, o: ["α ↑↓ β", "α ↑↑ β", "δεν είναι παράλληλα"], a: 1,
+      e: "α = 2β με 2 > 0, άρα ομόρροπα." },
+  ],
+};
+
+/* ═══════════════════════════ DRAWING KIT ═══════════════════════════ */
+let COL = {};
+function readColors() {
+  const cs = getComputedStyle(document.documentElement);
+  for (const k of ["ink", "muted", "line", "accent", "a", "b", "r", "j", "K", "bench", "grid", "paper", "ok", "bad", "axis"]) COL[k] = cs.getPropertyValue("--" + k).trim();
+}
+readColors();
+matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", readColors);
+new MutationObserver(readColors).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+const cv = document.getElementById("cv");
+const ctx = cv.getContext("2d");
+let W = 0, H = 0;
+function resize() {
+  const r = cv.getBoundingClientRect();
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  W = r.width; H = r.height;
+  cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+new ResizeObserver(resize).observe(cv);
+
+const FONT = (s, w = 700) => `${w} ${s}px Commissioner, "Segoe UI", system-ui, sans-serif`;
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+const lerp = (a, b, k) => a + (b - a) * k;
+const ease = (k) => (k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2);
+const seg = (t, a, b) => clamp((t - a) / (b - a));
+const num = (v, d = 2) => (Math.abs(v) < 0.005 ? 0 : v).toLocaleString("el-GR", { maximumFractionDigits: d });
+const deg = Math.PI / 180;
+
+function text(s, x, y, color = COL.muted, size = 14, align = "center", w = 700) { ctx.fillStyle = color; ctx.font = FONT(size, w); ctx.textAlign = align; ctx.fillText(s, x, y); }
+function rrect(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+/** Text with a small arrow above it (vector name). */
+function vtext(s, x, y, color, size = 15, align = "center") {
+  ctx.font = FONT(size, 800); const w = ctx.measureText(s).width;
+  text(s, x, y, color, size, align, 800);
+  const x0 = align === "center" ? x - w / 2 : align === "left" ? x : x - w;
+  const yy = y - size * 0.95;
+  ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = 1.3;
+  ctx.beginPath(); ctx.moveTo(x0 + 1, yy); ctx.lineTo(x0 + w - 1, yy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x0 + w + 1, yy); ctx.lineTo(x0 + w - 4, yy - 2.6); ctx.lineTo(x0 + w - 4, yy + 2.6); ctx.closePath(); ctx.fill();
+}
+/** Rounded label box for formulas. */
+function tag(s, x, y, color, align = "left") {
+  ctx.font = FONT(13); const w = ctx.measureText(s).width + 16;
+  const x0 = align === "center" ? x - w / 2 : align === "right" ? x - w : x;
+  ctx.strokeStyle = color; ctx.lineWidth = 1.3; ctx.fillStyle = COL.paper; rrect(x0, y - 14, w, 21, 10.5); ctx.fill(); ctx.stroke();
+  text(s, x0 + 8, y + 1.5, color, 13, "left");
+  return w;
+}
+function arrowPx(x1, y1, x2, y2, color, width = 3, head = 11, opts = {}) {
+  const dx = x2 - x1, dy = y2 - y1, L = Math.hypot(dx, dy);
+  if (L < 2) return;
+  const ux = dx / L, uy = dy / L, h = Math.min(head, L * 0.55);
+  ctx.save();
+  if (opts.alpha != null) ctx.globalAlpha = opts.alpha;
+  ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = width; ctx.lineCap = "round";
+  if (opts.dash) ctx.setLineDash([6, 5]);
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2 - ux * h * 0.8, y2 - uy * h * 0.8); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(x2 - ux * h - uy * h * 0.5, y2 - uy * h + ux * h * 0.5); ctx.lineTo(x2 - ux * h + uy * h * 0.5, y2 - uy * h - ux * h * 0.5); ctx.closePath(); ctx.fill();
+  ctx.restore();
+}
+
+/** Coordinate plane fitted into the canvas. Returns {X, Y, u}. */
+function plane(xmin, xmax, ymin, ymax, opts = {}) {
+  const padX = opts.padX ?? 26, top = opts.top ?? 18, bottom = opts.bottom ?? 18;
+  const u = Math.min((W - 2 * padX) / (xmax - xmin), (H - top - bottom) / (ymax - ymin));
+  const ox = W / 2 - u * (xmin + xmax) / 2;
+  const oy = top + (H - top - bottom) / 2 + u * (ymin + ymax) / 2;
+  const P = { u, X: (x) => ox + x * u, Y: (y) => oy - y * u, xmin, xmax, ymin, ymax };
+  if (opts.grid !== false) {
+    const step = u >= 18 ? 1 : u >= 8 ? 2 : 5;
+    ctx.strokeStyle = COL.grid; ctx.lineWidth = 1;
+    for (let x = Math.ceil(xmin / step) * step; x <= xmax; x += step) { ctx.beginPath(); ctx.moveTo(P.X(x), P.Y(ymin)); ctx.lineTo(P.X(x), P.Y(ymax)); ctx.stroke(); }
+    for (let y = Math.ceil(ymin / step) * step; y <= ymax; y += step) { ctx.beginPath(); ctx.moveTo(P.X(xmin), P.Y(y)); ctx.lineTo(P.X(xmax), P.Y(y)); ctx.stroke(); }
+    // axes
+    if (ymin <= 0 && ymax >= 0) { arrowPx(P.X(xmin), P.Y(0), P.X(xmax) + 6, P.Y(0), COL.axis, 1.5, 8); text("x", P.X(xmax) + 6, P.Y(0) + 17, COL.muted, 13); }
+    if (xmin <= 0 && xmax >= 0) { arrowPx(P.X(0), P.Y(ymin), P.X(0), P.Y(ymax) - 6, COL.axis, 1.5, 8); text("y", P.X(0) - 11, P.Y(ymax) + 2, COL.muted, 13); }
+    if (xmin <= 0 && xmax >= 0 && ymin <= 0 && ymax >= 0) text("O", P.X(0) - 9, P.Y(0) + 15, COL.muted, 12.5);
+    if (opts.ticks !== false && u >= 16) {
+      const ts = u >= 30 ? step : step * 2;
+      for (let x = Math.ceil(xmin / ts) * ts; x <= xmax - 0.5; x += ts) if (x !== 0) text(String(x).replace("-", "−"), P.X(x), P.Y(0) + 14, COL.muted, 10.5, "center", 500);
+      for (let y = Math.ceil(ymin / ts) * ts; y <= ymax - 0.5; y += ts) if (y !== 0) text(String(y).replace("-", "−"), P.X(0) - 6, P.Y(y) + 4, COL.muted, 10.5, "right", 500);
+    }
+  }
+  return P;
+}
+/** Plane that fits a list of points (plus the origin when asked). */
+function fitPlane(pts, opts = {}) {
+  const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
+  if (opts.origin !== false) { xs.push(0); ys.push(0); }
+  const m = opts.margin ?? 1.2;
+  return plane(Math.floor(Math.min(...xs) - m), Math.ceil(Math.max(...xs) + m), Math.floor(Math.min(...ys) - m), Math.ceil(Math.max(...ys) + m), opts);
+}
+function vec(P, x1, y1, x2, y2, color, width = 3, opts = {}) { arrowPx(P.X(x1), P.Y(y1), P.X(x2), P.Y(y2), color, width, opts.head ?? 11, opts); }
+function dot(P, x, y, color, label, pos = "ne", opts = {}) {
+  const px = P.X(x), py = P.Y(y);
+  ctx.fillStyle = color; ctx.strokeStyle = COL.paper; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(px, py, opts.r ?? 4.5, 0, 7); ctx.fill(); ctx.stroke();
+  if (!label) return;
+  const off = { ne: [8, -8, "left"], nw: [-8, -8, "right"], se: [8, 18, "left"], sw: [-8, 18, "right"], n: [0, -11, "center"], s: [0, 21, "center"], e: [10, 5, "left"], w: [-10, 5, "right"] }[pos];
+  text(label, px + off[0], py + off[1], opts.labelColor || color, opts.size ?? 13.5, off[2], 800);
+}
+function dashed(P, x1, y1, x2, y2, color = COL.muted, w = 1.3) {
+  ctx.save(); ctx.setLineDash([5, 5]); ctx.strokeStyle = color; ctx.lineWidth = w; ctx.beginPath(); ctx.moveTo(P.X(x1), P.Y(y1)); ctx.lineTo(P.X(x2), P.Y(y2)); ctx.stroke(); ctx.restore();
+}
+function line(P, x1, y1, x2, y2, color, w = 2) { ctx.strokeStyle = color; ctx.lineWidth = w; ctx.beginPath(); ctx.moveTo(P.X(x1), P.Y(y1)); ctx.lineTo(P.X(x2), P.Y(y2)); ctx.stroke(); }
+function poly(P, pts, fill, stroke, alpha = 0.14) {
+  ctx.beginPath(); pts.forEach(([x, y], i) => (i ? ctx.lineTo(P.X(x), P.Y(y)) : ctx.moveTo(P.X(x), P.Y(y)))); ctx.closePath();
+  if (fill) { ctx.globalAlpha = alpha; ctx.fillStyle = fill; ctx.fill(); ctx.globalAlpha = 1; }
+  if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = 2; ctx.stroke(); }
+}
+/** Arc for an angle at (cx, cy) from a0 to a1 (radians, math orientation), with arrow head at the end. */
+function angleArc(P, cx, cy, rPx, a0, a1, color, label) {
+  if (Math.abs(a1 - a0) < 0.01) return;
+  ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(P.X(cx), P.Y(cy), rPx, -a0, -a1, true); ctx.stroke();
+  const ex = P.X(cx) + rPx * Math.cos(a1), ey = P.Y(cy) - rPx * Math.sin(a1);
+  const tx = -Math.sin(a1), ty = -Math.cos(a1); // tangent (screen), direction of increasing angle
+  ctx.fillStyle = color; ctx.beginPath(); ctx.moveTo(ex + tx * 2, ey + ty * 2); ctx.lineTo(ex - tx * 8 + Math.cos(a1) * 4, ey - ty * 8 - Math.sin(a1) * 4); ctx.lineTo(ex - tx * 8 - Math.cos(a1) * 4, ey - ty * 8 + Math.sin(a1) * 4); ctx.closePath(); ctx.fill();
+  if (label) { const am = (a0 + a1) / 2; text(label, P.X(cx) + (rPx + 14) * Math.cos(am), P.Y(cy) - (rPx + 14) * Math.sin(am) + 5, color, 14, "center", 800); }
+}
+const fmt = (v) => {
+  if (Math.abs(v - Math.round(v)) < 1e-9) return String(Math.round(v)).replace("-", "−");
+  const h = v * 2, t = v * 3;
+  if (Math.abs(h - Math.round(h)) < 1e-9) return `${Math.round(h)}/2`.replace("-", "−");
+  if (Math.abs(t - Math.round(t)) < 1e-9) return `${Math.round(t)}/3`.replace("-", "−");
+  return num(v, 2).replace("-", "−");
+};
+const pt = (x, y) => `(${fmt(x)}, ${fmt(y)})`;
+/** Info lines in the top-left corner. */
+function info(lines, x = 12, y = 22) {
+  lines.forEach((l, i) => { if (l) tag(l[0], x, y + i * 26, l[1] || COL.ink); });
+}
+
+/* ═══════════════════════════ SCENES ═══════════════════════════ */
+const UI = {};
+const SCENES = {
+  hook(t) {
+    const P = plane(-1, 9, -1, 6);
+    const spots = [[0, 0], [4, 1], [1, 3], [5, 3]];
+    const T = 3.2, n = Math.floor(t / T), k = (t % T) / T;
+    const a = spots[n % 4], b = spots[(n + 1) % 4];
+    const mv = ease(seg(k, 0.72, 1));
+    const sx = lerp(a[0], b[0], mv), sy = lerp(a[1], b[1], mv);
+    // ghosts of earlier positions
+    spots.forEach((s) => vec(P, s[0], s[1], s[0] + 3, s[1] + 2, COL.a, 2, { alpha: 0.13 }));
+    const st = seg(k, 0.05, 0.35), up = seg(k, 0.35, 0.6);
+    if (k < 0.72) {
+      vec(P, sx, sy, sx + 3 * st, sy, COL.r, 2.6, { dash: true, head: 8 });
+      if (st >= 1) vec(P, sx + 3, sy, sx + 3, sy + 2 * up, COL.j, 2.6, { dash: true, head: 8 });
+      if (st > 0.5) text("3 δεξιά", P.X(sx + 1.5), P.Y(sy) + 18, COL.r, 13);
+      if (up > 0.5) text("2 πάνω", P.X(sx + 3) + 8, P.Y(sy + 1) + 4, COL.j, 13, "left");
+    }
+    vec(P, sx, sy, sx + 3, sy + 2, COL.a, 3.4);
+    vtext("α", P.X(sx + 1.3) - 8, P.Y(sy + 1.3) - 4, COL.a, 17);
+    tag("α = (3, 2)", 12, 22, COL.a);
+  },
+  axis(t) {
+    const x = UI.axis.x;
+    const P = plane(-5, 5, -2.4, 2.4, { grid: false });
+    const y0 = P.Y(0);
+    arrowPx(P.X(-5), y0, P.X(5) + 6, y0, COL.axis, 1.6, 9);
+    text("x′", P.X(-5) - 2, y0 - 10, COL.muted, 14); text("x", P.X(5) + 4, y0 - 10, COL.muted, 14);
+    for (let i = -4; i <= 4; i++) { ctx.strokeStyle = COL.axis; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(P.X(i), y0 - 5); ctx.lineTo(P.X(i), y0 + 5); ctx.stroke(); text(String(i).replace("-", "−"), P.X(i), y0 + 22, COL.muted, 12, "center", 500); }
+    // negative / positive half-axes
+    ctx.globalAlpha = 0.16; ctx.fillStyle = COL.b; ctx.fillRect(P.X(-5), y0 - 3, P.X(0) - P.X(-5), 6); ctx.fillStyle = COL.r; ctx.fillRect(P.X(0), y0 - 3, P.X(5) - P.X(0), 6); ctx.globalAlpha = 1;
+    text("αρνητικός ημιάξονας Ox′", P.X(-2.5), y0 + 46, COL.b, 12.5); text("θετικός ημιάξονας Ox", P.X(2.5), y0 + 46, COL.r, 12.5);
+    // OM = x i
+    const grow = ease(seg(t, 0.2, 1.2));
+    if (Math.abs(x) > 0.01) arrowPx(P.X(0), y0 - 28, P.X(x * grow), y0 - 28, COL.a, 3, 10);
+    if (grow > 0.9) vtext("OM", P.X(x / 2), y0 - 40, COL.a, 14);
+    arrowPx(P.X(0), y0, P.X(1), y0, COL.K, 4, 10);
+    vtext("i", P.X(0.5), y0 - 9, COL.K, 15);
+    dot(P, 0, 0, COL.ink, "O", "s", { labelColor: COL.ink }); dot(P, 1, 0, COL.K);
+    text("I", P.X(1) + 9, y0 + 36, COL.K, 13);
+    dot(P, x, 0, COL.a, null);
+    text(`M(${fmt(x)})`, P.X(x), y0 - 60, COL.a, 15, "center", 800);
+    tag(`OM = ${fmt(x)}·i`, 12, 22, COL.a);
+    tag("|OI| = 1", 12, 48, COL.K);
+  },
+  plane(t) {
+    const { x, y } = UI.plane;
+    const P = plane(-5, 5, -3.8, 3.8);
+    dashed(P, x, y, x, 0); dashed(P, x, y, 0, y);
+    // distances from axes
+    if (Math.abs(y) > 0.01) { ctx.save(); ctx.strokeStyle = COL.r; ctx.lineWidth = 3; ctx.globalAlpha = 0.55; ctx.beginPath(); ctx.moveTo(P.X(x), P.Y(0)); ctx.lineTo(P.X(x), P.Y(y)); ctx.stroke(); ctx.restore(); text(`|y| = ${fmt(Math.abs(y))}`, P.X(x) + (x >= 0 ? 8 : -8), P.Y(y / 2) + 4, COL.r, 12.5, x >= 0 ? "left" : "right"); }
+    if (Math.abs(x) > 0.01) { ctx.save(); ctx.strokeStyle = COL.j; ctx.lineWidth = 3; ctx.globalAlpha = 0.55; ctx.beginPath(); ctx.moveTo(P.X(0), P.Y(y)); ctx.lineTo(P.X(x), P.Y(y)); ctx.stroke(); ctx.restore(); text(`|x| = ${fmt(Math.abs(x))}`, P.X(x / 2), P.Y(y) + (y >= 0 ? -9 : 19), COL.j, 12.5); }
+    vec(P, 0, 0, 1, 0, COL.K, 3.4, { head: 9 }); vec(P, 0, 0, 0, 1, COL.K, 3.4, { head: 9 });
+    vtext("i", P.X(0.5), P.Y(0) + 18, COL.K, 14); vtext("j", P.X(0) - 12, P.Y(0.55), COL.K, 14);
+    dot(P, x, 0, COL.muted, "M₁", y >= 0 ? "s" : "n", { labelColor: COL.muted, size: 12 });
+    dot(P, 0, y, COL.muted, "M₂", x >= 0 ? "w" : "e", { labelColor: COL.muted, size: 12 });
+    dot(P, x, y, COL.a, `M${pt(x, y)}`, x >= 0 ? (y >= 0 ? "ne" : "se") : (y >= 0 ? "nw" : "sw"), { r: 5.5 });
+    const q = x > 0 && y > 0 ? "1ο" : x < 0 && y > 0 ? "2ο" : x < 0 && y < 0 ? "3ο" : x > 0 && y < 0 ? "4ο" : null;
+    tag(`τετμημένη x = ${fmt(x)}`, 12, 22, COL.j); tag(`τεταγμένη y = ${fmt(y)}`, 12, 48, COL.r);
+    if (q) tag(`${q} τεταρτημόριο`, 12, 74, COL.muted); else tag("πάνω σε άξονα", 12, 74, COL.muted);
+  },
+  components(t) {
+    const { x, y } = UI.components;
+    const P = plane(-5, 5, -3.6, 4.6);
+    const k1 = ease(seg(t, 0.1, 0.9)), k2 = ease(seg(t, 0.9, 1.7)), k3 = ease(seg(t, 1.7, 2.4));
+    dashed(P, x, y, x, 0); dashed(P, x, y, 0, y);
+    if (Math.abs(x) > 0.01) vec(P, 0, 0, x * k1, 0, COL.r, 3.4);
+    if (Math.abs(y) > 0.01 && k1 >= 1) vec(P, x, 0, x, y * k2, COL.j, 3.4);
+    if (Math.abs(y) > 0.01) vec(P, 0, 0, 0, y * k2, COL.j, 2, { alpha: 0.35 });
+    if (k3 > 0) vec(P, 0, 0, x * k3, y * k3, COL.a, 3.6);
+    if (Math.abs(x) > 0.01) text(`${fmt(x)}·i`, P.X(x / 2), P.Y(0) + (y >= 0 ? 20 : -10), COL.r, 13.5);
+    if (Math.abs(y) > 0.01 && k2 > 0.5) text(`${fmt(y)}·j`, P.X(x) + (x >= 0 ? 9 : -9), P.Y(y / 2) + 5, COL.j, 13.5, x >= 0 ? "left" : "right");
+    dot(P, x, 0, COL.muted, "A₁", y >= 0 ? "se" : "ne", { labelColor: COL.muted, size: 12 });
+    dot(P, 0, y, COL.muted, "A₂", x >= 0 ? "nw" : "ne", { labelColor: COL.muted, size: 12 });
+    dot(P, x, y, COL.a, "A", "ne");
+    if (k3 > 0.6) vtext("α", P.X(x * 0.45) + (y >= 0 ? -12 : 12), P.Y(y * 0.45) - 6, COL.a, 17);
+    tag(`α = ${fmt(x)}i + ${fmt(y)}j`.replace("+ −", "− "), 12, 22, COL.a); tag(`α = ${pt(x, y)}`, 12, 48, COL.a);
+  },
+  unique(t) {
+    const P = plane(-1, 9, -1, 6);
+    const spots = [[0, 0], [5, 0.5], [1, 3], [5.5, 3.5], [3, 1.5]];
+    spots.forEach((s, i) => {
+      const k = ease(seg(t, 0.3 * i, 0.3 * i + 0.6));
+      if (k <= 0) return;
+      vec(P, s[0], s[1], s[0] + 2 * k, s[1] + k, COL.a, 3);
+      if (k >= 1) text("(2, 1)", P.X(s[0] + 1), P.Y(s[1] + 0.5) + 18, COL.a, 12.5);
+    });
+    const k = ease(seg(t, 1.9, 2.5));
+    if (k > 0) { vec(P, 3, 5, 3 + 2 * k, 5 - k, COL.b, 3); if (k >= 1) text("(2, −1): άλλο διάνυσμα", P.X(3), P.Y(5) - 10, COL.b, 12.5, "left"); }
+    tag("ίσα ⇔ ίδιες συντεταγμένες", 12, 22, COL.a);
+  },
+  ops(t) {
+    const op = UI.ops.op;
+    const A = [1, -1], B = [1, 2];
+    const plans = {
+      sum: { steps: [[A, "α", COL.a], [B, "β", COL.b]], res: "α + β" },
+      diff: { steps: [[A, "α", COL.a], [[-1, -2], "−β", COL.b]], res: "α − β" },
+      dbl: { steps: [[A, "α", COL.a], [A, "α", COL.a]], res: "2α" },
+      mix: { steps: [[A, "α", COL.a], [A, "α", COL.a], [[-1, -2], "−β", COL.b]], res: "2α − β" },
+    }[op];
+    const pts = [[0, 0], A, B]; let px = 0, py = 0;
+    plans.steps.forEach(([d]) => { px += d[0]; py += d[1]; pts.push([px, py]); });
+    const P = fitPlane(pts, { margin: 0.8 });
+    // originals faded
+    vec(P, 0, 0, A[0], A[1], COL.a, 2, { alpha: 0.25 }); vec(P, 0, 0, B[0], B[1], COL.b, 2, { alpha: 0.25 });
+    let cx = 0, cy = 0;
+    plans.steps.forEach(([d, name, col], i) => {
+      const k = ease(seg(t, 0.2 + i * 0.9, 1.0 + i * 0.9));
+      if (k <= 0) return;
+      vec(P, cx, cy, cx + d[0] * k, cy + d[1] * k, col, 3.2);
+      if (k > 0.6) vtext(name.replace("−", "−"), P.X(cx + d[0] / 2) + (d[0] >= 0 && d[1] < 0 ? 16 : -14), P.Y(cy + d[1] / 2) + 4, col, 14);
+      cx += d[0]; cy += d[1];
+    });
+    const kr = ease(seg(t, 0.4 + plans.steps.length * 0.9, 1.2 + plans.steps.length * 0.9));
+    if (kr > 0) {
+      vec(P, 0, 0, cx * kr, cy * kr, COL.r, 3.6);
+      if (kr >= 1) { dot(P, cx, cy, COL.r, null); tag(`${plans.res} = ${pt(cx, cy)}`, 12, 74, COL.r); }
+    }
+    tag("α = (1, −1)", 12, 22, COL.a); tag("β = (1, 2)", 12, 48, COL.b);
+  },
+  axispar(t) {
+    const l = UI.axispar.l;
+    const x = l * l - 4, y = l - 2;
+    const P = plane(-5, 13, -6.5, 2.5);
+    const zero = Math.abs(x) < 1e-9 && Math.abs(y) < 1e-9;
+    if (zero) { ctx.strokeStyle = COL.bad; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(P.X(0), P.Y(0), 9 + 3 * Math.sin(t * 4), 0, 7); ctx.stroke(); }
+    else vec(P, 0, 0, x, y, Math.abs(x) < 1e-9 ? COL.ok : COL.a, 3.4);
+    tag(`λ = ${fmt(l)}`, 12, 22, COL.ink);
+    tag(`α = (${fmt(x)}, ${fmt(y)})`, 12, 48, COL.a);
+    let msg, c;
+    if (zero) { msg = "α = 0: μηδενικό!"; c = COL.bad; }
+    else if (Math.abs(x) < 1e-9) { msg = "x = 0 ⇒ α // y′y"; c = COL.ok; }
+    else if (Math.abs(y) < 1e-9) { msg = "y = 0 ⇒ α // x′x"; c = COL.ok; }
+    else { msg = "κανένας άξονας"; c = COL.muted; }
+    tag(msg, 12, 74, c);
+    text("Το y = 0 θέλει λ = 2, που μηδενίζει και το x", W / 2, H - 10, COL.muted, 12, "center", 500);
+  },
+  position(t) {
+    const P = plane(-5, 5, -3.6, 3.6);
+    const x = Math.round(3.6 * Math.cos(t * 0.45) * 2) / 2, y = Math.round(2.8 * Math.sin(t * 0.9) * 2) / 2;
+    dashed(P, x, y, x, 0); dashed(P, x, y, 0, y);
+    vec(P, 0, 0, x, y, COL.a, 3.4);
+    dot(P, x, y, COL.a, `A${pt(x, y)}`, x >= 0 ? (y >= 0 ? "ne" : "se") : (y >= 0 ? "nw" : "sw"));
+    tag(`OA = ${pt(x, y)}`, 12, 22, COL.a);
+    tag(`A${pt(x, y)}`, 12, 48, COL.ink);
+  },
+  ab(t) {
+    const ex = { d: [[-2, 3], [5, -7]], s: [[1, 2], [3, 7]], v: [[3, -2], [-1, 5]] }[UI.ab.ex];
+    const [A, B] = ex, dx = B[0] - A[0], dy = B[1] - A[1];
+    const P = fitPlane([A, B], { margin: 1, top: 70 });
+    vec(P, 0, 0, A[0], A[1], COL.muted, 2, { alpha: 0.45 }); vec(P, 0, 0, B[0], B[1], COL.muted, 2, { alpha: 0.45 });
+    const k1 = ease(seg(t, 0.3, 1.2)), k2 = ease(seg(t, 1.2, 2.1)), k3 = ease(seg(t, 2.1, 2.8));
+    vec(P, A[0], A[1], A[0] + dx * k1, A[1], COL.r, 2.6, { dash: true, head: 8 });
+    if (k1 >= 1) vec(P, B[0], A[1], B[0], A[1] + dy * k2, COL.j, 2.6, { dash: true, head: 8 });
+    if (k1 > 0.6) text(`${fmt(B[0])} − (${fmt(A[0])}) = ${fmt(dx)}`, P.X(A[0] + dx / 2), P.Y(A[1]) + (dy > 0 ? 18 : -8), COL.r, 12.5);
+    if (k2 > 0.6) text(`${fmt(dy)}`, P.X(B[0]) + (dx > 0 ? 8 : -8), P.Y(A[1] + dy / 2) + 4, COL.j, 13, dx > 0 ? "left" : "right");
+    if (k3 > 0) vec(P, A[0], A[1], A[0] + dx * k3, A[1] + dy * k3, COL.ok, 3.6);
+    dot(P, A[0], A[1], COL.ink, `A${pt(A[0], A[1])}`, dx > 0 ? "nw" : "ne", { labelColor: COL.ink });
+    dot(P, B[0], B[1], COL.ink, `B${pt(B[0], B[1])}`, dx > 0 ? (dy > 0 ? "ne" : "se") : "nw", { labelColor: COL.ink });
+    tag(`AB = (x₂ − x₁, y₂ − y₁) = ${pt(dx, dy)}`, 12, 22, COL.ok);
+  },
+  ak(t) {
+    const A = [-1, 1], B = [2, -1], G = [3, 4], d = [1, 5];
+    const P = plane(-2.5, 4.5, -2, 16.5, { top: 12, bottom: 12 });
+    poly(P, [A, B, G], COL.a, COL.muted, 0.08);
+    const k0 = ease(seg(t, 0.2, 0.9));
+    vec(P, B[0], B[1], B[0] + d[0] * k0, B[1] + d[1] * k0, COL.b, 3);
+    dot(P, A[0], A[1], COL.ink, "A", "w", { labelColor: COL.ink }); dot(P, B[0], B[1], COL.ink, "B", "e", { labelColor: COL.ink }); dot(P, G[0], G[1], COL.ink, "Γ", "e", { labelColor: COL.ink });
+    if (k0 >= 1) dashed(P, A[0] - 0.1, A[1] - 0.5, A[0] + 3.3, A[1] + 16.5, COL.line);
+    for (let i = 0; i < 3; i++) {
+      const k = ease(seg(t, 1.1 + i * 0.7, 1.7 + i * 0.7));
+      if (k <= 0) continue;
+      const sx = A[0] + d[0] * i, sy = A[1] + d[1] * i;
+      vec(P, sx, sy, sx + d[0] * k, sy + d[1] * k, i < 2 ? COL.r : COL.j, 3);
+    }
+    if (t > 2.4) dot(P, 1, 11, COL.r, "K(1, 11)", "w");
+    if (t > 3.1) dot(P, 2, 16, COL.j, "Λ(2, 16)", "w");
+    tag("BΓ = (1, 5)", W - 12, 22, COL.b, "right");
+    if (t > 2.4) tag("AK = 2BΓ = (2, 10)", W - 12, 48, COL.r, "right");
+    if (t > 3.1) tag("AΛ = 3BΓ = (3, 15)", W - 12, 74, COL.j, "right");
+  },
+  mid(t) {
+    const A = [-3, 1.5];
+    const B = [3.2 + 0.8 * Math.cos(t * 0.6), 2.2 * Math.sin(t * 0.6) + 0.6];
+    const M = [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2], S = [A[0] + B[0], A[1] + B[1]];
+    const P = plane(-4.5, 5, -2.5, 4.5);
+    poly(P, [[0, 0], A, S, B], COL.a, null, 0.06);
+    dashed(P, A[0], A[1], S[0], S[1], COL.line); dashed(P, B[0], B[1], S[0], S[1], COL.line);
+    vec(P, 0, 0, S[0], S[1], COL.muted, 2, { dash: true, head: 8 });
+    vec(P, 0, 0, A[0], A[1], COL.a, 2.6); vec(P, 0, 0, B[0], B[1], COL.b, 2.6); vec(P, 0, 0, M[0], M[1], COL.r, 3.4);
+    line(P, A[0], A[1], B[0], B[1], COL.ink, 2);
+    dot(P, A[0], A[1], COL.a, "A", "nw"); dot(P, B[0], B[1], COL.b, "B", "ne"); dot(P, M[0], M[1], COL.r, "M", "n");
+    text("OA + OB", P.X(S[0]) - 4, P.Y(S[1]) - 8, COL.muted, 12, "right");
+    tag(`A${pt(A[0], A[1])}  B(${num(B[0], 1)}, ${num(B[1], 1)})`, 12, 22, COL.ink);
+    tag(`M(${num(M[0], 2)}, ${num(M[1], 2)})`, 12, 48, COL.r);
+  },
+  para(t) {
+    const d = UI.para.ex === "d";
+    const A = d ? [2, 3] : [-2, 1], B = d ? [4, -1] : [1, 4];
+    const Kp = d ? [1, 4] : [2, -3];
+    const G = d ? [0, 5] : [2 * Kp[0] - A[0], 2 * Kp[1] - A[1]];
+    const D = [2 * Kp[0] - B[0], 2 * Kp[1] - B[1]];
+    const P = fitPlane([A, B, G, D], { margin: 1, origin: false });
+    const k1 = ease(seg(t, 0.3, 1.1)), k2 = ease(seg(t, 1.4, 2.3)), k3 = ease(seg(t, 2.5, 3.1));
+    line(P, A[0], A[1], lerp(A[0], G[0], k1), lerp(A[1], G[1], k1), COL.a, 2.4);
+    if (k2 > 0) line(P, B[0], B[1], lerp(B[0], D[0], k2), lerp(B[1], D[1], k2), COL.b, 2.4);
+    if (k3 > 0) { ctx.globalAlpha = k3; poly(P, [A, B, G, D], COL.r, COL.ink, 0.1); ctx.globalAlpha = 1; }
+    dot(P, A[0], A[1], COL.ink, `A${pt(A[0], A[1])}`, "w", { labelColor: COL.ink });
+    dot(P, B[0], B[1], COL.ink, `B${pt(B[0], B[1])}`, "e", { labelColor: COL.ink });
+    if (d || k1 >= 1) dot(P, G[0], G[1], COL.ink, `Γ${pt(G[0], G[1])}`, "e", { labelColor: d ? COL.ink : COL.r });
+    if (!d || k1 >= 1) dot(P, Kp[0], Kp[1], COL.r, `K${pt(Kp[0], Kp[1])}`, "e");
+    if (k2 >= 1) dot(P, D[0], D[1], COL.r, `Δ${pt(D[0], D[1])}`, "w");
+    tag(d ? "K = μέσο ΑΓ → μέσο ΒΔ → Δ" : "K = μέσο ΑΓ → Γ,  μέσο ΒΔ → Δ", 12, H - 16, COL.muted);
+  },
+  centroid(t) {
+    const A = [-1, 1], B = [2, 0], G = [2, -3], M = [2, -1.5], Gc = [1, -2 / 3], D = [5, -4];
+    const P = plane(-2.2, 6.2, -4.8, 2.2);
+    poly(P, [A, B, G], COL.a, COL.ink, 0.1);
+    const k1 = ease(seg(t, 0.3, 1.1)), k2 = ease(seg(t, 1.3, 2.0)), k3 = ease(seg(t, 2.2, 3.0));
+    if (k1 > 0) vec(P, A[0], A[1], lerp(A[0], M[0], k1), lerp(A[1], M[1], k1), COL.r, 3.2);
+    if (k1 >= 1) dot(P, M[0], M[1], COL.r, "M(2, −3/2)", "e");
+    if (k2 > 0) { ctx.globalAlpha = k2; dot(P, Gc[0], Gc[1], COL.j, "G(1, −2/3)", "sw"); ctx.globalAlpha = 1; }
+    if (k3 > 0) { vec(P, A[0], A[1], G[0], G[1], COL.b, 2.4, { alpha: 0.7 }); vec(P, B[0], B[1], lerp(B[0], D[0], k3), lerp(B[1], D[1], k3), COL.b, 3); }
+    if (k3 >= 1) { dot(P, D[0], D[1], COL.b, "Δ(5, −4)", "w"); dashed(P, G[0], G[1], D[0], D[1], COL.line); }
+    dot(P, A[0], A[1], COL.ink, "A", "nw", { labelColor: COL.ink }); dot(P, B[0], B[1], COL.ink, "B", "ne", { labelColor: COL.ink }); dot(P, G[0], G[1], COL.ink, "Γ", "sw", { labelColor: COL.ink });
+    if (k1 >= 1) tag("AM = (3, −5/2)", W - 12, 22, COL.r, "right");
+    if (k3 >= 1) tag("BΔ = AΓ = (3, −4)", W - 12, 48, COL.b, "right");
+  },
+  norm(t) {
+    const { x, y } = UI.norm;
+    const P = plane(-5.5, 5.5, -4.4, 4.4);
+    const L = Math.hypot(x, y);
+    if (Math.abs(x) > 0.01 && Math.abs(y) > 0.01) {
+      poly(P, [[0, 0], [x, 0], [x, y]], COL.a, null, 0.1);
+      const s = 0.35 * Math.sign(x), s2 = 0.35 * Math.sign(y);
+      ctx.strokeStyle = COL.muted; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(P.X(x - s), P.Y(0)); ctx.lineTo(P.X(x - s), P.Y(s2)); ctx.lineTo(P.X(x), P.Y(s2)); ctx.stroke();
+    }
+    line(P, 0, 0, x, 0, COL.r, 3.4); line(P, x, 0, x, y, COL.j, 3.4);
+    vec(P, 0, 0, x, y, COL.a, 3.4);
+    if (Math.abs(x) > 0.01) text(`|x| = ${fmt(Math.abs(x))}`, P.X(x / 2), P.Y(0) + (y >= 0 ? 19 : -9), COL.r, 13);
+    if (Math.abs(y) > 0.01) text(`|y| = ${fmt(Math.abs(y))}`, P.X(x) + (x >= 0 ? 8 : -8), P.Y(y / 2) + 4, COL.j, 13, x >= 0 ? "left" : "right");
+    dot(P, x, y, COL.a, "A", "n");
+    tag(`|α|² = ${fmt(x * x)} + ${fmt(y * y)} = ${fmt(x * x + y * y)}`, 12, 22, COL.a);
+    const sq = Math.abs(L - Math.round(L)) < 1e-9 ? fmt(L) : `√${fmt(x * x + y * y)} ≈ ${num(L, 2)}`;
+    tag(`|α| = ${sq}`, 12, 48, COL.a);
+  },
+  dist(t) {
+    const [A, B] = UI.dist.ex === "s" ? [[2, -7], [5, -3]] : [[8, 3], [2, -5]];
+    const P = fitPlane([A, B], { margin: 1 });
+    const dx = B[0] - A[0], dy = B[1] - A[1];
+    poly(P, [A, [B[0], A[1]], B], COL.a, null, 0.1);
+    const k = ease(seg(t, 0.3, 1.3));
+    line(P, A[0], A[1], lerp(A[0], B[0], k), A[1], COL.r, 3); if (k >= 1) line(P, B[0], A[1], B[0], lerp(A[1], B[1], ease(seg(t, 1.3, 2.1))), COL.j, 3);
+    if (t > 2.1) line(P, A[0], A[1], B[0], B[1], COL.a, 3.6);
+    text(`${fmt(Math.abs(dx))}`, P.X(A[0] + dx / 2), P.Y(A[1]) + (dy > 0 ? 18 : -8), COL.r, 14);
+    if (t > 1.6) text(`${fmt(Math.abs(dy))}`, P.X(B[0]) + (dx > 0 ? 9 : -9), P.Y(A[1] + dy / 2) + 5, COL.j, 14, dx > 0 ? "left" : "right");
+    dot(P, A[0], A[1], COL.ink, `A${pt(A[0], A[1])}`, dx > 0 ? "w" : "e", { labelColor: COL.ink });
+    dot(P, B[0], B[1], COL.ink, `B${pt(B[0], B[1])}`, dx > 0 ? "n" : "w", { labelColor: COL.ink });
+    const d = Math.hypot(dx, dy);
+    if (t > 2.1) tag(`(AB) = √(${fmt(dx * dx)} + ${fmt(dy * dy)}) = ${fmt(d)}`, 12, 22, COL.a);
+  },
+  trap(t) {
+    if (UI.trap.ex === "t") {
+      const A = [-4, -6], B = [5, 3], G = [-4, -1], D = [0, 3];
+      const P = plane(-6, 7, -7.2, 4.6);
+      poly(P, [A, B, D, G], COL.a, COL.ink, 0.1);
+      const k = ease(seg(t, 0.4, 1.2));
+      line(P, A[0], A[1], lerp(A[0], B[0], k), lerp(A[1], B[1], k), COL.r, 4); line(P, G[0], G[1], lerp(G[0], D[0], k), lerp(G[1], D[1], k), COL.r, 4);
+      const k2 = ease(seg(t, 1.5, 2.3));
+      line(P, A[0], A[1], A[0], lerp(A[1], G[1], k2), COL.j, 4); line(P, B[0], B[1], lerp(B[0], D[0], k2), B[1], COL.j, 4);
+      if (k2 >= 1) { text("5", P.X(-4) - 9, P.Y(-3.5) + 5, COL.j, 14, "right"); text("5", P.X(2.5), P.Y(3) - 8, COL.j, 14); }
+      dot(P, A[0], A[1], COL.ink, "A(−4, −6)", "e", { labelColor: COL.ink }); dot(P, B[0], B[1], COL.ink, "B(5, 3)", "e", { labelColor: COL.ink });
+      dot(P, G[0], G[1], COL.ink, "Γ(−4, −1)", "w", { labelColor: COL.ink }); dot(P, D[0], D[1], COL.ink, "Δ(0, 3)", "nw", { labelColor: COL.ink });
+      tag("ΑΒ // ΓΔ (βάσεις)", 12, 22, COL.r); if (k2 >= 1) tag("(ΑΓ) = (ΒΔ) = 5", 12, 48, COL.j);
+    } else {
+      const B = [4, 0], G = [0, 6], s = Math.sqrt(3), A1 = [2 + 3 * s, 3 + 2 * s], A2 = [2 - 3 * s, 3 - 2 * s];
+      const P = plane(-4.4, 8.4, -1.6, 7.6);
+      dashed(P, A2[0], A2[1], A1[0], A1[1], COL.line);
+      const k = ease(seg(t, 0.4, 1.4));
+      ctx.globalAlpha = k; poly(P, [B, G, A1], COL.a, COL.a, 0.12); poly(P, [B, G, A2], COL.b, COL.b, 0.12); ctx.globalAlpha = 1;
+      line(P, B[0], B[1], G[0], G[1], COL.ink, 3);
+      dot(P, B[0], B[1], COL.ink, "B(4, 0)", "se", { labelColor: COL.ink }); dot(P, G[0], G[1], COL.ink, "Γ(0, 6)", "nw", { labelColor: COL.ink });
+      if (k > 0.5) { dot(P, A1[0], A1[1], COL.a, "A₁", "e"); dot(P, A2[0], A2[1], COL.b, "A₂", "w"); }
+      tag("A₁(2 + 3√3, 3 + 2√3)", 12, 22, COL.a); tag("A₂(2 − 3√3, 3 − 2√3)", 12, 48, COL.b);
+      text("Τα A₁, A₂ είναι πάνω στη μεσοκάθετο της ΒΓ: 2x = 3y − 5", W / 2, H - 10, COL.muted, 12, "center", 500);
+    }
+  },
+  angle(t) {
+    const phi = UI.angle.phi * deg;
+    const P = plane(-3.6, 3.6, -3.1, 3.1, { ticks: false });
+    const R = 2.6;
+    const k = ease(seg(t, 0.1, 1.2));
+    const cur = phi * k;
+    angleArc(P, 0, 0, P.u * 0.9, 0, Math.max(cur, 0.02), COL.K, k >= 1 ? "φ" : null);
+    arrowPx(P.X(0), P.Y(0), P.X(R * Math.cos(cur)), P.Y(R * Math.sin(cur)), COL.muted, 1.5, 7, { alpha: k < 1 ? 0.8 : 0 });
+    vec(P, 0, 0, R * Math.cos(phi), R * Math.sin(phi), COL.a, 3.6);
+    vtext("α", P.X(R * 1.1 * Math.cos(phi)), P.Y(R * 1.1 * Math.sin(phi)) + 5, COL.a, 16);
+    const q = UI.angle.phi % 90 === 0 ? "πάνω σε άξονα" : `${Math.floor(UI.angle.phi / 90) + 1}ο τεταρτημόριο`;
+    tag(`φ = ${UI.angle.phi}°`, 12, 22, COL.K); tag(q, 12, 48, COL.muted);
+    text("↺ θετική φορά", W - 14, 24, COL.K, 13, "right");
+  },
+  slope(t) {
+    const d = UI.slope.phi;
+    const phi = d * deg;
+    const P = plane(-4.2, 4.2, -3.4, 3.4, { ticks: false });
+    const R = 3, x = R * Math.cos(phi), y = R * Math.sin(phi);
+    vec(P, 0, 0, -x, -y, COL.a, 2, { dash: true, alpha: 0.45 });
+    const vert = d % 180 === 90;
+    if (!vert) {
+      poly(P, [[0, 0], [x, 0], [x, y]], COL.a, null, 0.08);
+      line(P, 0, 0, x, 0, COL.r, 3); line(P, x, 0, x, y, COL.j, 3);
+      text(`x = ${num(x, 2)}`, P.X(x / 2), P.Y(0) + (y >= 0 ? 19 : -9), COL.r, 12.5);
+      if (Math.abs(y) > 0.15) text(`y = ${num(y, 2)}`, P.X(x) + (x >= 0 ? 8 : -8), P.Y(y / 2) + 4, COL.j, 12.5, x >= 0 ? "left" : "right");
+    }
+    angleArc(P, 0, 0, P.u * 0.7, 0, Math.max(phi, 0.02), COL.K, "φ");
+    vec(P, 0, 0, x, y, COL.a, 3.6);
+    tag(`φ = ${d}°`, 12, 22, COL.K);
+    if (vert) tag("x = 0: δεν ορίζεται λ", 12, 48, COL.bad);
+    else tag(`λ = y/x = εφ${d}° = ${num(Math.tan(phi), 3)}`, 12, 48, COL.a);
+    text(`το διακεκομμένο (φ = ${(d + 180) % 360}°) έχει το ίδιο λ`, W / 2, H - 10, COL.muted, 12, "center", 500);
+  },
+  angles8(t) {
+    const s = Math.sqrt(3);
+    const list = [["α", [1, s], 60, "(1, √3)"], ["β", [1, 1], 45, "(1, 1)"], ["γ", [-s, -3], 240, "(−√3, −3)"], ["δ", [2, -2], 315, "(2, −2)"], ["u", [0, 2], 90, "(0, 2)"], ["v", [2, 0], 0, "(2, 0)"], ["w", [0, -2], 270, "(0, −2)"], ["t", [-2, 0], 180, "(−2, 0)"]];
+    const P = plane(-3.8, 3.8, -3.6, 3.6, { ticks: false });
+    const T = 1.6, cur = Math.floor(t / T) % (list.length + 2);
+    list.forEach(([n, v, a, lab], i) => {
+      if (i > cur) return;
+      const on = i === cur;
+      vec(P, 0, 0, v[0], v[1], on ? COL.a : COL.muted, on ? 3.6 : 2, { alpha: on ? 1 : 0.5 });
+      vtext(n, P.X(v[0] * 1.13), P.Y(v[1] * 1.13) + 5, on ? COL.a : COL.muted, 14);
+      if (on) {
+        angleArc(P, 0, 0, P.u * 0.6, 0, Math.max(a * deg, 0.02), COL.K);
+        tag(`${n} = ${lab}`, 12, 22, COL.a);
+        tag(`φ = ${a}°`, 12, 48, COL.K);
+      }
+    });
+    if (cur >= list.length) tag("όλα μαζί", 12, 22, COL.muted);
+  },
+  det(t) {
+    const th = UI.det.th * deg;
+    const a = [3, 1], b = [2.6 * Math.cos(th), 2.6 * Math.sin(th)];
+    const D = a[0] * b[1] - b[0] * a[1];
+    const P = plane(-3, 6, -1, 3.6);
+    const flat = Math.abs(D) < 0.06;
+    poly(P, [[0, 0], a, [a[0] + b[0], a[1] + b[1]], b], flat ? COL.ok : D > 0 ? COL.a : COL.b, null, 0.2);
+    dashed(P, a[0], a[1], a[0] + b[0], a[1] + b[1], COL.line); dashed(P, b[0], b[1], a[0] + b[0], a[1] + b[1], COL.line);
+    vec(P, 0, 0, a[0], a[1], COL.a, 3.4); vec(P, 0, 0, b[0], b[1], COL.b, 3.4);
+    vtext("α", P.X(a[0]) + 12, P.Y(a[1]) + 5, COL.a, 15, "left"); vtext("β", P.X(b[0]) + (b[0] >= 0 ? 10 : -10), P.Y(b[1]) - 4, COL.b, 15, b[0] >= 0 ? "left" : "right");
+    tag(`α = (3, 1)   β = (${num(b[0], 2)}, ${num(b[1], 2)})`, 12, 22, COL.ink);
+    tag(`det = 3·${num(b[1], 2)} − ${num(b[0], 2)}·1 = ${num(D, 2)}`, 12, 48, flat ? COL.ok : COL.ink);
+    tag(flat ? "det = 0: α // β, εμβαδόν 0" : `εμβαδόν = |det| = ${num(Math.abs(D), 2)}`, 12, 74, flat ? COL.ok : COL.muted);
+  },
+  parallel(t) {
+    const l = UI.parallel.l;
+    const a = [1, 2], b = [l, 3];
+    const D = a[0] * b[1] - b[0] * a[1];
+    const P = plane(-3.6, 4.6, -1.2, 3.8);
+    const ok = Math.abs(D) < 1e-9;
+    if (ok) { const k = 4; dashed(P, -k * 0.5, -k, k * 0.5 * 1.8, k * 1.8, COL.ok); }
+    vec(P, 0, 0, a[0], a[1], COL.a, 3.4); vec(P, 0, 0, b[0], b[1], ok ? COL.ok : COL.b, 3.4);
+    vtext("α", P.X(a[0]) + 10, P.Y(a[1]) + 12, COL.a, 15, "left"); vtext("β", P.X(b[0]) + (l >= 0 ? 10 : -10), P.Y(b[1]) + 2, ok ? COL.ok : COL.b, 15, l >= 0 ? "left" : "right");
+    tag(`β = (${fmt(l)}, 3)`, 12, 22, COL.b);
+    tag(`det(α, β) = 1·3 − ${fmt(l)}·2 = ${fmt(D)}`, 12, 48, ok ? COL.ok : COL.ink);
+    tag(ok ? "det = 0 ⇒ α // β (ίδιος συντ. διεύθυνσης 2)" : `συντ. διεύθυνσης: 2 και ${Math.abs(l) < 1e-9 ? "—" : fmt(3 / l)}`, 12, 74, ok ? COL.ok : COL.muted);
+  },
+  sumpar(t) {
+    const same = UI.sumpar.dir === "same";
+    const a = [2, 1], b = same ? [3, 1.5] : [-3, -1.5];
+    const s = [a[0] + b[0], a[1] + b[1]];
+    const P = plane(-2.5, 6, -1.6, 3.4);
+    const k = ease(seg(t, 0.3, 1.1)), k2 = ease(seg(t, 1.3, 2.0));
+    vec(P, 0, 0, a[0], a[1], COL.a, 3.4);
+    vec(P, a[0], a[1], a[0] + b[0] * k, a[1] + b[1] * k, COL.b, 3.4, { alpha: 0.9 });
+    if (k2 > 0) { ctx.save(); ctx.translate(0, 18); vec(P, 0, 0, s[0] * k2, s[1] * k2, COL.r, 3.4); ctx.restore(); }
+    vtext("α", P.X(1) - 4, P.Y(0.5) - 8, COL.a, 15); vtext("β", P.X(a[0] + b[0] / 2) + 8, P.Y(a[1] + b[1] / 2) - 10, COL.b, 15);
+    const na = Math.hypot(...a), nb = Math.hypot(...b), ns = Math.hypot(...s);
+    tag(same ? "β = 1,5·α  (k > 0, ↑↑)" : "β = −1,5·α  (k < 0, ↑↓)", 12, 22, COL.ink);
+    tag(`|α| = ${num(na, 2)}   |β| = ${num(nb, 2)}`, 12, 48, COL.muted);
+    if (k2 >= 1) tag(same ? `|α + β| = ${num(ns, 2)} = |α| + |β|` : `|α + β| = ${num(ns, 2)} = ||α| − |β||`, 12, 74, COL.r);
+  },
+  collinear(t) {
+    const m = UI.collinear.m;
+    const A = [1, 0], B = [-m * m, 3], G = [-5 * m, 9];
+    const D = (B[0] - A[0]) * (G[1] - A[1]) - (G[0] - A[0]) * (B[1] - A[1]);
+    const P = plane(-11, 6.5, -1, 10);
+    const ok = Math.abs(D) < 1e-6;
+    if (ok) { const dx = G[0] - A[0], dy = G[1] - A[1]; line(P, A[0] - dx * 0.12, A[1] - dy * 0.12, G[0] + dx * 0.08, G[1] + dy * 0.08, COL.ok, 2.4); }
+    else poly(P, [A, B, G], COL.a, COL.muted, 0.12);
+    vec(P, A[0], A[1], B[0], B[1], COL.a, 2.6); vec(P, A[0], A[1], G[0], G[1], COL.b, 2.6);
+    dot(P, A[0], A[1], COL.ink, "A(1, 0)", "e", { labelColor: COL.ink });
+    dot(P, B[0], B[1], COL.a, `B${pt(B[0], B[1])}`, "w"); dot(P, G[0], G[1], COL.b, `Γ${pt(G[0], G[1])}`, G[0] < -3 ? "e" : "w");
+    tag(`μ = ${fmt(m)}`, 12, 22, COL.ink);
+    tag(`det(AB, AΓ) = ${num(D, 2).replace("-", "−")}`, 12, 48, ok ? COL.ok : COL.ink);
+    tag(ok ? "συνευθειακά!" : "τρίγωνο", 12, 74, ok ? COL.ok : COL.muted);
+  },
+  recap(t) {
+    const A = [-2, 1], B = [3, 3], M = [0.5, 2];
+    const P = plane(-4, 5, -1.6, 4.4);
+    vec(P, 0, 0, A[0], A[1], COL.muted, 2, { alpha: 0.5 }); vec(P, 0, 0, B[0], B[1], COL.muted, 2, { alpha: 0.5 });
+    poly(P, [A, [B[0], A[1]], B], COL.a, null, 0.08);
+    dashed(P, A[0], A[1], B[0], A[1], COL.r); dashed(P, B[0], A[1], B[0], B[1], COL.j);
+    vec(P, A[0], A[1], B[0], B[1], COL.ok, 3.4);
+    angleArc(P, A[0], A[1], 30, 0, Math.atan2(2, 5), COL.K, "φ");
+    dot(P, A[0], A[1], COL.ink, "A(−2, 1)", "w", { labelColor: COL.ink }); dot(P, B[0], B[1], COL.ink, "B(3, 3)", "n", { labelColor: COL.ink }); dot(P, M[0], M[1], COL.r, "M(1/2, 2)", "nw");
+    tag("AB = (5, 2)", 12, 22, COL.ok); tag("(AB) = √29", 12, 48, COL.a); tag("λ = 2/5 = εφφ", 12, 74, COL.K);
+  },
+  quiz(t) {
+    const P = plane(-3, 3, -2.6, 2.6, { ticks: false });
+    const n = 5;
+    for (let i = 0; i < n; i++) {
+      const a = t * 0.4 + (i * 2 * Math.PI) / n, r = 1.6 + 0.4 * Math.sin(t + i);
+      vec(P, 0, 0, r * Math.cos(a), r * Math.sin(a), [COL.a, COL.b, COL.r, COL.j, COL.K][i], 3);
+    }
+    ctx.fillStyle = COL.paper; ctx.beginPath(); ctx.arc(W / 2, H / 2, 34, 0, 7); ctx.fill();
+    text("?", W / 2, H / 2 + 22, COL.ink, 60, "center", 800);
+  },
+};
+
+/* ═══════════════════════════ SLIDE ENGINE ═══════════════════════════ */
+const textEl = document.getElementById("text"), capEl = document.getElementById("caption"), counter = document.getElementById("counter");
+const knobsEl = document.getElementById("knobs");
+const prev = document.getElementById("prev"), next = document.getElementById("next"), dots = document.getElementById("dots"), chaptersEl = document.getElementById("chapters");
+let idx = 0, t0 = performance.now();
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const QUIZ_STATE = {};
+for (const id in QUIZZES) QUIZ_STATE[id] = { i: 0, answers: QUIZZES[id].map(() => null) };
+try { const saved = JSON.parse(localStorage.getItem("dianismata-theory-quiz") || "{}"); for (const id in saved) if (QUIZ_STATE[id] && saved[id].answers?.length === QUIZZES[id].length) QUIZ_STATE[id] = saved[id]; } catch (e) {}
+function saveQuiz() { try { localStorage.setItem("dianismata-theory-quiz", JSON.stringify(QUIZ_STATE)); } catch (e) {} }
+
+// default knob/chip values
+SLIDES.forEach((s) => {
+  UI[s.scene] = UI[s.scene] || {};
+  (s.knobs || []).forEach((k) => (UI[s.scene][k.id] = k.value));
+  (s.chips || []).forEach((c) => (UI[s.scene][c.id] = c.value));
+});
+
+CHAPTERS.forEach((c) => {
+  const b = document.createElement("button"); b.type = "button"; b.dataset.ch = c.id;
+  b.innerHTML = `<span class="lbl">${c.name}<span class="long"> · ${c.long}</span></span><span class="bar"><i></i></span>`;
+  b.addEventListener("click", () => go(SLIDES.findIndex((s) => s.ch === c.id)));
+  chaptersEl.appendChild(b);
+});
+SLIDES.forEach((s, i) => {
+  const b = document.createElement("button"); b.type = "button"; b.setAttribute("aria-label", `Διαφάνεια ${i + 1}: ${s.title}`);
+  if (s.quiz) b.classList.add("quizdot");
+  b.addEventListener("click", () => go(i)); dots.appendChild(b);
+});
+
+const fmtKnob = (k, v) => `${num(v, k.step < 0.01 ? 3 : k.step < 0.5 ? 2 : 1)} ${k.unit}`;
+function renderKnobs(s) {
+  knobsEl.innerHTML = "";
+  const has = (s.knobs && s.knobs.length) || (s.chips && s.chips.length) || s.replay;
+  knobsEl.hidden = !has;
+  if (!has) return;
+  (s.chips || []).forEach((c) => {
+    const row = document.createElement("div"); row.className = "chips";
+    row.innerHTML = `<span>${c.label}</span>`;
+    c.options.forEach(([val, lbl]) => {
+      const b = document.createElement("button"); b.type = "button"; b.textContent = lbl; b.setAttribute("aria-pressed", UI[s.scene][c.id] === val ? "true" : "false");
+      b.addEventListener("click", () => { UI[s.scene][c.id] = val; [...row.querySelectorAll("button")].forEach((x) => x.setAttribute("aria-pressed", x === b ? "true" : "false")); if (s.scene === "lab") UI.lab.t0 = (performance.now() - t0) / 1000; });
+      row.appendChild(b);
+    });
+    if (s.replay) { const r = document.createElement("button"); r.type = "button"; r.className = "replay"; r.textContent = "↺ Ξανά"; r.addEventListener("click", () => (UI.lab.t0 = (performance.now() - t0) / 1000)); row.appendChild(r); }
+    knobsEl.appendChild(row);
+  });
+  const grid = document.createElement("div"); grid.style.display = "grid"; grid.style.gap = "8px 18px";
+  grid.style.gridTemplateColumns = (s.knobs || []).length > 2 ? "repeat(auto-fit, minmax(150px, 1fr))" : "1fr";
+  (s.knobs || []).forEach((k) => {
+    const id = `k-${s.scene}-${k.id}`;
+    const row = document.createElement("div"); row.className = "knob";
+    row.innerHTML = `<label for="${id}">${k.label}</label><output id="${id}-o">${fmtKnob(k, UI[s.scene][k.id])}</output><input id="${id}" type="range" min="${k.min}" max="${k.max}" step="${k.step}" value="${UI[s.scene][k.id]}">`;
+    const inp = row.querySelector("input"), out = row.querySelector("output");
+    inp.addEventListener("input", () => { UI[s.scene][k.id] = Number(inp.value); out.textContent = fmtKnob(k, UI[s.scene][k.id]); if (s.scene === "lab") UI.lab.t0 = (performance.now() - t0) / 1000; });
+    grid.appendChild(row);
+  });
+  knobsEl.appendChild(grid);
+}
+
+const LETTERS = ["Α", "Β", "Γ", "Δ"];
+function renderQuiz(s) {
+  const id = s.quiz, qs = QUIZZES[id], st = QUIZ_STATE[id], q = qs[st.i], ans = st.answers[st.i];
+  const wrap = document.createElement("div"); wrap.className = "quiz";
+  wrap.innerHTML = `<div class="qhead"><span>Ερώτηση ${st.i + 1} από ${qs.length}</span><span>${st.answers.filter((a, i) => a === qs[i].a).length} σωστές</span></div><div class="qtext">${q.q}</div>`;
+  q.o.forEach((o, j) => {
+    const b = document.createElement("button"); b.type = "button"; b.className = "opt";
+    b.innerHTML = `<span class="lt">${LETTERS[j]}</span><span>${o}</span>`;
+    if (ans != null) { b.disabled = true; if (j === q.a) b.dataset.state = "right"; else if (j === ans) b.dataset.state = "wrong"; }
+    b.addEventListener("click", () => { st.answers[st.i] = j; saveQuiz(); renderQuizInto(s); });
+    wrap.appendChild(b);
+  });
+  if (ans != null) {
+    const ex = document.createElement("div"); ex.className = "explain";
+    ex.innerHTML = `<b style="color:var(${ans === q.a ? "--ok" : "--bad"})">${ans === q.a ? "Σωστά!" : "Όχι ακριβώς."}</b> ${q.e}`;
+    wrap.appendChild(ex);
+  }
+  const nav = document.createElement("div"); nav.className = "qnav";
+  if (st.i > 0) { const b = document.createElement("button"); b.type = "button"; b.className = "ghost"; b.textContent = "← Προηγούμενη"; b.onclick = () => { st.i--; saveQuiz(); renderQuizInto(s); }; nav.appendChild(b); }
+  if (st.i < qs.length - 1) { const b = document.createElement("button"); b.type = "button"; b.textContent = "Επόμενη ερώτηση →"; b.disabled = ans == null; b.style.opacity = ans == null ? 0.45 : 1; b.onclick = () => { st.i++; saveQuiz(); renderQuizInto(s); }; nav.appendChild(b); }
+  else if (st.answers.every((a) => a != null)) { const b = document.createElement("button"); b.type = "button"; b.className = "ghost"; b.textContent = "↺ Ξανά από την αρχή"; b.onclick = () => { st.i = 0; st.answers = qs.map(() => null); saveQuiz(); renderQuizInto(s); }; nav.appendChild(b); }
+  wrap.appendChild(nav);
+  return wrap;
+}
+function renderQuizInto(s) {
+  const old = textEl.querySelector(".quiz"); const fresh = renderQuiz(s);
+  if (old) old.replaceWith(fresh); else textEl.appendChild(fresh);
+  reportHeight();
+}
+
+function render() {
+  const s = SLIDES[idx];
+  textEl.innerHTML = `<div class="kicker">${s.kicker}</div>${s.h1 ? `<h1>${s.title}</h1>` : `<h2>${s.title}</h2>`}${s.html}`;
+  if (s.quiz) textEl.appendChild(renderQuiz(s));
+  capEl.textContent = s.caption || "";
+  counter.textContent = `${idx + 1} / ${SLIDES.length}`;
+  prev.disabled = idx === 0; next.disabled = idx === SLIDES.length - 1;
+  next.textContent = idx === SLIDES.length - 1 ? "Τέλος" : "Επόμενο →";
+  [...dots.children].forEach((d, i) => d.setAttribute("aria-current", i === idx ? "true" : "false"));
+  [...chaptersEl.children].forEach((b) => {
+    const ch = b.dataset.ch, list = SLIDES.map((x, i) => [x, i]).filter(([x]) => x.ch === ch);
+    const first = list[0][1], last = list[list.length - 1][1];
+    const frac = idx > last ? 1 : idx < first ? 0 : (idx - first + 1) / list.length;
+    b.querySelector("i").style.width = `${frac * 100}%`;
+    b.setAttribute("aria-current", s.ch === ch ? "true" : "false");
+  });
+  renderKnobs(s);
+  t0 = performance.now();
+  if (s.scene === "lab") UI.lab.t0 = 0;
+  try { localStorage.setItem("dianismata-theory-slide", String(idx)); } catch (e) {}
+  requestAnimationFrame(reportHeight);
+}
+function go(i) { idx = Math.max(0, Math.min(SLIDES.length - 1, i)); render(); }
+prev.addEventListener("click", () => go(idx - 1));
+next.addEventListener("click", () => go(idx + 1));
+addEventListener("keydown", (e) => {
+  if (e.target && (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA")) return;
+  if (e.key === "ArrowRight" || e.key === "PageDown") go(idx + 1);
+  if (e.key === "ArrowLeft" || e.key === "PageUp") go(idx - 1);
+});
+let sx = null, sy = null;
+const stageEl = document.getElementById("stage");
+stageEl.addEventListener("touchstart", (e) => { if (e.target.closest("input, .knobs")) { sx = null; return; } sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+stageEl.addEventListener("touchend", (e) => { if (sx === null) return; const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy; if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) go(idx + (dx < 0 ? 1 : -1)); sx = null; });
+try { const saved = Number(new URLSearchParams(location.search).get("s") || localStorage.getItem("dianismata-theory-slide")); if (saved > 0 && saved < SLIDES.length) idx = saved; } catch (e) {}
+render(); resize();
+
+function frame(now) {
+  const t = reduce ? 6 : Math.max(0, (now - t0) / 1000);
+  ctx.clearRect(0, 0, W, H);
+  if (W > 0 && H > 0) { try { SCENES[SLIDES[idx].scene](t); } catch (err) { console.error(err); } }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+/* Report height to the embedding page so the iframe never scrolls internally. */
+let lastH = 0;
+function reportHeight() {
+  const h = Math.ceil(document.querySelector(".controls").getBoundingClientRect().bottom + window.scrollY + 18);
+  if (h !== lastH && window.parent !== window) { lastH = h; window.parent.postMessage({ type: "dianismata-theory-height", height: h }, "*"); }
+}
+new ResizeObserver(reportHeight).observe(document.body);
+addEventListener("load", reportHeight);
+document.fonts && document.fonts.ready.then(reportHeight);
+addEventListener("message", (e) => { if (e.data === "dianismata-theory-ping") { lastH = 0; reportHeight(); } });
+</script>
+</body>
+</html>

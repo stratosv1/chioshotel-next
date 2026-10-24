@@ -67,6 +67,9 @@ export default async function MixalisDashboardPage() {
             <Link href="/mixalis/ormi#askiseis" prefetch={false} className="rounded-full border border-black/10 px-4 py-2 hover:bg-[#f3efe8]">
               Φωτοτυπίες Τριπολίτη · Ορμή (λυμένες)
             </Link>
+            <Link href="/mixalis/dianismata#theoria" prefetch={false} className="rounded-full border border-black/10 px-4 py-2 hover:bg-[#f3efe8]">
+              Διανύσματα: συντεταγμένες (Μαθηματικά)
+            </Link>
             <a href="/mixalis/organiki1" className="rounded-full border border-black/10 px-4 py-2 hover:bg-[#f3efe8]">
               Οργανική χημεία (Β΄ Λυκείου)
             </a>

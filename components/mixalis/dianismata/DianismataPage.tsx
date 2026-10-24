@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { Practice } from "./Practice";
+import { DianismataTheoryEmbed } from "./TheoryEmbed";
 import { Trapeza } from "./Trapeza";
 
 function Section({ id, kicker, title, intro, children }: { id: string; kicker: string; title: string; intro?: ReactNode; children: ReactNode }) {
@@ -27,7 +28,8 @@ export function DianismataPage() {
           <p className="mt-4 text-sm font-semibold uppercase tracking-[0.18em] text-[#e7b77a]">Μαθηματικά Προσανατολισμού · Β΄ Λυκείου</p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-5xl">Διανύσματα</h1>
           <p className="mt-4 max-w-2xl text-[15px] leading-7 text-white/80">
-            Θέματα της Τράπεζας Θεμάτων λυμένα βήμα-βήμα, και ασκήσεις εξάσκησης με αυτόματο έλεγχο. Λύσε πρώτα στο τετράδιο. Αν κολλήσεις, άνοιξε
+            Η θεωρία των συντεταγμένων με κινούμενα σχέδια, θέματα της Τράπεζας Θεμάτων λυμένα βήμα-βήμα, και ασκήσεις εξάσκησης με αυτόματο
+            έλεγχο. Λύσε πρώτα στο τετράδιο. Αν κολλήσεις, άνοιξε
             την <b className="text-white">υπόδειξη</b>. Η <b className="text-white">λύση</b> ανοίγει ένα βήμα τη φορά, ώστε να συνεχίσεις μόνος σου
             μόλις καταλάβεις το κόλπο.
           </p>
@@ -35,6 +37,7 @@ export function DianismataPage() {
 
         <nav className="sticky top-0 z-10 -mx-4 flex gap-2 overflow-x-auto bg-[#f3efe8]/95 px-4 py-2 backdrop-blur sm:mx-0 sm:rounded-2xl sm:px-2">
           {[
+            ["#theoria", "Θεωρία"],
             ["#trapeza", "Τράπεζα Θεμάτων"],
             ["#eksaskisi", "Εξάσκηση"],
           ].map(([href, label]) => (
@@ -48,9 +51,32 @@ export function DianismataPage() {
           ))}
         </nav>
 
+        <section id="theoria" className="scroll-mt-20 rounded-3xl border border-black/10 bg-white p-3 shadow-sm sm:p-5">
+          <div className="flex flex-wrap items-end justify-between gap-3 px-2 pb-3 pt-1 sm:px-1">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">1 · Θεωρία · ξεκίνα από εδώ</p>
+              <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">Συντεταγμένες στο επίπεδο, βήμα βήμα</h2>
+              <p className="mt-1 max-w-3xl text-[15px] leading-7 text-[#5c534c]">
+                Όλη η §1.4 του σχολικού βιβλίου, η σύνοψη του Σαββάλα και οι σημειώσεις του Δημήτρη από το φροντιστήριο σε 27 διαφάνειες: άξονες,
+                συντεταγμένες διανύσματος, μέσο, μέτρο, απόσταση, γωνία, συντελεστής διεύθυνσης και συνθήκη παραλληλίας. Με κινούμενα σχέδια, τις
+                ασκήσεις του Δημήτρη λυμένες και τρία quiz.
+              </p>
+            </div>
+            <a
+              href="/mixalis/dianismata-theory.html"
+              target="_blank"
+              rel="noopener"
+              className="shrink-0 rounded-full border border-black/10 bg-white px-4 py-1.5 text-sm font-semibold hover:bg-[#f3efe8]"
+            >
+              Σε πλήρη οθόνη ↗
+            </a>
+          </div>
+          <DianismataTheoryEmbed />
+        </section>
+
         <Section
           id="trapeza"
-          kicker="1 · Τράπεζα Θεμάτων"
+          kicker="2 · Τράπεζα Θεμάτων"
           title="Θέματα 2 και 4, λυμένα και εξηγημένα"
           intro={
             <p>
@@ -64,7 +90,7 @@ export function DianismataPage() {
 
         <Section
           id="eksaskisi"
-          kicker="2 · Εξάσκηση"
+          kicker="3 · Εξάσκηση"
           title="Ασκήσεις με νέους αριθμούς κάθε φορά"
           intro={
             <p>

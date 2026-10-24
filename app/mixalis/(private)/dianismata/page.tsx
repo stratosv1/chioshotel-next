@@ -3,7 +3,7 @@ import { DianismataClient } from "@/components/mixalis/dianismata/DianismataClie
 
 export const metadata: Metadata = {
   title: { absolute: "Διανύσματα · Μαθηματικά Β΄ Λυκείου" },
-  description: "Θέματα της Τράπεζας Θεμάτων για τα διανύσματα με λύσεις βήμα-βήμα και ασκήσεις εξάσκησης.",
+  description: "Θεωρία των συντεταγμένων στο επίπεδο με κινούμενα σχέδια, θέματα της Τράπεζας Θεμάτων με λύσεις βήμα-βήμα και ασκήσεις εξάσκησης.",
 };
 
 export default function DianismataRoute() {
