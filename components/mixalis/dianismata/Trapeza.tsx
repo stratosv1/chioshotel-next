@@ -138,46 +138,78 @@ function PartCard({ part, mark, onMark }: { part: BankPart; mark?: Mark; onMark:
 function ItemCard({ item, index, progress, onMark }: { item: BankItem; index: number; progress: Progress; onMark: (k: string, m: Mark | null) => void }) {
   const done = item.parts.filter((p) => progress[partKey(item, p)] === "done").length;
   const [showKey, setShowKey] = useState(false);
+  const [open, setOpen] = useState(false);
+  const later = item.topic === "eswteriko";
+  const complete = done === item.parts.length;
 
   return (
-    <article id={`thema-${item.code}`} className="scroll-mt-16 border-t border-black/10 pt-8 first:border-t-0 first:pt-0">
-      <header className="flex flex-wrap items-center gap-2">
-        <span className="inline-flex h-8 min-w-8 items-center justify-center rounded-full bg-[#c9822f] px-2 text-sm font-bold text-white">{index}</span>
-        <span className="rounded-full bg-[#2c2825]/5 px-2.5 py-1 font-mono text-xs font-semibold text-[#4d4138]">
-          Τράπεζα · {item.code} · Θέμα {item.thema}
+    <article id={`thema-${item.code}`} className="scroll-mt-16 border-t border-black/10 first:border-t-0">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        className="group flex w-full items-start gap-3 py-5 text-left sm:gap-4"
+      >
+        <span
+          className={`mt-0.5 inline-flex h-9 min-w-9 shrink-0 items-center justify-center rounded-full px-2 text-sm font-bold text-white transition ${
+            complete ? "bg-[#2e8b57]" : "bg-[#c9822f]"
+          }`}
+        >
+          {complete ? "✓" : index}
         </span>
-        <span className="rounded-full bg-[#fdf3e6] px-2.5 py-1 text-xs font-semibold text-[#8a5a22]">{BANK_TOPIC_LABELS[item.topic]}</span>
-        <span className={`ml-auto text-xs font-semibold ${done === item.parts.length ? "text-[#2e8b57]" : "text-[#857261]"}`}>
-          {done}/{item.parts.length} ερωτήματα ✓
+        <span className="min-w-0 flex-1">
+          <span className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-semibold text-[#857261]">
+            <span>Θέμα {item.thema}</span>
+            <span aria-hidden="true">·</span>
+            <span>{BANK_TOPIC_LABELS[item.topic]}</span>
+            {later ? <span className="rounded-full bg-[#2c2825] px-2 py-0.5 text-[11px] text-white">§1.5 · αργότερα</span> : null}
+            <span className={complete ? "text-[#2e8b57]" : ""}>
+              {done}/{item.parts.length} ✓
+            </span>
+          </span>
+          <span className="mt-1 block text-lg font-semibold tracking-tight transition group-hover:text-[#8a5a22] sm:text-xl">{item.title}</span>
         </span>
-      </header>
+        <span aria-hidden="true" className={`mt-2 shrink-0 text-xl text-[#857261] transition-transform duration-300 ${open ? "rotate-180" : ""}`}>
+          ⌄
+        </span>
+      </button>
 
-      <h3 className="mt-3 text-xl font-semibold tracking-tight sm:text-2xl">{item.title}</h3>
-      <div className="mt-2 text-[15px] leading-8 text-[#2c2825]">{item.statement}</div>
-      {item.figure ? <div className="mt-3 max-w-xl">{item.figure}</div> : null}
+      {open ? (
+        <div className="pb-8 [animation:th-open_.35s_cubic-bezier(.2,.8,.2,1)_both]">
+          <style>{`@keyframes th-open { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }`}</style>
+          {later ? (
+            <p className="mb-3 rounded-xl bg-[#2c2825]/5 px-3 py-2 text-sm leading-6 text-[#4d4138]">
+              Αυτό το θέμα θέλει <b>εσωτερικό γινόμενο</b> (§1.5), που έρχεται μετά τις συντεταγμένες. Άφησέ το για όταν το κάνετε.
+            </p>
+          ) : null}
+          <p className="font-mono text-xs text-[#857261]">Τράπεζα Θεμάτων · {item.code}</p>
+          <div className="mt-2 text-[15px] leading-8 text-[#2c2825]">{item.statement}</div>
+          {item.figure ? <div className="mt-3 max-w-xl">{item.figure}</div> : null}
 
-      <div className="mt-5 space-y-6">
-        {item.parts.map((part) => (
-          <PartCard key={part.label} part={part} mark={progress[partKey(item, part)]} onMark={(m) => onMark(partKey(item, part), m)} />
-        ))}
-      </div>
+          <div className="mt-5 space-y-6">
+            {item.parts.map((part) => (
+              <PartCard key={part.label} part={part} mark={progress[partKey(item, part)]} onMark={(m) => onMark(partKey(item, part), m)} />
+            ))}
+          </div>
 
-      <div className="mt-4 space-y-3">
-        {showKey ? (
-          <p className="rounded-xl bg-[#ecf7f0] px-3 py-2 text-sm leading-7 text-[#245c3d]">
-            <b>🔑 Η ιδέα του θέματος:</b> {item.key}
-          </p>
-        ) : (
-          <button type="button" onClick={() => setShowKey(true)} className="text-sm font-semibold text-[#2e8b57] underline underline-offset-2">
-            🔑 Ποια είναι η βασική ιδέα του θέματος;
-          </button>
-        )}
-        {item.note ? (
-          <p className="rounded-xl bg-[#fdeeec] px-3 py-2 text-sm leading-6 text-[#7a2c22]">
-            <b>Προσοχή:</b> {item.note}
-          </p>
-        ) : null}
-      </div>
+          <div className="mt-4 space-y-3">
+            {showKey ? (
+              <p className="rounded-xl bg-[#ecf7f0] px-3 py-2 text-sm leading-7 text-[#245c3d]">
+                <b>🔑 Η ιδέα του θέματος:</b> {item.key}
+              </p>
+            ) : (
+              <button type="button" onClick={() => setShowKey(true)} className="text-sm font-semibold text-[#2e8b57] underline underline-offset-2">
+                🔑 Ποια είναι η βασική ιδέα του θέματος;
+              </button>
+            )}
+            {item.note ? (
+              <p className="rounded-xl bg-[#fdeeec] px-3 py-2 text-sm leading-6 text-[#7a2c22]">
+                <b>Προσοχή:</b> {item.note}
+              </p>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
     </article>
   );
 }
@@ -206,7 +238,9 @@ export function Trapeza() {
   const doneCount = allParts.filter((k) => progress[k] === "done").length;
   const againCount = allParts.filter((k) => progress[k] === "again").length;
 
-  const numbered = BANK.map((item, i) => ({ item, n: i + 1 }));
+  // Ό,τι θέλει εσωτερικό γινόμενο (§1.5) πάει στο τέλος, ώστε η σειρά να ακολουθεί την ύλη.
+  const ordered = [...BANK.filter((i) => i.topic !== "eswteriko"), ...BANK.filter((i) => i.topic === "eswteriko")];
+  const numbered = ordered.map((item, i) => ({ item, n: i + 1 }));
   const list = numbered.filter(({ item }) => {
     if (filter === "all") return true;
     if (filter === "t2") return item.thema === 2;
@@ -272,7 +306,7 @@ export function Trapeza() {
         ))}
       </div>
 
-      <div className="grid gap-10 pt-4">
+      <div className="pt-2">
         {list.map(({ item, n }) => (
           <ItemCard key={item.code} item={item} index={n} progress={progress} onMark={setMark} />
         ))}

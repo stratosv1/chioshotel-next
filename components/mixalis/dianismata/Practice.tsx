@@ -440,6 +440,9 @@ function parseAnswer(raw: string): number | null {
   return Number.isFinite(v) ? v : null;
 }
 
+// Γεννήτριες που θέλουν εσωτερικό γινόμενο (§1.5): δεν μπαίνουν στα «Ανάμεικτα» μέχρι να διδαχτεί.
+const LATER = new Set(["dot", "dotpolar", "abssum", "perp", "angle"]);
+
 export function Practice() {
   const [genId, setGenId] = useState<string>("mix");
   const [problem, setProblem] = useState<Problem>(() => GENERATORS[0].make());
@@ -450,7 +453,8 @@ export function Practice() {
   const [score, setScore] = useState({ right: 0, tries: 0 });
 
   const next = (id = genId) => {
-    const gen = id === "mix" ? GENERATORS[Math.floor(Math.random() * GENERATORS.length)] : GENERATORS.find((g) => g.id === id) ?? GENERATORS[0];
+    const pool = GENERATORS.filter((g) => !LATER.has(g.id));
+    const gen = id === "mix" ? pool[Math.floor(Math.random() * pool.length)] : GENERATORS.find((g) => g.id === id) ?? GENERATORS[0];
     setProblem(gen.make());
     setValues([]);
     setResult(null);
@@ -483,9 +487,15 @@ export function Practice() {
             }`}
           >
             {g.title}
+            {LATER.has(g.id) ? <span className="ml-1.5 text-[11px] opacity-60">§1.5</span> : null}
           </button>
         ))}
       </div>
+
+      <p className="text-sm leading-6 text-[#5c534c]">
+        <b>Πώς γράφεις:</b> αρνητικός με «-» (π.χ. -3), δεκαδικός με κόμμα (1,5) ή κλάσμα (3/2). Τα κουμπιά με «§1.5» θέλουν εσωτερικό γινόμενο και
+        δεν μπαίνουν στα «Ανάμεικτα».
+      </p>
 
       <div className="border-l-2 border-[#c9822f]/40 py-1 pl-4 sm:pl-5">
         <div className="text-[15px] leading-8 text-[#2c2825]">{problem.prompt}</div>
@@ -570,8 +580,7 @@ export function Practice() {
       </div>
 
       <p className="text-xs text-[#857261]">
-        Σε αυτή τη συνεδρία: <b className="text-[#2e8b57]">{score.right}</b> σωστές σε {score.tries} ελέγχους. Αρνητικοί με «-», δεκαδικοί με κόμμα (1,5)
-        ή κλάσμα (3/2).
+        Σε αυτή τη συνεδρία: <b className="text-[#2e8b57]">{score.right}</b> σωστές σε {score.tries} ελέγχους.
       </p>
     </div>
   );

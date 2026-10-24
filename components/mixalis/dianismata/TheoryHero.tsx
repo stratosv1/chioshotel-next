@@ -6,11 +6,11 @@
 const DECK = "/mixalis/dianismata-theory.html";
 
 const chapters = [
-  { letter: "Α", title: "Άξονες", text: "Άξονας, καρτεσιανό επίπεδο, τετμημένη και τεταγμένη", slide: 0 },
-  { letter: "Β", title: "Το διάνυσμα ως (x, y)", text: "α = x·i + y·j, ισότητα, πράξεις, παράλληλο σε άξονα", slide: 3 },
-  { letter: "Γ", title: "Σημεία", text: "AB = τέλος − αρχή, μέσο, κέντρο βάρους, μέτρο, απόσταση", slide: 8 },
-  { letter: "Δ", title: "Κατεύθυνση", text: "Γωνία φ, λ = εφφ, ορίζουσα, παραλληλία, συνευθειακά", slide: 18 },
-];
+  { letter: "Α", title: "Τα βασικά", text: "Τι είναι διάνυσμα, πρόσθεση, λ·α, οι λέξεις που θα ακούς", slide: 0 },
+  { letter: "Β", title: "Συντεταγμένες", text: "Άξονας, επίπεδο Oxy, α = (x, y), πράξεις", slide: 4 },
+  { letter: "Γ", title: "Σημεία", text: "AB = τέλος − αρχή, μέσο, κέντρο βάρους, μέτρο, απόσταση", slide: 11 },
+  { letter: "Δ", title: "Κατεύθυνση", text: "Τριγωνομετρία, γωνία φ, λ, ορίζουσα, παραλληλία", slide: 21 },
+]
 
 export function TheoryHero() {
   return (
@@ -66,21 +66,21 @@ export function TheoryHero() {
           Διανύσματα
         </h1>
         <p className="th-rise mt-5 max-w-xl text-[15px] leading-7 text-white/75 sm:text-base" style={{ animationDelay: ".16s" }}>
-          Η θεωρία των συντεταγμένων σε 27 κινούμενες διαφάνειες (σχολικό §1.4, Σαββάλας, σημειώσεις Δημήτρη), θέματα της Τράπεζας λυμένα βήμα
-          βήμα και ασκήσεις με αυτόματο έλεγχο.
+          Τρία βήματα με τη σειρά: πρώτα η θεωρία σε 31 κινούμενες διαφάνειες (από το «τι είναι διάνυσμα» μέχρι την παραλληλία), μετά τα
+          θέματα της Τράπεζας και στο τέλος εξάσκηση με αυτόματο έλεγχο.
         </p>
         <div className="th-rise mt-8 flex flex-wrap items-center gap-x-6 gap-y-3" style={{ animationDelay: ".24s" }}>
           <a
             href={DECK}
             className="inline-flex items-center gap-2 rounded-full bg-[#e7b77a] px-6 py-3 text-base font-semibold text-[#141821] shadow-lg shadow-black/30 transition hover:-translate-y-0.5 hover:bg-[#f0c98f]"
           >
-            Ξεκίνα τη θεωρία <span aria-hidden="true">→</span>
+            1. Ξεκίνα τη θεωρία <span aria-hidden="true">→</span>
           </a>
           <a href="#trapeza" className="text-sm font-semibold text-white/70 hover:text-white">
-            Τράπεζα Θεμάτων ↓
+            2. Τράπεζα Θεμάτων ↓
           </a>
           <a href="#eksaskisi" className="text-sm font-semibold text-white/70 hover:text-white">
-            Εξάσκηση ↓
+            3. Εξάσκηση ↓
           </a>
         </div>
 
