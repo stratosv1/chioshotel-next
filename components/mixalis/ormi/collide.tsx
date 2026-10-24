@@ -29,6 +29,10 @@ export type Collision = {
   pUnit?: string;
   kUnit?: string;
   system?: boolean;
+  /** caption shown during contact (default «κρούση · αργή κίνηση») */
+  tag?: string;
+  /** px per m/s for velocity arrows (default 9) */
+  vs?: number;
 };
 
 /** Positions and velocities of both bodies at animation time t. */
@@ -37,6 +41,7 @@ export function collisionState(c: Collision, t: number) {
   const dc = c.dc ?? 0.7;
   const S = c.S ?? 14;
   const X = c.X ?? 180;
+  const vs = c.vs ?? 9;
   const [w1, w2] = c.widths ?? [34, 40];
   let x1: number;
   let x2: number;
@@ -62,7 +67,7 @@ export function collisionState(c: Collision, t: number) {
     // Stop drifting before a body (or its arrow) leaves the 360 px frame,
     // so the frame where the step pauses still shows both bodies.
     const room = (x: number, v: number, half: number) =>
-      v > 0.01 ? (W_FRAME - 12 - (x + half) - v * 9) / (S * v) : v < -0.01 ? (x - half - 12 - Math.abs(v) * 9) / (S * Math.abs(v)) : Infinity;
+      v > 0.01 ? (W_FRAME - 12 - (x + half) - v * vs) / (S * v) : v < -0.01 ? (x - half - 12 - Math.abs(v) * vs) / (S * Math.abs(v)) : Infinity;
     const dtMax = Math.max(0, Math.min(room(X - w1 / 2, c.v1, w1 / 2), room(X + w2 / 2, c.v2, w2 / 2)));
     const dt = Math.min(t - tc - dc, dtMax);
     x1 = X - w1 / 2 + S * c.v1 * dt;
@@ -75,6 +80,7 @@ export function collisionState(c: Collision, t: number) {
 
 export function CollisionScene({ c, t, extra }: { c: Collision; t: number; extra?: React.ReactNode }) {
   const st = collisionState(c, t);
+  const vs = c.vs ?? 9;
   const gy = c.groundY ?? 104;
   const [l1, l2] = c.labels ?? ["m_1", "m_2"];
   const force = bump(t, st.tc, st.tc + st.dc);
@@ -106,7 +112,7 @@ export function CollisionScene({ c, t, extra }: { c: Collision; t: number; extra
         <g>
           <Box cx={st.x1} y={gy} w={st.w1} h={26} fill={C.b1} label={l1} />
           <Box cx={st.x2} y={gy} w={st.w2} h={30} fill={C.b2} label={l2} />
-          <Vec x={st.x2 + st.w2 / 2 + 2} y={vy} dx={st.s1 * 9} label="V" />
+          <Vec x={st.x2 + st.w2 / 2 + 2} y={vy} dx={st.s1 * vs} label="V" />
           {Math.abs(st.s1) < 0.05 ? <T x={(st.x1 + st.x2) / 2} y={vy - 4} s="V = 0" size={11} color={C.v} italic /> : null}
         </g>
       ) : (
@@ -116,14 +122,14 @@ export function CollisionScene({ c, t, extra }: { c: Collision; t: number; extra
           <Vec
             x={st.s1 >= 0 ? st.x1 - st.w1 / 2 : st.x1 + st.w1 / 2}
             y={vy}
-            dx={st.s1 * 9}
+            dx={st.s1 * vs}
             label={after ? `υ′_${l1.replace("m_", "")}` : `υ_${l1.replace("m_", "")}`}
             opacity={st.phase === "contact" ? 0.5 : 1}
           />
           <Vec
             x={st.s2 >= 0 ? st.x2 - st.w2 / 2 : st.x2 + st.w2 / 2}
             y={vy - 12}
-            dx={st.s2 * 9}
+            dx={st.s2 * vs}
             label={after ? `υ′_${l2.replace("m_", "")}` : `υ_${l2.replace("m_", "")}`}
             opacity={st.phase === "contact" ? 0.5 : 1}
           />
@@ -135,7 +141,7 @@ export function CollisionScene({ c, t, extra }: { c: Collision; t: number; extra
           <Vec x={st.x1 + st.w1 / 2} y={gy - 12} dx={-force * 46} color={C.F} label="−F" width={3.2} labelSide="below" />
         </g>
       ) : null}
-      <Tag x={14} y={22} s="κρούση · αργή κίνηση" color={C.F} show={st.phase === "contact"} />
+      <Tag x={14} y={22} s={c.tag ?? "κρούση · αργή κίνηση"} color={C.F} show={st.phase === "contact"} />
       {c.showK ? <Heat cx={(st.x1 + st.x2) / 2} cy={gy - 30} k={after ? Math.min(1, lost / Math.max(1e-6, Kb)) * 2 : 0} /> : null}
       {extra}
       <Bars y={gy + 32} max={pmax} items={items} unit="kg·m/s" />

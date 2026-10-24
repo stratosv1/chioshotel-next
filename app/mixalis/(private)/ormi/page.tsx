@@ -66,6 +66,9 @@ export default function OrmiPage() {
             <a href="/mixalis/ormi-typologio-A4.pdf" target="_blank" rel="noopener" className="rounded-full bg-[#2c2825] px-4 py-1.5 text-white hover:bg-black">
               Εκτύπωση σε A4 (PDF, 2 σελίδες)
             </a>
+            <Link href="/mixalis/tripolitis" prefetch={false} className="rounded-full border border-black/10 bg-white px-4 py-1.5 hover:bg-[#f3efe8]">
+              Λυμένες ασκήσεις Τριπολίτη
+            </Link>
           </div>
         </header>
 

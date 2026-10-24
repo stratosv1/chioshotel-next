@@ -5,7 +5,7 @@ import { usePlaying, useClock } from "@/components/mixalis/omali/shared";
 import { C, H, W, type Case } from "./kit";
 
 /** Turns "υ_1", "F_μ" or "p_{ολ,πριν}" inside plain text into real subscripts. */
-function rich(node: ReactNode): ReactNode {
+export function rich(node: ReactNode): ReactNode {
   if (typeof node === "string") {
     const out: ReactNode[] = [];
     const re = /_\{([^}]*)\}|_([\p{L}\p{N}]+)/gu;
