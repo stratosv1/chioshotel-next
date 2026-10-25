@@ -70,6 +70,9 @@ export default function OrmiPage() {
             <a href="/mixalis/ormi-typologio-A4.pdf" target="_blank" rel="noopener" className="rounded-full bg-[#2c2825] px-4 py-1.5 text-white hover:bg-black">
               Εκτύπωση σε A4 (PDF, 2 σελίδες)
             </a>
+            <a href="/mixalis/ormi-krouseis-parousiasi.pdf" download className="rounded-full bg-[#c9822f] px-4 py-1.5 text-white hover:bg-[#a96b22]">
+              ⬇ Παρουσίαση: όλες οι περιπτώσεις με λυμένα παραδείγματα (PDF, 20 διαφάνειες)
+            </a>
             <a href="#askiseis" className="rounded-full border border-black/10 bg-white px-4 py-1.5 hover:bg-[#f3efe8]">
               Λυμένες ασκήσεις Τριπολίτη ↓
             </a>
