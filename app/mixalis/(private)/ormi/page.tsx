@@ -4,11 +4,12 @@ import { Note } from "@/components/mixalis/omali/shared";
 import { OrmiAnimationsClient } from "@/components/mixalis/ormi/OrmiAnimationsClient";
 import { OrmiTheoryEmbed } from "@/components/mixalis/ormi/OrmiTheoryEmbed";
 import { TripolitisClient } from "@/components/mixalis/tripolitis/TripolitisClient";
+import { TrapezaOrmi } from "@/components/mixalis/ormi/trapeza/TrapezaOrmi";
 
 export const metadata: Metadata = {
   title: { absolute: "Ορμή και κρούσεις · Τυπολόγιο · Physics Workspace" },
   description:
-    "40 περιπτώσεις ορμής και κρούσεων (Τράπεζα Θεμάτων, σχολικό βιβλίο, Σαββάλας) σε ένα poster, με κινούμενο σχέδιο για κάθε περίπτωση.",
+    "40 περιπτώσεις ορμής και κρούσεων (Τράπεζα Θεμάτων, σχολικό βιβλίο, Σαββάλας) σε ένα poster, με κινούμενο σχέδιο για κάθε περίπτωση, και όλα τα Θέματα 2 της Τράπεζας λυμένα.",
 };
 
 const POSTER_W = 1212;
@@ -70,6 +71,9 @@ export default function OrmiPage() {
             <a href="#askiseis" className="rounded-full border border-black/10 bg-white px-4 py-1.5 hover:bg-[#f3efe8]">
               Λυμένες ασκήσεις Τριπολίτη ↓
             </a>
+            <a href="#trapeza" className="rounded-full border border-black/10 bg-white px-4 py-1.5 hover:bg-[#f3efe8]">
+              Τράπεζα Θεμάτων · Θέμα 2 ↓
+            </a>
           </div>
         </header>
 
@@ -122,6 +126,9 @@ export default function OrmiPage() {
             ))}
             <a href="#askiseis" className="shrink-0 rounded-full bg-[#2c2825] px-3 py-1.5 text-white hover:bg-black">
               Ασκήσεις Τριπολίτη
+            </a>
+            <a href="#trapeza" className="shrink-0 rounded-full bg-[#c9822f] px-3 py-1.5 text-white hover:bg-[#a96b22]">
+              Τράπεζα Θεμάτων
             </a>
           </div>
         </nav>
@@ -215,6 +222,21 @@ export default function OrmiPage() {
             </p>
           </div>
           <TripolitisClient embedded />
+        </section>
+
+        <section id="trapeza" className="scroll-mt-20 space-y-6">
+          <div className="rounded-3xl border border-black/10 bg-white p-5 shadow-sm sm:p-8">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Τράπεζα Θεμάτων</p>
+            <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">ΤΡΑΠΕΖΑ ΘΕΜΑΤΩΝ · Θέμα 2</h2>
+            <p className="mt-2 max-w-3xl text-[15px] leading-7 text-[#5c534c]">
+              Όλα τα ερωτήματα ορμής από τα Θέματα 2 της επίσημης Τράπεζας Θεμάτων, χωρισμένα ανά είδος. Για κάθε ένα: διάβασε την εκφώνηση,{" "}
+              <b>διάλεξε απάντηση</b> και γράψε στο τετράδιο <b>γιατί</b>, πριν δεις τη λύση. Μετά διάβασε την αιτιολόγηση βήμα-βήμα: αυτά τα
+              βήματα γράφεις στο γραπτό για να πάρεις τις μονάδες (η αιτιολόγηση μετράει 8–9 από τις 12–13 μονάδες).
+            </p>
+          </div>
+          <div className="rounded-3xl border border-black/10 bg-white p-4 shadow-sm sm:p-6">
+            <TrapezaOrmi />
+          </div>
         </section>
       </div>
     </main>
