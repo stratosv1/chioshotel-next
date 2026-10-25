@@ -128,7 +128,7 @@ export function FigXT() {
   const Y = (x: number) => 150 - x * 160;
   return (
     <Frame label="Θέση x του αμαξιδίου Α σε συνάρτηση με τον χρόνο (κρούση τη στιγμή t = 2 s)" h={175}>
-      <Axes ox={50} oy={150} w={240} h={135} xl="t (s)" yl="x (m)" />
+      <Axes ox={50} oy={150} w={240} h={124} xl="t (s)" yl="x (m)" />
       {[1, 2, 3].map((t) => (
         <g key={t}>
           <line x1={X(t)} y1={150} x2={X(t)} y2={154} stroke={INK} />
@@ -158,7 +158,7 @@ export function FigVT() {
   const Y = (v: number) => 150 - v * 8;
   return (
     <Frame label="Ταχύτητα του σώματος μάζας m: από 15 m/s σε 5 m/s κατά την κρούση (διάρκεια 1 s)" h={175}>
-      <Axes ox={50} oy={150} w={240} h={140} xl="t (s)" yl="υ (m/s)" />
+      <Axes ox={50} oy={150} w={240} h={124} xl="t (s)" yl="υ (m/s)" />
       {[1, 2, 3].map((t) => (
         <g key={t}>
           <line x1={X(t)} y1={150} x2={X(t)} y2={154} stroke={INK} />
