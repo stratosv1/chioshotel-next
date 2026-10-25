@@ -174,15 +174,16 @@ function buildDealOfferSchema(
     seller: {
       "@id": hotelId(),
     },
+    // schema.org: itemOffered must be a Product/Service, not an Accommodation.
+    // No @id here, so it is not merged with the room page's Accommodation node.
     itemOffered: {
-      "@type": "Accommodation",
-      "@id": schemaId(offer.roomPageHref, "room"),
+      "@type": "Service",
       name: offer.title,
       url: absoluteUrl(offer.roomPageHref),
       image: absoluteUrl(offer.image),
       description: offer.description,
-      inLanguage: language,
-      containedInPlace: {
+      serviceType: labels.accommodation,
+      provider: {
         "@id": hotelId(),
       },
     },

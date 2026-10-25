@@ -14,7 +14,7 @@ import {
   buildHotelSchema,
   buildImageSchema,
   buildOrganizationSchema,
-  buildSchemaGraph,
+  buildGuideSchemaGraph,
   buildWebsiteSchema,
   hotelId,
   itemListId,
@@ -378,7 +378,7 @@ export function buildChiosActivitiesSchema(data: ChiosActivitiesPageData) {
   const canonicalPath = data.path;
   const hubItemList = buildActivitiesItemListSchema(data);
 
-  return buildSchemaGraph([
+  return buildGuideSchemaGraph([
     buildOrganizationSchema(),
     buildHotelSchema({ path: canonicalPath }),
     buildWebsiteSchema(),

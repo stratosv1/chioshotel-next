@@ -722,6 +722,97 @@ export function buildSchemaGraph(
   };
 }
 
+const ARTICLE_TYPES = new Set([
+  "Article",
+  "BlogPosting",
+  "NewsArticle",
+  "Report",
+  "TechArticle",
+]);
+
+function hasType(node: SchemaObject, types: Set<string>): boolean {
+  const type = node["@type"];
+  const list = Array.isArray(type) ? type : [type];
+  return list.some((t) => typeof t === "string" && types.has(t));
+}
+
+/**
+ * Builds an Article node for an editorial guide page, derived from the
+ * page's own `#webpage` node so headline, description, image and language
+ * always match what the page already declares.
+ */
+export function buildGuideArticleSchema(
+  graph: SchemaObject[],
+): SchemaObject | null {
+  const page = graph.find(
+    (node) =>
+      typeof node["@id"] === "string" &&
+      (node["@id"] as string).endsWith("#webpage"),
+  );
+
+  if (!page || typeof page.url !== "string") {
+    return null;
+  }
+
+  const pageId = page["@id"] as string;
+  const articleId = pageId.replace(/#webpage$/, "#article");
+  const primaryImage = graph.find(
+    (node) =>
+      typeof node["@id"] === "string" &&
+      (node["@id"] as string).endsWith("#primaryimage"),
+  );
+  const image =
+    page.primaryImageOfPage ||
+    (primaryImage ? { "@id": primaryImage["@id"] as string } : page.image);
+
+  return {
+    "@type": "Article",
+    "@id": articleId,
+    url: page.url,
+    headline: page.headline || page.name,
+    name: page.name,
+    description: page.description,
+    inLanguage: page.inLanguage,
+    image,
+    author: {
+      "@id": organizationId(),
+    },
+    publisher: {
+      "@id": organizationId(),
+    },
+    mainEntityOfPage: {
+      "@id": pageId,
+    },
+    isPartOf: {
+      "@id": pageId,
+    },
+    about: page.about,
+  };
+}
+
+/**
+ * Same as buildSchemaGraph, plus an Article node for editorial guide pages
+ * (beaches, villages, museums, activities, island guides, travel landings).
+ * Skipped when the graph already contains an Article-type node.
+ */
+export function buildGuideSchemaGraph(
+  items: Array<SchemaObject | null | undefined>,
+): SchemaObject {
+  const graph = items.filter(Boolean) as SchemaObject[];
+
+  if (!graph.some((node) => hasType(node, ARTICLE_TYPES))) {
+    const article = buildGuideArticleSchema(graph);
+    if (article) {
+      graph.push(article);
+    }
+  }
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": graph,
+  };
+}
+
 export function buildBasePageSchema(input: WebPageSchemaInput): SchemaObject {
   return buildSchemaGraph([
     buildOrganizationSchema(),

@@ -151,8 +151,14 @@ function buildDirectBookingOfferSchema(data: RatesPageData): SchemaObject {
     seller: {
       "@id": hotelId(),
     },
+    // schema.org: itemOffered must be a Product/Service (not the LodgingBusiness itself).
     itemOffered: {
-      "@id": hotelId(),
+      "@type": "Service",
+      name: labels.accommodation,
+      serviceType: labels.accommodation,
+      provider: {
+        "@id": hotelId(),
+      },
     },
     potentialAction: {
       "@type": "ReserveAction",

@@ -12,7 +12,7 @@ import {
   buildHotelSchema,
   buildImageSchema,
   buildOrganizationSchema,
-  buildSchemaGraph,
+  buildGuideSchemaGraph,
   buildWebsiteSchema,
   getLocalizedSchemaAddress,
   hotelId,
@@ -268,7 +268,7 @@ export function buildVillageDetailSchema(village: VillageDetailData) {
   const parentPath = getParentPath(canonicalPath);
   const labels = labelsByLanguage[getSchemaLanguage(canonicalPath)];
 
-  return buildSchemaGraph([
+  return buildGuideSchemaGraph([
     buildOrganizationSchema(),
     buildHotelSchema({ path: canonicalPath }),
     buildWebsiteSchema(),

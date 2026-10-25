@@ -5,7 +5,7 @@ import {
 import {
   breadcrumbId,
   buildOrganizationSchema,
-  buildSchemaGraph,
+  buildGuideSchemaGraph,
   buildWebsiteSchema,
   organizationId,
   schemaId,
@@ -179,7 +179,7 @@ function buildChiosQuizEntitySchema(page: ChiosQuizSchemaPage): SchemaObject {
 export function buildChiosQuizSchema(locale: ChiosQuizLocale) {
   const page = getChiosQuizSchemaPage(locale);
 
-  return buildSchemaGraph([
+  return buildGuideSchemaGraph([
     buildOrganizationSchema(),
     buildWebsiteSchema(),
     buildChiosQuizWebPageSchema(page),

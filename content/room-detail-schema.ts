@@ -433,7 +433,8 @@ function buildRoomSchema(data: RoomDetailData): SchemaObject {
         }
       : undefined,
     amenityFeature: getRoomDetailAmenities(data),
-    hasPart: data.individualRooms.rooms.map((room) => ({
+    // Place-to-Place containment (hasPart is only valid on CreativeWork).
+    containsPlace: data.individualRooms.rooms.map((room) => ({
       "@id": schemaId(canonicalPath, room.id),
     })),
   };

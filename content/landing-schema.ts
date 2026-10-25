@@ -15,7 +15,7 @@ import {
   buildHotelSchema,
   buildImageSchema,
   buildOrganizationSchema,
-  buildSchemaGraph,
+  buildGuideSchemaGraph,
   buildWebsiteSchema,
   getLocalizedSchemaLabels,
   hotelId,
@@ -343,8 +343,10 @@ function buildLandingContentItemListSchema(
           inLanguage: card.href
             ? getLanguageForPath(card.href)
             : language,
+          // isPartOf expects a CreativeWork; the travel theme is also a
+          // TouristTrip, so point at the page instead.
           isPartOf: {
-            "@id": schemaId(canonicalPath, "travel-theme"),
+            "@id": webPageId(canonicalPath),
           },
         },
       };
@@ -507,7 +509,7 @@ export function buildLandingPageSchema(data: LandingPageSchemaData) {
     ? getCommercialImageReferences(canonicalPath, commercialImages)
     : [];
 
-  return buildSchemaGraph([
+  return buildGuideSchemaGraph([
     buildOrganizationSchema(),
     buildHotelSchema({ path: canonicalPath }),
     buildWebsiteSchema(),

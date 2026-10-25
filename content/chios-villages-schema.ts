@@ -11,7 +11,7 @@ import {
   buildHotelSchema,
   buildImageSchema,
   buildOrganizationSchema,
-  buildSchemaGraph,
+  buildGuideSchemaGraph,
   buildWebsiteSchema,
   getLocalizedSchemaAddress,
   hotelId,
@@ -228,7 +228,7 @@ function buildVillageStayActionSchema(data: ChiosVillagesPageData): SchemaObject
 export function buildChiosVillagesSchema(data: ChiosVillagesPageData) {
   const canonicalPath = data.seo.canonicalPath;
 
-  return buildSchemaGraph([
+  return buildGuideSchemaGraph([
     buildOrganizationSchema(),
     buildHotelSchema({ path: canonicalPath }),
     buildWebsiteSchema(),

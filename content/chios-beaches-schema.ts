@@ -12,7 +12,7 @@ import {
   buildHotelSchema,
   buildImageSchema,
   buildOrganizationSchema,
-  buildSchemaGraph,
+  buildGuideSchemaGraph,
   buildWebsiteSchema,
   hotelId,
   itemListId,
@@ -314,7 +314,7 @@ export function buildChiosBeachesSchema(data: ChiosBeachesPageData) {
   const canonicalPath = data.seo.canonicalPath;
   const labels = getBeachSchemaLabels(canonicalPath);
 
-  return buildSchemaGraph([
+  return buildGuideSchemaGraph([
     buildOrganizationSchema(),
     buildHotelSchema({ path: canonicalPath }),
     buildWebsiteSchema(),

@@ -10,7 +10,7 @@ import {
   buildFaqSchema,
   buildHotelSchema,
   buildOrganizationSchema,
-  buildSchemaGraph,
+  buildGuideSchemaGraph,
   buildWebsiteSchema,
   hotelId,
   itemListId,
@@ -111,7 +111,7 @@ export function buildChiosHotelsGuideSchema(data: ChiosHotelsGuideData) {
   ];
   const imageReferences = getCommercialImageReferences(path, images);
 
-  return buildSchemaGraph([
+  return buildGuideSchemaGraph([
     buildOrganizationSchema(),
     buildHotelSchema({
       path,
