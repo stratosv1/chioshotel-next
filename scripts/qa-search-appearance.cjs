@@ -70,7 +70,8 @@ const footer = read("components/VoulamandisFooterTailwind.tsx");
 const navigation = read("lib/site-navigation.ts");
 const agentGuide = read("content/agent-room-guide.ts");
 const sitemap = read("app/sitemap.ts");
-const imageSitemap = read("app/image-sitemap.xml/route.ts");
+const imageSitemap = read("lib/image-sitemap.ts");
+const robots = read("app/robots.ts");
 const collectionImageGallery = read(
   "components/chios/ChiosCollectionImageGallery.tsx",
 );
@@ -176,6 +177,12 @@ assert(
     imageSitemap.includes("...beachGuideEntries") &&
     imageSitemap.includes("...villageGuideEntries"),
   "The image sitemap must include every localized beaches and villages collection page.",
+);
+assert(
+  sitemap.includes("getImageSitemapEntries()") &&
+    sitemap.includes("withImages(") &&
+    !robots.includes("image-sitemap.xml"),
+  "Page images must be merged into sitemap.xml so each page is listed in exactly one sitemap.",
 );
 assert(
   beachesSchema.includes("...data.beaches.slice(0, 6)") &&

@@ -19,6 +19,7 @@ import { AI_ASSISTANT_LANGUAGES } from "@/lib/ai-assistant/page-localization";
 import { ROOM_FINDER_HREFS } from "@/lib/room-finder-cta-routing";
 import { routeMap } from "@/lib/url-map";
 import { absoluteUrl } from "@/lib/seo";
+import { getImageSitemapEntries } from "@/lib/image-sitemap";
 
 type SitemapEntry = MetadataRoute.Sitemap[number];
 
@@ -208,7 +209,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  return deduplicateByCanonicalUrl([
+  return withImages(deduplicateByCanonicalUrl([
     ...accommodationLandingRoutes,
     ...romanticStayRoutes,
     ...kamposRoutes,
@@ -228,7 +229,23 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...karfasElintaBeachRoutes,
     ...villageDetailRoutes,
     ...museumDetailRoutes,
-  ]);
+  ]));
+}
+
+// Page images live inside each page's own <url> entry (image:image), so every
+// page is listed in exactly one sitemap instead of also in a separate image sitemap.
+function withImages(entries: MetadataRoute.Sitemap): MetadataRoute.Sitemap {
+  const imagesByUrl = new Map(
+    getImageSitemapEntries().map((entry) => [
+      absoluteUrl(entry.path),
+      entry.images.map((image) => absoluteUrl(image)),
+    ]),
+  );
+
+  return entries.map((entry) => {
+    const images = imagesByUrl.get(entry.url);
+    return images?.length ? { ...entry, images } : entry;
+  });
 }
 
 function deduplicateByCanonicalUrl(entries: SitemapEntry[]): MetadataRoute.Sitemap {
