@@ -1,6 +1,7 @@
 "use client";
 
 import { Children, Fragment, cloneElement, isValidElement, useEffect, useMemo, useState, type ReactElement, type ReactNode } from "react";
+import { StudyMark } from "@/components/mixalis/study/StudyMark";
 import { BANK, BANK_TOPIC_LABELS, type BankQuestion, type BankTopic } from "./data";
 
 const STORAGE_KEY = "mixalis-ormi-trapeza-v1";
@@ -94,7 +95,12 @@ function BankCard({
     status === "right" ? "bg-[#2e8b57] text-white" : status === "wrong" ? "bg-[#c0392b] text-white" : status === "read" ? "bg-[#c9822f] text-white" : "bg-[#2c2825] text-white";
 
   return (
-    <article className="rounded-2xl border border-black/10 bg-[#fffdf9] p-4 sm:p-5">
+    <article
+      id={`tq-${keyOf(q)}`}
+      data-study-lesson="ormi"
+      data-study-id={`tq-${keyOf(q)}`}
+      className="scroll-mt-24 rounded-2xl border border-black/10 bg-[#fffdf9] p-4 sm:p-5"
+    >
       <header className="flex flex-wrap items-center gap-2">
         <span className={`inline-flex h-8 min-w-8 items-center justify-center rounded-full px-2 text-sm font-bold ${badge}`}>
           {status === "right" ? "✓" : status === "wrong" ? "✗" : index}
@@ -188,6 +194,7 @@ function BankCard({
           </button>
         </div>
       )}
+      <StudyMark lesson="ormi" id={`tq-${keyOf(q)}`} title={`Τράπεζα ${q.code} · Θέμα ${q.part}`} path="/mixalis/ormi" className="mt-4 border-t border-black/5 pt-3" />
     </article>
   );
 }

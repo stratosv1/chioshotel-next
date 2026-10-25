@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { StudyBar } from "@/components/mixalis/study/StudyBar";
+import { StudyMark } from "@/components/mixalis/study/StudyMark";
 import { Note } from "@/components/mixalis/omali/shared";
 import { OrmiAnimationsClient } from "@/components/mixalis/ormi/OrmiAnimationsClient";
 import { OrmiTheoryEmbed } from "@/components/mixalis/ormi/OrmiTheoryEmbed";
@@ -52,7 +54,7 @@ export default function OrmiPage() {
       <div className="mx-auto max-w-6xl space-y-6">
         <header className="rounded-3xl border border-black/10 bg-white p-6 shadow-sm sm:p-8">
           <Link href="/mixalis" prefetch={false} className="text-sm font-semibold text-[#857261] hover:text-[#5f5045]">
-            ← Physics Workspace
+            ← Τα μαθήματά μου
           </Link>
           <p className="mt-5 text-sm font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Φυσική Προσανατολισμού Β΄ Λυκείου</p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-5xl">Ορμή και κρούσεις: τυπολόγιο</h1>
@@ -77,7 +79,9 @@ export default function OrmiPage() {
           </div>
         </header>
 
-        <section id="theoria" className="scroll-mt-20 rounded-3xl border border-black/10 bg-white p-3 shadow-sm sm:p-5">
+        <StudyBar lesson="ormi" />
+
+        <section id="theoria" data-study-lesson="ormi" data-study-id="theoria" className="scroll-mt-20 rounded-3xl border border-black/10 bg-white p-3 shadow-sm sm:p-5">
           <div className="flex flex-wrap items-end justify-between gap-3 px-2 pb-3 pt-1 sm:px-1">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Ξεκίνα από εδώ</p>
@@ -92,6 +96,7 @@ export default function OrmiPage() {
             </a>
           </div>
           <OrmiTheoryEmbed />
+          <StudyMark lesson="ormi" id="theoria" title="Θεωρία (25 διαφάνειες)" path="/mixalis/ormi" className="mt-4 px-2 sm:px-1" />
         </section>
 
         <section className="rounded-3xl border border-black/10 bg-white p-3 shadow-sm sm:p-5">

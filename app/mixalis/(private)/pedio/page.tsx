@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { StudyBar } from "@/components/mixalis/study/StudyBar";
+import { StudyMark } from "@/components/mixalis/study/StudyMark";
 import { Note } from "@/components/mixalis/omali/shared";
 import { PedioAnimationsClient } from "@/components/mixalis/pedio/PedioAnimationsClient";
 import { PedioIntroEmbed } from "@/components/mixalis/pedio/PedioIntroEmbed";
@@ -64,7 +66,7 @@ export default function PedioPage() {
         <header className="rounded-3xl border border-black/10 bg-white p-6 shadow-sm sm:p-8">
           <div className="flex flex-wrap gap-x-5 gap-y-1">
             <Link href="/mixalis" prefetch={false} className="text-sm font-semibold text-[#857261] hover:text-[#5f5045]">
-              ← Physics Workspace
+              ← Τα μαθήματά μου
             </Link>
             <Link href="/mixalis/courses/general_education" prefetch={false} className="text-sm font-semibold text-[#857261] hover:text-[#5f5045]">
               Φυσική Γενικής Παιδείας →
@@ -87,7 +89,9 @@ export default function PedioPage() {
           </div>
         </header>
 
-        <section id="eisagogi" className="scroll-mt-20 rounded-3xl border border-black/10 bg-white p-3 shadow-sm sm:p-5">
+        <StudyBar lesson="pedio" />
+
+        <section id="eisagogi" data-study-lesson="pedio" data-study-id="eisagogi" className="scroll-mt-20 rounded-3xl border border-black/10 bg-white p-3 shadow-sm sm:p-5">
           <div className="flex flex-wrap items-end justify-between gap-3 px-2 pb-3 pt-1 sm:px-1">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Ξεκίνα από εδώ</p>
@@ -101,6 +105,7 @@ export default function PedioPage() {
             </a>
           </div>
           <PedioIntroEmbed />
+          <StudyMark lesson="pedio" id="eisagogi" title="Εισαγωγή στο ηλεκτρικό πεδίο" path="/mixalis/pedio" className="mt-4 px-2 sm:px-1" />
         </section>
 
         <section className="rounded-3xl border border-black/10 bg-white p-3 shadow-sm sm:p-5">

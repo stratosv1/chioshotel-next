@@ -3,6 +3,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { usePlaying, useClock } from "@/components/mixalis/omali/shared";
 import { rich } from "@/components/mixalis/ormi/AnimCard";
+import { StudyMark } from "@/components/mixalis/study/StudyMark";
 import { C, H, W, type Phase } from "@/components/mixalis/ormi/kit";
 
 export type Exercise = {
@@ -83,7 +84,7 @@ export function ExerciseCard({ ex, accent = "#1f6f5c" }: { ex: Exercise; accent?
   const allShown = shown >= ex.steps.length;
 
   return (
-    <article id={`a${ex.id.replace(".", "-")}`} ref={ref} className="scroll-mt-24 overflow-hidden rounded-3xl border border-black/10 bg-white shadow-sm">
+    <article id={`a${ex.id.replace(".", "-")}`} data-study-lesson="ormi" data-study-id={`a${ex.id.replace(".", "-")}`} ref={ref} className="scroll-mt-24 overflow-hidden rounded-3xl border border-black/10 bg-white shadow-sm">
       <header className="flex flex-wrap items-center gap-3 px-4 pt-4 sm:px-6">
         <span className="rounded-full px-3 py-1 font-mono text-sm font-bold text-white" style={{ backgroundColor: accent }}>
           {ex.id}
@@ -218,6 +219,7 @@ export function ExerciseCard({ ex, accent = "#1f6f5c" }: { ex: Exercise; accent?
           </div>
         </div>
       </div>
+      <StudyMark lesson="ormi" id={`a${ex.id.replace(".", "-")}`} title={`Άσκηση ${ex.id}: ${ex.title}`} path="/mixalis/ormi" className="border-t border-black/5 px-4 py-3 sm:px-6" />
     </article>
   );
 }

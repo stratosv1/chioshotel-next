@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { listPhysicsCourses } from "@/lib/mixalis/db";
+import { LessonProgress, StudyOverview } from "@/components/mixalis/study/StudyOverview";
 
 type SubLink = { label: string; href: string };
 type Lesson = {
@@ -9,6 +10,7 @@ type Lesson = {
   links: SubLink[];
   pdf?: string;
   plain?: boolean; // served outside Next routing (static HTML route)
+  study?: string; // key used by the ✓ / ★ study marks
 };
 type Subject = {
   key: string;
@@ -56,6 +58,7 @@ const SUBJECTS: Subject[] = [
         title: "Ορμή και κρούσεις",
         subtitle: "Θεωρία, τυπολόγιο με κινούμενα σχέδια και οι φωτοτυπίες του Τριπολίτη λυμένες.",
         href: "/mixalis/ormi",
+        study: "ormi",
         links: [
           { label: "Θεωρία", href: "/mixalis/ormi#theoria" },
           { label: "Ασκήσεις Τριπολίτη (λυμένες)", href: "/mixalis/ormi#askiseis" },
@@ -75,6 +78,7 @@ const SUBJECTS: Subject[] = [
         title: "Ηλεκτρικό πεδίο",
         subtitle: "Ένταση, ομογενές πεδίο, δυναμική ενέργεια, δυναμικό και πυκνωτής, με εισαγωγή και κινούμενα σχέδια.",
         href: "/mixalis/pedio",
+        study: "pedio",
         links: [{ label: "Εισαγωγή", href: "/mixalis/pedio#eisagogi" }],
         pdf: "/mixalis/pedio-typologio-A4.pdf",
       },
@@ -123,6 +127,7 @@ const SUBJECTS: Subject[] = [
         title: "Οργανική χημεία",
         subtitle: "Κεφάλαια 0–5 με κινούμενα μόρια, ασκήσεις, quiz, «Φτιάξε την ταυτότητα» των ομόλογων σειρών και λεξικό.",
         href: "/mixalis/organiki1",
+        study: "organiki1",
         plain: true,
         links: [
           { label: "0 · Πριν ξεκινήσεις", href: "/mixalis/organiki1#start" },
@@ -178,6 +183,8 @@ export default async function MixalisDashboardPage() {
           </form>
         </header>
 
+        <StudyOverview />
+
         <nav aria-label="Αντικείμενα" className="mb-8 flex flex-wrap gap-2">
           {SUBJECTS.map((s) => (
             <a key={s.key} href={`#${s.key}`} className={`rounded-full px-4 py-2 text-sm font-semibold ${s.soft}`}>
@@ -205,6 +212,8 @@ export default async function MixalisDashboardPage() {
                         </L>
                         <p className="mt-2 text-sm leading-6 text-[#6f665f] sm:text-base">{lesson.subtitle}</p>
                       </div>
+
+                      {lesson.study ? <LessonProgress lesson={lesson.study} /> : null}
 
                       {lesson.links.length > 0 && (
                         <ul className="flex flex-wrap gap-2">
