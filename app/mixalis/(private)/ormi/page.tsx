@@ -7,6 +7,7 @@ import { OrmiAnimationsClient } from "@/components/mixalis/ormi/OrmiAnimationsCl
 import { OrmiTheoryEmbed } from "@/components/mixalis/ormi/OrmiTheoryEmbed";
 import { TripolitisClient } from "@/components/mixalis/tripolitis/TripolitisClient";
 import { TrapezaOrmi } from "@/components/mixalis/ormi/trapeza/TrapezaOrmi";
+import { PosterCells, PosterRevisionNote } from "@/components/mixalis/ormi/PosterCells";
 
 export const metadata: Metadata = {
   title: { absolute: "Ορμή και κρούσεις · Τυπολόγιο · Physics Workspace" },
@@ -46,7 +47,6 @@ const cells = Array.from({ length: 40 }, (_, i) => {
   return { n: i + 1, x: 17 + 238 * col, y: 146 + 256 * section, w: 226, h: 212 };
 });
 
-const pct = (v: number, total: number) => `${((v / total) * 100).toFixed(3)}%`;
 
 export default function OrmiPage() {
   return (
@@ -113,16 +113,9 @@ export default function OrmiPage() {
               decoding="async"
               className="mx-auto h-auto w-full"
             />
-            {cells.map((c) => (
-              <a
-                key={c.n}
-                href={`#k${c.n}`}
-                aria-label={`Κινούμενο σχέδιο για το κουτάκι ${c.n}`}
-                className="absolute rounded-lg outline-none ring-[#c9822f] transition hover:bg-[#c9822f]/10 hover:ring-2 focus-visible:ring-2"
-                style={{ left: pct(c.x, POSTER_W), top: pct(c.y, POSTER_H), width: pct(c.w, POSTER_W), height: pct(c.h, POSTER_H) }}
-              />
-            ))}
+            <PosterCells cells={cells} posterW={POSTER_W} posterH={POSTER_H} lesson="ormi" />
           </div>
+          <PosterRevisionNote lesson="ormi" />
         </section>
 
         <nav className="sticky top-2 z-10 rounded-2xl border border-black/10 bg-white/90 p-2 shadow-sm backdrop-blur" aria-label="Ενότητες">
