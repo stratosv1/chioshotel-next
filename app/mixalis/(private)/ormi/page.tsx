@@ -90,7 +90,7 @@ export default function OrmiPage() {
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Ξεκίνα από εδώ</p>
               <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">Η θεωρία, βήμα βήμα</h2>
               <p className="mt-1 max-w-3xl text-[15px] leading-7 text-[#5c534c]">
-                Όλη η θεωρία του σχολικού βιβλίου (κεφ. 2) και του Σαββάλα (κεφ. 4–6) σε 25 διαφάνειες: ορμή, ΣF = Δp/Δt, αρχή διατήρησης της ορμής,
+                Όλη η θεωρία του σχολικού βιβλίου (κεφ. 2) και του Σαββάλα (κεφ. 4–6) σε 29 διαφάνειες: ορμή, ΣF = Δp/Δt, αρχή διατήρησης της ορμής,
                 κρούσεις και ενέργεια. Με κινούμενα σχέδια, τρία εργαστήρια για πειράματα και τρία quiz. Μετά πέρασε στο τυπολόγιο.
               </p>
             </div>
@@ -99,7 +99,7 @@ export default function OrmiPage() {
             </a>
           </div>
           <OrmiTheoryEmbed />
-          <StudyMark lesson="ormi" id="theoria" title="Θεωρία (25 διαφάνειες)" path="/mixalis/ormi" className="mt-4 px-2 sm:px-1" />
+          <StudyMark lesson="ormi" id="theoria" title="Θεωρία (29 διαφάνειες)" path="/mixalis/ormi" className="mt-4 px-2 sm:px-1" />
         </section>
 
         <section className="rounded-3xl border border-black/10 bg-white p-3 shadow-sm sm:p-5">

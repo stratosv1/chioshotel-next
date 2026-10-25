@@ -243,6 +243,14 @@ const SLIDES = [
     <p><b>3. Μεγαλύτερη Δp ≠ μεγαλύτερη δύναμη.</b> Κοίτα πάντα και το Δt. Σώμα Α: Δp = 6 kg·m/s σε 0,02 s ⇒ F = <b>300 N</b>. Σώμα Β: Δp = 9 kg·m/s σε 0,06 s ⇒ F = <b>150 N</b>. Το Β άλλαξε περισσότερο ορμή, αλλά δέχτηκε τη μισή δύναμη.</p>
     <p class="note">Ο ρυθμός dp/dt είναι πάντα ίσος με τη ΣF και δεν εξαρτάται από την ταχύτητα.</p>` },
 
+  { ch: "B", kicker: "Παγίδα με το έδαφος", title: "Δύναμη από το έδαφος: μην ξεχνάς το βάρος", scene: "floor", caption: "Μπάλα 0,4 kg: πέφτει με 5 m/s, αναπηδά με 3 m/s",
+    knobs: [{ id: "dt", label: "χρόνος επαφής Δt", min: 0.01, max: 0.2, step: 0.01, value: 0.05, unit: "s" }], html: `
+    <p class="lead">Το Δp/Δt σου δίνει τη <b>συνισταμένη</b> δύναμη, όχι τη δύναμη του δαπέδου. Στη μπάλα ασκούνται δύο δυνάμεις: η <b>N</b> από το δάπεδο (πάνω) και το <b>βάρος mg</b> (κάτω).</p>
+    <div class="formula">N − mg = Δp/Δt  ⇒  N = Δp/Δt + mg</div>
+    <p>Θετικά προς τα πάνω: Δp = 0,4·(+3) − 0,4·(−5) = <b>3,2 kg·m/s</b> (αναπήδηση: τα μέτρα προστίθενται). Με Δt = 0,05 s: ΣF = 64 N, άρα <b>N = 64 + 4 = 68 N</b>.</p>
+    <p>Σύρε τη μπάρα: όσο μεγαλώνει το Δt, η N μικραίνει και πλησιάζει το βάρος. Σε πολύ σύντομη επαφή το βάρος είναι αμελητέο μπροστά στη N.</p>
+    <p class="note">Τράπεζα Θεμάτων 16120: η σωστή απάντηση έχει «+ mg». Αν ξεχάσεις το βάρος, χάνεις το θέμα.</p>` },
+
   { ch: "B", kicker: "Ορμή και ενέργεια", title: "K = p² / 2m", scene: "pK", caption: "Μπάλα ποδοσφαίρου και σφαίρα όπλου: ίδια ορμή, πολύ διαφορετική K", html: `
     <p class="lead">Από p = mυ βγαίνει υ = p/m, και αν το βάλεις στο K = ½mυ²:</p>
     <div class="formula">K = p² / (2m)   ⇔   p = √(2mK)</div>
@@ -283,6 +291,14 @@ const SLIDES = [
     <p>Η κινητική ενέργεια <b>αυξάνεται</b> (από 0!). Την έδωσε το ελατήριο ή το εκρηκτικό. Και μοιράζεται ανάποδα: K₁/K₂ = m₂/m₁.</p>
     <p class="note">Ίδιο σχήμα: παγοδρόμοι που σπρώχνονται, άνθρωπος που πηδά από βάρκα, κανόνι που ρίχνει βλήμα (ανάκρουση).</p>` },
 
+  { ch: "C", kicker: "Προσοχή", title: "Διάσπαση ενώ κινείται", scene: "split", caption: "Η μαύρη ράβδος (ολική ορμή) μένει ίδια, αλλά ΔΕΝ είναι μηδέν",
+    chips: [{ id: "case", label: "Περίπτωση:", options: [["stop", "το ένα κομμάτι σταματά"], ["back", "το ένα γυρίζει πίσω"]], value: "stop" }], html: `
+    <p class="lead">Αν το σώμα <b>κινείται</b> τη στιγμή που σπάει, η ορμή πριν <b>δεν είναι μηδέν</b>. Είναι M·υ, και τόση πρέπει να είναι και η ολική ορμή μετά.</p>
+    <div class="formula">M·υ = m₁·υ₁ + m₂·υ₂</div>
+    <p><b>Το ένα σταματά:</b> 2 kg με 10 m/s σπάει σε δύο κομμάτια 1 kg. Αν το ένα μείνει ακίνητο: 2·10 = 1·0 + 1·υ ⇒ <b>υ = 20 m/s</b>. Όλη η ορμή «πέρασε» στο άλλο.</p>
+    <p><b>Το ένα γυρίζει πίσω:</b> 3 kg με 4 m/s, το κομμάτι 1 kg φεύγει μπροστά με 16 m/s: 3·4 = 1·16 + 2·υ ⇒ <b>υ = −2 m/s</b> (προς τα πίσω).</p>
+    <p class="note">Η κινητική ενέργεια αυξάνεται (100 → 200 J στο πρώτο), την έδωσε η έκρηξη. Τράπεζα: 16209, 16064, 21691, 21819.</p>` },
+
   { ch: "C", kicker: "Εφαρμογή", title: "Πώς κινείται ένας πύραυλος", scene: "rocket", caption: "Κάθε ριπή αερίων προς τα πίσω σπρώχνει τον πύραυλο μπροστά", html: `
     <p class="lead">Ο πύραυλος και τα αέρια του είναι ένα μονωμένο σύστημα. Όταν μια μάζα αερίων φεύγει προς τα πίσω, ο πύραυλος πρέπει να πάρει την ίδια ορμή προς τα μπροστά.</p>
     <div class="formula">0 = m·<span class='vec'>υ</span> + M·<span class='vec'>V</span></div>
@@ -299,6 +315,14 @@ const SLIDES = [
     <p><b>Κατά την ενέργεια:</b></p>
     <p>• <b>Ελαστική</b>: K<sub>μετά</sub> = K<sub>πριν</sub>.<br>• <b>Ανελαστική</b>: K<sub>μετά</sub> < K<sub>πριν</sub>, ένα μέρος γίνεται θερμότητα και παραμόρφωση.<br>• <b>Πλαστική</b>: ανελαστική όπου τα σώματα <b>κολλάνε</b> (συσσωμάτωμα).</p>
     <p class="note">Σε όλες ισχύει η ΑΔΟ. Η διαφορά είναι μόνο στην ενέργεια.</p>` },
+
+  { ch: "D", kicker: "Αναγνώριση", title: "Τι κρούση είναι; Κοίτα την K", scene: "which", caption: "1 kg με 6 m/s χτυπά ακίνητο 2 kg",
+    chips: [{ id: "case", label: "Μετά την κρούση:", options: [["el", "1 kg γυρίζει με 2 m/s"], ["in", "1 kg σταματά"], ["pl", "κολλάνε"]], value: "el" }], html: `
+    <p class="lead">Η ορμή διατηρείται σε <b>κάθε</b> κρούση, άρα δεν σου λέει τι κρούση είναι. Αυτό το λέει μόνο η <b>κινητική ενέργεια</b>.</p>
+    <div class="formula">K πριν  vs  K μετά</div>
+    <p>K πριν = ½·1·6² = 18 J. Πάτα τα κουμπιά:</p>
+    <p>• Το 1 kg γυρίζει με 2 m/s ⇒ το 2 kg φεύγει με 4 m/s. K μετά = 2 + 16 = 18 J ⇒ <b>ελαστική</b>.<br>• Το 1 kg σταματά ⇒ το 2 kg με 3 m/s. K μετά = 9 J &lt; 18 J ⇒ <b>ανελαστική</b>.<br>• Κολλάνε ⇒ V = 2 m/s. K μετά = 6 J ⇒ <b>πλαστική</b> (η μεγαλύτερη απώλεια).</p>
+    <p class="note">Δες και κάτι ακόμα: όταν ελαφρύ σώμα χτυπά ελαστικά βαρύ ακίνητο, <b>γυρίζει πίσω</b>.</p>` },
 
   { ch: "D", kicker: "Εργαστήριο", title: "Ο προσομοιωτής κρούσεων", scene: "lab", caption: "Η μαύρη ράβδος (ολική ορμή) δεν κουνιέται ποτέ",
     knobs: [
@@ -322,7 +346,8 @@ const SLIDES = [
     <p>Τότε K<sub>μετά</sub> = ½(m₁+m₂)V² = K<sub>πριν</sub> · m₁/(m₁+m₂). Αφού m₁ < m₁ + m₂, η κινητική <b>μειώνεται πάντα</b>.</p>
     <div class="formula">Q = Kπριν − Kμετά</div>
     <div class="formula">ποσοστό απώλειας = m₂/(m₁+m₂) · 100%</div>
-    <p>Το ποσοστό <b>δεν εξαρτάται από την ταχύτητα</b>, μόνο από τις μάζες (απόδειξη του Σαββάλα). Ίσες μάζες: 50%. Βλήμα σε βαρύ ξύλο: σχεδόν 100%.</p>` },
+    <p>Το ποσοστό <b>δεν εξαρτάται από την ταχύτητα</b>, μόνο από τις μάζες (απόδειξη του Σαββάλα). Ίσες μάζες: 50%. Βλήμα σε βαρύ ξύλο: σχεδόν 100%.</p>
+    <p>Αν <b>κινούνται και τα δύο</b>: ίδια φορά ⇒ χάνεται λίγη K. Αντίθετη φορά ⇒ χάνεται πολύ περισσότερη. Ίσες και αντίθετες ορμές ⇒ σταματούν και χάνεται <b>όλη</b> η K.</p>` },
 
   { ch: "D", kicker: "Ειδική περίπτωση", title: "Ίσες μάζες, ελαστική: ανταλλαγή", scene: "cradle", caption: "Η κούνια του Νεύτωνα και το μπιλιάρδο", html: `
     <p class="lead">Όταν δύο <b>ίσες</b> μάζες συγκρούονται <b>ελαστικά και μετωπικά</b>, <b>ανταλλάσσουν ταχύτητες</b>.</p>
@@ -335,7 +360,15 @@ const SLIDES = [
     <p><b>1. Η κρούση</b> (ελάχιστος χρόνος): ΑΔΟ ⇒ V = 0,1·100 / 4 = <b>2,5 m/s</b>.</p>
     <p><b>2. Ό,τι ακολουθεί</b>: εδώ το σύνολο ανεβαίνει σαν εκκρεμές ⇒ ΑΔΜΕ: h = V²/2g ≈ <b>0,31 m</b>.</p>
     <p>Άλλες συνέχειες: ολίσθηση με τριβή (ΘΜΚΕ), οριζόντια βολή από τραπέζι, τάση νήματος (κεντρομόλος).</p>
-    <p class="trap"><b>Παγίδα:</b> δεν γράφεις ΑΔΜΕ από το βλήμα μέχρι το ύψος h. Στην κρούση χάθηκε το 97,5% της ενέργειας!</p>` },
+    <p class="trap"><b>Παγίδα:</b> δεν γράφεις ΑΔΜΕ από το βλήμα μέχρι το ύψος h. Στην κρούση χάθηκε το 97,5% της ενέργειας!</p>
+    <p><b>Το αντίστροφο</b> (συχνό στις εξετάσεις): δίνεται το ύψος h και ζητείται η ταχύτητα του βλήματος. Λύνεις από το τέλος: ΑΔΜΕ ⇒ V = √(2gh), μετά ΑΔΟ ⇒ υ = (m + M)·V / m.</p>` },
+
+  { ch: "D", kicker: "Για προχωρημένους", title: "Κρούση σε κάθετες διευθύνσεις", scene: "perp", caption: "Κάτοψη: 2 kg ανατολικά με 3 m/s, 3 kg βόρεια με 2 m/s, κολλάνε", html: `
+    <p class="lead">Όταν τα σώματα κινούνται κάθετα, γράφεις την ΑΔΟ <b>χωριστά σε κάθε άξονα</b> και στο τέλος ενώνεις με Πυθαγόρειο.</p>
+    <p><b>Άξονας x:</b> p<sub>x</sub> = 2·3 = 6 kg·m/s. <b>Άξονας y:</b> p<sub>y</sub> = 3·2 = 6 kg·m/s.</p>
+    <div class="formula">p = √(p<sub>x</sub>² + p<sub>y</sub>²) = 6√2 ≈ 8,5 kg·m/s</div>
+    <p>Το συσσωμάτωμα (5 kg) φεύγει με V = 8,5/5 ≈ <b>1,7 m/s</b>, υπό <b>45°</b> (αφού p<sub>x</sub> = p<sub>y</sub>).</p>
+    <p class="note">Παγίδα: 6 + 6 = 12 είναι λάθος. Οι ορμές προστίθενται σαν βέλη, όχι σαν αριθμοί.</p>` },
 
   { ch: "D", kicker: "Στρατηγική", title: "Η μέθοδος σε 5 βήματα", scene: "method", caption: "Σε κάθε άσκηση κρούσης ή έκρηξης", html: `
     <ol class="steps">
@@ -846,6 +879,138 @@ const SCENES = {
     bars(24, H * 0.6, W - 48, [
       { label: "p₁", value: -m1 * v1 * on, color: COL.p }, { label: "p₂", value: m2 * v2 * on, color: COL.p }, { label: "p ολική", value: 0, color: COL.ink },
       { label: "K₁", value: 0.5 * m1 * v1 * v1 * on, color: COL.K, unit: "J" }, { label: "K₂", value: 0.5 * m2 * v2 * v2 * on, color: COL.K, unit: "J" }], 12.5);
+  },
+  floor(t) {
+    const m = 0.4, u = 5, v = 3, g = 10, dt = UI.floor.dt;
+    const dp = m * (u + v), SF = dp / dt, wgt = m * g, N = SF + wgt;
+    const gy = H * 0.82, bx = W * 0.2, r = 16, top = H * 0.14, T = 4.2, k = t % T;
+    const t1 = 1.1, t2 = 1.6, t3 = 2.8;
+    let y, sq = 0, contact = false;
+    if (k < t1) { const q = k / t1; y = lerp(top, gy - r, q * q); }
+    else if (k < t2) { const q = (k - t1) / (t2 - t1); sq = 0.35 * Math.sin(Math.PI * q); y = gy - r * (1 - sq); contact = true; }
+    else if (k < t3) { const q = (k - t2) / (t3 - t2); const hTop = gy - r - (gy - r - top) * (v * v) / (u * u); y = lerp(gy - r, hTop, 1 - (1 - q) * (1 - q)); }
+    else { const hTop = gy - r - (gy - r - top) * (v * v) / (u * u); y = hTop; }
+    ground(gy, 10, W * 0.42);
+    ball(bx, y, r, COL.b1, "", sq, "y");
+    if (k < t1) arrow(bx + 30, y - 18, bx + 30, y + 22, COL.v, 3, "υ₁ = 5 m/s", 9);
+    if (k >= t2 && k < t3) arrow(bx + 30, y + 18, bx + 30, y - 14, COL.v, 3, "υ₂ = 3 m/s", 9);
+    // forces during contact
+    const sc = Math.min(1.1, (H * 0.5) / Math.max(N, 1));
+    if (contact) {
+      arrow(bx, gy - 2 * r, bx, gy - 2 * r - Math.max(16, N * sc), COL.F, 4, `N = ${num(N, 0)} N`, 11);
+      arrow(bx - 4, gy, bx - 4, gy + Math.max(10, wgt * sc * 3), COL.ink, 3, "mg", 8, { side: -1 });
+    } else {
+      arrow(bx - 4, y + r, bx - 4, y + r + 22, COL.ink, 2.4, "mg", 8, { side: -1 });
+    }
+    // right panel: numbers
+    const tx = W * 0.47;
+    text("θετικά προς τα πάνω ↑", tx, 30, COL.muted, 12.5, "left");
+    text(`Δp = 0,4·(+3) − 0,4·(−5) = ${num(dp, 1)} kg·m/s`, tx, 58, COL.p, 14, "left");
+    text(`ΣF = Δp / Δt = ${num(dp, 1)} / ${num(dt, 2)} = ${num(SF, 1)} N`, tx, 84, COL.ink, 14, "left");
+    text(`mg = 0,4·10 = ${num(wgt, 0)} N`, tx, 110, COL.ink, 14, "left");
+    text(`N = ΣF + mg = ${num(N, 1)} N`, tx, 140, COL.F, 16, "left", 800);
+    bars(tx, H * 0.5, W - tx - 16, [
+      { label: "ΣF", value: SF, color: COL.ink, unit: "N", d: 1 },
+      { label: "mg", value: wgt, color: COL.muted, unit: "N", d: 1 },
+      { label: "N", value: N, color: COL.F, unit: "N", d: 1 }], Math.max(N, 1), { signed: false, rowH: 24, labelW: 40, valueW: 74 });
+    text(contact ? "τώρα ασκείται η N" : "η N υπάρχει μόνο στην επαφή", tx, H * 0.5 + 92, contact ? COL.F : COL.muted, 12.5, "left");
+  },
+  split(t) {
+    const c = UI.split.case;
+    const D = c === "stop" ? { M: 2, u: 10, m1: 1, v1: 0, m2: 1, v2: 20, L: "2 kg", l1: "1 kg", l2: "1 kg", s: 1 }
+                           : { M: 3, u: 4, m1: 2, v1: -2, m2: 1, v2: 16, L: "3 kg", l1: "2 kg", l2: "1 kg", s: 2 };
+    const gy = H * 0.36, T = 5, k = t % T, tc = 1.6, X = W * 0.36;
+    const S = Math.min(12, W / 55) * (c === "stop" ? 1 : 1.3);
+    const lim = (x) => clamp(x, 26, W - 26);
+    ground(gy);
+    if (k < tc) {
+      const x = X - S * D.u * (tc - k);
+      box(x, gy, 54, 30, COL.b1, D.L);
+      arrow(x - 20, gy - 46, x - 20 + D.u * 5 + 10, gy - 46, COL.v, 3, `υ = ${D.u} m/s`);
+    } else {
+      const d = Math.min(k - tc, 3);
+      const x1 = lim(X - 16 + S * D.v1 * d), x2 = lim(X + 16 + S * D.v2 * d);
+      burst(X, gy - 18, (k - tc) / 0.5);
+      box(x1, gy, 30, 26, COL.b1, D.l1); box(x2, gy, 30, 26, COL.b2, D.l2);
+      if (D.v1 !== 0) arrow(x1, gy - 44, x1 + D.v1 * 5 - 8, gy - 44, COL.v, 3, `υ₁ = ${D.v1} m/s`);
+      else text("ακίνητο", x1, gy - 38, COL.muted, 12.5);
+      arrow(x2, gy - 44, x2 + D.v2 * 3 + 8, gy - 44, COL.v, 3, `υ₂ = ${D.v2} m/s`);
+    }
+    const after = k >= tc ? 1 : 0, P = D.M * D.u;
+    tag(`Σp πριν = ${D.M}·${D.u} = ${P} kg·m/s ≠ 0`, 20, H * 0.5, COL.p);
+    bars(20, H * 0.58, W - 40, [
+      { label: "p πριν", value: P, color: COL.p },
+      { label: "p₁ μετά", value: D.m1 * D.v1 * after, color: COL.p },
+      { label: "p₂ μετά", value: D.m2 * D.v2 * after, color: COL.p },
+      { label: "p ολική", value: P, color: COL.ink }], Math.max(P, D.m2 * D.v2));
+    const Kb = 0.5 * D.M * D.u * D.u, Ka = 0.5 * D.m1 * D.v1 * D.v1 + 0.5 * D.m2 * D.v2 * D.v2;
+    bars(20, H * 0.58 + 92, W - 40, [
+      { label: "K πριν", value: Kb, color: COL.K, unit: "J" },
+      { label: "K μετά", value: after ? Ka : Kb, color: COL.K, unit: "J" }], Ka, { signed: false });
+  },
+  which(t) {
+    const c = UI.which.case;
+    if (UI.which.last !== c) { UI.which.last = c; UI.which.t0 = t; }
+    const k = (t - (UI.which.t0 || 0)) % 4.6, tc = 1.4;
+    const m1 = 1, u1 = 6, m2 = 2;
+    const [v1, v2] = c === "el" ? [-2, 4] : c === "in" ? [0, 3] : [2, 2];
+    const gy = H * 0.3, X = W * 0.42, S = Math.min(14, W / 45);
+    ground(gy);
+    let x1, x2;
+    if (k < tc) { x1 = X - 34 - S * u1 * (tc - k); x2 = X + 22; }
+    else { const d = Math.min(k - tc, 2.6); x1 = clamp(X - 34 + S * v1 * d, 20, W - 20); x2 = clamp(X + 22 + S * v2 * d, 20, W - 20); if (c === "pl") x1 = x2 - 50; }
+    box(x1, gy, 34, 26, COL.b1, "1"); box(x2, gy, 54, 34, COL.b2, "2 kg");
+    if (k >= tc && c !== "el") heat(X, gy - 18, c === "pl" ? 1 : 0.6);
+    if (k < tc) arrow(x1, gy - 50, x1 + 40, gy - 50, COL.v, 3, "6 m/s");
+    else {
+      if (v1 !== 0 && c !== "pl") arrow(x1, gy - 50, x1 + v1 * 9, gy - 50, COL.v, 3, `${v1} m/s`);
+      arrow(x2, gy - 56, x2 + v2 * 9 + 6, gy - 56, COL.v, 3, c === "pl" ? "V = 2 m/s" : `${v2} m/s`);
+    }
+    const on = k >= tc, Kb = 18, Ka = 0.5 * m1 * v1 * v1 + 0.5 * m2 * v2 * v2;
+    bars(20, H * 0.45, W - 40, [
+      { label: "p πριν", value: 6, color: COL.p },
+      { label: "p μετά", value: on ? m1 * v1 + m2 * v2 : 6, color: COL.p }], 8);
+    text("η ορμή είναι ίδια σε όλες τις περιπτώσεις: δεν σε βοηθά", 20, H * 0.45 + 58, COL.muted, 12.5, "left");
+    bars(20, H * 0.45 + 80, W - 40, [
+      { label: "K πριν", value: Kb, color: COL.K, unit: "J" },
+      { label: "K μετά", value: on ? Ka : Kb, color: COL.K, unit: "J" },
+      { label: "Q", value: on ? Kb - Ka : 0, color: COL.Q, unit: "J" }], Kb, { signed: false });
+    if (on) {
+      const verdict = c === "el" ? "K μετά = K πριν ⇒ ΕΛΑΣΤΙΚΗ" : c === "in" ? "K μετά < K πριν, χωριστά ⇒ ΑΝΕΛΑΣΤΙΚΗ" : "κολλάνε, μέγιστη απώλεια ⇒ ΠΛΑΣΤΙΚΗ";
+      text(verdict, W / 2, H - 16, c === "el" ? COL.ok : COL.Q, 16, "center", 800);
+    }
+  },
+  perp(t) {
+    const T = 5.2, k = t % T, tc = 1.8;
+    const C = { x: W * 0.3, y: H * 0.52 }, S = Math.min(26, W / 24);
+    // light grid
+    ctx.strokeStyle = COL.grid; ctx.lineWidth = 1;
+    for (let x = 14; x < W * 0.58; x += 28) { ctx.beginPath(); ctx.moveTo(x, 20); ctx.lineTo(x, H - 20); ctx.stroke(); }
+    for (let y = 20; y < H - 14; y += 28) { ctx.beginPath(); ctx.moveTo(14, y); ctx.lineTo(W * 0.58, y); ctx.stroke(); }
+    text("Β ↑", W * 0.56, 34, COL.muted, 12.5, "right"); text("Α →", W * 0.56, H - 22, COL.muted, 12.5, "right");
+    const V = Math.sqrt(72) / 5;
+    if (k < tc) {
+      const ax = C.x - S * 3 * (tc - k), by = C.y + S * 2 * (tc - k);
+      ball(ax, C.y, 15, COL.b1, "2"); ball(C.x, by, 18, COL.b2, "3");
+      arrow(ax + 18, C.y - 22, ax + 18 + 36, C.y - 22, COL.v, 3, "3 m/s");
+      arrow(C.x + 26, by, C.x + 26, by - 26, COL.v, 3, "2 m/s");
+    } else {
+      const d = Math.min(k - tc, 2.6), q = S * V * d / Math.SQRT2;
+      const x = C.x + q, y = C.y - q;
+      ball(x, y, 22, COL.b2, "5 kg");
+      arrow(x + 18, y - 18, x + 18 + 24, y - 18 - 24, COL.v, 3, "1,7 m/s", 9);
+      ctx.setLineDash([4, 5]); ctx.strokeStyle = COL.muted; ctx.beginPath(); ctx.moveTo(C.x, C.y); ctx.lineTo(x, y); ctx.stroke(); ctx.setLineDash([]);
+      text("45°", C.x + 30, C.y - 8, COL.muted, 12.5, "left");
+    }
+    // momentum triangle
+    const ox = W * 0.66, oy = H * 0.72, u = Math.min(22, (W * 0.3) / 7);
+    const g1 = clamp((k - 0.3) / 0.6), g2 = clamp((k - 1.0) / 0.6), g3 = clamp((k - tc) / 0.6);
+    arrow(ox, oy, ox + 6 * u * g1, oy, COL.p, 4, g1 > 0.9 ? "pₓ = 2·3 = 6" : null, 10, { side: -1 });
+    arrow(ox + 6 * u, oy, ox + 6 * u, oy - 6 * u * g2, COL.p, 4, g2 > 0.9 ? "py = 3·2 = 6" : null, 10);
+    if (g3 > 0) arrow(ox, oy, ox + 6 * u * g3, oy - 6 * u * g3, COL.ink, 4.5, g3 > 0.9 ? "p ≈ 8,5" : null, 11, { side: -1 });
+    text("p = √(6² + 6²) = 6√2 ≈ 8,5 kg·m/s", W * 0.62, 34, COL.ink, 13.5, "left", 800);
+    text("όχι 6 + 6 = 12 !", W * 0.62, 56, COL.bad, 13.5, "left", 800);
+    text("V = 8,5 / 5 ≈ 1,7 m/s", W * 0.62, 78, COL.v, 13.5, "left", 800);
   },
   rocket(t) {
     ctx.fillStyle = COL.grid; ctx.globalAlpha = 0.5; ctx.fillRect(0, 0, W, H * 0.62); ctx.globalAlpha = 1;
