@@ -7,6 +7,7 @@ import { section2, section3 } from "./scenes-2";
 import { section4, section5 } from "./scenes-3";
 import { section6, section7 } from "./scenes-4";
 import { section8 } from "./scenes-5";
+import { section9 } from "./scenes-6";
 
 export const SECTIONS: { title: string; color: string; bg: string; intro: string; cases: Case[] }[] = [
   {
@@ -64,6 +65,13 @@ export const SECTIONS: { title: string; color: string; bg: string; intro: string
     bg: "#f9edf4",
     intro: "Ελατήριο, πύραυλος, περπάτημα σε σανίδα, βροχή: όλα είναι ΑΔΟ ή ΣF = Δp/Δt με άλλη μορφή.",
     cases: section8,
+  },
+  {
+    title: "Ειδικές περιπτώσεις",
+    color: "#00796b",
+    bg: "#e6f4f1",
+    intro: "Τρεις περιπτώσεις που πέφτουν συχνά: ελαστική κρούση με άνισες μάζες, έκρηξη σε τρία κομμάτια και άλμα από όχημα που ήδη κινείται.",
+    cases: section9,
   },
 ];
 
