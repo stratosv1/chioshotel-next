@@ -55,6 +55,16 @@ const SUBJECTS: Subject[] = [
         pdf: "/mixalis/omali-typologio-A4.pdf",
       },
       {
+        title: "Βολές · τυπολόγιο",
+        subtitle: "Πλάγια και οριζόντια βολή: σχέδιο τροχιάς, όλοι οι τύποι και εξήγηση με αριθμούς για τον καθένα.",
+        href: "/mixalis/voli",
+        links: [
+          { label: "Μέγιστο ύψος", href: "/mixalis/voli#k6" },
+          { label: "Βεληνεκές", href: "/mixalis/voli#k7" },
+          { label: "Οριζόντια βολή", href: "/mixalis/voli#k8" },
+        ],
+      },
+      {
         title: "Ορμή και κρούσεις",
         subtitle: "Θεωρία, τυπολόγιο με κινούμενα σχέδια και οι φωτοτυπίες του Τριπολίτη λυμένες.",
         href: "/mixalis/ormi",

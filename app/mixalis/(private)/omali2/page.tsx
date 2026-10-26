@@ -89,6 +89,9 @@ export default function Omali2Page() {
             <a href="/mixalis/omali-typologio-A4.pdf" target="_blank" rel="noopener" className="rounded-full bg-[#2c2825] px-4 py-1.5 text-white hover:bg-black">
               Εκτύπωση σε A4 (PDF, 1 σελίδα)
             </a>
+            <Link href="/mixalis/voli" prefetch={false} className="rounded-full bg-[#1f6fd1] px-4 py-1.5 text-white hover:bg-[#1859a8]">
+              Τυπολόγιο βολών (πλάγια &amp; οριζόντια) →
+            </Link>
           </div>
         </header>
 
