@@ -214,86 +214,6 @@ function addFixedApt11Prices_(prices) {
 
 
 /******************************************************************
- * BOOKING REFERRER / CHANNEL HELPERS
- * Προσπαθεί να βρει την πηγή της κράτησης από τα πεδία που μπορεί
- * να στέλνει το Beds24: referrer, originalReferrer, channel, source κτλ.
- ******************************************************************/
-
-function getBookingReferrer_(b) {
-  if (!b || typeof b !== 'object') return '';
-
-  const directFields = [
-    b.originalReferrer,
-    b.referrer,
-    b.referer,
-    b.referredBy,
-    b.channel,
-    b.source,
-    b.sourceName,
-    b.bookingChannel,
-    b.channelName,
-    b.apiSource,
-    b.origin,
-    b.agent,
-    b.ota,
-    b.partner,
-    b.portal,
-    b.site
-  ];
-
-  for (var i = 0; i < directFields.length; i++) {
-    const value = directFields[i];
-    if (value !== null && value !== undefined && String(value).trim() !== '') {
-      return normalizeBookingReferrer_(value);
-    }
-  }
-
-  // Μερικές φορές το Beds24 βάζει πληροφορίες μέσα σε nested objects.
-  const nestedObjects = [b.referrerInfo, b.channelInfo, b.sourceInfo, b.bookingSource, b.invoicee, b.apiReference];
-  const nestedKeys = ['name', 'title', 'type', 'source', 'channel', 'referrer', 'originalReferrer', 'referer'];
-
-  for (var n = 0; n < nestedObjects.length; n++) {
-    const obj = nestedObjects[n];
-    if (!obj || typeof obj !== 'object') continue;
-
-    for (var k = 0; k < nestedKeys.length; k++) {
-      const nestedValue = obj[nestedKeys[k]];
-      if (nestedValue !== null && nestedValue !== undefined && String(nestedValue).trim() !== '') {
-        return normalizeBookingReferrer_(nestedValue);
-      }
-    }
-  }
-
-  return '';
-}
-
-function normalizeBookingReferrer_(value) {
-  const raw = String(value == null ? '' : value).trim();
-  if (!raw) return '';
-
-  const low = raw.toLowerCase();
-
-  if (low.indexOf('booking') !== -1 || low.indexOf('b.com') !== -1 || low.indexOf('booking.com') !== -1) {
-    return 'Booking.com';
-  }
-
-  if (low.indexOf('expedia') !== -1 || low.indexOf('hotels.com') !== -1 || low.indexOf('vrbo') !== -1) {
-    return 'Expedia';
-  }
-
-  if (low.indexOf('airbnb') !== -1) {
-    return 'Airbnb';
-  }
-
-  if (low.indexOf('direct') !== -1 || low.indexOf('manual') !== -1 || low.indexOf('website') !== -1) {
-    return 'Direct';
-  }
-
-  return raw;
-}
-
-
-/******************************************************************
  * MAIN REFRESH SYSTEM
  ******************************************************************/
 
@@ -351,7 +271,13 @@ function refreshSystem() {
     }
 
     const bookingsResp = getBookings_(token);
-    writeJsonToSheet_(debugBookingsSheet, bookingsResp, 'BOOKINGS DEBUG');
+    // Μόνο σύνοψη: το raw JSON του Beds24 έχει ονόματα, email και τηλέφωνα επισκεπτών.
+    writeJsonToSheet_(debugBookingsSheet, {
+      success: bookingsResp.success,
+      type: bookingsResp.type,
+      count: bookingsResp.count,
+      fetchWindow: bookingsResp.fetchWindow
+    }, 'BOOKINGS DEBUG');
 
     const bookings = normalizeBookings_(bookingsResp);
     Logger.log('Fetched bookings for occupancy calendar: ' + bookings.length);
@@ -942,97 +868,8 @@ function normalizeBookings_(resp) {
 
 
 
-/******************************************************************
- * BOOKING CONTACT HELPERS
- * Βρίσκει email / τηλέφωνο μέσα στο raw booking object του Beds24.
- * Τα στοιχεία μπορεί να έρχονται είτε στο root είτε σε nested objects
- * όπως invoicee, guest, guests, customer, contact κτλ.
- ******************************************************************/
-function findFirstBookingValue_(obj, keyMatchers, valueMatcher, maxDepth) {
-  maxDepth = typeof maxDepth === 'number' ? maxDepth : 4;
-  const seen = [];
-
-  function walk(value, depth) {
-    if (value === null || value === undefined || depth > maxDepth) return '';
-
-    if (typeof value === 'string' || typeof value === 'number') {
-      const text = String(value).trim();
-      if (text && valueMatcher && valueMatcher(text)) return text;
-      return '';
-    }
-
-    if (typeof value !== 'object') return '';
-    if (seen.indexOf(value) !== -1) return '';
-    seen.push(value);
-
-    if (Array.isArray(value)) {
-      for (var i = 0; i < value.length; i++) {
-        const fromArray = walk(value[i], depth + 1);
-        if (fromArray) return fromArray;
-      }
-      return '';
-    }
-
-    const keys = Object.keys(value);
-
-    // Πρώτα ψάχνουμε με βάση το όνομα του πεδίου.
-    for (var k = 0; k < keys.length; k++) {
-      const key = keys[k];
-      const lowKey = String(key || '').toLowerCase();
-      if (!keyMatchers.some(function(matcher) { return matcher(lowKey); })) continue;
-
-      const direct = value[key];
-      if (direct !== null && direct !== undefined) {
-        const text = String(direct).trim();
-        if (text && (!valueMatcher || valueMatcher(text))) return text;
-      }
-    }
-
-    // Μετά ψάχνουμε recursive, γιατί το Beds24 μπορεί να τα βάζει nested.
-    for (var n = 0; n < keys.length; n++) {
-      const nested = walk(value[keys[n]], depth + 1);
-      if (nested) return nested;
-    }
-
-    return '';
-  }
-
-  return walk(obj, 0);
-}
-
-function getBookingEmail_(b) {
-  return findFirstBookingValue_(
-    b,
-    [
-      function(k) { return k === 'email'; },
-      function(k) { return k.indexOf('email') !== -1; },
-      function(k) { return k === 'mail'; }
-    ],
-    function(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v).trim()); },
-    5
-  );
-}
-
-function getBookingPhone_(b) {
-  return findFirstBookingValue_(
-    b,
-    [
-      function(k) { return k === 'phone'; },
-      function(k) { return k === 'mobile'; },
-      function(k) { return k === 'telephone'; },
-      function(k) { return k.indexOf('phone') !== -1; },
-      function(k) { return k.indexOf('mobile') !== -1; },
-      function(k) { return k.indexOf('telephone') !== -1; },
-      function(k) { return k.indexOf('tel') !== -1; }
-    ],
-    function(v) {
-      const digits = String(v).replace(/\D/g, '');
-      return digits.length >= 6;
-    },
-    5
-  );
-}
-
+// Το νέο site χρειάζεται μόνο ποια μέρα είναι κλεισμένη και με ποια κράτηση.
+// Στοιχεία επισκεπτών (όνομα, email, τηλέφωνο, χρεώσεις) δεν γράφονται πια στο sheet.
 function buildOccupiedMap_(bookings) {
   const map = {};
 
@@ -1041,49 +878,11 @@ function buildOccupiedMap_(bookings) {
 
     const arr = parseIsoDate_(b.arrival);
     const dep = parseIsoDate_(b.departure);
+    if (!arr || !dep) return;
 
-    const numAdult = Number(b.numAdult || 0);
-    const numChild = Number(b.numChild || 0);
-    const totalGuests = numAdult + numChild;
-    const referrer = getBookingReferrer_(b);
-
-    const guestFromFirstLast = (
-      safeSheetCell_(b.firstName || '', 200) + ' ' +
-      safeSheetCell_(b.lastName || '', 200)
-    ).trim();
-
-    const guestName = guestFromFirstLast || safeSheetCell_(b.guestName || '', 300);
-    const guestEmail = getBookingEmail_(b);
-    const guestPhone = getBookingPhone_(b);
-    const charges = buildBookingChargeSummary_(b);
-
-    if (arr && dep) {
-      for (let d = new Date(arr); d < dep; d.setDate(d.getDate() + 1)) {
-        map[formatDate_(d) + '|' + b.roomId + '|' + b.unitId] = {
-          bookingId: safeSheetCell_(b.id || b.bookId, 100),
-          status: safeSheetCell_(b.status, 100),
-          guest: safeSheetCell_(guestName, 300),
-          numAdult: Number.isFinite(numAdult) ? numAdult : 0,
-          numChild: Number.isFinite(numChild) ? numChild : 0,
-          totalGuests: Number.isFinite(totalGuests) ? totalGuests : 0,
-          email: safeSheetCell_(guestEmail, 300),
-          phone: safeSheetCell_(guestPhone, 100),
-          mobile: safeSheetCell_(guestPhone, 100),
-          guestEmail: safeSheetCell_(guestEmail, 300),
-          guestPhone: safeSheetCell_(guestPhone, 100),
-          referrer: safeSheetCell_(referrer, 200),
-          channel: safeSheetCell_(referrer, 200),
-          source: safeSheetCell_(referrer, 200),
-
-          bookingTotal: charges.bookingTotal,
-          roomChargeTotal: charges.roomChargeTotal,
-          taxTotal: charges.taxTotal,
-          deposit: charges.deposit,
-          commission: charges.commission,
-          rateDescription: safeSheetCell_(charges.rateDescription, 300),
-          bookingChargeLines: safeSheetCell_(JSON.stringify(charges.bookingChargeLines), 1000)
-        };
-      }
+    const bookingId = safeSheetCell_(b.id || b.bookId, 100);
+    for (let d = new Date(arr); d < dep; d.setDate(d.getDate() + 1)) {
+      map[formatDate_(d) + '|' + b.roomId + '|' + b.unitId] = { bookingId: bookingId };
     }
   });
 
@@ -1109,37 +908,7 @@ function buildMappingRows_(unitsMap) {
 }
 
 function buildAvailabilityRows_(unitsMap, occupiedMap, prices, dates) {
-  const rows = [[
-    'date',
-    'roomId',
-    'roomName',
-    'unitId',
-    'unitName',
-    'price',
-    'bookingTotal',
-    'roomChargeTotal',
-    'taxTotal',
-    'deposit',
-    'commission',
-    'rateDescription',
-    'bookingChargeLines',
-    'available',
-    'reason',
-    'bookingId',
-    'status',
-    'guest',
-    'numAdult',
-    'numChild',
-    'totalGuests',
-    'email',
-    'phone',
-    'mobile',
-    'guestEmail',
-    'guestPhone',
-    'referrer',
-    'channel',
-    'source'
-  ]];
+  const rows = [['date', 'roomId', 'roomName', 'unitId', 'unitName', 'price', 'available', 'reason', 'bookingId']];
 
   Object.keys(unitsMap).sort(sortUnitKeys_(unitsMap)).forEach(function(k) {
     const u = unitsMap[k];
@@ -1166,31 +935,9 @@ function buildAvailabilityRows_(unitsMap, occupiedMap, prices, dates) {
         safeSheetCell_(u.unitId, 100),
         safeSheetCell_(u.unitName, 200),
         price,
-
-        occ ? occ.bookingTotal : '',
-        occ ? occ.roomChargeTotal : '',
-        occ ? occ.taxTotal : '',
-        occ ? occ.deposit : '',
-        occ ? occ.commission : '',
-        occ ? safeSheetCell_(occ.rateDescription, 300) : '',
-        occ ? safeSheetCell_(occ.bookingChargeLines, 1000) : '',
-
         avail,
         reason,
-        occ ? safeSheetCell_(occ.bookingId, 100) : '',
-        occ ? safeSheetCell_(occ.status, 100) : '',
-        occ ? safeSheetCell_(occ.guest, 300) : '',
-        occ ? Number(occ.numAdult || 0) : '',
-        occ ? Number(occ.numChild || 0) : '',
-        occ ? Number(occ.totalGuests || 0) : '',
-        occ ? safeSheetCell_(occ.email, 300) : '',
-        occ ? safeSheetCell_(occ.phone, 100) : '',
-        occ ? safeSheetCell_(occ.mobile, 100) : '',
-        occ ? safeSheetCell_(occ.guestEmail, 300) : '',
-        occ ? safeSheetCell_(occ.guestPhone, 100) : '',
-        occ ? safeSheetCell_(occ.referrer, 200) : '',
-        occ ? safeSheetCell_(occ.channel, 200) : '',
-        occ ? safeSheetCell_(occ.source, 200) : ''
+        occ ? occ.bookingId : ''
       ]);
     });
   });
@@ -1729,64 +1476,3 @@ function normalizeOccupancySnapshotDate_(value) {
   );
 }
 
-function normalizeMoneyForBooking_(value) {
-  if (value === null || value === undefined || value === '') return null;
-
-  if (typeof value === 'number') {
-    return Number.isFinite(value) ? value : null;
-  }
-
-  const cleaned = String(value)
-    .replace(/[^\d,.-]/g, '')
-    .replace(',', '.')
-    .trim();
-
-  if (!cleaned) return null;
-
-  const n = Number(cleaned);
-  return Number.isFinite(n) ? n : null;
-}
-// updateBookingCorePushSecret() removed from this copy: it hardcoded the
-// push secret. Set BOOKING_CORE_PUSH_SECRET in Project Settings > Script
-// properties instead.
-function buildBookingChargeSummary_(b) {
-  const bookingTotal = normalizeMoneyForBooking_(b && b.price);
-  const taxRaw = normalizeMoneyForBooking_(b && b.tax);
-  const taxTotal = taxRaw === null ? 0 : taxRaw;
-  const deposit = normalizeMoneyForBooking_(b && b.deposit);
-  const commission = normalizeMoneyForBooking_(b && b.commission);
-  const rateDescription = safeSheetCell_((b && b.rateDescription) || '', 300);
-
-  const roomChargeTotal =
-    bookingTotal === null ? null : round2_(bookingTotal - taxTotal);
-
-  const bookingChargeLines = [];
-
-  if (roomChargeTotal !== null) {
-    bookingChargeLines.push({
-      type: 'room',
-      description: rateDescription || 'Room / accommodation charge',
-      amount: roomChargeTotal,
-      currency: 'EUR'
-    });
-  }
-
-  if (taxTotal) {
-    bookingChargeLines.push({
-      type: 'tax',
-      description: 'Municipality Tax',
-      amount: taxTotal,
-      currency: 'EUR'
-    });
-  }
-
-  return {
-    bookingTotal: bookingTotal,
-    roomChargeTotal: roomChargeTotal,
-    taxTotal: taxTotal,
-    deposit: deposit,
-    commission: commission,
-    rateDescription: rateDescription,
-    bookingChargeLines: bookingChargeLines
-  };
-}
