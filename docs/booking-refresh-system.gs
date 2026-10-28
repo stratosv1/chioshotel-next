@@ -44,6 +44,19 @@ const PRICE_CSV_LAST_DATE_PROPERTY = 'PRICE_CSV_LAST_DATE';
 // Μικρό wait ώστε οι διπλές εκτελέσεις να κάνουν skip και όχι failure notification.
 const LOCK_WAIT_MS = 1000;
 
+// --- ΧΡΟΝΙΚΟ ΟΡΙΟ ΕΚΤΕΛΕΣΗΣ (Apps Script: 6 λεπτά) ---
+// Όταν το Apps Script σταματά την εκτέλεση στα 6 λεπτά, δεν τρέχει ούτε το finally
+// και τα sheets μπορεί να μείνουν μισογραμμένα. Γι' αυτό:
+// - αν μετά τα fetch από Beds24 έχει περάσει το WRITE όριο, δεν ξεκινάμε εγγραφές
+//   (μένουν τα προηγούμενα σωστά δεδομένα και ξαναδοκιμάζει το επόμενο refresh).
+// - αν έχει περάσει το OPTIONAL όριο, παραλείπονται τα deals / last-minute / Turkish
+//   caches σε αυτό το refresh (ανανεώνονται στο επόμενο).
+const REFRESH_WRITE_DEADLINE_MS = 3.5 * 60 * 1000;
+const REFRESH_OPTIONAL_DEADLINE_MS = 4.5 * 60 * 1000;
+// Fingerprint όσων γράφτηκαν τελευταία φορά στα sheets. Ίδιο fingerprint = δεν ξαναγράφουμε
+// ~190.000 κελιά του Availability κάθε 15 λεπτά χωρίς λόγο.
+const SHEETS_WRITE_FINGERPRINT_PROPERTY = 'SHEETS_WRITE_FINGERPRINT';
+
 // --- BOOKING CORE SOURCE CONTRACT ---
 const BOOKING_CORE_SCHEMA_VERSION = 1;
 const BOOKING_CORE_DATA_UPDATED_AT_PROPERTY = 'BOOKING_CORE_DATA_UPDATED_AT';
@@ -813,6 +826,7 @@ function refreshSystem() {
 
   const bookingCoreProps = PropertiesService.getScriptProperties();
   let bookingCoreReady = false;
+  const previousRefreshState = String(bookingCoreProps.getProperty(BOOKING_CORE_REFRESH_STATE_PROPERTY) || '');
   bookingCoreProps.setProperty(BOOKING_CORE_REFRESH_STATE_PROPERTY, 'UPDATING');
   bookingCoreProps.setProperty(BOOKING_CORE_REFRESH_STARTED_AT_PROPERTY, new Date().toISOString());
   bookingCoreProps.deleteProperty(BOOKING_CORE_REFRESH_ERROR_PROPERTY);
@@ -862,8 +876,6 @@ function refreshSystem() {
       );
     }
 
-    writeRateCache_(rateCacheSheet, prices);
-
     const bookingsResp = getBookings_(token);
     writeJsonToSheet_(debugBookingsSheet, bookingsResp, 'BOOKINGS DEBUG');
 
@@ -878,16 +890,48 @@ function refreshSystem() {
     const occupiedMap = buildOccupiedMap_(bookings);
     const unitsMap = buildUnitsMapFromFixedMappingAndBookings_(bookings);
 
-    logStep_('build maps');
-    writeMappingSheet_(mappingSheet, unitsMap);
-    logStep_('write mapping');
-    const availabilityValues = writeAvailabilitySheet_(availabilitySheet, unitsMap, occupiedMap, prices);
-    logStep_('write Availability');
-    buildCalendar_(calendarSheet, unitsMap, prices, occupiedMap);
-    logStep_('write occupancy_calendar');
+    const calendarDates = getRollingCalendarDates_(prices);
+    const mappingRows = buildMappingRows_(unitsMap);
+    const availabilityValues = buildAvailabilityRows_(unitsMap, occupiedMap, prices, calendarDates);
+    const calendarRows = buildCalendarRows_(unitsMap, occupiedMap, prices, calendarDates);
+    const rateCacheRows = buildRateCacheRows_(prices);
+    logStep_('build maps / rows');
 
-    SpreadsheetApp.flush();
-    logStep_('flush');
+    // Γράφουμε στα sheets μόνο όταν άλλαξε κάτι (κράτηση, τιμή, διαθεσιμότητα ή νέα μέρα).
+    const sheetsFingerprint = sha256Hex_(JSON.stringify([mappingRows, availabilityValues, calendarRows, rateCacheRows]));
+    const sheetsUnchanged =
+      sheetsFingerprint === String(bookingCoreProps.getProperty(SHEETS_WRITE_FINGERPRINT_PROPERTY) || '') &&
+      availabilitySheet.getLastRow() === availabilityValues.length &&
+      calendarSheet.getLastRow() === calendarRows.length;
+
+    if (sheetsUnchanged) {
+      console.log('Sheets unchanged; Availability / occupancy_calendar writes skipped.');
+    } else {
+      if (Date.now() - startedMs > REFRESH_WRITE_DEADLINE_MS) {
+        // Πολύ αργά για ασφαλή εγγραφή: κρατάμε τα παλιά (συνεπή) sheets και την προηγούμενη κατάσταση.
+        bookingCoreProps.setProperty(BOOKING_CORE_REFRESH_STATE_PROPERTY, previousRefreshState || 'ERROR');
+        if (previousRefreshState !== 'READY') {
+          bookingCoreProps.setProperty(BOOKING_CORE_REFRESH_ERROR_PROPERTY, 'Refresh stopped before sheet writes (time budget)');
+        }
+        console.warn('refreshSystem: ' + Math.round((Date.now() - startedMs) / 1000) +
+          's μετά τα fetch, δεν γίνονται εγγραφές σε αυτό το refresh (θα ξαναδοκιμάσει).');
+        return false;
+      }
+
+      writeRowsReplacing_(mappingSheet, mappingRows);
+      logStep_('write mapping');
+      writeRowsReplacing_(availabilitySheet, availabilityValues);
+      logStep_('write Availability');
+      writeRowsReplacing_(calendarSheet, calendarRows);
+      applyCalendarFormatting_(calendarSheet, calendarRows.length, calendarRows[0].length);
+      logStep_('write occupancy_calendar');
+      writeRowsReplacing_(rateCacheSheet, rateCacheRows);
+      logStep_('write rate_cache');
+
+      SpreadsheetApp.flush();
+      bookingCoreProps.setProperty(SHEETS_WRITE_FINGERPRINT_PROPERTY, sheetsFingerprint);
+      logStep_('flush');
+    }
 
     // Event-driven Booking Core sync: only push to Vercel when the canonical
     // availability/pricing snapshot actually changes. If a previous push failed,
@@ -939,6 +983,12 @@ function refreshSystem() {
     }
 
     logStep_('Booking Core sync');
+
+    if (Date.now() - startedMs > REFRESH_OPTIONAL_DEADLINE_MS) {
+      console.warn('refreshSystem: κοντά στο όριο των 6 λεπτών, τα deals / last-minute / Turkish caches ανανεώνονται στο επόμενο refresh.');
+      return true;
+    }
+
     resetExecutionCaches_();
     updateDealsCache();
     logStep_('updateDealsCache');
@@ -1600,25 +1650,16 @@ function buildUnitsMapFromFixedMappingAndBookings_(bookings) {
   return unitsMap;
 }
 
-function writeMappingSheet_(sheet, unitsMap) {
+function buildMappingRows_(unitsMap) {
   const rows = [['roomId', 'roomName', 'unitId', 'unitName']];
   Object.keys(unitsMap).sort(sortUnitKeys_(unitsMap)).forEach(function(key) {
     const u = unitsMap[key];
     rows.push([safeSheetCell_(u.roomId, 100), safeSheetCell_(u.roomName, 200), safeSheetCell_(u.unitId, 100), safeSheetCell_(u.unitName, 200)]);
   });
-  clearSheet_(sheet);
-  sheet.getRange(1, 1, rows.length, 4).setValues(rows);
+  return rows;
 }
 
-function writeAvailabilitySheet_(sheet, unitsMap, occupiedMap, prices) {
-  const roomIds = Object.keys(prices || {});
-  if (roomIds.length === 0) {
-    clearSheet_(sheet);
-    sheet.getRange(1, 1).setValue('No prices found');
-    return;
-  }
-
-  const dates = getRollingCalendarDates_(prices);
+function buildAvailabilityRows_(unitsMap, occupiedMap, prices, dates) {
   const rows = [[
     'date',
     'roomId',
@@ -1705,19 +1746,9 @@ function writeAvailabilitySheet_(sheet, unitsMap, occupiedMap, prices) {
     });
   });
 
-  clearSheet_(sheet);
-  sheet.getRange(1, 1, rows.length, rows[0].length).setValues(rows);
   return rows;
 }
-function buildCalendar_(sheet, unitsMap, prices, occupiedMap) {
-  const roomIds = Object.keys(prices || {});
-  if (roomIds.length === 0) {
-    clearSheet_(sheet);
-    sheet.getRange(1, 1).setValue('No prices found');
-    return;
-  }
-
-  const dates = getRollingCalendarDates_(prices);
+function buildCalendarRows_(unitsMap, occupiedMap, prices, dates) {
   const rows = [['roomId', 'roomName', 'unitId', 'unitName', 'label'].concat(dates)];
 
   Object.keys(unitsMap).sort(sortUnitKeys_(unitsMap)).forEach(function(k) {
@@ -1731,9 +1762,7 @@ function buildCalendar_(sheet, unitsMap, prices, occupiedMap) {
     rows.push(row.map(function(v) { return typeof v === 'string' ? safeSheetCell_(v, 1000) : v; }));
   });
 
-  clearSheet_(sheet);
-  sheet.getRange(1, 1, rows.length, rows[0].length).setValues(rows);
-  applyCalendarFormatting_(sheet, rows.length, rows[0].length);
+  return rows;
 }
 
 function getAllPriceDates_(prices) {
@@ -1784,14 +1813,9 @@ function getRoomPrice_(prices, rId, dStr) {
   return (prices[rId] && prices[rId][dStr]) ? Number(prices[rId][dStr]) : 0;
 }
 
-function writeRateCache_(sh, prices) {
-  clearSheet_(sh);
-
+function buildRateCacheRows_(prices) {
   const roomIds = Object.keys(prices || {}).sort();
-  if (roomIds.length === 0) {
-    sh.getRange(1, 1).setValue('No rate cache data');
-    return;
-  }
+  if (roomIds.length === 0) return [['No rate cache data']];
 
   const dates = getAllPriceDates_(prices);
   const rows = [['roomId'].concat(dates)];
@@ -1804,7 +1828,7 @@ function writeRateCache_(sh, prices) {
     rows.push(row);
   });
 
-  sh.getRange(1, 1, rows.length, rows[0].length).setValues(rows);
+  return rows;
 }
 
 function getRoomNameById_(roomId) {
@@ -1901,6 +1925,29 @@ function jsonOutput_(obj) { return ContentService.createTextOutput(JSON.stringif
 function jsonOutput(obj) { return jsonOutput_(obj); }
 function getOrCreateSheet_(ss, name) { let sh = ss.getSheetByName(name); if (!sh) sh = ss.insertSheet(name); return sh; }
 function clearSheet_(sh) { sh.clearContents(); sh.clearFormats(); }
+
+// Γράφει τα νέα rows πάνω στα παλιά και μετά καθαρίζει μόνο ό,τι περισσεύει.
+// Σε αντίθεση με clearSheet_ + setValues, το sheet δεν μένει ποτέ άδειο αν η
+// εκτέλεση κοπεί, και δεν καθαρίζονται formats σε όλο το grid σε κάθε refresh.
+function writeRowsReplacing_(sheet, rows) {
+  const numRows = rows.length;
+  const numCols = rows[0].length;
+  const oldRows = sheet.getLastRow();
+  const oldCols = sheet.getLastColumn();
+
+  sheet.getRange(1, 1, numRows, numCols).setValues(rows);
+
+  if (oldRows > numRows) sheet.getRange(numRows + 1, 1, oldRows - numRows, Math.max(oldCols, numCols)).clear();
+  if (oldCols > numCols) sheet.getRange(1, numCols + 1, Math.min(oldRows, numRows), oldCols - numCols).clear();
+}
+
+function sha256Hex_(text) {
+  const digest = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, text, Utilities.Charset.UTF_8);
+  return digest.map(function(byte) {
+    const value = byte < 0 ? byte + 256 : byte;
+    return ('0' + value.toString(16)).slice(-2);
+  }).join('');
+}
 
 function safeSheetCell_(value, maxLen) {
   maxLen = maxLen || 1000;
@@ -2445,16 +2492,7 @@ function computeBookingCoreFingerprint_(rows) {
     ];
   }));
 
-  const digest = Utilities.computeDigest(
-    Utilities.DigestAlgorithm.SHA_256,
-    canonical,
-    Utilities.Charset.UTF_8
-  );
-
-  return digest.map(function(byte) {
-    const value = byte < 0 ? byte + 256 : byte;
-    return ('0' + value.toString(16)).slice(-2);
-  }).join('');
+  return sha256Hex_(canonical);
 }
 
 function buildBookingCoreSnapshotPayloadFromRows_(rows, dataUpdatedAt, sourceRefreshedAt) {
