@@ -49,7 +49,7 @@ const LOCK_WAIT_MS = 1000;
 // και τα sheets μπορεί να μείνουν μισογραμμένα. Γι' αυτό:
 // - αν μετά τα fetch από Beds24 έχει περάσει το WRITE όριο, δεν ξεκινάμε εγγραφές
 //   (μένουν τα προηγούμενα σωστά δεδομένα και ξαναδοκιμάζει το επόμενο refresh).
-// - αν έχει περάσει το OPTIONAL όριο, παραλείπονται τα deals / last-minute / Turkish
+// - αν έχει περάσει το OPTIONAL όριο, παραλείπονται τα deals / last-minute
 //   caches σε αυτό το refresh (ανανεώνονται στο επόμενο).
 const REFRESH_WRITE_DEADLINE_MS = 3.5 * 60 * 1000;
 const REFRESH_OPTIONAL_DEADLINE_MS = 4.5 * 60 * 1000;
@@ -167,7 +167,6 @@ function doGet(e) {
     if (action === 'occupancy_snapshot') return getOccupancySnapshot_();
     if (action === 'booking_core_snapshot') return getBookingCoreSnapshot_();
     if (action === 'booking_core_health') return getBookingCoreHealth_();
-    if (action === 'turkish_deals') return getTurkishDeals_({ people: e.parameter.people, holiday: e.parameter.holiday });
     if (action === 'hk_calendar') return hkGetCalendar_(e.parameter || {});
 
     // HOTEL CALENDAR BOOKINGS
@@ -305,7 +304,6 @@ function doPost(e) {
     if (action === 'occupancy_snapshot') return getOccupancySnapshot_();
     if (action === 'get_last_minute_cache') return getLastMinuteCache_(payload);
     if (action === 'refresh_last_minute_cache') return refreshLastMinuteCache_(payload);
-    if (action === 'turkish_deals') return getTurkishDeals_(payload);
     if (action === 'hk_add_stay') return hkAddStay_(payload);
     if (action === 'hk_add_task') return hkAddTask_(payload);
     if (action === 'hk_delete_task') return hkDeleteTask_(payload);
@@ -985,7 +983,7 @@ function refreshSystem() {
     logStep_('Booking Core sync');
 
     if (Date.now() - startedMs > REFRESH_OPTIONAL_DEADLINE_MS) {
-      console.warn('refreshSystem: κοντά στο όριο των 6 λεπτών, τα deals / last-minute / Turkish caches ανανεώνονται στο επόμενο refresh.');
+      console.warn('refreshSystem: κοντά στο όριο των 6 λεπτών, τα deals / last-minute caches ανανεώνονται στο επόμενο refresh.');
       return true;
     }
 
@@ -994,8 +992,6 @@ function refreshSystem() {
     logStep_('updateDealsCache');
     refreshLastMinuteDefaultCacheNoLock_();
     logStep_('last-minute cache');
-    refreshTurkishCacheNoLock_();
-    logStep_('Turkish cache');
 
     console.log('refreshSystem completed successfully.');
     return true;
@@ -2030,172 +2026,6 @@ function setupLastMinuteTrigger() {
   deleteExistingTriggers_(['refreshLastMinuteDefaultCache']);
   ScriptApp.newTrigger('refreshLastMinuteDefaultCache').timeBased().everyMinutes(15).create();
   console.log('Last Minute trigger created.');
-}
-
-/******************************************************************
- * APP 3: TURKISH MARKET DEALS (HOLIDAYS & WEEKENDS)
- ******************************************************************/
-
-const TURKISH_CONFIG = {
-  periods: {
-    '23-nisan': { start: '2026-04-22', end: '2026-04-27' },
-    '1-mayis': { start: '2026-04-30', end: '2026-05-04' },
-    '19-mayis': { start: '2026-05-15', end: '2026-05-20' },
-    'kurban-bayrami': { start: '2026-05-22', end: '2026-06-01' },
-    '15-temmuz': { start: '2026-07-10', end: '2026-07-20' },
-    '30-agustos': { start: '2026-08-27', end: '2026-08-31' },
-    '29-ekim': { start: '2026-10-28', end: '2026-11-02' }
-  },
-  weekendsEndDate: '2026-10-30',
-  weekendsOffsetDays: 8
-};
-
-function getTurkishCacheKey_(people) { return 'TURKISH_DEALS_CACHE_' + String(people); }
-
-function clearTurkishCache() {
-  const props = PropertiesService.getScriptProperties();
-  [2, 3, 4].forEach(function(people) { props.deleteProperty(getTurkishCacheKey_(people)); });
-  console.log('Turkish cache cleared successfully.');
-}
-
-function getTurkishDeals_(payload) {
-  const people = normalizePeople_(payload && payload.people);
-  const holiday = String(payload && payload.holiday || '').trim();
-  const cacheKey = getTurkishCacheKey_(people);
-  const raw = PropertiesService.getScriptProperties().getProperty(cacheKey);
-
-  let data;
-  if (raw) {
-    try { data = JSON.parse(raw); } catch (e) {}
-  }
-
-  if (!data) {
-    data = buildTurkishCacheData_(people);
-    PropertiesService.getScriptProperties().setProperty(cacheKey, JSON.stringify(data));
-  }
-
-  if (holiday && data.holidays && data.holidays[holiday]) {
-    return jsonOutput_({ ok: true, success: true, source: raw ? 'CACHE' : 'LIVE', updatedAt: data.updatedAt, days: data.holidays[holiday].days, rooms: data.holidays[holiday].rooms });
-  }
-
-  return jsonOutput_({ ok: true, success: true, source: raw ? 'CACHE' : 'LIVE', data: data });
-}
-
-function buildTurkishCacheData_(people) {
-  const rooms = getLastMinuteRooms_().filter(function(r) { return Number(r.max) >= Number(people); });
-  const units = rooms.map(function(r) { return { roomId: r.roomId, unitId: r.unitId }; });
-  const oneNightResultsMemo = {};
-
-  function getOneNightResults_(checkin, checkout) {
-    const key = checkin + '|' + checkout;
-    if (!Object.prototype.hasOwnProperty.call(oneNightResultsMemo, key)) oneNightResultsMemo[key] = computeAvailabilityResults_(checkin, checkout, units);
-    return oneNightResultsMemo[key];
-  }
-
-  const allData = { updatedAt: new Date().toISOString(), people: people, holidays: {}, weekends: [] };
-
-  Object.keys(TURKISH_CONFIG.periods).forEach(function(key) {
-    const p = TURKISH_CONFIG.periods[key];
-    allData.holidays[key] = { days: buildDaysArrayForPeriod_(p.start, p.end, getOneNightResults_), rooms: rooms };
-  });
-
-  const weekends = buildTurkishFridayStarts_(TURKISH_CONFIG.weekendsEndDate, TURKISH_CONFIG.weekendsOffsetDays);
-  weekends.forEach(function(fridayStr) {
-    const fridayDate = parseIsoDate_(fridayStr);
-    if (!fridayDate) return;
-
-    const saturdayDate = addDays_(fridayDate, 1);
-    const sundayDate = addDays_(fridayDate, 2);
-    const saturdayStr = formatDate_(saturdayDate);
-    const sundayStr = formatDate_(sundayDate);
-
-    allData.weekends.push({
-      weekendStart: fridayStr,
-      days: [
-        { checkin: fridayStr, checkout: saturdayStr, results: getOneNightResults_(fridayStr, saturdayStr) },
-        { checkin: saturdayStr, checkout: sundayStr, results: getOneNightResults_(saturdayStr, sundayStr) }
-      ],
-      rooms: rooms
-    });
-  });
-
-  return allData;
-}
-
-function buildDaysArrayForPeriod_(startStr, endStr, getResultsFn) {
-  const days = [];
-  const startDate = parseIsoDate_(startStr);
-  const endDate = parseIsoDate_(endStr);
-  if (!startDate || !endDate) return days;
-
-  for (var d = new Date(startDate); d < endDate; d.setDate(d.getDate() + 1)) {
-    const checkin = formatDate_(d);
-    const checkout = formatDate_(addDays_(d, 1));
-    const results = getResultsFn(checkin, checkout);
-    days.push({ checkin: checkin, checkout: checkout, results: results });
-  }
-
-  return days;
-}
-
-function buildTurkishFridayStarts_(endDateStr, offsetDays) {
-  const out = [];
-  const today = new Date();
-  today.setHours(12, 0, 0, 0);
-
-  const startDate = addDays_(today, Number(offsetDays || 8));
-  const endDate = parseIsoDate_(endDateStr);
-  if (!endDate) throw new Error('Invalid endDateStr in buildTurkishFridayStarts_');
-
-  const d = new Date(startDate);
-  d.setHours(12, 0, 0, 0);
-
-  while (d <= endDate) {
-    if (d.getDay() === 5) out.push(formatDate_(d));
-    d.setDate(d.getDate() + 1);
-  }
-
-  return out;
-}
-
-function refreshTurkishCacheNoLock_() {
-  const peopleList = [2, 3, 4];
-  resetExecutionCaches_();
-
-  peopleList.forEach(function(people) {
-    const fresh = buildTurkishCacheData_(people);
-    PropertiesService.getScriptProperties().setProperty(getTurkishCacheKey_(people), JSON.stringify(fresh));
-  });
-
-  console.log('Turkish Cache refreshed successfully.');
-}
-
-function refreshTurkishCache() {
-  const startedMs = Date.now();
-  const lock = acquireScriptLockOrSkip_('refreshTurkishCache', LOCK_WAIT_MS);
-  if (!lock) return;
-
-  try {
-    refreshTurkishCacheNoLock_();
-  } finally {
-    logRuntime_('refreshTurkishCache', startedMs);
-    lock.releaseLock();
-  }
-}
-
-function rebuildTurkishCache() {
-  const startedMs = Date.now();
-  const lock = acquireScriptLockOrSkip_('rebuildTurkishCache', LOCK_WAIT_MS);
-  if (!lock) return;
-
-  try {
-    clearTurkishCache();
-    refreshTurkishCacheNoLock_();
-    console.log('Turkish cache rebuilt successfully.');
-  } finally {
-    logRuntime_('rebuildTurkishCache', startedMs);
-    lock.releaseLock();
-  }
 }
 
 /******************************************************************
