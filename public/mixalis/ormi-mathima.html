@@ -1,0 +1,1833 @@
+<!doctype html>
+<html lang="el" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Ορμή: το μάθημα</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Commissioner:wght@500;600;700;800&family=Literata:opsz,wght@7..72,400;7..72,600&family=Noto+Sans+Mono:wght@500;700&display=swap">
+<style>
+/* Το μάθημα της ορμής: μία διαφάνεια τη φορά. Κείμενο καθηγητή, ζωντανός «πάγκος» με κινούμενο σχέδιο και χειριστήρια, κάρτες εξήγησης. */
+:root {
+  --bg: #f4f1ea; --paper: #fffdf8; --ink: #1d2433; --muted: #5d6475; --line: #ddd6c8; --soft: #f8f5ee;
+  --accent: #c9822f; --accent2: #8a5a1c; --teal: #1f6f5c;
+  --v: #1f6fd1; --F: #d9342b; --p: #1f9d55; --K: #d9821c; --Q: #e2571e;
+  --b1: #7b5ea7; --b2: #e0a526; --b3: #4f8a83; --bench: #f7f4ec; --grid: #e7e1d4; --ok: #1f9d55; --bad: #c0392b;
+  --display: "Commissioner", "Segoe UI", system-ui, sans-serif;
+  --body: "Literata", Georgia, "Times New Roman", serif;
+  --mono: "Noto Sans Mono", ui-monospace, Menlo, monospace;
+}
+* { box-sizing: border-box; }
+html { background: var(--bg); }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.62;
+  padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.wrap { width: 100%; max-width: 1120px; display: flex; flex-direction: column; gap: 12px; }
+.topline { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.brand { font-family: var(--display); font-weight: 800; font-size: 15px; color: var(--accent2); letter-spacing: .02em; }
+.brand span { color: var(--muted); font-weight: 500; }
+.counter { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+.secs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: thin; }
+.secs button { all: unset; cursor: pointer; flex: 1 0 auto; min-width: 74px; display: flex; flex-direction: column; gap: 5px;
+  font-family: var(--display); font-size: 12.5px; font-weight: 700; color: var(--muted); }
+.secs button .bar { height: 5px; border-radius: 3px; background: var(--line); overflow: hidden; }
+.secs button .bar i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+.secs button[aria-current="true"] { color: var(--ink); }
+.secs button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+.slide { background: var(--paper); border: 1px solid var(--line); border-radius: 22px; padding: 26px 30px 24px; display: flex; flex-direction: column; gap: 16px; min-height: 560px; }
+.kicker { font-family: var(--display); font-size: 12.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .14em; color: var(--accent); }
+h1, h2, h3 { font-family: var(--display); font-weight: 800; line-height: 1.14; margin: 0; letter-spacing: -.01em; text-wrap: balance; }
+h1 { font-size: clamp(30px, 4.4vw, 48px); }
+h2 { font-size: clamp(23px, 3vw, 33px); }
+h3 { font-size: 18px; font-weight: 700; }
+p { margin: 0; }
+.lead { font-size: 18.5px; max-width: 46em; }
+.lead + .lead { margin-top: -6px; }
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
+.card { background: var(--soft); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; font-size: 16px; display: flex; flex-direction: column; gap: 8px; }
+.card h3 { font-size: 16px; }
+.card.tip { border-left: 5px solid var(--teal); }
+.card.trap { border-left: 5px solid var(--F); }
+.card.trap h3 { color: var(--F); }
+.card.key { border-left: 5px solid var(--accent); }
+.card ul, .card ol { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 5px; }
+.formula { display: inline-flex; align-items: center; gap: 10px; flex-wrap: wrap; font-family: var(--mono); font-size: 18px; font-weight: 700; padding: 8px 16px; border-radius: 12px; border: 2px solid var(--accent); color: var(--accent2); background: #fff; align-self: flex-start; }
+.formula.big { font-size: 24px; padding: 12px 22px; }
+.m { font-family: var(--mono); font-weight: 500; font-size: .94em; white-space: nowrap; }
+.fr { display: inline-flex; flex-direction: column; vertical-align: middle; text-align: center; line-height: 1.15; margin: 0 2px; }
+.fr > span:last-child { border-top: 1.6px solid currentColor; padding-top: 1px; }
+.c-v { color: var(--v); font-weight: 700; } .c-F { color: var(--F); font-weight: 700; } .c-p { color: var(--p); font-weight: 700; } .c-K { color: var(--K); font-weight: 700; } .c-a { color: var(--accent2); font-weight: 700; }
+.bench { background: var(--bench); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; }
+.cv { display: block; width: 100%; height: auto; touch-action: manipulation; }
+.ctrls { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; padding: 12px 16px; border-top: 1px solid var(--line); background: #fbf9f3; font-family: var(--display); font-size: 14px; }
+.ctrl { display: flex; align-items: center; gap: 8px; min-width: 250px; flex: 1 1 260px; }
+.ctrl label { flex-shrink: 0; }
+.ctrl label { font-weight: 700; white-space: nowrap; }
+.ctrl input[type=range] { flex: 1; accent-color: var(--accent); min-width: 80px; }
+.ctrl output { font-family: var(--mono); font-size: 13.5px; min-width: 70px; text-align: right; flex-shrink: 0; }
+.vec { position: relative; display: inline-block; }
+.vec::after { content: "→"; position: absolute; left: 0; right: 0; top: -0.72em; font-size: 0.6em; text-align: center; line-height: 1; font-weight: 700; }
+.btn { all: unset; cursor: pointer; font-family: var(--display); font-weight: 700; font-size: 14px; padding: 7px 14px; border-radius: 999px; background: #fff; border: 1.5px solid var(--line); color: var(--ink); white-space: nowrap; }
+.btn:hover { border-color: var(--accent); }
+.btn.pri { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn.pri:hover { background: var(--accent2); }
+.btn.dark { background: var(--ink); border-color: var(--ink); color: #fff; }
+.btn[aria-pressed="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+.btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.seg { display: flex; flex-wrap: wrap; gap: 6px; }
+.readout { font-family: var(--mono); font-size: 14px; padding: 10px 16px; border-top: 1px dashed var(--line); background: #fff; line-height: 1.7; }
+.readout b { font-weight: 700; }
+.steps-reveal { display: flex; flex-direction: column; gap: 8px; }
+.steps-reveal .st { display: none; padding: 9px 12px; border-radius: 12px; background: #fff; border: 1px solid var(--line); }
+.steps-reveal .st.on { display: block; animation: pop .35s ease; }
+@keyframes pop { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.quiz { display: flex; flex-direction: column; gap: 14px; }
+.qitem { background: var(--soft); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.qitem .qtext { font-weight: 600; }
+.qopts { display: grid; gap: 7px; }
+.qopts button { all: unset; cursor: pointer; padding: 9px 13px; border-radius: 11px; background: #fff; border: 1.5px solid var(--line); font-size: 16px; }
+.qopts button:hover { border-color: var(--accent); }
+.qopts button.right { border-color: var(--ok); background: #e9f7ef; }
+.qopts button.wrong { border-color: var(--bad); background: #fbecea; }
+.qfb { display: none; font-size: 15.5px; padding: 9px 12px; border-radius: 11px; background: #fff; border-left: 4px solid var(--teal); }
+.qfb.on { display: block; animation: pop .3s ease; }
+.score { font-family: var(--display); font-weight: 700; }
+table.t { border-collapse: collapse; width: 100%; font-size: 15px; background: #fff; border-radius: 12px; overflow: hidden; }
+table.t th, table.t td { border-bottom: 1px solid var(--line); padding: 7px 10px; text-align: left; vertical-align: middle; }
+table.t th { font-family: var(--display); font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); background: var(--soft); }
+.acc { border: 1px solid var(--line); border-radius: 14px; background: #fff; overflow: hidden; }
+.acc + .acc { margin-top: 8px; }
+.acc > button { all: unset; cursor: pointer; display: flex; gap: 10px; align-items: baseline; width: 100%; box-sizing: border-box; padding: 11px 14px; font-family: var(--display); font-weight: 700; font-size: 15.5px; }
+.acc > button .n { color: var(--accent); min-width: 2.2em; }
+.acc > button .chev { margin-left: auto; color: var(--muted); }
+.acc > .body { display: none; padding: 4px 16px 14px; border-top: 1px dashed var(--line); font-size: 16px; }
+.acc.open > .body { display: flex; flex-direction: column; gap: 10px; }
+.mapgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+.mapgrid button { all: unset; cursor: pointer; background: var(--soft); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; display: flex; flex-direction: column; gap: 3px; }
+.mapgrid button:hover { border-color: var(--accent); background: #fff; }
+.mapgrid b { font-family: var(--display); color: var(--accent2); }
+.mapgrid span { font-size: 14.5px; color: var(--muted); }
+.navbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.navbar .btn { padding: 10px 20px; font-size: 15px; }
+.hint { font-family: var(--display); font-size: 13px; color: var(--muted); text-align: center; }
+.tag { display: inline-block; font-family: var(--display); font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 999px; background: #efe7da; color: var(--accent2); }
+.pill-ok { color: var(--ok); font-weight: 700; } .pill-bad { color: var(--bad); font-weight: 700; }
+.sysbox { display: flex; flex-wrap: wrap; gap: 8px; }
+.sysbox label { display: inline-flex; gap: 6px; align-items: center; background: #fff; border: 1.5px solid var(--line); border-radius: 999px; padding: 5px 12px; font-family: var(--display); font-weight: 700; cursor: pointer; }
+@media (max-width: 640px) {
+  body { padding: 10px; font-size: 16px; }
+  .slide { padding: 18px 16px; border-radius: 16px; min-height: 0; }
+  .lead { font-size: 17px; }
+  .formula.big { font-size: 19px; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topline">
+    <div class="brand">Ορμή <span>· Κεφάλαιο 2 σχολικού βιβλίου · Φυσική Προσανατολισμού Β΄ Λυκείου</span></div>
+    <div class="counter" id="counter"></div>
+  </div>
+  <nav class="secs" id="secs" aria-label="Ενότητες"></nav>
+  <main class="slide" id="slide" aria-live="polite"></main>
+  <div class="navbar">
+    <button class="btn" id="prev">← Πίσω</button>
+    <span class="hint">Βελάκια ← → του πληκτρολογίου για αλλαγή διαφάνειας</span>
+    <button class="btn pri" id="next">Επόμενο →</button>
+  </div>
+</div>
+<script>
+"use strict";
+/* ============ ΕΡΓΑΛΕΙΑ ============ */
+const COL = { v: "#1f6fd1", F: "#d9342b", p: "#1f9d55", K: "#d9821c", Q: "#e2571e", ink: "#1d2433", mute: "#5d6475", line: "#ddd6c8",
+  grid: "#e7e1d4", b1: "#7b5ea7", b2: "#e0a526", b3: "#4f8a83", ground: "#b9a98f", wall: "#8b7d6b", acc: "#c9822f", white: "#ffffff" };
+const SL = [];
+let SCOPE = [];
+const onCleanup = (fn) => SCOPE.push(fn);
+const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+const lerp = (a, b, t) => a + (b - a) * t;
+const ease = (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+function fmt(x, d = 2) {
+  if (!isFinite(x)) return "—";
+  const r = Math.round(x * Math.pow(10, d)) / Math.pow(10, d);
+  let s = r.toFixed(d);
+  if (s.includes(".")) s = s.replace(/0+$/, "").replace(/\.$/, "");
+  if (s === "-0") s = "0";
+  return s.replace("-", "−").replace(".", ",");
+}
+function sgn(x, d = 2) { return (x > 0 ? "+" : "") + fmt(x, d); }
+function el(tag, attrs = {}, html = "") {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "class") e.className = v; else if (k.startsWith("on")) e.addEventListener(k.slice(2), v); else e.setAttribute(k, v);
+  }
+  if (html) e.innerHTML = html;
+  return e;
+}
+const frac = (a, b) => `<span class="fr"><span>${a}</span><span>${b}</span></span>`;
+const vec = (s) => `<span class="vec">${s}</span>`; // βελάκι διανύσματος πάνω από το γράμμα
+
+/* Βρόχος κίνησης που σταματά μόνος του όταν φεύγεις από τη διαφάνεια. */
+function animate(step) {
+  let alive = true, last = performance.now();
+  function f(t) { if (!alive) return; const dt = Math.min(0.05, (t - last) / 1000); last = t; step(dt, t / 1000); requestAnimationFrame(f); }
+  requestAnimationFrame(f);
+  onCleanup(() => (alive = false));
+}
+
+/* Καμβάς με λογικές διαστάσεις W×H που κλιμακώνεται στο πλάτος της οθόνης. */
+function canvas(host, W = 900, H = 320) {
+  const cv = el("canvas", { class: "cv", role: "img" });
+  cv.style.aspectRatio = `${W} / ${H}`;
+  host.appendChild(cv);
+  const ctx = cv.getContext("2d");
+  const g = { cv, ctx, W, H, redraw: null };
+  /* Αλλάζει το μέγεθος μόνο όταν χρειάζεται (η αλλαγή σβήνει τον καμβά) και ξανασχεδιάζει τα στατικά σχέδια. */
+  function fit() {
+    const w = cv.clientWidth || W, dpr = window.devicePixelRatio || 1, nw = Math.round(w * dpr), nh = Math.round((w * H / W) * dpr);
+    if (cv.width === nw && cv.height === nh) return;
+    cv.width = nw; cv.height = nh;
+    ctx.setTransform(cv.width / W, 0, 0, cv.width / W, 0, 0);
+    if (g.redraw) g.redraw();
+  }
+  fit();
+  const ro = new ResizeObserver(fit); ro.observe(cv); onCleanup(() => ro.disconnect());
+  g.clear = () => { ctx.setTransform(cv.width / W, 0, 0, cv.width / W, 0, 0); ctx.clearRect(0, 0, W, H); };
+  g.pos = (ev) => { const r = cv.getBoundingClientRect(); return { x: (ev.clientX - r.left) * W / r.width, y: (ev.clientY - r.top) * W / r.width }; };
+  return g;
+}
+function txt(ctx, s, x, y, o = {}) {
+  ctx.save();
+  ctx.font = `${o.weight || 600} ${o.size || 15}px ${o.mono ? '"Noto Sans Mono", monospace' : 'Commissioner, system-ui, sans-serif'}`;
+  ctx.fillStyle = o.color || COL.ink; ctx.textAlign = o.align || "left"; ctx.textBaseline = o.base || "middle";
+  if (o.bg) {
+    const w = ctx.measureText(s).width, h = (o.size || 15) + 8;
+    const x0 = o.align === "center" ? x - w / 2 : o.align === "right" ? x - w : x;
+    ctx.fillStyle = o.bg; roundRect(ctx, x0 - 5, y - h / 2, w + 10, h, 6); ctx.fill(); ctx.fillStyle = o.color || COL.ink;
+  }
+  ctx.fillText(s, x, y); ctx.restore();
+}
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+}
+/* Βέλος από (x1,y1) σε (x2,y2). Αν το μήκος είναι σχεδόν μηδέν δεν σχεδιάζεται. */
+function arrow(ctx, x1, y1, x2, y2, color, o = {}) {
+  const dx = x2 - x1, dy = y2 - y1, L = Math.hypot(dx, dy);
+  if (L < 2) return;
+  const w = o.w || 4, hd = Math.min(o.head || 13, L * 0.6), ux = dx / L, uy = dy / L;
+  ctx.save(); ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = w; ctx.lineCap = "round";
+  if (o.dash) ctx.setLineDash(o.dash);
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2 - ux * hd * 0.8, y2 - uy * hd * 0.8); ctx.stroke(); ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(x2 - ux * hd - uy * hd * 0.5, y2 - uy * hd + ux * hd * 0.5);
+  ctx.lineTo(x2 - ux * hd + uy * hd * 0.5, y2 - uy * hd - ux * hd * 0.5); ctx.closePath(); ctx.fill();
+  if (o.label) {
+    const lx = o.lx !== undefined ? o.lx : (x1 + x2) / 2 + (o.ox || 0), ly = o.ly !== undefined ? o.ly : (y1 + y2) / 2 + (o.oy !== undefined ? o.oy : -15);
+    txt(ctx, o.label, lx, ly, { color, size: o.size || 15, weight: 700, align: "center", bg: o.bg === false ? null : "rgba(255,253,248,.88)" });
+  }
+  ctx.restore();
+}
+function ground(ctx, y, x0 = 0, x1 = 900, o = {}) {
+  ctx.save(); ctx.strokeStyle = o.color || COL.ground; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.stroke();
+  ctx.lineWidth = 1.4; ctx.strokeStyle = o.hatch || "#d6cbb7";
+  for (let x = x0 + 4; x < x1; x += 14) { ctx.beginPath(); ctx.moveTo(x, y + 2); ctx.lineTo(x - 9, y + 11); ctx.stroke(); }
+  ctx.restore();
+}
+/* Αμαξάκι: x = κέντρο, y = έδαφος. */
+function cart(ctx, x, y, w, h, color, label, o = {}) {
+  ctx.save();
+  const r = Math.min(9, h * 0.22);
+  ctx.fillStyle = color; roundRect(ctx, x - w / 2, y - h - 2 * r + 2, w, h, 8); ctx.fill();
+  ctx.strokeStyle = "rgba(0,0,0,.18)"; ctx.lineWidth = 1.5; ctx.stroke();
+  ctx.fillStyle = "#3a3f4b";
+  for (const wx of [x - w * 0.3, x + w * 0.3]) { ctx.beginPath(); ctx.arc(wx, y - r, r, 0, Math.PI * 2); ctx.fill(); }
+  ctx.fillStyle = "#cfd3da"; for (const wx of [x - w * 0.3, x + w * 0.3]) { ctx.beginPath(); ctx.arc(wx, y - r, r * 0.35, 0, Math.PI * 2); ctx.fill(); }
+  if (label) txt(ctx, label, x, y - 2 * r + 2 - h / 2, { color: "#fff", size: o.size || 15, weight: 800, align: "center" });
+  ctx.restore();
+  return { top: y - h - 2 * r + 2, mid: y - 2 * r + 2 - h / 2 };
+}
+function block(ctx, x, y, w, h, color, label, o = {}) {
+  ctx.save(); ctx.fillStyle = color; roundRect(ctx, x - w / 2, y - h, w, h, 6); ctx.fill();
+  ctx.strokeStyle = "rgba(0,0,0,.2)"; ctx.lineWidth = 1.5; ctx.stroke();
+  if (label) txt(ctx, label, x, y - h / 2, { color: o.color || "#fff", size: o.size || 15, weight: 800, align: "center" });
+  ctx.restore();
+}
+function ball(ctx, x, y, r, color, label, o = {}) {
+  ctx.save(); const g = ctx.createRadialGradient(x - r * 0.35, y - r * 0.35, r * 0.1, x, y, r);
+  g.addColorStop(0, "#ffffff"); g.addColorStop(0.25, color); g.addColorStop(1, shade(color, -0.25));
+  ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+  if (label) txt(ctx, label, x, y, { color: o.color || "#fff", size: o.size || Math.max(11, r * 0.8), weight: 800, align: "center" });
+  ctx.restore();
+}
+function shade(hex, k) {
+  const n = parseInt(hex.slice(1), 16); let r = n >> 16, g = (n >> 8) & 255, b = n & 255;
+  const f = (c) => Math.round(clamp(k < 0 ? c * (1 + k) : c + (255 - c) * k, 0, 255));
+  return "#" + ((1 << 24) + (f(r) << 16) + (f(g) << 8) + f(b)).toString(16).slice(1);
+}
+/* Ράβδοι ορμής με πρόσημο γύρω από κεντρική γραμμή. items: [{label, val, color}]. Τελευταία ράβδος = ολική (μαύρη). */
+function pBars(ctx, x, y, w, items, maxAbs, o = {}) {
+  const rowH = o.rowH || 24, cx = x + w / 2, half = w / 2 - 10, unit = o.unit || "kg·m/s";
+  ctx.save();
+  ctx.strokeStyle = "#b9b2a4"; ctx.lineWidth = 1.5; ctx.setLineDash([4, 4]);
+  ctx.beginPath(); ctx.moveTo(cx, y - 6); ctx.lineTo(cx, y + items.length * rowH); ctx.stroke(); ctx.setLineDash([]);
+  items.forEach((it, i) => {
+    const yy = y + i * rowH, L = clamp(it.val / maxAbs, -1, 1) * half;
+    ctx.fillStyle = it.color; roundRect(ctx, Math.min(cx, cx + L), yy, Math.max(2, Math.abs(L)), rowH - 8, 4); ctx.fill();
+    txt(ctx, it.label, x - 6, yy + (rowH - 8) / 2, { align: "right", size: 13.5, color: it.color === "#1d2433" ? COL.ink : it.color, weight: 700 });
+    txt(ctx, `${sgn(it.val, o.d ?? 2)} ${unit}`, x + w + 6, yy + (rowH - 8) / 2, { size: 13, mono: true, weight: 500, color: COL.ink });
+  });
+  ctx.restore();
+}
+/* Μικρό διάγραμμα (π.χ. p–t). series: [{data:[[t,y]...], color, w}] */
+function plot(ctx, x, y, w, h, o) {
+  const { tMax, yMin, yMax } = o;
+  const X = (t) => x + (t / tMax) * w, Y = (v) => y + h - ((v - yMin) / (yMax - yMin)) * h;
+  ctx.save();
+  ctx.fillStyle = "#fff"; roundRect(ctx, x - 8, y - 8, w + 16, h + 16, 10); ctx.fill(); ctx.strokeStyle = COL.line; ctx.lineWidth = 1; ctx.stroke();
+  ctx.strokeStyle = COL.grid; ctx.lineWidth = 1;
+  for (let i = 1; i < 4; i++) { const yy = y + (h * i) / 4; ctx.beginPath(); ctx.moveTo(x, yy); ctx.lineTo(x + w, yy); ctx.stroke(); }
+  ctx.strokeStyle = COL.ink; ctx.lineWidth = 1.6;
+  const y0 = clamp(Y(0), y, y + h);
+  ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + h); ctx.moveTo(x, y0); ctx.lineTo(x + w, y0); ctx.stroke();
+  txt(ctx, o.ylab || "", x + 6, y + 4, { size: 13, weight: 700, color: o.ycol || COL.ink });
+  txt(ctx, o.xlab || "t", x + w - 4, y0 - 10, { size: 13, weight: 700, align: "right", color: COL.mute });
+  (o.series || []).forEach((s) => {
+    if (!s.data.length) return;
+    ctx.strokeStyle = s.color; ctx.lineWidth = s.w || 3; ctx.beginPath();
+    s.data.forEach(([t, v], i) => (i ? ctx.lineTo(X(t), Y(v)) : ctx.moveTo(X(t), Y(v)))); ctx.stroke();
+    if (s.fill) { ctx.globalAlpha = 0.18; ctx.fillStyle = s.color; ctx.lineTo(X(s.data[s.data.length - 1][0]), y0); ctx.lineTo(X(s.data[0][0]), y0); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1; }
+  });
+  ctx.restore();
+  return { X, Y };
+}
+
+/* Χειριστήρια */
+function controls(host) { const c = el("div", { class: "ctrls" }); host.appendChild(c); return c; }
+function slider(host, label, min, max, step, val, show, onInput) {
+  const w = el("div", { class: "ctrl" });
+  const id = "s" + Math.random().toString(36).slice(2, 8);
+  w.innerHTML = `<label for="${id}">${label}</label><input id="${id}" type="range" min="${min}" max="${max}" step="${step}" value="${val}"><output></output>`;
+  const inp = w.querySelector("input"), out = w.querySelector("output");
+  const upd = () => { const v = parseFloat(inp.value); out.innerHTML = show(v); onInput && onInput(v); };
+  inp.addEventListener("input", upd); host.appendChild(w); out.innerHTML = show(val);
+  return { get v() { return parseFloat(inp.value); }, set(v) { inp.value = v; upd(); }, el: w };
+}
+function button(host, label, onClick, cls = "") { const b = el("button", { class: "btn " + cls, type: "button" }, label); b.addEventListener("click", onClick); host.appendChild(b); return b; }
+function seg(host, labels, idx, onPick) {
+  const s = el("div", { class: "seg", role: "group" }); host.appendChild(s);
+  const bs = labels.map((l, i) => { const b = button(s, l, () => pick(i)); return b; });
+  function pick(i) { bs.forEach((b, j) => b.setAttribute("aria-pressed", String(i === j))); onPick(i); }
+  bs.forEach((b, j) => b.setAttribute("aria-pressed", String(idx === j)));
+  return { pick, el: s };
+}
+function readout(host) { const r = el("div", { class: "readout" }); host.appendChild(r); return r; }
+
+/* Βήματα που ανοίγουν ένα ένα. */
+function reveal(host, steps, label = "Δείξε το επόμενο βήμα") {
+  const box = el("div", { class: "steps-reveal" }); host.appendChild(box);
+  const items = steps.map((s) => { const d = el("div", { class: "st" }, s); box.appendChild(d); return d; });
+  let k = 0;
+  const bar = el("div", { class: "seg" }); host.appendChild(bar);
+  const nb = button(bar, label + ` (1/${steps.length})`, () => { if (k < items.length) { items[k++].classList.add("on"); } upd(); }, "pri");
+  const all = button(bar, "Όλα μαζί", () => { while (k < items.length) items[k++].classList.add("on"); upd(); });
+  const rs = button(bar, "Από την αρχή", () => { items.forEach((i) => i.classList.remove("on")); k = 0; upd(); });
+  function upd() { nb.style.display = all.style.display = k >= items.length ? "none" : ""; rs.style.display = k ? "" : "none"; nb.textContent = `${label} (${Math.min(k + 1, steps.length)}/${steps.length})`; postHeight(); }
+  upd();
+}
+
+/* Quiz: [{q, opts:[...], a: index, why}] */
+function quiz(host, qs) {
+  const box = el("div", { class: "quiz" }); host.appendChild(box);
+  const sc = el("div", { class: "score" }); let done = 0, good = 0;
+  qs.forEach((Q, qi) => {
+    const it = el("div", { class: "qitem" });
+    it.innerHTML = `<div class="qtext">${qi + 1}. ${Q.q}</div>`;
+    const ops = el("div", { class: "qopts" }); it.appendChild(ops);
+    const fb = el("div", { class: "qfb" }, Q.why); let answered = false;
+    Q.opts.forEach((o, oi) => {
+      const b = el("button", { type: "button" }, o); ops.appendChild(b);
+      b.addEventListener("click", () => {
+        if (answered) return; answered = true; done++;
+        if (oi === Q.a) { good++; b.classList.add("right"); fb.innerHTML = "<b class='pill-ok'>Σωστά!</b> " + Q.why; }
+        else { b.classList.add("wrong"); ops.children[Q.a].classList.add("right"); fb.innerHTML = "<b class='pill-bad'>Όχι ακριβώς.</b> " + Q.why; }
+        fb.classList.add("on"); sc.textContent = `Σκορ: ${good} / ${done}` + (done === qs.length ? (good === qs.length ? " · Τέλεια!" : " · Ξαναδιάβασε όσα έχασες.") : ""); postHeight();
+      });
+    });
+    it.appendChild(fb); box.appendChild(it);
+  });
+  box.appendChild(sc);
+}
+/* Αναδιπλούμενα κουτιά: [{n, title, body (html) , steps?}] */
+function accordion(host, items) {
+  items.forEach((it) => {
+    const a = el("div", { class: "acc" });
+    const b = el("button", { type: "button", "aria-expanded": "false" }, `<span class="n">${it.n}</span><span>${it.title}</span><span class="chev">▾</span>`);
+    const body = el("div", { class: "body" }, it.body || "");
+    a.appendChild(b); a.appendChild(body); host.appendChild(a);
+    let built = false;
+    b.addEventListener("click", () => {
+      a.classList.toggle("open"); b.setAttribute("aria-expanded", String(a.classList.contains("open")));
+      if (!built && it.steps) { reveal(body, it.steps, it.label || "Επόμενο βήμα λύσης"); built = true; }
+      postHeight();
+    });
+  });
+}
+function postHeight() {
+  requestAnimationFrame(() => { try { parent.postMessage({ type: "ormi-mathima-height", height: document.documentElement.scrollHeight }, "*"); } catch (e) {} });
+}
+/* ============ ΔΙΑΦΑΝΕΙΕΣ: ΕΙΣΑΓΩΓΗ, 2.1, 2.2 ============ */
+const SECS = [
+  { id: "intro", name: "Αρχή" }, { id: "2.1", name: "2.1 Σύστημα" }, { id: "2.2", name: "2.2 Κρούση" }, { id: "2.3", name: "2.3 Ορμή" },
+  { id: "2.4", name: "2.4 ΣF = Δp/Δt" }, { id: "2.5", name: "2.5 ΑΔΟ" }, { id: "2.6", name: "2.6 Ενέργεια" }, { id: "2.7", name: "2.7 Εφαρμογές" },
+  { id: "ask", name: "Ασκήσεις" },
+];
+function head(root, kicker, title, leads = [], tag = "h2") {
+  root.appendChild(el("div", { class: "kicker" }, kicker));
+  root.appendChild(el(tag, {}, title));
+  leads.forEach((l) => root.appendChild(el("p", { class: "lead" }, l)));
+}
+function cards(root, list) {
+  const c = el("div", { class: "cols" });
+  list.forEach(([cls, t, h]) => c.appendChild(el("div", { class: "card " + cls }, (t ? `<h3>${t}</h3>` : "") + h)));
+  root.appendChild(c); return c;
+}
+function bench(root, W, H) { const b = el("div", { class: "bench" }); root.appendChild(b); const g = canvas(b, W, H); return { b, g }; }
+
+/* ---------- 0. Αρχή ---------- */
+SL.push({ sec: "intro", title: "Η ορμή", build(root) {
+  head(root, "Κεφάλαιο 2 · Διατήρηση της ορμής", "Μιχάλη, γιατί χρειαζόμαστε κι άλλο μέγεθος;", [
+    "Ως τώρα περιέγραφες την κίνηση με <b>ταχύτητα</b>, <b>επιτάχυνση</b> και <b>δύναμη</b>, κοιτάζοντας <b>ένα σώμα τη φορά</b>. Όταν όμως δύο σώματα χτυπάνε μεταξύ τους (μια κρούση), οι δυνάμεις είναι τεράστιες, αλλάζουν κάθε χιλιοστό του δευτερολέπτου και δεν μπορείς να τις μετρήσεις.",
+    "Η λύση της Φυσικής: ένα νέο μέγεθος, η <b class='c-p'>ορμή</b>, που έχει μια μαγική ιδιότητα: <b>σε ένα μονωμένο σύστημα δεν αλλάζει ποτέ</b>. Έτσι λύνεις την κρούση χωρίς να ξέρεις τι έγινε «μέσα» της.",
+  ], "h1");
+  const { b, g } = bench(root, 900, 270);
+  const lanes = [
+    { name: "Φορτηγάκι", m: 2000, v: 2, col: COL.b1, w: 120, h: 46, kind: "cart" },
+    { name: "Μπάλα ποδοσφαίρου", m: 0.425, v: 25, col: COL.b2, r: 16, kind: "ball" },
+    { name: "Βλήμα όπλου", m: 0.01, v: 500, col: COL.b3, r: 6, kind: "ball" },
+  ];
+  const ro = readout(b);
+  ro.innerHTML = "Ποιο είναι πιο δύσκολο να σταματήσεις; Η απάντηση εξαρτάται <b>και</b> από τη μάζα <b>και</b> από την ταχύτητα: φορτηγάκι p = 2000·2 = <b class='c-p'>4000 kg·m/s</b>, μπάλα p = 0,425·25 ≈ <b class='c-p'>10,6 kg·m/s</b>, βλήμα p = 0,01·500 = <b class='c-p'>5 kg·m/s</b>. (Οι ταχύτητες στο σχέδιο δεν είναι σε κλίμακα.)";
+  let t = 0;
+  animate((dt) => {
+    t += dt; g.clear(); const c = g.ctx;
+    lanes.forEach((L, i) => {
+      const y = 70 + i * 82, speed = [40, 160, 420][i];
+      ground(c, y + 14, 20, 880);
+      const x = 230 + ((t * speed) % 480);
+      if (L.kind === "cart") cart(c, x, y + 14, L.w, L.h, L.col, "2 t");
+      else ball(c, x, y + 14 - L.r, L.r, L.col);
+      arrow(c, x + 10, y - 40, x + 10 + [30, 90, 150][i], y - 40, COL.v, { w: 3, label: `υ = ${L.v} m/s`, oy: 0, ox: [60, 100, 140][i] + 30, bg: false });
+      txt(c, L.name, 24, y - 40, { size: 14, color: COL.mute, weight: 700 });
+      const pw = Math.log10(L.m * L.v * 10) * 40;
+      c.fillStyle = COL.p; roundRect(c, 760, y - 10, Math.max(4, pw * 0.7), 14, 4); c.fill();
+      txt(c, "p", 748, y - 3, { color: COL.p, weight: 800, align: "right" });
+    });
+  });
+  root.appendChild(el("h3", {}, "Ο χάρτης του κεφαλαίου: πάτα για να πας κατευθείαν"));
+  const map = el("div", { class: "mapgrid" }); root.appendChild(map);
+  [["2.1", "Σύστημα σωμάτων", "αλληλεπίδραση, εσωτερικές / εξωτερικές δυνάμεις, μονωμένο σύστημα"],
+   ["2.2", "Το φαινόμενο της κρούσης", "τι είναι και γιατί το θεωρούμε μονωμένο"],
+   ["2.3", "Η έννοια της ορμής", "p = m·υ, διάνυσμα, πρόσημα, πόση ορμή έχουν τα σώματα"],
+   ["2.4", "Δύναμη και μεταβολή ορμής", "Δp, ΣF = Δp/Δt, μαξιλάρια, αναπηδήσεις, διαγράμματα p–t"],
+   ["2.5", "Αρχή διατήρησης της ορμής (ΑΔΟ)", "απόδειξη, αστροναύτες, παγοδρόμοι, πότε ισχύει"],
+   ["2.6", "Τι δεν διατηρείται", "η κινητική ενέργεια στην πλαστική κρούση, προσομοιωτής"],
+   ["2.7", "Εφαρμογές", "ελατήριο, ανάκρουση, πύραυλος, εκρήξεις"],
+   ["ask", "Ασκήσεις & ερωτήσεις", "η μέθοδος, οι 17 ασκήσεις και οι 19 ερωτήσεις του βιβλίου λυμένες"]].forEach(([id, t, s]) => {
+    const bt = el("button", { type: "button" }, `<b>${id === "ask" ? "★" : id} ${t}</b><span>${s}</span>`); bt.addEventListener("click", () => goSec(id)); map.appendChild(bt);
+  });
+  cards(root, [["key", "Οι χρωματικοί κανόνες σε όλο το μάθημα",
+    `<p><span class="c-v">Μπλε βέλος = ταχύτητα υ</span> · <span class="c-F">κόκκινο = δύναμη F</span> · <span class="c-p">πράσινο = ορμή p ή Δp</span> · <span class="c-K">πορτοκαλί = κινητική ενέργεια K</span>. Όσο πιο μακρύ το βέλος, τόσο μεγαλύτερο το μέγεθος.</p><p>Σε κάθε διαφάνεια: διάβασε, <b>πείραξε τα χειριστήρια</b>, και πριν ανοίξεις μια λύση, <b>σκέψου πρώτα μόνος σου</b>.</p>`]]);
+} });
+
+/* ---------- 2.1 α. Αλληλεπίδραση ---------- */
+SL.push({ sec: "2.1", title: "Αλληλεπίδραση", build(root) {
+  head(root, "2.1 Η έννοια του συστήματος", "Κανείς δεν τραβάει μόνος του: αλληλεπίδραση", [
+    "Φαίνεται ότι μόνο ο μαγνήτης τραβάει τη σιδερένια σφαίρα. Βάλε όμως και τα δύο πάνω σε αμαξάκια χωρίς τριβές και άφησέ τα: <b>κινούνται και τα δύο</b>, το ένα προς το άλλο. Η σφαίρα τραβάει κι αυτή το μαγνήτη!",
+  ]);
+  const { b, g } = bench(root, 900, 300);
+  const C = controls(b);
+  const s1 = slider(C, "m μαγνήτη", 0.5, 5, 0.5, 1, (v) => fmt(v, 1) + " kg", () => reset());
+  const s2 = slider(C, "m σφαίρας", 0.5, 5, 0.5, 3, (v) => fmt(v, 1) + " kg", () => reset());
+  const bc = el("div", { class: "seg" }); C.appendChild(bc);
+  const go = button(bc, "▶ Άφησέ τα", () => { running = true; }, "pri"); button(bc, "↺ Από την αρχή", () => reset());
+  const ro = readout(b);
+  const S = 100, W1 = 100, W2 = 80; let x1, x2, v1, v2, running, stuck;
+  function reset() { x1 = 1.6; x2 = 7.0; v1 = v2 = 0; running = false; stuck = false; }
+  reset();
+  animate((dt) => {
+    const m1 = s1.v, m2 = s2.v;
+    const gap = (x2 - x1) - (W1 + W2) / 2 / S;
+    let F = stuck ? 0 : 40 / Math.pow(gap + 0.5, 2);
+    if (running && !stuck) {
+      for (let k = 0; k < 4; k++) {
+        const gg = (x2 - x1) - (W1 + W2) / 2 / S, f = 40 / Math.pow(gg + 0.5, 2), h = dt / 4;
+        v1 += (f / m1) * h; v2 -= (f / m2) * h; x1 += v1 * h; x2 += v2 * h;
+        if ((x2 - x1) - (W1 + W2) / 2 / S <= 0) { const V = (m1 * v1 + m2 * v2) / (m1 + m2); v1 = v2 = V; stuck = true; running = false; break; }
+      }
+    }
+    g.clear(); const c = g.ctx, yG = 210;
+    ground(c, yG, 20, 880);
+    const X1 = x1 * S, X2 = x2 * S;
+    cart(c, X1, yG, W1, 30, "#c9ccd3", "");
+    c.save(); c.fillStyle = "#d9342b"; roundRect(c, X1 - 30, yG - 78, 30, 28, 4); c.fill(); c.fillStyle = "#3b6fd1"; roundRect(c, X1, yG - 78, 30, 28, 4); c.fill(); c.restore();
+    txt(c, "N", X1 - 15, yG - 64, { color: "#fff", weight: 800, align: "center" }); txt(c, "S", X1 + 15, yG - 64, { color: "#fff", weight: 800, align: "center" });
+    cart(c, X2, yG, W2, 30, "#c9ccd3", "");
+    ball(c, X2, yG - 70, 20, "#8d939e");
+    txt(c, `μαγνήτης ${fmt(m1, 1)} kg`, X1, yG + 28, { align: "center", size: 13.5, color: COL.mute });
+    txt(c, `σφαίρα ${fmt(m2, 1)} kg`, X2, yG + 28, { align: "center", size: 13.5, color: COL.mute });
+    if (!stuck) {
+      const L = clamp(F * 18, 12, 150);
+      arrow(c, X1 + 32, yG - 105, X1 + 32 + L, yG - 105, COL.F, { label: "F (από τη σφαίρα)", oy: -16 });
+      arrow(c, X2 - 22, yG - 105, X2 - 22 - L, yG - 105, COL.F, { label: "F (από το μαγνήτη)", oy: -16 });
+    }
+    arrow(c, X1, yG - 140, X1 + v1 * 40, yG - 140, COL.v, { label: "υ₁", oy: -14 });
+    arrow(c, X2, yG - 140, X2 + v2 * 40, yG - 140, COL.v, { label: "υ₂", oy: -14 });
+    ro.innerHTML = `F = <b class="c-F">${fmt(F, 2)} N</b> και στα δύο (3ος νόμος) · α₁ = F/m₁ = <b>${fmt(F / m1, 2)}</b> m/s², α₂ = F/m₂ = <b>${fmt(F / m2, 2)}</b> m/s²<br>` +
+      `υ₁ = <b class="c-v">${sgn(v1)}</b> m/s, υ₂ = <b class="c-v">${sgn(v2)}</b> m/s · m₁υ₁ = <b class="c-p">${sgn(m1 * v1)}</b>, m₂υ₂ = <b class="c-p">${sgn(m2 * v2)}</b> → άθροισμα <b class="c-p">${sgn(m1 * v1 + m2 * v2)}</b> kg·m/s` + (stuck ? " · <b>κόλλησαν και στάθηκαν!</b>" : "");
+    go.style.opacity = running || stuck ? 0.5 : 1;
+  });
+  cards(root, [
+    ["key", "Τι κρατάμε", `<p>Δύο σώματα <b>αλληλεπιδρούν</b> όταν ασκούν δυνάμεις το ένα στο άλλο. Οι δυνάμεις αυτές είναι πάντα <b>ίσες κατά μέτρο και αντίθετες</b> (δράση–αντίδραση, 3ος νόμος του Νεύτωνα).</p><p>Ίδια δύναμη ≠ ίδια κίνηση: το ελαφρύ σώμα παίρνει μεγαλύτερη επιτάχυνση (α = F/m).</p>`],
+    ["tip", "Πρόσεξε τον τελευταίο αριθμό", `<p>Το άθροισμα m₁υ₁ + m₂υ₂ μένει <b>συνέχεια 0</b>, όσο κι αν αλλάξεις τις μάζες. Και όταν κολλήσουν, σταματούν επί τόπου! Αυτό το άθροισμα είναι η <b class="c-p">ορμή του συστήματος</b>, και θα δεις στην 2.5 γιατί δεν αλλάζει.</p>`],
+    ["", "Άλλα παραδείγματα αλληλεπίδρασης", `<ul><li>Γη–Σελήνη: η Γη έλκει τη Σελήνη <b>και</b> η Σελήνη τη Γη (γι' αυτό έχουμε παλίρροιες).</li><li>Δύο φορτισμένα σώματα.</li><li>Δύο αυτοκίνητα που συγκρούονται, η ρακέτα και το μπαλάκι.</li></ul>`],
+  ]);
+} });
+
+/* ---------- 2.1 β. Σύστημα: κλειστό και ανοιχτό ---------- */
+SL.push({ sec: "2.1", title: "Σύστημα σωμάτων", build(root) {
+  head(root, "2.1 Η έννοια του συστήματος", "Τι είναι «σύστημα»; Μια ιδέα από τη Χημεία", [
+    "Θυμάσαι το νόμο του Lavoisier: <b>η μάζα ενός κλειστού συστήματος που αντιδρά χημικά μένει σταθερή</b>. Δες το πείραμα του βιβλίου: σίδηρος (Fe) και υδροχλωρικό οξύ (HCl) πάνω σε ζυγαριά. Δοκίμασε με κλειστό και με ανοιχτό δοχείο.",
+  ]);
+  const { b, g } = bench(root, 900, 290);
+  const C = controls(b); let closed = true, t = -1, bub = [];
+  seg(C, ["Κλειστό δοχείο", "Ανοιχτό δοχείο"], 0, (i) => { closed = i === 0; t = -1; bub = []; });
+  button(C, "▶ Ρίξε το οξύ στο σίδηρο", () => { t = 0; bub = []; }, "pri");
+  const ro = readout(b);
+  animate((dt) => {
+    const c = g.ctx; g.clear();
+    if (t >= 0) t += dt;
+    const react = clamp(t / 4, 0, 1), escaped = closed ? 0 : react;
+    const mass = 250 - 0.42 * escaped;
+    // ζυγαριά
+    c.fillStyle = "#4b5160"; roundRect(c, 300, 230, 300, 34, 8); c.fill();
+    c.fillStyle = "#c9f2d0"; roundRect(c, 400, 238, 100, 20, 4); c.fill();
+    txt(c, fmt(mass, 2) + " g", 450, 248, { mono: true, weight: 700, align: "center", size: 15 });
+    c.fillStyle = "#9aa1ad"; c.fillRect(310, 222, 280, 8);
+    // φιάλη
+    c.save(); c.strokeStyle = "#7f8a99"; c.lineWidth = 3; c.fillStyle = "rgba(200,225,240,.45)";
+    c.beginPath(); c.moveTo(390, 220); c.lineTo(510, 220); c.lineTo(480, 120); c.lineTo(480, 80); c.lineTo(420, 80); c.lineTo(420, 120); c.closePath(); c.fill(); c.stroke();
+    if (closed) { c.fillStyle = "#7b5a3a"; c.fillRect(414, 66, 72, 16); }
+    // υγρό & σίδηρος
+    c.fillStyle = `rgba(150,190,120,${0.35 + 0.3 * react})`; c.beginPath(); c.moveTo(398, 216); c.lineTo(502, 216); c.lineTo(492, 185); c.lineTo(408, 185); c.closePath(); c.fill();
+    c.fillStyle = "#5a5f69"; for (let i = 0; i < 7; i++) c.fillRect(415 + i * 11, 205 - (i % 2) * 3, 8, 8 * (1 - 0.5 * react));
+    c.restore();
+    if (t >= 0 && react < 1 && Math.random() < 0.5) bub.push({ x: 410 + Math.random() * 80, y: 210, vy: 30 + Math.random() * 30 });
+    bub.forEach((p) => { p.y -= p.vy * dt; if (!closed && p.y < 80) p.y -= p.vy * dt * 2; if (closed && p.y < 92) p.y = 92 + Math.random() * 10; });
+    bub = bub.filter((p) => p.y > -20);
+    c.fillStyle = "rgba(120,150,200,.8)"; bub.forEach((p) => { c.beginPath(); c.arc(p.x + Math.sin(p.y / 9) * 3, p.y, 3.5, 0, 7); c.fill(); });
+    txt(c, "Fe + 2HCl → FeCl₂ + H₂↑", 640, 120, { size: 16, weight: 700 });
+    txt(c, closed ? "Το H₂ μένει μέσα: η μάζα δεν αλλάζει" : "Το H₂ φεύγει στον αέρα: η ένδειξη πέφτει", 640, 150, { size: 14, color: closed ? COL.p : COL.F, weight: 700 });
+    ro.innerHTML = closed ? "<b>Κλειστό σύστημα</b>: ούτε μπαίνει ούτε βγαίνει μάζα, άρα η μάζα <b>διατηρείται</b>." : "<b>Ανοιχτό σύστημα</b>: κάτι (το H₂) βγήκε από το σύστημα, άρα η μάζα του <b>δεν</b> διατηρείται.";
+  });
+  cards(root, [
+    ["key", "Σύστημα στη Φυσική", `<p>Δύο ή περισσότερα σώματα που αλληλεπιδρούν και που <b>εμείς επιλέγουμε</b> να μελετήσουμε μαζί αποτελούν <b>σύστημα</b>. Ο μαγνήτης και η σφαίρα είναι σύστημα.</p><p>Το ίδιο σώμα μπορεί να ανήκει σε πολλά συστήματα: ο μαγνήτης αλληλεπιδρά και με το χέρι μας και με τη Γη.</p>`],
+    ["tip", "Το μάθημα από τη Χημεία", `<p>Μια ποσότητα «διατηρείται» μόνο αν το σύστημα είναι <b>απομονωμένο</b> από το περιβάλλον. Στη Χημεία αρκεί ένα πώμα. Στη Φυσική, το «περιβάλλον» μάς επηρεάζει με <b>δυνάμεις</b>, και αυτές δεν σταματάνε με πώμα. Γι' αυτό χρειαζόμαστε τις έννοιες της επόμενης διαφάνειας.</p>`],
+  ]);
+} });
+
+/* ---------- 2.1 γ. Εσωτερικές και εξωτερικές ---------- */
+SL.push({ sec: "2.1", title: "Εσωτερικές και εξωτερικές", build(root) {
+  head(root, "2.1 Εσωτερικές και εξωτερικές δυνάμεις", "Ποιος ασκεί τη δύναμη; Μέσα ή έξω από το σύστημα;", [
+    "<b>Εσωτερική</b> είναι μια δύναμη που την ασκεί σώμα του συστήματος <b>σε σώμα του ίδιου συστήματος</b>. <b>Εξωτερική</b> είναι μια δύναμη που την ασκεί σώμα <b>έξω</b> από το σύστημα. Το ίδιο βέλος αλλάζει χαρακτηρισμό αν αλλάξεις σύστημα. Διάλεξε ποια σώματα είναι στο σύστημα και δες (ερώτηση 4 του βιβλίου):",
+  ]);
+  const { b, g } = bench(root, 900, 300);
+  const C = controls(b);
+  const sys = { M: true, K: true, G: false };
+  const box = el("div", { class: "sysbox" }); C.appendChild(box);
+  [["M", "Μαθητής"], ["K", "Κιβώτιο"], ["G", "Γη (και το έδαφος)"]].forEach(([k, n]) => {
+    const l = el("label", {}, `<input type="checkbox" ${sys[k] ? "checked" : ""}> ${n}`); box.appendChild(l);
+    l.querySelector("input").addEventListener("change", (e) => { sys[k] = e.target.checked; draw(); });
+  });
+  const ro = readout(b);
+  const forces = [
+    { n: "F", by: "M", on: "K", d: "η δύναμη του μαθητή (μέσω σχοινιού) στο κιβώτιο" },
+    { n: "F′", by: "K", on: "M", d: "η αντίδραση: το κιβώτιο τραβάει το μαθητή" },
+    { n: "B_κ", by: "G", on: "K", d: "το βάρος του κιβωτίου (από τη Γη)" },
+    { n: "N_κ", by: "G", on: "K", d: "η κάθετη δύναμη του εδάφους στο κιβώτιο" },
+    { n: "T_κ", by: "G", on: "K", d: "η τριβή του εδάφους στο κιβώτιο" },
+    { n: "B_μ", by: "G", on: "M", d: "το βάρος του μαθητή" },
+    { n: "N_μ", by: "G", on: "M", d: "η κάθετη δύναμη του εδάφους στο μαθητή" },
+    { n: "T_μ", by: "G", on: "M", d: "η στατική τριβή στα παπούτσια του μαθητή" },
+  ];
+  const kind = (f) => (!sys[f.on] ? "none" : sys[f.by] ? "in" : "out");
+  function draw() {
+    const c = g.ctx; g.clear(); const yG = 240;
+    ground(c, yG, 20, 880);
+    // μαθητής
+    const sx = 250;
+    c.save(); c.strokeStyle = "#3a3f4b"; c.lineWidth = 5; c.lineCap = "round";
+    c.beginPath(); c.arc(sx - 14, 108, 15, 0, 7); c.stroke();
+    c.beginPath(); c.moveTo(sx - 10, 123); c.lineTo(sx, 180); c.lineTo(sx - 22, yG); c.moveTo(sx, 180); c.lineTo(sx + 12, yG); c.moveTo(sx - 6, 140); c.lineTo(sx + 40, 150); c.stroke();
+    c.strokeStyle = "#8b6b3d"; c.lineWidth = 3; c.beginPath(); c.moveTo(sx + 40, 150); c.lineTo(560, 190); c.stroke(); c.restore();
+    block(c, 620, yG, 120, 90, "#b88a52", "κιβώτιο");
+    // πλαίσια συστήματος
+    const hl = (x, y, w, h, on) => { if (!on) return; c.save(); c.strokeStyle = COL.acc; c.setLineDash([8, 6]); c.lineWidth = 2.5; roundRect(c, x, y, w, h, 14); c.stroke(); c.restore(); };
+    hl(200, 70, 110, 180, sys.M); hl(548, 130, 144, 120, sys.K);
+    if (sys.G) { c.save(); c.fillStyle = "rgba(201,130,47,.12)"; c.fillRect(20, yG, 860, 50); c.restore(); }
+    const colOf = (f) => ({ in: COL.b1, out: COL.F, none: "#c9c3b8" }[kind(f)]);
+    const A = (n, x1, y1, x2, y2, o = {}) => { const f = forces.find((q) => q.n === n); arrow(c, x1, y1, x2, y2, colOf(f), Object.assign({ label: n, w: 3.5 }, o)); };
+    A("F", 560, 180, 500, 180, { oy: 16 }); A("F′", sx + 40, 150, sx + 100, 150, { oy: -14 });
+    A("B_κ", 620, 195, 620, 270, { ox: 22, oy: 20 }); A("N_κ", 650, yG, 650, 160, { ox: 24, oy: -10 }); A("T_κ", 560, yG - 6, 610, yG - 6, { oy: 14, ox: 4 });
+    A("B_μ", sx - 4, 175, sx - 4, 250, { ox: -26, oy: 20 }); A("N_μ", sx - 30, yG, sx - 30, 175, { ox: -24, oy: -8 }); A("T_μ", sx + 10, yG - 4, sx - 50, yG - 4, { oy: 14, ox: -10 });
+    txt(c, "μοβ = εσωτερική", 30, 22, { color: COL.b1, weight: 800 }); txt(c, "κόκκινο = εξωτερική", 170, 22, { color: COL.F, weight: 800 });
+    txt(c, "γκρι = ασκείται σε σώμα εκτός συστήματος (δεν μας αφορά)", 340, 22, { color: "#a39d92", weight: 700 });
+    const ins = forces.filter((f) => kind(f) === "in").map((f) => f.n), outs = forces.filter((f) => kind(f) === "out").map((f) => f.n);
+    const names = ["M", "K", "G"].filter((k) => sys[k]).map((k) => ({ M: "μαθητής", K: "κιβώτιο", G: "Γη" }[k]));
+    ro.innerHTML = `Σύστημα: <b>${names.join(" – ") || "(κανένα σώμα)"}</b><br>Εσωτερικές: <b style="color:${COL.b1}">${ins.join(", ") || "καμία"}</b> · Εξωτερικές: <b class="c-F">${outs.join(", ") || "καμία"}</b>` +
+      (sys.G && sys.M && sys.K ? "<br>Όλα τα σώματα είναι μέσα: <b>όλες</b> οι δυνάμεις είναι εσωτερικές (και οι αντιδράσεις τους που ασκούνται στη Γη)." : "");
+    postHeight();
+  }
+  g.redraw = draw; draw();
+  cards(root, [
+    ["key", "Ο κανόνας με μία ερώτηση", `<p>Για κάθε βέλος ρώτα: <b>«Ποιος το ασκεί;»</b> Αν αυτός είναι μέσα στο σύστημα → εσωτερική. Αν είναι έξω → εξωτερική.</p><p>Το βάρος το ασκεί η <b>Γη</b>. Άρα είναι εξωτερική, εκτός αν βάλεις και τη Γη στο σύστημα.</p>`],
+    ["tip", "Ερώτηση 4 του βιβλίου: απαντήσεις", `<ul><li>Α. Η F είναι εσωτερική για το σύστημα μαθητής–κιβώτιο–Γη: <b class="pill-ok">Σωστό</b>.</li><li>Β. Η F είναι εξωτερική για το σύστημα κιβώτιο–Γη: <b class="pill-ok">Σωστό</b> (ο μαθητής είναι έξω).</li><li>Γ. Το βάρος του κιβωτίου είναι εσωτερική για το μαθητής–κιβώτιο: <b class="pill-bad">Λάθος</b> (η Γη είναι έξω).</li><li>Δ. Το βάρος του κιβωτίου είναι εξωτερική για το μαθητής–κιβώτιο–Γη: <b class="pill-bad">Λάθος</b> (η Γη είναι μέσα).</li></ul><p>Δοκίμασε κάθε περίπτωση με τα κουτάκια πάνω!</p>`],
+    ["trap", "Παγίδα (ερώτηση 8Β)", `<p>«Η έλξη της Γης στη Σελήνη δεν είναι εσωτερική, γιατί κάνει τη Σελήνη να γυρίζει». <b>Λάθος.</b> Το αν μια δύναμη κάνει κάτι δεν έχει σχέση. Για το σύστημα Γη–Σελήνη, την ασκεί η Γη, που είναι μέσα, άρα είναι <b>εσωτερική</b>.</p>`],
+  ]);
+} });
+
+/* ---------- 2.1 δ. Μονωμένο σύστημα ---------- */
+SL.push({ sec: "2.1", title: "Μονωμένο σύστημα", build(root) {
+  head(root, "2.1 Μονωμένο σύστημα", "Μονωμένο σύστημα: οι εξωτερικές «αλληλοεξουδετερώνονται»", [
+    "Στη Φυσική σχεδόν ποτέ δεν μπορείς να «κόψεις» τις εξωτερικές δυνάμεις. Μπορεί όμως να <b>αλληλοαναιρούνται</b>. Ονομάζουμε <b>μονωμένο</b> ένα σύστημα όταν η <b>συνισταμένη των εξωτερικών δυνάμεων είναι μηδέν</b>: τότε η κίνησή του καθορίζεται μόνο από τις εσωτερικές.",
+  ]);
+  root.appendChild(el("div", { class: "formula big" }, "Μονωμένο σύστημα ⇔ ΣF<sub>εξ</sub> = 0"));
+  const { b, g } = bench(root, 900, 270);
+  const C = controls(b); let fr = false;
+  seg(C, ["Λείο τραπέζι", "Τραπέζι με τριβή"], 0, (i) => (fr = i === 1));
+  const ro = readout(b); let t = 0;
+  animate((dt) => {
+    t += dt; const c = g.ctx; g.clear(); const yG = 200, ph = (Math.sin(t * 1.4) + 1) / 2;
+    ground(c, yG, 40, 860);
+    const X1 = 260 + ph * 50, X2 = 640 - ph * 35;
+    cart(c, X1, yG, 150, 34, COL.b1, "μαγνήτης"); cart(c, X2, yG, 140, 34, COL.b2, "σφαίρα");
+    arrow(c, X1 - 60, yG - 40, X1 - 60, yG + 34, COL.F, { label: "B₁", ox: -20, oy: 18 });
+    arrow(c, X1 + 62, yG - 18, X1 + 62, yG - 100, COL.F, { label: "N₁", ox: 20, oy: -30 });
+    arrow(c, X2 - 56, yG - 40, X2 - 56, yG + 34, COL.F, { label: "B₂", ox: -20, oy: 18 });
+    arrow(c, X2 + 58, yG - 18, X2 + 58, yG - 100, COL.F, { label: "N₂", ox: 20, oy: -30 });
+    arrow(c, X1 + 75, yG - 40, X1 + 135, yG - 40, COL.b1, { label: "F", oy: -14 });
+    arrow(c, X2 - 70, yG - 40, X2 - 130, yG - 40, COL.b1, { label: "F", oy: -14 });
+    if (fr) { arrow(c, X1, yG - 3, X1 - 45, yG - 3, "#e2571e", { label: "T₁", oy: 14 }); arrow(c, X2, yG - 3, X2 + 45, yG - 3, "#e2571e", { label: "T₂", oy: 14 }); }
+    ro.innerHTML = fr
+      ? "Εξωτερικές: B₁, N₁, B₂, N₂ <b>και τριβές T₁, T₂</b>. Οι τριβές δεν αναιρούνται από κάτι άλλο, άρα ΣF<sub>εξ</sub> ≠ 0: το σύστημα <b class='pill-bad'>δεν είναι μονωμένο</b>."
+      : "Εξωτερικές: B₁ = N₁ και B₂ = N₂, άρα ΣF<sub>εξ</sub> = 0: το σύστημα <b class='pill-ok'>είναι μονωμένο</b>. Μένουν μόνο οι εσωτερικές F (μοβ).";
+  });
+  cards(root, [
+    ["trap", "Στη φύση δεν υπάρχουν τέλεια μονωμένα συστήματα", `<p>Πάντα υπάρχει κάποια τριβή, αντίσταση του αέρα, μαγνητικό πεδίο της Γης… Θεωρούμε ένα σύστημα μονωμένο κάνοντας <b>προσέγγιση</b>: αγνοούμε τις δυνάμεις που είναι πολύ μικρές για να επηρεάσουν το φαινόμενο.</p>`],
+  ]);
+  root.appendChild(el("h3", {}, "Γρήγορος έλεγχος: είναι μονωμένο;"));
+  quiz(root, [
+    { q: "Δύο αμαξάκια που συγκρούονται πάνω σε <b>λείο</b> οριζόντιο τραπέζι.", opts: ["Ναι, μονωμένο", "Όχι"], a: 0, why: "Οι εξωτερικές είναι τα βάρη και οι κάθετες δυνάμεις, που αναιρούνται (B = N). Άρα ΣF<sub>εξ</sub> = 0." },
+    { q: "Ο άνθρωπος πάνω στην ακίνητη βάρκα (ερώτηση 3), σύστημα βάρκα–άνθρωπος.", opts: ["Ναι, μονωμένο", "Όχι"], a: 0, why: "Εξωτερικές: τα βάρη (από τη Γη) και η άνωση από το νερό. Ισορροπούν, άρα ΣF<sub>εξ</sub> = 0. Εσωτερικές: οι δυνάμεις που ασκούν μεταξύ τους ο άνθρωπος και η βάρκα (το πάτημα του ανθρώπου και η αντίδραση της βάρκας). Γι' αυτό, αν ο άνθρωπος περπατήσει, η βάρκα κινείται αντίθετα." },
+    { q: "Ένα κιβώτιο που το σπρώχνει ένας εργάτης (σύστημα: μόνο το κιβώτιο).", opts: ["Ναι, μονωμένο", "Όχι"], a: 1, why: "Η δύναμη του εργάτη και η τριβή είναι εξωτερικές και δεν αναιρούνται (το κιβώτιο επιταχύνεται). Άρα ΣF<sub>εξ</sub> ≠ 0." },
+    { q: "Μια μπάλα που πέφτει ελεύθερα (σύστημα: μόνο η μπάλα).", opts: ["Ναι, μονωμένο", "Όχι"], a: 1, why: "Το βάρος είναι εξωτερική δύναμη (την ασκεί η Γη) και δεν αναιρείται. Γι' αυτό η ορμή της μπάλας αλλάζει συνέχεια. Αν όμως πάρεις σύστημα μπάλα + Γη, γίνεται μονωμένο!" },
+    { q: "Δύο αυτοκίνητα συγκρούονται σε δρόμο με τριβές. Κατά τη διάρκεια της σύγκρουσης:", opts: ["Το θεωρούμε πρακτικά μονωμένο", "Δεν γίνεται να το θεωρήσουμε μονωμένο"], a: 0, why: "Οι δυνάμεις της σύγκρουσης είναι τόσο τεράστιες σε σχέση με τις τριβές, που τις τριβές τις αγνοούμε για το ελάχιστο Δt της κρούσης. Το εξηγεί η επόμενη διαφάνεια." },
+  ]);
+} });
+
+/* ---------- 2.2 Κρούση ---------- */
+function collide1D(m1, u1, m2, u2, e) {
+  const V = (m1 * u1 + m2 * u2) / (m1 + m2);
+  return [V - (e * m2 * (u1 - u2)) / (m1 + m2), V + (e * m1 * (u1 - u2)) / (m1 + m2)];
+}
+SL.push({ sec: "2.2", title: "Το φαινόμενο της κρούσης", build(root) {
+  head(root, "2.2 Το φαινόμενο της κρούσης", "Κρούση: δύο σώματα, μια πολύ σύντομη και πολύ δυνατή αλληλεπίδραση", [
+    "Αμαξάκια που χτυπάνε, αυτοκίνητα που συγκρούονται, ένα βλήμα που σφηνώνεται σε στόχο, μπάλες μπιλιάρδου, πρωτόνια που χτυπούν πυρήνες: όλα είναι <b>φαινόμενα κρούσης</b>. Σε όλα: (α) τα σώματα αλληλεπιδρούν και (β) τα θεωρούμε <b>μονωμένο σύστημα</b>. Διάλεξε περίπτωση:",
+  ]);
+  const { b, g } = bench(root, 900, 250);
+  const C = controls(b);
+  const cases = [
+    { n: "Χτυπάει ακίνητο (m₁ < m₂)", m1: 1, m2: 2, u1: 3, u2: 0, e: 1, d: "Το ελαφρύ αμαξάκι χτυπάει το βαρύ που ήταν ακίνητο. Μετά το (1) γυρίζει πίσω και το (2) φεύγει μπροστά (εικ. 2.9 α–γ)." },
+    { n: "Μετωπική", m1: 1, m2: 2, u1: 3, u2: -2, e: 1, d: "Σπρώχνουμε και τα δύο το ένα προς το άλλο. Ανάλογα με τις ταχύτητες, μετά μπορεί να φύγουν με διάφορους τρόπους (εικ. 2.9 δ–ε)." },
+    { n: "Σφήνωμα βλήματος", m1: 0.3, m2: 3, u1: 9, u2: 0, e: 0, d: "Το βλήμα σφηνώνεται στο στόχο και κινούνται μαζί ως ένα σώμα: <b>πλαστική κρούση</b> (εικ. 2.11)." },
+    { n: "Ίσες μάζες", m1: 1.5, m2: 1.5, u1: 3, u2: 0, e: 1, d: "Ίσες μάζες, το ένα ακίνητο: το κινούμενο σταματά και το άλλο φεύγει με την ταχύτητά του (όπως στο μπιλιάρδο)." },
+  ];
+  let k = 0, t = 0, x1, x2, v1, v2, done;
+  const ro = readout(b);
+  seg(C, cases.map((c) => c.n), 0, (i) => { k = i; start(); });
+  button(C, "↺ Ξανά", () => start(), "pri");
+  function start() { const K = cases[k]; x1 = 160; x2 = K.u2 < 0 ? 740 : 520; v1 = K.u1; v2 = K.u2; done = false; t = 0; }
+  start();
+  animate((dt) => {
+    const K = cases[k]; t += dt; const S = 55;
+    const w1 = K.m1 < 0.5 ? 26 : 40 + K.m1 * 20, w2 = 40 + K.m2 * 20;
+    if (!done && x2 - x1 <= (w1 + w2) / 2) { [v1, v2] = collide1D(K.m1, v1, K.m2, v2, K.e); done = true; }
+    if (t > 0.6) { x1 += v1 * S * dt; x2 += v2 * S * dt; }
+    if (x1 > 1100 || x1 < -250 || x2 > 1100) start();
+    const c = g.ctx; g.clear(); const yG = 190; ground(c, yG, 10, 890);
+    if (K.m1 < 0.5) { c.fillStyle = "#555"; roundRect(c, x1 - w1 / 2, yG - 60, w1, 14, 6); c.fill(); }
+    else cart(c, x1, yG, w1, 34, COL.b1, "1");
+    if (K.e === 0 && done) { cart(c, x2, yG, w2, 50, COL.b2, "2"); c.fillStyle = "#555"; roundRect(c, x2 - w2 / 2 - 10, yG - 60, 24, 14, 6); c.fill(); }
+    else cart(c, x2, yG, w2, 50, COL.b2, "2");
+    arrow(c, x1, yG - 95, x1 + v1 * 22, yG - 95, COL.v, { label: `υ₁ = ${fmt(v1, 2)} m/s`, oy: -14 });
+    if (!(K.e === 0 && done)) arrow(c, x2, yG - 105, x2 + v2 * 22, yG - 105, COL.v, { label: `υ₂ = ${fmt(v2, 2)} m/s`, oy: -14 });
+    txt(c, done ? "ΜΕΤΑ την κρούση" : "ΠΡΙΝ την κρούση", 450, 26, { align: "center", weight: 800, color: done ? COL.F : COL.mute });
+    txt(c, `m₁ = ${fmt(K.m1)} kg, m₂ = ${fmt(K.m2)} kg`, 450, 228, { align: "center", size: 13.5, color: COL.mute });
+    ro.innerHTML = K.d;
+  });
+  root.appendChild(el("h3", {}, "Γιατί λέμε ότι η κρούση είναι «μονωμένη», ακόμη κι όταν υπάρχουν τριβές;"));
+  const B2 = bench(root, 900, 230), C2 = controls(B2.b);
+  const sdt = slider(C2, "Διάρκεια κρούσης Δt", 0.005, 0.3, 0.005, 0.1, (v) => fmt(v, 3) + " s", () => draw2());
+  const ro2 = readout(B2.b);
+  function draw2() {
+    const c = B2.g.ctx; B2.g.clear(); const dt = sdt.v, m = 1000, dv = 10, Fc = (m * dv) / dt, Tr = 0.5 * m * 10;
+    const P = plot(c, 70, 30, 520, 160, { tMax: 0.3, yMin: 0, yMax: 2.1e5, ylab: "F (N)", xlab: "t (s)" });
+    // ημιτονικός παλμός με μέση τιμή Fc
+    const pulse = []; for (let i = 0; i <= 60; i++) { const tt = (dt * i) / 60; pulse.push([tt, Math.min(2.08e5, (Math.PI / 2) * Fc * Math.sin(Math.PI * tt / dt))]); }
+    c.save(); c.beginPath(); pulse.forEach(([tt, v], i) => (i ? c.lineTo(P.X(tt), P.Y(v)) : c.moveTo(P.X(tt), P.Y(v)))); c.lineTo(P.X(dt), P.Y(0)); c.closePath();
+    c.fillStyle = "rgba(217,52,43,.18)"; c.fill(); c.strokeStyle = COL.F; c.lineWidth = 3; c.stroke(); c.restore();
+    c.save(); c.strokeStyle = "#e2571e"; c.lineWidth = 3; c.setLineDash([6, 5]); c.beginPath(); c.moveTo(P.X(0), P.Y(Tr)); c.lineTo(P.X(0.3), P.Y(Tr)); c.stroke(); c.restore();
+    txt(c, "δύναμη κρούσης", P.X(dt) + 8, P.Y(Math.min(1.9e5, Fc)), { color: COL.F, weight: 700, size: 13.5 });
+    txt(c, "τριβή ≈ 5000 N", P.X(0.22), P.Y(Tr) - 12, { color: "#e2571e", weight: 700, size: 13.5 });
+    const Jc = m * dv, Jt = Tr * dt;
+    txt(c, "Ώθηση κρούσης", 640, 60, { weight: 800, color: COL.F }); txt(c, `${fmt(Jc, 0)} N·s`, 640, 84, { mono: true, size: 16 });
+    txt(c, "Ώθηση τριβής στο Δt", 640, 120, { weight: 800, color: "#e2571e" }); txt(c, `${fmt(Jt, 0)} N·s`, 640, 144, { mono: true, size: 16 });
+    txt(c, `= ${fmt((100 * Jt) / Jc, 1)} % της κρούσης`, 640, 172, { size: 15, weight: 700 });
+    ro2.innerHTML = `Αυτοκίνητο 1000 kg σταματά από 10 m/s. Μέση δύναμη κρούσης F = Δp/Δt = 10 000 / ${fmt(dt, 3)} = <b class="c-F">${fmt(Fc, 0)} N</b>, ενώ η τριβή είναι μόνο ~5000 N. Όσο πιο σύντομη η κρούση, τόσο πιο αμελητέα η τριβή.`;
+    postHeight();
+  }
+  B2.g.redraw = draw2; draw2();
+  cards(root, [["key", "Το συμπέρασμα", `<p>Κατά την κρούση αναπτύσσονται <b>πολύ μεγάλες εσωτερικές δυνάμεις</b> για <b>πολύ μικρό χρόνο</b>. Οι εξωτερικές (τριβές, βάρη) είναι μικρές σε σύγκριση και στο ελάχιστο Δt δεν προλαβαίνουν να κάνουν τίποτα. Γι' αυτό <b>κάθε κρούση τη θεωρούμε μονωμένο σύστημα</b> για τη στιγμή της σύγκρουσης.</p>`]]);
+} });
+/* ============ ΔΙΑΦΑΝΕΙΕΣ: 2.3 ΟΡΜΗ, 2.4 ΔΥΝΑΜΗ & ΜΕΤΑΒΟΛΗ ΟΡΜΗΣ ============ */
+
+/* ---------- 2.3 α. p = m·υ ---------- */
+SL.push({ sec: "2.3", title: "Ορμή p = m·υ", build(root) {
+  head(root, "2.3 Η έννοια της ορμής", "Ορμή = μάζα × ταχύτητα", [
+    "Ήδη από τον 17ο αιώνα οι επιστήμονες ρωτούσαν: σε μια σύγκρουση, μετράει περισσότερο η <b>μάζα</b> ή η <b>ταχύτητα</b>; Η απάντηση: <b>και τα δύο</b>. Γι' αυτό ορίσαμε ένα μέγεθος που τα περιέχει και τα δύο:",
+  ]);
+  root.appendChild(el("div", { class: "formula big" }, `<span class="c-p">${vec("p")}</span> = m · <span class="c-v">${vec("υ")}</span>`));
+  const { b, g } = bench(root, 900, 230);
+  const C = controls(b);
+  const sm = slider(C, "μάζα m", 0.5, 10, 0.5, 2, (v) => fmt(v, 1) + " kg", () => draw());
+  const sv = slider(C, "ταχύτητα υ", -15, 15, 0.5, 6, (v) => sgn(v, 1) + " m/s", () => draw());
+  const ro = readout(b);
+  function draw() {
+    const c = g.ctx; g.clear(); const m = sm.v, v = sv.v, p = m * v, yG = 170, X = 450;
+    ground(c, yG, 30, 870);
+    const w = 50 + m * 9; cart(c, X, yG, w, 26 + m * 3, COL.b1, `${fmt(m, 1)} kg`);
+    arrow(c, X, 50, X + v * 12, 50, COL.v, { label: `υ = ${sgn(v, 1)} m/s`, oy: -16 });
+    arrow(c, X, 92, X + p * 3, 92, COL.p, { label: `p = ${sgn(p, 1)} kg·m/s`, oy: 20, w: 6 });
+    txt(c, "+", 860, 22, { size: 20, weight: 800, color: COL.mute }); arrow(c, 780, 22, 850, 22, COL.mute, { w: 2, head: 9 });
+    ro.innerHTML = `p = m·υ = ${fmt(m, 1)} · (${sgn(v, 1)}) = <b class="c-p">${sgn(p, 1)} kg·m/s</b>. ` +
+      (v === 0 ? "Ακίνητο σώμα: <b>μηδενική ορμή</b>, όσο βαρύ κι αν είναι." : v < 0 ? "Η ταχύτητα είναι προς τα αριστερά (αρνητική), άρα και η ορμή: <b>η ορμή έχει πάντα την κατεύθυνση της ταχύτητας</b>." : "Η ορμή δείχνει προς τα εκεί που κινείται το σώμα.");
+    postHeight();
+  }
+  g.redraw = draw; draw();
+  cards(root, [
+    ["key", "Τα τρία πράγματα που πρέπει να ξέρεις", `<ol><li>Η ορμή είναι <b>διάνυσμα</b>, με την <b>κατεύθυνση της ταχύτητας</b> (η μάζα είναι πάντα θετική).</li><li>Μέτρο: <span class="m">p = m·υ</span>.</li><li>Μονάδα στο S.I.: <b>1 kg·m/s</b>, που είναι το ίδιο με <b>1 N·s</b> (γιατί 1 N = 1 kg·m/s²).</li></ol>`],
+    ["tip", "Γιατί είναι τόσο χρήσιμη;", `<p>Γιατί <b>διατηρείται</b>. Η ταχύτητα κάθε σώματος αλλάζει στην κρούση, η ολική ορμή όμως όχι. Έτσι κάνεις προβλέψεις χωρίς να υπολογίσεις όλες τις κουραστικές λεπτομέρειες της κίνησης.</p>`],
+    ["trap", "Δύο παρανοήσεις από το βιβλίο", `<p><b>«Ένα σώμα έξω από το πεδίο βαρύτητας δεν έχει ορμή».</b> Λάθος! Η ορμή εξαρτάται μόνο από m και υ. Ένας κομήτης στο διάστημα έχει τεράστια ορμή.</p><p><b>«Ορμή = η δύναμη που έχει το σώμα».</b> Λάθος! Ένα σώμα δεν «έχει» δύναμη. Η δύναμη χρειάζεται για να <b>αλλάξει</b> η ορμή (επόμενη ενότητα).</p>`],
+  ]);
+} });
+
+/* ---------- 2.3 β. Ορμή συστήματος, πρόσημα ---------- */
+SL.push({ sec: "2.3", title: "Ορμή συστήματος", build(root) {
+  head(root, "2.3 Η έννοια της ορμής", "Η ορμή του συστήματος: πρόσθεση βελών, όχι αριθμών", [
+    "Η ορμή ενός συστήματος είναι το <b>διανυσματικό</b> άθροισμα των ορμών των σωμάτων του. Όταν όλα κινούνται στην ίδια ευθεία, διαλέγεις μια <b>θετική φορά</b> και βάζεις <b>πρόσημο</b>: προς τη θετική φορά «+», αντίθετα «−». Αυτό είναι η άσκηση 12Α του βιβλίου:",
+  ]);
+  root.appendChild(el("div", { class: "formula" }, `p<sub>ολ</sub> = m₁υ₁ + m₂υ₂ <span style="font-weight:500;color:#5d6475">(με τα πρόσημα!)</span>`));
+  const { b, g } = bench(root, 900, 250);
+  const C = controls(b);
+  const s1 = slider(C, "m₁", 1, 6, 1, 2, (v) => v + " kg", () => draw());
+  const v1 = slider(C, "υ₁", -12, 12, 1, 10, (v) => sgn(v, 0) + " m/s", () => draw());
+  const s2 = slider(C, "m₂", 1, 6, 1, 4, (v) => v + " kg", () => draw());
+  const v2 = slider(C, "υ₂", -12, 12, 1, 6, (v) => sgn(v, 0) + " m/s", () => draw());
+  const pr = el("div", { class: "seg" }); C.appendChild(pr);
+  button(pr, "12Α: ίδια κατεύθυνση", () => { s1.set(2); v1.set(10); s2.set(4); v2.set(6); });
+  button(pr, "12Α: αντίθετες", () => { s1.set(2); v1.set(10); s2.set(4); v2.set(-6); });
+  button(pr, "Κινούνται, αλλά p = 0", () => { s1.set(2); v1.set(6); s2.set(3); v2.set(-4); });
+  const ro = readout(b);
+  function draw() {
+    const c = g.ctx; g.clear(); const m1 = s1.v, u1 = v1.v, m2 = s2.v, u2 = v2.v, p1 = m1 * u1, p2 = m2 * u2, P = p1 + p2, yG = 130, k = 4.5;
+    ground(c, yG, 30, 870);
+    cart(c, 280, yG, 50 + m1 * 10, 34, COL.b1, "1"); cart(c, 620, yG, 50 + m2 * 10, 34, COL.b2, "2");
+    arrow(c, 280, 50, 280 + u1 * 9, 50, COL.v, { label: `υ₁ = ${sgn(u1, 0)}`, oy: -14 }); arrow(c, 620, 50, 620 + u2 * 9, 50, COL.v, { label: `υ₂ = ${sgn(u2, 0)}`, oy: -14 });
+    txt(c, "+ θετική φορά →", 870, 18, { align: "right", color: COL.mute, weight: 700, size: 13.5 });
+    // πρόσθεση βελών μύτη με ουρά
+    const y = 185, x0 = 450 - (P * k) / 2;
+    arrow(c, x0, y, x0 + p1 * k, y, COL.b1, { label: `p₁ = ${sgn(p1, 0)}`, oy: -15, w: 6 });
+    arrow(c, x0 + p1 * k, y + 14, x0 + p1 * k + p2 * k, y + 14, COL.b2, { label: `p₂ = ${sgn(p2, 0)}`, oy: 17, w: 6 });
+    if (Math.abs(P) > 0.01) arrow(c, x0, y + 44, x0 + P * k, y + 44, COL.p, { label: `p_ολ = ${sgn(P, 0)}`, oy: 0, ox: (P > 0 ? 1 : -1) * (Math.abs(P * k) / 2 + 60), w: 7 });
+    else txt(c, "p_ολ = 0 : τα βέλη αλληλοαναιρούνται!", 450, y + 44, { align: "center", color: COL.p, weight: 800 });
+    ro.innerHTML = `p<sub>ολ</sub> = m₁υ₁ + m₂υ₂ = ${m1}·(${sgn(u1, 0)}) + ${m2}·(${sgn(u2, 0)}) = ${sgn(p1, 0)} ${p2 < 0 ? "−" : "+"} ${fmt(Math.abs(p2), 0)} = <b class="c-p">${sgn(P, 0)} kg·m/s</b>` +
+      (P < 0 ? " → το «−» σημαίνει ότι η ολική ορμή δείχνει <b>αριστερά</b>." : "");
+    postHeight();
+  }
+  g.redraw = draw; draw();
+  cards(root, [
+    ["key", "Άσκηση 12Α: η λύση", `<p>Θετική φορά: η φορά της υ₁. Ίδια κατεύθυνση: p = 2·10 + 4·6 = <b>44 kg·m/s</b>. Αντίθετες: p = 2·10 + 4·(−6) = 20 − 24 = <b>−4 kg·m/s</b>, δηλαδή 4 kg·m/s προς την κατεύθυνση του m₂.</p>`],
+    ["tip", "Ερώτηση 8: τι ισχύει;", `<p><b>Α. Σωστό:</b> σύστημα δύο σωμάτων μπορεί να έχει μηδενική ορμή ενώ κινούνται (πάτα «Κινούνται, αλλά p = 0»: 2·6 = 3·4).</p><p><b>Γ. Λάθος:</b> σώματα με διαφορετικές μάζες <b>μπορούν</b> να έχουν ίσες ορμές, π.χ. 1 kg με 6 m/s και 3 kg με 2 m/s.</p>`],
+    ["trap", "Το πιο συχνό λάθος", `<p>Να προσθέσεις τα μέτρα (20 + 24 = 44) ενώ τα σώματα κινούνται αντίθετα. <b>Πρώτα διαλέγεις θετική φορά, μετά βάζεις πρόσημα.</b> Πάντα.</p>`],
+  ]);
+} });
+
+/* ---------- 2.3 γ. Πόση ορμή έχουν; ---------- */
+SL.push({ sec: "2.3", title: "Πόση ορμή έχουν;", build(root) {
+  head(root, "2.3 · Δραστηριότητα 2 (σελ. 50)", "Από το κουνούπι ως το τάνκερ: πόση ορμή έχουν;", [
+    "Υπολόγισε πρώτα μόνος σου την ορμή κάθε σώματος του πίνακα (p = m·υ, πρώτα όλα σε S.I.). Μετά πάτα «Δείξε» για κάθε γραμμή.",
+  ]);
+  const rows = [
+    ["Αθλητής δρόμου 100 m", "10 m/s", "80 kg", "80 · 10", 800],
+    ["Βλήμα πυροβόλου όπλου", "500 m/s", "10 g = 0,01 kg", "0,01 · 500", 5],
+    ["Κουνούπι που πετάει", "7 m/s", "2 g = 0,002 kg", "0,002 · 7", 0.014],
+    ["Μόριο N₂ του αέρα (23 °C)", "800 m/s", "28 g/mol ÷ 6,02·10²³ ≈ 4,65·10⁻²⁶ kg", "4,65·10⁻²⁶ · 800", 3.72e-23],
+    ["Πετρελαιοφόρο πλοίο", "10 mi/h ≈ 16,1 km/h ≈ 4,47 m/s", "2·10⁸ kg", "2·10⁸ · 4,47", 8.94e8],
+    ["Μπάλα ποδοσφαίρου", "12 m/s", "425 g = 0,425 kg", "0,425 · 12", 5.1],
+  ];
+  const sci = (x) => { if (x >= 0.01 && x < 1e5) return fmt(x, 3); const e = Math.floor(Math.log10(x)); return fmt(x / Math.pow(10, e), 2) + "·10" + String(e).split("").map((d) => "⁰¹²³⁴⁵⁶⁷⁸⁹"[d] || "⁻").join(""); };
+  const tb = el("table", { class: "t" }); root.appendChild(tb);
+  tb.innerHTML = `<tr><th>Σώμα</th><th>υ</th><th>m</th><th>p (kg·m/s)</th></tr>`;
+  const shown = rows.map(() => false);
+  rows.forEach((r, i) => {
+    const tr = el("tr"); tr.innerHTML = `<td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td><td></td>`;
+    const td = tr.lastChild; const bt = button(td, "Δείξε", () => { td.innerHTML = `<span class="m">${r[3]} = <b class="c-p">${sci(r[4])}</b></span>`; shown[i] = true; draw(); });
+    tb.appendChild(tr);
+  });
+  const { b, g } = bench(root, 900, 250);
+  function draw() {
+    const c = g.ctx; g.clear();
+    txt(c, "Λογαριθμική κλίμακα: κάθε γραμμή = ×10", 450, 18, { align: "center", color: COL.mute, size: 13 });
+    const x0 = 230, x1 = 860, lo = -24, hi = 9, X = (v) => x0 + ((Math.log10(v) - lo) / (hi - lo)) * (x1 - x0);
+    c.strokeStyle = COL.grid; c.lineWidth = 1;
+    for (let e = lo; e <= hi; e += 3) { c.beginPath(); c.moveTo(X(Math.pow(10, e)), 32); c.lineTo(X(Math.pow(10, e)), 232); c.stroke(); txt(c, "10" + (e < 0 ? "⁻" : "") + String(Math.abs(e)).split("").map((d) => "⁰¹²³⁴⁵⁶⁷⁸⁹"[d]).join(""), X(Math.pow(10, e)), 242, { align: "center", size: 11.5, color: COL.mute }); }
+    rows.forEach((r, i) => {
+      const y = 44 + i * 32;
+      txt(c, r[0], x0 - 10, y + 8, { align: "right", size: 13, weight: 700 });
+      if (!shown[i]) { txt(c, "?", x0 + 10, y + 8, { color: COL.mute, weight: 800 }); return; }
+      c.fillStyle = COL.p; roundRect(c, x0, y, Math.max(3, X(r[4]) - x0), 16, 4); c.fill();
+    });
+    postHeight();
+  }
+  g.redraw = draw; draw();
+  const qs = el("div"); root.appendChild(qs);
+  accordion(qs, [
+    { n: "2.", title: "Ποιο έχει τη μεγαλύτερη και ποιο τη μικρότερη ορμή;", body: "<p><b>Μεγαλύτερη:</b> το πετρελαιοφόρο (≈ 9·10⁸ kg·m/s), αν και πάει πιο αργά από όλα, γιατί η μάζα του είναι τεράστια. <b>Μικρότερη:</b> το μόριο N₂ (≈ 4·10⁻²³ kg·m/s), αν και είναι το πιο γρήγορο.</p>" },
+    { n: "3.", title: "Αν όλα σταματούν στον ίδιο χρόνο Δt, για ποιο χρειάζεται η μεγαλύτερη δύναμη;", body: "<p>F = Δp/Δt. Με ίδιο Δt, μεγαλύτερη δύναμη θέλει αυτό με τη μεγαλύτερη Δp, δηλαδή το <b>πετρελαιοφόρο</b>.</p>" },
+    { n: "4α.", title: "Μας βομβαρδίζουν συνέχεια μόρια του αέρα, αλλά δεν «νιώθουμε τίποτα». Γιατί;", body: "<p>Κάθε μόριο έχει απειροελάχιστη ορμή (10⁻²³). Επιπλέον χτυπάνε από <b>όλες</b> τις μεριές εξίσου, οπότε οι δυνάμεις τους αλληλοαναιρούνται.</p>" },
+    { n: "4β.", title: "Γιατί στους κλειστούς στίβους, στο τέλος των 100 m, υπάρχει τοίχος με παχύ αφρώδες υλικό;", body: "<p>Ο αθλητής έχει μεγάλη ορμή (800 kg·m/s). Το αφρώδες υλικό τον σταματά σε <b>μεγαλύτερο Δt</b>, άρα με <b>μικρότερη δύναμη</b> F = Δp/Δt. Θα το δεις αναλυτικά στην 2.4.</p>" },
+    { n: "4γ.", title: "Γιατί τα πλοία παθαίνουν μεγάλες ζημιές στην προβλήτα, ακόμα και με μικρή ταχύτητα;", body: "<p>Επειδή η μάζα τους είναι τεράστια, έχουν τεράστια ορμή ακόμη και με λίγα m/s. Για να σταματήσουν σε λίγο χρόνο χρειάζεται πελώρια δύναμη. Γι' αυτό οι προβλήτες έχουν λάστιχα (μπαλόνια).</p>" },
+    { n: "5.", title: "Μια σφαίρα και μια μπάλα έχουν σχεδόν ίσες ορμές (5 και 5,1). Γιατί μας τραυματίζει μόνο η σφαίρα;", body: `<p>Ίδια ορμή δεν σημαίνει ίδιο αποτέλεσμα. Η σφαίρα έχει τεράστια ταχύτητα, άρα και <b class="c-K">κινητική ενέργεια</b> K = ½mυ²: σφαίρα ½·0,01·500² = <b>1250 J</b>, μπάλα ½·0,425·12² ≈ <b>31 J</b>. Επιπλέον σταματά σε ελάχιστο χρόνο, σε μια μικρή επιφάνεια, οπότε η δύναμη συγκεντρώνεται σε ένα σημείο και διαπερνά το σώμα.</p>` },
+  ]);
+} });
+
+/* ---------- 2.4 α. Μεταβολή ορμής ---------- */
+SL.push({ sec: "2.4", title: "Η μεταβολή της ορμής Δp", build(root) {
+  head(root, "2.4 Η δύναμη και η μεταβολή της ορμής", "Μεταβολή της ορμής: Δp = p<sub>τελ</sub> − p<sub>αρχ</sub>", [
+    "Πριν φτάσουμε στη δύναμη, μάθε καλά τη <b>μεταβολή</b> της ορμής. Είναι κι αυτή <b>διάνυσμα</b>: το βέλος που πρέπει να «προσθέσεις» στην αρχική ορμή για να πάρεις την τελική. Δοκίμασε τις περιπτώσεις, και πρόσεξε ιδιαίτερα την <b>αναπήδηση</b>.",
+  ]);
+  root.appendChild(el("div", { class: "formula big" }, `<span class="c-p">Δ${vec("p")}</span> = ${vec("p")}<sub>τελ</sub> − ${vec("p")}<sub>αρχ</sub> = m(${vec("υ")}<sub>τελ</sub> − ${vec("υ")}<sub>αρχ</sub>)`));
+  const { b, g } = bench(root, 900, 260);
+  const C = controls(b);
+  const m = 2;
+  const sa = slider(C, "υ αρχική", -10, 10, 1, 4, (v) => sgn(v, 0) + " m/s", () => draw());
+  const sb = slider(C, "υ τελική", -10, 10, 1, 8, (v) => sgn(v, 0) + " m/s", () => draw());
+  const pr = el("div", { class: "seg" }); C.appendChild(pr);
+  [["Επιταχύνει", 4, 8], ["Επιβραδύνει", 8, 3], ["Σταματά", 6, 0], ["Αναπηδά", 6, -4], ["Αναπηδά, ίδιο μέτρο", 5, -5]].forEach(([n, a, bb]) => button(pr, n, () => { sa.set(a); sb.set(bb); }));
+  const ro = readout(b);
+  function draw() {
+    const c = g.ctx; g.clear(); const ua = sa.v, ub = sb.v, pa = m * ua, pb = m * ub, dp = pb - pa, k = 18, X = 450;
+    txt(c, "+ θετική φορά →", 870, 18, { align: "right", color: COL.mute, weight: 700, size: 13.5 });
+    txt(c, "ΠΡΙΝ", 60, 58, { weight: 800, color: COL.mute }); txt(c, "ΜΕΤΑ", 60, 118, { weight: 800, color: COL.mute });
+    ball(c, X - 230, 58, 16, COL.b2); ball(c, X - 230, 118, 16, COL.b2);
+    arrow(c, X, 58, X + pa * k, 58, COL.p, { label: `p_αρχ = ${sgn(pa, 0)}`, oy: -17, w: 6 });
+    arrow(c, X, 118, X + pb * k, 118, COL.p, { label: `p_τελ = ${sgn(pb, 0)}`, oy: -17, w: 6 });
+    c.save(); c.strokeStyle = COL.line; c.setLineDash([4, 4]); c.beginPath(); c.moveTo(X, 30); c.lineTo(X, 250); c.stroke(); c.restore();
+    // κατασκευή: p_αρχ + Δp = p_τελ
+    txt(c, "p_αρχ + Δp = p_τελ", 60, 185, { weight: 800, color: COL.ink, size: 14 });
+    arrow(c, X, 180, X + pa * k, 180, "#9fd5b5", { w: 6 });
+    arrow(c, X + pa * k, 205, X + pa * k + dp * k, 205, COL.F, { label: `Δp = ${sgn(dp, 0)}`, oy: 18, w: 6 });
+    arrow(c, X, 232, X + pb * k, 232, "#9fd5b5", { w: 6 });
+    let msg = "";
+    if (ua * ub < 0) msg = `<b>Αναπήδηση:</b> αλλάζει φορά, οπότε τα μέτρα <b>προστίθενται</b>: |Δp| = m(|υ<sub>αρχ</sub>| + |υ<sub>τελ</sub>|) = ${m}·(${Math.abs(ua)} + ${Math.abs(ub)}) = ${Math.abs(dp)} kg·m/s.`;
+    else if (ub === 0) msg = "Σταματά: Δp = −p<sub>αρχ</sub> (αντίθετη από την αρχική ορμή).";
+    else if (Math.abs(ub) > Math.abs(ua)) msg = "Επιτάχυνση: η Δp έχει την ίδια φορά με την κίνηση.";
+    else if (Math.abs(ub) < Math.abs(ua)) msg = "Επιβράδυνση: η Δp είναι <b>αντίθετη</b> στην κίνηση.";
+    else msg = "Ίδια ορμή: Δp = 0.";
+    ro.innerHTML = `m = 2 kg · Δp = p<sub>τελ</sub> − p<sub>αρχ</sub> = (${sgn(pb, 0)}) − (${sgn(pa, 0)}) = <b class="c-F">${sgn(dp, 0)} kg·m/s</b><br>${msg}` +
+      (ua === -ub && ua !== 0 ? " Πρόσεξε: ίδιο μέτρο ταχύτητας ΔΕΝ σημαίνει Δp = 0!" : "");
+    postHeight();
+  }
+  g.redraw = draw; draw();
+  cards(root, [
+    ["trap", "Η μεγάλη παγίδα της αναπήδησης", `<p>Μπάλα 2 kg χτυπά τον τοίχο με 5 m/s και γυρίζει με 5 m/s. Η Δp <b>δεν</b> είναι 0! Είναι 2·(−5) − 2·(+5) = <b>−20 kg·m/s</b>. Η ορμή άλλαξε κατεύθυνση, άρα άλλαξε.</p>`],
+    ["key", "Η Δp δείχνει προς τη δύναμη", `<p>Θα δεις αμέσως ότι ΣF = Δp/Δt, άρα <b>η συνισταμένη δύναμη έχει πάντα την κατεύθυνση της Δp</b> (όχι της κίνησης!). Στην αναπήδηση, ο τοίχος σπρώχνει προς τα έξω, προς την κατεύθυνση της τελικής ταχύτητας.</p>`],
+  ]);
+} });
+
+/* ---------- 2.4 β. ΣF = Δp/Δt ---------- */
+SL.push({ sec: "2.4", title: "ΣF = Δp/Δt", build(root) {
+  head(root, "2.4 Η δύναμη και η μεταβολή της ορμής", "Ο 2ος νόμος του Νεύτωνα, με ορμή", [
+    "Ξεκινάμε από αυτό που ξέρεις, το ΣF = m·α, και την επιτάχυνση α = Δυ/Δt. Άνοιξε την απόδειξη βήμα βήμα:",
+  ]);
+  const rv = el("div"); root.appendChild(rv);
+  reveal(rv, [
+    `Θεμελιώδης νόμος: <span class="m">ΣF = m·α</span> και ορισμός επιτάχυνσης: <span class="m">α = ${frac("Δυ", "Δt")} = ${frac("υ<sub>τελ</sub> − υ<sub>αρχ</sub>", "Δt")}</span>`,
+    `Αντικαθιστώ: <span class="m">ΣF = m · ${frac("υ<sub>τελ</sub> − υ<sub>αρχ</sub>", "Δt")} = ${frac("m·υ<sub>τελ</sub> − m·υ<sub>αρχ</sub>", "Δt")}</span>`,
+    `Όμως m·υ<sub>τελ</sub> = p<sub>τελ</sub> και m·υ<sub>αρχ</sub> = p<sub>αρχ</sub>. Άρα: <span class="m">ΣF = ${frac("p<sub>τελ</sub> − p<sub>αρχ</sub>", "Δt")}</span>, δηλαδή <b class="c-a" style="font-size:1.15em">ΣF = Δp/Δt</b> (σχέση 2 του βιβλίου).`,
+    `Ισοδύναμα: <span class="m">Δp = ΣF · Δt</span>. Το γινόμενο ΣF·Δt λέγεται <b>ώθηση</b>. Και αφού οι μάζες στη σχέση «χάθηκαν»: για να αλλάξει η ορμή ενός σώματος <b>χρειάζεται δύναμη</b>, και η μεταβολή εξαρτάται μόνο από τη δύναμη και τον χρόνο.`,
+  ], "Επόμενο βήμα απόδειξης");
+  root.appendChild(el("div", { class: "formula big" }, `ΣF = <span class="fr"><span class="c-p">Δp</span><span>Δt</span></span> &nbsp;&nbsp;⇔&nbsp;&nbsp; <span class="c-p">Δp</span> = ΣF·Δt`));
+  root.appendChild(el("p", { class: "lead" }, "Δες το ζωντανά: η ίδια σταθερή δύναμη σπρώχνει σε λείο δάπεδο ένα <b>ελαφρύ</b> και ένα <b>βαρύ</b> σώμα. Ποιο αποκτά μεγαλύτερη ορμή σε ίδιο χρόνο;"));
+  const { b, g } = bench(root, 900, 300);
+  const C = controls(b);
+  const sF = slider(C, "Δύναμη F", 1, 10, 1, 6, (v) => v + " N", () => reset());
+  const bb = el("div", { class: "seg" }); C.appendChild(bb);
+  button(bb, "▶ Ξεκίνα", () => (run = true), "pri"); button(bb, "↺", () => reset());
+  const ro = readout(b);
+  let t, x1, x2, run, h1, h2; const mA = 1, mB = 4, T = 4;
+  function reset() { t = 0; x1 = x2 = 150; run = false; h1 = []; h2 = []; }
+  reset();
+  animate((dt) => {
+    const F = sF.v;
+    if (run && t < T) { t = Math.min(T, t + dt); x1 = 150 + 0.5 * (F / mA) * t * t * 6; x2 = 150 + 0.5 * (F / mB) * t * t * 6; h1.push([t, F * t]); h2.push([t, F * t]); }
+    const c = g.ctx; g.clear();
+    ground(c, 110, 20, 480); ground(c, 230, 20, 480);
+    const X1 = Math.min(x1, 430), X2 = Math.min(x2, 430);
+    block(c, X1, 110, 50, 40, COL.b2, "1 kg"); block(c, X2, 230, 80, 64, COL.b1, "4 kg");
+    if (t < T) { arrow(c, X1 - 85, 90, X1 - 27, 90, COL.F, { label: `F = ${F} N`, oy: -14 }); arrow(c, X2 - 100, 198, X2 - 42, 198, COL.F, { label: `F = ${F} N`, oy: -14 }); }
+    const u1 = (F / mA) * t, u2 = (F / mB) * t;
+    arrow(c, X1, 50, X1 + u1 * 3, 50, COL.v, { label: `υ = ${fmt(u1, 1)}`, oy: -12 }); arrow(c, X2, 150, X2 + u2 * 3, 150, COL.v, { label: `υ = ${fmt(u2, 1)}`, oy: -12 });
+    plot(c, 540, 40, 320, 200, { tMax: T, yMin: 0, yMax: 40, ylab: "p (kg·m/s)", xlab: "t (s)", ycol: COL.p, series: [{ data: h2, color: COL.b1, w: 7 }, { data: h1, color: COL.b2, w: 3 }] });
+    ro.innerHTML = `t = ${fmt(t, 2)} s · Ελαφρύ: υ = ${fmt(u1, 1)} m/s, p = <b class="c-p">${fmt(F * t, 1)}</b> · Βαρύ: υ = ${fmt(u2, 1)} m/s, p = <b class="c-p">${fmt(F * t, 1)}</b> kg·m/s<br>` +
+      `Ίδια δύναμη, ίδιος χρόνος ⇒ <b>ίδια Δp = F·Δt</b>, παρότι οι ταχύτητες διαφέρουν. Η κλίση της ευθείας p–t είναι ${F} kg·m/s ανά s = <b>${F} N = ΣF</b>.`;
+  });
+  cards(root, [
+    ["key", "Τι λέει η σχέση με λόγια", `<p>Η <b>συνισταμένη δύναμη</b> ισούται με τον <b>ρυθμό μεταβολής της ορμής</b>: πόση ορμή αλλάζει ανά δευτερόλεπτο. Αυτή είναι η <b>γενικότερη διατύπωση του 2ου νόμου</b> του Νεύτωνα (ο ίδιος έτσι τον έγραψε).</p>`],
+    ["tip", "Ερώτηση 8Δ: σωστό!", `<p>«Δύο ίσες δυνάμεις σε σώματα με διαφορετικές ορμές προκαλούν στον ίδιο χρόνο ίσες μεταβολές ορμής». <b>Σωστό</b>, γιατί Δp = F·Δt δεν περιέχει ούτε τη μάζα ούτε την αρχική ορμή. Μόλις το είδες στο γράφημα.</p>`],
+    ["trap", "Μην μπερδεύεις p με Δp/Δt", `<p>Η ορμή μπορεί να είναι μεγάλη και η δύναμη μηδέν (σώμα που κινείται ευθύγραμμα ομαλά). Και αντίστροφα: η ορμή μπορεί να είναι 0 και η δύναμη όχι (θα το δεις στο διάγραμμα p–t).</p>`],
+  ]);
+} });
+
+/* ---------- 2.4 γ. Η κλωτσιά ---------- */
+SL.push({ sec: "2.4", title: "Η δυνατή κλωτσιά", build(root) {
+  head(root, "2.4 · Λυμένο παράδειγμα του βιβλίου", "Πόσο δυνατή είναι μια «δυνατή κλωτσιά»;", [
+    "Ο ποδοσφαιριστής χτυπά την ακίνητη μπάλα (0,425 kg) και της δίνει 23 m/s. Το παπούτσι ακουμπά την μπάλα μόνο <b>0,008 s</b>. Από το ΣF = Δp/Δt βρίσκουμε τη <b>μέση</b> δύναμη. Άλλαξε τα δεδομένα και δες πώς αλλάζει.",
+  ]);
+  const { b, g } = bench(root, 900, 250);
+  const C = controls(b);
+  const sv = slider(C, "υ μπάλας", 5, 35, 1, 23, (v) => v + " m/s", () => kick());
+  const st = slider(C, "χρόνος επαφής Δt", 0.004, 0.04, 0.001, 0.008, (v) => fmt(v, 3) + " s", () => kick());
+  const pr = el("div", { class: "seg" }); C.appendChild(pr);
+  button(pr, "Βιβλίο: 23 m/s, 0,008 s", () => { sv.set(23); st.set(0.008); }); button(pr, "Άσκηση 3: 24 m/s, 0,03 s (m = 0,5)", () => { mball = 0.5; sv.set(24); st.set(0.03); });
+  button(pr, "▶ Κλωτσιά", () => kick(), "pri");
+  const ro = readout(b);
+  let t = 0, mball = 0.425;
+  sv.el.querySelector("input").addEventListener("input", () => (mball = 0.425));
+  function kick() { t = 0; }
+  animate((dt) => {
+    t += dt; const c = g.ctx; g.clear(); const v = sv.v, Dt = st.v, m = mball, F = (m * v) / Dt, W = 70 * 9.81;
+    ground(c, 200, 20, 600);
+    const swing = clamp(t / 0.5, 0, 1), ang = lerp(-1.1, 0.25, ease(swing));
+    c.save(); c.translate(150, 60); c.rotate(ang); c.strokeStyle = "#3a3f4b"; c.lineWidth = 16; c.lineCap = "round";
+    c.beginPath(); c.moveTo(0, 0); c.lineTo(0, 118); c.stroke(); c.fillStyle = "#222"; roundRect(c, -8, 112, 46, 20, 8); c.fill(); c.restore();
+    const bx = t < 0.5 ? 205 : 205 + (t - 0.5) * v * 14;
+    if (bx < 640) ball(c, bx, 180, 20, "#f2f2f2"), c.strokeStyle = "#333";
+    if (t > 0.45 && t < 0.62) arrow(c, 185, 180, 185 + 90, 180, COL.F, { label: "F", oy: -24, w: 6 });
+    // σύγκριση με βάρος
+    const sc = 0.12;
+    txt(c, "Σύγκριση μεγεθών", 650, 30, { weight: 800 });
+    c.fillStyle = COL.F; roundRect(c, 650, 50, Math.min(230, F * sc), 26, 5); c.fill();
+    txt(c, `F = ${fmt(F, 0)} N`, 655, 92, { color: COL.F, weight: 800 });
+    c.fillStyle = "#8b93a1"; roundRect(c, 650, 110, W * sc, 26, 5); c.fill();
+    txt(c, `βάρος ποδοσφαιριστή (70 kg) ≈ ${fmt(W, 0)} N`, 655, 152, { size: 13, color: COL.mute, weight: 700 });
+    txt(c, `F ≈ ${fmt(F / W, 1)} × βάρος του!`, 650, 190, { size: 18, weight: 800 });
+    ro.innerHTML = `Δp = m·υ − 0 = ${fmt(m, 3)}·${v} = <b class="c-p">${fmt(m * v, 2)} kg·m/s</b> → F = Δp/Δt = ${fmt(m * v, 2)} / ${fmt(Dt, 3)} = <b class="c-F">${fmt(F, 0)} N</b>`;
+  });
+  cards(root, [
+    ["key", "Η λύση του βιβλίου", `<p>F = (0,425 · 23) / 0,008 ≈ <b>1222 N</b>. Το βάρος του ποδοσφαιριστή είναι 70·9,81 = 686,7 N. Άρα η κλωτσιά είναι <b>σχεδόν διπλάσια από το βάρος του</b>!</p>`],
+    ["tip", "Γιατί «μέση» δύναμη;", `<p>Η δύναμη μέσα στα 0,008 s δεν είναι σταθερή: ανεβαίνει απότομα και πέφτει. Το Δp/Δt δίνει τη <b>μέση τιμή</b> της, αυτή που, αν ήταν σταθερή, θα έφερνε την ίδια μεταβολή ορμής.</p>`],
+  ]);
+} });
+
+/* ---------- 2.4 δ. Ίδια Δp, άλλο Δt ---------- */
+SL.push({ sec: "2.4", title: "Ίδια Δp, άλλο Δt", build(root) {
+  head(root, "2.4 · Γιατί το μαξιλάρι σε σώζει", "Ίδια μεταβολή ορμής, άλλος χρόνος: άλλη δύναμη", [
+    "Δύο ίδια αυγά πέφτουν από το ίδιο ύψος, άρα φτάνουν με την ίδια ορμή και σταματούν: <b>ίδια Δp</b>. Το ένα πέφτει σε πλακάκι, το άλλο σε μαξιλάρι. Από το <b>F = Δp/Δt</b>: όσο <b>μεγαλύτερο το Δt</b>, τόσο <b>μικρότερη η δύναμη</b>.",
+  ]);
+  const { b, g } = bench(root, 900, 320);
+  const C = controls(b);
+  const sh = slider(C, "ύψος πτώσης", 0.2, 2, 0.1, 1, (v) => fmt(v, 1) + " m", () => drop());
+  const sc = slider(C, "Δt στο μαξιλάρι", 0.02, 0.2, 0.01, 0.1, (v) => fmt(v, 2) + " s", () => drop());
+  button(C, "▶ Άφησε τα αυγά", () => drop(), "pri");
+  const ro = readout(b);
+  const m = 0.06, Dhard = 0.002, LIMIT = 25;
+  let t = 0;
+  function drop() { t = 0; }
+  animate((dt) => {
+    t += dt; const c = g.ctx; g.clear();
+    const h = sh.v, v = Math.sqrt(2 * 10 * h), dp = m * v, Fh = dp / Dhard, Fs = dp / sc.v, fall = Math.sqrt((2 * h) / 10) * 1.6;
+    const yFloor = 260, tf = clamp(t / fall, 0, 1), y = lerp(40, yFloor - 22, tf * tf);
+    ground(c, yFloor, 40, 200);
+    c.fillStyle = "#b6bcc6"; c.fillRect(40, yFloor - 6, 160, 6);
+    const squish = tf >= 1 ? clamp((t - fall) / 0.4, 0, 1) : 0;
+    c.fillStyle = "#e8b4c8"; roundRect(c, 260, yFloor - 46 + 26 * squish, 160, 46 - 26 * squish, 18); c.fill(); ground(c, yFloor, 250, 430);
+    const egg = (x, yy, broken) => { c.save(); c.translate(x, yy); if (broken) { c.fillStyle = "#f7d34a"; c.beginPath(); c.ellipse(0, 18, 34, 7, 0, 0, 7); c.fill(); c.fillStyle = "#fffaf0"; c.beginPath(); c.moveTo(-26, 14); c.lineTo(-14, 2); c.lineTo(-8, 12); c.lineTo(0, 0); c.lineTo(6, 13); c.closePath(); c.fill(); } else { c.fillStyle = "#fffaf0"; c.strokeStyle = "#d8cbb2"; c.lineWidth = 2; c.beginPath(); c.ellipse(0, 0, 15, 20, 0, 0, 7); c.fill(); c.stroke(); } c.restore(); };
+    egg(120, tf >= 1 ? yFloor - 22 : y, tf >= 1 && Fh > LIMIT);
+    egg(340, tf >= 1 ? yFloor - 46 + 26 * squish - 18 : y, tf >= 1 && Fs > LIMIT);
+    txt(c, "πλακάκι", 120, yFloor + 24, { align: "center", color: COL.mute }); txt(c, "μαξιλάρι", 340, yFloor + 24, { align: "center", color: COL.mute });
+    // F–t
+    const tMax = Math.max(0.22, sc.v * 1.1);
+    const P = plot(c, 500, 40, 360, 200, { tMax, yMin: 0, yMax: 160, ylab: "F (N)", xlab: "t (s)" });
+    const pulse = (D, F) => { const arr = []; for (let i = 0; i <= 50; i++) { const tt = (D * i) / 50; arr.push([tt, Math.min(158, (Math.PI / 2) * F * Math.sin((Math.PI * tt) / D))]); } return arr; };
+    [[Dhard, Fh, COL.F], [sc.v, Fs, COL.b3]].forEach(([D, F, col]) => {
+      const a = pulse(D, F); c.save(); c.beginPath(); a.forEach(([tt, vv], i) => (i ? c.lineTo(P.X(tt), P.Y(vv)) : c.moveTo(P.X(tt), P.Y(vv)))); c.lineTo(P.X(D), P.Y(0)); c.closePath();
+      c.globalAlpha = 0.2; c.fillStyle = col; c.fill(); c.globalAlpha = 1; c.strokeStyle = col; c.lineWidth = 3; c.stroke(); c.restore();
+    });
+    c.save(); c.strokeStyle = "#999"; c.setLineDash([5, 5]); c.beginPath(); c.moveTo(P.X(0), P.Y(LIMIT)); c.lineTo(P.X(tMax), P.Y(LIMIT)); c.stroke(); c.restore();
+    txt(c, "όριο θραύσης ~25 N", P.X(tMax) - 4, P.Y(LIMIT) - 10, { align: "right", size: 12, color: COL.mute });
+    txt(c, "ίδιο εμβαδόν = ίδια Δp", 690, 270, { align: "center", weight: 800, color: COL.p });
+    ro.innerHTML = `υ = √(2gh) = ${fmt(v, 2)} m/s · Δp = 0,06·${fmt(v, 2)} = <b class="c-p">${fmt(dp, 3)} kg·m/s</b> και στα δύο<br>` +
+      `Πλακάκι: F = ${fmt(dp, 3)}/0,002 = <b class="c-F">${fmt(Fh, 0)} N</b> ${Fh > LIMIT ? "→ σπάει" : ""} · Μαξιλάρι: F = ${fmt(dp, 3)}/${fmt(sc.v, 2)} = <b style="color:${COL.b3}">${fmt(Fs, 1)} N</b> ${Fs > LIMIT ? "→ σπάει!" : "→ σώζεται"}`;
+  });
+  cards(root, [
+    ["key", "Το εμβαδόν στο διάγραμμα F–t", `<p>Το εμβαδόν κάτω από την καμπύλη F–t είναι η <b>ώθηση</b> F·Δt = <b>Δp</b>. Οι δύο «καμπούρες» έχουν <b>ίδιο εμβαδόν</b>: η μία ψηλή και στενή (μεγάλη δύναμη), η άλλη χαμηλή και φαρδιά (μικρή δύναμη).</p>`],
+    ["tip", "Πού το βρίσκεις στην καθημερινή ζωή", `<ul><li><b>Αερόσακος, ζώνη, κράνος, αφρώδεις τοίχοι στίβων</b>: μεγαλώνουν το Δt.</li><li><b>Λυγίζεις τα γόνατα</b> όταν πηδάς από ψηλά.</li><li><b>Ερώτηση 5, ο ψαράς</b>: αν τραβήξει απότομα (μικρό Δt), χρειάζεται μεγάλη δύναμη για να δώσει στο ψάρι την ίδια ορμή, και η πετονιά σπάει. Σιγά σιγά (μεγάλο Δt), η δύναμη είναι μικρή.</li></ul>`],
+    ["tip", "Και το αντίθετο: θέλω μεγάλη δύναμη", `<ul><li><b>Ερώτηση 18, καράτε</b>: «κοφτά» χτυπήματα = πολύ μικρό Δt, άρα πολύ μεγάλη δύναμη στο τούβλο.</li><li><b>Ερώτηση 6, βουτιά</b>: από την εξέδρα φτάνεις στο νερό με πολύ μεγαλύτερη ταχύτητα, άρα μεγάλη Δp. Το νερό σε σταματά σε μικρό χρόνο, οπότε η δύναμη είναι μεγάλη και πονάει. Από τη βάρκα η Δp είναι μικρή.</li></ul>`],
+  ]);
+} });
+
+/* ---------- 2.4 ε. Αναπήδηση: πινγκ-πονγκ, τοίχος, δάπεδο ---------- */
+SL.push({ sec: "2.4", title: "Αναπηδήσεις", build(root) {
+  head(root, "2.4 · Δραστηριότητα 1 (σελ. 49) και ασκήσεις 5, 10", "Μπαλάκι που αναπηδά: ποια δύναμη δέχτηκε;", [
+    "Το μπαλάκι του πινγκ-πονγκ (10 g) πέφτει κάθετα στη ρακέτα με υ₁ και γυρίζει με υ₂, σε Δt ≈ 0,1 s. Διαλέγω <b>θετική φορά προς την επιστροφή</b>: p<sub>αρχ</sub> = −m·υ₁, p<sub>τελ</sub> = +m·υ₂.",
+  ]);
+  root.appendChild(el("div", { class: "formula" }, `Δp = m·υ₂ − (−m·υ₁) = m(υ₁ + υ₂) &nbsp;⇒&nbsp; F = ${frac("m(υ₁ + υ₂)", "Δt")}`));
+  const { b, g } = bench(root, 900, 260);
+  const C = controls(b);
+  let m = 0.01, Dt = 0.1;
+  const s1 = slider(C, "υ₁ (ερχόμενο)", 1, 20, 1, 10, (v) => v + " m/s", () => (t = 0));
+  const s2 = slider(C, "υ₂ (φεύγει)", 0, 20, 1, 8, (v) => v + " m/s", () => (t = 0));
+  const pr = el("div", { class: "seg" }); C.appendChild(pr);
+  const lbl = el("span", { class: "tag" }, "πινγκ-πονγκ: m = 10 g, Δt = 0,1 s");
+  button(pr, "Πινγκ-πονγκ", () => { m = 0.01; Dt = 0.1; lbl.textContent = "πινγκ-πονγκ: m = 10 g, Δt = 0,1 s"; t = 0; });
+  button(pr, "Άσκηση 10: τένις στον τοίχο", () => { m = 0.1; Dt = 0.1; s1.set(10); s2.set(8); lbl.textContent = "τένις: m = 100 g, Δt = 0,1 s"; t = 0; });
+  pr.appendChild(lbl);
+  const ro = readout(b);
+  let t = 0;
+  animate((dt) => {
+    t += dt; const c = g.ctx; g.clear(); const u1 = s1.v, u2 = s2.v, dp = m * (u1 + u2), F = dp / Dt;
+    c.fillStyle = "#c0504d"; roundRect(c, 600, 50, 16, 160, 6); c.fill(); c.fillStyle = "#8a6b4c"; c.fillRect(604, 210, 8, 40);
+    const T1 = 1.2, x = t < T1 ? lerp(120, 584, t / T1) : Math.max(60, 584 - (t - T1) * u2 * 30);
+    ball(c, x, 130, 14, "#f6f3ea");
+    if (t >= T1 - 0.05 && t < T1 + 0.35) arrow(c, 590, 130, 590 - Math.min(170, F * 2.5), 130, COL.F, { label: `F = ${fmt(F, 2)} N`, oy: -26, w: 6 });
+    arrow(c, 120, 40, 120 + u1 * 9, 40, COL.v, { label: `υ₁ = ${u1} m/s`, oy: -14 }); arrow(c, 450, 40, 450 - u2 * 9, 40, COL.v, { label: `υ₂ = ${u2} m/s`, oy: -14 });
+    txt(c, "← θετική φορά (+)", 40, 238, { color: COL.mute, weight: 700, size: 13.5 });
+    ro.innerHTML = `Δp = ${fmt(m, 2)}·(${u1} + ${u2}) = <b class="c-p">${fmt(dp, 3)} kg·m/s</b> (προς την επιστροφή) → F = ${fmt(dp, 3)}/${fmt(Dt, 2)} = <b class="c-F">${fmt(F, 2)} N</b>. Αν υ₂ = 0 (κολλάει) η δύναμη είναι μικρότερη· αν υ₂ = υ₁ (τέλεια αναπήδηση) είναι μέγιστη.`;
+    if (t > T1 + 3) t = 0;
+  });
+  cards(root, [
+    ["key", "Ερώτηση 17: προς τα πού δείχνει η δύναμη;", `<p>Η δύναμη έχει την κατεύθυνση της <b>Δp</b>, δηλαδή την κατεύθυνση της <b>ταχύτητας απομάκρυνσης</b> (Γ σωστό, Β λάθος). Ισχύει ακόμα κι όταν η μπάλα γυρίζει πιο αργά απ' ό,τι ήρθε.</p>`],
+    ["tip", "Άσκηση 10 λυμένη", `<p>Θετική φορά προς τον τοίχο: p<sub>αρχ</sub> = 0,1·10 = <b>+1 kg·m/s</b>, p<sub>τελ</sub> = 0,1·(−8) = <b>−0,8 kg·m/s</b>. Δp = −0,8 − 1 = <b>−1,8 kg·m/s</b>. F = −1,8/0,1 = <b>−18 N</b>: 18 N με φορά <b>από τον τοίχο προς τα έξω</b>.</p>`],
+  ]);
+  root.appendChild(el("h3", {}, "Κατακόρυφη αναπήδηση: μην ξεχάσεις το βάρος (άσκηση 5)"));
+  root.appendChild(el("p", {}, "Μπάλα 0,5 kg φτάνει στο δάπεδο με 30 m/s, αναπηδά με 10 m/s, μένει σε επαφή 0,25 s. Πόση είναι η μέση δύναμη από το δάπεδο; (g = 10 m/s²)"));
+  const r2 = el("div"); root.appendChild(r2);
+  reveal(r2, [
+    "Θετική φορά: <b>προς τα πάνω</b>. p<sub>αρχ</sub> = 0,5·(−30) = −15 kg·m/s, p<sub>τελ</sub> = 0,5·(+10) = +5 kg·m/s.",
+    "Δp = 5 − (−15) = <b class='c-p'>+20 kg·m/s</b> (προς τα πάνω).",
+    "Κατά την επαφή ασκούνται <b>δύο</b> δυνάμεις: η N του δαπέδου (πάνω) και το βάρος mg = 5 N (κάτω). ΣF = Δp/Δt = 20/0,25 = <b>80 N</b>.",
+    "ΣF = N − mg ⇒ N = 80 + 5 = <b class='c-F'>85 N</b>. Η συνισταμένη είναι 80 N, η δύναμη του δαπέδου 85 N. Σε πολύ σύντομες κρούσεις το βάρος είναι αμελητέο, εδώ όμως το Δt είναι μεγάλο και μετράει.",
+  ], "Επόμενο βήμα λύσης");
+} });
+
+/* ---------- 2.4 στ. Διάγραμμα p–t ---------- */
+SL.push({ sec: "2.4", title: "Διάγραμμα p–t", build(root) {
+  head(root, "2.4 · Ερωτήσεις 7, 9, 10 και άσκηση 4", "Το διάγραμμα p–t: η κλίση είναι η ΣF", [
+    "Μια μπάλα 0,5 kg ρίχνεται κατακόρυφα προς τα πάνω με 20 m/s και πέφτει πίσω στο χέρι. Πάνω της ασκείται <b>μόνο το βάρος</b>, σταθερό, άρα ο ρυθμός μεταβολής της ορμής είναι <b>σταθερός</b>: Δp/Δt = −mg. Θετική φορά: προς τα πάνω.",
+  ]);
+  const { b, g } = bench(root, 900, 320);
+  const C = controls(b);
+  const bb = el("div", { class: "seg" }); C.appendChild(bb);
+  button(bb, "▶ Πέτα τη μπάλα", () => { t = 0; run = true; hist = []; }, "pri"); button(bb, "⏸ Πάγωσε", () => (run = !run));
+  const ro = readout(b);
+  const m = 0.5, u0 = 20, G = 10, T = 4; let t = 0, run = false, hist = [];
+  animate((dt) => {
+    if (run) { t = Math.min(T, t + dt * 0.8); hist.push([t, m * (u0 - G * t)]); if (t >= T) run = false; }
+    const c = g.ctx; g.clear(); const y = u0 * t - 0.5 * G * t * t, u = u0 - G * t, p = m * u;
+    ground(c, 290, 40, 280);
+    const Y = 280 - y * 11.5;
+    ball(c, 160, Y - 10, 12, COL.b2);
+    arrow(c, 190, Y - 10, 190, Y - 10 - u * 4, COL.v, { label: `υ = ${sgn(u, 1)}`, ox: 44, oy: 0 });
+    arrow(c, 125, Y - 10, 125, Y + 35, COL.F, { label: "mg", ox: -24, oy: 0 });
+    const P = plot(c, 340, 30, 230, 240, { tMax: T, yMin: -12, yMax: 12, ylab: "p (kg·m/s)", ycol: COL.p, series: [{ data: hist, color: COL.p, w: 4 }] });
+    c.beginPath(); c.arc(P.X(t), P.Y(p), 6, 0, 7); c.fillStyle = COL.p; c.fill();
+    if (Math.abs(t - 2) < 0.08) txt(c, "p = 0, κλίση ≠ 0!", P.X(2) + 8, P.Y(0) - 16, { bg: "#fff", color: COL.F, weight: 800, size: 13 });
+    plot(c, 640, 30, 230, 240, { tMax: T, yMin: -8, yMax: 8, ylab: "Δp/Δt (N)", ycol: COL.F, series: [{ data: hist.length ? [[0, -5], [t, -5]] : [], color: COL.F, w: 4 }] });
+    ro.innerHTML = `t = ${fmt(t, 2)} s · p = m·υ = 0,5·(${sgn(u, 1)}) = <b class="c-p">${sgn(p, 2)} kg·m/s</b> · Δp/Δt = −mg = <b class="c-F">−5 N</b> (σταθερό)` +
+      (t >= T ? `<br>Στο τέλος: p = −10, αρχικά +10. <b>Δp = −20 kg·m/s ≠ 0</b>.` : "");
+  });
+  cards(root, [
+    ["key", "Ερώτηση 10: ποια διαγράμματα;", `<p>Η <b>p(t)</b> είναι ευθεία που <b>κατεβαίνει</b> από +mυ₀, μηδενίζεται στο t = υ₀/g και γίνεται αρνητική: <b>διάγραμμα Ε</b>. Ο <b>ρυθμός Δp/Δt</b> είναι σταθερός (μέτρο mg) σε όλη την κίνηση: <b>διάγραμμα Β</b> (που δείχνει τη σταθερή τιμή του).</p>`],
+    ["tip", "Ερώτηση 7: p = 0 αλλά Δp/Δt ≠ 0;", `<p><b>Ναι!</b> Στο ψηλότερο σημείο η μπάλα είναι στιγμιαία ακίνητη (p = 0), αλλά το βάρος συνεχίζει να ασκείται, άρα Δp/Δt = −mg ≠ 0. Γι' αυτό ξαναπέφτει.</p>`],
+    ["trap", "Ερώτηση 9: «η Δp είναι μηδέν, άρα παραβιάζεται ο νόμος»", `<p>Ο μαθητής κάνει λάθος. Η μπάλα γυρίζει με ίδιο <b>μέτρο</b> αλλά <b>αντίθετη φορά</b>: Δp = −mυ − mυ = <b>−2mυ</b> ≠ 0, προς τα κάτω, όσο η ώθηση του βάρους mg·Δt. Κανένας νόμος δεν παραβιάζεται.</p>`],
+    ["tip", "Άσκηση 4: ο αλεξιπτωτιστής", `<p>Μόνη δύναμη (στην αρχή) το βάρος: Δp/Δt = mg = 90·10 = <b>900 kg·m/s ανά s (= 900 N)</b>. Σε 1 s: Δp = 900 kg·m/s ⇒ υ = 900/90 = <b>10 m/s</b>.</p>`],
+  ]);
+} });
+
+/* ---------- 2.4 ζ. Πολλές δυνάμεις: ΣF ---------- */
+SL.push({ sec: "2.4", title: "Με τριβή: η ΣF", build(root) {
+  head(root, "2.4 · Άσκηση 9 και άσκηση 8", "Όταν ασκούνται πολλές δυνάμεις, μετράει η συνισταμένη", [
+    "Ο εργάτης σπρώχνει κιβώτιο 200 kg με F = 500 N για 4 s. Υπάρχει τριβή με μ = 0,1. Στη σχέση Δp = ΣF·Δt μπαίνει η <b>συνισταμένη</b>, όχι μόνο η F του εργάτη.",
+  ]);
+  const { b, g } = bench(root, 900, 260);
+  const C = controls(b);
+  const sF = slider(C, "F εργάτη", 200, 900, 50, 500, (v) => v + " N", () => reset());
+  const sm = slider(C, "μ", 0, 0.3, 0.05, 0.1, (v) => fmt(v, 2), () => reset());
+  const bb = el("div", { class: "seg" }); C.appendChild(bb);
+  button(bb, "▶ Σπρώξε 4 s", () => (run = true), "pri"); button(bb, "↺", () => reset());
+  const ro = readout(b);
+  const m = 200, T = 4; let t, x, run, hist;
+  function reset() { t = 0; x = 120; run = false; hist = [[0, 0]]; }
+  reset();
+  animate((dt) => {
+    const Tr = sm.v * m * 10, SF = Math.max(0, sF.v - Tr), a = SF / m;
+    if (run && t < T) { t = Math.min(T, t + dt); x = 120 + 0.5 * a * t * t * 22; hist.push([t, m * a * t]); }
+    const c = g.ctx; g.clear(); ground(c, 210, 20, 520); const X = Math.min(x, 460);
+    block(c, X, 210, 90, 80, "#b88a52", "200 kg");
+    arrow(c, X - 120, 170, X - 47, 170, COL.F, { label: `F = ${sF.v} N`, oy: -14 });
+    if (Tr > 0) arrow(c, X + 10, 205, X + 10 - Tr * 0.18, 205, "#e2571e", { label: `T = ${fmt(Tr, 0)} N`, oy: 16 });
+    const u = a * t; arrow(c, X, 105, X + u * 12, 105, COL.v, { label: `υ = ${fmt(u, 2)} m/s`, oy: -14 });
+    plot(c, 580, 30, 280, 190, { tMax: T, yMin: 0, yMax: 2800, ylab: "p (kg·m/s)", ycol: COL.p, series: [{ data: hist, color: COL.p, w: 4 }] });
+    ro.innerHTML = `T = μ·m·g = ${fmt(sm.v, 2)}·200·10 = ${fmt(Tr, 0)} N · ΣF = F − T = <b class="c-F">${fmt(SF, 0)} N</b>` + (sF.v <= Tr ? " (η F δεν ξεπερνά την τριβή: το κιβώτιο δεν κινείται)" : "") +
+      `<br>Δp = ΣF·Δt ⇒ m·υ − 0 = ${fmt(SF, 0)}·4 ⇒ υ = ${fmt(SF * 4, 0)}/200 = <b class="c-v">${fmt((SF * 4) / m, 2)} m/s</b>`;
+  });
+  cards(root, [
+    ["key", "Άσκηση 9: η λύση", `<p>T = 0,1·200·10 = 200 N, ΣF = 500 − 200 = 300 N. Δp = ΣF·Δt = 300·4 = 1200 kg·m/s ⇒ υ = 1200/200 = <b>6 m/s</b>.</p>`],
+    ["tip", "Άσκηση 8: διαβάζω το διάγραμμα p–t", `<p>Μάζα 1 kg. Από 0 ως 1 s: p = 2 σταθερή ⇒ ΣF = 0. Από 1 ως 2 s: p από 2 σε 4 ⇒ ΣF = 2/1 = <b>2 N</b>. Από 2 ως 3 s: p = 4 σταθερή ⇒ ΣF = 0. Ελάχιστη ταχύτητα υ = 2/1 = <b>2 m/s</b>, μέγιστη <b>4 m/s</b>. Η γραφική F–t: 0, μετά «σκαλί» 2 N από 1 ως 2 s, μετά πάλι 0.</p>`],
+  ]);
+} });
+
+/* ---------- 2.4 η. Βροχή ---------- */
+SL.push({ sec: "2.4", title: "Βροχή στο υπόστεγο", build(root) {
+  head(root, "2.4 · Άσκηση 7", "Πολλά μικρά χτυπήματα = μια σταθερή δύναμη", [
+    "500 σταγόνες το δευτερόλεπτο, μάζα 3·10⁻⁵ kg η καθεμία, πέφτουν με 17 m/s στη στέγη και <b>δεν αναπηδούν</b> (σταματούν και γλιστράνε). Κάθε σταγόνα χάνει όλη της την ορμή. Πόση δύναμη ασκούν μαζί;",
+  ]);
+  const { b, g } = bench(root, 900, 260);
+  const C = controls(b);
+  const sn = slider(C, "σταγόνες ανά s", 100, 1000, 50, 500, (v) => v, null);
+  const sv = slider(C, "ταχύτητα", 5, 30, 1, 17, (v) => v + " m/s", null);
+  let bounce = false; seg(C, ["Δεν αναπηδούν", "Αν αναπηδούσαν με ίδια ταχύτητα"], 0, (i) => (bounce = i === 1));
+  const ro = readout(b); let drops = [], splash = [];
+  animate((dt) => {
+    const n = sn.v, v = sv.v, md = 3e-5, dp1 = md * v * (bounce ? 2 : 1), F = n * dp1;
+    for (let i = 0; i < n * dt * 0.12; i++) drops.push({ x: 150 + Math.random() * 600, y: -10 });
+    drops.forEach((d) => (d.y += v * 18 * dt)); drops = drops.filter((d) => { if (d.y > 170) { splash.push({ x: d.x, t: 0 }); return false; } return true; });
+    splash.forEach((s) => (s.t += dt)); splash = splash.filter((s) => s.t < 0.3);
+    const c = g.ctx; g.clear();
+    c.strokeStyle = "#5b8fd6"; c.lineWidth = 2; drops.forEach((d) => { c.beginPath(); c.moveTo(d.x, d.y); c.lineTo(d.x, d.y + 10); c.stroke(); });
+    c.fillStyle = "#8b7d6b"; c.fillRect(130, 172, 640, 14); c.fillRect(150, 186, 10, 60); c.fillRect(740, 186, 10, 60);
+    c.strokeStyle = "#5b8fd6"; splash.forEach((s) => { c.beginPath(); c.arc(s.x, 170, 4 + s.t * 20, Math.PI, 2 * Math.PI); c.stroke(); });
+    arrow(c, 450, 192, 450, 192 + Math.min(60, F * 120), COL.F, { label: `F ≈ ${fmt(F, 3)} N`, ox: 70, oy: 0, w: 6 });
+    ro.innerHTML = `Κάθε σταγόνα: |Δp| = m·υ${bounce ? "·2" : ""} = 3·10⁻⁵·${v}${bounce ? "·2" : ""} = <b class="c-p">${fmt(dp1 * 1e4, 2)}·10⁻⁴ kg·m/s</b><br>` +
+      `Σε 1 s: ${n} σταγόνες ⇒ ΣΔp = ${fmt(n * dp1, 4)} kg·m/s ⇒ F = ΣΔp/Δt = <b class="c-F">${fmt(F, 4)} N</b>`;
+  });
+  cards(root, [
+    ["key", "Η λύση της άσκησης 7", `<p>Α. Κάθε σταγόνα: Δp = 0 − m·υ ⇒ |Δp| = 3·10⁻⁵·17 = <b>5,1·10⁻⁴ kg·m/s</b> (η Δp της σταγόνας δείχνει προς τα πάνω: η στέγη τη σταματά).</p><p>Β. Σε Δt = 1 s πέφτουν 500: F = 500·5,1·10⁻⁴/1 = <b>0,255 N</b>. Η σταγόνα δέχεται δύναμη προς τα πάνω, η στέγη (3ος νόμος) <b>προς τα κάτω</b>.</p>`],
+    ["tip", "Γενικός τύπος για «ροές»", `<p>Όταν πολλά σώματα χτυπάνε συνέχεια: <span class="m">F = (N/Δt)·m·Δυ</span>, όπου N/Δt πόσα χτυπάνε ανά δευτερόλεπτο. Αν αναπηδούσαν, η Δυ θα ήταν διπλάσια (δοκίμασέ το).</p>`],
+  ]);
+} });
+
+/* ---------- Quiz 1 ---------- */
+SL.push({ sec: "2.4", title: "Quiz 1: ορμή & δύναμη", build(root) {
+  head(root, "Έλεγχος γνώσεων · 2.3–2.4", "Quiz 1: ορμή και δύναμη", ["Απάντησε χωρίς να γυρίσεις πίσω. Μετά διάβασε την εξήγηση, ακόμα κι όταν το βρήκες."]);
+  quiz(root, [
+    { q: "Ποια είναι μονάδα της ορμής στο S.I.; (ερώτηση 2)", opts: ["1 N", "1 N·s", "1 N/s", "1 kg·m/s²"], a: 1, why: "1 kg·m/s = (1 kg·m/s²)·s = 1 N·s. Το kg·m/s² είναι το Newton (δύναμη)." },
+    { q: "Σώμα 2 kg κινείται με 3 m/s προς τα δεξιά και μετά από λίγο με 3 m/s προς τα αριστερά. Η μεταβολή της ορμής του έχει μέτρο:", opts: ["0", "6 kg·m/s", "12 kg·m/s", "3 kg·m/s"], a: 2, why: "Δp = 2·(−3) − 2·(+3) = −12 kg·m/s. Στην αλλαγή φοράς τα μέτρα προστίθενται." },
+    { q: "Ο ψαράς τραβάει την πετονιά απότομα και αυτή σπάει, ενώ σιγά σιγά αντέχει. Γιατί; (ερώτηση 5)", opts: ["Γιατί απότομα το ψάρι αποκτά μεγαλύτερη μάζα", "Για την ίδια Δp, μικρό Δt σημαίνει μεγάλη δύναμη", "Γιατί η ορμή δεν διατηρείται όταν τραβάμε απότομα"], a: 1, why: "F = Δp/Δt. Για να δώσει στο ψάρι μια ορισμένη ορμή σε πολύ λίγο χρόνο, η πετονιά πρέπει να ασκήσει πολύ μεγάλη δύναμη, μεγαλύτερη από το όριο αντοχής της." },
+    { q: "Μια μπάλα ρίχνεται προς τα πάνω. Στο ψηλότερο σημείο:", opts: ["p = 0 και Δp/Δt = 0", "p = 0 και Δp/Δt = −mg", "p ≠ 0 και Δp/Δt = 0"], a: 1, why: "Στιγμιαία ακίνητη (p = 0), αλλά το βάρος ασκείται συνέχεια: Δp/Δt = ΣF = −mg. (ερώτηση 7)" },
+    { q: "Δύο ίσες δυνάμεις ασκούνται για ίδιο χρόνο σε φορτηγό και σε ποδήλατο, που αρχικά κινούνται. Οι μεταβολές ορμής τους είναι:", opts: ["Ίσες", "Μεγαλύτερη στο φορτηγό", "Μεγαλύτερη στο ποδήλατο"], a: 0, why: "Δp = F·Δt: ίδια F, ίδιο Δt ⇒ ίδια Δp, ανεξάρτητα από μάζα και αρχική ορμή (ερώτηση 8Δ). Οι ταχύτητες όμως αλλάζουν διαφορετικά." },
+    { q: "Ο καρατέκας σπάει τούβλα με «κοφτά» χτυπήματα. Ποια σχέση το εξηγεί; (ερώτηση 18)", opts: ["K = ½mυ²", "F = Δp/Δt: πολύ μικρό Δt ⇒ πολύ μεγάλη F", "p = m·υ: το χέρι έχει μεγάλη μάζα"], a: 1, why: "Το χέρι σταματά πάνω στο τούβλο σε ελάχιστο χρόνο, οπότε η δύναμη πάνω στο τούβλο γίνεται πολύ μεγάλη." },
+    { q: "Μπάλα 0,5 kg σταματά από 24 m/s σε 0,03 s. Η μέση δύναμη έχει μέτρο:", opts: ["12 N", "400 N", "720 N", "0,36 N"], a: 1, why: "F = Δp/Δt = 0,5·24/0,03 = 12/0,03 = 400 N (άσκηση 3)." },
+    { q: "Σε διάγραμμα p–t, η κλίση της γραμμής ισούται με:", opts: ["την ταχύτητα", "τη συνισταμένη δύναμη", "την κινητική ενέργεια", "τη μάζα"], a: 1, why: "Κλίση = Δp/Δt = ΣF. (Ενώ στο διάγραμμα F–t το εμβαδόν είναι Δp.)" },
+  ]);
+} });
+/* ============ ΔΙΑΦΑΝΕΙΕΣ: 2.5 ΑΔΟ, 2.6 ΤΙ ΔΕΝ ΔΙΑΤΗΡΕΙΤΑΙ ============ */
+
+/* ---------- 2.5 α. Η αρχή και η απόδειξη ---------- */
+SL.push({ sec: "2.5", title: "Αρχή διατήρησης της ορμής", build(root) {
+  head(root, "2.5 Η αρχή διατήρησης της ορμής", "Η ολική ορμή ενός μονωμένου συστήματος μένει σταθερή", [
+    "Αυτή είναι η πιο σημαντική πρόταση του κεφαλαίου. Δες την πρώτα να συμβαίνει: δύο αμαξάκια με ελατήριο-προφυλακτήρα συγκρούονται. Κοίτα τις <b>πράσινες ράβδους</b>: η ορμή του καθενός αλλάζει, η <b>μαύρη</b> (ολική) όμως δεν κουνιέται.",
+  ]);
+  root.appendChild(el("div", { class: "formula big" }, `${vec("p")}<sub>ολ, πριν</sub> = ${vec("p")}<sub>ολ, μετά</sub> &nbsp;⇔&nbsp; m₁${vec("υ")}₁ + m₂${vec("υ")}₂ = m₁${vec("υ")}₁′ + m₂${vec("υ")}₂′`));
+  const { b, g } = bench(root, 900, 330);
+  const C = controls(b);
+  const s1 = slider(C, "m₁", 1, 4, 0.5, 1, (v) => fmt(v, 1) + " kg", () => reset());
+  const s2 = slider(C, "m₂", 1, 4, 0.5, 2, (v) => fmt(v, 1) + " kg", () => reset());
+  const u1s = slider(C, "υ₁", 0, 4, 0.5, 3, (v) => sgn(v, 1) + " m/s", () => reset());
+  const u2s = slider(C, "υ₂", -4, 2, 0.5, -1, (v) => sgn(v, 1) + " m/s", () => reset());
+  const bb = el("div", { class: "seg" }); C.appendChild(bb);
+  button(bb, "▶ Σύγκρουση", () => (run = true), "pri"); button(bb, "↺", () => reset());
+  const ro = readout(b);
+  const S = 70, K = 900, W1 = 70, W2 = 70; let x1, x2, v1, v2, t, run, h1, h2, F;
+  function reset() { x1 = 1.4; x2 = 7.4; v1 = u1s.v; v2 = u2s.v; t = 0; run = false; h1 = []; h2 = []; F = 0; }
+  reset();
+  animate((dt) => {
+    const m1 = s1.v, m2 = s2.v;
+    if (run && t < 4.2) {
+      const n = 40, h = (dt * 0.6) / n;
+      for (let i = 0; i < n; i++) {
+        const comp = (W1 + W2) / 2 / S + 0.35 - (x2 - x1); F = comp > 0 ? K * comp : 0;
+        v1 -= (F / m1) * h; v2 += (F / m2) * h; x1 += v1 * h; x2 += v2 * h; t += h;
+      }
+      h1.push([t, m1 * v1]); h2.push([t, m2 * v2]);
+    }
+    const c = g.ctx; g.clear(); const yG = 130, X1 = x1 * S, X2 = x2 * S;
+    ground(c, yG, 10, 560);
+    cart(c, X1, yG, W1, 30, COL.b1, "1");
+    cart(c, X2, yG, W2, 30, COL.b2, "2");
+    // ελατήριο στο μπροστινό μέρος του 1
+    const sx0 = X1 + W1 / 2, sx1 = Math.min(X2 - W2 / 2, sx0 + 0.35 * S);
+    c.save(); c.strokeStyle = "#6b7280"; c.lineWidth = 2.5; c.beginPath(); c.moveTo(sx0, yG - 34);
+    for (let i = 1; i <= 8; i++) c.lineTo(sx0 + ((sx1 - sx0) * i) / 8, yG - 34 + (i % 2 ? -7 : 7)); c.stroke(); c.restore();
+    if (F > 0.5) { arrow(c, X1 - 5, yG - 72, X1 - 5 - F * 0.35, yG - 72, COL.F, { label: "F₂₁", oy: -14 }); arrow(c, X2 + 5, yG - 72, X2 + 5 + F * 0.35, yG - 72, COL.F, { label: "F₁₂", oy: -14 }); }
+    arrow(c, X1, yG - 100, X1 + v1 * 22, yG - 100, COL.v, { w: 3 }); arrow(c, X2, yG - 100, X2 + v2 * 22, yG - 100, COL.v, { w: 3 });
+    const p1 = m1 * v1, p2 = m2 * v2, mx = Math.max(6, Math.abs(m1 * u1s.v) + Math.abs(m2 * u2s.v));
+    pBars(c, 120, 175, 330, [{ label: "p₁", val: p1, color: COL.b1 }, { label: "p₂", val: p2, color: COL.b2 }, { label: "p ολική", val: p1 + p2, color: "#1d2433" }], mx, { rowH: 30 });
+    plot(c, 600, 30, 270, 240, { tMax: 4.2, yMin: -mx, yMax: mx, ylab: "p (kg·m/s)", ycol: COL.p, series: [
+      { data: h1, color: COL.b1, w: 3 }, { data: h2, color: COL.b2, w: 3 }, { data: h1.map(([tt, a], i) => [tt, a + h2[i][1]]), color: "#1d2433", w: 4 }] });
+    ro.innerHTML = `p₁ = <b style="color:${COL.b1}">${sgn(p1)}</b> · p₂ = <b style="color:#b07d0c">${sgn(p2)}</b> · p₁ + p₂ = <b>${sgn(p1 + p2)} kg·m/s</b>` +
+      (F > 0.5 ? ` · τώρα ασκούνται δυνάμεις: F₁₂ = F₂₁ = <b class="c-F">${fmt(F, 0)} N</b>, ίσες και αντίθετες` : "") + `<br>Στο γράφημα: η p₁ κατεβαίνει όσο ανεβαίνει η p₂, σαν «καθρέφτης». Η μαύρη γραμμή είναι οριζόντια.`;
+  });
+  root.appendChild(el("h3", {}, "Γιατί συμβαίνει; Η απόδειξη από τον 3ο νόμο του Νεύτωνα"));
+  const rv = el("div"); root.appendChild(rv);
+  reveal(rv, [
+    `Τα δύο σώματα αλληλεπιδρούν: δράση–αντίδραση, <span class="m">${vec("F")}<sub>12</sub> = −${vec("F")}<sub>21</sub></span>. (Στο μονωμένο σύστημα αυτές είναι οι μόνες δυνάμεις που μετράνε.)`,
+    `Από το ΣF = Δp/Δt για κάθε σώμα: <span class="m">${frac("Δp₂", "Δt")} = −${frac("Δp₁", "Δt")}</span>`,
+    `Ο χρόνος αλληλεπίδρασης Δt είναι <b>ίδιος</b> για τα δύο (αρχίζουν και σταματούν να σπρώχνονται μαζί). Άρα <span class="m">Δp₂ = −Δp₁</span>: ό,τι ορμή χάνει το ένα, την κερδίζει το άλλο.`,
+    `<span class="m">Δp₁ + Δp₂ = 0 ⇒ (p₁′ − p₁) + (p₂′ − p₂) = 0 ⇒ <b>p₁ + p₂ = p₁′ + p₂′</b></span>. Η ορμή του συστήματος είναι σταθερή. ∎`,
+  ], "Επόμενο βήμα απόδειξης");
+  cards(root, [
+    ["key", "Αρχή, όχι απλώς νόμος", `<p>Έχει επιβεβαιωθεί πειραματικά τόσες φορές, σε αμαξάκια, γαλαξίες και πυρήνες ατόμων που βομβαρδίζονται με πρωτόνια ή νετρόνια, που λέγεται <b>Αρχή</b> διατήρησης της ορμής, όπως η αρχή διατήρησης της ενέργειας και του ηλεκτρικού φορτίου.</p>`],
+    ["trap", "Η ΑΔΟ ισχύει για το σύστημα, όχι για κάθε σώμα", `<p>Η ορμή <b>του καθενός</b> αλλάζει! Αυτό που μένει σταθερό είναι το <b>άθροισμα</b>. Γράφεις πάντα: «ΑΔΟ για το σύστημα (1)+(2)».</p>`],
+  ]);
+} });
+
+/* ---------- 2.5 β. Ίσες μάζες ---------- */
+SL.push({ sec: "2.5", title: "Ίσες μάζες: ανταλλαγή", build(root) {
+  head(root, "2.5 · Η εφαρμογή του βιβλίου (σελ. 52)", "Ίσες μάζες: «αλλάζουν» ταχύτητες", [
+    "Τα αμαξάκια Σ₁ και Σ₂ έχουν <b>ίσες μάζες</b> και κινούνται χωρίς τριβές. Το Σ₁ φτάνει με υ₁ στο ακίνητο Σ₂. Μετά την κρούση το Σ₁ <b>σταματά</b> και το Σ₂ φεύγει με υ₂. Πόση είναι η υ₂;",
+  ]);
+  const rv = el("div"); root.appendChild(rv);
+  reveal(rv, [
+    "ΑΔΟ για το σύστημα Σ₁–Σ₂: <span class='m'>m·υ₁ + m·0 = m·0 + m·υ₂</span>",
+    "Διαιρώ με m: <span class='m'><b>υ₂ = υ₁</b></span>. Τα δύο αμαξάκια <b>αντάλλαξαν τις ταχύτητές τους</b>. Αυτό το βλέπεις στο μπιλιάρδο και στο «λίκνο του Νεύτωνα»:",
+  ], "Λύσε το");
+  const { b, g } = bench(root, 900, 280);
+  const C = controls(b); let n = 1;
+  seg(C, ["Τράβα 1 μπάλα", "Τράβα 2 μπάλες"], 0, (i) => { n = i + 1; t = 0; });
+  const ro = readout(b); let t = 0;
+  ro.innerHTML = "Κάθε κρούση ανάμεσα σε ίσες μάζες περνά όλη την ορμή στην επόμενη μπάλα. Όσες μπάλες «μπαίνουν» από τη μία μεριά, τόσες «βγαίνουν» από την άλλη.";
+  animate((dt) => {
+    t += dt; const c = g.ctx; g.clear(); const L = 170, R = 22, cx = 450, top = 40, Qd = 0.45, amp = 0.75;
+    const q = (t % (4 * Qd)) / Qd; // 0–1: αριστερές πέφτουν, 1–3: δεξιές βγαίνουν και γυρίζουν, 3–4: αριστερές ξαναβγαίνουν
+    const aL = q < 1 ? -amp * Math.cos((Math.PI / 2) * q) : q >= 3 ? -amp * Math.sin((Math.PI / 2) * (q - 3)) : 0;
+    const aR = q >= 1 && q < 3 ? amp * Math.sin((Math.PI / 2) * (q - 1)) : 0;
+    c.fillStyle = "#6b7280"; c.fillRect(250, top - 8, 400, 8);
+    for (let i = 0; i < 5; i++) {
+      const px = cx + (i - 2) * 2 * R, a = i < n ? aL : i >= 5 - n ? aR : 0;
+      const bx = px + L * Math.sin(a), by = top + L * Math.cos(a);
+      c.strokeStyle = "#9aa1ad"; c.lineWidth = 1.5; c.beginPath(); c.moveTo(px, top); c.lineTo(bx, by); c.stroke();
+      ball(c, bx, by, R, i < n ? COL.b1 : i >= 5 - n ? COL.b2 : "#b8c0cc");
+    }
+  });
+  cards(root, [
+    ["tip", "Πότε ισχύει αυτό;", `<p>Η «ανταλλαγή» γίνεται όταν οι μάζες είναι ίσες <b>και</b> η κρούση δεν «χάνει» κινητική ενέργεια (ελαστική). Αν τα αμαξάκια κολλούσαν, θα έφευγαν μαζί με υ₁/2. Θα τα συγκρίνεις στον προσομοιωτή της 2.6.</p>`],
+  ]);
+} });
+
+/* ---------- 2.5 γ. Αστροναύτες ---------- */
+SL.push({ sec: "2.5", title: "Οι αστροναύτες", build(root) {
+  head(root, "2.5 · Δραστηριότητα 1 (σελ. 53)", "Μπάλα στο διάστημα: οι αστροναύτες", [
+    "Δύο αστροναύτες, μακριά από κάθε ουράνιο σώμα (το σύστημα είναι <b>μονωμένο</b>), αρχικά ακίνητοι. Ο Α πετά την μπάλα στον Β δίνοντάς της ορμή <b>10 kg·m/s</b>. Το ίδιο κάνει κι ο Β όταν την πιάσει. Πάτα τα κουμπιά με τη σειρά και παρακολούθησε τις ορμές.",
+  ]);
+  const { b, g } = bench(root, 900, 300);
+  const C = controls(b);
+  const steps = [
+    { n: "(α) Ακίνητοι", A: 0, B: 0, ball: 0, hold: "A", txt: "Όλα ακίνητα: p<sub>ολ</sub> = 0. Αυτό πρέπει να ισχύει μέχρι το τέλος!" },
+    { n: "(β) Ο Α πετά", A: -10, B: 0, ball: 10, hold: null, txt: "Η μπάλα παίρνει +10, άρα ο Α παίρνει <b>−10</b> (ανάκρουση: πάει προς τα πίσω). Σύνολο: −10 + 0 + 10 = <b>0</b>." },
+    { n: "(γ) Ο Β πιάνει", A: -10, B: 10, ball: 0, hold: "B", txt: "Ο Β πιάνει την μπάλα: Β + μπάλα κινούνται μαζί με ορμή <b>+10</b> (πλαστική κρούση!). Σύνολο: −10 + 10 = <b>0</b>." },
+    { n: "(δ) Ο Β πετά πίσω", A: -10, B: 20, ball: -10, hold: null, txt: "Ο Β δίνει στην μπάλα −10. Για να μείνει σταθερό το σύνολό του (+10), ο ίδιος παίρνει <b>+20</b>. Αυτό ζητά το ερώτημα ΙΙ: −10 + 20 − 10 = <b>0</b>." },
+    { n: "Ο Α πιάνει", A: -20, B: 20, ball: 0, hold: "A", txt: "Ο Α πιάνει την μπάλα: −10 + (−10) = <b>−20</b>. Σύνολο: −20 + 20 = <b>0</b>." },
+    { n: "Ο Α πετά ξανά (ερ. ΙΙΙ)", A: -30, B: 20, ball: 10, hold: null, txt: "Ο Α δίνει +10 στην μπάλα. Το δικό του μέρος γίνεται −20 − 10 = <b>−30 kg·m/s</b>: απάντηση στο ερώτημα ΙΙΙ. Σύνολο: −30 + 20 + 10 = <b>0</b>." },
+  ];
+  let k = 0, tk = 0, xA = 300, xB = 600, xb = 330;
+  const sg = seg(C, steps.map((s) => s.n), 0, (i) => { k = i; tk = 0; });
+  const ro = readout(b);
+  animate((dt) => {
+    tk += dt; const S = steps[k], c = g.ctx; g.clear();
+    c.fillStyle = "#0f1730"; roundRect(c, 0, 0, 900, 190, 0); c.fill();
+    for (let i = 0; i < 50; i++) { c.fillStyle = "rgba(255,255,255,.6)"; c.fillRect((i * 97) % 900, (i * 53) % 190, 2, 2); }
+    // στόχοι θέσεων
+    const f = 1.3, tgtA = 300 + S.A * 6, tgtB = 600 + S.B * 6;
+    xA = lerp(xA, tgtA, clamp(dt * f, 0, 1)); xB = lerp(xB, tgtB, clamp(dt * f, 0, 1));
+    const tb = S.hold === "A" ? xA + 34 : S.hold === "B" ? xB - 34 : (S.ball > 0 ? lerp(xA + 34, xB - 34, 0.5) : lerp(xA + 34, xB - 34, 0.5));
+    xb = lerp(xb, tb, clamp(dt * 2, 0, 1));
+    const astro = (x, lab) => { c.fillStyle = "#e9ecf3"; roundRect(c, x - 20, 85, 40, 60, 12); c.fill(); c.beginPath(); c.arc(x, 72, 20, 0, 7); c.fill(); c.fillStyle = "#c9822f"; c.beginPath(); c.arc(x, 72, 12, 0, 7); c.fill(); txt(c, lab, x, 165, { color: "#fff", weight: 800, align: "center" }); };
+    astro(xA, "Α"); astro(xB, "Β"); ball(c, xb, 100, 11, "#e2571e");
+    const ar = (x, p, y, lab) => { if (p) arrow(c, x, y, x + p * 6, y, "#45cf8c", { label: `${lab} ${sgn(p, 0)}`, oy: -14, bg: "rgba(15,23,48,.85)" }); };
+    ar(xA, S.A + (S.hold === "A" ? S.ball : 0), 30, "Α:"); ar(xB, S.B + (S.hold === "B" ? S.ball : 0), 30, "Β:"); if (!S.hold) ar(xb, S.ball, 125, "μπάλα:");
+    const pA = S.A, pB = S.B, pb = S.ball;
+    pBars(c, 180, 208, 460, [{ label: "Α", val: pA, color: COL.b1 }, { label: "Β", val: pB, color: COL.b2 }, { label: "μπάλα", val: pb, color: "#e2571e" }, { label: "ολική", val: pA + pB + pb, color: "#1d2433" }], 30, { rowH: 22, d: 0 });
+    ro.innerHTML = S.txt + (S.hold ? " (Όταν κάποιος κρατά την μπάλα, η ορμή της μετράει στη δική του.)" : "");
+  });
+  cards(root, [
+    ["key", "Η ιδέα με μία φράση", `<p>Κάθε φορά που κάποιος <b>πετάει</b> την μπάλα, «σπρώχνεται» προς τα πίσω· κάθε φορά που την <b>πιάνει</b>, «σπρώχνεται» προς τα πίσω πάλι! Γι' αυτό απομακρύνονται όλο και πιο γρήγορα, ενώ η ολική ορμή μένει <b>0</b>.</p>`],
+  ]);
+} });
+
+/* ---------- 2.5 δ. Παγοδρόμοι ---------- */
+SL.push({ sec: "2.5", title: "Οι παγοδρόμοι", build(root) {
+  head(root, "2.5 · Δραστηριότητα 2 (σελ. 54)", "Επαλήθευσαν οι μαθητές με τα πατίνια την ΑΔΟ;", [
+    "Δύο μαθητές με <b>ίσες μάζες</b> m συγκρούονται με τα πατίνια τους και μένουν αγκαλιασμένοι. Ένας φίλος μέτρησε τις ταχύτητες. Για κάθε περίπτωση, έλεγξε: p<sub>πριν</sub> = p<sub>μετά</sub>;",
+  ]);
+  const { b, g } = bench(root, 900, 260);
+  const C = controls(b);
+  const cs = [
+    { n: "(α) Αντίθετα, ίδια υ", a: 1, b: -1, f: 0, eq: "m·υ + m·(−υ) = 0 &nbsp;και μετά&nbsp; 2m·0 = 0 ✔" },
+    { n: "(β) Ο ένας ακίνητος", a: 1, b: 0, f: 0.5, eq: "m·υ + m·0 = m·υ &nbsp;και μετά&nbsp; 2m·(υ/2) = m·υ ✔" },
+    { n: "(γ) Ίδια φορά, 2υ και υ", a: 2, b: 1, f: 1.5, eq: "m·2υ + m·υ = 3m·υ &nbsp;και μετά&nbsp; 2m·(3υ/2) = 3m·υ ✔" },
+  ];
+  let k = 0, t = 0;
+  seg(C, cs.map((x) => x.n), 0, (i) => { k = i; t = 0; }); button(C, "↺ Ξανά", () => (t = 0), "pri");
+  const ro = readout(b);
+  animate((dt) => {
+    t += dt; const S = cs[k], c = g.ctx; g.clear(); const v = 70, yG = 160;
+    let xa = 250 + S.a * v * t, xb = (S.b < 0 ? 650 : 450) + S.b * v * t, hit = xb - xa <= 50;
+    const tc = (S.b < 0 ? 400 : 200) / ((S.a - S.b) * v);
+    if (t > tc) { const xc = 250 + S.a * v * tc + 25; xa = xc - 25 + S.f * v * (t - tc); xb = xa + 50; hit = true; }
+    if (t > tc + 3) t = 0;
+    ground(c, yG, 20, 880);
+    const kid = (x, col) => { c.fillStyle = col; roundRect(c, x - 16, yG - 95, 32, 55, 10); c.fill(); c.fillStyle = "#f2d0a9"; c.beginPath(); c.arc(x, yG - 108, 14, 0, 7); c.fill(); c.fillStyle = "#333"; c.fillRect(x - 18, yG - 40, 6, 32); c.fillRect(x + 12, yG - 40, 6, 32); c.fillRect(x - 24, yG - 10, 22, 6); c.fillRect(x + 6, yG - 10, 22, 6); };
+    kid(xa, COL.b1); kid(xb, COL.b2);
+    if (!hit) { arrow(c, xa, 30, xa + S.a * 40, 30, COL.v, { label: S.a === 2 ? "2υ" : "υ", oy: -12 }); if (S.b) arrow(c, xb, 30, xb + S.b * 40, 30, COL.v, { label: "υ", oy: -12 }); else txt(c, "υ = 0", xb, 30, { align: "center", color: COL.v, weight: 700 }); }
+    else { if (S.f) arrow(c, (xa + xb) / 2, 30, (xa + xb) / 2 + S.f * 40, 30, COL.v, { label: S.f === 0.5 ? "υ/2" : "3υ/2", oy: -12 }); else txt(c, "υ = 0, σταματούν", (xa + xb) / 2, 30, { align: "center", color: COL.v, weight: 700 }); }
+    const before = S.a + S.b, after = 2 * S.f;
+    pBars(c, 200, 190, 400, [{ label: "p πριν", val: before, color: "#1d2433" }, { label: "p μετά", val: hit ? after : before, color: COL.p }], 3.2, { unit: "m·υ", d: 1, rowH: 26 });
+    ro.innerHTML = `Θετική φορά: δεξιά. ${S.eq}`;
+  });
+  cards(root, [["key", "Τι συμπέραναν", `<p>Σε <b>όλες</b> τις περιπτώσεις η ορμή πριν ισούται με την ορμή μετά: επαλήθευσαν την ΑΔΟ. Πρόσεξε την (α): πριν κινούνται και οι δύο, όμως η ολική ορμή είναι 0, γι' αυτό μετά <b>σταματούν</b>.</p>`]]);
+} });
+
+/* ---------- 2.5 ε. Πότε ισχύει ---------- */
+SL.push({ sec: "2.5", title: "Πότε ισχύει η ΑΔΟ", build(root) {
+  head(root, "2.5 · Ερωτήσεις 11, 19", "Πότε επιτρέπεται να γράψεις ΑΔΟ;", [
+    "Πριν γράψεις «p<sub>πριν</sub> = p<sub>μετά</sub>» σε μια άσκηση, κάνε τον έλεγχο: <b>είναι το σύστημα μονωμένο;</b> Ή, για κρούσεις και εκρήξεις, <b>είναι η αλληλεπίδραση τόσο σύντομη που οι εξωτερικές είναι αμελητέες;</b>",
+  ]);
+  cards(root, [
+    ["key", "Ισχύει ✔", `<ul><li>Σε κάθε <b>μονωμένο</b> σύστημα (ΣF<sub>εξ</sub> = 0).</li><li>Σε κάθε <b>κρούση</b>, για τη στιγμή της σύγκρουσης.</li><li>Σε κάθε <b>έκρηξη / διάσπαση</b>, ελατήριο που εκτονώνεται, ανάκρουση όπλου, για τη στιγμή του φαινομένου.</li></ul>`],
+    ["trap", "Δεν ισχύει ✘", `<ul><li>Σε σώμα που δέχεται εξωτερική δύναμη για αρκετό χρόνο: π.χ. τριβή <b>μετά</b> την κρούση (εκεί χρησιμοποιείς ΣF = Δp/Δt ή ενέργεια).</li><li>Σε ένα σώμα μόνο του, όταν αλληλεπιδρά (η ορμή του αλλάζει!).</li><li>Σε σύστημα που το σπρώχνει κάποιος από έξω.</li></ul>`],
+    ["tip", "Μπόνους: ΑΔΟ σε έναν άξονα", `<p>Αν οι εξωτερικές δυνάμεις είναι μόνο <b>κατακόρυφες</b> (βάρη, κάθετες δυνάμεις), η ορμή διατηρείται στον <b>οριζόντιο</b> άξονα, ακόμα κι αν όχι στον κατακόρυφο.</p>`],
+  ]);
+  root.appendChild(el("h3", {}, "Ερώτηση 11: δύο σώματα δεμένα με νήμα, τα τραβά η F"));
+  const { b, g } = bench(root, 900, 210);
+  const C = controls(b);
+  const sF = slider(C, "F", 2, 20, 1, 10, (v) => v + " N", () => (t = 0));
+  const ro = readout(b); let t = 0;
+  animate((dt) => {
+    t += dt; if (t > 4) t = 0; const F = sF.v, m = 2, a = F / (2 * m), T = F / 2, x = 120 + 0.5 * a * t * t * 18, c = g.ctx; g.clear(); const yG = 150;
+    ground(c, yG, 20, 880);
+    block(c, x, yG, 80, 60, COL.b1, "Σ₁"); block(c, x + 220, yG, 80, 60, COL.b2, "Σ₂");
+    c.strokeStyle = "#555"; c.lineWidth = 3; c.beginPath(); c.moveTo(x + 40, yG - 30); c.lineTo(x + 180, yG - 30); c.stroke();
+    arrow(c, x + 40, yG - 30, x + 40 + T * 5, yG - 30, COL.F, { label: "T", oy: -16 }); arrow(c, x + 180, yG - 30, x + 180 - T * 5, yG - 30, COL.F, { label: "T", oy: 18 });
+    arrow(c, x + 260, yG - 30, x + 260 + F * 5, yG - 30, COL.F, { label: "F", oy: -16 });
+    txt(c, "λείο επίπεδο, m₁ = m₂ = 2 kg", 450, 190, { align: "center", color: COL.mute, size: 13 });
+    ro.innerHTML = `Σ₁: T = m·α · Σ₂: F − T = m·α ⇒ F − T = T ⇒ T = F/2 = <b>${fmt(T, 1)} N</b>. Ρυθμοί: Δp₁/Δt = T = <b>${fmt(T, 1)}</b>, Δp₂/Δt = F − T = <b>${fmt(F - T, 1)}</b> kg·m/s² → ίσοι.`;
+  });
+  cards(root, [
+    ["key", "Ερώτηση 11: απαντήσεις", `<ul><li>Α. Το σύστημα Σ₁–Σ₂ δεν είναι μονωμένο: <b class="pill-ok">Σωστό</b>, η F είναι εξωτερική και ΣF<sub>εξ</sub> = F ≠ 0. Η ορμή του συστήματος αυξάνεται κατά F κάθε δευτερόλεπτο.</li><li>Β. Ο ρυθμός του Σ₁ είναι μικρότερος: <b class="pill-bad">Λάθος</b>.</li><li>Γ. Οι ρυθμοί είναι ίσοι: <b class="pill-ok">Σωστό</b> (ίδια μάζα, ίδια επιτάχυνση).</li><li>Δ. F − T = T: <b class="pill-ok">Σωστό</b>.</li></ul>`],
+    ["tip", "Ερώτηση 19: απαντήσεις", `<ul><li>Α. «Η ορμή δεν είναι διάνυσμα»: <b class="pill-bad">Λάθος</b>.</li><li>Β. «Η ΑΔΟ ισχύει μόνο στις κρούσεις»: <b class="pill-bad">Λάθος</b>, ισχύει και σε εκρήξεις, ελατήρια, κάθε μονωμένο σύστημα.</li><li>Γ. «Ισχύει σε κάθε μονωμένο σύστημα»: <b class="pill-ok">Σωστό</b>.</li><li>Δ. «Ισχύει πάντοτε στις κρούσεις»: <b class="pill-ok">Σωστό</b>, γιατί κάθε κρούση τη θεωρούμε μονωμένο σύστημα (2.2).</li></ul>`],
+  ]);
+} });
+
+/* ---------- Quiz 2 ---------- */
+SL.push({ sec: "2.5", title: "Quiz 2: ΑΔΟ", build(root) {
+  head(root, "Έλεγχος γνώσεων · 2.1, 2.2, 2.5", "Quiz 2: σύστημα και αρχή διατήρησης της ορμής", ["Για κάθε απάντηση, σκέψου: «ποιο είναι το σύστημα; είναι μονωμένο; ποια είναι η ορμή πριν;»"]);
+  quiz(root, [
+    { q: "Δύο παγοδρόμοι Α (μάζα m) και Β (0,9m) στέκονται ακίνητοι. Ο Α σπρώχνει τον Β. Αν ο Α αποκτά ορμή p, ο Β αποκτά: (ερώτηση 13)", opts: ["p", "0,9p", "−p", "−0,9p"], a: 2, why: "Πριν: p<sub>ολ</sub> = 0. Μετά: p + p<sub>Β</sub> = 0 ⇒ p<sub>Β</sub> = −p. Οι μάζες δεν παίζουν ρόλο για τις ορμές, μόνο για τις ταχύτητες." },
+    { q: "Ακίνητο βλήμα διασπάται σε κομμάτια m και 2m. Ποια πρόταση είναι σωστή; (ερώτηση 14)", opts: ["Τα κομμάτια αποκτούν ίσες ορμές", "Αποκτούν αντίθετες ταχύτητες", "Αποκτούν αντίθετες ορμές", "Το 2m έχει διπλάσια ορμή"], a: 2, why: "0 = p₁ + p₂ ⇒ p₂ = −p₁: αντίθετες ορμές (ίσα μέτρα). Οι ταχύτητες είναι αντίθετης κατεύθυνσης αλλά <b>διαφορετικού μέτρου</b> (το m πάει διπλάσια γρήγορα), οπότε και το Ε του βιβλίου είναι σωστό." },
+    { q: "Σε μετωπική σύγκρουση αυτοκινήτων m και M = 2m, το συσσωμάτωμα μένει ακίνητο. Τι ισχύει; (ερώτηση 16)", opts: ["Το M είχε διπλάσια ταχύτητα από το m", "Είχαν ίσες ορμές πριν", "Η ορμή του συστήματος πριν ήταν μηδέν", "Είχαν ίσες ταχύτητες"], a: 2, why: "Μετά ακίνητα ⇒ p<sub>μετά</sub> = 0 ⇒ p<sub>πριν</sub> = 0 (Γ). Άρα αντίθετες ορμές (όχι ίσες, Β λάθος): m·υ = 2m·V ⇒ υ = 2V, το <b>m</b> είχε διπλάσια ταχύτητα (Α λάθος). Και το Δ (αντίθετες μεταβολές ορμής) είναι σωστό." },
+    { q: "Σώμα με ορμή p συγκρούεται πλαστικά με ακίνητο σώμα διπλάσιας μάζας. Ποια είναι σωστή; (ερώτηση 15)", opts: ["Το συσσωμάτωμα έχει ορμή p/3", "Το συσσωμάτωμα έχει ορμή p", "Η ορμή του κινούμενου μειώνεται κατά p/2"], a: 1, why: "ΑΔΟ: p<sub>μετά</sub> = p (Α σωστό). V = υ/3, οπότε το πρώτο σώμα έχει μετά p/3: μειώθηκε κατά <b>2p/3</b> (Β λάθος). Το αρχικά ακίνητο αποκτά 2m·υ/3 = <b>2p/3</b> (Γ σωστό)." },
+    { q: "Ο αστροναύτης Α (μετά το στιγμιότυπο δ) πιάνει την μπάλα και την ξαναπετά με ορμή 10 kg·m/s. Η ορμή του Α γίνεται:", opts: ["−10 kg·m/s", "−20 kg·m/s", "−30 kg·m/s", "0"], a: 2, why: "Πιάνοντας: −10 + (−10) = −20. Πετώντας +10: −20 − 10 = −30 kg·m/s." },
+    { q: "Ποια δύναμη είναι εσωτερική για το σύστημα Γη–Σελήνη;", opts: ["Η έλξη του Ήλιου στη Σελήνη", "Η έλξη της Γης στη Σελήνη", "Καμία, γιατί η Σελήνη περιφέρεται"], a: 1, why: "Την ασκεί η Γη, που ανήκει στο σύστημα. Ο Ήλιος είναι έξω, άρα η έλξη του είναι εξωτερική." },
+    { q: "Ένα αμαξάκι κινείται σε δρόμο με τριβή μετά από μια κρούση. Ισχύει ΑΔΟ για την κίνησή του μετά την κρούση;", opts: ["Ναι, πάντα", "Όχι: η τριβή αλλάζει την ορμή του όσο κινείται"], a: 1, why: "Η ΑΔΟ ισχύει για τη στιγμή της κρούσης. Μετά, η τριβή ασκείται για πολύ χρόνο και η ορμή μειώνεται (ΣF = Δp/Δt)." },
+  ]);
+} });
+
+/* ---------- 2.6 α. Η κινητική ενέργεια στην πλαστική ---------- */
+SL.push({ sec: "2.6", title: "Κινητική ενέργεια: χάνεται", build(root) {
+  head(root, "2.6 Μεγέθη που δεν διατηρούνται στην κρούση", "Η ορμή διατηρείται. Η κινητική ενέργεια;", [
+    "Το καρφί του αμαξιδίου (1) σφηνώνεται στο ακίνητο (2) και κινούνται μαζί με κοινή ταχύτητα V: <b>πλαστική κρούση</b>. Δες τις ράβδους: η <b class='c-p'>ορμή</b> μένει ίδια, η <b class='c-K'>κινητική ενέργεια</b> όμως πέφτει.",
+  ]);
+  const { b, g } = bench(root, 900, 290);
+  const C = controls(b);
+  const s1 = slider(C, "m₁", 1, 5, 0.5, 2, (v) => fmt(v, 1) + " kg", () => reset());
+  const s2 = slider(C, "m₂", 0.5, 5, 0.5, 2, (v) => fmt(v, 1) + " kg", () => reset());
+  const su = slider(C, "υ₁", 1, 6, 0.5, 4, (v) => fmt(v, 1) + " m/s", () => reset());
+  button(C, "▶ Κρούση", () => reset(true), "pri");
+  const ro = readout(b);
+  let x1, x2, v1, v2, stuck, run;
+  function reset(go) { x1 = 120; x2 = 450; v1 = su.v; v2 = 0; stuck = false; run = !!go; }
+  reset();
+  animate((dt) => {
+    const m1 = s1.v, m2 = s2.v, u1 = su.v, V = (m1 * u1) / (m1 + m2);
+    if (run) { x1 += v1 * 45 * dt; x2 += v2 * 45 * dt; if (!stuck && x2 - x1 < 95) { stuck = true; v1 = v2 = V; x1 = x2 - 95; } if (x2 > 880) reset(true); }
+    const c = g.ctx; g.clear(); const yG = 120; ground(c, yG, 10, 890);
+    cart(c, x1, yG, 80, 32, COL.b1, "1"); c.fillStyle = "#555"; c.fillRect(x1 + 40, yG - 34, 22, 5);
+    cart(c, x2, yG, 80, 32, COL.b2, "2");
+    arrow(c, x1, 40, x1 + v1 * 18, 40, COL.v, { label: stuck ? `V = ${fmt(V, 2)}` : `υ₁ = ${fmt(u1, 1)}`, oy: -12 });
+    const Kb = 0.5 * m1 * u1 * u1, Ka = 0.5 * (m1 + m2) * V * V, pNow = stuck ? (m1 + m2) * V : m1 * v1, KNow = stuck ? Ka : Kb;
+    const bx = 120, bw = 300;
+    txt(c, "Ορμή", bx - 10, 175, { align: "right", weight: 800, color: COL.p });
+    c.fillStyle = COL.p; roundRect(c, bx, 165, (bw * (m1 * u1)) / (5 * 6), 20, 4); c.fill(); txt(c, `${fmt(pNow, 2)} kg·m/s`, bx + 8 + (bw * (m1 * u1)) / 30, 175, { mono: true, size: 13 });
+    txt(c, "Κινητική", bx - 10, 215, { align: "right", weight: 800, color: COL.K });
+    const kmax = 0.5 * 5 * 36;
+    c.fillStyle = "#f3d7b0"; roundRect(c, bx, 205, (bw * Kb) / kmax, 20, 4); c.fill();
+    c.fillStyle = COL.K; roundRect(c, bx, 205, (bw * KNow) / kmax, 20, 4); c.fill();
+    txt(c, `${fmt(KNow, 2)} J`, bx + 8 + (bw * Kb) / kmax, 215, { mono: true, size: 13 });
+    if (stuck) { txt(c, `χάθηκαν Q = ${fmt(Kb - Ka, 2)} J (θερμότητα, παραμόρφωση, ήχος)`, bx, 250, { weight: 700, color: COL.Q }); }
+    txt(c, "K_μετά / K_πριν =", 620, 190, { weight: 700 }); txt(c, `m₁/(m₁+m₂) = ${fmt(m1 / (m1 + m2), 3)}`, 620, 215, { mono: true, size: 14 });
+    ro.innerHTML = `ΑΔΟ: m₁υ₁ = (m₁+m₂)V ⇒ V = ${fmt(m1, 1)}·${fmt(u1, 1)}/${fmt(m1 + m2, 1)} = <b class="c-v">${fmt(V, 2)} m/s</b> · K<sub>πριν</sub> = ½·${fmt(m1, 1)}·${fmt(u1, 1)}² = <b class="c-K">${fmt(Kb, 2)} J</b> · K<sub>μετά</sub> = ½·${fmt(m1 + m2, 1)}·${fmt(V, 2)}² = <b class="c-K">${fmt(Ka, 2)} J</b>`;
+  });
+  root.appendChild(el("h3", {}, "Η απόδειξη του βιβλίου (χωρίς αριθμούς)"));
+  const rv = el("div"); root.appendChild(rv);
+  reveal(rv, [
+    "ΑΔΟ: <span class='m'>m₁υ₁ = (m₁ + m₂)V</span> &nbsp;(1)",
+    "Επειδή m₁ < m₁ + m₂, από την (1) πρέπει <span class='m'>υ₁ > V</span> &nbsp;(2)",
+    "Πολλαπλασιάζω κατά μέλη (1) και (2) και διαιρώ με 2: <span class='m'>½m₁υ₁² > ½(m₁ + m₂)V²</span> &nbsp;(3)",
+    "Αριστερά είναι η αρχική κινητική ενέργεια, δεξιά η τελική. Άρα <b>K<sub>μετά</sub> < K<sub>πριν</sub></b>: η κινητική ενέργεια του συστήματος <b>μειώθηκε</b>. Δεν διατηρείται.",
+  ], "Επόμενο βήμα απόδειξης");
+  cards(root, [
+    ["key", "Πού πήγε η ενέργεια;", `<p>Η ολική ενέργεια διατηρείται πάντα. Η κινητική που «χάθηκε» έγινε <b>θερμότητα</b>, ενέργεια <b>παραμόρφωσης</b> (λαμαρίνες, καρφί), <b>ήχος</b>. Τη λέμε Q: <span class="m">Q = K<sub>πριν</sub> − K<sub>μετά</sub></span>.</p>`],
+    ["trap", "Μην γράψεις ποτέ σε πλαστική κρούση", `<p>«½m₁υ₁² = ½(m₁+m₂)V²». Είναι <b>πάντα λάθος</b>. Στην πλαστική κρούση γράφεις <b>μόνο</b> ΑΔΟ, και μετά υπολογίζεις τις K χωριστά.</p>`],
+  ]);
+} });
+
+/* ---------- 2.6 β. Προσομοιωτής κρούσεων ---------- */
+SL.push({ sec: "2.6", title: "Προσομοιωτής κρούσεων", build(root) {
+  head(root, "2.6 · Εργαστήριο", "Ο προσομοιωτής κρούσεων: όλες οι περιπτώσεις", [
+    "Φτιάξε όποια κρούση θέλεις: μάζες, ταχύτητες (με πρόσημο) και είδος. Σε <b>όλες</b> η μαύρη ράβδος της ορμής μένει ίδια. Η κινητική ενέργεια εξαρτάται από το είδος της κρούσης.",
+  ]);
+  const { b, g } = bench(root, 900, 300);
+  const C = controls(b);
+  const s1 = slider(C, "m₁", 0.5, 5, 0.5, 1, (v) => fmt(v, 1) + " kg", () => reset());
+  const s2 = slider(C, "m₂", 0.5, 5, 0.5, 3, (v) => fmt(v, 1) + " kg", () => reset());
+  const u1 = slider(C, "υ₁", -2, 6, 0.5, 4, (v) => sgn(v, 1) + " m/s", () => reset());
+  const u2 = slider(C, "υ₂", -6, 2, 0.5, 0, (v) => sgn(v, 1) + " m/s", () => reset());
+  let e = 0, en = "πλαστική";
+  seg(C, ["Πλαστική", "Ελαστική", "Ενδιάμεση"], 0, (i) => { e = [0, 1, 0.5][i]; en = ["πλαστική", "ελαστική", "ενδιάμεση"][i]; reset(); });
+  button(C, "▶ Κρούση", () => reset(true), "pri");
+  const ro = readout(b);
+  let x1, x2, v1, v2, hit, run, w1, w2;
+  function reset(go) { x1 = 220; x2 = 620; v1 = u1.v; v2 = u2.v; hit = false; run = !!go; }
+  reset();
+  animate((dt) => {
+    const m1 = s1.v, m2 = s2.v; w1 = 40 + m1 * 12; w2 = 40 + m2 * 12;
+    if (run) {
+      x1 += v1 * 40 * dt; x2 += v2 * 40 * dt;
+      if (!hit && x2 - x1 <= (w1 + w2) / 2) { [v1, v2] = collide1D(m1, v1, m2, v2, e); hit = true; x1 = x2 - (w1 + w2) / 2 - 0.5; }
+      if (!hit && v1 <= v2 && x2 - x1 > (w1 + w2) / 2) { /* δεν θα συναντηθούν */ }
+      if (x1 < -120 || x2 > 1020 || x1 > 1020 || x2 < -120) run = false;
+    }
+    const c = g.ctx; g.clear(); const yG = 110; ground(c, yG, 0, 900);
+    cart(c, x1, yG, w1, 30, COL.b1, "1"); cart(c, x2, yG, w2, 30, COL.b2, "2");
+    arrow(c, x1, 30, x1 + v1 * 18, 30, COL.v, { label: sgn(v1, 2), oy: -12 }); arrow(c, x2, 30, x2 + v2 * 18, 30, COL.v, { label: sgn(v2, 2), oy: -12 });
+    const p1 = m1 * v1, p2 = m2 * v2, mx = Math.max(4, Math.abs(m1 * u1.v) + Math.abs(m2 * u2.v));
+    pBars(c, 110, 150, 300, [{ label: "p₁", val: p1, color: COL.b1 }, { label: "p₂", val: p2, color: COL.b2 }, { label: "p ολ.", val: p1 + p2, color: "#1d2433" }], mx, { rowH: 28 });
+    const K0 = 0.5 * m1 * u1.v ** 2 + 0.5 * m2 * u2.v ** 2, Kn = 0.5 * m1 * v1 * v1 + 0.5 * m2 * v2 * v2;
+    txt(c, "Κινητική ενέργεια", 560, 150, { weight: 800, color: COL.K });
+    c.fillStyle = "#f3d7b0"; roundRect(c, 560, 165, 300, 20, 4); c.fill();
+    c.fillStyle = COL.K; roundRect(c, 560, 165, K0 ? (300 * Kn) / K0 : 0, 20, 4); c.fill();
+    txt(c, `K = ${fmt(Kn, 2)} J  (αρχικά ${fmt(K0, 2)} J)`, 560, 205, { mono: true, size: 13 });
+    if (hit) txt(c, e === 1 ? "Ελαστική: K πριν = K μετά" : `Χάθηκαν ${fmt(K0 - Kn, 2)} J (${fmt((100 * (K0 - Kn)) / K0, 0)}%)`, 560, 235, { weight: 800, color: e === 1 ? COL.p : COL.Q });
+    if (!hit && run && v1 <= v2) txt(c, "Με αυτές τις ταχύτητες δεν θα συναντηθούν!", 560, 265, { weight: 800, color: COL.F });
+    ro.innerHTML = `${en} κρούση · Πριν: p<sub>ολ</sub> = ${fmt(m1, 1)}·(${sgn(u1.v, 1)}) + ${fmt(m2, 1)}·(${sgn(u2.v, 1)}) = <b>${sgn(m1 * u1.v + m2 * u2.v, 2)}</b> kg·m/s` +
+      (hit ? ` · Μετά: υ₁′ = <b class="c-v">${sgn(v1, 2)}</b>, υ₂′ = <b class="c-v">${sgn(v2, 2)}</b> m/s ⇒ p<sub>ολ</sub> = <b>${sgn(p1 + p2, 2)}</b> kg·m/s ✔` : "");
+  });
+  cards(root, [
+    ["key", "Τα είδη των κρούσεων", `<ul><li><b>Πλαστική</b>: κολλάνε, κοινή ταχύτητα V. Χάνεται η <b>μέγιστη</b> δυνατή κινητική ενέργεια. Γράφεις ΑΔΟ.</li><li><b>Ελαστική</b>: δεν χάνεται κινητική ενέργεια (K<sub>πριν</sub> = K<sub>μετά</sub>). Γράφεις ΑΔΟ <b>και</b> διατήρηση K.</li><li><b>Ενδιάμεση (ανελαστική)</b>: χωρίζουν αλλά χάνεται λίγη K. Γράφεις ΑΔΟ, και χρειάζεσαι μία ταχύτητα δοσμένη.</li></ul>`],
+    ["tip", "Πειράματα να δοκιμάσεις", `<ul><li>Ίσες μάζες, ελαστική, υ₂ = 0: ανταλλαγή ταχυτήτων.</li><li>m₁ ≪ m₂, ελαστική: το ελαφρύ γυρίζει πίσω (μπάλα σε τοίχο).</li><li>Πλαστική με p<sub>ολ</sub> = 0 (π.χ. 2 kg με +3 και 3 kg με −2): σταματούν και <b>όλη</b> η K χάνεται.</li></ul>`],
+  ]);
+} });
+
+/* ---------- 2.6 γ. Μετωπική σύγκρουση & ζώνη ---------- */
+SL.push({ sec: "2.6", title: "Σύγκρουση αυτοκινήτων", build(root) {
+  head(root, "2.6 · Ερώτηση 16 και άσκηση 15", "Μετωπική σύγκρουση: γιατί φοράμε ζώνη", [
+    "Αυτοκίνητο 1200 kg (μαζί με το μαθητή, 60 kg) με 72 km/h = <b>20 m/s</b> συγκρούεται μετωπικά και πλαστικά με αντίθετα κινούμενο αυτοκίνητο. Ακινητοποιούνται <b>και τα δύο</b> σε 0,12 s.",
+  ]);
+  const { b, g } = bench(root, 900, 230);
+  const C = controls(b); let belt = true, t = 0;
+  seg(C, ["Με ζώνη", "Χωρίς ζώνη"], 0, (i) => { belt = i === 0; t = 0; }); button(C, "▶ Ξανά", () => (t = 0), "pri");
+  const ro = readout(b);
+  animate((dt) => {
+    t += dt; if (t > 5) t = 0; const c = g.ctx; g.clear(); const yG = 180, tc = 1.6;
+    const xa = t < tc ? 130 + t * 160 : 386, xb = t < tc ? 820 - t * 160 * 0.75 : 614 - 0;
+    ground(c, yG, 10, 890);
+    const car = (x, col, flip) => { c.save(); c.translate(x, yG); if (flip) c.scale(-1, 1); c.fillStyle = col; roundRect(c, -110, -60, 220, 42, 10); c.fill(); roundRect(c, -60, -92, 110, 36, 12); c.fill(); c.fillStyle = "#cfe6f7"; roundRect(c, -50, -86, 40, 26, 6); c.fill(); roundRect(c, 0, -86, 42, 26, 6); c.fill(); c.fillStyle = "#333"; c.beginPath(); c.arc(-62, -14, 16, 0, 7); c.arc(62, -14, 16, 0, 7); c.fill(); c.restore(); };
+    car(xa - 110, COL.b1, false); car(xb + 110, COL.b2, true);
+    let dx = 0; if (t > tc) dx = belt ? Math.min(8, (t - tc) * 60) : Math.min(70, (t - tc) * 500);
+    c.fillStyle = "#f2d0a9"; c.beginPath(); c.arc(xa - 95 + dx, yG - 78, 9, 0, 7); c.fill();
+    if (belt) { c.strokeStyle = "#222"; c.lineWidth = 3; c.beginPath(); c.moveTo(xa - 110 + dx, yG - 90); c.lineTo(xa - 85 + dx, yG - 55); c.stroke(); }
+    if (t > tc) txt(c, "ΜΠΑΜ!", 450, 50, { align: "center", size: 26, weight: 800, color: COL.F });
+    if (!belt && t > tc) txt(c, "χτυπά στο τιμόνι / παρμπρίζ σε ελάχιστο Δt", 450, 80, { align: "center", color: COL.F, weight: 700 });
+    ro.innerHTML = belt ? "Η ζώνη τον σταματά μαζί με το αυτοκίνητο, σε 0,12 s, με δύναμη <b class='c-F'>10 000 N</b>. Χωρίς ζώνη θα συνέχιζε με 20 m/s και θα σταματούσε σε πολύ μικρότερο χρόνο πάνω στο τιμόνι: πολύ μεγαλύτερη δύναμη." : "Χωρίς ζώνη, ο μαθητής συνεχίζει με 20 m/s (αδράνεια) και σταματά πάνω στο τιμόνι σε πολύ μικρότερο Δt: η δύναμη γίνεται πολλαπλάσια.";
+  });
+  const rv = el("div"); root.appendChild(rv);
+  reveal(rv, [
+    "<b>Α. Ορμή του δεύτερου αυτοκινήτου.</b> Μετά την κρούση ακίνητα ⇒ p<sub>μετά</sub> = 0 ⇒ (ΑΔΟ) p<sub>πριν</sub> = 0.",
+    "p₁ + p₂ = 0 ⇒ p₂ = −p₁ = −1200·20 = <b>−24 000 kg·m/s</b>: μέτρο 24 000 kg·m/s, αντίθετη φορά από το πρώτο.",
+    "<b>Β. Δύναμη στο μαθητή.</b> Δp<sub>μαθ</sub> = 0 − 60·20 = −1200 kg·m/s ⇒ F = Δp/Δt = 1200/0,12 = <b class='c-F'>10 000 N</b> (αντίθετα στην κίνηση).",
+    "Βάρος μαθητή: 60·10 = 600 N. F/B = 10 000/600 ≈ <b>16,7</b>: η ζώνη ασκεί σχεδόν 17 φορές το βάρος του! Γι' αυτό τα αυτοκίνητα έχουν και αερόσακους: για να μεγαλώσει κι άλλο το Δt.",
+  ], "Επόμενο βήμα λύσης");
+  cards(root, [["key", "Ερώτηση 16 (αυτοκίνητα m και 2m που μένουν ακίνητα)", `<p>Αφού μετά p = 0, πριν p = 0: <b>Γ σωστό</b>. Άρα αντίθετες ορμές με ίσα μέτρα (Β λάθος: δεν είναι «ίσες»). m·υ = 2m·V ⇒ το ελαφρύ (m) είχε διπλάσια ταχύτητα (Α λάθος). Δp₁ = −Δp₂, αντίθετες μεταβολές ορμής: <b>Δ σωστό</b>.</p>`]]);
+} });
+/* ============ ΔΙΑΦΑΝΕΙΕΣ: 2.7 ΕΦΑΡΜΟΓΕΣ ============ */
+
+/* ---------- 2.7 α. Ελατήριο ανάμεσα σε αμαξάκια ---------- */
+SL.push({ sec: "2.7", title: "Σύστημα ελατήριο–μάζες", build(root) {
+  head(root, "2.7 Εφαρμογές · 1. Σύστημα ελατήριο–μάζα", "Κόψε το νήμα: «έκρηξη» από ηρεμία", [
+    "Δύο αμαξάκια συγκρατούνται με λεπτό νήμα και ανάμεσά τους υπάρχει <b>συμπιεσμένο ελατήριο</b>. Οι εξωτερικές (βάρη, κάθετες) αναιρούνται: <b>μονωμένο</b> σύστημα, με αρχική ορμή <b>μηδέν</b>. Τι γίνεται αν κόψουμε το νήμα;",
+  ]);
+  const { b, g } = bench(root, 900, 290);
+  const C = controls(b);
+  const s1 = slider(C, "m₁", 0.5, 4, 0.5, 1, (v) => fmt(v, 1) + " kg", () => reset());
+  const s2 = slider(C, "m₂", 0.5, 4, 0.5, 2, (v) => fmt(v, 1) + " kg", () => reset());
+  button(C, "✂ Κόψε το νήμα", () => (cut = true), "pri"); button(C, "↺", () => reset());
+  const ro = readout(b);
+  const E = 12; let cut, t, x1, x2;
+  function reset() { cut = false; t = 0; x1 = 405; x2 = 495; }
+  reset();
+  animate((dt) => {
+    const m1 = s1.v, m2 = s2.v, u2 = Math.sqrt((2 * E * m1) / (m2 * (m1 + m2))), u1 = (m2 * u2) / m1;
+    if (cut) { t += dt; x1 -= u1 * 40 * dt; x2 += u2 * 40 * dt; if (x1 < -80 && x2 > 980) reset(); }
+    const c = g.ctx; g.clear(); const yG = 130; ground(c, yG, 0, 900);
+    cart(c, x1 - 40, yG, 70, 30, COL.b1, "1"); cart(c, x2 + 40, yG, 70, 30, COL.b2, "2");
+    const sx0 = x1 - 5, sx1 = cut ? Math.min(x1 + 60, x2 + 5) : x2 + 5;
+    c.save(); c.strokeStyle = "#6b7280"; c.lineWidth = 3; c.beginPath(); c.moveTo(sx0, yG - 32);
+    const coils = 10; for (let i = 1; i <= coils; i++) c.lineTo(sx0 + ((sx1 - sx0) * i) / coils, yG - 32 + (i % 2 ? -9 : 9)); c.stroke(); c.restore();
+    if (!cut) { c.strokeStyle = "#8b6b3d"; c.lineWidth = 2; c.beginPath(); c.moveTo(x1 - 40, yG - 58); c.lineTo(x2 + 40, yG - 58); c.stroke(); }
+    if (cut) { arrow(c, x1 - 40, 40, x1 - 40 - u1 * 18, 40, COL.v, { label: `υ₁ = ${fmt(u1, 2)}`, oy: -12 }); arrow(c, x2 + 40, 40, x2 + 40 + u2 * 18, 40, COL.v, { label: `υ₂ = ${fmt(u2, 2)}`, oy: -12 }); }
+    const p1 = cut ? -m1 * u1 : 0, p2 = cut ? m2 * u2 : 0;
+    pBars(c, 120, 175, 330, [{ label: "p₁", val: p1, color: COL.b1 }, { label: "p₂", val: p2, color: COL.b2 }, { label: "p ολική", val: p1 + p2, color: "#1d2433" }], 8, { rowH: 30 });
+    const K1 = cut ? 0.5 * m1 * u1 * u1 : 0, K2 = cut ? 0.5 * m2 * u2 * u2 : 0;
+    txt(c, "Κινητική ενέργεια (από το ελατήριο, 12 J)", 560, 175, { weight: 800, color: COL.K, size: 13.5 });
+    c.fillStyle = COL.b1; roundRect(c, 560, 192, (300 * K1) / E, 18, 4); c.fill(); c.fillStyle = COL.b2; roundRect(c, 560 + (300 * K1) / E, 192, (300 * K2) / E, 18, 4); c.fill();
+    if (cut) { txt(c, `K₁ = ${fmt(K1, 2)} J`, 560, 228, { mono: true, size: 13, color: COL.b1 }); txt(c, `K₂ = ${fmt(K2, 2)} J`, 720, 228, { mono: true, size: 13, color: "#b07d0c" }); }
+    ro.innerHTML = cut ? `Θετική φορά δεξιά: 0 + 0 = −m₁υ₁ + m₂υ₂ ⇒ <b>m₁υ₁ = m₂υ₂</b>: ${fmt(m1, 1)}·${fmt(u1, 2)} = ${fmt(m2, 1)}·${fmt(u2, 2)} = <b class="c-p">${fmt(m1 * u1, 2)} kg·m/s</b>. Το ελαφρύ φεύγει πιο γρήγορα: υ₁/υ₂ = m₂/m₁ = ${fmt(m2 / m1, 2)}.`
+      : "Πάτα «Κόψε το νήμα». Πριν: όλα ακίνητα, p<sub>ολ</sub> = 0.";
+  });
+  cards(root, [
+    ["key", "Το συμπέρασμα (σχέση 2 του βιβλίου)", `<p>Τα αμαξάκια αποκτούν <b>αντίθετες ορμές</b> ώστε η ολική να μείνει ίση με την αρχική, <b>μηδέν</b>: <span class="m">m₁υ₁ = m₂υ₂</span>. Οι ταχύτητες είναι αντιστρόφως ανάλογες των μαζών.</p>`],
+    ["tip", "Και η ενέργεια;", `<p>Εδώ η κινητική ενέργεια <b>αυξάνεται</b> (από 0 σε 12 J): προέρχεται από τη δυναμική ενέργεια του ελατηρίου. Το ίδιο στις εκρήξεις (χημική ενέργεια). Το ελαφρύ σώμα παίρνει το μεγαλύτερο μέρος: K₁/K₂ = m₂/m₁.</p>`],
+  ]);
+} });
+
+/* ---------- 2.7 β. Ανάκρουση ---------- */
+SL.push({ sec: "2.7", title: "Ανάκρουση όπλου", build(root) {
+  head(root, "2.7 · Δραστηριότητα 1 (σελ. 58) και άσκηση 11", "Ανάκρουση: το όπλο «κλωτσάει» προς τα πίσω", [
+    "Το πυροβόλο (μάζα Μ) είναι ακίνητο και εκτοξεύει βλήμα m με υ₀. Κατά την εκπυρσοκρότηση το σύστημα πυροβόλο–βλήμα είναι πρακτικά μονωμένο (εσωτερικές οι δυνάμεις των αερίων), με αρχική ορμή <b>0</b>. Άρα το πυροβόλο πρέπει να κινηθεί <b>αντίθετα</b>.",
+  ]);
+  root.appendChild(el("div", { class: "formula" }, "0 = m·υ₀ + M·V &nbsp;⇒&nbsp; V = −m·υ₀/M"));
+  const { b, g } = bench(root, 900, 250);
+  const C = controls(b);
+  const sM = slider(C, "M", 200, 2000, 100, 1000, (v) => v + " kg", () => reset());
+  const sm = slider(C, "m", 0.5, 5, 0.5, 1, (v) => fmt(v, 1) + " kg", () => reset());
+  const su = slider(C, "υ₀", 200, 1200, 100, 1000, (v) => v + " m/s", () => reset());
+  const smu = slider(C, "μ", 0.02, 0.2, 0.01, 0.05, (v) => fmt(v, 2), () => reset());
+  button(C, "💥 Φωτιά!", () => { reset(); fired = true; }, "pri");
+  const ro = readout(b);
+  let fired, t, xb, xc, Vc;
+  function reset() { fired = false; t = 0; xb = 560; xc = 520; Vc = 0; }
+  reset();
+  animate((dt) => {
+    const M = sM.v, m = sm.v, u0 = su.v, mu = smu.v, V = (m * u0) / M, a = mu * 10, tstop = V / a, d = (V * V) / (2 * a);
+    if (fired) { t += dt; Vc = Math.max(0, V - a * t); xc = 520 - (V * Math.min(t, tstop) - 0.5 * a * Math.min(t, tstop) ** 2) * 60; xb += u0 * 1.2 * dt; }
+    const c = g.ctx; g.clear(); const yG = 190; ground(c, yG, 10, 890);
+    c.save(); c.translate(xc, yG); c.fillStyle = "#4b5160"; roundRect(c, -90, -70, 120, 40, 10); c.fill(); c.fillRect(20, -62, 110, 18);
+    c.fillStyle = "#333"; c.beginPath(); c.arc(-60, -22, 20, 0, 7); c.arc(5, -22, 20, 0, 7); c.fill(); c.restore();
+    if (fired && t < 0.25) { c.fillStyle = "rgba(255,170,60,.8)"; c.beginPath(); c.arc(xc + 140, yG - 53, 22 * (1 - t * 3), 0, 7); c.fill(); }
+    if (fired && xb < 900) { c.fillStyle = "#222"; roundRect(c, xb + 90, yG - 58, 22, 9, 4); c.fill(); }
+    if (fired) arrow(c, xc - 30, 70, xc - 30 - Math.max(Vc, 0.0001) * 60, 70, COL.v, { label: `V = ${fmt(Vc, 2)} m/s`, oy: -14 });
+    txt(c, `t = ${fmt(Math.min(t, 9.99), 2)} s`, 40, 26, { mono: true, size: 14 });
+    ro.innerHTML = `V = m·υ₀/M = ${fmt(m, 1)}·${u0}/${M} = <b class="c-v">${fmt(V, 3)} m/s</b> προς τα πίσω · Τριβή: α = μg = ${fmt(a, 2)} m/s² ⇒ σταματά σε t = V/α = <b>${fmt(tstop, 2)} s</b>, αφού διανύσει ${fmt(d, 2)} m.`;
+  });
+  cards(root, [
+    ["key", "Άσκηση 11 λυμένη (M = 1000 kg, m = 1 kg, υ₀ = 1000 m/s, μ = 0,05)", `<p>Α. ΑΔΟ: 0 = 1·1000 + 1000·V ⇒ V = <b>−1 m/s</b> (1 m/s αντίθετα στο βλήμα).</p><p>Β. Μετά την εκπυρσοκρότηση, η τριβή είναι η συνισταμένη: ΣF = −μMg. Από Δp = ΣF·Δt: 0 − 1000·1 = −0,05·1000·10·Δt ⇒ <b>Δt = 2 s</b>.</p>`],
+    ["tip", "Δραστηριότητα 1: το πιστόλι", `<p>1. Ναι, ισχύει ΑΔΟ (εσωτερικές οι δυνάμεις των αερίων, πολύ μικρός χρόνος). 2. «Ανάκρουση» = η κίνηση του όπλου προς τα πίσω. 3. V = m·υ/M. Γι' αυτό ο σκοπευτής στηρίζει το όπλο στον ώμο: «δένει» το όπλο με το σώμα του, μεγαλώνει τη μάζα M και μικραίνει τη V.</p>`],
+  ]);
+} });
+
+/* ---------- 2.7 γ. Πύραυλος ---------- */
+SL.push({ sec: "2.7", title: "Πώς κινείται ο πύραυλος", build(root) {
+  head(root, "2.7 · 2. Η αρχή της κίνησης των πυραύλων", "Ο πύραυλος: συνεχείς «ανακρούσεις»", [
+    "Βάλε ένα αυτόματο όπλο πάνω σε βαγόνι χωρίς τριβές. Κάθε βλήμα που φεύγει προς τα πίσω δίνει στο βαγόνι λίγη ορμή προς τα μπροστά. Με <b>συνεχή</b> βολή, το βαγόνι επιταχύνεται συνέχεια. Ο πύραυλος κάνει ακριβώς αυτό, με «μοριακές σφαίρες»: τα αέρια της καύσης.",
+  ]);
+  const { b, g } = bench(root, 900, 260);
+  const C = controls(b);
+  let mode = 0;
+  seg(C, ["Όπλο σε βαγόνι", "Φιάλη με αέρα", "Πύραυλος"], 0, (i) => { mode = i; reset(); });
+  const bb = el("div", { class: "seg" }); C.appendChild(bb);
+  const fireB = button(bb, "Ένα βλήμα", () => shoot(), "pri");
+  const autoB = button(bb, "Συνεχής βολή", () => { auto = !auto; autoB.setAttribute("aria-pressed", String(auto)); });
+  button(bb, "↺", () => reset());
+  const ro = readout(b);
+  const mp = 1, urel = 60; let M, V, x, shots, pellets, auto, cool, gas;
+  function reset() { M = 100; V = 0; x = 150; shots = 0; pellets = []; auto = false; cool = 0; gas = []; autoB && autoB.setAttribute("aria-pressed", "false"); }
+  function shoot() { if (mode !== 0 || M <= 60) return; const Vn = V + (mp * urel) / M; pellets.push({ x: x - 70, v: Vn - urel }); M -= mp; V = Vn; shots++; }
+  reset();
+  animate((dt) => {
+    fireB.style.display = mode === 0 ? "" : "none"; autoB.style.display = mode === 0 ? "" : "none";
+    if (mode === 0 && auto) { cool -= dt; if (cool <= 0) { shoot(); cool = 0.25; } }
+    if (mode > 0 && M > 60) { const dm = 8 * dt; V += (dm * urel) / M; M -= dm; for (let i = 0; i < 3; i++) gas.push({ x: x - 75, y: (mode === 2 ? 130 : 150) + (Math.random() - 0.5) * 14, v: V - urel * (0.8 + Math.random() * 0.4), life: 0 }); }
+    x += V * 2.2 * dt; if (x > 980) x = -100;
+    pellets.forEach((p) => (p.x += p.v * 2.2 * dt)); pellets = pellets.filter((p) => p.x > -30 && p.x < 930);
+    gas.forEach((p) => { p.x += p.v * 2.2 * dt; p.life += dt; }); gas = gas.filter((p) => p.life < 0.8);
+    const c = g.ctx; g.clear(); const yG = 190;
+    if (mode < 2) { c.strokeStyle = "#8b7d6b"; c.lineWidth = 4; c.beginPath(); c.moveTo(0, yG); c.lineTo(900, yG); c.stroke(); c.lineWidth = 2; for (let i = 0; i < 900; i += 22) c.strokeRect(i, yG + 2, 14, 5); }
+    if (mode === 0) { cart(c, x, yG, 140, 40, "#6b7280", ""); c.fillStyle = "#333"; roundRect(c, x - 30, yG - 85, 60, 26, 6); c.fill(); c.fillRect(x - 90, yG - 78, 62, 10); txt(c, `${fmt(M, 0)} kg`, x, yG - 42, { color: "#fff", weight: 800, align: "center" }); c.fillStyle = "#222"; pellets.forEach((p) => { roundRect(c, p.x - 6, yG - 77, 12, 7, 3); c.fill(); }); }
+    if (mode === 1) { cart(c, x, yG, 140, 40, "#6b7280", ""); c.fillStyle = "#4f8a83"; roundRect(c, x - 55, yG - 100, 110, 48, 22); c.fill(); c.fillStyle = "#333"; c.fillRect(x - 75, yG - 82, 22, 10); txt(c, "αέρας υπό πίεση", x, yG - 76, { color: "#fff", size: 11.5, weight: 800, align: "center" }); }
+    if (mode === 2) { c.save(); c.translate(x, 130); c.fillStyle = "#e9ecf3"; roundRect(c, -70, -18, 130, 36, 10); c.fill(); c.strokeStyle = "#9aa1ad"; c.stroke(); c.fillStyle = COL.F; c.beginPath(); c.moveTo(60, -18); c.lineTo(95, 0); c.lineTo(60, 18); c.closePath(); c.fill(); c.fillStyle = "#4b5160"; c.beginPath(); c.moveTo(-70, -18); c.lineTo(-88, -30); c.lineTo(-60, -18); c.moveTo(-70, 18); c.lineTo(-88, 30); c.lineTo(-60, 18); c.fill(); c.restore(); }
+    gas.forEach((p) => { c.fillStyle = mode === 2 ? `rgba(255,${140 + p.life * 100 | 0},60,${0.8 - p.life})` : `rgba(120,150,200,${0.8 - p.life})`; c.beginPath(); c.arc(p.x, p.y, 3 + p.life * 6, 0, 7); c.fill(); });
+    arrow(c, x, 40, x + V * 4, 40, COL.v, { label: `V = ${fmt(V, 2)} m/s`, oy: -14 });
+    ro.innerHTML = mode === 0 ? `Βλήμα 1 kg φεύγει με ${urel} m/s ως προς το βαγόνι. Κάθε βολή: ΑΔΟ ⇒ το βαγόνι κερδίζει Δυ = m·υ<sub>σχ</sub>/M ≈ ${fmt((mp * urel) / Math.max(M, 1), 2)} m/s. Βολές: <b>${shots}</b>, ταχύτητα <b class="c-v">${fmt(V, 2)} m/s</b>. Όσο ελαφραίνει, τόσο πιο πολύ κερδίζει σε κάθε βολή.`
+      : mode === 1 ? "Ανοίγουμε τη στρόφιγγα: τα μόρια φεύγουν προς τα πίσω σαν μικροσκοπικά βλήματα και το βαγόνι επιταχύνεται προς τα μπροστά." : "Ο πύραυλος δεν «σπρώχνει τον αέρα». Τα αέρια της καύσης φεύγουν προς τα πίσω με τεράστια ταχύτητα και ο πύραυλος παίρνει την αντίθετη ορμή. Γι' αυτό δουλεύει και στο κενό του διαστήματος!";
+  });
+  cards(root, [
+    ["key", "Η αρχή του πυραύλου", `<p>Ορμή προς τα πίσω στα αέρια = ορμή προς τα μπροστά στον πύραυλο. Τα αέρια <b>δεν είναι αποθηκευμένα</b> υπό πίεση (όπως στη φιάλη) αλλά παράγονται από την <b>καύση</b> ειδικού μίγματος καυσίμου.</p>`],
+    ["trap", "Παρανόηση", `<p>«Ο πύραυλος προχωράει επειδή τα καυσαέρια σπρώχνουν τον αέρα». <b>Λάθος.</b> Αν ήταν έτσι, δεν θα κινούνταν στο διάστημα. Σπρώχνει τα δικά του καυσαέρια, και αυτά σπρώχνουν αυτόν (3ος νόμος, ΑΔΟ).</p>`],
+    ["tip", "Δραστηριότητα 2: μπαλόνι, πλοίο, αεροπλάνο", `<p><b>Μπαλόνι-πύραυλος:</b> ο αέρας βγαίνει από πίσω, το μπαλόνι τρέχει μπροστά στο νήμα. <b>Πλοίο:</b> η προπέλα σπρώχνει νερό προς τα πίσω, το πλοίο πάει μπροστά. <b>Ελικοφόρο αεροπλάνο:</b> ο έλικας σπρώχνει αέρα προς τα πίσω. Όλα: ορμή προς τα πίσω ⇒ ορμή προς τα μπροστά.</p>`],
+  ]);
+} });
+
+/* ---------- 2.7 δ. Διασπάσεις και εκρήξεις ---------- */
+SL.push({ sec: "2.7", title: "Εκρήξεις και διασπάσεις", build(root) {
+  head(root, "2.7 · Ερωτήσεις 12, 14 και άσκηση 14", "Εκρήξεις: τα κομμάτια μοιράζονται την ορμή", [
+    "Σε μια έκρηξη οι δυνάμεις είναι εσωτερικές, πολύ μεγάλες, και κρατούν ελάχιστο χρόνο: ισχύει <b>ΑΔΟ</b> για αμέσως πριν και αμέσως μετά. Διάλεξε περίπτωση:",
+  ]);
+  const { b, g } = bench(root, 900, 320);
+  const C = controls(b);
+  let k = 0;
+  seg(C, ["Ακίνητο → m και 2m", "Στο μέγιστο ύψος", "Πύραυλος σε κίνηση"], 0, (i) => { k = i; t = 0; });
+  button(C, "💥 Έκρηξη", () => (t = 0), "pri");
+  const ro = readout(b); let t = 0;
+  animate((dt) => {
+    t += dt; const c = g.ctx; g.clear(); const T0 = 0.8;
+    if (k === 0) {
+      ground(c, 220, 10, 890); const u = 3, e = Math.max(0, t - T0);
+      if (t < T0) block(c, 450, 220, 70, 50, "#6b7280", "3m");
+      else { block(c, 450 - 30 - 2 * u * 40 * e, 220, 40, 34, COL.b1, "m"); block(c, 450 + 30 + u * 40 * e, 220, 60, 46, COL.b2, "2m");
+        arrow(c, 450 - 30 - 2 * u * 40 * e, 140, 450 - 30 - 2 * u * 40 * e - 2 * u * 18, 140, COL.v, { label: "2υ", oy: -12 }); arrow(c, 450 + 30 + u * 40 * e, 140, 450 + 30 + u * 40 * e + u * 18, 140, COL.v, { label: "υ", oy: -12 });
+        pBars(c, 250, 250, 400, [{ label: "p (m)", val: -2, color: COL.b1 }, { label: "p (2m)", val: 2, color: COL.b2 }, { label: "ολική", val: 0, color: "#1d2433" }], 3, { unit: "m·υ", rowH: 22, d: 0 }); }
+      if (t > T0 + 3.5) t = 0;
+      ro.innerHTML = "0 = m·υ₁ + 2m·υ₂ ⇒ υ₁ = −2υ₂. <b>Ορμές αντίθετες με ίσα μέτρα</b>, ταχύτητες αντίθετες με <b>διαφορετικά μέτρα</b>: το ελαφρύ πάει διπλάσια γρήγορα. Ερώτηση 14: σωστά τα <b>Γ</b> και <b>Ε</b>.";
+    } else if (k === 1) {
+      ground(c, 300, 10, 890); const H = 200, m1 = 1, m2 = 2, u1 = 6, u2 = (m1 * u1) / m2, S = 22, e = Math.max(0, t - 2 * T0);
+      const ascent = clamp(t / (2 * T0), 0, 1), y = 300 - H * Math.sin((ascent * Math.PI) / 2) - 20;
+      c.save(); c.setLineDash([4, 5]); c.strokeStyle = "#bbb"; c.beginPath(); c.moveTo(450, 280); c.lineTo(450, 300 - H - 20); c.stroke(); c.restore();
+      if (t < 2 * T0) ball(c, 450, y, 14, "#6b7280");
+      else {
+        // οριζόντιες βολές από ύψος H: ίδιος χρόνος πτώσης Tf, οριζόντιες αποστάσεις ανάλογες των ταχυτήτων
+        const Tf = 1.8, top = 300 - H - 20, D1 = 330, D2 = (D1 * u2) / u1, s = Math.min(e, Tf) / Tf;
+        const Ys = (q) => top + (H + 4) * q * q;
+        ball(c, 450 - D1 * s, Ys(s), 10, COL.b1, "m₁", { size: 10 }); ball(c, 450 + D2 * s, Ys(s) - 4, 14, COL.b2, "m₂", { size: 10 });
+        c.save(); c.setLineDash([3, 4]);
+        c.strokeStyle = COL.b1; c.beginPath(); for (let q = 0; q <= s + 1e-6; q += 0.02) (q ? c.lineTo(450 - D1 * q, Ys(q)) : c.moveTo(450, Ys(0))); c.stroke();
+        c.strokeStyle = "#b07d0c"; c.beginPath(); for (let q = 0; q <= s + 1e-6; q += 0.02) (q ? c.lineTo(450 + D2 * q, Ys(q)) : c.moveTo(450, Ys(0))); c.stroke(); c.restore();
+        if (s >= 1) { txt(c, "φτάνουν ταυτόχρονα", 450 - D1, 312, { align: "center", size: 12.5, color: COL.b1, weight: 700 }); txt(c, "x₂ = x₁·m₁/m₂", 450 + D2, 312, { align: "center", size: 12.5, color: "#b07d0c", weight: 700 }); }
+        if (e < 1.2) { arrow(c, 450, 300 - H - 50, 450 - u1 * 14, 300 - H - 50, COL.v, { label: "υ₁", oy: -12 }); arrow(c, 450, 300 - H - 50, 450 + u2 * 14, 300 - H - 50, COL.v, { label: "υ₂ = m₁υ₁/m₂", oy: -12, ox: 40 }); }
+      }
+      if (t > 2 * T0 + 4.5) t = 0;
+      ro.innerHTML = "Στο μέγιστο ύψος η ταχύτητα είναι <b>0</b>, άρα p<sub>πριν</sub> = 0. Αν το m₁ φύγει οριζόντια με υ₁, τότε 0 = m₁υ₁ + m₂υ₂ ⇒ <b>υ₂ = −m₁υ₁/m₂</b>: οριζόντια, <b>αντίθετη</b> φορά (ερώτηση 12). Μετά κάνουν οριζόντιες βολές από το ίδιο ύψος, άρα φτάνουν στο έδαφος <b>ταυτόχρονα</b>.";
+    } else {
+      const e = Math.max(0, t - T0), yb = 260;
+      c.fillStyle = "#e9eef6"; c.fillRect(0, 0, 900, 320);
+      const rocket = (x, y, w, h, col, lab) => { c.fillStyle = col; roundRect(c, x - w / 2, y - h / 2, w, h, 8); c.fill(); txt(c, lab, x, y, { color: "#fff", weight: 800, align: "center", size: 12 }); };
+      if (t < T0) { rocket(450, yb - t * 60, 46, 100, "#6b7280", "1000 kg"); arrow(c, 500, yb - t * 60, 500, yb - t * 60 - 50, COL.v, { label: "500 m/s", ox: 46 }); }
+      else { const y0 = yb - T0 * 60; rocket(400, y0 - 50 - e * 120, 40, 80, COL.b1, "800 kg"); rocket(520, y0 + 10 + e * 180, 30, 40, COL.b2, "200");
+        arrow(c, 445, y0 - 50 - e * 120, 445, y0 - 50 - e * 120 - 60, COL.v, { label: "1000 m/s ↑", ox: 54 }); arrow(c, 560, y0 + 10 + e * 180, 560, y0 + 10 + e * 180 + 60, COL.F, { label: "1500 m/s ↓", ox: 54 }); }
+      if (t > T0 + 1.6) t = 0;
+      ro.innerHTML = "Θετικά προς τα πάνω. ΑΔΟ: M·υ = m₁υ₁ + m₂υ₂ ⇒ 1000·500 = 800·1000 + 200·υ₂ ⇒ 500 000 = 800 000 + 200υ₂ ⇒ <b>υ₂ = −1500 m/s</b>: το κομμάτι των 200 kg κινείται <b>προς τα κάτω</b> με 1500 m/s (άσκηση 14).";
+    }
+  });
+  cards(root, [
+    ["key", "Η συνταγή για κάθε έκρηξη", `<ol><li>Γράψε την ορμή <b>αμέσως πριν</b> (προσοχή: αν κινείται, δεν είναι 0!).</li><li>Γράψε την ορμή <b>αμέσως μετά</b>, με πρόσημα, για κάθε κομμάτι.</li><li>Εξίσωσε: p<sub>πριν</sub> = p<sub>μετά</sub>. Λύσε για την άγνωστη ταχύτητα. Αρνητικό αποτέλεσμα = αντίθετη φορά από αυτή που υπέθεσες.</li></ol>`],
+    ["trap", "Ενέργεια στην έκρηξη", `<p>Στην έκρηξη η κινητική ενέργεια <b>αυξάνεται</b> (από χημική ενέργεια). Άρα ούτε εδώ γράφεις διατήρηση κινητικής ενέργειας. Μόνο ΑΔΟ.</p>`],
+  ]);
+} });
+/* ============ ΑΣΚΗΣΕΙΣ, ΕΡΩΤΗΣΕΙΣ, ΣΥΝΟΨΗ ============ */
+
+/* ---------- Η μέθοδος + λυμένο παράδειγμα δύο σταδίων ---------- */
+SL.push({ sec: "ask", title: "Η μέθοδος σε 5 βήματα", build(root) {
+  head(root, "Πώς λύνεις κάθε άσκηση ορμής", "Η μέθοδος σε 5 βήματα", ["Αυτά τα βήματα γράφεις στο γραπτό σου. Οι βαθμοί είναι στην αιτιολόγηση, όχι μόνο στο τελικό αποτέλεσμα."]);
+  cards(root, [["key", "", `<ol>
+    <li><b>Σχήμα «πριν» και «μετά»</b>, με τα βέλη των ταχυτήτων. Μετάτρεψε μονάδες (km/h ÷ 3,6 = m/s, g → kg).</li>
+    <li><b>Θετική φορά</b>: τη γράφεις ρητά («θετική φορά προς τα δεξιά»).</li>
+    <li><b>Σύστημα και έλεγχος</b>: «Το σύστημα (1)+(2) είναι μονωμένο / η κρούση διαρκεί ελάχιστα, άρα ισχύει ΑΔΟ».</li>
+    <li><b>Εξίσωση</b>: p<sub>πριν</sub> = p<sub>μετά</sub> με πρόσημα. Ή, για ένα σώμα: ΣF = Δp/Δt.</li>
+    <li><b>Δεύτερο στάδιο</b>: μετά την κρούση συνήθως τριβή ή ύψος. Εκεί <b>δεν</b> ισχύει ΑΔΟ: χρησιμοποιείς ΣF = Δp/Δt, κινηματική ή ενέργεια.</li></ol>`]]);
+  root.appendChild(el("h3", {}, "Λυμένο παράδειγμα με δύο στάδια: η άσκηση 17"));
+  root.appendChild(el("p", {}, "m₁ = 0,4 kg και m₂ = 0,6 kg κινούνται αντίθετα σε οριζόντιο επίπεδο με μ = 0,2. Τη στιγμή της κρούσης έχουν υ₁ = 20 m/s και υ₂ = 5 m/s και συγκρούονται πλαστικά. Βρες: (Α) την ταχύτητα του συσσωματώματος, (Β) την απώλεια κινητικής ενέργειας, (Γ) πόσο διάστημα θα διανύσει. (g = 10 m/s²)"));
+  const { b, g } = bench(root, 900, 200);
+  const ro = readout(b); let t = 0;
+  animate((dt) => {
+    t += dt; if (t > 7) t = 0; const c = g.ctx; g.clear(); const yG = 150, tc = 1.2, V = 5, a = 2, ts = V / a;
+    ground(c, yG, 0, 900, { color: "#a8916e" });
+    let x1, x2, v;
+    if (t < tc) { x1 = 100 + 20 * 14 * t; x2 = 100 + 20 * 14 * tc + 60 + 5 * 14 * (tc - t); v = null; }
+    else { const s = Math.min(t - tc, ts), d = V * s - 0.5 * a * s * s; x1 = 100 + 20 * 14 * tc + d * 14; x2 = x1 + 60; v = V - a * s; }
+    block(c, x1, yG, 56, 40, COL.b1, "0,4"); block(c, x2, yG, 64, 48, COL.b2, "0,6");
+    if (v === null) { arrow(c, x1, 60, x1 + 70, 60, COL.v, { label: "20 m/s", oy: -12 }); arrow(c, x2, 60, x2 - 30, 60, COL.v, { label: "5 m/s", oy: -12 }); txt(c, "Στάδιο 1: κρούση (ΑΔΟ)", 450, 20, { align: "center", weight: 800 }); }
+    else { if (v > 0.01) { arrow(c, x1 + 30, 60, x1 + 30 + v * 14, 60, COL.v, { label: `V = ${fmt(v, 2)}`, oy: -12 }); arrow(c, x2 + 30, yG - 4, x2 - 20, yG - 4, "#e2571e", { label: "T", oy: 14 }); } txt(c, "Στάδιο 2: ολίσθηση με τριβή (όχι ΑΔΟ!)", 450, 20, { align: "center", weight: 800, color: "#e2571e" }); }
+    ro.innerHTML = t < tc ? "Θετική φορά: η φορά της υ₁." : `Μετά την κρούση: V = 5 m/s, επιβράδυνση από την τριβή α = μg = 2 m/s². ${v <= 0.01 ? "Σταμάτησε: s = 6,25 m." : ""}`;
+  });
+  const rv = el("div"); root.appendChild(rv);
+  reveal(rv, [
+    "<b>Α. Στάδιο 1, κρούση.</b> Θετική φορά: της υ₁. Η κρούση διαρκεί ελάχιστα, η τριβή είναι αμελητέα σε σχέση με τις δυνάμεις της κρούσης ⇒ ΑΔΟ: <span class='m'>m₁υ₁ − m₂υ₂ = (m₁ + m₂)V</span>",
+    "<span class='m'>0,4·20 − 0,6·5 = 1·V ⇒ 8 − 3 = V ⇒ <b>V = 5 m/s</b></span>, θετικό, άρα προς τη φορά που κινούνταν το m₁.",
+    "<b>Β. Απώλεια K.</b> K<sub>πριν</sub> = ½·0,4·20² + ½·0,6·5² = 80 + 7,5 = 87,5 J. K<sub>μετά</sub> = ½·1·5² = 12,5 J. <b>Απώλεια = 75 J</b>.",
+    "<b>Γ. Στάδιο 2, ολίσθηση.</b> Εδώ η τριβή δρα για πολύ χρόνο: όχι ΑΔΟ. T = μ(m₁+m₂)g = 0,2·1·10 = 2 N ⇒ α = T/(m₁+m₂) = 2 m/s².",
+    "Χρόνος ως τη στάση (Δp = ΣF·Δt): 0 − 1·5 = −2·Δt ⇒ Δt = 2,5 s. Διάστημα: s = V·t − ½αt² = 5·2,5 − ½·2·2,5² = 12,5 − 6,25 = <b>6,25 m</b> (ή s = V²/2α = 25/4).",
+  ], "Επόμενο βήμα λύσης");
+} });
+
+/* ---------- Οι 17 ασκήσεις του βιβλίου ---------- */
+SL.push({ sec: "ask", title: "Οι 17 ασκήσεις του βιβλίου", build(root) {
+  head(root, "Ασκήσεις – Προβλήματα (σελ. 65–67)", "Όλες οι ασκήσεις του βιβλίου, λυμένες βήμα βήμα", ["Άνοιξε μια άσκηση, <b>λύσε τη στο τετράδιο</b>, και μετά πάτα «Επόμενο βήμα λύσης» για να συγκρίνεις. Με * οι πιο δύσκολες."]);
+  const host = el("div"); root.appendChild(host);
+  accordion(host, [
+    { n: "1", title: "Ορμή λεωφορείου (2500 kg, 72 km/h)", steps: ["Μονάδες: 72 km/h = 72/3,6 = <b>20 m/s</b>.", "p = m·υ = 2500·20 = <b>50 000 kg·m/s</b>, με την κατεύθυνση της κίνησης."] },
+    { n: "2", title: "Boeing 747 (10⁵ kg) σταματά από 216 km/h σε 120 s", steps: ["216/3,6 = 60 m/s. Δp = 0 − 10⁵·60 = −6·10⁶ kg·m/s.", "F = Δp/Δt = −6·10⁶/120 = <b>−5·10⁴ N</b>: 50 000 N αντίθετα στην κίνηση."] },
+    { n: "3", title: "Κλωτσιά: μπάλα 0,5 kg, 0 → 24 m/s σε 0,03 s", steps: ["Δp = 0,5·24 − 0 = 12 kg·m/s.", "F = 12/0,03 = <b>400 N</b>."] },
+    { n: "4", title: "Αλεξιπτωτιστής 90 kg, χωρίς αλεξίπτωτο ανοιχτό", steps: ["Μόνη δύναμη το βάρος: Δp/Δt = ΣF = mg = 90·10 = <b>900 N</b> (kg·m/s ανά s).", "Σε 1 s: Δp = 900 kg·m/s ⇒ m·υ − 0 = 900 ⇒ υ = <b>10 m/s</b> (ξεκινά από ηρεμία, όπως στην ελεύθερη πτώση)."] },
+    { n: "5", title: "Μπάλα 0,5 kg: φτάνει με 30 m/s, αναπηδά με 10 m/s, Δt = 0,25 s", steps: ["Θετικά προς τα πάνω: p<sub>αρχ</sub> = −15, p<sub>τελ</sub> = +5 kg·m/s.", "Α. Δp = 5 − (−15) = <b>+20 kg·m/s</b> (προς τα πάνω).", "Β. ΣF = 20/0,25 = 80 N. ΣF = N − mg ⇒ N = 80 + 5 = <b>85 N</b> (μέση δύναμη από το δάπεδο)."] },
+    { n: "6", title: "Maserati 1600 kg, 0 → 90 km/h σε 5 s", steps: ["90/3,6 = 25 m/s. Α. Δp = 1600·25 = <b>40 000 kg·m/s</b>.", "Β. F = 40 000/5 = <b>8000 N</b>."] },
+    { n: "7", title: "Βροχή: 500 σταγόνες/s, 3·10⁻⁵ kg, 17 m/s", steps: ["Α. Κάθε σταγόνα σταματά: |Δp| = 3·10⁻⁵·17 = <b>5,1·10⁻⁴ kg·m/s</b>.", "Β. Σε 1 s: F = 500·5,1·10⁻⁴/1 = <b>0,255 N</b> στο υπόστεγο, προς τα κάτω."] },
+    { n: "8", title: "Διάγραμμα p–t (m = 1 kg): p = 2, μετά ανεβαίνει σε 4", steps: ["Α. υ = p/m: ελάχιστη <b>2 m/s</b> (0–1 s), μέγιστη <b>4 m/s</b> (2–3 s).", "Β. ΣF = κλίση: 0 στο 0–1 s, (4 − 2)/(2 − 1) = <b>2 N</b> στο 1–2 s, 0 στο 2–3 s. Γραφικά: ένα «σκαλοπάτι» ύψους 2 N από 1 ως 2 s."] },
+    { n: "9", title: "Κιβώτιο 200 kg, F = 500 N, μ = 0,1, 4 s", steps: ["T = μmg = 200 N, ΣF = 500 − 200 = 300 N.", "Δp = ΣF·Δt ⇒ 200·υ = 300·4 ⇒ <b>υ = 6 m/s</b>."] },
+    { n: "10", title: "Τένις 100 g στον τοίχο: 10 m/s → 8 m/s, Δt = 0,1 s", steps: ["Θετικά προς τον τοίχο. Α. p<sub>πριν</sub> = 0,1·10 = <b>+1 kg·m/s</b>, p<sub>μετά</sub> = 0,1·(−8) = <b>−0,8 kg·m/s</b>.", "Β. Δp = −0,8 − 1 = <b>−1,8 kg·m/s</b>.", "Γ. F = −1,8/0,1 = <b>−18 N</b>: 18 N από τον τοίχο προς τα έξω."] },
+    { n: "11*", title: "Πυροβόλο 1000 kg, βλήμα 1 kg με 1000 m/s, μ = 0,05", steps: ["Α. ΑΔΟ: 0 = 1·1000 + 1000·V ⇒ <b>V = −1 m/s</b> (αντίθετα στο βλήμα).", "Β. Τριβή T = μMg = 0,05·1000·10 = 500 N. Δp = ΣF·Δt: 0 − 1000·1 = −500·Δt ⇒ <b>Δt = 2 s</b>."] },
+    { n: "12*", title: "m₁ = 2 kg (10 m/s), m₂ = 4 kg (6 m/s)", steps: ["Α. Ίδια φορά: p = 20 + 24 = <b>44 kg·m/s</b>. Αντίθετες: p = 20 − 24 = <b>−4 kg·m/s</b> (4 kg·m/s προς τη φορά του m₂).", "Β. Πλαστική, ΑΔΟ: −4 = (2 + 4)·V ⇒ V = −2/3 ≈ <b>−0,67 m/s</b>: 0,67 m/s προς τη φορά που κινούνταν το m₂."] },
+    { n: "13", title: "Βλήμα 100 g με 400 m/s διαπερνά κιβώτιο 2 kg, βγαίνει με 100 m/s σε 0,1 s", steps: ["Α. ΑΔΟ: 0,1·400 + 0 = 0,1·100 + 2·V ⇒ 40 = 10 + 2V ⇒ <b>V = 15 m/s</b>.", "Β. Για το κιβώτιο: F = Δp/Δt = (2·15 − 0)/0,1 = <b>300 N</b>, με τη φορά του βλήματος. (Το βλήμα δέχεται 300 N αντίθετα: Δp = 0,1·(100 − 400) = −30 ⇒ −30/0,1 = −300 N.)"] },
+    { n: "14*", title: "Πύραυλος 1000 kg με 500 m/s χωρίζεται: 800 kg με 1000 m/s", steps: ["Θετικά προς τα πάνω. ΑΔΟ: 1000·500 = 800·1000 + 200·υ₂.", "500 000 = 800 000 + 200υ₂ ⇒ υ₂ = −300 000/200 = <b>−1500 m/s</b>: 1500 m/s <b>προς τη Γη</b>."] },
+    { n: "15", title: "Μαθητής 60 kg σε αυτοκίνητο 1200 kg με 72 km/h, μετωπική, σταματούν σε 0,12 s", steps: ["Α. Μετά ακίνητα ⇒ p<sub>πριν</sub> = 0 ⇒ p₂ = −1200·20 = <b>−24 000 kg·m/s</b> (αντίθετη φορά).", "Β. Μαθητής: Δp = 0 − 60·20 = −1200 kg·m/s ⇒ F = 1200/0,12 = <b>10 000 N</b>.", "Βάρος 600 N ⇒ F ≈ <b>16,7 φορές</b> το βάρος του."] },
+    { n: "16", title: "Όχημα 2000 kg χτυπά ακίνητο 1000 kg, κινούνται μαζί με 4 m/s", steps: ["Α. ΑΔΟ: 2000·υ = 3000·4 ⇒ <b>υ = 6 m/s</b>.", "Β. Δp(1000) = 1000·4 − 0 = <b>+4000 kg·m/s</b>.", "Γ. Δp(2000) = 2000·4 − 2000·6 = <b>−4000 kg·m/s</b>. Αντίθετες μεταβολές, όπως λέει η ΑΔΟ."] },
+    { n: "17*", title: "Πλαστική κρούση με τριβή (λυμένη στην προηγούμενη διαφάνεια)", steps: ["Α. 0,4·20 − 0,6·5 = 1·V ⇒ <b>V = 5 m/s</b>.", "Β. 87,5 − 12,5 = <b>75 J</b>.", "Γ. α = μg = 2 m/s² ⇒ s = V²/2α = <b>6,25 m</b>."] },
+  ]);
+} });
+
+/* ---------- Οι 19 ερωτήσεις του βιβλίου ---------- */
+SL.push({ sec: "ask", title: "Οι 19 ερωτήσεις του βιβλίου", build(root) {
+  head(root, "Ερωτήσεις (σελ. 60–64)", "Όλες οι ερωτήσεις του βιβλίου με απαντήσεις", ["Σκέψου την απάντηση πριν ανοίξεις. Δίπλα σε κάθε μία γράφει σε ποια διαφάνεια εξηγείται αναλυτικά."]);
+  const host = el("div"); root.appendChild(host);
+  const A = (h) => `<p>${h}</p>`;
+  accordion(host, [
+    { n: "1", title: "Τι είναι σύστημα σωμάτων; Τι σημαίνει μονωμένο;", body: A("Σύστημα: δύο ή περισσότερα σώματα που αλληλεπιδρούν και μελετάμε μαζί. Μονωμένο: η συνισταμένη των εξωτερικών δυνάμεων είναι μηδέν (ΣF<sub>εξ</sub> = 0). <span class='tag'>2.1</span>") },
+    { n: "2", title: "Μονάδα της ορμής στο S.I.", body: A("<b>1 kg·m/s = 1 N·s</b>. <span class='tag'>2.3</span>") },
+    { n: "3", title: "Άνθρωπος σε ακίνητη βάρκα: δυνάμεις", body: A("Εξωτερικές: βάρος ανθρώπου, βάρος βάρκας (από τη Γη), άνωση (από το νερό). Εσωτερικές: η δύναμη που ασκεί ο άνθρωπος στη βάρκα (πατάει) και η αντίδραση της βάρκας στον άνθρωπο. <span class='tag'>2.1</span>") },
+    { n: "4", title: "Μαθητής τραβά κιβώτιο: εσωτερική ή εξωτερική;", body: A("Α Σωστό, Β Σωστό, Γ Λάθος, Δ Λάθος. <span class='tag'>2.1 Εσωτερικές και εξωτερικές</span>") },
+    { n: "5", title: "Ο ψαράς και η πετονιά", body: A("Για ίδια μεταβολή ορμής, απότομο τράβηγμα = μικρό Δt ⇒ μεγάλη F = Δp/Δt, που ξεπερνά την αντοχή της. Σιγά σιγά: μεγάλο Δt, μικρή δύναμη. <span class='tag'>2.4 Ίδια Δp, άλλο Δt</span>") },
+    { n: "6", title: "Πτώση στη θάλασσα: από βάρκα και από εξέδρα", body: A("Από την εξέδρα φτάνει με πολύ μεγαλύτερη ταχύτητα, άρα μεγάλη Δp. Το νερό τον σταματά γρήγορα (μικρό Δt), άρα δέχεται μεγάλη δύναμη. <span class='tag'>2.4</span>") },
+    { n: "7*", title: "Μπορεί p = 0 και Δp/Δt ≠ 0;", body: A("Ναι: στο ψηλότερο σημείο μιας κατακόρυφης βολής, p = 0 αλλά Δp/Δt = −mg. <span class='tag'>2.4 Διάγραμμα p–t</span>") },
+    { n: "8", title: "Τέσσερις προτάσεις για ορμή και δυνάμεις", body: A("Α <b>Σωστό</b> (αντίθετες ορμές). Β <b>Λάθος</b> (εσωτερική για Γη–Σελήνη). Γ <b>Λάθος</b> (π.χ. 1 kg·6 m/s = 3 kg·2 m/s). Δ <b>Σωστό</b> (Δp = F·Δt). <span class='tag'>2.3, 2.4</span>") },
+    { n: "9", title: "Μπάλα πάνω-κάτω: «Δp = 0, άρα παραβιάζεται ο νόμος»", body: A("Η ταχύτητα αλλάζει φορά: Δp = −2mυ ≠ 0, ίση με την ώθηση του βάρους. Κανένας νόμος δεν παραβιάζεται. <span class='tag'>2.4 Διάγραμμα p–t</span>") },
+    { n: "10", title: "Κατακόρυφη βολή: διαγράμματα p(t) και Δp/Δt", body: A("p(t): <b>Ε</b> (ευθεία που κατεβαίνει και περνά από το 0 στο t = υ₀/g). Δp/Δt: σταθερό σε όλη την κίνηση, μέτρο mg: <b>Β</b>. <span class='tag'>2.4 Διάγραμμα p–t</span>") },
+    { n: "11", title: "Δύο σώματα δεμένα με νήμα, τα τραβά η F", body: A("Α Σωστό, Β Λάθος, Γ Σωστό, Δ Σωστό. <span class='tag'>2.5 Πότε ισχύει</span>") },
+    { n: "12", title: "Διάσπαση στο μέγιστο ύψος", body: A("Στο μέγιστο ύψος υ = 0 ⇒ p<sub>πριν</sub> = 0. 0 = m₁υ₁ + m₂υ₂ ⇒ υ₂ = −m₁υ₁/m₂: οριζόντια, αντίθετη φορά, μέτρο m₁υ₁/m₂. <span class='tag'>2.7 Εκρήξεις</span>") },
+    { n: "13", title: "Παγοδρόμοι m και 0,9m: ο ένας σπρώχνει τον άλλο", body: A("<b>Γ: −p</b>. Αρχικά p = 0, άρα αντίθετες ορμές. <span class='tag'>Quiz 2</span>") },
+    { n: "14", title: "Ακίνητο βλήμα → m και 2m", body: A("Σωστά: <b>Γ</b> (αντίθετες ορμές) και <b>Ε</b> (αντίθετες ταχύτητες με διαφορετικά μέτρα). Α, Β, Δ λάθος. <span class='tag'>2.7 Εκρήξεις</span>") },
+    { n: "15", title: "Ορμή p, πλαστική με ακίνητο διπλάσιας μάζας", body: A("Α <b>Σωστό</b> (ορμή p). Β <b>Λάθος</b>: μειώνεται κατά 2p/3. Γ <b>Σωστό</b>: αυξάνεται κατά 2p/3. <span class='tag'>Quiz 2</span>") },
+    { n: "16", title: "Μετωπική m και 2m, μένουν ακίνητα", body: A("Α Λάθος (το m είχε διπλάσια ταχύτητα), Β Λάθος (αντίθετες, όχι ίσες), <b>Γ Σωστό</b>, <b>Δ Σωστό</b>. <span class='tag'>2.6 Σύγκρουση αυτοκινήτων</span>") },
+    { n: "17", title: "Πινγκ-πονγκ: πρόσπτωση πιο γρήγορη από επιστροφή", body: A("Σωστό το <b>Γ</b>: η δύναμη έχει την κατεύθυνση της Δp, δηλαδή της ταχύτητας απομάκρυνσης. Το μέτρο της είναι F = m(υ₁ + υ₂)/Δt (τα μέτρα προστίθενται). <span class='tag'>2.4 Αναπηδήσεις</span>") },
+    { n: "18", title: "Καράτε: κοφτά χτυπήματα", body: A("Ναι, σχετίζεται με το F = Δp/Δt: πολύ μικρό Δt ⇒ πολύ μεγάλη δύναμη στο τούβλο. <span class='tag'>2.4</span>") },
+    { n: "19", title: "Ορμή και διατήρησή της: ποιες σωστές;", body: A("Α Λάθος, Β Λάθος, <b>Γ Σωστό</b>, <b>Δ Σωστό</b>. <span class='tag'>2.5 Πότε ισχύει</span>") },
+  ]);
+} });
+
+/* ---------- Quiz 3 ---------- */
+SL.push({ sec: "ask", title: "Quiz 3: κρούσεις και εφαρμογές", build(root) {
+  head(root, "Τελικό τεστ", "Quiz 3: κρούσεις, ενέργεια, εφαρμογές", ["Αν τα βρεις όλα, είσαι έτοιμος για το διαγώνισμα."]);
+  quiz(root, [
+    { q: "Σε μια πλαστική κρούση δύο σωμάτων:", opts: ["διατηρούνται ορμή και κινητική ενέργεια", "διατηρείται μόνο η ορμή", "διατηρείται μόνο η κινητική ενέργεια", "δεν διατηρείται τίποτα"], a: 1, why: "ΑΔΟ πάντα στην κρούση. Η κινητική ενέργεια μειώνεται (γίνεται θερμότητα, παραμόρφωση)." },
+    { q: "Σφαίρα 2 kg με 6 m/s σφηνώνεται σε ακίνητο σώμα 4 kg. Πόση κινητική ενέργεια χάνεται;", opts: ["0 J", "12 J", "24 J", "36 J"], a: 2, why: "V = 2·6/6 = 2 m/s. K<sub>πριν</sub> = ½·2·36 = 36 J, K<sub>μετά</sub> = ½·6·4 = 12 J. Χάνονται 24 J (το m₂/(m₁+m₂) = 2/3 της αρχικής)." },
+    { q: "Δύο αμαξάκια με ελατήριο ανάμεσά τους (m₁ = 1 kg, m₂ = 3 kg), αρχικά ακίνητα. Κόβουμε το νήμα και το m₂ φεύγει με 2 m/s. Το m₁ φεύγει με:", opts: ["2 m/s ίδια φορά", "6 m/s αντίθετα", "2/3 m/s αντίθετα", "6 m/s ίδια φορά"], a: 1, why: "0 = 1·υ₁ + 3·2 ⇒ υ₁ = −6 m/s: 6 m/s αντίθετα." },
+    { q: "Γιατί ένας πύραυλος μπορεί να επιταχύνεται στο κενό του διαστήματος;", opts: ["Σπρώχνει τον αέρα πίσω του", "Αποβάλλει αέρια προς τα πίσω και παίρνει αντίθετη ορμή", "Τον τραβάει η βαρύτητα των άστρων"], a: 1, why: "ΑΔΟ: η ορμή που παίρνουν τα αέρια προς τα πίσω είναι ίση και αντίθετη με αυτή που κερδίζει ο πύραυλος. Δεν χρειάζεται αέρας." },
+    { q: "Σώμα 3 kg ακίνητο εκρήγνυται σε δύο κομμάτια 1 kg και 2 kg. Το 1 kg φεύγει με 10 m/s. Η συνολική κινητική ενέργεια μετά είναι:", opts: ["0 J", "50 J", "75 J", "100 J"], a: 2, why: "Το 2 kg: 0 = 1·10 + 2·υ ⇒ υ = −5 m/s. K = ½·1·100 + ½·2·25 = 50 + 25 = 75 J. Αυξήθηκε από 0: στις εκρήξεις η K αυξάνεται." },
+    { q: "Βλήμα σφηνώνεται σε ξύλο που κρέμεται από νήμα. Σε ποιο στάδιο γράφεις ΑΔΟ;", opts: ["Σε όλη την κίνηση ως το μέγιστο ύψος", "Μόνο στη στιγμή της κρούσης", "Πουθενά, γιατί υπάρχει βάρος"], a: 1, why: "ΑΔΟ μόνο για την κρούση (ελάχιστο Δt). Μετά, για την άνοδο, χρησιμοποιείς διατήρηση μηχανικής ενέργειας." },
+    { q: "Σε ελαστική μετωπική κρούση ίσων μαζών, με το ένα ακίνητο:", opts: ["Κολλάνε και κινούνται με υ/2", "Το κινούμενο σταματά και το άλλο φεύγει με την ταχύτητά του", "Γυρίζουν πίσω και τα δύο"], a: 1, why: "Ανταλλάσσουν ταχύτητες (εφαρμογή του βιβλίου, σελ. 52, μπιλιάρδο, λίκνο του Νεύτωνα)." },
+  ]);
+} });
+
+/* ---------- Σύνοψη ---------- */
+SL.push({ sec: "ask", title: "Σύνοψη", build(root) {
+  head(root, "Περίληψη του κεφαλαίου", "Όλο το κεφάλαιο σε 8 φράσεις", ["Αν θυμάσαι αυτές, θυμάσαι το κεφάλαιο. Γράψ' τες σε ένα χαρτάκι."]);
+  cards(root, [
+    ["key", "1. Σύστημα", "<p>Σώματα που αλληλεπιδρούν. Εσωτερικές: από σώματα μέσα στο σύστημα. Εξωτερικές: από σώματα έξω.</p>"],
+    ["key", "2. Μονωμένο", "<p>ΣF<sub>εξ</sub> = 0. Στη φύση μόνο κατά προσέγγιση. Κάθε κρούση / έκρηξη το θεωρούμε μονωμένο.</p>"],
+    ["key", "3. Ορμή", `<p><span class="m">${vec("p")} = m${vec("υ")}</span>, διάνυσμα με την κατεύθυνση της ταχύτητας, μονάδα kg·m/s = N·s.</p>`],
+    ["key", "4. Πρόσημα", "<p>Πάντα πρώτα θετική φορά. Ορμή συστήματος = άθροισμα με πρόσημα.</p>"],
+    ["key", "5. Δp", "<p>Δp = p<sub>τελ</sub> − p<sub>αρχ</sub>. Στην αναπήδηση τα μέτρα προστίθενται.</p>"],
+    ["key", "6. 2ος νόμος", "<p><b>ΣF = Δp/Δt</b>. Κλίση p–t = ΣF, εμβαδόν F–t = Δp. Μεγάλο Δt ⇒ μικρή δύναμη.</p>"],
+    ["key", "7. ΑΔΟ", "<p>Σε μονωμένο σύστημα <b>p<sub>πριν</sub> = p<sub>μετά</sub></b>. Συνέπεια του 3ου νόμου.</p>"],
+    ["key", "8. Ενέργεια", "<p>Πλαστική κρούση: K μειώνεται. Έκρηξη / ελατήριο: K αυξάνεται. Μόνο η ορμή διατηρείται πάντα.</p>"],
+  ]);
+  cards(root, [["tip", "Μπράβο Μιχάλη! Και τώρα;", "<p>Κάτω από αυτή την παρουσίαση έχεις το <b>τυπολόγιο με τις 43 περιπτώσεις</b> (με κινούμενα σχέδια), τις <b>ασκήσεις του Τριπολίτη</b> και τα <b>Θέματα 2 της Τράπεζας Θεμάτων</b>. Ξεκίνα από την Τράπεζα: εκεί θα δεις αν τα έμαθες.</p>"]]);
+} });
+
+/* ============ ΠΛΟΗΓΗΣΗ ============ */
+const root = document.getElementById("slide"), secsEl = document.getElementById("secs"), counter = document.getElementById("counter");
+let cur = 0;
+const secBtns = SECS.map((s) => {
+  const bt = el("button", { type: "button" }, `<span class="bar"><i></i></span><span>${s.name}</span>`);
+  bt.addEventListener("click", () => goSec(s.id)); secsEl.appendChild(bt); return bt;
+});
+function goSec(id) { const i = SL.findIndex((s) => s.sec === id); if (i >= 0) show(i, true); }
+function show(i, scroll) {
+  cur = clamp(i, 0, SL.length - 1);
+  SCOPE.forEach((f) => { try { f(); } catch (e) {} }); SCOPE = [];
+  root.innerHTML = "";
+  try { SL[cur].build(root); } catch (e) { root.innerHTML = `<p>Σφάλμα στη διαφάνεια: ${e.message}</p>`; console.error(e); }
+  counter.textContent = `Διαφάνεια ${cur + 1} / ${SL.length} · ${SL[cur].title}`;
+  SECS.forEach((s, k) => {
+    const idx = SL.map((x, j) => [x, j]).filter(([x]) => x.sec === s.id).map(([, j]) => j);
+    const done = idx.filter((j) => j <= cur).length, frac = idx.length ? done / idx.length : 0;
+    secBtns[k].querySelector("i").style.width = (frac * 100).toFixed(0) + "%";
+    secBtns[k].setAttribute("aria-current", String(SL[cur].sec === s.id));
+  });
+  document.getElementById("prev").disabled = cur === 0; document.getElementById("prev").style.opacity = cur === 0 ? 0.4 : 1;
+  const nx = document.getElementById("next"); nx.textContent = cur === SL.length - 1 ? "Τέλος ✓" : "Επόμενο →";
+  try { history.replaceState(null, "", "#d" + (cur + 1)); } catch (e) {}
+  try { localStorage.setItem("ormi-mathima-slide", String(cur)); } catch (e) {}
+  postHeight();
+  setTimeout(postHeight, 300);
+  if (scroll) {
+    if (window.parent !== window) { try { parent.postMessage({ type: "ormi-mathima-top" }, "*"); } catch (e) {} }
+    else window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+}
+document.getElementById("prev").addEventListener("click", () => show(cur - 1, true));
+document.getElementById("next").addEventListener("click", () => show(cur + 1, true));
+document.addEventListener("keydown", (e) => {
+  if (e.target && /INPUT|TEXTAREA|SELECT/.test(e.target.tagName) && e.target.type !== "range") return;
+  if (e.key === "ArrowRight" && !(e.target && e.target.type === "range")) show(cur + 1, true);
+  if (e.key === "ArrowLeft" && !(e.target && e.target.type === "range")) show(cur - 1, true);
+});
+window.addEventListener("message", (e) => { if (e.data === "ormi-mathima-ping") postHeight(); });
+window.addEventListener("resize", postHeight);
+new ResizeObserver(postHeight).observe(document.body);
+let start = 0;
+const hm = /^#d(\d+)$/.exec(location.hash || "");
+if (hm) start = parseInt(hm[1], 10) - 1; else { try { const v = parseInt(localStorage.getItem("ormi-mathima-slide") || "0", 10); if (v >= 0) start = v; } catch (e) {} }
+show(isFinite(start) ? start : 0, false);
+</script>
+</body>
+</html>

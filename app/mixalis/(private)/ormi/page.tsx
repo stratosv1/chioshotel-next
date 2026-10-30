@@ -5,6 +5,7 @@ import { StudyMark } from "@/components/mixalis/study/StudyMark";
 import { Note } from "@/components/mixalis/omali/shared";
 import { OrmiAnimationsClient } from "@/components/mixalis/ormi/OrmiAnimationsClient";
 import { OrmiTheoryEmbed } from "@/components/mixalis/ormi/OrmiTheoryEmbed";
+import { OrmiMathimaEmbed } from "@/components/mixalis/ormi/OrmiMathimaEmbed";
 import { TripolitisClient } from "@/components/mixalis/tripolitis/TripolitisClient";
 import { TrapezaOrmi } from "@/components/mixalis/ormi/trapeza/TrapezaOrmi";
 import { PosterCells, PosterRevisionNote } from "@/components/mixalis/ormi/PosterCells";
@@ -12,7 +13,7 @@ import { PosterCells, PosterRevisionNote } from "@/components/mixalis/ormi/Poste
 export const metadata: Metadata = {
   title: { absolute: "Ορμή και κρούσεις · Τυπολόγιο · Physics Workspace" },
   description:
-    "43 περιπτώσεις ορμής και κρούσεων (Τράπεζα Θεμάτων, σχολικό βιβλίο, Σαββάλας) σε ένα poster, με κινούμενο σχέδιο για κάθε περίπτωση, και όλα τα Θέματα 2 της Τράπεζας λυμένα.",
+    "Διαδραστικό μάθημα του κεφαλαίου 2 (ορμή) με κίνηση και λυμένες όλες τις ασκήσεις του βιβλίου, 43 περιπτώσεις ορμής και κρούσεων σε ένα poster, και όλα τα Θέματα 2 της Τράπεζας λυμένα.",
 };
 
 const POSTER_W = 1212;
@@ -75,6 +76,9 @@ export default function OrmiPage() {
             <a href="/mixalis/ormi-krouseis-parousiasi.pdf" download className="rounded-full bg-[#c9822f] px-4 py-1.5 text-white hover:bg-[#a96b22]">
               ⬇ Παρουσίαση: όλες οι περιπτώσεις με λυμένα παραδείγματα (PDF, 20 διαφάνειες)
             </a>
+            <a href="#mathima" className="rounded-full bg-[#1f6f5c] px-4 py-1.5 text-white hover:bg-[#185747]">
+              ▶ Το μάθημα με κίνηση (κεφ. 2) ↓
+            </a>
             <a href="#askiseis" className="rounded-full border border-black/10 bg-white px-4 py-1.5 hover:bg-[#f3efe8]">
               Λυμένες ασκήσεις Τριπολίτη ↓
             </a>
@@ -86,10 +90,29 @@ export default function OrmiPage() {
 
         <StudyBar lesson="ormi" />
 
+        <section id="mathima" data-study-lesson="ormi" data-study-id="mathima" className="scroll-mt-20 rounded-3xl border border-black/10 bg-white p-3 shadow-sm sm:p-5">
+          <div className="flex flex-wrap items-end justify-between gap-3 px-2 pb-3 pt-1 sm:px-1">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Ξεκίνα από εδώ · Το μάθημα</p>
+              <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">Όλο το κεφάλαιο 2 του βιβλίου, με κίνηση</h2>
+              <p className="mt-1 max-w-3xl text-[15px] leading-7 text-[#5c534c]">
+                36 διαφάνειες που ακολουθούν το σχολικό βιβλίο ενότητα προς ενότητα (2.1–2.7): σύστημα, κρούση, ορμή, ΣF = Δp/Δt, αρχή διατήρησης
+                της ορμής, κινητική ενέργεια, ελατήριο, ανάκρουση, πύραυλος, εκρήξεις. Κάθε διαφάνεια έχει κινούμενο σχέδιο που πειράζεις, και στο
+                τέλος είναι λυμένες <b>όλες</b> οι 17 ασκήσεις και οι 19 ερωτήσεις του βιβλίου, με 3 quiz.
+              </p>
+            </div>
+            <a href="/mixalis/ormi-mathima.html" target="_blank" rel="noopener" className="shrink-0 rounded-full border border-black/10 bg-white px-4 py-1.5 text-sm font-semibold hover:bg-[#f3efe8]">
+              Σε πλήρη οθόνη ↗
+            </a>
+          </div>
+          <OrmiMathimaEmbed />
+          <StudyMark lesson="ormi" id="mathima" title="Μάθημα κεφ. 2 (36 διαφάνειες)" path="/mixalis/ormi" className="mt-4 px-2 sm:px-1" />
+        </section>
+
         <section id="theoria" data-study-lesson="ormi" data-study-id="theoria" className="scroll-mt-20 rounded-3xl border border-black/10 bg-white p-3 shadow-sm sm:p-5">
           <div className="flex flex-wrap items-end justify-between gap-3 px-2 pb-3 pt-1 sm:px-1">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Ξεκίνα από εδώ</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Επανάληψη</p>
               <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">Η θεωρία, βήμα βήμα</h2>
               <p className="mt-1 max-w-3xl text-[15px] leading-7 text-[#5c534c]">
                 Όλη η θεωρία του σχολικού βιβλίου (κεφ. 2) και του Σαββάλα (κεφ. 4–6) σε 29 διαφάνειες: ορμή, ΣF = Δp/Δt, αρχή διατήρησης της ορμής,
