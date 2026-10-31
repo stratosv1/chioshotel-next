@@ -1250,12 +1250,12 @@ const ADO_VS_DP = { sec: "2.5", title: "ΑΔΟ ή μεταβολή της ορμ
   animate((dt) => {
     t += dt; if (t > 4.6) t = 0;
     const c = g.ctx; g.clear();
-    const yG = 180, bw = bodySize(2).w + 20, bh = bodySize(2).h + 16, X0 = 470, tIn = 1.0, tOut = 1.6;
+    const yG = 180, bw = bodySize(2).w + 20, bh = bodySize(2).h + 16, X0 = 360, tIn = 1.0, tOut = 1.6;
     ground(c, yG, 0, 900);
     let xb, xBox = X0, vb = 400, vBox = 0, inside = false;
-    if (t < tIn) { xb = X0 - bw / 2 - 360 * (tIn - t); }
+    if (t < tIn) { xb = X0 - bw / 2 - 280 * (tIn - t); }
     else if (t < tOut) { const q = (t - tIn) / (tOut - tIn); xb = X0 - bw / 2 + q * bw; xBox = X0 + q * 6; inside = true; vb = lerp(400, 100, q); vBox = lerp(0, 15, q); }
-    else { const d = Math.min(t - tOut, 2.2); xBox = X0 + 6 + 40 * d; xb = xBox + bw / 2 + 4 + 150 * d; vb = 100; vBox = 15; }
+    else { const d = Math.min(t - tOut, 2.2); xBox = X0 + 6 + 30 * d; xb = xBox + bw / 2 + 4 + 120 * d; vb = 100; vBox = 15; }
     /* πλαίσιο συστήματος */
     c.save(); c.setLineDash([7, 6]); c.lineWidth = 2.2; c.strokeStyle = mode === 0 ? COL.p : COL.F;
     if (mode === 0) { const L = Math.min(xb, xBox - bw / 2) - 22, R = Math.max(xb + 16, xBox + bw / 2) + 22; roundRect(c, L, yG - bh - 40, R - L, bh + 50, 12); }
@@ -1264,7 +1264,7 @@ const ADO_VS_DP = { sec: "2.5", title: "ΑΔΟ ή μεταβολή της ορμ
     txt(c, mode === 0 ? "σύστημα: βλήμα + κιβώτιο (μονωμένο κατά την κρούση)" : "εξετάζουμε μόνο το κιβώτιο", 450, 22, { align: "center", size: 15, weight: 700, color: mode === 0 ? COL.p : COL.F });
     block(c, xBox, yG, bw, bh, COL.b1, "2 kg");
     if (!inside || mode === 0) { c.save(); c.fillStyle = "#3a3f4b"; roundRect(c, xb - 9, yG - bh / 2 - 4, 18, 8, 3); c.fill(); c.restore(); }
-    if (!inside) arrow(c, xb - 70, yG - bh / 2 - 34, xb - 10, yG - bh / 2 - 34, COL.v, { label: `${fmt(vb, 0)} m/s`, oy: -14 });
+    if (!inside) arrow(c, xb - 30, yG - bh / 2 - 34, xb + 30, yG - bh / 2 - 34, COL.v, { label: `${fmt(vb, 0)} m/s`, oy: -14 });
     if (vBox > 0.5) arrow(c, xBox - 30, yG - bh - 68, xBox - 30 + vBox * 4, yG - bh - 68, COL.v, { label: `V = ${fmt(vBox, 0)} m/s`, oy: -14, w: 3 });
     if (mode === 1 && inside) arrow(c, xBox - 40, yG - bh - 22, xBox + 50, yG - bh - 22, COL.F, { label: "F = 300 N (από το βλήμα)", oy: -16 });
     if (mode === 0 && inside) txt(c, "οι δυνάμεις βλήματος–κιβωτίου είναι εσωτερικές", 450, yG + 30, { align: "center", size: 13.5, color: COL.mute });
