@@ -25,7 +25,14 @@ const SUBJECTS: Subject[] = [
     badge: "EN",
     accent: "bg-[#2f5d8a] text-white",
     soft: "bg-[#e6eef6] text-[#24496d]",
-    lessons: [],
+    lessons: [
+      {
+        title: "Λέξεις",
+        subtitle: "Οι λέξεις κάθε κεφαλαίου από φωτογραφία, flashcards με προφορά και επαναληπτικό κάθε 5 κεφάλαια.",
+        href: "/sideris/agglika/lexeis",
+        links: [],
+      },
+    ],
   },
   {
     key: "germanika",
@@ -33,7 +40,14 @@ const SUBJECTS: Subject[] = [
     badge: "DE",
     accent: "bg-[#b5562a] text-white",
     soft: "bg-[#f8e9e0] text-[#86391a]",
-    lessons: [],
+    lessons: [
+      {
+        title: "Wörter · Λέξεις",
+        subtitle: "Οι λέξεις κάθε Lektion από φωτογραφία, flashcards με προφορά και επαναληπτικό κάθε 5 κεφάλαια.",
+        href: "/sideris/germanika/lexeis",
+        links: [],
+      },
+    ],
   },
 ];
 
