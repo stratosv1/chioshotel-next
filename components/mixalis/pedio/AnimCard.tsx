@@ -125,9 +125,9 @@ export function AnimCard({ data, accent, study }: { data: ECase; accent: string;
       data-study-lesson={study?.lesson}
       data-study-id={study ? `k${data.n}` : undefined}
       ref={ref}
-      className="scroll-mt-24 overflow-hidden rounded-3xl border border-black/10 bg-white shadow-sm"
+      className="scroll-mt-24"
     >
-      <header className="flex items-center gap-3 px-4 pt-4 sm:px-5">
+      <header className="flex items-center gap-3">
         <span
           className="grid h-8 w-8 shrink-0 place-items-center rounded-full text-sm font-bold text-white"
           style={{ backgroundColor: accent }}
@@ -137,14 +137,14 @@ export function AnimCard({ data, accent, study }: { data: ECase; accent: string;
         <h3 className="text-lg font-semibold tracking-tight text-[#1c2433]">{data.title}</h3>
       </header>
 
-      <p className="mt-2 px-4 text-[15px] leading-6 text-[#3d4452] sm:px-5">
+      <p className="mt-2 text-[15px] leading-6 text-[#3d4452]">
         <span className="font-semibold" style={{ color: accent }}>
           Τι βλέπεις:{" "}
         </span>
         {data.what}
       </p>
 
-      <dl className="mx-4 mt-3 grid gap-1 rounded-2xl border border-black/10 bg-[#f7f8fb] px-3 py-2 text-sm leading-6 sm:mx-5">
+      <dl className="mt-2 grid gap-1 text-sm leading-6">
         <div>
           <dt className="inline font-semibold text-[#1c2433]">Δεδομένα: </dt>
           <dd className="inline text-[#3d4452]">{rich(data.given)}</dd>
@@ -155,7 +155,7 @@ export function AnimCard({ data, accent, study }: { data: ECase; accent: string;
         </div>
       </dl>
 
-      <div className="mt-3 border-y border-black/5 bg-[#fbfaf7]">
+      <div className="mt-3">
         <svg
           viewBox={`0 0 ${W} ${H}`}
           className="block w-full"
@@ -168,7 +168,7 @@ export function AnimCard({ data, accent, study }: { data: ECase; accent: string;
       </div>
 
       {/* phase timeline */}
-      <div className="px-4 pt-3 sm:px-5">
+      <div className="pt-2">
         <div className="flex gap-1">
           {phases.map((p, i) => {
             const from = i ? phases[i - 1].until : 0;
@@ -183,7 +183,7 @@ export function AnimCard({ data, accent, study }: { data: ECase; accent: string;
                 style={{ flexGrow: share, flexBasis: 0, minWidth: "3.2rem" }}
                 title={`Πήγαινε στο βήμα: ${p.label}`}
               >
-                <span className="block h-1.5 overflow-hidden rounded-full bg-black/10">
+                <span className="block h-1.5 overflow-hidden rounded-full bg-[#e4ddd0]">
                   <span className="block h-full rounded-full" style={{ width: `${fill * 100}%`, backgroundColor: accent }} />
                 </span>
                 <span
@@ -202,7 +202,7 @@ export function AnimCard({ data, accent, study }: { data: ECase; accent: string;
         </p>
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 px-4 pb-3 sm:px-5">
+      <div className="flex flex-wrap items-center gap-2 pb-3">
         <button
           type="button"
           onClick={primary}
@@ -216,7 +216,7 @@ export function AnimCard({ data, accent, study }: { data: ECase; accent: string;
           onClick={() => setSlow(!slow)}
           aria-pressed={slow}
           className={`rounded-full px-3.5 py-1.5 text-sm font-semibold ${
-            slow ? "bg-[#2c2825] text-white" : "border border-black/10 bg-white text-[#4d4138] hover:bg-[#f3efe8]"
+            slow ? "bg-[#2c2825] text-white" : "border border-[#ddd5c7] bg-white text-[#4d4138] hover:bg-[#f3efe8]"
           }`}
         >
           🐢 Αργά
@@ -224,7 +224,7 @@ export function AnimCard({ data, accent, study }: { data: ECase; accent: string;
         <button
           type="button"
           onClick={switchMode}
-          className="rounded-full border border-black/10 bg-white px-3.5 py-1.5 text-sm font-semibold text-[#4d4138] hover:bg-[#f3efe8]"
+          className="rounded-full border border-[#ddd5c7] bg-white px-3.5 py-1.5 text-sm font-semibold text-[#4d4138] hover:bg-[#f3efe8]"
           title={mode === "step" ? "Να παίζει συνέχεια, χωρίς στάσεις" : "Να σταματά μετά από κάθε βήμα"}
         >
           {mode === "step" ? "∞ Συνεχόμενα" : "⏯ Βήμα-βήμα"}
@@ -241,7 +241,7 @@ export function AnimCard({ data, accent, study }: { data: ECase; accent: string;
         ) : null}
       </div>
 
-      <div className="border-t border-black/5 bg-[#fbf8f3] px-4 py-3 text-sm leading-6 sm:px-5">
+      <div className="border-t border-[#ddd5c7] py-3 text-sm leading-6">
         {showSolution ? (
           <div className="space-y-2">
             <p>
@@ -269,7 +269,7 @@ export function AnimCard({ data, accent, study }: { data: ECase; accent: string;
         )}
       </div>
       {study ? (
-        <StudyMark lesson={study.lesson} id={`k${data.n}`} title={`${data.n}. ${data.title}`} path={study.path} className="border-t border-black/5 px-4 py-3 sm:px-5" />
+        <StudyMark lesson={study.lesson} id={`k${data.n}`} title={`${data.n}. ${data.title}`} path={study.path} className="border-t border-[#ddd5c7] py-3" />
       ) : null}
     </article>
   );

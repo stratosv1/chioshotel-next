@@ -42,18 +42,17 @@
 * { box-sizing: border-box; }
 body {
   background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.6;
-  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
-  padding-block: 18px; display: flex; flex-direction: column; align-items: center; gap: 14px;
+  padding: 12px 0; display: flex; flex-direction: column; align-items: center; gap: 14px;
 }
-.top { width: 100%; max-width: 1120px; display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.top { width: 100%; max-width: none; display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .brand { font-family: var(--display); font-weight: 800; letter-spacing: 0.02em; font-size: 15px; color: var(--accent); }
 .brand span { color: var(--muted); font-weight: 500; }
 .counter { font-family: var(--mono); font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .stage {
-  width: 100%; max-width: 1120px; background: var(--paper); border: 1px solid var(--line); border-radius: 18px;
-  display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); min-height: 560px; overflow: hidden;
+  width: 100%; max-width: none;
+  display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); min-height: 620px; overflow: hidden;
 }
-.text { padding: 34px 34px 28px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.text { padding: 8px 40px 8px 0; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
 .kicker { font-family: var(--display); font-size: 12.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--accent); }
 h1, h2 { font-family: var(--display); font-weight: 800; line-height: 1.12; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
 h1 { font-size: clamp(30px, 4.2vw, 46px); }
@@ -66,13 +65,13 @@ h2 { font-size: clamp(24px, 3vw, 34px); }
 }
 .note { font-size: 15px; color: var(--muted); border-left: 3px solid var(--energy); padding-left: 12px; }
 .q { font-family: var(--display); font-weight: 700; color: var(--energy); }
-.bench { background: var(--bench); border-left: 1px solid var(--line); position: relative; min-width: 0; }
-.bench canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.bench { border-left: 1px solid var(--line); position: relative; min-width: 0; display: flex; flex-direction: column; }
+.cwrap { position: relative; flex: 1; min-height: 480px; }
+.cwrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .caption {
-  position: absolute; left: 14px; right: 14px; bottom: 12px; font-family: var(--display); font-size: 13px; color: var(--muted);
-  text-align: center; pointer-events: none;
+  font-family: var(--display); font-size: 13px; font-weight: 700; color: var(--muted); padding: 2px 0 8px 24px;
 }
-.controls { width: 100%; max-width: 1120px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.controls { width: 100%; max-width: none; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .controls button {
   font-family: var(--display); font-weight: 700; font-size: 15px; border-radius: 999px; padding: 10px 20px; cursor: pointer;
   border: 1.5px solid var(--line); background: var(--paper); color: var(--ink);
@@ -85,13 +84,22 @@ h2 { font-size: clamp(24px, 3vw, 34px); }
 .controls .dots button[aria-current="true"] { background: var(--accent); width: 26px; border-radius: 6px; }
 ul.recap { margin: 0; padding-left: 1.1em; display: flex; flex-direction: column; gap: 8px; }
 a { color: var(--accent); }
+.vec { position: relative; display: inline-block; }
+.vec::after { content: "→"; position: absolute; left: 0; right: 0; top: -0.62em; font-size: 0.62em; text-align: center; line-height: 1; }
+.mbar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 8px 0 0 24px; font-family: var(--display); }
+.mbar span { font-size: 13px; font-weight: 700; color: var(--muted); margin-left: 6px; }
+.mbar button { font-family: var(--display); font-weight: 700; font-size: 13.5px; border-radius: 999px; padding: 6px 13px; cursor: pointer; border: 1.5px solid var(--line); background: var(--paper); color: var(--ink); }
+.mbar button[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.mbar button.pause { border-color: var(--accent); color: var(--accent); min-width: 108px; }
+.mbar button.pause[aria-pressed="true"] { background: var(--accent); color: var(--paper); }
 .slide[hidden] { display: none !important; }
 @media (max-width: 820px) {
   .dots { order: 3; flex-basis: 100%; }
   .controls { justify-content: space-between; }
   .stage { grid-template-columns: 1fr; min-height: 0; }
-  .text { padding: 22px 20px 18px; }
-  .bench { border-left: none; border-top: 1px solid var(--line); height: 62vw; min-height: 260px; max-height: 420px; }
+  .text { padding: 12px 0; }
+  .bench { border-left: none; }
+  .cwrap { flex: none; height: 62vw; min-height: 260px; max-height: 420px; }
   body { font-size: 16px; }
   .text p.lead { font-size: 17px; }
   .controls button { padding: 9px 14px; }
@@ -107,7 +115,7 @@ a { color: var(--accent); }
 
 <main class="stage" id="stage">
   <section class="text" id="text"></section>
-  <div class="bench"><canvas id="cv" aria-label="Κινούμενο σχέδιο της διαφάνειας"></canvas><div class="caption" id="caption"></div></div>
+  <div class="bench"><div class="caption" id="caption"></div><div class="cwrap"><canvas id="cv" aria-label="Κινούμενο σχέδιο της διαφάνειας"></canvas></div><div class="mbar" id="mbar"><button type="button" class="pause" id="mpause" aria-pressed="false">❚❚ Παύση</button><span>Ταχύτητα:</span><button type="button" data-sp="1" aria-pressed="true">1×</button><button type="button" data-sp="0.5" aria-pressed="false">½×</button><button type="button" data-sp="0.25" aria-pressed="false">¼×</button></div></div>
 </main>
 
 <nav class="controls" aria-label="Πλοήγηση διαφανειών">
@@ -119,69 +127,69 @@ a { color: var(--accent); }
 <script>
 const SLIDES = [
   { kicker: "Ξεκινάμε", title: "Ηλεκτρικό πεδίο", h1: true, html: `
-      <p class="lead">Ένα ηλεκτρικό φορτίο δεν κάθεται απλώς κάπου. Αλλάζει τον χώρο γύρω του.</p>
-      <p>Σε αυτή την παρουσίαση θα δεις τι σημαίνει αυτό, πώς το μετράμε και γιατί είναι η βάση για όλο το κεφάλαιο: ένταση, δυναμικό, πυκνωτές.</p>
-      <p class="note">Προχώρα με το κουμπί «Επόμενο» ή με τα βέλη του πληκτρολογίου.</p>`, caption: "Ένα φορτίο και ο χώρος γύρω του", scene: "intro" },
-  { kicker: "Το παράδοξο", title: "Σπρώχνονται χωρίς να αγγίζονται", html: `
-      <p class="lead">Δύο θετικά φορτία απωθούνται. Ο νόμος του Coulomb μάς λέει πόσο: F = k·|Q·q|/r².</p>
-      <p>Δεν ακουμπούν όμως ποτέ. Πώς «ξέρει» το ένα ότι υπάρχει το άλλο;</p>
-      <p class="note"><span class="q">Ερώτηση:</span> αν βγάλεις το ένα φορτίο, αλλάζει κάτι στον χώρο εκεί που ήταν;</p>`, caption: "Απώθηση από απόσταση", scene: "coulomb" },
+      <p class="lead">Ένα ηλεκτρικό φορτίο δεν επηρεάζει μόνο τα σώματα που ακουμπά. Αλλάζει τις ιδιότητες του χώρου γύρω του.</p>
+      <p>Σε αυτή την παρουσίαση θα δούμε τι σημαίνει αυτό, πώς το περιγράφουμε με αριθμούς και γιατί πάνω του στηρίζεται όλο το κεφάλαιο: ένταση, δυναμικό, πυκνωτής.</p>
+      <p class="note">Για να προχωρήσεις, πάτα «Επόμενο» ή τα βέλη του πληκτρολογίου. Με το «Παύση» σταματάς την κίνηση για να τη μελετήσεις.</p>`, caption: "Ένα φορτίο και ο χώρος γύρω του", scene: "intro" },
+  { kicker: "Το παράδοξο", title: "Απωθούνται χωρίς να αγγίζονται", html: `
+      <p class="lead">Δύο θετικά φορτία απωθούνται. Το μέτρο της δύναμης το δίνει ο νόμος του Coulomb: F = k·|Q·q|/r².</p>
+      <p>Τα φορτία όμως δεν έρχονται ποτέ σε επαφή. Πώς ασκεί το ένα δύναμη στο άλλο από απόσταση;</p>
+      <p class="note"><span class="q">Σκέψου:</span> αν απομακρύνουμε το ένα φορτίο, έχει μείνει κάτι στον χώρο γύρω από το άλλο;</p>`, caption: "Δύο ίσα θετικά φορτία απωθούνται από απόσταση", scene: "coulomb" },
   { kicker: "Η ιδέα", title: "Το φορτίο αλλάζει τον χώρο", html: `
-      <p class="lead">Η απάντηση της Φυσικής: το φορτίο Q δημιουργεί γύρω του <b>ηλεκτρικό πεδίο</b>.</p>
-      <p>Σε κάθε σημείο του χώρου υπάρχει πια μια «οδηγία»: πόσο δυνατά και προς τα πού θα σπρωχτεί ένα φορτίο αν βρεθεί εκεί.</p>
-      <p>Τα βελάκια δείχνουν αυτές τις οδηγίες. Υπάρχουν ακόμη κι αν δεν υπάρχει κανένα άλλο φορτίο να τις «ακούσει».</p>`, caption: "Σε κάθε σημείο μια οδηγία: κατεύθυνση και μέγεθος", scene: "arrows" },
-  { kicker: "Κάτι γνωστό", title: "Το έχεις ήδη δει: βαρύτητα", html: `
-      <p class="lead">Γύρω από τη Γη υπάρχει βαρυτικό πεδίο. Δεν το βλέπεις, αλλά αν αφήσεις ένα κλειδί, πέφτει.</p>
-      <p>Το g = 10 N/kg λέει: «εδώ κάθε κιλό τραβιέται με 10 N». Είναι ιδιότητα του σημείου, όχι του κλειδιού.</p>
-      <p>Το ηλεκτρικό πεδίο είναι το ίδιο, με τη μάζα να γίνεται <b>φορτίο</b>.</p>
+      <p class="lead">Η απάντηση της Φυσικής είναι ότι το φορτίο Q δημιουργεί γύρω του <b>ηλεκτρικό πεδίο</b>.</p>
+      <p>Ηλεκτρικό πεδίο λέμε τον χώρο μέσα στον οποίο, αν βάλουμε ένα φορτίο, αυτό δέχεται δύναμη. Σε κάθε σημείο του πεδίου μπορούμε να πούμε πόσο μεγάλη δύναμη θα δεχτεί ένα φορτίο εκεί και προς ποια κατεύθυνση.</p>
+      <p>Τα βελάκια δείχνουν αυτή την πληροφορία σε κάθε σημείο. Το πεδίο υπάρχει ακόμη κι όταν δεν υπάρχει κανένα άλλο φορτίο για να δεχτεί τη δύναμη.</p>`, caption: "Σε κάθε σημείο: κατεύθυνση και μέγεθος της δύναμης ανά φορτίο", scene: "arrows" },
+  { kicker: "Κάτι γνωστό", title: "Κάτι που ήδη ξέρεις: το πεδίο βαρύτητας", html: `
+      <p class="lead">Γύρω από τη Γη υπάρχει πεδίο βαρύτητας. Δεν το βλέπουμε, αλλά αν αφήσουμε ένα κλειδί ελεύθερο, πέφτει.</p>
+      <p>Το g = 10 N/kg σημαίνει ότι σε αυτό το σημείο κάθε κιλό μάζας δέχεται βάρος 10 N. Είναι ιδιότητα του σημείου, όχι του κλειδιού.</p>
+      <p>Με το ηλεκτρικό πεδίο συμβαίνει κάτι ανάλογο· μόνο που στη θέση της μάζας έχουμε το <b>φορτίο</b>.</p>
       <div class="formula">g = F/m  ⟷  E = F/q</div>`, caption: "Αριστερά βαρύτητα, δεξιά ηλεκτρικό πεδίο", scene: "gravity" },
-  { kicker: "Πώς το ανιχνεύουμε", title: "Το δοκιμαστικό φορτίο", html: `
-      <p class="lead">Για να «δεις» το πεδίο, βάζεις ένα μικρό θετικό φορτίο q και κοιτάς τη δύναμη που δέχεται.</p>
-      <p>Το μετακινούμε γύρω από το Q. Κοντά η δύναμη είναι μεγάλη, μακριά μικρή. Πάντα δείχνει μακριά από το θετικό Q.</p>
-      <p class="note">Το q πρέπει να είναι μικρό, ώστε να μην «χαλάει» το πεδίο που μετράει.</p>`, caption: "Το δοκιμαστικό +q ψηλαφεί το πεδίο", scene: "probe" },
+  { kicker: "Πώς το ανιχνεύουμε", title: "Το υπόθεμα (δοκιμαστικό φορτίο)", html: `
+      <p class="lead">Για να μελετήσουμε το πεδίο, βάζουμε σε ένα σημείο του ένα μικρό θετικό φορτίο q, το <b>υπόθεμα</b>, και μετράμε τη δύναμη που δέχεται.</p>
+      <p>Μετακινούμε το υπόθεμα γύρω από το Q. Κοντά στο Q η δύναμη είναι μεγάλη, μακριά μικρή. Επειδή το Q είναι θετικό, η δύναμη έχει πάντα φορά προς τα έξω, μακριά από το Q.</p>
+      <p class="note">Το q πρέπει να είναι πολύ μικρό, ώστε να μην αλλάζει το πεδίο που θέλουμε να μετρήσουμε.</p>`, caption: "Το υπόθεμα +q σε διάφορες θέσεις γύρω από το Q", scene: "probe" },
   { kicker: "Ο ορισμός", title: "Ένταση: δύναμη ανά φορτίο", html: `
-      <p class="lead">Στο ίδιο σημείο βάζουμε πρώτα q και μετά 2q. Η δύναμη διπλασιάζεται, το πηλίκο F/q μένει ίδιο.</p>
-      <p>Αυτό το πηλίκο είναι η <b>ένταση</b> του πεδίου στο σημείο. Είναι διάνυσμα, με μονάδα το N/C.</p>
+      <p class="lead">Στο ίδιο σημείο βάζουμε πρώτα φορτίο q και μετά φορτίο 2q. Η δύναμη διπλασιάζεται, αλλά το πηλίκο F/q μένει ίδιο.</p>
+      <p>Αυτό το πηλίκο το ονομάζουμε <b>ένταση</b> του πεδίου στο σημείο. Η ένταση είναι διανυσματικό μέγεθος και μετριέται σε N/C.</p>
       <div class="formula">E = F / q</div>
-      <p class="note">Η ένταση περιγράφει το σημείο, όχι το φορτίο που έβαλες.</p>`, caption: "F διπλασιάζεται, E μένει ίδια", scene: "ratio" },
-  { kicker: "Η φορά", title: "Θετικό με την E, αρνητικό ανάποδα", html: `
-      <p class="lead">Η φορά της έντασης ορίζεται από τη δύναμη σε <b>θετικό</b> φορτίο.</p>
-      <p>Ένα αρνητικό φορτίο στο ίδιο σημείο δέχεται δύναμη ίδιου μέτρου, αλλά αντίθετης φοράς.</p>
-      <div class="formula">F = q·E</div>`, caption: "Πράσινο: E · Κόκκινο: δύναμη", scene: "sign" },
-  { kicker: "Σημειακό φορτίο", title: "Πεδίο Coulomb", html: `
-      <p class="lead">Από τον νόμο του Coulomb και τον ορισμό της E βγαίνει η ένταση γύρω από σημειακό φορτίο.</p>
+      <p class="note">Η ένταση χαρακτηρίζει το σημείο του πεδίου και δεν εξαρτάται από το φορτίο που βάλαμε εκεί.</p>`, caption: "Η F διπλασιάζεται, η E μένει ίδια", scene: "ratio" },
+  { kicker: "Η φορά", title: "Η φορά της δύναμης σε θετικό και σε αρνητικό φορτίο", html: `
+      <p class="lead">Η φορά της έντασης είναι ίδια με τη φορά της δύναμης που δέχεται ένα <b>θετικό</b> φορτίο.</p>
+      <p>Ένα αρνητικό φορτίο ίδιου μέτρου, στο ίδιο σημείο, δέχεται δύναμη ίδιου μέτρου αλλά αντίθετης φοράς από την ένταση.</p>
+      <div class="formula">F = q·E</div>`, caption: "Πράσινο: ένταση E · Κόκκινο: δύναμη F", scene: "sign" },
+  { kicker: "Σημειακό φορτίο", title: "Το πεδίο ενός σημειακού φορτίου", html: `
+      <p class="lead">Συνδυάζοντας τον νόμο του Coulomb με τον ορισμό E = F/q, βρίσκουμε την ένταση σε απόσταση r από σημειακό φορτίο Q:</p>
       <div class="formula">E = k·|Q| / r²</div>
-      <p>Διπλάσια απόσταση: τέταρτο της έντασης. Τριπλάσια: το ένα ένατο. Το πεδίο αδυνατίζει γρήγορα.</p>
-      <p class="note">k = 9·10⁹ N·m²/C²</p>`, caption: "Το βέλος μικραίνει με το 1/r²", scene: "coulombE" },
+      <p>Σε διπλάσια απόσταση η ένταση γίνεται 4 φορές μικρότερη· σε τριπλάσια, 9 φορές μικρότερη. Το πεδίο εξασθενεί γρήγορα καθώς απομακρυνόμαστε.</p>
+      <p class="note">k = 9·10⁹ N·m²/C²</p>`, caption: "Η ένταση είναι αντιστρόφως ανάλογη του r²", scene: "coulombE" },
   { kicker: "Ο χάρτης", title: "Δυναμικές γραμμές", html: `
-      <p class="lead">Αν ενώσεις τις οδηγίες, παίρνεις γραμμές. Σε κάθε σημείο τους η E είναι εφαπτόμενη.</p>
-      <p>Βγαίνουν από τα θετικά φορτία και καταλήγουν στα αρνητικά. Όπου είναι πυκνές, το πεδίο είναι δυνατό.</p>
-      <p class="note">Οι γραμμές δεν τέμνονται ποτέ: σε κάθε σημείο υπάρχει μία μόνο οδηγία.</p>`, caption: "Ένα φορτίο, μετά ένα ζευγάρι + και −", scene: "lines" },
-  { kicker: "Πολλά φορτία", title: "Οι εντάσεις προστίθενται", html: `
-      <p class="lead">Με δύο φορτία, κάθε σημείο παίρνει δύο οδηγίες. Η ολική είναι το διανυσματικό τους άθροισμα.</p>
-      <p>Γι' αυτό σε κάποια σημεία οι εντάσεις αλληλοαναιρούνται και η E γίνεται μηδέν.</p>
-      <div class="formula">E⃗ = E⃗₁ + E⃗₂</div>`, caption: "Παραλληλόγραμμο εντάσεων", scene: "superpose" },
+      <p class="lead">Οι δυναμικές γραμμές είναι νοητές γραμμές που μας δείχνουν πώς είναι το πεδίο. Σε κάθε σημείο τους η ένταση είναι εφαπτόμενη στη γραμμή.</p>
+      <p>Ξεκινούν από τα θετικά φορτία και καταλήγουν στα αρνητικά. Όπου είναι πυκνότερες, εκεί η ένταση είναι μεγαλύτερη.</p>
+      <p class="note">Οι δυναμικές γραμμές δεν τέμνονται ποτέ, γιατί σε κάθε σημείο η ένταση έχει μία μόνο κατεύθυνση.</p>`, caption: "Πρώτα ένα θετικό φορτίο, μετά ένα θετικό και ένα αρνητικό", scene: "lines" },
+  { kicker: "Πολλά φορτία", title: "Οι εντάσεις προστίθενται διανυσματικά", html: `
+      <p class="lead">Όταν υπάρχουν δύο φορτία, σε κάθε σημείο το καθένα δημιουργεί τη δική του ένταση. Η ολική ένταση είναι το διανυσματικό τους άθροισμα.</p>
+      <p>Γι' αυτό σε κάποια σημεία οι δύο εντάσεις αλληλοαναιρούνται και η ολική ένταση γίνεται μηδέν. Πρόσεξε στο σχέδιο: το φορτίο που είναι πιο κοντά δίνει μεγαλύτερη ένταση.</p>
+      <div class="formula"><span class='vec'>E</span> = <span class='vec'>E</span>₁ + <span class='vec'>E</span>₂</div>`, caption: "Ο κανόνας του παραλληλογράμμου για δύο ίσα θετικά φορτία", scene: "superpose" },
   { kicker: "Το πιο απλό πεδίο", title: "Ομογενές πεδίο", html: `
-      <p class="lead">Ανάμεσα σε δύο παράλληλες πλάκες με αντίθετα φορτία, η ένταση είναι <b>ίδια παντού</b>.</p>
-      <p>Γραμμές παράλληλες και ισαπέχουσες. Ένα φορτίο δέχεται σταθερή δύναμη, άρα κάνει ομαλά επιταχυνόμενη κίνηση, όπως ένα σώμα που πέφτει.</p>
-      <div class="formula">α = q·E / m</div>`, caption: "Ένα θετικό φορτίο αφήνεται ακίνητο", scene: "uniform" },
-  { kicker: "Ενέργεια", title: "Το δυναμικό είναι σαν ύψος", html: `
-      <p class="lead">Μια μπάλα κυλά από ψηλά προς χαμηλά και κερδίζει ταχύτητα. Ένα θετικό φορτίο «κυλά» από υψηλό σε χαμηλό <b>δυναμικό</b>.</p>
-      <p>Το δυναμικό V είναι ένας αριθμός για κάθε σημείο: πόση ενέργεια έχει εκεί κάθε coulomb. Η δυναμική ενέργεια γίνεται κινητική.</p>
-      <div class="formula">U = q·V   ·   E = V/ℓ</div>`, caption: "Πορτοκαλί: δυναμική ενέργεια · Μπλε: κινητική", scene: "energy" },
-  { kicker: "Αποθήκευση", title: "Ο πυκνωτής κρατά πεδίο", html: `
-      <p class="lead">Φορτίζεις δύο πλάκες με μια μπαταρία. Ανάμεσά τους δημιουργείται πεδίο, και σε αυτό αποθηκεύεται ενέργεια.</p>
-      <p>Όταν ενώσεις τις πλάκες με μια λάμπα, το πεδίο «αδειάζει» και η λάμπα ανάβει για λίγο.</p>
-      <div class="formula">C = Q/V   ·   U = ½·C·V²</div>`, caption: "Φόρτιση και εκφόρτιση", scene: "capacitor" },
+      <p class="lead">Ανάμεσα σε δύο παράλληλες μεταλλικές πλάκες με αντίθετα φορτία, η ένταση είναι <b>ίδια σε όλα τα σημεία</b>.</p>
+      <p>Οι δυναμικές γραμμές είναι παράλληλες και ισαπέχουν. Ένα φορτίο μέσα στο πεδίο δέχεται σταθερή δύναμη F = q·E, άρα, αν ξεκινήσει από την ηρεμία, κάνει ευθύγραμμη ομαλά επιταχυνόμενη κίνηση, όπως ένα σώμα που πέφτει ελεύθερα.</p>
+      <div class="formula">α = q·E / m</div>`, caption: "Ένα θετικό φορτίο αφήνεται ελεύθερο κοντά στη θετική πλάκα", scene: "uniform" },
+  { kicker: "Ενέργεια", title: "Το δυναμικό μοιάζει με το ύψος", html: `
+      <p class="lead">Μια μπάλα κατεβαίνει από ψηλά προς τα χαμηλά και αποκτά ταχύτητα. Με τον ίδιο τρόπο, ένα θετικό φορτίο που αφήνεται ελεύθερο κινείται από σημεία υψηλού προς σημεία χαμηλού <b>δυναμικού</b>.</p>
+      <p>Το δυναμικό V είναι μονόμετρο μέγεθος: σε κάθε σημείο είναι η δυναμική ενέργεια ανά μονάδα φορτίου (V = U/q). Καθώς το φορτίο κινείται, η δυναμική του ενέργεια μετατρέπεται σε κινητική.</p>
+      <div class="formula">U = q·V   ·   E = V/ℓ</div>`, caption: "Πορτοκαλί: δυναμική ενέργεια U · Μπλε: κινητική ενέργεια K", scene: "energy" },
+  { kicker: "Αποθήκευση", title: "Ο πυκνωτής αποθηκεύει ενέργεια", html: `
+      <p class="lead">Συνδέουμε δύο παράλληλες μεταλλικές πλάκες (τους οπλισμούς) με μια μπαταρία και φορτίζονται με αντίθετα φορτία. Ανάμεσά τους δημιουργείται ηλεκτρικό πεδίο, στο οποίο αποθηκεύεται ενέργεια.</p>
+      <p>Αν μετά συνδέσουμε τους οπλισμούς με ένα λαμπάκι, ο πυκνωτής εκφορτίζεται: η ενέργεια του πεδίου μετατρέπεται σε φως και θερμότητα, και το λαμπάκι ανάβει για λίγο.</p>
+      <div class="formula">C = Q/V   ·   U = ½·C·V²</div>`, caption: "Φόρτιση από μπαταρία και εκφόρτιση μέσα από λαμπάκι", scene: "capacitor" },
   { kicker: "Να θυμάσαι", title: "Πέντε φράσεις για όλο το κεφάλαιο", html: `
       <ul class="recap">
-        <li>Ένα φορτίο αλλάζει τον χώρο γύρω του: δημιουργεί <b>ηλεκτρικό πεδίο</b>.</li>
-        <li>Η <b>ένταση</b> E = F/q είναι η οδηγία σε κάθε σημείο: διάνυσμα, σε N/C.</li>
-        <li>Θετικό φορτίο: δύναμη κατά την E. Αρνητικό: αντίθετα.</li>
-        <li>Οι <b>δυναμικές γραμμές</b> είναι ο χάρτης: από + σε −, πυκνές όπου το πεδίο είναι δυνατό.</li>
-        <li>Το <b>δυναμικό</b> είναι σαν ύψος και το πεδίο αποθηκεύει <b>ενέργεια</b> (πυκνωτής).</li>
+        <li>Κάθε φορτίο δημιουργεί γύρω του <b>ηλεκτρικό πεδίο</b>: όποιο φορτίο βρεθεί εκεί, δέχεται δύναμη.</li>
+        <li>Η <b>ένταση</b> E = F/q χαρακτηρίζει κάθε σημείο του πεδίου: είναι διάνυσμα και μετριέται σε N/C.</li>
+        <li>Ένα θετικό φορτίο δέχεται δύναμη με τη φορά της E, ένα αρνητικό με αντίθετη φορά.</li>
+        <li>Οι <b>δυναμικές γραμμές</b> ξεκινούν από τα θετικά και καταλήγουν στα αρνητικά φορτία· είναι πυκνότερες εκεί όπου η ένταση είναι μεγαλύτερη.</li>
+        <li>Το <b>δυναμικό</b> μοιάζει με το ύψος στη βαρύτητα, και στο πεδίο μπορεί να αποθηκευτεί <b>ενέργεια</b> (πυκνωτής).</li>
       </ul>
-      <p class="note">Επόμενο βήμα: το τυπολόγιο με τις 30 περιπτώσεις και τις ασκήσεις, ακριβώς από κάτω σε αυτή τη σελίδα.</p>`, caption: "Όλο το κεφάλαιο σε μία εικόνα", scene: "recap" },
+      <p class="note">Επόμενο βήμα: το τυπολόγιο με τις 30 περιπτώσεις και τις ασκήσεις, ακριβώς από κάτω σε αυτή τη σελίδα.</p>`, caption: "Ένα θετικό και ένα αρνητικό φορτίο: γραμμές, ένταση, δύναμη", scene: "recap" },
 ];
 
 /* ---------- theme colours from CSS tokens ---------- */
@@ -299,7 +307,7 @@ const SCENES = {
     charge(x1, cy, 1, 20); charge(x2, cy, 1, 20);
     arrow(x1 - 24, cy, x1 - 24 - F, cy, COL.pos, 3.5, "F");
     arrow(x2 + 24, cy, x2 + 24 + F, cy, COL.pos, 3.5, "F");
-    text("κανένα σκοινί, καμία επαφή", W / 2, cy - 60, COL.energy, 15);
+    text("χωρίς επαφή", W / 2, cy - 60, COL.energy, 15);
   },
   arrows(t) {
     const cx = W * 0.5, cy = H * 0.47;
@@ -365,13 +373,13 @@ const SCENES = {
   },
   sign(t) {
     const y1 = H * 0.32, y2 = H * 0.62;
-    for (const y of [y1 - 40, y2 + 40]) arrow(30, y, W - 30, y, COL.field, 1.6, null, 8);
+    for (const y of [y1 - 40, y2 + 64]) arrow(30, y, W - 30, y, COL.field, 1.6, null, 8);
     text("E", W - 34, y1 - 50, COL.field, 16);
     const x = W / 2 + Math.sin(t) * W * 0.2;
     charge(x, y1, 1, 12); arrow(x + 18, y1, x + 78, y1, COL.pos, 3.4, "F");
     charge(x, y2, -1, 12); arrow(x - 18, y2, x - 78, y2, COL.pos, 3.4, "F");
     text("θετικό: ίδια φορά με την E", W / 2, y1 + 36, COL.ink, 14, "center", 500);
-    text("αρνητικό: αντίθετη φορά", W / 2, y2 + 36, COL.ink, 14, "center", 500);
+    text("αρνητικό: αντίθετη φορά", W / 2, y2 + 34, COL.ink, 14, "center", 500);
   },
   coulombE(t) {
     const cx = 60, cy = H * 0.36;
@@ -407,8 +415,8 @@ const SCENES = {
   superpose(t) {
     const q1 = { x: W * 0.22, y: H * 0.7, s: 1 }, q2 = { x: W * 0.78, y: H * 0.7, s: 1 };
     const px = W / 2 + Math.sin(t * 0.7) * W * 0.18, py = H * 0.32;
-    const S = 9000;
-    const parts = [q1, q2].map((q) => { const dx = px - q.x, dy = py - q.y, r = Math.hypot(dx, dy); const m = Math.min(130, S * 6 / r); return [dx / r * m, dy / r * m]; });
+    const K = 85 * Math.pow(W * 0.36, 2); // E ∝ 1/r²: the nearer charge gives the longer arrow
+    const parts = [q1, q2].map((q) => { const dx = px - q.x, dy = py - q.y, r = Math.hypot(dx, dy); const m = Math.min(160, K / (r * r)); return [dx / r * m, dy / r * m]; });
     ctx.setLineDash([4, 5]); ctx.strokeStyle = COL.muted; ctx.lineWidth = 1;
     for (const q of [q1, q2]) { ctx.beginPath(); ctx.moveTo(q.x, q.y); ctx.lineTo(px, py); ctx.stroke(); }
     const [a, b] = parts;
@@ -473,7 +481,7 @@ const SCENES = {
     if (cyc < 5.5) { ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(W / 2 - 6, wy - 14); ctx.lineTo(W / 2 - 6, wy + 14); ctx.moveTo(W / 2 + 6, wy - 8); ctx.lineTo(W / 2 + 6, wy + 8); ctx.stroke(); text("μπαταρία", W / 2, wy + 34, COL.muted, 13); }
     else {
       ctx.fillStyle = COL.energy; ctx.globalAlpha = 0.2 + 0.8 * lamp; ctx.beginPath(); ctx.arc(W / 2, wy, 14, 0, 7); ctx.fill(); ctx.globalAlpha = 1;
-      ctx.strokeStyle = COL.muted; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(W / 2, wy, 14, 0, 7); ctx.stroke(); text("λάμπα", W / 2, wy + 34, COL.muted, 13);
+      ctx.strokeStyle = COL.muted; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(W / 2, wy, 14, 0, 7); ctx.stroke(); text("λαμπάκι", W / 2, wy + 34, COL.muted, 13);
     }
     const bw = 150; ctx.fillStyle = COL.grid; ctx.fillRect(W / 2 - bw / 2, 14, bw, 9); ctx.fillStyle = COL.energy; ctx.fillRect(W / 2 - bw / 2, 14, bw * charge01 * charge01, 9);
     text("ενέργεια στο πεδίο", W / 2, 40, COL.energy, 12);
@@ -491,7 +499,10 @@ const SCENES = {
 /* ---------- slide engine ---------- */
 const textEl = document.getElementById("text"), capEl = document.getElementById("caption"), counter = document.getElementById("counter");
 const prev = document.getElementById("prev"), next = document.getElementById("next"), dots = document.getElementById("dots");
-let idx = 0, t0 = performance.now();
+/* Virtual clock: stands still while paused, runs slower at ½× / ¼×. */
+let vnow = 0, lastReal = performance.now();
+const MOTION = { paused: false, speed: 1 };
+let idx = 0, t0 = 0;
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 SLIDES.forEach((s, i) => {
   const b = document.createElement("button"); b.type = "button"; b.setAttribute("aria-label", `Διαφάνεια ${i + 1}: ${s.title}`);
@@ -505,20 +516,34 @@ function render() {
   prev.disabled = idx === 0; next.disabled = idx === SLIDES.length - 1;
   next.textContent = idx === SLIDES.length - 1 ? "Τέλος" : "Επόμενο →";
   [...dots.children].forEach((d, i) => d.setAttribute("aria-current", i === idx ? "true" : "false"));
-  t0 = performance.now();
+  t0 = vnow; MOTION.paused = false; syncMotion();
   try { localStorage.setItem("pedio-intro-slide", String(idx)); } catch (e) {}
 }
 function go(i) { idx = Math.max(0, Math.min(SLIDES.length - 1, i)); render(); }
 prev.addEventListener("click", () => go(idx - 1));
 next.addEventListener("click", () => go(idx + 1));
-addEventListener("keydown", (e) => { if (e.key === "ArrowRight" || e.key === "PageDown") go(idx + 1); if (e.key === "ArrowLeft" || e.key === "PageUp") go(idx - 1); });
+addEventListener("keydown", (e) => {
+  if (e.key === "ArrowRight" || e.key === "PageDown") go(idx + 1);
+  if (e.key === "ArrowLeft" || e.key === "PageUp") go(idx - 1);
+  if (e.key === " " && !(e.target && e.target.tagName === "BUTTON")) { e.preventDefault(); MOTION.paused = !MOTION.paused; syncMotion(); }
+});
+const mbar = document.getElementById("mbar"), mpause = document.getElementById("mpause");
+function syncMotion() {
+  mpause.textContent = MOTION.paused ? "▶ Συνέχεια" : "❚❚ Παύση";
+  mpause.setAttribute("aria-pressed", MOTION.paused ? "true" : "false");
+  mbar.querySelectorAll("[data-sp]").forEach((b) => b.setAttribute("aria-pressed", Number(b.dataset.sp) === MOTION.speed ? "true" : "false"));
+}
+mpause.addEventListener("click", () => { MOTION.paused = !MOTION.paused; syncMotion(); });
+mbar.querySelectorAll("[data-sp]").forEach((b) => b.addEventListener("click", () => { MOTION.speed = Number(b.dataset.sp); syncMotion(); }));
 let sx = null;
 document.getElementById("stage").addEventListener("touchstart", (e) => { sx = e.touches[0].clientX; }, { passive: true });
 document.getElementById("stage").addEventListener("touchend", (e) => { if (sx === null) return; const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 60) go(idx + (dx < 0 ? 1 : -1)); sx = null; });
 try { const saved = Number(localStorage.getItem("pedio-intro-slide")); if (saved > 0 && saved < SLIDES.length) idx = saved; } catch (e) {}
 render(); resize();
 function frame(now) {
-  const t = reduce ? 3.2 : (now - t0) / 1000;
+  const dtReal = Math.max(0, Math.min(100, now - lastReal)); lastReal = Math.max(lastReal, now);
+  if (!MOTION.paused) vnow += dtReal * MOTION.speed;
+  const t = reduce ? 3.2 : (vnow - t0) / 1000;
   ctx.clearRect(0, 0, W, H);
   if (W > 0 && H > 0) SCENES[SLIDES[idx].scene](t);
   requestAnimationFrame(frame);

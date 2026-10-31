@@ -15,7 +15,7 @@ export const SECTIONS: { title: string; color: string; bg: string; intro: string
     title: "Ηλεκτροστατικό πεδίο – ένταση",
     color: "#1e5fb4",
     bg: "#eaf2fd",
-    intro: "Η ένταση είναι διάνυσμα: δείχνει πού θα σπρωχτεί ένα θετικό φορτίο. Για πολλά φορτία τις προσθέτουμε σαν διανύσματα (σχολικό βιβλίο §1.2, Σαββάλας κεφ. 3).",
+    intro: "Η ένταση είναι διάνυσμα: έχει τη φορά της δύναμης που δέχεται ένα θετικό φορτίο. Για πολλά φορτία τις προσθέτουμε σαν διανύσματα (σχολικό βιβλίο §1.2, Σαββάλας κεφ. 3).",
     cases: section1,
   },
   {
@@ -57,15 +57,15 @@ export const SECTIONS: { title: string; color: string; bg: string; intro: string
 
 export function PedioAnimations() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-[4rem]">
       {SECTIONS.map((s, i) => (
-        <section key={s.title} id={`enotita-${i + 1}`} className="scroll-mt-20 rounded-3xl border p-4 sm:p-6" style={{ borderColor: s.color, backgroundColor: s.bg }}>
+        <section key={s.title} id={`enotita-${i + 1}`} className="scroll-mt-20 border-t-4 pt-6" style={{ borderColor: s.color }}>
           <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: s.color }}>
             Ενότητα {i + 1} · κουτάκια {s.cases[0].n}–{s.cases[s.cases.length - 1].n}
           </p>
           <h2 className="mt-1 text-2xl font-semibold tracking-tight text-[#1c2433] sm:text-3xl">{s.title}</h2>
           <p className="mt-2 max-w-3xl text-[15px] leading-7 text-[#3d4452]">{s.intro}</p>
-          <div className="mt-5 grid gap-5 lg:grid-cols-2">
+          <div className="mt-8 grid gap-x-[3rem] gap-y-[3.5rem] lg:grid-cols-2">
             {s.cases.map((c) => (
               <AnimCard key={c.n} data={c} accent={s.color} study={{ lesson: "pedio", path: "/mixalis/pedio" }} />
             ))}

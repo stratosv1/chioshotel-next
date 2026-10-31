@@ -1349,7 +1349,7 @@ try { const saved = Number(new URLSearchParams(location.search).get("s") || loca
 render(); resize();
 
 function frame(now) {
-  const dtReal = Math.min(100, now - lastReal); lastReal = now;
+  const dtReal = Math.max(0, Math.min(100, now - lastReal)); lastReal = Math.max(lastReal, now);
   if (!MOTION.paused) vnow += dtReal * MOTION.speed;
   const t = reduce ? 2.2 : (vnow - t0) / 1000;
   ctx.clearRect(0, 0, W, H);

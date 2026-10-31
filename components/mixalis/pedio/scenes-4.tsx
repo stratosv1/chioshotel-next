@@ -315,13 +315,13 @@ const case20: ECase = {
         <Charge x={ax} y={gy} sign={-1} r={11} label="" />
         <TE x={ax + 22} y={gy + 4} s="Q_Γ" size={10.5} italic />
         <Dot x={ax} y={ay} r={3} />
-        <TE x={ax - 10} y={ay - 6} s="A" size={11} />
+        <TE x={ax + 8} y={ay - 8} s="A" size={11} />
         <TE x={(ax + bx) / 2} y={ay - 8} s="4 m" size={9.5} color={C.muted} bold={false} />
         <TE x={ax - 16} y={(ay + gy) / 2 + 20} s="3 m" size={9.5} color={C.muted} bold={false} />
         {t >= 3.6 ? (
           <g>
-            <Arr x={ax} y={ay} dx={-eB} color={EC.E} label="E_B" ly={-8} opacity={t >= 7.2 ? 0.5 : 1} />
-            <Arr x={ax} y={ay} dx={0} dy={eG} color={EC.E} label="E_Γ" lx={-14} ly={4} opacity={t >= 7.2 ? 0.5 : 1} />
+            <Arr x={ax} y={ay} dx={-eB} color={EC.E} label="E_B" ly={-10} opacity={t >= 7.2 ? 0.5 : 1} />
+            <Arr x={ax} y={ay} dx={0} dy={eG} color={EC.E} label="E_Γ" lx={14} ly={4} opacity={t >= 7.2 ? 0.5 : 1} />
           </g>
         ) : null}
         {t >= 7.2 ? <Arr x={ax} y={ay} dx={-eB} dy={eG} color="#0f6b39" label="E_A" lx={-14} width={3.4} /> : null}

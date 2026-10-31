@@ -25,7 +25,7 @@ export function PedioIntroEmbed() {
       title="Πρώτη γνωριμία με το ηλεκτρικό πεδίο: παρουσίαση"
       loading="lazy"
       onLoad={() => ref.current?.contentWindow?.postMessage("pedio-intro-ping", "*")}
-      className="block w-full rounded-2xl border border-black/10 bg-[#f4f1ea]"
+      className="block w-full bg-[#f4f1ea]"
       style={{ height }}
     />
   );

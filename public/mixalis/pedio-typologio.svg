@@ -2,7 +2,7 @@
 <rect width="1212" height="1720" fill="#fbfaf7"/>
 <text x="606.0" y="52.0" font-size="40" fill="#14306b" text-anchor="middle" font-weight="900">ΗΛΕΚΤΡΙΚΟ ΠΕΔΙΟ – ΤΥΠΟΛΟΓΙΟ</text>
 <text x="606.0" y="84.0" font-size="19" fill="#1e5fb4" text-anchor="middle" font-weight="bold">30 περιπτώσεις • σχολικό βιβλίο και Σαββάλας • Φυσική Γενικής Παιδείας Β΄ Λυκείου</text>
-<text x="606.0" y="104.0" font-size="13" fill="#5b6577" text-anchor="middle" font-weight="normal">Βήματα: δοκιμαστικό +q για τις φορές → ένταση = διάνυσμα, δυναμικό = αριθμός με πρόσημο → W = q·(V<tspan baseline-shift="sub" font-size="70%">αρχ</tspan> − V<tspan baseline-shift="sub" font-size="70%">τελ</tspan>) → ενέργεια</text>
+<text x="606.0" y="104.0" font-size="13" fill="#5b6577" text-anchor="middle" font-weight="normal">Βήματα: υπόθεμα +q για τις φορές → ένταση = διάνυσμα, δυναμικό = αριθμός με πρόσημο → W = q·(V<tspan baseline-shift="sub" font-size="70%">αρχ</tspan> − V<tspan baseline-shift="sub" font-size="70%">τελ</tspan>) → ενέργεια</text>
 <rect x="14" y="112" width="1184" height="250" rx="10" fill="#eaf2fd" stroke="#1e5fb4" stroke-width="1.5"/>
 <rect x="14" y="112" width="1184" height="30" rx="10" fill="#1e5fb4"/>
 <rect x="14" y="132" width="1184" height="10" fill="#1e5fb4"/>
@@ -86,7 +86,7 @@
 <line x1="680.9" y1="209.1" x2="671.0" y2="219.0" stroke="#1f9d55" stroke-width="1.4" stroke-linecap="round"/>
 <polygon points="664.6,225.4 667.8,215.8 674.2,222.2" fill="#1f9d55"/>
 <text x="606.0" y="309.0" font-size="13" fill="#1e5fb4" text-anchor="middle" font-weight="bold" font-style="italic">E εφαπτόμενη στη γραμμή</text>
-<text x="606.0" y="350.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">Βγαίνουν από το +, μπαίνουν στο −.</text>
+<text x="606.0" y="350.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">Ξεκινούν από το +, καταλήγουν στο −.</text>
 <rect x="731" y="146" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
 <circle cx="746" cy="161" r="10" fill="#1e5fb4"/>
 <text x="746.0" y="165.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">4</text>
@@ -107,7 +107,7 @@
 <polygon points="906.0,212.0 897.0,216.5 897.0,207.5" fill="#1f9d55"/>
 <text x="882.5" y="205.0" font-size="12" fill="#1f9d55" text-anchor="middle" font-weight="bold" font-style="italic">E<tspan baseline-shift="sub" font-size="70%">2</tspan></text>
 <text x="844.0" y="309.0" font-size="11.5" fill="#1e5fb4" text-anchor="middle" font-weight="bold" font-style="italic">E<tspan baseline-shift="sub" font-size="70%">ολ</tspan> = E<tspan baseline-shift="sub" font-size="70%">1</tspan> + E<tspan baseline-shift="sub" font-size="70%">2</tspan> (ομόρροπες)</text>
-<text x="844.0" y="350.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">Βάλε δοκιμαστικό +q για τις φορές.</text>
+<text x="844.0" y="350.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">Βάλε νοερά ένα +q για τις φορές.</text>
 <rect x="969" y="146" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
 <circle cx="984" cy="161" r="10" fill="#1e5fb4"/>
 <text x="984.0" y="165.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">5</text>
@@ -172,7 +172,7 @@
 <polygon points="368.0,522.0 363.5,513.0 372.5,513.0" fill="#d9342b"/>
 <text x="382.0" y="510.5" font-size="12" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">mg</text>
 <text x="368.0" y="565.0" font-size="13" fill="#0f7d8c" text-anchor="middle" font-weight="bold" font-style="italic">|q|·E = m·g</text>
-<text x="368.0" y="606.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">Η F πρέπει να δείχνει πάνω.</text>
+<text x="368.0" y="606.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">Η F πρέπει να έχει φορά προς τα πάνω.</text>
 <rect x="493" y="402" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
 <circle cx="508" cy="417" r="10" fill="#0f7d8c"/>
 <text x="508.0" y="421.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">8</text>
@@ -196,7 +196,7 @@
 <rect x="731" y="402" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
 <circle cx="746" cy="417" r="10" fill="#0f7d8c"/>
 <text x="746.0" y="421.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">9</text>
-<text x="761.0" y="422.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Φρενάρει και γυρίζει</text>
+<text x="761.0" y="422.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Επιβράδυνση και επιστροφή</text>
 <line x1="754.0" y1="464.0" x2="934.0" y2="464.0" stroke="#1f9d55" stroke-width="1.1" stroke-linecap="round"/>
 <polygon points="849.0,464.0 841.0,460.5 841.0,467.5" fill="#1f9d55"/>
 <line x1="754.0" y1="520.0" x2="934.0" y2="520.0" stroke="#1f9d55" stroke-width="1.1" stroke-linecap="round"/>
@@ -213,7 +213,7 @@
 <text x="882.0" y="498.0" font-size="10" fill="#1f6fd1" text-anchor="start" font-weight="bold">υ = 0</text>
 <text x="844.0" y="556.0" font-size="13" fill="#0f7d8c" text-anchor="middle" font-weight="bold" font-style="italic">α = |q|E/m</text>
 <text x="844.0" y="575.0" font-size="13" fill="#0f7d8c" text-anchor="middle" font-weight="bold" font-style="italic">x<tspan baseline-shift="sub" font-size="70%">max</tspan> = υ<tspan baseline-shift="sub" font-size="70%">0</tspan><tspan baseline-shift="super" font-size="70%">2</tspan>/(2α)</text>
-<text x="844.0" y="606.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">Επιστρέφει με την ίδια ταχύτητα.</text>
+<text x="844.0" y="606.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">Επιστρέφει με ίδιο μέτρο ταχύτητας.</text>
 <rect x="969" y="402" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
 <circle cx="984" cy="417" r="10" fill="#0f7d8c"/>
 <text x="984.0" y="421.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">10</text>
@@ -490,7 +490,7 @@
 <line x1="791.0" y1="1260.0" x2="887.0" y2="1260.0" stroke="#d9342b" stroke-width="1.8" stroke-linecap="round"/>
 <polygon points="896.0,1260.0 887.0,1264.5 887.0,1255.5" fill="#d9342b"/>
 <text x="843.5" y="1252.0" font-size="10" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">W &gt; 0</text>
-<text x="844.0" y="1333.0" font-size="13" fill="#b8322b" text-anchor="middle" font-weight="bold" font-style="italic">W = q·E·d = q·(V<tspan baseline-shift="sub" font-size="70%">1</tspan> − V<tspan baseline-shift="sub" font-size="70%">2</tspan>)</text>
+<text x="844.0" y="1333.0" font-size="13" fill="#b8322b" text-anchor="middle" font-weight="bold" font-style="italic">W = q·E·ℓ = q·(V<tspan baseline-shift="sub" font-size="70%">1</tspan> − V<tspan baseline-shift="sub" font-size="70%">2</tspan>)</text>
 <text x="844.0" y="1374.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">Το δυναμικό πέφτει κατά τη φορά της E.</text>
 <rect x="969" y="1170" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
 <circle cx="984" cy="1185" r="10" fill="#b8322b"/>
@@ -508,7 +508,7 @@
 <text x="1108.5" y="1240.0" font-size="12" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ</text>
 <text x="1082.0" y="1324.0" font-size="13" fill="#b8322b" text-anchor="middle" font-weight="bold" font-style="italic">K = e·V (από ηρεμία)</text>
 <text x="1082.0" y="1343.0" font-size="13" fill="#b8322b" text-anchor="middle" font-weight="bold" font-style="italic">1 eV = 1,6·10<tspan baseline-shift="super" font-size="70%">−19</tspan> J</text>
-<text x="1082.0" y="1374.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">Πάει προς τη θετική πλάκα.</text>
+<text x="1082.0" y="1374.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">Κινείται προς τη θετική πλάκα.</text>
 <rect x="14" y="1392" width="1184" height="250" rx="10" fill="#ebf6ec" stroke="#2e7d32" stroke-width="1.5"/>
 <rect x="14" y="1392" width="1184" height="30" rx="10" fill="#2e7d32"/>
 <rect x="14" y="1412" width="1184" height="10" fill="#2e7d32"/>

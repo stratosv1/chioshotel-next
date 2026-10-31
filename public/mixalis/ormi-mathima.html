@@ -213,7 +213,7 @@ function syncMotion() {
 function animate(step) {
   let alive = true, last = performance.now();
   motionBar(LAST_HOST);
-  function f(t) { if (!alive) return; const raw = Math.min(0.05, (t - last) / 1000); last = t; step(MOTION.paused ? 0 : raw * MOTION.speed, t / 1000); requestAnimationFrame(f); }
+  function f(t) { if (!alive) return; const raw = Math.max(0, Math.min(0.05, (t - last) / 1000)); last = Math.max(last, t); step(MOTION.paused ? 0 : raw * MOTION.speed, t / 1000); requestAnimationFrame(f); }
   requestAnimationFrame(f);
   onCleanup(() => (alive = false));
 }
