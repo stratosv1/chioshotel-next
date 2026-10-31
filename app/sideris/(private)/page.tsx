@@ -28,7 +28,7 @@ export default function SiderisDashboardPage() {
       <div className="mx-auto max-w-6xl">
         <header className="mb-6 flex flex-col gap-5 rounded-3xl border border-black/10 bg-white p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-8">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#857261]">Χώρος μελέτης</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#857261]">Α΄ Γυμνασίου</p>
             <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">Τα μαθήματα του Σιδέρη</h1>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-[#6b625b] sm:text-base">
               {lessonCount > 0
