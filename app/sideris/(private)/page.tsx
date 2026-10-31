@@ -18,7 +18,24 @@ type Subject = {
 };
 
 // Add a lesson here when its page exists under app/sideris/(private)/<slug>.
-const SUBJECTS: Subject[] = [];
+const SUBJECTS: Subject[] = [
+  {
+    key: "agglika",
+    name: "Αγγλικά",
+    badge: "EN",
+    accent: "bg-[#2f5d8a] text-white",
+    soft: "bg-[#e6eef6] text-[#24496d]",
+    lessons: [],
+  },
+  {
+    key: "germanika",
+    name: "Γερμανικά",
+    badge: "DE",
+    accent: "bg-[#b5562a] text-white",
+    soft: "bg-[#f8e9e0] text-[#86391a]",
+    lessons: [],
+  },
+];
 
 export default function SiderisDashboardPage() {
   const lessonCount = SUBJECTS.reduce((n, s) => n + s.lessons.length, 0);
@@ -33,7 +50,7 @@ export default function SiderisDashboardPage() {
             <p className="mt-3 max-w-2xl text-sm leading-6 text-[#6b625b] sm:text-base">
               {lessonCount > 0
                 ? `${lessonCount} μαθήματα σε ${SUBJECTS.length} αντικείμενα. Πάτησε ένα μάθημα για να το ανοίξεις ή μια ενότητα για να πας κατευθείαν εκεί.`
-                : "Εδώ θα μπαίνουν τα μαθήματά σου, με θεωρία, τυπολόγια, λυμένα παραδείγματα και ασκήσεις."}
+                : "Εδώ θα μπαίνουν τα μαθήματά σου, με θεωρία, λεξιλόγιο, γραμματική και ασκήσεις."}
             </p>
           </div>
           <form action="/sideris/auth/logout" method="post">
@@ -68,6 +85,11 @@ export default function SiderisDashboardPage() {
                     <h2 className="text-2xl font-semibold tracking-tight">{s.name}</h2>
                   </div>
 
+                  {s.lessons.length === 0 ? (
+                    <p className="rounded-3xl border border-dashed border-black/15 bg-white/70 p-6 text-sm leading-6 text-[#6f665f]">
+                      Τα μαθήματα για {s.name} θα εμφανιστούν σύντομα εδώ.
+                    </p>
+                  ) : (
                   <div className="grid gap-5 md:grid-cols-2">
                     {s.lessons.map((lesson) => (
                       <article key={lesson.href} className="flex flex-col overflow-hidden rounded-3xl border border-black/10 bg-white shadow-sm">
@@ -114,6 +136,7 @@ export default function SiderisDashboardPage() {
                       </article>
                     ))}
                   </div>
+                  )}
                 </section>
               ))}
             </div>
