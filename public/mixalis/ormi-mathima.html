@@ -422,7 +422,12 @@ function accordion(host, items) {
   });
 }
 function postHeight() {
-  requestAnimationFrame(() => { try { parent.postMessage({ type: "ormi-mathima-height", height: document.documentElement.scrollHeight }, "*"); } catch (e) {} });
+  requestAnimationFrame(() => {
+    // Μετράμε μέχρι το τέλος του περιεχομένου (όχι το scrollHeight, που μέσα σε iframe δεν μικραίνει ποτέ κάτω από το τρέχον ύψος).
+    const w = document.querySelector(".wrap"); if (!w) return;
+    const h = Math.ceil(w.getBoundingClientRect().bottom + window.scrollY + 16);
+    try { parent.postMessage({ type: "ormi-mathima-height", height: h }, "*"); } catch (e) {}
+  });
 }
 /* ============ ΔΙΑΦΑΝΕΙΕΣ: ΕΙΣΑΓΩΓΗ, 2.1, 2.2 ============ */
 const SECS = [
