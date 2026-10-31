@@ -70,7 +70,7 @@ export function StudyBar({ lesson }: { lesson: string }) {
 
   return (
     <>
-      <section className="rounded-3xl border border-black/10 bg-white p-5 shadow-sm sm:p-6">
+      <section className="border-y border-[#ddd5c7] py-5">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Η πρόοδός μου</p>
           <p className="text-sm text-[#5c534c]">
@@ -92,7 +92,7 @@ export function StudyBar({ lesson }: { lesson: string }) {
               onClick={() => setFilter(key)}
               aria-pressed={filter === key}
               className={`rounded-full px-3.5 py-1.5 text-sm font-semibold transition ${
-                filter === key ? "bg-[#2c2825] text-white" : "border border-black/10 bg-white text-[#4d4138] hover:bg-[#f3efe8]"
+                filter === key ? "bg-[#2c2825] text-white" : "border border-[#ddd5c7] bg-white text-[#4d4138] hover:bg-[#f3efe8]"
               }`}
             >
               {label}

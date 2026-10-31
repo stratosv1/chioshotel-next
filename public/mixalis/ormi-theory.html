@@ -34,10 +34,10 @@
 * { box-sizing: border-box; }
 body {
   margin: 0; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.6;
-  padding: 18px max(16px, env(safe-area-inset-right, 0px)) 18px max(16px, env(safe-area-inset-left, 0px));
+  padding: 12px 0;
   display: flex; flex-direction: column; align-items: center; gap: 14px;
 }
-.top { width: 100%; max-width: 1160px; display: flex; flex-direction: column; gap: 10px; }
+.top { width: 100%; max-width: none; display: flex; flex-direction: column; gap: 10px; }
 .topline { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .brand { font-family: var(--display); font-weight: 800; letter-spacing: 0.02em; font-size: 15px; color: var(--accent); }
 .brand span { color: var(--muted); font-weight: 500; }
@@ -53,10 +53,10 @@ body {
 .chapters button .lbl { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .chapters button:focus-visible { outline: 3px solid var(--K); outline-offset: 3px; border-radius: 4px; }
 .stage {
-  width: 100%; max-width: 1160px; background: var(--paper); border: 1px solid var(--line); border-radius: 20px;
-  display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); min-height: 580px; overflow: hidden;
+  width: 100%; max-width: none;
+  display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); min-height: 620px; overflow: hidden;
 }
-.text { padding: 32px 32px 26px; display: flex; flex-direction: column; gap: 13px; min-width: 0; }
+.text { padding: 8px 40px 8px 0; display: flex; flex-direction: column; gap: 13px; min-width: 0; }
 .kicker { font-family: var(--display); font-size: 12.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--accent); }
 h1, h2 { font-family: var(--display); font-weight: 800; line-height: 1.12; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
 h1 { font-size: clamp(30px, 4.2vw, 46px); }
@@ -76,19 +76,19 @@ h2 { font-size: clamp(23px, 2.8vw, 32px); }
 .formula .vec::after { top: -0.62em; }
 .c-v { color: var(--v); font-weight: 600; } .c-F { color: var(--F); font-weight: 600; } .c-p { color: var(--p); font-weight: 600; } .c-K { color: var(--K); font-weight: 600; }
 ol.steps, ul.recap { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 7px; }
-.bench { background: var(--bench); border-left: 1px solid var(--line); display: flex; flex-direction: column; min-width: 0; }
-.cwrap { position: relative; flex: 1; min-height: 360px; }
+.bench { border-left: 1px solid var(--line); display: flex; flex-direction: column; min-width: 0; }
+.cwrap { position: relative; flex: 1; min-height: 480px; }
 .cwrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.caption { font-family: var(--display); font-size: 13px; font-weight: 700; color: var(--muted); padding: 10px 16px; border-bottom: 1px solid var(--line); min-height: 40px; }
+.caption { font-family: var(--display); font-size: 13px; font-weight: 700; color: var(--muted); padding: 4px 0 8px 24px; min-height: 30px; }
 .caption:empty { display: none; }
-.mbar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 8px 16px; border-top: 1px solid var(--line); font-family: var(--display); }
+.mbar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 8px 0 0 24px; font-family: var(--display); }
 .mbar span { font-size: 13px; font-weight: 700; color: var(--muted); margin-left: 6px; }
 .mbar button { font-family: var(--display); font-weight: 700; font-size: 13.5px; border-radius: 999px; padding: 6px 13px; cursor: pointer; border: 1.5px solid var(--line); background: var(--paper); color: var(--ink); }
 .mbar button[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 .mbar button.pause { border-color: var(--accent); color: var(--accent); min-width: 108px; }
 .mbar button.pause[aria-pressed="true"] { background: var(--accent); color: var(--paper); }
 .mbar button:focus-visible { outline: 3px solid var(--K); outline-offset: 2px; }
-.knobs { border-top: 1px solid var(--line); padding: 12px 16px 14px; display: grid; gap: 10px; font-family: var(--display); }
+.knobs { padding: 10px 0 4px 24px; display: grid; gap: 10px; font-family: var(--display); }
 .knobs[hidden], .mbar[hidden] { display: none; }
 .knob { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; align-items: baseline; font-size: 14px; }
 .knob label { font-weight: 700; color: var(--ink); }
@@ -115,12 +115,12 @@ ol.steps, ul.recap { margin: 0; padding-left: 1.2em; display: flex; flex-directi
 .opt[data-state="right"] { border-color: var(--ok); background: color-mix(in srgb, var(--ok) 12%, var(--paper)); }
 .opt[data-state="wrong"] { border-color: var(--bad); background: color-mix(in srgb, var(--bad) 10%, var(--paper)); }
 .opt[disabled] { cursor: default; }
-.explain { font-size: 15px; border-radius: 12px; padding: 10px 14px; background: var(--bench); border: 1px solid var(--line); }
+.explain { font-size: 15px; padding: 4px 0 4px 14px; border-left: 3px solid var(--line); }
 .explain b { font-family: var(--display); }
 .qnav { display: flex; gap: 8px; flex-wrap: wrap; }
 .qnav button { font-family: var(--display); font-weight: 700; font-size: 14px; border-radius: 999px; padding: 7px 16px; cursor: pointer; border: 1.5px solid var(--accent); background: var(--accent); color: var(--paper); }
 .qnav button.ghost { background: transparent; color: var(--accent); }
-.controls { width: 100%; max-width: 1160px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.controls { width: 100%; max-width: none; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .controls > button {
   font-family: var(--display); font-weight: 700; font-size: 15px; border-radius: 999px; padding: 10px 20px; cursor: pointer;
   border: 1.5px solid var(--line); background: var(--paper); color: var(--ink);
@@ -137,8 +137,8 @@ ol.steps, ul.recap { margin: 0; padding-left: 1.2em; display: flex; flex-directi
   .dots { order: 3; flex-basis: 100%; }
   .controls { justify-content: space-between; }
   .stage { grid-template-columns: 1fr; min-height: 0; }
-  .text { padding: 22px 20px 18px; }
-  .bench { border-left: none; border-top: 1px solid var(--line); }
+  .text { padding: 12px 0; }
+  .bench { border-left: none; }
   .cwrap { flex: none; height: 64vw; min-height: 270px; max-height: 430px; }
   body { font-size: 16px; }
   .text p.lead { font-size: 17px; }

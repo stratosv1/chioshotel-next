@@ -9,7 +9,7 @@ const anchor = (id: string) => `a${id.replace(".", "-")}`;
 export function TripolitisList({ embedded = false }: { embedded?: boolean }) {
   return (
     <div className="space-y-10">
-      <nav className={`${embedded ? "" : "sticky top-2 z-20 "}rounded-3xl border border-black/10 bg-white/95 p-3 shadow-sm backdrop-blur`} aria-label="Ασκήσεις Τριπολίτη">
+      <nav className={`${embedded ? "" : "sticky top-2 z-20 "}border-y border-[#ddd5c7] py-3`} aria-label="Ασκήσεις Τριπολίτη">
         <div className="flex max-h-40 flex-wrap gap-1.5 overflow-y-auto">
           {GROUPS.flatMap((g) =>
             g.items.map((e) => (
@@ -26,8 +26,8 @@ export function TripolitisList({ embedded = false }: { embedded?: boolean }) {
         </div>
       </nav>
       {GROUPS.map((g) => (
-        <section key={g.id} id={g.id} className="scroll-mt-24 space-y-5">
-          <div className="rounded-3xl border-l-8 bg-white px-5 py-4 shadow-sm" style={{ borderColor: g.accent }}>
+        <section key={g.id} id={g.id} className="scroll-mt-24 space-y-[3.5rem]">
+          <div className="border-l-8 pl-5" style={{ borderColor: g.accent }}>
             <p className="font-mono text-sm font-bold" style={{ color: g.accent }}>
               {g.pages}
             </p>

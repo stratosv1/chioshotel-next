@@ -99,7 +99,7 @@ function BankCard({
       id={`tq-${keyOf(q)}`}
       data-study-lesson="ormi"
       data-study-id={`tq-${keyOf(q)}`}
-      className="scroll-mt-24 rounded-2xl border border-black/10 bg-[#fffdf9] p-4 sm:p-5"
+      className="scroll-mt-24 border-t border-[#ddd5c7] pt-5"
     >
       <header className="flex flex-wrap items-center gap-2">
         <span className={`inline-flex h-8 min-w-8 items-center justify-center rounded-full px-2 text-sm font-bold ${badge}`}>
@@ -116,17 +116,17 @@ function BankCard({
         <Sub>{q.prompt}</Sub>
       </div>
 
-      {q.figure ? <div className="mt-3 rounded-xl border border-black/5 bg-white p-2">{q.figure}</div> : null}
+      {q.figure ? <div className="mt-3 max-w-4xl">{q.figure}</div> : null}
 
       {hasChoices ? (
         <div className="mt-3 grid gap-2">
           {q.choices!.map((choice, i) => {
             const isPicked = picked === i;
             const isCorrect = i === q.correct;
-            let style = "border-black/10 bg-white hover:bg-[#f3efe8]";
+            let style = "border-[#ddd5c7] bg-white hover:bg-[#f3efe8]";
             if (open && isCorrect) style = "border-[#2e8b57]/50 bg-[#ecf7f0]";
             else if (open && isPicked) style = "border-[#c0392b]/40 bg-[#fdeeec]";
-            else if (open) style = "border-black/5 bg-white opacity-60";
+            else if (open) style = "border-[#e9e3d8] bg-white opacity-60";
             return (
               <button
                 key={i}
@@ -152,7 +152,7 @@ function BankCard({
           <button
             type="button"
             onClick={reveal}
-            className="rounded-full border border-black/10 bg-white px-3.5 py-1.5 text-sm font-semibold text-[#4d4138] hover:bg-[#f3efe8]"
+            className="rounded-full border border-[#ddd5c7] bg-white px-3.5 py-1.5 text-sm font-semibold text-[#4d4138] hover:bg-[#f3efe8]"
           >
             {hasChoices ? "Δείξε απάντηση & εξήγηση" : "Σκέψου πρώτα, μετά δες την απάντηση"}
           </button>
@@ -175,7 +175,7 @@ function BankCard({
             <p className="mb-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-[#857261]">Αιτιολόγηση βήμα-βήμα</p>
             <ol className="space-y-1.5">
               {q.steps.map((s, i) => (
-                <li key={i} className="flex gap-2 rounded-xl bg-white px-3 py-2 text-[14px] leading-6 text-[#2c2825] ring-1 ring-black/5">
+                <li key={i} className="flex gap-2 border-l-2 border-[#cfc6b6] pl-3 text-[14px] leading-6 text-[#2c2825]">
                   <span className="font-bold text-[#c9822f]">{i + 1}.</span>
                   <span>
                     <Sub>{s}</Sub>
@@ -194,7 +194,7 @@ function BankCard({
           </button>
         </div>
       )}
-      <StudyMark lesson="ormi" id={`tq-${keyOf(q)}`} title={`Τράπεζα ${q.code} · Θέμα ${q.part}`} path="/mixalis/ormi" className="mt-4 border-t border-black/5 pt-3" />
+      <StudyMark lesson="ormi" id={`tq-${keyOf(q)}`} title={`Τράπεζα ${q.code} · Θέμα ${q.part}`} path="/mixalis/ormi" className="mt-4 border-t border-[#e9e3d8] pt-3" />
     </article>
   );
 }
@@ -228,7 +228,7 @@ export function TrapezaOrmi() {
 
   return (
     <div className="space-y-5">
-      <div className="rounded-2xl border border-black/10 bg-[#fbf8f3] p-4">
+      <div>
         <div className="flex flex-wrap items-baseline justify-between gap-3 text-sm">
           <span className="font-semibold text-[#4d4138]">Πρόοδος</span>
           <span className="font-mono font-semibold text-[#2e8b57]">
@@ -270,7 +270,7 @@ export function TrapezaOrmi() {
             onClick={() => setFilter(key)}
             aria-pressed={filter === key}
             className={`rounded-full px-3.5 py-1.5 text-sm font-semibold transition ${
-              filter === key ? "bg-[#2c2825] text-white" : "border border-black/10 bg-white text-[#4d4138] hover:bg-[#f3efe8]"
+              filter === key ? "bg-[#2c2825] text-white" : "border border-[#ddd5c7] bg-white text-[#4d4138] hover:bg-[#f3efe8]"
             }`}
           >
             {label}

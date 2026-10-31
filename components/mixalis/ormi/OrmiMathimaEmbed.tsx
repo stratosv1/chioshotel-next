@@ -32,7 +32,7 @@ export function OrmiMathimaEmbed() {
       src="/mixalis/ormi-mathima.html"
       title="Ορμή: το μάθημα του κεφαλαίου 2 με κινούμενα σχέδια, εργαστήρια, quiz και λυμένες ασκήσεις"
       onLoad={() => ref.current?.contentWindow?.postMessage("ormi-mathima-ping", "*")}
-      className="block w-full scroll-mt-4 rounded-2xl border border-black/10 bg-[#f4f1ea]"
+      className="block w-full scroll-mt-4 bg-[#f4f1ea]"
       style={{ height }}
     />
   );

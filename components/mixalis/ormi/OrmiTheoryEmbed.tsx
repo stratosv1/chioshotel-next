@@ -25,7 +25,7 @@ export function OrmiTheoryEmbed() {
       title="Ορμή και κρούσεις: η θεωρία με κινούμενα σχέδια, εργαστήρια και quiz"
       loading="lazy"
       onLoad={() => ref.current?.contentWindow?.postMessage("ormi-theory-ping", "*")}
-      className="block w-full rounded-2xl border border-black/10 bg-[#f4f1ea]"
+      className="block w-full bg-[#f4f1ea]"
       style={{ height }}
     />
   );

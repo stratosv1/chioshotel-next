@@ -84,8 +84,8 @@ export function ExerciseCard({ ex, accent = "#1f6f5c" }: { ex: Exercise; accent?
   const allShown = shown >= ex.steps.length;
 
   return (
-    <article id={`a${ex.id.replace(".", "-")}`} data-study-lesson="ormi" data-study-id={`a${ex.id.replace(".", "-")}`} ref={ref} className="scroll-mt-24 overflow-hidden rounded-3xl border border-black/10 bg-white shadow-sm">
-      <header className="flex flex-wrap items-center gap-3 px-4 pt-4 sm:px-6">
+    <article id={`a${ex.id.replace(".", "-")}`} data-study-lesson="ormi" data-study-id={`a${ex.id.replace(".", "-")}`} ref={ref} className="scroll-mt-24 border-t border-[#ddd5c7] pt-6">
+      <header className="flex flex-wrap items-center gap-3">
         <span className="rounded-full px-3 py-1 font-mono text-sm font-bold text-white" style={{ backgroundColor: accent }}>
           {ex.id}
         </span>
@@ -93,12 +93,12 @@ export function ExerciseCard({ ex, accent = "#1f6f5c" }: { ex: Exercise; accent?
         <span className="ml-auto text-xs font-semibold text-[#857261]">{ex.source}</span>
       </header>
 
-      <div className="mx-4 mt-3 rounded-2xl border border-[#e5dccb] bg-[#fffaf0] px-4 py-3 text-[15px] leading-7 text-[#2c2825] sm:mx-6">
+      <div className="mt-3 max-w-5xl text-[15px] leading-7 text-[#2c2825]">
         <p className="mb-1 text-xs font-semibold uppercase tracking-[0.14em] text-[#a07a3c]">Η άσκηση με λίγα λόγια</p>
         {rich(ex.statement)}
       </div>
 
-      <dl className="mx-4 mt-3 grid gap-1 rounded-2xl border border-black/10 bg-[#f7f8fb] px-4 py-2 text-sm leading-6 sm:mx-6">
+      <dl className="mt-2 grid max-w-5xl gap-1 text-sm leading-6">
         <div>
           <dt className="inline font-semibold text-[#1c2433]">Δεδομένα: </dt>
           <dd className="inline text-[#3d4452]">{rich(ex.given)}</dd>
@@ -109,9 +109,9 @@ export function ExerciseCard({ ex, accent = "#1f6f5c" }: { ex: Exercise; accent?
         </div>
       </dl>
 
-      <div className="mt-4 grid lg:grid-cols-2">
+      <div className="mt-4 grid gap-x-[3rem] gap-y-[1.5rem] lg:grid-cols-[3fr_2fr]">
         {/* animation */}
-        <div className="border-y border-black/5 bg-[#fbfaf7] lg:border-r">
+        <div>
           <svg viewBox={`0 0 ${W} ${H}`} className="block w-full" role="img" aria-label={`Κινούμενο σχέδιο της άσκησης ${ex.id}`} fontFamily="Inter, 'Segoe UI', Roboto, Arial, sans-serif">
             {Scene({ t: tt })}
           </svg>
@@ -128,7 +128,7 @@ export function ExerciseCard({ ex, accent = "#1f6f5c" }: { ex: Exercise; accent?
                     className="group min-w-0 text-left"
                     style={{ flexGrow: (p.until - from) / ex.period, flexBasis: 0, minWidth: "3.2rem" }}
                   >
-                    <span className="block h-1.5 overflow-hidden rounded-full bg-black/10">
+                    <span className="block h-1.5 overflow-hidden rounded-full bg-[#e4ddd0]">
                       <span className="block h-full rounded-full" style={{ width: `${fill * 100}%`, backgroundColor: accent }} />
                     </span>
                     <span className={`mt-1 block break-words text-[11px] font-semibold leading-tight ${i === phaseIndex ? "text-[#1c2433]" : "text-[#9aa3b2]"}`}>
@@ -150,7 +150,7 @@ export function ExerciseCard({ ex, accent = "#1f6f5c" }: { ex: Exercise; accent?
               type="button"
               onClick={() => setSlow(!slow)}
               aria-pressed={slow}
-              className={`rounded-full px-3.5 py-1.5 text-sm font-semibold ${slow ? "bg-[#2c2825] text-white" : "border border-black/10 bg-white text-[#4d4138] hover:bg-[#f3efe8]"}`}
+              className={`rounded-full px-3.5 py-1.5 text-sm font-semibold ${slow ? "bg-[#2c2825] text-white" : "border border-[#ddd5c7] bg-white text-[#4d4138] hover:bg-[#f3efe8]"}`}
             >
               🐢 Αργά
             </button>
@@ -168,7 +168,7 @@ export function ExerciseCard({ ex, accent = "#1f6f5c" }: { ex: Exercise; accent?
         </div>
 
         {/* solution */}
-        <div className="border-t border-black/5 px-4 py-4 sm:px-6 lg:border-t-0">
+        <div>
           <p className="text-xs font-semibold uppercase tracking-[0.14em]" style={{ color: accent }}>
             Λύση βήμα βήμα
           </p>
@@ -177,7 +177,7 @@ export function ExerciseCard({ ex, accent = "#1f6f5c" }: { ex: Exercise; accent?
           ) : null}
           <ol className="mt-3 space-y-3">
             {ex.steps.slice(0, shown).map((s, i) => (
-              <li key={s.title} className="rounded-2xl border border-black/10 bg-[#fbf8f3] px-4 py-3 text-[15px] leading-7">
+              <li key={s.title} className="border-l-2 border-[#cfc6b6] pl-4 text-[15px] leading-7">
                 <p className="text-sm font-semibold text-[#1c2433]">
                   Βήμα {i + 1}: {rich(s.title)}
                 </p>
@@ -187,14 +187,14 @@ export function ExerciseCard({ ex, accent = "#1f6f5c" }: { ex: Exercise; accent?
           </ol>
           {allShown ? (
             <div className="mt-3 space-y-3">
-              <div className="rounded-2xl border-2 px-4 py-3 text-[15px] leading-7" style={{ borderColor: accent }}>
+              <div className="border-l-4 pl-4 text-[15px] leading-7" style={{ borderColor: accent }}>
                 <p className="text-sm font-semibold" style={{ color: accent }}>
                   Απάντηση
                 </p>
                 <div>{rich(ex.answer)}</div>
               </div>
               {ex.remember ? (
-                <div className="rounded-2xl border border-[#c0392b]/25 bg-[#fdeeec] px-4 py-3 text-sm leading-6 text-[#7a2c22]">
+                <div className="border-l-4 border-[#c0392b]/60 pl-4 text-sm leading-6 text-[#7a2c22]">
                   <span className="font-semibold">Τι να θυμάσαι: </span>
                   {rich(ex.remember)}
                 </div>
@@ -207,19 +207,19 @@ export function ExerciseCard({ ex, accent = "#1f6f5c" }: { ex: Exercise; accent?
                 <button type="button" onClick={() => setShown(shown + 1)} className="rounded-full px-4 py-1.5 text-sm font-semibold text-white" style={{ backgroundColor: accent }}>
                   {shown === 0 ? "Ξεκίνα τη λύση" : "Επόμενο βήμα λύσης"} ({shown + 1}/{ex.steps.length})
                 </button>
-                <button type="button" onClick={() => setShown(ex.steps.length)} className="rounded-full border border-black/10 bg-white px-4 py-1.5 text-sm font-semibold text-[#4d4138] hover:bg-[#f3efe8]">
+                <button type="button" onClick={() => setShown(ex.steps.length)} className="rounded-full border border-[#ddd5c7] bg-white px-4 py-1.5 text-sm font-semibold text-[#4d4138] hover:bg-[#f3efe8]">
                   Όλη η λύση
                 </button>
               </>
             ) : (
-              <button type="button" onClick={() => setShown(0)} className="rounded-full border border-black/10 bg-white px-4 py-1.5 text-sm font-semibold text-[#4d4138] hover:bg-[#f3efe8]">
+              <button type="button" onClick={() => setShown(0)} className="rounded-full border border-[#ddd5c7] bg-white px-4 py-1.5 text-sm font-semibold text-[#4d4138] hover:bg-[#f3efe8]">
                 Κρύψε τη λύση
               </button>
             )}
           </div>
         </div>
       </div>
-      <StudyMark lesson="ormi" id={`a${ex.id.replace(".", "-")}`} title={`Άσκηση ${ex.id}: ${ex.title}`} path="/mixalis/ormi" className="border-t border-black/5 px-4 py-3 sm:px-6" />
+      <StudyMark lesson="ormi" id={`a${ex.id.replace(".", "-")}`} title={`Άσκηση ${ex.id}: ${ex.title}`} path="/mixalis/ormi" className="mt-4 border-t border-[#ddd5c7] py-3" />
     </article>
   );
 }

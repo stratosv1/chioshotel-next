@@ -53,9 +53,9 @@ const cells = Array.from({ length: 43 }, (_, i) => {
 
 export default function OrmiPage() {
   return (
-    <main className="min-h-screen bg-[#f3efe8] px-4 py-5 text-[#2c2825] sm:px-8 sm:py-8">
-      <div className="mx-auto max-w-6xl space-y-6">
-        <header className="rounded-3xl border border-black/10 bg-white p-6 shadow-sm sm:p-8">
+    <main className="min-h-screen bg-[#f4f1ea] px-4 py-6 text-[#2c2825] sm:px-8 sm:py-10 lg:px-[3rem]">
+      <div className="w-full space-y-[4rem]">
+        <header>
           <Link href="/mixalis" prefetch={false} className="text-sm font-semibold text-[#857261] hover:text-[#5f5045]">
             ← Τα μαθήματά μου
           </Link>
@@ -67,7 +67,7 @@ export default function OrmiPage() {
             σχέδιό του, όπου το φαινόμενο εξηγείται βήμα βήμα.
           </p>
           <div className="mt-5 flex flex-wrap gap-2 text-sm font-semibold">
-            <a href="/mixalis/ormi-typologio.svg" target="_blank" rel="noopener" className="rounded-full border border-black/10 bg-white px-4 py-1.5 hover:bg-[#f3efe8]">
+            <a href="/mixalis/ormi-typologio.svg" target="_blank" rel="noopener" className="rounded-full border border-[#ddd5c7] bg-white px-4 py-1.5 hover:bg-[#f3efe8]">
               Poster σε πλήρες μέγεθος
             </a>
             <a href="/mixalis/ormi-typologio-A4.pdf" target="_blank" rel="noopener" className="rounded-full bg-[#2c2825] px-4 py-1.5 text-white hover:bg-black">
@@ -79,10 +79,10 @@ export default function OrmiPage() {
             <a href="#mathima" className="rounded-full bg-[#1f6f5c] px-4 py-1.5 text-white hover:bg-[#185747]">
               ▶ Το μάθημα με κίνηση (κεφ. 2) ↓
             </a>
-            <a href="#askiseis" className="rounded-full border border-black/10 bg-white px-4 py-1.5 hover:bg-[#f3efe8]">
+            <a href="#askiseis" className="rounded-full border border-[#ddd5c7] bg-white px-4 py-1.5 hover:bg-[#f3efe8]">
               Λυμένες ασκήσεις Τριπολίτη ↓
             </a>
-            <a href="#trapeza" className="rounded-full border border-black/10 bg-white px-4 py-1.5 hover:bg-[#f3efe8]">
+            <a href="#trapeza" className="rounded-full border border-[#ddd5c7] bg-white px-4 py-1.5 hover:bg-[#f3efe8]">
               Τράπεζα Θεμάτων · Θέμα 2 ↓
             </a>
           </div>
@@ -90,27 +90,27 @@ export default function OrmiPage() {
 
         <StudyBar lesson="ormi" />
 
-        <section id="mathima" data-study-lesson="ormi" data-study-id="mathima" className="scroll-mt-20 rounded-3xl border border-black/10 bg-white p-3 shadow-sm sm:p-5">
-          <div className="flex flex-wrap items-end justify-between gap-3 px-2 pb-3 pt-1 sm:px-1">
+        <section id="mathima" data-study-lesson="ormi" data-study-id="mathima" className="scroll-mt-20 border-t border-[#ddd5c7] pt-8">
+          <div className="flex flex-wrap items-end justify-between gap-3 pb-5">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Ξεκίνα από εδώ · Το μάθημα</p>
               <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">Όλο το κεφάλαιο 2 του βιβλίου, με κίνηση</h2>
               <p className="mt-1 max-w-3xl text-[15px] leading-7 text-[#5c534c]">
-                36 διαφάνειες που ακολουθούν το σχολικό βιβλίο ενότητα προς ενότητα (2.1–2.7): σύστημα, κρούση, ορμή, ΣF = Δp/Δt, αρχή διατήρησης
+                38 διαφάνειες που ακολουθούν το σχολικό βιβλίο ενότητα προς ενότητα (2.1–2.7): σύστημα, κρούση, ορμή, ΣF = Δp/Δt, αρχή διατήρησης
                 της ορμής, κινητική ενέργεια, ελατήριο, ανάκρουση, πύραυλος, εκρήξεις. Κάθε διαφάνεια έχει κινούμενο σχέδιο που πειράζεις, και στο
                 τέλος είναι λυμένες <b>όλες</b> οι 17 ασκήσεις και οι 19 ερωτήσεις του βιβλίου, με 3 quiz.
               </p>
             </div>
-            <a href="/mixalis/ormi-mathima.html" target="_blank" rel="noopener" className="shrink-0 rounded-full border border-black/10 bg-white px-4 py-1.5 text-sm font-semibold hover:bg-[#f3efe8]">
+            <a href="/mixalis/ormi-mathima.html" target="_blank" rel="noopener" className="shrink-0 rounded-full border border-[#ddd5c7] bg-white px-4 py-1.5 text-sm font-semibold hover:bg-[#f3efe8]">
               Σε πλήρη οθόνη ↗
             </a>
           </div>
           <OrmiMathimaEmbed />
-          <StudyMark lesson="ormi" id="mathima" title="Μάθημα κεφ. 2 (36 διαφάνειες)" path="/mixalis/ormi" className="mt-4 px-2 sm:px-1" />
+          <StudyMark lesson="ormi" id="mathima" title="Μάθημα κεφ. 2 (38 διαφάνειες)" path="/mixalis/ormi" className="mt-4" />
         </section>
 
-        <section id="theoria" data-study-lesson="ormi" data-study-id="theoria" className="scroll-mt-20 rounded-3xl border border-black/10 bg-white p-3 shadow-sm sm:p-5">
-          <div className="flex flex-wrap items-end justify-between gap-3 px-2 pb-3 pt-1 sm:px-1">
+        <section id="theoria" data-study-lesson="ormi" data-study-id="theoria" className="scroll-mt-20 border-t border-[#ddd5c7] pt-8">
+          <div className="flex flex-wrap items-end justify-between gap-3 pb-5">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Επανάληψη</p>
               <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">Η θεωρία, βήμα βήμα</h2>
@@ -119,16 +119,16 @@ export default function OrmiPage() {
                 κρούσεις και ενέργεια. Με κινούμενα σχέδια, τρία εργαστήρια για πειράματα και τρία quiz. Μετά πέρασε στο τυπολόγιο.
               </p>
             </div>
-            <a href="/mixalis/ormi-theory.html" target="_blank" rel="noopener" className="shrink-0 rounded-full border border-black/10 bg-white px-4 py-1.5 text-sm font-semibold hover:bg-[#f3efe8]">
+            <a href="/mixalis/ormi-theory.html" target="_blank" rel="noopener" className="shrink-0 rounded-full border border-[#ddd5c7] bg-white px-4 py-1.5 text-sm font-semibold hover:bg-[#f3efe8]">
               Σε πλήρη οθόνη ↗
             </a>
           </div>
           <OrmiTheoryEmbed />
-          <StudyMark lesson="ormi" id="theoria" title="Θεωρία (29 διαφάνειες)" path="/mixalis/ormi" className="mt-4 px-2 sm:px-1" />
+          <StudyMark lesson="ormi" id="theoria" title="Θεωρία (29 διαφάνειες)" path="/mixalis/ormi" className="mt-4" />
         </section>
 
-        <section className="rounded-3xl border border-black/10 bg-white p-3 shadow-sm sm:p-5">
-          <div className="relative overflow-hidden rounded-2xl border border-black/10 bg-[#fbfaf7]">
+        <section className="border-t border-[#ddd5c7] pt-8">
+          <div className="relative mx-auto max-w-[1500px]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/mixalis/ormi-typologio.svg"
@@ -143,7 +143,7 @@ export default function OrmiPage() {
           <PosterRevisionNote lesson="ormi" />
         </section>
 
-        <nav className="sticky top-2 z-10 rounded-2xl border border-black/10 bg-white/90 p-2 shadow-sm backdrop-blur" aria-label="Ενότητες">
+        <nav className="sticky top-0 z-10 -mx-4 border-b border-[#ddd5c7] bg-[rgba(244,241,234,0.92)] px-4 py-2 backdrop-blur sm:-mx-[2rem] sm:px-8 lg:-mx-[3rem] lg:px-[3rem]" aria-label="Ενότητες">
           <div className="flex gap-1.5 overflow-x-auto text-sm font-semibold">
             {sectionNames.map((name, i) => (
               <a key={name} href={`#enotita-${i + 1}`} className="shrink-0 rounded-full px-3 py-1.5 text-[#4d4138] hover:bg-[#f3efe8]">
@@ -159,7 +159,7 @@ export default function OrmiPage() {
           </div>
         </nav>
 
-        <section className="rounded-3xl border border-black/10 bg-white p-5 shadow-sm sm:p-8">
+        <section className="border-t border-[#ddd5c7] pt-8">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Κινούμενα σχέδια</p>
           <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">Πώς διαβάζεις τα σχέδια</h2>
           <ol className="mt-4 max-w-3xl list-decimal space-y-2 pl-5 text-[15px] leading-7 text-[#3d4452]">
@@ -174,8 +174,8 @@ export default function OrmiPage() {
               Πριν ανοίξεις τη λύση, προσπάθησε να τη γράψεις μόνος σου. Μετά πάτα <b>«Δείξε τη λύση»</b> και σύγκρινε.
             </li>
           </ol>
-          <div className="mt-5 grid gap-3 sm:grid-cols-2">
-            <div className="rounded-2xl border border-black/10 bg-[#fbf8f3] p-4 text-sm leading-6 text-[#3d4452]">
+          <div className="mt-6 grid gap-x-[2.5rem] gap-y-[1.5rem] lg:grid-cols-3">
+            <div className="border-l-2 border-[#c9822f]/50 pl-4 text-sm leading-6 text-[#3d4452]">
               <p className="font-semibold text-[#1c2433]">Τα χρώματα</p>
               <p className="mt-1">
                 <span className="font-semibold text-[#1f6fd1]">Μπλε βέλος</span> = ταχύτητα ·{" "}
@@ -184,16 +184,16 @@ export default function OrmiPage() {
                 <span className="font-semibold text-[#e08a1e]">πορτοκαλί</span> = κινητική ενέργεια. Όσο πιο μακρύ το βέλος, τόσο μεγαλύτερο το μέγεθος.
               </p>
             </div>
-            <div className="rounded-2xl border border-black/10 bg-[#fbf8f3] p-4 text-sm leading-6 text-[#3d4452]">
+            <div className="border-l-2 border-[#c9822f]/50 pl-4 text-sm leading-6 text-[#3d4452]">
               <p className="font-semibold text-[#1c2433]">Οι ράβδοι κάτω από την εικόνα</p>
               <p className="mt-1">
                 Δείχνουν ορμές με πρόσημο. Ράβδος <b>δεξιά</b> από τη γκρι γραμμή = θετική (προς τα δεξιά ή όπως λέει η «θετική φορά»),{" "}
                 <b>αριστερά</b> = αρνητική. Η <b>μαύρη ράβδος</b> είναι η ολική ορμή. Όταν ισχύει η ΑΔΟ, δεν κουνιέται.
               </p>
             </div>
-            <div className="rounded-2xl border border-black/10 bg-[#fbf8f3] p-4 text-sm leading-6 text-[#3d4452] sm:col-span-2">
+            <div className="border-l-2 border-[#c9822f]/50 pl-4 text-sm leading-6 text-[#3d4452]">
               <p className="font-semibold text-[#1c2433]">Συντομογραφίες</p>
-              <ul className="mt-1 grid gap-x-6 gap-y-1 sm:grid-cols-2">
+              <ul className="mt-1 grid gap-y-1">
                 <li><b>ΑΔΟ</b>: Αρχή Διατήρησης της Ορμής</li>
                 <li><b>ΑΔΜΕ</b>: Αρχή Διατήρησης της Μηχανικής Ενέργειας</li>
                 <li><b>ΘΜΚΕ</b>: Θεώρημα Μεταβολής της Κινητικής Ενέργειας</li>
@@ -211,12 +211,12 @@ export default function OrmiPage() {
 
         <OrmiAnimationsClient />
 
-        <section className="rounded-3xl border border-black/10 bg-white p-5 shadow-sm sm:p-8">
+        <section className="border-t border-[#ddd5c7] pt-8">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Οδηγός</p>
           <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">Τι προσέχεις σε κάθε ενότητα</h2>
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
+          <div className="mt-6 grid gap-x-[2.5rem] gap-y-[1.5rem] sm:grid-cols-2 xl:grid-cols-3">
             {groups.map((g) => (
-              <div key={g.range} className="rounded-2xl border border-black/10 bg-[#fbf8f3] p-4">
+              <div key={g.range} className="border-t border-[#ddd5c7] pt-3">
                 <p className="text-xs font-semibold text-[#857261]">Κουτάκια {g.range}</p>
                 <p className="mt-1 font-semibold">{g.title}</p>
                 <p className="mt-2 text-sm leading-6 text-[#5c534c]">{g.text}</p>
@@ -238,8 +238,8 @@ export default function OrmiPage() {
           </div>
         </section>
 
-        <section id="askiseis" className="scroll-mt-20 space-y-6">
-          <div className="rounded-3xl border border-black/10 bg-white p-5 shadow-sm sm:p-8">
+        <section id="askiseis" className="scroll-mt-20 space-y-10">
+          <div className="border-t border-[#ddd5c7] pt-8">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Εξάσκηση</p>
             <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">Λυμένες ασκήσεις Τριπολίτη (4.67–4.123)</h2>
             <p className="mt-2 max-w-3xl text-[15px] leading-7 text-[#5c534c]">
@@ -250,8 +250,8 @@ export default function OrmiPage() {
           <TripolitisClient embedded />
         </section>
 
-        <section id="trapeza" className="scroll-mt-20 space-y-6">
-          <div className="rounded-3xl border border-black/10 bg-white p-5 shadow-sm sm:p-8">
+        <section id="trapeza" className="scroll-mt-20 space-y-8">
+          <div className="border-t border-[#ddd5c7] pt-8">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Τράπεζα Θεμάτων</p>
             <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">ΤΡΑΠΕΖΑ ΘΕΜΑΤΩΝ · Θέμα 2</h2>
             <p className="mt-2 max-w-3xl text-[15px] leading-7 text-[#5c534c]">
@@ -260,9 +260,7 @@ export default function OrmiPage() {
               βήματα γράφεις στο γραπτό για να πάρεις τις μονάδες (η αιτιολόγηση μετράει 8–9 από τις 12–13 μονάδες).
             </p>
           </div>
-          <div className="rounded-3xl border border-black/10 bg-white p-4 shadow-sm sm:p-6">
-            <TrapezaOrmi />
-          </div>
+          <TrapezaOrmi />
         </section>
       </div>
     </main>
