@@ -23,6 +23,7 @@ export type Collision = {
   /** x where the faces touch */
   X?: number;
   groundY?: number;
+  /** @deprecated sizes now follow the masses; kept so older configs still type-check */
   widths?: [number, number];
   showK?: boolean;
   barMax?: number;
@@ -42,7 +43,11 @@ export function collisionState(c: Collision, t: number) {
   const S = c.S ?? 14;
   const X = c.X ?? 180;
   const vs = c.vs ?? 9;
-  const [w1, w2] = c.widths ?? [34, 40];
+  // Size follows mass (same rule for every case): equal masses look identical, the heavier body is bigger.
+  const ref = Math.max(c.m1, c.m2);
+  const size = (m: number) => ({ w: Math.round(24 + 22 * Math.sqrt(m / ref)), h: Math.round(16 + 14 * Math.sqrt(m / ref)) });
+  const { w: w1, h: h1 } = size(c.m1);
+  const { w: w2, h: h2 } = size(c.m2);
   let x1: number;
   let x2: number;
   let s1: number;
@@ -75,7 +80,7 @@ export function collisionState(c: Collision, t: number) {
     s1 = c.v1;
     s2 = c.v2;
   }
-  return { x1, x2, s1, s2, phase, tc, dc, w1, w2 };
+  return { x1, x2, s1, s2, phase, tc, dc, w1, w2, h1, h2 };
 }
 
 export function CollisionScene({ c, t, extra }: { c: Collision; t: number; extra?: React.ReactNode }) {
@@ -110,15 +115,15 @@ export function CollisionScene({ c, t, extra }: { c: Collision; t: number; extra
       ) : null}
       {c.stick && after ? (
         <g>
-          <Box cx={st.x1} y={gy} w={st.w1} h={26} fill={C.b1} label={l1} />
-          <Box cx={st.x2} y={gy} w={st.w2} h={30} fill={C.b2} label={l2} />
+          <Box cx={st.x1} y={gy} w={st.w1} h={st.h1} fill={C.b1} label={l1} />
+          <Box cx={st.x2} y={gy} w={st.w2} h={st.h2} fill={C.b2} label={l2} />
           <Vec x={st.x2 + st.w2 / 2 + 2} y={vy} dx={st.s1 * vs} label="V" />
           {Math.abs(st.s1) < 0.05 ? <T x={(st.x1 + st.x2) / 2} y={vy - 4} s="V = 0" size={11} color={C.v} italic /> : null}
         </g>
       ) : (
         <g>
-          <Box cx={st.x1} y={gy} w={st.w1} h={26} fill={C.b1} label={l1} />
-          <Box cx={st.x2} y={gy} w={st.w2} h={30} fill={C.b2} label={l2} />
+          <Box cx={st.x1} y={gy} w={st.w1} h={st.h1} fill={C.b1} label={l1} />
+          <Box cx={st.x2} y={gy} w={st.w2} h={st.h2} fill={C.b2} label={l2} />
           <Vec
             x={st.s1 >= 0 ? st.x1 - st.w1 / 2 : st.x1 + st.w1 / 2}
             y={vy}

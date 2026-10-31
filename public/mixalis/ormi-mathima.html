@@ -76,6 +76,9 @@ p { margin: 0; }
 .btn[aria-pressed="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
 .btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .seg { display: flex; flex-wrap: wrap; gap: 6px; }
+.motion { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 6px; padding: 8px 12px 0; font-family: var(--display); font-size: 13px; }
+.motion .mbtn { padding: 4px 11px; font-size: 13px; }
+.motion .mlbl { color: var(--muted); font-weight: 700; margin-left: 6px; }
 .readout { font-family: var(--mono); font-size: 14px; padding: 10px 16px; border-top: 1px dashed var(--line); background: #fff; line-height: 1.7; }
 .readout b { font-weight: 700; }
 .steps-reveal { display: flex; flex-direction: column; gap: 8px; }
@@ -115,7 +118,18 @@ table.t th { font-family: var(--display); font-size: 13px; text-transform: upper
 .pill-ok { color: var(--ok); font-weight: 700; } .pill-bad { color: var(--bad); font-weight: 700; }
 .sysbox { display: flex; flex-wrap: wrap; gap: 8px; }
 .sysbox label { display: inline-flex; gap: 6px; align-items: center; background: #fff; border: 1.5px solid var(--line); border-radius: 999px; padding: 5px 12px; font-family: var(--display); font-weight: 700; cursor: pointer; }
+html, body { overflow-x: hidden; }
+.tscroll { overflow-x: auto; max-width: 100%; }
+.cvwrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.rotate-tip { display: none; }
+@media (max-width: 640px) and (orientation: portrait) {
+  .cv { min-width: 620px; }
+  .rotate-tip { display: block; font-family: var(--display); font-size: 12.5px; color: var(--muted); padding: 6px 12px 0; }
+}
 @media (max-width: 640px) {
+  .hint { display: none; }
+  table.t { font-size: 13.5px; }
+  table.t th, table.t td { padding: 6px 6px; }
   body { padding: 10px; font-size: 16px; }
   .slide { padding: 18px 16px; border-radius: 16px; min-height: 0; }
   .lead { font-size: 17px; }
@@ -168,10 +182,38 @@ function el(tag, attrs = {}, html = "") {
 const frac = (a, b) => `<span class="fr"><span>${a}</span><span>${b}</span></span>`;
 const vec = (s) => `<span class="vec">${s}</span>`; // βελάκι διανύσματος πάνω από το γράμμα
 
-/* Βρόχος κίνησης που σταματά μόνος του όταν φεύγεις από τη διαφάνεια. */
+/* Μέγεθος σώματος από τη μάζα του: ίσες μάζες = ίσα σώματα, βαρύτερο = μεγαλύτερο (σε όλο το μάθημα). */
+const bodySize = (m) => ({ w: Math.round(34 + 30 * Math.sqrt(m)), h: Math.round(18 + 10 * Math.sqrt(m)) });
+
+/* Παύση και αργή κίνηση: κοινές για όλα τα σχέδια (κουμπιά πάνω από κάθε κινούμενο σχέδιο, ή το πλήκτρο Space). */
+const MOTION = { paused: false, speed: 1 };
+let LAST_HOST = null;
+function motionBar(host) {
+  if (!host || host.querySelector(":scope > .motion")) return;
+  const bar = el("div", { class: "motion", role: "group", "aria-label": "Έλεγχος κίνησης" });
+  const pb = el("button", { type: "button", class: "btn mbtn" });
+  pb.addEventListener("click", () => { MOTION.paused = !MOTION.paused; syncMotion(); });
+  bar.appendChild(pb);
+  bar.appendChild(el("span", { class: "mlbl" }, "Ταχύτητα:"));
+  [[1, "1×"], [0.5, "½×"], [0.25, "¼×"]].forEach(([v, l]) => {
+    const b = el("button", { type: "button", class: "btn mbtn", "data-speed": String(v) }, l);
+    b.addEventListener("click", () => { MOTION.speed = v; MOTION.paused = false; syncMotion(); });
+    bar.appendChild(b);
+  });
+  host.insertBefore(bar, host.firstChild); syncMotion();
+  bar.insertAdjacentElement("afterend", el("div", { class: "rotate-tip" }, "📱 Γύρνα το κινητό οριζόντια για μεγαλύτερο σχέδιο, ή σύρε το σχέδιο δεξιά–αριστερά."));
+}
+function syncMotion() {
+  document.querySelectorAll(".motion").forEach((bar) => {
+    const pb = bar.querySelector(".mbtn"); pb.textContent = MOTION.paused ? "▶ Συνέχεια" : "❚❚ Παύση"; pb.classList.toggle("pri", MOTION.paused);
+    bar.querySelectorAll("[data-speed]").forEach((b) => b.setAttribute("aria-pressed", String(parseFloat(b.dataset.speed) === MOTION.speed)));
+  });
+}
+/* Βρόχος κίνησης που σταματά μόνος του όταν φεύγεις από τη διαφάνεια. Σέβεται την παύση και την ταχύτητα. */
 function animate(step) {
   let alive = true, last = performance.now();
-  function f(t) { if (!alive) return; const dt = Math.min(0.05, (t - last) / 1000); last = t; step(dt, t / 1000); requestAnimationFrame(f); }
+  motionBar(LAST_HOST);
+  function f(t) { if (!alive) return; const raw = Math.min(0.05, (t - last) / 1000); last = t; step(MOTION.paused ? 0 : raw * MOTION.speed, t / 1000); requestAnimationFrame(f); }
   requestAnimationFrame(f);
   onCleanup(() => (alive = false));
 }
@@ -180,7 +222,7 @@ function animate(step) {
 function canvas(host, W = 900, H = 320) {
   const cv = el("canvas", { class: "cv", role: "img" });
   cv.style.aspectRatio = `${W} / ${H}`;
-  host.appendChild(cv);
+  const wrap = el("div", { class: "cvwrap" }); wrap.appendChild(cv); host.appendChild(wrap); LAST_HOST = host;
   const ctx = cv.getContext("2d");
   const g = { cv, ctx, W, H, redraw: null };
   /* Αλλάζει το μέγεθος μόνο όταν χρειάζεται (η αλλαγή σβήνει τον καμβά) και ξανασχεδιάζει τα στατικά σχέδια. */
@@ -445,7 +487,7 @@ SL.push({ sec: "intro", title: "Η ορμή", build(root) {
     const bt = el("button", { type: "button" }, `<b>${id === "ask" ? "★" : id} ${t}</b><span>${s}</span>`); bt.addEventListener("click", () => goSec(id)); map.appendChild(bt);
   });
   cards(root, [["key", "Οι χρωματικοί κανόνες σε όλο το μάθημα",
-    `<p><span class="c-v">Μπλε βέλος = ταχύτητα υ</span> · <span class="c-F">κόκκινο = δύναμη F</span> · <span class="c-p">πράσινο = ορμή p ή Δp</span> · <span class="c-K">πορτοκαλί = κινητική ενέργεια K</span>. Όσο πιο μακρύ το βέλος, τόσο μεγαλύτερο το μέγεθος.</p><p>Σε κάθε διαφάνεια: διάβασε, <b>πείραξε τα χειριστήρια</b>, και πριν ανοίξεις μια λύση, <b>σκέψου πρώτα μόνος σου</b>.</p>`]]);
+    `<p><span class="c-v">Μπλε βέλος = ταχύτητα υ</span> · <span class="c-F">κόκκινο = δύναμη F</span> · <span class="c-p">πράσινο = ορμή p ή Δp</span> · <span class="c-K">πορτοκαλί = κινητική ενέργεια K</span>. Όσο πιο μακρύ το βέλος, τόσο μεγαλύτερο το μέγεθος. Το <b>μέγεθος κάθε σώματος δείχνει τη μάζα του</b>: ίσες μάζες σχεδιάζονται ίδιες.</p><p>Κάθε κινούμενο σχέδιο έχει από πάνω κουμπιά <b>❚❚ Παύση</b> και <b>αργή κίνηση (½×, ¼×)</b>· παύση κάνεις και με το πλήκτρο Space.</p><p>Σε κάθε διαφάνεια: διάβασε, <b>πείραξε τα χειριστήρια</b>, και πριν ανοίξεις μια λύση, <b>σκέψου πρώτα μόνος σου</b>.</p>`]]);
 } });
 
 /* ---------- 2.1 α. Αλληλεπίδραση ---------- */
@@ -460,11 +502,12 @@ SL.push({ sec: "2.1", title: "Αλληλεπίδραση", build(root) {
   const bc = el("div", { class: "seg" }); C.appendChild(bc);
   const go = button(bc, "▶ Άφησέ τα", () => { running = true; }, "pri"); button(bc, "↺ Από την αρχή", () => reset());
   const ro = readout(b);
-  const S = 100, W1 = 100, W2 = 80; let x1, x2, v1, v2, running, stuck;
+  const S = 100; let W1 = 100, W2 = 80, x1, x2, v1, v2, running, stuck;
   function reset() { x1 = 1.6; x2 = 7.0; v1 = v2 = 0; running = false; stuck = false; }
   reset();
   animate((dt) => {
     const m1 = s1.v, m2 = s2.v;
+    if (!running && !stuck) { W1 = Math.max(70, bodySize(m1).w); W2 = Math.max(56, bodySize(m2).w); }
     const gap = (x2 - x1) - (W1 + W2) / 2 / S;
     let F = stuck ? 0 : 40 / Math.pow(gap + 0.5, 2);
     if (running && !stuck) {
@@ -481,7 +524,7 @@ SL.push({ sec: "2.1", title: "Αλληλεπίδραση", build(root) {
     c.save(); c.fillStyle = "#d9342b"; roundRect(c, X1 - 30, yG - 78, 30, 28, 4); c.fill(); c.fillStyle = "#3b6fd1"; roundRect(c, X1, yG - 78, 30, 28, 4); c.fill(); c.restore();
     txt(c, "N", X1 - 15, yG - 64, { color: "#fff", weight: 800, align: "center" }); txt(c, "S", X1 + 15, yG - 64, { color: "#fff", weight: 800, align: "center" });
     cart(c, X2, yG, W2, 30, "#c9ccd3", "");
-    ball(c, X2, yG - 70, 20, "#8d939e");
+    ball(c, X2, yG - 50 - (10 + 5 * Math.sqrt(m2)), 10 + 5 * Math.sqrt(m2), "#8d939e");
     txt(c, `μαγνήτης ${fmt(m1, 1)} kg`, X1, yG + 28, { align: "center", size: 13.5, color: COL.mute });
     txt(c, `σφαίρα ${fmt(m2, 1)} kg`, X2, yG + 28, { align: "center", size: 13.5, color: COL.mute });
     if (!stuck) {
@@ -668,15 +711,15 @@ SL.push({ sec: "2.2", title: "Το φαινόμενο της κρούσης", bu
   start();
   animate((dt) => {
     const K = cases[k]; t += dt; const S = 55;
-    const w1 = K.m1 < 0.5 ? 26 : 40 + K.m1 * 20, w2 = 40 + K.m2 * 20;
+    const B1 = bodySize(K.m1), B2 = bodySize(K.m2), w1 = K.m1 < 0.5 ? 26 : B1.w, w2 = B2.w;
     if (!done && x2 - x1 <= (w1 + w2) / 2) { [v1, v2] = collide1D(K.m1, v1, K.m2, v2, K.e); done = true; }
     if (t > 0.6) { x1 += v1 * S * dt; x2 += v2 * S * dt; }
     if (x1 > 1100 || x1 < -250 || x2 > 1100) start();
     const c = g.ctx; g.clear(); const yG = 190; ground(c, yG, 10, 890);
     if (K.m1 < 0.5) { c.fillStyle = "#555"; roundRect(c, x1 - w1 / 2, yG - 60, w1, 14, 6); c.fill(); }
-    else cart(c, x1, yG, w1, 34, COL.b1, "1");
-    if (K.e === 0 && done) { cart(c, x2, yG, w2, 50, COL.b2, "2"); c.fillStyle = "#555"; roundRect(c, x2 - w2 / 2 - 10, yG - 60, 24, 14, 6); c.fill(); }
-    else cart(c, x2, yG, w2, 50, COL.b2, "2");
+    else cart(c, x1, yG, w1, B1.h, COL.b1, "1");
+    if (K.e === 0 && done) { cart(c, x2, yG, w2, B2.h, COL.b2, "2"); c.fillStyle = "#555"; roundRect(c, x2 - w2 / 2 - 10, yG - 60, 24, 14, 6); c.fill(); }
+    else cart(c, x2, yG, w2, B2.h, COL.b2, "2");
     arrow(c, x1, yG - 95, x1 + v1 * 22, yG - 95, COL.v, { label: `υ₁ = ${fmt(v1, 2)} m/s`, oy: -14 });
     if (!(K.e === 0 && done)) arrow(c, x2, yG - 135, x2 + v2 * 22, yG - 135, COL.v, { label: `υ₂ = ${fmt(v2, 2)} m/s`, oy: -14 });
     txt(c, done ? "ΜΕΤΑ την κρούση" : "ΠΡΙΝ την κρούση", 450, 26, { align: "center", weight: 800, color: done ? COL.F : COL.mute });
@@ -759,7 +802,7 @@ SL.push({ sec: "2.3", title: "Ορμή συστήματος", build(root) {
   function draw() {
     const c = g.ctx; g.clear(); const m1 = s1.v, u1 = v1.v, m2 = s2.v, u2 = v2.v, p1 = m1 * u1, p2 = m2 * u2, P = p1 + p2, yG = 130, k = 4.5;
     ground(c, yG, 30, 870);
-    cart(c, 280, yG, 50 + m1 * 10, 34, COL.b1, "1"); cart(c, 620, yG, 50 + m2 * 10, 34, COL.b2, "2");
+    cart(c, 280, yG, bodySize(m1).w, bodySize(m1).h, COL.b1, "1"); cart(c, 620, yG, bodySize(m2).w, bodySize(m2).h, COL.b2, "2");
     arrow(c, 280, 50, 280 + u1 * 9, 50, COL.v, { label: `υ₁ = ${sgn(u1, 0)}`, oy: -14 }); arrow(c, 620, 50, 620 + u2 * 9, 50, COL.v, { label: `υ₂ = ${sgn(u2, 0)}`, oy: -14 });
     txt(c, "+ θετική φορά →", 870, 18, { align: "right", color: COL.mute, weight: 700, size: 13.5 });
     // πρόσθεση βελών μύτη με ουρά
@@ -794,7 +837,7 @@ SL.push({ sec: "2.3", title: "Πόση ορμή έχουν;", build(root) {
     ["Μπάλα ποδοσφαίρου", "12 m/s", "425 g = 0,425 kg", "0,425 · 12", 5.1],
   ];
   const sci = (x) => { if (x >= 0.01 && x < 1e5) return fmt(x, 3); const e = Math.floor(Math.log10(x)); return fmt(x / Math.pow(10, e), 2) + "·10" + String(e).split("").map((d) => "⁰¹²³⁴⁵⁶⁷⁸⁹"[d] || "⁻").join(""); };
-  const tb = el("table", { class: "t" }); root.appendChild(tb);
+  const tb = el("table", { class: "t" }); const tsc = el("div", { class: "tscroll" }); tsc.appendChild(tb); root.appendChild(tsc);
   tb.innerHTML = `<tr><th>Σώμα</th><th>υ</th><th>m</th><th>p (kg·m/s)</th></tr>`;
   const shown = rows.map(() => false);
   rows.forEach((r, i) => {
@@ -1180,11 +1223,12 @@ SL.push({ sec: "2.5", title: "Αρχή διατήρησης της ορμής", 
   const bb = el("div", { class: "seg" }); C.appendChild(bb);
   button(bb, "▶ Σύγκρουση", () => (run = true), "pri"); button(bb, "↺", () => reset());
   const ro = readout(b);
-  const S = 70, K = 900, W1 = 70, W2 = 70; let x1, x2, v1, v2, t, run, h1, h2, F;
+  const S = 70, K = 900; let W1 = 70, W2 = 70, x1, x2, v1, v2, t, run, h1, h2, F;
   function reset() { x1 = 1.4; x2 = 7.4; v1 = u1s.v; v2 = u2s.v; t = 0; run = false; h1 = []; h2 = []; F = 0; }
   reset();
   animate((dt) => {
     const m1 = s1.v, m2 = s2.v;
+    if (!run) { W1 = bodySize(m1).w; W2 = bodySize(m2).w; }
     if (run && t < 4.2) {
       const n = 40, h = (dt * 0.6) / n;
       for (let i = 0; i < n; i++) {
@@ -1195,8 +1239,8 @@ SL.push({ sec: "2.5", title: "Αρχή διατήρησης της ορμής", 
     }
     const c = g.ctx; g.clear(); const yG = 130, X1 = x1 * S, X2 = x2 * S;
     ground(c, yG, 10, 560);
-    cart(c, X1, yG, W1, 30, COL.b1, "1");
-    cart(c, X2, yG, W2, 30, COL.b2, "2");
+    cart(c, X1, yG, W1, bodySize(m1).h, COL.b1, "1");
+    cart(c, X2, yG, W2, bodySize(m2).h, COL.b2, "2");
     // ελατήριο στο μπροστινό μέρος του 1
     const sx0 = X1 + W1 / 2, sx1 = Math.min(X2 - W2 / 2, sx0 + 0.35 * S);
     c.save(); c.strokeStyle = "#6b7280"; c.lineWidth = 2.5; c.beginPath(); c.moveTo(sx0, yG - 34);
@@ -1367,7 +1411,7 @@ SL.push({ sec: "2.5", title: "Quiz 2: ΑΔΟ", build(root) {
   head(root, "Έλεγχος γνώσεων · 2.1, 2.2, 2.5", "Quiz 2: σύστημα και αρχή διατήρησης της ορμής", ["Για κάθε απάντηση, σκέψου: «ποιο είναι το σύστημα; είναι μονωμένο; ποια είναι η ορμή πριν;»"]);
   quiz(root, [
     { q: "Δύο παγοδρόμοι Α (μάζα m) και Β (0,9m) στέκονται ακίνητοι. Ο Α σπρώχνει τον Β. Αν ο Α αποκτά ορμή p, ο Β αποκτά: (ερώτηση 13)", opts: ["p", "0,9p", "−p", "−0,9p"], a: 2, why: "Πριν: p<sub>ολ</sub> = 0. Μετά: p + p<sub>Β</sub> = 0 ⇒ p<sub>Β</sub> = −p. Οι μάζες δεν παίζουν ρόλο για τις ορμές, μόνο για τις ταχύτητες." },
-    { q: "Ακίνητο βλήμα διασπάται σε κομμάτια m και 2m. Ποια πρόταση είναι σωστή; (ερώτηση 14)", opts: ["Τα κομμάτια αποκτούν ίσες ορμές", "Αποκτούν αντίθετες ταχύτητες", "Αποκτούν αντίθετες ορμές", "Το 2m έχει διπλάσια ορμή"], a: 2, why: "0 = p₁ + p₂ ⇒ p₂ = −p₁: αντίθετες ορμές (ίσα μέτρα). Οι ταχύτητες είναι αντίθετης κατεύθυνσης αλλά <b>διαφορετικού μέτρου</b> (το m πάει διπλάσια γρήγορα), οπότε και το Ε του βιβλίου είναι σωστό." },
+    { q: "Ακίνητο βλήμα διασπάται σε κομμάτια m και 2m. Ποια πρόταση είναι σωστή; (ερώτηση 14)", opts: ["Τα κομμάτια αποκτούν ίσες ορμές", "Αποκτούν αντίθετες ταχύτητες (ίδιο μέτρο, αντίθετη φορά)", "Αποκτούν αντίθετες ορμές (ίδιο μέτρο, αντίθετη φορά)", "Το 2m αποκτά διπλάσια ορμή"], a: 2, why: "0 = p₁ + p₂ ⇒ p₂ = −p₁: αντίθετες ορμές (ίσα μέτρα). Οι ταχύτητες είναι αντίθετης κατεύθυνσης αλλά <b>διαφορετικού μέτρου</b> (το m πάει διπλάσια γρήγορα), οπότε και το Ε του βιβλίου είναι σωστό." },
     { q: "Σε μετωπική σύγκρουση αυτοκινήτων m και M = 2m, το συσσωμάτωμα μένει ακίνητο. Τι ισχύει; (ερώτηση 16)", opts: ["Το M είχε διπλάσια ταχύτητα από το m", "Είχαν ίσες ορμές πριν", "Η ορμή του συστήματος πριν ήταν μηδέν", "Είχαν ίσες ταχύτητες"], a: 2, why: "Μετά ακίνητα ⇒ p<sub>μετά</sub> = 0 ⇒ p<sub>πριν</sub> = 0 (Γ). Άρα αντίθετες ορμές (όχι ίσες, Β λάθος): m·υ = 2m·V ⇒ υ = 2V, το <b>m</b> είχε διπλάσια ταχύτητα (Α λάθος). Και το Δ (αντίθετες μεταβολές ορμής) είναι σωστό." },
     { q: "Σώμα με ορμή p συγκρούεται πλαστικά με ακίνητο σώμα διπλάσιας μάζας. Ποια είναι σωστή; (ερώτηση 15)", opts: ["Το συσσωμάτωμα έχει ορμή p/3", "Το συσσωμάτωμα έχει ορμή p", "Η ορμή του κινούμενου μειώνεται κατά p/2"], a: 1, why: "ΑΔΟ: p<sub>μετά</sub> = p (Α σωστό). V = υ/3, οπότε το πρώτο σώμα έχει μετά p/3: μειώθηκε κατά <b>2p/3</b> (Β λάθος). Το αρχικά ακίνητο αποκτά 2m·υ/3 = <b>2p/3</b> (Γ σωστό)." },
     { q: "Ο αστροναύτης Α (μετά το στιγμιότυπο δ) πιάνει την μπάλα και την ξαναπετά με ορμή 10 kg·m/s. Η ορμή του Α γίνεται:", opts: ["−10 kg·m/s", "−20 kg·m/s", "−30 kg·m/s", "0"], a: 2, why: "Πιάνοντας: −10 + (−10) = −20. Πετώντας +10: −20 − 10 = −30 kg·m/s." },
@@ -1393,10 +1437,11 @@ SL.push({ sec: "2.6", title: "Κινητική ενέργεια: χάνεται"
   reset();
   animate((dt) => {
     const m1 = s1.v, m2 = s2.v, u1 = su.v, V = (m1 * u1) / (m1 + m2);
-    if (run) { x1 += v1 * 45 * dt; x2 += v2 * 45 * dt; if (!stuck && x2 - x1 < 95) { stuck = true; v1 = v2 = V; x1 = x2 - 95; } if (x2 > 880) reset(true); }
+    const B1 = bodySize(m1), B2 = bodySize(m2), touch = (B1.w + B2.w) / 2 + 4;
+    if (run) { x1 += v1 * 45 * dt; x2 += v2 * 45 * dt; if (!stuck && x2 - x1 < touch) { stuck = true; v1 = v2 = V; x1 = x2 - touch; } if (x2 > 880) reset(true); }
     const c = g.ctx; g.clear(); const yG = 120; ground(c, yG, 10, 890);
-    cart(c, x1, yG, 80, 32, COL.b1, "1"); c.fillStyle = "#555"; c.fillRect(x1 + 40, yG - 34, 22, 5);
-    cart(c, x2, yG, 80, 32, COL.b2, "2");
+    cart(c, x1, yG, B1.w, B1.h, COL.b1, "1"); c.fillStyle = "#555"; c.fillRect(x1 + B1.w / 2, yG - 18 - B1.h / 2, 14, 5);
+    cart(c, x2, yG, B2.w, B2.h, COL.b2, "2");
     arrow(c, x1, 40, x1 + v1 * 18, 40, COL.v, { label: stuck ? `V = ${fmt(V, 2)}` : `υ₁ = ${fmt(u1, 1)}`, oy: -12 });
     const Kb = 0.5 * m1 * u1 * u1, Ka = 0.5 * (m1 + m2) * V * V, pNow = stuck ? (m1 + m2) * V : m1 * v1, KNow = stuck ? Ka : Kb;
     const bx = 120, bw = 300;
@@ -1444,7 +1489,7 @@ SL.push({ sec: "2.6", title: "Προσομοιωτής κρούσεων", build(
   function reset(go) { x1 = 220; x2 = 620; v1 = u1.v; v2 = u2.v; hit = false; run = !!go; }
   reset();
   animate((dt) => {
-    const m1 = s1.v, m2 = s2.v; w1 = 40 + m1 * 12; w2 = 40 + m2 * 12;
+    const m1 = s1.v, m2 = s2.v; w1 = bodySize(m1).w; w2 = bodySize(m2).w;
     if (run) {
       x1 += v1 * 40 * dt; x2 += v2 * 40 * dt;
       if (!hit && x2 - x1 <= (w1 + w2) / 2) { [v1, v2] = collide1D(m1, v1, m2, v2, e); hit = true; x1 = x2 - (w1 + w2) / 2 - 0.5; }
@@ -1452,7 +1497,7 @@ SL.push({ sec: "2.6", title: "Προσομοιωτής κρούσεων", build(
       if (x1 < -120 || x2 > 1020 || x1 > 1020 || x2 < -120) run = false;
     }
     const c = g.ctx; g.clear(); const yG = 110; ground(c, yG, 0, 900);
-    cart(c, x1, yG, w1, 30, COL.b1, "1"); cart(c, x2, yG, w2, 30, COL.b2, "2");
+    cart(c, x1, yG, w1, bodySize(m1).h, COL.b1, "1"); cart(c, x2, yG, w2, bodySize(m2).h, COL.b2, "2");
     arrow(c, x1, 30, x1 + v1 * 18, 30, COL.v, { label: sgn(v1, 2), oy: -12 }); arrow(c, x2, 30, x2 + v2 * 18, 30, COL.v, { label: sgn(v2, 2), oy: -12 });
     const p1 = m1 * v1, p2 = m2 * v2, mx = Math.max(4, Math.abs(m1 * u1.v) + Math.abs(m2 * u2.v));
     pBars(c, 110, 150, 300, [{ label: "p₁", val: p1, color: COL.b1 }, { label: "p₂", val: p2, color: COL.b2 }, { label: "p ολ.", val: p1 + p2, color: "#1d2433" }], mx, { rowH: 28 });
@@ -1523,12 +1568,13 @@ SL.push({ sec: "2.7", title: "Σύστημα ελατήριο–μάζες", bui
     const m1 = s1.v, m2 = s2.v, u2 = Math.sqrt((2 * E * m1) / (m2 * (m1 + m2))), u1 = (m2 * u2) / m1;
     if (cut) { t += dt; x1 -= u1 * 40 * dt; x2 += u2 * 40 * dt; if (x1 < -80 && x2 > 980) reset(); }
     const c = g.ctx; g.clear(); const yG = 130; ground(c, yG, 0, 900);
-    cart(c, x1 - 40, yG, 70, 30, COL.b1, "1"); cart(c, x2 + 40, yG, 70, 30, COL.b2, "2");
+    const B1 = bodySize(m1), B2 = bodySize(m2);
+    cart(c, x1 - 5 - B1.w / 2, yG, B1.w, B1.h, COL.b1, "1"); cart(c, x2 + 5 + B2.w / 2, yG, B2.w, B2.h, COL.b2, "2");
     const sx0 = x1 - 5, sx1 = cut ? Math.min(x1 + 60, x2 + 5) : x2 + 5;
     c.save(); c.strokeStyle = "#6b7280"; c.lineWidth = 3; c.beginPath(); c.moveTo(sx0, yG - 32);
     const coils = 10; for (let i = 1; i <= coils; i++) c.lineTo(sx0 + ((sx1 - sx0) * i) / coils, yG - 32 + (i % 2 ? -9 : 9)); c.stroke(); c.restore();
     if (!cut) { c.strokeStyle = "#8b6b3d"; c.lineWidth = 2; c.beginPath(); c.moveTo(x1 - 40, yG - 58); c.lineTo(x2 + 40, yG - 58); c.stroke(); }
-    if (cut) { arrow(c, x1 - 40, 40, x1 - 40 - u1 * 18, 40, COL.v, { label: `υ₁ = ${fmt(u1, 2)}`, oy: -12 }); arrow(c, x2 + 40, 40, x2 + 40 + u2 * 18, 40, COL.v, { label: `υ₂ = ${fmt(u2, 2)}`, oy: -12 }); }
+    if (cut) { arrow(c, x1 - 5 - B1.w / 2, 40, x1 - 5 - B1.w / 2 - u1 * 18, 40, COL.v, { label: `υ₁ = ${fmt(u1, 2)}`, oy: -12 }); arrow(c, x2 + 5 + B2.w / 2, 40, x2 + 5 + B2.w / 2 + u2 * 18, 40, COL.v, { label: `υ₂ = ${fmt(u2, 2)}`, oy: -12 }); }
     const p1 = cut ? -m1 * u1 : 0, p2 = cut ? m2 * u2 : 0;
     pBars(c, 120, 175, 330, [{ label: "p₁", val: p1, color: COL.b1 }, { label: "p₂", val: p2, color: COL.b2 }, { label: "p ολική", val: p1 + p2, color: "#1d2433" }], 8, { rowH: 30 });
     const K1 = cut ? 0.5 * m1 * u1 * u1 : 0, K2 = cut ? 0.5 * m2 * u2 * u2 : 0;
@@ -1805,7 +1851,7 @@ const secBtns = SECS.map((s) => {
 function goSec(id) { const i = SL.findIndex((s) => s.sec === id); if (i >= 0) show(i, true); }
 function show(i, scroll) {
   cur = clamp(i, 0, SL.length - 1);
-  SCOPE.forEach((f) => { try { f(); } catch (e) {} }); SCOPE = [];
+  SCOPE.forEach((f) => { try { f(); } catch (e) {} }); SCOPE = []; MOTION.paused = false; LAST_HOST = null;
   root.innerHTML = "";
   try { SL[cur].build(root); } catch (e) { root.innerHTML = `<p>Σφάλμα στη διαφάνεια: ${e.message}</p>`; console.error(e); }
   counter.textContent = `Διαφάνεια ${cur + 1} / ${SL.length} · ${SL[cur].title}`;
@@ -1829,6 +1875,7 @@ function show(i, scroll) {
 document.getElementById("prev").addEventListener("click", () => show(cur - 1, true));
 document.getElementById("next").addEventListener("click", () => show(cur + 1, true));
 document.addEventListener("keydown", (e) => {
+  if (e.key === " " && !(e.target && /INPUT|TEXTAREA|SELECT|BUTTON/.test(e.target.tagName))) { e.preventDefault(); MOTION.paused = !MOTION.paused; syncMotion(); return; }
   if (e.target && /INPUT|TEXTAREA|SELECT/.test(e.target.tagName) && e.target.type !== "range") return;
   if (e.key === "ArrowRight" && !(e.target && e.target.type === "range")) show(cur + 1, true);
   if (e.key === "ArrowLeft" && !(e.target && e.target.type === "range")) show(cur - 1, true);

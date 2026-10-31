@@ -176,7 +176,7 @@
 <line x1="1046.0" y1="226.0" x2="1015.0" y2="226.0" stroke="#1f9d55" stroke-width="3" stroke-linecap="round"/>
 <polygon points="1006.0,226.0 1015.0,221.5 1015.0,230.5" fill="#1f9d55"/>
 <text x="1026.0" y="218.0" font-size="12" fill="#1f9d55" text-anchor="middle" font-weight="bold" font-style="italic">Δp</text>
-<text x="1082.0" y="300.0" font-size="14" fill="#1e5fb4" text-anchor="middle" font-weight="bold" font-style="italic">Δp<tspan baseline-shift="sub" font-size="70%">x</tspan> = 2mυ·συνφ</text>
+<text x="1082.0" y="300.0" font-size="14" fill="#1e5fb4" text-anchor="middle" font-weight="bold" font-style="italic">|Δp<tspan baseline-shift="sub" font-size="70%">x</tspan>| = 2mυ·συνφ</text>
 <text x="1082.0" y="319.0" font-size="14" fill="#1e5fb4" text-anchor="middle" font-weight="bold" font-style="italic">Δp<tspan baseline-shift="sub" font-size="70%">y</tspan> = 0</text>
 <text x="1082.0" y="350.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">φ: γωνία με την κάθετη στον τοίχο.</text>
 <rect x="14" y="368" width="1184" height="250" rx="10" fill="#e6f6f8" stroke="#0f7d8c" stroke-width="1.5"/>
@@ -871,8 +871,8 @@
 <text x="984.0" y="1957.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">40</text>
 <text x="999.0" y="1958.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Κατακόρυφη βολή</text>
 <g transform="translate(969,1938)"><line x1="17" y1="126" x2="209" y2="126" stroke="#8a8f99" stroke-width="2" stroke-linecap="round"/><line x1="80" y1="40" x2="80" y2="120" stroke="#5b6577" stroke-width="1" stroke-dasharray="3 3"/><circle cx="80" cy="40" r="8" fill="#f4a261" stroke="#4a5568" stroke-width="1.2"/><text x="96.0" y="36.0" font-size="10" fill="#1c2433" text-anchor="start" font-weight="bold">υ = 0, p = 0</text><line x1="80.0" y1="49.0" x2="80.0" y2="65.0" stroke="#d9342b" stroke-width="2.4" stroke-linecap="round"/><polygon points="80.0,74.0 75.5,65.0 84.5,65.0" fill="#d9342b"/><text x="94.0" y="70.0" font-size="11" fill="#d9342b" text-anchor="start" font-weight="bold" font-style="italic">mg</text><line x1="56.0" y1="118.0" x2="56.0" y2="91.0" stroke="#1f6fd1" stroke-width="2.5" stroke-linecap="round"/><polygon points="56.0,82.0 60.5,91.0 51.5,91.0" fill="#1f6fd1"/><text x="44.0" y="100.0" font-size="12" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ<tspan baseline-shift="sub" font-size="70%">0</tspan></text><line x1="104.0" y1="84.0" x2="104.0" y2="109.0" stroke="#1f6fd1" stroke-width="2.5" stroke-linecap="round"/><polygon points="104.0,118.0 99.5,109.0 108.5,109.0" fill="#1f6fd1"/><text x="118.0" y="106.0" font-size="12" fill="#1f6fd1" text-anchor="start" font-weight="bold" font-style="italic">υ<tspan baseline-shift="sub" font-size="70%">0</tspan></text><text x="170.0" y="66.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">πάνω: +</text></g>
-<text x="1082.0" y="2092.0" font-size="14" fill="#1f9d55" text-anchor="middle" font-weight="bold" font-style="italic">Δp<tspan baseline-shift="sub" font-size="70%">ολ</tspan> = −2mυ<tspan baseline-shift="sub" font-size="70%">0</tspan></text>
-<text x="1082.0" y="2111.0" font-size="12.5" fill="#1f9d55" text-anchor="middle" font-weight="bold" font-style="italic">dp/dt = −mg (και στο ύψιστο)</text>
+<text x="1082.0" y="2092.0" font-size="14" fill="#1f9d55" text-anchor="middle" font-weight="bold" font-style="italic">Δp = −2mυ<tspan baseline-shift="sub" font-size="70%">0</tspan> (ως την επιστροφή)</text>
+<text x="1082.0" y="2111.0" font-size="12.5" fill="#1f9d55" text-anchor="middle" font-weight="bold" font-style="italic">Δp/Δt = −mg (και στο ύψιστο)</text>
 <text x="1082.0" y="2142.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">Στο ύψιστο p = 0, αλλά ο ρυθμός ≠ 0.</text>
 <rect x="14" y="2160" width="1184" height="250" rx="10" fill="#e6f4f1" stroke="#00796b" stroke-width="1.5"/>
 <rect x="14" y="2160" width="1184" height="30" rx="10" fill="#00796b"/>
@@ -909,7 +909,7 @@
 <text x="747" y="2308" font-size="13" fill="#1c2433" text-anchor="start" font-weight="normal">27 · Έκρηξη κινούμενου: Mυ = m<tspan baseline-shift="sub" font-size="70%">1</tspan>υ<tspan baseline-shift="sub" font-size="70%">1</tspan> + m<tspan baseline-shift="sub" font-size="70%">2</tspan>υ<tspan baseline-shift="sub" font-size="70%">2</tspan></text>
 <text x="747" y="2334" font-size="13" fill="#1c2433" text-anchor="start" font-weight="normal">31–32 · Ανελαστική και ελαστική ίσων μαζών</text>
 <text x="747" y="2360" font-size="13" fill="#1c2433" text-anchor="start" font-weight="normal">20 · Κάθετες διευθύνσεις: ΑΔΟ ανά άξονα</text>
-<text x="747" y="2390" font-size="12" fill="#1f9d55" text-anchor="start" font-weight="bold" font-style="italic">Ελαστική ή όχι; Το λέει ΜΟΝΟ η K, η ορμή διατηρείται πάντα.</text>
+<text x="747" y="2390" font-size="12" fill="#1f9d55" text-anchor="start" font-weight="bold" font-style="italic">Ελαστική ή όχι; Το λέει ΜΟΝΟ η K, η ορμή διατηρείται σε κάθε κρούση.</text>
 <text x="606.0" y="2434.0" font-size="13" fill="#5b6577" text-anchor="middle" font-weight="normal">Σύμβολα: p ορμή • υ ταχύτητα πριν • V κοινή ταχύτητα μετά • Δp μεταβολή ορμής • Q θερμότητα (απώλεια K) • μ συντελεστής τριβής • N κάθετη δύναμη • d διείσδυση • g = 10 m/s²</text>
 <text x="606.0" y="2456.0" font-size="13" fill="#1c2433" text-anchor="middle" font-weight="bold">Η ορμή διατηρείται σε κάθε κρούση και έκρηξη. Η κινητική ενέργεια διατηρείται ΜΟΝΟ στην ελαστική κρούση — στην πλαστική χάνεται (Q &gt; 0), στην έκρηξη αυξάνεται.</text>
 <text x="606.0" y="2484.0" font-size="12" fill="#9aa3b2" text-anchor="middle" font-weight="normal">Physics Workspace • Μιχάλης</text>

@@ -123,7 +123,7 @@ const case27: Case = {
 const case28: Case = {
   n: 28,
   given: "Σώμα 3 kg ρίχνεται πάνω με 20 m/s. Στο ψηλότερο σημείο σπάει: 1 kg φεύγει οριζόντια με 4 m/s.",
-  ask: "Πού πέφτει κάθε κομμάτι.",
+  ask: "Πόσο μακριά από το σημείο της έκρηξης (οριζόντια) πέφτει κάθε κομμάτι, και πόσο απέχουν μεταξύ τους στο έδαφος.",
   what: "Μια μπάλα πετιέται ψηλά, εκρήγνυται στο ψηλότερο σημείο και τα κομμάτια πέφτουν κάνοντας οριζόντια βολή. Δείχνει πώς συνδυάζεται η έκρηξη με τη βολή.",
   title: "Έκρηξη στο ύψιστο σημείο",
   period: 7,
@@ -256,7 +256,7 @@ const case29: Case = {
           </g>
         ) : null}
         <line x1={table.x2 + 160} y1={table.y - 12} x2={table.x2 + 160} y2={floor} stroke={C.muted} strokeWidth={1} />
-        <T x={table.x2 + 154} y={(table.y + floor) / 2} s="H = 1,25 m" size={10} color={C.muted} anchor="end" bold={false} />
+        <T x={table.x2 + 154} y={floor - 14} s="H = 1,25 m" size={10} color={C.muted} anchor="end" bold={false} />
         {tau >= 0.5 ? (
           <g>
             <line x1={table.x2 - 14} y1={floor + 8} x2={table.x2 - 14 + S * 2} y2={floor + 8} stroke={C.p} strokeWidth={2} />
@@ -303,9 +303,9 @@ const case30: Case = {
         <Ground y={gy} />
         <Cart cx={cartX} y={gy} w={64} label="M" fill={C.b1} />
         <Box cx={stuck ? cartX : X} y={blockY} w={24} h={20} fill={C.b2} label="m" />
-        {!stuck ? <Vec x={X + 18} y={blockY - 18} dx={0} dy={vy * 5} label="υ_y" /> : null}
+        {!stuck ? <Vec x={X - 20} y={blockY - 18} dx={0} dy={vy * 5} label="υ_y" labelSide="left" /> : null}
         <Vec x={cartX + 34} y={gy - 34} dx={(t < 2 ? 3 : t < 2.6 ? lerp(3, 2, seg(t, 2, 2.6)) : 2) * 9} label={t < 2 ? "υ = 3" : "V = 2"} />
-        {N > 0.05 ? <Vec x={cartX} y={gy + 2} dx={0} dy={-N * 70} color={C.F} label="N (μεγάλη)" labelSide="left" width={3.4} /> : null}
+        {N > 0.05 ? <Vec x={cartX} y={gy + 2} dx={0} dy={-N * 70} color={C.F} label="N (μεγάλη)" labelSide="right" width={3.4} /> : null}
         <Tag x={14} y={24} s="κρούση · αργή κίνηση" color={C.F} show={t > 2 && t < 2.6} />
         <Bars
           y={142}
