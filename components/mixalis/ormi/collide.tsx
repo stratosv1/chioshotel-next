@@ -100,8 +100,8 @@ export function CollisionScene({ c, t, extra }: { c: Collision; t: number; extra
     { label: `p_${l2.replace("m_", "")}`, value: p2, unit: c.pUnit },
     { label: "p_{ολ}", value: p1 + p2, color: C.ink, unit: c.pUnit },
   ];
-  if (c.showK) items.push({ label: "K_{ολ}", value: Ka, color: C.K, unit: c.kUnit ?? "J" });
-  const pmax = c.barMax ?? Math.max(Math.abs(c.m1 * c.u1), Math.abs(c.m2 * c.u2), Math.abs(c.m1 * c.u1 + c.m2 * c.u2), Kb * (c.showK ? 1 : 0)) * 1.1;
+  // Different quantities must not share a bar scale: momentum has kg·m/s, energy has J.
+  const pmax = c.barMax ?? Math.max(Math.abs(c.m1 * c.u1), Math.abs(c.m2 * c.u2), Math.abs(c.m1 * c.u1 + c.m2 * c.u2), 0.1) * 1.1;
   const lost = Math.max(0, Kb - Ka);
   const vy = gy - 34;
   return (
@@ -150,6 +150,15 @@ export function CollisionScene({ c, t, extra }: { c: Collision; t: number; extra
       {c.showK ? <Heat cx={(st.x1 + st.x2) / 2} cy={gy - 30} k={after ? Math.min(1, lost / Math.max(1e-6, Kb)) * 2 : 0} /> : null}
       {extra}
       <Bars y={gy + 32} max={pmax} items={items} unit="kg·m/s" />
+      {c.showK ? (
+        <T
+          x={W_FRAME / 2}
+          y={Math.min(gy + 96, 203)}
+          s={`Κινητική (J): πριν ${Kb.toLocaleString("el-GR", { maximumFractionDigits: 1 })} · τώρα ${Ka.toLocaleString("el-GR", { maximumFractionDigits: 1 })}`}
+          color={C.K}
+          size={10}
+        />
+      ) : null}
     </g>
   );
 }
