@@ -134,7 +134,7 @@ export default function OrmiPage() {
         <section className="rounded-3xl border border-black/10 bg-white p-3 shadow-sm sm:p-5">
           <div className="mb-4 rounded-2xl border border-black/10 bg-[#fbf8f3] p-3 sm:hidden">
             <h3 className="text-base font-bold">Το τυπολόγιο ανά ενότητα</h3>
-            <p className="mt-1 text-xs leading-5 text-[#5b6577]">Στο κινητό το πλήρες poster είναι μικρό. Διάλεξε μια ενότητα για να δεις τα σχέδια σε κανονικό μέγεθος.</p>
+            <p className="mt-1 text-xs leading-5 text-[#5b6577]">Το poster κυλάει οριζόντια στο κινητό για να διαβάζονται οι τύποι. Ή διάλεξε μια ενότητα και άνοιξε τα κινούμενα σχέδια.</p>
             <div className="mt-3 grid grid-cols-2 gap-2">
               {sectionNames.map((name, i) => (
                 <a key={name} href={`#enotita-${i + 1}`} className="rounded-xl border border-black/10 bg-white px-3 py-2 text-xs font-semibold leading-5 text-[#3d4452]">
@@ -143,7 +143,8 @@ export default function OrmiPage() {
               ))}
             </div>
           </div>
-          <div className="relative overflow-hidden rounded-2xl border border-black/10 bg-[#fbfaf7]">
+          <div className="overflow-x-auto rounded-2xl border border-black/10 bg-[#fbfaf7]" aria-label="Τυπολόγιο 43 περιπτώσεων, κυλήστε οριζόντια στο κινητό">
+            <div className="relative min-w-[850px] sm:min-w-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/mixalis/ormi-typologio.svg"
@@ -154,6 +155,7 @@ export default function OrmiPage() {
               className="mx-auto h-auto w-full"
             />
             <PosterCells cells={cells} posterW={POSTER_W} posterH={POSTER_H} lesson="ormi" />
+            </div>
           </div>
           <PosterRevisionNote lesson="ormi" />
         </section>
