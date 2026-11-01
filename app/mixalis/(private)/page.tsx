@@ -154,6 +154,21 @@ const SUBJECTS: Subject[] = [
       },
     ],
   },
+  {
+    key: "diploma",
+    name: "Δίπλωμα μηχανής",
+    badge: "🏍",
+    accent: "bg-[#2c2825] text-white",
+    soft: "bg-[#e9e2d8] text-[#4a3f36]",
+    lessons: [
+      {
+        title: "Ερωτήσεις θεωρίας",
+        subtitle: "Εξάσκηση στις ερωτήσεις του βιβλίου. Κρατάει τα λάθη και τα ξαναρωτάει μέχρι να τα μάθεις.",
+        href: "/mixalis/drive",
+        links: [],
+      },
+    ],
+  },
 ];
 
 function L({ href, plain, className, children }: { href: string; plain?: boolean; className: string; children: React.ReactNode }) {
