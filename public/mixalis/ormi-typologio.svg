@@ -2,7 +2,7 @@
 <rect width="1212" height="2488" fill="#fbfaf7"/>
 <text x="606.0" y="52.0" font-size="40" fill="#14306b" text-anchor="middle" font-weight="900">ΟΡΜΗ ΚΑΙ ΚΡΟΥΣΕΙΣ – ΤΥΠΟΛΟΓΙΟ</text>
 <text x="606.0" y="84.0" font-size="19" fill="#1e5fb4" text-anchor="middle" font-weight="bold">43 περιπτώσεις • Τράπεζα Θεμάτων, σχολικό βιβλίο, Σαββάλας • Φυσική Προσανατολισμού Β΄ Λυκείου</text>
-<text x="606.0" y="104.0" font-size="13" fill="#5b6577" text-anchor="middle" font-weight="normal">Πρώτα: σύστημα + χρονικό διάστημα + εξωτερική ώθηση → ΑΔΟ αν ΣJεξ ≈ 0, αλλιώς Δp = ΣJεξ → ενέργεια αν χρειάζεται</text>
+<text x="606.0" y="104.0" font-size="13" fill="#5b6577" text-anchor="middle" font-weight="normal">Πρώτα: σύστημα + χρονικό διάστημα + εξωτερική ώθηση → ΑΔΟ αν η εξωτερική ώθηση ≈ 0, αλλιώς Δp = εξωτερική ώθηση → ενέργεια αν χρειάζεται</text>
 <rect x="14" y="112" width="1184" height="250" rx="10" fill="#eaf2fd" stroke="#1e5fb4" stroke-width="1.5"/>
 <rect x="14" y="112" width="1184" height="30" rx="10" fill="#1e5fb4"/>
 <rect x="14" y="132" width="1184" height="10" fill="#1e5fb4"/>
@@ -911,6 +911,6 @@
 <text x="747" y="2360" font-size="13" fill="#1c2433" text-anchor="start" font-weight="normal">20 · Κάθετες διευθύνσεις: ΑΔΟ ανά άξονα</text>
 <text x="747" y="2390" font-size="12" fill="#1f9d55" text-anchor="start" font-weight="bold" font-style="italic">Ελαστική; Έλεγξε K πριν/μετά. ΑΔΟ όταν η εξωτερική ώθηση είναι αμελητέα.</text>
 <text x="606.0" y="2434.0" font-size="13" fill="#5b6577" text-anchor="middle" font-weight="normal">Σύμβολα: p ορμή • υ ταχύτητα πριν • V κοινή ταχύτητα μετά • Δp μεταβολή ορμής • Q απώλεια κινητικής ενέργειας • μ συντελεστής τριβής • N κάθετη δύναμη • d διείσδυση • g = 10 m/s²</text>
-<text x="606.0" y="2456.0" font-size="13" fill="#1c2433" text-anchor="middle" font-weight="bold">ΑΔΟ: συνολική εξωτερική ώθηση ≈ 0 στο σύστημα ή στον άξονα. Διαφορετικά Δp = ΣJεξ. Στην ελαστική κρούση διατηρείται και η K.</text>
+<text x="606.0" y="2456.0" font-size="13" fill="#1c2433" text-anchor="middle" font-weight="bold">ΑΔΟ: συνολική εξωτερική ώθηση ≈ 0 στο σύστημα ή στον άξονα. Διαφορετικά Δp = εξωτερική ώθηση. Στην ελαστική κρούση διατηρείται και η K.</text>
 <text x="606.0" y="2484.0" font-size="12" fill="#9aa3b2" text-anchor="middle" font-weight="normal">Physics Workspace • Μιχάλης</text>
 </svg>
