@@ -1,12 +1,16 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { DriveQuestion } from "@/lib/mixalis/drive/questions";
 
 // Practice statistics live on the device (localStorage), like the other
 // Mixalis study pages. One entry per question id.
 const STORE_KEY = "mixalis-drive-v1";
 const CAT_KEY = "mixalis-drive-cat-v1";
+/** The round in progress, so a reload or a locked phone doesn't lose it. */
+const ROUND_KEY = "mixalis-drive-round-v1";
+
+type SavedRound = { title: string; ids: string[]; index: number; missed: string[]; correctCount: number };
 const ROUND_SIZE = 20;
 /** Correct answers in a row needed before a missed question leaves the "Λάθη" list. */
 const MASTER_STREAK = 2;
@@ -76,14 +80,33 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
   const [cat, setCat] = useState<string | null>(null);
   const [showAllHard, setShowAllHard] = useState(false);
 
+  const byId = useMemo(() => new Map(questions.map((q) => [q.id, q])), [questions]);
+  const answering = useRef(false);
+  const restored = useRef(false);
+
   useEffect(() => {
     setStats(readStats());
     try {
       setCat(window.localStorage.getItem(CAT_KEY));
+      const raw = window.localStorage.getItem(ROUND_KEY);
+      const saved = raw ? (JSON.parse(raw) as SavedRound) : null;
+      if (saved && Array.isArray(saved.ids)) {
+        const queue = saved.ids.map((id) => byId.get(id)).filter(Boolean) as DriveQuestion[];
+        if (queue.length && saved.index < queue.length) {
+          setRound({
+            title: saved.title,
+            queue,
+            index: Math.max(0, saved.index),
+            missed: (saved.missed ?? []).map((id) => byId.get(id)).filter(Boolean) as DriveQuestion[],
+            correctCount: saved.correctCount ?? 0,
+          });
+        }
+      }
     } catch {
       // ignore
     }
-  }, []);
+    restored.current = true;
+  }, [byId]);
 
   const categories = useMemo(() => {
     const m = new Map<string, number>();
@@ -91,7 +114,8 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
     return [...m.entries()];
   }, [questions]);
 
-  const pool = useMemo(() => (cat ? questions.filter((q) => q.category === cat) : questions), [questions, cat]);
+  const validCat = cat && categories.some(([c]) => c === cat) ? cat : null;
+  const pool = useMemo(() => (validCat ? questions.filter((q) => q.category === validCat) : questions), [questions, validCat]);
 
   const chooseCat = (c: string | null) => {
     setCat(c);
@@ -102,8 +126,6 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
       // ignore
     }
   };
-
-  const byId = useMemo(() => new Map(questions.map((q) => [q.id, q])), [questions]);
 
   const summary = useMemo(() => {
     let seen = 0;
@@ -129,6 +151,7 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
 
   const start = useCallback((title: string, queue: DriveQuestion[]) => {
     if (!queue.length) return;
+    answering.current = false;
     setRound({ title, queue, index: 0, missed: [], correctCount: 0 });
     setChosen([]);
     setRevealed(false);
@@ -138,8 +161,42 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
   const current = round && round.index < round.queue.length ? round.queue[round.index] : null;
   const multi = !!current && current.correct.length > 1;
 
+  // Keep the round in progress on the device; clear it once it is finished or closed.
+  useEffect(() => {
+    if (!restored.current) return;
+    try {
+      if (round && round.index < round.queue.length) {
+        const saved: SavedRound = {
+          title: round.title,
+          ids: round.queue.map((q) => q.id),
+          index: round.index + (revealed ? 1 : 0),
+          missed: round.missed.map((q) => q.id),
+          correctCount: round.correctCount,
+        };
+        window.localStorage.setItem(ROUND_KEY, JSON.stringify(saved));
+      } else {
+        window.localStorage.removeItem(ROUND_KEY);
+      }
+    } catch {
+      // ignore
+    }
+  }, [round, revealed]);
+
+  // Warm up the next question's pictures so they appear instantly.
+  useEffect(() => {
+    if (!round) return;
+    const next = round.queue[round.index + 1];
+    for (const src of [next?.image, ...(next?.optionImages ?? [])]) {
+      if (src) {
+        const img = new Image();
+        img.src = src;
+      }
+    }
+  }, [round]);
+
   const check = (picked: number[]) => {
-    if (!current || !round) return;
+    if (!current || !round || revealed || answering.current) return;
+    answering.current = true;
     const ok = picked.length === current.correct.length && picked.every((i) => current.correct.includes(i));
     const next = { ...stats };
     const prev = next[current.id] ?? { seen: 0, wrong: 0, streak: 0, last: 0 };
@@ -168,9 +225,25 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
 
   const nextQuestion = () => {
     if (!round) return;
+    answering.current = false;
     setRound({ ...round, index: round.index + 1 });
     setChosen([]);
     setRevealed(false);
+    window.scrollTo({ top: 0 });
+  };
+
+  /** "Τέλος" in the middle of a round: show the results of what was answered so far. */
+  const finishEarly = () => {
+    if (!round) return;
+    const answered = round.index + (revealed ? 1 : 0);
+    answering.current = false;
+    setChosen([]);
+    setRevealed(false);
+    if (answered === 0) {
+      setRound(null);
+      return;
+    }
+    setRound({ ...round, queue: round.queue.slice(0, answered), index: answered });
     window.scrollTo({ top: 0 });
   };
 
@@ -203,7 +276,7 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
       <section className="pb-28">
         <div className="sticky top-0 z-10 -mx-4 bg-[#f3efe8]/95 px-4 pb-3 pt-3 backdrop-blur sm:-mx-8 sm:px-8">
           <div className="flex items-center justify-between text-sm font-semibold text-[#857261]">
-            <button type="button" onClick={() => setRound(null)} className="py-2 pr-3 hover:text-[#2c2825]">
+            <button type="button" onClick={finishEarly} className="py-2 pr-3 hover:text-[#2c2825]">
               ✕ Τέλος
             </button>
             <span>{round.title}</span>
@@ -357,11 +430,11 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
     <section>
       <div className="-mx-4 overflow-x-auto px-4 pb-4 sm:mx-0 sm:px-0">
         <div className="flex w-max gap-2 sm:w-auto sm:flex-wrap">
-          <Chip active={!cat} onClick={() => chooseCat(null)}>
+          <Chip active={!validCat} onClick={() => chooseCat(null)}>
             Όλες · {questions.length}
           </Chip>
           {categories.map(([c, n]) => (
-            <Chip key={c} active={cat === c} onClick={() => chooseCat(c)}>
+            <Chip key={c} active={validCat === c} onClick={() => chooseCat(c)}>
               {c} · {n}
             </Chip>
           ))}
@@ -378,7 +451,7 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
       <div className="mt-8 space-y-3">
         <button
           type="button"
-          onClick={() => start(cat ?? "Εξάσκηση", weightedPick(pool, stats, roundSize))}
+          onClick={() => start(validCat ?? "Εξάσκηση", weightedPick(pool, stats, roundSize))}
           className="w-full rounded-2xl bg-[#2c2825] px-5 py-5 text-left text-white active:bg-black"
         >
           <span className="block text-xl font-semibold">Εξάσκηση · {roundSize} ερωτήσεις</span>
@@ -397,14 +470,14 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
               : "Δεν υπάρχουν λάθη για επανάληψη"}
           </span>
         </button>
-        {cat ? (
+        {validCat ? (
           <button
             type="button"
-            onClick={() => start(cat, shuffle(pool))}
+            onClick={() => start(validCat, shuffle(pool))}
             className="w-full rounded-2xl border-2 border-black/15 bg-white px-5 py-5 text-left"
           >
             <span className="block text-xl font-semibold">Όλη η ενότητα · {pool.length}</span>
-            <span className="mt-1 block text-base text-[#6b625b]">{cat}, με τυχαία σειρά</span>
+            <span className="mt-1 block text-base text-[#6b625b]">{validCat}, με τυχαία σειρά</span>
           </button>
         ) : null}
       </div>
@@ -436,7 +509,7 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
           })}
         </ol>
       ) : (
-        <p className="mt-3 text-lg text-[#6b625b]">Ακόμα κανένα λάθος{cat ? " σε αυτή την ενότητα" : ""}. Τα στατιστικά γεμίζουν καθώς απαντάει.</p>
+        <p className="mt-3 text-lg text-[#6b625b]">Ακόμα κανένα λάθος{validCat ? " σε αυτή την ενότητα" : ""}. Τα στατιστικά γεμίζουν καθώς απαντάει.</p>
       )}
 
       {!showAllHard && summary.hardest.length > hardShown.length ? (
