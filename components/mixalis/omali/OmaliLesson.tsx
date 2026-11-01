@@ -12,6 +12,7 @@ import { Quiz, ThinkCard, type ThinkQuestion } from "./Think";
 import { RotatingDisk, Wheels } from "./Wheels";
 import { Formula, Note } from "./shared";
 import { TrapezaThemata } from "./TrapezaThemata";
+import { OmaliTheoryEmbed } from "./OmaliTheoryEmbed";
 
 function Section({
   id,
@@ -388,6 +389,25 @@ export function OmaliLesson() {
             ))}
           </div>
         </nav>
+
+        <section id="theoria" className="scroll-mt-20 rounded-3xl border border-black/10 bg-white p-3 shadow-sm sm:p-5">
+          <div className="flex flex-wrap items-end justify-between gap-3 px-2 pb-4 sm:px-1">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Ξεκίνα από εδώ · Θεωρία 1.2 &amp; σύνδεση με 1.3</p>
+              <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">Η ομαλή κυκλική κίνηση, βήμα βήμα</h2>
+              <p className="mt-2 max-w-3xl text-[15px] leading-7 text-[#5c534c]">
+                24 διαδραστικές διαφάνειες βασισμένες στο υπάρχον μάθημα της Neon: γωνία, τόξο, περίοδος,
+                συχνότητα, γραμμική και γωνιακή ταχύτητα, κεντρομόλος επιτάχυνση, διαγράμματα και
+                εφαρμογές. Άλλαξε τις τιμές, πάγωσε την κίνηση και έλεγξε την κατανόησή σου πριν συνεχίσεις στις ασκήσεις.
+              </p>
+            </div>
+            <a href="/mixalis/omali-theory.html" target="_blank" rel="noopener"
+               className="shrink-0 rounded-full border border-black/10 bg-white px-4 py-2 text-sm font-semibold hover:bg-[#f3efe8]">
+              Σε πλήρη οθόνη
+            </a>
+          </div>
+          <OmaliTheoryEmbed />
+        </section>
 
         <Section
           id="lab"
