@@ -2,10 +2,25 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { DriveQuestion } from "@/lib/mixalis/drive/questions";
+import {
+  mergeDocs,
+  needsWork,
+  recheckDue,
+  recordAnswer,
+  sanitizeDoc,
+  statusOf,
+  type ProgressDoc,
+  type QStat,
+  type Stats,
+} from "@/lib/mixalis/drive/progress";
 
-// Practice statistics live on the device (localStorage), like the other
-// Mixalis study pages. One entry per question id.
+// The practice record is kept on the device (localStorage) and synced to the
+// server, so it survives a cleared browser and can be seen from another phone.
 const STORE_KEY = "mixalis-drive-v1";
+const RESET_KEY = "mixalis-drive-reset-v1";
+const API = "/mixalis/api/drive/progress";
+/** Wait this long after an answer before syncing, so a burst of answers is one write. */
+const SYNC_DELAY_MS = 20_000;
 const SET_KEY = "mixalis-drive-set-v1";
 /** Questions are studied in packs of 50, in book order. */
 const SET_SIZE = 50;
@@ -14,31 +29,36 @@ const ROUND_KEY = "mixalis-drive-round-v1";
 
 type SavedRound = { title: string; ids: string[]; index: number; missed: string[]; correctCount: number };
 const ROUND_SIZE = 20;
-/** Correct answers in a row needed before a missed question leaves the "Λάθη" list. */
-const MASTER_STREAK = 2;
 
-type QStat = { seen: number; wrong: number; streak: number; last: number };
-type Stats = Record<string, QStat>;
-
-function readStats(): Stats {
+function readLocal(): ProgressDoc {
   try {
     const raw = window.localStorage.getItem(STORE_KEY);
-    const parsed = raw ? JSON.parse(raw) : null;
-    return parsed && typeof parsed === "object" ? (parsed as Stats) : {};
+    const resetAt = Number(window.localStorage.getItem(RESET_KEY)) || 0;
+    return sanitizeDoc({ stats: raw ? JSON.parse(raw) : {}, resetAt }) ?? { stats: {}, resetAt: 0 };
   } catch {
-    return {};
+    return { stats: {}, resetAt: 0 };
   }
 }
 
-function writeStats(stats: Stats) {
+function writeLocal(doc: ProgressDoc) {
   try {
-    window.localStorage.setItem(STORE_KEY, JSON.stringify(stats));
+    window.localStorage.setItem(STORE_KEY, JSON.stringify(doc.stats));
+    window.localStorage.setItem(RESET_KEY, String(doc.resetAt || 0));
   } catch {
-    // storage blocked (private mode): stats just won't persist
+    // storage blocked (private mode): the server copy still keeps it
   }
 }
 
-const needsReview = (s?: QStat) => !!s && s.wrong > 0 && s.streak < MASTER_STREAK;
+function fmtDay(t?: number) {
+  if (!t) return "";
+  const d = new Date(t);
+  const today = new Date();
+  const y = new Date(today);
+  y.setDate(today.getDate() - 1);
+  if (d.toDateString() === today.toDateString()) return "σήμερα";
+  if (d.toDateString() === y.toDateString()) return "χθες";
+  return d.toLocaleDateString("el-GR", { day: "numeric", month: "short" });
+}
 
 /** Pick up to n questions without repeats, favouring unseen and often-missed ones. */
 function weightedPick(questions: DriveQuestion[], stats: Stats, n: number): DriveQuestion[] {
@@ -46,9 +66,9 @@ function weightedPick(questions: DriveQuestion[], stats: Stats, n: number): Driv
     const s = stats[q.id];
     let w: number;
     if (!s || s.seen === 0) w = 3;
-    else if (needsReview(s)) w = 3 + 2 * s.wrong;
-    else if (s.streak >= MASTER_STREAK) w = 0.6;
-    else w = 1.5;
+    else if (needsWork(s)) w = (recheckDue(s) || s.streak === 0 ? 4 : 2) + 2 * s.wrong;
+    else if (s.learnedAt) w = 1;
+    else w = 0.6;
     return { q, k: Math.pow(Math.random(), 1 / w) };
   });
   keyed.sort((a, b) => b.k - a.k);
@@ -76,6 +96,10 @@ type Round = {
 
 export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
   const [stats, setStats] = useState<Stats>({});
+  const [sync, setSync] = useState<"idle" | "saving" | "saved" | "offline">("idle");
+  const docRef = useRef<ProgressDoc>({ stats: {}, resetAt: 0 });
+  const dirty = useRef(false);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [round, setRound] = useState<Round | null>(null);
   const [chosen, setChosen] = useState<number[]>([]);
   const [revealed, setRevealed] = useState(false);
@@ -86,8 +110,77 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
   const answering = useRef(false);
   const restored = useRef(false);
 
+  const push = useCallback(async (opts: { reset?: boolean; keepalive?: boolean } = {}) => {
+    if (timer.current) clearTimeout(timer.current);
+    timer.current = null;
+    if (!dirty.current && !opts.reset) return;
+    dirty.current = false;
+    setSync("saving");
+    try {
+      const res = await fetch(opts.reset ? `${API}?reset=1` : API, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(docRef.current),
+        keepalive: opts.keepalive,
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      setSync("saved");
+    } catch {
+      dirty.current = true;
+      setSync("offline");
+    }
+  }, []);
+
+  const schedulePush = useCallback(() => {
+    dirty.current = true;
+    if (timer.current) clearTimeout(timer.current);
+    timer.current = setTimeout(() => void push(), SYNC_DELAY_MS);
+  }, [push]);
+
+  const commit = useCallback(
+    (doc: ProgressDoc) => {
+      docRef.current = doc;
+      setStats(doc.stats);
+      writeLocal(doc);
+    },
+    [],
+  );
+
+  // Load: device copy first (instant), then merge with the server copy.
   useEffect(() => {
-    setStats(readStats());
+    const local = readLocal();
+    commit(local);
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(API, { cache: "no-store" });
+        if (!res.ok) throw new Error(String(res.status));
+        const server = sanitizeDoc(await res.json()) ?? { stats: {}, resetAt: 0 };
+        if (cancelled) return;
+        const merged = mergeDocs(docRef.current, server);
+        commit(merged);
+        const serverBehind = Object.entries(merged.stats).some(([id, st]) => server.stats[id]?.last !== st.last);
+        if (serverBehind) {
+          dirty.current = true;
+          void push();
+        } else setSync("saved");
+      } catch {
+        if (!cancelled) setSync("offline");
+      }
+    })();
+    const onHide = () => {
+      if (document.visibilityState === "hidden" && dirty.current) void push({ keepalive: true });
+    };
+    document.addEventListener("visibilitychange", onHide);
+    window.addEventListener("pagehide", onHide);
+    return () => {
+      cancelled = true;
+      document.removeEventListener("visibilitychange", onHide);
+      window.removeEventListener("pagehide", onHide);
+    };
+  }, [commit, push]);
+
+  useEffect(() => {
     try {
       const savedSet = Number(window.localStorage.getItem(SET_KEY));
       if (savedSet > 0) setSetNo(savedSet);
@@ -123,6 +216,12 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
     return out;
   }, [questions]);
 
+  const packOf = useMemo(() => {
+    const m = new Map<string, number>();
+    for (const p of packs) for (const q of p.items) m.set(q.id, p.n);
+    return m;
+  }, [packs]);
+
   const pack = setNo ? packs.find((p) => p.n === setNo) ?? null : null;
   const pool = pack ? pack.items : questions;
 
@@ -146,8 +245,8 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
       const st = stats[q.id];
       if (!st || st.seen === 0) continue;
       seen++;
-      if (needsReview(st)) review++;
-      else if (st.streak >= 1) good++;
+      if (needsWork(st)) review++;
+      else good++;
     }
     return { seen, good, review };
   };
@@ -156,22 +255,27 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
     let seen = 0;
     let answers = 0;
     let wrong = 0;
-    let mastered = 0;
     const review: DriveQuestion[] = [];
+    const learned: DriveQuestion[] = [];
     for (const q of pool) {
       const s = stats[q.id];
       if (!s || s.seen === 0) continue;
       seen++;
       answers += s.seen;
       wrong += s.wrong;
-      if (needsReview(s)) review.push(q);
-      else if (s.streak >= MASTER_STREAK) mastered++;
+      if (needsWork(s)) review.push(q);
+      else if (s.learnedAt) learned.push(q);
     }
     const accuracy = answers ? Math.round(((answers - wrong) / answers) * 100) : null;
-    const hardest = pool
-      .filter((q) => (stats[q.id]?.wrong ?? 0) > 0)
-      .sort((a, b) => stats[b.id].wrong - stats[a.id].wrong || stats[b.id].seen - stats[a.id].seen);
-    return { seen, answers, accuracy, mastered, review, hardest };
+    // Still wrong first, then the ones due for their re-check, then the ones waiting for tomorrow.
+    const rank = (q: DriveQuestion) => {
+      const s = stats[q.id];
+      return s.streak === 0 ? 0 : recheckDue(s) ? 1 : 2;
+    };
+    review.sort((a, b) => rank(a) - rank(b) || stats[b.id].wrong - stats[a.id].wrong);
+    learned.sort((a, b) => (stats[b.id].learnedAt ?? 0) - (stats[a.id].learnedAt ?? 0));
+    const dueNow = review.filter((q) => rank(q) < 2).length;
+    return { seen, answers, accuracy, review, learned, dueNow };
   }, [pool, stats]);
 
   const start = useCallback((title: string, queue: DriveQuestion[]) => {
@@ -229,16 +333,9 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
     if (!current || !round || revealed || answering.current) return;
     answering.current = true;
     const ok = picked.length === current.correct.length && picked.every((i) => current.correct.includes(i));
-    const next = { ...stats };
-    const prev = next[current.id] ?? { seen: 0, wrong: 0, streak: 0, last: 0 };
-    next[current.id] = {
-      seen: prev.seen + 1,
-      wrong: prev.wrong + (ok ? 0 : 1),
-      streak: ok ? prev.streak + 1 : 0,
-      last: Date.now(),
-    };
-    setStats(next);
-    writeStats(next);
+    const doc = docRef.current;
+    commit({ ...doc, stats: { ...doc.stats, [current.id]: recordAnswer(doc.stats[current.id], ok) } });
+    schedulePush();
     setChosen(picked);
     setRevealed(true);
     setRound({
@@ -279,9 +376,9 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
   };
 
   const resetStats = () => {
-    if (!window.confirm("Σίγουρα; Θα σβηστούν όλα τα στατιστικά και η λίστα με τα λάθη.")) return;
-    setStats({});
-    writeStats({});
+    if (!window.confirm("Σίγουρα; Θα σβηστούν όλα τα στατιστικά και η λίστα «Θέλουν δουλειά», και σε όλες τις συσκευές.")) return;
+    commit({ stats: {}, resetAt: Date.now() });
+    void push({ reset: true });
   };
 
   // ───────────── Empty bank ─────────────
@@ -373,7 +470,16 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
 
         {revealed ? (
           <div className="mt-6">
-            <p className={`text-2xl font-bold ${ok ? "text-[#2e8b57]" : "text-[#c0392b]"}`}>{ok ? "Σωστό! 👍" : "Λάθος — μπαίνει στα λάθη"}</p>
+            <p className={`text-2xl font-bold ${ok ? "text-[#2e8b57]" : "text-[#c0392b]"}`}>{ok ? "Σωστό! 👍" : "Λάθος"}</p>
+            <p className="mt-1 text-base font-semibold text-[#6b625b]">
+              {!ok
+                ? "Μπαίνει στις «Θέλουν δουλειά» και θα ξαναρωτηθεί."
+                : s?.learnedAt && s.last === s.learnedAt
+                  ? "✓ Την έμαθε! Βγαίνει από τις «Θέλουν δουλειά»."
+                  : s && s.wrong > 0 && !s.learnedAt
+                    ? `Μένει στις «Θέλουν δουλειά»: θα ξαναρωτηθεί ${s.fixAt && Date.now() - s.fixAt < 60_000 ? "αύριο" : "σε άλλη μέρα"} για να φανεί αν την έμαθε.`
+                    : null}
+            </p>
             {current.explanation ? <p className="mt-3 text-lg leading-8 text-[#4f4741]">{current.explanation}</p> : null}
           </div>
         ) : null}
@@ -418,6 +524,7 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
         {round.missed.length ? (
           <>
             <h3 className="mt-10 text-xl font-semibold">Αυτές έκανες λάθος</h3>
+            <p className="mt-1 text-base text-[#6b625b]">Γράφτηκαν στις «Θέλουν δουλειά» του πακέτου τους.</p>
             <ol className="mt-3 divide-y divide-black/10">
               {round.missed.map((q) => (
                 <li key={q.id} className="py-4">
@@ -447,7 +554,14 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
               Ξαναρώτα μου τα {round.missed.length} λάθη
             </button>
           ) : null}
-          <button type="button" onClick={() => setRound(null)} className="w-full rounded-2xl border-2 border-black/15 bg-white py-4 text-lg font-semibold">
+          <button
+            type="button"
+            onClick={() => {
+              setRound(null);
+              void push();
+            }}
+            className="w-full rounded-2xl border-2 border-black/15 bg-white py-4 text-lg font-semibold"
+          >
             Πίσω στην αρχή
           </button>
         </div>
@@ -457,7 +571,7 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
 
   // ───────────── Home ─────────────
   const roundSize = Math.min(ROUND_SIZE, pool.length);
-  const hardShown = showAllHard ? summary.hardest : summary.hardest.slice(0, 25);
+  const workShown = showAllHard ? summary.review : summary.review.slice(0, 30);
   return (
     <section>
       {pack ? (
@@ -476,7 +590,7 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
         <Stat label={pack ? "Στο πακέτο" : "Ερωτήσεις"} value={`${pool.length}`} />
         <Stat label="Έχει δει" value={`${summary.seen}`} />
         <Stat label="Επιτυχία" value={summary.accuracy === null ? "—" : `${summary.accuracy}%`} />
-        <Stat label="Για επανάληψη" value={`${summary.review.length}`} accent={summary.review.length > 0} />
+        <Stat label="Θέλουν δουλειά" value={`${summary.review.length}`} accent={summary.review.length > 0} />
       </div>
 
       <div className="mt-8 space-y-3">
@@ -501,17 +615,17 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
         )}
         <button
           type="button"
-          onClick={() => start(pack ? `Λάθη · πακέτο ${pack.n}` : "Επανάληψη λαθών", shuffle(summary.review))}
+          onClick={() => start(pack ? `Θέλουν δουλειά · πακέτο ${pack.n}` : "Θέλουν δουλειά", summary.review)}
           disabled={!summary.review.length}
           className="w-full rounded-2xl bg-[#c0392b] px-5 py-5 text-left text-white active:bg-[#a33a2c] disabled:bg-black/10 disabled:text-[#857261]"
         >
           <span className="block text-xl font-semibold">
-            Επανάληψη λαθών{pack ? " του πακέτου" : ""} · {summary.review.length}
+            Θέλουν δουλειά{pack ? " · πακέτο" : ""} · {summary.review.length}
           </span>
           <span className="mt-1 block text-base opacity-80">
             {summary.review.length
-              ? `Φεύγουν από τη λίστα όταν τις απαντήσεις σωστά ${MASTER_STREAK} φορές στη σειρά`
-              : "Δεν υπάρχουν λάθη για επανάληψη"}
+              ? "Όσες έκανε λάθος. Φεύγουν μόνο όταν τις απαντήσει σωστά και ξανά σωστά σε άλλη μέρα"
+              : "Καμία ερώτηση δεν θέλει δουλειά"}
           </span>
         </button>
       </div>
@@ -544,8 +658,8 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
                         <span className="bg-[#c0392b]" style={{ width: `${(pr.review / total) * 100}%` }} />
                       </span>
                       <span className="mt-1.5 block text-sm tabular-nums text-[#6b625b]">
-                        {pr.seen === 0 ? `${total} ερωτήσεις` : `${pr.good}/${total} σωστές`}
-                        {pr.review ? <span className="font-semibold text-[#c0392b]"> · {pr.review} λάθη</span> : null}
+                        {pr.seen === 0 ? `${total} ερωτήσεις` : `${pr.good}/${total} εντάξει`}
+                        {pr.review ? <span className="font-semibold text-[#c0392b]"> · {pr.review} θέλουν δουλειά</span> : null}
                       </span>
                     </span>
                   </button>
@@ -556,41 +670,48 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
         </>
       ) : null}
 
-      <h2 className="mt-12 text-2xl font-semibold tracking-tight">Πού κάνει λάθη</h2>
-      {summary.hardest.length ? (
+      <h2 className="mt-12 text-2xl font-semibold tracking-tight">
+        Θέλουν δουλειά{pack ? ` · πακέτο ${pack.n}` : ""} <span className="text-[#c0392b]">{summary.review.length || ""}</span>
+      </h2>
+      {summary.review.length ? (
         <ol className="mt-3 divide-y divide-black/10">
-          {hardShown.map((q) => {
-            const s = stats[q.id];
-            const mastered = !needsReview(s);
-            return (
-              <li key={q.id} className="flex items-start gap-4 py-4">
-                <span
-                  className={`mt-1 shrink-0 rounded-full px-3 py-1 text-sm font-bold tabular-nums ${
-                    mastered ? "bg-[#e7f5ec] text-[#2e6b47]" : "bg-[#fbe6e3] text-[#a33a2c]"
-                  }`}
-                >
-                  {s.wrong}/{s.seen}
-                </span>
-                <div>
-                  <p className="text-lg leading-7">{q.text}</p>
-                  <p className="mt-1 text-sm text-[#857261]">
-                    {mastered ? "✓ Την έμαθε" : `Θέλει ακόμα ${MASTER_STREAK - s.streak} ${MASTER_STREAK - s.streak === 1 ? "σωστή" : "σωστές"} στη σειρά`}
-                    {q.category ? ` · ${q.category}` : ""}
-                  </p>
-                </div>
-              </li>
-            );
-          })}
+          {workShown.map((q) => (
+            <WorkItem key={q.id} q={q} s={stats[q.id]} showPack={!pack ? packOf.get(q.id) : undefined} />
+          ))}
         </ol>
       ) : (
-        <p className="mt-3 text-lg text-[#6b625b]">Ακόμα κανένα λάθος{pack ? " σε αυτό το πακέτο" : ""}. Τα στατιστικά γεμίζουν καθώς απαντάει.</p>
+        <p className="mt-3 text-lg text-[#6b625b]">
+          {summary.seen ? "Καμία. Όσες κάνει λάθος θα γράφονται εδώ." : "Ακόμα τίποτα. Όσες κάνει λάθος θα γράφονται εδώ."}
+        </p>
       )}
-
-      {!showAllHard && summary.hardest.length > hardShown.length ? (
+      {!showAllHard && summary.review.length > workShown.length ? (
         <button type="button" onClick={() => setShowAllHard(true)} className="mt-2 text-base font-semibold text-[#c9822f]">
-          Δείξε και τις υπόλοιπες {summary.hardest.length - hardShown.length}
+          Δείξε και τις υπόλοιπες {summary.review.length - workShown.length}
         </button>
       ) : null}
+
+      {summary.learned.length ? (
+        <details className="mt-10">
+          <summary className="cursor-pointer text-xl font-semibold text-[#2e6b47]">
+            Τις έμαθε · {summary.learned.length} <span className="text-base font-normal text-[#857261]">(ήταν λάθος, τώρα σωστές)</span>
+          </summary>
+          <ol className="mt-2 divide-y divide-black/10">
+            {summary.learned.map((q) => (
+              <WorkItem key={q.id} q={q} s={stats[q.id]} showPack={!pack ? packOf.get(q.id) : undefined} />
+            ))}
+          </ol>
+        </details>
+      ) : null}
+
+      <p className="mt-10 text-sm text-[#857261]">
+        {sync === "saving"
+          ? "Αποθήκευση…"
+          : sync === "saved"
+            ? "✓ Αποθηκευμένα και στον server"
+            : sync === "offline"
+              ? "Χωρίς σύνδεση: κρατιούνται στο κινητό και θα ανέβουν μόλις υπάρξει ίντερνετ"
+              : ""}
+      </p>
 
       {summary.answers > 0 ? (
         <button type="button" onClick={resetStats} className="mt-12 text-sm font-semibold text-[#857261] underline underline-offset-4">
@@ -599,6 +720,38 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
       ) : null}
       {byId.size !== questions.length ? <p className="mt-4 text-sm text-[#c0392b]">Προσοχή: διπλά ids στις ερωτήσεις.</p> : null}
     </section>
+  );
+}
+
+function WorkItem({ q, s, showPack }: { q: DriveQuestion; s: QStat; showPack?: number }) {
+  const st = statusOf(s);
+  const due = recheckDue(s);
+  const badge =
+    st === "learned"
+      ? { cls: "bg-[#e7f5ec] text-[#2e6b47]", text: `✓ Την έμαθε ${fmtDay(s.learnedAt)}` }
+      : st === "recheck"
+        ? due
+          ? { cls: "bg-[#fdf3e6] text-[#8a5a22]", text: "Ώρα για επανέλεγχο" }
+          : { cls: "bg-[#fdf3e6] text-[#8a5a22]", text: `Σωστή ${fmtDay(s.fixAt)} · επανέλεγχος άλλη μέρα` }
+        : { cls: "bg-[#fbe6e3] text-[#a33a2c]", text: `Λάθος ${fmtDay(s.wrongAt)}` };
+  return (
+    <li className="py-4">
+      <div className="flex flex-wrap items-center gap-2 text-sm font-semibold">
+        <span className={`rounded-full px-3 py-1 ${badge.cls}`}>{badge.text}</span>
+        <span className="tabular-nums text-[#857261]">
+          λάθος {s.wrong} από {s.seen}
+          {showPack ? ` · πακέτο ${showPack}` : ""}
+        </span>
+      </div>
+      <p className="mt-2 text-lg leading-7">{q.text}</p>
+      <p className="mt-1 text-base font-semibold text-[#2e8b57]">✓ {q.correct.map((i) => q.options[i]).join(" · ")}</p>
+      {q.optionImages
+        ? q.correct.map((i) => (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img key={i} src={q.optionImages![i]} alt="" className="mt-2 h-16 w-auto rounded-lg" />
+          ))
+        : null}
+    </li>
   );
 }
 
