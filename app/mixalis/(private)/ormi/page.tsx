@@ -9,6 +9,7 @@ import { OrmiMathimaEmbed } from "@/components/mixalis/ormi/OrmiMathimaEmbed";
 import { TripolitisClient } from "@/components/mixalis/tripolitis/TripolitisClient";
 import { TrapezaOrmi } from "@/components/mixalis/ormi/trapeza/TrapezaOrmi";
 import { PosterCells, PosterRevisionNote } from "@/components/mixalis/ormi/PosterCells";
+import { OrmiLawTrainer } from "@/components/mixalis/ormi/OrmiLawTrainer";
 
 export const metadata: Metadata = {
   title: { absolute: "Ορμή και κρούσεις · Τυπολόγιο · Physics Workspace" },
@@ -79,6 +80,7 @@ export default function OrmiPage() {
             <a href="#mathima" className="rounded-full bg-[#1f6f5c] px-4 py-1.5 text-white hover:bg-[#185747]">
               ▶ Το μάθημα με κίνηση (κεφ. 2) ↓
             </a>
+            <a href="#epilogi-nomou" className="rounded-full bg-[#1f6f5c] px-4 py-1.5 text-white hover:bg-[#185747]">ΑΔΟ ή μεταβολή ορμής; · Τεστ επιλογής ↓</a>
             <a href="#askiseis" className="rounded-full border border-black/10 bg-white px-4 py-1.5 hover:bg-[#f3efe8]">
               Λυμένες ασκήσεις Τριπολίτη ↓
             </a>
@@ -127,7 +129,20 @@ export default function OrmiPage() {
           <StudyMark lesson="ormi" id="theoria" title="Θεωρία (29 διαφάνειες)" path="/mixalis/ormi" className="mt-4 px-2 sm:px-1" />
         </section>
 
+        <OrmiLawTrainer />
+
         <section className="rounded-3xl border border-black/10 bg-white p-3 shadow-sm sm:p-5">
+          <div className="mb-4 rounded-2xl border border-black/10 bg-[#fbf8f3] p-3 sm:hidden">
+            <h3 className="text-base font-bold">Το τυπολόγιο ανά ενότητα</h3>
+            <p className="mt-1 text-xs leading-5 text-[#5b6577]">Στο κινητό το πλήρες poster είναι μικρό. Διάλεξε μια ενότητα για να δεις τα σχέδια σε κανονικό μέγεθος.</p>
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              {sectionNames.map((name, i) => (
+                <a key={name} href={`#enotita-${i + 1}`} className="rounded-xl border border-black/10 bg-white px-3 py-2 text-xs font-semibold leading-5 text-[#3d4452]">
+                  {i + 1}. {name} · {i * 5 + 1}–{Math.min(43, (i + 1) * 5)}
+                </a>
+              ))}
+            </div>
+          </div>
           <div className="relative overflow-hidden rounded-2xl border border-black/10 bg-[#fbfaf7]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -153,6 +168,7 @@ export default function OrmiPage() {
             <a href="#askiseis" className="shrink-0 rounded-full bg-[#2c2825] px-3 py-1.5 text-white hover:bg-black">
               Ασκήσεις Τριπολίτη
             </a>
+            <a href="#epilogi-nomou" className="shrink-0 rounded-full bg-[#1f6f5c] px-3 py-1.5 text-white">ΑΔΟ ή Δp; · Τεστ</a>
             <a href="#trapeza" className="shrink-0 rounded-full bg-[#c9822f] px-3 py-1.5 text-white hover:bg-[#a96b22]">
               Τράπεζα Θεμάτων
             </a>
