@@ -147,6 +147,7 @@ const SUBJECTS: Subject[] = [
           { label: "4 · Ισομέρεια", href: "/mixalis/organiki1#ch4" },
           { label: "5 · Μοριακός τύπος", href: "/mixalis/organiki1#ch5" },
           { label: "Εργαστήριο", href: "/mixalis/organiki1#lab" },
+          { label: "Εξάσκηση τύπων", href: "/mixalis/organiki1#typ" },
           { label: "Τυπολόγιο", href: "/mixalis/organiki1#sheet" },
           { label: "Λεξικό", href: "/mixalis/organiki1#lexiko" },
         ],
