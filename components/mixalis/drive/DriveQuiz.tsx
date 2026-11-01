@@ -160,6 +160,12 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
 
   const current = round && round.index < round.queue.length ? round.queue[round.index] : null;
   const multi = !!current && current.correct.length > 1;
+  // Answers are shown in a fresh random order every time, so the position can't be memorised.
+  const order = useMemo(
+    () => (current ? shuffle(current.options.map((_, i) => i)) : []),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [current?.id, round?.index, round?.queue],
+  );
 
   // Keep the round in progress on the device; clear it once it is finished or closed.
   useEffect(() => {
@@ -308,7 +314,8 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
         ) : null}
 
         <ul className="mt-6 space-y-3">
-          {current.options.map((opt, i) => {
+          {order.map((i, pos) => {
+            const opt = current.options[i];
             const isCorrect = current.correct.includes(i);
             const isChosen = chosen.includes(i);
             let cls = "border-black/15 bg-white active:bg-[#f7f4ef]";
@@ -325,7 +332,7 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
                   className={`flex w-full items-start gap-4 rounded-2xl border-2 px-4 py-4 text-left text-lg leading-7 transition ${cls}`}
                 >
                   <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-full bg-black/5 text-base font-bold">
-                    {revealed && isCorrect ? "✓" : revealed && isChosen ? "✕" : LETTERS[i]}
+                    {revealed && isCorrect ? "✓" : revealed && isChosen ? "✕" : LETTERS[pos]}
                   </span>
                   {current.optionImages?.[i] ? (
                     // eslint-disable-next-line @next/next/no-img-element
