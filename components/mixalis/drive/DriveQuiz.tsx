@@ -6,7 +6,9 @@ import type { DriveQuestion } from "@/lib/mixalis/drive/questions";
 // Practice statistics live on the device (localStorage), like the other
 // Mixalis study pages. One entry per question id.
 const STORE_KEY = "mixalis-drive-v1";
-const CAT_KEY = "mixalis-drive-cat-v1";
+const SET_KEY = "mixalis-drive-set-v1";
+/** Questions are studied in packs of 50, in book order. */
+const SET_SIZE = 50;
 /** The round in progress, so a reload or a locked phone doesn't lose it. */
 const ROUND_KEY = "mixalis-drive-round-v1";
 
@@ -77,7 +79,7 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
   const [round, setRound] = useState<Round | null>(null);
   const [chosen, setChosen] = useState<number[]>([]);
   const [revealed, setRevealed] = useState(false);
-  const [cat, setCat] = useState<string | null>(null);
+  const [setNo, setSetNo] = useState<number | null>(null);
   const [showAllHard, setShowAllHard] = useState(false);
 
   const byId = useMemo(() => new Map(questions.map((q) => [q.id, q])), [questions]);
@@ -87,7 +89,8 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
   useEffect(() => {
     setStats(readStats());
     try {
-      setCat(window.localStorage.getItem(CAT_KEY));
+      const savedSet = Number(window.localStorage.getItem(SET_KEY));
+      if (savedSet > 0) setSetNo(savedSet);
       const raw = window.localStorage.getItem(ROUND_KEY);
       const saved = raw ? (JSON.parse(raw) as SavedRound) : null;
       if (saved && Array.isArray(saved.ids)) {
@@ -108,23 +111,45 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
     restored.current = true;
   }, [byId]);
 
-  const categories = useMemo(() => {
-    const m = new Map<string, number>();
-    for (const q of questions) if (q.category) m.set(q.category, (m.get(q.category) ?? 0) + 1);
-    return [...m.entries()];
+  // Packs of 50 in book order; a short remainder joins the last pack.
+  const packs = useMemo(() => {
+    const out: { n: number; items: DriveQuestion[]; cats: string[] }[] = [];
+    for (let i = 0; i < questions.length; i += SET_SIZE) {
+      const items = questions.slice(i, i + SET_SIZE);
+      if (out.length && items.length < SET_SIZE / 2) out[out.length - 1].items.push(...items);
+      else out.push({ n: out.length + 1, items, cats: [] });
+    }
+    for (const p of out) p.cats = [...new Set(p.items.map((q) => q.category).filter(Boolean) as string[])];
+    return out;
   }, [questions]);
 
-  const validCat = cat && categories.some(([c]) => c === cat) ? cat : null;
-  const pool = useMemo(() => (validCat ? questions.filter((q) => q.category === validCat) : questions), [questions, validCat]);
+  const pack = setNo ? packs.find((p) => p.n === setNo) ?? null : null;
+  const pool = pack ? pack.items : questions;
 
-  const chooseCat = (c: string | null) => {
-    setCat(c);
+  const choosePack = (n: number | null) => {
+    setSetNo(n);
+    setShowAllHard(false);
     try {
-      if (c) window.localStorage.setItem(CAT_KEY, c);
-      else window.localStorage.removeItem(CAT_KEY);
+      if (n) window.localStorage.setItem(SET_KEY, String(n));
+      else window.localStorage.removeItem(SET_KEY);
     } catch {
       // ignore
     }
+    window.scrollTo({ top: 0 });
+  };
+
+  const packProgress = (items: DriveQuestion[]) => {
+    let seen = 0;
+    let good = 0;
+    let review = 0;
+    for (const q of items) {
+      const st = stats[q.id];
+      if (!st || st.seen === 0) continue;
+      seen++;
+      if (needsReview(st)) review++;
+      else if (st.streak >= 1) good++;
+    }
+    return { seen, good, review };
   };
 
   const summary = useMemo(() => {
@@ -435,59 +460,101 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
   const hardShown = showAllHard ? summary.hardest : summary.hardest.slice(0, 25);
   return (
     <section>
-      <div className="-mx-4 overflow-x-auto px-4 pb-4 sm:mx-0 sm:px-0">
-        <div className="flex w-max gap-2 sm:w-auto sm:flex-wrap">
-          <Chip active={!validCat} onClick={() => chooseCat(null)}>
-            Όλες · {questions.length}
-          </Chip>
-          {categories.map(([c, n]) => (
-            <Chip key={c} active={validCat === c} onClick={() => chooseCat(c)}>
-              {c} · {n}
-            </Chip>
-          ))}
+      {pack ? (
+        <div className="pb-4">
+          <button type="button" onClick={() => choosePack(null)} className="py-1 text-sm font-semibold text-[#857261]">
+            ← Όλα τα πακέτα
+          </button>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight">
+            Πακέτο {pack.n} <span className="text-[#857261]">από {packs.length}</span>
+          </h2>
+          <p className="mt-1 text-base text-[#6b625b]">{pack.cats.join(" · ")}</p>
         </div>
-      </div>
+      ) : null}
 
       <div className="grid grid-cols-2 gap-x-6 gap-y-6 border-y border-black/10 py-6 sm:grid-cols-4">
-        <Stat label="Ερωτήσεις" value={`${pool.length}`} />
+        <Stat label={pack ? "Στο πακέτο" : "Ερωτήσεις"} value={`${pool.length}`} />
         <Stat label="Έχει δει" value={`${summary.seen}`} />
         <Stat label="Επιτυχία" value={summary.accuracy === null ? "—" : `${summary.accuracy}%`} />
         <Stat label="Για επανάληψη" value={`${summary.review.length}`} accent={summary.review.length > 0} />
       </div>
 
       <div className="mt-8 space-y-3">
+        {pack ? (
+          <button
+            type="button"
+            onClick={() => start(`Πακέτο ${pack.n}`, shuffle(pack.items))}
+            className="w-full rounded-2xl bg-[#2c2825] px-5 py-5 text-left text-white active:bg-black"
+          >
+            <span className="block text-xl font-semibold">Ξεκίνα το πακέτο · {pack.items.length} ερωτήσεις</span>
+            <span className="mt-1 block text-base text-white/70">Όλες με τυχαία σειρά, και στο τέλος ξανά όσες έκανες λάθος</span>
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={() => start("Εξάσκηση", weightedPick(pool, stats, roundSize))}
+            className="w-full rounded-2xl bg-[#2c2825] px-5 py-5 text-left text-white active:bg-black"
+          >
+            <span className="block text-xl font-semibold">Γρήγορη εξάσκηση · {roundSize} ερωτήσεις</span>
+            <span className="mt-1 block text-base text-white/70">Από όλα τα πακέτα, πρώτα όσες κάνεις συχνά λάθος</span>
+          </button>
+        )}
         <button
           type="button"
-          onClick={() => start(validCat ?? "Εξάσκηση", weightedPick(pool, stats, roundSize))}
-          className="w-full rounded-2xl bg-[#2c2825] px-5 py-5 text-left text-white active:bg-black"
-        >
-          <span className="block text-xl font-semibold">Εξάσκηση · {roundSize} ερωτήσεις</span>
-          <span className="mt-1 block text-base text-white/70">Πρώτα όσες δεν έχεις δει και όσες κάνεις συχνά λάθος</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => start("Επανάληψη λαθών", shuffle(summary.review))}
+          onClick={() => start(pack ? `Λάθη · πακέτο ${pack.n}` : "Επανάληψη λαθών", shuffle(summary.review))}
           disabled={!summary.review.length}
           className="w-full rounded-2xl bg-[#c0392b] px-5 py-5 text-left text-white active:bg-[#a33a2c] disabled:bg-black/10 disabled:text-[#857261]"
         >
-          <span className="block text-xl font-semibold">Επανάληψη λαθών · {summary.review.length}</span>
+          <span className="block text-xl font-semibold">
+            Επανάληψη λαθών{pack ? " του πακέτου" : ""} · {summary.review.length}
+          </span>
           <span className="mt-1 block text-base opacity-80">
             {summary.review.length
               ? `Φεύγουν από τη λίστα όταν τις απαντήσεις σωστά ${MASTER_STREAK} φορές στη σειρά`
               : "Δεν υπάρχουν λάθη για επανάληψη"}
           </span>
         </button>
-        {validCat ? (
-          <button
-            type="button"
-            onClick={() => start(validCat, shuffle(pool))}
-            className="w-full rounded-2xl border-2 border-black/15 bg-white px-5 py-5 text-left"
-          >
-            <span className="block text-xl font-semibold">Όλη η ενότητα · {pool.length}</span>
-            <span className="mt-1 block text-base text-[#6b625b]">{validCat}, με τυχαία σειρά</span>
-          </button>
-        ) : null}
       </div>
+
+      {!pack ? (
+        <>
+          <h2 className="mt-12 text-2xl font-semibold tracking-tight">Πακέτα των {SET_SIZE}</h2>
+          <ol className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+            {packs.map((p) => {
+              const pr = packProgress(p.items);
+              const total = p.items.length;
+              const done = pr.good === total;
+              return (
+                <li key={p.n}>
+                  <button
+                    type="button"
+                    onClick={() => choosePack(p.n)}
+                    className={`flex h-full w-full flex-col rounded-2xl px-4 py-4 text-left active:opacity-80 ${
+                      done ? "bg-[#e7f5ec]" : "bg-white"
+                    }`}
+                  >
+                    <span className="flex items-baseline justify-between gap-2">
+                      <span className="text-lg font-semibold">Πακέτο {p.n}</span>
+                      {done ? <span className="text-lg">✓</span> : null}
+                    </span>
+                    <span className="mt-1 line-clamp-2 text-sm leading-5 text-[#857261]">{p.cats.join(" · ")}</span>
+                    <span className="mt-auto block pt-3">
+                      <span className="flex h-1.5 overflow-hidden rounded-full bg-black/10">
+                        <span className="bg-[#2e8b57]" style={{ width: `${(pr.good / total) * 100}%` }} />
+                        <span className="bg-[#c0392b]" style={{ width: `${(pr.review / total) * 100}%` }} />
+                      </span>
+                      <span className="mt-1.5 block text-sm tabular-nums text-[#6b625b]">
+                        {pr.seen === 0 ? `${total} ερωτήσεις` : `${pr.good}/${total} σωστές`}
+                        {pr.review ? <span className="font-semibold text-[#c0392b]"> · {pr.review} λάθη</span> : null}
+                      </span>
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
+        </>
+      ) : null}
 
       <h2 className="mt-12 text-2xl font-semibold tracking-tight">Πού κάνει λάθη</h2>
       {summary.hardest.length ? (
@@ -516,7 +583,7 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
           })}
         </ol>
       ) : (
-        <p className="mt-3 text-lg text-[#6b625b]">Ακόμα κανένα λάθος{validCat ? " σε αυτή την ενότητα" : ""}. Τα στατιστικά γεμίζουν καθώς απαντάει.</p>
+        <p className="mt-3 text-lg text-[#6b625b]">Ακόμα κανένα λάθος{pack ? " σε αυτό το πακέτο" : ""}. Τα στατιστικά γεμίζουν καθώς απαντάει.</p>
       )}
 
       {!showAllHard && summary.hardest.length > hardShown.length ? (
@@ -532,21 +599,6 @@ export function DriveQuiz({ questions }: { questions: DriveQuestion[] }) {
       ) : null}
       {byId.size !== questions.length ? <p className="mt-4 text-sm text-[#c0392b]">Προσοχή: διπλά ids στις ερωτήσεις.</p> : null}
     </section>
-  );
-}
-
-function Chip({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={active}
-      className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition ${
-        active ? "bg-[#2c2825] text-white" : "bg-[#e9e2d8] text-[#4a3f36] active:bg-[#ddd3c6]"
-      }`}
-    >
-      {children}
-    </button>
   );
 }
 
