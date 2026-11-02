@@ -1,8 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import EmailsPanel from "./EmailsPanel";
 
-type Tab = "summary" | "guests" | "pending" | "exclusions";
+type Tab = "summary" | "guests" | "pending" | "emails" | "exclusions";
 type Bucket = { key: string; count: number };
 type Summary = {
   bookings: number;
@@ -45,6 +46,7 @@ const TABS: { key: Tab; label: string }[] = [
   { key: "summary", label: "Πίνακας" },
   { key: "guests", label: "Πελάτες" },
   { key: "pending", label: "Χωρίς email" },
+  { key: "emails", label: "Αυτόματα email" },
   { key: "exclusions", label: "Εξαιρέσεις" },
 ];
 const LANGUAGES = ["el", "en", "de", "fr", "it", "es", "tr"];
@@ -173,6 +175,7 @@ export default function CrmApp() {
 
   useEffect(() => {
     setError("");
+    if (tab === "emails") return;
     const load =
       tab === "summary" ? loadSummary() :
       tab === "guests" ? loadGuests() :
@@ -260,7 +263,7 @@ export default function CrmApp() {
           <a href="/staff" className="text-sm font-bold text-amber-800">← Staff</a>
           <h1 className="mt-1 text-3xl font-black tracking-tight">Πελάτες & CRM</h1>
           <p className="mt-1 text-sm text-stone-600">
-            Οι πελάτες προκύπτουν από τις κρατήσεις του Beds24. Από εδώ δεν στέλνεται κανένα email.
+            Οι πελάτες προκύπτουν από τις κρατήσεις του Beds24.
           </p>
         </header>
 
@@ -468,6 +471,8 @@ export default function CrmApp() {
             </ul>
           </section>
         ) : null}
+
+        {tab === "emails" ? <EmailsPanel /> : null}
 
         {tab === "exclusions" ? (
           <section className="grid gap-4">
