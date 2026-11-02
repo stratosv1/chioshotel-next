@@ -5,8 +5,11 @@ import type { ReactNode } from "react";
 import { Arrow, Formula, Note } from "../omali/shared";
 import { ThinkCard, type ThinkQuestion } from "../omali/Think";
 import { ComponentsLab } from "./ComponentsLab";
+import { AngleRule } from "./AngleRule";
+import { ComponentsTrainer } from "./ComponentsTrainer";
 import { AngleArc, C, Sb, Txt, V, VL } from "./figures";
 import { IdeaCards } from "./IdeaCards";
+import { ResolveFig } from "./ResolveFig";
 
 function Section({
   id,
@@ -63,10 +66,12 @@ function TrigTriangle() {
   );
 }
 
-const trigRows: { deg: string; sin: string; cos: string; tan: string; sinD: string; cosD: string }[] = [
+const trigRows: { deg: string; sin: string; cos: string; tan: string; sinD: string; cosD: string; approx?: boolean }[] = [
   { deg: "0°", sin: "0", cos: "1", tan: "0", sinD: "0", cosD: "1" },
   { deg: "30°", sin: "1/2", cos: "√3/2", tan: "√3/3", sinD: "0,5", cosD: "0,866" },
+  { deg: "37°", sin: "0,6", cos: "0,8", tan: "0,75", sinD: "0,6", cosD: "0,8", approx: true },
   { deg: "45°", sin: "√2/2", cos: "√2/2", tan: "1", sinD: "0,707", cosD: "0,707" },
+  { deg: "53°", sin: "0,8", cos: "0,6", tan: "4/3", sinD: "0,8", cosD: "0,6", approx: true },
   { deg: "60°", sin: "√3/2", cos: "1/2", tan: "√3", sinD: "0,866", cosD: "0,5" },
   { deg: "90°", sin: "1", cos: "0", tan: "δεν ορίζεται", sinD: "1", cosD: "0" },
 ];
@@ -86,7 +91,10 @@ function TrigTable() {
         <tbody>
           {trigRows.map((r, i) => (
             <tr key={r.deg} className={i % 2 ? "bg-[#fbf8f3]" : "bg-white"}>
-              <td className="px-3 py-2 font-semibold text-[#c9822f]">{r.deg}</td>
+              <td className="px-3 py-2 font-semibold text-[#c9822f]">
+                {r.deg}
+                {r.approx ? <span className="ml-1 align-super text-[10px] text-[#857261]">≈</span> : null}
+              </td>
               <td className="px-3 py-2" style={{ color: C.green }}>
                 <b>{r.sin}</b>
                 {r.sin !== r.sinD ? <span className="ml-1.5 text-xs text-[#857261]">≈ {r.sinD}</span> : null}
@@ -225,7 +233,101 @@ const quiz: ThinkQuestion[] = [
       </>
     ),
   },
+  {
+    prompt: (
+      <>
+        Νήμα ασκεί δύναμη T = 20 N και σχηματίζει γωνία 60° με την <b>κατακόρυφο</b>. Πόση είναι η οριζόντια συνιστώσα T<sub>x</sub>;
+      </>
+    ),
+    choices: ["10 N", "17,3 N", "20 N", "0 N"],
+    correct: 1,
+    whyWrong: {
+      0: "Αυτό είναι το T·συν60°. Θα ίσχυε αν η γωνία ήταν με τον οριζόντιο. Εδώ η γωνία ακουμπάει τον y, άρα ο x παίρνει ημ.",
+    },
+    explain: (
+      <>
+        Η γωνία ακουμπάει τον κατακόρυφο άξονα ⇒ T<sub>x</sub> = T·<b>ημ</b>60° = 20·0,866 ≈ <b>17,3 N</b> (και T<sub>y</sub> = T·συν60° = 10 N).
+      </>
+    ),
+  },
+  {
+    prompt: (
+      <>
+        F = 10 N δείχνει <b>αριστερά και κάτω</b>, με γωνία 37° κάτω από τον οριζόντιο. Ποιες είναι οι (F<sub>x</sub>, F<sub>y</sub>);
+      </>
+    ),
+    choices: ["(8, 6) N", "(−8, −6) N", "(−6, −8) N", "(8, −6) N"],
+    correct: 1,
+    whyWrong: {
+      0: "Τα μέτρα είναι σωστά, αλλά ξέχασες τα πρόσημα: αριστερά και κάτω ⇒ και τα δύο αρνητικά.",
+      2: "Μπέρδεψες ημ με συν. Η γωνία ακουμπάει τον x, άρα |Fx| = F·συν37° = 8 N.",
+      3: "Αριστερά σημαίνει αρνητική Fx.",
+    },
+    explain: (
+      <>
+        Μέτρα με την οξεία γωνία: |F<sub>x</sub>| = 10·0,8 = 8 N, |F<sub>y</sub>| = 10·0,6 = 6 N. Πρόσημα από το σχήμα: <b>(−8, −6) N</b>.
+      </>
+    ),
+  },
+  {
+    prompt: "Σώμα 4 kg βρίσκεται σε κεκλιμένο επίπεδο 30° (g = 10 m/s²). Πόση είναι η συνιστώσα του βάρους παράλληλα στο επίπεδο;",
+    choices: ["20 N", "34,6 N", "40 N", "0 N"],
+    correct: 0,
+    whyWrong: {
+      1: "Αυτή είναι η κάθετη συνιστώσα W·συν30°. Η γωνία ακουμπάει τον κάθετο άξονα, άρα η παράλληλη παίρνει ημ.",
+      2: "Αυτό είναι όλο το βάρος. Θέλουμε μόνο το κομμάτι του κατά μήκος του επιπέδου.",
+    },
+    explain: (
+      <>
+        W = 40 N, W<sub>x</sub> = W·ημ30° = 40·0,5 = <b>20 N</b>.
+      </>
+    ),
+  },
+  {
+    prompt: (
+      <>
+        Μια δύναμη έχει F<sub>x</sub> = 6 N και F<sub>y</sub> = 8 N. Πόσο είναι το μέτρο της και τι γωνία σχηματίζει με τον x;
+      </>
+    ),
+    choices: ["10 N, ≈53°", "14 N, ≈53°", "10 N, ≈37°", "10 N, 45°"],
+    correct: 0,
+    whyWrong: {
+      1: "Τα μέτρα των συνιστωσών δεν προστίθενται απλά: Πυθαγόρειο.",
+      2: "εφθ = Fy / Fx = 8/6 = 4/3, που αντιστοιχεί στις ≈53°, όχι στις 37°.",
+    },
+    explain: (
+      <>
+        F = √(36 + 64) = <b>10 N</b>, εφθ = 8/6 = 4/3 ⇒ θ ≈ <b>53°</b>.
+      </>
+    ),
+  },
 ];
+
+/* ───────────── Three forces example ───────────── */
+
+function ThreeForcesFigure() {
+  const ox = 120;
+  const oy = 120;
+  const s = 9;
+  return (
+    <svg viewBox="0 0 240 175" className="w-full" role="img" aria-label="Τρεις δυνάμεις σε ένα σημείο και η συνισταμένη τους">
+      <line x1={20} y1={oy} x2={225} y2={oy} stroke="#cbbfb1" strokeWidth={1.2} />
+      <line x1={ox} y1={165} x2={ox} y2={10} stroke="#cbbfb1" strokeWidth={1.2} />
+      <Txt x={222} y={oy + 14} color={C.muted} italic>x</Txt>
+      <Txt x={ox + 9} y={16} color={C.muted} italic>y</Txt>
+      <line x1={ox + 8 * s} y1={oy} x2={ox + 8 * s} y2={oy - 6 * s} stroke={C.muted} strokeDasharray="3 4" />
+      <Arrow x1={ox} y1={oy} x2={ox + 8 * s} y2={oy - 6 * s} color={C.orange} width={4} head={11} />
+      <Arrow x1={ox} y1={oy} x2={ox - 5 * s} y2={oy} color={C.teal} width={4} head={11} />
+      <Arrow x1={ox} y1={oy} x2={ox} y2={oy + 2 * s + 6} color={C.green} width={4} head={9} />
+      <Arrow x1={ox} y1={oy} x2={ox + 3 * s} y2={oy - 4 * s} color={C.purple} width={3} head={10} dashed />
+      <AngleArc cx={ox} cy={oy} r={30} a1={37} label="37°" labelR={46} color={C.ink} />
+      <Txt x={ox + 8 * s - 4} y={oy - 6 * s - 10} color={C.orange} size={13} anchor="middle">F₁ = 10 N</Txt>
+      <Txt x={ox - 5 * s - 4} y={oy - 8} color={C.teal} size={13} anchor="end">F₂ = 5 N</Txt>
+      <Txt x={ox + 8} y={oy + 2 * s + 14} color={C.green} size={13} anchor="start">F₃ = 2 N</Txt>
+      <Txt x={ox + 3 * s - 4} y={oy - 4 * s - 8} color={C.purple} size={13} anchor="end">R</Txt>
+    </svg>
+  );
+}
 
 /* ───────────── Page ───────────── */
 
@@ -233,7 +335,9 @@ const nav = [
   { href: "#ideas", label: "12 ιδέες" },
   { href: "#trig", label: "Τριγωνομετρία" },
   { href: "#lab", label: "Εργαστήριο" },
+  { href: "#rule", label: "Πότε ημ, πότε συν" },
   { href: "#examples", label: "Παραδείγματα" },
+  { href: "#trainer", label: "Προπόνηση" },
   { href: "#quiz", label: "Τεστ" },
   { href: "#summary", label: "Τυπολόγιο" },
 ];
@@ -253,6 +357,10 @@ export function DianismaLesson() {
             και <b>φορά</b> (προς τα πού). Αν μάθεις να «μιλάς» με διανύσματα, δυνάμεις, κινήσεις, ισορροπία, έργο και ροπή γίνονται στην ουσία
             το ίδιο πρόβλημα.
           </p>
+          <div className="mt-5 max-w-3xl rounded-2xl border border-[#0f8b8d]/30 bg-[#eef8f8] px-4 py-3 text-[14px] leading-6 text-[#2f4a4a]">
+            <b>Στόχος της σελίδας:</b> να βγάζεις τις συνιστώσες F<sub>x</sub> και F<sub>y</sub> σε κάθε άσκηση γρήγορα και χωρίς λάθος. Σειρά: πίνακας
+            τριγωνομετρικών → κανόνας της γωνίας → λυμένα παραδείγματα → <a href="#trainer" className="font-semibold underline">προπόνηση</a>.
+          </div>
           <nav className="mt-6 flex flex-wrap gap-2">
             {nav.map((n) => (
               <a
@@ -318,7 +426,11 @@ export function DianismaLesson() {
             <TrigTable />
             <p className="mt-3 text-[14px] leading-6 text-[#6b625b]">
               <b>Κόλπο:</b> το ημ «ανεβαίνει» 0 → 1/2 → √2/2 → √3/2 → 1, και το συν κάνει την ίδια σειρά <b>ανάποδα</b>. Άρα ημ30° = συν60° και
-              ημ60° = συν30°.
+              ημ60° = συν30°. Γενικά, όταν δύο γωνίες κάνουν μαζί 90°, το ημ της μίας είναι το συν της άλλης.
+            </p>
+            <p className="mt-2 text-[14px] leading-6 text-[#6b625b]">
+              <b>≈ 37° και 53°:</b> δεν είναι «στρογγυλές» γωνίες, αλλά οι ασκήσεις τις χρησιμοποιούν συνέχεια γιατί δίνουν καθαρά νούμερα (τρίγωνο
+              3‑4‑5). Συνήθως η εκφώνηση γράφει «ημφ = 0,6 και συνφ = 0,8». Όταν το δεις, ξέρεις ότι φ ≈ 37°.
             </p>
           </div>
 
@@ -339,12 +451,21 @@ export function DianismaLesson() {
         >
           <ComponentsLab />
           <Note tone="warn">
-            Προσοχή: η γωνία θ μετριέται από τον <b>άξονα x</b>. Αν σου δώσουν τη γωνία με τον άξονα y, τότε αλλάζουν θέση: F<sub>x</sub> = F·ημφ και
-            F<sub>y</sub> = F·συνφ.
+            Προσοχή: εδώ η γωνία θ μετριέται από τον <b>άξονα x</b>. Αν σου δώσουν τη γωνία με τον άξονα y, τότε αλλάζουν θέση: F<sub>x</sub> = F·ημφ
+            και F<sub>y</sub> = F·συνφ. Δες τον κανόνα της γωνίας ακριβώς από κάτω.
           </Note>
         </Section>
 
-        <Section id="examples" kicker="Μέρος 4" title="Λυμένα παραδείγματα">
+        <Section
+          id="rule"
+          kicker="Μέρος 4"
+          title="Ο κανόνας της γωνίας: πότε ημ, πότε συν"
+          intro="Οι ασκήσεις δεν δίνουν πάντα τη γωνία «με τον x». Αυτές είναι οι τέσσερις περιπτώσεις που θα συναντήσεις, και όλες λύνονται με τον ίδιο κανόνα."
+        >
+          <AngleRule />
+        </Section>
+
+        <Section id="examples" kicker="Μέρος 5" title="Λυμένα παραδείγματα">
           <div className="grid items-start gap-6 md:grid-cols-[1fr_1.1fr]">
             <div className="rounded-2xl border border-black/10 bg-white p-3">
               <SuitcaseFigure />
@@ -403,9 +524,124 @@ export function DianismaLesson() {
               </ol>
             </div>
           </div>
+
+          <hr className="border-black/10" />
+
+          <div className="grid items-start gap-6 md:grid-cols-[1fr_1.1fr]">
+            <div className="mx-auto w-full max-w-sm rounded-2xl border border-black/10 bg-white p-3">
+              <ResolveFig
+                phi={270}
+                refDeg={300}
+                axisRot={30}
+                incline
+                baseLabel="θ = 30°"
+                angleLabel="θ"
+                forceLabel="W"
+                adjLabel={<>W<Sb>y</Sb></>}
+                oppLabel={<>W<Sb>x</Sb></>}
+                ariaLabel="Σώμα σε κεκλιμένο 30°: το βάρος αναλύεται σε παράλληλη και κάθετη συνιστώσα"
+              />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold">Παράδειγμα 3: Σώμα σε κεκλιμένο επίπεδο</h3>
+              <p className="mt-2 text-[15px] leading-7 text-[#4d4138]">
+                Σώμα μάζας <b>m = 2 kg</b> βρίσκεται σε κεκλιμένο επίπεδο γωνίας <b>30°</b> (g = 10 m/s²). Ανάλυσε το βάρος σε συνιστώσες παράλληλα
+                και κάθετα στο επίπεδο.
+              </p>
+              <ol className="mt-4 space-y-3">
+                <Step n={1}>W = m·g = 2·10 = <b>20 N</b>, κατακόρυφο προς τα κάτω.</Step>
+                <Step n={2}>
+                  Στρίβω τους άξονες: x <b>παράλληλα</b> στο επίπεδο, y <b>κάθετα</b> σε αυτό. Έτσι η κάθετη δύναμη N και η τριβή πέφτουν πάνω
+                  στους άξονες και αναλύω μόνο το βάρος.
+                </Step>
+                <Step n={3}>
+                  Η γωνία 30° ξαναεμφανίζεται ανάμεσα στο W και στον άξονα y (το W είναι κάθετο στο έδαφος, ο y κάθετος στο επίπεδο: γωνίες με
+                  πλευρές κάθετες είναι ίσες). Ακουμπάει τον y ⇒ ο y παίρνει <b>συν</b>.
+                </Step>
+                <Step n={4}>
+                  <span style={{ color: C.green }}>W<sub>x</sub></span> = W·ημ30° = 20·0,5 = <b>10 N</b> (το τραβάει προς τα κάτω στο επίπεδο)
+                </Step>
+                <Step n={5}>
+                  <span style={{ color: C.teal }}>W<sub>y</sub></span> = W·συν30° = 20·0,866 ≈ <b>17,3 N</b> (το πιέζει στο επίπεδο, άρα N = 17,3 N)
+                </Step>
+              </ol>
+            </div>
+          </div>
+
+          <hr className="border-black/10" />
+
+          <div className="grid items-start gap-6 md:grid-cols-[1fr_1.1fr]">
+            <div className="mx-auto w-full max-w-sm rounded-2xl border border-black/10 bg-white p-3">
+              <ThreeForcesFigure />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold">Παράδειγμα 4: Τρεις δυνάμεις (η πιο συχνή άσκηση)</h3>
+              <p className="mt-2 text-[15px] leading-7 text-[#4d4138]">
+                Σε ένα σώμα ασκούνται: <b>F₁ = 10 N</b> με γωνία 37° πάνω από τον x, <b>F₂ = 5 N</b> προς τα αριστερά και <b>F₃ = 2 N</b> προς τα
+                κάτω. Βρες τη συνισταμένη (ημ37° = 0,6, συν37° = 0,8).
+              </p>
+              <div className="mt-4 overflow-x-auto rounded-xl border border-black/10">
+                <table className="w-full min-w-[300px] text-center text-[14px]">
+                  <thead className="bg-[#2c2825] text-white">
+                    <tr>
+                      <th className="px-2 py-1.5">Δύναμη</th>
+                      <th className="px-2 py-1.5">F<sub>x</sub></th>
+                      <th className="px-2 py-1.5">F<sub>y</sub></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="bg-white">
+                      <td className="px-2 py-1.5 font-semibold" style={{ color: C.orange }}>F₁</td>
+                      <td className="px-2 py-1.5">10·συν37° = 8</td>
+                      <td className="px-2 py-1.5">10·ημ37° = 6</td>
+                    </tr>
+                    <tr className="bg-[#fbf8f3]">
+                      <td className="px-2 py-1.5 font-semibold" style={{ color: C.teal }}>F₂</td>
+                      <td className="px-2 py-1.5">−5</td>
+                      <td className="px-2 py-1.5">0</td>
+                    </tr>
+                    <tr className="bg-white">
+                      <td className="px-2 py-1.5 font-semibold" style={{ color: C.green }}>F₃</td>
+                      <td className="px-2 py-1.5">0</td>
+                      <td className="px-2 py-1.5">−2</td>
+                    </tr>
+                    <tr className="bg-[#efe7dc] font-semibold">
+                      <td className="px-2 py-1.5">Σύνολο</td>
+                      <td className="px-2 py-1.5">ΣF<sub>x</sub> = 3 N</td>
+                      <td className="px-2 py-1.5">ΣF<sub>y</sub> = 4 N</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <ol className="mt-4 space-y-3">
+                <Step n={1}>Κάθε δύναμη σε δική της γραμμή. Όσες είναι ήδη πάνω σε άξονα δεν θέλουν τριγωνομετρία, μόνο πρόσημο.</Step>
+                <Step n={2}>Προσθέτω τις στήλες, με τα πρόσημα: ΣF<sub>x</sub> = 8 − 5 = 3 N, ΣF<sub>y</sub> = 6 − 2 = 4 N.</Step>
+                <Step n={3}>
+                  <span style={{ color: C.purple }}>R</span> = √(3² + 4²) = <b>5 N</b>, εφθ = 4/3 ⇒ θ ≈ <b>53°</b> πάνω από τον x.
+                </Step>
+              </ol>
+              <p className="mt-4 rounded-xl bg-[#f3efe8] px-3 py-2 text-[14px] leading-6 text-[#5c534c]">
+                Αν το σώμα <b>ισορροπεί</b>, γράφεις ΣF<sub>x</sub> = 0 και ΣF<sub>y</sub> = 0 με τον ίδιο πίνακα και λύνεις ως προς τον άγνωστο.
+              </p>
+            </div>
+          </div>
         </Section>
 
-        <Section id="quiz" kicker="Μέρος 5" title="Γρήγορο τεστ" intro="Διάλεξε πρώτα απάντηση, μετά δες την εξήγηση.">
+        <Section
+          id="trainer"
+          kicker="Μέρος 6"
+          title="Προπόνηση: Fx και Fy μέχρι να γίνει αυτόματο"
+          intro={
+            <>
+              Κάθε φορά νέα δύναμη, νέα γωνία, νέα κατεύθυνση. Γράψε τις συνιστώσες και πάτα <b>Έλεγχος</b>. Ξεκίνα από το επίπεδο 1 και ανέβαινε
+              όταν πετυχαίνεις 10 στη σειρά. Το λάθος σού λέει τι μπέρδεψες: ημ με συν ή πρόσημο.
+            </>
+          }
+        >
+          <ComponentsTrainer />
+        </Section>
+
+        <Section id="quiz" kicker="Μέρος 7" title="Γρήγορο τεστ" intro="Διάλεξε πρώτα απάντηση, μετά δες την εξήγηση.">
           <div className="grid gap-4 md:grid-cols-2">
             {quiz.map((q, i) => (
               <ThinkCard key={i} question={q} label="Δοκίμασε" index={i + 1} />
@@ -416,7 +652,12 @@ export function DianismaLesson() {
         <Section id="summary" kicker="Τυπολόγιο" title="Όλα σε μία ματιά">
           <div className="grid gap-3 sm:grid-cols-2">
             {[
-              ["Συνιστώσες", "Fx = F·συνθ,  Fy = F·ημθ"],
+              ["Κανόνας", "Η συνιστώσα που ακουμπάει τη γωνία παίρνει συν"],
+              ["Γωνία θ με τον x", "Fx = F·συνθ,  Fy = F·ημθ"],
+              ["Γωνία φ με τον y", "Fx = F·ημφ,  Fy = F·συνφ"],
+              ["Πρόσημα", "Μέτρα με την οξεία γωνία, πρόσημο από το σχήμα"],
+              ["Κεκλιμένο γωνίας θ", "Wx = mg·ημθ,  Wy = mg·συνθ"],
+              ["Πολλές δυνάμεις", "ΣFx, ΣFy ⇒ R = √(ΣFx² + ΣFy²)"],
               ["Μέτρο από συνιστώσες", "F = √(Fx² + Fy²)"],
               ["Γωνία από συνιστώσες", "εφθ = Fy / Fx"],
               ["Συνισταμένη (κάθετες)", "R = √(F₁² + F₂²)"],

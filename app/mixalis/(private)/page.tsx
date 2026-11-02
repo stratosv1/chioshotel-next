@@ -113,13 +113,15 @@ const SUBJECTS: Subject[] = [
       },
       {
         title: "Διάνυσμα: πέρα από το βέλος",
-        subtitle: "12 βασικές ιδέες για τα διανύσματα, συνιστώσες με τριγωνομετρία και λυμένα παραδείγματα.",
+        subtitle: "Συνιστώσες Fx, Fy με τριγωνομετρία: κανόνας της γωνίας, κεκλιμένο, λυμένα παραδείγματα και προπόνηση με απεριόριστες ασκήσεις.",
         href: "/mixalis/dianisma",
         links: [
           { label: "12 ιδέες", href: "/mixalis/dianisma#ideas" },
           { label: "Τριγωνομετρία", href: "/mixalis/dianisma#trig" },
           { label: "Εργαστήριο", href: "/mixalis/dianisma#lab" },
+          { label: "Πότε ημ, πότε συν", href: "/mixalis/dianisma#rule" },
           { label: "Παραδείγματα", href: "/mixalis/dianisma#examples" },
+          { label: "Προπόνηση Fx/Fy", href: "/mixalis/dianisma#trainer" },
           { label: "Τεστ", href: "/mixalis/dianisma#quiz" },
           { label: "Τυπολόγιο", href: "/mixalis/dianisma#summary" },
         ],
