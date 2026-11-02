@@ -115,6 +115,13 @@ export const kamposChiosPageEn: KamposChiosPageData = {
       imageAlt: "Antouaniko mansion in Kambos Chios with historic architecture",
     },
     {
+      title: "From Genoese gardens to the Chios tangerine",
+      text:
+        "The name Kambos appears in travelers' accounts from 1673. The Genoese created the citrus gardens in the 13th century and began the mansions in the 14th, with high walls of reddish Thymiana stone and wells worked by the traditional maganos. The disaster of 1822 left only about 400 of some 1,200 estates restored. After the freeze of 1850 the hardy tangerine brought new life, until the 1881 earthquake destroyed most buildings. Today Kambos is protected as a historic site.",
+      image: citrusEstateImage,
+      imageAlt: "Citrus estate in the historic Kambos area of Chios",
+    },
+    {
       title: "Perfect for slow walks and quiet discovery",
       text:
         "Kambos is not a beach. It is a historic residential area made for slow walks, citrus aromas, hidden courtyards and a deeper sense of place before heading out to the beaches, villages and museums of Chios.",
@@ -199,6 +206,13 @@ export const kamposChiosPageEl: KamposChiosPageData = {
       imageAlt: "Αντουάνικο αρχοντικό στον Κάμπο της Χίου με ιστορική αρχιτεκτονική",
     },
     {
+      title: "Από τα γενουάτικα περιβόλια στο μανταρίνι Χίου",
+      text:
+        "Το όνομα Κάμπος εμφανίζεται σε αφηγήσεις περιηγητών από το 1673. Οι Γενουάτες δημιούργησαν τα περιβόλια τον 13ο αιώνα και ξεκίνησαν τα αρχοντικά τον 14ο, με ψηλούς τοίχους από την κόκκινη πέτρα των Θυμιανών και πηγάδια με το παραδοσιακό μαγγάνι. Μετά την καταστροφή του 1822 αποκαταστάθηκαν μόνο περίπου 400 από τα 1.200 κτήματα. Μετά τον παγετό του 1850, το ανθεκτικό μανταρίνι έδωσε νέα πνοή, μέχρι που ο σεισμός του 1881 κατέστρεψε τα περισσότερα κτίρια. Σήμερα ο Κάμπος προστατεύεται ως ιστορικός τόπος.",
+      image: citrusEstateImage,
+      imageAlt: "Κτήμα με εσπεριδοειδή στον ιστορικό Κάμπο της Χίου",
+    },
+    {
       title: "Ιδανικός για περίπατο και ήρεμη ανακάλυψη",
       text:
         "Ο Κάμπος δεν είναι παραλία. Είναι μια ιστορική κατοικημένη περιοχή για αργούς περιπάτους, αρώματα εσπεριδοειδών, κρυμμένες αυλές και αυθεντική αίσθηση τόπου πριν εξερευνήσετε παραλίες, χωριά και μουσεία της Χίου.",
@@ -276,6 +290,13 @@ export const kamposChiosPageFr: KamposChiosPageData = {
         "Depuis la période génoise et les anciennes familles de Chios, Kambos s’est développé comme un quartier de maisons raffinées, portes arquées, plafonds peints, cours en marbre et entrées de jardins impressionnantes.",
       image: antouanikoImage,
       imageAlt: "Demeure Antouaniko à Kambos Chios avec architecture historique",
+    },
+    {
+      title: "Des jardins génois à la mandarine de Chios",
+      text:
+        "Le nom de Kambos apparaît dans les récits de voyageurs dès 1673. Les Génois ont créé les jardins d'agrumes au XIIIe siècle et commencé les demeures au XIVe, avec de hauts murs en pierre rougeâtre de Thymiana et des puits actionnés par le « maganos » traditionnel. Après le désastre de 1822, seuls 400 environ des 1 200 domaines ont été restaurés. Après le gel de 1850, la résistante mandarine a redonné vie à la région, jusqu'au séisme de 1881, qui a détruit la plupart des bâtiments. Kambos est aujourd'hui protégé comme site historique.",
+      image: citrusEstateImage,
+      imageAlt: "Domaine d'agrumes dans le quartier historique de Kambos à Chios",
     },
     {
       title: "Parfait pour les promenades lentes et la découverte",
@@ -357,6 +378,13 @@ export const kamposChiosPageDe: KamposChiosPageData = {
       imageAlt: "Antouaniko-Herrenhaus in Kambos auf Chios mit historischer Architektur",
     },
     {
+      title: "Von genuesischen Gärten zur Chios-Mandarine",
+      text:
+        "Der Name Kambos taucht seit 1673 in Reiseberichten auf. Die Genuesen legten im 13. Jahrhundert die Zitrusgärten an und begannen im 14. Jahrhundert mit den Herrenhäusern, mit hohen Mauern aus rötlichem Thymiana-Stein und Brunnen, die mit dem traditionellen Maganos betrieben wurden. Nach der Katastrophe von 1822 wurden nur etwa 400 der rund 1.200 Anwesen wiederhergestellt. Nach dem Frost von 1850 brachte die robuste Mandarine neues Leben, bis das Erdbeben von 1881 die meisten Gebäude zerstörte. Heute steht Kambos als historische Stätte unter Schutz.",
+      image: citrusEstateImage,
+      imageAlt: "Zitrusanwesen im historischen Kambos auf Chios",
+    },
+    {
       title: "Perfekt für ruhige Spaziergänge und Entdeckungen",
       text:
         "Kambos ist kein Strand. Es ist ein historisches Wohnviertel für langsame Spaziergänge, Zitrusdüfte, versteckte Höfe und ein tieferes Gefühl für Chios, bevor Sie Strände, Dörfer und Museen erkunden.",
@@ -434,6 +462,13 @@ export const kamposChiosPageIt: KamposChiosPageData = {
         "Dal periodo genovese e dalle antiche famiglie di Chios, Kambos si è sviluppato come area di case raffinate, porte ad arco, soffitti dipinti, cortili in marmo e ingressi monumentali ai giardini.",
       image: antouanikoImage,
       imageAlt: "Dimora Antouaniko a Kambos Chios con architettura storica",
+    },
+    {
+      title: "Dai giardini genovesi al mandarino di Chios",
+      text:
+        "Il nome Kambos compare nei racconti dei viaggiatori dal 1673. I genovesi crearono gli agrumeti nel XIII secolo e iniziarono le dimore nel XIV, con alti muri di pietra rossastra di Thymiana e pozzi azionati dal tradizionale «maganos». Dopo il disastro del 1822 furono ripristinate solo circa 400 delle 1.200 tenute. Dopo la gelata del 1850 il resistente mandarino ridiede vita alla zona, fino al terremoto del 1881, che distrusse gran parte degli edifici. Oggi Kambos è tutelato come sito storico.",
+      image: citrusEstateImage,
+      imageAlt: "Tenuta di agrumi nella storica area di Kambos a Chios",
     },
     {
       title: "Perfetto per passeggiate lente e scoperte tranquille",
@@ -515,6 +550,13 @@ export const kamposChiosPageEs: KamposChiosPageData = {
       imageAlt: "Mansión Antouaniko en Kambos de Chios con arquitectura histórica",
     },
     {
+      title: "De los jardines genoveses a la mandarina de Quíos",
+      text:
+        "El nombre de Kambos aparece en relatos de viajeros desde 1673. Los genoveses crearon los huertos de cítricos en el siglo XIII y comenzaron las mansiones en el XIV, con altos muros de piedra rojiza de Thymiana y pozos movidos por el tradicional «maganos». Tras el desastre de 1822 solo se restauraron unas 400 de las 1.200 fincas. Después de la helada de 1850, la resistente mandarina dio nueva vida a la zona, hasta que el terremoto de 1881 destruyó la mayoría de los edificios. Hoy Kambos está protegido como sitio histórico.",
+      image: citrusEstateImage,
+      imageAlt: "Finca de cítricos en la histórica zona de Kambos en Quíos",
+    },
+    {
       title: "Perfecto para paseos lentos y descubrimientos tranquilos",
       text:
         "Kambos no es una playa. Es una zona residencial histórica para caminar despacio, sentir el aroma de los cítricos, descubrir patios ocultos y conectar con la identidad de Chios antes de explorar playas, pueblos y museos.",
@@ -592,6 +634,13 @@ export const kamposChiosPageTr: KamposChiosPageData = {
         "Ceneviz döneminden ve Sakız Adası’nın eski ailelerinden itibaren Kambos; zarif evleri, kemerli kapıları, boyalı tavanları, mermer avluları ve etkileyici bahçe girişleriyle özel bir yerleşim alanı olarak gelişmiştir.",
       image: antouanikoImage,
       imageAlt: "Sakız Adası Kambos bölgesinde tarihi mimariye sahip Antouaniko konağı",
+    },
+    {
+      title: "Ceneviz bahçelerinden Sakız mandalinasına",
+      text:
+        "Kambos adı 1673'ten itibaren gezginlerin anlatılarında geçer. Cenevizliler narenciye bahçelerini 13. yüzyılda kurdu, konakları 14. yüzyılda yapmaya başladı; Thymiana'nın kırmızımsı taşından yüksek duvarlar ve geleneksel \"maganos\" ile çalışan kuyular bu dönemin izidir. 1822 felaketinden sonra yaklaşık 1.200 mülkün yalnızca 400 kadarı onarıldı. 1850 donundan sonra dayanıklı mandalina bölgeye yeniden hayat verdi; 1881 depremi ise binaların çoğunu yıktı. Kambos bugün tarihî alan olarak koruma altındadır.",
+      image: citrusEstateImage,
+      imageAlt: "Sakız Adası'nın tarihî Kambos bölgesinde narenciye bahçesi",
     },
     {
       title: "Yavaş yürüyüşler ve sakin keşifler için ideal",

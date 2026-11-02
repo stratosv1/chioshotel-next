@@ -647,6 +647,20 @@ const englishPages: Record<ChiosActivityKey, ChiosActivitiesPageData> = {
         ],
       },
       {
+        title: "A battle against pirates, replayed",
+        text: [
+          "According to local legend, Mostra goes back to the Middle Ages, when pirates raided the Aegean. The people of Thymiana defeated a band that landed nearby, and a year later they reenacted the victory.",
+          "Today the village splits into two groups, the Thymianousses and the Corsairs, who stage mock fights through the neighborhoods and the central square. The whole village then joins a carnival procession that ends with a dance in the square.",
+        ],
+      },
+      {
+        title: "More carnival customs on Chios",
+        text: [
+          "The Mastic villages have a carnival custom of their own. On Clean Monday in Olympoi, Mesta, Elata and Lithi, a villager dressed as an Ottoman Aga sits with his vizier and secretary and hands out mock fines, a playful memory of the heavy taxes of the past.",
+          "Carnival dates follow the Orthodox calendar and change every year, so check the local program before you plan your trip.",
+        ],
+      },
+      {
         title: "Stay close to the celebration",
         text: [
           "Voulamandis House in Kambos is a peaceful and convenient base for discovering Mostra, Thymiana and the surrounding area of Chios.",
@@ -746,6 +760,13 @@ const englishPages: Record<ChiosActivityKey, ChiosActivitiesPageData> = {
         ],
       },
       {
+        title: "Routes to plan your walk around",
+        text: [
+          "One long route links Lithi beach with Agiasmata in eight stages, passing Nea Moni, Avgonyma, Anavatos and Volissos along the way. You don't have to walk it all: the stage from Anavatos to Agios Isidoros is about 6 km, and from Agios Isidoros to Katavasi about 7 km.",
+          "In the north, the Agiasmata valley has more than 50 km of old paths, the Kampia ravine is a favorite in May, and a separate path leads from Agios Giannis to Agio Gala. Spring and autumn are the most comfortable seasons. In summer, start early, carry water and check the condition of the path before you set off.",
+        ],
+      },
+      {
         title: "Nature, history and local life",
         text: [
           "A hiking holiday in Chios can combine natural beauty with Byzantine monasteries, medieval villages, local tavernas and seasonal wildflowers.",
@@ -799,6 +820,13 @@ const englishPages: Record<ChiosActivityKey, ChiosActivitiesPageData> = {
         ],
       },
       {
+        title: "What to expect at Agiasmata",
+        text: [
+          "The water at Agiasmata rises at about 57.5 °C, close to the sea, and is rich in minerals. The bathing center has a relaxation area and a canteen serving herbal teas and juices.",
+          "The baths usually open from July to October, so check the current schedule before you drive north. You can round off the day with a swim, a walk on the old paths of the valley or a visit to the nearby monasteries and villages.",
+        ],
+      },
+      {
         title: "A day trip from Kambos",
         text: [
           "From Voulamandis House, Agiasmata can be part of a longer day trip through the villages and landscapes of northern Chios.",
@@ -845,6 +873,20 @@ const englishPages: Record<ChiosActivityKey, ChiosActivitiesPageData> = {
         text: [
           "The event has become known far beyond Chios and attracts visitors who want to witness a unique local custom filled with sound, light and emotion.",
           "For the people of Chios, it remains a powerful symbol of Easter, faith, identity and local tradition.",
+        ],
+      },
+      {
+        title: "How the battle works",
+        text: [
+          "The two churches stand on hilltops about 400 meters apart. Each parish fires tens of thousands of homemade rockets at the other's bell tower, launching them in their hundreds from angled ramps.",
+          "Direct hits on the belfries are counted the next day. Each parish usually claims victory, so the two agree to settle the score the following Easter.",
+        ],
+      },
+      {
+        title: "From cannons to rockets",
+        text: [
+          "The exact origins of the custom are unclear. Local tradition places it in the Ottoman period, and folklore says real cannons were used until the authorities banned them in 1889.",
+          "The churches and nearby buildings are protected with metal sheets and mesh. The event was cancelled in 2016 after complaints about property damage and returned in 2017 with limits on its duration and the number of rockets.",
         ],
       },
       {
@@ -895,6 +937,20 @@ const englishPages: Record<ChiosActivityKey, ChiosActivitiesPageData> = {
         text: [
           "Beautiful sites for flowers and orchids include Kato Fana, Managros, Pelinaio Mountain, Kampia ravine and the hills around Pyrgi, Olympoi and Mesta.",
           "Different areas bloom at different moments of the season, so a short drive can reveal changing landscapes and new botanical surprises.",
+        ],
+      },
+      {
+        title: "When and where to see them",
+        text: [
+          "The first orchids, such as Himantoglossum robertianum, appear at the end of winter. At Kato Fana in the south they grow behind the sandy beach in April and May, while at Managros in the northwest spring flowers appear from late March to mid-April.",
+          "The Kampia ravine in the north is at its best in May, when you can walk in the shade of oaks and wild roses along the stream. The low hills around Pyrgi, Olympoi and Mesta are covered in maquis, where some rare orchids also grow.",
+        ],
+      },
+      {
+        title: "A list of species that keeps growing",
+        text: [
+          "Botanists have long been drawn to Mount Pelinaio, home to plants found only there, such as Fritillaria pelinea. Five more orchid species were added to the island's records in 2002 and 2003.",
+          "Orchids are fragile, so please enjoy them where they grow: photograph them, stay on the path and leave the flowers for the next visitor.",
         ],
       },
       {
@@ -974,6 +1030,20 @@ const localizedActivityCopy: Partial<
           text: [
             "Η Μόστρα δεν είναι απλώς μια παρέλαση. Είναι μια γιορτή κοινότητας, ιστορίας και τοπικής ταυτότητας.",
             "Οι επισκέπτες μπορούν να χαρούν παραδοσιακές γεύσεις, μουσική και τη ζεστή ατμόσφαιρα ενός αυθεντικού χιώτικου χωριού.",
+          ],
+        },
+        {
+          title: "Μια μάχη με πειρατές που ζωντανεύει ξανά",
+          text: [
+            "Σύμφωνα με τον τοπικό θρύλο, η Μόστρα ξεκινά από τον Μεσαίωνα, όταν οι πειρατές λεηλατούσαν το Αιγαίο. Οι Θυμιανούσοι νίκησαν μια ομάδα που αποβιβάστηκε κοντά και την επόμενη χρονιά αναπαρέστησαν τη νίκη τους.",
+            "Σήμερα το χωριό χωρίζεται σε δύο ομάδες, τους Θυμιανούσους και τους Κουρσάρους, που δίνουν εικονικές μάχες στις γειτονιές και στην κεντρική πλατεία. Στη συνέχεια όλο το χωριό παίρνει μέρος σε αποκριάτικη πομπή, που καταλήγει σε χορό στην πλατεία.",
+          ],
+        },
+        {
+          title: "Κι άλλα αποκριάτικα έθιμα στη Χίο",
+          text: [
+            "Τα Μαστιχοχώρια έχουν το δικό τους αποκριάτικο έθιμο. Την Καθαρά Δευτέρα στους Ολύμπους, στα Μεστά, στα Ελάτα και στο Λιθί, ένας χωριανός ντυμένος Αγάς κάθεται με τον βεζίρη και τον γραμματέα του και μοιράζει εικονικά πρόστιμα, μια παιχνιδιάρικη ανάμνηση των βαριών φόρων του παρελθόντος.",
+            "Οι ημερομηνίες της Αποκριάς ακολουθούν το ορθόδοξο εορτολόγιο και αλλάζουν κάθε χρόνο, γι' αυτό ελέγξτε το τοπικό πρόγραμμα πριν οργανώσετε το ταξίδι σας.",
           ],
         },
         {
@@ -1064,6 +1134,13 @@ const localizedActivityCopy: Partial<
           ],
         },
         {
+          title: "Διαδρομές για να οργανώσετε την πεζοπορία σας",
+          text: [
+            "Μια μεγάλη διαδρομή ενώνει την παραλία Λιθί με τα Αγιάσματα σε οκτώ σκέλη, περνώντας από τη Νέα Μονή, τα Αυγώνυμα, τον Ανάβατο και τη Βολισσό. Δεν χρειάζεται να την περπατήσετε ολόκληρη: το σκέλος από τον Ανάβατο στον Άγιο Ισίδωρο είναι περίπου 6 χλμ. και από τον Άγιο Ισίδωρο στην Κατάβαση περίπου 7 χλμ.",
+            "Στα βόρεια, η κοιλάδα των Αγιασμάτων έχει πάνω από 50 χλμ. παλιά μονοπάτια, το φαράγγι των Καμπιών ξεχωρίζει τον Μάιο και ένα ακόμη μονοπάτι οδηγεί από τον Άγιο Γιάννη στο Άγιο Γάλα. Η άνοιξη και το φθινόπωρο είναι οι πιο άνετες εποχές. Το καλοκαίρι ξεκινήστε νωρίς, έχετε μαζί σας νερό και ελέγξτε την κατάσταση του μονοπατιού πριν ξεκινήσετε.",
+          ],
+        },
+        {
           title: "Φύση, ιστορία και τοπική ζωή",
           text: [
             "Μια πεζοπορική εμπειρία στη Χίο μπορεί να συνδυάσει φύση, βυζαντινά μοναστήρια, μεσαιωνικά χωριά, ταβέρνες και εποχιακά αγριολούλουδα.",
@@ -1104,6 +1181,13 @@ const localizedActivityCopy: Partial<
           text: [
             "Η επίσκεψη στα Αγιάσματα μπορεί να συνδυαστεί με ήπιες βόλτες, θέα, τοπικό φαγητό και γνωριμία με τη βόρεια Χίο.",
             "Είναι ιδανική επιλογή για όσους θέλουν να ισορροπήσουν τις παραλίες και τις εκδρομές με μια πιο χαλαρή εμπειρία.",
+          ],
+        },
+        {
+          title: "Τι θα βρείτε στα Αγιάσματα",
+          text: [
+            "Το νερό στα Αγιάσματα αναβλύζει στους 57,5 °C περίπου, κοντά στη θάλασσα, και είναι πλούσιο σε μέταλλα. Το κέντρο διαθέτει χώρο χαλάρωσης και κυλικείο με αφεψήματα και χυμούς.",
+            "Τα λουτρά λειτουργούν συνήθως από τον Ιούλιο έως τον Οκτώβριο, γι' αυτό ελέγξτε το τρέχον ωράριο πριν ξεκινήσετε για τα βόρεια. Μπορείτε να ολοκληρώσετε τη μέρα με μια βουτιά, έναν περίπατο στα παλιά μονοπάτια της κοιλάδας ή μια επίσκεψη στα κοντινά μοναστήρια και χωριά.",
           ],
         },
         {
@@ -1150,6 +1234,20 @@ const localizedActivityCopy: Partial<
           ],
         },
         {
+          title: "Πώς γίνεται η μάχη",
+          text: [
+            "Οι δύο εκκλησίες βρίσκονται σε λόφους που απέχουν περίπου 400 μέτρα. Κάθε ενορία εκτοξεύει δεκάδες χιλιάδες χειροποίητες ρουκέτες προς το καμπαναριό της άλλης, ρίχνοντάς τες κατά εκατοντάδες από κεκλιμένες βάσεις.",
+            "Οι εύστοχες βολές στα καμπαναριά μετρώνται την επόμενη μέρα. Κάθε ενορία συνήθως διεκδικεί τη νίκη, και έτσι η αναμέτρηση ανανεώνεται για το επόμενο Πάσχα.",
+          ],
+        },
+        {
+          title: "Από τα κανόνια στις ρουκέτες",
+          text: [
+            "Η ακριβής αρχή του εθίμου δεν είναι γνωστή. Η τοπική παράδοση το τοποθετεί στην οθωμανική περίοδο και λέει ότι χρησιμοποιούνταν αληθινά κανόνια, μέχρι που οι αρχές τα απαγόρευσαν το 1889.",
+            "Οι εκκλησίες και τα γύρω κτίρια προστατεύονται με λαμαρίνες και πλέγματα. Το έθιμο ακυρώθηκε το 2016 μετά από διαμαρτυρίες για ζημιές σε περιουσίες και επέστρεψε το 2017 με όρια στη διάρκεια και στον αριθμό των ρουκετών.",
+          ],
+        },
+        {
           title: "Παρακολούθηση με ασφάλεια και σεβασμό",
           text: [
             "Οι επισκέπτες πρέπει πάντα να ακολουθούν τις τοπικές οδηγίες ασφαλείας και να παρακολουθούν από προτεινόμενα σημεία.",
@@ -1191,6 +1289,20 @@ const localizedActivityCopy: Partial<
           text: [
             "Όμορφα σημεία για λουλούδια και ορχιδέες είναι ο Κάτω Φανάς, ο Μάναγρος, το Πελινναίο, η Καμπιά και οι λόφοι γύρω από το Πυργί, τους Ολύμπους και τα Μεστά.",
             "Διαφορετικές περιοχές ανθίζουν σε διαφορετικές στιγμές της εποχής, προσφέροντας συνεχώς νέες εικόνες.",
+          ],
+        },
+        {
+          title: "Πότε και πού θα τις δείτε",
+          text: [
+            "Οι πρώτες ορχιδέες, όπως το Himantoglossum robertianum, εμφανίζονται στο τέλος του χειμώνα. Στον Κάτω Φανά, στα νότια, φυτρώνουν πίσω από την αμμουδιά τον Απρίλιο και τον Μάιο, ενώ στον Μάναγρο, στα βορειοδυτικά, τα ανοιξιάτικα λουλούδια εμφανίζονται από τα τέλη Μαρτίου έως τα μέσα Απριλίου.",
+            "Το φαράγγι των Καμπιών, στα βόρεια, είναι στην καλύτερη στιγμή του τον Μάιο, όταν περπατάτε στη σκιά από βελανιδιές και αγριοτριανταφυλλιές δίπλα στο ρέμα. Οι χαμηλοί λόφοι γύρω από το Πυργί, τους Ολύμπους και τα Μεστά καλύπτονται από μακία βλάστηση, όπου φυτρώνουν και ορισμένες σπάνιες ορχιδέες.",
+          ],
+        },
+        {
+          title: "Ένας κατάλογος ειδών που μεγαλώνει",
+          text: [
+            "Οι βοτανολόγοι μελετούν εδώ και χρόνια το Πελινναίο, όπου φύονται φυτά που δεν υπάρχουν αλλού, όπως η Fritillaria pelinea. Το 2002 και το 2003 προστέθηκαν πέντε ακόμη είδη ορχιδέας στα αρχεία του νησιού.",
+            "Οι ορχιδέες είναι εύθραυστες, γι' αυτό απολαύστε τις εκεί που φυτρώνουν: φωτογραφίστε τις, μείνετε στο μονοπάτι και αφήστε τα λουλούδια για τον επόμενο επισκέπτη.",
           ],
         },
         {
@@ -1259,6 +1371,20 @@ const localizedActivityCopy: Partial<
           text: [
             "Mostra est plus qu'un défilé. C'est une fête de communauté, d'histoire et d'identité locale.",
             "Les visiteurs peuvent profiter de saveurs traditionnelles, de musique locale et de l'accueil chaleureux d'un village de Chios.",
+          ],
+        },
+        {
+          title: "Une bataille contre les pirates, rejouée",
+          text: [
+            "Selon la légende locale, la Mostra remonte au Moyen Âge, quand les pirates écumaient la mer Égée. Les habitants de Thymiana vainquirent une bande débarquée non loin de là, puis rejouèrent leur victoire l'année suivante.",
+            "Aujourd'hui, le village se divise en deux groupes, les Thymianousses et les Corsaires, qui se livrent des combats simulés dans les quartiers et sur la place centrale. Tout le village participe ensuite à un cortège de carnaval, qui s'achève par une danse sur la place.",
+          ],
+        },
+        {
+          title: "D'autres coutumes de carnaval à Chios",
+          text: [
+            "Les villages du mastic ont leur propre coutume. Le lundi pur, à Olympoi, Mesta, Elata et Lithi, un villageois déguisé en aga ottoman s'installe avec son vizir et son secrétaire et distribue de fausses amendes, souvenir malicieux des lourds impôts d'autrefois.",
+            "Les dates du carnaval suivent le calendrier orthodoxe et changent chaque année : consultez le programme local avant d'organiser votre voyage.",
           ],
         },
         {
@@ -1349,6 +1475,13 @@ const localizedActivityCopy: Partial<
           ],
         },
         {
+          title: "Des itinéraires pour organiser votre randonnée",
+          text: [
+            "Un long itinéraire relie la plage de Lithi à Agiasmata en huit étapes, en passant par Nea Moni, Avgonyma, Anavatos et Volissos. Inutile de tout parcourir : l'étape d'Anavatos à Agios Isidoros fait environ 6 km, et celle d'Agios Isidoros à Katavasi environ 7 km.",
+            "Dans le nord, la vallée d'Agiasmata compte plus de 50 km d'anciens chemins, le ravin de Kampia est particulièrement beau en mai et un autre sentier mène d'Agios Giannis à Agio Gala. Le printemps et l'automne sont les saisons les plus agréables. En été, partez tôt, emportez de l'eau et vérifiez l'état du sentier avant de vous lancer.",
+          ],
+        },
+        {
           title: "Nature, histoire et vie locale",
           text: [
             "Une randonnée à Chios peut combiner nature, monastères byzantins, villages médiévaux, tavernes et fleurs sauvages de saison.",
@@ -1389,6 +1522,13 @@ const localizedActivityCopy: Partial<
           text: [
             "Une visite à Agiasmata peut se combiner avec de petites promenades, des vues pittoresques, une cuisine locale et l'exploration du nord de Chios.",
             "C'est un bon choix pour équilibrer plages, visites et moments de repos.",
+          ],
+        },
+        {
+          title: "Ce qui vous attend à Agiasmata",
+          text: [
+            "L'eau d'Agiasmata jaillit à environ 57,5 °C, près de la mer, et elle est riche en minéraux. Le centre thermal dispose d'un espace de détente et d'une buvette proposant tisanes et jus.",
+            "Les bains ouvrent généralement de juillet à octobre : vérifiez les horaires actuels avant de partir vers le nord. Vous pouvez terminer la journée par une baignade, une promenade sur les anciens chemins de la vallée ou une visite des monastères et villages voisins.",
           ],
         },
         {
@@ -1435,6 +1575,20 @@ const localizedActivityCopy: Partial<
           ],
         },
         {
+          title: "Comment se déroule la bataille",
+          text: [
+            "Les deux églises se dressent sur des collines distantes d'environ 400 mètres. Chaque paroisse tire des dizaines de milliers de fusées artisanales vers le clocher de l'autre, par centaines depuis des rampes inclinées.",
+            "Les tirs directs sur les clochers sont comptés le lendemain. Chaque paroisse revendique généralement la victoire, et les deux camps se donnent rendez-vous à la Pâque suivante.",
+          ],
+        },
+        {
+          title: "Des canons aux fusées",
+          text: [
+            "Les origines exactes de la coutume sont incertaines. La tradition locale la situe à l'époque ottomane et raconte que de vrais canons étaient utilisés jusqu'à leur interdiction par les autorités en 1889.",
+            "Les églises et les bâtiments voisins sont protégés par des tôles et des grillages. L'événement a été annulé en 2016 après des plaintes pour dégâts matériels, puis a repris en 2017 avec des limites de durée et de nombre de fusées.",
+          ],
+        },
+        {
           title: "Observer avec sécurité et respect",
           text: [
             "Les visiteurs doivent toujours suivre les consignes locales de sécurité et regarder depuis les zones recommandées.",
@@ -1476,6 +1630,20 @@ const localizedActivityCopy: Partial<
           text: [
             "Parmi les beaux sites figurent Kato Fana, Managros, le mont Pelinaio, le ravin de Kampia et les collines autour de Pyrgi, Olympoi et Mesta.",
             "Les différentes régions fleurissent à des moments différents, révélant sans cesse de nouveaux paysages.",
+          ],
+        },
+        {
+          title: "Quand et où les voir",
+          text: [
+            "Les premières orchidées, comme Himantoglossum robertianum, apparaissent à la fin de l'hiver. À Kato Fana, dans le sud, elles poussent derrière la plage de sable en avril et mai, tandis qu'à Managros, au nord-ouest, les fleurs de printemps apparaissent de fin mars à mi-avril.",
+            "Le ravin de Kampia, dans le nord, est à son plus beau en mai, quand on marche à l'ombre des chênes et des églantiers le long du ruisseau. Les basses collines autour de Pyrgi, Olympoi et Mesta sont couvertes de maquis, où poussent aussi quelques orchidées rares.",
+          ],
+        },
+        {
+          title: "Une liste d'espèces qui s'allonge",
+          text: [
+            "Les botanistes s'intéressent depuis longtemps au mont Pelinaio, où poussent des plantes qu'on ne trouve nulle part ailleurs, comme Fritillaria pelinea. Cinq nouvelles espèces d'orchidées ont été ajoutées aux inventaires de l'île en 2002 et 2003.",
+            "Les orchidées sont fragiles : admirez-les là où elles poussent, photographiez-les, restez sur le sentier et laissez les fleurs au prochain visiteur.",
           ],
         },
         {
@@ -1544,6 +1712,20 @@ const localizedActivityCopy: Partial<
           text: [
             "Mostra ist mehr als ein Umzug. Es ist ein Fest der Gemeinschaft, der Geschichte und der lokalen Identität.",
             "Besucher erleben traditionelle Speisen, Musik und die herzliche Atmosphäre eines echten Dorfes auf Chios.",
+          ],
+        },
+        {
+          title: "Ein Kampf gegen Piraten, neu inszeniert",
+          text: [
+            "Der lokalen Legende nach geht die Mostra auf das Mittelalter zurück, als Piraten die Ägäis heimsuchten. Die Bewohner von Thymiana besiegten eine in der Nähe gelandete Bande und stellten ihren Sieg im Jahr darauf nach.",
+            "Heute teilt sich das Dorf in zwei Gruppen, die Thymianousses und die Korsaren, die sich in den Vierteln und auf dem Hauptplatz Scheingefechte liefern. Danach zieht das ganze Dorf in einem Karnevalsumzug mit, der mit einem Tanz auf dem Platz endet.",
+          ],
+        },
+        {
+          title: "Weitere Karnevalsbräuche auf Chios",
+          text: [
+            "Auch die Mastixdörfer haben ihren eigenen Karnevalsbrauch. Am Reinen Montag sitzt in Olympoi, Mesta, Elata und Lithi ein als osmanischer Aga verkleideter Dorfbewohner mit Wesir und Schreiber zusammen und verteilt Scherzstrafen, eine spielerische Erinnerung an die hohen Steuern früherer Zeiten.",
+            "Die Karnevalstermine richten sich nach dem orthodoxen Kalender und ändern sich jedes Jahr. Prüfen Sie daher das lokale Programm, bevor Sie Ihre Reise planen.",
           ],
         },
         {
@@ -1634,6 +1816,13 @@ const localizedActivityCopy: Partial<
           ],
         },
         {
+          title: "Routen für Ihre Wanderplanung",
+          text: [
+            "Eine lange Route verbindet den Strand von Lithi in acht Etappen mit Agiasmata und führt über Nea Moni, Avgonyma, Anavatos und Volissos. Sie müssen nicht die ganze Strecke gehen: Die Etappe von Anavatos nach Agios Isidoros ist etwa 6 km lang, die von Agios Isidoros nach Katavasi etwa 7 km.",
+            "Im Norden bietet das Tal von Agiasmata mehr als 50 km alte Wege, die Kampia-Schlucht ist im Mai besonders schön, und ein weiterer Pfad führt von Agios Giannis nach Agio Gala. Frühling und Herbst sind die angenehmsten Jahreszeiten. Starten Sie im Sommer früh, nehmen Sie Wasser mit und prüfen Sie vorher den Zustand des Weges.",
+          ],
+        },
+        {
           title: "Natur, Geschichte und lokales Leben",
           text: [
             "Eine Wanderreise auf Chios kann Natur, byzantinische Klöster, mittelalterliche Dörfer, Tavernen und saisonale Wildblumen verbinden.",
@@ -1674,6 +1863,13 @@ const localizedActivityCopy: Partial<
           text: [
             "Ein Besuch in Agiasmata lässt sich mit kleinen Spaziergängen, schönen Ausblicken, lokaler Küche und der Erkundung des Nordens von Chios verbinden.",
             "Es ist ideal für Reisende, die Strandtage und Besichtigungen mit Ruhe ausgleichen möchten.",
+          ],
+        },
+        {
+          title: "Was Sie in Agiasmata erwartet",
+          text: [
+            "Das Wasser von Agiasmata tritt nahe dem Meer mit etwa 57,5 °C aus und ist reich an Mineralien. Das Badezentrum verfügt über einen Ruhebereich und eine Kantine mit Kräutertees und Säften.",
+            "Die Bäder sind in der Regel von Juli bis Oktober geöffnet. Prüfen Sie daher die aktuellen Zeiten, bevor Sie in den Norden fahren. Runden Sie den Tag mit einem Bad im Meer, einem Spaziergang auf den alten Wegen des Tals oder einem Besuch der nahen Klöster und Dörfer ab.",
           ],
         },
         {
@@ -1720,6 +1916,20 @@ const localizedActivityCopy: Partial<
           ],
         },
         {
+          title: "So läuft die Schlacht ab",
+          text: [
+            "Die beiden Kirchen stehen auf Hügeln, die etwa 400 Meter voneinander entfernt sind. Jede Gemeinde feuert Zehntausende selbst gebaute Raketen auf den Glockenturm der anderen ab, zu Hunderten von schrägen Rampen aus.",
+            "Die direkten Treffer auf die Glockentürme werden am nächsten Tag gezählt. Meist beansprucht jede Gemeinde den Sieg für sich, und so wird die Entscheidung auf das nächste Osterfest vertagt.",
+          ],
+        },
+        {
+          title: "Von Kanonen zu Raketen",
+          text: [
+            "Die genauen Ursprünge des Brauchs sind unklar. Die lokale Überlieferung verortet ihn in der osmanischen Zeit und erzählt, dass echte Kanonen benutzt wurden, bis die Behörden sie 1889 verboten.",
+            "Die Kirchen und die Gebäude ringsum werden mit Blechen und Gittern geschützt. 2016 wurde die Veranstaltung nach Beschwerden über Sachschäden abgesagt und kehrte 2017 mit Grenzen für Dauer und Raketenzahl zurück.",
+          ],
+        },
+        {
           title: "Sicher und respektvoll beobachten",
           text: [
             "Besucher sollten immer den lokalen Sicherheitshinweisen folgen und nur von empfohlenen Aussichtspunkten beobachten.",
@@ -1761,6 +1971,20 @@ const localizedActivityCopy: Partial<
           text: [
             "Schöne Orte für Blumen und Orchideen sind Kato Fana, Managros, der Berg Pelinaio, die Kampia-Schlucht und die Hügel um Pyrgi, Olympoi und Mesta.",
             "Verschiedene Regionen blühen zu unterschiedlichen Zeiten und zeigen immer neue Landschaften.",
+          ],
+        },
+        {
+          title: "Wann und wo Sie sie sehen",
+          text: [
+            "Die ersten Orchideen, etwa Himantoglossum robertianum, erscheinen am Ende des Winters. Bei Kato Fana im Süden wachsen sie im April und Mai hinter dem Sandstrand, bei Managros im Nordwesten zeigen sich die Frühlingsblumen von Ende März bis Mitte April.",
+            "Die Kampia-Schlucht im Norden ist im Mai am schönsten, wenn Sie im Schatten von Eichen und Wildrosen am Bach entlanggehen. Die niedrigen Hügel um Pyrgi, Olympoi und Mesta sind von Macchia bedeckt, in der auch einige seltene Orchideen wachsen.",
+          ],
+        },
+        {
+          title: "Eine Artenliste, die weiter wächst",
+          text: [
+            "Botaniker zieht es seit Langem zum Berg Pelinaio, wo Pflanzen wachsen, die es nur dort gibt, etwa Fritillaria pelinea. 2002 und 2003 kamen fünf weitere Orchideenarten in die Aufzeichnungen der Insel.",
+            "Orchideen sind empfindlich. Genießen Sie sie deshalb an ihrem Standort: Fotografieren Sie sie, bleiben Sie auf dem Weg und lassen Sie die Blumen für die nächsten Besucher stehen.",
           ],
         },
         {
@@ -1829,6 +2053,20 @@ const localizedActivityCopy: Partial<
           text: [
             "Mostra è più di una sfilata. È una celebrazione della comunità, della storia e dell'identità locale.",
             "I visitatori possono godere sapori tradizionali, musica e l'atmosfera accogliente di un villaggio di Chios.",
+          ],
+        },
+        {
+          title: "Una battaglia contro i pirati, rievocata",
+          text: [
+            "Secondo la leggenda locale, la Mostra risale al Medioevo, quando i pirati razziavano l'Egeo. Gli abitanti di Thymiana sconfissero una banda sbarcata nelle vicinanze e l'anno dopo rievocarono la vittoria.",
+            "Oggi il villaggio si divide in due gruppi, i Thymianousses e i Corsari, che inscenano finti combattimenti nei quartieri e nella piazza centrale. Poi tutto il villaggio partecipa a una sfilata di carnevale, che si conclude con una danza in piazza.",
+          ],
+        },
+        {
+          title: "Altre usanze di carnevale a Chios",
+          text: [
+            "Anche i villaggi del mastice hanno la loro usanza. Il Lunedì Puro, a Olympoi, Mesta, Elata e Lithi, un abitante vestito da aga ottomano siede con il visir e il segretario e distribuisce finte multe, un ricordo giocoso delle pesanti tasse del passato.",
+            "Le date del carnevale seguono il calendario ortodosso e cambiano ogni anno: controlla il programma locale prima di organizzare il viaggio.",
           ],
         },
         {
@@ -1919,6 +2157,13 @@ const localizedActivityCopy: Partial<
           ],
         },
         {
+          title: "Percorsi per organizzare la tua escursione",
+          text: [
+            "Un lungo percorso collega la spiaggia di Lithi ad Agiasmata in otto tappe, passando per Nea Moni, Avgonyma, Anavatos e Volissos. Non serve percorrerlo tutto: la tappa da Anavatos ad Agios Isidoros è di circa 6 km, quella da Agios Isidoros a Katavasi di circa 7 km.",
+            "Nel nord, la valle di Agiasmata offre oltre 50 km di antichi sentieri, la gola di Kampia è particolarmente bella a maggio e un altro sentiero porta da Agios Giannis ad Agio Gala. Primavera e autunno sono le stagioni più piacevoli. In estate parti presto, porta dell'acqua e verifica lo stato del sentiero prima di iniziare.",
+          ],
+        },
+        {
           title: "Natura, storia e vita locale",
           text: [
             "Un'esperienza trekking a Chios può combinare natura, monasteri bizantini, villaggi medievali, taverne e fiori selvatici stagionali.",
@@ -1959,6 +2204,13 @@ const localizedActivityCopy: Partial<
           text: [
             "Una visita ad Agiasmata può essere abbinata a passeggiate leggere, panorami, cucina locale e scoperta del nord di Chios.",
             "È una buona scelta per alternare giornate di mare, visite e momenti di riposo.",
+          ],
+        },
+        {
+          title: "Cosa aspettarsi ad Agiasmata",
+          text: [
+            "L'acqua di Agiasmata sgorga a circa 57,5 °C, vicino al mare, ed è ricca di minerali. Il centro termale dispone di una zona relax e di un punto ristoro con tisane e succhi.",
+            "Le terme aprono di solito da luglio a ottobre, quindi verifica gli orari aggiornati prima di partire verso nord. Puoi completare la giornata con un bagno, una passeggiata sugli antichi sentieri della valle o una visita ai monasteri e ai villaggi vicini.",
           ],
         },
         {
@@ -2005,6 +2257,20 @@ const localizedActivityCopy: Partial<
           ],
         },
         {
+          title: "Come si svolge la battaglia",
+          text: [
+            "Le due chiese sorgono su colline distanti circa 400 metri. Ogni parrocchia lancia decine di migliaia di razzi artigianali verso il campanile dell'altra, a centinaia da rampe inclinate.",
+            "I colpi diretti sui campanili vengono contati il giorno dopo. Di solito ogni parrocchia rivendica la vittoria, e così la sfida viene rinviata alla Pasqua successiva.",
+          ],
+        },
+        {
+          title: "Dai cannoni ai razzi",
+          text: [
+            "Le origini esatte dell'usanza non sono chiare. La tradizione locale la colloca nel periodo ottomano e racconta che si usavano veri cannoni, finché le autorità non li vietarono nel 1889.",
+            "Le chiese e gli edifici vicini vengono protetti con lamiere e reti. L'evento fu annullato nel 2016 dopo proteste per i danni alle proprietà ed è tornato nel 2017 con limiti alla durata e al numero di razzi.",
+          ],
+        },
+        {
           title: "Osservare in sicurezza e con rispetto",
           text: [
             "I visitatori devono sempre seguire le indicazioni locali di sicurezza e osservare dagli spazi consigliati.",
@@ -2046,6 +2312,20 @@ const localizedActivityCopy: Partial<
           text: [
             "Tra i luoghi più belli ci sono Kato Fana, Managros, il monte Pelinaio, la gola di Kampia e le colline intorno a Pyrgi, Olympoi e Mesta.",
             "Le diverse zone fioriscono in momenti diversi della stagione, offrendo paesaggi sempre nuovi.",
+          ],
+        },
+        {
+          title: "Quando e dove vederle",
+          text: [
+            "Le prime orchidee, come Himantoglossum robertianum, compaiono alla fine dell'inverno. A Kato Fana, nel sud, crescono dietro la spiaggia di sabbia in aprile e maggio, mentre a Managros, a nord-ovest, i fiori primaverili appaiono da fine marzo a metà aprile.",
+            "La gola di Kampia, nel nord, dà il meglio di sé a maggio, quando si cammina all'ombra di querce e rose selvatiche lungo il torrente. Le basse colline intorno a Pyrgi, Olympoi e Mesta sono coperte di macchia, dove crescono anche alcune orchidee rare.",
+          ],
+        },
+        {
+          title: "Un elenco di specie che continua a crescere",
+          text: [
+            "I botanici studiano da tempo il monte Pelinaio, dove crescono piante che non esistono altrove, come la Fritillaria pelinea. Nel 2002 e nel 2003 altre cinque specie di orchidee sono state aggiunte agli elenchi dell'isola.",
+            "Le orchidee sono fragili: ammiratele dove crescono, fotografatele, restate sul sentiero e lasciate i fiori al prossimo visitatore.",
           ],
         },
         {
@@ -2114,6 +2394,20 @@ const localizedActivityCopy: Partial<
           text: [
             "Mostra es más que un desfile. Es una celebración de comunidad, historia e identidad local.",
             "Los visitantes pueden disfrutar de sabores tradicionales, música y la atmósfera acogedora de un pueblo de Quíos.",
+          ],
+        },
+        {
+          title: "Una batalla contra piratas, recreada",
+          text: [
+            "Según la leyenda local, la Mostra se remonta a la Edad Media, cuando los piratas asaltaban el Egeo. Los habitantes de Thymiana derrotaron a una banda que desembarcó cerca y un año después recrearon su victoria.",
+            "Hoy el pueblo se divide en dos grupos, los Thymianousses y los Corsarios, que libran combates simulados por los barrios y la plaza central. Después todo el pueblo se une a un desfile de carnaval que termina con un baile en la plaza.",
+          ],
+        },
+        {
+          title: "Más costumbres de carnaval en Quíos",
+          text: [
+            "Los pueblos del mastiha tienen su propia costumbre. El Lunes Limpio, en Olympoi, Mesta, Elata y Lithi, un vecino vestido de agá otomano se sienta con su visir y su secretario y reparte multas de broma, un recuerdo juguetón de los duros impuestos del pasado.",
+            "Las fechas del carnaval siguen el calendario ortodoxo y cambian cada año, así que consulta el programa local antes de planificar tu viaje.",
           ],
         },
         {
@@ -2204,6 +2498,13 @@ const localizedActivityCopy: Partial<
           ],
         },
         {
+          title: "Rutas para organizar tu caminata",
+          text: [
+            "Una larga ruta une la playa de Lithi con Agiasmata en ocho etapas, pasando por Nea Moni, Avgonyma, Anavatos y Volissos. No hace falta recorrerla entera: la etapa de Anavatos a Agios Isidoros tiene unos 6 km, y la de Agios Isidoros a Katavasi unos 7 km.",
+            "En el norte, el valle de Agiasmata tiene más de 50 km de antiguos caminos, el barranco de Kampia destaca en mayo y otro sendero lleva de Agios Giannis a Agio Gala. La primavera y el otoño son las estaciones más agradables. En verano, sal temprano, lleva agua y comprueba el estado del sendero antes de empezar.",
+          ],
+        },
+        {
           title: "Naturaleza, historia y vida local",
           text: [
             "Una experiencia de senderismo en Quíos puede combinar naturaleza, monasterios bizantinos, pueblos medievales, tabernas y flores silvestres de temporada.",
@@ -2244,6 +2545,13 @@ const localizedActivityCopy: Partial<
           text: [
             "Una visita a Agiasmata puede combinarse con paseos suaves, vistas, comida local y exploración del norte de Quíos.",
             "Es una buena opción para equilibrar playas, visitas y momentos de descanso.",
+          ],
+        },
+        {
+          title: "Qué esperar en Agiasmata",
+          text: [
+            "El agua de Agiasmata brota a unos 57,5 °C, cerca del mar, y es rica en minerales. El centro termal cuenta con una zona de relajación y una cantina con infusiones y zumos.",
+            "Los baños suelen abrir de julio a octubre, así que comprueba el horario actual antes de ir al norte. Puedes completar el día con un baño en el mar, un paseo por los antiguos caminos del valle o una visita a los monasterios y pueblos cercanos.",
           ],
         },
         {
@@ -2290,6 +2598,20 @@ const localizedActivityCopy: Partial<
           ],
         },
         {
+          title: "Cómo se desarrolla la batalla",
+          text: [
+            "Las dos iglesias se alzan sobre colinas separadas por unos 400 metros. Cada parroquia dispara decenas de miles de cohetes caseros contra el campanario de la otra, por centenares desde rampas inclinadas.",
+            "Los impactos directos en los campanarios se cuentan al día siguiente. Cada parroquia suele proclamarse vencedora, así que ambas dejan la revancha para la Pascua siguiente.",
+          ],
+        },
+        {
+          title: "De los cañones a los cohetes",
+          text: [
+            "El origen exacto de la costumbre no está claro. La tradición local lo sitúa en la época otomana y cuenta que se usaban cañones de verdad hasta que las autoridades los prohibieron en 1889.",
+            "Las iglesias y los edificios cercanos se protegen con planchas metálicas y mallas. El evento se canceló en 2016 tras quejas por daños materiales y volvió en 2017 con límites de duración y de número de cohetes.",
+          ],
+        },
+        {
           title: "Observar con seguridad y respeto",
           text: [
             "Los visitantes deben seguir siempre las instrucciones locales de seguridad y mirar desde las zonas recomendadas.",
@@ -2331,6 +2653,20 @@ const localizedActivityCopy: Partial<
           text: [
             "Entre los lugares más bonitos están Kato Fana, Managros, el monte Pelinaio, el barranco de Kampia y las colinas alrededor de Pyrgi, Olympoi y Mesta.",
             "Las distintas zonas florecen en momentos diferentes de la temporada, ofreciendo paisajes siempre nuevos.",
+          ],
+        },
+        {
+          title: "Cuándo y dónde verlas",
+          text: [
+            "Las primeras orquídeas, como Himantoglossum robertianum, aparecen al final del invierno. En Kato Fana, en el sur, crecen detrás de la playa de arena en abril y mayo, mientras que en Managros, en el noroeste, las flores de primavera aparecen desde finales de marzo hasta mediados de abril.",
+            "El barranco de Kampia, en el norte, está en su mejor momento en mayo, cuando se camina a la sombra de robles y rosas silvestres junto al arroyo. Las colinas bajas alrededor de Pyrgi, Olympoi y Mesta están cubiertas de maquia, donde también crecen algunas orquídeas raras.",
+          ],
+        },
+        {
+          title: "Una lista de especies que sigue creciendo",
+          text: [
+            "Los botánicos estudian desde hace tiempo el monte Pelinaio, con plantas que solo crecen allí, como la Fritillaria pelinea. En 2002 y 2003 se añadieron otras cinco especies de orquídeas a los registros de la isla.",
+            "Las orquídeas son frágiles: disfrútalas donde crecen, fotografíalas, no te salgas del sendero y deja las flores para el próximo visitante.",
           ],
         },
         {
@@ -2399,6 +2735,20 @@ const localizedActivityCopy: Partial<
           text: [
             "Mostra yalnızca bir geçit töreni değildir. Topluluk, tarih ve yerel kimliğin kutlanmasıdır.",
             "Ziyaretçiler geleneksel tatları, müziği ve Sakız köylerinin sıcak atmosferini yaşayabilir.",
+          ],
+        },
+        {
+          title: "Korsanlara karşı savaşın canlandırılması",
+          text: [
+            "Yerel efsaneye göre Mostra, korsanların Ege'yi yağmaladığı Orta Çağ'a uzanır. Thymiana halkı yakınlara çıkan bir korsan grubunu yendi ve bir yıl sonra bu zaferi canlandırdı.",
+            "Bugün köy, Thymianousses ve Korsanlar adlı iki gruba ayrılır; mahallelerde ve ana meydanda gösteri savaşları yaparlar. Ardından tüm köy, meydanda dansla sona eren karnaval yürüyüşüne katılır.",
+          ],
+        },
+        {
+          title: "Sakız Adası'nda diğer karnaval gelenekleri",
+          text: [
+            "Mastik köylerinin de kendi geleneği vardır. Temiz Pazartesi günü Olympoi, Mesta, Elata ve Lithi'de Osmanlı ağası kılığına giren bir köylü, veziri ve kâtibiyle oturur ve şakasına para cezaları keser; bu, geçmişin ağır vergilerinin eğlenceli bir hatırasıdır.",
+            "Karnaval tarihleri Ortodoks takvimine göre her yıl değişir; bu nedenle seyahatinizi planlamadan önce yerel programı kontrol edin.",
           ],
         },
         {
@@ -2489,6 +2839,13 @@ const localizedActivityCopy: Partial<
           ],
         },
         {
+          title: "Yürüyüşünüzü planlamak için rotalar",
+          text: [
+            "Uzun bir rota, Nea Moni, Avgonyma, Anavatos ve Volissos üzerinden sekiz etapta Lithi plajını Agiasmata'ya bağlar. Tamamını yürümeniz gerekmez: Anavatos ile Agios Isidoros arasındaki etap yaklaşık 6 km, Agios Isidoros ile Katavasi arasındaki etap yaklaşık 7 km'dir.",
+            "Kuzeyde Agiasmata vadisinde 50 km'den uzun eski patikalar bulunur, Kampia vadisi mayıs ayında öne çıkar ve başka bir patika Agios Giannis'ten Agio Gala'ya uzanır. En rahat mevsimler ilkbahar ve sonbahardır. Yazın erken yola çıkın, yanınıza su alın ve başlamadan önce patikanın durumunu kontrol edin.",
+          ],
+        },
+        {
           title: "Doğa, tarih ve yerel yaşam",
           text: [
             "Sakız Adası'nda yürüyüş, doğayı Bizans manastırları, Orta Çağ köyleri, tavernalar ve mevsimlik yabani çiçeklerle birleştirebilir.",
@@ -2529,6 +2886,13 @@ const localizedActivityCopy: Partial<
           text: [
             "Agiasmata ziyareti hafif yürüyüşler, güzel manzaralar, yerel yemekler ve kuzey Sakız'ın keşfiyle birleştirilebilir.",
             "Plaj günleri ve gezileri dinlenme ile dengelemek isteyenler için iyi bir seçimdir.",
+          ],
+        },
+        {
+          title: "Agiasmata'da sizi neler bekliyor",
+          text: [
+            "Agiasmata'nın suyu denize yakın bir noktada yaklaşık 57,5 °C sıcaklıkta çıkar ve minerallerce zengindir. Merkezde bir dinlenme alanı ile bitki çayları ve meyve suları sunan bir kantin bulunur.",
+            "Kaplıcalar genellikle temmuzdan ekime kadar açıktır; bu nedenle kuzeye gitmeden önce güncel saatleri kontrol edin. Günü denize girerek, vadinin eski patikalarında yürüyerek veya yakındaki manastırları ve köyleri ziyaret ederek tamamlayabilirsiniz.",
           ],
         },
         {
@@ -2575,6 +2939,20 @@ const localizedActivityCopy: Partial<
           ],
         },
         {
+          title: "Savaş nasıl yapılır",
+          text: [
+            "İki kilise, aralarında yaklaşık 400 metre bulunan tepelerin üzerindedir. Her cemaat, eğimli rampalardan yüzlercesini birden ateşleyerek karşı kilisenin çan kulesine on binlerce el yapımı roket fırlatır.",
+            "Çan kulelerine yapılan doğrudan isabetler ertesi gün sayılır. Her cemaat genellikle zaferi üstlenir, bu yüzden hesaplaşma bir sonraki Paskalya'ya kalır.",
+          ],
+        },
+        {
+          title: "Toplardan roketlere",
+          text: [
+            "Geleneğin kesin kökeni bilinmiyor. Yerel gelenek onu Osmanlı dönemine yerleştirir ve yetkililer 1889'da yasaklayana kadar gerçek topların kullanıldığını anlatır.",
+            "Kiliseler ve çevredeki binalar metal levhalar ve tel örgülerle korunur. Etkinlik, mülk hasarı şikâyetleri nedeniyle 2016'da iptal edildi ve 2017'de süre ile roket sayısına getirilen sınırlarla geri döndü.",
+          ],
+        },
+        {
           title: "Güvenli ve saygılı izleme",
           text: [
             "Ziyaretçiler her zaman yerel güvenlik talimatlarına uymalı ve önerilen izleme alanlarından takip etmelidir.",
@@ -2616,6 +2994,20 @@ const localizedActivityCopy: Partial<
           text: [
             "Kato Fana, Managros, Pelinaio Dağı, Kampia vadisi ve Pyrgi, Olympoi ile Mesta çevresindeki tepeler güzel çiçek ve orkide alanlarıdır.",
             "Farklı bölgeler mevsimin farklı zamanlarında çiçeklenir ve sürekli değişen manzaralar sunar.",
+          ],
+        },
+        {
+          title: "Ne zaman ve nerede görülür",
+          text: [
+            "Himantoglossum robertianum gibi ilk orkideler kışın sonunda ortaya çıkar. Güneydeki Kato Fana'da nisan ve mayısta kumsalın arkasında yetişirler; kuzeybatıdaki Managros'ta ise bahar çiçekleri mart sonundan nisan ortasına kadar görülür.",
+            "Kuzeydeki Kampia vadisi, dere boyunca meşe ve yaban gülleri arasında yürüyebileceğiniz mayıs ayında en güzel halindedir. Pyrgi, Olympoi ve Mesta çevresindeki alçak tepeler, bazı nadir orkidelerin de yetiştiği makilerle kaplıdır.",
+          ],
+        },
+        {
+          title: "Büyümeye devam eden bir tür listesi",
+          text: [
+            "Botanikçiler uzun süredir, Fritillaria pelinea gibi yalnızca orada yetişen bitkilere ev sahipliği yapan Pelinaio Dağı ile ilgileniyor. 2002 ve 2003 yıllarında adanın kayıtlarına beş orkide türü daha eklendi.",
+            "Orkideler hassastır; onları yetiştikleri yerde izleyin, fotoğraflayın, patikadan ayrılmayın ve çiçekleri bir sonraki ziyaretçiye bırakın.",
           ],
         },
         {
