@@ -3,6 +3,7 @@ import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import { fetchBeds24BookingById, type Beds24ApiV2BookingLookup } from "@/lib/beds24/api-v2-booking";
+import { guestCountry, guestPhone } from "@/lib/crm/beds24-contacts";
 import { BOOKING_CORE_DEALS_CACHE_TAG } from "@/lib/booking-core/cache-tags";
 import {
   isBeds24CancellationStatus,
@@ -87,7 +88,9 @@ function resolveBookingPayload(
     room: apiRoomName || clean(body.room),
     room_id: clean(api?.roomId) || clean(body.room_id),
     unit_id: clean(api?.unitId) || clean(body.unit_id),
-    guest_language: apiGuestLanguage || clean(body.guest_language),
+    guest_language: apiGuestLanguage || clean(api?.lang) || clean(body.guest_language),
+    guest_country: guestCountry(api) ?? "",
+    guest_phone: guestPhone(api) ?? "",
     price: apiPrice || clean(body.price),
     api_v2_lookup: {
       attempted: lookup.attempted,
@@ -118,6 +121,8 @@ async function saveBookingToDatabase(body: Beds24BookingPayload) {
   const room = clean(body.room);
   const guestLanguage = clean(body.guest_language);
   const price = clean(body.price);
+  const country = clean(body.guest_country);
+  const phone = clean(body.guest_phone);
   const rawJson = JSON.stringify(body);
 
   const rows = await sql`
@@ -133,6 +138,8 @@ async function saveBookingToDatabase(body: Beds24BookingPayload) {
       room,
       guest_language,
       price,
+      country,
+      phone,
       raw_json
     )
     VALUES (
@@ -147,6 +154,8 @@ async function saveBookingToDatabase(body: Beds24BookingPayload) {
       ${nullable(room)}::text,
       ${nullable(guestLanguage)}::text,
       ${nullable(price)}::text,
+      ${nullable(country)}::text,
+      ${nullable(phone)}::text,
       ${rawJson}::jsonb
     )
     ON CONFLICT (booking_id)
@@ -161,6 +170,8 @@ async function saveBookingToDatabase(body: Beds24BookingPayload) {
       room = COALESCE(EXCLUDED.room, public.beds24_bookings.room),
       guest_language = COALESCE(EXCLUDED.guest_language, public.beds24_bookings.guest_language),
       price = COALESCE(EXCLUDED.price, public.beds24_bookings.price),
+      country = COALESCE(EXCLUDED.country, public.beds24_bookings.country),
+      phone = COALESCE(EXCLUDED.phone, public.beds24_bookings.phone),
       raw_json = EXCLUDED.raw_json,
       updated_at = NOW()
     WHERE ROW(

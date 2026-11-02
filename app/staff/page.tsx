@@ -48,6 +48,13 @@ const staffLinks = [
     className: styles.directBooking,
   },
   {
+    href: "/staff/crm",
+    icon: "👥",
+    label: "Πελάτες & CRM",
+    subText: "Πελάτες ανά χώρα · κρατήσεις χωρίς email · εξαιρέσεις",
+    className: styles.performance,
+  },
+  {
     href: "/staff/statistics",
     icon: "📈",
     label: "Στατιστικά Voulamandis House",
