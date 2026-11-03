@@ -157,6 +157,30 @@ export async function getSummary() {
   };
 }
 
+export async function listGuestMessages(email: string) {
+  const sql = getSql();
+  const rows = (await sql`
+    select m.direction, m.subject, m.body, m.summary, m.booking_ids,
+      to_char(m.sent_at at time zone 'Europe/Athens', 'YYYY-MM-DD HH24:MI') as sent_at
+    from public.crm_guest_messages m
+    where m.guest_email = ${email} or m.booking_ids && coalesce((
+      select array_agg(b.booking_id) from public.beds24_bookings b
+      left join public.crm_booking_contacts c using (booking_id)
+      where lower(trim(coalesce(nullif(c.real_email, ''), b.email))) = ${email}
+    ), '{}'::text[])
+    order by m.sent_at desc
+    limit 100
+  `) as any[];
+  return rows.map((row) => ({
+    direction: row.direction as "guest" | "staff",
+    subject: row.subject as string | null,
+    body: row.body as string,
+    summary: row.summary as string | null,
+    bookingIds: row.booking_ids as string[],
+    sentAt: row.sent_at as string,
+  }));
+}
+
 export async function listExclusions() {
   const sql = getSql();
   const rows = (await sql`select email, note from public.crm_excluded_emails order by email`) as any[];

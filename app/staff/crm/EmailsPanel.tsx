@@ -11,7 +11,7 @@ import {
 
 type Settings = { testMode: boolean; testEmail: string; enabledTypes: EmailType[] };
 type Due = { type: EmailType; language: string; guestEmail: string; name: string; checkin: string };
-type LogRow = { type: EmailType; language: string; recipient: string; guestEmail: string | null; mode: string; status: string; error: string | null; sentAt: string };
+type LogRow = { type: EmailType | "confirmation"; language: string; recipient: string; guestEmail: string | null; mode: string; status: string; error: string | null; sentAt: string };
 
 const API = "/api/staff/crm/emails/";
 const panelClass = "rounded-2xl bg-white p-4 shadow-sm";
@@ -89,7 +89,7 @@ export default function EmailsPanel() {
         <p className="mt-1 text-sm">
           {settings.testMode
             ? `Όλα τα email πηγαίνουν στο ${settings.testEmail}. Κανένας πελάτης δεν παίρνει τίποτα.`
-            : "Τα ενεργά email φεύγουν κανονικά στους πελάτες, κάθε πρωί."}
+            : "Τα ενεργά email φεύγουν κανονικά στους πελάτες."}
         </p>
         <form
           className="mt-3 flex flex-wrap items-end gap-2"
@@ -116,7 +116,7 @@ export default function EmailsPanel() {
 
       <section className={panelClass}>
         <h2 className="mb-1 text-lg font-black">Αυτόματα email</h2>
-        <p className="mb-3 text-sm text-stone-600">Άνοιξε ή κλείσε κάθε email ξεχωριστά. Ο έλεγχος τρέχει κάθε πρωί γύρω στις 9.</p>
+        <p className="mb-3 text-sm text-stone-600">Άνοιξε ή κλείσε κάθε email ξεχωριστά. Ο έλεγχος τρέχει κάθε πρωί γύρω στις 9, και κάθε βράδυ γύρω στις 9 για το πρωινό.</p>
         <ul className="grid gap-1">
           {EMAIL_TYPES.map((type) => {
             const enabled = settings.enabledTypes.includes(type);
@@ -194,7 +194,7 @@ export default function EmailsPanel() {
           <ul className="grid gap-1 text-sm">
             {log.map((row, index) => (
               <li key={`${row.sentAt}-${index}`} className="break-all border-b border-stone-100 py-1.5">
-                {row.sentAt} · <strong>{EMAIL_TYPE_LABELS[row.type]?.label ?? row.type}</strong> · {row.recipient} · {row.mode === "test" ? "δοκιμή" : "ζωντανά"} · {row.status === "sent" ? "στάλθηκε" : row.status === "failed" ? `απέτυχε: ${row.error ?? ""}` : row.status}
+                {row.sentAt} · <strong>{EMAIL_TYPE_LABELS[row.type]?.label ?? (row.type === "confirmation" ? "Επιβεβαίωση κράτησης" : row.type)}</strong> · {row.recipient} · {row.mode === "test" ? "δοκιμή" : "ζωντανά"} · {row.status === "sent" ? "στάλθηκε" : row.status === "failed" ? `απέτυχε: ${row.error ?? ""}` : row.status}
               </li>
             ))}
           </ul>

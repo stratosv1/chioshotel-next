@@ -1,21 +1,20 @@
-# Guest arrival replies -> Beds24 notes
+# Booking emails -> Beds24 notes and the staff CRM
 
-A few days before arrival, Beds24 auto actions send the "Few days left..." /
-"Λίγες μέρες έμειναν πια..." email and ask the guest for their arrival time and
-how they arrive. When the guest replies, the arrival info is added
-automatically to the **Notes** field of the booking in Beds24. The Notes field
-is internal and never sent to the guest.
+The confirmation, pre-arrival and island emails carry the booking number in the
+subject (`✅ 92640049 - Name`). When a guest replies, a short summary is added
+to the **Notes** field of the booking in Beds24 and the whole message appears in
+the guest's conversation in `/staff/crm`. Our own replies appear only in the CRM.
+The Notes field is internal and never sent to the guest.
 
 Flow:
 
 1. `docs/gmail-arrival-notes.gs`: a Google Apps Script in
-   vhouse.reservations@gmail.com. It runs every 10 minutes, finds new guest
-   replies in those threads and reads the booking id(s) from the subject
-   (`✅ 92640049 - Name-...`).
+   vhouse.reservations@gmail.com. It runs every 10 minutes, finds new messages
+   in those threads and reads the booking id(s) from the subject.
 2. `app/api/gmail/arrival-notes/route.ts`: removes the quoted original email,
-   extracts only the arrival info with OpenAI (no info means nothing is
-   written) and appends one line to the booking's Notes, e.g.
-   `Άφιξη (email πελάτη 23/09): 2/10 17:20 αεροπλάνο από Αθήνα, ταξί`.
+   stores the message for the CRM, summarises it with OpenAI (only pleasantries
+   means nothing is written) and appends one line to the booking's Notes, e.g.
+   `Email πελάτη 23/09: 2/10 17:20 αεροπλάνο από Αθήνα, ταξί`.
    Existing notes are kept, and the same note is not added twice.
 
 ## Setup (once)

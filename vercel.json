@@ -35,6 +35,10 @@
     {
       "path": "/api/cron/crm-guest-emails/",
       "schedule": "23 6 * * *"
+    },
+    {
+      "path": "/api/cron/crm-guest-emails/?run=evening",
+      "schedule": "7 18 * * *"
     }
   ]
 }

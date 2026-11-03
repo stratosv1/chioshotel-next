@@ -1,14 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
+import { neon } from "@neondatabase/serverless";
 import { fetchBeds24BookingById } from "@/lib/beds24/api-v2-booking";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /**
- * Receives guest replies to the pre-arrival emails ("Few days left..." /
- * "Λίγες μέρες έμειναν πια...") from the Gmail Apps Script in
- * docs/gmail-arrival-notes.gs, extracts the arrival information and appends
- * it to the Beds24 booking notes (internal, never shown to the guest).
+ * Receives emails linked to a booking from the Gmail Apps Script in
+ * docs/gmail-arrival-notes.gs. Every email is kept for the staff CRM, and what
+ * the guest asked or told us is appended to the Beds24 booking notes
+ * (internal, never shown to the guest).
  */
 
 const beds24BaseUrl = "https://beds24.com/api/v2";
@@ -47,6 +48,7 @@ function stripQuotedReply(body: string) {
     /^>/m,
     /Your Arrival is Approaching!/i,
     /Η Άφιξή Σας Πλησιάζει!/i,
+    /^VOULAMANDIS HOUSE$/m,
   ];
 
   let end = body.length;
@@ -74,11 +76,11 @@ async function extractArrival(params: { reply: string; date: string; guest: stri
           content: [{
             type: "input_text",
             text: [
-              "You read a guest's email reply to a Greek rooms-rental property that asked for their arrival time and how they arrive.",
-              "Extract only arrival information the guest actually wrote: arrival day/date, time, means of transport (plane, ferry, car, taxi, rental car), flight or ship name, where they come from, and short practical arrival requests (e.g. early check-in, parking).",
+              "You read a guest's email to a Greek rooms-rental property about their booking.",
+              "Keep only what staff need to know: arrival day/date and time, means of transport, flight or ship name, breakfast, taxi or luggage requests, special requests, questions, changes to the stay.",
               "Never invent or infer facts that are not written.",
-              "If the reply contains no arrival information at all, set hasArrivalInfo to false and note to an empty string.",
-              "Otherwise write note as ONE short line in Greek, staff-style, e.g. \"2/10 17:20 αεροπλάνο από Αθήνα, ταξί\". Use dd/mm dates without year and 24h times.",
+              "If the email has nothing useful (only thanks or pleasantries), set hasArrivalInfo to false and note to an empty string.",
+              "Otherwise write note as ONE short line in Greek, staff-style, e.g. \"2/10 17:20 αεροπλάνο από Αθήνα, ταξί, ζητά βρεφικό κρεβάτι\". Use dd/mm dates without year and 24h times.",
             ].join("\n"),
           }],
         },
@@ -146,6 +148,18 @@ function shortDate(iso: string) {
   return date.toLocaleDateString("el-GR", { day: "2-digit", month: "2-digit", timeZone: "Europe/Athens" });
 }
 
+async function storeMessage(params: { messageId: string; bookingIds: string[]; guestEmail: string; direction: "guest" | "staff"; subject: string; body: string; summary: string | null; sentAt: string }) {
+  const url = process.env.DATABASE_URL?.trim();
+  if (!url || !params.messageId) return;
+  const sql = neon(url);
+  const sentAt = Number.isNaN(Date.parse(params.sentAt)) ? new Date().toISOString() : params.sentAt;
+  await sql`insert into public.crm_guest_messages (message_id, booking_ids, guest_email, direction, subject, body, summary, sent_at)
+    values (${params.messageId}, ${params.bookingIds}::text[], ${params.guestEmail}, ${params.direction}, ${params.subject}, ${params.body}, ${params.summary}, ${sentAt}::timestamptz)
+    on conflict (message_id) do update set summary = coalesce(excluded.summary, public.crm_guest_messages.summary)`;
+}
+
+const emailAddress = (from: string) => (from.match(/<([^>]+)>/)?.[1] ?? from).trim().toLowerCase();
+
 export async function POST(request: NextRequest) {
   const secret = process.env.ARRIVAL_NOTES_SECRET?.trim();
   if (!secret) return json({ ok: false, error: "ARRIVAL_NOTES_SECRET is not configured." }, 503);
@@ -164,6 +178,26 @@ export async function POST(request: NextRequest) {
   if (!bookingIds.length) return json({ ok: false, error: "No booking id." }, 400);
   if (!reply) return json({ ok: true, written: [], skipped: "empty_reply" });
 
+  const message = {
+    messageId: clean(body?.messageId),
+    bookingIds,
+    guestEmail: emailAddress(guest),
+    subject: clean(body?.subject).slice(0, 300),
+    body: reply,
+    sentAt: receivedAt,
+  };
+
+  // Our own replies appear in the CRM conversation but never in the Notes.
+  if (body?.direction === "staff") {
+    try {
+      await storeMessage({ ...message, direction: "staff", summary: null });
+    } catch (error) {
+      console.error("[arrival-notes] message store failed", error);
+      return json({ ok: false, error: "Message store failed." }, 502);
+    }
+    return json({ ok: true, written: [], skipped: "staff_message" });
+  }
+
   let extraction: ArrivalExtraction;
   try {
     extraction = await extractArrival({ reply, date: receivedAt, guest });
@@ -172,12 +206,19 @@ export async function POST(request: NextRequest) {
     return json({ ok: false, error: "Extraction failed." }, 502);
   }
 
+  try {
+    await storeMessage({ ...message, direction: "guest", summary: extraction.note || null });
+  } catch (error) {
+    console.error("[arrival-notes] message store failed", error);
+    return json({ ok: false, error: "Message store failed." }, 502);
+  }
+
   if (!extraction.hasArrivalInfo || !extraction.note) {
-    return json({ ok: true, written: [], skipped: "no_arrival_info" });
+    return json({ ok: true, written: [], skipped: "no_useful_info" });
   }
 
   const received = shortDate(receivedAt);
-  const line = `Άφιξη (email πελάτη${received ? ` ${received}` : ""}): ${extraction.note}`;
+  const line = `Email πελάτη${received ? ` ${received}` : ""}: ${extraction.note}`;
 
   let token: string;
   try {

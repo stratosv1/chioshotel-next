@@ -7,6 +7,7 @@ import {
   EMAIL_TYPES,
   type EmailContext,
   type EmailLanguage,
+  type EmailRoom,
   type EmailType,
 } from "@/lib/crm/guest-email-templates";
 
@@ -67,6 +68,10 @@ function displayName(name: string | null) {
   return value === value.toUpperCase() ? value.charAt(0) + value.slice(1).toLowerCase() : value;
 }
 
+export type EmailRun = "morning" | "evening" | "all";
+
+const EVENING_TYPES: EmailType[] = ["breakfast"];
+
 // Each type has a short window, so a missed cron run catches up the next day
 // but switching a type on never reaches old bookings.
 function dueTypes(today: number, checkin: number, checkout: number): EmailType[] {
@@ -77,6 +82,7 @@ function dueTypes(today: number, checkin: number, checkout: number): EmailType[]
   if (toArrival >= 1 && toArrival <= 3) due.push("chios_info");
   if (toArrival === 0) due.push("welcome");
   if (toArrival < 0 && toDeparture > 0) due.push("daily");
+  if (toArrival <= 0 && toDeparture > 0) due.push("breakfast");
   if (toDeparture === 1) due.push("checkout");
   if (toDeparture >= -3 && toDeparture <= -1) due.push("thank_you");
   return due;
@@ -85,20 +91,21 @@ function dueTypes(today: number, checkin: number, checkout: number): EmailType[]
 export type DueEmail = {
   key: string;
   bookingId: string;
+  bookingIds: string[];
   type: EmailType;
   language: EmailLanguage;
   guestEmail: string;
   name: string;
-  room: string;
+  lastName: string;
+  rooms: EmailRoom[];
   checkin: string;
-  checkout: string;
   stayDay: number;
 };
 
 export async function listDueEmails(today = athensToday()): Promise<DueEmail[]> {
   const sql = getSql();
   const rows = (await sql`
-    select s.booking_id, s.firstname, s.room, s.country, s.guest_language,
+    select s.booking_id, s.firstname, s.lastname, s.room, s.country, s.guest_language,
       lower(trim(coalesce(nullif(c.real_email, ''), s.email))) as email,
       o.language as override_language, o.country as override_country,
       to_char(s.checkin, 'YYYY-MM-DD') as checkin, to_char(s.checkout, 'YYYY-MM-DD') as checkout
@@ -119,18 +126,25 @@ export async function listDueEmails(today = athensToday()): Promise<DueEmail[]> 
     if (!row.email || virtual.test(row.email) || excluded.has(row.email)) continue;
     for (const type of dueTypes(now, dayNumber(row.checkin), dayNumber(row.checkout))) {
       // Several rooms on one email are one guest: one email per stay, one daily per day.
-      const key = `${type}:${row.email}:${row.checkin}${type === "daily" ? `:${today}` : ""}`;
-      if (due.has(key)) continue;
+      const key = `${type}:${row.email}:${row.checkin}${type === "daily" || type === "breakfast" ? `:${today}` : ""}`;
+      const room = { room: row.room ?? "", checkin: row.checkin, checkout: row.checkout };
+      const existing = due.get(key);
+      if (existing) {
+        existing.bookingIds.push(row.booking_id);
+        existing.rooms.push(room);
+        continue;
+      }
       due.set(key, {
         key,
         bookingId: row.booking_id,
+        bookingIds: [row.booking_id],
         type,
         language: chooseLanguage(row.override_language ?? row.guest_language?.slice(0, 2).toLowerCase() ?? null, row.override_country ?? row.country),
         guestEmail: row.email,
         name: displayName(row.firstname),
-        room: row.room ?? "",
+        lastName: (row.lastname ?? "").trim(),
+        rooms: [room],
         checkin: row.checkin,
-        checkout: row.checkout,
         stayDay: now - dayNumber(row.checkin),
       });
     }
@@ -138,7 +152,7 @@ export async function listDueEmails(today = athensToday()): Promise<DueEmail[]> 
   return [...due.values()];
 }
 
-async function deliver(to: string, subject: string, html: string, text: string) {
+export async function deliverEmail(to: string, subject: string, html: string, text: string) {
   const user = process.env.SMTP_USER;
   const pass = process.env.SMTP_PASS;
   if (!user || !pass) throw new Error("SMTP is not configured.");
@@ -159,15 +173,15 @@ async function deliver(to: string, subject: string, html: string, text: string) 
   });
 }
 
-async function contextFor(item: Pick<DueEmail, "type" | "name" | "room" | "checkin" | "checkout" | "stayDay" | "language">, date: string, preview = false): Promise<EmailContext | null> {
-  const ctx: EmailContext = { firstName: item.name, room: item.room, checkin: item.checkin, checkout: item.checkout };
+async function contextFor(item: Pick<DueEmail, "type" | "name" | "lastName" | "bookingIds" | "rooms" | "stayDay" | "language">, date: string, preview = false): Promise<EmailContext | null> {
+  const ctx: EmailContext = { firstName: item.name, lastName: item.lastName, bookingIds: item.bookingIds, rooms: item.rooms };
   if (item.type !== "daily") return ctx;
   const seaDay = await loadTodaySeaDay(date, preview);
   const suggestion = seaDay ? buildDailySuggestion(seaDay, date, item.stayDay, item.language) : null;
   return suggestion ? { ...ctx, suggestion } : null;
 }
 
-export async function runDueEmails() {
+export async function runDueEmails(run: EmailRun = "all") {
   const today = athensToday();
   const settings = await getEmailSettings();
   const summary = { due: 0, sent: 0, failed: 0, skipped: 0, testMode: settings.testMode };
@@ -175,7 +189,11 @@ export async function runDueEmails() {
   if (settings.testMode && !settings.testEmail) throw new Error("Λείπει το δοκιμαστικό email.");
 
   const sql = getSql();
-  const due = (await listDueEmails(today)).filter((item) => settings.enabledTypes.includes(item.type));
+  const due = (await listDueEmails(today)).filter((item) => {
+    if (!settings.enabledTypes.includes(item.type)) return false;
+    if (run === "all") return true;
+    return EVENING_TYPES.includes(item.type) === (run === "evening");
+  });
   summary.due = due.length;
 
   for (const item of due.slice(0, MAX_SENDS_PER_RUN)) {
@@ -200,7 +218,7 @@ export async function runDueEmails() {
     const email = buildGuestEmail(item.type, item.language, ctx);
     const subject = settings.testMode ? `[ΔΟΚΙΜΗ → ${item.guestEmail}] ${email.subject}` : email.subject;
     try {
-      await deliver(recipient, subject, email.html, email.text);
+      await deliverEmail(recipient, subject, email.html, email.text);
       await sql`update public.crm_email_log set status = 'sent' where dedupe_key = ${key}`;
       summary.sent += 1;
     } catch (error) {
@@ -212,17 +230,23 @@ export async function runDueEmails() {
   return summary;
 }
 
-const SAMPLE = { name: "Maria", room: "Family Apartment", stayDay: 2, bookingId: "" };
-
 export async function renderPreview(type: EmailType, language: EmailLanguage) {
   const today = athensToday();
   const shift = (days: number) => new Date((dayNumber(today) + days) * 86_400_000).toISOString().slice(0, 10);
-  const ctx = await contextFor({ ...SAMPLE, type, language, checkin: shift(-2), checkout: shift(3) }, today, true);
+  const ctx = await contextFor({
+    type,
+    language,
+    name: "Maria",
+    lastName: "Papadopoulou",
+    bookingIds: ["92640049"],
+    rooms: [{ room: "Family Apartment", checkin: shift(-2), checkout: shift(3) }],
+    stayDay: 2,
+  }, today, true);
   return ctx ? buildGuestEmail(type, language, ctx) : null;
 }
 
 export async function sendTestEmail(type: EmailType, language: EmailLanguage, to: string) {
   const email = await renderPreview(type, language);
   if (!email) throw new Error("Δεν υπάρχει πρόγνωση καιρού αυτή τη στιγμή.");
-  await deliver(to, `[ΔΟΚΙΜΗ] ${email.subject}`, email.html, email.text);
+  await deliverEmail(to, `[ΔΟΚΙΜΗ] ${email.subject}`, email.html, email.text);
 }

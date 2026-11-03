@@ -1,9 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import ConfirmationPanel from "./ConfirmationPanel";
 import EmailsPanel from "./EmailsPanel";
 
-type Tab = "summary" | "guests" | "pending" | "emails" | "exclusions";
+type Tab = "summary" | "guests" | "pending" | "confirmation" | "emails" | "exclusions";
 type Bucket = { key: string; count: number };
 type Summary = {
   bookings: number;
@@ -41,11 +42,13 @@ type PendingBooking = {
   checkout: string | null;
 };
 type Exclusion = { email: string; note: string };
+type GuestMessage = { direction: "guest" | "staff"; subject: string | null; body: string; summary: string | null; bookingIds: string[]; sentAt: string };
 
 const TABS: { key: Tab; label: string }[] = [
   { key: "summary", label: "Πίνακας" },
   { key: "guests", label: "Πελάτες" },
   { key: "pending", label: "Χωρίς email" },
+  { key: "confirmation", label: "Επιβεβαίωση κράτησης" },
   { key: "emails", label: "Αυτόματα email" },
   { key: "exclusions", label: "Εξαιρέσεις" },
 ];
@@ -155,6 +158,7 @@ export default function CrmApp() {
   const [editing, setEditing] = useState<{ email: string; country: string; language: string } | null>(null);
   const [emailDrafts, setEmailDrafts] = useState<Record<string, string>>({});
   const [newExclusion, setNewExclusion] = useState("");
+  const [conversation, setConversation] = useState<{ email: string; messages: GuestMessage[] | null } | null>(null);
   const [backfill, setBackfill] = useState<{ running: boolean; text: string; fields: string[] }>({ running: false, text: "", fields: [] });
   const stopBackfill = useRef(false);
 
@@ -175,7 +179,7 @@ export default function CrmApp() {
 
   useEffect(() => {
     setError("");
-    if (tab === "emails") return;
+    if (tab === "emails" || tab === "confirmation") return;
     const load =
       tab === "summary" ? loadSummary() :
       tab === "guests" ? loadGuests() :
@@ -211,6 +215,21 @@ export default function CrmApp() {
       return !query || guest.email.includes(query) || guest.name.toLowerCase().includes(query);
     });
   }, [guests, search, countryFilter]);
+
+  const toggleConversation = async (email: string) => {
+    if (conversation?.email === email) {
+      setConversation(null);
+      return;
+    }
+    setConversation({ email, messages: null });
+    try {
+      const payload = await getJson(`${API}?view=messages&email=${encodeURIComponent(email)}`);
+      setConversation({ email, messages: payload.messages });
+    } catch (reason) {
+      setConversation(null);
+      fail(reason);
+    }
+  };
 
   const startBackfill = async () => {
     stopBackfill.current = false;
@@ -258,7 +277,7 @@ export default function CrmApp() {
 
   return (
     <main className="min-h-screen bg-[#f6efe5] px-4 py-6 text-stone-900 md:px-8">
-      <div className="mx-auto max-w-[1100px]">
+      <div className="mx-auto max-w-[1280px]">
         <header className="mb-6">
           <a href="/staff" className="text-sm font-bold text-amber-800">← Staff</a>
           <h1 className="mt-1 text-3xl font-black tracking-tight">Πελάτες & CRM</h1>
@@ -356,14 +375,32 @@ export default function CrmApp() {
                       </p>
                       {guest.unsubscribed ? <p className="mt-1 text-sm font-bold text-red-800">Έχει διαγραφεί από το newsletter</p> : null}
                     </div>
-                    <button
-                      type="button"
-                      className={secondaryButton}
-                      onClick={() => setEditing({ email: guest.email, country: guest.country ?? "", language: guest.language ?? "" })}
-                    >
-                      Διόρθωση
-                    </button>
+                    <div className="flex flex-wrap gap-2">
+                      <button type="button" className={secondaryButton} aria-expanded={conversation?.email === guest.email} onClick={() => toggleConversation(guest.email)}>
+                        Συζήτηση
+                      </button>
+                      <button
+                        type="button"
+                        className={secondaryButton}
+                        onClick={() => setEditing({ email: guest.email, country: guest.country ?? "", language: guest.language ?? "" })}
+                      >
+                        Διόρθωση
+                      </button>
+                    </div>
                   </div>
+                  {conversation?.email === guest.email ? (
+                    <div className="mt-3 grid gap-2 border-t border-stone-100 pt-3">
+                      {!conversation.messages ? <p className="text-sm text-stone-600">Φόρτωση…</p> : null}
+                      {conversation.messages && !conversation.messages.length ? <p className="text-sm text-stone-600">Δεν υπάρχουν μηνύματα.</p> : null}
+                      {(conversation.messages ?? []).map((message, index) => (
+                        <article key={`${message.sentAt}-${index}`} className={`rounded-xl p-3 text-sm ${message.direction === "guest" ? "bg-stone-100" : "bg-emerald-50"}`}>
+                          <p className="font-bold">{message.direction === "guest" ? "Πελάτης" : "Εμείς"} · {message.sentAt} · #{message.bookingIds.join(", ")}</p>
+                          {message.summary ? <p className="mt-1 font-bold text-amber-900">{message.summary}</p> : null}
+                          <p className="mt-1 whitespace-pre-wrap break-words">{message.body}</p>
+                        </article>
+                      ))}
+                    </div>
+                  ) : null}
                   {editing?.email === guest.email ? (
                     <form
                       className="mt-3 grid gap-3 border-t border-stone-100 pt-3 md:grid-cols-[1fr_1fr_auto]"
@@ -471,6 +508,8 @@ export default function CrmApp() {
             </ul>
           </section>
         ) : null}
+
+        {tab === "confirmation" ? <ConfirmationPanel /> : null}
 
         {tab === "emails" ? <EmailsPanel /> : null}
 

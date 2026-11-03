@@ -6,6 +6,7 @@ import {
   isValidEmail,
   isVirtualEmail,
   listExclusions,
+  listGuestMessages,
   listGuests,
   listPendingBookings,
   normalizeEmail,
@@ -34,6 +35,11 @@ export async function GET(request: NextRequest) {
     if (view === "pending") {
       const scope = request.nextUrl.searchParams.get("scope") === "all" ? "all" : "upcoming";
       return NextResponse.json({ ok: true, bookings: await listPendingBookings(scope) }, { headers });
+    }
+    if (view === "messages") {
+      const email = normalizeEmail(request.nextUrl.searchParams.get("email"));
+      if (!isValidEmail(email)) return fail("Μη έγκυρο email.");
+      return NextResponse.json({ ok: true, messages: await listGuestMessages(email) }, { headers });
     }
     if (view === "exclusions") return NextResponse.json({ ok: true, exclusions: await listExclusions() }, { headers });
     return NextResponse.json({ ok: true, summary: await getSummary() }, { headers });
