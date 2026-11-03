@@ -78,7 +78,9 @@ function dueTypes(today: number, checkin: number, checkout: number): EmailType[]
   const toArrival = checkin - today;
   const toDeparture = checkout - today;
   const due: EmailType[] = [];
-  if (toArrival >= 4 && toArrival <= 7) due.push("arrival");
+  // Last-minute bookings and late emails still get it, once, thanks to the dedupe key.
+  if (toArrival >= 1 && toArrival <= 7) due.push("arrival");
+  if (toArrival >= 1 && toArrival <= 2) due.push("arrival_time");
   if (toArrival >= 1 && toArrival <= 3) due.push("chios_info");
   if (toArrival === 0) due.push("welcome");
   if (toArrival < 0 && toDeparture > 0) due.push("daily");
@@ -119,6 +121,9 @@ export async function listDueEmails(today = athensToday()): Promise<DueEmail[]> 
     order by s.checkin, s.booking_id
   `) as any[];
   const excluded = new Set(((await sql`select email from public.crm_excluded_emails`) as any[]).map((row) => row.email));
+  const arrivalOn = (await getEmailSettings()).enabledTypes.includes("arrival");
+  const sentArrival = new Set(((await sql`select dedupe_key from public.crm_email_log where email_type = 'arrival' and status = 'sent'`) as any[]).map((row) => String(row.dedupe_key).replace(/^test:\d{4}-\d{2}-\d{2}:/, "")));
+  const knownArrival = new Set(((await sql`select unnest(booking_ids) as booking_id from public.crm_guest_messages where arrival_time is not null`) as any[]).map((row) => row.booking_id));
   const virtual = new RegExp(VIRTUAL_EMAIL);
   const now = dayNumber(today);
   const due = new Map<string, DueEmail>();
@@ -127,6 +132,11 @@ export async function listDueEmails(today = athensToday()): Promise<DueEmail[]> 
     for (const type of dueTypes(now, dayNumber(row.checkin), dayNumber(row.checkout))) {
       // Several rooms on one email are one guest: one email per stay, one daily per day.
       const key = `${type}:${row.email}:${row.checkin}${type === "daily" || type === "breakfast" ? `:${today}` : ""}`;
+      const arrivalKey = `arrival:${row.email}:${row.checkin}`;
+      const awaitingArrival = arrivalOn && !sentArrival.has(arrivalKey);
+      if (type === "arrival_time" && knownArrival.has(row.booking_id)) continue;
+      // Never two arrival emails in one morning: the pre-arrival goes first.
+      if ((type === "arrival_time" || type === "chios_info") && awaitingArrival) continue;
       const room = { room: row.room ?? "", checkin: row.checkin, checkout: row.checkout };
       const existing = due.get(key);
       if (existing) {

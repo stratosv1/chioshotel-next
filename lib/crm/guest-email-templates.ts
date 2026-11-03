@@ -17,12 +17,13 @@ import {
 
 export type { EmailLanguage };
 
-export const EMAIL_TYPES = ["arrival", "chios_info", "welcome", "daily", "breakfast", "checkout", "thank_you"] as const;
+export const EMAIL_TYPES = ["arrival", "arrival_time", "chios_info", "welcome", "daily", "breakfast", "checkout", "thank_you"] as const;
 export type EmailType = (typeof EMAIL_TYPES)[number];
 export const EMAIL_LANGUAGES = ["el", "en", "tr"] as const;
 
 export const EMAIL_TYPE_LABELS: Record<EmailType, { label: string; when: string }> = {
-  arrival: { label: "Pre-arrival", when: "7 ημέρες πριν την άφιξη, το πρωί" },
+  arrival: { label: "Pre-arrival", when: "7 ημέρες πριν, ή μόλις έχουμε email αν είναι πιο αργά" },
+  arrival_time: { label: "Υπενθύμιση ώρας άφιξης", when: "1–2 ημέρες πριν, μόνο αν δεν έχουμε την ώρα" },
   chios_info: { label: "Πληροφορίες για το νησί", when: "3 ημέρες πριν την άφιξη, το πρωί" },
   welcome: { label: "Καλωσόρισμα", when: "Ημέρα άφιξης, το πρωί" },
   daily: { label: "Πρόταση ημέρας", when: "Κάθε πρωί της διαμονής, με βάση τον καιρό" },
@@ -32,7 +33,7 @@ export const EMAIL_TYPE_LABELS: Record<EmailType, { label: string; when: string 
 };
 
 /** These three carry the booking number, so guest replies reach the booking. */
-const SUBJECT_WITH_BOOKING: EmailType[] = ["arrival", "chios_info"];
+const SUBJECT_WITH_BOOKING: EmailType[] = ["arrival", "arrival_time", "chios_info"];
 
 export type DailySuggestion = {
   areaTitle: string;
@@ -184,6 +185,14 @@ function entries(language: EmailLanguage, ctx: EmailContext): Record<EmailType, 
           { title: "Yol tarifimizi kullanın", html: `Google Maps sizi karışık ara yollara götürebilir. Kolayca ulaşmak için <a href="${PRE_ARRIVAL_URL}" style="color:#2f6b4f;font-weight:700">özel yol tarifimizi</a> izleyin.` },
         ]) + button(PRE_ARRIVAL_URL, "Voulamandis House yol tarifi") + callout("Devamı geliyor", "Yakında size plajlar, köyler ve gerçek Sakız deneyimleri için önerilerimizi göndereceğiz.") + p("Her türlü soru veya özel isteğiniz için buradayız. İlk andan itibaren kendinizi evinizde hissetmenizi istiyoruz."),
       },
+    }[language],
+    arrival_time: {
+      en: { subject: "What time will you arrive?", eyebrow: "Almost there", heading: "What time will you arrive?", preheader: "Reply with your arrival time, so we can be ready for you.",
+        body: p(`Dear ${first},`) + p("Your stay is almost here! Please reply to this email with your approximate arrival time, so we can be ready to welcome you.") + button(PRE_ARRIVAL_URL, "Directions to Voulamandis House") },
+      el: { subject: "Τι ώρα θα φτάσετε;", eyebrow: "Σχεδόν φτάσατε", heading: "Τι ώρα θα φτάσετε;", preheader: "Απαντήστε με την ώρα άφιξης, για να είμαστε έτοιμοι.",
+        body: p(`Αγαπητέ/ή ${first},`) + p("Η διαμονή σας πλησιάζει! Απαντήστε σε αυτό το email με την ώρα άφιξής σας περίπου, για να είμαστε έτοιμοι να σας υποδεχτούμε.") + button(PRE_ARRIVAL_URL, "Οδηγίες για το Voulamandis House") },
+      tr: { subject: "Saat kaçta geleceksiniz?", eyebrow: "Az kaldı", heading: "Saat kaçta geleceksiniz?", preheader: "Hazır olabilmemiz için varış saatinizi yazın.",
+        body: p(`Sevgili ${first},`) + p("Konaklamanız çok yakın! Sizi karşılamaya hazır olabilmemiz için lütfen bu e-postayı yaklaşık varış saatinizle yanıtlayın.") + button(PRE_ARRIVAL_URL, "Voulamandis House yol tarifi") },
     }[language],
     chios_info: {
       en: {

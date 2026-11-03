@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { runDueEmails } from "@/lib/crm/guest-emails";
+import { runOutreachFollowUps } from "@/lib/crm/ota-outreach";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -13,7 +14,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
   }
   try {
-    return NextResponse.json({ ok: true, ...(await runDueEmails(request.nextUrl.searchParams.get("run") === "evening" ? "evening" : "morning")) });
+    const evening = request.nextUrl.searchParams.get("run") === "evening";
+    const emails = await runDueEmails(evening ? "evening" : "morning");
+    const followUps = evening ? null : await runOutreachFollowUps();
+    return NextResponse.json({ ok: true, ...emails, followUps });
   } catch (error) {
     console.error("crm guest emails cron failed", error);
     return NextResponse.json({ ok: false, error: "Run failed" }, { status: 500 });

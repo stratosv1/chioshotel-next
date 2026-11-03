@@ -1,6 +1,7 @@
 import "server-only";
 import { neon } from "@neondatabase/serverless";
 import { fetchBeds24BookingById } from "@/lib/beds24/api-v2-booking";
+import { buildGuestSms } from "@/lib/crm/ota-message-text";
 import { isVirtualEmail } from "@/lib/crm/store";
 
 function getSql() {
@@ -31,6 +32,8 @@ export type BoardBooking = {
   emailState: "real" | "virtual" | "none";
   phone: string | null;
   arrivalTime: string | null;
+  smsTemplate: string;
+  deliveryProblem: string | null;
   events: BoardEvent[];
 };
 
@@ -47,15 +50,34 @@ const EMAIL_TITLES: Record<string, string> = {
   daily: "Πρόταση ημέρας", breakfast: "Υπενθύμιση πρωινού", checkout: "Υπενθύμιση αναχώρησης", thank_you: "Ευχαριστούμε",
 };
 
-export async function listMonthBookings(month: string): Promise<BoardBooking[]> {
+const FAILED_SMS = ["UNDELIVERED", "FAILED", "EXPIRED", "REJECTED"];
+
+function boardLanguage(language: string | null, country: string | null) {
+  const code = (language ?? "").slice(0, 2).toLowerCase();
+  if (code === "el" || code === "en" || code === "tr") return code;
+  if (country === "GR" || country === "CY") return "el";
+  return country === "TR" ? "tr" : "en";
+}
+
+/** Upcoming bookings still missing the email or the arrival time, soonest first. */
+export async function listAttentionBookings() {
+  const bookings = await listBookings(null);
+  return bookings.filter((booking) => booking.emailState !== "real" || !booking.arrivalTime);
+}
+
+export const listMonthBookings = (month: string) => listBookings(month);
+
+async function listBookings(month: string | null): Promise<BoardBooking[]> {
   const sql = getSql();
   const rows = (await sql`
-    select b.booking_id, b.status, b.firstname, b.lastname, b.email, b.phone, b.room,
+    select b.booking_id, b.status, b.firstname, b.lastname, b.email, b.phone, b.room, b.guest_language, b.country,
       to_char(b.checkin, 'YYYY-MM-DD') as checkin, to_char(b.checkout, 'YYYY-MM-DD') as checkout,
       nullif(c.real_email, '') as real_email
     from public.beds24_bookings b
     left join public.crm_booking_contacts c using (booking_id)
-    where to_char(b.checkin, 'YYYY-MM') = ${month} and lower(b.status) in ('confirmed', 'new', 'request')
+    where lower(b.status) in ('confirmed', 'new', 'request')
+      and (${month}::text is null or to_char(b.checkin, 'YYYY-MM') = ${month})
+      and (${month}::text is not null or b.checkin >= current_date)
     order by b.checkin, b.booking_id
   `) as any[];
   if (!rows.length) return [];
@@ -71,7 +93,9 @@ export async function listMonthBookings(month: string): Promise<BoardBooking[]> 
     sql`select booking_id, channel, message, status, recipient_phone,
         to_char(created_at at time zone 'Europe/Athens', 'YYYY-MM-DD HH24:MI') as time
       from public.staff_guest_communications where booking_id = any(${ids}::text[]) order by created_at`,
-    sql`select booking_id, status, to_char(created_at at time zone 'Europe/Athens', 'YYYY-MM-DD HH24:MI') as time
+    sql`select booking_id, status, error, to_char(created_at at time zone 'Europe/Athens', 'YYYY-MM-DD HH24:MI') as time,
+        to_char(reminder_at at time zone 'Europe/Athens', 'YYYY-MM-DD HH24:MI') as reminder,
+        to_char(reminder2_at at time zone 'Europe/Athens', 'YYYY-MM-DD HH24:MI') as reminder2, reminder_status
       from public.crm_ota_outreach where booking_id = any(${ids}::text[])`,
   ]) as any[][];
 
@@ -91,13 +115,19 @@ export async function listMonthBookings(month: string): Promise<BoardBooking[]> 
     const virtual = address ? isVirtualEmail(address) : false;
     const own = messages.filter((row) => row.booking_ids.some(has));
 
-    const events: BoardEvent[] = [
+    const events: BoardEvent[] = ([
       ...own.map((row) => ({ time: row.time, channel: row.direction === "staff" ? "staff" as const : "guest" as const, title: row.direction === "staff" ? "Δική μας απάντηση" : "Μήνυμα πελάτη", body: row.body, summary: row.summary, status: null })),
       ...emails.filter((row) => has(row.booking_id)).map((row) => ({ time: row.time, channel: "email" as const, title: `Email: ${EMAIL_TITLES[row.email_type] ?? row.email_type}${row.mode === "test" ? " (δοκιμή)" : ""}`, body: row.recipient, summary: null, status: row.status === "failed" ? `Απέτυχε: ${row.error ?? ""}` : "Στάλθηκε" })),
       ...comms.filter((row) => has(row.booking_id)).map((row) => ({ time: row.time, channel: (row.channel === "sms" ? "sms" : "whatsapp") as BoardEvent["channel"], title: row.channel === "sms" ? `SMS προς ${row.recipient_phone ?? ""}` : "WhatsApp", body: row.message, summary: null, status: row.status })),
-      ...outreach.filter((row) => has(row.booking_id)).map((row) => ({ time: row.time, channel: "ota" as const, title: "Μήνυμα Booking/Expedia για email", body: null, summary: null, status: row.status === "sent" ? "Στάλθηκε" : row.status })),
-    ].sort((a, b) => a.time.localeCompare(b.time));
+      ...outreach.filter((row) => has(row.booking_id)).flatMap((row) => [
+        { time: row.time, channel: "ota" as const, title: "Μήνυμα Booking/Expedia για email", body: null, summary: null, status: row.status === "sent" ? "Το δέχτηκε το Beds24" : `Απέτυχε: ${row.error ?? ""}` },
+        ...[row.reminder, row.reminder2].filter(Boolean).map((time: string) => ({ time, channel: "ota" as const, title: "Υπενθύμιση Booking/Expedia", body: null, summary: null, status: "Το δέχτηκε το Beds24" })),
+      ]),
+    ] as BoardEvent[]).sort((a, b) => a.time.localeCompare(b.time));
 
+    const lastSms = [...events].reverse().find((event) => event.channel === "sms");
+    const failedSms = FAILED_SMS.includes(lastSms?.status ?? "");
+    const failedChannel = outreach.some((row) => has(row.booking_id) && (row.status === "failed" || row.reminder_status === "failed"));
     const arrival = [...own].reverse().find((row) => row.arrival_time || arrivalFromSummary(row.summary));
     return {
       bookingIds,
@@ -113,6 +143,8 @@ export async function listMonthBookings(month: string): Promise<BoardBooking[]> 
       emailState: !address ? "none" : virtual ? "virtual" : "real",
       phone: first.phone,
       arrivalTime: arrival ? arrival.arrival_time || arrivalFromSummary(arrival.summary) : null,
+      smsTemplate: buildGuestSms(boardLanguage(first.guest_language, first.country), first.firstname ?? ""),
+      deliveryProblem: failedSms ? "Το SMS δεν παραδόθηκε" : failedChannel ? "Το μήνυμα Booking/Expedia απέτυχε" : null,
       events,
     };
   });

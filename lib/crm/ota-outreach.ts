@@ -1,8 +1,9 @@
 import "server-only";
 import { neon } from "@neondatabase/serverless";
-import { appendBookingNote, getBeds24WriteToken, noteDate, summarizeGuestMessage } from "@/lib/crm/booking-notes";
+import { appendBookingNote, getBeds24WriteToken, noteDate, summarizeGuestMessage, updateBookingEmail } from "@/lib/crm/booking-notes";
 import type { EmailLanguage } from "@/lib/crm/email-design";
-import { buildOtaMessage } from "@/lib/crm/ota-message-text";
+import { buildGuestSms, buildOtaMessage, buildOtaReminder } from "@/lib/crm/ota-message-text";
+import { sendBookingSms } from "@/lib/crm/sms";
 import { isVirtualEmail } from "@/lib/crm/store";
 
 const MESSAGES_URL = "https://api.beds24.com/v2/bookings/messages";
@@ -10,6 +11,7 @@ const WRITE_MESSAGES_URL = "https://beds24.com/api/v2/bookings/messages";
 const DEFAULT_LOOKBACK_MS = 30 * 60 * 1000;
 const MAX_LOOKBACK_MS = 24 * 60 * 60 * 1000;
 const MAX_MESSAGES_PER_RUN = 15;
+const LAST_MINUTE_DAYS = 3;
 const EMAIL_IN_TEXT = /[a-z0-9._%+-]+@[a-z0-9-]+(?:\.[a-z0-9-]+)*\.[a-z]{2,}/i;
 
 function getSql() {
@@ -44,24 +46,29 @@ export async function setOutreachEnabled(enabled: boolean) {
   await sql`update public.crm_email_settings set ota_outreach_enabled_at = case when ${enabled}::boolean then now() else null end, updated_at = now() where id`;
 }
 
-async function sendMessage(bookingId: string, language: EmailLanguage, firstName: string) {
+/** Beds24 confirms it accepted the message; a refusal throws, so it shows as failed. */
+async function postChannelMessage(bookingId: string, message: string) {
+  const token = await getBeds24WriteToken();
+  const response = await fetch(WRITE_MESSAGES_URL, {
+    method: "POST",
+    headers: { accept: "application/json", "Content-Type": "application/json", token },
+    body: JSON.stringify([{ bookingId: Number(bookingId), message }]),
+    cache: "no-store",
+    signal: AbortSignal.timeout(12_000),
+  });
+  const result = await response.json().catch(() => null);
+  const success = Array.isArray(result) ? result[0]?.success !== false : response.ok;
+  if (!response.ok || !success) throw new Error(`Beds24 HTTP ${response.status}`);
+}
+
+async function sendMessage(bookingId: string, language: EmailLanguage, firstName: string, lastMinute: boolean) {
   const sql = getSql();
   const claimed = (await sql`insert into public.crm_ota_outreach (booking_id, language, status) values (${bookingId}, ${language}, 'sending')
     on conflict (booking_id) do update set status = 'sending', error = null where public.crm_ota_outreach.status = 'failed'
     returning booking_id`) as any[];
   if (!claimed.length) return "already_sent";
   try {
-    const token = await getBeds24WriteToken();
-    const response = await fetch(WRITE_MESSAGES_URL, {
-      method: "POST",
-      headers: { accept: "application/json", "Content-Type": "application/json", token },
-      body: JSON.stringify([{ bookingId: Number(bookingId), message: buildOtaMessage(language, firstName) }]),
-      cache: "no-store",
-      signal: AbortSignal.timeout(12_000),
-    });
-    const result = await response.json().catch(() => null);
-    const success = Array.isArray(result) ? result[0]?.success !== false : response.ok;
-    if (!response.ok || !success) throw new Error(`Beds24 HTTP ${response.status}`);
+    await postChannelMessage(bookingId, buildOtaMessage(language, firstName, lastMinute));
     await sql`update public.crm_ota_outreach set status = 'sent' where booking_id = ${bookingId}`;
     return "sent";
   } catch (error) {
@@ -79,23 +86,73 @@ export async function maybeSendOtaOutreach(params: { bookingId: string; status: 
     // Rooms of one group booking get a single message, on the master booking.
     if (params.masterId && params.masterId !== "0" && params.masterId !== params.bookingId) return;
     const sql = getSql();
-    const [row] = (await sql`select (b.received_at >= s.ota_outreach_enabled_at and b.checkout >= current_date) as eligible
+    const [row] = (await sql`select (b.received_at >= s.ota_outreach_enabled_at and b.checkout >= current_date) as eligible, (b.checkin - current_date) as days
       from public.crm_email_settings s
       join public.beds24_bookings b on b.booking_id = ${params.bookingId}
       where s.id and s.ota_outreach_enabled_at is not null`) as any[];
     if (!row?.eligible) return;
-    await sendMessage(params.bookingId, pickLanguage(params.language, params.country), params.firstName);
+    await sendMessage(params.bookingId, pickLanguage(params.language, params.country), params.firstName, row.days <= LAST_MINUTE_DAYS);
   } catch (error) {
     console.error("[ota-outreach] failed", error);
   }
 }
 
-/** One real booking, on request from staff, while the switch is still off. */
+/** Staff button. The first press sends the request, later presses a reminder. */
 export async function sendOutreachToBooking(bookingId: string) {
   const sql = getSql();
-  const [row] = (await sql`select firstname, guest_language, country from public.beds24_bookings where booking_id = ${bookingId}`) as any[];
+  const [row] = (await sql`select firstname, guest_language, country, (checkin - current_date) as days from public.beds24_bookings where booking_id = ${bookingId}`) as any[];
   if (!row) throw new Error("Δεν βρέθηκε η κράτηση.");
-  return sendMessage(bookingId, pickLanguage(row.guest_language ?? "", row.country ?? ""), row.firstname ?? "");
+  const language = pickLanguage(row.guest_language ?? "", row.country ?? "");
+  const outcome = await sendMessage(bookingId, language, row.firstname ?? "", row.days <= LAST_MINUTE_DAYS);
+  if (outcome !== "already_sent") return outcome;
+  await postChannelMessage(bookingId, buildOtaReminder(language, row.firstname ?? ""));
+  await sql`update public.crm_ota_outreach set reminder_at = coalesce(reminder_at, now()) where booking_id = ${bookingId}`;
+  return "sent";
+}
+
+/** Morning run: asks again at 7 and 3 days before arrival, then one SMS. Stops once we have the email. */
+export async function runOutreachFollowUps() {
+  const sql = getSql();
+  const [settings] = (await sql`select ota_outreach_enabled_at from public.crm_email_settings where id`) as any[];
+  const summary = { reminders: 0, sms: 0, failed: 0 };
+  if (!settings?.ota_outreach_enabled_at) return summary;
+
+  const rows = (await sql`
+    select o.booking_id, o.language, o.reminder_at, o.reminder2_at, o.sms_at, b.firstname, b.lastname, b.phone,
+      (b.checkin - current_date) as days,
+      greatest(o.created_at, o.reminder_at, o.reminder2_at) < now() - interval '20 hours' as quiet
+    from public.crm_ota_outreach o
+    join public.beds24_bookings b using (booking_id)
+    left join public.crm_booking_contacts c using (booking_id)
+    where o.status = 'sent' and lower(b.status) in ('confirmed', 'new') and b.checkin >= current_date
+      and nullif(c.real_email, '') is null and coalesce(c.ignored, false) = false
+  `) as any[];
+
+  for (const row of rows) {
+    if (!row.quiet) continue;
+    const language = row.language as EmailLanguage;
+    try {
+      if (row.days >= 4 && row.days <= 7 && !row.reminder_at) {
+        await postChannelMessage(row.booking_id, buildOtaReminder(language, row.firstname ?? ""));
+        await sql`update public.crm_ota_outreach set reminder_at = now(), reminder_status = 'sent' where booking_id = ${row.booking_id}`;
+        summary.reminders += 1;
+      } else if (row.days >= 1 && row.days <= 3 && !row.reminder2_at) {
+        await postChannelMessage(row.booking_id, buildOtaReminder(language, row.firstname ?? ""));
+        await sql`update public.crm_ota_outreach set reminder2_at = now(), reminder_status = 'sent' where booking_id = ${row.booking_id}`;
+        summary.reminders += 1;
+      } else if (row.days <= 2 && !row.sms_at && String(row.phone ?? "").trim()) {
+        // Marked first: a wrong number must not be charged again every morning.
+        await sql`update public.crm_ota_outreach set sms_at = now() where booking_id = ${row.booking_id}`;
+        await sendBookingSms({ bookingId: row.booking_id, guestName: `${row.firstname ?? ""} ${row.lastname ?? ""}`.trim(), phone: row.phone, message: buildGuestSms(language, row.firstname ?? "") });
+        summary.sms += 1;
+      }
+    } catch (error) {
+      summary.failed += 1;
+      const message = error instanceof Error ? error.message.slice(0, 300) : "send failed";
+      await sql`update public.crm_ota_outreach set reminder_status = 'failed', error = ${message} where booking_id = ${row.booking_id}`;
+    }
+  }
+  return summary;
 }
 
 /** Called every 10 minutes with the last good run. Nothing new means no database access. */
@@ -151,6 +208,7 @@ export async function processBeds24Messages(messages: any[]) {
         on conflict (booking_id) do update set real_email = coalesce(nullif(public.crm_booking_contacts.real_email, ''), excluded.real_email),
           source = coalesce(public.crm_booking_contacts.source, excluded.source), updated_at = now()`;
       summary.emails += 1;
+      await updateBookingEmail(bookingId, realEmail, writeToken);
       if (await appendBookingNote(bookingId, `Email πελάτη (μήνυμα ${received}): ${realEmail}`, realEmail, writeToken) === "written") summary.notes += 1;
     }
     if (note.hasInfo && note.note) {

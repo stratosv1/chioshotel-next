@@ -23,6 +23,23 @@ export async function getBeds24WriteToken() {
   throw new Error("No Beds24 write credential is configured.");
 }
 
+/** Replaces the channel's virtual address, as staff did by hand, so Beds24 flows reach the guest. */
+export async function updateBookingEmail(bookingId: string, email: string, token: string) {
+  const response = await fetch(`${beds24BaseUrl}/bookings`, {
+    method: "POST",
+    headers: { accept: "application/json", "Content-Type": "application/json", token },
+    body: JSON.stringify([{ id: Number(bookingId), email }]),
+    cache: "no-store",
+  });
+  const result = await response.json().catch(() => null);
+  const success = Array.isArray(result) ? result[0]?.success !== false : response.ok;
+  if (!response.ok || !success) {
+    console.error("[booking-notes] Beds24 email update failed", { bookingId, status: response.status });
+    return false;
+  }
+  return true;
+}
+
 export type GuestSummary = { hasInfo: boolean; note: string; arrivalTime: string };
 
 /** One short staff line in Greek, or nothing when the email is only pleasantries. */

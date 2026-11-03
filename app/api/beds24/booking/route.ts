@@ -342,8 +342,7 @@ export async function POST(request: Request) {
       }
     }
 
-    await sendBookingEmail(resolvedBody);
-
+    // Before the owner notification: a failed notification must not cost the guest message.
     await maybeSendOtaOutreach({
       bookingId,
       status: clean(resolvedBody.status),
@@ -353,6 +352,8 @@ export async function POST(request: Request) {
       country: clean(resolvedBody.guest_country),
       masterId: clean(apiLookup.booking?.masterId),
     });
+
+    await sendBookingEmail(resolvedBody);
 
     return NextResponse.json({
       ok: true,

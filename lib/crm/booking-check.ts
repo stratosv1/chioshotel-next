@@ -1,5 +1,6 @@
 import "server-only";
 import { neon } from "@neondatabase/serverless";
+import { fetchBeds24BookingById } from "@/lib/beds24/api-v2-booking";
 import { ingestGmailMessage } from "@/lib/crm/gmail-intake";
 import { processBeds24Messages } from "@/lib/crm/ota-outreach";
 import { isVirtualEmail } from "@/lib/crm/store";
@@ -64,10 +65,24 @@ async function checkGmail(bookingIds: string[], email: string | null, webAppUrl:
   return stored;
 }
 
+/** A cancellation the webhook missed is corrected whenever staff check a booking. */
+async function refreshStatus(bookingIds: string[]) {
+  const sql = getSql();
+  for (const id of bookingIds) {
+    const lookup = await fetchBeds24BookingById(id);
+    const status = lookup.ok ? String(lookup.booking?.status ?? "") : lookup.reason === "booking_not_found" ? "Deleted" : "";
+    if (status) {
+      await sql`update public.beds24_bookings set status = ${status}, updated_at = now()
+        where booking_id = ${id} and lower(status) is distinct from lower(${status})`;
+    }
+  }
+}
+
 /** On demand, one booking: Booking/Expedia messages, then the Gmail inbox. */
 export async function checkBookingCommunication(bookingIds: string[], email: string | null) {
   const sql = getSql();
   const [settings] = (await sql`select gmail_webapp_url from public.crm_email_settings where id`) as any[];
+  await refreshStatus(bookingIds);
   const beds24 = await checkBeds24(bookingIds);
   const gmailReady = Boolean(settings?.gmail_webapp_url);
   const gmail = gmailReady ? await checkGmail(bookingIds, email, settings.gmail_webapp_url) : 0;

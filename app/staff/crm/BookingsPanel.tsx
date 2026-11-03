@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 type BoardEvent = { time: string; channel: "guest" | "staff" | "email" | "sms" | "whatsapp" | "ota"; title: string; body: string | null; summary: string | null; status: string | null };
 type Booking = {
   bookingIds: string[]; name: string; firstName: string; rooms: string[]; checkin: string; checkout: string; status: string;
-  channel: string; email: string | null; emailState: "real" | "virtual" | "none"; phone: string | null; arrivalTime: string | null; events: BoardEvent[];
+  channel: string; email: string | null; emailState: "real" | "virtual" | "none"; phone: string | null; arrivalTime: string | null; smsTemplate: string; deliveryProblem: string | null; events: BoardEvent[];
 };
 type Filter = "all" | "no_email" | "no_arrival" | "messages";
 
@@ -45,7 +45,7 @@ function Chip({ ok, children }: { ok: boolean; children: React.ReactNode }) {
   return <span className={`rounded-full px-3 py-1 text-xs font-black ${ok ? "bg-emerald-100 text-emerald-900" : "bg-red-100 text-red-900"}`}>{children}</span>;
 }
 
-export default function BookingsPanel() {
+export default function BookingsPanel({ attention = false }: { attention?: boolean }) {
   const [month, setMonth] = useState(thisMonth);
   const [bookings, setBookings] = useState<Booking[] | null>(null);
   const [filter, setFilter] = useState<Filter>("all");
@@ -58,11 +58,11 @@ export default function BookingsPanel() {
   const [notice, setNotice] = useState("");
 
   const load = useCallback(async () => {
-    const response = await fetch(`${API}?month=${month}`, { cache: "no-store" });
+    const response = await fetch(attention ? `${API}?attention=1` : `${API}?month=${month}`, { cache: "no-store" });
     const payload = await response.json();
     if (!payload.ok) throw new Error(payload.error);
     setBookings(payload.bookings);
-  }, [month]);
+  }, [attention, month]);
 
   useEffect(() => {
     setBookings(null);
@@ -121,6 +121,29 @@ export default function BookingsPanel() {
     }
   };
 
+  const askOnChannel = async (booking: Booking) => {
+    if (!window.confirm("Να σταλεί τώρα μήνυμα στον πελάτη μέσω Booking/Expedia;")) return;
+    setBusy(true);
+    setError("");
+    setNotice("");
+    try {
+      const response = await fetch("/api/staff/crm/emails/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "outreach_one", bookingId: booking.bookingIds[0] }),
+      });
+      const payload = await response.json();
+      if (!payload.ok) throw new Error(payload.error);
+      setNotice("Το Beds24 δέχτηκε το μήνυμα.");
+      await load();
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : "Η αποστολή απέτυχε.");
+      await load().catch(() => undefined);
+    } finally {
+      setBusy(false);
+    }
+  };
+
   const sendSms = async (booking: Booking) => {
     if (!window.confirm(`Να σταλεί SMS στο ${sms.phone};`)) return;
     setBusy(true);
@@ -172,6 +195,9 @@ export default function BookingsPanel() {
 
   return (
     <div className="grid gap-4">
+      {attention ? (
+        <p className="text-sm font-bold text-stone-600">{total} μελλοντικές κρατήσεις χωρίς email ή ώρα άφιξης, πρώτα όσες έρχονται νωρίτερα.</p>
+      ) : (
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <button type="button" aria-label="Προηγούμενος μήνας" className={secondaryButton} onClick={() => setMonth(shiftMonth(month, -1))}>←</button>
@@ -180,6 +206,7 @@ export default function BookingsPanel() {
         </div>
         <p className="text-sm font-bold text-stone-600">{total} κρατήσεις · {withEmail} με email · {withArrival} με ώρα άφιξης</p>
       </div>
+      )}
 
       <div className="flex flex-wrap gap-2">
         {FILTERS.map((item) => (
@@ -191,7 +218,8 @@ export default function BookingsPanel() {
 
       {error ? <div role="alert" className="rounded-xl bg-red-100 px-4 py-3 text-sm font-bold text-red-900">{error}</div> : null}
       {!bookings ? <p className="text-sm text-stone-600">Φόρτωση…</p> : null}
-      {bookings && !visible.length ? <p className="rounded-2xl bg-white p-4 text-sm text-stone-600 shadow-sm">Δεν υπάρχουν κρατήσεις.</p> : null}
+      {notice && !openId ? <p role="status" className="rounded-xl bg-emerald-100 px-3 py-2 text-sm font-bold text-emerald-900">{notice}</p> : null}
+      {bookings && !visible.length ? <p className="rounded-2xl bg-white p-4 text-sm text-stone-600 shadow-sm">{attention ? "Όλες οι κρατήσεις έχουν email και ώρα άφιξης." : "Δεν υπάρχουν κρατήσεις."}</p> : null}
 
       <ul className="grid gap-2">
         {visible.map((booking) => {
@@ -209,6 +237,7 @@ export default function BookingsPanel() {
                 <span className="flex flex-wrap gap-2">
                   <Chip ok={booking.emailState === "real"}>{booking.emailState === "real" ? "✓ Email" : "✕ Χωρίς email"}</Chip>
                   <Chip ok={Boolean(booking.arrivalTime)}>{booking.arrivalTime ? `✓ Άφιξη ${booking.arrivalTime}` : "✕ Χωρίς ώρα άφιξης"}</Chip>
+                  {booking.deliveryProblem ? <span className="rounded-full bg-red-600 px-3 py-1 text-xs font-black text-white">⚠ {booking.deliveryProblem}</span> : null}
                   {guestMessages ? <span className="rounded-full bg-stone-100 px-3 py-1 text-xs font-black">💬 {guestMessages}</span> : null}
                   {lastSms ? <span className={`rounded-full bg-violet-50 px-3 py-1 text-xs font-black ${SMS_STATUS[lastSms.status ?? ""]?.tone ?? ""}`}>SMS: {SMS_STATUS[lastSms.status ?? ""]?.label ?? lastSms.status}</span> : null}
                 </span>
@@ -252,7 +281,17 @@ export default function BookingsPanel() {
                       </form>
                     ) : null}
 
-                    <h3 className="mt-2 font-black">Αποστολή SMS</h3>
+                    {booking.emailState === "virtual" ? (
+                      <button type="button" disabled={busy} className={`${primaryButton} justify-self-start`} onClick={() => askOnChannel(booking)}>
+                        Ζήτα email μέσω {booking.channel}
+                      </button>
+                    ) : null}
+
+                    <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
+                      <h3 className="font-black">Αποστολή SMS</h3>
+                      <button type="button" className={secondaryButton} onClick={() => setSms({ ...sms, message: booking.smsTemplate })}>Έτοιμο κείμενο</button>
+                    </div>
+                    {!booking.phone ? <p className="rounded-xl bg-amber-100 px-3 py-2 text-sm font-bold text-amber-900">Δεν υπάρχει κινητό σε αυτή την κράτηση.</p> : null}
                     {notice ? <p role="status" className="rounded-xl bg-emerald-100 px-3 py-2 text-sm font-bold text-emerald-900">{notice}</p> : null}
                     <form className="grid gap-2" onSubmit={(event) => { event.preventDefault(); void sendSms(booking); }}>
                       <div>

@@ -167,7 +167,7 @@ export default function EmailsPanel() {
               {outreach.enabled ? "ON" : "OFF"}
             </button>
           </div>
-          <p className="mb-3 text-sm text-stone-600">Φεύγει μόνο σε νέες κρατήσεις, μία φορά. Η δοκιμαστική λειτουργία δεν ισχύει εδώ: το μήνυμα πάει στον πελάτη.</p>
+          <p className="mb-3 text-sm text-stone-600">Φεύγει σε νέες κρατήσεις, με υπενθύμιση 7 και 3 μέρες πριν και ένα SMS στο τέλος, μέχρι να μας δώσει email. Η δοκιμαστική λειτουργία δεν ισχύει εδώ: τα μηνύματα πάνε στον πελάτη.</p>
           <pre className="mb-3 whitespace-pre-wrap rounded-xl bg-stone-100 p-3 font-sans text-sm">{outreach.samples[previewLanguage]}</pre>
           <form
             className="flex flex-wrap items-end gap-2"

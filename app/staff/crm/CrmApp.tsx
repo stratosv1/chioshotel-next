@@ -5,7 +5,7 @@ import BookingsPanel from "./BookingsPanel";
 import ConfirmationPanel from "./ConfirmationPanel";
 import EmailsPanel from "./EmailsPanel";
 
-type Tab = "bookings" | "summary" | "guests" | "pending" | "confirmation" | "emails" | "exclusions";
+type Tab = "attention" | "bookings" | "summary" | "guests" | "pending" | "confirmation" | "emails" | "exclusions";
 type Bucket = { key: string; count: number };
 type Summary = {
   bookings: number;
@@ -46,10 +46,10 @@ type Exclusion = { email: string; note: string };
 type GuestMessage = { direction: "guest" | "staff"; subject: string | null; body: string; summary: string | null; bookingIds: string[]; sentAt: string };
 
 const TABS: { key: Tab; label: string }[] = [
+  { key: "attention", label: "Εκκρεμότητες" },
   { key: "bookings", label: "Κρατήσεις" },
   { key: "summary", label: "Πίνακας" },
   { key: "guests", label: "Πελάτες" },
-  { key: "pending", label: "Χωρίς email" },
   { key: "confirmation", label: "Επιβεβαίωση κράτησης" },
   { key: "emails", label: "Αυτόματα email" },
   { key: "exclusions", label: "Εξαιρέσεις" },
@@ -147,7 +147,7 @@ function BucketList({ title, buckets, format }: { title: string; buckets: Bucket
 }
 
 export default function CrmApp() {
-  const [tab, setTab] = useState<Tab>("bookings");
+  const [tab, setTab] = useState<Tab>("attention");
   const [summary, setSummary] = useState<Summary | null>(null);
   const [guests, setGuests] = useState<Guest[] | null>(null);
   const [pending, setPending] = useState<PendingBooking[] | null>(null);
@@ -181,7 +181,7 @@ export default function CrmApp() {
 
   useEffect(() => {
     setError("");
-    if (tab === "emails" || tab === "confirmation" || tab === "bookings") return;
+    if (tab === "emails" || tab === "confirmation" || tab === "bookings" || tab === "attention") return;
     const load =
       tab === "summary" ? loadSummary() :
       tab === "guests" ? loadGuests() :
@@ -305,7 +305,9 @@ export default function CrmApp() {
         {notice ? <div role="status" className="mb-4 rounded-xl bg-emerald-100 px-4 py-3 text-sm font-bold text-emerald-900">{notice}</div> : null}
         {error ? <div role="alert" className="mb-4 rounded-xl bg-red-100 px-4 py-3 text-sm font-bold text-red-900">{error}</div> : null}
 
-        {tab === "bookings" ? <BookingsPanel /> : null}
+        {tab === "attention" ? <BookingsPanel key="attention" attention /> : null}
+
+        {tab === "bookings" ? <BookingsPanel key="bookings" /> : null}
 
         {tab === "summary" ? (
           summary ? (

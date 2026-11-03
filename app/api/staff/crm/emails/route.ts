@@ -91,7 +91,6 @@ export async function POST(request: NextRequest) {
         if (!/^\d{4,12}$/.test(bookingId)) return fail("Μη έγκυρος αριθμός κράτησης.");
         const outcome = await sendOutreachToBooking(bookingId);
         if (outcome === "failed") return fail("Η αποστολή απέτυχε. Δες το ιστορικό.", 502);
-        if (outcome === "already_sent") return fail("Το μήνυμα έχει ήδη σταλεί σε αυτή την κράτηση.");
         return NextResponse.json({ ok: true }, { headers });
       }
       case "run_now":
