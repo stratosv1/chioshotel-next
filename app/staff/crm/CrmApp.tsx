@@ -1,10 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import BookingsPanel from "./BookingsPanel";
 import ConfirmationPanel from "./ConfirmationPanel";
 import EmailsPanel from "./EmailsPanel";
 
-type Tab = "summary" | "guests" | "pending" | "confirmation" | "emails" | "exclusions";
+type Tab = "bookings" | "summary" | "guests" | "pending" | "confirmation" | "emails" | "exclusions";
 type Bucket = { key: string; count: number };
 type Summary = {
   bookings: number;
@@ -45,6 +46,7 @@ type Exclusion = { email: string; note: string };
 type GuestMessage = { direction: "guest" | "staff"; subject: string | null; body: string; summary: string | null; bookingIds: string[]; sentAt: string };
 
 const TABS: { key: Tab; label: string }[] = [
+  { key: "bookings", label: "Κρατήσεις" },
   { key: "summary", label: "Πίνακας" },
   { key: "guests", label: "Πελάτες" },
   { key: "pending", label: "Χωρίς email" },
@@ -145,7 +147,7 @@ function BucketList({ title, buckets, format }: { title: string; buckets: Bucket
 }
 
 export default function CrmApp() {
-  const [tab, setTab] = useState<Tab>("summary");
+  const [tab, setTab] = useState<Tab>("bookings");
   const [summary, setSummary] = useState<Summary | null>(null);
   const [guests, setGuests] = useState<Guest[] | null>(null);
   const [pending, setPending] = useState<PendingBooking[] | null>(null);
@@ -179,7 +181,7 @@ export default function CrmApp() {
 
   useEffect(() => {
     setError("");
-    if (tab === "emails" || tab === "confirmation") return;
+    if (tab === "emails" || tab === "confirmation" || tab === "bookings") return;
     const load =
       tab === "summary" ? loadSummary() :
       tab === "guests" ? loadGuests() :
@@ -302,6 +304,8 @@ export default function CrmApp() {
 
         {notice ? <div role="status" className="mb-4 rounded-xl bg-emerald-100 px-4 py-3 text-sm font-bold text-emerald-900">{notice}</div> : null}
         {error ? <div role="alert" className="mb-4 rounded-xl bg-red-100 px-4 py-3 text-sm font-bold text-red-900">{error}</div> : null}
+
+        {tab === "bookings" ? <BookingsPanel /> : null}
 
         {tab === "summary" ? (
           summary ? (

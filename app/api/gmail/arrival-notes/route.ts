@@ -52,13 +52,13 @@ function stripQuotedReply(body: string) {
   return body.slice(0, end).trim().slice(0, MAX_BODY_CHARS);
 }
 
-async function storeMessage(params: { messageId: string; bookingIds: string[]; guestEmail: string; direction: "guest" | "staff"; subject: string; body: string; summary: string | null; sentAt: string }) {
+async function storeMessage(params: { messageId: string; bookingIds: string[]; guestEmail: string; direction: "guest" | "staff"; subject: string; body: string; summary: string | null; arrivalTime?: string | null; sentAt: string }) {
   const url = process.env.DATABASE_URL?.trim();
   if (!url || !params.messageId) return;
   const sql = neon(url);
   const sentAt = Number.isNaN(Date.parse(params.sentAt)) ? new Date().toISOString() : params.sentAt;
-  await sql`insert into public.crm_guest_messages (message_id, booking_ids, guest_email, direction, subject, body, summary, sent_at)
-    values (${params.messageId}, ${params.bookingIds}::text[], ${params.guestEmail}, ${params.direction}, ${params.subject}, ${params.body}, ${params.summary}, ${sentAt}::timestamptz)
+  await sql`insert into public.crm_guest_messages (message_id, booking_ids, guest_email, direction, subject, body, summary, arrival_time, sent_at)
+    values (${params.messageId}, ${params.bookingIds}::text[], ${params.guestEmail}, ${params.direction}, ${params.subject}, ${params.body}, ${params.summary}, ${params.arrivalTime ?? null}, ${sentAt}::timestamptz)
     on conflict (message_id) do update set summary = coalesce(excluded.summary, public.crm_guest_messages.summary)`;
 }
 
@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    await storeMessage({ ...message, direction: "guest", summary: extraction.note || null });
+    await storeMessage({ ...message, direction: "guest", summary: extraction.note || null, arrivalTime: extraction.arrivalTime || null });
   } catch (error) {
     console.error("[arrival-notes] message store failed", error);
     return json({ ok: false, error: "Message store failed." }, 502);

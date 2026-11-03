@@ -135,8 +135,8 @@ export async function syncGuestMessages(sinceMs?: number) {
     const realEmail = found && !isVirtualEmail(found) ? found : "";
     const note = await summarizeGuestMessage({ reply: body, date: sentAt, guest: `${booking.firstname ?? ""} ${booking.lastname ?? ""}`.trim() });
 
-    await sql`insert into public.crm_guest_messages (message_id, booking_ids, guest_email, direction, subject, body, summary, sent_at)
-      values (${`beds24:${item.id}`}, ${[bookingId]}::text[], ${realEmail || booking.email}, 'guest', 'Booking / Expedia', ${body}, ${note.note || null}, ${Number.isNaN(Date.parse(sentAt)) ? new Date().toISOString() : sentAt}::timestamptz)
+    await sql`insert into public.crm_guest_messages (message_id, booking_ids, guest_email, direction, subject, body, summary, arrival_time, sent_at)
+      values (${`beds24:${item.id}`}, ${[bookingId]}::text[], ${realEmail || booking.email}, 'guest', 'Booking / Expedia', ${body}, ${note.note || null}, ${note.arrivalTime || null}, ${Number.isNaN(Date.parse(sentAt)) ? new Date().toISOString() : sentAt}::timestamptz)
       on conflict (message_id) do nothing`;
     summary.stored += 1;
 

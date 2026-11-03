@@ -23,7 +23,7 @@ export async function getBeds24WriteToken() {
   throw new Error("No Beds24 write credential is configured.");
 }
 
-export type GuestSummary = { hasInfo: boolean; note: string };
+export type GuestSummary = { hasInfo: boolean; note: string; arrivalTime: string };
 
 /** One short staff line in Greek, or nothing when the email is only pleasantries. */
 export async function summarizeGuestMessage(params: { reply: string; date: string; guest: string }): Promise<GuestSummary> {
@@ -47,6 +47,7 @@ export async function summarizeGuestMessage(params: { reply: string; date: strin
               "Keep only what staff need to know: arrival day/date and time, means of transport, flight or ship name, breakfast, taxi or luggage requests, special requests, questions, changes to the stay.",
               "Never invent or infer facts that are not written.",
               "If the message has nothing useful (only thanks or pleasantries, or only an email address), set hasInfo to false and note to an empty string.",
+              "Set arrivalTime to the time the guest will arrive at the property as 24h HH:MM, or an empty string if not stated. Never use a departure time.",
               "Otherwise write note as ONE short line in Greek, staff-style, e.g. \"2/10 17:20 αεροπλάνο από Αθήνα, ταξί, ζητά βρεφικό κρεβάτι\". Use dd/mm dates without year and 24h times.",
             ].join("\n"),
           }],
@@ -64,8 +65,8 @@ export async function summarizeGuestMessage(params: { reply: string; date: strin
           schema: {
             type: "object",
             additionalProperties: false,
-            properties: { hasInfo: { type: "boolean" }, note: { type: "string" } },
-            required: ["hasInfo", "note"],
+            properties: { hasInfo: { type: "boolean" }, note: { type: "string" }, arrivalTime: { type: "string" } },
+            required: ["hasInfo", "note", "arrivalTime"],
           },
         },
       },
@@ -79,7 +80,7 @@ export async function summarizeGuestMessage(params: { reply: string; date: strin
       data?.output?.flatMap((item: any) => item?.content ?? []).find((part: any) => part?.type === "output_text")?.text,
   );
   const parsed = JSON.parse(text) as GuestSummary;
-  return { hasInfo: Boolean(parsed.hasInfo), note: clean(parsed.note).replace(/\s+/g, " ").slice(0, 300) };
+  return { hasInfo: Boolean(parsed.hasInfo), note: clean(parsed.note).replace(/\s+/g, " ").slice(0, 300), arrivalTime: /^\d{2}:\d{2}$/.test(clean(parsed.arrivalTime)) ? clean(parsed.arrivalTime) : "" };
 }
 
 export const noteDate = (iso: string) => {
