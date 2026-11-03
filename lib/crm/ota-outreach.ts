@@ -107,7 +107,11 @@ export async function syncGuestMessages() {
   const response = await fetch(url, { headers: { accept: "application/json", token }, cache: "no-store", signal: AbortSignal.timeout(12_000) });
   if (!response.ok) throw new Error(`Beds24 HTTP ${response.status}`);
   const payload = (await response.json()) as any;
-  const messages = (Array.isArray(payload?.data) ? payload.data : []).filter((item: any) => String(item?.source ?? "") === "guest" && String(item?.message ?? "").trim());
+  // Beds24 can return older messages despite maxAge, so age is checked here too.
+  // A missing or unreadable time counts as old: old messages must never reach the notes.
+  const oldest = Date.now() - LOOKBACK_SECONDS * 1000;
+  const messages = (Array.isArray(payload?.data) ? payload.data : []).filter((item: any) =>
+    String(item?.source ?? "") === "guest" && String(item?.message ?? "").trim() && Date.parse(String(item?.time ?? "")) >= oldest);
   const summary = { found: messages.length, stored: 0, emails: 0, notes: 0 };
   if (!messages.length) return summary;
 
