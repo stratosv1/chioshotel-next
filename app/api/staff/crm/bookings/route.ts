@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+import { checkBookingCommunication } from "@/lib/crm/booking-check";
 import { getBookingNotes, listMonthBookings } from "@/lib/crm/bookings-board";
 import { sendBookingSms } from "@/lib/crm/sms";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 
 // Access is protected by the staff Basic Auth in proxy.ts (/api/staff/*).
 
@@ -29,6 +31,12 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as Record<string, unknown>;
+    if (body.action === "check") {
+      const bookingIds = (Array.isArray(body.bookingIds) ? body.bookingIds : []).map(String).filter((id) => /^\d{4,12}$/.test(id));
+      if (!bookingIds.length) return fail("Μη έγκυρη κράτηση.");
+      const email = typeof body.email === "string" && body.email ? body.email.trim().toLowerCase() : null;
+      return NextResponse.json({ ok: true, ...(await checkBookingCommunication(bookingIds, email)) }, { headers });
+    }
     const bookingId = String(body.bookingId ?? "").trim();
     const message = String(body.message ?? "").trim();
     if (!/^\d{4,12}$/.test(bookingId)) return fail("Μη έγκυρη κράτηση.");

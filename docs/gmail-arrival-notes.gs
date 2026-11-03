@@ -106,6 +106,44 @@ function processArrivalReplies() {
   if (!failed) store.setProperty("lastRun", String(startedAt));
 }
 
+/**
+ * "Έλεγχος" button in /staff/crm: finds the emails of one booking on request.
+ * Deploy as a web app (Execute as: Me, Who has access: Anyone). Requests without
+ * the secret get nothing.
+ */
+function doPost(e) {
+  var answer = function (data) {
+    return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(ContentService.MimeType.JSON);
+  };
+  var request = JSON.parse(e.postData.contents || "{}");
+  var secret = PropertiesService.getScriptProperties().getProperty("ARRIVAL_NOTES_SECRET");
+  if (!secret || request.secret !== secret) return answer({ ok: false });
+
+  var terms = (request.bookingIds || [])
+    .filter(function (id) { return /^\d{4,12}$/.test(id); })
+    .map(function (id) { return "subject:" + id; });
+  if (/^[^\s"@]+@[^\s"@]+$/.test(request.email || "")) {
+    terms.push("from:" + request.email);
+    terms.push("to:" + request.email);
+  }
+  if (!terms.length) return answer({ ok: true, messages: [] });
+
+  var messages = [];
+  GmailApp.search("{" + terms.join(" ") + "} -in:spam -in:trash", 0, 15).forEach(function (thread) {
+    thread.getMessages().forEach(function (message) {
+      if (messages.length >= 40) return;
+      messages.push({
+        id: message.getId(),
+        from: message.getFrom(),
+        date: message.getDate().toISOString(),
+        subject: message.getSubject(),
+        body: message.getPlainBody().slice(0, 8000),
+      });
+    });
+  });
+  return answer({ ok: true, messages: messages });
+}
+
 /** Run once to create the 10-minute trigger. */
 function installTrigger() {
   ScriptApp.getProjectTriggers().forEach(function (trigger) {

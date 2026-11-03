@@ -88,9 +88,37 @@ export default function BookingsPanel() {
     setSms({ phone: booking.phone ?? "", message: "" });
     setRealEmail("");
     setNotice("");
-    const response = await fetch(`${API}?notes=${id}`, { cache: "no-store" });
+    await loadNotes(id);
+  };
+
+  const loadNotes = async (bookingId: string) => {
+    const response = await fetch(`${API}?notes=${bookingId}`, { cache: "no-store" });
     const payload = await response.json().catch(() => null);
     setNotes(payload?.ok ? payload.notes : null);
+  };
+
+  const runCheck = async (booking: Booking) => {
+    setBusy(true);
+    setError("");
+    setNotice("");
+    try {
+      const response = await fetch(API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "check", bookingIds: booking.bookingIds, email: booking.email }),
+      });
+      const payload = await response.json();
+      if (!payload.ok) throw new Error(payload.error);
+      const found = payload.beds24 + payload.gmail;
+      const gmailNote = payload.gmailReady ? "" : " Το Gmail δεν έχει συνδεθεί ακόμα, ελέγχθηκαν μόνο τα μηνύματα Booking/Expedia.";
+      setNotice(`${found ? `Βρέθηκαν ${found} νέα: ${payload.gmail} email, ${payload.beds24} μηνύματα.` : "Δεν βρέθηκε κάτι νέο."}${gmailNote}`);
+      await load();
+      await loadNotes(booking.bookingIds[0]);
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : "Ο έλεγχος απέτυχε.");
+    } finally {
+      setBusy(false);
+    }
   };
 
   const sendSms = async (booking: Booking) => {
@@ -199,7 +227,12 @@ export default function BookingsPanel() {
                         {event.status ? <p className={`mt-1 font-black ${SMS_STATUS[event.status]?.tone ?? "text-stone-600"}`}>{SMS_STATUS[event.status]?.label ?? event.status}</p> : null}
                       </article>
                     ))}
-                    <h3 className="mt-2 font-black">Notes Beds24</h3>
+                    <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
+                      <h3 className="font-black">Notes Beds24</h3>
+                      <button type="button" disabled={busy} className={primaryButton} onClick={() => runCheck(booking)}>
+                        {busy ? "Έλεγχος…" : "Έλεγχος email & μηνυμάτων"}
+                      </button>
+                    </div>
                     {notes === undefined ? <p className="text-sm text-stone-600">Φόρτωση…</p> : null}
                     {notes === null ? <p className="text-sm text-stone-600">Δεν φορτώθηκαν.</p> : null}
                     {notes ? <p className="whitespace-pre-wrap break-words rounded-xl bg-stone-100 p-3 text-sm">{notes}</p> : null}

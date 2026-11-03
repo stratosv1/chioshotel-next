@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { removeImportedNotes } from "@/lib/crm/notes-cleanup";
 import { syncGuestMessages } from "@/lib/crm/ota-outreach";
 
 export const runtime = "nodejs";
@@ -16,7 +15,6 @@ export async function POST(request: NextRequest) {
   }
   try {
     const body = await request.json().catch(() => null);
-    await removeImportedNotes().catch((error) => console.error("[notes-cleanup] failed", error));
     return NextResponse.json({ ok: true, ...(await syncGuestMessages(Number(body?.since))) }, { headers: { "X-Robots-Tag": "noindex, nofollow" } });
   } catch (error) {
     console.error("[booking-messages] sync failed", error);

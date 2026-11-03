@@ -22,6 +22,10 @@ calls `app/api/gmail/booking-messages/route.ts`, which reads their messages from
 Beds24. A real email found in a message is saved to the CRM (marked
 `ota_message`: for the stay only, never for campaigns) and to the booking Notes.
 
+The "Έλεγχος" button in `/staff/crm` checks one booking on request through the
+script's `doPost` web app. Its URL is stored in
+`crm_email_settings.gmail_webapp_url`.
+
 ## Setup (once)
 
 1. **Vercel**: add the environment variable `ARRIVAL_NOTES_SECRET` (a long

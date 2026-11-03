@@ -114,7 +114,12 @@ export async function syncGuestMessages(sinceMs?: number) {
   // A missing or unreadable time counts as old: old messages must never reach the notes.
   const messages = (Array.isArray(payload?.data) ? payload.data : []).filter((item: any) =>
     String(item?.source ?? "") === "guest" && String(item?.message ?? "").trim() && Date.parse(String(item?.time ?? "")) >= oldest);
-  const summary = { found: messages.length, stored: 0, emails: 0, notes: 0 };
+  return { found: messages.length, ...(await processBeds24Messages(messages)) };
+}
+
+/** Stores the messages not seen before. Known messages never reach the notes twice. */
+export async function processBeds24Messages(messages: any[]) {
+  const summary = { stored: 0, emails: 0, notes: 0 };
   if (!messages.length) return summary;
 
   const sql = getSql();
