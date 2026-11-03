@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import { fetchBeds24BookingById, type Beds24ApiV2BookingLookup } from "@/lib/beds24/api-v2-booking";
 import { guestCountry, guestPhone } from "@/lib/crm/beds24-contacts";
+import { maybeSendOtaOutreach } from "@/lib/crm/ota-outreach";
 import { BOOKING_CORE_DEALS_CACHE_TAG } from "@/lib/booking-core/cache-tags";
 import {
   isBeds24CancellationStatus,
@@ -342,6 +343,16 @@ export async function POST(request: Request) {
     }
 
     await sendBookingEmail(resolvedBody);
+
+    await maybeSendOtaOutreach({
+      bookingId,
+      status: clean(resolvedBody.status),
+      email: clean(resolvedBody.email),
+      firstName: clean(resolvedBody.firstname),
+      language: clean(resolvedBody.guest_language),
+      country: clean(resolvedBody.guest_country),
+      masterId: clean(apiLookup.booking?.masterId),
+    });
 
     return NextResponse.json({
       ok: true,

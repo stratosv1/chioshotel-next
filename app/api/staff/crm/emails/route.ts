@@ -9,6 +9,8 @@ import {
   saveEmailSettings,
   sendTestEmail,
 } from "@/lib/crm/guest-emails";
+import { getOutreachStatus, sendOutreachToBooking, setOutreachEnabled } from "@/lib/crm/ota-outreach";
+import { buildOtaMessage } from "@/lib/crm/ota-message-text";
 import {
   EMAIL_LANGUAGES,
   EMAIL_TYPES,
@@ -37,12 +39,13 @@ export async function GET(request: NextRequest) {
       if (!email) return fail("Δεν υπάρχει πρόγνωση καιρού αυτή τη στιγμή.", 503);
       return NextResponse.json({ ok: true, subject: email.subject, html: email.html }, { headers });
     }
-    const [settings, due, log] = await Promise.all([getEmailSettings(), listDueEmails(), listEmailLog()]);
+    const [settings, due, log, outreach] = await Promise.all([getEmailSettings(), listDueEmails(), listEmailLog(), getOutreachStatus()]);
     return NextResponse.json({
       ok: true,
       settings,
       due: due.map(({ type: dueType, language, guestEmail, name, checkin }) => ({ type: dueType, language, guestEmail, name, checkin })),
       log,
+      outreach: { ...outreach, samples: Object.fromEntries(EMAIL_LANGUAGES.map((language) => [language, buildOtaMessage(language, "Maria")])) },
     }, { headers });
   } catch (error) {
     console.error("staff crm emails GET failed", error);
@@ -77,6 +80,18 @@ export async function POST(request: NextRequest) {
         if (!isType(body.type) || !isLanguage(body.language)) return fail("Μη έγκυρη δοκιμή.");
         if (!settings.testEmail) return fail("Λείπει το δοκιμαστικό email.");
         await sendTestEmail(body.type, body.language, settings.testEmail);
+        return NextResponse.json({ ok: true }, { headers });
+      }
+      case "set_outreach": {
+        await setOutreachEnabled(body.enabled === true);
+        return NextResponse.json({ ok: true }, { headers });
+      }
+      case "outreach_one": {
+        const bookingId = String(body.bookingId ?? "").trim();
+        if (!/^\d{4,12}$/.test(bookingId)) return fail("Μη έγκυρος αριθμός κράτησης.");
+        const outcome = await sendOutreachToBooking(bookingId);
+        if (outcome === "failed") return fail("Η αποστολή απέτυχε. Δες το ιστορικό.", 502);
+        if (outcome === "already_sent") return fail("Το μήνυμα έχει ήδη σταλεί σε αυτή την κράτηση.");
         return NextResponse.json({ ok: true }, { headers });
       }
       case "run_now":

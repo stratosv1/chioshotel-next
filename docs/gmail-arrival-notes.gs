@@ -11,6 +11,7 @@
  */
 
 var ENDPOINT = "https://chioshotel.gr/api/gmail/arrival-notes";
+var MESSAGES_ENDPOINT = "https://chioshotel.gr/api/gmail/booking-messages";
 var OWN_ADDRESS = "vhouse.reservations@gmail.com";
 // Gmail search cannot match the emoji reliably, so the subject is checked below.
 var SEARCH_QUERY = "newer_than:3d -in:spam -in:trash";
@@ -80,6 +81,16 @@ function processArrivalReplies() {
     if (processed[key] < cutoff) delete processed[key];
   });
   store.setProperty("processed", JSON.stringify(processed));
+
+  // Booking.com and Expedia guest messages, read from Beds24 by the site.
+  var sync = UrlFetchApp.fetch(MESSAGES_ENDPOINT, {
+    method: "post",
+    headers: { Authorization: "Bearer " + secret },
+    muteHttpExceptions: true,
+  });
+  if (sync.getResponseCode() >= 300) {
+    console.error("booking-messages " + sync.getResponseCode() + ": " + sync.getContentText());
+  }
 }
 
 /** Run once to create the 10-minute trigger. */

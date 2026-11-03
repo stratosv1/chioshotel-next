@@ -17,6 +17,11 @@ Flow:
    `Email πελάτη 23/09: 2/10 17:20 αεροπλάνο από Αθήνα, ταξί`.
    Existing notes are kept, and the same note is not added twice.
 
+Booking.com and Expedia guests have no real email, so the same 10-minute run
+calls `app/api/gmail/booking-messages/route.ts`, which reads their messages from
+Beds24. A real email found in a message is saved to the CRM (marked
+`ota_message`: for the stay only, never for campaigns) and to the booking Notes.
+
 ## Setup (once)
 
 1. **Vercel**: add the environment variable `ARRIVAL_NOTES_SECRET` (a long

@@ -13,6 +13,8 @@ type Settings = { testMode: boolean; testEmail: string; enabledTypes: EmailType[
 type Due = { type: EmailType; language: string; guestEmail: string; name: string; checkin: string };
 type LogRow = { type: EmailType | "confirmation"; language: string; recipient: string; guestEmail: string | null; mode: string; status: string; error: string | null; sentAt: string };
 
+type Outreach = { enabled: boolean; samples: Record<EmailLanguage, string>; log: { bookingId: string; language: string; status: string; error: string | null; sentAt: string }[] };
+
 const API = "/api/staff/crm/emails/";
 const panelClass = "rounded-2xl bg-white p-4 shadow-sm";
 const inputClass = "w-full rounded-xl border border-stone-300 bg-white px-3 py-2 text-sm";
@@ -34,6 +36,8 @@ export default function EmailsPanel() {
   const [settings, setSettings] = useState<Settings | null>(null);
   const [due, setDue] = useState<Due[]>([]);
   const [log, setLog] = useState<LogRow[]>([]);
+  const [outreach, setOutreach] = useState<Outreach | null>(null);
+  const [outreachBooking, setOutreachBooking] = useState("");
   const [testEmail, setTestEmail] = useState("");
   const [previewType, setPreviewType] = useState<EmailType>("daily");
   const [previewLanguage, setPreviewLanguage] = useState<EmailLanguage>("el");
@@ -48,6 +52,7 @@ export default function EmailsPanel() {
     setTestEmail(payload.settings.testEmail);
     setDue(payload.due);
     setLog(payload.log);
+    setOutreach(payload.outreach);
   }, []);
 
   useEffect(() => {
@@ -142,6 +147,53 @@ export default function EmailsPanel() {
           })}
         </ul>
       </section>
+
+      {outreach ? (
+        <section className={panelClass}>
+          <div className="mb-1 flex flex-wrap items-center justify-between gap-3">
+            <h2 className="text-lg font-black">Μήνυμα σε πελάτες Booking / Expedia</h2>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={outreach.enabled}
+              aria-label="Μήνυμα σε πελάτες Booking και Expedia"
+              disabled={busy}
+              onClick={() => {
+                if (!outreach.enabled && !window.confirm("Κάθε νέα κράτηση Booking/Expedia θα παίρνει αυτόματα το μήνυμα. Να ανοίξει;")) return;
+                void act({ action: "set_outreach", enabled: !outreach.enabled }, outreach.enabled ? "Έκλεισε." : "Άνοιξε για νέες κρατήσεις.");
+              }}
+              className={`min-w-[76px] rounded-full px-4 py-2 text-sm font-black disabled:opacity-50 ${outreach.enabled ? "bg-emerald-700 text-white" : "bg-stone-200 text-stone-700"}`}
+            >
+              {outreach.enabled ? "ON" : "OFF"}
+            </button>
+          </div>
+          <p className="mb-3 text-sm text-stone-600">Φεύγει μόνο σε νέες κρατήσεις, μία φορά. Η δοκιμαστική λειτουργία δεν ισχύει εδώ: το μήνυμα πάει στον πελάτη.</p>
+          <pre className="mb-3 whitespace-pre-wrap rounded-xl bg-stone-100 p-3 font-sans text-sm">{outreach.samples[previewLanguage]}</pre>
+          <form
+            className="flex flex-wrap items-end gap-2"
+            onSubmit={(event) => {
+              event.preventDefault();
+              if (!window.confirm(`Να σταλεί τώρα το μήνυμα στον πελάτη της κράτησης ${outreachBooking};`)) return;
+              void act({ action: "outreach_one", bookingId: outreachBooking }, "Το μήνυμα στάλθηκε.");
+            }}
+          >
+            <div className="min-w-[200px] flex-1">
+              <label htmlFor="crm-outreach-booking" className="mb-1 block text-sm font-bold">Δοκιμή σε μία κράτηση</label>
+              <input id="crm-outreach-booking" inputMode="numeric" required className={inputClass} value={outreachBooking} onChange={(event) => setOutreachBooking(event.target.value)} placeholder="Αριθμός κράτησης" />
+            </div>
+            <button type="submit" disabled={busy} className={secondaryButton}>Αποστολή σε αυτή</button>
+          </form>
+          {outreach.log.length ? (
+            <ul className="mt-3 grid gap-1 text-sm">
+              {outreach.log.map((row) => (
+                <li key={row.bookingId} className="break-all border-b border-stone-100 py-1.5">
+                  {row.sentAt} · #{row.bookingId} · {row.language.toUpperCase()} · {row.status === "sent" ? "στάλθηκε" : row.status === "failed" ? `απέτυχε: ${row.error ?? ""}` : row.status}
+                </li>
+              ))}
+            </ul>
+          ) : null}
+        </section>
+      ) : null}
 
       <section className={panelClass}>
         <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
