@@ -20,6 +20,8 @@ function stripQuotedReply(body: string) {
     /Your Arrival is Approaching!/i,
     /Η Άφιξή Σας Πλησιάζει!/i,
     /^VOULAMANDIS HOUSE$/m,
+    /^Voulamandis House\s*$/m,
+    /^Rooms & Apartments\b/m,
   ];
   let end = body.length;
   for (const marker of markers) {

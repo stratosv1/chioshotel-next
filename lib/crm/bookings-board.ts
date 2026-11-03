@@ -50,6 +50,8 @@ const EMAIL_TITLES: Record<string, string> = {
   daily: "Πρόταση ημέρας", breakfast: "Υπενθύμιση πρωινού", checkout: "Υπενθύμιση αναχώρησης", thank_you: "Ευχαριστούμε",
 };
 
+// Asking for an arrival time months ahead is pointless, so it only counts when close.
+const ARRIVAL_ATTENTION_DAYS = 14;
 const FAILED_SMS = ["UNDELIVERED", "FAILED", "EXPIRED", "REJECTED"];
 
 function boardLanguage(language: string | null, country: string | null) {
@@ -62,7 +64,8 @@ function boardLanguage(language: string | null, country: string | null) {
 /** Upcoming bookings still missing the email or the arrival time, soonest first. */
 export async function listAttentionBookings() {
   const bookings = await listBookings(null);
-  return bookings.filter((booking) => booking.emailState !== "real" || !booking.arrivalTime);
+  const arrivalLimit = new Date(Date.now() + ARRIVAL_ATTENTION_DAYS * 86_400_000).toISOString().slice(0, 10);
+  return bookings.filter((booking) => booking.emailState !== "real" || (!booking.arrivalTime && booking.checkin <= arrivalLimit));
 }
 
 export const listMonthBookings = (month: string) => listBookings(month);

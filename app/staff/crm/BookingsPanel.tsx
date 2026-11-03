@@ -196,7 +196,7 @@ export default function BookingsPanel({ attention = false }: { attention?: boole
   return (
     <div className="grid gap-4">
       {attention ? (
-        <p className="text-sm font-bold text-stone-600">{total} μελλοντικές κρατήσεις χωρίς email ή ώρα άφιξης, πρώτα όσες έρχονται νωρίτερα.</p>
+        <p className="text-sm font-bold text-stone-600">{total} κρατήσεις θέλουν έλεγχο: χωρίς email, ή χωρίς ώρα άφιξης αν έρχονται μέσα σε 14 μέρες.</p>
       ) : (
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
